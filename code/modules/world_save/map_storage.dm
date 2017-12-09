@@ -8,6 +8,8 @@
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents"
 /client/verb/SaveWorld()
 	Save_World()
+/client/verb/LoadWorld()
+	Load_World()
 var/atom/movable/lighting_overlay/should_save = 0
 /datum/Write(savefile/f)
 	var/list/saving
@@ -108,7 +110,11 @@ var/atom/movable/lighting_overlay/should_save = 0
 	return
 
 /datum/Read(savefile/f)
-	..()
+	for(var/ind in 1 to f.dir.len)
+		var/variable = f.dir[ind]
+		var/to_set
+		f.dir[variable] >> to_set
+		vars[variable] = to_set
 
 var/global/list/found_vars = list()
 /proc/Save_World()
@@ -147,9 +153,9 @@ var/global/list/found_vars = list()
 /proc/Load_World()
 	spawn(5)
 		for(var/z = 1, z <= 3, z++)
-			for(var/x = 1, x <= 255, x += 16)
+			for(var/x = 1, x <= 200, x += 20)
 				sleep(10)
-				for(var/y = 1, y <= 255, y += 16)
+				for(var/y = 1, y <= 200, y += 20)
 					Load_Chunk(x,y,z)
 					world << "Loaded [x]-[y]-[z]"
 					CHECK_TICK
@@ -157,9 +163,8 @@ var/global/list/found_vars = list()
 	return 1
 /proc/Load_Chunk(var/xi, var/yi, var/zi, var/savefile/f = new("map_saves/game.sav"))
 	var/z = zi
-	for(var/x = xi, x <= xi + 16, x++)
-		sleep(10)
-		for(var/y = yi, y <= yi + 16, y++)
+	for(var/x = xi, x <= xi + 20, x++)
+		for(var/y = yi, y <= yi + 20, y++)
 			f.cd = "/[z]"
 			var/turf/T = locate(x,y,z)
 			for(var/o in T.contents)

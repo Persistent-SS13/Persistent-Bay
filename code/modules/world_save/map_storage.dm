@@ -126,10 +126,8 @@ var/global/list/found_vars = list()
 		for(var/z = 1, z <= 3, z++)
 			for(var/x = 1, x <= 200, x += 20)
 				for(var/y = 1, y <= 200, y += 20)
-					var/chunktime = REALTIMEOFDAY
 					Save_Chunk(x,y,z, f)
 					sleep(1)
-					world << "Saved [x]-[y]-[z] in [(REALTIMEOFDAY - chunktime)/10] seconds!"
 
 
 		world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
@@ -139,12 +137,14 @@ var/global/list/found_vars = list()
 /proc/Save_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
 
 	var/z = zi
-	f.cd = "/[z]/Chunk([yi]-[xi])"
+	xi = (xi - (xi % 20) + 1)
+	yi = (yi - (yi % 20) + 1)
+	f.cd = "/[z]/Chunk([yi]|[xi])"
 	var/list/L = new()
 	for(var/y = yi, y <= yi + 20, y++)
 		for(var/x = xi, x <= xi + 20, x++)
 			var/turf/T = locate(x,y,z)
-			if(T == null)
+			if(!T || (T.type == /turf/space && (!T.contents || !T.contents.len)))
 				continue
 			L["[x]-[y]"] = T
 	f["L"] << L

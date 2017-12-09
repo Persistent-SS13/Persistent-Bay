@@ -16,7 +16,8 @@ var/atom/movable/lighting_overlay/should_save = 0
 	else
 		saving = get_saved_vars()
 		found_vars["[type]"] = saving
-	for(var/variable in saving)
+	for(var/ind in 1 to saving.len)
+		var/variable = saving[ind]
 		CHECK_TICK
 		if(vars[variable] == initial(vars[variable]))
 			continue

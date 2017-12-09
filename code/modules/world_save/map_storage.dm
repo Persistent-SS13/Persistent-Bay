@@ -8,10 +8,9 @@
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents"
 /client/verb/SaveWorld()
 	Save_World()
-
+var/atom/movable/lighting_overlay/should_save = 0
 /datum/Write(savefile/f)
 	var/list/saving
-	var/starttime = REALTIMEOFDAY
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
 	else
@@ -19,14 +18,15 @@
 		found_vars["[type]"] = saving
 	for(var/variable in saving)
 		CHECK_TICK
+		if(vars[variable] == initial(vars[variable]))
+			continue
 		f["[variable]"] << vars[variable]
-	if(((REALTIMEOFDAY - starttime)/10)>10)
-		message_admins("[src] took [(REALTIMEOFDAY - starttime)/10] seconds to save..")
 	return
 
 /atom/Write(savefile/f)
+	if(!should_save)
+		return 0
 	var/list/saving
-	var/starttime = REALTIMEOFDAY
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
 	else
@@ -34,13 +34,14 @@
 		found_vars["[type]"] = saving
 	for(var/variable in saving)
 		CHECK_TICK
+		if(vars[variable] == initial(vars[variable]))
+			continue
 		f["[variable]"] << vars[variable]
-	if(((REALTIMEOFDAY - starttime)/10)>10)
-		message_admins("[src] took [(REALTIMEOFDAY - starttime)/10] seconds to save..")
 	return
 /atom/movable/Write(savefile/f)
+	if(!should_save)
+		return 0
 	var/list/saving
-	var/starttime = REALTIMEOFDAY
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
 	else
@@ -48,13 +49,14 @@
 		found_vars["[type]"] = saving
 	for(var/variable in saving)
 		CHECK_TICK
+		if(vars[variable] == initial(vars[variable]))
+			continue
 		f["[variable]"] << vars[variable]
-	if(((REALTIMEOFDAY - starttime)/10)>10)
-		message_admins("[src] took [(REALTIMEOFDAY - starttime)/10] seconds to save..")
 	return
 /obj/Write(savefile/f)
+	if(!should_save)
+		return 0
 	var/list/saving
-	var/starttime = REALTIMEOFDAY
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
 	else
@@ -62,14 +64,15 @@
 		found_vars["[type]"] = saving
 	for(var/variable in saving)
 		CHECK_TICK
+		if(vars[variable] == initial(vars[variable]))
+			continue
 		f["[variable]"] << vars[variable]
-	if(((REALTIMEOFDAY - starttime)/10)>10)
-		message_admins("[src] took [(REALTIMEOFDAY - starttime)/10] seconds to save..")
 	return
 
 /turf/Write(savefile/f)
+	if(!should_save)
+		return 0
 	var/list/saving
-	var/starttime = REALTIMEOFDAY
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
 	else
@@ -77,11 +80,13 @@
 		found_vars["[type]"] = saving
 	for(var/variable in saving)
 		CHECK_TICK
+		if(vars[variable] == initial(vars[variable]))
+			continue
 		f["[variable]"] << vars[variable]
-	if(((REALTIMEOFDAY - starttime)/10)>10)
-		message_admins("[src] took [(REALTIMEOFDAY - starttime)/10] seconds to save..")
 	return
 /mob/Write(savefile/f)
+	if(!should_save)
+		return 0
 	var/list/saving
 	var/starttime = REALTIMEOFDAY
 	if(found_vars.Find("[type]"))
@@ -91,9 +96,9 @@
 		found_vars["[type]"] = saving
 	for(var/variable in saving)
 		CHECK_TICK
+		if(vars[variable] == initial(vars[variable]))
+			continue
 		f["[variable]"] << vars[variable]
-	if(((REALTIMEOFDAY - starttime)/10)>10)
-		message_admins("[src] took [(REALTIMEOFDAY - starttime)/10] seconds to save..")
 	return
 
 /datum/Read(savefile/f)
@@ -117,13 +122,14 @@ var/global/list/found_vars = list()
 		world << "Saving Complete"
 	return 1
 /proc/Save_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
+	var/starttime = REALTIMEOFDAY
 	var/z = zi
 	for(var/x = xi, x <= xi + 16, x++)
 		for(var/y = yi, y <= yi + 16, y++)
 			f.cd = "/[z]"
 			var/turf/T = locate(x,y,z)
 			f["[x]-[y]"] << T
-
+	world << "Saved [xi]-[yi]-[zi] in [(REALTIMEOFDAY - starttime)/10] seconds!"
 /proc/Load_World()
 	spawn(5)
 		for(var/z = 1, z <= 3, z++)

@@ -1,7 +1,7 @@
 /datum
 	var/should_save = 1
 	var/map_storage_saved_vars = ""
-	
+
 /turf
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents"
 /obj
@@ -109,32 +109,41 @@ var/atom/movable/lighting_overlay/should_save = 0
 
 /datum/Read(savefile/f)
 	..()
-	
-var/global/list/found_vars = list()	
+
+var/global/list/found_vars = list()
 /proc/Save_World()
 	var/starttime = REALTIMEOFDAY
 	spawn(0)
 		fdel("map_saves/game.sav")
 		var/savefile/f = new("map_saves/game.sav")
 		found_vars = list()
-		for(var/z = 1, z <= 1, z++)
-			for(var/x = 1, x <= 255, x += 16)
-				for(var/y = 1, y <= 255, y += 16)
+		for(var/z = 1, z <= 3, z++)
+			for(var/x = 1, x <= 200, x += 20)
+				for(var/y = 1, y <= 200, y += 20)
+					var/chunktime = REALTIMEOFDAY
 					Save_Chunk(x,y,z, f)
-					world << "Saved [x]-[y]-[z]"
-					CHECK_TICK
-		
+					sleep(1)
+					world << "Saved [x]-[y]-[z] in [(REALTIMEOFDAY - chunktime)/10] seconds!"
+
+
 		world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 		world << "Saving Complete"
 	return 1
+
 /proc/Save_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
-	var/starttime = REALTIMEOFDAY
+
 	var/z = zi
-	for(var/x = xi, x <= xi + 16, x++)
-		for(var/y = yi, y <= yi + 16, y++)
-			f.cd = "/[z]"
+	f.cd = "/[z]/Chunk([yi]-[xi])"
+	var/list/L = new()
+	for(var/y = yi, y <= yi + 20, y++)
+		for(var/x = xi, x <= xi + 20, x++)
 			var/turf/T = locate(x,y,z)
-			f["[x]-[y]"] << T
+			if(T == null)
+				continue
+			L["[x]-[y]"] = T
+	f["L"] << L
+
+
 /proc/Load_World()
 	spawn(5)
 		for(var/z = 1, z <= 3, z++)
@@ -178,7 +187,7 @@ var/global/list/found_vars = list()
 	if(!hasvar(src, input))
 		to_chat(M, "The [src] does not have this var")
 		return
-	
+
 	var/A = src.type
 	var/B = replacetext("[A]", "/", "-")
 	var/C = B
@@ -224,7 +233,7 @@ var/global/list/found_vars = list()
 		savedvarparams = ""
 	var/list/savedvars = params2list(savedvarparams)
 	if(savedvars && savedvars.len)
-		
+
 	for(var/v in savedvars)
 		if(findtext(v, "\n"))
 			var/list/split2 = splittext(v, "\n")

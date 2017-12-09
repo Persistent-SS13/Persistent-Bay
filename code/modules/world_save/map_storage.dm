@@ -129,7 +129,6 @@ var/global/list/found_vars = list()
 			f.cd = "/[z]"
 			var/turf/T = locate(x,y,z)
 			f["[x]-[y]"] << T
-	world << "Saved [xi]-[yi]-[zi] in [(REALTIMEOFDAY - starttime)/10] seconds!"
 /proc/Load_World()
 	spawn(5)
 		for(var/z = 1, z <= 3, z++)

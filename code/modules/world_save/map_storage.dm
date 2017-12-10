@@ -3,10 +3,10 @@
 	var/map_storage_saved_vars = ""
 
 /turf
-	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents"
+	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
 
 /obj
-	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents"
+	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
 
 /client/verb/SaveWorld()
 	Save_World()
@@ -15,6 +15,7 @@
 	Load_World()
 
 var/atom/movable/lighting_overlay/should_save = 0
+
 /datum/Write(savefile/f)
 	var/list/saving
 	if(found_vars.Find("[type]"))
@@ -111,11 +112,17 @@ var/atom/movable/lighting_overlay/should_save = 0
 	return
 
 /datum/Read(savefile/f)
-	for(var/ind in 1 to f.dir.len)
-		var/variable = f.dir[ind]
-		var/to_set
-		f.dir[variable] >> to_set
-		vars[variable] = to_set
+	var/list/loading = get_saved_vars()
+	if(found_vars.Find("[type]"))
+		loading = found_vars["[type]"]
+	else
+		loading = get_saved_vars()
+		found_vars["[type]"] = loading
+	for(var/ind in 1 to loading.len)
+		var/variable = loading[ind]
+		if(vars[variable] == initial(vars[variable]))
+			continue
+		f["[variable]"] >> vars[variable]
 
 var/global/list/found_vars = list()
 
@@ -124,9 +131,9 @@ var/global/list/found_vars = list()
 	fdel("map_saves/game.sav")
 	var/savefile/f = new("map_saves/game.sav")
 	found_vars = list()
-	for(var/z = 1, z <= 1, z++)
-		for(var/x = 1, x <= 200, x += 20)
-			for(var/y = 1, y <= 200, y += 20)
+	for(var/z in 1 to world.maxz)
+		for(var/x in 1 to world.maxx step 20)
+			for(var/y in 1 to world.maxy step 20)
 				Save_Chunk(x,y,z, f)
 
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
@@ -138,8 +145,8 @@ var/global/list/found_vars = list()
 	xi = (xi - (xi % 20) + 1)
 	yi = (yi - (yi % 20) + 1)
 	f.cd = "/[z]/Chunk|[yi]|[xi]"
-	for(var/y = yi, y <= yi + 20, y++)
-		for(var/x = xi, x <= xi + 20, x++)
+	for(var/y in yi to yi + 20)
+		for(var/x in xi to xi + 20)
 			var/turf/T = locate(x,y,z)
 			if(!T || (T.type == /turf/space && (!T.contents || !T.contents.len)))
 				continue
@@ -147,12 +154,15 @@ var/global/list/found_vars = list()
 
 
 /proc/Load_World()
+	var/starttime = REALTIMEOFDAY
 	world.maxz++
-	for(var/z = world.maxz , z <= world.maxz, z++)
-		for(var/x = 1, x <= 200, x += 20)
-			for(var/y = 1, y <= 200, y += 20)
+	for(var/z in 1 to 1)
+		for(var/x in 1 to world.maxx step 20)
+			for(var/y in 1 to world.maxy step 20)
 				Load_Chunk(x,y,z)
 				world << "Loaded [x]-[y]-[z]"
+				sleep(2)
+	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Loading Complete"
 	return 1
 
@@ -161,8 +171,8 @@ var/global/list/found_vars = list()
 	xi = (xi - (xi % 20) + 1)
 	yi = (yi - (yi % 20) + 1)
 	f.cd = "/[z]/Chunk|[yi]|[xi]"
-	for(var/y = yi, y <= yi + 20, y++)
-		for(var/x = xi, x <= xi + 20, x++)
+	for(var/y in yi to yi + 20)
+		for(var/x in xi to xi + 20)
 			var/turf/T = locate(x,y,z)
 			f["[x]-[y]"] >> T
 

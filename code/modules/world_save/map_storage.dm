@@ -4,12 +4,16 @@
 
 /turf
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents"
+
 /obj
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents"
+
 /client/verb/SaveWorld()
 	Save_World()
+
 /client/verb/LoadWorld()
 	Load_World()
+
 var/atom/movable/lighting_overlay/should_save = 0
 /datum/Write(savefile/f)
 	var/list/saving
@@ -20,7 +24,6 @@ var/atom/movable/lighting_overlay/should_save = 0
 		found_vars["[type]"] = saving
 	for(var/ind in 1 to saving.len)
 		var/variable = saving[ind]
-		CHECK_TICK
 		if(vars[variable] == initial(vars[variable]))
 			continue
 		f["[variable]"] << vars[variable]
@@ -37,11 +40,11 @@ var/atom/movable/lighting_overlay/should_save = 0
 		found_vars["[type]"] = saving
 	for(var/ind in 1 to saving.len)
 		var/variable = saving[ind]
-		CHECK_TICK
 		if(vars[variable] == initial(vars[variable]))
 			continue
 		f["[variable]"] << vars[variable]
 	return
+
 /atom/movable/Write(savefile/f)
 	if(!should_save)
 		return 0
@@ -53,11 +56,11 @@ var/atom/movable/lighting_overlay/should_save = 0
 		found_vars["[type]"] = saving
 	for(var/ind in 1 to saving.len)
 		var/variable = saving[ind]
-		CHECK_TICK
 		if(vars[variable] == initial(vars[variable]))
 			continue
 		f["[variable]"] << vars[variable]
 	return
+
 /obj/Write(savefile/f)
 	if(!should_save)
 		return 0
@@ -69,7 +72,6 @@ var/atom/movable/lighting_overlay/should_save = 0
 		found_vars["[type]"] = saving
 	for(var/ind in 1 to saving.len)
 		var/variable = saving[ind]
-		CHECK_TICK
 		if(vars[variable] == initial(vars[variable]))
 			continue
 		f["[variable]"] << vars[variable]
@@ -86,11 +88,11 @@ var/atom/movable/lighting_overlay/should_save = 0
 		found_vars["[type]"] = saving
 	for(var/ind in 1 to saving.len)
 		var/variable = saving[ind]
-		CHECK_TICK
 		if(vars[variable] == initial(vars[variable]))
 			continue
 		f["[variable]"] << vars[variable]
 	return
+
 /mob/Write(savefile/f)
 	if(!should_save)
 		return 0
@@ -103,7 +105,6 @@ var/atom/movable/lighting_overlay/should_save = 0
 		found_vars["[type]"] = saving
 	for(var/ind in 1 to saving.len)
 		var/variable = saving[ind]
-		CHECK_TICK
 		if(vars[variable] == initial(vars[variable]))
 			continue
 		f["[variable]"] << vars[variable]
@@ -117,58 +118,52 @@ var/atom/movable/lighting_overlay/should_save = 0
 		vars[variable] = to_set
 
 var/global/list/found_vars = list()
+
 /proc/Save_World()
 	var/starttime = REALTIMEOFDAY
-	spawn(0)
-		fdel("map_saves/game.sav")
-		var/savefile/f = new("map_saves/game.sav")
-		found_vars = list()
-		for(var/z = 1, z <= 3, z++)
-			for(var/x = 1, x <= 200, x += 20)
-				for(var/y = 1, y <= 200, y += 20)
-					Save_Chunk(x,y,z, f)
-					sleep(1)
+	fdel("map_saves/game.sav")
+	var/savefile/f = new("map_saves/game.sav")
+	found_vars = list()
+	for(var/z = 1, z <= 1, z++)
+		for(var/x = 1, x <= 200, x += 20)
+			for(var/y = 1, y <= 200, y += 20)
+				Save_Chunk(x,y,z, f)
 
-
-		world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
-		world << "Saving Complete"
+	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
+	world << "Saving Complete"
 	return 1
 
 /proc/Save_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
-
 	var/z = zi
 	xi = (xi - (xi % 20) + 1)
 	yi = (yi - (yi % 20) + 1)
-	f.cd = "/[z]/Chunk([yi]|[xi])"
-	var/list/L = new()
+	f.cd = "/[z]/Chunk|[yi]|[xi]"
 	for(var/y = yi, y <= yi + 20, y++)
 		for(var/x = xi, x <= xi + 20, x++)
 			var/turf/T = locate(x,y,z)
 			if(!T || (T.type == /turf/space && (!T.contents || !T.contents.len)))
 				continue
-			L["[x]-[y]"] = T
-	f["L"] << L
+			f["[x]-[y]"] << T
 
 
 /proc/Load_World()
-	spawn(5)
-		for(var/z = 1, z <= 3, z++)
-			for(var/x = 1, x <= 200, x += 20)
-				sleep(10)
-				for(var/y = 1, y <= 200, y += 20)
-					Load_Chunk(x,y,z)
-					world << "Loaded [x]-[y]-[z]"
-					CHECK_TICK
-		world << "Loading Complete"
+	world.maxz++
+	for(var/z = world.maxz , z <= world.maxz, z++)
+		for(var/x = 1, x <= 200, x += 20)
+			for(var/y = 1, y <= 200, y += 20)
+				Load_Chunk(x,y,z)
+				world << "Loaded [x]-[y]-[z]"
+	world << "Loading Complete"
 	return 1
+
 /proc/Load_Chunk(var/xi, var/yi, var/zi, var/savefile/f = new("map_saves/game.sav"))
 	var/z = zi
-	for(var/x = xi, x <= xi + 20, x++)
-		for(var/y = yi, y <= yi + 20, y++)
-			f.cd = "/[z]"
+	xi = (xi - (xi % 20) + 1)
+	yi = (yi - (yi % 20) + 1)
+	f.cd = "/[z]/Chunk|[yi]|[xi]"
+	for(var/y = yi, y <= yi + 20, y++)
+		for(var/x = xi, x <= xi + 20, x++)
 			var/turf/T = locate(x,y,z)
-			for(var/o in T.contents)
-				qdel(o)
 			f["[x]-[y]"] >> T
 
 /datum/proc/remove_saved(var/ind)
@@ -185,6 +180,7 @@ var/global/list/found_vars = list()
 	savedvarparams = list2params(saved_vars)
 	fdel("saved_vars/[B].txt")
 	text2file(savedvarparams, "saved_vars/[B].txt")
+
 /datum/proc/add_saved(var/mob/M)
 	if(!check_rights(R_ADMIN, 1, M))
 		return
@@ -228,6 +224,7 @@ var/global/list/found_vars = list()
 	savedvarparams = list2params(newvars)
 	fdel("saved_vars/[C].txt")
 	text2file(savedvarparams, "saved_vars/[C].txt")
+
 /datum/proc/get_saved_vars()
 	var/list/to_save = list()
 	to_save |= params2list(map_storage_saved_vars)
@@ -266,6 +263,7 @@ var/global/list/found_vars = list()
 	if(found_vars && found_vars.len)
 		to_save |= found_vars
 	return to_save
+
 /datum/proc/add_saved_var(var/mob/M)
 	if(!check_rights(R_ADMIN, 1, M))
 		return

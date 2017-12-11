@@ -31,7 +31,7 @@
 		found_vars["[type]"] = saving
 	for(var/ind in 1 to saving.len)
 		var/variable = saving[ind]
-		if(vars[variable] == initial(vars[variable]))
+		if((variable != "pixel_x" && variable != "pixel_y") && (vars[variable] == initial(vars[variable])))
 			continue
 		f["[variable]"] << vars[variable]
 	return
@@ -126,7 +126,8 @@
 		found_vars["[type]"] = loading
 	for(var/ind in 1 to loading.len)
 		var/variable = loading[ind]
-		f["[variable]"] >> vars[variable]
+		if(f.dir.Find("[variable]"))
+			f["[variable]"] >> vars[variable]
 
 /turf/Read(savefile/f)
 	var/list/loading
@@ -139,7 +140,8 @@
 		found_vars["[type]"] = loading
 	for(var/ind in 1 to loading.len)
 		var/variable = loading[ind]
-		f["[variable]"] >> vars[variable]
+		if(f.dir.Find("[variable]"))
+			f["[variable]"] >> vars[variable]
 
 var/global/list/found_vars = list()
 var/global/list/all_loaded = list()
@@ -183,9 +185,14 @@ var/global/list/all_loaded = list()
 				Load_Chunk(x,y,z, f)
 				world << "Loaded [x]-[y]-[z]"
 				sleep(-1)
+	
 	for(var/ind in 1 to all_loaded.len)
 		var/datum/dat = all_loaded[ind]
 		dat.after_load()
+		if(istype(dat,/atom/))
+			var/atom/A = dat
+			A.Initialize()
+	SSmachines.makepowernets()
 	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Loading Complete"
 	return 1

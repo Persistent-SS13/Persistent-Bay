@@ -17,7 +17,7 @@
 	var/lum_b = 0
 
 	var/needs_update = FALSE
-
+	should_save = 0
 /atom/movable/lighting_overlay/Initialize()
 	// doesn't need special init
 	initialized = TRUE

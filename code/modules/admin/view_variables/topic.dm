@@ -236,7 +236,14 @@
 
 		src.holder.marked_datum_weak = weakref(D)
 		href_list["datumrefresh"] = href_list["mark_object"]
+	else if(href_list["saved_vars"])
+		if(!check_rights(0))	return
 
+		var/datum/D = locate(href_list["saved_vars"])
+		if(!istype(D))
+			to_chat(usr, "This can only be done to instances of type /datum")
+			return
+		D.add_saved_var(usr)
 	else if(href_list["rotatedatum"])
 		if(!check_rights(0))	return
 

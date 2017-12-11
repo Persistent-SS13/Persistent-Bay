@@ -13,9 +13,15 @@
 
 /client/verb/LoadWorld()
 	Load_World()
-
-var/atom/movable/lighting_overlay/should_save = 0
-
+/datum/proc/after_load()
+	return
+	
+/turf/after_load()
+	..()
+	lighting_build_overlay()
+/atom/movable/lighting_overlay/after_load()
+	loc = null
+	qdel(src)
 /datum/Write(savefile/f)
 	var/list/saving
 	if(found_vars.Find("[type]"))
@@ -31,8 +37,6 @@ var/atom/movable/lighting_overlay/should_save = 0
 	return
 
 /atom/Write(savefile/f)
-	if(!should_save)
-		return 0
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
@@ -113,6 +117,8 @@ var/atom/movable/lighting_overlay/should_save = 0
 
 /datum/Read(savefile/f)
 	var/list/loading
+	if(all_loaded)
+		all_loaded += src
 	if(found_vars.Find("[type]"))
 		loading = found_vars["[type]"]
 	else
@@ -120,12 +126,12 @@ var/atom/movable/lighting_overlay/should_save = 0
 		found_vars["[type]"] = loading
 	for(var/ind in 1 to loading.len)
 		var/variable = loading[ind]
-		if(vars[variable] == initial(vars[variable]))
-			continue
 		f["[variable]"] >> vars[variable]
 
 /turf/Read(savefile/f)
 	var/list/loading
+	if(all_loaded)
+		all_loaded += src
 	if(found_vars.Find("[type]"))
 		loading = found_vars["[type]"]
 	else
@@ -133,12 +139,10 @@ var/atom/movable/lighting_overlay/should_save = 0
 		found_vars["[type]"] = loading
 	for(var/ind in 1 to loading.len)
 		var/variable = loading[ind]
-		if(vars[variable] == initial(vars[variable]))
-			continue
 		f["[variable]"] >> vars[variable]
 
 var/global/list/found_vars = list()
-
+var/global/list/all_loaded = list()
 /proc/Save_World()
 	var/starttime = REALTIMEOFDAY
 	fdel("map_saves/game.sav")
@@ -171,12 +175,17 @@ var/global/list/found_vars = list()
 	var/savefile/f = new("map_saves/game.sav")
 	var/starttime = REALTIMEOFDAY
 	world.maxz++
+	all_loaded = list()
+	found_vars = list()
 	for(var/z in 1 to 1)
 		for(var/x in 1 to world.maxx step 20)
 			for(var/y in 1 to world.maxy step 20)
 				Load_Chunk(x,y,z, f)
 				world << "Loaded [x]-[y]-[z]"
 				sleep(-1)
+	for(var/ind in 1 to all_loaded.len)
+		var/datum/dat = all_loaded[ind]
+		dat.after_load()
 	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Loading Complete"
 	return 1

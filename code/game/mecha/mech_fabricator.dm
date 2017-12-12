@@ -2,7 +2,7 @@
 	icon = 'icons/obj/robotics.dmi'
 	icon_state = "fab-idle"
 	name = "Exosuit Fabricator"
-	desc = "A machine used for construction of robotcs and mechas."
+	desc = "A machine used for construction of robotics and mechas."
 	density = 1
 	anchored = 1
 	use_power = 1
@@ -188,7 +188,7 @@
 
 			update_busy()
 	else
-		to_chat(user, "The fabricator cannot hold more [stack_plural].")// use the plural form even if the given sheet is singular
+		to_chat(user, "The fabricator cannot hold any more [stack_plural]!")// use the plural form even if the given sheet is singular
 
 
 /obj/machinery/mecha_part_fabricator/emag_act(var/remaining_charges, var/mob/user)
@@ -329,7 +329,7 @@
 	update_busy()
 
 /obj/machinery/mecha_part_fabricator/proc/sync()
-	sync_message = "Error: no console found."
+	sync_message = "Error: No console found!"
 	for(var/obj/machinery/computer/rdconsole/RDC in get_area_all_atoms(get_area(src)))
 		if(!RDC.sync)
 			continue

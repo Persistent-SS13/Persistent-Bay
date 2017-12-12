@@ -176,10 +176,10 @@
 		if (user.hand)
 			temp = H.organs_by_name[BP_L_HAND]
 		if(temp && !temp.is_usable())
-			to_chat(user, "<span class='notice'>You try to move your [temp.name], but cannot!</span>")
+			to_chat(user, "<span class='notice'>You try to move your [temp.name], but you can't!</span>")
 			return
 		if(!temp)
-			to_chat(user, "<span class='notice'>You try to use your hand, but realize it is no longer attached!</span>")
+			to_chat(user, "<span class='notice'>You try to use your hand, but then realize it is no longer attached!</span>")
 			return
 	src.pickup(user)
 	if (istype(src.loc, /obj/item/weapon/storage))
@@ -340,12 +340,12 @@ var/list/global/slot_flags_enumeration = list(
 		if(slot_wear_id, slot_belt)
 			if(!H.w_uniform && (slot_w_uniform in mob_equip))
 				if(!disable_warning)
-					to_chat(H, "<span class='warning'>You need a jumpsuit before you can attach this [name].</span>")
+					to_chat(H, "<span class='warning'>You need to have a jumpsuit on before you can attach this [name] to it.</span>")
 				return 0
 		if(slot_l_store, slot_r_store)
 			if(!H.w_uniform && (slot_w_uniform in mob_equip))
 				if(!disable_warning)
-					to_chat(H, "<span class='warning'>You need a jumpsuit before you can attach this [name].</span>")
+					to_chat(H, "<span class='warning'>You need to have a jumpsuit on before you can attach this [name] to it.</span>")
 				return 0
 			if(slot_flags & SLOT_DENYPOCKET)
 				return 0
@@ -461,10 +461,10 @@ var/list/global/slot_flags_enumeration = list(
 				return
 
 	if(!M.has_eyes())
-		to_chat(user, "<span class='warning'>You cannot locate any eyes on [M]!</span>")
+		to_chat(user, "<span class='warning'>You cannot find any eyes in [M]'s eye sockets!</span>")
 		return
 
-	admin_attack_log(user, M, "Attacked using \a [src]", "Was attacked with \a [src]", "used \a [src] to attack")
+	admin_attack_log(user, M, "Attacked using \a [src]", "was attacked with \a [src]", "used \a [src] to attack")
 
 	user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
 	user.do_attack_animation(M)
@@ -490,8 +490,8 @@ var/list/global/slot_flags_enumeration = list(
 			to_chat(user, "<span class='danger'>You stab [M] in the eye with [src]!</span>")
 		else
 			user.visible_message( \
-				"<span class='danger'>[user] has stabbed themself with [src]!</span>", \
-				"<span class='danger'>You stab yourself in the eyes with [src]!</span>" \
+				"<span class='danger'>[user] has stabbed themselves in the eye with the [src]!</span>", \
+				"<span class='danger'>You stab yourself in the eyes with the [src]!</span>" \
 			)
 
 		eyes.damage += rand(3,4)
@@ -606,7 +606,7 @@ modules/mob/living/carbon/human/life.dm if you die, you will be zoomed out.
 		to_chat(user, "<span class='warning'>Your visor gets in the way of looking through the [devicename].</span>")
 		cannotzoom = 1
 	else if(!zoom && usr.get_active_hand() != src)
-		to_chat(user, "<span class='warning'>You are too distracted to look through the [devicename], perhaps if it was in your active hand this might work better.</span>")
+		to_chat(user, "<span class='warning'>You are too distracted to look through the [devicename], perhaps if it was in your active hand this might work.</span>")
 		cannotzoom = 1
 
 	if(!zoom && !cannotzoom)

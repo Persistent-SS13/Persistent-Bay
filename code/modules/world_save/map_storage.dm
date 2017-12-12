@@ -28,6 +28,13 @@
 	qdel(src)
 
 /datum/Write(savefile/f)
+	var/uid
+	if(!(src in all_saved))
+		all_saved |= src
+		uid = all_saved.len
+	else
+		uid = all_saved.Find(src)
+	f["**uid"] << uid
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
@@ -42,6 +49,13 @@
 	return
 
 /atom/Write(savefile/f)
+	var/uid
+	if(!(src in all_saved))
+		all_saved |= src
+		uid = all_saved.len
+	else
+		uid = all_saved.Find(src)
+	f["**uid"] << uid
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
@@ -56,8 +70,13 @@
 	return
 
 /atom/movable/Write(savefile/f)
-	if(!should_save)
-		return 0
+	var/uid
+	if(!(src in all_saved))
+		all_saved |= src
+		uid = all_saved.len
+	else
+		uid = all_saved.Find(src)
+	f["**uid"] << uid
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
@@ -72,8 +91,13 @@
 	return
 
 /obj/Write(savefile/f)
-	if(!should_save)
-		return 0
+	var/uid
+	if(!(src in all_saved))
+		all_saved |= src
+		uid = all_saved.len
+	else
+		uid = all_saved.Find(src)
+	f["**uid"] << uid
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
@@ -88,8 +112,13 @@
 	return
 
 /turf/Write(savefile/f)
-	if(!should_save)
-		return 0
+	var/uid
+	if(!(src in all_saved))
+		all_saved |= src
+		uid = all_saved.len
+	else
+		uid = all_saved.Find(src)
+	f["**uid"] << uid
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
@@ -105,8 +134,13 @@
 	return
 
 /mob/Write(savefile/f)
-	if(!should_save)
-		return 0
+	var/uid
+	if(!(src in all_saved))
+		all_saved |= src
+		uid = all_saved.len
+	else
+		uid = all_saved.Find(src)
+	f["**uid"] << uid
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
@@ -121,8 +155,13 @@
 	return
 
 /area/Write(savefile/f)
-	if(!should_save)
-		return 0
+	var/uid
+	if(!(src in all_saved))
+		all_saved |= src
+		uid = all_saved.len
+	else
+		uid = all_saved.Find(src)
+	f["**uid"] << uid
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
@@ -137,9 +176,18 @@
 	return
 
 /datum/Read(savefile/f)
+	if(f.dir.Find("**uid"))
+		var/uid
+		f["**uid"] >> uid
+		if("[uid]" in loaded_by_uid)
+			. = loaded_by_uid["[uid]"]
+			qdel(src)
+			return .
+		else
+			loaded_by_uid["[uid]"] = src
 	var/list/loading
 	if(all_loaded)
-		all_loaded += src
+		all_loaded |= src
 	if(found_vars.Find("[type]"))
 		loading = found_vars["[type]"]
 	else
@@ -151,9 +199,18 @@
 			f["[variable]"] >> vars[variable]
 
 /turf/Read(savefile/f)
+	if(f.dir.Find("**uid"))
+		var/uid
+		f["**uid"] >> uid
+		if("[uid]" in loaded_by_uid)
+			. = loaded_by_uid["[uid]"]
+			qdel(src)
+			return .
+		else
+			loaded_by_uid["[uid]"] = src
 	var/list/loading
 	if(all_loaded)
-		all_loaded += src
+		all_loaded |= src
 	if(found_vars.Find("[type]"))
 		loading = found_vars["[type]"]
 	else
@@ -168,6 +225,15 @@
 	A.contents.Add(src)
 
 /area/Read(savefile/f)
+	if(f.dir.Find("**uid"))
+		var/uid
+		f["**uid"] >> uid
+		if("[uid]" in loaded_by_uid)
+			. = loaded_by_uid["[uid]"]
+			qdel(src)
+			return .
+		else
+			loaded_by_uid["[uid]"] = src
 	var/list/loading
 	if(all_loaded)
 		all_loaded += src
@@ -183,21 +249,19 @@
 
 var/global/list/found_vars = list()
 var/global/list/all_loaded = list()
+var/global/list/all_saved = list()
+var/global/list/loaded_by_uid = list()
 
 /proc/Save_World()
 	var/starttime = REALTIMEOFDAY
 	fdel("map_saves/game.sav")
 	var/savefile/f = new("map_saves/game.sav")
-	found_vars = list(80000)
-	var/list/L = new()
+	found_vars = list()
 	for(var/z in 1 to 3)
-		for(var/x in 1 to world.maxx)
-			for(var/y in 1 to world.maxy)
-				var/turf/T = locate(x,y,z)
-				if(!T || (T.type == /turf/space && (!T.contents || !T.contents.len) && istype(T.loc, /area/space)))
-					continue
-				L.Add(T)
-	f["Station1"] << L
+		for(var/x in 1 to world.maxx step 20)
+			for(var/y in 1 to world.maxy step 20)
+				Save_Chunk(x,y,z, f)
+				sleep(-1)
 
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
@@ -218,22 +282,28 @@ var/global/list/all_loaded = list()
 
 
 /proc/Load_World()
-
 	var/savefile/f = new("map_saves/game.sav")
-
 	var/starttime = REALTIMEOFDAY
-
+	world.maxz++
 	all_loaded = list()
 	found_vars = list()
-
-	Load_List(f)
-	Load_Initialize()
-
+	for(var/z in 1 to 1)
+		for(var/x in 1 to world.maxx step 20)
+			for(var/y in 1 to world.maxy step 20)
+				Load_Chunk(x,y,z, f)
+				world << "Loaded [x]-[y]-[z]"
+				sleep(-1)
+	
+	for(var/ind in 1 to all_loaded.len)
+		var/datum/dat = all_loaded[ind]
+		dat.after_load()
+		if(istype(dat,/atom/))
+			var/atom/A = dat
+			A.Initialize()
+	SSmachines.makepowernets()
 	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Loading Complete"
-
 	return 1
-
 /proc/Load_List(var/savefile/f)
 	var/list/L = new(80000)
 	f["Station1"] >> L

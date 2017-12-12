@@ -7,8 +7,8 @@ world/IsBanned(key,address,computer_id)
 	//Guest Checking
 	if(!config.guests_allowed && IsGuestKey(key))
 		log_access("Failed Login: [key] - Guests not allowed")
-		message_admins("<span class='notice'>Failed Login: [key] - Guests not allowed</span>")
-		return list("reason"="guest", "desc"="\nReason: Guests not allowed. Please sign in with a byond account.")
+		message_admins("<span class='notice'>Failed Login: [key] - Guests not allowed.</span>")
+		return list("reason"="guest", "desc"="\nReason: Guests not allowed. Please sign in with a BYOND account.")
 
 	if(config.ban_legacy_system)
 
@@ -60,16 +60,16 @@ world/IsBanned(key,address,computer_id)
 
 			var/expires = ""
 			if(text2num(duration) > 0)
-				expires = " The ban is for [duration] minutes and expires on [expiration] (server time)."
+				expires = " The ban is for [duration] minutes and expires at [expiration] (server time)."
 
 			var/desc = "\nReason: You, or another user of this computer or connection ([pckey]) is banned from playing here. The ban reason is:\n[reason]\nThis ban was applied by [ackey] on [bantime], [expires]"
 
 			return list("reason"="[bantype]", "desc"="[desc]")
 
 		if (failedcid)
-			message_admins("[key] has logged in with a blank computer id in the ban check.")
+			message_admins("[key] has logged in with a blank computer ID in the ban check.")
 		if (failedip)
-			message_admins("[key] has logged in with a blank ip in the ban check.")
+			message_admins("[key] has logged in with a blank IP in the ban check.")
 		return ..()	//default pager ban stuff
 #endif
 #undef OVERRIDE_BAN_SYSTEM

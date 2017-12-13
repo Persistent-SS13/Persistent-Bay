@@ -279,8 +279,7 @@ var/global/list/loaded_by_uid = list()
 				continue
 			f["[x]-[y]"] << T
 			f["[x]-[y]-A"] << T.loc
-
-
+			
 /proc/Load_World()
 	var/savefile/f = new("map_saves/game.sav")
 	var/starttime = REALTIMEOFDAY
@@ -462,7 +461,7 @@ var/global/list/loaded_by_uid = list()
 	var/ind = 0
 	for(var/x in saved_vars)
 		ind++
-		dat += "[x] <a href='?_src_=savevars;Remove=[ind];Vars=\ref[src]'>(Remove)</a><br>"
+		dat += "[x] <a href='?_src_=vars;Remove_Var=[ind];Varsx=\ref[src]'>(Remove)</a><br>"
 	dat += "<hr><br>"
-	dat += "<a href='?_src_=savevars;Vars=\ref[src];Add=1'>(Add new var)</a>"
+	dat += "<a href='?_src_=vars;Varsx=\ref[src];Add_Var=1'>(Add new var)</a>"
 	M << browse(dat, "window=roundstats;size=500x600")

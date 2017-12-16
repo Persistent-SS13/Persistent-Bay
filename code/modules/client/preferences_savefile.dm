@@ -1,14 +1,13 @@
 #define SAVEFILE_VERSION_MIN	8
 #define SAVEFILE_VERSION_MAX	17
 
-/datum/preferences/proc/load_path(ckey,filename="preferences.sav")
+/proc/load_path(ckey,filename="preferences.sav")
 	if(!ckey)	return
-	path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
-	savefile_version = SAVEFILE_VERSION_MAX
+	var/path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 	return path
 
 /datum/preferences/proc/load_preferences()
-	load_path(client.ckey)
+	path = load_path(client.ckey)
 	if(!fexists(path))		return 0
 	var/savefile/S = new /savefile(path)
 	if(!S)					return 0
@@ -20,7 +19,7 @@
 	return 1
 
 /datum/preferences/proc/save_preferences()
-	load_path(client.ckey)
+	path = load_path(client.ckey)
 	var/savefile/S = new /savefile(path)
 	if(!S)					return 0
 	S.cd = "/"

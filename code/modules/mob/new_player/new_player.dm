@@ -129,6 +129,7 @@
 		client.prefs.slot_select(src)
 		return 1
 	if(href_list["pickslot_load"])
+		panel.close()
 		chosen_slot = text2num(href_list["pickslot_load"])
 		message_admins("chosen slot: [chosen_slot]")
 		if(ticker.current_state <= GAME_STATE_PREGAME)
@@ -518,7 +519,7 @@
 		new_character.loc = spawn_turf
 		message_admins("spawnturf :[spawn_turf] [spawn_turf.x], [spawn_turf.y], [spawn_turf.z]")
 	new_character.key = key		//Manually transfer the key to log them in
-	
+	new_character.save_slot = chosen_slot
 	return new_character
 	/**
 	var/mob/living/carbon/human/new_character

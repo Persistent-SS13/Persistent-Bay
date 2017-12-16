@@ -20,3 +20,4 @@ __pycache__
 config/*
 !config/*/
 *.sav
+Save.txt

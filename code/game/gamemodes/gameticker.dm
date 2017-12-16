@@ -330,6 +330,15 @@ var/global/datum/controller/gameticker/ticker
 
 		if(!mode.explosion_in_progress && game_finished && (mode_finished || post_game))
 			current_state = GAME_STATE_FINISHED
+			for(var/datum/mind/employee in minds)
+				if(!employee.current || !employee.current.ckey) continue
+				var/save_path = load_path(employee.current.ckey, "")
+				if(fexists("[save_path][employee.current.save_slot].sav"))
+					fdel("[save_path][employee.current.save_slot].sav")
+				var/savefile/f = new("[save_path][employee.current.save_slot].sav")
+				f << employee.current
+				to_chat(employee.current, "You character has been saved.")
+			Save_World()
 			Master.SetRunLevel(RUNLEVEL_POSTGAME)
 
 			spawn

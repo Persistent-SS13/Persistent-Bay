@@ -31,7 +31,7 @@ datum/preferences
 	var/savefile/loaded_character
 	var/datum/category_collection/player_setup_collection/player_setup
 	var/datum/browser/panel
-
+	var/datum/browser/char_panel
 	// Persistent Edit, Adding the character list..
 	var/list/character_list = list()
 	var/list/icon_list = list()
@@ -45,7 +45,7 @@ datum/preferences
 		client = C
 		client_ckey = C.ckey
 		if(!IsGuestKey(C.key))
-			load_path(C.ckey)
+			path = load_path(C.ckey)
 			load_preferences()
 		//	load_and_update_character()
 
@@ -129,9 +129,9 @@ datum/preferences
 	dat += player_setup.content(user)
 
 	dat += "</html></body>"
-	var/datum/browser/popup = new(user, "NT Employee Application","NT Employee Application", 1200, 800, src)
-	popup.set_content(dat)
-	popup.open()
+	char_panel = new(user, "NT Employee Application","NT Employee Application", 1200, 800, src)
+	char_panel.set_content(dat)
+	char_panel.open()
 
 /datum/preferences/proc/process_link(mob/user, list/href_list)
 
@@ -154,6 +154,9 @@ datum/preferences
 	if(href_list["save"])
 		save_preferences()
 		save_character()
+		user << browse(null, "window=saves")
+		char_panel.close()
+		return 0
 	else if(href_list["reload"])
 		load_preferences()
 		load_character()
@@ -354,6 +357,7 @@ datum/preferences
 			var/savefile/S =  new("[path_to][i].sav")
 			var/mob/M
 			S >> M
+			M.regenerate_icons()
 			character_list += M
 		else
 			character_list += "empty"

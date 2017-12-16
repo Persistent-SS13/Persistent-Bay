@@ -2,6 +2,21 @@ var/global/list/found_vars = list()
 var/global/list/all_loaded = list()
 var/global/list/saved = list()
 
+
+/obj/item/map_storage_debugger
+	name = "DEBUG ITEM"
+	desc = "DEBUG ITEM"
+	icon = 'icons/obj/device.dmi'
+	icon_state = "eftpos"
+	var/list/spawned = list()
+
+/obj/item/map_storage_debugger/attack_self(mob/user)
+	var/type_path = input(user, "Enter the typepath you want spawned", "debugger","") as text|null
+	var/datum/D = new type_path()
+	if(D)
+		spawned |= D
+	else
+		to_chat(user, "No datum of type [type_path]")
 /datum
 	var/should_save = 1
 	var/map_storage_saved_vars = ""
@@ -33,7 +48,9 @@ var/global/list/saved = list()
 /atom/movable/lighting_overlay/after_load()
 	loc = null
 	qdel(src)
-
+/mob/living/carbon/human/after_load()
+	..()
+	regenerate_icons()
 /datum/SaveList
 	var/list/InList
 
@@ -52,7 +69,7 @@ var/global/list/saved = list()
 		var/y = (T.y - (T.y % 20) + 1)
 		f.cd = "../../[T.z]/Chunk|[x]|[y]"
 		f["[T.x]-[T.y]"] << T
-
+		sleep(-1)
 /datum/proc/StandardWrite(var/savefile/f)
 	if(!should_save)
 		return
@@ -127,7 +144,7 @@ var/global/list/saved = list()
 	var/savefile/f = new("map_saves/game.sav")
 	var/datum/SaveList/L = new()
 	found_vars = list()
-	for(var/z in 1 to 3)
+	for(var/z in 1 to 5)
 		for(var/x in 1 to world.maxx)
 			for(var/y in 1 to world.maxy)
 				var/turf/T = locate(x,y,z)
@@ -144,12 +161,12 @@ var/global/list/saved = list()
 	return 1
 
 /proc/Load_World()
+	if(!fexists("map_saves/game.sav")) return
 	var/savefile/f = new("map_saves/game.sav")
 	var/starttime = REALTIMEOFDAY
-	world.maxz++
 	all_loaded = list()
 	found_vars = list()
-	for(var/z in 1 to 1)
+	for(var/z in 1 to 5)
 		for(var/x in 1 to world.maxx step 20)
 			for(var/y in 1 to world.maxy step 20)
 				Load_Chunk(x,y,z, f)
@@ -317,7 +334,7 @@ var/global/list/saved = list()
 	var/ind = 0
 	for(var/x in saved_vars)
 		ind++
-		dat += "[x] <a href='?_src_=vars;Remove_Var=[ind];Vars=\ref[src]'>(Remove)</a><br>"
+		dat += "[x] <a href='?_src_=vars;Remove_Var=[ind];Varsx=\ref[src]'>(Remove)</a><br>"
 	dat += "<hr><br>"
-	dat += "<a href='?_src_=vars;Vars=\ref[src];Add_Var=1'>(Add new var)</a>"
+	dat += "<a href='?_src_=vars;Varsx=\ref[src];Add_Var=1'>(Add new var)</a>"
 	M << browse(dat, "window=roundstats;size=500x600")

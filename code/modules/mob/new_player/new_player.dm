@@ -19,6 +19,8 @@
 
 	virtual_mob = null // Hear no evil, speak no evil
 
+	// Persitent Edit, chosen slot
+	var/chosen_slot = 0
 /mob/new_player/New()
 	..()
 	verbs += /mob/proc/toggle_antag_pool
@@ -30,7 +32,7 @@
 /mob/new_player/proc/new_player_panel_proc()
 	var/output = "<div align='center'>"
 	output +="<hr>"
-	output += "<p><a href='byond://?src=\ref[src];show_preferences=1'>Setup Character</A></p>"
+	output += "<p><a href='byond://?src=\ref[src];show_preferences=1'>Create New Character</A></p>"
 
 	if(!ticker || ticker.current_state <= GAME_STATE_PREGAME)
 		if(ready)
@@ -69,7 +71,33 @@
 	panel.set_content(output)
 	panel.open()
 	return
-
+	
+/mob/new_player/proc/slot_select_load()
+	var/mob/user = src
+	if(!client.prefs.character_list || (client.prefs.character_list.len < config.character_slots))
+		client.prefs.load_characters()
+	var/dat  = list()
+	dat += "<body>"
+	dat += "<tt><center>"
+	dat += "<b>Select the Character you want to load</b><hr>"
+	var/name
+	var/ind = 0
+	for(var/x in client.prefs.character_list)
+		ind++
+		var/mob/M = x
+		if(istype(M))
+			var/icon/ico = client.prefs.get_preview_icon(M)
+			user << browse_rsc(ico, "[ind]preview.png")
+			dat += "<center><img src=[ind]preview.png width=[ico.Width()] height=[ico.Height()]></center><br>"
+			dat += "<b><a href='?src=\ref[src];pickslot_load=[ind]'>[M.real_name]</a></b><hr>"
+		else
+			dat += "Open Slot [ind]<hr>"
+	dat += "<hr>"
+	dat += "</center></tt>"
+	panel = new(user, "Character Slots", "Character Slots", 300, 390, src)
+	panel.set_content(jointext(dat,null))
+	panel.open()
+	
 /mob/new_player/Stat()
 	. = ..()
 
@@ -98,14 +126,22 @@
 	if(!client)	return 0
 
 	if(href_list["show_preferences"])
-		client.prefs.ShowChoices(src)
+		client.prefs.slot_select(src)
 		return 1
-
-	if(href_list["ready"])
-		if(!ticker || ticker.current_state <= GAME_STATE_PREGAME) // Make sure we don't ready up after the round has started
-			ready = text2num(href_list["ready"])
+	if(href_list["pickslot_load"])
+		chosen_slot = text2num(href_list["pickslot_load"])
+		message_admins("chosen slot: [chosen_slot]")
+		if(ticker.current_state <= GAME_STATE_PREGAME)
+			ready = 1
 		else
-			ready = 0
+			AttemptLateSpawn()
+		
+	if(href_list["ready"])
+		slot_select_load()
+	//	if(!ticker || ticker.current_state <= GAME_STATE_PREGAME) // Make sure we don't ready up after the round has started
+	//		ready = text2num(href_list["ready"])
+	//	else
+	//		ready = 0
 
 	if(href_list["refresh"])
 		panel.close()
@@ -154,11 +190,11 @@
 			return 1
 
 	if(href_list["late_join"])
-
-		if(!ticker || ticker.current_state != GAME_STATE_PLAYING)
-			to_chat(usr, "<span class='warning'>The round is either not ready, or has already finished...</span>")
-			return
-		LateChoices() //show the latejoin job selection menu
+		slot_select_load()
+	//	if(!ticker || ticker.current_state != GAME_STATE_PLAYING)
+	//		to_chat(usr, "<span class='warning'>The round is either not ready, or has already finished...</span>")
+	//		return
+	//	LateChoices() //show the latejoin job selection menu
 
 	if(href_list["manifest"])
 		ViewManifest()
@@ -303,7 +339,34 @@
 	if(client)
 		return client.prefs.char_rank
 
-/mob/new_player/proc/AttemptLateSpawn(var/datum/job/job, var/spawning_at)
+/mob/new_player/proc/AttemptLateSpawn(var/datum/job/job, var/turf/spawning_at)
+	message_admins("attemptlatespawn")
+	if(src != usr)
+		message_admins("ran by non usr...")
+		return 0
+	if(!ticker || ticker.current_state != GAME_STATE_PLAYING)
+		to_chat(usr, "<span class='warning'>The round is either not ready, or has already finished...</span>")
+		return 0
+	if(!config.enter_allowed)
+		to_chat(usr, "<span class='notice'>There is an administrative lock on entering the game!</span>")
+		return 0
+	var/mob/living/character = create_character()	//creates the human and transfers vars and mind
+	if(!character)
+		message_admins("create_character failed!")
+		return 0
+	qdel(src)
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
 	if(src != usr)
 		return 0
 	if(!ticker || ticker.current_state != GAME_STATE_PLAYING)
@@ -382,7 +445,7 @@
 		matchmaker.do_matchmaking()
 	log_and_message_admins("has joined the round as [character.mind.assigned_role].", character)
 	qdel(src)
-
+	**/
 
 /mob/new_player/proc/AnnounceCyborg(var/mob/living/character, var/rank, var/join_message)
 	if (ticker.current_state == GAME_STATE_PLAYING)
@@ -429,20 +492,43 @@
 	dat += "</table></center>"
 	src << browse(jointext(dat, null), "window=latechoices;size=450x640;can_close=1")
 
+	
+
 /mob/new_player/proc/create_character(var/turf/spawn_turf)
+	message_admins("create_character")
 	spawning = 1
 	close_spawn_windows()
-
+	if(!chosen_slot)
+		message_admins("no chosen slot..")
+		return
+	var/mob/new_character = client.prefs.character_list[chosen_slot]
+	if(!new_character)
+		message_admins("null new_character")
+		return
+	if(!new_character.mind)
+		mind.active = 0					//we wish to transfer the key manually
+		mind.original = new_character
+		if(client.prefs.memory)
+			mind.store_memory(client.prefs.memory)
+		mind.transfer_to(new_character)					//won't transfer key since the mind is not active
+	message_admins("create_character end")
+	if(!spawn_turf)
+		var/datum/spawnpoint/spawnpoint = job_master.get_spawnpoint_for(client, get_rank_pref())
+		spawn_turf = pick(spawnpoint.turfs)
+		new_character.loc = spawn_turf
+		message_admins("spawnturf :[spawn_turf] [spawn_turf.x], [spawn_turf.y], [spawn_turf.z]")
+	new_character.key = key		//Manually transfer the key to log them in
+	
+	return new_character
+	/**
 	var/mob/living/carbon/human/new_character
 
 	var/datum/species/chosen_species
 	if(client.prefs.species)
 		chosen_species = all_species[client.prefs.species]
 
-	if(!spawn_turf)
-		var/datum/spawnpoint/spawnpoint = job_master.get_spawnpoint_for(client, get_rank_pref())
-		spawn_turf = pick(spawnpoint.turfs)
-
+	
+	
 	if(chosen_species)
 		if(!check_species_allowed(chosen_species))
 			spawning = 0 //abort
@@ -507,7 +593,7 @@
 
 	new_character.key = key		//Manually transfer the key to log them in
 	return new_character
-
+	**/
 /mob/new_player/proc/ViewManifest()
 	var/dat = "<div align='center'>"
 	dat += html_crew_manifest(OOC = 1)

@@ -73,7 +73,8 @@
 
 	. = list()
 	. += "<tt><center>"
-	. += "<b>Choose occupation chances</b><br>Unavailable occupations are crossed out.<br>"
+	. += "<b>Choose Starting NT-Certifications</b><br>Most characters start with no certifications and recieve them all in game.<br>"
+	/**
 	if(GLOB.using_map.flags & MAP_HAS_BRANCH)
 
 		player_branch = mil_branches.get_branch(pref.char_branch)
@@ -189,8 +190,9 @@
 
 	. += "<a href='?src=\ref[src];reset_jobs=1'>\[Reset\]</a></center>"
 	. += "</tt>"
+	**/
 	. = jointext(.,null)
-
+	
 /datum/category_item/player_setup_item/occupation/OnTopic(href, href_list, user)
 	if(href_list["reset_jobs"])
 		ResetJobs()

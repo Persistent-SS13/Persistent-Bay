@@ -5,9 +5,10 @@
 	if(!ckey)	return
 	path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 	savefile_version = SAVEFILE_VERSION_MAX
+	return path
 
 /datum/preferences/proc/load_preferences()
-	if(!path)				return 0
+	load_path(client.ckey)
 	if(!fexists(path))		return 0
 	var/savefile/S = new /savefile(path)
 	if(!S)					return 0
@@ -19,7 +20,7 @@
 	return 1
 
 /datum/preferences/proc/save_preferences()
-	if(!path)				return 0
+	load_path(client.ckey)
 	var/savefile/S = new /savefile(path)
 	if(!S)					return 0
 	S.cd = "/"
@@ -30,13 +31,20 @@
 	return 1
 
 /datum/preferences/proc/load_character(slot)
-	if(!path)				return 0
-	if(!fexists(path))		return 0
-	var/savefile/S = new /savefile(path)
-	if(!S)					return 0
-	S.cd = "/"
-	if(!slot)	slot = default_slot
+//	if(!path)				return 0
+//	if(!fexists(path))		return 0
+//	var/savefile/S = new /savefile(path)
+//	if(!S)					return 0
+//	S.cd = "/"
+//	if(!slot)	slot = default_slot
 
+	
+	
+	
+	
+	
+	
+	/**
 	if(slot != SAVE_RESET) // SAVE_RESET will reset the slot as though it does not exist, but keep the current slot for saving purposes.
 		slot = sanitize_integer(slot, 1, config.character_slots, initial(default_slot))
 		if(slot != default_slot)
@@ -53,19 +61,32 @@
 		S.cd = GLOB.using_map.character_load_path(S, default_slot)
 
 	loaded_character = S
-
+	**/
 	return 1
 
 /datum/preferences/proc/save_character()
-	if(!path)				return 0
-	var/savefile/S = new /savefile(path)
-	if(!S)					return 0
-	S.cd = GLOB.using_map.character_save_path(default_slot)
+//	if(!path)				return 0
+//	var/savefile/S = new /savefile(path)
+//	if(!S)					return 0
+//	S.cd = GLOB.using_map.character_save_path(default_slot)
+	var/use_path = load_path(client.ckey, "")
+	var/savefile/S = new("[use_path][chosen_slot].sav")
+	var/mob/living/carbon/human/mannequin = new()
+	dress_preview_mob(mannequin, TRUE)
+	mannequin.name = real_name
+	mannequin.real_name = real_name
+	mannequin.dna.ResetUIFrom(mannequin)
+	mannequin.dna.ready_dna(mannequin)
+	mannequin.dna.b_type = client.prefs.b_type
+	mannequin.sync_organ_dna()
+	mannequin.create_stack()
+	S << mannequin
+	qdel(mannequin)
 
-	S["version"] << SAVEFILE_VERSION_MAX
-	player_setup.save_character(S)
-	loaded_character = S
-	return S
+//	S["version"] << SAVEFILE_VERSION_MAX
+//	player_setup.save_character(S)
+//	loaded_character = S
+//	return S
 
 /datum/preferences/proc/sanitize_preferences()
 	player_setup.sanitize_setup()

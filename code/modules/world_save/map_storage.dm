@@ -66,7 +66,7 @@ var/global/list/saved = list()
 
 	for(var/ind in 1 to saving.len)
 		var/variable = saving[ind]
-		if(((variable != "pixel_x" && variable != "pixel_y") && (vars[variable] == initial(vars[variable])))
+		if(((variable != "pixel_x" && variable != "pixel_y") && (vars[variable] == initial(vars[variable]))))
 			continue
 		f["[variable]"] << vars[variable]
 
@@ -96,7 +96,7 @@ var/global/list/saved = list()
 /datum/proc/StandardRead(var/savefile/f)
 	var/list/loading
 	if(all_loaded)
-		all_loaded += src
+		all_loaded |= src
 
 	if(found_vars.Find("[type]"))
 		loading = found_vars["[type]"]
@@ -317,7 +317,7 @@ var/global/list/saved = list()
 	var/ind = 0
 	for(var/x in saved_vars)
 		ind++
-		dat += "[x] <a href='?_src_=savevars;Remove=[ind];Vars=\ref[src]'>(Remove)</a><br>"
+		dat += "[x] <a href='?_src_=vars;Remove_Var=[ind];Vars=\ref[src]'>(Remove)</a><br>"
 	dat += "<hr><br>"
-	dat += "<a href='?_src_=savevars;Vars=\ref[src];Add=1'>(Add new var)</a>"
+	dat += "<a href='?_src_=vars;Vars=\ref[src];Add_Var=1'>(Add new var)</a>"
 	M << browse(dat, "window=roundstats;size=500x600")

@@ -239,6 +239,7 @@ var/global/datum/controller/occupations/job_master
  *  This proc must not have any side effect besides of modifying "assigned_role".
  **/
 	proc/DivideOccupations()
+		/**
 		//Setup new player list and get the jobs list
 		Debug("Running DO")
 		SetupOccupations()
@@ -346,6 +347,7 @@ var/global/datum/controller/occupations/job_master
 				player.ready = 0
 				player.new_player_panel_proc()
 				unassigned -= player
+		**/
 		return 1
 
 

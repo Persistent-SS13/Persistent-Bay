@@ -80,6 +80,7 @@
 	mannequin.sync_organ_dna()
 	mannequin.create_stack()
 	S << mannequin
+	load_characters()
 	qdel(mannequin)
 
 //	S["version"] << SAVEFILE_VERSION_MAX

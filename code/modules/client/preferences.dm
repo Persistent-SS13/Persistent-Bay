@@ -154,7 +154,7 @@ datum/preferences
 	if(href_list["save"])
 		save_preferences()
 		save_character()
-		user << browse(null, "window=saves")
+		usr << browse(null, "window=saves")
 		char_panel.close()
 		return 0
 	else if(href_list["reload"])
@@ -357,8 +357,9 @@ datum/preferences
 			var/savefile/S =  new("[path_to][i].sav")
 			var/mob/M
 			S >> M
-			M.regenerate_icons()
-			character_list += M
+			if(M)
+				M.regenerate_icons()
+				character_list += M
 		else
 			character_list += "empty"
 	return 1
@@ -386,7 +387,7 @@ datum/preferences
 	panel.open()
 
 /datum/preferences/proc/slot_select(mob/user)
-	if(character_list || (character_list.len < config.character_slots))
+	if(!character_list || (character_list.len < config.character_slots))
 		load_characters()
 	var/dat  = list()
 	var/path_to = load_path(user.ckey,"")

@@ -6,6 +6,7 @@
 	var/totalPlayers = 0		 //Player counts for the Lobby tab
 	var/totalPlayersReady = 0
 	var/datum/browser/panel
+	var/datum/browser/load_panel
 	var/show_invalid_jobs = 0
 	universal_speak = 1
 
@@ -94,9 +95,9 @@
 			dat += "Open Slot [ind]<hr>"
 	dat += "<hr>"
 	dat += "</center></tt>"
-	panel = new(user, "Character Slots", "Character Slots", 300, 390, src)
-	panel.set_content(jointext(dat,null))
-	panel.open()
+	load_panel = new(user, "Character Slots", "Character Slots", 300, 390, src)
+	load_panel.set_content(jointext(dat,null))
+	load_panel.open()
 	
 /mob/new_player/Stat()
 	. = ..()
@@ -129,14 +130,16 @@
 		client.prefs.slot_select(src)
 		return 1
 	if(href_list["pickslot_load"])
-		panel.close()
+		src << browse(null, "window=saves")
+		load_panel.close()
 		chosen_slot = text2num(href_list["pickslot_load"])
 		message_admins("chosen slot: [chosen_slot]")
 		if(ticker.current_state <= GAME_STATE_PREGAME)
 			ready = 1
 		else
 			AttemptLateSpawn()
-		
+			close_spawn_windows()
+		return 0
 	if(href_list["ready"])
 		slot_select_load()
 	//	if(!ticker || ticker.current_state <= GAME_STATE_PREGAME) // Make sure we don't ready up after the round has started
@@ -520,6 +523,7 @@
 		message_admins("spawnturf :[spawn_turf] [spawn_turf.x], [spawn_turf.y], [spawn_turf.z]")
 	new_character.key = key		//Manually transfer the key to log them in
 	new_character.save_slot = chosen_slot
+	CreateModularRecord(new_character)
 	return new_character
 	/**
 	var/mob/living/carbon/human/new_character

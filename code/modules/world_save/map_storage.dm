@@ -1,6 +1,13 @@
+var/global/list/found_vars = list()
+var/global/list/all_loaded = list()
+var/global/list/saved = list()
+
 /datum
 	var/should_save = 1
 	var/map_storage_saved_vars = ""
+
+/atom/movable/lighting_overlay
+	should_save = 0
 
 /turf
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
@@ -27,259 +34,115 @@
 	loc = null
 	qdel(src)
 
-/datum/Write(savefile/f)
-	var/uid
-	if(!(src in all_saved))
-		all_saved |= src
-		uid = all_saved.len
+/datum/SaveList
+	var/list/InList
+
+/datum/SaveList/New(var/num)
+	if(num)
+		InList = new(num)
 	else
-		uid = all_saved.Find(src)
-	f["**uid"] << uid
+		InList = new()
+
+/datum/SaveList/proc/Add(var/object)
+	InList.Add(object)
+
+/datum/SaveList/Write(savefile/f)
+	for(var/turf/T in InList)
+		var/x = (T.x - (T.x % 20) + 1)
+		var/y = (T.y - (T.y % 20) + 1)
+		f.cd = "../../[T.z]/Chunk|[x]|[y]"
+		f["[T.x]-[T.y]"] << T
+
+/datum/proc/StandardWrite(var/savefile/f)
+	if(!should_save)
+		return
+
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
 	else
 		saving = get_saved_vars()
 		found_vars["[type]"] = saving
+
 	for(var/ind in 1 to saving.len)
 		var/variable = saving[ind]
-		if((variable != "pixel_x" && variable != "pixel_y") && (vars[variable] == initial(vars[variable])))
+		if(((variable != "pixel_x" && variable != "pixel_y") && (vars[variable] == initial(vars[variable])))
 			continue
 		f["[variable]"] << vars[variable]
-	return
+
+/datum/Write(savefile/f)
+	StandardWrite(f)
 
 /atom/Write(savefile/f)
-	var/uid
-	if(!(src in all_saved))
-		all_saved |= src
-		uid = all_saved.len
-	else
-		uid = all_saved.Find(src)
-	f["**uid"] << uid
-	var/list/saving
-	if(found_vars.Find("[type]"))
-		saving = found_vars["[type]"]
-	else
-		saving = get_saved_vars()
-		found_vars["[type]"] = saving
-	for(var/ind in 1 to saving.len)
-		var/variable = saving[ind]
-		if(vars[variable] == initial(vars[variable]))
-			continue
-		f["[variable]"] << vars[variable]
-	return
+	StandardWrite(f)
 
 /atom/movable/Write(savefile/f)
-	var/uid
-	if(!(src in all_saved))
-		all_saved |= src
-		uid = all_saved.len
-	else
-		uid = all_saved.Find(src)
-	f["**uid"] << uid
-	var/list/saving
-	if(found_vars.Find("[type]"))
-		saving = found_vars["[type]"]
-	else
-		saving = get_saved_vars()
-		found_vars["[type]"] = saving
-	for(var/ind in 1 to saving.len)
-		var/variable = saving[ind]
-		if(vars[variable] == initial(vars[variable]))
-			continue
-		f["[variable]"] << vars[variable]
-	return
+	StandardWrite(f)
 
 /obj/Write(savefile/f)
-	var/uid
-	if(!(src in all_saved))
-		all_saved |= src
-		uid = all_saved.len
-	else
-		uid = all_saved.Find(src)
-	f["**uid"] << uid
-	var/list/saving
-	if(found_vars.Find("[type]"))
-		saving = found_vars["[type]"]
-	else
-		saving = get_saved_vars()
-		found_vars["[type]"] = saving
-	for(var/ind in 1 to saving.len)
-		var/variable = saving[ind]
-		if(vars[variable] == initial(vars[variable]))
-			continue
-		f["[variable]"] << vars[variable]
-	return
+	StandardWrite(f)
 
 /turf/Write(savefile/f)
-	var/uid
-	if(!(src in all_saved))
-		all_saved |= src
-		uid = all_saved.len
-	else
-		uid = all_saved.Find(src)
-	f["**uid"] << uid
-	var/list/saving
-	if(found_vars.Find("[type]"))
-		saving = found_vars["[type]"]
-	else
-		saving = get_saved_vars()
-		found_vars["[type]"] = saving
-	for(var/ind in 1 to saving.len)
-		var/variable = saving[ind]
-		if(vars[variable] == initial(vars[variable]))
-			continue
-		f["[variable]"] << vars[variable]
+	StandardWrite(f)
 	f["area"] << src.loc
-	return
 
 /mob/Write(savefile/f)
-	var/uid
-	if(!(src in all_saved))
-		all_saved |= src
-		uid = all_saved.len
-	else
-		uid = all_saved.Find(src)
-	f["**uid"] << uid
-	var/list/saving
-	if(found_vars.Find("[type]"))
-		saving = found_vars["[type]"]
-	else
-		saving = get_saved_vars()
-		found_vars["[type]"] = saving
-	for(var/ind in 1 to saving.len)
-		var/variable = saving[ind]
-		if(vars[variable] == initial(vars[variable]))
-			continue
-		f["[variable]"] << vars[variable]
-	return
+	if(StandardWrite(f))
+		return
 
 /area/Write(savefile/f)
-	var/uid
-	if(!(src in all_saved))
-		all_saved |= src
-		uid = all_saved.len
-	else
-		uid = all_saved.Find(src)
-	f["**uid"] << uid
-	var/list/saving
-	if(found_vars.Find("[type]"))
-		saving = found_vars["[type]"]
-	else
-		saving = get_saved_vars()
-		found_vars["[type]"] = saving
-	for(var/ind in 1 to saving.len)
-		var/variable = saving[ind]
-		if(vars[variable] == initial(vars[variable]))
-			continue
-		f["[variable]"] << vars[variable]
-	return
+	StandardWrite(f)
 
-/datum/Read(savefile/f)
-	if(f.dir.Find("**uid"))
-		var/uid
-		f["**uid"] >> uid
-		if("[uid]" in loaded_by_uid)
-			. = loaded_by_uid["[uid]"]
-			qdel(src)
-			return .
-		else
-			loaded_by_uid["[uid]"] = src
-	var/list/loading
-	if(all_loaded)
-		all_loaded |= src
-	if(found_vars.Find("[type]"))
-		loading = found_vars["[type]"]
-	else
-		loading = get_saved_vars()
-		found_vars["[type]"] = loading
-	for(var/ind in 1 to loading.len)
-		var/variable = loading[ind]
-		if(f.dir.Find("[variable]"))
-			f["[variable]"] >> vars[variable]
-
-/turf/Read(savefile/f)
-	if(f.dir.Find("**uid"))
-		var/uid
-		f["**uid"] >> uid
-		if("[uid]" in loaded_by_uid)
-			. = loaded_by_uid["[uid]"]
-			qdel(src)
-			return .
-		else
-			loaded_by_uid["[uid]"] = src
-	var/list/loading
-	if(all_loaded)
-		all_loaded |= src
-	if(found_vars.Find("[type]"))
-		loading = found_vars["[type]"]
-	else
-		loading = get_saved_vars()
-		found_vars["[type]"] = loading
-	for(var/ind in 1 to loading.len)
-		var/variable = loading[ind]
-		if(f.dir.Find("[variable]"))
-			f["[variable]"] >> vars[variable]
-	var/area/A
-	f["area"] >> A
-	A.contents.Add(src)
-
-/area/Read(savefile/f)
-	if(f.dir.Find("**uid"))
-		var/uid
-		f["**uid"] >> uid
-		if("[uid]" in loaded_by_uid)
-			. = loaded_by_uid["[uid]"]
-			qdel(src)
-			return .
-		else
-			loaded_by_uid["[uid]"] = src
+/datum/proc/StandardRead(var/savefile/f)
 	var/list/loading
 	if(all_loaded)
 		all_loaded += src
+
 	if(found_vars.Find("[type]"))
 		loading = found_vars["[type]"]
 	else
 		loading = get_saved_vars()
 		found_vars["[type]"] = loading
+
 	for(var/ind in 1 to loading.len)
 		var/variable = loading[ind]
 		if(f.dir.Find("[variable]"))
 			f["[variable]"] >> vars[variable]
 
-var/global/list/found_vars = list()
-var/global/list/all_loaded = list()
-var/global/list/all_saved = list()
-var/global/list/loaded_by_uid = list()
+/datum/Read(savefile/f)
+	StandardRead(f)
+
+/turf/Read(savefile/f)
+	var/area/A
+	f["area"] >> A
+	A.contents.Add(src)
+	StandardRead(f)
+
+/area/Read(savefile/f)
+	StandardRead(f)
 
 /proc/Save_World()
 	var/starttime = REALTIMEOFDAY
 	fdel("map_saves/game.sav")
 	var/savefile/f = new("map_saves/game.sav")
+	var/datum/SaveList/L = new()
 	found_vars = list()
 	for(var/z in 1 to 3)
-		for(var/x in 1 to world.maxx step 20)
-			for(var/y in 1 to world.maxy step 20)
-				Save_Chunk(x,y,z, f)
-				sleep(-1)
+		for(var/x in 1 to world.maxx)
+			for(var/y in 1 to world.maxy)
+				var/turf/T = locate(x,y,z)
+				if(!T || (T.type == /turf/space && (!T.contents || !T.contents.len)) && T.loc.type == /area/space)
+					continue
+				L.Add(T)
+	f["PreObject"] << L
 
+	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
+	starttime = REALTIMEOFDAY
+	f.ExportText("/","Save.txt")
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
 	return 1
 
-/proc/Save_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
-	var/z = zi
-	xi = (xi - (xi % 20) + 1)
-	yi = (yi - (yi % 20) + 1)
-	f.cd = "/[z]/Chunk|[yi]|[xi]"
-	for(var/y in yi to yi + 20)
-		for(var/x in xi to xi + 20)
-			var/turf/T = locate(x,y,z)
-			if(!T || (T.type == /turf/space && (!T.contents || !T.contents.len)))
-				continue
-			f["[x]-[y]"] << T
-			f["[x]-[y]-A"] << T.loc
-			
 /proc/Load_World()
 	var/savefile/f = new("map_saves/game.sav")
 	var/starttime = REALTIMEOFDAY
@@ -292,7 +155,7 @@ var/global/list/loaded_by_uid = list()
 				Load_Chunk(x,y,z, f)
 				world << "Loaded [x]-[y]-[z]"
 				sleep(-1)
-	
+
 	for(var/ind in 1 to all_loaded.len)
 		var/datum/dat = all_loaded[ind]
 		dat.after_load()
@@ -303,18 +166,6 @@ var/global/list/loaded_by_uid = list()
 	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Loading Complete"
 	return 1
-/proc/Load_List(var/savefile/f)
-	var/list/L = new(80000)
-	f["Station1"] >> L
-
-/proc/Load_Initialize()
-	for(var/ind in 1 to all_loaded.len)
-		var/datum/dat = all_loaded[ind]
-		dat.after_load()
-		if(istype(dat,/atom/))
-			var/atom/A = dat
-			A.Initialize()
-	SSmachines.makepowernets()
 
 /proc/Load_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
 	var/z = zi
@@ -325,10 +176,15 @@ var/global/list/loaded_by_uid = list()
 		for(var/x in xi to xi + 20)
 			var/turf/T = locate(x,y,z)
 			f["[x]-[y]"] >> T
-			var/area/A
-			f["[x]-[y]-A"] >> A
-			if(A)
-				A.contents.Add(T)
+
+/proc/Load_Initialize()
+	for(var/ind in 1 to all_loaded.len)
+		var/datum/dat = all_loaded[ind]
+		dat.after_load()
+		if(istype(dat,/atom/))
+			var/atom/A = dat
+			A.Initialize()
+	SSmachines.makepowernets()
 
 /datum/proc/remove_saved(var/ind)
 	var/A = src.type
@@ -461,7 +317,7 @@ var/global/list/loaded_by_uid = list()
 	var/ind = 0
 	for(var/x in saved_vars)
 		ind++
-		dat += "[x] <a href='?_src_=vars;Remove_Var=[ind];Varsx=\ref[src]'>(Remove)</a><br>"
+		dat += "[x] <a href='?_src_=savevars;Remove=[ind];Vars=\ref[src]'>(Remove)</a><br>"
 	dat += "<hr><br>"
-	dat += "<a href='?_src_=vars;Varsx=\ref[src];Add_Var=1'>(Add new var)</a>"
+	dat += "<a href='?_src_=savevars;Vars=\ref[src];Add=1'>(Add new var)</a>"
 	M << browse(dat, "window=roundstats;size=500x600")

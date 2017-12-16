@@ -190,10 +190,10 @@ datum/preferences
 		g_skin = green
 		b_skin = blue
 
-/datum/preferences/proc/dress_preview_mob(var/mob/living/carbon/human/mannequin)
+/datum/preferences/proc/dress_preview_mob(var/mob/living/carbon/human/mannequin, var/finalize = FALSE)
 	var/update_icon = FALSE
-	copy_to(mannequin, TRUE)
-
+	copy_to(mannequin, !finalize)
+	mannequin.real_name = real_name
 	var/datum/job/previewJob
 	if(equip_preview_mob && job_master)
 		// Determine what job is marked as 'High' priority, and dress them up as such.
@@ -261,3 +261,22 @@ datum/preferences
 	preview_icon.Blend(stamp, ICON_OVERLAY, 49, 1)
 
 	preview_icon.Scale(preview_icon.Width() * 2, preview_icon.Height() * 2) // Scaling here to prevent blurring in the browser.
+
+/datum/preferences/proc/get_preview_icon(var/atom/movable/mannequin)
+	var/icon/ico = icon('icons/effects/128x48.dmi', "steel")
+	ico.Scale(48+32, 16+32)
+
+	mannequin.dir = NORTH
+	var/icon/stamp = getFlatIcon(mannequin)
+	ico.Blend(stamp, ICON_OVERLAY, 25, 17)
+
+	mannequin.dir = WEST
+	stamp = getFlatIcon(mannequin)
+	ico.Blend(stamp, ICON_OVERLAY, 1, 9)
+
+	mannequin.dir = SOUTH
+	stamp = getFlatIcon(mannequin)
+	ico.Blend(stamp, ICON_OVERLAY, 49, 1)
+
+	ico.Scale(ico.Width() * 2, ico.Height() * 2) // Scaling here to prevent blurring in the browser.
+	return ico

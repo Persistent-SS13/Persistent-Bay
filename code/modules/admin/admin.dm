@@ -763,6 +763,31 @@ var/global/floorIsLava = 0
 	log_and_message_admins("toggled deadchat.")
 	feedback_add_details("admin_verb","TDSAY") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc
 
+/datum/admins/proc/savenow()
+	set category = "Server"
+	set desc="Saves Station and Characters"
+	set name="Save Station and Characters"
+
+	if(!check_rights(R_ADMIN))
+		return
+
+	for(var/datum/mind/employee in ticker.minds)
+		if(!employee.current || !employee.current.ckey) continue
+		var/save_path = load_path(employee.current.ckey, "")
+		if(fexists("[save_path][employee.current.save_slot].sav"))
+			fdel("[save_path][employee.current.save_slot].sav")
+		var/savefile/f = new("[save_path][employee.current.save_slot].sav")
+		f << employee.current
+		to_chat(employee.current, "You character has been saved.")
+	Save_World()
+/datum/admins/proc/loadnow()
+	set category = "Server"
+	set desc="Loads the Station"
+	set name="Load Station"
+
+	if(!check_rights(R_ADMIN))
+		return
+	Load_World()
 /datum/admins/proc/toggleoocdead()
 	set category = "Server"
 	set desc="Toggle Dead OOC."

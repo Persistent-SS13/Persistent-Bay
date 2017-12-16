@@ -4,6 +4,51 @@
 #define TOPIC_UPDATE_PREVIEW 4
 #define TOPIC_REFRESH_UPDATE_PREVIEW (TOPIC_REFRESH|TOPIC_UPDATE_PREVIEW)
 
+// PERSISTENCE EDIT
+// This greatly improves the way inputs work, plus its really hard to understand/use, it fits right in with baycode
+proc
+	get_input(wait = 100 as num,mob/U,Message,Title,Default,Type,list/List)
+		var/prompts/input/Input = new
+		var/Option
+		if(wait) spawn(wait) if(!Option) del Input
+		Option = Input.option(U,Message,Title,Default,Type,List)
+		return Option
+	get_alert(wait = 100 as num,mob/U,Message,Title,Button1,Button2,Button3)
+		var/prompts/alert/Alert = new
+		var/Option
+		if(wait) spawn(wait) if(!Option) del Alert
+		Option = Alert.option(U,Message,Title,Button1,Button2,Button3)
+		return Option
+prompts
+	input
+		proc/option(mob/U,Message="",Title="",Default="",Type,list/List)
+			switch(Type)
+				if("text") return input(U,Message,Title,Default) as text
+				if("text|null") return input(U,Message,Title,Default) as text|null
+				if("password") return input(U,Message,Title,Default) as password
+				if("password|null") return input(U,Message,Title,Default) as password|null
+				if("command_text") return input(U,Message,Title,Default) as command_text
+				if("command_text|null") return input(U,Message,Title,Default) as command_text|null
+				if("icon") return input(U,Message,Title,Default) as icon
+				if("icon|null") return input(U,Message,Title,Default) as icon|null
+				if("sound") return input(U,Message,Title,Default) as sound
+				if("sound|null") return input(U,Message,Title,Default) as sound|null
+				if("num") return input(U,Message,Title,Default) as num
+				if("num|null") return input(U,Message,Title,Default) as num|null
+				if("message") return input(U,Message,Title,Default) as message
+				if("message|null") return input(U,Message,Title,Default) as message|null
+				if("mob") return input(U,Message,Title,Default) as mob in List
+				if("obj") return input(U,Message,Title,Default) as obj in List
+				if("turf") return input(U,Message,Title,Default) as turf in List
+				if("area") return input(U,Message,Title,Default) as area in List
+				if("color") return input(U,Message , Title, Default) as color|null
+				else return input(U,Message,Title,Default) in List
+	alert
+		proc/option(mob/U,Message,Title,Button1="Ok",Button2,Button3)
+			return alert(U,Message,Title,Button1,Button2,Button3)
+//to use them
+
+// PERSISTENCE EDIT ENDS HERE
 /datum/category_group/player_setup_category/general_preferences
 	name = "General"
 	sort_order = 1
@@ -19,30 +64,11 @@
 	sort_order = 3
 	category_item_type = /datum/category_item/player_setup_item/occupation
 
-/datum/category_group/player_setup_category/appearance_preferences
-	name = "Roles"
-	sort_order = 4
-	category_item_type = /datum/category_item/player_setup_item/antagonism
-
-/datum/category_group/player_setup_category/relations_preferences
-	name = "Matchmaking"
-	sort_order = 5
-	category_item_type = /datum/category_item/player_setup_item/relations
-
-/datum/category_group/player_setup_category/loadout_preferences
-	name = "Loadout"
-	sort_order = 6
-	category_item_type = /datum/category_item/player_setup_item/loadout
-
 /datum/category_group/player_setup_category/global_preferences
 	name = "Global"
 	sort_order = 7
 	category_item_type = /datum/category_item/player_setup_item/player_global
 
-/datum/category_group/player_setup_category/law_pref
-	name = "Laws"
-	sort_order = 8
-	category_item_type = /datum/category_item/player_setup_item/law_pref
 
 
 /****************************

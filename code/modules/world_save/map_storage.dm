@@ -2,6 +2,21 @@ var/global/list/found_vars = list()
 var/global/list/all_loaded = list()
 var/global/list/saved = list()
 
+
+/obj/item/map_storage_debugger
+	name = "DEBUG ITEM"
+	desc = "DEBUG ITEM"
+	icon = 'icons/obj/device.dmi'
+	icon_state = "eftpos"
+	var/list/spawned = list()
+
+/obj/item/map_storage_debugger/attack_self(mob/user)
+	var/type_path = input(user, "Enter the typepath you want spawned", "debugger","") as text|null
+	var/datum/D = new type_path()
+	if(D)
+		spawned |= D
+	else
+		to_chat(user, "No datum of type [type_path]")
 /datum
 	var/should_save = 1
 	var/map_storage_saved_vars = ""
@@ -33,7 +48,10 @@ var/global/list/saved = list()
 /atom/movable/lighting_overlay/after_load()
 	loc = null
 	qdel(src)
-
+/mob/living/carbon/human/after_load()
+	..()
+	redraw_inv()
+	regenerate_icons()
 /datum/SaveList
 	var/list/InList
 
@@ -52,6 +70,14 @@ var/global/list/saved = list()
 		var/y = (T.y - (T.y % 20) + 1)
 		f.cd = "../../[T.z]/Chunk|[x]|[y]"
 		f["[T.x]-[T.y]"] << T
+/datum/SaveList/Read(savefile/f)
+	for(var/z in 1 to 5)
+		for(var/x in 1 to world.maxx step 20)
+			for(var/y in 1 to world.maxy step 20)
+				Load_Chunk(x,y,z, f)
+				world << "Loaded [x]-[y]-[z]"
+				sleep(-1)
+
 
 /datum/proc/StandardWrite(var/savefile/f)
 	if(!should_save)
@@ -66,7 +92,7 @@ var/global/list/saved = list()
 
 	for(var/ind in 1 to saving.len)
 		var/variable = saving[ind]
-		if(((variable != "pixel_x" && variable != "pixel_y") && (vars[variable] == initial(vars[variable])))
+		if(((variable != "pixel_x" && variable != "pixel_y") && (vars[variable] == initial(vars[variable]))))
 			continue
 		f["[variable]"] << vars[variable]
 
@@ -96,7 +122,7 @@ var/global/list/saved = list()
 /datum/proc/StandardRead(var/savefile/f)
 	var/list/loading
 	if(all_loaded)
-		all_loaded += src
+		all_loaded |= src
 
 	if(found_vars.Find("[type]"))
 		loading = found_vars["[type]"]
@@ -122,20 +148,24 @@ var/global/list/saved = list()
 	StandardRead(f)
 
 /proc/Save_World()
+	world << "The World has paused to write to file; Remain connected, this process usually takes less than 30 seconds."
+
 	var/starttime = REALTIMEOFDAY
 	fdel("map_saves/game.sav")
 	var/savefile/f = new("map_saves/game.sav")
 	var/datum/SaveList/L = new()
 	found_vars = list()
-	for(var/z in 1 to 3)
+	for(var/z in 1 to 5)
 		for(var/x in 1 to world.maxx)
 			for(var/y in 1 to world.maxy)
 				var/turf/T = locate(x,y,z)
 				if(!T || (T.type == /turf/space && (!T.contents || !T.contents.len)) && T.loc.type == /area/space)
 					continue
 				L.Add(T)
+	f.cd = "/main"
 	f["PreObject"] << L
-
+	f.cd = "/extras"
+	f["records"] << GLOB.all_crew_records
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	starttime = REALTIMEOFDAY
 	f.ExportText("/","Save.txt")
@@ -144,18 +174,14 @@ var/global/list/saved = list()
 	return 1
 
 /proc/Load_World()
+	if(!fexists("map_saves/game.sav")) return
 	var/savefile/f = new("map_saves/game.sav")
 	var/starttime = REALTIMEOFDAY
-	world.maxz++
 	all_loaded = list()
 	found_vars = list()
-	for(var/z in 1 to 1)
-		for(var/x in 1 to world.maxx step 20)
-			for(var/y in 1 to world.maxy step 20)
-				Load_Chunk(x,y,z, f)
-				world << "Loaded [x]-[y]-[z]"
-				sleep(-1)
-
+	f.cd = "/main"
+	var/datum/SaveList/L
+	f["PreObject"] >> L
 	for(var/ind in 1 to all_loaded.len)
 		var/datum/dat = all_loaded[ind]
 		dat.after_load()
@@ -163,6 +189,8 @@ var/global/list/saved = list()
 			var/atom/A = dat
 			A.Initialize()
 	SSmachines.makepowernets()
+	f.cd = "/extras"
+	f["records"] >> GLOB.all_crew_records
 	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Loading Complete"
 	return 1
@@ -317,7 +345,7 @@ var/global/list/saved = list()
 	var/ind = 0
 	for(var/x in saved_vars)
 		ind++
-		dat += "[x] <a href='?_src_=savevars;Remove=[ind];Vars=\ref[src]'>(Remove)</a><br>"
+		dat += "[x] <a href='?_src_=vars;Remove_Var=[ind];Varsx=\ref[src]'>(Remove)</a><br>"
 	dat += "<hr><br>"
-	dat += "<a href='?_src_=savevars;Vars=\ref[src];Add=1'>(Add new var)</a>"
+	dat += "<a href='?_src_=vars;Varsx=\ref[src];Add_Var=1'>(Add new var)</a>"
 	M << browse(dat, "window=roundstats;size=500x600")

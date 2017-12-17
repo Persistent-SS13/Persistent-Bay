@@ -358,7 +358,7 @@ datum/preferences
 			var/mob/M
 			S >> M
 			if(M)
-				M.regenerate_icons()
+				M.after_load()
 				character_list += M
 		else
 			character_list += "empty"

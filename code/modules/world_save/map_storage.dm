@@ -50,8 +50,8 @@ var/global/list/saved = list()
 	qdel(src)
 /mob/living/carbon/human/after_load()
 	..()
-	redraw_inv()
 	regenerate_icons()
+	redraw_inv()
 /datum/SaveList
 	var/list/InList
 
@@ -70,15 +70,6 @@ var/global/list/saved = list()
 		var/y = (T.y - (T.y % 20) + 1)
 		f.cd = "../../[T.z]/Chunk|[x]|[y]"
 		f["[T.x]-[T.y]"] << T
-/datum/SaveList/Read(savefile/f)
-	for(var/z in 1 to 5)
-		for(var/x in 1 to world.maxx step 20)
-			for(var/y in 1 to world.maxy step 20)
-				Load_Chunk(x,y,z, f)
-				world << "Loaded [x]-[y]-[z]"
-				sleep(-1)
-
-
 /datum/proc/StandardWrite(var/savefile/f)
 	if(!should_save)
 		return
@@ -162,7 +153,6 @@ var/global/list/saved = list()
 				if(!T || (T.type == /turf/space && (!T.contents || !T.contents.len)) && T.loc.type == /area/space)
 					continue
 				L.Add(T)
-	f.cd = "/main"
 	f["PreObject"] << L
 	f.cd = "/extras"
 	f["records"] << GLOB.all_crew_records
@@ -179,9 +169,13 @@ var/global/list/saved = list()
 	var/starttime = REALTIMEOFDAY
 	all_loaded = list()
 	found_vars = list()
-	f.cd = "/main"
-	var/datum/SaveList/L
-	f["PreObject"] >> L
+	for(var/z in 1 to 5)
+		for(var/x in 1 to world.maxx step 20)
+			for(var/y in 1 to world.maxy step 20)
+				Load_Chunk(x,y,z, f)
+				world << "Loaded [x]-[y]-[z]"
+				sleep(-1)
+
 	for(var/ind in 1 to all_loaded.len)
 		var/datum/dat = all_loaded[ind]
 		dat.after_load()

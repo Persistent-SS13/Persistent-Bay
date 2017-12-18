@@ -4,6 +4,7 @@
  *		Anesthetic
  *		Air
  *		Phoron
+ *		Phorosian Phoron
  *		Emergency Oxygen
  */
 
@@ -94,6 +95,14 @@
 		user.remove_from_mob(src)
 		src.loc = F
 	return
+	
+/*
+ * Phorosian Phoron
+ */
+/obj/item/weapon/tank/phoron/phorosian
+	desc = "The lifeblood of Phorosians.  Warning:  Extremely flammable, do not inhale (unless you're a Phorosian)."
+	icon_state = "plasma_fr"
+	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
 
 /*
  * Emergency Oxygen

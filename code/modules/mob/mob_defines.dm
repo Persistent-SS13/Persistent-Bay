@@ -60,7 +60,8 @@
 	var/transforming = null	//Carbon
 	var/hand = null
 	var/real_name = null
-
+	var/save_slot = 0
+	
 	var/bhunger = 0			//Carbon
 
 	var/druggy = 0			//Carbon

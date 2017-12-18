@@ -6,6 +6,7 @@ datum/preferences
 	//doohickeys for savefiles
 	var/path
 	var/default_slot = 1				//Holder so it doesn't default to slot 1, rather the last one used
+	var/chosen_slot = 0
 	var/savefile_version = 0
 
 	//non-preference stuff
@@ -30,7 +31,10 @@ datum/preferences
 	var/savefile/loaded_character
 	var/datum/category_collection/player_setup_collection/player_setup
 	var/datum/browser/panel
-
+	var/datum/browser/char_panel
+	// Persistent Edit, Adding the character list..
+	var/list/character_list = list()
+	var/list/icon_list = list()
 /datum/preferences/New(client/C)
 	player_setup = new(src)
 	gender = pick(MALE, FEMALE)
@@ -41,9 +45,9 @@ datum/preferences
 		client = C
 		client_ckey = C.ckey
 		if(!IsGuestKey(C.key))
-			load_path(C.ckey)
+			path = load_path(C.ckey)
 			load_preferences()
-			load_and_update_character()
+		//	load_and_update_character()
 
 /datum/preferences/proc/load_and_update_character(var/slot)
 	load_character(slot)
@@ -114,12 +118,8 @@ datum/preferences
 	var/dat = "<html><body><center>"
 
 	if(path)
-		dat += "Slot - "
-		dat += "<a href='?src=\ref[src];load=1'>Load slot</a> - "
-		dat += "<a href='?src=\ref[src];save=1'>Save slot</a> - "
-		dat += "<a href='?src=\ref[src];resetslot=1'>Reset slot</a> - "
-		dat += "<a href='?src=\ref[src];reload=1'>Reload slot</a>"
-
+		dat += "Finish Character - "
+		dat += "<a href='?src=\ref[src];save=1'>Finalize</a>"
 	else
 		dat += "Please create an account to save your preferences."
 
@@ -129,9 +129,9 @@ datum/preferences
 	dat += player_setup.content(user)
 
 	dat += "</html></body>"
-	var/datum/browser/popup = new(user, "Character Setup","Character Setup", 1200, 800, src)
-	popup.set_content(dat)
-	popup.open()
+	char_panel = new(user, "NT Employee Application","NT Employee Application", 1200, 800, src)
+	char_panel.set_content(dat)
+	char_panel.open()
 
 /datum/preferences/proc/process_link(mob/user, list/href_list)
 
@@ -154,6 +154,9 @@ datum/preferences
 	if(href_list["save"])
 		save_preferences()
 		save_character()
+		usr << browse(null, "window=saves")
+		char_panel.close()
+		return 0
 	else if(href_list["reload"])
 		load_preferences()
 		load_character()
@@ -165,6 +168,12 @@ datum/preferences
 	else if(href_list["changeslot"])
 		load_character(text2num(href_list["changeslot"]))
 		sanitize_preferences()
+		close_load_dialog(usr)
+	else if(href_list["pickslot"])
+		chosen_slot = text2num(href_list["pickslot"])
+		randomize_appearance_and_body_for()
+		sanitize_preferences()
+		client.prefs.ShowChoices(src)
 		close_load_dialog(usr)
 	else if(href_list["resetslot"])
 		if(real_name != input("This will reset the current slot. Enter the character's full name to confirm."))
@@ -340,7 +349,20 @@ datum/preferences
 
 	return
 
-
+/datum/preferences/proc/load_characters()
+	var/path_to = load_path(client.ckey, "")
+	character_list = list()
+	for(var/i=1, i<= config.character_slots, i++)
+		if(fexists("[path_to][i].sav"))
+			var/savefile/S =  new("[path_to][i].sav")
+			var/mob/M
+			S >> M
+			if(M)
+				M.after_load()
+				character_list += M
+		else
+			character_list += "empty"
+	return 1
 /datum/preferences/proc/open_load_dialog(mob/user)
 	var/dat  = list()
 	dat += "<body>"
@@ -364,6 +386,30 @@ datum/preferences
 	panel.set_content(jointext(dat,null))
 	panel.open()
 
+/datum/preferences/proc/slot_select(mob/user)
+	if(!character_list || (character_list.len < config.character_slots))
+		load_characters()
+	var/dat  = list()
+	var/path_to = load_path(user.ckey,"")
+	dat += "<body>"
+	dat += "<tt><center>"
+	dat += "<b>Select the character slot you want to save this character under.</b><hr>"
+	var/name
+	var/ind = 0
+	for(var/x in character_list)
+		ind++
+		var/mob/M = x
+		if(istype(M))
+			dat += "<b>[M.real_name]</b><br>"
+		else
+			dat += "<a href='?src=\ref[src];pickslot=[ind]'>Open Slot [ind]</a><br>"
+	dat += "<hr>"
+	dat += "</center></tt>"
+	panel = new(user, "Character Slots", "Character Slots", 300, 390, src)
+	panel.set_content(jointext(dat,null))
+	panel.open()
+
+	
 /datum/preferences/proc/close_load_dialog(mob/user)
 	user << browse(null, "window=saves")
 	panel.close()

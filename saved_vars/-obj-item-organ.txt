@@ -1,0 +1,1 @@
+status%0d%0a=&robotic%0d%0a=&owner%0d%0a=&dna%0d%0a=&species%0d%0a=&damage%0d%0a=&rejecting%0d%0a=

@@ -2,7 +2,8 @@
 	w_class = ITEM_SIZE_TINY
 	var/required_slot_flags
 	var/required_free_body_parts
-
+	var/icon_path = ""
+	icon = 'icons/mob/human.dmi'
 /obj/item/underwear/afterattack(var/atom/target, var/mob/user, var/proximity)
 	if(!proximity)
 		return // Might as well check

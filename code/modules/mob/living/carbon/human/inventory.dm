@@ -220,8 +220,66 @@ This saves us from having to call add_fingerprint() any time something is put in
 
 
 
+/mob/living/carbon/human/proc/redraw_inv()
+	var/obj/item/W
+	if(back)
+		W = back
+		W.hud_layerise()
+	if(wear_mask)
+		W = wear_mask
+		W.hud_layerise()
+	if(handcuffed)
+		W = handcuffed
+		W.hud_layerise()
+	if(l_hand)
+		W = l_hand
+		W.hud_layerise()
+	if(r_hand)
+		W = r_hand
+		W.hud_layerise()
+	if(belt)
+		W = belt
+		W.hud_layerise()
+	if(wear_id)
+		W = wear_id
+		W.hud_layerise()
+	if(l_ear)
+		W = l_ear
+		W.hud_layerise()
+	if(r_ear)
+		W = r_ear
+		W.hud_layerise()
+	if(glasses)
+		W = glasses
+		W.hud_layerise()
+	if(gloves)
+		W = gloves
+		W.hud_layerise()
+	if(head)
+		W = head
+		W.hud_layerise()
+	if(shoes)
+		W = shoes
+		W.hud_layerise()
+	if(wear_suit)
+		W = wear_suit
+		W.hud_layerise()
+	if(w_uniform)
+		W = w_uniform
+		W.hud_layerise()
+	if(l_store)
+		W = l_store
+		W.hud_layerise()
+	if(r_store)
+		W = r_store
+		W.hud_layerise()
+	if(s_store)
+		W = s_store
+		W.hud_layerise()
+
 //This is an UNSAFE proc. Use mob_can_equip() before calling this one! Or rather use equip_to_slot_if_possible() or advanced_equip_to_slot_if_possible()
 //set redraw_mob to 0 if you don't wish the hud to be updated - if you're doing it manually in your own proc.
+	
 /mob/living/carbon/human/equip_to_slot(obj/item/W as obj, slot, redraw_mob = 1)
 
 	if(!slot) return

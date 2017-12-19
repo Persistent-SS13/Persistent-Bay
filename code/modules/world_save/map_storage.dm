@@ -33,11 +33,6 @@ var/global/list/saved = list()
 /area
 	map_storage_saved_vars = "name;power_equip;power_light;power_environ;always_unpowered;uid;global_uid"
 
-/client/verb/SaveWorld()
-	Save_World()
-
-/client/verb/LoadWorld()
-	Load_World()
 /datum/proc/after_load()
 	return
 
@@ -65,11 +60,25 @@ var/global/list/saved = list()
 	InList.Add(object)
 
 /datum/SaveList/Write(savefile/f)
+	var/starttime = REALTIMEOFDAY
 	for(var/turf/T in InList)
-		var/x = (T.x - (T.x % 20) + 1)
-		var/y = (T.y - (T.y % 20) + 1)
-		f.cd = "../../[T.z]/Chunk|[x]|[y]"
-		f["[T.x]-[T.y]"] << T
+		f["[T.x]-[T.y]-[T.z]"] << T
+	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
+	world << "Saving Complete"
+/datum/SaveList/Read(savefile/f)
+	var/starttime = REALTIMEOFDAY
+	var/v = null
+	for(var/variable in f.dir)
+		f[variable] >> v
+	for(var/ind in 1 to all_loaded.len)
+		var/datum/dat = all_loaded[ind]
+		dat.after_load()
+		if(istype(dat,/atom/))
+			var/atom/A = dat
+			A.Initialize()
+	SSmachines.makepowernets()
+	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
+	world << "Loading Complete"
 /datum/proc/StandardWrite(var/savefile/f)
 	if(!should_save)
 		return
@@ -141,7 +150,6 @@ var/global/list/saved = list()
 /proc/Save_World()
 	world << "The World has paused to write to file; Remain connected, this process usually takes less than 30 seconds."
 
-	var/starttime = REALTIMEOFDAY
 	fdel("map_saves/game.sav")
 	var/savefile/f = new("map_saves/game.sav")
 	var/datum/SaveList/L = new()
@@ -153,14 +161,11 @@ var/global/list/saved = list()
 				if(!T || (T.type == /turf/space && (!T.contents || !T.contents.len)) && T.loc.type == /area/space)
 					continue
 				L.Add(T)
-	f["PreObject"] << L
 	f.cd = "/extras"
 	f["records"] << GLOB.all_crew_records
-	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
-	starttime = REALTIMEOFDAY
-	f.ExportText("/","Save.txt")
-	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
-	world << "Saving Complete"
+	f.cd = "/main"
+	f["PreObject"] << L
+
 	return 1
 
 /proc/Load_World()
@@ -169,24 +174,11 @@ var/global/list/saved = list()
 	var/starttime = REALTIMEOFDAY
 	all_loaded = list()
 	found_vars = list()
-	for(var/z in 1 to 5)
-		for(var/x in 1 to world.maxx step 20)
-			for(var/y in 1 to world.maxy step 20)
-				Load_Chunk(x,y,z, f)
-				world << "Loaded [x]-[y]-[z]"
-				sleep(-1)
-
-	for(var/ind in 1 to all_loaded.len)
-		var/datum/dat = all_loaded[ind]
-		dat.after_load()
-		if(istype(dat,/atom/))
-			var/atom/A = dat
-			A.Initialize()
-	SSmachines.makepowernets()
+	var/v
 	f.cd = "/extras"
 	f["records"] >> GLOB.all_crew_records
-	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
-	world << "Loading Complete"
+	f.cd = "/main"
+	f["PreObject"] >> v
 	return 1
 
 /proc/Load_Chunk(var/xi, var/yi, var/zi, var/savefile/f)

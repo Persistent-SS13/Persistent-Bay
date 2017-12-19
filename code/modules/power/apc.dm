@@ -215,7 +215,8 @@
 	if(emp_hardened)
 		return
 	failure_timer = max(failure_timer, round(duration))
-
+/obj/machinery/power/apc/before_load()
+	qdel(terminal)
 /obj/machinery/power/apc/proc/make_terminal()
 	// create a terminal object at the same position as original turf loc
 	// wires will attach to this

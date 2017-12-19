@@ -19,7 +19,11 @@
 	var/turf/T = src.loc
 	if(level==1) hide(!T.is_plating())
 	return
-
+/obj/machinery/power/terminal/after_load()
+	..()
+	var/turf/T = src.loc
+	if(level==1) hide(!T.is_plating())
+	return
 /obj/machinery/power/terminal/Destroy()
 	if(master)
 		master.disconnect_terminal(src)

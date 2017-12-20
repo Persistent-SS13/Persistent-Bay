@@ -10,8 +10,6 @@ SUBSYSTEM_DEF(mapping)
 
 /datum/controller/subsystem/mapping/Initialize(timeofday)
 	preloadTemplates()
-	spawn(0)
-		Load_World()
 	..()
 
 /datum/controller/subsystem/mapping/Recover()

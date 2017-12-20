@@ -442,7 +442,6 @@
 	if(job_master.ShouldCreateRecords(job.title))
 		if(character.mind.assigned_role != "Cyborg")
 			CreateModularRecord(character)
-			ticker.minds += character.mind//Cyborgs and AIs handle this in the transform proc.	//TODO!!!!! ~Carn
 			AnnounceArrival(character, job, spawnpoint.msg)
 		else
 			AnnounceCyborg(character, job, spawnpoint.msg)
@@ -510,6 +509,7 @@
 		message_admins("null new_character")
 		return
 	if(!new_character.mind)
+		
 		mind.active = 0					//we wish to transfer the key manually
 		mind.original = new_character
 		if(client.prefs.memory)
@@ -523,6 +523,8 @@
 		message_admins("spawnturf :[spawn_turf] [spawn_turf.x], [spawn_turf.y], [spawn_turf.z]")
 	new_character.key = key		//Manually transfer the key to log them in
 	new_character.save_slot = chosen_slot
+	ticker.minds |= new_character.mind//Cyborgs and AIs handle this in the transform proc.	//TODO!!!!! ~Carn
+
 	CreateModularRecord(new_character)
 	return new_character
 	/**

@@ -225,113 +225,57 @@ This saves us from having to call add_fingerprint() any time something is put in
 	if(back)
 		W = back
 		W.hud_layerise()
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_back)
-				W.screen_loc = gear["loc"]
 	if(wear_mask)
 		W = wear_mask
 		W.hud_layerise()
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_wear_mask)
-				W.screen_loc = gear["loc"]
 	if(handcuffed)
 		W = handcuffed
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_handcuffed)
-				W.screen_loc = gear["loc"]
+		W.hud_layerise()
 	if(l_hand)
 		W = l_hand
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_l_hand)
-				W.screen_loc = gear["loc"]
+		W.hud_layerise()
 	if(r_hand)
 		W = r_hand
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_r_hand)
-				W.screen_loc = gear["loc"]
+		W.hud_layerise()
 	if(belt)
 		W = belt
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_belt)
-				W.screen_loc = gear["loc"]
+		W.hud_layerise()
 	if(wear_id)
 		W = wear_id
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_wear_id)
-				W.screen_loc = gear["loc"]
+		W.hud_layerise()
 	if(l_ear)
 		W = l_ear
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_l_ear)
-				W.screen_loc = gear["loc"]
+		W.hud_layerise()
 	if(r_ear)
 		W = r_ear
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_r_ear)
-				W.screen_loc = gear["loc"]
+		W.hud_layerise()
 	if(glasses)
 		W = glasses
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_glasses)
-				W.screen_loc = gear["loc"]
+		W.hud_layerise()
 	if(gloves)
 		W = gloves
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_gloves)
-				W.screen_loc = gear["loc"]
+		W.hud_layerise()
 	if(head)
 		W = head
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_head)
-				W.screen_loc = gear["loc"]
+		W.hud_layerise()
 	if(shoes)
 		W = shoes
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_shoes)
-				W.screen_loc = gear["loc"]
+		W.hud_layerise()
 	if(wear_suit)
 		W = wear_suit
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_wear_suit)
-				W.screen_loc = gear["loc"]
+		W.hud_layerise()
 	if(w_uniform)
 		W = w_uniform
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_w_uniform)
-				W.screen_loc = gear["loc"]
+		W.hud_layerise()
 	if(l_store)
 		W = l_store
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_l_store)
-				W.screen_loc = gear["loc"]
+		W.hud_layerise()
 	if(r_store)
 		W = r_store
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_r_store)
-				W.screen_loc = gear["loc"]
+		W.hud_layerise()
 	if(s_store)
 		W = s_store
-		for(var/s in species.hud.gear)
-			var/list/gear = species.hud.gear[s]
-			if(gear["slot"] == slot_s_store)
-				W.screen_loc = gear["loc"]
+		W.hud_layerise()
 
 //This is an UNSAFE proc. Use mob_can_equip() before calling this one! Or rather use equip_to_slot_if_possible() or advanced_equip_to_slot_if_possible()
 //set redraw_mob to 0 if you don't wish the hud to be updated - if you're doing it manually in your own proc.

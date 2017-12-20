@@ -35,7 +35,8 @@ var/global/list/saved = list()
 
 /datum/proc/after_load()
 	return
-
+/area/after_load()
+	power_change()
 /datum/proc/before_load()
 	return
 
@@ -123,6 +124,7 @@ var/global/list/saved = list()
 	StandardWrite(f)
 
 /datum/proc/StandardRead(var/savefile/f)
+	before_load()
 	var/list/loading
 	if(all_loaded)
 		all_loaded |= src

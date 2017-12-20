@@ -25,7 +25,7 @@ var/global/list/saved = list()
 	should_save = 0
 
 /turf
-	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
+	map_storage_saved_vars = "loc;density;icon_state;name;pixel_x;pixel_y;contents;dir"
 
 /obj
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
@@ -69,8 +69,24 @@ var/global/list/saved = list()
 	var/v = null
 	for(var/variable in f.dir)
 		f[variable] >> v
-	
+/datum/SaveList/Read(savefile/f)
+	var/starttime = REALTIMEOFDAY
+	var/v = null
+	for(var/variable in f.dir)
+		f[variable] >> v
+	for(var/ind in 1 to all_loaded.len)
+		var/datum/dat = all_loaded[ind]
+		dat.after_load()
+		if(istype(dat,/atom/))
+			var/atom/A = dat
+			A.Initialize()
+	SSmachines.makepowernets()
+	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
+	world << "Loading Complete"
 /datum/proc/StandardWrite(var/savefile/f)
+	if(!should_save)
+		return
+
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
@@ -80,114 +96,37 @@ var/global/list/saved = list()
 
 	for(var/ind in 1 to saving.len)
 		var/variable = saving[ind]
-		if(vars[variable] == initial(vars[variable]))
+		if(((variable != "pixel_x" && variable != "pixel_y") && (vars[variable] == initial(vars[variable]))))
 			continue
 		f["[variable]"] << vars[variable]
 
 /datum/Write(savefile/f)
-	var/list/saving
-	if(found_vars.Find("[type]"))
-		saving = found_vars["[type]"]
-	else
-		saving = get_saved_vars()
-		found_vars["[type]"] = saving
-
-	for(var/ind in 1 to saving.len)
-		var/variable = saving[ind]
-		if(vars[variable] == initial(vars[variable]))
-			continue
-		f["[variable]"] << vars[variable]
-
+	StandardWrite(f)
 
 /atom/Write(savefile/f)
-	var/list/saving
-	if(found_vars.Find("[type]"))
-		saving = found_vars["[type]"]
-	else
-		saving = get_saved_vars()
-		found_vars["[type]"] = saving
-
-	for(var/ind in 1 to saving.len)
-		var/variable = saving[ind]
-		if(vars[variable] == initial(vars[variable]))
-			continue
-		f["[variable]"] << vars[variable]
-
+	StandardWrite(f)
 
 /atom/movable/Write(savefile/f)
-	var/list/saving
-	if(found_vars.Find("[type]"))
-		saving = found_vars["[type]"]
-	else
-		saving = get_saved_vars()
-		found_vars["[type]"] = saving
-
-	for(var/ind in 1 to saving.len)
-		var/variable = saving[ind]
-		if(vars[variable] == initial(vars[variable]))
-			continue
-		f["[variable]"] << vars[variable]
-
+	StandardWrite(f)
 
 /obj/Write(savefile/f)
-	var/list/saving
-	if(found_vars.Find("[type]"))
-		saving = found_vars["[type]"]
-	else
-		saving = get_saved_vars()
-		found_vars["[type]"] = saving
-
-	for(var/ind in 1 to saving.len)
-		var/variable = saving[ind]
-		if(vars[variable] == initial(vars[variable]))
-			continue
-		f["[variable]"] << vars[variable]
+	StandardWrite(f)
 
 /turf/Write(savefile/f)
-	var/list/saving
-	if(found_vars.Find("[type]"))
-		saving = found_vars["[type]"]
-	else
-		saving = get_saved_vars()
-		found_vars["[type]"] = saving
-
-	for(var/ind in 1 to saving.len)
-		var/variable = saving[ind]
-		if(vars[variable] == initial(vars[variable]))
-			continue
-		f["[variable]"] << vars[variable]
-
+	StandardWrite(f)
 
 /mob/Write(savefile/f)
-	var/list/saving
-	if(found_vars.Find("[type]"))
-		saving = found_vars["[type]"]
-	else
-		saving = get_saved_vars()
-		found_vars["[type]"] = saving
+	if(StandardWrite(f))
+		return
 
-	for(var/ind in 1 to saving.len)
-		var/variable = saving[ind]
-		if(vars[variable] == initial(vars[variable]))
-			continue
-		f["[variable]"] << vars[variable]
 /area/Write(savefile/f)
-	var/list/saving
-	if(found_vars.Find("[type]"))
-		saving = found_vars["[type]"]
-	else
-		saving = get_saved_vars()
-		found_vars["[type]"] = saving
-
-	for(var/ind in 1 to saving.len)
-		var/variable = saving[ind]
-		if(vars[variable] == initial(vars[variable]))
-			continue
-		f["[variable]"] << vars[variable]
+	StandardWrite(f)
 
 /datum/proc/StandardRead(var/savefile/f)
 	var/list/loading
-	all_loaded |= src
+	if(all_loaded)
+		all_loaded |= src
+
 	if(found_vars.Find("[type]"))
 		loading = found_vars["[type]"]
 	else
@@ -196,46 +135,17 @@ var/global/list/saved = list()
 
 	for(var/ind in 1 to loading.len)
 		var/variable = loading[ind]
-		f["[variable]"] >> vars[variable]
+		if(f.dir.Find("[variable]"))
+			f["[variable]"] >> vars[variable]
 
 /datum/Read(savefile/f)
-	var/list/loading
-	all_loaded |= src
-	if(found_vars.Find("[type]"))
-		loading = found_vars["[type]"]
-	else
-		loading = get_saved_vars()
-		found_vars["[type]"] = loading
-
-	for(var/ind in 1 to loading.len)
-		var/variable = loading[ind]
-		f["[variable]"] >> vars[variable]
+	StandardRead(f)
 
 /turf/Read(savefile/f)
-	var/list/loading
-	all_loaded |= src
-	if(found_vars.Find("[type]"))
-		loading = found_vars["[type]"]
-	else
-		loading = get_saved_vars()
-		found_vars["[type]"] = loading
-
-	for(var/ind in 1 to loading.len)
-		var/variable = loading[ind]
-		f["[variable]"] >> vars[variable]
+	StandardRead(f)
 
 /area/Read(savefile/f)
-	var/list/loading
-	all_loaded |= src
-	if(found_vars.Find("[type]"))
-		loading = found_vars["[type]"]
-	else
-		loading = get_saved_vars()
-		found_vars["[type]"] = loading
-
-	for(var/ind in 1 to loading.len)
-		var/variable = loading[ind]
-		f["[variable]"] >> vars[variable]
+	StandardRead(f)
 /proc/Save_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
 	var/z = zi
 	xi = (xi - (xi % 20) + 1)
@@ -256,11 +166,30 @@ var/global/list/saved = list()
 	found_vars = list()
 	for(var/z in 1 to 5)
 		var/starttime2 = REALTIMEOFDAY
-		var/list/turfs = block(locate(1,1,z),locate(world.maxx,world.maxy,z))
+		var/list/turfs = block(locate(1,1,z),locate(round(world.maxx/2),round(world.maxy/2),z))
 		for(var/turf/T in turfs)
 			if(T.type == /turf/space && (!T.contents || !T.contents.len))
 				turfs -= T
-		
+		f << turfs
+		CHECK_TICK
+		turfs = block(locate(1,round(world.maxy/2)+1,z),locate(round(world.maxx/2),world.maxy,z))
+		for(var/turf/T in turfs)
+			if(T.type == /turf/space && (!T.contents || !T.contents.len))
+				turfs -= T
+		f << turfs
+		message_admins("Z: [z] saved in [(REALTIMEOFDAY - starttime2)/10] seconds.")
+		CHECK_TICK
+		turfs = block(locate(round(world.maxx/2)+1,1,z),locate(world.maxx,round(world.maxy/2),z))
+		for(var/turf/T in turfs)
+			if(T.type == /turf/space && (!T.contents || !T.contents.len))
+				turfs -= T
+		f << turfs
+		CHECK_TICK
+	
+		turfs = block(locate(round(world.maxx/2)+1,round(world.maxy/2)+1,z),locate(world.maxx,world.maxy,z))
+		for(var/turf/T in turfs)
+			if(T.type == /turf/space && (!T.contents || !T.contents.len))
+				turfs -= T
 		f << turfs
 		message_admins("Z: [z] saved in [(REALTIMEOFDAY - starttime2)/10] seconds.")
 		CHECK_TICK
@@ -283,7 +212,7 @@ var/global/list/saved = list()
 		ind2++
 		var/starttime2 = REALTIMEOFDAY
 		f >> v
-		message_admins("Z: [ind2] loaded in [(REALTIMEOFDAY - starttime2)/10] seconds.")
+		world << "Loading.. [ind2*5]% Complete"
 		CHECK_TICK
 	for(var/ind in 1 to all_loaded.len)
 		var/datum/dat = all_loaded[ind]

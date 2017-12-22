@@ -100,7 +100,7 @@ var/global/list/saved = list()
 
 	for(var/ind in 1 to saving.len)
 		var/variable = saving[ind]
-		if(((variable != "pixel_x" && variable != "pixel_y") && (vars[variable] == initial(vars[variable]))))
+		if(vars[variable] == initial(vars[variable]))
 			continue
 		f["[variable]"] << vars[variable]
 
@@ -177,7 +177,8 @@ var/global/list/saved = list()
 			for(var/y in 1 to world.maxy step 20)
 				Save_Chunk(x,y,z, f)
 				CHECK_TICK
-
+	f.cd = "/extras"
+	f["records"] << GLOB.all_crew_records
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
 	return 1

@@ -18,10 +18,15 @@
 	return -1
 
 /obj/machinery/atmospherics/pipe/New()
-	if(istype(get_turf(src), /turf/simulated/wall) || istype(get_turf(src), /turf/simulated/shuttle/wall) || istype(get_turf(src), /turf/unsimulated/wall))
-		level = 1
+	if(loc)
+		if(istype(get_turf(src), /turf/simulated/wall) || istype(get_turf(src), /turf/simulated/shuttle/wall) || istype(get_turf(src), /turf/unsimulated/wall))
+			level = 1
 	..()
-
+/obj/machinery/atmospherics/pipe/after_load()
+	if(loc)
+		if(istype(get_turf(src), /turf/simulated/wall) || istype(get_turf(src), /turf/simulated/shuttle/wall) || istype(get_turf(src), /turf/unsimulated/wall))
+			level = 1
+	..()
 /obj/machinery/atmospherics/pipe/hides_under_flooring()
 	return level != 2
 
@@ -183,7 +188,27 @@
 			initialize_directions = SOUTH|EAST
 		if(SOUTHWEST)
 			initialize_directions = SOUTH|WEST
+/obj/machinery/atmospherics/pipe/simple/after_load()
+	..()
 
+	// Pipe colors and icon states are handled by an image cache - so color and icon should
+	//  be null. For mapping purposes color is defined in the object definitions.
+	icon = null
+	alpha = 255
+
+	switch(dir)
+		if(SOUTH || NORTH)
+			initialize_directions = SOUTH|NORTH
+		if(EAST || WEST)
+			initialize_directions = EAST|WEST
+		if(NORTHEAST)
+			initialize_directions = NORTH|EAST
+		if(NORTHWEST)
+			initialize_directions = NORTH|WEST
+		if(SOUTHEAST)
+			initialize_directions = SOUTH|EAST
+		if(SOUTHWEST)
+			initialize_directions = SOUTH|WEST
 /obj/machinery/atmospherics/pipe/simple/hide(var/i)
 	if(istype(loc, /turf/simulated))
 		set_invisibility(i ? 101 : 0)
@@ -451,7 +476,16 @@
 			initialize_directions = SOUTH|WEST|NORTH
 		if(WEST)
 			initialize_directions = NORTH|EAST|SOUTH
-
+/obj/machinery/atmospherics/pipe/manifold/after_load()
+	switch(dir)
+		if(NORTH)
+			initialize_directions = EAST|SOUTH|WEST
+		if(SOUTH)
+			initialize_directions = WEST|NORTH|EAST
+		if(EAST)
+			initialize_directions = SOUTH|WEST|NORTH
+		if(WEST)
+			initialize_directions = NORTH|EAST|SOUTH
 /obj/machinery/atmospherics/pipe/manifold/hide(var/i)
 	if(istype(loc, /turf/simulated))
 		set_invisibility(i ? 101 : 0)
@@ -1347,7 +1381,7 @@
 		universal_underlays(node2)
 	else
 		universal_underlays(,dir)
-		universal_underlays(dir, -180)
+	//	universal_underlays(dir, -180)
 
 /obj/machinery/atmospherics/pipe/simple/visible/universal/update_underlays()
 	..()

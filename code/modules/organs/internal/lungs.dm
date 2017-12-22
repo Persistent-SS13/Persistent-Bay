@@ -54,7 +54,9 @@
 /obj/item/organ/internal/lungs/replaced()
 	..()
 	sync_breath_types()
-
+/obj/item/organ/internal/lungs/after_load()
+	..()
+	sync_breath_types()
 /**
  *  Set these lungs' breath types based on the lungs' species
  */
@@ -63,7 +65,7 @@
 	breath_type = species.breath_type ? species.breath_type : "oxygen"
 	poison_type = species.poison_type ? species.poison_type : "phoron"
 	exhale_type = species.exhale_type ? species.exhale_type : "carbon_dioxide"
-
+/obj/item/organ/internal/lungs/
 /obj/item/organ/internal/lungs/Process()
 	..()
 	if(!owner)
@@ -146,7 +148,12 @@
 	var/toxins_pp = (poison/breath.total_moles)*breath_pressure
 	var/exhaled_pp = (exhaling/breath.total_moles)*breath_pressure
 
-	var/inhale_efficiency = min(round(inhale_pp/safe_pressure_min, 0.001), 3)
+	var/inhale_efficiency
+	if(safe_pressure_min)
+		inhale_efficiency = min(round(inhale_pp/safe_pressure_min, 0.001), 3)
+	else
+		message_admins("no safe_pressure_min [safe_pressure_min] [owner] [owner.x] [owner.y] [owner.z]")
+		inhale_efficiency = 3
 	// Not enough to breathe
 	if(inhale_efficiency < 1)
 		if(prob(20) && active_breathing)

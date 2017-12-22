@@ -192,11 +192,12 @@
 
 /obj/machinery/power/apc/Destroy()
 	src.update()
-	area.apc = null
-	area.power_light = 0
-	area.power_equip = 0
-	area.power_environ = 0
-	area.power_change()
+	if(area)
+		area.apc = null
+		area.power_light = 0
+		area.power_equip = 0
+		area.power_environ = 0
+		area.power_change()
 	qdel(wires)
 	wires = null
 	qdel(terminal)
@@ -216,8 +217,9 @@
 		return
 	failure_timer = max(failure_timer, round(duration))
 /obj/machinery/power/apc/before_load()
-	terminal.loc = null
-	qdel(terminal)
+	if(terminal)
+		terminal.loc = null
+		qdel(terminal)
 /obj/machinery/power/apc/proc/make_terminal()
 	// create a terminal object at the same position as original turf loc
 	// wires will attach to this
@@ -230,7 +232,9 @@
 	// is starting with a power cell installed, create it and set its charge level
 	if(cell_type)
 		src.cell = new cell_type(src)
-
+	if(!loc)
+		qdel(src)
+		return
 	var/area/A = src.loc.loc
 
 	//if area isn't specified use current
@@ -819,6 +823,7 @@
 	return "[area.name] : [equipment]/[lighting]/[environ] ([lastused_equip+lastused_light+lastused_environ]) : [cell? cell.percent() : "N/C"] ([charging])"
 
 /obj/machinery/power/apc/proc/update()
+	if(!area) return
 	if(operating && !shorted && !failure_timer)
 
 		//prevent unnecessary updates to emergency lighting
@@ -976,7 +981,9 @@
 		return 0
 
 /obj/machinery/power/apc/Process()
-
+	if(!loc)
+		qdel(src)
+		return
 	if(stat & (BROKEN|MAINT))
 		return
 	if(!area.requires_power)

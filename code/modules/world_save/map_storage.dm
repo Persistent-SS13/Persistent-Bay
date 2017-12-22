@@ -25,7 +25,7 @@ var/global/list/saved = list()
 	should_save = 0
 
 /turf
-	map_storage_saved_vars = "loc;density;icon_state;name;pixel_x;pixel_y;contents;dir"
+	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
 
 /obj
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
@@ -51,6 +51,9 @@ var/global/list/saved = list()
 	..()
 	regenerate_icons()
 	redraw_inv()
+	if(hud_used)
+		hud_used.persistant_inventory_update()
+	
 /datum/SaveList
 	var/list/InList
 
@@ -158,48 +161,25 @@ var/global/list/saved = list()
 			var/turf/T = locate(x,y,z)
 			if(!T || (T.type == /turf/space && (!T.contents || !T.contents.len)))
 				continue
-			f << T
+			lis |= T
+	f << lis
 /proc/Save_World()
-	world << "The World has paused to write to file; Remain connected, this process usually takes less than 30 seconds."
 	var/starttime = REALTIMEOFDAY
+	for(var/turf/T in GLOB.latejoin_cryo)
+		var/obj/effect/persistent_spawn/spawnpoint = new()
+		spawnpoint.loc = T
 	fdel("map_saves/game.sav")
 	var/savefile/f = new("map_saves/game.sav")
-	var/datum/SaveList/L = new()
 	found_vars = list()
 	for(var/z in 1 to 5)
-		var/starttime2 = REALTIMEOFDAY
-		var/list/turfs = block(locate(1,1,z),locate(round(world.maxx/2),round(world.maxy/2),z))
-		for(var/turf/T in turfs)
-			if(T.type == /turf/space && (!T.contents || !T.contents.len))
-				turfs -= T
-		f << turfs
-		CHECK_TICK
-		turfs = block(locate(1,round(world.maxy/2)+1,z),locate(round(world.maxx/2),world.maxy,z))
-		for(var/turf/T in turfs)
-			if(T.type == /turf/space && (!T.contents || !T.contents.len))
-				turfs -= T
-		f << turfs
-		message_admins("Z: [z] saved in [(REALTIMEOFDAY - starttime2)/10] seconds.")
-		CHECK_TICK
-		turfs = block(locate(round(world.maxx/2)+1,1,z),locate(world.maxx,round(world.maxy/2),z))
-		for(var/turf/T in turfs)
-			if(T.type == /turf/space && (!T.contents || !T.contents.len))
-				turfs -= T
-		f << turfs
-		CHECK_TICK
-	
-		turfs = block(locate(round(world.maxx/2)+1,round(world.maxy/2)+1,z),locate(world.maxx,world.maxy,z))
-		for(var/turf/T in turfs)
-			if(T.type == /turf/space && (!T.contents || !T.contents.len))
-				turfs -= T
-		f << turfs
-		message_admins("Z: [z] saved in [(REALTIMEOFDAY - starttime2)/10] seconds.")
-		CHECK_TICK
-	f.cd = "/extras"
-	f["records"] << GLOB.all_crew_records
+		f.cd = "/map/[z]"
+		for(var/x in 1 to world.maxx step 20)
+			for(var/y in 1 to world.maxy step 20)
+				Save_Chunk(x,y,z, f)
+				CHECK_TICK
+
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
-
 	return 1
 
 /proc/Load_World()
@@ -209,24 +189,21 @@ var/global/list/saved = list()
 	all_loaded = list()
 	found_vars = list()
 	var/v = null
-	var/ind2 = 0
-	while(!f.eof)
-		ind2++
-		var/starttime2 = REALTIMEOFDAY
-		f >> v
-		world << "Loading.. [ind2*5]% Complete"
-		CHECK_TICK
+	for(var/z in 1 to 5)
+		f.cd = "/map/[z]"
+		while(!f.eof)
+			f >> v
+			CHECK_TICK
+		world << "Loading.. [z*20]% Complete"
+
 	for(var/ind in 1 to all_loaded.len)
 		var/datum/dat = all_loaded[ind]
 		dat.after_load()
-		if(istype(dat,/atom/))
-			var/atom/A = dat
-			A.Initialize()
 	all_loaded = list()
 	SSmachines.makepowernets()
 	f.cd = "/extras"
 	f["records"] >> GLOB.all_crew_records
-	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
+	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"				
 	world << "Loading Complete"
 	return 1
 

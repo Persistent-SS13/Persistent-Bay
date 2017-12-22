@@ -33,8 +33,30 @@ var/list/floor_decals = list()
 		if(!T.decals) T.decals = list()
 		T.decals |= floor_decals[cache_key]
 		T.overlays |= floor_decals[cache_key]
+		T.saved_decals |= src
 	initialized = TRUE
-	return INITIALIZE_HINT_QDEL
+	loc = null
+	return 1
+//	return INITIALIZE_HINT_QDEL
+/obj/effect/floor_decal/proc/init_for(var/turf/T)
+	if(istype(T, /turf/simulated/floor) || istype(T, /turf/unsimulated/floor))
+		plane = T.is_plating() ? ABOVE_PLATING_PLANE : ABOVE_TURF_PLANE
+		var/cache_key = "[alpha]-[color]-[dir]-[icon_state]-[plane]-[layer]"
+		if(!floor_decals[cache_key])
+			var/image/I = image(icon = src.icon, icon_state = src.icon_state, dir = src.dir)
+			I.plane = plane
+			I.layer = layer
+			I.appearance_flags = appearance_flags
+			I.color = src.color
+			I.alpha = src.alpha
+			floor_decals[cache_key] = I
+		if(!T.decals) T.decals = list()
+		T.decals |= floor_decals[cache_key]
+		T.overlays |= floor_decals[cache_key]
+	initialized = TRUE
+	return 1
+
+
 
 /obj/effect/floor_decal/reset
 	name = "reset marker"

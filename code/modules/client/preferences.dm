@@ -359,6 +359,8 @@ datum/preferences
 			S >> M
 			if(M)
 				M.after_load()
+				for(var/datum/D in M.contents)
+					D.after_load()
 				character_list += M
 		else
 			character_list += "empty"

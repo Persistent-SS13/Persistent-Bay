@@ -218,9 +218,10 @@ This saves us from having to call add_fingerprint() any time something is put in
 	update_action_buttons()
 	return 1
 
+/mob/proc/redraw_inv()
+	return 1
 
-
-/mob/living/carbon/human/proc/redraw_inv()
+/mob/living/carbon/human/redraw_inv()
 	var/obj/item/W
 	if(back)
 		W = back

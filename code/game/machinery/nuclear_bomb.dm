@@ -418,7 +418,7 @@ var/bomb_set
 	. = ..()
 	var/obj/item/weapon/paper/R = new(src)
 	R.set_content("<center><img src=sollogo.png><br><br>\
-	<b>Warning: Classified<br>SEV Torch Self Destruct System - Instructions</b></center><br><br>\
+	<b>Warning: Classified<br>NTF Shambhala Self Destruct System - Instructions</b></center><br><br>\
 	In the event of a Delta-level emergency, this document will guide you through the activation of the vessel's \
 	on-board nuclear self destruct system. Please read carefully.<br><br>\
 	1) (Optional) Announce the imminent activation to any surviving crew members, and begin evacuation procedures.<br>\

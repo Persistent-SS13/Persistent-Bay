@@ -248,9 +248,11 @@
 		secured = 1
 		update_icon()
 		name = initial(name) + " ([tmr.time] secs)"
-
-		loc.verbs += /obj/item/device/assembly_holder/timer_igniter/verb/configure
-
+		if(loc)
+			loc.verbs += /obj/item/device/assembly_holder/timer_igniter/verb/configure
+	after_load()
+		if(loc)
+			loc.verbs |= /obj/item/device/assembly_holder/timer_igniter/verb/configure
 	detached()
 		loc.verbs -= /obj/item/device/assembly_holder/timer_igniter/verb/configure
 		..()

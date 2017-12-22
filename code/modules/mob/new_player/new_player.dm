@@ -526,6 +526,7 @@
 	ticker.minds |= new_character.mind//Cyborgs and AIs handle this in the transform proc.	//TODO!!!!! ~Carn
 
 	CreateModularRecord(new_character)
+	new_character.redraw_inv()
 	return new_character
 	/**
 	var/mob/living/carbon/human/new_character

@@ -1,8 +1,8 @@
 /datum/map/torch
-	name = "Torch"
-	full_name = "SEV Torch"
+	name = "Shambhala"
+	full_name = "NTF Shambhala"
 	path = "torch"
-	flags = MAP_HAS_BRANCH | MAP_HAS_RANK
+	flags = MAP_HAS_RANK
 
 	lobby_icon = 'maps/torch/icons/lobby.dmi'
 
@@ -20,13 +20,13 @@
 	allowed_spawns = list("Cryogenic Storage", "Cyborg Storage")
 	default_spawn = "Cryogenic Storage"
 
-	station_name  = "SEV Torch"
-	station_short = "Torch"
+	station_name  = "NTF Shambhala"
+	station_short = "Shambhala"
 	dock_name     = "TBD"
-	boss_name     = "Expeditionary Command"
-	boss_short    = "Command"
-	company_name  = "Sol Central Government"
-	company_short = "SolGov"
+	boss_name     = "NT Central Command"
+	boss_short    = "Centcom"
+	company_name  = "Nanotrasen"
+	company_short = "NT"
 
 	map_admin_faxes = list("NanoTrasen Central Office")
 
@@ -50,7 +50,7 @@
 	minor_announcement = new(new_sound = sound('sound/AI/torch/commandreport.ogg', volume = 45))
 
 /datum/map/torch/send_welcome()
-	var/welcome_text = "<center><img src = sollogo.png /><br /><font size = 3><b>SEV Torch</b> Sensor Readings:</font><hr />"
+	var/welcome_text = "<center><img src = sollogo.png /><br /><font size = 3><b>NTF Shambhala</b> Sensor Readings:</font><hr />"
 	welcome_text += "Report generated on [stationdate2text()] at [stationtime2text()]</center><br /><br />"
 	welcome_text += "Current system:<br /><b>[system_name()]</b><br />"
 	welcome_text += "Next system targeted for jump:<br /><b>[generate_system_name()]</b><br />"
@@ -59,7 +59,7 @@
 	welcome_text += "Scan results:<br />"
 	var/list/scan_results = list()
 	for(var/poi in points_of_interest)
-		if(poi == "SEV Torch")
+		if(poi == "NTF Shambhala")
 			continue
 		if(isnull(scan_results[poi]))
 			scan_results[poi] = 1
@@ -72,7 +72,7 @@
 		else
 			welcome_text += "[count] <b>[result]\s</b><br />"
 
-	post_comm_message("SEV Torch Sensor Readings", welcome_text)
+	post_comm_message("NTF Shambhala Sensor Readings", welcome_text)
 	minor_announcement.Announce(message = "New [GLOB.using_map.company_name] Update available at all communication consoles.")
 
 

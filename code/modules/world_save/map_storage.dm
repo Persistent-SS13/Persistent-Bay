@@ -88,9 +88,6 @@ var/global/list/saved = list()
 	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Loading Complete"
 /datum/proc/StandardWrite(var/savefile/f)
-	if(!should_save)
-		return
-
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
@@ -100,10 +97,26 @@ var/global/list/saved = list()
 
 	for(var/ind in 1 to saving.len)
 		var/variable = saving[ind]
+		if(!hasvar(src, variable))
+			continue
 		if(vars[variable] == initial(vars[variable]))
 			continue
+		var/list/return_this = list()
+		if(istype(vars[variable], /datum))
+			var/datum/D = vars[variable]
+			if(!D.should_save)
+				continue
+		if(istype(vars[variable], /list))
+			var/list/D = vars[variable]
+			for(var/datum/dat in D)
+				if(!dat.should_save)
+					D -= dat
+					return_this += dat
 		f["[variable]"] << vars[variable]
-
+		if(return_this.len)
+			var/list/D = vars[variable]
+			D |= return_this
+			
 /datum/Write(savefile/f)
 	StandardWrite(f)
 
@@ -141,6 +154,7 @@ var/global/list/saved = list()
 	for(var/ind in 1 to loading.len)
 		var/variable = loading[ind]
 		if(f.dir.Find("[variable]"))
+			vars[variable] = null
 			f["[variable]"] >> vars[variable]
 
 /datum/Read(savefile/f)

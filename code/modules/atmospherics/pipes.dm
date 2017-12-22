@@ -188,27 +188,7 @@
 			initialize_directions = SOUTH|EAST
 		if(SOUTHWEST)
 			initialize_directions = SOUTH|WEST
-/obj/machinery/atmospherics/pipe/simple/after_load()
-	..()
 
-	// Pipe colors and icon states are handled by an image cache - so color and icon should
-	//  be null. For mapping purposes color is defined in the object definitions.
-	icon = null
-	alpha = 255
-
-	switch(dir)
-		if(SOUTH || NORTH)
-			initialize_directions = SOUTH|NORTH
-		if(EAST || WEST)
-			initialize_directions = EAST|WEST
-		if(NORTHEAST)
-			initialize_directions = NORTH|EAST
-		if(NORTHWEST)
-			initialize_directions = NORTH|WEST
-		if(SOUTHEAST)
-			initialize_directions = SOUTH|EAST
-		if(SOUTHWEST)
-			initialize_directions = SOUTH|WEST
 /obj/machinery/atmospherics/pipe/simple/hide(var/i)
 	if(istype(loc, /turf/simulated))
 		set_invisibility(i ? 101 : 0)
@@ -1000,7 +980,9 @@
 /obj/machinery/atmospherics/pipe/cap/New()
 	..()
 	initialize_directions = dir
-
+/obj/machinery/atmospherics/pipe/cap/after_load()
+	..()
+	initialize_directions = dir
 /obj/machinery/atmospherics/pipe/cap/hide(var/i)
 	if(istype(loc, /turf/simulated))
 		set_invisibility(i ? 101 : 0)
@@ -1129,7 +1111,9 @@
 	icon_state = "air"
 	initialize_directions = dir
 	..()
-
+/obj/machinery/atmospherics/pipe/tank/after_load()
+	initialize_directions = dir
+	..()
 /obj/machinery/atmospherics/pipe/tank/Process()
 	if(!parent)
 		..()

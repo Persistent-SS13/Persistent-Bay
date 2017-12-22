@@ -16,7 +16,8 @@
 		air_contents = new
 
 		air_contents.volume = 200
-
+	after_load()
+		initialize_directions = dir
 // Housekeeping and pipe network stuff below
 	network_expand(datum/pipe_network/new_network, obj/machinery/atmospherics/pipe/reference)
 		if(reference == node)

@@ -49,9 +49,6 @@
 /obj/machinery/atmospherics/tvalve/New()
 	initialize_directions()
 	..()
-/obj/machinery/atmospherics/tvalve/after_load()
-	initialize_directions()
-	..()
 
 /obj/machinery/atmospherics/tvalve/proc/initialize_directions()
 	switch(dir)

@@ -31,7 +31,6 @@
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
 	component_parts += new /obj/item/stack/cable_coil(src, 2)
 	RefreshParts()
-
 /obj/machinery/atmospherics/unary/freezer/atmos_init()
 	..()
 	if(node)

@@ -392,11 +392,9 @@ datum/preferences
 	if(!character_list || (character_list.len < config.character_slots))
 		load_characters()
 	var/dat  = list()
-	var/path_to = load_path(user.ckey,"")
 	dat += "<body>"
 	dat += "<tt><center>"
 	dat += "<b>Select the character slot you want to save this character under.</b><hr>"
-	var/name
 	var/ind = 0
 	for(var/x in character_list)
 		ind++

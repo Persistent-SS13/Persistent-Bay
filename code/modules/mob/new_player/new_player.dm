@@ -81,7 +81,6 @@
 	dat += "<body>"
 	dat += "<tt><center>"
 	dat += "<b>Select the Character you want to load</b><hr>"
-	var/name
 	var/ind = 0
 	for(var/x in client.prefs.character_list)
 		ind++

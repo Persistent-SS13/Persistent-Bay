@@ -53,7 +53,7 @@ var/global/list/saved = list()
 	redraw_inv()
 	if(hud_used)
 		hud_used.persistant_inventory_update()
-	
+
 /datum/SaveList
 	var/list/InList
 
@@ -116,7 +116,7 @@ var/global/list/saved = list()
 		if(return_this.len)
 			var/list/D = vars[variable]
 			D |= return_this
-			
+
 /datum/Write(savefile/f)
 	StandardWrite(f)
 
@@ -185,7 +185,7 @@ var/global/list/saved = list()
 	fdel("map_saves/game.sav")
 	var/savefile/f = new("map_saves/game.sav")
 	found_vars = list()
-	for(var/z in 1 to 5)
+	for(var/z in 1 to 11)
 		f.cd = "/map/[z]"
 		for(var/x in 1 to world.maxx step 20)
 			for(var/y in 1 to world.maxy step 20)
@@ -204,7 +204,7 @@ var/global/list/saved = list()
 	all_loaded = list()
 	found_vars = list()
 	var/v = null
-	for(var/z in 1 to 5)
+	for(var/z in 1 to 11)
 		f.cd = "/map/[z]"
 		while(!f.eof)
 			f >> v
@@ -218,7 +218,7 @@ var/global/list/saved = list()
 	SSmachines.makepowernets()
 	f.cd = "/extras"
 	f["records"] >> GLOB.all_crew_records
-	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"				
+	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Loading Complete"
 	return 1
 

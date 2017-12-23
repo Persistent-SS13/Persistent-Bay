@@ -249,7 +249,6 @@ var/global/list/saved = list()
 		savedvarparams = ""
 	var/list/saved_vars = params2list(savedvarparams)
 	if(saved_vars.len < ind)
-		message_admins("remove_saved saved_vars less than ind [src]")
 		return
 	saved_vars.Cut(ind, ind+1)
 	savedvarparams = list2params(saved_vars)
@@ -268,7 +267,6 @@ var/global/list/saved = list()
 	var/B = replacetext("[A]", "/", "-")
 	var/C = B
 	var/savedvarparams = file2text("saved_vars/[B].txt")
-	message_admins("savedvarparams: | [savedvarparams] | saved_vars/[B].txt")
 	if(!savedvarparams)
 		savedvarparams = ""
 	var/list/savedvars = params2list(savedvarparams)
@@ -285,7 +283,6 @@ var/global/list/saved = list()
 			for(var/xa in subtypes)
 				subtypes_text += "-[xa]"
 			var/savedvarparamss = file2text("saved_vars/[subtypes_text]-[x].txt")
-			message_admins("savedvarparamss: [savedvarparamss] dir: saved_vars/[subtypes_text]-[x].txt")
 			var/list/saved_vars = params2list(savedvarparamss)
 			if(saved_vars && saved_vars.len)
 				found_vars |= saved_vars
@@ -354,13 +351,11 @@ var/global/list/saved = list()
 			for(var/xa in subtypes)
 				subtypes_text += "-[xa]"
 			var/savedvarparams = file2text("saved_vars/[subtypes_text]-[x].txt")
-			message_admins("savedvarparams: [savedvarparams] dir: saved_vars/[subtypes_text]-[x].txt")
 			var/list/saved_vars = params2list(savedvarparams)
 			if(saved_vars && saved_vars.len)
 				found_vars |= saved_vars
 			subtypes += x
 	var/savedvarparams = file2text("saved_vars/[C].txt")
-	message_admins("savedvarparams: [savedvarparams] saved_vars/[C].txt")
 	if(!savedvarparams)
 		savedvarparams = ""
 	var/list/saved_vars = params2list(savedvarparams)

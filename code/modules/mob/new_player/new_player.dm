@@ -130,9 +130,14 @@
 		return 1
 	if(href_list["pickslot_load"])
 		src << browse(null, "window=saves")
-		load_panel.close()
 		chosen_slot = text2num(href_list["pickslot_load"])
-		message_admins("chosen slot: [chosen_slot]")
+		var/mob/M = client.prefs.character_list[chosen_slot]
+		for(var/mob/mobbie in GLOB.all_cryo_mobs)
+			if(mobbie.real_name == M.real_name)
+				chosen_slot = 0
+				to_chat(src, "This character has already entered cryogenic storage for this shift.")
+				return 0
+		load_panel.close()
 		if(ticker.current_state <= GAME_STATE_PREGAME)
 			ready = 1
 		else
@@ -500,7 +505,6 @@
 /mob/new_player/proc/create_character(var/turf/spawn_turf)
 	message_admins("create_character")
 	spawning = 1
-	close_spawn_windows()
 	if(!chosen_slot)
 		message_admins("no chosen slot..")
 		return
@@ -509,19 +513,23 @@
 		message_admins("null new_character")
 		return
 	if(!new_character.mind)
-
 		mind.active = 0					//we wish to transfer the key manually
 		mind.original = new_character
 		if(client.prefs.memory)
 			mind.store_memory(client.prefs.memory)
 		mind.transfer_to(new_character)					//won't transfer key since the mind is not active
-	message_admins("create_character end")
 	if(!spawn_turf)
 		if(!GLOB.cryopods.len)
 			message_admins("WARNING! No cryopods avalible for spawning!")
 			return
 		var/obj/o = pick(GLOB.cryopods)
 		spawn_turf = get_step(o.loc, o.dir)
+		if(!spawn_turf)
+			message_admins("WARNING! spawn_turf generated is invalid!!!")
+			spawn_turf = o.loc
+		if(!spawn_turf)
+			message_admins("WARNING! spawn-turf still invalid!!")
+			spawn_turf = locate(100, 100, 1)
 		new_character.loc = spawn_turf
 		message_admins("spawnturf :[spawn_turf] [spawn_turf.x], [spawn_turf.y], [spawn_turf.z]")
 	new_character.key = key		//Manually transfer the key to log them in
@@ -530,6 +538,7 @@
 
 	CreateModularRecord(new_character)
 	new_character.redraw_inv()
+	close_spawn_windows()
 	return new_character
 	/**
 	var/mob/living/carbon/human/new_character

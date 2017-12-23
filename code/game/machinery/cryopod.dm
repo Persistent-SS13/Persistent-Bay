@@ -191,6 +191,8 @@
 		/obj/item/clothing/head/helmet/space,
 		/obj/item/weapon/storage/internal
 	)
+/obj/machinery/cryopod/New()
+	GLOB.cryopods |= src
 
 /obj/machinery/cryopod/robot
 	name = "robotic storage unit"

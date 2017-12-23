@@ -72,7 +72,7 @@
 	panel.set_content(output)
 	panel.open()
 	return
-	
+
 /mob/new_player/proc/slot_select_load()
 	var/mob/user = src
 	if(!client.prefs.character_list || (client.prefs.character_list.len < config.character_slots))
@@ -98,7 +98,7 @@
 	load_panel = new(user, "Character Slots", "Character Slots", 300, 390, src)
 	load_panel.set_content(jointext(dat,null))
 	load_panel.open()
-	
+
 /mob/new_player/Stat()
 	. = ..()
 
@@ -166,10 +166,11 @@
 
 			observer.started_as_observer = 1
 			close_spawn_windows()
-			var/obj/O = locate("landmark*Observer-Start")
-			if(istype(O))
+
+			if(GLOB.cryopods.len)
+				var/obj/O = pick(GLOB.cryopods)
 				to_chat(src, "<span class='notice'>Now teleporting.</span>")
-				observer.forceMove(O.loc)
+				observer.forceMove(get_step(O.loc, O.dir))
 			else
 				to_chat(src, "<span class='danger'>Could not locate an observer spawn point. Use the Teleport verb to jump to the map.</span>")
 			observer.timeofdeath = world.time // Set the time of death so that the respawn timer works correctly.
@@ -359,17 +360,17 @@
 		message_admins("create_character failed!")
 		return 0
 	qdel(src)
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
 	/**
 	if(src != usr)
 		return 0
@@ -495,7 +496,7 @@
 	dat += "</table></center>"
 	src << browse(jointext(dat, null), "window=latechoices;size=450x640;can_close=1")
 
-	
+
 
 /mob/new_player/proc/create_character(var/turf/spawn_turf)
 	message_admins("create_character")
@@ -509,7 +510,7 @@
 		message_admins("null new_character")
 		return
 	if(!new_character.mind)
-		
+
 		mind.active = 0					//we wish to transfer the key manually
 		mind.original = new_character
 		if(client.prefs.memory)
@@ -517,8 +518,11 @@
 		mind.transfer_to(new_character)					//won't transfer key since the mind is not active
 	message_admins("create_character end")
 	if(!spawn_turf)
-		var/datum/spawnpoint/spawnpoint = job_master.get_spawnpoint_for(client, get_rank_pref())
-		spawn_turf = pick(spawnpoint.turfs)
+		if(!GLOB.cryopods.len)
+			message_admins("WARNING! No cryopods avalible for spawning!")
+			return
+		var/obj/o = pick(GLOB.cryopods)
+		spawn_turf = get_step(o.loc, o.dir)
 		new_character.loc = spawn_turf
 		message_admins("spawnturf :[spawn_turf] [spawn_turf.x], [spawn_turf.y], [spawn_turf.z]")
 	new_character.key = key		//Manually transfer the key to log them in
@@ -535,8 +539,8 @@
 	if(client.prefs.species)
 		chosen_species = all_species[client.prefs.species]
 
-	
-	
+
+
 	if(chosen_species)
 		if(!check_species_allowed(chosen_species))
 			spawning = 0 //abort

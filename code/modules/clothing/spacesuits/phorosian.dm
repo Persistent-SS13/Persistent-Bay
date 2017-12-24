@@ -9,7 +9,7 @@
 	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 100, rad = 20)
 	species_restricted = list(SPECIES_PHOROSIAN)
 	sprite_sheets = list(
-		"Phorosian" = 'icons/mob/species/phorosian/suit.dmi'
+		SPECIES_PHOROSIAN = 'icons/mob/species/phorosian/suit.dmi'
 		)
 	breach_threshold = 18
 	can_breach = 1
@@ -25,6 +25,8 @@
 	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 100, rad = 20)
 	max_heat_protection_temperature = SPACE_SUIT_MAX_HEAT_PROTECTION_TEMPERATURE
 	siemens_coefficient = 0.4
-
 	species_restricted = list(SPECIES_PHOROSIAN)
 	light_overlay = "helmet_light"
+	sprite_sheets = list(
+		SPECIES_PHOROSIAN = 'icons/mob/species/phorosian/helmet.dmi'
+		)

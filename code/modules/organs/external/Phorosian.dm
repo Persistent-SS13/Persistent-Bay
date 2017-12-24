@@ -111,6 +111,7 @@
 	// Too much poison in the air.
 	if(toxins_pp > safe_toxins_max)
 		take_damage(3)
+		to_chat(owner, "<span class='warning'>Your lungs feel like they're burning!</span>")
 		breath.adjust_gas(poison_type, -poison/6, update = 0) //update after
 		owner.phoron_alert = 1
 	else
@@ -153,25 +154,21 @@
 		owner.oxygen_alert = 0
 	return failed_breath
 	
-	var/heal_rate
+	
+	//blood regen from phoron
 	if (inhale_pp>16 && inhale_pp<=100)
-		heal_rate=(inhale_pp-16)/10
-	else if (inhale_pp<16)
-		heal_rate=0
+		owner.add_chemical_effect(CE_BLOODRESTORE, inhale_pp-16/10)
 	else if (inhale_pp>100)
-		heal_rate=8.4  //Note, might have to increase this. Don't want to gimp their healing
-	for(var/obj/item/organ/I in owner.internal_organs)
-		if(I.damage > 0)
-			I.damage = max(I.damage - heal_rate, 0)
-			return 1
-
-	// Heal remaining damage.
-	if (owner.getBruteLoss() || owner.getFireLoss() || owner.getOxyLoss() || owner.getToxLoss())
-		owner.adjustBruteLoss(-heal_rate)
-		owner.adjustFireLoss(-heal_rate)
-		owner.adjustOxyLoss(-heal_rate)
-		owner.adjustToxLoss(-heal_rate)
-		return 1
+		owner.add_chemical_effect(CE_BLOODRESTORE, 8.4)
+		
+/obj/item/organ/internal/lungs/phorosian/handle_failed_breath() //It's not the lack of air killing them, it's the lack of blood.
+	if(prob(15) && !owner.nervous_system_failure())
+		if(!owner.is_asystole())
+			if(active_breathing)
+				owner.emote("gasp")
+		else
+			owner.emote(pick("shiver","twitch"))
+		owner.remove_blood(HUMAN_MAX_OXYLOSS*breath_fail_ratio)
 	
 //Phoron reinforced bones woo.
 /obj/item/organ/external/head/phorosian

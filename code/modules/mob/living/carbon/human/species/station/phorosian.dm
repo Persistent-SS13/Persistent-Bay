@@ -12,7 +12,8 @@
 	has_floating_eyes = 1 
 	hunger_factor = 0  
 	breath_type = "phoron"
-	poison_type = null //nothing really poisons them, but without phoron their body shuts down.
+	poison_type = "oxygen" //Getting oxygen into your lungs HURTS
+	exhale_type = null
 	siemens_coefficient = 0.7
 	flags = NO_POISON //They're sorta made out of poison
 	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED
@@ -76,7 +77,7 @@
 
 
 /datum/species/phorosian/get_blood_name()
-	return "liquid phoron"
+	return "Phoronic plasma"
 	
 /datum/species/phorosian/equip_survival_gear(var/mob/living/carbon/human/H)
 	H.equip_to_slot_or_del(new /obj/item/clothing/mask/breath(H), slot_wear_mask)
@@ -99,7 +100,7 @@
 		var/datum/gas_mixture/environment = H.loc.return_air()
 		if(environment && environment.gas["oxygen"] && environment.gas["oxygen"] >= 0.5) //Phorosians so long as there's enough oxygen (0.5 moles, same as it takes to burn gaseous phoron).
 			if(!burning)
-				H.visible_message("<span class='danger'>[H]'s body reacts with the atmosphere starts to sizzle and burn!</span>","<span class='userdanger'>Your body reacts with the atmosphere and starts to sizzle and burn!</span>")
+				H.visible_message("<span class='danger'>[H]'s body reacts with the atmosphere and starts to sizzle and burn!</span>","<span class='userdanger'>Your body reacts with the atmosphere and starts to sizzle and burn!</span>")
 				burning=1
 			H.burn_skin(H.get_pressure_weakness()*5)
 			H.updatehealth()
@@ -107,3 +108,22 @@
 		burning=0
 
 		
+	for(var/obj/item/organ/I in H.internal_organs)
+		if(I.damage > 0)
+			I.damage = max(I.damage - 2, 0)
+			H.remove_blood(4)
+			return 1
+
+	// Heal remaining damage.
+	if (H.getBruteLoss())
+		H.adjustBruteLoss(-4)
+		H.remove_blood(4)
+	if (H.getFireLoss())
+		H.adjustFireLoss(-4)
+		H.remove_blood(4)
+	if (H.getOxyLoss())
+		H.adjustOxyLoss(-4)
+		H.remove_blood(4)
+	if (H.getToxLoss())
+		H.adjustToxLoss(-4)
+		H.remove_blood(4)

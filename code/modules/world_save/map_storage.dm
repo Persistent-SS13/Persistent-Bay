@@ -155,7 +155,9 @@ var/global/list/saved = list()
 		var/variable = loading[ind]
 		if(f.dir.Find("[variable]"))
 			vars[variable] = null
-			f["[variable]"] >> vars[variable]
+			try
+				f["[variable]"] >> vars[variable]
+			catch
 
 /datum/Read(savefile/f)
 	StandardRead(f)

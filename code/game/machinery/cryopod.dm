@@ -277,7 +277,11 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 
 /obj/machinery/cryopod/proc/find_control_computer(urgent=0)
 	// Workaround for http://www.byond.com/forum/?post=2007448
-	for(var/obj/machinery/computer/cryopod/C in src.loc.loc)
+	var/turf/T = src.loc
+	if(!T)
+		sleep(10)
+		T = src.loc
+	for(var/obj/machinery/computer/cryopod/C in T.loc)
 		control_computer = C
 		break
 	// control_computer = locate(/obj/machinery/computer/cryopod) in src.loc.loc
@@ -321,7 +325,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 					return
 
 			despawn_occupant()
-	
+
 
 
 // This function can not be undone; do not call this unless you are sure

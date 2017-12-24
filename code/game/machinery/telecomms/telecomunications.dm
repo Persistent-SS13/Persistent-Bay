@@ -124,6 +124,9 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	if(!listening_levels)
 		//Defaults to our Z level!
 		var/turf/position = get_turf(src)
+		if(!position)
+			sleep(10)
+			position = get_turf(src)
 		listening_levels = GetConnectedZlevels(position.z)
 
 	if(autolinkers.len)

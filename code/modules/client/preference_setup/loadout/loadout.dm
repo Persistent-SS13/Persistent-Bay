@@ -6,6 +6,8 @@ var/list/gear_datums = list()
 	var/gear_slot = 1  //The current gear save slot
 
 /datum/preferences/proc/Gear()
+	if(!gear_list)
+		gear_list = list()
 	return gear_list[gear_slot]
 
 /datum/loadout_category

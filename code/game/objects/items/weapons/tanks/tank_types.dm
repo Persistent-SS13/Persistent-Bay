@@ -101,7 +101,8 @@
  */
 /obj/item/weapon/tank/phoron/phorosian
 	desc = "The lifeblood of Phorosians.  Warning:  Extremely flammable, do not inhale (unless you're a Phorosian)."
-	icon_state = "plasma_fr"
+	icon_state = "phoronfr"
+	gauge_icon = "indicator_tank"
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
 
 /*

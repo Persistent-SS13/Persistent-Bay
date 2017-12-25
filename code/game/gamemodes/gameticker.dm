@@ -141,11 +141,11 @@ var/global/datum/controller/gameticker/ticker
 	current_state = GAME_STATE_PLAYING
 	Master.SetRunLevel(RUNLEVEL_GAME)
 	create_characters() //Create player characters and transfer them
-	equip_characters()
-	for(var/mob/living/carbon/human/H in GLOB.player_list)
-		if(!H.mind || player_is_antag(H.mind, only_offstation_roles = 1) || !job_master.ShouldCreateRecords(H.mind.assigned_role))
-			continue
-		CreateModularRecord(H)
+//	equip_characters()
+//	for(var/mob/living/carbon/human/H in GLOB.player_list)
+//		if(!H.mind || player_is_antag(H.mind, only_offstation_roles = 1) || !job_master.ShouldCreateRecords(H.mind.assigned_role))
+//			continue
+//		CreateModularRecord(H)
 
 	callHook("roundstart")
 
@@ -335,7 +335,9 @@ var/global/datum/controller/gameticker/ticker
 				if(fexists("[save_path][employee.current.save_slot].sav"))
 					fdel("[save_path][employee.current.save_slot].sav")
 				var/savefile/f = new("[save_path][employee.current.save_slot].sav")
+				employee.current.save_override = 1
 				f << employee.current
+				employee.current.save_override = 0
 				to_chat(employee.current, "You character has been saved.")
 			Save_World()
 			Master.SetRunLevel(RUNLEVEL_POSTGAME)

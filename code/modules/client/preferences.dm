@@ -348,7 +348,12 @@ datum/preferences
 		character.nutrition = rand(140,360)
 
 	return
-
+/datum/preferences/proc/delete_character(var/slot)
+	var/path_to = load_path(client.ckey, "")
+	if(!slot) return
+	fdel("[path_to][slot].sav")
+	if(character_list && (character_list.len >= slot))
+		character_list[slot] = "nothing"
 /datum/preferences/proc/load_characters()
 	var/path_to = load_path(client.ckey, "")
 	character_list = list()

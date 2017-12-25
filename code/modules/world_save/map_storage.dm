@@ -1,7 +1,14 @@
 var/global/list/found_vars = list()
 var/global/list/all_loaded = list()
 var/global/list/saved = list()
+var/global/list/areas_to_save = list()
 
+
+/datum/area_holder
+	var/area_type = "/area"
+	var/name
+	var/list/turfs = list()
+	map_storage_saved_vars = "area_type;name;turfs"
 
 /obj/item/map_storage_debugger
 	name = "DEBUG ITEM"
@@ -32,7 +39,16 @@ var/global/list/saved = list()
 
 /area
 	map_storage_saved_vars = "name;power_equip;power_light;power_environ;always_unpowered;uid;global_uid"
-
+/datum/proc/should_save()
+	return should_save
+/mob/var/save_override = 0
+/mob/should_save()
+	if(save_override)
+		return 1
+	else
+		if(key || ckey)
+			return 0
+		return should_save
 /datum/proc/after_load()
 	return
 /area/after_load()
@@ -42,6 +58,7 @@ var/global/list/saved = list()
 
 /turf/after_load()
 	..()
+	update_icon()
 	lighting_build_overlay()
 
 /atom/movable/lighting_overlay/after_load()
@@ -51,42 +68,7 @@ var/global/list/saved = list()
 	..()
 	regenerate_icons()
 	redraw_inv()
-	if(hud_used)
-		hud_used.persistant_inventory_update()
 
-/datum/SaveList
-	var/list/InList
-
-/datum/SaveList/New(var/num)
-	if(num)
-		InList = new(num)
-	else
-		InList = new()
-
-/datum/SaveList/proc/Add(var/object)
-	InList.Add(object)
-
-/datum/SaveList/Write(savefile/f)
-	for(var/turf/T in InList)
-		f["[T.x]-[T.y]-[T.z]"] << T
-/datum/SaveList/Read(savefile/f)
-	var/v = null
-	for(var/variable in f.dir)
-		f[variable] >> v
-/datum/SaveList/Read(savefile/f)
-	var/starttime = REALTIMEOFDAY
-	var/v = null
-	for(var/variable in f.dir)
-		f[variable] >> v
-	for(var/ind in 1 to all_loaded.len)
-		var/datum/dat = all_loaded[ind]
-		dat.after_load()
-		if(istype(dat,/atom/))
-			var/atom/A = dat
-			A.Initialize()
-	SSmachines.makepowernets()
-	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
-	world << "Loading Complete"
 /datum/proc/StandardWrite(var/savefile/f)
 	var/list/saving
 	if(found_vars.Find("[type]"))
@@ -104,18 +86,18 @@ var/global/list/saved = list()
 		var/list/return_this = list()
 		if(istype(vars[variable], /datum))
 			var/datum/D = vars[variable]
-			if(!D.should_save)
+			if(!D.should_save())
 				continue
 		if(istype(vars[variable], /list))
 			var/list/D = vars[variable]
 			for(var/datum/dat in D)
-				if(!dat.should_save)
+				if(!dat.should_save())
 					D -= dat
 					return_this += dat
 		f["[variable]"] << vars[variable]
 		if(return_this.len)
 			var/list/D = vars[variable]
-			D |= return_this
+			D += return_this
 
 /datum/Write(savefile/f)
 	StandardWrite(f)
@@ -130,6 +112,7 @@ var/global/list/saved = list()
 	StandardWrite(f)
 
 /turf/Write(savefile/f)
+	areas_to_save |= loc
 	StandardWrite(f)
 
 /mob/Write(savefile/f)
@@ -138,7 +121,15 @@ var/global/list/saved = list()
 
 /area/Write(savefile/f)
 	StandardWrite(f)
-
+	var/list/coord_list = list()
+	for(var/turf/T in src)
+		coord_list += list(T.x, T.y, T.z)
+	f["coord_list"] << coord_list
+/area/proc/get_turf_coords()
+	var/list/coord_list = list()
+	for(var/turf/T in src)
+		coord_list += list(T.x, T.y, T.z)
+	return coord_list
 /datum/proc/StandardRead(var/savefile/f)
 	before_load()
 	var/list/loading
@@ -154,8 +145,8 @@ var/global/list/saved = list()
 	for(var/ind in 1 to loading.len)
 		var/variable = loading[ind]
 		if(f.dir.Find("[variable]"))
-			vars[variable] = null
 			try
+				vars[variable] = initial(vars[variable])
 				f["[variable]"] >> vars[variable]
 			catch
 
@@ -167,6 +158,12 @@ var/global/list/saved = list()
 
 /area/Read(savefile/f)
 	StandardRead(f)
+	var/list/coord_list
+	f["coord_list"] >> coord_list
+	for(var/ind in 1 to coord_list.len)
+		var/list/cords = coord_list[ind]
+		contents.Add(locate(cords[1],cords[2],cords[3]))
+	
 /proc/Save_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
 	var/z = zi
 	xi = (xi - (xi % 20) + 1)
@@ -180,6 +177,7 @@ var/global/list/saved = list()
 			lis |= T
 	f << lis
 /proc/Save_World()
+	areas_to_save = list()
 	var/starttime = REALTIMEOFDAY
 	for(var/turf/T in GLOB.latejoin_cryo)
 		var/obj/effect/persistent_spawn/spawnpoint = new()
@@ -194,6 +192,14 @@ var/global/list/saved = list()
 				Save_Chunk(x,y,z, f)
 				CHECK_TICK
 	f.cd = "/extras"
+	var/list/formatted_areas = list()
+	for(var/area/A in areas_to_save)
+		var/datum/area_holder/holder = new()
+		holder.area_type = A.type
+		holder.name = A.name
+		holder.turfs = A.get_turf_coords()
+		formatted_areas += holder
+	f["areas"] << formatted_areas
 	f["records"] << GLOB.all_crew_records
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
@@ -219,6 +225,14 @@ var/global/list/saved = list()
 	all_loaded = list()
 	SSmachines.makepowernets()
 	f.cd = "/extras"
+	var/list/areas
+	f["areas"] >> areas
+	for(var/datum/area_holder/holder in areas)
+		message_admins("loading area holder..")
+		var/area/A = new
+		A.name = holder.name
+		for(var/list/coords in holder.turfs)
+			A.contents.Add(locate(coords[1],coords[2],coords[3]))
 	f["records"] >> GLOB.all_crew_records
 	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Loading Complete"

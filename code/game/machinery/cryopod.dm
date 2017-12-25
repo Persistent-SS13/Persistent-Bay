@@ -274,13 +274,13 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 /obj/machinery/cryopod/Initialize()
 	. = ..()
 	find_control_computer()
-
+/obj/machinery/cryopod/after_load()
+	find_control_computer()
 /obj/machinery/cryopod/proc/find_control_computer(urgent=0)
 	// Workaround for http://www.byond.com/forum/?post=2007448
 	var/turf/T = src.loc
 	if(!T)
-		sleep(10)
-		T = src.loc
+		return
 	for(var/obj/machinery/computer/cryopod/C in T.loc)
 		control_computer = C
 		break

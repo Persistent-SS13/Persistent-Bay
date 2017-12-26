@@ -335,10 +335,9 @@ var/global/datum/controller/gameticker/ticker
 				if(fexists("[save_path][employee.current.save_slot].sav"))
 					fdel("[save_path][employee.current.save_slot].sav")
 				var/savefile/f = new("[save_path][employee.current.save_slot].sav")
-				employee.current.save_override = 1
 				f << employee.current
-				employee.current.save_override = 0
 				to_chat(employee.current, "You character has been saved.")
+				employee.current.save_override = 0
 			Save_World()
 			Master.SetRunLevel(RUNLEVEL_POSTGAME)
 

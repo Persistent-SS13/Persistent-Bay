@@ -166,8 +166,6 @@
 			load_panel.close()
 			new_player_panel_proc()
 		else
-			load_panel.close()
-			panel.close()
 			close_spawn_windows()	
 			AttemptLateSpawn()
 		return 0
@@ -555,23 +553,32 @@
 	if(!spawn_turf)
 		if(!GLOB.cryopods.len)
 			message_admins("WARNING! No cryopods avalible for spawning!")
-			return
-		var/obj/o = pick(GLOB.cryopods)
-		spawn_turf = get_step(o.loc, o.dir)
-		if(!spawn_turf)
-			message_admins("WARNING! spawn_turf generated is invalid!!!")
-			spawn_turf = o.loc
+			spawn_turf = locate(102, 98, 1)
+		else
+			var/obj/o
+			while(!o && GLOB.cryopods.len)
+				o = pick(GLOB.cryopods)
+				if(!o.loc)
+					GLOB.cryopods -= o
+					qdel(o)
+					o = null
+			if(o)
+				spawn_turf = get_step(o.loc, o.dir)
+			if(!spawn_turf)
+				message_admins("WARNING! spawn_turf generated is invalid!!!")
+				o = pick(GLOB.cryopods)
+				spawn_turf = o.loc
 		if(!spawn_turf)
 			message_admins("WARNING! spawn-turf still invalid!!")
-			spawn_turf = locate(100, 100, 1)
+			spawn_turf = locate(102, 98, 1)
 		message_admins("spawnturf :[spawn_turf] [spawn_turf.x], [spawn_turf.y], [spawn_turf.z]")
+	close_spawn_windows()	
 	new_character.loc = spawn_turf
 	new_character.key = key		//Manually transfer the key to log them in
 	new_character.save_slot = chosen_slot
 	ticker.minds |= new_character.mind//Cyborgs and AIs handle this in the transform proc.	//TODO!!!!! ~Carn
 	new_character.redraw_inv()
 	CreateModularRecord(new_character)
-	close_spawn_windows()
 	return new_character
 	/**
 	var/mob/living/carbon/human/new_character
@@ -660,8 +667,10 @@
 
 /mob/new_player/proc/close_spawn_windows()
 	src << browse(null, "window=latechoices") //closes late choices window
-	panel.close()
-
+	if(panel)
+		panel.close()
+	if(load_panel)
+		load_panel.close()
 /mob/new_player/proc/has_admin_rights()
 	return check_rights(R_ADMIN, 0, src)
 

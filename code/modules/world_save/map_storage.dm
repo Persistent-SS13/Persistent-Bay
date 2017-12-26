@@ -2,7 +2,7 @@ var/global/list/found_vars = list()
 var/global/list/all_loaded = list()
 var/global/list/saved = list()
 var/global/list/areas_to_save = list()
-
+var/global/list/zones_to_save = list()
 
 /datum/area_holder
 	var/area_type = "/area"
@@ -41,9 +41,9 @@ var/global/list/areas_to_save = list()
 	map_storage_saved_vars = "name;power_equip;power_light;power_environ;always_unpowered;uid;global_uid"
 /datum/proc/should_save()
 	return should_save
-/mob/var/save_override = 0
+/mob/var/save_override = 1
 /mob/should_save()
-	if(save_override)
+	if(!save_override)
 		return 1
 	else
 		if(key || ckey)
@@ -114,22 +114,33 @@ var/global/list/areas_to_save = list()
 /turf/Write(savefile/f)
 	areas_to_save |= loc
 	StandardWrite(f)
+/turf/simulated/Write(savefile/f)
+	if(zone)
+		zones_to_save |= zone
+	areas_to_save |= loc
+	StandardWrite(f)
 
 /mob/Write(savefile/f)
 	if(StandardWrite(f))
 		return
 
-/area/Write(savefile/f)
-	StandardWrite(f)
-	var/list/coord_list = list()
-	for(var/turf/T in src)
-		coord_list += list(T.x, T.y, T.z)
-	f["coord_list"] << coord_list
 /area/proc/get_turf_coords()
 	var/list/coord_list = list()
-	for(var/turf/T in src)
-		coord_list += list(T.x, T.y, T.z)
+	var/ind = 0
+	for(var/turf/T in contents)
+		ind++
+		coord_list += "[ind]"
+		coord_list[ind] = list(T.x, T.y, T.z)
 	return coord_list
+/zone/proc/get_turf_coords()
+	var/list/coord_list = list()
+	var/ind = 0
+	for(var/turf/T in contents)
+		ind++
+		coord_list += "[ind]"
+		coord_list[ind] = list(T.x, T.y, T.z)
+	return coord_list
+
 /datum/proc/StandardRead(var/savefile/f)
 	before_load()
 	var/list/loading
@@ -146,13 +157,14 @@ var/global/list/areas_to_save = list()
 		var/variable = loading[ind]
 		if(f.dir.Find("[variable]"))
 			try
-				vars[variable] = initial(vars[variable])
 				f["[variable]"] >> vars[variable]
 			catch
 
 /datum/Read(savefile/f)
 	StandardRead(f)
-
+/atom/movable/Read(savefile/f)
+	contents = list()
+	StandardRead(f)
 /turf/Read(savefile/f)
 	StandardRead(f)
 
@@ -178,10 +190,8 @@ var/global/list/areas_to_save = list()
 	f << lis
 /proc/Save_World()
 	areas_to_save = list()
+	zones_to_save = list()
 	var/starttime = REALTIMEOFDAY
-	for(var/turf/T in GLOB.latejoin_cryo)
-		var/obj/effect/persistent_spawn/spawnpoint = new()
-		spawnpoint.loc = T
 	fdel("map_saves/game.sav")
 	var/savefile/f = new("map_saves/game.sav")
 	found_vars = list()
@@ -194,11 +204,17 @@ var/global/list/areas_to_save = list()
 	f.cd = "/extras"
 	var/list/formatted_areas = list()
 	for(var/area/A in areas_to_save)
+		if(istype(A, /area/space)) continue
 		var/datum/area_holder/holder = new()
 		holder.area_type = A.type
 		holder.name = A.name
 		holder.turfs = A.get_turf_coords()
 		formatted_areas += holder
+	var/list/zones = list()
+	for(var/zone/Z in zones_to_save)
+		Z.turf_coords = Z.get_turf_coords()
+		zones |= Z
+	f["zones"] << zones
 	f["areas"] << formatted_areas
 	f["records"] << GLOB.all_crew_records
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
@@ -212,28 +228,46 @@ var/global/list/areas_to_save = list()
 	all_loaded = list()
 	found_vars = list()
 	var/v = null
+	f.cd = "/extras"
+	var/list/areas
+	f["areas"] >> areas
+	for(var/datum/area_holder/holder in areas)
+		var/area/A = new 
+		A.name = holder.name
+		var/list/turfs = list()
+		for(var/ind in 1 to holder.turfs.len)
+			var/list/coords = holder.turfs[ind]
+			var/turf/T = locate(text2num(coords[1]),text2num(coords[2]),text2num(coords[3]))
+			if(!T)
+				message_admins("No turf found for area load")
+			turfs |= T
+		A.contents.Add(turfs)
+	f["records"] >> GLOB.all_crew_records
+	f.cd = "/"
 	for(var/z in 1 to 11)
 		f.cd = "/map/[z]"
 		while(!f.eof)
 			f >> v
 			CHECK_TICK
-		world << "Loading.. [z*20]% Complete"
+		world << "Loading.. [((1/(12-z))*100)]% Complete"
+	f.cd = "/extras"
+	var/list/zones
+	f["zones"] >> zones
+	for(var/zone/Z in zones)
+		for(var/ind in 1 to Z.turf_coords.len)
+			var/list/coords = Z.turf_coords[ind]
+			var/turf/simulated/T = locate(text2num(coords[1]),text2num(coords[2]),text2num(coords[3]))
+			if(!T)
+				message_admins("No turf found for zone load")
+			T.zone = Z
+			Z.contents |= T
 
 	for(var/ind in 1 to all_loaded.len)
 		var/datum/dat = all_loaded[ind]
 		dat.after_load()
 	all_loaded = list()
 	SSmachines.makepowernets()
-	f.cd = "/extras"
-	var/list/areas
-	f["areas"] >> areas
-	for(var/datum/area_holder/holder in areas)
-		message_admins("loading area holder..")
-		var/area/A = new
-		A.name = holder.name
-		for(var/list/coords in holder.turfs)
-			A.contents.Add(locate(coords[1],coords[2],coords[3]))
-	f["records"] >> GLOB.all_crew_records
+	
 	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Loading Complete"
 	return 1

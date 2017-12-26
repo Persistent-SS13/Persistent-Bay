@@ -55,6 +55,7 @@ Class Procs:
 /zone/var/list/graphic_add = list()
 /zone/var/list/graphic_remove = list()
 
+/zone/var/list/turf_coords = list() // used for save/loading zones :V
 /zone/New()
 	SSair.add_zone(src)
 	air.temperature = TCMB

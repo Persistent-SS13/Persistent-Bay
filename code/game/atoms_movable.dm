@@ -241,25 +241,38 @@
 		overmap_spacetravel(get_turf(src), src)
 		return
 
-	var/new_x
-	var/new_y
-	var/new_z = GLOB.using_map.get_transit_zlevel(z)
+	var/list/L = list(	"1" = list("NORTH" = 10, "SOUTH" = 5, "EAST" = 8, "WEST" = 7),
+						"2" = list("NORTH" = 10, "SOUTH" = 5, "EAST" = 8, "WEST" = 7),
+						"3" = list("NORTH" = 10, "SOUTH" = 5, "EAST" = 8, "WEST" = 7),
+						"4" = list("NORTH" = 7, "SOUTH" = 9, "EAST" = 5, "WEST" = 6),
+						"5" = list("NORTH" = 2, "SOUTH" = 10, "EAST" = 6, "WEST" = 4),
+						"6" = list("NORTH" = 8, "SOUTH" = 11, "EAST" = 4, "WEST" = 5),
+						"7" = list("NORTH" = 9, "SOUTH" = 4, "EAST" = 2, "WEST" = 8),
+						"8" = list("NORTH" = 11, "SOUTH" = 6, "EAST" = 7, "WEST" = 2),
+						"9" = list("NORTH" = 4, "SOUTH" = 7, "EAST" = 10, "WEST" = 11),
+						"10" = list("NORTH" = 5, "SOUTH" = 2, "EAST" = 11, "WEST" = 9),
+						"11" = list("NORTH" = 6, "SOUTH" = 8, "EAST" = 9, "WEST" = 10)
+					)
+
+	var/new_x = x
+	var/new_y = y
+	var/new_z = z
 	if(new_z)
 		if(x <= TRANSITIONEDGE)
-			new_x = world.maxx - TRANSITIONEDGE - 2
-			new_y = rand(TRANSITIONEDGE + 2, world.maxy - TRANSITIONEDGE - 2)
+			new_x = world.maxx - TRANSITIONEDGE - 1
+			new_z = L["[z]"]["WEST"]
 
-		else if (x >= (world.maxx - TRANSITIONEDGE + 1))
+		else if (x >= (world.maxx - TRANSITIONEDGE))
 			new_x = TRANSITIONEDGE + 1
-			new_y = rand(TRANSITIONEDGE + 2, world.maxy - TRANSITIONEDGE - 2)
+			new_z = L["[z]"]["EAST"]
 
 		else if (y <= TRANSITIONEDGE)
-			new_y = world.maxy - TRANSITIONEDGE -2
-			new_x = rand(TRANSITIONEDGE + 2, world.maxx - TRANSITIONEDGE - 2)
+			new_y = world.maxy - TRANSITIONEDGE - 1
+			new_z = L["[z]"]["SOUTH"]
 
-		else if (y >= (world.maxy - TRANSITIONEDGE + 1))
+		else if (y >= (world.maxy - TRANSITIONEDGE))
 			new_y = TRANSITIONEDGE + 1
-			new_x = rand(TRANSITIONEDGE + 2, world.maxx - TRANSITIONEDGE - 2)
+			new_z = L["[z]"]["NORTH"]
 
 		var/turf/T = locate(new_x, new_y, new_z)
 		if(T)

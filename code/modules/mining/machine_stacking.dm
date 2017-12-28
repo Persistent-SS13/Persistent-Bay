@@ -103,21 +103,32 @@
 			if(src.output) break
 		return
 	return
-
+/obj/machinery/mineral/stacking_machine/after_load()
+	spawn( 5 )
+		for (var/dir in GLOB.cardinal)
+			src.input = locate(/obj/machinery/mineral/input, get_step(src, dir))
+			if(src.input) break
+		for (var/dir in GLOB.cardinal)
+			src.output = locate(/obj/machinery/mineral/output, get_step(src, dir))
+			if(src.output) break
+		return
 /obj/machinery/mineral/stacking_machine/Process()
 	if (src.output && src.input)
 		var/turf/T = get_turf(input)
-		for(var/obj/item/O in T.contents)
-			if(istype(O,/obj/item/stack/material))
-				var/obj/item/stack/material/S = O
-				if(!isnull(stack_storage[initial(S.name)]))
-					stack_storage[initial(S.name)] += S.amount
-					O.loc = null
+		if(T)
+			for(var/obj/item/O in T.contents)
+				if(istype(O,/obj/item/stack/material))
+					var/obj/item/stack/material/S = O
+					if(!isnull(stack_storage[initial(S.name)]))
+						stack_storage[initial(S.name)] += S.amount
+						O.loc = null
+					else
+						O.loc = output.loc
 				else
 					O.loc = output.loc
-			else
-				O.loc = output.loc
-
+		else
+			qdel(input)
+			qdel(src)
 	//Output amounts that are past stack_amt.
 	for(var/sheet in stack_storage)
 		if(stack_storage[sheet] >= stack_amt)
@@ -125,7 +136,7 @@
 			var/obj/item/stack/material/S = new stacktype (get_turf(output))
 			S.amount = stack_amt
 			stack_storage[sheet] -= stack_amt
-
-	console.updateUsrDialog()
+	if(console)
+		console.updateUsrDialog()
 	return
 

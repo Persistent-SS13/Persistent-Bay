@@ -45,7 +45,26 @@
 		ports += new_port
 
 	build_icons()
+/obj/machinery/atmospherics/omni/after_load()
+	..()
+	ports = new()
+	for(var/d in GLOB.cardinal)
+		var/datum/omni_port/new_port = new(src, d)
+		switch(d)
+			if(NORTH)
+				new_port.mode = tag_north
+			if(SOUTH)
+				new_port.mode = tag_south
+			if(EAST)
+				new_port.mode = tag_east
+			if(WEST)
+				new_port.mode = tag_west
+		if(new_port.mode > 0)
+			initialize_directions |= d
+		ports += new_port
 
+	build_icons()
+	
 /obj/machinery/atmospherics/omni/update_icon()
 	if(stat & NOPOWER)
 		overlays = overlays_off

@@ -46,12 +46,12 @@
 				species_blacklist |= job.type
 
 /datum/job/captain
-	title = "Commanding Officer"
-	supervisors = "the Sol Central Government and the Sol Code of Military Justice"
+	title = "Captain"
+	supervisors = "Nanotrasen Central Command"
 	minimal_player_age = 21
 	economic_modifier = 15
 	ideal_character_age = 50
-	outfit_type = /decl/hierarchy/outfit/job/torch/crew/command/CO
+	outfit_type = /decl/hierarchy/outfit/job/captain
 	allowed_branches = list(
 		/datum/mil_branch/expeditionary_corps
 	)
@@ -64,14 +64,14 @@
 							 /datum/computer_file/program/camera_monitor)
 
 /datum/job/hop
-	title = "Executive Officer"
-	supervisors = "the Commanding Officer"
+	title = "Head of Personnel"
+	supervisors = "the Captain"
 	department = "Command"
 	department_flag = COM
 	minimal_player_age = 21
 	economic_modifier = 10
 	ideal_character_age = 45
-	outfit_type = /decl/hierarchy/outfit/job/torch/crew/command/XO
+	outfit_type = /decl/hierarchy/outfit/job/hop
 	allowed_branches = list(
 		/datum/mil_branch/expeditionary_corps,
 		/datum/mil_branch/fleet = /decl/hierarchy/outfit/job/torch/crew/command/XO/fleet,
@@ -113,7 +113,7 @@
 
 /datum/job/rd
 	title = "Research Director"
-	supervisors = "NanoTrasen and the Commanding Officer"
+	supervisors = "The Commanding Officers"
 	economic_modifier = 20
 	minimal_player_age = 14
 	ideal_character_age = 60
@@ -133,7 +133,7 @@
 
 /datum/job/cmo
 	title = "Chief Medical Officer"
-	supervisors = "the Commanding Officer and the Executive Officer"
+	supervisors = "The Commanding Officers"
 	economic_modifier = 10
 	minimal_player_age = 21
 	ideal_character_age = 48

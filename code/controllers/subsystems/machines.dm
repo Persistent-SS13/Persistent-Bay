@@ -166,7 +166,8 @@ datum/controller/subsystem/machines/proc/setup_atmos_machinery(list/machines)
 				M.auto_use_power()
 		else
 			machinery.Remove(M)
-			M.is_processing = null
+			if(M)
+				M.is_processing = null
 		if(MC_TICK_CHECK)
 			return
 

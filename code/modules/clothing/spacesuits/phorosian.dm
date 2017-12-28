@@ -12,8 +12,9 @@
 	sprite_sheets = list(
 		SPECIES_PHOROSIAN = 'icons/mob/species/phorosian/suit.dmi'
 		)
-	breach_threshold = 18
+	breach_threshold = 6
 	can_breach = 1
+	resiliance = 0.1
 	
 	
 /obj/item/clothing/head/helmet/space/phorosian
@@ -48,7 +49,7 @@
 	item_state = "phorosianAtmos_suit"
 	armor = list(melee = 40, bullet = 5, laser = 20,energy = 5, bomb = 35, bio = 100, rad = 50)
 	max_heat_protection_temperature = FIRESUIT_MAX_HEAT_PROTECTION_TEMPERATURE
-
+	
 /obj/item/clothing/head/helmet/space/phorosian/atmostech
 	name = "Phorosian atmospheric helmet"
 	icon_state = "phorosianAtmos_helmet0"
@@ -301,3 +302,4 @@
 	icon_state = "phorosianNukeops_helmet0"
 	item_state = "phorosianNukeops_helmet0"
 	armor = list(melee = 60, bullet = 50, laser = 30, energy = 15, bomb = 35, bio = 100, rad = 50)
+	

@@ -80,8 +80,7 @@
 
 /obj/item/weapon/tank/phoron/New()
 	..()
-
-	src.air_contents.adjust_gas("phoron", (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
+	src.air_contents.adjust_gas("phoron", (3*ONE_ATMOSPHERE)*70/(R_IDEAL_GAS_EQUATION*T20C))
 	return
 
 /obj/item/weapon/tank/phoron/attackby(obj/item/weapon/W as obj, mob/user as mob)
@@ -105,6 +104,10 @@
 	gauge_icon = "indicator_tank"
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
 
+/obj/item/weapon/tank/phoron/phorosian/New()
+	..()
+	src.air_contents.adjust_gas("phoron", (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
+	return	
 /*
  * Emergency Oxygen
  */

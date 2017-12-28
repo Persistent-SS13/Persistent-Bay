@@ -16,7 +16,7 @@
 	exhale_type = null
 	siemens_coefficient = 0.7
 	flags = NO_POISON //They're sorta made out of poison
-	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED
+	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED | SPECIES_IS_RESTRICTED
 	appearance_flags = HAS_EYE_COLOR
 	brute_mod =     0.7 //Phoron has made them resistant to damage
 	burn_mod =      1.5 //Shame they burn good though.
@@ -69,7 +69,6 @@
 		BP_HEART =    /obj/item/organ/internal/heart/phorosian,
 		BP_LUNGS =    /obj/item/organ/internal/lungs/phorosian,
 		BP_LIVER =    /obj/item/organ/internal/liver/phorosian,
-		BP_KIDNEYS =  /obj/item/organ/internal/kidneys,
 		BP_BRAIN =    /obj/item/organ/internal/brain/phorosian,
 		BP_EYES =     /obj/item/organ/internal/eyes/phorosian,
 		)
@@ -78,22 +77,14 @@
 	
 /mob/living/carbon/human/phorosian/vomit(var/toxvomit = 0, var/timevomit = 1, var/level = 3) //nothing to really vomit out, considering they don't eat
 	return
-
-
+	
 /datum/species/phorosian/get_blood_name()
 	return "Phoronic plasma"
 	
 /datum/species/phorosian/equip_survival_gear(var/mob/living/carbon/human/H)
-	H.equip_to_slot_or_del(new /obj/item/clothing/mask/breath(H), slot_wear_mask)
-
-	if(istype(H.get_equipped_item(slot_back), /obj/item/weapon/storage/backpack))
-		H.equip_to_slot_or_del(new /obj/item/weapon/tank/nitrogen(H), slot_r_hand)
-		H.internal = H.r_hand
-	else
-		H.equip_to_slot_or_del(new /obj/item/weapon/tank/nitrogen(H), slot_back)
-		H.equip_to_slot_or_del(new /obj/item/weapon/storage/box/vox(H), slot_r_hand)
-		H.internal = H.back
-
+	H.equip_to_slot_or_del(new /obj/item/clothing/head/helmet/space/phorosian(H), slot_head)
+	H.equip_to_slot_or_del(new /obj/item/clothing/suit/space/phorosian(H), slot_wear_suit)
+	H.equip_to_slot_or_del(new /obj/item/weapon/tank/phoron/phorosian(H), slot_s_store)
 	if(H.internals)
 		H.internals.icon_state = "internal1"
 
@@ -127,9 +118,6 @@
 		H.remove_blood(3)
 	if (H.getFireLoss())
 		H.adjustFireLoss(-2)
-		H.remove_blood(3)
-	if (H.getOxyLoss())
-		H.adjustOxyLoss(-2)
 		H.remove_blood(3)
 	if (H.getToxLoss())
 		H.adjustToxLoss(-2)

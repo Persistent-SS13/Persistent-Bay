@@ -67,10 +67,6 @@
 	if(!job_master)
 		return
 
-	var/datum/species/S = preference_species()
-	var/datum/mil_branch/player_branch = null
-	var/datum/mil_rank/player_rank = null
-
 	. = list()
 	. += "<tt><center>"
 	. += "<b>Choose Starting NT-Certifications</b><br>Most characters start with no certifications and recieve them all in game.<br>"

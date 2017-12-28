@@ -13,12 +13,21 @@
 	New()
 		..()
 		var/turf/T = loc
-		Beacon = new /obj/item/device/radio/beacon
-		Beacon.invisibility = INVISIBILITY_MAXIMUM
-		Beacon.loc = T
+		if(T)
+			Beacon = new /obj/item/device/radio/beacon
+			Beacon.invisibility = INVISIBILITY_MAXIMUM
+			Beacon.loc = T
 
-		hide(!T.is_plating())
+			hide(!T.is_plating())
+	after_load()
+		..()
+		var/turf/T = loc
+		if(T)
+			Beacon = new /obj/item/device/radio/beacon
+			Beacon.invisibility = INVISIBILITY_MAXIMUM
+			Beacon.loc = T
 
+			hide(!T.is_plating())
 	Destroy()
 		QDEL_NULL(Beacon)
 		. = ..()

@@ -5,6 +5,7 @@
  * since time_entered, which is world.time when the occupant moves in.
  * ~ Zuhayr
  */
+GLOBAL_LIST_EMPTY(all_cryo_mobs)
 
 
 //Main cryopod console.
@@ -191,6 +192,8 @@
 		/obj/item/clothing/head/helmet/space,
 		/obj/item/weapon/storage/internal
 	)
+/obj/machinery/cryopod/New()
+	GLOB.cryopods |= src
 
 /obj/machinery/cryopod/robot
 	name = "robotic storage unit"
@@ -271,10 +274,14 @@
 /obj/machinery/cryopod/Initialize()
 	. = ..()
 	find_control_computer()
-
+/obj/machinery/cryopod/after_load()
+	find_control_computer()
 /obj/machinery/cryopod/proc/find_control_computer(urgent=0)
 	// Workaround for http://www.byond.com/forum/?post=2007448
-	for(var/obj/machinery/computer/cryopod/C in src.loc.loc)
+	var/turf/T = src.loc
+	if(!T)
+		return
+	for(var/obj/machinery/computer/cryopod/C in T.loc)
 		control_computer = C
 		break
 	// control_computer = locate(/obj/machinery/computer/cryopod) in src.loc.loc
@@ -304,6 +311,9 @@
 
 //Lifted from Unity stasis.dm and refactored. ~Zuhayr
 /obj/machinery/cryopod/Process()
+	if(!loc)
+		GLOB.cryopods -= src
+		qdel(src)
 	if(occupant)
 		//Allow a ten minute gap between entering the pod and actually despawning.
 		if(world.time - time_entered < time_till_despawn)
@@ -316,103 +326,16 @@
 
 			despawn_occupant()
 
-// This function can not be undone; do not call this unless you are sure
-// Also make sure there is a valid control computer
-/obj/machinery/cryopod/robot/despawn_occupant()
-	var/mob/living/silicon/robot/R = occupant
-	if(!istype(R)) return ..()
 
-	qdel(R.mmi)
-	for(var/obj/item/I in R.module) // the tools the borg has; metal, glass, guns etc
-		for(var/obj/item/O in I) // the things inside the tools, if anything; mainly for janiborg trash bags
-			O.forceMove(R)
-		qdel(I)
-	qdel(R.module)
-
-	return ..()
 
 // This function can not be undone; do not call this unless you are sure
 // Also make sure there is a valid control computer
 /obj/machinery/cryopod/proc/despawn_occupant()
-	//Drop all items into the pod.
-	for(var/obj/item/W in occupant)
-		occupant.drop_from_inventory(W)
-		W.forceMove(src)
-
-		if(W.contents.len) //Make sure we catch anything not handled by qdel() on the items.
-			for(var/obj/item/O in W.contents)
-				if(istype(O,/obj/item/weapon/storage/internal)) //Stop eating pockets, you fuck!
-					continue
-				O.forceMove(src)
-
-	//Delete all items not on the preservation list.
-	var/list/items = src.contents.Copy()
-	items -= occupant // Don't delete the occupant
-	items -= announce // or the autosay radio.
-
-	for(var/obj/item/W in items)
-
-		var/preserve = null
-		// Snowflaaaake.
-		if(istype(W, /obj/item/device/mmi))
-			var/obj/item/device/mmi/brain = W
-			if(brain.brainmob && brain.brainmob.client && brain.brainmob.key)
-				preserve = 1
-			else
-				continue
-		else
-			for(var/T in preserve_items)
-				if(istype(W,T))
-					preserve = 1
-					break
-
-		if(!preserve)
-			qdel(W)
-		else
-			if(control_computer && control_computer.allow_items)
-				control_computer.frozen_items += W
-				W.loc = null
-			else
-				W.forceMove(src.loc)
-
-	//Update any existing objectives involving this mob.
-	for(var/datum/objective/O in all_objectives)
-		// We don't want revs to get objectives that aren't for heads of staff. Letting
-		// them win or lose based on cryo is silly so we remove the objective.
-		if(O.target == occupant.mind)
-			if(O.owner && O.owner.current)
-				to_chat(O.owner.current, "<span class='warning'>You get the feeling your target is no longer within your reach...</span>")
-			qdel(O)
-
-	//Handle job slot/tater cleanup.
-	if(occupant.mind)
-		var/job = occupant.mind.assigned_role
-		job_master.FreeRole(job)
-
-		if(occupant.mind.objectives.len)
-			occupant.mind.objectives = null
-			occupant.mind.special_role = null
-	//else
-		//if(ticker.mode.name == "AutoTraitor")
-			//var/datum/game_mode/traitor/autotraitor/current_mode = ticker.mode
-			//current_mode.possible_traitors.Remove(occupant)
-
-	// Delete them from datacore.
-	var/datum/computer_file/crew_record/R = get_crewmember_record(occupant.real_name)
-	if(R)
-		qdel(R)
-
-	icon_state = base_icon_state
-
-	//TODO: Check objectives/mode, update new targets if this mob is the target, spawn new antags?
-
-
-	//Make an announcement and log the person entering storage.
-
-	// Titles should really be fetched from data records
-	//  and records should not be fetched by name as there is no guarantee names are unique
+	occupant.loc = null
+	var/mob/new_player/M = new /mob/new_player()
+	M.loc = null
+	M.key = occupant.key
 	var/role_alt_title = occupant.mind ? occupant.mind.role_alt_title : "Unknown"
-
 	if(control_computer)
 		control_computer.frozen_crew += "[occupant.real_name], [role_alt_title] - [stationtime2text()]"
 		control_computer._admin_logs += "[key_name(occupant)] ([role_alt_title]) at [stationtime2text()]"
@@ -420,12 +343,7 @@
 
 	announce.autosay("[occupant.real_name], [role_alt_title], [on_store_message]", "[on_store_name]")
 	visible_message("<span class='notice'>\The [initial(name)] hums and hisses as it moves [occupant.real_name] into storage.</span>", 3)
-
-	//This should guarantee that ghosts don't spawn.
-	occupant.ckey = null
-
-	// Delete the mob.
-	qdel(occupant)
+	GLOB.all_cryo_mobs |= occupant
 	set_occupant(null)
 
 

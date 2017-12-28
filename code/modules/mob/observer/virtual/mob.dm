@@ -3,7 +3,9 @@
 
 /mob/observer/virtual/mob/New(var/location, var/mob/host)
 	..()
-
+	if(!host)
+		qdel(src)
+		return
 	GLOB.sight_set_event.register(host, src, /mob/observer/virtual/mob/proc/sync_sight)
 	GLOB.see_invisible_set_event.register(host, src, /mob/observer/virtual/mob/proc/sync_sight)
 	GLOB.see_in_dark_set_event.register(host, src, /mob/observer/virtual/mob/proc/sync_sight)

@@ -765,8 +765,16 @@ var/global/floorIsLava = 0
 
 /datum/admins/proc/savenow()
 	set category = "Server"
-	set desc="Saves Station and Characters"
-	set name="Save Station and Characters"
+	set desc="Saves Station"
+	set name="Save Station"
+
+	if(!check_rights(R_ADMIN))
+		return
+	Save_World()
+/datum/admins/proc/savechars()
+	set category = "Server"
+	set desc="Saves Characters"
+	set name="Save Characters"
 
 	if(!check_rights(R_ADMIN))
 		return
@@ -779,7 +787,7 @@ var/global/floorIsLava = 0
 		var/savefile/f = new("[save_path][employee.current.save_slot].sav")
 		f << employee.current
 		to_chat(employee.current, "You character has been saved.")
-	Save_World()
+
 /datum/admins/proc/loadnow()
 	set category = "Server"
 	set desc="Loads the Station"

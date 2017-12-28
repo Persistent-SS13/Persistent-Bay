@@ -50,6 +50,9 @@
 			id_with_download += text2num(N)
 
 /obj/machinery/r_n_d/server/Process()
+	if(!loc) 
+		qdel(src) 
+		return
 	var/datum/gas_mixture/environment = loc.return_air()
 	switch(environment.temperature)
 		if(0 to T0C)

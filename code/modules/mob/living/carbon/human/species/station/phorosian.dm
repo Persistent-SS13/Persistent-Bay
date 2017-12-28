@@ -21,12 +21,13 @@
 	brute_mod =     0.7 //Phoron has made them resistant to damage
 	burn_mod =      1.5 //Shame they burn good though.
 	death_message = "seizes up and falls limp, their eyes going dim..."
-	blood_oxy = 0 //That would be really dumb
 	flesh_color = "#3b1077"
 	blood_color = "#4d224d"
 	reagent_tag = IS_PHOROSIAN
-	strength    = STR_LOW
-	var/burning
+	strength    = STR_LOW //they weak
+	var/burning //used to check if they are already burning from oxygen exposure - doesn't check for fire
+	
+	var/list/eye_overlays = list()
 	
 	cold_level_1 = 240 //Default 260 - Lower is better
 	cold_level_2 = 180 //Default 200
@@ -69,10 +70,13 @@
 		BP_LUNGS =    /obj/item/organ/internal/lungs/phorosian,
 		BP_LIVER =    /obj/item/organ/internal/liver/phorosian,
 		BP_KIDNEYS =  /obj/item/organ/internal/kidneys,
-		BP_BRAIN =    /obj/item/organ/internal/brain,
-		BP_EYES =     /obj/item/organ/internal/eyes,
+		BP_BRAIN =    /obj/item/organ/internal/brain/phorosian,
+		BP_EYES =     /obj/item/organ/internal/eyes/phorosian,
 		)
 /mob/living/carbon/human/phorosian/pl_effects() //you're made of the stuff why would it hurt you?
+	return
+	
+/mob/living/carbon/human/phorosian/vomit(var/toxvomit = 0, var/timevomit = 1, var/level = 3) //nothing to really vomit out, considering they don't eat
 	return
 
 
@@ -92,9 +96,11 @@
 
 	if(H.internals)
 		H.internals.icon_state = "internal1"
+
 	
 /datum/species/phorosian/handle_environment_special(var/mob/living/carbon/human/H)
-
+	H.nutrition = 400 //if someone knows how to stop something from even needing nutrition, please change this.
+	
 	//Should they get exposed to oxygen, things get heated.
 	if(H.get_pressure_weakness()>0.5) //If air gets in, then well there's a problem.
 		var/datum/gas_mixture/environment = H.loc.return_air()
@@ -107,23 +113,25 @@
 	else
 		burning=0
 
-		
-	for(var/obj/item/organ/I in H.internal_organs)
-		if(I.damage > 0)
-			I.damage = max(I.damage - 2, 0)
-			H.remove_blood(4)
-			return 1
-
+			
+	//healing stuff	
+	//for(var/obj/item/organ/I in H.internal_organs)
+		//if(I.damage > 0)
+			//I.damage = max(I.damage - 2, 0)
+			//H.remove_blood(5)
+			//return 1
+			
 	// Heal remaining damage.
 	if (H.getBruteLoss())
-		H.adjustBruteLoss(-4)
-		H.remove_blood(4)
+		H.adjustBruteLoss(-2)
+		H.remove_blood(3)
 	if (H.getFireLoss())
-		H.adjustFireLoss(-4)
-		H.remove_blood(4)
+		H.adjustFireLoss(-2)
+		H.remove_blood(3)
 	if (H.getOxyLoss())
-		H.adjustOxyLoss(-4)
-		H.remove_blood(4)
+		H.adjustOxyLoss(-2)
+		H.remove_blood(3)
 	if (H.getToxLoss())
-		H.adjustToxLoss(-4)
-		H.remove_blood(4)
+		H.adjustToxLoss(-2)
+		H.remove_blood(3)
+

@@ -1,18 +1,40 @@
+//definitions
+
 /obj/item/organ/internal/lungs/phorosian
 	name = "phoronized lungs" 
 	icon_state = "lungs-plasma"
+	desc = "A set of lungs seemingly made out of fleshy phoron."
 	breath_type = "phoron"
 	poison_type = "oxygen" //It burns to breathe!
 
 /obj/item/organ/internal/liver/phorosian
-	name = "phoronized liver"
+	name = "phoron processor"
+	desc = "A fleshy hunk of phoron that looks a little like a liver."
 	parent_organ = BP_CHEST
 	color = "#7e4ba0"
 	
 /obj/item/organ/internal/heart/phorosian
-	name = "phoronized heart"
+	name = "phoron pump"
 	parent_organ = BP_CHEST
 	color = "#7e4ba0"
+	
+/obj/item/organ/internal/brain/phorosian
+	name = "Crystallized brain"
+	desc = "A brain seemingly made out of both crystallized phoron and brain matter."
+	parent_organ = BP_HEAD
+	color = "#7e4ba0"
+
+/obj/item/organ/internal/eyes/phorosian
+	name = "Crystallized eyeballs"
+	desc = "A pair of crystal spheres in the shape of eyes. They give off a faint glow."
+	phoron_guard = 1
+	
+/obj/item/organ/internal/eyes/phorosian/New()
+	update_colour()
+	
+	
+
+//lung stuff - makes phorosians gain blood depending on intake of phoron. Also makes their lungs burn if they breathe oxygen.
 
 /obj/item/organ/internal/lungs/phorosian/handle_breath(datum/gas_mixture/breath, var/forced) //Turns out breathing the stuff everyone dislikes means you need your own breathing proc
 	if(!owner)
@@ -58,7 +80,6 @@
 	if(safe_pressure_min)
 		inhale_efficiency = min(round(inhale_pp/safe_pressure_min, 0.001), 3)
 	else
-		message_admins("no safe_pressure_min [safe_pressure_min] [owner] [owner.x] [owner.y] [owner.z]")
 		inhale_efficiency = 3
 	// Not enough to breathe
 	if(inhale_efficiency < 1)
@@ -110,7 +131,7 @@
 
 	// Too much poison in the air.
 	if(toxins_pp > safe_toxins_max)
-		take_damage(3)
+		take_damage(1)
 		to_chat(owner, "<span class='warning'>Your lungs feel like they're burning!</span>")
 		breath.adjust_gas(poison_type, -poison/6, update = 0) //update after
 		owner.phoron_alert = 1
@@ -170,37 +191,122 @@
 			owner.emote(pick("shiver","twitch"))
 		owner.remove_blood(HUMAN_MAX_OXYLOSS*breath_fail_ratio)
 	
+//Brain stuff - Only difference is that you don't paralyse at low blood to stop you from dropping your tank, 'cause that would suck.
+/obj/item/organ/internal/brain/phorosian/Process()
+
+	if(owner)
+		if(damage > max_damage / 2 && healed_threshold)
+			spawn()
+				alert(owner, "You have taken massive brain damage! You will not be able to remember the events leading up to your injury.", "Brain Damaged")
+			healed_threshold = 0
+
+		if(damage < (max_damage / 4))
+			healed_threshold = 1
+
+		if(owner.paralysis < 1) // Skip it if we're already down.
+
+			if((owner.disabilities & EPILEPSY) && prob(1))
+				to_chat(owner, "<span class='warning'>You have a seizure!</span>")
+				owner.visible_message("<span class='danger'>\The [owner] starts having a seizure!</span>")
+				owner.Paralyse(10)
+				owner.make_jittery(1000)
+			else if((owner.disabilities & TOURETTES) && prob(10))
+				owner.Stun(10)
+				switch(rand(1, 3))
+					if(1)
+						owner.emote("twitch")
+					if(2 to 3)
+						owner.say("[prob(50) ? ";" : ""][pick("SHIT", "PISS", "FUCK", "CUNT", "COCKSUCKER", "MOTHERFUCKER", "TITS")]")
+				owner.make_jittery(100)
+			else if((owner.disabilities & NERVOUS) && prob(10))
+				owner.stuttering = max(10, owner.stuttering)
+
+			if(owner.stat == CONSCIOUS)
+				if(damage > 0 && prob(1))
+					owner.custom_pain("Your head feels numb and painful.",10)
+				if(is_bruised() && prob(1) && owner.eye_blurry <= 0)
+					to_chat(owner, "<span class='warning'>It becomes hard to see for some reason.</span>")
+					owner.eye_blurry = 10
+				if(is_broken() && prob(1) && owner.get_active_hand())
+					to_chat(owner, "<span class='danger'>Your hand won't respond properly, and you drop what you are holding!</span>")
+					owner.drop_item()
+				if((damage >= (max_damage * 0.75)))
+					if(!owner.lying)
+						to_chat(owner, "<span class='danger'>You black out!</span>")
+					owner.Paralyse(10)
+
+		// Brain damage from low oxygenation or lack of blood.
+		if(owner.should_have_organ(BP_HEART))
+
+			// No heart? You are going to have a very bad time. Not 100% lethal because heart transplants should be a thing.
+			var/blood_volume = owner.get_blood_oxygenation()
+
+			if(owner.is_asystole()) // Heart is missing or isn't beating and we're not breathing (hardcrit)
+				owner.Paralyse(3)
+			var/can_heal = damage && damage < max_damage && (damage % damage_threshold_value || owner.chem_effects[CE_BRAIN_REGEN] || (!past_damage_threshold(3) && owner.chem_effects[CE_STABLE]))
+			var/damprob
+			//Effects of bloodloss
+			switch(blood_volume)
+
+				if(BLOOD_VOLUME_SAFE to INFINITY)
+					if(can_heal)
+						damage--
+				if(BLOOD_VOLUME_OKAY to BLOOD_VOLUME_SAFE)
+					if(prob(1))
+						to_chat(owner, "<span class='warning'>You feel [pick("dizzy","woozy","faint")]...</span>")
+					damprob = owner.chem_effects[CE_STABLE] ? 30 : 60
+					if(!past_damage_threshold(2) && prob(damprob))
+						take_damage(1)
+				if(BLOOD_VOLUME_BAD to BLOOD_VOLUME_OKAY)
+					owner.eye_blurry = max(owner.eye_blurry,6)
+					damprob = owner.chem_effects[CE_STABLE] ? 40 : 80
+					if(!past_damage_threshold(4) && prob(damprob))
+						take_damage(1)
+						to_chat(owner, "<span class='warning'>You feel extremely [pick("dizzy","woozy","faint")]...</span>")
+				if(BLOOD_VOLUME_SURVIVE to BLOOD_VOLUME_BAD)
+					owner.eye_blurry = max(owner.eye_blurry,6)
+					damprob = owner.chem_effects[CE_STABLE] ? 60 : 100
+					if(!past_damage_threshold(6) && prob(damprob))
+						take_damage(1)
+						to_chat(owner, "<span class='warning'>You feel extremely [pick("dizzy","woozy","faint")]...</span>")
+				if(-(INFINITY) to BLOOD_VOLUME_SURVIVE) // Also see heart.dm, being below this point puts you into cardiac arrest.
+					owner.eye_blurry = max(owner.eye_blurry,6)
+					damprob = owner.chem_effects[CE_STABLE] ? 80 : 100
+					if(prob(damprob))
+						take_damage(1)
+	..()
+	
 //Phoron reinforced bones woo.
 /obj/item/organ/external/head/phorosian
-	min_broken_damage = 40	
+	min_broken_damage = 45	
 
 /obj/item/organ/external/chest/phorosian
-	min_broken_damage = 40
+	min_broken_damage = 45
 
 /obj/item/organ/external/groin/phorosian
-	min_broken_damage = 40
+	min_broken_damage = 45
 
 /obj/item/organ/external/arm/phorosian
-	min_broken_damage = 35
+	min_broken_damage = 40
 
 /obj/item/organ/external/arm/right/phorosian
-	min_broken_damage = 35
+	min_broken_damage = 40
 
 /obj/item/organ/external/leg/phorosian
-	min_broken_damage = 35
+	min_broken_damage = 40
 
 /obj/item/organ/external/leg/right/phorosian
-	min_broken_damage = 35
+	min_broken_damage = 40
 
 /obj/item/organ/external/foot/phorosian
-	min_broken_damage = 20
+	min_broken_damage = 25
 
 /obj/item/organ/external/foot/right/phorosian
-	min_broken_damage = 20
+	min_broken_damage = 25
 
 /obj/item/organ/external/hand/phorosian
-	min_broken_damage = 20
+	min_broken_damage = 25
 
 /obj/item/organ/external/hand/right/phorosian
-	min_broken_damage = 20
+	min_broken_damage = 25
 	

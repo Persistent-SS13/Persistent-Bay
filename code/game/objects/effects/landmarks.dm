@@ -1,3 +1,15 @@
+/obj/effect/persistent_spawn
+	name = "landmark"
+	icon = 'icons/mob/screen1.dmi'
+	icon_state = "x2"
+	anchored = 1.0
+	unacidable = 1
+	simulated = 0
+	invisibility = 101
+
+/obj/effect/persistent_spawn/after_load()
+	GLOB.latejoin_cryo |= loc
+	qdel(src)
 /obj/effect/landmark
 	name = "landmark"
 	icon = 'icons/mob/screen1.dmi'
@@ -10,8 +22,6 @@
 
 /obj/effect/landmark/New()
 	..()
-	tag = "landmark*[name]"
-
 	//TODO clean up this mess
 	switch(name)			//some of these are probably obsolete
 		if("monkey")

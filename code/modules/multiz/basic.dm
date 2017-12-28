@@ -7,6 +7,16 @@ var/z_levels = 0 // Each bit represents a connection between adjacent levels.  S
 // If the height is more than 1, we mark all contained levels as connected.
 /obj/effect/landmark/map_data/New()
 	..()
+	if(height == 1) return
+	ASSERT(height <= z)
+	if(z > GLOB.HIGHEST_CONNECTABLE_ZLEVEL_INDEX)
+		CRASH("[log_info_line(src)] - Attempted to connect Z-levels outside the valid range.")
+	// Due to the offsets of how connections are stored v.s. how z-levels are indexed, some magic number silliness happened.
+	for(var/i = (z - height) to (z - 2))
+		z_levels |= (1 << i)
+/obj/effect/landmark/map_data/after_load()
+	..()
+	if(height == 1) return
 	ASSERT(height <= z)
 	if(z > GLOB.HIGHEST_CONNECTABLE_ZLEVEL_INDEX)
 		CRASH("[log_info_line(src)] - Attempted to connect Z-levels outside the valid range.")
@@ -15,8 +25,9 @@ var/z_levels = 0 // Each bit represents a connection between adjacent levels.  S
 		z_levels |= (1 << i)
 
 /obj/effect/landmark/map_data/Initialize()
+	return ":)"
 	..()
-	return INITIALIZE_HINT_QDEL
+//	return INITIALIZE_HINT_QDEL
 
 // The storage of connections between adjacent levels means some bitwise magic is needed.
 /proc/HasAbove(var/z)

@@ -161,7 +161,7 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 
 	if(delay)
 		sleep(delay)
-
+	
 	if(init_sss)
 		init_subtypes(/datum/controller/subsystem, subsystems)
 
@@ -180,7 +180,7 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 		CHECK_TICK
 	current_ticklimit = TICK_LIMIT_RUNNING
 	var/time = (REALTIMEOFDAY - start_timeofday) / 10
-
+	
 	var/msg = "Initializations complete within [time] second\s!"
 	report_progress(msg)
 	log_world(msg)

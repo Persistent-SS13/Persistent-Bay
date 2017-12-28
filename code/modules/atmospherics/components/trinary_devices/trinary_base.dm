@@ -31,7 +31,18 @@ obj/machinery/atmospherics/trinary
 		air1.volume = 200
 		air2.volume = 200
 		air3.volume = 200
-
+	after_load()
+		..()
+		switch(dir)
+			if(NORTH)
+				initialize_directions = EAST|NORTH|SOUTH
+			if(SOUTH)
+				initialize_directions = SOUTH|WEST|NORTH
+			if(EAST)
+				initialize_directions = EAST|WEST|SOUTH
+			if(WEST)
+				initialize_directions = WEST|NORTH|EAST
+	
 // Housekeeping and pipe network stuff below
 	network_expand(datum/pipe_network/new_network, obj/machinery/atmospherics/pipe/reference)
 		if(reference == node1)

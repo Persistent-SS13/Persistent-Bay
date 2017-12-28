@@ -118,12 +118,31 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 /obj/machinery/telecomms/New()
 	telecomms_list += src
 	..()
+/obj/machinery/telecomms/after_load()
+	var/turf/position = get_turf(src)
+	if(!position)
+		message_admins("telecomms with no loc during after_load? |[src] | [loc] | [position] |")
+		return
+	listening_levels = GetConnectedZlevels(position.z)
+	
+	if(autolinkers.len)
+		// Links nearby machines
+		if(!long_range_link)
+			for(var/obj/machinery/telecomms/T in orange(20, src))
+				add_link(T)
+		else
+			for(var/obj/machinery/telecomms/T in telecomms_list)
+				add_link(T)
+	update_power()
+	. = ..()
 
 /obj/machinery/telecomms/Initialize()
 	//Set the listening_levels if there's none.
 	if(!listening_levels)
 		//Defaults to our Z level!
 		var/turf/position = get_turf(src)
+		if(!position)
+			return
 		listening_levels = GetConnectedZlevels(position.z)
 
 	if(autolinkers.len)

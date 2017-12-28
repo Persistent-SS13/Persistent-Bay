@@ -393,6 +393,9 @@
 		return
 
 	var/atom/L = loc						// recharging from loc turf
+	if(!loc)
+		qdel(src)
+		return
 	var/datum/gas_mixture/env = L.return_air()
 
 	var/power_draw = -1
@@ -731,8 +734,9 @@
 
 	// update the icon_state to reflect hidden status
 	proc/update()
-		var/turf/T = src.loc
-		hide(!T.is_plating() && !istype(T,/turf/space))	// space never hides pipes
+		if(loc)
+			var/turf/T = src.loc
+			hide(!T.is_plating() && !istype(T,/turf/space))	// space never hides pipes
 
 	// hide called by levelupdate if turf intact status changes
 	// change visibility status and force update of icon
@@ -981,10 +985,19 @@
 			dpdir = dir | turn(dir, 180)
 		else
 			dpdir = dir | turn(dir, -90)
-
-		update()
+		if(loc)
+			update()
 		return
 
+	after_load()
+		..()
+		if(icon_state == "pipe-s")
+			dpdir = dir | turn(dir, 180)
+		else
+			dpdir = dir | turn(dir, -90)
+		if(loc)
+			update()
+		return
 ///// Z-Level stuff
 /obj/structure/disposalpipe/up
 	icon_state = "pipe-u"
@@ -1478,7 +1491,13 @@
 
 	update()
 	return
-
+/obj/structure/disposalpipe/trunk/after_load()
+	..()
+	dpdir = dir
+	spawn(1)
+		getlinked()
+	update()
+	return
 /obj/structure/disposalpipe/trunk/proc/getlinked()
 	linked = null
 	var/obj/machinery/disposal/D = locate() in src.loc

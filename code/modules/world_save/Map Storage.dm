@@ -2,7 +2,8 @@
 	return
 /datum/proc/before_save()
 	return
-
+/datum/proc/before_load()
+	return
 
 
 

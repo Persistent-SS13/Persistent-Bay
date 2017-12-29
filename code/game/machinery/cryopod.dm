@@ -326,6 +326,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 
 			despawn_occupant()
 
+/mob/var/stored_ckey = ""
 
 
 // This function can not be undone; do not call this unless you are sure
@@ -333,6 +334,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 /obj/machinery/cryopod/proc/despawn_occupant()
 	occupant.loc = null
 	var/mob/new_player/M = new /mob/new_player()
+	occupant.stored_ckey = occupant.ckey
 	M.loc = null
 	M.key = occupant.key
 	var/role_alt_title = occupant.mind ? occupant.mind.role_alt_title : "Unknown"

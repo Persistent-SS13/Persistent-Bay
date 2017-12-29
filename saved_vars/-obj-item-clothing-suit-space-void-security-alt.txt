@@ -1,1 +1,0 @@
-species_restricted%0d%0a=&sprite_sheets

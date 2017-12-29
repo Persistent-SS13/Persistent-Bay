@@ -166,6 +166,18 @@
 		update_uis()
 		to_chat(user, "You insert \the [I] into \the [src].")
 		return
+	if(istype(W, /obj/item/organ))
+		if(!dna_scanner)
+			to_chat(user, "You try to scan \the [W] into \the [src], but it does not have an DNA scanner installed.")
+			return
+		var/obj/item/organ/I = W
+		if(!I.dna)
+			to_chat(user, "\The [src] reports that it cannot get a readng from \the [W].")
+			return
+		dna_scanner.stored_dna = I.dna.Clone()
+		to_chat(user, "\The [src] reports that it successfully stored a readng from \the [W].")
+		update_uis()
+		return
 	if(istype(W, /obj/item/weapon/paper) || istype(W, /obj/item/weapon/paper_bundle))
 		if(!nano_printer)
 			return

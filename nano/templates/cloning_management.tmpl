@@ -1,0 +1,33 @@
+{{if data.has_scanner}}
+	{{if data.has_dna}}
+		<h2>Current DNA: {{:data.dna}}</h2><br>
+	{{else}}
+		<h2><span class='alert'><i>No DNA scanned.</i></span><h2><br>
+	{{/if}}
+	<hr>
+	<h2>Cloning Pods</h2><br>
+	{{for data.connected_pods}}
+		<hr>
+		- {{:value.name}} -<br>
+		Status: 
+		{{if value.attempting}}
+			<font color='008000'><b>Currently Cloning</b></font>
+		{{else}}
+			{{if value.status}}
+				<font color='FF0000'><b>Issue Detected</b></font>
+			{{else}}
+				Normal
+			{{/if}}
+		{{/if}}
+		<br>
+		Biomass: {{:value.biomass}} / {{:data.clone_biomass}}
+		<br>
+		{{if value.can_select}}
+			{{:helper.link('Select for Cloning', '', {'select_pod' : '1', 'target' : value.pod_ref}, null)}}
+		{{/if}}
+		{{:helper.link('Disconnect from Manager', '', {'disconnect_pod' : '1', 'target' : value.pod_ref}, null)}}
+	{{/for}}
+	{{:helper.link('Scan for Pods', '', {'connect' : '1'}, null)}}
+{{else}}
+	<span class='alert'><i>This program requires a dna scanner to function. Please install a dna scanner to continue.</i></span><br>
+{{/if}}

@@ -246,7 +246,9 @@ var/const/enterloopsanity = 100
 	if(decals && decals.len)
 		decals.Cut()
 		decals = null
-
+	if(stored_decals && stored_decals.len)
+		stored_decals.Cut()
+		
 // Called when turf is hit by a thrown object
 /turf/hitby(atom/movable/AM as mob|obj, var/speed)
 	if(src.density)

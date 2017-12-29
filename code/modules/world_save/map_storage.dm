@@ -41,14 +41,7 @@ var/global/list/zones_to_save = list()
 	map_storage_saved_vars = "name;power_equip;power_light;power_environ;always_unpowered;uid;global_uid"
 /datum/proc/should_save()
 	return should_save
-/mob/var/save_override = 1
-/mob/should_save()
-	if(!save_override)
-		return 1
-	else
-		if(key || ckey)
-			return 0
-		return should_save
+
 /datum/proc/after_load()
 	return
 /area/after_load()

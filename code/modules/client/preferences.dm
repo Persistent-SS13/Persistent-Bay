@@ -172,6 +172,8 @@ datum/preferences
 	else if(href_list["pickslot"])
 		chosen_slot = text2num(href_list["pickslot"])
 		randomize_appearance_and_body_for()
+		real_name = random_name(gender, species)
+		preview_icon = null
 		sanitize_preferences()
 		client.prefs.ShowChoices(src)
 		close_load_dialog(usr)

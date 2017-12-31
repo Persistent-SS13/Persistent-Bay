@@ -201,10 +201,11 @@
 
 /obj/machinery/organ_printer/flesh/print_organ(var/choice)
 	var/obj/item/organ/O = ..()
-	var/weakref/W = loaded_dna["donor"]
-	var/mob/living/carbon/C = W.resolve()
-	if(C)
-		O.set_dna(C.dna)
+	var/datum/dna/A = loaded_dna["donor"]
+	var/datum/dna/D = A.Clone()
+	qdel(A)
+	if(D)
+		O.set_dna(D)
 		if(O.species)
 			// This is a very hacky way of doing of what organ/New() does if it has an owner
 			O.w_class = max(O.w_class + mob_size_difference(O.species.mob_size, MOB_MEDIUM), 1)

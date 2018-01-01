@@ -572,8 +572,7 @@
 			message_admins("WARNING! spawn-turf still invalid!!")
 			spawn_turf = locate(102, 98, 1)
 		message_admins("spawnturf :[spawn_turf] [spawn_turf.x], [spawn_turf.y], [spawn_turf.z]")
-	close_spawn_windows()
-	new_character.transforming = 0
+	close_spawn_windows()	
 	new_character.loc = spawn_turf
 	new_character.key = key		//Manually transfer the key to log them in
 	new_character.save_slot = chosen_slot

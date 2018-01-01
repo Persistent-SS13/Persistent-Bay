@@ -791,7 +791,6 @@ var/global/floorIsLava = 0
 		if(fexists("[save_path][mobbie.save_slot].sav"))
 			fdel("[save_path][mobbie.save_slot].sav")
 		var/savefile/f = new("[save_path][mobbie.save_slot].sav")
-		mobbie.should_save = 1
 		f << mobbie
 	for(var/datum/mind/employee in ticker.minds)
 		if(!employee.current || !employee.current.ckey) continue
@@ -799,7 +798,6 @@ var/global/floorIsLava = 0
 		if(fexists("[save_path][employee.current.save_slot].sav"))
 			fdel("[save_path][employee.current.save_slot].sav")
 		var/savefile/f = new("[save_path][employee.current.save_slot].sav")
-		employee.current.should_save = 1
 		f << employee.current
 		to_chat(employee.current, "You character has been saved.")
 	

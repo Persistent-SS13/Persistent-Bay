@@ -22,3 +22,5 @@ config/*
 *.sav
 Save.txt
 *.txt
+*.7z
+*.zip

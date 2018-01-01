@@ -22,3 +22,5 @@ config/*
 *.sav
 Save.txt
 *.txt
+saved_vars.7z
+saved_vars.zip

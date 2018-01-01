@@ -29,8 +29,12 @@
 
 	var/movement_delay
 /turf/after_load()
+	update_icon()
 	for(var/obj/effect/floor_decal/decal in saved_decals)
 		decal.init_for(src)
+	if(dynamic_lighting && !lighting_overlay)
+		var/atom/movable/lighting_overlay/O = new /atom/movable/lighting_overlay(src)
+		lighting_overlay = O
 /turf/New()
 	..()
 	for(var/atom/movable/AM as mob|obj in src)
@@ -246,6 +250,9 @@ var/const/enterloopsanity = 100
 	if(decals && decals.len)
 		decals.Cut()
 		decals = null
+	if(saved_decals && saved_decals.len)
+		saved_decals.Cut()
+		saved_decals = null
 
 // Called when turf is hit by a thrown object
 /turf/hitby(atom/movable/AM as mob|obj, var/speed)

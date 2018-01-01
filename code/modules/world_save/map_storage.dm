@@ -27,7 +27,8 @@ var/global/list/zones_to_save = list()
 /datum
 	var/should_save = 1
 	var/map_storage_saved_vars = ""
-
+	var/has_loaded = 0
+	var/has_saved = 0
 /atom/movable/lighting_overlay
 	should_save = 0
 
@@ -48,11 +49,6 @@ var/global/list/zones_to_save = list()
 	power_change()
 /datum/proc/before_load()
 	return
-
-/turf/after_load()
-	..()
-	update_icon()
-	lighting_build_overlay()
 
 /atom/movable/lighting_overlay/after_load()
 	loc = null
@@ -93,30 +89,38 @@ var/global/list/zones_to_save = list()
 			D += return_this
 
 /datum/Write(savefile/f)
-	StandardWrite(f)
-
+	if(!has_saved)
+		StandardWrite(f)
+		has_saved = 1
 /atom/Write(savefile/f)
-	StandardWrite(f)
-
+	if(!has_saved)
+		StandardWrite(f)
+		has_saved = 1
 /atom/movable/Write(savefile/f)
-	StandardWrite(f)
-
+	if(!has_saved)
+		StandardWrite(f)
+		has_saved = 1
 /obj/Write(savefile/f)
-	StandardWrite(f)
-
+	if(!has_saved)
+		StandardWrite(f)
+		has_saved = 1
 /turf/Write(savefile/f)
-	areas_to_save |= loc
-	StandardWrite(f)
+	if(!has_saved)
+		areas_to_save |= loc
+		StandardWrite(f)
+		has_saved = 1
 /turf/simulated/Write(savefile/f)
-	if(zone)
-		zones_to_save |= zone
-	areas_to_save |= loc
-	StandardWrite(f)
-
+	if(!has_saved)
+		if(zone)
+			zones_to_save |= zone
+		areas_to_save |= loc
+		StandardWrite(f)
+		has_saved = 1
 /mob/Write(savefile/f)
-	if(StandardWrite(f))
-		return
-
+	if(!has_saved)
+		if(StandardWrite(f))
+			return
+		has_saved = 1
 /area/proc/get_turf_coords()
 	var/list/coord_list = list()
 	var/ind = 0
@@ -154,21 +158,33 @@ var/global/list/zones_to_save = list()
 			catch
 
 /datum/Read(savefile/f)
-	StandardRead(f)
+	if(!has_loaded)
+		StandardRead(f)
+		has_loaded = 1
 /atom/movable/Read(savefile/f)
-	contents = list()
-	StandardRead(f)
+	if(!has_loaded)
+		for(var/atom/movable/ob in contents)
+			ob.loc = null
+		StandardRead(f)
+		has_loaded = 1
+/atom/movable/Read(savefile/f)
+	if(!has_loaded)
+		for(var/atom/movable/ob in contents)
+			ob.loc = null
+		StandardRead(f)
+		has_loaded = 1
+		
+/obj/item/weapon/storage/Read(savefile/f)
+	if(!has_loaded)
+		for(var/atom/movable/ob in contents)
+			ob.loc = null
+		startswith = null
+		StandardRead(f)
+		has_loaded = 1
 /turf/Read(savefile/f)
-	StandardRead(f)
-
-/area/Read(savefile/f)
-	StandardRead(f)
-	var/list/coord_list
-	f["coord_list"] >> coord_list
-	for(var/ind in 1 to coord_list.len)
-		var/list/cords = coord_list[ind]
-		contents.Add(locate(cords[1],cords[2],cords[3]))
-	
+	if(!has_loaded)
+		StandardRead(f)
+		has_loaded = 1
 /proc/Save_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
 	var/z = zi
 	xi = (xi - (xi % 20) + 1)

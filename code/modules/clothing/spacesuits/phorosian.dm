@@ -5,7 +5,6 @@
 	icon_state = "phorosiansuit"
 	item_state = "phorosiansuit"
 	allowed = list(/obj/item/weapon/tank)
-	w_class = ITEM_SIZE_HUGE//bulky item
 	desc = "A special containment suit designed to protect a phorosians volatile body from outside exposure."
 	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 100, rad = 20)
 	species_restricted = list(SPECIES_PHOROSIAN)
@@ -14,7 +13,7 @@
 		)
 	breach_threshold = 6
 	can_breach = 1
-	resiliance = 0.1
+	resilience = 0.1
 	
 	
 /obj/item/clothing/head/helmet/space/phorosian
@@ -303,3 +302,93 @@
 	item_state = "phorosianNukeops_helmet0"
 	armor = list(melee = 60, bullet = 50, laser = 30, energy = 15, bomb = 35, bio = 100, rad = 50)
 	
+	
+/obj/item/device/phorosiansuit_changer //Can be used to change the type of plasmaman suit.
+	name = "Phorosian suit adapter kit"
+	desc = "A device used to recolor and adapt a Phorosian containment suit to be more suited for the job they are assigned to."
+	icon_state = "modkit"
+	w_class = 2
+	force = 0
+	throwforce = 0
+
+
+
+/obj/item/device/phorosiansuit_changer/afterattack(atom/target, mob/user, proximity)
+	if(!proximity || !ishuman(user) || user.lying)
+		return
+	var/mob/living/carbon/human/H = user
+	var/suit=/obj/item/clothing/suit/space/phorosian
+	var/helm=/obj/item/clothing/head/helmet/space/phorosian
+	switch(H.mind.assigned_job.uid)
+		if("scientist","roboticist")
+			suit=/obj/item/clothing/suit/space/phorosian/science
+			helm=/obj/item/clothing/head/helmet/space/phorosian/science
+		if("rd")
+			suit=/obj/item/clothing/suit/space/phorosian/science/rd
+			helm=/obj/item/clothing/head/helmet/space/phorosian/science/rd
+		if("engineer","mechanic")
+			suit=/obj/item/clothing/suit/space/phorosian/engineer/
+			helm=/obj/item/clothing/head/helmet/space/phorosian/engineer/
+		if("chief")
+			suit=/obj/item/clothing/suit/space/phorosian/engineer/ce
+			helm=/obj/item/clothing/head/helmet/space/phorosian/engineer/ce
+		if("atmostech")
+			suit=/obj/item/clothing/suit/space/phorosian/atmostech
+			helm=/obj/item/clothing/head/helmet/space/phorosian/atmostech
+		if("pilot","judge","brigdoc","warden","detective","officer")
+			suit=/obj/item/clothing/suit/space/phorosian/security/
+			helm=/obj/item/clothing/head/helmet/space/phorosian/security/
+		if("hos")
+			suit=/obj/item/clothing/suit/space/phorosian/security/hos
+			helm=/obj/item/clothing/head/helmet/space/phorosian/security/hos
+		if("captain","nano","blueshield")
+			suit=/obj/item/clothing/suit/space/phorosian/security/captain
+			helm=/obj/item/clothing/head/helmet/space/phorosian/security/captain
+		if("hop")
+			suit=/obj/item/clothing/suit/space/phorosian/security/hop
+			helm=/obj/item/clothing/head/helmet/space/phorosian/security/hop
+		if("doctor")
+			suit=/obj/item/clothing/suit/space/phorosian/medical
+			helm=/obj/item/clothing/head/helmet/space/phorosian/medical
+		if("paramedic")
+			suit=/obj/item/clothing/suit/space/phorosian/medical/paramedic
+			helm=/obj/item/clothing/head/helmet/space/phorosian/medical/paramedic
+		if("chemist")
+			suit=/obj/item/clothing/suit/space/phorosian/medical/chemist
+			helm=/obj/item/clothing/head/helmet/space/phorosian/medical/chemist
+		if("cmo")
+			suit=/obj/item/clothing/suit/space/phorosian/medical/cmo
+			helm=/obj/item/clothing/head/helmet/space/phorosian/medical/cmo
+		if("chef","bartender")
+			suit=/obj/item/clothing/suit/space/phorosian/service
+			helm=/obj/item/clothing/head/helmet/space/phorosian/service
+		if("quartermaster","cargotech")
+			suit=/obj/item/clothing/suit/space/phorosian/cargo
+			helm=/obj/item/clothing/head/helmet/space/phorosian/cargo
+		if("miner")
+			suit=/obj/item/clothing/suit/space/phorosian/miner
+			helm=/obj/item/clothing/head/helmet/space/phorosian/miner
+		if("botanist")
+			suit=/obj/item/clothing/suit/space/phorosian/botanist
+			helm=/obj/item/clothing/head/helmet/space/phorosian/botanist
+		if("chaplain")
+			suit=/obj/item/clothing/suit/space/phorosian/chaplain
+			helm=/obj/item/clothing/head/helmet/space/phorosian/chaplain
+		if("janitor")
+			suit=/obj/item/clothing/suit/space/phorosian/janitor
+			helm=/obj/item/clothing/head/helmet/space/phorosian/janitor
+		if("civilian","lawyer")
+			suit=/obj/item/clothing/suit/space/phorosian/assistant
+			helm=/obj/item/clothing/head/helmet/space/phorosian/assistant
+	
+	if(istype(target, /obj/item/clothing/head/helmet/space/phorosian))
+		H.equip_to_slot(new helm(H), slot_head)		
+		qdel(target)
+		to_chat(H, "<span class='notice'>You use the kit on [target], adapting it to suit your current job.</span>")
+	if (istype(target, /obj/item/clothing/suit/space/phorosian))
+		H.equip_to_slot(new suit(H), slot_wear_suit)
+		qdel(target)
+		to_chat(H, "<span class='notice'>You use the kit on [target], adapting it to suit your current job.</span>")
+	return
+	to_chat(user, "<span class='warning'>You can't modify [target]!</span>")
+

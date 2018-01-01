@@ -16,7 +16,7 @@
 	exhale_type = null
 	siemens_coefficient = 0.7
 	flags = NO_POISON //They're sorta made out of poison
-	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED | SPECIES_IS_RESTRICTED
+	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED 
 	appearance_flags = HAS_EYE_COLOR
 	brute_mod =     0.7 //Phoron has made them resistant to damage
 	burn_mod =      1.5 //Shame they burn good though.
@@ -24,8 +24,7 @@
 	flesh_color = "#3b1077"
 	blood_color = "#4d224d"
 	reagent_tag = IS_PHOROSIAN
-	strength    = STR_LOW //they weak
-	var/burning //used to check if they are already burning from oxygen exposure - doesn't check for fire
+	
 	
 	var/list/eye_overlays = list()
 	
@@ -72,6 +71,8 @@
 		BP_BRAIN =    /obj/item/organ/internal/brain/phorosian,
 		BP_EYES =     /obj/item/organ/internal/eyes/phorosian,
 		)
+		
+
 /mob/living/carbon/human/phorosian/pl_effects() //you're made of the stuff why would it hurt you?
 	return
 	
@@ -96,30 +97,13 @@
 	if(H.get_pressure_weakness()>0.5) //If air gets in, then well there's a problem.
 		var/datum/gas_mixture/environment = H.loc.return_air()
 		if(environment && environment.gas["oxygen"] && environment.gas["oxygen"] >= 0.5) //Phorosians so long as there's enough oxygen (0.5 moles, same as it takes to burn gaseous phoron).
-			if(!burning)
-				H.visible_message("<span class='danger'>[H]'s body reacts with the atmosphere and starts to sizzle and burn!</span>","<span class='userdanger'>Your body reacts with the atmosphere and starts to sizzle and burn!</span>")
-				burning=1
+			if(!H.oxyburn)
+				if(H.get_pressure_weakness() !=1)
+					H.visible_message("<span class='warning'>The internal seals on [H]'s suit break open! </span>","<span class='warning'>The internal seals on your suit break open!</span>")
+				H.visible_message("<span class='warning'>[H]'s body reacts with the atmosphere and starts to sizzle and burn!</span>","<span class='warning'>Your body reacts with the atmosphere and starts to sizzle and burn!</span>")
+				H.oxyburn=1
 			H.burn_skin(H.get_pressure_weakness()*5)
 			H.updatehealth()
 	else
-		burning=0
-
-			
-	//healing stuff	
-	//for(var/obj/item/organ/I in H.internal_organs)
-		//if(I.damage > 0)
-			//I.damage = max(I.damage - 2, 0)
-			//H.remove_blood(5)
-			//return 1
-			
-	// Heal remaining damage.
-	if (H.getBruteLoss())
-		H.adjustBruteLoss(-2)
-		H.remove_blood(3)
-	if (H.getFireLoss())
-		H.adjustFireLoss(-2)
-		H.remove_blood(3)
-	if (H.getToxLoss())
-		H.adjustToxLoss(-2)
-		H.remove_blood(3)
+		H.oxyburn=0
 

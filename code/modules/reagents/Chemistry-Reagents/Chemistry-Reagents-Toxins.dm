@@ -80,8 +80,11 @@
 		L.adjust_fire_stacks(amount / fire_mult)
 
 /datum/reagent/toxin/phoron/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
-	if(alien == IS_NABBER || alien == IS_PHOROSIAN)
+	if(alien == IS_NABBER )
 		return
+	if(alien == IS_PHOROSIAN ) //pure phoron helps them regain blood, since it's a staple in their blood. Also promotes healing.
+		M.add_chemical_effect(CE_BLOODRESTORE, 8 * removed)
+		M.heal_organ_damage(3 * removed, 3 * removed)
 	..()
 
 /datum/reagent/toxin/phoron/affect_touch(var/mob/living/carbon/M, var/alien, var/removed)

@@ -365,7 +365,6 @@ datum/preferences
 			var/mob/M
 			S >> M
 			if(M)
-				M.transforming = 1
 				M.after_load()
 				for(var/datum/D in M.contents)
 					D.after_load()

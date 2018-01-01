@@ -15,7 +15,7 @@ var/const/GHOST_IMAGE_ALL = ~GHOST_IMAGE_NONE
 	status_flags = GODMODE
 	var/ghost_image_flag = GHOST_IMAGE_DARKNESS
 	var/image/ghost_image = null //this mobs ghost image, for deleting and stuff
-
+	should_save = 0
 /mob/observer/New()
 	..()
 	ghost_image = image(src.icon,src)

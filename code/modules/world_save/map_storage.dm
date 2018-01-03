@@ -38,8 +38,8 @@ var/global/list/zones_to_save = list()
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
 
 /area
-	map_storage_saved_vars = "name;power_equip;power_light;power_environ;always_unpowered;uid;global_uid"
-/datum/proc/should_save()
+	map_storage_saved_vars = ""
+/datum/proc/should_save(var/datum/saver)
 	return should_save
 
 /datum/proc/after_load()
@@ -79,12 +79,12 @@ var/global/list/zones_to_save = list()
 		var/list/return_this = list()
 		if(istype(vars[variable], /datum))
 			var/datum/D = vars[variable]
-			if(!D.should_save())
+			if(!D.should_save(src))
 				continue
 		if(istype(vars[variable], /list))
 			var/list/D = vars[variable]
 			for(var/datum/dat in D)
-				if(!dat.should_save())
+				if(!dat.should_save(src))
 					D -= dat
 					return_this += dat
 		f["[variable]"] << vars[variable]
@@ -158,16 +158,16 @@ var/global/list/zones_to_save = list()
 /atom/movable/Read(savefile/f)
 	contents = list()
 	StandardRead(f)
+/obj/item/weapon/storage/Read(savefile/f)
+	for(var/atom/movable/am in contents)
+		am.loc = null
+	startswith = list()
+	StandardRead(f)
 /turf/Read(savefile/f)
 	StandardRead(f)
 
 /area/Read(savefile/f)
-	StandardRead(f)
-	var/list/coord_list
-	f["coord_list"] >> coord_list
-	for(var/ind in 1 to coord_list.len)
-		var/list/cords = coord_list[ind]
-		contents.Add(locate(cords[1],cords[2],cords[3]))
+	return 0
 	
 /proc/Save_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
 	var/z = zi
@@ -209,6 +209,7 @@ var/global/list/zones_to_save = list()
 		zones |= Z
 	f["zones"] << zones
 	f["areas"] << formatted_areas
+	f["turbolifts"] << turbolifts
 	f["records"] << GLOB.all_crew_records
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
@@ -222,10 +223,11 @@ var/global/list/zones_to_save = list()
 	found_vars = list()
 	var/v = null
 	f.cd = "/extras"
+	f["records"] >> GLOB.all_crew_records
 	var/list/areas
 	f["areas"] >> areas
 	for(var/datum/area_holder/holder in areas)
-		var/area/A = new 
+		var/area/A = new holder.area_type
 		A.name = holder.name
 		var/list/turfs = list()
 		for(var/ind in 1 to holder.turfs.len)
@@ -235,7 +237,6 @@ var/global/list/zones_to_save = list()
 				message_admins("No turf found for area load")
 			turfs |= T
 		A.contents.Add(turfs)
-	f["records"] >> GLOB.all_crew_records
 	f.cd = "/"
 	for(var/z in 1 to 11)
 		f.cd = "/map/[z]"
@@ -244,6 +245,7 @@ var/global/list/zones_to_save = list()
 			CHECK_TICK
 		world << "Loading.. [((1/(12-z))*100)]% Complete"
 	f.cd = "/extras"
+	f["turbolifts"] >> turbolifts
 	var/list/zones
 	f["zones"] >> zones
 	for(var/zone/Z in zones)

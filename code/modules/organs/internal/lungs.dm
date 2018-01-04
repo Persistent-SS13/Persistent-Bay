@@ -109,7 +109,7 @@
 	bruise()
 
 /obj/item/organ/internal/lungs/proc/handle_breath(datum/gas_mixture/breath, var/forced)
-	if(!owner)
+	if(!owner || !loc)
 		return 1
 	if(!breath)
 		breath_fail_ratio = 1
@@ -120,6 +120,8 @@
 	//exposure to extreme pressures can rupture lungs
 	if(breath_pressure < species.hazard_low_pressure || breath_pressure > species.hazard_high_pressure)
 		var/datum/gas_mixture/environment = loc.return_air_for_internal_lifeform()
+		if(!environment)
+			return 0
 		var/env_pressure = environment.return_pressure()
 		var/lung_rupture_prob =  robotic >= ORGAN_ROBOT ? prob(2.5) : prob(5) //Robotic lungs are less likely to rupture.
 		if(env_pressure < species.hazard_low_pressure || env_pressure > species.hazard_high_pressure)

@@ -25,8 +25,8 @@
 
 	var/list/decals
 	var/list/saved_decals = list()
-	
-	
+
+
 	var/movement_delay
 /turf/after_load()
 	for(var/obj/effect/floor_decal/decal in saved_decals)

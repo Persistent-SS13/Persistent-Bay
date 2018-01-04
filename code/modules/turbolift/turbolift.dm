@@ -86,6 +86,7 @@
 	var/area/turbolift/destination = locate(next_floor.area_ref)
 
 	if(!istype(origin) || !istype(destination) || (origin == destination))
+		message_admins("TURBOLIFT FAILED TO LOCATE DESTINATION")
 		return 0
 
 	for(var/turf/T in destination)

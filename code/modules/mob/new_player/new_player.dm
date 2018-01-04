@@ -33,7 +33,7 @@
 /mob/new_player/proc/new_player_panel_proc()
 	var/output = "<div align='center'>"
 	output +="<hr>"
-	output += "<p><a href='byond://?src=\ref[src];show_preferences=1'>Create New Character</A></p>"
+	output += "<p><a href='byond://?src=\ref[src];show_preferences=1'>Create A New Character</A></p>"
 
 	if(!ticker || ticker.current_state <= GAME_STATE_PREGAME)
 		if(ready)
@@ -46,7 +46,7 @@
 		output += "<p><a href='byond://?src=\ref[src];late_join=1'>Join Game!</A></p>"
 
 	output += "<p><a href='byond://?src=\ref[src];observe=1'>Observe</A></p>"
-
+	output += "<br><p><a href='byond://?src=\ref[src];delete_char=1'>Delete a Character</A></p>"
 	if(!IsGuestKey(src.key))
 		establish_db_connection()
 		if(dbcon.IsConnected())
@@ -67,7 +67,7 @@
 
 	output += "</div>"
 
-	panel = new(src, "Welcome","Welcome", 210, 280, src)
+	panel = new(src, "Welcome","Welcome", 210, 300, src)
 	panel.set_window_options("can_close=0")
 	panel.set_content(output)
 	panel.open()
@@ -80,7 +80,7 @@
 	var/dat  = list()
 	dat += "<body>"
 	dat += "<tt><center>"
-	dat += "<b>Select the Character you want to load</b><hr>"
+	dat += "<b>Select the character you want to load</b><hr>"
 	var/ind = 0
 	for(var/x in client.prefs.character_list)
 		ind++
@@ -94,7 +94,31 @@
 			dat += "Open Slot [ind]<hr>"
 	dat += "<hr>"
 	dat += "</center></tt>"
-	load_panel = new(user, "Character Slots", "Character Slots", 300, 390, src)
+	load_panel = new(user, "Character Slots", "Character Slots", 300, 500, src)
+	load_panel.set_content(jointext(dat,null))
+	load_panel.open()
+/mob/new_player/proc/slot_select_delete()
+	var/mob/user = src
+	if(!client.prefs.character_list || (client.prefs.character_list.len < config.character_slots))
+		client.prefs.load_characters()
+	var/dat  = list()
+	dat += "<body>"
+	dat += "<tt><center>"
+	dat += "<b>Select the character you want to delete</b><hr>"
+	var/ind = 0
+	for(var/x in client.prefs.character_list)
+		ind++
+		var/mob/M = x
+		if(istype(M))
+			var/icon/ico = client.prefs.get_preview_icon(M)
+			user << browse_rsc(ico, "[ind]preview.png")
+			dat += "<center><img src=[ind]preview.png width=[ico.Width()] height=[ico.Height()]></center><br>"
+			dat += "<b><a href='?src=\ref[src];pickslot_delete=[ind]'>[M.real_name]</a></b><hr>"
+		else
+			dat += "Open Slot [ind]<hr>"
+	dat += "<hr>"
+	dat += "</center></tt>"
+	load_panel = new(user, "Character Slots", "Character Slots", 300, 500, src)
 	load_panel.set_content(jointext(dat,null))
 	load_panel.open()
 
@@ -127,25 +151,40 @@
 
 	if(href_list["show_preferences"])
 		client.prefs.slot_select(src)
-		return 1
+		return 0
 	if(href_list["pickslot_load"])
 		src << browse(null, "window=saves")
 		chosen_slot = text2num(href_list["pickslot_load"])
 		var/mob/M = client.prefs.character_list[chosen_slot]
 		for(var/mob/mobbie in GLOB.all_cryo_mobs)
 			if(mobbie.real_name == M.real_name)
-				chosen_slot = 0
-				to_chat(src, "This character has already entered cryogenic storage for this shift.")
-				return 0
+				client.prefs.character_list[chosen_slot] = mobbie
 		load_panel.close()
+		panel.close()
 		if(ticker.current_state <= GAME_STATE_PREGAME)
 			ready = 1
+			load_panel.close()
+			new_player_panel_proc()
 		else
+			close_spawn_windows()	
 			AttemptLateSpawn()
-			close_spawn_windows()
+		return 0
+	if(href_list["pickslot_delete"])
+		
+		chosen_slot = text2num(href_list["pickslot_delete"])
+		var/mob/M = client.prefs.character_list[chosen_slot]
+		if(input("Are you SURE you want to delete [M.real_name]. THIS IS PERMANENT. Enter the characters full name to confirm","DELETE A CHARACTER","") == M.real_name)
+			src << browse(null, "window=saves")
+			for(var/mob/mobbie in GLOB.all_cryo_mobs)
+				if(mobbie.real_name == M.real_name)
+					GLOB.all_cryo_mobs -= mobbie
+					qdel(mobbie)	
+			client.prefs.delete_character(chosen_slot)
+			load_panel.close()
 		return 0
 	if(href_list["ready"])
 		slot_select_load()
+		return 0
 	//	if(!ticker || ticker.current_state <= GAME_STATE_PREGAME) // Make sure we don't ready up after the round has started
 	//		ready = text2num(href_list["ready"])
 	//	else
@@ -154,7 +193,7 @@
 	if(href_list["refresh"])
 		panel.close()
 		new_player_panel_proc()
-
+		return 0
 	if(href_list["observe"])
 		if(!(initialization_stage&INITIALIZATION_COMPLETE))
 			to_chat(src, "<span class='warning'>Please wait for server initialization to complete...</span>")
@@ -200,11 +239,14 @@
 
 	if(href_list["late_join"])
 		slot_select_load()
+		return 0
 	//	if(!ticker || ticker.current_state != GAME_STATE_PLAYING)
 	//		to_chat(usr, "<span class='warning'>The round is either not ready, or has already finished...</span>")
 	//		return
 	//	LateChoices() //show the latejoin job selection menu
-
+	if(href_list["delete_char"])
+		slot_select_delete()
+		return 0
 	if(href_list["manifest"])
 		ViewManifest()
 
@@ -365,16 +407,6 @@
 		return 0
 	qdel(src)
 
-
-
-
-
-
-
-
-
-
-
 	/**
 	if(src != usr)
 		return 0
@@ -415,12 +447,12 @@
 
 	job_master.AssignRole(src, job.title, 1)
 
-	var/mob/living/character = create_character(spawn_turf)	//creates the human and transfers vars and mind
+	var/mob/living/character = create_character()	//creates the human and transfers vars and mind
 	if(!character)
 		return 0
 
-	character = job_master.EquipRank(character, job.title, 1)					//equips the human
-	equip_custom_items(character)
+//	character = job_master.EquipRank(character, job.title, 1)					//equips the human
+//	equip_custom_items(character)
 
 	// AIs don't need a spawnpoint, they must spawn at an empty core
 	if(character.mind.assigned_role == "AI")
@@ -521,24 +553,32 @@
 	if(!spawn_turf)
 		if(!GLOB.cryopods.len)
 			message_admins("WARNING! No cryopods avalible for spawning!")
-			return
-		var/obj/o = pick(GLOB.cryopods)
-		spawn_turf = get_step(o.loc, o.dir)
-		if(!spawn_turf)
-			message_admins("WARNING! spawn_turf generated is invalid!!!")
-			spawn_turf = o.loc
+			spawn_turf = locate(102, 98, 1)
+		else
+			var/obj/o
+			while(!o && GLOB.cryopods.len)
+				o = pick(GLOB.cryopods)
+				if(!o.loc)
+					GLOB.cryopods -= o
+					qdel(o)
+					o = null
+			if(o)
+				spawn_turf = get_step(o.loc, o.dir)
+			if(!spawn_turf)
+				message_admins("WARNING! spawn_turf generated is invalid!!!")
+				o = pick(GLOB.cryopods)
+				spawn_turf = o.loc
 		if(!spawn_turf)
 			message_admins("WARNING! spawn-turf still invalid!!")
-			spawn_turf = locate(100, 100, 1)
-		new_character.loc = spawn_turf
+			spawn_turf = locate(102, 98, 1)
 		message_admins("spawnturf :[spawn_turf] [spawn_turf.x], [spawn_turf.y], [spawn_turf.z]")
+	close_spawn_windows()	
+	new_character.loc = spawn_turf
 	new_character.key = key		//Manually transfer the key to log them in
 	new_character.save_slot = chosen_slot
 	ticker.minds |= new_character.mind//Cyborgs and AIs handle this in the transform proc.	//TODO!!!!! ~Carn
-
-	CreateModularRecord(new_character)
 	new_character.redraw_inv()
-	close_spawn_windows()
+	CreateModularRecord(new_character)
 	return new_character
 	/**
 	var/mob/living/carbon/human/new_character
@@ -627,8 +667,10 @@
 
 /mob/new_player/proc/close_spawn_windows()
 	src << browse(null, "window=latechoices") //closes late choices window
-	panel.close()
-
+	if(panel)
+		panel.close()
+	if(load_panel)
+		load_panel.close()
 /mob/new_player/proc/has_admin_rights()
 	return check_rights(R_ADMIN, 0, src)
 

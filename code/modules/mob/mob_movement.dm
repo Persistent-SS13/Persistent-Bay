@@ -437,6 +437,8 @@
 
 	if(!lastarea)
 		lastarea = get_area(loc)
+	if(!lastarea)
+		return 0
 	if(!lastarea.has_gravity)
 		return 0
 

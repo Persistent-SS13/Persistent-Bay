@@ -274,13 +274,13 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 /obj/machinery/cryopod/Initialize()
 	. = ..()
 	find_control_computer()
-
+/obj/machinery/cryopod/after_load()
+	find_control_computer()
 /obj/machinery/cryopod/proc/find_control_computer(urgent=0)
 	// Workaround for http://www.byond.com/forum/?post=2007448
 	var/turf/T = src.loc
 	if(!T)
-		sleep(10)
-		T = src.loc
+		return
 	for(var/obj/machinery/computer/cryopod/C in T.loc)
 		control_computer = C
 		break
@@ -326,6 +326,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 
 			despawn_occupant()
 
+/mob/var/stored_ckey = ""
 
 
 // This function can not be undone; do not call this unless you are sure
@@ -333,6 +334,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 /obj/machinery/cryopod/proc/despawn_occupant()
 	occupant.loc = null
 	var/mob/new_player/M = new /mob/new_player()
+	occupant.stored_ckey = occupant.ckey
 	M.loc = null
 	M.key = occupant.key
 	var/role_alt_title = occupant.mind ? occupant.mind.role_alt_title : "Unknown"

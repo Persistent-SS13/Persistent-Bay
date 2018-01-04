@@ -5,6 +5,8 @@
 	return (..() && !(silent && emote_type == AUDIBLE_MESSAGE))
 
 /mob/proc/emote(var/act, var/m_type, var/message)
+	if(!loc)
+		return
 	// s-s-snowflake
 	if(src.stat == DEAD && act != "deathgasp")
 		return

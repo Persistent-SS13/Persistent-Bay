@@ -770,7 +770,14 @@ var/global/floorIsLava = 0
 
 	if(!check_rights(R_ADMIN))
 		return
+	for(var/datum/mind/employee in ticker.minds)
+		if(!employee.current || !employee.current.ckey) continue
+		employee.current.should_save = 0
 	Save_World()
+	for(var/datum/mind/employee in ticker.minds)
+		if(!employee.current || !employee.current.ckey) continue
+		employee.current.should_save = 1
+
 /datum/admins/proc/savechars()
 	set category = "Server"
 	set desc="Saves Characters"
@@ -778,7 +785,13 @@ var/global/floorIsLava = 0
 
 	if(!check_rights(R_ADMIN))
 		return
-
+	for(var/mob/mobbie in GLOB.all_cryo_mobs)
+		if(!mobbie.stored_ckey) continue
+		var/save_path = load_path(mobbie.stored_ckey, "")
+		if(fexists("[save_path][mobbie.save_slot].sav"))
+			fdel("[save_path][mobbie.save_slot].sav")
+		var/savefile/f = new("[save_path][mobbie.save_slot].sav")
+		f << mobbie
 	for(var/datum/mind/employee in ticker.minds)
 		if(!employee.current || !employee.current.ckey) continue
 		var/save_path = load_path(employee.current.ckey, "")
@@ -787,7 +800,7 @@ var/global/floorIsLava = 0
 		var/savefile/f = new("[save_path][employee.current.save_slot].sav")
 		f << employee.current
 		to_chat(employee.current, "You character has been saved.")
-
+	
 /datum/admins/proc/loadnow()
 	set category = "Server"
 	set desc="Loads the Station"
@@ -821,7 +834,7 @@ var/global/floorIsLava = 0
 	var/long_message = " toggled hub visibility.  The server is now [world.visibility ? "visible" : "invisible"] ([world.visibility])."
 
 	send2adminirc("[key_name(src)]" + long_message)
-	log_and_message_admins("toggled hub visibility.")
+	log_and_message_admins("toggled hub visibility ([long_message]).")
 	feedback_add_details("admin_verb","THUB") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc
 
 /datum/admins/proc/toggletraitorscaling()

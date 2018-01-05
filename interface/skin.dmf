@@ -1096,7 +1096,6 @@ window "mainwindow"
 		size = 1038x564
 		anchor1 = none
 		anchor2 = none
-		background-color = none
 		is-default = true
 		saved-params = "pos;size;is-minimized;is-maximized"
 		statusbar = false
@@ -1136,7 +1135,6 @@ window "mainwindow"
 		size = 1038x520
 		anchor1 = 0,0
 		anchor2 = 100,100
-		background-color = none
 		saved-params = "splitter"
 		right = "rpane"
 		is-vert = true
@@ -1182,7 +1180,6 @@ window "mainwindow"
 		size = 1x1
 		anchor1 = none
 		anchor2 = none
-		background-color = none
 		is-visible = false
 		saved-params = ""
 	elem "hotkey_toggle"
@@ -1191,7 +1188,6 @@ window "mainwindow"
 		size = 104x16
 		anchor1 = 100,100
 		anchor2 = none
-		background-color = none
 		border = line
 		saved-params = ""
 		text = "Hotkey Mode"

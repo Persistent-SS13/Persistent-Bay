@@ -5,16 +5,11 @@
 	deform = 'icons/mob/human_races/r_phorosian_pb.dmi'  // TODO: Need deform.
 	rarity_value = 5
 	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick, /datum/unarmed_attack/punch, /datum/unarmed_attack/bite)
-	blurb = "Victims of Phoron Restructurant Syndrome, Phorosians are forced \
-	to use containment suits on oxygen-based stations as they burn when exposed.\
-	Problems with short term and long term memory alongside other mental \
-	impairments are rampant among them,and they often have to go through many \
-	months of therapy to relearn how to do many tasks."
+	blurb = "Todo"
 	meat_type = /ore/phoron
 	taste_sensitivity = TASTE_DULL //Question is how could they taste anything in the first place?
-	virus_immune = 1 
+	virus_immune = 1 // Their cells don't exactly work like normal humanoids.
 	has_floating_eyes = 1 
-	num_alternate_languages = 1
 	hunger_factor = 0  
 	breath_type = "phoron"
 	poison_type = "oxygen" //Getting oxygen into your lungs HURTS
@@ -91,7 +86,6 @@
 	H.equip_to_slot_or_del(new /obj/item/clothing/head/helmet/space/phorosian(H), slot_head)
 	H.equip_to_slot_or_del(new /obj/item/clothing/suit/space/phorosian(H), slot_wear_suit)
 	H.equip_to_slot_or_del(new /obj/item/weapon/tank/phoron/phorosian(H), slot_s_store)
-	H.equip_to_slot_or_del(new /obj/item/weapon/storage/box/phoron(H.back), slot_in_backpack)
 	if(H.internals)
 		H.internals.icon_state = "internal1"
 
@@ -100,7 +94,7 @@
 	H.nutrition = 400 //if someone knows how to stop something from even needing nutrition, please change this.
 	
 	//Should they get exposed to oxygen, things get heated.
-	if(H.get_pressure_weakness()>0.6) //If air gets in, then well there's a problem.
+	if(H.get_pressure_weakness()>0.5) //If air gets in, then well there's a problem.
 		var/datum/gas_mixture/environment = H.loc.return_air()
 		if(environment && environment.gas["oxygen"] && environment.gas["oxygen"] >= 0.5) //Phorosians so long as there's enough oxygen (0.5 moles, same as it takes to burn gaseous phoron).
 			if(!H.oxyburn)
@@ -108,7 +102,7 @@
 					H.visible_message("<span class='warning'>The internal seals on [H]'s suit break open! </span>","<span class='warning'>The internal seals on your suit break open!</span>")
 				H.visible_message("<span class='warning'>[H]'s body reacts with the atmosphere and starts to sizzle and burn!</span>","<span class='warning'>Your body reacts with the atmosphere and starts to sizzle and burn!</span>")
 				H.oxyburn=1
-			H.burn_skin(H.get_pressure_weakness())
+			H.burn_skin(H.get_pressure_weakness()*5)
 			H.updatehealth()
 	else
 		H.oxyburn=0

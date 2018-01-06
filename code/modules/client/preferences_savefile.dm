@@ -79,8 +79,6 @@
 	mannequin.dna.b_type = client.prefs.b_type
 	mannequin.sync_organ_dna()
 	mannequin.create_stack()
-	var/decl/hierarchy/outfit/job/assistant/outfit = new()
-	outfit.equip(mannequin)
 	S << mannequin
 	load_characters()
 	qdel(mannequin)

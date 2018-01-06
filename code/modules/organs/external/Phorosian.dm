@@ -131,7 +131,7 @@
 
 	// Too much poison in the air.
 	if(toxins_pp > safe_toxins_max)
-		take_damage(0.5)
+		take_damage(1)
 		to_chat(owner, "<span class='warning'>Your lungs feel like they are burning!</span>")
 		breath.adjust_gas(poison_type, -poison/6, update = 0) //update after
 		owner.phoron_alert = 1

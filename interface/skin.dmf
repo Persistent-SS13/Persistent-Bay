@@ -1092,19 +1092,19 @@ window "chemdispenser_reagents"
 window "mainwindow"
 	elem "mainwindow"
 		type = MAIN
-		pos = 125,7
-		size = 1350x721
+		pos = 281,0
+		size = 1038x564
 		anchor1 = none
 		anchor2 = none
-		background-color = none
 		is-default = true
 		saved-params = "pos;size;is-minimized;is-maximized"
+		statusbar = false
 		icon = 'icons\\ss13_64.png'
 		macro = "macro"
 		menu = "menu"
 	elem "loocbutton"
 		type = BUTTON
-		pos = 128,701
+		pos = 128,544
 		size = 56x16
 		anchor1 = 0,100
 		anchor2 = none
@@ -1117,7 +1117,7 @@ window "mainwindow"
 		button-type = radio
 	elem "nonebutton"
 		type = BUTTON
-		pos = 248,701
+		pos = 248,544
 		size = 60x16
 		anchor1 = 0,100
 		anchor2 = none
@@ -1132,17 +1132,16 @@ window "mainwindow"
 	elem "mainvsplit"
 		type = CHILD
 		pos = 0,0
-		size = 1350x673
+		size = 1038x520
 		anchor1 = 0,0
 		anchor2 = 100,100
-		background-color = none
 		saved-params = "splitter"
 		right = "rpane"
 		is-vert = true
 	elem "input"
 		type = INPUT
-		pos = 0,677
-		size = 1350x20
+		pos = 0,520
+		size = 1038x20
 		anchor1 = 0,100
 		anchor2 = 100,100
 		background-color = #d3b5b5
@@ -1151,7 +1150,7 @@ window "mainwindow"
 		saved-params = "command"
 	elem "mebutton"
 		type = BUTTON
-		pos = 68,701
+		pos = 68,544
 		size = 56x16
 		anchor1 = 0,100
 		anchor2 = none
@@ -1164,7 +1163,7 @@ window "mainwindow"
 		button-type = radio
 	elem "oocbutton"
 		type = BUTTON
-		pos = 188,701
+		pos = 188,544
 		size = 56x16
 		anchor1 = 0,100
 		anchor2 = none
@@ -1181,16 +1180,14 @@ window "mainwindow"
 		size = 1x1
 		anchor1 = none
 		anchor2 = none
-		background-color = none
 		is-visible = false
 		saved-params = ""
 	elem "hotkey_toggle"
 		type = BUTTON
-		pos = 1242,701
+		pos = 930,544
 		size = 104x16
 		anchor1 = 100,100
 		anchor2 = none
-		background-color = none
 		border = line
 		saved-params = ""
 		text = "Hotkey Mode"
@@ -1198,7 +1195,7 @@ window "mainwindow"
 		button-type = checkbox
 	elem "saybutton"
 		type = BUTTON
-		pos = 8,701
+		pos = 8,544
 		size = 56x16
 		anchor1 = 0,100
 		anchor2 = none

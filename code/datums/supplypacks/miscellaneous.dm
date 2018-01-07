@@ -292,4 +292,11 @@
 	name = "\improper Pest Control Crate"
 	cost = 10
 	containername = "\improper Pest Control Crate"
+	
+/decl/hierarchy/supply_pack/miscellaneous/phorosian
+	num_contained = 1
+	contains = list(/obj/item/device/phorosiansuit_changer)
+	name = "\improper Phorosian Suit Adapter"
+	cost = 50
+	containername = "\improper Phorosian Suit adapter"
 

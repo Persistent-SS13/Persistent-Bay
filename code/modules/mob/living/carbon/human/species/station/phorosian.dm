@@ -20,7 +20,7 @@
 	poison_type = "oxygen" //Getting oxygen into your lungs HURTS
 	exhale_type = null
 	siemens_coefficient = 0.7
-	flags = NO_POISON //They're sorta made out of poison
+	flags = NO_POISON | NO_PAIN //They're sorta made out of poison
 	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED 
 	appearance_flags = HAS_EYE_COLOR
 	brute_mod =     0.7 //Phoron has made them resistant to damage

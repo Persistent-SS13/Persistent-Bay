@@ -218,9 +218,10 @@ This saves us from having to call add_fingerprint() any time something is put in
 	update_action_buttons()
 	return 1
 
+/mob/proc/redraw_inv()
+	return 1
 
-
-/mob/living/carbon/human/proc/redraw_inv()
+/mob/living/carbon/human/redraw_inv()
 	var/obj/item/W
 	if(back)
 		W = back
@@ -276,7 +277,9 @@ This saves us from having to call add_fingerprint() any time something is put in
 	if(s_store)
 		W = s_store
 		W.hud_layerise()
-
+	if(hud_used)
+		hud_used.persistant_inventory_update()
+		hud_used.hands_inventory_update()
 //This is an UNSAFE proc. Use mob_can_equip() before calling this one! Or rather use equip_to_slot_if_possible() or advanced_equip_to_slot_if_possible()
 //set redraw_mob to 0 if you don't wish the hud to be updated - if you're doing it manually in your own proc.
 	

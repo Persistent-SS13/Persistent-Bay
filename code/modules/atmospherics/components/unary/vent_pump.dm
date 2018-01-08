@@ -74,12 +74,26 @@
 	air_contents.volume = ATMOS_DEFAULT_VOLUME_PUMP
 
 	icon = null
-	initial_loc = get_area(loc)
-	area_uid = initial_loc.uid
-	if (!id_tag)
-		assign_uid()
-		id_tag = num2text(uid)
+	if(loc)
+		initial_loc = get_area(loc)
+		area_uid = initial_loc.uid
+		if (!id_tag)
+			assign_uid()
+			id_tag = num2text(uid)
 
+/obj/machinery/atmospherics/unary/vent_pump/after_load()
+	..()
+	air_contents.volume = ATMOS_DEFAULT_VOLUME_PUMP
+
+	icon = null
+	if(loc)
+		initial_loc = get_area(loc)
+		area_uid = initial_loc.uid
+		if (!id_tag)
+			assign_uid()
+			id_tag = num2text(uid)
+
+			
 /obj/machinery/atmospherics/unary/vent_pump/Destroy()
 	unregister_radio(src, frequency)
 	if(initial_loc)
@@ -385,6 +399,10 @@
 			"You hear welding.")
 		return 1
 
+	if(isMultitool(W))
+		broadcast_status()
+		to_chat(user, "<span class='notice'>A [name == "Air Vent" ? "red" : "green"] light appears on \the [src] as it broadcasts atmospheric data.</span>")
+		flick("broadcast", src)
 	else
 		..()
 

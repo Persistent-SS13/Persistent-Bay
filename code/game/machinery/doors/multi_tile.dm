@@ -2,7 +2,14 @@
 /obj/machinery/door/airlock/multi_tile
 	width = 2
 	appearance_flags = 0
-
+/obj/machinery/door/airlock/multi_tile/should_save(var/datum/caller)
+	if(istype(caller, /turf))
+		var/turf/T = caller
+		if(src in T.contents)
+			..()
+		else
+			return 0
+	..()
 /obj/machinery/door/airlock/multi_tile/New()
 	..()
 	SetBounds()

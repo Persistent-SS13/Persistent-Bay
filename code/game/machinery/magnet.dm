@@ -32,16 +32,30 @@
 
 	New()
 		..()
-		var/turf/T = loc
-		hide(!T.is_plating())
-		center = T
+		if(loc)
+			var/turf/T = loc
+			hide(!T.is_plating())
+			center = T
 
-		spawn(10)	// must wait for map loading to finish
-			if(radio_controller)
-				radio_controller.add_object(src, freq, RADIO_MAGNETS)
+			spawn(10)	// must wait for map loading to finish
+				if(radio_controller)
+					radio_controller.add_object(src, freq, RADIO_MAGNETS)
 
-		spawn()
-			magnetic_process()
+			spawn()
+				magnetic_process()
+	after_load()
+		..()
+		if(loc)
+			var/turf/T = loc
+			hide(!T.is_plating())
+			center = T
+
+			spawn(10)	// must wait for map loading to finish
+				if(radio_controller)
+					radio_controller.add_object(src, freq, RADIO_MAGNETS)
+
+			spawn()
+				magnetic_process()
 
 	// update the invisibility and icon
 	hide(var/intact)

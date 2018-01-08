@@ -24,9 +24,13 @@
 	var/blessed = 0             // Has the turf been blessed?
 
 	var/list/decals
+	var/list/saved_decals = list()
+
 
 	var/movement_delay
-
+/turf/after_load()
+	for(var/obj/effect/floor_decal/decal in saved_decals)
+		decal.init_for(src)
 /turf/New()
 	..()
 	for(var/atom/movable/AM as mob|obj in src)

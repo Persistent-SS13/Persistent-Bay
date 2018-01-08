@@ -172,6 +172,8 @@ datum/preferences
 	else if(href_list["pickslot"])
 		chosen_slot = text2num(href_list["pickslot"])
 		randomize_appearance_and_body_for()
+		real_name = random_name(gender, species)
+		preview_icon = null
 		sanitize_preferences()
 		client.prefs.ShowChoices(src)
 		close_load_dialog(usr)
@@ -348,7 +350,12 @@ datum/preferences
 		character.nutrition = rand(140,360)
 
 	return
-
+/datum/preferences/proc/delete_character(var/slot)
+	var/path_to = load_path(client.ckey, "")
+	if(!slot) return
+	fdel("[path_to][slot].sav")
+	if(character_list && (character_list.len >= slot))
+		character_list[slot] = "nothing"
 /datum/preferences/proc/load_characters()
 	var/path_to = load_path(client.ckey, "")
 	character_list = list()
@@ -359,6 +366,8 @@ datum/preferences
 			S >> M
 			if(M)
 				M.after_load()
+				for(var/datum/D in M.contents)
+					D.after_load()
 				character_list += M
 		else
 			character_list += "empty"
@@ -390,11 +399,9 @@ datum/preferences
 	if(!character_list || (character_list.len < config.character_slots))
 		load_characters()
 	var/dat  = list()
-	var/path_to = load_path(user.ckey,"")
 	dat += "<body>"
 	dat += "<tt><center>"
 	dat += "<b>Select the character slot you want to save this character under.</b><hr>"
-	var/name
 	var/ind = 0
 	for(var/x in character_list)
 		ind++

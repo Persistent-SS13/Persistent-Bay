@@ -278,33 +278,55 @@
 
 /stat_rig_module/activate/New(var/obj/item/rig_module/module)
 	..()
-	name = module.activate_string
-	if(module.active_power_cost)
-		name += " ([module.active_power_cost*10]A)"
+	if(module)
+		name = module.activate_string
+		if(module.active_power_cost)
+			name += " ([module.active_power_cost*10]A)"
 	module_mode = "activate"
-
+/stat_rig_module/activate/after_load()
+	..()
+	if(module)
+		name = module.activate_string
+		if(module.active_power_cost)
+			name += " ([module.active_power_cost*10]A)"
 /stat_rig_module/activate/CanUse()
 	return module.toggleable && !module.active
 
 /stat_rig_module/deactivate/New(var/obj/item/rig_module/module)
 	..()
-	name = module.deactivate_string
-	// Show cost despite being 0, if it means changing from an active cost.
-	if(module.active_power_cost || module.passive_power_cost)
-		name += " ([module.passive_power_cost*10]P)"
+	if(module)
+		name = module.deactivate_string
+		// Show cost despite being 0, if it means changing from an active cost.
+		if(module.active_power_cost || module.passive_power_cost)
+			name += " ([module.passive_power_cost*10]P)"
 
-	module_mode = "deactivate"
+		module_mode = "deactivate"
+/stat_rig_module/deactivate/after_load()
+	..()
+	if(module)
+		name = module.deactivate_string
+		// Show cost despite being 0, if it means changing from an active cost.
+		if(module.active_power_cost || module.passive_power_cost)
+			name += " ([module.passive_power_cost*10]P)"
 
+		module_mode = "deactivate"
 /stat_rig_module/deactivate/CanUse()
 	return module.toggleable && module.active
 
 /stat_rig_module/engage/New(var/obj/item/rig_module/module)
 	..()
-	name = module.engage_string
-	if(module.use_power_cost)
-		name += " ([module.use_power_cost*10]E)"
-	module_mode = "engage"
-
+	if(module)
+		name = module.engage_string
+		if(module.use_power_cost)
+			name += " ([module.use_power_cost*10]E)"
+		module_mode = "engage"
+/stat_rig_module/engage/after_load()
+	..()
+	if(module)
+		name = module.engage_string
+		if(module.use_power_cost)
+			name += " ([module.use_power_cost*10]E)"
+		module_mode = "engage"
 /stat_rig_module/engage/CanUse()
 	return module.usable
 

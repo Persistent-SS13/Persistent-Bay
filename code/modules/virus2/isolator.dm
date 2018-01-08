@@ -72,10 +72,10 @@
 						if (ID in virusDB)
 							R = virusDB[ID]
 
-						var/weakref/W = B.data["donor"]
-						var/mob/living/carbon/human/D = W.resolve()
+						var/datum/dna/A = B.data["donor"]
+						var/datum/dna/D = A.Clone()
 						pathogen_pool.Add(list(list(\
-							"name" = "[D ? D.get_species() : "Unidentified"] [B.name]", \
+							"name" = "[D ? D.species : "Unidentified"] [B.name]", \
 							"dna" = B.data["blood_DNA"], \
 							"unique_id" = V.uniqueID, \
 							"reference" = "\ref[V]", \
@@ -187,9 +187,9 @@
 			P.info += "<hr>"
 
 			for(var/datum/reagent/blood/B in sample.reagents.reagent_list)
-				var/weakref/W = B.data["donor"]
-				var/mob/living/carbon/human/D = W.resolve()
-				P.info += "<large><u>[D ? D.get_species() : "Unidentified"] [B.name]:</u></large><br>[B.data["blood_DNA"]]<br>"
+				var/datum/dna/A = B.data["donor"]
+				var/datum/dna/D = A.Clone()
+				P.info += "<large><u>[D ? D.species : "Unidentified"] [B.name]:</u></large><br>[B.data["blood_DNA"]]<br>"
 
 				var/list/virus = B.data["virus2"]
 				P.info += "<u>Pathogens:</u> <br>"

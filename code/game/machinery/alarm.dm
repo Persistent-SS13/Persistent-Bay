@@ -121,10 +121,35 @@
 		pixel_y = (dir & 3)? (dir ==1 ? -24 : 24) : 0
 		update_icon()
 		frame.transfer_fingerprints_to(src)
+/obj/machinery/alarm/after_load()
+	. = ..()
+	alarm_area = get_area(src)
+	if(!alarm_area)
+		return
+	area_uid = alarm_area.uid
+	if (name == "alarm")
+		name = "[alarm_area.name] Air Alarm"
+
+	if(!wires)
+		wires = new(src)
+
+	// breathable air according to human/Life()
+	TLV["oxygen"] =			list(16, 19, 135, 140) // Partial pressure, kpa
+	TLV["carbon dioxide"] = list(-1.0, -1.0, 5, 10) // Partial pressure, kpa
+	TLV["phoron"] =			list(-1.0, -1.0, 0.2, 0.5) // Partial pressure, kpa
+	TLV["other"] =			list(-1.0, -1.0, 0.5, 1.0) // Partial pressure, kpa
+	TLV["pressure"] =		list(ONE_ATMOSPHERE*0.80,ONE_ATMOSPHERE*0.90,ONE_ATMOSPHERE*1.10,ONE_ATMOSPHERE*1.20) /* kpa */
+	TLV["temperature"] =	list(T0C-26, T0C, T0C+40, T0C+66) // K
+
+	set_frequency(frequency)
+	if (!master_is_operating())
+		elect_master()
 
 /obj/machinery/alarm/Initialize()
 	. = ..()
 	alarm_area = get_area(src)
+	if(!alarm_area)
+		return
 	area_uid = alarm_area.uid
 	if (name == "alarm")
 		name = "[alarm_area.name] Air Alarm"
@@ -666,6 +691,7 @@
 					return 1
 
 				if( "power",
+					"direction",
 					"adjust_external_pressure",
 					"checks",
 					"o2_scrub",

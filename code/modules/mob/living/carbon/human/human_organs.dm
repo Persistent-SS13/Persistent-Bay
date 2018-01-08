@@ -65,6 +65,7 @@
 							W.germ_level += 1
 
 /mob/living/carbon/human/proc/handle_stance()
+	if(!loc) return
 	// Don't need to process any of this if they aren't standing anyways
 	// unless their stance is damaged, and we want to check if they should stay down
 	if (!stance_damage && (lying || resting) && (life_tick % 4) != 0)

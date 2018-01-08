@@ -21,7 +21,8 @@
 	var/eye_icon_location = 'icons/mob/human_face.dmi'
 
 	var/has_lips
-
+	var/h_style = ""
+	var/f_style = ""
 /obj/item/organ/external/head/get_agony_multiplier()
 	return (owner && owner.headcheck(organ_tag)) ? 1.50 : 1
 

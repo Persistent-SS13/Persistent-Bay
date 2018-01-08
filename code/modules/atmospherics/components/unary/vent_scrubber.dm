@@ -38,12 +38,19 @@
 	air_contents.volume = ATMOS_DEFAULT_VOLUME_FILTER
 
 	icon = null
-	initial_loc = get_area(loc)
-	area_uid = initial_loc.uid
 	if (!id_tag)
 		assign_uid()
 		id_tag = num2text(uid)
-
+	if(loc)
+		initial_loc = get_area(loc)
+		area_uid = initial_loc.uid
+		
+/obj/machinery/atmospherics/unary/vent_scrubber/after_load()
+	..()
+	if(loc)
+		initial_loc = get_area(loc)
+		area_uid = initial_loc.uid
+	
 /obj/machinery/atmospherics/unary/vent_scrubber/Destroy()
 	unregister_radio(src, frequency)
 	..()
@@ -316,6 +323,11 @@
 			"<span class='notice'>You [welded ? "weld \the [src] shut" : "unweld \the [src]"].</span>", \
 			"You hear welding.")
 		return 1
+
+	if(isMultitool(W))
+		broadcast_status()
+		to_chat(user, "<span class='notice'>A [name == "Air Vent" ? "red" : "green"] light appears on \the [src] as it broadcasts atmospheric data.</span>")
+		flick("broadcast", src)
 
 	return ..()
 

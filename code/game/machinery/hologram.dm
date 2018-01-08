@@ -60,8 +60,11 @@ var/const/HOLOPAD_MODE = RANGE_BASED
 
 /obj/machinery/hologram/holopad/New()
 	..()
-	desc = "It's a floor-mounted device for projecting holographic images. Its ID is '[loc.loc]'"
-
+	if(loc)
+		desc = "It's a floor-mounted device for projecting holographic images. Its ID is '[loc.loc]'"
+/obj/machinery/hologram/holopad/after_load()
+	if(loc)
+		desc = "It's a floor-mounted device for projecting holographic images. Its ID is '[loc.loc]'"
 /obj/machinery/hologram/holopad/attack_hand(var/mob/living/carbon/human/user) //Carn: Hologram requests.
 	if(!istype(user))
 		return

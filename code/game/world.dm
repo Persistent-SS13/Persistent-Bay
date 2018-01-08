@@ -1,4 +1,4 @@
-/var/server_name = "Baystation 12"
+/var/server_name = "Persistence Station 13"
 
 /var/game_id = null
 /hook/global_init/proc/generate_gameid()
@@ -68,7 +68,6 @@
 /world/New()
 	//set window title
 	name = "[server_name] - [GLOB.using_map.full_name]"
-
 	//logs
 	SetupLogs()
 	var/date_string = time2text(world.realtime, "YYYY/MM-Month/DD-Day")
@@ -578,37 +577,13 @@ var/world_topic_spam_protect_time = world.timeofday
 
 /world/proc/update_status()
 	var/s = ""
-
-	if (config && config.server_name)
-		s += "<b>[config.server_name]</b> &#8212; "
+	s += "<a href='https://discord.gg/UUpHSPp'>" 
+	s += "<b>Persistent Station 13, Saving Station and Characters.</b> &#8212; "
 
 	s += "<b>[station_name()]</b>";
-	s += " ("
-	s += "<a href=\"http://\">" //Change this to wherever you want the hub to link to.
-//	s += "[game_version]"
-	s += "Default"  //Replace this with something else. Or ever better, delete it and uncomment the game version.
-	s += "</a>"
-	s += ")"
-
+	//Change this to wherever you want the hub to link to.
+	s += " | Brand New! Baystation Base, Active Development, Saving Promotions, Levels, Antag Alignment, Custom Space Stations! </a> <br>"
 	var/list/features = list()
-
-	if(ticker)
-		if(master_mode)
-			features += master_mode
-	else
-		features += "<b>STARTING</b>"
-
-	if (!config.enter_allowed)
-		features += "closed"
-
-	features += config.abandon_allowed ? "respawn" : "no respawn"
-
-	if (config && config.allow_vote_mode)
-		features += "vote"
-
-	if (config && config.allow_ai)
-		features += "AI allowed"
-
 	var/n = 0
 	for (var/mob/M in GLOB.player_list)
 		if (M.client)

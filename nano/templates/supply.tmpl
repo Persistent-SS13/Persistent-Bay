@@ -8,7 +8,7 @@
 <div class="item">
 	{{:helper.link('Browse Goods', 'cart', {'set_screen' : 1}, data.screen == 1 ? 'selected' : null)}}
 	{{:helper.link('View Statistics', 'calculator', {'set_screen' : 2}, data.screen == 2 ? 'selected' : null)}}
-	{{:helper.link('Shuttle Control', 'bullet', {'set_screen' : 3}, data.screen == 3 ? 'selected' : null)}}
+	{{:helper.link('Order Control', 'bullet', {'set_screen' : 3}, data.screen == 3 ? 'selected' : null)}}
 	{{:helper.link('Browse Orders', 'check', {'set_screen' : 4}, data.screen == 4 ? 'selected' : null)}}
 </div>
 <hr>
@@ -97,26 +97,10 @@
 {{else data.screen == 3}}
 	<div class="item">
 		<div class="itemLabel">
-			Current shuttle location:
-		</div>
-		<div class="itemContent">
-			{{:data.shuttle_location}}
-		</div>
-	</div>
-	<div class="item">
-		<div class="itemLabel">
-			Current shuttle status:
-		</div>
-		<div class="itemContent">
-			{{:data.shuttle_status}}
-		</div>
-	</div>
-	<div class="item">
-		<div class="itemLabel">
 			Commands:
 		</div>
 		<div class="itemContent">
-			{{:helper.link('Launch', 'check', {'launch_shuttle' : 1}, data.is_admin ? (data.shuttle_can_control ? null : 'disabled') : 'disabled')}}
+			{{:helper.link('Order', 'check', {'launch_order' : 1})}}
 		</div>
 	</div>
 {{else data.screen == 4}}

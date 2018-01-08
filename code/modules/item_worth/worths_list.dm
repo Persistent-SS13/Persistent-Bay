@@ -578,7 +578,6 @@ var/list/worths = list(
 					/obj/structure/plasticflaps = 15,
 					/obj/structure/cult/pylon = 700,
 					/obj/structure/cult = 160,
-					/obj/structure/cryofeed = 450,
 					/obj/structure/AIcore = 6000,
 					/obj/structure/AIcore/deactivated = 7000,
 					/obj/structure/computerframe = 50,

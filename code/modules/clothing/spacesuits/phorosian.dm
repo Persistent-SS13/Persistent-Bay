@@ -325,7 +325,6 @@
 	var/mob/living/carbon/human/H = user
 	var/suit=/obj/item/clothing/suit/space/phorosian
 	var/helm=/obj/item/clothing/head/helmet/space/phorosian
-	to_chat(H, "<span class='notice'>[H.mind.assigned_role]</span>")
 	switch(H.mind.assigned_role)
 		if("Scientist","Roboticist", "Xenobiologist")
 			suit=/obj/item/clothing/suit/space/phorosian/science

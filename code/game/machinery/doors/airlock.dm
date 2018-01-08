@@ -449,6 +449,11 @@ About the new airlock wires panel:
 
 /obj/machinery/door/airlock/proc/isWireCut(var/wireIndex)
 	// You can find the wires in the datum folder.
+	if(!wires)
+		if (secured_wires)
+			wires = new/datum/wires/airlock/secure(src)
+		else
+			wires = new/datum/wires/airlock(src)
 	return wires.IsIndexCut(wireIndex)
 
 /obj/machinery/door/airlock/proc/canAIControl()

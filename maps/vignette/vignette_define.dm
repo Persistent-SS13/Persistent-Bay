@@ -1,6 +1,6 @@
 /datum/map/vignette
-	name = "Vignette"
-	full_name = "Vignette"
+	name = "NTSS Vignette"
+	full_name = ""
 	path = "vignette"
 	flags = MAP_HAS_RANK
 
@@ -17,7 +17,7 @@
 	allowed_spawns = list("Cryogenic Storage", "Cyborg Storage")
 	default_spawn = "Cryogenic Storage"
 
-	station_name  = "Vignette"
+	station_name  = "NTSS Vignette Permanent Station"
 	station_short = "Vignette"
 	dock_name     = "TBD"
 	boss_name     = "NT Central Command"

@@ -21,7 +21,10 @@
 	var/silicate = 0 // number of units of silicate
 
 	atmos_canpass = CANPASS_PROC
-
+	var/saved_dir = 0
+/obj/structure/window/Write(savefile/f)
+	saved_dir = dir
+	..()
 /obj/structure/window/examine(mob/user)
 	. = ..(user)
 
@@ -318,7 +321,6 @@
 	update_nearby_tiles(need_rebuild=1)
 	update_nearby_icons()
 
-
 /obj/structure/window/Destroy()
 	set_density(0)
 	update_nearby_tiles()
@@ -326,8 +328,11 @@
 	. = ..()
 	for(var/obj/structure/window/W in orange(location, 1))
 		W.update_icon()
-
-
+/obj/structure/window/after_load()
+	dir = saved_dir
+	ini_dir = dir
+	update_nearby_tiles(need_rebuild=1)
+	..()
 /obj/structure/window/Move()
 	var/ini_dir = dir
 	update_nearby_tiles(need_rebuild=1)
@@ -364,6 +369,9 @@
 		verbs += /obj/structure/window/proc/revrotate
 
 //merges adjacent full-tile windows into one (blatant ripoff from game/smoothwall.dm)
+/obj/structure/window/after_load()
+	..()
+	update_icon()
 /obj/structure/window/update_icon()
 	//A little cludge here, since I don't know how it will work with slim windows. Most likely VERY wrong.
 	//this way it will only update full-tile ones

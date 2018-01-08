@@ -924,6 +924,7 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/weapon/computer_hardware/card_slot
 	sort_string = "VBAAM"
 
+	
 // Nano printer
 /datum/design/item/modularcomponent/nanoprinter
 	name = "nano printer"
@@ -1050,6 +1051,15 @@ other types of metals and chemistry for reagents).
 	chemicals = list(/datum/reagent/acid = 20)
 	build_path = /obj/item/weapon/computer_hardware/ai_slot
 	sort_string = "VBAAZ"
+/datum/design/item/modularcomponent/dna_scanner
+	name = "DNA scanner port"
+	id = "cardslot"
+	req_tech = list(TECH_DATA = 2)
+	build_type = PROTOLATHE
+	materials = list(DEFAULT_WALL_MATERIAL = 600)
+	build_path = /obj/item/weapon/computer_hardware/dna_scanner
+	sort_string = "VBABA"
+
 /*
 CIRCUITS BELOW
 */
@@ -1379,6 +1389,17 @@ CIRCUITS BELOW
 	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/miningdrillbrace
 	sort_string = "KCAAB"
+/datum/design/circuit/clonepod
+	name = "clone pod"
+	id = "clonepod"
+	req_tech = list(TECH_DATA = 3, TECH_BIO = 3)
+	build_path = /obj/item/weapon/circuitboard/clonepod
+	sort_string = "KCAAC"
+	
+	
+	
+	
+	
 
 /datum/design/circuit/mecha
 	req_tech = list(TECH_DATA = 3)

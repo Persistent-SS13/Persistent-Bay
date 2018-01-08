@@ -329,6 +329,15 @@ var/global/datum/controller/gameticker/ticker
 
 		if(!mode.explosion_in_progress && game_finished && (mode_finished || post_game))
 			current_state = GAME_STATE_FINISHED
+			
+			for(var/mob/mobbie in GLOB.all_cryo_mobs)
+				if(!mobbie.stored_ckey) continue
+				var/save_path = load_path(mobbie.stored_ckey, "")
+				if(fexists("[save_path][mobbie.save_slot].sav"))
+					fdel("[save_path][mobbie.save_slot].sav")
+				var/savefile/f = new("[save_path][mobbie.save_slot].sav")
+				f << mobbie
+				
 			for(var/datum/mind/employee in minds)
 				if(!employee.current || !employee.current.ckey) continue
 				var/save_path = load_path(employee.current.ckey, "")
@@ -337,8 +346,16 @@ var/global/datum/controller/gameticker/ticker
 				var/savefile/f = new("[save_path][employee.current.save_slot].sav")
 				f << employee.current
 				to_chat(employee.current, "You character has been saved.")
-				employee.current.save_override = 0
+			
+			sleep(20)
+			for(var/datum/mind/employee in minds)
+				if(!employee.current || !employee.current.ckey) continue
+				employee.current.should_save = 0
 			Save_World()
+			for(var/datum/mind/employee in minds)
+				if(!employee.current || !employee.current.ckey)
+					continue
+				employee.current.should_save = 1
 			Master.SetRunLevel(RUNLEVEL_POSTGAME)
 
 			spawn

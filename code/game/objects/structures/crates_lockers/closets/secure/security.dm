@@ -53,7 +53,12 @@
 		/obj/item/device/flash
 	)
 */
-
+/obj/structure/closet/secure_closet/hop/WillContain()
+	return list(
+		/obj/item/weapon/storage/box/ids = 1,
+		/obj/item/device/pda = 2
+	)
+		
 /obj/structure/closet/secure_closet/hop2
 	name = "head of personnel's attire"
 	req_access = list(access_hop)

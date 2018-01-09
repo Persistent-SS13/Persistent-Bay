@@ -7,7 +7,7 @@
 	icon_opened = "securecargoopen"
 	icon_broken = "securecargobroken"
 	icon_off = "securecargooff"
-
+/*
 /obj/structure/closet/secure_closet/cargotech/WillContain()
 	return list(
 		new/datum/atom_creator/weighted(list(/obj/item/weapon/storage/backpack = 75,  /obj/item/weapon/storage/backpack/satchel/grey = 25)),
@@ -18,7 +18,7 @@
 		/obj/item/clothing/gloves/thick,
 		/obj/item/clothing/head/soft
 	)
-
+*/
 /obj/structure/closet/secure_closet/quartermaster
 	name = "quartermaster's locker"
 	req_access = list(access_qm)
@@ -28,7 +28,7 @@
 	icon_opened = "secureqmopen"
 	icon_broken = "secureqmbroken"
 	icon_off = "secureqmoff"
-
+/*
 /obj/structure/closet/secure_closet/quartermaster/WillContain()
 	return list(
 		new/datum/atom_creator/weighted(list(/obj/item/weapon/storage/backpack = 75,  /obj/item/weapon/storage/backpack/satchel/grey = 25)),
@@ -43,3 +43,4 @@
 		/obj/item/clothing/glasses/meson,
 		/obj/item/clothing/head/soft
 	)
+*/

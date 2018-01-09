@@ -46,7 +46,7 @@
 	icon_opened = "syndicate1open"
 	
 /*
- * /obj/structure/closet/gimmick/tacticool/WillContain()
+/obj/structure/closet/gimmick/tacticool/WillContain()
 	return list(
 		/obj/item/clothing/glasses/eyepatch,
 		/obj/item/clothing/glasses/sunglasses,

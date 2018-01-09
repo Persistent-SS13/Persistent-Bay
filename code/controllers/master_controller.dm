@@ -42,6 +42,7 @@ datum/controller/game_controller/proc/setup()
 	SetupXenoarch()
 
 	transfer_controller = new
+	save_controller = new
 
 	report_progress("Initializations complete")
 	initialization_stage |= INITIALIZATION_COMPLETE

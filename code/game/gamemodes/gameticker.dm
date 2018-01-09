@@ -38,7 +38,7 @@ var/global/datum/controller/gameticker/ticker
 /datum/controller/gameticker/proc/pregame()
 	do
 		if(!gamemode_voted)
-			pregame_timeleft = 180
+			pregame_timeleft = 30
 		else
 			pregame_timeleft = 15
 			if(!isnull(secondary_mode))
@@ -63,7 +63,7 @@ var/global/datum/controller/gameticker/ticker
 			if(pregame_timeleft == config.vote_autogamemode_timeleft && !gamemode_voted)
 				gamemode_voted = 1
 				if(!vote.time_remaining)
-					vote.autogamemode()	//Quit calling this over and over and over and over.
+				//	vote.autogamemode()	//Quit calling this over and over and over and over.
 					while(vote.time_remaining)
 						for(var/i=0, i<10, i++)
 							sleep(1)
@@ -422,7 +422,7 @@ var/global/datum/controller/gameticker/ticker
 			spawn(50)
 				if(!round_end_announced) // Spam Prevention. Now it should announce only once.
 					log_and_message_admins(": All antagonists are deceased or the gamemode has ended.") //Outputs as "Event: All antagonists are deceased or the gamemode has ended."
-				vote.autotransfer()
+			//	vote.autotransfer()
 
 		return 1
 

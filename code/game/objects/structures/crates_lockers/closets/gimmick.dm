@@ -44,8 +44,8 @@
 	icon_state = "syndicate1"
 	icon_closed = "syndicate1"
 	icon_opened = "syndicate1open"
-//
-/obj/structure/closet/gimmick/tacticool/WillContain()
+/*
+ * /obj/structure/closet/gimmick/tacticool/WillContain()
 	return list(
 		/obj/item/clothing/glasses/eyepatch,
 		/obj/item/clothing/glasses/sunglasses,
@@ -55,7 +55,7 @@
 		/obj/item/clothing/shoes/swat = 2,
 		/obj/item/clothing/suit/space/void/swat = 2,
 		/obj/item/clothing/under/syndicate/tacticool = 2)
-//
+*\
 /obj/structure/closet/thunderdome
 	name = "\improper Thunderdome closet"
 	desc = "Everything you need!"

@@ -266,9 +266,10 @@
 		icon_state = icon_opened
 
 /obj/structure/closet/shipping_wall/filled
-
+/*
 /obj/structure/closet/shipping_wall/filled/WillContain()
 	return list(
 		/obj/item/stack/material/cardboard/ten,
 		/obj/item/device/destTagger,
 		/obj/item/weapon/packageWrap)
+*/

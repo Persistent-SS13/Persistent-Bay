@@ -284,6 +284,11 @@
 												contents.Add(t.air_contents.gas["oxygen"])
 											else
 												contents.Add(0)
+										if ("phoron")
+											if(t.air_contents.gas["phoron"] && !t.air_contents.gas["oxygen"])
+												contents.Add(t.air_contents.gas["phoron"])
+											else
+												contents.Add(0)
 
 										// No races breath this, but never know about downstream servers.
 										if ("carbon dioxide")

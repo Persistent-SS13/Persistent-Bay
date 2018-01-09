@@ -53,6 +53,9 @@
 	pulling_punches = 1
 	..(new_loc, SPECIES_NABBER)
 
+/mob/living/carbon/human/phorosian/New(var/new_loc)
+	..(new_loc, SPECIES_PHOROSIAN)
+
 /mob/living/carbon/human/monkey/New(var/new_loc)
 	..(new_loc, "Monkey")
 

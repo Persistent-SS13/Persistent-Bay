@@ -100,7 +100,7 @@ var/list/organ_cache = list()
 	if(is_preserved())
 		return
 	//Process infections
-	if ((robotic >= ORGAN_ROBOT) || (owner && owner.species && (owner.species.flags & IS_PLANT)))
+	if ((robotic >= ORGAN_ROBOT) || (owner && owner.species && (owner.species.flags & IS_PLANT)) || (owner && owner.species && (owner.species && owner.species.name == SPECIES_PHOROSIAN)))
 		germ_level = 0
 		return
 

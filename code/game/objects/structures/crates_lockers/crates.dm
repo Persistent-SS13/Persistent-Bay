@@ -126,16 +126,16 @@ obj/structure/closet/crate
 	icon_state = "crate"
 	icon_opened = "crateopen"
 	icon_closed = "crate"
-
+/*
 /obj/structure/closet/crate/rcd/WillContain()
 	return list(
 		/obj/item/weapon/rcd_ammo = 3,
 		/obj/item/weapon/rcd
 	)
-
+*/
 /obj/structure/closet/crate/solar
 	name = "solar pack crate"
-
+/*
 /obj/structure/closet/crate/solar/WillContain()
 	return list(
 		/obj/item/solar_assembly = 14,
@@ -143,13 +143,13 @@ obj/structure/closet/crate
 		/obj/item/weapon/tracker_electronics,
 		/obj/item/weapon/paper/solar
 	)
-
+*/
 /obj/structure/closet/crate/solar_assembly
 	name = "solar assembly crate"
-
+/*
 /obj/structure/closet/crate/solar_assembly/WillContain()
 	return list(/obj/item/solar_assembly = 16)
-
+*/
 /obj/structure/closet/crate/freezer
 	name = "freezer"
 	desc = "A freezer."
@@ -172,10 +172,9 @@ obj/structure/closet/crate
 			newgas.temperature = target_temp
 		return newgas
 
-/obj/structure/closet/crate/freezer/rations //Fpr use in the escape shuttle
+/obj/structure/closet/crate/freezer/rations
 	name = "emergency rations"
 	desc = "A crate of emergency rations."
-
 
 /obj/structure/closet/crate/freezer/rations/WillContain()
 	return list(/obj/item/weapon/reagent_containers/food/snacks/liquidfood = 4)
@@ -200,10 +199,10 @@ obj/structure/closet/crate
 	icon_state = "radiation"
 	icon_opened = "radiationopen"
 	icon_closed = "radiation"
-
+/*
 /obj/structure/closet/crate/radiation_gear/WillContain()
 	return list(/obj/item/clothing/suit/radiation = 8)
-
+*/
 /obj/structure/closet/crate/secure/weapon
 	name = "weapons crate"
 	desc = "A secure weapons crate."

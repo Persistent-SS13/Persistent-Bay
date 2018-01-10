@@ -53,7 +53,10 @@ var/global/list/zones_to_save = list()
 	..()
 	update_icon()
 	lighting_build_overlay()
-
+	update_air_properties()
+	for(var/obj/effect/floor_decal/decal in saved_decals)
+		decal.init_for(src)
+	
 /atom/movable/lighting_overlay/after_load()
 	loc = null
 	qdel(src)

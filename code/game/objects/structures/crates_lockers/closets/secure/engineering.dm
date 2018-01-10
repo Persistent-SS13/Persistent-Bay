@@ -7,7 +7,7 @@
 	icon_opened = "secureceopen"
 	icon_broken = "securecebroken"
 	icon_off = "secureceoff"
-
+/*
 /obj/structure/closet/secure_closet/engineering_chief/WillContain()
 	return list(
 		new/datum/atom_creator/weighted(list(/obj/item/clothing/accessory/storage/brown_vest = 70, /obj/item/clothing/accessory/storage/webbing = 30)),
@@ -29,6 +29,7 @@
 		/obj/item/taperoll/engineering,
 		/obj/item/weapon/crowbar/brace_jack
 	)
+*/
 
 /obj/structure/closet/secure_closet/engineering_electrical
 	name = "electrical supplies"
@@ -40,6 +41,7 @@
 	icon_broken = "secureengelecbroken"
 	icon_off = "secureengelecoff"
 
+/*
 /obj/structure/closet/secure_closet/engineering_electrical/WillContain()
 	return list(
 		/obj/item/clothing/gloves/nabber = 2,
@@ -48,6 +50,7 @@
 		/obj/item/weapon/module/power_control = 3,
 		/obj/item/device/multitool = 3
 	)
+*/
 
 /obj/structure/closet/secure_closet/engineering_welding
 	name = "welding supplies"
@@ -58,7 +61,7 @@
 	icon_opened = "toolclosetopen"
 	icon_broken = "secureengweldbroken"
 	icon_off = "secureengweldoff"
-
+/*
 /obj/structure/closet/secure_closet/engineering_welding/WillContain()
 	return list(
 		/obj/item/clothing/head/welding = 3,
@@ -67,6 +70,7 @@
 		/obj/item/clothing/glasses/welding = 3,
 		/obj/item/weapon/welder_tank = 6
 	)
+*/
 
 /obj/structure/closet/secure_closet/engineering_personal
 	name = "engineer's locker"
@@ -77,7 +81,7 @@
 	icon_opened = "secureengopen"
 	icon_broken = "secureengbroken"
 	icon_off = "secureengoff"
-
+/*
 /obj/structure/closet/secure_closet/engineering_personal/WillContain()
 	return list(
 		new/datum/atom_creator/weighted(list(/obj/item/clothing/accessory/storage/brown_vest = 70, /obj/item/clothing/accessory/storage/webbing = 30)),
@@ -91,6 +95,7 @@
 		/obj/item/weapon/cartridge/engineering,
 		/obj/item/taperoll/engineering
 	)
+*/
 
 /obj/structure/closet/secure_closet/atmos_personal
 	name = "technician's locker"
@@ -101,7 +106,7 @@
 	icon_opened = "secureatmopen"
 	icon_broken = "secureatmbroken"
 	icon_off = "secureatmoff"
-
+/*
 /obj/structure/closet/secure_closet/atmos_personal/WillContain()
 	return list(
 		new/datum/atom_creator/weighted(list(/obj/item/clothing/accessory/storage/brown_vest = 70, /obj/item/clothing/accessory/storage/webbing = 30)),
@@ -116,3 +121,4 @@
 		/obj/item/weapon/cartridge/atmos,
 		/obj/item/taperoll/atmos
 	)
+*/

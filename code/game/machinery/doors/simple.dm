@@ -238,3 +238,15 @@
 
 /obj/machinery/door/unpowered/simple/cult/New(var/newloc,var/material_name,var/complexity)
 	..(newloc, "cult", complexity)
+
+
+
+
+obj/machinery/door/unpowered/simple/attackby(obj/item/W as obj, mob/user as mob)
+	if((isScrewdriver(W)) && (istype(loc, /turf/simulated) || anchored))
+		playsound(loc, 'sound/items/Screwdriver.ogg', 100, 1)
+		anchored = !anchored
+		user.visible_message("<span class='notice'>[user] [anchored ? "fastens" : "unfastens"] the [src].</span>", \
+								 "<span class='notice'>You have [anchored ? "fastened the [src] to" : "unfastened the [src] from"] the floor.</span>")
+		return
+	..()

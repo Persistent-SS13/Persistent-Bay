@@ -578,11 +578,9 @@ var/world_topic_spam_protect_time = world.timeofday
 /world/proc/update_status()
 	var/s = ""
 	s += "<a href='https://discord.gg/UUpHSPp'>" 
-	s += "<b>Persistent Station 13, Saving Station and Characters.</b> &#8212; "
-
-	s += "<b>[station_name()]</b>";
+	s += "<b>*Alpha* Persistent SS13, Saving Station and Characters, Custom Stations-Custom Factions. *Alpha*</b> &#8212; "
 	//Change this to wherever you want the hub to link to.
-	s += " | Brand New! Baystation Base, Active Development, Saving Promotions, Levels, Antag Alignment, Custom Space Stations! </a> <br>"
+	s += " | Brand New! Baystation Base, Active Development, Come learn the ropes before the WIPE!</a> <br>"
 	var/list/features = list()
 	var/n = 0
 	for (var/mob/M in GLOB.player_list)

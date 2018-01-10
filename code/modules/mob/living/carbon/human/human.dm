@@ -1198,7 +1198,7 @@
 
 	. = CAN_INJECT
 	for(var/obj/item/clothing/C in list(head, wear_mask, wear_suit, w_uniform, gloves, shoes))
-		if(C && (C.body_parts_covered & affecting.body_part) && (C.item_flags & THICKMATERIAL))
+		if(C && (C.body_parts_covered & affecting.body_part) && (C.item_flags & ITEM_FLAG_THICKMATERIAL))
 			if(istype(C, /obj/item/clothing/suit/space))
 				. = INJECTION_PORT //it was going to block us, but it's a space suit so it doesn't because it has some kind of port
 			else
@@ -1247,14 +1247,14 @@
 		return ..()
 
 /mob/living/carbon/human/getDNA()
-	if(species.flags & NO_SCAN)
+	if(species.species_flags & SPECIES_FLAG_NO_SCAN)
 		return null
 	if(isSynthetic())
 		return
 	..()
 
 /mob/living/carbon/human/setDNA()
-	if(species.flags & NO_SCAN)
+	if(species.species_flags & SPECIES_FLAG_NO_SCAN)
 		return
 	if(isSynthetic())
 		return
@@ -1275,7 +1275,7 @@
 	return 0
 
 /mob/living/carbon/human/slip(var/slipped_on, stun_duration=8)
-	if((species.flags & NO_SLIP) || (shoes && (shoes.item_flags & NOSLIP)))
+	if((species.species_flags & SPECIES_FLAG_NO_SLIP) || (shoes && (shoes.item_flags & ITEM_FLAG_NOSLIP)))
 		return 0
 	return !!(..(slipped_on,stun_duration))
 
@@ -1364,7 +1364,7 @@
 	set desc = "Try not to hurt them."
 	set category = "IC"
 
-	if(stat || species.flags & CAN_NAB) return
+	if(incapacitated() || species.species_flags & SPECIES_FLAG_CAN_NAB) return
 	pulling_punches = !pulling_punches
 	to_chat(src, "<span class='notice'>You are now [pulling_punches ? "pulling your punches" : "not pulling your punches"].</span>")
 	return
@@ -1454,7 +1454,7 @@
 		if(!istype(check_organ))
 			return 0
 		return check_organ.can_feel_pain()
-	return !(species.flags & NO_PAIN)
+	return !(species.species_flags & SPECIES_FLAG_NO_PAIN)
 
 /mob/living/carbon/human/get_breath_volume()
 	. = ..()

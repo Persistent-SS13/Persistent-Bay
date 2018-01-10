@@ -26,7 +26,7 @@
 	extended_desc = "This smoke generator creates clouds of smoke on command. It can also hold liquids inside, which will go \
 	into the smoke clouds when activated. The reagents are consumed when the smoke is made."
 	ext_cooldown = 1
-	flags = OPENCONTAINER
+	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	volume = 100
 
 	complexity = 20
@@ -76,7 +76,7 @@
 	extended_desc = "This autoinjector can push up to 30 units of reagents into another container or someone else outside of the machine. The target \
 	must be adjacent to the machine, and if it is a person, they cannot be wearing thick clothing. Negative given amounts makes the injector suck out reagents instead."
 
-	flags = OPENCONTAINER
+	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	volume = 30
 
 	complexity = 20
@@ -293,7 +293,7 @@
 	icon_state = "reagent_storage"
 	extended_desc = "This is effectively an internal beaker."
 
-	flags = OPENCONTAINER
+	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	volume = 60
 
 	complexity = 4
@@ -330,7 +330,7 @@
 	icon_state = "reagent_storage_cryo"
 	extended_desc = "This is effectively an internal cryo beaker."
 
-	flags = OPENCONTAINER | NOREACT
+	atom_flags = ATOM_FLAG_OPEN_CONTAINER | ATOM_FLAG_NO_REACT
 	complexity = 8
 	spawn_flags = IC_SPAWN_RESEARCH
 

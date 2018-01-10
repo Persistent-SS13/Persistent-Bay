@@ -81,7 +81,7 @@
 	possible_transfer_amounts = "10;25;50;100"
 	initial_capacity = 50000
 	initial_reagent_types = list(/datum/reagent/water = 1)
-	flags = OBJ_CLIMBABLE
+	atom_flags = ATOM_FLAG_CLIMBABLE
 
 /obj/structure/reagent_dispensers/watertank/attackby(var/obj/item/weapon/W as obj, mob/user as mob)
 	if(isScrewdriver(W))
@@ -107,7 +107,7 @@
 	var/modded = 0
 	var/obj/item/device/assembly_holder/rig = null
 	initial_reagent_types = list(/datum/reagent/fuel = 1)
-	flags = OBJ_CLIMBABLE
+	atom_flags = ATOM_FLAG_CLIMBABLE
 
 /obj/structure/reagent_dispensers/fueltank/examine(mob/user)
 	if(!..(user, 2))
@@ -283,7 +283,7 @@
 	amount_per_transfer_from_this = 10
 	matter = list(DEFAULT_WALL_MATERIAL = 20000)
 	initial_reagent_types = list(/datum/reagent/ethanol/beer = 1)
-	flags = OBJ_CLIMBABLE
+	atom_flags = ATOM_FLAG_CLIMBABLE
 
 /obj/structure/reagent_dispensers/beerkeg/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(isScrewdriver(W))

@@ -90,6 +90,6 @@
 /obj/item/frame/intercom
 	name = "Intercom Frame"
 	desc = "Used for building intercoms"
-	icon = 'icons/obj/monitors.dmi'
-	icon_state = "intercom-frame"
+	icon = 'icons/obj/radio.dmi'
+	icon_state = "intercom-p"
 	build_machine_type = /obj/item/device/radio/intercom

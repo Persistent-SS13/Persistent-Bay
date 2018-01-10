@@ -28,9 +28,6 @@
 
 
 	var/movement_delay
-/turf/after_load()
-	for(var/obj/effect/floor_decal/decal in saved_decals)
-		decal.init_for(src)
 /turf/New()
 	..()
 	for(var/atom/movable/AM as mob|obj in src)
@@ -246,7 +243,9 @@ var/const/enterloopsanity = 100
 	if(decals && decals.len)
 		decals.Cut()
 		decals = null
-
+	if(saved_decals && saved_decals.len)
+		saved_decals.Cut()
+		saved_decals = null
 // Called when turf is hit by a thrown object
 /turf/hitby(atom/movable/AM as mob|obj, var/speed)
 	if(src.density)

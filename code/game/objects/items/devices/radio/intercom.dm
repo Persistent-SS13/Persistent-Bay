@@ -217,7 +217,7 @@
 	origin_tech = "engineering=2;programming=1"
 
 
-/obj/machinery/alarm/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/device/radio/intercom/attackby(obj/item/W as obj, mob/user as mob)
 	src.add_fingerprint(user)
 
 	switch(buildstage)

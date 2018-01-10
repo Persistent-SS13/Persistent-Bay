@@ -79,3 +79,30 @@
 		return
 	power_change()
 	..(severity)
+
+
+/obj/machinery/light_switch/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
+	if(istype(W, /obj/item/device/reagent_scanner))
+		return
+
+
+	if(istype(W, /obj/item/weapon/wrench))
+		to_chat(user, "<span class='notice'>You detach \the [src] from the wall.</span>")
+		new/obj/item/frame/light_switch(get_turf(src))
+		qdel(src)
+		return 1
+
+	return src.attack_hand(user)
+
+
+/obj/machinery/light_switch/New(loc, dir, atom/frame)
+	..(loc)
+
+	if(dir)
+		src.set_dir(dir)
+
+	if(istype(frame))
+
+		pixel_x = (dir & 3)? 0 : (dir == 4 ? -40 : 40)
+		pixel_y = (dir & 3)? (dir ==1 ? -40 : 40) : 0
+		frame.transfer_fingerprints_to(src)

@@ -80,10 +80,11 @@
 	recipes += new/datum/stack_recipe("grenade casing", /obj/item/weapon/grenade/chem_grenade)
 	recipes += new/datum/stack_recipe("light fixture frame", /obj/item/frame/light, 2)
 	recipes += new/datum/stack_recipe("small light fixture frame", /obj/item/frame/light/small, 1)
+	recipes += new/datum/stack_recipe("light switch frame", /obj/item/frame/light_switch, 1)
 	recipes += new/datum/stack_recipe("apc frame", /obj/item/frame/apc, 2)
 	recipes += new/datum/stack_recipe("air alarm frame", /obj/item/frame/air_alarm, 2)
 	recipes += new/datum/stack_recipe("fire alarm frame", /obj/item/frame/fire_alarm, 2)
-
+	recipes += new/datum/stack_recipe("intercom frame", /obj/item/frame/intercom, 2)
 	recipes += new/datum/stack_recipe_list("modular computer frames", list( \
 		new/datum/stack_recipe("modular console frame", /obj/item/modular_computer/console, 20),\
 		new/datum/stack_recipe("modular telescreen frame", /obj/item/modular_computer/telescreen, 10),\
@@ -96,6 +97,7 @@
 	recipes += new/datum/stack_recipe("Metal crate", /obj/structure/closet/crate, 10, time = 50, one_per_turf = 1)
 	recipes += new/datum/stack_recipe("knife grip", /obj/item/weapon/material/butterflyhandle, 4, time = 20, one_per_turf = 0, on_floor = 1, supplied_material = "[name]")
 	recipes += new/datum/stack_recipe("dark floor tile", /obj/item/stack/tile/floor_dark, 1, 4, 20)
+	recipes += new/datum/stack_recipe("Operating Table", /obj/machinery/optable, 10, time = 50, one_per_turf = 1)
 
 /material/stone/generate_recipes()
 	..()
@@ -112,6 +114,7 @@
 	recipes += new/datum/stack_recipe("white floor tile", /obj/item/stack/tile/floor_white, 1, 4, 20)
 	recipes += new/datum/stack_recipe("freezer floor tile", /obj/item/stack/tile/floor_freezer, 1, 4, 20)
 	recipes += new/datum/stack_recipe("hazard cone", /obj/item/weapon/caution/cone, 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("plastic flaps", /obj/structure/plasticflaps, 10, one_per_turf = 1, on_floor = 1)
 
 
 /material/wood/generate_recipes()

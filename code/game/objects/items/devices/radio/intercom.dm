@@ -6,10 +6,13 @@
 	anchored = 1
 	w_class = ITEM_SIZE_HUGE
 	canhear_range = 2
-	flags = CONDUCT | NOBLOODY
+	flags = CONDUCT
 	layer = ABOVE_WINDOW_LAYER
 	var/number = 0
 	var/last_tick //used to delay the powercheck
+	var/buildstage = 0
+	var/circuitry_installed = 1
+
 
 /obj/item/device/radio/intercom/get_storage_cost()
 	return ITEM_SIZE_NO_CONTAINER
@@ -161,3 +164,52 @@
 /obj/item/device/radio/intercom/locked/confessional
 	name = "confessional intercom"
 	locked_frequency = 1480
+
+/obj/item/device/radio/intercom/locked/prison
+	name = "\improper prison intercom"
+	desc = "Talk through this. It looks like it has been modified to not broadcast."
+
+/obj/item/device/radio/intercom/locked/prison/New()
+	..()
+	wires.CutWireIndex(WIRE_TRANSMIT)
+
+/obj/item/device/radio/intercom/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
+	if(istype(W, /obj/item/device/reagent_scanner))
+		return
+
+
+	if(istype(W, /obj/item/weapon/wrench))
+		to_chat(user, "<span class='notice'>You detach \the [src] from the wall.</span>")
+		new /obj/item/frame/intercom(get_turf(src))
+		qdel(src)
+		return 1
+
+	return src.attack_hand(user)
+
+/obj/item/device/radio/intercom/New(loc, dir, atom/frame)
+	..(loc)
+
+	if(dir)
+		src.set_dir(dir)
+
+	if(istype(frame))
+
+		pixel_x = (dir & 3)? 0 : (dir == 4 ? -40 : 40)
+		pixel_y = (dir & 3)? (dir ==1 ? -40 : 40) : 0
+		frame.transfer_fingerprints_to(src)
+
+
+/obj/item/device/radio/intercom/update_icon()
+	if(!circuitry_installed)
+		icon_state="intercom-frame"
+		return
+	icon_state = "intercom[!on?"-p":""][b_stat ? "-open":""]"
+
+/obj/item/weapon/intercom_electronics
+	name = "intercom electronics"
+	icon = 'icons/obj/doors/door_assembly.dmi'
+	icon_state = "door_electronics"
+	desc = "Looks like a circuit. Probably is."
+	w_class = ITEM_SIZE_SMALL
+	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	origin_tech = "engineering=2;programming=1"

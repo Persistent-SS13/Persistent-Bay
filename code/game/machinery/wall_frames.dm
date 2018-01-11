@@ -71,3 +71,25 @@
 	icon_state = "bulb-construct-item"
 	refund_amt = 1
 	build_machine_type = /obj/machinery/light_construct/small
+
+/obj/item/frame/driver_button
+	name = "mass driver button frame"
+	desc = "Used for repairing or building mass driver buttons"
+	icon = 'icons/obj/objects.dmi'
+	icon_state = "launcherbtt_frame"
+	refund_amt = 1
+//	build_machine_type =
+
+/obj/item/frame/light_switch
+	name = "light switch frame"
+	desc = "Used for repairing or building light switches"
+	icon = 'icons/obj/power.dmi'
+	icon_state = "light-p"
+	build_machine_type = /obj/machinery/light_switch
+
+/obj/item/frame/intercom
+	name = "Intercom Frame"
+	desc = "Used for building intercoms"
+	icon = 'icons/obj/monitors.dmi'
+	icon_state = "intercom-frame"
+	build_machine_type = /obj/item/device/radio/intercom

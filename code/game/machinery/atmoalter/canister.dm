@@ -268,12 +268,11 @@ update_flag
 			thejetpack.merge(removed)
 			to_chat(user, "You pulse-pressurize your jetpack from the tank.")
 		return
-
+	..()
 
 /obj/machinery/portable_atmospherics/canister/attackby(obj/item/W as obj, mob/user as mob)
 	if(isWelder(W) && src.destroyed)
 		var/obj/item/weapon/weldingtool/WT = W
-
 		if(WT.remove_fuel(0,user))
 			var/obj/item/stack/material/steel/new_item = new(usr.loc)
 			new_item.add_to_stacks(usr)

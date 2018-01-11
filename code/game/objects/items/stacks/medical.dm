@@ -30,11 +30,11 @@
 			return 1
 
 		if(affecting.organ_tag == BP_HEAD)
-			if(H.head && istype(H.head,/obj/item/clothing/head/helmet/space))
+			if(H.head && istype(H.head,/obj/item/clothing/head/helmet/space) && !istype(H.head,/obj/item/clothing/head/helmet/space/phorosian))
 				to_chat(user, "<span class='warning'>You can't apply [src] through [H.head]!</span>")
 				return 1
 		else
-			if(H.wear_suit && istype(H.wear_suit,/obj/item/clothing/suit/space))
+			if(H.wear_suit && istype(H.wear_suit,/obj/item/clothing/suit/space) && !istype(H.wear_suit,/obj/item/clothing/suit/space/phorosian))
 				to_chat(user, "<span class='warning'>You can't apply [src] through [H.wear_suit]!</span>")
 				return 1
 

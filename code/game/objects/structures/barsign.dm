@@ -27,8 +27,18 @@
 		else
 			to_chat(user, "It says '[icon_state]'")
 
-/obj/structure/sign/double/barsign/New()
-	..()
+/obj/structure/sign/double/barsign/New(loc, dir, atom/frame)
+	..(loc)
+
+	if(dir)
+		src.set_dir(dir)
+
+	if(istype(frame))
+
+		pixel_x = (dir & 3)? 0 : (dir == 4 ? -40 : 40)
+		pixel_y = (dir & 3)? (dir ==1 ? -40 : 40) : 0
+		frame.transfer_fingerprints_to(src)
+
 	icon_state = pick(get_valid_states())
 
 /obj/structure/sign/double/barsign/attackby(obj/item/I, mob/user)
@@ -63,3 +73,4 @@
 		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 		qdel(src)
 		return
+

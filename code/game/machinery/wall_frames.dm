@@ -103,7 +103,6 @@
 	refund_amt = 2
 	build_machine_type = /obj/item/device/radio/intercom
 
-
 /obj/item/frame/noticeboard
 	name = "noticeboard"
 	desc = "Used for building NoticeBoards"
@@ -158,3 +157,5 @@
 	build_machine_type = /obj/structure/sink/kitchen
 
 
+// /obj/machinery/newscaster
+// /obj/machinery/newscaster/security_unit

@@ -44,7 +44,7 @@
 
 	// List of vending_product items available.
 	var/list/product_records = list()
-
+	var/list/hidden_records = list()
 
 	// Variables used to initialize advertising
 	var/product_slogans = "" //String of slogans spoken out loud, separated by semicolons
@@ -59,6 +59,8 @@
 	var/last_reply = 0
 	var/last_slogan = 0 //When did we last pitch?
 	var/slogan_delay = 6000 //How long until we can pitch again?
+
+	var/obj/item/weapon/vending_refill/refill_canister = null    //The type of refill canisters used by this machine.
 
 	// Things that can go wrong
 	emagged = 0 //Ignores if somebody doesn't have card access to that machine.
@@ -962,6 +964,36 @@
 	product_ads = "FJKLFJSD;AJKFLBJAKL;1234 LOONIES LOL!;>MFW;Kill them fuckers!;GET DAT FUKKEN DISK;HONK!;EI NATH;Down with Central!;Admin conspiracies since forever!;Space-time bending hardware!"
 	products = list(/obj/item/clothing/head/wizard = 1,/obj/item/clothing/suit/wizrobe = 1,/obj/item/clothing/head/wizard/red = 1,/obj/item/clothing/suit/wizrobe/red = 1,/obj/item/clothing/shoes/sandal = 1,/obj/item/weapon/staff = 2)
 
+/obj/machinery/vending/autodrobe
+	name = "\improper AutoDrobe"
+	desc = "A vending machine for costumes."
+	icon_state = "theater"
+	icon_deny = "theater-deny"
+	product_slogans = "Dress for success!;Suited and booted!;It's show time!;Why leave style up to fate? Use AutoDrobe!"
+	vend_delay = 15
+	vend_reply = "Thank you for using AutoDrobe!"
+	products = list(/obj/item/clothing/suit/chickensuit = 1,/obj/item/clothing/head/chicken = 1,/obj/item/clothing/under/gladiator = 1,
+					/obj/item/clothing/head/helmet/gladiator = 1,/obj/item/clothing/under/gimmick/rank/captain/suit = 1,/obj/item/clothing/head/flatcap = 1,/obj/item/clothing/glasses/gglasses = 1,/obj/item/clothing/shoes/jackboots = 1,
+					/obj/item/clothing/under/schoolgirl = 1,/obj/item/clothing/head/kitty = 1,/obj/item/clothing/under/blackskirt = 1,/obj/item/clothing/head/beret = 1,
+					/obj/item/clothing/under/suit_jacket = 1,/obj/item/clothing/head/that =1,/obj/item/clothing/under/kilt = 1,/obj/item/clothing/head/beret = 1,
+					/obj/item/clothing/glasses/monocle =1,/obj/item/clothing/head/bowlerhat = 1,/obj/item/weapon/cane = 1,/obj/item/clothing/under/sl_suit = 1,
+					/obj/item/clothing/mask/fakemoustache = 1,/obj/item/clothing/suit/bio_suit/plaguedoctorsuit = 1,/obj/item/clothing/head/plaguedoctorhat = 1,/obj/item/clothing/mask/gas/plaguedoctor = 1,
+					/obj/item/clothing/suit/apron = 1,/obj/item/clothing/under/waiter = 1,/obj/item/clothing/head/bandana = 1,
+					/obj/item/clothing/suit/wizrobe/fake = 1,/obj/item/clothing/head/wizard/fake = 1,/obj/item/weapon/staff = 3,/obj/item/clothing/mask/gas/sexyclown = 1,
+					/obj/item/clothing/under/sexyclown = 1,/obj/item/clothing/mask/gas/sexymime = 1,/obj/item/clothing/under/sexymime = 1,/obj/item/clothing/suit/apron/overalls = 1,
+					/obj/item/clothing/head/rabbitears =1)
+	refill_canister = /obj/item/weapon/vending_refill/autodrobe
+
+/obj/machinery/vending/autodrobe/New()
+	..()
+	component_parts = list()
+	var/obj/item/weapon/circuitboard/vendor/V = new(null)
+	V.set_type(type)
+	component_parts += V
+	component_parts += new /obj/item/weapon/vending_refill/autodrobe(0)
+	component_parts += new /obj/item/weapon/vending_refill/autodrobe(0)
+	component_parts += new /obj/item/weapon/vending_refill/autodrobe(0)
+
 /obj/machinery/vending/dinnerware
 	name = "Dinnerware"
 	desc = "A kitchen and restaurant equipment vendor."
@@ -1058,6 +1090,16 @@
 					/obj/item/weapon/screwdriver = 2,/obj/item/weapon/crowbar = 2)
 	contraband = list(/obj/item/device/flash = 2)
 
+/obj/machinery/vending/sustenance
+	name = "\improper Sustenance Vendor"
+	desc = "A vending machine which vends food, as required by section 47-C of the NT's Prisoner Ethical Treatment Agreement."
+	product_slogans = "Enjoy your meal.;Enough calories to support strenuous labor."
+	product_ads = "The healthiest!;Award-winning chocolate bars!;Mmm! So good!;Oh my god it's so juicy!;Have a snack.;Snacks are good for you!;Have some more Getmore!;Best quality snacks straight from mars.;We love chocolate!;Try our new jerky!"
+	icon_state = "sustenance"
+	products = list(/obj/item/weapon/reagent_containers/food/snacks/tofu = 24,
+					/obj/item/weapon/reagent_containers/food/drinks/ice = 12,
+					/obj/item/weapon/reagent_containers/food/snacks/candy_corn = 6)
+
 //FOR ACTORS GUILD - mainly props that cannot be spawned otherwise
 /obj/machinery/vending/props
 	name = "prop dispenser"
@@ -1114,3 +1156,41 @@
 	prices = list(/obj/item/toy/blink = 3, /obj/item/toy/spinningtoy = 10, /obj/item/weapon/deck/tarot = 3, /obj/item/weapon/deck/cards = 3, /obj/item/weapon/pack/cardemon = 5, /obj/item/weapon/pack/spaceball = 5, /obj/item/weapon/storage/pill_bottle/dice_nerd = 6, /obj/item/weapon/storage/pill_bottle/dice = 6, /obj/item/weapon/storage/box/checkers = 10, /obj/item/weapon/storage/box/checkers/chess/red = 10, /obj/item/weapon/storage/box/checkers/chess = 10)
 	premium = list(/obj/item/weapon/gun/projectile/revolver/capgun = 1, /obj/item/ammo_magazine/caps = 4)
 	contraband = list(/obj/item/weapon/reagent_containers/spray/waterflower = 2, /obj/item/weapon/storage/box/snappops = 3)
+/obj/machinery/vending/clothing
+	name = "ClothesMate" //renamed to make the slogan rhyme
+	desc = "A vending machine for clothing."
+	icon_state = "clothes"
+	product_slogans = "Dress for success!;Prepare to look swagalicious!;Look at all this free swag!;Why leave style up to fate? Use the ClothesMate!"
+	vend_delay = 15
+	vend_reply = "Thank you for using the ClothesMate!"
+	products = list(/obj/item/clothing/head/that=2,/obj/item/clothing/head/fedora=1,/obj/item/clothing/glasses/monocle=1,
+	/obj/item/clothing/under/sundress=2,/obj/item/clothing/glasses/regular=2,/obj/item/clothing/suit/poncho=1,
+	/obj/item/clothing/suit/ianshirt=1,/obj/item/clothing/shoes/laceup=2,/obj/item/clothing/shoes/black=4,/obj/item/clothing/shoes/sandal=1)
+	contraband = list(/obj/item/clothing/under/syndicate/tacticool=1,/obj/item/clothing/mask/balaclava=1,/obj/item/clothing/head/ushanka=1,/obj/item/clothing/under/soviet=1)
+	premium = list(/obj/item/clothing/under/suit_jacket/checkered=1,/obj/item/clothing/head/mailman=1,/obj/item/clothing/under/rank/mailman=1)
+	refill_canister = /obj/item/weapon/vending_refill/clothing
+
+/obj/machinery/vending/clothing/New()
+	..()
+	component_parts = list()
+	var/obj/item/weapon/circuitboard/vendor/V = new(null)
+	V.set_type(type)
+	component_parts += V
+	component_parts += new /obj/item/weapon/vending_refill/clothing(0)
+	component_parts += new /obj/item/weapon/vending_refill/clothing(0)
+	component_parts += new /obj/item/weapon/vending_refill/clothing(0)
+
+/obj/machinery/vending/artvend
+	name = "ArtVend"
+	desc = "A vending machine for art supplies."
+	product_slogans = "Stop by for all your artistic needs!;Color the floors with crayons, not blood!;Don't be a starving artist, use ArtVend. ;Don't fart, do art!"
+	product_ads = "Just like Kindergarten!;Now with 1000% more vibrant colors!;Screwing with the janitor was never so easy!;Creativity is at the heart of every spessman."
+	vend_delay = 34
+	icon_state = "artvend"
+	products = list(/obj/item/stack/cable_coil/random = 10,/obj/item/device/camera = 4,/obj/item/device/camera_film = 6,
+	/obj/item/weapon/storage/photo_album = 2,/obj/item/weapon/wrapping_paper = 4,/obj/item/weapon/packageWrap = 4,
+	/obj/item/weapon/storage/fancy/crayons = 4,/obj/item/weapon/hand_labeler = 4,/obj/item/weapon/paper = 10,
+	/obj/item/weapon/c_tube = 10,/obj/item/weapon/pen = 5,/obj/item/weapon/pen/blue = 5,
+	/obj/item/weapon/pen/red = 5)
+	contraband = list(/obj/item/weapon/pen/crayon/mime = 1,/obj/item/weapon/pen/crayon/rainbow = 1)
+	premium = list(/obj/item/weapon/contraband/poster = 5)

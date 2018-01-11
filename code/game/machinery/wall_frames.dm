@@ -51,11 +51,17 @@
 /obj/item/frame/fire_alarm
 	name = "fire alarm frame"
 	desc = "Used for building fire alarms."
+	icon = 'icons/obj/monitors.dmi'
+	icon_state = "firex"
+	refund_amt = 2
 	build_machine_type = /obj/machinery/firealarm
 
 /obj/item/frame/air_alarm
 	name = "air alarm frame"
 	desc = "Used for building air alarms."
+	icon = 'icons/obj/monitors.dmi'
+	icon_state = "alarmx"
+	refund_amt = 2
 	build_machine_type = /obj/machinery/alarm
 
 /obj/item/frame/light
@@ -63,6 +69,7 @@
 	desc = "Used for building lights."
 	icon = 'icons/obj/lighting.dmi'
 	icon_state = "tube-construct-item"
+	refund_amt = 2
 	build_machine_type = /obj/machinery/light_construct
 	reverse = 1
 
@@ -85,6 +92,7 @@
 	desc = "Used for repairing or building light switches"
 	icon = 'icons/obj/power.dmi'
 	icon_state = "light-p"
+	refund_amt = 1
 	build_machine_type = /obj/machinery/light_switch
 
 /obj/item/frame/intercom
@@ -92,4 +100,61 @@
 	desc = "Used for building intercoms"
 	icon = 'icons/obj/radio.dmi'
 	icon_state = "intercom-p"
+	refund_amt = 2
 	build_machine_type = /obj/item/device/radio/intercom
+
+
+/obj/item/frame/noticeboard
+	name = "noticeboard"
+	desc = "Used for building NoticeBoards"
+	icon = 'icons/obj/stationobjs.dmi'
+	icon_state = "nboard00"
+	refund_amt = 2
+	refund_type = /obj/item/stack/material/cardboard
+	build_machine_type = /obj/structure/noticeboard
+
+/obj/item/frame/mirror
+	name = "Mirror Frame"
+	desc = "Used for building Mirrors"
+	icon = 'icons/obj/stationobjs.dmi'
+	icon_state = "mirror"
+	refund_amt = 2
+	refund_type = /obj/item/stack/material/silver
+	build_machine_type = /obj/structure/mirror
+
+/obj/item/frame/mirror
+	name = "Shower Frame"
+	desc = "Used for building Showers"
+	icon = 'icons/obj/watercloset.dmi'
+	icon_state = "shower"
+	refund_amt = 2
+	build_machine_type = /obj/machinery/shower
+
+
+/obj/item/frame/wallflash
+	name = "Wall Flash Frame"
+	desc = "Used for building Wall Mounted Flashes"
+	icon = 'icons/obj/stationobjs.dmi'
+	icon_state = "mflash1"
+	refund_amt = 2
+	build_machine_type = /obj/machinery/flasher
+
+
+/obj/item/frame/barsign
+	name = "Bar Sign Frame"
+	desc = "Used for building Bar Signs"
+	icon = 'icons/obj/barsigns.dmi'
+	icon_state = "empty"
+	refund_amt = 2
+	build_machine_type = /obj/structure/sign/double/barsign
+
+
+/obj/item/frame/kitchensink
+	name = "Kitchen Sink Frame"
+	desc = "Used for building Kitchen Sinks"
+	icon = 'icons/obj/watercloset.dmi'
+	icon_state = "sink_alt"
+	refund_amt = 2
+	build_machine_type = /obj/structure/sink/kitchen
+
+

@@ -48,3 +48,18 @@
 		return
 
 	return ..()
+
+
+/obj/structure/sign/double/barsign/attackby(obj/item/W as obj, mob/user as mob)
+	if((isScrewdriver(W)) && (istype(loc, /turf/simulated) || anchored))
+		playsound(loc, 'sound/items/Screwdriver.ogg', 100, 1)
+		anchored = !anchored
+		user.visible_message("<span class='notice'>[user] [anchored ? "fastens" : "unfastens"] the [src].</span>", \
+								 "<span class='notice'>You have [anchored ? "fastened the [src] to" : "unfastened the [src] from"] the floor.</span>")
+		return
+	else if(isWrench(W))
+		to_chat(user, "You remove the [src] assembly from the wall!")
+		new /obj/item/frame/barsign(get_turf(user))
+		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
+		qdel(src)
+		return

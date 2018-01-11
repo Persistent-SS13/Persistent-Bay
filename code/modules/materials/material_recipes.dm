@@ -101,8 +101,8 @@
 	recipes += new/datum/stack_recipe("dark floor tile", /obj/item/stack/tile/floor_dark, 1, 4, 20)
 	recipes += new/datum/stack_recipe("Operating Table", /obj/machinery/optable, 10, time = 50, one_per_turf = 1)
 	recipes += new/datum/stack_recipe("Item Safe", /obj/structure/safe, 10, time = 50, one_per_turf = 1)
-	/obj/machinery/door/blast
-	/obj/machinery/door/blast/shutters
+//	/obj/machinery/door/blast
+//	/obj/machinery/door/blast/shutters
 
 /material/stone/generate_recipes()
 	..()
@@ -146,7 +146,7 @@
 	recipes += new/datum/stack_recipe("zip gun frame", /obj/item/weapon/zipgunframe, 5)
 	recipes += new/datum/stack_recipe("coilgun stock", /obj/item/weapon/coilgun_assembly, 5)
 	recipes += new/datum/stack_recipe("stick", /obj/item/weapon/material/stick, 1)
-	recipes += new/datum/stack_recipe("wooden Saloon Door", /obj/machinery/door/wood/saloon, 10, time = 10, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("wooden Saloon Door", /obj/machinery/door/unpowered/simple/wood/saloon, 10, time = 10, one_per_turf = 1, on_floor = 1)
 
 
 

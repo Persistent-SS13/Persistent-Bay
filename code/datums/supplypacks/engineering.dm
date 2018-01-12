@@ -244,12 +244,24 @@
 	containertype = /obj/structure/closet/firecloset
 	containername = "\improper fire-safety closet"
 
-/decl/hierarchy/supply_pack/engineering/voidsuit
-	name = "Engineering voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/engineering/alt,
-					/obj/item/clothing/head/helmet/space/void/engineering/alt,
-					/obj/item/clothing/shoes/magboots)
-	cost = 120
-	containername = "\improper Engineering voidsuit crate"
+/decl/hierarchy/supply_pack/engineering/engivoidsuits
+	name = "Bulk Engineering Hardsuit Order (x10)"
+	contains = list(/obj/item/clothing/suit/space/void/engineering/prepared = 10)
+	containername = "Engineering Hardsuits - Bulk Order"
 	containertype = /obj/structure/closet/crate/secure/large
+	cost = 500
 	access = access_engine
+
+/decl/hierarchy/supply_pack/engineering/shieldgen
+	name = "Anti-Breach Shields (x4)"
+	contains = list(/obj/machinery/shieldgen = 4)
+	containername = "Anti-Breach Shields"
+	containertype = /obj/structure/closet/crate/secure/large
+	cost = 40
+
+/decl/hierarchy/supply_pack/engineering/shieldgen
+	name = "Anti-Breach Shields (x4)"
+	contains = list(/obj/machinery/shieldgen = 4)
+	containername = "Anti-Breach Shields"
+	containertype = /obj/structure/closet/crate/secure/large
+	cost = 40

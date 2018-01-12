@@ -2,6 +2,18 @@
 	name = "Medical"
 	containertype = /obj/structure/closet/crate/medical
 
+/decl/hierarchy/supply_pack/medical/bulkfirstaid
+	name = "Bulk Medkit Crate"
+	contains = list(/obj/item/weapon/storage/firstaid/regular = 10,
+					/obj/item/weapon/storage/firstaid/fire = 10,
+					/obj/item/weapon/storage/firstaid/toxin = 10,
+					/obj/item/weapon/storage/firstaid/adv = 10,
+					/obj/item/weapon/storage/firstaid/o2 = 10)
+	cost = 50
+	containertype = /obj/structure/closet/crate/secure/large
+	containername = "Bulk Medkit Crate (x10)"
+	access = access_medical
+
 /decl/hierarchy/supply_pack/medical/medical
 	name = "Medical crate"
 	contains = list(/obj/item/weapon/storage/firstaid/regular,

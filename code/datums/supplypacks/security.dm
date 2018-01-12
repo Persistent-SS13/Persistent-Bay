@@ -332,3 +332,10 @@
 	containertype = /obj/structure/closet/crate/secure
 	containername = "\improper Security biohazard gear crate"
 	access = access_security
+/decl/hierarchy/supply_pack/security/flashers
+	name = "Portable Flashers (x2)"
+	contains = list(/obj/machinery/flasher/portable = 2)
+	cost = 20
+	containertype = /obj/structure/closet/crate/secure/large
+	containername = "\improper wall shield generators crate"
+	access = access_security

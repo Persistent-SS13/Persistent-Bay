@@ -4,6 +4,11 @@ var/global/list/saved = list()
 var/global/list/areas_to_save = list()
 var/global/list/zones_to_save = list()
 
+/proc/Prepare_Atmos_For_Saving()
+	for(var/datum/pipe_network/net in SSmachines.pipenets)
+		for(var/datum/pipeline/line in net.line_members)
+			line.temporarily_store_air()
+
 /datum/area_holder
 	var/area_type = "/area"
 	var/name

@@ -85,3 +85,58 @@
 	containertype = /obj/structure/closet/crate/secure
 	containername = "\improper Shaft miner equipment"
 	access = access_mining
+
+/decl/hierarchy/supply_pack/supply/mule
+	name = "MULEbot Crate"
+	contains = list()
+	cost = 20
+	containertype = /obj/structure/largecrate/animal/mulebot
+	containername = "Mulebot Crate"
+
+/decl/hierarchy/supply_pack/supply/cargotrain
+	name = "Cargo Train Tug"
+	contains = list(/obj/vehicle/train/cargo/engine)
+	cost = 45
+	containertype = /obj/structure/largecrate
+	containername = "\improper Cargo Train Tug Crate"
+
+/decl/hierarchy/supply_pack/supply/cargotrailer
+	name = "Cargo Train Trolley"
+	contains = list(/obj/vehicle/train/cargo/trolley)
+	cost = 15
+	containertype = /obj/structure/largecrate
+	containername = "\improper Cargo Train Trolley Crate"
+
+/decl/hierarchy/supply_pack/supply/contraband
+	num_contained = 5
+	contains = list(/obj/item/seeds/bloodtomatoseed,
+					/obj/item/weapon/storage/pill_bottle/zoom,
+					/obj/item/weapon/storage/pill_bottle/happy,
+					/obj/item/weapon/reagent_containers/food/drinks/bottle/pwine)
+
+	name = "Contraband crate"
+	cost = 30
+	containername = "\improper Unlabeled crate"
+	contraband = 1
+	supply_method = /decl/supply_method/randomized
+
+/decl/hierarchy/supply_pack/supply/hoverpod
+	name = "Hoverpod Shipment"
+	contains = list()
+	cost = 80
+	containertype = /obj/structure/largecrate/hoverpod
+	containername = "\improper Hoverpod Crate"
+
+/decl/hierarchy/supply_pack/supply/webbing
+	name = "Webbing crate"
+	num_contained = 4
+	contains = list(/obj/item/clothing/accessory/holster,
+					/obj/item/clothing/accessory/storage/black_vest,
+					/obj/item/clothing/accessory/storage/brown_vest,
+					/obj/item/clothing/accessory/storage/white_vest,
+					/obj/item/clothing/accessory/storage/drop_pouches/black,
+					/obj/item/clothing/accessory/storage/drop_pouches/brown,
+					/obj/item/clothing/accessory/storage/drop_pouches/white,
+					/obj/item/clothing/accessory/storage/webbing)
+	cost = 15
+	containername = "\improper Webbing crate"

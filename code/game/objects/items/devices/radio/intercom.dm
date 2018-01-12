@@ -11,6 +11,7 @@
 	var/number = 0
 	var/last_tick //used to delay the powercheck
 	var/buildstage = 0
+	var/wiresexposed = 0
 	var/circuitry_installed = 1
 
 
@@ -193,9 +194,10 @@
 		src.set_dir(dir)
 
 	if(istype(frame))
-
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -40 : 40)
-		pixel_y = (dir & 3)? (dir ==1 ? -40 : 40) : 0
+		buildstage = 0
+		wiresexposed = 1
+		pixel_x = (dir & 3)? 0 : (dir == 4 ? -24 : 24)
+		pixel_y = (dir & 3)? (dir ==1 ? -24 : 24) : 0
 		frame.transfer_fingerprints_to(src)
 
 
@@ -213,3 +215,63 @@
 	w_class = ITEM_SIZE_SMALL
 	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
 	origin_tech = "engineering=2;programming=1"
+
+
+/obj/item/device/radio/intercom/attackby(obj/item/W as obj, mob/user as mob)
+	src.add_fingerprint(user)
+
+	switch(buildstage)
+		if(2)
+			if(isScrewdriver(W))  // Opening that Intercom up.
+				to_chat(user, "You pop the [src] maintence panel open.")
+				wiresexposed = !wiresexposed
+				to_chat(user, "The wires have been [wiresexposed ? "exposed" : "unexposed"]")
+				update_icon()
+				return
+
+			if (wiresexposed && isWirecutter(W))
+				user.visible_message("<span class='warning'>[user] has cut the wires inside \the [src]!</span>", "You have cut the wires inside \the [src].")
+				playsound(src.loc, 'sound/items/Wirecutter.ogg', 50, 1)
+				new/obj/item/stack/cable_coil(get_turf(src), 5)
+				buildstage = 1
+				update_icon()
+				return
+
+
+		if(1)
+			if(isCoil(W))
+				var/obj/item/stack/cable_coil/C = W
+				if (C.use(5))
+					to_chat(user, "<span class='notice'>You wire \the [src].</span>")
+					buildstage = 2
+					update_icon()
+					return
+				else
+					to_chat(user, "<span class='warning'>You need 5 pieces of cable to do wire \the [src].</span>")
+					return
+
+			else if(isCrowbar(W))
+				to_chat(user, "You start prying out the [src] circuit.")
+				playsound(src.loc, 'sound/items/Crowbar.ogg', 50, 1)
+				if(do_after(user,20))
+					to_chat(user, "You pry out the [src] circuit!")
+					var/obj/item/weapon/intercom_electronics/circuit = new /obj/item/weapon/intercom_electronics()
+					circuit.dropInto(user.loc)
+					buildstage = 0
+					update_icon()
+				return
+		if(0)
+			if(istype(W, /obj/item/weapon/intercom_electronics))
+				to_chat(user, "You insert the [src] circuit!")
+				qdel(W)
+				buildstage = 1
+				update_icon()
+				return
+
+			else if(isWrench(W))
+				to_chat(user, "You remove the [src] assembly from the wall!")
+				new /obj/item/frame/intercom(get_turf(user))
+				playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
+				qdel(src)
+
+	return ..()

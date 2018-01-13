@@ -214,3 +214,36 @@
 							/obj/item/weapon/stock_parts/subspace/filter = 1,
 							/obj/item/weapon/stock_parts/subspace/crystal = 1,
 							/obj/item/weapon/stock_parts/micro_laser/high = 2)
+
+
+
+
+
+/obj/item/weapon/circuitboard/smartfridge
+	name = "circuit board (smartfridge)"
+	build_path = /obj/machinery/smartfridge/
+	board_type = "machine"
+	origin_tech = "programming=1"
+	frame_desc = "Requires 3 Matter Bins"
+	req_components = list(
+							/obj/item/weapon/stock_parts/matter_bin = 3)
+
+	var/list/names_paths = list(/obj/machinery/smartfridge/ = "Smart Fridge",
+							/obj/machinery/smartfridge/seeds = "MegaSeed Servitor",
+							/obj/machinery/smartfridge/secure/extract = "Slime Extract Storage",
+							/obj/machinery/smartfridge/secure/medbay = "Refrigerated Medicine Storage",
+							/obj/machinery/smartfridge/secure/virology = "Refrigerated Virus Storage",
+							/obj/machinery/smartfridge/chemistry = "Smart Chemical Storage",
+							/obj/machinery/smartfridge/chemistry/virology = "Smart Virus Storage",
+							/obj/machinery/smartfridge/drinks = "Drink Showcase",
+							/obj/machinery/smartfridge/drying_rack = "Drying Rack",)
+
+/obj/item/weapon/circuitboard/smartfridge/attackby(obj/item/I, mob/user, params)
+	if(istype(I, /obj/item/weapon/screwdriver))
+		set_type(pick(names_paths), user)
+
+
+/obj/item/weapon/circuitboard/smartfridge/proc/set_type(typepath, mob/user)
+		build_path = typepath
+		name = "circuit board ([names_paths[build_path]] )"
+		user << "<span class='notice'>You set the board to [names_paths[build_path]].</span>"

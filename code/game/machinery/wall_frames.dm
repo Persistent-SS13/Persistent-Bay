@@ -121,7 +121,7 @@
 	refund_type = /obj/item/stack/material/silver
 	build_machine_type = /obj/structure/mirror
 
-/obj/item/frame/mirror
+/obj/item/frame/shower
 	name = "Shower Frame"
 	desc = "Used for building Showers"
 	icon = 'icons/obj/watercloset.dmi'

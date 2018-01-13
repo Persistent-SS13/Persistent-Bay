@@ -30,6 +30,12 @@
 
 /obj/machinery/smartfridge/New()
 	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/smartfridge(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	RefreshParts()
 	if(is_secure)
 		wires = new/datum/wires/smartfridge/secure(src)
 	else
@@ -185,6 +191,19 @@
 		icon_state = icon_off
 	else
 		icon_state = icon_on
+
+
+/obj/machinery/smartfridge/attackby(var/obj/item/O as obj, var/mob/user as mob)
+
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+	return ..()
+
 
 /*******************
 *   Item Adding

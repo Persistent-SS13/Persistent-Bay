@@ -586,6 +586,25 @@
 	src.visible_message("<span class='warning'>\The [src] launches \a [throw_item] at \the [target]!</span>")
 	return 1
 
+
+
+
+
+/obj/machinery/vending/attackby(var/obj/item/O as obj, var/mob/user as mob)
+
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+	return ..()
+
+
+
+
+
 /*
  * Vending machine types
  */

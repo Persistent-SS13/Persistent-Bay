@@ -265,3 +265,28 @@
 	containername = "Anti-Breach Shields"
 	containertype = /obj/structure/closet/crate/secure/large
 	cost = 40
+
+decl/hierarchy/supply_pack/engineering/cablelayer
+	name = "AutoMatic Cable Layer"
+	contains = list(/obj/machinery/cablelayer)
+	containername = "AutoMatic Cable Layer"
+	containertype = /obj/structure/closet/crate/secure/large
+	cost = 500
+	access = access_engine
+
+decl/hierarchy/supply_pack/engineering/floorlayer
+	name = "AutoMatic Tiler"
+	contains = list(/obj/machinery/floorlayer)
+	containername = "AutoMatic Tiler"
+	containertype = /obj/structure/closet/crate/secure/large
+	cost = 500
+	access = access_engine
+
+decl/hierarchy/supply_pack/engineering/pipelayer
+	name = "AutoMatic Piper"
+	contains = list(/obj/machinery/pipelayer)
+	containername = "AutoMatic Piper"
+	containertype = /obj/structure/closet/crate/secure/large
+	cost = 500
+	access = access_engine
+

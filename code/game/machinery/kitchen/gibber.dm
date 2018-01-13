@@ -232,3 +232,24 @@
 		update_icon()
 
 
+/obj/machinery/gibber/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/machinery/gibber(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/stack/cable_coil(src, 1)
+
+
+
+/obj/machinery/gibber/attackby(var/obj/item/O as obj, var/mob/user as mob)
+
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+	return ..()

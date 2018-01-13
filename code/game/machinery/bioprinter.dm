@@ -55,6 +55,7 @@
 /obj/machinery/organ_printer/New()
 	..()
 	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/bioprinter(src)
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)

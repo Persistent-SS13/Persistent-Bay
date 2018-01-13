@@ -13,11 +13,21 @@ var/const/SAFETY_COOLDOWN = 100
 	var/icon_name = "grinder-o"
 	var/blood = 0
 	var/eat_dir = WEST
+	var/amount_produced = 1
 
 /obj/machinery/recycler/New()
 	// On us
 	..()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/machine/recycler(null)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(null)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(null)
 	update_icon()
+
+/obj/machinery/recycler/Destroy()
+	return ..()
+
 
 /obj/machinery/recycler/examine()
 	set src in view()
@@ -31,23 +41,25 @@ var/const/SAFETY_COOLDOWN = 100
 	update_icon()
 
 
-/obj/machinery/recycler/attackby(var/obj/item/I, var/mob/user, params)
-	if(istype(I, /obj/item/weapon/screwdriver) && emagged)
-		emagged = 0
-		update_icon()
-		user << "<span class='notice'>You reset the crusher to its default factory settings.</span>"
-	else
-		..()
-		return
+/obj/machinery/recycler/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	..()
 	add_fingerprint(user)
+	if(istype(W, /obj/item/weapon/wrench))
+		if(!anchored)
+			usr.visible_message("<span class='notice'>[user] secures the bolts of the [src]</span>", "<span class='notice'>You secure the bolts of the [src]</span>", "Someone's securing some bolts")
+			src.anchored = 1
+		else
+			usr.visible_message("<span class='danger'>[user] unsecures the bolts of the [src]!</span>", "<span class='notice'>You unsecure the bolts of the [src]</span>", "Someone's unsecuring some bolts")
+			src.anchored = 0
 
-/obj/machinery/recycler/emag_act(user as mob)
+/obj/machinery/recycler/emag_act(mob/user)
 	if(!emagged)
 		emagged = 1
 		if(safety_mode)
 			safety_mode = 0
 			update_icon()
-		playsound(src.loc, "sparks", 75, 1, -1)
+		playsound(loc, "sparks", 75, 1, -1)
+		to_chat(user, "<span class='notice'>You use the cryptographic sequencer on the [name].</span>")
 
 /obj/machinery/recycler/update_icon()
 	..()
@@ -105,7 +117,6 @@ var/const/SAFETY_COOLDOWN = 100
 		if(sound)
 			playsound(src.loc, 'sound/items/Welder.ogg', 50, 1)
 
-
 /obj/machinery/recycler/proc/stop(var/mob/living/L)
 	playsound(src.loc, 'sound/machines/buzz-sigh.ogg', 50, 0)
 	safety_mode = 1
@@ -153,6 +164,48 @@ var/const/SAFETY_COOLDOWN = 100
 		L.adjustBruteLoss(1000)
 
 
+/obj/machinery/recycler/verb/rotate()
+	set name = "Rotate Clockwise"
+	set category = "Object"
+	set src in oview(1)
+
+	var/mob/living/user = usr
+
+	if(usr.incapacitated())
+		return
+	if(anchored)
+		to_chat(usr, "[src] is fastened to the floor!")
+		return 0
+	eat_dir = turn(eat_dir, 270)
+	to_chat(user, "<span class='notice'>[src] will now accept items from [dir2text(eat_dir)].</span>")
+	return 1
+
+/obj/machinery/recycler/verb/rotateccw()
+	set name = "Rotate Counter Clockwise"
+	set category = "Object"
+	set src in oview(1)
+
+	var/mob/living/user = usr
+
+	if(usr.incapacitated())
+		return
+	if(anchored)
+		to_chat(usr, "[src] is fastened to the floor!")
+		return 0
+	eat_dir = turn(eat_dir, 90)
+	to_chat(user, "<span class='notice'>[src] will now accept items from [dir2text(eat_dir)].</span>")
+	return 1
+
+/obj/machinery/recycler/attackby(var/obj/item/O as obj, var/mob/user as mob)
+
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+	return ..()
 
 /obj/item/weapon/paper/recycler
 	name = "paper - 'garbage duty instructions'"

@@ -12,6 +12,9 @@
 	var/obj/item/weapon/reagent_containers/glass/beaker = null
 	var/filtering = 0
 	var/pump
+	var/efficiency
+	var/initial_bin_rating = 1
+	var/min_health = 25
 
 	use_power = 1
 	idle_power_usage = 15
@@ -236,3 +239,43 @@
 			to_chat(user, "The subject has too many chemicals.")
 	else
 		to_chat(user, "There's no suitable occupant in \the [src].")
+
+
+/obj/machinery/sleeper/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/sleeper(src)
+
+	// Customizable bin rating, used by the labor camp to stop people filling themselves with chemicals and escaping.
+	var/obj/item/weapon/stock_parts/matter_bin/B = new(src)
+	B.rating = initial_bin_rating
+	component_parts += B
+
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/stack/cable_coil(src, 1)
+	RefreshParts()
+
+
+/obj/machinery/sleeper/upgraded/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/sleeper(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin/super(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator/pico(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/stack/cable_coil(src, 1)
+	RefreshParts()
+
+/obj/machinery/sleeper/RefreshParts()
+	var/E
+	var/I
+	for(var/obj/item/weapon/stock_parts/matter_bin/B in component_parts)
+		E += B.rating
+	for(var/obj/item/weapon/stock_parts/manipulator/M in component_parts)
+		I += M.rating
+
+	efficiency = E
+	min_health = -E * 25

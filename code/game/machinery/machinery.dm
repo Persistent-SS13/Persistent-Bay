@@ -97,7 +97,6 @@ Class Procs:
 	name = "machinery"
 	icon = 'icons/obj/stationobjs.dmi'
 	w_class = ITEM_SIZE_NO_CONTAINER
-
 	var/stat = 0
 	var/emagged = 0
 	var/malf_upgraded = 0
@@ -115,6 +114,11 @@ Class Procs:
 	var/interact_offline = 0 // Can the machine be interacted with while de-powered.
 	var/clicksound			// sound played on succesful interface use by a carbon lifeform
 	var/clickvol = 40		// sound played on succesful interface use
+	var/use_log = list()
+	var/area/myArea
+	var/custom_aghost_alerts=0
+	var/manual = 0
+
 
 /obj/machinery/Initialize(mapload, d=0)
 	. = ..()
@@ -241,10 +245,13 @@ Class Procs:
 
 	src.add_fingerprint(user)
 
-	return ..()
+/obj/machinery/proc/CheckParts()
+	RefreshParts()
+	return
 
 /obj/machinery/proc/RefreshParts() //Placeholder proc for machines that are built using frames.
 	return
+	return 0
 
 /obj/machinery/proc/assign_uid()
 	uid = gl_uid
@@ -260,6 +267,39 @@ Class Procs:
 
 	state(text, "blue")
 	playsound(src.loc, 'sound/machines/ping.ogg', 50, 0)
+
+/obj/machinery/proc/exchange_parts(mob/user, obj/item/weapon/storage/part_replacer/W)
+	//var/shouldplaysound = 0
+	if(istype(W) && component_parts)
+		if(panel_open)
+			var/obj/item/weapon/circuitboard/CB = locate(/obj/item/weapon/circuitboard) in component_parts
+			var/P
+			for(var/obj/item/weapon/stock_parts/A in component_parts)
+				for(var/D in CB.req_components)
+					if(ispath(A.type, D))
+						P = D
+						break
+				for(var/obj/item/weapon/stock_parts/B in W.contents)
+					if(istype(B, P) && istype(A, P))
+						if(B.rating > A.rating)
+							W.remove_from_storage(B, src)
+							W.handle_item_insertion(A, 1)
+							component_parts -= A
+							component_parts += B
+							B.loc = null
+							user << "<span class='notice'>[A.name] replaced with [B.name].</span>"
+						//	shouldplaysound = 1
+							break
+			RefreshParts()
+		else
+			user << "<span class='notice'>Following parts detected in the machine:</span>"
+			for(var/var/obj/item/C in component_parts)
+				user << "<span class='notice'>    [C.name]</span>"
+		//if(shouldplaysound)
+		//	W.play_rped_sound()
+		return 1
+	else
+		return 0
 
 /obj/machinery/proc/shock(mob/user, prb)
 	if(inoperable())

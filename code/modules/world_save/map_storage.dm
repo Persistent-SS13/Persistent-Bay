@@ -4,6 +4,11 @@ var/global/list/saved = list()
 var/global/list/areas_to_save = list()
 var/global/list/zones_to_save = list()
 
+/proc/Prepare_Atmos_For_Saving()
+	for(var/datum/pipe_network/net in SSmachines.pipenets)
+		for(var/datum/pipeline/line in net.line_members)
+			line.temporarily_store_air()
+
 /datum/area_holder
 	var/area_type = "/area"
 	var/name
@@ -53,7 +58,10 @@ var/global/list/zones_to_save = list()
 	..()
 	update_icon()
 	lighting_build_overlay()
-
+	update_air_properties()
+	for(var/obj/effect/floor_decal/decal in saved_decals)
+		decal.init_for(src)
+	
 /atom/movable/lighting_overlay/after_load()
 	loc = null
 	qdel(src)
@@ -61,7 +69,6 @@ var/global/list/zones_to_save = list()
 	..()
 	regenerate_icons()
 	redraw_inv()
-
 /datum/proc/StandardWrite(var/savefile/f)
 	var/list/saving
 	if(found_vars.Find("[type]"))

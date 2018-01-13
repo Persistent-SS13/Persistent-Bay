@@ -69,7 +69,6 @@ var/global/list/zones_to_save = list()
 	..()
 	regenerate_icons()
 	redraw_inv()
-
 /datum/proc/StandardWrite(var/savefile/f)
 	var/list/saving
 	if(found_vars.Find("[type]"))

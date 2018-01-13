@@ -128,8 +128,46 @@
 							/obj/item/weapon/stock_parts/console_screen = 4)
 
 
+/obj/item/weapon/circuitboard/holopad
+	name = "circuit board (AI Holopad)"
+	build_path = /obj/machinery/hologram/holopad
+	board_type = "machine"
+	origin_tech = "programming=1"
+	req_components = list(
+							/obj/item/weapon/stock_parts/capacitor = 1)
 
+/obj/item/weapon/circuitboard/chem_dispenser
+	name = "circuit board (Portable Chem Dispenser)"
+	build_path = /obj/machinery/chemical_dispenser
+	board_type = "machine"
+	origin_tech = "materials=4;engineering=4;programming=4;plasmatech=3;biotech=3"
+	frame_desc = "Requires 2 Matter Bins, 1 Capacitor, 1 Manipulator, 1 Console Screen, and 1 Power Cell."
+	req_components = list(
+							/obj/item/weapon/stock_parts/matter_bin = 2,
+							/obj/item/weapon/stock_parts/capacitor = 1,
+							/obj/item/weapon/stock_parts/manipulator = 1,
+							/obj/item/weapon/stock_parts/console_screen = 1,)
 
+/obj/item/weapon/circuitboard/reagentgrinder
+	name = "circuit board (All-in-one Grinder)"
+	build_path = /obj/machinery/reagentgrinder
+	board_type = "machine"
+	origin_tech = "mateirals=2;engineering=1;plasmatech=3;biotech=1;"
+	frame_desc = "Requires 1 Matter Bins, 1 Capacitor, 1 Manipulator, and 1 Power Cell."
+	req_components = list(
+							/obj/item/weapon/stock_parts/matter_bin = 1,
+							/obj/item/weapon/stock_parts/capacitor = 1,
+							/obj/item/weapon/stock_parts/manipulator = 1,)
+
+/obj/item/weapon/circuitboard/chem_master
+	name = "circuit board (Chem Master 2999)"
+	build_path = /obj/machinery/chem_master/
+	board_type = "machine"
+	origin_tech = "materials=2;programming=2;biotech=1"
+	req_components = list(
+							/obj/item/weapon/reagent_containers/glass/beaker = 2,
+							/obj/item/weapon/stock_parts/manipulator = 1,
+							/obj/item/weapon/stock_parts/console_screen = 1)
 
 // Telecomms circuit boards:
 /obj/item/weapon/circuitboard/telecomms/receiver
@@ -247,3 +285,25 @@
 		build_path = typepath
 		name = "circuit board ([names_paths[build_path]] )"
 		user << "<span class='notice'>You set the board to [names_paths[build_path]].</span>"
+
+
+
+/obj/item/weapon/circuitboard/botany_extractor
+	name = "circuit board (Lysis-Isolation Centrifuge)"
+	build_path = /obj/machinery/botany/extractor
+	board_type = "machine"
+	origin_tech = "biotech=3;programming=3"
+	req_components = list(
+							/obj/item/weapon/stock_parts/matter_bin = 1,
+							/obj/item/weapon/stock_parts/scanning_module = 1,
+							/obj/item/weapon/stock_parts/console_screen = 1)
+
+/obj/item/weapon/circuitboard/botany_editor
+	name = "circuit board (Bioballistic Delivery System)"
+	build_path = /obj/machinery/botany/editor
+	board_type = "machine"
+	origin_tech = "biotech=3;programming=3"
+	req_components = list(
+							/obj/item/weapon/stock_parts/matter_bin = 1,
+							/obj/item/weapon/stock_parts/manipulator = 1,
+							/obj/item/weapon/stock_parts/console_screen = 1)

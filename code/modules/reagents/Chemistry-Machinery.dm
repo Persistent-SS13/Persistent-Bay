@@ -34,6 +34,13 @@
 /obj/machinery/chem_master/New()
 	create_reagents(120)
 	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/chem_master(null)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(null)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
+	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(null)
+	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(null)
+
 
 /obj/machinery/chem_master/ex_act(severity)
 	switch(severity)
@@ -45,29 +52,37 @@
 				qdel(src)
 				return
 
-/obj/machinery/chem_master/attackby(var/obj/item/weapon/B as obj, var/mob/user as mob)
+/obj/machinery/chem_master/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)
 
-	if(istype(B, /obj/item/weapon/reagent_containers/glass))
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+
+	if(istype(O, /obj/item/weapon/reagent_containers/glass))
 
 		if(src.beaker)
 			to_chat(user, "A beaker is already loaded into the machine.")
 			return
-		src.beaker = B
+		src.beaker = O
 		user.drop_item()
-		B.loc = src
+		O.loc = src
 		to_chat(user, "You add the beaker to the machine!")
 		src.updateUsrDialog()
 		icon_state = "mixer1"
 
-	else if(istype(B, /obj/item/weapon/storage/pill_bottle))
+	else if(istype(O, /obj/item/weapon/storage/pill_bottle))
 
 		if(src.loaded_pill_bottle)
 			to_chat(user, "A pill bottle is already loaded into the machine.")
 			return
 
-		src.loaded_pill_bottle = B
+		src.loaded_pill_bottle = O
 		user.drop_item()
-		B.loc = src
+		O.loc = src
 		to_chat(user, "You add the pill bottle into the dispenser slot!")
 		src.updateUsrDialog()
 	return
@@ -289,6 +304,7 @@
 /obj/machinery/chem_master/condimaster
 	name = "CondiMaster 3000"
 	condi = 1
+
 
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////

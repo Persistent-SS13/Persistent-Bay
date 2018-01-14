@@ -9,7 +9,7 @@
 	food_color = "#ffad33"
 	cooked_sound = 'sound/machines/ding.ogg'
 
-/obj/machinery/cooker/deepfryer/New()
+/obj/machinery/cooker/fryer/New()
 	..()
 	component_parts = list()
 	component_parts += new /obj/item/weapon/circuitboard/deepfryer(null)
@@ -18,7 +18,7 @@
 	component_parts += new /obj/item/stack/cable_coil(null, 5)
 	RefreshParts()
 
-/obj/machinery/cooker/deepfryer/upgraded/New()
+/obj/machinery/cooker/fryer/upgraded/New()
 	..()
 	component_parts = list()
 	component_parts += new /obj/item/weapon/circuitboard/deepfryer(null)
@@ -27,7 +27,7 @@
 	component_parts += new /obj/item/stack/cable_coil(null, 5)
 	RefreshParts()
 
-/obj/machinery/cooker/deepfryer/RefreshParts()
+/obj/machinery/cooker/fryer/RefreshParts()
 	return
 
 /obj/machinery/cooker/fryer/cook_mob(var/mob/living/victim, var/mob/user)

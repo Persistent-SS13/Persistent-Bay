@@ -9,7 +9,7 @@
 	off_icon = "grill_off"
 	can_burn_food = 1
 
-/obj/machinery/kitchen_machine/grill/New()
+/obj/machinery/cooker/grill/New()
 	..()
 	component_parts = list()
 	component_parts += new /obj/item/weapon/circuitboard/grill(null)
@@ -19,7 +19,7 @@
 	component_parts += new /obj/item/stack/cable_coil(null, 5)
 	RefreshParts()
 
-/obj/machinery/kitchen_machine/grill/upgraded/New()
+/obj/machinery/cooker/grill/upgraded/New()
 	..()
 	component_parts = list()
 	component_parts += new /obj/item/weapon/circuitboard/grill(null)
@@ -29,6 +29,6 @@
 	component_parts += new /obj/item/stack/cable_coil(null, 5)
 	RefreshParts()
 
-/obj/machinery/kitchen_machine/grill/RefreshParts()
+/obj/machinery/cooker/grill/RefreshParts()
 
 	return

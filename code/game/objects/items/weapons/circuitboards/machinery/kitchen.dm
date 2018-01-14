@@ -51,7 +51,7 @@
 
 /obj/item/weapon/circuitboard/deepfryer
 	name = "circuit board (Deep Fryer)"
-	build_path = /obj/machinery/cooker/deepfryer
+	build_path = /obj/machinery/cooker/fryer/
 	board_type = "machine"
 	origin_tech = "programming=2"
 	frame_desc = "Requires 2 Micro Lasers and 5 pieces of cable."
@@ -68,6 +68,16 @@
 							/obj/item/weapon/stock_parts/matter_bin = 1,
 							/obj/item/weapon/stock_parts/manipulator = 1)
 
+/obj/item/weapon/circuitboard/cereal
+	name = "circuit board (cereal maker)"
+	build_path = /obj/machinery/cooker/cereal
+	board_type = "machine"
+	origin_tech = "programming=1;plasmatech=1"
+	frame_desc = "Requires 2 Micro Lasers, 5 pieces of cable and 1 Console Screen."
+	req_components = list(
+							/obj/item/weapon/stock_parts/micro_laser = 2,
+							/obj/item/stack/cable_coil = 5,
+							/obj/item/weapon/stock_parts/console_screen = 1)
 
 
 

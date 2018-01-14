@@ -163,6 +163,6 @@
 /obj/item/frame/atm_frame
 	name = "atm"
 	desc = "An ATM, just secure to the wall."
-	icon_state = "atm_frame"
-	item_state = "syringe_kit"
-
+	icon = 'icons/obj/monitors.dmi'
+	icon_state = "firex"
+	build_machine_type = /obj/machinery/atm

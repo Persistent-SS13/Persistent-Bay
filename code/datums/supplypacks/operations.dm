@@ -234,7 +234,7 @@
 					/obj/item/weapon/storage/backpack/messenger/tox,
 					/obj/item/device/radio/headset/heads/rd) // /obj/item/weapon/cartidge/engineering
 	cost = 20
-	containertype = /obj/structure/closet/secure_closet/rd
+	containertype = /obj/structure/closet/secure_closet/RD
 	containername = "Research Director's Locker"
 /decl/hierarchy/supply_pack/operations/janitor
 	name = "Janitor Equipment"

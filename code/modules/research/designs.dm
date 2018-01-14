@@ -1062,6 +1062,15 @@ other types of metals and chemistry for reagents).
 
 /*
 CIRCUITS BELOW
+
+Format:
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZZZ"
+
 */
 
 /datum/design/circuit
@@ -1395,7 +1404,69 @@ CIRCUITS BELOW
 	req_tech = list(TECH_DATA = 3, TECH_BIO = 3)
 	build_path = /obj/item/weapon/circuitboard/clonepod
 	sort_string = "KCAAC"
-	
+//This sorting system is too autistic for me, so fuck it, they're all starting at Z and working their way up
+/datum/design/circuit/chem_dispenser
+	name = "Portable Chem Dispenser"
+	id = "chemdispenser"
+	req_tech = list(TECH_MATERIAL = 3, TECH_BIO = 3, TECH_PHORON = 3, TECH_ENGINEERING = 3, TECH_DATA = 4)
+	build_path = /obj/item/weapon/circuitboard/chem_dispenser
+	sort_string = "ZZZZY"
+/datum/design/circuit/reagentgrinder
+	name = "Reagent Grinder"
+	id = "reagentgrinder"
+	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 1, TECH_PHORON = 2, TECH_BIO = 1)
+	build_path = /obj/item/weapon/circuitboard/reagentgrinder
+	sort_string = "ZZZZX"
+/datum/design/circuit/chem_master
+	name = "Chem Master"
+	id = "chem_master"
+	req_tech = list(TECH_MATERIAL = 2 TECH_BIO = 1, TECH_DATA = 1)
+	build_path = /obj/item/weapon/circuitboard/chem_master
+	sort_string = "ZZZZW"
+/datum/design/circuit/botany_extractor
+	name = "Lysis-Isolation Centrifuge"
+	id = "botany_extractor"
+	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 2, TECH_BIO = 3, TECH_DATA = 3)
+	build_path = /obj/item/weapon/circuitboard/botany_extractor
+	sort_string = "ZZZZV"
+/datum/design/circuit/botany_editor
+	name = "Bioballistic Delivery System"
+	id = "botany_editor"
+	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 2, TECH_BIO = 3, TECH_DATA = 3)
+	build_path = /obj/item/weapon/circuitboard/botany_editor
+	sort_string = "ZZZZU"
+/datum/design/circuit/smartfridge
+	name = "Modular Smart Fridge"
+	id = "smartfridge"
+	req_tech = list(TECH_DATA = 1)
+	build_path = /obj/item/weapon/circuitboard/smartfridge
+	sort_string = "ZZZZT"
+/*
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZZS"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZZR"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZZQ"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZZP"
+*/
 	
 	
 	

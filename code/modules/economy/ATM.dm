@@ -26,8 +26,16 @@
 	var/datum/effect/effect/system/spark_spread/spark_system
 	var/account_security_level = 0
 
-/obj/machinery/atm/New()
-	..()
+/obj/machinery/atm/New(var/loc, var/dir, atom/frame)
+	..(loc)
+	if(dir)
+		src.set_dir(dir)
+
+	if(istype(frame))
+		pixel_x = (dir & 3)? 0 : (dir == 4 ? -24 : 24)
+		pixel_y = (dir & 3)? (dir ==1 ? -24 : 24) : 0
+		update_icon()
+		frame.transfer_fingerprints_to(src)
 	machine_id = "[station_name()] ATM #[num_financial_terminals++]"
 	spark_system = new /datum/effect/effect/system/spark_spread
 	spark_system.set_up(5, 0, src)
@@ -68,7 +76,14 @@
 		to_chat(user, "\icon[src] <span class='warning'>The [src] beeps: \"[response]\"</span>")
 		return 1
 
-/obj/machinery/atm/attackby(obj/item/I as obj, mob/user as mob)
+/obj/machinery/atm/attackby(obj/item/I as obj, mob/user as mob, params)
+	if(default_deconstruction_screwdriver(user, icon_state, icon_state, I))
+		return
+	if(panel_open && default_deconstruction_crowbar(user, I, message = "You start pulling \the [src] off the wall."))
+		to_chat(user, "<span class='notice'>You pull \the [src] off the wall.</span>")
+		new /obj/item/frame/atm_frame(src.loc)
+		qdel(src)
+		return
 	if(istype(I, /obj/item/weapon/card))
 		if(emagged > 0)
 			//prevent inserting id into an emagged ATM

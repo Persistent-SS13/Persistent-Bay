@@ -159,3 +159,10 @@
 
 // /obj/machinery/newscaster
 // /obj/machinery/newscaster/security_unit
+
+/obj/item/frame/atm_frame
+	name = "atm"
+	desc = "An ATM, just secure to the wall."
+	icon_state = "atm_frame"
+	item_state = "syringe_kit"
+

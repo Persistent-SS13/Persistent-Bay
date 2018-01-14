@@ -9,6 +9,27 @@
 	food_color = "#ffad33"
 	cooked_sound = 'sound/machines/ding.ogg'
 
+/obj/machinery/cooker/deepfryer/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/deepfryer(null)
+	component_parts += new /obj/item/weapon/stock_parts/micro_laser(null)
+	component_parts += new /obj/item/weapon/stock_parts/micro_laser(null)
+	component_parts += new /obj/item/stack/cable_coil(null, 5)
+	RefreshParts()
+
+/obj/machinery/cooker/deepfryer/upgraded/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/deepfryer(null)
+	component_parts += new /obj/item/weapon/stock_parts/micro_laser/ultra(null)
+	component_parts += new /obj/item/weapon/stock_parts/micro_laser/ultra(null)
+	component_parts += new /obj/item/stack/cable_coil(null, 5)
+	RefreshParts()
+
+/obj/machinery/cooker/deepfryer/RefreshParts()
+	return
+
 /obj/machinery/cooker/fryer/cook_mob(var/mob/living/victim, var/mob/user)
 
 	if(!istype(victim))

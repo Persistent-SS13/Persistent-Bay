@@ -1407,13 +1407,13 @@ Format:
 //This sorting system is too autistic for me, so fuck it, they're all starting at Z and working their way up
 /datum/design/circuit/chem_dispenser
 	name = "Portable Chem Dispenser"
-	id = "chemdispenser"
+	id = "chem_dispenser"
 	req_tech = list(TECH_MATERIAL = 3, TECH_BIO = 3, TECH_PHORON = 3, TECH_ENGINEERING = 3, TECH_DATA = 4)
 	build_path = /obj/item/weapon/circuitboard/chem_dispenser
 	sort_string = "ZZZZY"
 /datum/design/circuit/reagentgrinder
 	name = "Reagent Grinder"
-	id = "reagentgrinder"
+	id = "reagent_grinder"
 	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 1, TECH_PHORON = 2, TECH_BIO = 1)
 	build_path = /obj/item/weapon/circuitboard/reagentgrinder
 	sort_string = "ZZZZX"
@@ -1441,25 +1441,25 @@ Format:
 	req_tech = list(TECH_DATA = 1)
 	build_path = /obj/item/weapon/circuitboard/smartfridge
 	sort_string = "ZZZZT"
-/*
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
+/datum/design/circuit/teleporter_hub
+	name = "Teleporter Hub"
+	id = "teleporter_hub"
+	req_tech = list(TECH_MATERIAL = 4, TECH_ENGINEERING = 5, TECH_BLUESPACE = 5, TECH_DATA = 3)
+	build_path = /obj/item/weapon/circuitboard/teleporter_hub
 	sort_string = "ZZZZS"
-/datum/design/circuit/
-	name = ""
-	id = ""
+/datum/design/circuit/teleporter_station
+	name = "Teleporter Station"
+	id = "teleporter_station"
 	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
+	build_path = /obj/item/weapon/circuitboard/teleporter_station
 	sort_string = "ZZZZR"
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
+/datum/design/circuit/telesci_pad
+	name = "Telepad"
+	id = "telesci_pad"
+	req_tech = list(TECH_MATERIAL = 3, TECH_ENGINEERING = 4, TECH_BLUESPACE = 3, TECH_DATA = 4)
+	build_path = /obj/item/weapon/circuitboard/telesci_pad
 	sort_string = "ZZZZQ"
+/*
 /datum/design/circuit/
 	name = ""
 	id = ""

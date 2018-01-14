@@ -169,6 +169,18 @@
 							/obj/item/weapon/stock_parts/manipulator = 1,
 							/obj/item/weapon/stock_parts/console_screen = 1)
 
+/obj/item/weapon/circuitboard/photocopier
+	name = "circuit board (photocopier)"
+	build_path = /obj/machinery/photocopier/
+	board_type = "machine"
+	origin_tech = "materials=2;programming=2;biotech=1"
+	req_components = list(
+							/obj/item/weapon/stock_parts/matter_bin = 2,
+							/obj/item/weapon/stock_parts/manipulator = 1,
+							/obj/item/weapon/stock_parts/console_screen = 1)
+
+
+
 // Telecomms circuit boards:
 /obj/item/weapon/circuitboard/telecomms/receiver
 	name = "Circuit Board (Subspace Receiver)"

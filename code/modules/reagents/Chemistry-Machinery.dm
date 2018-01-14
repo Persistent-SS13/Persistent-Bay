@@ -32,7 +32,6 @@
 	flags = OPENCONTAINER
 
 /obj/machinery/chem_master/New()
-	create_reagents(120)
 	..()
 	component_parts = list()
 	component_parts += new /obj/item/weapon/circuitboard/chem_master(null)
@@ -335,8 +334,25 @@
 
 /obj/machinery/reagentgrinder/New()
 	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/reagentgrinder(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
+	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
+
 	beaker = new /obj/item/weapon/reagent_containers/glass/beaker/large(src)
 	return
+
+/obj/machinery/reagentgrinder/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)
+
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
 
 /obj/machinery/reagentgrinder/update_icon()
 	icon_state = "juicer"+num2text(!isnull(beaker))

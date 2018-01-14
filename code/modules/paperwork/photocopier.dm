@@ -15,6 +15,15 @@
 	var/toner = 30 //how much toner is left! woooooo~
 	var/maxcopies = 10	//how many copies can be copied at once- idea shamelessly stolen from bs12's copier!
 
+/obj/machinery/photocopier/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/photocopier(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	return
 /obj/machinery/photocopier/attack_ai(mob/user as mob)
 	return attack_hand(user)
 
@@ -103,6 +112,13 @@
 		updateUsrDialog()
 
 /obj/machinery/photocopier/attackby(obj/item/O as obj, mob/user as mob)
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
 	if(istype(O, /obj/item/weapon/paper) || istype(O, /obj/item/weapon/photo) || istype(O, /obj/item/weapon/paper_bundle))
 		if(!copyitem)
 			user.drop_item()

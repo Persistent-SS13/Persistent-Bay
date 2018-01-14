@@ -34,7 +34,7 @@ LEGACY_RECORD_STRUCTURE(virus_records, virus_record)
 
 	antigen = list(pick(ALL_ANTIGENS))
 	antigen |= pick(ALL_ANTIGENS)
-	spreadtype = prob(45? "Airborne" : "Contact"
+	spreadtype = prob(45) "Airborne" : "Contact"
 
 	if(all_species.len)
 		affected_species = get_infectable_species()

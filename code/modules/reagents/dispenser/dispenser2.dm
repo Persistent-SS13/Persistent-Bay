@@ -28,6 +28,7 @@
 		for(var/type in spawn_cartridges)
 			add_cartridge(new type(src))
 
+
 /obj/machinery/chemical_dispenser/examine(mob/user)
 	. = ..()
 	to_chat(user, "It has [cartridges.len] cartridges installed, and has space for [DISPENSER_MAX_CARTRIDGES - cartridges.len] more.")
@@ -68,10 +69,17 @@
 	GLOB.nanomanager.update_uis(src)
 
 /obj/machinery/chemical_dispenser/attackby(obj/item/weapon/W, mob/user)
+	if(default_deconstruction_screwdriver(user, W))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, W))
+		return
+	if(default_part_replacement(user, W))
+		return
 	if(istype(W, /obj/item/weapon/reagent_containers/chem_disp_cartridge))
 		add_cartridge(W, user)
 
-	else if(isScrewdriver(W))
+	else if(isWrench(W))
 		var/label = input(user, "Which cartridge would you like to remove?", "Chemical Dispenser") as null|anything in cartridges
 		if(!label) return
 		var/obj/item/weapon/reagent_containers/chem_disp_cartridge/C = remove_cartridge(label)

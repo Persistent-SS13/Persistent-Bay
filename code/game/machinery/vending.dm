@@ -586,6 +586,25 @@
 	src.visible_message("<span class='warning'>\The [src] launches \a [throw_item] at \the [target]!</span>")
 	return 1
 
+
+
+
+
+/obj/machinery/vending/attackby(var/obj/item/O as obj, var/mob/user as mob)
+
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+	return ..()
+
+
+
+
+
 /*
  * Vending machine types
  */
@@ -657,19 +676,21 @@
 	product_ads = "Drink up!;Booze is good for you!;Alcohol is humanity's best friend.;Quite delighted to serve you!;Care for a nice, cold beer?;Nothing cures you like booze!;Have a sip!;Have a drink!;Have a beer!;Beer is good for you!;Only the finest alcohol!;Best quality booze since 2053!;Award-winning wine!;Maximum alcohol!;Man loves beer.;A toast for progress!"
 	req_access = list(access_bar)
 
+/obj/machinery/vending/boozeomat/New()
+	..()
+	component_parts = list()
+	var/obj/item/weapon/circuitboard/vendor/V = new(null)
+	V.set_type(type)
+	component_parts += V
+	component_parts += new /obj/item/weapon/vending_refill/boozeomat(0)
+	component_parts += new /obj/item/weapon/vending_refill/boozeomat(0)
+	component_parts += new /obj/item/weapon/vending_refill/boozeomat(0)
+
 /obj/machinery/vending/assist
 	products = list(	/obj/item/device/assembly/prox_sensor = 5,/obj/item/device/assembly/igniter = 3,/obj/item/device/assembly/signaler = 4,
 						/obj/item/weapon/wirecutters = 1, /obj/item/weapon/cartridge/signal = 4)
 	contraband = list(/obj/item/device/flashlight = 5,/obj/item/device/assembly/timer = 2)
 	product_ads = "Only the finest!;Have some tools.;The most robust equipment.;The finest gear in space!"
-
-/obj/machinery/vending/assist/antag
-	name = "AntagCorpVend"
-	contraband = list()
-	products = list(	/obj/item/device/assembly/prox_sensor = 5, /obj/item/device/assembly/signaler = 4,
-						/obj/item/device/assembly/infra = 4, /obj/item/device/assembly/prox_sensor = 4,
-						/obj/item/weapon/handcuffs = 8, /obj/item/device/flash = 4,
-						/obj/item/weapon/cartridge/signal = 4, /obj/item/clothing/glasses/sunglasses = 4)
 
 /obj/machinery/vending/coffee
 	name = "Hot Drinks machine"
@@ -685,7 +706,15 @@
 	prices = list(/obj/item/weapon/reagent_containers/food/drinks/coffee = 3, /obj/item/weapon/reagent_containers/food/drinks/tea = 3, /obj/item/weapon/reagent_containers/food/drinks/h_chocolate = 3)
 
 
-
+/obj/machinery/vending/coffee/New()
+	..()
+	component_parts = list()
+	var/obj/item/weapon/circuitboard/vendor/V = new(null)
+	V.set_type(type)
+	component_parts += V
+	component_parts += new /obj/item/weapon/vending_refill/coffee(0)
+	component_parts += new /obj/item/weapon/vending_refill/coffee(0)
+	component_parts += new /obj/item/weapon/vending_refill/coffee(0)
 
 /obj/machinery/vending/snack
 	name = "Getmore Chocolate Corp"
@@ -703,7 +732,15 @@
 					/obj/item/weapon/reagent_containers/food/snacks/sosjerky = 2,/obj/item/weapon/reagent_containers/food/snacks/no_raisin = 1,/obj/item/weapon/reagent_containers/food/snacks/spacetwinkie = 1,
 					/obj/item/weapon/reagent_containers/food/snacks/cheesiehonkers = 1, /obj/item/weapon/reagent_containers/food/snacks/tastybread = 2)
 
-
+/obj/machinery/vending/snack/New()
+	..()
+	component_parts = list()
+	var/obj/item/weapon/circuitboard/vendor/V = new(null)
+	V.set_type(type)
+	component_parts += V
+	component_parts += new /obj/item/weapon/vending_refill/snack(0)
+	component_parts += new /obj/item/weapon/vending_refill/snack(0)
+	component_parts += new /obj/item/weapon/vending_refill/snack(0)
 
 /obj/machinery/vending/cola
 	name = "Robust Softdrinks"
@@ -723,6 +760,17 @@
 					/obj/item/weapon/reagent_containers/food/drinks/cans/waterbottle = 2,/obj/item/weapon/reagent_containers/food/drinks/cans/space_up = 1,
 					/obj/item/weapon/reagent_containers/food/drinks/cans/iced_tea = 1,/obj/item/weapon/reagent_containers/food/drinks/cans/grape_juice = 1)
 	idle_power_usage = 211 //refrigerator - believe it or not, this is actually the average power consumption of a refrigerated vending machine according to NRCan.
+
+
+/obj/machinery/vending/cola/New()
+	..()
+	component_parts = list()
+	var/obj/item/weapon/circuitboard/vendor/V = new(null)
+	V.set_type(type)
+	component_parts += V
+	component_parts += new /obj/item/weapon/vending_refill/cola(0)
+	component_parts += new /obj/item/weapon/vending_refill/cola(0)
+	component_parts += new /obj/item/weapon/vending_refill/cola(0)
 
 /obj/machinery/vending/fitness
 	name = "SweatMAX"
@@ -833,6 +881,15 @@
 					/obj/item/weapon/reagent_containers/ecig_cartridge/coffee = 15,
 					/obj/item/weapon/reagent_containers/ecig_cartridge/blanknico = 15)
 
+/obj/machinery/vending/cigarette/New()
+	..()
+	component_parts = list()
+	var/obj/item/weapon/circuitboard/vendor/V = new(null)
+	V.set_type(type)
+	component_parts += V
+	component_parts += new /obj/item/weapon/vending_refill/cigarette(0)
+	component_parts += new /obj/item/weapon/vending_refill/cigarette(0)
+	component_parts += new /obj/item/weapon/vending_refill/cigarette(0)
 
 /obj/machinery/vending/medical
 	name = "NanoMed Plus"
@@ -895,6 +952,17 @@
 	products = list(/obj/item/weapon/handcuffs = 8,/obj/item/weapon/grenade/flashbang = 4,/obj/item/weapon/grenade/chem_grenade/teargas = 4,/obj/item/device/flash = 5,
 					/obj/item/weapon/reagent_containers/food/snacks/donut/normal = 12,/obj/item/weapon/storage/box/evidence = 6)
 	contraband = list(/obj/item/clothing/glasses/sunglasses = 2,/obj/item/weapon/storage/box/donut = 2)
+
+/obj/machinery/vending/security/New()
+	..()
+	component_parts = list()
+	var/obj/item/weapon/circuitboard/vendor/V = new(null)
+	V.set_type(type)
+	component_parts += V
+	component_parts += new /obj/item/weapon/vending_refill/security(0)
+	component_parts += new /obj/item/weapon/vending_refill/security(0)
+	component_parts += new /obj/item/weapon/vending_refill/security(0)
+
 
 /obj/machinery/vending/hydronutrients
 	name = "NutriMax"

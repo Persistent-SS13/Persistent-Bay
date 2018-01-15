@@ -48,6 +48,7 @@
 	recipes += new/datum/stack_recipe("key", /obj/item/weapon/key, 1, time = 10)
 	recipes += new/datum/stack_recipe("table frame", /obj/structure/table, 1, time = 10, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("rack", /obj/structure/table/rack, 1, time = 5, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("weight lifter", /obj/structure/fitness/weightlifter, 4, time = 50, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("closet", /obj/structure/closet, 2, time = 15, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("canister", /obj/machinery/portable_atmospherics/canister, 10, time = 15, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("cannon frame", /obj/item/weapon/cannonframe, 10, time = 15, one_per_turf = 0, on_floor = 0)
@@ -101,9 +102,12 @@
 	recipes += new/datum/stack_recipe("dark floor tile", /obj/item/stack/tile/floor_dark, 1, 4, 20)
 	recipes += new/datum/stack_recipe("Operating Table", /obj/machinery/optable, 10, time = 50, one_per_turf = 1)
 	recipes += new/datum/stack_recipe("Item Safe", /obj/structure/safe, 10, time = 50, one_per_turf = 1)
-//	/obj/machinery/door/blast
-//	/obj/machinery/door/blast/shutters
-
+/*	recipes += new/datum/stack_recipe_list("Blast Doors Assemblies", list( \
+	new/datum/stack_recipe("assembly", /obj/structure/door_assembly/, 4, time = 50, one_per_turf = 1, on_floor = 1), \
+		))
+	/obj/machinery/door/blast
+	/obj/machinery/door/blast/shutters
+*/
 /material/stone/generate_recipes()
 	..()
 	recipes += new/datum/stack_recipe("planting bed", /obj/machinery/portable_atmospherics/hydroponics/soil, 3, time = 10, one_per_turf = 1, on_floor = 1)
@@ -121,6 +125,7 @@
 	recipes += new/datum/stack_recipe("hazard cone", /obj/item/weapon/caution/cone, 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("plastic flaps", /obj/structure/plasticflaps, 15, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("tiolet", /obj/structure/toilet, 5, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("Punching bag", /obj/structure/fitness/punchingbag, 5, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe_list("Curtains",list( \
 		new/datum/stack_recipe("Curtain", /obj/structure/curtain, 10, one_per_turf = 1, on_floor = 1), \
 		new/datum/stack_recipe("Black Curtain", /obj/structure/curtain/black, 10, one_per_turf = 1, on_floor = 1), \
@@ -178,3 +183,13 @@
 material/silver/generate_recipes()
 	..()
 	recipes += new/datum/stack_recipe("Mirror Frame", /obj/item/frame/mirror, 2)
+
+
+
+
+
+
+
+material/marble/generate_recipes()
+..()
+//	recipes += new/datum/stack_recipe("Sink", /obj/item/frame/sink, 2)

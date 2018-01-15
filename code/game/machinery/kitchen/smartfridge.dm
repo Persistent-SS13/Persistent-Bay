@@ -30,6 +30,14 @@
 
 /obj/machinery/smartfridge/New()
 	..()
+	component_parts = list()
+	var/obj/item/weapon/circuitboard/smartfridge/V = new(null)
+	V.set_type(type)
+	component_parts += V
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	RefreshParts()
 	if(is_secure)
 		wires = new/datum/wires/smartfridge/secure(src)
 	else
@@ -186,19 +194,21 @@
 	else
 		icon_state = icon_on
 
+
+
 /*******************
 *   Item Adding
 ********************/
 
 /obj/machinery/smartfridge/attackby(var/obj/item/O as obj, var/mob/user as mob)
-	if(isScrewdriver(O))
-		panel_open = !panel_open
-		user.visible_message("[user] [panel_open ? "opens" : "closes"] the maintenance panel of \the [src].", "You [panel_open ? "open" : "close"] the maintenance panel of \the [src].")
-		overlays.Cut()
-		if(panel_open)
-			overlays += image(icon, icon_panel)
-		GLOB.nanomanager.update_uis(src)
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
 		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+	return ..()
 
 	if(isMultitool(O) || isWirecutter(O))
 		if(panel_open)

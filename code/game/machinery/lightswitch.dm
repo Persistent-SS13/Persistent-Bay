@@ -103,6 +103,6 @@
 
 	if(istype(frame))
 
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -40 : 40)
-		pixel_y = (dir & 3)? (dir ==1 ? -40 : 40) : 0
+		pixel_x = (dir & 3)? 0 : (dir == 4 ? -40 : 24)
+		pixel_y = (dir & 3)? (dir ==1 ? -40 : 24) : 0
 		frame.transfer_fingerprints_to(src)

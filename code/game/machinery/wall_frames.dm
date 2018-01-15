@@ -121,7 +121,7 @@
 	refund_type = /obj/item/stack/material/silver
 	build_machine_type = /obj/structure/mirror
 
-/obj/item/frame/mirror
+/obj/item/frame/shower
 	name = "Shower Frame"
 	desc = "Used for building Showers"
 	icon = 'icons/obj/watercloset.dmi'
@@ -159,3 +159,10 @@
 
 // /obj/machinery/newscaster
 // /obj/machinery/newscaster/security_unit
+
+/obj/item/frame/atm_frame
+	name = "atm"
+	desc = "An ATM, just secure to the wall."
+	icon = 'icons/obj/monitors.dmi'
+	icon_state = "firex"
+	build_machine_type = /obj/machinery/atm

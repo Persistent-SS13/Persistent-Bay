@@ -791,7 +791,7 @@
 	switch(buildstage)
 		if(2)
 			if(isScrewdriver(W))  // Opening that Air Alarm up.
-//				to_chat(user, "You pop the Air Alarm's maintence panel open.")
+				to_chat(user, "You pop the Air Alarm's maintence panel open.")
 				wiresexposed = !wiresexposed
 				to_chat(user, "The wires have been [wiresexposed ? "exposed" : "unexposed"]")
 				update_icon()

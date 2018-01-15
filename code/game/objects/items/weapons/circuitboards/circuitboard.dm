@@ -35,3 +35,4 @@
 	if (istype(M, build_path))
 		return 1
 	return 0
+

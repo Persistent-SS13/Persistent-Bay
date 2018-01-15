@@ -26,7 +26,7 @@
 	component_parts += new /obj/item/stack/cable_coil(null, 5)
 	RefreshParts()
 
-/obj/machinery/cooker/candyupgraded/New()
+/obj/machinery/cooker/candy/upgraded/New()
 	..()
 	component_parts = list()
 	component_parts += new /obj/item/weapon/circuitboard/candy_maker(null)

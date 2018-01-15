@@ -2488,6 +2488,7 @@
 #include "code\unit_tests\zas_tests.dm"
 #include "code\unit_tests\~helpers.dm"
 #include "code\unit_tests\~unit_test_types.dm"
+#include "code\wip\artstuff.dm"
 #include "code\wip\shipcore.dm"
 #include "code\wip\spaceship_builder_unused.dm"
 #include "interface\interface.dm"

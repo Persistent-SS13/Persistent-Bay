@@ -10,6 +10,13 @@
 	density = 1
 	var/list/hit_message = list("hit", "punch", "kick", "robust")
 
+/obj/structure/fitness/punchingbag/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	if(isWirecutter(W))
+		to_chat(user, "<span class='notice'>You take apart \the [src].</span>")
+		new/obj/item/stack/material/plastic(get_turf(src))
+		qdel(src)
+		return 1
+
 /obj/structure/fitness/punchingbag/attack_hand(var/mob/living/carbon/human/user)
 	if(!istype(user))
 		..()
@@ -37,6 +44,11 @@
 		playsound(src.loc, 'sound/items/Deconstruct.ogg', 75, 1)
 		weight = ((weight) % qualifiers.len) + 1
 		to_chat(user, "You set the machine's weight level to [weight].")
+	if(isWelder(W))
+		to_chat(user, "<span class='notice'>You take apart \the [src].</span>")
+		new/obj/item/stack/material/steel(get_turf(src))
+		qdel(src)
+		return 1
 
 /obj/structure/fitness/weightlifter/attack_hand(var/mob/living/carbon/human/user)
 	if(!istype(user))

@@ -17,8 +17,7 @@
 	food_color = get_random_colour(1)
 	. = ..()
 
-
-/obj/machinery/kitchen_machine/candy_maker/New()
+/obj/machinery/cooker/candy/New()
 	..()
 	component_parts = list()
 	component_parts += new /obj/item/weapon/circuitboard/candy_maker(null)
@@ -27,7 +26,7 @@
 	component_parts += new /obj/item/stack/cable_coil(null, 5)
 	RefreshParts()
 
-/obj/machinery/kitchen_machine/candy_maker/upgraded/New()
+/obj/machinery/cooker/candyupgraded/New()
 	..()
 	component_parts = list()
 	component_parts += new /obj/item/weapon/circuitboard/candy_maker(null)
@@ -36,5 +35,5 @@
 	component_parts += new /obj/item/stack/cable_coil(null, 5)
 	RefreshParts()
 
-/obj/machinery/kitchen_machine/candy_maker/RefreshParts()
+/obj/machinery/cooker/candy/RefreshParts()
 	return

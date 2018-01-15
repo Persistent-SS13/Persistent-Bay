@@ -577,3 +577,8 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	name = "ecigarette cartridge"
 	path = /obj/item/weapon/reagent_containers/ecig_cartridge/blank
 	category = "Devices and Components"
+
+/datum/autolathe/recipe/keypad
+	name = "Airlock Keypad Electronics"
+	path = /obj/item/weapon/airlock_electronics/keypad_electronics
+	category = "Engineering"

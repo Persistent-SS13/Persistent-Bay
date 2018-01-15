@@ -230,6 +230,19 @@
 			src.name = "Near finished Airlock Assembly"
 			src.electronics = W
 
+	else if(istype(W, /obj/item/weapon/airlock_electronics/keypad_electronics) && state == 1)
+		playsound(src.loc, 'sound/items/Screwdriver.ogg', 100, 1)
+		user.visible_message("[user] installs the electronics into the airlock assembly.", "You start to install electronics into the airlock assembly.")
+
+		if(do_after(user, 40,src))
+			if(!src) return
+			user.drop_item()
+			W.loc = src
+			to_chat(user, "<span class='notice'>You installed the airlock electronics!</span>")
+			src.state = 2
+			src.name = "Near finished Airlock Assembly"
+			src.electronics = W
+
 	else if(isCrowbar(W) && state == 2 )
 		//This should never happen, but just in case I guess
 		if (!electronics)
@@ -306,3 +319,9 @@
 		if(2)
 			name = "Near Finished "
 	name += "[glass == 1 ? "Window " : ""][istext(glass) ? "[glass] Airlock" : base_name] Assembly"
+
+obj/structure/door_assembly/door_assembly_keyp
+ 	base_icon_state = "keyp"
+ 	base_name = "Keypad Airlock"
+ 	glass = -1
+ 	airlock_type = "/keypad"

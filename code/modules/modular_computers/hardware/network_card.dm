@@ -12,8 +12,35 @@ var/global/ntnet_card_uid = 1
 	var/identification_string = "" 	// Identification string, technically nickname seen in the network. Can be set by user.
 	var/long_range = 0
 	var/ethernet = 0 // Hard-wired, therefore always on, ignores NTNet wireless checks.
+	
+	var/connected = 0
+	var/connected_to = ""
+	var/password = ""
+	var/datum/ntnet/connected_network
 	malfunction_probability = 1
-
+/obj/item/weapon/computer_hardware/network_card/proc/get_network()
+	if(!connected) return
+	if(connected_network && connected_network.net_uid == connected_to)
+		connected = 1
+		return connected_network
+	else
+		connected_network = null
+		for(var/datum/world_faction/fact in GLOB.all_world_factions)
+			if(fact.network)
+				if(fact.network.net_uid == connected_to)
+					if(!fact.network.secured || fact.network.password == password)
+						connected_network = fact.network
+						connected = 1
+						return connected_network
+	connected = 0
+/obj/item/weapon/computer_hardware/network_card/after_load()
+	..()
+	get_network()
+/obj/item/weapon/computer_hardware/network_card/proc/disconnect()
+	connected = 0
+	connected_to = ""
+	password = ""
+	connected_network = null
 /obj/item/weapon/computer_hardware/network_card/diagnostics(var/mob/user)
 	..()
 	to_chat(user, "NIX Unique ID: [identification_id]")
@@ -63,6 +90,27 @@ var/global/ntnet_card_uid = 1
 
 // 0 - No signal, 1 - Low signal, 2 - High signal. 3 - Wired Connection
 /obj/item/weapon/computer_hardware/network_card/proc/get_signal(var/specific_action = 0)
+	if(!holder2) // Hardware is not installed in anything. No signal. How did this even get called?
+		return 0
+
+	if(!enabled)
+		return 0
+	get_network()
+	if(!check_functionality() || !connected_network || is_banned())
+		return 0
+
+	if(ethernet) // Computer is connected via wired connection.
+		return 3
+
+	if(!connected_network.check_function(specific_action)) // NTNet is down and we are not connected via wired connection. No signal.
+		return 0
+		
+	if(long_range)
+		return 2
+	else
+		return 1
+		
+/obj/item/weapon/computer_hardware/network_card/proc/get_signal_old(var/specific_action = 0)
 	if(!holder2) // Hardware is not installed in anything. No signal. How did this even get called?
 		return 0
 

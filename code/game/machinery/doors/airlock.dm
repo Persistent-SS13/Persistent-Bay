@@ -76,7 +76,7 @@
 					src.l_set = 1
 				else if((src.code == src.l_code) && (src.emagged == 0) && (src.l_set == 1))
 					src.locked = 0
-					playsound(src,boltUp, 30, 0, 3)
+					playsound(src,bolts_rising, 30, 0, 3)
 					update_icon()
 					src.overlays = null
 					src.code = null
@@ -85,7 +85,7 @@
 			else
 				if((href_list["type"] == "R") && (src.emagged == 0) && (!src.l_setshort))
 					src.locked = 1
-					playsound(src,boltDown, 30, 0, 3)
+					playsound(src,bolts_dropping, 30, 0, 3)
 					src.overlays = null
 					update_icon()
 					src.code = null

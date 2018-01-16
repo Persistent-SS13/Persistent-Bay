@@ -1245,6 +1245,10 @@ About the new airlock wires panel:
 	//create new electronics
 	if (secured_wires)
 		src.electronics = new/obj/item/weapon/airlock_electronics/secure( src.loc )
+
+	if (haskeypad)
+		src.electronics = new/obj/item/weapon/airlock_electronics/keypad_electronics(src.loc )
+
 	else
 		src.electronics = new/obj/item/weapon/airlock_electronics( src.loc )
 

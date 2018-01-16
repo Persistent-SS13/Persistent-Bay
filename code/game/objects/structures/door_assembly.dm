@@ -306,3 +306,9 @@
 		if(2)
 			name = "Near Finished "
 	name += "[glass == 1 ? "Window " : ""][istext(glass) ? "[glass] Airlock" : base_name] Assembly"
+
+obj/structure/door_assembly/door_assembly_keyp
+ 	base_icon_state = "keyp"
+ 	base_name = "Keypad Airlock"
+ 	glass = -1
+ 	airlock_type = "/keypad"

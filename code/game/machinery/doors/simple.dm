@@ -119,6 +119,18 @@
 
 /obj/machinery/door/unpowered/simple/attackby(obj/item/I as obj, mob/user as mob)
 	src.add_fingerprint(user)
+	if((isScrewdriver(I)) && (istype(loc, /turf/simulated) && (!lock.isLocked() || anchored)))
+		playsound(loc, 'sound/items/Screwdriver.ogg', 100, 1)
+		anchored = !anchored
+		user.visible_message("<span class='notice'>[user] [anchored ? "fastens" : "unfastens"] the [src].</span>", \
+								 "<span class='notice'>You have [anchored ? "fastened the [src] to" : "unfastened the [src] from"] the floor.</span>")
+		return
+
+	else if(isCrowbar(I) && (!lock.isLocked()))
+		to_chat(user, "You destroy the [src] salvaging nothing!")
+		playsound(src.loc, 'sound/items/Crowbar.ogg', 50, 1)
+		qdel(src)
+		return
 	if(istype(I, /obj/item/weapon/key) && lock)
 		var/obj/item/weapon/key/K = I
 		if(!lock.toggle(I))
@@ -238,20 +250,3 @@
 
 /obj/machinery/door/unpowered/simple/cult/New(var/newloc,var/material_name,var/complexity)
 	..(newloc, "cult", complexity)
-
-
-
-
-obj/machinery/door/unpowered/simple/attackby(obj/item/W as obj, mob/user as mob)
-	if((isScrewdriver(W)) && (istype(loc, /turf/simulated) || anchored))
-		playsound(loc, 'sound/items/Screwdriver.ogg', 100, 1)
-		anchored = !anchored
-		user.visible_message("<span class='notice'>[user] [anchored ? "fastens" : "unfastens"] the [src].</span>", \
-								 "<span class='notice'>You have [anchored ? "fastened the [src] to" : "unfastened the [src] from"] the floor.</span>")
-		return
-
-	else if(isCrowbar(W))
-		to_chat(user, "You destroy the [src] salvaging nothing!")
-		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
-		qdel(src)
-		return

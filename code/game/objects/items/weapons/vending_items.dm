@@ -77,3 +77,8 @@
 	machine_name = "ClothesMate"
 	icon_state = "refill_clothes"
 	charges = 20// of 62
+
+
+/obj/item/weapon/vending_refill/security
+	machine_name = "Robust Industries"
+	charges = 12//of 43

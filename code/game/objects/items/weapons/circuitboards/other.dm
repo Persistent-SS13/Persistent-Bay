@@ -9,6 +9,17 @@
 	origin_tech = list(TECH_DATA = 4, TECH_BIO = 2)
 	board_type = "other"
 
+/obj/item/weapon/circuitboard/resleever
+	name = "circuit board (resleever)"
+	build_path = /obj/machinery/resleever
+	board_type = "machine"
+	origin_tech = "programming=3;biotech=4;engineering=3;materials=3"
+	req_components = list(
+							/obj/item/weapon/stock_parts/manipulator = 3,
+							/obj/item/weapon/stock_parts/scanning_module = 1,
+							/obj/item/stack/cable_coil = 2,
+							/obj/item/weapon/stock_parts/console_screen = 1)
+
 /obj/item/weapon/circuitboard/vendor
 	name = "circuit board (Booze-O-Mat Vendor)"
 	build_path = /obj/machinery/vending/boozeomat
@@ -35,52 +46,6 @@
 		name = "circuit board ([names_paths[build_path]] Vendor)"
 		user << "<span class='notice'>You set the board to [names_paths[build_path]].</span>"
 		req_components = list(text2path("/obj/item/weapon/vending_refill/[copytext("[build_path]", 24)]") = 3)
-
-
-
-/obj/item/weapon/circuitboard/microwave
-	name = "circuit board (Microwave)"
-	build_path = /obj/machinery/microwave
-	board_type = "machine"
-	origin_tech = "programming=1"
-	frame_desc = "Requires 1 Micro Laser, 2 pieces of cable and 1 Console Screen."
-	req_components = list(
-							/obj/item/weapon/stock_parts/micro_laser = 1,
-							/obj/item/stack/cable_coil = 2,
-							/obj/item/weapon/stock_parts/console_screen = 1)
-
-/obj/item/weapon/circuitboard/oven
-	name = "circuit board (Oven)"
-	build_path = /obj/machinery/cooker/oven
-	board_type = "machine"
-	origin_tech = "programming=1;plasmatech=1"
-	frame_desc = "Requires 2 Micro Lasers, 5 pieces of cable and 1 Console Screen."
-	req_components = list(
-							/obj/item/weapon/stock_parts/micro_laser = 2,
-							/obj/item/stack/cable_coil = 5,
-							/obj/item/weapon/stock_parts/console_screen = 1)
-
-/obj/item/weapon/circuitboard/grill
-	name = "circuit board (Grill)"
-	build_path = /obj/machinery/cooker/grill
-	board_type = "machine"
-	origin_tech = "programming=1;plasmatech=1"
-	frame_desc = "Requires 2 Micro Lasers, 5 pieces of cable and 1 Console Screen."
-	req_components = list(
-							/obj/item/weapon/stock_parts/micro_laser = 2,
-							/obj/item/stack/cable_coil = 5,
-							/obj/item/weapon/stock_parts/console_screen = 1)
-
-/obj/item/weapon/circuitboard/candy_maker
-	name = "circuit board (Candy Maker)"
-	build_path = /obj/machinery/cooker/candy
-	board_type = "machine"
-	origin_tech = "programming=2"
-	frame_desc = "Requires 1 Manipulator, 5 pieces of cable and 1 Console Screen."
-	req_components = list(
-							/obj/item/weapon/stock_parts/manipulator = 1,
-							/obj/item/stack/cable_coil = 5,
-							/obj/item/weapon/stock_parts/console_screen = 1)
 
 
 /obj/item/weapon/circuitboard/sleeper
@@ -128,6 +93,56 @@
 							/obj/item/weapon/stock_parts/console_screen = 4)
 
 
+/obj/item/weapon/circuitboard/holopad
+	name = "circuit board (AI Holopad)"
+	build_path = /obj/machinery/hologram/holopad
+	board_type = "machine"
+	origin_tech = "programming=1"
+	req_components = list(
+							/obj/item/weapon/stock_parts/capacitor = 1)
+
+/obj/item/weapon/circuitboard/chem_dispenser
+	name = "circuit board (Portable Chem Dispenser)"
+	build_path = /obj/machinery/chemical_dispenser
+	board_type = "machine"
+	origin_tech = "materials=4;engineering=4;programming=4;plasmatech=3;biotech=3"
+	frame_desc = "Requires 2 Matter Bins, 1 Capacitor, 1 Manipulator, 1 Console Screen, and 1 Power Cell."
+	req_components = list(
+							/obj/item/weapon/stock_parts/matter_bin = 2,
+							/obj/item/weapon/stock_parts/capacitor = 1,
+							/obj/item/weapon/stock_parts/manipulator = 1,
+							/obj/item/weapon/stock_parts/console_screen = 1,)
+
+/obj/item/weapon/circuitboard/reagentgrinder
+	name = "circuit board (All-in-one Grinder)"
+	build_path = /obj/machinery/reagentgrinder
+	board_type = "machine"
+	origin_tech = "mateirals=2;engineering=1;plasmatech=3;biotech=1;"
+	frame_desc = "Requires 1 Matter Bins, 1 Capacitor, 1 Manipulator, and 1 Power Cell."
+	req_components = list(
+							/obj/item/weapon/stock_parts/matter_bin = 1,
+							/obj/item/weapon/stock_parts/capacitor = 1,
+							/obj/item/weapon/stock_parts/manipulator = 1,)
+
+/obj/item/weapon/circuitboard/chem_master
+	name = "circuit board (Chem Master 2999)"
+	build_path = /obj/machinery/chem_master/
+	board_type = "machine"
+	origin_tech = "materials=2;programming=2;biotech=1"
+	req_components = list(
+							/obj/item/weapon/reagent_containers/glass/beaker = 2,
+							/obj/item/weapon/stock_parts/manipulator = 1,
+							/obj/item/weapon/stock_parts/console_screen = 1)
+
+/obj/item/weapon/circuitboard/photocopier
+	name = "circuit board (photocopier)"
+	build_path = /obj/machinery/photocopier/
+	board_type = "machine"
+	origin_tech = "materials=2;programming=2;biotech=1"
+	req_components = list(
+							/obj/item/weapon/stock_parts/matter_bin = 2,
+							/obj/item/weapon/stock_parts/manipulator = 1,
+							/obj/item/weapon/stock_parts/console_screen = 1)
 
 
 
@@ -214,3 +229,91 @@
 							/obj/item/weapon/stock_parts/subspace/filter = 1,
 							/obj/item/weapon/stock_parts/subspace/crystal = 1,
 							/obj/item/weapon/stock_parts/micro_laser/high = 2)
+
+
+/obj/item/weapon/circuitboard/teleporter_hub
+	name = "circuit board (Teleporter Hub)"
+	build_path = /obj/machinery/teleport/hub
+	board_type = "machine"
+	origin_tech = "programming=3;engineering=5;bluespace=5;materials=4"
+	frame_desc = "Requires 3 Bluespace Crystals and 1 Matter Bin."
+	req_components = list(
+							/obj/item/weapon/stock_parts/subspace/crystal = 3,
+							/obj/item/weapon/stock_parts/matter_bin = 1)
+
+/obj/item/weapon/circuitboard/teleporter_station
+	name = "circuit board (Teleporter Station)"
+	build_path = /obj/machinery/teleport/station
+	board_type = "machine"
+	origin_tech = "programming=4;engineering=4;bluespace=4"
+	frame_desc = "Requires 2 Bluespace Crystals, 2 Capacitors and 1 Console Screen."
+	req_components = list(
+							/obj/item/weapon/stock_parts/subspace/crystal = 2,
+							/obj/item/weapon/stock_parts/capacitor = 2,
+							/obj/item/weapon/stock_parts/console_screen = 1)
+
+/*
+/obj/item/weapon/circuitboard/telesci_pad
+	name = "Circuit board (Telepad)"
+	build_path = /obj/machinery/telepad
+	board_type = "machine"
+	origin_tech = "programming=4;engineering=3;materials=3;bluespace=4"
+	frame_desc = "Requires 2 Bluespace Crystals, 1 Capacitor, 1 piece of cable and 1 Console Screen."
+	req_components = list(
+							/obj/item/weapon/stock_parts/subspace/crystal = 2,
+							/obj/item/weapon/stock_parts/capacitor = 1,
+							/obj/item/stack/cable_coil = 1,
+							/obj/item/weapon/stock_parts/console_screen = 1)
+*/
+
+
+/obj/item/weapon/circuitboard/smartfridge
+	name = "circuit board (smartfridge)"
+	build_path = /obj/machinery/smartfridge/
+	board_type = "machine"
+	origin_tech = "programming=1"
+	frame_desc = "Requires 3 Matter Bins"
+	req_components = list(
+							/obj/item/weapon/stock_parts/matter_bin = 3)
+
+	var/list/names_paths = list(/obj/machinery/smartfridge/ = "Smart Fridge",
+							/obj/machinery/smartfridge/seeds = "MegaSeed Servitor",
+							/obj/machinery/smartfridge/secure/extract = "Slime Extract Storage",
+							/obj/machinery/smartfridge/secure/medbay = "Refrigerated Medicine Storage",
+							/obj/machinery/smartfridge/secure/virology = "Refrigerated Virus Storage",
+							/obj/machinery/smartfridge/chemistry = "Smart Chemical Storage",
+							/obj/machinery/smartfridge/chemistry/virology = "Smart Virus Storage",
+							/obj/machinery/smartfridge/drinks = "Drink Showcase",
+							/obj/machinery/smartfridge/drying_rack = "Drying Rack",)
+
+/obj/item/weapon/circuitboard/smartfridge/attackby(obj/item/I, mob/user, params)
+	if(istype(I, /obj/item/weapon/screwdriver))
+		set_type(pick(names_paths), user)
+
+
+/obj/item/weapon/circuitboard/smartfridge/proc/set_type(typepath, mob/user)
+		build_path = typepath
+		name = "circuit board ([names_paths[build_path]] )"
+		user << "<span class='notice'>You set the board to [names_paths[build_path]].</span>"
+
+
+
+/obj/item/weapon/circuitboard/botany_extractor
+	name = "circuit board (Lysis-Isolation Centrifuge)"
+	build_path = /obj/machinery/botany/extractor
+	board_type = "machine"
+	origin_tech = "biotech=3;programming=3"
+	req_components = list(
+							/obj/item/weapon/stock_parts/matter_bin = 1,
+							/obj/item/weapon/stock_parts/scanning_module = 1,
+							/obj/item/weapon/stock_parts/console_screen = 1)
+
+/obj/item/weapon/circuitboard/botany_editor
+	name = "circuit board (Bioballistic Delivery System)"
+	build_path = /obj/machinery/botany/editor
+	board_type = "machine"
+	origin_tech = "biotech=3;programming=3"
+	req_components = list(
+							/obj/item/weapon/stock_parts/matter_bin = 1,
+							/obj/item/weapon/stock_parts/manipulator = 1,
+							/obj/item/weapon/stock_parts/console_screen = 1)

@@ -22,7 +22,6 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	var/list/autolinkers = list() // list of text/number values to link with
 	var/id = "NULL" // identification string
 	var/network = "NULL" // the network of the machinery
-
 	var/list/freq_listening = list() // list of frequencies to tune into: if none, will listen to all
 
 	var/machinetype = 0 // just a hacky way of preventing alike machines from pairing
@@ -124,7 +123,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 		message_admins("telecomms with no loc during after_load? |[src] | [loc] | [position] |")
 		return
 	listening_levels = GetConnectedZlevels(position.z)
-	
+
 	if(autolinkers.len)
 		// Links nearby machines
 		if(!long_range_link)

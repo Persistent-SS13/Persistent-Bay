@@ -271,17 +271,6 @@
 		if(put_mob(M))
 			qdel(G)
 	return
-	if (istype(G, /obj/item/weapon/screwdriver))
-		if(occupant || on)
-			user << "<span class='notice'>The maintenance panel is locked.</span>"
-			return
-		default_deconstruction_screwdriver(user, "pod0-o", "pod0", G)
-		return
-
-	if(exchange_parts(user, G))
-		return
-
-	default_deconstruction_crowbar(G)
 
 	if(istype(G, /obj/item/grab))
 		if(panel_open)
@@ -301,6 +290,16 @@
 /obj/machinery/atmospherics/unary/cryo_cell/update_icon()
 	handle_update_icon()
 
+/obj/machinery/atmospherics/unary/cryo_cell/attackby(var/obj/item/O as obj, var/mob/user as mob)
+
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+	return ..()
 /obj/machinery/atmospherics/unary/cryo_cell/proc/handle_update_icon() //making another proc to avoid spam in update_icon
 	overlays.Cut() //empty the overlay proc, just in case
 	icon_state = "pod[on]" //set the icon properly every time

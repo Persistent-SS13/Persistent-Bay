@@ -80,3 +80,10 @@ obj/item/weapon/circuitboard/rdserver
 						/obj/item/weapon/stock_parts/matter_bin = 1,
 						/obj/item/weapon/stock_parts/manipulator = 1,
 						/obj/item/weapon/stock_parts/micro_laser = 1)
+
+
+
+
+
+
+/obj/item/weapon/circuitboard/machinery/robotic_fabricator

@@ -14,6 +14,21 @@
 	idle_power_usage = 60
 	active_power_usage = 10000	//10 kW. It's a big all-body scanner.
 
+
+
+
+
+
+/obj/machinery/bodyscanner/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/bodyscanner(src)
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	RefreshParts()
+
 /obj/machinery/bodyscanner/relaymove(mob/user as mob)
 	if (user.stat)
 		return
@@ -185,12 +200,49 @@
 	anchored = 1
 
 
+
+/obj/machinery/body_scanconsole/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/bodyscanner_console(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	RefreshParts()
+
 /obj/machinery/body_scanconsole/Initialize()
 	for(var/D in GLOB.cardinal)
 		src.connected = locate(/obj/machinery/bodyscanner, get_step(src, D))
 		if(src.connected)
 			break
 	return ..()
+
+
+
+
+/obj/machinery/bodyscanner/attackby(var/obj/item/O as obj, var/mob/user as mob)
+
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+	return ..()
+
+/obj/machinery/body_scanconsole/attackby(var/obj/item/O as obj, var/mob/user as mob)
+
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+	return ..()
+
 
 /*
 

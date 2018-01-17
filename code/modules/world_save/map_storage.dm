@@ -58,7 +58,7 @@ var/global/list/zones_to_save = list()
 	..()
 	update_icon()
 	lighting_build_overlay()
-	update_air_properties()
+	
 	for(var/obj/effect/floor_decal/decal in saved_decals)
 		decal.init_for(src)
 	
@@ -189,6 +189,7 @@ var/global/list/zones_to_save = list()
 			lis |= T
 	f << lis
 /proc/Save_World()
+	Prepare_Atmos_For_Saving()
 	areas_to_save = list()
 	zones_to_save = list()
 	var/starttime = REALTIMEOFDAY
@@ -263,7 +264,8 @@ var/global/list/zones_to_save = list()
 				message_admins("No turf found for zone load")
 			T.zone = Z
 			Z.contents |= T
-
+	for(var/zone/Z in zones)	
+		Z.rebuild()
 	for(var/ind in 1 to all_loaded.len)
 		var/datum/dat = all_loaded[ind]
 		dat.after_load()

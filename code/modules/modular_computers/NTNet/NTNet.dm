@@ -3,6 +3,13 @@ var/global/datum/ntnet/ntnet_global = new()
 
 // This is the NTNet datum. There can be only one NTNet datum in game at once. Modular computers read data from this.
 /datum/ntnet/
+	var/name = "" // network name
+	var/net_uid = "" // the thing the cards connect to, this is DANGEROUS TO CHANGE, BREAKING ALL CONNECTED MACHINES, also their can only be ONE NETWORK OF EACH TYPE
+	var/invisible = 0
+	var/secured = 0
+	var/password = "password"
+	var/datum/world_faction/holder
+	
 	var/list/relays = list()
 	var/list/logs = list()
 	var/list/available_station_software = list()
@@ -79,6 +86,7 @@ var/global/datum/ntnet/ntnet_global = new()
 	var/operating = 0
 
 	// Check all relays. If we have at least one working relay, network is up.
+	
 	for(var/obj/machinery/ntnet_relay/R in relays)
 		if(R.operable())
 			operating = 1

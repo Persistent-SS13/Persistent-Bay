@@ -33,7 +33,6 @@
 	var/obj/item/weapon/airlock_electronics/electronics = null
 	var/hasShocked = 0 //Prevents multiple shocks from happening
 	var/secured_wires = 0
-	var/haskeypad = 0
 	var/datum/wires/airlock/wires = null
 
 	var/open_sound_powered = 'sound/machines/airlock_open.ogg'
@@ -52,6 +51,7 @@
 	var/_wifi_id
 	var/datum/wifi/receiver/button/door/wifi_receiver
 	var/obj/item/weapon/airlock_brace/brace = null
+	var/haskeypad = 0
 
 /obj/machinery/door/airlock/keypad // HERE
 	name = "Keypad Entry Airlock"

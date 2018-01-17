@@ -76,6 +76,9 @@
 	icon_state = "clown"
 	item_state = "clown"
 	item_flags = AIRTIGHT | BLOCKHAIR
+	sprite_sheets = list(
+	SPECIES_VOX = 'icons/mob/species/vox/mask.dmi',
+		)
 
 /obj/item/clothing/mask/gas/sexyclown
 	name = "sexy-clown wig and mask"

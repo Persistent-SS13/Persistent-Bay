@@ -79,7 +79,25 @@
 	mannequin.dna.b_type = client.prefs.b_type
 	mannequin.sync_organ_dna()
 	mannequin.create_stack()
+	var/money_amount = 500
+	var/datum/money_account/M = create_account(mannequin.real_name, money_amount, null)
+	M.remote_access_pin = chosen_pin
+	if(!mannequin.mind)
+		mannequin.mind = new()
+	var/remembered_info = ""
+	remembered_info += "<b>Your account number is:</b> #[M.account_number]<br>"
+	remembered_info += "<b>Your account pin is:</b> [M.remote_access_pin]<br>"
+	remembered_info += "<b>Your account funds are:</b> [M.money]<br>"
+
+	if(M.transaction_log.len)
+		var/datum/transaction/T = M.transaction_log[1]
+		remembered_info += "<b>Your account was created:</b> [T.time], [T.date] at [T.source_terminal]<br>"
+	mannequin.mind.store_memory(remembered_info)
+
+	mannequin.mind.initial_account = M
+	CreateModularRecord(mannequin)
 	var/decl/hierarchy/outfit/job/assistant/outfit = new()
+	
 	outfit.equip(mannequin)
 	S << mannequin
 	load_characters()

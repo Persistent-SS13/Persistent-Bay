@@ -19,7 +19,6 @@ var/global/ntnet_card_uid = 1
 	var/datum/ntnet/connected_network
 	malfunction_probability = 1
 /obj/item/weapon/computer_hardware/network_card/proc/get_network()
-	if(!connected) return
 	if(connected_network && connected_network.net_uid == connected_to)
 		connected = 1
 		return connected_network
@@ -86,7 +85,8 @@ var/global/ntnet_card_uid = 1
 	return "[identification_string] (NID [identification_id])"
 
 /obj/item/weapon/computer_hardware/network_card/proc/is_banned()
-	return ntnet_global.check_banned(identification_id)
+	if(connected_network)
+		return connected_network.check_banned(identification_id)
 
 // 0 - No signal, 1 - Low signal, 2 - High signal. 3 - Wired Connection
 /obj/item/weapon/computer_hardware/network_card/proc/get_signal(var/specific_action = 0)

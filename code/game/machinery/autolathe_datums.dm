@@ -216,12 +216,12 @@ var/const/EXTRA_COST_FACTOR = 1.25
 
 /datum/autolathe/recipe/airalarm
 	name = "air alarm electronics"
-	path = /obj/item/weapon/airalarm_electronics
+	path = /obj/item/weapon/circuitboard/airalarm
 	category = "Engineering"
 
 /datum/autolathe/recipe/firealarm
 	name = "fire alarm electronics"
-	path = /obj/item/weapon/firealarm_electronics
+	path = /obj/item/weapon/circuitboard/firealarm
 	category = "Engineering"
 
 /datum/autolathe/recipe/powermodule

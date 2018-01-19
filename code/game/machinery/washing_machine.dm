@@ -4,6 +4,7 @@
 	icon_state = "wm_10"
 	density = 1
 	anchored = 1.0
+	circuit = /obj/item/weapon/circuitboard/washing
 	var/state = 1
 	//1 = empty, open door
 	//2 = empty, closed door
@@ -13,14 +14,20 @@
 	//6 = blood, open door
 	//7 = blood, closed door
 	//8 = blood, running
-	var/panel = 0
-	//0 = closed
-	//1 = open
 	var/hacked = 1 //Bleh, screw hacking, let's have it hacked by default.
 	//0 = not hacked
 	//1 = hacked
 	var/gibs_ready = 0
 	var/obj/crayon
+	var/list/washing = list()
+
+/obj/machinery/washing_machine/New()
+	circuit = new circuit(src)
+	component_parts = list()
+	component_parts += new /obj/item/weapon/stock_parts/motor(src)
+	component_parts += new /obj/item/weapon/stock_parts/gear(src)
+	component_parts += new /obj/item/weapon/stock_parts/gear(src)
+	RefreshParts()
 
 /obj/machinery/washing_machine/Destroy()
 	qdel(crayon)
@@ -78,15 +85,23 @@
 
 
 /obj/machinery/washing_machine/update_icon()
-	icon_state = "wm_[state][panel]"
+	icon_state = "wm_[state][panel_open]"
 
 /obj/machinery/washing_machine/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	if(state == 2 && washing.len < 1)
+		if(default_deconstruction_screwdriver(user, W))
+			return
+		if(default_deconstruction_crowbar(user, W))
+			return
+	/*if(istype(W,/obj/item/weapon/screwdriver))
+		panel = !panel
+		user << "<span class='notice'>You [panel ? "open" : "close"] the [src]'s maintenance panel</span>"*/
 	if(istype(W,/obj/item/weapon/pen/crayon) || istype(W,/obj/item/weapon/stamp))
 		if( state in list(	1, 3, 6 ) )
 			if(!crayon)
 				user.drop_item()
 				crayon = W
-				crayon.forceMove(src)
+				crayon.loc = src
 			else
 				..()
 		else

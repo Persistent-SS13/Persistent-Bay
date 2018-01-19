@@ -4,7 +4,7 @@
 	icon_state = "dispenser"
 	clicksound = "button"
 	clickvol = 20
-
+//	circuit = /obj/item/weapon/circuitboard/chemical_dispenser
 	var/list/spawn_cartridges = null // Set to a list of types to spawn one of each on New()
 
 	var/list/cartridges = list() // Associative, label -> cartridge

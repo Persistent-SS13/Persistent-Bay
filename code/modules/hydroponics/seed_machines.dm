@@ -85,15 +85,10 @@
 			to_chat(user, "You load [W] into [src].")
 		return
 
-	if(isScrewdriver(W))
-		open = !open
-		to_chat(user, "<span class='notice'>You [open ? "open" : "close"] the maintenance panel.</span>")
+	if(default_deconstruction_screwdriver(user, W))
 		return
-
-	if(open)
-		if(isCrowbar(W))
-			dismantle()
-			return
+	if(default_deconstruction_crowbar(user, W))
+		return
 
 	if(istype(W,/obj/item/weapon/disk/botany))
 		if(loaded_disk)

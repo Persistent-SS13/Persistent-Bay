@@ -54,7 +54,7 @@
 
 
 /obj/machinery/atm/Process()
-	if(stat & NOPOWER)
+	if(stat & NOPOWER || buildstage != 2)
 		return
 
 	if(ticks_left_timeout > 0)

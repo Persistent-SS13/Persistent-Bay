@@ -10,7 +10,7 @@
 	layer = ABOVE_WINDOW_LAYER
 	var/number = 0
 	var/last_tick //used to delay the powercheck
-	var/buildstage = 0
+	var/buildstage = 2
 	var/wiresexposed = 0
 	var/circuitry_installed = 1
 

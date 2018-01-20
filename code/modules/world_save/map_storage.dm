@@ -215,6 +215,7 @@ var/global/list/zones_to_save = list()
 	for(var/zone/Z in zones_to_save)
 		Z.turf_coords = Z.get_turf_coords()
 		zones |= Z
+	f["factions"] << GLOB.all_world_factions
 	f["zones"] << zones
 	f["areas"] << formatted_areas
 	f["turbolifts"] << turbolifts
@@ -232,6 +233,7 @@ var/global/list/zones_to_save = list()
 	var/v = null
 	f.cd = "/extras"
 	f["records"] >> GLOB.all_crew_records
+	f["factions"] >> GLOB.all_world_factions
 	var/list/areas
 	f["areas"] >> areas
 	for(var/datum/area_holder/holder in areas)
@@ -253,8 +255,10 @@ var/global/list/zones_to_save = list()
 			CHECK_TICK
 		world << "Loading.. [((1/(12-z))*100)]% Complete"
 	f.cd = "/extras"
+	
 	f["turbolifts"] >> turbolifts
 	var/list/zones
+	
 	f["zones"] >> zones
 	for(var/zone/Z in zones)
 		for(var/ind in 1 to Z.turf_coords.len)

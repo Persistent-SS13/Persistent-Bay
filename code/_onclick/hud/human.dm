@@ -293,8 +293,12 @@
 		H.fov.icon_state = "combat"
 		H.fov.name = " "
 		H.fov.screen_loc = "1,1"
-		H.fov.mouse_opacity = 1
-		H.fov.layer = UNDER_HUD_LAYER
+		H.fov.mouse_opacity = 0
+		H.fov.plane = LIGHTING_PLANE
+		H.fov.layer = LIGHTING_LAYER
+		H.fov.invisibility = INVISIBILITY_LIGHTING
+		H.fov.simulated = 0
+	//	H.fov.layer = UNDER_HUD_LAYER
 		hud_elements |= H.fov
 
 	mymob.client.screen = list()

@@ -9,6 +9,13 @@
 	var/security_level = 0	//0 - auto-identify from worn ID, require only account number
 							//1 - require manual login / account number and pin
 							//2 - require card and manual login
+/datum/money_account/after_load()
+	if(get_account(account_number))
+		message_admins("duplicate account loaded owner: [owner_name] account_number: [account_number]")
+		qdel(src)
+	else
+		all_money_accounts.Add(src)
+	..()
 
 /datum/money_account/proc/do_transaction(var/datum/transaction/T)
 	money = max(0, money + T.amount)

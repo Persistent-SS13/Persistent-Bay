@@ -7,26 +7,24 @@
 	use_power = 1
 	idle_power_usage = 300
 	active_power_usage = 300
-	var/processing = 0
 	frame_type = "computer"
+	var/processing = 0
+
 	var/icon_keyboard = "generic_key"
 	var/icon_screen = "generic"
 	var/light_range_on = 2
 	var/light_power_on = 1
 	var/overlay_layer
-	flags = OBJ_CLIMBABLE
-	clicksound = "keyboard"
 
 /obj/machinery/computer/New()
 	overlay_layer = layer
 	..()
 
-/obj/machinery/computer/Initialize()
-	. = ..()
+/obj/machinery/computer/proc/initialize()
 	power_change()
 	update_icon()
 
-/obj/machinery/computer/Process()
+/obj/machinery/computer/proc/process()
 	if(stat & (NOPOWER|BROKEN))
 		return 0
 	return 1
@@ -80,6 +78,15 @@
 	if(icon_keyboard)
 		overlays += image(icon, icon_keyboard, overlay_layer)
 
+/obj/machinery/computer/power_change()
+	..()
+	update_icon()
+	if(stat & NOPOWER)
+		set_light(0)
+	else
+		set_light(light_range_on, light_power_on)
+
+
 /obj/machinery/computer/proc/set_broken()
 	stat |= BROKEN
 	update_icon()
@@ -119,5 +126,8 @@
 		src.attack_hand(user)
 	return
 
-/obj/machinery/computer/attack_ghost(var/mob/ghost)
-	attack_hand(ghost)
+
+
+
+
+

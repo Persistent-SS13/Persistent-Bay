@@ -597,7 +597,6 @@
 #include "code\game\machinery\computer\arcade_orion.dm"
 #include "code\game\machinery\computer\atmos_alert.dm"
 #include "code\game\machinery\computer\atmos_control.dm"
-#include "code\game\machinery\computer\buildandrepair.dm"
 #include "code\game\machinery\computer\computer.dm"
 #include "code\game\machinery\computer\crew.dm"
 #include "code\game\machinery\computer\guestpass.dm"

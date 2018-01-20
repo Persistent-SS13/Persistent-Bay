@@ -238,8 +238,43 @@
 		mymob.nutrition_icon.screen_loc = ui_nutrition
 		hud_elements |= mymob.nutrition_icon
 
+	mymob.stamina_icon = new /obj/screen()//STAMINA
+	mymob.stamina_icon.icon = ui_style
+	mymob.stamina_icon.icon_state = "stamina0"
+	mymob.stamina_icon.name = "stamina"
+	mymob.stamina_icon.screen_loc = ui_stamina
+	hud_elements |= mymob.stamina_icon
+
+	mymob.kick_icon = new /obj/screen()
+	mymob.kick_icon.icon = ui_style
+	mymob.kick_icon.icon_state = "kick"
+	mymob.kick_icon.name = "kick"
+	mymob.kick_icon.screen_loc = ui_kick_jump
+	hud_elements |= mymob.kick_icon
+
+	mymob.jump_icon = new /obj/screen()
+	mymob.jump_icon.icon = ui_style
+	mymob.jump_icon.icon_state = "jump"
+	mymob.jump_icon.name = "jump"
+	mymob.jump_icon.screen_loc = ui_kick_jump
+	hud_elements |= mymob.jump_icon
+
+	mymob.fixeye = new /obj/screen()
+	mymob.fixeye.icon = ui_style
+	mymob.fixeye.icon_state = "fixeye"
+	mymob.fixeye.name = "fixeye"
+	mymob.fixeye.screen_loc = ui_fixeye
+	hud_elements |= mymob.fixeye
 
 	mymob.pain = new /obj/screen( null )
+	mymob.pain.icon = ui_style
+	mymob.pain.icon_state = "blank"
+	mymob.pain.name = "pain"
+	mymob.pain.screen_loc = "WEST,SOUTH to EAST,NORTH"
+	mymob.pain.layer = UNDER_HUD_LAYER
+	mymob.pain.mouse_opacity = 0
+	hud_elements |= mymob.pain
+
 
 	mymob.zone_sel = new /obj/screen/zone_sel( null )
 	mymob.zone_sel.icon = ui_style
@@ -270,6 +305,17 @@
 	mymob.radio_use_icon.icon = ui_style
 	mymob.radio_use_icon.color = ui_color
 	mymob.radio_use_icon.alpha = ui_alpha
+
+	if(ishuman(mymob))
+		var/mob/living/carbon/human/H = mymob
+		H.fov = new /obj/screen()
+		H.fov.icon = 'icons/mob/hide.dmi'
+		H.fov.icon_state = "combat"
+		H.fov.name = " "
+		H.fov.screen_loc = "1,1"
+		H.fov.mouse_opacity = 1
+		H.fov.layer = UNDER_HUD_LAYER
+		hud_elements |= H.fov
 
 	mymob.client.screen = list()
 

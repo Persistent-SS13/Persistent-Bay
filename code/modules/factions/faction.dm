@@ -53,6 +53,7 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 		fact.network.secured = 1
 		fact.network.password = network_password
 	fact.network.invisible = network_invisible
+	GLOB.all_world_factions |= fact
 	qdel(src)
 	return
 /obj/faction_spawner/Nanotrasen

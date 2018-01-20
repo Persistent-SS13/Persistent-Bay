@@ -16,7 +16,7 @@ GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
 	var/icon/photo_front = null
 	var/icon/photo_side = null
 	var/list/fields = list()	// Fields of this record
-
+	var/datum/money_account/linked_account
 /datum/computer_file/crew_record/New()
 	..()
 	for(var/T in subtypesof(/record_field/))
@@ -29,6 +29,8 @@ GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
 
 /datum/computer_file/crew_record/proc/load_from_mob(var/mob/living/carbon/human/H)
 	if(istype(H))
+		if(H.mind && H.mind.initial_account)
+			linked_account = H.mind.initial_account
 		photo_front = getFlatIcon(H, SOUTH, always_use_defdir = 1)
 		photo_side = getFlatIcon(H, WEST, always_use_defdir = 1)
 	else
@@ -36,7 +38,7 @@ GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
 		photo_front = getFlatIcon(dummy, SOUTH, always_use_defdir = 1)
 		photo_side = getFlatIcon(dummy, WEST, always_use_defdir = 1)
 		qdel(dummy)
-
+	
 	// Generic record
 	set_name(H ? H.real_name : "Unset")
 	set_job(H ? GetAssignment(H) : "Unset")

@@ -152,6 +152,9 @@ datum/preferences
 		return 1
 
 	if(href_list["save"])
+		if(get_crewmember_record(real_name))
+			to_chat(usr, "A character with that name already exists!")
+			return
 		save_preferences()
 		save_character()
 		usr << browse(null, "window=saves")

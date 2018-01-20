@@ -186,6 +186,8 @@
 				emote("cough")
 
 /mob/living/carbon/human/handle_mutations_and_radiation()
+	if(!species)
+		species = new()
 	if(in_stasis)
 		return
 

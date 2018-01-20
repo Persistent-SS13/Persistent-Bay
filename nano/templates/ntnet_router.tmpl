@@ -10,7 +10,7 @@
 			{{if data.attempted}}
 				Unable to connect to {{:data.connected_to}}
 				{{if data.has_password}}
-				 with password {{:data.display_password}}
+					with password {{:data.display_password}}
 				{{/if}}
 			{{else}}
 				Not connected to any network.
@@ -29,7 +29,7 @@
 						{{else}}
 							{{:helper.link('CONNECT', null, {'connect' : value.ref})}}
 						{{/if}}
-						<hr>
+						<br><hr>
 					{{/for}}
 				</div>
 			</div>

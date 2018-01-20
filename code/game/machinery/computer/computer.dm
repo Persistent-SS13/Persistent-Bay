@@ -9,7 +9,7 @@
 	active_power_usage = 300
 	frame_type = "computer"
 	var/processing = 0
-
+	clicksound = "keyboard"
 	var/icon_keyboard = "generic_key"
 	var/icon_screen = "generic"
 	var/light_range_on = 2
@@ -24,7 +24,7 @@
 	power_change()
 	update_icon()
 
-/obj/machinery/computer/proc/process()
+/obj/machinery/computer/Process()
 	if(stat & (NOPOWER|BROKEN))
 		return 0
 	return 1

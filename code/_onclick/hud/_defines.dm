@@ -50,12 +50,14 @@
 
 //Lower right, persistant menu
 #define ui_dropbutton "EAST-4:22,SOUTH:5"
-#define ui_drop_throw "EAST-1:28,SOUTH+1:7"
-#define ui_pull_resist "EAST-2:26,SOUTH+1:7"
+#define ui_drop_throw "EAST-2:30,SOUTH+1:7"//"EAST-1:28,SOUTH+1:7"
+#define ui_pull_resist "EAST-3:30,SOUTH+1:7"//"EAST-2:26,SOUTH+1:7"
 #define ui_acti "EAST-2:26,SOUTH:5"
 #define ui_movi "EAST-3:24,SOUTH:5"
 #define ui_zonesel "EAST-1:28,SOUTH:5"
 #define ui_acti_alt "EAST-1:28,SOUTH:5" //alternative intent switcher for when the interface is hidden (F12)
+#define ui_kick_jump "CENTER+3:16,SOUTH:5"
+#define ui_fixeye "EAST-1:28,SOUTH+1:7"//"EAST-3:30,SOUTH+1:7"
 
 #define ui_borg_pull "EAST-3:24,SOUTH+1:7"
 #define ui_borg_module "EAST-2:26,SOUTH+1:7"
@@ -80,7 +82,8 @@
 
 //Middle right (status indicators)
 #define ui_nutrition "EAST-1:28,CENTER-2:11"
-#define ui_temp "EAST-1:28,CENTER-1:13"
+#define ui_temp  "EAST-1:28,CENTER-2:-15"//"EAST-1:28,CENTER-5:19" //"EAST-1:28,CENTER-1:13"//I'll get this right one day.
+#define ui_stamina "EAST-1:28,CENTER-1:9"
 #define ui_health "EAST-1:28,CENTER:15"
 #define ui_internal "EAST-1:28,CENTER+1:17"
 									//borgs

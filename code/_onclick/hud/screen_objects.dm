@@ -209,6 +209,20 @@
 				var/mob/living/L = usr
 				L.resist()
 
+		if("surrender")
+			if(ishuman(usr))
+				var/mob/living/carbon/human/S = usr
+				S.surrender()
+
+		if("rest")
+			usr.mob_rest()
+
+
+		if("mood")
+			var/mob/living/carbon/C = usr
+			C.print_happiness(C)
+
+
 		if("mov_intent")
 			switch(usr.m_intent)
 				if("run")

@@ -212,7 +212,7 @@
 /obj/machinery/door/airlock/glass
 	name = "Glass Airlock"
 	icon = 'icons/obj/doors/Doorglass.dmi'
-	
+
 
 	door_crush_damage = DOOR_CRUSH_DAMAGE*0.75
 	maxhealth = 300
@@ -680,7 +680,7 @@ About the new airlock wires panel:
 /obj/machinery/door/airlock/update_icon()
 	set_light(0)
 	if(overlays) overlays.Cut()
-	if(density)
+	if(!density)
 		if(locked && lights && src.arePowerSystemsOn())
 			icon_state = "door_locked"
 			set_light(2, 0.75, COLOR_RED_LIGHT)

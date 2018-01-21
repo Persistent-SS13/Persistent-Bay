@@ -1,4 +1,8 @@
 /mob/living/carbon/human/examine(mob/user)
+	user.visible_message("<small>[user] looks at [src].</small>")
+	if(get_dist(user,src) > 5)//Don't get descriptions of things far away.
+		to_chat(user, "<span class='info'>It's too far away to see clearly.</span>")
+		return
 	var/skipgloves = 0
 	var/skipsuitstorage = 0
 	var/skipjumpsuit = 0
@@ -23,11 +27,10 @@
 
 	if(wear_mask)
 		skipface |= wear_mask.flags_inv & HIDEFACE
-
-	//no accuately spotting headsets from across the room.
-	if(get_dist(user, src) > 3)
+	if(get_dist(user, src) > 1)
 		skipears = 1
 
+	//no accuately spotting headsets from across the room.
 	var/list/msg = list("<span class='info'>*---------*\nThis is ")
 
 	var/datum/gender/T = gender_datums[get_gender()]
@@ -61,16 +64,15 @@
 		msg += "[T.He] [T.is] wearing [w_uniform.get_examine_line()].\n"
 
 	//head
-	if(head)
-		msg += "[T.He] [T.is] wearing [head.get_examine_line()] on [T.his] head.\n"
+	msg += "[T.He] [T.is] wearing [head.get_examine_line()] on [T.his] head.\n"
 
 	//suit/armour
 	if(wear_suit)
 		msg += "[T.He] [T.is] wearing [wear_suit.get_examine_line()].\n"
+
 		//suit/armour storage
 		if(s_store && !skipsuitstorage)
 			msg += "[T.He] [T.is] carrying [s_store.get_examine_line()] on [T.his] [wear_suit.name].\n"
-
 	//back
 	if(back)
 		msg += "[T.He] [T.has] [back.get_examine_line()] on [T.his] back.\n"
@@ -86,8 +88,19 @@
 	//gloves
 	if(gloves && !skipgloves)
 		msg += "[T.He] [T.has] [gloves.get_examine_line()] on [T.his] hands.\n"
-	else if(blood_DNA)
-		msg += "<span class='warning'>[T.He] [T.has] [(hand_blood_color != SYNTH_BLOOD_COLOUR) ? "blood" : "oil"]-stained hands!</span>\n"
+
+	//handcuffed?
+
+	//handcuffed?
+	if(handcuffed)
+		if(istype(handcuffed, /obj/item/weapon/handcuffs/cable))
+			msg += "<span class='warning'>[T.He] [T.is] \icon[handcuffed] restrained with cable!</span>\n"
+		else
+			msg += "<span class='warning'>[T.He] [T.is] \icon[handcuffed] handcuffed!</span>\n"
+
+	//buckled
+	if(buckled)
+		msg += "<span class='warning'>[T.He] [T.is] \icon[buckled] buckled to [buckled]!</span>\n"
 
 	//belt
 	if(belt)
@@ -96,8 +109,6 @@
 	//shoes
 	if(shoes && !skipshoes)
 		msg += "[T.He] [T.is] wearing [shoes.get_examine_line()] on [T.his] feet.\n"
-	else if(feet_blood_DNA)
-		msg += "<span class='warning'>[T.He] [T.has] [(feet_blood_color != SYNTH_BLOOD_COLOUR) ? "blood" : "oil"]-stained feet!</span>\n"
 
 	//mask
 	if(wear_mask && !skipmask)
@@ -117,16 +128,17 @@
 
 	//ID
 	if(wear_id)
-		msg += "[T.He] [T.is] wearing [wear_id.get_examine_line()].\n"
+		msg += "[T.He] [T.is] wearing \icon[wear_id] \a [wear_id].\n"
 
-	//handcuffed?
-	if(handcuffed)
-		if(istype(handcuffed, /obj/item/weapon/handcuffs/cable))
-			msg += "<span class='warning'>[T.He] [T.is] \icon[handcuffed] restrained with cable!</span>\n"
-		else
-			msg += "<span class='warning'>[T.He] [T.is] \icon[handcuffed] handcuffed!</span>\n"
+	if(str > user.str && str < (user.str + 5))
+		msg += "[T.He] looks stronger than you.\n"
 
-	//buckled
+	if(str > (user.str + 5))
+		msg += "<b>[T.He] looks a lot stronger than you.</b>\n"
+
+	if(str < user.str)
+		msg += "[T.He] looks weaker than you.\n"
+
 	if(buckled)
 		msg += "<span class='warning'>[T.He] [T.is] \icon[buckled] buckled to [buckled]!</span>\n"
 
@@ -140,13 +152,19 @@
 			msg += "<span class='warning'>[T.He] [T.is] twitching ever so slightly.</span>\n"
 
 	//Disfigured face
+
+
 	if(!skipface) //Disfigurement only matters for the head currently.
+
 		var/obj/item/organ/external/head/E = get_organ(BP_HEAD)
 		if(E && E.disfigured) //Check to see if we even have a head and if the head's disfigured.
 			if(E.species) //Check to make sure we have a species
 				msg += E.species.disfigure_msg(src)
 			else //Just in case they lack a species for whatever reason.
 				msg += "<span class='warning'>[T.His] face is horribly mangled!</span>\n"
+
+
+
 
 	//splints
 	for(var/organ in list(BP_L_LEG, BP_R_LEG, BP_L_ARM, BP_R_ARM))
@@ -176,9 +194,21 @@
 						to_chat(user, "<span class='deadsay'>[T.He] [T.has] a pulse!</span>")
 
 	if(fire_stacks)
-		msg += "[T.He] looks flammable.\n"
+		msg += "[T.He] [T.is] covered in some liquid.\n"
+
 	if(on_fire)
 		msg += "<span class='warning'>[T.He] [T.is] on fire!.</span>\n"
+
+	msg += "<span class='warning'>"
+
+
+	if(nutrition < 100)
+		msg += "[T.He] [T.is] severely malnourished.\n"
+	else if(nutrition >= 500)
+		msg += "[T.He] [T.is] quite chubby.\n"
+
+
+	msg += "</span>"
 
 	var/ssd_msg = species.get_ssd(src)
 	if(ssd_msg && (!should_have_organ(BP_BRAIN) || has_brain()) && stat != DEAD)
@@ -186,6 +216,17 @@
 			msg += "<span class='deadsay'>[T.He] [T.is] [ssd_msg]. It doesn't look like [T.he] [T.is] waking up anytime soon.</span>\n"
 		else if(!client)
 			msg += "<span class='deadsay'>[T.He] [T.is] [ssd_msg].</span>\n"
+
+	var/mhealth = (getBruteLoss() + getFireLoss())//How injured they look. Not not nescessarily how hurt they actually are.
+
+	if(mhealth >= 25 && mhealth < 50)//Is the person a little hurt?
+		msg += "<span class='warning'><b>[T.He] looks somewhat injured.\n</b></span>"
+
+	if(mhealth >= 50 && mhealth < 75)//Hurt.
+		msg += "<span class='warning'><b>[T.He] looks injured.</b></span>\n"
+
+	if(mhealth >= 75)//Or incredibly hurt.
+		msg += "<span class='warning'><b>[T.He] looks incredibly injured.</b>\n</span>"
 
 	var/list/wound_flavor_text = list()
 	var/applying_pressure = ""
@@ -204,7 +245,7 @@
 		wound_flavor_text[E.name] = ""
 
 		if(E.applied_pressure == src)
-			applying_pressure = "<span class='info'>[T.He] [T.is] applying pressure to [T.his] [E.name].</span><br>"
+			applying_pressure = "<span class='info'>[T.He] is applying pressure to [T.his] [E.name].</span><br>"
 
 		var/obj/item/clothing/hidden
 		var/list/clothing_items = list(head, wear_mask, wear_suit, w_uniform, gloves, shoes)
@@ -219,14 +260,14 @@
 		else
 			if(E.is_stump())
 				wound_flavor_text[E.name] += "<b>[T.He] [T.has] a stump where [T.his] [organ_descriptor] should be.</b>\n"
-				if(E.wounds.len && E.parent)
-					wound_flavor_text[E.name] += "[T.He] [T.has] [E.get_wounds_desc()] on [T.his] [E.parent.name].<br>"
+				//if((E.wounds.len || E.open) && E.parent)
+				//	wound_flavor_text[E.name] += "[T.He] [T.has] [E.get_wounds_desc()] on [T.his] [E.parent.name].<br>"
 			else
 				if(!is_synth && E.robotic >= ORGAN_ROBOT && (E.parent && E.parent.robotic < ORGAN_ROBOT))
 					wound_flavor_text[E.name] = "[T.He] [T.has] a [E.name].\n"
-				var/wounddesc = E.get_wounds_desc()
-				if(wounddesc != "nothing")
-					wound_flavor_text[E.name] += "[T.He] [T.has] [wounddesc] on [T.his] [E.name].<br>"
+				//var/wounddesc = E.get_wounds_desc()
+				//if(wounddesc != "nothing")
+				//	wound_flavor_text[E.name] += "[T.He] [T.has] [wounddesc] on [T.his] [E.name].<br>"
 		if(!hidden || distance <=1)
 			if(E.dislocated > 0)
 				wound_flavor_text[E.name] += "[T.His] [E.joint] is dislocated!<br>"
@@ -243,12 +284,18 @@
 		msg += wound_flavor_text[limb]
 	msg += "</span>"
 
-	for(var/obj/implant in get_visible_implants(0))
-		if(implant in shown_objects)
-			continue
-		msg += "<span class='danger'>[src] [T.has] \a [implant.name] sticking out of [T.his] flesh!</span>\n"
-	if(digitalcamo)
-		msg += "[T.He] [T.is] repulsively uncanny!\n"
+	if(happiness <= MOOD_LEVEL_SAD2)
+		msg += "<span class='warning'>[T.He] looks sad.</span>\n"
+
+	if(decaylevel == 1)
+		msg += "[T.He] [T.is] starting to smell.\n"
+	if(decaylevel == 2)
+		msg += "[T.He] [T.is] bloated and smells disgusting.\n"
+	if(decaylevel == 3)
+		msg += "[T.He] [T.is] rotting and blackened, the skin sloughing off. The smell is indescribably foul.\n"
+	if(decaylevel == 4)
+		msg += "[T.He] [T.is] mostly dessicated now, with only bones remaining of what used to be a person.\n"
+
 
 	if(hasHUD(user,"security"))
 		var/perpname = "wot"
@@ -268,8 +315,9 @@
 			if(R)
 				criminal = R.get_criminalStatus()
 
-			msg += "<span class = 'deptradio'>Criminal status:</span> <a href='?src=\ref[src];criminal=1'>\[[criminal]\]</a>\n"
-			msg += "<span class = 'deptradio'>Security records:</span> <a href='?src=\ref[src];secrecord=`'>\[View\]</a>\n"
+		msg += "<span class = 'deptradio'>Criminal status:</span> <a href='?src=\ref[src];criminal=1'>\[[criminal]\]</a>\n"
+		msg += "<span class = 'deptradio'>Security records:</span> <a href='?src=\ref[src];secrecord=`'>\[View\]</a>\n"
+
 
 	if(hasHUD(user,"medical"))
 		var/perpname = "wot"
@@ -288,8 +336,8 @@
 		if(R)
 			medical = R.get_status()
 
-		msg += "<span class = 'deptradio'>Physical status:</span> <a href='?src=\ref[src];medical=1'>\[[medical]\]</a>\n"
-		msg += "<span class = 'deptradio'>Medical records:</span> <a href='?src=\ref[src];medrecord=`'>\[View\]</a>\n"
+			msg += "<span class = 'deptradio'>Physical status:</span> <a href='?src=\ref[src];medical=1'>\[[medical]\]</a>\n"
+			msg += "<span class = 'deptradio'>Medical records:</span> <a href='?src=\ref[src];medrecord=`'>\[View\]</a>\n"
 
 
 	if(print_flavor_text()) msg += "[print_flavor_text()]\n"
@@ -310,17 +358,9 @@
 		var/mob/living/carbon/human/H = M
 		switch(hudtype)
 			if("security")
-				if(istype(H.glasses,/obj/item/clothing/glasses))
-					var/obj/item/clothing/glasses/G = H.glasses
-					return istype(G.hud, /obj/item/clothing/glasses/hud/security) || istype(G, /obj/item/clothing/glasses/hud/security)
-				else
-					return FALSE
+				return istype(H.glasses, /obj/item/clothing/glasses/hud/security) || istype(H.glasses, /obj/item/clothing/glasses/sunglasses/sechud)
 			if("medical")
-				if(istype(H.glasses,/obj/item/clothing/glasses))
-					var/obj/item/clothing/glasses/G = H.glasses
-					return istype(G.hud, /obj/item/clothing/glasses/hud/health) || istype(G, /obj/item/clothing/glasses/hud/health)
-				else
-					return FALSE
+				return istype(H.glasses, /obj/item/clothing/glasses/hud/health)
 			else
 				return 0
 	else if(istype(M, /mob/living/silicon/robot))

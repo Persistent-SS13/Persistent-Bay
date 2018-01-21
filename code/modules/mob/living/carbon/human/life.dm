@@ -577,6 +577,12 @@
 			silent = 0
 			return 1
 
+
+		handle_happiness()
+
+		handle_hygiene()
+
+
 		if(hallucination_power)
 			handle_hallucinations()
 
@@ -1165,3 +1171,45 @@
 	..()
 	if(XRAY in mutations)
 		set_sight(sight|SEE_TURFS|SEE_MOBS|SEE_OBJS)
+
+/mob/living/carbon/human/proc/handle_decay()
+	var/decaytime = world.time - timeofdeath
+	var/image/flies = image('icons/effects/effects.dmi', "rotten")//This is a hack, there has got to be a safer way to do this but I don't know it at the moment.
+
+	if(isSynthetic())
+		return
+
+	if(decaytime <= 6000) //10 minutes for decaylevel1 -- stinky
+		return
+
+	if(decaytime > 6000 && decaytime <= 12000)//20 minutes for decaylevel2 -- bloated and very stinky
+		decaylevel = 1
+		overlays -= flies
+		overlays += flies
+
+	if(decaytime > 12000 && decaytime <= 18000)//30 minutes for decaylevel3 -- rotting and gross
+		decaylevel = 2
+
+	if(decaytime > 18000 && decaytime <= 27000)//45 minutes for decaylevel4 -- skeleton
+		decaylevel = 3
+
+	if(decaytime > 27000)
+		decaylevel = 4
+		overlays -= flies
+		flies = null
+		ChangeToSkeleton()
+		return //No puking over skeletons, they don't smell at all!
+
+
+	for(var/mob/living/carbon/human/H in range(decaylevel, src))
+		if(prob(2))
+			if(istype(loc,/obj/item/bodybag))
+				return
+			if(H.wear_mask)
+				return
+			if(H.stat == DEAD)//This shouldn't even need to be a fucking check.
+				return
+			to_chat(H, "<spawn class='warning'>You smell something foul...")
+			H.add_event("disgust", /datum/happiness_event/disgust/verygross)
+			if(prob(75))
+				H.vomit()

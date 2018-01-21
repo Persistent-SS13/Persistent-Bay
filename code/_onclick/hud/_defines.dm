@@ -75,6 +75,7 @@
 #define ui_fire "EAST-1:28,NORTH-3:25"
 #define ui_oxygen "EAST-1:28,NORTH-4:23"
 #define ui_pressure "EAST-1:28,NORTH-5:21"
+#define ui_surrender "EAST+1, NORTH-9"
 
 #define ui_alien_toxin "EAST-1:28,NORTH-2:25"
 #define ui_alien_fire "EAST-1:28,NORTH-3:25"
@@ -86,6 +87,7 @@
 #define ui_stamina "EAST-1:28,CENTER-1:9"
 #define ui_health "EAST-1:28,CENTER:15"
 #define ui_internal "EAST-1:28,CENTER+1:17"
+#define ui_happiness "EAST+1, NORTH-13:18"
 									//borgs
 #define ui_borg_health "EAST-1:28,CENTER-1:13" //borgs have the health display where humans have the pressure damage indicator.
 #define ui_alien_health "EAST-1:28,CENTER-1:13" //aliens have the health display where humans have the pressure damage indicator.
@@ -124,4 +126,7 @@
 #define ui_iarrowright "SOUTH-1,EAST-2"
 
 #define ui_spell_master "EAST-1:16,NORTH-1:16"
+
+
+
 #define ui_genetic_master "EAST-1:16,NORTH-3:16"

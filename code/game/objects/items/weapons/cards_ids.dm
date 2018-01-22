@@ -118,6 +118,8 @@ var/const/NO_EMAG_ACT = -50
 	var/datum/mil_branch/military_branch = null //Vars for tracking branches and ranks on multi-crewtype maps
 	var/datum/mil_rank/military_rank = null
 
+	var/list/approved_factions = list() // factions that have approved this card for use on their machines. format-- list("[faction.uid]")
+	
 /obj/item/weapon/card/id/New()
 	..()
 	if(job_access_type)
@@ -208,8 +210,25 @@ var/const/NO_EMAG_ACT = -50
 	src.add_fingerprint(user)
 	return
 
-/obj/item/weapon/card/id/GetAccess()
-	return access
+/obj/item/weapon/card/id/GetAccess(var/faction_uid)
+	if(!faction_uid || faction_uid == "")
+		return access
+	var/list/final_access = list()
+	var/datum/world_faction/faction = get_faction(faction_uid)
+	if(faction)
+		if(faction.allow_unapproved_ids || approved_factions.Find(faction.uid))
+			var/datum/computer_file/crew_record/record = faction.get_record(registered_name)
+			if(record)
+				final_access |= record.access
+				if(faction.allow_id_access) final_access |= access
+				return final_access
+			else
+				if(faction.allow_id_access)
+					return access
+				else
+					return list()
+	else
+		return access
 
 /obj/item/weapon/card/id/GetIdCard()
 	return src

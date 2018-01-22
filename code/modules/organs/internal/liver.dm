@@ -43,6 +43,7 @@
 	else if(owner.chem_effects[CE_ANTITOX])
 		filter_effect += 1
 
+	handle_thirst()
 	// If you're not filtering well, you're going to take damage. Even more if you have alcohol in you.
 	if(filter_effect < 2)
 		owner.adjustToxLoss(0.5 * max(2 - filter_effect, 0) * (1 + owner.chem_effects[CE_ALCOHOL_TOXIC] + 0.5 * owner.chem_effects[CE_ALCOHOL]))
@@ -71,3 +72,24 @@
 			owner.nutrition -= 10
 		else if(owner.nutrition >= 200)
 			owner.nutrition -= 3
+
+/obj/item/organ/internal/liver/proc/handle_thirst()
+	owner.adjust_thirst(-THIRST_FACTOR)
+	switch(owner.thirst)
+		if(THIRST_LEVEL_THIRSTY to INFINITY)
+			owner.clear_event("thirst")
+		if(THIRST_LEVEL_DEHYDRATED to THIRST_LEVEL_THIRSTY)
+			owner.add_event("thirst", /datum/happiness_event/thirst/thirsty)
+			if(prob(1))
+				to_chat(owner, "<span class='warning'>You fall down because of your thirst.</span>")
+				owner.Weaken(1)
+				owner.Stun(1)
+		if(0 to THIRST_LEVEL_DEHYDRATED)
+			owner.add_event("thirst", /datum/happiness_event/thirst/dehydrated)
+			if(prob(5))
+				to_chat(owner, "<span class='warning'>You faint from dehydration.</span>")
+				owner.Paralyse(5)
+			else if(prob(6))
+				to_chat(owner, "<span class='warning'>You fall down because of your thirst.</span>")
+				owner.Weaken(1)
+				owner.Stun(1)

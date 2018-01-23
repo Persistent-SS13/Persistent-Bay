@@ -57,6 +57,9 @@
 /mob/living/carbon/human/Stat()
 	. = ..()
 	if(statpanel("Status"))
+		stat("ST:", "[str]")//Stats!
+		stat("DX:", "[dex]")
+		stat("IT:", "[int]")
 		stat("Intent:", "[a_intent]")
 		stat("Move Mode:", "[m_intent]")
 

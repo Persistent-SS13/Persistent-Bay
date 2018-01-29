@@ -13,7 +13,7 @@
 /datum/computer_file/program/clone_manager/Topic(href, href_list)
 	if(..())
 		return 1
-	if(!computer.dna_scanner) return 0
+	if(!computer.dna_scanner || !computer.dna_scanner.check_functionality()) return 0
 	if(href_list["connect"])
 		var/found = 0
 		for(var/obj/machinery/clonepod/pod in view(4,computer.loc))
@@ -62,7 +62,9 @@
 
 /datum/nano_module/program/clone_manager/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data = host.initial_data()
-	data["has_scanner"] = !!program.computer.dna_scanner
+	var/scanner_status = 1
+	if(!program.computer.dna_scanner || !program.computer.dna_scanner.check_functionality()) scanner_status = 0
+	data["has_scanner"] = scanner_status
 	if(program.computer.dna_scanner)
 		data["has_dna"] = !!program.computer.dna_scanner.stored_dna
 		if(!!program.computer.dna_scanner.stored_dna)

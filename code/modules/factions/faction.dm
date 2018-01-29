@@ -1,5 +1,10 @@
 GLOBAL_LIST_EMPTY(all_world_factions)
-/proc/get_faction(var/name)
+/proc/get_faction(var/name, var/password)
+	if(password)
+		var/datum/world_faction/fac = GLOB.all_world_factions.Find(name)
+		if(!fac) return
+		if(fac.password != password) return
+		return fac
 	return GLOB.all_world_factions.Find(name)
 /datum/world_faction
 	var/name = "" // can be safely changed
@@ -11,7 +16,7 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	var/datum/records_holder/records
 	var/datum/ntnet/network
 	
-	var/allow_id_access = 0 // allows access off the ID (the IDs access var) instead of directly from faction records, assuming its a faction-approved ID
+	var/allow_id_access = 0 // allows access off the ID (the IDs access var instead of directly from faction records, assuming its a faction-approved ID
 	var/allow_unapproved_ids = 0 // allows ids that are not faction-approved or faction-created to still be used to access doors IF THE registered_name OF THE CARD HAS VALID RECORDS ON FILE or allow_id_access is set to 1
 /datum/world_faction/New()
 	network = new()
@@ -47,6 +52,8 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	var/network_password
 	var/network_invisible = 0
 /obj/faction_spawner/New()
+	if(!GLOB.all_world_factions)
+		GLOB.all_world_factions = list()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 		if(existing_faction.uid == uid)
 			qdel(src)
@@ -72,3 +79,5 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	password = "rosebud"
 	network_name = "Nanotrasen Network"
 	network_uid = "nt_net"
+
+	

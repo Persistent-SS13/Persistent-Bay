@@ -51,8 +51,6 @@
 			return global.SScircuit;
 		if("SSevent")
 			return global.SSevent;
-		if("SSfastprocess")
-			return global.SSfastprocess;
 		if("SSgarbage")
 			return global.SSgarbage;
 		if("SSicon_update")
@@ -75,8 +73,6 @@
 			return global.SSnano;
 		if("SSobj")
 			return global.SSobj;
-		if("SSopen_space")
-			return global.SSopen_space;
 		if("SSplants")
 			return global.SSplants;
 		if("SSprocessing")
@@ -87,6 +83,8 @@
 			return global.SSshuttle;
 		if("SSskybox")
 			return global.SSskybox;
+		if("SStgui")
+			return global.SStgui;
 		if("SStimer")
 			return global.SStimer;
 		if("SStrade")
@@ -569,8 +567,6 @@
 			return global.lighting_overlays_initialised;
 		if("limb_icon_cache")
 			return global.limb_icon_cache;
-		if("list_of_ais")
-			return global.list_of_ais;
 		if("loadout_categories")
 			return global.loadout_categories;
 		if("lobby_image")
@@ -1051,8 +1047,6 @@
 			return global.whitelisted_species;
 		if("wireColours")
 			return global.wireColours;
-		if("wirelessProcess")
-			return global.wirelessProcess;
 		if("wizards")
 			return global.wizards;
 		if("world_topic_spam_protect_ip")
@@ -1126,8 +1120,6 @@
 			global.SScircuit=newval;
 		if("SSevent")
 			global.SSevent=newval;
-		if("SSfastprocess")
-			global.SSfastprocess=newval;
 		if("SSgarbage")
 			global.SSgarbage=newval;
 		if("SSicon_update")
@@ -1150,8 +1142,6 @@
 			global.SSnano=newval;
 		if("SSobj")
 			global.SSobj=newval;
-		if("SSopen_space")
-			global.SSopen_space=newval;
 		if("SSplants")
 			global.SSplants=newval;
 		if("SSprocessing")
@@ -1162,6 +1152,8 @@
 			global.SSshuttle=newval;
 		if("SSskybox")
 			global.SSskybox=newval;
+		if("SStgui")
+			global.SStgui=newval;
 		if("SStimer")
 			global.SStimer=newval;
 		if("SStrade")
@@ -1644,8 +1636,6 @@
 			global.lighting_overlays_initialised=newval;
 		if("limb_icon_cache")
 			global.limb_icon_cache=newval;
-		if("list_of_ais")
-			global.list_of_ais=newval;
 		if("loadout_categories")
 			global.loadout_categories=newval;
 		if("lobby_image")
@@ -2126,8 +2116,6 @@
 			global.whitelisted_species=newval;
 		if("wireColours")
 			global.wireColours=newval;
-		if("wirelessProcess")
-			global.wirelessProcess=newval;
 		if("wizards")
 			global.wizards=newval;
 		if("world_topic_spam_protect_ip")
@@ -2175,7 +2163,6 @@
 	"SSchemistry",
 	"SScircuit",
 	"SSevent",
-	"SSfastprocess",
 	"SSgarbage",
 	"SSicon_update",
 	"SSinactivity",
@@ -2187,12 +2174,12 @@
 	"SSmobs",
 	"SSnano",
 	"SSobj",
-	"SSopen_space",
 	"SSplants",
 	"SSprocessing",
 	"SSradiation",
 	"SSshuttle",
 	"SSskybox",
+	"SStgui",
 	"SStimer",
 	"SStrade",
 	"SSvines",
@@ -2434,7 +2421,6 @@
 	"light_overlay_cache",
 	"lighting_overlays_initialised",
 	"limb_icon_cache",
-	"list_of_ais",
 	"loadout_categories",
 	"lobby_image",
 	"log_end",
@@ -2675,7 +2661,6 @@
 	"whitelist",
 	"whitelisted_species",
 	"wireColours",
-	"wirelessProcess",
 	"wizards",
 	"world_topic_spam_protect_ip",
 	"world_topic_spam_protect_time",

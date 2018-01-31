@@ -1,0 +1,42 @@
+{{if data.card_installed}}
+	<h1>CURRENT NETWORK</h1>
+		{{if data.connected}}
+			Currently connected to <b{{:data.connected_to}}></b> ({{:data.display_name}}) 
+			{{if data.secured}}
+				Connected with password {{:data.display_password}}
+			{{/if}}
+			<br><br>{{:helper.link('DISCONNECT', null, {'disconnect' : 1})}}
+		{{else}}
+			{{if data.attempted}}
+				Unable to connect to {{:data.connected_to}}
+				{{if data.has_password}}
+					with password {{:data.display_password}}
+				{{/if}}
+			{{else}}
+				Not connected to any network.
+			{{/if}}
+
+		{{/if}}
+	<h1>PUBLIC NETWORKS</h1>	
+		<div class="statusDisplay" style="overflow: auto;">
+			<div class="item">
+				<div class="itemContent" style="width: 100%;">
+					{{for data.networks}}
+						{{:value.net_uid}} ({{:value.display_name}})<br>
+						{{:value.secured ? 'password/access required' : 'unsecured network'}}<br>
+						{{if value.connected}}
+							Connected
+						{{else}}
+							{{:helper.link('CONNECT', null, {'connect' : value.ref})}}
+						{{/if}}
+						<br><hr>
+					{{/for}}
+				</div>
+			</div>
+		</div>
+	<h1>MANUAL CONNECT</h1>
+		{{:helper.link('MANUALLY ENTER NET_UID AND PASSWORD', null, {'manual_connect' : 1})}}
+		
+{{else}}
+	<h1>NO NETWORK CARD DETECTED. PLEASE INSTALL A WIRELESS NETWORK CARD TO CONTINUE</h1>
+{{/if}}

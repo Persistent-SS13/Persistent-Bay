@@ -9,7 +9,7 @@
 	plane = ABOVE_HUMAN_PLANE // this needs to be fairly high so it displays over most things, but it needs to be under lighting
 	interact_offline = 1
 	layer = ABOVE_HUMAN_LAYER
-
+	circuit = /obj/item/weapon/circuitboard/cryo_tube
 	var/on = 0
 	use_power = 1
 	idle_power_usage = 20
@@ -20,7 +20,7 @@
 	var/temperature_archived
 	var/mob/living/carbon/occupant = null
 	var/obj/item/weapon/reagent_containers/glass/beaker = null
-
+	var/efficiency
 	var/current_heat_capacity = 50
 
 /obj/machinery/atmospherics/unary/cryo_cell/New()
@@ -28,13 +28,38 @@
 	icon = 'icons/obj/cryogenics_split.dmi'
 	update_icon()
 	initialize_directions = dir
+	initialize()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/stack/cable_coil(src, 1)
+	RefreshParts()
+
+/obj/machinery/atmospherics/unary/cryo_cell/RefreshParts()
+	var/C
+	for(var/obj/item/weapon/stock_parts/matter_bin/M in component_parts)
+		C += M.rating
+	current_heat_capacity = 50 * C
+	efficiency = C
+
+/obj/machinery/atmospherics/unary/cryo_cell/proc/initialize()
+	if(node) return
+	var/node_connect = dir
+	for(var/obj/machinery/atmospherics/target in get_step(src,node_connect))
+		if(target.initialize_directions & get_dir(target,src))
+			node = target
+			break
+
 /obj/machinery/atmospherics/unary/cryo_cell/Destroy()
 	var/turf/T = loc
 	T.contents += contents
+	var/obj/item/weapon/reagent_containers/glass/B = beaker
 	if(beaker)
-		beaker.forceMove(get_step(loc, SOUTH)) //Beaker is carefully ejected from the wreckage of the cryotube
-		beaker = null
-	. = ..()
+		B.loc = get_step(loc, SOUTH) //Beaker is carefully ejected from the wreckage of the cryotube
+	..()
 
 /obj/machinery/atmospherics/unary/cryo_cell/atmos_init()
 	..()
@@ -44,6 +69,49 @@
 		if(target.initialize_directions & get_dir(target,src))
 			node = target
 			break
+
+
+/obj/machinery/atmospherics/unary/cryo_cell/MouseDrop_T(atom/movable/O as mob|obj, mob/user as mob)
+	if(O.loc == user) //no you can't pull things out of your ass
+		return
+	if(user.restrained() || user.stat || user.weakened || user.stunned || user.paralysis || user.resting) //are you cuffed, dying, lying, stunned or other
+		return
+	if(get_dist(user, src) > 1 || get_dist(user, O) > 1 || user.contents.Find(src)) // is the mob anchored, too far away from you, or are you too far away from the source
+		return
+	if(!ismob(O)) //humans only
+		return
+	if(istype(O, /mob/living/simple_animal) || istype(O, /mob/living/silicon)) //animals and robutts dont fit
+		return
+	if(!ishuman(user) && !isrobot(user)) //No ghosts or mice putting people into the sleeper
+		return
+	if(user.loc==null) // just in case someone manages to get a closet into the blue light dimension, as unlikely as that seems
+		return
+	if(!istype(user.loc, /turf) || !istype(O.loc, /turf)) // are you in a container/closet/pod/etc?
+		return
+	if(occupant)
+		user << "\blue <B>The cryo cell is already occupied!</B>"
+		return
+/*	if(isrobot(user))
+		if(!istype(user:module, /obj/item/weapon/robot_module/medical))
+			user << "<span class='warning'>You do not have the means to do this!</span>"
+			return*/
+	var/mob/living/L = O
+	if(!istype(L) || L.buckled)
+		return
+	if(L.abiotic())
+		user << "\red <B>Subject cannot have abiotic items on.</B>"
+		return
+	for(var/mob/living/carbon/slime/M in range(1,L))
+		if(M.Victim == L)
+			usr << "[L.name] will not fit into the cryo cell because they have a slime latched onto their head."
+			return
+	if(put_mob(L))
+		if(L == user)
+			visible_message("[user] climbs into the cryo cell.", 3)
+		else
+			visible_message("[user] puts [L.name] into the cryo cell.", 3)
+			if(user.pulling == L)
+				user.pulling = null
 
 /obj/machinery/atmospherics/unary/cryo_cell/Process()
 	..()
@@ -191,27 +259,78 @@
 			qdel(G)
 	return
 
-/obj/machinery/atmospherics/unary/cryo_cell/update_icon()
-	overlays.Cut()
-	icon_state = "pod[on]"
-	var/image/I
+	if(istype(G, /obj/item/grab))
+		if(panel_open)
+			user << "\blue <b>Close the maintenance panel first.</b>"
+			return
+		if(!ismob(G:affecting))
+			return
+		for(var/mob/living/carbon/slime/M in range(1,G:affecting))
+			if(M.Victim == G:affecting)
+				usr << "[G:affecting:name] will not fit into the cryo because they have a slime latched onto their head."
+				return
+		var/mob/M = G:affecting
+		if(put_mob(M))
+			del(G)
+	return
 
-	I = image(icon, "pod[on]_top")
-	I.pixel_z = 32
-	overlays += I
+/obj/machinery/atmospherics/unary/cryo_cell/update_icon()
+	handle_update_icon()
+
+/obj/machinery/atmospherics/unary/cryo_cell/attackby(var/obj/item/O as obj, var/mob/user as mob)
+
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+	return ..()
+/obj/machinery/atmospherics/unary/cryo_cell/proc/handle_update_icon() //making another proc to avoid spam in update_icon
+	overlays.Cut() //empty the overlay proc, just in case
+	icon_state = "pod[on]" //set the icon properly every time
+
+	if(!src.occupant)
+		overlays += "lid[on]" //if no occupant, just put the lid overlay on, and ignore the rest
+		return
+
 
 	if(occupant)
 		var/image/pickle = image(occupant.icon, occupant.icon_state)
 		pickle.overlays = occupant.overlays
-		pickle.pixel_z = 18
+		pickle.pixel_y = 22
+
 		overlays += pickle
+		overlays += "lid[on]"
+		if(src.on) //no bobbing if off
+			var/up = 0 //used to see if we are going up or down, 1 is down, 2 is up
+			while(occupant)
+				overlays -= "lid[on]" //have to remove the overlays first, to force an update- remove cloning pod overlay
+				overlays -= pickle //remove mob overlay
 
-	I = image(icon, "lid[on]")
-	overlays += I
+				switch(pickle.pixel_y) //this looks messy as fuck but it works, switch won't call itself twice
 
-	I = image(icon, "lid[on]_top")
-	I.pixel_z = 32
-	overlays += I
+					if(23) //inbetween state, for smoothness
+						switch(up) //this is set later in the switch, to keep track of where the mob is supposed to go
+							if(2) //2 is up
+								pickle.pixel_y = 24 //set to highest
+
+							if(1) //1 is down
+								pickle.pixel_y = 22 //set to lowest
+
+					if(22) //mob is at it's lowest
+						pickle.pixel_y = 23 //set to inbetween
+						up = 2 //have to go up
+
+					if(24) //mob is at it's highest
+						pickle.pixel_y = 23 //set to inbetween
+						up = 1 //have to go down
+
+				overlays += pickle //re-add the mob to the icon
+				overlays += "lid[on]" //re-add the overlay of the pod, they are inside it, not floating
+
+				sleep(7) //don't want to jiggle violently, just slowly bob
 
 /obj/machinery/atmospherics/unary/cryo_cell/proc/process_occupant()
 	if(air_contents.total_moles < 10)

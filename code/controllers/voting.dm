@@ -50,9 +50,9 @@ datum/controller/vote
 
 				voting.Cut()
 
-	proc/autotransfer()
-		initiate_vote("crew_transfer","the server", 1)
-		log_debug("The server has called a crew transfer vote")
+	//proc/autotransfer()
+	//	initiate_vote("crew_transfer","the server", 1)
+	//	log_debug("The server has called a crew transfer vote")
 
 	proc/autogamemode()
 		initiate_vote("gamemode","the server", 1)
@@ -96,21 +96,6 @@ datum/controller/vote
 				else if(mode == "gamemode")
 					if(master_mode in choices)
 						choices[master_mode] += non_voters
-				else if(mode == "crew_transfer")
-					var/factor = 0.5
-					switch(world.time / (10 * 60)) // minutes
-						if(0 to 60)
-							factor = 0.5
-						if(61 to 120)
-							factor = 0.8
-						if(121 to 240)
-							factor = 1
-						if(241 to 300)
-							factor = 1.2
-						else
-							factor = 1.4
-					choices["Initiate Crew Transfer"] = round(choices["Initiate Crew Transfer"] * factor)
-					to_world("<font color='purple'>Crew Transfer Factor: [factor]</font>")
 
 
 		for(var/option in choices)
@@ -207,47 +192,7 @@ datum/controller/vote
 							master_mode = .[1]
 					secondary_mode = .[2]
 					tertiary_mode = .[3]
-				if("crew_transfer")
-					if(.[1] == "Initiate Crew Transfer")
-						init_autotransfer()
-					else if(.[1] == "Add Antagonist")
-						spawn(10)
-							autoaddantag()
-				if("add_antagonist")
-					if(isnull(.[1]) || .[1] == "None")
-						antag_add_finished = 1
-					else
-						choices -= "Random"
-						if(!auto_add_antag)
-							choices -= "None"
-						for(var/i = 1, i <= length(.), i++)
-							if(.[i] == "Random")
-								.[i] = pick(choices)
-								to_world("The random antag in [i]\th place is [.[i]].")
-
-						var/antag_type = antag_names_to_ids()[.[1]]
-						if(ticker.current_state < GAME_STATE_SETTING_UP)
-							additional_antag_types |= antag_type
-						else
-							spawn(0) // break off so we don't hang the vote process
-								var/list/antag_choices = list(all_antag_types()[antag_type], all_antag_types()[antag_names_to_ids()[.[2]]], all_antag_types()[antag_names_to_ids()[.[3]]])
-								if(ticker.attempt_late_antag_spawn(antag_choices))
-									antag_add_finished = 1
-									if(auto_add_antag)
-										auto_add_antag = 0
-										// the buffer will already have an hour added to it, so we'll give it one more
-										transfer_controller.timerbuffer = transfer_controller.timerbuffer + config.vote_autotransfer_interval
-								else
-									to_world("<b>No antags were added.</b>")
-
-									if(auto_add_antag)
-										auto_add_antag = 0
-										spawn(10)
-											autotransfer()
-				if("map")
-					var/datum/map/M = GLOB.all_maps[.[1]]
-					fdel("use_map")
-					text2file(M.path, "use_map")
+				
 
 		if(mode == "gamemode") //fire this even if the vote fails.
 			if(!round_progressing)

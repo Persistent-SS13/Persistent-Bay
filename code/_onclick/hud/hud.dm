@@ -162,6 +162,8 @@
 
 	FinalizeInstantiation(ui_style, ui_color, ui_alpha)
 
+	update_parallax_existence()
+
 /datum/hud/proc/FinalizeInstantiation(var/ui_style, var/ui_color, var/ui_alpha)
 	return
 

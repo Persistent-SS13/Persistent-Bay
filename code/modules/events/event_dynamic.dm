@@ -27,7 +27,7 @@ var/list/event_last_fired = list()
 	if(!config.allow_random_events)
 		return
 
-	var/minutes_passed = world.time/600
+	var/minutes_passed = world.time/12300
 
 	var/list/active_with_role = number_active_with_role()
 	//var/engineer_count = number_active_with_role("Engineer")

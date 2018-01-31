@@ -12,6 +12,7 @@
 	idle_power_usage = 5
 	active_power_usage = 100
 	flags = NOREACT
+	circuit = /obj/item/weapon/circuitboard/smartfridge/
 	var/global/max_n_of_items = 999 // Sorry but the BYOND infinite loop detector doesn't look things over 1000.
 	var/icon_on = "smartfridge"
 	var/icon_off = "smartfridge-off"
@@ -30,6 +31,10 @@
 
 /obj/machinery/smartfridge/New()
 	..()
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	RefreshParts()
 	if(is_secure)
 		wires = new/datum/wires/smartfridge/secure(src)
 	else
@@ -186,19 +191,21 @@
 	else
 		icon_state = icon_on
 
+
+
 /*******************
 *   Item Adding
 ********************/
 
 /obj/machinery/smartfridge/attackby(var/obj/item/O as obj, var/mob/user as mob)
-	if(isScrewdriver(O))
-		panel_open = !panel_open
-		user.visible_message("[user] [panel_open ? "opens" : "closes"] the maintenance panel of \the [src].", "You [panel_open ? "open" : "close"] the maintenance panel of \the [src].")
-		overlays.Cut()
-		if(panel_open)
-			overlays += image(icon, icon_panel)
-		GLOB.nanomanager.update_uis(src)
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
 		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+	return ..()
 
 	if(isMultitool(O) || isWirecutter(O))
 		if(panel_open)

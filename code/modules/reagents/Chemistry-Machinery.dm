@@ -19,6 +19,7 @@
 	idle_power_usage = 20
 	clicksound = "button"
 	clickvol = 20
+	circuit = /obj/item/weapon/circuitboard/chem_master
 	var/beaker = null
 	var/obj/item/weapon/storage/pill_bottle/loaded_pill_bottle = null
 	var/mode = 0
@@ -32,8 +33,13 @@
 	flags = OPENCONTAINER
 
 /obj/machinery/chem_master/New()
-	create_reagents(120)
 	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(null)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
+	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(null)
+	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(null)
+
 
 /obj/machinery/chem_master/ex_act(severity)
 	switch(severity)
@@ -45,29 +51,37 @@
 				qdel(src)
 				return
 
-/obj/machinery/chem_master/attackby(var/obj/item/weapon/B as obj, var/mob/user as mob)
+/obj/machinery/chem_master/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)
 
-	if(istype(B, /obj/item/weapon/reagent_containers/glass))
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+
+	if(istype(O, /obj/item/weapon/reagent_containers/glass))
 
 		if(src.beaker)
 			to_chat(user, "A beaker is already loaded into the machine.")
 			return
-		src.beaker = B
+		src.beaker = O
 		user.drop_item()
-		B.loc = src
+		O.loc = src
 		to_chat(user, "You add the beaker to the machine!")
 		src.updateUsrDialog()
 		icon_state = "mixer1"
 
-	else if(istype(B, /obj/item/weapon/storage/pill_bottle))
+	else if(istype(O, /obj/item/weapon/storage/pill_bottle))
 
 		if(src.loaded_pill_bottle)
 			to_chat(user, "A pill bottle is already loaded into the machine.")
 			return
 
-		src.loaded_pill_bottle = B
+		src.loaded_pill_bottle = O
 		user.drop_item()
-		B.loc = src
+		O.loc = src
 		to_chat(user, "You add the pill bottle into the dispenser slot!")
 		src.updateUsrDialog()
 	return
@@ -161,6 +175,7 @@
 
 			if (href_list["createpill_multiple"])
 				count = input("Select the number of pills to make.", "Max [max_pill_count]", pillamount) as num
+				count = round(count)
 				count = Clamp(count, 1, max_pill_count)
 
 			if(reagents.total_volume/count < 1) //Sanity checking.
@@ -290,6 +305,7 @@
 	name = "CondiMaster 3000"
 	condi = 1
 
+
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 /obj/machinery/reagentgrinder
@@ -303,6 +319,7 @@
 	use_power = 1
 	idle_power_usage = 5
 	active_power_usage = 100
+	circuit = /obj/item/weapon/circuitboard/reagentgrinder
 	var/inuse = 0
 	var/obj/item/weapon/reagent_containers/beaker = null
 	var/limit = 10
@@ -319,8 +336,24 @@
 
 /obj/machinery/reagentgrinder/New()
 	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
+	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
+
 	beaker = new /obj/item/weapon/reagent_containers/glass/beaker/large(src)
 	return
+
+/obj/machinery/reagentgrinder/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)
+
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
 
 /obj/machinery/reagentgrinder/update_icon()
 	icon_state = "juicer"+num2text(!isnull(beaker))

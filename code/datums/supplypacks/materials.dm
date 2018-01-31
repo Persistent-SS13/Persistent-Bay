@@ -1,6 +1,19 @@
 /decl/hierarchy/supply_pack/materials
 	name = "Materials"
 
+// Material Sheets - Bulk!
+/decl/hierarchy/supply_pack/materials/steel200
+	name = "Bulk Steel Order - 200"
+	contains = list(/obj/item/stack/material/steel/fifty = 4)
+	cost = 40
+	containername = "\improper Bulk Steel Shipment"
+
+/decl/hierarchy/supply_pack/materials/glass200
+	name = "Bulk Glass Order - 200"
+	contains = list(/obj/item/stack/material/glass/fifty = 4)
+	cost = 40
+	containername = "\improper Bulk Glass Shipment"
+
 // Material sheets (50 - full stack)
 /decl/hierarchy/supply_pack/materials/steel50
 	name = "50 steel sheets"

@@ -123,6 +123,13 @@
 			take_victim(G.affecting,usr)
 			qdel(W)
 			return
+	if(istype(W, /obj/item/weapon/wrench))
+		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
+		if(do_after(user, 20, target = src))
+			to_chat(user, "<span class='notice'>You deconstruct the [src].</span>")
+			new /obj/item/stack/material/plasteel(loc, 5)
+			qdel(src)
+
 
 /obj/machinery/optable/proc/check_table(mob/living/carbon/patient as mob)
 	check_victim()

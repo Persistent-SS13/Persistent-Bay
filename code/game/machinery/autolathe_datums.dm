@@ -216,12 +216,12 @@ var/const/EXTRA_COST_FACTOR = 1.25
 
 /datum/autolathe/recipe/airalarm
 	name = "air alarm electronics"
-	path = /obj/item/weapon/airalarm_electronics
+	path = /obj/item/weapon/circuitboard/airalarm
 	category = "Engineering"
 
 /datum/autolathe/recipe/firealarm
 	name = "fire alarm electronics"
-	path = /obj/item/weapon/firealarm_electronics
+	path = /obj/item/weapon/circuitboard/firealarm
 	category = "Engineering"
 
 /datum/autolathe/recipe/powermodule
@@ -577,3 +577,8 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	name = "ecigarette cartridge"
 	path = /obj/item/weapon/reagent_containers/ecig_cartridge/blank
 	category = "Devices and Components"
+
+/datum/autolathe/recipe/keypad
+	name = "Airlock Keypad Electronics"
+	path = /obj/item/weapon/airlock_electronics/keypad_electronics
+	category = "Engineering"

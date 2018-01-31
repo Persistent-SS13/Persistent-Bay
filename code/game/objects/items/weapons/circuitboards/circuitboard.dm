@@ -12,12 +12,13 @@
 	origin_tech = list(TECH_DATA = 2)
 	density = 0
 	anchored = 0
-	w_class = ITEM_SIZE_SMALL
+	w_class = 2.0
 	flags = CONDUCT
 	force = 5.0
 	throwforce = 5.0
 	throw_speed = 3
 	throw_range = 15
+	var/frame_desc = null
 	var/build_path = null
 	var/board_type = "computer"
 	var/list/req_components = null

@@ -2,6 +2,18 @@
 	name = "Medical"
 	containertype = /obj/structure/closet/crate/medical
 
+/decl/hierarchy/supply_pack/medical/bulkfirstaid
+	name = "Bulk Medkit Crate"
+	contains = list(/obj/item/weapon/storage/firstaid/regular = 10,
+					/obj/item/weapon/storage/firstaid/fire = 10,
+					/obj/item/weapon/storage/firstaid/toxin = 10,
+					/obj/item/weapon/storage/firstaid/adv = 10,
+					/obj/item/weapon/storage/firstaid/o2 = 10)
+	cost = 50
+	containertype = /obj/structure/closet/crate/secure/large
+	containername = "Bulk Medkit Crate (x10)"
+	access = access_medical
+
 /decl/hierarchy/supply_pack/medical/medical
 	name = "Medical crate"
 	contains = list(/obj/item/weapon/storage/firstaid/regular,
@@ -28,6 +40,36 @@
 	contains = list(/obj/item/weapon/reagent_containers/blood/OMinus = 4)
 	cost = 15
 	containername = "\improper O- blood crate"
+
+/decl/hierarchy/supply_pack/medical/firstaid
+	name = "Regular first-aid kits"
+	contains = list(/obj/item/weapon/storage/firstaid/regular = 4)
+	cost = 15
+	containername = "\improper First-aid crate"
+
+/decl/hierarchy/supply_pack/medical/firstaidfire
+	name = "Fire first-aid kits"
+	contains = list(/obj/item/weapon/storage/firstaid/fire = 3)
+	cost = 20
+	containername = "\improper Fire first-aid crate"
+
+/decl/hierarchy/supply_pack/medical/firstaidtoxin
+	name = "Toxin first-aid kits"
+	contains = list(/obj/item/weapon/storage/firstaid/toxin = 3)
+	cost = 20
+	containername = "\improper Toxin first-aid crate"
+
+/decl/hierarchy/supply_pack/medical/firstaido2
+	name = "O2 first-aid kits"
+	contains = list(/obj/item/weapon/storage/firstaid/o2 = 3)
+	cost = 20
+	containername = "\improper O2 first-aid crate"
+
+/decl/hierarchy/supply_pack/medical/firstaidadv
+	name = "Advanced first-aid kits"
+	contains = list(/obj/item/weapon/storage/firstaid/adv = 3)
+	cost = 25
+	containername = "\improper Advanced first-aid crate"
 
 /decl/hierarchy/supply_pack/medical/bodybag
 	name = "Body bag crate"

@@ -14,6 +14,7 @@
 			if(!istype(screenobj) || !screenobj.globalscreen)
 				qdel(screenobj)
 		client.screen = list()
+		client.cleanup_parallax_references()
 	if(mind && mind.current == src)
 		spellremove(src)
 	ghostize()
@@ -630,7 +631,7 @@
 		if(ticker && ticker.current_state != GAME_STATE_PREGAME)
 			stat("Local Time", stationtime2text())
 			stat("Local Date", stationdate2text())
-			stat("Round Duration", roundduration2text())
+			stat("Server Uptime", roundduration2text())
 		if(client.holder || isghost(client.mob))
 			stat("Location:", "([x], [y], [z]) [loc]")
 
@@ -725,7 +726,7 @@
 		regenerate_icons()
 	else if( lying != lying_prev )
 		update_icons()
-
+		update_vision_cone()
 	return canmove
 
 /mob/proc/reset_layer()
@@ -964,21 +965,13 @@ mob/proc/yank_out_object()
 
 	return 0
 
-/mob/update_icon()
+/mob/proc/updateicon()
 	return
 
-/mob/verb/face_direction()
-
-	set name = "Face Direction"
-	set category = "IC"
-	set src = usr
-
+/mob/proc/face_direction()
 	set_face_dir()
 
-	if(!facing_dir)
-		to_chat(usr, "You are now not facing anything.")
-	else
-		to_chat(usr, "You are now facing [dir2text(facing_dir)].")
+
 /mob/proc/set_face_dir(var/newdir)
 	if(!isnull(facing_dir) && newdir == facing_dir)
 		facing_dir = null
@@ -999,6 +992,7 @@ mob/proc/yank_out_object()
 			return ..(facing_dir)
 	else
 		return ..()
+
 
 /mob/proc/set_stat(var/new_stat)
 	. = stat != new_stat

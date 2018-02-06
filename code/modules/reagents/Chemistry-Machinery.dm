@@ -19,6 +19,7 @@
 	idle_power_usage = 20
 	clicksound = "button"
 	clickvol = 20
+	circuit = /obj/item/weapon/circuitboard/chem_master
 	var/beaker = null
 	var/obj/item/weapon/storage/pill_bottle/loaded_pill_bottle = null
 	var/mode = 0
@@ -34,7 +35,6 @@
 /obj/machinery/chem_master/New()
 	..()
 	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/chem_master(null)
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(null)
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
 	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(null)
@@ -175,6 +175,7 @@
 
 			if (href_list["createpill_multiple"])
 				count = input("Select the number of pills to make.", "Max [max_pill_count]", pillamount) as num
+				count = round(count)
 				count = Clamp(count, 1, max_pill_count)
 
 			if(reagents.total_volume/count < 1) //Sanity checking.
@@ -318,6 +319,7 @@
 	use_power = 1
 	idle_power_usage = 5
 	active_power_usage = 100
+	circuit = /obj/item/weapon/circuitboard/reagentgrinder
 	var/inuse = 0
 	var/obj/item/weapon/reagent_containers/beaker = null
 	var/limit = 10
@@ -335,7 +337,6 @@
 /obj/machinery/reagentgrinder/New()
 	..()
 	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/reagentgrinder(src)
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
 	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)

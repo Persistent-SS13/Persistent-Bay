@@ -13,7 +13,8 @@
 	flags = OBJ_ANCHORABLE
 	clicksound = "button"
 	clickvol = 40
-
+	circuit = /obj/item/weapon/circuitboard/vendor
+	frame_type = "vending"
 	var/icon_vend //Icon_state when vending
 	var/icon_deny //Icon_state when denying access
 	var/diona_spawn_chance = 0.1
@@ -93,6 +94,12 @@
 
 	return
 
+/obj/machinery/vending/dismantle()
+	var/obj/structure/frame/A = ..()
+	A.frame_type = "vending"
+	A.state = 3
+	A.icon_state = "[A.frame_type]_3"
+	qdel(src)
 /**
  *  Build src.produdct_records from the products lists
  *
@@ -679,9 +686,6 @@
 /obj/machinery/vending/boozeomat/New()
 	..()
 	component_parts = list()
-	var/obj/item/weapon/circuitboard/vendor/V = new(null)
-	V.set_type(type)
-	component_parts += V
 	component_parts += new /obj/item/weapon/vending_refill/boozeomat(0)
 	component_parts += new /obj/item/weapon/vending_refill/boozeomat(0)
 	component_parts += new /obj/item/weapon/vending_refill/boozeomat(0)
@@ -691,6 +695,7 @@
 						/obj/item/weapon/wirecutters = 1, /obj/item/weapon/cartridge/signal = 4)
 	contraband = list(/obj/item/device/flashlight = 5,/obj/item/device/assembly/timer = 2)
 	product_ads = "Only the finest!;Have some tools.;The most robust equipment.;The finest gear in space!"
+	circuit = /obj/item/weapon/circuitboard/
 
 /obj/machinery/vending/coffee
 	name = "Hot Drinks machine"
@@ -699,6 +704,7 @@
 	icon_state = "coffee"
 	icon_vend = "coffee-vend"
 	vend_delay = 34
+	circuit = /obj/item/weapon/circuitboard/
 	idle_power_usage = 211 //refrigerator - believe it or not, this is actually the average power consumption of a refrigerated vending machine according to NRCan.
 	vend_power_usage = 85000 //85 kJ to heat a 250 mL cup of coffee
 	products = list(/obj/item/weapon/reagent_containers/food/drinks/coffee = 25,/obj/item/weapon/reagent_containers/food/drinks/tea = 25,/obj/item/weapon/reagent_containers/food/drinks/h_chocolate = 25)
@@ -709,9 +715,6 @@
 /obj/machinery/vending/coffee/New()
 	..()
 	component_parts = list()
-	var/obj/item/weapon/circuitboard/vendor/V = new(null)
-	V.set_type(type)
-	component_parts += V
 	component_parts += new /obj/item/weapon/vending_refill/coffee(0)
 	component_parts += new /obj/item/weapon/vending_refill/coffee(0)
 	component_parts += new /obj/item/weapon/vending_refill/coffee(0)
@@ -723,6 +726,7 @@
 	product_ads = "The healthiest!;Award-winning chocolate bars!;Mmm! So good!;Oh my god it's so juicy!;Have a snack.;Snacks are good for you!;Have some more Getmore!;Best quality snacks straight from mars.;We love chocolate!;Try our new jerky!"
 	icon_state = "snack"
 	icon_vend = "snack-vend"
+	circuit = /obj/item/weapon/circuitboard/
 	vend_delay = 25
 	products = list(/obj/item/weapon/reagent_containers/food/snacks/candy = 6,/obj/item/weapon/reagent_containers/food/drinks/dry_ramen = 6,/obj/item/weapon/reagent_containers/food/snacks/chips =6,
 					/obj/item/weapon/reagent_containers/food/snacks/sosjerky = 6,/obj/item/weapon/reagent_containers/food/snacks/no_raisin = 6,/obj/item/weapon/reagent_containers/food/snacks/spacetwinkie = 6,
@@ -735,9 +739,6 @@
 /obj/machinery/vending/snack/New()
 	..()
 	component_parts = list()
-	var/obj/item/weapon/circuitboard/vendor/V = new(null)
-	V.set_type(type)
-	component_parts += V
 	component_parts += new /obj/item/weapon/vending_refill/snack(0)
 	component_parts += new /obj/item/weapon/vending_refill/snack(0)
 	component_parts += new /obj/item/weapon/vending_refill/snack(0)
@@ -748,6 +749,7 @@
 	icon_state = "Cola_Machine"
 	icon_vend = "Cola_Machine-vend"
 	vend_delay = 11
+	circuit = /obj/item/weapon/circuitboard/
 	product_slogans = "Robust Softdrinks: More robust than a toolbox to the head!"
 	product_ads = "Refreshing!;Hope you're thirsty!;Over 1 million drinks sold!;Thirsty? Why not cola?;Please, have a drink!;Drink up!;The best drinks in space."
 	products = list(/obj/item/weapon/reagent_containers/food/drinks/cans/cola = 10,/obj/item/weapon/reagent_containers/food/drinks/cans/space_mountain_wind = 10,
@@ -765,9 +767,6 @@
 /obj/machinery/vending/cola/New()
 	..()
 	component_parts = list()
-	var/obj/item/weapon/circuitboard/vendor/V = new(null)
-	V.set_type(type)
-	component_parts += V
 	component_parts += new /obj/item/weapon/vending_refill/cola(0)
 	component_parts += new /obj/item/weapon/vending_refill/cola(0)
 	component_parts += new /obj/item/weapon/vending_refill/cola(0)
@@ -779,6 +778,7 @@
 	product_ads = "Pain is just weakness leaving the body!;Run! Your fat is catching up to you;Never forget leg day!;Push out!;This is the only break you get today.;Don't cry, sweat!;Healthy is an outfit that looks good on everybody."
 	icon_state = "fitness"
 	icon_vend = "fitness-vend"
+	circuit = /obj/item/weapon/circuitboard/
 	vend_delay = 6
 	products = list(/obj/item/weapon/reagent_containers/food/drinks/milk/smallcarton = 8,
 					/obj/item/weapon/reagent_containers/food/drinks/milk/smallcarton/chocolate = 8,
@@ -808,6 +808,7 @@
 	icon_state = "cart"
 	icon_deny = "cart-deny"
 	icon_vend = "cart-vend"
+	circuit = /obj/item/weapon/circuitboard/
 	vend_delay = 23
 	products = list(/obj/item/weapon/cartridge/medical = 10,/obj/item/weapon/cartridge/engineering = 10,/obj/item/weapon/cartridge/security = 10,
 					/obj/item/weapon/cartridge/janitor = 10,/obj/item/weapon/cartridge/signal/science = 10,/obj/item/device/pda/heads = 10,
@@ -884,9 +885,6 @@
 /obj/machinery/vending/cigarette/New()
 	..()
 	component_parts = list()
-	var/obj/item/weapon/circuitboard/vendor/V = new(null)
-	V.set_type(type)
-	component_parts += V
 	component_parts += new /obj/item/weapon/vending_refill/cigarette(0)
 	component_parts += new /obj/item/weapon/vending_refill/cigarette(0)
 	component_parts += new /obj/item/weapon/vending_refill/cigarette(0)
@@ -897,6 +895,7 @@
 	icon_state = "med"
 	icon_deny = "med-deny"
 	icon_vend = "med-vend"
+	circuit = /obj/item/weapon/circuitboard/
 	vend_delay = 18
 	product_ads = "Go save some lives!;The best stuff for your medbay.;Only the finest tools.;Natural chemicals!;This stuff saves lives.;Don't you want some?;Ping!"
 	req_access = list(access_medical_equip)
@@ -915,6 +914,7 @@
 /obj/machinery/vending/phoronresearch
 	name = "Toximate 3000"
 	desc = "All the fine parts you need in one vending machine!"
+	circuit = /obj/item/weapon/circuitboard/
 	products = list(/obj/item/clothing/under/rank/scientist = 6,/obj/item/clothing/suit/bio_suit = 6,/obj/item/clothing/head/bio_hood = 6,
 					/obj/item/device/transfer_valve = 6,/obj/item/device/assembly/timer = 6,/obj/item/device/assembly/signaler = 6,
 					/obj/item/device/assembly/prox_sensor = 6,/obj/item/device/assembly/igniter = 6)
@@ -925,6 +925,7 @@
 	product_ads = "Go save some lives!;The best stuff for your medbay.;Only the finest tools.;Natural chemicals!;This stuff saves lives.;Don't you want some?"
 	icon_state = "wallmed"
 	icon_deny = "wallmed-deny"
+	circuit = /obj/item/weapon/circuitboard/
 	density = 0 //It is wall-mounted, and thus, not dense. --Superxpdude
 	products = list(/obj/item/stack/medical/bruise_pack = 2,/obj/item/stack/medical/ointment = 2,/obj/item/weapon/reagent_containers/hypospray/autoinjector = 4)
 	contraband = list(/obj/item/weapon/reagent_containers/syringe/antitoxin = 4,/obj/item/weapon/reagent_containers/syringe/antiviral = 4,/obj/item/weapon/reagent_containers/pill/tox = 1)
@@ -935,6 +936,7 @@
 	product_ads = "Go save some lives!;The best stuff for your medbay.;Only the finest tools.;Natural chemicals!;This stuff saves lives.;Don't you want some?"
 	icon_state = "wallmed"
 	icon_deny = "wallmed-deny"
+	circuit = /obj/item/weapon/circuitboard/
 	density = 0 //It is wall-mounted, and thus, not dense. --Superxpdude
 	products = list(/obj/item/weapon/reagent_containers/hypospray/autoinjector = 5,/obj/item/weapon/reagent_containers/syringe/antitoxin = 1,/obj/item/stack/medical/bruise_pack = 3,
 					/obj/item/stack/medical/ointment =3)
@@ -947,6 +949,7 @@
 	icon_state = "sec"
 	icon_deny = "sec-deny"
 	icon_vend = "sec-vend"
+	circuit = /obj/item/weapon/circuitboard/
 	vend_delay = 14
 	req_access = list(access_security)
 	products = list(/obj/item/weapon/handcuffs = 8,/obj/item/weapon/grenade/flashbang = 4,/obj/item/weapon/grenade/chem_grenade/teargas = 4,/obj/item/device/flash = 5,
@@ -956,9 +959,6 @@
 /obj/machinery/vending/security/New()
 	..()
 	component_parts = list()
-	var/obj/item/weapon/circuitboard/vendor/V = new(null)
-	V.set_type(type)
-	component_parts += V
 	component_parts += new /obj/item/weapon/vending_refill/security(0)
 	component_parts += new /obj/item/weapon/vending_refill/security(0)
 	component_parts += new /obj/item/weapon/vending_refill/security(0)
@@ -972,6 +972,7 @@
 	icon_state = "nutri"
 	icon_deny = "nutri-deny"
 	icon_vend = "nutri-vend"
+	circuit = /obj/item/weapon/circuitboard/
 	vend_delay = 26
 	products = list(/obj/item/weapon/reagent_containers/glass/bottle/eznutrient = 6,/obj/item/weapon/reagent_containers/glass/bottle/left4zed = 4,/obj/item/weapon/reagent_containers/glass/bottle/robustharvest = 3,/obj/item/weapon/plantspray/pests = 20,
 					/obj/item/weapon/reagent_containers/syringe = 5,/obj/item/weapon/storage/plants = 5)
@@ -985,6 +986,7 @@
 	product_ads = "We like plants!;Grow some crops!;Grow, baby, growww!;Aw h'yeah son!"
 	icon_state = "seeds"
 	icon_vend = "seeds-vend"
+	circuit = /obj/item/weapon/circuitboard/
 	vend_delay = 13
 	products = list(/obj/item/seeds/bananaseed = 3,/obj/item/seeds/berryseed = 3,/obj/item/seeds/carrotseed = 3,/obj/item/seeds/chantermycelium = 3,/obj/item/seeds/chiliseed = 3,
 					/obj/item/seeds/cornseed = 3, /obj/item/seeds/eggplantseed = 3, /obj/item/seeds/potatoseed = 3, /obj/item/seeds/replicapod = 3,/obj/item/seeds/soyaseed = 3,
@@ -1028,6 +1030,7 @@
 	icon_state = "MagiVend"
 	product_slogans = "Sling spells the proper way with MagiVend!;Be your own Houdini! Use MagiVend!"
 	vend_delay = 15
+	circuit = /obj/item/weapon/circuitboard/
 	vend_reply = "Have an enchanted evening!"
 	product_ads = "FJKLFJSD;AJKFLBJAKL;1234 LOONIES LOL!;>MFW;Kill them fuckers!;GET DAT FUKKEN DISK;HONK!;EI NATH;Down with Central!;Admin conspiracies since forever!;Space-time bending hardware!"
 	products = list(/obj/item/clothing/head/wizard = 1,/obj/item/clothing/suit/wizrobe = 1,/obj/item/clothing/head/wizard/red = 1,/obj/item/clothing/suit/wizrobe/red = 1,/obj/item/clothing/shoes/sandal = 1,/obj/item/weapon/staff = 2)
@@ -1039,6 +1042,7 @@
 	icon_deny = "theater-deny"
 	product_slogans = "Dress for success!;Suited and booted!;It's show time!;Why leave style up to fate? Use AutoDrobe!"
 	vend_delay = 15
+	circuit = /obj/item/weapon/circuitboard/
 	vend_reply = "Thank you for using AutoDrobe!"
 	products = list(/obj/item/clothing/suit/chickensuit = 1,/obj/item/clothing/head/chicken = 1,/obj/item/clothing/under/gladiator = 1,
 					/obj/item/clothing/head/helmet/gladiator = 1,/obj/item/clothing/under/gimmick/rank/captain/suit = 1,/obj/item/clothing/head/flatcap = 1,/obj/item/clothing/glasses/gglasses = 1,/obj/item/clothing/shoes/jackboots = 1,
@@ -1055,9 +1059,6 @@
 /obj/machinery/vending/autodrobe/New()
 	..()
 	component_parts = list()
-	var/obj/item/weapon/circuitboard/vendor/V = new(null)
-	V.set_type(type)
-	component_parts += V
 	component_parts += new /obj/item/weapon/vending_refill/autodrobe(0)
 	component_parts += new /obj/item/weapon/vending_refill/autodrobe(0)
 	component_parts += new /obj/item/weapon/vending_refill/autodrobe(0)
@@ -1068,6 +1069,7 @@
 	product_ads = "Mm, food stuffs!;Food and food accessories.;Get your plates!;You like forks?;I like forks.;Woo, utensils.;You don't really need these..."
 	icon_state = "dinnerware"
 	icon_vend = "dinnerware-vend"
+	circuit = /obj/item/weapon/circuitboard/
 	products = list(
 	/obj/item/weapon/tray = 8,
 	/obj/item/weapon/material/kitchen/utensil/fork = 6,
@@ -1097,6 +1099,7 @@
 	desc = "An old soda vending machine. How could this have got here?"
 	icon_state = "sovietsoda"
 	icon_vend = "sovietsoda-vend"
+	circuit = /obj/item/weapon/circuitboard/
 	product_ads = "For Tsar and Country.;Have you fulfilled your nutrition quota today?;Very nice!;We are simple people, for this is all we eat.;If there is a person, there is a problem. If there is no person, then there is no problem."
 	products = list(/obj/item/weapon/reagent_containers/food/drinks/bottle/space_up = 30) // TODO Russian soda can
 	contraband = list(/obj/item/weapon/reagent_containers/food/drinks/bottle/cola = 20) // TODO Russian cola can
@@ -1108,6 +1111,7 @@
 	icon_state = "tool"
 	icon_deny = "tool-deny"
 	icon_vend = "tool-vend"
+	circuit = /obj/item/weapon/circuitboard/
 	vend_delay = 11
 	//req_access = list(access_maint_tunnels) //Maintenance access
 	products = list(/obj/item/stack/cable_coil/random = 10,/obj/item/weapon/crowbar = 5,/obj/item/weapon/weldingtool = 3,/obj/item/weapon/wirecutters = 5,
@@ -1123,8 +1127,9 @@
 	icon_deny = "engivend-deny"
 	icon_vend = "engivend-vend"
 	vend_delay = 21
+	circuit = /obj/item/weapon/circuitboard/
 	req_one_access = list(access_atmospherics,access_engine_equip)
-	products = list(/obj/item/clothing/glasses/meson = 2,/obj/item/device/multitool = 4,/obj/item/device/geiger = 4,/obj/item/weapon/airlock_electronics = 10,/obj/item/weapon/module/power_control = 10,/obj/item/weapon/airalarm_electronics = 10,/obj/item/weapon/cell = 10,/obj/item/clamp = 10)
+	products = list(/obj/item/clothing/glasses/meson = 2,/obj/item/device/multitool = 4,/obj/item/device/geiger = 4,/obj/item/weapon/circuitboard/airalarm = 10,/obj/item/weapon/module/power_control = 10,/obj/item/weapon/circuitboard/firealarm = 10,/obj/item/weapon/cell = 10,/obj/item/clamp = 10)
 	contraband = list(/obj/item/weapon/cell/high = 3)
 	premium = list(/obj/item/weapon/storage/belt/utility = 3)
 
@@ -1134,6 +1139,7 @@
 	desc = "Everything you need for do-it-yourself repair."
 	icon_state = "engi"
 	icon_deny = "engi-deny"
+	circuit = /obj/item/weapon/circuitboard/
 	req_one_access = list(access_atmospherics,access_engine_equip)
 	products = list(/obj/item/weapon/storage/belt/utility = 4,/obj/item/clothing/glasses/meson = 4,/obj/item/clothing/gloves/insulated = 4, /obj/item/weapon/screwdriver = 12,
 					/obj/item/weapon/crowbar = 12,/obj/item/weapon/wirecutters = 12,/obj/item/device/multitool = 12,/obj/item/weapon/wrench = 12,/obj/item/device/t_scanner = 12,
@@ -1152,6 +1158,7 @@
 	desc = "All the tools you need to create your own robot army."
 	icon_state = "robotics"
 	icon_deny = "robotics-deny"
+	circuit = /obj/item/weapon/circuitboard/
 	req_access = list(access_robotics)
 	products = list(/obj/item/stack/cable_coil = 4,/obj/item/device/flash/synthetic = 4,/obj/item/weapon/cell = 4,/obj/item/device/healthanalyzer = 2,
 					/obj/item/weapon/scalpel = 1,/obj/item/weapon/circular_saw = 1,/obj/item/weapon/tank/anesthetic = 2,/obj/item/clothing/mask/breath/medical = 5,
@@ -1164,6 +1171,7 @@
 	product_slogans = "Enjoy your meal.;Enough calories to support strenuous labor."
 	product_ads = "The healthiest!;Award-winning chocolate bars!;Mmm! So good!;Oh my god it's so juicy!;Have a snack.;Snacks are good for you!;Have some more Getmore!;Best quality snacks straight from mars.;We love chocolate!;Try our new jerky!"
 	icon_state = "sustenance"
+	circuit = /obj/item/weapon/circuitboard/
 	products = list(/obj/item/weapon/reagent_containers/food/snacks/tofu = 24,
 					/obj/item/weapon/reagent_containers/food/drinks/ice = 12,
 					/obj/item/weapon/reagent_containers/food/snacks/candy_corn = 6)
@@ -1173,6 +1181,7 @@
 	name = "prop dispenser"
 	desc = "All the props an actor could need. Probably."
 	icon_state = "Theater"
+	circuit = /obj/item/weapon/circuitboard/
 	products = list(/obj/structure/flora/pottedplant = 2, /obj/item/device/flashlight/lamp = 2, /obj/item/device/flashlight/lamp/green = 2, /obj/item/weapon/reagent_containers/food/drinks/jar = 1,
 					/obj/item/weapon/nullrod = 1, /obj/item/toy/cultsword = 4, /obj/item/toy/katana = 2)
 
@@ -1181,6 +1190,7 @@
 	name = "container dispenser"
 	desc = "A container that dispenses containers."
 	icon_state = "robotics"
+	circuit = /obj/item/weapon/circuitboard/
 	products = list(/obj/structure/closet/crate/freezer = 2, /obj/structure/closet = 3, /obj/structure/closet/crate = 3)
 
 /obj/machinery/vending/fashionvend
@@ -1190,6 +1200,7 @@
 	icon_state = "Theater"
 	vend_delay = 15
 	vend_reply = "Absolutely smashing!"
+	circuit = /obj/item/weapon/circuitboard/
 	product_ads = "Impress the love of your life!;Don't look poor, look rich!;100% authentic designers!;All sales are final!;Lowest prices guaranteed!"
 	products = list(/obj/item/weapon/mirror = 8,
 					/obj/item/weapon/haircomb = 8,
@@ -1220,6 +1231,7 @@
 	product_slogans = "Escape to a fantasy world!;Fuel your gambling addiction!;Ruin your friendships!"
 	product_ads = "Elves and dwarves!;Totally not satanic!;Fun times forever!"
 	icon_state = "games"
+	circuit = /obj/item/weapon/circuitboard/
 	products = list(/obj/item/toy/blink = 5, /obj/item/toy/spinningtoy = 2, /obj/item/weapon/deck/cards = 5, /obj/item/weapon/deck/tarot = 5, /obj/item/weapon/pack/cardemon = 6, /obj/item/weapon/pack/spaceball = 6, /obj/item/weapon/storage/pill_bottle/dice_nerd = 5, /obj/item/weapon/storage/pill_bottle/dice = 5, /obj/item/weapon/storage/box/checkers = 2, /obj/item/weapon/storage/box/checkers/chess/red = 2, /obj/item/weapon/storage/box/checkers/chess = 2)
 	prices = list(/obj/item/toy/blink = 3, /obj/item/toy/spinningtoy = 10, /obj/item/weapon/deck/tarot = 3, /obj/item/weapon/deck/cards = 3, /obj/item/weapon/pack/cardemon = 5, /obj/item/weapon/pack/spaceball = 5, /obj/item/weapon/storage/pill_bottle/dice_nerd = 6, /obj/item/weapon/storage/pill_bottle/dice = 6, /obj/item/weapon/storage/box/checkers = 10, /obj/item/weapon/storage/box/checkers/chess/red = 10, /obj/item/weapon/storage/box/checkers/chess = 10)
 	premium = list(/obj/item/weapon/gun/projectile/revolver/capgun = 1, /obj/item/ammo_magazine/caps = 4)
@@ -1231,6 +1243,7 @@
 	product_slogans = "Dress for success!;Prepare to look swagalicious!;Look at all this free swag!;Why leave style up to fate? Use the ClothesMate!"
 	vend_delay = 15
 	vend_reply = "Thank you for using the ClothesMate!"
+	circuit = /obj/item/weapon/circuitboard/
 	products = list(/obj/item/clothing/head/that=2,/obj/item/clothing/head/fedora=1,/obj/item/clothing/glasses/monocle=1,
 	/obj/item/clothing/under/sundress=2,/obj/item/clothing/glasses/regular=2,/obj/item/clothing/suit/poncho=1,
 	/obj/item/clothing/suit/ianshirt=1,/obj/item/clothing/shoes/laceup=2,/obj/item/clothing/shoes/black=4,/obj/item/clothing/shoes/sandal=1)
@@ -1241,9 +1254,6 @@
 /obj/machinery/vending/clothing/New()
 	..()
 	component_parts = list()
-	var/obj/item/weapon/circuitboard/vendor/V = new(null)
-	V.set_type(type)
-	component_parts += V
 	component_parts += new /obj/item/weapon/vending_refill/clothing(0)
 	component_parts += new /obj/item/weapon/vending_refill/clothing(0)
 	component_parts += new /obj/item/weapon/vending_refill/clothing(0)
@@ -1255,6 +1265,7 @@
 	product_ads = "Just like Kindergarten!;Now with 1000% more vibrant colors!;Screwing with the janitor was never so easy!;Creativity is at the heart of every spessman."
 	vend_delay = 34
 	icon_state = "artvend"
+	circuit = /obj/item/weapon/circuitboard/
 	products = list(/obj/item/stack/cable_coil/random = 10,/obj/item/device/camera = 4,/obj/item/device/camera_film = 6,
 	/obj/item/weapon/storage/photo_album = 2,/obj/item/weapon/wrapping_paper = 4,/obj/item/weapon/packageWrap = 4,
 	/obj/item/weapon/storage/fancy/crayons = 4,/obj/item/weapon/hand_labeler = 4,/obj/item/weapon/paper = 10,

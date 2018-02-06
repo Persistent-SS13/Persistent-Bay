@@ -53,6 +53,13 @@
 	var/obj/item/weapon/airlock_brace/brace = null
 	var/haskeypad = 0
 
+	var/image/panel_image = null
+	var/panel_icon_state = "panel_open"
+
+	var/image/welded_image = null
+	var/welded_icon_state = "welded"
+
+
 /obj/machinery/door/airlock/keypad // HERE
 	name = "Keypad Entry Airlock"
 	icon = 'icons/obj/doors/Doorkeypad.dmi'
@@ -205,14 +212,15 @@
 /obj/machinery/door/airlock/glass
 	name = "Glass Airlock"
 	icon = 'icons/obj/doors/Doorglass.dmi'
-	hitsound = 'sound/effects/Glasshit.ogg'
 
-	open_sound_powered = 'sound/machines/windowdoor.ogg'
-	close_sound_powered = 'sound/machines/windowdoor.ogg'
 
 	door_crush_damage = DOOR_CRUSH_DAMAGE*0.75
 	maxhealth = 300
 	explosion_resistance = 5
+	hitsound = 'sound/effects/Glasshit.ogg'
+
+	open_sound_powered = 'sound/machines/windowdoor.ogg'
+	close_sound_powered = 'sound/machines/windowdoor.ogg'
 	opacity = 0
 	glass = 1
 

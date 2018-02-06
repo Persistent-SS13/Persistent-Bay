@@ -53,3 +53,4 @@
 	var/obj/item/weapon/computer_hardware/ai_slot/ai_slot							// AI slot, an intellicard housing that allows modifications of AIs.
 	var/obj/item/weapon/computer_hardware/tesla_link/tesla_link						// Tesla Link, Allows remote charging from nearest APC.
 	var/obj/item/weapon/computer_hardware/dna_scanner/dna_scanner					// DNA scanner, for Cloning Control
+	var/obj/item/weapon/computer_hardware/logistic_processor/logistic_processor				// DNA scanner, for Cloning Control

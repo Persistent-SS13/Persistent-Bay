@@ -13,6 +13,7 @@
 	anchored = 1
 	use_power = 1
 	idle_power_usage = 10
+	circuit =  /obj/item/weapon/circuitboard/atm
 	var/datum/money_account/authenticated_account
 	var/number_incorrect_tries = 0
 	var/previous_account_number = 0
@@ -54,7 +55,7 @@
 
 
 /obj/machinery/atm/Process()
-	if(stat & NOPOWER)
+	if(stat & NOPOWER || buildstage != 2)
 		return
 
 	if(ticks_left_timeout > 0)
@@ -87,12 +88,26 @@
 		var/response = pick("Initiating withdraw. Have a nice day!", "CRITICAL ERROR: Activating cash chamber panic siphon.","PIN Code accepted! Emptying account balance.", "Jackpot!")
 		to_chat(user, "\icon[src] <span class='warning'>The [src] beeps: \"[response]\"</span>")
 		return 1
-
+/obj/machinery/atm/dismantle()
+	var/obj/structure/frame/A = ..()
+	A.frame_type = "atm"
+	A.state = 4
+	A.icon_state = "[A.frame_type]_4"
+	qdel(src)
 /obj/machinery/atm/attackby(obj/item/I as obj, mob/user as mob)
+	if(istype(I, /obj/item/weapon/screwdriver) && circuit)
+		user << "<span class='notice'>You start disconnecting the monitor.</span>"
+		playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
+		if(do_after(user, 20))
+			dismantle()
+		return
 	if(istype(I, /obj/item/weapon/card))
 		if(emagged > 0)
 			//prevent inserting id into an emagged ATM
-			to_chat(user, "\icon[src] <span class='warning'>CARD READER ERROR. This system has been compromised!</span>")
+			user << "\red \icon[src] CARD READER ERROR. This system has been compromised!"
+			return
+		else if(istype(I,/obj/item/weapon/card/emag))
+			I.resolve_attackby(src, user)
 			return
 
 		var/obj/item/weapon/card/id/idcard = I
@@ -102,8 +117,6 @@
 			held_card = idcard
 			if(authenticated_account && held_card.associated_account_number != authenticated_account.account_number)
 				authenticated_account = null
-			attack_hand(user)
-
 	else if(authenticated_account)
 		if(istype(I,/obj/item/weapon/spacecash))
 			var/obj/item/weapon/spacecash/dolla = I
@@ -121,65 +134,6 @@
 			qdel(I)
 	else
 		..()
-
-/obj/machinery/atm/attackby(obj/item/W as obj, mob/user as mob)
-	src.add_fingerprint(user)
-	switch(buildstage)
-		if(2)
-			if(isScrewdriver(W))
-				to_chat(user, "You pop the Air Alarm's maintence panel open.")
-				wiresexposed = !wiresexposed
-				to_chat(user, "The wires have been [wiresexposed ? "exposed" : "unexposed"]")
-				update_icon()
-				return
-
-			if (wiresexposed && isWirecutter(W))
-				user.visible_message("<span class='warning'>[user] has cut the wires inside \the [src]!</span>", "You have cut the wires inside \the [src].")
-				playsound(src.loc, 'sound/items/Wirecutter.ogg', 50, 1)
-				new/obj/item/stack/cable_coil(get_turf(src), 5)
-				buildstage = 1
-				update_icon()
-				return
-
-			return
-
-		if(1)
-			if(isCoil(W))
-				var/obj/item/stack/cable_coil/C = W
-				if (C.use(5))
-					to_chat(user, "<span class='notice'>You wire \the [src].</span>")
-					buildstage = 2
-					update_icon()
-					return
-				else
-					to_chat(user, "<span class='warning'>You need 5 pieces of cable to do wire \the [src].</span>")
-					return
-
-			else if(isCrowbar(W))
-				to_chat(user, "You start prying out the circuit.")
-				playsound(src.loc, 'sound/items/Crowbar.ogg', 50, 1)
-				if(do_after(user,20))
-					to_chat(user, "You pry out the circuit!")
-					var/obj/item/weapon/atm_electronics/circuit = new /obj/item/weapon/atm_electronics()
-					circuit.dropInto(user.loc)
-					buildstage = 0
-					update_icon()
-				return
-		if(0)
-			if(istype(W, /obj/item/weapon/atm_electronics))
-				to_chat(user, "You insert the circuit!")
-				qdel(W)
-				buildstage = 1
-				update_icon()
-				return
-
-			else if(isWrench(W))
-				to_chat(user, "You remove the fire alarm assembly from the wall!")
-				new /obj/item/frame/atm_frame(get_turf(user))
-				playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
-				qdel(src)
-
-	return ..()
 
 /obj/machinery/atm/attack_hand(mob/user)
 	if(!..())

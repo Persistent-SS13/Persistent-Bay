@@ -9,6 +9,13 @@
 	origin_tech = list(TECH_DATA = 4, TECH_BIO = 2)
 	board_type = "other"
 
+
+/obj/item/weapon/circuitboard/seedextractor
+	name = "circuit board (seed extractor)"
+	build_path = /obj/machinery/seed_extractor
+	board_type = "machine"
+	origin_tech = "biotech=1;programming=3"
+
 /obj/item/weapon/circuitboard/resleever
 	name = "circuit board (resleever)"
 	build_path = /obj/machinery/resleever
@@ -48,18 +55,6 @@
 		req_components = list(text2path("/obj/item/weapon/vending_refill/[copytext("[build_path]", 24)]") = 3)
 
 
-/obj/item/weapon/circuitboard/sleeper
-	name = "circuit board (Sleeper)"
-	build_path = /obj/machinery/sleeper
-	board_type = "machine"
-	origin_tech = "programming=3;biotech=2;engineering=3;materials=3"
-	frame_desc = "Requires 1 Matter Bin, 1 Manipulator, 1 piece of cable and 2 Console Screens."
-	req_components = list(
-							/obj/item/weapon/stock_parts/matter_bin = 1,
-							/obj/item/weapon/stock_parts/manipulator = 1,
-							/obj/item/stack/cable_coil = 1,
-							/obj/item/weapon/stock_parts/console_screen = 2)
-
 /obj/item/weapon/circuitboard/bodyscanner
 	name = "circuit board (Body Scanner)"
 	build_path = /obj/machinery/bodyscanner
@@ -98,6 +93,15 @@
 	build_path = /obj/machinery/hologram/holopad
 	board_type = "machine"
 	origin_tech = "programming=1"
+	req_components = list(
+							/obj/item/weapon/stock_parts/capacitor = 1)
+
+
+/obj/item/weapon/circuitboard/longrangeholopad
+	name = "circuit board (Long Range Holopad)"
+	build_path = /obj/machinery/hologram/holopad/longrange
+	board_type = "machine"
+	origin_tech = "programming=1, bluespace=1"
 	req_components = list(
 							/obj/item/weapon/stock_parts/capacitor = 1)
 

@@ -20,6 +20,7 @@
 	var/obj/screen/using
 	var/obj/screen/inventory/inv_box
 
+
 	// Draw the various inventory equipment slots.
 	var/has_hidden_gear
 	for(var/gear_slot in hud_data.gear)
@@ -238,8 +239,32 @@
 		mymob.nutrition_icon.screen_loc = ui_nutrition
 		hud_elements |= mymob.nutrition_icon
 
+	mymob.stamina_icon = new /obj/screen()//STAMINA
+	mymob.stamina_icon.icon = ui_style
+	mymob.stamina_icon.icon_state = "stamina0"
+	mymob.stamina_icon.name = "stamina"
+	mymob.stamina_icon.screen_loc = ui_stamina
+	hud_elements |= mymob.stamina_icon
+
+	mymob.rest = new /obj/screen()
+	mymob.rest.name = "rest"
+	mymob.rest.icon = ui_style
+	mymob.rest.icon_state = "rest[mymob.resting]"
+	mymob.rest.screen_loc = ui_rest//ui_rest
+	hud_elements |= mymob.rest
+	if (mymob.resting)
+		mymob.rest.icon_state = "rest1"
+	else
+		mymob.rest.icon_state = "rest0"
 
 	mymob.pain = new /obj/screen( null )
+	mymob.pain.icon = ui_style
+	mymob.pain.icon_state = "blank"
+	mymob.pain.name = "pain"
+	mymob.pain.screen_loc = "WEST,SOUTH to EAST,NORTH"
+	mymob.pain.layer = UNDER_HUD_LAYER
+	mymob.pain.mouse_opacity = 0
+	hud_elements |= mymob.pain
 
 	mymob.zone_sel = new /obj/screen/zone_sel( null )
 	mymob.zone_sel.icon = ui_style
@@ -248,6 +273,21 @@
 	mymob.zone_sel.overlays.Cut()
 	mymob.zone_sel.overlays += image('icons/mob/zone_sel.dmi', "[mymob.zone_sel.selecting]")
 	hud_elements |= mymob.zone_sel
+
+	mymob.happiness_icon = new /obj/screen()
+	mymob.happiness_icon.name = "mood"
+	mymob.happiness_icon.icon = ui_style
+	mymob.happiness_icon.icon_state = "mood4"
+	mymob.happiness_icon.screen_loc = ui_happiness
+	hud_elements |= mymob.happiness_icon
+
+
+	mymob.surrender = new /obj/screen()
+	mymob.surrender.name = "surrender"
+	mymob.surrender.icon = ui_style//'icons/mob/screen/dark.dmi'
+	mymob.surrender.icon_state = "surrender"
+	mymob.surrender.screen_loc = ui_surrender
+	hud_elements |= mymob.surrender
 
 	//Handle the gun settings buttons
 	mymob.gun_setting_icon = new /obj/screen/gun/mode(null)
@@ -270,6 +310,21 @@
 	mymob.radio_use_icon.icon = ui_style
 	mymob.radio_use_icon.color = ui_color
 	mymob.radio_use_icon.alpha = ui_alpha
+
+	if(ishuman(mymob))
+		var/mob/living/carbon/human/H = mymob
+		H.fov = new /obj/screen()
+		H.fov.icon = 'icons/mob/hide.dmi'
+		H.fov.icon_state = "combat"
+		H.fov.name = " "
+		H.fov.screen_loc = "1,1"
+		H.fov.mouse_opacity = 0
+		H.fov.plane = LIGHTING_PLANE
+		H.fov.layer = LIGHTING_LAYER
+		H.fov.invisibility = INVISIBILITY_LIGHTING
+		H.fov.simulated = 0
+	//	H.fov.layer = UNDER_HUD_LAYER
+		hud_elements |= H.fov
 
 	mymob.client.screen = list()
 

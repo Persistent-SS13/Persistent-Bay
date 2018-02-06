@@ -4,6 +4,7 @@
 	var/list/stomach_contents = list()
 	var/list/datum/disease2/disease/virus2 = list()
 	var/list/antibodies = list()
+	var/datum/happiness_event/list/events = list()
 
 	var/life_tick = 0      // The amount of life ticks that have processed on this mob.
 	var/obj/item/handcuffed = null //Whether or not the mob is handcuffed
@@ -31,3 +32,9 @@
 	//the second is the message in question.
 	var/last_taste_time = 0
 	var/last_taste_text = ""
+
+	//For sad, thirsty, and dirty lads.
+	var/happiness = 0
+	var/thirst = THIRST_LEVEL_FILLED
+	var/hygiene = HYGIENE_LEVEL_NORMAL
+	var/my_hygiene_factor = HYGIENE_FACTOR

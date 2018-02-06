@@ -15,7 +15,7 @@
 	capacity = 0
 	charge = 0
 	should_be_mapped = 1
-	circuit = /obj/item/weapon/circuitboard/batteryrack
+
 	var/max_transfer_rate = 0							// Maximal input/output rate. Determined by used capacitors when building the device.
 	var/mode = PSU_OFFLINE								// Current inputting/outputting mode
 	var/list/internal_cells = list()					// Cells stored in this PSU
@@ -33,6 +33,7 @@
 
 /obj/machinery/power/smes/batteryrack/proc/add_parts()
 	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/batteryrack
 	component_parts += new /obj/item/weapon/stock_parts/capacitor/				// Capacitors: Maximal I/O
 	component_parts += new /obj/item/weapon/stock_parts/capacitor/
 	component_parts += new /obj/item/weapon/stock_parts/capacitor/

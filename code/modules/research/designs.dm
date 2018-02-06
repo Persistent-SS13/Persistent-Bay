@@ -1053,20 +1053,12 @@ other types of metals and chemistry for reagents).
 	sort_string = "VBAAZ"
 /datum/design/item/modularcomponent/dna_scanner
 	name = "DNA scanner port"
-	id = "dnaslot"
+	id = "cardslot"
 	req_tech = list(TECH_DATA = 2)
 	build_type = PROTOLATHE
 	materials = list(DEFAULT_WALL_MATERIAL = 600)
 	build_path = /obj/item/weapon/computer_hardware/dna_scanner
 	sort_string = "VBABA"
-/datum/design/item/modularcomponent/logistic_processor
-	name = "Advanced Logistic Processor"
-	id = "logproc"
-	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 4)
-	build_type = PROTOLATHE
-	materials = list(DEFAULT_WALL_MATERIAL = 5000, "glass" = 1000, "phoron" = 3000, "diamond" = 3000, "uranium" = 3000)
-	build_path = /obj/item/weapon/computer_hardware/logistic_processor
-	sort_string = "VBABB"
 
 /*
 CIRCUITS BELOW

@@ -17,8 +17,9 @@
 	use_power = 1
 	idle_power_usage = 2
 	active_power_usage = 500
-	circuit = /obj/item/weapon/circuitboard/gibber
+
 //auto-gibs anything that bumps into it
+/obj/machinery/gibber/autogibber
 	var/turf/input_plate
 
 /obj/machinery/gibber/autogibber/New()
@@ -234,6 +235,7 @@
 /obj/machinery/gibber/New()
 	..()
 	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/gibber(src)
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)

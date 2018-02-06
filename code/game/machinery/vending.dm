@@ -10,11 +10,11 @@
 	layer = BELOW_OBJ_LAYER
 	anchored = 1
 	density = 1
+	frame_type = "vending"
 	flags = OBJ_ANCHORABLE
 	clicksound = "button"
 	clickvol = 40
-	circuit = /obj/item/weapon/circuitboard/vendor
-	frame_type = "vending"
+
 	var/icon_vend //Icon_state when vending
 	var/icon_deny //Icon_state when denying access
 	var/diona_spawn_chance = 0.1
@@ -94,12 +94,6 @@
 
 	return
 
-/obj/machinery/vending/dismantle()
-	var/obj/structure/frame/A = ..()
-	A.frame_type = "vending"
-	A.state = 3
-	A.icon_state = "[A.frame_type]_3"
-	qdel(src)
 /**
  *  Build src.produdct_records from the products lists
  *
@@ -635,6 +629,7 @@
 	desc = "A refrigerated vending unit for alcoholic beverages and alcoholic beverage accessories."
 	icon_state = "boozeomat"
 	icon_deny = "boozeomat-deny"
+	circuit = /obj/item/weapon/circuitboard/vendor
 	products = list(/obj/item/weapon/reagent_containers/food/drinks/bottle/gin = 5,
 					/obj/item/weapon/reagent_containers/food/drinks/bottle/whiskey = 5,
 					/obj/item/weapon/reagent_containers/food/drinks/bottle/tequilla = 5,
@@ -686,6 +681,9 @@
 /obj/machinery/vending/boozeomat/New()
 	..()
 	component_parts = list()
+	var/obj/item/weapon/circuitboard/vendor/V = new(null)
+	V.set_type(type)
+	component_parts += V
 	component_parts += new /obj/item/weapon/vending_refill/boozeomat(0)
 	component_parts += new /obj/item/weapon/vending_refill/boozeomat(0)
 	component_parts += new /obj/item/weapon/vending_refill/boozeomat(0)
@@ -715,6 +713,9 @@
 /obj/machinery/vending/coffee/New()
 	..()
 	component_parts = list()
+	var/obj/item/weapon/circuitboard/vendor/V = new(null)
+	V.set_type(type)
+	component_parts += V
 	component_parts += new /obj/item/weapon/vending_refill/coffee(0)
 	component_parts += new /obj/item/weapon/vending_refill/coffee(0)
 	component_parts += new /obj/item/weapon/vending_refill/coffee(0)
@@ -739,6 +740,9 @@
 /obj/machinery/vending/snack/New()
 	..()
 	component_parts = list()
+	var/obj/item/weapon/circuitboard/vendor/V = new(null)
+	V.set_type(type)
+	component_parts += V
 	component_parts += new /obj/item/weapon/vending_refill/snack(0)
 	component_parts += new /obj/item/weapon/vending_refill/snack(0)
 	component_parts += new /obj/item/weapon/vending_refill/snack(0)
@@ -767,6 +771,9 @@
 /obj/machinery/vending/cola/New()
 	..()
 	component_parts = list()
+	var/obj/item/weapon/circuitboard/vendor/V = new(null)
+	V.set_type(type)
+	component_parts += V
 	component_parts += new /obj/item/weapon/vending_refill/cola(0)
 	component_parts += new /obj/item/weapon/vending_refill/cola(0)
 	component_parts += new /obj/item/weapon/vending_refill/cola(0)
@@ -885,6 +892,9 @@
 /obj/machinery/vending/cigarette/New()
 	..()
 	component_parts = list()
+	var/obj/item/weapon/circuitboard/vendor/V = new(null)
+	V.set_type(type)
+	component_parts += V
 	component_parts += new /obj/item/weapon/vending_refill/cigarette(0)
 	component_parts += new /obj/item/weapon/vending_refill/cigarette(0)
 	component_parts += new /obj/item/weapon/vending_refill/cigarette(0)
@@ -959,6 +969,9 @@
 /obj/machinery/vending/security/New()
 	..()
 	component_parts = list()
+	var/obj/item/weapon/circuitboard/vendor/V = new(null)
+	V.set_type(type)
+	component_parts += V
 	component_parts += new /obj/item/weapon/vending_refill/security(0)
 	component_parts += new /obj/item/weapon/vending_refill/security(0)
 	component_parts += new /obj/item/weapon/vending_refill/security(0)
@@ -1059,6 +1072,9 @@
 /obj/machinery/vending/autodrobe/New()
 	..()
 	component_parts = list()
+	var/obj/item/weapon/circuitboard/vendor/V = new(null)
+	V.set_type(type)
+	component_parts += V
 	component_parts += new /obj/item/weapon/vending_refill/autodrobe(0)
 	component_parts += new /obj/item/weapon/vending_refill/autodrobe(0)
 	component_parts += new /obj/item/weapon/vending_refill/autodrobe(0)
@@ -1254,6 +1270,9 @@
 /obj/machinery/vending/clothing/New()
 	..()
 	component_parts = list()
+	var/obj/item/weapon/circuitboard/vendor/V = new(null)
+	V.set_type(type)
+	component_parts += V
 	component_parts += new /obj/item/weapon/vending_refill/clothing(0)
 	component_parts += new /obj/item/weapon/vending_refill/clothing(0)
 	component_parts += new /obj/item/weapon/vending_refill/clothing(0)

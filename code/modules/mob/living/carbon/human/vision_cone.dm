@@ -1,8 +1,12 @@
 /////////////VISION CONE///////////////
-//Vision cone code by Matt and Honkertron. This vision cone code allows for mobs and/or items to blocked out from a players field of vision.
+//This vision cone code allows for mobs and/or items to blocked out from a players field of vision.
 //This code makes use of the "cone of effect" proc created by Lummox, contributed by Jtgibson. More info on that here:
 //http://www.byond.com/forum/?post=195138
 ///////////////////////////////////////
+
+
+
+
 //Defines.
 #define OPPOSITE_DIR(D) turn(D, 180)
 

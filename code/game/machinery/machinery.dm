@@ -126,7 +126,7 @@ Class Procs:
 	if(d)
 		set_dir(d)
 	START_PROCESSING(SSmachines, src)
-	if(circuit && !istype(circuit, /obj/item/weapon/circuitboard))
+	if(circuit)
 		circuit = new circuit(src)
 
 /obj/machinery/Destroy()
@@ -376,7 +376,7 @@ Class Procs:
 	M.loc = null
 	M.deconstruct(src)
 	qdel(src)
-	return A
+	return 1
 
 /datum/proc/apply_visual(mob/M)
 	return

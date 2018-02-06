@@ -59,21 +59,11 @@ var/const/HOLOPAD_MODE = RANGE_BASED
 	var/base_icon = "holopad-B"
 	circuit = /obj/item/weapon/circuitboard/holopad
 
-/obj/machinery/hologram/holopad/dismantle()
-	var/obj/structure/frame/A = ..()
-	A.frame_type = "holopad"
-	A.state = 4
-	A.icon_state = "[A.frame_type]_4"
-	qdel(src)
-
-
 /obj/machinery/hologram/holopad/attackby(obj/item/I as obj, user as mob)
 	if(istype(I, /obj/item/weapon/screwdriver) && circuit)
 		user << "<span class='notice'>You start removing the glass.</span>"
 		playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
 		if(do_after(user, 20))
-			dismantle()
-			/*
 			var/obj/structure/frame/A = new /obj/structure/frame( src.loc )
 			var/obj/item/weapon/circuitboard/M = new circuit( A )
 			A.circuit = M
@@ -88,7 +78,7 @@ var/const/HOLOPAD_MODE = RANGE_BASED
 			M.deconstruct(src)
 			for (var/mob/living/silicon/ai/master in masters)
 				clear_holo(master)
-			qdel(src) */
+			qdel(src)
 	else
 		src.attack_hand(user)
 	return
@@ -445,7 +435,7 @@ Holographic project of everything else.
 	power_per_hologram = 1000 //per usage per hologram
 	holopadType = HOLOPAD_LONG_RANGE
 	base_icon = "holopad-Y"
-	circuit = /obj/item/weapon/circuitboard/longrangeholopad
+
 #undef RANGE_BASED
 #undef AREA_BASED
 #undef HOLOPAD_PASSIVE_POWER_USAGE

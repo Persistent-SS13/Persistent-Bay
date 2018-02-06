@@ -64,8 +64,7 @@ avoid code duplication. This includes items that may sometimes act as a standard
 		return 0
 	if(M == user && user.a_intent != I_HURT)
 		return 0
-	if(user.staminaloss >= STAMINA_EXHAUST)//Can't attack people if you're out of stamina.
-		return 0
+
 	/////////////////////////
 
 	if(!no_attack_log)

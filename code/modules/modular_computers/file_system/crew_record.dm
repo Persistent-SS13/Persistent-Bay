@@ -17,7 +17,6 @@ GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
 	var/icon/photo_side = null
 	var/list/fields = list()	// Fields of this record
 	var/datum/money_account/linked_account
-	var/list/access = list() // used for factional access
 /datum/computer_file/crew_record/New()
 	..()
 	for(var/T in subtypesof(/record_field/))

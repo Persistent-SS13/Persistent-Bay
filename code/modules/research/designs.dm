@@ -924,7 +924,7 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/weapon/computer_hardware/card_slot
 	sort_string = "VBAAM"
 
-	
+
 // Nano printer
 /datum/design/item/modularcomponent/nanoprinter
 	name = "nano printer"
@@ -1053,24 +1053,23 @@ other types of metals and chemistry for reagents).
 	sort_string = "VBAAZ"
 /datum/design/item/modularcomponent/dna_scanner
 	name = "DNA scanner port"
-	id = "cardslot"
+	id = "dnaslot"
 	req_tech = list(TECH_DATA = 2)
 	build_type = PROTOLATHE
 	materials = list(DEFAULT_WALL_MATERIAL = 600)
 	build_path = /obj/item/weapon/computer_hardware/dna_scanner
 	sort_string = "VBABA"
+/datum/design/item/modularcomponent/logistic_processor
+	name = "Advanced Logistic Processor"
+	id = "logproc"
+	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 4)
+	build_type = PROTOLATHE
+	materials = list(DEFAULT_WALL_MATERIAL = 5000, "glass" = 1000, "phoron" = 3000, "diamond" = 3000, "uranium" = 3000)
+	build_path = /obj/item/weapon/computer_hardware/logistic_processor
+	sort_string = "VBABB"
 
 /*
 CIRCUITS BELOW
-
-Format:
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
-	sort_string = "ZZZZZ"
-
 */
 
 /datum/design/circuit
@@ -1404,73 +1403,11 @@ Format:
 	req_tech = list(TECH_DATA = 3, TECH_BIO = 3)
 	build_path = /obj/item/weapon/circuitboard/clonepod
 	sort_string = "KCAAC"
-//This sorting system is too autistic for me, so fuck it, they're all starting at Z and working their way up
-/datum/design/circuit/chem_dispenser
-	name = "Portable Chem Dispenser"
-	id = "chem_dispenser"
-	req_tech = list(TECH_MATERIAL = 3, TECH_BIO = 3, TECH_PHORON = 3, TECH_ENGINEERING = 3, TECH_DATA = 4)
-	build_path = /obj/item/weapon/circuitboard/chem_dispenser
-	sort_string = "ZZZZY"
-/datum/design/circuit/reagentgrinder
-	name = "Reagent Grinder"
-	id = "reagent_grinder"
-	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 1, TECH_PHORON = 2, TECH_BIO = 1)
-	build_path = /obj/item/weapon/circuitboard/reagentgrinder
-	sort_string = "ZZZZX"
-/datum/design/circuit/chem_master
-	name = "Chem Master"
-	id = "chem_master"
-	req_tech = list(TECH_MATERIAL = 2 TECH_BIO = 1, TECH_DATA = 1)
-	build_path = /obj/item/weapon/circuitboard/chem_master
-	sort_string = "ZZZZW"
-/datum/design/circuit/botany_extractor
-	name = "Lysis-Isolation Centrifuge"
-	id = "botany_extractor"
-	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 2, TECH_BIO = 3, TECH_DATA = 3)
-	build_path = /obj/item/weapon/circuitboard/botany_extractor
-	sort_string = "ZZZZV"
-/datum/design/circuit/botany_editor
-	name = "Bioballistic Delivery System"
-	id = "botany_editor"
-	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 2, TECH_BIO = 3, TECH_DATA = 3)
-	build_path = /obj/item/weapon/circuitboard/botany_editor
-	sort_string = "ZZZZU"
-/datum/design/circuit/smartfridge
-	name = "Modular Smart Fridge"
-	id = "smartfridge"
-	req_tech = list(TECH_DATA = 1)
-	build_path = /obj/item/weapon/circuitboard/smartfridge
-	sort_string = "ZZZZT"
-/datum/design/circuit/teleporter_hub
-	name = "Teleporter Hub"
-	id = "teleporter_hub"
-	req_tech = list(TECH_MATERIAL = 4, TECH_ENGINEERING = 5, TECH_BLUESPACE = 5, TECH_DATA = 3)
-	build_path = /obj/item/weapon/circuitboard/teleporter_hub
-	sort_string = "ZZZZS"
-/datum/design/circuit/teleporter_station
-	name = "Teleporter Station"
-	id = "teleporter_station"
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/teleporter_station
-	sort_string = "ZZZZR"
-/datum/design/circuit/telesci_pad
-	name = "Telepad"
-	id = "telesci_pad"
-	req_tech = list(TECH_MATERIAL = 3, TECH_ENGINEERING = 4, TECH_BLUESPACE = 3, TECH_DATA = 4)
-	build_path = /obj/item/weapon/circuitboard/telesci_pad
-	sort_string = "ZZZZQ"
-/*
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
-	sort_string = "ZZZZP"
-*/
-	
-	
-	
-	
+
+
+
+
+
 
 /datum/design/circuit/mecha
 	req_tech = list(TECH_DATA = 3)

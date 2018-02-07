@@ -7,11 +7,21 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 #define core_access_wireless_programs 6
 /proc/get_faction(var/name, var/password)
 	if(password)
-		var/datum/world_faction/fac = GLOB.all_world_factions.Find(name)
-		if(!fac) return
-		if(fac.password != password) return
-		return fac
-	return GLOB.all_world_factions.Find(name)
+		var/datum/world_faction/found_faction
+		for(var/datum/world_faction/fac in GLOB.all_world_factions)
+			if(fac.uid == name) 
+				found_faction = fac 
+				break
+		if(!found_faction) return
+		if(found_faction.password != password) return
+		return found_faction
+	var/datum/world_faction/found_faction
+	for(var/datum/world_faction/fac in GLOB.all_world_factions)
+		if(fac.uid == name) 
+			found_faction = fac 
+			break
+	if(!found_faction) return
+	return found_faction
 /datum/world_faction
 	var/name = "" // can be safely changed
 	var/abbreviation = "" // can be safely changed

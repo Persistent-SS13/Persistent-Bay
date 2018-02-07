@@ -66,12 +66,13 @@
 			menu = 2
 		else if(menu == 1 || menu == 2)
 			menu = 3
-		if(menu == 4)
-			data["faction_name"] = connected_faction.name
-			data["faction_uid"] = connected_faction.uid
+		data["faction_name"] = connected_faction.name
+		data["faction_uid"] = connected_faction.uid
+		if(menu == 4)			
 			data["faction_abbreviation"] = connected_faction.abbreviation
 			var/regex/allregex = regex(".")
-			data["faction_password"] = allregex.Replace(program.computer.network_card.password, "*")
+			data["faction_purpose"] = connected_faction.purpose
+			data["faction_password"] = allregex.Replace(connected_faction.password, "*")
 		if(menu == 5)
 			data["network_name"] = connected_faction.network.name
 			data["network_uid"] = connected_faction.network.net_uid
@@ -79,9 +80,7 @@
 			data["network_visible"] = connected_faction.network.invisible ? "No" : "Yes"
 		if(menu == 6)
 			var/list/access_categories[0]
-			var/ind = 0
 			for(var/datum/access_category/category in connected_faction.access_categories)
-				ind++
 				access_categories[++access_categories.len] = list("name" = category.name, "accesses" = list(), "ref" = "\ref[category]")
 				for(var/x in category.accesses)
 					var/datum/access/access = category.accesses[x]
@@ -153,7 +152,7 @@
 						if(existing_faction.name == select_name)
 							to_chat(usr, "Error! A Lognet with that display name already exists!")
 							return 1
-					connected_faction.name = curr_name
+					connected_faction.name = select_name
 					to_chat(usr, "Lognet display name successfully changed.")
 		if("change_abbreviation")
 			var/curr_name = connected_faction.abbreviation
@@ -166,7 +165,7 @@
 						if(existing_faction.abbreviation == select_name)
 							to_chat(usr, "Error! A Lognet with that abbreviation already exists!")
 							return 1
-					connected_faction.name = curr_name
+					connected_faction.abbreviation = select_name
 					to_chat(usr, "Lognet abbreviation successfully changed.")
 		if("change_purpose")
 			var/curr_name = connected_faction.purpose
@@ -175,7 +174,7 @@
 				if(curr_name != connected_faction.purpose)
 					to_chat(usr, "Your inputs expired because somemone used the terminal first.")
 				else
-					connected_faction.purpose = curr_name
+					connected_faction.purpose = select_name
 					to_chat(usr, "Lognet description successfully changed.")
 		if("change_password")
 			if(input(usr,"Enter current password","Lognet Password") != connected_faction.password) return 1
@@ -183,13 +182,13 @@
 			var/select_name = sanitize(input(usr,"Enter new password. This will log this terminal out.","Lognet Password") as null|text, 20)
 			if(select_name)
 				var/confirm_password = input(usr,"Reenter password to confirm","Lognet Password") as null|text
-				if(confirm_password != curr_name)
+				if(confirm_password != select_name)
 					to_chat(usr, "Unable to confirm password")
 				else
 					if(curr_name != connected_faction.password)
 						to_chat(usr, "Your inputs expired because somemone used the terminal first.")
 					else
-						connected_faction.password = curr_name
+						connected_faction.password = select_name
 						to_chat(usr, "Lognet password successfully changed.")
 		if("change_networkname")
 			var/curr_name = connected_faction.network.name
@@ -198,20 +197,20 @@
 				if(curr_name != connected_faction.network.name)
 					to_chat(usr, "Your inputs expired because somemone used the terminal first.")
 				else
-					connected_faction.network.name = curr_name
+					connected_faction.network.name = select_name
 					to_chat(usr, "Wireless network display name successfully changed.")
 		if("change_networkuid")
 			var/curr_name = connected_faction.network.net_uid
 			var/select_name = sanitizeName(input(usr,"Enter the wireless network uid. Spaces are not allowed,","Wireless Network UID", curr_name) as null|text, MAX_NAME_LEN, 1, 0,1)
 			if(select_name)
-				if(curr_name != connected_faction.network.name)
+				if(curr_name != connected_faction.network.net_uid)
 					to_chat(usr, "Your inputs expired because somemone used the terminal first.")
 				else
 					for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 						if(existing_faction.network.net_uid == select_name)
 							to_chat(usr, "Error! A network with that UID already exists!")
 							return 1
-					connected_faction.network.net_uid = curr_name
+					connected_faction.network.net_uid = select_name
 					to_chat(usr, "Wireless network UID successfully changed.")
 		if("change_networkpassword")
 			var/curr_name = connected_faction.network.password
@@ -220,11 +219,13 @@
 				if(curr_name != connected_faction.password)
 					to_chat(usr, "Your inputs expired because somemone used the terminal first.")
 				else
-					connected_faction.network.password = curr_name
+					connected_faction.network.password = select_name
 					to_chat(usr, "Wireless network password successfully changed.")
 			else
 				connected_faction.network.secured = 0
 				connected_faction.network.password = null
 		if("change_networkvisible")
 			connected_faction.network.invisible = !connected_faction.network.invisible
+		if("menu_back")
+			menu = 3
 	GLOB.nanomanager.update_uis(src)

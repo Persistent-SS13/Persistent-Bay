@@ -101,6 +101,7 @@
 					src.code += text("[]", href_list["type"])
 					if(length(src.code) > 5)
 						src.code = "ERROR"
+		else
 			src.add_fingerprint(usr)
 			for(var/mob/M in viewers(1, src.loc))
 				if((M.client && M.machine == src))

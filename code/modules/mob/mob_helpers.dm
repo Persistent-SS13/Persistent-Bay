@@ -599,25 +599,6 @@ proc/is_blind(A)
 	if(dna)
 		dna.real_name = real_name
 	return 1
-/mob/proc/surrender()//Surrending. I need to put this in a different file.
-	if(!incapacitated())
-		Stun(5)
-		Weaken(5)
-		visible_message("<b>[src] surrenders!</b>")
-//		playsound(src, 'sound/effects/surrender.ogg', 50, 1)
-
-/mob/proc/mob_rest()
-	if(resting && !stunned && !weakened)//The incapacitated proc includes resting for whatever fucking stupid reason I hate SS13 code so fucking much.
-		visible_message("<span class='notice'>[usr] is trying to get up.</span>")
-		if(do_after(src, 20))
-			resting = 0
-			rest.icon_state = "rest0"
-		return
-
-	else
-		resting = 1
-		rest.icon_state = "rest1"
-
 
 /mob/proc/ssd_check()
 	return !client && !teleop

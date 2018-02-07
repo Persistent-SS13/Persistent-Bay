@@ -72,7 +72,7 @@
 			owner.nutrition -= 10
 		else if(owner.nutrition >= 200)
 			owner.nutrition -= 3
-/*
+
 /obj/item/organ/internal/liver/proc/handle_thirst()
 	owner.adjust_thirst(-THIRST_FACTOR)
 	switch(owner.thirst)
@@ -93,6 +93,3 @@
 				to_chat(owner, "<span class='warning'>You fall down because of your thirst.</span>")
 				owner.Weaken(1)
 				owner.Stun(1)
-
-
-*/

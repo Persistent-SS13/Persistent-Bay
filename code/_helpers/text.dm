@@ -64,7 +64,7 @@
 	return sanitize(replace_characters(input, list(">"=" ","<"=" ", "\""="'")), max_length, encode, trim, extra)
 
 //Filters out undesirable characters from names
-/proc/sanitizeName(var/input, var/max_length = MAX_NAME_LEN, var/allow_numbers = 0, var/force_first_letter_uppercase = TRUE)
+/proc/sanitizeName(var/input, var/max_length = MAX_NAME_LEN, var/allow_numbers = 0, var/force_first_letter_uppercase = TRUE, var/uid_mode = FALSE)
 	if(!input || length(input) > max_length)
 		return //Rejects the input if it is null or if it is longer then the max length allowed
 
@@ -113,9 +113,16 @@
 
 			//Space
 			if(32)
+				if(uid_mode) return
 				if(last_char_group <= 1)	continue	//suppress double-spaces and spaces at start of string
 				output += ascii2text(ascii_char)
 				last_char_group = 1
+			if(95)
+				if(uid_mode)
+					output += ascii2text(ascii_char)
+					last_char_group = 2
+				else
+					return
 			else
 				return
 

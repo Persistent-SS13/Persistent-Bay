@@ -2,6 +2,7 @@
 	icon = 'icons/obj/doors/SL_doors.dmi'
 	icon_state = "generic_closed"
 	icon_base = "generic"
+	var/welded_base = "airlock"
 	density = 1
 	
 /obj/machinery/door/airlock/supernorn/do_animate(animation)
@@ -19,10 +20,17 @@
 /obj/machinery/door/airlock/supernorn/update_icon()
 	if(!density)
 		icon_state =  "[icon_base]_open"
-	else if(locked)
-		icon_state =  "[icon_base]_locked"
-	else
-		icon_state =  "[icon_base]_closed"
+	else 
+		if(p_open || welded)
+			overlays = list()
+			if(p_open)
+				overlays += image(icon, "panel_open")
+			if(welded)
+				overlays += image(icon, "[welded_base]_welded")
+		if(locked)
+			icon_state =  "[icon_base]_locked"
+		else
+			icon_state =  "[icon_base]_closed"
 
 /obj/machinery/door/airlock/supernorn/command
 	name = "Command"
@@ -63,7 +71,7 @@
 	maxhealth = 300
 	explosion_resistance = 5
 	hitsound = 'sound/effects/Glasshit.ogg'
-
+	welded_base = "glass"
 	open_sound_powered = 'sound/machines/windowdoor.ogg'
 	close_sound_powered = 'sound/machines/windowdoor.ogg'
 	opacity = 0
@@ -76,7 +84,7 @@
 	maxhealth = 300
 	explosion_resistance = 5
 	hitsound = 'sound/effects/Glasshit.ogg'
-
+	welded_base = "glass"
 	open_sound_powered = 'sound/machines/windowdoor.ogg'
 	close_sound_powered = 'sound/machines/windowdoor.ogg'
 	opacity = 0
@@ -89,7 +97,7 @@
 	maxhealth = 300
 	explosion_resistance = 5
 	hitsound = 'sound/effects/Glasshit.ogg'
-
+	welded_base = "airlock"
 	open_sound_powered = 'sound/machines/windowdoor.ogg'
 	close_sound_powered = 'sound/machines/windowdoor.ogg'
 	opacity = 0

@@ -607,10 +607,11 @@ proc/is_blind(A)
 //		playsound(src, 'sound/effects/surrender.ogg', 50, 1)
 
 /mob/proc/mob_rest()
-	if(resting && !stunned && !weakened)
+	if(resting && !stunned && !weakened)//The incapacitated proc includes resting for whatever fucking stupid reason I hate SS13 code so fucking much.
 		visible_message("<span class='notice'>[usr] is trying to get up.</span>")
-		resting = 0
-		rest.icon_state = "rest0"
+		if(do_after(src, 20))
+			resting = 0
+			rest.icon_state = "rest0"
 		return
 
 	else

@@ -43,7 +43,7 @@
 	else if(owner.chem_effects[CE_ANTITOX])
 		filter_effect += 1
 
-//	handle_thirst()
+	handle_thirst()
 	// If you're not filtering well, you're going to take damage. Even more if you have alcohol in you.
 	if(filter_effect < 2)
 		owner.adjustToxLoss(0.5 * max(2 - filter_effect, 0) * (1 + owner.chem_effects[CE_ALCOHOL_TOXIC] + 0.5 * owner.chem_effects[CE_ALCOHOL]))

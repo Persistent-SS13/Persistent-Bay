@@ -101,6 +101,7 @@
 					src.code += text("[]", href_list["type"])
 					if(length(src.code) > 5)
 						src.code = "ERROR"
+		else
 			src.add_fingerprint(usr)
 			for(var/mob/M in viewers(1, src.loc))
 				if((M.client && M.machine == src))
@@ -212,7 +213,7 @@
 /obj/machinery/door/airlock/glass
 	name = "Glass Airlock"
 	icon = 'icons/obj/doors/Doorglass.dmi'
-
+	
 
 	door_crush_damage = DOOR_CRUSH_DAMAGE*0.75
 	maxhealth = 300

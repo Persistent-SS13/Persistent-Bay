@@ -1,236 +1,62 @@
 {{if data.has_log}}
 	{{if data.menu == 1}}
 		<h2>Connect to Logistic Network</h2>
-	
+		<br><br>{{:helper.link("Enter UID and Password", 'locked', {'action' : 'connect'})}}
 	{{/if}}
 	{{if data.menu == 2}}
+		<h2>{{:data.faction_uid}}</h2><br>
 		<h2>Authenticate Terminal</h2>
+		<br><br>{{:helper.link("Enter Password", 'locked', {'action' : 'log_in'})}}
+		<br><br>or<br>
+		<br><br>{{:helper.link("Disconnect from Lognet", 'cross', {'action' : 'disconnect'})}}
+		
 	{{/if}}
 	{{if data.menu == 3}}
-	
+		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
+		<h2>Logistics Network Control</h2>
+		<br><br>{{:helper.link("Log Out", 'locked', {'action' : 'log_out', 'menu_target' : '4'})}}
+		<br><hr>
+		<br><br>{{:helper.link("Central Options", 'wrench', {'action' : 'change_menu', 'menu_target' : '4'})}}
+		<br><br>{{:helper.link("Network Options", 'gear', {'action' : 'change_menu', 'menu_target' : '5'})}}
+		<br><br>{{:helper.link("Access Config", 'locked', {'action' : 'change_menu', 'menu_target' : '6'})}}
+		<br><br>{{:helper.link("Assignments Config", 'pencil', {'action' : 'change_menu', 'menu_target' : '7'})}}
 	{{/if}}
-{{else}}
-	<h2><span class='alert'><i>No operational Logistics Processor detected. CHECK LOG PROCESSOR</i></span></h2>
-{{/if}}
-
-
-
-{{if data.have_id_slot}}{{:helper.link('Access Modification', 'home', {'action' : 'switchm', 'target' : 'mod'}, data.mmode ? 'disabled' : null)}}{{/if}}
-{{:helper.link('Crew Manifest', 'folder-open', {'action' : 'switchm', 'target' : 'manifest'}, !data.mmode ? 'disabled' : null)}}
-{{if data.have_printer}}{{:helper.link('Print', 'print', {'action' : 'print'}, (!data.mmode || data.has_id) ? null : 'disabled')}}{{/if}}
-
-{{if !data.mmode}}
-<div class='item'>
-  <h2>Crew Manifest</h2>
-</div>
-<div class='item'>
-  {{:data.manifest}}
-</div>
-{{else}}
-<div class='item'>
-  <h2>Access Modification</h2>
-</div>
-
-{{if !data.has_id}}
-  <span class='alert'><i>Please insert the ID into the terminal to proceed.</i></span><br>
-{{/if}}
-
-<div class='item'>
-  <div class='itemLabel'>
-	Target Identity:
-  </div>
-  <div class='itemContent'>
-	{{:helper.link(data.id_name, 'eject', {'action' : 'eject'})}}
-  </div>
-</div>
-<hr>
-
-{{if data.authenticated}}
-  {{if data.has_id}}
-	<div class='item'>
-	  <h2>Details</h2>
-	</div>
-
-	<div class='item'>
-	  <div class='itemLabel'>
-		Registered Name:
-	  </div>
-	  <div class='itemContent'>
-		{{:helper.link(data.id_owner, 'pencil', {'action' : 'edit', 'name' : 1})}}
-	  </div>
-	</div>
-
-	<div class='item'>
-	  <div class='itemLabel'>
-		Account Number:
-	  </div>
-	  <div class='itemContent'>
-		{{:helper.link(data.id_account_number, 'pencil', {'action' : 'edit', 'account' : 1})}}
-	  </div>
-	</div>
-	
-
-	<div class='item'>
-	  <div class='itemLabel'>
-		Terminations:
-	  </div>
-	  <div class='itemContent'>
-		{{:helper.link('Terminate ' + data.id_owner, 'gear', {'action' : 'terminate'}, data.id_rank == "Terminated" ? 'disabled' : null, data.id_rank == "Terminated" ? 'disabled' : 'linkDanger')}}
-	  </div>
-	</div>
-
-	<div class='item'>
-	  <h2>Assignment</h2>
-	</div>
-		{{:helper.link(data.assignments ? "Hide assignments" : "Show assignments", 'gear', {'action' : 'togglea'})}}
-	<div class='item'>
-	  <span id='allvalue.jobsslot'>
+	{{if data.menu == 4}}
+		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
+		<h2>Central Options</h2>
+		<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'menu_back'})}}
+		<br><hr>
+		<br><br>{{:helper.link("Change Full Name", 'pencil', {'action' : 'change_name'})}} Full Name: <b>{{:data.faction_name}}</b>
+		<br><br>{{:helper.link("Change Abbreviation", 'pencil', {'action' : 'change_abbreviation'})}} Abbreviation: <b>{{:data.faction_abbreviation}}</b>
+		<br><br>{{:helper.link("Change Description/Mission Statement", 'pencil', {'action' : 'change_purpose'})}} Purpose: <b>{{:data.faction_purpose}}</b>
+		<br><br>{{:helper.link("Change LogNet Password", 'radiation', {'action' : 'change_password'})}} Password: <b>{{:data.faction_password}}</b>
+	{{/if}}
+	{{if data.menu == 5}}
+		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
+		<h2>Network Options</h2>
+		<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'menu_back'})}}
+		<br><hr>
+		<br><br>{{:helper.link("Change Network Display Name", 'pencil', {'action' : 'change_networkname'})}} Display Name: <b>{{:data.network_name}}</b>
+		<br><br>{{:helper.link("Change Network UID", 'pencil', {'action' : 'change_networkuid'})}} Network UID: <b>{{:data.network_uid}}</b>
+		<br><br>{{:helper.link("Change Network Password", 'locked', {'action' : 'change_networkpassword'})}} Password: <b>{{:data.network_password}}</b>
+		<br><br>{{:helper.link("Toggle Network Visbility", 'search', {'action' : 'change_networkvisible'})}} Network Visible: <b>{{:data.network_visible}}</b>
+	{{/if}}
+	{{if data.menu == 6}}
+		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
+		<h2>Access Configuration</h2>
+		<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'menu_back'})}}
+		<br><hr>
+		<br><br>{{:helper.link("Create New Access Catagory", 'pencil', {'action' : 'create_accesscatagory'})}}
+		<br><br>{{:helper.link("Change New Access", 'pencil', {'action' : 'create'})}}
+		<br><hr>
+		<h3>Core Access</h3> - Core access cannot be deleted or used outside their named purpose.<br>
+		<br>
+		{{:helper.link("(1) Logistic Control, Leadership", '', {'action' : 'none'})}}{{:helper.link("(2) Command Programs", '', {'action' : 'none'})}}{{:helper.link("(3) Engineering Programs", '', {'action' : 'none'})}}
+		{{:helper.link("(4) Medical Programs", '', {'action' : 'none'})}}{{:helper.link("(5) Security Programs", '', {'action' : 'none'})}}{{:helper.link("(6) Networking Programs", '', {'action' : 'none'})}}
+		{{for data.access_catagories}}
 		
-	  </span>
-	</div>
-	<div class='item'>
-	  {{if data.assignments}}
-	  <div id="all-value.jobs">
-		<table>
-		  <tr>
-			<th></th><th>Command</th>
-		  </tr>
-		  <tr>
-			<th>Special</th>
-			<td>
-			  {{:helper.link("Custom", '', {'action' : 'assign', 'assign_target' : 'Custom'})}}
-			</td>
-		  </tr>
-		  <tr>
-			<th style="color: '#800080';">Command</th>
-			<td>
-			  {{for data.command_jobs}}
-				{{:helper.link(value.display_name, '', {'action' : 'assign', 'assign_target' : value.job}, data.id_rank == value.job ? 'disabled' : null)}}
-			  {{/for}}
-			</td>
-		  </tr>
-		  <tr>
-			<th style="color: '#800080';">Support</th>
-			<td>
-			  {{for data.support_jobs}}
-				{{:helper.link(value.display_name, '', {'action' : 'assign', 'assign_target' : value.job}, data.id_rank == value.job ? 'disabled' : null)}}
-			  {{/for}}
-			</td>
-		  </tr>	  
-		  <tr>
-			<th style="color: '#FFA500';">Engineering</th>
-			<td>
-			  {{for data.engineering_jobs}}
-				{{:helper.link(value.display_name, '', {'action' : 'assign', 'assign_target' : value.job}, data.id_rank == value.job ? 'disabled' : null)}}
-			  {{/for}}
-			</td>
-		  </tr>
-		  <tr>
-			<th style="color: '#008000';">Medical</th>
-			<td>
-			  {{for data.medical_jobs}}
-				{{:helper.link(value.display_name, '', {'action' : 'assign', 'assign_target' : value.job}, data.id_rank == value.job ? 'disabled' : null)}}
-			  {{/for}}
-			</td>
-		  </tr>
-		  <tr>
-			<th style="color: '#a65ba6';">Science</th>
-			<td>
-			  {{for data.science_jobs}}
-				{{:helper.link(value.display_name, '', {'action' : 'assign', 'assign_target' : value.job}, data.id_rank == value.job ? 'disabled' : null)}}
-			  {{/for}}
-			</td>
-		  </tr>
-		  <tr>
-			<th style="color: '#DD0000';">Security</th>
-			<td>
-			  {{for data.security_jobs}}
-			{{:helper.link(value.display_name, '', {'action' : 'assign', 'assign_target' : value.job}, data.id_rank == value.job ? 'disabled' : null)}}
-			  {{/for}}
-			</td>
-		  </tr>
-		  <tr>
-			<th style="color: '#bb9040';">Supply</th>
-			<td>
-			  {{for data.supply_jobs}}
-				{{:helper.link(value.display_name, '', {'action' : 'assign', 'assign_target' : value.job}, data.id_rank == value.job ? 'disabled' : null)}}
-			  {{/for}}
-			</td>
-		  </tr>
-		  <tr>
-			<th style="color: '#68099e';">Exploration</th>
-			<td>
-			  {{for data.exploration_jobs}}
-				{{:helper.link(value.display_name, '', {'action' : 'assign', 'assign_target' : value.job}, data.id_rank == value.job ? 'disabled' : null)}}
-			  {{/for}}
-			</td>
-		  </tr>
-		  
-		  <tr>
-			<th style="color: '#88b764';">Service</th>
-			<td>
-			  {{for data.service_jobs}}
-				{{:helper.link(value.display_name, '', {'action' : 'assign', 'assign_target' : value.job}, data.id_rank == value.job ? 'disabled' : null)}}
-			  {{/for}}
-			</td>
-		  </tr>
-		  <tr>
-			<th style="color: '#808080';">Civilian</th>
-			<td>
-			  {{for data.civilian_jobs}}
-				{{if index && index % 6 === 0}}
-				{{/if}}
-				{{:helper.link(value.display_name, '', {'action' : 'assign', 'assign_target' : value.job}, data.id_rank == value.job ? 'disabled' : null)}}
-			  {{/for}}
-			</td>
-		  </tr>
-		  {{if data.centcom_access}}
-			<tr>
-			  <th style="color: '#A52A2A';">CentCom</th>
-			  <td>
-				{{for data.centcom_jobs}}
-				  {{if index % 6 === 0}}
-					</td></tr><tr><th></th><td>
-				  {{/if}}
-
-				  {{:helper.link(value.display_name, '', {'action' : 'assign', 'assign_target' : value.job}, data.id_rank == value.job ? 'disabled' : null)}}
-				{{/for}}
-			  </td>
-			</tr>
-		  {{/if}}
-		</table>
-	  </div>
-	  {{/if}}
-	</div>
-
-	{{if data.centcom_access}}
-	  <div class='item'>
-		<h2>Central Command</h2>
-	  </div>
-	  <div class='item' style='width: 100%'>
-		{{for data.all_centcom_access}}
-		  <div class='itemContentWide'>
-		  {{:helper.link(value.desc, '', {'action' : 'access', 'access_target' : value.ref, 'allowed' : value.allowed}, null, value.allowed ? 'selected' : null)}}
-		  </div>
 		{{/for}}
-	  </div>
-	{{else}}
-	  <div class='item'>
-		<h2>{{:data.station_name}}</h2>
-	  </div>
-	  <div class='item' style='width: 100%'>
-		{{for data.regions}}
-		  <div style='float: left; width: 175px; min-height: 250px'>
-			<div class='average'><b>{{:value.name}}</b></div>
-			{{for value.accesses :accessValue:accessKey}}
-			  <div class='itemContentWide'>
-				{{:helper.link(accessValue.desc, '', {'action' : 'access', 'access_target' : accessValue.ref, 'allowed' : accessValue.allowed}, null, accessValue.allowed ? 'selected' : null)}}
-			  </div>
-			{{/for}}
-		  </div>
-		{{/for}}
-	  </div>
 	{{/if}}
-  {{/if}}
-{{/if}}
+{{else}}
+	<h2><span class='alert'><i>No operational Logistics Processor detected. <br>CHECK LOG PROCESSOR</i></span></h2>
 {{/if}}

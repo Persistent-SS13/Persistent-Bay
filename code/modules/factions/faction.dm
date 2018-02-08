@@ -1,18 +1,36 @@
 GLOBAL_LIST_EMPTY(all_world_factions)
+#define core_access_leader 1
+#define core_access_command_programs 2
+#define core_access_engineering_programs 3
+#define core_access_medical_programs 4
+#define core_access_security_programs 5
+#define core_access_wireless_programs 6
 /proc/get_faction(var/name, var/password)
 	if(password)
-		var/datum/world_faction/fac = GLOB.all_world_factions.Find(name)
-		if(!fac) return
-		if(fac.password != password) return
-		return fac
-	return GLOB.all_world_factions.Find(name)
+		var/datum/world_faction/found_faction
+		for(var/datum/world_faction/fac in GLOB.all_world_factions)
+			if(fac.uid == name) 
+				found_faction = fac 
+				break
+		if(!found_faction) return
+		if(found_faction.password != password) return
+		return found_faction
+	var/datum/world_faction/found_faction
+	for(var/datum/world_faction/fac in GLOB.all_world_factions)
+		if(fac.uid == name) 
+			found_faction = fac 
+			break
+	if(!found_faction) return
+	return found_faction
 /datum/world_faction
 	var/name = "" // can be safely changed
-	var/name_short = "" // 
+	var/abbreviation = "" // can be safely changed
+	var/purpose = "" // can be safely changed
 	var/uid = "" // THIS SHOULD NEVER BE CHANGED!
-	var/password = "password" // this is used to access the factions 
-	var/list/assignment_catagories = list()
-	var/list/access_catagories = list()
+	var/password = "password" // this is used to access the faction, can be safely changed
+	var/list/assignment_categories = list()
+	var/list/access_categories = list()
+	var/list/all_access = list() // format list("10", "11", "12", "13") used to determine which accesses are already given out. 
 	var/datum/records_holder/records
 	var/datum/ntnet/network
 	
@@ -21,6 +39,11 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 /datum/world_faction/New()
 	network = new()
 	records = new()
+/datum/world_faction/proc/rebuild_all_access()
+	all_access = list()
+	for(var/datum/access_category/access_category in access_categories)
+		for(var/x in access_category.accesses)
+			all_access |= x
 /datum/records_holder
 	var/use_standard = 1
 	var/list/custom_records = list() // format-- list("")
@@ -41,10 +64,10 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 /datum/access_category
 	var/name = ""
 	var/list/accesses = list() // format-- list("11" = "Bridge Access")
-	
+
 /obj/faction_spawner
 	name = "Name to start faction with"
-	var/name_short = "Faction shortname"
+	var/name_short = "Faction Abbreviation"
 	var/uid = "faction_uid"
 	var/password = "starting_password"
 	var/network_name = "network name"
@@ -60,7 +83,7 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 			return
 	var/datum/world_faction/fact = new()
 	fact.name = name
-	fact.name_short = name_short
+	fact.abbreviation = name_short
 	fact.uid = uid
 	fact.password = password
 	fact.network.name = network_name

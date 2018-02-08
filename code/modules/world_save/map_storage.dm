@@ -170,6 +170,10 @@ var/global/list/zones_to_save = list()
 		am.loc = null
 	startswith = list()
 	StandardRead(f)
+/obj/Read(savefile/f)
+	for(var/atom/movable/am in contents)
+		am.loc = null
+	StandardRead(f)
 /turf/Read(savefile/f)
 	StandardRead(f)
 

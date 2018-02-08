@@ -31,10 +31,10 @@ var/datum/controller/save_controller/save_controller
 
 
 /datum/controller/save_controller/proc/save()
-	Save_World()
 	for(var/datum/mind/employee in ticker.minds)
 		if(!employee.current || !employee.current.ckey) continue
 		employee.current.should_save = 0
+	Save_World()
 	for(var/datum/mind/employee in ticker.minds)
 		if(!employee.current || !employee.current.ckey) continue
 		employee.current.should_save = 1

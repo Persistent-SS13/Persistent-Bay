@@ -255,7 +255,7 @@
 							/obj/item/weapon/stock_parts/subspace/crystal = 2,
 							/obj/item/weapon/stock_parts/capacitor = 2,
 							/obj/item/weapon/stock_parts/console_screen = 1)
-
+/*
 /obj/item/weapon/circuitboard/telesci_pad
 	name = "Circuit board (Telepad)"
 	build_path = /obj/machinery/telepad
@@ -267,7 +267,7 @@
 							/obj/item/weapon/stock_parts/capacitor = 1,
 							/obj/item/stack/cable_coil = 1,
 							/obj/item/weapon/stock_parts/console_screen = 1)
-
+*/
 
 /obj/item/weapon/circuitboard/smartfridge
 	name = "circuit board (smartfridge)"

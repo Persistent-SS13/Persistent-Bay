@@ -1467,12 +1467,14 @@ CIRCUITS BELOW
 	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
 	build_path = /obj/item/weapon/circuitboard/teleporter_station
 	sort_string = "ZZZZR"
+/*
 /datum/design/circuit/telesci_pad
 	name = "Telepad"
 	id = "telesci_pad"
 	req_tech = list(TECH_MATERIAL = 3, TECH_ENGINEERING = 4, TECH_BLUESPACE = 3, TECH_DATA = 4)
 	build_path = /obj/item/weapon/circuitboard/telesci_pad
 	sort_string = "ZZZZQ"
+*/
 /datum/design/circuit/atm_electronics
 	name = "Automated Teller Machine"
 	id = "atm_electronics"

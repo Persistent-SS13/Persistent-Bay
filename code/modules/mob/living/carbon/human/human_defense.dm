@@ -259,8 +259,6 @@ meteor_act
 			if(BP_CHEST)
 				bloody_body(src)
 
-
-
 /mob/living/carbon/human/proc/projectile_hit_bloody(obj/item/projectile/P, var/effective_force, var/hit_zone)
 	if(P.damage_type != BRUTE || P.nodamage)
 		return

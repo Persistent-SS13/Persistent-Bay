@@ -245,6 +245,26 @@
 	mymob.stamina_icon.screen_loc = ui_stamina
 	hud_elements |= mymob.stamina_icon
 
+	mymob.kick_icon = new /obj/screen()
+	mymob.kick_icon.icon = ui_style
+	mymob.kick_icon.icon_state = "kick"
+	mymob.kick_icon.name = "kick"
+	mymob.kick_icon.screen_loc = ui_kick_jump
+	hud_elements |= mymob.kick_icon
+
+	mymob.jump_icon = new /obj/screen()
+	mymob.jump_icon.icon = ui_style
+	mymob.jump_icon.icon_state = "jump"
+	mymob.jump_icon.name = "jump"
+	mymob.jump_icon.screen_loc = ui_kick_jump
+	hud_elements |= mymob.jump_icon
+
+	mymob.fixeye = new /obj/screen()
+	mymob.fixeye.icon = ui_style
+	mymob.fixeye.icon_state = "fixeye"
+	mymob.fixeye.name = "fixeye"
+	mymob.fixeye.screen_loc = ui_fixeye
+	hud_elements |= mymob.fixeye
 
 	mymob.pain = new /obj/screen( null )
 	mymob.pain.icon = ui_style

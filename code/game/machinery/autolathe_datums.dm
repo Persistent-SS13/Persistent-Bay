@@ -582,3 +582,20 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	name = "Airlock Keypad Electronics"
 	path = /obj/item/weapon/airlock_electronics/keypad_electronics
 	category = "Engineering"
+
+/datum/autolathe/recipe/analyzer
+	name = "Gas Analyzer"
+	path = /obj/item/device/analyzer
+	category = "Tools"
+
+/datum/autolathe/recipe/healthscanner
+	name = "Health Scanner"
+	path = /obj/item/device/healthanalyzer
+	category = "Medical"
+
+/*
+/datum/autolathe/recipe/
+	name = ""
+	path = /obj/item/
+	category = ""
+*/

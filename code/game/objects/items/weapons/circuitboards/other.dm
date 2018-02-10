@@ -92,7 +92,7 @@
 	name = "circuit board (AI Holopad)"
 	build_path = /obj/machinery/hologram/holopad
 	board_type = "machine"
-	origin_tech = "engineering=2;programming=3;bluespace=1"
+	origin_tech = "programming=1"
 	req_components = list(
 							/obj/item/weapon/stock_parts/capacitor = 1)
 
@@ -101,7 +101,7 @@
 	name = "circuit board (Long Range Holopad)"
 	build_path = /obj/machinery/hologram/holopad/longrange
 	board_type = "machine"
-	origin_tech = "engineering=2;programming=3;bluespace=2"
+	origin_tech = "programming=1, bluespace=1"
 	req_components = list(
 							/obj/item/weapon/stock_parts/capacitor = 1)
 

@@ -131,7 +131,7 @@
 					/obj/item/weapon/storage/backpack/security,
 					/obj/item/device/radio/headset/heads/hos) 
 	cost = 500
-	containertype = /obj/structure/closet/secure_closet/hos
+	containertype = /obj/structure/closet/secure_closet/security
 	containername = "Security Corporal Equipment"
 /decl/hierarchy/supply_pack/operations/detective
 	name = "Detective Equipment"
@@ -253,7 +253,7 @@
 					/obj/item/weapon/cartridge/cmo,
 					/obj/item/device/radio/headset/heads/cmo) 
 	cost = 300
-	containertype = /obj/structure/closet/secure_closet/CMO
+	containertype = /obj/structure/closet/secure_closet/cmo
 	containername = "Chief Medical Officer's Locker"
 /decl/hierarchy/supply_pack/operations/chemist
 	name = "Chemist Equipment"

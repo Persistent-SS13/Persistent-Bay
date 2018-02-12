@@ -110,9 +110,9 @@
 	build_path = /obj/machinery/chemical_dispenser
 	board_type = "machine"
 	origin_tech = "materials=4;engineering=4;programming=4;plasmatech=3;biotech=3"
-	frame_desc = "Requires 2 Matter Bins, 1 Capacitor, 1 Manipulator, 1 Console Screen, and 1 Power Cell."
+	frame_desc = "Requires 1 Capacitor, 1 Manipulator, and 1 Console Screen, and 2 beakers."
 	req_components = list(
-							/obj/item/weapon/stock_parts/matter_bin = 2,
+							/obj/item/weapon/reagent_containers/glass/beaker = 2,
 							/obj/item/weapon/stock_parts/capacitor = 1,
 							/obj/item/weapon/stock_parts/manipulator = 1,
 							/obj/item/weapon/stock_parts/console_screen = 1,)

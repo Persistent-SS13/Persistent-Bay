@@ -4,7 +4,7 @@
 	icon_state = "dispenser"
 	clicksound = "button"
 	clickvol = 20
-//	circuit = /obj/item/weapon/circuitboard/chemical_dispenser
+	circuit = /obj/item/weapon/circuitboard/chem_dispenser
 	var/list/spawn_cartridges = null // Set to a list of types to spawn one of each on New()
 
 	var/list/cartridges = list() // Associative, label -> cartridge
@@ -23,6 +23,14 @@
 
 /obj/machinery/chemical_dispenser/New()
 	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
+	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
+
+	RefreshParts()
 
 	if(spawn_cartridges)
 		for(var/type in spawn_cartridges)

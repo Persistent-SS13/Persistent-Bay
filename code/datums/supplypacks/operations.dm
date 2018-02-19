@@ -45,6 +45,7 @@
 					/obj/item/weapon/stamp/ce,
 					/obj/item/weapon/cartridge/ce,
 					/obj/item/blueprints,
+					/obj/item/clothing/cloak/ce,
 					/obj/item/weapon/storage/backpack/industrial,
 					/obj/item/device/radio/headset/heads/ce) 
 	cost = 400
@@ -128,6 +129,7 @@
 					/obj/item/taperoll/police,
 					/obj/item/weapon/stamp/hos,
 					/obj/item/weapon/book/manual/nt_regs,
+					/obj/item/clothing/cloak/hos,
 					/obj/item/weapon/storage/backpack/security,
 					/obj/item/device/radio/headset/heads/hos) 
 	cost = 500
@@ -248,6 +250,7 @@
 					/obj/item/taperoll/medical,
 					/obj/item/weapon/stamp/cmo,
 					/obj/item/weapon/reagent_containers/hypospray/vial,
+					/obj/item/clothing/cloak/cmo,
 					/obj/item/weapon/storage/backpack/satchel_med,
 					/obj/item/weapon/storage/backpack/messenger/med,
 					/obj/item/weapon/cartridge/cmo,
@@ -308,6 +311,7 @@
 					/obj/item/weapon/stamp/rd,
 					/obj/item/taperoll/research,
 					/obj/item/weapon/cartridge/rd,
+					/obj/item/clothing/cloak/rd,
 					/obj/item/weapon/storage/backpack/messenger/tox,
 					/obj/item/device/radio/headset/heads/rd) 
 	cost = 200

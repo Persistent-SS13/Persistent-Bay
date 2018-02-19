@@ -59,7 +59,7 @@ for reference:
 	desc = "This space is blocked off by a barricade."
 	icon = 'icons/obj/structures.dmi'
 	icon_state = "barricade"
-	anchored = 1.0
+	anchored = 1
 	density = 1
 	var/health = 100
 	var/maxhealth = 100
@@ -113,6 +113,14 @@ for reference:
 			qdel(src)
 			return
 		..()
+
+/obj/structure/barricade/attackby(obj/item/W as obj, mob/user as mob)
+	if((isScrewdriver(W)) && (istype(loc, /turf/simulated) || anchored))
+		playsound(loc, 'sound/items/Screwdriver.ogg', 100, 1)
+		anchored = !anchored
+		user.visible_message("<span class='notice'>[user] [anchored ? "fastens" : "unfastens"] the [src].</span>", \
+								 "<span class='notice'>You have [anchored ? "fastened the [src] to" : "unfastened the [src] from"] the floor.</span>")
+		return
 
 /obj/structure/barricade/proc/dismantle()
 	material.place_dismantled_product(get_turf(src))

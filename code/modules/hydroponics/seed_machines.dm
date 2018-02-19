@@ -85,15 +85,10 @@
 			to_chat(user, "You load [W] into [src].")
 		return
 
-	if(isScrewdriver(W))
-		open = !open
-		to_chat(user, "<span class='notice'>You [open ? "open" : "close"] the maintenance panel.</span>")
+	if(default_deconstruction_screwdriver(user, W))
 		return
-
-	if(open)
-		if(isCrowbar(W))
-			dismantle()
-			return
+	if(default_deconstruction_crowbar(user, W))
+		return
 
 	if(istype(W,/obj/item/weapon/disk/botany))
 		if(loaded_disk)
@@ -123,9 +118,34 @@
 /obj/machinery/botany/extractor
 	name = "lysis-isolation centrifuge"
 	icon_state = "traitcopier"
-
+	circuit = /obj/item/weapon/circuitboard/botany_extractor
 	var/datum/seed/genetics // Currently scanned seed genetic structure.
 	var/degradation = 0     // Increments with each scan, stops allowing gene mods after a certain point.
+	var/degrade_lower = 5
+	var/degrade_upper = 10
+
+/obj/machinery/botany/extractor/attackby(var/obj/item/O as obj, var/mob/user as mob)
+
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+	return ..()
+
+/obj/machinery/botany/extractor/New()
+	..()
+
+	component_parts = list()
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(null)
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(null)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
+	RefreshParts()
+
+/obj/machinery/botany/extractor/RefreshParts()
+
 
 /obj/machinery/botany/extractor/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 
@@ -255,7 +275,7 @@
 	name = "bioballistic delivery system"
 	icon_state = "traitgun"
 	disk_needs_genes = 1
-
+	circuit = /obj/item/weapon/circuitboard/botany_editor
 /obj/machinery/botany/editor/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 
 	if(!user)
@@ -322,3 +342,29 @@
 
 	usr.set_machine(src)
 	src.add_fingerprint(usr)
+
+
+
+
+/obj/machinery/botany/editor/attackby(var/obj/item/O as obj, var/mob/user as mob)
+
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+	return ..()
+
+/obj/machinery/botany/editor/New()
+	..()
+
+	component_parts = list()
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(null)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(null)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
+	RefreshParts()
+
+/obj/machinery/botany/editor/RefreshParts()
+	return

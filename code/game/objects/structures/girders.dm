@@ -11,6 +11,7 @@
 	var/material/reinf_material
 	var/reinforcing = 0
 
+
 /obj/structure/girder/displaced
 	icon_state = "displaced"
 	anchored = 0
@@ -58,27 +59,27 @@
 	if(isWrench(W) && state == 0)
 		if(anchored && !reinf_material)
 			playsound(src.loc, 'sound/items/Ratchet.ogg', 100, 1)
-			to_chat(user, "<span class='notice'>Now disassembling the girder...</span>")
+			to_chat(user, "<span class='notice'>Now disassembling the [src]...</span>")
 			if(do_after(user, 40,src))
 				if(!src) return
-				to_chat(user, "<span class='notice'>You dissasembled the girder!</span>")
+				to_chat(user, "<span class='notice'>You dissasembled the [src]!</span>")
 				dismantle()
 		else if(!anchored)
 			playsound(src.loc, 'sound/items/Ratchet.ogg', 100, 1)
-			to_chat(user, "<span class='notice'>Now securing the girder...</span>")
+			to_chat(user, "<span class='notice'>Now securing the [src]...</span>")
 			if(do_after(user, 40,src))
-				to_chat(user, "<span class='notice'>You secured the girder!</span>")
+				to_chat(user, "<span class='notice'>You secured the [src]!</span>")
 				reset_girder()
 
 	else if(istype(W, /obj/item/weapon/pickaxe/plasmacutter))
-		to_chat(user, "<span class='notice'>Now slicing apart the girder...</span>")
+		to_chat(user, "<span class='notice'>Now slicing apart the [src]...</span>")
 		if(do_after(user,30,src))
 			if(!src) return
-			to_chat(user, "<span class='notice'>You slice apart the girder!</span>")
+			to_chat(user, "<span class='notice'>You slice apart the [src]!</span>")
 			dismantle()
 
 	else if(istype(W, /obj/item/weapon/pickaxe/diamonddrill))
-		to_chat(user, "<span class='notice'>You drill through the girder!</span>")
+		to_chat(user, "<span class='notice'>You drill through the [src]!</span>")
 		dismantle()
 
 	else if(isScrewdriver(W))

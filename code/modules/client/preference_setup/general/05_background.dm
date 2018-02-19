@@ -4,7 +4,7 @@
 	var/gen_record = ""
 	var/nanotrasen_relation = "Neutral"
 	var/memory = ""
-
+	var/chosen_pin = 1000
 	//Some faction information.
 	var/home_system = "Unset"           //System of birth.
 	var/citizenship = "None"            //Current home system.
@@ -65,7 +65,8 @@
 		. += "<a href='?src=\ref[src];set_security_records=1'>[TextPreview(pref.sec_record,40)]</a><br>"
 		. += "Memory:<br>"
 		. += "<a href='?src=\ref[src];set_memory=1'>[TextPreview(pref.memory,40)]</a><br>"
-
+		. += "Bank Account Pin:<br>"
+		. += "<a href='?src=\ref[src];set_pin=1'>[pref.chosen_pin]</a><br>"
 /datum/category_item/player_setup_item/general/background/OnTopic(var/href,var/list/href_list, var/mob/user)
 	if(href_list["nt_relation"])
 		var/new_relation = input(user, "Choose your relation to [GLOB.using_map.company_name]. Note that this represents what others can find out about your character by researching your background, not what your character actually thinks.", "Character Preference", pref.nanotrasen_relation)  as null|anything in COMPANY_ALIGNMENTS
@@ -144,5 +145,11 @@
 		if(!isnull(memes) && CanUseTopic(user))
 			pref.memory = memes
 		return TOPIC_REFRESH
-
+	else if(href_list["set_pin"])
+		var/chose = input(user,"Enter starting bank pin (1000-9999)","Character Preference") as num
+		if(chose > 9999 || chose < 1000)
+			to_chat(user, "Your pin must be between 1000 and 9999")
+		else
+			pref.chosen_pin = chose
+		return TOPIC_REFRESH
 	return ..()

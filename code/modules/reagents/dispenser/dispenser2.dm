@@ -4,7 +4,7 @@
 	icon_state = "dispenser"
 	clicksound = "button"
 	clickvol = 20
-
+	circuit = /obj/item/weapon/circuitboard/chem_dispenser
 	var/list/spawn_cartridges = null // Set to a list of types to spawn one of each on New()
 
 	var/list/cartridges = list() // Associative, label -> cartridge
@@ -23,10 +23,19 @@
 
 /obj/machinery/chemical_dispenser/New()
 	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
+	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
+
+	RefreshParts()
 
 	if(spawn_cartridges)
 		for(var/type in spawn_cartridges)
 			add_cartridge(new type(src))
+
 
 /obj/machinery/chemical_dispenser/examine(mob/user)
 	. = ..()
@@ -68,10 +77,17 @@
 	GLOB.nanomanager.update_uis(src)
 
 /obj/machinery/chemical_dispenser/attackby(obj/item/weapon/W, mob/user)
+	if(default_deconstruction_screwdriver(user, W))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, W))
+		return
+	if(default_part_replacement(user, W))
+		return
 	if(istype(W, /obj/item/weapon/reagent_containers/chem_disp_cartridge))
 		add_cartridge(W, user)
 
-	else if(isScrewdriver(W))
+	else if(isWrench(W))
 		var/label = input(user, "Which cartridge would you like to remove?", "Chemical Dispenser") as null|anything in cartridges
 		if(!label) return
 		var/obj/item/weapon/reagent_containers/chem_disp_cartridge/C = remove_cartridge(label)

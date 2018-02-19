@@ -1,30 +1,27 @@
 /obj/item/device/radio/intercom
-	name = "intercom (General)"
+	name = "station intercom (General)"
 	desc = "Talk through this."
 	icon_state = "intercom"
-	randpixel = 0
 	anchored = 1
-	w_class = ITEM_SIZE_HUGE
+	w_class = 4.0
 	canhear_range = 2
 	flags = CONDUCT | NOBLOODY
-	layer = ABOVE_WINDOW_LAYER
+	var/circuit = /obj/item/weapon/circuitboard/intercom
 	var/number = 0
 	var/last_tick //used to delay the powercheck
-
-/obj/item/device/radio/intercom/get_storage_cost()
-	return ITEM_SIZE_NO_CONTAINER
+	var/wiresexposed = 0
 
 /obj/item/device/radio/intercom/custom
-	name = "intercom (Custom)"
+	name = "station intercom (Custom)"
 	broadcasting = 0
 	listening = 0
 
 /obj/item/device/radio/intercom/interrogation
-	name = "intercom (Interrogation)"
+	name = "station intercom (Interrogation)"
 	frequency  = 1449
 
 /obj/item/device/radio/intercom/private
-	name = "intercom (Private)"
+	name = "station intercom (Private)"
 	frequency = AI_FREQ
 
 /obj/item/device/radio/intercom/specops
@@ -37,65 +34,47 @@
 	listening = 1
 
 /obj/item/device/radio/intercom/department/medbay
-	name = "intercom (Medbay)"
+	name = "station intercom (Medbay)"
+	icon_state = "secintercom"
 	frequency = MED_I_FREQ
 
 /obj/item/device/radio/intercom/department/security
-	name = "intercom (Security)"
+	name = "station intercom (Security)"
+	icon_state = "medintercom"
 	frequency = SEC_I_FREQ
 
-/obj/item/device/radio/intercom/entertainment
-	name = "entertainment intercom"
-	frequency = ENT_FREQ
-	canhear_range = 4
-
-/obj/item/device/radio/intercom/Initialize()
-	. = ..()
+/obj/item/device/radio/intercom/New()
+	..()
 	START_PROCESSING(SSobj, src)
 
-/obj/item/device/radio/intercom/department/medbay/Initialize()
-	. = ..()
-	internal_channels = GLOB.default_medbay_channels.Copy()
+/obj/item/device/radio/intercom/department/medbay/New()
+	..()
+	internal_channels = list(
+		num2text(PUB_FREQ) = list(),
+		num2text(MED_I_FREQ) = list(access_medical)
+	)
 
-/obj/item/device/radio/intercom/department/security/Initialize()
-	. = ..()
+/obj/item/device/radio/intercom/department/security/New()
+	..()
 	internal_channels = list(
 		num2text(PUB_FREQ) = list(),
 		num2text(SEC_I_FREQ) = list(access_security)
 	)
 
-/obj/item/device/radio/intercom/entertainment/Initialize()
-	. = ..()
-	internal_channels = list(
-		num2text(PUB_FREQ) = list(),
-		num2text(ENT_FREQ) = list()
-	)
-
 /obj/item/device/radio/intercom/syndicate
 	name = "illicit intercom"
-	desc = "Talk through this. Evilly."
+	desc = "Talk through this. Evilly"
 	frequency = SYND_FREQ
 	subspace_transmission = 1
 	syndie = 1
 
-/obj/item/device/radio/intercom/syndicate/Initialize()
-	. = ..()
+/obj/item/device/radio/intercom/syndicate/New()
+	..()
 	internal_channels[num2text(SYND_FREQ)] = list(access_syndicate)
-
-/obj/item/device/radio/intercom/raider
-	name = "illicit intercom"
-	desc = "Pirate radio, but not in the usual sense of the word."
-	frequency = RAID_FREQ
-	subspace_transmission = 1
-	syndie = 1
-
-/obj/item/device/radio/intercom/raider/Initialize()
-	. = ..()
-	internal_channels[num2text(RAID_FREQ)] = list(access_syndicate)
 
 /obj/item/device/radio/intercom/Destroy()
 	STOP_PROCESSING(SSobj, src)
-	return ..()
+	..()
 
 /obj/item/device/radio/intercom/attack_ai(mob/user as mob)
 	src.add_fingerprint(user)
@@ -106,6 +85,41 @@
 	src.add_fingerprint(user)
 	spawn (0)
 		attack_self(user)
+
+/obj/item/device/radio/intercom/attackby(obj/item/W as obj, mob/user as mob)
+	src.add_fingerprint(user)
+	if(istype(W, /obj/item/weapon/screwdriver))  // Opening the intercom up.
+		wiresexposed = !wiresexposed
+		user << "The wires have been [wiresexposed ? "exposed" : "unexposed"]"
+		if(wiresexposed)
+			if(!on)
+				icon_state = "intercom-p_open"
+			else
+				icon_state = "intercom_open"
+		else
+			icon_state = "intercom"
+		return
+	if (wiresexposed && istype(W, /obj/item/weapon/wirecutters))
+		user.visible_message("<span class='warning'>[user] has cut the wires inside \the [src]!</span>", "You have cut the wires inside \the [src].")
+		playsound(src.loc, 'sound/items/Wirecutter.ogg', 50, 1)
+		new/obj/item/stack/cable_coil(get_turf(src), 5)
+		var/obj/structure/frame/A = new /obj/structure/frame( src.loc )
+		var/obj/item/weapon/circuitboard/M = new circuit( A )
+		A.frame_type = "intercom"
+		A.pixel_x = pixel_x
+		A.pixel_y = pixel_y
+		A.circuit = M
+		A.set_dir(dir)
+		A.anchored = 1
+		for (var/obj/C in src)
+			C.forceMove(loc)
+		A.state = 2
+		A.icon_state = "intercom_2"
+		M.deconstruct(src)
+		qdel(src)
+	else
+		src.attack_hand(user)
+	return
 
 /obj/item/device/radio/intercom/receive_range(freq, level)
 	if (!on)
@@ -122,7 +136,7 @@
 
 	return canhear_range
 
-/obj/item/device/radio/intercom/Process()
+/obj/item/device/radio/intercom/proc/process()
 	if(((world.timeofday - last_tick) > 30) || ((world.timeofday - last_tick) < 0))
 		last_tick = world.timeofday
 
@@ -136,28 +150,32 @@
 				on = A.powered(EQUIP) // set "on" to the power status
 
 		if(!on)
-			icon_state = "intercom-p"
+			if(wiresexposed)
+				icon_state = "intercom-p_open"
+			else
+				icon_state = "intercom-p"
 		else
-			icon_state = "intercom"
-
-/obj/item/device/radio/intercom/broadcasting
-	broadcasting = 1
+			if(wiresexposed)
+				icon_state = "intercom_open"
+			else
+				icon_state = initial(icon_state)
 
 /obj/item/device/radio/intercom/locked
-	var/locked_frequency
+    var/locked_frequency
 
-/obj/item/device/radio/intercom/locked/set_frequency()
-	..(locked_frequency)
+/obj/item/device/radio/intercom/locked/set_frequency(var/frequency)
+	if(frequency == locked_frequency)
+		..(locked_frequency)
 
 /obj/item/device/radio/intercom/locked/list_channels()
 	return ""
 
 /obj/item/device/radio/intercom/locked/ai_private
 	name = "\improper AI intercom"
-	locked_frequency = AI_FREQ
+	frequency = AI_FREQ
 	broadcasting = 1
 	listening = 1
 
 /obj/item/device/radio/intercom/locked/confessional
 	name = "confessional intercom"
-	locked_frequency = 1480
+	frequency = 1480

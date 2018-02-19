@@ -579,6 +579,7 @@
 	ticker.minds |= new_character.mind//Cyborgs and AIs handle this in the transform proc.	//TODO!!!!! ~Carn
 	new_character.redraw_inv()
 	CreateModularRecord(new_character)
+	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1))// MAD JAMS cant last forever yo
 	return new_character
 	/**
 	var/mob/living/carbon/human/new_character
@@ -617,7 +618,7 @@
 	else
 		client.prefs.copy_to(new_character)
 
-	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1))// MAD JAMS cant last forever yo
+	
 
 	if(mind)
 		mind.active = 0					//we wish to transfer the key manually

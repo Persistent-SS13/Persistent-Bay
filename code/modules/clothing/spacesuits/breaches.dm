@@ -181,10 +181,6 @@
 		if(!repair_power)
 			return
 
-		if(istype(src.loc,/mob/living))
-			to_chat(user, "<span class='warning'>How do you intend to patch a hardsuit while someone is wearing it?</span>")
-			return
-
 		if(!damage || !burn_damage)
 			to_chat(user, "There is no surface damage on \the [src] to repair.")
 			return
@@ -196,10 +192,6 @@
 		return
 
 	else if(isWelder(W))
-
-		if(istype(src.loc,/mob/living))
-			to_chat(user, "<span class='warning'>How do you intend to patch a hardsuit while someone is wearing it?</span>")
-			return
 
 		if (!damage || ! brute_damage)
 			to_chat(user, "There is no structural damage on \the [src] to repair.")

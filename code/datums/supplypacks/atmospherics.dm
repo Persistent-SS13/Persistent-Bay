@@ -64,7 +64,7 @@
 	cost = 60
 	containername = "\improper Phoron gas canister crate"
 	containertype = /obj/structure/closet/crate/secure/large
-	access = access_atmospherics
+	access = access_ce
 
 /decl/hierarchy/supply_pack/atmospherics/canister_sleeping_agent
 	name = "N2O gas canister"
@@ -99,3 +99,10 @@
 	containername = "\improper Hydrogen canister crate"
 	containertype = /obj/structure/closet/crate/secure/large
 	access = access_atmospherics
+
+/decl/hierarchy/supply_pack/atmospherics/airpump
+	name = "Portable Air Pumps (x4)"
+	contains = list(/obj/machinery/portable_atmospherics/powered/pump = 4)
+	cost = 25
+	containername = "Portable Air Pump Shipment"
+	containertype = /obj/structure/largecrate

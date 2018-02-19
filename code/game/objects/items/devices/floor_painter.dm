@@ -104,8 +104,8 @@
 	if(decal_data["coloured"] && paint_colour)
 		painting_colour = paint_colour
 
-	new painting_decal(F, painting_dir, painting_colour)
-
+	var/obj/newdecal = new painting_decal(F, painting_dir, painting_colour)
+	newdecal.Initialize()
 /obj/item/device/floor_painter/attack_self(var/mob/user)
 	var/choice = input("Do you wish to change the decal type, paint direction, or paint colour?") as null|anything in list("Decal","Direction", "Colour")
 	if(choice == "Decal")

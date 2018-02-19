@@ -240,8 +240,8 @@
 	var/list/turf/found = new
 	var/list/turf/pending = list(first)
 	while(pending.len)
-		if (found.len+pending.len > 300)
-			return ROOM_ERR_TOOLARGE
+	//	if (found.len+pending.len > 300)
+	//		return ROOM_ERR_TOOLARGE
 		var/turf/T = pending[1] //why byond havent list::pop()?
 		pending -= T
 		for (var/dir in GLOB.cardinal)

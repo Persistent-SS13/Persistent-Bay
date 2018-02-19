@@ -4,6 +4,7 @@
  *		Anesthetic
  *		Air
  *		Phoron
+ *		Phorosian Phoron
  *		Emergency Oxygen
  */
 
@@ -79,7 +80,6 @@
 
 /obj/item/weapon/tank/phoron/New()
 	..()
-
 	src.air_contents.adjust_gas("phoron", (3*ONE_ATMOSPHERE)*70/(R_IDEAL_GAS_EQUATION*T20C))
 	return
 
@@ -94,7 +94,20 @@
 		user.remove_from_mob(src)
 		src.loc = F
 	return
+	
+/*
+ * Phorosian Phoron
+ */
+/obj/item/weapon/tank/phoron/phorosian
+	desc = "The lifeblood of Phorosians.  Warning:  Extremely flammable, do not inhale (unless you're a Phorosian)."
+	icon_state = "phoronfr"
+	gauge_icon = "indicator_tank"
+	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
 
+/obj/item/weapon/tank/phoron/phorosian/New()
+	..()
+	src.air_contents.adjust_gas("phoron", (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
+	return	
 /*
  * Emergency Oxygen
  */
@@ -138,6 +151,7 @@
 	icon_state = "emergency_nitro"
 	gauge_icon = "indicator_emergency"
 
+
 /obj/item/weapon/tank/emergency/nitrogen/New()
 	..()
 	src.air_contents.adjust_gas("nitrogen", (3*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
@@ -149,7 +163,16 @@
 	gauge_icon = "indicator_emergency_double"
 	volume = 10
 
-
+/obj/item/weapon/tank/emergency/phoron
+	name = "emergency phoron tank"
+	desc = "An emergency air tank hastily painted orange and issued to Phorosian crewmembers."
+	icon_state = "emergency_phoron"
+	gauge_icon = "indicator_emergency"
+	
+/obj/item/weapon/tank/emergency/phoron/New()
+	..()
+	src.air_contents.adjust_gas("phoron", (3*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
+	
 /*
  * Nitrogen
  */

@@ -118,3 +118,11 @@
 	if(!ui)
 		ui = new(user, src, ui_key, "airlock_electronics", src.name, 1000, 500, master_ui, state)
 		ui.open()
+
+/obj/item/weapon/airlock_electronics/keypad_electronics
+ 	name = "keypad airlock electronics"
+ 	icon = 'icons/obj/doors/door_assembly.dmi'
+ 	icon_state = "door_electronics_keypad"
+ 	w_class = 2 //It should be tiny! -Agouri
+ 	desc = "An upgraded version airlock electronics board, with a keypad to lock the door."
+ 	matter = list(DEFAULT_WALL_MATERIAL = 50,"glass" = 50)

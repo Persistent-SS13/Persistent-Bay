@@ -261,8 +261,8 @@
 	icon_state = "satchel-gen"
 
 /obj/item/weapon/storage/backpack/satchel_tox
-	name = "\improper NanoTrasen satchel"
-	desc = "Useful for holding research materials. The colors on it denote it as a NanoTrasen bag."
+	name = "\improper Nanotrasen satchel"
+	desc = "Useful for holding research materials. The colors on it denote it as a Nanotrasen bag."
 	icon_state = "satchel-nt"
 
 /obj/item/weapon/storage/backpack/satchel_sec

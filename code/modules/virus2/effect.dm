@@ -338,6 +338,12 @@
 		for(var/mob/living/carbon/human/M in get_step(mob,mob.dir))
 			mob.spread_disease_to(M)
 		if (prob(50) && !mob.wear_mask)
+			var/turf/T = get_turf(mob)
+			var/found = 0
+			for(var/obj/effect/decal/cleanable/mucus/muc in T.contents)
+				found++
+				if(found >= 3)
+					return
 			var/obj/effect/decal/cleanable/mucus/M = new(get_turf(mob))
 			M.virus2 = virus_copylist(mob.virus2)
 

@@ -18,6 +18,10 @@ GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
 	var/list/fields = list()	// Fields of this record
 	var/datum/money_account/linked_account
 	var/list/access = list() // used for factional access
+	var/suspended = 0
+	var/terminated = 0
+	var/assignment_uid = ""
+	var/rank = 0
 /datum/computer_file/crew_record/New()
 	..()
 	for(var/T in subtypesof(/record_field/))
@@ -27,7 +31,11 @@ GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
 /datum/computer_file/crew_record/Destroy()
 	. = ..()
 	GLOB.all_crew_records.Remove(src)
-
+/datum/computer_file/crew_record/proc/try_duty()
+	if(suspended > world.realtime || terminated)
+		return 0
+	else
+		return assignment_uid
 /datum/computer_file/crew_record/proc/load_from_mob(var/mob/living/carbon/human/H)
 	if(istype(H))
 		if(H.mind && H.mind.initial_account)

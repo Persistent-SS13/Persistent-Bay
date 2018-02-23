@@ -325,7 +325,7 @@ var/list/solars_list = list()
 					S.set_control(src)
 					connected_panels |= S
 			else if(istype(M, /obj/machinery/power/tracker))
-				if(!connected_tracker) //if there's already a tracker connected to the computer don't add another
+				if(!connected_tracker || !connected_tracker.loc) //if there's already a tracker connected to the computer don't add another
 					var/obj/machinery/power/tracker/T = M
 					if(!T.control) //i.e unconnected
 						connected_tracker = T

@@ -1,12 +1,12 @@
 /datum/computer_file/program/card_mod
 	filename = "cardmod"
-	filedesc = "Account access/assignment modification program"
+	filedesc = "ID card modification program"
 	nanomodule_path = /datum/nano_module/program/card_mod
 	program_icon_state = "id"
 	program_menu_icon = "key"
-	extended_desc = "Program for programming crew ."
+	extended_desc = "Program for programming crew ID cards."
 	required_access = access_change_ids
-	requires_ntnet = 1
+	requires_ntnet = 0
 	size = 8
 
 /datum/nano_module/program/card_mod
@@ -16,7 +16,6 @@
 	var/show_assignments = 0
 
 /datum/nano_module/program/card_mod/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
-
 	var/list/data = host.initial_data()
 
 	data["src"] = "\ref[src]"

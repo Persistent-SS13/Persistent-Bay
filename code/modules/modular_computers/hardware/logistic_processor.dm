@@ -6,8 +6,8 @@
 	icon_state = "cpu_normal_photonic"
 	hardware_size = 3
 	origin_tech = list(TECH_DATA = 2)
-	var/connecting_uid = ""
-	var/connecting_password = ""
+	var/faction_uid = ""
+	var/faction_password = ""
 /obj/item/weapon/computer_hardware/logistic_processor/Destroy()
 	if(holder2 && (holder2.dna_scanner == src))
 		holder2.dna_scanner = null

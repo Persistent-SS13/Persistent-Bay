@@ -10,6 +10,24 @@
 	power_channel = EQUIP
 	var/obj/item/weapon/cell/charging = null
 	var/chargelevel = -1
+	circuit = /obj/item/weapon/circuitboard/machinery/cell_charger
+
+
+/obj/machinery/cell_charger/New()
+
+	..()
+	//Create parts for Machine
+	component_parts = list()
+	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	RefreshParts()
+
+/obj/machinery/cell_charger/Destroy()
+	qdel()
+	return ..()
+
 
 /obj/machinery/cell_charger/update_icon()
 	icon_state = "ccharger[charging ? 1 : 0]"
@@ -67,6 +85,18 @@
 		anchored = !anchored
 		to_chat(user, "You [anchored ? "attach" : "detach"] the cell charger [anchored ? "to" : "from"] the ground")
 		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
+
+
+/obj/machinery/cell_charger/attackby(var/obj/item/O as obj, var/mob/user as mob)
+
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+	return ..()
 
 /obj/machinery/cell_charger/attack_hand(mob/user)
 	if(charging)

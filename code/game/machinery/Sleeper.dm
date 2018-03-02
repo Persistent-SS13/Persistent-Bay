@@ -7,11 +7,15 @@
 	anchored = 1
 	clicksound = 'sound/machines/buttonbeep.ogg'
 	clickvol = 30
+	circuit = /obj/item/weapon/circuitboard/sleeper
 	var/mob/living/carbon/human/occupant = null
 	var/list/available_chemicals = list("Inaprovaline" = /datum/reagent/inaprovaline, "Soporific" = /datum/reagent/soporific, "Paracetamol" = /datum/reagent/paracetamol, "Dylovene" = /datum/reagent/dylovene, "Dexalin" = /datum/reagent/dexalin)
 	var/obj/item/weapon/reagent_containers/glass/beaker = null
 	var/filtering = 0
 	var/pump
+	var/efficiency
+	var/initial_bin_rating = 1
+	var/min_health = 25
 
 	use_power = 1
 	idle_power_usage = 15
@@ -236,3 +240,26 @@
 			to_chat(user, "The subject has too many chemicals.")
 	else
 		to_chat(user, "There's no suitable occupant in \the [src].")
+
+
+/obj/machinery/sleeper/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/stack/cable_coil(src, 1)
+	RefreshParts()
+
+
+/obj/machinery/sleeper/attackby(var/obj/item/O as obj, var/mob/user as mob)
+
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+	return ..()

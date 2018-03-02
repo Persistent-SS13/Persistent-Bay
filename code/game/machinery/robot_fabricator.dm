@@ -10,6 +10,9 @@
 	use_power = 1
 	idle_power_usage = 40
 	active_power_usage = 10000
+	var/efficiency
+	var/initial_bin_rating = 1
+	circuit = /obj/item/weapon/circuitboard/machinery/robotic_fabricator
 
 /obj/machinery/robotic_fabricator/attackby(var/obj/item/O as obj, var/mob/user as mob)
 	if (istype(O, /obj/item/stack/material) && O.get_material_name() == DEFAULT_WALL_MATERIAL)
@@ -136,3 +139,38 @@ Please wait until completion...</TT><BR>
 	for (var/mob/M in viewers(1, src))
 		if (M.client && M.machine == src)
 			src.attack_hand(M)
+
+
+
+/obj/machinery/robotic_fabricator/New()
+	..()
+	component_parts = list()
+	var/obj/item/weapon/stock_parts/matter_bin/B = new(src)
+	B.rating = initial_bin_rating
+	component_parts += B
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/stack/cable_coil(src, 1)
+	RefreshParts()
+
+/obj/machinery/robotic_fabricator/RefreshParts()
+	var/E
+	var/I
+	for(var/obj/item/weapon/stock_parts/matter_bin/B in component_parts)
+		E += B.rating
+	for(var/obj/item/weapon/stock_parts/manipulator/M in component_parts)
+		I += M.rating
+
+	efficiency = E
+
+/obj/machinery/robotic_fabricator/attackby(var/obj/item/O as obj, var/mob/user as mob)
+
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+	return ..()

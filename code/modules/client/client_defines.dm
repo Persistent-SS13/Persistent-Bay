@@ -45,5 +45,20 @@
 	var/related_accounts_ip = "Requires database"	//So admins know why it isn't working - Used to determine what other accounts previously logged in from this ip
 	var/related_accounts_cid = "Requires database"	//So admins know why it isn't working - Used to determine what other accounts previously logged in from this computer id
 
-	preload_rsc = 1 // This is 0 so we can set it to an URL once the player logs in and have them download the resources from a different server.
+	preload_rsc = 0 // This is 0 so we can set it to an URL once the player logs in and have them download the resources from a different server.
 	var/static/obj/screen/click_catcher/void
+
+	var/reset_stretch = 0 //Used by things that fiddle with client's stretch-to-fit.
+
+
+
+		////////////
+		//PARALLAX//
+		////////////
+	var/list/parallax = list()
+	var/list/parallax_movable = list()
+	var/list/parallax_offset = list()
+	var/turf/previous_turf = null
+	var/obj/screen/plane_master/parallax_master/parallax_master = null
+	var/obj/screen/plane_master/parallax_dustmaster/parallax_dustmaster = null
+	var/obj/screen/plane_master/parallax_spacemaster/parallax_spacemaster = null

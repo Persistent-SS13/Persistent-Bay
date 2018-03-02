@@ -107,13 +107,8 @@
 
 	if(ishuman(mymob))
 		var/mob/living/carbon/human/H = mymob
-		for(var/gear_slot in H.species.hud.gear)
-			var/list/hud_data = H.species.hud.gear[gear_slot]
-			switch(hud_data["slot"])
-				if(slot_l_hand)
-					if(H.l_hand) H.l_hand.screen_loc = hud_data["loc"]
-				if(slot_r_hand)
-					if(H.r_hand) H.r_hand.screen_loc = hud_data["loc"]
+		if(H.l_hand) H.l_hand.screen_loc = ui_lhand
+		if(H.r_hand) H.r_hand.screen_loc = ui_rhand
 
 /datum/hud/proc/persistant_inventory_update()
 	if(!mymob)
@@ -161,6 +156,8 @@
 	var/ui_alpha = mymob.client.prefs.UI_style_alpha
 
 	FinalizeInstantiation(ui_style, ui_color, ui_alpha)
+
+	update_parallax_existence()
 
 /datum/hud/proc/FinalizeInstantiation(var/ui_style, var/ui_color, var/ui_alpha)
 	return

@@ -29,6 +29,7 @@
 /obj/machinery/resleever/New()
 	..()
 	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/resleever(src)
 	component_parts += new /obj/item/stack/cable_coil(src, 2)
 	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src, 3)

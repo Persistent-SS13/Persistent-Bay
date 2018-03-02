@@ -4,6 +4,11 @@ var/global/list/saved = list()
 var/global/list/areas_to_save = list()
 var/global/list/zones_to_save = list()
 
+/proc/Prepare_Atmos_For_Saving()
+	for(var/datum/pipe_network/net in SSmachines.pipenets)
+		for(var/datum/pipeline/line in net.line_members)
+			line.temporarily_store_air()
+
 /datum/area_holder
 	var/area_type = "/area"
 	var/name
@@ -53,7 +58,10 @@ var/global/list/zones_to_save = list()
 	..()
 	update_icon()
 	lighting_build_overlay()
-
+	
+	for(var/obj/effect/floor_decal/decal in saved_decals)
+		decal.init_for(src)
+	
 /atom/movable/lighting_overlay/after_load()
 	loc = null
 	qdel(src)
@@ -61,7 +69,6 @@ var/global/list/zones_to_save = list()
 	..()
 	regenerate_icons()
 	redraw_inv()
-
 /datum/proc/StandardWrite(var/savefile/f)
 	var/list/saving
 	if(found_vars.Find("[type]"))
@@ -163,6 +170,10 @@ var/global/list/zones_to_save = list()
 		am.loc = null
 	startswith = list()
 	StandardRead(f)
+/obj/Read(savefile/f)
+	for(var/atom/movable/am in contents)
+		am.loc = null
+	StandardRead(f)
 /turf/Read(savefile/f)
 	StandardRead(f)
 
@@ -182,6 +193,7 @@ var/global/list/zones_to_save = list()
 			lis |= T
 	f << lis
 /proc/Save_World()
+	Prepare_Atmos_For_Saving()
 	areas_to_save = list()
 	zones_to_save = list()
 	var/starttime = REALTIMEOFDAY
@@ -207,6 +219,7 @@ var/global/list/zones_to_save = list()
 	for(var/zone/Z in zones_to_save)
 		Z.turf_coords = Z.get_turf_coords()
 		zones |= Z
+	f["factions"] << GLOB.all_world_factions
 	f["zones"] << zones
 	f["areas"] << formatted_areas
 	f["turbolifts"] << turbolifts
@@ -224,6 +237,7 @@ var/global/list/zones_to_save = list()
 	var/v = null
 	f.cd = "/extras"
 	f["records"] >> GLOB.all_crew_records
+	f["factions"] >> GLOB.all_world_factions
 	var/list/areas
 	f["areas"] >> areas
 	for(var/datum/area_holder/holder in areas)
@@ -245,8 +259,10 @@ var/global/list/zones_to_save = list()
 			CHECK_TICK
 		world << "Loading.. [((1/(12-z))*100)]% Complete"
 	f.cd = "/extras"
+	
 	f["turbolifts"] >> turbolifts
 	var/list/zones
+	
 	f["zones"] >> zones
 	for(var/zone/Z in zones)
 		for(var/ind in 1 to Z.turf_coords.len)
@@ -256,7 +272,8 @@ var/global/list/zones_to_save = list()
 				message_admins("No turf found for zone load")
 			T.zone = Z
 			Z.contents |= T
-
+	for(var/zone/Z in zones)	
+		Z.rebuild()
 	for(var/ind in 1 to all_loaded.len)
 		var/datum/dat = all_loaded[ind]
 		dat.after_load()

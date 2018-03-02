@@ -4,7 +4,6 @@
 	icon_state = "metal"
 
 	var/material/material
-	var/icon_base
 	hitsound = 'sound/weapons/genhit.ogg'
 	var/datum/lock/lock
 	var/initial_lock_value //for mapping purposes. Basically if this value is set, it sets the lock to this value.
@@ -119,6 +118,18 @@
 
 /obj/machinery/door/unpowered/simple/attackby(obj/item/I as obj, mob/user as mob)
 	src.add_fingerprint(user)
+	if((isScrewdriver(I)) && (istype(loc, /turf/simulated) && (!lock.isLocked() || anchored)))
+		playsound(loc, 'sound/items/Screwdriver.ogg', 100, 1)
+		anchored = !anchored
+		user.visible_message("<span class='notice'>[user] [anchored ? "fastens" : "unfastens"] the [src].</span>", \
+								 "<span class='notice'>You have [anchored ? "fastened the [src] to" : "unfastened the [src] from"] the floor.</span>")
+		return
+
+	else if(isCrowbar(I) && (!lock.isLocked()))
+		to_chat(user, "You destroy the [src] salvaging nothing!")
+		playsound(src.loc, 'sound/items/Crowbar.ogg', 50, 1)
+		qdel(src)
+		return
 	if(istype(I, /obj/item/weapon/key) && lock)
 		var/obj/item/weapon/key/K = I
 		if(!lock.toggle(I))

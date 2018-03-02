@@ -91,7 +91,14 @@
 		replaced(owner)
 		sync_colour_to_human(owner)
 	get_icon()
-
+/obj/item/organ/external/after_load()
+	..()
+	if(isnull(pain_disability_threshold))
+		pain_disability_threshold = (max_damage * 0.75)
+	if(owner)
+		replaced(owner)
+		sync_colour_to_human(owner)
+	get_icon()
 /obj/item/organ/external/Destroy()
 
 	if(wounds)
@@ -544,7 +551,7 @@ Note that amputating the affected organ does in fact remove the infection from t
 */
 /obj/item/organ/external/proc/update_germs()
 
-	if(robotic >= ORGAN_ROBOT || (owner.species && owner.species.flags & IS_PLANT)) //Robotic limbs shouldn't be infected, nor should nonexistant limbs.
+	if(robotic >= ORGAN_ROBOT || (owner.species && owner.species.flags & IS_PLANT) ||(owner.species && owner.species.name == SPECIES_PHOROSIAN)) //Robotic limbs shouldn't be infected, nor should nonexistant limbs.
 		germ_level = 0
 		return
 

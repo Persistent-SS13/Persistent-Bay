@@ -9,7 +9,7 @@
 	cook_time = 300
 	food_color = "#a34719"
 	can_burn_food = 1
-
+	circuit = /obj/item/weapon/circuitboard/oven
 	output_options = list(
 		"Personal Pizza" = /obj/item/weapon/reagent_containers/food/snacks/variable/pizza,
 		"Bread" = /obj/item/weapon/reagent_containers/food/snacks/variable/bread,
@@ -22,3 +22,14 @@
 		"Cookie" = /obj/item/weapon/reagent_containers/food/snacks/variable/cookie,
 		"Donut" = /obj/item/weapon/reagent_containers/food/snacks/variable/donut,
 		)
+
+
+
+/obj/machinery/cooker/oven/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/stock_parts/micro_laser(null)
+	component_parts += new /obj/item/weapon/stock_parts/micro_laser(null)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
+	component_parts += new /obj/item/stack/cable_coil(null, 5)
+	RefreshParts()

@@ -325,7 +325,7 @@ var/list/solars_list = list()
 					S.set_control(src)
 					connected_panels |= S
 			else if(istype(M, /obj/machinery/power/tracker))
-				if(!connected_tracker) //if there's already a tracker connected to the computer don't add another
+				if(!connected_tracker || !connected_tracker.loc) //if there's already a tracker connected to the computer don't add another
 					var/obj/machinery/power/tracker/T = M
 					if(!T.control) //i.e unconnected
 						connected_tracker = T
@@ -403,30 +403,32 @@ var/list/solars_list = list()
 	return
 
 /obj/machinery/power/solar_control/attackby(I as obj, user as mob)
-	if(isScrewdriver(I))
+	if(istype(I, /obj/item/weapon/screwdriver))
 		playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
-		if(do_after(user, 20,src))
+		if(do_after(user, 20))
 			if (src.stat & BROKEN)
-				to_chat(user, "<span class='notice'>The broken glass falls out.</span>")
-				var/obj/structure/computerframe/A = new /obj/structure/computerframe( src.loc )
+				user << "\blue The broken glass falls out."
+				var/obj/structure/frame/A = new /obj/structure/frame( src.loc )
 				new /obj/item/weapon/material/shard( src.loc )
 				var/obj/item/weapon/circuitboard/solar_control/M = new /obj/item/weapon/circuitboard/solar_control( A )
 				for (var/obj/C in src)
 					C.loc = src.loc
 				A.circuit = M
+				A.frame_type = "computer"
 				A.state = 3
-				A.icon_state = "3"
+				A.icon_state = "computer_3"
 				A.anchored = 1
 				qdel(src)
 			else
-				to_chat(user, "<span class='notice'>You disconnect the monitor.</span>")
-				var/obj/structure/computerframe/A = new /obj/structure/computerframe( src.loc )
+				user << "\blue You disconnect the monitor."
+				var/obj/structure/frame/A = new /obj/structure/frame( src.loc )
 				var/obj/item/weapon/circuitboard/solar_control/M = new /obj/item/weapon/circuitboard/solar_control( A )
 				for (var/obj/C in src)
 					C.loc = src.loc
 				A.circuit = M
+				A.frame_type = "computer"
 				A.state = 4
-				A.icon_state = "4"
+				A.icon_state = "computer_4"
 				A.anchored = 1
 				qdel(src)
 	else

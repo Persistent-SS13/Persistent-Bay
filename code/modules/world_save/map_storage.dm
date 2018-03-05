@@ -237,6 +237,8 @@ var/global/list/zones_to_save = list()
 	var/v = null
 	f.cd = "/extras"
 	f["records"] >> GLOB.all_crew_records
+	if(!GLOB.all_crew_records)
+		GLOB.all_crew_records = list()
 	f["factions"] >> GLOB.all_world_factions
 	var/list/areas
 	f["areas"] >> areas

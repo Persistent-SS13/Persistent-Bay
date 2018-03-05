@@ -24,6 +24,11 @@
 	var/connected_faction = ""
 	var/duty_status = 0
 	var/datum/world_faction/faction
+	
+/obj/item/organ/internal/stack/proc/get_owner_name()
+	if(!owner) return 0
+	return owner.real_name
+	
 /obj/item/organ/internal/stack/ui_action_click()
 	if(!owner) return
 	ui_interact(owner)
@@ -56,6 +61,7 @@
 		if(duty_status == 1)
 			try_duty()
 		data["duty_status"] = duty_status ? "On Duty" : "Off Duty"
+		data["duty_status_num"] = duty_status
 	else
 		var/list/potential = get_potential()
 		var/list/formatted[0]

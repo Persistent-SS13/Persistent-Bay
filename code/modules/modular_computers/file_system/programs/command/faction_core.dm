@@ -26,6 +26,7 @@
 	var/datum/assignment/selected_assignment
 	var/viewing_ranks = 0
 	var/prior_menu = 3
+	var/datum/access_category/core_access
 /datum/nano_module/program/faction_core/proc/try_connect()
 
 	if(!program.computer.logistic_processor || !program.computer.logistic_processor.check_functionality())
@@ -126,7 +127,14 @@
 			data["pay"] = selected_assignment.payscale
 			data["title"] = selected_assignment.name
 			var/list/access_categories[0]
-			for(var/datum/access_category/category in connected_faction.access_categories)
+			var/datum/access_category/core/core
+			if(!core_access)
+				core = new()
+				core_access = core
+			var/list/all_categories = list()
+			all_categories |= core_access
+			all_categories |= connected_faction.access_categories
+			for(var/datum/access_category/category in all_categories)
 				access_categories[++access_categories.len] = list("name" = category.name, "accesses" = list(), "ref" = "\ref[category]")
 				var/ind = 0
 				for(var/x in category.accesses)
@@ -506,7 +514,8 @@
 				to_chat(usr, "Payscale cannot be higher than 10 or the pay of the higher ranks.")
 			selected_assignment.payscale = new_pay
 		if("delete_assignment")
-			if(input("Are you sure you want to delete this assignment? All ranking data will be lost.") in list("Confirm", "Cancel") == "Confirm")
+			var/choice = input(usr,"Are you sure you want to delete this assignment? All ranking data will be lost.") in list("Confirm", "Cancel")
+			if(choice == "Confirm")
 				selected_assignmentcategory.assignments -= selected_assignment
 				qdel(selected_assignment)
 				connected_faction.rebuild_all_assignments()
@@ -533,7 +542,9 @@
 					if(!ind) return 1
 					if(ind > selected_assignment.ranks.len)
 						ind = 0
-					
+						min = selected_assignment.payscale
+						if(selected_assignment.ranks.len)
+							min = selected_assignment.ranks[selected_assignment.ranks[selected_assignment.ranks.len]]
 					if(ind)
 						if(ind == 1)
 							min = selected_assignment.payscale
@@ -554,7 +565,8 @@
 				selected_assignment.ranks[select_name] = new_pay
 				to_chat(usr, "Rank successfully created.")
 		if("delete_rank")
-			if(input("Are you sure you want to delete a rank? All higher ranks will be moved down by one, giving existing lower ranks an instant promotion.") in list("Confirm", "Cancel") == "Cancel") return 1
+			var/choice2 = input(usr, "Are you sure you want to delete a rank? All higher ranks will be moved down by one, giving existing lower ranks an instant promotion.") in list("Confirm", "Cancel")
+			if(choice2 == "Cancel") return 1
 			if(!selected_assignment.ranks.len) return 1
 			var/list/choices = list()
 			var/ind = 1
@@ -563,7 +575,7 @@
 				choices += "[ind] [x]"
 			var/choice = input(usr,"Choose which rank to delete.","Delete rank",null) as null|anything in choices
 			var/list/items = splittext(choice," ")
-			ind = text2num(items[1])
+			ind = text2num(items[1])-1
 			selected_assignment.ranks.Cut(ind, ind+1)
 			to_chat(usr, "Rank successfully deleted.")
 		if("pick_access")

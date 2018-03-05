@@ -50,14 +50,14 @@
 		Core Access - Core access cannot be deleted or used outside their named purpose.<br>
 		<br>
 		{{:helper.link("(1) Logistic Control, Leadership", '', {'action' : 'none'})}}{{:helper.link("(2) Command Programs", '', {'action' : 'none'})}}{{:helper.link("(3) Engineering Programs", '', {'action' : 'none'})}}
-		{{:helper.link("(4) Medical Programs", '', {'action' : 'none'})}}{{:helper.link("(5) Security Programs", '', {'action' : 'none'})}}{{:helper.link("(6) Networking Programs", '', {'action' : 'none'})}}{{:helper.link("(7-10) Reserved", '', {'action' : 'none'})}}
+		{{:helper.link("(4) Medical Programs", '', {'action' : 'none'})}}{{:helper.link("(5) Security Programs", '', {'action' : 'none'})}}{{:helper.link("(6) Networking Programs", '', {'action' : 'none'})}}{{:helper.link("(7) Lock Electronics", '', {'action' : 'none'})}}{{:helper.link("(8-10) Reserved", '', {'action' : 'none'})}}
 		<br><br><br><br><hr><br>
 		{{for data.access_categories}}
 			{{:helper.link(value.name, '', {'action' : 'select_accesscategory', 'selected_ref' : value.ref})}}{{:helper.link("Create new access", '', {'action' : 'create_access_two', 'selected_ref' : value.ref})}}:<br><br>
 			{{for value.accesses :accessValue:accessIndex}}
 				{{:helper.link(accessValue.name, '', {'action' : 'select_access', 'selected_ref' : value.ref, 'selected_ind' : accessValue.ind})}}
 			{{/for}}
-			<br><br><hr><br>
+			<br><br><br><br><hr><br>
 		{{/for}}
 	{{/if}}
 	{{if data.menu == 7}}
@@ -143,9 +143,9 @@
 			{{for data.access_categories}}
 				{{:value.name}} :<br><br>
 				{{for value.accesses :accessValue:accessIndex}}
-					{{:helper.link(accessValue.name, '', {'action' : 'pick_access', 'selected_ref' : value.ref, 'selected_ind' : accessValue.ind}, accessValue.existing ? 'selected' : null)}}
+					{{:helper.link(accessValue.name, '', {'action' : 'pick_access', 'selected_ref' : value.ref, 'selected_ind' : accessValue.ind}, null, accessValue.existing ? 'selected' : null)}}
 				{{/for}}
-				<br><br><hr><br>
+				<br><br><br><br><hr><br>
 			{{/for}}	
 		{{/if}}
 	{{/if}}

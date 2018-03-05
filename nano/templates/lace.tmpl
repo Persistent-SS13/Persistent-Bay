@@ -2,7 +2,7 @@
 	<h2>Connected to {{:data.faction_name}}</h2>
 	<br><br>
 	<h4>Duty Status: {{:data.duty_status}}</h4><br>
-	{{:helper.link("Off Duty", '', {'action' : 'off_duty'}, !data.duty_status ? 'selected' : null)}}{{:helper.link("On Duty", '', {'action' : 'on_duty'}, data.duty_status ? 'selected' : null)}}
+	{{:helper.link("Off Duty", '', {'action' : 'off_duty'}, !data.duty_status_num ? 'selected' : null)}}{{:helper.link("On Duty", '', {'action' : 'on_duty'}, data.duty_status_num ? 'selected' : null)}}
 	<br><br>{{:helper.link("Disconnect from employment network", 'cross', {'action' : 'disconnect'})}}
 {{else}}
 	<h2>Connect to Employment Network</h2>

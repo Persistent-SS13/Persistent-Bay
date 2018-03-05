@@ -186,12 +186,6 @@ var/list/mining_floors = list()
 
 		playsound(user, P.drill_sound, 20, 1)
 
-
-		if(ishuman(user))
-			var/mob/living/carbon/human/H = user
-			H.adjustStaminaLoss(rand(1,10))
-			user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-
 		var/newDepth = excavation_level + P.excavation_amount // Used commonly below
 		//handle any archaeological finds we might uncover
 		var/fail_message = ""

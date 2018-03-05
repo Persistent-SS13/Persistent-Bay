@@ -238,13 +238,6 @@
 		mymob.nutrition_icon.screen_loc = ui_nutrition
 		hud_elements |= mymob.nutrition_icon
 
-	mymob.stamina_icon = new /obj/screen()//STAMINA
-	mymob.stamina_icon.icon = ui_style
-	mymob.stamina_icon.icon_state = "stamina0"
-	mymob.stamina_icon.name = "stamina"
-	mymob.stamina_icon.screen_loc = ui_stamina
-	hud_elements |= mymob.stamina_icon
-
 
 	mymob.pain = new /obj/screen( null )
 	mymob.pain.icon = ui_style

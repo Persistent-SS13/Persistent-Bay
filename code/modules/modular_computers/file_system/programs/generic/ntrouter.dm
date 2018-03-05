@@ -78,12 +78,12 @@
 	if(!program.computer.network_card)
 		return 1
 	if(href_list["disconnect"])
-		if(input("Are you sure you want to disconnect from the network? Network settings wont save.") in list("Confirm", "Cancel") == "Confirm")
+		if(input(usr, "Are you sure you want to disconnect from the network? Network settings wont save.") in list("Confirm", "Cancel") == "Confirm")
 			program.computer.network_card.disconnect()
 		return 1
 	if(href_list["connect"])
 		if(program.computer.network_card.connected)
-			if(input("Are you sure you want to connect to a different network? You will be disconnected from your current network and settings wont save.") in list("Confirm", "Cancel") != "Confirm")
+			if(input(usr, "Are you sure you want to connect to a different network? You will be disconnected from your current network and settings wont save.") in list("Confirm", "Cancel") != "Confirm")
 				return 1
 			program.computer.network_card.disconnect()
 		var/datum/ntnet/network = locate(href_list["connect"])
@@ -92,11 +92,11 @@
 			return 1
 		program.computer.network_card.connected_to = network.net_uid
 		if(network.secured)
-			program.computer.network_card.password = input("This network requires a password","Enter network password","")
+			program.computer.network_card.password = input(usr, "This network requires a password","Enter network password","")
 		program.computer.network_card.get_network()
 		return 1
 	if(href_list["manual_connect"])
-		program.computer.network_card.connected_to = input("Enter the net_uid for the network","Enter net_uid","")
-		program.computer.network_card.password = input("Enter the password for the network. (Only used if required)","Enter password","")
+		program.computer.network_card.connected_to = input(usr, "Enter the net_uid for the network","Enter net_uid","")
+		program.computer.network_card.password = input(usr,"Enter the password for the network. (Only used if required)","Enter password","")
 		program.computer.network_card.get_network()
 		return 1

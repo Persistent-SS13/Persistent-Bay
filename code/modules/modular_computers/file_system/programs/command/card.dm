@@ -1,38 +1,49 @@
 /datum/computer_file/program/card_mod
 	filename = "cardmod"
-	filedesc = "ID card modification program"
+	filedesc = "Account modification program"
 	nanomodule_path = /datum/nano_module/program/card_mod
 	program_icon_state = "id"
 	program_menu_icon = "key"
-	extended_desc = "Program for programming crew ID cards."
+	extended_desc = "Program for programming crew ."
 	required_access = access_change_ids
-	requires_ntnet = 0
+	requires_ntnet = 1
 	size = 8
 
 /datum/nano_module/program/card_mod
-	name = "ID card modification program"
+	name = "Account modification program"
 	var/mod_mode = 1
 	var/is_centcom = 0
 	var/show_assignments = 0
-
+	var/datum/computer_file/crew_record/record
+	var/manifest_setting = 1
+	var/submode = 0
 /datum/nano_module/program/card_mod/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
+
 	var/list/data = host.initial_data()
 
 	data["src"] = "\ref[src]"
 	data["station_name"] = station_name()
-	data["manifest"] = html_crew_manifest()
 	data["assignments"] = show_assignments
+	var/datum/world_faction/connected_faction
+	if(program.computer.network_card && program.computer.network_card.connected_network)
+		connected_faction = program.computer.network_card.connected_network.holder
+	if(connected_faction)
+		data["found_faction"] = 1
+		data["faction_name"] = connected_faction.name
+		data["manifest"] = html_crew_manifest_faction(null, null, connected_faction, manifest_setting)
+
 	if(program && program.computer)
 		data["have_id_slot"] = !!program.computer.card_slot
 		data["have_printer"] = !!program.computer.nano_printer
 		data["authenticated"] = program.can_run(user)
-		if(!program.computer.card_slot)
-			mod_mode = 0 //We can't modify IDs when there is no card reader
 	else
 		data["have_id_slot"] = 0
 		data["have_printer"] = 0
 		data["authenticated"] = 0
 	data["mmode"] = mod_mode
+	data["submode"] = submode
+	if(!mod_mode && !submode)
+		data["manifest"] = 1
 	data["centcom_access"] = is_centcom
 
 	if(program && program.computer && program.computer.card_slot)
@@ -42,22 +53,84 @@
 		data["id_rank"] = id_card && id_card.assignment ? id_card.assignment : "Unassigned"
 		data["id_owner"] = id_card && id_card.registered_name ? id_card.registered_name : "-----"
 		data["id_name"] = id_card ? id_card.name : "-----"
-
-	data["command_jobs"] = format_jobs(GLOB.command_positions)
-	data["support_jobs"] = format_jobs(GLOB.support_positions)
-	data["engineering_jobs"] = format_jobs(GLOB.engineering_positions)
-	data["medical_jobs"] = format_jobs(GLOB.medical_positions)
-	data["science_jobs"] = format_jobs(GLOB.science_positions)
-	data["security_jobs"] = format_jobs(GLOB.security_positions)
-	data["exploration_jobs"] = format_jobs(GLOB.exploration_positions)
-	data["service_jobs"] = format_jobs(GLOB.service_positions)
-	data["supply_jobs"] = format_jobs(GLOB.supply_positions)
-	data["civilian_jobs"] = format_jobs(GLOB.civilian_positions)
-	data["centcom_jobs"] = format_jobs(get_all_centcom_jobs())
-
-	data["all_centcom_access"] = is_centcom ? get_accesses(1) : null
-	data["regions"] = get_accesses()
-
+	data["has_record"] = !!record
+	data["record_name"] = record ? record.get_name() : "-Search by name-"
+	if(record)
+		if(record.terminated)
+			data["duty_status"] = "Terminated"
+			data["terminated"] = 1
+		else if(record.suspended > world.realtime)
+			data["duty_status"] = "Suspended"
+			data["suspended"] = 1
+		else
+			switch(connected_faction.get_duty_status(record.get_name()))
+				if(0)
+					data["duty_status"] = "Off network"
+				if(1)
+					data["duty_status"] = "On network, Off duty"
+				if(2)
+					data["duty_status"] = "On duty"
+		var/datum/assignment/assignment = connected_faction.get_assignment(record.assignment_uid)
+		if(assignment)
+			data["assignment_uid"] = assignment.uid
+			data["current_rank"] = record.rank
+			var/promote_button = 0
+			var/demote_button = 0
+			var/max_rank = assignment.ranks.len + 1
+			for(var/name in record.promote_votes)
+				if(name == user.real_name)
+					promote_button = 2
+					break
+			if(!promote_button)
+				for(var/name in record.demote_votes)
+					if(name == user.real_name)
+						demote_button = 2
+						break
+			if(!promote_button)
+				if(record.rank < max_rank)
+					promote_button = 1
+			if(!demote_button)
+				if(record.rank != 1)
+					demote_button = 1
+			data["promote_button"] = promote_button
+			if(record.rank == 1)
+				data["title"] = assignment.name
+			else
+				data["title"] = assignment.ranks[record.rank-1]
+			if(record.custom_title)
+				data["custom_title"] = record.custom_title
+			else
+				data["custom_title"] = "None"
+		else
+			data["assignment_uid"] = "None"
+			data["current_rank"] = "None"
+			data["promote_button"] = 0
+			data["demote_button"] = 0
+			data["title"] = "None"
+			data["custom_title"] = "None"
+		var/list/assignment_categories[0]
+		var/none_select = 1
+		for(var/datum/assignment_category/category in connected_faction.assignment_categories)
+			assignment_categories[++assignment_categories.len] = list("name" = category.name, "assignments" = list())
+			for(var/datum/assignment/assignmentz in category.assignments)
+				var/selected = 0
+				var/x = text2num(record.assignment_data[assignmentz.uid])
+				var/title = ""
+				if(x && x > 1)
+					title = assignmentz.ranks[x-1]
+				else
+					title = assignmentz.name
+				if(assignment && assignment.uid == assignmentz.uid)
+					selected = 1
+					none_select = 0
+				assignment_categories[assignment_categories.len]["assignments"] += list(list(
+				"name" = title,
+				"ref" = "\ref[assignmentz]",
+				"selected" = selected
+				))
+		data["none_select"] = none_select
+		data["assignment_categories"] = assignment_categories
+		
 	if(program.computer.card_slot && program.computer.card_slot.stored_card)
 		var/obj/item/weapon/card/id/id_card = program.computer.card_slot.stored_card
 		if(is_centcom)
@@ -115,14 +188,52 @@
 	var/obj/item/weapon/card/id/id_card
 	if (computer.card_slot)
 		id_card = computer.card_slot.stored_card
-
+	var/datum/world_faction/connected_faction
+	if(computer.network_card && computer.network_card.connected_network)
+		connected_faction = computer.network_card.connected_network.holder
 	var/datum/nano_module/program/card_mod/module = NM
 	switch(href_list["action"])
+		if("scan_id")
+			module.record = null
+			var/datum/computer_file/crew_record/record = connected_faction.get_record(id_card.registered_name)
+			if(!record && id_card.registered_name)
+				var/choice = input(usr,"No record is on file for [id_card.registered_name]. Would you like to create a new record for [id_card.registered_name] based on information found in public records?") in list("Create", "Cancel")
+				if(choice == "Cancel") return 1
+				if(!connected_faction.get_record(id_card.registered_name) && module)
+					record = new()
+					if(!record.load_from_global(id_card.registered_name))
+						to_chat(user, "No public records have been found for [id_card.registered_name]. Record creation aborted.")
+						return 0
+					connected_faction.records.faction_records |= record
+					module.record = record
+			else
+				module.record = record
+		if("search_name")
+			module.record = null
+			var/select_name = input(usr,"Enter the name of the record to search for.","Record Search", "") as null|text
+			if(select_name)
+				var/datum/computer_file/crew_record/record = connected_faction.get_record(select_name)
+				if(!record)
+					var/choice = input(usr,"No record is on file for [select_name]. Would you like to create a new record for [select_name] based on information found in public records?") in list("Create", "Cancel")
+					if(choice == "Cancel") return 1
+					if(!connected_faction.get_record(select_name) && module)
+						record = new()
+						if(!record.load_from_global(select_name))
+							to_chat(user, "No public records have been found for [select_name]. Record creation aborted.")
+							return 0
+						connected_faction.records.faction_records |= record
+						module.record = record
+				else
+					module.record = record
 		if("switchm")
 			if(href_list["target"] == "mod")
 				module.mod_mode = 1
 			else if (href_list["target"] == "manifest")
 				module.mod_mode = 0
+				module.submode = 0
+			else if (href_list["target"] == "id")
+				module.mod_mode = 0
+				module.submode = 1
 		if("togglea")
 			if(module.show_assignments)
 				module.show_assignments = 0
@@ -155,7 +266,7 @@
 				else
 					var/contents = {"<h4>Crew Manifest</h4>
 									<br>
-									[html_crew_manifest()]
+									[html_crew_manifest_faction(null, null, connected_faction, module.manifest_setting)]
 									"}
 					if(!computer.nano_printer.print_text(contents,text("crew manifest ([])", stationtime2text())))
 						to_chat(usr, "<span class='notice'>Hardware error: Printer was unable to print the file. It may be out of paper.</span>")
@@ -167,51 +278,26 @@
 				computer.proc_eject_id(user)
 		if("terminate")
 			if(computer && can_run(user, 1))
-				id_card.assignment = "Terminated"
-				remove_nt_access(id_card)
-				callHook("terminate_employee", list(id_card))
-		if("edit")
-			if(computer && can_run(user, 1))
-				if(href_list["name"])
-					var/temp_name = sanitizeName(input("Enter name.", "Name", id_card.registered_name),allow_numbers=TRUE)
-					if(temp_name)
-						id_card.registered_name = temp_name
-					else
-						computer.visible_message("<span class='notice'>[computer] buzzes rudely.</span>")
-				else if(href_list["account"])
-					var/account_num = text2num(input("Enter account number.", "Account", id_card.associated_account_number))
-					id_card.associated_account_number = account_num
+				module.record.terminated = 1
+				update_ids(module.record.get_name())
 		if("assign")
-			if(computer && can_run(user, 1) && id_card)
+			if(computer && can_run(user, 1))
 				var/t1 = href_list["assign_target"]
 				if(t1 == "Custom")
-					var/temp_t = sanitize(input("Enter a custom job assignment.","Assignment", id_card.assignment), 45)
+					var/temp_t = sanitize(input("Enter a custom title.","Assignment", module.record.custom_title), 45)
 					//let custom jobs function as an impromptu alt title, mainly for sechuds
 					if(temp_t)
-						id_card.assignment = temp_t
+						module.record.custom_title = temp_t
 				else
-					var/list/access = list()
-					if(module.is_centcom)
-						access = get_centcom_access(t1)
-					else
-						var/datum/job/jobdatum
-						for(var/jobtype in typesof(/datum/job))
-							var/datum/job/J = new jobtype
-							if(ckey(J.title) == ckey(t1))
-								jobdatum = J
-								break
-						if(!jobdatum)
-							to_chat(usr, "<span class='warning'>No log exists for this job: [t1]</span>")
-							return
-
-						access = jobdatum.get_access()
-
-					remove_nt_access(id_card)
-					apply_access(id_card, access)
-					id_card.assignment = t1
-					id_card.rank = t1
-
-				callHook("reassign_employee", list(id_card))
+					var/datum/assignment/assignment = locate(href_list["assign_target"])
+					if(!assignment) return 0
+					module.record.assignment_data[module.record.assignment_uid] = "[module.record.rank]"
+					module.record.assignment_uid = assignment.uid
+					module.record.rank = text2num(module.record.assignment_data[assignment.uid])
+					if(!module.record.rank)
+						module.record.rank = 1
+					module.record.custom_title = null
+				update_ids(module.record.get_name())
 		if("access")
 			if(href_list["allowed"] && computer && can_run(user, 1))
 				var/access_type = text2num(href_list["access_target"])
@@ -220,6 +306,28 @@
 					id_card.access -= access_type
 					if(!access_allowed)
 						id_card.access += access_type
+		if("promote")
+			if(!user_id_card) return
+			module.record.promote_votes |= user_id_card.registered_name
+			module.record.check_rank_change(connected_faction)
+		if("demote")
+			if(!user_id_card) return
+			module.record.demote_votes |= user_id_card.registered_name
+			module.record.check_rank_change(connected_faction)
+		if("promote_cancel")
+			if(!user_id_card) return
+			module.record.promote_votes -= user_id_card.registered_name
+		if("demote_cancel")
+			if(!user_id_card) return
+			module.record.promote_votes -= user_id_card.registered_name
+		if("register_id")
+			id_card.approved_factions |= connected_faction.uid
+			to_chat(user, "Card successfully approved for [connected_faction.name]")
+		if("resync_id")
+			id_card.approved_factions |= connected_faction.uid
+			id_card.selected_faction = connected_faction.uid
+			to_chat(user, "Card successfully resynced to [connected_faction.name]")
+			update_ids(id_card.registered_name)
 	if(id_card)
 		id_card.name = text("[id_card.registered_name]'s ID Card ([id_card.assignment])")
 

@@ -44,18 +44,110 @@
 	{{if data.menu == 6}}
 		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 		<h2>Access Configuration</h2>
-		<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'menu_back'})}}
+		<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
+		<br><br>{{:helper.link("Create New Access Category", 'pencil', {'action' : 'create_accesscategory'})}}
 		<br><hr>
-		<br><br>{{:helper.link("Create New Access Catagory", 'pencil', {'action' : 'create_accesscatagory'})}}
-		<br><br>{{:helper.link("Change New Access", 'pencil', {'action' : 'create'})}}
-		<br><hr>
-		<h3>Core Access</h3> - Core access cannot be deleted or used outside their named purpose.<br>
+		Core Access - Core access cannot be deleted or used outside their named purpose.<br>
 		<br>
 		{{:helper.link("(1) Logistic Control, Leadership", '', {'action' : 'none'})}}{{:helper.link("(2) Command Programs", '', {'action' : 'none'})}}{{:helper.link("(3) Engineering Programs", '', {'action' : 'none'})}}
-		{{:helper.link("(4) Medical Programs", '', {'action' : 'none'})}}{{:helper.link("(5) Security Programs", '', {'action' : 'none'})}}{{:helper.link("(6) Networking Programs", '', {'action' : 'none'})}}
-		{{for data.access_catagories}}
-		
+		{{:helper.link("(4) Medical Programs", '', {'action' : 'none'})}}{{:helper.link("(5) Security Programs", '', {'action' : 'none'})}}{{:helper.link("(6) Networking Programs", '', {'action' : 'none'})}}{{:helper.link("(7) Lock Electronics", '', {'action' : 'none'})}}{{:helper.link("(8-10) Reserved", '', {'action' : 'none'})}}
+		<br><br><br><br><hr><br>
+		{{for data.access_categories}}
+			{{:helper.link(value.name, '', {'action' : 'select_accesscategory', 'selected_ref' : value.ref})}}{{:helper.link("Create new access", '', {'action' : 'create_access_two', 'selected_ref' : value.ref})}}:<br><br>
+			{{for value.accesses :accessValue:accessIndex}}
+				{{:helper.link(accessValue.name, '', {'action' : 'select_access', 'selected_ref' : value.ref, 'selected_ind' : accessValue.ind})}}
+			{{/for}}
+			<br><br><br><br><hr><br>
 		{{/for}}
+	{{/if}}
+	{{if data.menu == 7}}
+		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
+		<h2>Assignment/Category Configuration</h2>
+		<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
+		<br><hr>
+		<br><br>{{:helper.link("Create New Assignment Category", 'pencil', {'action' : 'create_assignmentcategory'})}}
+		<br><hr>
+		{{for data.assignment_categories}}
+			{{:helper.link(value.name, '', {'action' : 'select_assignmentcategory', 'selected_ref' : value.ref})}}{{:helper.link("Create New Assignment", '', {'action' : 'create_assignment_two', 'selected_ref' : value.ref})}}:<br><br>
+			{{for value.assignments :assignmentValue:assignmentIndex}}
+				{{:helper.link(assignmentValue.name, '', {'action' : 'select_assignment', 'selected_ref' : assignmentValue.ref2, 'category_ref' : value.ref})}}
+			{{/for}}
+			<br><br><hr><br>
+		{{/for}}
+	{{/if}}
+	{{if data.menu == 8}}
+		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
+		<h2>{{:data.selected_accesscategory}} (Access Category)</h2>
+		<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
+		<br><hr>
+		<br><br>{{:helper.link("Create New Access", 'pencil', {'action' : 'create_access'})}}
+		<br><br>{{:helper.link("Change name", 'pencil', {'action' : 'edit_accesscategory'})}}
+		<br><br>{{:helper.link("Delete Access Category", 'cross', {'action' : 'delete_accesscategory'})}}
+		<br><hr><br>
+		<h3>Accesses</h3><br>
+		{{for data.accesses}}
+			{{:helper.link(value.name, '', {'action' : 'select_access_noref', 'selected_ind' : value.ind})}}
+		{{/for}}
+	{{/if}}
+	{{if data.menu == 9}}
+		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
+		<h2>({{:data.accessnum}}) {{:data.selected_access}} (Access)</h2>
+		<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
+		<br><hr>
+		<br><br>{{:helper.link("Change name", 'pencil', {'action' : 'edit_access'})}}
+		<br><br>{{:helper.link("Delete Access", 'cross', {'action' : 'delete_access'})}}
+		<br><hr>
+		Access #: <b>{{:data.accessnum}}</b><br>
+		Name: <b>{{:data.selected_access}}</b><br>
+		Access Category: <b>{{:data.selected_accesscategory}}</b><br>
+	{{/if}}
+	{{if data.menu == 10}}
+		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
+		<h2>{{:data.selected_assignmentcategory}} (Assignment Category)</h2>
+		<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
+		<br><hr>
+		<br><br>Command Category: {{:helper.link("Yes", '', {'action' : 'assignmentcategory_leadership_yes'}, data.leader_faction ? 'selected' : null)}}{{:helper.link("No", '', {'action' : 'assignmentcategory_leadership_no'}, data.leader_faction ? null : 'selected')}}
+		<br><br>If this is turned on, this category will use the central account for its purchases, it will have universal promotion requests and it may be based on voting depending on the governance structure.
+		<br><br>Membership Status: {{:helper.link("Yes", '', {'action' : 'assignmentcategory_membership_yes'}, data.membership_faction ? 'selected' : null)}}{{:helper.link("No", '', {'action' : 'assignmentcategory_membership_no'}, data.membership_faction ? null : 'selected')}}
+		<br><br>Whether the people with assignments under this category are considered members of the network. Members get a variety of rights depending on the governance structure, including voting rights.
+		<br><br>Account Status: {{:helper.link("On", '', {'action' : 'assignmentcategory_account_on'}, data.account_status ? 'selected' : null)}}{{:helper.link("off", '', {'action' : 'assignmentcategory_account_off'}, data.account_status ? null : 'selected')}}
+		<br><br>Whether this category uses its own account for imports and exports. If not enabled, costs will be paid out of the central account.
+		<br><br>Leader Assignment: {{:helper.link(data.faction_leader, 'flag', {'action' : 'assignmentcategory_changeleader'})}}
+		<br><br>Anyone with the Leader Assignment will have access to the sub-command program, where they can manage their section including recommending promotion for their subordinates, account management and other functions.
+		<br><br>{{:helper.link("Change Name", 'pencil', {'action' : 'edit_assignmentcategory'})}}
+		<br><br>{{:helper.link("Delete Assignment Category", 'cross', {'action' : 'delete_assignmentcategory'})}}
+		<br><br>{{:helper.link("Create New Assignment", 'pencil', {'action' : 'create_assignment'})}}
+		<br><hr><br>
+		<h3>Assignments</h3><br>
+		{{for data.assignments}}
+			{{:helper.link(value.name, '', {'action' : 'select_assignment_two', 'selected_ref' : value.ref})}}
+		{{/for}}
+	{{/if}}
+	{{if data.menu == 11}}
+		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
+		<h2>{{:data.selected_assignment}} (Assignment)</h2>
+		<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
+		<br><hr>
+		<br><br>{{:helper.link("Change Rank 1 Title", 'pencil', {'action' : 'edit_assignment'})}} Title: {{:data.title}}
+		<br><br>{{:helper.link("Change Rank 1 Payscale", 'pencil', {'action' : 'edit_assignment_pay'})}} Pay: {{:data.pay}}
+		<br><br>{{:helper.link("Delete Assignment", 'cross', {'action' : 'delete_assignment'})}}
+		<br><br>{{:helper.link("View/Edit Access", '', {'action' : 'view_access'}, data.view_ranks ? null : 'selected')}}{{:helper.link("View/Edit Ranks", '', {'action' : 'view_ranks'}, data.view_ranks ? 'selected' : null)}}
+		<br><hr><br>
+		{{if data.view_ranks}}
+			{{:helper.link("Add New Rank", '', {'action' : 'create_rank'})}}{{:helper.link("Delete rank", '', {'action' : 'delete_rank'})}}<br><br><hr>
+			{{for data.ranks}}
+				{{:helper.link(value.name, '', {'action' : 'nothing'})}}
+			{{/for}}
+		{{else}}
+			Select the access that this assignment should have.<br><br><hr>
+			{{for data.access_categories}}
+				{{:value.name}} :<br><br>
+				{{for value.accesses :accessValue:accessIndex}}
+					{{:helper.link(accessValue.name, '', {'action' : 'pick_access', 'selected_ref' : value.ref, 'selected_ind' : accessValue.ind}, null, accessValue.existing ? 'selected' : null)}}
+				{{/for}}
+				<br><br><br><br><hr><br>
+			{{/for}}	
+		{{/if}}
 	{{/if}}
 {{else}}
 	<h2><span class='alert'><i>No operational Logistics Processor detected. <br>CHECK LOG PROCESSOR</i></span></h2>

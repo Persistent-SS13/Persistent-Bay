@@ -11,6 +11,9 @@
 /*
  * DATA CARDS - Used for the teleporter
  */
+
+GLOBAL_LIST_EMPTY(all_id_cards)
+
 /obj/item/weapon/card
 	name = "card"
 	desc = "Does card things."
@@ -89,7 +92,31 @@ var/const/NO_EMAG_ACT = -50
 		qdel(src)
 
 	return 1
+/proc/update_ids(var/name)
+	var/datum/computer_file/crew_record/record
+	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+		if(record2.get_name() == name)
+			record = record2
+			break
+	if(!record)
+		message_admins("no record found for [name]")
+		return
 
+	for(var/obj/item/weapon/card/id/id in GLOB.all_id_cards)
+		if(id.registered_name == name)
+			if(id.validate_time < record.validate_time)
+				id.devalidate()
+				continue
+			var/datum/world_faction/faction = get_faction(id.selected_faction)
+			if(faction)
+				var/datum/computer_file/crew_record/record2 = faction.get_record(id.registered_name)
+				if(record2)
+					id.sync_from_record(record2)
+				else
+					continue
+			else
+				continue
+			
 /obj/item/weapon/card/id
 	name = "identification card"
 	desc = "A card used to provide ID and determine access."
@@ -105,6 +132,7 @@ var/const/NO_EMAG_ACT = -50
 	var/dna_hash = "\[UNSET\]"
 	var/fingerprint_hash = "\[UNSET\]"
 	var/sex = "\[UNSET\]"
+	var/species = "\[UNSET\]"
 	var/icon/front
 	var/icon/side
 
@@ -118,17 +146,19 @@ var/const/NO_EMAG_ACT = -50
 	var/datum/mil_branch/military_branch = null //Vars for tracking branches and ranks on multi-crewtype maps
 	var/datum/mil_rank/military_rank = null
 
+	var/selected_faction // faction this ID syncs to.. where should this be set?
 	var/list/approved_factions = list() // factions that have approved this card for use on their machines. format-- list("[faction.uid]")
-	
+	var/validate_time = 0 // this should be set at the time of creation to check if the card is valid
+	var/valid = 1
 /obj/item/weapon/card/id/New()
 	..()
+	GLOB.all_id_cards |= src
 	if(job_access_type)
 		var/datum/job/j = job_master.GetJobByType(job_access_type)
 		if(j)
 			rank = j.title
 			assignment = rank
-			access |= j.get_access()
-
+			access |= j.get_access()	
 /obj/item/weapon/card/id/examine(mob/user)
 	set src in oview(1)
 	if(in_range(usr, src))
@@ -136,10 +166,41 @@ var/const/NO_EMAG_ACT = -50
 		to_chat(usr, desc)
 	else
 		to_chat(usr, "<span class='warning'>It is too far away.</span>")
-
+/obj/item/weapon/card/id/proc/sync_from_record(var/datum/computer_file/crew_record/record)
+	age = record.get_age()
+	blood_type = record.get_bloodtype()
+	dna_hash = record.get_dna()
+	fingerprint_hash = record.get_fingerprint()
+	sex = record.get_sex()
+	species = record.get_species()
+	front = record.photo_front
+	side = record.photo_side
+	if(record.terminated)
+		assignment = "Terminated"
+		rank = 0
+	if(record.custom_title)
+		assignment = record.custom_title	//can be alt title or the actual job
+	else
+		var/datum/world_faction/faction = get_faction(selected_faction)
+		if(!faction) return
+		var/datum/assignment/job = faction.get_assignment(record.assignment_uid)
+		if(!job)
+			assignment = "Unassigned"
+			rank = 0
+			return
+		if(record.rank > 1)
+			assignment = job.ranks[record.rank-1]
+		else
+			assignment = job.name
+	rank = record.rank	//actual job
+	name = text("[registered_name]'s ID Card ([assignment])")
 /obj/item/weapon/card/id/proc/prevent_tracking()
 	return 0
-
+/obj/item/weapon/card/id/proc/devalidate()
+	rank = "Devalidated"
+	assignment = "Devalidated"
+	valid = 0
+	update_name()
 /obj/item/weapon/card/id/proc/show(mob/user as mob)
 	if(front && side)
 		user << browse_rsc(front, "front.png")
@@ -221,6 +282,9 @@ var/const/NO_EMAG_ACT = -50
 			if(record)
 				final_access |= record.access
 				if(faction.allow_id_access) final_access |= access
+				var/datum/assignment/assignment = faction.get_assignment(record.try_duty())
+				if(assignment)
+					final_access |= assignment.accesses
 				return final_access
 			else
 				if(faction.allow_id_access)

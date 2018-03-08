@@ -577,6 +577,12 @@
 			silent = 0
 			return 1
 
+
+		handle_happiness()
+
+		handle_hygiene()
+
+
 		if(hallucination_power)
 			handle_hallucinations()
 
@@ -650,6 +656,7 @@
 		if (nutrition > 0)
 			nutrition = max (0, nutrition - species.hunger_factor)
 
+		CheckStamina()
 	return 1
 
 /mob/living/carbon/human/handle_regular_hud_updates()
@@ -755,6 +762,20 @@
 				if(250 to 350)					nutrition_icon.icon_state = "nutrition2"
 				if(150 to 250)					nutrition_icon.icon_state = "nutrition3"
 				else							nutrition_icon.icon_state = "nutrition4"
+
+		if(stamina_icon)
+			switch((staminaloss))
+				if(100 to INFINITY)		stamina_icon.icon_state = "stamina10"
+				if(90 to 100)			stamina_icon.icon_state = "stamina9"
+				if(80 to 90)			stamina_icon.icon_state = "stamina8"
+				if(70 to 80)			stamina_icon.icon_state = "stamina7"
+				if(60 to 70)			stamina_icon.icon_state = "stamina6"
+				if(50 to 60)			stamina_icon.icon_state = "stamina5"
+				if(40 to 50)			stamina_icon.icon_state = "stamina4"
+				if(30 to 40)			stamina_icon.icon_state = "stamina3"
+				if(20 to 30)			stamina_icon.icon_state = "stamina2"
+				if(10 to 20)			stamina_icon.icon_state = "stamina1"
+				else					stamina_icon.icon_state = "stamina0"
 
 		if(isSynthetic())
 			var/obj/item/organ/internal/cell/C = internal_organs_by_name[BP_CELL]
@@ -914,16 +935,17 @@
 
 	if(shock_stage == 40)
 		custom_pain("[pick("The pain is excruciating", "Please, just end the pain", "Your whole body is going numb")]!", 0)
+
 	if (shock_stage >= 60)
-		if(shock_stage == 60) visible_message("<b>[src]</b>'s body becomes limp.")
+		//if(shock_stage == 60) //visible_message("<b>[src]</b>'s body becomes limp.")
 		if (prob(2))
 			custom_pain("[pick("The pain is excruciating", "Please, just end the pain", "Your whole body is going numb")]!", shock_stage, nohalloss = 0)
-			Weaken(10)
+			adjustStaminaLoss(20)
 
 	if(shock_stage >= 80)
 		if (prob(5))
 			custom_pain("[pick("The pain is excruciating", "Please, just end the pain", "Your whole body is going numb")]!", shock_stage, nohalloss = 0)
-			Weaken(20)
+			adjustStaminaLoss(20)
 
 	if(shock_stage >= 120)
 		if (prob(2))
@@ -931,11 +953,11 @@
 			Paralyse(5)
 
 	if(shock_stage == 150)
-		visible_message("<b>[src]</b> can no longer stand, collapsing!")
-		Weaken(20)
+	//	visible_message("<b>[src]</b> can no longer stand, collapsing!")
+		adjustStaminaLoss(20)
 
-	if(shock_stage >= 150)
-		Weaken(20)
+//	if(shock_stage >= 150)
+	//	Weaken(20)
 
 /*
 	Called by life(), instead of having the individual hud items update icons each tick and check for status changes
@@ -1149,3 +1171,45 @@
 	..()
 	if(XRAY in mutations)
 		set_sight(sight|SEE_TURFS|SEE_MOBS|SEE_OBJS)
+
+/mob/living/carbon/human/proc/handle_decay()
+	var/decaytime = world.time - timeofdeath
+	var/image/flies = image('icons/effects/effects.dmi', "rotten")//This is a hack, there has got to be a safer way to do this but I don't know it at the moment.
+
+	if(isSynthetic())
+		return
+
+	if(decaytime <= 6000) //10 minutes for decaylevel1 -- stinky
+		return
+
+	if(decaytime > 6000 && decaytime <= 12000)//20 minutes for decaylevel2 -- bloated and very stinky
+		decaylevel = 1
+		overlays -= flies
+		overlays += flies
+
+	if(decaytime > 12000 && decaytime <= 18000)//30 minutes for decaylevel3 -- rotting and gross
+		decaylevel = 2
+
+	if(decaytime > 18000 && decaytime <= 27000)//45 minutes for decaylevel4 -- skeleton
+		decaylevel = 3
+
+	if(decaytime > 27000)
+		decaylevel = 4
+		overlays -= flies
+		flies = null
+		ChangeToSkeleton()
+		return //No puking over skeletons, they don't smell at all!
+
+
+	for(var/mob/living/carbon/human/H in range(decaylevel, src))
+		if(prob(2))
+			if(istype(loc,/obj/item/bodybag))
+				return
+			if(H.wear_mask)
+				return
+			if(H.stat == DEAD)//This shouldn't even need to be a fucking check.
+				return
+			to_chat(H, "<spawn class='warning'>You smell something foul...")
+			H.add_event("disgust", /datum/happiness_event/disgust/verygross)
+			if(prob(75))
+				H.vomit()

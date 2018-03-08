@@ -185,6 +185,9 @@
 			var/washmask = 1
 			var/washears = 1
 			var/washglasses = 1
+			H.set_hygiene(HYGIENE_LEVEL_CLEAN)
+			H.add_event("shower", /datum/happiness_event/nice_shower)
+
 
 			if(H.wear_suit)
 				washgloves = !(H.wear_suit.flags_inv & HIDEGLOVES)
@@ -232,6 +235,7 @@
 				if(H.belt.clean_blood())
 					H.update_inv_belt(0)
 			H.clean_blood(washshoes)
+
 		else
 			if(M.wear_mask)						//if the mob is not human, it cleans the mask without asking for bitflags
 				if(M.wear_mask.clean_blood())

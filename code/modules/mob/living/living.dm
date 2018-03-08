@@ -596,13 +596,12 @@ default behaviour is:
 		M.update_vision_cone()
 
 	update_vision_cone()
-/*
 
 /mob/living/proc/CheckStamina()
 	if(staminaloss <= 0)
 		setStaminaLoss(0)
 
-	if(staminaloss && !combat_mode)//If we're not doing anything, we're not in combat mode, and we've lost stamina we can wait to gain it back.
+	if(staminaloss)//If we're not doing anything, we're not in combat mode, and we've lost stamina we can wait to gain it back.
 		if(lying)
 			adjustStaminaLoss(-5)
 		else
@@ -611,7 +610,7 @@ default behaviour is:
 	if(staminaloss >= STAMINA_EXHAUST && !stat)//Oh shit we've lost too much stamina and now we're tired!
 		Exhaust()
 		return
-*/
+
 /mob/living/proc/Exhaust()//Called when you run out of stamina.
 	Weaken(5)
 

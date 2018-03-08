@@ -18,6 +18,15 @@ GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
 	var/list/fields = list()	// Fields of this record
 	var/datum/money_account/linked_account
 	var/list/access = list() // used for factional access
+	var/suspended = 0
+	var/terminated = 0
+	var/assignment_uid
+	var/list/promote_votes = list()
+	var/list/demote_votes = list()
+	var/rank = 0
+	var/custom_title
+	var/assignment_data = list() // format = list(assignment_uid = rank)
+	var/validate_time = 0
 /datum/computer_file/crew_record/New()
 	..()
 	for(var/T in subtypesof(/record_field/))
@@ -27,6 +36,127 @@ GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
 /datum/computer_file/crew_record/Destroy()
 	. = ..()
 	GLOB.all_crew_records.Remove(src)
+/datum/computer_file/crew_record/proc/try_duty()
+	if(suspended > world.realtime || terminated)
+		return 0
+	else
+		return assignment_uid
+/datum/computer_file/crew_record/proc/check_rank_change(var/datum/world_faction/faction)
+	var/list/all_promotes = list()
+	var/list/three_promotes = list()
+	var/list/five_promotes = list()
+	var/list/all_demotes = list()
+	var/list/three_demotes = list()
+	var/list/five_demotes = list()
+	for(var/name in promote_votes)
+		var/datum/computer_file/crew_record/record = faction.get_record(name)
+		if(record)
+			var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
+			if(assignment)
+				if(assignment.accesses.Find("2"))
+					if(record.rank >= 5)
+						five_promotes |= name
+					if(record.rank >= 3)
+						three_promotes |= name
+					all_promotes |= name
+	if(five_promotes.len >= faction.five_promote_req)
+		rank++
+		promote_votes.Cut()
+		demote_votes.Cut()
+		return
+	if(three_promotes.len >= faction.three_promote_req)
+		rank++
+		promote_votes.Cut()
+		demote_votes.Cut()
+		return
+	if(all_promotes.len >= faction.all_promote_req)
+		rank++
+		promote_votes.Cut()
+		demote_votes.Cut()
+		return
+	for(var/name in demote_votes)
+		var/datum/computer_file/crew_record/record = faction.get_record(name)
+		if(record)
+			var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
+			if(assignment)
+				if(assignment.accesses.Find("2"))
+					if(record.rank >= 5)
+						five_demotes |= name
+					if(record.rank >= 3)
+						three_demotes |= name
+					all_demotes |= name
+	if(five_demotes.len >= faction.five_promote_req)
+		rank--
+		promote_votes.Cut()
+		demote_votes.Cut()
+		return
+	if(three_demotes.len >= faction.three_promote_req)
+		rank--
+		promote_votes.Cut()
+		demote_votes.Cut()
+		return
+	if(all_demotes.len >= faction.all_promote_req)
+		rank--
+		promote_votes.Cut()
+		demote_votes.Cut()
+		return
+/datum/computer_file/crew_record/proc/load_from_id(var/obj/item/weapon/card/id/card)
+	if(!istype(card))
+		return 0
+	photo_front = card.front
+	photo_side = card.side
+
+	set_name(card.registered_name)
+	set_job("Unset")
+	set_sex(card.sex)
+	set_age(card.age)
+	set_status(GLOB.default_physical_status)
+	set_species(card.species)
+	// Medical record
+	set_bloodtype(card.blood_type)
+	set_medRecord("No record supplied")
+
+	// Security record
+	set_criminalStatus(GLOB.default_security_status)
+	set_dna(card.dna_hash)
+	set_fingerprint(card.fingerprint_hash)
+	set_secRecord("No record supplied")
+
+	// Employment record
+	set_emplRecord("No record supplied")
+	return 1
+/datum/computer_file/crew_record/proc/load_from_global(var/real_name)
+	var/datum/computer_file/crew_record/record
+	for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+		if(R.get_name() == real_name)
+			record = R
+			break
+	if(!record)
+		return 0
+	photo_front = record.photo_front
+	photo_side = record.photo_side
+	set_name(record.get_name())
+	set_job(record.get_job())
+	set_sex(record.get_sex())
+	set_age(record.get_age())
+	set_status(record.get_status())
+	set_species(record.get_species())
+
+	// Medical record
+	set_bloodtype(record.get_bloodtype())
+	set_medRecord("No record supplied")
+
+	// Security record
+	set_criminalStatus(GLOB.default_security_status)
+	set_dna(record.get_dna())
+	set_fingerprint(record.get_fingerprint())
+	set_secRecord("No record supplied")
+
+	// Employment record
+	set_emplRecord("No record supplied")
+	set_homeSystem(record.get_homeSystem())
+	set_religion(record.get_religion())
+	return 1
 
 /datum/computer_file/crew_record/proc/load_from_mob(var/mob/living/carbon/human/H)
 	if(istype(H))

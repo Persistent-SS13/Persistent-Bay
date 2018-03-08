@@ -55,6 +55,18 @@
 			return
 		found = 1
 		tesla_link = H
+	else if(istype(H, /obj/item/weapon/computer_hardware/dna_scanner))
+		if(dna_scanner)
+			to_chat(user, "This computer's dna scanner slot is already occupied by \the [dna_scanner].")
+			return
+		found = 1
+		dna_scanner = H	
+	else if(istype(H, /obj/item/weapon/computer_hardware/logistic_processor))
+		if(logistic_processor)
+			to_chat(user, "This computer's logistic processor slot is already occupied by \the [logistic_processor].")
+			return
+		found = 1
+		logistic_processor = H		
 	if(found)
 		to_chat(user, "You install \the [H] into \the [src]")
 		H.holder2 = src

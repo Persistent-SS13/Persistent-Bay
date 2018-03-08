@@ -170,6 +170,10 @@ var/global/list/zones_to_save = list()
 		am.loc = null
 	startswith = list()
 	StandardRead(f)
+/obj/Read(savefile/f)
+	for(var/atom/movable/am in contents)
+		am.loc = null
+	StandardRead(f)
 /turf/Read(savefile/f)
 	StandardRead(f)
 
@@ -233,6 +237,8 @@ var/global/list/zones_to_save = list()
 	var/v = null
 	f.cd = "/extras"
 	f["records"] >> GLOB.all_crew_records
+	if(!GLOB.all_crew_records)
+		GLOB.all_crew_records = list()
 	f["factions"] >> GLOB.all_world_factions
 	var/list/areas
 	f["areas"] >> areas

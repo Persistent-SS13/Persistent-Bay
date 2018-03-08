@@ -300,3 +300,16 @@
 	cost = 50
 	containername = "\improper Phorosian Suit adapter"
 
+/decl/hierarchy/supply_pack/miscellaneous/bedsheets
+	name = "Bedsheet Variety Pack"
+	contains = list(/obj/item/weapon/bedsheet,
+					/obj/item/weapon/bedsheet/blue,
+					/obj/item/weapon/bedsheet/green,
+					/obj/item/weapon/bedsheet/orange,
+					/obj/item/weapon/bedsheet/purple,
+					/obj/item/weapon/bedsheet/red,
+					/obj/item/weapon/bedsheet/yellow,
+					/obj/item/weapon/bedsheet/brown,
+					/obj/item/weapon/bedsheet/rainbow)
+	cost = 10
+	containername = "Bedsheet Crate"

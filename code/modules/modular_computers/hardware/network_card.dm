@@ -18,6 +18,10 @@ var/global/ntnet_card_uid = 1
 	var/password = ""
 	var/datum/ntnet/connected_network
 	malfunction_probability = 1
+/obj/item/weapon/computer_hardware/network_card/proc/get_faction()
+	get_network()
+	if(connected && connected_network)
+		return connected_network.holder
 /obj/item/weapon/computer_hardware/network_card/proc/get_network()
 	if(connected_network && connected_network.net_uid == connected_to)
 		connected = 1

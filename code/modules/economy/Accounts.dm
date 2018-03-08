@@ -9,6 +9,9 @@
 	var/security_level = 0	//0 - auto-identify from worn ID, require only account number
 							//1 - require manual login / account number and pin
 							//2 - require card and manual login
+	var/account_type = 0	//0 - personal account
+							//1 - assignment category account
+							//3 - central faction account
 /datum/money_account/after_load()
 	if(get_account(account_number))
 		message_admins("duplicate account loaded owner: [owner_name] account_number: [account_number]")
@@ -75,7 +78,7 @@
 	T.amount = starting_funds
 	if(!source_db)
 		//set a random date, time and location some time over the past few decades
-		T.date = "[num2text(rand(1,31))] [pick("January","February","March","April","May","June","July","August","September","October","November","December")], [game_year-rand(8,18)]"
+		T.date = "[num2text(rand(1,31))] [pick("January","February","March","April","May","June","July","August","September","October","November","December")], [game_year]"
 		T.time = "[rand(0,24)]:[rand(11,59)]"
 		T.source_terminal = "NTGalaxyNet Terminal #[rand(111,1111)]"
 

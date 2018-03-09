@@ -42,7 +42,7 @@
 	color = "#b18345"
 
 /obj/item/clothing/accessory/nt
-	name = "\improper NanoTrasen tie with a clip"
+	name = "\improper Nanotrasen tie with a clip"
 	desc = "A neosilk clip-on tie. This one has a clip on it that proudly bears 'NT' on it."
 	icon_state = "ntcliptie"
 

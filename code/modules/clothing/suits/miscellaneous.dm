@@ -404,8 +404,8 @@
 	icon_closed = "mu_hoodie"
 
 /obj/item/clothing/suit/storage/toggle/hoodie/nt
-	name = "NanoTrasen hoodie"
-	desc = "A warm, blue sweatshirt.  It proudly bears the silver NanoTrasen insignia lettering on the back.  The edges are trimmed with silver."
+	name = "Nanotrasen hoodie"
+	desc = "A warm, blue sweatshirt.  It proudly bears the silver Nanotrasen insignia lettering on the back.  The edges are trimmed with silver."
 	icon_state = "nt_hoodie"
 	icon_open = "nt_hoodie_open"
 	icon_closed = "nt_hoodie"
@@ -430,7 +430,7 @@
 
 /obj/item/clothing/suit/poncho/roles/security
 	name = "security poncho"
-	desc = "A simple, comfortable cloak without sleeves. This one is black and red, which are standard NanoTrasen Security colors."
+	desc = "A simple, comfortable cloak without sleeves. This one is black and red, which are standard Nanotrasen Security colors."
 	icon_state = "secponcho"
 	item_state = "secponcho"
 
@@ -448,7 +448,7 @@
 
 /obj/item/clothing/suit/poncho/roles/science
 	name = "science poncho"
-	desc = "A simple, comfortable cloak without sleeves. This one is white with a few red stripes, which are standard NanoTrasen Science colors."
+	desc = "A simple, comfortable cloak without sleeves. This one is white with a few red stripes, which are standard Nanotrasen Science colors."
 	icon_state = "sciponcho"
 	item_state = "sciponcho"
 

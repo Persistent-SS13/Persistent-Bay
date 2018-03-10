@@ -1,4 +1,4 @@
-GLOBAL_VAR_CONST(HIGHEST_CONNECTABLE_ZLEVEL_INDEX, 17)
+GLOBAL_VAR_CONST(HIGHEST_CONNECTABLE_ZLEVEL_INDEX, 27)
 
 // If you add a more comprehensive system, just untick this file.
 // WARNING: Only works for up to 17 z-levels!

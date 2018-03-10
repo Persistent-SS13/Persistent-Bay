@@ -6,7 +6,7 @@
 	program_menu_icon = "flag"
 	nanomodule_path = /datum/nano_module/program/faction_core
 	extended_desc = "Uses a Logistic Processor to connect to and modify bluespace networks over satalite."
-	required_access = access_heads
+	required_access = core_access_command_programs
 	requires_ntnet = 0
 	size = 65
 	usage_flags = PROGRAM_CONSOLE
@@ -298,7 +298,7 @@
 			var/curr_name = connected_faction.network.password
 			var/select_name = sanitize(input(usr,"Enter new password. All connected terminals will need to update their password. Leave blank to have unsecured network.","Wireless Network Password") as null|text, 20)
 			if(select_name)
-				if(curr_name != connected_faction.password)
+				if(curr_name != connected_faction.network.password)
 					to_chat(usr, "Your inputs expired because someone used the terminal first.")
 				else
 					connected_faction.network.password = select_name

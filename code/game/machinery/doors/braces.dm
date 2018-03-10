@@ -150,3 +150,4 @@
 	else
 		req_access = electronics.conf_access
 		req_one_access = list()
+	req_access_faction = electronics.req_access_faction

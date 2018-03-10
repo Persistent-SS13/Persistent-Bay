@@ -2,7 +2,7 @@
 {{if data.found_faction}}
 	{{:helper.link('Account Modification', 'home', {'action' : 'switchm', 'target' : 'mod'}, data.mmode ? 'disabled' : null)}}
 	{{:helper.link('ID Registration', 'home', {'action' : 'switchm', 'target' : 'id'}, data.submode ? 'disabled' : null)}}
-	{{:helper.link('Crew Manifest', 'folder-open', {'action' : 'switchm', 'target' : 'manifest'}, data.manifest ? 'disabled' : null)}}
+	{{:helper.link('Crew Manifest', 'folder-open', {'action' : 'switchm', 'target' : 'manifest'}, data.manifest_button ? 'disabled' : null)}}
 	{{if data.have_printer}} {{:helper.link('Print', 'print', {'action' : 'print'}, (!data.mmode || data.has_id) ? null : 'disabled')}} {{/if}}
 
 	{{if !data.mmode}}

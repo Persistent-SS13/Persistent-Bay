@@ -5,6 +5,57 @@ GLOBAL_VAR_INIT(default_physical_status, "Active")
 GLOBAL_LIST_INIT(security_statuses, list("None", "Released", "Parolled", "Incarcerated", "Arrest"))
 GLOBAL_VAR_INIT(default_security_status, "None")
 GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
+#define GETTER_SETTER(KEY) /datum/computer_file/crew_record/proc/get_##KEY(){var/record_field/F = locate(/record_field/##KEY) in fields; if(F) return F.get_value()} \
+/datum/computer_file/crew_record/proc/set_##KEY(value){var/record_field/F = locate(/record_field/##KEY) in fields; if(F) return F.set_value(value)}
+
+// Fear not the preprocessor, for it is a friend. To add a field, use one of these, depending on value type and if you need special access to see it.
+// It will also create getter/setter procs for record datum, named like /get_[key here]() /set_[key_here](value) e.g. get_name() set_name(value)
+// Use getter setters to avoid errors caused by typoing the string key.
+#define FIELD_SHORT(NAME, KEY) /record_field/##KEY/name = ##NAME; GETTER_SETTER(##KEY)
+#define FIELD_SHORT_SECURE(NAME, KEY, ACCESS) FIELD_SHORT(##NAME, ##KEY); /record_field/##KEY/acccess = ##ACCESS
+
+#define FIELD_LONG(NAME, KEY) FIELD_SHORT(##NAME, ##KEY); /record_field/##KEY/valtype = EDIT_LONGTEXT
+#define FIELD_LONG_SECURE(NAME, KEY, ACCESS) FIELD_LONG(##NAME, ##KEY); /record_field/##KEY/acccess = ##ACCESS
+
+#define FIELD_NUM(NAME, KEY) FIELD_SHORT(##NAME, ##KEY); /record_field/##KEY/valtype = EDIT_NUMERIC; /record_field/##KEY/value = 0
+#define FIELD_NUM_SECURE(NAME, KEY, ACCESS) FIELD_NUM(##NAME, ##KEY); /record_field/##KEY/acccess = ##ACCESS
+
+#define FIELD_LIST(NAME, KEY, OPTIONS) FIELD_SHORT(##NAME, ##KEY); /record_field/##KEY/valtype = EDIT_LIST; /record_field/##KEY/get_options(){. = ##OPTIONS;}
+#define FIELD_LIST_SECURE(NAME, KEY, OPTIONS, ACCESS) FIELD_LIST(##NAME, ##KEY, ##OPTIONS); /record_field/##KEY/acccess = ##ACCESS
+
+// GENERIC RECORDS
+FIELD_SHORT("Name",name)
+FIELD_SHORT("Job",job)
+FIELD_LIST("Sex", sex, record_genders())
+FIELD_NUM("Age", age)
+
+FIELD_LIST("Status", status, GLOB.physical_statuses)
+/record_field/status/acccess_edit = access_medical
+
+FIELD_SHORT("Species",species)
+FIELD_LIST("Branch", branch, record_branches())
+FIELD_LIST("Rank", rank, record_ranks())
+
+// MEDICAL RECORDS
+FIELD_LIST("Blood Type", bloodtype, GLOB.blood_types)
+FIELD_LONG_SECURE("Medical Record", medRecord, access_medical)
+
+// SECURITY RECORDS
+FIELD_LIST_SECURE("Criminal Status", criminalStatus, GLOB.security_statuses, access_security)
+FIELD_LONG_SECURE("Security Record", secRecord, access_security)
+FIELD_SHORT_SECURE("DNA", dna, access_security)
+FIELD_SHORT_SECURE("Fingerprint", fingerprint, access_security)
+
+// EMPLOYMENT RECORDS
+FIELD_LONG_SECURE("Employment Record", emplRecord, access_heads)
+FIELD_SHORT_SECURE("Home System", homeSystem, access_heads)
+FIELD_SHORT_SECURE("Citizenship", citizenship, access_heads)
+FIELD_SHORT_SECURE("Faction", faction, access_heads)
+FIELD_SHORT_SECURE("Religion", religion, access_heads)
+
+// ANTAG RECORDS
+FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
+
 
 // Kept as a computer file for possible future expansion into servers.
 /datum/computer_file/crew_record
@@ -48,57 +99,90 @@ GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
 	var/list/all_demotes = list()
 	var/list/three_demotes = list()
 	var/list/five_demotes = list()
+	var/datum/assignment/curr_assignment = faction.get_assignment(assignment_uid)
+	if(!curr_assignment) return 0
 	for(var/name in promote_votes)
+		if(name == get_name()) continue
 		var/datum/computer_file/crew_record/record = faction.get_record(name)
 		if(record)
+			var/head_position = 0
+			var/command_category = 0
 			var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
 			if(assignment)
-				if(assignment.accesses.Find("2"))
-					if(record.rank >= 5)
-						five_promotes |= name
-					if(record.rank >= 3)
-						three_promotes |= name
-					all_promotes |= name
+				if(curr_assignment.parent)
+					if(curr_assignment.parent.command_faction)
+						command_category = 1
+						if(curr_assignment.parent.head_position.uid == curr_assignment.uid) head_position = 1
+				if(command_category || assignment.parent.name == curr_assignment.parent.name) // either the promotion is coming from a command position or its coming from an internal promotion request
+					if(assignment.parent)
+						if(assignment.parent.head_position.uid == assignment.uid && !curr_assignment.parent.head_position.uid != curr_assignment.uid) // The promoted position is a head position and the promoter is not
+							continue
+						if((assignment.uid == curr_assignment.uid || !curr_assignment.parent.head_position.uid != curr_assignment.uid) && record.rank >= rank) // they have the same assignment and we are equal or less rank
+							continue
+					if(assignment.accesses.Find("2"))
+						if(record.rank >= 5 || (record.rank >= assignment.ranks.len && head_position))
+							five_promotes |= name
+						if(record.rank >= 3 || (record.rank >= assignment.ranks.len && head_position))
+							three_promotes |= name
+						all_promotes |= name
 	if(five_promotes.len >= faction.five_promote_req)
 		rank++
 		promote_votes.Cut()
 		demote_votes.Cut()
+		update_ids(get_name())
 		return
 	if(three_promotes.len >= faction.three_promote_req)
 		rank++
 		promote_votes.Cut()
 		demote_votes.Cut()
+		update_ids(get_name())
 		return
 	if(all_promotes.len >= faction.all_promote_req)
 		rank++
 		promote_votes.Cut()
 		demote_votes.Cut()
+		update_ids(get_name())
 		return
 	for(var/name in demote_votes)
 		var/datum/computer_file/crew_record/record = faction.get_record(name)
 		if(record)
+			var/head_position = 0
+			var/command_category = 0
 			var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
 			if(assignment)
+				if(curr_assignment.parent)
+					if(curr_assignment.parent.command_faction)
+						command_category = 1
+						if(curr_assignment.parent.head_position.uid == curr_assignment.uid) head_position = 1
+				if(command_category || assignment.parent.name == curr_assignment.parent.name) // either the promotion is coming from a command position or its coming from an internal promotion request
+					if(assignment.parent)
+						if(assignment.parent.head_position.uid == assignment.uid && !curr_assignment.parent.head_position.uid != curr_assignment.uid && (assignment.parent.command_faction || !curr_assignment.parent.command_faction)) // The promoted position is a head position and the promoter is not
+							continue
+						if((assignment.uid == curr_assignment.uid || !curr_assignment.parent.head_position.uid != curr_assignment.uid) && record.rank >= rank) // they have the same assignment and we are equal or less rank
+							continue
 				if(assignment.accesses.Find("2"))
-					if(record.rank >= 5)
+					if(record.rank >= 5 || (record.rank >= assignment.ranks.len && head_position))
 						five_demotes |= name
-					if(record.rank >= 3)
+					if(record.rank >= 3 || (record.rank >= assignment.ranks.len && head_position))
 						three_demotes |= name
 					all_demotes |= name
 	if(five_demotes.len >= faction.five_promote_req)
 		rank--
 		promote_votes.Cut()
 		demote_votes.Cut()
+		update_ids(get_name())
 		return
 	if(three_demotes.len >= faction.three_promote_req)
 		rank--
 		promote_votes.Cut()
 		demote_votes.Cut()
+		update_ids(get_name())
 		return
 	if(all_demotes.len >= faction.all_promote_req)
 		rank--
 		promote_votes.Cut()
 		demote_votes.Cut()
+		update_ids(get_name())
 		return
 /datum/computer_file/crew_record/proc/load_from_id(var/obj/item/weapon/card/id/card)
 	if(!istype(card))
@@ -324,57 +408,6 @@ GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
 	if(!used_access)
 		return FALSE
 	return islist(used_access) ? (acccess_edit in used_access) : acccess_edit == used_access
-
-#define GETTER_SETTER(KEY) /datum/computer_file/crew_record/proc/get_##KEY(){var/record_field/F = locate(/record_field/##KEY) in fields; if(F) return F.get_value()} \
-/datum/computer_file/crew_record/proc/set_##KEY(value){var/record_field/F = locate(/record_field/##KEY) in fields; if(F) return F.set_value(value)}
-
-// Fear not the preprocessor, for it is a friend. To add a field, use one of these, depending on value type and if you need special access to see it.
-// It will also create getter/setter procs for record datum, named like /get_[key here]() /set_[key_here](value) e.g. get_name() set_name(value)
-// Use getter setters to avoid errors caused by typoing the string key.
-#define FIELD_SHORT(NAME, KEY) /record_field/##KEY/name = ##NAME; GETTER_SETTER(##KEY)
-#define FIELD_SHORT_SECURE(NAME, KEY, ACCESS) FIELD_SHORT(##NAME, ##KEY); /record_field/##KEY/acccess = ##ACCESS
-
-#define FIELD_LONG(NAME, KEY) FIELD_SHORT(##NAME, ##KEY); /record_field/##KEY/valtype = EDIT_LONGTEXT
-#define FIELD_LONG_SECURE(NAME, KEY, ACCESS) FIELD_LONG(##NAME, ##KEY); /record_field/##KEY/acccess = ##ACCESS
-
-#define FIELD_NUM(NAME, KEY) FIELD_SHORT(##NAME, ##KEY); /record_field/##KEY/valtype = EDIT_NUMERIC; /record_field/##KEY/value = 0
-#define FIELD_NUM_SECURE(NAME, KEY, ACCESS) FIELD_NUM(##NAME, ##KEY); /record_field/##KEY/acccess = ##ACCESS
-
-#define FIELD_LIST(NAME, KEY, OPTIONS) FIELD_SHORT(##NAME, ##KEY); /record_field/##KEY/valtype = EDIT_LIST; /record_field/##KEY/get_options(){. = ##OPTIONS;}
-#define FIELD_LIST_SECURE(NAME, KEY, OPTIONS, ACCESS) FIELD_LIST(##NAME, ##KEY, ##OPTIONS); /record_field/##KEY/acccess = ##ACCESS
-
-// GENERIC RECORDS
-FIELD_SHORT("Name",name)
-FIELD_SHORT("Job",job)
-FIELD_LIST("Sex", sex, record_genders())
-FIELD_NUM("Age", age)
-
-FIELD_LIST("Status", status, GLOB.physical_statuses)
-/record_field/status/acccess_edit = access_medical
-
-FIELD_SHORT("Species",species)
-FIELD_LIST("Branch", branch, record_branches())
-FIELD_LIST("Rank", rank, record_ranks())
-
-// MEDICAL RECORDS
-FIELD_LIST("Blood Type", bloodtype, GLOB.blood_types)
-FIELD_LONG_SECURE("Medical Record", medRecord, access_medical)
-
-// SECURITY RECORDS
-FIELD_LIST_SECURE("Criminal Status", criminalStatus, GLOB.security_statuses, access_security)
-FIELD_LONG_SECURE("Security Record", secRecord, access_security)
-FIELD_SHORT_SECURE("DNA", dna, access_security)
-FIELD_SHORT_SECURE("Fingerprint", fingerprint, access_security)
-
-// EMPLOYMENT RECORDS
-FIELD_LONG_SECURE("Employment Record", emplRecord, access_heads)
-FIELD_SHORT_SECURE("Home System", homeSystem, access_heads)
-FIELD_SHORT_SECURE("Citizenship", citizenship, access_heads)
-FIELD_SHORT_SECURE("Faction", faction, access_heads)
-FIELD_SHORT_SECURE("Religion", religion, access_heads)
-
-// ANTAG RECORDS
-FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 
 //Options builderes
 /record_field/rank/proc/record_ranks()

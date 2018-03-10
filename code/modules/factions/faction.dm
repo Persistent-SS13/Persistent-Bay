@@ -38,6 +38,8 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	var/all_promote_req = 3
 	var/three_promote_req = 2
 	var/five_promote_req = 1
+
+	var/leader_name = ""
 /datum/world_faction/proc/get_duty_status(var/real_name)
 	for(var/obj/item/organ/internal/stack/stack in connected_laces)
 		if(stack.get_owner_name() == real_name)

@@ -770,13 +770,16 @@ var/global/floorIsLava = 0
 
 	if(!check_rights(R_ADMIN))
 		return
-	for(var/datum/mind/employee in ticker.minds)
-		if(!employee.current || !employee.current.ckey) continue
-		employee.current.should_save = 0
 	Save_World()
-	for(var/datum/mind/employee in ticker.minds)
-		if(!employee.current || !employee.current.ckey) continue
-		employee.current.should_save = 1
+
+/datum/admins/proc/spawnasteroid()
+	set category = "Server"
+	set desc="Spawn Asteroid"
+	set name="Spawn Asteroid"
+
+	if(!check_rights(R_ADMIN))
+		return
+	new /obj/effect/landmark/random_gen/asteroid/genTest(usr.loc)
 
 /datum/admins/proc/savechars()
 	set category = "Server"
@@ -800,7 +803,7 @@ var/global/floorIsLava = 0
 		var/savefile/f = new("[save_path][employee.current.save_slot].sav")
 		f << employee.current
 		to_chat(employee.current, "You character has been saved.")
-	
+
 /datum/admins/proc/loadnow()
 	set category = "Server"
 	set desc="Loads the Station"

@@ -31,13 +31,7 @@ var/datum/controller/save_controller/save_controller
 
 
 /datum/controller/save_controller/proc/save()
-	for(var/datum/mind/employee in ticker.minds)
-		if(!employee.current || !employee.current.ckey) continue
-		employee.current.should_save = 0
 	Save_World()
-	for(var/datum/mind/employee in ticker.minds)
-		if(!employee.current || !employee.current.ckey) continue
-		employee.current.should_save = 1
 	for(var/mob/mobbie in GLOB.all_cryo_mobs)
 		if(!mobbie.stored_ckey) continue
 		var/save_path = load_path(mobbie.stored_ckey, "")

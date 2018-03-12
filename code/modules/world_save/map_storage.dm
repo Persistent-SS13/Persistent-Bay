@@ -8,7 +8,8 @@ var/global/list/zones_to_save = list()
 	for(var/datum/pipe_network/net in SSmachines.pipenets)
 		for(var/datum/pipeline/line in net.line_members)
 			line.temporarily_store_air()
-
+/mob/living
+	should_save = 0
 /datum/area_holder
 	var/area_type = "/area"
 	var/name
@@ -58,10 +59,10 @@ var/global/list/zones_to_save = list()
 	..()
 	update_icon()
 	lighting_build_overlay()
-	
+
 	for(var/obj/effect/floor_decal/decal in saved_decals)
 		decal.init_for(src)
-	
+
 /atom/movable/lighting_overlay/after_load()
 	loc = null
 	qdel(src)
@@ -123,6 +124,11 @@ var/global/list/zones_to_save = list()
 /mob/Write(savefile/f)
 	if(StandardWrite(f))
 		return
+/mob/living/Write(savefile/f)
+	should_save = 1
+	if(StandardWrite(f))
+		should_save = 0
+		return
 
 /area/proc/get_turf_coords()
 	var/list/coord_list = list()
@@ -179,7 +185,7 @@ var/global/list/zones_to_save = list()
 
 /area/Read(savefile/f)
 	return 0
-	
+
 /proc/Save_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
 	var/z = zi
 	xi = (xi - (xi % 20) + 1)
@@ -200,7 +206,7 @@ var/global/list/zones_to_save = list()
 	fdel("map_saves/game.sav")
 	var/savefile/f = new("map_saves/game.sav")
 	found_vars = list()
-	for(var/z in 1 to 11)
+	for(var/z in 1 to 27)
 		f.cd = "/map/[z]"
 		for(var/x in 1 to world.maxx step 20)
 			for(var/y in 1 to world.maxy step 20)
@@ -254,17 +260,17 @@ var/global/list/zones_to_save = list()
 			turfs |= T
 		A.contents.Add(turfs)
 	f.cd = "/"
-	for(var/z in 1 to 11)
+	for(var/z in 1 to 27)
 		f.cd = "/map/[z]"
 		while(!f.eof)
 			f >> v
 			CHECK_TICK
-		world << "Loading.. [((1/(12-z))*100)]% Complete"
+		world << "Loading Zlevel [z] Complete"
 	f.cd = "/extras"
-	
+
 	f["turbolifts"] >> turbolifts
 	var/list/zones
-	
+
 	f["zones"] >> zones
 	for(var/zone/Z in zones)
 		for(var/ind in 1 to Z.turf_coords.len)
@@ -274,14 +280,14 @@ var/global/list/zones_to_save = list()
 				message_admins("No turf found for zone load")
 			T.zone = Z
 			Z.contents |= T
-	for(var/zone/Z in zones)	
+	for(var/zone/Z in zones)
 		Z.rebuild()
 	for(var/ind in 1 to all_loaded.len)
 		var/datum/dat = all_loaded[ind]
 		dat.after_load()
 	all_loaded = list()
 	SSmachines.makepowernets()
-	
+
 	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Loading Complete"
 	return 1

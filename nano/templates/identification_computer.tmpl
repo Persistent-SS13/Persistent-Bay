@@ -8,7 +8,7 @@
 	{{if !data.mmode}}
 		{{if !data.submode}}
 			<div class='item'>
-			  <h2>Crew Manifest</h2>
+			  <h2>Crew Manifest ({{:data.faction_name}})</h2>
 			</div>
 			<div class='item'>
 			  {{:data.manifest}}
@@ -48,7 +48,7 @@
 		{{/if}}
 	{{else}}
 		<div class='item'>
-		  <h2>Account Modification</h2>
+		  <h2>Account Modification ({{:data.faction_name}})</h2>
 		</div>
 
 		{{if !data.has_id}}
@@ -124,7 +124,7 @@
 					</div>
 					<div class='itemContent'>
 						{{:helper.link('Vote to Promote', '', {'action' : 'promote'},data.promote_button != 1  ? 'disabled' : null, data.promote_button != 1  ? 'disabled' : null)}}{{:helper.link('X', '', {'action' : 'promote_cancel'},data.promote_button != 2  ? 'disabled' : null, data.promote_button != 2  ? 'disabled' : null)}}<br><br>
-						{{:helper.link('Vote to Demote', '', {'action' : 'demote'},data.demote_button != 1  ? 'disabled' : null, data.promote_button != 1  ? 'disabled' : null)}}{{:helper.link('X', '', {'action' : 'demote_cancel'},data.demote_button != 2  ? 'disabled' : null, data.promote_button != 3  ? 'disabled' : null)}}
+						{{:helper.link('Vote to Demote', '', {'action' : 'demote'},data.demote_button != 1  ? 'disabled' : null, data.demote_button != 1  ? 'disabled' : null)}}{{:helper.link('X', '', {'action' : 'demote_cancel'},data.demote_button != 2  ? 'disabled' : null, data.demote_button != 2  ? 'disabled' : null)}}
 					</div>
 				</div>
 				<div class='item'>

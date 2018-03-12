@@ -82,6 +82,10 @@
 					if(name == user_id_card.registered_name)
 						promote_button = 2
 						break
+				for(var/name in record.demote_votes)
+					if(name == user_id_card.registered_name)
+						demote_button = 2
+						break
 				if(!promote_button)
 					for(var/name in record.demote_votes)
 						if(name == user_id_card.registered_name)

@@ -106,18 +106,16 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		var/datum/computer_file/crew_record/record = faction.get_record(name)
 		if(record)
 			var/head_position = 0
-			var/command_category = 0
 			var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
 			if(assignment)
 				if(curr_assignment.parent)
 					if(curr_assignment.parent.command_faction)
-						command_category = 1
 						if(curr_assignment.parent.head_position.uid == curr_assignment.uid) head_position = 1
-				if(command_category || assignment.parent.name == curr_assignment.parent.name) // either the promotion is coming from a command position or its coming from an internal promotion request
+				if(assignment.parent.command_faction || assignment.parent.name == curr_assignment.parent.name) // either the promotion is coming from a command position or its coming from an internal promotion request
 					if(assignment.parent)
-						if(assignment.parent.head_position.uid == assignment.uid && !curr_assignment.parent.head_position.uid != curr_assignment.uid) // The promoted position is a head position and the promoter is not
+						if(assignment.parent.head_position.uid != assignment.uid && curr_assignment.parent.head_position.uid == curr_assignment.uid) // The promoted position is a head position and the promoter is not
 							continue
-						if((assignment.uid == curr_assignment.uid || !curr_assignment.parent.head_position.uid != curr_assignment.uid) && record.rank >= rank) // they have the same assignment and we are equal or less rank
+						if((assignment.uid == curr_assignment.uid || assignment.parent.head_position.uid != assignment.uid) && record.rank <= rank) // they have the same assignment and we are equal or less rank
 							continue
 					if(assignment.accesses.Find("2"))
 						if(record.rank >= 5 || (record.rank >= assignment.ranks.len && head_position))
@@ -147,20 +145,18 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		var/datum/computer_file/crew_record/record = faction.get_record(name)
 		if(record)
 			var/head_position = 0
-			var/command_category = 0
 			var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
 			if(assignment)
 				if(curr_assignment.parent)
 					if(curr_assignment.parent.command_faction)
-						command_category = 1
 						if(curr_assignment.parent.head_position.uid == curr_assignment.uid) head_position = 1
-				if(command_category || assignment.parent.name == curr_assignment.parent.name) // either the promotion is coming from a command position or its coming from an internal promotion request
-					if(assignment.parent)
-						if(assignment.parent.head_position.uid == assignment.uid && !curr_assignment.parent.head_position.uid != curr_assignment.uid && (assignment.parent.command_faction || !curr_assignment.parent.command_faction)) // The promoted position is a head position and the promoter is not
-							continue
-						if((assignment.uid == curr_assignment.uid || !curr_assignment.parent.head_position.uid != curr_assignment.uid) && record.rank >= rank) // they have the same assignment and we are equal or less rank
-							continue
-				if(assignment.accesses.Find("2"))
+				if(assignment.parent.head_position.uid != assignment.uid && curr_assignment.parent.head_position.uid == curr_assignment.uid) // The promoted position is a head position and the promoter is not
+					message_admins("disregard 1")
+					continue
+				if((assignment.uid == curr_assignment.uid || assignment.parent.head_position.uid != assignment.uid) && record.rank <= rank) // they have the same assignment and we are equal or less rank
+					message_admins("disregard 2")
+					continue
+				if(assignment.accesses.Find("2") || record.access.Find("2"))
 					if(record.rank >= 5 || (record.rank >= assignment.ranks.len && head_position))
 						five_demotes |= name
 					if(record.rank >= 3 || (record.rank >= assignment.ranks.len && head_position))

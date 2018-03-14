@@ -264,9 +264,9 @@
 		// Ditto here. Create the lower ladder first.
 		var/obj/structure/ladder/downer = new(A)
 		downer.allowed_directions = UP
-		downer.icon_state = "ladder10"
 
 		new /obj/structure/ladder(upper_loc)
+
 		user.drop_item()
 		qdel(src)
 
@@ -307,7 +307,7 @@
 	if(QDELETED(src))
 		return
 
-	var/obj/item/weapon/plasteel_ladder/R = new(get_turf(H))
+	var/obj/structure/ladder/R = new(get_turf(H))
 	transfer_fingerprints_to(R)
 
 	H.visible_message("<span class='notice'>[H] removes the [src] into [R]!</span>",

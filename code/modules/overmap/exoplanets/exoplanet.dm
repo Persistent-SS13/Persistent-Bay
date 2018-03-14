@@ -385,7 +385,7 @@
 	has_resources = 1
 	var/diggable = 1
 	var/mudpit = 0	//if pits should not take turf's color
-
+	skip_icon_state = 1
 /turf/simulated/floor/exoplanet/Entered(atom/movable/A)
 	..()
 	if(A.simulated && GLOB.using_map.use_overmap)
@@ -396,6 +396,7 @@
 
 /turf/simulated/floor/exoplanet/New()
 	if(GLOB.using_map.use_overmap)
+		/**
 		var/obj/effect/overmap/sector/exoplanet/E = map_sectors["[z]"]
 		if(istype(E))
 			if(E.atmosphere)
@@ -404,6 +405,7 @@
 			if(E.lightlevel)
 				light_power = E.lightlevel
 				light_range = 2
+		**/
 	..()
 
 /turf/simulated/floor/exoplanet/attackby(obj/item/C, mob/user)

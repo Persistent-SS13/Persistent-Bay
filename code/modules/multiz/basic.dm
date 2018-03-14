@@ -31,12 +31,12 @@ var/z_levels = 0 // Each bit represents a connection between adjacent levels.  S
 
 // The storage of connections between adjacent levels means some bitwise magic is needed.
 /proc/HasAbove(var/z)
-	if(z >= world.maxz || z > 16 || z < 1)
+	if(z >= world.maxz || z < 1)
 		return 0
 	return z_levels & (1 << (z - 1))
 
 /proc/HasBelow(var/z)
-	if(z > world.maxz || z > 17 || z < 2)
+	if(z > world.maxz || z < 2)
 		return 0
 	return z_levels & (1 << (z - 2))
 

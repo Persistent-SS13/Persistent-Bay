@@ -35,7 +35,7 @@ var/list/mining_floors = list()
 	var/image/ore_overlay
 
 	has_resources = 1
-
+	skip_icon_state = 1
 /turf/simulated/mineral/New()
 	if (!mining_walls["[src.z]"])
 		mining_walls["[src.z]"] = list()

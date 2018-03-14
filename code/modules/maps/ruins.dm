@@ -80,6 +80,7 @@
 	invisibility = 0
 
 /obj/effect/ruin_loader/proc/Load(list/potentialRuins, datum/map_template/template)
+	return
 	var/list/possible_ruins = list()
 	for(var/A in potentialRuins)
 		var/datum/map_template/T = potentialRuins[A]

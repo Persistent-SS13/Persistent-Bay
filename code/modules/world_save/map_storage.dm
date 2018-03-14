@@ -33,13 +33,14 @@ var/global/list/zones_to_save = list()
 /datum
 	var/should_save = 1
 	var/map_storage_saved_vars = ""
-
+	var/skip_empty = ""
+	var/skip_icon_state = 0
 /atom/movable/lighting_overlay
 	should_save = 0
 
 /turf
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
-
+	skip_empty = "contents;saved_decals"
 /obj
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
 
@@ -77,7 +78,7 @@ var/global/list/zones_to_save = list()
 	else
 		saving = get_saved_vars()
 		found_vars["[type]"] = saving
-
+	if(skip_icon_state) saving -= "icon_state"
 	for(var/ind in 1 to saving.len)
 		var/variable = saving[ind]
 		if(!hasvar(src, variable))
@@ -90,6 +91,9 @@ var/global/list/zones_to_save = list()
 			if(!D.should_save(src))
 				continue
 		if(istype(vars[variable], /list))
+			if(variable in params2list(skip_empty))
+				var/list/lis = vars[variable]
+				if(!lis.len) continue
 			var/list/D = vars[variable]
 			for(var/datum/dat in D)
 				if(!dat.should_save(src))
@@ -151,7 +155,7 @@ var/global/list/zones_to_save = list()
 	before_load()
 	var/list/loading
 	if(all_loaded)
-		all_loaded |= src
+		all_loaded += src
 
 	if(found_vars.Find("[type]"))
 		loading = found_vars["[type]"]
@@ -166,6 +170,24 @@ var/global/list/zones_to_save = list()
 				f["[variable]"] >> vars[variable]
 			catch
 
+/turf/StandardRead(var/savefile/f)
+	before_load()
+	var/list/loading
+	if(all_loaded)
+		all_loaded += src
+
+	if(found_vars.Find("[type]"))
+		loading = found_vars["[type]"]
+	else
+		loading = get_saved_vars()
+		found_vars["[type]"] = loading
+
+	for(var/ind in 1 to loading.len)
+		var/variable = loading[ind]
+		if("[variable]" == "x" || "[variable]" == "y" || "[variable]" == "z") continue
+		if(variable in f.dir)
+			f["[variable]"] >> vars[variable]
+			
 /datum/Read(savefile/f)
 	StandardRead(f)
 /atom/movable/Read(savefile/f)
@@ -194,7 +216,7 @@ var/global/list/zones_to_save = list()
 	for(var/y in yi to yi + 20)
 		for(var/x in xi to xi + 20)
 			var/turf/T = locate(x,y,z)
-			if(!T || (T.type == /turf/space && (!T.contents || !T.contents.len)))
+			if(!T || ((T.type == /turf/space || T.type == /turf/simulated/open) && (!T.contents || !T.contents.len)))
 				continue
 			lis |= T
 	f << lis
@@ -262,10 +284,11 @@ var/global/list/zones_to_save = list()
 	f.cd = "/"
 	for(var/z in 1 to 27)
 		f.cd = "/map/[z]"
+		var/starttime2 = REALTIMEOFDAY
 		while(!f.eof)
 			f >> v
-			CHECK_TICK
-		world << "Loading Zlevel [z] Complete"
+			sleep(-1)
+		world << "Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!"
 	f.cd = "/extras"
 
 	f["turbolifts"] >> turbolifts

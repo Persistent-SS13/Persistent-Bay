@@ -11,6 +11,7 @@
 	var/accessibility_weight = 0
 
 /datum/map_template/New(var/list/paths = null, var/rename = null)
+	return 0
 	if(paths)
 		mappaths = paths
 	if(mappaths)

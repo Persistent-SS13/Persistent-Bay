@@ -6,7 +6,7 @@
 	extended_desc = "This program allows switching between bluespace networks."
 	size = 12
 	requires_ntnet = 0
-	required_access = access_network
+//	required_access = core_access_wireless_programs
 	available_on_ntnet = 0
 	nanomodule_path = /datum/nano_module/program/computer_ntrouter/
 
@@ -52,6 +52,7 @@
 			data["connected"] = 1
 			data["display_name"] = network.name
 			data["secured"] = network.secured
+			data["locked"] = program.computer.network_card.locked
 		else
 			data["connected"] = 0
 			var/attempted = 0
@@ -78,12 +79,12 @@
 	if(!program.computer.network_card)
 		return 1
 	if(href_list["disconnect"])
-		if(input("Are you sure you want to disconnect from the network? Network settings wont save.") in list("Confirm", "Cancel") == "Confirm")
+		if(input(usr, "Are you sure you want to disconnect from the network? Network settings wont save.") in list("Confirm", "Cancel") == "Confirm")
 			program.computer.network_card.disconnect()
 		return 1
 	if(href_list["connect"])
 		if(program.computer.network_card.connected)
-			if(input("Are you sure you want to connect to a different network? You will be disconnected from your current network and settings wont save.") in list("Confirm", "Cancel") != "Confirm")
+			if(input(usr, "Are you sure you want to connect to a different network? You will be disconnected from your current network and settings wont save.") in list("Confirm", "Cancel") != "Confirm")
 				return 1
 			program.computer.network_card.disconnect()
 		var/datum/ntnet/network = locate(href_list["connect"])
@@ -92,11 +93,11 @@
 			return 1
 		program.computer.network_card.connected_to = network.net_uid
 		if(network.secured)
-			program.computer.network_card.password = input("This network requires a password","Enter network password","")
+			program.computer.network_card.password = input(usr, "This network requires a password","Enter network password","")
 		program.computer.network_card.get_network()
 		return 1
 	if(href_list["manual_connect"])
-		program.computer.network_card.connected_to = input("Enter the net_uid for the network","Enter net_uid","")
-		program.computer.network_card.password = input("Enter the password for the network. (Only used if required)","Enter password","")
+		program.computer.network_card.connected_to = input(usr, "Enter the net_uid for the network","Enter net_uid","")
+		program.computer.network_card.password = input(usr,"Enter the password for the network. (Only used if required)","Enter password","")
 		program.computer.network_card.get_network()
 		return 1

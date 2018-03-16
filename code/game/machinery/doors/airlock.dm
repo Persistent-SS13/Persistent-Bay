@@ -101,7 +101,6 @@
 					src.code += text("[]", href_list["type"])
 					if(length(src.code) > 5)
 						src.code = "ERROR"
-		else
 			src.add_fingerprint(usr)
 			for(var/mob/M in viewers(1, src.loc))
 				if((M.client && M.machine == src))
@@ -1278,10 +1277,11 @@ About the new airlock wires panel:
 		if(electronics.one_access)
 			req_access.Cut()
 			req_one_access = src.electronics.conf_access
+			
 		else
 			req_one_access.Cut()
 			req_access = src.electronics.conf_access
-
+		req_access_faction = electronics.req_access_faction
 		//get the name from the assembly
 		if(assembly.created_name)
 			name = assembly.created_name
@@ -1346,7 +1346,7 @@ About the new airlock wires panel:
 	else if (src.req_one_access.len)
 		electronics.conf_access = src.req_one_access
 		electronics.one_access = 1
-
+	electronics.req_access_faction = req_access_faction
 /obj/machinery/door/airlock/emp_act(var/severity)
 	if(prob(20/severity))
 		spawn(0)

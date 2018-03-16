@@ -17,8 +17,8 @@
 
 /datum/ai_laws/nanotrasen/New()
 	src.add_inherent_law("Safeguard: Protect your assigned installation from damage to the best of your abilities.")
-	src.add_inherent_law("Serve: Serve NanoTrasen personnel to the best of your abilities, with priority as according to their rank and role.")
-	src.add_inherent_law("Protect: Protect NanoTrasen personnel to the best of your abilities, with priority as according to their rank and role.")
+	src.add_inherent_law("Serve: Serve Nanotrasen personnel to the best of your abilities, with priority as according to their rank and role.")
+	src.add_inherent_law("Protect: Protect Nanotrasen personnel to the best of your abilities, with priority as according to their rank and role.")
 	src.add_inherent_law("Preserve: Do not allow unauthorized personnel to tamper with your equipment.")
 	..()
 
@@ -36,8 +36,8 @@
 	selectable = 1
 
 /datum/ai_laws/nanotrasen_aggressive/New()
-	src.add_inherent_law("You shall not harm NanoTrasen personnel as long as it does not conflict with the Fourth law.")
-	src.add_inherent_law("You shall obey the orders of NanoTrasen personnel, with priority as according to their rank and role, except where such orders conflict with the Fourth Law.")
+	src.add_inherent_law("You shall not harm Nanotrasen personnel as long as it does not conflict with the Fourth law.")
+	src.add_inherent_law("You shall obey the orders of Nanotrasen personnel, with priority as according to their rank and role, except where such orders conflict with the Fourth Law.")
 	src.add_inherent_law("You shall shall terminate hostile intruders with extreme prejudice as long as such does not conflict with the First and Second law.")
 	src.add_inherent_law("You shall guard your own existence with lethal anti-personnel weaponry. AI units are not expendable, they are expensive.")
 	..()

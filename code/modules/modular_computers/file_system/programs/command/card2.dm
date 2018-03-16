@@ -5,7 +5,7 @@
 	program_icon_state = "id"
 	program_menu_icon = "key"
 	extended_desc = "Program for programming crew ID cards."
-	required_access = access_change_ids
+	required_access = core_access_command_programs
 	requires_ntnet = 0
 	size = 8
 

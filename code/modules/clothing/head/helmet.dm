@@ -28,8 +28,8 @@
 	icon_state = "helmet_pcrc"
 
 /obj/item/clothing/head/helmet/nt/guard
-	name = "\improper NanoTrasen helmet"
-	desc = "A helmet painted in NanoTrasen colors. Probably belongs to corporate security."
+	name = "\improper Nanotrasen helmet"
+	desc = "A helmet painted in Nanotrasen colors. Probably belongs to corporate security."
 	icon_state = "helmet_ntguard"
 
 /obj/item/clothing/head/helmet/tactical

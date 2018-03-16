@@ -23,7 +23,7 @@
 	var/room_wall_type = /turf/simulated/wall
 	var/border_wall_type = /turf/unsimulated/mineral
 
-	target_turf_type = /turf/unsimulated/mask
+	target_turf_type = /turf/space
 
 	var/chance_of_room = 65
 	var/chance_of_room_empty = 50

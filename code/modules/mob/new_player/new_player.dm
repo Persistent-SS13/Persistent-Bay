@@ -45,7 +45,7 @@
 		output += "<a href='byond://?src=\ref[src];manifest=1'>View the Crew Manifest</A><br><br>"
 		output += "<p><a href='byond://?src=\ref[src];late_join=1'>Join Game!</A></p>"
 
-	output += "<p><a href='byond://?src=\ref[src];observe=1'>Observe</A></p>"
+//	output += "<p><a href='byond://?src=\ref[src];observe=1'>Observe</A></p>"
 	output += "<br><p><a href='byond://?src=\ref[src];delete_char=1'>Delete a Character</A></p>"
 	if(!IsGuestKey(src.key))
 		establish_db_connection()
@@ -67,7 +67,7 @@
 
 	output += "</div>"
 
-	panel = new(src, "Welcome","Welcome", 210, 300, src)
+	panel = new(src, "Persistent SS13","Persistent SS13", 210, 300, src)
 	panel.set_window_options("can_close=0")
 	panel.set_content(output)
 	panel.open()

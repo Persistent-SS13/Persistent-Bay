@@ -1,0 +1,21 @@
+<div class='item'>
+	<div class='itemLabel'>
+		Connected to:
+	</div>
+	<div class='itemContent'>
+		{{:data.faction_name}}
+	</div>
+</div>
+<br>
+ID cards will sync their details and access to the network they are connected to.<br>
+ID cards can be made valid for multiple access networks or synced to a different network by using the 'Add Card to Network' and 'Sync card to Network' functions in the Account Modification program.
+<br><br>
+	{{:helper.link("Print ID Card", '', {'action' : 'print_card'}, !data.have_printer ? 'disabled' : null)}}
+	<br>
+	{{if !data.have_printer}}
+		No printer detected. Install a printer to enable this function.
+	{{/if}}
+	<br><br>
+	{{:helper.link("Devalidate Existing IDs", 'radiation', {'action' : 'devalidate_card'}, null)}}
+	<br>
+	This function will cause all IDs created in your name prior to this time to become useless. Do this if you've had your ID stolen, and then print a new one.

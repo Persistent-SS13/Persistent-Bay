@@ -243,8 +243,11 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 		else	H.equip_to_slot_or_del(new /obj/item/weapon/storage/box/survival(H), slot_r_hand)
 
 /datum/species/proc/create_organs(var/mob/living/carbon/human/H) //Handles creation of mob organs.
-
 	H.mob_size = mob_size
+	var/stack_type = /obj/item/organ/internal/stack
+	
+	var/obj/item/organ/internal/stack/stack = H.internal_organs_by_name["stack"]
+	if(stack) stack_type = stack.type
 	for(var/obj/item/organ/organ in H.contents)
 		if((organ in H.organs) || (organ in H.internal_organs))
 			qdel(organ)
@@ -253,12 +256,9 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 	if(H.internal_organs)         H.internal_organs.Cut()
 	if(H.organs_by_name)          H.organs_by_name.Cut()
 	if(H.internal_organs_by_name) H.internal_organs_by_name.Cut()
-
 	H.organs = list()
 	H.internal_organs = list()
 	H.organs_by_name = list()
-	H.internal_organs_by_name = list()
-
 	for(var/limb_type in has_limbs)
 		var/list/organ_data = has_limbs[limb_type]
 		var/limb_path = organ_data["path"]
@@ -280,7 +280,11 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 
 	for(var/obj/item/organ/O in (H.organs|H.internal_organs))
 		O.owner = H
-
+	stack = new stack_type(H)
+	if(stack)
+		stack.owner = H
+	else
+		message_admins("No stack, what the heck")
 	H.sync_organ_dna()
 
 /datum/species/proc/hug(var/mob/living/carbon/human/H,var/mob/living/target)

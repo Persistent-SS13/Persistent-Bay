@@ -30,7 +30,9 @@
 			spillover = brute_dam + burn_dam + brute + burn - max_damage
 			if(spillover > 0)
 				burn -= spillover
-
+	if(!owner) 
+		qdel(src)
+		return
 	owner.updatehealth() //droplimb will call updatehealth() again if it does end up being called
 	//If limb took enough damage, try to cut or tear it off
 	if(owner && loc == owner && !is_stump())

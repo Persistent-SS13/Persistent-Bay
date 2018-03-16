@@ -25,7 +25,7 @@ var/list/default_material_composition = list("steel" = 0, "glass" = 0, "gold" = 
 		if(materials[f] >= SHEET_MATERIAL_AMOUNT)
 			var/path = get_material_by_name(f)
 			if(path)
-				var/obj/item/stack/S = new f(loc)
+				var/obj/item/stack/S = new path(loc)
 				S.amount = round(materials[f] / SHEET_MATERIAL_AMOUNT)
 	..()
 

@@ -68,6 +68,8 @@
 				id.sync_from_record(record)
 			id.registered_name = usr.real_name
 			id.validate_time = world.realtime
+			if(record.linked_account)
+				id.associated_account_number = record.linked_account.account_number
 			id.update_name()
 			usr.last_print = world.realtime + 5 MINUTES
 			playsound(computer.loc, pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)

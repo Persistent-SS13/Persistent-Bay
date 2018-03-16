@@ -140,6 +140,8 @@
 /obj/item/organ/internal/stack/after_load()
 	..()
 	try_connect()
+	if(duty_status)
+		try_duty()
 /obj/item/organ/internal/stack/proc/backup_inviable()
 	return 	(!istype(backup) || backup == owner.mind || (backup.current && backup.current.stat != DEAD))
 

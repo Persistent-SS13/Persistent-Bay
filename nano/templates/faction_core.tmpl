@@ -20,6 +20,7 @@
 		<br><br>{{:helper.link("Network Options", 'gear', {'action' : 'change_menu', 'menu_target' : '5'})}}
 		<br><br>{{:helper.link("Access Config", 'locked', {'action' : 'change_menu', 'menu_target' : '6'})}}
 		<br><br>{{:helper.link("Assignments Config", 'pencil', {'action' : 'change_menu', 'menu_target' : '7'})}}
+		<br><br>{{:helper.link("Economy Menu", 'briefcase', {'action' : 'change_menu', 'menu_target' : '12'})}}
 	{{/if}}
 	{{if data.menu == 4}}
 		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
@@ -148,6 +149,71 @@
 				<br><br><br><br><hr><br>
 			{{/for}}	
 		{{/if}}
+	{{/if}}
+	{{if data.menu == 12}}
+		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
+		<h2>Economy Menu</h2>
+		<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
+		<br><hr>
+		<div class='item'>
+			<div class='itemLabel'>
+				Current Account Balance:
+			</div>
+			<div class='itemContent'>
+				{{:data.money_balance}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Current Debt:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Settle Debt", 'cross', {'action' : 'money_settle'})}}{{:data.money_debt}}
+			</div>
+		</div>
+		<br> The current debt represents missed payments due to insufficent funds to pay employees. The debt is already paid as much as it can be during auto-payout, after the current employees are paid.
+		<div class='item'>
+			<div class='itemLabel'>
+				Hourly Pay Rate:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Change", 'pencil', {'action' : 'money_change'})}}{{:data.money_rate}}
+			</div>
+		</div>
+		<br> The pay for each employee is determined by taking the hourly pay rate, divided by the time they didn't work (it's possible for an employee to be paid for working half a shift), multiplied by their payscale. This is automatically hourly.
+	{{/if}}
+	{{if data.menu == 13}}
+		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
+		<h2>Promotion Control</h2>
+		<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
+		<br><hr>
+		<h4>Promotion/Demotion Requirements</h4>
+		<br>These represent the amount of votes required at certain ranks to authorize a promotion/demotion.
+		<div class='item'>
+			<div class='itemLabel'>
+				Any rank promotion votes required:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Change", 'pencil', {'action' : 'req1_change'})}}{{:data.rank1_req}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Rank 3+ promotion votes required:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Change", 'pencil', {'action' : 'req3_change'})}}{{:data.rank3_req}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Rank 5+ promotion votes required:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Change", 'pencil', {'action' : 'req5_change'})}}{{:data.rank5_req}}
+			</div>
+		</div>
+		<br>A promotion vote coming from someone with an assignment that is the leader of the command faction, and they are the highest rank available to that assignment ALWAYS cound as a rank 5 vote.
 	{{/if}}
 {{else}}
 	<h2><span class='alert'><i>No operational Logistics Processor detected. <br>CHECK LOG PROCESSOR</i></span></h2>

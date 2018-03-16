@@ -57,9 +57,9 @@
 					src.connect_image = image(src.icon, "connect[overlaydir]")
 				else
 					src.connect_image.icon_state = "connect[overlaydir]"
-				src.UpdateOverlays(src.connect_image, "connect")
+		//		src.UpdateOverlays(src.connect_image, "connect")
 			else
-				src.UpdateOverlays(null, "connect")
+		//		src.UpdateOverlays(null, "connect")
 
 /turf/simulated/wall/auto/reinforced
 	name = "reinforced wall"

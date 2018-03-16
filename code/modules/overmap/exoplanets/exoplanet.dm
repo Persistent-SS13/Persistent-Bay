@@ -395,8 +395,8 @@
 				E.process_map_edge(A)
 
 /turf/simulated/floor/exoplanet/New()
-	if(GLOB.using_map.use_overmap)
 		/**
+	if(GLOB.using_map.use_overmap)
 		var/obj/effect/overmap/sector/exoplanet/E = map_sectors["[z]"]
 		if(istype(E))
 			if(E.atmosphere)

@@ -279,21 +279,6 @@
 	mymob.radio_use_icon.color = ui_color
 	mymob.radio_use_icon.alpha = ui_alpha
 
-	if(ishuman(mymob))
-		var/mob/living/carbon/human/H = mymob
-		H.fov = new /obj/screen()
-		H.fov.icon = 'icons/mob/hide.dmi'
-		H.fov.icon_state = "combat"
-		H.fov.name = " "
-		H.fov.screen_loc = "1,1"
-		H.fov.mouse_opacity = 0
-		H.fov.plane = LIGHTING_PLANE
-		H.fov.layer = LIGHTING_LAYER
-		H.fov.invisibility = INVISIBILITY_LIGHTING
-		H.fov.simulated = 0
-	//	H.fov.layer = UNDER_HUD_LAYER
-		hud_elements |= H.fov
-
 	mymob.client.screen = list()
 
 	mymob.client.screen += hud_elements

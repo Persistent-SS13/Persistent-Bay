@@ -78,6 +78,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/custom_title
 	var/assignment_data = list() // format = list(assignment_uid = rank)
 	var/validate_time = 0
+	var/worked = 0
 /datum/computer_file/crew_record/New()
 	..()
 	for(var/T in subtypesof(/record_field/))

@@ -26,15 +26,15 @@
 
 /obj/machinery/microwave/New()
 	..()
-	component_parts = list()
+	reagents = new/datum/reagents(100)
+	reagents.my_atom = src
+
+	circuit = new circuit(src)
 	component_parts = list()
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
 	component_parts += new /obj/item/weapon/stock_parts/motor(src)
 	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	RefreshParts()
 
-	reagents = new/datum/reagents(100)
-	reagents.my_atom = src
 	if (!available_recipes)
 		available_recipes = new
 		for (var/type in (typesof(/datum/recipe)-/datum/recipe))
@@ -54,7 +54,7 @@
 		acceptable_items |= /obj/item/weapon/holder
 		acceptable_items |= /obj/item/weapon/reagent_containers/food/snacks/grown
 
-
+	RefreshParts()
 
 /*******************
 *   Item Adding

@@ -61,8 +61,7 @@
 		msg += "[T.He] [T.is] wearing [w_uniform.get_examine_line()].\n"
 
 	//head
-	if(head)
-		msg += "[T.He] [T.is] wearing [head.get_examine_line()] on [T.his] head.\n"
+	msg += "[T.He] [T.is] wearing [head.get_examine_line()] on [T.his] head.\n"
 
 	//suit/armour
 	if(wear_suit)

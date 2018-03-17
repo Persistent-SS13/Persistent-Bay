@@ -6,7 +6,7 @@
 	desc = "It's a machine that prints organs."
 	icon = 'icons/obj/surgery.dmi'
 	icon_state = "bioprinter"
-	circuit = /obj/item/weapon/circuitboard/bioprinter
+
 	anchored = 1
 	density = 1
 	use_power = 1
@@ -55,6 +55,7 @@
 /obj/machinery/organ_printer/New()
 	..()
 	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/bioprinter(src)
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
@@ -123,7 +124,7 @@
 	name = "prosthetic organ fabricator"
 	desc = "It's a machine that prints prosthetic organs."
 	icon_state = "roboprinter"
-	circuit = /obj/item/weapon/circuitboard/roboprinter
+
 	var/matter_amount_per_sheet = 10
 	var/matter_type = DEFAULT_WALL_MATERIAL
 
@@ -138,12 +139,7 @@
 
 /obj/machinery/organ_printer/robot/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	RefreshParts()
+	component_parts += new /obj/item/weapon/circuitboard/roboprinter
 
 /obj/machinery/organ_printer/robot/print_organ(var/choice)
 	var/obj/item/organ/O = ..()
@@ -175,7 +171,6 @@
 	name = "bioprinter"
 	desc = "It's a machine that prints replacement organs."
 	icon_state = "bioprinter"
-	circuit = /obj/item/weapon/circuitboard/bioprinter
 	var/list/amount_list = list(
 		/obj/item/weapon/reagent_containers/food/snacks/meat = 50,
 		/obj/item/weapon/reagent_containers/food/snacks/rawcutlet = 15
@@ -202,13 +197,8 @@
 
 /obj/machinery/organ_printer/flesh/New()
 	..()
-	component_parts = list()
 	component_parts += new /obj/item/device/healthanalyzer
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	RefreshParts()
+	component_parts += new /obj/item/weapon/circuitboard/bioprinter
 
 /obj/machinery/organ_printer/flesh/print_organ(var/choice)
 	var/obj/item/organ/O = ..()

@@ -90,9 +90,8 @@
 		return 1
 /obj/machinery/atm/dismantle()
 	var/obj/structure/frame/A = ..()
-	A.frame_type = "atm"
 	A.state = 4
-	A.icon_state = "[A.frame_type]_4"
+	A.icon_state = "atm_4"
 	qdel(src)
 /obj/machinery/atm/attackby(obj/item/I as obj, mob/user as mob)
 	if(istype(I, /obj/item/weapon/screwdriver) && circuit)

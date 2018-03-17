@@ -298,9 +298,8 @@
 	name = "mining drill brace"
 	desc = "A machinery brace for an industrial drill. It looks easily two feet thick."
 	icon_state = "mining_brace"
-	circuit = /obj/item/weapon/circuitboard/miningdrillbrace
+	/obj/item/weapon/circuitboard/miningdrillbrace
 	var/obj/machinery/mining/drill/connected
-
 
 /obj/machinery/mining/brace/New()
 	..()

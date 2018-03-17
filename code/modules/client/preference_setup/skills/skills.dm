@@ -22,6 +22,10 @@
 
 /datum/category_item/player_setup_item/skills/content()
 	. = list()
+	
+	. += "<h2>Coming soon! Level up and improve attributes that change the way your character plays.<br>Dont worry, when the update comes older characters will get a chance to assign their points.</h2>"
+	/*
+	. = list()
 	. += "<b>Select your Skills</b><br>"
 	. += "Current skill level: <b>[pref.GetSkillClass(pref.used_skillpoints)]</b> ([pref.used_skillpoints])<br>"
 	. += "<table>"
@@ -43,7 +47,7 @@
 			. += "</tr>"
 	. += "</table>"
 	. = jointext(.,null)
-
+	*/
 /datum/category_item/player_setup_item/proc/skill_to_button(var/skill, var/level_name, var/current_level, var/selection_level)
 	if(current_level == selection_level)
 		return "<th><span class='linkOn'>[level_name]</span></th>"

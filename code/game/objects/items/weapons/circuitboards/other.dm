@@ -9,13 +9,6 @@
 	origin_tech = list(TECH_DATA = 4, TECH_BIO = 2)
 	board_type = "other"
 
-
-/obj/item/weapon/circuitboard/seedextractor
-	name = "circuit board (seed extractor)"
-	build_path = /obj/machinery/seed_extractor
-	board_type = "machine"
-	origin_tech = "biotech=1;programming=3"
-
 /obj/item/weapon/circuitboard/resleever
 	name = "circuit board (resleever)"
 	build_path = /obj/machinery/resleever
@@ -93,15 +86,6 @@
 	build_path = /obj/machinery/hologram/holopad
 	board_type = "machine"
 	origin_tech = "programming=1"
-	req_components = list(
-							/obj/item/weapon/stock_parts/capacitor = 1)
-
-
-/obj/item/weapon/circuitboard/longrangeholopad
-	name = "circuit board (Long Range Holopad)"
-	build_path = /obj/machinery/hologram/holopad/longrange
-	board_type = "machine"
-	origin_tech = "programming=1, bluespace=1"
 	req_components = list(
 							/obj/item/weapon/stock_parts/capacitor = 1)
 

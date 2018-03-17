@@ -4,6 +4,7 @@
 	icon_state = "metal"
 
 	var/material/material
+	var/icon_base
 	hitsound = 'sound/weapons/genhit.ogg'
 	var/datum/lock/lock
 	var/initial_lock_value //for mapping purposes. Basically if this value is set, it sets the lock to this value.

@@ -12,7 +12,7 @@
 	layer = CLOSED_DOOR_LAYER
 	var/open_layer = OPEN_DOOR_LAYER
 	var/closed_layer = CLOSED_DOOR_LAYER
-	var/icon_base = "door"
+
 	var/visible = 1
 	var/p_open = 0
 	var/operating = 0

@@ -28,6 +28,7 @@
 /obj/machinery/autolathe/New()
 	..()
 	wires = new(src)
+	circuit = new circuit(src)
 	component_parts = list()
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)

@@ -17,6 +17,7 @@ var/global/ntnet_card_uid = 1
 	var/connected_to = ""
 	var/password = ""
 	var/datum/ntnet/connected_network
+	var/locked = 0
 	malfunction_probability = 1
 /obj/item/weapon/computer_hardware/network_card/proc/get_faction()
 	get_network()

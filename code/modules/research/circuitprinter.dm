@@ -10,7 +10,7 @@ using metal and glass, it uses glass and reagents (usually sulphuric acid).
 	flags = OPENCONTAINER
 	var/list/datum/design/queue = list()
 	var/progress = 0
-	circuit = /obj/item/weapon/circuitboard/circuit_imprinter
+
 	var/max_material_storage = 75000
 	var/mat_efficiency = 1
 	var/speed = 1
@@ -20,9 +20,11 @@ using metal and glass, it uses glass and reagents (usually sulphuric acid).
 	active_power_usage = 2500
 
 /obj/machinery/r_n_d/circuit_imprinter/New()
+	materials = default_material_composition.Copy()
+
 	..()
-	circuit = new circuit()
 	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/circuit_imprinter(src)
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
 	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)

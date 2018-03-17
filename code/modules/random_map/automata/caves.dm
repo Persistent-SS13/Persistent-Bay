@@ -89,8 +89,10 @@
 			continue
 
 		num_applied += 1
-		new new_path(T)
-
+		var/list/turfs = list()
+		turfs |= new new_path(T)
+		for(var/turf/simulated/mineral/mineral in turfs)
+			mineral.setup()
 		CHECK_TICK
 
 	game_log("ASGEN", "Applied [num_applied] turfs.")

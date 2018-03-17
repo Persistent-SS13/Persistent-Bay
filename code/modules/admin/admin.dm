@@ -770,14 +770,20 @@ var/global/floorIsLava = 0
 
 	if(!check_rights(R_ADMIN))
 		return
-	for(var/datum/mind/employee in ticker.minds)
-		if(!employee.current || !employee.current.ckey) continue
-		employee.current.should_save = 0
 	Save_World()
-	for(var/datum/mind/employee in ticker.minds)
-		if(!employee.current || !employee.current.ckey) continue
-		employee.current.should_save = 1
 
+/datum/admins/proc/buildaccounts()
+	set category = "Server"
+	set desc="Build accounts"
+	set name="Build accounts"
+
+	if(!check_rights(R_ADMIN))
+		return
+	for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
+		if(!record.linked_account)
+			record.linked_account = create_account(record.get_name(), 0, null)
+			record.linked_account.remote_access_pin = 1111
+			
 /datum/admins/proc/savechars()
 	set category = "Server"
 	set desc="Saves Characters"
@@ -792,6 +798,7 @@ var/global/floorIsLava = 0
 			fdel("[save_path][mobbie.save_slot].sav")
 		var/savefile/f = new("[save_path][mobbie.save_slot].sav")
 		f << mobbie
+		mobbie.should_save = 0
 	for(var/datum/mind/employee in ticker.minds)
 		if(!employee.current || !employee.current.ckey) continue
 		var/save_path = load_path(employee.current.ckey, "")
@@ -799,8 +806,9 @@ var/global/floorIsLava = 0
 			fdel("[save_path][employee.current.save_slot].sav")
 		var/savefile/f = new("[save_path][employee.current.save_slot].sav")
 		f << employee.current
+		employee.current.should_save = 0
 		to_chat(employee.current, "You character has been saved.")
-	
+
 /datum/admins/proc/loadnow()
 	set category = "Server"
 	set desc="Loads the Station"

@@ -35,16 +35,19 @@ var/list/mining_floors = list()
 	var/image/ore_overlay
 
 	has_resources = 1
-
+	skip_icon_state = 1
 /turf/simulated/mineral/New()
 	if (!mining_walls["[src.z]"])
 		mining_walls["[src.z]"] = list()
 	mining_walls["[src.z]"] += src
+	
+/turf/simulated/mineral/proc/setup()
 	spawn(0)
 		MineralSpread()
 	spawn(2)
 		update_icon(1)
-
+/turf/simulated/mineral/after_load()
+	update_icon(0)
 /turf/simulated/mineral/Destroy()
 	if (mining_walls["[src.z]"])
 		mining_walls["[src.z]"] -= src

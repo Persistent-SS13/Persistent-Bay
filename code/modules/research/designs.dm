@@ -1475,12 +1475,6 @@ CIRCUITS BELOW
 	build_path = /obj/item/weapon/circuitboard/telesci_pad
 	sort_string = "ZZZZQ"
 */
-/datum/design/circuit/atm_electronics
-	name = "Automated Teller Machine"
-	id = "atm_electronics"
-	req_tech = list(TECH_ENGINEERING = 1, TECH_DATA = 1)
-	build_path = /obj/item/weapon/atm_electronics
-	sort_string = "ZZZZP"
 /datum/design/circuit/photocopier
 	name = "Photocopier"
 	id = "photocopier"
@@ -1559,12 +1553,7 @@ CIRCUITS BELOW
 	req_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 3, TECH_BLUESPACE = 1)
 	build_path = /obj/item/weapon/circuitboard/holopad
 	sort_string = "ZZZZC"
-/datum/design/circuit/longrangeholopad
-	name = "Long-Range Holopad"
-	id = "longrangeholopad"
-	req_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 3, TECH_BLUESPACE = 2)
-	build_path = /obj/item/weapon/circuitboard/longrangeholopad
-	sort_string = "ZZZZB"
+
 /*
 /datum/design/circuit/
 	name = ""
@@ -1645,8 +1634,6 @@ CIRCUITS BELOW
 	build_path = /obj/item/weapon/circuitboard/
 	sort_string = "ZZZYO"
 */
-
-
 
 
 

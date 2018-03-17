@@ -15,10 +15,12 @@
 	var/base_charge_rate = 60 KILOWATTS
 	var/repair_power_usage = 10 KILOWATTS		// Per 1 HP of health.
 	var/repair = 0
-	circuit = /obj/item/weapon/circuitboard/mech_recharger
+
 /obj/machinery/mech_recharger/New()
 	..()
 	component_parts = list()
+
+	component_parts += new /obj/item/weapon/circuitboard/mech_recharger(src)
 	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
 	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
 	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)

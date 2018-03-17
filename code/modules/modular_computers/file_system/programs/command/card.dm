@@ -5,7 +5,7 @@
 	program_icon_state = "id"
 	program_menu_icon = "key"
 	extended_desc = "Program for programming crew ."
-	required_access = access_change_ids
+	required_access = core_access_command_programs
 	requires_ntnet = 1
 	size = 8
 
@@ -20,7 +20,7 @@
 /datum/nano_module/program/card_mod/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 
 	var/list/data = host.initial_data()
-
+	var/obj/item/weapon/card/id/user_id_card = user.GetIdCard()
 	data["src"] = "\ref[src]"
 	data["station_name"] = station_name()
 	data["assignments"] = show_assignments
@@ -43,7 +43,7 @@
 	data["mmode"] = mod_mode
 	data["submode"] = submode
 	if(!mod_mode && !submode)
-		data["manifest"] = 1
+		data["manifest_button"] = 1
 	data["centcom_access"] = is_centcom
 
 	if(program && program.computer && program.computer.card_slot)
@@ -77,22 +77,28 @@
 			var/promote_button = 0
 			var/demote_button = 0
 			var/max_rank = assignment.ranks.len + 1
-			for(var/name in record.promote_votes)
-				if(name == user.real_name)
-					promote_button = 2
-					break
-			if(!promote_button)
+			if(user_id_card)
+				for(var/name in record.promote_votes)
+					if(name == user_id_card.registered_name)
+						promote_button = 2
+						break
 				for(var/name in record.demote_votes)
-					if(name == user.real_name)
+					if(name == user_id_card.registered_name)
 						demote_button = 2
 						break
-			if(!promote_button)
-				if(record.rank < max_rank)
-					promote_button = 1
-			if(!demote_button)
-				if(record.rank != 1)
-					demote_button = 1
+				if(!promote_button)
+					for(var/name in record.demote_votes)
+						if(name == user_id_card.registered_name)
+							demote_button = 2
+							break
+				if(!promote_button)
+					if(record.rank < max_rank)
+						promote_button = 1
+				if(!demote_button)
+					if(record.rank != 1)
+						demote_button = 1
 			data["promote_button"] = promote_button
+			data["demote_button"] = demote_button
 			if(record.rank == 1)
 				data["title"] = assignment.name
 			else
@@ -194,6 +200,8 @@
 	var/datum/nano_module/program/card_mod/module = NM
 	switch(href_list["action"])
 		if("scan_id")
+			if(!id_card)
+				return
 			module.record = null
 			var/datum/computer_file/crew_record/record = connected_faction.get_record(id_card.registered_name)
 			if(!record && id_card.registered_name)
@@ -228,6 +236,7 @@
 		if("switchm")
 			if(href_list["target"] == "mod")
 				module.mod_mode = 1
+				module.submode = 0
 			else if (href_list["target"] == "manifest")
 				module.mod_mode = 0
 				module.submode = 0

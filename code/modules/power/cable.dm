@@ -91,14 +91,13 @@ var/list/possible_cable_coil_colours
 
 
 /obj/structure/cable/after_load()
-	var/dash = findtext(icon_state, "-")
-	d1 = text2num( copytext( icon_state, 1, dash ) )
-
-	d2 = text2num( copytext( icon_state, dash+1 ) )
-
+	icon_state = "[d1]-[d2]"
+	
 	var/turf/T = src.loc			// hide if turf is not intact
 	if(T)
 		if(level==1) hide(!T.is_plating())
+	mergeConnectedNetworks(d1)
+	mergeConnectedNetworks(d2)
 /obj/structure/cable/Destroy()     // called when a cable is deleted
 	if(powernet)
 		cut_cable_from_powernet()  // update the powernets

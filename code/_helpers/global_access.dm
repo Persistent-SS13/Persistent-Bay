@@ -1049,11 +1049,11 @@
 			return global.wrapped_species_by_ref;
 		if("xenomorphs")
 			return global.xenomorphs;
-		if("z_levels")
-			return global.z_levels;
+		if("z_level_connections")
+			return global.z_level_connections;
 		if("zone_blocked")
 			return global.zone_blocked;
-		
+
 /proc/writeglobal(which, newval)
 	switch(which)
 		if("ALL_ANTIGENS")
@@ -2104,11 +2104,11 @@
 			global.wrapped_species_by_ref=newval;
 		if("xenomorphs")
 			global.xenomorphs=newval;
-		if("z_levels")
-			global.z_levels=newval;
+		if("z_level_connections")
+			global.z_level_connections=newval;
 		if("zone_blocked")
 			global.zone_blocked=newval;
-		
+
 /var/list/_all_globals=list(
 	"ALL_ANTIGENS",
 	"ANTAG_FREQS",
@@ -2634,5 +2634,5 @@
 	"worths",
 	"wrapped_species_by_ref",
 	"xenomorphs",
-	"z_levels",
+	"z_level_connections",
 	"zone_blocked")

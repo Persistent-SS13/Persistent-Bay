@@ -278,17 +278,6 @@ default behaviour is:
 /mob/living/proc/setHalLoss(var/amount)
 	adjustBruteLoss((amount * 0.5)-getBruteLoss())
 
-/mob/living/proc/getStaminaLoss()//Stamina shit.
-	return staminaloss
-
-/mob/living/proc/adjustStaminaLoss(var/amount)
-	if(status_flags & GODMODE)	return 0
-	staminaloss = min(max(staminaloss + amount, 0),(maxHealth*2))
-
-/mob/living/proc/setStaminaLoss(var/amount)
-	if(status_flags & GODMODE)	return 0
-	staminaloss = amount
-
 /mob/living/proc/getBrainLoss()
 	return 0
 
@@ -434,7 +423,6 @@ default behaviour is:
 	SetParalysis(0)
 	SetStunned(0)
 	SetWeakened(0)
-	setStaminaLoss(0)
 
 	// shut down ongoing problems
 	radiation = 0
@@ -591,29 +579,6 @@ default behaviour is:
 	if(update_slimes)
 		for(var/mob/living/carbon/slime/M in view(1,src))
 			M.UpdateFeed()
-
-	for(var/mob/M in oview(src))
-		M.update_vision_cone()
-
-	update_vision_cone()
-/*
-
-/mob/living/proc/CheckStamina()
-	if(staminaloss <= 0)
-		setStaminaLoss(0)
-
-	if(staminaloss && !combat_mode)//If we're not doing anything, we're not in combat mode, and we've lost stamina we can wait to gain it back.
-		if(lying)
-			adjustStaminaLoss(-5)
-		else
-			adjustStaminaLoss(-1)
-
-	if(staminaloss >= STAMINA_EXHAUST && !stat)//Oh shit we've lost too much stamina and now we're tired!
-		Exhaust()
-		return
-*/
-/mob/living/proc/Exhaust()//Called when you run out of stamina.
-	Weaken(5)
 
 /mob/living/verb/resist()
 	set name = "Resist"
@@ -787,31 +752,6 @@ default behaviour is:
 	else
 		..()
 
-/mob/living/set_dir()
-	..()
-	update_vision_cone()
+/mob/living/Destroy()
 
-/atom/movable/proc/receive_damage(atom/A)
-	var/pixel_x_diff = rand(-2,2)
-	var/pixel_y_diff = rand(-2,2)
-	animate(src, pixel_x = pixel_x + pixel_x_diff, pixel_y = pixel_y + pixel_y_diff, time = 2)
-	animate(pixel_x = initial(pixel_x), pixel_y = initial(pixel_y), time = 2)
-
-/mob/living/receive_damage(atom/A)
-	..()
-
-/mob/living/proc/getTrail() //silicon and simple_animals don't get blood trails
-    return null
-
-/mob/living/Move(NewLoc, direct)
-	for(var/client/C in in_vision_cones)
-		if(src in C.hidden_mobs)
-			var/turf/T = get_turf(src)
-			var/image/I = image('icons/effects/footstepsound.dmi', loc = T, icon_state = "default", layer = 18)
-			C.images += I
-			spawn(4)
-				if(C)
-					C.images -= I
-		else
-			in_vision_cones.Remove(C)
-	. = ..()
+	return ..()

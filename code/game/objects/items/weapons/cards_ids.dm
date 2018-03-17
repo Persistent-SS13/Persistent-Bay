@@ -274,17 +274,19 @@ var/const/NO_EMAG_ACT = -50
 /obj/item/weapon/card/id/GetAccess(var/faction_uid)
 	if(!faction_uid || faction_uid == "")
 		return access
-	var/list/final_access = list()
+	var/list/final_access[0]
 	var/datum/world_faction/faction = get_faction(faction_uid)
 	if(faction)
 		if(faction.allow_unapproved_ids || approved_factions.Find(faction.uid))
 			var/datum/computer_file/crew_record/record = faction.get_record(registered_name)
 			if(record)
-				final_access |= record.access
+				for(var/x in record.access)
+					final_access |= text2num(x)
 				if(faction.allow_id_access) final_access |= access
 				var/datum/assignment/assignment = faction.get_assignment(record.try_duty())
 				if(assignment)
-					final_access |= assignment.accesses
+					for(var/x in assignment.accesses)
+						final_access |= text2num(x)
 				return final_access
 			else
 				if(faction.allow_id_access)

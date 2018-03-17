@@ -129,7 +129,7 @@ datum/preferences
 	dat += player_setup.content(user)
 
 	dat += "</html></body>"
-	char_panel = new(user, "NT Employee Application","NT Employee Application", 1200, 800, src)
+	char_panel = new(user, "Create a new character","Create a new character", 1200, 800, src)
 	char_panel.set_content(dat)
 	char_panel.open()
 

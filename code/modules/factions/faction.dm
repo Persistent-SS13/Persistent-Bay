@@ -38,16 +38,32 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	var/all_promote_req = 3
 	var/three_promote_req = 2
 	var/five_promote_req = 1
+
+	var/payrate = 100
+	var/leader_name = ""
+	var/list/debts = list() // format list("Ro Laren" = "550") real_name = debt amount
 /datum/world_faction/proc/get_duty_status(var/real_name)
 	for(var/obj/item/organ/internal/stack/stack in connected_laces)
 		if(stack.get_owner_name() == real_name)
 			return stack.duty_status + 1
 	return 0
-
+/datum/world_faction/proc/get_debt()
+	var/debt = 0
+	for(var/x in debts)
+		debt += text2num(debts[x])
+	return debt
+/datum/world_faction/proc/pay_debt()
+	for(var/x in debts)
+		var/debt = text2num(debts[x])
+		if(!money_transfer(central_account,x,"Postpaid Payroll",debt))
+			return 0
+		debts -= x
+	
 /datum/world_faction/New()
 	network = new()
 	network.holder = src
 	records = new()
+	create_faction_account()
 /datum/world_faction/proc/rebuild_all_access()
 	all_access = list()
 	for(var/datum/access_category/access_category in access_categories)
@@ -76,7 +92,7 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 		if(R.get_name() == real_name)
 			return R
 	
-/datum/world_faction/proc/create_account()
+/datum/world_faction/proc/create_faction_account()
 	central_account = create_account(name, 0)
 /datum/assignment_category
 	var/name = ""

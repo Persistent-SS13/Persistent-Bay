@@ -13,7 +13,6 @@
 	anchored = 1
 	use_power = 1
 	idle_power_usage = 10
-	circuit =  /obj/item/weapon/circuitboard/atm
 	var/datum/money_account/authenticated_account
 	var/number_incorrect_tries = 0
 	var/previous_account_number = 0
@@ -26,24 +25,6 @@
 	var/view_screen = NO_SCREEN
 	var/datum/effect/effect/system/spark_spread/spark_system
 	var/account_security_level = 0
-	var/wiresexposed = 0
-	var/buildstage = 2
-
-
-
-/obj/machinery/atm/New(var/loc, var/dir, atom/frame)
-	..(loc)
-
-	if(dir)
-		src.set_dir(dir)
-
-	if(istype(frame))
-		buildstage = 0
-		wiresexposed = 1
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -24 : 24)
-		pixel_y = (dir & 3)? (dir ==1 ? -24 : 24) : 0
-		update_icon()
-		frame.transfer_fingerprints_to(src)
 
 /obj/machinery/atm/New()
 	..()
@@ -52,10 +33,8 @@
 	spark_system.set_up(5, 0, src)
 	spark_system.attach(src)
 
-
-
 /obj/machinery/atm/Process()
-	if(stat & NOPOWER || buildstage != 2)
+	if(stat & NOPOWER)
 		return
 
 	if(ticks_left_timeout > 0)
@@ -88,26 +67,12 @@
 		var/response = pick("Initiating withdraw. Have a nice day!", "CRITICAL ERROR: Activating cash chamber panic siphon.","PIN Code accepted! Emptying account balance.", "Jackpot!")
 		to_chat(user, "\icon[src] <span class='warning'>The [src] beeps: \"[response]\"</span>")
 		return 1
-/obj/machinery/atm/dismantle()
-	var/obj/structure/frame/A = ..()
-	A.frame_type = "atm"
-	A.state = 4
-	A.icon_state = "[A.frame_type]_4"
-	qdel(src)
+
 /obj/machinery/atm/attackby(obj/item/I as obj, mob/user as mob)
-	if(istype(I, /obj/item/weapon/screwdriver) && circuit)
-		user << "<span class='notice'>You start disconnecting the monitor.</span>"
-		playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
-		if(do_after(user, 20))
-			dismantle()
-		return
 	if(istype(I, /obj/item/weapon/card))
 		if(emagged > 0)
 			//prevent inserting id into an emagged ATM
-			user << "\red \icon[src] CARD READER ERROR. This system has been compromised!"
-			return
-		else if(istype(I,/obj/item/weapon/card/emag))
-			I.resolve_attackby(src, user)
+			to_chat(user, "\icon[src] <span class='warning'>CARD READER ERROR. This system has been compromised!</span>")
 			return
 
 		var/obj/item/weapon/card/id/idcard = I
@@ -117,6 +82,8 @@
 			held_card = idcard
 			if(authenticated_account && held_card.associated_account_number != authenticated_account.account_number)
 				authenticated_account = null
+			attack_hand(user)
+
 	else if(authenticated_account)
 		if(istype(I,/obj/item/weapon/spacecash))
 			var/obj/item/weapon/spacecash/dolla = I
@@ -493,11 +460,3 @@
 		human_user.put_in_hands(E)
 	E.worth = sum
 	E.owner_name = authenticated_account.owner_name
-
-/obj/item/weapon/atm_electronics
-	name = "atm electronics"
-	icon = 'icons/obj/doors/door_assembly.dmi'
-	icon_state = "door_electronics"
-	desc = "Looks like a circuit. Probably is."
-	w_class = ITEM_SIZE_SMALL
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)

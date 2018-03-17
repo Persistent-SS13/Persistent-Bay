@@ -12,7 +12,6 @@
 	idle_power_usage = 5
 	active_power_usage = 100
 	flags = NOREACT
-	circuit = /obj/item/weapon/circuitboard/smartfridge/
 	var/global/max_n_of_items = 999 // Sorry but the BYOND infinite loop detector doesn't look things over 1000.
 	var/icon_on = "smartfridge"
 	var/icon_off = "smartfridge-off"
@@ -31,6 +30,10 @@
 
 /obj/machinery/smartfridge/New()
 	..()
+	component_parts = list()
+	var/obj/item/weapon/circuitboard/smartfridge/V = new(null)
+	V.set_type(type)
+	component_parts += V
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)

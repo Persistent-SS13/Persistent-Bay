@@ -45,7 +45,7 @@
 		return list(icon_state)
 
 /obj/item/weapon/spacecash/bundle
-	name = "pile of thalers"
+	name = "pile of ethericoins"
 	icon_state = ""
 	desc = "They are worth 0 Ethericoins."
 	worth = 0
@@ -61,7 +61,7 @@
 			sum -= i
 			num++
 			. += "spacecash[i]"
-	if(num == 0) // Less than one thaler, let's just make it look like 1 for ease
+	if(num == 0) // Less than one ethericoin, let's just make it look like 1 for ease
 		. += "spacecash1"
 
 /obj/item/weapon/spacecash/bundle/update_icon()
@@ -80,7 +80,7 @@
 	if(worth in denominations)
 		src.name = "[worth] Ethericoin"
 	else
-		src.name = "pile of [worth] thalers"
+		src.name = "pile of [worth] ethericoins"
 
 	if(overlays.len <= 2)
 		w_class = ITEM_SIZE_TINY

@@ -1,15 +1,15 @@
+
 /obj/machinery/microwave
-	name = "Microwave"
+	name = "microwave"
 	icon = 'icons/obj/kitchen.dmi'
 	icon_state = "mw"
-	layer = 2.9
+	layer = BELOW_OBJ_LAYER
 	density = 1
 	anchored = 1
 	use_power = 1
 	idle_power_usage = 5
 	active_power_usage = 100
 	flags = OPENCONTAINER | NOREACT
-	circuit = /obj/item/weapon/circuitboard/microwave
 	var/operating = 0 // Is it on?
 	var/dirty = 0 // = {0..100} Does it need cleaning?
 	var/broken = 0 // ={0,1,2} How broken is it???
@@ -17,6 +17,7 @@
 	var/global/list/acceptable_items // List of the items you can put in
 	var/global/list/acceptable_reagents // List of the reagents you can put in
 	var/global/max_n_of_items = 0
+	var/efficiency
 
 // see code/modules/food/recipes_microwave.dm for recipes
 
@@ -26,15 +27,7 @@
 
 /obj/machinery/microwave/New()
 	..()
-	component_parts = list()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/stock_parts/motor(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	RefreshParts()
-
-	reagents = new/datum/reagents(100)
-	reagents.my_atom = src
+	create_reagents(100)
 	if (!available_recipes)
 		available_recipes = new
 		for (var/type in (typesof(/datum/recipe)-/datum/recipe))
@@ -55,47 +48,82 @@
 		acceptable_items |= /obj/item/weapon/reagent_containers/food/snacks/grown
 
 
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/microwave(null)
+	component_parts += new /obj/item/weapon/stock_parts/micro_laser(null)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
+	component_parts += new /obj/item/stack/cable_coil(null, 2)
+	RefreshParts()
+
+
+/obj/machinery/microwave/upgraded/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/microwave(null)
+	component_parts += new /obj/item/weapon/stock_parts/micro_laser/ultra(null)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
+	component_parts += new /obj/item/stack/cable_coil(null, 2)
+	RefreshParts()
+
+/obj/machinery/microwave/RefreshParts()
+	var/E
+	for(var/obj/item/weapon/stock_parts/micro_laser/M in component_parts)
+		E += M.rating
+	efficiency = E
+
 
 /*******************
 *   Item Adding
 ********************/
 
-/obj/machinery/microwave/attackby(var/obj/item/O as obj, var/mob/user as mob)
+/obj/machinery/microwave/attackby(var/obj/item/O as obj, var/mob/user as mob, params)
+	if(operating)
+		return
+	if(!broken && dirty < 100)
+		if(default_deconstruction_screwdriver(user, "mw-o", "mw", O))
+			return
+	if(!broken && istype(O, /obj/item/weapon/wrench))
+		playsound(src, 'sound/items/Ratchet.ogg', 50, 1)
+		if(anchored)
+			anchored = 0
+			user << "<span class='caution'>The [src] can now be moved.</span>"
+			return
+		else if(!anchored)
+			anchored = 1
+			user << "<span class='caution'>The [src] is now secured.</span>"
+			return
+
+	default_deconstruction_crowbar(O)
+
 	if(src.broken > 0)
 		if(src.broken == 2 && istype(O, /obj/item/weapon/screwdriver)) // If it's broken and they're using a screwdriver
 			user.visible_message( \
-				"<span class='notice'>\The [user] starts to fix part of the microwave.</span>", \
-				"<span class='notice'>You start to fix part of the microwave.</span>" \
+				"\blue [user] starts to fix part of the microwave.", \
+				"\blue You start to fix part of the microwave." \
 			)
 			if (do_after(user,20))
 				user.visible_message( \
-					"<span class='notice'>\The [user] fixes part of the microwave.</span>", \
-					"<span class='notice'>You have fixed part of the microwave.</span>" \
+					"\blue [user] fixes part of the microwave.", \
+					"\blue You have fixed part of the microwave." \
 				)
 				src.broken = 1 // Fix it a bit
 		else if(src.broken == 1 && istype(O, /obj/item/weapon/wrench)) // If it's broken and they're doing the wrench
 			user.visible_message( \
-				"<span class='notice'>\The [user] starts to fix part of the microwave.</span>", \
-				"<span class='notice'>You start to fix part of the microwave.</span>" \
+				"\blue [user] starts to fix part of the microwave.", \
+				"\blue You start to fix part of the microwave." \
 			)
 			if (do_after(user,20))
 				user.visible_message( \
-					"<span class='notice'>\The [user] fixes the microwave.</span>", \
-					"<span class='notice'>You have fixed the microwave.</span>" \
+					"\blue [user] fixes the microwave.", \
+					"\blue You have fixed the microwave." \
 				)
 				src.icon_state = "mw"
 				src.broken = 0 // Fix it!
 				src.dirty = 0 // just to be sure
 				src.flags = OPENCONTAINER
 		else
-			user << "<span class='warning'>It's broken!</span>"
+			user << "\red It's broken!"
 			return 1
-	else if(default_deconstruction_screwdriver(user, O))
-		return
-	else if(default_deconstruction_crowbar(user, O))
-		return
-
-
 	else if(src.dirty==100) // The microwave is all dirty so can't be used!
 		if(istype(O, /obj/item/weapon/reagent_containers/spray/cleaner) || istype(O, /obj/item/weapon/soap)) // If they're trying to clean it then let them
 			user.visible_message( \

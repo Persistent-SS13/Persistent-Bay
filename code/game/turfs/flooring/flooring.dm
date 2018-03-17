@@ -3,6 +3,9 @@ var/list/flooring_types
 /proc/get_flooring_data(var/flooring_path)
 	if(!flooring_types)
 		flooring_types = list()
+		var/list/possible = subtypesof(/decl/flooring)
+		for(var/decl in possible)
+			flooring_types["[decl]"] = new decl
 	if(!flooring_types["[flooring_path]"])
 		flooring_types["[flooring_path]"] = new flooring_path
 	return flooring_types["[flooring_path]"]
@@ -52,7 +55,7 @@ var/list/flooring_types
 	flags = TURF_HAS_EDGES | TURF_REMOVE_SHOVEL
 	build_type = /obj/item/stack/tile/grass
 
-/decl/flooring/asteroid
+/decl/flooring/asteroidspa
 	name = "coarse sand"
 	desc = "Gritty and unpleasant."
 	icon = 'icons/turf/flooring/asteroid.dmi'
@@ -122,7 +125,7 @@ var/list/flooring_types
 
 /decl/flooring/tiling/mono
 	icon_base = "monotile"
-
+	build_type = null
 /decl/flooring/tiling/white
 	desc = "How sterile."
 	color = COLOR_WHITE
@@ -138,7 +141,8 @@ var/list/flooring_types
 
 /decl/flooring/tiling/dark/mono
 	icon_base = "monotile"
-
+	build_type = null
+	
 /decl/flooring/tiling/freezer
 	desc = "Don't slip."
 	icon_base = "freezer"

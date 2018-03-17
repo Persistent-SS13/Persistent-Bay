@@ -272,7 +272,9 @@
 	var/generation_height
 	var/seed
 	delete_me = TRUE
-
+/obj/effect/landmark/random_gen/asteroid/genTest
+    generation_width = 200
+    generation_height = 200
 /obj/effect/landmark/random_gen/asteroid/Initialize()
 	. = ..()
 

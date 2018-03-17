@@ -6,7 +6,7 @@
 	extended_desc = "This program allows switching between bluespace networks."
 	size = 12
 	requires_ntnet = 0
-	required_access = access_network
+//	required_access = core_access_wireless_programs
 	available_on_ntnet = 0
 	nanomodule_path = /datum/nano_module/program/computer_ntrouter/
 
@@ -52,6 +52,7 @@
 			data["connected"] = 1
 			data["display_name"] = network.name
 			data["secured"] = network.secured
+			data["locked"] = program.computer.network_card.locked
 		else
 			data["connected"] = 0
 			var/attempted = 0

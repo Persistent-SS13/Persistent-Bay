@@ -52,21 +52,8 @@
 	. += "Citizenship: <a href='?src=\ref[src];citizenship=1'>[pref.citizenship]</a><br/>"
 	. += "Faction: <a href='?src=\ref[src];faction=1'>[pref.faction]</a><br/>"
 	. += "Religion: <a href='?src=\ref[src];religion=1'>[pref.religion]</a><br/>"
-
-	. += "<br/><b>Records</b>:<br/>"
-	if(jobban_isbanned(user, "Records"))
-		. += "<span class='danger'>You are banned from using character records.</span><br>"
-	else
-		. += "Medical Records:<br>"
-		. += "<a href='?src=\ref[src];set_medical_records=1'>[TextPreview(pref.med_record,40)]</a><br><br>"
-		. += "Employment Records:<br>"
-		. += "<a href='?src=\ref[src];set_general_records=1'>[TextPreview(pref.gen_record,40)]</a><br><br>"
-		. += "Security Records:<br>"
-		. += "<a href='?src=\ref[src];set_security_records=1'>[TextPreview(pref.sec_record,40)]</a><br>"
-		. += "Memory:<br>"
-		. += "<a href='?src=\ref[src];set_memory=1'>[TextPreview(pref.memory,40)]</a><br>"
-		. += "Bank Account Pin:<br>"
-		. += "<a href='?src=\ref[src];set_pin=1'>[pref.chosen_pin]</a><br>"
+	. += "Bank Account Pin:<br>"
+	. += "<a href='?src=\ref[src];set_pin=1'>[pref.chosen_pin]</a><br>"
 /datum/category_item/player_setup_item/general/background/OnTopic(var/href,var/list/href_list, var/mob/user)
 	if(href_list["nt_relation"])
 		var/new_relation = input(user, "Choose your relation to [GLOB.using_map.company_name]. Note that this represents what others can find out about your character by researching your background, not what your character actually thinks.", "Character Preference", pref.nanotrasen_relation)  as null|anything in COMPANY_ALIGNMENTS

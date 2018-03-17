@@ -12,7 +12,6 @@
 	active_power_usage = 10000
 	var/efficiency
 	var/initial_bin_rating = 1
-	circuit = /obj/item/weapon/circuitboard/machinery/robotic_fabricator
 
 /obj/machinery/robotic_fabricator/attackby(var/obj/item/O as obj, var/mob/user as mob)
 	if (istype(O, /obj/item/stack/material) && O.get_material_name() == DEFAULT_WALL_MATERIAL)
@@ -145,10 +144,25 @@ Please wait until completion...</TT><BR>
 /obj/machinery/robotic_fabricator/New()
 	..()
 	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/machinery/robotic_fabricator(src)
+
 	var/obj/item/weapon/stock_parts/matter_bin/B = new(src)
 	B.rating = initial_bin_rating
 	component_parts += B
+
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/stack/cable_coil(src, 1)
+	RefreshParts()
+
+
+/obj/machinery/robotic_fabricator/upgraded/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/machinery/robotic_fabricator(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin/super(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator/pico(src)
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
 	component_parts += new /obj/item/stack/cable_coil(src, 1)

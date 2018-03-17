@@ -32,6 +32,7 @@
 				else
 					C.req_access = circuit.conf_access
 					C.req_one_access = null
+				C.req_access_faction = circuit.req_access_faction
 				playsound(get_turf(src), 'sound/items/Screwdriver.ogg', 50, 1)
 				del(src)
 				return
@@ -155,6 +156,7 @@
 			C.conf_access=req_access
 		else
 			C.conf_access=req_one_access
+		C.req_access_faction = req_access_faction
 		if(!destroyed)
 			var/obj/structure/displaycase_frame/F=new(T)
 			F.state=1

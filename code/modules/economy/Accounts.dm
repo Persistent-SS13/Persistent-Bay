@@ -6,7 +6,7 @@
 	var/money = 0
 	var/list/transaction_log = list()
 	var/suspended = 0
-	var/security_level = 0	//0 - auto-identify from worn ID, require only account number
+	var/security_level = 1	//0 - auto-identify from worn ID, require only account number
 							//1 - require manual login / account number and pin
 							//2 - require card and manual login
 	var/account_type = 0	//0 - personal account
@@ -130,6 +130,21 @@
 	D.transaction_log.Add(T)
 
 	return 1
+/proc/money_transfer(var/datum/money_account/payer, var/attempt_real_name, var/purpose, var/amount)
+	if(!payer || amount > payer.money)
+		return 0
+	var/datum/money_account/D = get_account_record(attempt_real_name)
+	if(!D || D.suspended)
+		return 1
+	var/datum/transaction/Te = new("[attempt_real_name]", purpose, -amount, 0)
+	payer.do_transaction(Te)
+	D.money = D.money + amount
+
+	//create a transaction log entry
+	var/datum/transaction/T = new(payer.owner_name, purpose, amount, 0)
+	D.transaction_log.Add(T)
+
+	return 1
 
 //this returns the first account datum that matches the supplied accnum/pin combination, it returns null if the combination did not match any account
 /proc/attempt_account_access(var/attempt_account_number, var/attempt_pin_number, var/security_level_passed = 0)
@@ -141,3 +156,7 @@
 	for(var/datum/money_account/D in all_money_accounts)
 		if(D.account_number == account_number)
 			return D
+/proc/get_account_record(var/real_name)
+	for(var/datum/computer_file/crew_record/L in GLOB.all_crew_records)
+		if(L.get_name() == real_name)
+			return L.linked_account

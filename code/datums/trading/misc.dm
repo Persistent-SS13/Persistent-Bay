@@ -12,7 +12,7 @@
 				"trade_blacklist"   = "Legally I can' do that. Morally, I refuse to do that.",
 				"trade_found_unwanted" = "I only want animals. I don't need food, shiny things, I'm looking for specific ones at that. Ones I already have the cage and food for.",
 				"trade_not_enough"   = "I'd give you the animal for free, but I need the money to feed the others. So you must pay in full.",
-				"how_much"          = "This is a fine specimin, I believe it will cost you VALUE thalers.",
+				"how_much"          = "This is a fine specimin, I believe it will cost you VALUE ethericoins.",
 				"what_want"         = "I have the facilities currently to support",
 
 				"compliment_deny"   = "That was almost charming.",
@@ -80,7 +80,7 @@
 				"trade_complete" = "We thank you for purchasing something. We enjoyed the experience of you doing so and we hope to learn from it.",
 				"trade_blacklist"= "We are not allowed to do such. We are sorry.",
 				"trade_not_enough"="We have sufficiently experienced giving away goods for free. We wish to experience getting money in return.",
-				"how_much"       = "We believe that is worth VALUE thalers.",
+				"how_much"       = "We believe that is worth VALUE ethericoins.",
 				"what_want"      = "We wish only for the experiences you give us, in all else we want",
 
 				"compliment_deny"= "You are attempting to compliment us.",
@@ -120,7 +120,7 @@
 				"trade_complete" = "Now remember, these may be replicas, but they are still a bit sharp!",
 				"trade_blacklist"= "No, I don't deal in that.",
 				"trade_not_enough"="Hm. Well, I need more money than that.",
-				"how_much"       = "This fine piece of craftsmanship costs about VALUE thalers.",
+				"how_much"       = "This fine piece of craftsmanship costs about VALUE ethericoins.",
 				"what_want"      = "I want",
 
 				"compliment_deny"= "Oh ho ho! Aren't you quite the jester.",

@@ -6,7 +6,7 @@
 	icon = 'icons/obj/walllocker.dmi'
 	desc = "A wall mounted oxygen pump with a retractable face mask that you can pull over your face in case of emergencies."
 	icon_state = "emerg"
-//	circuit = /obj/item/weapon/circuitboard/oxygen_pump
+
 	anchored = TRUE
 
 	var/obj/item/weapon/tank/tank
@@ -242,5 +242,4 @@
 	icon_state = "anesthetic_tank"
 	icon_state_closed = "anesthetic_tank"
 	icon_state_open = "anesthetic_tank_open"
-//	circuit = /obj/item/weapon/circuitboard/anesthetic_pump
 	mask_type = /obj/item/clothing/mask/breath/anesthetic

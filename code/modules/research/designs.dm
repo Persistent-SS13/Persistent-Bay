@@ -939,7 +939,7 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/weapon/computer_hardware/card_slot
 	sort_string = "VBAAM"
 
-
+	
 // Nano printer
 /datum/design/item/modularcomponent/nanoprinter
 	name = "nano printer"
@@ -1418,6 +1418,7 @@ CIRCUITS BELOW
 	req_tech = list(TECH_DATA = 3, TECH_BIO = 3)
 	build_path = /obj/item/weapon/circuitboard/clonepod
 	sort_string = "KCAAC"
+<<<<<<< HEAD
 //This sorting system is too autistic for me, so fuck it, they're all starting at Z and working their way up
 /datum/design/circuit/chem_dispenser
 	name = "Portable Chem Dispenser"
@@ -1649,6 +1650,13 @@ CIRCUITS BELOW
 
 
 
+=======
+	
+	
+	
+	
+	
+>>>>>>> parent of 6acc0fe3cd... Construction Redo Part 1
 
 /datum/design/circuit/mecha
 	req_tech = list(TECH_DATA = 3)

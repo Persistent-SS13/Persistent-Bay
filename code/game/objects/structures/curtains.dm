@@ -78,7 +78,8 @@
 	if(isWelder(W))
 		var/obj/item/weapon/weldingtool/WT = W
 		if(WT.remove_fuel(0,user))
-			new /obj/item/stack/material/plastic/(get_turf(src),4)
+			var/obj/item/stack/material/plastic/new_item = new(usr.loc)
+			new_item.add_to_stacks(usr)
 			for (var/mob/M in viewers(src))
 				M.show_message("<span class='notice'>Now slicing apart the [src]...</span>", 3, "<span class='notice'>You hear welding.</span>", 2)
 		qdel(src)

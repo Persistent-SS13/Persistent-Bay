@@ -19,7 +19,6 @@
 	idle_power_usage = 2
 	active_power_usage = 6
 	power_channel = ENVIRON
-	circuit = /obj/item/weapon/circuitboard/keycard_auth
 
 /obj/machinery/keycard_auth/attack_ai(mob/user as mob)
 	to_chat(user, "<span class='warning'>A firewall prevents you from interfacing with this device!</span>")
@@ -27,37 +26,21 @@
 
 /obj/machinery/keycard_auth/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(stat & (NOPOWER|BROKEN))
-		user << "This device is not powered."
+		to_chat(user, "This device is not powered.")
 		return
 	if(istype(W,/obj/item/weapon/card/id))
 		var/obj/item/weapon/card/id/ID = W
 		if(access_keycard_auth in ID.access)
 			if(active == 1)
 				//This is not the device that made the initial request. It is the device confirming the request.
-				if(event_source)
+				if(event_source && event_source.event_triggered_by != usr)
 					event_source.confirmed = 1
 					event_source.event_confirmed_by = usr
+				else
+					to_chat(user, "<span class='warning'>Unable to confirm, DNA matches that of origin.</span>")
 			else if(screen == 2)
 				event_triggered_by = usr
 				broadcast_request() //This is the device making the initial event request. It needs to broadcast to other devices
-
-	if(istype(W, /obj/item/weapon/screwdriver))
-		user << "You remove the faceplate from the [src]"
-		var/obj/structure/frame/A = new /obj/structure/frame( src.loc )
-		var/obj/item/weapon/circuitboard/M = new circuit( A )
-		A.frame_type = "keycard"
-		A.pixel_x = pixel_x
-		A.pixel_y = pixel_y
-		A.set_dir(dir)
-		A.circuit = M
-		A.anchored = 1
-		for (var/obj/C in src)
-			C.forceMove(loc)
-		A.state = 3
-		A.icon_state = "keycard_3"
-		M.deconstruct(src)
-		qdel(src)
-		return
 
 //icon_state gets set everwhere besides here, that needs to be fixed sometime
 /obj/machinery/keycard_auth/update_icon()

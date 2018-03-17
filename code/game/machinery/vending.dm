@@ -11,11 +11,14 @@
 	anchored = 1
 	density = 1
 <<<<<<< HEAD
+<<<<<<< HEAD
 	frame_type = "machine"
 =======
 	circuit = /obj/item/weapon/circuitboard/vendor
 	frame_type = "vending"
 >>>>>>> parent of d47a6dc2d8... part 1 more
+=======
+>>>>>>> parent of 6acc0fe3cd... Construction Redo Part 1
 	flags = OBJ_ANCHORABLE
 	clicksound = "button"
 	clickvol = 40
@@ -1130,7 +1133,7 @@
 	icon_vend = "engivend-vend"
 	vend_delay = 21
 	req_one_access = list(access_atmospherics,access_engine_equip)
-	products = list(/obj/item/clothing/glasses/meson = 2,/obj/item/device/multitool = 4,/obj/item/device/geiger = 4,/obj/item/weapon/circuitboard/airalarm = 10,/obj/item/weapon/module/power_control = 10,/obj/item/weapon/circuitboard/firealarm = 10,/obj/item/weapon/cell = 10,/obj/item/clamp = 10)
+	products = list(/obj/item/clothing/glasses/meson = 2,/obj/item/device/multitool = 4,/obj/item/device/geiger = 4,/obj/item/weapon/airlock_electronics = 10,/obj/item/weapon/module/power_control = 10,/obj/item/weapon/airalarm_electronics = 10,/obj/item/weapon/cell = 10,/obj/item/clamp = 10)
 	contraband = list(/obj/item/weapon/cell/high = 3)
 	premium = list(/obj/item/weapon/storage/belt/utility = 3)
 

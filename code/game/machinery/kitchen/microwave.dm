@@ -82,8 +82,6 @@
 	if(!broken && dirty < 100)
 		if(default_deconstruction_screwdriver(user, "mw-o", "mw", O))
 			return
-		if(exchange_parts(user, O))
-			return
 	if(!broken && istype(O, /obj/item/weapon/wrench))
 		playsound(src, 'sound/items/Ratchet.ogg', 50, 1)
 		if(anchored)

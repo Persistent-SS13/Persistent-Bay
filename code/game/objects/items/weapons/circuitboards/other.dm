@@ -33,8 +33,8 @@
 							/obj/machinery/vending/coffee = "Solar's Best Hot Drinks",
 							/obj/machinery/vending/snack = "Getmore Chocolate Corp",
 							/obj/machinery/vending/cola = "Robust Softdrinks",
-							/obj/machinery/vending/cigarette = "ShadyCigs Deluxe",
-							/obj/machinery/vending/autodrobe = "AutoDrobe",)
+							/obj/machinery/vending/cigarette = "ShadyCigs Deluxe"
+							)
 
 /obj/item/weapon/circuitboard/vendor/attackby(obj/item/I, mob/user, params)
 	if(istype(I, /obj/item/weapon/screwdriver))

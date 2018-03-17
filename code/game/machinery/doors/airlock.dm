@@ -33,7 +33,7 @@
 	var/obj/item/weapon/airlock_electronics/electronics = null
 	var/hasShocked = 0 //Prevents multiple shocks from happening
 	var/secured_wires = 0
-	var/haskeypad = 0
+
 	var/datum/wires/airlock/wires = null
 
 	var/open_sound_powered = 'sound/machines/airlock_open.ogg'
@@ -206,7 +206,7 @@
 /obj/machinery/door/airlock/glass
 	name = "Glass Airlock"
 	icon = 'icons/obj/doors/Doorglass.dmi'
-	
+
 
 	door_crush_damage = DOOR_CRUSH_DAMAGE*0.75
 	maxhealth = 300
@@ -1271,7 +1271,7 @@ About the new airlock wires panel:
 		if(electronics.one_access)
 			req_access.Cut()
 			req_one_access = src.electronics.conf_access
-			
+
 		else
 			req_one_access.Cut()
 			req_access = src.electronics.conf_access

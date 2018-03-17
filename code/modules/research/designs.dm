@@ -939,7 +939,7 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/weapon/computer_hardware/card_slot
 	sort_string = "VBAAM"
 
-	
+
 // Nano printer
 /datum/design/item/modularcomponent/nanoprinter
 	name = "nano printer"
@@ -1418,7 +1418,6 @@ CIRCUITS BELOW
 	req_tech = list(TECH_DATA = 3, TECH_BIO = 3)
 	build_path = /obj/item/weapon/circuitboard/clonepod
 	sort_string = "KCAAC"
-<<<<<<< HEAD
 //This sorting system is too autistic for me, so fuck it, they're all starting at Z and working their way up
 /datum/design/circuit/chem_dispenser
 	name = "Portable Chem Dispenser"
@@ -1476,12 +1475,6 @@ CIRCUITS BELOW
 	build_path = /obj/item/weapon/circuitboard/telesci_pad
 	sort_string = "ZZZZQ"
 */
-/datum/design/circuit/atm_electronics
-	name = "Automated Teller Machine"
-	id = "atm_electronics"
-	req_tech = list(TECH_ENGINEERING = 1, TECH_DATA = 1)
-	build_path = /obj/item/weapon/atm_electronics
-	sort_string = "ZZZZP"
 /datum/design/circuit/photocopier
 	name = "Photocopier"
 	id = "photocopier"
@@ -1560,12 +1553,7 @@ CIRCUITS BELOW
 	req_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 3, TECH_BLUESPACE = 1)
 	build_path = /obj/item/weapon/circuitboard/holopad
 	sort_string = "ZZZZC"
-/datum/design/circuit/longrangeholopad
-	name = "Long-Range Holopad"
-	id = "longrangeholopad"
-	req_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 3, TECH_BLUESPACE = 2)
-	build_path = /obj/item/weapon/circuitboard/longrangeholopad
-	sort_string = "ZZZZB"
+
 /*
 /datum/design/circuit/
 	name = ""
@@ -1648,15 +1636,6 @@ CIRCUITS BELOW
 */
 
 
-
-
-=======
-	
-	
-	
-	
-	
->>>>>>> parent of 6acc0fe3cd... Construction Redo Part 1
 
 /datum/design/circuit/mecha
 	req_tech = list(TECH_DATA = 3)

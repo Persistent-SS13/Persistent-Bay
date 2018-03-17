@@ -576,6 +576,7 @@ var/list/worths = list(
 					/obj/structure/cult = 160,
 					/obj/structure/AIcore = 6000,
 					/obj/structure/AIcore/deactivated = 7000,
+					/obj/structure/computerframe = 50,
 					/obj/structure/plushie = 7,
 					/obj/structure/bedsheetbin = 25,
 					/obj/structure/coatrack = 10,

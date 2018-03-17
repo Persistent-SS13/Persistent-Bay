@@ -52,6 +52,7 @@
 	var/_wifi_id
 	var/datum/wifi/receiver/button/door/wifi_receiver
 	var/obj/item/weapon/airlock_brace/brace = null
+	var/haskeypad = 0
 
 /obj/machinery/door/airlock/keypad // HERE
 	name = "Keypad Entry Airlock"

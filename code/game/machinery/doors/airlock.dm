@@ -53,6 +53,13 @@
 	var/obj/item/weapon/airlock_brace/brace = null
 	var/haskeypad = 0
 
+	var/image/panel_image = null
+	var/panel_icon_state = "panel_open"
+
+	var/image/welded_image = null
+	var/welded_icon_state = "welded"
+
+
 /obj/machinery/door/airlock/keypad // HERE
 	name = "Keypad Entry Airlock"
 	icon = 'icons/obj/doors/Doorkeypad.dmi'

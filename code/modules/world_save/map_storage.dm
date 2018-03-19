@@ -187,6 +187,13 @@ var/global/list/zones_to_save = list()
 		if("[variable]" == "x" || "[variable]" == "y" || "[variable]" == "z") continue
 		if(variable in f.dir)
 			f["[variable]"] >> vars[variable]
+
+/obj/StandardRead(var/savefile/f)
+	Initalize()
+	for(var/obj/ob in contents)
+		ob.loc = null
+		qdel(ob)
+	..()
 			
 /datum/Read(savefile/f)
 	StandardRead(f)

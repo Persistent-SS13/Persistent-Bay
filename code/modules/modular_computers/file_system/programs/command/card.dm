@@ -251,6 +251,8 @@
 		if("print")
 			if(computer && computer.nano_printer) //This option should never be called if there is no printer
 				if(module.mod_mode)
+					return 0
+					/*
 					if(can_run(user, 1))
 						var/contents = {"<h4>Access Report</h4>
 									<u>Prepared By:</u> [user_id_card.registered_name ? user_id_card.registered_name : "Unknown"]<br>
@@ -272,6 +274,7 @@
 							return
 						else
 							computer.visible_message("<span class='notice'>\The [computer] prints out paper.</span>")
+					*/
 				else
 					var/contents = {"<h4>Crew Manifest</h4>
 									<br>

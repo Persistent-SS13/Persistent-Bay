@@ -50,10 +50,10 @@ prompts
 
 // PERSISTENCE EDIT ENDS HERE
 
-/datum/category_group/player_setup_category/general_preferences
+/datum/category_group/player_setup_category/welcome_preferences
 	name = "Welcome"
 	sort_order = 1
-	category_item_type = /datum/category_item/player_setup_item/general
+	category_item_type = /datum/category_item/player_setup_item/welcome
 
 /datum/category_group/player_setup_category/general_preferences
 	name = "Character"

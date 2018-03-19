@@ -42,6 +42,7 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	var/payrate = 100
 	var/leader_name = ""
 	var/list/debts = list() // format list("Ro Laren" = "550") real_name = debt amount
+	var/joinable = 0
 /datum/world_faction/proc/get_duty_status(var/real_name)
 	for(var/obj/item/organ/internal/stack/stack in connected_laces)
 		if(stack.get_owner_name() == real_name)
@@ -167,7 +168,7 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 /obj/faction_spawner/Nanotrasen
 	name = "Nanotrasen Corporate Colony"
 	name_short = "Nanotrasen"
-	uid = "nanotrasen"
+	uid = "Nanotrasen"
 	password = "rosebud"
 	network_name = "Nanotrasen Network"
 	network_uid = "nt_net"

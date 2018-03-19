@@ -186,6 +186,9 @@
 	var/breathing_sound = 'sound/voice/monkey.ogg'
 	var/list/equip_adjust = list()
 	var/list/equip_overlays = list()
+	
+	var/list/backgrounds = list() // format list("Outer World Colonist" = "blurbtext")
+	
 /*
 These are all the things that can be adjusted for equipping stuff and
 each one can be in the NORTH, SOUTH, EAST, and WEST direction. Specify

@@ -9,4 +9,4 @@
 	icon_off = "cabinetdetective_broken"
 
 /obj/structure/closet/secure_closet/bar/WillContain()
-	return list(/obj/item/weapon/reagent_containers/food/drinks/bottle/small/beer = 4)
+	return list(/obj/item/weapon/reagent_containers/food/drinks/bottle/small/beer = 10)

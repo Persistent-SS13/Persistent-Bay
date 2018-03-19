@@ -230,11 +230,12 @@
 /obj/machinery/power/apc/proc/init_round_start()
 	has_electronics = 2 //installed and secured
 	// is starting with a power cell installed, create it and set its charge level
-	if(cell_type)
-		src.cell = new cell_type(src)
-	if(!loc)
-		qdel(src)
-		return
+	if(!map_storage_loaded)
+		if(cell_type)
+			src.cell = new cell_type(src)
+		if(!loc)
+			qdel(src)
+			return
 	var/area/A = src.loc.loc
 
 	//if area isn't specified use current

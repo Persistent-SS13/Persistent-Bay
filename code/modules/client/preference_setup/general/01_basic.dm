@@ -38,7 +38,7 @@ datum/preferences
 /datum/category_item/player_setup_item/general/basic/content()
 	. = list()
 	. += "* = Required Field"
-	. += "<b>Full Name:</b> "
+	. += "<b>*Full Name:</b> "
 	. += "<a href='?src=\ref[src];rename=1'><b>[pref.real_name ? pref.real_name : "*Unset"]</b></a><br>"
 //	. += "<a href='?src=\ref[src];always_random_name=1'>Always Random Name: [pref.be_random_name ? "Yes" : "No"]</a>"
 	. += "<br>"

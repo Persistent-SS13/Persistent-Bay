@@ -35,6 +35,7 @@ var/global/list/zones_to_save = list()
 	var/map_storage_saved_vars = ""
 	var/skip_empty = ""
 	var/skip_icon_state = 0
+	var/map_storage_loaded = 0 // this is special instructions for problematic Initialize()
 /atom/movable/lighting_overlay
 	should_save = 0
 
@@ -72,6 +73,7 @@ var/global/list/zones_to_save = list()
 	regenerate_icons()
 	redraw_inv()
 /datum/proc/StandardWrite(var/savefile/f)
+	map_storage_loaded = 1
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
@@ -189,7 +191,6 @@ var/global/list/zones_to_save = list()
 			f["[variable]"] >> vars[variable]
 
 /obj/StandardRead(var/savefile/f)
-	Initalize()
 	for(var/obj/ob in contents)
 		ob.loc = null
 		qdel(ob)

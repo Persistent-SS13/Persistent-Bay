@@ -9,10 +9,10 @@
 
 /obj/structure/anomaly_container/Initialize()
 	. = ..()
-
-	var/obj/machinery/artifact/A = locate() in loc
-	if(A)
-		contain(A)
+	if(!map_storage_loaded)
+		var/obj/machinery/artifact/A = locate() in loc
+		if(A)
+			contain(A)
 
 /obj/structure/anomaly_container/attack_hand(var/mob/user)
 	release()

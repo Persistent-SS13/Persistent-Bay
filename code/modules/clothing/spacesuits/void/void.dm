@@ -79,9 +79,10 @@ else if(##equipment_var) {\
 
 /obj/item/clothing/suit/space/void/Initialize()
 	. = ..()
-	VOIDSUIT_INIT_EQUIPMENT(boots,  /obj/item/clothing/shoes/magboots)
-	VOIDSUIT_INIT_EQUIPMENT(helmet, /obj/item/clothing/head/helmet)
-	VOIDSUIT_INIT_EQUIPMENT(tank,   /obj/item/weapon/tank)
+	if(!map_storage_loaded)
+		VOIDSUIT_INIT_EQUIPMENT(boots,  /obj/item/clothing/shoes/magboots)
+		VOIDSUIT_INIT_EQUIPMENT(helmet, /obj/item/clothing/head/helmet)
+		VOIDSUIT_INIT_EQUIPMENT(tank,   /obj/item/weapon/tank)
 
 #undef VOIDSUIT_INIT_EQUIPMENT
 

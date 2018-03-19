@@ -20,27 +20,28 @@
 
 /obj/item/weapon/fuel_assembly/Initialize()
 	. = ..()
-	var/material/material = get_material_by_name(fuel_type)
-	if(istype(material))
-		name = "[material.use_name] fuel rod assembly"
-		desc = "A fuel rod for a fusion reactor. This one is made from [material.use_name]."
-		fuel_colour = material.icon_colour
-		fuel_type = material.use_name
-		if(material.radioactivity)
-			radioactivity = material.radioactivity
-			desc += " It is warm to the touch."
-			START_PROCESSING(SSobj, src)
-		if(material.luminescence)
-			set_light(material.luminescence, material.luminescence, material.icon_colour)
-	else
-		name = "[fuel_type] fuel rod assembly"
-		desc = "A fuel rod for a fusion reactor. This one is made from [fuel_type]."
+	if(!map_storage_loaded)
+		var/material/material = get_material_by_name(fuel_type)
+		if(istype(material))
+			name = "[material.use_name] fuel rod assembly"
+			desc = "A fuel rod for a fusion reactor. This one is made from [material.use_name]."
+			fuel_colour = material.icon_colour
+			fuel_type = material.use_name
+			if(material.radioactivity)
+				radioactivity = material.radioactivity
+				desc += " It is warm to the touch."
+				START_PROCESSING(SSobj, src)
+			if(material.luminescence)
+				set_light(material.luminescence, material.luminescence, material.icon_colour)
+		else
+			name = "[fuel_type] fuel rod assembly"
+			desc = "A fuel rod for a fusion reactor. This one is made from [fuel_type]."
 
-	icon_state = "blank"
-	var/image/I = image(icon, "fuel_assembly")
-	I.color = fuel_colour
-	overlays += list(I, image(icon, "fuel_assembly_bracket"))
-	rod_quantities[fuel_type] = initial_amount
+		icon_state = "blank"
+		var/image/I = image(icon, "fuel_assembly")
+		I.color = fuel_colour
+		overlays += list(I, image(icon, "fuel_assembly_bracket"))
+		rod_quantities[fuel_type] = initial_amount
 
 /obj/item/weapon/fuel_assembly/Process()
 	if(!radioactivity)

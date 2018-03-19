@@ -363,7 +363,7 @@ datum/preferences
 	var/slots = config.character_slots
 	if(check_rights(R_ADMIN, 0, client))
 		slots += 2
-	for(var/i=1, i<= config.character_slots, i++)
+	for(var/i=1, i<= slots, i++)
 		if(fexists("[path_to][i].sav"))
 			var/savefile/S =  new("[path_to][i].sav")
 			var/mob/M
@@ -380,12 +380,14 @@ datum/preferences
 	var/dat  = list()
 	dat += "<body>"
 	dat += "<tt><center>"
-
+	var/slots = config.character_slots
+	if(check_rights(R_ADMIN, 0, client))
+		slots += 2
 	var/savefile/S = new /savefile(path)
 	if(S)
 		dat += "<b>Select a character slot to load</b><hr>"
 		var/name
-		for(var/i=1, i<= config.character_slots, i++)
+		for(var/i=1, i<= slots, i++)
 			S.cd = GLOB.using_map.character_load_path(S, i)
 			S["real_name"] >> name
 			if(!name)	name = "Character[i]"
@@ -400,7 +402,10 @@ datum/preferences
 	panel.open()
 
 /datum/preferences/proc/slot_select(mob/user)
-	if(!character_list || (character_list.len < config.character_slots))
+	var/slots = config.character_slots
+	if(check_rights(R_ADMIN, 0, client))
+		slots += 2
+	if(!character_list || (character_list.len < slots))
 		load_characters()
 	var/dat  = list()
 	dat += "<body>"

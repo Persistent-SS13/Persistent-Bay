@@ -32,7 +32,6 @@
 		else
 			to_chat(usr, "This machine is already in perfect condition.")
 		return
-/*
 
 	switch(construct_op)
 		if(0)
@@ -100,7 +99,6 @@
 					var/obj/machinery/constructable_frame/machine_frame/F = new
 					F.loc = src.loc
 					qdel(src)
-*/
 
 /obj/machinery/telecomms/attack_ai(var/mob/user as mob)
 	attack_hand(user)

@@ -72,7 +72,7 @@
 		"Your CPU temperature probes warn you that you are approaching critical heat levels!"
 		)
 	genders = list(NEUTER)
-
+	spawn_flags = SPECIES_IS_RESTRICTED
 /datum/species/machine/handle_death(var/mob/living/carbon/human/H)
 	..()
 	if(istype(H.wear_mask,/obj/item/clothing/mask/monitor))

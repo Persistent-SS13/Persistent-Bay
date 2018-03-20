@@ -99,8 +99,12 @@
 	load_panel.open()
 /mob/new_player/proc/slot_select_delete()
 	var/mob/user = src
-	if(!client.prefs.character_list || (client.prefs.character_list.len < config.character_slots))
+	var/slots = config.character_slots
+	if(check_rights(R_ADMIN, 0, client))
+		slots += 2
+	if(!client.prefs.character_list || (client.prefs.character_list.len < slots))
 		client.prefs.load_characters()
+	
 	var/dat  = list()
 	dat += "<body>"
 	dat += "<tt><center>"

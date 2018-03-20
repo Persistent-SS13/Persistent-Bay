@@ -460,7 +460,8 @@
 
 /obj/structure/window/Initialize()
 	. = ..()
-	layer = is_full_window() ? FULL_WINDOW_LAYER : SIDE_WINDOW_LAYER
+	if(!map_storage_loaded)
+		layer = is_full_window() ? FULL_WINDOW_LAYER : SIDE_WINDOW_LAYER
 
 /obj/structure/window/reinforced/full
 	dir = 5

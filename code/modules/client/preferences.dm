@@ -38,7 +38,7 @@ datum/preferences
 /datum/preferences/New(client/C)
 	player_setup = new(src)
 	gender = pick(MALE, FEMALE)
-	real_name = random_name(gender,species)
+	real_name = null
 	b_type = RANDOM_BLOOD_TYPE
 
 	if(istype(C))
@@ -175,7 +175,7 @@ datum/preferences
 	else if(href_list["pickslot"])
 		chosen_slot = text2num(href_list["pickslot"])
 		randomize_appearance_and_body_for()
-		real_name = random_name(gender, species)
+		real_name = null
 		preview_icon = null
 		sanitize_preferences()
 		client.prefs.ShowChoices(src)
@@ -195,8 +195,6 @@ datum/preferences
 	// Sanitizing rather than saving as someone might still be editing when copy_to occurs.
 	player_setup.sanitize_setup()
 	character.set_species(species)
-	if(be_random_name)
-		real_name = random_name(gender,species)
 
 	if(config.humans_need_surnames)
 		var/firstspace = findtext(real_name, " ")
@@ -362,7 +360,10 @@ datum/preferences
 /datum/preferences/proc/load_characters()
 	var/path_to = load_path(client.ckey, "")
 	character_list = list()
-	for(var/i=1, i<= config.character_slots, i++)
+	var/slots = config.character_slots
+	if(check_rights(R_ADMIN, 0, client))
+		slots += 2
+	for(var/i=1, i<= slots, i++)
 		if(fexists("[path_to][i].sav"))
 			var/savefile/S =  new("[path_to][i].sav")
 			var/mob/M
@@ -379,12 +380,14 @@ datum/preferences
 	var/dat  = list()
 	dat += "<body>"
 	dat += "<tt><center>"
-
+	var/slots = config.character_slots
+	if(check_rights(R_ADMIN, 0, client))
+		slots += 2
 	var/savefile/S = new /savefile(path)
 	if(S)
 		dat += "<b>Select a character slot to load</b><hr>"
 		var/name
-		for(var/i=1, i<= config.character_slots, i++)
+		for(var/i=1, i<= slots, i++)
 			S.cd = GLOB.using_map.character_load_path(S, i)
 			S["real_name"] >> name
 			if(!name)	name = "Character[i]"
@@ -399,7 +402,10 @@ datum/preferences
 	panel.open()
 
 /datum/preferences/proc/slot_select(mob/user)
-	if(!character_list || (character_list.len < config.character_slots))
+	var/slots = config.character_slots
+	if(check_rights(R_ADMIN, 0, client))
+		slots += 2
+	if(!character_list || (character_list.len < slots))
 		load_characters()
 	var/dat  = list()
 	dat += "<body>"
@@ -419,7 +425,7 @@ datum/preferences
 	panel.set_content(jointext(dat,null))
 	panel.open()
 
-	
+
 /datum/preferences/proc/close_load_dialog(mob/user)
 	user << browse(null, "window=saves")
 	panel.close()

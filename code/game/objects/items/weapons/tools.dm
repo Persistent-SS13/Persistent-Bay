@@ -176,8 +176,9 @@
 	var/obj/item/weapon/welder_tank/tank = /obj/item/weapon/welder_tank // where the fuel is stored
 
 /obj/item/weapon/weldingtool/Initialize()
-	if(ispath(tank))
-		tank = new tank
+	if(!map_storage_loaded)
+		if(ispath(tank))
+			tank = new tank
 
 	set_extension(src, /datum/extension/base_icon_state, /datum/extension/base_icon_state, icon_state)
 	update_icon()
@@ -469,8 +470,9 @@
 	var/can_remove = 1
 
 /obj/item/weapon/welder_tank/Initialize()
-	create_reagents(max_fuel)
-	reagents.add_reagent(/datum/reagent/fuel, max_fuel)
+	if(!map_storage_loaded)
+		create_reagents(max_fuel)
+		reagents.add_reagent(/datum/reagent/fuel, max_fuel)
 	. = ..()
 
 /obj/item/weapon/welder_tank/afterattack(obj/O as obj, mob/user as mob, proximity)

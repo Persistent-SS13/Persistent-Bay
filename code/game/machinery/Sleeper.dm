@@ -22,7 +22,8 @@
 
 /obj/machinery/sleeper/Initialize()
 	. = ..()
-	beaker = new /obj/item/weapon/reagent_containers/glass/beaker/large(src)
+	if(!map_storage_loaded)
+		beaker = new /obj/item/weapon/reagent_containers/glass/beaker/large(src)
 	update_icon()
 
 /obj/machinery/sleeper/Process()

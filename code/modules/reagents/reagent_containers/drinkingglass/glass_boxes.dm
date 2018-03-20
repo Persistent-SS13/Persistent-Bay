@@ -16,7 +16,8 @@
 
 /obj/item/weapon/storage/box/mixedglasses/Initialize()
 	. = ..()
-	make_exact_fit()
+	if(!map_storage_loaded)
+		make_exact_fit()
 
 /obj/item/weapon/storage/box/glasses
 	name = "box of glasses"
@@ -25,10 +26,10 @@
 
 /obj/item/weapon/storage/box/glasses/Initialize()
 	. = ..()
-
-	for(var/i = 1 to 7)
-		new glass_type(src)
-	make_exact_fit()
+	if(!map_storage_loaded)
+		for(var/i = 1 to 7)
+			new glass_type(src)
+		make_exact_fit()
 
 /obj/item/weapon/storage/box/glasses/square
 	name = "box of half-pint glasses"
@@ -69,8 +70,9 @@
 	storage_slots = 14
 
 /obj/item/weapon/storage/box/glass_extras/Initialize()
-	for(var/i = 1 to 14)
-		new extra_type(src)
+	if(!map_storage_loaded)
+		for(var/i = 1 to 14)
+			new extra_type(src)
 	. = ..()
 
 /obj/item/weapon/storage/box/glass_extras/straws

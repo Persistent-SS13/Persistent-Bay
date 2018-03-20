@@ -3,11 +3,11 @@
 	name_plural = "Humans"
 	primitive_form = "Monkey"
 	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick, /datum/unarmed_attack/punch, /datum/unarmed_attack/bite)
-	blurb = "Humanity originated in the Sol system, and over the last five centuries has spread \
-	colonies across a wide swathe of space. They hold a wide range of forms and creeds.<br/><br/> \
-	While the central Sol government maintains control of its far-flung people, powerful corporate \
-	interests, rampant cyber and bio-augmentation and secretive factions make life on most human \
-	worlds tumultous at best."
+	blurb = "Humanity originated in the Sol system, and has rapidly spread across the galaxy \
+	by creating a vast network of colonies.<br/><br/> \
+	The majority of humanity is caught up in the civil war between SolGov and the Terran Federation \
+	creating generations of soldiers and refugees and slowly tearing apart the colonies that \
+	had made humanity so proud."
 	num_alternate_languages = 2
 	secondary_langs = list(LANGUAGE_SOL_COMMON)
 	name_language = null // Use the first-name last-name generator rather than a language scrambler
@@ -17,7 +17,12 @@
 
 	spawn_flags = SPECIES_CAN_JOIN
 	appearance_flags = HAS_HAIR_COLOR | HAS_SKIN_TONE_NORMAL | HAS_LIPS | HAS_UNDERWEAR | HAS_EYE_COLOR
-
+	backgrounds = list("Earth Citizen" = "You spend your early life living on the birth planet of humanity. Earth culture clings to the art and ideas that colored humanities past. Those who aren't well off and dont want to enlist in the SolGov Navy may become so desperate that they need to leave the planet in search of work.",
+						"Inner Core Settler" = "When the Terran Federation began capturing colonies, the inner core was secured by the SolGov Navy. Since then, inner core colonies are often the target of sieges and blockades by the Terran fleet creating a class of refugees eager to seek a more stable home.",
+						"Agartha Settler" = "You have lived in the heart of the Terran Federation, the planet Agartha. The Federation claims to be more democratic than SolGov, but in order to maintain the military fervor it employs propoganda and survelliance to discourage anyone who doesnt totally support the state. Anyone not willing to enlist in the Grand Fleet should seek refuge anywhere else.",
+						"Outer Core Settler" = "The Terran Federation sent a fleet to liberate your planet from SolGov and your colonial government gave no resistance. Since then, attacks by the SolGov Navy and the distribution of your planets resources to fuel the wars have made it a horrible place to live.",
+						"Corporate Colonist" = "The invention of bluespace travel allowed some private corperations to stay independent from the warring human nations. Employees of these colonies found it much more desirable to remain unaffiliated as well, instead living on the space installations that the corperations setup. When an employee gets fired or laid off, they also lose access to their home suddenly, leaving them in a tough spot if they cant find work or opportunity elsewhere."
+					)
 /datum/species/human/get_bodytype(var/mob/living/carbon/human/H)
 	return SPECIES_HUMAN
 

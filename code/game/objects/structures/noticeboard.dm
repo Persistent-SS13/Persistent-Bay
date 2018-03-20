@@ -8,12 +8,13 @@
 	var/notices = 0
 
 /obj/structure/noticeboard/Initialize()
-	for(var/obj/item/I in loc)
-		if(notices > 4) break
-		if(istype(I, /obj/item/weapon/paper))
-			I.forceMove(src)
-			notices++
-	icon_state = "nboard0[notices]"
+	if(!map_storage_loaded)
+		for(var/obj/item/I in loc)
+			if(notices > 4) break
+			if(istype(I, /obj/item/weapon/paper))
+				I.forceMove(src)
+				notices++
+		icon_state = "nboard0[notices]"
 	. = ..()
 
 //attaching papers!!

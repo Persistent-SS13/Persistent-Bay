@@ -20,6 +20,7 @@ var/list/floor_decals = list()
 	if(supplied_dir) set_dir(supplied_dir)
 	var/turf/T = get_turf(src)
 	if(istype(T, /turf/simulated/floor) || istype(T, /turf/unsimulated/floor))
+		if(!T.saved_decals) T.saved_decals = list()
 		plane = T.is_plating() ? ABOVE_PLATING_PLANE : ABOVE_TURF_PLANE
 		var/cache_key = "[alpha]-[color]-[dir]-[icon_state]-[plane]-[layer]"
 		if(!floor_decals[cache_key])
@@ -63,6 +64,9 @@ var/list/floor_decals = list()
 
 /obj/effect/floor_decal/reset/Initialize()
 	var/turf/T = get_turf(src)
+	if(!T)
+		qdel(src)
+		return
 	T.remove_decals()
 	T.update_icon()
 	initialized = TRUE

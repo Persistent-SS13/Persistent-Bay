@@ -230,11 +230,12 @@
 /obj/machinery/power/apc/proc/init_round_start()
 	has_electronics = 2 //installed and secured
 	// is starting with a power cell installed, create it and set its charge level
-	if(cell_type)
-		src.cell = new cell_type(src)
-	if(!loc)
-		qdel(src)
-		return
+	if(!map_storage_loaded)
+		if(cell_type)
+			src.cell = new cell_type(src)
+		if(!loc)
+			qdel(src)
+			return
 	var/area/A = src.loc.loc
 
 	//if area isn't specified use current
@@ -585,6 +586,7 @@
 				new /obj/item/stack/cable_coil(loc,10)
 				to_chat(user, "<span class='notice'>You cut the cables and dismantle the power terminal.</span>")
 				qdel(terminal)
+				terminal = null
 	else if (istype(W, /obj/item/weapon/module/power_control) && opened && has_electronics==0 && !((stat & BROKEN)))
 		user.visible_message("<span class='warning'>[user.name] inserts the power control board into [src].</span>", \
 							"You start to insert the power control board into the frame...")

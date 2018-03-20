@@ -318,8 +318,7 @@
 
 // Byond seemingly calls stat, each tick.
 // Calling things each tick can get expensive real quick.
-// So we slow this down a little.
-// See: http://www.byond.com/docs/ref/info.html#/client/proc/Stat
+// So we slow this down ee: http://www.byond.com/docs/ref/info.html#/client/proc/Stat
 /client/Stat()
 	if(!usr)
 		return
@@ -357,12 +356,6 @@ client/proc/MayRespawn()
 
 	// Something went wrong, client is usually kicked or transfered to a new mob at this point
 	return 0
-
-client/verb/character_setup()
-	set name = "Character Setup"
-	set category = "OOC"
-	if(prefs)
-		prefs.ShowChoices(usr)
 
 /client/proc/apply_fps(var/client_fps)
 	if(world.byond_version >= 511 && byond_version >= 511 && client_fps >= CLIENT_MIN_FPS && client_fps <= CLIENT_MAX_FPS)

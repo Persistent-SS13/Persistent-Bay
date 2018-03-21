@@ -38,7 +38,8 @@ var/global/list/zones_to_save = list()
 	var/map_storage_loaded = 0 // this is special instructions for problematic Initialize()
 /atom/movable/lighting_overlay
 	should_save = 0
-
+/turf/space
+	map_storage_saved_vars = "contents"
 /turf
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
 	skip_empty = "contents;saved_decals"
@@ -73,7 +74,7 @@ var/global/list/zones_to_save = list()
 	regenerate_icons()
 	redraw_inv()
 /datum/proc/StandardWrite(var/savefile/f)
-	map_storage_loaded = 1
+	
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
@@ -154,6 +155,7 @@ var/global/list/zones_to_save = list()
 	return coord_list
 
 /datum/proc/StandardRead(var/savefile/f)
+	map_storage_loaded = 1
 	before_load()
 	var/list/loading
 	if(all_loaded)
@@ -173,6 +175,7 @@ var/global/list/zones_to_save = list()
 			catch
 
 /turf/StandardRead(var/savefile/f)
+	map_storage_loaded = 1
 	before_load()
 	var/list/loading
 	if(all_loaded)
@@ -189,12 +192,6 @@ var/global/list/zones_to_save = list()
 		if("[variable]" == "x" || "[variable]" == "y" || "[variable]" == "z") continue
 		if(variable in f.dir)
 			f["[variable]"] >> vars[variable]
-
-/obj/StandardRead(var/savefile/f)
-	for(var/obj/ob in contents)
-		ob.loc = null
-		qdel(ob)
-	..()
 			
 /datum/Read(savefile/f)
 	StandardRead(f)

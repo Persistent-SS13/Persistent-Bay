@@ -37,9 +37,9 @@ datum/preferences
 
 /datum/category_item/player_setup_item/general/basic/content()
 	. = list()
-	. += "* = Required Field"
+	. += "* = Required Field<br><br>"
 	. += "<b>*Full Name:</b> "
-	. += "<a href='?src=\ref[src];rename=1'><b>[pref.real_name ? pref.real_name : "*Unset"]</b></a><br>"
+	. += "<a href='?src=\ref[src];rename=1'><b>[pref.real_name ? pref.real_name : "Unset*"]</b></a><br>"
 //	. += "<a href='?src=\ref[src];always_random_name=1'>Always Random Name: [pref.be_random_name ? "Yes" : "No"]</a>"
 	. += "<br>"
 	. += "<b>Gender:</b> <a href='?src=\ref[src];gender=1'><b>[gender2text(pref.gender)]</b></a><br>"
@@ -74,6 +74,21 @@ datum/preferences
 		var/new_gender = input(user, "Choose your character's gender:", "Character Preference", pref.gender) as null|anything in S.genders
 		if(new_gender && CanUseTopic(user))
 			pref.gender = new_gender
+		if(S & HAS_UNDERWEAR)
+			pref.all_underwear.Cut()
+			for(var/datum/category_group/underwear/WRC in GLOB.underwear.categories)
+				if(WRC.name == "Underwear, top")
+					if(pref.gender == FEMALE)
+						pref.all_underwear[WRC.name] = "Bra"
+					else
+						pref.all_underwear[WRC.name] = "None"
+					continue
+				if(WRC.name == "Underwear, top")
+					if(pref.gender == FEMALE)
+						pref.all_underwear[WRC.name] = "Panties"
+					else
+						pref.all_underwear[WRC.name] = "Boxers"
+					continue
 		return TOPIC_REFRESH_UPDATE_PREVIEW
 
 	else if(href_list["age"])

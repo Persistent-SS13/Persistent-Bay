@@ -13,7 +13,7 @@
 
 /datum/category_item/player_setup_item/general/background
 	name = "Background"
-	sort_order = 5
+	sort_order = 4
 
 /datum/category_item/player_setup_item/general/background/load_character(var/savefile/S)
 	from_file(S["med_record"],pref.med_record)

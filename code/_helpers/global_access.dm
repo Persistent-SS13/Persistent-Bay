@@ -61,6 +61,8 @@
 			return global.SSopen_space;
 		if("SSprocessing")
 			return global.SSprocessing;
+		if("SSskybox")
+			return global.SSskybox;
 		if("SSvines")
 			return global.SSvines;
 		if("Tier1Runes")
@@ -1116,6 +1118,8 @@
 			global.SSopen_space=newval;
 		if("SSprocessing")
 			global.SSprocessing=newval;
+		if("SSskybox")
+			global.SSskybox=newval;
 		if("SSvines")
 			global.SSvines=newval;
 		if("Tier1Runes")
@@ -2139,6 +2143,7 @@
 	"SSmobs",
 	"SSobj",
 	"SSopen_space",
+	"SSskybox",
 	"SSprocessing",
 	"SSvines",
 	"Tier1Runes",
@@ -2207,7 +2212,6 @@
 	"ascii_red",
 	"ascii_reset",
 	"ascii_yellow",
-	"ashtray_cache",
 	"asset_cache",
 	"asset_datums",
 	"assigned",

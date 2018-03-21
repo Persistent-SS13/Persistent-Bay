@@ -152,8 +152,17 @@ datum/preferences
 		return 1
 
 	if(href_list["save"])
+		if(!real_name)
+			to_chat(usr, "You must select a valid character name")
+			return
 		if(get_crewmember_record(real_name))
 			to_chat(usr, "A character with that name already exists!")
+			return
+		if(!home_system)
+			to_chat(usr, "You must choose a valid early life")
+			return
+		if(!faction)
+			to_chat(usr, "You must choose a valid employer.")
 			return
 		save_preferences()
 		save_character()

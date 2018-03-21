@@ -75,6 +75,8 @@
 	desc = "A true prankster's facial attire. A clown is incomplete without their wig and mask."
 	icon_state = "clown"
 	item_state = "clown_hat"
+	item_state = "clown"
+	item_flags = AIRTIGHT | BLOCKHAIR
 
 /obj/item/clothing/mask/gas/sexyclown
 	name = "sexy-clown wig and mask"

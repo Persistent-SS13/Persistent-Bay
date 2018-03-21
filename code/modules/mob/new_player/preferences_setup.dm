@@ -25,6 +25,18 @@ datum/preferences
 		if(current_species.appearance_flags & HAS_UNDERWEAR)
 			all_underwear.Cut()
 			for(var/datum/category_group/underwear/WRC in GLOB.underwear.categories)
+				if(WRC.name == "Underwear, top")
+					if(gender == FEMALE)
+						all_underwear[WRC.name] = "Bra"
+					else
+						all_underwear[WRC.name] = "None"
+					continue
+				if(WRC.name == "Underwear, top")
+					if(gender == FEMALE)
+						all_underwear[WRC.name] = "Panties"
+					else
+						all_underwear[WRC.name] = "Boxers"
+					continue
 				var/datum/category_item/underwear/WRI = pick(WRC.items)
 				all_underwear[WRC.name] = WRI.name
 

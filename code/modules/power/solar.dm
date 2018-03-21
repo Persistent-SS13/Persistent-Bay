@@ -294,7 +294,12 @@ var/list/solars_list = list()
 	var/nexttime = 0		// time for a panel to rotate of 1° in manual tracking
 	var/obj/machinery/power/tracker/connected_tracker = null
 	var/list/connected_panels = list()
-
+/obj/machinery/power/solar_control/after_load()
+	..()
+	src.search_for_connected()
+	if(connected_tracker && track == 2)
+		connected_tracker.set_angle(GLOB.sun.angle)
+	src.set_panels(cdir)
 /obj/machinery/power/solar_control/drain_power()
 	return -1
 

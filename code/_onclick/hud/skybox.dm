@@ -8,8 +8,10 @@
 	var/mob/owner
 	var/image/image
 	var/image/stars
-
-/obj/skybox/Initialize(mob/M)
+	should_save = 0
+/obj/skybox/Initialize()
+	. = ..()
+	var/mob/M = loc
 	SSskybox.skyboxes += src
 	owner = M
 	owner.skybox = src
@@ -23,7 +25,6 @@
 		overlays += stars
 	DoRotate()
 	update()
-	. = ..(null)
 
 /obj/skybox/proc/update()
 	if(!owner || !owner.client)

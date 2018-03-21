@@ -38,9 +38,9 @@ var/global/photo_count = 0
 
 /obj/item/weapon/photo/New()
 	id = photo_count++
-/obj/item/weapon/photo/after_load()
-	..()
-	update_icon()
+//	/obj/item/weapon/photo/after_load()
+//		..()
+//		update_icon()
 /obj/item/weapon/photo/attack_self(mob/user as mob)
 	user.examinate(src)
 

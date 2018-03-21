@@ -157,7 +157,7 @@
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
 
 /obj/item/clothing/under/gentlesuit
-	name = "gentlemans suit"
+	name = "Earth worker uniform"
 	desc = "A silk black shirt with a white tie and a matching gray vest and slacks. Feels proper."
 	icon_state = "gentlesuit"
 	item_state = "gy_suit"
@@ -473,8 +473,8 @@
 	worn_state = "hos_formal_fem"
 
 /obj/item/clothing/under/assistantformal
-	name = "assistant's formal uniform"
-	desc = "An assistant's formal-wear. Why an assistant needs formal-wear is still unknown."
+	name = "Low Class Earth Wear"
+	desc = "On Earth, even the poor dress well enough."
 	icon_state = "assistant_formal"
 	item_state = "gy_suit"
 	worn_state = "assistant_formal"
@@ -584,14 +584,14 @@
 
 // Replace this with actual uniform when someone wants to sprite one
 /obj/item/clothing/under/confederacy
-	name = "\improper Confederate uniform"
-	desc = "A military uniform belonging to the Terran Colonial Confederation, an independent human government."
+	name = "\improper Confederacy uniform"
+	desc = "A uniform that citizens of Agartha wear in solidarity with their navy and armed forces."
 	icon_state = "confed"
 	worn_state = "confed"
 
 /obj/item/clothing/under/saare
-	name = "\improper SAARE uniform"
-	desc = "A uniform belonging to Strategic Assault and Asset Retention Enterprises, a minor private military corporation."
+	name = "\improper Agartha uniform"
+	desc = "A uniform that citizens of Agartha wear in solidarity with their navy and armed forces."
 	icon_state = "saare"
 	worn_state = "saare"
 

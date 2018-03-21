@@ -4,13 +4,16 @@
 
 	var/decl/backpack_outfit/backpack
 	var/list/backpack_metadata
+	var/obj/selected_under
 
 /datum/category_item/player_setup_item/general/equipment
 	name = "Clothing"
-	sort_order = 4
+	sort_order = 5
 
 	var/static/list/backpacks_by_name
-
+	var/list/possible_under
+	var/list/possible_under_extra = list()
+	var/last_background = ""
 /datum/category_item/player_setup_item/general/equipment/New()
 	..()
 	if(!backpacks_by_name)
@@ -19,6 +22,12 @@
 		for(var/bo in bos)
 			var/decl/backpack_outfit/backpack_outfit = bos[bo]
 			backpacks_by_name[backpack_outfit.name] = backpack_outfit
+	if(!possible_under)
+		possible_under = list()
+		possible_under |= new /obj/item/clothing/under/color/grey()
+		possible_under |= new /obj/item/clothing/under/color/green()
+		possible_under |= new /obj/item/clothing/under/color/white()
+		possible_under |= new /obj/item/clothing/under/color/black()
 
 /datum/category_item/player_setup_item/general/equipment/load_character(var/savefile/S)
 	var/load_backbag
@@ -84,8 +93,21 @@
 
 /datum/category_item/player_setup_item/general/equipment/content()
 	. = list()
-	. += "<b>Equipment:</b><br>"
+	. += "<b>Starting Equipment:</b><br>"
+	if(pref.home_system && pref.home_system != last_background)
+		last_background = pref.home_system
+	//	switch(pref.home_system)
+		//	if("Earth Citizen")
+				
+		//	if("Inner Core Settler")
+
+		//	if("Agartha Settler")
+
+		//	if("Outer Core Settler")
+
+		//	if("Corporate Colonist")
 	for(var/datum/category_group/underwear/UWC in GLOB.underwear.categories)
+		if(UWC.name != "Socks" && UWC.name != "Undershirt") continue
 		var/item_name = (pref.all_underwear && pref.all_underwear[UWC.name]) ? pref.all_underwear[UWC.name] : "None"
 		. += "[UWC.name]: <a href='?src=\ref[src];change_underwear=[UWC.name]'><b>[item_name]</b></a>"
 

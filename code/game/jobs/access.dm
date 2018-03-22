@@ -15,7 +15,9 @@
 /atom/movable/proc/GetAccess(var/faction_uid)
 	var/obj/item/weapon/card/id/id = GetIdCard()
 	return id ? id.GetAccess(faction_uid) : list()
-
+/atom/movable/proc/GetFaction()
+	var/obj/item/weapon/card/id/id = GetIdCard()
+	return id ? id.GetFaction() : list()
 /atom/movable/proc/GetIdCard()
 	return null
 

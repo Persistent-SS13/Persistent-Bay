@@ -46,6 +46,10 @@
 	to_file(S["backpack_metadata"], pref.backpack_metadata)
 
 /datum/category_item/player_setup_item/general/equipment/sanitize_character()
+	if(!pref.selected_under)
+		pref.selected_under = pick(possible_under)
+	if(!(pref.selected_under in possible_under) && !(pref.selected_under in possible_under_extra))
+		pref.selected_under = pick(possible_under)
 	if(!istype(pref.all_underwear))
 		pref.all_underwear = list()
 
@@ -92,20 +96,38 @@
 
 
 /datum/category_item/player_setup_item/general/equipment/content()
-	. = list()
-	. += "<b>Starting Equipment:</b><br>"
 	if(pref.home_system && pref.home_system != last_background)
 		last_background = pref.home_system
-	//	switch(pref.home_system)
-		//	if("Earth Citizen")
-				
-		//	if("Inner Core Settler")
-
-		//	if("Agartha Settler")
-
-		//	if("Outer Core Settler")
-
-		//	if("Corporate Colonist")
+		if(!possible_under_extra)
+			possible_under_extra = list()
+		else
+			for(var/obj/x in possible_under_extra)
+				qdel(x)
+			possible_under_extra.Cut()
+		switch(pref.home_system)
+			if("Earth Citizen")
+				possible_under_extra |= new /obj/item/clothing/under/assistantformal
+				possible_under_extra |= new /obj/item/clothing/under/gentlesuit
+			if("Inner Core Settler")
+				possible_under_extra |= new /obj/item/clothing/under/frontier
+				possible_under_extra |= new /obj/item/clothing/under/serviceoveralls
+			if("Agartha Settler")
+				possible_under_extra |= new /obj/item/clothing/under/confederacy
+				possible_under_extra |= new /obj/item/clothing/under/saare
+			if("Outer Core Settler")
+				possible_under_extra |= new /obj/item/clothing/under/frontier
+				possible_under_extra |= new /obj/item/clothing/under/serviceoveralls
+			if("Corporate Colonist")
+				possible_under_extra |= new /obj/item/clothing/under/mbill
+				possible_under_extra |= new /obj/item/clothing/under/wardt
+				possible_under_extra |= new	/obj/item/clothing/under/pcrc
+		pref.selected_under = pick(possible_under_extra)
+		pref.preview_icon = null
+		pref.ShowChoices(usr)
+	
+	. = list()
+	. += "<b>Starting Equipment:</b><br>"
+	. += "Starting Clothing: <a href='?src=\ref[src];change_under=1'><b>[pref.selected_under ? pref.selected_under.name : "Unset*"]</b></a><br>"
 	for(var/datum/category_group/underwear/UWC in GLOB.underwear.categories)
 		if(UWC.name != "Socks" && UWC.name != "Undershirt") continue
 		var/item_name = (pref.all_underwear && pref.all_underwear[UWC.name]) ? pref.all_underwear[UWC.name] : "None"
@@ -180,6 +202,12 @@
 		if(!isnull(new_backpack) && CanUseTopic(user))
 			pref.backpack = backpacks_by_name[new_backpack]
 			return TOPIC_REFRESH_UPDATE_PREVIEW
+	else if(href_list["change_under"])
+		var/obj/new_under = input(user, "Choose backpack style:", "Character Preference", pref.backpack) as null|anything in possible_under+possible_under_extra
+		if(new_under)
+			pref.selected_under = new_under
+			return TOPIC_REFRESH_UPDATE_PREVIEW
+		return TOPIC_NOACTION
 	else if(href_list["backpack"] && href_list["tweak"])
 		var/backpack_name = href_list["backpack"]
 		if(!(backpack_name in backpacks_by_name))

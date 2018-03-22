@@ -70,6 +70,16 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	for(var/datum/access_category/access_category in access_categories)
 		for(var/x in access_category.accesses)
 			all_access |= x
+	all_access |= "1"
+	all_access |= "2"
+	all_access |= "3"
+	all_access |= "4"
+	all_access |= "5"
+	all_access |= "6"
+	all_access |= "7"
+	all_access |= "8"
+	all_access |= "9"
+	all_access |= "10"
 /datum/world_faction/proc/rebuild_all_assignments()
 	all_assignments = list()
 	for(var/datum/assignment_category/assignment_category in assignment_categories)
@@ -168,9 +178,14 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 /obj/faction_spawner/Nanotrasen
 	name = "Nanotrasen Corporate Colony"
 	name_short = "Nanotrasen"
-	uid = "Nanotrasen"
+	uid = "nanotrasen"
 	password = "rosebud"
 	network_name = "Nanotrasen Network"
 	network_uid = "nt_net"
-
-	
+/obj/faction_spawner/Refugee
+	name = "Refugee Network"
+	name_short = "Refugee Net"
+	uid = "refugee"
+	password = "Hope97"
+	network_name = "freenet"
+	network_uid = "freenet"

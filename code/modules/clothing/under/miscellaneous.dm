@@ -157,8 +157,8 @@
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
 
 /obj/item/clothing/under/gentlesuit
-	name = "Earth worker uniform"
-	desc = "A silk black shirt with a white tie and a matching gray vest and slacks. Feels proper."
+	name = "Earthborn uniform"
+	desc = "A silk black shirt with a white tie, in the style of modern earth sensibilites."
 	icon_state = "gentlesuit"
 	item_state = "gy_suit"
 	worn_state = "gentlesuit"
@@ -474,7 +474,7 @@
 
 /obj/item/clothing/under/assistantformal
 	name = "Low Class Earth Wear"
-	desc = "On Earth, even the poor dress well enough."
+	desc = "A simple suit combination that is common lower class wear on Earth."
 	icon_state = "assistant_formal"
 	item_state = "gy_suit"
 	worn_state = "assistant_formal"
@@ -520,12 +520,11 @@
 	starting_accessories = list(/obj/item/clothing/accessory/yellow, /obj/item/clothing/accessory/toggleable/tan_jacket)
 
 /obj/item/clothing/under/serviceoveralls
-	name = "workman outfit"
-	desc = "The very image of a working man. Not that you're probably doing work."
-	icon_state = "mechanic"
+	name = "simple workers outfit"
+	desc = "A uniform suitable for basic labor."
 	item_state = "lb_suit"
+	icon_state = "grayson"
 	worn_state = "mechanic"
-
 /obj/item/clothing/under/cheongsam
 	name = "cheongsam"
 	desc = "It is a cheongsam dress."
@@ -584,7 +583,7 @@
 
 // Replace this with actual uniform when someone wants to sprite one
 /obj/item/clothing/under/confederacy
-	name = "\improper Confederacy uniform"
+	name = "\improper Terran Confederacy uniform"
 	desc = "A uniform that citizens of Agartha wear in solidarity with their navy and armed forces."
 	icon_state = "confed"
 	worn_state = "confed"

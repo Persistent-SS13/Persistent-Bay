@@ -106,14 +106,24 @@
 					))
 			data["assignment_categories"] = assignment_categories
 		if(menu == 8)
+			if(!selected_accesscategory)
+				menu = 6
+				return ui_interact(user, ui_key, ui, force_open, state)
 			var/list/accesses[0]
 			var/ind = 0
 			for(var/x in selected_accesscategory.accesses)
 				ind++
 				var/name = selected_accesscategory.accesses[x]
 				accesses[++accesses.len] = list("name" = "([x]) [name]", "ind" = ind)
-			data["accesses"] = accesses	
+			data["accesses"] = accesses
+		if(menu == 9)
+			if(!selected_access)
+				menu = 6
+				return ui_interact(user, ui_key, ui, force_open, state)
 		if(menu == 10) // assignment category view
+			if(!selected_assignmentcategory)
+				menu = 7
+				return ui_interact(user, ui_key, ui, force_open, state)
 			data["leader_faction"] = selected_assignmentcategory.command_faction
 			data["membership_faction"] = selected_assignmentcategory.member_faction
 			data["account_status"] = selected_assignmentcategory.account_status
@@ -124,6 +134,9 @@
 				assignments[++assignments.len] = list("name" = "([assignment.uid]) [assignment.name]", "ref" = "\ref[assignment]")
 			data["assignments"] = assignments
 		if(menu == 11)
+			if(!selected_assignment)
+				menu = 7
+				return ui_interact(user, ui_key, ui, force_open, state)
 			data["pay"] = selected_assignment.payscale
 			data["title"] = selected_assignment.name
 			var/list/access_categories[0]
@@ -502,6 +515,15 @@
 					new_assignment.uid = select_name
 					selected_assignmentcategory2.assignments |= new_assignment
 					to_chat(usr, "Assignment successfully created.")
+		if("edit_assignmentcategory")
+			var/curr_name = selected_assignmentcategory.name
+			var/select_name = sanitizeName(input(usr,"Enter new assignment category name.","Edit Assignment Category", "") as null|text, MAX_NAME_LEN, 1, 0)
+			if(select_name)
+				if(curr_name != selected_assignmentcategory.name)
+					to_chat(usr, "Your inputs expired because someone used the terminal first.")
+					GLOB.nanomanager.update_uis(src)
+					return 1
+				selected_assignmentcategory.name = select_name
 		if("edit_assignment")
 			var/curr_name = selected_assignment.name
 			var/select_name = sanitizeName(input(usr,"Enter new rank 1 title.","Rank 1 Title", "") as null|text, MAX_NAME_LEN, 1, 0)
@@ -516,11 +538,22 @@
 			if(!new_pay && new_pay != 0) return 1
 			var/maximum = 10
 			if(selected_assignment.ranks.len)
-				var/x = selected_assignment
+				var/x = selected_assignment.ranks[selected_assignment.ranks.len]
 				maximum = selected_assignment.ranks[x]
 			if(new_pay > maximum)
 				to_chat(usr, "Payscale cannot be higher than 10 or the pay of the higher ranks.")
+				return
 			selected_assignment.payscale = new_pay
+		if("delete_assignmentcategory")
+			if(selected_assignmentcategory.assignments.len)
+				to_chat(usr,"You must delete all assignments inside a category before removing the category.")
+				return
+			var/choice = input(usr,"Are you sure you want to delete this assignment category?") in list("Confirm", "Cancel")
+			if(choice == "Confirm")
+				connected_faction.assignment_categories -= selected_assignmentcategory
+				qdel(selected_assignmentcategory)
+				to_chat(usr, "Assignment Category successfully deleted.")
+			menu = 8
 		if("delete_assignment")
 			var/choice = input(usr,"Are you sure you want to delete this assignment? All ranking data will be lost.") in list("Confirm", "Cancel")
 			if(choice == "Confirm")

@@ -1,6 +1,5 @@
 
 GLOBAL_LIST_EMPTY(all_cryo_mobs)
-
 /*
  * Cryogenic refrigeration unit. Basically a despawner.
  */
@@ -112,7 +111,6 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	var/allow_occupant_types = list(/mob/living/carbon/human)
 	var/disallow_occupant_types = list()
 
-	var/faction = ""
 	var/mob/occupant = null       // Person waiting to be despawned.
 	var/time_till_despawn = 1800  // 3 minutes till despawn
 	var/time_entered = 0          // Used to keep track of the safe period.
@@ -120,6 +118,58 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 
 	var/obj/machinery/computer/cryopod/control_computer
 	var/last_no_computer_message = 0
+	var/super_locked = 1
+	req_access = list(core_access_command_programs)
+	var/datum/world_faction/faction
+/obj/machinery/cryopod/attack_hand(mob/user = usr)
+	if(stat & (NOPOWER|BROKEN))
+		return
+
+	user.set_machine(src)
+	src.add_fingerprint(usr)
+
+	var/dat
+
+	if (!( ticker ))
+		return
+	if(!faction && req_access_faction && req_access_faction != "")
+		faction = get_faction(req_access_faction)
+	dat += "<hr/><br/><b>Cryopod Control</b><br/>"
+	dat += "This cryopod is connected to: [faction ? faction.name : "Not connected"]<br/><br/><hr/>"
+	if(faction)
+		dat += "<a href='?src=\ref[src];enter=1'>Enter pod</a><br><a href='?src=\ref[src];eject=1'>Eject Occupant</a><br><br>"
+		dat += "Those authorized can <a href='?src=\ref[src];disconnect=1'>disconnect this pod from the network</a>"
+	else
+		dat += "Those authorized can <a href='?src=\ref[src];connect=1'>connect this pod to a network</a>"
+
+	user << browse(dat, "window=cryopod")
+	onclose(user, "cryopod")
+/obj/machinery/cryopod/Topic(href, href_list)
+	if((. = ..()))
+		return
+
+	var/mob/user = usr
+
+	src.add_fingerprint(user)
+
+	if(href_list["enter"])
+		if(faction)
+			move_inside_proc(usr)
+	if(href_list["eject"])
+		eject_proc(usr)
+	if(href_list["disconnect"])
+		if(allowed(usr))
+			faction = null
+			req_access_faction = null
+	if(href_list["connect"])
+		faction = get_faction(usr.GetFaction())
+		if(faction)
+			if(!allowed(usr))
+				faction = null
+			else
+				req_access_faction = faction.uid
+	src.updateUsrDialog()
+	return
 
 
 /obj/machinery/cryopod/robot
@@ -301,6 +351,68 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 
 	name = initial(name)
 	return
+/obj/machinery/cryopod/proc/eject_proc(var/mob/usr)
+	set name = "Eject Pod"
+	set category = "Object"
+	set src in oview(1)
+	if(usr.stat != 0)
+		return
+
+	icon_state = base_icon_state
+
+	//Eject any items that aren't meant to be in the pod.
+	var/list/items = src.contents
+	if(occupant) items -= occupant
+	if(announce) items -= announce
+
+	for(var/obj/item/W in items)
+		W.forceMove(get_turf(src))
+
+	src.go_out()
+	add_fingerprint(usr)
+
+	name = initial(name)
+	return
+/obj/machinery/cryopod/proc/move_inside_proc(var/mob/usr)
+	if(usr.stat != 0 || !check_occupant_allowed(usr))
+		return
+
+	if(src.occupant)
+		to_chat(usr, "<span class='notice'><B>\The [src] is in use.</B></span>")
+		return
+
+	for(var/mob/living/carbon/slime/M in range(1,usr))
+		if(M.Victim == usr)
+			to_chat(usr, "You're too busy getting your life sucked out of you.")
+			return
+
+	visible_message("[usr] starts climbing into \the [src].", 3)
+
+	if(do_after(usr, 20, src))
+
+		if(!usr || !usr.client)
+			return
+
+		if(src.occupant)
+			to_chat(usr, "<span class='notice'><B>\The [src] is in use.</B></span>")
+			return
+
+		usr.stop_pulling()
+		usr.client.perspective = EYE_PERSPECTIVE
+		usr.client.eye = src
+		usr.forceMove(src)
+		set_occupant(usr)
+		icon_state = occupied_icon_state
+
+		to_chat(usr, "<span class='notice'>[on_enter_occupant_message]</span>")
+		to_chat(usr, "<span class='notice'><b>If you ghost, log out or close your client now, your character will shortly be saved and removed from the round.</b></span>")
+
+		time_entered = world.time
+
+		src.add_fingerprint(usr)
+
+	return
+
 
 /obj/machinery/cryopod/verb/move_inside()
 	set name = "Enter Pod"
@@ -367,3 +479,16 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	name = initial(name)
 	if(occupant)
 		name = "[name] ([occupant])"
+
+/obj/structure/frontier_beacon
+	name = "Frontier Beacon"
+	desc = "A huge bluespace beacon. The technology is unlike anything you've ever seen, but its apparent that this recieves teleportation signals from the gateway outside the frontier."
+	icon = 'icons/obj/machines/antimatter.dmi'
+	icon_state = "shield"
+	anchored = 1
+	density = 1
+/obj/structure/frontier_beacon/New()
+	..()
+	GLOB.frontierbeacons |= src
+
+

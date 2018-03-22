@@ -187,6 +187,7 @@ var/const/NO_EMAG_ACT = -50
 		if(!job)
 			assignment = "Unassigned"
 			rank = 0
+			name = text("[registered_name]'s ID Card ([assignment])")
 			return
 		if(record.rank > 1)
 			assignment = job.ranks[record.rank-1]
@@ -270,13 +271,18 @@ var/const/NO_EMAG_ACT = -50
 
 	src.add_fingerprint(user)
 	return
-
+/obj/item/weapon/card/id/GetFaction()
+	return selected_faction
 /obj/item/weapon/card/id/GetAccess(var/faction_uid)
+	if(!valid) return list()
 	if(!faction_uid || faction_uid == "")
 		return access
 	var/list/final_access[0]
 	var/datum/world_faction/faction = get_faction(faction_uid)
 	if(faction)
+		if(faction.leader_name == registered_name)
+			faction.rebuild_all_access()
+			return faction.all_access
 		if(faction.allow_unapproved_ids || approved_factions.Find(faction.uid))
 			var/datum/computer_file/crew_record/record = faction.get_record(registered_name)
 			if(record)

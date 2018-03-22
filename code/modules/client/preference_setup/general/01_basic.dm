@@ -74,7 +74,7 @@ datum/preferences
 		var/new_gender = input(user, "Choose your character's gender:", "Character Preference", pref.gender) as null|anything in S.genders
 		if(new_gender && CanUseTopic(user))
 			pref.gender = new_gender
-		if(S & HAS_UNDERWEAR)
+		if(1)//S & HAS_UNDERWEAR)
 			pref.all_underwear.Cut()
 			for(var/datum/category_group/underwear/WRC in GLOB.underwear.categories)
 				if(WRC.name == "Underwear, top")

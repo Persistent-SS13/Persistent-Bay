@@ -554,28 +554,84 @@
 		if(client.prefs.memory)
 			mind.store_memory(client.prefs.memory)
 		mind.transfer_to(new_character)					//won't transfer key since the mind is not active
+		
+	
 	if(!spawn_turf)
-		if(!GLOB.cryopods.len)
-			message_admins("WARNING! No cryopods avalible for spawning!")
-			spawn_turf = locate(102, 98, 1)
-		else
-			var/obj/o
-			while(!o && GLOB.cryopods.len)
-				o = pick(GLOB.cryopods)
-				if(!o.loc)
-					GLOB.cryopods -= o
-					qdel(o)
-					o = null
-			if(o)
-				spawn_turf = get_step(o.loc, o.dir)
+
+		if(new_character.spawn_type == 1)
+			if(!GLOB.cryopods.len)
+				message_admins("WARNING! No cryopods avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
+				spawn_turf = locate(102, 98, 1)
+			else
+				for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+					if(pod.req_access_faction == new_character.spawn_loc)
+						spawn_turf = pod.loc
+						break
+				if(!spawn_turf)
+					for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+						if(pod.req_access_faction == "refugee")
+							spawn_turf = pod.loc
+							break
+				if(!spawn_turf)
+					for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+						if(pod.req_access_faction == "nanotrasen")
+							spawn_turf = pod.loc
+							break
+				if(!spawn_turf)
+					var/obj/o
+					while(!o && GLOB.cryopods.len)
+						o = pick(GLOB.cryopods)
+						if(!o.loc)
+							GLOB.cryopods -= o
+							qdel(o)
+							o = null
+					if(o)
+						spawn_turf = o.loc
+				if(!spawn_turf)
+					message_admins("WARNING! No cryopods avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
+					spawn_turf = locate(102, 98, 1)
+		else if(new_character.spawn_type == 2)
+			if(!GLOB.frontierbeacons.len)
+				message_admins("WARNING! No beacons avalible for spawning! spawn one and set the req_access_faction!")
+			for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
+				if(beacon.req_access_faction == new_character.spawn_loc)
+					spawn_turf = get_step(beacon.loc,pick(GLOB.cardinal))
+					new /obj/effect/portal(spawn_turf, delete_after = 30)
+					break
 			if(!spawn_turf)
-				message_admins("WARNING! spawn_turf generated is invalid!!!")
-				o = pick(GLOB.cryopods)
-				spawn_turf = o.loc
+				message_admins("No frontier beacon for [new_character.spawn_loc], spawn one and set the req_access_faction!")
+				for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
+					spawn_turf = get_step(beacon.loc,pick(GLOB.cardinal))
+					new /obj/effect/portal(spawn_turf, delete_after = 30)
+			if(!spawn_turf)
+				for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+					if(pod.req_access_faction == "refugee")
+						spawn_turf = pod.loc
+						break
+			if(!spawn_turf)
+				for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+					if(pod.req_access_faction == "nanotrasen")
+						spawn_turf = pod.loc
+						break
+			if(!spawn_turf)
+				var/obj/o
+				while(!o && GLOB.cryopods.len)
+					o = pick(GLOB.cryopods)
+					if(!o.loc)
+						GLOB.cryopods -= o
+						qdel(o)
+						o = null
+				if(o)
+					spawn_turf = o.loc
+			if(!spawn_turf)
+				message_admins("WARNING! No cryopods avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
+				spawn_turf = locate(102, 98, 1)
 		if(!spawn_turf)
 			message_admins("WARNING! spawn-turf still invalid!!")
 			spawn_turf = locate(102, 98, 1)
-		message_admins("spawnturf :[spawn_turf] [spawn_turf.x], [spawn_turf.y], [spawn_turf.z]")
+
+
+
 	close_spawn_windows()	
 	new_character.loc = spawn_turf
 	new_character.key = key		//Manually transfer the key to log them in
@@ -584,6 +640,19 @@
 	new_character.redraw_inv()
 	CreateModularRecord(new_character)
 	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1))// MAD JAMS cant last forever yo
+	if(new_character.spawn_type == 2)
+		new_character.spawn_type = 1
+		sound_to(new_character, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = 1))
+		spawn()
+			shake_camera(new_character, 3, 1)
+		new_character.druggy = 3
+		new_character.Weaken(3)
+		to_chat(new_character, "<span class='danger'>Your trip through the frontier gateway is like nothing you have ever experienced!</span>")
+		to_chat(new_character, "In fact, it was like your consciousness was ripped from your body and then hammered back inside moments later.")
+		to_chat(new_character, "However, you've made it to the uncharted frontier. You don't know when you'll be able to return to the places you've left behind.")
+		to_chat(new_character, "No time to think about that, your first priority is to get your bearings and find a job that pays. Whatever you decide to do in this new frontier, you're going to need a lot more cash than what you have now.")
+	else
+		to_chat(new_character, "You eject from your cryosleep, ready to resume life in the frontier.")
 	return new_character
 	/**
 	var/mob/living/carbon/human/new_character

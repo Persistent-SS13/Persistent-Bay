@@ -138,6 +138,10 @@
 		return ai_slot
 	if(tesla_link && (tesla_link.name == name))
 		return tesla_link
+	if(logistic_processor && (logistic_processor.name == name))
+		return logistic_processor
+	if(dna_scanner && (dna_scanner.name == name))
+		return dna_scanner
 	return null
 
 // Returns list of all components
@@ -161,4 +165,9 @@
 		all_components.Add(ai_slot)
 	if(tesla_link)
 		all_components.Add(tesla_link)
+	if(dna_scanner)
+		all_components.Add(dna_scanner)
+	if(logistic_processor)
+		all_components.Add(logistic_processor)
+		
 	return all_components

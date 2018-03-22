@@ -1,6 +1,5 @@
 
 GLOBAL_LIST_EMPTY(all_cryo_mobs)
-
 /*
  * Cryogenic refrigeration unit. Basically a despawner.
  */
@@ -480,3 +479,16 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	name = initial(name)
 	if(occupant)
 		name = "[name] ([occupant])"
+
+/obj/structure/frontier_beacon
+	name = "Frontier Beacon"
+	desc = "A huge bluespace beacon. The technology is unlike anything you've ever seen, but its apparent that this recieves teleportation signals from the gateway outside the frontier."
+	icon = 'icons/obj/supplybeacon.dmi'
+	icon_state = "beacon"
+	anchored = 1
+	density = 1
+/obj/structure/frontier_beacon/New()
+	..()
+	GLOB.frontierbeacons |= src
+
+

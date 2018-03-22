@@ -96,7 +96,9 @@
 
 	mannequin.mind.initial_account = M
 	var/datum/computer_file/crew_record/record = CreateModularRecord(mannequin)
+	var/faction_uid = "refugee"
 	if(faction == "Nanotrasen")
+		faction_uid = "nanotrasen"
 		var/datum/world_faction/faction = get_faction("nanotrasen")
 		if(faction)
 			var/datum/computer_file/crew_record/record2 = new()
@@ -134,6 +136,8 @@
 			if(stack)
 				stack.connected_faction = "refugee"
 				stack.try_connect()
+	mannequin.spawn_loc = faction_uid
+	mannequin.spawn_type = 2
 	mannequin.equip_to_slot_or_del(new /obj/item/clothing/shoes/black(mannequin),slot_shoes)
 	S << mannequin
 	load_characters()

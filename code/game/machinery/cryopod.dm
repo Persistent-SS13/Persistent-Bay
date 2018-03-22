@@ -171,7 +171,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	src.updateUsrDialog()
 	return
 
-	
+
 /obj/machinery/cryopod/robot
 	name = "robotic storage unit"
 	desc = "A storage unit for robots."
@@ -413,7 +413,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 
 	return
 
-	
+
 /obj/machinery/cryopod/verb/move_inside()
 	set name = "Enter Pod"
 	set category = "Object"
@@ -483,8 +483,8 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 /obj/structure/frontier_beacon
 	name = "Frontier Beacon"
 	desc = "A huge bluespace beacon. The technology is unlike anything you've ever seen, but its apparent that this recieves teleportation signals from the gateway outside the frontier."
-	icon = 'icons/obj/supplybeacon.dmi'
-	icon_state = "beacon"
+	icon = 'icons/obj/machines/antimatter.dmi'
+	icon_state = "shield"
 	anchored = 1
 	density = 1
 /obj/structure/frontier_beacon/New()

@@ -8,13 +8,12 @@
 	anchored = 1
 
 	var/obj/machinery/mineral/processing_unit/machine = null
-	var/machinedir = EAST
 	var/show_all_ores = 0
 
 /obj/machinery/mineral/processing_unit_console/New()
 	..()
 	spawn(7)
-		src.machine = locate(/obj/machinery/mineral/processing_unit, get_step(src, machinedir))
+		src.machine = locate(/obj/machinery/mineral/processing_unit, block(locate(x - 1, y - 1, z),locate(x + 1, y + 1, z)))
 		if (machine)
 			machine.console = src
 		else

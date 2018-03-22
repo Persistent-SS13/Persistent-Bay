@@ -40,6 +40,12 @@ var/global/list/zones_to_save = list()
 	should_save = 0
 /turf/space
 	map_storage_saved_vars = "contents"
+/turf/space/after_load()
+	..()
+	for(var/atom/movable/lighting_overlay/overlay in contents)
+		overlay.loc = null
+		qdel(overlay)
+		
 /turf
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
 	skip_empty = "contents;saved_decals"
@@ -230,6 +236,14 @@ var/global/list/zones_to_save = list()
 	areas_to_save = list()
 	zones_to_save = list()
 	var/starttime = REALTIMEOFDAY
+	var/backup = 0
+	var/dir = 1
+	while(!backup)
+		if(fexists("backups/[dir].sav"))
+			dir++
+		else
+			backup = 1
+			fcopy("map_saves/game.sav", "backups/[dir].sav")
 	fdel("map_saves/game.sav")
 	var/savefile/f = new("map_saves/game.sav")
 	found_vars = list()

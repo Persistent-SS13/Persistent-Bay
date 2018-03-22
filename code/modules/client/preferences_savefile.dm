@@ -37,12 +37,12 @@
 //	S.cd = "/"
 //	if(!slot)	slot = default_slot
 
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	/**
 	if(slot != SAVE_RESET) // SAVE_RESET will reset the slot as though it does not exist, but keep the current slot for saving purposes.
 		slot = sanitize_integer(slot, 1, config.character_slots, initial(default_slot))
@@ -95,10 +95,46 @@
 	mannequin.mind.store_memory(remembered_info)
 
 	mannequin.mind.initial_account = M
-	CreateModularRecord(mannequin)
-	var/decl/hierarchy/outfit/job/assistant/outfit = new()
-	
-	outfit.equip(mannequin)
+	var/datum/computer_file/crew_record/record = CreateModularRecord(mannequin)
+	if(faction == "Nanotrasen")
+		var/datum/world_faction/faction = get_faction("nanotrasen")
+		if(faction)
+			var/datum/computer_file/crew_record/record2 = new()
+			if(!record2.load_from_global(real_name))
+				message_admins("record for [real_name] failed to load in character creation..")
+			else
+				faction.records.faction_records |= record
+			var/obj/item/weapon/card/id/id = new(mannequin)
+			id.registered_name = real_name
+			id.selected_faction = faction.uid
+			id.approved_factions |= faction.uid
+			if(record2)
+				id.sync_from_record(record2)
+			mannequin.equip_to_slot_or_del(id,slot_wear_id)
+			var/obj/item/organ/internal/stack/stack = mannequin.internal_organs_by_name["stack"]
+			if(stack)
+				stack.connected_faction = "nanotrasen"
+				stack.try_connect()
+	if(faction == "Refugees" || faction == "Entrepreneur")
+		var/datum/world_faction/faction = get_faction("refugee")
+		if(faction)
+			var/datum/computer_file/crew_record/record2 = new()
+			if(!record2.load_from_global(real_name))
+				message_admins("record for [real_name] failed to load in character creation..")
+			else
+				faction.records.faction_records |= record
+			var/obj/item/weapon/card/id/id = new(mannequin)
+			id.registered_name = real_name
+			id.selected_faction = faction.uid
+			id.approved_factions |= faction.uid
+			if(record2)
+				id.sync_from_record(record2)
+			mannequin.equip_to_slot_or_del(id,slot_wear_id)
+			var/obj/item/organ/internal/stack/stack = mannequin.internal_organs_by_name["stack"]
+			if(stack)
+				stack.connected_faction = "refugee"
+				stack.try_connect()
+	mannequin.equip_to_slot_or_del(new /obj/item/clothing/shoes/black(mannequin),slot_shoes)
 	S << mannequin
 	load_characters()
 	qdel(mannequin)

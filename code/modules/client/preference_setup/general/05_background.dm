@@ -40,22 +40,22 @@
 /datum/category_item/player_setup_item/general/background/sanitize_character()
 	return 0
 /datum/category_item/player_setup_item/general/background/content(var/mob/user)
-	. += "<b>Background Information</b><br>"
-	. += "Early Life: <a href='?src=\ref[src];home_system=1'>[pref.home_system ? pref.home_system : "Unset*"]</a><br/>"
+	. += "<b>Background Information</b><br><br>"
+	. += "Early Life: <a href='?src=\ref[src];home_system=1'>[pref.home_system ? pref.home_system : "Unset*"]</a>"
 	if(pref.home_system)
 		var/datum/species/S = all_species[pref.species ? pref.species : SPECIES_HUMAN]
 		var/background = S.backgrounds[pref.home_system]
 		if(background)
-			. += "<br>[background]<br><br>"
-	. += "<b>Starting Employer</b>: <a href='?src=\ref[src];faction=1'>[pref.faction ? pref.faction : "Unset*"]</a><br/>"
+			. += "<br>[background]<br>"
+	. += "<br><br>Starting Employer: <a href='?src=\ref[src];faction=1'>[pref.faction ? pref.faction : "Unset*"]</a>"
 	switch(pref.faction)
 		if("Nanotrasen")
-			. += "<br>You're offered a job as an employee in Nanotrasen, one of the newest and fastest research firms in the Galaxy. Nanotrasen provides you passage to a gateway that teleports you to their outpost deep inside the frontier.<br><br>"
+			. += "<br>You're offered a job as an employee in Nanotrasen, one of the newest and fastest research firms in the Galaxy. Nanotrasen provides you passage to a gateway that teleports you to their outpost deep inside the frontier.<br>"
 		if("Refugees")
 			. += "<br>You have left your previous home in a desperate search for a better life. You've been offered free passage to a gateway that will teleport you to a free-station deep inside the frontier.<br><br>"
 		if("Entrepreneur")
-			. += "<br>You have heard about an unexplored frontier rich in rare materials and untapped research opprotunties. Theirs money to be made everywhere, and theirs even free passage to a gateway that will teleport you to a free-station.<br><br>"
-	. += "Bank Account Pin:<br>"
+			. += "<br>You have heard about an unexplored frontier rich in rare materials and untapped research opprotunties. Theirs money to be made everywhere, and theirs even free passage to a gateway that will teleport you to a free-station.<br>"
+	. += "<br><br>Bank Account Pin:<br>"
 	. += "<a href='?src=\ref[src];set_pin=1'>[pref.chosen_pin]</a><br>"
 /datum/category_item/player_setup_item/general/background/OnTopic(var/href,var/list/href_list, var/mob/user)
 	if(href_list["nt_relation"])
@@ -68,7 +68,8 @@
 		var/datum/species/S = all_species[pref.species ? pref.species : SPECIES_HUMAN]
 
 		var/choice = input(user, "Please choose a background.", "Character Preference", pref.home_system) as null|anything in S.backgrounds
-		pref.home_system = choice
+		if(choice)
+			pref.home_system = choice
 		return TOPIC_REFRESH
 
 	else if(href_list["citizenship"])
@@ -86,7 +87,8 @@
 	else if(href_list["faction"])
 		var/list/joinable = list("Nanotrasen", "Refugees", "Entrepreneur")
 		var/choice = input(user, "Please choose a reason for coming to the frontier", "Character Preference", pref.faction) as null|anything in joinable
-		pref.faction = choice
+		if(choice)
+			pref.faction = choice
 		return TOPIC_REFRESH
 
 	else if(href_list["religion"])

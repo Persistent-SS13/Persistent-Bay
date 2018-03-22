@@ -127,7 +127,9 @@ datum/preferences
 	dat += player_setup.header()
 	dat += "<br><HR></center>"
 	dat += player_setup.content(user)
-
+	if(!preview_icon)
+		update_preview_icon()
+		return ShowChoices(user)
 	dat += "</html></body>"
 	char_panel = new(user, "Create a new character","Create a new character", 1200, 800, src)
 	char_panel.set_content(dat)
@@ -186,6 +188,9 @@ datum/preferences
 		randomize_appearance_and_body_for()
 		real_name = null
 		preview_icon = null
+		home_system = null
+		faction = null
+		selected_under = null
 		sanitize_preferences()
 		client.prefs.ShowChoices(src)
 		close_load_dialog(usr)

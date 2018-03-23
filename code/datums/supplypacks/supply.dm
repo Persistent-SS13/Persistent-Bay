@@ -140,3 +140,15 @@
 					/obj/item/clothing/accessory/storage/webbing)
 	cost = 15
 	containername = "\improper Webbing crate"
+
+/decl/hierarchy/supply_pack/supply/glowsticks
+	name = "Glowsticks (x20)"
+	contains = list(/obj/item/device/flashlight/glowstick,
+					/obj/item/device/flashlight/glowstick/red,
+					/obj/item/device/flashlight/glowstick/yellow,
+					/obj/item/device/flashlight/glowstick/orange,
+					/obj/item/device/flashlight/glowstick/blue)
+	cost = 10
+	containername = "\improper Glowstick Crate"
+	num_contained = 20
+	supply_method = /decl/supply_method/randomized

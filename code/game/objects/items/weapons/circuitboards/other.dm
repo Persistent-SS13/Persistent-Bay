@@ -99,7 +99,17 @@
 	board_type = "machine"
 	origin_tech = "programming=1"
 	req_components = list(
-							/obj/item/weapon/stock_parts/capacitor = 1)
+							/obj/item/weapon/stock_parts/capacitor = 1,
+							/obj/item/weapon/stock_parts/scanning_module = 1)
+
+/obj/item/weapon/circuitboard/holopad_longrange
+	name = "circuit board (Long Range Holopad)"
+	build_path = /obj/machinery/hologram/holopad/longrange
+	board_type = "machine"
+	origin_tech = "programming=1"
+	req_components = list(
+							/obj/item/weapon/stock_parts/capacitor = 1,
+							/obj/item/weapon/stock_parts/scanning_module = 1)
 
 /obj/item/weapon/circuitboard/chem_dispenser
 	name = "circuit board (Portable Chem Dispenser)"

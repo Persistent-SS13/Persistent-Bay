@@ -1553,14 +1553,19 @@ CIRCUITS BELOW
 	req_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 3, TECH_BLUESPACE = 1)
 	build_path = /obj/item/weapon/circuitboard/holopad
 	sort_string = "ZZZZC"
-
-/*
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
+/datum/design/circuit/holopad_longrange
+	name = "Long Range Holopad"
+	id = "holopad_longrange"
+	req_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 3, TECH_BLUESPACE = 2)
+	build_path = /obj/item/weapon/circuitboard/holopad_longrange
+	sort_string = "ZZZZB"
+/datum/design/circuit/cryopod
+	name = "Cryogenic Freezer"
+	id = "cryopod"
+	req_tech = list(TECH_ENGINEERING = 2)
+	build_path = /obj/item/weapon/circuitboard/cryopod
 	sort_string = "ZZZZA"
+/*
 /datum/design/circuit/
 	name = ""
 	id = ""

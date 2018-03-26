@@ -160,9 +160,9 @@
 // /obj/machinery/newscaster
 // /obj/machinery/newscaster/security_unit
 
-/obj/item/frame/atm_frame
+/obj/item/frame/atm
 	name = "atm"
 	desc = "An ATM, just secure to the wall."
-	icon = 'icons/obj/monitors.dmi'
-	icon_state = "firex"
+	icon = 'icons/obj/terminals.dmi'
+	icon_state = "atm_frame"
 	build_machine_type = /obj/machinery/atm

@@ -87,6 +87,12 @@
 	icon_state = "clownpack"
 	item_state_slots = null
 
+/obj/item/weapon/storage/backpack/mime
+	name = "Parcel Parceaux"
+	desc = "A silent backpack made for those silent workers. Silence Co."
+	icon_state = "mimepack"
+	item_state_slots = null
+
 /obj/item/weapon/storage/backpack/medic
 	name = "medical backpack"
 	desc = "It's a backpack especially designed for use in a sterile environment."

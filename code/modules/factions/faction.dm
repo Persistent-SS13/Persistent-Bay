@@ -43,6 +43,10 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	var/leader_name = ""
 	var/list/debts = list() // format list("Ro Laren" = "550") real_name = debt amount
 	var/joinable = 0
+
+	var/list/cargo_telepads = list()
+	var/list/approved_orders = list()
+	var/list/pending_orders = list()
 /datum/world_faction/proc/get_duty_status(var/real_name)
 	for(var/obj/item/organ/internal/stack/stack in connected_laces)
 		if(stack.get_owner_name() == real_name)
@@ -65,6 +69,12 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	network.holder = src
 	records = new()
 	create_faction_account()
+/datum/world_faction/proc/rebuild_cargo_telepads()
+	cargo_telepads.Cut()
+	for(var/obj/machinery/telepad_cargo/telepad in GLOB.cargotelepads)
+		if(telepad.req_access_faction == uid)
+			telepad.connected_faction = src
+			cargo_telepads |= telepad
 /datum/world_faction/proc/rebuild_all_access()
 	all_access = list()
 	for(var/datum/access_category/access_category in access_categories)
@@ -142,7 +152,7 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	accesses["5"] = "Security Programs"
 	accesses["6"] = "Networking Programs"
 	accesses["7"] = "Lock Electronics"
-
+	accesses["8"] = "Import/Export Approval"
 /obj/faction_spawner
 	name = "Name to start faction with"
 	var/name_short = "Faction Abbreviation"

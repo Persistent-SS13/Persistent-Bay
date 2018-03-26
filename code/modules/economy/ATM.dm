@@ -25,8 +25,81 @@
 	var/view_screen = NO_SCREEN
 	var/datum/effect/effect/system/spark_spread/spark_system
 	var/account_security_level = 0
+	var/buildstage = 2	// 2 = complete, 1 = no wires,  0 = circuit gone
+	var/wiresexposed = 0
 
-/obj/machinery/atm/New()
+/obj/machinery/atm/update_icon()	//Sprites for each build stage
+	overlays.Cut()
+
+	if(wiresexposed)
+		switch(buildstage)
+			if(2)
+				icon_state="atm_b2"
+			if(1)
+				icon_state="atm_b1"
+			if(0)
+				icon_state="atm_b0"
+		set_light(0)
+		return
+
+/obj/machinery/atm/attackby(obj/item/W as obj, mob/user as mob)	//Build code
+	src.add_fingerprint(user)
+
+	if(isScrewdriver(W) && buildstage == 2)
+		wiresexposed = !wiresexposed
+		update_icon()
+		return
+
+	if(wiresexposed)
+		switch(buildstage)
+			if(2)
+				if(isWirecutter(W))
+					user.visible_message("<span class='notice'>\The [user] has cut the wires inside \the [src]!</span>", "<span class='notice'>You have cut the wires inside \the [src].</span>")
+					new/obj/item/stack/cable_coil(get_turf(src), 5)
+					playsound(src.loc, 'sound/items/Wirecutter.ogg', 50, 1)
+					buildstage = 1
+					update_icon()
+			if(1)
+				if(istype(W, /obj/item/stack/cable_coil))
+					var/obj/item/stack/cable_coil/C = W
+					if (C.use(5))
+						to_chat(user, "<span class='notice'>You wire \the [src].</span>")
+						buildstage = 2
+						return
+					else
+						to_chat(user, "<span class='warning'>You need 5 pieces of cable to wire \the [src].</span>")
+						return
+				else if(isCrowbar(W))
+					to_chat(user, "You pry out the circuit!")
+					playsound(src.loc, 'sound/items/Crowbar.ogg', 50, 1)
+					spawn(20)
+						var/obj/item/weapon/circuitboard/atm/circuit = new /obj/item/weapon/circuitboard/atm()
+						circuit.dropInto(user.loc)
+						buildstage = 0
+						update_icon()
+			if(0)
+				if(istype(W, /obj/item/weapon/circuitboard/atm))
+					to_chat(user, "You insert the circuit!")
+					qdel(W)
+					buildstage = 1
+					update_icon()
+
+				else if(isWrench(W))
+					to_chat(user, "You remove the ATM assembly from the wall!")
+					new /obj/item/frame/atm(get_turf(user))
+					playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
+					qdel(src)
+		return
+
+	return
+
+/obj/machinery/atm/New(loc, dir, atom/frame)	//ATM is created from frame
+	..(loc)
+
+	if(istype(frame))
+		buildstage = 0
+		wiresexposed = 1
+		frame.transfer_fingerprints_to(src)
 	..()
 	machine_id = "[station_name()] ATM #[num_financial_terminals++]"
 	spark_system = new /datum/effect/effect/system/spark_spread
@@ -102,9 +175,13 @@
 	else
 		..()
 
-/obj/machinery/atm/attack_hand(mob/user)
-	if(!..())
-		interact(user)
+/obj/machinery/atm/attack_hand(mob/user)	//Prevent ATM from being used when under de/construction
+	if(user.stat || stat & (NOPOWER|BROKEN))
+		return
+	if (buildstage != 2)
+		return
+		if(!..())
+			interact(user)
 
 /obj/machinery/atm/interact(mob/user)
 

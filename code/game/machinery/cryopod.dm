@@ -121,6 +121,24 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	var/super_locked = 1
 	req_access = list(core_access_command_programs)
 	var/datum/world_faction/faction
+
+/obj/machinery/cryopod/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/cryopod(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	RefreshParts()
+
+/obj/machinery/cryopod/attackby(var/obj/item/O as obj, var/mob/user as mob)
+	if(!occupant)
+		if(default_deconstruction_screwdriver(user, O))
+			return
+		if(default_deconstruction_crowbar(user, O))
+			return
+	..()
+
 /obj/machinery/cryopod/attack_hand(mob/user = usr)
 	if(stat & (NOPOWER|BROKEN))
 		return
@@ -132,7 +150,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 
 	if (!( ticker ))
 		return
-	if(!faction && req_access_faction && req_access_faction != "")
+	if(req_access_faction && req_access_faction != "" || (faction && faction.uid != req_access_faction))
 		faction = get_faction(req_access_faction)
 	dat += "<hr/><br/><b>Cryopod Control</b><br/>"
 	dat += "This cryopod is connected to: [faction ? faction.name : "Not connected"]<br/><br/><hr/>"
@@ -164,8 +182,10 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	if(href_list["connect"])
 		faction = get_faction(usr.GetFaction())
 		if(faction)
+			req_access_faction = faction.uid
 			if(!allowed(usr))
 				faction = null
+				req_access_faction = ""
 			else
 				req_access_faction = faction.uid
 	src.updateUsrDialog()
@@ -246,13 +266,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	if(occupant)
 		if(world.time - time_entered < time_till_despawn)
 			return
-
-		if(!occupant.client && occupant.stat<2) //Occupant is living and has no client.
-			if(!control_computer)
-				if(!find_control_computer(urgent=1))
-					return
-
-			despawn_occupant()
+		despawn_occupant()
 
 /mob/var/stored_ckey = ""
 
@@ -376,7 +390,9 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 /obj/machinery/cryopod/proc/move_inside_proc(var/mob/usr)
 	if(usr.stat != 0 || !check_occupant_allowed(usr))
 		return
-
+	if(!req_access_faction || req_access_faction == "")
+		to_chat(usr, "<span class='notice'><B>\The [src] is not connected to a network.</B></span>")
+		return
 	if(src.occupant)
 		to_chat(usr, "<span class='notice'><B>\The [src] is in use.</B></span>")
 		return
@@ -402,6 +418,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		usr.client.eye = src
 		usr.forceMove(src)
 		set_occupant(usr)
+		usr.spawn_loc = req_access_faction
 		icon_state = occupied_icon_state
 
 		to_chat(usr, "<span class='notice'>[on_enter_occupant_message]</span>")
@@ -418,7 +435,9 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	set name = "Enter Pod"
 	set category = "Object"
 	set src in oview(1)
-
+	if(!req_access_faction || req_access_faction == "")
+		to_chat(usr, "<span class='notice'><B>\The [src] is not connected to a network.</B></span>")
+		return
 	if(usr.stat != 0 || !check_occupant_allowed(usr))
 		return
 
@@ -448,7 +467,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		usr.forceMove(src)
 		set_occupant(usr)
 		icon_state = occupied_icon_state
-
+		usr.spawn_loc = req_access_faction
 		to_chat(usr, "<span class='notice'>[on_enter_occupant_message]</span>")
 		to_chat(usr, "<span class='notice'><b>If you ghost, log out or close your client now, your character will shortly be saved and removed from the round.</b></span>")
 

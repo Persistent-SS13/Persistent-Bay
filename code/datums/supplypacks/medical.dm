@@ -9,7 +9,7 @@
 					/obj/item/weapon/storage/firstaid/toxin = 10,
 					/obj/item/weapon/storage/firstaid/adv = 10,
 					/obj/item/weapon/storage/firstaid/o2 = 10)
-	cost = 50
+	cost = 200
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "Bulk Medkit Crate (x10)"
 	access = access_medical

@@ -57,6 +57,10 @@
 	recipes += new/datum/stack_recipe("computer frame", /obj/structure/computerframe, 5, time = 25, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("wall girders", /obj/structure/girder, 2, time = 50, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("machine frame", /obj/machinery/constructable_frame/machine_frame, 5, time = 25, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe_list("conveyor belts", list( \
+		new/datum/stack_recipe("conveyor belt assembly", /obj/item/conveyor_construct, 3, time = 15, one_per_turf = 1, on_floor =1), \
+		new/datum/stack_recipe("conveyor belt switch", /obj/item/conveyor_switch_construct, 1, time = 5, one_per_turf = 1, on_floor =1), \
+		))
 	recipes += new/datum/stack_recipe("turret frame", /obj/machinery/porta_turret_construct, 5, time = 25, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe_list("airlock assemblies", list( \
 		new/datum/stack_recipe("standard airlock assembly", /obj/structure/door_assembly, 4, time = 50, one_per_turf = 1, on_floor = 1), \
@@ -88,6 +92,7 @@
 	recipes += new/datum/stack_recipe("apc frame", /obj/item/frame/apc, 2)
 	recipes += new/datum/stack_recipe("air alarm frame", /obj/item/frame/air_alarm, 2)
 	recipes += new/datum/stack_recipe("fire alarm frame", /obj/item/frame/fire_alarm, 2)
+	recipes += new/datum/stack_recipe("ATM", /obj/item/frame/atm, 2)
 	recipes += new/datum/stack_recipe("intercom frame", /obj/item/frame/intercom, 2)
 	recipes += new/datum/stack_recipe_list("modular computer frames", list( \
 		new/datum/stack_recipe("modular console frame", /obj/item/modular_computer/console, 20),\

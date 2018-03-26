@@ -1467,14 +1467,12 @@ CIRCUITS BELOW
 	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
 	build_path = /obj/item/weapon/circuitboard/teleporter_station
 	sort_string = "ZZZZR"
-/*
-/datum/design/circuit/telesci_pad
+/datum/design/circuit/telepad
 	name = "Telepad"
-	id = "telesci_pad"
-	req_tech = list(TECH_MATERIAL = 3, TECH_ENGINEERING = 4, TECH_BLUESPACE = 3, TECH_DATA = 4)
-	build_path = /obj/item/weapon/circuitboard/telesci_pad
+	id = "telepad"
+	req_tech = list(TECH_BLUESPACE = 2)
+	build_path = /obj/item/weapon/circuitboard/telepad
 	sort_string = "ZZZZQ"
-*/
 /datum/design/circuit/photocopier
 	name = "Photocopier"
 	id = "photocopier"
@@ -1553,14 +1551,19 @@ CIRCUITS BELOW
 	req_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 3, TECH_BLUESPACE = 1)
 	build_path = /obj/item/weapon/circuitboard/holopad
 	sort_string = "ZZZZC"
-
-/*
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
+/datum/design/circuit/holopad_longrange
+	name = "Long Range Holopad"
+	id = "holopad_longrange"
+	req_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 3, TECH_BLUESPACE = 2)
+	build_path = /obj/item/weapon/circuitboard/holopad_longrange
+	sort_string = "ZZZZB"
+/datum/design/circuit/cryopod
+	name = "Cryogenic Freezer"
+	id = "cryopod"
+	req_tech = list(TECH_ENGINEERING = 2)
+	build_path = /obj/item/weapon/circuitboard/cryopod
 	sort_string = "ZZZZA"
+/*
 /datum/design/circuit/
 	name = ""
 	id = ""

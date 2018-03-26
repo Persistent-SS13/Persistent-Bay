@@ -1,5 +1,5 @@
 //CARGO TELEPAD//
-/obj/machinery/telepad_cargo
+/obj/machinery/telepad
 	name = "cargo telepad"
 	desc = "A telepad used to recieve imports and send exports."
 	icon = 'icons/obj/telescience.dmi'
@@ -7,6 +7,7 @@
 	anchored = 1
 	use_power = 1
 	idle_power_usage = 20
+<<<<<<< HEAD
 	active_power_usage = 500
 	var/stage = 0
 	var/datum/world_faction/connected_faction
@@ -22,6 +23,17 @@
 
 /obj/machinery/telepad_cargo/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
 	if(istype(W, /obj/item/weapon/wrench))
+	active_power_usage = 15000
+/obj/machinery/telepad/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/telepad(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	RefreshParts()
+/obj/machinery/telepad/attackby(obj/item/O as obj, mob/user as mob, params)
+	if(istype(O, /obj/item/weapon/wrench))
 		playsound(src, 'sound/items/Ratchet.ogg', 50, 1)
 		if(anchored)
 			anchored = 0
@@ -107,6 +119,8 @@
 		src.add_fingerprint(user)
 	else
 		to_chat(user, "The telepad rejects your access.")
+	..()
+	
 ///TELEPAD CALLER///
 /obj/item/device/telepad_beacon
 	name = "telepad beacon"
@@ -119,7 +133,7 @@
 /obj/item/device/telepad_beacon/attack_self(mob/user as mob)
 	if(user)
 		to_chat(user, "<span class = 'caution'> Locked In</span>")
-		new /obj/machinery/telepad_cargo(user.loc)
+		new /obj/machinery/telepad(user.loc)
 		playsound(src, 'sound/effects/pop.ogg', 100, 1, 1)
 		qdel(src)
 	return

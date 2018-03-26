@@ -121,6 +121,24 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	var/super_locked = 1
 	req_access = list(core_access_command_programs)
 	var/datum/world_faction/faction
+
+/obj/machinery/cryopod/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/cryopod(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	RefreshParts()
+
+/obj/machinery/cryopod/attackby(var/obj/item/O as obj, var/mob/user as mob)
+	if(!occupant)
+		if(default_deconstruction_screwdriver(user, O))
+			return
+		if(default_deconstruction_crowbar(user, O))
+			return
+	..()
+
 /obj/machinery/cryopod/attack_hand(mob/user = usr)
 	if(stat & (NOPOWER|BROKEN))
 		return

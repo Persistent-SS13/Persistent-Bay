@@ -1,5 +1,5 @@
 //CARGO TELEPAD//
-/obj/machinery/telepad_cargo
+/obj/machinery/telepad
 	name = "cargo telepad"
 	desc = "A telepad used by the Rapid Crate Sender."
 	icon = 'icons/obj/telescience.dmi'
@@ -8,9 +8,16 @@
 	use_power = 1
 	idle_power_usage = 20
 	active_power_usage = 15000
-	var/stage = 0
-/obj/machinery/telepad_cargo/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
-	if(istype(W, /obj/item/weapon/wrench))
+/obj/machinery/telepad/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/telepad(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	RefreshParts()
+/obj/machinery/telepad/attackby(obj/item/O as obj, mob/user as mob, params)
+	if(istype(O, /obj/item/weapon/wrench))
 		playsound(src, 'sound/items/Ratchet.ogg', 50, 1)
 		if(anchored)
 			anchored = 0
@@ -18,22 +25,11 @@
 		else if(!anchored)
 			anchored = 1
 			to_chat(user, "<span class = 'caution'> The [src] is now secured.</span>")
-	if(istype(W, /obj/item/weapon/screwdriver))
-		if(stage == 0)
-			playsound(src, 'sound/items/Screwdriver.ogg', 50, 1)
-			to_chat(user, "<span class = 'caution'> You unscrew the telepad's tracking beacon.</span>")
-			stage = 1
-		else if(stage == 1)
-			playsound(src, 'sound/items/Screwdriver.ogg', 50, 1)
-			to_chat(user, "<span class = 'caution'> You screw in the telepad's tracking beacon.</span>")
-			stage = 0
-	if(istype(W, /obj/item/weapon/weldingtool) && stage == 1)
-		playsound(src, 'sound/items/Welder.ogg', 50, 1)
-		to_chat(user, "<span class = 'caution'> You disassemble the telepad.</span>")
-		new /obj/item/stack/material/steel(get_turf(src))
-		new /obj/item/stack/material/glass(get_turf(src))
-		qdel(src)
-
+	if(default_deconstruction_screwdriver(user, O))
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	..()
 ///TELEPAD CALLER///
 /obj/item/device/telepad_beacon
 	name = "telepad beacon"
@@ -46,7 +42,7 @@
 /obj/item/device/telepad_beacon/attack_self(mob/user as mob)
 	if(user)
 		to_chat(user, "<span class = 'caution'> Locked In</span>")
-		new /obj/machinery/telepad_cargo(user.loc)
+		new /obj/machinery/telepad(user.loc)
 		playsound(src, 'sound/effects/pop.ogg', 100, 1, 1)
 		qdel(src)
 	return

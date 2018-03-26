@@ -355,20 +355,17 @@
 	containertype = /obj/structure/closet/secure_closet/hydroponics
 	containername = "Botanist Equipment"
 /decl/hierarchy/supply_pack/operations/clown
-/**
 	name = "Clown Equipment"
 	contains = list(/obj/item/clothing/under/rank/clown,
 					/obj/item/clothing/mask/gas/clown_hat,
 					/obj/item/clothing/shoes/clown_shoes,
-					/obj/item/clothing/gloves/rainbow/clown,
 					/obj/item/weapon/bikehorn,
-					/obj/item/toy/crayon/rainbow,
+					/obj/item/weapon/pen/crayon/rainbow,
 					/obj/item/weapon/bedsheet/clown,
 					/obj/item/weapon/stamp/clown,
-					/obj/item/stack/sheet/mineral/bananium, // Clowns control the entire bananium industry now :eyes:
-					/obj/item/weapon/cartridge/clown, // Cannot be bought from the vendor, so adding it to this pack
+					/obj/item/weapon/cartridge/clown,
 					/obj/item/weapon/storage/backpack/clown) 
-	cost = 250
+	cost = 15
 	containertype = /obj/structure/closet/secure_closet
 	containername = "Clown Equipment"
 /decl/hierarchy/supply_pack/operations/mime
@@ -377,12 +374,10 @@
 					/obj/item/clothing/mask/gas/mime,
 					/obj/item/clothing/shoes/mime,
 					/obj/item/clothing/head/beret,
-					/obj/item/toy/crayon/mime,
+					/obj/item/weapon/pen/crayon/mime,
 					/obj/item/weapon/bedsheet/mime,
-					/obj/item/stack/sheet/mineral/tranquillite,
 					/obj/item/weapon/cartridge/mime,
 					/obj/item/weapon/storage/backpack/mime) 
-	cost = 150
+	cost = 15
 	containertype = /obj/structure/closet/secure_closet
 	containername = "Mime Equipment"
-**/

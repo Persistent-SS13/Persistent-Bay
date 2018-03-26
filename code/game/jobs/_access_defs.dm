@@ -21,3 +21,4 @@
 #define core_access_security_programs 5
 #define core_access_wireless_programs 6
 #define core_access_door_configuration 7
+#define core_access_order_approval 8

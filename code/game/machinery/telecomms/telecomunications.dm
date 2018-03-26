@@ -59,6 +59,10 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	*/
 // Loop through all linked machines and send the signal or copy.
 	for(var/obj/machinery/telecomms/machine in links)
+		if(!machine.loc)
+			links -= machine
+			qdel(machine)
+			continue
 		if(filter && !istype( machine, filter ))
 			continue
 		if(!machine.on)
@@ -121,6 +125,8 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 
 /obj/machinery/telecomms/Initialize()
 	//Set the listening_levels if there's none.
+	if(!loc)
+		return
 	if(!listening_levels)
 		//Defaults to our Z level!
 		var/turf/position = get_turf(src)
@@ -192,6 +198,9 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 
 /obj/machinery/telecomms/proc/checkheat()
 	// Checks heat from the environment and applies any integrity damage
+	if(!loc)
+		qdel(src)
+		return
 	var/datum/gas_mixture/environment = loc.return_air()
 	var/damage_chance = 0                           // Percent based chance of applying 1 integrity damage this tick
 	switch(environment.temperature)

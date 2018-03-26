@@ -90,6 +90,23 @@ Used In File(s): /code/game/objects/item/devices/radio/radio.dm
 		{{:helper.link('++', null, {'freq' : 10})}}
 	</div>
 </div>
+<div class="item">
+	<div class="itemLabelWide">
+		Connected Network:
+	</div>
+	<div class="itemContentMedium">
+		{{:data.connected_faction}}<br>{{:helper.link('Connect using ID', null, {'connect_to_faction' : 1})}}
+	</div>
+</div>
+<div class="item">
+	<div class="itemLabelWide">
+		Open broadcast mode: 
+	</div>
+	<div class="itemContentMedium">
+		{{:helper.link(data.public_mode, null, {'toggle_public_mode' : 1})}}
+	</div>
+</div>
+<br>Open broadcast mode makes your radio transmit and recieve messages without encryption, disregarding your connected network.
 
 {{if data.chan_list_len >= 1}}
 	<h3>Channels</h3>

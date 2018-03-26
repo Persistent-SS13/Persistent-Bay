@@ -236,17 +236,18 @@
 		if(!loc)
 			qdel(src)
 			return
-	var/area/A = src.loc.loc
+	if(loc)
+		var/area/A = src.loc.loc
 
-	//if area isn't specified use current
-	if(isarea(A) && src.areastring == null)
-		src.area = A
-		name = "\improper [area.name] APC"
-	else
-		src.area = get_area_name(areastring)
-		name = "\improper [area.name] APC"
-	area.apc = src
-	update_icon()
+		//if area isn't specified use current
+		if(isarea(A) && src.areastring == null)
+			src.area = A
+			name = "\improper [area.name] APC"
+		else
+			src.area = get_area_name(areastring)
+			name = "\improper [area.name] APC"
+		area.apc = src
+		update_icon()
 
 /obj/machinery/power/apc/examine(mob/user)
 	if(..(user, 1))

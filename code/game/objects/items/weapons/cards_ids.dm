@@ -276,7 +276,7 @@ var/const/NO_EMAG_ACT = -50
 /obj/item/weapon/card/id/GetAccess(var/faction_uid)
 	if(!valid) return list()
 	if(!faction_uid || faction_uid == "")
-		return access
+		faction_uid = selected_faction
 	var/list/final_access[0]
 	var/datum/world_faction/faction = get_faction(faction_uid)
 	if(faction)

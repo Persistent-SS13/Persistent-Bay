@@ -79,3 +79,9 @@
 
 /area/supply/office
 	name = "\improper Cargo Office"
+
+/area/engine
+	name = "\improper Engineering"
+
+/area/engine/telecoms
+	name = "\improper Telecommunications"

@@ -2513,6 +2513,8 @@
 #include "maps\random_ruins\space_ruins\space_ruins.dm"
 #include "maps\vignette\vignette.dm"
 #include "maps\vignette\vignette_define.dm"
+#include "maps\vignette\backup\vignette_areas.dm"
+#include "maps\vignette\backup\vignette_elevator.dm"
 #include "maps\~mapsystem\map_preferences.dm"
 #include "maps\~mapsystem\map_ranks.dm"
 #include "maps\~mapsystem\maps.dm"

@@ -75,8 +75,13 @@
 
 /mob/new_player/proc/slot_select_load()
 	var/mob/user = src
-	if(!client.prefs.character_list || (client.prefs.character_list.len < config.character_slots))
+	var/slots = config.character_slots
+	if(check_rights(R_ADMIN, 0, client))
+		slots += 2
+	if(!client.prefs.character_list || (client.prefs.character_list.len < slots))
 		client.prefs.load_characters()
+		sleep(20)
+		return slot_select_load()
 	var/dat  = list()
 	dat += "<body>"
 	dat += "<tt><center>"
@@ -603,6 +608,7 @@
 				for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
 					spawn_turf = get_step(beacon.loc,pick(GLOB.cardinal))
 					new /obj/effect/portal(spawn_turf, delete_after = 50)
+					break
 			if(!spawn_turf)
 				for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
 					if(pod.req_access_faction == "refugee")

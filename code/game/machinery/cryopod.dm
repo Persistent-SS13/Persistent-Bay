@@ -112,7 +112,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	var/disallow_occupant_types = list()
 
 	var/mob/occupant = null       // Person waiting to be despawned.
-	var/time_till_despawn = 1800  // 3 minutes till despawn
+	var/time_till_despawn = 1 MINUTE  // 3 minutes till despawn
 	var/time_entered = 0          // Used to keep track of the safe period.
 	var/obj/item/device/radio/intercom/announce //
 
@@ -353,13 +353,14 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	icon_state = base_icon_state
 
 	//Eject any items that aren't meant to be in the pod.
+	/**
 	var/list/items = src.contents
 	if(occupant) items -= occupant
 	if(announce) items -= announce
 
 	for(var/obj/item/W in items)
 		W.forceMove(get_turf(src))
-
+	**/
 	src.go_out()
 	add_fingerprint(usr)
 
@@ -373,7 +374,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		return
 
 	icon_state = base_icon_state
-
+	/**
 	//Eject any items that aren't meant to be in the pod.
 	var/list/items = src.contents
 	if(occupant) items -= occupant
@@ -381,7 +382,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 
 	for(var/obj/item/W in items)
 		W.forceMove(get_turf(src))
-
+	**/
 	src.go_out()
 	add_fingerprint(usr)
 

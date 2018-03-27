@@ -93,7 +93,16 @@
 		var/datum/transaction/T = M.transaction_log[1]
 		remembered_info += "<b>Your account was created:</b> [T.time], [T.date] at [T.source_terminal]<br>"
 	mannequin.mind.store_memory(remembered_info)
-
+	var/decl/backpack_outfit/bo
+	var/metadata
+	if(mannequin.backpack_setup)
+		bo = mannequin.backpack_setup.backpack
+		metadata = mannequin.backpack_setup.metadata
+	else
+		bo = get_default_outfit_backpack()
+	var/backpack = bo.spawn_backpack(mannequin, metadata)
+	if(backpack)
+		mannequin.equip_to_slot_or_del(backpack,slot_back)
 	mannequin.mind.initial_account = M
 	var/datum/computer_file/crew_record/record = CreateModularRecord(mannequin)
 	var/faction_uid = "refugee"
@@ -110,6 +119,7 @@
 			id.registered_name = real_name
 			id.selected_faction = faction.uid
 			id.approved_factions |= faction.uid
+			id.account_number = M.account_number
 			if(record2)
 				id.sync_from_record(record2)
 			mannequin.equip_to_slot_or_del(id,slot_wear_id)
@@ -140,7 +150,7 @@
 	mannequin.spawn_type = 2
 	mannequin.equip_to_slot_or_del(new /obj/item/clothing/shoes/black(mannequin),slot_shoes)
 	S << mannequin
-	load_characters()
+	character_list = list()
 	qdel(mannequin)
 
 //	S["version"] << SAVEFILE_VERSION_MAX

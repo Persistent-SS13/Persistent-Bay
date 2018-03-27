@@ -66,10 +66,12 @@
 
 	else if(href_list["home_system"])
 		var/datum/species/S = all_species[pref.species ? pref.species : SPECIES_HUMAN]
-
-		var/choice = input(user, "Please choose a background.", "Character Preference", pref.home_system) as null|anything in S.backgrounds
-		if(choice)
-			pref.home_system = choice
+		if(S.backgrounds.len)
+			var/choice = input(user, "Please choose a background.", "Character Preference", pref.home_system) as null|anything in S.backgrounds
+			if(choice)
+				pref.home_system = choice
+		else
+			pref.home_system = "Unknown"
 		return TOPIC_REFRESH
 
 	else if(href_list["citizenship"])

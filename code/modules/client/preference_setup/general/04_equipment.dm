@@ -129,7 +129,7 @@
 	. += "<b>Starting Equipment:</b><br>"
 	. += "Starting Clothing: <a href='?src=\ref[src];change_under=1'><b>[pref.selected_under ? pref.selected_under.name : "Unset*"]</b></a><br>"
 	for(var/datum/category_group/underwear/UWC in GLOB.underwear.categories)
-		if(UWC.name != "Socks" && UWC.name != "Undershirt") continue
+		if(UWC.name != "Socks") continue
 		var/item_name = (pref.all_underwear && pref.all_underwear[UWC.name]) ? pref.all_underwear[UWC.name] : "None"
 		. += "[UWC.name]: <a href='?src=\ref[src];change_underwear=[UWC.name]'><b>[item_name]</b></a>"
 

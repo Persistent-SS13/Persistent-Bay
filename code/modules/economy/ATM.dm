@@ -41,7 +41,9 @@
 				icon_state="atm_b0"
 		set_light(0)
 		return
-
+	else
+		icon_state = "atm"
+		
 /obj/machinery/atm/attackby(obj/item/W as obj, mob/user as mob)	//Build code
 	src.add_fingerprint(user)
 
@@ -93,7 +95,7 @@
 
 	return
 
-/obj/machinery/atm/New(loc, dir, atom/frame)	//ATM is created from frame
+/obj/machinery/atm/New(loc, dir, atom/frame, var/ndir)	//ATM is created from frame
 	..(loc)
 
 	if(istype(frame))
@@ -106,6 +108,10 @@
 	spark_system.set_up(5, 0, src)
 	spark_system.attach(src)
 
+	if(ndir)
+		set_dir(ndir)
+		pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 30 : -30)
+		pixel_y = (src.dir & 3)? (src.dir ==1 ? 30 : -30) : 0
 /obj/machinery/atm/Process()
 	if(stat & NOPOWER)
 		return
@@ -180,8 +186,8 @@
 		return
 	if (buildstage != 2)
 		return
-		if(!..())
-			interact(user)
+	if(!..())
+		interact(user)
 
 /obj/machinery/atm/interact(mob/user)
 

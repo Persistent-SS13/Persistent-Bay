@@ -6,13 +6,15 @@
 	{{/if}}
 </div>
 <div class="item">
-	{{:helper.link('Browse Goods', 'cart', {'set_screen' : 1}, data.screen == 1 ? 'selected' : null)}}
+	{{:helper.link('Browse available imports', 'cart', {'set_screen' : 1}, data.screen == 1 ? 'selected' : null)}}
 	{{:helper.link('View Statistics', 'calculator', {'set_screen' : 2}, data.screen == 2 ? 'selected' : null)}}
-	{{:helper.link('Order Control', 'bullet', {'set_screen' : 3}, data.screen == 3 ? 'selected' : null)}}
-	{{:helper.link('Browse Orders', 'check', {'set_screen' : 4}, data.screen == 4 ? 'selected' : null)}}
+	{{:helper.link('Browse Import Requests', 'check', {'set_screen' : 4}, data.screen == 4 ? 'selected' : null)}}
+	{{:helper.link('Recieve Imports', 'bullet', {'set_screen' : 3}, data.screen == 3 ? 'selected' : null)}}
+	{{:helper.link('View Export Orders', 'cart', {'set_screen' : 5}, data.screen == 5 ? 'selected' : null)}}
+	{{:helper.link('Send Exports', 'bullet', {'set_screen' : 6}, data.screen == 6 ? 'selected' : null)}}
 </div>
 <hr>
-<span>Current balance: {{:data.credits}} Credits</span>
+<span>Current Account: {{:data.faction_name}}<br>Current balance: {{:data.credits}} $$</span>
 <hr>
 {{if data.screen == 1}}
 	{{for data.categories}}
@@ -24,83 +26,31 @@
 			{{for data.possible_purchases}}
 				<tr>
 				<td>{{:value.name}}
-				<td>{{:value.cost}} Credits
+				<td>{{:value.cost}} $$
 				<td>{{:helper.link('Order', null, {'order' : value.ref})}}
 			{{/for}}
 		</table>
 	{{/if}}
 {{else data.screen == 2}}
-	<div class="item">
-		<div class="itemLabel">
-			Total credits generated today:
-		</div>
-		<div class="itemContent">
-			{{:data.total_credits}} Cr.
-		</div>
-	</div>
-	<div class="item">
-		<div class="itemLabel">
-			Standard allocation:
-		</div>
-		<div class="itemContent">
-			{{:data.credits_passive}} Cr.
-		</div>
-	</div>
-	<div class="item">
-		<div class="itemLabel">
-			Credits from recycled crates:
-		</div>
-		<div class="itemContent">
-			{{:data.credits_crates}} Cr.
-		</div>
-	</div>
-	<div class="item">
-		<div class="itemLabel">
-			Credits from phoron exports:
-		</div>
-		<div class="itemContent">
-			{{:data.credits_phoron}} Cr.
-		</div>
-	</div>
-	<div class="item">
-		<div class="itemLabel">
-			Credits from platinum exports:
-		</div>
-		<div class="itemContent">
-			{{:data.credits_platinum}} Cr.
-		</div>
-	</div>
-	<div class="item">
-		<div class="itemLabel">
-			Credits from uploaded antibody data:
-		</div>
-		<div class="itemContent">
-			{{:data.credits_virology}} Cr.
-		</div>
-	</div>
-	<div class="item">
-		<div class="itemLabel">
-			Credit bonus for paperwork handling:
-		</div>
-		<div class="itemContent">
-			{{:data.credits_paperwork}} Cr.
-		</div>
-	</div>
-	<div class="item">
-		<div class="itemLabel">
-			Options:
-		</div>
-		<div class="itemContent">
-			{{:helper.link('Print', 'print', {'print_summary' : 1}, data.can_print ? null : 'disabled')}}
-		</div>
-	</div>
+	<h2>This feature is under construction due to recent changes to the system.</h2>
 {{else data.screen == 3}}
 	<div class="item">
 		<div class="itemLabel">
-			Commands:
+			Import Telepad Selection:
 		</div>
 		<div class="itemContent">
-			{{:helper.link('Order', 'check', {'launch_order' : 1})}}
+			{{for data.telepads}}
+				{{:helper.link(value.name, '', {'toggle_telepad' : value.ref},null, value.selected ? 'selected' : null )}}
+			{{/for}}
+		</div>
+	</div>
+	<hr>
+	<div class="item">
+		<div class="itemLabel">
+			Receive all confirmed orders:
+		</div>
+		<div class="itemContent">
+			{{:helper.link('Initiate Telepads', 'check', {'launch_order' : 1})}}
 		</div>
 	</div>
 {{else data.screen == 4}}
@@ -134,6 +84,47 @@
 					<td>{{:helper.link('Cancel', 'cancel', {'cancel_order' : value.id})}}
 				{{/for}}
 			</table>
+		</div>
+	{{else}}
+		<h3>Access denied: Missing identificaton or insufficient permissions.</h3>
+	{{/if}}
+{{else data.screen == 5}}
+	<h2>Current Export Orders</h2>
+	<h3>Attach an export manifest in any crate or closet along with some amount of <b>only the items requested</b>. The cost for containers and energy are at your own expense.</h3>
+	<br>
+	{{for data.exports}}
+		<hr>
+		<h2>{{:value.name}}</h2>
+		<h3>{{:value.supplied}} / {{:value.required}} Supplied</h3>
+		<br><br>
+		{{:helper.link('Print Export Manifest', 'print', {'print_export' : value.id}, data.can_print ? null : 'disabled')}}
+		{{if !data.can_print}}
+			No printer detected! Install a printer.
+		{{/if}}
+		<br><br>
+		<hr>
+	{{/for}}
+		
+{{else data.screen == 6}}
+	{{if data.is_admin}}
+		<div class="item">
+			<div class="itemLabel">
+				Export Telepad Selection:
+			</div>
+			<div class="itemContent">
+				{{for data.telepads}}
+					{{:helper.link(value.name, '', {'toggle_telepad_export' : value.ref},null, value.selected ? 'selected' : null )}}
+				{{/for}}
+			</div>
+		</div>
+		<hr>
+		<div class="item">
+			<div class="itemLabel">
+				Send Valid Exports:
+			</div>
+			<div class="itemContent">
+				{{:helper.link('Initiate Telepads', 'check', {'launch_export' : 1})}}
+			</div>
 		</div>
 	{{else}}
 		<h3>Access denied: Missing identificaton or insufficient permissions.</h3>

@@ -241,17 +241,33 @@
 		overmap_spacetravel(get_turf(src), src)
 		return
 
-	var/list/L = list(	"1" = list("NORTH" = 10, "SOUTH" = 5, "EAST" = 8, "WEST" = 7),
-						"2" = list("NORTH" = 10, "SOUTH" = 5, "EAST" = 8, "WEST" = 7),
-						"3" = list("NORTH" = 10, "SOUTH" = 5, "EAST" = 8, "WEST" = 7),
-						"4" = list("NORTH" = 7, "SOUTH" = 9, "EAST" = 5, "WEST" = 6),
-						"5" = list("NORTH" = 2, "SOUTH" = 10, "EAST" = 6, "WEST" = 4),
-						"6" = list("NORTH" = 8, "SOUTH" = 11, "EAST" = 4, "WEST" = 5),
-						"7" = list("NORTH" = 9, "SOUTH" = 4, "EAST" = 2, "WEST" = 8),
-						"8" = list("NORTH" = 11, "SOUTH" = 6, "EAST" = 7, "WEST" = 2),
-						"9" = list("NORTH" = 4, "SOUTH" = 7, "EAST" = 10, "WEST" = 11),
-						"10" = list("NORTH" = 5, "SOUTH" = 2, "EAST" = 11, "WEST" = 9),
-						"11" = list("NORTH" = 6, "SOUTH" = 8, "EAST" = 9, "WEST" = 10)
+	var/list/L = list(	"1" = list("NORTH" = 19, "SOUTH" = 10, "EAST" = 4, "WEST" = 7),
+						"2" = list("NORTH" = 20, "SOUTH" = 11, "EAST" = 5, "WEST" = 8),
+						"3" = list("NORTH" = 21, "SOUTH" = 12, "EAST" = 6, "WEST" = 9),
+						"4" = list("NORTH" = 22, "SOUTH" = 13, "EAST" = 7, "WEST" = 1),
+						"5" = list("NORTH" = 23, "SOUTH" = 14, "EAST" = 8, "WEST" = 2),
+						"6" = list("NORTH" = 24, "SOUTH" = 15, "EAST" = 9, "WEST" = 3),
+						"7" = list("NORTH" = 25, "SOUTH" = 16, "EAST" = 1, "WEST" = 4),
+						"8" = list("NORTH" = 26, "SOUTH" = 17, "EAST" = 2, "WEST" = 5),
+						"9" = list("NORTH" = 27, "SOUTH" = 18, "EAST" = 3, "WEST" = 6),
+						"10" = list("NORTH" = 1, "SOUTH" = 19, "EAST" = 13, "WEST" = 16),
+						"11" = list("NORTH" = 2, "SOUTH" = 20, "EAST" = 14, "WEST" = 17),
+						"12" = list("NORTH" = 3, "SOUTH" = 21, "EAST" = 15, "WEST" = 18),
+						"13" = list("NORTH" = 4, "SOUTH" = 22, "EAST" = 16, "WEST" = 10),
+						"14" = list("NORTH" = 5, "SOUTH" = 23, "EAST" = 17, "WEST" = 11),
+						"15" = list("NORTH" = 6, "SOUTH" = 24, "EAST" = 18, "WEST" = 12),
+						"16" = list("NORTH" = 7, "SOUTH" = 25, "EAST" = 10, "WEST" = 13),
+						"17" = list("NORTH" = 8, "SOUTH" = 26, "EAST" = 11, "WEST" = 14),
+						"18" = list("NORTH" = 9, "SOUTH" = 27, "EAST" = 12, "WEST" = 15),
+						"19" = list("NORTH" = 10, "SOUTH" = 1, "EAST" = 22, "WEST" = 25),
+						"20" = list("NORTH" = 11, "SOUTH" = 2, "EAST" = 23, "WEST" = 26),
+						"21" = list("NORTH" = 12, "SOUTH" = 3, "EAST" = 24, "WEST" = 27),
+						"22" = list("NORTH" = 13, "SOUTH" = 4, "EAST" = 25, "WEST" = 19),
+						"23" = list("NORTH" = 14, "SOUTH" = 5, "EAST" = 26, "WEST" = 20),
+						"24" = list("NORTH" = 15, "SOUTH" = 6, "EAST" = 27, "WEST" = 21),
+						"25" = list("NORTH" = 16, "SOUTH" = 7, "EAST" = 19, "WEST" = 22),
+						"26" = list("NORTH" = 17, "SOUTH" = 8, "EAST" = 20, "WEST" = 23),
+						"27" = list("NORTH" = 28, "SOUTH" = 9, "EAST" = 21, "WEST" = 24)
 					)
 
 	var/new_x = x

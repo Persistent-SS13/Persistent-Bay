@@ -8,7 +8,8 @@ var/global/list/zones_to_save = list()
 	for(var/datum/pipe_network/net in SSmachines.pipenets)
 		for(var/datum/pipeline/line in net.line_members)
 			line.temporarily_store_air()
-
+/mob/living
+	should_save = 0
 /datum/area_holder
 	var/area_type = "/area"
 	var/name
@@ -32,13 +33,22 @@ var/global/list/zones_to_save = list()
 /datum
 	var/should_save = 1
 	var/map_storage_saved_vars = ""
-
+	var/skip_empty = ""
+	var/skip_icon_state = 0
+	var/map_storage_loaded = 0 // this is special instructions for problematic Initialize()
 /atom/movable/lighting_overlay
 	should_save = 0
-
+/turf/space
+	map_storage_saved_vars = "contents"
+/turf/space/after_load()
+	..()
+	for(var/atom/movable/lighting_overlay/overlay in contents)
+		overlay.loc = null
+		qdel(overlay)
+		
 /turf
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
-
+	skip_empty = "contents;saved_decals"
 /obj
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
 
@@ -58,10 +68,10 @@ var/global/list/zones_to_save = list()
 	..()
 	update_icon()
 	lighting_build_overlay()
-	
+
 	for(var/obj/effect/floor_decal/decal in saved_decals)
 		decal.init_for(src)
-	
+
 /atom/movable/lighting_overlay/after_load()
 	loc = null
 	qdel(src)
@@ -70,13 +80,14 @@ var/global/list/zones_to_save = list()
 	regenerate_icons()
 	redraw_inv()
 /datum/proc/StandardWrite(var/savefile/f)
+	
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
 	else
 		saving = get_saved_vars()
 		found_vars["[type]"] = saving
-
+	if(skip_icon_state) saving -= "icon_state"
 	for(var/ind in 1 to saving.len)
 		var/variable = saving[ind]
 		if(!hasvar(src, variable))
@@ -89,6 +100,9 @@ var/global/list/zones_to_save = list()
 			if(!D.should_save(src))
 				continue
 		if(istype(vars[variable], /list))
+			if(variable in params2list(skip_empty))
+				var/list/lis = vars[variable]
+				if(!lis.len) continue
 			var/list/D = vars[variable]
 			for(var/datum/dat in D)
 				if(!dat.should_save(src))
@@ -123,6 +137,11 @@ var/global/list/zones_to_save = list()
 /mob/Write(savefile/f)
 	if(StandardWrite(f))
 		return
+/mob/living/Write(savefile/f)
+	should_save = 1
+	if(StandardWrite(f))
+		should_save = 0
+		return
 
 /area/proc/get_turf_coords()
 	var/list/coord_list = list()
@@ -142,10 +161,11 @@ var/global/list/zones_to_save = list()
 	return coord_list
 
 /datum/proc/StandardRead(var/savefile/f)
+	map_storage_loaded = 1
 	before_load()
 	var/list/loading
 	if(all_loaded)
-		all_loaded |= src
+		all_loaded += src
 
 	if(found_vars.Find("[type]"))
 		loading = found_vars["[type]"]
@@ -160,6 +180,25 @@ var/global/list/zones_to_save = list()
 				f["[variable]"] >> vars[variable]
 			catch
 
+/turf/StandardRead(var/savefile/f)
+	map_storage_loaded = 1
+	before_load()
+	var/list/loading
+	if(all_loaded)
+		all_loaded += src
+
+	if(found_vars.Find("[type]"))
+		loading = found_vars["[type]"]
+	else
+		loading = get_saved_vars()
+		found_vars["[type]"] = loading
+
+	for(var/ind in 1 to loading.len)
+		var/variable = loading[ind]
+		if("[variable]" == "x" || "[variable]" == "y" || "[variable]" == "z") continue
+		if(variable in f.dir)
+			f["[variable]"] >> vars[variable]
+			
 /datum/Read(savefile/f)
 	StandardRead(f)
 /atom/movable/Read(savefile/f)
@@ -179,7 +218,7 @@ var/global/list/zones_to_save = list()
 
 /area/Read(savefile/f)
 	return 0
-	
+
 /proc/Save_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
 	var/z = zi
 	xi = (xi - (xi % 20) + 1)
@@ -188,7 +227,7 @@ var/global/list/zones_to_save = list()
 	for(var/y in yi to yi + 20)
 		for(var/x in xi to xi + 20)
 			var/turf/T = locate(x,y,z)
-			if(!T || (T.type == /turf/space && (!T.contents || !T.contents.len)))
+			if(!T || ((T.type == /turf/space || T.type == /turf/simulated/open) && (!T.contents || !T.contents.len)))
 				continue
 			lis |= T
 	f << lis
@@ -197,10 +236,18 @@ var/global/list/zones_to_save = list()
 	areas_to_save = list()
 	zones_to_save = list()
 	var/starttime = REALTIMEOFDAY
+	var/backup = 0
+	var/dir = 1
+	while(!backup)
+		if(fexists("backups/[dir].sav"))
+			dir++
+		else
+			backup = 1
+			fcopy("map_saves/game.sav", "backups/[dir].sav")
 	fdel("map_saves/game.sav")
 	var/savefile/f = new("map_saves/game.sav")
 	found_vars = list()
-	for(var/z in 1 to 11)
+	for(var/z in 1 to 27)
 		f.cd = "/map/[z]"
 		for(var/x in 1 to world.maxx step 20)
 			for(var/y in 1 to world.maxy step 20)
@@ -237,6 +284,8 @@ var/global/list/zones_to_save = list()
 	var/v = null
 	f.cd = "/extras"
 	f["records"] >> GLOB.all_crew_records
+	if(!GLOB.all_crew_records)
+		GLOB.all_crew_records = list()
 	f["factions"] >> GLOB.all_world_factions
 	var/list/areas
 	f["areas"] >> areas
@@ -252,17 +301,18 @@ var/global/list/zones_to_save = list()
 			turfs |= T
 		A.contents.Add(turfs)
 	f.cd = "/"
-	for(var/z in 1 to 11)
+	for(var/z in 1 to 27)
 		f.cd = "/map/[z]"
+		var/starttime2 = REALTIMEOFDAY
 		while(!f.eof)
 			f >> v
-			CHECK_TICK
-		world << "Loading.. [((1/(12-z))*100)]% Complete"
+			sleep(-1)
+		world << "Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!"
 	f.cd = "/extras"
-	
+
 	f["turbolifts"] >> turbolifts
 	var/list/zones
-	
+
 	f["zones"] >> zones
 	for(var/zone/Z in zones)
 		for(var/ind in 1 to Z.turf_coords.len)
@@ -272,14 +322,14 @@ var/global/list/zones_to_save = list()
 				message_admins("No turf found for zone load")
 			T.zone = Z
 			Z.contents |= T
-	for(var/zone/Z in zones)	
+	for(var/zone/Z in zones)
 		Z.rebuild()
 	for(var/ind in 1 to all_loaded.len)
 		var/datum/dat = all_loaded[ind]
 		dat.after_load()
 	all_loaded = list()
 	SSmachines.makepowernets()
-	
+
 	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Loading Complete"
 	return 1

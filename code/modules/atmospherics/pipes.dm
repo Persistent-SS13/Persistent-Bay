@@ -22,11 +22,6 @@
 		if(istype(get_turf(src), /turf/simulated/wall) || istype(get_turf(src), /turf/simulated/shuttle/wall) || istype(get_turf(src), /turf/unsimulated/wall))
 			level = 1
 	..()
-/obj/machinery/atmospherics/pipe/after_load()
-	if(loc)
-		if(istype(get_turf(src), /turf/simulated/wall) || istype(get_turf(src), /turf/simulated/shuttle/wall) || istype(get_turf(src), /turf/unsimulated/wall))
-			level = 1
-	..()
 /obj/machinery/atmospherics/pipe/hides_under_flooring()
 	return level != 2
 
@@ -70,7 +65,8 @@
 /obj/machinery/atmospherics/pipe/Destroy()
 	QDEL_NULL(parent)
 	if(air_temporary)
-		loc.assume_air(air_temporary)
+		if(loc)
+			loc.assume_air(air_temporary)
 
 	. = ..()
 

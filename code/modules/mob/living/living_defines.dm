@@ -15,10 +15,6 @@
 	//var/fireloss = 0  //Burn damage caused by being way too hot, too cold or burnt.
 	//var/halloss = 0   //Hallucination damage. 'Fake' damage obtained through hallucinating or the holodeck. Sleeping should cause it to wear off.
 
-	var/staminaloss = 0
-
-	var/hallucination = 0 //Directly affects how long a mob will hallucinate for
-
 	var/last_special = 0 //Used by the resist verb, likely used to prevent players from bypassing next_move by logging in/out.
 
 	var/t_phoron = null
@@ -34,8 +30,9 @@
 
 	var/mob/living/cameraFollow = null
 	var/list/datum/action/actions = list()
-	var/silent = null 		// Can't talk. Value goes down every life proc.
+
 	var/update_slimes = 1
+	var/silent = null 		// Can't talk. Value goes down every life proc.
 	var/on_fire = 0 //The "Are we on fire?" var
 	var/fire_stacks
 
@@ -49,11 +46,6 @@
 	var/slurring = null		//Carbon
 
 	var/job = null//Living
-
-	var/doing_something = 0	//Like pulling teeth?
+	var/list/obj/aura/auras = null //Basically a catch-all aura/force-field thing.
 
 	var/obj/screen/cells = null
-
-	var/list/in_vision_cones = list()
-
-	var/footstep = 0

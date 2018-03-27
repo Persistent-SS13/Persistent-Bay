@@ -7,20 +7,23 @@
 	use_power = 1
 	idle_power_usage = 300
 	active_power_usage = 300
-	frame_type = "computer"
+	var/circuit = null //The path to the circuit board type. If circuit==null, the computer can't be disassembled.
 	var/processing = 0
-	clicksound = "keyboard"
+
 	var/icon_keyboard = "generic_key"
 	var/icon_screen = "generic"
 	var/light_range_on = 2
 	var/light_power_on = 1
 	var/overlay_layer
+	flags = OBJ_CLIMBABLE
+	clicksound = "keyboard"
 
 /obj/machinery/computer/New()
 	overlay_layer = layer
 	..()
 
-/obj/machinery/computer/proc/initialize()
+/obj/machinery/computer/Initialize()
+	. = ..()
 	power_change()
 	update_icon()
 
@@ -78,15 +81,6 @@
 	if(icon_keyboard)
 		overlays += image(icon, icon_keyboard, overlay_layer)
 
-/obj/machinery/computer/power_change()
-	..()
-	update_icon()
-	if(stat & NOPOWER)
-		set_light(0)
-	else
-		set_light(light_range_on, light_power_on)
-
-
 /obj/machinery/computer/proc/set_broken()
 	stat |= BROKEN
 	update_icon()
@@ -96,30 +90,29 @@
 	text = replacetext(text, "\n", "<BR>")
 	return text
 
-/obj/machinery/computer/dismantle(var/mob/user)
-	var/obj/structure/frame/A =	..()
-	if (src.stat & BROKEN)
-		user << "<span class='notice'>The broken glass falls out.</span>"
-		new /obj/item/weapon/material/shard( src.loc )
-		A.state = 3
-		A.icon_state = "[A.frame_type]_3"
-	else
-		user << "<span class='notice'>You disconnect the monitor.</span>"
-		A.state = 4
-		A.icon_state = "[A.frame_type]_4"
-	qdel(src)
 /obj/machinery/computer/attackby(I as obj, user as mob)
-	if(istype(I, /obj/item/weapon/screwdriver) && circuit)
-		user << "<span class='notice'>You start disconnecting the monitor.</span>"
+	if(isScrewdriver(I) && circuit)
 		playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
-		if(do_after(user, 20))
-			dismantle(user)
+		if(do_after(user, 20, src))
+			var/obj/structure/computerframe/A = new /obj/structure/computerframe( src.loc )
+			var/obj/item/weapon/circuitboard/M = new circuit( A )
+			A.circuit = M
+			A.anchored = 1
+			for (var/obj/C in src)
+				C.dropInto(loc)
+			if (src.stat & BROKEN)
+				to_chat(user, "<span class='notice'>The broken glass falls out.</span>")
+				new /obj/item/weapon/material/shard( src.loc )
+				A.state = 3
+				A.icon_state = "3"
+			else
+				to_chat(user, "<span class='notice'>You disconnect the monitor.</span>")
+				A.state = 4
+				A.icon_state = "4"
+			M.deconstruct(src)
+			qdel(src)
 	else
-		src.attack_hand(user)
-	return
+		..()
 
-
-
-
-
-
+/obj/machinery/computer/attack_ghost(var/mob/ghost)
+	attack_hand(ghost)

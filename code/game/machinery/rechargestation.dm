@@ -7,7 +7,6 @@
 	anchored = 1
 	use_power = 1
 	idle_power_usage = 50
-	circuit = /obj/item/weapon/circuitboard/recharge_station
 	var/mob/living/occupant = null
 	var/obj/item/weapon/cell/cell = null
 	var/icon_update_tick = 0	// Used to rebuild the overlay only once every 10 ticks
@@ -26,6 +25,7 @@
 	..()
 
 	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/recharge_station(src)
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
 	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)

@@ -299,8 +299,8 @@
 	valid_accessory_slots = list(ACCESSORY_SLOT_INSIGNIA)
 
 /obj/item/clothing/suit/armor/vest/nt
-	name = "\improper NanoTrasen armored vest"
-	desc = "A synthetic armor vest. This one is marked with the crest of NanoTrasen."
+	name = "\improper Nanotrasen armored vest"
+	desc = "A synthetic armor vest. This one is marked with the crest of Nanotrasen."
 	icon_state = "ntvest"
 
 /obj/item/clothing/suit/armor/vest/detective

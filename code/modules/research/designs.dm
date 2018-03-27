@@ -398,6 +398,13 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/device/reagent_scanner/adv
 	sort_string = "MACBB"
 
+/datum/design/item/medical/slime_scanner
+	desc = "A device for scanning identified and unidentified lifeforms."
+	id = "slime_scanner"
+	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 2)
+	build_path = /obj/item/device/slime_scanner
+	sort_string = "MACBC"
+
 /datum/design/item/beaker/AssembleDesignName()
 	name = "Beaker prototype ([item_name])"
 
@@ -792,9 +799,17 @@ other types of metals and chemistry for reagents).
 	desc = "A kit of dangerous, high-tech equipment with changeable looks."
 	id = "chameleon"
 	req_tech = list(TECH_ILLEGAL = 2)
-	materials = list(DEFAULT_WALL_MATERIAL = 500)
-	build_path = /obj/item/weapon/storage/backpack/chameleon/sydie_kit
+	materials = list(DEFAULT_WALL_MATERIAL = 500, "diamond" = 300, "gold" = 200, "phoron" = 100)
+	build_path = /obj/item/weapon/storage/box/syndie_kit/chameleon
 	sort_string = "VASBA"
+/datum/design/item/chameleon_gun
+	name = "Holographic Gun"
+	desc = "A weapon that can change its appearance."
+	id = "chameleon_gun"
+	req_tech = list(TECH_ILLEGAL = 4)
+	materials = list(DEFAULT_WALL_MATERIAL = 800, "diamond" = 1000, "gold" = 600, "phoron" = 400)
+	build_path = /obj/item/weapon/gun/energy/chameleon
+	sort_string = "VASBB"
 
 // Modular computer components
 // Hard drives
@@ -1403,9 +1418,225 @@ CIRCUITS BELOW
 	req_tech = list(TECH_DATA = 3, TECH_BIO = 3)
 	build_path = /obj/item/weapon/circuitboard/clonepod
 	sort_string = "KCAAC"
-
-
-
+//This sorting system is too autistic for me, so fuck it, they're all starting at Z and working their way up
+/datum/design/circuit/chem_dispenser
+	name = "Portable Chem Dispenser"
+	id = "chem_dispenser"
+	req_tech = list(TECH_MATERIAL = 3, TECH_BIO = 3, TECH_PHORON = 3, TECH_ENGINEERING = 3, TECH_DATA = 4)
+	build_path = /obj/item/weapon/circuitboard/chem_dispenser
+	sort_string = "ZZZZY"
+/datum/design/circuit/reagentgrinder
+	name = "Reagent Grinder"
+	id = "reagent_grinder"
+	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 1, TECH_PHORON = 2, TECH_BIO = 1)
+	build_path = /obj/item/weapon/circuitboard/reagentgrinder
+	sort_string = "ZZZZX"
+/datum/design/circuit/chem_master
+	name = "Chem Master"
+	id = "chem_master"
+	req_tech = list(TECH_MATERIAL = 2, TECH_BIO = 1, TECH_DATA = 1)
+	build_path = /obj/item/weapon/circuitboard/chem_master
+	sort_string = "ZZZZW"
+/datum/design/circuit/botany_extractor
+	name = "Lysis-Isolation Centrifuge"
+	id = "botany_extractor"
+	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 2, TECH_BIO = 3, TECH_DATA = 3)
+	build_path = /obj/item/weapon/circuitboard/botany_extractor
+	sort_string = "ZZZZV"
+/datum/design/circuit/botany_editor
+	name = "Bioballistic Delivery System"
+	id = "botany_editor"
+	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 2, TECH_BIO = 3, TECH_DATA = 3)
+	build_path = /obj/item/weapon/circuitboard/botany_editor
+	sort_string = "ZZZZU"
+/datum/design/circuit/smartfridge
+	name = "Modular Smart Fridge"
+	id = "smartfridge"
+	req_tech = list(TECH_DATA = 1)
+	build_path = /obj/item/weapon/circuitboard/smartfridge
+	sort_string = "ZZZZT"
+/datum/design/circuit/teleporter_hub
+	name = "Teleporter Hub"
+	id = "teleporter_hub"
+	req_tech = list(TECH_MATERIAL = 4, TECH_ENGINEERING = 5, TECH_BLUESPACE = 5, TECH_DATA = 3)
+	build_path = /obj/item/weapon/circuitboard/teleporter_hub
+	sort_string = "ZZZZS"
+/datum/design/circuit/teleporter_station
+	name = "Teleporter Station"
+	id = "teleporter_station"
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/teleporter_station
+	sort_string = "ZZZZR"
+/datum/design/circuit/telepad
+	name = "Telepad"
+	id = "telepad"
+	req_tech = list(TECH_BLUESPACE = 2)
+	build_path = /obj/item/weapon/circuitboard/telepad
+	sort_string = "ZZZZQ"
+/datum/design/circuit/photocopier
+	name = "Photocopier"
+	id = "photocopier"
+	req_tech = list(TECH_MATERIAL = 2, TECH_DATA = 2)
+	build_path = /obj/item/weapon/circuitboard/photocopier
+	sort_string = "ZZZZO"
+/datum/design/circuit/gibber
+	name = "Meat Grinder"
+	id = "gibber"
+	req_tech = list(TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/gibber
+	sort_string = "ZZZZN"
+/datum/design/circuit/microwave
+	name = "Microwave"
+	id = "microwave"
+	req_tech = list(TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/microwave
+	sort_string = "ZZZZM"
+/datum/design/circuit/oven
+	name = "Oven"
+	id = "oven"
+	req_tech = list(TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/oven
+	sort_string = "ZZZZL"
+/datum/design/circuit/grill
+	name = "Grill"
+	id = "grill"
+	req_tech = list(TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/grill
+	sort_string = "ZZZZK"
+/datum/design/circuit/candy_maker
+	name = "Candy Maker"
+	id = "candy_maker"
+	req_tech = list(TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/candy_maker
+	sort_string = "ZZZZJ"
+/datum/design/circuit/deepfryer
+	name = "Deep Fryer"
+	id = "deepfryer"
+	req_tech = list(TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/deepfryer
+	sort_string = "ZZZZI"
+/datum/design/circuit/cereal
+	name = "Cereal Maker"
+	id = "cereal"
+	req_tech = list(TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/cereal
+	sort_string = "ZZZZH"
+/datum/design/circuit/bodyscanner_console
+	name = "Body Scanner Console"
+	id = "bodyscanner_console"
+	req_tech = list(TECH_MATERIAL = 3, TECH_ENGINEERING = 3, TECH_BIO = 2, TECH_DATA = 3)
+	build_path = /obj/item/weapon/circuitboard/bodyscanner_console
+	sort_string = "ZZZZG"
+/datum/design/circuit/bodyscanner
+	name = "Body Scanner"
+	id = "bodyscanner"
+	req_tech = list(TECH_MATERIAL = 3, TECH_ENGINEERING = 3, TECH_BIO = 2, TECH_DATA = 3)
+	build_path = /obj/item/weapon/circuitboard/bodyscanner
+	sort_string = "ZZZZF"
+/datum/design/circuit/sleeper
+	name = "Sleeper"
+	id = "sleeper"
+	req_tech = list(TECH_MATERIAL = 3, TECH_ENGINEERING = 3, TECH_BIO = 2, TECH_DATA = 3)
+	build_path = /obj/item/weapon/circuitboard/sleeper
+	sort_string = "ZZZZE"
+/datum/design/circuit/area_atmos
+	name = "Area Air Control Console"
+	id = "area_atmos"
+	req_tech = list(TECH_DATA = 2)
+	build_path = /obj/item/weapon/circuitboard/area_atmos
+	sort_string = "ZZZZD"
+/datum/design/circuit/holopad
+	name = "Holopad"
+	id = "holopad"
+	req_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 3, TECH_BLUESPACE = 1)
+	build_path = /obj/item/weapon/circuitboard/holopad
+	sort_string = "ZZZZC"
+/datum/design/circuit/holopad_longrange
+	name = "Long Range Holopad"
+	id = "holopad_longrange"
+	req_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 3, TECH_BLUESPACE = 2)
+	build_path = /obj/item/weapon/circuitboard/holopad_longrange
+	sort_string = "ZZZZB"
+/datum/design/circuit/cryopod
+	name = "Cryogenic Freezer"
+	id = "cryopod"
+	req_tech = list(TECH_ENGINEERING = 2)
+	build_path = /obj/item/weapon/circuitboard/cryopod
+	sort_string = "ZZZZA"
+/datum/design/circuit/atm
+	name = "Automatic Teller Machine (ATM)"
+	id = "atm"
+	req_tech = list(TECH_ENGINEERING = 1,TECH_DATA = 1)
+	build_path = /obj/item/weapon/circuitboard/atm
+	sort_string = "ZZZYZ"
+/*
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZYY"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZYX"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZYW"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZYV"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZYU"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZYT"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZYS"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZYR"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZYQ"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZYP"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZYO"
+*/
 
 
 

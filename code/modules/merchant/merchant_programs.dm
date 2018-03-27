@@ -135,10 +135,13 @@
 		last_comms = "PAD NOT CONNECTED. CANNOT TRANSFER"
 		return
 	var/turf/T = get_turf(pad)
-	var/obj/item/weapon/spacecash/bundle/B = new(T)
-	B.worth = bank
-	bank = 0
-	B.update_icon()
+	if(bank)
+		var/obj/item/weapon/spacecash/bundle/B = new(T)
+		B.worth = bank
+		bank = 0
+		B.update_icon()
+	else
+		last_comms = "NO BALANCE TO WITHDRAW"
 
 /datum/computer_file/program/merchant/Topic(href, href_list)
 	if(..())

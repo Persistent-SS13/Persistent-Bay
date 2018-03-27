@@ -97,6 +97,7 @@ Class Procs:
 	name = "machinery"
 	icon = 'icons/obj/stationobjs.dmi'
 	w_class = ITEM_SIZE_NO_CONTAINER
+
 	var/stat = 0
 	var/emagged = 0
 	var/malf_upgraded = 0
@@ -114,20 +115,12 @@ Class Procs:
 	var/interact_offline = 0 // Can the machine be interacted with while de-powered.
 	var/clicksound			// sound played on succesful interface use by a carbon lifeform
 	var/clickvol = 40		// sound played on succesful interface use
-	var/use_log = list()
-	var/area/myArea
-	var/custom_aghost_alerts=0
-	var/manual = 0
-	var/circuit = null
-	var/frame_type = "machine"
 
 /obj/machinery/Initialize(mapload, d=0)
 	. = ..()
 	if(d)
 		set_dir(d)
 	START_PROCESSING(SSmachines, src)
-	if(circuit && !istype(circuit, /obj/item/weapon/circuitboard))
-		circuit = new circuit(src)
 
 /obj/machinery/Destroy()
 	STOP_PROCESSING(SSmachines, src)
@@ -137,22 +130,11 @@ Class Procs:
 				qdel(A)
 			else // Otherwise we assume they were dropped to the ground during deconstruction, and were not removed from the component_parts list by deconstruction code.
 				component_parts -= A
-	if(contents) // The same for contents.
-		for(var/atom/A in contents)
-			if(ishuman(A))
-				var/mob/living/carbon/human/H = A
-				H.client.eye = H.client.mob
-				H.client.perspective = MOB_PERSPECTIVE
-				H.loc = src.loc
-			else
-				qdel(A)
-	return ..()
+	. = ..()
 
 /obj/machinery/Process()//If you dont use process or power why are you here
 	if(!(use_power || idle_power_usage || active_power_usage))
 		return PROCESS_KILL
-
-	return
 
 /obj/machinery/emp_act(severity)
 	if(use_power && stat == 0)
@@ -257,15 +239,10 @@ Class Procs:
 			to_chat(user, "<span class='warning'>You momentarily forget how to use \the [src].</span>")
 			return 1
 
-	src.add_fingerprint(user)
-
-/obj/machinery/proc/CheckParts()
-	RefreshParts()
-	return
+	return ..()
 
 /obj/machinery/proc/RefreshParts() //Placeholder proc for machines that are built using frames.
 	return
-	return 0
 
 /obj/machinery/proc/assign_uid()
 	uid = gl_uid
@@ -282,7 +259,6 @@ Class Procs:
 	state(text, "blue")
 	playsound(src.loc, 'sound/machines/ping.ogg', 50, 0)
 
-
 /obj/machinery/proc/shock(mob/user, prb)
 	if(inoperable())
 		return 0
@@ -291,7 +267,7 @@ Class Procs:
 	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 	s.set_up(5, 1, src)
 	s.start()
-	if (electrocute_mob(user, get_area(src), src, 0.7))
+	if(electrocute_mob(user, get_area(src), src, 0.7))
 		var/area/temp_area = get_area(src)
 		if(temp_area)
 			var/obj/machinery/power/apc/temp_apc = temp_area.get_apc()
@@ -302,13 +278,29 @@ Class Procs:
 			return 1
 	return 0
 
+/obj/machinery/proc/default_deconstruction_crowbar(var/mob/user, var/obj/item/weapon/crowbar/C)
+	if(!istype(C))
+		return 0
+	if(!panel_open)
+		return 0
+	. = dismantle()
+
+/obj/machinery/proc/default_deconstruction_screwdriver(var/mob/user, var/obj/item/weapon/screwdriver/S)
+	if(!istype(S))
+		return 0
+	playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
+	panel_open = !panel_open
+	to_chat(user, "<span class='notice'>You [panel_open ? "open" : "close"] the maintenance hatch of \the [src].</span>")
+	update_icon()
+	return 1
+
 /obj/machinery/proc/default_part_replacement(var/mob/user, var/obj/item/weapon/storage/part_replacer/R)
 	if(!istype(R))
 		return 0
 	if(!component_parts)
 		return 0
 	if(panel_open)
-		var/obj/item/weapon/circuitboard/CB = circuit
+		var/obj/item/weapon/circuitboard/CB = locate(/obj/item/weapon/circuitboard) in component_parts
 		var/P
 		for(var/obj/item/weapon/stock_parts/A in component_parts)
 			for(var/T in CB.req_components)
@@ -323,60 +315,30 @@ Class Procs:
 						component_parts -= A
 						component_parts += B
 						B.loc = null
-						user << "<span class='notice'>[A.name] replaced with [B.name].</span>"
+						to_chat(user, "<span class='notice'>[A.name] replaced with [B.name].</span>")
 						break
 			update_icon()
 			RefreshParts()
 	else
-		user << "<span class='notice'>Following parts detected in the machine:</span>"
+		to_chat(user, "<span class='notice'>Following parts detected in the machine:</span>")
 		for(var/var/obj/item/C in component_parts)
-			user << "<span class='notice'>    [C.name]</span>"
-	return 1
-
-/obj/machinery/proc/default_deconstruction_crowbar(var/mob/user, var/obj/item/weapon/crowbar/C)
-	if(!istype(C))
-		return 0
-	if(!panel_open)
-		return 0
-	. = dismantle()
-
-/obj/machinery/proc/default_deconstruction_screwdriver(var/mob/user, var/obj/item/weapon/screwdriver/S)
-	if(!istype(S))
-		return 0
-	playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
-	panel_open = !panel_open
-	user << "<span class='notice'>You [panel_open ? "open" : "close"] the maintenance hatch of [src].</span>"
-	update_icon()
+			to_chat(user, "<span class='notice'>	[C.name]</span>")
 	return 1
 
 /obj/machinery/proc/dismantle()
 	playsound(loc, 'sound/items/Crowbar.ogg', 50, 1)
-	var/obj/structure/frame/A = new /obj/structure/frame( src.loc )
-	var/obj/item/weapon/circuitboard/M = circuit
-	A.circuit = M
-	A.anchored = 1
-	A.density = 1
-	A.frame_type = M.board_type
-	if(A.frame_type in A.no_circuit)
-		A.need_circuit = 0
-	for (var/obj/D in src.component_parts)
-		D.forceMove(loc)
-	if(A.components)
-		A.components.Cut()
-	else
-		A.components = list()
-	component_parts = list()
-	A.icon_state = "[A.frame_type]_3"
-	A.state = 3
-	A.dir = dir
-	A.pixel_x = pixel_x
-	A.pixel_y = pixel_y
-	A.check_components()
-	A.update_desc()
-	M.loc = null
-	M.deconstruct(src)
+	var/obj/machinery/constructable_frame/machine_frame/M = new /obj/machinery/constructable_frame/machine_frame(get_turf(src))
+	M.set_dir(src.dir)
+	M.state = 2
+	M.icon_state = "box_1"
+	for(var/obj/I in component_parts)
+		I.forceMove(get_turf(src))
+
 	qdel(src)
-	return A
+	return 1
+
+/obj/machinery/InsertedContents()
+	return (contents - component_parts)
 
 /datum/proc/apply_visual(mob/M)
 	return

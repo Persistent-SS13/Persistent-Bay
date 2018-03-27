@@ -11,8 +11,8 @@
 	//Has a list of items that it can hold.
 	var/list/can_hold = list(
 		/obj/item/weapon/cell,
-		/obj/item/weapon/circuitboard/airalarm,
-		/obj/item/weapon/circuitboard/firealarm,
+		/obj/item/weapon/firealarm_electronics,
+		/obj/item/weapon/airalarm_electronics,
 		/obj/item/weapon/airlock_electronics,
 		/obj/item/weapon/tracker_electronics,
 		/obj/item/weapon/module/power_control,

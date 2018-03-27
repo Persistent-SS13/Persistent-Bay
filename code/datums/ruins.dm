@@ -12,6 +12,7 @@
 	var/suffixes = null
 
 /datum/map_template/ruin/New()
+	return 0
 	if(!name && id)
 		name = id
 

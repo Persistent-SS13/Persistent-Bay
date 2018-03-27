@@ -49,6 +49,8 @@
 
 //updates the tracker icon and the facing angle for the control computer
 /obj/machinery/power/tracker/proc/set_angle(var/angle)
+	if(!control)
+		return
 	sun_angle = angle
 
 	//set icon dir to show sun illumination

@@ -5,11 +5,10 @@
 	anchored = 0
 	name = "computer frame"
 	icon = 'icons/obj/stock_parts.dmi'
-	icon_state = "[frame_type]_0"
+	icon_state = "0"
 	var/state = 0
 	var/obj/item/weapon/circuitboard/circuit = null
 	flags = OBJ_CLIMBABLE
-	frame_type = "computer"
 //	weight = 1.0E8
 
 /obj/structure/computerframe/attackby(obj/item/P as obj, mob/user as mob)
@@ -44,7 +43,7 @@
 				if(B.board_type == "computer")
 					playsound(src.loc, 'sound/items/Deconstruct.ogg', 50, 1)
 					to_chat(user, "<span class='notice'>You place the circuit board inside the frame.</span>")
-					src.icon_state = "[frame_type]_1"
+					src.icon_state = "1"
 					src.circuit = P
 					user.drop_item()
 					P.loc = src
@@ -59,7 +58,7 @@
 				playsound(src.loc, 'sound/items/Crowbar.ogg', 50, 1)
 				to_chat(user, "<span class='notice'>You remove the circuit board.</span>")
 				src.state = 1
-				src.icon_state = "[frame_type]_0"
+				src.icon_state = "0"
 				circuit.loc = src.loc
 				src.circuit = null
 		if(2)
@@ -67,7 +66,7 @@
 				playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
 				to_chat(user, "<span class='notice'>You unfasten the circuit board.</span>")
 				src.state = 1
-				src.icon_state = "[frame_type]_1"
+				src.icon_state = "1"
 			if(isCoil(P))
 				var/obj/item/stack/cable_coil/C = P
 				if (C.get_amount() < 5)
@@ -79,13 +78,13 @@
 					if (C.use(5))
 						to_chat(user, "<span class='notice'>You add cables to the frame.</span>")
 						state = 3
-						icon_state = "[frame_type]_3"
+						icon_state = "3"
 		if(3)
 			if(isWirecutter(P))
 				playsound(src.loc, 'sound/items/Wirecutter.ogg', 50, 1)
 				to_chat(user, "<span class='notice'>You remove the cables.</span>")
 				src.state = 2
-				src.icon_state = "[frame_type]_2"
+				src.icon_state = "2"
 				var/obj/item/stack/cable_coil/A = new /obj/item/stack/cable_coil( src.loc )
 				A.amount = 5
 
@@ -100,13 +99,13 @@
 					if (G.use(2))
 						to_chat(user, "<span class='notice'>You put in the glass panel.</span>")
 						src.state = 4
-						src.icon_state = "[frame_type]_4"
+						src.icon_state = "4"
 		if(4)
 			if(isCrowbar(P))
 				playsound(src.loc, 'sound/items/Crowbar.ogg', 50, 1)
 				to_chat(user, "<span class='notice'>You remove the glass panel.</span>")
 				src.state = 3
-				src.icon_state = "[frame_type]_3"
+				src.icon_state = "3"
 				new /obj/item/stack/material/glass( src.loc, 2 )
 			if(isScrewdriver(P))
 				playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)

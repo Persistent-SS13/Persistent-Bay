@@ -238,13 +238,6 @@
 		mymob.nutrition_icon.screen_loc = ui_nutrition
 		hud_elements |= mymob.nutrition_icon
 
-	mymob.stamina_icon = new /obj/screen()//STAMINA
-	mymob.stamina_icon.icon = ui_style
-	mymob.stamina_icon.icon_state = "stamina0"
-	mymob.stamina_icon.name = "stamina"
-	mymob.stamina_icon.screen_loc = ui_stamina
-	hud_elements |= mymob.stamina_icon
-
 
 	mymob.pain = new /obj/screen( null )
 	mymob.pain.icon = ui_style
@@ -285,21 +278,6 @@
 	mymob.radio_use_icon.icon = ui_style
 	mymob.radio_use_icon.color = ui_color
 	mymob.radio_use_icon.alpha = ui_alpha
-
-	if(ishuman(mymob))
-		var/mob/living/carbon/human/H = mymob
-		H.fov = new /obj/screen()
-		H.fov.icon = 'icons/mob/hide.dmi'
-		H.fov.icon_state = "combat"
-		H.fov.name = " "
-		H.fov.screen_loc = "1,1"
-		H.fov.mouse_opacity = 0
-		H.fov.plane = LIGHTING_PLANE
-		H.fov.layer = LIGHTING_LAYER
-		H.fov.invisibility = INVISIBILITY_LIGHTING
-		H.fov.simulated = 0
-	//	H.fov.layer = UNDER_HUD_LAYER
-		hud_elements |= H.fov
 
 	mymob.client.screen = list()
 

@@ -1,44 +1,34 @@
-GLOBAL_VAR_CONST(HIGHEST_CONNECTABLE_ZLEVEL_INDEX, 17)
+GLOBAL_VAR_CONST(HIGHEST_CONNECTABLE_ZLEVEL_INDEX, 27)
 
-// If you add a more comprehensive system, just untick this file.
-// WARNING: Only works for up to 17 z-levels!
-var/z_levels = 0 // Each bit represents a connection between adjacent levels.  So the first bit means levels 1 and 2 are connected.
-
-// If the height is more than 1, we mark all contained levels as connected.
+var/list/z_level_connections
 /obj/effect/landmark/map_data/New()
 	..()
 	if(height == 1) return
+	if(!z_level_connections)
+		z_level_connections = list()
 	ASSERT(height <= z)
-	if(z > GLOB.HIGHEST_CONNECTABLE_ZLEVEL_INDEX)
-		CRASH("[log_info_line(src)] - Attempted to connect Z-levels outside the valid range.")
-	// Due to the offsets of how connections are stored v.s. how z-levels are indexed, some magic number silliness happened.
-	for(var/i = (z - height) to (z - 2))
-		z_levels |= (1 << i)
-/obj/effect/landmark/map_data/after_load()
-	..()
-	if(height == 1) return
-	ASSERT(height <= z)
-	if(z > GLOB.HIGHEST_CONNECTABLE_ZLEVEL_INDEX)
-		CRASH("[log_info_line(src)] - Attempted to connect Z-levels outside the valid range.")
-	// Due to the offsets of how connections are stored v.s. how z-levels are indexed, some magic number silliness happened.
-	for(var/i = (z - height) to (z - 2))
-		z_levels |= (1 << i)
+	ASSERT(height + z - 1 <= world.maxz)
+	for(var/i = z - height + 2, i <= z, i++)
+		ConnectLowerZ(i)
 
-/obj/effect/landmark/map_data/Initialize()
-	return ":)"
-	..()
-//	return INITIALIZE_HINT_QDEL
+/proc/ConnectLowerZ(var/z)
+	if(!z_level_connections)
+		z_level_connections = list()
+	z_level_connections["[z]"] |= DOWN
+	z_level_connections["[z - 1]"] |= UP
 
-// The storage of connections between adjacent levels means some bitwise magic is needed.
+/proc/DisconnectLowerZ(var/z)
+	if(!z_level_connections) return
+	z_level_connections["[z]"] &= DOWN
+	z_level_connections["[z - 1]"] &= UP
+
 /proc/HasAbove(var/z)
-	if(z >= world.maxz || z > 16 || z < 1)
-		return 0
-	return z_levels & (1 << (z - 1))
+	if(!z_level_connections) return 0
+	return z_level_connections["[z]"] & UP
 
 /proc/HasBelow(var/z)
-	if(z > world.maxz || z > 17 || z < 2)
-		return 0
-	return z_levels & (1 << (z - 2))
+	if(!z_level_connections) return 0
+	return z_level_connections["[z]"] & DOWN
 
 // Thankfully, no bitwise magic is needed here.
 /proc/GetAbove(var/atom/atom)
@@ -53,7 +43,7 @@ var/z_levels = 0 // Each bit represents a connection between adjacent levels.  S
 		return null
 	return HasBelow(turf.z) ? get_step(turf, DOWN) : null
 
-/proc/GetConnectedZlevels(z)
+/proc/GetConnectedZlevels(var/z)
 	. = list(z)
 	for(var/level = z, HasBelow(level), level--)
 		. |= level-1
@@ -70,3 +60,4 @@ var/z_levels = 0 // Each bit represents a connection between adjacent levels.  S
 		. = GetBelow(ref)
 	else
 		. = get_step(ref, dir)
+

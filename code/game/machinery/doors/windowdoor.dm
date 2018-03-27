@@ -44,6 +44,7 @@
 		else if (src.req_one_access.len)
 			ae.conf_access = src.req_one_access
 			ae.one_access = 1
+		ae.req_access_faction = req_access_faction
 	else
 		ae = electronics
 		electronics = null
@@ -228,6 +229,7 @@
 				else if (src.req_one_access.len)
 					ae.conf_access = src.req_one_access
 					ae.one_access = 1
+				ae.req_access_faction = req_access_faction
 			else
 				ae = electronics
 				electronics = null

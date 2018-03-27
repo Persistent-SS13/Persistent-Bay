@@ -6,7 +6,7 @@
 	cook_type = "cerealized"
 	on_icon = "cereal_on"
 	off_icon = "cereal_off"
-	circuit = /obj/item/weapon/circuitboard/cereal
+
 /obj/machinery/cooker/cereal/change_product_strings(var/obj/item/weapon/reagent_containers/food/snacks/product)
 	. = ..()
 	product.name = "box of [cooking_obj.name] cereal"
@@ -27,8 +27,23 @@
 /obj/machinery/cooker/cereal/New()
 	..()
 	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/cereal(null)
 	component_parts += new /obj/item/weapon/stock_parts/micro_laser(null)
 	component_parts += new /obj/item/weapon/stock_parts/micro_laser(null)
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
 	component_parts += new /obj/item/stack/cable_coil(null, 5)
 	RefreshParts()
+
+/obj/machinery/cooker/cereal/upgraded/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/cereal(null)
+	component_parts += new /obj/item/weapon/stock_parts/micro_laser/ultra(null)
+	component_parts += new /obj/item/weapon/stock_parts/micro_laser/ultra(null)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
+	component_parts += new /obj/item/stack/cable_coil(null, 5)
+	RefreshParts()
+
+/obj/machinery/cooker/cereal/RefreshParts()
+
+	return

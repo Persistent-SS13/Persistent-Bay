@@ -12,18 +12,17 @@
 	origin_tech = list(TECH_DATA = 2)
 	density = 0
 	anchored = 0
-	w_class = 2.0
+	w_class = ITEM_SIZE_SMALL
 	flags = CONDUCT
 	force = 5.0
 	throwforce = 5.0
 	throw_speed = 3
 	throw_range = 15
-	var/frame_desc = null
 	var/build_path = null
 	var/board_type = "computer"
 	var/list/req_components = null
 	var/contain_parts = 1
-
+	var/frame_desc = null
 //Called when the circuitboard is used to contruct a new machine.
 /obj/item/weapon/circuitboard/proc/construct(var/obj/machinery/M)
 	if (istype(M, build_path))
@@ -36,3 +35,4 @@
 	if (istype(M, build_path))
 		return 1
 	return 0
+

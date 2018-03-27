@@ -15,12 +15,14 @@
 /atom/movable/proc/GetAccess(var/faction_uid)
 	var/obj/item/weapon/card/id/id = GetIdCard()
 	return id ? id.GetAccess(faction_uid) : list()
-
+/atom/movable/proc/GetFaction()
+	var/obj/item/weapon/card/id/id = GetIdCard()
+	return id ? id.GetFaction() : ""
 /atom/movable/proc/GetIdCard()
 	return null
 
 /obj/proc/check_access(obj/item/I)
-	return check_access_list(I ? I.GetAccess() : list())
+	return check_access_list(I ? I.GetAccess(req_access_faction) : list())
 
 /obj/proc/check_access_list(var/list/L)
 	if(!req_access)		req_access = list()

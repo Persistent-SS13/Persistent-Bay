@@ -30,7 +30,10 @@
 				component_list += "[num2text(req_components[I])] [req_component_names[I]]"
 		D = "Requires [english_list(component_list)]."
 	desc = D
-
+/obj/structure/frame/after_load()
+	..()
+	if(circuit)
+		check_components()
 /obj/structure/frame/proc/check_components(mob/user as mob)
 	components = list()
 	req_components = circuit.req_components.Copy()
@@ -220,9 +223,12 @@
 					var/obj/machinery/new_machine = new src.circuit.build_path(src.loc, src.dir)
 					// Handle machines that have allocated default parts in thier constructor.
 					if(new_machine.component_parts)
-						for(var/CP in new_machine.component_parts)
-							qdel(CP)
-						new_machine.component_parts.Cut()
+						if(islist(new_machine.component_parts))
+							for(var/CP in new_machine.component_parts)
+								qdel(CP)
+							new_machine.component_parts.Cut()
+						else
+							new_machine.component_parts = null
 					else
 						new_machine.component_parts = list()
 

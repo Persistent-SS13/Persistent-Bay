@@ -2265,13 +2265,14 @@
  */
 /obj/item/weapon/reagent_containers/food/snacks/slice/Initialize()
 	. = ..()
-	if(filled)
-		var/obj/item/weapon/reagent_containers/food/snacks/whole = new whole_path()
-		if(whole && whole.slices_num)
-			var/reagent_amount = whole.reagents.total_volume/whole.slices_num
-			whole.reagents.trans_to_obj(src, reagent_amount)
+	if(!map_storage_loaded)
+		if(filled)
+			var/obj/item/weapon/reagent_containers/food/snacks/whole = new whole_path()
+			if(whole && whole.slices_num)
+				var/reagent_amount = whole.reagents.total_volume/whole.slices_num
+				whole.reagents.trans_to_obj(src, reagent_amount)
 
-		qdel(whole)
+			qdel(whole)
 
 /obj/item/weapon/reagent_containers/food/snacks/sliceable/meatbread
 	name = "meatbread loaf"

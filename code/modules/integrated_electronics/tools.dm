@@ -205,62 +205,64 @@
 
 /obj/item/weapon/storage/bag/circuits/basic/Initialize()
 	. = ..()
-	var/list/types_to_spawn = typesof(/obj/item/integrated_circuit/arithmetic,
-		/obj/item/integrated_circuit/logic,
-		/obj/item/integrated_circuit/memory,
-		) - list(/obj/item/integrated_circuit/arithmetic,
-		/obj/item/integrated_circuit/memory,
-		/obj/item/integrated_circuit/logic,
-		)
+	if(!map_storage_loaded)
+		var/list/types_to_spawn = typesof(/obj/item/integrated_circuit/arithmetic,
+			/obj/item/integrated_circuit/logic,
+			/obj/item/integrated_circuit/memory,
+			) - list(/obj/item/integrated_circuit/arithmetic,
+			/obj/item/integrated_circuit/memory,
+			/obj/item/integrated_circuit/logic,
+			)
 
-	types_to_spawn.Add(/obj/item/integrated_circuit/input/numberpad,
-		/obj/item/integrated_circuit/input/textpad,
-		/obj/item/integrated_circuit/input/button,
-		/obj/item/integrated_circuit/input/signaler,
-		/obj/item/integrated_circuit/input/local_locator,
-		/obj/item/integrated_circuit/output/screen,
-		/obj/item/integrated_circuit/converter/num2text,
-		/obj/item/integrated_circuit/converter/text2num,
-		/obj/item/integrated_circuit/converter/uppercase,
-		/obj/item/integrated_circuit/converter/lowercase,
-		/obj/item/integrated_circuit/time/delay/five_sec,
-		/obj/item/integrated_circuit/time/delay/one_sec,
-		/obj/item/integrated_circuit/time/delay/half_sec,
-		/obj/item/integrated_circuit/time/delay/tenth_sec,
-		/obj/item/integrated_circuit/time/ticker/slow,
-		/obj/item/integrated_circuit/time/clock
-		)
+		types_to_spawn.Add(/obj/item/integrated_circuit/input/numberpad,
+			/obj/item/integrated_circuit/input/textpad,
+			/obj/item/integrated_circuit/input/button,
+			/obj/item/integrated_circuit/input/signaler,
+			/obj/item/integrated_circuit/input/local_locator,
+			/obj/item/integrated_circuit/output/screen,
+			/obj/item/integrated_circuit/converter/num2text,
+			/obj/item/integrated_circuit/converter/text2num,
+			/obj/item/integrated_circuit/converter/uppercase,
+			/obj/item/integrated_circuit/converter/lowercase,
+			/obj/item/integrated_circuit/time/delay/five_sec,
+			/obj/item/integrated_circuit/time/delay/one_sec,
+			/obj/item/integrated_circuit/time/delay/half_sec,
+			/obj/item/integrated_circuit/time/delay/tenth_sec,
+			/obj/item/integrated_circuit/time/ticker/slow,
+			/obj/item/integrated_circuit/time/clock
+			)
 
-	for(var/thing in types_to_spawn)
-		var/obj/item/integrated_circuit/ic = thing
-		if(initial(ic.category) == thing)
-			continue
+		for(var/thing in types_to_spawn)
+			var/obj/item/integrated_circuit/ic = thing
+			if(initial(ic.category) == thing)
+				continue
 
-		for(var/i = 1 to 4)
-			new thing(src)
+			for(var/i = 1 to 4)
+				new thing(src)
 
-	new /obj/item/device/electronic_assembly(src)
-	new /obj/item/device/integrated_electronics/wirer(src)
-	new /obj/item/device/integrated_electronics/debugger(src)
-	new /obj/item/weapon/crowbar(src)
-	new /obj/item/weapon/screwdriver(src)
-	make_exact_fit()
+		new /obj/item/device/electronic_assembly(src)
+		new /obj/item/device/integrated_electronics/wirer(src)
+		new /obj/item/device/integrated_electronics/debugger(src)
+		new /obj/item/weapon/crowbar(src)
+		new /obj/item/weapon/screwdriver(src)
+		make_exact_fit()
 
 /obj/item/weapon/storage/bag/circuits/debug/Initialize()
 	. = ..()
-	name = "[name] - not intended for general use"
-	desc = "[desc] - not intended for general use"
-	for(var/subtype in subtypesof(/obj/item/integrated_circuit))
-		var/obj/item/integrated_circuit/ic = subtype
-		if(initial(ic.category) == subtype)
-			continue
-		for(var/i = 1 to 10)
-			new subtype(src)
+	if(!map_storage_loaded)
+		name = "[name] - not intended for general use"
+		desc = "[desc] - not intended for general use"
+		for(var/subtype in subtypesof(/obj/item/integrated_circuit))
+			var/obj/item/integrated_circuit/ic = subtype
+			if(initial(ic.category) == subtype)
+				continue
+			for(var/i = 1 to 10)
+				new subtype(src)
 
-	new /obj/item/device/electronic_assembly(src)
-	new /obj/item/device/integrated_electronics/wirer(src)
-	new /obj/item/device/integrated_electronics/debugger(src)
-	new /obj/item/device/integrated_electronics/analyzer(src)
-	new /obj/item/weapon/crowbar(src)
-	new /obj/item/weapon/screwdriver(src)
-	make_exact_fit()
+		new /obj/item/device/electronic_assembly(src)
+		new /obj/item/device/integrated_electronics/wirer(src)
+		new /obj/item/device/integrated_electronics/debugger(src)
+		new /obj/item/device/integrated_electronics/analyzer(src)
+		new /obj/item/weapon/crowbar(src)
+		new /obj/item/weapon/screwdriver(src)
+		make_exact_fit()

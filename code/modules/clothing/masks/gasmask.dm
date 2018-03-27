@@ -2,7 +2,7 @@
 	name = "gas mask"
 	desc = "A face-covering mask that can be connected to an air supply. Filters harmful gases from the air."
 	icon_state = "fullgas"
-	item_state = "gas_alt"
+	item_state = "fullgas"
 	item_flags = BLOCK_GAS_SMOKE_EFFECT | AIRTIGHT
 	flags_inv = HIDEEARS|HIDEEYES|HIDEFACE
 	body_parts_covered = FACE|EYES
@@ -45,7 +45,7 @@
 	name = "plague doctor mask"
 	desc = "A modernised version of the classic design, this mask will not only filter out phoron but it can also be connected to an air supply."
 	icon_state = "plaguedoctor"
-	item_state = "plaguedoctor"
+	item_state = "gas_mask"
 	armor = list(melee = 0, bullet = 0, laser = 2,energy = 2, bomb = 0, bio = 90, rad = 0)
 	body_parts_covered = HEAD|FACE|EYES
 
@@ -74,11 +74,9 @@
 	name = "clown wig and mask"
 	desc = "A true prankster's facial attire. A clown is incomplete without their wig and mask."
 	icon_state = "clown"
+	item_state = "clown_hat"
 	item_state = "clown"
 	item_flags = AIRTIGHT | BLOCKHAIR
-	sprite_sheets = list(
-	SPECIES_VOX = 'icons/mob/species/vox/mask.dmi',
-		)
 
 /obj/item/clothing/mask/gas/sexyclown
 	name = "sexy-clown wig and mask"
@@ -91,7 +89,6 @@
 	desc = "The traditional mime's mask. It has an eerie facial posture."
 	icon_state = "mime"
 	item_state = "mime"
-	item_flags = AIRTIGHT | BLOCKHAIR
 
 /obj/item/clothing/mask/gas/monkeymask
 	name = "monkey mask"
@@ -127,7 +124,6 @@
 	name = "vox breathing mask"
 	desc = "A small oxygen filter for use by Vox"
 	icon_state = "respirator"
-	item_flags = AIRTIGHT
 	flags_inv = 0
 	body_parts_covered = 0
 	species_restricted = list(SPECIES_VOX)

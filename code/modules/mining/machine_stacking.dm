@@ -7,14 +7,13 @@
 	density = 1
 	anchored = 1
 	var/obj/machinery/mineral/stacking_machine/machine = null
-	var/machinedir = SOUTHEAST
 
 /obj/machinery/mineral/stacking_unit_console/New()
 
 	..()
 
 	spawn(7)
-		src.machine = locate(/obj/machinery/mineral/stacking_machine, get_step(src, machinedir))
+		src.machine = locate(/obj/machinery/mineral/processing_unit, block(locate(x - 1, y - 1, z),locate(x + 1, y + 1, z)))
 		if (machine)
 			machine.console = src
 		else

@@ -12,7 +12,7 @@
 	var/enabled = 1				// Set to 0 if the relay was turned off
 	var/dos_failure = 0			// Set to 1 if the relay failed due to (D)DoS attack
 	var/list/dos_sources = list()	// Backwards reference for qdel() stuff
-	circuit = /obj/item/weapon/circuitboard/ntnet_relay
+
 	// Denial of Service attack variables
 	var/dos_overload = 0		// Amount of DoS "packets" in this relay's buffer
 	var/dos_capacity = 500		// Amount of DoS "packets" in buffer required to crash the relay
@@ -97,6 +97,7 @@
 	gl_uid++
 	component_parts = list()
 	component_parts += new /obj/item/stack/cable_coil(src,15)
+	component_parts += new /obj/item/weapon/circuitboard/ntnet_relay(src)
 
 	if(ntnet_global)
 		ntnet_global.relays.Add(src)
@@ -114,16 +115,22 @@
 		D.error = "Connection to quantum relay severed"
 	..()
 
-/obj/machinery/ntnet_relay/attackby(var/obj/item/weapon/I as obj, var/mob/user as mob)
-	if(istype(I, /obj/item/weapon/screwdriver) && circuit)
-		user << "<span class='notice'>You pop open the maintence hatch.</span>"
+/obj/machinery/ntnet_relay/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
+	if(isScrewdriver(W))
 		playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
-		if(do_after(user, 20))
-			dismantle()
+		panel_open = !panel_open
+		to_chat(user, "You [panel_open ? "open" : "close"] the maintenance hatch")
+		return
+	if(isCrowbar(W))
+		if(!panel_open)
+			to_chat(user, "Open the maintenance panel first.")
+			return
+		playsound(src.loc, 'sound/items/Crowbar.ogg', 50, 1)
+		to_chat(user, "You disassemble \the [src]!")
 
-/obj/machinery/ntnet_relay/holopad/dismantle()
-	var/obj/structure/frame/A = ..()
-	A.frame_type = "machine"
-	A.state = 4
-	A.icon_state = "[A.frame_type]_4"
-	qdel(src)
+		for(var/atom/movable/A in component_parts)
+			A.forceMove(src.loc)
+		new/obj/machinery/constructable_frame/machine_frame(src.loc)
+		qdel(src)
+		return
+	..()

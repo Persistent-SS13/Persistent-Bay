@@ -18,18 +18,18 @@
 /datum/nano_module/proc/check_eye(var/mob/user)
 	return -1
 
-/datum/nano_module/proc/check_access(var/mob/user, var/access)
+/datum/nano_module/proc/check_access(var/mob/user, var/access, var/faction_uid)
 	if(!access)
 		return 1
 
 	if(!istype(user))
 		return 0
-
+	
 	var/obj/item/weapon/card/id/I = user.GetIdCard()
 	if(!I)
 		return 0
-
-	if(access in I.access)
+	var/list/access_list = I.GetAccess(faction_uid)
+	if(access in access_list)
 		return 1
 
 	return 0

@@ -348,14 +348,7 @@ var/global/datum/controller/gameticker/ticker
 				to_chat(employee.current, "You character has been saved.")
 
 			sleep(20)
-			for(var/datum/mind/employee in minds)
-				if(!employee.current || !employee.current.ckey) continue
-				employee.current.should_save = 0
 			Save_World()
-			for(var/datum/mind/employee in minds)
-				if(!employee.current || !employee.current.ckey)
-					continue
-				employee.current.should_save = 1
 			Master.SetRunLevel(RUNLEVEL_POSTGAME)
 
 			spawn

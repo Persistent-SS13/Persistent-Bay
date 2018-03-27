@@ -61,6 +61,8 @@
 			return global.SSopen_space;
 		if("SSprocessing")
 			return global.SSprocessing;
+		if("SSskybox")
+			return global.SSskybox;
 		if("SSvines")
 			return global.SSvines;
 		if("Tier1Runes")
@@ -1049,11 +1051,11 @@
 			return global.wrapped_species_by_ref;
 		if("xenomorphs")
 			return global.xenomorphs;
-		if("z_levels")
-			return global.z_levels;
+		if("z_level_connections")
+			return global.z_level_connections;
 		if("zone_blocked")
 			return global.zone_blocked;
-		
+
 /proc/writeglobal(which, newval)
 	switch(which)
 		if("ALL_ANTIGENS")
@@ -1116,6 +1118,8 @@
 			global.SSopen_space=newval;
 		if("SSprocessing")
 			global.SSprocessing=newval;
+		if("SSskybox")
+			global.SSskybox=newval;
 		if("SSvines")
 			global.SSvines=newval;
 		if("Tier1Runes")
@@ -2104,11 +2108,11 @@
 			global.wrapped_species_by_ref=newval;
 		if("xenomorphs")
 			global.xenomorphs=newval;
-		if("z_levels")
-			global.z_levels=newval;
+		if("z_level_connections")
+			global.z_level_connections=newval;
 		if("zone_blocked")
 			global.zone_blocked=newval;
-		
+
 /var/list/_all_globals=list(
 	"ALL_ANTIGENS",
 	"ANTAG_FREQS",
@@ -2139,6 +2143,7 @@
 	"SSmobs",
 	"SSobj",
 	"SSopen_space",
+	"SSskybox",
 	"SSprocessing",
 	"SSvines",
 	"Tier1Runes",
@@ -2207,7 +2212,6 @@
 	"ascii_red",
 	"ascii_reset",
 	"ascii_yellow",
-	"ashtray_cache",
 	"asset_cache",
 	"asset_datums",
 	"assigned",
@@ -2634,5 +2638,5 @@
 	"worths",
 	"wrapped_species_by_ref",
 	"xenomorphs",
-	"z_levels",
+	"z_level_connections",
 	"zone_blocked")

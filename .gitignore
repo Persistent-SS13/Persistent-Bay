@@ -24,3 +24,4 @@ Save.txt
 *.txt
 *.7z
 *.zip
+.vscode/tasks.json

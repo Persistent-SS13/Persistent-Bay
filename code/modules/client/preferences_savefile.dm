@@ -119,7 +119,7 @@
 			id.registered_name = real_name
 			id.selected_faction = faction.uid
 			id.approved_factions |= faction.uid
-			id.account_number = M.account_number
+			id.associated_account_number = M.account_number
 			if(record2)
 				id.sync_from_record(record2)
 			mannequin.equip_to_slot_or_del(id,slot_wear_id)
@@ -149,6 +149,7 @@
 	mannequin.spawn_loc = faction_uid
 	mannequin.spawn_type = 2
 	mannequin.equip_to_slot_or_del(new /obj/item/clothing/shoes/black(mannequin),slot_shoes)
+	mannequin.species.equip_survival_gear(mannequin)
 	S << mannequin
 	character_list = list()
 	qdel(mannequin)

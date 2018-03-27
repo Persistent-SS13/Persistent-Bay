@@ -166,3 +166,16 @@
 	icon = 'icons/obj/terminals.dmi'
 	icon_state = "atm_frame"
 	build_machine_type = /obj/machinery/atm
+	
+	
+/obj/item/frame/atm/try_build(turf/on_wall)
+	if (get_dist(on_wall,usr)>1)
+		return
+	var/ndir = get_dir(usr,on_wall)
+	if (!(ndir in GLOB.cardinal))
+		return
+	var/turf/loc = get_turf(usr)
+	
+	new /obj/machinery/atm(loc, 1, src, ndir)
+	qdel(src)
+

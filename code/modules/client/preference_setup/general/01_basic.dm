@@ -89,6 +89,10 @@ datum/preferences
 					else
 						pref.all_underwear[WRC.name] = "Boxers"
 					continue
+				if(WRC.name == "Undershirt")
+					pref.all_underwear[WRC.name] = "Shirt"
+					continue	
+					
 		return TOPIC_REFRESH_UPDATE_PREVIEW
 
 	else if(href_list["age"])

@@ -267,7 +267,7 @@
 			var/i = rand(1,clear_turfs.len)
 			var/turf/pickedloc = clear_turfs[i]
 			clear_turfs.Cut(i,i+1)
-			supply_controller.shoppinglist -= S
+			connected_faction.approved_orders -= S
 
 			var/datum/supply_order/SO = S
 			var/decl/hierarchy/supply_pack/SP = SO.object

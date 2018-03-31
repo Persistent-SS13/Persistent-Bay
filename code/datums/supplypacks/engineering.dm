@@ -157,27 +157,17 @@
 	name = "Pipe Dispenser"
 	contains = list(/obj/machinery/pipedispenser/orderable)
 	cost = 35
-<<<<<<< HEAD
-	containertype = /obj/structure/closet/crate/large
-//	containername = "\improper Pipe Dispenser Crate"
-=======
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "\improper Pipe Dispenser Crate"
 	access = 3
->>>>>>> master
 
 /decl/hierarchy/supply_pack/engineering/disposals_dispenser
 	name = "Disposals Pipe Dispenser"
 	contains = list(/obj/machinery/pipedispenser/disposal/orderable)
 	cost = 35
-<<<<<<< HEAD
-	containertype = /obj/structure/closet/crate/large
-//	containername = "\improper Disposal Dispenser Crate"
-=======
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "\improper Disposal Dispenser Crate"
 	access = 3
->>>>>>> master
 
 /decl/hierarchy/supply_pack/engineering/shield_generator
 	name = "Shield Generator Construction Kit"

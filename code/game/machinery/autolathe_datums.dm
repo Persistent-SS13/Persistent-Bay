@@ -593,6 +593,10 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/device/healthanalyzer
 	category = "Medical"
 
+/datum/autolathe/recipe/gps
+	name = "GPS"
+	path = /obj/item/device/gps
+	category = "Devices and Components"
 /*
 /datum/autolathe/recipe/
 	name = ""

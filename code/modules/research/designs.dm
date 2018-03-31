@@ -1334,6 +1334,12 @@ CIRCUITS BELOW
 	build_path = /obj/item/weapon/circuitboard/solar_control
 	sort_string = "JAAAF"
 
+/datum/design/circuit/tracker_electronics
+	name = "Solar Tracker"
+	id = "tracker_electronics"
+	build_path = /obj/item/weapon/tracker_electronics
+	sort_string = "JAAAG"
+
 /datum/design/circuit/pacman
 	name = "PACMAN-type generator"
 	id = "pacman"
@@ -1428,7 +1434,7 @@ CIRCUITS BELOW
 /datum/design/circuit/reagentgrinder
 	name = "Reagent Grinder"
 	id = "reagent_grinder"
-	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 1, TECH_PHORON = 2, TECH_BIO = 1)
+	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 1, TECH_BIO = 1)
 	build_path = /obj/item/weapon/circuitboard/reagentgrinder
 	sort_string = "ZZZZX"
 /datum/design/circuit/chem_master
@@ -1455,17 +1461,17 @@ CIRCUITS BELOW
 	req_tech = list(TECH_DATA = 1)
 	build_path = /obj/item/weapon/circuitboard/smartfridge
 	sort_string = "ZZZZT"
-/datum/design/circuit/teleporter_hub
-	name = "Teleporter Hub"
-	id = "teleporter_hub"
-	req_tech = list(TECH_MATERIAL = 4, TECH_ENGINEERING = 5, TECH_BLUESPACE = 5, TECH_DATA = 3)
-	build_path = /obj/item/weapon/circuitboard/teleporter_hub
+/datum/design/circuit/turbine
+	name = "Thermoelectric Generator Turbine"
+	id = "turbine"
+	req_tech = list(TECH_ENGINEERING = 4, TECH_POWER = 4)
+	build_path = /obj/item/weapon/circuitboard/turbine
 	sort_string = "ZZZZS"
-/datum/design/circuit/teleporter_station
-	name = "Teleporter Station"
-	id = "teleporter_station"
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/teleporter_station
+/datum/design/circuit/turbine_control
+	name = "Thermoelectric Generator Control Console"
+	id = "turbine_control"
+	req_tech = list(TECH_ENGINEERING = 2, TECH_POWER = 2, TECH_DATA = 2)
+	build_path = /obj/item/weapon/circuitboard/turbine_control
 	sort_string = "ZZZZR"
 /datum/design/circuit/telepad
 	name = "Telepad"
@@ -1569,13 +1575,13 @@ CIRCUITS BELOW
 	req_tech = list(TECH_ENGINEERING = 1,TECH_DATA = 1)
 	build_path = /obj/item/weapon/circuitboard/atm
 	sort_string = "ZZZYZ"
-/*
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
+/datum/design/circuit/recycler
+	name = "Recycler"
+	id = "recycler"
+	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 2)
+	build_path = /obj/item/weapon/circuitboard/recycler
 	sort_string = "ZZZYY"
+/*
 /datum/design/circuit/
 	name = ""
 	id = ""

@@ -18,7 +18,7 @@
 			/obj/item/weapon/storage/box/glowsticks = 2,
 			/obj/item/weapon/clothingbag/rubbermask,
 			/obj/item/weapon/clothingbag/rubbersuit)
-	cost = 20
+	cost = 15
 	containername = "\improper Party equipment"
 
 /decl/hierarchy/supply_pack/hospitality/barsupplies
@@ -45,7 +45,7 @@
 					/obj/item/clothing/suit/redtag = 3,
 					/obj/item/weapon/gun/energy/lasertag/blue = 3,
 					/obj/item/clothing/suit/bluetag = 3)
-	cost = 20
+	cost = 10
 	containertype = /obj/structure/closet
 	containername = "\improper Lasertag Closet"
 
@@ -56,45 +56,45 @@
 					/obj/item/pizzabox/mushroom,
 					/obj/item/pizzabox/meat,
 					/obj/item/pizzabox/vegetable)
-	cost = 15
+	cost = 12
 	containertype = /obj/structure/closet/crate/freezer
 	containername = "\improper Pizza crate"
 	supply_method = /decl/supply_method/randomized
 
 
 /decl/hierarchy/supply_pack/hospitality/beef
-	name = "Beef crate"
-	contains = list(/obj/item/weapon/reagent_containers/food/snacks/meat/beef = 6)
+	name = "Beef (x40)"
+	contains = list(/obj/item/weapon/reagent_containers/food/snacks/meat/beef = 40)
 	containertype = /obj/structure/closet/crate/freezer
 	containername = "\improper Beef crate"
 	cost = 20
 
 /decl/hierarchy/supply_pack/hospitality/goat
-	name = "Goat meat crate"
-	contains = list(/obj/item/weapon/reagent_containers/food/snacks/meat/goat = 6)
+	name = "Goat Meat (x40)"
+	contains = list(/obj/item/weapon/reagent_containers/food/snacks/meat/goat = 40)
 	containertype = /obj/structure/closet/crate/freezer
 	containername = "\improper Goat meat crate"
 	cost = 20
 
 /decl/hierarchy/supply_pack/hospitality/chicken
-	name = "Chicken meat crate"
-	contains = list(/obj/item/weapon/reagent_containers/food/snacks/meat/chicken = 6)
+	name = "Chicken Meat (x40)"
+	contains = list(/obj/item/weapon/reagent_containers/food/snacks/meat/chicken = 40)
 	containertype = /obj/structure/closet/crate/freezer
 	containername = "\improper Chicken meat crate"
 	cost = 20
 
 /decl/hierarchy/supply_pack/hospitality/eggs
-	name = "Eggs crate"
-	contains = list(/obj/item/weapon/storage/fancy/egg_box = 2)
+	name = "Five Cartons of Eggs"
+	contains = list(/obj/item/weapon/storage/fancy/egg_box = 5)
 	containertype = /obj/structure/closet/crate/freezer
 	containername = "\improper Egg crate"
 	cost = 15
 
 /decl/hierarchy/supply_pack/hospitality/milk
-	name = "Milk crate"
-	contains = list(/obj/item/weapon/reagent_containers/food/drinks/milk = 3)
+	name = "Imported Milk (x7)"
+	contains = list(/obj/item/weapon/reagent_containers/food/drinks/milk = 7)
 	containertype = /obj/structure/closet/crate/freezer
-	containername = "\improper Milk crate"
+	containername = "\improper Imported Milk crate"
 	cost = 15
 
 /decl/hierarchy/supply_pack/hospitality/artscrafts

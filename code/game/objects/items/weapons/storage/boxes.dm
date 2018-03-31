@@ -387,7 +387,8 @@
 
 /obj/item/weapon/storage/box/lights/Initialize()
 	. = ..()
-	make_exact_fit()
+	if(!map_storage_loaded)
+		make_exact_fit()
 
 /obj/item/weapon/storage/box/lights/bulbs
 	startswith = list(/obj/item/weapon/light/bulb = 21)

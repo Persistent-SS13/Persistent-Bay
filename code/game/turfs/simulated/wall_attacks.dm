@@ -14,12 +14,9 @@
 		sleep(15)
 		set_density(0)
 		set_opacity(0)
-		blocks_air = ZONE_BLOCKED
 		update_icon()
 		update_air()
 		set_light(0)
-		src.blocks_air = 0
-		set_opacity(0)
 		for(var/turf/simulated/turf in loc)
 			SSair.mark_for_update(turf)
 	else
@@ -80,7 +77,6 @@
 			to_chat(user, "<span class='danger'>\The [material.display_name] crumbles under your touch!</span>")
 			dismantle_wall()
 			return 1
-
 	if(..()) return 1
 
 	if(!can_open)

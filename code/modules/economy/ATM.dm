@@ -50,7 +50,7 @@
 	if(isScrewdriver(W) && buildstage == 2)
 		wiresexposed = !wiresexposed
 		update_icon()
-		return
+		return 1
 
 	if(wiresexposed)
 		switch(buildstage)
@@ -91,7 +91,7 @@
 					new /obj/item/frame/atm(get_turf(user))
 					playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 					qdel(src)
-		return
+		return 1
 
 	return
 
@@ -148,6 +148,8 @@
 		return 1
 
 /obj/machinery/atm/attackby(obj/item/I as obj, mob/user as mob)
+	if(..())
+		return
 	if(istype(I, /obj/item/weapon/card))
 		if(emagged > 0)
 			//prevent inserting id into an emagged ATM
@@ -178,8 +180,7 @@
 			to_chat(user, "<span class='info'>You insert [I] into [src].</span>")
 			src.attack_hand(user)
 			qdel(I)
-	else
-		..()
+
 
 /obj/machinery/atm/attack_hand(mob/user)	//Prevent ATM from being used when under de/construction
 	if(user.stat || stat & (NOPOWER|BROKEN))

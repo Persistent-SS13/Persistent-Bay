@@ -17,5 +17,8 @@
 
 /datum/event/communications_blackout/start()
 	for(var/obj/machinery/telecomms/T in telecomms_list)
+		if(!T.loc)
+			telecomms_list -= T
+			continue
 		if(prob(T.outage_probability))
 			T.overloaded_for = max(severity * rand(90, 120), T.overloaded_for)

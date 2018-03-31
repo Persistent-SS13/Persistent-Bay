@@ -165,7 +165,7 @@ var/list/point_source_descriptions = list(
 
 	var/exportnum = 0
 	var/list/all_exports = list()
-	
+	var/list/old_exports = list()
 /datum/controller/supply/New()
 	ordernum = rand(1,9000)
 
@@ -181,13 +181,15 @@ var/list/point_source_descriptions = list(
 	
 /datum/controller/supply/proc/generate_initial()
 	generate_export("manufacturing-basic")
+	generate_export("manufacturing-basic")
+	generate_export("manufacturing-advanced")
 	generate_export("manufacturing-advanced")
 	generate_export("material")
 	generate_export("material")
 /datum/controller/supply/proc/close_order(var/datum/export_order/export)
 	var/order_type = export.order_type
+	old_exports |= export
 	all_exports -= export
-	qdel(export)
 	sleep(rand(25 MINUTES, 35 MINUTES))
 	generate_export(order_type)
 /datum/controller/supply/proc/fill_order(var/id, var/closet)
@@ -209,8 +211,9 @@ var/list/point_source_descriptions = list(
 			else
 				export = new()
 				export.required = rand(30, 100)
+				per += rand(5,10)
 			for(var/x in recipe.resources)
-				per += round(recipe.resources[x]/2000,0.01)
+				per += round(recipe.resources[x]/1000,0.01)
 			export.typepath = recipe.path
 			export.rate = per
 			export.order_type = typee
@@ -237,9 +240,9 @@ var/list/point_source_descriptions = list(
 							design = pick(possible_designs)
 					if(!restart) valid = 1
 			export.required = rand(20, 60)
-			var/per = rand(5,150)
+			var/per = rand(10,30)
 			for(var/x in design.materials)
-				per += round(design.materials[x]/2000,0.01)
+				per += round(design.materials[x]/1000,0.01)
 			for(var/x in design.req_tech)
 				per += design.req_tech[x]*2
 			export.typepath = design.build_path
@@ -253,17 +256,17 @@ var/list/point_source_descriptions = list(
 		if("material")
 			export = new /datum/export_order/stack()
 			var/list/possible = list(
-								/obj/item/stack/material/diamond = 2,
-								/obj/item/stack/material/uranium = 2,
-								/obj/item/stack/material/gold = 2,
-								/obj/item/stack/material/platinum = 3,
-								/obj/item/stack/material/phoron = 5,
-								/obj/item/stack/material/tritium = 5,
-								/obj/item/stack/material/osmium = 5,
-								/obj/item/stack/material/deuterium = 5
+								/obj/item/stack/material/diamond = 10,
+								/obj/item/stack/material/uranium = 10,
+								/obj/item/stack/material/gold = 10,
+								/obj/item/stack/material/platinum = 10,
+								/obj/item/stack/material/phoron = 20,
+								/obj/item/stack/material/tritium = 20,
+								/obj/item/stack/material/osmium = 20,
+								/obj/item/stack/material/deuterium = 20
 								)
 			var/x = pick(possible)
-			var/per = possible[x]+rand(-1,1)
+			var/per = possible[x]+rand(0,5)
 			export.typepath = x
 			export.rate = per
 			export.order_type = typee

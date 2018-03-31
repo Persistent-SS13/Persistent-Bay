@@ -127,6 +127,7 @@
 			if(stack)
 				stack.connected_faction = "nanotrasen"
 				stack.try_connect()
+			mannequin.equip_to_slot_or_del(new /obj/item/device/radio/headset(mannequin),slot_l_ear)
 	if(faction == "Refugees" || faction == "Entrepreneur")
 		var/datum/world_faction/faction = get_faction("refugee")
 		if(faction)

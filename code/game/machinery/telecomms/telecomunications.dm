@@ -139,6 +139,9 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 				add_link(T)
 		else
 			for(var/obj/machinery/telecomms/T in telecomms_list)
+				if(!T.loc)
+					telecomms_list -= T
+					continue
 				add_link(T)
 	update_power()
 	. = ..()

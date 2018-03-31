@@ -48,7 +48,7 @@
 	BOOTS_TYPE = /obj/item/clothing/shoes/magboots
 	TANK_TYPE = /obj/item/weapon/tank/oxygen
 	MASK_TYPE = /obj/item/clothing/mask/breath
-	req_access = list(access_atmospherics)
+	req_access = list(core_access_engineering_programs)
 	islocked = 1
 
 /obj/machinery/suit_storage_unit/atmos/alt

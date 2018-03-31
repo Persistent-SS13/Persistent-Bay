@@ -1,31 +1,24 @@
-/datum/computer_file/program/supply
-	filename = "supply"
-	filedesc = "Supply Management"
-	nanomodule_path = /datum/nano_module/program/supply
+/datum/computer_file/program/invoicing
+	filename = "invoicing-program"
+	filedesc = "Create invoices for your Logistics Network account."
+	nanomodule_path = /datum/nano_module/program/invoicing
 	program_icon_state = "supply"
 	program_menu_icon = "cart"
-	extended_desc = "A management tool that allows for ordering of various supplies through the facility's cargo system. Some features may require additional access."
+	extended_desc = "A tool for creating digital invoices that act as one time payment processors for networks to recieve payment from individual accounts. ."
 	size = 21
 	available_on_ntnet = 1
 	requires_ntnet = 1
-
-/datum/computer_file/program/supply/process_tick()
-	..()
-	var/datum/nano_module/program/supply/SNM = NM
-	if(istype(SNM))
-		SNM.emagged = computer_emagged
-
-/datum/nano_module/program/supply
-	name = "Supply Management program"
+	required_access = core_access_order_approval
+	
+/datum/nano_module/program/invoicing
+	name = "Invoicing program"
 	var/screen = 1		// 0: Ordering menu, 1: Statistics 2: Shuttle control, 3: Orders menu
 	var/selected_category
 	var/list/category_names
 	var/list/category_contents
-	var/emagged = FALSE	// TODO: Implement synchronisation with modular computer framework.
 	var/current_security_level
-	var/list/selected_telepads
-	var/list/selected_telepads_export = list()
-/datum/nano_module/program/supply/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
+
+/datum/nano_module/program/invoicing/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
 	var/list/data = host.initial_data()
 	var/datum/world_faction/connected_faction
 	if(program.computer.network_card && program.computer.network_card.connected_network)
@@ -119,7 +112,7 @@
 		ui.set_initial_data(data)
 		ui.open()
 
-/datum/nano_module/program/supply/Topic(href, href_list)
+/datum/nano_module/program/invoicing/Topic(href, href_list)
 	var/mob/user = usr
 	if(..())
 		return 1

@@ -66,7 +66,7 @@
 							/obj/item/weapon/stock_parts/console_screen = 1,)
 
 /obj/item/weapon/circuitboard/chem_master
-	name = T_BOARD(Chem Master 2999)
+	name = T_BOARD("Chem Master 2999")
 	build_path = /obj/machinery/chem_master/
 	board_type = "machine"
 	origin_tech = "materials=2;programming=2;biotech=1"

@@ -10,7 +10,7 @@
 	board_type = "other"
 
 /obj/item/weapon/circuitboard/vendor
-	name = T_BOARD(Booze-O-Mat Vendor)
+	name = T_BOARD("Booze-O-Mat Vendor")
 	build_path = /obj/machinery/vending/boozeomat
 	board_type = "machine"
 	origin_tech = "programming=1"
@@ -32,12 +32,12 @@
 
 /obj/item/weapon/circuitboard/vendor/proc/set_type(typepath, mob/user)
 		build_path = typepath
-		name = T_BOARD([names_paths[build_path]] Vendor)
+		name = T_BOARD("[names_paths[build_path]] Vendor")
 		user << "<span class='notice'>You set the board to [names_paths[build_path]].</span>"
 		req_components = list(text2path("/obj/item/weapon/vending_refill/[copytext("[build_path]", 24)]") = 3)
 
 /obj/item/weapon/circuitboard/holopad
-	name = T_BOARD(AI Holopad)
+	name = T_BOARD("Holopad")
 	build_path = /obj/machinery/hologram/holopad
 	board_type = "machine"
 	origin_tech = "programming=1"
@@ -46,7 +46,7 @@
 							/obj/item/weapon/stock_parts/scanning_module = 1)
 
 /obj/item/weapon/circuitboard/holopad_longrange
-	name = T_BOARD(Long Range Holopad)
+	name = T_BOARD("Long Range Holopad")
 	build_path = /obj/machinery/hologram/holopad/longrange
 	board_type = "machine"
 	origin_tech = "programming=1"
@@ -55,7 +55,7 @@
 							/obj/item/weapon/stock_parts/scanning_module = 1)
 
 /obj/item/weapon/circuitboard/reagentgrinder
-	name = T_BOARD(All-in-one Grinder)
+	name = T_BOARD("All-in-one Grinder")
 	build_path = /obj/machinery/reagentgrinder
 	board_type = "machine"
 	origin_tech = "materials=2;engineering=1;biotech=1;"
@@ -65,7 +65,7 @@
 							/obj/item/weapon/stock_parts/manipulator = 1,)
 
 /obj/item/weapon/circuitboard/photocopier
-	name = T_BOARD(photocopier)
+	name = T_BOARD("photocopier")
 	build_path = /obj/machinery/photocopier/
 	board_type = "machine"
 	origin_tech = "materials=2;programming=2;biotech=1"
@@ -115,7 +115,7 @@
 */
 
 /obj/item/weapon/circuitboard/smartfridge
-	name = T_BOARD(smartfridge)
+	name = T_BOARD("smartfridge")
 	build_path = /obj/machinery/smartfridge/
 	board_type = "machine"
 	origin_tech = "programming=1"
@@ -139,5 +139,5 @@
 
 /obj/item/weapon/circuitboard/smartfridge/proc/set_type(typepath, mob/user)
 		build_path = typepath
-		name = T_BOARD([names_paths[build_path]] )
+		name = T_BOARD("[names_paths[build_path]]")
 		user << "<span class='notice'>You set the board to [names_paths[build_path]].</span>"

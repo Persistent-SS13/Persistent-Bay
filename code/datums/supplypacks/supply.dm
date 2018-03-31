@@ -16,7 +16,7 @@
 
 /decl/hierarchy/supply_pack/supply/toner
 	name = "Toner cartridges"
-	contains = list(/obj/item/device/toner = 6)
+	contains = list(/obj/item/device/toner = 20)
 	cost = 10
 	containername = "\improper Toner cartridges"
 
@@ -30,9 +30,10 @@
 					/obj/item/weapon/reagent_containers/spray/cleaner,
 					/obj/item/weapon/reagent_containers/glass/rag,
 					/obj/item/weapon/grenade/chem_grenade/cleaner = 3,
-					/obj/structure/mopbucket)
+					/obj/structure/mopbucket,
+					/obj/item/weapon/soap)
 	cost = 10
-	containertype = /obj/structure/closet/crate/large
+	containertype = /obj/structure/closet/crate/trashcart
 	containername = "\improper Janitorial supplies"
 
 /decl/hierarchy/supply_pack/supply/boxes
@@ -55,36 +56,15 @@
 					 /obj/structure/filingcabinet/chestdrawer{anchored = 0},
 					 /obj/item/weapon/paper_bin)
 	name = "Office supplies"
-	cost = 15
+	cost = 10
 	containertype = /obj/structure/closet/crate/large
 	containername = "\improper Office supplies crate"
 
 /decl/hierarchy/supply_pack/supply/spare_pda
 	name = "Spare PDAs"
-	contains = list(/obj/item/device/pda = 3)
+	contains = list(/obj/item/device/pda = 10)
 	cost = 10
 	containername = "\improper Spare PDA crate"
-
-/decl/hierarchy/supply_pack/supply/minergear
-	name = "Shaft miner equipment"
-	contains = list(/obj/item/weapon/storage/backpack/industrial,
-					/obj/item/weapon/storage/backpack/satchel_eng,
-					/obj/item/device/radio/headset/headset_cargo,
-					/obj/item/clothing/under/rank/miner,
-					/obj/item/clothing/gloves/thick,
-					/obj/item/clothing/shoes/black,
-					/obj/item/device/analyzer,
-					/obj/item/weapon/storage/ore,
-					/obj/item/device/flashlight/lantern,
-					/obj/item/weapon/shovel,
-					/obj/item/weapon/pickaxe,
-					/obj/item/weapon/mining_scanner,
-					/obj/item/clothing/glasses/material,
-					/obj/item/clothing/glasses/meson)
-	cost = 15
-	containertype = /obj/structure/closet/crate/secure
-	containername = "\improper Shaft miner equipment"
-	access = access_mining
 
 /decl/hierarchy/supply_pack/supply/mule
 	name = "MULEbot Crate"
@@ -106,19 +86,6 @@
 	cost = 15
 	containertype = /obj/structure/largecrate
 	containername = "\improper Cargo Train Trolley Crate"
-
-/decl/hierarchy/supply_pack/supply/contraband
-	num_contained = 5
-	contains = list(/obj/item/seeds/bloodtomatoseed,
-					/obj/item/weapon/storage/pill_bottle/zoom,
-					/obj/item/weapon/storage/pill_bottle/happy,
-					/obj/item/weapon/reagent_containers/food/drinks/bottle/pwine)
-
-	name = "Contraband crate"
-	cost = 30
-	containername = "\improper Unlabeled crate"
-	contraband = 1
-	supply_method = /decl/supply_method/randomized
 
 /decl/hierarchy/supply_pack/supply/hoverpod
 	name = "Hoverpod Shipment"
@@ -150,5 +117,23 @@
 					/obj/item/device/flashlight/glowstick/blue)
 	cost = 10
 	containername = "\improper Glowstick Crate"
-	num_contained = 20
+	num_contained = 10
 	supply_method = /decl/supply_method/randomized
+
+/decl/hierarchy/supply_pack/atmospherics/softsuits
+	name = "EVA Softsuit w/ Small Airtank"
+	contains = list(/obj/item/weapon/tank/emergency/oxygen/engi,
+			 		/obj/item/clothing/suit/space,
+					/obj/item/clothing/head/helmet/space,
+					/obj/item/clothing/mask/gas)
+	cost = 30
+	containername = "\improper Softsuit crate"
+
+/decl/hierarchy/supply_pack/atmospherics/softsuits_bulk
+	name = "Bulk Shipment of EVA Softsuits (x5) w/ Small Airtanks"
+	contains = list(/obj/item/weapon/tank/emergency/oxygen/engi = 5,
+			 		/obj/item/clothing/suit/space = 5,
+					/obj/item/clothing/head/helmet/space = 5,
+					/obj/item/clothing/mask/gas = 5)
+	cost = 150
+	containername = "\improper Bulk Softsuit crate"

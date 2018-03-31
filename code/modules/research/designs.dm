@@ -1334,6 +1334,12 @@ CIRCUITS BELOW
 	build_path = /obj/item/weapon/circuitboard/solar_control
 	sort_string = "JAAAF"
 
+/datum/design/circuit/tracker_electronics
+	name = "Solar Tracker"
+	id = "tracker_electronics"
+	build_path = /obj/item/weapon/tracker_electronics
+	sort_string = "JAAAG"
+
 /datum/design/circuit/pacman
 	name = "PACMAN-type generator"
 	id = "pacman"

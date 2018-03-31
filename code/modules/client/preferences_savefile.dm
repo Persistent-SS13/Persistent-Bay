@@ -150,7 +150,6 @@
 	mannequin.spawn_loc = faction_uid
 	mannequin.spawn_type = 2
 	mannequin.equip_to_slot_or_del(new /obj/item/clothing/shoes/black(mannequin),slot_shoes)
-	mannequin.species.equip_survival_gear(mannequin)
 	S << mannequin
 	character_list = list()
 	qdel(mannequin)

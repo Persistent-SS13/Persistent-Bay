@@ -119,7 +119,7 @@
 			id.registered_name = real_name
 			id.selected_faction = faction.uid
 			id.approved_factions |= faction.uid
-			id.account_number = M.account_number
+			id.associated_account_number = M.account_number
 			if(record2)
 				id.sync_from_record(record2)
 			mannequin.equip_to_slot_or_del(id,slot_wear_id)
@@ -127,6 +127,7 @@
 			if(stack)
 				stack.connected_faction = "nanotrasen"
 				stack.try_connect()
+			mannequin.equip_to_slot_or_del(new /obj/item/device/radio/headset(mannequin),slot_l_ear)
 	if(faction == "Refugees" || faction == "Entrepreneur")
 		var/datum/world_faction/faction = get_faction("refugee")
 		if(faction)

@@ -58,7 +58,11 @@
 	cost = 40
 	containername = "\improper N2O gas canister crate"
 	containertype = /obj/structure/closet/crate/secure/large
+<<<<<<< HEAD
 //	access = access_atmospherics
+=======
+	access = 3
+>>>>>>> master
 
 /decl/hierarchy/supply_pack/atmospherics/canister_carbon_dioxide
 	name = "Carbon dioxide gas canister"
@@ -66,7 +70,11 @@
 	cost = 40
 	containername = "\improper CO2 canister crate"
 	containertype = /obj/structure/closet/crate/secure/large
+<<<<<<< HEAD
 //	access = access_atmospherics
+=======
+	access = 3
+>>>>>>> master
 
 /decl/hierarchy/supply_pack/atmospherics/voidsuit
 	name = "Atmospherics voidsuit"
@@ -76,7 +84,11 @@
 	cost = 100
 	containername = "\improper Atmospherics voidsuit crate"
 	containertype = /obj/structure/closet/crate/secure/large
+<<<<<<< HEAD
 //	access = access_atmospherics
+=======
+	access = 3
+>>>>>>> master
 
 /decl/hierarchy/supply_pack/atmospherics/canister_hydrogen
 	name = "Hydrogen canister"
@@ -84,7 +96,11 @@
 	cost = 10
 	containername = "\improper Hydrogen canister crate"
 	containertype = /obj/structure/closet/crate/secure/large
+<<<<<<< HEAD
 //	access = access_atmospherics
+=======
+	access = 3
+>>>>>>> master
 
 /decl/hierarchy/supply_pack/atmospherics/airpump
 	name = "Portable Air Pumps (x4)"

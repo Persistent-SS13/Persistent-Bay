@@ -162,6 +162,43 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 
 	user << browse(dat, "window=cryopod")
 	onclose(user, "cryopod")
+	
+/obj/machinery/cryopod/MouseDrop_T(var/mob/target, var/mob/user)
+	if(!istype(target))
+		return
+	if (!CanMouseDrop(target, user))
+		return
+	if (src.occupant)
+		to_chat(user, "<span class='warning'>The cryopod is already occupied!</span>")
+		return
+	if (target.buckled)
+		to_chat(user, "<span class='warning'>Unbuckle the subject before attempting to move them.</span>")
+		return
+	if(!req_access_faction || req_access_faction == "")
+		to_chat(usr, "<span class='notice'><B>\The [src] is not connected to a network.</B></span>")
+		return
+	if(!check_occupant_allowed(target))
+		return
+	user.visible_message("<span class='notice'>\The [user] begins placing \the [target] into \the [src].</span>", "<span class='notice'>You start placing \the [target] into \the [src].</span>")
+	if(!do_after(user, 30, src))
+		return
+	if(src.occupant)
+		to_chat(usr, "<span class='notice'><B>\The [src] is in use.</B></span>")
+		return
+	target.stop_pulling()
+	target.client.perspective = EYE_PERSPECTIVE
+	target.client.eye = src
+	target.forceMove(src)
+	set_occupant(target)
+	icon_state = occupied_icon_state
+	target.spawn_loc = req_access_faction
+	to_chat(target, "<span class='notice'>[on_enter_occupant_message]</span>")
+	to_chat(target, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
+	time_entered = world.time
+	src.add_fingerprint(user)
+	
+	
+	
 /obj/machinery/cryopod/Topic(href, href_list)
 	if((. = ..()))
 		return
@@ -289,7 +326,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	visible_message("<span class='notice'>\The [initial(name)] hums and hisses as it moves [occupant.real_name] into storage.</span>", 3)
 	GLOB.all_cryo_mobs |= occupant
 	set_occupant(null)
-
+	icon_state = base_icon_state
 
 /obj/machinery/cryopod/attackby(var/obj/item/weapon/G as obj, var/mob/user as mob)
 	if(isMultitool(G))
@@ -333,7 +370,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 			icon_state = occupied_icon_state
 
 			to_chat(M, "<span class='notice'>[on_enter_occupant_message]</span>")
-			to_chat(M, "<span class='notice'><b>If you ghost, log out or close your client now, your character will shortly be saved and removed from the round.</b></span>")
+			to_chat(M, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
 			set_occupant(M)
 			time_entered = world.time
 			var/turf/location = get_turf(src)
@@ -423,7 +460,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		icon_state = occupied_icon_state
 
 		to_chat(usr, "<span class='notice'>[on_enter_occupant_message]</span>")
-		to_chat(usr, "<span class='notice'><b>If you ghost, log out or close your client now, your character will shortly be saved and removed from the round.</b></span>")
+		to_chat(usr, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
 
 		time_entered = world.time
 
@@ -470,7 +507,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		icon_state = occupied_icon_state
 		usr.spawn_loc = req_access_faction
 		to_chat(usr, "<span class='notice'>[on_enter_occupant_message]</span>")
-		to_chat(usr, "<span class='notice'><b>If you ghost, log out or close your client now, your character will shortly be saved and removed from the round.</b></span>")
+		to_chat(usr, "<span class='notice'>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
 
 		time_entered = world.time
 

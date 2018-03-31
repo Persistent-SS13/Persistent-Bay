@@ -33,6 +33,7 @@
 
 /obj/machinery/chem_master/New()
 	..()
+	reagents = new()
 	component_parts = list()
 	component_parts += new /obj/item/weapon/circuitboard/chem_master(null)
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(null)
@@ -237,6 +238,8 @@
 	return src.attack_hand(user)
 
 /obj/machinery/chem_master/attack_hand(mob/user as mob)
+	if(!reagents)
+		reagents = new()
 	if(inoperable())
 		return
 	user.set_machine(src)

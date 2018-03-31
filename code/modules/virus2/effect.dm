@@ -191,13 +191,14 @@
 	multiplier_max = 3
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		shake_camera(mob,5*multiplier)
-
+/**
 /datum/disease2/effect/telepathic
 	name = "Telepathy Syndrome"
 	stage = 3
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		mob.dna.SetSEState(GLOB.REMOTETALKBLOCK,1)
 		domutcheck(mob, null, MUTCHK_FORCED)
+**/
 /**
 /datum/disease2/effect/mind
 	name = "Lazy Mind Syndrome"

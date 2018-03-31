@@ -87,18 +87,18 @@
 
 
 	access = list(access_security, access_brig, access_armory, access_forensics_lockers,
-			            access_medical, access_morgue, access_engine, access_engine_equip, access_maint_tunnels, access_external_airlocks, access_emergency_storage,
+			            access_medical, access_morgue, access_engine, core_access_engineering_programs, access_maint_tunnels, access_external_airlocks, access_emergency_storage,
 			            access_change_ids, access_ai_upload, access_teleporter, access_eva, access_heads,
-			            access_all_personal_lockers, access_chapel_office, access_tech_storage, access_atmospherics, access_bar, access_janitor, access_crematorium, access_robotics,
+			            access_all_personal_lockers, access_chapel_office, access_tech_storage, core_access_engineering_programs, access_bar, access_janitor, access_crematorium, access_robotics,
 			            access_kitchen, access_cargo, access_construction, access_chemistry, access_cargo_bot, access_hydroponics, access_library, access_virology,
 			            access_cmo, access_qm, access_network, access_surgery, access_mailsorting, access_heads_vault, access_ce,
 			            access_hop, access_hos, access_RC_announce, access_keycard_auth, access_tcomsat, access_gateway, access_sec_doors, access_psychiatrist,
 			            access_medical_equip, access_solgov_crew, access_robotics_engineering, access_emergency_armory, access_gun, access_expedition_shuttle, access_guppy,
 			            access_seneng, access_senmed, access_senadv, access_hangar, access_guppy_helm, access_expedition_shuttle_helm, access_aquila, access_aquila_helm, access_explorer, access_pathfinder)
 	minimal_access = list(access_security, access_brig, access_armory, access_forensics_lockers,
-			            access_medical, access_morgue, access_engine, access_engine_equip, access_maint_tunnels, access_external_airlocks, access_emergency_storage,
+			            access_medical, access_morgue, access_engine, core_access_engineering_programs, access_maint_tunnels, access_external_airlocks, access_emergency_storage,
 			            access_change_ids, access_ai_upload, access_teleporter, access_eva, access_heads,
-			            access_all_personal_lockers, access_chapel_office, access_tech_storage, access_atmospherics, access_bar, access_janitor, access_crematorium,
+			            access_all_personal_lockers, access_chapel_office, access_tech_storage, core_access_engineering_programs, access_bar, access_janitor, access_crematorium,
 			            access_kitchen, access_cargo, access_construction, access_chemistry, access_cargo_bot, access_hydroponics, access_library, access_virology,
 			            access_cmo, access_qm, access_network, access_surgery, access_mailsorting, access_heads_vault, access_ce,
 			            access_hop, access_hos, access_RC_announce, access_keycard_auth, access_tcomsat, access_gateway, access_sec_doors, access_psychiatrist,
@@ -183,14 +183,14 @@
 		/datum/mil_rank/marine/o1
 	)
 
-	access = list(access_engine, access_engine_equip, access_maint_tunnels, access_external_airlocks, access_emergency_storage,
+	access = list(access_engine, core_access_engineering_programs, access_maint_tunnels, access_external_airlocks, access_emergency_storage,
 			            access_ai_upload, access_teleporter, access_eva, access_heads,
-			            access_tech_storage, access_robotics, access_atmospherics, access_janitor, access_construction,
+			            access_tech_storage, access_robotics, core_access_engineering_programs, access_janitor, access_construction,
 			            access_network, access_ce, access_RC_announce, access_keycard_auth, access_tcomsat,
 			            access_solgov_crew, access_robotics_engineering, access_seneng, access_hangar, access_robotics)
-	minimal_access = list(access_engine, access_engine_equip, access_maint_tunnels, access_external_airlocks, access_emergency_storage,
+	minimal_access = list(access_engine, core_access_engineering_programs, access_maint_tunnels, access_external_airlocks, access_emergency_storage,
 			            access_ai_upload, access_teleporter, access_eva, access_heads,
-			            access_tech_storage, access_atmospherics, access_janitor, access_construction,
+			            access_tech_storage, core_access_engineering_programs, access_janitor, access_construction,
 			            access_network, access_ce, access_RC_announce, access_keycard_auth, access_tcomsat,
 			            access_solgov_crew, access_robotics_engineering, access_seneng, access_hangar, access_robotics)
 
@@ -445,8 +445,8 @@
 		/datum/mil_rank/marine/e5
 	)
 
-	access = list(access_engine, access_engine_equip, access_maint_tunnels, access_external_airlocks, access_emergency_storage,
-			            access_teleporter, access_eva, access_tech_storage, access_atmospherics, access_janitor, access_construction,
+	access = list(access_engine, core_access_engineering_programs, access_maint_tunnels, access_external_airlocks, access_emergency_storage,
+			            access_teleporter, access_eva, access_tech_storage, core_access_engineering_programs, access_janitor, access_construction,
 			            access_tcomsat, access_solgov_crew, access_seneng)
 
 	software_on_spawn = list(/datum/computer_file/program/power_monitor,
@@ -491,8 +491,8 @@
 		/datum/mil_rank/marine/e2
 	)
 
-	access = list(access_engine, access_engine_equip, access_maint_tunnels, access_external_airlocks, access_emergency_storage,
-			            access_teleporter, access_eva, access_tech_storage, access_atmospherics, access_janitor, access_construction,
+	access = list(access_engine, core_access_engineering_programs, access_maint_tunnels, access_external_airlocks, access_emergency_storage,
+			            access_teleporter, access_eva, access_tech_storage, core_access_engineering_programs, access_janitor, access_construction,
 			            access_solgov_crew)
 	minimal_access = list()
 
@@ -521,8 +521,8 @@
 	allowed_branches = list(/datum/mil_branch/civilian)
 	allowed_ranks = list(/datum/mil_rank/civ/contractor)
 
-	access = list(access_engine, access_engine_equip, access_maint_tunnels, access_external_airlocks, access_emergency_storage,
-			            access_teleporter, access_eva, access_tech_storage, access_atmospherics, access_janitor, access_construction,
+	access = list(access_engine, core_access_engineering_programs, access_maint_tunnels, access_external_airlocks, access_emergency_storage,
+			            access_teleporter, access_eva, access_tech_storage, core_access_engineering_programs, access_janitor, access_construction,
 			            access_solgov_crew)
 
 	software_on_spawn = list(/datum/computer_file/program/power_monitor,

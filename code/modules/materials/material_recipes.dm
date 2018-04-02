@@ -30,38 +30,22 @@
 
 /material/steel/generate_recipes()
 	..()
-	recipes += new/datum/stack_recipe_list("office chairs",list( \
-		new/datum/stack_recipe("dark office chair", /obj/structure/bed/chair/office/dark, 5, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("light office chair", /obj/structure/bed/chair/office/light, 5, one_per_turf = 1, on_floor = 1) \
-		))
-	recipes += new/datum/stack_recipe_list("comfy chairs", list( \
-		new/datum/stack_recipe("beige comfy chair", /obj/structure/bed/chair/comfy/beige, 2, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("black comfy chair", /obj/structure/bed/chair/comfy/black, 2, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("brown comfy chair", /obj/structure/bed/chair/comfy/brown, 2, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("lime comfy chair", /obj/structure/bed/chair/comfy/lime, 2, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("teal comfy chair", /obj/structure/bed/chair/comfy/teal, 2, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("red comfy chair", /obj/structure/bed/chair/comfy/red, 2, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("blue comfy chair", /obj/structure/bed/chair/comfy/blue, 2, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("purple comfy chair", /obj/structure/bed/chair/comfy/purp, 2, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("green comfy chair", /obj/structure/bed/chair/comfy/green, 2, one_per_turf = 1, on_floor = 1), \
-		))
-	recipes += new/datum/stack_recipe("key", /obj/item/weapon/key, 1, time = 10)
-	recipes += new/datum/stack_recipe("table frame", /obj/structure/table, 1, time = 10, one_per_turf = 1, on_floor = 1)
-	recipes += new/datum/stack_recipe("rack", /obj/structure/table/rack, 1, time = 5, one_per_turf = 1, on_floor = 1)
-	recipes += new/datum/stack_recipe("weight lifter", /obj/structure/fitness/weightlifter, 4, time = 50, one_per_turf = 1, on_floor = 1)
-	recipes += new/datum/stack_recipe("closet", /obj/structure/closet, 2, time = 15, one_per_turf = 1, on_floor = 1)
-	recipes += new/datum/stack_recipe("canister", /obj/machinery/portable_atmospherics/canister, 10, time = 15, one_per_turf = 1, on_floor = 1)
-	recipes += new/datum/stack_recipe("cannon frame", /obj/item/weapon/cannonframe, 10, time = 15, one_per_turf = 0, on_floor = 0)
-	recipes += new/datum/stack_recipe("regular floor tile", /obj/item/stack/tile/floor, 1, 4, 20)
-	recipes += new/datum/stack_recipe("metal rod", /obj/item/stack/rods, 1, 2, 60)
-	recipes += new/datum/stack_recipe("computer frame", /obj/structure/computerframe, 5, time = 25, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("wall girders", /obj/structure/girder, 2, time = 50, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("metal rod", /obj/item/stack/rods, 1, 2, 60)
+	recipes += new/datum/stack_recipe("regular floor tile", /obj/item/stack/tile/floor, 1, 4, 20)
 	recipes += new/datum/stack_recipe("machine frame", /obj/machinery/constructable_frame/machine_frame, 5, time = 25, one_per_turf = 1, on_floor = 1)
-	recipes += new/datum/stack_recipe_list("conveyor belts", list( \
-		new/datum/stack_recipe("conveyor belt assembly", /obj/item/conveyor_construct, 3, time = 15, one_per_turf = 1, on_floor =1), \
-		new/datum/stack_recipe("conveyor belt switch", /obj/item/conveyor_switch_construct, 1, time = 5, one_per_turf = 1, on_floor =1), \
-		))
+	recipes += new/datum/stack_recipe("computer frame", /obj/structure/computerframe, 5, time = 25, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("turret frame", /obj/machinery/porta_turret_construct, 5, time = 25, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe_list("wall-mounted frames", list( \
+		new/datum/stack_recipe("apc frame", /obj/item/frame/apc, 2),\
+		new/datum/stack_recipe("air alarm frame", /obj/item/frame/air_alarm, 2),\
+		new/datum/stack_recipe("fire alarm frame", /obj/item/frame/fire_alarm, 2),\
+		new/datum/stack_recipe("ATM", /obj/item/frame/atm, 2),\
+		new/datum/stack_recipe("intercom frame", /obj/item/frame/intercom, 2),\
+		new/datum/stack_recipe("light switch frame", /obj/item/frame/light_switch, 1),\
+		))
+	recipes += new/datum/stack_recipe("light fixture frame", /obj/item/frame/light, 2)
+	recipes += new/datum/stack_recipe("small light fixture frame", /obj/item/frame/light/small, 1)
 	recipes += new/datum/stack_recipe_list("airlock assemblies", list( \
 		new/datum/stack_recipe("standard airlock assembly", /obj/structure/door_assembly, 4, time = 50, one_per_turf = 1, on_floor = 1), \
 		new/datum/stack_recipe("command airlock assembly", /obj/structure/door_assembly/door_assembly_com, 4, time = 50, one_per_turf = 1, on_floor = 1), \
@@ -84,22 +68,40 @@
 		new/datum/stack_recipe("keypad airlock assembly", /obj/structure/door_assembly/door_assembly_keyp, 4, time = 50, one_per_turf = 1, on_floor = 1),
 
 		))
-
-	recipes += new/datum/stack_recipe("grenade casing", /obj/item/weapon/grenade/chem_grenade)
-	recipes += new/datum/stack_recipe("light fixture frame", /obj/item/frame/light, 2)
-	recipes += new/datum/stack_recipe("small light fixture frame", /obj/item/frame/light/small, 1)
-	recipes += new/datum/stack_recipe("light switch frame", /obj/item/frame/light_switch, 1)
-	recipes += new/datum/stack_recipe("apc frame", /obj/item/frame/apc, 2)
-	recipes += new/datum/stack_recipe("air alarm frame", /obj/item/frame/air_alarm, 2)
-	recipes += new/datum/stack_recipe("fire alarm frame", /obj/item/frame/fire_alarm, 2)
-	recipes += new/datum/stack_recipe("ATM", /obj/item/frame/atm, 2)
-	recipes += new/datum/stack_recipe("intercom frame", /obj/item/frame/intercom, 2)
 	recipes += new/datum/stack_recipe_list("modular computer frames", list( \
 		new/datum/stack_recipe("modular console frame", /obj/item/modular_computer/console, 20),\
 		new/datum/stack_recipe("modular telescreen frame", /obj/item/modular_computer/telescreen, 10),\
 		new/datum/stack_recipe("modular laptop frame", /obj/item/modular_computer/laptop, 10),\
 		new/datum/stack_recipe("modular tablet frame", /obj/item/modular_computer/tablet, 5),\
 	))
+	recipes += new/datum/stack_recipe_list("conveyor belts", list( \
+		new/datum/stack_recipe("conveyor belt assembly", /obj/item/conveyor_construct, 3, time = 15, one_per_turf = 1, on_floor =1), \
+		new/datum/stack_recipe("conveyor belt switch", /obj/item/conveyor_switch_construct, 1, time = 5, one_per_turf = 1, on_floor =1), \
+		))
+	recipes += new/datum/stack_recipe("air tank dispenser", /obj/structure/dispenser, 5, time = 25, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("grenade casing", /obj/item/weapon/grenade/chem_grenade)
+	recipes += new/datum/stack_recipe_list("office chairs",list( \
+		new/datum/stack_recipe("dark office chair", /obj/structure/bed/chair/office/dark, 5, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("light office chair", /obj/structure/bed/chair/office/light, 5, one_per_turf = 1, on_floor = 1) \
+		))
+	recipes += new/datum/stack_recipe_list("comfy chairs", list( \
+		new/datum/stack_recipe("beige comfy chair", /obj/structure/bed/chair/comfy/beige, 2, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("black comfy chair", /obj/structure/bed/chair/comfy/black, 2, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("brown comfy chair", /obj/structure/bed/chair/comfy/brown, 2, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("lime comfy chair", /obj/structure/bed/chair/comfy/lime, 2, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("teal comfy chair", /obj/structure/bed/chair/comfy/teal, 2, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("red comfy chair", /obj/structure/bed/chair/comfy/red, 2, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("blue comfy chair", /obj/structure/bed/chair/comfy/blue, 2, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("purple comfy chair", /obj/structure/bed/chair/comfy/purp, 2, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("green comfy chair", /obj/structure/bed/chair/comfy/green, 2, one_per_turf = 1, on_floor = 1), \
+		))
+	recipes += new/datum/stack_recipe("key", /obj/item/weapon/key, 1, time = 10)
+	recipes += new/datum/stack_recipe("table frame", /obj/structure/table, 1, time = 10, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("rack", /obj/structure/table/rack, 1, time = 5, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("weight lifter", /obj/structure/fitness/weightlifter, 4, time = 50, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("closet", /obj/structure/closet, 2, time = 15, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("canister", /obj/machinery/portable_atmospherics/canister, 10, time = 15, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("cannon frame", /obj/item/weapon/cannonframe, 10, time = 15, one_per_turf = 0, on_floor = 0)
 /material/plasteel/generate_recipes()
 	..()
 	recipes += new/datum/stack_recipe("Bar Sign Frame", /obj/item/frame/barsign, 4, time = 50, one_per_turf = 1)

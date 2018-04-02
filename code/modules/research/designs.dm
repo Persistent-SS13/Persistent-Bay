@@ -1428,7 +1428,7 @@ CIRCUITS BELOW
 /datum/design/circuit/chem_dispenser
 	name = "Portable Chem Dispenser"
 	id = "chem_dispenser"
-	req_tech = list(TECH_MATERIAL = 3, TECH_BIO = 3, TECH_PHORON = 3, TECH_ENGINEERING = 3, TECH_DATA = 4)
+	req_tech = list(TECH_DATA = 3, TECH_BIO = 2, TECH_ENGINEERING = 3)
 	build_path = /obj/item/weapon/circuitboard/chem_dispenser
 	sort_string = "ZZZZY"
 /datum/design/circuit/reagentgrinder
@@ -1440,7 +1440,7 @@ CIRCUITS BELOW
 /datum/design/circuit/chem_master
 	name = "Chem Master"
 	id = "chem_master"
-	req_tech = list(TECH_MATERIAL = 2, TECH_BIO = 1, TECH_DATA = 1)
+	req_tech = list(TECH_MATERIAL = 2, TECH_DATA = 3, TECH_BIO = 2, TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/chem_master
 	sort_string = "ZZZZW"
 /datum/design/circuit/botany_extractor
@@ -1581,19 +1581,19 @@ CIRCUITS BELOW
 	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/recycler
 	sort_string = "ZZZYY"
-/*
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
+/datum/design/circuit/microscope
+	name = "Microscope"
+	id = "microscope"
+	origin_tech = list(TECH_DATA = 2, TECH_BIO = 3, TECH_ENGINEERING = 3)
+	build_path = /obj/item/weapon/circuitboard/microscope
 	sort_string = "ZZZYX"
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
+/datum/design/circuit/dnaforensics
+	name = "DNA Analyzer"
+	id = "dnaforensics"
+	origin_tech = list(TECH_DATA = 2, TECH_BIO = 3, TECH_ENGINEERING = 3)
+	build_path = /obj/item/weapon/circuitboard/dnaforensics
 	sort_string = "ZZZYW"
+/*
 /datum/design/circuit/
 	name = ""
 	id = ""

@@ -176,9 +176,7 @@ var/global/list/zones_to_save = list()
 	for(var/ind in 1 to loading.len)
 		var/variable = loading[ind]
 		if(f.dir.Find("[variable]"))
-			try
-				f["[variable]"] >> vars[variable]
-			catch
+			f["[variable]"] >> vars[variable]
 
 /turf/StandardRead(var/savefile/f)
 	map_storage_loaded = 1
@@ -318,7 +316,7 @@ var/global/list/zones_to_save = list()
 		for(var/ind in 1 to Z.turf_coords.len)
 			var/list/coords = Z.turf_coords[ind]
 			var/turf/simulated/T = locate(text2num(coords[1]),text2num(coords[2]),text2num(coords[3]))
-			if(!T)
+			if(!T || !istype(T))
 				message_admins("No turf found for zone load")
 			T.zone = Z
 			Z.contents |= T

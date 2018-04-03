@@ -43,7 +43,7 @@
 
 /obj/structure/closet/secure_closet/RD
 	name = "research director's locker"
-	req_access = list(access_rd)
+	req_access = list(core_access_science_programs)
 	icon_state = "rdsecure1"
 	icon_closed = "rdsecure"
 	icon_locked = "rdsecure1"

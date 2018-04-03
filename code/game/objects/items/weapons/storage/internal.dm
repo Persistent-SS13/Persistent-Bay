@@ -104,7 +104,14 @@
 	if(master_item)
 		loc = master_item
 		name = master_item.name
-		master_item.pockets = src
+		if(istype(loc, /obj/item/clothing/suit/storage))
+			var/obj/item/clothing/suit/storage/coat = loc
+			if(coat)
+				coat.pockets = src
+		if(istype(loc, /obj/item/clothing/accessory/storage))
+			var/obj/item/clothing/accessory/storage/web = loc
+			if(web)
+				web.hold = src
 		..()
 /obj/item/weapon/storage/internal/pouch/New(var/newloc, var/storage_space)
 	max_storage_space = storage_space

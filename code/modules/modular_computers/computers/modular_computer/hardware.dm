@@ -105,6 +105,12 @@
 	if(tesla_link == H)
 		tesla_link = null
 		found = 1
+	if(dna_scanner == H)
+		dna_scanner = null
+		found = 1
+	if(logistic_processor == H)
+		logistic_processor = null
+		found = 1
 	if(found)
 		if(user)
 			to_chat(user, "You remove \the [H] from \the [src].")

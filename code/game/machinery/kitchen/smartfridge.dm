@@ -140,7 +140,7 @@
 	icon_off = "drying_rack"
 
 /obj/machinery/smartfridge/drying_rack/accept_check(var/obj/item/O as obj)
-	if(istype(O, /obj/item/weapon/reagent_containers/food/snacks/))
+	if(istype(O, /obj/item/weapon/reagent_containers/food/snacks))
 		var/obj/item/weapon/reagent_containers/food/snacks/S = O
 		if (S.dried_type)
 			return 1

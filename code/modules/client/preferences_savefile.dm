@@ -149,6 +149,7 @@
 				stack.try_connect()
 	mannequin.spawn_loc = faction_uid
 	mannequin.spawn_type = 2
+	mannequin.species.equip_survival_gear(mannequin)
 	mannequin.equip_to_slot_or_del(new /obj/item/clothing/shoes/black(mannequin),slot_shoes)
 	S << mannequin
 	character_list = list()

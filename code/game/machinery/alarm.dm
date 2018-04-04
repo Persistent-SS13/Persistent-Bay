@@ -98,7 +98,7 @@
 
 /obj/machinery/alarm/server/New()
 	..()
-	req_access = list(access_rd, core_access_engineering_programs, core_access_engineering_programs)
+	req_access = list(core_access_science_programs, core_access_engineering_programs, core_access_engineering_programs)
 	TLV["temperature"] =	list(T0C-26, T0C, T0C+30, T0C+40) // K
 	target_temperature = T0C+10
 

@@ -82,6 +82,7 @@
 				T.resources["phoron"] =   rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
 				T.resources["osmium"] =   rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
 				T.resources["hydrogen"] = rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
+				T.resources["bluespace crystal"] = rand(0,1)
 				T.resources["iron"] =     0
 				T.resources["gold"] =     0
 				T.resources["silver"] =   0

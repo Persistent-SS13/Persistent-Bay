@@ -153,6 +153,8 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	accesses["6"] = "Networking Programs"
 	accesses["7"] = "Lock Electronics"
 	accesses["8"] = "Import/Export Approval"
+	accesses["9"] = "Science Machinery & Programs"
+	
 /obj/faction_spawner
 	name = "Name to start faction with"
 	var/name_short = "Faction Abbreviation"

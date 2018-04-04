@@ -292,6 +292,10 @@
 			if(computer && can_run(user, 1))
 				module.record.terminated = 1
 				update_ids(module.record.get_name())
+		if("unterminate")
+			if(computer && can_run(user, 1))
+				module.record.terminated = 0
+				update_ids(module.record.get_name())
 		if("assign")
 			if(computer && can_run(user, 1))
 				var/t1 = href_list["assign_target"]

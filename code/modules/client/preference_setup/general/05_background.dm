@@ -88,7 +88,7 @@
 		return TOPIC_REFRESH
 
 	else if(href_list["faction"])
-		var/list/joinable = list("Nanotrasen") //, "Refugees", "Entrepreneur")
+		var/list/joinable = list("Nanotrasen", "Refugees", "Entrepreneur")
 		var/choice = input(user, "Please choose a reason for coming to the frontier", "Character Preference", pref.faction) as null|anything in joinable
 		if(choice)
 			pref.faction = choice

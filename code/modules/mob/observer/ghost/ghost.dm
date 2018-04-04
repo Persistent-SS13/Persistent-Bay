@@ -144,14 +144,15 @@ Works together with spawning an observer, noted above.
 		if(G.admin_ghosted)
 			return
 	if(key)
-		hide_fullscreens()
-		var/mob/observer/ghost/ghost = new(src)	//Transfer safety to observer spawning proc.
-		ghost.can_reenter_corpse = can_reenter_corpse
-		ghost.timeofdeath = src.stat == DEAD ? src.timeofdeath : world.time
-		ghost.key = key
-		if(ghost.client && !ghost.client.holder && !config.antag_hud_allowed)		// For new ghosts we remove the verb from even showing up if it's not allowed.
-			ghost.verbs -= /mob/observer/ghost/verb/toggle_antagHUD	// Poor guys, don't know what they are missing!
-		return ghost
+		if(check_rights(R_ADMIN, 0, src))
+			hide_fullscreens()
+			var/mob/observer/ghost/ghost = new(src)	//Transfer safety to observer spawning proc.
+			ghost.can_reenter_corpse = can_reenter_corpse
+			ghost.timeofdeath = src.stat == DEAD ? src.timeofdeath : world.time
+			ghost.key = key
+			if(ghost.client && !ghost.client.holder && !config.antag_hud_allowed)		// For new ghosts we remove the verb from even showing up if it's not allowed.
+				ghost.verbs -= /mob/observer/ghost/verb/toggle_antagHUD	// Poor guys, don't know what they are missing!
+			return ghost
 
 /*
 This is the proc mobs get to turn into a ghost. Forked from ghostize due to compatibility issues.
@@ -161,6 +162,8 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	set name = "Ghost"
 	set desc = "Relinquish your life and enter the land of the dead."
 
+	to_chat(src, "This verb has been disabled for persistence.")
+	return
 	if(stat == DEAD)
 		announce_ghost_joinleave(ghostize(1))
 	else

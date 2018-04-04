@@ -98,11 +98,10 @@ var/list/point_source_descriptions = list(
 		playsound(crate.loc,'sound/effects/teleport.ogg',40,1)
 		qdel(crate)
 		supplied += filled
-		if(supplied >= required)
-			supply_controller.close_order(src)
-		return filled*rate
-	message_admins("fill failed due to no objects found")
-	return 0
+		. = filled*rate
+		spawn(10)
+			if(supplied >= required)
+				supply_controller.close_order(src)
 		
 /datum/export_order/stack
 	
@@ -140,10 +139,10 @@ var/list/point_source_descriptions = list(
 		playsound(crate.loc,'sound/effects/teleport.ogg',40,1)
 		qdel(crate)
 		supplied += filled
-		if(supplied >= required)
-			supply_controller.close_order(src)
-		return filled*rate
-	return 0
+		. = filled*rate
+		spawn(10)
+			if(supplied >= required)
+				supply_controller.close_order(src)
 /datum/controller/supply
 	//supply points
 	var/points = 50

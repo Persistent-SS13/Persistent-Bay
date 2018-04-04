@@ -34,7 +34,13 @@
 	var/const/deffont = "Verdana"
 	var/const/signfont = "Times New Roman"
 	var/const/crayonfont = "Comic Sans MS"
+/obj/item/weapon/paper/Write(savefile/f)
+	info_links = replacetext(info_links,"\ref[src]","***MY_REF***")
+	
+	StandardWrite(f)
 
+/obj/item/weapon/paper/after_load()
+	info_links = replacetext(info_links,"***MY_REF***","\ref[src]")
 /obj/item/weapon/paper/New(loc, text,title)
 	..(loc)
 	set_content(text ? text : info, title)

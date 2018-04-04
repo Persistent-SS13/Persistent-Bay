@@ -16,7 +16,7 @@
 		if(NETWORK_MINE)
 			return access_mailsorting // Cargo office - all cargo staff should have access here.
 		if(NETWORK_RESEARCH)
-			return access_research
+			return core_access_science_programs
 		if(NETWORK_THUNDER)
 			return 0
 

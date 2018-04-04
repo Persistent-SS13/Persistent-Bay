@@ -313,8 +313,8 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 /obj/machinery/cryopod/proc/despawn_occupant()
 	occupant.loc = null
 	var/mob/new_player/M = new /mob/new_player()
+	M.loc = locate(100,100,28)
 	occupant.stored_ckey = occupant.ckey
-	M.loc = null
 	M.key = occupant.key
 	var/role_alt_title = occupant.mind ? occupant.mind.role_alt_title : "Unknown"
 	if(control_computer)

@@ -1774,6 +1774,14 @@ CIRCUITS BELOW
 	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 3, TECH_BLUESPACE = 2)
 	build_path = /obj/item/weapon/circuitboard/telecomms/receiver
 	sort_string = "PAAAG"
+	
+/datum/design/circuit/bluespace_satellite
+	name = "bluespace satellite"
+	id = "bluespace-satellite"
+	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 4, TECH_BLUESPACE = 3)
+	build_path = /obj/item/weapon/circuitboard/bluespace_satellite
+	sort_string = "PAAAH"
+
 
 /datum/design/circuit/shield_generator
 	name = "Shield Generator"

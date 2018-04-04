@@ -3,6 +3,14 @@
 	sleep(10)
 	internal_organs_by_name[BP_STACK] = new /obj/item/organ/internal/stack(src,1)
 	to_chat(src, "<span class='notice'>You feel a faint sense of vertigo as your neural lace boots.</span>")
+/obj/item/organ/internal/stack/examine(mob/user) // -- TLE
+	. = ..(user)
+	if(lacemob && lacemob.key)//if thar be a brain inside... the brain.
+		to_chat(user, "This one looks occupied and ready for cloning, the conciousness clearly present and active.")
+	else if(lacemob && lacemob.stored_ckey)
+		to_chat(user, "This one appears inactive, the conciousness is resting and the transfer cannot complete until it 'wakes'.")
+	else 
+		to_chat(user, "This one seems particularly lifeless. Perhaps it will regain some of its luster later..")
 
 /obj/item/organ/internal/stack
 	name = "neural lace"
@@ -24,14 +32,32 @@
 	var/connected_faction = ""
 	var/duty_status = 0
 	var/datum/world_faction/faction
-	
+	var/mob/living/carbon/lace/lacemob
+	var/sensor = 0
+/obj/item/organ/internal/stack/proc/transfer_identity(var/mob/living/carbon/H)
+
+	if(!lacemob)
+		lacemob = new(src)
+		lacemob.name = H.real_name
+		lacemob.real_name = H.real_name
+		lacemob.dna = H.dna.Clone()
+		lacemob.timeofhostdeath = H.timeofdeath
+		lacemob.container = src
+		lacemob.spawn_loc = H.spawn_loc
+	if(H.mind)
+		H.mind.transfer_to(lacemob)
+
+	to_chat(lacemob, "<span class='notice'>You feel slightly disoriented. Your conciousness suddenly shifts into a neural lace.</span>")
+
 /obj/item/organ/internal/stack/proc/get_owner_name()
 	if(!owner) return 0
 	return owner.real_name
-	
+
 /obj/item/organ/internal/stack/ui_action_click()
 	if(!owner) return
 	ui_interact(owner)
+/obj/item/organ/internal/stack/proc/ui_mobaction_click()
+	ui_interact(lacemob)
 /obj/item/organ/internal/stack/Topic(href, href_list)
 	switch (href_list["action"])
 		if("off_duty")
@@ -51,11 +77,23 @@
 			if(!faction) return 0
 			connected_faction = faction.uid
 			try_connect()
-		
+		if("sensor_off")
+			sensor = 0
+		if("sensor_on")
+			sensor = 1
+		if("logoff")
+			var/mob/new_player/M = new /mob/new_player()
+			M.loc = locate(100,100,28)
+			lacemob.stored_ckey = lacemob.ckey
+			M.key = lacemob.key
 	GLOB.nanomanager.update_uis(src)
+
 /obj/item/organ/internal/stack/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data = list()
 	try_connect()
+	if(lacemob)
+		data["lacemob"] = 1
+		data["sensor"] = sensor
 	if(faction)
 		data["faction_name"] = faction.name
 		if(duty_status == 1)
@@ -74,13 +112,13 @@
 		ui = new(user, src, ui_key, "lace.tmpl", "[name] UI", 550, 450, state = state)
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
-		ui.open()	
+		ui.open()
 /obj/item/organ/internal/stack/proc/get_potential()
 	if(!owner) return list()
 	var/list/potential[0]
 	for(var/datum/world_faction/fact in GLOB.all_world_factions)
 		var/datum/computer_file/crew_record/record = fact.get_record(owner.real_name)
-		if(record) 
+		if(record)
 			potential |= fact
 		else
 			message_admins("record not found for [fact.name] [owner.real_name]")
@@ -146,18 +184,20 @@
 	return 	(!istype(backup) || backup == owner.mind || (backup.current && backup.current.stat != DEAD))
 
 /obj/item/organ/internal/stack/replaced()
-	if(!..()) 
+	if(!..())
 		message_admins("stack replace() failed")
 		return 0
 
+	if(lacemob)
+		overwrite()
+		return 1
 	if(owner && !backup_inviable())
 		var/current_owner = owner
 		var/response = input(find_dead_player(ownerckey, 1), "Your neural backup has been placed into a new body. Do you wish to return to life?", "Resleeving") as anything in list("Yes", "No")
 		if(src && response == "Yes" && owner == current_owner)
 			overwrite()
-	else
-		message_admins("stack backup_inviable failed")
 	sleep(-1)
+
 	do_backup()
 
 	return 1

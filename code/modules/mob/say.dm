@@ -69,7 +69,7 @@
 	var/verb = pick(speak_emote)
 	if(verb == "says") //a little bit of a hack, but we can't let speak_emote default to an empty list without breaking other things
 		if(ending == "!")
-			verb = pick("exclaims","shouts","yells")
+			verb = "exclaims"//pick("exclaims","shouts","yells")
 		else if(ending == "?")
 			verb ="asks"
 	return verb

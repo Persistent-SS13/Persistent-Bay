@@ -13,7 +13,7 @@
 /obj/machinery/computer/shuttle_control/research
 	name = "research shuttle control console"
 	shuttle_tag = "Research"
-	//req_access = list(access_research)
+	//req_access = list(core_access_science_programs)
 	circuit = /obj/item/weapon/circuitboard/research_shuttle
 
 /obj/machinery/computer/shuttle_control/merchant

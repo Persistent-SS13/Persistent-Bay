@@ -87,8 +87,8 @@
 	spawn_positions = 1
 	supervisors = "the head of personnel"
 	selection_color = "#515151"
-	access = list(access_janitor, access_maint_tunnels, access_engine, access_research, access_sec_doors, access_medical)
-	minimal_access = list(access_janitor, access_maint_tunnels, access_engine, access_research, access_sec_doors, access_medical)
+	access = list(access_janitor, access_maint_tunnels, access_engine, core_access_science_programs, access_sec_doors, access_medical)
+	minimal_access = list(access_janitor, access_maint_tunnels, access_engine, core_access_science_programs, access_sec_doors, access_medical)
 	alt_titles = list("Custodian","Sanitation Technician")
 	outfit_type = /decl/hierarchy/outfit/job/service/janitor
 

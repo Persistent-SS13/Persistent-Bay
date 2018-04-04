@@ -3,7 +3,7 @@
 	icon_state = "bolt"
 	plane = EFFECTS_BELOW_LIGHTING_PLANE
 	layer = PROJECTILE_LAYER
-
+	should_save = 0
 /obj/effect/projectile/New(var/turf/location)
 	if(istype(location))
 		loc = location

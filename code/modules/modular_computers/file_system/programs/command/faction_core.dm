@@ -246,7 +246,7 @@
 			prior_menu = 3
 		if("change_name")
 			var/curr_name = connected_faction.name
-			var/select_name = sanitizeName(input(usr,"Enter the name of your orginization","Lognet Display Name", connected_faction.name) as null|text, MAX_NAME_LEN, 1, 0)
+			var/select_name = sanitizeName(input(usr,"Enter the name of your organization","Lognet Display Name", connected_faction.name) as null|text, MAX_NAME_LEN, 1, 0)
 			if(select_name)
 				if(curr_name != connected_faction.name)
 					to_chat(usr, "Your inputs expired because someone used the terminal first.")
@@ -259,7 +259,7 @@
 					to_chat(usr, "Lognet display name successfully changed.")
 		if("change_abbreviation")
 			var/curr_name = connected_faction.abbreviation
-			var/select_name = sanitizeName(input(usr,"Enter the abbreviation of your orginization","Lognet Abbreviation", connected_faction.abbreviation) as null|text, 20, 1, 0)
+			var/select_name = sanitizeName(input(usr,"Enter the abbreviation of your organization","Lognet Abbreviation", connected_faction.abbreviation) as null|text, 20, 1, 0)
 			if(select_name)
 				if(curr_name != connected_faction.abbreviation)
 					to_chat(usr, "Your inputs expired because someone used the terminal first.")
@@ -272,7 +272,7 @@
 					to_chat(usr, "Lognet abbreviation successfully changed.")
 		if("change_purpose")
 			var/curr_name = connected_faction.purpose
-			var/select_name = sanitize(input(usr,"Enter a description or purpose for your orginization.","Lognet Desc.", connected_faction.purpose) as null|text, 126)
+			var/select_name = sanitize(input(usr,"Enter a description or purpose for your organization.","Lognet Desc.", connected_faction.purpose) as null|text, 126)
 			if(select_name)
 				if(curr_name != connected_faction.purpose)
 					to_chat(usr, "Your inputs expired because someone used the terminal first.")

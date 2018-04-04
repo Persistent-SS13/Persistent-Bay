@@ -204,7 +204,7 @@ var/list/point_source_descriptions = list(
 	switch(typee)
 		if("manufacturing-basic")
 			var/datum/autolathe/recipe/recipe = pick(autolathe_recipes)
-			var/per = rand(1,3)
+			var/per = rand(5,10)
 			if(recipe.is_stack)
 				export = new /datum/export_order/stack()
 				export.required = rand(100,250)
@@ -213,7 +213,7 @@ var/list/point_source_descriptions = list(
 				export.required = rand(30, 100)
 				per += rand(5,10)
 			for(var/x in recipe.resources)
-				per += round(recipe.resources[x]/1000,0.01)
+				per += round(recipe.resources[x]/300,0.01)
 			export.typepath = recipe.path
 			export.rate = per
 			export.order_type = typee
@@ -239,12 +239,12 @@ var/list/point_source_descriptions = list(
 							restart = 1
 							design = pick(possible_designs)
 					if(!restart) valid = 1
-			export.required = rand(20, 60)
-			var/per = rand(10,30)
+			export.required = rand(30, 70)
+			var/per = rand(20,40)
 			for(var/x in design.materials)
-				per += round(design.materials[x]/1000,0.01)
+				per += round(design.materials[x]/150,0.01)
 			for(var/x in design.req_tech)
-				per += design.req_tech[x]*2
+				per += design.req_tech[x]*5
 			export.typepath = design.build_path
 			export.rate = per
 			export.order_type = typee
@@ -256,14 +256,12 @@ var/list/point_source_descriptions = list(
 		if("material")
 			export = new /datum/export_order/stack()
 			var/list/possible = list(
-								/obj/item/stack/material/diamond = 10,
-								/obj/item/stack/material/uranium = 10,
-								/obj/item/stack/material/gold = 10,
-								/obj/item/stack/material/platinum = 10,
-								/obj/item/stack/material/phoron = 20,
-								/obj/item/stack/material/tritium = 20,
-								/obj/item/stack/material/osmium = 20,
-								/obj/item/stack/material/deuterium = 20
+								/obj/item/stack/material/diamond = 30,
+								/obj/item/stack/material/uranium = 30,
+								/obj/item/stack/material/gold = 30,
+								/obj/item/stack/material/platinum = 30,
+								/obj/item/stack/material/phoron = 80,
+								/obj/item/stack/material/osmium = 50,
 								)
 			var/x = pick(possible)
 			var/per = possible[x]+rand(0,5)

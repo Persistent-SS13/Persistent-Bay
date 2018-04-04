@@ -1584,13 +1584,13 @@ CIRCUITS BELOW
 /datum/design/circuit/microscope
 	name = "Microscope"
 	id = "microscope"
-	origin_tech = list(TECH_DATA = 2, TECH_BIO = 3, TECH_ENGINEERING = 3)
+	req_tech = list(TECH_DATA = 2, TECH_BIO = 3, TECH_ENGINEERING = 3)
 	build_path = /obj/item/weapon/circuitboard/microscope
 	sort_string = "ZZZYX"
 /datum/design/circuit/dnaforensics
 	name = "DNA Analyzer"
 	id = "dnaforensics"
-	origin_tech = list(TECH_DATA = 2, TECH_BIO = 3, TECH_ENGINEERING = 3)
+	req_tech = list(TECH_DATA = 2, TECH_BIO = 3, TECH_ENGINEERING = 3)
 	build_path = /obj/item/weapon/circuitboard/dnaforensics
 	sort_string = "ZZZYW"
 /*

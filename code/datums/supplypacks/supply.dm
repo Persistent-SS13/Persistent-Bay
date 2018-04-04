@@ -120,7 +120,7 @@
 	num_contained = 10
 	supply_method = /decl/supply_method/randomized
 
-/decl/hierarchy/supply_pack/atmospherics/softsuits
+/decl/hierarchy/supply_pack/supply/softsuits
 	name = "EVA Softsuit w/ Small Airtank"
 	contains = list(/obj/item/weapon/tank/emergency/oxygen/engi,
 			 		/obj/item/clothing/suit/space,
@@ -129,7 +129,7 @@
 	cost = 30
 	containername = "\improper Softsuit crate"
 
-/decl/hierarchy/supply_pack/atmospherics/softsuits_bulk
+/decl/hierarchy/supply_pack/supply/softsuits_bulk
 	name = "Bulk Shipment of EVA Softsuits (x5) w/ Small Airtanks"
 	contains = list(/obj/item/weapon/tank/emergency/oxygen/engi = 5,
 			 		/obj/item/clothing/suit/space = 5,

@@ -13,7 +13,7 @@
 	name = T_BOARD("Booze-O-Mat Vendor")
 	build_path = /obj/machinery/vending/boozeomat
 	board_type = "machine"
-	origin_tech = "programming=1"
+	origin_tech = list(TECH_DATA = 1)
 	frame_desc = "Requires 3 Resupply Canisters."
 	req_components = list(
 							/obj/item/weapon/vending_refill/boozeomat = 3)
@@ -40,7 +40,7 @@
 	name = T_BOARD("Holopad")
 	build_path = /obj/machinery/hologram/holopad
 	board_type = "machine"
-	origin_tech = "programming=1"
+	origin_tech = list(TECH_DATA = 1)
 	req_components = list(
 							/obj/item/weapon/stock_parts/capacitor = 1,
 							/obj/item/weapon/stock_parts/scanning_module = 1)
@@ -49,7 +49,7 @@
 	name = T_BOARD("Long Range Holopad")
 	build_path = /obj/machinery/hologram/holopad/longrange
 	board_type = "machine"
-	origin_tech = "programming=1"
+	origin_tech = list(TECH_DATA = 1)
 	req_components = list(
 							/obj/item/weapon/stock_parts/capacitor = 1,
 							/obj/item/weapon/stock_parts/scanning_module = 1)
@@ -58,7 +58,7 @@
 	name = T_BOARD("All-in-one Grinder")
 	build_path = /obj/machinery/reagentgrinder
 	board_type = "machine"
-	origin_tech = "materials=2;engineering=1;biotech=1;"
+	origin_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 1, TECH_BIO = 1)
 	req_components = list(
 							/obj/item/weapon/stock_parts/matter_bin = 1,
 							/obj/item/weapon/stock_parts/capacitor = 1,
@@ -68,7 +68,7 @@
 	name = T_BOARD("photocopier")
 	build_path = /obj/machinery/photocopier/
 	board_type = "machine"
-	origin_tech = "materials=2;programming=2;biotech=1"
+	origin_tech = list(TECH_MATERIAL =1, TECH_DATA = 1)
 	req_components = list(
 							/obj/item/weapon/stock_parts/matter_bin = 2,
 							/obj/item/weapon/stock_parts/manipulator = 1,
@@ -77,7 +77,7 @@
 /obj/item/weapon/circuitboard/atm
 	name = T_BOARD("ATM")
 	build_path = /obj/machinery/atm
-	origin_tech = "engineering=1;programming=1"
+	origin_tech = list(TECH_DATA = 1)
 
 /*
 /obj/item/weapon/circuitboard/teleporter_hub
@@ -118,7 +118,7 @@
 	name = T_BOARD("smartfridge")
 	build_path = /obj/machinery/smartfridge/
 	board_type = "machine"
-	origin_tech = "programming=1"
+	origin_tech = list(TECH_DATA = 1)
 	frame_desc = "Requires 3 Matter Bins"
 	req_components = list(
 							/obj/item/weapon/stock_parts/matter_bin = 3)

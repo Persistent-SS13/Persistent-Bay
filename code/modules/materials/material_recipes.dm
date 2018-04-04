@@ -95,6 +95,8 @@
 		new/datum/stack_recipe("purple comfy chair", /obj/structure/bed/chair/comfy/purp, 2, one_per_turf = 1, on_floor = 1), \
 		new/datum/stack_recipe("green comfy chair", /obj/structure/bed/chair/comfy/green, 2, one_per_turf = 1, on_floor = 1), \
 		))
+	recipes += new/datum/stack_recipe("Roller Bed", /obj/structure/bed/roller, 2, time = 10, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("IV Drip", /obj/machinery/iv_drip, 3, time = 15, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("key", /obj/item/weapon/key, 1, time = 10)
 	recipes += new/datum/stack_recipe("table frame", /obj/structure/table, 1, time = 10, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("rack", /obj/structure/table/rack, 1, time = 5, one_per_turf = 1, on_floor = 1)

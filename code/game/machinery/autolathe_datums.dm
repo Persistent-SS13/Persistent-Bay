@@ -572,6 +572,11 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	name = "Health Scanner"
 	path = /obj/item/device/healthanalyzer
 	category = "Medical"
+
+/datum/autolathe/recipe/mop
+	name = "Mop"
+	path = /obj/item/weapon/mop
+	category = "General"
 /*
 /datum/autolathe/recipe/
 	name = ""

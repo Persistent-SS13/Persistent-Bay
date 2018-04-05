@@ -160,7 +160,7 @@
 	name = "plasma blast"
 	icon_state = "purplelaser"
 	damage_type = BRUTE
-	check_armour = "bullet"
+	check_armour = "energy"
 	sharp = 1
 	edge = 1
 	damage = 45

@@ -162,6 +162,7 @@
 	icon_state = "phorosianMiner_suit"
 	item_state = "phorosianMiner_suit"
 	armor = list(melee = 50, bullet = 5, laser = 20,energy = 5, bomb = 55, bio = 100, rad = 20)
+	
 
 /obj/item/clothing/head/helmet/space/phorosian/miner
 	name = "Phorosian miner helmet"
@@ -169,6 +170,13 @@
 	item_state = "phorosianMiner_helmet0"
 	armor = list(melee = 50, bullet = 5, laser = 20,energy = 5, bomb = 55, bio = 100, rad = 20)
 
+/obj/item/clothing/suit/space/phorosian/miner/alt
+	icon_state = "phorosianMiner_suit_alt"
+	item_state = "phorosianMiner_suit_alt"
+	
+/obj/item/clothing/head/helmet/space/phorosian/miner/alt
+	icon_state = "phorosianMiner_helmet_alt0"
+	item_state = "phorosianMiner_helmet_alt0"
 
 // MEDSCI
 
@@ -314,7 +322,11 @@
 	w_class = 2
 	force = 0
 	throwforce = 0
-
+	var/chosensuit
+	
+/obj/item/device/phorosiansuit_changer/attack_self(mob/living/user)
+	var/list/suits= list("Scientist" , "Research Director", "Engineer", "Chief Engineer", "Atmospheric Technician", "Security Officer", "Warden", "Captain", "Head of Personnel", "Medical Doctor", "Paramedic", "Chemist", "Chief Medical Officer", "Chef", "Cargo Technician", "Shaft Miner", "Shaft Miner (alt)", "Gardener", "Chaplain", "Janitor", "Civilian")     
+	chosensuit = input(user, "Pick the type of suit you would like to wear.") as null|anything in suits
 
 #define USED_ADAPT_HELM 1
 #define USED_ADAPT_SUIT 2
@@ -325,14 +337,14 @@
 	var/mob/living/carbon/human/H = user
 	var/suit=/obj/item/clothing/suit/space/phorosian
 	var/helm=/obj/item/clothing/head/helmet/space/phorosian
-	switch(H.mind.assigned_role)
-		if("Scientist","Roboticist", "Xenobiologist")
+	switch(chosensuit)
+		if("Scientist")
 			suit=/obj/item/clothing/suit/space/phorosian/science
 			helm=/obj/item/clothing/head/helmet/space/phorosian/science
 		if("Research Director")
 			suit=/obj/item/clothing/suit/space/phorosian/science/rd
 			helm=/obj/item/clothing/head/helmet/space/phorosian/science/rd
-		if("Engineer","mechanic")
+		if("Engineer")
 			suit=/obj/item/clothing/suit/space/phorosian/engineer/
 			helm=/obj/item/clothing/head/helmet/space/phorosian/engineer/
 		if("Chief Engineer")
@@ -341,10 +353,10 @@
 		if("Atmospheric Technician")
 			suit=/obj/item/clothing/suit/space/phorosian/atmostech
 			helm=/obj/item/clothing/head/helmet/space/phorosian/atmostech
-		if("pilot","judge","brigdoc","Detective","Security Officer")
+		if("Security Officer")
 			suit=/obj/item/clothing/suit/space/phorosian/security/
 			helm=/obj/item/clothing/head/helmet/space/phorosian/security/
-		if("Head of Security", "Warden")
+		if("Warden")
 			suit=/obj/item/clothing/suit/space/phorosian/security/hos
 			helm=/obj/item/clothing/head/helmet/space/phorosian/security/hos
 		if("Captain","nano","blueshield")
@@ -353,7 +365,7 @@
 		if("Head of Personnel")
 			suit=/obj/item/clothing/suit/space/phorosian/hop
 			helm=/obj/item/clothing/head/helmet/space/phorosian/hop
-		if("Medical Doctor", "Geneticist", "Psychiatrist")
+		if("Medical Doctor")
 			suit=/obj/item/clothing/suit/space/phorosian/medical
 			helm=/obj/item/clothing/head/helmet/space/phorosian/medical
 		if("Paramedic")
@@ -365,15 +377,18 @@
 		if("Chief Medical Officer")
 			suit=/obj/item/clothing/suit/space/phorosian/medical/cmo
 			helm=/obj/item/clothing/head/helmet/space/phorosian/medical/cmo
-		if("Chef","Bartender")
+		if("Chef")
 			suit=/obj/item/clothing/suit/space/phorosian/service
 			helm=/obj/item/clothing/head/helmet/space/phorosian/service
-		if("Quartermaster","Cargo Technician")
+		if("Cargo Technician")
 			suit=/obj/item/clothing/suit/space/phorosian/cargo
 			helm=/obj/item/clothing/head/helmet/space/phorosian/cargo
 		if("Shaft Miner")
 			suit=/obj/item/clothing/suit/space/phorosian/miner
 			helm=/obj/item/clothing/head/helmet/space/phorosian/miner
+		if("Shaft Miner (alt)")
+			suit=/obj/item/clothing/suit/space/phorosian/miner/alt
+			helm=/obj/item/clothing/head/helmet/space/phorosian/miner/alt
 		if("Gardener")
 			suit=/obj/item/clothing/suit/space/phorosian/botanist
 			helm=/obj/item/clothing/head/helmet/space/phorosian/botanist
@@ -383,7 +398,7 @@
 		if("Janitor")
 			suit=/obj/item/clothing/suit/space/phorosian/janitor
 			helm=/obj/item/clothing/head/helmet/space/phorosian/janitor
-		if("Civilian","Internal Affairs Agent","Assistant","Librarian")
+		if("Civilian")
 			suit=/obj/item/clothing/suit/space/phorosian/assistant
 			helm=/obj/item/clothing/head/helmet/space/phorosian/assistant
 	

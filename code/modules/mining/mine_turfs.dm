@@ -115,7 +115,12 @@ var/list/mining_floors = list()
 		if(emitter_blasts_taken > 2) // 3 blasts per tile
 			mined_ore = 1
 			GetDrilled()
-
+			
+	//Plasma Cutter Blasts
+	else if(istype(Proj, /obj/item/projectile/plasma))
+		mined_ore = 1
+		GetDrilled()
+				
 /turf/simulated/mineral/Bumped(AM)
 	. = ..()
 	if(istype(AM,/mob/living/carbon/human))

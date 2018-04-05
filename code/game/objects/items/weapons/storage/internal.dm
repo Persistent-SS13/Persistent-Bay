@@ -11,6 +11,7 @@
 		verbs -= /obj/item/verb/verb_pickup	//make sure this is never picked up.
 		..()
 /obj/item/weapon/storage/internal/after_load()
+	storage_ui = new /datum/storage_ui/default()
 	if(master_item)
 		loc = master_item
 		name = master_item.name

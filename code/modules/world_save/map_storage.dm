@@ -59,6 +59,9 @@ var/global/list/zones_to_save = list()
 
 /datum/proc/after_load()
 	return
+/atom/movable/after_load()
+	update_icon()
+	..()
 /area/after_load()
 	power_change()
 /datum/proc/before_load()

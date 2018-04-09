@@ -286,6 +286,7 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 	stack = new stack_type(H)
 	if(stack)
 		stack.owner = H
+		H.internal_organs_by_name[BP_STACK] = stack
 	else
 		message_admins("No stack, what the heck")
 	H.sync_organ_dna()

@@ -12,12 +12,6 @@ var/datum/controller/ambient_controller/ambient_controller
 /datum/music_file/planetrise
 	length = 3 MINUTES + 10 SECONDS
 	path = 'sound/ambience/new/action/Planetrise v1_0 (medium, exciting).ogg'
-/datum/music_file/article196
-	length = 1 MINUTES + 40 SECONDS
-	path = 'sound/ambience/new/action/Zander Noriega - Article 196 Section 1(short tense).wav'
-/datum/music_file/perpetualtension
-	length = 2 MINUTES + 42 SECONDS
-	path = 'sound/ambience/new/action/Zander Noriega - Perpetual Tension (short tense).wav'
 // DARK
 /datum/music_file/darkambience
 	length = 38 SECONDS
@@ -25,9 +19,6 @@ var/datum/controller/ambient_controller/ambient_controller
 /datum/music_file/caveambience
 	length = 2 MINUTES + 3 SECONDS
 	path = 'sound/ambience/new/dark/radakan - cave ambience (short, mysterious).ogg'
-/datum/music_file/blackdrought
-	length = 4 MINUTES + 2 SECONDS
-	path = 'sound/ambience/new/dark/Zander Noriega - Black Drought (long, dark).wav'
 //FUN
 /datum/music_file/restoration
 	length = 4 MINUTES + 50 SECONDS
@@ -35,9 +26,6 @@ var/datum/controller/ambient_controller/ambient_controller
 /datum/music_file/urban
 	length = 3 MINUTES + 32 SECONDS
 	path = 'sound/ambience/new/fun/UrbanTheme (medium, jazzy).ogg'
-/datum/music_file/walking
-	length = 2 MINUTES + 59 SECONDS
-	path = 'sound/ambience/new/fun/Zander Noriega - Walking Among Androids 2.0(medium, exciting).wav'
 // NEUTRAL
 /datum/music_file/bazaarnet
 	length = 5 MINUTES + 14 SECONDS
@@ -70,16 +58,12 @@ var/datum/controller/ambient_controller/ambient_controller
 	action = list()
 	action |= new /datum/music_file/crystal_space()
 	action |= new /datum/music_file/planetrise()
-	action |= new /datum/music_file/article196()
-	action |= new /datum/music_file/perpetualtension()
 	dark = list()
 	dark |= new /datum/music_file/darkambience()
 	dark |= new /datum/music_file/caveambience()
-	dark |= new /datum/music_file/blackdrought()
 	fun = list()
 	fun |= new /datum/music_file/restoration()
 	fun |= new /datum/music_file/urban()
-	fun |= new /datum/music_file/walking()
 	neutral = list()
 	neutral |= new /datum/music_file/bazaarnet()
 	neutral |= new /datum/music_file/factory()
@@ -161,9 +145,7 @@ var/datum/controller/ambient_controller/ambient_controller
 					controller.timetostop = controller.lastplayed.length + world.time
 		for(var/client/C in GLOB.clients)
 			var/mob/M = C.mob
-			if(M && to_play["[M.z]"]) //&& C.get_preference_value(/datum/client_preference/play_ambiance) == GLOB.PREF_YES)
+			if(M && to_play["[M.z]"] && C.get_preference_value(/datum/client_preference/play_ambiance) == GLOB.PREF_YES)
 				var/turf/T = M.loc
 				var/datum/music_file/file = to_play["[M.z]"]
-				message_admins("should be playing..")
 				M.playsound_local(T, sound(file.path, repeat = 0, wait = 0, volume = 15, channel = 1))
-

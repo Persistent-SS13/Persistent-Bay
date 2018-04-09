@@ -245,6 +245,11 @@
 	if(!mob.lastarea)
 		mob.lastarea = get_area(mob.loc)
 
+	if(isobj(mob.loc) || ismob(mob.loc))//Inside an object, tell it we moved
+		var/atom/O = mob.loc
+		return O.relaymove(mob, direct)		
+		
+		
 	if(!mob.check_solid_ground())
 		var/allowmove = mob.Allow_Spacemove(0)
 		if(!allowmove)
@@ -254,9 +259,7 @@
 		else
 			mob.inertia_dir = 0 //If not then we can reset inertia and move
 
-	if(isobj(mob.loc) || ismob(mob.loc))//Inside an object, tell it we moved
-		var/atom/O = mob.loc
-		return O.relaymove(mob, direct)
+
 
 	if(isturf(mob.loc))
 

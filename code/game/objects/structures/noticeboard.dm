@@ -20,9 +20,11 @@
 			if(istype(I, /obj/item/weapon/paper))
 				I.forceMove(src)
 				notices++
-		icon_state = "nboard0[notices]"
+		
 	. = ..()
-
+/obj/structure/noticeboard/after_load()
+	icon_state = "nboard0[notices]"
+	..()
 //attaching papers!!
 /obj/structure/noticeboard/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)
 	if(istype(O, /obj/item/weapon/paper) || istype(O, /obj/item/weapon/photo))

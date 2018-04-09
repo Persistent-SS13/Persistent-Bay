@@ -41,6 +41,8 @@
 
 /obj/item/weapon/paper/after_load()
 	info_links = replacetext(info_links,"***MY_REF***","\ref[src]")
+	update_icon()
+	..()
 /obj/item/weapon/paper/New(loc, text,title)
 	..(loc)
 	set_content(text ? text : info, title)

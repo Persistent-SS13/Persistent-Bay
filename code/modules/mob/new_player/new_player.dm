@@ -542,7 +542,21 @@
 	src << browse(jointext(dat, null), "window=latechoices;size=450x640;can_close=1")
 
 
-
+/mob/proc/after_spawn()
+	return
+/mob/living/carbon/lace/after_spawn()
+	if(container2)
+		container2.loc = loc
+		loc = container
+		if(client)
+			client.perspective = EYE_PERSPECTIVE
+			client.eye = container
+	else if(container)
+		container.loc = loc
+		loc = container
+		if(client)
+			client.perspective = EYE_PERSPECTIVE
+			client.eye = container
 /mob/new_player/proc/create_character(var/turf/spawn_turf)
 	message_admins("create_character")
 	spawning = 1
@@ -659,6 +673,7 @@
 		to_chat(new_character, "No time to think about that, your first priority is to get your bearings and find a job that pays. Whatever you decide to do in this new frontier, you're going to need a lot more cash than what you have now.")
 	else
 		to_chat(new_character, "You eject from your cryosleep, ready to resume life in the frontier.")
+	new_character.after_spawn()
 	return new_character
 	/**
 	var/mob/living/carbon/human/new_character

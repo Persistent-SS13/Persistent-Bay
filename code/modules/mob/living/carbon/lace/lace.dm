@@ -11,10 +11,11 @@
 	icon_state = "cortical-stack"
 
 /mob/living/carbon/lace/New()
-	var/datum/action/lace/laceaction = new()
+	container = loc
+	var/datum/action/lace/laceaction = new(container)
 	laceaction.Grant(src)
-	laceaction.target = container
 	..()
+/mob/living/carbon/lace/after_load()
 
 /mob/living/carbon/lace/Destroy()
 	if(key)				//If there is a mob connected to this thing. Have to check key twice to avoid false death reporting.

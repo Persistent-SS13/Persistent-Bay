@@ -43,6 +43,8 @@
 		lacemob.dna = H.dna.Clone()
 		lacemob.timeofhostdeath = H.timeofdeath
 		lacemob.container = src
+		if(owner)
+			lacemob.container2 = owner
 		lacemob.spawn_loc = H.spawn_loc
 	if(H.mind)
 		H.mind.transfer_to(lacemob)
@@ -54,8 +56,11 @@
 	return owner.real_name
 
 /obj/item/organ/internal/stack/ui_action_click()
-	if(!owner) return
-	ui_interact(owner)
+	if(!owner && !lacemob) return
+	if(lacemob)
+		ui_interact(lacemob)
+	else
+		ui_interact(owner)
 /obj/item/organ/internal/stack/proc/ui_mobaction_click()
 	ui_interact(lacemob)
 /obj/item/organ/internal/stack/Topic(href, href_list)
@@ -105,7 +110,6 @@
 		var/list/formatted[0]
 		for(var/datum/world_faction/fact in potential)
 			formatted[++formatted.len] = list("name" = fact.name, "ref" = "\ref[fact]")
-		message_admins("[formatted.len]")
 		data["potential"] = formatted
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
@@ -121,7 +125,6 @@
 		if(record)
 			potential |= fact
 		else
-			message_admins("record not found for [fact.name] [owner.real_name]")
 	return potential
 /obj/item/organ/internal/stack/proc/try_duty()
 	if(!owner || !faction)

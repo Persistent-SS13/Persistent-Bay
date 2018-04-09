@@ -513,7 +513,7 @@ other types of metals and chemistry for reagents).
 	id = "stunrevolver"
 	desc = "A non-lethal stun. Warning: Can cause cardiac arrest."
 	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 3, TECH_POWER = 2)
-	materials = list(DEFAULT_WALL_MATERIAL = , "silver" = 1000, "gold" = 500)
+	materials = list(DEFAULT_WALL_MATERIAL = 4000, "silver" = 1000, "gold" = 500)
 	build_path = /obj/item/weapon/gun/energy/stunrevolver
 	sort_string = "TAAAA"
 

@@ -136,3 +136,11 @@
 					/obj/item/clothing/mask/gas = 5)
 	cost = 150
 	containername = "\improper Bulk Softsuit crate"
+
+/decl/hierarchy/supply_pack/supply/blueprints
+	name = "Blueprints"
+	contains = list(/obj/item/blueprints)
+	cost = 150
+	containertype = /obj/structure/closet/crate/secure/large/phoron
+	containername = "\improper Blueprints Crate"
+	access = 1	//Access 1 instead of 3 because it would mean only someone with access to logistics program could be trusted to open it

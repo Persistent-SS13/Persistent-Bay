@@ -32,13 +32,12 @@
 	containername = "Atmospheric Technician Equipment"
 //	access = core_access_engineering_programs
 /decl/hierarchy/supply_pack/operations/ce
-	name = "Chief Engineer's Equipment - Blueprints and RIG Included"
+	name = "Chief Engineer's Equipment"
 	contains = list(/obj/item/clothing/under/rank/chief_engineer,
 					/obj/item/clothing/head/hardhat/white,
 					/obj/item/clothing/shoes/workboots,
 					/obj/item/clothing/shoes/brown,
 					/obj/item/clothing/gloves/insulated,
-					/obj/item/weapon/rig/ce,
 					/obj/item/clothing/glasses/meson,
 					/obj/item/weapon/storage/belt/utility/full,
 					/obj/item/device/multitool,
@@ -46,11 +45,10 @@
 					/obj/item/weapon/crowbar/brace_jack,
 					/obj/item/weapon/stamp/ce,
 					/obj/item/weapon/cartridge/ce,
-					/obj/item/blueprints,
 					/obj/item/clothing/cloak/ce,
 					/obj/item/weapon/storage/backpack/industrial,
 					/obj/item/device/radio/headset/heads/ce) 
-	cost = 300
+	cost = 50
 	containertype = /obj/structure/closet/secure_closet/engineering_chief
 	containername = "Chief Engineer's Locker"
 //	access = core_access_engineering_programs
@@ -256,13 +254,12 @@
 					/obj/item/clothing/accessory/stethoscope,
 					/obj/item/taperoll/medical,
 					/obj/item/weapon/stamp/cmo,
-					/obj/item/weapon/reagent_containers/hypospray/vial,
 					/obj/item/clothing/cloak/cmo,
 					/obj/item/weapon/storage/backpack/satchel_med,
 					/obj/item/weapon/storage/backpack/messenger/med,
 					/obj/item/weapon/cartridge/cmo,
 					/obj/item/device/radio/headset/heads/cmo) 
-	cost = 70
+	cost = 50
 	containertype = /obj/structure/closet/secure_closet/CMO
 	containername = "Chief Medical Officer's Locker"
 /decl/hierarchy/supply_pack/operations/chemist

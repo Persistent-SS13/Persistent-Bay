@@ -347,7 +347,7 @@
 					/obj/item/weapon/storage/bag/trash,
 					/obj/item/device/radio/headset/headset_service) 
 	cost = 10
-	containertype = /obj/structure/jcloset
+	containertype = /obj/structure/closet/jcloset
 	containername = "Janitor Equipment"
 /decl/hierarchy/supply_pack/operations/chef
 	name = "Chef Equipment"

@@ -57,7 +57,7 @@ var/const/EXTRA_COST_FACTOR = 1.25
 
 /datum/autolathe/recipe/tank_double
 	name = "Air Tank - Small, Extended"
-	path = /obj/item/weapon/tank/oxygen/yellow
+	path = /obj/item/weapon/tank/emergency/oxygen/engi
 	category = "General"
 
 /datum/autolathe/recipe/jar

@@ -46,7 +46,7 @@
 			I.loc = src
 	. = ..()
 
-/obj/structure/filingcabinet/attackby(obj/item/P as obj, mob/user as mob)
+/obj/structure/filingcabinet/attackby(obj/item/P as obj, obj/item/weapon/W as obj, mob/user as mob)
 	if(is_type_in_list(P, can_hold))
 		add_fingerprint(user)
 		to_chat(user, "<span class='notice'>You put [P] in [src].</span>")
@@ -56,6 +56,15 @@
 		sleep(5)
 		icon_state = initial(icon_state)
 		updateUsrDialog()
+	if(isWelder(W))
+		var/obj/item/weapon/weldingtool/WT = W
+		if(WT.remove_fuel(0,user))
+			var/obj/item/stack/material/steel/new_item = new(usr.loc)
+			new_item.add_to_stacks(usr)
+			for (var/mob/M in viewers(src))
+				M.show_message("<span class='notice'>[src] is shaped into metal by [user.name] with the weldingtool.</span>", 3, "<span class='notice'>You hear welding.</span>", 2)
+			qdel(src)
+		return
 	else
 		..()
 	return

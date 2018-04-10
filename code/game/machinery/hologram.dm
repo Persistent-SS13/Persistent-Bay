@@ -57,41 +57,6 @@ var/const/HOLOPAD_MODE = RANGE_BASED
 
 	var/holopadType = HOLOPAD_SHORT_RANGE //Whether the holopad is short-range or long-range.
 	var/base_icon = "holopad-B"
-	circuit = /obj/item/weapon/circuitboard/holopad
-
-/obj/machinery/hologram/holopad/dismantle()
-	var/obj/structure/frame/A = ..()
-	A.frame_type = "holopad"
-	A.state = 4
-	A.icon_state = "[A.frame_type]_4"
-	qdel(src)
-
-
-/obj/machinery/hologram/holopad/attackby(obj/item/I as obj, user as mob)
-	if(istype(I, /obj/item/weapon/screwdriver) && circuit)
-		user << "<span class='notice'>You start removing the glass.</span>"
-		playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
-		if(do_after(user, 20))
-			dismantle()
-			/*
-			var/obj/structure/frame/A = new /obj/structure/frame( src.loc )
-			var/obj/item/weapon/circuitboard/M = new circuit( A )
-			A.circuit = M
-			A.anchored = 1
-			A.density = 1
-			A.frame_type = "holopad"
-			for (var/obj/C in src)
-				C.forceMove(loc)
-			user << "<span class='notice'>You remove the glass.</span>"
-			A.state = 4
-			A.icon_state = "holopad_4"
-			M.deconstruct(src)
-			for (var/mob/living/silicon/ai/master in masters)
-				clear_holo(master)
-			qdel(src) */
-	else
-		src.attack_hand(user)
-	return
 
 /obj/machinery/hologram/holopad/New()
 	..()
@@ -100,7 +65,11 @@ var/const/HOLOPAD_MODE = RANGE_BASED
 /obj/machinery/hologram/holopad/after_load()
 	if(loc)
 		desc = "It's a floor-mounted device for projecting holographic images. Its ID is '[loc.loc]'"
-/obj/machinery/hologram/holopad/attack_hand(var/mob/living/carbon/human/user) //Carn: Hologram requests.
+/obj/machinery/hologram/holopad/attack_hand(var/obj/item/I as obj, var/mob/living/carbon/human/user) //Carn: Hologram requests.
+	if(default_deconstruction_screwdriver(user, I))
+		return
+	if(default_deconstruction_crowbar(user, I))
+		return
 	if(!istype(user))
 		return
 	if(incoming_connection&&caller_id)
@@ -445,7 +414,7 @@ Holographic project of everything else.
 	power_per_hologram = 1000 //per usage per hologram
 	holopadType = HOLOPAD_LONG_RANGE
 	base_icon = "holopad-Y"
-	circuit = /obj/item/weapon/circuitboard/longrangeholopad
+
 #undef RANGE_BASED
 #undef AREA_BASED
 #undef HOLOPAD_PASSIVE_POWER_USAGE

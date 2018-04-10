@@ -9,41 +9,23 @@
 	use_power = 1
 	idle_power_usage = 2
 	active_power_usage = 50
-	circuit = /obj/item/weapon/circuitboard/mass_driver
 
 	var/power = 1.0
 	var/code = 1.0
 	var/id = 1.0
 	var/drive_range = 50 //this is mostly irrelevant since current mass drivers throw into space, but you could make a lower-range mass driver for interstation transport or something I guess.
+	var/_wifi_id
+	var/datum/wifi/receiver/button/mass_driver/wifi_receiver
 
-/obj/machinery/mass_driver/New()
-	..()
-	circuit = new circuit(src)
-	component_parts = list()
-	component_parts += new /obj/item/weapon/stock_parts/motor(src)
-	component_parts += new /obj/item/weapon/stock_parts/motor(src)
-	component_parts += new /obj/item/weapon/stock_parts/gear(src)
-	component_parts += new /obj/item/weapon/stock_parts/gear(src)
-	component_parts += new /obj/item/weapon/stock_parts/spring(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 5)
-	RefreshParts()
+/obj/machinery/mass_driver/Initialize()
+	. = ..()
+	if(_wifi_id)
+		wifi_receiver = new(_wifi_id, src)
 
-/obj/machinery/mass_driver/attackby(var/obj/item/I, mob/user)
-	if(default_deconstruction_screwdriver(user, I))
-		return
-	if(default_deconstruction_crowbar(user, I))
-		return
-
-	if(istype(I, /obj/item/device/multitool))
-		if(panel_open)
-			var/input = sanitize(input(usr, "What id would you like to give this conveyor?", "Multitool-Conveyor interface", id))
-			if(!input)
-				usr << "No input found please hang up and try your call again."
-				return
-			id = input
-			return
-	return
+/obj/machinery/mass_driver/Destroy()
+	qdel(wifi_receiver)
+	wifi_receiver = null
+	return ..()
 
 /obj/machinery/mass_driver/proc/drive(amount)
 	if(stat & (BROKEN|NOPOWER))
@@ -56,7 +38,7 @@
 			O_limit++
 			if(O_limit >= 20)
 				for(var/mob/M in hearers(src, null))
-					M << "<span class='notice'>The mass driver lets out a screech, it mustn't be able to handle any more items.</span>"
+					to_chat(M, "<span class='notice'>The mass driver lets out a screech, it mustn't be able to handle any more items.</span>")
 				break
 			use_power(500)
 			spawn( 0 )

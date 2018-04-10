@@ -62,6 +62,8 @@ var/list/admin_verbs_admin = list(
 	/datum/admins/proc/toggleoocdead,	//toggles ooc on/off for everyone who is dead,
 	/datum/admins/proc/toggledsay,		//toggles dsay on/off for everyone,
 	/datum/admins/proc/savenow, // Persistent edit, savenow saves station
+	/datum/admins/proc/changeambience,
+	/datum/admins/proc/buildaccounts,
 	/datum/admins/proc/savechars,
 	/datum/admins/proc/loadnow, // Persistent edit, loads the station
 	/client/proc/game_panel,			//game panel, allows to change game-mode etc,

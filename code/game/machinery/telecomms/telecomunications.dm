@@ -22,6 +22,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	var/list/autolinkers = list() // list of text/number values to link with
 	var/id = "NULL" // identification string
 	var/network = "NULL" // the network of the machinery
+
 	var/list/freq_listening = list() // list of frequencies to tune into: if none, will listen to all
 
 	var/machinetype = 0 // just a hacky way of preventing alike machines from pairing
@@ -58,6 +59,10 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	*/
 // Loop through all linked machines and send the signal or copy.
 	for(var/obj/machinery/telecomms/machine in links)
+		if(!machine.loc)
+			links -= machine
+			qdel(machine)
+			continue
 		if(filter && !istype( machine, filter ))
 			continue
 		if(!machine.on)
@@ -117,31 +122,14 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 /obj/machinery/telecomms/New()
 	telecomms_list += src
 	..()
-/obj/machinery/telecomms/after_load()
-	var/turf/position = get_turf(src)
-	if(!position)
-		message_admins("telecomms with no loc during after_load? |[src] | [loc] | [position] |")
-		return
-	listening_levels = GetConnectedZlevels(position.z)
-
-	if(autolinkers.len)
-		// Links nearby machines
-		if(!long_range_link)
-			for(var/obj/machinery/telecomms/T in orange(20, src))
-				add_link(T)
-		else
-			for(var/obj/machinery/telecomms/T in telecomms_list)
-				add_link(T)
-	update_power()
-	. = ..()
 
 /obj/machinery/telecomms/Initialize()
 	//Set the listening_levels if there's none.
+	if(!loc)
+		return
 	if(!listening_levels)
 		//Defaults to our Z level!
 		var/turf/position = get_turf(src)
-		if(!position)
-			return
 		listening_levels = GetConnectedZlevels(position.z)
 
 	if(autolinkers.len)
@@ -151,6 +139,9 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 				add_link(T)
 		else
 			for(var/obj/machinery/telecomms/T in telecomms_list)
+				if(!T.loc)
+					telecomms_list -= T
+					continue
 				add_link(T)
 	update_power()
 	. = ..()
@@ -210,7 +201,9 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 
 /obj/machinery/telecomms/proc/checkheat()
 	// Checks heat from the environment and applies any integrity damage
-	if(!loc) return
+	if(!loc)
+		qdel(src)
+		return
 	var/datum/gas_mixture/environment = loc.return_air()
 	var/damage_chance = 0                           // Percent based chance of applying 1 integrity damage this tick
 	switch(environment.temperature)

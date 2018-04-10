@@ -12,19 +12,16 @@
 	var/produces_heat = 1
 	idle_power_usage = 800
 	var/delay = 10
-	req_access = list(access_rd) //Only the R&D can change server settings.
-	circuit = /obj/item/weapon/circuitboard/rdserver
+	req_access = list(core_access_science_programs) //Only the R&D can change server settings.
 
 /obj/machinery/r_n_d/server/New()
 	..()
-	circuit = new circuit()
 	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/rdserver(src)
 	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
 	component_parts += new /obj/item/stack/cable_coil(src)
 	component_parts += new /obj/item/stack/cable_coil(src)
 	RefreshParts()
-	Initialize()
-
 
 /obj/machinery/r_n_d/server/Destroy()
 	griefProtection()
@@ -53,8 +50,8 @@
 			id_with_download += text2num(N)
 
 /obj/machinery/r_n_d/server/Process()
-	if(!loc)
-		qdel(src)
+	if(!loc) 
+		qdel(src) 
 		return
 	var/datum/gas_mixture/environment = loc.return_air()
 	switch(environment.temperature)

@@ -12,8 +12,9 @@
 	var/obj/item/weapon/weldingtool/welder
 
 /obj/item/weapon/weldpack/Initialize()
-	create_reagents(max_fuel)
-	reagents.add_reagent(/datum/reagent/fuel, max_fuel)
+	if(!map_storage_loaded)
+		create_reagents(max_fuel)
+		reagents.add_reagent(/datum/reagent/fuel, max_fuel)
 
 	. = ..()
 

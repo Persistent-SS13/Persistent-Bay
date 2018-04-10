@@ -45,13 +45,13 @@ won't update every console in existence) but it's more of a hassle to do. Also, 
 	var/id = 0			//ID of the computer (for server restrictions).
 	var/sync = 1		//If sync = 0, it doesn't show up on Server Control Console
 
-	req_access = list(access_research)	//Data and setting manipulation requires scientist access.
+	req_access = list(core_access_science_programs)	//Data and setting manipulation requires scientist access.
 
 /obj/machinery/computer/rdconsole/proc/CallMaterialName(var/ID)
 	var/return_name = ID
 	switch(return_name)
 		if("metal")
-			return_name = "Steel"
+			return_name = "Metal"
 		if("glass")
 			return_name = "Glass"
 		if("gold")
@@ -785,7 +785,7 @@ won't update every console in existence) but it's more of a hassle to do. Also, 
 /obj/machinery/computer/rdconsole/robotics
 	name = "Robotics R&D Console"
 	id = 2
-	req_access = list(access_robotics)
+	req_access = list(core_access_science_programs)
 
 /obj/machinery/computer/rdconsole/core
 	name = "Core R&D Console"

@@ -1,6 +1,5 @@
 
 GLOBAL_LIST_EMPTY(all_cryo_mobs)
-
 /*
  * Cryogenic refrigeration unit. Basically a despawner.
  */
@@ -24,30 +23,6 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	var/storage_name = "Cryogenic Oversight Control"
 	var/allow_items = 1
 
-/obj/item/weapon/circuitboard/cryopodcontrol
-	name = "Circuit board (Cryogenic Oversight Console)"
-	build_path = "/obj/machinery/computer/cryopod"
-	origin_tech = list(TECH_DATA = 3)
-
-/obj/item/weapon/circuitboard/robotstoragecontrol
-	name = "Circuit board (Robotic Storage Console)"
-	build_path = "/obj/machinery/computer/cryopod/robot"
-	origin_tech = list(TECH_DATA = 3)
-
-/obj/item/weapon/circuitboard/dormscontrol
-	name = "Circuit board (Residential Oversight Console)"
-	build_path = "/obj/machinery/computer/cryopod/door/dorms"
-	origin_tech = list(TECH_DATA = 3)
-
-/obj/item/weapon/circuitboard/travelcontrol
-	name = "Circuit board (Travel Oversight Console - Docks)"
-	build_path = "/obj/machinery/computer/cryopod/door/travel"
-	origin_tech = list(TECH_DATA = 3)
-
-/obj/item/weapon/circuitboard/gatewaycontrol
-	name = "Circuit board (Travel Oversight Console - Gateway)"
-	build_path = "/obj/machinery/computer/cryopod/door/gateway"
-	origin_tech = list(TECH_DATA = 3)
 
 /obj/machinery/computer/cryopod/robot
 	name = "robotic storage console"
@@ -60,81 +35,6 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	storage_name = "Robotic Storage Control"
 	allow_items = 0
 
-/obj/machinery/computer/cryopod/dorms
-	name = "residential oversight console"
-	desc = "An interface between visitors and the residential oversight systems tasked with keeping track of all visitors in the deeper section of the colony."
-	icon = 'icons/obj/robot_storage.dmi' //placeholder
-	icon_state = "console" //placeholder
-	circuit = "/obj/item/weapon/circuitboard/robotstoragecontrol"
-
-	storage_type = "visitors"
-	storage_name = "Residential Oversight Control"
-	allow_items = 1
-
-/obj/machinery/computer/cryopod/travel
-	name = "docking oversight console"
-	desc = "An interface between visitors and the docking oversight systems tasked with keeping track of all visitors who enter or exit from the docks."
-	icon = 'icons/obj/robot_storage.dmi' //placeholder
-	icon_state = "console" //placeholder
-	circuit = "/obj/item/weapon/circuitboard/robotstoragecontrol"
-
-	storage_type = "visitors"
-	storage_name = "Travel Oversight Control"
-	allow_items = 1
-
-/obj/machinery/computer/cryopod/gateway
-	name = "gateway oversight console"
-	desc = "An interface between visitors and the gateway oversight systems tasked with keeping track of all visitors who enter or exit from the gateway."
-	icon = 'icons/obj/robot_storage.dmi' //placeholder
-	icon_state = "console" //placeholder
-	circuit = "/obj/item/weapon/circuitboard/robotstoragecontrol"
-
-	storage_type = "visitors"
-	storage_name = "Travel Oversight Control"
-	allow_items = 1
-
-//Decorative structures to go alongside cryopods.
-/obj/structure/cryofeed
-
-	name = "cryogenic feed"
-	desc = "A bewildering tangle of machinery and pipes."
-	icon = 'icons/obj/Cryogenic2.dmi'
-	icon_state = "cryo_rear"
-	anchored = 1
-	dir = WEST
-
-/obj/machinery/cryopod/robot/door/dorms
-	name = "Residential District Elevator"
-	desc = "A small elevator that goes down to the deeper section of the colony."
-	on_store_message = "has departed for the residential district."
-	on_store_name = "Residential Oversight"
-	on_enter_occupant_message = "The elevator door closes slowly, ready to bring you down to the residential district."
-	on_store_visible_message_1 = "makes a ding as it moves"
-	on_store_visible_message_2 = "to the residential district."
-
-/obj/machinery/cryopod/robot/door/travel
-	name = "Passenger Elevator"
-	desc = "A small elevator that goes down to the passenger section of the vessel."
-	on_store_message = "is slated to depart from the colony."
-	on_store_name = "Travel Oversight"
-	on_enter_occupant_message = "The elevator door closes slowly, ready to bring you down to the hell that is economy class travel."
-	on_store_visible_message_1 = "makes a ding as it moves"
-	on_store_visible_message_2 = "to the passenger deck."
-
-/obj/machinery/cryopod/robot/door/gateway
-	name = "Gateway"
-	desc = "The gateway you might've came in from.  You could leave the colony easily using this."
-	icon = 'icons/obj/machines/gateway.dmi'
-	icon_state = "offcenter"
-	base_icon_state = "offcenter"
-	occupied_icon_state = "oncenter"
-	on_store_message = "has departed from the colony."
-	on_store_name = "Travel Oversight"
-	on_enter_occupant_message = "The gateway activates, and you step into the swirling portal."
-	on_store_visible_message_1 = "'s portal disappears just after"
-	on_store_visible_message_2 = "finishes walking across it."
-
-	time_till_despawn = 60 //1 second, because gateway.
 
 /obj/machinery/computer/cryopod/attack_ai()
 	src.attack_hand()
@@ -208,19 +108,126 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	var/on_store_message = "has entered long-term storage."
 	var/on_store_name = "Cryogenic Oversight"
 	var/on_enter_occupant_message = "You feel cool air surround you. You go numb as your senses turn inward."
-	var/on_enter_visible_message = "starts climbing into the"
-	var/on_store_visible_message_1 = "hums and hisses as it moves" //We need two variables because byond doesn't let us have variables inside strings at compile-time.
-	var/on_store_visible_message_2 = "into storage."
 	var/allow_occupant_types = list(/mob/living/carbon/human)
 	var/disallow_occupant_types = list()
 
-	var/faction = ""
 	var/mob/occupant = null       // Person waiting to be despawned.
-	var/time_till_despawn = 1800  // 3 minutes till despawn
+	var/time_till_despawn = 1 MINUTE  // 3 minutes till despawn
 	var/time_entered = 0          // Used to keep track of the safe period.
+	var/obj/item/device/radio/intercom/announce //
 
 	var/obj/machinery/computer/cryopod/control_computer
 	var/last_no_computer_message = 0
+	var/super_locked = 1
+	req_access = list(core_access_command_programs)
+	var/datum/world_faction/faction
+
+/obj/machinery/cryopod/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/cryopod(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	RefreshParts()
+
+/obj/machinery/cryopod/attackby(var/obj/item/O as obj, var/mob/user as mob)
+	if(!occupant)
+		if(default_deconstruction_screwdriver(user, O))
+			return
+		if(default_deconstruction_crowbar(user, O))
+			return
+	..()
+
+/obj/machinery/cryopod/attack_hand(mob/user = usr)
+	if(stat & (NOPOWER|BROKEN))
+		return
+
+	user.set_machine(src)
+	src.add_fingerprint(usr)
+
+	var/dat
+
+	if (!( ticker ))
+		return
+	if(req_access_faction && req_access_faction != "" || (faction && faction.uid != req_access_faction))
+		faction = get_faction(req_access_faction)
+	dat += "<hr/><br/><b>Cryopod Control</b><br/>"
+	dat += "This cryopod is connected to: [faction ? faction.name : "Not connected"]<br/><br/><hr/>"
+	if(faction)
+		dat += "<a href='?src=\ref[src];enter=1'>Enter pod</a><br><a href='?src=\ref[src];eject=1'>Eject Occupant</a><br><br>"
+		dat += "Those authorized can <a href='?src=\ref[src];disconnect=1'>disconnect this pod from the network</a>"
+	else
+		dat += "Those authorized can <a href='?src=\ref[src];connect=1'>connect this pod to a network</a>"
+
+	user << browse(dat, "window=cryopod")
+	onclose(user, "cryopod")
+	
+/obj/machinery/cryopod/MouseDrop_T(var/mob/target, var/mob/user)
+	if(!istype(target))
+		return
+	if (!CanMouseDrop(target, user))
+		return
+	if (src.occupant)
+		to_chat(user, "<span class='warning'>The cryopod is already occupied!</span>")
+		return
+	if (target.buckled)
+		to_chat(user, "<span class='warning'>Unbuckle the subject before attempting to move them.</span>")
+		return
+	if(!req_access_faction || req_access_faction == "")
+		to_chat(usr, "<span class='notice'><B>\The [src] is not connected to a network.</B></span>")
+		return
+	if(!check_occupant_allowed(target))
+		return
+	user.visible_message("<span class='notice'>\The [user] begins placing \the [target] into \the [src].</span>", "<span class='notice'>You start placing \the [target] into \the [src].</span>")
+	if(!do_after(user, 30, src))
+		return
+	if(src.occupant)
+		to_chat(usr, "<span class='notice'><B>\The [src] is in use.</B></span>")
+		return
+	target.stop_pulling()
+	if(target.client)
+		target.client.perspective = EYE_PERSPECTIVE
+		target.client.eye = src
+	target.forceMove(src)
+	set_occupant(target)
+	icon_state = occupied_icon_state
+	target.spawn_loc = req_access_faction
+	to_chat(target, "<span class='notice'>[on_enter_occupant_message]</span>")
+	to_chat(target, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
+	time_entered = world.time
+	src.add_fingerprint(user)
+	
+	
+	
+/obj/machinery/cryopod/Topic(href, href_list)
+	if((. = ..()))
+		return
+
+	var/mob/user = usr
+
+	src.add_fingerprint(user)
+
+	if(href_list["enter"])
+		if(faction)
+			move_inside_proc(usr)
+	if(href_list["eject"])
+		eject_proc(usr)
+	if(href_list["disconnect"])
+		if(allowed(usr))
+			faction = null
+			req_access_faction = null
+	if(href_list["connect"])
+		faction = get_faction(usr.GetFaction())
+		if(faction)
+			req_access_faction = faction.uid
+			if(!allowed(usr))
+				faction = null
+				req_access_faction = ""
+			else
+				req_access_faction = faction.uid
+	src.updateUsrDialog()
+	return
 
 
 /obj/machinery/cryopod/robot
@@ -240,6 +247,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 
 /obj/machinery/cryopod/New()
 	GLOB.cryopods |= src
+	announce = new /obj/item/device/radio/intercom(src)
 	..()
 
 
@@ -296,13 +304,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	if(occupant)
 		if(world.time - time_entered < time_till_despawn)
 			return
-
-		if(!occupant.client && occupant.stat<2) //Occupant is living and has no client.
-			if(!control_computer)
-				if(!find_control_computer(urgent=1))
-					return
-
-			despawn_occupant()
+		despawn_occupant()
 
 /mob/var/stored_ckey = ""
 
@@ -312,8 +314,8 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 /obj/machinery/cryopod/proc/despawn_occupant()
 	occupant.loc = null
 	var/mob/new_player/M = new /mob/new_player()
+	M.loc = locate(100,100,28)
 	occupant.stored_ckey = occupant.ckey
-	M.loc = null
 	M.key = occupant.key
 	var/role_alt_title = occupant.mind ? occupant.mind.role_alt_title : "Unknown"
 	if(control_computer)
@@ -321,10 +323,11 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		control_computer._admin_logs += "[key_name(occupant)] ([role_alt_title]) at [stationtime2text()]"
 	log_and_message_admins("[key_name(occupant)] ([role_alt_title]) entered cryostorage.")
 
+	announce.autosay("[occupant.real_name], [role_alt_title], [on_store_message]", "[on_store_name]")
 	visible_message("<span class='notice'>\The [initial(name)] hums and hisses as it moves [occupant.real_name] into storage.</span>", 3)
 	GLOB.all_cryo_mobs |= occupant
 	set_occupant(null)
-
+	icon_state = base_icon_state
 
 /obj/machinery/cryopod/attackby(var/obj/item/weapon/G as obj, var/mob/user as mob)
 	if(isMultitool(G))
@@ -345,13 +348,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		var/willing = null //We don't want to allow people to be forced into despawning.
 		var/mob/M = G:affecting
 
-		if(M.client)
-			if(alert(M,"Would you like to enter long-term storage?",,"Yes","No") == "Yes")
-				if(!M || !grab || !grab.affecting) return
-				willing = 1
-		else
-			willing = 1
-
+		willing = 1
 		if(willing)
 
 			visible_message("[user] starts putting [grab.affecting:name] into \the [src].", 3)
@@ -368,7 +365,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 			icon_state = occupied_icon_state
 
 			to_chat(M, "<span class='notice'>[on_enter_occupant_message]</span>")
-			to_chat(M, "<span class='notice'><b>If you ghost, log out or close your client now, your character will shortly be saved and removed from the round.</b></span>")
+			to_chat(M, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
 			set_occupant(M)
 			time_entered = world.time
 			var/turf/location = get_turf(src)
@@ -388,23 +385,92 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	icon_state = base_icon_state
 
 	//Eject any items that aren't meant to be in the pod.
+	/**
 	var/list/items = src.contents
 	if(occupant) items -= occupant
+	if(announce) items -= announce
 
 	for(var/obj/item/W in items)
 		W.forceMove(get_turf(src))
-
+	**/
 	src.go_out()
 	add_fingerprint(usr)
 
 	name = initial(name)
 	return
+/obj/machinery/cryopod/proc/eject_proc(var/mob/usr)
+	set name = "Eject Pod"
+	set category = "Object"
+	set src in oview(1)
+	if(usr.stat != 0)
+		return
+
+	icon_state = base_icon_state
+	/**
+	//Eject any items that aren't meant to be in the pod.
+	var/list/items = src.contents
+	if(occupant) items -= occupant
+	if(announce) items -= announce
+
+	for(var/obj/item/W in items)
+		W.forceMove(get_turf(src))
+	**/
+	src.go_out()
+	add_fingerprint(usr)
+
+	name = initial(name)
+	return
+/obj/machinery/cryopod/proc/move_inside_proc(var/mob/usr)
+	if(usr.stat != 0 || !check_occupant_allowed(usr))
+		return
+	if(!req_access_faction || req_access_faction == "")
+		to_chat(usr, "<span class='notice'><B>\The [src] is not connected to a network.</B></span>")
+		return
+	if(src.occupant)
+		to_chat(usr, "<span class='notice'><B>\The [src] is in use.</B></span>")
+		return
+
+	for(var/mob/living/carbon/slime/M in range(1,usr))
+		if(M.Victim == usr)
+			to_chat(usr, "You're too busy getting your life sucked out of you.")
+			return
+
+	visible_message("[usr] starts climbing into \the [src].", 3)
+
+	if(do_after(usr, 20, src))
+
+		if(!usr || !usr.client)
+			return
+
+		if(src.occupant)
+			to_chat(usr, "<span class='notice'><B>\The [src] is in use.</B></span>")
+			return
+
+		usr.stop_pulling()
+		usr.client.perspective = EYE_PERSPECTIVE
+		usr.client.eye = src
+		usr.forceMove(src)
+		set_occupant(usr)
+		usr.spawn_loc = req_access_faction
+		icon_state = occupied_icon_state
+
+		to_chat(usr, "<span class='notice'>[on_enter_occupant_message]</span>")
+		to_chat(usr, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
+
+		time_entered = world.time
+
+		src.add_fingerprint(usr)
+
+	return
+
 
 /obj/machinery/cryopod/verb/move_inside()
 	set name = "Enter Pod"
 	set category = "Object"
 	set src in oview(1)
-
+	if(!req_access_faction || req_access_faction == "")
+		to_chat(usr, "<span class='notice'><B>\The [src] is not connected to a network.</B></span>")
+		return
 	if(usr.stat != 0 || !check_occupant_allowed(usr))
 		return
 
@@ -434,9 +500,9 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		usr.forceMove(src)
 		set_occupant(usr)
 		icon_state = occupied_icon_state
-
+		usr.spawn_loc = req_access_faction
 		to_chat(usr, "<span class='notice'>[on_enter_occupant_message]</span>")
-		to_chat(usr, "<span class='notice'><b>If you ghost, log out or close your client now, your character will shortly be saved and removed from the round.</b></span>")
+		to_chat(usr, "<span class='notice'>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
 
 		time_entered = world.time
 
@@ -466,14 +532,15 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	if(occupant)
 		name = "[name] ([occupant])"
 
-
-/obj/machinery/cryopod/robot/door/gateway/move_inside()
+/obj/structure/frontier_beacon
+	name = "Frontier Beacon"
+	desc = "A huge bluespace beacon. The technology is unlike anything you've ever seen, but its apparent that this recieves teleportation signals from the gateway outside the frontier."
+	icon = 'icons/obj/machines/antimatter.dmi'
+	icon_state = "shield"
+	anchored = 1
+	density = 1
+/obj/structure/frontier_beacon/New()
 	..()
-	//locate(/obj/machinery/computer/cryopod) in range(6,src)
-	for(var/obj/machinery/gateway/G in range(1,src))
-		G.icon_state = "on"
+	GLOB.frontierbeacons |= src
 
-/obj/machinery/cryopod/robot/door/gateway/go_out()
-	..()
-	for(var/obj/machinery/gateway/G in range(1,src))
-		G.icon_state = "off"
+

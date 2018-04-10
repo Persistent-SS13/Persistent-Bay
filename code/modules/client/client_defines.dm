@@ -49,16 +49,3 @@
 	var/static/obj/screen/click_catcher/void
 
 	var/reset_stretch = 0 //Used by things that fiddle with client's stretch-to-fit.
-
-
-
-		////////////
-		//PARALLAX//
-		////////////
-	var/list/parallax = list()
-	var/list/parallax_movable = list()
-	var/list/parallax_offset = list()
-	var/turf/previous_turf = null
-	var/obj/screen/plane_master/parallax_master/parallax_master = null
-	var/obj/screen/plane_master/parallax_dustmaster/parallax_dustmaster = null
-	var/obj/screen/plane_master/parallax_spacemaster/parallax_spacemaster = null

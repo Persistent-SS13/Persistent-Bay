@@ -9,7 +9,7 @@
 	plane = ABOVE_HUMAN_PLANE // this needs to be fairly high so it displays over most things, but it needs to be under lighting
 	interact_offline = 1
 	layer = ABOVE_HUMAN_LAYER
-	circuit = /obj/item/weapon/circuitboard/cryo_tube
+
 	var/on = 0
 	use_power = 1
 	idle_power_usage = 20
@@ -30,7 +30,20 @@
 	initialize_directions = dir
 	initialize()
 	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/cryo_tube(src)
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/stack/cable_coil(src, 1)
+	RefreshParts()
+
+/obj/machinery/atmospherics/unary/cryo_cell/upgraded/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/cryo_tube(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin/super(src)
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)

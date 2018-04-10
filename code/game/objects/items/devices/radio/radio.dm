@@ -27,6 +27,9 @@
 	var/const/FREQ_LISTENING = 1
 	var/list/internal_channels
 
+	var/faction_uid = ""
+	var/public_mode = 1 // if this is on, the radio will send and recieve signals with no faction association
+
 /obj/item/device/radio
 	var/datum/radio_frequency/radio_connection
 	var/list/datum/radio_frequency/secure_radio_connections = new
@@ -35,7 +38,9 @@
 		radio_controller.remove_object(src, frequency)
 		frequency = new_frequency
 		radio_connection = radio_controller.add_object(src, frequency, RADIO_CHAT)
-
+/obj/item/device/radio/proc/getfaction(var/mob/user)
+	faction_uid = user.GetFaction()
+	message_admins("faction_uid:[faction_uid]")
 /obj/item/device/radio/Initialize()
 	. = ..()
 	wires = new(src)
@@ -81,7 +86,14 @@
 
 	data["mic_cut"] = (wires.IsIndexCut(WIRE_TRANSMIT) || wires.IsIndexCut(WIRE_SIGNAL))
 	data["spk_cut"] = (wires.IsIndexCut(WIRE_RECEIVE) || wires.IsIndexCut(WIRE_SIGNAL))
-
+	var/datum/world_faction/connected_faction
+	if(faction_uid && faction_uid != "")
+		connected_faction = get_faction(faction_uid)
+	if(!connected_faction)
+		faction_uid = ""
+		public_mode = 1
+	data["connected_faction"] = connected_faction ? connected_faction.name : "Not connected."
+	data["public_mode"] = public_mode ? "On" : "Off"
 	var/list/chanlist = list_channels(user)
 	if(islist(chanlist) && chanlist.len)
 		data["chan_list"] = chanlist
@@ -169,7 +181,12 @@
 		if(A && target)
 			A.ai_actual_track(target)
 		. = 1
-
+	else if(href_list["connect_to_faction"])
+		getfaction(usr)
+		. = 1
+	else if(href_list["toggle_public_mode"])
+		public_mode = !public_mode
+		. = 1
 	else if (href_list["freq"])
 		var/new_frequency = (frequency + text2num(href_list["freq"]))
 		if ((new_frequency < PUBLIC_LOW_FREQ || new_frequency > PUBLIC_HIGH_FREQ))
@@ -199,7 +216,7 @@
 		. = 1
 	if(href_list["nowindow"]) // here for pAIs, maybe others will want it, idk
 		return 1
-
+	
 	if(.)
 		GLOB.nanomanager.update_uis(src)
 
@@ -355,17 +372,24 @@
 			"reject" = 0,	// if nonzero, the signal will not be accepted by any broadcasting machinery
 			"level" = position.z, // The source's z level
 			"language" = speaking,
-			"verb" = verb
+			"verb" = verb,
+			"faction_uid" = public_mode ? faction_uid : ""
 		)
 		signal.frequency = connection.frequency // Quick frequency set
 
 	  //#### Sending the signal to all subspace receivers ####//
 
 		for(var/obj/machinery/telecomms/receiver/R in telecomms_list)
+			if(!R.loc)
+				telecomms_list -= R
+				continue
 			R.receive_signal(signal)
 
 		// Allinone can act as receivers.
 		for(var/obj/machinery/telecomms/allinone/R in telecomms_list)
+			if(!R.loc)
+				telecomms_list -= R
+				continue
 			R.receive_signal(signal)
 
 		// Receiving code can be located in Telecommunications.dm
@@ -415,6 +439,9 @@
 	signal.frequency = connection.frequency // Quick frequency set
 
 	for(var/obj/machinery/telecomms/receiver/R in telecomms_list)
+		if(!R.loc)
+			telecomms_list -= R
+			continue
 		R.receive_signal(signal)
 
 
@@ -431,7 +458,7 @@
 	if(!connection)	return 0	//~Carn
 	return Broadcast_Message(connection, M, voicemask, pick(M.speak_emote),
 					  src, message, displayname, jobname, real_name, M.voice_name,
-					  filter_type, signal.data["compression"], GetConnectedZlevels(position.z), connection.frequency,verb,speaking)
+					  filter_type, signal.data["compression"], GetConnectedZlevels(position.z), connection.frequency,verb,speaking, public_mode ? faction_uid : "")
 
 
 /obj/item/device/radio/hear_talk(mob/M as mob, msg, var/verb = "says", var/datum/language/speaking = null)
@@ -454,11 +481,15 @@
 */
 
 
-/obj/item/device/radio/proc/receive_range(freq, level)
+/obj/item/device/radio/proc/receive_range(freq, level, faction)
 	// check if this radio can receive on the given frequency, and if so,
 	// what the range is in which mobs will hear the radio
 	// returns: -1 if can't receive, range otherwise
-
+	if(!faction || faction == "")
+		if(!public_mode)
+			return -1
+	if(faction && faction != "" && faction != faction_uid)
+		return -1
 	if (wires.IsIndexCut(WIRE_RECEIVE))
 		return -1
 	if(!listening)

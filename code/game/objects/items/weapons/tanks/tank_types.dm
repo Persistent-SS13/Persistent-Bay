@@ -122,6 +122,7 @@
 	force = 4
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
 	volume = 2 //Tiny. Real life equivalents only have 21 breaths of oxygen in them. They're EMERGENCY tanks anyway -errorage (dangercon 2011)
+	matter = list("steel" = 250)
 
 /obj/item/weapon/tank/emergency/oxygen
 	name = "emergency oxygen tank"
@@ -137,12 +138,14 @@
 	name = "extended-capacity emergency oxygen tank"
 	icon_state = "emergency_engi"
 	volume = 6
+	matter = list("steel" = 350)
 
 /obj/item/weapon/tank/emergency/oxygen/double
 	name = "double emergency oxygen tank"
 	icon_state = "emergency_double"
 	gauge_icon = "indicator_emergency_double"
 	volume = 10
+	matter = list("steel" = 500)
 
 
 /obj/item/weapon/tank/emergency/nitrogen
@@ -162,6 +165,7 @@
 	icon_state = "emergency_double_nitrogen"
 	gauge_icon = "indicator_emergency_double"
 	volume = 10
+	matter = list("steel" = 500)
 
 /obj/item/weapon/tank/emergency/phoron
 	name = "emergency phoron tank"

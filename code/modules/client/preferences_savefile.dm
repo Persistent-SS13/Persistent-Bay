@@ -37,12 +37,12 @@
 //	S.cd = "/"
 //	if(!slot)	slot = default_slot
 
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	/**
 	if(slot != SAVE_RESET) // SAVE_RESET will reset the slot as though it does not exist, but keep the current slot for saving purposes.
 		slot = sanitize_integer(slot, 1, config.character_slots, initial(default_slot))
@@ -78,7 +78,7 @@
 	mannequin.dna.ready_dna(mannequin)
 	mannequin.dna.b_type = client.prefs.b_type
 	mannequin.sync_organ_dna()
-	mannequin.internal_organs_by_name[BP_STACK] = new /obj/item/organ/internal/stack(mannequin,1)
+	// mannequin.internal_organs_by_name[BP_STACK] = new /obj/item/organ/internal/stack(mannequin,1)
 	var/money_amount = 500
 	var/datum/money_account/M = create_account(mannequin.real_name, money_amount, null)
 	M.remote_access_pin = chosen_pin
@@ -93,14 +93,66 @@
 		var/datum/transaction/T = M.transaction_log[1]
 		remembered_info += "<b>Your account was created:</b> [T.time], [T.date] at [T.source_terminal]<br>"
 	mannequin.mind.store_memory(remembered_info)
-
+	var/decl/backpack_outfit/bo
+	var/metadata
+	if(mannequin.backpack_setup)
+		bo = mannequin.backpack_setup.backpack
+		metadata = mannequin.backpack_setup.metadata
+	else
+		bo = get_default_outfit_backpack()
+	var/backpack = bo.spawn_backpack(mannequin, metadata)
+	if(backpack)
+		mannequin.equip_to_slot_or_del(backpack,slot_back)
 	mannequin.mind.initial_account = M
-	CreateModularRecord(mannequin)
-	var/decl/hierarchy/outfit/job/assistant/outfit = new()
-	
-	outfit.equip(mannequin)
+	var/datum/computer_file/crew_record/record = CreateModularRecord(mannequin)
+	var/faction_uid = "refugee"
+	if(faction == "Nanotrasen")
+		faction_uid = "nanotrasen"
+		var/datum/world_faction/faction = get_faction("nanotrasen")
+		if(faction)
+			var/datum/computer_file/crew_record/record2 = new()
+			if(!record2.load_from_global(real_name))
+				message_admins("record for [real_name] failed to load in character creation..")
+			else
+				faction.records.faction_records |= record
+			var/obj/item/weapon/card/id/id = new(mannequin)
+			id.registered_name = real_name
+			id.selected_faction = faction.uid
+			id.approved_factions |= faction.uid
+			id.associated_account_number = M.account_number
+			if(record2)
+				id.sync_from_record(record2)
+			mannequin.equip_to_slot_or_del(id,slot_wear_id)
+			var/obj/item/organ/internal/stack/stack = mannequin.internal_organs_by_name["stack"]
+			if(stack)
+				stack.connected_faction = "nanotrasen"
+				stack.try_connect()
+			mannequin.equip_to_slot_or_del(new /obj/item/device/radio/headset(mannequin),slot_l_ear)
+	if(faction == "Refugees" || faction == "Entrepreneur")
+		var/datum/world_faction/faction = get_faction("refugee")
+		if(faction)
+			var/datum/computer_file/crew_record/record2 = new()
+			if(!record2.load_from_global(real_name))
+				message_admins("record for [real_name] failed to load in character creation..")
+			else
+				faction.records.faction_records |= record
+			var/obj/item/weapon/card/id/id = new(mannequin)
+			id.registered_name = real_name
+			id.selected_faction = faction.uid
+			id.approved_factions |= faction.uid
+			if(record2)
+				id.sync_from_record(record2)
+			mannequin.equip_to_slot_or_del(id,slot_wear_id)
+			var/obj/item/organ/internal/stack/stack = mannequin.internal_organs_by_name["stack"]
+			if(stack)
+				stack.connected_faction = "refugee"
+				stack.try_connect()
+	mannequin.spawn_loc = faction_uid
+	mannequin.spawn_type = 2
+	mannequin.species.equip_survival_gear(mannequin)
+	mannequin.equip_to_slot_or_del(new /obj/item/clothing/shoes/black(mannequin),slot_shoes)
 	S << mannequin
-	load_characters()
+	character_list = list()
 	qdel(mannequin)
 
 //	S["version"] << SAVEFILE_VERSION_MAX

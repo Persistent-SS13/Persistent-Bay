@@ -10,7 +10,7 @@
 	power_channel = EQUIP
 	var/obj/item/weapon/cell/charging = null
 	var/chargelevel = -1
-	circuit = /obj/item/weapon/circuitboard/machinery/cell_charger
+
 
 
 /obj/machinery/cell_charger/New()
@@ -18,6 +18,7 @@
 	..()
 	//Create parts for Machine
 	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/machinery/cell_charger(src)
 	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
 	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)

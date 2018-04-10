@@ -31,6 +31,10 @@
 
 /obj/item/weapon/computer_hardware/nano_printer/attackby(obj/item/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/weapon/paper))
+		var/obj/item/weapon/paper/paper = W
+		if(paper.info && paper.info != "")
+			to_chat(user, "You try to add \the [W] into \the [src], but paper that is not blank is not accepted.")
+			return
 		if(stored_paper >= max_paper)
 			to_chat(user, "You try to add \the [W] into \the [src], but its paper bin is full.")
 			return
@@ -46,6 +50,9 @@
 			return
 		for(var/obj/item/weapon/bundleitem in B) //loop through items in bundle
 			if(istype(bundleitem, /obj/item/weapon/paper)) //if item is paper (and not photo), add into the bin
+				var/obj/item/weapon/paper/paper = bundleitem
+				if(paper.info && paper.info != "")					
+					continue
 				B.pages.Remove(bundleitem)
 				qdel(bundleitem)
 				num_of_pages_added++

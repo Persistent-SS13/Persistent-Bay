@@ -13,7 +13,7 @@
 	desc = "Emergency air-tight shutter, capable of sealing off breached areas."
 	icon = 'icons/obj/doors/DoorHazard.dmi'
 	icon_state = "door_open"
-	req_one_access = list(access_atmospherics, access_engine_equip)
+	req_one_access = list(core_access_engineering_programs, core_access_engineering_programs)
 	opacity = 0
 	density = 0
 	layer = BELOW_DOOR_LAYER
@@ -261,7 +261,7 @@
 	if (stat & BROKEN)
 		new /obj/item/weapon/circuitboard/broken(src.loc)
 	else
-		new/obj/item/weapon/circuitboard/airalarm(src.loc)
+		new/obj/item/weapon/airalarm_electronics(src.loc)
 
 	var/obj/structure/firedoor_assembly/FA = new/obj/structure/firedoor_assembly(src.loc)
 	FA.anchored = !moved

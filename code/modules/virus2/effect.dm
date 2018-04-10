@@ -78,6 +78,7 @@
 				if(O)
 					O.droplimb(0,DROPLIMB_BLUNT)
 
+/**
 /datum/disease2/effect/radian
 	name = "Radian's Syndrome"
 	stage = 4
@@ -85,7 +86,7 @@
 	badness = VIRUS_COMMON
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		mob.apply_effect(2*multiplier, IRRADIATE, blocked = 0)
-
+**/
 /datum/disease2/effect/deaf
 	name = "Dead Ear Syndrome"
 	stage = 4
@@ -99,14 +100,14 @@
 	badness = VIRUS_EXOTIC
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		mob.monkeyize()
-
+/**
 /datum/disease2/effect/killertoxins
 	name = "Toxification Syndrome"
 	stage = 4
 	badness = VIRUS_COMMON
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		mob.adjustToxLoss(15*multiplier)
-
+**/
 /datum/disease2/effect/dna
 	name = "Reverse Pattern Syndrome"
 	stage = 4
@@ -175,7 +176,7 @@
 			E.min_broken_damage = initial(E.min_broken_damage)
 
 ////////////////////////STAGE 3/////////////////////////////////
-
+/**
 /datum/disease2/effect/toxins
 	name = "Hyperacidity"
 	stage = 3
@@ -183,21 +184,22 @@
 	badness = VIRUS_COMMON
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		mob.adjustToxLoss((2*multiplier))
-
+**/
 /datum/disease2/effect/shakey
 	name = "World Shaking Syndrome"
 	stage = 3
 	multiplier_max = 3
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		shake_camera(mob,5*multiplier)
-
+/**
 /datum/disease2/effect/telepathic
 	name = "Telepathy Syndrome"
 	stage = 3
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		mob.dna.SetSEState(GLOB.REMOTETALKBLOCK,1)
 		domutcheck(mob, null, MUTCHK_FORCED)
-
+**/
+/**
 /datum/disease2/effect/mind
 	name = "Lazy Mind Syndrome"
 	stage = 3
@@ -206,7 +208,7 @@
 		var/obj/item/organ/internal/brain/B = mob.internal_organs_by_name[BP_BRAIN]
 		if (B && B.damage < B.min_broken_damage)
 			B.take_damage(5)
-
+**/
 /datum/disease2/effect/deaf
 	name = "Hard of Hearing Syndrome"
 	stage = 3
@@ -219,14 +221,14 @@
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		to_chat(mob, "<span class='notice'>You have trouble telling right and left apart all of a sudden.</span>")
 		mob.confused += 10
-
+/**
 /datum/disease2/effect/mutation
 	name = "DNA Degradation"
 	stage = 3
 	badness = VIRUS_COMMON
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		mob.apply_damage(2, CLONE)
-
+**/
 /datum/disease2/effect/chem_synthesis
 	name = "Chemical Synthesis"
 	stage = 3
@@ -338,6 +340,12 @@
 		for(var/mob/living/carbon/human/M in get_step(mob,mob.dir))
 			mob.spread_disease_to(M)
 		if (prob(50) && !mob.wear_mask)
+			var/turf/T = get_turf(mob)
+			var/found = 0
+			for(var/obj/effect/decal/cleanable/mucus/muc in T.contents)
+				found++
+				if(found >= 3)
+					return
 			var/obj/effect/decal/cleanable/mucus/M = new(get_turf(mob))
 			M.virus2 = virus_copylist(mob.virus2)
 

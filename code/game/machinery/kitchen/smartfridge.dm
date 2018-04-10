@@ -12,7 +12,6 @@
 	idle_power_usage = 5
 	active_power_usage = 100
 	flags = NOREACT
-	circuit = /obj/item/weapon/circuitboard/smartfridge/
 	var/global/max_n_of_items = 999 // Sorry but the BYOND infinite loop detector doesn't look things over 1000.
 	var/icon_on = "smartfridge"
 	var/icon_off = "smartfridge-off"
@@ -31,6 +30,10 @@
 
 /obj/machinery/smartfridge/New()
 	..()
+	component_parts = list()
+	var/obj/item/weapon/circuitboard/smartfridge/V = new(null)
+	V.set_type(type)
+	component_parts += V
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
@@ -69,7 +72,7 @@
 /obj/machinery/smartfridge/secure/extract
 	name = "\improper Slime Extract Storage"
 	desc = "A refrigerated storage unit for slime extracts."
-	req_access = list(access_research)
+	req_access = list(core_access_science_programs)
 
 /obj/machinery/smartfridge/secure/extract/accept_check(var/obj/item/O as obj)
 	if(istype(O,/obj/item/slime_extract))
@@ -137,7 +140,7 @@
 	icon_off = "drying_rack"
 
 /obj/machinery/smartfridge/drying_rack/accept_check(var/obj/item/O as obj)
-	if(istype(O, /obj/item/weapon/reagent_containers/food/snacks/))
+	if(istype(O, /obj/item/weapon/reagent_containers/food/snacks))
 		var/obj/item/weapon/reagent_containers/food/snacks/S = O
 		if (S.dried_type)
 			return 1
@@ -205,7 +208,6 @@
 		return
 	if(default_part_replacement(user, O))
 		return
-	return ..()
 
 	if(isMultitool(O) || isWirecutter(O))
 		if(panel_open)

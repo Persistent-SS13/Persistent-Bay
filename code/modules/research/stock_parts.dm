@@ -61,30 +61,6 @@
 	origin_tech = list(TECH_MATERIAL = 1)
 	matter = list(DEFAULT_WALL_MATERIAL = 80)
 
-/obj/item/weapon/stock_parts/gear
-	name = "gear"
-	desc = "A gear used for construction."
-	icon = 'icons/obj/stock_parts.dmi'
-	icon_state = "gear"
-	origin_tech = list(TECH_ENGINEERING = 1)
-	matter = list(DEFAULT_WALL_MATERIAL = 50)
-
-/obj/item/weapon/stock_parts/motor
-	name = "motor"
-	desc = "A motor used for construction."
-	icon = 'icons/obj/stock_parts.dmi'
-	icon_state = "motor"
-	origin_tech = list(TECH_ENGINEERING = 1)
-	matter = list(DEFAULT_WALL_MATERIAL = 60, "glass" = 10)
-
-/obj/item/weapon/stock_parts/spring
-	name = "spring"
-	desc = "A spring used for construction."
-	icon = 'icons/obj/stock_parts.dmi'
-	icon_state = "spring"
-	origin_tech = list(TECH_ENGINEERING = 1)
-	matter = list(DEFAULT_WALL_MATERIAL = 40)
-
 //Rank 2
 
 /obj/item/weapon/stock_parts/scanning_module/adv

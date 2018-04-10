@@ -10,6 +10,7 @@
     {{#if data.lockable}}
     	<ui-button icon='lock' action='lock'>Lock</ui-button>
     {{/if}}
+	<b>Connected Access Network:{{data.connected_faction}}</b>
   </ui-section>
   <hr/>
   <table>

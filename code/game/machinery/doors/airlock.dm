@@ -33,6 +33,7 @@
 	var/obj/item/weapon/airlock_electronics/electronics = null
 	var/hasShocked = 0 //Prevents multiple shocks from happening
 	var/secured_wires = 0
+
 	var/datum/wires/airlock/wires = null
 
 	var/open_sound_powered = 'sound/machines/airlock_open.ogg'
@@ -52,13 +53,6 @@
 	var/datum/wifi/receiver/button/door/wifi_receiver
 	var/obj/item/weapon/airlock_brace/brace = null
 	var/haskeypad = 0
-
-	var/image/panel_image = null
-	var/panel_icon_state = "panel_open"
-
-	var/image/welded_image = null
-	var/welded_icon_state = "welded"
-
 
 /obj/machinery/door/airlock/keypad // HERE
 	name = "Keypad Entry Airlock"
@@ -101,7 +95,6 @@
 					src.code += text("[]", href_list["type"])
 					if(length(src.code) > 5)
 						src.code = "ERROR"
-		else
 			src.add_fingerprint(usr)
 			for(var/mob/M in viewers(1, src.loc))
 				if((M.client && M.machine == src))
@@ -213,7 +206,7 @@
 /obj/machinery/door/airlock/glass
 	name = "Glass Airlock"
 	icon = 'icons/obj/doors/Doorglass.dmi'
-	
+
 
 	door_crush_damage = DOOR_CRUSH_DAMAGE*0.75
 	maxhealth = 300
@@ -929,7 +922,7 @@ About the new airlock wires panel:
 			return 0
 		cut_verb = "cutting"
 		cut_sound = 'sound/items/Welder.ogg'
-	else if(istype(item,/obj/item/weapon/pickaxe/plasmacutter))
+	else if(istype(item,/obj/item/weapon/gun/energy/plasmacutter))
 		cut_verb = "cutting"
 		cut_sound = 'sound/items/Welder.ogg'
 		cut_delay *= 0.66
@@ -1278,10 +1271,11 @@ About the new airlock wires panel:
 		if(electronics.one_access)
 			req_access.Cut()
 			req_one_access = src.electronics.conf_access
+
 		else
 			req_one_access.Cut()
 			req_access = src.electronics.conf_access
-
+		req_access_faction = electronics.req_access_faction
 		//get the name from the assembly
 		if(assembly.created_name)
 			name = assembly.created_name
@@ -1346,7 +1340,7 @@ About the new airlock wires panel:
 	else if (src.req_one_access.len)
 		electronics.conf_access = src.req_one_access
 		electronics.one_access = 1
-
+	electronics.req_access_faction = req_access_faction
 /obj/machinery/door/airlock/emp_act(var/severity)
 	if(prob(20/severity))
 		spawn(0)

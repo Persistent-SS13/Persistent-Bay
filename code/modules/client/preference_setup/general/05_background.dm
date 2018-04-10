@@ -6,14 +6,14 @@
 	var/memory = ""
 	var/chosen_pin = 1000
 	//Some faction information.
-	var/home_system = "Unset"           //System of birth.
+	var/home_system           //System of birth.
 	var/citizenship = "None"            //Current home system.
-	var/faction = "None"                //Antag faction/general associated faction.
+	var/faction              //Antag faction/general associated faction.
 	var/religion = "None"               //Religious association.
 
 /datum/category_item/player_setup_item/general/background
 	name = "Background"
-	sort_order = 5
+	sort_order = 4
 
 /datum/category_item/player_setup_item/general/background/load_character(var/savefile/S)
 	from_file(S["med_record"],pref.med_record)
@@ -38,35 +38,26 @@
 	to_file(S["memory"],pref.memory)
 
 /datum/category_item/player_setup_item/general/background/sanitize_character()
-	if(!pref.home_system) pref.home_system = "Unset"
-	if(!pref.citizenship) pref.citizenship = "None"
-	if(!pref.faction)     pref.faction =     "None"
-	if(!pref.religion)    pref.religion =    "None"
-
-	pref.nanotrasen_relation = sanitize_inlist(pref.nanotrasen_relation, COMPANY_ALIGNMENTS, initial(pref.nanotrasen_relation))
-
+	return 0
 /datum/category_item/player_setup_item/general/background/content(var/mob/user)
-	. += "<b>Background Information</b><br>"
-	. += "[GLOB.using_map.company_name] Relation: <a href='?src=\ref[src];nt_relation=1'>[pref.nanotrasen_relation]</a><br/>"
-	. += "Home System: <a href='?src=\ref[src];home_system=1'>[pref.home_system]</a><br/>"
-	. += "Citizenship: <a href='?src=\ref[src];citizenship=1'>[pref.citizenship]</a><br/>"
-	. += "Faction: <a href='?src=\ref[src];faction=1'>[pref.faction]</a><br/>"
-	. += "Religion: <a href='?src=\ref[src];religion=1'>[pref.religion]</a><br/>"
-
-	. += "<br/><b>Records</b>:<br/>"
-	if(jobban_isbanned(user, "Records"))
-		. += "<span class='danger'>You are banned from using character records.</span><br>"
-	else
-		. += "Medical Records:<br>"
-		. += "<a href='?src=\ref[src];set_medical_records=1'>[TextPreview(pref.med_record,40)]</a><br><br>"
-		. += "Employment Records:<br>"
-		. += "<a href='?src=\ref[src];set_general_records=1'>[TextPreview(pref.gen_record,40)]</a><br><br>"
-		. += "Security Records:<br>"
-		. += "<a href='?src=\ref[src];set_security_records=1'>[TextPreview(pref.sec_record,40)]</a><br>"
-		. += "Memory:<br>"
-		. += "<a href='?src=\ref[src];set_memory=1'>[TextPreview(pref.memory,40)]</a><br>"
-		. += "Bank Account Pin:<br>"
-		. += "<a href='?src=\ref[src];set_pin=1'>[pref.chosen_pin]</a><br>"
+	. += "<b>Background Information</b><br><br>"
+	. += "Early Life: <a href='?src=\ref[src];home_system=1'>[pref.home_system ? pref.home_system : "Unset*"]</a>"
+	if(pref.home_system)
+		var/datum/species/S = all_species[pref.species ? pref.species : SPECIES_HUMAN]
+		var/background = S.backgrounds[pref.home_system]
+		if(background)
+			. += "<br>[background]<br>"
+	. += "<br><br>Starting Employer: <a href='?src=\ref[src];faction=1'>[pref.faction ? pref.faction : "Unset*"]</a>"
+	switch(pref.faction)
+		if("Nanotrasen")
+			. += "<br>You're offered a job as an employee in Nanotrasen, one of the newest and fastest research firms in the Galaxy. Nanotrasen provides you passage to a gateway that teleports you to their outpost deep inside the frontier.<br>"
+		if("Refugees")
+			. += "<br>You have left your previous home in a desperate search for a better life. You've been offered free passage to a gateway that will teleport you to a free-station deep inside the frontier.<br><br>"
+		if("Entrepreneur")
+			. += "<br>You have heard about an unexplored frontier rich in rare materials and untapped research opprotunties. Theirs money to be made everywhere, and theirs even free passage to a gateway that will teleport you to a free-station.<br>"
+			
+	. += "<br><br>Bank Account Pin:<br>"
+	. += "<a href='?src=\ref[src];set_pin=1'>[pref.chosen_pin]</a><br>"
 /datum/category_item/player_setup_item/general/background/OnTopic(var/href,var/list/href_list, var/mob/user)
 	if(href_list["nt_relation"])
 		var/new_relation = input(user, "Choose your relation to [GLOB.using_map.company_name]. Note that this represents what others can find out about your character by researching your background, not what your character actually thinks.", "Character Preference", pref.nanotrasen_relation)  as null|anything in COMPANY_ALIGNMENTS
@@ -75,15 +66,13 @@
 			return TOPIC_REFRESH
 
 	else if(href_list["home_system"])
-		var/choice = input(user, "Please choose a home system.", "Character Preference", pref.home_system) as null|anything in GLOB.using_map.home_system_choices + list("Unset","Other")
-		if(!choice || !CanUseTopic(user))
-			return TOPIC_NOACTION
-		if(choice == "Other")
-			var/raw_choice = sanitize(input(user, "Please enter a home system.", "Character Preference")  as text|null, MAX_NAME_LEN)
-			if(raw_choice && CanUseTopic(user))
-				pref.home_system = raw_choice
+		var/datum/species/S = all_species[pref.species ? pref.species : SPECIES_HUMAN]
+		if(S.backgrounds.len)
+			var/choice = input(user, "Please choose a background.", "Character Preference", pref.home_system) as null|anything in S.backgrounds
+			if(choice)
+				pref.home_system = choice
 		else
-			pref.home_system = choice
+			pref.home_system = "Unknown"
 		return TOPIC_REFRESH
 
 	else if(href_list["citizenship"])
@@ -99,14 +88,9 @@
 		return TOPIC_REFRESH
 
 	else if(href_list["faction"])
-		var/choice = input(user, "Please choose a faction to work for.", "Character Preference", pref.faction) as null|anything in GLOB.using_map.faction_choices + list("None","Other")
-		if(!choice || !CanUseTopic(user))
-			return TOPIC_NOACTION
-		if(choice == "Other")
-			var/raw_choice = sanitize(input(user, "Please enter a faction.", "Character Preference")  as text|null, MAX_NAME_LEN)
-			if(raw_choice)
-				pref.faction = raw_choice
-		else
+		var/list/joinable = list("Nanotrasen", "Refugees", "Entrepreneur")
+		var/choice = input(user, "Please choose a reason for coming to the frontier", "Character Preference", pref.faction) as null|anything in joinable
+		if(choice)
 			pref.faction = choice
 		return TOPIC_REFRESH
 

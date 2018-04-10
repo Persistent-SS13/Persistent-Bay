@@ -72,7 +72,7 @@
 	var/RCon = 1				// Cut to disable AI and remote control.
 	var/RCon_tag = "NO_TAG"		// RCON tag, change to show it on SMES Remote control console.
 	var/emp_proof = 0			// Whether the SMES is EMP proof
-	circuit = /obj/item/weapon/circuitboard/smes
+
 	charge = 0
 	should_be_mapped = 1
 
@@ -137,6 +137,7 @@
 /obj/machinery/power/smes/buildable/New()
 	component_parts = list()
 	component_parts += new /obj/item/stack/cable_coil(src,30)
+	component_parts += new /obj/item/weapon/circuitboard/smes(src)
 	src.wires = new /datum/wires/smes(src)
 
 	// Allows for mapped-in SMESs with larger capacity/IO
@@ -157,6 +158,9 @@
 // Proc: recalc_coils()
 // Parameters: None
 // Description: Updates properties (IO, capacity, etc.) of this SMES by checking internal components.
+/obj/machinery/power/smes/buildable/after_load()
+	recalc_coils()
+	..()
 /obj/machinery/power/smes/buildable/proc/recalc_coils()
 	cur_coils = 0
 	capacity = 0

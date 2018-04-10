@@ -1,7 +1,7 @@
 /datum/computer_file/program/supply
 	filename = "supply"
 	filedesc = "Supply Management"
-	nanomodule_path = /datum/nano_module/supply
+	nanomodule_path = /datum/nano_module/program/supply
 	program_icon_state = "supply"
 	program_menu_icon = "cart"
 	extended_desc = "A management tool that allows for ordering of various supplies through the facility's cargo system. Some features may require additional access."
@@ -11,11 +11,11 @@
 
 /datum/computer_file/program/supply/process_tick()
 	..()
-	var/datum/nano_module/supply/SNM = NM
+	var/datum/nano_module/program/supply/SNM = NM
 	if(istype(SNM))
 		SNM.emagged = computer_emagged
 
-/datum/nano_module/supply
+/datum/nano_module/program/supply
 	name = "Supply Management program"
 	var/screen = 1		// 0: Ordering menu, 1: Statistics 2: Shuttle control, 3: Orders menu
 	var/selected_category
@@ -23,18 +23,29 @@
 	var/list/category_contents
 	var/emagged = FALSE	// TODO: Implement synchronisation with modular computer framework.
 	var/current_security_level
-
-/datum/nano_module/supply/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
+	var/list/selected_telepads
+	var/list/selected_telepads_export = list()
+/datum/nano_module/program/supply/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
 	var/list/data = host.initial_data()
-	var/is_admin = check_access(user, access_cargo)
+	var/datum/world_faction/connected_faction
+	if(program.computer.network_card && program.computer.network_card.connected_network)
+		connected_faction = program.computer.network_card.connected_network.holder
+	if(!connected_faction)
+		program.computer.kill_program()
+	if(!selected_telepads)
+		selected_telepads = connected_faction.cargo_telepads.Copy()
+	var/is_admin = check_access(user, core_access_order_approval, connected_faction.uid)
+	data["faction_name"] = connected_faction.name
+	data["credits"] = connected_faction.central_account.money
+	data["is_admin"] = is_admin
+		
+		
 	var/decl/security_state/security_state = decls_repository.get_decl(GLOB.using_map.security_state)
 	if(!category_names || !category_contents || current_security_level != security_state.current_security_level)
 		generate_categories()
 		current_security_level = security_state.current_security_level
-
-	data["is_admin"] = is_admin
+	data["can_print"] = can_print()
 	data["screen"] = screen
-	data["credits"] = "[supply_controller.points]"
 	switch(screen)
 		if(1)// Main ordering menu
 			data["categories"] = category_names
@@ -50,30 +61,57 @@
 			data["credits_platinum"] = supply_controller.point_sources["platinum"] ? supply_controller.point_sources["platinum"] : 0
 			data["credits_paperwork"] = supply_controller.point_sources["manifest"] ? supply_controller.point_sources["manifest"] : 0
 			data["credits_virology"] = supply_controller.point_sources["virology"] ? supply_controller.point_sources["virology"] : 0
-			data["can_print"] = can_print()
-
+			
+		if(3) // order confirmation and telepad control
+			var/list/telepads[0]
+			for(var/obj/machinery/telepad_cargo/telepad in connected_faction.cargo_telepads)
+				telepads.Add(list(list(
+					"name" = telepad.name,
+					"ref" = "\ref[telepad]",
+					"selected" = (telepad in selected_telepads)
+				)))
+				data["telepads"] = telepads
 		if(4)// Order processing
 			var/list/cart[0]
 			var/list/requests[0]
-			for(var/datum/supply_order/SO in supply_controller.shoppinglist)
+			for(var/datum/supply_order/SO in connected_faction.approved_orders)
 				cart.Add(list(list(
 					"id" = SO.ordernum,
 					"object" = SO.object.name,
 					"orderer" = SO.orderedby,
-					"cost" = SO.object.cost,
+					"cost" = SO.object.cost*10,
 					"reason" = SO.reason
 				)))
-			for(var/datum/supply_order/SO in supply_controller.requestlist)
+			for(var/datum/supply_order/SO in connected_faction.pending_orders)
 				requests.Add(list(list(
 					"id" = SO.ordernum,
 					"object" = SO.object.name,
 					"orderer" = SO.orderedby,
-					"cost" = SO.object.cost,
+					"cost" = SO.object.cost*10,
 					"reason" = SO.reason
 					)))
 			data["cart"] = cart
 			data["requests"] = requests
-
+		if(5) // export view..
+			var/list/exports[0]
+			for(var/datum/export_order/order in supply_controller.all_exports)
+				exports.Add(list(list(
+					"name" = order.name,
+					"required" = order.required,
+					"supplied" = order.supplied,
+					"id" = "\ref[order]"
+				)))
+			data["exports"] = exports
+		if(6)
+			var/list/telepads[0]
+			for(var/obj/machinery/telepad_cargo/telepad in connected_faction.cargo_telepads)
+				telepads.Add(list(list(
+					"name" = telepad.name,
+					"ref" = "\ref[telepad]",
+					"selected" = (telepad in selected_telepads_export)
+				)))
+				data["telepads"] = telepads
+				
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "supply.tmpl", name, 1050, 800, state = state)
@@ -81,11 +119,17 @@
 		ui.set_initial_data(data)
 		ui.open()
 
-/datum/nano_module/supply/Topic(href, href_list)
+/datum/nano_module/program/supply/Topic(href, href_list)
 	var/mob/user = usr
 	if(..())
 		return 1
-
+	var/datum/world_faction/connected_faction
+	if(program.computer.network_card && program.computer.network_card.connected_network)
+		connected_faction = program.computer.network_card.connected_network.holder
+	if(!connected_faction)
+		return 1
+		
+		
 	if(href_list["select_category"])
 		selected_category = href_list["select_category"]
 		return 1
@@ -93,7 +137,20 @@
 	if(href_list["set_screen"])
 		screen = text2num(href_list["set_screen"])
 		return 1
-
+	if(href_list["toggle_telepad"])
+		var/obj/machinery/telepad_cargo/telepad = locate(href_list["toggle_telepad"])
+		if(telepad in selected_telepads)
+			selected_telepads -= telepad
+		else
+			selected_telepads |= telepad
+		return 1
+	if(href_list["toggle_telepad_export"])
+		var/obj/machinery/telepad_cargo/telepad = locate(href_list["toggle_telepad_export"])
+		if(telepad in selected_telepads_export)
+			selected_telepads_export -= telepad
+		else
+			selected_telepads_export |= telepad
+		return 1
 	if(href_list["order"])
 		var/decl/hierarchy/supply_pack/P = locate(href_list["order"]) in supply_controller.master_supply_list
 		if(!istype(P) || P.is_category())
@@ -124,12 +181,17 @@
 		O.reason = reason
 		O.orderedrank = idrank
 		O.comment = "#[O.ordernum]"
-		supply_controller.requestlist += O
+		connected_faction.pending_orders += O
 
 		if(can_print() && alert(user, "Would you like to print a confirmation receipt?", "Print receipt?", "Yes", "No") == "Yes")
 			print_order(O, user)
 		return 1
-
+	if(href_list["print_export"])
+		if(!can_print())
+			return
+		print_export(user, href_list["print_export"])
+		
+		return 1
 	if(href_list["print_summary"])
 		if(!can_print())
 			return
@@ -161,73 +223,55 @@
 			status_signal.data["command"] = "supply"
 			frequency.post_signal(src, status_signal)
 		return 1
-
+	if(href_list["launch_export"])
+		var/sent = 0
+		var/earned = 0
+		if(!selected_telepads_export.len)
+			to_chat(usr, "No telepads selected to use.")
+		for(var/obj/machinery/telepad_cargo/telepad in selected_telepads_export)
+			var/turf/T = telepad.loc
+			if(T.density)	continue
+			for(var/obj/structure/closet/closet in T.contents)
+				for(var/obj/item/weapon/paper/export/export in closet.contents)
+					message_admins("export manifest found")
+					var/earn = supply_controller.fill_order(export.export_id, closet)
+					if(earn)	
+						connected_faction.central_account.money += earn
+						earned += earn
+						sent++
+					break
+				break
+		to_chat(usr, "Export protocl completed, [sent] orders were succesfully sent and [earned] $$ was put into the account.")
 	if(href_list["launch_order"])
-
-		var/phoron_count = 0
-		var/plat_count = 0
-		var/turf/H
-		if(istype(host, /atom))
-			var/atom/G = host
-			H = G.loc
-		for(var/atom/movable/MA in block(locate(H.x - 3,H.y - 1,H.z),locate(H.x - 1, H.y + 1, H.z)))
-			if(MA.anchored)	continue
-
-			// Must be in a crate!
-			if(istype(MA,/obj/structure/closet/crate))
-				var/obj/structure/closet/crate/CR = MA
-
-				supply_controller.add_points_from_source(CR.points_per_crate, "crate")
-				var/find_slip = 1
-
-				for(var/atom in CR)
-					// Sell manifests
-					var/atom/A = atom
-					if(find_slip && istype(A,/obj/item/weapon/paper/manifest))
-						var/obj/item/weapon/paper/manifest/slip = A
-						if(!slip.is_copy && slip.stamped && slip.stamped.len) //yes, the clown stamp will work. clown is the highest authority on the station, it makes sense
-							supply_controller.add_points_from_source(supply_controller.points_per_slip, "manifest")
-							find_slip = 0
-						continue
-
-					// Sell phoron and platinum
-					if(istype(A, /obj/item/stack))
-						var/obj/item/stack/P = A
-						switch(P.get_material_name())
-							if("phoron") phoron_count += P.get_amount()
-							if("platinum") plat_count += P.get_amount()
-			qdel(MA)
-
-		if(phoron_count)
-			var/temp = phoron_count * supply_controller.points_per_phoron
-			supply_controller.add_points_from_source(temp, "phoron")
-
-		if(plat_count)
-			var/temp = plat_count * supply_controller.points_per_platinum
-			supply_controller.add_points_from_source(temp, "platinum")
-
-		if(!supply_controller.shoppinglist.len) return
+		if(!connected_faction.approved_orders) return
+		if(!selected_telepads.len)
+			to_chat(usr, "No telepads selected to use.")
 		var/list/clear_turfs = list()
-		for(var/turf/T in block(locate(H.x - 3,H.y - 1,H.z),locate(H.x - 1, H.y + 1, H.z)))
+		for(var/obj/machinery/telepad_cargo/telepad in selected_telepads)
+			var/turf/T = telepad.loc
 			if(T.density)	continue
 			var/contcount
 			for(var/atom/A in T.contents)
-				if(!A.simulated)
+				if(!A.density)
 					continue
 				contcount++
 			if(contcount)
 				continue
 			clear_turfs += T
-		for(var/S in supply_controller.shoppinglist)
-			if(!clear_turfs.len)	break
+		if(!clear_turfs.len)
+			to_chat(usr, "All selected telepads are obstructed. Clear telepads and try again.")
+		for(var/S in connected_faction.approved_orders)
+			if(!clear_turfs.len)
+				to_chat(usr, "Not enough unobstructed telepads to complete the order. Clear telepads and try again to recieve the remaining shipment.")
+				break
 			var/i = rand(1,clear_turfs.len)
 			var/turf/pickedloc = clear_turfs[i]
 			clear_turfs.Cut(i,i+1)
-			supply_controller.shoppinglist -= S
+			connected_faction.approved_orders -= S
 
 			var/datum/supply_order/SO = S
 			var/decl/hierarchy/supply_pack/SP = SO.object
-
+			playsound(pickedloc,'sound/effects/teleport.ogg',40,1)
 			var/obj/A = new SP.containertype(pickedloc)
 			A.name = "[SP.containername][SO.comment ? " ([SO.comment])":"" ]"
 			//supply manifest generation begin
@@ -236,63 +280,56 @@
 			if(!SP.contraband)
 				slip = new /obj/item/weapon/paper/manifest(A)
 				slip.is_copy = 0
-				slip.info = "<h3>[command_name()] Shipping Manifest</h3><hr><br>"
+				slip.info = "<h3>[connected_faction.name] Shipping Manifest</h3><hr><br>"
 				slip.info +="Order #[SO.ordernum]<br>"
-				slip.info +="Destination: [GLOB.using_map.station_name]<br>"
-				slip.info +="[supply_controller.shoppinglist.len] PACKAGES IN THIS SHIPMENT<br>"
+				slip.info +="Destination: [connected_faction.name] Frontier Telepads<br>"
 				slip.info +="CONTENTS:<br><ul>"
 
 			//spawn the stuff, finish generating the manifest while you're at it
-			if(SP.access)
-				if(isnum(SP.access))
-					A.req_access = list(SP.access)
-				else if(islist(SP.access))
-					var/list/L = SP.access // access var is a plain var, we need a list
-					A.req_access = L.Copy()
-				else
-					log_debug("<span class='danger'>Supply pack with invalid access restriction [SP.access] encountered!</span>")
+			if(A.req_access.len)
+			//	SP.access.len
+				A.req_access = list(core_access_order_approval)
 
 			var/list/spawned = SP.spawn_contents(A)
 			if(slip)
 				for(var/atom/content in spawned)
 					slip.info += "<li>[content.name]</li>" //add the item to the manifest
 				slip.info += "</ul><br>"
-				slip.info += "CHECK CONTENTS AND STAMP BELOW THE LINE TO CONFIRM RECEIPT OF GOODS<hr>"
 
 		return 1
 
 	if(href_list["approve_order"])
 		var/id = text2num(href_list["approve_order"])
-		for(var/datum/supply_order/SO in supply_controller.requestlist)
+		for(var/datum/supply_order/SO in connected_faction.pending_orders)
 			if(SO.ordernum != id)
 				continue
-			if(SO.object.cost > supply_controller.points)
-				to_chat(usr, "<span class='warning'>Not enough points to purchase \the [SO.object.name]!</span>")
+			if(SO.object.cost*10 > connected_faction.central_account.money)
+				to_chat(usr, "<span class='warning'>Not enough Ethericoin $$ to purchase \the [SO.object.name]!</span>")
 				return 1
-			supply_controller.requestlist -= SO
-			supply_controller.shoppinglist += SO
-			supply_controller.points -= SO.object.cost
+			connected_faction.pending_orders -= SO
+			connected_faction.approved_orders += SO
+			connected_faction.central_account.money -= SO.object.cost*10 // make transaction log here...
 			break
 		return 1
 
 	if(href_list["deny_order"])
 		var/id = text2num(href_list["deny_order"])
-		for(var/datum/supply_order/SO in supply_controller.requestlist)
+		for(var/datum/supply_order/SO in connected_faction.pending_orders)
 			if(SO.ordernum == id)
-				supply_controller.requestlist -= SO
+				connected_faction.pending_orders -= SO
 				break
 		return 1
 
 	if(href_list["cancel_order"])
 		var/id = text2num(href_list["cancel_order"])
-		for(var/datum/supply_order/SO in supply_controller.shoppinglist)
+		for(var/datum/supply_order/SO in connected_faction.approved_orders)
 			if(SO.ordernum == id)
-				supply_controller.shoppinglist -= SO
-				supply_controller.points += SO.object.cost
+				connected_faction.approved_orders -= SO
+				connected_faction.central_account.money += SO.object.cost*10
 				break
 		return 1
 
-/datum/nano_module/supply/proc/generate_categories()
+/datum/nano_module/program/supply/proc/generate_categories()
 	category_names = list()
 	category_contents = list()
 	for(var/decl/hierarchy/supply_pack/sp in cargo_supply_pack_root.children)
@@ -304,12 +341,12 @@
 					continue
 				category.Add(list(list(
 					"name" = spc.name,
-					"cost" = spc.cost,
+					"cost" = spc.cost*10,
 					"ref" = "\ref[spc]"
 				)))
 			category_contents[sp.name] = category
 
-/datum/nano_module/supply/proc/get_shuttle_status()
+/datum/nano_module/program/supply/proc/get_shuttle_status()
 	var/datum/shuttle/autodock/ferry/supply/shuttle = supply_controller.shuttle
 	if(!istype(shuttle))
 		return "No Connection"
@@ -322,18 +359,22 @@
 	return "Docking/Undocking"
 
 
-/datum/nano_module/supply/proc/can_print()
+/datum/nano_module/program/supply/proc/can_print()
 	var/obj/item/modular_computer/MC = nano_host()
 	if(!istype(MC) || !istype(MC.nano_printer))
 		return 0
 	return 1
 
-/datum/nano_module/supply/proc/print_order(var/datum/supply_order/O, var/mob/user)
+/datum/nano_module/program/supply/proc/print_order(var/datum/supply_order/O, var/mob/user)
 	if(!O)
 		return
-
+	var/datum/world_faction/connected_faction
+	if(program.computer.network_card && program.computer.network_card.connected_network)
+		connected_faction = program.computer.network_card.connected_network.holder
+	if(!connected_faction)
+		return 1
 	var/t = ""
-	t += "<h3>[GLOB.using_map.station_name] Supply Requisition Reciept</h3><hr>"
+	t += "<h3>[connected_faction.name] Supply Requisition Reciept</h3><hr>"
 	t += "INDEX: #[O.ordernum]<br>"
 	t += "REQUESTED BY: [O.orderedby]<br>"
 	t += "RANK: [O.orderedrank]<br>"
@@ -345,9 +386,25 @@
 	t += "<hr>"
 	print_text(t, user)
 
-/datum/nano_module/supply/proc/print_summary(var/mob/user)
+/datum/nano_module/program/supply/proc/print_summary(var/mob/user)
 	var/t = ""
 	t += "<center><BR><b><large>[GLOB.using_map.station_name]</large></b><BR><i>[station_date]</i><BR><i>Export overview<field></i></center><hr>"
 	for(var/source in point_source_descriptions)
 		t += "[point_source_descriptions[source]]: [supply_controller.point_sources[source] || 0]<br>"
 	print_text(t, user)
+/datum/nano_module/program/supply/proc/print_export(var/mob/user, var/id)
+	var/datum/world_faction/connected_faction
+	if(program.computer.network_card && program.computer.network_card.connected_network)
+		connected_faction = program.computer.network_card.connected_network.holder
+	if(!connected_faction)
+		return 1
+	var/datum/export_order/order = locate(id)
+	var/t = ""
+	t += "<h3>[connected_faction.name] Export Manifest</h3><hr>"
+	t += "EXPORT: [order.name]<br>"
+	t += "PRINTED BY: [user.name]<br>"
+	t += "SUPPLIED/REQUESTED: [order.supplied]/[order.required]<br>"
+	t += "<hr>"
+	var/obj/item/weapon/paper/export/export = new(program.computer.loc)
+	export.info = t
+	export.export_id = order.id

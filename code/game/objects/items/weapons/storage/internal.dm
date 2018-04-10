@@ -11,6 +11,7 @@
 		verbs -= /obj/item/verb/verb_pickup	//make sure this is never picked up.
 		..()
 /obj/item/weapon/storage/internal/after_load()
+	storage_ui = new /datum/storage_ui/default()
 	if(master_item)
 		loc = master_item
 		name = master_item.name
@@ -100,7 +101,19 @@
 	storage_slots = slots
 	max_w_class = slot_size
 	..()
-
+/obj/item/weapon/storage/internal/pockets/after_load()
+	if(master_item)
+		loc = master_item
+		name = master_item.name
+		if(istype(loc, /obj/item/clothing/suit/storage))
+			var/obj/item/clothing/suit/storage/coat = loc
+			if(coat)
+				coat.pockets = src
+		if(istype(loc, /obj/item/clothing/accessory/storage))
+			var/obj/item/clothing/accessory/storage/web = loc
+			if(web)
+				web.hold = src
+		..()
 /obj/item/weapon/storage/internal/pouch/New(var/newloc, var/storage_space)
 	max_storage_space = storage_space
 	..()

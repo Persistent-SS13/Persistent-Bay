@@ -68,11 +68,12 @@
 	var/list/starting_chems = null
 
 /obj/item/weapon/gun/projectile/dartgun/Initialize()
-	if(starting_chems)
-		for(var/chem in starting_chems)
-			var/obj/B = new container_type(src)
-			B.reagents.add_reagent(chem, 60)
-			beakers += B
+	if(!map_storage_loaded)
+		if(starting_chems)
+			for(var/chem in starting_chems)
+				var/obj/B = new container_type(src)
+				B.reagents.add_reagent(chem, 60)
+				beakers += B
 	. = ..()
 	update_icon()
 

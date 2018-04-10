@@ -70,9 +70,9 @@
 	desc = "Engineering"
 	region = ACCESS_REGION_ENGINEERING
 
-/var/const/access_engine_equip = 11
+/var/const/access_engineer_equipment = 11
 /datum/access/engine_equip
-	id = access_engine_equip
+	id = core_access_engineering_programs
 	desc = "Engine Room"
 	region = ACCESS_REGION_ENGINEERING
 
@@ -148,9 +148,8 @@
 	desc = "Technical Storage"
 	region = ACCESS_REGION_ENGINEERING
 
-/var/const/access_atmospherics = 24
 /datum/access/atmospherics
-	id = access_atmospherics
+	id = core_access_engineering_programs
 	desc = "Atmospherics"
 	region = ACCESS_REGION_ENGINEERING
 

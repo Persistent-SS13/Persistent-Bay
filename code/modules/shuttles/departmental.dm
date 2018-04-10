@@ -7,13 +7,13 @@
 /obj/machinery/computer/shuttle_control/engineering
 	name = "engineering shuttle control console"
 	shuttle_tag = "Engineering"
-	//req_one_access = list(access_engine_equip,access_atmospherics)
+	//req_one_access = list(core_access_engineering_programs,core_access_engineering_programs)
 	circuit = /obj/item/weapon/circuitboard/engineering_shuttle
 
 /obj/machinery/computer/shuttle_control/research
 	name = "research shuttle control console"
 	shuttle_tag = "Research"
-	//req_access = list(access_research)
+	//req_access = list(core_access_science_programs)
 	circuit = /obj/item/weapon/circuitboard/research_shuttle
 
 /obj/machinery/computer/shuttle_control/merchant

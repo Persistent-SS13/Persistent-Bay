@@ -10,6 +10,20 @@
 	var/obj/item/weapon/sample = null
 	var/report_num = 0
 
+/obj/machinery/microscope/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/microscope(src)
+	component_parts += new /obj/item/stack/material/glass(src)	//The "lens" of the microscope
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	RefreshParts()
+
+/obj/machinery/cryopod/attackby(var/obj/item/O as obj, var/mob/user as mob)
+	if(default_deconstruction_screwdriver(user, O))
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
 /obj/machinery/microscope/attackby(obj/item/weapon/W as obj, mob/user as mob)
 
 	if(sample)

@@ -49,23 +49,25 @@ prompts
 //to use them
 
 // PERSISTENCE EDIT ENDS HERE
-/datum/category_group/player_setup_category/general_preferences
-	name = "General"
+
+/datum/category_group/player_setup_category/welcome_preferences
+	name = "Welcome"
 	sort_order = 1
+	category_item_type = /datum/category_item/player_setup_item/welcome
+
+/datum/category_group/player_setup_category/general_preferences
+	name = "Character"
+	sort_order = 2
 	category_item_type = /datum/category_item/player_setup_item/general
 
 /datum/category_group/player_setup_category/skill_preferences
 	name = "Skills"
-	sort_order = 2
+	sort_order = 3
 	category_item_type = /datum/category_item/player_setup_item/skills
 
-/datum/category_group/player_setup_category/occupation_preferences
-	name = "Occupation"
-	sort_order = 3
-	category_item_type = /datum/category_item/player_setup_item/occupation
 
 /datum/category_group/player_setup_category/global_preferences
-	name = "Global"
+	name = "Game Settings"
 	sort_order = 7
 	category_item_type = /datum/category_item/player_setup_item/player_global
 
@@ -117,7 +119,7 @@ prompts
 	var/dat = ""
 	for(var/datum/category_group/player_setup_category/PS in categories)
 		if(PS == selected_category)
-			dat += "[PS.name] "	// TODO: Check how to properly mark a href/button selected in a classic browser window
+			dat += "<b>[PS.name] </b>"	// TODO: Check how to properly mark a href/button selected in a classic browser window
 		else
 			dat += "<a href='?src=\ref[src];category=\ref[PS]'>[PS.name]</a> "
 	return dat
@@ -192,7 +194,6 @@ prompts
 			. += "</td><td></td><td style='width:50%'>"
 		. += "[PI.content(user)]<br>"
 	. += "</td></tr></table>"
-
 /datum/category_group/player_setup_category/occupation_preferences/content(var/mob/user)
 	for(var/datum/category_item/player_setup_item/PI in items)
 		. += "[PI.content(user)]<br>"

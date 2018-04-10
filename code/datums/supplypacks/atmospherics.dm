@@ -9,20 +9,6 @@
 	cost = 10
 	containername = "\improper Internals crate"
 
-/decl/hierarchy/supply_pack/atmospherics/evacuation
-	name = "Emergency equipment"
-	contains = list(/obj/item/weapon/storage/toolbox/emergency = 2,
-					/obj/item/clothing/suit/storage/hazardvest = 2,
-					/obj/item/clothing/suit/armor/vest = 2,
-					/obj/item/weapon/tank/emergency/oxygen/engi = 4,
-			 		/obj/item/clothing/suit/space/emergency = 4,
-					/obj/item/clothing/head/helmet/space/emergency = 4,
-					/obj/item/clothing/mask/gas = 4,
-					/obj/item/device/flashlight/glowstick = 5)
-	cost = 45
-
-	containername = "\improper Emergency crate"
-
 /decl/hierarchy/supply_pack/atmospherics/inflatable
 	name = "Inflatable barriers"
 	contains = list(/obj/item/weapon/storage/briefcase/inflatable = 3)
@@ -64,7 +50,7 @@
 	cost = 60
 	containername = "\improper Phoron gas canister crate"
 	containertype = /obj/structure/closet/crate/secure/large
-	access = access_ce
+//	access = access_ce
 
 /decl/hierarchy/supply_pack/atmospherics/canister_sleeping_agent
 	name = "N2O gas canister"
@@ -72,7 +58,7 @@
 	cost = 40
 	containername = "\improper N2O gas canister crate"
 	containertype = /obj/structure/closet/crate/secure/large
-	access = access_atmospherics
+	access = 3
 
 /decl/hierarchy/supply_pack/atmospherics/canister_carbon_dioxide
 	name = "Carbon dioxide gas canister"
@@ -80,17 +66,17 @@
 	cost = 40
 	containername = "\improper CO2 canister crate"
 	containertype = /obj/structure/closet/crate/secure/large
-	access = access_atmospherics
+	access = 3
 
 /decl/hierarchy/supply_pack/atmospherics/voidsuit
 	name = "Atmospherics voidsuit"
 	contains = list(/obj/item/clothing/suit/space/void/atmos/alt,
 					/obj/item/clothing/head/helmet/space/void/atmos/alt,
 					/obj/item/clothing/shoes/magboots)
-	cost = 120
+	cost = 100
 	containername = "\improper Atmospherics voidsuit crate"
 	containertype = /obj/structure/closet/crate/secure/large
-	access = access_atmospherics
+	access = 3
 
 /decl/hierarchy/supply_pack/atmospherics/canister_hydrogen
 	name = "Hydrogen canister"
@@ -98,11 +84,18 @@
 	cost = 10
 	containername = "\improper Hydrogen canister crate"
 	containertype = /obj/structure/closet/crate/secure/large
-	access = access_atmospherics
+	access = 3
 
 /decl/hierarchy/supply_pack/atmospherics/airpump
 	name = "Portable Air Pumps (x4)"
 	contains = list(/obj/machinery/portable_atmospherics/powered/pump = 4)
 	cost = 25
 	containername = "Portable Air Pump Shipment"
+	containertype = /obj/structure/largecrate
+
+/decl/hierarchy/supply_pack/atmospherics/bulk_canister_air
+	name = "Large Air Canister Shipment (x10)"
+	contains = list(/obj/machinery/portable_atmospherics/canister/air = 10)
+	cost = 100
+	containername = "\improper Large Air Canister Crate"
 	containertype = /obj/structure/largecrate

@@ -837,7 +837,11 @@
 		germ_level += n
 
 /mob/living/carbon/human/revive()
-
+	var/obj/item/organ/internal/stack/stack = internal_organs_by_name[BP_STACK]
+	if(stack)
+		if(stack.lacemob && stack.lacemob.mind)
+			stack.lacemob.mind.transfer_to(src)
+			
 	if(should_have_organ(BP_HEART))
 		vessel.add_reagent(/datum/reagent/blood,species.blood_volume-vessel.total_volume)
 		fixblood()

@@ -61,11 +61,13 @@ What is the naming convention for planes or layers?
 */
 
 #define CLICKCATCHER_PLANE -500
+
 #define SPACE_PLANE -499
-#define PLANE_SPACE_PARALLAX (SPACE_PLANE + 1) // -97
-#define PLANE_SPACE_DUST (PLANE_SPACE_PARALLAX + 1) // -96
-#define PLANE_ABOVE_PARALLAX (PLANE_SPACE_BACKGROUND + 3) // -95
-#define OPEN_SPACE_PLANE -94 //
+#define SKYBOX_PLANE SPACE_PLANE + 1
+
+#define DUST_PLANE SPACE_PLANE + 2
+	#define DUST_LAYER 1
+	#define DEBRIS_LAYER 2
 //Reserve planes for openspace
 #define OPENSPACE_PLANE_START -462
 #define OPENSPACE_PLANE_END -22

@@ -12,7 +12,7 @@
 	anchored = 1
 	use_power = 0
 	clicksound = "switch"
-	circuit = /obj/item/weapon/circuitboard/smes
+
 	var/capacity = 5e6 // maximum charge
 	var/charge = 1e6 // actual charge
 
@@ -130,6 +130,8 @@
 	// else inputting = 0, as set in process()
 
 	for(var/obj/machinery/power/terminal/term in terminals)
+		if(!term.powernet)
+			continue
 		var/inputted = term.powernet.draw_power(to_input)
 		add_charge(inputted)
 		input_available += inputted

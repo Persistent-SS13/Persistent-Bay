@@ -56,8 +56,8 @@
 #define ui_movi "EAST-3:24,SOUTH:5"
 #define ui_zonesel "EAST-1:28,SOUTH:5"
 #define ui_acti_alt "EAST-1:28,SOUTH:5" //alternative intent switcher for when the interface is hidden (F12)
-#define ui_rest "CENTER+3:16,SOUTH:5"
-#define ui_happiness "EAST-1:28,CENTER-3:7"//"EAST-3:30,SOUTH+1:7"
+#define ui_kick_jump "CENTER+3:16,SOUTH:5"
+#define ui_fixeye "EAST-1:28,SOUTH+1:7"//"EAST-3:30,SOUTH+1:7"
 
 #define ui_borg_pull "EAST-3:24,SOUTH+1:7"
 #define ui_borg_module "EAST-2:26,SOUTH+1:7"
@@ -75,8 +75,7 @@
 #define ui_fire "EAST-1:28,NORTH-3:25"
 #define ui_oxygen "EAST-1:28,NORTH-4:23"
 #define ui_pressure "EAST-1:28,NORTH-5:21"
-#define ui_surrender "EAST-1:28,SOUTH+1:6"
-
+#define ui_surrender "EAST+1, NORTH-9"
 
 #define ui_alien_toxin "EAST-1:28,NORTH-2:25"
 #define ui_alien_fire "EAST-1:28,NORTH-3:25"
@@ -88,7 +87,7 @@
 #define ui_stamina "EAST-1:28,CENTER-1:9"
 #define ui_health "EAST-1:28,CENTER:15"
 #define ui_internal "EAST-1:28,CENTER+1:17"
-
+#define ui_happiness "EAST+1, NORTH-13:18"
 									//borgs
 #define ui_borg_health "EAST-1:28,CENTER-1:13" //borgs have the health display where humans have the pressure damage indicator.
 #define ui_alien_health "EAST-1:28,CENTER-1:13" //aliens have the health display where humans have the pressure damage indicator.
@@ -119,12 +118,15 @@
 #define ui_hand "CENTER-1:14,SOUTH:5"
 #define ui_hstore1 "CENTER-2,CENTER-2"
 //#define ui_resist "EAST+1,SOUTH-1"
-#define ui_sleep "EAST-1, NORTH-13"
-
+#define ui_sleep "EAST+1, NORTH-13"
+#define ui_rest "EAST+1, NORTH-14"
 
 
 #define ui_iarrowleft "SOUTH-1,EAST-4"
 #define ui_iarrowright "SOUTH-1,EAST-2"
 
 #define ui_spell_master "EAST-1:16,NORTH-1:16"
+
+
+
 #define ui_genetic_master "EAST-1:16,NORTH-3:16"

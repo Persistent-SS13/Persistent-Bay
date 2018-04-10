@@ -1,0 +1,29 @@
+<span>Current Account: {{:data.faction_name}}<br>Current balance: {{:data.credits}} $$</span>
+<hr>
+{{if data.screen == 1}}
+	<h2>Create a digital invoice payable to {{:data.faction_name}}.</h2>
+	<div class="item">
+		<div class="itemLabel">
+			{{:helper.link("Invoice Amount:", '', {'change_amount' : 1})}}
+		</div>
+		<div class="itemContent">
+			{{:data.amount}}
+		</div>
+	</div>
+	<div class="item">
+		<div class="itemLabel">
+			{{:helper.link("Invoice Reason:", '', {'change_reason' : 1})}}
+		</div>
+		<div class="itemContent">
+			{{:data.reason}}
+		</div>
+	</div>
+	<div class="item">
+		<div class="itemLabel">
+			{{:helper.link("Finalize", '', {'finish' : 1})}}
+		</div>
+		<div class="itemContent">
+			The invoice and related transactions will also carry the name of the person who printed the invoice for security purposes.
+		</div>
+	</div>
+{{/if}}

@@ -10,7 +10,6 @@
 	active_power_usage = 200
 	power_channel = EQUIP
 	flags = OBJ_ANCHORABLE|OBJ_CLIMBABLE
-	circuit = /obj/item/weapon/circuitboard/photocopier
 	var/obj/item/copyitem = null	//what's in the copier!
 	var/copies = 1	//how many copies to print!
 	var/toner = 30 //how much toner is left! woooooo~
@@ -19,6 +18,7 @@
 /obj/machinery/photocopier/New()
 	..()
 	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/photocopier(src)
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)

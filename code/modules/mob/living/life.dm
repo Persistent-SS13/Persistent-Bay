@@ -1,9 +1,13 @@
+/mob/living/var/last_hud_update = 0
 /mob/living/Life()
 	set invisibility = 0
 	set background = BACKGROUND_ENABLED
 
 	..()
-
+	if(last_hud_update > world.time)
+		last_hud_update = world.time + 15 SECONDS
+		update_action_buttons()
+	
 	if (transforming)
 		return
 	if(!loc)
@@ -186,7 +190,6 @@
 		set_fullscreen(disabilities & NEARSIGHTED, "impaired", /obj/screen/fullscreen/impaired, 1)
 		set_fullscreen(eye_blurry, "blurry", /obj/screen/fullscreen/blurry)
 		set_fullscreen(druggy, "high", /obj/screen/fullscreen/high)
-	set_fullscreen(stat == UNCONSCIOUS, "blackout", /obj/screen/fullscreen/blackout)
 
 	if(machine)
 		var/viewflags = machine.check_eye(src)

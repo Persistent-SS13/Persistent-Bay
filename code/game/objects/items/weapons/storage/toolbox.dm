@@ -12,6 +12,7 @@
 	throwforce = 10
 	throw_speed = 1
 	throw_range = 7
+	matter = list(DEFAULT_WALL_MATERIAL = 200)
 	w_class = ITEM_SIZE_LARGE
 	max_w_class = ITEM_SIZE_NORMAL
 	max_storage_space = DEFAULT_LARGEBOX_STORAGE //enough to hold all starting contents

@@ -7,47 +7,38 @@
 	anchored = 1
 	var/notices = 0
 
-/obj/structure/noticeboard/New(var/loc, var/dir, var/building = 0)
-	..()
-
-	if(building)
-		if(loc)
-			src.loc = loc
-
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -32 : 32)
-		pixel_y = (dir & 3)? (dir ==1 ? -27 : 27) : 0
-		update_icon()
-		return
-
+/obj/structure/noticeboard/New(loc, dir, atom/frame, var/ndir)
+	..(loc)
+	if(ndir)
+		set_dir(ndir)
+		pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 30 : -30)
+		pixel_y = (src.dir & 3)? (src.dir ==1 ? 30 : -30) : 0
 /obj/structure/noticeboard/Initialize()
-	for(var/obj/item/I in loc)
-		if(notices > 4) break
-		if(istype(I, /obj/item/weapon/paper))
-			I.loc = src
-			notices++
+	if(!map_storage_loaded)
+		for(var/obj/item/I in loc)
+			if(notices > 4) break
+			if(istype(I, /obj/item/weapon/paper))
+				I.forceMove(src)
+				notices++
+		
+	. = ..()
+/obj/structure/noticeboard/after_load()
 	icon_state = "nboard0[notices]"
-
+	..()
 //attaching papers!!
 /obj/structure/noticeboard/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)
-	if(istype(O, /obj/item/weapon/paper))
+	if(istype(O, /obj/item/weapon/paper) || istype(O, /obj/item/weapon/photo))
 		if(notices < 5)
 			O.add_fingerprint(user)
 			add_fingerprint(user)
-			user.drop_from_inventory(O)
-			O.loc = src
+			user.drop_from_inventory(O,src)
 			notices++
 			icon_state = "nboard0[notices]"	//update sprite
-			user << "<span class='notice'>You pin the paper to the noticeboard.</span>"
+			to_chat(user, "<span class='notice'>You pin the paper to the noticeboard.</span>")
 		else
-			user << "<span class='notice'>You reach to pin your paper to the board but hesitate. You are certain your paper will not be seen among the many others already attached.</span>"
-	if(istype(O, /obj/item/weapon/wrench))
-		user << "<span class='notice'>You start to unwrench the noticeboard.</span>"
-		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
-		if(do_after(user, 15))
-			user << "<span class='notice'>You unwrench the noticeboard.</span>"
-			new /obj/item/frame/noticeboard( src.loc )
-			qdel(src)
-		return
+			to_chat(user, "<span class='notice'>You reach to pin your paper to the board but hesitate. You are certain your paper will not be seen among the many others already attached.</span>")
+	if(isCrowbar(O))
+		qdel(src)
 
 /obj/structure/noticeboard/attack_hand(var/mob/user)
 	examine(user)
@@ -61,6 +52,8 @@
 		var/dat = "<B>Noticeboard</B><BR>"
 		for(var/obj/item/weapon/paper/P in src)
 			dat += "<A href='?src=\ref[src];read=\ref[P]'>[P.name]</A> <A href='?src=\ref[src];write=\ref[P]'>Write</A> <A href='?src=\ref[src];remove=\ref[P]'>Remove</A><BR>"
+		for(var/obj/item/weapon/photo/P in src)
+			dat += "<A href='?src=\ref[src];look=\ref[P]'>[P.name]</A> <A href='?src=\ref[src]; <A href='?src=\ref[src];remove=\ref[P]'>Remove</A><BR>"
 		user << browse("<HEAD><TITLE>Notices</TITLE></HEAD>[dat]","window=noticeboard")
 		onclose(user, "noticeboard")
 	else

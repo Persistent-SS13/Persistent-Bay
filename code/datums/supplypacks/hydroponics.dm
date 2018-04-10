@@ -73,7 +73,7 @@
 					)
 	cost = 15
 	containername = "\improper Hydroponics crate"
-	access = access_hydroponics
+//	access = access_hydroponics
 
 /decl/hierarchy/supply_pack/hydroponics/seeds
 	name = "Seeds crate"
@@ -96,7 +96,7 @@
 					/obj/item/seeds/sugarcaneseed)
 	cost = 10
 	containername = "\improper Seeds crate"
-	access = access_hydroponics
+//	access = access_hydroponics
 
 /decl/hierarchy/supply_pack/hydroponics/weedcontrol
 	name = "Weed control crate"
@@ -106,7 +106,7 @@
 					/obj/item/weapon/grenade/chem_grenade/antiweed = 2)
 	cost = 25
 	containername = "\improper Weed control crate"
-	access = access_hydroponics
+//	access = access_hydroponics
 
 /decl/hierarchy/supply_pack/hydroponics/exoticseeds
 	name = "Exotic seeds crate"
@@ -118,7 +118,7 @@
 	cost = 15
 	containertype = /obj/structure/closet/crate/secure
 	containername = "\improper Exotic Seeds crate"
-	access = access_xenobiology
+//	access = access_xenobiology
 
 /decl/hierarchy/supply_pack/hydroponics/watertank
 	name = "Water tank crate"
@@ -135,7 +135,7 @@
 					/obj/item/bee_pack)
 	cost = 40
 	containername = "\improper Beekeeping crate"
-	access = access_hydroponics
+//	access = access_hydroponics
 
 /decl/hierarchy/supply_pack/hydroponics/hydrotray
 	name = "Empty hydroponics tray"
@@ -143,4 +143,4 @@
 	cost = 30
 	containertype = /obj/structure/closet/crate/large/hydroponics
 	containername = "\improper Hydroponics tray crate"
-	access = access_hydroponics
+//	access = access_hydroponics

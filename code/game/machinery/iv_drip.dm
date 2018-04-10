@@ -61,31 +61,25 @@
 /obj/machinery/iv_drip/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if (istype(W, /obj/item/weapon/reagent_containers))
 		if(!isnull(src.beaker))
-			user << "There is already a reagent container loaded!"
+			to_chat(user, "There is already a reagent container loaded!")
 			return
 
 		user.drop_item()
 		W.loc = src
 		src.beaker = W
-		user << "You attach \the [W] to \the [src]."
+		to_chat(user, "You attach \the [W] to \the [src].")
 		src.update_icon()
 		return
-
-	if(istype(W, /obj/item/weapon/screwdriver))
-		playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
-		user << "<span class='notice'>You start to dismantle the IV drip.</span>"
-		if(do_after(user, 15))
-			user << "<span class='notice'>You dismantle the IV drip.</span>"
-			var/obj/item/stack/rods/A = new /obj/item/stack/rods( src.loc )
-			A.amount = 6
-			if(src.beaker)
-				src.beaker.loc = get_turf(src)
-				src.beaker = null
+	if(isWelder(W))
+		var/obj/item/weapon/weldingtool/WT = W
+		if(WT.remove_fuel(0,user))
+			var/obj/item/stack/material/steel/new_item = new(usr.loc)
+			new_item.add_to_stacks(usr)
+			for (var/mob/M in viewers(src))
+				M.show_message("<span class='notice'>[src] is shaped into metal by [user.name] with the weldingtool.</span>", 3, "<span class='notice'>You hear welding.</span>", 2)
 			qdel(src)
 		return
-	else
-		return ..()
-
+	..()
 
 /obj/machinery/iv_drip/Process()
 	set background = 1

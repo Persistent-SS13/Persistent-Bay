@@ -185,3 +185,36 @@ obj/item/weapon/gun/energy/staff/focus
 			to_chat(user, "<span class='warning'>The [src.name] will now strike only a single person.</span>")
 			projectile_type = /obj/item/projectile/forcebolt"
 	*/
+
+/obj/item/weapon/gun/energy/plasmacutter
+	name = "plasma cutter"
+	desc = "A mining tool capable of expelling concentrated plasma bursts. You could use it to cut limbs off xenos! Or, you know, mine stuff."
+	icon_state = "plasmacutter"
+	item_state = "plasmacutter"
+	w_class = ITEM_SIZE_NORMAL
+	damtype = "fire"
+	charge_meter = 0
+	attack_verb = list("attacked", "slashed", "cut", "sliced")
+	force = 15
+	var/toolspeed = 0.7 //plasmacutters can be used as welders for a few things, and are faster than standard welders
+	fire_sound = 'sound/weapons/pulse.ogg'
+	fire_sound_text = "plasma blast"
+	projectile_type= /obj/item/projectile/plasma
+	charge_cost = 10 //How much energy is needed to fire.
+	max_shots = 30 //Determines the capacity of the weapon's power cell. Specifying a cell_type overrides this value.
+	sharp=1
+	edge=1
+
+
+/obj/item/weapon/gun/energy/plasmacutter/attackby(obj/item/A, mob/user)
+	if(istype(A, /obj/item/stack/material/phoron))
+		var/obj/item/stack/material/S = A
+		
+		if(power_supply.charge==300)
+			return 0
+		S.use(1)
+		power_supply.give(150)
+		to_chat(user, "<span class='notice'>You insert [A] in [src], recharging it.</span>")
+		
+	else
+		..()

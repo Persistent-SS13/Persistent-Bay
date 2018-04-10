@@ -7,7 +7,6 @@
 	anchored = 1
 	clicksound = 'sound/machines/buttonbeep.ogg'
 	clickvol = 30
-	circuit = /obj/item/weapon/circuitboard/sleeper
 	var/mob/living/carbon/human/occupant = null
 	var/list/available_chemicals = list("Inaprovaline" = /datum/reagent/inaprovaline, "Soporific" = /datum/reagent/soporific, "Paracetamol" = /datum/reagent/paracetamol, "Dylovene" = /datum/reagent/dylovene, "Dexalin" = /datum/reagent/dexalin)
 	var/obj/item/weapon/reagent_containers/glass/beaker = null
@@ -23,7 +22,8 @@
 
 /obj/machinery/sleeper/Initialize()
 	. = ..()
-	beaker = new /obj/item/weapon/reagent_containers/glass/beaker/large(src)
+	if(!map_storage_loaded)
+		beaker = new /obj/item/weapon/reagent_containers/glass/beaker/large(src)
 	update_icon()
 
 /obj/machinery/sleeper/Process()
@@ -245,12 +245,41 @@
 /obj/machinery/sleeper/New()
 	..()
 	component_parts = list()
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/circuitboard/sleeper(src)
+
+	// Customizable bin rating, used by the labor camp to stop people filling themselves with chemicals and escaping.
+	var/obj/item/weapon/stock_parts/matter_bin/B = new(src)
+	B.rating = initial_bin_rating
+	component_parts += B
+
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
 	component_parts += new /obj/item/stack/cable_coil(src, 1)
 	RefreshParts()
+
+
+/obj/machinery/sleeper/upgraded/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/sleeper(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin/super(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator/pico(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/stack/cable_coil(src, 1)
+	RefreshParts()
+
+/obj/machinery/sleeper/RefreshParts()
+	var/E
+	var/I
+	for(var/obj/item/weapon/stock_parts/matter_bin/B in component_parts)
+		E += B.rating
+	for(var/obj/item/weapon/stock_parts/manipulator/M in component_parts)
+		I += M.rating
+
+	efficiency = E
+	min_health = -E * 25
 
 
 /obj/machinery/sleeper/attackby(var/obj/item/O as obj, var/mob/user as mob)

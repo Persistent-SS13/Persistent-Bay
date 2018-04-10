@@ -15,6 +15,18 @@
 							/obj/item/weapon/stock_parts/manipulator = 2,
 							/obj/item/weapon/stock_parts/micro_laser = 1)
 
+/obj/item/weapon/circuitboard/bluespace_satellite
+	name = T_BOARD("bluespace satellite")
+	build_path = /obj/machinery/bluespace_satellite
+	origin_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 3, TECH_BLUESPACE = 3)
+	req_components = list(
+							/obj/item/weapon/stock_parts/subspace/ansible = 1,
+							/obj/item/weapon/stock_parts/subspace/filter = 1,
+							/obj/item/weapon/stock_parts/manipulator = 2,
+							/obj/item/weapon/stock_parts/micro_laser = 1,
+							/obj/item/weapon/stock_parts/subspace/amplifier = 1,
+							/obj/item/bluespace_crystal = 1)
+							
 /obj/item/weapon/circuitboard/telecomms/hub
 	name = T_BOARD("hub mainframe")
 	build_path = /obj/machinery/telecomms/hub

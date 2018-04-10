@@ -13,7 +13,6 @@
 	anchored = 1
 	use_power = 1
 	idle_power_usage = 10
-	circuit =  /obj/item/weapon/circuitboard/atm
 	var/datum/money_account/authenticated_account
 	var/number_incorrect_tries = 0
 	var/previous_account_number = 0
@@ -26,36 +25,95 @@
 	var/view_screen = NO_SCREEN
 	var/datum/effect/effect/system/spark_spread/spark_system
 	var/account_security_level = 0
+	var/buildstage = 2	// 2 = complete, 1 = no wires,  0 = circuit gone
 	var/wiresexposed = 0
-	var/buildstage = 2
 
+/obj/machinery/atm/update_icon()	//Sprites for each build stage
+	overlays.Cut()
 
+	if(wiresexposed)
+		switch(buildstage)
+			if(2)
+				icon_state="atm_b2"
+			if(1)
+				icon_state="atm_b1"
+			if(0)
+				icon_state="atm_b0"
+		set_light(0)
+		return
+	else
+		icon_state = "atm"
+		
+/obj/machinery/atm/attackby(obj/item/W as obj, mob/user as mob)	//Build code
+	src.add_fingerprint(user)
 
-/obj/machinery/atm/New(var/loc, var/dir, atom/frame)
+	if(isScrewdriver(W) && buildstage == 2)
+		wiresexposed = !wiresexposed
+		update_icon()
+		return 1
+
+	if(wiresexposed)
+		switch(buildstage)
+			if(2)
+				if(isWirecutter(W))
+					user.visible_message("<span class='notice'>\The [user] has cut the wires inside \the [src]!</span>", "<span class='notice'>You have cut the wires inside \the [src].</span>")
+					new/obj/item/stack/cable_coil(get_turf(src), 5)
+					playsound(src.loc, 'sound/items/Wirecutter.ogg', 50, 1)
+					buildstage = 1
+					update_icon()
+			if(1)
+				if(istype(W, /obj/item/stack/cable_coil))
+					var/obj/item/stack/cable_coil/C = W
+					if (C.use(5))
+						to_chat(user, "<span class='notice'>You wire \the [src].</span>")
+						buildstage = 2
+						return
+					else
+						to_chat(user, "<span class='warning'>You need 5 pieces of cable to wire \the [src].</span>")
+						return
+				else if(isCrowbar(W))
+					to_chat(user, "You pry out the circuit!")
+					playsound(src.loc, 'sound/items/Crowbar.ogg', 50, 1)
+					spawn(20)
+						var/obj/item/weapon/circuitboard/atm/circuit = new /obj/item/weapon/circuitboard/atm()
+						circuit.dropInto(user.loc)
+						buildstage = 0
+						update_icon()
+			if(0)
+				if(istype(W, /obj/item/weapon/circuitboard/atm))
+					to_chat(user, "You insert the circuit!")
+					qdel(W)
+					buildstage = 1
+					update_icon()
+
+				else if(isWrench(W))
+					to_chat(user, "You remove the ATM assembly from the wall!")
+					new /obj/item/frame/atm(get_turf(user))
+					playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
+					qdel(src)
+		return 1
+
+	return
+
+/obj/machinery/atm/New(loc, dir, atom/frame, var/ndir)	//ATM is created from frame
 	..(loc)
-
-	if(dir)
-		src.set_dir(dir)
 
 	if(istype(frame))
 		buildstage = 0
 		wiresexposed = 1
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -24 : 24)
-		pixel_y = (dir & 3)? (dir ==1 ? -24 : 24) : 0
-		update_icon()
 		frame.transfer_fingerprints_to(src)
-
-/obj/machinery/atm/New()
 	..()
 	machine_id = "[station_name()] ATM #[num_financial_terminals++]"
 	spark_system = new /datum/effect/effect/system/spark_spread
 	spark_system.set_up(5, 0, src)
 	spark_system.attach(src)
 
-
-
+	if(ndir)
+		set_dir(ndir)
+		pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 30 : -30)
+		pixel_y = (src.dir & 3)? (src.dir ==1 ? 30 : -30) : 0
 /obj/machinery/atm/Process()
-	if(stat & NOPOWER || buildstage != 2)
+	if(stat & NOPOWER)
 		return
 
 	if(ticks_left_timeout > 0)
@@ -88,26 +146,14 @@
 		var/response = pick("Initiating withdraw. Have a nice day!", "CRITICAL ERROR: Activating cash chamber panic siphon.","PIN Code accepted! Emptying account balance.", "Jackpot!")
 		to_chat(user, "\icon[src] <span class='warning'>The [src] beeps: \"[response]\"</span>")
 		return 1
-/obj/machinery/atm/dismantle()
-	var/obj/structure/frame/A = ..()
-	A.frame_type = "atm"
-	A.state = 4
-	A.icon_state = "[A.frame_type]_4"
-	qdel(src)
+
 /obj/machinery/atm/attackby(obj/item/I as obj, mob/user as mob)
-	if(istype(I, /obj/item/weapon/screwdriver) && circuit)
-		user << "<span class='notice'>You start disconnecting the monitor.</span>"
-		playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
-		if(do_after(user, 20))
-			dismantle()
+	if(..())
 		return
 	if(istype(I, /obj/item/weapon/card))
 		if(emagged > 0)
 			//prevent inserting id into an emagged ATM
-			user << "\red \icon[src] CARD READER ERROR. This system has been compromised!"
-			return
-		else if(istype(I,/obj/item/weapon/card/emag))
-			I.resolve_attackby(src, user)
+			to_chat(user, "\icon[src] <span class='warning'>CARD READER ERROR. This system has been compromised!</span>")
 			return
 
 		var/obj/item/weapon/card/id/idcard = I
@@ -117,6 +163,8 @@
 			held_card = idcard
 			if(authenticated_account && held_card.associated_account_number != authenticated_account.account_number)
 				authenticated_account = null
+			attack_hand(user)
+
 	else if(authenticated_account)
 		if(istype(I,/obj/item/weapon/spacecash))
 			var/obj/item/weapon/spacecash/dolla = I
@@ -132,10 +180,13 @@
 			to_chat(user, "<span class='info'>You insert [I] into [src].</span>")
 			src.attack_hand(user)
 			qdel(I)
-	else
-		..()
 
-/obj/machinery/atm/attack_hand(mob/user)
+
+/obj/machinery/atm/attack_hand(mob/user)	//Prevent ATM from being used when under de/construction
+	if(user.stat || stat & (NOPOWER|BROKEN))
+		return
+	if (buildstage != 2)
+		return
 	if(!..())
 		interact(user)
 
@@ -493,11 +544,3 @@
 		human_user.put_in_hands(E)
 	E.worth = sum
 	E.owner_name = authenticated_account.owner_name
-
-/obj/item/weapon/atm_electronics
-	name = "atm electronics"
-	icon = 'icons/obj/doors/door_assembly.dmi'
-	icon_state = "door_electronics"
-	desc = "Looks like a circuit. Probably is."
-	w_class = ITEM_SIZE_SMALL
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)

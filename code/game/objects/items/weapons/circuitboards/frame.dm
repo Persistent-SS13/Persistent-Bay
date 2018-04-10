@@ -3,7 +3,7 @@
 #endif
 
 //Circuitboards for frames (mostly wall based frames).  Most of these don't fit into other categories.
-
+/*
 //Display
 
 /obj/item/weapon/circuitboard/guestpass
@@ -217,3 +217,8 @@
 							/obj/item/weapon/stock_parts/capacitor = 1,
 							/obj/item/weapon/stock_parts/spring = 1,
 							/obj/item/stack/cable_coil = 5)
+*/
+/obj/item/weapon/circuitboard/atm
+	name = T_BOARD("ATM")
+	build_path = /obj/machinery/atm
+	origin_tech = "engineering=1;programming=1"

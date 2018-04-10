@@ -1,0 +1,37 @@
+<div class="item">
+	<div class="itemLabelWide">
+		Anchored in place:
+	</div>
+	<div class="itemContentMedium">
+		{{:data.anchored}}
+	</div>
+</div>
+<div class="item">
+	<div class="itemLabelWide">
+		Beacon Secured:
+	</div>
+	<div class="itemContentMedium">
+		{{:data.beacon}}
+	</div>
+</div>
+<br>If the telepad is not anchored with its beacon secured, it will not be able to send or recieve shipments.
+<div class="item">
+	<div class="itemLabelWide">
+		Connected Network:
+	</div>
+	<div class="itemContentMedium">
+		{{:data.connected_faction}}<br>{{:helper.link('Connect using ID', null, {'connect_to_faction' : 1})}}
+	</div>
+</div>
+<div class="item">
+	<div class="itemLabelWide">
+		Label: 
+	</div>
+	<div class="itemContentMedium">
+		<br>{{:helper.link(data.label, null, {'change_label' : 1})}}
+	</div>
+</div>
+{{if data.connected}}
+	<br><br>
+	{{:helper.link('Disconnect using ID', null, {'disconnect_from_faction' : 1})}}
+{{/if}}

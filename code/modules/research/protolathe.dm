@@ -8,7 +8,7 @@
 	active_power_usage = 5000
 
 	var/max_material_storage = 100000
-	circuit = /obj/item/weapon/circuitboard/protolathe
+
 	var/list/datum/design/queue = list()
 	var/progress = 0
 
@@ -18,8 +18,8 @@
 /obj/machinery/r_n_d/protolathe/New()
 	materials = default_material_composition.Copy()
 	..()
-	circuit = new circuit()
 	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/protolathe(src)
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
@@ -27,7 +27,6 @@
 	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
 	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
 	RefreshParts()
-
 
 /obj/machinery/r_n_d/protolathe/Process()
 	..()

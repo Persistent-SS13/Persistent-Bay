@@ -105,6 +105,12 @@
 	if(tesla_link == H)
 		tesla_link = null
 		found = 1
+	if(dna_scanner == H)
+		dna_scanner = null
+		found = 1
+	if(logistic_processor == H)
+		logistic_processor = null
+		found = 1
 	if(found)
 		if(user)
 			to_chat(user, "You remove \the [H] from \the [src].")
@@ -138,6 +144,10 @@
 		return ai_slot
 	if(tesla_link && (tesla_link.name == name))
 		return tesla_link
+	if(logistic_processor && (logistic_processor.name == name))
+		return logistic_processor
+	if(dna_scanner && (dna_scanner.name == name))
+		return dna_scanner
 	return null
 
 // Returns list of all components
@@ -161,4 +171,9 @@
 		all_components.Add(ai_slot)
 	if(tesla_link)
 		all_components.Add(tesla_link)
+	if(dna_scanner)
+		all_components.Add(dna_scanner)
+	if(logistic_processor)
+		all_components.Add(logistic_processor)
+		
 	return all_components

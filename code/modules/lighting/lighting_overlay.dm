@@ -40,7 +40,7 @@
 		update_overlay()
 	else
 		qdel(src)
-
+		loc = null
 /atom/movable/lighting_overlay/proc/update_overlay()
 	set waitfor = FALSE
 	var/turf/T = loc

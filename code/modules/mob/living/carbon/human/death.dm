@@ -31,7 +31,7 @@
 	BITSET(hud_updateflag, LIFE_HUD)
 
 	//backs up lace if available.
-	var/obj/item/organ/internal/stack/s = get_organ(BP_STACK)
+	var/obj/item/organ/internal/stack/s = internal_organs_by_name[BP_STACK]
 	if(s)
 		s.do_backup()
 
@@ -74,7 +74,8 @@
 		if(species.death_sound)
 			playsound(loc, species.death_sound, 80, 1, 1)
 	handle_hud_list()
-
+	if(s)
+		s.transfer_identity(src)
 /mob/living/carbon/human/proc/ChangeToHusk()
 	if(HUSK in mutations)	return
 

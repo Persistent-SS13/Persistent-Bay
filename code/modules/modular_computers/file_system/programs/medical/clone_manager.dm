@@ -5,7 +5,7 @@
 	program_icon_state = "crew"
 	program_menu_icon = "heart"
 	extended_desc = "This program connects to nearby cloning pods, and uses dna scanning hardware to collect DNA and transmit it to the pods."
-	required_access = access_medical
+	required_access = core_access_medical_programs
 	requires_ntnet = 0
 	network_destination = "cloner management"
 	size = 20

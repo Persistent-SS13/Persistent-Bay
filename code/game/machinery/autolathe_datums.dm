@@ -35,36 +35,6 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/weapon/reagent_containers/glass/bucket
 	category = "General"
 
-/datum/autolathe/recipe/drinkingglass
-	name = "drinking glass"
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/square
-	category = "General"
-	New()
-		..()
-		var/obj/O = path
-		name = initial(O.name) // generic recipes yay
-
-/datum/autolathe/recipe/drinkingglass/rocks
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/rocks
-
-/datum/autolathe/recipe/drinkingglass/shake
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/shake
-
-/datum/autolathe/recipe/drinkingglass/cocktail
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/cocktail
-
-/datum/autolathe/recipe/drinkingglass/shot
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/shot
-
-/datum/autolathe/recipe/drinkingglass/pint
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/pint
-
-/datum/autolathe/recipe/drinkingglass/mug
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/mug
-
-/datum/autolathe/recipe/drinkingglass/wine
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/wine
-
 /datum/autolathe/recipe/flashlight
 	name = "flashlight"
 	path = /obj/item/device/flashlight
@@ -78,6 +48,16 @@ var/const/EXTRA_COST_FACTOR = 1.25
 /datum/autolathe/recipe/extinguisher
 	name = "extinguisher"
 	path = /obj/item/weapon/extinguisher
+	category = "General"
+
+/datum/autolathe/recipe/tank
+	name = "Air Tank"
+	path = /obj/item/weapon/tank/oxygen/yellow
+	category = "General"
+
+/datum/autolathe/recipe/tank_double
+	name = "Air Tank - Small, Extended"
+	path = /obj/item/weapon/tank/oxygen/yellow
 	category = "General"
 
 /datum/autolathe/recipe/jar
@@ -216,12 +196,12 @@ var/const/EXTRA_COST_FACTOR = 1.25
 
 /datum/autolathe/recipe/airalarm
 	name = "air alarm electronics"
-	path = /obj/item/weapon/circuitboard/airalarm
+	path = /obj/item/weapon/airalarm_electronics
 	category = "Engineering"
 
 /datum/autolathe/recipe/firealarm
 	name = "fire alarm electronics"
-	path = /obj/item/weapon/circuitboard/firealarm
+	path = /obj/item/weapon/firealarm_electronics
 	category = "Engineering"
 
 /datum/autolathe/recipe/powermodule
@@ -593,9 +573,42 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/device/healthanalyzer
 	category = "Medical"
 
+/datum/autolathe/recipe/mop
+	name = "Mop"
+	path = /obj/item/weapon/mop
+	category = "General"
 /*
 /datum/autolathe/recipe/
 	name = ""
 	path = /obj/item/
 	category = ""
 */
+/datum/autolathe/recipe/drinkingglass
+	name = "drinking glass"
+	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/square
+	category = "General"
+	New()
+		..()
+		var/obj/O = path
+		name = initial(O.name) // generic recipes yay
+
+/datum/autolathe/recipe/drinkingglass/rocks
+	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/rocks
+
+/datum/autolathe/recipe/drinkingglass/shake
+	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/shake
+
+/datum/autolathe/recipe/drinkingglass/cocktail
+	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/cocktail
+
+/datum/autolathe/recipe/drinkingglass/shot
+	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/shot
+
+/datum/autolathe/recipe/drinkingglass/pint
+	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/pint
+
+/datum/autolathe/recipe/drinkingglass/mug
+	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/mug
+
+/datum/autolathe/recipe/drinkingglass/wine
+	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/wine

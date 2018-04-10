@@ -55,7 +55,7 @@
 				"trade_blacklist"   = "Sir, this is a /electronics/ store.",
 				"trade_no_goods"    = "As much as I'd love to buy that from you, I'm not.",
 				"trade_not_enough"  = "Your offer isn't adequete to the item you've selected, sir.",
-				"how_much"          = "Your total comes out to VALUE thalers.",
+				"how_much"          = "Your total comes out to VALUE ethericoins.",
 
 				"compliment_deny"   = "Hahaha! Yeah... funny...",
 				"compliment_accept" = "That's very nice of you!",
@@ -82,6 +82,8 @@
 								/obj/item/stack/cable_coil/cyborg                        = TRADER_BLACKLIST,
 								/obj/item/stack/cable_coil/random                        = TRADER_BLACKLIST,
 								/obj/item/stack/cable_coil/cut                           = TRADER_BLACKLIST,
+								/obj/item/weapon/airalarm_electronics                    = TRADER_THIS_TYPE,
+								/obj/item/weapon/airlock_electronics                     = TRADER_ALL,
 								/obj/item/weapon/cell                                    = TRADER_THIS_TYPE,
 								/obj/item/weapon/cell/crap                               = TRADER_THIS_TYPE,
 								/obj/item/weapon/cell/high                               = TRADER_THIS_TYPE,
@@ -106,7 +108,7 @@
 				"trade_blacklist"   = "Hm, how about no?",
 				"trade_no_goods"    = "We don't buy, sir. Only sell.",
 				"trade_not_enough"  = "Sorry, ORIGIN policy to not accept trades below our marked prices.",
-				"how_much"          = "Your total comes out to VALUE thalers.",
+				"how_much"          = "Your total comes out to VALUE ethericoins.",
 
 				"compliment_deny"   = "Excuse me?",
 				"compliment_accept" = "Aw, you're so nice!",
@@ -292,7 +294,7 @@ Sells devices, odds and ends, and medical stuff
 				"trade_blacklist"   = "Legally I can' do that. Morally... anyway I refuse to do that.",
 				"trade_found_unwanted" = "I only want animals. I don't need food, shiny things, I'm looking for specific ones at that. Ones I already have the cage and food for.",
 				"trade_not_enough"   = "I'd give you this for free, but I need the money to feed the specimens. So you must pay in full.",
-				"how_much"          = "This is a good choice, I believe it will cost you VALUE thalers.",
+				"how_much"          = "This is a good choice, I believe it will cost you VALUE ethericoins.",
 				"what_want"         = "I have the facilities currently to support",
 
 				"compliment_deny"   = "According to customs on 34 planets I traded with, this constitutes sexual harrasment.",
@@ -328,7 +330,7 @@ Sells devices, odds and ends, and medical stuff
 				"trade_blacklist"   = "Whoa whoa, I don't want this shit, put it away.",
 				"trade_found_unwanted" = "What the hell do you expect me to do with this junk?",
 				"trade_not_enough"   = "Sorry, pal, full payment upfront, I don't write the rules. Well, I do but that's beside the point.",
-				"how_much"          = "Hmm this is one damn fine item, but I'll part with it for VALUE thalers.",
+				"how_much"          = "Hmm this is one damn fine item, but I'll part with it for VALUE ethericoins.",
 				"what_want"         = "I could always use some fucking",
 
 				"compliment_deny"   = "Haha, how nice of you, why don't you go fall in an elevator shaft.",
@@ -383,7 +385,7 @@ Sells devices, odds and ends, and medical stuff
 				"trade_blacklist"   = "Whoa whoa, I don't want this shit, put it away.",
 				"trade_found_unwanted" = "Sorry, we are currently not looking to purchase these items.",
 				"trade_not_enough"   = "Sorry, this is an insufficient sum for this purchase.",
-				"how_much"          = "For ONE entry of ITEM the price would be VALUE thalers.",
+				"how_much"          = "For ONE entry of ITEM the price would be VALUE ethericoins.",
 				"what_want"         = "We are currently looking to procure",
 
 				"compliment_deny"   = "I am afraid this is beyond my competency.",

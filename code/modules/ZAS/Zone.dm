@@ -54,7 +54,7 @@ Class Procs:
 
 /zone/var/list/graphic_add = list()
 /zone/var/list/graphic_remove = list()
-
+/zone/var/invalid_for = 0
 /zone/var/list/turf_coords = list() // used for save/loading zones :V
 /zone/New()
 	SSair.add_zone(src)
@@ -128,9 +128,7 @@ Class Procs:
 	for(var/turf/simulated/T in contents)
 		T.dbg(invalid_zone)
 	#endif
-
 /zone/proc/rebuild()
-	if(invalid) return //Short circuit for explosions where rebuild is called many times over.
 	c_invalidate()
 	for(var/turf/simulated/T in contents)
 		T.update_graphic(graphic_remove = air.graphic) //we need to remove the overlays so they're not doubled when the zone is rebuilt
@@ -147,6 +145,11 @@ Class Procs:
 	air.group_multiplier = contents.len+1
 
 /zone/proc/tick()
+	if(invalid)
+		invalid_for++
+		if(invalid_for > 10)
+			invalid = 0
+			rebuild()
 	if(air.temperature >= PHORON_FLASHPOINT && !(src in SSair.active_fire_zones) && air.check_combustability() && contents.len)
 		var/turf/T = pick(contents)
 		if(istype(T))

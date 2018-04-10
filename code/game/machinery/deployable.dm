@@ -16,7 +16,7 @@ for reference:
 	access_tox_storage = 8
 	access_genetics = 9
 	access_engine = 10
-	access_engine_equip= 11
+	core_access_engineering_programs= 11
 	access_maint_tunnels = 12
 	access_external_airlocks = 13
 	access_emergency_storage = 14
@@ -29,7 +29,7 @@ for reference:
 	access_all_personal_lockers = 21
 	access_chapel_office = 22
 	access_tech_storage = 23
-	access_atmospherics = 24
+	core_access_engineering_programs = 24
 	access_bar = 25
 	access_janitor = 26
 	access_crematorium = 27

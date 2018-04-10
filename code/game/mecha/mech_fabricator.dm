@@ -8,8 +8,7 @@
 	use_power = 1
 	idle_power_usage = 20
 	active_power_usage = 5000
-	req_access = list(access_robotics)
-	circuit = /obj/item/weapon/circuitboard/mechfab
+	req_access = list(core_access_science_programs)
 
 	var/speed = 1
 	var/mat_efficiency = 1
@@ -30,6 +29,7 @@
 	..()
 
 	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/mechfab(src)
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)

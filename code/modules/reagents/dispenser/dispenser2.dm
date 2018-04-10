@@ -4,7 +4,7 @@
 	icon_state = "dispenser"
 	clicksound = "button"
 	clickvol = 20
-	circuit = /obj/item/weapon/circuitboard/chem_dispenser
+
 	var/list/spawn_cartridges = null // Set to a list of types to spawn one of each on New()
 
 	var/list/cartridges = list() // Associative, label -> cartridge
@@ -23,19 +23,10 @@
 
 /obj/machinery/chemical_dispenser/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
-	component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
-
-	RefreshParts()
 
 	if(spawn_cartridges)
 		for(var/type in spawn_cartridges)
 			add_cartridge(new type(src))
-
 
 /obj/machinery/chemical_dispenser/examine(mob/user)
 	. = ..()
@@ -77,17 +68,10 @@
 	GLOB.nanomanager.update_uis(src)
 
 /obj/machinery/chemical_dispenser/attackby(obj/item/weapon/W, mob/user)
-	if(default_deconstruction_screwdriver(user, W))
-		updateUsrDialog()
-		return
-	if(default_deconstruction_crowbar(user, W))
-		return
-	if(default_part_replacement(user, W))
-		return
 	if(istype(W, /obj/item/weapon/reagent_containers/chem_disp_cartridge))
 		add_cartridge(W, user)
 
-	else if(isWrench(W))
+	else if(isScrewdriver(W))
 		var/label = input(user, "Which cartridge would you like to remove?", "Chemical Dispenser") as null|anything in cartridges
 		if(!label) return
 		var/obj/item/weapon/reagent_containers/chem_disp_cartridge/C = remove_cartridge(label)
@@ -153,29 +137,28 @@
 		ui.set_initial_data(data)
 		ui.open()
 
-/obj/machinery/chemical_dispenser/Topic(href, href_list)
-	if(..())
-		return 1
-
+/obj/machinery/chemical_dispenser/Topic(user, href_list)
 	if(href_list["amount"])
 		amount = round(text2num(href_list["amount"]), 1) // round to nearest 1
 		amount = max(0, min(120, amount)) // Since the user can actually type the commands himself, some sanity checking
+		return TOPIC_REFRESH
 
-	else if(href_list["dispense"])
+	if(href_list["dispense"])
 		var/label = href_list["dispense"]
 		if(cartridges[label] && container && container.is_open_container())
 			var/obj/item/weapon/reagent_containers/chem_disp_cartridge/C = cartridges[label]
 			C.reagents.trans_to(container, amount)
+			return TOPIC_REFRESH
+		return TOPIC_HANDLED
 
 	else if(href_list["ejectBeaker"])
 		if(container)
 			var/obj/item/weapon/reagent_containers/B = container
-			B.loc = loc
+			B.dropInto(loc)
 			container = null
 			update_icon()
-
-	add_fingerprint(usr)
-	return 1 // update UIs attached to this object
+			return TOPIC_REFRESH
+		return TOPIC_HANDLED
 
 /obj/machinery/chemical_dispenser/attack_ai(mob/user as mob)
 	ui_interact(user)

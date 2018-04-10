@@ -73,7 +73,7 @@
 	icon_state = "apc0"
 	anchored = 1
 	use_power = 0
-	req_access = list(access_engine_equip)
+	req_access = list(core_access_engineering_programs)
 	clicksound = "switch"
 	var/area/area
 	var/areastring = null
@@ -230,22 +230,24 @@
 /obj/machinery/power/apc/proc/init_round_start()
 	has_electronics = 2 //installed and secured
 	// is starting with a power cell installed, create it and set its charge level
-	if(cell_type)
-		src.cell = new cell_type(src)
-	if(!loc)
-		qdel(src)
-		return
-	var/area/A = src.loc.loc
+	if(!map_storage_loaded)
+		if(cell_type)
+			src.cell = new cell_type(src)
+		if(!loc)
+			qdel(src)
+			return
+	if(loc)
+		var/area/A = src.loc.loc
 
-	//if area isn't specified use current
-	if(isarea(A) && src.areastring == null)
-		src.area = A
-		name = "\improper [area.name] APC"
-	else
-		src.area = get_area_name(areastring)
-		name = "\improper [area.name] APC"
-	area.apc = src
-	update_icon()
+		//if area isn't specified use current
+		if(isarea(A) && src.areastring == null)
+			src.area = A
+			name = "\improper [area.name] APC"
+		else
+			src.area = get_area_name(areastring)
+			name = "\improper [area.name] APC"
+		area.apc = src
+		update_icon()
 
 /obj/machinery/power/apc/examine(mob/user)
 	if(..(user, 1))
@@ -585,6 +587,7 @@
 				new /obj/item/stack/cable_coil(loc,10)
 				to_chat(user, "<span class='notice'>You cut the cables and dismantle the power terminal.</span>")
 				qdel(terminal)
+				terminal = null
 	else if (istype(W, /obj/item/weapon/module/power_control) && opened && has_electronics==0 && !((stat & BROKEN)))
 		user.visible_message("<span class='warning'>[user.name] inserts the power control board into [src].</span>", \
 							"You start to insert the power control board into the frame...")

@@ -8,7 +8,7 @@
 
 	matter = list(DEFAULT_WALL_MATERIAL = 50,"glass" = 50)
 
-	req_access = list(access_engine)
+	req_access = list(core_access_door_configuration)
 
 	var/secure = 0 //if set, then wires will be randomized and bolts will drop if the door is broken
 	var/list/conf_access = list()
@@ -16,6 +16,7 @@
 	var/last_configurator = null
 	var/locked = 1
 	var/lockable = 1
+	var/datum/world_faction/connected_faction
 
 
 /obj/item/weapon/airlock_electronics/attack_self(mob/user as mob)
@@ -38,19 +39,21 @@
 /obj/item/weapon/airlock_electronics/ui_data(mob/user)
 	var/list/data = list()
 	var/list/regions = list()
-
-	for(var/i in ACCESS_REGION_SECURITY to ACCESS_REGION_SUPPLY) //code/game/jobs/_access_defs.dm
-		var/list/region = list()
-		var/list/accesses = list()
-		for(var/j in get_region_accesses(i))
-			var/list/access = list()
-			access["name"] = get_access_desc(j)
-			access["id"] = j
-			access["req"] = (j in src.conf_access)
-			accesses[++accesses.len] = access
-		region["name"] = get_region_accesses_name(i)
-		region["accesses"] = accesses
-		regions[++regions.len] = region
+	if(!connected_faction) locked = 1
+	if(!locked)
+		data["connected_faction"] = connected_faction.name
+		for(var/datum/access_category/i in connected_faction.access_categories) //code/game/jobs/_access_defs.dm
+			var/list/region = list()
+			var/list/accesses = list()
+			for(var/j in i.accesses)
+				var/list/access = list()
+				access["name"] = i.accesses[j]
+				access["id"] = j
+				access["req"] = (text2num(j) in src.conf_access)
+				accesses[++accesses.len] = access
+			region["name"] = i.name
+			region["accesses"] = accesses
+			regions[++regions.len] = region
 	data["regions"] = regions
 	data["oneAccess"] = one_access
 	data["locked"] = locked
@@ -89,6 +92,12 @@
 				if(!istype(I, /obj/item/weapon/card/id))
 					to_chat(usr, "<span class='warning'>[\src] flashes a yellow LED near the ID scanner. Did you remember to scan your ID or PDA?</span>")
 					return TRUE
+				connected_faction = get_faction(I.selected_faction)
+				if(!connected_faction)
+					to_chat(usr, "<span class='warning'>[\src] flashes a red LED near the ID scanner, indicating your access has been denied.</span>")
+					return TRUE
+				if(connected_faction.uid != req_access_faction) conf_access = list()
+				req_access_faction = connected_faction.uid
 				if (check_access(I))
 					locked = 0
 					last_configurator = I.registered_name
@@ -98,6 +107,8 @@
 		if("lock")
 			if(!lockable)
 				return TRUE
+			conf_access.Cut()
+			connected_faction = null
 			locked = 1
 			. = TRUE
 

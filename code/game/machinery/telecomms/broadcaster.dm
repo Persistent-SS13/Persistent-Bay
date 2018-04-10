@@ -62,7 +62,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 							  signal.data["name"], signal.data["job"],
 							  signal.data["realname"], signal.data["vname"],,
 							  signal.data["compression"], signal.data["level"], signal.frequency,
-							  signal.data["verb"], signal.data["language"]	)
+							  signal.data["verb"], signal.data["language"],signal.data["faction_uid"])
 
 
 	   /** #### - Simple Broadcast - #### **/
@@ -72,7 +72,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 			/* ###### Broadcast a message using signal.data ###### */
 			Broadcast_SimpleMessage(signal.data["name"], signal.frequency,
 								  signal.data["message"],null, null,
-								  signal.data["compression"], listening_levels)
+								  signal.data["compression"], listening_levels,faction_uid = signal.data["faction_uid"])
 
 
 	   /** #### - Artificial Broadcast - #### **/
@@ -88,7 +88,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 							  signal.data["radio"], signal.data["message"],
 							  signal.data["name"], signal.data["job"],
 							  signal.data["realname"], signal.data["vname"], 4, signal.data["compression"], signal.data["level"], signal.frequency,
-							  signal.data["verb"], signal.data["language"])
+							  signal.data["verb"], signal.data["language"],signal.data["faction_uid"])
 
 		if(!message_delay)
 			message_delay = 1
@@ -152,7 +152,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 							  signal.data["radio"], signal.data["message"],
 							  signal.data["name"], signal.data["job"],
 							  signal.data["realname"], signal.data["vname"],, signal.data["compression"], list(0), connection.frequency,
-							  signal.data["verb"], signal.data["language"])
+							  signal.data["verb"], signal.data["language"], signal.data["faction_uid"])
 		else
 			if(intercept)
 				Broadcast_Message(signal.data["connection"], signal.data["mob"],
@@ -160,7 +160,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 							  signal.data["radio"], signal.data["message"],
 							  signal.data["name"], signal.data["job"],
 							  signal.data["realname"], signal.data["vname"], 3, signal.data["compression"], list(0), connection.frequency,
-							  signal.data["verb"], signal.data["language"])
+							  signal.data["verb"], signal.data["language"], signal.data["faction_uid"])
 
 
 
@@ -224,7 +224,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 /proc/Broadcast_Message(var/datum/radio_frequency/connection, var/mob/M,
 						var/vmask, var/vmessage, var/obj/item/device/radio/radio,
 						var/message, var/name, var/job, var/realname, var/vname,
-						var/data, var/compression, var/list/level, var/freq, var/verbage = "says", var/datum/language/speaking = null)
+						var/data, var/compression, var/list/level, var/freq, var/verbage = "says", var/datum/language/speaking = null, var/faction_uid = "")
 
 
   /* ###### Prepare the radio connection ###### */
@@ -238,7 +238,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 	if(data == 1)
 
 		for (var/obj/item/device/radio/intercom/R in connection.devices["[RADIO_CHAT]"])
-			if(R.receive_range(display_freq, level) > -1)
+			if(R.receive_range(display_freq, level, faction_uid) > -1)
 				radios += R
 
 	// --- Broadcast only to intercoms and station-bounced radios ---
@@ -250,7 +250,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 			if(istype(R, /obj/item/device/radio/headset))
 				continue
 
-			if(R.receive_range(display_freq, level) > -1)
+			if(R.receive_range(display_freq, level, faction_uid) > -1)
 				radios += R
 
 	// --- Broadcast to antag radios! ---
@@ -259,7 +259,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 		for(var/antag_freq in ANTAG_FREQS)
 			var/datum/radio_frequency/antag_connection = radio_controller.return_frequency(antag_freq)
 			for (var/obj/item/device/radio/R in antag_connection.devices["[RADIO_CHAT]"])
-				if(R.receive_range(antag_freq, level) > -1)
+				if(R.receive_range(antag_freq, level, faction_uid) > -1)
 					radios += R
 
 	// --- Broadcast to ALL radio devices ---
@@ -267,7 +267,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 	else
 
 		for (var/obj/item/device/radio/R in connection.devices["[RADIO_CHAT]"])
-			if(R.receive_range(display_freq, level) > -1)
+			if(R.receive_range(display_freq, level, faction_uid) > -1)
 				radios += R
 
 	// Get a list of mobs who can hear from the radios we collected.
@@ -623,6 +623,9 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 
   //#### Sending the signal to all subspace receivers ####//
 	for(var/obj/machinery/telecomms/receiver/R in telecomms_list)
+		if(!R.loc)
+			telecomms_list -= R
+			continue
 		R.receive_signal(signal)
 
 	if(do_sleep)

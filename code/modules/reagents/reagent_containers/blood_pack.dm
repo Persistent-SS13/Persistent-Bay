@@ -20,7 +20,9 @@
 	volume = 200
 
 	var/blood_type = null
-
+/obj/item/weapon/reagent_containers/after_load()
+	update_icon()
+	..()
 /obj/item/weapon/reagent_containers/blood/New()
 	..()
 	if(blood_type)

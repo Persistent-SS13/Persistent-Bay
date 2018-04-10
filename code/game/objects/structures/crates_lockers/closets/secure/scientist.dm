@@ -7,7 +7,7 @@
 	icon_opened = "secureresopen"
 	icon_broken = "secureresbroken"
 	icon_off = "secureresoff"
-
+/*
 /obj/structure/closet/secure_closet/scientist/WillContain()
 	return list(
 		new /datum/atom_creator/weighted(list(/obj/item/weapon/storage/backpack/messenger/tox, /obj/item/weapon/storage/backpack/satchel_tox)),
@@ -18,7 +18,7 @@
 		/obj/item/clothing/mask/gas,
 		/obj/item/weapon/clipboard
 	)
-
+*/
 /obj/structure/closet/secure_closet/xenobio
 	name = "xenobiologist's locker"
 	req_access = list(access_xenobiology)
@@ -28,7 +28,7 @@
 	icon_opened = "secureresopen"
 	icon_broken = "secureresbroken"
 	icon_off = "secureresoff"
-
+/*
 /obj/structure/closet/secure_closet/xenobio/WillContain()
 	return list(
 		new /datum/atom_creator/weighted(list(/obj/item/weapon/storage/backpack/messenger/tox, /obj/item/weapon/storage/backpack/satchel_tox)),
@@ -40,7 +40,7 @@
 		/obj/item/clothing/gloves/latex,
 		/obj/item/weapon/clipboard
 	)
-
+*/
 /obj/structure/closet/secure_closet/RD
 	name = "research director's locker"
 	req_access = list(core_access_science_programs)
@@ -50,7 +50,7 @@
 	icon_opened = "rdsecureopen"
 	icon_broken = "rdsecurebroken"
 	icon_off = "rdsecureoff"
-
+/*
 /obj/structure/closet/secure_closet/RD/WillContain()
 	return list(
 		/obj/item/clothing/suit/bio_suit/scientist = 2,
@@ -69,11 +69,11 @@
 		/obj/item/weapon/clipboard,
 		/obj/item/clothing/suit/storage/toggle/labcoat/rd
 	)
-
+*/
 /obj/structure/closet/secure_closet/animal
 	name = "animal control closet"
 	req_access = list(core_access_science_programs)
-
+/*
 /obj/structure/closet/secure_closet/animal/WillContain()
 	return list(
 		/obj/item/device/assembly/signaler,
@@ -84,3 +84,4 @@
 		/obj/item/weapon/reagent_containers/glass/bottle/chloralhydrate,
 		/obj/item/weapon/reagent_containers/glass/bottle/stoxin
 	)
+*/

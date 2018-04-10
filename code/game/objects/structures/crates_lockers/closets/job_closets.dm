@@ -14,7 +14,7 @@
 	icon_state = "black"
 	icon_closed = "black"
 /*
-/obj/structure/closet/gmcloset/WillContain()
+/obj/structure/closet/gmcloset/WillContain() // Add items to supply crate.
 	return list(
 		/obj/item/clothing/head/that = 2,
 		/obj/item/device/radio/headset/headset_service = 2,

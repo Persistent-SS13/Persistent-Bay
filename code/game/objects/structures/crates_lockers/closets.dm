@@ -259,8 +259,8 @@
 	return
 
 /obj/structure/closet/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	/*
 	if(istype(W, /obj/item/weapon/rcs) && !src.opened)
-		/*
 		if(user in contents) //to prevent self-teleporting.
 			return
 		var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread

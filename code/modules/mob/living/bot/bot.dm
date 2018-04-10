@@ -17,6 +17,8 @@
 	var/obj/access_scanner = null
 	var/list/req_access = list()
 	var/list/req_one_access = list()
+	var/list/req_access_faction = list()
+	var/datum/world_faction/connected_faction
 
 	var/atom/target = null
 	var/list/ignore_list = list()
@@ -55,6 +57,10 @@
 	else
 		turn_off()
 
+/mob/living/bot/after_load()
+	..()
+	connected_faction = get_faction(req_access_faction)
+
 /mob/living/bot/Life()
 	..()
 	if(health <= 0)
@@ -82,6 +88,11 @@
 
 /mob/living/bot/attackby(var/obj/item/O, var/mob/user)
 	if(O.GetIdCard())
+		if(!connected_faction && O.GetFaction())
+			req_access_faction = O.GetFaction()
+			connected_faction = get_faction(req_access_faction)
+			to_chat(user, "<span class='notice'>\The [src] has been synced to your faction</span>")
+			return
 		if(access_scanner.allowed(user) && !open)
 			locked = !locked
 			to_chat(user, "<span class='notice'>Controls are now [locked ? "locked." : "unlocked."]</span>")

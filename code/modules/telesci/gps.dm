@@ -1,3 +1,4 @@
+/*	Interferes with the regular GPS already in Bay
 var/list/GPS_list = list()
 /obj/item/device/gps
 	name = "galactic positioning system"	//"global" -> "galactic", because we're in spess
@@ -68,3 +69,4 @@ var/list/GPS_list = list()
 /obj/item/device/gps/engineering
 	icon_state = "gps-e"
 	gpstag = "ENG1"
+*/

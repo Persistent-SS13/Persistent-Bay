@@ -226,3 +226,10 @@
 	containername = "\improper Medical voidsuit crate"
 	containertype = /obj/structure/closet/crate/secure/large
 	access = 4
+
+/decl/hierarchy/supply_pack/medical/anesthetic
+	name = "Anesthetic Tanks (x10)"
+	contains = list(/obj/item/weapon/tank/anesthetic = 10)
+	cost = 75
+	containertype = /obj/structure/closet/crate/medical
+	containername = "\improper Anesthetic Tanks crate"

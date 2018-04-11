@@ -26,25 +26,25 @@
 	icon_opened = "syndicate1open"
 	anchored = 0
 
-/obj/structure/closet/gimmick/russian
+/obj/structure/closet/gimmick/russian //Add the contents to Supply Crate.
 	name = "russian surplus closet"
 	desc = "It's a storage unit for Russian standard-issue surplus."
 	icon_state = "syndicate1"
 	icon_closed = "syndicate1"
 	icon_opened = "syndicate1open"
-
+/*
 /obj/structure/closet/gimmick/russian/WillContain()
 	return list(
 		/obj/item/clothing/head/ushanka = 5,
 		/obj/item/clothing/under/soviet = 5)
-
+*/
 /obj/structure/closet/gimmick/tacticool
 	name = "tacticool gear closet"
 	desc = "It's a storage unit for Tacticool gear."
 	icon_state = "syndicate1"
 	icon_closed = "syndicate1"
 	icon_opened = "syndicate1open"
-	
+/*
 /obj/structure/closet/gimmick/tacticool/WillContain()
 	return list(
 		/obj/item/clothing/glasses/eyepatch,
@@ -55,10 +55,10 @@
 		/obj/item/clothing/shoes/swat = 2,
 		/obj/item/clothing/suit/space/void/swat = 2,
 		/obj/item/clothing/under/syndicate/tacticool = 2)
-		
-/obj/structure/closet/thunderdome
+*/
+/obj/structure/closet/thunderdome  //Do not add this to supply crates.
 	name = "\improper Thunderdome closet"
-	desc = "Everything you need!"
+	desc = "Everything you need! Admin-spawn only, not for regular game use."
 	icon_state = "syndicate"
 	icon_closed = "syndicate"
 	icon_opened = "syndicateopen"

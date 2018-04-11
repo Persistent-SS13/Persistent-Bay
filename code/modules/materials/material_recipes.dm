@@ -78,6 +78,7 @@
 		new/datum/stack_recipe("conveyor belt assembly", /obj/item/conveyor_construct, 3, time = 15, one_per_turf = 1, on_floor =1), \
 		new/datum/stack_recipe("conveyor belt switch", /obj/item/conveyor_switch_construct, 1, time = 5, one_per_turf = 1, on_floor =1), \
 		))
+	recipes += new/datum/stack_recipe("filing cabinet", /obj/structure/filingcabinet, 3, time = 25, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("air tank dispenser", /obj/structure/dispenser, 5, time = 25, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("grenade casing", /obj/item/weapon/grenade/chem_grenade)
 	recipes += new/datum/stack_recipe_list("office chairs",list( \

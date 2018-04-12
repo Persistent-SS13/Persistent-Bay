@@ -9,14 +9,19 @@
 	use_me = 0 //Can't use the me verb, it's a freaking immobile brain
 	icon = 'icons/obj/surgery.dmi'
 	icon_state = "cortical-stack"
-
+	
 /mob/living/carbon/lace/New()
 	container = loc
 	var/datum/action/lace/laceaction = new(container)
 	laceaction.Grant(src)
 	..()
 /mob/living/carbon/lace/after_load()
-
+	if(container)
+		container.lacemob = src
+	for(var/datum/action/action in actions)
+		action.target = container
+		
+	
 /mob/living/carbon/lace/Destroy()
 	if(key)				//If there is a mob connected to this thing. Have to check key twice to avoid false death reporting.
 		if(stat!=DEAD)	//If not dead.

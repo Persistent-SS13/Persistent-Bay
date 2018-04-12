@@ -337,9 +337,9 @@ var/global/list/obj/item/device/pda/PDAs = list()
 	else
 		return 0
 
-/obj/item/device/pda/GetAccess()
+/obj/item/device/pda/GetAccess(var/faction_uid)
 	if(id)
-		return id.GetAccess()
+		return id.GetAccess(faction_uid)
 	else
 		return ..()
 

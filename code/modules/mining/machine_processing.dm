@@ -232,5 +232,5 @@
 				new /obj/item/weapon/ore/slag(output.loc)
 		else
 			continue
-
-	console.updateUsrDialog()
+	if(console)
+		console.updateUsrDialog()

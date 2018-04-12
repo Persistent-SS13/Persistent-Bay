@@ -583,16 +583,19 @@
 				spawn_turf = locate(102, 98, 1)
 			else
 				for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+					if(!pod.loc) continue
 					if(pod.req_access_faction == new_character.spawn_loc)
 						spawn_turf = pod.loc
 						break
 				if(!spawn_turf)
 					for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+						if(!pod.loc) continue
 						if(pod.req_access_faction == "refugee")
 							spawn_turf = pod.loc
 							break
 				if(!spawn_turf)
 					for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+						if(!pod.loc) continue
 						if(pod.req_access_faction == "nanotrasen")
 							spawn_turf = pod.loc
 							break
@@ -613,6 +616,7 @@
 			if(!GLOB.frontierbeacons.len)
 				message_admins("WARNING! No beacons avalible for spawning! spawn one and set the req_access_faction!")
 			for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
+				if(!beacon.loc) continue
 				if(beacon.req_access_faction == new_character.spawn_loc)
 					spawn_turf = get_step(beacon.loc,pick(GLOB.cardinal))
 					new /obj/effect/portal(spawn_turf, delete_after = 50)
@@ -620,16 +624,19 @@
 			if(!spawn_turf)
 				message_admins("No frontier beacon for [new_character.spawn_loc], spawn one and set the req_access_faction!")
 				for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
+					if(!beacon.loc) continue
 					spawn_turf = get_step(beacon.loc,pick(GLOB.cardinal))
 					new /obj/effect/portal(spawn_turf, delete_after = 50)
 					break
 			if(!spawn_turf)
 				for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+					if(!pod.loc) continue
 					if(pod.req_access_faction == "refugee")
 						spawn_turf = pod.loc
 						break
 			if(!spawn_turf)
 				for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+					if(!pod.loc) continue
 					if(pod.req_access_faction == "nanotrasen")
 						spawn_turf = pod.loc
 						break

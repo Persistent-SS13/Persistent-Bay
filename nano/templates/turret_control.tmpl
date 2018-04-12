@@ -40,7 +40,7 @@
         {{if data.allowed > 2}}
             <div class="item">
                 {{for data.access}}
-                        {{:helper.link(value.name, null, {'command' : 'access', 'value' : value.id}, null, value.selected == 0 ? null : value.selected == 1 ? 'selected' : value.selected == 2 ? 'yellowButton' : 'redButton' )}}
+                        {{:helper.link(value.name, null, {'command' : 'access', 'value' : value.id}, null, value.selected == 3 ? 'redButton' : value.selected == 2 ? 'yellowButton' : value.selected == 1 ? 'selected' : null )}}
                 {{/for}}
             </div>
         {{/if}}

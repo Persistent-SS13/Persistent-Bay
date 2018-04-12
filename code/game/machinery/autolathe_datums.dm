@@ -40,6 +40,21 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/device/flashlight
 	category = "General"
 
+/datum/autolathe/recipe/maglight
+	name = "Maglight"
+	path = /obj/item/device/flashlight/maglight
+	category = "General"
+
+/datum/autolathe/recipe/penlight
+	name = "Pen Light"
+	path = /obj/item/device/flashlight/pen
+	category = "General"
+
+/datum/autolathe/recipe/desklamp
+	name = "Desk Lamp"
+	path = /obj/item/device/flashlight/desk
+	category = "General"
+
 /datum/autolathe/recipe/floor_light
 	name = "floor light"
 	path = /obj/machinery/floor_light

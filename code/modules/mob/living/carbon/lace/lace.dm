@@ -1,7 +1,7 @@
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:32
 
 /mob/living/carbon/lace
-	var/obj/item/container = null // should be the lace..
+	var/obj/item/organ/internal/stack/container = null // should be the lace..
 	var/mob/container2 = null
 	var/timeofhostdeath = 0
 	var/emp_damage = 0//Handles a type of MMI damage
@@ -9,7 +9,7 @@
 	use_me = 0 //Can't use the me verb, it's a freaking immobile brain
 	icon = 'icons/obj/surgery.dmi'
 	icon_state = "cortical-stack"
-	
+
 /mob/living/carbon/lace/New()
 	container = loc
 	var/datum/action/lace/laceaction = new(container)
@@ -20,8 +20,8 @@
 		container.lacemob = src
 	for(var/datum/action/action in actions)
 		action.target = container
-		
-	
+
+
 /mob/living/carbon/lace/Destroy()
 	if(key)				//If there is a mob connected to this thing. Have to check key twice to avoid false death reporting.
 		if(stat!=DEAD)	//If not dead.

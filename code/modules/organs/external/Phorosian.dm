@@ -157,6 +157,12 @@
 		if(isnull(last_failed_breath))
 			last_failed_breath = world.time
 	else
+		var/blood_volume_raw = owner.vessel.get_reagent_amount(/datum/reagent/blood)
+		if(blood_volume_raw < species.blood_volume)
+			var/datum/reagent/blood/B = owner.get_blood(owner.vessel)
+			if(istype(B))
+				B.volume += 0.2 + owner.chem_effects[CE_BLOODRESTORE] // regenerate blood VERY slowly
+		heal_damage(0.1)
 		last_failed_breath = null
 		owner.adjustOxyLoss(-5 * inhale_efficiency)
 		if(robotic < ORGAN_ROBOT && species.breathing_sound && is_below_sound_pressure(get_turf(owner)))
@@ -187,35 +193,35 @@
 	
 //Phoron reinforced bones woo.
 /obj/item/organ/external/head/phorosian
-	min_broken_damage = 45	
+	min_broken_damage = 50	
 
 /obj/item/organ/external/chest/phorosian
-	min_broken_damage = 45
+	min_broken_damage = 50
 
 /obj/item/organ/external/groin/phorosian
-	min_broken_damage = 45
+	min_broken_damage = 50
 
 /obj/item/organ/external/arm/phorosian
-	min_broken_damage = 40
+	min_broken_damage = 45
 
 /obj/item/organ/external/arm/right/phorosian
-	min_broken_damage = 40
+	min_broken_damage = 45
 
 /obj/item/organ/external/leg/phorosian
-	min_broken_damage = 40
+	min_broken_damage = 45
 
 /obj/item/organ/external/leg/right/phorosian
-	min_broken_damage = 40
+	min_broken_damage = 45
 
 /obj/item/organ/external/foot/phorosian
-	min_broken_damage = 25
+	min_broken_damage = 30
 
 /obj/item/organ/external/foot/right/phorosian
-	min_broken_damage = 25
+	min_broken_damage = 30
 
 /obj/item/organ/external/hand/phorosian
-	min_broken_damage = 25
+	min_broken_damage = 30
 
 /obj/item/organ/external/hand/right/phorosian
-	min_broken_damage = 25
+	min_broken_damage = 30
 	

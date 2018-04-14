@@ -52,7 +52,7 @@ var/const/EXTRA_COST_FACTOR = 1.25
 
 /datum/autolathe/recipe/desklamp
 	name = "Desk Lamp"
-	path = /obj/item/device/flashlight/desk
+	path = /obj/item/device/flashlight/lamp
 	category = "General"
 
 /datum/autolathe/recipe/floor_light

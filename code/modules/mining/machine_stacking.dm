@@ -11,13 +11,13 @@
 /obj/machinery/mineral/stacking_unit_console/New()
 
 	..()
-
-	spawn(7)
-		src.machine = locate(/obj/machinery/mineral/processing_unit, block(locate(x - 1, y - 1, z),locate(x + 1, y + 1, z)))
-		if (machine)
-			machine.console = src
-		else
-			qdel(src)
+	for(var/obj/machinery/mineral/processing_unit/unit in view(7, src))
+		src.machine = unit
+		break
+	if (machine)
+		machine.console = src
+	else
+		qdel(src)
 
 /obj/machinery/mineral/stacking_unit_console/attack_hand(mob/user)
 	add_fingerprint(user)

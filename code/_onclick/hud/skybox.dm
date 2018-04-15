@@ -28,7 +28,7 @@
 
 /obj/skybox/proc/update()
 	if(!owner || !owner.client)
-		qdel(src)
+		return
 	var/turf/T = get_turf(owner.client.eye)
 	screen_loc = "CENTER:[-224-(T&&T.x)],CENTER:[-224-(T&&T.y)]"
 

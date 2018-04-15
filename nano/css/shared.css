@@ -50,7 +50,7 @@ hr {
 }
 
 a:hover, .zoomLink:hover, .linkActive:hover {
-    background: #507aac;
+    box-shadow: 0 0 2rem GhostWhite inset;
 }
 
 .linkPending, .linkPending:hover {

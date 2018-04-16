@@ -147,6 +147,13 @@
 	refund_amt = 2
 	build_machine_type = /obj/structure/sign/double/barsign
 
+/obj/item/frame/sink
+	name = "Sink Frame"
+	desc = "Used for building Sinks"
+	icon = 'icons/obj/watercloset.dmi'
+	icon_state = "sink"
+	refund_amt = 2
+	build_machine_type = /obj/structure/sink
 
 /obj/item/frame/kitchensink
 	name = "Kitchen Sink Frame"

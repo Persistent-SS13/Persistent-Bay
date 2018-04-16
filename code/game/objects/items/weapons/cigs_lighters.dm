@@ -523,6 +523,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	slot_flags = SLOT_BELT
 	attack_verb = list("burnt", "singed")
 	var/max_fuel = 5
+	matter = list(DEFAULT_WALL_MATERIAL = 250, "glass" = 250)
 
 /obj/item/weapon/flame/lighter/New()
 	..()

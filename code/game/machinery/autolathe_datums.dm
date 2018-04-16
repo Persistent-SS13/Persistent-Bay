@@ -592,6 +592,16 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	name = "Mop"
 	path = /obj/item/weapon/mop
 	category = "General"
+
+/datum/autolathe/recipe/glasses
+	name = "Prescription Glasses"
+	path = /obj/item/clothing/glasses/regular
+	category = "Medical"
+
+/datum/autolathe/recipe/lighter
+	name = "Cheap Lighter"
+	path = /obj/item/weapon/flame/lighter
+	category = "General"
 /*
 /datum/autolathe/recipe/
 	name = ""

@@ -43,6 +43,7 @@
 		new/datum/stack_recipe("ATM", /obj/item/frame/atm, 2),\
 		new/datum/stack_recipe("intercom frame", /obj/item/frame/intercom, 2),\
 		new/datum/stack_recipe("light switch frame", /obj/item/frame/light_switch, 1),\
+		new/datum/stack_recipe("sink frame", /obj/item/frame/sink, 2),\
 		))
 	recipes += new/datum/stack_recipe("light fixture frame", /obj/item/frame/light, 2)
 	recipes += new/datum/stack_recipe("small light fixture frame", /obj/item/frame/light/small, 1)
@@ -204,4 +205,3 @@ material/silver/generate_recipes()
 
 material/marble/generate_recipes()
 ..()
-//	recipes += new/datum/stack_recipe("Sink", /obj/item/frame/sink, 2)

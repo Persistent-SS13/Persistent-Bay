@@ -139,7 +139,7 @@
 	recipes += new/datum/stack_recipe_list("Plumbing",list( \
 		new/datum/stack_recipe("shower frame", /obj/item/frame/shower, 2), \
 		new/datum/stack_recipe("toilet", /obj/structure/toilet, 5, one_per_turf = 1, on_floor = 1)
-		new/datum/stack_recipe("sink frame", /obj/item/frame/kitchensink, 2),\
+		new/datum/stack_recipe("kitchen sink frame", /obj/item/frame/kitchensink, 2),\
 		))
 	recipes += new/datum/stack_recipe("Punching bag", /obj/structure/fitness/punchingbag, 5, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe_list("Curtains",list( \

@@ -16,12 +16,7 @@
 	desc = "A tank of oxygen."
 	icon_state = "oxygen"
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
-
-
-/obj/item/weapon/tank/oxygen/New()
-	..()
-	air_contents.adjust_gas("oxygen", (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
-
+	starting_pressure = list("oxygen" = 6*ONE_ATMOSPHERE)
 
 /obj/item/weapon/tank/oxygen/yellow
 	desc = "A tank of oxygen. This one is yellow."
@@ -40,15 +35,7 @@
 	desc = "A tank with an N2O/O2 gas mix."
 	icon_state = "anesthetic"
 	item_state = "an_tank"
-
-/obj/item/weapon/tank/anesthetic/New()
-	..()
-
-	air_contents.gas["oxygen"] = (3*ONE_ATMOSPHERE)*70/(R_IDEAL_GAS_EQUATION*T20C) * O2STANDARD
-	air_contents.gas["sleeping_agent"] = (3*ONE_ATMOSPHERE)*70/(R_IDEAL_GAS_EQUATION*T20C) * N2STANDARD
-	air_contents.update_values()
-
-	return
+	starting_pressure = list("oxygen" = 3*ONE_ATMOSPHERE*O2STANDARD, "sleeping_agent" = 3*ONE_ATMOSPHERE*N2STANDARD)
 
 /*
  * Air
@@ -57,14 +44,7 @@
 	name = "air tank"
 	desc = "Mixed anyone?"
 	icon_state = "oxygen"
-
-/obj/item/weapon/tank/air/New()
-	..()
-
-	src.air_contents.adjust_multi("oxygen", (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C) * O2STANDARD, "nitrogen", (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C) * N2STANDARD)
-
-	return
-
+	starting_pressure = list("oxygen" = 6*ONE_ATMOSPHERE*O2STANDARD, "nitrogen" = 6*ONE_ATMOSPHERE*N2STANDARD)
 
 /*
  * Phoron
@@ -76,25 +56,19 @@
 	gauge_icon = null
 	flags = CONDUCT
 	slot_flags = null	//they have no straps!
-
-
-/obj/item/weapon/tank/phoron/New()
-	..()
-	src.air_contents.adjust_gas("phoron", (3*ONE_ATMOSPHERE)*70/(R_IDEAL_GAS_EQUATION*T20C))
-	return
+	starting_pressure = list("phoron" = 3*ONE_ATMOSPHERE)
 
 /obj/item/weapon/tank/phoron/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	..()
 
 	if (istype(W, /obj/item/weapon/flamethrower))
 		var/obj/item/weapon/flamethrower/F = W
-		if ((!F.status)||(F.ptank))	return
-		src.master = F
+		if (!F.status||F.ptank)	return
+		master = F
 		F.ptank = src
 		user.remove_from_mob(src)
-		src.loc = F
-	return
-	
+		forceMove(F)
+
 /*
  * Phorosian Phoron
  */
@@ -103,11 +77,8 @@
 	icon_state = "phoronfr"
 	gauge_icon = "indicator_tank"
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
+	starting_pressure = list("phoron" = 6*ONE_ATMOSPHERE)
 
-/obj/item/weapon/tank/phoron/phorosian/New()
-	..()
-	src.air_contents.adjust_gas("phoron", (6*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
-	return	
 /*
  * Emergency Oxygen
  */
@@ -129,10 +100,7 @@
 	desc = "Used for emergencies. Contains very little oxygen, so try to conserve it until you actually need it."
 	icon_state = "emergency"
 	gauge_icon = "indicator_emergency"
-
-/obj/item/weapon/tank/emergency/oxygen/New()
-	..()
-	src.air_contents.adjust_gas("oxygen", (3*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
+	starting_pressure = list("oxygen" = 3*ONE_ATMOSPHERE)
 
 /obj/item/weapon/tank/emergency/oxygen/engi
 	name = "extended-capacity emergency oxygen tank"
@@ -153,12 +121,7 @@
 	desc = "An emergency air tank hastily painted red and issued to Vox crewmembers."
 	icon_state = "emergency_nitro"
 	gauge_icon = "indicator_emergency"
-
-
-/obj/item/weapon/tank/emergency/nitrogen/New()
-	..()
-	src.air_contents.adjust_gas("nitrogen", (3*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
-
+	starting_pressure = list("nitrogen" = 3*ONE_ATMOSPHERE)
 
 /obj/item/weapon/tank/emergency/nitrogen/double
 	name = "double emergency nitrogen tank"
@@ -172,11 +135,8 @@
 	desc = "An emergency air tank hastily painted orange and issued to Phorosian crewmembers."
 	icon_state = "emergency_phoron"
 	gauge_icon = "indicator_emergency"
-	
-/obj/item/weapon/tank/emergency/phoron/New()
-	..()
-	src.air_contents.adjust_gas("phoron", (3*ONE_ATMOSPHERE)*volume/(R_IDEAL_GAS_EQUATION*T20C))
-	
+	starting_pressure = list("phoron" = 3*ONE_ATMOSPHERE)
+
 /*
  * Nitrogen
  */
@@ -185,10 +145,4 @@
 	desc = "A tank of nitrogen."
 	icon_state = "oxygen_fr"
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
-
-
-/obj/item/weapon/tank/nitrogen/New()
-	..()
-
-	src.air_contents.adjust_gas("nitrogen", (3*ONE_ATMOSPHERE)*70/(R_IDEAL_GAS_EQUATION*T20C))
-	return
+	starting_pressure = list("nitrogen" = 3*ONE_ATMOSPHERE)

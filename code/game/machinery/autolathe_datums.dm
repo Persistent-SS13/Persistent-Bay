@@ -263,6 +263,11 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/weapon/reagent_containers/glass/beaker/vial
 	category = "Medical"
 
+/datum/autolathe/recipe/pillbottle
+	name = "pill bottle"
+	path = /obj/item/weapon/storage/pill_bottle
+	category = "Medical"
+
 /datum/autolathe/recipe/syringe
 	name = "syringe"
 	path = /obj/item/weapon/reagent_containers/syringe

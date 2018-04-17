@@ -43,7 +43,8 @@
 /mob/living/carbon/human/Life()
 	set invisibility = 0
 	set background = BACKGROUND_ENABLED
-
+	if(!loc)
+		return
 	if (transforming)
 		return
 	if(last_hud_update > world.time)

@@ -1,7 +1,6 @@
-//definitions
-
+//INTERNAL ORGANS
 /obj/item/organ/internal/lungs/phorosian
-	name = "phoronized lungs" 
+	name = "phoronized lungs"
 	icon_state = "lungs-plasma"
 	desc = "A set of lungs seemingly made out of fleshy phoron."
 	breath_type = "phoron"
@@ -12,12 +11,12 @@
 	desc = "A fleshy hunk of phoron that looks a little like a liver."
 	parent_organ = BP_CHEST
 	color = "#7e4ba0"
-	
+
 /obj/item/organ/internal/heart/phorosian
 	name = "phoron pump"
 	parent_organ = BP_CHEST
 	color = "#7e4ba0"
-	
+
 /obj/item/organ/internal/brain/phorosian
 	name = "Crystallized brain"
 	desc = "A brain seemingly made out of both crystallized phoron and brain matter."
@@ -28,11 +27,11 @@
 	name = "Crystallized eyeballs"
 	desc = "A pair of crystal spheres in the shape of eyes. They give off a faint glow."
 	phoron_guard = 1
-	
+
 /obj/item/organ/internal/eyes/phorosian/New()
 	update_colour()
-	
-	
+
+
 
 //lung stuff - makes phorosians gain blood depending on intake of phoron. Also makes their lungs burn if they breathe oxygen.
 
@@ -44,7 +43,7 @@
 		handle_failed_breath()
 		return 1
 
-	var/breath_pressure = breath.total_moles*R_IDEAL_GAS_EQUATION*breath.temperature/BREATH_VOLUME
+	var/breath_pressure = breath.return_pressure()
 	//exposure to extreme pressures can rupture lungs
 	if(breath_pressure < species.hazard_low_pressure || breath_pressure > species.hazard_high_pressure)
 		var/datum/gas_mixture/environment = loc.return_air_for_internal_lifeform()
@@ -93,7 +92,7 @@
 
 	owner.oxygen_alert = failed_inhale * 2
 
-	var/inhaled_gas_used = inhaling/6
+	var/inhaled_gas_used = inhaling / 4
 	breath.adjust_gas(breath_type, -inhaled_gas_used, update = 0) //update afterwards
 
 	if(exhale_type)
@@ -112,22 +111,25 @@
 			failed_exhale = 1
 		else if(exhaled_pp > safe_exhaled_max * 0.7)
 			word = pick("dizzy","short of breath","faint","momentarily confused")
-			warn_prob = 1
+			warn_prob = 10
 			alert = 1
 			failed_exhale = 1
 			var/ratio = 1.0 - (safe_exhaled_max - exhaled_pp)/(safe_exhaled_max*0.3)
 			if (owner.getOxyLoss() < 50*ratio)
 				oxyloss = HUMAN_MAX_OXYLOSS
-		else if(exhaled_pp > safe_exhaled_max * 0.6)
+		else if(exhaled_pp > safe_exhaled_max * 0.4)
 			word = pick("a little dizzy","short of breath")
-			warn_prob = 1
+			warn_prob = 10
 		else
 			owner.co2_alert = 0
 
-		if(!owner.co2_alert && word && prob(warn_prob))
-			to_chat(owner, "<span class='warning'>You feel [word].</span>")
-			owner.adjustOxyLoss(oxyloss)
-			owner.co2_alert = alert
+		if(word)
+			if(!owner.co2_alert)
+				owner.co2_alert = alert
+			if(prob(warn_prob))
+				to_chat(owner, "<span class='warning'>You feel [word].</span>")
+
+		owner.adjustOxyLoss(oxyloss)
 
 	// Too much poison in the air.
 	if(toxins_pp > safe_toxins_max)
@@ -180,7 +182,7 @@
 	else
 		owner.oxygen_alert = 0
 	return failed_breath
-		
+
 /obj/item/organ/internal/lungs/phorosian/handle_failed_breath() //It's not the lack of air killing them, it's the lack of blood.
 	if(prob(15) && !owner.nervous_system_failure())
 		if(!owner.is_asystole())
@@ -189,11 +191,12 @@
 		else
 			owner.emote(pick("shiver","twitch"))
 		owner.remove_blood(HUMAN_MAX_OXYLOSS*breath_fail_ratio)
-	
-	
+
+
+//EXTERNAL ORGANS
 //Phoron reinforced bones woo.
 /obj/item/organ/external/head/phorosian
-	min_broken_damage = 50	
+	min_broken_damage = 50
 
 /obj/item/organ/external/chest/phorosian
 	min_broken_damage = 50
@@ -224,4 +227,3 @@
 
 /obj/item/organ/external/hand/right/phorosian
 	min_broken_damage = 30
-	

@@ -114,12 +114,12 @@
 	recipes += new/datum/stack_recipe("dark floor tile", /obj/item/stack/tile/floor_dark, 1, 4, 20)
 	recipes += new/datum/stack_recipe("Operating Table", /obj/machinery/optable, 10, time = 50, one_per_turf = 1)
 	recipes += new/datum/stack_recipe("Item Safe", /obj/structure/safe, 10, time = 50, one_per_turf = 1)
-/*	recipes += new/datum/stack_recipe_list("Blast Doors Assemblies", list( \
+//	recipes += new/datum/stack_recipe_list("Blast Doors Assemblies", list( \
 	new/datum/stack_recipe("assembly", /obj/structure/door_assembly/, 4, time = 50, one_per_turf = 1, on_floor = 1), \
 		))
-	/obj/machinery/door/blast
-	/obj/machinery/door/blast/shutters
-*/
+//	/obj/machinery/door/blast
+//	/obj/machinery/door/blast/shutters
+
 /material/stone/generate_recipes()
 	..()
 	recipes += new/datum/stack_recipe("planting bed", /obj/machinery/portable_atmospherics/hydroponics/soil, 3, time = 10, one_per_turf = 1, on_floor = 1)
@@ -181,7 +181,7 @@
 		new/datum/stack_recipe("large box", /obj/item/weapon/storage/box/large, 2), \
 		new/datum/stack_recipe("donut box", /obj/item/weapon/storage/box/donut/empty), \
 		new/datum/stack_recipe("egg box", /obj/item/weapon/storage/fancy/egg_box/empty), \
-		new/datum/stack_recipe("cigarette carton", /obj/item/weapon/storage/box/cigarettes, 4) \
+		new/datum/stack_recipe("cigarette carton", /obj/item/weapon/storage/box/cigarettes, 4), \
 		new/datum/stack_recipe("light tubes box", /obj/item/weapon/storage/box/lights/tubes/empty), \
 		new/datum/stack_recipe("light bulbs box", /obj/item/weapon/storage/box/lights/bulbs/empty), \
 		new/datum/stack_recipe("mouse traps box", /obj/item/weapon/storage/box/mousetraps/empty), \

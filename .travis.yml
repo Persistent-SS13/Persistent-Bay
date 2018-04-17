@@ -13,8 +13,6 @@ env:
     - TEST=CODE
     - TEST=WEB
     - TEST=MAP MAP_PATH=example
-    - TEST=MAP MAP_PATH=overmap_example
-    - TEST=MAP MAP_PATH=PS13_overmap
     - TEST=MAP MAP_PATH=vignette
 
 cache:

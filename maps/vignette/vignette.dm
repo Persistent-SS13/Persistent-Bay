@@ -15,7 +15,6 @@
 	#define using_map_DATUM /datum/map/vignette
 
 #elif !defined(MAP_OVERRIDE)
-say
 	#warn A map has already been included, ignoring Vignette
 
 #endif

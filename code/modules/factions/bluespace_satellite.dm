@@ -10,7 +10,7 @@
 	var/status = 0 // 0 = unpowered, 1 = closed 2 = open 3 = contruction mode 4 = occupied 5 = obstructed
 	req_access = list(core_access_command_programs)
 	var/datum/world_faction/faction
-	var/dimensions = 1 // 1 = 5*7, 2 = 7*7 
+	var/dimensions = 1 // 1 = 5*7, 2 = 7*7
 /obj/machinery/docking_beacon/attack_hand(var/mob/user as mob)
 	ui_interact(user)
 
@@ -23,7 +23,7 @@
 	var/data[0]
 	if(req_access_faction && req_access_faction != "" || (faction && faction.uid != req_access_faction))
 		faction = get_faction(req_access_faction)
-		
+
 	if(faction)
 		data["connected"] = 1
 		data["name"] = faction.name
@@ -42,8 +42,8 @@
 				data["status"] = "Occupied"
 			if(5)
 				data["status"] = "Obstructed"
-		data["dimenson"] = dimensons
-		
+		data["dimenson"] = dimensions
+
 	// update the ui if it exists, returns null if no ui is passed/found
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
@@ -65,10 +65,10 @@
 	add_fingerprint(usr)
 	return 1 // update UIs attached to this object
 
-	
-	
-	
-	
+
+
+
+
 /obj/machinery/bluespace_satellite
 	name = "bluespace satellite"
 	desc = "Can be configured and launched to create a new logistics network."
@@ -84,7 +84,7 @@
 	var/chosen_password
 	var/starting_leader
 	var/chosen_netuid
-	
+
 /obj/machinery/bluespace_satellite/New()
 	..()
 

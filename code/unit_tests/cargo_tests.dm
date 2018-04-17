@@ -30,6 +30,6 @@
 	if(bad_tests)
 		fail("[bad_tests] cargo supply pack\s with inconsistent pre/post-open contents found.")
 	else
-		pass("No  cargo supply packs with inconsistent pre/post-open contents found.")
+		pass("No cargo supply packs with inconsistent pre/post-open contents found.")
 
 	return 1

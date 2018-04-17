@@ -239,11 +239,11 @@ function run_byond_tests {
         ./install-byond.sh || exit 1
         source $HOME/BYOND-${BYOND_MAJOR}.${BYOND_MINOR}/byond/bin/byondsetup
     fi
-    run_test_ci "check globals build" "python tools/GenerateGlobalVarAccess/gen_globals.py baystation12.dme code/_helpers/global_access.dm"
-    run_test "check globals unchanged" "md5sum -c - <<< 'ac09662e5e3ca04bb5a9a55e17276535 *code/_helpers/global_access.dm'"
-    run_test "build map unit tests" "scripts/dm.sh -DUNIT_TEST -M$MAP_PATH baystation12.dme"
+    run_test_ci "check globals build" "python tools/GenerateGlobalVarAccess/gen_globals.py persistentss13.dme code/_helpers/global_access.dm"
+    run_test "check globals unchanged" "md5sum -c - <<< 'fd59c70916e2dbc42bd94d7f0a9fb343 *code/_helpers/global_access.dm'"
+    run_test "build map unit tests" "scripts/dm.sh -DUNIT_TEST -M$MAP_PATH persistentss13.dme"
     run_test "check no warnings in build" "grep ', 0 warnings' build_log.txt"
-    run_test "run unit tests" "DreamDaemon baystation12.dmb -invisible -trusted -core 2>&1 | tee log.txt"
+    run_test "run unit tests" "DreamDaemon persistentss13.dmb -invisible -trusted -core 2>&1 | tee log.txt"
     run_test "check tests passed" "grep 'All Unit Tests Passed' log.txt"
     run_test "check no runtimes" "grep 'Caught 0 Runtimes' log.txt"
     run_test_fail "check no runtimes 2" "grep 'runtime error:' log.txt"

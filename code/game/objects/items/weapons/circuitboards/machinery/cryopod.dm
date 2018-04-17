@@ -1,5 +1,5 @@
 #ifndef T_BOARD
-#error T_BOARD macro is not defined but we need it! 
+#error T_BOARD macro is not defined but we need it!
 #endif
 
 /obj/item/weapon/circuitboard/cryopod
@@ -10,4 +10,4 @@
 	req_components = list(
 							/obj/item/weapon/stock_parts/matter_bin = 1,
 							/obj/item/weapon/stock_parts/scanning_module = 1,
-                            /obj/item/weapon/stock_parts/console_screen = 1)
+							/obj/item/weapon/stock_parts/console_screen = 1)

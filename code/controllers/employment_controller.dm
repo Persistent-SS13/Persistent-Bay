@@ -13,7 +13,7 @@ var/datum/controller/employment_controller/employment_controller
 	. = ..()
 
 /datum/controller/employment_controller/Process()
-	var/reset_timerbuffer = 0
+//	var/reset_timerbuffer = 0
 	if(round_duration_in_ticks > checkbuffer)
 		checkbuffer = round_duration_in_ticks + 5 MINUTES
 		for(var/datum/world_faction/connected_faction in GLOB.all_world_factions)

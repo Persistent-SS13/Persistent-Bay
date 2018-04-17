@@ -26,6 +26,23 @@
 
 /obj/machinery/atmospherics/binary/circulator/New()
 	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/circulator(src)
+	component_parts += new /obj/item/stack/cable_coil(src, 30)
+	component_parts += new /obj/item/pipe(src)
+	component_parts += new /obj/item/pipe(src)
+	component_parts += new /obj/item/stack/material/plasteel(src)
+	component_parts += new /obj/item/stack/material/plasteel(src)
+	component_parts += new /obj/item/stack/material/plasteel(src)
+	component_parts += new /obj/item/stack/material/plasteel(src)
+	component_parts += new /obj/item/stack/material/plasteel(src)
+	component_parts += new /obj/item/stack/material/plasteel(src)
+	component_parts += new /obj/item/stack/material/plasteel(src)
+	component_parts += new /obj/item/stack/material/plasteel(src)
+	component_parts += new /obj/item/stack/material/plasteel(src)
+	component_parts += new /obj/item/stack/material/plasteel(src)
+	RefreshParts()
+
 	desc = initial(desc) + " Its outlet port is to the [dir2text(dir)]."
 	air1.volume = 400
 

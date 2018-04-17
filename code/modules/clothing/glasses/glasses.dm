@@ -14,6 +14,7 @@
 	var/obj/screen/overlay = null
 	var/obj/item/clothing/glasses/hud/hud = null	// Hud glasses, if any
 	var/electric = 0 //if the glasses should be disrupted by EMP
+	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 200)
 
 /obj/item/clothing/glasses/New()
 	..()

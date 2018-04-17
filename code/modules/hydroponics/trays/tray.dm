@@ -122,7 +122,8 @@
 		/datum/reagent/radium =  8,
 		/datum/reagent/mutagen = 15
 		)
-
+/obj/machinery/portable_atmospherics/hydroponics/after_load()
+	update_icon()
 /obj/machinery/portable_atmospherics/hydroponics/AltClick()
 	if(mechanical && !usr.incapacitated() && Adjacent(usr))
 		close_lid(usr)

@@ -577,8 +577,8 @@ var/world_topic_spam_protect_time = world.timeofday
 
 /world/proc/update_status()
 	var/s = ""
-	s += "<a href='https://discord.gg/UUpHSPp'>" 
-	s += "Persistent Station 13, Characters and Stations Save & Load</a> "
+	s += "<a href='https://discord.gg/UUpHSPp'>"
+	s += "(HRP) Persistent Station 13, Characters and Stations Save & Load (HRP)</a> "
 	//Change this to wherever you want the hub to link to.
 	s += " | Create your own custom faction and carve out a piece of the frontier. Final alpha testing before true public release.<br>"
 	var/list/features = list()

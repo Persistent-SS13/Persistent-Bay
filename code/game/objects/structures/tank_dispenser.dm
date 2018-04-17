@@ -1,5 +1,5 @@
 /obj/structure/dispenser
-	name = "tank storage unit"
+	name = "air tank dispenser"	//Changed name, just made more sense with this one
 	desc = "A simple yet bulky storage device for gas tanks. Has room for up to ten oxygen tanks, and ten phoron tanks."
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "dispenser"
@@ -81,6 +81,15 @@
 		else
 			to_chat(user, "<span class='notice'>You wrench [src] into place.</span>")
 			anchored = 1
+		return
+	if(isWelder(I) && !anchored)
+		var/obj/item/weapon/weldingtool/WT = I
+		if(WT.remove_fuel(0,user))
+			var/obj/item/stack/material/steel/new_item = new(usr.loc)
+			new_item.add_to_stacks(usr)
+			for (var/mob/M in viewers(src))
+				M.show_message("<span class='notice'>[src] is shaped into metal by [user.name] with the welding tool.</span>", 3, "<span class='notice'>You hear welding.</span>", 2)
+			qdel(src)
 		return
 
 /obj/structure/dispenser/Topic(href, href_list)

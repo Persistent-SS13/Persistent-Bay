@@ -186,8 +186,9 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		to_chat(usr, "<span class='notice'><B>\The [src] is in use.</B></span>")
 		return
 	target.stop_pulling()
-	target.client.perspective = EYE_PERSPECTIVE
-	target.client.eye = src
+	if(target.client)
+		target.client.perspective = EYE_PERSPECTIVE
+		target.client.eye = src
 	target.forceMove(src)
 	set_occupant(target)
 	icon_state = occupied_icon_state
@@ -313,8 +314,8 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 /obj/machinery/cryopod/proc/despawn_occupant()
 	occupant.loc = null
 	var/mob/new_player/M = new /mob/new_player()
+	M.loc = locate(100,100,28)
 	occupant.stored_ckey = occupant.ckey
-	M.loc = null
 	M.key = occupant.key
 	var/role_alt_title = occupant.mind ? occupant.mind.role_alt_title : "Unknown"
 	if(control_computer)
@@ -347,13 +348,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		var/willing = null //We don't want to allow people to be forced into despawning.
 		var/mob/M = G:affecting
 
-		if(M.client)
-			if(alert(M,"Would you like to enter long-term storage?",,"Yes","No") == "Yes")
-				if(!M || !grab || !grab.affecting) return
-				willing = 1
-		else
-			willing = 1
-
+		willing = 1
 		if(willing)
 
 			visible_message("[user] starts putting [grab.affecting:name] into \the [src].", 3)

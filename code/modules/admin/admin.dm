@@ -771,6 +771,26 @@ var/global/floorIsLava = 0
 	if(!check_rights(R_ADMIN))
 		return
 	Save_World()
+/datum/admins/proc/changeambience()
+	set category = "Server"
+	set desc="Change ambience tone"
+	set name="Modify Ambience"
+
+	if(!check_rights(R_ADMIN))
+		return
+	var/choice = input("Choose the zlevel to change ambience on. The 2 lower zlevels are included.", "Zlevel") as anything in ambient_controller.zlevel_data|null
+	if(choice)
+		var/datum/music_controller/controller = ambient_controller.zlevel_data[choice]
+		if(!controller)
+			message_admins("zlevel with no music controller [choice]")
+			return
+		var/choice2 = input("Choose the type of ambient music to play.", "Tone") as anything in list("action", "neutral", "fun", "dark", "none")|null
+		if(choice2)
+			if(choice2 == "none") controller.tone = null
+			else
+				if(choice2 != controller.tone)
+					controller.timetostop = 0
+					controller.tone = choice2
 
 /datum/admins/proc/buildaccounts()
 	set category = "Server"
@@ -783,7 +803,7 @@ var/global/floorIsLava = 0
 		if(!record.linked_account)
 			record.linked_account = create_account(record.get_name(), 0, null)
 			record.linked_account.remote_access_pin = 1111
-			
+
 /datum/admins/proc/savechars()
 	set category = "Server"
 	set desc="Saves Characters"

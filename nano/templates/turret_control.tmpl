@@ -1,41 +1,48 @@
 <div class="item">
 	<div class="itemLabelWide">
-		Behaviour controls are {{:data.locked ? "locked" : "unlocked"}}.
+		Behavior controls are {{:data.locked ? "locked" : "unlocked"}}.
 	</div>
 </div>
 <br>
-{{if data.access}}
-    <div class="item">
-		<div class="itemLabelWide">
-			Turret Status:
-		</div>
-		<div class="itemContentNarrow">
-			{{:helper.link('Enabled', null, {'command' : 'enable', 'value' : 1},  data.enabled ?'redButton' : null)}}
-			{{:helper.link('Disabled',null, {'command' : 'enable', 'value' : 0}, !data.enabled ? 'selected' : null)}}
-		</div>
-	</div>	
+{{if data.allowed > 1}}
+    {{if data.ui_mode == 0}}
+        <div class="item">
+            <div class="itemLabelWide">
+                Turret Status:
+            </div>
+            <div class="itemContentNarrow">
+                {{:helper.link('Enabled', null, {'command' : 'enable', 'value' : 1},  data.enabled ? 'redButton' : null)}}
+                {{:helper.link('Disabled',null, {'command' : 'enable', 'value' : 0}, !data.enabled ? 'selected' : null)}}
+            </div>
+        </div>	
 
-    {{if data.is_lethal}}
         <div class="item">
             <div class="itemLabelWide">
                 Lethal Mode:
             </div>
             <div class="itemContentNarrow">
                 {{:helper.link('On', null, {'command' : 'lethal', 'value' : 1},  data.lethal ?'redButton' : null)}}
-                {{:helper.link('Off',null, {'command' : 'lethal', 'value' : 0}, !data.lethal ? 'selected' : null)}}
+                {{:helper.link('Off', null, {'command' : 'lethal', 'value' : 0}, !data.lethal ? 'selected' : null)}}
             </div>
         </div>	
-    {{/if}}
-    
-    {{for data.settings}}
+        {{if data.allowed > 2}}
+            <div class="item">
+                <div class="itemContentNarrow">
+                    {{:helper.link('Required Access', null, {'command' : 'ui_mode', 'value' : 1})}}
+                </div>
+            </div>
+        {{/if}}
+    {{else}}
         <div class="item">
-            <div class="itemLabelWide">
-                {{:value.category}}
+            {{:helper.link('Return', null, {'command' : 'ui_mode', 'value' : 0})}}
+            Interaction with people is based on their access's color. Green means it won't shoot them, yellow means they can turn off the turret, red means full access. Otherwise, pew pew.
+		</div>
+        {{if data.allowed > 2}}
+            <div class="item">
+                {{for data.access}}
+                        {{:helper.link(value.name, null, {'command' : 'access', 'value' : value.id}, null, value.selected == 3 ? 'redButton' : value.selected == 2 ? 'yellowButton' : value.selected == 1 ? 'selected' : null )}}
+                {{/for}}
             </div>
-            <div class="itemContentNarrow">
-                {{:helper.link('On', null, {'command' : value.setting, 'value' : 1},  value.value ? 'selected' : null)}}
-                {{:helper.link('Off',null, {'command' : value.setting, 'value' : 0}, !value.value ? 'selected' : null)}}
-            </div>
-        </div>
-    {{/for}}
+        {{/if}}
+    {{/if}}
 {{/if}}

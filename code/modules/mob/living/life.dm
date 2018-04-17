@@ -1,9 +1,13 @@
+/mob/living/var/last_hud_update = 0
 /mob/living/Life()
 	set invisibility = 0
 	set background = BACKGROUND_ENABLED
 
 	..()
-
+	if(last_hud_update > world.time)
+		last_hud_update = world.time + 15 SECONDS
+		update_action_buttons()
+	
 	if (transforming)
 		return
 	if(!loc)

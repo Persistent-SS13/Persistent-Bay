@@ -91,11 +91,13 @@ research holder datum.
 	return
 
 /datum/research/proc/AddDesign2Known(var/datum/design/D)
+	if(!D) return
 	if(!known_designs.len) // Special case
 		known_designs.Add(D)
 		return
 	for(var/i = 1 to known_designs.len)
 		var/datum/design/A = known_designs[i]
+		if(!A) continue
 		if(A.id == D.id) // We are guaranteed to reach this if the ids are the same, because sort_string will also be the same
 			return
 		if(A.sort_string > D.sort_string)

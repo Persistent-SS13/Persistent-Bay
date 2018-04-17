@@ -7,6 +7,12 @@
 	anchored = 1
 	var/notices = 0
 
+/obj/structure/noticeboard/New(loc, dir, atom/frame, var/ndir)
+	..(loc)
+	if(ndir)
+		set_dir(ndir)
+		pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 30 : -30)
+		pixel_y = (src.dir & 3)? (src.dir ==1 ? 30 : -30) : 0
 /obj/structure/noticeboard/Initialize()
 	if(!map_storage_loaded)
 		for(var/obj/item/I in loc)
@@ -14,9 +20,11 @@
 			if(istype(I, /obj/item/weapon/paper))
 				I.forceMove(src)
 				notices++
-		icon_state = "nboard0[notices]"
+		
 	. = ..()
-
+/obj/structure/noticeboard/after_load()
+	icon_state = "nboard0[notices]"
+	..()
 //attaching papers!!
 /obj/structure/noticeboard/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)
 	if(istype(O, /obj/item/weapon/paper) || istype(O, /obj/item/weapon/photo))
@@ -29,6 +37,8 @@
 			to_chat(user, "<span class='notice'>You pin the paper to the noticeboard.</span>")
 		else
 			to_chat(user, "<span class='notice'>You reach to pin your paper to the board but hesitate. You are certain your paper will not be seen among the many others already attached.</span>")
+	if(isCrowbar(O))
+		qdel(src)
 
 /obj/structure/noticeboard/attack_hand(var/mob/user)
 	examine(user)

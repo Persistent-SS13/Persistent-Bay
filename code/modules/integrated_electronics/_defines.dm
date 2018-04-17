@@ -312,9 +312,10 @@
 	src.name = name
 	src.data = data
 	holder = newloc
+	/**
 	if(!istype(holder))
 		message_admins("ERROR: An integrated_io ([src.name]) spawned without a valid holder!  This is a bug.")
-
+	**/
 /datum/integrated_io/Destroy()
 	disconnect()
 	data = null

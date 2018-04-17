@@ -65,7 +65,11 @@ var/const/HOLOPAD_MODE = RANGE_BASED
 /obj/machinery/hologram/holopad/after_load()
 	if(loc)
 		desc = "It's a floor-mounted device for projecting holographic images. Its ID is '[loc.loc]'"
-/obj/machinery/hologram/holopad/attack_hand(var/mob/living/carbon/human/user) //Carn: Hologram requests.
+/obj/machinery/hologram/holopad/attack_hand(var/obj/item/I as obj, var/mob/living/carbon/human/user) //Carn: Hologram requests.
+	if(default_deconstruction_screwdriver(user, I))
+		return
+	if(default_deconstruction_crowbar(user, I))
+		return
 	if(!istype(user))
 		return
 	if(incoming_connection&&caller_id)

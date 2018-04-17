@@ -142,7 +142,14 @@ var/global/list/zones_to_save = list()
 	if(StandardWrite(f))
 		should_save = 0
 		return
-
+/mob/living/carbon/lace/Write(savefile/f)
+	should_save = 1
+	if(container2)
+		container2.should_save = 1
+	if(StandardWrite(f))
+		should_save = 0
+		if(container2) container2.should_save = 0
+		return
 /area/proc/get_turf_coords()
 	var/list/coord_list = list()
 	var/ind = 0

@@ -46,7 +46,9 @@
 
 	if (transforming)
 		return
-
+	if(last_hud_update > world.time)
+		last_hud_update = world.time + 15 SECONDS
+		update_action_buttons()
 	fire_alert = 0 //Reset this here, because both breathe() and handle_environment() have a chance to set it.
 
 	//TODO: seperate this out
@@ -290,7 +292,7 @@
 			src.spread_disease_to(M)
 
 
-/mob/living/carbon/human/get_breath_from_internal(volume_needed=BREATH_VOLUME)
+/mob/living/carbon/human/get_breath_from_internal(volume_needed=STD_BREATH_VOLUME)
 	if(internal)
 
 		var/obj/item/weapon/tank/rig_supply

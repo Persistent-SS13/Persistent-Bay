@@ -837,6 +837,10 @@
 		germ_level += n
 
 /mob/living/carbon/human/revive()
+	var/obj/item/organ/internal/stack/stack = internal_organs_by_name[BP_STACK]
+	if(stack)
+		if(stack.lacemob && stack.lacemob.mind)
+			stack.lacemob.mind.transfer_to(src)
 
 	if(should_have_organ(BP_HEART))
 		vessel.add_reagent(/datum/reagent/blood,species.blood_volume-vessel.total_volume)
@@ -1423,6 +1427,12 @@
 			return 0
 		return check_organ.can_feel_pain()
 	return !(species.flags & NO_PAIN)
+
+/mob/living/carbon/human/get_breath_volume()
+	. = ..()
+	var/obj/item/organ/internal/heart/H = internal_organs_by_name[BP_HEART]
+	if(H)
+		. *= (H.robotic < ORGAN_ROBOT) ? pulse()/PULSE_NORM : 1.5
 
 /mob/living/carbon/human/need_breathe()
 	if(species.breathing_organ && should_have_organ(species.breathing_organ))

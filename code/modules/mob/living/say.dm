@@ -131,7 +131,7 @@ proc/get_radio_key_from_channel(var/channel)
 
 /mob/living/proc/get_speech_ending(verb, var/ending)
 	if(ending=="!")
-		return pick("exclaims","shouts","yells")
+		return "exclaims"//pick("exclaims","shouts","yells")
 	if(ending=="?")
 		return "asks"
 	return verb

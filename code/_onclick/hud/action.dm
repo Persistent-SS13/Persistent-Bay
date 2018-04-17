@@ -8,8 +8,10 @@
 #define AB_CHECK_LYING 4
 #define AB_CHECK_ALIVE 8
 #define AB_CHECK_INSIDE 16
-
-
+/mob/living/carbon/lace/Life()
+	update_action_buttons()
+/datum/action/lace
+	name = "Access Lace UI"
 /datum/action
 	var/name = "Generic Action"
 	var/action_type = AB_ITEM

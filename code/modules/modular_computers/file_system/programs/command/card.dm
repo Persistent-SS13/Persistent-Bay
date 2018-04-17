@@ -102,7 +102,10 @@
 			if(record.rank == 1)
 				data["title"] = assignment.name
 			else
-				data["title"] = assignment.ranks[record.rank-1]
+				var/use_rank = record.rank
+				if(record.rank-1 > assignment.ranks.len)
+					use_rank = assignment.ranks.len+1
+				data["title"] = assignment.ranks[use_rank-1]
 			if(record.custom_title)
 				data["custom_title"] = record.custom_title
 			else

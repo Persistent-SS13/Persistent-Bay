@@ -158,6 +158,9 @@
 // Proc: recalc_coils()
 // Parameters: None
 // Description: Updates properties (IO, capacity, etc.) of this SMES by checking internal components.
+/obj/machinery/power/smes/buildable/after_load()
+	recalc_coils()
+	..()
 /obj/machinery/power/smes/buildable/proc/recalc_coils()
 	cur_coils = 0
 	capacity = 0

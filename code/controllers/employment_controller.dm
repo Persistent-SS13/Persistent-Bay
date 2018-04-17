@@ -13,8 +13,9 @@ var/datum/controller/employment_controller/employment_controller
 	. = ..()
 
 /datum/controller/employment_controller/Process()
-	var/reset_timerbuffer = 0
+//	var/reset_timerbuffer = 0
 	if(round_duration_in_ticks > checkbuffer)
+		checkbuffer = round_duration_in_ticks + 5 MINUTES
 		for(var/datum/world_faction/connected_faction in GLOB.all_world_factions)
 			for(var/obj/item/organ/internal/stack/stack in connected_faction.connected_laces)
 				var/datum/computer_file/crew_record/record = connected_faction.get_record(stack.get_owner_name())
@@ -28,7 +29,7 @@ var/datum/controller/employment_controller/employment_controller
 				if(round_duration_in_ticks > timerbuffer)
 					to_chat(stack.owner, "Your [stack] buzzes, letting you know that you should be getting paid.")
 			if(round_duration_in_ticks > timerbuffer)
-				reset_timerbuffer = 1
+				timerbuffer = round_duration_in_ticks + 1 HOUR
 				for(var/datum/computer_file/crew_record/record in connected_faction.get_records())
 					if(record.worked)
 						var/datum/assignment/assignment = connected_faction.get_assignment(record.assignment_uid)
@@ -37,7 +38,10 @@ var/datum/controller/employment_controller/employment_controller
 							continue
 						var/payscale = 0
 						if(record.rank > 1)
-							payscale = text2num(assignment.ranks[assignment.ranks[record.rank-1]])
+							var/use_rank = record.rank
+							if(record.rank > assignment.ranks.len+1)
+								use_rank = assignment.ranks.len+1
+							payscale = text2num(assignment.ranks[assignment.ranks[use_rank-1]])
 						else
 							payscale = assignment.payscale
 						var/to_pay = connected_faction.payrate/12*record.worked*payscale
@@ -49,6 +53,4 @@ var/datum/controller/employment_controller/employment_controller
 								connected_faction.debts[record.get_name()] = "[to_pay]"
 						record.worked = 0
 					
-		checkbuffer = round_duration_in_ticks + 5 MINUTES
-		if(reset_timerbuffer)
-			timerbuffer = round_duration_in_ticks + 1 HOUR
+			

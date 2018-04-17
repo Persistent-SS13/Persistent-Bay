@@ -187,7 +187,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	photo_front = card.front
 	photo_side = card.side
 
-	set_name(card.registered_name)
+	fields["name"] = card.registered_name
 	set_job("Unset")
 	set_sex(card.sex)
 	set_age(card.age)
@@ -216,7 +216,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		return 0
 	photo_front = record.photo_front
 	photo_side = record.photo_side
-	set_name(record.get_name())
+	fields["name"] = record.fields["name"]
 	set_job(record.get_job())
 	set_sex(record.get_sex())
 	set_age(record.get_age())
@@ -250,9 +250,9 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		photo_front = getFlatIcon(dummy, SOUTH, always_use_defdir = 1)
 		photo_side = getFlatIcon(dummy, WEST, always_use_defdir = 1)
 		qdel(dummy)
-	
+
 	// Generic record
-	set_name(H ? H.real_name : "Unset")
+	fields["name"] = H ? H.real_name : "Unset"
 	set_job(H ? GetAssignment(H) : "Unset")
 	set_sex(H ? gender2text(H.gender) : "Unset")
 	set_age(H ? H.age : 30)

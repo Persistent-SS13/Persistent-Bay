@@ -122,7 +122,7 @@
 	allowed_ranks = list(/datum/mil_rank/civ/nt)
 
 	access = list(access_tox, access_tox_storage, access_emergency_storage, access_teleporter, access_heads, core_access_science_programs,
-						access_research, access_mining, access_mining_office, access_mining_station, access_xenobiology,
+						core_access_science_programs, access_mining, access_mining_office, access_mining_station, access_xenobiology,
 						access_RC_announce, access_keycard_auth, access_xenoarch, access_nanotrasen, access_sec_guard,
 						access_expedition_shuttle, access_guppy, access_hangar, access_petrov, access_petrov_helm, access_guppy_helm)
 	minimal_access = list()
@@ -252,7 +252,7 @@
 	allowed_branches = list(/datum/mil_branch/civilian)
 	allowed_ranks = list(/datum/mil_rank/civ/nt)
 
-	access = list(access_liaison, access_tox, access_tox_storage, access_heads, access_research,
+	access = list(access_liaison, access_tox, access_tox_storage, access_heads, core_access_science_programs,
 						access_mining, access_mining_office, access_mining_station, access_xenobiology,
 						access_xenoarch, access_nanotrasen, access_sec_guard,
 						access_hangar, access_petrov, access_petrov_helm)
@@ -999,7 +999,7 @@
 	allowed_branches = list(/datum/mil_branch/civilian)
 	allowed_ranks = list(/datum/mil_rank/civ/nt)
 
-	access = list(access_tox, access_tox_storage, access_research, access_mining, access_mining_office,
+	access = list(access_tox, access_tox_storage, core_access_science_programs, access_mining, access_mining_office,
 						access_mining_station, access_xenobiology, access_xenoarch, access_nanotrasen,
 						access_expedition_shuttle, access_guppy, access_hangar, access_petrov, access_petrov_helm, access_guppy_helm)
 
@@ -1020,7 +1020,7 @@
 	allowed_branches = list(/datum/mil_branch/civilian)
 	allowed_ranks = list(/datum/mil_rank/civ/nt)
 
-	access = list(access_research, access_mining_office,
+	access = list(core_access_science_programs, access_mining_office,
 						access_mining_station, access_nanotrasen, access_expedition_shuttle, access_expedition_shuttle_helm, access_guppy,
 						access_hangar, access_petrov, access_petrov_helm, access_guppy_helm)
 /datum/job/scientist
@@ -1043,7 +1043,7 @@
 	allowed_branches = list(/datum/mil_branch/civilian)
 	allowed_ranks = list(/datum/mil_rank/civ/nt)
 
-	access = list(access_tox, access_tox_storage, access_research, access_petrov, access_petrov_helm,
+	access = list(access_tox, access_tox_storage, core_access_science_programs, access_petrov, access_petrov_helm,
 						access_mining_office, access_mining_station, access_xenobiology, access_guppy_helm,
 						access_xenoarch, access_nanotrasen, access_expedition_shuttle, access_guppy, access_hangar)
 	minimal_access = list()
@@ -1068,7 +1068,7 @@
 	allowed_branches = list(/datum/mil_branch/civilian)
 	allowed_ranks = list(/datum/mil_rank/civ/nt)
 
-	access = list(access_research, access_mining, access_mining_office, access_mining_station, access_nanotrasen,
+	access = list(core_access_science_programs, access_mining, access_mining_office, access_mining_station, access_nanotrasen,
 						access_expedition_shuttle, access_guppy, access_hangar, access_petrov, access_guppy_helm)
 	minimal_access = list()
 
@@ -1089,7 +1089,7 @@
 	allowed_branches = list(/datum/mil_branch/civilian)
 	allowed_ranks = list(/datum/mil_rank/civ/nt, /datum/mil_rank/civ/contractor)
 
-	access = list(access_tox, access_tox_storage,access_research, access_mining, access_mining_office, access_mining_station, access_xenobiology,
+	access = list(access_tox, access_tox_storage,core_access_science_programs, access_mining, access_mining_office, access_mining_station, access_xenobiology,
 						access_xenoarch, access_nanotrasen, access_sec_guard, access_hangar, access_petrov, access_expedition_shuttle, access_guppy)
 
 
@@ -1116,7 +1116,7 @@
 	allowed_branches = list(/datum/mil_branch/civilian)
 	allowed_ranks = list(/datum/mil_rank/civ/nt)
 
-	access = list(access_research, access_mining_office, access_nanotrasen, access_petrov, access_expedition_shuttle, access_guppy)
+	access = list(core_access_science_programs, access_mining_office, access_nanotrasen, access_petrov, access_expedition_shuttle, access_guppy)
 
 
 /datum/job/assistant

@@ -53,7 +53,6 @@
 					 /obj/item/weapon/folder/yellow,
 					 /obj/item/weapon/hand_labeler,
 					 /obj/item/weapon/tape_roll,
-					 /obj/structure/filingcabinet/chestdrawer{anchored = 0},
 					 /obj/item/weapon/paper_bin)
 	name = "Office supplies"
 	cost = 10
@@ -120,7 +119,7 @@
 	num_contained = 10
 	supply_method = /decl/supply_method/randomized
 
-/decl/hierarchy/supply_pack/atmospherics/softsuits
+/decl/hierarchy/supply_pack/supply/softsuits
 	name = "EVA Softsuit w/ Small Airtank"
 	contains = list(/obj/item/weapon/tank/emergency/oxygen/engi,
 			 		/obj/item/clothing/suit/space,
@@ -129,7 +128,7 @@
 	cost = 30
 	containername = "\improper Softsuit crate"
 
-/decl/hierarchy/supply_pack/atmospherics/softsuits_bulk
+/decl/hierarchy/supply_pack/supply/softsuits_bulk
 	name = "Bulk Shipment of EVA Softsuits (x5) w/ Small Airtanks"
 	contains = list(/obj/item/weapon/tank/emergency/oxygen/engi = 5,
 			 		/obj/item/clothing/suit/space = 5,
@@ -137,3 +136,11 @@
 					/obj/item/clothing/mask/gas = 5)
 	cost = 150
 	containername = "\improper Bulk Softsuit crate"
+
+/decl/hierarchy/supply_pack/supply/blueprints
+	name = "Blueprints"
+	contains = list(/obj/item/blueprints)
+	cost = 150
+	containertype = /obj/structure/closet/crate/secure/large/phoron
+	containername = "\improper Blueprints Crate"
+	access = 1	//Access 1 instead of 3 because it would mean only someone with access to logistics program could be trusted to open it

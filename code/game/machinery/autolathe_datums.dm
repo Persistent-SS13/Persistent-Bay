@@ -35,39 +35,24 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/weapon/reagent_containers/glass/bucket
 	category = "General"
 
-/datum/autolathe/recipe/drinkingglass
-	name = "drinking glass"
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/square
-	category = "General"
-	New()
-		..()
-		var/obj/O = path
-		name = initial(O.name) // generic recipes yay
-
-/datum/autolathe/recipe/drinkingglass/rocks
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/rocks
-
-/datum/autolathe/recipe/drinkingglass/shake
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/shake
-
-/datum/autolathe/recipe/drinkingglass/cocktail
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/cocktail
-
-/datum/autolathe/recipe/drinkingglass/shot
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/shot
-
-/datum/autolathe/recipe/drinkingglass/pint
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/pint
-
-/datum/autolathe/recipe/drinkingglass/mug
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/mug
-
-/datum/autolathe/recipe/drinkingglass/wine
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/wine
-
 /datum/autolathe/recipe/flashlight
 	name = "flashlight"
 	path = /obj/item/device/flashlight
+	category = "General"
+
+/datum/autolathe/recipe/maglight
+	name = "Maglight"
+	path = /obj/item/device/flashlight/maglight
+	category = "General"
+
+/datum/autolathe/recipe/penlight
+	name = "Pen Light"
+	path = /obj/item/device/flashlight/pen
+	category = "General"
+
+/datum/autolathe/recipe/desklamp
+	name = "Desk Lamp"
+	path = /obj/item/device/flashlight/lamp
 	category = "General"
 
 /datum/autolathe/recipe/floor_light
@@ -78,6 +63,16 @@ var/const/EXTRA_COST_FACTOR = 1.25
 /datum/autolathe/recipe/extinguisher
 	name = "extinguisher"
 	path = /obj/item/weapon/extinguisher
+	category = "General"
+
+/datum/autolathe/recipe/tank
+	name = "Air Tank"
+	path = /obj/item/weapon/tank/oxygen/yellow
+	category = "General"
+
+/datum/autolathe/recipe/tank_double
+	name = "Air Tank - Small, Extended"
+	path = /obj/item/weapon/tank/emergency/oxygen/engi
 	category = "General"
 
 /datum/autolathe/recipe/jar
@@ -281,6 +276,11 @@ var/const/EXTRA_COST_FACTOR = 1.25
 /datum/autolathe/recipe/vial
 	name = "glass vial"
 	path = /obj/item/weapon/reagent_containers/glass/beaker/vial
+	category = "Medical"
+
+/datum/autolathe/recipe/pillbottle
+	name = "pill bottle"
+	path = /obj/item/weapon/storage/pill_bottle
 	category = "Medical"
 
 /datum/autolathe/recipe/syringe
@@ -593,13 +593,52 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/device/healthanalyzer
 	category = "Medical"
 
-/datum/autolathe/recipe/gps
-	name = "GPS"
-	path = /obj/item/device/gps
-	category = "Devices and Components"
+/datum/autolathe/recipe/mop
+	name = "Mop"
+	path = /obj/item/weapon/mop
+	category = "General"
+
+/datum/autolathe/recipe/glasses
+	name = "Prescription Glasses"
+	path = /obj/item/clothing/glasses/regular
+	category = "Medical"
+
+/datum/autolathe/recipe/lighter
+	name = "Cheap Lighter"
+	path = /obj/item/weapon/flame/lighter
+	category = "General"
 /*
 /datum/autolathe/recipe/
 	name = ""
 	path = /obj/item/
 	category = ""
 */
+/datum/autolathe/recipe/drinkingglass
+	name = "drinking glass"
+	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/square
+	category = "General"
+	New()
+		..()
+		var/obj/O = path
+		name = initial(O.name) // generic recipes yay
+
+/datum/autolathe/recipe/drinkingglass/rocks
+	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/rocks
+
+/datum/autolathe/recipe/drinkingglass/shake
+	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/shake
+
+/datum/autolathe/recipe/drinkingglass/cocktail
+	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/cocktail
+
+/datum/autolathe/recipe/drinkingglass/shot
+	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/shot
+
+/datum/autolathe/recipe/drinkingglass/pint
+	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/pint
+
+/datum/autolathe/recipe/drinkingglass/mug
+	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/mug
+
+/datum/autolathe/recipe/drinkingglass/wine
+	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/wine

@@ -69,8 +69,8 @@
 	supervisors = "the chief medical officer and research director"
 	selection_color = "#013d3b"
 	economic_modifier = 7
-	access = list(access_medical, access_morgue, access_surgery, access_chemistry, access_virology, access_genetics, access_research)
-	minimal_access = list(access_medical, access_morgue, access_genetics, access_research)
+	access = list(access_medical, access_morgue, access_surgery, access_chemistry, access_virology, access_genetics, core_access_science_programs)
+	minimal_access = list(access_medical, access_morgue, access_genetics, core_access_science_programs)
 	outfit_type = /decl/hierarchy/outfit/job/medical/geneticist
 
 /datum/job/psychiatrist

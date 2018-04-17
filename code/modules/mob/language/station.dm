@@ -88,7 +88,7 @@
 /datum/language/human/get_spoken_verb(var/msg_end)
 	switch(msg_end)
 		if("!")
-			return pick("exclaims","shouts","yells") //TODO: make the basic proc handle lists of verbs.
+			return "exclaims"//pick("exclaims","shouts","yells") //TODO: make the basic proc handle lists of verbs.
 		if("?")
 			return ask_verb
 	return speech_verb

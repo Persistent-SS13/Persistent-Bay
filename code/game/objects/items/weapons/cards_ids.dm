@@ -282,7 +282,9 @@ var/const/NO_EMAG_ACT = -50
 	if(faction)
 		if(faction.leader_name == registered_name)
 			faction.rebuild_all_access()
-			return faction.all_access
+			for(var/x in faction.all_access)
+				final_access |= text2num(x)
+			return final_access
 		if(faction.allow_unapproved_ids || approved_factions.Find(faction.uid))
 			var/datum/computer_file/crew_record/record = faction.get_record(registered_name)
 			if(record)

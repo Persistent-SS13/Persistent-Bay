@@ -9,7 +9,7 @@
 	icon_broken = "miningsecbroken"
 	icon_off = "miningsecoff"
 	req_access = list(access_mining)
-
+/*
 /obj/structure/closet/secure_closet/miner/New()
 	..()
 	sleep(2)
@@ -27,7 +27,7 @@
 	new /obj/item/weapon/shovel(src)
 	new /obj/item/weapon/pickaxe(src)
 	new /obj/item/clothing/glasses/meson(src)
-
+*/
 /******************************Lantern*******************************/
 
 /obj/item/device/flashlight/lantern
@@ -99,19 +99,6 @@
 	desc = "This makes no metallurgic sense."
 	drill_verb = "picking"
 
-/obj/item/weapon/pickaxe/plasmacutter
-	name = "plasma cutter"
-	icon_state = "plasmacutter"
-	item_state = "gun"
-	w_class = ITEM_SIZE_NORMAL //it is smaller than the pickaxe
-	damtype = "fire"
-	digspeed = 20 //Can slice though normal walls, all girders, or be used in reinforced wall deconstruction/ light thermite on fire
-	origin_tech = list(TECH_MATERIAL = 4, TECH_PHORON = 3, TECH_ENGINEERING = 3)
-	desc = "A rock cutter that uses bursts of hot plasma. You could use it to cut limbs off of xenos! Or, you know, mine stuff."
-	drill_verb = "cutting"
-	drill_sound = 'sound/items/Welder.ogg'
-	sharp = 1
-	edge = 1
 
 /obj/item/weapon/pickaxe/diamond
 	name = "diamond pickaxe"

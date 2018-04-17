@@ -15,8 +15,21 @@
 	var/last_process_worldtime = 0
 	var/report_num = 0
 
-/obj/machinery/dnaforensics/attackby(var/obj/item/W, mob/user as mob)
+/obj/machinery/dnaforensics/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/dnaforensics(src)
+	component_parts += new /obj/item/stack/material/glass(src)	//The glass cover the analyzer has
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	RefreshParts()
 
+/obj/machinery/dnaforensics/attackby(var/obj/item/W, var/obj/item/O as obj, mob/user as mob)
+	if(closed)
+		if(default_deconstruction_screwdriver(user, O))
+			return
+		if(default_deconstruction_crowbar(user, O))
+			return
 	if(bloodsamp)
 		to_chat(user, "<span class='warning'>There is already a sample in the machine.</span>")
 		return

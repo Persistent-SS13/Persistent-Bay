@@ -542,7 +542,21 @@
 	src << browse(jointext(dat, null), "window=latechoices;size=450x640;can_close=1")
 
 
-
+/mob/proc/after_spawn()
+	return
+/mob/living/carbon/lace/after_spawn()
+	if(container2)
+		container2.loc = loc
+		loc = container
+		if(client)
+			client.perspective = EYE_PERSPECTIVE
+			client.eye = container
+	else if(container)
+		container.loc = loc
+		loc = container
+		if(client)
+			client.perspective = EYE_PERSPECTIVE
+			client.eye = container
 /mob/new_player/proc/create_character(var/turf/spawn_turf)
 	message_admins("create_character")
 	spawning = 1
@@ -569,16 +583,19 @@
 				spawn_turf = locate(102, 98, 1)
 			else
 				for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+					if(!pod.loc) continue
 					if(pod.req_access_faction == new_character.spawn_loc)
 						spawn_turf = pod.loc
 						break
 				if(!spawn_turf)
 					for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+						if(!pod.loc) continue
 						if(pod.req_access_faction == "refugee")
 							spawn_turf = pod.loc
 							break
 				if(!spawn_turf)
 					for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+						if(!pod.loc) continue
 						if(pod.req_access_faction == "nanotrasen")
 							spawn_turf = pod.loc
 							break
@@ -599,6 +616,7 @@
 			if(!GLOB.frontierbeacons.len)
 				message_admins("WARNING! No beacons avalible for spawning! spawn one and set the req_access_faction!")
 			for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
+				if(!beacon.loc) continue
 				if(beacon.req_access_faction == new_character.spawn_loc)
 					spawn_turf = get_step(beacon.loc,pick(GLOB.cardinal))
 					new /obj/effect/portal(spawn_turf, delete_after = 50)
@@ -606,16 +624,19 @@
 			if(!spawn_turf)
 				message_admins("No frontier beacon for [new_character.spawn_loc], spawn one and set the req_access_faction!")
 				for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
+					if(!beacon.loc) continue
 					spawn_turf = get_step(beacon.loc,pick(GLOB.cardinal))
 					new /obj/effect/portal(spawn_turf, delete_after = 50)
 					break
 			if(!spawn_turf)
 				for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+					if(!pod.loc) continue
 					if(pod.req_access_faction == "refugee")
 						spawn_turf = pod.loc
 						break
 			if(!spawn_turf)
 				for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+					if(!pod.loc) continue
 					if(pod.req_access_faction == "nanotrasen")
 						spawn_turf = pod.loc
 						break
@@ -659,6 +680,7 @@
 		to_chat(new_character, "No time to think about that, your first priority is to get your bearings and find a job that pays. Whatever you decide to do in this new frontier, you're going to need a lot more cash than what you have now.")
 	else
 		to_chat(new_character, "You eject from your cryosleep, ready to resume life in the frontier.")
+	new_character.after_spawn()
 	return new_character
 	/**
 	var/mob/living/carbon/human/new_character

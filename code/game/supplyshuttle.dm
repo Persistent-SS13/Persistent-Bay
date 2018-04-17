@@ -98,11 +98,10 @@ var/list/point_source_descriptions = list(
 		playsound(crate.loc,'sound/effects/teleport.ogg',40,1)
 		qdel(crate)
 		supplied += filled
-		if(supplied >= required)
-			supply_controller.close_order(src)
-		return filled*rate
-	message_admins("fill failed due to no objects found")
-	return 0
+		. = filled*rate
+		spawn(10)
+			if(supplied >= required)
+				supply_controller.close_order(src)
 		
 /datum/export_order/stack
 	
@@ -140,10 +139,10 @@ var/list/point_source_descriptions = list(
 		playsound(crate.loc,'sound/effects/teleport.ogg',40,1)
 		qdel(crate)
 		supplied += filled
-		if(supplied >= required)
-			supply_controller.close_order(src)
-		return filled*rate
-	return 0
+		. = filled*rate
+		spawn(10)
+			if(supplied >= required)
+				supply_controller.close_order(src)
 /datum/controller/supply
 	//supply points
 	var/points = 50
@@ -213,7 +212,7 @@ var/list/point_source_descriptions = list(
 				export.required = rand(30, 100)
 				per += rand(5,10)
 			for(var/x in recipe.resources)
-				per += round(recipe.resources[x]/300,0.01)
+				per += round(recipe.resources[x]/800,0.01)
 			export.typepath = recipe.path
 			export.rate = per
 			export.order_type = typee
@@ -240,9 +239,9 @@ var/list/point_source_descriptions = list(
 							design = pick(possible_designs)
 					if(!restart) valid = 1
 			export.required = rand(30, 70)
-			var/per = rand(20,40)
+			var/per = rand(10,25)
 			for(var/x in design.materials)
-				per += round(design.materials[x]/150,0.01)
+				per += round(design.materials[x]/500,0.01)
 			for(var/x in design.req_tech)
 				per += design.req_tech[x]*5
 			export.typepath = design.build_path

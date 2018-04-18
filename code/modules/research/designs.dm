@@ -1445,17 +1445,17 @@ CIRCUITS BELOW
 	req_tech = list(TECH_MATERIAL = 2, TECH_DATA = 3, TECH_BIO = 2, TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/chem_master
 	sort_string = "ZZZZW"
-/datum/design/circuit/botany_extractor
-	name = "Lysis-Isolation Centrifuge"
-	id = "botany_extractor"
-	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 2, TECH_BIO = 3, TECH_DATA = 3)
-	build_path = /obj/item/weapon/circuitboard/botany_extractor
+/datum/design/circuit/libraryscanner
+	name = "Book Scanner"
+	id = "libraryscanner"
+	req_tech = list(TECH_MATERIAL =1, TECH_DATA = 1)
+	build_path = /obj/item/weapon/circuitboard/libraryscanner
 	sort_string = "ZZZZV"
-/datum/design/circuit/botany_editor
-	name = "Bioballistic Delivery System"
-	id = "botany_editor"
-	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 2, TECH_BIO = 3, TECH_DATA = 3)
-	build_path = /obj/item/weapon/circuitboard/botany_editor
+/datum/design/circuit/bookbinder
+	name = "Book Binder"
+	id = "bookbinder"
+	req_tech = list(TECH_MATERIAL =1, TECH_DATA = 1)
+	build_path = /obj/item/weapon/circuitboard/bookbinder
 	sort_string = "ZZZZU"
 /datum/design/circuit/smartfridge
 	name = "Modular Smart Fridge"
@@ -1625,19 +1625,19 @@ CIRCUITS BELOW
 	req_tech = list(TECH_ENGINEERING = 4, TECH_POWER = 4)
 	build_path = /obj/item/weapon/circuitboard/turbinemotor
 	sort_string = "ZZZYR"
-/*
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
+/datum/design/circuit/botany_extractor
+	name = "Lysis-Isolation Centrifuge"
+	id = "botany_extractor"
+	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 2, TECH_BIO = 3, TECH_DATA = 3)
+	build_path = /obj/item/weapon/circuitboard/botany_extractor
 	sort_string = "ZZZYQ"
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
+/datum/design/circuit/botany_editor
+	name = "Bioballistic Delivery System"
+	id = "botany_editor"
+	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 2, TECH_BIO = 3, TECH_DATA = 3)
+	build_path = /obj/item/weapon/circuitboard/botany_editor
 	sort_string = "ZZZYP"
+/*
 /datum/design/circuit/
 	name = ""
 	id = ""

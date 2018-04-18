@@ -52,7 +52,7 @@
 							"tag" = network,
 							"has_access" = can_access_network(user, network, connected_faction, is_faction_restricted(network))
 							)))
-	
+
 	// .Add faction networks to all_networks here
 	// be sure to check_access(user, 5, connected_faction.uid)
 
@@ -209,13 +209,3 @@
 	var/list/public_networks[0]
 	public_networks.Add(list(list("tag" = NETWORK_PUBLIC, "has_access" = 1)))
 	return public_networks
-
-/datum/nano_module/camera_monitor/apply_visual(mob/M)
-	if(current_camera)
-		current_camera.apply_visual(M)
-	else
-		remove_visual(M)
-
-/datum/nano_module/camera_monitor/remove_visual(mob/M)
-	if(current_camera)
-		current_camera.remove_visual(M)

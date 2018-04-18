@@ -138,7 +138,7 @@
 
 /mob/living/carbon/slime/proc/handle_nutrition()
 
-	nutrition -= 0.1 + 0.05 * is_adult
+	nutrition -= 0.05 + 0.025 * is_adult
 
 	if(nutrition <= 0)
 		nutrition = 0

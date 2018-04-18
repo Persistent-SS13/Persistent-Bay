@@ -68,6 +68,7 @@
 				T.resources["phoron"] =   0
 				T.resources["osmium"] =   0
 				T.resources["hydrogen"] = 0
+				T.resources["bluespace crystal"] = 0
 			else if(tmp_cell < deep_val) // Rare metals.
 				T.resources["gold"] =     rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
 				T.resources["silver"] =   rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
@@ -75,6 +76,10 @@
 				T.resources["phoron"] =   rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
 				T.resources["osmium"] =   rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
 				T.resources["hydrogen"] = 0
+				if(prob(1)) // 1 percent
+					T.resources["bluespace crystal"] = 1
+				else
+					T.resources["bluespace crystal"] = 0
 				T.resources["diamond"] =  0
 				T.resources["iron"] =     0
 				T.resources["salt"] =     0
@@ -84,7 +89,10 @@
 				T.resources["phoron"] =   rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
 				T.resources["osmium"] =   rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
 				T.resources["hydrogen"] = rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
-				T.resources["bluespace crystal"] = rand(0,1)
+				if(prob(5)) // 5 percent
+					T.resources["bluespace crystal"] = 1
+				else
+					T.resources["bluespace crystal"] = 0
 				T.resources["iron"] =     0
 				T.resources["gold"] =     0
 				T.resources["silver"] =   0

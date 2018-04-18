@@ -1637,13 +1637,13 @@ CIRCUITS BELOW
 	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 2, TECH_BIO = 3, TECH_DATA = 3)
 	build_path = /obj/item/weapon/circuitboard/botany_editor
 	sort_string = "ZZZYP"
-/*
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
+/datum/design/circuit/seed_extractor
+	name = "Seed Extractor"
+	id = "seed_extractor"
+	req_tech = list(TECH_BIO = 3, TECH_DATA = 3)
+	build_path = /obj/item/weapon/circuitboard/seed_extractor
 	sort_string = "ZZZYO"
+/*
 /datum/design/circuit/
 	name = ""
 	id = ""

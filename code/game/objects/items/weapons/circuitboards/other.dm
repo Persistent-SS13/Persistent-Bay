@@ -158,5 +158,5 @@
 	board_type = "machine"
 	origin_tech = list(TECH_MATERIAL =1, TECH_DATA = 1)
 	req_components = list(
-							/obj/item/weapon/computer_hardware/nanoprinter = 1,
+							/obj/item/weapon/computer_hardware/nano_printer = 1,
 							/obj/item/weapon/stock_parts/manipulator = 1)

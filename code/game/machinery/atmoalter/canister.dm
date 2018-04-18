@@ -111,11 +111,6 @@
 
 
 /obj/machinery/portable_atmospherics/canister/proc/check_change()
-	if(!loc)
-		qdel(src)
-	if(!air_contents)
-		air_contents = new()
-		return
 	var/old_flag = update_flag
 	update_flag = 0
 	if(holding)
@@ -205,9 +200,7 @@ update_flag
 /obj/machinery/portable_atmospherics/canister/Process()
 	if (destroyed)
 		return
-	if(!air_contents)
-		air_contents = new()
-		return
+
 	..()
 
 	if(valve_open)

@@ -1,4 +1,3 @@
-/**
 /obj/machinery/docking_beacon
 	name = "docking beacon"
 	desc = "Can be installed to provide a landing and launch zone for shuttles, and to facilitate the construction of shuttles.."
@@ -8,15 +7,68 @@
 	icon_state = "unpowered"
 
 	use_power = 0			//1 = idle, 2 = active
-	var/chosen_uid
-	var/chosen_name
-	var/chosen_short
-	var/chosen_password
-	var/starting_leader
-	var/chosen_netuid
 	var/status = 0 // 0 = unpowered, 1 = closed 2 = open 3 = contruction mode 4 = occupied 5 = obstructed
-**/
+	req_access = list(core_access_command_programs)
+	var/datum/world_faction/faction
+	var/dimensions = 1 // 1 = 5*7, 2 = 7*7 
+/obj/machinery/docking_beacon/attack_hand(var/mob/user as mob)
+	ui_interact(user)
 
+/obj/machinery/docking_beacon/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
+
+	if(user.stat)
+		return
+
+	// this is the data which will be sent to the ui
+	var/data[0]
+	if(req_access_faction && req_access_faction != "" || (faction && faction.uid != req_access_faction))
+		faction = get_faction(req_access_faction)
+		
+	if(faction)
+		data["connected"] = 1
+		data["name"] = faction.name
+		switch(status)
+			if(0)
+				data["unpowered"] = 1
+				data["status"] = "Unpowered"
+			if(1)
+				data["status"] = "Closed"
+			if(2)
+				data["status"] = "Open"
+			if(3)
+				data["status"] = "Shuttle Construction"
+				data["construction"] = 1
+			if(4)
+				data["status"] = "Occupied"
+			if(5)
+				data["status"] = "Obstructed"
+		data["dimenson"] = dimensons
+		
+	// update the ui if it exists, returns null if no ui is passed/found
+	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	if (!ui)
+		// the ui does not exist, so we'll create a new() one
+		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
+		ui = new(user, src, ui_key, "docking_beacon.tmpl", "Docking Beacon UI", 500, 550)
+		// when the ui is first opened this is the data it will use
+		ui.set_initial_data(data)
+		// open the new ui window
+		ui.open()
+
+
+
+/obj/machinery/docking_beacon/Topic(href, href_list)
+	if(stat & (NOPOWER|BROKEN))
+		return 0 // don't update UIs attached to this object
+
+
+	add_fingerprint(usr)
+	return 1 // update UIs attached to this object
+
+	
+	
+	
+	
 /obj/machinery/bluespace_satellite
 	name = "bluespace satellite"
 	desc = "Can be configured and launched to create a new logistics network."
@@ -32,7 +84,7 @@
 	var/chosen_password
 	var/starting_leader
 	var/chosen_netuid
-
+	
 /obj/machinery/bluespace_satellite/New()
 	..()
 
@@ -51,8 +103,6 @@
 
 /obj/machinery/bluespace_satellite/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 
-	if(user.stat)
-		return
 
 	// this is the data which will be sent to the ui
 	var/data[0]

@@ -137,6 +137,7 @@
 	recipes += new/datum/stack_recipe("freezer floor tile", /obj/item/stack/tile/floor_freezer, 1, 4, 20)
 	recipes += new/datum/stack_recipe("hazard cone", /obj/item/weapon/caution/cone, 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("plastic flaps", /obj/structure/plasticflaps, 15, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("Mop Bucket", /obj/structure/mopbucket, 3, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe_list("Plumbing",list( \
 		new/datum/stack_recipe("shower frame", /obj/item/frame/shower, 2), \
 		new/datum/stack_recipe("toilet", /obj/structure/toilet, 5, one_per_turf = 1, on_floor = 1),\

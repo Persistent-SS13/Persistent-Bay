@@ -8,6 +8,7 @@
 	icon_state = "wall-locker"
 	density = 0
 	anchored = 1
+	wrenchable = 0 // wall lockers cannot be unanchored with a wrench
 	icon_closed = "wall-locker"
 	icon_opened = "wall-lockeropen"
 	storage_types = CLOSET_STORAGE_ITEMS

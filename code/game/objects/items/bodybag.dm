@@ -39,6 +39,7 @@
 	close_sound = 'sound/items/zip.ogg'
 	var/item_path = /obj/item/bodybag
 	density = 0
+	wrenchable = 0 // body bags cannot be anchored with a wrench
 	storage_capacity = (MOB_MEDIUM * 2) - 1
 	var/contains_body = 0
 

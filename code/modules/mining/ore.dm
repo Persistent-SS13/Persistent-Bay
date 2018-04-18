@@ -48,6 +48,9 @@
 /obj/item/weapon/ore/coal
 	ore = /ore/coal
 
+/obj/item/weapon/ore/salt
+	ore = /ore/salt
+
 /obj/item/weapon/ore/glass
 	ore = /ore/glass
 	slot_flags = SLOT_HOLSTER

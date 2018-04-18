@@ -438,3 +438,21 @@
 	cost = 6
 	containertype = /obj/structure/closet/lawcloset
 	containername = "Bureaucrat Equipment"
+/decl/hierarchy/supply_pack/operations/personal
+	name = "Personal Locker"
+	contains = list() 
+	cost = 2
+	containertype = /obj/structure/closet/secure_closet/personal/empty
+	containername = "Personal Locker"
+/decl/hierarchy/supply_pack/operations/patient
+	name = "Patient's Closet"
+	contains = list() 
+	cost = 2
+	containertype = /obj/structure/closet/secure_closet/personal/patient
+	containername = "Patient's Closet"
+/decl/hierarchy/supply_pack/operations/personal_cabinet
+	name = "Personal Cabinet"
+	contains = list() 
+	cost = 2
+	containertype = /obj/structure/closet/secure_closet/personal/cabinet/empty
+	containername = "Personal Cabinet"

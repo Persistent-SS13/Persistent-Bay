@@ -17,7 +17,6 @@
 	var/welded = 0
 	var/large = 1
 	var/wrenchable = 1
-	var/unwrenched = 1 // Unwrenched closets can be anchored.
 	var/wall_mounted = 0 //never solid (You can always pass over it)
 	var/health = 100
 	var/breakout = 0 //if someone is currently breaking out. mutex
@@ -370,7 +369,7 @@
 		if (src.wrenchable==0)
 			// Do not allow wrench interactions with things that aren't wrenchable.
 			return
-		if (src.unwrenched==0)
+		if (src.anchored==1)
 			playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 			to_chat(user, "<span class='notice'>You begin to unsecure \the [src] from the floor...</span>")
 			if (do_after(user, 40, src))
@@ -379,8 +378,7 @@
 					"<span class='notice'>You have unsecured \the [src]. Now it can be pulled somewhere else.</span>", \
 					"You hear ratchet.")
 				src.anchored = 0
-				src.unwrenched = 1
-		else /*if (src.unwrenched==1)*/
+		else /*if (src.anchored==0)*/
 			playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 			to_chat(user, "<span class='notice'>You begin to secure \the [src] to the floor...</span>")
 			if (do_after(user, 20, src))
@@ -389,7 +387,6 @@
 					"<span class='notice'>You have secured \the [src].</span>", \
 					"You hear ratchet.")
 				src.anchored = 1
-				src.unwrenched = 0
 		return
 	else if(istype(W, /obj/item/weapon/packageWrap))
 		return

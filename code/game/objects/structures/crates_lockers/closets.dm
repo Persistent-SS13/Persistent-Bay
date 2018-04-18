@@ -5,6 +5,7 @@
 	icon_state = "closed"
 	density = 1
 	w_class = ITEM_SIZE_NO_CONTAINER
+	anchored = 0
 
 	var/icon_closed = "closed"
 	var/icon_opened = "open"
@@ -15,6 +16,7 @@
 
 	var/welded = 0
 	var/large = 1
+	var/wrenchable = 1
 	var/wall_mounted = 0 //never solid (You can always pass over it)
 	var/health = 100
 	var/breakout = 0 //if someone is currently breaking out. mutex
@@ -363,6 +365,29 @@
 			playsound(src.loc, 'sound/weapons/blade1.ogg', 50, 1)
 			playsound(src.loc, "sparks", 50, 1)
 			open()
+	else if(isWrench(W))
+		if (src.wrenchable==0)
+			// Do not allow wrench interactions with things that aren't wrenchable.
+			return
+		if (src.anchored==1)
+			playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
+			to_chat(user, "<span class='notice'>You begin to unsecure \the [src] from the floor...</span>")
+			if (do_after(user, 40, src))
+				user.visible_message( \
+					"<span class='notice'>\The [user] unsecures \the [src].</span>", \
+					"<span class='notice'>You have unsecured \the [src]. Now it can be pulled somewhere else.</span>", \
+					"You hear ratchet.")
+				src.anchored = 0
+		else /*if (src.anchored==0)*/
+			playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
+			to_chat(user, "<span class='notice'>You begin to secure \the [src] to the floor...</span>")
+			if (do_after(user, 20, src))
+				user.visible_message( \
+					"<span class='notice'>\The [user] secures \the [src].</span>", \
+					"<span class='notice'>You have secured \the [src].</span>", \
+					"You hear ratchet.")
+				src.anchored = 1
+		return
 	else if(istype(W, /obj/item/weapon/packageWrap))
 		return
 	else if(isWelder(W) && (setup & CLOSET_CAN_BE_WELDED))

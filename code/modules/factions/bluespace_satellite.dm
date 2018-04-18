@@ -1,3 +1,22 @@
+/**
+/obj/machinery/docking_beacon
+	name = "docking beacon"
+	desc = "Can be installed to provide a landing and launch zone for shuttles, and to facilitate the construction of shuttles.."
+	anchored = 0
+	density = 1
+	icon = 'icons/obj/machines/dock_beacon.dmi'
+	icon_state = "unpowered"
+
+	use_power = 0			//1 = idle, 2 = active
+	var/chosen_uid
+	var/chosen_name
+	var/chosen_short
+	var/chosen_password
+	var/starting_leader
+	var/chosen_netuid
+	var/status = 0 // 0 = unpowered, 1 = closed 2 = open 3 = contruction mode 4 = occupied 5 = obstructed
+**/
+
 /obj/machinery/bluespace_satellite
 	name = "bluespace satellite"
 	desc = "Can be configured and launched to create a new logistics network."
@@ -117,6 +136,6 @@
 		qdel(portal)
 		loc = null
 		qdel(src)
-		
+
 	add_fingerprint(usr)
 	return 1 // update UIs attached to this object

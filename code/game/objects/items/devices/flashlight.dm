@@ -128,6 +128,7 @@
 	slot_flags = SLOT_EARS
 	brightness_on = 2
 	w_class = ITEM_SIZE_TINY
+	matter = list(DEFAULT_WALL_MATERIAL = 30,"glass" = 10)
 
 /obj/item/device/flashlight/maglight
 	name = "maglight"

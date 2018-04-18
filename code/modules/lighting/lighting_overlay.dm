@@ -48,12 +48,14 @@
 	if(!istype(T))
 		if(loc)
 			log_debug("A lighting overlay realised its loc was NOT a turf (actual loc: [loc][loc ? ", " + loc.type : "null"]) in update_overlay() and got qdel'ed!")
+			loc = null
 		else
 			log_debug("A lighting overlay realised it was in nullspace in update_overlay() and got pooled!")
-		qdel(src)
+		spawn(1) qdel(src)
 		return
 	if(!T.dynamic_lighting)
-		qdel(src)
+		loc = null
+		spawn(1) qdel(src)
 		return
 
 	// To the future coder who sees this and thinks

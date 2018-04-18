@@ -804,6 +804,23 @@ var/global/floorIsLava = 0
 			record.linked_account = create_account(record.get_name(), 0, null)
 			record.linked_account.remote_access_pin = 1111
 
+/datum/admins/proc/retrieve_account()
+	set category = "Server"
+	set desc="Retrieve Account"
+	set name="Retrieve Account"
+
+	if(!check_rights(R_ADMIN))
+		return
+	var/real_name = input("Enter the real name to search for", "Real name") as text|null
+	if(real_name)
+		for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
+			if(record.get_name() == real_name)
+				to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
+				break
+			
+			
+			
+			
 /datum/admins/proc/savechars()
 	set category = "Server"
 	set desc="Saves Characters"

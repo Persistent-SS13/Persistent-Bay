@@ -9,7 +9,7 @@
 	icon_broken = "miningsecbroken"
 	icon_off = "miningsecoff"
 	req_access = list(access_mining)
-
+/*
 /obj/structure/closet/secure_closet/miner/New()
 	..()
 	sleep(2)
@@ -27,7 +27,7 @@
 	new /obj/item/weapon/shovel(src)
 	new /obj/item/weapon/pickaxe(src)
 	new /obj/item/clothing/glasses/meson(src)
-
+*/
 /******************************Lantern*******************************/
 
 /obj/item/device/flashlight/lantern

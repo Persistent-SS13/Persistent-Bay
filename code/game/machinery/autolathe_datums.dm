@@ -40,6 +40,21 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/device/flashlight
 	category = "General"
 
+/datum/autolathe/recipe/maglight
+	name = "Maglight"
+	path = /obj/item/device/flashlight/maglight
+	category = "General"
+
+/datum/autolathe/recipe/penlight
+	name = "Pen Light"
+	path = /obj/item/device/flashlight/pen
+	category = "General"
+
+/datum/autolathe/recipe/desklamp
+	name = "Desk Lamp"
+	path = /obj/item/device/flashlight/lamp
+	category = "General"
+
 /datum/autolathe/recipe/floor_light
 	name = "floor light"
 	path = /obj/machinery/floor_light
@@ -261,6 +276,11 @@ var/const/EXTRA_COST_FACTOR = 1.25
 /datum/autolathe/recipe/vial
 	name = "glass vial"
 	path = /obj/item/weapon/reagent_containers/glass/beaker/vial
+	category = "Medical"
+
+/datum/autolathe/recipe/pillbottle
+	name = "pill bottle"
+	path = /obj/item/weapon/storage/pill_bottle
 	category = "Medical"
 
 /datum/autolathe/recipe/syringe
@@ -576,6 +596,16 @@ var/const/EXTRA_COST_FACTOR = 1.25
 /datum/autolathe/recipe/mop
 	name = "Mop"
 	path = /obj/item/weapon/mop
+	category = "General"
+
+/datum/autolathe/recipe/glasses
+	name = "Prescription Glasses"
+	path = /obj/item/clothing/glasses/regular
+	category = "Medical"
+
+/datum/autolathe/recipe/lighter
+	name = "Cheap Lighter"
+	path = /obj/item/weapon/flame/lighter
 	category = "General"
 /*
 /datum/autolathe/recipe/

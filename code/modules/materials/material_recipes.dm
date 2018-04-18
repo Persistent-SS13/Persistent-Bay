@@ -136,7 +136,12 @@
 	recipes += new/datum/stack_recipe("freezer floor tile", /obj/item/stack/tile/floor_freezer, 1, 4, 20)
 	recipes += new/datum/stack_recipe("hazard cone", /obj/item/weapon/caution/cone, 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("plastic flaps", /obj/structure/plasticflaps, 15, one_per_turf = 1, on_floor = 1)
-	recipes += new/datum/stack_recipe("tiolet", /obj/structure/toilet, 5, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe_list("Plumbing",list( \
+		new/datum/stack_recipe("shower frame", /obj/item/frame/shower, 2), \
+		new/datum/stack_recipe("toilet", /obj/structure/toilet, 5, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("sink frame", /obj/item/frame/sink, 2),\
+		new/datum/stack_recipe("kitchen sink frame", /obj/item/frame/kitchensink, 2),\
+		))
 	recipes += new/datum/stack_recipe("Punching bag", /obj/structure/fitness/punchingbag, 5, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe_list("Curtains",list( \
 		new/datum/stack_recipe("Curtain", /obj/structure/curtain, 10, one_per_turf = 1, on_floor = 1), \
@@ -204,4 +209,3 @@ material/silver/generate_recipes()
 
 material/marble/generate_recipes()
 ..()
-//	recipes += new/datum/stack_recipe("Sink", /obj/item/frame/sink, 2)

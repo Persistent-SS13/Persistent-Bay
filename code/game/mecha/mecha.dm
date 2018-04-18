@@ -1743,6 +1743,8 @@
 	process(var/obj/mecha/mecha)
 		if(mecha.internal_tank)
 			var/datum/gas_mixture/tank_air = mecha.internal_tank.return_air()
+			if(!tank_air)
+				return
 			var/datum/gas_mixture/cabin_air = mecha.cabin_air
 
 			var/release_pressure = mecha.internal_tank_valve

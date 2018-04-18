@@ -194,7 +194,6 @@ var/list/point_source_descriptions = list(
 /datum/controller/supply/proc/fill_order(var/id, var/closet)
 	for(var/datum/export_order/export in all_exports)
 		if(export.id == id)
-			message_admins("order found")
 			return export.fill(closet)
 	return 0
 /datum/controller/supply/proc/generate_export(var/typee = "")

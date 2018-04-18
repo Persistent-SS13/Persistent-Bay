@@ -3,6 +3,7 @@ var/global/list/all_loaded = list()
 var/global/list/saved = list()
 var/global/list/areas_to_save = list()
 var/global/list/zones_to_save = list()
+var/global/list/debug_data = list()
 
 /proc/Prepare_Atmos_For_Saving()
 	for(var/datum/pipe_network/net in SSmachines.pipenets)
@@ -45,7 +46,7 @@ var/global/list/zones_to_save = list()
 	for(var/atom/movable/lighting_overlay/overlay in contents)
 		overlay.loc = null
 		qdel(overlay)
-		
+
 /turf
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
 	skip_empty = "contents;saved_decals"
@@ -80,7 +81,7 @@ var/global/list/zones_to_save = list()
 	regenerate_icons()
 	redraw_inv()
 /datum/proc/StandardWrite(var/savefile/f)
-	
+
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
@@ -168,6 +169,7 @@ var/global/list/zones_to_save = list()
 	return coord_list
 
 /datum/proc/StandardRead(var/savefile/f)
+	var/starttime = REALTIMEOFDAY
 	map_storage_loaded = 1
 	before_load()
 	var/list/loading
@@ -184,8 +186,14 @@ var/global/list/zones_to_save = list()
 		var/variable = loading[ind]
 		if(f.dir.Find("[variable]"))
 			f["[variable]"] >> vars[variable]
-
+	if("[src.type]" in debug_data)
+		var/amount = debug_data["[src.type]"][1]
+		var/time = debug_data["[src.type]"][2]
+		debug_data["[src.type]"] = list(amount++,time+((REALTIMEOFDAY - starttime)/10))
+	else
+		debug_data["[src.type]"] = list(1,(REALTIMEOFDAY - starttime)/10)
 /turf/StandardRead(var/savefile/f)
+	var/starttime = REALTIMEOFDAY
 	map_storage_loaded = 1
 	before_load()
 	var/list/loading
@@ -203,7 +211,14 @@ var/global/list/zones_to_save = list()
 		if("[variable]" == "x" || "[variable]" == "y" || "[variable]" == "z") continue
 		if(variable in f.dir)
 			f["[variable]"] >> vars[variable]
-			
+	if("[src.type]" in debug_data)
+		var/amount = debug_data["[src.type]"][1]
+		var/time = debug_data["[src.type]"][2]
+		debug_data["[src.type]"] = list(amount+1,time+((REALTIMEOFDAY - starttime)/10))
+	else
+		debug_data["[src.type]"] = list(1,(REALTIMEOFDAY - starttime)/10)
+	if((REALTIMEOFDAY - starttime)/10 > 29)
+		world << "[src.type] took [(REALTIMEOFDAY - starttime)/10] seconds to load at [x] [y] [z]"
 /datum/Read(savefile/f)
 	StandardRead(f)
 /atom/movable/Read(savefile/f)
@@ -286,6 +301,7 @@ var/global/list/zones_to_save = list()
 	var/savefile/f = new("map_saves/game.sav")
 	all_loaded = list()
 	found_vars = list()
+	debug_data = list()
 	var/v = null
 	f.cd = "/extras"
 	f["records"] >> GLOB.all_crew_records
@@ -325,6 +341,7 @@ var/global/list/zones_to_save = list()
 			var/turf/simulated/T = locate(text2num(coords[1]),text2num(coords[2]),text2num(coords[3]))
 			if(!T || !istype(T))
 				message_admins("No turf found for zone load")
+				continue
 			T.zone = Z
 			Z.contents |= T
 	for(var/zone/Z in zones)
@@ -334,7 +351,8 @@ var/global/list/zones_to_save = list()
 		dat.after_load()
 	all_loaded = list()
 	SSmachines.makepowernets()
-
+	for(var/x in debug_data)
+		world << "Loaded [debug_data[x][1]] [x] in [debug_data[x][2]] seconds!"
 	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Loading Complete"
 	return 1

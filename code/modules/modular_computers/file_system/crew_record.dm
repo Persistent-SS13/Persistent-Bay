@@ -187,7 +187,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	photo_front = card.front
 	photo_side = card.side
 
-	fields["name"] = card.registered_name
+	set_name(card.registered_name)
 	set_job("Unset")
 	set_sex(card.sex)
 	set_age(card.age)
@@ -216,7 +216,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		return 0
 	photo_front = record.photo_front
 	photo_side = record.photo_side
-	fields["name"] = record.fields["name"]
+	set_name(record.get_name())
 	set_job(record.get_job())
 	set_sex(record.get_sex())
 	set_age(record.get_age())
@@ -252,7 +252,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		qdel(dummy)
 
 	// Generic record
-	fields["name"] = H ? H.real_name : "Unset"
+	set_name(H ? H.real_name : "Unset")
 	set_job(H ? GetAssignment(H) : "Unset")
 	set_sex(H ? gender2text(H.gender) : "Unset")
 	set_age(H ? H.age : 30)
@@ -383,7 +383,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 			if(!(newval in options))
 				return
 		if(EDIT_SHORTTEXT)
-			newval = sanitize(newval)
+			newval = newval
 		if(EDIT_LONGTEXT)
 			newval = sanitize(replacetext(newval, "\n", "\[br\]"), MAX_PAPER_MESSAGE_LEN)
 	value = newval

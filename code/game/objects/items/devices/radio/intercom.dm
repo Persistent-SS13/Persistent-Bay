@@ -1,5 +1,5 @@
 /obj/item/device/radio/intercom
-	name = "intercom (General)"
+	name = "intercom"
 	desc = "Talk through this."
 	icon_state = "intercom"
 	randpixel = 0

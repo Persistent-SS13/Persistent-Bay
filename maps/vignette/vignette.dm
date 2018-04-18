@@ -11,6 +11,7 @@
 
 	#include "vignette_areas.dm"
 	#include "vignette_elevator.dm"
+	#include "vignette_presets.dm"
 	#define using_map_DATUM /datum/map/vignette
 
 #elif !defined(MAP_OVERRIDE)

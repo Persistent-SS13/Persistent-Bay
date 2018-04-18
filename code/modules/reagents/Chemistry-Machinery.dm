@@ -332,7 +332,8 @@
 		/obj/item/stack/material/phoron/fifty = /datum/reagent/toxin/phoron,
 		/obj/item/stack/material/gold = /datum/reagent/gold,
 		/obj/item/stack/material/silver = /datum/reagent/silver,
-		/obj/item/stack/material/mhydrogen = /datum/reagent/hydrazine
+		/obj/item/stack/material/mhydrogen = /datum/reagent/hydrazine,
+		/obj/item/stack/material/salt = /datum/reagent/sodiumchloride
 		)
 
 /obj/machinery/reagentgrinder/New()

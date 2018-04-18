@@ -79,6 +79,16 @@ var/global/list/ores_by_type = list()
 	ore = /obj/item/weapon/ore/coal
 	scan_icon = "mineral_common"
 
+/ore/salt
+	name = "salt"
+	display_name = "rock salt"
+	smelts_to = "salt"
+	compresses_to = "salt"
+	result_amount = 10
+	spread_chance = 10
+	ore = /obj/item/weapon/ore/salt
+	scan_icon = "mineral_common"
+
 /ore/glass
 	name = "sand"
 	display_name = "sand"

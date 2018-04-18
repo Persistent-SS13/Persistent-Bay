@@ -129,7 +129,7 @@
 		return
 
 	if(!is_adult)
-		if(amount_grown >= 10)
+		if(amount_grown >= 30)
 			is_adult = 1
 			maxHealth = 200
 			amount_grown = 0
@@ -142,21 +142,21 @@
 
 /mob/living/carbon/slime/verb/Reproduce()
 	set category = "Slime"
-	set desc = "This will make you split into four slimes."
+	set desc = "This will make you split into two slimes."
 
 	if(stat)
 		to_chat(src, "<span class='notice'>I must be conscious to do this...</span>")
 		return
 
 	if(is_adult)
-		if(amount_grown >= 10)
+		if(amount_grown >= 30)
 			if(stat)
 				to_chat(src, "<span class='notice'>I must be conscious to do this...</span>")
 				return
 
 			var/list/babies = list()
 			var/list/mutations = GetMutations()
-			for(var/i = 1 to 4)
+			for(var/i = 1 to 2)
 				var/t = colour
 				if(prob(mutation_chance))
 					t = pick(mutations)

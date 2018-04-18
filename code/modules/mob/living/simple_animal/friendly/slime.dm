@@ -6,8 +6,8 @@
 	icon_living = "grey baby slime"
 	icon_dead = "grey baby slime dead"
 	speak_emote = list("chirps")
-	health = 100
-	maxHealth = 100
+	health = 200
+	maxHealth = 200
 	response_help  = "pets"
 	response_disarm = "shoos"
 	response_harm   = "stomps on"

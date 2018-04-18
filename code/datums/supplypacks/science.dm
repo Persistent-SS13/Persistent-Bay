@@ -9,6 +9,13 @@
 	containername = "\improper Virus sample crate"
 	access = access_cmo
 
+/decl/hierarchy/supply_pack/science/slimecore
+	name = "Slime core crate"
+	contains = list(/obj/item/slime_extract/grey = 2)
+	cost = 50
+	containertype = /obj/structure/closet/crate/freezer
+	containername = "\improper Slime core crate"
+
 /decl/hierarchy/supply_pack/science/coolanttank
 	name = "Coolant tank crate"
 	contains = list(/obj/structure/reagent_dispensers/coolanttank)

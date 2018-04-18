@@ -2,9 +2,6 @@
 /proc/is_faction_restricted(var/network)
 	if(!network)
 		return 0
-	. = GLOB.using_map.(network)
-	if(.)
-		return
 
 	switch(network)
 		if(NETWORK_NT)
@@ -76,7 +73,7 @@
 /datum/nano_module/camera_monitor/proc/modify_networks_list(var/list/networks)
 	return networks
 
-/datum/nano_module/camera_monitor/proc/can_access_network(var/user, var/network, var/connected_faction, var/restricted)
+/datum/nano_module/camera_monitor/proc/can_access_network(var/mob/user, var/network, var/connected_faction, var/restricted)
 	// Anyone can view public networks
 	if(!restricted)
 		return 1

@@ -243,6 +243,12 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 			M.remove_from_mob(src) //un-equip it so the overlays can update
 		qdel(src)
 
+/obj/item/clothing/mask/smokable/cigarette/custom
+	name = "hand-rolled cigarette"
+	desc = "A tightly rolled smokeable, ready to deliver whatever it's been dipped in."
+	filling = list() // Starts with nothing, dip it in a reageant to finish.
+	color = "#dcdcdc"
+
 /obj/item/clothing/mask/smokable/cigarette/menthol
 	name = "menthol cigarette"
 	desc = "A cigarette with a little minty kick. Well, minty in theory."

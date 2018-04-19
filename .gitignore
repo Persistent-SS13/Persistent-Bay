@@ -21,7 +21,9 @@ config/*
 !config/*/
 *.sav
 Save.txt
-*.txt
 *.7z
 *.zip
 .vscode/tasks.json
+
+# ignore saved vars
+saved_vars/

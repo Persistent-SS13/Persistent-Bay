@@ -21,15 +21,15 @@
 			if(Uses == 0)
 				to_chat(user, "<span class='warning'> You can't enhance a used extract!</span>")
 				return ..()
-			to_chat(user, "You apply the enhancer. It now has triple the amount of uses.")
-			Uses = 3
+			to_chat(user, "You apply the enhancer. It now has double the amount of uses.")
+			Uses = 2
 			enhanced = 1
 			qdel(O)
 
 /obj/item/slime_extract/New()
 	..()
 	create_reagents(100)
-	reagents.add_reagent(/datum/reagent/slimejelly, 30)
+	reagents.add_reagent(/datum/reagent/slimejelly, 10)
 
 /obj/item/slime_extract/grey
 	name = "grey slime extract"
@@ -203,17 +203,17 @@
 		if(M.stat)
 			to_chat(user, "<span class='warning'> The slime is dead!</span>")
 			return..()
-		if(M.cores == 3)
+		if(M.cores == 2)
 			to_chat(user, "<span class='warning'> The slime already has the maximum amount of extract!</span>")
 			return..()
 
-		to_chat(user, "You feed the slime the steroid. It now has triple the amount of extract.")
-		M.cores = 3
+		to_chat(user, "You feed the slime the steroid. It now has double the amount of extract.")
+		M.cores = 2
 		qdel(src)
 
 /obj/item/weapon/slimesteroid2
 	name = "extract enhancer"
-	desc = "A potent chemical mix that will give a slime extract three uses."
+	desc = "A potent chemical mix that will give a slime extract two uses."
 	icon = 'icons/obj/chemical.dmi'
 	icon_state = "bottle17"
 
@@ -226,8 +226,8 @@
 		if(extract.Uses == 0)
 			to_chat(user, "<span class='warning'> You can't enhance a used extract!</span>")
 			return ..()
-		to_chat(user, "You apply the enhancer. It now has triple the amount of uses.")
-		extract.Uses = 3
+		to_chat(user, "You apply the enhancer. It now has double the amount of uses.")
+		extract.Uses = 2
 		extract.enhanced = 1
 		qdel(src)
 

@@ -322,9 +322,9 @@
 		return
 	if(prob(10))
 		to_chat(M, "<span class='danger'>Your insides are burning!</span>")
-		M.adjustToxLoss(rand(100, 300) * removed)
+		M.adjustToxLoss(rand(50, 100) * removed) // That's an average of 75 toxin damage per unit. Don't fuck with this stuff.
 	else if(prob(40))
-		M.heal_organ_damage(25 * removed, 0)
+		M.heal_organ_damage(25 * removed, 0) // It has a higher probability per unit of healing your organs. Which is weird, but okay.
 
 /datum/reagent/soporific
 	name = "Soporific"
@@ -547,8 +547,8 @@
 		return
 	if(H.species.name == SPECIES_PROMETHEAN)
 		return
-	H.adjustToxLoss(40 * removed)
-	if(H.chem_doses[type] < 1 || prob(30))
+	H.adjustToxLoss(7.5 * removed) // Pretty dangerous with the new higher dose
+	if(H.chem_doses[type] < 10 || prob(50)) // You have to inject at least 10, and there's only a 50/50 chance of it working at all
 		return
 	H.chem_doses[type] = 0
 	var/list/meatchunks = list()
@@ -557,7 +557,7 @@
 		if(!E.is_stump() && E.robotic < ORGAN_ROBOT && E.species.name != SPECIES_PROMETHEAN)
 			meatchunks += E
 	if(!meatchunks.len)
-		if(prob(10))
+		if(prob(10)) // only a 10% chance per ten units if your limbs are robotic
 			to_chat(H, "<span class='danger'>Your flesh rapidly mutates!</span>")
 			H.set_species(SPECIES_PROMETHEAN)
 			H.shapeshifter_set_colour("#05ff9b")
@@ -578,9 +578,9 @@
 		E.cannot_break = 1
 		E.dislocated = -1
 		E.nonsolid = 1
-		E.max_damage = 5
+		E.max_damage = 10
 		E.update_icon(1)
-	O.max_damage = 15
+	O.max_damage = 20 // A little more durable than before, but not really.
 	if(prob(10))
 		to_chat(H, "<span class='danger'>Your slimy [O.name]'s plops off!</span>")
 		O.droplimb()

@@ -22,6 +22,9 @@
 /obj/machinery/camera/network/thunder
 	network = list(NETWORK_THUNDER)
 
+/obj/machinery/camera/network/public
+	network = list(NETWORK_PUBLIC)
+
 // EMP
 
 /obj/machinery/camera/emp_proof/Initialize()

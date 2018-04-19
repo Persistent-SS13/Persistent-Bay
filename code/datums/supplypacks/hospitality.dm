@@ -21,6 +21,24 @@
 	cost = 15
 	containername = "\improper Party equipment"
 
+/decl/hierarchy/supply_pack/hospitality/cigarettes
+	num_contained = 4
+	name = "Imported cigarettes"
+	contains = list(
+			/obj/item/weapon/storage/fancy/cigarettes,
+			/obj/item/weapon/storage/fancy/cigarettes/dromedaryco,
+			/obj/item/weapon/storage/fancy/cigarettes/killthroat,
+			/obj/item/weapon/storage/fancy/cigarettes/luckystars,
+			/obj/item/weapon/storage/fancy/cigarettes/jerichos,
+			/obj/item/weapon/storage/fancy/cigarettes/menthols,
+			/obj/item/weapon/storage/fancy/cigarettes/carcinomas,
+			/obj/item/weapon/storage/fancy/cigarettes/professionals,
+			/obj/item/weapon/flame/lighter,
+			/obj/item/weapon/flame/lighter/zippo)
+	cost = 30
+	containername = "\improper Imported cigarettes"
+	supply_method = /decl/supply_method/randomized
+
 /decl/hierarchy/supply_pack/hospitality/barsupplies
 	name = "Bar supplies"
 	contains = list(

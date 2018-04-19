@@ -121,6 +121,13 @@
 	containertype = /obj/structure/closet
 	containername = "\improper Formalwear for the best occasions."
 
+/decl/hierarchy/supply_pack/miscellaneous/gambling
+	contains = list(/obj/item/weapon/deck/cards,
+					/obj/item/weapon/dice = 4)
+	name = "\improper Gambling Crate"
+	cost = 5
+	containername = "\improper gambling crate"
+
 /decl/hierarchy/supply_pack/miscellaneous/card_packs
 	num_contained = 5
 	contains = list(/obj/item/weapon/pack/cardemon,

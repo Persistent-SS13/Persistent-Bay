@@ -181,11 +181,14 @@
 		new/datum/stack_recipe("large box", /obj/item/weapon/storage/box/large, 2), \
 		new/datum/stack_recipe("donut box", /obj/item/weapon/storage/box/donut/empty), \
 		new/datum/stack_recipe("egg box", /obj/item/weapon/storage/fancy/egg_box/empty), \
+		new/datum/stack_recipe("cigarette carton", /obj/item/weapon/storage/box/cigarettes, 4) \
 		new/datum/stack_recipe("light tubes box", /obj/item/weapon/storage/box/lights/tubes/empty), \
 		new/datum/stack_recipe("light bulbs box", /obj/item/weapon/storage/box/lights/bulbs/empty), \
 		new/datum/stack_recipe("mouse traps box", /obj/item/weapon/storage/box/mousetraps/empty), \
 		new/datum/stack_recipe("pizza box", /obj/item/pizzabox), \
 		))
+	recipes += new/datum/stack_recipe("empty cigarette pack", /obj/item/weapon/storage/fancy/cigarettes/blank)
+	recipes += new/datum/stack_recipe("empty cigarette", /obj/item/clothing/mask/smokable/cigarette/custom)
 	recipes += new/datum/stack_recipe("cardborg suit", /obj/item/clothing/suit/cardborg, 3)
 	recipes += new/datum/stack_recipe("cardborg helmet", /obj/item/clothing/head/cardborg)
 	recipes += new/datum/stack_recipe_list("folders",list( \

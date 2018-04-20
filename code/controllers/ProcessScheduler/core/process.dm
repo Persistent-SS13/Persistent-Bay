@@ -185,6 +185,8 @@
 // Do not call this directly - use SHECK or SCHECK_EVERY
 /datum/controller/process/proc/sleepCheck(var/tickId = 0)
 	calls_since_last_scheck = 0
+	
+	
 	if (killed)
 		// The kill proc is the only place where killed is set.
 		// The kill proc should have deleted this datum, and all sleeping procs that are
@@ -194,17 +196,19 @@
 		// This will only really help if the doWork proc ends up in an infinite loop.
 		handleHung()
 		CRASH("Process [name] hung and was restarted.")
-
+	if (TimeOfTick > last_slept + sleep_interval)
+		// If we haven't slept in sleep_interval deciseconds, sleep to allow other work to proceed.
+		sleep(0)
+		last_slept = TimeOfTick
+	/**
 	if (main.getCurrentTickElapsedTime() > main.timeAllowance)
 		sleep(world.tick_lag)
 		cpu_defer_count++
 		last_slept = 0
 	else
-		if (TimeOfTick > last_slept + sleep_interval)
-			// If we haven't slept in sleep_interval deciseconds, sleep to allow other work to proceed.
-			sleep(0)
-			last_slept = TimeOfTick
+		
 
+	**/
 /datum/controller/process/proc/update()
 	// Clear delta
 	if(previousStatus != status)

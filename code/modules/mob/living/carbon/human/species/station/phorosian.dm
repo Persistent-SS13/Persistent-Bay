@@ -18,7 +18,7 @@
 	hunger_factor = 0  
 	breath_type = "phoron"
 	poison_type = "oxygen" //Getting oxygen into your lungs HURTS
-	exhale_type = null
+	exhale_type = "hydrogen"
 	siemens_coefficient = 0.7
 	flags = NO_POISON | NO_PAIN //They're sorta made out of poison
 	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED 
@@ -29,7 +29,7 @@
 	flesh_color = "#3b1077"
 	blood_color = "#4d224d"
 	reagent_tag = IS_PHOROSIAN
-	
+	breath_volume= 1.4
 	
 	var/list/eye_overlays = list()
 	
@@ -84,8 +84,13 @@
 /mob/living/carbon/human/phorosian/vomit(var/toxvomit = 0, var/timevomit = 1, var/level = 3) //nothing to really vomit out, considering they don't eat
 	return
 	
+	
+/mob/living/carbon/human/phorosian/get_breath_volume()
+	return 2 //gives them more time between tank refills
+	
+
 /datum/species/phorosian/get_blood_name()
-	return "Phoronic plasma"
+	return "phoronic plasma"
 	
 /datum/species/phorosian/equip_survival_gear(var/mob/living/carbon/human/H)
 	H.equip_to_slot_or_del(new /obj/item/clothing/head/helmet/space/phorosian(H), slot_head)

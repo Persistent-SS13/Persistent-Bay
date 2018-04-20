@@ -1,4 +1,4 @@
-/obj/machinery/computer/centrifuge
+/obj/machinery/centrifuge
 	name = "isolation centrifuge"
 	desc = "Used to separate things with different weights. Spin 'em round, round, right round."
 	icon = 'icons/obj/virology.dmi'
@@ -9,7 +9,17 @@
 	var/obj/item/weapon/reagent_containers/glass/beaker/vial/sample = null
 	var/datum/disease2/disease/virus2 = null
 
-/obj/machinery/computer/centrifuge/attackby(var/obj/O as obj, var/mob/user as mob)
+/obj/machinery/centrifuge/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/centrifuge(src)
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/computer_hardware/hard_drive/portable(src)
+	component_parts += new /obj/item/stack/material/glass(src)
+	RefreshParts()
+
+/obj/machinery/centrifuge/attackby(var/obj/O as obj, var/mob/user as mob)
 	if(isScrewdriver(O))
 		return ..(O,user)
 
@@ -27,16 +37,16 @@
 
 	src.attack_hand(user)
 
-/obj/machinery/computer/centrifuge/update_icon()
+/obj/machinery/centrifuge/update_icon()
 	..()
 	if(! (stat & (BROKEN|NOPOWER)) && (isolating || curing))
 		icon_state = "centrifuge_moving"
 
-/obj/machinery/computer/centrifuge/attack_hand(var/mob/user as mob)
+/obj/machinery/centrifuge/attack_hand(var/mob/user as mob)
 	if(..()) return
 	ui_interact(user)
 
-/obj/machinery/computer/centrifuge/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
+/obj/machinery/centrifuge/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 	user.set_machine(src)
 
 	var/data[0]
@@ -77,7 +87,7 @@
 		ui.set_initial_data(data)
 		ui.open()
 
-/obj/machinery/computer/centrifuge/Process()
+/obj/machinery/centrifuge/Process()
 	..()
 	if (stat & (NOPOWER|BROKEN)) return
 
@@ -91,7 +101,7 @@
 		if(isolating == 0)
 			isolate()
 
-/obj/machinery/computer/centrifuge/Topic(href, href_list)
+/obj/machinery/centrifuge/Topic(href, href_list)
 	if (..()) return 1
 
 	var/mob/user = usr
@@ -147,7 +157,7 @@
 
 	return 0
 
-/obj/machinery/computer/centrifuge/proc/cure()
+/obj/machinery/centrifuge/proc/cure()
 	if (!sample) return
 	var/datum/reagent/blood/B = locate(/datum/reagent/blood) in sample.reagents.reagent_list
 	if (!B) return
@@ -161,7 +171,7 @@
 	update_icon()
 	ping("\The [src] pings, \"Antibody isolated.\"")
 
-/obj/machinery/computer/centrifuge/proc/isolate()
+/obj/machinery/centrifuge/proc/isolate()
 	if (!sample) return
 	var/obj/item/weapon/virusdish/dish = new/obj/item/weapon/virusdish(loc)
 	dish.virus2 = virus2
@@ -171,7 +181,7 @@
 	update_icon()
 	ping("\The [src] pings, \"Pathogen isolated.\"")
 
-/obj/machinery/computer/centrifuge/proc/print(var/mob/user)
+/obj/machinery/centrifuge/proc/print(var/mob/user)
 	var/obj/item/weapon/paper/P = new /obj/item/weapon/paper(loc)
 	P.name = "paper - Pathology Report"
 	P.info = {"

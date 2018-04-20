@@ -100,6 +100,7 @@
 	recipes += new/datum/stack_recipe("IV Drip", /obj/machinery/iv_drip, 3, time = 15, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("key", /obj/item/weapon/key, 1, time = 10)
 	recipes += new/datum/stack_recipe("table frame", /obj/structure/table, 1, time = 10, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("Paper Shredder", /obj/machinery/papershredder, 3, time = 25, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("rack", /obj/structure/table/rack, 1, time = 5, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("weight lifter", /obj/structure/fitness/weightlifter, 4, time = 50, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("closet", /obj/structure/closet, 2, time = 15, one_per_turf = 1, on_floor = 1)
@@ -136,6 +137,7 @@
 	recipes += new/datum/stack_recipe("freezer floor tile", /obj/item/stack/tile/floor_freezer, 1, 4, 20)
 	recipes += new/datum/stack_recipe("hazard cone", /obj/item/weapon/caution/cone, 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("plastic flaps", /obj/structure/plasticflaps, 15, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("Mop Bucket", /obj/structure/mopbucket, 3, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe_list("Plumbing",list( \
 		new/datum/stack_recipe("shower frame", /obj/item/frame/shower, 2), \
 		new/datum/stack_recipe("toilet", /obj/structure/toilet, 5, one_per_turf = 1, on_floor = 1),\

@@ -10,9 +10,19 @@
 	var/obj/machinery/mineral/processing_unit/machine = null
 	var/show_all_ores = 0
 
-/obj/machinery/mineral/processing_unit_console/New()
+/obj/machinery/mineral/processing_unit_console/New()	//Built like a machine until I can have it mountable on walls
 	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/processing_unit_console(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	RefreshParts()
 
+/obj/machinery/mineral/processing_unit_console/attackby(var/obj/O as obj, var/mob/user as mob)
+	if(default_deconstruction_screwdriver(user, O))
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	..()
 
 /obj/machinery/mineral/processing_unit_console/attack_hand(mob/user)
 	add_fingerprint(user)
@@ -111,6 +121,12 @@
 
 /obj/machinery/mineral/processing_unit/New()
 	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/processing_unit(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	component_parts += new /obj/item/weapon/stock_parts/micro_laser(src)
+	component_parts += new /obj/item/device/assembly/igniter(src)
+	RefreshParts()
 
 	// initialize static alloy_data list
 	if(!alloy_data)
@@ -133,6 +149,13 @@
 			if(src.output) break
 		return
 	return
+
+/obj/machinery/mineral/processing_unit/attackby(var/obj/O as obj, var/mob/user as mob)
+	if(default_deconstruction_screwdriver(user, O))
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	..()
 
 /obj/machinery/mineral/processing_unit/Process()
 

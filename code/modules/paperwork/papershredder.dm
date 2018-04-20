@@ -44,6 +44,15 @@
 				paperamount = max_paper
 			update_icon()
 			return
+	if(isWelder(W))
+		var/obj/item/weapon/weldingtool/WT = W
+		if(WT.remove_fuel(0,user))
+			var/obj/item/stack/material/steel/new_item = new(usr.loc)
+			new_item.add_to_stacks(usr)
+			for (var/mob/M in viewers(src))
+				M.show_message("<span class='notice'>[src] is shaped into metal by [user.name] with the weldingtool.</span>", 3, "<span class='notice'>You hear welding.</span>", 2)
+			qdel(src)
+		return
 	..()
 	return
 

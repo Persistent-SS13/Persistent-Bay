@@ -12,6 +12,15 @@
 
 	var/obj/item/weapon/reagent_containers/container = null
 
+/obj/machinery/antibodyanalyser/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/antibodyanalyser(src)
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/computer_hardware/hard_drive/portable(src)
+	RefreshParts()
+
 /obj/machinery/disease2/antibodyanalyser/update_icon()
 	if(scanning)
 		icon_state = "analyser_processing"
@@ -25,6 +34,12 @@
 			I.forceMove(src)
 			user.visible_message("[user] adds a sample to \the [src]!", "You add a sample to \the [src]!")
 		return
+
+	if(default_deconstruction_screwdriver(user, I))
+		return
+	if(default_deconstruction_crowbar(user, I))
+		return
+	..()
 
 /obj/machinery/disease2/antibodyanalyser/Process()
 	if(stat & (NOPOWER|BROKEN))

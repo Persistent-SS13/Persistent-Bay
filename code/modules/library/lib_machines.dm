@@ -9,7 +9,7 @@
  * Library Scanner
  */
 /obj/machinery/libraryscanner
-	name = "Book Scanner"
+	name = "\improper Book Scanner"
 	icon = 'icons/obj/library.dmi'
 	icon_state = "bigscanner"
 	anchored = 1

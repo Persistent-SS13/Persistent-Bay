@@ -32,6 +32,57 @@
 	icon_state = "propulsion"
 	opacity = 1
 
+//Working like regular machines until a better way to make them is made
+/obj/structure/shuttle/engine/propulsion/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/shuttleengine(src)
+	component_parts += new /obj/item/device/assembly/igniter(src)
+	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+	component_parts += new /obj/item/stack/cable_coil(src, 30)
+	component_parts += new /obj/item/stack/material/uranium(src)
+	component_parts += new /obj/item/stack/material/uranium(src)
+	component_parts += new /obj/item/stack/material/uranium(src)
+	component_parts += new /obj/item/stack/material/uranium(src)
+	component_parts += new /obj/item/stack/material/uranium(src)
+	component_parts += new /obj/item/stack/material/uranium(src)
+	component_parts += new /obj/item/stack/material/uranium(src)
+	component_parts += new /obj/item/stack/material/uranium(src)
+	component_parts += new /obj/item/stack/material/uranium(src)
+	component_parts += new /obj/item/stack/material/uranium(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	component_parts += new /obj/item/stack/material/ocp(src)
+	RefreshParts()
+
+/obj/structure/shuttle/engine/propulsion/attackby(var/obj/O as obj, var/mob/user as mob)
+	if(default_deconstruction_screwdriver(user, O))
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	..()
+
 /obj/structure/shuttle/engine/propulsion/burst
 	name = "burst"
 

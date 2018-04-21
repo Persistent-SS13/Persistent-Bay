@@ -1698,13 +1698,67 @@ CIRCUITS BELOW
 	id = "unloading_machine"
 	build_path = /obj/item/weapon/circuitboard/unloading_machine
 	sort_string = "ZZZYE"
+/datum/design/circuit/shuttleengine
+	name = "Shuttle Engine"
+	id = "shuttleengine"
+	req_tech = list(TECH_ENGINEERING = 4, TECH_POWER = 4)
+	build_path = /obj/item/weapon/circuitboard/shuttleengine
+	sort_string = "ZZZYD"
 /*
 /datum/design/circuit/
 	name = ""
 	id = ""
 	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
 	build_path = /obj/item/weapon/circuitboard/
-	sort_string = "ZZZYD"
+	sort_string = "ZZZYC"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZYB"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZYA"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZXZ"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZXY"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZXX"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZXW"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZXV"
+/datum/design/circuit/
+	name = ""
+	id = ""
+	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
+	build_path = /obj/item/weapon/circuitboard/
+	sort_string = "ZZZXU"
 */
 
 

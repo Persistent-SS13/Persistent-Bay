@@ -115,6 +115,7 @@
 	recipes += new/datum/stack_recipe("dark floor tile", /obj/item/stack/tile/floor_dark, 1, 4, 20)
 	recipes += new/datum/stack_recipe("Book Binder", /obj/machinery/bookbinder, 10, time = 50, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("Wheelchair", /obj/structure/bed/chair/wheelchair, 10, time = 50, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("Morgue Tray", /obj/structure/morgue, 20, time = 50, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe_list("immovable wall cabinets", list( \
 		new/datum/stack_recipe("fire extinguisher cabinet", /obj/structure/extinguisher_cabinet, 2), \
 		new/datum/stack_recipe("medical cabinet", /obj/structure/closet/secure_closet/medical_wall, 2), \

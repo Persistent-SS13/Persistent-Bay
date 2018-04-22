@@ -114,8 +114,12 @@
 	if(found)
 		if(user)
 			to_chat(user, "You remove \the [H] from \the [src].")
+
 		H.forceMove(get_turf(src))
+		if(Adjacent(user) && !issilicon(user))
+			user.put_in_hands(H)
 		H.holder2 = null
+
 		update_verbs()
 	if(critical && enabled)
 		if(user)

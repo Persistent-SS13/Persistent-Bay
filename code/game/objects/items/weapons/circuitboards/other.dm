@@ -163,7 +163,7 @@
 
 /obj/item/weapon/circuitboard/shuttleengine
 	name = T_BOARD("shuttle engine")
-	build_path = /obj/structure/shuttle/engine/propulsion
+	build_path = /obj/machinery/shuttleengine
 	board_type = "machine"
 	origin_tech = list(TECH_ENGINEERING = 4, TECH_POWER = 4)
 	req_components = list(

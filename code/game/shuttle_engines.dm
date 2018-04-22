@@ -32,8 +32,35 @@
 	icon_state = "propulsion"
 	opacity = 1
 
-//Working like regular machines until a better way to make them is made
-/obj/structure/shuttle/engine/propulsion/New()
+/obj/structure/shuttle/engine/propulsion/burst
+	name = "burst"
+
+/obj/structure/shuttle/engine/propulsion/burst/left
+	name = "left"
+	icon_state = "burst_l"
+
+/obj/structure/shuttle/engine/propulsion/burst/right
+	name = "right"
+	icon_state = "burst_r"
+
+/obj/structure/shuttle/engine/router
+	name = "router"
+	icon_state = "router"
+
+//I'll just define a new "machine" instead
+/obj/machinery/shuttleengine
+	name = "propulsion"
+	density = 1
+	anchored = 1.0
+	icon = 'icons/turf/shuttle.dmi'
+	icon_state = "propulsion"
+	opacity = 1
+
+	CanPass(atom/movable/mover, turf/target, height, air_group)
+		if(!height || air_group) return 0
+		else return ..()
+
+/obj/machinery/shuttleengine/New()
 	..()
 	component_parts = list()
 	component_parts += new /obj/item/weapon/circuitboard/shuttleengine(src)
@@ -82,18 +109,3 @@
 	if(default_deconstruction_crowbar(user, O))
 		return
 	..()
-
-/obj/structure/shuttle/engine/propulsion/burst
-	name = "burst"
-
-/obj/structure/shuttle/engine/propulsion/burst/left
-	name = "left"
-	icon_state = "burst_l"
-
-/obj/structure/shuttle/engine/propulsion/burst/right
-	name = "right"
-	icon_state = "burst_r"
-
-/obj/structure/shuttle/engine/router
-	name = "router"
-	icon_state = "router"

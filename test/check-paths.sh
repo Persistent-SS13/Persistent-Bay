@@ -20,19 +20,21 @@ exactly() { # exactly N name search [mode]
 	fi
 }
 
+# With the potential exception of << if you increase any of these numbers you're probably doing it wrong
 exactly 0 "escapes" '\\\\(red|blue|green|black|b|i[^mc])'
-exactly 6 "Del()s" '\WDel\('
+exactly 7 "Del()s" '\WDel\('
 exactly 2 "/atom text paths" '"/atom'
-exactly 2 "/area text paths" '"/area'
+exactly 11 "/area text paths" '"/area'
 exactly 2 "/datum text paths" '"/datum'
 exactly 2 "/mob text paths" '"/mob'
-exactly 12 "/obj text paths" '"/obj'
+exactly 13 "/obj text paths" '"/obj'
 exactly 8 "/turf text paths" '"/turf'
-exactly 1 "world<< uses" 'world<<|world[[:space:]]<<'
+exactly 8 "world<< uses" 'world<<|world[[:space:]]<<'
 exactly 46 "world.log<< uses" 'world.log<<|world.log[[:space:]]<<'
-exactly 709 "<< uses" '(?<!<)<<(?!<)' -P
+exactly 840 "<< uses" '(?<!<)<<(?!<)' -P
 exactly 0 "incorrect indentations" '^( {4,})' -P
-exactly 39 "text2path uses" 'text2path'
+exactly 38 "text2path uses" 'text2path'
+# With the potential exception of << if you increase any of these numbers you're probably doing it wrong
 
 num=`find ./html/changelogs -not -name "*.yml" | wc -l`
 echo "$num non-yml files (expecting exactly 2)"

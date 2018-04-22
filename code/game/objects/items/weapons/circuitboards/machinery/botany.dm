@@ -29,3 +29,14 @@
 							/obj/item/weapon/stock_parts/matter_bin = 1,
 							/obj/item/weapon/stock_parts/manipulator = 1,
 							/obj/item/weapon/stock_parts/console_screen = 1)
+
+/obj/item/weapon/circuitboard/seed_extractor
+	name = T_BOARD("Seed Extractor")
+	build_path = /obj/machinery/seed_extractor
+	board_type = "machine"
+	origin_tech = list(TECH_BIO = 3, TECH_DATA = 3)
+	req_components = list(
+							/obj/item/weapon/stock_parts/scanning_module = 1,
+							/obj/item/weapon/stock_parts/manipulator = 1,
+							/obj/item/weapon/stock_parts/console_screen = 1,
+							/obj/item/device/analyzer/plant_analyzer)

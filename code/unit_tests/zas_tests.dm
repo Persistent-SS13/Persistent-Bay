@@ -136,7 +136,7 @@ datum/unit_test/zas_supply_shuttle_moved/start_test()
 
 datum/unit_test/zas_supply_shuttle_moved/check_result()
 	if(!shuttle)
-		skip("This map has no supply shuttle.")
+		pass("This map has no supply shuttle.")
 		return 1
 
 	if(shuttle.moving_status == SHUTTLE_IDLE && !shuttle.at_station())

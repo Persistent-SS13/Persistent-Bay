@@ -13,11 +13,51 @@
 	CanPass(atom/movable/mover, turf/target, height, air_group)
 		if(!height || air_group) return 0
 		else return ..()
+/obj/structure/shuttle/engine/attackby(var/obj/item/W, var/mob/user)
+	if(isWrench(W))
+		if(permaanchor)
+			to_chat(user, "The engine is wired in to an active shuttle and cannot be wrenched.")
+			return
+		anchored = !anchored
+		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
+		if(anchored)
+			user.visible_message("[user.name] secures [src.name] to the floor.", \
+				"You secure the [src.name] to the floor.", \
+				"You hear a ratchet")
+		else
+			user.visible_message("[user.name] unsecures [src.name] from the floor.", \
+				"You unsecure the [src.name] from the floor.", \
+				"You hear a ratchet")
+		return
+
+	return ..()
+
 
 /obj/structure/shuttle/engine
 	name = "engine"
 	density = 1
 	anchored = 1.0
+	var/permaanchor = 0
+/obj/structure/shuttle/engine/verb/rotate()
+	set name = "Rotate Clockwise"
+	set category = "Object"
+	set src in oview(1)
+
+	if (src.anchored || usr:stat)
+		to_chat(usr, "It is fastened to the floor!")
+		return 0
+	src.set_dir(turn(src.dir, 270))
+	return 1
+/obj/structure/shuttle/engine/verb/rotateccw()
+	set name = "Rotate Counter Clockwise"
+	set category = "Object"
+	set src in oview(1)
+
+	if (src.anchored || usr:stat)
+		to_chat(usr, "It is fastened to the floor!")
+		return 0
+	src.set_dir(turn(src.dir, 90))
+	return 1
 
 /obj/structure/shuttle/engine/heater
 	name = "heater"

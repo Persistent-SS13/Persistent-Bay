@@ -71,22 +71,3 @@
 		pass("All areas are pure.")
 
 	return 1
-
-/datum/unit_test/areas_shall_be_used
-	name = "AREA: Areas shall be used"
-
-/datum/unit_test/areas_shall_be_used/start_test()
-	var/unused_areas = 0
-	for(var/area_type in subtypesof(/area))
-		if(area_type in GLOB.using_map.area_usage_test_exempted_areas)
-			continue
-		var/area/located_area = locate(area_type)
-		if(located_area && !located_area.z)
-			log_bad("[log_info_line(located_area)] is unused.")
-			unused_areas++
-
-	if(unused_areas)
-		fail("Found [unused_areas] unused area\s.")
-	else
-		pass("All areas are used.")
-	return 1

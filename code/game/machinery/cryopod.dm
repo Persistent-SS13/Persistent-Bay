@@ -502,7 +502,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		icon_state = occupied_icon_state
 		usr.spawn_loc = req_access_faction
 		to_chat(usr, "<span class='notice'>[on_enter_occupant_message]</span>")
-		to_chat(usr, "<span class='notice'>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
+		to_chat(usr, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
 
 		time_entered = world.time
 

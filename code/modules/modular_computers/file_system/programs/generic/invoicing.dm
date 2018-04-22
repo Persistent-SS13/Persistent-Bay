@@ -9,7 +9,7 @@
 	available_on_ntnet = 1
 	requires_ntnet = 1
 	required_access = core_access_order_approval
-	
+
 /datum/nano_module/program/invoicing
 	name = "Invoicing program"
 	var/screen = 1		// 0: Ordering menu, 1: Statistics 2: Shuttle control, 3: Orders menu
@@ -32,7 +32,7 @@
 	data["screen"] = screen
 	data["amount"] = amount
 	data["reason"] = reason ? reason : "Unset"
-	
+
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "invoicing.tmpl", name, 1050, 500, state = state)
@@ -48,7 +48,7 @@
 		connected_faction = program.computer.network_card.connected_network.holder
 	if(!connected_faction)
 		return 1
-		
+
 	if(href_list["change_reason"])
 		var/newtext = sanitize(input(usr, "Enter the reason for the invoice, used in related transacrtions.", "Change reason", reason) as message|null, MAX_TEXTFILE_LENGTH)
 		if(!newtext)
@@ -56,7 +56,7 @@
 			return 1
 		reason = newtext
 		return 1
-		
+
 	if(href_list["change_amount"])
 		var/newtext = input("Invoice amount", "Invoice amount", amount) as null|num
 		if(!newtext)
@@ -94,12 +94,12 @@
 	else if(issilicon(user))
 		idname = user.real_name
 	var/t = ""
-	t += "<font face='Verdana' color=blue><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'><center></td><tr><td><center><H1>[connected_faction.name]</td>"
-	t += "<tr><td><BR><center><B>Status:</B>*Unpaid*<BR>"
-	t += "<B>Total:</B> [amount] $$ Ethericoins<BR><BR><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>"
-	t += "<td><center>Authorized by:<BR>[idname] [idrank]<BR><td><center>Paid by:<BR>*None*</td></tr></table><BR></td>"
-	t += "<tr><td><H3>Reason</H3><font size = '1'>[reason]<BR></td></tr></table><BR><center><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>"
-	t += "<td><center><font size='4'><B>Swipe ID to confirm transaction.</font>"
+	t += "<font face='Verdana' color=blue><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'><center></td><tr><td><H1>[connected_faction.name]</td>"
+	t += "<tr><td><br><b>Status:</b>*Unpaid*<br>"
+	t += "<b>Total:</b> [amount] $$ Ethericoins<br><br><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>"
+	t += "<td>Authorized by:<br>[idname] [idrank]<br><td>Paid by:<br>*None*</td></tr></table><br></td>"
+	t += "<tr><td><h3>Reason</H3><font size = '1'>[reason]<br></td></tr></table><br><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>"
+	t += "<td></font><font size='4'><b>Swipe ID to confirm transaction.</b></font></center></font>"
 	var/obj/item/weapon/paper/invoice/invoice = new()
 	invoice.info = t
 	invoice.purpose = reason
@@ -148,7 +148,7 @@
 			if(account.remote_access_pin != attempt_pin)
 				to_chat(user, "Unable to access account: incorrect credentials.")
 				return
-			
+
 		if(transaction_amount > account.money)
 			to_chat(user, "Unable to complete transaction: insufficient funds.")
 			return
@@ -164,7 +164,7 @@
 			to_chat(user, "Payment succesful")
 			update_icon()
 		return
-		
+
 	..()
 /obj/item/weapon/paper/invoice/Topic(href, href_list)
 	..()

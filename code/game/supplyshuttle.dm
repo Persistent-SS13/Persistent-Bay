@@ -80,7 +80,7 @@ var/list/point_source_descriptions = list(
 		if(istype(A, /obj/item/weapon/paper/export))
 			filling |= A
 			continue
-		if(!istype(A, typepath))			
+		if(!istype(A, typepath))
 			message_admins("fill failed due to invalid object [A.name]")
 			return 0
 		if(filled >= (required - supplied))
@@ -102,9 +102,9 @@ var/list/point_source_descriptions = list(
 		spawn(10)
 			if(supplied >= required)
 				supply_controller.close_order(src)
-		
+
 /datum/export_order/stack
-	
+
 /datum/export_order/stack/fill(var/obj/structure/closet/crate)
 	if(!crate)
 		return 0
@@ -177,7 +177,7 @@ var/list/point_source_descriptions = list(
 
 	// Supply shuttle ticker - handles supply point regeneration
 	// This is called by the process scheduler every thirty seconds
-	
+
 /datum/controller/supply/proc/generate_initial()
 	generate_export("manufacturing-basic")
 	generate_export("manufacturing-basic")
@@ -225,6 +225,8 @@ var/list/point_source_descriptions = list(
 			var/list/possible_designs = list()
 			for(var/D in subtypesof(/datum/design))
 				possible_designs += new D(src)
+			if(!possible_designs.len)
+				return
 			var/datum/design/design = pick(possible_designs)
 			var/valid = 0
 			while(!valid)
@@ -247,10 +249,11 @@ var/list/point_source_descriptions = list(
 			export.rate = per
 			export.order_type = typee
 			export.id = exportnum
-			var/obj/ob = new design.build_path()
-			export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each item."
-			all_exports |= export
-			return export
+			if(design.build_path)
+				var/obj/ob = new design.build_path()
+				export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each item."
+				all_exports |= export
+				return export
 		if("material")
 			export = new /datum/export_order/stack()
 			var/list/possible = list(

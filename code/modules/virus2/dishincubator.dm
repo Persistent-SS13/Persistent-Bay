@@ -175,7 +175,9 @@
 
 	if (href_list["ejectchem"])
 		if(beaker)
-			beaker.loc = src.loc
+			beaker.forceMove(loc)
+			if(Adjacent(usr) && !issilicon(usr))
+				usr.put_in_hands(beaker)
 			beaker = null
 		return 1
 
@@ -187,7 +189,9 @@
 
 	if (href_list["ejectdish"])
 		if(dish)
-			dish.loc = src.loc
+			dish.forceMove(loc)
+			if(Adjacent(usr) && !issilicon(usr))
+				usr.put_in_hands(dish)
 			dish = null
 		return 1
 

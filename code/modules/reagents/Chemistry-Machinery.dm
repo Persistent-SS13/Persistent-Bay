@@ -19,7 +19,7 @@
 	idle_power_usage = 20
 	clicksound = "button"
 	clickvol = 20
-	var/beaker = null
+	var/obj/item/weapon/reagent_containers/beaker  = null
 	var/obj/item/weapon/storage/pill_bottle/loaded_pill_bottle = null
 	var/mode = 0
 	var/condi = 0
@@ -93,7 +93,9 @@
 
 	if (href_list["ejectp"])
 		if(loaded_pill_bottle)
-			loaded_pill_bottle.loc = src.loc
+			loaded_pill_bottle.forceMove(loc)
+			if(Adjacent(usr) && !issilicon(usr))
+				usr.put_in_hands(loaded_pill_bottle)
 			loaded_pill_bottle = null
 	else if(href_list["close"])
 		usr << browse(null, "window=chemmaster")
@@ -101,7 +103,7 @@
 		return
 
 	if(beaker)
-		var/datum/reagents/R = beaker:reagents
+		var/datum/reagents/R = beaker.reagents
 		if (href_list["analyze"])
 			var/dat = ""
 			if(!condi)
@@ -164,7 +166,9 @@
 			return
 		else if (href_list["eject"])
 			if(beaker)
-				beaker:loc = src.loc
+				beaker.forceMove(loc)
+				if(Adjacent(usr) && !issilicon(usr))
+					usr.put_in_hands(beaker)
 				beaker = null
 				reagents.clear_reagents()
 				icon_state = "mixer0"
@@ -259,7 +263,7 @@
 			dat += "No pill bottle inserted.<BR><BR>"
 		dat += "<A href='?src=\ref[src];close=1'>Close</A>"
 	else
-		var/datum/reagents/R = beaker:reagents
+		var/datum/reagents/R = beaker.reagents
 		dat += "<A href='?src=\ref[src];eject=1'>Eject beaker and Clear Buffer</A><BR>"
 		if(src.loaded_pill_bottle)
 			dat += "<A href='?src=\ref[src];ejectp=1'>Eject Pill Bottle \[[loaded_pill_bottle.contents.len]/[loaded_pill_bottle.max_storage_space]\]</A><BR><BR>"

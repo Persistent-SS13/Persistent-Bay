@@ -356,7 +356,9 @@
 
 	if(href_list["ejectItem"])
 		if(scanned_item)
-			scanned_item.loc = src.loc
+			scanned_item.forceMove(loc)
+			if(Adjacent(usr) && !issilicon(usr))
+				usr.put_in_hands(scanned_item)
 			scanned_item = null
 
 	add_fingerprint(usr)

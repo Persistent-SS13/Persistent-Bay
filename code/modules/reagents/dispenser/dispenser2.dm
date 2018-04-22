@@ -154,7 +154,9 @@
 	else if(href_list["ejectBeaker"])
 		if(container)
 			var/obj/item/weapon/reagent_containers/B = container
-			B.dropInto(loc)
+			B.forceMove(loc)
+			if(Adjacent(usr) && !issilicon(usr))
+				usr.put_in_hands(B)
 			container = null
 			update_icon()
 			return TOPIC_REFRESH

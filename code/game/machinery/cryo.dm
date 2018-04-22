@@ -240,6 +240,8 @@
 	if(href_list["ejectBeaker"])
 		if(beaker)
 			beaker.forceMove(get_step(loc, SOUTH))
+			if(Adjacent(usr) && !issilicon(usr))
+				usr.put_in_hands(beaker)
 			beaker = null
 
 	if(href_list["ejectOccupant"])

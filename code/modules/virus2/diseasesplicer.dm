@@ -156,7 +156,9 @@
 
 	if(href_list["eject"])
 		if (dish)
-			dish.loc = src.loc
+			dish.forceMove(loc)
+			if(Adjacent(usr) && !issilicon(usr))
+				usr.put_in_hands(dish)
 			dish = null
 		return 1
 

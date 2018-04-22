@@ -19,7 +19,7 @@
 	idle_power_usage = 20
 	clicksound = "button"
 	clickvol = 20
-	var/obj/item/weapon/reagent_containers/beaker  = null
+	var/obj/item/weapon/reagent_containers/beaker = null
 	var/obj/item/weapon/storage/pill_bottle/loaded_pill_bottle = null
 	var/mode = 0
 	var/condi = 0

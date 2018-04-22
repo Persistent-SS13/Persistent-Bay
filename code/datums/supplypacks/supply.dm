@@ -118,6 +118,30 @@
 	num_contained = 10
 	supply_method = /decl/supply_method/randomized
 
+/decl/hierarchy/supply_pack/supply/colortubes
+	name = "Colored Light Tubes"
+	contains = list(/obj/item/weapon/light/tube/red = 3,
+					/obj/item/weapon/light/tube/green = 3,
+					/obj/item/weapon/light/tube/blue = 3,
+					/obj/item/weapon/light/tube/purple = 3,
+					/obj/item/weapon/light/tube/pink = 3,
+					/obj/item/weapon/light/tube/yellow = 3,
+					/obj/item/weapon/light/tube/orange = 3)
+	cost = 40
+	containername = "\improper Light Tube Crate"
+
+/decl/hierarchy/supply_pack/supply/colortubes
+	name = "Colored Light Bulbs"
+	contains = list(/obj/item/weapon/light/bulb/red = 3,
+					/obj/item/weapon/light/bulb/green = 3,
+					/obj/item/weapon/light/bulb/blue = 3,
+					/obj/item/weapon/light/bulb/purple = 3,
+					/obj/item/weapon/light/bulb/pink = 3,
+					/obj/item/weapon/light/bulb/yellow = 3,
+					/obj/item/weapon/light/bulb/orange = 3)
+	cost = 30
+	containername = "\improper Light Bulb Crate"
+
 /decl/hierarchy/supply_pack/supply/softsuits
 	name = "EVA Softsuit w/ Small Airtank"
 	contains = list(/obj/item/weapon/tank/emergency/oxygen/engi,

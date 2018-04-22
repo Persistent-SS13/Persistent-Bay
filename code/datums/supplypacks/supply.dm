@@ -76,7 +76,7 @@
 	contains = list(/obj/structure/janitorialcart)
 	cost = 50
 	containertype = /obj/structure/largecrate
-	containername = "Janitprial Cart Crate"
+	containername = "Janitorial Cart Crate"
 
 /decl/hierarchy/supply_pack/supply/cargotrain
 	name = "Cargo Train Tug"

@@ -210,7 +210,9 @@
 	wall_mounted = 1
 	storage_types = CLOSET_STORAGE_ITEMS
 
-/obj/structure/closet/hydrant/New()
+/obj/structure/closet/hydrant/filled
+
+/obj/structure/closet/hydrant/filled/New()
 	..()
 	new /obj/item/inflatable/door(src)
 	new /obj/item/inflatable/door(src)

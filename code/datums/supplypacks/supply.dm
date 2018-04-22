@@ -71,6 +71,13 @@
 	containertype = /obj/structure/largecrate/animal/mulebot
 	containername = "Mulebot Crate"
 
+/decl/hierarchy/supply_pack/supply/janicart
+	name = "Janitorial Cart Crate"
+	contains = list(/obj/structure/janitorialcart)
+	cost = 50
+	containertype = /obj/structure/largecrate
+	containername = "Janitprial Cart Crate"
+
 /decl/hierarchy/supply_pack/supply/cargotrain
 	name = "Cargo Train Tug"
 	contains = list(/obj/vehicle/train/cargo/engine)

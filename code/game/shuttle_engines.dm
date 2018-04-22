@@ -103,7 +103,7 @@
 	component_parts += new /obj/item/stack/material/ocp(src)
 	RefreshParts()
 
-/obj/structure/shuttle/engine/propulsion/attackby(var/obj/O as obj, var/mob/user as mob)
+/obj/machinery/shuttleengine/attackby(var/obj/O as obj, var/mob/user as mob)
 	if(default_deconstruction_screwdriver(user, O))
 		return
 	if(default_deconstruction_crowbar(user, O))

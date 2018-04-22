@@ -168,7 +168,9 @@ won't update every console in existence) but it's more of a hassle to do. Also, 
 		t_disk.stored = null
 
 	else if(href_list["eject_tech"]) //Eject the technology disk.
-		t_disk.loc = loc
+		t_disk.forceMove(loc)
+		if(Adjacent(usr) && !issilicon(usr))
+			usr.put_in_hands(t_disk)
 		t_disk = null
 		screen = 1.0
 
@@ -191,7 +193,9 @@ won't update every console in existence) but it's more of a hassle to do. Also, 
 		d_disk.blueprint = null
 
 	else if(href_list["eject_design"]) //Eject the design disk.
-		d_disk.loc = loc
+		d_disk.forceMove(loc)
+		if(Adjacent(usr) && !issilicon(usr))
+			usr.put_in_hands(d_disk)
 		d_disk = null
 		screen = 1.0
 

@@ -179,7 +179,9 @@
 		return 1
 
 	if (href_list["eject"])
-		sample.loc = src.loc
+		sample.forceMove(loc)
+		if(Adjacent(usr) && !issilicon(usr))
+			usr.put_in_hands(sample)
 		sample = null
 		update_icon()
 		return 1

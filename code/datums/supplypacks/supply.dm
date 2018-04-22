@@ -113,9 +113,9 @@
 					/obj/item/device/flashlight/glowstick/yellow,
 					/obj/item/device/flashlight/glowstick/orange,
 					/obj/item/device/flashlight/glowstick/blue)
-	cost = 10
+	cost = 20
 	containername = "\improper Glowstick Crate"
-	num_contained = 10
+	num_contained = 20
 	supply_method = /decl/supply_method/randomized
 
 /decl/hierarchy/supply_pack/supply/softsuits

@@ -128,6 +128,18 @@
 	cost = 5
 	containername = "\improper gambling crate"
 
+/decl/hierarchy/supply_pack/miscellaneous/tabletop
+	contains = list(/obj/item/weapon/paper_bin,
+					/obj/item/weapon/dice/d4 = 1,
+					/obj/item/weapon/dice = 1,
+					/obj/item/weapon/dice/d8 = 1,
+					/obj/item/weapon/dice/d10 = 1,
+					/obj/item/weapon/dice/d12 = 1,
+					/obj/item/weapon/dice/d20 = 1)
+	name = "\improper Tabletop Gaming Crate"
+	cost = 10
+	containername = "\improper gambling crate"
+
 /decl/hierarchy/supply_pack/miscellaneous/card_packs
 	num_contained = 5
 	contains = list(/obj/item/weapon/pack/cardemon,
@@ -203,7 +215,8 @@
 					/obj/item/clothing/mask/gas/monkeymask,
 					/obj/item/clothing/head/helmet/gladiator,
 					/obj/item/clothing/head/ushanka,
-					/obj/item/clothing/mask/spirit)
+					/obj/item/clothing/mask/spirit,
+					/obj/item/clothing/head/cowboy_hat)
 	cost = 6
 	containername = "\improper Actor hats crate"
 	containertype = /obj/structure/closet

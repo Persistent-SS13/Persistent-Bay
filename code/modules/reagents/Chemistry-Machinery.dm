@@ -94,8 +94,6 @@
 	if (href_list["ejectp"])
 		if(loaded_pill_bottle)
 			loaded_pill_bottle.forceMove(loc)
-			if(Adjacent(usr) && !issilicon(usr))
-				usr.put_in_hands(loaded_pill_bottle)
 			loaded_pill_bottle = null
 	else if(href_list["close"])
 		usr << browse(null, "window=chemmaster")

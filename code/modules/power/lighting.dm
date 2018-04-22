@@ -561,6 +561,35 @@
 	brightness_range = 8
 	brightness_power = 3
 
+/obj/item/weapon/light/tube/red
+	color = "#da0205"
+	brightness_color = "#da0205"
+
+/obj/item/weapon/light/tube/green
+	color = "#71da02"
+	brightness_color = "#71da02"
+
+/obj/item/weapon/light/tube/blue
+	color = "#0271da"
+	brightness_color = "#0271da"
+
+/obj/item/weapon/light/tube/purple
+	color = "#6b02da"
+	brightness_color = "#6b02da"
+
+/obj/item/weapon/light/tube/pink
+	color = "#da0271"
+	brightness_color = "#da0271"
+
+/obj/item/weapon/light/tube/yellow
+	color = "#dad702"
+	brightness_color = "#dad702"
+
+/obj/item/weapon/light/tube/orange
+	color = "#da6b02"
+	brightness_color = "#da6b02"
+
+
 /obj/item/weapon/light/bulb
 	name = "light bulb"
 	desc = "A replacement light bulb."
@@ -580,6 +609,30 @@
 /obj/item/weapon/light/bulb/red
 	color = "#da0205"
 	brightness_color = "#da0205"
+
+/obj/item/weapon/light/bulb/green
+	color = "#71da02"
+	brightness_color = "#71da02"
+
+/obj/item/weapon/light/bulb/blue
+	color = "#0271da"
+	brightness_color = "#0271da"
+
+/obj/item/weapon/light/bulb/purple
+	color = "#6b02da"
+	brightness_color = "#6b02da"
+
+/obj/item/weapon/light/bulb/pink
+	color = "#da0271"
+	brightness_color = "#da0271"
+
+/obj/item/weapon/light/bulb/yellow
+	color = "#dad702"
+	brightness_color = "#dad702"
+
+/obj/item/weapon/light/bulb/orange
+	color = "#da6b02"
+	brightness_color = "#da6b02"
 
 /obj/item/weapon/light/bulb/red/readylight
 	brightness_range = 5

@@ -7,9 +7,9 @@
 	icon = 'icons/atmos/clamp.dmi'
 	icon_state = "pclamp0"
 	anchored = 1.0
+	matter = list(DEFAULT_WALL_MATERIAL = 300, "glass" = 500)
 	var/obj/machinery/atmospherics/pipe/simple/target = null
 	var/open = 1
-
 	var/datum/pipe_network/network_node1
 	var/datum/pipe_network/network_node2
 

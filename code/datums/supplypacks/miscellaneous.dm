@@ -189,6 +189,30 @@
 	cost = 10
 	containername = "\improper Cardboard sheets crate"
 
+/decl/hierarchy/supply_pack/miscellaneous/luxury
+	name = "Luxury Crate"
+	num_contained = 1
+	contains = list(/obj/item/clothing/ears/earring/stud/diamond,
+					/obj/item/clothing/ears/earring/dangle/gold,
+					/obj/item/clothing/ears/earring/dangle/diamond,
+					/obj/item/clothing/ears/earring/stud/gold,
+					/obj/item/clothing/ears/earring/stud/platinum,
+					/obj/item/clothing/ears/earring/dangle/silver,
+					/obj/item/clothing/ears/earring/dangle/platinum,
+					/obj/item/clothing/ears/earring/stud/silver,
+					/obj/item/clothing/gloves/captain,
+					/obj/item/clothing/gloves/color/evening,
+					/obj/item/clothing/ring/material/gold,
+					/obj/item/clothing/ring/material/silver,
+					/obj/item/clothing/accessory/locket,
+					/obj/item/clothing/accessory/black/expensive,
+					/obj/item/clothing/accessory/scarf
+
+					)
+	cost = 100
+	containername = "\improper Luxury crate"
+	supply_method = /decl/supply_method/randomized
+
 /decl/hierarchy/supply_pack/miscellaneous/witch
 	name = "Witch costume"
 	contains = list(/obj/item/clothing/suit/wizrobe/marisa/fake,

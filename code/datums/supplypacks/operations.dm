@@ -438,6 +438,19 @@
 	cost = 6
 	containertype = /obj/structure/closet/lawcloset
 	containername = "Bureaucrat Equipment"
+/decl/hierarchy/supply_pack/operations/beret
+	name = "Uniform Beret Locker"
+	contains = list(/obj/item/clothing/head/beret/sec = 4
+					/obj/item/clothing/head/beret/sec/corporate/officer
+					/obj/item/clothing/head/beret/sec/corporate/hos
+					/obj/item/clothing/head/beret/sec/corporate/warden
+					/obj/item/clothing/head/beret/engineering = 4
+					/obj/item/clothing/head/beret/plaincolor = 2
+					/obj/item/clothing/head/beret/purple
+					/obj/item/clothing/head/beret/guard)
+	cost = 20
+	containertype = /obj/structure/closet
+	containername = "Beret Locker"
 /decl/hierarchy/supply_pack/operations/personal
 	name = "Personal Locker"
 	contains = list() 

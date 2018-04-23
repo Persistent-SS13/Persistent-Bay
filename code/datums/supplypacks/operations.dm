@@ -438,6 +438,21 @@
 	cost = 6
 	containertype = /obj/structure/closet/lawcloset
 	containername = "Bureaucrat Equipment"
+
+/decl/hierarchy/supply_pack/operations/journalist
+	name = "Journalist Equipment"
+	contains = list(/obj/item/clothing/accessory/badge/press,
+					/obj/item/device/radio/headset/entertainment,
+					/obj/item/clothing/accessory/armor/tag/press,
+					/obj/item/clothing/suit/armor/vest/press,
+					/obj/item/device/tvcamera,
+					/obj/item/device/taperecorder,
+					/obj/item/device/camera_film = 2,
+					/obj/item/device/camera)
+	cost = 20
+	containertype = /obj/structure/closet
+	containername = "Journalist Equipment"
+
 /decl/hierarchy/supply_pack/operations/beret
 	name = "Beret Locker"
 	contains = list(/obj/item/clothing/head/beret/sec = 4,

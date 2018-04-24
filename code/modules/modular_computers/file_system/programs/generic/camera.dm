@@ -197,6 +197,7 @@
 
 // The television variant has access only to the Public network
 /datum/nano_module/program/camera_monitor/tv/modify_networks_list(var/list/networks)
+	..()
 	var/list/public_networks[0]
 	public_networks.Add(list(list("tag" = NETWORK_PUBLIC, "has_access" = 1)))
 	return public_networks

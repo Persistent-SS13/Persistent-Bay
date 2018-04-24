@@ -181,7 +181,9 @@ var/global/datum/ntnet/ntnet_global = new()
 			add_log("Configuration Updated. Wireless network firewall now [setting_peertopeer ? "allows" : "disallows"] peer to peer network traffic.")
 		if(NTNET_COMMUNICATION)
 			setting_communication = !setting_communication
-			if setting_softwaredownload
+			if(setting_communication)
+				build_news_list()
+				add_log("News repository updated.")
 			add_log("Configuration Updated. Wireless network firewall now [setting_communication ? "allows" : "disallows"] instant messaging and similar communication services.")
 		if(NTNET_SYSTEMCONTROL)
 			setting_systemcontrol = !setting_systemcontrol

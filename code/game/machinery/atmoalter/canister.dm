@@ -183,6 +183,7 @@ update_flag
 		return 1
 
 	if (src.health <= 10)
+		disconnect()
 		var/atom/location = src.loc
 		location.assume_air(air_contents)
 

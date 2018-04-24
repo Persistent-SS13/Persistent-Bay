@@ -41,7 +41,7 @@
 	for(var/network in GLOB.using_map.station_networks)
 		all_networks.Add(list(list(
 							"tag" = network,
-							"has_access" = can_access_network(user, network, connected_faction, is_faction_restricted(network))
+							"has_access" = can_access_network(user, network, is_faction_restricted(network))
 							)))
 
 	// .Add faction networks to all_networks here
@@ -197,7 +197,6 @@
 
 // The television variant has access only to the Public network
 /datum/nano_module/program/camera_monitor/tv/modify_networks_list(var/list/networks)
-	..()
 	var/list/public_networks[0]
 	public_networks.Add(list(list("tag" = NETWORK_PUBLIC, "has_access" = 1)))
 	return public_networks

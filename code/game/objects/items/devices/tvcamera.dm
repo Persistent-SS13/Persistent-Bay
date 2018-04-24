@@ -6,7 +6,7 @@
 	w_class = ITEM_SIZE_LARGE
 	slot_flags = SLOT_BELT
 	var/channel = "General News Feed"
-	var/obj/machinery/camera/network/thunder/camera
+	var/obj/machinery/camera/network/public/camera
 	var/obj/item/device/radio/radio
 
 /obj/item/device/tvcamera/New()

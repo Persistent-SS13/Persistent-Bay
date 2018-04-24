@@ -137,7 +137,7 @@
 	cost = 40
 	containername = "\improper Light Tube Crate"
 
-/decl/hierarchy/supply_pack/supply/colortubes
+/decl/hierarchy/supply_pack/supply/colorbulbs
 	name = "Colored Light Bulbs"
 	contains = list(/obj/item/weapon/light/bulb/red = 3,
 					/obj/item/weapon/light/bulb/green = 3,

@@ -530,7 +530,7 @@
 	id = "mech_teleporter"
 	req_tech = list(TECH_BLUESPACE = 10, TECH_MAGNET = 5)
 	build_path = /obj/item/mecha_parts/mecha_equipment/teleporter
-
+/**
 /datum/design/item/mecha/rcd
 	name = "RCD"
 	desc = "An exosuit-mounted rapid construction device."
@@ -539,7 +539,7 @@
 	materials = list(DEFAULT_WALL_MATERIAL = 30000, "phoron" = 25000, "silver" = 20000, "gold" = 20000)
 	req_tech = list(TECH_MATERIAL = 4, TECH_BLUESPACE = 3, TECH_MAGNET = 4, TECH_POWER = 4, TECH_ENGINEERING = 4)
 	build_path = /obj/item/mecha_parts/mecha_equipment/tool/rcd
-
+**/
 /datum/design/item/mecha/gravcatapult
 	name = "Gravitational catapult"
 	desc = "An exosuit-mounted gravitational catapult."

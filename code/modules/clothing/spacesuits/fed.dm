@@ -1,6 +1,6 @@
 /obj/item/clothing/head/helmet/space/fed
-	name = "ODST Helmet"
-	desc = "Standard issue short-EVA capable helmet issued to ODST forces"
+	name = "Federation helmet"
+	desc = "Standard issue short-EVA capable helmet issued to Federation forces"
 	item_state = "federation_helmet"
 	icon_state = "federation_helmet"
 	item_flags = STOPPRESSUREDAMAGE|THICKMATERIAL
@@ -20,7 +20,7 @@
 	on = 0
 
 /obj/item/clothing/suit/space/fed
-	name = "\improper Federation Armor"
+	name = "\improper Federation armor"
 	desc = "Lightweight, durable armor issued to Federation soldiers for increased survivability in the field."
 	icon_state = "federation_armor"
 	blood_overlay_type = "armor"
@@ -36,33 +36,52 @@
 		)
 
 //Defines for armour subtypes//
+/obj/item/clothing/suit/space/fed/sharpshooter
+	name = "\improper Federation sharpshooter armour"
+	item_state = "federation_armor_sharpshooter"
+	icon_state = "federation_armor_sharpshooter"
+
+/obj/item/clothing/head/helmet/space/fed/sharpshooter
+	name = "\improper Federation sharpshooter helmet"
+	item_state = "federation_helmet_sharpshooter"
+	icon_state = "federation_helmet_sharpshooter"
+
+/obj/item/clothing/suit/space/fed/cqb
+	name = "\improper Federation CQB armour"
+	item_state = "federation_armor_cqb"
+	icon_state = "federation_armor_cqb"
+
+/obj/item/clothing/head/helmet/space/fed/cqb
+	name = "\improper Federation CQB helmet"
+	item_state = "federation_helmet_cqb"
+	icon_state = "federation_helmet_cqb"
+
 /obj/item/clothing/suit/space/fed/medic
-	name = "\improper Federation Medic Armour"
+	name = "\improper Federation medic armour"
+	item_state = "federation_armor_medic"
 	icon_state = "federation_armor_medic"
 
 /obj/item/clothing/head/helmet/space/fed/medic
-	name = "\improper Federation Medic Helmet"
+	name = "\improper Federation medic helmet"
 	item_state = "federation_helmet_medic"
 	icon_state = "federation_helmet_medic"
 
-
 /obj/item/clothing/head/helmet/space/fed/engineer
-	name = "\improper Federation Engineer Helmet"
-
+	name = "\improper Federation engineer helmet"
 	item_state = "federation_helmet_engineer"
 	icon_state = "federation_helmet_engineer"
 
 /obj/item/clothing/suit/space/fed/engineer
-	name = "\improper Federation Engineer Armour"
+	name = "\improper Federation engineer armour"
 	icon_state = "federation_armor_engineer"
-
-
+	item_state ="federation_armor_engineer"
+	
 /obj/item/clothing/head/helmet/space/fed/squadleader
-	name = "\improper Federation Squad Leader Helmet"
+	name = "\improper Federation squad leader helmet"
 	item_state = "federation_helmet_squad_leader"
 	icon_state = "federation_helmet_squad_leader"
 
 /obj/item/clothing/suit/space/fed/squadleader
-	name = "\improper Federation Squad Leader Armour"
-
+	name = "\improper Federation squad leader armour"
 	icon_state = "federation_armor_squad_leader"
+	item_state = "federation_armor_squad_leader"

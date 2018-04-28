@@ -106,7 +106,7 @@
 	desc = "It's field cap in Nanotrasen colors."
 	icon_state = "ntwhitesoft"
 	
-/obj/item/clothing/head/soft/fed/utility
+/obj/item/clothing/head/soft/fed
 	name = "\improper Federation utility cap"
 	desc = "A green utility cap."
 	icon_state = "greenutility"
@@ -119,7 +119,7 @@
 /obj/item/clothing/head/soft/fed/garrison
 	name = "\improper Federation garrison cap"
 	desc = "A green garrison cap."
-	icon_state = "greengarrison"
+	icon_state = "greengarrisoncap"
 
 /obj/item/clothing/head/soft/fed/dress
 	name = "\improper Federation dress cap"

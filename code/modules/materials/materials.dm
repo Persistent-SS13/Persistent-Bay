@@ -355,6 +355,9 @@ var/list/name_to_material
 	icon_colour = "#ffffff"
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
+	gaseous_products = list(
+				"chlorine" = 10.3 // 600~g / 58.4 per mole
+				)
 
 /material/steel
 	name = DEFAULT_WALL_MATERIAL
@@ -615,6 +618,9 @@ var/list/name_to_material
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
 	is_fusion_fuel = 1
+	gaseous_products = list(
+				"tritium" = 33.3 //(100~g / 3 grams per mole)
+				)
 
 /material/deuterium
 	name = "deuterium"
@@ -624,6 +630,9 @@ var/list/name_to_material
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
 	is_fusion_fuel = 1
+	gaseous_products = list(
+				"deuterium" = 50 //(100~g / 2 grams per mole)
+				)
 
 /material/mhydrogen
 	name = "mhydrogen"
@@ -631,15 +640,27 @@ var/list/name_to_material
 	icon_colour = "#e6c5de"
 	stack_origin_tech = list(TECH_MATERIAL = 6, TECH_POWER = 6, TECH_MAGNET = 5)
 	is_fusion_fuel = 1
+	gaseous_products = list(
+				"hydrogen" = 30 //(30~g / 1 grams per mole) probably don't have a ton of this stuff per stack
+				)
 
 /material/ice
 	name = "ice"
 	stack_type = /obj/item/stack/material/ice
 	icon_colour = "#c5e5e2"
 	gaseous_products = list(
-				"hydrogen" = 22.2, //(600g / 18 grams per mole)*2/3
+				"hydrogen" = 22.2, //(600~g / 18 grams per mole)*2/3
 				"oxygen" = 11.1
 				)
+
+/material/dryice
+	name = "dryice"
+	stack_type = /obj/item/stack/material/dryice
+	icon_colour = "#dce2e2"
+	gaseous_products = list(
+				"carbon_dioxide" = 13.6 //(600~g / 44.01 grams per mole)
+				)
+
 /material/platinum
 	name = "platinum"
 	stack_type = /obj/item/stack/material/platinum

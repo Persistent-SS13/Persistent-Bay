@@ -179,9 +179,21 @@
 
 /obj/item/stack/material/ice
 	name = "ice"
-	icon_state = "sheet-silver"
+	icon_state = "sheet-marble"
 	default_type = "ice"
 	apply_colour = 1
+
+/obj/item/stack/material/ice/five
+	amount = 5
+
+/obj/item/stack/material/dryice
+	name = "dry ice"
+	icon_state = "sheet-silver"
+	default_type = "dryice"
+	apply_colour = 1
+
+/obj/item/stack/material/dryice/five
+	amount = 5
 
 //Extremely valuable to Research.
 /obj/item/stack/material/mhydrogen

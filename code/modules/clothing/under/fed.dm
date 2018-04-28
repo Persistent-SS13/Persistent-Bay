@@ -1,4 +1,4 @@
-/obj/item/clothing/under/fed/utility
+/obj/item/clothing/under/fed
 	desc = "A federation standard utility uniform."
 	name = "\improper Federation utility uniform"
 	icon_state = "greenutility"

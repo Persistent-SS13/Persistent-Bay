@@ -73,6 +73,7 @@ var/list/name_to_material
 	var/sheet_singular_name = "sheet"
 	var/sheet_plural_name = "sheets"
 	var/is_fusion_fuel
+	var/list/gaseous_products	  		  // Used with sublimator to produce gas
 
 	// Shards/tables/structures
 	var/shard_type = SHARD_SHRAPNEL       // Path of debris object.
@@ -295,6 +296,9 @@ var/list/name_to_material
 	sheet_singular_name = "crystal"
 	sheet_plural_name = "crystals"
 	is_fusion_fuel = 1
+	gaseous_products = list(
+				"phoron" = 3.4 // 1360~g / 405g per mole
+				)
 
 /material/phoron/supermatter
 	name = "supermatter"
@@ -628,6 +632,14 @@ var/list/name_to_material
 	stack_origin_tech = list(TECH_MATERIAL = 6, TECH_POWER = 6, TECH_MAGNET = 5)
 	is_fusion_fuel = 1
 
+/material/ice
+	name = "ice"
+	stack_type = /obj/item/stack/material/ice
+	icon_colour = "#c5e5e2"
+	gaseous_products = list(
+				"hydrogen" = 22.2, //(600g / 18 grams per mole)*2/3
+				"oxygen" = 11.1
+				)
 /material/platinum
 	name = "platinum"
 	stack_type = /obj/item/stack/material/platinum

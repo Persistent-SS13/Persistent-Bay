@@ -177,6 +177,12 @@
 /obj/item/stack/material/platinum/ten
 	amount = 10
 
+/obj/item/stack/material/ice
+	name = "ice"
+	icon_state = "sheet-silver"
+	default_type = "ice"
+	apply_colour = 1
+
 //Extremely valuable to Research.
 /obj/item/stack/material/mhydrogen
 	name = "metallic hydrogen"

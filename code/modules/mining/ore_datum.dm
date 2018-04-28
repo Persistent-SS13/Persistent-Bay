@@ -180,7 +180,6 @@ var/global/list/ores_by_type = list()
 	spread_chance = 25
 	ore = /obj/item/weapon/ore/ice
 	scan_icon = "mineral_common"
-	/ore/ice
 
 /ore/dryice
 	name = "dryice"

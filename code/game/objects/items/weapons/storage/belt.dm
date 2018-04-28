@@ -187,6 +187,13 @@
 	icon_state = "swatbelt"
 	item_state = "swatbelt"
 	storage_slots = 9
+	
+/obj/item/weapon/storage/belt/security/tactical/fed
+	name = "federation combat belt"
+	desc = "Can hold combat gear such as ammo magazines and grenades."
+	icon_state = "ammobelt"
+	item_state = "ammobelt"
+	storage_slots = 9
 
 /obj/item/weapon/storage/belt/waistpack
 	name = "waist pack"

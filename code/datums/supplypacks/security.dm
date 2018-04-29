@@ -163,6 +163,12 @@
 	containername = "\improper 7.62 practice ammunition crate"
 	access = 5
 
+/decl/hierarchy/supply_pack/security/prisoneruniforms
+	name "Prisoner Uniforms"
+	contains = list(/obj/item/clothing/under/color/orange = 4)
+	cost = 20
+	containername = "\improper brig uniform supply crate"
+
 /decl/hierarchy/supply_pack/security/forensics
 	name = "Forensics Kit"
 	contains = list(/obj/item/weapon/storage/box/evidence = 2,

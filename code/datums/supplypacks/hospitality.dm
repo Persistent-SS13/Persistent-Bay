@@ -39,6 +39,14 @@
 	containername = "\improper Imported cigarettes"
 	supply_method = /decl/supply_method/randomized
 
+/decl/hierarchy/supply_pack/hospitality/cigars
+	name = "Imported cigars"
+	contains = list(
+			/obj/item/weapon/storage/fancy/cigar,
+			/obj/item/weapon/flame/lighter/zippo)
+	cost = 100
+	containername = "\improper Imported cigars"
+
 /decl/hierarchy/supply_pack/hospitality/barsupplies
 	name = "Bar supplies"
 	contains = list(

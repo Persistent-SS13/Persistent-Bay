@@ -77,6 +77,12 @@
 	cost = 10
 	containername = "\improper Body bag crate"
 
+/decl/hierarchy/supply_pack/medical/belts
+	name = "Medical Belts crate"
+	contains = list(/obj/item/weapon/storage/belt/medical = 3)
+	cost = 20
+	containername = "\improper Medical Belts crate"
+
 /decl/hierarchy/supply_pack/medical/cryobag
 	name = "Stasis bag crate"
 	contains = list(/obj/item/bodybag/cryobag = 3)

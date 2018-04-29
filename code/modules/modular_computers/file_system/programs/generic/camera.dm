@@ -41,7 +41,7 @@
 	for(var/network in GLOB.using_map.station_networks)
 		all_networks.Add(list(list(
 							"tag" = network,
-							"has_access" = can_access_network(user, network, connected_faction, is_faction_restricted(network))
+							"has_access" = can_access_network(user, network, is_faction_restricted(network))
 							)))
 
 	// .Add faction networks to all_networks here

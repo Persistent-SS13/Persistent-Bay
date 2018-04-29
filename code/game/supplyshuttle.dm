@@ -249,10 +249,11 @@ var/list/point_source_descriptions = list(
 			export.rate = per
 			export.order_type = typee
 			export.id = exportnum
-			var/obj/ob = new design.build_path
-			export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each item."
-			all_exports |= export
-			return export
+			if(design.build_path)
+				var/obj/ob = new design.build_path()
+				export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each item."
+				all_exports |= export
+				return export
 		if("material")
 			export = new /datum/export_order/stack()
 			var/list/possible = list(

@@ -11,6 +11,8 @@ var/global/list/debug_data = list()
 			line.temporarily_store_air()
 /mob/living
 	should_save = 0
+/mob/living/simple_animal
+	should_save = 1
 /datum/area_holder
 	var/area_type = "/area"
 	var/name

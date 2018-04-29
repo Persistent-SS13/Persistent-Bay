@@ -9,17 +9,31 @@
  * Library Scanner
  */
 /obj/machinery/libraryscanner
-	name = "scanner"
+	name = "\improper Book Scanner"
 	icon = 'icons/obj/library.dmi'
 	icon_state = "bigscanner"
 	anchored = 1
 	density = 1
 	var/obj/item/weapon/book/cache		// Last scanned book
 
+/obj/machinery/libraryscanner/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/libraryscanner(src)
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/computer_hardware/hard_drive/portable(src)
+	RefreshParts()
+
 /obj/machinery/libraryscanner/attackby(var/obj/O as obj, var/mob/user as mob)
 	if(istype(O, /obj/item/weapon/book))
 		user.drop_item()
 		O.loc = src
+	if(default_deconstruction_screwdriver(user, O))
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	..()
 
 /obj/machinery/libraryscanner/attack_hand(var/mob/user as mob)
 	usr.set_machine(src)
@@ -66,6 +80,14 @@
 	anchored = 1
 	density = 1
 
+/obj/machinery/bookbinder/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/bookbinder(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/computer_hardware/nano_printer(src)
+	RefreshParts()
+
 /obj/machinery/bookbinder/attackby(var/obj/O as obj, var/mob/user as mob)
 	if(istype(O, /obj/item/weapon/paper))
 		user.drop_item()
@@ -79,5 +101,9 @@
 		b.name = "Print Job #" + "[rand(100, 999)]"
 		b.icon_state = "book[rand(1,7)]"
 		qdel(O)
+	if(default_deconstruction_screwdriver(user, O))
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
 	else
 		..()

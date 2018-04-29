@@ -131,7 +131,7 @@
 	global.lighting_update_overlays_old -= src
 
 	var/turf/T = loc
-	if(istype(T))
+	if(T && istype(T))
 		T.lighting_overlay = null
 
 	. = ..()

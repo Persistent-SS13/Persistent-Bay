@@ -15,6 +15,16 @@
 	var/datum/computer_file/data/virus_record/entry = null
 	var/obj/item/weapon/reagent_containers/syringe/sample = null
 
+/obj/machinery/disease2/isolator/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/isolator(src)
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/computer_hardware/hard_drive/portable(src)
+	RefreshParts()
+
 /obj/machinery/disease2/isolator/update_icon()
 	if (stat & (BROKEN|NOPOWER))
 		icon_state = "isolator"
@@ -44,6 +54,12 @@
 	update_icon()
 
 	src.attack_hand(user)
+
+	if(default_deconstruction_screwdriver(user, O))
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	..()
 
 /obj/machinery/disease2/isolator/attack_hand(mob/user as mob)
 	if(stat & (NOPOWER|BROKEN)) return
@@ -163,7 +179,9 @@
 		return 1
 
 	if (href_list["eject"])
-		sample.loc = src.loc
+		sample.forceMove(loc)
+		if(Adjacent(usr) && !issilicon(usr))
+			usr.put_in_hands(sample)
 		sample = null
 		update_icon()
 		return 1

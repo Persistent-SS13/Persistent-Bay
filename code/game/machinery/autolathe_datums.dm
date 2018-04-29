@@ -544,6 +544,11 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	hidden = 1
 	category = "Engineering"
 
+/datum/autolathe/recipe/stasisclamp
+	name = "stasis clamp"
+	path = /obj/machinery/clamp
+	category = "Engineering"
+
 /datum/autolathe/recipe/electropack
 	name = "electropack"
 	path = /obj/item/device/radio/electropack

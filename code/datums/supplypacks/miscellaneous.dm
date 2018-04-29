@@ -128,6 +128,18 @@
 	cost = 5
 	containername = "\improper gambling crate"
 
+/decl/hierarchy/supply_pack/miscellaneous/tabletop
+	contains = list(/obj/item/weapon/paper_bin,
+					/obj/item/weapon/dice/d4 = 1,
+					/obj/item/weapon/dice = 1,
+					/obj/item/weapon/dice/d8 = 1,
+					/obj/item/weapon/dice/d10 = 1,
+					/obj/item/weapon/dice/d12 = 1,
+					/obj/item/weapon/dice/d20 = 1)
+	name = "\improper Tabletop Gaming Crate"
+	cost = 10
+	containername = "\improper gambling crate"
+
 /decl/hierarchy/supply_pack/miscellaneous/card_packs
 	num_contained = 5
 	contains = list(/obj/item/weapon/pack/cardemon,
@@ -177,6 +189,30 @@
 	cost = 10
 	containername = "\improper Cardboard sheets crate"
 
+/decl/hierarchy/supply_pack/miscellaneous/luxury
+	name = "Luxury Crate"
+	num_contained = 1
+	contains = list(/obj/item/clothing/ears/earring/stud/diamond,
+					/obj/item/clothing/ears/earring/dangle/gold,
+					/obj/item/clothing/ears/earring/dangle/diamond,
+					/obj/item/clothing/ears/earring/stud/gold,
+					/obj/item/clothing/ears/earring/stud/platinum,
+					/obj/item/clothing/ears/earring/dangle/silver,
+					/obj/item/clothing/ears/earring/dangle/platinum,
+					/obj/item/clothing/ears/earring/stud/silver,
+					/obj/item/clothing/gloves/captain,
+					/obj/item/clothing/gloves/color/evening,
+					/obj/item/clothing/ring/material/gold,
+					/obj/item/clothing/ring/material/silver,
+					/obj/item/clothing/accessory/locket,
+					/obj/item/clothing/accessory/black/expensive,
+					/obj/item/clothing/accessory/scarf
+
+					)
+	cost = 100
+	containername = "\improper Luxury crate"
+	supply_method = /decl/supply_method/randomized
+
 /decl/hierarchy/supply_pack/miscellaneous/witch
 	name = "Witch costume"
 	contains = list(/obj/item/clothing/suit/wizrobe/marisa/fake,
@@ -203,7 +239,8 @@
 					/obj/item/clothing/mask/gas/monkeymask,
 					/obj/item/clothing/head/helmet/gladiator,
 					/obj/item/clothing/head/ushanka,
-					/obj/item/clothing/mask/spirit)
+					/obj/item/clothing/mask/spirit,
+					/obj/item/clothing/head/cowboy_hat)
 	cost = 6
 	containername = "\improper Actor hats crate"
 	containertype = /obj/structure/closet

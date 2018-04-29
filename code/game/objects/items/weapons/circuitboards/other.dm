@@ -141,3 +141,34 @@
 		build_path = typepath
 		name = T_BOARD("[names_paths[build_path]]")
 		user << "<span class='notice'>You set the board to [names_paths[build_path]].</span>"
+
+/obj/item/weapon/circuitboard/libraryscanner
+	name = T_BOARD("book scanner")
+	build_path = /obj/machinery/libraryscanner
+	board_type = "machine"
+	origin_tech = list(TECH_MATERIAL =1, TECH_DATA = 1)
+	req_components = list(
+							/obj/item/weapon/computer_hardware/hard_drive/portable = 1,
+							/obj/item/weapon/stock_parts/scanning_module = 1,
+							/obj/item/weapon/stock_parts/console_screen = 1)
+
+/obj/item/weapon/circuitboard/bookbinder
+	name = T_BOARD("book binder")
+	build_path = /obj/machinery/bookbinder
+	board_type = "machine"
+	origin_tech = list(TECH_MATERIAL =1, TECH_DATA = 1)
+	req_components = list(
+							/obj/item/weapon/computer_hardware/nano_printer = 1,
+							/obj/item/weapon/stock_parts/manipulator = 1)
+
+/obj/item/weapon/circuitboard/shuttleengine
+	name = T_BOARD("shuttle engine")
+	build_path = /obj/machinery/shuttleengine
+	board_type = "machine"
+	origin_tech = list(TECH_ENGINEERING = 4, TECH_POWER = 4)
+	req_components = list(
+							/obj/item/stack/cable_coil = 30,
+							/obj/item/device/assembly/igniter = 1,
+							/obj/item/weapon/stock_parts/capacitor = 5,
+							/obj/item/stack/material/uranium = 10,
+							/obj/item/stack/material/ocp = 20)

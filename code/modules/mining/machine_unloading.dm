@@ -13,6 +13,22 @@
 
 /obj/machinery/mineral/unloading_machine/New()
 	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/unloading_machine(src)
+	component_parts += new /obj/item/stack/material/steel(src)
+	component_parts += new /obj/item/stack/material/steel(src)
+	component_parts += new /obj/item/stack/material/steel(src)
+	component_parts += new /obj/item/stack/material/steel(src)
+	component_parts += new /obj/item/stack/material/steel(src)
+	RefreshParts()
+
+/obj/machinery/mineral/unloading_machine/attackby(var/obj/O as obj, var/mob/user as mob)
+	if(default_deconstruction_screwdriver(user, O))
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	..()
+
 	spawn( 5 )
 		for (var/dir in GLOB.cardinal)
 			src.input = locate(/obj/machinery/mineral/input, get_step(src, dir))

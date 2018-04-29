@@ -72,8 +72,8 @@
 	icon_closed = "labcoat_rd"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
 	
-/obj/item/clothing/suit/storage/toggle/labcoat/rd
-	name = "Chief medical officer's labcoat"
+/obj/item/clothing/suit/storage/toggle/labcoat/coat_cmo
+	name = "chief medical officer's labcoat"
 	desc = "A full-body labcoat covered in blue and black designs, denoting it as a Nanotrasen management coat. Judging by the amount of designs on it, it is only to be worn by the most enthusiastic of Nanotrasen employees."
 	icon_state = "coat_cmo_open"
 	icon_open = "coat_cmo_open"

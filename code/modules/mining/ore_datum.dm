@@ -171,3 +171,22 @@ var/global/list/ores_by_type = list()
 	compresses_to = "mhydrogen"
 	ore = /obj/item/weapon/ore/hydrogen //Technically not needed since there's no hydrogen ore vein, but consistency is nice
 	scan_icon = "mineral_rare"
+
+/ore/ice
+	name = "ice"
+	display_name = "unrefined ice"
+	compresses_to = "ice"
+	result_amount = 5
+	spread_chance = 25
+	ore = /obj/item/weapon/ore/ice
+	scan_icon = "mineral_common"
+
+/ore/dryice
+	name = "dryice"
+	display_name = "unrefined dry ice"
+	compresses_to = "dryice"
+	result_amount = 5
+	spread_chance = 25
+	ore = /obj/item/weapon/ore/dryice
+	scan_icon = "mineral_common"
+

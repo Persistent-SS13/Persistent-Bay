@@ -64,6 +64,8 @@
 				T.resources["gold"] =     rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["silver"] =   rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["uranium"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["ice"] = 	  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["dryice"] =   rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["diamond"] =  0
 				T.resources["phoron"] =   0
 				T.resources["osmium"] =   0
@@ -83,6 +85,8 @@
 				T.resources["diamond"] =  0
 				T.resources["iron"] =     0
 				T.resources["salt"] =     0
+				T.resources["ice"] = 	  0
+				T.resources["dryice"] =   0
 			else                             // Deep metals.
 				T.resources["uranium"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["diamond"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
@@ -97,7 +101,8 @@
 				T.resources["gold"] =     0
 				T.resources["silver"] =   0
 				T.resources["salt"] =     0
-
+				T.resources["ice"] = 	  0
+				T.resources["dryice"] =   0
 /datum/random_map/noise/ore/get_map_char(var/value)
 	if(value < rare_val)
 		return "S"

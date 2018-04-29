@@ -819,6 +819,37 @@
 		user.visible_message("[user] attaches [W] to [src].", "You attach [W] to [src]")
 		return
 
+#define LOCKED 1
+#define OCCUPIED 2
+	else if(istype(W, /obj/item/grab))
+		if ((locate(/obj/item/mecha_parts/mecha_equipment/tool/passenger) in contents))
+			var/obj/item/grab/G = W
+			if(iscarbon(G.affecting))
+				var/result = 0
+				for(var/obj/item/mecha_parts/mecha_equipment/tool/passenger/P in contents) //clarity for user
+					if (P.occupant)
+						result |= OCCUPIED
+						continue
+
+					if (P.door_locked)
+						result |= LOCKED
+						continue
+
+					P.stuff_inside(G, user)
+					return
+
+				switch (result)
+					if (OCCUPIED)
+						to_chat(user, "<span class='danger'>The passenger compartment is already occupied!</span>")
+					if (LOCKED)
+						to_chat(user, "<span class='warning'>The passenger compartment hatch is locked!</span>")
+					if (OCCUPIED|LOCKED)
+						to_chat(user, "<span class='danger'>All of the passenger compartments are already occupied or locked!</span>")
+					if (0)
+						to_chat(user, "<span class='warning'>\The [src] doesn't have a passenger compartment.</span>")
+#undef LOCKED
+#undef OCCUPIED
+
 	else
 		src.log_message("Attacked by [W]. Attacker - [user]")
 

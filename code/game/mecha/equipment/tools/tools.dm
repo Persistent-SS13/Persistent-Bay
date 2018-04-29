@@ -1029,6 +1029,21 @@
 	else
 		to_chat(user, "You stop entering the exosuit.")
 
+/obj/item/mecha_parts/mecha_equipment/tool/passenger/proc/stuff_inside(var/obj/item/grab/G, var/mob/user)
+	if (chassis)
+		chassis.visible_message("<span class='danger'>[user] starts forcing [G.affecting] into the [chassis]! </span>")
+
+	if(do_after(user, 40, src))
+		if(!src.occupant)
+			G.affecting.forceMove(src)
+			occupant = G.affecting
+			log_message("\The [G.affecting] boarded.")
+			occupant_message("\The [G.affecting] boarded.")
+			chassis.visible_message("<span class='danger'>[G.affecting] is forced into the [chassis]! </span>")
+			qdel(G)
+		else if(src.occupant != G.affecting)
+			to_chat(user, "<span class='warning'>You were too slow, and someone boarded in the meantime.</span>")
+
 /obj/item/mecha_parts/mecha_equipment/tool/passenger/verb/eject()
 	set name = "Eject"
 	set category = "Exosuit Interface"

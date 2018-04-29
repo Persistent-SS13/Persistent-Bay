@@ -75,20 +75,20 @@ update_flag
 	..()
 
 	if(valve_open)
-		var/datum/gas_mixture/enviroment
+		var/datum/gas_mixture/environment
 		if(holding)
-			enviroment = holding.air_contents
+			environment = holding.air_contents
 		else
-			enviroment = loc.return_air()
+			environment = loc.return_air()
 
-		var/env_pressure = enviroment.return_pressure()
+		var/env_pressure = environment.return_pressure()
 		var/pressure_delta = release_pressure - env_pressure
 
 		if((air_contents.temperature > 0) && (pressure_delta > 0))
-			var/transfer_moles = calculate_transfer_moles(air_contents, enviroment, pressure_delta)
+			var/transfer_moles = calculate_transfer_moles(air_contents, environment, pressure_delta)
 			transfer_moles = min(transfer_moles, (release_flow_rate/air_contents.volume)*air_contents.total_moles) //Limits based off flow rate
 
-			var/return_val = pump_gas_passive(src, air_contents, enviroment, transfer_moles)
+			var/return_val = pump_gas_passive(src, air_contents, environment, transfer_moles)
 			if(return_val >= 0)
 				src.update_icon()
 

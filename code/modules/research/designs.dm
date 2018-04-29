@@ -1137,6 +1137,13 @@ CIRCUITS BELOW
 	build_path = /obj/item/weapon/circuitboard/operating
 	sort_string = "FACAA"
 
+/datum/design/circuit/cryo_cell
+	name = "Cryotube"
+	id = "cryocell"
+	req_tech = list(TECH_DATA = 2, TECH_BIO = 3, TECH_ENGINEERING = 4)
+	build_path = /obj/item/weapon/circuitboard/cryo_tube
+	sort_string = "FAGAG"
+
 /datum/design/circuit/resleever
 	name = "neural lace resleever"
 	id = "resleever"

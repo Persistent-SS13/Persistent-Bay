@@ -85,6 +85,12 @@
 /obj/item/weapon/ore/hydrogen
 	ore = /ore/hydrogen
 
+/obj/item/weapon/ore/ice
+	ore = /ore/ice
+
+/obj/item/weapon/ore/dryice
+	ore = /ore/dryice
+
 /obj/item/weapon/ore/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/device/core_sampler))
 		var/obj/item/device/core_sampler/C = W

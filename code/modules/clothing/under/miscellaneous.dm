@@ -525,6 +525,7 @@
 	item_state = "lb_suit"
 	icon_state = "grayson"
 	worn_state = "mechanic"
+	
 /obj/item/clothing/under/cheongsam
 	name = "cheongsam"
 	desc = "It is a cheongsam dress."

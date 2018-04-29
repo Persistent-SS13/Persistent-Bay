@@ -97,7 +97,6 @@
 	if(shuttle)
 		data["connected"] = 1
 		var/list/beacons = get_docks(user)
-		var/list/formatted_beacons[0]
 		for(var/obj/machinery/docking_beacon/beacon in beacons)
 			break
 			return 1

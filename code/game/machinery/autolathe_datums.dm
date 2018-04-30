@@ -41,17 +41,17 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	category = "General"
 
 /datum/autolathe/recipe/maglight
-	name = "Maglight"
+	name = "maglight"
 	path = /obj/item/device/flashlight/maglight
 	category = "General"
 
 /datum/autolathe/recipe/penlight
-	name = "Pen Light"
+	name = "penlight"
 	path = /obj/item/device/flashlight/pen
 	category = "General"
 
 /datum/autolathe/recipe/desklamp
-	name = "Desk Lamp"
+	name = "desk lamp"
 	path = /obj/item/device/flashlight/lamp
 	category = "General"
 
@@ -66,12 +66,12 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	category = "General"
 
 /datum/autolathe/recipe/tank
-	name = "Air Tank"
+	name = "air tank"
 	path = /obj/item/weapon/tank/oxygen/yellow
 	category = "General"
 
 /datum/autolathe/recipe/tank_double
-	name = "Air Tank - Small, Extended"
+	name = "emergency air tank"
 	path = /obj/item/weapon/tank/emergency/oxygen/engi
 	category = "General"
 
@@ -111,7 +111,7 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	category = "Tools"
 
 /datum/autolathe/recipe/t_scanner
-	name = "T-ray scanner"
+	name = "t-ray scanner"
 	path = /obj/item/device/t_scanner
 	category = "Tools"
 
@@ -228,6 +228,7 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	name = "matter cartridge"
 	path = /obj/item/weapon/rcd_ammo
 	category = "Engineering"
+
 /datum/autolathe/recipe/rcd_ammo_large
 	name = "high-capacity matter cartridge"
 	path = /obj/item/weapon/rcd_ammo/large
@@ -549,6 +550,16 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/machinery/clamp
 	category = "Engineering"
 
+/datum/autolathe/recipe/beerkeg
+	name = "beer keg"
+	path = /obj/structure/reagent_dispensers/beerkeg/empty
+	category = "General"
+
+/datum/autolathe/recipe/watercooler
+	name = "water cooler"
+	path = /obj/structure/reagent_dispensers/water_cooler/empty
+	category = "General"
+
 /datum/autolathe/recipe/electropack
 	name = "electropack"
 	path = /obj/item/device/radio/electropack
@@ -583,41 +594,100 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/weapon/reagent_containers/ecig_cartridge/blank
 	category = "Devices and Components"
 
+/datum/autolathe/recipe/ecig
+	// We get it, you vape
+	name = "ecigarette"
+	path = /obj/item/clothing/mask/smokable/ecig
+	category = "Devices and Components"
+
 /datum/autolathe/recipe/keypad
-	name = "Airlock Keypad Electronics"
+	name = "airlock keypad electronics"
 	path = /obj/item/weapon/airlock_electronics/keypad_electronics
 	category = "Engineering"
 
 /datum/autolathe/recipe/analyzer
-	name = "Gas Analyzer"
+	name = "gas analyzer"
 	path = /obj/item/device/analyzer
 	category = "Tools"
 
 /datum/autolathe/recipe/healthscanner
-	name = "Health Scanner"
+	name = "health scanner"
 	path = /obj/item/device/healthanalyzer
 	category = "Medical"
 
 /datum/autolathe/recipe/mop
-	name = "Mop"
+	name = "mop"
 	path = /obj/item/weapon/mop
 	category = "General"
 
+/datum/autolathe/recipe/spraybottle
+	name = "spray bottle"
+	path = /obj/item/weapon/reagent_containers/spray
+	category = "General"
+
 /datum/autolathe/recipe/glasses
-	name = "Prescription Glasses"
+	name = "prescription glasses"
 	path = /obj/item/clothing/glasses/regular
 	category = "Medical"
 
+/datum/autolathe/recipe/dropper
+	name = "dropper"
+	path = /obj/item/weapon/reagent_containers/dropper
+	category = "Medical"
+
 /datum/autolathe/recipe/lighter
-	name = "Cheap Lighter"
+	name = "cheap lighter"
 	path = /obj/item/weapon/flame/lighter
 	category = "General"
-/*
-/datum/autolathe/recipe/
-	name = ""
-	path = /obj/item/
-	category = ""
-*/
+
+/datum/autolathe/recipe/pitcher
+	name = "pitcher"
+	path = /obj/item/weapon/reagent_containers/food/drinks/pitcher
+	category = "General"
+
+/datum/autolathe/recipe/carafe
+	name = "carafe"
+	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/carafe
+	category = "General"
+
+/datum/autolathe/recipe/coffeecup
+	name = "coffee cup"
+	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup
+	category = "General"
+	New()
+		..()
+		var/obj/O = path
+		name = initial(O.name) // generic recipes yay
+
+/datum/autolathe/recipe/coffeecup/black
+	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/black
+
+/datum/autolathe/recipe/coffeecup/green
+	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/green
+
+/datum/autolathe/recipe/coffeecup/heart
+	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/heart
+
+/datum/autolathe/recipe/coffeecup/metal
+	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/metal
+
+/datum/autolathe/recipe/coffeecup/rainbow
+	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/rainbow
+
+/datum/autolathe/recipe/coffeecup/tall
+	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/tall
+	hidden = 1 // Yuki can't be trusted with this.
+
+/datum/autolathe/recipe/coffeecup/NT
+	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/NT
+
+/datum/autolathe/recipe/coffeecup/STC
+	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/STC
+	hidden = 1 // We get our autolathes from a SolGov-friendly firm.
+
+/datum/autolathe/recipe/coffeecup/SCG
+	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/SCG
+
 /datum/autolathe/recipe/drinkingglass
 	name = "drinking glass"
 	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/square

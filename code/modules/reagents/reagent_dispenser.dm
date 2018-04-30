@@ -217,7 +217,7 @@
 	icon_state = "water_cooler"
 	possible_transfer_amounts = null
 	matter = list("metal" = 200)
-	anchored = 1
+	anchored = 0
 	initial_capacity = 500
 	initial_reagent_types = list(/datum/reagent/water = 1)
 
@@ -246,6 +246,12 @@
 	matter = list("metal" = 200)
 	initial_reagent_types = list(/datum/reagent/ethanol/beer = 1)
 	flags = OBJ_CLIMBABLE
+
+/obj/structure/reagent_dispensers/water_cooler/empty
+	initial_reagent_types = list()
+
+/obj/structure/reagent_dispensers/beerkeg/empty
+	initial_reagent_types = list()
 
 /obj/structure/reagent_dispensers/virusfood
 	name = "Virus Food Dispenser"

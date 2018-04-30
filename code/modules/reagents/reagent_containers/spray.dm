@@ -17,6 +17,7 @@
 	var/list/spray_sizes = list(1,3)
 	var/step_delay = 10 // lower is faster
 	volume = 250
+	matter = list("glass" = 60)
 
 /obj/item/weapon/reagent_containers/spray/New()
 	..()

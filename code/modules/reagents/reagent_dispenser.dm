@@ -216,6 +216,7 @@
 	icon = 'icons/obj/vending.dmi'
 	icon_state = "water_cooler"
 	possible_transfer_amounts = null
+	matter = list("metal" = 200)
 	anchored = 0
 	initial_capacity = 500
 	initial_reagent_types = list(/datum/reagent/water = 1)
@@ -242,6 +243,7 @@
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "beertankTEMP"
 	amount_per_transfer_from_this = 10
+	matter = list("metal" = 200)
 	initial_reagent_types = list(/datum/reagent/ethanol/beer = 1)
 	flags = OBJ_CLIMBABLE
 

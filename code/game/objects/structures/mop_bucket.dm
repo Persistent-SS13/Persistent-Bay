@@ -25,3 +25,8 @@
 			reagents.trans_to_obj(I, 5)
 			to_chat(user, "<span class='notice'>You wet \the [I] in \the [src].</span>")
 			playsound(loc, 'sound/effects/slosh.ogg', 25, 1)
+	if(isWrench(I))
+		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
+		to_chat(user, "<span class='notice'>You deconstruct \the [src]</span>")
+		new /obj/item/stack/material/plastic(src.loc, 3)
+		qdel(src)

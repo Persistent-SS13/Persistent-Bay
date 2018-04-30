@@ -100,11 +100,13 @@
 	recipes += new/datum/stack_recipe("IV Drip", /obj/machinery/iv_drip, 3, time = 15, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("key", /obj/item/weapon/key, 1, time = 10)
 	recipes += new/datum/stack_recipe("table frame", /obj/structure/table, 1, time = 10, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("Paper Shredder", /obj/machinery/papershredder, 3, time = 25, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("rack", /obj/structure/table/rack, 1, time = 5, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("weight lifter", /obj/structure/fitness/weightlifter, 4, time = 50, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("closet", /obj/structure/closet, 2, time = 15, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("canister", /obj/machinery/portable_atmospherics/canister, 10, time = 15, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("cannon frame", /obj/item/weapon/cannonframe, 10, time = 15, one_per_turf = 0, on_floor = 0)
+	recipes += new/datum/stack_recipe("meat spike frame", /obj/structure/kitchenspike_frame, 4, time = 40, one_per_turf = 1, on_floor = 1)
 /material/plasteel/generate_recipes()
 	..()
 	recipes += new/datum/stack_recipe("Bar Sign Frame", /obj/item/frame/barsign, 4, time = 50, one_per_turf = 1)
@@ -112,14 +114,23 @@
 	recipes += new/datum/stack_recipe("Metal crate", /obj/structure/closet/crate, 10, time = 50, one_per_turf = 1)
 	recipes += new/datum/stack_recipe("knife grip", /obj/item/weapon/material/butterflyhandle, 4, time = 20, one_per_turf = 0, on_floor = 1, supplied_material = "[name]")
 	recipes += new/datum/stack_recipe("dark floor tile", /obj/item/stack/tile/floor_dark, 1, 4, 20)
+	recipes += new/datum/stack_recipe("Wheelchair", /obj/structure/bed/chair/wheelchair, 10, time = 50, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("Morgue Tray", /obj/structure/morgue, 20, time = 50, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe_list("immovable wall cabinets", list( \
+		new/datum/stack_recipe("fire extinguisher cabinet", /obj/structure/extinguisher_cabinet, 2), \
+		new/datum/stack_recipe("medical cabinet", /obj/structure/closet/secure_closet/medical_wall, 2), \
+		new/datum/stack_recipe("shipping cabinet", /obj/structure/closet/shipping_wall, 2), \
+		new/datum/stack_recipe("fire-safety cabinet", /obj/structure/closet/hydrant, 2)
+		))
+	recipes += new/datum/stack_recipe("linen bin", /obj/structure/bedsheetbin, 4, time = 10, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("Operating Table", /obj/machinery/optable, 10, time = 50, one_per_turf = 1)
 	recipes += new/datum/stack_recipe("Item Safe", /obj/structure/safe, 10, time = 50, one_per_turf = 1)
-/*	recipes += new/datum/stack_recipe_list("Blast Doors Assemblies", list( \
+//	recipes += new/datum/stack_recipe_list("Blast Doors Assemblies", list( \
 	new/datum/stack_recipe("assembly", /obj/structure/door_assembly/, 4, time = 50, one_per_turf = 1, on_floor = 1), \
 		))
-	/obj/machinery/door/blast
-	/obj/machinery/door/blast/shutters
-*/
+//	/obj/machinery/door/blast
+//	/obj/machinery/door/blast/shutters
+
 /material/stone/generate_recipes()
 	..()
 	recipes += new/datum/stack_recipe("planting bed", /obj/machinery/portable_atmospherics/hydroponics/soil, 3, time = 10, one_per_turf = 1, on_floor = 1)
@@ -136,6 +147,7 @@
 	recipes += new/datum/stack_recipe("freezer floor tile", /obj/item/stack/tile/floor_freezer, 1, 4, 20)
 	recipes += new/datum/stack_recipe("hazard cone", /obj/item/weapon/caution/cone, 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("plastic flaps", /obj/structure/plasticflaps, 15, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("Mop Bucket", /obj/structure/mopbucket, 3, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe_list("Plumbing",list( \
 		new/datum/stack_recipe("shower frame", /obj/item/frame/shower, 2), \
 		new/datum/stack_recipe("toilet", /obj/structure/toilet, 5, one_per_turf = 1, on_floor = 1),\
@@ -165,9 +177,11 @@
 	recipes += new/datum/stack_recipe("beehive assembly", /obj/item/beehive_assembly, 4)
 	recipes += new/datum/stack_recipe("beehive frame", /obj/item/honey_frame, 1)
 	recipes += new/datum/stack_recipe("book shelf", /obj/structure/bookcase, 5, time = 15, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("dresser", /obj/structure/undies_wardrobe, 4, time = 10, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("zip gun frame", /obj/item/weapon/zipgunframe, 5)
 	recipes += new/datum/stack_recipe("coilgun stock", /obj/item/weapon/coilgun_assembly, 5)
 	recipes += new/datum/stack_recipe("stick", /obj/item/weapon/material/stick, 1)
+	recipes += new/datum/stack_recipe("dog bed", /obj/structure/dogbed, 2)
 	recipes += new/datum/stack_recipe("wooden Saloon Door", /obj/machinery/door/unpowered/simple/wood/saloon, 10, time = 10, one_per_turf = 1, on_floor = 1)
 
 
@@ -181,11 +195,14 @@
 		new/datum/stack_recipe("large box", /obj/item/weapon/storage/box/large, 2), \
 		new/datum/stack_recipe("donut box", /obj/item/weapon/storage/box/donut/empty), \
 		new/datum/stack_recipe("egg box", /obj/item/weapon/storage/fancy/egg_box/empty), \
+		new/datum/stack_recipe("cigarette carton", /obj/item/weapon/storage/box/cigarettes, 4), \
 		new/datum/stack_recipe("light tubes box", /obj/item/weapon/storage/box/lights/tubes/empty), \
 		new/datum/stack_recipe("light bulbs box", /obj/item/weapon/storage/box/lights/bulbs/empty), \
 		new/datum/stack_recipe("mouse traps box", /obj/item/weapon/storage/box/mousetraps/empty), \
 		new/datum/stack_recipe("pizza box", /obj/item/pizzabox), \
 		))
+	recipes += new/datum/stack_recipe("empty cigarette pack", /obj/item/weapon/storage/fancy/cigarettes/blank)
+	recipes += new/datum/stack_recipe("empty cigarette", /obj/item/clothing/mask/smokable/cigarette/custom)
 	recipes += new/datum/stack_recipe("cardborg suit", /obj/item/clothing/suit/cardborg, 3)
 	recipes += new/datum/stack_recipe("cardborg helmet", /obj/item/clothing/head/cardborg)
 	recipes += new/datum/stack_recipe_list("folders",list( \

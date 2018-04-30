@@ -279,11 +279,6 @@
 	name = "Emo Alt"
 	icon_state = "hair_emo2"
 
-/datum/sprite_accessory/hair/emolong
-	name = "Long Emo"
-	icon_state = "hair_emolong"
-	gender = FEMALE
-
 /datum/sprite_accessory/hair/shortovereye
 	name = "Overeye Short"
 	icon_state = "hair_shortovereye"
@@ -335,7 +330,7 @@
 	icon_state = "hair_kusanagi"
 
 /datum/sprite_accessory/hair/kagami
-	name = "Pigtails"
+	name = "Kagami"
 	icon_state = "hair_kagami"
 	gender = FEMALE
 
@@ -678,10 +673,6 @@
 /datum/sprite_accessory/hair/bigpompadour
 	name = "Big Pompadour"
 	icon_state = "hair_bigpompadour"
-
-/datum/sprite_accessory/hair/messy
-	name = "Messy"
-	icon_state = "hair_messy"
 
 /datum/sprite_accessory/hair/longemo
 	name = "Long Emo"

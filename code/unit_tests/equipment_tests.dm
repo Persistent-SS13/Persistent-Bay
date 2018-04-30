@@ -1,6 +1,6 @@
 #define SUCCESS 1
 #define FAILURE 0
-
+/*
 
 datum/unit_test/vision_glasses/
 	name = "EQUIPMENT: Vision Template"
@@ -58,7 +58,7 @@ datum/unit_test/vision_glasses/plain
 	name = "EQUIPMENT: Plain glasses. see_invis"
 	glasses_type = /obj/item/clothing/glasses/regular
 	expectation = SEE_INVISIBLE_LIVING
-
+*/
 // ============================================================================
 
 datum/unit_test/storage_capacity_test

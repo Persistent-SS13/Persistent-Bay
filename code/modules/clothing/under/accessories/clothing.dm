@@ -188,6 +188,15 @@
 	var/tucked = 0
 	var/buttoned = 0
 
+/obj/item/clothing/accessory/toggleable/flannel/red
+	name = "red flannel shirt"
+	desc = "A comfy, red plaid flannel shirt."
+	icon_state = "flannel"
+	rolled = 0
+	tucked = 0
+	buttoned = 0
+	color = "#da0205"
+
 /obj/item/clothing/accessory/toggleable/flannel/on_attached(obj/item/clothing/under/S, mob/user as mob)
 	..()
 	has_suit.verbs += /obj/item/clothing/accessory/toggleable/flannel/verb/tuck

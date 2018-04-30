@@ -3,8 +3,8 @@
 		return
 
 	if(attacked > 0)
-		if(attacked > 50)
-			attacked = 50 // Let's not get into absurdly long periods of rage
+		if(attacked > 40)
+			attacked = 40 // Let's not get into absurdly long periods of rage
 		--attacked
 
 	if(confused > 0)
@@ -121,7 +121,7 @@
 	AIproc = 1
 	var/addedDelay = 0
 
-	if(amount_grown >= 10 && !Target)
+	if(amount_grown >= 30 && !Target)
 		if(is_adult)
 			Reproduce()
 		else

@@ -30,7 +30,6 @@
 					/obj/item/weapon/reagent_containers/spray/cleaner,
 					/obj/item/weapon/reagent_containers/glass/rag,
 					/obj/item/weapon/grenade/chem_grenade/cleaner = 3,
-					/obj/structure/mopbucket,
 					/obj/item/weapon/soap)
 	cost = 10
 	containertype = /obj/structure/closet/crate/trashcart
@@ -71,6 +70,13 @@
 	cost = 20
 	containertype = /obj/structure/largecrate/animal/mulebot
 	containername = "Mulebot Crate"
+
+/decl/hierarchy/supply_pack/supply/janicart
+	name = "Janitorial Cart Crate"
+	contains = list(/obj/structure/janitorialcart)
+	cost = 50
+	containertype = /obj/structure/largecrate
+	containername = "Janitorial Cart Crate"
 
 /decl/hierarchy/supply_pack/supply/cargotrain
 	name = "Cargo Train Tug"
@@ -114,10 +120,34 @@
 					/obj/item/device/flashlight/glowstick/yellow,
 					/obj/item/device/flashlight/glowstick/orange,
 					/obj/item/device/flashlight/glowstick/blue)
-	cost = 10
+	cost = 20
 	containername = "\improper Glowstick Crate"
-	num_contained = 10
+	num_contained = 20
 	supply_method = /decl/supply_method/randomized
+
+/decl/hierarchy/supply_pack/supply/colortubes
+	name = "Colored Light Tubes"
+	contains = list(/obj/item/weapon/light/tube/red = 3,
+					/obj/item/weapon/light/tube/green = 3,
+					/obj/item/weapon/light/tube/blue = 3,
+					/obj/item/weapon/light/tube/purple = 3,
+					/obj/item/weapon/light/tube/pink = 3,
+					/obj/item/weapon/light/tube/yellow = 3,
+					/obj/item/weapon/light/tube/orange = 3)
+	cost = 40
+	containername = "\improper Light Tube Crate"
+
+/decl/hierarchy/supply_pack/supply/colorbulbs
+	name = "Colored Light Bulbs"
+	contains = list(/obj/item/weapon/light/bulb/red = 3,
+					/obj/item/weapon/light/bulb/green = 3,
+					/obj/item/weapon/light/bulb/blue = 3,
+					/obj/item/weapon/light/bulb/purple = 3,
+					/obj/item/weapon/light/bulb/pink = 3,
+					/obj/item/weapon/light/bulb/yellow = 3,
+					/obj/item/weapon/light/bulb/orange = 3)
+	cost = 30
+	containername = "\improper Light Bulb Crate"
 
 /decl/hierarchy/supply_pack/supply/softsuits
 	name = "EVA Softsuit w/ Small Airtank"

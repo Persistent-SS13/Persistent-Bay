@@ -19,7 +19,7 @@
 	var/update_stats_every = (1 SECONDS)
 	var/next_stats_update = 0
 	var/stat_updates_to_keep = 5
-
+	var/stage = 0
 /datum/controller/process/lighting/setup()
 	name = "lighting"
 
@@ -33,11 +33,11 @@
 		doWork(1)
 
 /datum/controller/process/lighting/doWork(roundstart)
-
+	stage = 0
 	lighting_update_lights_old = lighting_update_lights //We use a different list so any additions to the update lists during a delay from scheck() don't cause things to be cut from the list without being updated.
 	lighting_update_lights = list()
 	for(var/datum/light_source/L in lighting_update_lights_old)
-
+		stage = 1
 		if(L.check() || L.destroyed || L.force_update)
 			L.remove_lum()
 			if(!L.destroyed)
@@ -56,7 +56,7 @@
 	lighting_update_corners = list()
 	for(var/A in lighting_update_corners_old)
 		var/datum/lighting_corner/C = A
-
+		stage = 2
 		C.update_overlays()
 
 		C.needs_update = FALSE
@@ -67,6 +67,7 @@
 	lighting_update_overlays = list()
 
 	for(var/A in lighting_update_overlays_old)
+		stage = 3
 		var/atom/movable/lighting_overlay/O = A
 		O.update_overlay()
 		O.needs_update = 0
@@ -79,6 +80,7 @@
 	if(next_stats_update <= world.time)
 		next_stats_update = world.time + update_stats_every
 		for(var/stat_name in stats_queues)
+			stage = 4
 			var/stat_sum = 0
 			var/list/stats_queue = stats_queues[stat_name]
 			for(var/count in stats_queue)

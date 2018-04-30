@@ -172,11 +172,18 @@ var/global/datum/ntnet/ntnet_global = new()
 		if(NTNET_SOFTWAREDOWNLOAD)
 			setting_softwaredownload = !setting_softwaredownload
 			add_log("Configuration Updated. Wireless network firewall now [setting_softwaredownload ? "allows" : "disallows"] connection to software repositories.")
+			if(setting_softwaredownload)
+				// If you turned it off and on again, rebuild the software list. This fetches new NTNet programs.
+				build_software_lists()
+				add_log("Software repository update complete.")
 		if(NTNET_PEERTOPEER)
 			setting_peertopeer = !setting_peertopeer
 			add_log("Configuration Updated. Wireless network firewall now [setting_peertopeer ? "allows" : "disallows"] peer to peer network traffic.")
 		if(NTNET_COMMUNICATION)
 			setting_communication = !setting_communication
+			if(setting_communication)
+				build_news_list()
+				add_log("News repository updated.")
 			add_log("Configuration Updated. Wireless network firewall now [setting_communication ? "allows" : "disallows"] instant messaging and similar communication services.")
 		if(NTNET_SYSTEMCONTROL)
 			setting_systemcontrol = !setting_systemcontrol

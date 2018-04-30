@@ -1,45 +1,38 @@
-// Returns which access is relevant to passed network. Used by the program.
-/proc/get_camera_access(var/network)
+// Returns whether a network is faction restricted
+/proc/is_faction_restricted(var/network)
 	if(!network)
 		return 0
-	. = GLOB.using_map.get_network_access(network)
-	if(.)
-		return
 
-	switch(network)
-		if(NETWORK_ENGINEERING, NETWORK_ALARM_ATMOS, NETWORK_ALARM_CAMERA, NETWORK_ALARM_FIRE, NETWORK_ALARM_POWER)
-			return access_engine
-		if(NETWORK_CRESCENT, NETWORK_ERT)
-			return access_cent_specops
-		if(NETWORK_MEDICAL)
-			return access_medical
-		if(NETWORK_MINE)
-			return access_mailsorting // Cargo office - all cargo staff should have access here.
-		if(NETWORK_RESEARCH)
-			return core_access_science_programs
-		if(NETWORK_THUNDER)
-			return 0
+	if(network == NETWORK_PUBLIC) // Let people create public news channels! Horray!
+		return 0
 
-	return access_security // Default for all other networks
+	return 1 // Assume faction restriction
 
 /datum/computer_file/program/camera_monitor
 	filename = "cammon"
 	filedesc = "Camera Monitoring"
-	nanomodule_path = /datum/nano_module/camera_monitor
+	nanomodule_path = /datum/nano_module/program/camera_monitor
 	program_icon_state = "cameras"
 	program_menu_icon = "search"
-	extended_desc = "This program allows remote access to the camera system. Some camera networks may have additional access requirements."
+	extended_desc = "This program allows security personnel remote access to the camera system of the connected network."
 	size = 12
 	available_on_ntnet = 1
 	requires_ntnet = 1
 
-/datum/nano_module/camera_monitor
+/datum/nano_module/program/camera_monitor
 	name = "Camera Monitoring program"
 	var/obj/machinery/camera/current_camera = null
 	var/current_network = null
+	var/datum/world_faction/connected_faction
 
-/datum/nano_module/camera_monitor/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
+/datum/nano_module/program/camera_monitor/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
 	var/list/data = host.initial_data()
+	if(program.computer.network_card && program.computer.network_card.connected_network)
+		connected_faction = program.computer.network_card.connected_network.holder
+	if(connected_faction)
+		data["faction_uid"] = connected_faction.uid
+		data["faction_name"] = connected_faction.name
+		data["faction_netuid"] = connected_faction.network.net_uid
 
 	data["current_camera"] = current_camera ? current_camera.nano_structure() : null
 	data["current_network"] = current_network
@@ -48,11 +41,13 @@
 	for(var/network in GLOB.using_map.station_networks)
 		all_networks.Add(list(list(
 							"tag" = network,
-							"has_access" = can_access_network(user, get_camera_access(network))
+							"has_access" = can_access_network(user, network, is_faction_restricted(network))
 							)))
 
-	all_networks = modify_networks_list(all_networks)
+	// .Add faction networks to all_networks here
+	// be sure to check_access(user, 5, connected_faction.uid)
 
+	all_networks = modify_networks_list(all_networks)
 	data["networks"] = all_networks
 
 	if(current_network)
@@ -69,17 +64,22 @@
 		ui.open()
 
 // Intended to be overriden by subtypes to manually add non-station networks to the list.
-/datum/nano_module/camera_monitor/proc/modify_networks_list(var/list/networks)
+/datum/nano_module/program/camera_monitor/proc/modify_networks_list(var/list/networks)
 	return networks
 
-/datum/nano_module/camera_monitor/proc/can_access_network(var/mob/user, var/network_access)
-	// No access passed, or 0 which is considered no access requirement. Allow it.
-	if(!network_access)
+/datum/nano_module/program/camera_monitor/proc/can_access_network(var/mob/user, var/network, var/restricted)
+	// Anyone can view public networks
+	if(!restricted || !connected_faction)
 		return 1
 
-	return check_access(user, access_security) || check_access(user, network_access)
+	// If it's a network that matches the connected faction net uid ('nt_net'), it is the security network for that faction
+	if(network == connected_faction.network.net_uid)
+		return check_access(user, 5, connected_faction.uid)
 
-/datum/nano_module/camera_monitor/Topic(href, href_list)
+	// Otherwise it is someone else's, refuse access
+	return 0
+
+/datum/nano_module/program/camera_monitor/Topic(href, href_list)
 	if(..())
 		return 1
 
@@ -94,8 +94,8 @@
 		return 1
 
 	else if(href_list["switch_network"])
-		// Either security access, or access to the specific camera network's department is required in order to access the network.
-		if(can_access_network(usr, get_camera_access(href_list["switch_network"])))
+		// Security access is required in order to access the network.
+		if(can_access_network(usr, href_list["switch_network"], is_faction_restricted(href_list["switch_network"])))
 			current_network = href_list["switch_network"]
 		else
 			to_chat(usr, "\The [nano_host()] shows an \"Network Access Denied\" error message.")
@@ -106,7 +106,7 @@
 		usr.reset_view(current_camera)
 		return 1
 
-/datum/nano_module/camera_monitor/proc/switch_to_camera(var/mob/user, var/obj/machinery/camera/C)
+/datum/nano_module/program/camera_monitor/proc/switch_to_camera(var/mob/user, var/obj/machinery/camera/C)
 	//don't need to check if the camera works for AI because the AI jumps to the camera location and doesn't actually look through cameras.
 	if(isAI(user))
 		var/mob/living/silicon/ai/A = user
@@ -123,7 +123,7 @@
 	user.reset_view(C)
 	return 1
 
-/datum/nano_module/camera_monitor/proc/set_current(var/obj/machinery/camera/C)
+/datum/nano_module/program/camera_monitor/proc/set_current(var/obj/machinery/camera/C)
 	if(current_camera == C)
 		return
 
@@ -136,14 +136,14 @@
 		if(istype(L))
 			L.tracking_initiated()
 
-/datum/nano_module/camera_monitor/proc/reset_current()
+/datum/nano_module/program/camera_monitor/proc/reset_current()
 	if(current_camera)
 		var/mob/living/L = current_camera.loc
 		if(istype(L))
 			L.tracking_cancelled()
 	current_camera = null
 
-/datum/nano_module/camera_monitor/check_eye(var/mob/user as mob)
+/datum/nano_module/program/camera_monitor/check_eye(var/mob/user as mob)
 	if(!current_camera)
 		return 0
 	var/viewflag = current_camera.check_eye(user)
@@ -158,26 +158,45 @@
 	filedesc = "Advanced Camera Monitoring"
 	extended_desc = "This program allows remote access to the camera system. Some camera networks may have additional access requirements. This version has an integrated database with additional encrypted keys."
 	size = 14
-	nanomodule_path = /datum/nano_module/camera_monitor/ert
+	nanomodule_path = /datum/nano_module/program/camera_monitor/ert
 	available_on_ntnet = 0
 
-/datum/nano_module/camera_monitor/ert
+/datum/nano_module/program/camera_monitor/ert
 	name = "Advanced Camera Monitoring Program"
 	available_to_ai = FALSE
 
 // The ERT variant has access to ERT and crescent cams, but still checks for accesses. ERT members should be able to use it.
-/datum/nano_module/camera_monitor/ert/modify_networks_list(var/list/networks)
+/datum/nano_module/program/camera_monitor/ert/modify_networks_list(var/list/networks)
 	..()
 	networks.Add(list(list("tag" = NETWORK_ERT, "has_access" = 1)))
 	networks.Add(list(list("tag" = NETWORK_CRESCENT, "has_access" = 1)))
 	return networks
 
-/datum/nano_module/camera_monitor/apply_visual(mob/M)
+/datum/nano_module/program/camera_monitor/apply_visual(mob/M)
 	if(current_camera)
 		current_camera.apply_visual(M)
 	else
 		remove_visual(M)
 
-/datum/nano_module/camera_monitor/remove_visual(mob/M)
+/datum/nano_module/program/camera_monitor/remove_visual(mob/M)
 	if(current_camera)
 		current_camera.remove_visual(M)
+
+// Public variant of the camera program
+/datum/computer_file/program/camera_monitor/tv
+	filename = "tv"
+	filedesc = "Television"
+	extended_desc = "This program allows the reception of broadcast television."
+	size = 4
+	nanomodule_path = /datum/nano_module/program/camera_monitor/tv
+	available_on_ntnet = 1
+
+/datum/nano_module/program/camera_monitor/tv
+	name = "Television"
+	available_to_ai = FALSE
+
+// The television variant has access only to the Public network
+/datum/nano_module/program/camera_monitor/tv/modify_networks_list(var/list/networks)
+	var/list/public_networks[0]
+	public_networks.Add(list(list("tag" = NETWORK_PUBLIC, "has_access" = 1)))
+	return public_networks

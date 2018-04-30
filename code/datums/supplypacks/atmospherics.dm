@@ -93,6 +93,13 @@
 	containername = "Portable Air Pump Shipment"
 	containertype = /obj/structure/largecrate
 
+/decl/hierarchy/supply_pack/atmosperics/sublimator
+	name = "Sublimator"
+	contains = list(/obj/machinery/portable_atmospherics/sublimator)
+	cost = 250
+	containername = "\improper Sublimator Crate"
+	containertype = /obj/structure/largecrate
+
 /decl/hierarchy/supply_pack/atmospherics/bulk_canister_air
 	name = "Large Air Canister Shipment (x10)"
 	contains = list(/obj/machinery/portable_atmospherics/canister/air = 10)

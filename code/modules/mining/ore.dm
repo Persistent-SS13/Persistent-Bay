@@ -48,6 +48,9 @@
 /obj/item/weapon/ore/coal
 	ore = /ore/coal
 
+/obj/item/weapon/ore/salt
+	ore = /ore/salt
+
 /obj/item/weapon/ore/glass
 	ore = /ore/glass
 	slot_flags = SLOT_HOLSTER
@@ -81,6 +84,12 @@
 
 /obj/item/weapon/ore/hydrogen
 	ore = /ore/hydrogen
+
+/obj/item/weapon/ore/ice
+	ore = /ore/ice
+
+/obj/item/weapon/ore/dryice
+	ore = /ore/dryice
 
 /obj/item/weapon/ore/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/device/core_sampler))

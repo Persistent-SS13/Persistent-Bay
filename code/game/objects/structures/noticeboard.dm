@@ -24,6 +24,7 @@
 	. = ..()
 /obj/structure/noticeboard/after_load()
 	icon_state = "nboard0[notices]"
+	notices = contents.len
 	..()
 //attaching papers!!
 /obj/structure/noticeboard/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)

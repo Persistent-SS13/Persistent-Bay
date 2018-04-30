@@ -103,6 +103,17 @@
 /obj/item/stack/material/marble/fifty
 	amount = 50
 
+/obj/item/stack/material/salt
+	name = "salt brick"
+	icon_state = "sheet-marble"
+	default_type = "salt"
+
+/obj/item/stack/material/salt/ten
+	amount = 10
+
+/obj/item/stack/material/salt/fifty
+	amount = 50
+
 /obj/item/stack/material/diamond
 	name = "diamond"
 	icon_state = "sheet-diamond"
@@ -165,6 +176,24 @@
 
 /obj/item/stack/material/platinum/ten
 	amount = 10
+
+/obj/item/stack/material/ice
+	name = "ice"
+	icon_state = "sheet-marble"
+	default_type = "ice"
+	apply_colour = 1
+
+/obj/item/stack/material/ice/five
+	amount = 5
+
+/obj/item/stack/material/dryice
+	name = "dry ice"
+	icon_state = "sheet-silver"
+	default_type = "dryice"
+	apply_colour = 1
+
+/obj/item/stack/material/dryice/five
+	amount = 5
 
 //Extremely valuable to Research.
 /obj/item/stack/material/mhydrogen

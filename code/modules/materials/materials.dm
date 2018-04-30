@@ -439,7 +439,7 @@ var/list/name_to_material
 	name = "glass"
 	stack_type = /obj/item/stack/material/glass
 	flags = MATERIAL_BRITTLE
-	icon_colour = "#00e1ff"
+	icon_colour = "#4f8cbb"
 	opacity = 0.3
 	integrity = 50
 	shard_type = SHARD_SHARD
@@ -536,7 +536,7 @@ var/list/name_to_material
 	display_name = "reinforced glass"
 	stack_type = /obj/item/stack/material/glass/reinforced
 	flags = MATERIAL_BRITTLE
-	icon_colour = "#00e1ff"
+	icon_colour = "#4f8cbb"
 	opacity = 0.3
 	integrity = 100
 	melting_point = T0C + 750

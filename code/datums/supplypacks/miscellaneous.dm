@@ -104,7 +104,7 @@
 
 /decl/hierarchy/supply_pack/miscellaneous/clothing
 	num_contained = 10
-	contains = list(/obj/item/clothing/accessory/toggleable/flannel,
+	contains = list(/obj/item/clothing/accessory/toggleable/flannel/red,
 					/obj/item/clothing/accessory/toggleable/hawaii,
 					/obj/item/clothing/accessory/toggleable/zhongshan,
 					/obj/item/clothing/accessory/toggleable/nanotrasen_jacket,

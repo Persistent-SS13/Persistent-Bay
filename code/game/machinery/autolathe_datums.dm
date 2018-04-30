@@ -111,7 +111,7 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	category = "Tools"
 
 /datum/autolathe/recipe/t_scanner
-	name = "t-ray scanner"
+	name = "T-ray scanner"
 	path = /obj/item/device/t_scanner
 	category = "Tools"
 

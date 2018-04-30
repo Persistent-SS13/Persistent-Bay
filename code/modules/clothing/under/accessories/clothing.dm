@@ -192,9 +192,9 @@
 	name = "red flannel shirt"
 	desc = "A comfy, red plaid flannel shirt."
 	icon_state = "flannel"
-	var/rolled = 0
-	var/tucked = 0
-	var/buttoned = 0
+	rolled = 0
+	tucked = 0
+	buttoned = 0
 	color = "#da0205"
 
 /obj/item/clothing/accessory/toggleable/flannel/on_attached(obj/item/clothing/under/S, mob/user as mob)

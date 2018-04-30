@@ -1,3 +1,196 @@
+GLOBAL_LIST_EMPTY(all_docking_beacons)
+
+
+/obj/structure/hologram
+	name = ""
+	mouse_opacity = 0
+	simulated = 0
+	anchored = 1
+	plane = LIGHTING_PLANE
+	layer = LIGHTING_LAYER
+	should_save = 0
+/obj/structure/hologram/dockzone
+	icon = 'icons/obj/machines/dock_beacon.dmi'
+	icon_state = "dockzone"
+/obj/machinery/docking_beacon
+	name = "docking beacon"
+	desc = "Can be installed to provide a landing and launch zone for shuttles, and to facilitate the construction of shuttles.."
+	anchored = 0
+	density = 1
+	icon = 'icons/obj/machines/dock_beacon.dmi'
+	icon_state = "unpowered"
+
+	use_power = 0			//1 = idle, 2 = active
+	var/status = 0 // 0 = unpowered, 1 = closed 2 = open 3 = contruction mode 4 = occupied 5 = obstructed
+	req_access = list(core_access_command_programs)
+	var/datum/world_faction/faction
+	var/dimensions = 1 // 1 = 5*7, 2 = 7*7
+	var/highlighted = 0
+	var/id = "docking port"
+	var/visible_mode = 0 // 0 = invisible, 1 = visible, docking auth required, 2 = visible, anyone can dock
+
+/obj/machinery/docking_beacon/New()
+	..()
+	GLOB.all_docking_beacons |= src
+/obj/machinery/docking_beacon/after_load()
+	if(req_access_faction && req_access_faction != "" || (faction && faction.uid != req_access_faction))
+		faction = get_faction(req_access_faction)
+/obj/machinery/docking_beacon/attack_hand(var/mob/user as mob)
+	ui_interact(user)
+
+/obj/machinery/docking_beacon/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
+
+	if(user.stat)
+		return
+
+	// this is the data which will be sent to the ui
+	var/data[0]
+	if(req_access_faction && req_access_faction != "" || (faction && faction.uid != req_access_faction))
+		faction = get_faction(req_access_faction)
+
+	data["highlighted"] = highlighted
+	data["visible"] = visible_mode
+	if(faction)
+		data["connected"] = 1
+		data["name"] = faction.name
+		data["id"] = id
+		switch(status)
+			if(0)
+				data["unpowered"] = 1
+				data["status"] = "Unpowered"
+			if(1)
+				data["status"] = "Closed"
+			if(2)
+				data["status"] = "Open"
+			if(3)
+				data["status"] = "Shuttle Construction"
+				data["construction"] = 1
+			if(4)
+				data["status"] = "Occupied"
+			if(5)
+				data["status"] = "Obstructed"
+		data["dimenson"] = dimensions
+
+	// update the ui if it exists, returns null if no ui is passed/found
+	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	if (!ui)
+		// the ui does not exist, so we'll create a new() one
+		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
+		ui = new(user, src, ui_key, "docking_beacon.tmpl", "Docking Beacon UI", 500, 550)
+		// when the ui is first opened this is the data it will use
+		ui.set_initial_data(data)
+		// open the new ui window
+		ui.open()
+
+
+/obj/machinery/docking_beacon/update_icon()
+	switch(status)
+		if(0)
+			icon_state = "unpowered"
+		if(1)
+			icon_state = "red"
+		if(2)
+			icon_state = "green"
+		if(3)
+			icon_state = "yellow"
+		if(4 to 5)
+			icon_state = "red"
+/obj/machinery/docking_beacon/Topic(href, href_list)
+	if(stat & (NOPOWER|BROKEN))
+		return 0 // don't update UIs attached to this object
+	if(href_list["power_off"])
+		status = 0
+	if(href_list["power_on"])
+		if(anchored)
+			if(status == 0)
+				status = 1
+	if(href_list["status_close"])
+		if(check_obstructed())
+			status = 5
+		else
+			status = 1
+	if(href_list["status_open"])
+		if(check_obstructed())
+			status = 5
+		else if(check_occupied())
+			status = 4
+		else
+			status = 2
+	if(href_list["status_construct"])
+		if(check_occupied())
+			status = 4
+		else
+			status = 3
+	if(href_list["finalize"])
+		finalize(usr)
+	if(href_list["highlight"])
+		if(!highlighted)
+			highlighted = 1
+			spawn(0)
+				highlight()
+	if(href_list["sync"])
+		faction = get_faction(usr.GetFaction())
+		if(faction)
+			req_access_faction = faction.uid
+			if(!allowed(usr))
+				faction = null
+				req_access_faction = ""
+			else
+				req_access_faction = faction.uid
+	if(href_list["set_visible"])
+		visible_mode = text2num(href_list["set_visible"])
+	if(href_list["change_id"])
+		var/select_name = sanitizeName(input(usr,"Enter a new dock ID","DOCK ID") as null|text, MAX_NAME_LEN)
+		if(select_name)
+			id = select_name
+	update_icon()
+	add_fingerprint(usr)
+	return 1 // update UIs attached to this object
+
+
+/obj/machinery/docking_beacon/proc/highlight()
+	var/list/turfs = get_turfs()
+	var/list/holos = list()
+	for(var/turf/T in turfs)
+		var/obj/structure/hologram/dockzone/holo = new(T)
+		holos |= holo
+	sleep(15 SECONDS)
+	highlighted = 0
+	for(var/obj/holo in holos)
+		holo.loc = null
+		qdel(holo)
+
+/obj/machinery/docking_beacon/proc/check_obstructed()
+	var/list/turfs = get_turfs()
+	for(var/turf/T in turfs)
+		if(!istype(T, /turf/space))
+			return 1
+	return 0
+/obj/machinery/docking_beacon/proc/check_occupied()
+	var/list/turfs = get_turfs()
+	for(var/turf/T in turfs)
+		if(!istype(T.loc, /area/space))
+			return 1
+	return 0
+
+/obj/machinery/docking_beacon/proc/finalize(var/mob/user)
+
+
+/obj/machinery/docking_beacon/proc/get_turfs()
+	var/list/return_turfs = list()
+	/**
+	switch(dir)
+		if(NORTH)
+			return_turfs = block(locate(x-2,y+1,z), locate(x+2,y+8,z))
+		if(WEST)
+			return_turfs = block(locate(x+1,y+2,z), locate(x+8,y-2,z))
+		if(SOUTH)
+			return_turfs = block(locate(x-2,y-1,z), locate(x+2,y-8,z))
+		if(EAST)
+			return_turfs = block(locate(x-1,y+2,z), locate(x-8,y-2,z))
+	**/
+	return_turfs = block(locate(x-2,y-1,z), locate(x+2,y-8,z))
+	return return_turfs
 /obj/machinery/bluespace_satellite
 	name = "bluespace satellite"
 	desc = "Can be configured and launched to create a new logistics network."
@@ -32,8 +225,6 @@
 
 /obj/machinery/bluespace_satellite/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 
-	if(user.stat)
-		return
 
 	// this is the data which will be sent to the ui
 	var/data[0]
@@ -109,6 +300,7 @@
 		new_faction.leader_name = starting_leader
 		new_faction.network.invisible = 1
 		new_faction.network.net_uid = chosen_netuid
+		new_faction.network.name = chosen_netuid
 		var/obj/effect/portal/portal = new(loc)
 		loc.visible_message("The \icon[src] [src] beams away!.")
 		sleep(1 SECOND)
@@ -117,6 +309,6 @@
 		qdel(portal)
 		loc = null
 		qdel(src)
-		
+
 	add_fingerprint(usr)
 	return 1 // update UIs attached to this object

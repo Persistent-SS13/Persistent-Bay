@@ -9,8 +9,12 @@
 	var/obj/machinery/mineral/stacking_machine/machine = null
 
 /obj/machinery/mineral/stacking_unit_console/New()
-
 	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/stacking_unit_console(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	RefreshParts()
+
 	for(var/obj/machinery/mineral/processing_unit/unit in view(7, src))
 		src.machine = unit
 		break
@@ -18,6 +22,13 @@
 		machine.console = src
 	else
 		qdel(src)
+
+/obj/machinery/mineral/stacking_unit_console/attackby(var/obj/O as obj, var/mob/user as mob)
+	if(default_deconstruction_screwdriver(user, O))
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	..()
 
 /obj/machinery/mineral/stacking_unit_console/attack_hand(mob/user)
 	add_fingerprint(user)
@@ -79,6 +90,15 @@
 
 /obj/machinery/mineral/stacking_machine/New()
 	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/stacking_machine(src)
+	component_parts += new /obj/item/stack/material/steel(src)
+	component_parts += new /obj/item/stack/material/steel(src)
+	component_parts += new /obj/item/stack/material/steel(src)
+	component_parts += new /obj/item/stack/material/steel(src)
+	component_parts += new /obj/item/stack/material/steel(src)
+	RefreshParts()
+
 
 	for(var/stacktype in subtypesof(/obj/item/stack/material))
 		var/obj/item/stack/S = stacktype
@@ -102,6 +122,14 @@
 			if(src.output) break
 		return
 	return
+
+/obj/machinery/mineral/stacking_machine/attackby(var/obj/O as obj, var/mob/user as mob)
+	if(default_deconstruction_screwdriver(user, O))
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	..()
+
 /obj/machinery/mineral/stacking_machine/after_load()
 	spawn( 5 )
 		for (var/dir in GLOB.cardinal)

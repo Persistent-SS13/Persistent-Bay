@@ -125,7 +125,8 @@
 		if(names.len > 0)
 			dat += "<tr><th colspan=3>[department["header"]]</th></tr>"
 			for(var/name in names)
-				dat += "<tr class='candystripe'><td>[mil_ranks[name]][name]</td><td>[names[name]]</td><td>[isactive[name]]</td></tr>"
+				if(isactive[name] != "Inactive")
+					dat += "<tr class='candystripe'><td>[mil_ranks[name]][name]</td><td>[names[name]]</td><td>[isactive[name]]</td></tr>"
 
 	dat += "</table>"
 	dat = replacetext(dat, "\n", "") // so it can be placed on paper correctly
@@ -183,15 +184,16 @@
 			if(branch_obj && rank_obj)
 				mil_ranks[name] = "<abbr title=\"[rank_obj.name], [branch_obj.name]\">[rank_obj.name_short]</abbr> "
 
-		if(OOC)
-			var/active = 0
-			for(var/mob/M in GLOB.player_list)
-				if(M.real_name == name && M.client && M.client.inactivity <= 10 * 60 * 10)
-					active = 1
-					break
-			isactive[name] = active ? "Active" : "Inactive"
+		var/active = 0
+		for(var/mob/M in GLOB.player_list)
+			if(M.real_name == name && M.client && M.client.inactivity <= 10 * 60 * 10)
+				active = 1
+				break
+
+		if(!active)
+			isactive[name] = "Inactive"
 		else
-			isactive[name] = CR.get_status()
+			isactive[name] = OOC ? "Active" : CR.get_status()
 
 		var/datum/job/job = job_master.occupations_by_title[rank]
 		var/found_place = 0
@@ -220,7 +222,8 @@
 		if(names.len > 0)
 			dat += "<tr><th colspan=3>[department["header"]]</th></tr>"
 			for(var/name in names)
-				dat += "<tr class='candystripe'><td>[mil_ranks[name]][name]</td><td>[names[name]]</td><td>[isactive[name]]</td></tr>"
+				if(isactive[name] != "Inactive")
+					dat += "<tr class='candystripe'><td>[mil_ranks[name]][name]</td><td>[names[name]]</td><td>[isactive[name]]</td></tr>"
 
 	dat += "</table>"
 	dat = replacetext(dat, "\n", "") // so it can be placed on paper correctly

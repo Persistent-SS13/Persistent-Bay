@@ -53,7 +53,7 @@ var/list/admin_verbs_admin = list(
 	/client/proc/manage_silicon_laws,	// Allows viewing and editing silicon laws. ,
 	/client/proc/check_antagonists,
 	/client/proc/admin_memo,			//admin memo system. show/delete/write. +SERVER needed to delete admin memos of others,
-	/client/proc/dsay,					//talk in deadchat using our ckey
+	/client/proc/dsay,					//talk in deadchat using our ckey,
 //	/client/proc/toggle_hear_deadcast,	//toggles whether we hear deadchat,
 	/client/proc/investigate_show,		//various admintools for investigation. Such as a singulo grief-log,
 	/datum/admins/proc/toggleooc,		//toggles ooc on/off for everyone,
@@ -61,11 +61,12 @@ var/list/admin_verbs_admin = list(
 	/datum/admins/proc/togglelooc,		//toggles looc on/off for everyone,
 	/datum/admins/proc/toggleoocdead,	//toggles ooc on/off for everyone who is dead,
 	/datum/admins/proc/toggledsay,		//toggles dsay on/off for everyone,
-	/datum/admins/proc/savenow, // Persistent edit, savenow saves station
+	/datum/admins/proc/savenow,			//persistent edit, savenow saves the station,
 	/datum/admins/proc/changeambience,
 	/datum/admins/proc/buildaccounts,
+	/datum/admins/proc/retrieve_account,
 	/datum/admins/proc/savechars,
-	/datum/admins/proc/loadnow, // Persistent edit, loads the station
+	/datum/admins/proc/loadnow,			//persistent edit, loadnow loads the station,
 	/client/proc/game_panel,			//game panel, allows to change game-mode etc,
 	/client/proc/cmd_admin_say,			//admin-only ooc chat,
 	/datum/admins/proc/togglehubvisibility, //toggles visibility on the BYOND Hub,

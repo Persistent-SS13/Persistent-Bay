@@ -4,7 +4,6 @@
 	icon_state = "pipe_d"
 	density = 1
 	anchored = 1
-	var/unwrenched = 0
 	var/wait = 0
 
 /obj/machinery/pipedispenser/attack_hand(user as mob)
@@ -82,7 +81,7 @@
 /obj/machinery/pipedispenser/Topic(href, href_list)
 	if(..())
 		return
-	if(unwrenched || !usr.canmove || usr.stat || usr.restrained() || !in_range(loc, usr))
+	if(!src.anchored || !usr.canmove || usr.stat || usr.restrained() || !in_range(loc, usr))
 		usr << browse(null, "window=pipedispenser")
 		return
 	usr.set_machine(src)
@@ -113,7 +112,7 @@
 		qdel(W)
 		return
 	else if(isWrench(W))
-		if (unwrenched==0)
+		if (src.anchored==1)
 			playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 			to_chat(user, "<span class='notice'>You begin to unfasten \the [src] from the floor...</span>")
 			if (do_after(user, 40, src))
@@ -123,10 +122,9 @@
 					"You hear ratchet.")
 				src.anchored = 0
 				src.stat |= MAINT
-				src.unwrenched = 1
 				if (usr.machine==src)
 					usr << browse(null, "window=pipedispenser")
-		else /*if (unwrenched==1)*/
+		else /*if (anchored==0)*/
 			playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 			to_chat(user, "<span class='notice'>You begin to fasten \the [src] to the floor...</span>")
 			if (do_after(user, 20, src))
@@ -136,7 +134,6 @@
 					"You hear ratchet.")
 				src.anchored = 1
 				src.stat &= ~MAINT
-				src.unwrenched = 0
 				power_change()
 	else
 		return ..()
@@ -208,7 +205,7 @@ Nah
 	usr.set_machine(src)
 	src.add_fingerprint(usr)
 	if(href_list["dmake"])
-		if(unwrenched || !usr.canmove || usr.stat || usr.restrained() || !in_range(loc, usr))
+		if(!src.anchored || !usr.canmove || usr.stat || usr.restrained() || !in_range(loc, usr))
 			usr << browse(null, "window=pipedispenser")
 			return
 		if(!wait)
@@ -268,8 +265,6 @@ Nah
 // adding a pipe dispensers that spawn unhooked from the ground
 /obj/machinery/pipedispenser/orderable
 	anchored = 0
-	unwrenched = 1
 
 /obj/machinery/pipedispenser/disposal/orderable
 	anchored = 0
-	unwrenched = 1

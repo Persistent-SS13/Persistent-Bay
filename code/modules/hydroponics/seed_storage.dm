@@ -150,15 +150,16 @@
 /obj/machinery/seed_storage/interact(mob/user as mob)
 	if (..())
 		return
-
+	
 	if (!seeds_initialized)
-		for(var/typepath in starting_seeds)
-			var/amount = starting_seeds[typepath]
-			if(isnull(amount)) amount = 1
+		if(!map_storage_loaded)
+			for(var/typepath in starting_seeds)
+				var/amount = starting_seeds[typepath]
+				if(isnull(amount)) amount = 1
 
-			for (var/i = 1 to amount)
-				var/O = new typepath
-				add(O)
+				for (var/i = 1 to amount)
+					var/O = new typepath
+					add(O)
 		seeds_initialized = 1
 
 	var/dat = "<center><h1>Seed storage contents</h1></center>"

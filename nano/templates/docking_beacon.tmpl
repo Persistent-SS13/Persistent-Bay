@@ -1,0 +1,73 @@
+{{if data.connected}}
+	<h2>Connected to {{:data.name}}. Used for sending, recieving and constructing bluespace shuttles.</h2>
+	<br>
+	<div class='item'>
+		<div class='itemLabel'>
+			Current Status:
+		</div>
+		<div class='itemContent'>
+			{{:data.status}}
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			Toggle Power:
+		</div>
+		<div class='itemContent'>
+			{{:helper.link('Off', '', {'power_off' : '1'}, data.unpowered ? 'selected' : null)}}{{:helper.link('On', '', {'power_on' : '1'}, !data.unpowered ? 'selected' : null)}}
+		</div>
+	</div>
+	The beacon can only be unanchored and moved when the power is off. It will still retain its network sync during transport.
+	{{if !data.unpowered}}
+		<div class='item'>
+			<div class='itemLabel'>
+				Port ID:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link(data.id, '', {'change_id' : '1'}, null)}}
+			</div>
+		</div>
+		The Port ID is what is displayed when viewing the port from shuttle and station computers.
+		<div class='item'>
+			<div class='itemLabel'>
+				Visibility Mode:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link('Authorized Only', '', {'set_visible' : '0'}, data.visible == 0 ? 'selected' : null)}}{{:helper.link('Visible, Restricted', '', {'set_visible' : '1'}, data.visible == 1 ? 'selected' : null)}}{{:helper.link('Any Access', '', {'set_visible' : '2'}, data.visible == 2 ? 'selected' : null)}}
+			</div>
+		</div>
+		Authorized Only: Only those with proper access on the docks network can see and use the dock<br>
+		Visible, Restriced: The dock is visible but those without proper access must make a docking request and be authorized<br>
+		Any Access: The dock is visible and anyone can dock with it at any time
+		<div class='item'>
+			<div class='itemLabel'>
+				Operating Mode:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link('Closed', '', {'status_close' : '1'}, data.status == 'Closed' ? 'selected' : null)}}{{:helper.link('Open', '', {'status_open' : '1'}, data.status == 'Open' ? 'selected' : null)}}{{:helper.link('Shuttle Construction', '', {'status_construct' : '1'}, data.status == 'Shuttle Construction' ? 'selected' : null)}}{{:helper.link('Occupied', '', {'status_occupied' : '1'}, data.status == 'Occupied' ? 'selected' : 'disabled')}}{{:helper.link('Obstructed', '', {'status_occupied' : '1'}, data.status == 'Obstructed' ? 'selected' : 'disabled')}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Highlight Dock Area:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link('Highlight', '', {'highlight' : '1'}, data.highlighted ? 'selected' : null)}}
+			</div>
+		</div>
+		{{if data.construction}}
+			<div class='item'>
+				<div class='itemLabel'>
+					Finalize Construction:
+				</div>
+				<div class='itemContent'>
+					{{:helper.link('Finalize', '', {'finalize' : '1'}, null)}}
+				</div>
+			</div>
+			When theirs an appropriate amount of engines and a valid bridge computer in the beacon area, you can finalize the shuttle construction here. A roof will be automatically constructed if needed after finalization.
+		{{/if}}
+	{{/if}}
+{{else}}
+	<h2>This beacon is not synced to a network. Authorized personel can sync this beacon to a network.</h2>
+	{{:helper.link('Sync to network', '', {'sync' : '1'}, null)}}
+{{/if}}

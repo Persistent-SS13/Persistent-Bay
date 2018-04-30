@@ -10,6 +10,15 @@
 
 	var/obj/item/weapon/virusdish/dish = null
 
+/obj/machinery/disease2/diseaseanalyser/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/diseaseanalyser(src)
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/computer_hardware/hard_drive/portable(src)
+	RefreshParts()
+
 /obj/machinery/disease2/diseaseanalyser/attackby(var/obj/O as obj, var/mob/user as mob)
 	if(!istype(O,/obj/item/weapon/virusdish)) return
 
@@ -22,6 +31,12 @@
 	O.loc = src
 
 	user.visible_message("[user] adds \a [O] to \the [src]!", "You add \a [O] to \the [src]!")
+
+	if(default_deconstruction_screwdriver(user, O))
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	..()
 
 /obj/machinery/disease2/diseaseanalyser/Process()
 	if(stat & (NOPOWER|BROKEN))

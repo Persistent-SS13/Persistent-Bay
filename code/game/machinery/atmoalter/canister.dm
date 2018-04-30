@@ -51,8 +51,8 @@
 
 /obj/machinery/portable_atmospherics/canister/hydrogen
 	name = "\improper Canister: \[Hydrogen\]"
-	icon_state = "red"
-	canister_color = "red"
+	icon_state = "purple"
+	canister_color = "purple"
 	can_label = 0
 
 
@@ -106,7 +106,9 @@
 /obj/machinery/portable_atmospherics/canister/empty/sleeping_agent
 	icon_state = "redws"
 	canister_type = /obj/machinery/portable_atmospherics/canister/sleeping_agent
-
+/obj/machinery/portable_atmospherics/canister/empty/hydrogen
+	icon_state = "purple"
+	canister_type = /obj/machinery/portable_atmospherics/canister/hydrogen
 
 
 
@@ -181,6 +183,7 @@ update_flag
 		return 1
 
 	if (src.health <= 10)
+		disconnect()
 		var/atom/location = src.loc
 		location.assume_air(air_contents)
 
@@ -360,6 +363,7 @@ update_flag
 			"\[N2O\]" = "redws", \
 			"\[N2\]" = "red", \
 			"\[O2\]" = "blue", \
+			"\[Hydrogen\]" = "purple", \
 			"\[Phoron\]" = "orange", \
 			"\[CO2\]" = "black", \
 			"\[Air\]" = "grey", \

@@ -216,7 +216,7 @@
 		. = 1
 	if(href_list["nowindow"]) // here for pAIs, maybe others will want it, idk
 		return 1
-	
+
 	if(.)
 		GLOB.nanomanager.update_uis(src)
 
@@ -373,7 +373,7 @@
 			"level" = position.z, // The source's z level
 			"language" = speaking,
 			"verb" = verb,
-			"faction_uid" = public_mode ? faction_uid : ""
+			"faction_uid" = public_mode ? "" : faction_uid
 		)
 		signal.frequency = connection.frequency // Quick frequency set
 

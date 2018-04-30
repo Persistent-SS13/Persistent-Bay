@@ -14,7 +14,7 @@
 //
 // Tests Life() and mob breathing in space.
 //
-
+/*
 datum/unit_test/human_breath
 	name = "MOB: Breathing Species Suffocate in Space"
 	var/list/test_subjects = list()
@@ -25,6 +25,7 @@ datum/unit_test/human_breath/start_test()
 
 	if(!istype(T, /turf/space))	//If the above isn't a space turf then we force it to find one will most likely pick 1,1,1
 		T = locate(/turf/space)
+
 	for(var/species_name in all_species)
 		var/datum/species/S = all_species[species_name]
 		var/mob/living/carbon/human/H = new(T, S.name)
@@ -58,7 +59,7 @@ datum/unit_test/human_breath/check_result()
 		pass("All breathing species mobs suffocated in space.")
 
 	return 1	// return 1 to show we're done and don't want to recheck the result.
-
+*/
 // ============================================================================
 
 /var/default_mobloc = null
@@ -69,6 +70,7 @@ proc/create_test_mob_with_mind(var/turf/mobloc = null, var/mobtype = /mob/living
 	if(isnull(mobloc))
 		if(!default_mobloc)
 			for(var/turf/simulated/floor/tiled/T in world)
+				T.update_air_properties()
 				var/pressure = T.zone.air.return_pressure()
 				if(90 < pressure && pressure < 120) // Find a turf between 90 and 120
 					default_mobloc = T
@@ -393,7 +395,7 @@ datum/unit_test/mob_damage/vox/halloss
 // =================================================================
 // Diona
 // =================================================================
-
+/*
 datum/unit_test/mob_damage/diona
 	name = "MOB: Diona damage check template"
 	mob_type = /mob/living/carbon/human/diona
@@ -424,42 +426,7 @@ datum/unit_test/mob_damage/diona/halloss
 	name = "MOB: Diona Halloss Damage Check"
 	damagetype = PAIN
 	expected_vulnerability = IMMUNE
-
-// =================================================================
-// Nabbers
-// =================================================================
-
-datum/unit_test/mob_damage/nabber
-	name = "MOB: GAS damage check template"
-	mob_type = /mob/living/carbon/human/nabber
-
-datum/unit_test/mob_damage/nabber/brute
-	name = "MOB: GAS Brute Damage Check"
-	damagetype = BRUTE
-	expected_vulnerability = ARMORED
-
-datum/unit_test/mob_damage/nabber/fire
-	name = "MOB: GAS Fire Damage Check"
-	damagetype = BURN
-	expected_vulnerability = EXTRA_VULNERABLE
-
-datum/unit_test/mob_damage/nabber/tox
-	name = "MOB: GAS Toxins Damage Check"
-	damagetype = TOX
-
-datum/unit_test/mob_damage/nabber/oxy
-	name = "MOB: GAS Oxygen Damage Check"
-	damagetype = OXY
-	expected_vulnerability = ARMORED
-
-datum/unit_test/mob_damage/nabber/clone
-	name = "MOB: GAS Clone Damage Check"
-	damagetype = CLONE
-
-datum/unit_test/mob_damage/nabber/halloss
-	name = "MOB: GAS Halloss Damage Check"
-	damagetype = PAIN
-
+*/
 // =================================================================
 // SPECIAL WHITTLE SNOWFLAKES aka IPC
 // =================================================================
@@ -493,6 +460,42 @@ datum/unit_test/mob_damage/machine/clone
 
 datum/unit_test/mob_damage/machine/halloss
 	name = "MOB: IPC Halloss Damage Check"
+	damagetype = PAIN
+	expected_vulnerability = IMMUNE
+
+// =================================================================
+// Phorosians
+// =================================================================
+
+datum/unit_test/mob_damage/phorosian
+	name = "MOB: Phorosian damage check template"
+	mob_type = /mob/living/carbon/human/machine
+
+datum/unit_test/mob_damage/phorosian/brute
+	name = "MOB: Phorosian Brute Damage Check"
+	damagetype = BRUTE
+
+datum/unit_test/mob_damage/phorosian/fire
+	name = "MOB: Phorosian Fire Damage Check"
+	damagetype = BURN
+
+datum/unit_test/mob_damage/phorosian/tox
+	name = "MOB: Phorosian Toxins Damage Check"
+	damagetype = TOX
+	expected_vulnerability = IMMUNE
+
+datum/unit_test/mob_damage/phorosian/oxy
+	name = "MOB: Phorosian Oxygen Damage Check"
+	damagetype = OXY
+	expected_vulnerability = IMMUNE
+
+datum/unit_test/mob_damage/phorosian/clone
+	name = "MOB: Phorosian Clone Damage Check"
+	damagetype = CLONE
+	expected_vulnerability = IMMUNE
+
+datum/unit_test/mob_damage/phorosian/halloss
+	name = "MOB: Phorosian Halloss Damage Check"
 	damagetype = PAIN
 	expected_vulnerability = IMMUNE
 

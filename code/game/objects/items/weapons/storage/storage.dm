@@ -88,6 +88,8 @@
 	storage_ui.show_to(user)
 
 /obj/item/weapon/storage/proc/prepare_ui()
+	if(!storage_ui || !istype(storage_ui))
+		storage_ui = new()
 	storage_ui.prepare_ui()
 
 /obj/item/weapon/storage/proc/close(mob/user as mob)
@@ -321,7 +323,10 @@
 	for(var/obj/item/I in contents)
 		remove_from_storage(I, T, 1)
 	update_ui_after_item_removal()
-
+/obj/item/weapon/storage/after_load()
+	storage_ui = new storage_ui(src)
+	prepare_ui()
+	..()
 /obj/item/weapon/storage/Initialize()
 	. = ..()
 	if(allow_quick_empty)

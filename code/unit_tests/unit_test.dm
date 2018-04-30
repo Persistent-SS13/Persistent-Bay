@@ -35,7 +35,7 @@ var/currently_running_tests = 0
 
 // For console out put in Linux/Bash makes the output green or red.
 // Should probably only be used for unit tests/Travis since some special folks use winders to host servers.
-// if you want plain output, use dm.sh -DUNIT_TEST -DUNIT_TEST_PLAIN baystation12.dme
+// if you want plain output, use dm.sh -DUNIT_TEST -DUNIT_TEST_PLAIN persistentss13.dme
 #ifdef UNIT_TEST_PLAIN
 var/ascii_esc = ""
 var/ascii_red = ""

@@ -5,6 +5,7 @@
 	desc = "A set of lungs seemingly made out of fleshy phoron."
 	breath_type = "phoron"
 	poison_type = "oxygen" //It burns to breathe!
+	exhale_type = "hydrogen"
 
 /obj/item/organ/internal/liver/phorosian
 	name = "phoron processor"
@@ -18,13 +19,13 @@
 	color = "#7e4ba0"
 
 /obj/item/organ/internal/brain/phorosian
-	name = "Crystallized brain"
+	name = "crystallized brain"
 	desc = "A brain seemingly made out of both crystallized phoron and brain matter."
 	parent_organ = BP_HEAD
 	color = "#7e4ba0"
 
 /obj/item/organ/internal/eyes/phorosian
-	name = "Crystallized eyeballs"
+	name = "crystallized eyeballs"
 	desc = "A pair of crystal spheres in the shape of eyes. They give off a faint glow."
 	phoron_guard = 1
 

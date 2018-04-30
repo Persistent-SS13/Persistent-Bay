@@ -22,6 +22,15 @@
 /obj/machinery/camera/network/thunder
 	network = list(NETWORK_THUNDER)
 
+/obj/machinery/camera/network/public
+	network = list(NETWORK_PUBLIC)
+
+/obj/machinery/camera/network/nanotrasen
+	network = list(NETWORK_NT)
+
+/obj/machinery/camera/network/refugee
+	network = list(NETWORK_REFUGEE)
+
 // EMP
 
 /obj/machinery/camera/emp_proof/Initialize()

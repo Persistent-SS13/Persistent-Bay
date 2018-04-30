@@ -1,6 +1,6 @@
 /obj/structure/closet/secure_closet/freezer/kitchen
 	name = "kitchen cabinet"
-	req_access = list(access_kitchen)
+	req_access = list()
 /*
 /obj/structure/closet/secure_closet/freezer/kitchen/WillContain() //Add the contents to Supply Crate.
 	return list(
@@ -49,7 +49,7 @@
 	icon_opened = "fridgeopen"
 	icon_broken = "fridgebroken"
 	icon_off = "fridgebroken"
-	req_access = list(access_heads_vault)
+	req_access = list()
 
 /obj/structure/closet/secure_closet/freezer/money/Initialize()
 	. = ..()

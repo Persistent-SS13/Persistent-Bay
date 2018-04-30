@@ -161,6 +161,8 @@
 			return global.all_grabstates;
 		if("all_languages")
 			return global.all_languages;
+		if("all_loaded")
+			return global.all_loaded;
 		if("all_money_accounts")
 			return global.all_money_accounts;
 		if("all_objectives")
@@ -175,6 +177,8 @@
 			return global.all_unit_tests_passed;
 		if("all_virtual_listeners")
 			return global.all_virtual_listeners;
+		if("ambient_controller")
+			return global.ambient_controller;
 		if("announced_news_types")
 			return global.announced_news_types;
 		if("antag_add_finished")
@@ -185,6 +189,8 @@
 			return global.appearance_manager;
 		if("area_repository")
 			return global.area_repository;
+		if("areas_to_save")
+			return global.areas_to_save;
 		if("artefact_feedback")
 			return global.artefact_feedback;
 		if("ascii_esc")
@@ -315,6 +321,8 @@
 			return global.dbcon_old;
 		if("deathsquad")
 			return global.deathsquad;
+		if("debug_data")
+			return global.debug_data;
 		if("debug_verbs")
 			return global.debug_verbs;
 		if("decls_repository")
@@ -353,6 +361,8 @@
 			return global.dummy_lighting_corner;
 		if("economic_species_modifier")
 			return global.economic_species_modifier;
+		if("employment_controller")
+			return global.employment_controller;
 		if("empty_playable_ai_cores")
 			return global.empty_playable_ai_cores;
 		if("endgame_exits")
@@ -417,6 +427,8 @@
 			return global.follow_repository;
 		if("forced_ambiance_list")
 			return global.forced_ambiance_list;
+		if("found_vars")
+			return global.found_vars;
 		if("fruit_icon_cache")
 			return global.fruit_icon_cache;
 		if("fuel_injectors")
@@ -447,6 +459,8 @@
 			return global.ghost_sightless_images;
 		if("ghost_traps")
 			return global.ghost_traps;
+		if("globalBlankCanvases")
+			return global.globalBlankCanvases;
 		if("global_message_listener")
 			return global.global_message_listener;
 		if("global_vars_")
@@ -817,6 +831,10 @@
 			return global.runtime_diary;
 		if("same_wires")
 			return global.same_wires;
+		if("save_controller")
+			return global.save_controller;
+		if("saved")
+			return global.saved;
 		if("scheduler")
 			return global.scheduler;
 		if("secondary_mode")
@@ -1055,7 +1073,9 @@
 			return global.z_level_connections;
 		if("zone_blocked")
 			return global.zone_blocked;
-
+		if("zones_to_save")
+			return global.zones_to_save;
+		
 /proc/writeglobal(which, newval)
 	switch(which)
 		if("ALL_ANTIGENS")
@@ -1218,6 +1238,8 @@
 			global.all_grabstates=newval;
 		if("all_languages")
 			global.all_languages=newval;
+		if("all_loaded")
+			global.all_loaded=newval;
 		if("all_money_accounts")
 			global.all_money_accounts=newval;
 		if("all_objectives")
@@ -1232,6 +1254,8 @@
 			global.all_unit_tests_passed=newval;
 		if("all_virtual_listeners")
 			global.all_virtual_listeners=newval;
+		if("ambient_controller")
+			global.ambient_controller=newval;
 		if("announced_news_types")
 			global.announced_news_types=newval;
 		if("antag_add_finished")
@@ -1242,6 +1266,8 @@
 			global.appearance_manager=newval;
 		if("area_repository")
 			global.area_repository=newval;
+		if("areas_to_save")
+			global.areas_to_save=newval;
 		if("artefact_feedback")
 			global.artefact_feedback=newval;
 		if("ascii_esc")
@@ -1372,6 +1398,8 @@
 			global.dbcon_old=newval;
 		if("deathsquad")
 			global.deathsquad=newval;
+		if("debug_data")
+			global.debug_data=newval;
 		if("debug_verbs")
 			global.debug_verbs=newval;
 		if("decls_repository")
@@ -1410,6 +1438,8 @@
 			global.dummy_lighting_corner=newval;
 		if("economic_species_modifier")
 			global.economic_species_modifier=newval;
+		if("employment_controller")
+			global.employment_controller=newval;
 		if("empty_playable_ai_cores")
 			global.empty_playable_ai_cores=newval;
 		if("endgame_exits")
@@ -1474,6 +1504,8 @@
 			global.follow_repository=newval;
 		if("forced_ambiance_list")
 			global.forced_ambiance_list=newval;
+		if("found_vars")
+			global.found_vars=newval;
 		if("fruit_icon_cache")
 			global.fruit_icon_cache=newval;
 		if("fuel_injectors")
@@ -1504,6 +1536,8 @@
 			global.ghost_sightless_images=newval;
 		if("ghost_traps")
 			global.ghost_traps=newval;
+		if("globalBlankCanvases")
+			global.globalBlankCanvases=newval;
 		if("global_message_listener")
 			global.global_message_listener=newval;
 		if("global_vars_")
@@ -1874,6 +1908,10 @@
 			global.runtime_diary=newval;
 		if("same_wires")
 			global.same_wires=newval;
+		if("save_controller")
+			global.save_controller=newval;
+		if("saved")
+			global.saved=newval;
 		if("scheduler")
 			global.scheduler=newval;
 		if("secondary_mode")
@@ -2112,7 +2150,9 @@
 			global.z_level_connections=newval;
 		if("zone_blocked")
 			global.zone_blocked=newval;
-
+		if("zones_to_save")
+			global.zones_to_save=newval;
+		
 /var/list/_all_globals=list(
 	"ALL_ANTIGENS",
 	"ANTAG_FREQS",
@@ -2143,8 +2183,8 @@
 	"SSmobs",
 	"SSobj",
 	"SSopen_space",
-	"SSskybox",
 	"SSprocessing",
+	"SSskybox",
 	"SSvines",
 	"Tier1Runes",
 	"Tier2Runes",
@@ -2194,6 +2234,7 @@
 	"all_grabobjects",
 	"all_grabstates",
 	"all_languages",
+	"all_loaded",
 	"all_money_accounts",
 	"all_objectives",
 	"all_robolimbs",
@@ -2201,17 +2242,20 @@
 	"all_ui_styles",
 	"all_unit_tests_passed",
 	"all_virtual_listeners",
+	"ambient_controller",
 	"announced_news_types",
 	"antag_add_finished",
 	"antag_names_to_ids_",
 	"appearance_manager",
 	"area_repository",
+	"areas_to_save",
 	"artefact_feedback",
 	"ascii_esc",
 	"ascii_green",
 	"ascii_red",
 	"ascii_reset",
 	"ascii_yellow",
+	"ashtray_cache",
 	"asset_cache",
 	"asset_datums",
 	"assigned",
@@ -2270,6 +2314,7 @@
 	"dbcon",
 	"dbcon_old",
 	"deathsquad",
+	"debug_data",
 	"debug_verbs",
 	"decls_repository",
 	"default_material_composition",
@@ -2289,6 +2334,7 @@
 	"dreams",
 	"dummy_lighting_corner",
 	"economic_species_modifier",
+	"employment_controller",
 	"empty_playable_ai_cores",
 	"endgame_exits",
 	"endgame_safespawns",
@@ -2321,6 +2367,7 @@
 	"fluidtrack_cache",
 	"follow_repository",
 	"forced_ambiance_list",
+	"found_vars",
 	"fruit_icon_cache",
 	"fuel_injectors",
 	"fusion_cores",
@@ -2336,6 +2383,7 @@
 	"ghost_darkness_images",
 	"ghost_sightless_images",
 	"ghost_traps",
+	"globalBlankCanvases",
 	"global_message_listener",
 	"global_vars_",
 	"godcult",
@@ -2521,6 +2569,8 @@
 	"rune_list",
 	"runtime_diary",
 	"same_wires",
+	"save_controller",
+	"saved",
 	"scheduler",
 	"secondary_mode",
 	"secret_force_mode",
@@ -2639,4 +2689,5 @@
 	"wrapped_species_by_ref",
 	"xenomorphs",
 	"z_level_connections",
-	"zone_blocked")
+	"zone_blocked",
+	"zones_to_save")

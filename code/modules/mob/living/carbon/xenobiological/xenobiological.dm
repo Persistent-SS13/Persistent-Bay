@@ -5,12 +5,12 @@
 	pass_flags = PASSTABLE
 	speak_emote = list("chirps")
 
-	maxHealth = 150
-	health = 150
+	maxHealth = 200
+	health = 200
 	gender = NEUTER
 
 	update_icon = 0
-	nutrition = 800
+	nutrition = 2400
 
 	see_in_dark = 8
 	update_slimes = 0
@@ -23,10 +23,10 @@
 	var/is_adult = 0
 	var/number = 0 // Used to understand when someone is talking to it
 	var/cores = 1 // the number of /obj/item/slime_extract's the slime has left inside
-	var/mutation_chance = 30 // Chance of mutating, should be between 25 and 35
+	var/mutation_chance = 10 // Chance of mutating, should be between 5 and 15
 
 	var/powerlevel = 0 // 0-10 controls how much electricity they are generating
-	var/amount_grown = 0 // controls how long the slime has been overfed, if 10, grows or reproduces
+	var/amount_grown = 0 // controls how long the slime has been overfed, if 30, grows or reproduces
 
 	var/mob/living/Victim = null // the person the slime is currently feeding on
 	var/mob/living/Target = null // AI variable - tells the slime to hunt this down
@@ -147,7 +147,7 @@
 
 	if (client.statpanel == "Status")
 		stat(null, "Nutrition: [nutrition]/[get_max_nutrition()]")
-		if(amount_grown >= 10)
+		if(amount_grown >= 30)
 			if(is_adult)
 				stat(null, "You can reproduce!")
 			else
@@ -160,7 +160,7 @@
 	return
 
 /mob/living/carbon/slime/bullet_act(var/obj/item/projectile/Proj)
-	attacked += 10
+	attacked += 8
 	..(Proj)
 	return 0
 
@@ -205,7 +205,7 @@
 
 	if(Victim)
 		if(Victim == M)
-			if(prob(60))
+			if(prob(50))
 				visible_message("<span class='warning'>\The [M] attempts to wrestle \the [src] off!</span>")
 				playsound(loc, 'sound/weapons/punchmiss.ogg', 25, 1, -1)
 
@@ -213,14 +213,14 @@
 				visible_message("<span class='warning'>\The [M] manages to wrestle \the [src] off!</span>")
 				playsound(loc, 'sound/weapons/thudswoosh.ogg', 50, 1, -1)
 
-				confused = max(confused, 2)
+				confused = max(confused, 3)
 				Feedstop()
 				UpdateFace()
 				step_away(src, M)
 			return
 
 		else
-			if(prob(30))
+			if(prob(20))
 				visible_message("<span class='warning'>\The [M] attempts to wrestle \the [src] off \the [Victim]!</span>")
 				playsound(loc, 'sound/weapons/punchmiss.ogg', 25, 1, -1)
 
@@ -228,7 +228,7 @@
 				visible_message("<span class='warning'>\The [M] manages to wrestle \the [src] off \the [Victim]!</span>")
 				playsound(loc, 'sound/weapons/thudswoosh.ogg', 50, 1, -1)
 
-				confused = max(confused, 2)
+				confused = max(confused, 3)
 				Feedstop()
 				UpdateFace()
 				step_away(src, M)
@@ -240,10 +240,10 @@
 			help_shake_act(M)
 
 		if (I_DISARM)
-			var/success = prob(40)
+			var/success = prob(50)
 			visible_message("<span class='warning'>\The [M] pushes \the [src]![success ? " \The [src] looks momentarily disoriented!" : ""]</span>")
 			if(success)
-				confused = max(confused, 2)
+				confused = max(confused, 3)
 				UpdateFace()
 				playsound(loc, 'sound/weapons/thudswoosh.ogg', 50, 1, -1)
 			else
@@ -253,7 +253,7 @@
 
 			var/damage = rand(1, 9)
 
-			attacked += 10
+			attacked += 8
 			if (prob(90))
 				if (HULK in M.mutations)
 					damage += 5
@@ -278,8 +278,8 @@
 
 /mob/living/carbon/slime/attackby(var/obj/item/W, var/mob/user)
 	if(W.force > 0)
-		attacked += 10
-		if(prob(25))
+		attacked += 8
+		if(prob(20))
 			to_chat(user, "<span class='danger'>\The [W] passes right through \the [src]!</span>")
 			return
 

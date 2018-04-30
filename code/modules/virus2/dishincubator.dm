@@ -14,6 +14,15 @@
 	var/foodsupply = 0
 	var/toxins = 0
 
+/obj/machinery/disease2/incubator/New()
+	..()
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/incubator(src)
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	RefreshParts()
+
 /obj/machinery/disease2/incubator/attackby(var/obj/O as obj, var/mob/user as mob)
 	if(istype(O, /obj/item/weapon/reagent_containers/glass) || istype(O,/obj/item/weapon/reagent_containers/syringe))
 
@@ -45,6 +54,12 @@
 		GLOB.nanomanager.update_uis(src)
 
 		src.attack_hand(user)
+
+	if(default_deconstruction_screwdriver(user, O))
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	..()
 
 /obj/machinery/disease2/incubator/attack_hand(mob/user as mob)
 	if(stat & (NOPOWER|BROKEN)) return
@@ -160,7 +175,9 @@
 
 	if (href_list["ejectchem"])
 		if(beaker)
-			beaker.loc = src.loc
+			beaker.forceMove(loc)
+			if(Adjacent(usr) && !issilicon(usr))
+				usr.put_in_hands(beaker)
 			beaker = null
 		return 1
 
@@ -172,7 +189,9 @@
 
 	if (href_list["ejectdish"])
 		if(dish)
-			dish.loc = src.loc
+			dish.forceMove(loc)
+			if(Adjacent(usr) && !issilicon(usr))
+				usr.put_in_hands(dish)
 			dish = null
 		return 1
 

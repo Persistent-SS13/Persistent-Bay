@@ -174,6 +174,12 @@
 	else
 		..()
 
+/obj/item/weapon/storage/fancy/cigarettes/blank
+	name = "pack of cigarettes"
+	desc = "This is a nondescript pack for cigarettes. It looks like someone folded it by hand."
+	icon_state = "cigpacket"
+	startswith = list()
+
 /obj/item/weapon/storage/fancy/cigarettes/dromedaryco
 	name = "pack of Dromedary Co. cigarettes"
 	desc = "A packet of six imported Dromedary Company cancer sticks. A label on the packaging reads, \"Wouldn't a slow death make a change?\"."

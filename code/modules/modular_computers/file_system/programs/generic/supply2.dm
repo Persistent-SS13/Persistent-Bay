@@ -233,7 +233,6 @@
 			if(T.density)	continue
 			for(var/obj/structure/closet/closet in T.contents)
 				for(var/obj/item/weapon/paper/export/export in closet.contents)
-					message_admins("export manifest found")
 					var/earn = supply_controller.fill_order(export.export_id, closet)
 					if(earn)	
 						connected_faction.central_account.money += earn

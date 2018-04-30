@@ -9,7 +9,7 @@
 #define FAILURE 0
 #define SUCCESS 1
 
-
+/* //No APCs in space, my man
 /datum/unit_test/apc_area_test
 	name = "MAP: Area Test APC / Scrubbers / Vents"
 
@@ -65,7 +65,7 @@
 		var/exempt_type = GLOB.using_map.apc_test_exempt_areas[i]
 		if(istype(area, exempt_type))
 			return GLOB.using_map.apc_test_exempt_areas[exempt_type]
-
+*/
 //=======================================================================================
 
 /datum/unit_test/wire_test
@@ -219,7 +219,7 @@
 	return 1
 
 //=======================================================================================
-
+/*
 datum/unit_test/correct_allowed_spawn_test
 	name = "MAP: All allowed_spawns entries should have spawnpoints on map."
 
@@ -247,7 +247,7 @@ datum/unit_test/correct_allowed_spawn_test/start_test()
 		pass("All entries in allowed_spawns have spawnpoints.")
 
 	return 1
-
+*/
 //=======================================================================================
 
 datum/unit_test/map_check

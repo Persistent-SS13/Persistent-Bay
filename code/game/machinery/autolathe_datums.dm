@@ -111,7 +111,7 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	category = "Tools"
 
 /datum/autolathe/recipe/t_scanner
-	name = "t-ray scanner"
+	name = "T-ray scanner"
 	path = /obj/item/device/t_scanner
 	category = "Tools"
 
@@ -673,10 +673,6 @@ var/const/EXTRA_COST_FACTOR = 1.25
 
 /datum/autolathe/recipe/coffeecup/rainbow
 	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/rainbow
-
-/datum/autolathe/recipe/coffeecup/tall
-	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/tall
-	hidden = 1 // Yuki can't be trusted with this.
 
 /datum/autolathe/recipe/coffeecup/NT
 	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/NT

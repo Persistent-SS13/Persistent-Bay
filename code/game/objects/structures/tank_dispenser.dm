@@ -18,6 +18,9 @@
 /obj/structure/dispenser/phoron
 	oxygentanks = 0
 
+/obj/structure/dispenser/empty
+	oxygentanks = 0
+	phorontanks = 0
 
 /obj/structure/dispenser/New()
 	update_icon()

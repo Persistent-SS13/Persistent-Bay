@@ -104,6 +104,7 @@
 	recipes += new/datum/stack_recipe("rack", /obj/structure/table/rack, 1, time = 5, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("weight lifter", /obj/structure/fitness/weightlifter, 4, time = 50, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("closet", /obj/structure/closet, 2, time = 15, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("Metal crate", /obj/structure/closet/crate, 10, time = 50, one_per_turf = 1)
 	recipes += new/datum/stack_recipe("canister", /obj/machinery/portable_atmospherics/canister, 10, time = 15, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("cannon frame", /obj/item/weapon/cannonframe, 10, time = 15, one_per_turf = 0, on_floor = 0)
 	recipes += new/datum/stack_recipe("meat spike frame", /obj/structure/kitchenspike_frame, 4, time = 40, one_per_turf = 1, on_floor = 1)

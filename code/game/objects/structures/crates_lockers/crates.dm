@@ -342,7 +342,7 @@ obj/structure/closet/crate
 	icon_opened = "largermetalopen"
 	icon_closed = "largermetal"
 
-/obj/structure/closet/crate/secure/large/reinforced/proc/slice_into_parts(obj/item/weapon/weldingtool/WT, mob/user)
+/obj/structure/closet/crate/secure/large/reinforced/slice_into_parts(obj/item/weapon/weldingtool/WT, mob/user)
 	if(!WT.remove_fuel(0,user))
 		to_chat(user, "<span class='notice'>You need more welding fuel to complete this task.</span>")
 		return

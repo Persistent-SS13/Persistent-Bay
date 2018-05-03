@@ -60,16 +60,24 @@ var/const/HOLOPAD_MODE = RANGE_BASED
 
 /obj/machinery/hologram/holopad/New()
 	..()
+	//Adds parts to the holopad
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/holopad(src)
+	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	RefreshParts()
+
 	if(loc)
 		desc = "It's a floor-mounted device for projecting holographic images. Its ID is '[loc.loc]'"
 /obj/machinery/hologram/holopad/after_load()
 	if(loc)
 		desc = "It's a floor-mounted device for projecting holographic images. Its ID is '[loc.loc]'"
-/obj/machinery/hologram/holopad/attack_hand(var/obj/item/I as obj, var/mob/living/carbon/human/user) //Carn: Hologram requests.
-	if(default_deconstruction_screwdriver(user, I))
+/obj/machinery/hologram/holopad/attackby(var/obj/item/O as obj, var/mob/living/carbon/human/user)
+	if(default_deconstruction_screwdriver(user, O))
 		return
-	if(default_deconstruction_crowbar(user, I))
+	if(default_deconstruction_crowbar(user, O))
 		return
+/obj/machinery/hologram/holopad/attack_hand(var/mob/living/carbon/human/user) //Carn: Hologram requests.
 	if(!istype(user))
 		return
 	if(incoming_connection&&caller_id)
@@ -410,11 +418,25 @@ Holographic project of everything else.
 	name = "long range holopad"
 	desc = "It's a floor-mounted device for projecting holographic images. This one utilizes bluespace transmitter to communicate with far away locations."
 	icon_state = "holopad-Y0"
-	map_range = 2
+	map_range = 5
 	power_per_hologram = 1000 //per usage per hologram
 	holopadType = HOLOPAD_LONG_RANGE
 	base_icon = "holopad-Y"
 
+/obj/machinery/hologram/holopad/longrange/New()
+	..()
+	//Adds parts to the holopad
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/holopad_longrange(src)
+	component_parts += new /obj/item/weapon/stock_parts/subspace/ansible(src)
+	component_parts += new /obj/item/weapon/stock_parts/subspace/filter(src)
+	component_parts += new /obj/item/weapon/stock_parts/subspace/crystal(src)
+	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	RefreshParts()
+
+	if(loc)
+		desc = "It's a floor-mounted device for projecting holographic images. This one utilizes a bluespace transmitter to communicate with far away locations. Its ID is '[loc.loc]'"
 #undef RANGE_BASED
 #undef AREA_BASED
 #undef HOLOPAD_PASSIVE_POWER_USAGE

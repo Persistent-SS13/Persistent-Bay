@@ -88,43 +88,19 @@
 	src.icon_state = "body_scanner_0"
 	return
 
-/obj/machinery/bodyscanner/attackby(obj/item/grab/normal/G, user as mob)
-	if (!ismob(G.affecting))
-		return
+/obj/machinery/bodyscanner/proc/placeinto(var/mob/target, var/mob/user)
 	if (src.occupant)
 		to_chat(user, "<span class='warning'>The scanner is already occupied!</span>")
-		return
-	if (G.affecting.abiotic())
-		to_chat(user, "<span class='warning'>Subject cannot have abiotic items on.</span>")
-		return
-	var/mob/M = G.affecting
-	M.forceMove(src)
-	src.occupant = M
-	update_use_power(2)
-	src.icon_state = "body_scanner_1"
-	for(var/obj/O in src)
-		O.forceMove(loc)
-	src.add_fingerprint(user)
-	qdel(G)
-
-//Like grap-put, but for mouse-drop.
-/obj/machinery/bodyscanner/MouseDrop_T(var/mob/target, var/mob/user)
-	if(!istype(target))
-		return
-	if (!CanMouseDrop(target, user))
-		return
-	if (src.occupant)
-		to_chat(user, "<span class='warning'>The scanner is already occupied!</span>")
-		return
+		return FALSE
 	if (target.abiotic())
 		to_chat(user, "<span class='warning'>The subject cannot have abiotic items on.</span>")
-		return
+		return FALSE
 	if (target.buckled)
 		to_chat(user, "<span class='warning'>Unbuckle the subject before attempting to move them.</span>")
-		return
+		return FALSE
 	user.visible_message("<span class='notice'>\The [user] begins placing \the [target] into \the [src].</span>", "<span class='notice'>You start placing \the [target] into \the [src].</span>")
 	if(!do_after(user, 30, src))
-		return
+		return FALSE
 	var/mob/M = target
 	M.forceMove(src)
 	src.occupant = M
@@ -133,6 +109,21 @@
 	for(var/obj/O in src)
 		O.forceMove(loc)
 	src.add_fingerprint(user)
+	return TRUE
+
+/obj/machinery/bodyscanner/attackby(obj/item/grab/normal/G, var/mob/user)
+	if (!ismob(G.affecting))
+		return
+	if(placeinto(G.affecting, user))
+		qdel(G)
+
+//Like grap-put, but for mouse-drop.
+/obj/machinery/bodyscanner/MouseDrop_T(var/mob/target, var/mob/user)
+	if(!istype(target))
+		return
+	if (!CanMouseDrop(target, user))
+		return
+	placeinto(target, user)
 
 /obj/machinery/bodyscanner/ex_act(severity)
 	switch(severity)

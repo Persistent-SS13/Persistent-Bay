@@ -154,7 +154,7 @@ obj/machinery/resleever/Process()
 	else
 		return
 
-/obj/machinery/resleever/proc/placeinto(var/mob/target, var/mob/user)
+/obj/machinery/resleever/proc/go_in(var/mob/target, var/mob/user)
 	if(occupant)
 		to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
 		return FALSE
@@ -223,7 +223,7 @@ obj/machinery/resleever/Process()
 		if(!ismob(grab.affecting))
 			return
 
-		if(placeinto(grab.affecting, user))
+		if(go_in(grab.affecting, user))
 			qdel(grab)
 
 /obj/machinery/resleever/MouseDrop_T(var/mob/target, var/mob/user)
@@ -231,7 +231,7 @@ obj/machinery/resleever/Process()
 		return
 	if (!CanMouseDrop(target, user))
 		return
-	placeinto(target, user)
+	go_in(target, user)
 
 /obj/machinery/resleever/proc/eject_occupant()
 	if(!(occupant))

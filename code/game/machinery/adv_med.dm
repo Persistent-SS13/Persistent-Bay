@@ -88,7 +88,7 @@
 	src.icon_state = "body_scanner_0"
 	return
 
-/obj/machinery/bodyscanner/proc/placeinto(var/mob/target, var/mob/user)
+/obj/machinery/bodyscanner/proc/go_in(var/mob/target, var/mob/user)
 	if (src.occupant)
 		to_chat(user, "<span class='warning'>The scanner is already occupied!</span>")
 		return FALSE
@@ -113,7 +113,7 @@
 /obj/machinery/bodyscanner/attackby(obj/item/grab/normal/G, var/mob/user)
 	if (!ismob(G.affecting))
 		return
-	if(placeinto(G.affecting, user))
+	if(go_in(G.affecting, user))
 		qdel(G)
 
 //Like grap-put, but for mouse-drop.
@@ -122,7 +122,7 @@
 		return
 	if (!CanMouseDrop(target, user))
 		return
-	placeinto(target, user)
+	go_in(target, user)
 
 /obj/machinery/bodyscanner/ex_act(severity)
 	switch(severity)

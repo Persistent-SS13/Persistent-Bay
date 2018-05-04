@@ -91,14 +91,14 @@
 	cost = 15
 	containertype = /obj/structure/largecrate
 	containername = "\improper Cargo Train Trolley Crate"
-
+/* //Hoverpods = Cause of MC crash, to be commented out of Cargo until fixed.
 /decl/hierarchy/supply_pack/supply/hoverpod
 	name = "Hoverpod Shipment"
 	contains = list()
 	cost = 80
 	containertype = /obj/structure/largecrate/hoverpod
 	containername = "\improper Hoverpod Crate"
-
+   //Webbing = Sprites at the moment are borked, to be commented out until fixed.
 /decl/hierarchy/supply_pack/supply/webbing
 	name = "Webbing crate"
 	num_contained = 4
@@ -112,7 +112,7 @@
 					/obj/item/clothing/accessory/storage/webbing)
 	cost = 15
 	containername = "\improper Webbing crate"
-
+*/
 /decl/hierarchy/supply_pack/supply/glowsticks
 	name = "Glowsticks (x20)"
 	contains = list(/obj/item/device/flashlight/glowstick,

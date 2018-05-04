@@ -86,7 +86,7 @@
 	else
 		visible_message("\The [user] starts laying [C] onto \the [src].")
 
-	if(do_after(user, 10, src))
+	if(do_after(user, 10, C))
 		if (C == user)
 			user.visible_message("[user] climbs on \the [src].","You climb on \the [src].")
 		else

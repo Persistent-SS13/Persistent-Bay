@@ -193,7 +193,7 @@
 	else
 		visible_message("\The [user] starts putting [M] into \the [src].")
 
-	if(do_after(user, 20, src))
+	if(do_after(user, 20, M))
 		if(occupant)
 			to_chat(user, "<span class='warning'>\The [src] is already occupied.</span>")
 			return FALSE

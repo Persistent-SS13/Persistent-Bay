@@ -164,7 +164,7 @@ obj/machinery/resleever/Process()
 
 	visible_message("[user] starts putting [target.name] into \the [src].", 3)
 
-	if(do_after(user, 20, src))
+	if(do_after(user, 20, target))
 		if (target.buckled)
 			target.buckled.user_unbuckle_mob(user)
 			if (target.buckled)

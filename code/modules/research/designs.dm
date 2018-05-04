@@ -1093,6 +1093,15 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/weapon/computer_hardware/logistic_processor
 	sort_string = "VBABB"
 
+/datum/design/item/jetpack
+	name = "Air Supply and Propulsion System"	//Just a fancy name for a jetpack, heh
+	id = "jetpack"
+	req_tech = list(TECH_ENGINEERING = 4)
+	build_type = PROTOLATHE
+	materials = list(DEFAULT_WALL_MATERIAL = 6000)
+	build_path = /obj/item/weapon/tank/jetpack
+	sort_string = "VBABC"
+
 /*
 CIRCUITS BELOW
 */

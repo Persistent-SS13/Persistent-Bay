@@ -66,6 +66,12 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	category = "General"
 
 /datum/autolathe/recipe/tank
+	New()
+		..()
+		var/obj/item/weapon/tank/T
+		T.starting_pressure = list() //Empty air tanks only
+
+/datum/autolathe/recipe/tank
 	name = "air tank"
 	path = /obj/item/weapon/tank/oxygen/yellow
 	category = "General"

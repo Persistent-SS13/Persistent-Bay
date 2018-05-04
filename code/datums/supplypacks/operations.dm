@@ -71,7 +71,7 @@
 					/obj/item/clothing/glasses/meson,
 					/obj/item/weapon/storage/backpack/industrial,
 					/obj/item/device/flashlight/lantern,
-					/obj/item/device/analyzer,
+					/obj/item/weapon/mining_scanner,
 					/obj/item/clothing/gloves/thick,
 					/obj/item/weapon/storage/ore,
 					/obj/item/weapon/shovel,

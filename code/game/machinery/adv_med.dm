@@ -95,12 +95,13 @@
 	if (target.abiotic())
 		to_chat(user, "<span class='warning'>The subject cannot have abiotic items on.</span>")
 		return FALSE
-	if (target.buckled)
-		to_chat(user, "<span class='warning'>Unbuckle the subject before attempting to move them.</span>")
-		return FALSE
 	user.visible_message("<span class='notice'>\The [user] begins placing \the [target] into \the [src].</span>", "<span class='notice'>You start placing \the [target] into \the [src].</span>")
 	if(!do_after(user, 30, src))
 		return FALSE
+	if (target.buckled)
+		target.buckled.user_unbuckle_mob(user)
+		if (target.buckled)
+			return FALSE
 	target.forceMove(src)
 	src.occupant = target
 	update_use_power(2)

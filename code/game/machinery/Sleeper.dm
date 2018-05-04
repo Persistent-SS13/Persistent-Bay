@@ -147,9 +147,6 @@
 		return
 	if(!istype(target))
 		return
-	if(target.buckled)
-		to_chat(user, "<span class='warning'>Unbuckle the subject before attempting to move them.</span>")
-		return
 	go_in(target, user)
 
 /obj/machinery/sleeper/relaymove(var/mob/user)
@@ -200,6 +197,10 @@
 		if(occupant)
 			to_chat(user, "<span class='warning'>\The [src] is already occupied.</span>")
 			return FALSE
+		if (M.buckled)
+			M.buckled.user_unbuckle_mob(user)
+			if (M.buckled)
+				return FALSE
 		M.stop_pulling()
 		if(M.client)
 			M.client.perspective = EYE_PERSPECTIVE

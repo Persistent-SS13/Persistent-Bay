@@ -36,6 +36,32 @@
                 {{:helper.link('On', null, {'command' : 'lethal', 'value' : 1},  data.lethal ?'redButton' : null)}}
                 {{:helper.link('Off', null, {'command' : 'lethal', 'value' : 0}, !data.lethal ? 'selected' : null)}}
             </div>
+		<div class="item">
+            <div class="itemLabelWide">
+                Check Faction:
+            </div>
+            <div class="itemContentNarrow">
+                {{:helper.link('On', null, {'command' : 'check_faction', 'value' : 1},  data.check_faction ?'redButton' : null)}}
+                {{:helper.link('Off', null, {'command' : 'check_faction', 'value' : 0}, !data.check_faction ? 'selected' : null)}}
+            </div>
+        </div>
+		<div class="item">
+            <div class="itemLabelWide">
+                Check Access:
+            </div>
+            <div class="itemContentNarrow">
+                {{:helper.link('On', null, {'command' : 'check_access', 'value' : 1},  data.check_access ?'redButton' : null)}}
+                {{:helper.link('Off', null, {'command' : 'check_access', 'value' : 0}, !data.check_access ? 'selected' : null)}}
+            </div>
+        </div>
+		<div class="item">
+            <div class="itemLabelWide">
+                Check Wanted:
+            </div>
+            <div class="itemContentNarrow">
+                {{:helper.link('On', null, {'command' : 'check_wanted', 'value' : 1},  data.check_wanted ?'redButton' : null)}}
+                {{:helper.link('Off', null, {'command' : 'check_wanted', 'value' : 0}, !data.check_wanted ? 'selected' : null)}}
+            </div>
         </div>
         {{if data.allowed > 2}}
             <div class="item">

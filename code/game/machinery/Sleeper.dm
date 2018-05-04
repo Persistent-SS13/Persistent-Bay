@@ -136,6 +136,12 @@
 			to_chat(user, "<span class='warning'>\The [src] has a beaker already.</span>")
 		return
 
+/obj/machinery/sleeper/attackby(obj/item/grab/normal/G, var/mob/user)
+	if (!ismob(G.affecting))
+		return
+	if(go_in(G.affecting, user))
+		qdel(G)
+
 /obj/machinery/sleeper/MouseDrop_T(var/mob/target, var/mob/user)
 	if(!CanMouseDrop(target, user))
 		return
@@ -178,12 +184,12 @@
 
 /obj/machinery/sleeper/proc/go_in(var/mob/M, var/mob/user)
 	if(!M)
-		return
+		return FALSE
 	if(stat & (BROKEN|NOPOWER))
-		return
+		return FALSE
 	if(occupant)
 		to_chat(user, "<span class='warning'>\The [src] is already occupied.</span>")
-		return
+		return FALSE
 
 	if(M == user)
 		visible_message("\The [user] starts climbing into \the [src].")
@@ -193,7 +199,7 @@
 	if(do_after(user, 20, src))
 		if(occupant)
 			to_chat(user, "<span class='warning'>\The [src] is already occupied.</span>")
-			return
+			return FALSE
 		M.stop_pulling()
 		if(M.client)
 			M.client.perspective = EYE_PERSPECTIVE
@@ -202,6 +208,8 @@
 		update_use_power(2)
 		occupant = M
 		update_icon()
+		return TRUE
+	return FALSE
 
 /obj/machinery/sleeper/proc/go_out()
 	if(!occupant)

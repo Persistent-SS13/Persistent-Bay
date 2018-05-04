@@ -154,6 +154,30 @@ obj/machinery/resleever/Process()
 	else
 		return
 
+/obj/machinery/resleever/proc/placeinto(var/mob/target, var/mob/user)
+	if(occupant)
+		to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
+		return FALSE
+
+	if(!check_occupant_allowed(target))
+		return FALSE
+
+	visible_message("[user] starts putting [target.name] into \the [src].", 3)
+
+	if(do_after(user, 20, src))
+		target.forceMove(src)
+
+		occupant = target
+		occupant_name = target.name
+		update_icon()
+		if(target.client)
+			target.client.perspective = EYE_PERSPECTIVE
+			target.client.eye = src
+
+		return TRUE
+
+	return FALSE
+
 /obj/machinery/resleever/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(default_deconstruction_screwdriver(user, W))
 		if(occupant)
@@ -199,24 +223,15 @@ obj/machinery/resleever/Process()
 		if(!ismob(grab.affecting))
 			return
 
-		if(!check_occupant_allowed(grab.affecting))
-			return
+		if(placeinto(grab.affecting, user))
+			qdel(grab)
 
-		var/mob/M = grab.affecting
-
-		visible_message("[user] starts putting [grab.affecting:name] into \the [src].", 3)
-
-		if(do_after(user, 20, src))
-			if(!M || !grab || !grab.affecting) return
-
-			M.forceMove(src)
-
-			occupant = M
-			occupant_name = occupant.name
-			update_icon()
-			if(M.client)
-				M.client.perspective = EYE_PERSPECTIVE
-				M.client.eye = src
+/obj/machinery/resleever/MouseDrop_T(var/mob/target, var/mob/user)
+	if(!istype(target))
+		return
+	if (!CanMouseDrop(target, user))
+		return
+	placeinto(target, user)
 
 /obj/machinery/resleever/proc/eject_occupant()
 	if(!(occupant))

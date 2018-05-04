@@ -101,9 +101,8 @@
 	user.visible_message("<span class='notice'>\The [user] begins placing \the [target] into \the [src].</span>", "<span class='notice'>You start placing \the [target] into \the [src].</span>")
 	if(!do_after(user, 30, src))
 		return FALSE
-	var/mob/M = target
-	M.forceMove(src)
-	src.occupant = M
+	target.forceMove(src)
+	src.occupant = target
 	update_use_power(2)
 	src.icon_state = "body_scanner_1"
 	for(var/obj/O in src)

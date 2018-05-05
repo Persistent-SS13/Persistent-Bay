@@ -655,17 +655,17 @@ var/const/EXTRA_COST_FACTOR = 1.25
     path = /obj/item/weapon/lipstick
     category = "General"
 
-/datum/autolathe/recipe/lipstick purple
+/datum/autolathe/recipe/lipstick_purple
 	name = "purple lipstick"
 	path = /obj/item/weapon/lipstick/purple
 	category = "General"
 
-/datum/autolathe/recipe/lipstick jade
+/datum/autolathe/recipe/lipstick_jade
 	name = "jade lipstick"
 	path = /obj/item/weapon/lipstick/jade
 	category = "General"
 
-/datum/autolathe/recipe/lipstick black
+/datum/autolathe/recipe/lipstick_black
 	name = "black lipstick"
 	path = /obj/item/weapon/lipstick/black
 	category = "General"
@@ -675,33 +675,33 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/weapon/haircomb
 	category = "General"
 
-/datum/autolathe/recipe/red doll
+/datum/autolathe/recipe/red_doll
 	name = "red doll"
 	path = /obj/item/toy/therapy_red
 	category = "General"
 
-/datum/autolathe/recipe/purple doll
+/datum/autolathe/recipe/purple_doll
 	name = "purple doll"
 	path = /obj/item/toy/therapy_purple
 	category = "General"
 
-/datum/autolathe/recipe/blue doll
+/datum/autolathe/recipe/blue_doll
 	name = "blue doll"
 	path = /obj/item/toy/therapy_blue
 	category = "General"
 
-/datum/autolathe/recipe/yellow doll
+/datum/autolathe/recipe/yellow_doll
 	name = "yellow doll"
 	path = /obj/item/toy/therapy_yellow
 	category = "General"
 
-/datum/autolathe/recipe/green doll
+/datum/autolathe/recipe/green_doll
 	name = "green doll"
 	path = /obj/item/toy/therapy_green
 	category = "General"
 
 
-/datum/autolathe/recipe/water balloon
+/datum/autolathe/recipe/water_balloon
 	name = "water balloon"
 	path = /obj/item/toy/water_balloon
 	category = "General"

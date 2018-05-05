@@ -651,9 +651,9 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	category = "General"
 
 /datum/autolathe/recipe/lipstick
-    name = "lipstick"
-    path = /obj/item/weapon/lipstick
-    category = "General"
+	name = "lipstick"
+	path = /obj/item/weapon/lipstick
+	category = "General"
 
 /datum/autolathe/recipe/lipstick_purple
 	name = "purple lipstick"

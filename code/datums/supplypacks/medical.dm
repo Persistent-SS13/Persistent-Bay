@@ -236,7 +236,7 @@
 /decl/hierarchy/supply_pack/medical/anesthetic
 	name = "Anesthetic Tanks and Masks (x8)"
 	contains = list(/obj/item/weapon/tank/anesthetic = 8,
-	                /obj/item/clothing/mask/breath/medical = 2)
+					/obj/item/clothing/mask/breath/medical = 2)
 	cost = 75
 	containertype = /obj/structure/closet/crate/medical
 	containername = "\improper Anesthetic Tanks and Masks crate"

@@ -240,5 +240,3 @@
 	cost = 75
 	containertype = /obj/structure/closet/crate/medical
 	containername = "\improper Anesthetic Tanks and Masks crate"
-
-

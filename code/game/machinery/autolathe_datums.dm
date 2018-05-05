@@ -700,7 +700,6 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/toy/therapy_green
 	category = "General"
 
-
 /datum/autolathe/recipe/water_balloon
 	name = "water balloon"
 	path = /obj/item/toy/water_balloon

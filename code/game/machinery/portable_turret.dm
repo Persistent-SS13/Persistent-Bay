@@ -21,8 +21,8 @@
 
 	var/raised = 0			//if the turret cover is "open" and the turret is raised
 	var/raising= 0			//if the turret is currently opening or closing its cover
-	var/health = 80			//the turret's health
-	var/maxhealth = 80		//turrets maximal health.
+	var/health = 120		//the turret's health
+	var/maxhealth = 120		//turrets maximal health.
 	var/auto_repair = 0		//if 1 the turret slowly repairs itself.
 	var/locked = 0			//if the turret's behaviour control access is locked
 	var/controllock = 0		//if the turret responds to control panels
@@ -41,7 +41,12 @@
 	var/attacked = 0		//if set to 1, the turret gets pissed off and shoots at people nearby (unless they have sec access!)
 	var/enabled = 0			//determines if the turret is on
 	var/lethal = 0			//whether in lethal or stun mode
+	var/range = 7			//engagement range of the turret, forming a square from the tile of the turret(Default 2*7+1=15)
 	var/disabled = 0
+
+	var/check_faction = 0	//should the turret shoot if the target isn't of the parent faction
+	var/check_access = 0	//should the turret shoot if the target does not have the right access
+	var/check_wanted = 0	//should the turret shoot if the target is wanted
 
 	var/shot_sound 			//what sound should play when the turret fires
 	var/eshot_sound			//what sound should play when the emagged turret fires
@@ -173,6 +178,12 @@ var/list/turret_icons
 	data["locked"] = locked
 	data["enabled"] = enabled
 	data["lethal"] = lethal
+	data["check_faction"] = check_faction
+	data["check_access"] = check_access
+	data["check_wanted"] = check_wanted
+	data["range"] = range
+	data["minrange"] = 1
+	data["maxrange"] = 7
 	data["connected_faction"] = connected_faction
 	data["ui_mode"] = ui_mode
 	if(!locked && data["allowed"] > 1)	//Save performance by making sure we only do this if they can access it
@@ -223,8 +234,16 @@ var/list/turret_icons
 			enabled = value
 		else if(href_list["command"] == "lethal")
 			lethal = value
+		else if(href_list["command"] == "check_faction")
+			check_faction = value
+		else if(href_list["command"] == "check_access")
+			check_access = value
+		else if(href_list["command"] == "check_wanted")
+			check_wanted = value
 		else if(href_list["command"] == "ui_mode")
 			ui_mode = value
+		else if(href_list["command"] == "range")
+			range += value
 		else if(href_list["command"] == "access")
 			req_access["[value]"] = req_access["[value]"] > 2 ? 0 : req_access["[value]"] + 1
 
@@ -254,7 +273,7 @@ var/list/turret_icons
 						Gun.power_supply.charge = gun_charge
 						Gun.update_icon()
 					if(prob(50))
-						new /obj/item/stack/material/steel(loc, rand(1,4))
+						new /obj/item/stack/material/plasteel(loc, rand(1,4))
 					if(prob(50))
 						new /obj/item/device/assembly/prox_sensor(loc)
 				else
@@ -411,7 +430,7 @@ var/list/turret_icons
 	var/list/targets = list()			//list of primary targets
 	var/list/secondarytargets = list()	//targets that are least important
 
-	for(var/mob/M in mobs_in_view(world.view, src))
+	for(var/mob/M in mobs_in_view(range, src))
 		assess_and_assign(M, targets, secondarytargets)
 
 	if(!tryToShootAt(targets))
@@ -484,12 +503,22 @@ var/list/turret_icons
 	if(emagged)
 		return 10
 
+	if(connected_faction == null) //safety check
+		check_faction = 0
+		check_access = 0
 
-	for(var/access in H.GetAccess(connected_faction.uid))
-		if(req_access["[access]"] > 0)
-			return H.assess_perp(src, 0, 0, 1, 1)
+	if(check_faction && H.GetFaction() != connected_faction)
+		return 10
 
-	return 10
+	if(check_access)
+		for(var/access in H.GetAccess(connected_faction.uid))
+			if(!(req_access["[access]"] > 0))
+				return 10
+
+	if(check_wanted)
+		return H.assess_perp(src, 0, 0, 1, 1)
+
+	return 0
 
 /obj/machinery/porta_turret/proc/assess_bot(var/mob/living/bot/B)
 	if(!B || !istype(B))
@@ -653,14 +682,14 @@ var/list/turret_icons
 				return
 
 		if(1)
-			if(istype(I, /obj/item/stack/material) && I.get_material_name() == DEFAULT_WALL_MATERIAL)
+			if(istype(I, /obj/item/stack/material) && I.get_material_name() == "plasteel")
 				var/obj/item/stack/M = I
 				if(M.use(2))
-					to_chat(user, "<span class='notice'>You add some metal armor to the interior frame.</span>")
+					to_chat(user, "<span class='notice'>You add some plasteel armor to the interior frame.</span>")
 					build_step = 2
 					icon_state = "turret_frame2"
 				else
-					to_chat(user, "<span class='warning'>You need two sheets of metal to continue construction.</span>")
+					to_chat(user, "<span class='warning'>You need two sheets of plasteel to continue construction.</span>")
 				return
 
 			else if(istype(I, /obj/item/weapon/wrench))
@@ -741,13 +770,13 @@ var/list/turret_icons
 			//attack_hand() removes the prox sensor
 
 		if(6)
-			if(istype(I, /obj/item/stack/material) && I.get_material_name() == DEFAULT_WALL_MATERIAL)
+			if(istype(I, /obj/item/stack/material) && I.get_material_name() == "plasteel")
 				var/obj/item/stack/M = I
 				if(M.use(2))
-					to_chat(user, "<span class='notice'>You add some metal armor to the exterior frame.</span>")
+					to_chat(user, "<span class='notice'>You add some plasteel armor to the exterior frame.</span>")
 					build_step = 7
 				else
-					to_chat(user, "<span class='warning'>You need two sheets of metal to continue construction.</span>")
+					to_chat(user, "<span class='warning'>You need two sheets of plasteel to continue construction.</span>")
 				return
 
 			else if(istype(I, /obj/item/weapon/screwdriver))

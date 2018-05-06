@@ -136,13 +136,16 @@
 			to_chat(user, "<span class='warning'>\The [src] has a beaker already.</span>")
 		return
 
+/obj/machinery/sleeper/attackby(obj/item/grab/normal/G, var/mob/user)
+	if (!ismob(G.affecting))
+		return
+	if(go_in(G.affecting, user))
+		qdel(G)
+
 /obj/machinery/sleeper/MouseDrop_T(var/mob/target, var/mob/user)
 	if(!CanMouseDrop(target, user))
 		return
 	if(!istype(target))
-		return
-	if(target.buckled)
-		to_chat(user, "<span class='warning'>Unbuckle the subject before attempting to move them.</span>")
 		return
 	go_in(target, user)
 
@@ -178,22 +181,26 @@
 
 /obj/machinery/sleeper/proc/go_in(var/mob/M, var/mob/user)
 	if(!M)
-		return
+		return FALSE
 	if(stat & (BROKEN|NOPOWER))
-		return
+		return FALSE
 	if(occupant)
 		to_chat(user, "<span class='warning'>\The [src] is already occupied.</span>")
-		return
+		return FALSE
 
 	if(M == user)
 		visible_message("\The [user] starts climbing into \the [src].")
 	else
 		visible_message("\The [user] starts putting [M] into \the [src].")
 
-	if(do_after(user, 20, src))
+	if(do_after(user, 20, M))
 		if(occupant)
 			to_chat(user, "<span class='warning'>\The [src] is already occupied.</span>")
-			return
+			return FALSE
+		if (M.buckled)
+			M.buckled.user_unbuckle_mob(user)
+			if (M.buckled)
+				return FALSE
 		M.stop_pulling()
 		if(M.client)
 			M.client.perspective = EYE_PERSPECTIVE
@@ -202,6 +209,8 @@
 		update_use_power(2)
 		occupant = M
 		update_icon()
+		return TRUE
+	return FALSE
 
 /obj/machinery/sleeper/proc/go_out()
 	if(!occupant)

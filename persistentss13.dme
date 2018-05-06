@@ -595,6 +595,8 @@
 #include "code\game\machinery\camera\motion.dm"
 #include "code\game\machinery\camera\presets.dm"
 #include "code\game\machinery\camera\tracking.dm"
+#include "code\game\machinery\clothes crafting\clothes_crafter.dm"
+#include "code\game\machinery\clothes crafting\clothes_recipes.dm"
 #include "code\game\machinery\computer\ai_core.dm"
 #include "code\game\machinery\computer\arcade.dm"
 #include "code\game\machinery\computer\arcade_orion.dm"

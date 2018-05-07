@@ -560,11 +560,6 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/structure/reagent_dispensers/beerkeg/empty
 	category = "General"
 
-/datum/autolathe/recipe/watercooler
-	name = "water cooler"
-	path = /obj/structure/reagent_dispensers/water_cooler/empty
-	category = "General"
-
 /datum/autolathe/recipe/electropack
 	name = "electropack"
 	path = /obj/item/device/radio/electropack

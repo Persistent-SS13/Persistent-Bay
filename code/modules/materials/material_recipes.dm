@@ -165,6 +165,7 @@
 		new/datum/stack_recipe("Engineering Curtain", /obj/structure/curtain/open/shower/engineering, 10, one_per_turf = 1, on_floor = 1), \
 		new/datum/stack_recipe("Security Curtain", /obj/structure/curtain/open/shower/security, 10, one_per_turf = 1, on_floor = 1), \
 		))
+	recipes += new/datum/stack_recipe("Water Cooler", /obj/structure/reagent_dispensers/water_cooler/empty, 10, one_per_turf = 1, on_floor = 1)
 
 
 /material/wood/generate_recipes()

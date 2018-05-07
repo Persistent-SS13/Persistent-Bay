@@ -123,7 +123,7 @@
 	var/obj/machinery/atmospherics/unary/vent_pump/entry_vent
 	var/travelling_in_vent = 0
 	var/dormant = FALSE    // If dormant, does not add the spiderling to the process list unless it's also growing
-	var/growth_chance = 10 // % chance of beginning growth, and eventually become a beautiful death machine
+	var/growth_chance = 1 // % chance of beginning growth, and eventually become a beautiful death machine
 
 	var/shift_range = 6
 
@@ -205,8 +205,8 @@
 					entry_vent = null
 					return
 				var/obj/machinery/atmospherics/unary/vent_pump/exit_vent = pick(vents)
-				if(prob(50))
-					src.visible_message("<B>[src] scrambles into the ventillation ducts!</B>")
+				/*if(prob(50))
+					src.visible_message("<B>[src] scrambles into the ventillation ducts!</B>")*/
 
 				spawn(rand(20,60))
 					loc = exit_vent

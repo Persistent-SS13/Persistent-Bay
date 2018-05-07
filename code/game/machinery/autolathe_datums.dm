@@ -65,7 +65,7 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/weapon/extinguisher
 	category = "General"
 
-/datum/autolathe/recipe/tank/Fabricate()
+/datum/autolathe/recipe/tank/proc/Fabricate()
 	var/obj/item/weapon/tank/T
 	T.starting_pressure = list() //Empty air tanks only
 	return T

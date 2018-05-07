@@ -68,7 +68,7 @@ var/const/EXTRA_COST_FACTOR = 1.25
 /datum/autolathe/recipe/tank/Fabricate()
 	var/obj/item/weapon/tank/T
 	T.starting_pressure = list() //Empty air tanks only
-    return T
+	return T
 
 /datum/autolathe/recipe/tank
 	name = "air tank"

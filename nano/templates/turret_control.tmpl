@@ -15,7 +15,19 @@
                 {{:helper.link('Disabled',null, {'command' : 'enable', 'value' : 0}, !data.enabled ? 'selected' : null)}}
             </div>
         </div>	
-
+		
+		<div class="item">
+			<div class="itemLabelWide">
+				Range
+			</div>
+			<div class="itemContentNarrow">
+				<div style="clear: both; padding-top: 4px;">
+					{{:helper.link('-', null, {'command' : 'range', 'value' : -1}, (data.range > data.minrange) ? null : 'disabled')}}
+					<div style="float: left; width: 80px; text-align: center;">&nbsp;{{:data.range}} &nbsp;</div>
+					{{:helper.link('+', null, {'command' : 'range', 'value' : 1}, (data.range < data.maxrange) ? null : 'disabled')}}
+				</div>
+			</div>
+		</div>
         <div class="item">
             <div class="itemLabelWide">
                 Lethal Mode:
@@ -24,7 +36,33 @@
                 {{:helper.link('On', null, {'command' : 'lethal', 'value' : 1},  data.lethal ?'redButton' : null)}}
                 {{:helper.link('Off', null, {'command' : 'lethal', 'value' : 0}, !data.lethal ? 'selected' : null)}}
             </div>
-        </div>	
+		<div class="item">
+            <div class="itemLabelWide">
+                Check Faction:
+            </div>
+            <div class="itemContentNarrow">
+                {{:helper.link('On', null, {'command' : 'check_faction', 'value' : 1},  data.check_faction ?'redButton' : null)}}
+                {{:helper.link('Off', null, {'command' : 'check_faction', 'value' : 0}, !data.check_faction ? 'selected' : null)}}
+            </div>
+        </div>
+		<div class="item">
+            <div class="itemLabelWide">
+                Check Access:
+            </div>
+            <div class="itemContentNarrow">
+                {{:helper.link('On', null, {'command' : 'check_access', 'value' : 1},  data.check_access ?'redButton' : null)}}
+                {{:helper.link('Off', null, {'command' : 'check_access', 'value' : 0}, !data.check_access ? 'selected' : null)}}
+            </div>
+        </div>
+		<div class="item">
+            <div class="itemLabelWide">
+                Check Wanted:
+            </div>
+            <div class="itemContentNarrow">
+                {{:helper.link('On', null, {'command' : 'check_wanted', 'value' : 1},  data.check_wanted ?'redButton' : null)}}
+                {{:helper.link('Off', null, {'command' : 'check_wanted', 'value' : 0}, !data.check_wanted ? 'selected' : null)}}
+            </div>
+        </div>
         {{if data.allowed > 2}}
             <div class="item">
                 <div class="itemContentNarrow">

@@ -165,7 +165,8 @@
 
 /decl/hierarchy/supply_pack/security/prisoneruniforms
 	name = "Prisoner Uniforms"
-	contains = list(/obj/item/clothing/under/color/orange = 4)
+	contains = list(/obj/item/clothing/under/color/orange = 4,
+					/obj/item/clothing/shoes/orange = 4)
 	cost = 20
 	containername = "\improper brig uniform supply crate"
 

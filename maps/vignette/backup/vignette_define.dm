@@ -4,7 +4,7 @@
 	path = "vignette"
 	flags = MAP_HAS_RANK
 
-	lobby_icon = 'maps/torch/icons/lobby.dmi'
+	lobby_icon = 'maps/vignette/icons/lobby.dmi'
 
 	station_levels = list(1,2,3,4,5,6,7,8,9,10,11)
 	contact_levels = list(1,2,3)

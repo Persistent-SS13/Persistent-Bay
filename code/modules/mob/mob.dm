@@ -1006,7 +1006,7 @@ mob/proc/yank_out_object()
 	. = stat != new_stat
 	stat = new_stat
 
-/* lmao who needs this shit
+
 /mob/verb/northfaceperm()
 	set hidden = 1
 	set_face_dir(client.client_dir(NORTH))
@@ -1022,8 +1022,8 @@ mob/proc/yank_out_object()
 /mob/verb/westfaceperm()
 	set hidden = 1
 	set_face_dir(client.client_dir(WEST))
-*/
-/mob/verb/eastfaceperm()
+
+/mob/verb/eastfacepeek()
 	set hidden = 1
 	if(!canface())	return 0
 	dir = EAST
@@ -1031,7 +1031,7 @@ mob/proc/yank_out_object()
 	client.pixel_x = min(160, client.pixel_x + 160)
 	return 1
 
-/mob/verb/northfaceperm()
+/mob/verb/northfacepeek()
 	set hidden = 1
 	if(!canface())	return 0
 	dir = NORTH
@@ -1039,7 +1039,7 @@ mob/proc/yank_out_object()
 	client.pixel_y = min(160, client.pixel_y + 160)
 	return 1
 
-/mob/verb/westfaceperm()
+/mob/verb/westfacepeek()
 	set hidden = 1
 	if(!canface())	return 0
 	dir = WEST
@@ -1047,7 +1047,7 @@ mob/proc/yank_out_object()
 	client.pixel_x = max(-160, client.pixel_x - 160)
 	return 1
 
-/mob/verb/southfaceperm()
+/mob/verb/southfacepeek()
 	set hidden = 1
 	if(!canface())	return 0
 	dir = SOUTH

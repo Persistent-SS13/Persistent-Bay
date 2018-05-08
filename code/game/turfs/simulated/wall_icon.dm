@@ -42,7 +42,7 @@
 	update_connections(1)
 	update_icon()
 
-/turf/simulated/wall/update_icon()
+/turf/simulated/wall/update_icon(var/propagate = 1)
 	if(!material || !p_material)
 		update_material(1)
 
@@ -50,6 +50,7 @@
 		generate_overlays()
 
 	overlays.Cut()
+	update_connections(propagate)
 	var/image/I
 	for(var/i = 1 to 4)
 		I = image('icons/turf/wall_masks.dmi', "[r_material ? p_material.icon_reinf : p_material.icon_base][wall_connections[i]]", dir = 1<<(i-1))
@@ -97,8 +98,7 @@
 		if(!W.p_material)
 			continue
 		if(propagate)
-			W.update_connections()
-			W.update_icon()
+			W.update_icon(0)
 		if(can_join_with(W))
 			dirs += get_dir(src, W)
 

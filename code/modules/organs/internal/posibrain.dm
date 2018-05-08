@@ -46,8 +46,7 @@
 		brainmob.add_language("Encoded Audio Language")
 
 /obj/item/organ/internal/posibrain/Destroy()
-	if(brainmob)
-		QDEL_NULL(brainmob)
+	QDEL_NULL(brainmob)
 	..()
 
 /obj/item/organ/internal/posibrain/attack_self(mob/user as mob)

@@ -531,6 +531,30 @@ datum/unit_test/robot_module_icons/start_test()
 
 	return 1
 
+/datum/unit_test/mob_nullspace
+	name = "MOB: Mob in nullspace shall not cause runtimes"
+	var/list/test_subjects = list()
+	async = 1
+
+/datum/unit_test/mob_nullspace/start_test()
+	// Simply create one of each species type in nullspace
+	for(var/species_name in all_species)
+		var/test_subject = new/mob/living/carbon/human(null, species_name)
+		test_subjects += test_subject
+	return 1
+
+/datum/unit_test/mob_nullspace/check_result()
+	for(var/ts in test_subjects)
+		var/mob/living/carbon/human/H = ts
+		if(H.life_tick < 10)
+			return FALSE
+
+	QDEL_NULL_LIST(test_subjects)
+
+	// No failure state, we just rely on the general runtime check to fail the entire build for us
+	pass("Mob nullspace test concluded.")
+	return 1
+
 #undef VULNERABLE
 #undef IMMUNE
 #undef SUCCESS

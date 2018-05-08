@@ -98,7 +98,7 @@
 	cost = 80
 	containertype = /obj/structure/largecrate/hoverpod
 	containername = "\improper Hoverpod Crate"
-
+/*
 /decl/hierarchy/supply_pack/supply/webbing
 	name = "Webbing crate"
 	num_contained = 4
@@ -112,7 +112,7 @@
 					/obj/item/clothing/accessory/storage/webbing)
 	cost = 15
 	containername = "\improper Webbing crate"
-
+*/
 /decl/hierarchy/supply_pack/supply/glowsticks
 	name = "Glowsticks (x20)"
 	contains = list(/obj/item/device/flashlight/glowstick,

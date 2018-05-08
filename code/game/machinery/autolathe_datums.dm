@@ -65,6 +65,11 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/weapon/extinguisher
 	category = "General"
 
+/datum/autolathe/recipe/tank/proc/Fabricate()
+	var/obj/item/weapon/tank/T = ..()
+	T.air_contents = new /datum/gas_mixture(T.volume, T20C)  //Empty air tanks only
+	return T
+
 /datum/autolathe/recipe/tank
 	name = "air tank"
 	path = /obj/item/weapon/tank/oxygen/yellow
@@ -553,11 +558,6 @@ var/const/EXTRA_COST_FACTOR = 1.25
 /datum/autolathe/recipe/beerkeg
 	name = "beer keg"
 	path = /obj/structure/reagent_dispensers/beerkeg/empty
-	category = "General"
-
-/datum/autolathe/recipe/watercooler
-	name = "water cooler"
-	path = /obj/structure/reagent_dispensers/water_cooler/empty
 	category = "General"
 
 /datum/autolathe/recipe/electropack

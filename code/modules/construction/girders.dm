@@ -186,11 +186,10 @@
 	return damage ? 1 : 0
 
 /obj/structure/girder/proc/dismantle(var/devastated)
-	playsound(get_turf(src), 'sound/items/Welder.ogg', 100, 1)
+	playsound(src, 'sound/items/Welder.ogg', 100, 1)
 	if(!devastated)
-		new material.stack_type(get_turf(src), 4)
-		if(r_material)
-			new r_material.stack_type(get_turf(src), 6)
+		new material.stack_type(src, 4)
+		new r_material.stack_type(src, 6)
 
 	material = null
 	r_material = null

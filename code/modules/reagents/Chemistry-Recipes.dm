@@ -867,7 +867,7 @@
 /datum/chemical_reaction/nt_soap
 	name = "Nanotrasen Soap"
 	result = null
-	required_reagents = list(/datum/reagent/glycerol = 1, /datum/reagent/space_cleaner = 1, /datum/reagent/phoron = 1)
+	required_reagents = list(/datum/reagent/glycerol = 1, /datum/reagent/space_cleaner = 1, /datum/reagent/toxin/phoron = 1)
 	result_amount = 1
 
 /datum/chemical_reaction/soap/on_reaction(var/datum/reagents/holder, var/created_volume)

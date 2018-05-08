@@ -46,7 +46,6 @@
 
 	var/check_faction = 0	//should the turret shoot if the target isn't of the parent faction
 	var/check_access = 0	//should the turret shoot if the target does not have the right access
-	var/check_wanted = 0	//should the turret shoot if the target is wanted
 
 	var/shot_sound 			//what sound should play when the turret fires
 	var/eshot_sound			//what sound should play when the emagged turret fires
@@ -180,7 +179,6 @@ var/list/turret_icons
 	data["lethal"] = lethal
 	data["check_faction"] = check_faction
 	data["check_access"] = check_access
-	data["check_wanted"] = check_wanted
 	data["range"] = range
 	data["minrange"] = 1
 	data["maxrange"] = 7
@@ -238,8 +236,6 @@ var/list/turret_icons
 			check_faction = value
 		else if(href_list["command"] == "check_access")
 			check_access = value
-		else if(href_list["command"] == "check_wanted")
-			check_wanted = value
 		else if(href_list["command"] == "ui_mode")
 			ui_mode = value
 		else if(href_list["command"] == "range")
@@ -507,18 +503,16 @@ var/list/turret_icons
 		check_faction = 0
 		check_access = 0
 
-	if(check_faction && H.GetFaction() != connected_faction)
+	if(check_faction && H.GetFaction() != connected_faction.uid)
 		return 10
 
 	if(check_access)
 		for(var/access in H.GetAccess(connected_faction.uid))
-			if(!(req_access["[access]"] > 0))
-				return 10
+			if(req_access["[access]"] > 0)
+				return H.assess_perp(src, 0, 0, 1, 1)
+		return 10 //if they don't have any of the required access
 
-	if(check_wanted)
-		return H.assess_perp(src, 0, 0, 1, 1)
-
-	return 0
+	return H.assess_perp(src, 0, 0, 1, 1)
 
 /obj/machinery/porta_turret/proc/assess_bot(var/mob/living/bot/B)
 	if(!B || !istype(B))

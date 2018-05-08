@@ -4,8 +4,8 @@
 	name = "ore detector"
 	desc = "A complex device used to locate ore deep underground."
 	icon = 'icons/obj/device.dmi'
-	icon_state = "forensic0-old" //GET A BETTER SPRITE.
-	item_state = "electronic"
+	icon_state = "mining1" //GET A BETTER SPRITE. //Done
+	item_state = "electronic"	//I don't know what this does, so I will just leave it
 	origin_tech = list(TECH_MAGNET = 1, TECH_ENGINEERING = 1)
 	matter = list(DEFAULT_WALL_MATERIAL = 150)
 	var/survey_data = 0

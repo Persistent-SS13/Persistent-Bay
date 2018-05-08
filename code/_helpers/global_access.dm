@@ -899,6 +899,8 @@
 			return global.sqlpass;
 		if("sqlport")
 			return global.sqlport;
+		if("stack_to_material")
+			return global.stack_to_material;
 		if("station_account")
 			return global.station_account;
 		if("station_date")
@@ -1976,6 +1978,8 @@
 			global.sqlpass=newval;
 		if("sqlport")
 			global.sqlport=newval;
+		if("stack_to_material")
+			global.stack_to_material=newval;
 		if("station_account")
 			global.station_account=newval;
 		if("station_date")
@@ -2603,6 +2607,7 @@
 	"sqllogin",
 	"sqlpass",
 	"sqlport",
+	"stack_to_material",
 	"station_account",
 	"station_date",
 	"stool_cache",

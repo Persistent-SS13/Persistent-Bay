@@ -156,7 +156,9 @@
 	if(M.bodytemperature < 170)
 		M.adjustCloneLoss(-10 * removed)
 		M.add_chemical_effect(CE_OXYGENATED, 1)
+		/* //Removing healing properties for both Clonexadone and Cryoxadone, too unbalanced at this stage of development.
 		M.heal_organ_damage(10 * removed, 10 * removed)
+		*/
 		M.add_chemical_effect(CE_PULSE, -2)
 
 /datum/reagent/clonexadone
@@ -173,7 +175,9 @@
 	if(M.bodytemperature < 170)
 		M.adjustCloneLoss(-30 * removed)
 		M.add_chemical_effect(CE_OXYGENATED, 2)
+		/* //Removing healing properties for both Clonexadone and Cryoxadone, too unbalanced at this stage of development.
 		M.heal_organ_damage(30 * removed, 30 * removed)
+		*/
 		M.add_chemical_effect(CE_PULSE, -2)
 
 /* Painkillers */
@@ -732,7 +736,7 @@
 		M.add_chemical_effect(CE_PULSE, 1)
 	else if(M.chem_doses[type] < 1)
 		M.add_chemical_effect(CE_PAINKILLER, min(10*volume, 20))
-	M.add_chemical_effect(CE_PULSE, 2)
+		M.add_chemical_effect(CE_PULSE, 2)
 	if(M.chem_doses[type] > 10)
 		M.make_jittery(5)
 	if(volume >= 5 && M.is_asystole())

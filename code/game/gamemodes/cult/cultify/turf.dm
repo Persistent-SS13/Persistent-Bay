@@ -33,7 +33,7 @@
 	var/turf/simulated/wall/wall = src
 	if(!istype(wall))
 		return
-	if(wall.reinf_material)
+	if(wall.r_material)
 		ChangeTurf(/turf/simulated/wall/cult/reinf)
 	else
 		ChangeTurf(/turf/simulated/wall/cult)

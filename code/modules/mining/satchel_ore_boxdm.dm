@@ -25,6 +25,18 @@
 
 	return
 
+	if(isCrowbar(W))
+		new /obj/item/stack/material/wood(src)
+		for (var/obj/item/weapon/ore/O in contents)
+			contents -= O
+			O.loc = src.loc
+		user.visible_message("<span class='notice'>[user] tears down \the [src].</span>", \
+							 "<span class='notice'>You take apart \the [src].</span>", \
+							 "<span class='notice'>You hear splitting wood.</span>")
+		qdel(src)
+	else
+		return attack_hand(user)
+
 /obj/structure/ore_box/proc/update_ore_count()
 
 	stored_ore = list()

@@ -597,7 +597,7 @@ var/const/EXTRA_COST_FACTOR = 1.25
 /datum/autolathe/recipe/ecig
 	// We get it, you vape
 	name = "ecigarette"
-	path = /obj/item/clothing/mask/smokable/ecig
+	path = /obj/item/clothing/mask/smokable/ecig/lathed
 	category = "Devices and Components"
 
 /datum/autolathe/recipe/keypad

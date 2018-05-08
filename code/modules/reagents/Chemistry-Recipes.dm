@@ -355,6 +355,12 @@
 	required_reagents = list (/datum/reagent/ammonia = 1, /datum/reagent/ethanol = 1)
 	result_amount = 2
 
+/datum/chemical_reaction/adrenaline
+	name = "Adrenaline"
+	result = /datum/reagent/adrenaline
+	required_reagents = list (/datum/reagent/hyperzine = 1, /datum/reagent/adrenaline = 1, /datum/reagent/acid/hydrochloric = 1)
+	result_amount = 3
+
 /datum/chemical_reaction/space_cleaner
 	name = "Space cleaner"
 	result = /datum/reagent/space_cleaner

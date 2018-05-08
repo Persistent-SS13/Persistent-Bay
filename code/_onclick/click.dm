@@ -51,6 +51,9 @@
 	if(modifiers["middle"])
 		MiddleClickOn(A)
 		return 1
+	if(modifiers["middle"] && modifiers["shift"])
+		MiddleShiftClickOn(A)
+		return 1
 	if(modifiers["shift"])
 		ShiftClickOn(A)
 		return 0
@@ -209,6 +212,10 @@
 */
 /mob/proc/MiddleClickOn(var/atom/A)
 	swap_hand()
+	return
+
+/mob/proc/MiddleShiftClickOn(var/atom/A)
+	pointed(A)
 	return
 
 // In case of use break glass

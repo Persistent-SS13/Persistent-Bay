@@ -402,7 +402,7 @@
 /datum/chemical_reaction/rezadone
 	name = "Rezadone"
 	result = /datum/reagent/rezadone
-	required_reagents = list(/datum/reagent/arithrazine, /datum/reagent/cryptobiolin = 1, /datum/reagent/copper = 1)
+	required_reagents = list(/datum/reagent/arithrazine = 1, /datum/reagent/cryptobiolin = 1, /datum/reagent/copper = 1)
 	result_amount = 3
 
 /datum/chemical_reaction/lexorin

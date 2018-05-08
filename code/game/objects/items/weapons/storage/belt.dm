@@ -5,6 +5,7 @@
 	icon_state = "utilitybelt"
 	item_state = "utility"
 	storage_slots = 7
+	item_flags = IS_BELT
 	max_w_class = ITEM_SIZE_NORMAL
 	slot_flags = SLOT_BELT
 	attack_verb = list("whipped", "lashed", "disciplined")
@@ -187,7 +188,7 @@
 	icon_state = "swatbelt"
 	item_state = "swatbelt"
 	storage_slots = 9
-	
+
 /obj/item/weapon/storage/belt/security/tactical/fed
 	name = "federation combat belt"
 	desc = "Can hold combat gear such as ammo magazines and grenades."

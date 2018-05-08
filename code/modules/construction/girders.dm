@@ -22,6 +22,7 @@
 
 /obj/structure/girder/update_icon()
 	color = material.icon_colour
+	overlays.Cut()
 	switch(state)
 		if(0)
 			icon_state = "girder_d"

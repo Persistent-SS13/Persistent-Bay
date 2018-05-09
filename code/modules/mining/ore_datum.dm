@@ -92,6 +92,7 @@ var/global/list/ores_by_type = list()
 	display_name = "raw carbon"
 	icon_tag = "coal"
 	smelts_to = "plastic"
+	compresses_to = "coal"
 	alloy = 1
 	result_amount = 5
 	spread_chance = 25

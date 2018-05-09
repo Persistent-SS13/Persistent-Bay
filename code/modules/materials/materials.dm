@@ -435,6 +435,16 @@ var/list/name_to_material
 				/datum/reagent/sodiumchloride = 20
 				)
 
+/material/carbon
+	name = "coal"
+	stack_type = /obj/item/stack/material/carbon
+	icon_colour = "#11111a"
+	sheet_singular_name = "brick"
+	sheet_plural_name = "bricks"
+	chem_products = list(
+				/datum/reagent/carbon = 40
+				)
+
 /material/steel
 	name = DEFAULT_WALL_MATERIAL
 	stack_type = /obj/item/stack/material/steel

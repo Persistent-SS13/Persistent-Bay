@@ -88,6 +88,9 @@
 /material/salt
 	value = 1
 
+/material/carbon
+	value = 1
+
 /material/ice
 	value = 10
 

@@ -114,6 +114,15 @@
 /obj/item/stack/material/salt/fifty
 	amount = 50
 
+/obj/item/stack/material/carbon
+	name = "coal brick"
+	icon_state = "sheet-marble"
+	default_type = "carbon"
+	apply_colour = 1
+
+/obj/item/stack/material/carbon/ten
+	amount = 10
+
 /obj/item/stack/material/diamond
 	name = "diamond"
 	icon_state = "sheet-diamond"

@@ -41,7 +41,7 @@
 	radiation_repository.resistance_cache.Remove(src)
 	update_icon()
 
-/turf/simulated/wall/update_icon(var/propagate = 1)
+/turf/simulated/wall/update_icon()
 	if(!material || !p_material)
 		update_material(1)
 
@@ -49,7 +49,6 @@
 		generate_overlays()
 
 	overlays.Cut()
-	update_connections(propagate)
 	var/image/I
 	for(var/i = 1 to 4)
 		if(wall_connections[i])
@@ -98,7 +97,8 @@
 		if(!W.p_material)
 			continue
 		if(propagate)
-			W.update_icon(0)
+			W.update_connections()
+			W.update_icon()
 		if(can_join_with(W))
 			dirs += get_dir(src, W)
 

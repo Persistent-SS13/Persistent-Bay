@@ -16,10 +16,10 @@
 /material/copper
 	value = 15
 
-/material/copper/bronze
+/material/bronze
 	value = 20
 
-/material/copper/brass
+/material/brass
 	value = 20
 
 /material/tin
@@ -60,6 +60,9 @@
 
 /material/glass/phoron/reinforced
 	value = 40
+
+/material/glass/fiberglass
+	value = 10
 
 /material/osmium
 	value = 30

@@ -258,6 +258,7 @@
 	name = "Chief Medical Officer's Equipment"
 	contains = list(/obj/item/clothing/under/rank/chief_medical_officer,
 					/obj/item/clothing/suit/storage/toggle/labcoat/cmoalt,
+					/obj/item/clothing/suit/storage/toggle/labcoat/coat_cmo,
 					/obj/item/clothing/shoes/white,
 					/obj/item/weapon/storage/belt/medical,
 					/obj/item/clothing/glasses/hud/health,
@@ -468,19 +469,19 @@
 	containername = "\improper Beret Locker"
 /decl/hierarchy/supply_pack/operations/personal
 	name = "Personal Locker"
-	contains = list() 
+	contains = list()
 	cost = 2
 	containertype = /obj/structure/closet/secure_closet/personal/empty
 	containername = "Personal Locker"
 /decl/hierarchy/supply_pack/operations/patient
 	name = "Patient's Closet"
-	contains = list() 
+	contains = list()
 	cost = 2
 	containertype = /obj/structure/closet/secure_closet/personal/patient
 	containername = "Patient's Closet"
 /decl/hierarchy/supply_pack/operations/personal_cabinet
 	name = "Personal Cabinet"
-	contains = list() 
+	contains = list()
 	cost = 2
 	containertype = /obj/structure/closet/secure_closet/personal/cabinet/empty
 	containername = "Personal Cabinet"

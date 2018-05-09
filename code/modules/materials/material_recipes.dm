@@ -136,6 +136,10 @@
 	..()
 	recipes += new/datum/stack_recipe("planting bed", /obj/machinery/portable_atmospherics/hydroponics/soil, 3, time = 10, one_per_turf = 1, on_floor = 1)
 
+/material/copper/generate_recipes()
+	..()
+	recipes += new/datum/stack_recipe("cable coil", /obj/item/stack/cable_coil, 1, time=5)
+
 /material/plastic/generate_recipes()
 	..()
 	recipes += new/datum/stack_recipe("plastic crate", /obj/structure/closet/crate/plastic, 10, one_per_turf = 1, on_floor = 1)

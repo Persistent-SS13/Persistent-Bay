@@ -276,9 +276,69 @@ var/list/name_to_material
 				/datum/reagent/gold = 15
 				)
 
-/material/gold/bronze //placeholder for ashtrays
+/material/copper
+	name = "copper"
+	stack_type = /obj/item/stack/material/copper
+	icon_colour = "#eea800"
+	weight = 20
+	hardness = 50
+	integrity = 100
+	stack_origin_tech = list(TECH_MATERIAL = 2)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
+	chem_products = list(
+				/datum/reagent/copper = 20
+				)
+
+/material/copper/bronze //copper and tin
 	name = "bronze"
+	stack_type = /obj/item/stack/material/bronze
+	icon_colour = "#ffb900"
+	integrity = 125
+	stack_origin_tech = list(TECH_MATERIAL = 3)
+	composite_material = list("copper" = 7500, "tin" = 3750)
+
+/material/copper/brass //copper and zinc
+	name = "brass"
+	stack_type = /obj/item/stack/material/brass
 	icon_colour = "#edd12f"
+	hardness = 35
+	integrity = 130
+	stack_origin_tech = list(TECH_MATERIAL = 3)
+	composite_material = list("copper" = 7500, "zinc" = 3750)
+
+/material/tin
+	name = "tin"
+	stack_type = /obj/item/stack/material/tin
+	icon_colour = "#e1f6f3"
+	weight = 18
+	hardness = 25
+	stack_origin_tech = list(TECH_MATERIAL = 2)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
+
+/material/zinc
+	name = "zinc"
+	stack_type = /obj/item/stack/material/zinc
+	icon_colour = "#c1d6d3"
+	weight = 18
+	hardness = 50
+	stack_origin_tech = list(TECH_MATERIAL = 2)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
+
+/material/aluminum
+	name = "aluminum"
+	stack_type = /obj/item/stack/material/aluminum
+	icon_colour = "#c1d6d3"
+	weight = 18
+	hardness = 50
+	stack_origin_tech = list(TECH_MATERIAL = 2)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
+	chem_products = list(
+				/datum/reagent/aluminum = 20
+				)
 
 /material/silver
 	name = "silver"
@@ -454,6 +514,44 @@ var/list/name_to_material
 	stack_origin_tech = list(TECH_MATERIAL = 3)
 	composite_material = list("plasteel" = 7500, "osmium" = 3750)
 
+/material/tungsten
+	name = "tungsten"
+	stack_type = /obj/item/stack/material/tungsten
+	integrity = 250 // Tungsten ain't no bitch
+	melting_point = 16000
+	icon_colour = "#8888aa"
+	weight = 32 // Tungsten B-Ball bats OP AF
+	stack_origin_tech = list(TECH_MATERIAL = 4)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
+	chem_products = list(
+				/datum/reagent/tungsten = 20
+				)
+
+/material/lead
+	name = "lead"
+	stack_type = /obj/item/stack/material/lead
+	icon_colour = "#6677bb"
+	radioactivity = 2 // Simulated lead poisoning using VERY weak radiation
+	weight = 28
+	stack_origin_tech = list(TECH_MATERIAL = 2)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
+
+/material/sulfur
+	name = "sulfur"
+	stack_type = /obj/item/stack/material/sulfur
+	icon_colour = "#4f8cbb"
+	integrity = 5
+	hardness = 1
+	melting_point = T0C + 80
+	ignition_point = T0C + 70
+	weight = 3
+	sheet_singular_name = "brick"
+	sheet_plural_name = "bricks"
+	chem_products = list(
+				/datum/reagent/sulfur = 20
+				)
 
 /material/glass
 	name = "glass"

@@ -370,6 +370,12 @@ STARLIGHT 0
 ## Uncomment this line to announce shuttle dock announcements to the main IRC channel, if MAIN_IRC has also been setup.
 # ANNOUNCE_SHUTTLE_DOCK_TO_IRC
 
+## Uncomment to change the in-game year as the number of years from the current real year
+# YEAR_SKIP 420
+
+## Uncomment to change the in-game timezone relative to GMT
+# TIME_ZONE -5
+
 ## Uncomment to enable map voting; you'll need to use the script at tools/server.sh or an equivalent for it to take effect
 ## You'll also likely need to enable WAIT_FOR_SIGUSR1 below
 # MAP_SWITCHING

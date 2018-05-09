@@ -182,7 +182,7 @@
 			<A href='?src=\ref[src];filterset=2'>Nitrogen</A><BR>
 			<A href='?src=\ref[src];filterset=3'>Carbon Dioxide</A><BR>
 			<A href='?src=\ref[src];filterset=4'>Nitrous Oxide</A><BR>
-			<A href='?src=\ref[src];filterset=4'>Hydrogen</A><BR>
+			<A href='?src=\ref[src];filterset=5'>Hydrogen</A><BR>
 			<A href='?src=\ref[src];filterset=-1'>Nothing</A><BR>
 			<HR>
 			<B>Set Flow Rate Limit:</B>

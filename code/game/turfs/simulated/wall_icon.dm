@@ -39,7 +39,6 @@
 	set_opacity(p_material.opacity >= 0.5)
 
 	radiation_repository.resistance_cache.Remove(src)
-	update_connections(1)
 	update_icon()
 
 /turf/simulated/wall/update_icon(var/propagate = 1)
@@ -53,9 +52,10 @@
 	update_connections(propagate)
 	var/image/I
 	for(var/i = 1 to 4)
-		I = image('icons/turf/wall_masks.dmi', "[r_material ? p_material.icon_reinf : p_material.icon_base][wall_connections[i]]", dir = 1<<(i-1))
-		I.color = p_material.icon_colour
-		overlays += I
+		if(wall_connections[i])
+			I = image('icons/turf/wall_masks.dmi', "[r_material ? p_material.icon_reinf : p_material.icon_base][wall_connections[i]]", dir = 1<<(i-1))
+			I.color = p_material.icon_colour
+			overlays += I
 
 	if(r_material)
 		if(state == null)

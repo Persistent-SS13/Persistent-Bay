@@ -152,7 +152,6 @@
 			G = new(src, material)
 			G.state = 2
 		G.anchored = 1
-		G.update_icon()
 		new p_material.stack_type(src, 2)
 		src.ChangeTurf(floor_type)
 

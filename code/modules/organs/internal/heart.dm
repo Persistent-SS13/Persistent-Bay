@@ -178,8 +178,6 @@
 		return "no pulse"
 
 	var/pulsesound = "normal"
-	if(is_bruised())
-		pulsesound = "irregular"
 
 	switch(pulse)
 		if(PULSE_SLOW)
@@ -190,5 +188,8 @@
 			pulsesound = "very fast"
 		if(PULSE_THREADY)
 			pulsesound = "extremely fast and faint"
+
+	if(is_bruised())
+		pulsesound = "irregular, but otherwise " + pulsesound
 
 	. = "[pulsesound] pulse"

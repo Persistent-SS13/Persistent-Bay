@@ -204,12 +204,14 @@
 				if(Crowbar(W, user))
 					to_chat(user, "<span class='notice'>You unbend the material from around \the [src].</span>")
 					state = 1
+					update_connections(1)
 					update_icon()
 					return
 			if(null)
 				if(Weld(W, user, null, "You start unwelding the material from \the [src]."))
 					to_chat(user, "<span class='notice'>You unweld the material from \the [src].</span>")
 					state = 2
+					update_connections(1)
 					update_icon()
 					return
 

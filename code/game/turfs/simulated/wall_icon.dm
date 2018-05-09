@@ -41,7 +41,7 @@
 	radiation_repository.resistance_cache.Remove(src)
 	update_icon()
 
-/turf/simulated/wall/update_icon(var/propagate = 1)
+/turf/simulated/wall/update_icon()
 	if(!material || !p_material)
 		update_material(1)
 
@@ -49,13 +49,14 @@
 		generate_overlays()
 
 	overlays.Cut()
-	update_connections(propagate)
 	var/image/I
 	for(var/i = 1 to 4)
-		if(wall_connections[i])
+		try
 			I = image('icons/turf/wall_masks.dmi', "[r_material ? p_material.icon_reinf : p_material.icon_base][wall_connections[i]]", dir = 1<<(i-1))
 			I.color = p_material.icon_colour
 			overlays += I
+		catch(var/exception/e)
+			world.log << "[e] on [e.file] : [e.line]"
 
 	if(r_material)
 		if(state == null)
@@ -98,7 +99,7 @@
 		if(!W.p_material)
 			continue
 		if(propagate)
-			W.update_icon(0)
+			W.update_icon()
 		if(can_join_with(W))
 			dirs += get_dir(src, W)
 

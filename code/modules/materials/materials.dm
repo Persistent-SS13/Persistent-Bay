@@ -83,6 +83,7 @@ var/list/stack_to_material
 	var/sheet_plural_name = "sheets"
 	var/is_fusion_fuel
 	var/list/gaseous_products	  		  // Used with sublimator to produce gas
+	var/list/chem_products				  // Used with the grinder to produce chemicals
 
 	// Shards/tables/structures
 	var/shard_type = SHARD_SHRAPNEL       // Path of debris object.
@@ -254,6 +255,9 @@ var/list/stack_to_material
 	weight = 22
 	stack_origin_tech = list(TECH_MATERIAL = 5)
 	door_icon_base = "stone"
+	chem_products = list(
+				/datum/reagent/uranium = 15
+				)
 
 /material/diamond
 	name = "diamond"
@@ -281,6 +285,9 @@ var/list/stack_to_material
 	stack_origin_tech = list(TECH_MATERIAL = 4)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
+	chem_products = list(
+				/datum/reagent/gold = 15
+				)
 
 /material/gold/bronze //placeholder for ashtrays
 	name = "bronze"
@@ -295,6 +302,9 @@ var/list/stack_to_material
 	stack_origin_tech = list(TECH_MATERIAL = 3)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
+	chem_products = list(
+				/datum/reagent/silver = 15
+				)
 
 /material/phoron
 	name = "phoron"
@@ -311,6 +321,9 @@ var/list/stack_to_material
 	is_fusion_fuel = 1
 	gaseous_products = list(
 				"phoron" = 3.4 // 1360~g / 405g per mole
+				)
+	chem_products = list(
+				/datum/reagent/toxin/phoron = 15
 				)
 
 /material/phoron/supermatter
@@ -354,6 +367,9 @@ var/list/stack_to_material
 	gaseous_products = list(
 				"chlorine" = 10.3 // 600~g / 58.4 per mole
 				)
+	chem_products = list(
+				/datum/reagent/sodiumchloride = 20
+				)
 
 /material/steel
 	name = DEFAULT_WALL_MATERIAL
@@ -363,6 +379,10 @@ var/list/stack_to_material
 	icon_reinf = "metal"
 	icon_colour = "#666666"
 	hitsound = 'sound/weapons/smash.ogg'
+	chem_products = list(
+				/datum/reagent/iron = 15,
+				/datum/reagent/carbon = 5
+				)
 
 /material/diona
 	name = "biomass"
@@ -557,6 +577,9 @@ var/list/stack_to_material
 	created_window = /obj/structure/window/phoronbasic
 	wire_product = null
 	rod_product = /obj/item/stack/material/glass/phoronrglass
+	chem_products = list(
+				/datum/reagent/toxin/phoron = 10
+				)
 
 /material/glass/phoron/reinforced
 	name = "rphglass"
@@ -586,6 +609,9 @@ var/list/stack_to_material
 	melting_point = T0C+371 //assuming heat resistant plastic
 	stack_origin_tech = list(TECH_MATERIAL = 3)
 	conductive = 0
+	chem_products = list(
+				/datum/reagent/toxin/plasticide = 20
+				)
 
 /material/plastic/holographic
 	name = "holoplastic"
@@ -634,6 +660,9 @@ var/list/stack_to_material
 	gaseous_products = list(
 				"hydrogen" = 30 //(30~g / 1 grams per mole) probably don't have a ton of this stuff per stack
 				)
+	chem_products = list(
+				/datum/reagent/hydrazine = 20
+				)
 
 /material/ice
 	name = "ice"
@@ -643,6 +672,10 @@ var/list/stack_to_material
 				"hydrogen" = 22.2, //(600~g / 18 grams per mole)*2/3
 				"oxygen" = 11.1
 				)
+	chem_products = list(
+				/datum/reagent/drink/ice = 15,
+				/datum/reagent/water = 5
+				)
 
 /material/dryice
 	name = "dryice"
@@ -650,6 +683,9 @@ var/list/stack_to_material
 	icon_colour = "#dce2e2"
 	gaseous_products = list(
 				"carbon_dioxide" = 13.6 //(600~g / 44.01 grams per mole)
+				)
+	chem_products = list(
+				/datum/reagent/carbon = 20
 				)
 
 /material/platinum
@@ -669,6 +705,9 @@ var/list/stack_to_material
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
 	hitsound = 'sound/weapons/smash.ogg'
+	chem_products = list(
+				/datum/reagent/iron = 20
+				)
 
 // Adminspawn only, do not let anyone get this.
 /material/voxalloy
@@ -712,6 +751,9 @@ var/list/stack_to_material
 	sheet_plural_name = "planks"
 	hitsound = 'sound/effects/woodhit.ogg'
 	conductive = 0
+	chem_products = list(
+				/datum/reagent/carbon = 10
+				)
 
 /material/wood/holographic
 	name = "holowood"

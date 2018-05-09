@@ -80,7 +80,7 @@
 			thermitemelt(user)
 			return
 
-	if(integrity != MaxIntegrity() && Weld(W, user, null, "You start repairing the damage to [src]."))
+	if(integrity != MaxIntegrity() && Weld(W, user, null, "You start repairing the damage to [src].</span>"))
 		repair_damage(MaxIntegrity())
 		return
 

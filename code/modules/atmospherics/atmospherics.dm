@@ -135,5 +135,8 @@ obj/machinery/atmospherics/proc/check_connect_types(obj/machinery/atmospherics/a
 
 /obj/machinery/atmospherics/proc/disconnect(obj/machinery/atmospherics/reference)
 
+/obj/machinery/atmospherics/proc/atmos_scan()
+	return null
+
 /obj/machinery/atmospherics/update_icon()
 	return null

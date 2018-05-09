@@ -338,7 +338,7 @@ var/list/global/slot_flags_enumeration = list(
 			if( (slot_flags & SLOT_TWOEARS) && H.get_equipped_item(slot_other_ear) )
 				return 0
 		if(slot_belt, slot_wear_id)
-			if(slot == slot_belt && (item_flags & ITEM_FLAG_IS_BELT))
+			if(slot == slot_belt && (item_flags & IS_BELT))
 				return 1
 			else if(!H.w_uniform && (slot_w_uniform in mob_equip))
 				if(!disable_warning)

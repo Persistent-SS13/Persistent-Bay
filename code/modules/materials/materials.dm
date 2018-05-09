@@ -290,22 +290,35 @@ var/list/name_to_material
 				/datum/reagent/copper = 20
 				)
 
-/material/copper/bronze //copper and tin
+/material/bronze //copper and tin
 	name = "bronze"
 	stack_type = /obj/item/stack/material/bronze
 	icon_colour = "#ffb900"
+	weight = 20
+	hardness = 50
 	integrity = 125
 	stack_origin_tech = list(TECH_MATERIAL = 3)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
 	composite_material = list("copper" = 7500, "tin" = 3750)
+	chem_products = list(
+				/datum/reagent/copper = 15
+				)
 
-/material/copper/brass //copper and zinc
+/material/brass //copper and zinc
 	name = "brass"
 	stack_type = /obj/item/stack/material/brass
 	icon_colour = "#edd12f"
+	weight = 20
 	hardness = 35
 	integrity = 130
 	stack_origin_tech = list(TECH_MATERIAL = 3)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
 	composite_material = list("copper" = 7500, "zinc" = 3750)
+	chem_products = list(
+				/datum/reagent/copper = 15
+				)
 
 /material/tin
 	name = "tin"
@@ -584,6 +597,9 @@ var/list/name_to_material
 	rod_product = /obj/item/stack/material/glass/reinforced
 	hitsound = 'sound/effects/Glasshit.ogg'
 	conductive = 0
+	chem_products = list(
+				/datum/reagent/silicon = 20
+				)
 
 /material/glass/build_windows(var/mob/living/user, var/obj/item/stack/used_stack)
 
@@ -696,6 +712,7 @@ var/list/name_to_material
 	rod_product = /obj/item/stack/material/glass/phoronrglass
 	chem_products = list(
 				/datum/reagent/toxin/phoron = 10
+				/datum/reagent/silicon = 10
 				)
 
 /material/glass/phoron/reinforced
@@ -713,6 +730,31 @@ var/list/name_to_material
 	rod_product = null
 	integrity = 100
 
+/material/glass/fiberglass
+	name = "fiberglass"
+	display_name = "fiberglass"
+	stack_type = /obj/item/stack/material/glass/fiberglass
+	flags = null //Fiberglass isn't very brittle
+	icon_colour = "#bbbbcc"
+	opacity = 0.4
+	integrity = 125
+	melting_point = T0C + 90 // It's slightly more susceptible to fire than normal glass
+	tableslam_noise = 'sound/weapons/tablehit1.ogg'
+	hitsound = 'sound/weapons/tablehit1.ogg'
+	weight = 10
+	brute_armor = 4 // It's very tough against brute damage though
+	burn_armor = 1
+	shard_type = SHARD_SPLINTER
+	stack_origin_tech = list(TECH_MATERIAL = 2)
+	destruction_desc = "splinters"
+	window_options = list("One Direction" = 1, "Full Window" = 4)
+	created_window = /obj/structure/window/plastic
+	wire_product = null
+	rod_product = null
+	chem_products = list(
+				/datum/reagent/silicon = 20
+				/datum/reagent/toxin/plasticide = 2
+				)
 
 /material/plastic
 	name = "plastic"
@@ -727,7 +769,7 @@ var/list/name_to_material
 	stack_origin_tech = list(TECH_MATERIAL = 3)
 	conductive = 0
 	chem_products = list(
-				/datum/reagent/toxin/plasticide = 20
+				/datum/reagent/toxin/plasticide = 2
 				)
 
 /material/plastic/holographic

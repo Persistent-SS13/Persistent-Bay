@@ -430,3 +430,11 @@
 
 /obj/item/stack/material/glass/phoronrglass/ten
 	amount = 10
+
+/obj/item/stack/material/glass/fiberglass
+	name = "fiberglass"
+	icon_state = "sheet-fiberglass"
+	default_type = "fiberglass"
+
+/obj/item/stack/material/glass/fiberglass/ten
+	amount = 10

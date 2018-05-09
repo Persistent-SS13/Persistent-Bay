@@ -278,9 +278,12 @@
 
 /obj/item/weapon/secbot_assembly/attackby(var/obj/item/O, var/mob/user)
 	..()
-	if(!build_step && Weld(O, user, 0, "You weld a hole in \the [src]."))
-		build_step = 1
-		overlays += image('icons/obj/aibots.dmi', "hs_hole")
+	if(isWelder(O) && !build_step)
+		var/obj/item/weapon/weldingtool/WT = O
+		if(WT.remove_fuel(0, user))
+			build_step = 1
+			overlays += image('icons/obj/aibots.dmi', "hs_hole")
+			to_chat(user, "You weld a hole in \the [src].")
 
 	else if(isprox(O) && (build_step == 1))
 		user.drop_item()

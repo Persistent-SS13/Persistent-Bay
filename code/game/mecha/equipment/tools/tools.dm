@@ -94,7 +94,7 @@
 			if(T == chassis.loc && src == chassis.selected)
 				if(istype(target, /turf/simulated/wall))
 					var/turf/simulated/wall/W = target
-					if(W.r_material)
+					if(W.reinf_material)
 						occupant_message("<span class='warning'>\The [target] is too durable to drill through.</span>")
 					else
 						log_message("Drilled through \the [target]")
@@ -149,7 +149,7 @@
 			if(T == chassis.loc && src == chassis.selected)
 				if(istype(target, /turf/simulated/wall))
 					var/turf/simulated/wall/W = target
-					if(!W.r_material || do_after_cooldown(target))//To slow down how fast mechs can drill through the station
+					if(!W.reinf_material || do_after_cooldown(target))//To slow down how fast mechs can drill through the station
 						log_message("Drilled through \the [target]")
 						target.ex_act(3)
 				else if(istype(target, /turf/simulated/mineral))

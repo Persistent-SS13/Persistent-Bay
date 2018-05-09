@@ -148,17 +148,19 @@
 	taste_description = "sludge"
 	reagent_state = LIQUID
 	color = "#8080ff"
-	metabolism = REM * 0.5
+	metabolism = REM * 0.05
 	scannable = 1
 	flags = IGNORE_MOB_SIZE
 
 /datum/reagent/cryoxadone/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+	M.add_chemical_effect(CE_CRYO, 1)
 	if(M.bodytemperature < 170)
-		M.adjustCloneLoss(-10 * removed)
+		M.adjustCloneLoss(-100 * removed)
 		M.add_chemical_effect(CE_OXYGENATED, 1)
-		/* //Removing healing properties for both Clonexadone and Cryoxadone, too unbalanced at this stage of development.
-		M.heal_organ_damage(10 * removed, 10 * removed)
-		*/
+		// It metabolizes 10x slower, but only heals 2x as much.
+		// This means that it heals at 1/5 the speed it used to.
+		// Stasis further slows it.
+		M.heal_organ_damage(20 * removed, 20 * removed)
 		M.add_chemical_effect(CE_PULSE, -2)
 
 /datum/reagent/clonexadone
@@ -167,17 +169,19 @@
 	taste_description = "slime"
 	reagent_state = LIQUID
 	color = "#80bfff"
-	metabolism = REM * 0.5
+	metabolism = REM * 0.05
 	scannable = 1
 	flags = IGNORE_MOB_SIZE
 
 /datum/reagent/clonexadone/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+	M.add_chemical_effect(CE_CRYO, 1)
 	if(M.bodytemperature < 170)
-		M.adjustCloneLoss(-30 * removed)
+		M.adjustCloneLoss(-300 * removed)
 		M.add_chemical_effect(CE_OXYGENATED, 2)
-		/* //Removing healing properties for both Clonexadone and Cryoxadone, too unbalanced at this stage of development.
-		M.heal_organ_damage(30 * removed, 30 * removed)
-		*/
+		// It metabolizes 10x slower, but only heals 1.6x as much.
+		// This means that it heals at 1/6 the speed it used to.
+		// Stasis further slows it.
+		M.heal_organ_damage(50 * removed, 50 * removed)
 		M.add_chemical_effect(CE_PULSE, -2)
 
 /* Painkillers */

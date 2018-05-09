@@ -89,6 +89,7 @@ var/global/Holiday = null
 
 		if(10)	//Oct
 			switch(DD)
+				if(3)							Holiday = "German Unity Day"
 				if(4)							Holiday = "Animal's Day"
 				if(7)							Holiday = "Smiling Day"
 				if(16)							Holiday = "Boss' Day"
@@ -105,7 +106,6 @@ var/global/Holiday = null
 			switch(DD)
 				if(10)							Holiday = "Human-Rights Day"
 				if(14)							Holiday = "Monkey Day"
-				if(21)							if(YY==12)	Holiday = "End of the World"
 				if(22)							Holiday = "Orgasming Day"		//lol. These all actually exist
 				if(24)							Holiday = "Christmas Eve"
 				if(25)							Holiday = "Christmas"

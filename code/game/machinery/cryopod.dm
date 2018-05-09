@@ -302,9 +302,6 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		qdel(src)
 
 	if(occupant)
-		if(applies_stasis && iscarbon(occupant))
-			var/mob/living/carbon/C = occupant
-			C.SetStasis(20)
 
 		if(world.time - time_entered < time_till_despawn)
 			return

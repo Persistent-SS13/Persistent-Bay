@@ -26,7 +26,6 @@
 
 // Assoc list containing all material datums indexed by name.
 var/list/name_to_material
-var/list/stack_to_material
 
 //Returns the material the object is made of, if applicable.
 //Will we ever need to return more than one value here? Or should we just return the "dominant" material.
@@ -41,15 +40,13 @@ var/list/stack_to_material
 
 // Builds the datum list above.
 /proc/populate_material_list(force_remake=0)
-	if(name_to_material || stack_to_material && !force_remake) return // Already set up!
+	if(name_to_material && !force_remake) return // Already set up!
 	name_to_material = list()
-	stack_to_material = list()
 	for(var/type in typesof(/material) - /material)
 		var/material/new_mineral = new type
-		if(new_mineral.name)
-			name_to_material[lowertext(new_mineral.name)] = new_mineral
-		if(new_mineral.stack_type)
-			stack_to_material[new_mineral.stack_type] = new_mineral
+		if(!new_mineral.name)
+			continue
+		name_to_material[lowertext(new_mineral.name)] = new_mineral
 	return 1
 
 // Safety proc to make sure the material list exists before trying to grab from it.
@@ -59,12 +56,6 @@ var/list/stack_to_material
 	. = name_to_material[name]
 	if(!.)
 		log_error("Unable to acquire material by name '[name]'")
-/proc/get_material_by_stack(var/stack)
-	if(!stack_to_material)
-		populate_material_list()
-	. = stack_to_material[stack]
-	if(!.)
-		log_error("Unable to aquire material by stack '[stack]'")
 
 /proc/material_display_name(name)
 	var/material/material = get_material_by_name(name)
@@ -93,9 +84,9 @@ var/list/stack_to_material
 
 	// Icons
 	var/icon_colour                                      // Colour applied to products of this material.
-	var/icon_base = "solid"                              // Wall and table base icon tag. See header.
+	var/icon_base = "metal"                              // Wall and table base icon tag. See header.
 	var/door_icon_base = "metal"                         // Door base icon tag. See header.
-	var/icon_reinf = "solid"                       // Reinforced wall and table icon tag
+	var/icon_reinf = "reinf_metal"                       // Overlay used
 	var/list/stack_origin_tech = list(TECH_MATERIAL = 1) // Research level for stacks.
 
 	// Attributes
@@ -171,8 +162,6 @@ var/list/stack_to_material
 		use_name = display_name
 	if(!adjective_name)
 		adjective_name = display_name
-	if(!icon_reinf)
-		icon_reinf = icon_base
 	if(!shard_icon)
 		shard_icon = shard_type
 	if(!burn_armor)
@@ -212,6 +201,13 @@ var/list/stack_to_material
 /material/placeholder
 	name = "placeholder"
 
+// Places a girder object when a wall is dismantled, also applies reinforced material.
+/material/proc/place_dismantled_girder(var/turf/target, var/material/reinf_material)
+	var/obj/structure/girder/G = new(target)
+	if(reinf_material)
+		G.reinf_material = reinf_material
+		G.reinforce_girder()
+
 // General wall debris product placement.
 // Not particularly necessary aside from snowflakey cult girders.
 /material/proc/place_dismantled_product(var/turf/target,var/is_devastated)
@@ -232,16 +228,8 @@ var/list/stack_to_material
 /material/proc/is_brittle()
 	return !!(flags & MATERIAL_BRITTLE)
 
-/material/proc/combustion_effect(var/turf/T, var/temperature, var/amount = 1)
-	if(!ignition_point || temperature < ignition_point)
-		return 0
-	if(gaseous_products)
-		var/list/tiles = list()
-		tiles += /turf/simulated/floor in range(2,T)
-		for(var/gas in gaseous_products)
-			for(var/turf/simulated/floor/target_tile in tiles)
-				target_tile.assume_gas("[gas]", (gaseous_products[gas] * amount) / tiles.len)
-	return 1
+/material/proc/combustion_effect(var/turf/T, var/temperature)
+	return
 
 // Datum definitions follow.
 /material/uranium
@@ -273,7 +261,6 @@ var/list/stack_to_material
 /material/gold
 	name = "gold"
 	stack_type = /obj/item/stack/material/gold
-	icon_reinf = "metal"
 	icon_colour = "#edd12f"
 	weight = 25
 	hardness = 25
@@ -300,7 +287,7 @@ var/list/stack_to_material
 	name = "phoron"
 	stack_type = /obj/item/stack/material/phoron
 	ignition_point = PHORON_MINIMUM_BURN_TEMPERATURE
-	icon_reinf = "metal"
+	icon_base = "stone"
 	icon_colour = "#e37108"
 	shard_type = SHARD_SHARD
 	hardness = 30
@@ -320,6 +307,23 @@ var/list/stack_to_material
 	stack_origin_tech = list(TECH_BLUESPACE = 2, TECH_MATERIAL = 6, TECH_PHORON = 4)
 	stack_type = null
 	luminescence = 3
+
+
+//Controls phoron and phoron based objects reaction to being in a turf over 200c -- Phoron's flashpoint.
+/material/phoron/combustion_effect(var/turf/T, var/temperature, var/effect_multiplier)
+	if(isnull(ignition_point))
+		return 0
+	if(temperature < ignition_point)
+		return 0
+	var/totalPhoron = 0
+	for(var/turf/simulated/floor/target_tile in range(2,T))
+		var/phoronToDeduce = (temperature/30) * effect_multiplier
+		totalPhoron += phoronToDeduce
+		target_tile.assume_gas("phoron", phoronToDeduce, 200+T0C)
+		spawn (0)
+			target_tile.hotspot_expose(temperature, 400)
+	return round(totalPhoron/100)
+
 
 /material/stone
 	name = "sandstone"
@@ -360,7 +364,8 @@ var/list/stack_to_material
 	stack_type = /obj/item/stack/material/steel
 	integrity = 150
 	brute_armor = 5
-	icon_reinf = "metal"
+	icon_base = "solid"
+	icon_reinf = "reinf_over"
 	icon_colour = "#666666"
 	hitsound = 'sound/weapons/smash.ogg'
 
@@ -370,12 +375,15 @@ var/list/stack_to_material
 	stack_type = null
 	integrity = 600
 	icon_base = "diona"
-	icon_reinf = "diona"
+	icon_reinf = "noreinf"
 	hitsound = 'sound/effects/attackblob.ogg'
 	conductive = 0
 
 /material/diona/place_dismantled_product()
 	return
+
+/material/diona/place_dismantled_girder(var/turf/target)
+	spawn_diona_nymph(target)
 
 /material/steel/holographic
 	name = "holo" + DEFAULT_WALL_MATERIAL
@@ -390,7 +398,7 @@ var/list/stack_to_material
 	integrity = 400
 	melting_point = 6000
 	icon_base = "solid"
-	icon_reinf = "metal"
+	icon_reinf = "reinf_over"
 	icon_colour = "#777777"
 	explosion_resistance = 25
 	brute_armor = 6
@@ -410,6 +418,7 @@ var/list/stack_to_material
 	icon_base = "metal"
 	door_icon_base = "metal"
 	icon_colour = "#d1e6e3"
+	icon_reinf = "reinf_metal"
 
 /material/plasteel/ocp
 	name = "osmium-carbide plasteel"
@@ -417,7 +426,7 @@ var/list/stack_to_material
 	integrity = 200
 	melting_point = 12000
 	icon_base = "solid"
-	icon_reinf = "metal"
+	icon_reinf = "reinf_over"
 	icon_colour = "#9bc6f2"
 	brute_armor = 4
 	burn_armor = 20
@@ -578,8 +587,8 @@ var/list/stack_to_material
 	name = "plastic"
 	stack_type = /obj/item/stack/material/plastic
 	flags = MATERIAL_BRITTLE
-	icon_base = "curvy"
-	icon_reinf = "curvy"
+	icon_base = "solid"
+	icon_reinf = "reinf_over"
 	icon_colour = "#cccccc"
 	hardness = 10
 	weight = 5
@@ -687,8 +696,6 @@ var/list/stack_to_material
 	name = "elevatorium"
 	display_name = "elevator panelling"
 	icon_colour = "#666666"
-	icon_base = "metal"
-	icon_reinf = "metal"
 
 /material/wood
 	name = "wood"
@@ -696,6 +703,7 @@ var/list/stack_to_material
 	stack_type = /obj/item/stack/material/wood
 	icon_colour = "#824b28"
 	integrity = 50
+	icon_base = "solid"
 	explosion_resistance = 2
 	shard_type = SHARD_SPLINTER
 	shard_can_repair = 0 // you can't weld splinters back into planks
@@ -724,6 +732,8 @@ var/list/stack_to_material
 	stack_type = /obj/item/stack/material/cardboard
 	flags = MATERIAL_BRITTLE
 	integrity = 10
+	icon_base = "solid"
+	icon_reinf = "reinf_over"
 	icon_colour = "#aaaaaa"
 	hardness = 1
 	brute_armor = 1
@@ -756,6 +766,12 @@ var/list/stack_to_material
 	sheet_plural_name = "bricks"
 	conductive = 0
 
+/material/cult/place_dismantled_girder(var/turf/target)
+	new /obj/structure/girder/cult(target)
+
+/material/cult/place_dismantled_product(var/turf/target)
+	new /obj/effect/decal/cleanable/blood(target)
+
 /material/cult/reinf
 	name = "cult2"
 	display_name = "human remains"
@@ -784,6 +800,7 @@ var/list/stack_to_material
 	stack_type = null
 	icon_base = "jaggy"
 	door_icon_base = "metal"
+	icon_reinf = "reinf_metal"
 	hitsound = 'sound/weapons/smash.ogg'
 	sheet_singular_name = "chunk"
 	sheet_plural_name = "chunks"
@@ -798,6 +815,9 @@ var/list/stack_to_material
 	integrity = rand(200,400)
 	melting_point = rand(400,10000)
 	..()
+
+/material/aliumium/place_dismantled_girder(var/turf/target, var/material/reinf_material)
+	return
 
 //TODO PLACEHOLDERS:
 /material/leather

@@ -658,7 +658,7 @@
 
 /datum/reagent/rezadone
 	name = "Rezadone"
-	description = "A powder with almost magical properties, this substance can effectively treat genetic damage in humanoids, though excessive consumption has side effects."
+	description = "This remarkable emergency treatment can treat genetic damage in humanoids, but such crude regrowth of tissue is almost guaranteed to disfigure the patient."
 	taste_description = "sickness"
 	reagent_state = SOLID
 	color = "#669900"
@@ -669,13 +669,12 @@
 /datum/reagent/rezadone/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	M.adjustCloneLoss(-20 * removed)
 	M.adjustOxyLoss(-2 * removed)
-	M.heal_organ_damage(20 * removed, 20 * removed)
-	M.adjustToxLoss(-20 * removed)
-	if(M.chem_doses[type] > 3 && ishuman(M))
+	M.heal_organ_damage(10 * removed, 10 * removed)
+	M.adjustToxLoss(-10 * removed)
+	if(M.chem_doses[type] > 1 && ishuman(M))
 		var/mob/living/carbon/human/H = M
 		for(var/obj/item/organ/external/E in H.organs)
 			E.disfigured = 1 //currently only matters for the head, but might as well disfigure them all.
-	if(M.chem_doses[type] > 10)
 		M.make_dizzy(5)
 		M.make_jittery(5)
 

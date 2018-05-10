@@ -736,8 +736,6 @@
 		reset_plane_and_layer()
 
 /mob/proc/facedir(var/ndir)
-	client.pixel_x = 0
-	client.pixel_y = 0
 	if(!canface() || client.moving || world.time < client.move_delay)
 		return 0
 	set_dir(ndir)
@@ -994,6 +992,8 @@ mob/proc/yank_out_object()
 		facing_dir = dir
 
 /mob/set_dir()
+	client.pixel_x = 0
+	client.pixel_y = 0
 	if(facing_dir)
 		if(!canface() || lying || buckled || restrained())
 			facing_dir = null

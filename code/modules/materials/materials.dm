@@ -711,7 +711,7 @@ var/list/name_to_material
 	wire_product = null
 	rod_product = /obj/item/stack/material/glass/phoronrglass
 	chem_products = list(
-				/datum/reagent/toxin/phoron = 10
+				/datum/reagent/toxin/phoron = 10,
 				/datum/reagent/silicon = 10
 				)
 
@@ -752,7 +752,7 @@ var/list/name_to_material
 	wire_product = null
 	rod_product = null
 	chem_products = list(
-				/datum/reagent/silicon = 20
+				/datum/reagent/silicon = 20,
 				/datum/reagent/toxin/plasticide = 2
 				)
 

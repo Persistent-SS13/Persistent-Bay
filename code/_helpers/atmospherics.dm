@@ -34,7 +34,7 @@
 		var/datum/gas_mixture/gas_contents = gm
 
 		var/pressure = gas_contents.return_pressure()
-		var/total_moles = gas_contents.get_total_moles()
+		var/total_moles = gas_contents.total_moles
 
 		if (total_moles>0)
 

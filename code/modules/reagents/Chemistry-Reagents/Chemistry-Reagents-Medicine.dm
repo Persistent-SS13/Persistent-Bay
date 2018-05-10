@@ -157,10 +157,17 @@
 	if(M.bodytemperature < 170)
 		M.adjustCloneLoss(-100 * removed)
 		M.add_chemical_effect(CE_OXYGENATED, 1)
-		// It metabolizes 10x slower, but only heals 2x as much.
-		// This means that it heals at 1/5 the speed it used to.
-		// Stasis further slows it.
-		M.heal_organ_damage(20 * removed, 20 * removed)
+		if(ishuman(M))
+		var/mob/living/carbon/human/H = M
+		for(var/obj/item/organ/internal/I in H.internal_organs)
+			if(I.robotic >= ORGAN_ROBOT)
+				continue
+			if(I.organ_tag == BP_BRAIN)
+				H.confused++
+				H.drowsyness++
+				if(I.damage >= I.min_bruised_damage)
+					continue
+			I.damage = max(I.damage - (10*removed), 0)
 		M.add_chemical_effect(CE_PULSE, -2)
 
 /datum/reagent/clonexadone
@@ -178,10 +185,15 @@
 	if(M.bodytemperature < 170)
 		M.adjustCloneLoss(-300 * removed)
 		M.add_chemical_effect(CE_OXYGENATED, 2)
-		// It metabolizes 10x slower, but only heals 1.6x as much.
-		// This means that it heals at 1/6 the speed it used to.
-		// Stasis further slows it.
-		M.heal_organ_damage(50 * removed, 50 * removed)
+				for(var/obj/item/organ/internal/I in H.internal_organs)
+			if(I.robotic >= ORGAN_ROBOT)
+				continue
+			if(I.organ_tag == BP_BRAIN)
+				H.confused++
+				H.drowsyness++
+				if(I.damage >= I.min_bruised_damage)
+					continue
+			I.damage = max(I.damage - (20*removed), 0)
 		M.add_chemical_effect(CE_PULSE, -2)
 
 /* Painkillers */

@@ -454,15 +454,18 @@
 		return
 	stasis_sources[source] = factor
 
-/mob/living/carbon/proc/GetStasis()
-	if((species && (species.flags & NO_SCAN)) || isSynthetic())
-		return 0
-	. = 0
-	for(var/source in stasis_sources)
-		. += stasis_sources[source]
-
 /mob/living/carbon/proc/InStasis()
-	var/stasis = GetStasis()
-	if(!stasis)
-		return FALSE
-	return life_tick % stasis
+	if(!stasis_value)
+		return 0
+	return life_tick % stasis_value
+
+// call only once per run of life
+/mob/living/carbon/proc/UpdateStasis()
+	stasis_value = 0
+	if((species && (species.flags & NO_SCAN)) || isSynthetic())
+		return
+	for(var/source in stasis_sources)
+		stasis_value += stasis_sources[source]
+	stasis_sources.Cut()
+
+

@@ -33,3 +33,4 @@
 	var/last_taste_text = ""
 
 	var/list/stasis_sources = list()
+	var/stasis_value

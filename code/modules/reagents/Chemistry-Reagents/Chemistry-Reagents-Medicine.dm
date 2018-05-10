@@ -195,7 +195,7 @@
 	overdose = 60
 	reagent_state = LIQUID
 	scannable = 1
-	metabolism = 0.02
+	metabolism = REM * 0.05
 	flags = IGNORE_MOB_SIZE
 
 /datum/reagent/paracetamol/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)

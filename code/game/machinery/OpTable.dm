@@ -81,24 +81,34 @@
 	check_victim()
 
 /obj/machinery/optable/proc/take_victim(mob/living/carbon/C, mob/living/carbon/user as mob)
-	if (C == user)
-		user.visible_message("[user] climbs on \the [src].","You climb on \the [src].")
+	if(C == user)
+		visible_message("\The [user] starts climbing onto \the [src].")
 	else
-		visible_message("<span class='notice'>\The [C] has been laid on \the [src] by [user].</span>", 3)
-	if (C.client)
-		C.client.perspective = EYE_PERSPECTIVE
-		C.client.eye = src
-	C.resting = 1
-	C.dropInto(loc)
-	for(var/obj/O in src)
-		O.dropInto(loc)
-	src.add_fingerprint(user)
-	if(ishuman(C))
-		var/mob/living/carbon/human/H = C
-		src.victim = H
-		icon_state = H.pulse() ? "table2-active" : "table2-idle"
-	else
-		icon_state = "table2-idle"
+		visible_message("\The [user] starts laying [C] onto \the [src].")
+
+	if(do_after(user, 10, C))
+		if (C == user)
+			user.visible_message("[user] climbs on \the [src].","You climb on \the [src].")
+		else
+			visible_message("<span class='notice'>\The [C] has been laid on \the [src] by [user].</span>", 3)
+			if (C.buckled)
+				C.buckled.user_unbuckle_mob(user)
+				if (C.buckled)
+					return
+		if (C.client)
+			C.client.perspective = EYE_PERSPECTIVE
+			C.client.eye = src
+		C.resting = 1
+		C.dropInto(loc)
+		for(var/obj/O in src)
+			O.dropInto(loc)
+		src.add_fingerprint(user)
+		if(ishuman(C))
+			var/mob/living/carbon/human/H = C
+			src.victim = H
+			icon_state = H.pulse() ? "table2-active" : "table2-idle"
+		else
+			icon_state = "table2-idle"
 
 /obj/machinery/optable/MouseDrop_T(mob/target, mob/user)
 

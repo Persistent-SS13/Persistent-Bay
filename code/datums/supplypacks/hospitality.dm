@@ -141,3 +141,9 @@
 	/obj/item/weapon/wrapping_paper = 3)
 	cost = 10
 	containername = "\improper Arts and Crafts crate"
+
+/decl/hierarchy/supply_pack/hospitality/posters
+	name = "Assorted Posters (x4)"
+	contains = list(/obj/item/weapon/contraband/poster = 4)
+	cost = 20
+	containername = "\improper Posters crate"

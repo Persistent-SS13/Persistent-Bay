@@ -73,9 +73,9 @@ var/list/holder_mob_icon_cache = list()
 			return I
 	return null
 
-/obj/item/weapon/holder/GetAccess()
+/obj/item/weapon/holder/GetAccess(var/faction_uid)
 	var/obj/item/I = GetIdCard()
-	return I ? I.GetAccess() : ..()
+	return I ? I.GetAccess(faction_uid) : ..(faction_uid)
 
 /obj/item/weapon/holder/attack_self()
 	for(var/mob/M in contents)

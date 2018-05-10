@@ -78,9 +78,16 @@
 
 /obj/item/New()
 	..()
-	if(randpixel && (!pixel_x && !pixel_y) && isturf(loc)) //hopefully this will prevent us from messing with mapper-set pixel_x/y
+	if((!pixel_x && !pixel_y) && isturf(loc)) //hopefully this will prevent us from messing with mapper-set pixel_x/y
+		randomize_pixel_offset()
+
+/obj/item/proc/randomize_pixel_offset(var/reset = 0)
+	if(!reset && randpixel)
 		pixel_x = rand(-randpixel, randpixel)
 		pixel_y = rand(-randpixel, randpixel)
+	if(reset)
+		pixel_x = 0
+		pixel_y = 0
 
 /obj/item/Destroy()
 	qdel(hidden_uplink)
@@ -194,13 +201,7 @@
 		if(isliving(src.loc))
 			return
 	if(user.put_in_active_hand(src))
-		if(randpixel)
-			pixel_x = rand(-randpixel, randpixel)
-			pixel_y = rand(-randpixel/2, randpixel/2)
-			pixel_z = 0
-		else if(randpixel == 0)
-			pixel_x = 0
-			pixel_y = 0
+		randomize_pixel_offset(1)
 	return
 
 /obj/item/attack_ai(mob/user as mob)
@@ -230,8 +231,6 @@
 
 // apparently called whenever an item is removed from a slot, container, or anything else.
 /obj/item/proc/dropped(mob/user as mob)
-	if(randpixel)
-		pixel_z = randpixel //an idea borrowed from some of the older pixel_y randomizations. Intended to make items appear to drop at a character
 	if(zoom)
 		zoom(user) //binoculars, scope, etc
 
@@ -337,8 +336,10 @@ var/list/global/slot_flags_enumeration = list(
 				return 0
 			if( (slot_flags & SLOT_TWOEARS) && H.get_equipped_item(slot_other_ear) )
 				return 0
-		if(slot_wear_id, slot_belt)
-			if(!H.w_uniform && (slot_w_uniform in mob_equip))
+		if(slot_belt, slot_wear_id)
+			if(slot == slot_belt && (item_flags & IS_BELT))
+				return 1
+			else if(!H.w_uniform && (slot_w_uniform in mob_equip))
 				if(!disable_warning)
 					to_chat(H, "<span class='warning'>You need a jumpsuit before you can attach this [name].</span>")
 				return 0

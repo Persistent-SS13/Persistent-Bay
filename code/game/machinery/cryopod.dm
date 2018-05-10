@@ -162,7 +162,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 
 	user << browse(dat, "window=cryopod")
 	onclose(user, "cryopod")
-	
+
 /obj/machinery/cryopod/MouseDrop_T(var/mob/target, var/mob/user)
 	if(!istype(target))
 		return
@@ -197,9 +197,9 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	to_chat(target, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
 	time_entered = world.time
 	src.add_fingerprint(user)
-	
-	
-	
+
+
+
 /obj/machinery/cryopod/Topic(href, href_list)
 	if((. = ..()))
 		return
@@ -302,6 +302,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		qdel(src)
 
 	if(occupant)
+
 		if(world.time - time_entered < time_till_despawn)
 			return
 		despawn_occupant()
@@ -356,18 +357,8 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 			if(do_after(user, 20, src))
 				if(!M || !grab || !grab.affecting) return
 
-				M.forceMove(src)
-
-				if(M.client)
-					M.client.perspective = EYE_PERSPECTIVE
-					M.client.eye = src
-
-			icon_state = occupied_icon_state
-
-			to_chat(M, "<span class='notice'>[on_enter_occupant_message]</span>")
-			to_chat(M, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
 			set_occupant(M)
-			time_entered = world.time
+
 			var/turf/location = get_turf(src)
 			log_admin("[key_name_admin(M)] has entered a stasis pod. (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[location.x];Y=[location.y];Z=[location.z]'>JMP</a>)")
 			message_admins("<span class='notice'>[key_name_admin(M)] has entered a stasis pod.</span>")
@@ -494,17 +485,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 			to_chat(usr, "<span class='notice'><B>\The [src] is in use.</B></span>")
 			return
 
-		usr.stop_pulling()
-		usr.client.perspective = EYE_PERSPECTIVE
-		usr.client.eye = src
-		usr.forceMove(src)
 		set_occupant(usr)
-		icon_state = occupied_icon_state
-		usr.spawn_loc = req_access_faction
-		to_chat(usr, "<span class='notice'>[on_enter_occupant_message]</span>")
-		to_chat(usr, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
-
-		time_entered = world.time
 
 		src.add_fingerprint(usr)
 
@@ -526,11 +507,25 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 
 	return
 
-/obj/machinery/cryopod/proc/set_occupant(var/occupant)
+/obj/machinery/cryopod/proc/set_occupant(var/mob/living/carbon/occupant)
 	src.occupant = occupant
-	name = initial(name)
-	if(occupant)
-		name = "[name] ([occupant])"
+	if(!occupant)
+		name = initial(name)
+		return
+
+	occupant.stop_pulling()
+	if(occupant.client)
+		usr.spawn_loc = req_access_faction
+		to_chat(usr, "<span class='notice'>[on_enter_occupant_message]</span>")
+		to_chat(usr, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
+		occupant.client.perspective = EYE_PERSPECTIVE
+		occupant.client.eye = src
+
+	occupant.forceMove(src)
+	time_entered = world.time
+
+	name = "[name] ([occupant])"
+	icon_state = occupied_icon_state
 
 /obj/structure/frontier_beacon
 	name = "Frontier Beacon"

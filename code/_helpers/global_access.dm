@@ -823,8 +823,8 @@
 			return global.round_progressing;
 		if("round_start_time")
 			return global.round_start_time;
-		if("roundstart_hour")
-			return global.roundstart_hour;
+		if("roundstart_timeofday")
+			return global.roundstart_timeofday;
 		if("rune_list")
 			return global.rune_list;
 		if("runtime_diary")
@@ -1900,8 +1900,8 @@
 			global.round_progressing=newval;
 		if("round_start_time")
 			global.round_start_time=newval;
-		if("roundstart_hour")
-			global.roundstart_hour=newval;
+		if("roundstart_timeofday")
+			global.roundstart_timeofday=newval;
 		if("rune_list")
 			global.rune_list=newval;
 		if("runtime_diary")
@@ -2565,7 +2565,7 @@
 	"robot_modules",
 	"round_progressing",
 	"round_start_time",
-	"roundstart_hour",
+	"roundstart_timeofday",
 	"rune_list",
 	"runtime_diary",
 	"same_wires",

@@ -65,6 +65,11 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/weapon/extinguisher
 	category = "General"
 
+/datum/autolathe/recipe/tank/proc/Fabricate()
+	var/obj/item/weapon/tank/T = ..()
+	T.air_contents = new /datum/gas_mixture(T.volume, T20C)  //Empty air tanks only
+	return T
+
 /datum/autolathe/recipe/tank
 	name = "air tank"
 	path = /obj/item/weapon/tank/oxygen/yellow
@@ -555,11 +560,6 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/structure/reagent_dispensers/beerkeg/empty
 	category = "General"
 
-/datum/autolathe/recipe/watercooler
-	name = "water cooler"
-	path = /obj/structure/reagent_dispensers/water_cooler/empty
-	category = "General"
-
 /datum/autolathe/recipe/electropack
 	name = "electropack"
 	path = /obj/item/device/radio/electropack
@@ -597,7 +597,7 @@ var/const/EXTRA_COST_FACTOR = 1.25
 /datum/autolathe/recipe/ecig
 	// We get it, you vape
 	name = "ecigarette"
-	path = /obj/item/clothing/mask/smokable/ecig
+	path = /obj/item/clothing/mask/smokable/ecig/lathed
 	category = "Devices and Components"
 
 /datum/autolathe/recipe/keypad
@@ -648,6 +648,61 @@ var/const/EXTRA_COST_FACTOR = 1.25
 /datum/autolathe/recipe/carafe
 	name = "carafe"
 	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/carafe
+	category = "General"
+
+/datum/autolathe/recipe/lipstick
+	name = "lipstick"
+	path = /obj/item/weapon/lipstick
+	category = "General"
+
+/datum/autolathe/recipe/lipstick_purple
+	name = "purple lipstick"
+	path = /obj/item/weapon/lipstick/purple
+	category = "General"
+
+/datum/autolathe/recipe/lipstick_jade
+	name = "jade lipstick"
+	path = /obj/item/weapon/lipstick/jade
+	category = "General"
+
+/datum/autolathe/recipe/lipstick_black
+	name = "black lipstick"
+	path = /obj/item/weapon/lipstick/black
+	category = "General"
+
+/datum/autolathe/recipe/comb
+	name = "comb"
+	path = /obj/item/weapon/haircomb
+	category = "General"
+
+/datum/autolathe/recipe/red_doll
+	name = "red doll"
+	path = /obj/item/toy/therapy_red
+	category = "General"
+
+/datum/autolathe/recipe/purple_doll
+	name = "purple doll"
+	path = /obj/item/toy/therapy_purple
+	category = "General"
+
+/datum/autolathe/recipe/blue_doll
+	name = "blue doll"
+	path = /obj/item/toy/therapy_blue
+	category = "General"
+
+/datum/autolathe/recipe/yellow_doll
+	name = "yellow doll"
+	path = /obj/item/toy/therapy_yellow
+	category = "General"
+
+/datum/autolathe/recipe/green_doll
+	name = "green doll"
+	path = /obj/item/toy/therapy_green
+	category = "General"
+
+/datum/autolathe/recipe/water_balloon
+	name = "water balloon"
+	path = /obj/item/toy/water_balloon
 	category = "General"
 
 /datum/autolathe/recipe/coffeecup

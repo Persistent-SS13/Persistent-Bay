@@ -472,11 +472,11 @@
 	name = "Fiberglass"
 	result = null
 	required_reagents = list(/datum/reagent/silicon = 20, /datum/reagent/toxin/plasticide = 2)
-	catalysts = list(/datum/reagent/plasticide = 8)
+	catalysts = list(/datum/reagent/toxin/plasticide = 8)
 	result_amount = 1
 
 /datum/chemical_reaction/plastication/on_reaction(var/datum/reagents/holder, var/created_volume)
-	new /obj/item/stack/material/glass/plastglass(get_turf(holder.my_atom), created_volume)
+	new /obj/item/stack/material/glass/fiberglass(get_turf(holder.my_atom), created_volume)
 
 /datum/chemical_reaction/latticing
 	name = "Glass"

@@ -748,7 +748,7 @@ var/list/name_to_material
 	stack_origin_tech = list(TECH_MATERIAL = 2)
 	destruction_desc = "splinters"
 	window_options = list("One Direction" = 1, "Full Window" = 4)
-	created_window = /obj/structure/window/plastic
+	created_window = /obj/structure/window/fiberglass
 	wire_product = null
 	rod_product = null
 	chem_products = list(

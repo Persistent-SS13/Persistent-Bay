@@ -185,7 +185,7 @@
 	if(M.bodytemperature < 170)
 		M.adjustCloneLoss(-300 * removed)
 		M.add_chemical_effect(CE_OXYGENATED, 2)
-				for(var/obj/item/organ/internal/I in H.internal_organs)
+		for(var/obj/item/organ/internal/I in H.internal_organs)
 			if(I.robotic >= ORGAN_ROBOT)
 				continue
 			if(I.organ_tag == BP_BRAIN)

@@ -355,6 +355,12 @@
 	required_reagents = list (/datum/reagent/ammonia = 1, /datum/reagent/ethanol = 1)
 	result_amount = 2
 
+/datum/chemical_reaction/adrenaline
+	name = "Adrenaline"
+	result = /datum/reagent/adrenaline
+	required_reagents = list (/datum/reagent/hyperzine = 1, /datum/reagent/adrenaline = 1, /datum/reagent/acid/hydrochloric = 1)
+	result_amount = 3
+
 /datum/chemical_reaction/space_cleaner
 	name = "Space cleaner"
 	result = /datum/reagent/space_cleaner
@@ -402,7 +408,7 @@
 /datum/chemical_reaction/rezadone
 	name = "Rezadone"
 	result = /datum/reagent/rezadone
-	required_reagents = list(/datum/reagent/arithrazine, /datum/reagent/cryptobiolin = 1, /datum/reagent/copper = 1)
+	required_reagents = list(/datum/reagent/ryetalyn = 1, /datum/reagent/cryptobiolin = 1, /datum/reagent/copper = 1)
 	result_amount = 3
 
 /datum/chemical_reaction/lexorin
@@ -461,6 +467,25 @@
 
 /datum/chemical_reaction/plastication/on_reaction(var/datum/reagents/holder, var/created_volume)
 	new /obj/item/stack/material/plastic(get_turf(holder.my_atom), created_volume)
+
+/datum/chemical_reaction/pultrusion
+	name = "Fiberglass"
+	result = null
+	required_reagents = list(/datum/reagent/silicon = 20, /datum/reagent/toxin/plasticide = 2)
+	catalysts = list(/datum/reagent/toxin/plasticide = 8)
+	result_amount = 1
+
+/datum/chemical_reaction/plastication/on_reaction(var/datum/reagents/holder, var/created_volume)
+	new /obj/item/stack/material/glass/fiberglass(get_turf(holder.my_atom), created_volume)
+
+/datum/chemical_reaction/latticing
+	name = "Glass"
+	result = null
+	required_reagents = list(/datum/reagent/acid/polyacid = 1, /datum/reagent/silicon = 20)
+	result_amount = 1
+
+/datum/chemical_reaction/plastication/on_reaction(var/datum/reagents/holder, var/created_volume)
+	new /obj/item/stack/material/glass(get_turf(holder.my_atom), created_volume)
 
 /* Grenade reactions */
 
@@ -833,6 +858,52 @@
 
 /datum/chemical_reaction/aluminum_paint/send_data()
 	return "#f0f8ff"
+
+/* Soapmaking */
+
+/datum/chemical_reaction/soap
+	name = "Soap"
+	result = null
+	required_reagents = list(/datum/reagent/glycerol = 1, /datum/reagent/space_cleaner = 1, /datum/reagent/water = 1)
+	result_amount = 1
+
+/datum/chemical_reaction/soap/on_reaction(var/datum/reagents/holder, var/created_volume)
+	var/location = get_turf(holder.my_atom)
+	for(var/i = 1, i <= created_volume, i++)
+		new /obj/item/weapon/soap(location)
+
+/datum/chemical_reaction/gold_soap
+	name = "Gold Soap"
+	result = null
+	required_reagents = list(/datum/reagent/glycerol = 1, /datum/reagent/space_cleaner = 1, /datum/reagent/gold = 1)
+	result_amount = 1
+
+/datum/chemical_reaction/soap/on_reaction(var/datum/reagents/holder, var/created_volume)
+	var/location = get_turf(holder.my_atom)
+	for(var/i = 1, i <= created_volume, i++)
+		new /obj/item/weapon/soap/gold(location)
+
+/datum/chemical_reaction/nt_soap
+	name = "Nanotrasen Soap"
+	result = null
+	required_reagents = list(/datum/reagent/glycerol = 1, /datum/reagent/space_cleaner = 1, /datum/reagent/toxin/phoron = 1)
+	result_amount = 1
+
+/datum/chemical_reaction/soap/on_reaction(var/datum/reagents/holder, var/created_volume)
+	var/location = get_turf(holder.my_atom)
+	for(var/i = 1, i <= created_volume, i++)
+		new /obj/item/weapon/soap/nanotrasen(location)
+
+/datum/chemical_reaction/syndie_soap
+	name = "Syndicate Soap"
+	result = null
+	required_reagents = list(/datum/reagent/glycerol = 1, /datum/reagent/space_cleaner = 1, /datum/reagent/blood = 1)
+	result_amount = 1
+
+/datum/chemical_reaction/soap/on_reaction(var/datum/reagents/holder, var/created_volume)
+	var/location = get_turf(holder.my_atom)
+	for(var/i = 1, i <= created_volume, i++)
+		new /obj/item/weapon/soap/syndie(location)
 
 /* Slime cores */
 

@@ -96,7 +96,7 @@
 		return
 
 	//Dead or cryosleep people do not pump the blood.
-	if(!owner || owner.in_stasis || owner.stat == DEAD || owner.bodytemperature < 170)
+	if(!owner || owner.InStasis() || owner.stat == DEAD || owner.bodytemperature < 170)
 		return
 
 	if(pulse != PULSE_NONE || robotic >= ORGAN_ROBOT)
@@ -166,3 +166,30 @@
 		return FALSE
 
 	return pulse > PULSE_NONE || robotic == ORGAN_ROBOT || (owner.status_flags & FAKEDEATH)
+
+/obj/item/organ/internal/heart/listen()
+	if(robotic == ORGAN_ROBOT && is_working())
+		if(is_bruised())
+			return "sputtering pump"
+		else
+			return "steady whirr of the pump"
+
+	if(!pulse || (owner.status_flags & FAKEDEATH))
+		return "no pulse"
+
+	var/pulsesound = "normal"
+
+	switch(pulse)
+		if(PULSE_SLOW)
+			pulsesound = "slow"
+		if(PULSE_FAST)
+			pulsesound = "fast"
+		if(PULSE_2FAST)
+			pulsesound = "very fast"
+		if(PULSE_THREADY)
+			pulsesound = "extremely fast and faint"
+
+	if(is_bruised())
+		pulsesound = "irregular, but otherwise " + pulsesound
+
+	. = "[pulsesound] pulse"

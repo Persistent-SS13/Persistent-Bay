@@ -267,3 +267,6 @@
 #define SURGERY_RETRACTED 2
 #define SURGERY_ENCASED 3
 
+#define STASIS_MISC "misc"
+#define STASIS_CRYOBAG "cryobag"
+#define STASIS_COLD "cold"

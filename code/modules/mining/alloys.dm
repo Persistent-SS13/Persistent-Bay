@@ -37,6 +37,22 @@
 		)
 	product = /obj/item/stack/material/steel
 
+/datum/alloy/bronze
+	metaltag = "bronze"
+	requires = list(
+		"copper" = 1,
+		"tin" = 1
+		)
+	product = /obj/item/stack/material/bronze
+
+/datum/alloy/brass
+	metaltag = "brass"
+	requires = list(
+		"copper" = 1,
+		"zinc" = 1
+		)
+	product = /obj/item/stack/material/brass
+
 /datum/alloy/borosilicate
 	metaltag = "phglass"
 	requires = list(

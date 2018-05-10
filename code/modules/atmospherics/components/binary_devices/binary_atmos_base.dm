@@ -127,7 +127,14 @@ obj/machinery/atmospherics/binary
 		update_underlays()
 
 		return null
-		
+
+obj/machinery/atmospherics/binary/atmos_scan()
+	var/list/results = list()
+	results += air1
+	results += air2
+
+	return results
+
 obj/machinery/atmospherics/binary/Destroy()
 	loc = null
 

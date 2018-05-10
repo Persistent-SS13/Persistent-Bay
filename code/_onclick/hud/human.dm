@@ -239,7 +239,7 @@
 		hud_elements |= mymob.nutrition_icon
 
 
-	mymob.pain = new /obj/screen( null )
+	mymob.pain = new /obj/screen/fullscreen/pain( null )
 	mymob.pain.icon = ui_style
 	mymob.pain.icon_state = "blank"
 	mymob.pain.name = "pain"

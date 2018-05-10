@@ -823,8 +823,8 @@
 			return global.round_progressing;
 		if("round_start_time")
 			return global.round_start_time;
-		if("roundstart_hour")
-			return global.roundstart_hour;
+		if("roundstart_timeofday")
+			return global.roundstart_timeofday;
 		if("rune_list")
 			return global.rune_list;
 		if("runtime_diary")
@@ -899,8 +899,6 @@
 			return global.sqlpass;
 		if("sqlport")
 			return global.sqlport;
-		if("stack_to_material")
-			return global.stack_to_material;
 		if("station_account")
 			return global.station_account;
 		if("station_date")
@@ -1902,8 +1900,8 @@
 			global.round_progressing=newval;
 		if("round_start_time")
 			global.round_start_time=newval;
-		if("roundstart_hour")
-			global.roundstart_hour=newval;
+		if("roundstart_timeofday")
+			global.roundstart_timeofday=newval;
 		if("rune_list")
 			global.rune_list=newval;
 		if("runtime_diary")
@@ -1978,8 +1976,6 @@
 			global.sqlpass=newval;
 		if("sqlport")
 			global.sqlport=newval;
-		if("stack_to_material")
-			global.stack_to_material=newval;
 		if("station_account")
 			global.station_account=newval;
 		if("station_date")
@@ -2569,7 +2565,7 @@
 	"robot_modules",
 	"round_progressing",
 	"round_start_time",
-	"roundstart_hour",
+	"roundstart_timeofday",
 	"rune_list",
 	"runtime_diary",
 	"same_wires",
@@ -2607,7 +2603,6 @@
 	"sqllogin",
 	"sqlpass",
 	"sqlport",
-	"stack_to_material",
 	"station_account",
 	"station_date",
 	"stool_cache",

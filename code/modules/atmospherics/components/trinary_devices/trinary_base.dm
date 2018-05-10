@@ -177,3 +177,11 @@ obj/machinery/atmospherics/trinary
 		update_underlays()
 
 		return null
+
+obj/machinery/atmospherics/trinary/atmos_scan()
+	var/list/results = list()
+	results += air1
+	results += air2
+	results += air3
+
+	return results

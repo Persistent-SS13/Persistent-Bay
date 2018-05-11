@@ -989,6 +989,9 @@ mob/proc/yank_out_object()
 		facing_dir = dir
 
 /mob/set_dir()
+	if(!isnull(client))
+		client.pixel_x = 0
+		client.pixel_y = 0
 	if(facing_dir)
 		if(!canface() || lying || buckled || restrained())
 			facing_dir = null

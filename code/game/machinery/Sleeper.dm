@@ -146,11 +146,12 @@
 			to_chat(user, "<span class='warning'>\The [src] has a beaker already.</span>")
 		return
 
-/obj/machinery/sleeper/attackby(obj/item/grab/normal/G, var/mob/user)
-	if (!ismob(G.affecting))
-		return
-	if(go_in(G.affecting, user))
-		qdel(G)
+	if(istype(I, /obj/item/grab/normal))
+		var/obj/item/grab/normal/G = I
+		if (!ismob(G.affecting))
+			return
+		if(go_in(G.affecting, user))
+			qdel(G)
 
 /obj/machinery/sleeper/MouseDrop_T(var/mob/target, var/mob/user)
 	if(!CanMouseDrop(target, user))

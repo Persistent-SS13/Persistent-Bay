@@ -240,25 +240,25 @@ macro "macro"
 		command = ".northwest"
 	elem 
 		name = "ALT+West"
-		command = "westfaceperm"
+		command = "westfacepeek"
 	elem 
 		name = "CTRL+West"
 		command = "westface"
 	elem 
-		name = "SHIFT+West"
-		command = "westfacepeek"
+		name = "ALT+SHIFT+West"
+		command = "westfaceperm"
 	elem 
 		name = "West+REP"
 		command = ".moveleft"
 	elem 
-		name = "ALT+North"
-		command = "northfaceperm"
+		name = "North"
+		command = "northfacepeek"
 	elem 
 		name = "CTRL+North"
 		command = "northface"
 	elem 
-		name = "SHIFT+North"
-		command = "northfacepeek"
+		name = "ALT+SHIFT+North"
+		command = "northfaceperm"
 	elem 
 		name = "North+REP"
 		command = ".moveup"
@@ -269,20 +269,20 @@ macro "macro"
 		name = "CTRL+East"
 		command = "eastface"
 	elem 
-		name = "SHIFT+East"
+		name = "ALT+SHIFT+East"
 		command = "eastfaceperm"
 	elem 
 		name = "East+REP"
 		command = ".moveright"
 	elem 
 		name = "ALT+South"
-		command = "southfaceperm"
+		command = "southfacepeek"
 	elem 
 		name = "CTRL+South"
 		command = "southface"
 	elem 
-		name = "SHIFT+South"
-		command = "southfacepeek"
+		name = "ALT+SHIFT+South"
+		command = "southfaceperm"
 	elem 
 		name = "South+REP"
 		command = ".movedown"
@@ -422,49 +422,49 @@ macro "hotkeymode"
 		command = ".northwest"
 	elem 
 		name = "ALT+West"
-		command = "westfaceperm"
+		command = "westfacepeek"
 	elem 
 		name = "CTRL+West"
 		command = "westface"
 	elem 
-		name = "SHIFT+West"
-		command = "westfacepeek"
+		name = "ALT+SHIFT+West"
+		command = "westfaceperm"
 	elem 
 		name = "West+REP"
 		command = ".moveleft"
 	elem 
 		name = "ALT+North"
-		command = "northfaceperm"
+		command = "northfacepeek"
 	elem 
 		name = "CTRL+North"
 		command = "northface"
 	elem 
-		name = "SHIFT+North"
-		command = "northfacepeek"
+		name = "ALT+SHIFT+North"
+		command = "northfaceperm"
 	elem 
 		name = "North+REP"
 		command = ".moveup"
 	elem 
 		name = "ALT+East"
-		command = "eastfaceperm"
+		command = "eastfacepeek"
 	elem 
 		name = "CTRL+East"
 		command = "eastface"
 	elem 
-		name = "SHIFT+East"
-		command = "eastfacepeek"
+		name = "ALT+SHIFT+East"
+		command = "eastfaceperm"
 	elem 
 		name = "East+REP"
 		command = ".moveright"
 	elem 
 		name = "ALT+South"
-		command = "southfaceperm"
+		command = "southfacepeek"
 	elem 
 		name = "CTRL+South"
 		command = "southface"
 	elem 
-		name = "SHIFT+South"
-		command = "southfacepeek"
+		name = "ALT+SHIFT+South"
+		command = "southfaceperm"
 	elem 
 		name = "South+REP"
 		command = ".movedown"

@@ -47,6 +47,8 @@
 	qdel(wires)
 	wires = null
 	for(var/datum/stored_items/S in item_records)
+		for(var/obj/item/I in S.instances)
+			I.dropInto(loc)
 		qdel(S)
 	item_records = null
 	return ..()

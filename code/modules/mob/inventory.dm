@@ -245,7 +245,6 @@ var/list/slot_equipment_priority = list( \
 			I.forceMove(target)
 		else
 			I.dropInto(loc)
-			I.randomize_pixel_offset()
 		I.dropped(src)
 	return 1
 

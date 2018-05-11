@@ -221,76 +221,64 @@ macro "borghotkeymode"
 
 macro "macro"
 	elem 
-		name = "Tab"
+		name = "TAB"
 		command = ".winset \"mainwindow.macro=hotkeymode hotkey_toggle.is-checked=true mapwindow.map.focus=true\""
 	elem 
-		name = "Center+REP"
+		name = "CENTER+REP"
 		command = ".center"
 	elem 
-		name = "Northeast"
+		name = "NORTHEAST"
 		command = ".northeast"
 	elem 
-		name = "Southeast"
+		name = "SOUTHEAST"
 		command = ".southeast"
 	elem 
-		name = "Southwest"
+		name = "SOUTHWEST"
 		command = ".southwest"
 	elem 
-		name = "Northwest"
+		name = "NORTHWEST"
 		command = ".northwest"
 	elem 
-		name = "ALT+West"
-		command = "westfacepeek"
-	elem 
-		name = "CTRL+West"
-		command = "westface"
-	elem 
-		name = "ALT+SHIFT+West"
+		name = "ALT+WEST"
 		command = "westfaceperm"
 	elem 
-		name = "West+REP"
+		name = "CTRL+WEST"
+		command = "westface"
+	elem 
+		name = "WEST+REP"
 		command = ".moveleft"
 	elem 
-		name = "North"
-		command = "northfacepeek"
-	elem 
-		name = "CTRL+North"
-		command = "northface"
-	elem 
-		name = "ALT+SHIFT+North"
+		name = "ALT+NORTH"
 		command = "northfaceperm"
 	elem 
-		name = "North+REP"
+		name = "CTRL+NORTH"
+		command = "northface"
+	elem 
+		name = "NORTH+REP"
 		command = ".moveup"
 	elem 
-		name = "ALT+East"
+		name = "ALT+EAST"
 		command = "eastfaceperm"
 	elem 
-		name = "CTRL+East"
+		name = "CTRL+EAST"
 		command = "eastface"
 	elem 
-		name = "ALT+SHIFT+East"
-		command = "eastfaceperm"
-	elem 
-		name = "East+REP"
+		name = "EAST+REP"
 		command = ".moveright"
 	elem 
-		name = "ALT+South"
-		command = "southfacepeek"
-	elem 
-		name = "CTRL+South"
-		command = "southface"
-	elem 
-		name = "ALT+SHIFT+South"
+		name = "ALT+SOUTH"
 		command = "southfaceperm"
 	elem 
-		name = "South+REP"
+		name = "CTRL+SOUTH"
+		command = "southface"
+	elem 
+		name = "SOUTH+REP"
 		command = ".movedown"
 	elem 
-		name = "Insert"
+		name = "INSERT"
 		command = "a-intent right"
 	elem 
-		name = "Delete"
+		name = "DELETE"
 		command = "delete-key-pressed"
 	elem 
 		name = "CTRL+1"
@@ -344,25 +332,25 @@ macro "macro"
 		name = "CTRL+Z"
 		command = "Activate-Held-Object"
 	elem 
-		name = "CTRL+Numpad1"
+		name = "CTRL+NUMPAD1"
 		command = "body-r-leg"
 	elem 
-		name = "CTRL+Numpad2"
+		name = "CTRL+NUMPAD2"
 		command = "body-groin"
 	elem 
-		name = "CTRL+Numpad3"
+		name = "CTRL+NUMPAD3"
 		command = "body-l-leg"
 	elem 
-		name = "CTRL+Numpad4"
+		name = "CTRL+NUMPAD4"
 		command = "body-r-arm"
 	elem 
-		name = "CTRL+Numpad5"
+		name = "CTRL+NUMPAD5"
 		command = "body-chest"
 	elem 
-		name = "CTRL+Numpad6"
+		name = "CTRL+NUMPAD6"
 		command = "body-l-arm"
 	elem 
-		name = "CTRL+Numpad8"
+		name = "CTRL+NUMPAD8"
 		command = "body-toggle-head"
 	elem 
 		name = "F1"
@@ -403,76 +391,64 @@ macro "macro"
 
 macro "hotkeymode"
 	elem 
-		name = "Tab"
+		name = "TAB"
 		command = ".winset \"mainwindow.macro=macro hotkey_toggle.is-checked=false input.focus=true\""
 	elem 
-		name = "Center+REP"
+		name = "CENTER+REP"
 		command = ".center"
 	elem 
-		name = "Northeast"
+		name = "NORTHEAST"
 		command = ".northeast"
 	elem 
-		name = "Southeast"
+		name = "SOUTHEAST"
 		command = ".southeast"
 	elem 
-		name = "Southwest"
+		name = "SOUTHWEST"
 		command = ".southwest"
 	elem 
-		name = "Northwest"
+		name = "NORTHWEST"
 		command = ".northwest"
 	elem 
-		name = "ALT+West"
-		command = "westfacepeek"
-	elem 
-		name = "CTRL+West"
-		command = "westface"
-	elem 
-		name = "ALT+SHIFT+West"
+		name = "ALT+WEST"
 		command = "westfaceperm"
 	elem 
-		name = "West+REP"
+		name = "CTRL+WEST"
+		command = "westface"
+	elem 
+		name = "WEST+REP"
 		command = ".moveleft"
 	elem 
-		name = "ALT+North"
-		command = "northfacepeek"
-	elem 
-		name = "CTRL+North"
-		command = "northface"
-	elem 
-		name = "ALT+SHIFT+North"
+		name = "ALT+NORTH"
 		command = "northfaceperm"
 	elem 
-		name = "North+REP"
+		name = "CTRL+NORTH"
+		command = "northface"
+	elem 
+		name = "NORTH+REP"
 		command = ".moveup"
 	elem 
-		name = "ALT+East"
-		command = "eastfacepeek"
-	elem 
-		name = "CTRL+East"
-		command = "eastface"
-	elem 
-		name = "ALT+SHIFT+East"
+		name = "ALT+EAST"
 		command = "eastfaceperm"
 	elem 
-		name = "East+REP"
+		name = "CTRL+EAST"
+		command = "eastface"
+	elem 
+		name = "EAST+REP"
 		command = ".moveright"
 	elem 
-		name = "ALT+South"
-		command = "southfacepeek"
-	elem 
-		name = "CTRL+South"
-		command = "southface"
-	elem 
-		name = "ALT+SHIFT+South"
+		name = "ALT+SOUTH"
 		command = "southfaceperm"
 	elem 
-		name = "South+REP"
+		name = "CTRL+SOUTH"
+		command = "southface"
+	elem 
+		name = "SOUTH+REP"
 		command = ".movedown"
 	elem 
-		name = "Insert"
+		name = "INSERT"
 		command = "a-intent right"
 	elem 
-		name = "Delete"
+		name = "DELETE"
 		command = "delete-key-pressed"
 	elem 
 		name = "1"
@@ -502,17 +478,11 @@ macro "hotkeymode"
 		name = "5"
 		command = ".me"
 	elem 
-		name = "ALT+A"
-		command = "westfacepeek"
-	elem 
 		name = "A+REP"
 		command = ".moveleft"
 	elem 
 		name = "CTRL+A+REP"
 		command = ".moveleft"
-	elem 
-		name = "ALT+D"
-		command = "eastfacepeek"
 	elem 
 		name = "D+REP"
 		command = ".moveright"
@@ -561,9 +531,6 @@ macro "hotkeymode"
 	elem 
 		name = "CTRL+R"
 		command = ".southwest"
-	elem 
-		name = "ALT+S"
-		command = "southfacepeek"
 	elem "s_key"
 		name = "S+REP"
 		command = ".movedown"
@@ -573,9 +540,6 @@ macro "hotkeymode"
 	elem 
 		name = "T"
 		command = ".say"
-	elem 
-		name = "ALT+W"
-		command = "northfacepeek"
 	elem "w_key"
 		name = "W+REP"
 		command = ".moveup"
@@ -601,25 +565,25 @@ macro "hotkeymode"
 		name = "CTRL+Z"
 		command = "Activate-Held-Object"
 	elem 
-		name = "Numpad1"
+		name = "NUMPAD1"
 		command = "body-r-leg"
 	elem 
-		name = "Numpad2"
+		name = "NUMPAD2"
 		command = "body-groin"
 	elem 
-		name = "Numpad3"
+		name = "NUMPAD3"
 		command = "body-l-leg"
 	elem 
-		name = "Numpad4"
+		name = "NUMPAD4"
 		command = "body-r-arm"
 	elem 
-		name = "Numpad5"
+		name = "NUMPAD5"
 		command = "body-chest"
 	elem 
-		name = "Numpad6"
+		name = "NUMPAD6"
 		command = "body-l-arm"
 	elem 
-		name = "Numpad8"
+		name = "NUMPAD8"
 		command = "body-toggle-head"
 	elem 
 		name = "F1"
@@ -1132,6 +1096,7 @@ window "mainwindow"
 		size = 1038x564
 		anchor1 = none
 		anchor2 = none
+		background-color = none
 		is-default = true
 		saved-params = "pos;size;is-minimized;is-maximized"
 		icon = 'icons\\ss13_64.png'
@@ -1170,6 +1135,7 @@ window "mainwindow"
 		size = 1038x520
 		anchor1 = 0,0
 		anchor2 = 100,100
+		background-color = none
 		saved-params = "splitter"
 		right = "rpane"
 		is-vert = true
@@ -1215,6 +1181,7 @@ window "mainwindow"
 		size = 1x1
 		anchor1 = none
 		anchor2 = none
+		background-color = none
 		is-visible = false
 		saved-params = ""
 	elem "hotkey_toggle"
@@ -1223,6 +1190,7 @@ window "mainwindow"
 		size = 104x16
 		anchor1 = 100,100
 		anchor2 = none
+		background-color = none
 		border = line
 		saved-params = ""
 		text = "Hotkey Mode"

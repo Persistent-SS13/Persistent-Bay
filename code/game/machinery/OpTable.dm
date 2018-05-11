@@ -95,6 +95,8 @@
 				C.buckled.user_unbuckle_mob(user)
 				if (C.buckled)
 					return
+		if (user.pulling == C)
+			user.stop_pulling()
 		if (C.client)
 			C.client.perspective = EYE_PERSPECTIVE
 			C.client.eye = src

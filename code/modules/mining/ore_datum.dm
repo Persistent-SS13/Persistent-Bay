@@ -68,11 +68,31 @@ var/global/list/ores_by_type = list()
 	ore = /obj/item/weapon/ore/iron
 	scan_icon = "mineral_common"
 
+/ore/copper
+	name = "copper"
+	display_name = "copper"
+	smelts_to = "copper"
+	alloy = 1
+	result_amount = 5
+	spread_chance = 25
+	ore = /obj/item/weapon/ore/copper
+	scan_icon = "mineral_common"
+
+/ore/aluminum
+	name = "aluminum"
+	display_name = "aluminum"
+	smelts_to = "aluminum"
+	result_amount = 5
+	spread_chance = 25
+	ore = /obj/item/weapon/ore/aluminum
+	scan_icon = "mineral_common"
+
 /ore/coal
 	name = "carbon"
 	display_name = "raw carbon"
 	icon_tag = "coal"
 	smelts_to = "plastic"
+	compresses_to = "coal"
 	alloy = 1
 	result_amount = 5
 	spread_chance = 25
@@ -116,6 +136,44 @@ var/global/list/ores_by_type = list()
 	xarch_source_mineral = "phoron"
 	origin_tech = list(TECH_MATERIAL = 2)
 
+/ore/tin
+	name = "tin"
+	display_name = "tin"
+	smelts_to = "tin"
+	alloy = 1
+	result_amount = 5
+	spread_chance = 20
+	ore = /obj/item/weapon/ore/tin
+	scan_icon = "mineral_uncommon"
+
+/ore/zinc
+	name = "zinc"
+	display_name = "zinc"
+	smelts_to = "zinc"
+	alloy = 1
+	result_amount = 5
+	spread_chance = 20
+	ore = /obj/item/weapon/ore/zinc
+	scan_icon = "mineral_uncommon"
+
+/ore/sulfur
+	name = "sulfur"
+	display_name = "sulfur"
+	smelts_to = "sulfur"
+	result_amount = 5
+	spread_chance = 20
+	ore = /obj/item/weapon/ore/sulfur
+	scan_icon = "mineral_uncommon"
+
+/ore/lead
+	name = "lead"
+	display_name = "lead"
+	smelts_to = "lead"
+	result_amount = 5
+	spread_chance = 10
+	ore = /obj/item/weapon/ore/lead
+	scan_icon = "mineral_uncommon"
+
 /ore/silver
 	name = "silver"
 	display_name = "native silver"
@@ -152,6 +210,15 @@ var/global/list/ores_by_type = list()
 	scan_icon = "mineral_rare"
 	xarch_source_mineral = "nitrogen"
 	origin_tech = list(TECH_MATERIAL = 6)
+
+/ore/tungsten
+	name = "tungsten"
+	display_name = "wolframite"
+	smelts_to = "tungsten"
+	result_amount = 5
+	spread_chance = 10
+	ore = /obj/item/weapon/ore/tungsten
+	scan_icon = "mineral_rare"
 
 /ore/platinum
 	name = "platinum"

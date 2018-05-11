@@ -148,18 +148,27 @@
 	taste_description = "sludge"
 	reagent_state = LIQUID
 	color = "#8080ff"
-	metabolism = REM * 0.5
+	metabolism = REM * 0.05
 	scannable = 1
 	flags = IGNORE_MOB_SIZE
 
 /datum/reagent/cryoxadone/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+	M.add_chemical_effect(CE_CRYO, 1)
 	if(M.bodytemperature < 170)
-		M.adjustCloneLoss(-10 * removed)
+		M.adjustCloneLoss(-50 * removed)
 		M.add_chemical_effect(CE_OXYGENATED, 1)
-		/* //Removing healing properties for both Clonexadone and Cryoxadone, too unbalanced at this stage of development.
-		M.heal_organ_damage(10 * removed, 10 * removed)
-		*/
-		M.add_chemical_effect(CE_PULSE, -2)
+		if(ishuman(M))
+			var/mob/living/carbon/human/H = M
+			for(var/obj/item/organ/internal/I in H.internal_organs)
+				if(I.robotic >= ORGAN_ROBOT)
+					continue
+				if(I.organ_tag == BP_BRAIN)
+					H.confused++
+					H.drowsyness++
+					if(I.damage >= I.min_bruised_damage)
+						continue
+				I.damage = max(I.damage - (10*removed), 0)
+			M.add_chemical_effect(CE_PULSE, -2)
 
 /datum/reagent/clonexadone
 	name = "Clonexadone"
@@ -167,17 +176,26 @@
 	taste_description = "slime"
 	reagent_state = LIQUID
 	color = "#80bfff"
-	metabolism = REM * 0.5
+	metabolism = REM * 0.05
 	scannable = 1
 	flags = IGNORE_MOB_SIZE
 
 /datum/reagent/clonexadone/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+	M.add_chemical_effect(CE_CRYO, 1)
 	if(M.bodytemperature < 170)
-		M.adjustCloneLoss(-30 * removed)
+		M.adjustCloneLoss(-150 * removed)
 		M.add_chemical_effect(CE_OXYGENATED, 2)
-		/* //Removing healing properties for both Clonexadone and Cryoxadone, too unbalanced at this stage of development.
-		M.heal_organ_damage(30 * removed, 30 * removed)
-		*/
+		if(ishuman(M))
+			var/mob/living/carbon/human/H = M
+			for(var/obj/item/organ/internal/I in H.internal_organs)
+				if(I.robotic >= ORGAN_ROBOT)
+					continue
+				if(I.organ_tag == BP_BRAIN)
+					H.confused++
+					H.drowsyness++
+					if(I.damage >= I.min_bruised_damage)
+						continue
+				I.damage = max(I.damage - (10*removed), 0)
 		M.add_chemical_effect(CE_PULSE, -2)
 
 /* Painkillers */
@@ -191,7 +209,7 @@
 	overdose = 60
 	reagent_state = LIQUID
 	scannable = 1
-	metabolism = 0.02
+	metabolism = REM * 0.05
 	flags = IGNORE_MOB_SIZE
 
 /datum/reagent/paracetamol/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)

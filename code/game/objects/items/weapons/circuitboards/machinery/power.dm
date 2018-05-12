@@ -26,6 +26,7 @@
 							/obj/item/stack/cable_coil = 30,
 							/obj/item/weapon/stock_parts/capacitor = 1,
 							/obj/item/stack/material/plasteel = 10)
+
 /obj/item/weapon/circuitboard/compressor
 	name = T_BOARD("compressor")
 	build_path = /obj/machinery/compressor
@@ -35,6 +36,7 @@
 							/obj/item/stack/cable_coil = 30,
 							/obj/item/pipe = 2,
 							/obj/item/stack/material/ocp = 10)
+
 /obj/item/weapon/circuitboard/pipeturbine
 	name = T_BOARD("pipe turbine")
 	build_path = /obj/machinery/atmospherics/pipeturbine
@@ -44,6 +46,7 @@
 							/obj/item/stack/cable_coil = 30,
 							/obj/item/pipe = 2,
 							/obj/item/stack/material/plasteel = 10)
+
 /obj/item/weapon/circuitboard/turbinemotor
 	name = T_BOARD("electric motor")
 	build_path = /obj/machinery/power/turbinemotor
@@ -53,6 +56,7 @@
 							/obj/item/stack/cable_coil = 30,
 							/obj/item/weapon/stock_parts/capacitor = 2,
 							/obj/item/stack/material/ocp = 10)
+
 /obj/item/weapon/circuitboard/generator
 	name = T_BOARD("thermoelectric generator")
 	build_path = /obj/machinery/power/generator
@@ -62,6 +66,7 @@
 							/obj/item/stack/cable_coil = 30,
 							/obj/item/weapon/stock_parts/capacitor = 2,
 							/obj/item/stack/material/ocp = 10)
+
 /obj/item/weapon/circuitboard/circulator
 	name = T_BOARD("circulator")
 	build_path = /obj/machinery/atmospherics/binary/circulator

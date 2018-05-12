@@ -43,9 +43,20 @@
 	else
 		wires = new/datum/wires/smartfridge(src)
 
+/obj/machinery/smartfridge/proc/DumpInstances()
+	for(var/datum/stored_items/S in item_records)
+		for(var/obj/item/I in S.instances)
+			I.dropInto(loc)
+			S.instances -= I
+
+/obj/machinery/smartfridge/dismantle()
+	DumpInstances()
+	. = ..()
+
 /obj/machinery/smartfridge/Destroy()
 	qdel(wires)
 	wires = null
+	DumpInstances()
 	for(var/datum/stored_items/S in item_records)
 		qdel(S)
 	item_records = null

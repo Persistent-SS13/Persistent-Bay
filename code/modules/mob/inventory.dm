@@ -94,13 +94,13 @@ var/list/slot_equipment_priority = list( \
 	for(var/obj/item/weapon/storage/S in src.contents)
 		if(S == src.back) continue
 		if(S.can_be_inserted(newitem, null, 1))
-			newitem.forceMove(S)
+			S.handle_item_insertion(newitem)
 			return S
 	// Try put it in their backpack
 	if(istype(src.back,/obj/item/weapon/storage))
 		var/obj/item/weapon/storage/backpack = src.back
 		if(backpack.can_be_inserted(newitem, null, 1))
-			newitem.forceMove(src.back)
+			backpack.handle_item_insertion(newitem)
 			return backpack
 
 /mob/proc/equip_to_storage_or_drop(obj/item/newitem)

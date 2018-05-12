@@ -2024,7 +2024,7 @@ CIRCUITS BELOW
 	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 3, TECH_BLUESPACE = 2)
 	build_path = /obj/item/weapon/circuitboard/telecomms/receiver
 	sort_string = "PAAAG"
-	
+
 /datum/design/circuit/bluespace_satellite
 	name = "bluespace satellite"
 	id = "bluespace-satellite"
@@ -2307,6 +2307,15 @@ CIRCUITS BELOW
 	materials = list(DEFAULT_WALL_MATERIAL = 120, "glass" = 50)
 	build_path = /obj/item/weapon/weldingtool/experimental
 	sort_string = "VBAAT"
+
+/datum/design/item/welding_gas_mask
+	name = "welding gas mask"
+	desc = "A face-covering mask that can be connected to an air supply. Filters harmful gases from the air. Includes a cover to protect eyes from intense flashes."
+	id = "welding_gas_mask"
+	req_tech = list(TECH_ENGINEERING = 5)
+	materials = list(DEFAULT_WALL_MATERIAL = 3500, "glass" = 1500)
+	build_path = /obj/item/clothing/mask/gas/welding
+	sort_string = "VBAAU"
 
 //RIG Modules
 //Sidenote; Try to keep a requirement of 5 engineering for each, but keep the rest as similiar to it's original as possible.

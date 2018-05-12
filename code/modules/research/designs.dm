@@ -564,7 +564,7 @@ other types of metals and chemistry for reagents).
 /datum/design/item/weapon/saw
 	id = "saw"
 	desc = "The L6 Squad Automatic Weapon, chambered in 5.56x45mm."
-	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 5)
 	materials = list(DEFAULT_WALL_MATERIAL = 15000, "silver" = 10000, "diamond" = 5000)
 	build_path = /obj/item/weapon/gun/projectile/automatic/l6_saw
 	sort_string = "TAABB"
@@ -572,7 +572,7 @@ other types of metals and chemistry for reagents).
 /datum/design/item/weapon/z8
 	id = "z8"
 	desc = "Z8 Bulldog assault rifle. Chambered in 7.62x51mm."
-	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 4)
 	materials = list(DEFAULT_WALL_MATERIAL = 10000, "silver" = 5000, "diamond" = 2000)
 	build_path = /obj/item/weapon/gun/projectile/automatic/z8
 	sort_string = "TAABC"
@@ -580,7 +580,7 @@ other types of metals and chemistry for reagents).
 /datum/design/item/weapon/sts
 	id = "sts"
 	desc = "The venerable STS-35 assault rifle chambered in 5.56x45mm."
-	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 4)
 	materials = list(DEFAULT_WALL_MATERIAL = 10000, "silver" = 3000, "diamond" = 2000)
 	build_path = /obj/item/weapon/gun/projectile/automatic/sts35
 	sort_string = "TAABD"
@@ -588,7 +588,7 @@ other types of metals and chemistry for reagents).
 /datum/design/item/weapon/c20r
 	id = "c20r"
 	desc = "C20r submachine gun chambered in 10mm."
-	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 4)
 	materials = list(DEFAULT_WALL_MATERIAL = 10000, "silver" = 3500, "diamond" = 2500)
 	build_path = /obj/item/weapon/gun/projectile/automatic/c20r
 	sort_string = "TAABE"
@@ -628,7 +628,7 @@ other types of metals and chemistry for reagents).
 /datum/design/item/weapon/combat
 	id = "combat"
 	desc = "Built for close quarters combat, the Hephaestus Industries KS-40 is widely regarded as a weapon of choice for repelling boarders."
-	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 4)
 	materials = list(DEFAULT_WALL_MATERIAL = 10000, "silver" = 5000, "diamond" = 2500)
 	build_path = /obj/item/weapon/gun/projectile/shotgun/pump/combat
 	sort_string = "TAABJ"
@@ -659,7 +659,7 @@ other types of metals and chemistry for reagents).
 
 /datum/design/item/weapon/ammo_556
 	id = "ammo_556"
-	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 4)
 	materials = list(DEFAULT_WALL_MATERIAL = 5000, "silver" = 500)
 	build_path = /obj/item/ammo_magazine/box/a556
 	sort_string = "TAABN"

@@ -70,7 +70,7 @@
 	breath_type = species.breath_type ? species.breath_type : "oxygen"
 	poison_type = species.poison_type ? species.poison_type : "phoron"
 	exhale_type = species.exhale_type ? species.exhale_type : "carbon_dioxide"
-/obj/item/organ/internal/lungs/
+
 /obj/item/organ/internal/lungs/Process()
 	..()
 	if(!owner)
@@ -107,7 +107,7 @@
 
 			owner.losebreath += round(damage/2)
 
-	if(scarred && active_breating && !owner.is_asystole())
+	if(scarred && active_breathing && !owner.is_asystole())
 		if(prob(1) && scarred > 2) // Very bad scarring
 			owner.visible_message(
 				"<B>\The [owner]</B> coughs up blood!",

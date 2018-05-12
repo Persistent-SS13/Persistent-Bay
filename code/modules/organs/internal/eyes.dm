@@ -79,18 +79,18 @@
 
 	if(scarred)
 		if(scarred > 2 && !(owner.sdisabilities & BLIND))
-			ownder.sdisabilities |= BLIND
+			owner.sdisabilities |= BLIND
 		else if(scarred < 3 && !(owner.sdisabilities & BLIND))
-			user.sdisabilities &= ~BLIND
+			owner.sdisabilities &= ~BLIND
 
 		if(!(owner.disabilities & NEARSIGHTED))
 			owner.disabilities |= NEARSIGHTED
 
 	else // If your eyes are somehow un-scarred, you'll be all better
 		if(owner.sdisabilities & BLIND)
-			user.sdisabilities &= ~BLIND
+			owner.sdisabilities &= ~BLIND
 		if(owner.disabilities & NEARSIGHTED)
-			user.disabilities &= ~NEARSIGHTED
+			owner.disabilities &= ~NEARSIGHTED
 
 /obj/item/organ/internal/eyes/proc/get_total_protection(var/flash_protection = FLASH_PROTECTION_NONE)
 	return (flash_protection + innate_flash_protection)

@@ -84,7 +84,7 @@ var/list/global/tank_gauge_cache = list()
 		var/descriptive
 		switch(celsius_temperature)
 			if(300 to INFINITY)
-				descriptive = "furiously hot"
+				descriptive = "furiously hot" // me_irl
 			if(100 to 300)
 				descriptive = "hot"
 			if(80 to 100)

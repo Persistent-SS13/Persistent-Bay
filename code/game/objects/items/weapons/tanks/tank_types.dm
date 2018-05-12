@@ -19,13 +19,22 @@
 	starting_pressure = list("oxygen" = 6*ONE_ATMOSPHERE)
 	volume = 180
 
+/obj/item/weapon/tank/oxygen/empty
+	starting_pressure = list()
+
 /obj/item/weapon/tank/oxygen/yellow
 	desc = "A tank of oxygen. This one is yellow."
 	icon_state = "oxygen_f"
 
+/obj/item/weapon/tank/oxygen/yellow/empty
+	starting_pressure = list()
+
 /obj/item/weapon/tank/oxygen/red
 	desc = "A tank of oxygen. This one is red."
 	icon_state = "oxygen_fr"
+
+/obj/item/weapon/tank/oxygen/red/empty
+	starting_pressure = list()
 
 
 /*
@@ -39,6 +48,9 @@
 	starting_pressure = list("oxygen" = 6*ONE_ATMOSPHERE*O2STANDARD, "sleeping_agent" = 6*ONE_ATMOSPHERE*N2STANDARD)
 	volume = 270
 
+/obj/item/weapon/tank/anesthetic/empty
+	starting_pressure = list()
+
 /*
  * Air
  */
@@ -48,6 +60,9 @@
 	icon_state = "oxygen"
 	starting_pressure = list("oxygen" = 6*ONE_ATMOSPHERE*O2STANDARD, "nitrogen" = 6*ONE_ATMOSPHERE*N2STANDARD)
 	volume = 180
+
+/obj/item/weapon/tank/air/empty
+	starting_pressure = list()
 
 /*
  * Phoron
@@ -73,6 +88,9 @@
 		user.remove_from_mob(src)
 		forceMove(F)
 
+/obj/item/weapon/tank/phoron/empty
+	starting_pressure = list()
+
 /*
  * Phorosian Phoron
  */
@@ -83,6 +101,9 @@
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
 	starting_pressure = list("phoron" = 6*ONE_ATMOSPHERE)
 	volume = 180
+
+/obj/item/weapon/tank/phoron/phorosian/empty
+	starting_pressure = list()
 
 /*
  * Emergency Oxygen
@@ -100,6 +121,9 @@
 	volume = 40
 	matter = list("steel" = 250)
 
+/obj/item/weapon/tank/emergency/empty
+	starting_pressure = list()
+
 /obj/item/weapon/tank/emergency/oxygen
 	name = "emergency oxygen tank"
 	desc = "Used for emergencies. Contains very little oxygen, so try to conserve it until you actually need it."
@@ -107,11 +131,17 @@
 	gauge_icon = "indicator_emergency"
 	starting_pressure = list("oxygen" = 10*ONE_ATMOSPHERE)
 
+/obj/item/weapon/tank/emergency/oxygen/empty
+	starting_pressure = list()
+
 /obj/item/weapon/tank/emergency/oxygen/engi
 	name = "extended-capacity emergency oxygen tank"
 	icon_state = "emergency_engi"
 	volume = 55
 	matter = list("steel" = 350)
+
+/obj/item/weapon/tank/emergency/oxygen/engi/empty
+	starting_pressure = list()
 
 /obj/item/weapon/tank/emergency/oxygen/double
 	name = "double emergency oxygen tank"
@@ -120,6 +150,8 @@
 	volume = 70
 	matter = list("steel" = 500)
 
+/obj/item/weapon/tank/emergency/oxygen/double/empty
+	starting_pressure = list()
 
 /obj/item/weapon/tank/emergency/nitrogen
 	name = "emergency nitrogen tank"
@@ -128,6 +160,9 @@
 	gauge_icon = "indicator_emergency"
 	starting_pressure = list("nitrogen" = 10*ONE_ATMOSPHERE)
 
+/obj/item/weapon/tank/emergency/nitrogen/empty
+	starting_pressure = list()
+
 /obj/item/weapon/tank/emergency/nitrogen/double
 	name = "double emergency nitrogen tank"
 	icon_state = "emergency_double_nitrogen"
@@ -135,12 +170,18 @@
 	volume = 70
 	matter = list("steel" = 500)
 
+/obj/item/weapon/tank/emergency/nitrogen/double/empty
+	starting_pressure = list()
+
 /obj/item/weapon/tank/emergency/phoron
 	name = "emergency phoron tank"
 	desc = "An emergency air tank hastily painted orange and issued to Phorosian crewmembers."
 	icon_state = "emergency_phoron"
 	gauge_icon = "indicator_emergency"
 	starting_pressure = list("phoron" = 10*ONE_ATMOSPHERE)
+
+/obj/item/weapon/tank/emergency/phoron/empty
+	starting_pressure = list()
 
 /*
  * Nitrogen
@@ -152,3 +193,6 @@
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
 	starting_pressure = list("nitrogen" = 6*ONE_ATMOSPHERE)
 	volume = 180
+
+/obj/item/weapon/tank/nitrogen/empty
+	starting_pressure = list()

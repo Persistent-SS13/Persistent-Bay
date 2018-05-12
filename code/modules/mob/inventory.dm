@@ -87,20 +87,26 @@ var/list/slot_equipment_priority = list( \
 
 	return 0
 
-/mob/proc/equip_to_storage(obj/item/newitem)
+/mob/proc/equip_to_storage(obj/item/newitem, var/force = 1)
 	//Try to put it in a "weird" place first
 	//That'll help tools to find your toolbelt before your backpack etc.
 	// Try to place it in any item that can store stuff, on the mob.
 	for(var/obj/item/weapon/storage/S in src.contents)
 		if(S == src.back) continue
 		if(S.can_be_inserted(newitem, null, 1))
-			S.handle_item_insertion(newitem)
+			if(force)
+				newitem.forceMove(S)
+			else
+				S.handle_item_insertion(newitem)
 			return S
 	// Try put it in their backpack
 	if(istype(src.back,/obj/item/weapon/storage))
 		var/obj/item/weapon/storage/backpack = src.back
 		if(backpack.can_be_inserted(newitem, null, 1))
-			backpack.handle_item_insertion(newitem)
+			if(force)
+				newitem.forceMove(src.back)
+			else
+				backpack.handle_item_insertion(newitem)
 			return backpack
 
 /mob/proc/equip_to_storage_or_drop(obj/item/newitem)

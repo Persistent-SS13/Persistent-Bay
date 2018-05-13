@@ -38,10 +38,10 @@
 	storage_end.screen_loc = "7,7 to 10,8"
 	storage_end.layer = HUD_BASE_LAYER
 
-	stored_start = new /obj //we just need these to hold the icon
+	stored_start = new /obj //we just need these to hold the icon	//why the fuck are they defined as /obj/screen/storage then???
 	stored_start.icon_state = "stored_start"
 	stored_start.layer = HUD_BASE_LAYER
-	stored_continue = new /obj
+	stored_continue = new /obj/screen/storage //not this one, it has to relay the item too
 	stored_continue.icon_state = "stored_continue"
 	stored_continue.layer = HUD_BASE_LAYER
 	stored_end = new /obj
@@ -225,9 +225,9 @@
 		M_end.Translate(endpoint-stored_cap_width,0)
 		stored_start.transform = M_start
 		stored_continue.transform = M_continue
+		stored_continue.master = O
 		stored_end.transform = M_end
 		storage_start.overlays += stored_start
-		stored_continue.master = O
 		storage_start.overlays += stored_continue
 		storage_start.overlays += stored_end
 

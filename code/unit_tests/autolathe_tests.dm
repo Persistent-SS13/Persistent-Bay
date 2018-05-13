@@ -108,13 +108,13 @@
 		if(autolathe_items.Find(R.path))
 			bad_tests++
 			log_bad("[R.name] - duplicate autolathe recipe/s found with path [R.path].")
-		list.Add(R.path)
+		autolathe_items.Add(R.path)
 
 	for(var/datum/design/item/R in protolathe_recipes)
 		if(protolathe_items.Find(R.build_path))
 			bad_tests++
-			log_bad("[R.name] - duplicate protolathe recipe/s found with path [R.path].")
-		list.Add(R.path)
+			log_bad("[R.name] - duplicate protolathe recipe/s found with path [R.build_path].")
+		protolathe_items.Add(R.build_path)
 
 	for(var/R in autolathe_items)
 		if(protolathe_items.Find(R))

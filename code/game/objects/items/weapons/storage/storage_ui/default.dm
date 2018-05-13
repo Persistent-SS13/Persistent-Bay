@@ -8,6 +8,7 @@
 	var/obj/screen/storage/stored_start
 	var/obj/screen/storage/stored_continue
 	var/obj/screen/storage/stored_end
+	var/list/obj/screen/storage/stored_continues
 	var/obj/screen/close/closer
 
 /datum/storage_ui/default/New(var/storage)
@@ -41,9 +42,15 @@
 	stored_start = new /obj //we just need these to hold the icon	//why the fuck are they defined as /obj/screen/storage then???
 	stored_start.icon_state = "stored_start"
 	stored_start.layer = HUD_BASE_LAYER
-	stored_continue = new /obj/screen/storage //not this one, it has to relay the item too
-	stored_continue.icon_state = "stored_continue"
-	stored_continue.layer = HUD_BASE_LAYER
+
+//	stored_continue = new /obj/screen/storage //not this one, it has to relay the item too
+//	stored_continue.icon_state = "stored_continue"
+//	stored_continue.layer = HUD_BASE_LAYER
+	init_continue()
+
+	stored_continues = list()
+	stored_continues += stored_continue
+
 	stored_end = new /obj
 	stored_end.icon_state = "stored_end"
 	stored_end.layer = HUD_BASE_LAYER
@@ -53,6 +60,11 @@
 	closer.icon_state = "x"
 	closer.layer = HUD_BASE_LAYER
 
+/datum/storage_ui/default/proc/init_continue()
+	stored_continue = new /obj/screen/storage //not this one, it has to relay the item too
+	stored_continue.icon_state = "stored_continue"
+	stored_continue.layer = HUD_BASE_LAYER
+
 /datum/storage_ui/default/Destroy()
 	close_all()
 	QDEL_NULL(boxes)
@@ -60,7 +72,9 @@
 	QDEL_NULL(storage_continue)
 	QDEL_NULL(storage_end)
 	QDEL_NULL(stored_start)
-	QDEL_NULL(stored_continue)
+	for(var/obj/SC in stored_continues)
+		QDELL_NULL(SC)
+	QDELL_NULL(stored_continue)
 	QDEL_NULL(stored_end)
 	QDEL_NULL(closer)
 	. = ..()
@@ -215,7 +229,7 @@
 	for(var/obj/item/O in storage.contents)
 		startpoint = endpoint + 1
 		endpoint += storage_width * O.get_storage_cost()/storage.max_storage_space
-
+		init_continue()
 		var/matrix/M_start = matrix()
 		var/matrix/M_continue = matrix()
 		var/matrix/M_end = matrix()
@@ -226,6 +240,7 @@
 		stored_start.transform = M_start
 		stored_continue.transform = M_continue
 		stored_continue.master = O
+		stored_continues += stored_continues
 		stored_end.transform = M_end
 		storage_start.overlays += stored_start
 		storage_start.overlays += stored_continue

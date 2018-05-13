@@ -88,18 +88,20 @@ var/list/slot_equipment_priority = list( \
 	return 0
 
 /mob/proc/equip_to_storage(obj/item/newitem)
+	//Try to put it in a "weird" place first
+	//That'll help tools to find your toolbelt before your backpack etc.
+	// Try to place it in any item that can store stuff, on the mob.
+	for(var/obj/item/weapon/storage/S in src.contents)
+		if(S == src.back) continue
+		if(S.can_be_inserted(newitem, null, 1))
+			newitem.forceMove(S)
+			return S
 	// Try put it in their backpack
 	if(istype(src.back,/obj/item/weapon/storage))
 		var/obj/item/weapon/storage/backpack = src.back
 		if(backpack.can_be_inserted(newitem, null, 1))
 			newitem.forceMove(src.back)
 			return backpack
-
-	// Try to place it in any item that can store stuff, on the mob.
-	for(var/obj/item/weapon/storage/S in src.contents)
-		if(S.can_be_inserted(newitem, null, 1))
-			newitem.forceMove(S)
-			return S
 
 /mob/proc/equip_to_storage_or_drop(obj/item/newitem)
 	var/stored = equip_to_storage(newitem)
@@ -243,7 +245,6 @@ var/list/slot_equipment_priority = list( \
 			I.forceMove(target)
 		else
 			I.dropInto(loc)
-			I.randomize_pixel_offset()
 		I.dropped(src)
 	return 1
 

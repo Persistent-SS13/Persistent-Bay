@@ -6,7 +6,6 @@
 	can_plate = 0
 	can_reinforce = 0
 	flipped = -1
-
 	material = DEFAULT_TABLE_MATERIAL
 
 /obj/structure/table/rack/New()

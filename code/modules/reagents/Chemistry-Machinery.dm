@@ -405,8 +405,7 @@
 		if(!material.chem_products.len)
 			to_chat(user, "\The [material.name] is unable to produce any usable reagents.")
 			return 1
-
-	if(!O.reagents || !O.reagents.total_volume)
+	else if(!O.reagents || !O.reagents.total_volume)
 		to_chat(user, "\The [O] is not suitable for blending.")
 		return 1
 

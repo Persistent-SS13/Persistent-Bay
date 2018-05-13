@@ -561,6 +561,115 @@ other types of metals and chemistry for reagents).
 	materials = list(DEFAULT_WALL_MATERIAL = 8000, "silver" = 2000, "diamond" = 1000)
 	build_path = /obj/item/weapon/gun/projectile/automatic
 	sort_string = "TAABA"
+/datum/design/item/weapon/saw
+	id = "saw"
+	desc = "The L6 Squad Automatic Weapon, chambered in 5.56x45mm."
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 5)
+	materials = list(DEFAULT_WALL_MATERIAL = 15000, "silver" = 10000, "diamond" = 5000)
+	build_path = /obj/item/weapon/gun/projectile/automatic/l6_saw
+	sort_string = "TAABB"
+
+/datum/design/item/weapon/z8
+	id = "z8"
+	desc = "Z8 Bulldog assault rifle. Chambered in 7.62x51mm."
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 4)
+	materials = list(DEFAULT_WALL_MATERIAL = 10000, "silver" = 5000, "diamond" = 2000)
+	build_path = /obj/item/weapon/gun/projectile/automatic/z8
+	sort_string = "TAABC"
+
+/datum/design/item/weapon/sts
+	id = "sts"
+	desc = "The venerable STS-35 assault rifle chambered in 5.56x45mm."
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 4)
+	materials = list(DEFAULT_WALL_MATERIAL = 10000, "silver" = 3000, "diamond" = 2000)
+	build_path = /obj/item/weapon/gun/projectile/automatic/sts35
+	sort_string = "TAABD"
+
+/datum/design/item/weapon/c20r
+	id = "c20r"
+	desc = "C20r submachine gun chambered in 10mm."
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 4)
+	materials = list(DEFAULT_WALL_MATERIAL = 10000, "silver" = 3500, "diamond" = 2500)
+	build_path = /obj/item/weapon/gun/projectile/automatic/c20r
+	sort_string = "TAABE"
+
+/datum/design/item/weapon/colt
+	id = "colt"
+	desc = "A modern reproduction of the Colt M1911 sidearm, chambered in .45 ACP."
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
+	materials = list(DEFAULT_WALL_MATERIAL = 6000, "silver" = 500)
+	build_path = /obj/item/weapon/gun/projectile/colt
+	sort_string = "TAABF"
+
+/datum/design/item/weapon/nt
+	id = "nt"
+	desc = "Nanotrasen Mk58 pistol, chambered in .45 ACP."
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
+	materials = list(DEFAULT_WALL_MATERIAL = 6000, "silver" = 500)
+	build_path = /obj/item/weapon/gun/projectile/sec
+	sort_string = "TAABG"
+
+/datum/design/item/weapon/holdout
+	id = "holdout"
+	desc = "The Lumoco Arms P3 Whisper. A small, easily concealable gun. Uses 9mm rounds."
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
+	materials = list(DEFAULT_WALL_MATERIAL = 4000, "silver" = 250)
+	build_path = /obj/item/weapon/gun/projectile/pistol
+	sort_string = "TAABH"
+
+/datum/design/item/weapon/pump
+	id = "pump"
+	desc = "The mass-produced W-T Remmington 29x shotgun is a favourite of police and security forces on many worlds. Useful for sweeping alleys."
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
+	materials = list(DEFAULT_WALL_MATERIAL = 10000, "silver" = 2500, "diamond" = 1000)
+	build_path = /obj/item/weapon/gun/projectile/shotgun/pump
+	sort_string = "TAABI"
+
+/datum/design/item/weapon/combat
+	id = "combat"
+	desc = "Built for close quarters combat, the Hephaestus Industries KS-40 is widely regarded as a weapon of choice for repelling boarders."
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 4)
+	materials = list(DEFAULT_WALL_MATERIAL = 10000, "silver" = 5000, "diamond" = 2500)
+	build_path = /obj/item/weapon/gun/projectile/shotgun/pump/combat
+	sort_string = "TAABJ"
+
+/datum/design/item/weapon/double
+	id = "double"
+	desc = "A true classic - the double barrel shotgun."
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
+	materials = list(DEFAULT_WALL_MATERIAL = 7500, "silver" = 1000)
+	build_path = /obj/item/weapon/gun/projectile/shotgun/doublebarrel
+	sort_string = "TAABK"
+
+/datum/design/item/weapon/detective
+	id = "detective"
+	desc = "Pistol (.45), reskinnable"
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
+	materials = list(DEFAULT_WALL_MATERIAL = 5000, "silver" = 1000)
+	build_path = /obj/item/weapon/gun/projectile/colt/detective
+	sort_string = "TAABL"
+
+/datum/design/item/weapon/revolver
+	id = "revolver"
+	desc = "Martian copy of the S&W Model 10, .38 special."
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
+	materials = list(DEFAULT_WALL_MATERIAL = 5000, "silver" = 1000)
+	build_path = /obj/item/weapon/gun/projectile/revolver/detective
+	sort_string = "TAABM"
+
+/datum/design/item/weapon/ammo_556
+	id = "ammo_556"
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 4)
+	materials = list(DEFAULT_WALL_MATERIAL = 5000, "silver" = 500)
+	build_path = /obj/item/ammo_magazine/box/a556
+	sort_string = "TAABN"
+
+/datum/design/item/weapon/ammo_45
+	id = "ammo_45"
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
+	materials = list(DEFAULT_WALL_MATERIAL = 4250, "silver" = 250)
+	build_path = /obj/item/ammo_magazine/box/c45
+	sort_string = "TAABO"
 
 /datum/design/item/weapon/ammo_9mm
 	id = "ammo_9mm"

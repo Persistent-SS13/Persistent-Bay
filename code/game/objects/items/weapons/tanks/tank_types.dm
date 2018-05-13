@@ -36,9 +36,9 @@
 	desc = "A tank with an N2O/O2 gas mix."
 	icon_state = "anesthetic"
 	item_state = "an_tank"
-	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
+	w_class = ITEM_SIZE_LARGE
 	starting_pressure = list("oxygen" = 10*ONE_ATMOSPHERE*O2STANDARD, "sleeping_agent" = 10*ONE_ATMOSPHERE*N2STANDARD)
-	volume = 180
+	volume = 270
 
 /*
  * Air

@@ -65,19 +65,14 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/weapon/extinguisher
 	category = "General"
 
-/datum/autolathe/recipe/tank/proc/Fabricate()
-	var/obj/item/weapon/tank/T = ..()
-	T.air_contents = new /datum/gas_mixture(T.volume, T20C)  //Empty air tanks only
-	return T
-
 /datum/autolathe/recipe/tank
 	name = "air tank"
-	path = /obj/item/weapon/tank/oxygen/yellow
+	path = /obj/item/weapon/tank/oxygen/yellow/empty
 	category = "General"
 
 /datum/autolathe/recipe/tank_double
 	name = "emergency air tank"
-	path = /obj/item/weapon/tank/emergency/oxygen/engi
+	path = /obj/item/weapon/tank/emergency/oxygen/engi/empty
 	category = "General"
 
 /datum/autolathe/recipe/jar

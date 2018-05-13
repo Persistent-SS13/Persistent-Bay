@@ -206,13 +206,13 @@
 
 /obj/item/integrated_circuit/input/signaler/Initialize()
 	. = ..()
-
-	var/datum/integrated_io/new_freq = inputs[1]
-	var/datum/integrated_io/new_code = inputs[2]
-	// Set the pins so when someone sees them, they won't show as null
-	new_freq.data = frequency
-	new_code.data = 30
-	set_frequency(new_freq.data)
+	if(!map_storage_loaded)
+		var/datum/integrated_io/new_freq = inputs[1]
+		var/datum/integrated_io/new_code = inputs[2]
+		// Set the pins so when someone sees them, they won't show as null
+		new_freq.data = frequency
+		new_code.data = 30
+		set_frequency(new_freq.data)
 
 /obj/item/integrated_circuit/input/signaler/Destroy()
 	if(radio_controller)

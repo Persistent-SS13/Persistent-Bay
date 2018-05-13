@@ -53,7 +53,7 @@
 				sleep(10)
 				processing = 0
 				var/turf/T = get_step(get_step(src, EAST), EAST) // Double step
-				new /obj/structure/girder(T, new M())
+				new /obj/item/girderpart(T, new M())
 				return
 
 /obj/machinery/girderlathe/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, var/master_ui = null, var/datum/topic_state/state = GLOB.default_state)

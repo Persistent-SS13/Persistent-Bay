@@ -1,3 +1,9 @@
+/turf/simulated/wall/proc/update_full(var/propagate, var/integrity)
+	update_material(integrity)
+	update_connections(propagate)
+	update_icon()
+
+
 /turf/simulated/wall/proc/update_material(var/updateIntegrity)
 
 	if(!istype(material, /material))
@@ -39,7 +45,6 @@
 	set_opacity(p_material.opacity >= 0.5)
 
 	radiation_repository.resistance_cache.Remove(src)
-	update_icon()
 
 /turf/simulated/wall/update_icon()
 	if(!material || !p_material)
@@ -99,13 +104,13 @@
 		if(!W.p_material)
 			continue
 		if(propagate)
-			W.update_icon()
+			W.update_connections()
 		if(can_join_with(W))
 			dirs += get_dir(src, W)
 
 	wall_connections = dirs_to_corner_states(dirs)
 
 /turf/simulated/wall/proc/can_join_with(var/turf/simulated/wall/W)
-	if(state == null && W.state == null && p_material == W.p_material)
+	if(state == null && W.state == null && p_material.name == W.p_material.name)
 		return 1
 	return 0

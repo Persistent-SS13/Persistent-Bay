@@ -78,6 +78,7 @@
 				T.p_material = W:material
 				T.state = 0
 				T.update_material(1)
+				T.update_icon()
 				qdel(src)
 				return
 			if(Screwdriver(W, user, 0))
@@ -148,6 +149,7 @@
 				T.p_material = W:material
 				T.state = 0
 				T.update_material(1)
+				T.update_icon()
 				qdel(src)
 				return
 			if(Weld(W, user))

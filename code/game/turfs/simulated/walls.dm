@@ -12,6 +12,7 @@
 	var/integrity = 150 // Placeholder until assigned
 	var/damage_overlay = 0
 	var/can_open = 0
+	var/reinf_material		// Material to be updated to the latest
 	var/material/material	// Material the girder is made out of
 	var/material/r_material	// Material used to reinforce the girder
 	var/material/p_material	// Material used to plate the girder
@@ -28,10 +29,15 @@
 	r_material = r_mat
 	p_material = p_mat
 	update_material(1)
+	update_icon()
 	processing_turfs |= src
 
 /turf/simulated/wall/after_load()
-	update_material(0)
+	..()
+	if(reinf_material)
+		p_material = reinf_material
+	reinf_material = null
+	update_full(1, 1)
 
 /turf/simulated/wall/Destroy()
 	processing_turfs -= src

@@ -93,3 +93,40 @@
 		pass("Autolathe test recipe passed all initialization tests.")
 
 	return 1
+
+/datum/unit_test/autolathe_dupe_test
+	name = "AUTOLATHE: duplicate recipe test"
+
+/datum/unit_test/autolathe_dupe_test/start_test()
+	var/bad_tests = 0
+	var/warn_tests = 0
+
+	var/list/autolathe_items = list()
+	var/list/protolathe_items = list()
+
+	for(var/datum/autolathe/recipe/R in autolathe_recipes)
+		if(autolathe_items.Find(R.path))
+			bad_tests++
+			log_bad("[R.name] - duplicate autolathe recipe/s found with path [R.path].")
+		list.Add(R.path)
+
+	for(var/datum/design/item/R in protolathe_recipes)
+		if(protolathe_items.Find(R.build_path))
+			bad_tests++
+			log_bad("[R.name] - duplicate protolathe recipe/s found with path [R.path].")
+		list.Add(R.path)
+
+	for(var/R in autolathe_items)
+		if(protolathe_items.Find(R))
+			warn_tests++
+			log_debug("Path [R] - recipe is shared between both autolathe and protolathe.")
+
+	autolathe_items = null
+	protolathe_items = null
+
+	if(bad_tests)
+		fail("[bad_tests] autolathe or protolathe recipe\s had duplicate paths.")
+	else
+		pass("No duplicate recipes found, and [warn_tests] shared autolathe/protolathe recipe/s found.")
+
+	return 1

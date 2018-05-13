@@ -456,9 +456,11 @@
 				to_chat(H, "<span class='danger'>You go blind!</span>")
 				H.eye_blind = 5
 				H.eye_blurry = 5
-				H.disabilities |= NEARSIGHTED
-				spawn(100)
-					H.disabilities &= ~NEARSIGHTED
+				// We don't want this to cure nearsightedness accidentally
+				if(!(H.disabilities & NEARSIGHTED))
+					H.disabilities |= NEARSIGHTED
+					spawn(100)
+						H.disabilities &= ~NEARSIGHTED
 
 /obj/item/weapon/welder_tank
 	name = "welding fuel tank"

@@ -9,6 +9,7 @@
 	min_broken_damage = 45
 	max_damage = 70
 	relative_size = 60
+	scarring_effect = 4
 
 /obj/item/organ/internal/liver/robotize()
 	. = ..()
@@ -74,3 +75,7 @@
 			owner.nutrition -= 10
 		else if(owner.nutrition >= 200)
 			owner.nutrition -= 3
+
+	if(owner.chem_effects[CE_ALCOHOL] && scarred) // If your liver is messed up, you can't hold liqour very well
+		if(prob(scarred*scarred)) // Scarring 1 == 1%, Scarring 2 == 4%, Scarring 3 == 9%
+			spawn owner.vomit()

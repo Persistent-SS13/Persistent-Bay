@@ -227,6 +227,7 @@
 		stored_continue.transform = M_continue
 		stored_end.transform = M_end
 		storage_start.overlays += stored_start
+		stored_continue.master = O
 		storage_start.overlays += stored_continue
 		storage_start.overlays += stored_end
 

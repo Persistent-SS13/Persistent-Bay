@@ -736,8 +736,6 @@
 		reset_plane_and_layer()
 
 /mob/proc/facedir(var/ndir)
-	client.pixel_x = 0
-	client.pixel_y = 0
 	if(!canface() || client.moving || world.time < client.move_delay)
 		return 0
 	set_dir(ndir)
@@ -850,9 +848,6 @@
 
 /mob/proc/get_species()
 	return ""
-
-/mob/proc/flash_weak_pain()
-	flick("weak_pain",pain)
 
 /mob/proc/get_visible_implants(var/class = 0)
 	var/list/visible_implants = list()
@@ -994,6 +989,9 @@ mob/proc/yank_out_object()
 		facing_dir = dir
 
 /mob/set_dir()
+	if(!isnull(client))
+		client.pixel_x = 0
+		client.pixel_y = 0
 	if(facing_dir)
 		if(!canface() || lying || buckled || restrained())
 			facing_dir = null
@@ -1005,7 +1003,6 @@ mob/proc/yank_out_object()
 /mob/proc/set_stat(var/new_stat)
 	. = stat != new_stat
 	stat = new_stat
-
 
 /mob/verb/northfaceperm()
 	set hidden = 1
@@ -1022,38 +1019,6 @@ mob/proc/yank_out_object()
 /mob/verb/westfaceperm()
 	set hidden = 1
 	set_face_dir(client.client_dir(WEST))
-
-/mob/verb/eastfacepeek()
-	set hidden = 1
-	if(!canface())	return 0
-	dir = EAST
-	if(!client)		return 0
-	client.pixel_x = min(160, client.pixel_x + 160)
-	return 1
-
-/mob/verb/northfacepeek()
-	set hidden = 1
-	if(!canface())	return 0
-	dir = NORTH
-	if(!client)		return 0
-	client.pixel_y = min(160, client.pixel_y + 160)
-	return 1
-
-/mob/verb/westfacepeek()
-	set hidden = 1
-	if(!canface())	return 0
-	dir = WEST
-	if(!client)		return 0
-	client.pixel_x = max(-160, client.pixel_x - 160)
-	return 1
-
-/mob/verb/southfacepeek()
-	set hidden = 1
-	if(!canface())	return 0
-	dir = SOUTH
-	if(!client)		return 0
-	client.pixel_y = max(-160, client.pixel_y - 160)
-	return 1
 
 /mob/proc/adjustEarDamage()
 	return

@@ -26,7 +26,6 @@
 
 // Assoc list containing all material datums indexed by name.
 var/list/name_to_material
-var/list/stack_to_material
 
 //Returns the material the object is made of, if applicable.
 //Will we ever need to return more than one value here? Or should we just return the "dominant" material.
@@ -41,15 +40,13 @@ var/list/stack_to_material
 
 // Builds the datum list above.
 /proc/populate_material_list(force_remake=0)
-	if(name_to_material || stack_to_material && !force_remake) return // Already set up!
+	if(name_to_material && !force_remake) return // Already set up!
 	name_to_material = list()
-	stack_to_material = list()
 	for(var/type in typesof(/material) - /material)
 		var/material/new_mineral = new type
-		if(new_mineral.name)
-			name_to_material[lowertext(new_mineral.name)] = new_mineral
-		if(new_mineral.stack_type)
-			stack_to_material[new_mineral.stack_type] = new_mineral
+		if(!new_mineral.name)
+			continue
+		name_to_material[lowertext(new_mineral.name)] = new_mineral
 	return 1
 
 // Safety proc to make sure the material list exists before trying to grab from it.
@@ -59,12 +56,6 @@ var/list/stack_to_material
 	. = name_to_material[name]
 	if(!.)
 		log_error("Unable to acquire material by name '[name]'")
-/proc/get_material_by_stack(var/stack)
-	if(!stack_to_material)
-		populate_material_list()
-	. = stack_to_material[stack]
-	if(!.)
-		log_error("Unable to aquire material by stack '[stack]'")
 
 /proc/material_display_name(name)
 	var/material/material = get_material_by_name(name)
@@ -83,6 +74,7 @@ var/list/stack_to_material
 	var/sheet_plural_name = "sheets"
 	var/is_fusion_fuel
 	var/list/gaseous_products	  		  // Used with sublimator to produce gas
+	var/list/chem_products				  // Used with the grinder to produce chemicals
 
 	// Shards/tables/structures
 	var/shard_type = SHARD_SHRAPNEL       // Path of debris object.
@@ -93,9 +85,9 @@ var/list/stack_to_material
 
 	// Icons
 	var/icon_colour                                      // Colour applied to products of this material.
-	var/icon_base = "solid"                              // Wall and table base icon tag. See header.
+	var/icon_base = "metal"                              // Wall and table base icon tag. See header.
 	var/door_icon_base = "metal"                         // Door base icon tag. See header.
-	var/icon_reinf = "solid"                       // Reinforced wall and table icon tag
+	var/icon_reinf = "reinf_metal"                       // Overlay used
 	var/list/stack_origin_tech = list(TECH_MATERIAL = 1) // Research level for stacks.
 
 	// Attributes
@@ -171,8 +163,6 @@ var/list/stack_to_material
 		use_name = display_name
 	if(!adjective_name)
 		adjective_name = display_name
-	if(!icon_reinf)
-		icon_reinf = icon_base
 	if(!shard_icon)
 		shard_icon = shard_type
 	if(!burn_armor)
@@ -212,6 +202,13 @@ var/list/stack_to_material
 /material/placeholder
 	name = "placeholder"
 
+// Places a girder object when a wall is dismantled, also applies reinforced material.
+/material/proc/place_dismantled_girder(var/turf/target, var/material/reinf_material)
+	var/obj/structure/girder/G = new(target)
+	if(reinf_material)
+		G.reinf_material = reinf_material
+		G.reinforce_girder()
+
 // General wall debris product placement.
 // Not particularly necessary aside from snowflakey cult girders.
 /material/proc/place_dismantled_product(var/turf/target,var/is_devastated)
@@ -232,16 +229,8 @@ var/list/stack_to_material
 /material/proc/is_brittle()
 	return !!(flags & MATERIAL_BRITTLE)
 
-/material/proc/combustion_effect(var/turf/T, var/temperature, var/amount = 1)
-	if(!ignition_point || temperature < ignition_point)
-		return 0
-	if(gaseous_products)
-		var/list/tiles = list()
-		tiles += /turf/simulated/floor in range(2,T)
-		for(var/gas in gaseous_products)
-			for(var/turf/simulated/floor/target_tile in tiles)
-				target_tile.assume_gas("[gas]", (gaseous_products[gas] * amount) / tiles.len)
-	return 1
+/material/proc/combustion_effect(var/turf/T, var/temperature)
+	return
 
 // Datum definitions follow.
 /material/uranium
@@ -254,6 +243,9 @@ var/list/stack_to_material
 	weight = 22
 	stack_origin_tech = list(TECH_MATERIAL = 5)
 	door_icon_base = "stone"
+	chem_products = list(
+				/datum/reagent/uranium = 15
+				)
 
 /material/diamond
 	name = "diamond"
@@ -273,7 +265,6 @@ var/list/stack_to_material
 /material/gold
 	name = "gold"
 	stack_type = /obj/item/stack/material/gold
-	icon_reinf = "metal"
 	icon_colour = "#edd12f"
 	weight = 25
 	hardness = 25
@@ -281,10 +272,86 @@ var/list/stack_to_material
 	stack_origin_tech = list(TECH_MATERIAL = 4)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
+	chem_products = list(
+				/datum/reagent/gold = 15
+				)
 
-/material/gold/bronze //placeholder for ashtrays
+/material/copper
+	name = "copper"
+	stack_type = /obj/item/stack/material/copper
+	icon_colour = "#eea800"
+	weight = 20
+	hardness = 50
+	integrity = 100
+	stack_origin_tech = list(TECH_MATERIAL = 2)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
+	chem_products = list(
+				/datum/reagent/copper = 20
+				)
+
+/material/bronze //copper and tin
 	name = "bronze"
+	stack_type = /obj/item/stack/material/bronze
+	icon_colour = "#ffb900"
+	weight = 20
+	hardness = 50
+	integrity = 125
+	stack_origin_tech = list(TECH_MATERIAL = 3)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
+	composite_material = list("copper" = 7500, "tin" = 3750)
+	chem_products = list(
+				/datum/reagent/copper = 15
+				)
+
+/material/brass //copper and zinc
+	name = "brass"
+	stack_type = /obj/item/stack/material/brass
 	icon_colour = "#edd12f"
+	weight = 20
+	hardness = 35
+	integrity = 130
+	stack_origin_tech = list(TECH_MATERIAL = 3)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
+	composite_material = list("copper" = 7500, "zinc" = 3750)
+	chem_products = list(
+				/datum/reagent/copper = 15
+				)
+
+/material/tin
+	name = "tin"
+	stack_type = /obj/item/stack/material/tin
+	icon_colour = "#e1f6f3"
+	weight = 18
+	hardness = 25
+	stack_origin_tech = list(TECH_MATERIAL = 2)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
+
+/material/zinc
+	name = "zinc"
+	stack_type = /obj/item/stack/material/zinc
+	icon_colour = "#c1d6d3"
+	weight = 18
+	hardness = 50
+	stack_origin_tech = list(TECH_MATERIAL = 2)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
+
+/material/aluminum
+	name = "aluminum"
+	stack_type = /obj/item/stack/material/aluminum
+	icon_colour = "#c1d6d3"
+	weight = 18
+	hardness = 50
+	stack_origin_tech = list(TECH_MATERIAL = 2)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
+	chem_products = list(
+				/datum/reagent/aluminum = 20
+				)
 
 /material/silver
 	name = "silver"
@@ -295,12 +362,15 @@ var/list/stack_to_material
 	stack_origin_tech = list(TECH_MATERIAL = 3)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
+	chem_products = list(
+				/datum/reagent/silver = 15
+				)
 
 /material/phoron
 	name = "phoron"
 	stack_type = /obj/item/stack/material/phoron
 	ignition_point = PHORON_MINIMUM_BURN_TEMPERATURE
-	icon_reinf = "metal"
+	icon_base = "stone"
 	icon_colour = "#e37108"
 	shard_type = SHARD_SHARD
 	hardness = 30
@@ -312,6 +382,9 @@ var/list/stack_to_material
 	gaseous_products = list(
 				"phoron" = 3.4 // 1360~g / 405g per mole
 				)
+	chem_products = list(
+				/datum/reagent/toxin/phoron = 15
+				)
 
 /material/phoron/supermatter
 	name = "supermatter"
@@ -320,6 +393,23 @@ var/list/stack_to_material
 	stack_origin_tech = list(TECH_BLUESPACE = 2, TECH_MATERIAL = 6, TECH_PHORON = 4)
 	stack_type = null
 	luminescence = 3
+
+
+//Controls phoron and phoron based objects reaction to being in a turf over 200c -- Phoron's flashpoint.
+/material/phoron/combustion_effect(var/turf/T, var/temperature, var/effect_multiplier)
+	if(isnull(ignition_point))
+		return 0
+	if(temperature < ignition_point)
+		return 0
+	var/totalPhoron = 0
+	for(var/turf/simulated/floor/target_tile in range(2,T))
+		var/phoronToDeduce = (temperature/30) * effect_multiplier
+		totalPhoron += phoronToDeduce
+		target_tile.assume_gas("phoron", phoronToDeduce, 200+T0C)
+		spawn (0)
+			target_tile.hotspot_expose(temperature, 400)
+	return round(totalPhoron/100)
+
 
 /material/stone
 	name = "sandstone"
@@ -354,15 +444,33 @@ var/list/stack_to_material
 	gaseous_products = list(
 				"chlorine" = 10.3 // 600~g / 58.4 per mole
 				)
+	chem_products = list(
+				/datum/reagent/sodiumchloride = 20
+				)
+
+/material/carbon
+	name = "coal"
+	stack_type = /obj/item/stack/material/carbon
+	icon_colour = "#11111a"
+	sheet_singular_name = "brick"
+	sheet_plural_name = "bricks"
+	chem_products = list(
+				/datum/reagent/carbon = 40
+				)
 
 /material/steel
 	name = DEFAULT_WALL_MATERIAL
 	stack_type = /obj/item/stack/material/steel
 	integrity = 150
 	brute_armor = 5
-	icon_reinf = "metal"
+	icon_base = "solid"
+	icon_reinf = "reinf_over"
 	icon_colour = "#666666"
 	hitsound = 'sound/weapons/smash.ogg'
+	chem_products = list(
+				/datum/reagent/iron = 15,
+				/datum/reagent/carbon = 5
+				)
 
 /material/diona
 	name = "biomass"
@@ -370,12 +478,15 @@ var/list/stack_to_material
 	stack_type = null
 	integrity = 600
 	icon_base = "diona"
-	icon_reinf = "diona"
+	icon_reinf = "noreinf"
 	hitsound = 'sound/effects/attackblob.ogg'
 	conductive = 0
 
 /material/diona/place_dismantled_product()
 	return
+
+/material/diona/place_dismantled_girder(var/turf/target)
+	spawn_diona_nymph(target)
 
 /material/steel/holographic
 	name = "holo" + DEFAULT_WALL_MATERIAL
@@ -390,7 +501,7 @@ var/list/stack_to_material
 	integrity = 400
 	melting_point = 6000
 	icon_base = "solid"
-	icon_reinf = "metal"
+	icon_reinf = "reinf_over"
 	icon_colour = "#777777"
 	explosion_resistance = 25
 	brute_armor = 6
@@ -410,6 +521,7 @@ var/list/stack_to_material
 	icon_base = "metal"
 	door_icon_base = "metal"
 	icon_colour = "#d1e6e3"
+	icon_reinf = "reinf_metal"
 
 /material/plasteel/ocp
 	name = "osmium-carbide plasteel"
@@ -417,7 +529,7 @@ var/list/stack_to_material
 	integrity = 200
 	melting_point = 12000
 	icon_base = "solid"
-	icon_reinf = "metal"
+	icon_reinf = "reinf_over"
 	icon_colour = "#9bc6f2"
 	brute_armor = 4
 	burn_armor = 20
@@ -425,6 +537,44 @@ var/list/stack_to_material
 	stack_origin_tech = list(TECH_MATERIAL = 3)
 	composite_material = list("plasteel" = 7500, "osmium" = 3750)
 
+/material/tungsten
+	name = "tungsten"
+	stack_type = /obj/item/stack/material/tungsten
+	integrity = 250 // Tungsten ain't no bitch
+	melting_point = 16000
+	icon_colour = "#8888aa"
+	weight = 32 // Tungsten B-Ball bats OP AF
+	stack_origin_tech = list(TECH_MATERIAL = 4)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
+	chem_products = list(
+				/datum/reagent/tungsten = 20
+				)
+
+/material/lead
+	name = "lead"
+	stack_type = /obj/item/stack/material/lead
+	icon_colour = "#6677bb"
+	radioactivity = 2 // Simulated lead poisoning using VERY weak radiation
+	weight = 28
+	stack_origin_tech = list(TECH_MATERIAL = 2)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
+
+/material/sulfur
+	name = "sulfur"
+	stack_type = /obj/item/stack/material/sulfur
+	icon_colour = "#4f8cbb"
+	integrity = 5
+	hardness = 1
+	melting_point = T0C + 80
+	ignition_point = T0C + 70
+	weight = 3
+	sheet_singular_name = "brick"
+	sheet_plural_name = "bricks"
+	chem_products = list(
+				/datum/reagent/sulfur = 20
+				)
 
 /material/glass
 	name = "glass"
@@ -447,6 +597,9 @@ var/list/stack_to_material
 	rod_product = /obj/item/stack/material/glass/reinforced
 	hitsound = 'sound/effects/Glasshit.ogg'
 	conductive = 0
+	chem_products = list(
+				/datum/reagent/silicon = 20
+				)
 
 /material/glass/build_windows(var/mob/living/user, var/obj/item/stack/used_stack)
 
@@ -557,6 +710,10 @@ var/list/stack_to_material
 	created_window = /obj/structure/window/phoronbasic
 	wire_product = null
 	rod_product = /obj/item/stack/material/glass/phoronrglass
+	chem_products = list(
+				/datum/reagent/toxin/phoron = 10,
+				/datum/reagent/silicon = 10
+				)
 
 /material/glass/phoron/reinforced
 	name = "rphglass"
@@ -573,19 +730,47 @@ var/list/stack_to_material
 	rod_product = null
 	integrity = 100
 
+/material/glass/fiberglass
+	name = "fiberglass"
+	display_name = "fiberglass"
+	stack_type = /obj/item/stack/material/glass/fiberglass
+	flags = null //Fiberglass isn't very brittle
+	icon_colour = "#bbbbcc"
+	opacity = 0.4
+	integrity = 125
+	melting_point = T0C + 90 // It's slightly more susceptible to fire than normal glass
+	tableslam_noise = 'sound/weapons/tablehit1.ogg'
+	hitsound = 'sound/weapons/tablehit1.ogg'
+	weight = 10
+	brute_armor = 4 // It's very tough against brute damage though
+	burn_armor = 1
+	shard_type = SHARD_SPLINTER
+	stack_origin_tech = list(TECH_MATERIAL = 2)
+	destruction_desc = "splinters"
+	window_options = list("One Direction" = 1, "Full Window" = 4)
+	created_window = /obj/structure/window/fiberglass
+	wire_product = null
+	rod_product = null
+	chem_products = list(
+				/datum/reagent/silicon = 20,
+				/datum/reagent/toxin/plasticide = 2
+				)
 
 /material/plastic
 	name = "plastic"
 	stack_type = /obj/item/stack/material/plastic
 	flags = MATERIAL_BRITTLE
-	icon_base = "curvy"
-	icon_reinf = "curvy"
+	icon_base = "solid"
+	icon_reinf = "reinf_over"
 	icon_colour = "#cccccc"
 	hardness = 10
 	weight = 5
 	melting_point = T0C+371 //assuming heat resistant plastic
 	stack_origin_tech = list(TECH_MATERIAL = 3)
 	conductive = 0
+	chem_products = list(
+				/datum/reagent/toxin/plasticide = 2
+				)
 
 /material/plastic/holographic
 	name = "holoplastic"
@@ -634,6 +819,9 @@ var/list/stack_to_material
 	gaseous_products = list(
 				"hydrogen" = 30 //(30~g / 1 grams per mole) probably don't have a ton of this stuff per stack
 				)
+	chem_products = list(
+				/datum/reagent/hydrazine = 20
+				)
 
 /material/ice
 	name = "ice"
@@ -643,6 +831,10 @@ var/list/stack_to_material
 				"hydrogen" = 22.2, //(600~g / 18 grams per mole)*2/3
 				"oxygen" = 11.1
 				)
+	chem_products = list(
+				/datum/reagent/drink/ice = 15,
+				/datum/reagent/water = 5
+				)
 
 /material/dryice
 	name = "dryice"
@@ -650,6 +842,9 @@ var/list/stack_to_material
 	icon_colour = "#dce2e2"
 	gaseous_products = list(
 				"carbon_dioxide" = 13.6 //(600~g / 44.01 grams per mole)
+				)
+	chem_products = list(
+				/datum/reagent/carbon = 20
 				)
 
 /material/platinum
@@ -669,6 +864,9 @@ var/list/stack_to_material
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
 	hitsound = 'sound/weapons/smash.ogg'
+	chem_products = list(
+				/datum/reagent/iron = 20
+				)
 
 // Adminspawn only, do not let anyone get this.
 /material/voxalloy
@@ -687,8 +885,6 @@ var/list/stack_to_material
 	name = "elevatorium"
 	display_name = "elevator panelling"
 	icon_colour = "#666666"
-	icon_base = "metal"
-	icon_reinf = "metal"
 
 /material/wood
 	name = "wood"
@@ -696,6 +892,7 @@ var/list/stack_to_material
 	stack_type = /obj/item/stack/material/wood
 	icon_colour = "#824b28"
 	integrity = 50
+	icon_base = "solid"
 	explosion_resistance = 2
 	shard_type = SHARD_SPLINTER
 	shard_can_repair = 0 // you can't weld splinters back into planks
@@ -712,6 +909,9 @@ var/list/stack_to_material
 	sheet_plural_name = "planks"
 	hitsound = 'sound/effects/woodhit.ogg'
 	conductive = 0
+	chem_products = list(
+				/datum/reagent/carbon = 10
+				)
 
 /material/wood/holographic
 	name = "holowood"
@@ -724,6 +924,8 @@ var/list/stack_to_material
 	stack_type = /obj/item/stack/material/cardboard
 	flags = MATERIAL_BRITTLE
 	integrity = 10
+	icon_base = "solid"
+	icon_reinf = "reinf_over"
 	icon_colour = "#aaaaaa"
 	hardness = 1
 	brute_armor = 1
@@ -756,6 +958,12 @@ var/list/stack_to_material
 	sheet_plural_name = "bricks"
 	conductive = 0
 
+/material/cult/place_dismantled_girder(var/turf/target)
+	new /obj/structure/girder/cult(target)
+
+/material/cult/place_dismantled_product(var/turf/target)
+	new /obj/effect/decal/cleanable/blood(target)
+
 /material/cult/reinf
 	name = "cult2"
 	display_name = "human remains"
@@ -784,6 +992,7 @@ var/list/stack_to_material
 	stack_type = null
 	icon_base = "jaggy"
 	door_icon_base = "metal"
+	icon_reinf = "reinf_metal"
 	hitsound = 'sound/weapons/smash.ogg'
 	sheet_singular_name = "chunk"
 	sheet_plural_name = "chunks"
@@ -798,6 +1007,9 @@ var/list/stack_to_material
 	integrity = rand(200,400)
 	melting_point = rand(400,10000)
 	..()
+
+/material/aliumium/place_dismantled_girder(var/turf/target, var/material/reinf_material)
+	return
 
 //TODO PLACEHOLDERS:
 /material/leather

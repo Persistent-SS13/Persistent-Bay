@@ -450,6 +450,17 @@
 	damage_per_fire_tick = 2.0
 	glasstype = /obj/item/stack/material/glass/reinforced
 
+/obj/structure/window/fiberglass
+	name = "fiberglass window"
+	desc = "It looks strong and sleek. It may not even shatter."
+	icon_state = "twindow"
+	basestate = "twindow"
+	maxhealth = 100.0
+	maximal_heat = T0C + 90
+	damage_per_fire_tick = 5.0 // These windows are not built for fire
+	shardtype = /obj/item/weapon/material/shard/fiberglass
+	glasstype = /obj/item/stack/material/glass/fiberglass
+
 
 /obj/structure/window/New(Loc, constructed=0)
 	..()

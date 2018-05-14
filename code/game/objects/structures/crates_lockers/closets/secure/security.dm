@@ -243,7 +243,7 @@
 */
 /obj/structure/closet/secure_closet/injection
 	name = "lethal injections locker"
-	req_access = list(core_access_security_programs)
+	req_access = list(core_access_command_programs, core_access_security_programs)
 
 /obj/structure/closet/secure_closet/injection/WillContain()
 	return list(/obj/item/weapon/reagent_containers/syringe/ld50_syringe/choral = 2)

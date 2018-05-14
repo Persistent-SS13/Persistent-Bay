@@ -13,6 +13,8 @@ var/global/list/debug_data = list()
 	should_save = 0
 /mob/living/simple_animal
 	should_save = 1
+/mob/living/bot
+	should_save = 1
 /datum/area_holder
 	var/area_type = "/area"
 	var/name

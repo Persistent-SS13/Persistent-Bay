@@ -43,9 +43,20 @@
 	else
 		wires = new/datum/wires/smartfridge(src)
 
+/obj/machinery/smartfridge/proc/DumpInstances()
+	for(var/datum/stored_items/S in item_records)
+		for(var/obj/item/I in S.instances)
+			I.dropInto(loc)
+			S.instances -= I
+
+/obj/machinery/smartfridge/dismantle()
+	DumpInstances()
+	. = ..()
+
 /obj/machinery/smartfridge/Destroy()
 	qdel(wires)
 	wires = null
+	DumpInstances()
 	for(var/datum/stored_items/S in item_records)
 		qdel(S)
 	item_records = null
@@ -84,7 +95,7 @@
 	desc = "A refrigerated storage unit for storing medicine and chemicals."
 	icon_state = "smartfridge" //To fix the icon in the map editor.
 	icon_on = "smartfridge_chem"
-	req_one_access = list(access_medical,access_chemistry)
+	req_access = list(core_access_medical_programs)
 
 /obj/machinery/smartfridge/secure/medbay/accept_check(var/obj/item/O as obj)
 	if(istype(O,/obj/item/weapon/reagent_containers/glass/))
@@ -98,7 +109,7 @@
 /obj/machinery/smartfridge/secure/virology
 	name = "\improper Refrigerated Virus Storage"
 	desc = "A refrigerated storage unit for storing viral material."
-	req_access = list(access_virology)
+	req_access = list(core_access_medical_programs)
 	icon_state = "smartfridge_virology"
 	icon_on = "smartfridge_virology"
 	icon_off = "smartfridge_virology-off"

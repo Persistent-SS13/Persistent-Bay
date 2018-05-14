@@ -354,3 +354,6 @@ var/list/organ_cache = list()
 
 /obj/item/organ/proc/isrobotic()
 	return robotic >= ORGAN_ROBOT
+
+/obj/item/organ/proc/listen()
+	return

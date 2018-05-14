@@ -30,6 +30,7 @@
 
 /material/steel/generate_recipes()
 	..()
+	recipes += new/datum/stack_recipe("wall girders", /obj/structure/girder, 2, time = 50, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("metal rod", /obj/item/stack/rods, 1, 2, 60)
 	recipes += new/datum/stack_recipe("regular floor tile", /obj/item/stack/tile/floor, 1, 4, 20)
 	recipes += new/datum/stack_recipe("machine frame", /obj/machinery/constructable_frame/machine_frame, 5, time = 25, one_per_turf = 1, on_floor = 1)
@@ -134,6 +135,10 @@
 /material/stone/generate_recipes()
 	..()
 	recipes += new/datum/stack_recipe("planting bed", /obj/machinery/portable_atmospherics/hydroponics/soil, 3, time = 10, one_per_turf = 1, on_floor = 1)
+
+/material/copper/generate_recipes()
+	..()
+	recipes += new/datum/stack_recipe("cable coil", /obj/item/stack/cable_coil, 1, time=5)
 
 /material/plastic/generate_recipes()
 	..()

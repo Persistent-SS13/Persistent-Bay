@@ -9,6 +9,7 @@
 	min_broken_damage = 45
 	max_damage = 70
 	relative_size = 60
+	scarring_effect = 4
 
 /obj/item/organ/internal/liver/robotize()
 	. = ..()
@@ -54,7 +55,7 @@
 		take_damage(owner.chem_effects[CE_ALCOHOL_TOXIC], prob(90)) // Chance to warn them
 
 	// Heal a bit if needed and we're not busy. This allows recovery from low amounts of toxloss.
-	if(!owner.chem_effects[CE_ALCOHOL] && !owner.chem_effects[CE_TOXIN] && !owner.radiation)
+	if(!owner.chem_effects[CE_ALCOHOL] && !owner.chem_effects[CE_TOXIN] && !owner.radiation && damage > 0)
 		if(damage < min_broken_damage)
 			heal_damage(0.2)
 		if(damage < min_bruised_damage)
@@ -74,3 +75,7 @@
 			owner.nutrition -= 10
 		else if(owner.nutrition >= 200)
 			owner.nutrition -= 3
+
+	if(owner.chem_effects[CE_ALCOHOL] && scarred) // If your liver is messed up, you can't hold liqour very well
+		if(prob(scarred*scarred)) // Scarring 1 == 1%, Scarring 2 == 4%, Scarring 3 == 9%
+			spawn owner.vomit()

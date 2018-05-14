@@ -289,6 +289,9 @@ its easier to just keep the beam vertical.
 /atom/proc/fire_act()
 	return
 
+/atom/proc/melt()
+	return
+
 /atom/proc/hitby(atom/movable/AM as mob|obj)
 	if (density)
 		AM.throwing = 0
@@ -402,6 +405,9 @@ its easier to just keep the beam vertical.
 	while(istype(destination))
 		var/atom/drop_destination = destination.onDropInto(src)
 		if(!istype(drop_destination) || drop_destination == destination)
+			if(istype(src, /obj/item) && istype(destination, /turf))
+				var/obj/item/I = src
+				I.randomize_pixel_offset()
 			return forceMove(destination)
 		destination = drop_destination
 	return forceMove(null)

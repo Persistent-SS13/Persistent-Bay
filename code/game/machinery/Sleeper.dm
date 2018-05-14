@@ -12,6 +12,9 @@
 	var/obj/item/weapon/reagent_containers/glass/beaker = null
 	var/filtering = 0
 	var/pump
+	var/list/stasis_settings = list(1, 2, 5)
+	var/stasis = 1
+
 	var/efficiency
 	var/initial_bin_rating = 1
 	var/min_health = 25
@@ -48,6 +51,9 @@
 					occupant.ingested.trans_to_obj(beaker, 3)
 		else
 			toggle_pump()
+
+	if(iscarbon(occupant) && stasis > 1)
+		occupant.SetStasis(stasis)
 
 /obj/machinery/sleeper/update_icon()
 	icon_state = "sleeper_[occupant ? "1" : "0"]"
@@ -86,6 +92,7 @@
 		data["beaker"] = -1
 	data["filtering"] = filtering
 	data["pump"] = pump
+	data["stasis"] = stasis
 
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
@@ -118,7 +125,10 @@
 		if(occupant && occupant.stat != DEAD)
 			if(href_list["chemical"] in available_chemicals) // Your hacks are bad and you should feel bad
 				inject_chemical(usr, href_list["chemical"], text2num(href_list["amount"]))
-
+	if(href_list["stasis"])
+		var/nstasis = text2num(href_list["stasis"])
+		if(stasis != nstasis && nstasis in stasis_settings)
+			stasis = text2num(href_list["stasis"])
 	return 1
 
 /obj/machinery/sleeper/attack_ai(var/mob/user)
@@ -136,11 +146,12 @@
 			to_chat(user, "<span class='warning'>\The [src] has a beaker already.</span>")
 		return
 
-/obj/machinery/sleeper/attackby(obj/item/grab/normal/G, var/mob/user)
-	if (!ismob(G.affecting))
-		return
-	if(go_in(G.affecting, user))
-		qdel(G)
+	if(istype(I, /obj/item/grab/normal))
+		var/obj/item/grab/normal/G = I
+		if (!ismob(G.affecting))
+			return
+		if(go_in(G.affecting, user))
+			qdel(G)
 
 /obj/machinery/sleeper/MouseDrop_T(var/mob/target, var/mob/user)
 	if(!CanMouseDrop(target, user))

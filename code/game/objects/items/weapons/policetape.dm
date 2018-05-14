@@ -69,7 +69,7 @@ var/list/tape_roll_applications = list()
 /obj/item/tape/police
 	name = "police tape"
 	desc = "A length of police tape.  Do not cross."
-	req_access = list(access_security)
+	req_access = list(core_access_security_programs)
 	color = COLOR_RED
 
 /obj/item/taperoll/engineering
@@ -120,7 +120,7 @@ var/list/tape_roll_applications = list()
 /obj/item/tape/medical
 	name = "medical tape"
 	desc = "A length of medical tape. Better not cross it."
-	req_one_access = list(access_medical)
+	req_one_access = list(core_access_medical_programs)
 	color = COLOR_GREEN
 
 /obj/item/taperoll/update_icon()

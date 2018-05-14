@@ -114,6 +114,15 @@
 /obj/item/stack/material/salt/fifty
 	amount = 50
 
+/obj/item/stack/material/carbon
+	name = "coal brick"
+	icon_state = "sheet-marble"
+	default_type = "carbon"
+	apply_colour = 1
+
+/obj/item/stack/material/carbon/ten
+	amount = 10
+
 /obj/item/stack/material/diamond
 	name = "diamond"
 	icon_state = "sheet-diamond"
@@ -168,6 +177,60 @@
 /obj/item/stack/material/silver/ten
 	amount = 10
 
+/obj/item/stack/material/copper
+	name = "copper"
+	icon_state = "sheet-silver"
+	default_type = "copper"
+	apply_colour = 1
+
+/obj/item/stack/material/copper/ten
+	amount = 10
+
+/obj/item/stack/material/bronze
+	name = "bronze"
+	icon_state = "sheet-silver"
+	default_type = "bronze"
+	apply_colour = 1
+
+/obj/item/stack/material/bronze/ten
+	amount = 10
+
+/obj/item/stack/material/brass
+	name = "brass"
+	icon_state = "sheet-silver"
+	default_type = "brass"
+	apply_colour = 1
+
+/obj/item/stack/material/brass/ten
+	amount = 10
+
+/obj/item/stack/material/tin
+	name = "tin"
+	icon_state = "sheet-silver"
+	default_type = "tin"
+	apply_colour = 1
+
+/obj/item/stack/material/tin/ten
+	amount = 10
+
+/obj/item/stack/material/zinc
+	name = "zinc"
+	icon_state = "sheet-silver"
+	default_type = "zinc"
+	apply_colour = 1
+
+/obj/item/stack/material/zinc/ten
+	amount = 10
+
+/obj/item/stack/material/aluminum
+	name = "aluminum"
+	icon_state = "sheet-silver"
+	default_type = "aluminum"
+	apply_colour = 1
+
+/obj/item/stack/material/aluminum/ten
+	amount = 10
+
 //Valuable resource, cargo can sell it.
 /obj/item/stack/material/platinum
 	name = "platinum"
@@ -175,6 +238,24 @@
 	default_type = "platinum"
 
 /obj/item/stack/material/platinum/ten
+	amount = 10
+
+/obj/item/stack/material/tungsten
+	name = "tungsten"
+	icon_state = "sheet-silver"
+	default_type = "tungsten"
+	apply_colour = 1
+
+/obj/item/stack/material/tungsten/ten
+	amount = 10
+
+/obj/item/stack/material/lead
+	name = "lead"
+	icon_state = "sheet-silver"
+	default_type = "lead"
+	apply_colour = 1
+
+/obj/item/stack/material/lead/ten
 	amount = 10
 
 /obj/item/stack/material/ice
@@ -194,6 +275,12 @@
 
 /obj/item/stack/material/dryice/five
 	amount = 5
+
+/obj/item/stack/material/sulfur
+	name = "sulfur"
+	icon_state = "sheet-marble"
+	default_type = "sulfur"
+	apply_colour = 1
 
 //Extremely valuable to Research.
 /obj/item/stack/material/mhydrogen
@@ -342,4 +429,12 @@
 	default_type = "rphglass"
 
 /obj/item/stack/material/glass/phoronrglass/ten
+	amount = 10
+
+/obj/item/stack/material/glass/fiberglass
+	name = "fiberglass"
+	icon_state = "sheet-fiberglass"
+	default_type = "fiberglass"
+
+/obj/item/stack/material/glass/fiberglass/ten
 	amount = 10

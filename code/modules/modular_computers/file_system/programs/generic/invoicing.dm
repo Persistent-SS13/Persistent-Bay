@@ -8,7 +8,6 @@
 	size = 21
 	available_on_ntnet = 1
 	requires_ntnet = 1
-	required_access = core_access_order_approval
 
 /datum/nano_module/program/invoicing
 	name = "Invoicing program"

@@ -28,8 +28,7 @@
 	material = mat
 	r_material = r_mat
 	p_material = p_mat
-	update_material(1)
-	update_icon()
+	update_full(1, 1)
 	processing_turfs |= src
 
 /turf/simulated/wall/after_load()

@@ -1,7 +1,7 @@
 
 /obj/machinery/girderlathe
 	name = "Girder Lathe"
-	desc = "A large machine designed to fabricate girders from sheets and rods"
+	desc = "A large machine designed to pre-fabricate girders parts from sheets"
 	icon = 'icons/obj/machines/girderlathe.dmi'
 	icon_state = "lathe"
 	bound_width = 64

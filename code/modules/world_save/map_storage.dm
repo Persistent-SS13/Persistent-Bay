@@ -358,13 +358,11 @@ var/global/list/debug_data = list()
 	
 //	var/savefile/q = new("map_saves/records.sav")
 	
-//	q >> GLOB.all_world_factions
 //	if(!GLOB.all_world_factions)
 //		GLOB.all_world_factions = list()
 //	for(var/ind in 1 to all_loaded.len)
 //		var/datum/dat = all_loaded[ind]
 //		dat.after_load()
-//	q >> GLOB.all_crew_records
 //	if(!GLOB.all_crew_records)
 //		GLOB.all_crew_records = list()
 	all_loaded = list()

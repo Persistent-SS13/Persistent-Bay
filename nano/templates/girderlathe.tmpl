@@ -1,0 +1,19 @@
+<div class='item'>
+    {{:helper.link('Close', 'gear', {'close' : 1})}}
+    {{:helper.link('Power', null, {'power' : 1}, null, data.use_power == 2 ? 'selected' : null)}}
+    {{:helper.link('Input', null, {'input' : 1}, null, data.input ? 'selected' : null)}}    
+</div>
+<div class='item'>
+    Currently {{:data.processing ? "Processing" : "Not Processing"}}
+</div>
+<div class="item">
+    {{for data.contents}}
+        <div class="item">
+            <span class='highlight'>{{:value.type}} : {{:value.amount}}</span>
+        </div>
+    {{/for}}
+</div>
+
+<div class="item">
+    {{:helper.link('Eject Contents', null, {'eject' : 1})}}
+</div>

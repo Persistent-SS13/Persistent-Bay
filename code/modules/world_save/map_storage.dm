@@ -268,7 +268,9 @@ var/global/list/debug_data = list()
 		else
 			backup = 1
 			fcopy("map_saves/game.sav", "backups/[dir].sav")
+			fcopy("map_saves/records.sav", "backups/[dir]-r.sav")
 	fdel("map_saves/game.sav")
+	fdel("map_saves/records.sav")
 	var/savefile/f = new("map_saves/game.sav")
 	found_vars = list()
 	for(var/z in 1 to 27)
@@ -295,6 +297,9 @@ var/global/list/debug_data = list()
 	f["areas"] << formatted_areas
 	f["turbolifts"] << turbolifts
 	f["records"] << GLOB.all_crew_records
+	var/savefile/q = new("map_saves/records.sav")
+	q << GLOB.all_world_factions
+	q << GLOB.all_crew_records
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
 	return 1
@@ -350,9 +355,18 @@ var/global/list/debug_data = list()
 			Z.contents |= T
 	for(var/zone/Z in zones)
 		Z.rebuild()
+	
+	var/savefile/q = new("map_saves/records.sav")
+	
+	q >> GLOB.all_world_factions
+	if(!GLOB.all_world_factions)
+		GLOB.all_world_factions = list()
 	for(var/ind in 1 to all_loaded.len)
 		var/datum/dat = all_loaded[ind]
 		dat.after_load()
+	q >> GLOB.all_crew_records
+	if(!GLOB.all_crew_records)
+		GLOB.all_crew_records = list()
 	all_loaded = list()
 	SSmachines.makepowernets()
 	for(var/x in debug_data)

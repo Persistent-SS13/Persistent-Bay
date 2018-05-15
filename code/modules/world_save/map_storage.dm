@@ -292,11 +292,9 @@ var/global/list/debug_data = list()
 	for(var/zone/Z in zones_to_save)
 		Z.turf_coords = Z.get_turf_coords()
 		zones |= Z
-	f["factions"] << GLOB.all_world_factions
 	f["zones"] << zones
 	f["areas"] << formatted_areas
 	f["turbolifts"] << turbolifts
-	f["records"] << GLOB.all_crew_records
 	var/savefile/q = new("map_saves/records.sav")
 	q << GLOB.all_world_factions
 	q << GLOB.all_crew_records
@@ -358,11 +356,13 @@ var/global/list/debug_data = list()
 	
 //	var/savefile/q = new("map_saves/records.sav")
 	
+//	q >> GLOB.all_world_factions
 //	if(!GLOB.all_world_factions)
 //		GLOB.all_world_factions = list()
 //	for(var/ind in 1 to all_loaded.len)
 //		var/datum/dat = all_loaded[ind]
 //		dat.after_load()
+//	q >> GLOB.all_crew_records
 //	if(!GLOB.all_crew_records)
 //		GLOB.all_crew_records = list()
 	all_loaded = list()

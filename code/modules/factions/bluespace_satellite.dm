@@ -152,8 +152,9 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/list/turfs = get_turfs()
 	var/list/holos = list()
 	for(var/turf/T in turfs)
-		var/obj/structure/hologram/dockzone/holo = new(T)
-		holos |= holo
+		if(istype(T, /turf/space))
+			var/obj/structure/hologram/dockzone/holo = new(T)
+			holos |= holo
 	sleep(15 SECONDS)
 	highlighted = 0
 	for(var/obj/holo in holos)

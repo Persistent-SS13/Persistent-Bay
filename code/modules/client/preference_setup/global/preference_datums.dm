@@ -21,6 +21,8 @@ GLOBAL_VAR_CONST(PREF_CTRL_CLICK, "ctrl click")
 GLOBAL_VAR_CONST(PREF_CTRL_SHIFT_CLICK, "ctrl shift click")
 GLOBAL_VAR_CONST(PREF_HEAR, "Hear")
 GLOBAL_VAR_CONST(PREF_SILENT, "Silent")
+GLOBAL_VAR_CONST(PREF_PLEASANTLY, "Pleasantly")
+GLOBAL_VAR_CONST(PREF_LOUDLY, "Loudly")
 
 var/list/_client_preferences
 var/list/_client_preferences_by_key
@@ -206,9 +208,14 @@ var/list/_client_preferences_by_type
 	options = list(GLOB.PREF_SHOW, GLOB.PREF_HIDE)
 
 /datum/client_preference/staff/play_adminhelp_ping
-	description = "Adminhelps"
+	description = "Ahelp Ping"
 	key = "SOUND_ADMINHELP"
 	options = list(GLOB.PREF_HEAR, GLOB.PREF_SILENT)
+
+/datum/client_preference/staff/bwoink_urgency
+	description = "Admin PM Players"
+	key = "BWOINK_URGENCY"
+	options = list(GLOB.PREF_PLEASANTLY, GLOB.PREF_LOUDLY)
 
 /datum/client_preference/staff/show_rlooc
 	description ="Remote LOOC chat"

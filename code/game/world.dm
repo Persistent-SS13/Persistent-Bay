@@ -372,7 +372,7 @@ var/world_topic_spam_protect_time = world.timeofday
 		C.received_irc_pm = world.time
 		C.irc_admin = input["sender"]
 
-		sound_to(C, 'sound/machines/ping.ogg')
+		sound_to(C, 'sound/effects/pleasant.ogg')
 		to_chat(C, message)
 
 		for(var/client/A in GLOB.admins)

@@ -1305,7 +1305,7 @@ CIRCUITS BELOW
 	req_tech = list(TECH_DATA = 3, TECH_BLUESPACE = 2)
 	build_path = /obj/item/weapon/circuitboard/teleporter
 	sort_string = "HAAAA"
-/*
+*/
 // commented out because telescience is commented out
 
 /datum/design/circuit/robocontrol
@@ -1704,7 +1704,7 @@ CIRCUITS BELOW
 	req_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 3, TECH_BLUESPACE = 2)
 	build_path = /obj/item/weapon/circuitboard/holopad_longrange
 	sort_string = "ZZZZB"
-	/*
+	*/
 	//Breaks the game.
 /datum/design/circuit/cryopod
 	name = "Cryogenic Freezer"

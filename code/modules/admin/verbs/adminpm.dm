@@ -147,6 +147,8 @@
 		if (src.get_preference_value(/datum/client_preference/staff/bwoink_urgency) == GLOB.PREF_LOUDLY)
 			sound_to(C, 'sound/effects/adminhelp.ogg') // GOT A MINUTE?
 			sound_to(src, 'sound/effects/adminhelp.ogg') // Let the admin know they're bwoinking!
+		else
+			sound_to(C, 'sound/effects/pleasant.ogg')
 
 	log_admin("PM: [key_name(src)]->[key_name(C)]: [msg]")
 	adminmsg2adminirc(src, C, html_decode(msg))

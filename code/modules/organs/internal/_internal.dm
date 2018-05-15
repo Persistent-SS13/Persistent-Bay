@@ -172,13 +172,13 @@
 	if(damage < min_bruised_damage) // If it's not even bruised, it will just heal very slowly.
 		heal_damage(0.01)
 	else if(is_bruised()) // If it is bruised, it will heal a little faster, but it will scar if it's not aided by medication or surgery
-		if(((damage - 0.02) < (min_bruised_damage)) && (scarred < 3))
-			scarred++
-			max_damage -= scarring_effect
-			min_broken_damage -= scarring_effect
+	//	if(((damage - 0.02) < (min_bruised_damage)) && (scarred < 3))
+	//		scarred++
+	//		max_damage -= scarring_effect
+	//		min_broken_damage -= scarring_effect
 		heal_damage(0.02)
 
 /obj/item/organ/internal/emp_act(severity)
 	..()
-	if(severity > 1 && scarred <3) // A strong enough EMP can mess up your robotic organs permanantly
-		scarred++
+//	if(severity > 1 && scarred <3) // A strong enough EMP can mess up your robotic organs permanantly
+//		scarred++

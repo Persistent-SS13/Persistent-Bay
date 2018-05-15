@@ -8,11 +8,11 @@
 	var/shuttle_tag  // Used to coordinate data in shuttle controller.
 	var/hacked = 0   // Has been emagged, no access restrictions.
 
-	var/ui_template = "shuttle_control_console.tmpl"
+	var/ui_template = "bridge_computer.tmpl"
 	var/datum/shuttle/autodock/shuttle
 
 	var/desired_name = ""
-	var/shuttle_type = 1 // 1 = faction shuttle, 2 = personal shuttle
+	var/shuttle_type = 1 // 1 = personal shuttle, 2 = faction shuttle
 	var/locked_to = "" // either the real_name or the faction_uid
 	var/ready = 0 // this is set to 1 to confirm construction is completed, and then the dock finalizes it
 
@@ -97,12 +97,15 @@
 	if(shuttle)
 		data["connected"] = 1
 		var/list/beacons = get_docks(user)
+		var/list/formatted_beacons[0]
 		for(var/obj/machinery/docking_beacon/beacon in beacons)
-			break
-			return 1
-
+			var/dock_status = beacons[beacon]
+			formatted_beacons[++formatted_beacons.len] = list("name" = beacon.id, "status" = dock_status)
+		data["beacons"] = formatted_beacons
+		
 	else
 		data["desired_name"] = desired_name != "" ? desired_name : "Unset!"
+		data["name_set"] = desired_name != "" ? 1 : 0
 		data["shuttle_type"] = shuttle_type
 		data["locked_to"] = locked_to
 
@@ -114,6 +117,16 @@
 		ui.set_auto_update(1)
 
 /obj/machinery/computer/bridge_computer/Topic(href, href_list)
+
+	if(href_list["set_name"])
+		var/curr_name = desired_name
+		var/select_name = sanitizeName(input(usr,"Enter the name of the vessel","Shuttle name", desired_name) as null|text, MAX_NAME_LEN, 1, 0)
+		if(select_name)
+			if(curr_name != desired_name)
+				to_chat(usr, "Your inputs expired because someone used the terminal first.")
+			else
+				desired_name = select_name
+	
 	if(..())
 		return 1
 

@@ -19,7 +19,7 @@ This saves us from having to call add_fingerprint() any time something is put in
 				update_inv_l_hand(0)
 			else
 				update_inv_r_hand(0)
-		else if(!equip_to_storage(I))
+		else if(!equip_to_storage(I, 0))
 			to_chat(H, "<span class='warning'>You are unable to equip that.</span>")
 
 /mob/living/carbon/human/proc/equip_in_one_of_slots(obj/item/W, list/slots, del_on_fail = 1)

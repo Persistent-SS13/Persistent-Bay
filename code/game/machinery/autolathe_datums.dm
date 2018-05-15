@@ -1,3 +1,8 @@
+#ifdef T_BOARD_LATHE
+#error T_BOARD_LATHE already defined elsewhere, we can't use it.
+#endif
+#define T_BOARD_LATHE(name)	"circuit board (" + (name) + ")"
+
 /var/global/list/autolathe_recipes
 /var/global/list/autolathe_categories
 
@@ -173,12 +178,6 @@ var/const/EXTRA_COST_FACTOR = 1.25
 /datum/autolathe/recipe/metal
 	name = "steel sheets"
 	path = /obj/item/stack/material/steel
-	category = "General"
-	is_stack = 1
-
-/datum/autolathe/recipe/glass
-	name = "glass sheets"
-	path = /obj/item/stack/material/glass
 	category = "General"
 	is_stack = 1
 
@@ -375,6 +374,32 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/stack/cable_coil/single
 	category = "Devices and Components"
 	is_stack = 1
+
+// Only level one stock parts are available, better parts require research
+/datum/autolathe/recipe/matter_bin
+	name = "matter bin"
+	path = /obj/item/weapon/stock_parts/matter_bin
+	category = "Devices and Components"
+
+/datum/autolathe/recipe/manipulator
+	name = "manipulator" // insert ex-gf joke
+	path = /obj/item/weapon/stock_parts/manipulator
+	category = "Devices and Components"
+
+/datum/autolathe/recipe/capacitor
+	name = "capacitor"
+	path = /obj/item/weapon/stock_parts/capacitor
+	category = "Devices and Components"
+
+/datum/autolathe/recipe/scanning_module
+	name = "scanning module"
+	path = /obj/item/weapon/stock_parts/scanning_module
+	category = "Devices and Components"
+
+/datum/autolathe/recipe/micro_laser
+	name = "micro-laser"
+	path = /obj/item/weapon/stock_parts/micro_laser
+	category = "Devices and Components"
 
 /datum/autolathe/recipe/tube/large
 	name = "spotlight tube"
@@ -578,6 +603,22 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	hidden = 1
 	category = "Tools"
 
+/datum/autolathe/recipe/spade
+	name = "spade"
+	path = /obj/item/weapon/shovel/spade
+	category = "Tools"
+
+/datum/autolathe/recipe/shovel
+	name = "shovel"
+	path = /obj/item/weapon/shovel
+	category = "Tools"
+	hidden = 1
+
+/datum/autolathe/recipe/pickaxe
+	name = "mining drill"
+	path = /obj/item/weapon/pickaxe
+	category = "Tools"
+
 /datum/autolathe/recipe/handcuffs
 	name = "handcuffs"
 	path = /obj/item/weapon/handcuffs
@@ -768,3 +809,194 @@ var/const/EXTRA_COST_FACTOR = 1.25
 
 /datum/autolathe/recipe/drinkingglass/wine
 	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/wine
+
+/**************************\
+|      CIRCUIT BOARDS      |
+\**************************/
+
+// These circuits should be enough to help get your station up and running until you have R&D
+/datum/autolathe/recipe/circuitboard_autolathe
+	name = T_BOARD_LATHE("autolathe") // The machines! They're multiplying!
+	path = /obj/item/weapon/circuitboard/autolathe
+	category = "Circuits"
+
+// You need these things to create an R&D department so you can make more advanced stuff
+/datum/autolathe/recipe/circuitboard_destructive_analyzer
+	name = T_BOARD_LATHE("destructive analyzer")
+	path = /obj/item/weapon/circuitboard/destructive_analyzer
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_protolathe
+	name = T_BOARD_LATHE("protolathe")
+	path = /obj/item/weapon/circuitboard/protolathe
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_circuit_imprinter
+	name = T_BOARD_LATHE("circuit imprinter")
+	path = /obj/item/weapon/circuitboard/circuit_imprinter
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_rdserver
+	name = T_BOARD_LATHE("R&D server")
+	path = /obj/item/weapon/circuitboard/rdserver
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_rdconsole
+	name = T_BOARD_LATHE("R&D control console")
+	path = /obj/item/weapon/circuitboard/rdconsole
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_integrated_printer
+	name = "Circuit board (Integrated Circuit Printer)"
+	path = /obj/item/weapon/circuitboard/integrated_printer
+	category = "Circuits"
+	hidden = 1
+
+// Mining machines are basically required for everything
+/datum/autolathe/recipe/circuitboard_miningdrill
+	name = T_BOARD_LATHE("mining drill head")
+	path = /obj/item/weapon/circuitboard/miningdrill
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_miningdrillbrace
+	name = T_BOARD_LATHE("mining drill brace")
+	path = /obj/item/weapon/circuitboard/miningdrillbrace
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_processing_unit_console
+	name = T_BOARD_LATHE("Material Processor Console")
+	path = /obj/item/weapon/circuitboard/processing_unit_console
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_processing_unit
+	name = T_BOARD_LATHE("Material Processor")
+	path = /obj/item/weapon/circuitboard/processing_unit
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_processing_unit
+	name = T_BOARD_LATHE("Material Processor")
+	path = /obj/item/weapon/circuitboard/processing_unit
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_stacking_unit_console
+	name = T_BOARD_LATHE("Stacking Machine Console")
+	path = /obj/item/weapon/circuitboard/stacking_unit_console
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_stacking_machine
+	name = T_BOARD_LATHE("Stacking Machine")
+	path = /obj/item/weapon/circuitboard/stacking_machine
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_unloading_machine
+	name = T_BOARD_LATHE("Unloading Machine")
+	path = /obj/item/weapon/circuitboard/unloading_machine
+	category = "Circuits"
+
+// Botany
+/datum/autolathe/recipe/circuitboard_biogenerator
+	name = T_BOARD_LATHE("biogenerator")
+	path = /obj/item/weapon/circuitboard/biogenerator
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_seed_extractor
+	name = T_BOARD_LATHE("Seed Extractor")
+	path = /obj/item/weapon/circuitboard/seed_extractor
+	category = "Circuits"
+
+// Station Essentials
+// Man should have the freedom to make his own bed, and then lie in it
+/datum/autolathe/recipe/circuitboard_cryopod
+	name = T_BOARD_LATHE("Cryogenic Freezer")
+	path = /obj/item/weapon/circuitboard/cryopod
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_atm
+	name = T_BOARD_LATHE("ATM")
+	path = /obj/item/weapon/circuitboard/atm
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_shuttleengine
+	name = T_BOARD_LATHE("shuttle engine")
+	path = /obj/item/weapon/circuitboard/shuttleengine
+	category = "Circuits"
+	hidden = 1
+
+/datum/autolathe/recipe/circuitboard_solar_control
+	name = T_BOARD_LATHE("solar control console")
+	path = /obj/item/weapon/circuitboard/solar_control
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_recycler
+	name = T_BOARD_LATHE("Recycler")
+	path = /obj/item/weapon/circuitboard/recycler
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_telepad
+	name = T_BOARD_LATHE("Telepad")
+	path = /obj/item/weapon/circuitboard/telepad
+	category = "Circuits"
+
+// Kitchen Stuff
+// Only the most advanced and wealthy stations have more than a microwave
+// They're like college students
+/datum/autolathe/recipe/circuitboard_microwave
+	name = "circuit board (Microwave)"
+	path = /obj/item/weapon/circuitboard/microwave
+	category = "Circuits"
+
+// You can recharge mechs, but not build them. Mostly just so people can recharge their pods at shitty stations
+/datum/autolathe/recipe/circuitboard_mech_recharger
+	name = T_BOARD_LATHE("mech recharger")
+	path = /obj/item/weapon/circuitboard/mech_recharger
+	category = "Circuits"
+
+// Medical Stuff
+// No advanced machines, but enough to keep your patients from dropping dead
+/datum/autolathe/recipe/circuitboard_sleeper
+	name = T_BOARD_LATHE("Sleeper")
+	path = /obj/item/weapon/circuitboard/sleeper
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_chem_dispenser
+	name = T_BOARD_LATHE("Portable Chem Dispenser")
+	path = /obj/item/weapon/circuitboard/chem_dispenser
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_chem_master
+	name = T_BOARD_LATHE("Chem Master 2999")
+	path = /obj/item/weapon/circuitboard/chem_master
+	category = "Circuits"
+
+// Engineering Stuff
+/datum/autolathe/recipe/circuitboard_pacman
+	name = T_BOARD_LATHE("PACMAN-type generator")
+	path = /obj/item/weapon/circuitboard/pacman
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_pacman_super
+	name = T_BOARD_LATHE("SUPERPACMAN-type generator")
+	path = /obj/item/weapon/circuitboard/pacman/super
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_pacman_super_potato
+	name = T_BOARD_LATHE("PTTO-3 nuclear generator")
+	path = /obj/item/weapon/circuitboard/pacman/super/potato
+	category = "Circuits"
+	hidden = 1 // This outputs radiation, so may want to keep it hidden
+
+/datum/autolathe/recipe/circuitboard_pacman_mrs
+	name = T_BOARD_LATHE("MRSPACMAN-type generator")
+	path = /obj/item/weapon/circuitboard/pacman/mrs
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_batteryrack
+	name = T_BOARD_LATHE("battery rack PSU")
+	path = /obj/item/weapon/circuitboard/batteryrack
+	category = "Circuits"
+
+/datum/autolathe/recipe/circuitboard_cell_charger
+	name = T_BOARD_LATHE("Cell Charger")
+	path = /obj/item/weapon/circuitboard/machinery/cell_charger
+	category = "Circuits"
+

@@ -1297,13 +1297,16 @@ CIRCUITS BELOW
 	req_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 3)
 	build_path = /obj/item/weapon/circuitboard/roboprinter
 	sort_string = "FAGAM"
-
+	
+/*
 /datum/design/circuit/teleconsole
 	name = "teleporter control console"
 	id = "teleconsole"
 	req_tech = list(TECH_DATA = 3, TECH_BLUESPACE = 2)
 	build_path = /obj/item/weapon/circuitboard/teleporter
 	sort_string = "HAAAA"
+/*
+// commented out because telescience is commented out
 
 /datum/design/circuit/robocontrol
 	name = "robotics control console"
@@ -1614,6 +1617,8 @@ CIRCUITS BELOW
 	req_tech = list(TECH_BLUESPACE = 2)
 	build_path = /obj/item/weapon/circuitboard/telepad
 	sort_string = "ZZZZQ"
+	//Left in because this may be used in the future (or currently a part of) supply
+	
 /datum/design/circuit/photocopier
 	name = "Photocopier"
 	id = "photocopier"
@@ -1686,6 +1691,7 @@ CIRCUITS BELOW
 	req_tech = list(TECH_DATA = 2)
 	build_path = /obj/item/weapon/circuitboard/area_atmos
 	sort_string = "ZZZZD"
+	/*
 /datum/design/circuit/holopad
 	name = "Holopad"
 	id = "holopad"
@@ -1698,6 +1704,8 @@ CIRCUITS BELOW
 	req_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 3, TECH_BLUESPACE = 2)
 	build_path = /obj/item/weapon/circuitboard/holopad_longrange
 	sort_string = "ZZZZB"
+	/*
+	//Breaks the game.
 /datum/design/circuit/cryopod
 	name = "Cryogenic Freezer"
 	id = "cryopod"
@@ -1895,7 +1903,7 @@ CIRCUITS BELOW
 */
 
 
-
+/*
 /datum/design/circuit/mecha
 	req_tech = list(TECH_DATA = 3)
 
@@ -1971,7 +1979,8 @@ CIRCUITS BELOW
 	req_tech = list(TECH_DATA = 4, TECH_COMBAT = 2)
 	build_path = /obj/item/weapon/circuitboard/mecha/durand/targeting
 	sort_string = "NAADC"
-
+*/
+//Breaks the game.
 /datum/design/circuit/tcom
 	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 4)
 

@@ -223,6 +223,9 @@
 	storage_continue.screen_loc = "4:[storage_cap_width+(storage_width-storage_cap_width*2)/2+2],2:16"
 	storage_end.screen_loc = "4:[19+storage_width-storage_cap_width],2:16"
 
+	for(var/obj/SC in stored_continues)
+		QDEL_NULL(SC)
+
 	var/startpoint = 0
 	var/endpoint = 1
 

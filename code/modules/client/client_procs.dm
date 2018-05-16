@@ -125,7 +125,7 @@
 
 	// Change the way they should download resources.
 	if(config.resource_urls && config.resource_urls.len)
-		src.preload_rsc = pick(config.resource_urls)
+		src.preload_rsc = 2//pick(config.resource_urls)
 	else src.preload_rsc = 2 // If config.resource_urls is not set, preload like normal.
 
 	if(byond_version < DM_VERSION)

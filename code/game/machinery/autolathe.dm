@@ -1,6 +1,6 @@
 /obj/machinery/autolathe
 	name = "autolathe"
-	desc = "It produces items using metal and glass."
+	desc = "It produces items using sheets of materials."
 	icon_state = "autolathe"
 	density = 1
 	anchored = 1
@@ -11,8 +11,8 @@
 	clickvol = 30
 
 	var/list/machine_recipes
-	var/list/stored_material =  list(DEFAULT_WALL_MATERIAL = 0, "glass" = 0)
-	var/list/storage_capacity = list(DEFAULT_WALL_MATERIAL = 0, "glass" = 0)
+	var/list/stored_material =  list(DEFAULT_WALL_MATERIAL = 0)
+	var/list/storage_capacity = 0
 	var/show_category = "All"
 
 	var/hacked = 0
@@ -24,7 +24,6 @@
 	var/build_time = 50
 
 	var/datum/wires/autolathe/wires = null
-
 
 /obj/machinery/autolathe/New()
 
@@ -49,6 +48,43 @@
 	if(!machine_recipes)
 		machine_recipes = autolathe_recipes
 
+/obj/machinery/autolathe/proc/handle_recipe(var/datum/autolathe/recipe/R, var/index = 0)
+	if(R.hidden && !hacked || (show_category != "All" && show_category != R.category))
+		return "" // Returns an emtpy string to avoid concat issues below
+	var/can_make = 1
+	var/material_string = ""
+	var/multiplier_string = ""
+	var/max_sheets
+	var/comma
+	if(!R.resources || !R.resources.len)
+		material_string = "No resources required.</td>"
+	else
+		//Make sure it's buildable and list requires resources.
+		for(var/material in R.resources)
+			var/sheets = round(stored_material[material]/round(R.resources[material]*mat_efficiency))
+			if(isnull(max_sheets) || max_sheets > sheets)
+				max_sheets = sheets
+			if(!isnull(stored_material[material]) && stored_material[material] < round(R.resources[material]*mat_efficiency))
+				can_make = 0
+			if(!comma)
+				comma = 1
+			else
+				material_string += ", "
+			material_string += "[round(R.resources[material] * mat_efficiency)] [material]"
+		material_string += ".<br></td>"
+		//Build list of multipliers for sheets.
+		if(R.is_stack)
+			var/obj/item/stack/R_stack = R.path
+			max_sheets = min(max_sheets, initial(R_stack.max_amount))
+			//do not allow lathe to print more sheets than the max amount that can fit in one stack
+			if(max_sheets && max_sheets > 0)
+				multiplier_string  += "<br>"
+				for(var/i = 5;i<max_sheets;i*=2) //5,10,20,40...
+					multiplier_string  += "<a href='?src=\ref[src];make=[index];multiplier=[i]'>\[x[i]\]</a>"
+				multiplier_string += "<a href='?src=\ref[src];make=[index];multiplier=[max_sheets]'>\[x[max_sheets]\]</a>"
+
+	return "<tr><td width = 180>[R.hidden ? "<font color = 'red'>*</font>" : ""]<b>[can_make ? "<a href='?src=\ref[src];make=[index];multiplier=1'>" : ""][R.name][can_make ? "</a>" : ""]</b>[R.hidden ? "<font color = 'red'>*</font>" : ""][multiplier_string]</td><td align = right>[material_string]</tr>"
+
 /obj/machinery/autolathe/interact(mob/user as mob)
 
 	update_recipe_list()
@@ -68,8 +104,23 @@
 		var/material_bottom = "<tr>"
 
 		for(var/material in stored_material)
+			if(stored_material[material] == 0)
+				continue
+
+			if(!machine_recipes[material])
+				var/material/material_path = get_material_by_name(material)
+				if(!material_path || !material_path.stack_type)
+					continue
+
+				var/datum/autolathe/recipe/R = new /datum/autolathe/recipe
+				R.name = material
+				R.path = material_path.stack_type
+				R.category = "General"
+				R.is_stack = 1
+				machine_recipes[material] = R
+
 			material_top += "<td width = '25%' align = center><b>[material]</b></td>"
-			material_bottom += "<td width = '25%' align = center>[stored_material[material]]<b>/[storage_capacity[material]]</b></td>"
+			material_bottom += "<td width = '25%' align = center>[stored_material[material]]<b>/[storage_capacity]</b></td>"
 
 		dat += "[material_top]</tr>[material_bottom]</tr></table><hr>"
 		dat += "<h2>Printable Designs</h2><h3>Showing: <a href='?src=\ref[src];change_category=1'>[show_category]</a>.</h3></center><table width = '100%'>"
@@ -77,41 +128,7 @@
 		var/index = 0
 		for(var/datum/autolathe/recipe/R in machine_recipes)
 			index++
-			if(R.hidden && !hacked || (show_category != "All" && show_category != R.category))
-				continue
-			var/can_make = 1
-			var/material_string = ""
-			var/multiplier_string = ""
-			var/max_sheets
-			var/comma
-			if(!R.resources || !R.resources.len)
-				material_string = "No resources required.</td>"
-			else
-				//Make sure it's buildable and list requires resources.
-				for(var/material in R.resources)
-					var/sheets = round(stored_material[material]/round(R.resources[material]*mat_efficiency))
-					if(isnull(max_sheets) || max_sheets > sheets)
-						max_sheets = sheets
-					if(!isnull(stored_material[material]) && stored_material[material] < round(R.resources[material]*mat_efficiency))
-						can_make = 0
-					if(!comma)
-						comma = 1
-					else
-						material_string += ", "
-					material_string += "[round(R.resources[material] * mat_efficiency)] [material]"
-				material_string += ".<br></td>"
-				//Build list of multipliers for sheets.
-				if(R.is_stack)
-					var/obj/item/stack/R_stack = R.path
-					max_sheets = min(max_sheets, initial(R_stack.max_amount))
-					//do not allow lathe to print more sheets than the max amount that can fit in one stack
-					if(max_sheets && max_sheets > 0)
-						multiplier_string  += "<br>"
-						for(var/i = 5;i<max_sheets;i*=2) //5,10,20,40...
-							multiplier_string  += "<a href='?src=\ref[src];make=[index];multiplier=[i]'>\[x[i]\]</a>"
-						multiplier_string += "<a href='?src=\ref[src];make=[index];multiplier=[max_sheets]'>\[x[max_sheets]\]</a>"
-
-			dat += "<tr><td width = 180>[R.hidden ? "<font color = 'red'>*</font>" : ""]<b>[can_make ? "<a href='?src=\ref[src];make=[index];multiplier=1'>" : ""][R.name][can_make ? "</a>" : ""]</b>[R.hidden ? "<font color = 'red'>*</font>" : ""][multiplier_string]</td><td align = right>[material_string]</tr>"
+			dat += handle_recipe(R,index)
 
 		dat += "</table><hr>"
 	//Hacking.
@@ -165,10 +182,13 @@
 
 	for(var/material in eating.matter)
 
-		if(isnull(stored_material[material]) || isnull(storage_capacity[material]))
+		if(isnull(storage_capacity))
 			continue
 
-		if(stored_material[material] >= storage_capacity[material])
+		if(isnull(stored_material[material]))
+			stored_material[material] = 0
+
+		if(stored_material[material] >= storage_capacity)
 			continue
 
 		var/total_material = eating.matter[material]
@@ -178,15 +198,15 @@
 			var/obj/item/stack/stack = eating
 			total_material *= stack.get_amount()
 
-		if(stored_material[material] + total_material > storage_capacity[material])
-			total_material = storage_capacity[material] - stored_material[material]
+		if(stored_material[material] + total_material > storage_capacity)
+			total_material = storage_capacity - stored_material
 			filltype = 1
 		else
 			filltype = 2
 
-		stored_material[material] += total_material
+		stored_material += total_material
 		total_used += total_material
-		mass_per_sheet += eating.matter[material]
+		mass_per_sheet += eating.matter
 
 	if(!filltype)
 		to_chat(user, "<span class='notice'>\The [src] is full. Please remove material from the autolathe in order to insert more.</span>")
@@ -293,8 +313,7 @@
 	for(var/obj/item/weapon/stock_parts/manipulator/M in component_parts)
 		man_rating += M.rating
 
-	storage_capacity[DEFAULT_WALL_MATERIAL] = mb_rating  * 25000
-	storage_capacity["glass"] = mb_rating  * 12500
+	storage_capacity = mb_rating  * 25000
 	build_time = 50 / man_rating
 	mat_efficiency = 1.1 - man_rating * 0.1// Normally, price is 1.25 the amount of material, so this shouldn't go higher than 0.8. Maximum rating of parts is 3
 

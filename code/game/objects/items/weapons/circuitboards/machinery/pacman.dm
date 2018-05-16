@@ -17,13 +17,16 @@
 	name = T_BOARD("SUPERPACMAN-type generator")
 	build_path = /obj/machinery/power/port_gen/pacman/super
 	origin_tech = list(TECH_DATA = 3, TECH_POWER = 4, TECH_ENGINEERING = 4)
+	matter = list("silver" = 100, "glass" = 150)
 
 /obj/item/weapon/circuitboard/pacman/super/potato
 	name = T_BOARD("PTTO-3 nuclear generator")
 	build_path = /obj/machinery/power/port_gen/pacman/super/potato
 	origin_tech = list(TECH_DATA = 3, TECH_POWER = 5, TECH_ENGINEERING = 4)
+	matter = list("gold" = 100, "glass" = 150)
 
 /obj/item/weapon/circuitboard/pacman/mrs
 	name = T_BOARD("MRSPACMAN-type generator")
 	build_path = /obj/machinery/power/port_gen/pacman/mrs
 	origin_tech = list(TECH_DATA = 3, TECH_POWER = 5, TECH_ENGINEERING = 5)
+	matter = list("platinum" = 100, "glass" = 150)

@@ -18,6 +18,28 @@ other types of metals and chemistry for reagents).
 */
 //Note: More then one of these can be added to a design.
 
+/var/global/list/protolathe_recipes
+/var/global/list/protolathe_categories
+
+// Items are more expensive to produce than they are to recycle.
+
+/proc/populate_protolathe_recipes()
+
+	//Create global protolathe recipe list if it hasn't been made already.
+	protolathe_recipes = list()
+	protolathe_categories = list()
+	for(var/R in typesof(/datum/design/item)-/datum/design/item)
+		var/datum/design/item/recipe = new R
+		protolathe_recipes += recipe
+		protolathe_categories |= recipe.category
+
+		var/obj/item/I = new recipe.build_path
+		if(I.matter && !recipe.materials) //This can be overidden in the datums.
+			recipe.materials = list()
+			for(var/material in I.matter)
+				recipe.materials[material] = I.matter[material] * EXTRA_COST_FACTOR
+		qdel(I)
+
 /datum/design						//Datum for object designs, used in construction
 	var/name = null					//Name of the created object. If null it will be 'guessed' from build_path if possible.
 	var/desc = null					//Description of the created object. If null it will use group_desc and name where applicable.
@@ -2024,7 +2046,7 @@ CIRCUITS BELOW
 	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 3, TECH_BLUESPACE = 2)
 	build_path = /obj/item/weapon/circuitboard/telecomms/receiver
 	sort_string = "PAAAG"
-	
+
 /datum/design/circuit/bluespace_satellite
 	name = "bluespace satellite"
 	id = "bluespace-satellite"
@@ -2307,6 +2329,15 @@ CIRCUITS BELOW
 	materials = list(DEFAULT_WALL_MATERIAL = 120, "glass" = 50)
 	build_path = /obj/item/weapon/weldingtool/experimental
 	sort_string = "VBAAT"
+
+/datum/design/item/welding_gas_mask
+	name = "welding gas mask"
+	desc = "A face-covering mask that can be connected to an air supply. Filters harmful gases from the air. Includes a cover to protect eyes from intense flashes."
+	id = "welding_gas_mask"
+	req_tech = list(TECH_ENGINEERING = 5)
+	materials = list(DEFAULT_WALL_MATERIAL = 3500, "glass" = 1500)
+	build_path = /obj/item/clothing/mask/gas/welding
+	sort_string = "VBAAU"
 
 //RIG Modules
 //Sidenote; Try to keep a requirement of 5 engineering for each, but keep the rest as similiar to it's original as possible.

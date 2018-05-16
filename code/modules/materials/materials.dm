@@ -202,13 +202,6 @@ var/list/name_to_material
 /material/placeholder
 	name = "placeholder"
 
-// Places a girder object when a wall is dismantled, also applies reinforced material.
-/material/proc/place_dismantled_girder(var/turf/target, var/material/reinf_material)
-	var/obj/structure/girder/G = new(target)
-	if(reinf_material)
-		G.reinf_material = reinf_material
-		G.reinforce_girder()
-
 // General wall debris product placement.
 // Not particularly necessary aside from snowflakey cult girders.
 /material/proc/place_dismantled_product(var/turf/target,var/is_devastated)
@@ -484,9 +477,6 @@ var/list/name_to_material
 
 /material/diona/place_dismantled_product()
 	return
-
-/material/diona/place_dismantled_girder(var/turf/target)
-	spawn_diona_nymph(target)
 
 /material/steel/holographic
 	name = "holo" + DEFAULT_WALL_MATERIAL
@@ -958,9 +948,6 @@ var/list/name_to_material
 	sheet_plural_name = "bricks"
 	conductive = 0
 
-/material/cult/place_dismantled_girder(var/turf/target)
-	new /obj/structure/girder/cult(target)
-
 /material/cult/place_dismantled_product(var/turf/target)
 	new /obj/effect/decal/cleanable/blood(target)
 
@@ -1007,9 +994,6 @@ var/list/name_to_material
 	integrity = rand(200,400)
 	melting_point = rand(400,10000)
 	..()
-
-/material/aliumium/place_dismantled_girder(var/turf/target, var/material/reinf_material)
-	return
 
 //TODO PLACEHOLDERS:
 /material/leather

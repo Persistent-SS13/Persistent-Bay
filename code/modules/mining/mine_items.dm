@@ -140,7 +140,7 @@
 	item_state = "shovel"
 	w_class = ITEM_SIZE_HUGE
 	origin_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1)
-	matter = list(DEFAULT_WALL_MATERIAL = 50)
+	matter = list(DEFAULT_WALL_MATERIAL = 100)
 	attack_verb = list("bashed", "bludgeoned", "thrashed", "whacked")
 	sharp = 0
 	edge = 1
@@ -152,6 +152,7 @@
 	item_state = "spade"
 	force = 5.0
 	throwforce = 7.0
+	matter = list(DEFAULT_WALL_MATERIAL = 50)
 	w_class = ITEM_SIZE_SMALL
 
 

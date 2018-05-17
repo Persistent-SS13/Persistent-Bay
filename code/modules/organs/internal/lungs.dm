@@ -20,7 +20,7 @@
 	var/min_breath_pressure
 	var/last_int_pressure
 	var/last_ext_pressure
-	var/max_pressure_diff = 202.65 //Default
+	var/max_pressure_diff = 60 //Default
 
 	var/oxygen_deprivation = 0
 	var/safe_exhaled_max = 6
@@ -144,7 +144,7 @@
 	var/ext_pressure_diff = abs(last_ext_pressure - environment.return_pressure()) * owner.get_pressure_weakness()
 	if(int_pressure_diff > max_pressure_diff && ext_pressure_diff > max_pressure_diff)
 		var/lung_rupture_prob = isrobotic() ? prob(30) : prob(60) //Robotic lungs are less likely to rupture.
-		if(lung_rupture_prob)
+		if(!is_bruised() && lung_rupture_prob) //only rupture if NOT already ruptured
 			rupture()
 
 /obj/item/organ/internal/lungs/proc/handle_breath(datum/gas_mixture/breath, var/forced)

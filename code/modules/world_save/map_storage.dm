@@ -268,9 +268,7 @@ var/global/list/debug_data = list()
 		else
 			backup = 1
 			fcopy("map_saves/game.sav", "backups/[dir].sav")
-			fcopy("map_saves/records.sav", "backups/[dir]-r.sav")
 	fdel("map_saves/game.sav")
-	fdel("map_saves/records.sav")
 	var/savefile/f = new("map_saves/game.sav")
 	found_vars = list()
 	for(var/z in 1 to 27)
@@ -292,105 +290,16 @@ var/global/list/debug_data = list()
 	for(var/zone/Z in zones_to_save)
 		Z.turf_coords = Z.get_turf_coords()
 		zones |= Z
+	f["factions"] << GLOB.all_world_factions
 	f["zones"] << zones
 	f["areas"] << formatted_areas
 	f["turbolifts"] << turbolifts
-	var/savefile/q = new("map_saves/records.sav")
-	q << GLOB.all_world_factions
-	q << GLOB.all_crew_records
+	f["records"] << GLOB.all_crew_records
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
 	return 1
 
-/proc/Load_Records()
-	var/savefile/f = new("map_saves/game.sav")
-	f.cd = "/extras"
-	f["records"] >> GLOB.all_crew_records
-	if(!GLOB.all_crew_records)
-		GLOB.all_crew_records = list()
-	f["factions"] >> GLOB.all_world_factions
-	var/list/areas
-	f["areas"] >> areas
-	for(var/datum/area_holder/holder in areas)
-		var/area/A = new holder.area_type
-		A.name = holder.name
-		var/list/turfs = list()
-		for(var/ind in 1 to holder.turfs.len)
-			var/list/coords = holder.turfs[ind]
-			var/turf/T = locate(text2num(coords[1]),text2num(coords[2]),text2num(coords[3]))
-			if(!T)
-				message_admins("No turf found for area load")
-			turfs |= T
-		A.contents.Add(turfs)
-/proc/Load_Chunk(var/z)
-	var/v
-	var/savefile/f = new("map_saves/game.sav")
-	f.cd = "/map/[z]"
-	var/starttime2 = REALTIMEOFDAY
-	while(!f.eof)
-		f >> v
-		sleep(-1)
-	world << "Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!"
-
-/proc/Load_Last()
-	var/savefile/f = new("map_saves/game.sav")
-	f.cd = "/extras"
-	f["turbolifts"] >> turbolifts
-	var/list/zones
-	f["zones"] >> zones
-	for(var/zone/Z in zones)
-		for(var/ind in 1 to Z.turf_coords.len)
-			var/list/coords = Z.turf_coords[ind]
-			var/turf/simulated/T = locate(text2num(coords[1]),text2num(coords[2]),text2num(coords[3]))
-			if(!T || !istype(T))
-				message_admins("No turf found for zone load")
-				continue
-			T.zone = Z
-			Z.contents |= T
-	for(var/zone/Z in zones)
-		Z.rebuild()
 /proc/Load_World()
-	var/starttime = REALTIMEOFDAY
-	if(!fexists("map_saves/game.sav")) return
-	all_loaded = list()
-	found_vars = list()
-	debug_data = list()
-	var/starttime2 = REALTIMEOFDAY
-	Load_Records()
-	world << "Loading Records completed in [(REALTIMEOFDAY - starttime2)/10] seconds!"
-	for(var/z in 1 to 27)
-		Load_Chunk(z)
-	starttime2 = REALTIMEOFDAY
-	Load_Last()
-	world << "Loading Turbolifts and Zones completed in [(REALTIMEOFDAY - starttime2)/10] seconds!"
-
-//	var/savefile/q = new("map_saves/records.sav")
-
-//	q >> GLOB.all_world_factions
-//	if(!GLOB.all_world_factions)
-//		GLOB.all_world_factions = list()
-
-//	q >> GLOB.all_crew_records
-//	if(!GLOB.all_crew_records)
-//		GLOB.all_crew_records = list()
-	starttime2 = REALTIMEOFDAY
-	for(var/ind in 1 to all_loaded.len)
-		var/datum/dat = all_loaded[ind]
-		dat.after_load()
-	all_loaded = list()
-	SSmachines.makepowernets()
-//	for(var/x in debug_data)
-//		world << "Loaded [debug_data[x][1]] [x] in [debug_data[x][2]] seconds!"
-	world << "Completed Afterlaods in [(REALTIMEOFDAY - starttime2)/10] seconds!"
-
-	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
-	world << "Loading Complete"
-	return 1
-
-
-
-
-/proc/Load_World_Old()
 	var/starttime = REALTIMEOFDAY
 	if(!fexists("map_saves/game.sav")) return
 	var/savefile/f = new("map_saves/game.sav")
@@ -441,18 +350,9 @@ var/global/list/debug_data = list()
 			Z.contents |= T
 	for(var/zone/Z in zones)
 		Z.rebuild()
-	f = null
-//	var/savefile/q = new("map_saves/records.sav")
-
-//	q >> GLOB.all_world_factions
-//	if(!GLOB.all_world_factions)
-//		GLOB.all_world_factions = list()
-//	for(var/ind in 1 to all_loaded.len)
-//		var/datum/dat = all_loaded[ind]
-//		dat.after_load()
-//	q >> GLOB.all_crew_records
-//	if(!GLOB.all_crew_records)
-//		GLOB.all_crew_records = list()
+	for(var/ind in 1 to all_loaded.len)
+		var/datum/dat = all_loaded[ind]
+		dat.after_load()
 	all_loaded = list()
 	SSmachines.makepowernets()
 	for(var/x in debug_data)
@@ -461,7 +361,7 @@ var/global/list/debug_data = list()
 	world << "Loading Complete"
 	return 1
 
-/proc/Load_Chunk_Old(var/xi, var/yi, var/zi, var/savefile/f)
+/proc/Load_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
 	var/z = zi
 	xi = (xi - (xi % 20) + 1)
 	yi = (yi - (yi % 20) + 1)

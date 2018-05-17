@@ -353,7 +353,7 @@ var/global/list/debug_data = list()
 			Z.contents |= T
 	for(var/zone/Z in zones)
 		Z.rebuild()
-	
+	f = null
 //	var/savefile/q = new("map_saves/records.sav")
 	
 //	q >> GLOB.all_world_factions

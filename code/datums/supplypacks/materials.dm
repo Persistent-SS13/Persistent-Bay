@@ -24,7 +24,7 @@
 /decl/hierarchy/supply_pack/materials/steel50
 	name = "Steel (x50)"
 	contains = list(/obj/item/stack/material/steel/fifty)
-	cost = 10
+	cost = 30
 	containername = "\improper Steel sheets crate"
 
 /decl/hierarchy/supply_pack/materials/glass50

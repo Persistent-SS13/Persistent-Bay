@@ -140,10 +140,15 @@
 	receiver_message += "</span></span>"
 	to_chat(C, receiver_message)
 
-	//play the recieving admin the adminhelp sound (if they have them enabled)
+	//play the recieving player the adminhelp sound (if they have them enabled)
 	//non-admins shouldn't be able to disable this
 	if(C.get_preference_value(/datum/client_preference/staff/play_adminhelp_ping) == GLOB.PREF_HEAR)
-		sound_to(C, 'sound/effects/adminhelp.ogg')
+		// only do it if the sending admin has turned on loud bwoinking
+		if (src.get_preference_value(/datum/client_preference/staff/bwoink_urgency) == GLOB.PREF_LOUDLY)
+			sound_to(C, 'sound/effects/adminhelp.ogg') // GOT A MINUTE?
+			sound_to(src, 'sound/effects/adminhelp.ogg') // Let the admin know they're bwoinking!
+		else
+			sound_to(C, 'sound/effects/pleasant.ogg')
 
 	log_admin("PM: [key_name(src)]->[key_name(C)]: [msg]")
 	adminmsg2adminirc(src, C, html_decode(msg))

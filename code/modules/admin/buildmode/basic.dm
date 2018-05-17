@@ -27,13 +27,12 @@
 			T.ChangeTurf(/turf/simulated/wall)
 			return
 		else if(istype(object,/turf/simulated/wall))
-			var/turf/simulated/wall/T = object
+			var/turf/T = object
 			Log("Upgraded - [log_info_line(object)]")
-			T.r_material = get_material_by_name("steel")
-			T.update_full(1, 1)
+			T.ChangeTurf(/turf/simulated/wall/r_wall)
 			return
 	else if(pa["right"])
-		if(istype(object,/turf/simulated/wall && !object:r_material))
+		if(istype(object,/turf/simulated/wall))
 			var/turf/T = object
 			Log("Downgraded - [log_info_line(object)]")
 			T.ChangeTurf(/turf/simulated/floor)
@@ -43,11 +42,10 @@
 			Log("Downgraded - [log_info_line(object)]")
 			T.ChangeTurf(/turf/space)
 			return
-		else if(istype(object,/turf/simulated/wall))
-			var/turf/simulated/wall/T = object
+		else if(istype(object,/turf/simulated/wall/r_wall))
+			var/turf/T = object
 			Log("Downgraded - [log_info_line(object)]")
-			T.r_material = null
-			T.update_full(1, 1)
+			T.ChangeTurf(/turf/simulated/wall)
 			return
 		else if(istype(object,/obj))
 			Log("Deleted - [log_info_line(object)]")

@@ -7,7 +7,6 @@ obj/item/weapon/circuitboard/rdserver
 	build_path = /obj/machinery/r_n_d/server
 	board_type = "machine"
 	origin_tech = list(TECH_DATA = 3)
-	matter = list("gold" = 50, "glass" = 150)
 	req_components = list(
 							/obj/item/stack/cable_coil = 2,
 							/obj/item/weapon/stock_parts/scanning_module = 1)
@@ -17,7 +16,6 @@ obj/item/weapon/circuitboard/rdserver
 	build_path = /obj/machinery/r_n_d/destructive_analyzer
 	board_type = "machine"
 	origin_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2, TECH_DATA = 2)
-	matter = list("gold" = 50, "glass" = 150)
 	req_components = list(
 							/obj/item/weapon/stock_parts/scanning_module = 1,
 							/obj/item/weapon/stock_parts/manipulator = 1,
@@ -38,7 +36,6 @@ obj/item/weapon/circuitboard/rdserver
 	build_path = /obj/machinery/r_n_d/protolathe
 	board_type = "machine"
 	origin_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 2)
-	matter = list("gold" = 50, "glass" = 150)
 	req_components = list(
 							/obj/item/weapon/stock_parts/matter_bin = 2,
 							/obj/item/weapon/stock_parts/manipulator = 2,
@@ -50,7 +47,6 @@ obj/item/weapon/circuitboard/rdserver
 	build_path = /obj/machinery/r_n_d/circuit_imprinter
 	board_type = "machine"
 	origin_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 2)
-	matter = list("gold" = 50, "glass" = 150)
 	req_components = list(
 							/obj/item/weapon/stock_parts/matter_bin = 1,
 							/obj/item/weapon/stock_parts/manipulator = 1,
@@ -80,7 +76,6 @@ obj/item/weapon/circuitboard/rdserver
 	build_path = /obj/machinery/integrated_circuit_printer
 	board_type = "machine"
 	origin_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 2)
-	matter = list("gold" = 100, "glass" = 150)
 	req_components = list(
 						/obj/item/weapon/stock_parts/matter_bin = 1,
 						/obj/item/weapon/stock_parts/manipulator = 1,

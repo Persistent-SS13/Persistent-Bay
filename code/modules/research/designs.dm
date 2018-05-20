@@ -18,28 +18,6 @@ other types of metals and chemistry for reagents).
 */
 //Note: More then one of these can be added to a design.
 
-/var/global/list/protolathe_recipes
-/var/global/list/protolathe_categories
-
-// Items are more expensive to produce than they are to recycle.
-
-/proc/populate_protolathe_recipes()
-
-	//Create global protolathe recipe list if it hasn't been made already.
-	protolathe_recipes = list()
-	protolathe_categories = list()
-	for(var/R in typesof(/datum/design/item)-/datum/design/item)
-		var/datum/design/item/recipe = new R
-		protolathe_recipes += recipe
-		protolathe_categories |= recipe.category
-
-		var/obj/item/I = new recipe.build_path
-		if(I.matter && !recipe.materials) //This can be overidden in the datums.
-			recipe.materials = list()
-			for(var/material in I.matter)
-				recipe.materials[material] = I.matter[material] * EXTRA_COST_FACTOR
-		qdel(I)
-
 /datum/design						//Datum for object designs, used in construction
 	var/name = null					//Name of the created object. If null it will be 'guessed' from build_path if possible.
 	var/desc = null					//Description of the created object. If null it will use group_desc and name where applicable.

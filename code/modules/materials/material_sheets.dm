@@ -186,9 +186,6 @@
 /obj/item/stack/material/copper/ten
 	amount = 10
 
-/obj/item/stack/material/copper/fifty
-	amount = 50
-
 /obj/item/stack/material/bronze
 	name = "bronze"
 	icon_state = "sheet-silver"

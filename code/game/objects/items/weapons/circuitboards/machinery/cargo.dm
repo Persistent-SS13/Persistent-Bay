@@ -10,13 +10,11 @@
 	req_components = list(
 		/obj/item/weapon/stock_parts/matter_bin = 1,
 		/obj/item/weapon/stock_parts/manipulator = 1)
-
 /obj/item/weapon/circuitboard/telepad
 	name = T_BOARD("Telepad")
 	build_path = /obj/machinery/telepad_cargo
 	board_type = "machine"
 	origin_tech = "bluespace=1"
-	matter = list("platinum" = 50, "glass" = 150)
 	req_components = list(
 		/obj/item/weapon/stock_parts/matter_bin = 1,
 		/obj/item/weapon/stock_parts/manipulator = 1,

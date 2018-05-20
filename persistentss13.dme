@@ -2486,7 +2486,6 @@
 #include "code\unit_tests\alt_appearances_test.dm"
 #include "code\unit_tests\area_tests.dm"
 #include "code\unit_tests\atmospherics_tests.dm"
-#include "code\unit_tests\autolathe_tests.dm"
 #include "code\unit_tests\equipment_tests.dm"
 #include "code\unit_tests\extension_tests.dm"
 #include "code\unit_tests\food_tests.dm"

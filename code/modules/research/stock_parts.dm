@@ -24,7 +24,7 @@
 	w_class = ITEM_SIZE_SMALL
 	var/rating = 1
 
-//Rank 1 - Autolathable
+//Rank 1
 
 /obj/item/weapon/stock_parts/console_screen
 	name = "console screen"

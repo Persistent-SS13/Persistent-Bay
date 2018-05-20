@@ -169,7 +169,6 @@
 	build_path = /obj/machinery/shuttleengine
 	board_type = "machine"
 	origin_tech = list(TECH_ENGINEERING = 4, TECH_POWER = 4)
-	matter = list("platinum" = 100, "glass" = 150)
 	req_components = list(
 							/obj/item/stack/cable_coil = 30,
 							/obj/item/device/assembly/igniter = 1,

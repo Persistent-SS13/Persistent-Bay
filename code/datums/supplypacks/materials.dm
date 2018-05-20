@@ -14,12 +14,6 @@
 	cost = 40
 	containername = "\improper Bulk Glass Shipment"
 
-/decl/hierarchy/supply_pack/materials/copper200
-	name = "Bulk Copper Order - 200"
-	contains = list(/obj/item/stack/material/copper/fifty = 4)
-	cost = 40
-	containername = "\improper Copper sheets crate"
-
 // Material sheets (50 - full stack)
 /decl/hierarchy/supply_pack/materials/steel50
 	name = "Steel (x50)"
@@ -32,12 +26,6 @@
 	contains = list(/obj/item/stack/material/glass/fifty)
 	cost = 10
 	containername = "\improper Glass sheets crate"
-
-/decl/hierarchy/supply_pack/materials/copper50
-	name = "Copper (x50)"
-	contains = list(/obj/item/stack/material/copper/fifty)
-	cost = 10
-	containername = "\improper Copper sheets crate"
 
 /decl/hierarchy/supply_pack/materials/wood50
 	name = "Wooden Planks (x50)"

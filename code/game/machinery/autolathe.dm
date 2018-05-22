@@ -184,10 +184,8 @@
 			var/obj/item/stack/stack = eating
 			total_material *= stack.get_amount()
 		else
-			world << "A total_material: [total_material]"
 			total_material *= 0.7 + (1 - mat_efficiency)	//everything else gets a multiplier of 0.7 + 0.1 for each manipulator level above 1, totals a maximum of 0.9
 			total_material = round(total_material)
-			world << "B total_material: [total_material]"
 
 		if(stored_material[material] + total_material > storage_capacity)
 			total_material = storage_capacity - stored_material[material]

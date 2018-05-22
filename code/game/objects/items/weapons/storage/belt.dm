@@ -147,6 +147,7 @@
 		/obj/item/device/megaphone,
 		/obj/item/weapon/melee,
 		/obj/item/weapon/gun/projectile/sec,
+		/obj/item/weapon/gun/projectile/colt/detective,
 		/obj/item/taperoll,
 		/obj/item/device/holowarrant,
 		/obj/item/weapon/magnetic_ammo

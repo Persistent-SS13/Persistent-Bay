@@ -1,16 +1,22 @@
 
 var/list/dreams = list(
-	"an ID card","a bottle","a familiar face","a crewmember","a toolbox","a security officer","the captain",
-	"voices from all around","deep space","a doctor","the engine","a traitor","an ally","darkness",
-	"light","a scientist","a monkey","a catastrophe","a loved one","a gun","warmth","freezing","the sun",
-	"a hat","a ruined station","a planet","phoron","air","the medical bay","the bridge","blinking lights",
-	"a blue light","an abandoned laboratory","Nanotrasen", "pirates", "mercenaries","blood","healing","power","respect",
-	"riches","space","a crash","happiness","pride","a fall","water","flames","ice","melons","flying","the eggs","money",
-	"the chief engineer","the research director","the chief medical officer",
-	"a station engineer","the janitor","the atmospheric technician",
-	"a cargo technician","the botanist","a shaft miner","the psychologist","the chemist",
+	""Welcome to The NSS Vignette!"",""A whole new frontier..."",""Life is transient, but so is death."",
+	"The gateway annihilates your body, spreading it across the cosmos...","The stars chime like struck bells.",
+	"You hear a distant bark...","A faraway sun smiles at you.","Something whispers into your ear...","Xentec...?","Your lungs!",
+	"You hear a sinister hiss...","The computer beeps, and then goes black.",
+	"A great light from the skies eviscerates an entire colony...",The Darkness...",""Love..."","""Close your eyes."",
+	"Lush forests...",""Want another drink?"","The airlock explodes!","The slime envelops your head...",""WAKE UP!"","Snow falls...",
+	"The shrine glows with an eerie light...",""Your employment on this station has come to an end."","Blood stains...","Find the truth.",
+	"You sign your name on the dotted line.","Exotic scents...","The tastes of another planet...","Luxurious silks...",
+	""Hyperion, Divinity in innovation!"",""Bluespace is perfectly safe!"",""Green planet? We'll just take another!"",
+	""What's a Vox?"","An explosion rocks the station!","You reach a hand up to feel your exposed brain...",""I'm not scared!",
+	"The air alarm turns red...","A claw slashes your face!","A shooting star passes by...", "You feel trapped.",
+	"A feeling of impending doom rests heavily on you...",""You can do it!"","The thing stares at you, an eerie smile on it's 'face'.",
+	"You wake up...","You fall asleep...","You take one more out of the packet...","You feel at peace with the universe.",
+	""I did not have sexual relations with that Unathi!"","Something is missing...","This journey will never end.","Sleep...",
+	"Zzz...","It's so dark...","...","BOOM!","ZAP!","Sss!","Whoosh!",""No!"",""This was a mistake..."","You hear hooves.","It's cold...",
 	"the virologist","the roboticist","a chef","the bartender","a chaplain","a librarian","a mouse",
-	"a beach","the holodeck","a smokey room","a voice","the cold","a mouse","an operating table","the rain","a skrell",
+	"You hear a loud buzz!","","a smokey room","a voice","the cold","a mouse","an operating table","the rain","a skrell",
 	"an unathi","a tajaran","the ai core","a beaker of strange liquid","the supermatter"
 	)
 
@@ -19,7 +25,7 @@ mob/living/carbon/proc/dream()
 
 	spawn(0)
 		for(var/i = rand(1,4),i > 0, i--)
-			to_chat(src, "<span class='notice'><i>... [pick(dreams)] ...</i></span>")
+			to_chat(src, "<span class='notice'><i>[pick(dreams)]</i></span>")
 			sleep(rand(40,70))
 			if(paralysis <= 0)
 				dreaming = 0

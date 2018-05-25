@@ -862,7 +862,7 @@
 	icon_state = "roburger"
 	filling_color = "#cccccc"
 	center_of_mass = "x=16;y=11"
-	nutriment_desc = list("bun" = 2, "metal" = 3)
+	nutriment_desc = list("bun" = 2, DEFAULT_WALL_MATERIAL = 3)
 	nutriment_amt = 2
 	New()
 		..()
@@ -1148,7 +1148,7 @@
 	trash = /obj/item/stack/rods
 	filling_color = "#fffee0"
 	center_of_mass = "x=17;y=15"
-	nutriment_desc = list("tofu" = 3, "metal" = 1)
+	nutriment_desc = list("tofu" = 3, DEFAULT_WALL_MATERIAL = 1)
 	nutriment_amt = 8
 	New()
 		..()

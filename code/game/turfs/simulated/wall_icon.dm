@@ -56,34 +56,30 @@
 	overlays.Cut()
 	var/image/I
 	for(var/i = 1 to 4)
-		try
-			I = image('icons/turf/wall_masks.dmi', "[r_material ? p_material.icon_reinf : p_material.icon_base][wall_connections[i]]", dir = 1<<(i-1))
-			I.color = p_material.icon_colour
-			overlays += I
-		catch(var/exception/e)
-			world.log << "[e] on [e.file] : [e.line]"
+		I = image('icons/turf/wall_masks.dmi', "[r_material ? p_material.icon_reinf : p_material.icon_base][wall_connections[i]]", dir = 1<<(i-1))
+		I.color = p_material.icon_colour
+		overlays = overlays.Copy() + I
 
 	if(r_material)
 		if(state == null)
 			I = image('icons/turf/wall_masks.dmi', "reinf_over")
 			I.color = r_material.icon_colour
-			overlays += I
+			overlays = overlays.Copy() + I
 		else
 			I = image('icons/turf/wall_masks.dmi', "reinf_construct-[state]")
 			I.color = r_material.icon_colour
-			overlays += I
+			overlays = overlays.Copy() + I
 		if(state >= 5 || state == null)
 			I = image('icons/turf/wall_masks.dmi', "reinf_metal")
 			I.color = "#666666"
-			overlays += I
+			overlays = overlays.Copy() + I
 
 	if(integrity != MaxIntegrity())
-
 		var/overlay = round(damage_overlays.len * (1 / (integrity / MaxIntegrity())))
 		if(overlay > damage_overlays.len)
 			overlay = damage_overlays.len
 
-		overlays += damage_overlays[overlay]
+		overlays = overlays.Copy() + damage_overlays[overlay]
 	return
 
 /turf/simulated/wall/proc/generate_overlays()

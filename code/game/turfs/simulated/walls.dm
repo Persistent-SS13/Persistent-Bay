@@ -23,6 +23,16 @@
 
 	var/global/damage_overlays[16]
 
+/turf/simulated/wall/r_wall/after_load()
+	..()
+	var/mat = material
+	var/r_mat = r_material
+	var/p_mat = p_material
+	ChangeTurf(/turf/simulated/wall)
+	material = mat
+	r_material = r_mat
+	p_material = p_mat
+
 /turf/simulated/wall/New(var/newloc, var/material/mat, var/material/r_mat, var/material/p_mat)
 	..(newloc)
 	material = mat
@@ -35,6 +45,7 @@
 	..()
 	if(reinf_material)
 		p_material = reinf_material
+		r_material = reinf_material
 	reinf_material = null
 	update_full(1, 1)
 

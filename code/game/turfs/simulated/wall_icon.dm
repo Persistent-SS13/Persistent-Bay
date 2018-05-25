@@ -56,12 +56,9 @@
 	overlays.Cut()
 	var/image/I
 	for(var/i = 1 to 4)
-		try
-			I = image('icons/turf/wall_masks.dmi', "[r_material ? p_material.icon_reinf : p_material.icon_base][wall_connections[i]]", dir = 1<<(i-1))
-			I.color = p_material.icon_colour
-			overlays = overlays.Copy() + I
-		catch(var/exception/e)
-			world.log << "[e] on [e.file] : [e.line]"
+		I = image('icons/turf/wall_masks.dmi', "[r_material ? p_material.icon_reinf : p_material.icon_base][wall_connections[i]]", dir = 1<<(i-1))
+		I.color = p_material.icon_colour
+		overlays = overlays.Copy() + I
 
 	if(r_material)
 		if(state == null)

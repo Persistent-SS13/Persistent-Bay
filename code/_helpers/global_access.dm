@@ -51,6 +51,8 @@
 			return global.SScircuit;
 		if("SSevent")
 			return global.SSevent;
+		if("SSfastprocess")
+			return global.SSfastprocess;
 		if("SSgarbage")
 			return global.SSgarbage;
 		if("SSicon_update")
@@ -73,6 +75,8 @@
 			return global.SSnano;
 		if("SSobj")
 			return global.SSobj;
+		if("SSopen_space")
+			return global.SSopen_space;
 		if("SSplants")
 			return global.SSplants;
 		if("SSprocessing")
@@ -83,6 +87,8 @@
 			return global.SSshuttle;
 		if("SSskybox")
 			return global.SSskybox;
+		if("SSsun")
+			return global.SSsun;
 		if("SStgui")
 			return global.SStgui;
 		if("SStimer")
@@ -91,6 +97,8 @@
 			return global.SStrade;
 		if("SSvines")
 			return global.SSvines;
+		if("SSwireless")
+			return global.SSwireless;
 		if("SSxenoarch")
 			return global.SSxenoarch;
 		if("Tier1Runes")
@@ -171,8 +179,6 @@
 			return global.air_blocked;
 		if("air_processing_killed")
 			return global.air_processing_killed;
-		if("alarm_manager")
-			return global.alarm_manager;
 		if("alien_whitelist")
 			return global.alien_whitelist;
 		if("allCasters")
@@ -241,8 +247,6 @@
 			return global.assigned;
 		if("assigned_blocks")
 			return global.assigned_blocks;
-		if("atmosphere_alarm")
-			return global.atmosphere_alarm;
 		if("attack_log_repository")
 			return global.attack_log_repository;
 		if("autolathe_categories")
@@ -267,8 +271,6 @@
 			return global.cached_icons;
 		if("cached_space")
 			return global.cached_space;
-		if("camera_alarm")
-			return global.camera_alarm;
 		if("camera_range_display_status")
 			return global.camera_range_display_status;
 		if("camera_repository")
@@ -433,8 +435,6 @@
 			return global.fileaccess_timer;
 		if("finds_as_strings")
 			return global.finds_as_strings;
-		if("fire_alarm")
-			return global.fire_alarm;
 		if("flesh_hud_colours")
 			return global.flesh_hud_colours;
 		if("floorIsLava")
@@ -655,8 +655,6 @@
 			return global.mob_hat_cache;
 		if("mob_repository")
 			return global.mob_repository;
-		if("motion_alarm")
-			return global.motion_alarm;
 		if("moving_levels")
 			return global.moving_levels;
 		if("multi_point_spawns")
@@ -735,8 +733,6 @@
 			return global.possible_changeling_IDs;
 		if("poster_designs")
 			return global.poster_designs;
-		if("power_alarm")
-			return global.power_alarm;
 		if("powerinstances")
 			return global.powerinstances;
 		if("powers")
@@ -765,8 +761,6 @@
 			return global.priv_syndicate_access;
 		if("processScheduler")
 			return global.processScheduler;
-		if("processing_turfs")
-			return global.processing_turfs;
 		if("prometheans")
 			return global.prometheans;
 		if("protected_objects")
@@ -1120,6 +1114,8 @@
 			global.SScircuit=newval;
 		if("SSevent")
 			global.SSevent=newval;
+		if("SSfastprocess")
+			global.SSfastprocess=newval;
 		if("SSgarbage")
 			global.SSgarbage=newval;
 		if("SSicon_update")
@@ -1142,6 +1138,8 @@
 			global.SSnano=newval;
 		if("SSobj")
 			global.SSobj=newval;
+		if("SSopen_space")
+			global.SSopen_space=newval;
 		if("SSplants")
 			global.SSplants=newval;
 		if("SSprocessing")
@@ -1152,6 +1150,8 @@
 			global.SSshuttle=newval;
 		if("SSskybox")
 			global.SSskybox=newval;
+		if("SSsun")
+			global.SSsun=newval;
 		if("SStgui")
 			global.SStgui=newval;
 		if("SStimer")
@@ -1160,6 +1160,8 @@
 			global.SStrade=newval;
 		if("SSvines")
 			global.SSvines=newval;
+		if("SSwireless")
+			global.SSwireless=newval;
 		if("SSxenoarch")
 			global.SSxenoarch=newval;
 		if("Tier1Runes")
@@ -1240,8 +1242,6 @@
 			global.air_blocked=newval;
 		if("air_processing_killed")
 			global.air_processing_killed=newval;
-		if("alarm_manager")
-			global.alarm_manager=newval;
 		if("alien_whitelist")
 			global.alien_whitelist=newval;
 		if("allCasters")
@@ -1310,8 +1310,6 @@
 			global.assigned=newval;
 		if("assigned_blocks")
 			global.assigned_blocks=newval;
-		if("atmosphere_alarm")
-			global.atmosphere_alarm=newval;
 		if("attack_log_repository")
 			global.attack_log_repository=newval;
 		if("autolathe_categories")
@@ -1336,8 +1334,6 @@
 			global.cached_icons=newval;
 		if("cached_space")
 			global.cached_space=newval;
-		if("camera_alarm")
-			global.camera_alarm=newval;
 		if("camera_range_display_status")
 			global.camera_range_display_status=newval;
 		if("camera_repository")
@@ -1502,8 +1498,6 @@
 			global.fileaccess_timer=newval;
 		if("finds_as_strings")
 			global.finds_as_strings=newval;
-		if("fire_alarm")
-			global.fire_alarm=newval;
 		if("flesh_hud_colours")
 			global.flesh_hud_colours=newval;
 		if("floorIsLava")
@@ -1724,8 +1718,6 @@
 			global.mob_hat_cache=newval;
 		if("mob_repository")
 			global.mob_repository=newval;
-		if("motion_alarm")
-			global.motion_alarm=newval;
 		if("moving_levels")
 			global.moving_levels=newval;
 		if("multi_point_spawns")
@@ -1804,8 +1796,6 @@
 			global.possible_changeling_IDs=newval;
 		if("poster_designs")
 			global.poster_designs=newval;
-		if("power_alarm")
-			global.power_alarm=newval;
 		if("powerinstances")
 			global.powerinstances=newval;
 		if("powers")
@@ -1834,8 +1824,6 @@
 			global.priv_syndicate_access=newval;
 		if("processScheduler")
 			global.processScheduler=newval;
-		if("processing_turfs")
-			global.processing_turfs=newval;
 		if("prometheans")
 			global.prometheans=newval;
 		if("protected_objects")
@@ -2163,6 +2151,7 @@
 	"SSchemistry",
 	"SScircuit",
 	"SSevent",
+	"SSfastprocess",
 	"SSgarbage",
 	"SSicon_update",
 	"SSinactivity",
@@ -2174,15 +2163,18 @@
 	"SSmobs",
 	"SSnano",
 	"SSobj",
+	"SSopen_space",
 	"SSplants",
 	"SSprocessing",
 	"SSradiation",
 	"SSshuttle",
 	"SSskybox",
+	"SSsun",
 	"SStgui",
 	"SStimer",
 	"SStrade",
 	"SSvines",
+	"SSwireless",
 	"SSxenoarch",
 	"Tier1Runes",
 	"Tier2Runes",
@@ -2223,7 +2215,6 @@
 	"air_alarm_topic",
 	"air_blocked",
 	"air_processing_killed",
-	"alarm_manager",
 	"alien_whitelist",
 	"allCasters",
 	"allConsoles",
@@ -2258,7 +2249,6 @@
 	"asset_datums",
 	"assigned",
 	"assigned_blocks",
-	"atmosphere_alarm",
 	"attack_log_repository",
 	"autolathe_categories",
 	"autolathe_recipes",
@@ -2271,7 +2261,6 @@
 	"cable_list",
 	"cached_icons",
 	"cached_space",
-	"camera_alarm",
 	"camera_range_display_status",
 	"camera_repository",
 	"cameranet",
@@ -2354,7 +2343,6 @@
 	"file_uid",
 	"fileaccess_timer",
 	"finds_as_strings",
-	"fire_alarm",
 	"flesh_hud_colours",
 	"floorIsLava",
 	"floor_decals",
@@ -2465,7 +2453,6 @@
 	"minor_announcement",
 	"mob_hat_cache",
 	"mob_repository",
-	"motion_alarm",
 	"moving_levels",
 	"multi_point_spawns",
 	"narsie_behaviour",
@@ -2505,7 +2492,6 @@
 	"possible_cable_coil_colours",
 	"possible_changeling_IDs",
 	"poster_designs",
-	"power_alarm",
 	"powerinstances",
 	"powers",
 	"preferences_datums",
@@ -2520,7 +2506,6 @@
 	"priv_station_access",
 	"priv_syndicate_access",
 	"processScheduler",
-	"processing_turfs",
 	"prometheans",
 	"protected_objects",
 	"protolathe_categories",

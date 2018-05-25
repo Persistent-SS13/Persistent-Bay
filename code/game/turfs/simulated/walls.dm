@@ -43,7 +43,9 @@
 	r_material = r_mat
 	p_material = p_mat
 	update_full(1, 1)
-	processing_turfs |= src
+
+/turf/simulated/wall/Initialize()
+	START_PROCESSING(SSturf, src) //Used for radiation.
 
 /turf/simulated/wall/after_load()
 	..()
@@ -54,7 +56,7 @@
 	update_full(1, 1)
 
 /turf/simulated/wall/Destroy()
-	processing_turfs -= src
+	STOP_PROCESSING(SSturf, src)
 	dismantle_wall(1)
 	. = ..()
 
@@ -67,8 +69,12 @@
 	var/obj/O = A
 	return (istype(O) && O.hides_under_flooring()) || ..()
 
-/turf/simulated/wall/process()
-	// Calling parent will kill processing
+/turf/simulated/wall/Process(wait, times_fired)
+	var/how_often = max(round(2 SECONDS / wait), 1)
+	
+	if(times_fired % how_often)
+		return //We only work about every 2 seconds
+
 	if(!radiate())
 		return PROCESS_KILL
 

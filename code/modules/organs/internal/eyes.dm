@@ -35,6 +35,14 @@
 	..()
 	robotize()
 
+/obj/item/organ/internal/removed(var/mob/living/user)
+	..()
+	// Your eyes can't be disabled if you don't have eyes ;)
+	if(user.disabilities & NEARSIGHTED)
+		user.disabilities &= ~NEARSIGHTED
+		user.sdisabilities &= ~BLIND
+
+
 /obj/item/organ/internal/eyes/replaced(var/mob/living/carbon/human/target)
 
 	// Apply our eye colour to the target.
@@ -68,6 +76,21 @@
 		owner.eye_blurry = 20
 	if(is_broken())
 		owner.eye_blind = 20
+
+	if(scarred)
+		if(scarred > 2 && !(owner.sdisabilities & BLIND))
+			owner.sdisabilities |= BLIND
+		else if(scarred < 3 && !(owner.sdisabilities & BLIND))
+			owner.sdisabilities &= ~BLIND
+
+		if(!(owner.disabilities & NEARSIGHTED))
+			owner.disabilities |= NEARSIGHTED
+
+	else // If your eyes are somehow un-scarred, you'll be all better
+		if(owner.sdisabilities & BLIND)
+			owner.sdisabilities &= ~BLIND
+		if(owner.disabilities & NEARSIGHTED)
+			owner.disabilities &= ~NEARSIGHTED
 
 /obj/item/organ/internal/eyes/proc/get_total_protection(var/flash_protection = FLASH_PROTECTION_NONE)
 	return (flash_protection + innate_flash_protection)

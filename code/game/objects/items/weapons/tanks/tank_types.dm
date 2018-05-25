@@ -16,7 +16,7 @@
 	desc = "A tank of oxygen."
 	icon_state = "oxygen"
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
-	starting_pressure = list("oxygen" = 6*ONE_ATMOSPHERE)
+	starting_pressure = list("oxygen" = 10*ONE_ATMOSPHERE)
 	volume = 180
 
 /obj/item/weapon/tank/oxygen/yellow
@@ -36,7 +36,8 @@
 	desc = "A tank with an N2O/O2 gas mix."
 	icon_state = "anesthetic"
 	item_state = "an_tank"
-	starting_pressure = list("oxygen" = 6*ONE_ATMOSPHERE*O2STANDARD, "sleeping_agent" = 6*ONE_ATMOSPHERE*N2STANDARD)
+	w_class = ITEM_SIZE_HUGE
+	starting_pressure = list("oxygen" = 10*ONE_ATMOSPHERE*O2STANDARD, "sleeping_agent" = 10*ONE_ATMOSPHERE*N2STANDARD)
 	volume = 270
 
 /*

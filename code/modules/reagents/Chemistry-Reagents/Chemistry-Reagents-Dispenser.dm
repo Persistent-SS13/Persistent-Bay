@@ -114,7 +114,7 @@
 	return
 
 /datum/reagent/ethanol/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
-	M.nutrition += nutriment_factor * removed
+	M.nutrition += (nutriment_factor + strength / 2) * removed
 	var/strength_mod = 1
 	if(alien == IS_SKRELL)
 		strength_mod *= 5

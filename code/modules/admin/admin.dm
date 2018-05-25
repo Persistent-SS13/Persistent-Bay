@@ -818,8 +818,19 @@ var/global/floorIsLava = 0
 				to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
 				break
 			
-			
-			
+/datum/admins/proc/delete_account()
+	set category = "Server"
+	set desc="Delete Record"
+	set name="Delete Record"
+
+	if(!check_rights(R_ADMIN))
+		return
+	var/real_name = input("Enter the real name to record clear", "Real name") as text|null
+	if(real_name)
+		for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
+			if(record.get_name() == real_name)
+				GLOB.all_crew_records -= record
+				qdel(record)
 			
 /datum/admins/proc/savechars()
 	set category = "Server"

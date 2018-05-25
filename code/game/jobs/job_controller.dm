@@ -506,11 +506,13 @@ var/global/datum/controller/occupations/job_master
 		// END EMAIL GENERATION
 
 		//Gives glasses to the vision impaired
+		/*
 		if(H.disabilities & NEARSIGHTED)
 			var/equipped = H.equip_to_slot_or_del(new /obj/item/clothing/glasses/regular(H), slot_glasses)
 			if(equipped)
 				var/obj/item/clothing/glasses/G = H.glasses
 				G.prescription = 7
+		*/
 
 		BITSET(H.hud_updateflag, ID_HUD)
 		BITSET(H.hud_updateflag, IMPLOYAL_HUD)

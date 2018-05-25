@@ -9,6 +9,7 @@
 	min_broken_damage = 45
 	max_damage = 70
 	relative_size = 60
+	scarring_effect = 4
 
 	var/active_breathing = 1
 
@@ -69,7 +70,7 @@
 	breath_type = species.breath_type ? species.breath_type : "oxygen"
 	poison_type = species.poison_type ? species.poison_type : "phoron"
 	exhale_type = species.exhale_type ? species.exhale_type : "carbon_dioxide"
-/obj/item/organ/internal/lungs/
+
 /obj/item/organ/internal/lungs/Process()
 	..()
 	if(!owner)
@@ -105,6 +106,27 @@
 				to_chat(owner, "<span class='danger'>You're having trouble getting enough [breath_type]!</span>")
 
 			owner.losebreath += round(damage/2)
+
+	if(scarred && active_breathing && !owner.is_asystole())
+		if(prob(1) && scarred > 2) // Very bad scarring
+			owner.visible_message(
+				"<B>\The [owner]</B> coughs up blood!",
+				"<span class='warning'>You cough up blood!</span>",
+				"You hear someone coughing!",
+			)
+
+			owner.drip(1)
+
+		if(prob(1) && scarred > 1) // Normal scarring
+			var/msg_pick = pick("gasp", "cough")
+			owner.visible_message(
+				"<B>\The [owner]</B> [msg_pick]s, wheezing!",
+				"<span class='warning'>Your chest feels tight!</span>",
+				"You hear someone [msg_pick]ing with a wheeze!",
+			)
+
+		if(prob(2)) // Slight scarring
+			owner.emote("cough")
 
 /obj/item/organ/internal/lungs/proc/rupture()
 	var/obj/item/organ/external/parent = owner.get_organ(parent_organ)
@@ -225,7 +247,7 @@
 		if(robotic >= ORGAN_ROBOT)
 			ratio /= 2 //Robolungs filter out some of the inhaled toxic air.
 		owner.reagents.add_reagent(/datum/reagent/toxin, Clamp(ratio, MIN_TOXIN_DAMAGE, MAX_TOXIN_DAMAGE))
-		breath.adjust_gas(poison_type, -poison/6, update = 0) //update after
+		breath.adjust_gas(poison_type, -poison, update = 0) //update after
 		owner.phoron_alert = 1
 	else
 		owner.phoron_alert = 0
@@ -241,7 +263,7 @@
 			if(prob(20))
 				owner.emote(pick("giggle", "laugh"))
 
-		breath.adjust_gas("sleeping_agent", -breath.gas["sleeping_agent"]/6, update = 0) //update after
+		breath.adjust_gas("sleeping_agent", -breath.gas["sleeping_agent"], update = 0) //update after
 
 	// Were we able to breathe?
 	var/failed_breath = failed_inhale || failed_exhale

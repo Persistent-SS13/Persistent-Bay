@@ -65,6 +65,7 @@ var/list/admin_verbs_admin = list(
 	/datum/admins/proc/changeambience,
 	/datum/admins/proc/buildaccounts,
 	/datum/admins/proc/retrieve_account,
+	/datum/admins/proc/delete_account,
 	/datum/admins/proc/savechars,
 	/datum/admins/proc/loadnow,			//persistent edit, loadnow loads the station,
 	/client/proc/game_panel,			//game panel, allows to change game-mode etc,

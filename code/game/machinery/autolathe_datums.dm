@@ -1,10 +1,8 @@
 /var/global/list/autolathe_recipes
 /var/global/list/autolathe_categories
 
-var/const/EXTRA_COST_FACTOR = 1
+var/const/EXTRA_COST_FACTOR = 1.25
 // Items are more expensive to produce than they are to recycle.
-// Yeah but just make recycling bad
-// Extra cost factor implies you are DELETING steel (1st law of thermodynamics)
 
 /proc/populate_lathe_recipes()
 
@@ -374,7 +372,7 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/cable_coil
 	name = "cable coil"
-	path = /obj/item/stack/cable_coil
+	path = /obj/item/stack/cable_coil/single
 	category = "Devices and Components"
 	is_stack = 1
 

@@ -9,11 +9,10 @@
 	active_power_usage = 2000
 	clicksound = "keyboard"
 	clickvol = 30
-	multiplier = 1
 
 	var/list/machine_recipes
-	var/list/stored_material = list(DEFAULT_WALL_MATERIAL = 0, "glass" = 0)
-	var/list/storage_capacity = 0
+	var/list/stored_material =  list(DEFAULT_WALL_MATERIAL = 0, "glass" = 0)
+	var/list/storage_capacity = list(DEFAULT_WALL_MATERIAL = 0, "glass" = 0)
 	var/show_category = "All"
 
 	var/hacked = 0
@@ -26,7 +25,9 @@
 
 	var/datum/wires/autolathe/wires = null
 
+
 /obj/machinery/autolathe/New()
+
 	..()
 	wires = new(src)
 	//Create parts for lathe.
@@ -68,10 +69,9 @@
 
 		for(var/material in stored_material)
 			material_top += "<td width = '25%' align = center><b>[material]</b></td>"
-			material_bottom += "<td width = '25%' align = center>[stored_material[material]]<b>/[storage_capacity]</b></td>"
+			material_bottom += "<td width = '25%' align = center>[stored_material[material]]<b>/[storage_capacity[material]]</b></td>"
 
 		dat += "[material_top]</tr>[material_bottom]</tr></table><hr>"
-		dat += GetMultiplierForm(src)
 		dat += "<h2>Printable Designs</h2><h3>Showing: <a href='?src=\ref[src];change_category=1'>[show_category]</a>.</h3></center><table width = '100%'>"
 
 		var/index = 0
@@ -87,24 +87,18 @@
 			if(!R.resources || !R.resources.len)
 				material_string = "No resources required.</td>"
 			else
-				//Fucking stacks should never get a bonus due to having "REALLY good manipulators"
-				var/actual_efficiency = 1
-				if(!istype(R.path, /obj/item/stack))
-					actual_efficiency = mat_efficiency
 				//Make sure it's buildable and list requires resources.
 				for(var/material in R.resources)
-					if(!stored_material[material])
-						stored_material[material] = 0
-					var/sheets = round(stored_material[material]/round(R.resources[material]*actual_efficiency*multiplier))
+					var/sheets = round(stored_material[material]/round(R.resources[material]*mat_efficiency))
 					if(isnull(max_sheets) || max_sheets > sheets)
 						max_sheets = sheets
-					if(stored_material[material] < round(R.resources[material]*actual_efficiency*multiplier))
+					if(!isnull(stored_material[material]) && stored_material[material] < round(R.resources[material]*mat_efficiency))
 						can_make = 0
 					if(!comma)
 						comma = 1
 					else
 						material_string += ", "
-					material_string += "[round(R.resources[material] * actual_efficiency * multiplier)] [material]"
+					material_string += "[round(R.resources[material] * mat_efficiency)] [material]"
 				material_string += ".<br></td>"
 				//Build list of multipliers for sheets.
 				if(R.is_stack)
@@ -117,7 +111,7 @@
 							multiplier_string  += "<a href='?src=\ref[src];make=[index];multiplier=[i]'>\[x[i]\]</a>"
 						multiplier_string += "<a href='?src=\ref[src];make=[index];multiplier=[max_sheets]'>\[x[max_sheets]\]</a>"
 
-			dat += "<tr><td width = 180>[R.hidden ? "<font color = 'red'>*</font>" : ""]<b>[can_make ? "<a href='?src=\ref[src];make=[index];multiplier=1'>" : ""][R.name][multiplier > 1 ? " x[multiplier]" : ""][can_make ? "</a>" : ""]</b>[R.hidden ? "<font color = 'red'>*</font>" : ""][multiplier_string]</td><td align = right>[material_string]</tr>"
+			dat += "<tr><td width = 180>[R.hidden ? "<font color = 'red'>*</font>" : ""]<b>[can_make ? "<a href='?src=\ref[src];make=[index];multiplier=1'>" : ""][R.name][can_make ? "</a>" : ""]</b>[R.hidden ? "<font color = 'red'>*</font>" : ""][multiplier_string]</td><td align = right>[material_string]</tr>"
 
 		dat += "</table><hr>"
 	//Hacking.
@@ -127,9 +121,7 @@
 
 		dat += "<hr>"
 
-	var/datum/browser/popup = new(usr, "autolathe", "Autolathe Control Panel")
-	popup.set_content(jointext(dat, null))
-	popup.open()
+	user << browse(dat, "window=autolathe")
 	onclose(user, "autolathe")
 
 /obj/machinery/autolathe/attackby(var/obj/item/O as obj, var/mob/user as mob)
@@ -172,9 +164,11 @@
 	var/mass_per_sheet = 0 // Amount of material constituting one sheet.
 
 	for(var/material in eating.matter)
-		if(!stored_material[material])
-			stored_material[material] = 0
-		if(stored_material[material] >= storage_capacity)
+
+		if(isnull(stored_material[material]) || isnull(storage_capacity[material]))
+			continue
+
+		if(stored_material[material] >= storage_capacity[material])
 			continue
 
 		var/total_material = eating.matter[material]
@@ -183,18 +177,17 @@
 		if(istype(eating,/obj/item/stack))
 			var/obj/item/stack/stack = eating
 			total_material *= stack.get_amount()
-		else
-			total_material *= 0.7 + (1 - mat_efficiency)	//everything else gets a multiplier of 0.7 + 0.1 for each manipulator level above 1, totals a maximum of 0.9
-			total_material = round(total_material)
 
-		if(stored_material[material] + total_material > storage_capacity)
-			total_material = storage_capacity - stored_material[material]
+		if(stored_material[material] + total_material > storage_capacity[material])
+			total_material = storage_capacity[material] - stored_material[material]
 			filltype = 1
 		else
 			filltype = 2
+
 		stored_material[material] += total_material
 		total_used += total_material
 		mass_per_sheet += eating.matter[material]
+
 	if(!filltype)
 		to_chat(user, "<span class='notice'>\The [src] is full. Please remove material from the autolathe in order to insert more.</span>")
 		return
@@ -231,10 +224,6 @@
 		to_chat(usr, "<span class='notice'>The autolathe is busy. Please wait for completion of previous operation.</span>")
 		return
 
-	if(ProcessMultiplierForm(src, href_list))
-		src.updateUsrDialog()
-		return
-
 	if(href_list["change_category"])
 
 		var/choice = input("Which category do you wish to display?") as null|anything in autolathe_categories+"All"
@@ -244,62 +233,50 @@
 	if(href_list["make"] && machine_recipes)
 
 		var/index = text2num(href_list["make"])
-		var/stack_multiplier = text2num(href_list["multiplier"])
+		var/multiplier = text2num(href_list["multiplier"])
 		var/datum/autolathe/recipe/making
 
 		if(index > 0 && index <= machine_recipes.len)
 			making = machine_recipes[index]
 
 		//Exploit detection, not sure if necessary after rewrite.
-		//Not necessary, loop breaks if you can't afford shit
-		//if(!making || stack_multiplier < 0 || stack_multiplier > 100)
-		//	var/turf/exploit_loc = get_turf(usr)
-		//	message_admins("[key_name_admin(usr)] tried to exploit an autolathe to duplicate an item! ([exploit_loc ? "<a href='?_src_=holder;adminplayerobservecoodjump=1;X=[exploit_loc.x];Y=[exploit_loc.y];Z=[exploit_loc.z]'>JMP</a>" : "null"])", 0)
-		//	log_admin("EXPLOIT : [key_name(usr)] tried to exploit an autolathe to duplicate an item!")
-		//	return
+		if(!making || multiplier < 0 || multiplier > 100)
+			var/turf/exploit_loc = get_turf(usr)
+			message_admins("[key_name_admin(usr)] tried to exploit an autolathe to duplicate an item! ([exploit_loc ? "<a href='?_src_=holder;adminplayerobservecoodjump=1;X=[exploit_loc.x];Y=[exploit_loc.y];Z=[exploit_loc.z]'>JMP</a>" : "null"])", 0)
+			log_admin("EXPLOIT : [key_name(usr)] tried to exploit an autolathe to duplicate an item!")
+			return
 
-		var/mult = multiplier
-		//Fucking stacks should never get a bonus due to having "REALLY good manipulators"
-		var/actual_efficiency = 1
-		if(!istype(making.path, /obj/item/stack))
-			actual_efficiency = mat_efficiency
 		busy = 1
 		update_use_power(2)
-		var/longest_spawn = 0
-		for(var/i = 0, i < mult, i++)
-			//Check if we still have the materials.
-			var/break_mult = 0
-			for(var/material in making.resources)
-				if(!isnull(stored_material[material]))
-					if(stored_material[material] < round(making.resources[material] * actual_efficiency) * stack_multiplier)
-						break_mult = 1
-						break
-			if(break_mult)
-				break
-			longest_spawn = build_time + (build_time * i)
-			//Consume materials.
-			for(var/material in making.resources)
-				if(!isnull(stored_material[material]))
-					stored_material[material] = max(0, stored_material[material] - round(making.resources[material] * actual_efficiency) * stack_multiplier)
 
-			spawn(longest_spawn)
-				//Sanity check.
-				if(!src) return
-				//Create the desired item.
-				var/obj/item/I = new making.path(loc)
-				if(stack_multiplier > 1 && istype(I, /obj/item/stack))
-					var/obj/item/stack/S = I
-					S.amount = stack_multiplier
-					S.update_icon()
-				//Time to prevent free materials at higher levels, 0.8 cost multiplier + 0.9 gain multiplier hmmmm yumyum spicey
-				if(!istype(I, /obj/item/stack))
-					for(var/material in I.matter)
-						I.matter[material] = round(I.matter[material] * actual_efficiency)
-				//Fancy autolathe animation.
-				flick("autolathe_n", src)
-		spawn(longest_spawn)
-			busy = 0
-			update_use_power(1)
+		//Check if we still have the materials.
+		for(var/material in making.resources)
+			if(!isnull(stored_material[material]))
+				if(stored_material[material] < round(making.resources[material] * mat_efficiency) * multiplier)
+					return
+
+		//Consume materials.
+		for(var/material in making.resources)
+			if(!isnull(stored_material[material]))
+				stored_material[material] = max(0, stored_material[material] - round(making.resources[material] * mat_efficiency) * multiplier)
+
+		//Fancy autolathe animation.
+		flick("autolathe_n", src)
+
+		sleep(build_time)
+
+		busy = 0
+		update_use_power(1)
+
+		//Sanity check.
+		if(!making || !src) return
+
+		//Create the desired item.
+		var/obj/item/I = new making.path(loc)
+		if(multiplier > 1 && istype(I, /obj/item/stack))
+			var/obj/item/stack/S = I
+			S.amount = multiplier
+			S.update_icon()
 
 	updateUsrDialog()
 
@@ -316,13 +293,13 @@
 	for(var/obj/item/weapon/stock_parts/manipulator/M in component_parts)
 		man_rating += M.rating
 
-	var/material/M = get_material_by_name(DEFAULT_WALL_MATERIAL)
-	var/obj/item/stack/material/S = M.stack_type
-	storage_capacity = mb_rating * initial(S.perunit) * 15
-	build_time = 30 / man_rating
-	mat_efficiency = 1.1 - man_rating * 0.1	//You get a slight discount on items with better parts, also affects the recycling penalty of the autolathe (AKA use the recycler)
+	storage_capacity[DEFAULT_WALL_MATERIAL] = mb_rating  * 25000
+	storage_capacity["glass"] = mb_rating  * 12500
+	build_time = 50 / man_rating
+	mat_efficiency = 1.1 - man_rating * 0.1// Normally, price is 1.25 the amount of material, so this shouldn't go higher than 0.8. Maximum rating of parts is 3
 
 /obj/machinery/autolathe/dismantle()
+
 	for(var/mat in stored_material)
 		var/material/M = get_material_by_name(mat)
 		if(!istype(M))

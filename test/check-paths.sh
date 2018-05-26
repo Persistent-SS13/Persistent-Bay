@@ -16,6 +16,7 @@ exactly() { # exactly N name search [mode]
 		echo "$num $name"
 	else
 		echo "$(tput setaf 9)$num $name (expecting exactly $count)$(tput sgr0)"
+		echo "If this is not in error, you can change the value in test\check-paths.sh"
 		FAILED=1
 	fi
 }

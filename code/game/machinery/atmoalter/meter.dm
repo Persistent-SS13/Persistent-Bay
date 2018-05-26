@@ -60,6 +60,8 @@
 			"sigtype" = "status"
 		)
 		radio_connection.post_signal(src, signal)
+/obj/machinery/meter/attack_hand(mob/user)
+	examine(user)
 
 /obj/machinery/meter/examine(mob/user)
 	. = ..()

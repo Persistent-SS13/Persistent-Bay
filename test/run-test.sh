@@ -260,9 +260,9 @@ function run_all_tests {
 
 function run_configured_tests {
     if [[ -z ${TEST+z} ]]; then
-        msg_bad "You must provide TEST in environment; valid options ALL,MAP,WEB,CODE"
         msg_meh "Note: map tests require MAP_PATH set"
-        exit 1
+        msg_bad "Please input TEST environment; valid options ALL,MAP,WEB,CODE"
+        read TEST
     fi
     case $TEST in
         "ALL")

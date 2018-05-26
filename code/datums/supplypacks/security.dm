@@ -204,9 +204,9 @@
 	name = "Deployable Barriers (x4)"
 	contains = list(/obj/machinery/deployable/barrier = 4)
 	cost = 20
-	containertype = /obj/structure/closet/crate/secure/large
-	containername = "\improper Security barrier crate"
-	access = 5
+	containertype = /obj/structure/largecrate
+	containername = "\improper Security barrier crate (x4)"
+//	access = 5 // They require access to deploy anyway.
 
 /decl/hierarchy/supply_pack/security/securitybiosuit
 	name = "Security Biohazard Gear"

@@ -85,9 +85,9 @@ var/list/name_to_material
 
 	// Icons
 	var/icon_colour                                      // Colour applied to products of this material.
-	var/icon_base = "metal"                              // Wall and table base icon tag. See header.
+	var/icon_base = "solid"                              // Wall and table base icon tag. See header.
 	var/door_icon_base = "metal"                         // Door base icon tag. See header.
-	var/icon_reinf = "reinf_metal"                       // Overlay used
+	var/icon_reinf = "metal"                       // Overlay used
 	var/list/stack_origin_tech = list(TECH_MATERIAL = 1) // Research level for stacks.
 
 	// Attributes
@@ -201,13 +201,6 @@ var/list/name_to_material
 // Used by walls when qdel()ing to avoid neighbor merging.
 /material/placeholder
 	name = "placeholder"
-
-// Places a girder object when a wall is dismantled, also applies reinforced material.
-/material/proc/place_dismantled_girder(var/turf/target, var/material/reinf_material)
-	var/obj/structure/girder/G = new(target)
-	if(reinf_material)
-		G.reinf_material = reinf_material
-		G.reinforce_girder()
 
 // General wall debris product placement.
 // Not particularly necessary aside from snowflakey cult girders.
@@ -464,7 +457,7 @@ var/list/name_to_material
 	integrity = 150
 	brute_armor = 5
 	icon_base = "solid"
-	icon_reinf = "reinf_over"
+	icon_reinf = "metal"
 	icon_colour = "#666666"
 	hitsound = 'sound/weapons/smash.ogg'
 	chem_products = list(
@@ -485,9 +478,6 @@ var/list/name_to_material
 /material/diona/place_dismantled_product()
 	return
 
-/material/diona/place_dismantled_girder(var/turf/target)
-	spawn_diona_nymph(target)
-
 /material/steel/holographic
 	name = "holo" + DEFAULT_WALL_MATERIAL
 	display_name = DEFAULT_WALL_MATERIAL
@@ -501,7 +491,7 @@ var/list/name_to_material
 	integrity = 400
 	melting_point = 6000
 	icon_base = "solid"
-	icon_reinf = "reinf_over"
+	icon_reinf = "metal"
 	icon_colour = "#777777"
 	explosion_resistance = 25
 	brute_armor = 6
@@ -518,18 +508,14 @@ var/list/name_to_material
 	integrity = 200
 	melting_point = 3000
 	stack_type = null
-	icon_base = "metal"
-	door_icon_base = "metal"
 	icon_colour = "#d1e6e3"
-	icon_reinf = "reinf_metal"
+	icon_reinf = "metal"
 
 /material/plasteel/ocp
 	name = "osmium-carbide plasteel"
 	stack_type = /obj/item/stack/material/ocp
 	integrity = 200
 	melting_point = 12000
-	icon_base = "solid"
-	icon_reinf = "reinf_over"
 	icon_colour = "#9bc6f2"
 	brute_armor = 4
 	burn_armor = 20
@@ -761,7 +747,7 @@ var/list/name_to_material
 	stack_type = /obj/item/stack/material/plastic
 	flags = MATERIAL_BRITTLE
 	icon_base = "solid"
-	icon_reinf = "reinf_over"
+	icon_reinf = "metal"
 	icon_colour = "#cccccc"
 	hardness = 10
 	weight = 5
@@ -893,6 +879,7 @@ var/list/name_to_material
 	icon_colour = "#824b28"
 	integrity = 50
 	icon_base = "solid"
+	icon_reinf = "jaggy"
 	explosion_resistance = 2
 	shard_type = SHARD_SPLINTER
 	shard_can_repair = 0 // you can't weld splinters back into planks
@@ -925,7 +912,7 @@ var/list/name_to_material
 	flags = MATERIAL_BRITTLE
 	integrity = 10
 	icon_base = "solid"
-	icon_reinf = "reinf_over"
+	icon_reinf = "jaggy"
 	icon_colour = "#aaaaaa"
 	hardness = 1
 	brute_armor = 1
@@ -952,14 +939,11 @@ var/list/name_to_material
 	display_name = "disturbing stone"
 	icon_base = "cult"
 	icon_colour = "#402821"
-	icon_reinf = "reinf_cult"
+	icon_reinf = "cult"
 	shard_type = SHARD_STONE_PIECE
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
 	conductive = 0
-
-/material/cult/place_dismantled_girder(var/turf/target)
-	new /obj/structure/girder/cult(target)
 
 /material/cult/place_dismantled_product(var/turf/target)
 	new /obj/effect/decal/cleanable/blood(target)
@@ -990,26 +974,13 @@ var/list/name_to_material
 /material/aliumium
 	name = "alien alloy"
 	stack_type = null
-	icon_base = "jaggy"
+	icon_base = "solid"
 	door_icon_base = "metal"
-	icon_reinf = "reinf_metal"
+	icon_reinf = "metal"
 	hitsound = 'sound/weapons/smash.ogg'
 	sheet_singular_name = "chunk"
 	sheet_plural_name = "chunks"
 
-/material/aliumium/New()
-	icon_base = pick("jaggy","curvy")
-	icon_colour = rgb(rand(10,150),rand(10,150),rand(10,150))
-	explosion_resistance = rand(25,40)
-	brute_armor = rand(10,20)
-	burn_armor = rand(10,20)
-	hardness = rand(15,100)
-	integrity = rand(200,400)
-	melting_point = rand(400,10000)
-	..()
-
-/material/aliumium/place_dismantled_girder(var/turf/target, var/material/reinf_material)
-	return
 
 //TODO PLACEHOLDERS:
 /material/leather

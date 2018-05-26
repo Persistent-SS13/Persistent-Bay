@@ -60,7 +60,6 @@
 	QDEL_NULL(storage_continue)
 	QDEL_NULL(storage_end)
 	QDEL_NULL(stored_start)
-	QDEL_NULL(stored_continue)
 	QDEL_NULL(stored_end)
 	QDEL_NULL(closer)
 	. = ..()

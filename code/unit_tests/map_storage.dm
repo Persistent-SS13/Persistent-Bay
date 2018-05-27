@@ -1,3 +1,5 @@
+#ifdef UNIT_TEST
+
 /*This set of unit tests ensures that MAP_STORAGE works properly*/
 
 /datum/unit_test/should_save_test
@@ -50,3 +52,5 @@
 	pass("Debug item properly spawns test datum.")
 
 	return 1
+
+#endif

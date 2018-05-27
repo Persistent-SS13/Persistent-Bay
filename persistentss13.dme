@@ -2502,6 +2502,7 @@
 #include "code\unit_tests\movement_tests.dm"
 #include "code\unit_tests\observation_tests.dm"
 #include "code\unit_tests\organ_tests.dm"
+#include "code\unit_tests\override_tests.dm"
 #include "code\unit_tests\power_tests.dm"
 #include "code\unit_tests\seed_tests.dm"
 #include "code\unit_tests\subsystem_tests.dm"

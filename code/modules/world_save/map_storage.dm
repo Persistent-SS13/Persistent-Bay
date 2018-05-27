@@ -28,13 +28,19 @@ var/global/list/debug_data = list()
 	icon_state = "eftpos"
 	var/list/spawned = list()
 
-/obj/item/map_storage_debugger/attack_self(mob/user)
-	var/type_path = input(user, "Enter the typepath you want spawned", "debugger","") as text|null
+/obj/item/map_storage_debugger/proc/spawn_debug(var/mob/user, var/type_path)
+	if(!type_path)
+		type_path = input(user, "Enter the typepath you want spawned", "debugger","") as text|null
 	var/datum/D = new type_path()
 	if(D)
 		spawned |= D
-	else
+		return D
+	else if(user)
 		to_chat(user, "No datum of type [type_path]")
+
+/obj/item/map_storage_debugger/attack_self(mob/user)
+	return spawn_debug(user)
+
 /datum
 	var/should_save = 1
 	var/map_storage_saved_vars = ""

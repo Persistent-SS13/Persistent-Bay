@@ -16,7 +16,6 @@
 	var/icon_fill = "fill"
 	var/high_volume = 0
 
-	initialized = 0
 	alpha = 255
 	var/volume = 700
 	var/divide_treshold = 150
@@ -77,7 +76,7 @@
 		spawn(15) loop()
 
 	after_load()
-		initialized = 0
+		atom_flags &= ~ATOM_FLAG_INITIALIZED
 		on_reagent_change()
 		loop()
 
@@ -131,11 +130,11 @@
 		old_direc = direc
 		direc = 0
 		if (!high_volume && reagents.total_volume >= 170)
-			initialized = 0
+			atom_flags &= ~ATOM_FLAG_INITIALIZED
 			high_volume = 1
 		else if (high_volume && reagents.total_volume < 170)
 			high_volume = 0
-			initialized = 0
+			atom_flags &= ~ATOM_FLAG_INITIALIZED
 		if (reagents.total_volume > 60)
 			alpha = 95 + (reagents.total_volume *(150))/reagents.maximum_volume
 		else
@@ -149,7 +148,7 @@
 				if (!P) continue
 				if (!P.dir) continue
 				direc |= direction
-		if (direc == old_direc && initialized)
+		if (direc == old_direc && atom_flags & ATOM_FLAG_INITIALIZED)
 			return
 		if (loc && loc.density == 1)
 			alpha += 20
@@ -265,8 +264,8 @@
 		if (reagents.total_volume >= 170)
 			icon_state += "_hv"
 		icon = I
-		if (!initialized)
-			initialized = 1
+		if (!atom_flags & ATOM_FLAG_INITIALIZED)
+			atom_flags |= ATOM_FLAG_INITIALIZED
 
 
 /obj/effect/decal/cleanable/puddle_chem/proc/divide() //increases in size by creating a new puddle on a non-dense turf with half the current volume. Should only happen if the total reagent volume gets too much

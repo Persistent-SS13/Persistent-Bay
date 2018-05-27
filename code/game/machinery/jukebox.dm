@@ -155,7 +155,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 	data["tracks_cyberpunk"] = tracks_cyberpunk
 
  	// update the ui if it exists, returns null if no ui is passed/found
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		// the ui does not exist, so we'll create a new() one
 		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
@@ -180,16 +180,16 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 			if(T.title == href_list["title"])
 				current_track = T
 				StartPlaying()
-		GLOB.nanomanager.update_uis(src)
+		SSnano.update_uis(src)
 	if(href_list["stop"])
 		StopPlaying()
-		GLOB.nanomanager.update_uis(src)
+		SSnano.update_uis(src)
 	if(href_list["play"])
 		if(!current_track)
 			to_chat(usr, "No track selected.")
 		else
 			StartPlaying()
-		GLOB.nanomanager.update_uis(src)
+		SSnano.update_uis(src)
 
 /obj/machinery/media/jukebox/attack_ai(mob/user as mob)
 	return src.attack_hand(user)

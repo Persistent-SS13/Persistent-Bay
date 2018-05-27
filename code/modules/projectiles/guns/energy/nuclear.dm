@@ -36,18 +36,25 @@
 	self_recharge = 1
 	use_external_power = 1
 
-/obj/item/weapon/gun/energy/gun/nuclear
-	name = "advanced energy gun"
-	desc = "An energy gun with an experimental miniaturized reactor."
-	icon_state = "nucgun"
-	origin_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 5, TECH_POWER = 3)
-	slot_flags = SLOT_BELT
+/obj/item/weapon/gun/energy/gun/nuclear	//Would be easier to change the gun to a subtype of /laser, but would cause problems with AEGs already ingame
+	name = "\the HC30 Laser Rifle"
+	desc = "A modification of the Hephaestus Industries G40E carbine. The HC30 variant contains a uranium core, allowing for more available shots." //HC30 = High Capacity with 30 shots, hehehe
+	icon_state = "hc_laser"
+	item_state = "hc_laser"
+	origin_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 5, TECH_POWER = 4)
+	slot_flags = SLOT_BELT|SLOT_BACK	//Since apparently the laser rifle can be strapped to your back
 	w_class = ITEM_SIZE_LARGE
-	force = 8 //looks heavier than a pistol
-	self_recharge = 1
-	modifystate = null
+	projectile_type = /obj/item/projectile/beam/midlaser
+	max_shots = 30 //x3 the charge of a standard laser rifle
+	force = 10 //looks heavier than a pistol	//Naaaah
+	one_hand_penalty = 2
+	//self_recharge = 1
+	//modifystate = null
+	wielded_item_state = "laser-wielded"
 	one_hand_penalty = 1 //bulkier than an e-gun, but not quite the size of a carbine
-
+	accuracy = 2
+	matter = list(DEFAULT_WALL_MATERIAL = 15000, GLASS = 2000)
+/*
 	firemodes = list(
 		list(mode_name="stun", projectile_type=/obj/item/projectile/beam/stun),
 		list(mode_name="shock", projectile_type=/obj/item/projectile/beam/stun/shock),
@@ -100,3 +107,4 @@
 	new_overlays += get_mode_overlay()
 
 	overlays = new_overlays
+*/

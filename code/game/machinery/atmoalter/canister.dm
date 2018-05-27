@@ -215,7 +215,7 @@ update_flag
 		var/pressure_delta = release_pressure - env_pressure
 		var/internal_pressure = air_contents.return_pressure()
 		if(release_pressure > internal_pressure && env_pressure > internal_pressure)
-			pressure_delta = internal_pressure - env_pressure
+			pressure_delta = (release_pressure - internal_pressure) - env_pressure
 
 		if((air_contents.temperature > 0) && (pressure_delta != 0))
 			var/transfer_moles = calculate_transfer_moles(air_contents, environment, pressure_delta)

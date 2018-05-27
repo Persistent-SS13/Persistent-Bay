@@ -8,7 +8,7 @@
 			return
 
 	if (src.stat == 2)
-		return src.say_dead(message)
+		return src.say_dead(message, encode = 0)
 
 	if (src.stat)
 		return

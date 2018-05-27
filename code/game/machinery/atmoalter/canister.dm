@@ -203,9 +203,7 @@ update_flag
 /obj/machinery/portable_atmospherics/canister/Process()
 	if (destroyed)
 		return
-
 	..()
-
 	if(valve_open)
 		var/datum/gas_mixture/environment
 		if(holding)
@@ -215,12 +213,20 @@ update_flag
 
 		var/env_pressure = environment.return_pressure()
 		var/pressure_delta = release_pressure - env_pressure
+		var/internal_pressure = air_contents.return_pressure()
+		if(release_pressure > internal_pressure && env_pressure > internal_pressure)
+			pressure_delta = internal_pressure - env_pressure
 
-		if((air_contents.temperature > 0) && (pressure_delta > 0))
+		if((air_contents.temperature > 0) && (pressure_delta != 0))
 			var/transfer_moles = calculate_transfer_moles(air_contents, environment, pressure_delta)
-			transfer_moles = min(transfer_moles, (release_flow_rate/air_contents.volume)*air_contents.total_moles) //flow rate limit
+			var/returnval= 0
+			if(pressure_delta < 0)
+				transfer_moles = calculate_transfer_moles(environment, air_contents, abs(pressure_delta))
+				returnval = pump_gas_passive(src, environment, air_contents, transfer_moles)
+			else
+				transfer_moles = min(transfer_moles, (release_flow_rate/air_contents.volume)*air_contents.total_moles) //flow rate limit
+				returnval = pump_gas_passive(src, air_contents, environment, transfer_moles)
 
-			var/returnval = pump_gas_passive(src, air_contents, environment, transfer_moles)
 			if(returnval >= 0)
 				src.update_icon()
 

@@ -33,24 +33,25 @@
 	name = "MAP_STORAGE: debugger functions properly"
 
 /datum/unit_test/map_storage_debugger/start_test()
-	var/bad_tests = 0
-
 	var/obj/item/map_storage_debugger/test_debugger = new /obj/item/map_storage_debugger(get_safe_turf())
 
 	if(!test_debugger)
 		fail("DEBUG ITEM - does not exist.")
+		return 1
 	if(!istype(test_debugger))
 		fail("DEBUG ITEM - is not type /obj/item/map_storage_debugger.")
+		return 1
 
-	var/datum/map_storage_test/test_datum = test_debugger.spawn_debug(/datum/map_storage_test)
+	var/datum/map_storage_test/test_datum = test_debugger.spawn_debug(null,/datum/map_storage_test)
 
 	if(!test_datum)
 		fail("TEST DATUM - does not exist.")
+		return 1
 	if(!istype(test_datum))
 		fail("TEST DATUM - is not type /datum/map_storage_test.")
+		return 1
 
 	pass("Debug item properly spawns test datum.")
-
 	return 1
 
 #endif

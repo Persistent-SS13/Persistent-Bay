@@ -60,6 +60,7 @@
 	contains  = list(/obj/item/solar_assembly = 50,
 					/obj/item/weapon/paper/solar
 					)
+	containertype = /obj/structure/largecrate
 	cost = 50
 	containername = "\improper Large Solar Panel crate"
 
@@ -235,7 +236,7 @@
 /decl/hierarchy/supply_pack/engineering/engivoidsuits
 	name = "Bulk Engineering Hardsuit Order (x10)"
 	contains = list(/obj/item/clothing/suit/space/void/engineering/prepared = 10)
-	containername = "Engineering Hardsuits - Bulk Order"
+	containername = "\improper Engineering Hardsuits - Bulk Order"
 	containertype = /obj/structure/closet/crate/secure/large
 	cost = 500
 	access = 3
@@ -243,8 +244,8 @@
 /decl/hierarchy/supply_pack/engineering/antibreach
 	name = "Anti-Breach Shields (x4)"
 	contains = list(/obj/machinery/shieldgen = 4)
-	containername = "Anti-Breach Shields"
-	containertype = /obj/structure/closet/crate/large
+	containername = "\improper Anti-Breach Shield Crate (x4)"
+	containertype = /obj/structure/largecrate
 	cost = 40
 
 /decl/hierarchy/supply_pack/engineering/shieldgens

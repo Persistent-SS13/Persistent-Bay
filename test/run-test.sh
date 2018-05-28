@@ -240,7 +240,7 @@ function run_byond_tests {
         source $HOME/BYOND-${BYOND_MAJOR}.${BYOND_MINOR}/byond/bin/byondsetup
     fi
     run_test_ci "check globals build" "python tools/GenerateGlobalVarAccess/gen_globals.py persistentss13.dme code/_helpers/global_access.dm"
-    run_test "check globals unchanged" "md5sum -c - <<< '328f94bc61e8b28444059bc0debd1b45 *code/_helpers/global_access.dm'"
+    run_test "check globals unchanged" "md5sum -c - <<< 'c7f079cc11d86682698b4d6f80a6ddee *code/_helpers/global_access.dm'"
     run_test "build map unit tests" "scripts/dm.sh -DUNIT_TEST -M$MAP_PATH persistentss13.dme"
     run_test "check no warnings in build" "grep ', 0 warnings' build_log.txt"
     run_test "run unit tests" "DreamDaemon persistentss13.dmb -invisible -trusted -core 2>&1 | tee log.txt"
@@ -260,9 +260,9 @@ function run_all_tests {
 
 function run_configured_tests {
     if [[ -z ${TEST+z} ]]; then
-        msg_bad "You must provide TEST in environment; valid options ALL,MAP,WEB,CODE"
         msg_meh "Note: map tests require MAP_PATH set"
-        exit 1
+        msg_bad "Please input TEST environment; valid options ALL,MAP,WEB,CODE"
+        read TEST
     fi
     case $TEST in
         "ALL")

@@ -146,7 +146,7 @@
 					/obj/item/weapon/storage/box/masks,
 					/obj/item/weapon/storage/box/gloves)
 	cost = 20
-	containertype = /obj/structure/closet/wardrobe/white
+	containertype = /obj/structure/closet/crate/large
 	containername = "\improper Medical scrubs crate"
 
 /decl/hierarchy/supply_pack/medical/autopsy
@@ -179,7 +179,7 @@
 					/obj/item/weapon/storage/box/masks,
 					/obj/item/weapon/storage/box/gloves)
 	cost = 15
-	containertype = /obj/structure/closet/crate/secure
+	containertype = /obj/structure/closet/crate/secure/large
 	containername = "\improper Medical uniform crate"
 	access = 4
 

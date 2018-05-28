@@ -773,6 +773,10 @@
 			return global.prometheans;
 		if("protected_objects")
 			return global.protected_objects;
+		if("protolathe_categories")
+			return global.protolathe_categories;
+		if("protolathe_recipes")
+			return global.protolathe_recipes;
 		if("rad_collectors")
 			return global.rad_collectors;
 		if("radiation_repository")
@@ -1850,6 +1854,10 @@
 			global.prometheans=newval;
 		if("protected_objects")
 			global.protected_objects=newval;
+		if("protolathe_categories")
+			global.protolathe_categories=newval;
+		if("protolathe_recipes")
+			global.protolathe_recipes=newval;
 		if("rad_collectors")
 			global.rad_collectors=newval;
 		if("radiation_repository")
@@ -2540,6 +2548,8 @@
 	"processing_turfs",
 	"prometheans",
 	"protected_objects",
+	"protolathe_categories",
+	"protolathe_recipes",
 	"rad_collectors",
 	"radiation_repository",
 	"radio_controller",

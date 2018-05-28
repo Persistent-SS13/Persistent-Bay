@@ -1,3 +1,4 @@
+/*
 /obj/item/weapon/gun/energy/laser
 	name = "laser carbine"
 	desc = "A Hephaestus Industries G40E carbine, designed to kill with concentrated energy blasts."
@@ -12,7 +13,7 @@
 	matter = list(DEFAULT_WALL_MATERIAL = 2000)
 	projectile_type = /obj/item/projectile/beam/midlaser
 	wielded_item_state = "laser-wielded"
-
+*/
 /obj/item/weapon/gun/energy/laser/mounted
 	self_recharge = 1
 	use_external_power = 1
@@ -24,7 +25,7 @@
 	icon_state = "laserp"
 	projectile_type = /obj/item/projectile/beam/practice
 	charge_cost = 10 //How much energy is needed to fire.
-
+/*
 /obj/item/weapon/gun/energy/laser/practice/proc/hacked()
 	return projectile_type != /obj/item/projectile/beam/practice
 
@@ -46,7 +47,7 @@
 			to_chat(user, "<span class='danger'>\The [src] sizzles in your hands, acrid smoke rising from the firing end!</span>")
 			desc += " The optical pathway is melted and useless."
 			projectile_type = null
-
+*/
 obj/item/weapon/gun/energy/retro
 	name = "retro laser"
 	icon_state = "retro"
@@ -56,7 +57,7 @@ obj/item/weapon/gun/energy/retro
 	w_class = ITEM_SIZE_NORMAL
 	projectile_type = /obj/item/projectile/beam
 	fire_delay = 15 //old technology, and a pistol
-
+/*
 /obj/item/weapon/gun/energy/captain
 	name = "antique laser gun"
 	icon_state = "caplaser"
@@ -86,7 +87,7 @@ obj/item/weapon/gun/energy/retro
 	accuracy = 2
 	fire_delay = 20
 	wielded_item_state = "gun_wielded"
-
+*/
 /obj/item/weapon/gun/energy/lasercannon/mounted
 	name = "mounted laser cannon"
 	self_recharge = 1
@@ -94,7 +95,7 @@ obj/item/weapon/gun/energy/retro
 	recharge_time = 10
 	accuracy = 0 //mounted laser cannons don't need any help, thanks
 	one_hand_penalty = 0
-
+/*
 /obj/item/weapon/gun/energy/xray
 	name = "x-ray laser carbine"
 	desc = "A high-power laser gun capable of emitting concentrated x-ray blasts, that are able to penetrate laser-resistant armor much more readily than standard photonic beams."
@@ -147,7 +148,7 @@ obj/item/weapon/gun/energy/retro
 	set popup_menu = 1
 
 	toggle_scope(usr, 2.0)
-
+*/
 ////////Laser Tag////////////////////
 
 /obj/item/weapon/gun/energy/lasertag

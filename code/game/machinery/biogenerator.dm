@@ -32,6 +32,7 @@
 			/obj/item/weapon/storage/wallet/leather = 100,
 			/obj/item/clothing/gloves/thick/botany = 250,
 			/obj/item/weapon/storage/belt/utility = 300,
+			/obj/item/weapon/storage/belt/security = 300,
 			/obj/item/weapon/storage/backpack/satchel = 400,
 			/obj/item/weapon/storage/bag/cash = 400,
 			/obj/item/clothing/shoes/workboots = 400,

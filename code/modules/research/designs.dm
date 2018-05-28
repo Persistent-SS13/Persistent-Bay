@@ -544,6 +544,14 @@ other types of metals and chemistry for reagents).
 	materials = list(DEFAULT_WALL_MATERIAL = 4000, "silver" = 1000, "gold" = 500)
 	build_path = /obj/item/weapon/gun/energy/stunrevolver
 	sort_string = "TAAAA"
+
+/datum/design/item/weapon/laser_carbine
+	id = "laser_carbine"
+	desc = "A laser weapon designed to kill."
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 5, TECH_POWER = 5)
+	materials = list(DEFAULT_WALL_MATERIAL = 5000, "glass" = 3000, "silver" = 2000, "gold" = 2000, "diamond" = 6000)
+	build_path = /obj/item/weapon/gun/energy/laser
+	sort_string = "TAAAB"
 /*
 /datum/design/item/weapon/nuclear_gun
 	id = "nuclear_gun"
@@ -574,6 +582,13 @@ other types of metals and chemistry for reagents).
 	materials = list("gold" = 5000,"uranium" = 10000, "mutagen" = 40)
 	build_path = /obj/item/weapon/gun/energy/decloner
 	sort_string = "TAAAE"
+
+/datum/design/item/weapon/wt550
+	id = "wt-550"
+	req_tech = list(TECH_COMBAT = 5, TECH_MATERIAL = 3)
+	materials = list(DEFAULT_WALL_MATERIAL = 8000, "silver" = 2000, "diamond" = 1000)
+	build_path = /obj/item/weapon/gun/projectile/automatic/wt550
+	sort_string = "TAABA"
 /*
 /datum/design/item/weapon/smg
 	id = "smg"

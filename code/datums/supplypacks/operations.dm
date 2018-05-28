@@ -356,8 +356,9 @@
 					/obj/item/weapon/storage/bag/trash,
 					/obj/item/device/radio/headset/headset_service)
 	cost = 10
-	containertype = /obj/structure/closet/jcloset
-	containername = "Janitor Equipment"
+	containertype = /obj/structure/closet/crate/large
+	containername = "\improper Janitor Equipment Crate"
+
 /decl/hierarchy/supply_pack/operations/chef
 	name = "Chef Equipment"
 	contains = list(/obj/item/clothing/under/rank/chef,

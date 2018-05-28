@@ -15,7 +15,7 @@
 							/obj/item/weapon/stock_parts/manipulator = 2,
 							/obj/item/weapon/stock_parts/micro_laser = 1)
 
-/obj/item/weapon/circuitboard/bluespace_satellite
+/obj/item/weapon/circuitboard/telecomms/bluespace_satellite
 	name = T_BOARD("bluespace satellite")
 	build_path = /obj/machinery/bluespace_satellite
 	origin_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 3, TECH_BLUESPACE = 3)

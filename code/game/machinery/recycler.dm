@@ -104,17 +104,18 @@ var/const/SAFETY_COOLDOWN = 100
 /obj/machinery/recycler/proc/recycle(var/obj/item/I, var/sound = 1)
 	I.loc = src.loc
 	if(!istype(I, /obj/item/weapon/disk/nuclear) && !istype(I, /obj/item/stack))
-		for(var/mat in I.matter)
-			stored_material[mat] += I.matter[mat]
-			var/material/M = get_material_by_name(mat)
-			if(!istype(M))
-				continue
-			var/obj/item/stack/material/S = new M.stack_type(loc)
-			if(stored_material[mat] > S.perunit)
-				S.amount = round(stored_material[mat] / S.perunit)
-				stored_material[mat] -= S.amount * S.perunit
-			else
-				qdel(S)
+		if(istype(I) && I.matter)
+			for(var/mat in I.matter)
+				stored_material[mat] += I.matter[mat]
+				var/material/M = get_material_by_name(mat)
+				if(!istype(M))
+					continue
+				var/obj/item/stack/material/S = new M.stack_type(loc)
+				if(stored_material[mat] > S.perunit)
+					S.amount = round(stored_material[mat] / S.perunit)
+					stored_material[mat] -= S.amount * S.perunit
+				else
+					qdel(S)
 		qdel(I)
 		if(sound)
 			playsound(src.loc, 'sound/items/Welder.ogg', 50, 1)

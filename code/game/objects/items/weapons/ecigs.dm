@@ -130,7 +130,7 @@
 	w_class = ITEM_SIZE_TINY
 	icon = 'icons/obj/ecig.dmi'
 	icon_state = "ecartridge"
-	matter = list("metal" = 50, "glass" = 10)
+	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 10)
 	volume = 20
 	flags = OPENCONTAINER
 

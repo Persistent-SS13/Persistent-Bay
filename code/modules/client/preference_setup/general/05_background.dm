@@ -101,7 +101,7 @@
 		if(choice == "Other")
 			var/raw_choice = sanitize(input(user, "Please enter a religon.", "Character Preference")  as text|null, MAX_NAME_LEN)
 			if(raw_choice)
-				pref.religion = sanitize(raw_choice)
+				pref.religion = raw_choice
 		else
 			pref.religion = choice
 		return TOPIC_REFRESH

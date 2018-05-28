@@ -148,7 +148,7 @@
 	taste_description = "sludge"
 	reagent_state = LIQUID
 	color = "#8080ff"
-	metabolism = REM * 0.05
+	metabolism = REM * 0.5
 	scannable = 1
 	flags = IGNORE_MOB_SIZE
 
@@ -167,8 +167,7 @@
 					H.drowsyness++
 					if(I.damage >= I.min_bruised_damage)
 						continue
-				I.damage = max(I.damage - (10*removed), 0)
-			M.add_chemical_effect(CE_PULSE, -2)
+				I.damage = max(I.damage - (removed), 0)
 
 /datum/reagent/clonexadone
 	name = "Clonexadone"
@@ -176,7 +175,7 @@
 	taste_description = "slime"
 	reagent_state = LIQUID
 	color = "#80bfff"
-	metabolism = REM * 0.05
+	metabolism = REM * 0.5
 	scannable = 1
 	flags = IGNORE_MOB_SIZE
 
@@ -195,8 +194,7 @@
 					H.drowsyness++
 					if(I.damage >= I.min_bruised_damage)
 						continue
-				I.damage = max(I.damage - (10*removed), 0)
-		M.add_chemical_effect(CE_PULSE, -2)
+				I.damage = max(I.damage - (removed), 0)
 
 /* Painkillers */
 

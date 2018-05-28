@@ -33,10 +33,7 @@ var/global/list/datum/supply_drop_loot/supply_drop
 	container = /obj/structure/largecrate
 /datum/supply_drop_loot/lasers/New()
 	..()
-	contents = list(/*
-		/obj/item/weapon/gun/energy/laser,
-		/obj/item/weapon/gun/energy/laser,
-		/obj/item/weapon/gun/energy/sniperrifle,*/
+	contents = list(
 		/obj/item/weapon/gun/energy/ionrifle)
 
 /datum/supply_drop_loot/ballistics
@@ -46,8 +43,7 @@ var/global/list/datum/supply_drop_loot/supply_drop
 	..()
 	contents = list(
 		/obj/item/weapon/gun/projectile/sec,
-		/obj/item/weapon/gun/projectile/shotgun/doublebarrel,/*
-		/obj/item/weapon/gun/projectile/shotgun/pump/combat,*/
+		/obj/item/weapon/gun/projectile/shotgun/doublebarrel,
 		/obj/item/weapon/gun/projectile/automatic/wt550)
 
 /datum/supply_drop_loot/ballistics

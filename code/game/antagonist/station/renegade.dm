@@ -24,22 +24,17 @@ var/datum/antagonist/renegade/renegades
 	initial_spawn_target = 6
 	antaghud_indicator = "hudrenegade"
 
-	var/list/spawn_guns = list(/*
-		/obj/item/weapon/gun/energy/laser,*/
+	var/list/spawn_guns = list(
 		/obj/item/weapon/gun/energy/gun,
 		/obj/item/weapon/gun/energy/crossbow,
-		/obj/item/weapon/gun/energy/crossbow/largecrossbow,/*
-		/obj/item/weapon/gun/projectile/automatic,
-		/obj/item/weapon/gun/projectile/automatic/mini_uzi,
-		/obj/item/weapon/gun/projectile/automatic/c20r,*/
+		/obj/item/weapon/gun/energy/crossbow/largecrossbow,
 		/obj/item/weapon/gun/projectile/automatic/wt550,
 		/obj/item/weapon/gun/projectile/colt/detective,
 		/obj/item/weapon/gun/projectile/sec/wood,
 		/obj/item/weapon/gun/projectile/silenced,
 		/obj/item/weapon/gun/projectile/pistol,
 		/obj/item/weapon/gun/projectile/revolver,
-		/obj/item/weapon/gun/projectile/shotgun/doublebarrel/sawn,/*
-		/obj/item/weapon/gun/projectile/magnum_pistol,*/
+		/obj/item/weapon/gun/projectile/shotgun/doublebarrel/sawn,
 		list(/obj/item/weapon/gun/projectile/revolver/detective, /obj/item/weapon/gun/projectile/revolver/deckard)
 		)
 

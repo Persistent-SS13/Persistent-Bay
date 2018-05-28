@@ -64,27 +64,16 @@ var/datum/antagonist/raider/raiders
 		/obj/item/clothing/suit/poncho/colored,
 		)
 
-	var/list/raider_guns = list(/*
-		/obj/item/weapon/gun/energy/laser,
-		/obj/item/weapon/gun/energy/retro,
-		/obj/item/weapon/gun/energy/xray,
-		/obj/item/weapon/gun/energy/xray/pistol,
-		/obj/item/weapon/gun/energy/mindflayer,
-		/obj/item/weapon/gun/energy/toxgun,*/
+	var/list/raider_guns = list(
 		/obj/item/weapon/gun/energy/stunrevolver,
 		/obj/item/weapon/gun/energy/ionrifle,
 		/obj/item/weapon/gun/energy/taser,
 		/obj/item/weapon/gun/energy/crossbow/largecrossbow,
 		/obj/item/weapon/gun/launcher/crossbow,
 		/obj/item/weapon/gun/launcher/grenade/loaded,
-		/obj/item/weapon/gun/launcher/pneumatic,/*
-		/obj/item/weapon/gun/projectile/automatic/mini_uzi,
-		/obj/item/weapon/gun/projectile/automatic/c20r,
-		/obj/item/weapon/gun/projectile/automatic/wt550,
-		/obj/item/weapon/gun/projectile/automatic/sts35,*/
+		/obj/item/weapon/gun/launcher/pneumatic,
 		/obj/item/weapon/gun/projectile/silenced,
-		/obj/item/weapon/gun/projectile/shotgun/pump,/*
-		/obj/item/weapon/gun/projectile/shotgun/pump/combat,*/
+		/obj/item/weapon/gun/projectile/shotgun/pump,
 		/obj/item/weapon/gun/projectile/shotgun/doublebarrel,
 		/obj/item/weapon/gun/projectile/shotgun/doublebarrel/pellet,
 		/obj/item/weapon/gun/projectile/shotgun/doublebarrel/sawn,

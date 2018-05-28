@@ -25,16 +25,10 @@ var/list/worths = list(
 					/obj/item/weapon/reagent_containers/glass = -60,
 					/obj/item/weapon/reagent_containers = -1,
 //GUNS,
-					/obj/item/weapon/gun/energy/laser/practice = 500,/*
-					/obj/item/weapon/gun/energy/laser/dogan = 1900,
-					/obj/item/weapon/gun/energy/laser = 3000,*/
+					/obj/item/weapon/gun/energy/laser/practice = 500,
 					/obj/item/weapon/gun/energy/retro = 1400,
-					/obj/item/weapon/gun/energy/captain = 2500,/*
-					/obj/item/weapon/gun/energy/lasercannon = 4100,
-					/obj/item/weapon/gun/energy/xray = 2900,
-					/obj/item/weapon/gun/energy/sniperrifle = 5400,*/
-					/obj/item/weapon/gun/energy/lasertag = 10,/*
-					/obj/item/weapon/gun/energy/gun/nuclear = 2800,*/
+					/obj/item/weapon/gun/energy/captain = 2500,
+					/obj/item/weapon/gun/energy/lasertag = 10,
 					/obj/item/weapon/gun/energy/pulse_rifle/destroyer = 6500,
 					/obj/item/weapon/gun/energy/pulse_rifle = 4200,
 					/obj/item/weapon/gun/energy/taser = 500,
@@ -50,19 +44,13 @@ var/list/worths = list(
 					/obj/item/weapon/gun/launcher/syringe = 150,
 					/obj/item/weapon/gun/launcher/alien = 3500,
 					/obj/item/weapon/gun/launcher = 300,
-/*//AUTOMATICS,
-					/obj/item/weapon/gun/projectile/automatic/c20r = 3250,
-					/obj/item/weapon/gun/projectile/automatic/sts35 = 3800,
-					/obj/item/weapon/gun/projectile/automatic/z8 = 3100,
-					/obj/item/weapon/gun/projectile/automatic/l6_saw = 13400,
-					/obj/item/weapon/gun/projectile/automatic/mini_uzi/usi = 2000,
-					/obj/item/weapon/gun/projectile/automatic = 3000,*/
+//AUTOMATICS,
+					/obj/item/weapon/gun/projectile/automatic/wt550 = 1400,
+					/obj/item/weapon/gun/projectile/automatic = 3000,
 //PROJECTILE,
 					/obj/item/weapon/gun/projectile/colt = 1700,
 					/obj/item/weapon/gun/projectile/sec/MK = 1200,
-					/obj/item/weapon/gun/projectile/sec = 1650,/*
-					/obj/item/weapon/gun/projectile/magnum_pistol = 2000,
-					/obj/item/weapon/gun/projectile/gyropistol = 5500,*/
+					/obj/item/weapon/gun/projectile/sec = 1650,
 					/obj/item/weapon/gun/projectile/heavysniper/ant = 1800,
 					/obj/item/weapon/gun/projectile/heavysniper = 12000,
 					/obj/item/weapon/gun/projectile/silenced/cheap = 1500,

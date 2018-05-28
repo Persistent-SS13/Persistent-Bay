@@ -89,7 +89,7 @@
 			else
 				//Fucking stacks should never get a bonus due to having "REALLY good manipulators"
 				var/actual_efficiency = 1
-				if(!istype(R.path, /obj/item/stack))
+				if(!ispath(R.path, /obj/item/stack))
 					actual_efficiency = mat_efficiency
 				//Make sure it's buildable and list requires resources.
 				for(var/material in R.resources)
@@ -319,7 +319,7 @@
 	var/material/M = get_material_by_name(DEFAULT_WALL_MATERIAL)
 	var/obj/item/stack/material/S = M.stack_type
 	storage_capacity = mb_rating * initial(S.perunit) * 15
-	build_time = 30 / man_rating
+	build_time = 45 / man_rating
 	mat_efficiency = 1.1 - man_rating * 0.1	//You get a slight discount on items with better parts, also affects the recycling penalty of the autolathe (AKA use the recycler)
 
 /obj/machinery/autolathe/dismantle()

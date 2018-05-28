@@ -57,6 +57,10 @@
 #define PIPE_FUEL_DOWN           50
 #define PIPE_FUEL_CAP            51
 
+#define PIPE_R_STRAIGHT			52
+#define PIPE_R_BENT				53
+#define INJECTOR				54
+
 #define CONNECT_TYPE_REGULAR	1
 #define CONNECT_TYPE_SUPPLY		2
 #define CONNECT_TYPE_SCRUBBER	4

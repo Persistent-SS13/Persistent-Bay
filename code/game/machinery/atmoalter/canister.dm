@@ -203,9 +203,7 @@ update_flag
 /obj/machinery/portable_atmospherics/canister/Process()
 	if (destroyed)
 		return
-
 	..()
-
 	if(valve_open)
 		var/datum/gas_mixture/environment
 		if(holding)

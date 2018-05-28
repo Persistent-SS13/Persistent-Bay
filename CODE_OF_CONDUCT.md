@@ -38,6 +38,15 @@ An author may only merge their own PR under the following circumstances:
 * At least two other developers have approved the PR
 * At least 24 hours have passed since the second approval
 
+A PR may be closed by a developer under any of the following circumstances:
+
+* It is attempting to add a feature that has previously been blocked by the host or head of staff
+* It has not been updated in 2 weeks, after changes have been requested
+* The author refuses to make requested changes
+* The proposed changes do not align with the server's goals
+
 ## Developer Responsibilities
 
-Developers are responsible for reviewing Pull Requests, merging approved Pull Requests, closing resolved Issues, and maintaining quality standards.
+Developers are responsible for reviewing Pull Requests, merging approved Pull Requests, closing resolved Issues, and maintaining quality standards. Developers are also responsible for determining whether or not a Pull Request aligns with the goals of the server's administration.
+
+Developers are to be held accountable for any decisions they make regarding whether or not a Pull Request aligns with the goals of the server's administration, and are encouraged to talk with the server administration before deciding what the server administration wants.

@@ -1920,7 +1920,7 @@ CIRCUITS BELOW
 	name = "bluespace satellite"
 	id = "bluespace-satellite"
 	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 4, TECH_BLUESPACE = 3)
-	build_path = /obj/item/weapon/circuitboard/bluespace_satellite
+	build_path = /obj/item/weapon/circuitboard/telecomms/bluespace_satellite
 	sort_string = "PAAAH"
 
 

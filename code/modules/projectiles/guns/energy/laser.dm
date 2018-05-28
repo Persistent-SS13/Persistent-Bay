@@ -1,4 +1,4 @@
-/*
+
 /obj/item/weapon/gun/energy/laser
 	name = "laser carbine"
 	desc = "A Hephaestus Industries G40E carbine, designed to kill with concentrated energy blasts."
@@ -13,7 +13,7 @@
 	matter = list(DEFAULT_WALL_MATERIAL = 2000)
 	projectile_type = /obj/item/projectile/beam/midlaser
 	wielded_item_state = "laser-wielded"
-*/
+
 /obj/item/weapon/gun/energy/laser/mounted
 	self_recharge = 1
 	use_external_power = 1
@@ -87,7 +87,7 @@ obj/item/weapon/gun/energy/retro
 	accuracy = 2
 	fire_delay = 20
 	wielded_item_state = "gun_wielded"
-*/
+
 /obj/item/weapon/gun/energy/lasercannon/mounted
 	name = "mounted laser cannon"
 	self_recharge = 1
@@ -95,7 +95,7 @@ obj/item/weapon/gun/energy/retro
 	recharge_time = 10
 	accuracy = 0 //mounted laser cannons don't need any help, thanks
 	one_hand_penalty = 0
-/*
+
 /obj/item/weapon/gun/energy/xray
 	name = "x-ray laser carbine"
 	desc = "A high-power laser gun capable of emitting concentrated x-ray blasts, that are able to penetrate laser-resistant armor much more readily than standard photonic beams."

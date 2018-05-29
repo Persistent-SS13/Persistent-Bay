@@ -95,6 +95,14 @@
 	projectile_type = /obj/item/projectile/bullet/pellet/shotgun
 	matter = list(DEFAULT_WALL_MATERIAL = 360)
 
+/obj/item/ammo_casing/shotgun/rubber
+	name = "rubber shell"
+	desc = "A 12 gauge rubber shell."
+	icon_state = "rshell"
+	spent_icon = "rshell-spent"
+	projectile_type = /obj/item/projectile/bullet/pellet/shotgun/rubber
+	matter = list(DEFAULT_WALL_MATERIAL = 180)
+
 /obj/item/ammo_casing/shotgun/blank
 	name = "shotgun shell"
 	desc = "A blank shell."

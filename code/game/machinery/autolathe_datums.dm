@@ -312,6 +312,12 @@ var/const/EXTRA_COST_FACTOR = 1
 	hidden = 1
 	category = "Arms and Ammunition"
 
+/datum/autolathe/recipe/shotgun_rubber
+	name = "ammunition (shotgun, rubber)"
+	path = /obj/item/ammo_casing/shotgun/rubber
+	hidden = 1
+	category = "Arms and Ammunition"
+
 /datum/autolathe/recipe/shotgun_flash
 	name = "ammunition (shotgun, flash)"
 	path = /obj/item/ammo_casing/shotgun/flash

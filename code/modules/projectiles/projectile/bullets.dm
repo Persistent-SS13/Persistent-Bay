@@ -188,6 +188,17 @@
 	range_step = 1
 	spread_step = 10
 
+/obj/item/projectile/bullet/pellet/shotgun/rubber
+	name = "shrapnel"
+	check_armour = "melee"
+	damage = 5
+	agony = 12
+	embed = 0
+	sharp = 0
+	range_step = 1
+	spread_step = 12
+	base_spread = 80
+
 /* "Rifle" rounds */
 
 /obj/item/projectile/bullet/rifle

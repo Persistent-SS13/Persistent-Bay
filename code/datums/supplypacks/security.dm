@@ -139,6 +139,22 @@
 	containername = "\improper Tasers crate"
 	access = 5
 
+/decl/hierarchy/supply_pack/security/weapons_shotguns
+	name = "Weapons - Riot Shotguns (x3)"
+	contains = list(/obj/item/weapon/gun/projectile/shotgun/pump = 3)
+	cost = 120
+	containertype = /obj/structure/closet/crate/secure/weapon
+	containername = "\improper Riot shotguns crate"
+	access = 5
+
+/decl/hierarchy/supply_pack/security/weapons_civshotgun
+	name = "Weapons - Civilian Double-barreled Shotgun"
+	contains = list(/obj/item/weapon/gun/projectile/shotgun/doublebarrel)
+	cost = 100
+	containertype = /obj/structure/closet/crate/secure/weapon
+	containername = "\improper Double-barreled shotgun crate"
+	access = 5
+
 /decl/hierarchy/supply_pack/security/pistolammopractice
 	name = "Ammunition - .45 practice"
 	contains = list(/obj/item/ammo_magazine/c45m/practice = 8)

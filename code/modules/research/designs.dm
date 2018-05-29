@@ -547,9 +547,9 @@ other types of metals and chemistry for reagents).
 
 /datum/design/item/weapon/nuclear_gun
 	id = "nuclear_gun"
-	desc = "Self-recharging energy weapon powered by a nuclear core."
+	desc = "High capacity laser rifle."
 	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 5, TECH_POWER = 5)
-	materials = list(DEFAULT_WALL_MATERIAL = 5000, "glass" = 1000, "silver" = 1000, "gold" = 2000, "uranium" = 10000)
+	materials = list(DEFAULT_WALL_MATERIAL = 15000, "glass" = 2000, "silver" = 8000, "gold" = 4000, "uranium" = 10000)
 	build_path = /obj/item/weapon/gun/energy/gun/nuclear
 	sort_string = "TAAAB"
 

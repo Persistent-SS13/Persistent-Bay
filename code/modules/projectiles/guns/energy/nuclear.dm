@@ -36,18 +36,28 @@
 	self_recharge = 1
 	use_external_power = 1
 
-/obj/item/weapon/gun/energy/gun/nuclear
-	name = "advanced energy gun"
-	desc = "An energy gun with an experimental miniaturized reactor."
-	icon_state = "nucgun"
-	origin_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 5, TECH_POWER = 3)
-	slot_flags = SLOT_BELT
+/obj/item/weapon/gun/energy/gun/nuclear	//Would be easier to change the gun to a subtype of /laser, but would cause problems with AEGs already ingame
+	name = "\improper HC30 Laser Carbine"
+	desc = "A modification of the Hephaestus Industries G40E carbine. The HC30 variant contains a uranium core, allowing for more available shots." //HC30 = High Capacity with 30 shots, hehehe
+	icon_state = "hc_laser"
+	item_state = "laser"
+	wielded_item_state = "laser-wielded"
+	origin_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 5, TECH_POWER = 4)
+	slot_flags = SLOT_BELT|SLOT_BACK	//Since apparently the laser rifle can be strapped to your back
 	w_class = ITEM_SIZE_LARGE
-	force = 8 //looks heavier than a pistol
-	self_recharge = 1
-	modifystate = null
-	one_hand_penalty = 1 //bulkier than an e-gun, but not quite the size of a carbine
+	projectile_type = /obj/item/projectile/beam/midlaser
+	max_shots = 30 //x3 the charge of a standard laser rifle
+	force = 10 //looks heavier than a pistol	//Naaaah
+	one_hand_penalty = 2
+	fire_delay = 6
+	//self_recharge = 1
+	//modifystate = null
+	one_hand_penalty = 2 //bulkier than an e-gun, but not quite the size of a carbine	//It is now!
+	accuracy = 2
+	matter = list(DEFAULT_WALL_MATERIAL = 15000, GLASS = 2000)
 
+	firemodes = list()
+/*
 	firemodes = list(
 		list(mode_name="stun", projectile_type=/obj/item/projectile/beam/stun),
 		list(mode_name="shock", projectile_type=/obj/item/projectile/beam/stun/shock),
@@ -73,12 +83,12 @@
 			fail_counter = max(fail_counter, 10)
 			if(ismob(loc))
 				to_chat(loc, "<span class='warning'>\The [src] feels pleasantly warm.</span>")
-
+*/
 /obj/item/weapon/gun/energy/gun/nuclear/proc/get_charge_overlay()
 	var/ratio = power_supply.percent()
 	ratio = round(ratio, 25)
-	return "nucgun-[ratio]"
-
+	return "hc_laser[ratio]"
+/*
 /obj/item/weapon/gun/energy/gun/nuclear/proc/get_reactor_overlay()
 	if(fail_counter)
 		return "nucgun-medium"
@@ -91,12 +101,23 @@
 	switch(current_mode.name)
 		if("stun") return "nucgun-stun"
 		if("lethal") return "nucgun-kill"
-
+*/
 /obj/item/weapon/gun/energy/gun/nuclear/update_icon()
+	//I don't know why, but this makes the on-mob icon work
+	if(wielded_item_state)
+		var/mob/living/M = loc
+		if(istype(M))
+			if(M.can_wield_item(src) && src.is_held_twohanded(M))
+				item_state_slots[slot_l_hand_str] = wielded_item_state
+				item_state_slots[slot_r_hand_str] = wielded_item_state
+			else
+				item_state_slots[slot_l_hand_str] = initial(item_state)
+				item_state_slots[slot_r_hand_str] = initial(item_state)
+	
 	var/list/new_overlays = list()
 
 	new_overlays += get_charge_overlay()
-	new_overlays += get_reactor_overlay()
-	new_overlays += get_mode_overlay()
+	//new_overlays += get_reactor_overlay()
+	//new_overlays += get_mode_overlay()
 
 	overlays = new_overlays

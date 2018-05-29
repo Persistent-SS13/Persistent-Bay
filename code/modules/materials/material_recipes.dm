@@ -103,8 +103,8 @@
 	recipes += new/datum/stack_recipe("Paper Shredder", /obj/machinery/papershredder, 3, time = 25, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("rack", /obj/structure/table/rack, 1, time = 5, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("weight lifter", /obj/structure/fitness/weightlifter, 4, time = 50, one_per_turf = 1, on_floor = 1)
-	recipes += new/datum/stack_recipe("closet", /obj/structure/closet, 2, time = 15, one_per_turf = 1, on_floor = 1)
-	recipes += new/datum/stack_recipe("Metal crate", /obj/structure/closet/crate, 10, time = 50, one_per_turf = 1)
+	recipes += new/datum/stack_recipe("closet", /obj/structure/closet, 5, time = 50, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("Metal crate", /obj/structure/closet/crate, 5, time = 50, one_per_turf = 1)
 	recipes += new/datum/stack_recipe("canister", /obj/machinery/portable_atmospherics/canister, 10, time = 15, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("cannon frame", /obj/item/weapon/cannonframe, 10, time = 15, one_per_turf = 0, on_floor = 0)
 	recipes += new/datum/stack_recipe("meat spike frame", /obj/structure/kitchenspike_frame, 4, time = 40, one_per_turf = 1, on_floor = 1)
@@ -112,7 +112,7 @@
 	..()
 	recipes += new/datum/stack_recipe("Bar Sign Frame", /obj/item/frame/barsign, 4, time = 50, one_per_turf = 1)
 	recipes += new/datum/stack_recipe("AI core", /obj/structure/AIcore, 4, time = 50, one_per_turf = 1)
-	recipes += new/datum/stack_recipe("Secure Crate", /obj/structure/closet/crate/secure/large/reinforced, 10, time = 50, one_per_turf = 1)
+	recipes += new/datum/stack_recipe("Secure Crate", /obj/structure/closet/crate/secure/large/reinforced, 5, time = 50, one_per_turf = 1)
 	recipes += new/datum/stack_recipe("knife grip", /obj/item/weapon/material/butterflyhandle, 4, time = 20, one_per_turf = 0, on_floor = 1, supplied_material = "[name]")
 	recipes += new/datum/stack_recipe("dark floor tile", /obj/item/stack/tile/floor_dark, 1, 4, 20)
 	recipes += new/datum/stack_recipe("Wheelchair", /obj/structure/bed/chair/wheelchair, 10, time = 50, one_per_turf = 1, on_floor = 1)
@@ -142,7 +142,7 @@
 
 /material/plastic/generate_recipes()
 	..()
-	recipes += new/datum/stack_recipe("plastic crate", /obj/structure/closet/crate/plastic, 10, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("plastic crate", /obj/structure/closet/crate/plastic, 5, time = 50, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("plastic bag", /obj/item/weapon/storage/bag/plasticbag, 3, on_floor = 1)
 	recipes += new/datum/stack_recipe("blood pack", /obj/item/weapon/reagent_containers/blood/empty, 4, on_floor = 0)
 	recipes += new/datum/stack_recipe("reagent dispenser cartridge (large)", /obj/item/weapon/reagent_containers/chem_disp_cartridge,        5, on_floor=0) // 500u
@@ -161,13 +161,13 @@
 		))
 	recipes += new/datum/stack_recipe("Punching bag", /obj/structure/fitness/punchingbag, 5, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe_list("Curtains",list( \
-		new/datum/stack_recipe("Curtain", /obj/structure/curtain, 10, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("Black Curtain", /obj/structure/curtain/black, 10, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("Medical Curtain", /obj/structure/curtain/medical, 10, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("Privacy Curtain", /obj/structure/curtain/open/privacy, 10, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("Shower Curtain", /obj/structure/curtain/open/shower, 10, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("Engineering Curtain", /obj/structure/curtain/open/shower/engineering, 10, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("Security Curtain", /obj/structure/curtain/open/shower/security, 10, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("Curtain", /obj/structure/curtain, 3, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("Black Curtain", /obj/structure/curtain/black, 3, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("Medical Curtain", /obj/structure/curtain/medical, 3, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("Privacy Curtain", /obj/structure/curtain/open/privacy, 3, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("Shower Curtain", /obj/structure/curtain/open/shower, 3, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("Engineering Curtain", /obj/structure/curtain/open/shower/engineering, 3, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("Security Curtain", /obj/structure/curtain/open/shower/security, 3, one_per_turf = 1, on_floor = 1), \
 		))
 	recipes += new/datum/stack_recipe("Water Cooler", /obj/structure/reagent_dispensers/water_cooler/empty, 10, one_per_turf = 1, on_floor = 1)
 

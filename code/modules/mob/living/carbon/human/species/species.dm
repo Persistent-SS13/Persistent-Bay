@@ -96,7 +96,7 @@
 	var/breath_type = "oxygen"                        // Non-oxygen gas breathed, if any.
 	var/poison_type = "phoron"                        // Poisonous air.
 	var/exhale_type = "carbon_dioxide"                // Exhaled gas type.
-	var/max_pressure_diff = 202.65					  // Maximum pressure difference that is safe for lungs
+	var/max_pressure_diff = 2*ONE_ATMOSPHERE		  // Maximum pressure difference that is safe for lungs
 	var/cold_level_1 = 260                            // Cold damage level 1 below this point.
 	var/cold_level_2 = 200                            // Cold damage level 2 below this point.
 	var/cold_level_3 = 120                            // Cold damage level 3 below this point.

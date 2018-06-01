@@ -78,7 +78,7 @@
 	mannequin.dna.ready_dna(mannequin)
 	mannequin.dna.b_type = client.prefs.b_type
 	mannequin.sync_organ_dna()
-	// mannequin.internal_organs_by_name[BP_STACK] = new /obj/item/organ/internal/stack(mannequin,1)
+	mannequin.internal_organs_by_name[BP_STACK] = new /obj/item/organ/internal/stack(mannequin,1)
 	var/money_amount = 500
 	var/datum/money_account/M = create_account(mannequin.real_name, money_amount, null)
 	M.remote_access_pin = chosen_pin

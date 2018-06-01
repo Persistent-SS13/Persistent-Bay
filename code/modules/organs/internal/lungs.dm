@@ -20,7 +20,7 @@
 	var/min_breath_pressure
 	var/last_int_pressure
 	var/last_ext_pressure
-	var/max_pressure_diff = 60 //Default
+	var/max_pressure_diff = 2*ONE_ATMOSPHERE //Default
 
 	var/oxygen_deprivation = 0
 	var/safe_exhaled_max = 6

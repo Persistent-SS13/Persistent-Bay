@@ -95,19 +95,33 @@
 /obj/machinery/computer/bridge_computer/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 	var/list/data = get_ui_data()
 	if(shuttle)
+		data["name"] = shuttle.name
+		switch(shuttle.moving_status)
+			if(SHUTTLE_IDLE)
+				data["status"] = "Idle"
+			if(SHUTTLE_WARMUP)
+				data["status"] = "Preparing for jump"
+			else
+				data["status"] = "Moving"
 		data["connected"] = 1
+		if(shuttle.moving_status == SHUTTLE_IDLE)
+			// add launch requirements here
+			data["can_launch"] = 1
+		else
+			data["can_launch"] = 0
+
 		var/list/beacons = get_docks(user)
 		var/list/formatted_beacons[0]
 		for(var/obj/machinery/docking_beacon/beacon in beacons)
 			var/dock_status = beacons[beacon]
-			formatted_beacons[++formatted_beacons.len] = list("name" = beacon.id, "status" = dock_status)
+			formatted_beacons[++formatted_beacons.len] = list("name" = beacon.id, "status" = dock_status, "ref" = "\ref[beacon]")
 		data["beacons"] = formatted_beacons
-		
+
 	else
 		data["desired_name"] = desired_name != "" ? desired_name : "Unset!"
 		data["name_set"] = desired_name != "" ? 1 : 0
 		data["shuttle_type"] = shuttle_type
-		data["locked_to"] = locked_to
+		data["locked_to"] = locked_to != "" ? locked_to : "Unset!"
 
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
@@ -115,6 +129,29 @@
 		ui.set_initial_data(data)
 		ui.open()
 		ui.set_auto_update(1)
+
+
+/obj/machinery/computer/bridge_computer/proc/get_valid()
+	if(!desired_name || desired_name == "")
+		return 0
+	if(locked_to)
+		if(locked_to == "")
+			return 0
+		if(shuttle_type == 2)
+			if(!get_faction(locked_to))
+				locked_to = ""
+				return 0
+		else
+			var/datum/computer_file/crew_record/record = new()
+			if(!record.load_from_global(locked_to))
+				qdel(record)
+				locked_to = ""
+				return 0
+			qdel(record)
+		return 1
+	else
+		return 0
+
 
 /obj/machinery/computer/bridge_computer/Topic(href, href_list)
 
@@ -126,7 +163,27 @@
 				to_chat(usr, "Your inputs expired because someone used the terminal first.")
 			else
 				desired_name = select_name
-	
+		else
+			desired_name = ""
+	if(href_list["set_personal"])
+		shuttle_type = 1
+		locked_to = ""
+	if(href_list["set_corporate"])
+		shuttle_type = 2
+		locked_to = ""
+	if(href_list["set_locked"])
+		var/x = usr.get_id_name("")
+		if(x)
+			locked_to = x
+		else
+			locked_to = ""
+	if(href_list["set_locked_2"])
+		var/x = usr.GetFaction()
+		if(x)
+			locked_to = x
+		else
+			locked_to = ""
+
 	if(..())
 		return 1
 

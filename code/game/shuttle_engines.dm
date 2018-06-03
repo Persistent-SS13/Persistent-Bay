@@ -36,7 +36,7 @@
 /obj/structure/shuttle/engine
 	name = "engine"
 	density = 1
-	anchored = 1.0
+	anchored = 0.0
 	var/permaanchor = 0
 /obj/structure/shuttle/engine/verb/rotate()
 	set name = "Rotate Clockwise"

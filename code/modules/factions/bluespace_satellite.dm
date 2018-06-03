@@ -28,7 +28,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/highlighted = 0
 	var/id = "docking port"
 	var/visible_mode = 0 // 0 = invisible, 1 = visible, docking auth required, 2 = visible, anyone can dock
-
+	var/datum/shuttle/shuttle
 /obj/machinery/docking_beacon/New()
 	..()
 	GLOB.all_docking_beacons |= src
@@ -107,6 +107,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	if(href_list["status_close"])
 		if(check_obstructed())
 			status = 5
+			status = 5
 		else
 			status = 1
 	if(href_list["status_open"])
@@ -175,7 +176,38 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	return 0
 
 /obj/machinery/docking_beacon/proc/finalize(var/mob/user)
-
+	if(shuttle)
+		return 0
+	var/list/turfs = get_turfs()
+	var/valid_bridge_computer_found = 0
+	var/bcomps = 0
+	var/list/engines = list()
+	var/name
+	for(var/turf/T in turfs)
+		if(istype(T.loc, /area/space))
+			turfs -= T
+			continue
+		for(var/obj/machinery/computer/bridge_computer/comp in T.contents)
+			bcomps++
+			if(bcomps > 1)
+				to_chat(user, "Multiple bridge computers detected. Shuttle finalization aborted.")
+				return
+			if(comp.get_valid())
+				valid_bridge_computer_found = 1
+			else
+				to_chat(user, "The bridge computer reports an error in configuration. Shuttle finalization aborted.")
+				return
+		for(var/obj/structure/shuttle/engine/engine in T.contents)
+			if(engine.anchored)
+				engines |= engine
+	if(!valid_bridge_computer_found)
+		to_chat(user, "No valid bridge computer found. Shuttle finalization aborted.")
+	if(!engines.len)
+		to_chat(user, "No properly anchored engine found. Shuttle finalization aborted.")
+		return 0
+	for(var/obj/structure/shuttle/engine/engine in engines)
+		engine.permaanchor = 1
+	shuttle = new(name, src)
 
 /obj/machinery/docking_beacon/proc/get_turfs()
 	var/list/return_turfs = list()

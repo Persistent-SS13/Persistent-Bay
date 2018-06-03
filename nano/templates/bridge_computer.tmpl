@@ -1,6 +1,33 @@
 {{if data.connected}}
-
-
+	<h3>{{:data.name}}</h3>
+	<div class="item">
+		<div class="itemLabel">
+			Current Status:
+		</div>
+		<div class="itemContent">
+			{{:data.status}}
+		</div>
+	</div>
+	<div class="item">
+		<div class="itemLabel">
+			Current Status:
+		</div>
+		<div class="itemContent">
+			{{:data.status}}
+		</div>
+	</div>
+	{{if data.can_launch}}
+		Available Destinations
+		{{for data.beacons}}
+			{{if value.status == 2}}
+				{{:helper.link('REQUEST: {{:value.name}}', '', {'action' : 'request_dock', 'selected_ref' : value.ref})}}
+			{{else}}
+				{{:helper.link('DOCK: {{:value.name}}', '', {'action' : 'select_dock', 'selected_ref' : value.ref})}}
+			{{/if}}
+		{{/for}}
+	{{else}}
+		<br>Launch not available!
+	{{/if}}
 {{else}}
 	<h3>Shuttle Construction</h3>
 	<br><br>

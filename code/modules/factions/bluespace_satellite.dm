@@ -107,7 +107,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	if(href_list["status_close"])
 		if(check_obstructed())
 			status = 5
-			status = 5
 		else
 			status = 1
 	if(href_list["status_open"])

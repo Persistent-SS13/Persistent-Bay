@@ -1,3 +1,5 @@
+/obj/machinery/mineral/processing_unit_console/New()
+	qdel(src)
 /**********************Mineral processing unit**************************/
 /obj/machinery/mineral/processing_unit
 	name = "material processor" //This isn't actually a goddamn furnace, we're in space and it's processing platinum and flammable phoron...

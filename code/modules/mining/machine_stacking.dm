@@ -1,3 +1,5 @@
+/obj/machinery/mineral/stacking_unit_console/New()
+	qdel(src)
 /**********************Mineral stacking unit**************************/
 /obj/machinery/mineral/stacking_machine
 	name = "stacking machine"

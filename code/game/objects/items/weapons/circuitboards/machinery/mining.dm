@@ -44,3 +44,8 @@
 	board_type = "machine"
 	origin_tech = list()
 	req_components = list(/obj/item/stack/material/steel = 5)
+
+/obj/item/weapon/circuitboard/processing_unit_console/New()
+	qdel(src)
+/obj/item/weapon/circuitboard/stacking_unit_console/New()
+	qdel(src)

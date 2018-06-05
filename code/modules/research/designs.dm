@@ -1732,21 +1732,11 @@ CIRCUITS BELOW
 	req_tech = list(TECH_DATA = 3, TECH_BIO = 3)
 	build_path = /obj/item/weapon/circuitboard/splicer
 	sort_string = "ZZZYJ"
-/datum/design/circuit/processing_unit_console
-	name = "Material Processor Console"
-	id = "processing_unit_console"
-	build_path = /obj/item/weapon/circuitboard/processing_unit_console
-	sort_string = "ZZZYI"
 /datum/design/circuit/processing_unit
 	name = "Material Processor"
 	id = "processing_unit"
 	build_path = /obj/item/weapon/circuitboard/processing_unit
 	sort_string = "ZZZYH"
-/datum/design/circuit/stacking_unit_console
-	name = "Stacking Machine Console"
-	id = "stacking_unit_console"
-	build_path = /obj/item/weapon/circuitboard/stacking_unit_console
-	sort_string = "ZZZYG"
 /datum/design/circuit/stacking_machine
 	name = "Stacking Machine"
 	id = "stacking_machine"

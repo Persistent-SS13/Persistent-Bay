@@ -1,4 +1,6 @@
 /**********************Input and output plates**************************/
+/obj/machinery/mineral/input/New()
+	qdel(src)
 
 /obj/machinery/mineral/input
 	icon = 'icons/mob/screen1.dmi'
@@ -8,6 +10,9 @@
 	anchored = 1.0
 	New()
 		icon_state = "blank"
+
+/obj/machinery/mineral/output/New()
+	qdel(src)
 
 /obj/machinery/mineral/output
 	icon = 'icons/mob/screen1.dmi'

@@ -383,3 +383,6 @@ Class Procs:
 		M.multiplier = new_mult
 		return 1
 	return 0
+
+/obj/machinery/after_load()
+	RefreshParts()

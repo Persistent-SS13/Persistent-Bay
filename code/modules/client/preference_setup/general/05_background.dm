@@ -6,10 +6,10 @@
 	var/memory = ""
 	var/chosen_pin = 1000
 	//Some faction information.
-	var/home_system           //System of birth.
-	var/citizenship = "None"            //Current home system.
-	var/faction              //Antag faction/general associated faction.
-	var/religion = "None"               //Religious association.
+	var/home_system				//System of birth.
+	var/citizenship = "None"	//Current home system.
+	var/faction					//General associated faction.
+	var/religion = "None"		//Religious association.
 
 /datum/category_item/player_setup_item/general/background
 	name = "Background"
@@ -48,14 +48,9 @@
 		if(background)
 			. += "<br>[background]<br>"
 	. += "<br><br>Starting Employer: <a href='?src=\ref[src];faction=1'>[pref.faction ? pref.faction : "Unset*"]</a>"
-	switch(pref.faction)
-		if("Nanotrasen")
-			. += "<br>You're offered a job as an employee in Nanotrasen, one of the newest and fastest research firms in the Galaxy. Nanotrasen provides you passage to a gateway that teleports you to their outpost deep inside the frontier.<br>"
-		if("Refugees")
-			. += "<br>You have left your previous home in a desperate search for a better life. You've been offered free passage to a gateway that will teleport you to a free-station deep inside the frontier.<br><br>"
-		if("Entrepreneur")
-			. += "<br>You have heard about an unexplored frontier rich in rare materials and untapped research opprotunties. Theirs money to be made everywhere, and theirs even free passage to a gateway that will teleport you to a free-station.<br>"
-			
+	if(pref.faction != "Unset*") // TODO; Add configurable join messages that factions can set
+		. += "<br>You have decided to join the growing ranks of [pref.faction]. In exchange for your service, you've been offered free passage to a gateway that will teleport you to their headquarters deep within the frontier.<br>"
+
 	. += "<br><br>Bank Account Pin:<br>"
 	. += "<a href='?src=\ref[src];set_pin=1'>[pref.chosen_pin]</a><br>"
 /datum/category_item/player_setup_item/general/background/OnTopic(var/href,var/list/href_list, var/mob/user)
@@ -88,10 +83,23 @@
 		return TOPIC_REFRESH
 
 	else if(href_list["faction"])
-		var/list/joinable = list("Nanotrasen", "Refugees", "Entrepreneur")
+		var/list/joinable = list("nanotrasen")
+
+		if(!GLOB.frontierbeacons.len)
+			message_admins("WARNING! No beacons avalible for faction selection! spawn one and set the req_access_faction!")
+		for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
+			if(!beacon.loc || !beacon.activated) continue
+			if(beacon.req_access_faction)
+				var/datum/world_faction/faction = get_faction(beacon.req_access_faction)
+				if(!joinable[faction.uid])
+					joinable[faction.uid] = faction.abbreviation
+
 		var/choice = input(user, "Please choose a reason for coming to the frontier", "Character Preference", pref.faction) as null|anything in joinable
-		if(choice)
-			pref.faction = choice
+		if(choice) // Why the hell doesn't 'Find' work with associative lists?
+			for(var/p in joinable)
+				if(joinable[p] == choice)
+					pref.faction = p
+
 		return TOPIC_REFRESH
 
 	else if(href_list["religion"])

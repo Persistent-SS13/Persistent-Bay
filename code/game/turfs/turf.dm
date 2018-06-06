@@ -54,7 +54,7 @@
 	return 1
 
 /turf/attack_hand(mob/user)
-	if(!(user.canmove) || user.restrained() || !(user.pulling))
+	if(user.restrained())
 		return 0
 	if(user.pulling.anchored || !isturf(user.pulling.loc))
 		return 0

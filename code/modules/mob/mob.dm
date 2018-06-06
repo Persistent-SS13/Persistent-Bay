@@ -673,24 +673,18 @@
 
 // facing verbs
 /mob/proc/canface()
-	if(!canmove)						return 0
-	if(anchored)						return 0
-	if(transforming)					return 0
-	return 1
+	return MayMove()
 
 // Not sure what to call this. Used to check if humans are wearing an AI-controlled exosuit and hence don't need to fall over yet.
 /mob/proc/can_stand_overridden()
 	return 0
 
-//Updates canmove, lying and icons. Could perhaps do with a rename but I can't think of anything to describe it.
-/mob/proc/update_canmove()
-
+//Updates lying and icons
+/mob/proc/UpdateLyingBuckledAndVerbStatus()
 	if(!resting && cannot_stand() && can_stand_overridden())
 		lying = 0
-		canmove = 1
 	else if(buckled)
 		anchored = 1
-		canmove = 0
 		if(istype(buckled))
 			if(buckled.buckle_lying == -1)
 				lying = incapacitated(INCAPACITATION_KNOCKDOWN)
@@ -698,10 +692,8 @@
 				lying = buckled.buckle_lying
 			if(buckled.buckle_movable)
 				anchored = 0
-				canmove = 1
 	else
 		lying = incapacitated(INCAPACITATION_KNOCKDOWN)
-		canmove = !incapacitated(INCAPACITATION_DISABLED)
 
 	if(lying)
 		set_density(0)
@@ -712,9 +704,6 @@
 	reset_layer()
 
 	for(var/obj/item/grab/G in grabbed_by)
-		if(G.stop_move())
-			canmove = 0
-
 		if(G.force_stand())
 			lying = 0
 
@@ -727,8 +716,6 @@
 	else if( lying != lying_prev )
 		update_icons()
 
-	return canmove
-
 /mob/proc/reset_layer()
 	if(lying)
 		plane = LYING_MOB_PLANE
@@ -737,15 +724,12 @@
 		reset_plane_and_layer()
 
 /mob/proc/facedir(var/ndir)
-	if(!isnull(client))
-		client.pixel_x = 0
-		client.pixel_y = 0
-	if(!canface() || client.moving || world.time < client.move_delay)
+	if(!canface() || moving)
 		return 0
 	set_dir(ndir)
 	if(buckled && buckled.buckle_movable)
 		buckled.set_dir(ndir)
-	client.move_delay += movement_delay()
+	setMoveCooldown(movement_delay())
 	return 1
 
 
@@ -793,19 +777,19 @@
 	if(status_flags & CANWEAKEN)
 		facing_dir = null
 		weakened = max(max(weakened,amount),0)
-		update_canmove()	//updates lying, canmove and icons
+		UpdateLyingBuckledAndVerbStatus()
 	return
 
 /mob/proc/SetWeakened(amount)
 	if(status_flags & CANWEAKEN)
 		weakened = max(amount,0)
-		update_canmove()	//updates lying, canmove and icons
+		UpdateLyingBuckledAndVerbStatus()
 	return
 
 /mob/proc/AdjustWeakened(amount)
 	if(status_flags & CANWEAKEN)
 		weakened = max(weakened + amount,0)
-		update_canmove()	//updates lying, canmove and icons
+		UpdateLyingBuckledAndVerbStatus()
 	return
 
 /mob/proc/Paralyse(amount)

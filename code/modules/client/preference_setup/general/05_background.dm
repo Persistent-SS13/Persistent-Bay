@@ -47,9 +47,14 @@
 		var/background = S.backgrounds[pref.home_system]
 		if(background)
 			. += "<br>[background]<br>"
-	. += "<br><br>Starting Employer: <a href='?src=\ref[src];faction=1'>[pref.faction ? pref.faction : "Unset*"]</a>"
-	if(pref.faction != "Unset*") // TODO; Add configurable join messages that factions can set
-		. += "<br>You have decided to join the growing ranks of [pref.faction]. In exchange for your service, you've been offered free passage to a gateway that will teleport you to their headquarters deep within the frontier.<br>"
+	var/faction_sname
+	if(pref.faction)
+		var/datum/world_faction/player_faction = get_faction(pref.faction)
+		if(player_faction)
+			faction_sname = faction.abbreviation
+	. += "<br><br>Starting Employer: <a href='?src=\ref[src];faction=1'>[faction_sname ? faction_sname : "Unset*"]</a>"
+	if(faction_sname) // TODO; Add configurable join messages that factions can set
+		. += "<br>You have decided to join the growing ranks of [faction_sname]. In exchange for your service, you've been offered free passage to a gateway that will teleport you to their headquarters deep within the frontier.<br>"
 
 	. += "<br><br>Bank Account Pin:<br>"
 	. += "<a href='?src=\ref[src];set_pin=1'>[pref.chosen_pin]</a><br>"
@@ -83,7 +88,7 @@
 		return TOPIC_REFRESH
 
 	else if(href_list["faction"])
-		var/list/joinable = list("nanotrasen" = "Nanotrasen")
+		var/list/joinable = list("Nanotrasen" = "nanotrasen")
 
 		if(!GLOB.frontierbeacons.len)
 			message_admins("WARNING! No beacons avalible for faction selection! spawn one and set the req_access_faction!")
@@ -91,14 +96,12 @@
 			if(!beacon.loc || !beacon.activated) continue
 			if(beacon.req_access_faction)
 				var/datum/world_faction/faction = get_faction(beacon.req_access_faction)
-				if(!joinable[faction.uid])
-					joinable[faction.uid] = faction.abbreviation
+				if(!joinable[faction.abbreviation])
+					joinable[faction.abbreviation] = faction.uid
 
-		var/choice = input(user, "Please choose a faction to start out with.", "Character Preference", pref.faction) as null|anything in joinable
-		if(choice) // Why the hell doesn't 'Find' work with associative lists?
-			for(var/p in joinable)
-				if(joinable[p] == choice)
-					pref.faction = p
+		var/choice = input(user, "Please choose a faction to start out with.", "Character Preference", null) as null|anything in joinable
+		if(choice)
+			pref.faction = joinable[choice]
 
 		return TOPIC_REFRESH
 

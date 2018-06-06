@@ -271,11 +271,13 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	set_fingerprint(H ? md5(H.dna.uni_identity) : "")
 	set_secRecord((H && H.sec_record && !jobban_isbanned(H, "Records") ? html_decode(H.sec_record) : "No record supplied"))
 
+	var/datum/world_faction/faction = get_faction(H.personal_faction)
+
 	// Employment record
 	set_emplRecord((H && H.gen_record && !jobban_isbanned(H, "Records") ? html_decode(H.gen_record) : "No record supplied"))
 	set_homeSystem(H ? H.home_system : "Unset")
 	set_citizenship(H ? H.citizenship : "Unset")
-	set_faction(H ? H.personal_faction : "Unset")
+	set_faction(faction && faction.abbreviation ? faction.abbreviation : "Unset")
 	set_religion(H ? H.religion : "Unset")
 
 	// Antag record

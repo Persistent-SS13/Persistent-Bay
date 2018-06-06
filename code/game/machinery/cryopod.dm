@@ -534,6 +534,8 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	icon_state = "shield"
 	anchored = 1
 	density = 1
+	var/activated = 1 // Setting this to 0 will make it so people can't spawn here.
+
 /obj/structure/frontier_beacon/New()
 	..()
 	GLOB.frontierbeacons |= src

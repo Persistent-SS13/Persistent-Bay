@@ -88,7 +88,7 @@
 		return TOPIC_REFRESH
 
 	else if(href_list["faction"])
-		var/list/joinable = list("Nanotrasen" = "nanotrasen")
+		var/list/joinable_factions = list("Nanotrasen" = "nanotrasen")
 
 		if(!GLOB.frontierbeacons.len)
 			message_admins("WARNING! No beacons avalible for faction selection! spawn one and set the req_access_faction!")
@@ -96,12 +96,12 @@
 			if(!beacon.loc || !beacon.activated) continue
 			if(beacon.req_access_faction)
 				var/datum/world_faction/faction = get_faction(beacon.req_access_faction)
-				if(!joinable[faction.abbreviation])
-					joinable[faction.abbreviation] = faction.uid
+				if(!joinable_factions[faction.abbreviation])
+					joinable_factions[faction.abbreviation] = faction.uid
 
-		var/choice = input(user, "Please choose a faction to start out with.", "Character Preference", "Nanotrasen") as null|anything in joinable
+		var/choice = input(user, "Please choose a faction.", "Character Preference") as null|anything in joinable_factions
 		if(choice)
-			pref.faction = joinable[choice]
+			pref.faction = joinable_factions[choice]
 
 		return TOPIC_REFRESH
 

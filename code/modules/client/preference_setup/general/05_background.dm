@@ -83,7 +83,7 @@
 		return TOPIC_REFRESH
 
 	else if(href_list["faction"])
-		var/list/joinable = list("nanotrasen")
+		var/list/joinable = list("nanotrasen" = "Nanotrasen")
 
 		if(!GLOB.frontierbeacons.len)
 			message_admins("WARNING! No beacons avalible for faction selection! spawn one and set the req_access_faction!")
@@ -94,7 +94,7 @@
 				if(!joinable[faction.uid])
 					joinable[faction.uid] = faction.abbreviation
 
-		var/choice = input(user, "Please choose a reason for coming to the frontier", "Character Preference", pref.faction) as null|anything in joinable
+		var/choice = input(user, "Please choose a faction to start out with.", "Character Preference", pref.faction) as null|anything in joinable
 		if(choice) // Why the hell doesn't 'Find' work with associative lists?
 			for(var/p in joinable)
 				if(joinable[p] == choice)

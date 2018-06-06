@@ -99,7 +99,7 @@
 				if(!joinable[faction.abbreviation])
 					joinable[faction.abbreviation] = faction.uid
 
-		var/choice = input(user, "Please choose a faction to start out with.", "Character Preference", null) as null|anything in joinable
+		var/choice = input(user, "Please choose a faction to start out with.", "Character Preference", "Nanotrasen") as null|anything in joinable
 		if(choice)
 			pref.faction = joinable[choice]
 

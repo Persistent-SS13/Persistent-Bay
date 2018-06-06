@@ -51,7 +51,7 @@
 	if(pref.faction)
 		var/datum/world_faction/player_faction = get_faction(pref.faction)
 		if(player_faction)
-			faction_sname = faction.abbreviation
+			faction_sname = player_faction.abbreviation
 	. += "<br><br>Starting Employer: <a href='?src=\ref[src];faction=1'>[faction_sname ? faction_sname : "Unset*"]</a>"
 	if(faction_sname) // TODO; Add configurable join messages that factions can set
 		. += "<br>You have decided to join the growing ranks of [faction_sname]. In exchange for your service, you've been offered free passage to a gateway that will teleport you to their headquarters deep within the frontier.<br>"

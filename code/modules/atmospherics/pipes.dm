@@ -160,9 +160,9 @@
 	var/minimum_temperature_difference = 300
 	var/thermal_conductivity = 0 //WALL_HEAT_TRANSFER_COEFFICIENT No
 
-	var/maximum_pressure = 140*ONE_ATMOSPHERE	//this way setting the high pressure pump to the maximum like a shit will heck your stuff up
-	var/fatigue_pressure = 125*ONE_ATMOSPHERE
-	alert_pressure = 110*ONE_ATMOSPHERE			//little grace period
+	var/maximum_pressure = 130*ONE_ATMOSPHERE	//this way setting the high pressure pump to the maximum like a shit will heck your stuff up
+	var/fatigue_pressure = 115*ONE_ATMOSPHERE
+	alert_pressure = 100*ONE_ATMOSPHERE			//little grace period
 
 	level = 1
 
@@ -171,9 +171,9 @@
 	name = " reinforced pipe"
 	desc = "A one meter section of reinforced pipe able to withstand high and extreme pressures."
 
-	maximum_pressure = 1400*ONE_ATMOSPHERE	//this way setting the high pressure pump to the maximum like a shit will heck your stuff up
-	fatigue_pressure = 1250*ONE_ATMOSPHERE
-	alert_pressure = 1100*ONE_ATMOSPHERE			//little grace period
+	maximum_pressure = 1300*ONE_ATMOSPHERE	//this way setting the high pressure pump to the maximum like a shit will heck your stuff up
+	fatigue_pressure = 1150*ONE_ATMOSPHERE
+	alert_pressure = 1000*ONE_ATMOSPHERE			//little grace period
 	color = PIPE_COLOR_RED					//RED for DANGER
 
 /obj/machinery/atmospherics/pipe/simple/New()

@@ -20,6 +20,9 @@
 	interact_offline = 1 // Allows this to be used when not in powered area.
 	var/release_log = ""
 	var/update_flag = 0
+	var/heat_capacity = 31250
+	var/heat = 9160937.5//T20C * heat_capacity
+	var/temperature = T20C
 
 /obj/machinery/portable_atmospherics/canister/drain_power()
 	return -1
@@ -204,6 +207,7 @@ update_flag
 	if (destroyed)
 		return
 	..()
+	handle_heat_exchange()
 	if(valve_open)
 		var/datum/gas_mixture/environment
 		if(holding)
@@ -228,6 +232,30 @@ update_flag
 		can_label = 0
 
 	air_contents.react() //cooking up air cans - add phoron and oxygen, then heat above PHORON_MINIMUM_BURN_TEMPERATURE
+
+/obj/machinery/portable_atmospherics/canister/proc/handle_heat_exchange()
+	if(istype(src.loc, /turf/space))
+		heat -= COSMIC_RADIATION_TEMPERATURE * CANISTER_HEAT_TRANSFER_COEFFICIENT
+		return
+	exchange_heat(loc.return_air())
+	exchange_heat(air_contents)
+	if(temperature > temperature_resistance)
+		health -= 1
+		healthcheck()
+
+
+/obj/machinery/portable_atmospherics/canister/proc/exchange_heat(var/datum/gas_mixture/environment)
+	var/relative_density = (environment.total_moles/environment.volume) / (MOLES_CELLSTANDARD/CELL_VOLUME)
+	if(relative_density > 0.02) //don't bother if we are in vacuum or near-vacuum
+		var/loc_temp = environment.temperature
+		if(loc_temp == temperature)
+			return
+		var/loc_heat = environment.heat_capacity()
+		var/transferred_heat = QUANTIZE(((loc_heat / loc_temp) * (loc_temp - temperature)) * CANISTER_HEAT_TRANSFER_COEFFICIENT)
+		environment.add_thermal_energy(-transferred_heat)
+		heat += transferred_heat
+
+		temperature = QUANTIZE(heat / heat_capacity)
 
 /obj/machinery/portable_atmospherics/canister/proc/return_temperature()
 	var/datum/gas_mixture/GM = src.return_air()

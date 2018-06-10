@@ -88,6 +88,8 @@
 	storage_ui.show_to(user)
 
 /obj/item/weapon/storage/proc/prepare_ui()
+	if(ispath(storage_ui))
+		storage_ui = new storage_ui(src)
 	if(!storage_ui || !istype(storage_ui))
 		storage_ui = new()
 	storage_ui.prepare_ui()
@@ -323,10 +325,7 @@
 	for(var/obj/item/I in contents)
 		remove_from_storage(I, T, 1)
 	update_ui_after_item_removal()
-/obj/item/weapon/storage/after_load()
-	storage_ui = new storage_ui(src)
-	prepare_ui()
-	..()
+
 /obj/item/weapon/storage/Initialize()
 	. = ..()
 	if(allow_quick_empty)
@@ -342,7 +341,6 @@
 	if(isnull(max_storage_space) && !isnull(storage_slots))
 		max_storage_space = storage_slots*base_storage_cost(max_w_class)
 
-	storage_ui = new storage_ui(src)
 	prepare_ui()
 	spawn(100)
 		if(!map_storage_loaded)
@@ -359,6 +357,10 @@
 						for(var/i in 1 to (isnull(data)? 1 : data))
 							new item_path(src)
 				update_icon()
+
+/obj/item/weapon/storage/after_load()
+	. = ..()
+	prepare_ui()
 
 /obj/item/weapon/storage/emp_act(severity)
 	if(!istype(src.loc, /mob/living))

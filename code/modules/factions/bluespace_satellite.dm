@@ -29,14 +29,34 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/id = "docking port"
 	var/visible_mode = 0 // 0 = invisible, 1 = visible, docking auth required, 2 = visible, anyone can dock
 	var/datum/shuttle/shuttle
+	var/obj/machinery/computer/bridge_computer/bridge
 /obj/machinery/docking_beacon/New()
 	..()
 	GLOB.all_docking_beacons |= src
 /obj/machinery/docking_beacon/after_load()
 	if(req_access_faction && req_access_faction != "" || (faction && faction.uid != req_access_faction))
 		faction = get_faction(req_access_faction)
+	check_shuttle()
 /obj/machinery/docking_beacon/attack_hand(var/mob/user as mob)
 	ui_interact(user)
+/obj/machinery/docking_beacon/attackby(var/obj/item/W, var/mob/user)
+	if(isWrench(W))
+		if(status)
+			to_chat(user, "The beacon is powered and cannot be moved.")
+			return
+		anchored = !anchored
+		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
+		if(anchored)
+			user.visible_message("[user.name] secures [src.name] to the floor.", \
+				"You secure the [src.name] to the floor.", \
+				"You hear a ratchet")
+		else
+			user.visible_message("[user.name] unsecures [src.name] from the floor.", \
+				"You unsecure the [src.name] from the floor.", \
+				"You hear a ratchet")
+		return
+
+	return ..()
 
 /obj/machinery/docking_beacon/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 
@@ -104,6 +124,8 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		if(anchored)
 			if(status == 0)
 				status = 1
+		else
+			to_chat(usr, "The beacon must be anchored first.")
 	if(href_list["status_close"])
 		if(check_obstructed())
 			status = 5
@@ -152,7 +174,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/list/turfs = get_turfs()
 	var/list/holos = list()
 	for(var/turf/T in turfs)
-		if(istype(T, /turf/space))
+		if(1)//istype(T, /turf/space))
 			var/obj/structure/hologram/dockzone/holo = new(T)
 			holos |= holo
 	sleep(15 SECONDS)
@@ -173,7 +195,16 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		if(!istype(T.loc, /area/space))
 			return 1
 	return 0
-
+/obj/machinery/docking_beacon/proc/check_shuttle()
+	var/list/turfs = get_turfs()
+	for(var/turf/T in turfs)
+		for(var/obj/machinery/computer/bridge_computer/comp in T.contents)
+			if(comp.shuttle)
+				bridge = comp
+				shuttle = comp.shuttle
+				bridge.dock = src
+				return
+	return 0
 /obj/machinery/docking_beacon/proc/finalize(var/mob/user)
 	if(shuttle)
 		return 0
@@ -182,8 +213,12 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/bcomps = 0
 	var/list/engines = list()
 	var/name
+	var/obj/machinery/computer/bridge_computer/bridge
 	for(var/turf/T in turfs)
-		if(istype(T.loc, /area/space))
+		if(!istype(T.loc, /area/space))
+			status = 4
+			return 0
+		if(istype(T, /turf/space))
 			turfs -= T
 			continue
 		for(var/obj/machinery/computer/bridge_computer/comp in T.contents)
@@ -191,11 +226,8 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			if(bcomps > 1)
 				to_chat(user, "Multiple bridge computers detected. Shuttle finalization aborted.")
 				return
-			if(comp.get_valid())
-				valid_bridge_computer_found = 1
-			else
-				to_chat(user, "The bridge computer reports an error in configuration. Shuttle finalization aborted.")
-				return
+			bridge = comp
+			valid_bridge_computer_found = 1
 		for(var/obj/structure/shuttle/engine/engine in T.contents)
 			if(engine.anchored)
 				engines |= engine
@@ -206,8 +238,23 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		return 0
 	for(var/obj/structure/shuttle/engine/engine in engines)
 		engine.permaanchor = 1
-	shuttle = new(name, src)
+	var/area/shuttle/A = new
+	A.name = "shuttle"
+	//var/ma
+	//ma = A.master ? "[A.master]" : "(null)"
+	A.power_equip = 0
+	A.power_light = 0
+	A.power_environ = 0
+	A.always_unpowered = 0
+	A.contents.Add(turfs)
 
+	
+	shuttle = new(name, src)
+	bridge.shuttle = shuttle
+	shuttle.shuttle_area = A
+	shuttle.bridge = bridge
+	bridge.dock = src
+	
 /obj/machinery/docking_beacon/proc/get_turfs()
 	var/list/return_turfs = list()
 	/**

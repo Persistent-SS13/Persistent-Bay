@@ -15,7 +15,7 @@
 	var/shuttle_type = 1 // 1 = personal shuttle, 2 = faction shuttle
 	var/locked_to = "" // either the real_name or the faction_uid
 	var/ready = 0 // this is set to 1 to confirm construction is completed, and then the dock finalizes it
-
+	var/obj/machinery/docking_beacon/dock
 /obj/machinery/computer/bridge_computer/attack_hand(user as mob)
 	if(..(user))
 		return
@@ -79,6 +79,8 @@
 /obj/machinery/computer/bridge_computer/proc/get_docks(mob/user)
 	var/list/beacons = list()
 	for(var/obj/machinery/docking_beacon/beacon in GLOB.all_docking_beacons)
+		if(beacon == dock)
+			continue
 		if(beacon.visible_mode)
 			if(beacon.visible_mode == 1)
 				beacons[beacon] = 1
@@ -95,34 +97,37 @@
 /obj/machinery/computer/bridge_computer/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 	var/list/data = get_ui_data()
 	if(shuttle)
-		data["name"] = shuttle.name
-		switch(shuttle.moving_status)
-			if(SHUTTLE_IDLE)
-				data["status"] = "Idle"
-			if(SHUTTLE_WARMUP)
-				data["status"] = "Preparing for jump"
-			else
-				data["status"] = "Moving"
 		data["connected"] = 1
-		if(shuttle.moving_status == SHUTTLE_IDLE)
-			// add launch requirements here
-			data["can_launch"] = 1
+		if(shuttle.finalized)
+			data["final"] = 1
+			data["name"] = shuttle.name
+			switch(shuttle.moving_status)
+				if(SHUTTLE_IDLE)
+					data["status"] = "Idle"
+				if(SHUTTLE_WARMUP)
+					data["status"] = "Preparing for jump"
+				else
+					data["status"] = "Moving"
+			
+			if(shuttle.moving_status == SHUTTLE_IDLE)
+				// add launch requirements here
+				data["can_launch"] = 1
+			else
+				data["can_launch"] = 0
+
+			var/list/beacons = get_docks(user)
+			var/list/formatted_beacons[0]
+			for(var/obj/machinery/docking_beacon/beacon in beacons)
+				var/dock_status = beacons[beacon]
+				formatted_beacons[++formatted_beacons.len] = list("name" = beacon.id, "status" = dock_status, "ref" = "\ref[beacon]")
+			data["beacons"] = formatted_beacons
 		else
-			data["can_launch"] = 0
+			data["desired_name"] = desired_name != "" ? desired_name : "Unset!"
+			data["name_set"] = desired_name != "" ? 1 : 0
+			data["shuttle_type"] = shuttle_type
+			data["locked_to"] = locked_to != "" ? locked_to : "Unset!"
 
-		var/list/beacons = get_docks(user)
-		var/list/formatted_beacons[0]
-		for(var/obj/machinery/docking_beacon/beacon in beacons)
-			var/dock_status = beacons[beacon]
-			formatted_beacons[++formatted_beacons.len] = list("name" = beacon.id, "status" = dock_status, "ref" = "\ref[beacon]")
-		data["beacons"] = formatted_beacons
-
-	else
-		data["desired_name"] = desired_name != "" ? desired_name : "Unset!"
-		data["name_set"] = desired_name != "" ? 1 : 0
-		data["shuttle_type"] = shuttle_type
-		data["locked_to"] = locked_to != "" ? locked_to : "Unset!"
-
+		
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, ui_template, "[shuttle_tag] Shuttle Control", 470, 450)
@@ -183,7 +188,23 @@
 			locked_to = x
 		else
 			locked_to = ""
-
+	if(href_list["finalize"])
+		if(get_valid())
+			shuttle.finalized = 1
+			shuttle.name = desired_name
+			shuttle.ownertype = shuttle_type
+			shuttle.owner = locked_to
+			shuttle.shuttle_area.name = desired_name
+			to_chat(usr, "Shuttle finalization complete.")
+		else
+			to_chat(usr, "Shuttle finalization failed, check details.")
+	if(href_list["select_dock"])
+		if(!dock)
+			for(var/obj/machinery/docking_beacon/beacon in GLOB.all_docking_beacons)
+				beacon.check_shuttle()
+			return
+		var/obj/machinery/docking_beacon/beacon = locate(href_list["selected_ref"])
+		shuttle.short_jump(beacon, dock)
 	if(..())
 		return 1
 

@@ -21,6 +21,10 @@
 
 	var/defer_initialisation = FALSE //this shuttle will/won't be initialised by something after roundstart
 
+	var/finalized = 0
+	var/owner
+	var/ownertype = 1 // 1 = personal, 2 = factional
+	var/obj/machinery/computer/bridge_computer/bridge
 /datum/shuttle/New(_name, var/obj/effect/shuttle_landmark/initial_location)
 	..()
 	if(_name)
@@ -63,7 +67,7 @@
 
 	. = ..()
 
-/datum/shuttle/proc/short_jump(var/obj/effect/shuttle_landmark/destination)
+/datum/shuttle/proc/short_jump(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/location)
 	if(moving_status != SHUTTLE_IDLE) return
 
 	moving_status = SHUTTLE_WARMUP
@@ -80,7 +84,7 @@
 			return
 
 		moving_status = SHUTTLE_INTRANSIT //shouldn't matter but just to be safe
-		attempt_move(destination)
+		attempt_move(destination, location)
 		moving_status = SHUTTLE_IDLE
 
 /datum/shuttle/proc/long_jump(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/interim, var/travel_time)
@@ -118,7 +122,8 @@
 /datum/shuttle/proc/fuel_check()
 	return 1 //fuel check should always pass in non-overmap shuttles (they have magic engines)
 
-/datum/shuttle/proc/attempt_move(var/obj/effect/shuttle_landmark/destination)
+/datum/shuttle/proc/attempt_move(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/location)
+	if(location) current_location = location
 	if(current_location == destination)
 		return FALSE
 

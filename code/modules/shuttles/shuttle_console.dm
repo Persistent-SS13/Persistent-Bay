@@ -27,40 +27,7 @@
 	ui_interact(user)
 
 /obj/machinery/computer/bridge_computer/proc/get_ui_data()
-	if(!shuttle)
-		return list()
-	var/shuttle_state
-	switch(shuttle.moving_status)
-		if(SHUTTLE_IDLE) shuttle_state = "idle"
-		if(SHUTTLE_WARMUP) shuttle_state = "warmup"
-		if(SHUTTLE_INTRANSIT) shuttle_state = "in_transit"
-
-	var/shuttle_status
-	switch (shuttle.process_state)
-		if(IDLE_STATE)
-			if (shuttle.in_use)
-				shuttle_status = "Busy."
-			else
-				shuttle_status = "Standing-by at [shuttle.current_location]."
-
-		if(WAIT_LAUNCH, FORCE_LAUNCH)
-			shuttle_status = "Shuttle has recieved command and will depart shortly."
-		if(WAIT_ARRIVE)
-			shuttle_status = "Proceeding to [shuttle.next_location]."
-		if(WAIT_FINISH)
-			shuttle_status = "Arriving at destination now."
-
-	return list(
-		"name" = shuttle.name,
-		"shuttle_status" = shuttle_status,
-		"shuttle_state" = shuttle_state,
-		"has_docking" = shuttle.active_docking_controller? 1 : 0,
-		"docking_status" = shuttle.active_docking_controller? shuttle.active_docking_controller.get_docking_status() : null,
-		"docking_override" = shuttle.active_docking_controller? shuttle.active_docking_controller.override_enabled : null,
-		"can_launch" = shuttle.can_launch(),
-		"can_cancel" = shuttle.can_cancel(),
-		"can_force" = shuttle.can_force(),
-	)
+	return 0
 
 /obj/machinery/computer/bridge_computer/proc/handle_topic_href(var/datum/shuttle/autodock/shuttle, var/list/href_list)
 	if(!istype(shuttle))
@@ -95,7 +62,6 @@
 	return beacons
 
 /obj/machinery/computer/bridge_computer/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
-	var/list/data = get_ui_data()
 	if(shuttle)
 		data["connected"] = 1
 		if(shuttle.finalized)

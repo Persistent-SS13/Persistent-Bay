@@ -186,7 +186,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 /obj/machinery/docking_beacon/proc/check_obstructed()
 	var/list/turfs = get_turfs()
 	for(var/turf/T in turfs)
-		if(!istype(T, /turf/space))
+		if(!istype(T, /turf/space) && !istype(T, /turf/simulated/open))
 			return 1
 	return 0
 /obj/machinery/docking_beacon/proc/check_occupied()

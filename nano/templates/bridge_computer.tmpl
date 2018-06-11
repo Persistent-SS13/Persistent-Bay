@@ -1,4 +1,4 @@
-{{if data.connected}}
+{{if data.final}}
 	<h3>{{:data.name}}</h3>
 	<div class="item">
 		<div class="itemLabel">
@@ -20,18 +20,18 @@
 		Available Destinations
 		{{for data.beacons}}
 			{{if value.status == 2}}
-				{{:helper.link('REQUEST: {{:value.name}}', '', {'action' : 'request_dock', 'selected_ref' : value.ref})}}
+				{{:helper.link('REQUEST: {{:value.name}}', '', {'request_dock' : '1', 'selected_ref' : value.ref})}}
 			{{else}}
-				{{:helper.link('DOCK: {{:value.name}}', '', {'action' : 'select_dock', 'selected_ref' : value.ref})}}
+				{{:helper.link('DOCK: {{:value.name}}', '', {'select_dock' : '1', 'selected_ref' : value.ref})}}
 			{{/if}}
 		{{/for}}
 	{{else}}
 		<br>Launch not available!
 	{{/if}}
-{{else}}
+{{else data.connected}}
 	<h3>Shuttle Construction</h3>
 	<br><br>
-	Build this console inside an empty docking zone, fill out the following information and attach the appropriate amount of engines and then finalize the construction through the docking beacon.
+		Fill out this information to finalize the shuttle construction.
 	<br>
 	<div class="item">
 		<div class="itemLabel">
@@ -68,7 +68,19 @@
 			</div>
 		</div>
 	{{/if}}
-	
+	<div class="item">
+		<div class="itemLabel">
+			Finalize: 
+		</div>
+		<div class="itemContent">
+			{{:helper.link('Finalize Shuttle', 'check', {'finalize' : '1'}, null, null)}}
+		</div>
+	</div>
+{{else}}
+	<h3>Shuttle Construction</h3>
+	<br><br>
+		Build this console inside an empty docking zone, then use the dock to finalize the construction, add an APC and return to this console.
+	<br>
 {{/if}}
 <h3>Shuttle Status</h3>
 <div class="item" style="padding-top: 10px">

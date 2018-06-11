@@ -62,6 +62,7 @@
 	return beacons
 
 /obj/machinery/computer/bridge_computer/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
+	var/list/data = list()
 	if(shuttle)
 		data["connected"] = 1
 		if(shuttle.finalized)
@@ -74,7 +75,7 @@
 					data["status"] = "Preparing for jump"
 				else
 					data["status"] = "Moving"
-			
+
 			if(shuttle.moving_status == SHUTTLE_IDLE)
 				// add launch requirements here
 				data["can_launch"] = 1
@@ -93,7 +94,7 @@
 			data["shuttle_type"] = shuttle_type
 			data["locked_to"] = locked_to != "" ? locked_to : "Unset!"
 
-		
+
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, ui_template, "[shuttle_tag] Shuttle Control", 470, 450)

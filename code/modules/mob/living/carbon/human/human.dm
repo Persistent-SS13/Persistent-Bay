@@ -309,10 +309,13 @@
 		else
 			return "Unknown"
 	return real_name
-
+/mob/proc/get_id_name(var/if_no_id = "Unknown")
+	return if_no_id
+/mob/proc/get_idcard()
+	return 
 //gets name from ID or PDA itself, ID inside PDA doesn't matter
 //Useful when player is being seen by other mobs
-/mob/living/carbon/human/proc/get_id_name(var/if_no_id = "Unknown")
+/mob/living/carbon/human/get_id_name(var/if_no_id = "Unknown")
 	. = if_no_id
 	if(istype(wear_id,/obj/item/device/pda))
 		var/obj/item/device/pda/P = wear_id
@@ -324,7 +327,7 @@
 	return
 
 //gets ID card object from special clothes slot or null.
-/mob/living/carbon/human/proc/get_idcard()
+/mob/living/carbon/human/get_idcard()
 	if(wear_id)
 		return wear_id.GetIdCard()
 
@@ -846,7 +849,7 @@
 		vessel.add_reagent(/datum/reagent/blood,species.blood_volume-vessel.total_volume)
 		fixblood()
 
-	species.create_organs(src) // Reset our organs/limbs.
+	species.create_organs(src,1) // Reset our organs/limbs with a new stack.
 	restore_all_organs()       // Reapply robotics/amputated status from preferences.
 
 	if(!client || !key) //Don't boot out anyone already in the mob.

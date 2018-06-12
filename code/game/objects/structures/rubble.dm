@@ -15,7 +15,7 @@
 
 /obj/structure/rubble/New()
 	..()
-	if(prob(emptyprob)) 
+	if(prob(emptyprob))
 		lootleft = 0
 
 /obj/structure/rubble/Initialize()
@@ -55,7 +55,7 @@
 		lootleft--
 		update_icon()
 		to_chat(user, "<span class='notice'>You find \a [booty] and pull it carefully out of \the [src].</span>")
-		
+
 /obj/structure/rubble/attackby(var/obj/item/I, var/mob/user)
 	if (istype(I, /obj/item/weapon/pickaxe))
 		var/obj/item/weapon/pickaxe/P = I
@@ -66,7 +66,7 @@
 				var/obj/item/booty = pick(loot)
 				booty = new booty(loc)
 			qdel(src)
-	else 
+	else
 		..()
 		health -= I.force
 		if(health < 1)
@@ -93,7 +93,6 @@
 	/obj/item/weapon/archaeological_find/remains/robot,
 	/obj/item/weapon/archaeological_find/remains/,
 	/obj/item/weapon/archaeological_find/gun,
-	/obj/item/weapon/archaeological_find/laser,
 	/obj/item/weapon/archaeological_find/statuette,
 	/obj/item/weapon/archaeological_find/instrument,
 	/obj/item/weapon/archaeological_find/container,

@@ -1,15 +1,10 @@
 /**********************Unloading unit**************************/
-
-
 /obj/machinery/mineral/unloading_machine
 	name = "unloading machine"
 	icon = 'icons/obj/machines/mining_machines.dmi'
 	icon_state = "unloader"
 	density = 1
 	anchored = 1.0
-	var/obj/machinery/mineral/input = null
-	var/obj/machinery/mineral/output = null
-
 
 /obj/machinery/mineral/unloading_machine/New()
 	..()
@@ -27,36 +22,23 @@
 		return
 	if(default_deconstruction_crowbar(user, O))
 		return
+	var/obj/item/device/multitool/M = O
+	if(istype(M))
+		dir = angle2dir(dir2angle(dir) + 45)
+		user.visible_message("<span class='notice'>You change the output dir of \the [src] to [dir2text(dir)]</span>")
 	..()
-
-	spawn( 5 )
-		for (var/dir in GLOB.cardinal)
-			src.input = locate(/obj/machinery/mineral/input, get_step(src, dir))
-			if(src.input) break
-		for (var/dir in GLOB.cardinal)
-			src.output = locate(/obj/machinery/mineral/output, get_step(src, dir))
-			if(src.output) break
-		return
 	return
 
-/obj/machinery/mineral/unloading_machine/Process()
-	if (src.output && src.input)
-		if (locate(/obj/structure/ore_box, input.loc))
-			var/obj/structure/ore_box/BOX = locate(/obj/structure/ore_box, input.loc)
-			var/i = 0
-			for (var/obj/item/weapon/ore/O in BOX.contents)
-				BOX.contents -= O
-				O.loc = output.loc
-				i++
-				if (i>=10)
-					return
-		if (locate(/obj/item, input.loc))
-			var/obj/item/O
-			var/i
-			for (i = 0; i<10; i++)
-				O = locate(/obj/item, input.loc)
-				if (O)
-					O.loc = src.output.loc
-				else
-					return
+/obj/machinery/mineral/unloading_machine/Bumped(var/atom/movable/A)
+	var/obj/structure/ore_box/BOX = A
+	if (istype(BOX))
+		var/i = 0
+		for (var/obj/item/weapon/ore/O in BOX.contents)
+			BOX.contents -= O
+			O.loc = get_step(loc, dir)
+			i++
+			if (i>=10)
+				return
+		return
+	A.forceMove(get_step(loc, dir))
 	return

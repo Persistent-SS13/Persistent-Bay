@@ -1,5 +1,7 @@
 
 /obj/structure/girder
+	name = "girder"
+	desc = "The internals of a wall"
 	icon_state = "girder_d"
 	anchored = 0
 	density = 1
@@ -30,6 +32,8 @@
 			icon_state = "girder_w"
 		else
 			icon_state = "girder"
+	name = "[r_material ? "[r_material.display_name] reinforced " : ""][material.display_name] [initial(name)]"
+	desc = "It seems to be a [r_material ? "[r_material.display_name] reinforced " : ""][material.display_name] [initial(name)]."
 	if(r_material)
 		var/image/I = image('icons/obj/structures.dmi', "girder_r")
 		I.color = r_material.icon_colour

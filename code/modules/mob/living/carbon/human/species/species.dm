@@ -96,7 +96,7 @@
 	var/breath_type = "oxygen"                        // Non-oxygen gas breathed, if any.
 	var/poison_type = "phoron"                        // Poisonous air.
 	var/exhale_type = "carbon_dioxide"                // Exhaled gas type.
-	var/max_pressure_diff = 60						  // Maximum pressure difference that is safe for lungs
+	var/max_pressure_diff = 2*ONE_ATMOSPHERE		  // Maximum pressure difference that is safe for lungs
 	var/cold_level_1 = 260                            // Cold damage level 1 below this point.
 	var/cold_level_2 = 200                            // Cold damage level 2 below this point.
 	var/cold_level_3 = 120                            // Cold damage level 3 below this point.
@@ -247,7 +247,7 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 		if (extendedtank)	H.equip_to_slot_or_del(new /obj/item/weapon/storage/box/engineer(H), slot_r_hand)
 		else	H.equip_to_slot_or_del(new /obj/item/weapon/storage/box/survival(H), slot_r_hand)
 
-/datum/species/proc/create_organs(var/mob/living/carbon/human/H) //Handles creation of mob organs.
+/datum/species/proc/create_organs(var/mob/living/carbon/human/H, var/new_stack = 0) //Handles creation of mob organs.
 	H.mob_size = mob_size
 	var/stack_type = /obj/item/organ/internal/stack
 	
@@ -285,12 +285,13 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 
 	for(var/obj/item/organ/O in (H.organs|H.internal_organs))
 		O.owner = H
-	stack = new stack_type(H)
-	if(stack)
-		stack.owner = H
-		H.internal_organs_by_name[BP_STACK] = stack
-	else
-		message_admins("No stack, what the heck")
+	if(new_stack)
+		stack = new stack_type(H)
+		if(stack)
+			stack.owner = H
+			H.internal_organs_by_name[BP_STACK] = stack
+		else
+			message_admins("No stack, what the heck")
 	H.sync_organ_dna()
 
 /datum/species/proc/hug(var/mob/living/carbon/human/H,var/mob/living/target)

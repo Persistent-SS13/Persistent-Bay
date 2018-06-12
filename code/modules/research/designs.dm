@@ -545,6 +545,14 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/weapon/gun/energy/stunrevolver
 	sort_string = "TAAAA"
 
+/datum/design/item/weapon/laser_carbine
+	id = "laser_carbine"
+	desc = "A laser weapon designed to kill."
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 5, TECH_POWER = 5)
+	materials = list(DEFAULT_WALL_MATERIAL = 5000, "glass" = 3000, "silver" = 2000, "gold" = 2000, "diamond" = 6000)
+	build_path = /obj/item/weapon/gun/energy/laser
+	sort_string = "TAAAB"
+/*
 /datum/design/item/weapon/nuclear_gun
 	id = "nuclear_gun"
 	desc = "Self-recharging energy weapon powered by a nuclear core."
@@ -567,7 +575,7 @@ other types of metals and chemistry for reagents).
 	materials = list(DEFAULT_WALL_MATERIAL = 5000, "glass" = 1000, "uranium" = 1000, "phoron" = 6000)
 	build_path = /obj/item/weapon/gun/energy/toxgun
 	sort_string = "TAAAD"
-
+*/
 /datum/design/item/weapon/decloner
 	id = "decloner"
 	req_tech = list(TECH_COMBAT = 8, TECH_MATERIAL = 7, TECH_BIO = 5, TECH_POWER = 6)
@@ -575,13 +583,20 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/weapon/gun/energy/decloner
 	sort_string = "TAAAE"
 
+/datum/design/item/weapon/wt550
+	id = "wt-550"
+	req_tech = list(TECH_COMBAT = 5, TECH_MATERIAL = 3)
+	materials = list(DEFAULT_WALL_MATERIAL = 8000, "silver" = 2000, "diamond" = 1000)
+	build_path = /obj/item/weapon/gun/projectile/automatic/wt550
+	sort_string = "TAABA"
+/*
 /datum/design/item/weapon/smg
 	id = "smg"
 	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
 	materials = list(DEFAULT_WALL_MATERIAL = 8000, "silver" = 2000, "diamond" = 1000)
 	build_path = /obj/item/weapon/gun/projectile/automatic
 	sort_string = "TAABA"
-
+*/
 /datum/design/item/weapon/ammo_9mm
 	id = "ammo_9mm"
 	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
@@ -1717,21 +1732,11 @@ CIRCUITS BELOW
 	req_tech = list(TECH_DATA = 3, TECH_BIO = 3)
 	build_path = /obj/item/weapon/circuitboard/splicer
 	sort_string = "ZZZYJ"
-/datum/design/circuit/processing_unit_console
-	name = "Material Processor Console"
-	id = "processing_unit_console"
-	build_path = /obj/item/weapon/circuitboard/processing_unit_console
-	sort_string = "ZZZYI"
 /datum/design/circuit/processing_unit
 	name = "Material Processor"
 	id = "processing_unit"
 	build_path = /obj/item/weapon/circuitboard/processing_unit
 	sort_string = "ZZZYH"
-/datum/design/circuit/stacking_unit_console
-	name = "Stacking Machine Console"
-	id = "stacking_unit_console"
-	build_path = /obj/item/weapon/circuitboard/stacking_unit_console
-	sort_string = "ZZZYG"
 /datum/design/circuit/stacking_machine
 	name = "Stacking Machine"
 	id = "stacking_machine"

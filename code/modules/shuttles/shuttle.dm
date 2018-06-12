@@ -127,7 +127,7 @@
 	if(current_location == destination)
 		return FALSE
 
-	if(!destination.is_valid(src))
+	if(istype(destination) && !destination.is_valid(src))
 		return FALSE
 	testing("[src] moving to [destination]. Areas are [english_list(shuttle_area)]")
 	var/list/translation = list()

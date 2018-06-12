@@ -182,7 +182,7 @@
 		for(var/obj/structure/cable/C in A)
 			powernets |= C.powernet
 
-	translate_turfs(turf_translation, current_location.base_area, current_location.base_turf)
+	translate_turfs(turf_translation, get_area(current_location), /turf/space)
 	current_location = destination
 
 	// if there's a zlevel above our destination, paint in a ceiling on it so we retain our air

@@ -25,28 +25,15 @@
 		return 1
 
 	ui_interact(user)
-
-/obj/machinery/computer/bridge_computer/proc/get_ui_data()
-	return 0
-
-/obj/machinery/computer/bridge_computer/proc/handle_topic_href(var/datum/shuttle/autodock/shuttle, var/list/href_list)
-	if(!istype(shuttle))
-		return
-
-	if(href_list["move"])
-		if(!shuttle.next_location.is_valid(shuttle))
-			to_chat(usr, "<span class='warning'>Destination zone is invalid or obstructed.</span>")
-			return
-		shuttle.launch(src)
-	else if(href_list["force"])
-		shuttle.force_launch(src)
-	else if(href_list["cancel"])
-		shuttle.cancel_launch(src)
-
+			
+/obj/machinery/computer/bridge_computer/after_load()
+	..()
+	if(shuttle && loc && loc.loc)
+		shuttle.shuttle_area |= loc.loc 
 /obj/machinery/computer/bridge_computer/proc/get_docks(mob/user)
 	var/list/beacons = list()
 	for(var/obj/machinery/docking_beacon/beacon in GLOB.all_docking_beacons)
-		if(beacon == dock)
+		if(beacon == dock || !beacon.status)
 			continue
 		if(beacon.visible_mode)
 			if(beacon.visible_mode == 1)

@@ -9,9 +9,13 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	plane = LIGHTING_PLANE
 	layer = LIGHTING_LAYER
 	should_save = 0
+	
+	
 /obj/structure/hologram/dockzone
 	icon = 'icons/obj/machines/dock_beacon.dmi'
 	icon_state = "dockzone"
+	
+	
 /obj/machinery/docking_beacon
 	name = "docking beacon"
 	desc = "Can be installed to provide a landing and launch zone for shuttles, and to facilitate the construction of shuttles.."
@@ -19,7 +23,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	density = 1
 	icon = 'icons/obj/machines/dock_beacon.dmi'
 	icon_state = "unpowered"
-
 	use_power = 0			//1 = idle, 2 = active
 	var/status = 0 // 0 = unpowered, 1 = closed 2 = open 3 = contruction mode 4 = occupied 5 = obstructed
 	req_access = list(core_access_command_programs)
@@ -30,15 +33,23 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/visible_mode = 0 // 0 = invisible, 1 = visible, docking auth required, 2 = visible, anyone can dock
 	var/datum/shuttle/shuttle
 	var/obj/machinery/computer/bridge_computer/bridge
+	
+	
 /obj/machinery/docking_beacon/New()
 	..()
 	GLOB.all_docking_beacons |= src
+	
+	
 /obj/machinery/docking_beacon/after_load()
 	if(req_access_faction && req_access_faction != "" || (faction && faction.uid != req_access_faction))
 		faction = get_faction(req_access_faction)
 	check_shuttle()
+	
+	
 /obj/machinery/docking_beacon/attack_hand(var/mob/user as mob)
 	ui_interact(user)
+	
+	
 /obj/machinery/docking_beacon/attackby(var/obj/item/W, var/mob/user)
 	if(isWrench(W))
 		if(status)
@@ -58,6 +69,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 
 	return ..()
 
+	
 /obj/machinery/docking_beacon/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 
 	if(user.stat)
@@ -90,7 +102,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			if(5)
 				data["status"] = "Obstructed"
 		data["dimenson"] = dimensions
-
+	message_admins("debug 1")
 	// update the ui if it exists, returns null if no ui is passed/found
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
@@ -101,6 +113,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		ui.set_initial_data(data)
 		// open the new ui window
 		ui.open()
+		message_admins("debug 2")
 
 
 /obj/machinery/docking_beacon/update_icon()
@@ -115,6 +128,8 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			icon_state = "yellow"
 		if(4 to 5)
 			icon_state = "red"
+			
+			
 /obj/machinery/docking_beacon/Topic(href, href_list)
 	if(stat & (NOPOWER|BROKEN))
 		return 0 // don't update UIs attached to this object
@@ -183,18 +198,23 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		holo.loc = null
 		qdel(holo)
 
+		
 /obj/machinery/docking_beacon/proc/check_obstructed()
 	var/list/turfs = get_turfs()
 	for(var/turf/T in turfs)
 		if(!istype(T, /turf/space) && !istype(T, /turf/simulated/open))
 			return 1
 	return 0
+	
+	
 /obj/machinery/docking_beacon/proc/check_occupied()
 	var/list/turfs = get_turfs()
 	for(var/turf/T in turfs)
 		if(!istype(T.loc, /area/space))
 			return 1
 	return 0
+	
+	
 /obj/machinery/docking_beacon/proc/check_shuttle()
 	var/list/turfs = get_turfs()
 	for(var/turf/T in turfs)
@@ -205,6 +225,8 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 				bridge.dock = src
 				return
 	return 0
+	
+	
 /obj/machinery/docking_beacon/proc/finalize(var/mob/user)
 	if(shuttle)
 		return 0
@@ -255,6 +277,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	shuttle.bridge = bridge
 	bridge.dock = src
 	
+	
 /obj/machinery/docking_beacon/proc/get_turfs()
 	var/list/return_turfs = list()
 	/**
@@ -270,6 +293,8 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	**/
 	return_turfs = block(locate(x-2,y-1,z), locate(x+2,y-8,z))
 	return return_turfs
+	
+	
 /obj/machinery/bluespace_satellite
 	name = "bluespace satellite"
 	desc = "Can be configured and launched to create a new logistics network."
@@ -286,6 +311,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/starting_leader
 	var/chosen_netuid
 
+	
 /obj/machinery/bluespace_satellite/New()
 	..()
 
@@ -293,6 +319,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 /obj/machinery/bluespace_satellite/attack_hand(var/mob/user as mob)
 	ui_interact(user)
 
+	
 /obj/machinery/bluespace_satellite/attackby(var/obj/I as obj, var/mob/user as mob)
 	if(istype(I, /obj/item/weapon/card/id))
 		var/obj/item/weapon/card/id/id = I
@@ -301,6 +328,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		GLOB.nanomanager.update_uis(src)
 		return
 	..()
+
 
 /obj/machinery/bluespace_satellite/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 

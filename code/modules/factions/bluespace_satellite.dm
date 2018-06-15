@@ -102,7 +102,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			if(5)
 				data["status"] = "Obstructed"
 		data["dimenson"] = dimensions
-	message_admins("debug 1")
+	message_admins("ui_interact has ran, opening ui")
 	// update the ui if it exists, returns null if no ui is passed/found
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
@@ -113,7 +113,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		ui.set_initial_data(data)
 		// open the new ui window
 		ui.open()
-		message_admins("debug 2")
+		message_admins("ui should be open...")
 
 
 /obj/machinery/docking_beacon/update_icon()

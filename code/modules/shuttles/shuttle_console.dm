@@ -167,6 +167,10 @@
 			shuttle.ownertype = shuttle_type
 			shuttle.owner = locked_to
 			shuttle.shuttle_area.name = desired_name
+			if(shuttle_type == 1)
+				req_access_personal = locked_to
+			else
+				req_access_faction = locked_to
 			to_chat(usr, "Shuttle finalization complete.")
 		else
 			to_chat(usr, "Shuttle finalization failed, check details.")

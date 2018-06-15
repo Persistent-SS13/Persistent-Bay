@@ -200,6 +200,7 @@ var/const/NO_EMAG_ACT = -50
 /obj/item/weapon/card/id/proc/devalidate()
 	rank = "Devalidated"
 	assignment = "Devalidated"
+	registered_name = "Devalidated"
 	valid = 0
 	update_name()
 /obj/item/weapon/card/id/proc/show(mob/user as mob)

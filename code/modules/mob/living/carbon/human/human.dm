@@ -319,10 +319,11 @@
 	. = if_no_id
 	if(istype(wear_id,/obj/item/device/pda))
 		var/obj/item/device/pda/P = wear_id
-		return P.owner
+		if(P.id && P.id.valid)
+			return P.id.registered_name
 	if(wear_id)
 		var/obj/item/weapon/card/id/I = wear_id.GetIdCard()
-		if(I)
+		if(I && I.valid)
 			return I.registered_name
 	return
 

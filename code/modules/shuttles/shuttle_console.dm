@@ -33,7 +33,7 @@
 /obj/machinery/computer/bridge_computer/proc/get_docks(mob/user)
 	var/list/beacons = list()
 	for(var/obj/machinery/docking_beacon/beacon in GLOB.all_docking_beacons)
-		if(beacon == dock || !beacon.status)
+		if(beacon == dock || beacon.status != 2)
 			continue
 		if(beacon.visible_mode)
 			if(beacon.visible_mode == 1)
@@ -158,6 +158,9 @@
 				beacon.check_shuttle()
 			return
 		var/obj/machinery/docking_beacon/beacon = locate(href_list["selected_ref"])
+		dock = beacon
+		dock.bridge = src
+		dock.shuttle = shuttle
 		shuttle.short_jump(beacon, dock)
 	if(..())
 		return 1

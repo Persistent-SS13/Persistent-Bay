@@ -169,9 +169,10 @@
 			shuttle.shuttle_area.name = desired_name
 			if(shuttle_type == 1)
 				req_access_personal = locked_to
+				req_access = list(999)
 			else
 				req_access_faction = locked_to
-			req_access = list(core_access_command_programs)
+				req_access = list(core_access_command_programs)
 			to_chat(usr, "Shuttle finalization complete.")
 		else
 			to_chat(usr, "Shuttle finalization failed, check details.")

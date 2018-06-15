@@ -86,7 +86,12 @@
 			var/list/formatted_beacons[0]
 			for(var/obj/machinery/docking_beacon/beacon in beacons)
 				var/dock_status = beacons[beacon]
-				formatted_beacons[++formatted_beacons.len] = list("name" = beacon.id, "status" = dock_status, "ref" = "\ref[beacon]")
+				var/dock_name
+				if(dock_status == 2)
+					dock_name = "REQUEST: [beacon.id]"
+				else
+					dock_name = "DOCK: [beacon.id]"
+				formatted_beacons[++formatted_beacons.len] = list("name" = dock_name, "status" = dock_status, "ref" = "\ref[beacon]")
 			data["beacons"] = formatted_beacons
 		else
 			data["desired_name"] = desired_name != "" ? desired_name : "Unset!"

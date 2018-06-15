@@ -171,6 +171,7 @@
 				req_access_personal = locked_to
 			else
 				req_access_faction = locked_to
+			req_access = list(core_access_command_programs)
 			to_chat(usr, "Shuttle finalization complete.")
 		else
 			to_chat(usr, "Shuttle finalization failed, check details.")

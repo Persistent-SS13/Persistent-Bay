@@ -86,7 +86,12 @@
 			var/list/formatted_beacons[0]
 			for(var/obj/machinery/docking_beacon/beacon in beacons)
 				var/dock_status = beacons[beacon]
-				formatted_beacons[++formatted_beacons.len] = list("name" = beacon.id, "status" = dock_status, "ref" = "\ref[beacon]")
+				var/dock_name
+				if(dock_status == 2)
+					dock_name = "REQUEST: [beacon.id]"
+				else
+					dock_name = "DOCK: [beacon.id]"
+				formatted_beacons[++formatted_beacons.len] = list("name" = dock_name, "status" = dock_status, "ref" = "\ref[beacon]")
 			data["beacons"] = formatted_beacons
 		else
 			data["desired_name"] = desired_name != "" ? desired_name : "Unset!"
@@ -162,6 +167,12 @@
 			shuttle.ownertype = shuttle_type
 			shuttle.owner = locked_to
 			shuttle.shuttle_area.name = desired_name
+			if(shuttle_type == 1)
+				req_access_personal = locked_to
+				req_access = list(999)
+			else
+				req_access_faction = locked_to
+				req_access = list(core_access_command_programs)
 			to_chat(usr, "Shuttle finalization complete.")
 		else
 			to_chat(usr, "Shuttle finalization failed, check details.")
@@ -174,8 +185,6 @@
 		shuttle.short_jump(beacon, dock)
 	if(..())
 		return 1
-
-	handle_topic_href(shuttle_controller.shuttles[shuttle_tag], href_list)
 
 /obj/machinery/computer/bridge_computer/emag_act(var/remaining_charges, var/mob/user)
 	if (!hacked)

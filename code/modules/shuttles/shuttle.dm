@@ -2,7 +2,7 @@
 
 /datum/shuttle
 	var/name = ""
-	var/warmup_time = 0
+	var/warmup_time = 10
 	var/moving_status = SHUTTLE_IDLE
 
 	var/area/shuttle_area //can be both single area type or a list of areas
@@ -32,7 +32,10 @@
 
 	var/list/areas = list()
 	if(!islist(shuttle_area))
-		shuttle_area = list(shuttle_area)
+		if(shuttle_area)
+			shuttle_area = list(shuttle_area)
+		else
+			shuttle_area = list()
 	for(var/T in shuttle_area)
 		var/area/A = locate(T)
 		if(!istype(A))

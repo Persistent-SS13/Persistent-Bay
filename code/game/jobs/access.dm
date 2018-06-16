@@ -3,6 +3,7 @@
 /obj/var/list/req_access = list()
 /obj/var/list/req_one_access = list()
 /obj/var/req_access_faction = ""
+/obj/var/req_access_personal
 //returns 1 if this mob has sufficient access to use this object
 /obj/proc/allowed(mob/M)
 	//check if it doesn't require any access at all
@@ -10,6 +11,9 @@
 		return 1
 	if(!istype(M))
 		return 0
+	if(req_access_personal)
+		if(M.get_id_name() == req_access_personal)
+			return 1
 	return check_access_list(M.GetAccess(req_access_faction))
 
 /atom/movable/proc/GetAccess(var/faction_uid)

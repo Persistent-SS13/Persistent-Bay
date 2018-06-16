@@ -167,7 +167,7 @@
 			shuttle.ownertype = shuttle_type
 			shuttle.owner = locked_to
 			loc.loc.name = desired_name
-			
+
 			if(shuttle_type == 1)
 				req_access_personal = locked_to
 				req_access = list(999)
@@ -208,8 +208,55 @@
 /obj/machinery/computer/bridge_computer/emp_act()
 	return
 
-	
-/obj/machinery/computer/shuttle_control/after_load()
+/obj/machinery/computer/shuttle_control/proc/get_ui_data(var/datum/shuttle/autodock/shuttle)
+	var/shuttle_state
+	switch(shuttle.moving_status)
+		if(SHUTTLE_IDLE) shuttle_state = "idle"
+		if(SHUTTLE_WARMUP) shuttle_state = "warmup"
+		if(SHUTTLE_INTRANSIT) shuttle_state = "in_transit"
+
+	var/shuttle_status
+	switch (shuttle.process_state)
+		if(IDLE_STATE)
+			if (shuttle.in_use)
+				shuttle_status = "Busy."
+			else
+				shuttle_status = "Standing-by at [shuttle.current_location]."
+
+		if(WAIT_LAUNCH, FORCE_LAUNCH)
+			shuttle_status = "Shuttle has recieved command and will depart shortly."
+		if(WAIT_ARRIVE)
+			shuttle_status = "Proceeding to [shuttle.next_location]."
+		if(WAIT_FINISH)
+			shuttle_status = "Arriving at destination now."
+
+	return list(
+		"shuttle_status" = shuttle_status,
+		"shuttle_state" = shuttle_state,
+		"has_docking" = shuttle.active_docking_controller? 1 : 0,
+		"docking_status" = shuttle.active_docking_controller? shuttle.active_docking_controller.get_docking_status() : null,
+		"docking_override" = shuttle.active_docking_controller? shuttle.active_docking_controller.override_enabled : null,
+		"can_launch" = shuttle.can_launch(),
+		"can_cancel" = shuttle.can_cancel(),
+		"can_force" = shuttle.can_force(),
+	)
+
+/obj/machinery/computer/shuttle_control/proc/handle_topic_href(var/datum/shuttle/autodock/shuttle, var/list/href_list)
+	if(!istype(shuttle))
+		return
+
+	if(href_list["move"])
+		if(!shuttle.next_location.is_valid(shuttle))
+			to_chat(usr, "<span class='warning'>Destination zone is invalid or obstructed.</span>")
+			return
+		shuttle.launch(src)
+	else if(href_list["force"])
+		shuttle.force_launch(src)
+	else if(href_list["cancel"])
+		shuttle.cancel_launch(src)
+
+
+/obj/machinery/computer/bridge_computer/after_load()
 	..()
 	if(shuttle && loc && loc.loc)
 		shuttle.shuttle_area |= loc.loc

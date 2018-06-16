@@ -47,19 +47,20 @@
 		current_location = initial_location
 	else
 		current_location = locate(current_location)
+
+	shuttle_controller.shuttles[src.name] = src
+	if(flags & SHUTTLE_FLAGS_PROCESS)
+		shuttle_controller.process_shuttles += src
+	
+	if(flags & SHUTTLE_FLAGS_SUPPLY)
+		if(supply_controller.shuttle)
+			CRASH("A supply shuttle is already defined.")
+		supply_controller.shuttle = src
 	if(!istype(current_location))
 		CRASH("Shuttle \"[name]\" could not find its starting location.")
 
 	if(src.name in shuttle_controller.shuttles)
 		CRASH("A shuttle with the name '[name]' is already defined.")
-	shuttle_controller.shuttles[src.name] = src
-	if(flags & SHUTTLE_FLAGS_PROCESS)
-		shuttle_controller.process_shuttles += src
-	if(flags & SHUTTLE_FLAGS_SUPPLY)
-		if(supply_controller.shuttle)
-			CRASH("A supply shuttle is already defined.")
-		supply_controller.shuttle = src
-
 /datum/shuttle/Destroy()
 	current_location = null
 
@@ -76,19 +77,19 @@
 	moving_status = SHUTTLE_WARMUP
 	if(sound_takeoff)
 		playsound(current_location, sound_takeoff, 100, 20, 0.2)
-	spawn(warmup_time*10)
-		if (moving_status == SHUTTLE_IDLE)
-			return FALSE	//someone cancelled the launch
+	sleep(warmup_time*10)
+	if (moving_status == SHUTTLE_IDLE)
+		return FALSE	//someone cancelled the launch
 
-		if(!fuel_check()) //fuel error (probably out of fuel) occured, so cancel the launch
-			var/datum/shuttle/autodock/S = src
-			if(istype(S))
-				S.cancel_launch(null)
-			return
+	if(!fuel_check()) //fuel error (probably out of fuel) occured, so cancel the launch
+		var/datum/shuttle/autodock/S = src
+		if(istype(S))
+			S.cancel_launch(null)
+		return
 
-		moving_status = SHUTTLE_INTRANSIT //shouldn't matter but just to be safe
-		attempt_move(destination, location)
-		moving_status = SHUTTLE_IDLE
+	moving_status = SHUTTLE_INTRANSIT //shouldn't matter but just to be safe
+	attempt_move(destination, location)
+	moving_status = SHUTTLE_IDLE
 
 /datum/shuttle/proc/long_jump(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/interim, var/travel_time)
 	if(moving_status != SHUTTLE_IDLE) return

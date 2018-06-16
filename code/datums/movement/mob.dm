@@ -74,7 +74,7 @@
 			return // No wheelchair driving in space
 		if(istype(mob.pulledby, /obj/structure/bed/chair/wheelchair))
 			. = MOVEMENT_HANDLED
-			mob.pulledby.relaymove(mob, direction)
+			mob.pulledby.DoMove(direction, mob)
 		else if(istype(mob.buckled, /obj/structure/bed/chair/wheelchair))
 			. = MOVEMENT_HANDLED
 			if(ishuman(mob))
@@ -85,8 +85,12 @@
 					return // No hands to drive your chair? Tough luck!
 			//drunk wheelchair driving
 			direction = mob.AdjustMovementDirection(direction)
-			mob.move_delay += 2
-			mob.buckled.relaymove(mob, direction)
+			mob.buckled.DoMove(direction, mob)
+
+/datum/movement_handler/mob/buckle_relay/MayMove(var/mover)
+	if(mob.buckled)
+		return mob.buckled.MayMove(mover)
+	return TRUE
 
 // Movement delay
 /datum/movement_handler/mob/delay
@@ -199,7 +203,25 @@
 	//We are now going to move
 	mob.moving = 1
 	direction = mob.AdjustMovementDirection(direction)
-	//Something with pulling things
+	step(mob, direction)
+
+	// Something with pulling things
+	HandleGrabs(direction)
+
+	for (var/obj/item/grab/G in mob)
+		if (G.assailant_reverse_facing())
+			mob.set_dir(GLOB.reverse_dir[direction])
+		G.assailant_moved()
+	for (var/obj/item/grab/G in mob.grabbed_by)
+		G.adjust_position()
+
+	mob.moving = 0
+
+/datum/movement_handler/mob/movement/MayMove(var/mob/mover)
+	return !mob.moving
+
+/datum/movement_handler/mob/movement/proc/HandleGrabs(var/direction)
+	// TODO: Look into making grabs use movement events instead, this is a mess.
 	for (var/obj/item/grab/G in mob)
 		mob.move_delay = max(mob.move_delay, G.grab_slowdown())
 		var/list/L = mob.ret_grab()
@@ -210,7 +232,6 @@
 				if(M)
 					if ((get_dist(mob, M) <= 1 || M.loc == mob.loc))
 						var/turf/T = mob.loc
-						. = ..()
 						if (isturf(M.loc))
 							var/diag = get_dir(mob, M)
 							if ((diag - 1) & diag)
@@ -232,19 +253,6 @@
 						M.animate_movement = 2
 						return
 			G.adjust_position()
-
-	for (var/obj/item/grab/G in mob)
-		if (G.assailant_reverse_facing())
-			mob.set_dir(GLOB.reverse_dir[direction])
-		G.assailant_moved()
-	for (var/obj/item/grab/G in mob.grabbed_by)
-		G.adjust_position()
-
-	mob.moving = 0
-	step(mob, direction)
-
-/datum/movement_handler/mob/movement/MayMove(var/mob/mover)
-	return !mob.moving
 
 // Misc. helpers
 /mob/proc/MayEnterTurf(var/turf/T)

@@ -59,8 +59,8 @@
 	if(!istype(current_location))
 		CRASH("Shuttle \"[name]\" could not find its starting location.")
 
-	if(src.name in shuttle_controller.shuttles)
-		CRASH("A shuttle with the name '[name]' is already defined.")
+//	if(src.name in shuttle_controller.shuttles)
+//		CRASH("A shuttle with the name '[name]' is already defined.")
 /datum/shuttle/Destroy()
 	current_location = null
 

@@ -87,6 +87,10 @@
 	name = "\improper First Deck Maintenance"
 	icon_state = "maintcentral"
 
+/area/maintenance/firstdecksecondary
+	name = "\improper Engineering Maintenance"
+	icon_state = "maintcentral"
+
 /area/comms
 	name = "\improper Contour Telecommunications"
 	icon_state = "tcomsatcham"
@@ -107,12 +111,8 @@
 	name = "\improper Contour Arrivals"
 	icon_state = "entry_pods"
 
-/area/security/checkpoint/C1
-	name = "\improper Security Checkpoint 1"
-	icon_state = "checkpoint"
-
-/area/security/checkpoint/C2
-	name = "\improper Security Checkpoint 2"
+/area/security/checkpoint
+	name = "\improper Security Checkpoint"
 	icon_state = "checkpoint"
 
 // Contour Engineering

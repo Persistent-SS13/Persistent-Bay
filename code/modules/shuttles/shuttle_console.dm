@@ -184,7 +184,9 @@
 			return
 		var/obj/machinery/docking_beacon/beacon = locate(href_list["selected_ref"])
 		shuttle.short_jump(beacon, dock)
+		dock.status = 2
 		dock = beacon
+		dock.status = 4
 		dock.bridge = src
 		dock.shuttle = shuttle
 		shuttle.current_location = dock

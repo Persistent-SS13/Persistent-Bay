@@ -223,6 +223,8 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 				bridge = comp
 				shuttle = comp.shuttle
 				bridge.dock = src
+				shuttle.current_location = src
+				status = 4
 				return
 	return 0
 	

@@ -33,6 +33,17 @@
 	return ..()
 
 
+
+/obj/item/weapon/circuitboard/shuttle_engine
+	name = T_BOARD("shuttle engine")
+	build_path = /obj/structure/shuttle/engine/propulsion
+	origin_tech = list(TECH_ENGINEERING = 5, TECH_BLUESPACE = 3)
+	req_components = list(
+							/obj/item/stack/cable_coil = 10,
+							/obj/item/device/assembly/igniter = 1,
+							/obj/item/weapon/stock_parts/capacitor = 5)
+							
+	
 /obj/structure/shuttle/engine
 	name = "engine"
 	density = 1
@@ -95,7 +106,7 @@
 	icon = 'icons/turf/shuttle.dmi'
 	icon_state = "propulsion"
 	opacity = 1
-
+	var/permaanchor = 0
 	CanPass(atom/movable/mover, turf/target, height, air_group)
 		if(!height || air_group) return 0
 		else return ..()
@@ -116,36 +127,50 @@
 	component_parts += new /obj/item/stack/material/uranium(src)
 	component_parts += new /obj/item/stack/material/uranium(src)
 	component_parts += new /obj/item/stack/material/uranium(src)
-	component_parts += new /obj/item/stack/material/uranium(src)
-	component_parts += new /obj/item/stack/material/uranium(src)
-	component_parts += new /obj/item/stack/material/uranium(src)
-	component_parts += new /obj/item/stack/material/uranium(src)
-	component_parts += new /obj/item/stack/material/uranium(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
 	RefreshParts()
 
 /obj/machinery/shuttleengine/attackby(var/obj/O as obj, var/mob/user as mob)
+	if(isWrench(W))
+		if(permaanchor)
+			to_chat(user, "The engine is wired in to an active shuttle and cannot be wrenched.")
+			return
+		anchored = !anchored
+		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
+		if(anchored)
+			user.visible_message("[user.name] secures [src.name] to the floor.", \
+				"You secure the [src.name] to the floor.", \
+				"You hear a ratchet")
+		else
+			user.visible_message("[user.name] unsecures [src.name] from the floor.", \
+				"You unsecure the [src.name] from the floor.", \
+				"You hear a ratchet")
+		return
+	if(permaanchor)
+		to_chat(user, "The engine is wired in to an active shuttle and cannot be modified.")
+		return
 	if(default_deconstruction_screwdriver(user, O))
 		return
 	if(default_deconstruction_crowbar(user, O))
 		return
 	..()
+	
+/obj/machinery/shuttleengine/verb/rotate()
+	set name = "Rotate Clockwise"
+	set category = "Object"
+	set src in oview(1)
+
+	if (src.anchored || usr:stat)
+		to_chat(usr, "It is fastened to the floor!")
+		return 0
+	src.set_dir(turn(src.dir, 270))
+	return 1
+/obj/machinery/shuttleengine/verb/rotateccw()
+	set name = "Rotate Counter Clockwise"
+	set category = "Object"
+	set src in oview(1)
+
+	if (src.anchored || usr:stat)
+		to_chat(usr, "It is fastened to the floor!")
+		return 0
+	src.set_dir(turn(src.dir, 90))
+	return 1

@@ -276,7 +276,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 				return
 			bridge = comp
 			valid_bridge_computer_found = 1
-		for(var/obj/structure/shuttle/engine/engine in T.contents)
+		for(var/obj/machinery/shuttleengine/engine in T.contents)
 			if(engine.anchored)
 				engines |= engine
 	if(!valid_bridge_computer_found)
@@ -284,7 +284,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	if(!engines.len)
 		to_chat(user, "No properly anchored engine found. Shuttle finalization aborted.")
 		return 0
-	for(var/obj/structure/shuttle/engine/engine in engines)
+	for(var/obj/machinery/shuttleengine/engine in engines)
 		engine.permaanchor = 1
 	var/area/shuttle/A = new
 	A.name = "shuttle"

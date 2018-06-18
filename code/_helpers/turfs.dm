@@ -146,7 +146,10 @@
 	for(var/obj/O in source)
 		if(O.simulated)
 			O.forceMove(new_turf)
-
+		else
+			if(istype(O, /atom/movable/lighting_overlay))
+				O.loc = null
+				qdel(O)
 	for(var/mob/M in source)
 		if(isEye(M)) continue // If we need to check for more mobs, I'll add a variable
 		M.forceMove(new_turf)

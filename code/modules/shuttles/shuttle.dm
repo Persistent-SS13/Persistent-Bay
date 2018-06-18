@@ -25,6 +25,7 @@
 	var/owner
 	var/ownertype = 1 // 1 = personal, 2 = factional
 	var/obj/machinery/computer/bridge_computer/bridge
+	var/size = 1
 /datum/shuttle/New(_name, var/obj/effect/shuttle_landmark/initial_location)
 	..()
 	if(_name)
@@ -75,8 +76,7 @@
 	if(moving_status != SHUTTLE_IDLE) return
 
 	moving_status = SHUTTLE_WARMUP
-	if(sound_takeoff)
-		playsound(current_location, sound_takeoff, 100, 20, 0.2)
+	playsound(current_location.loc, sound_takeoff, 100, 20, 1)
 	sleep(warmup_time*10)
 	if (moving_status == SHUTTLE_IDLE)
 		return FALSE	//someone cancelled the launch

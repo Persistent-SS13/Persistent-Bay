@@ -173,5 +173,4 @@
 							/obj/item/stack/cable_coil = 30,
 							/obj/item/device/assembly/igniter = 1,
 							/obj/item/weapon/stock_parts/capacitor = 5,
-							/obj/item/stack/material/uranium = 10,
-							/obj/item/stack/material/ocp = 20)
+							/obj/item/stack/material/uranium = 5)

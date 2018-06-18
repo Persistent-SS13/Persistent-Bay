@@ -1,3 +1,8 @@
+/obj/item/weapon/circuitboard/bridge_computer
+	name = T_BOARD("Bridge Computer")
+	build_path = /obj/machinery/computer/bridge_computer
+	origin_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 4)
+
 /obj/machinery/computer/bridge_computer
 	name = "shuttle bridge console"
 	icon = 'icons/obj/computer.dmi'
@@ -45,8 +50,9 @@
 
 /obj/machinery/computer/bridge_computer/proc/get_docks(mob/user)
 	var/list/beacons = list()
+	if(!shuttle) return
 	for(var/obj/machinery/docking_beacon/beacon in GLOB.all_docking_beacons)
-		if(beacon == dock || beacon.status != 2 || !beacon.loc)
+		if(beacon == dock || beacon.status != 2 || !beacon.loc || beacon.dimensions < shuttle.size)
 			continue
 		if(beacon.visible_mode)
 			if(beacon.visible_mode == 1)
@@ -102,7 +108,7 @@
 
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
-		ui = new(user, src, ui_key, ui_template, "[shuttle_tag] Shuttle Control", 470, 450)
+		ui = new(user, src, ui_key, ui_template, "[shuttle_tag] Shuttle Control", 400, 300)
 		ui.set_initial_data(data)
 		ui.open()
 		ui.set_auto_update(1)
@@ -131,7 +137,8 @@
 
 
 /obj/machinery/computer/bridge_computer/Topic(href, href_list)
-
+	if(!allowed(usr))
+		return 1
 	if(href_list["set_name"])
 		var/curr_name = desired_name
 		var/select_name = sanitizeName(input(usr,"Enter the name of the vessel","Shuttle name", desired_name) as null|text, MAX_NAME_LEN, 1, 0)
@@ -173,7 +180,7 @@
 				req_access = list(999)
 			else
 				req_access_faction = locked_to
-				req_access = list(core_access_command_programs)
+				req_access = list(core_access_shuttle_programs)
 			to_chat(usr, "Shuttle finalization complete.")
 		else
 			to_chat(usr, "Shuttle finalization failed, check details.")
@@ -183,11 +190,17 @@
 				beacon.check_shuttle()
 			return
 		var/obj/machinery/docking_beacon/beacon = locate(href_list["selected_ref"])
+		if(beacon.dimensions < shuttle.size)
+			to_chat(usr, "Dock is not big enough.")
+			return 1
 		shuttle.short_jump(beacon, dock)
+		dock.status = 2
 		dock = beacon
+		dock.status = 4
 		dock.bridge = src
 		dock.shuttle = shuttle
 		shuttle.current_location = dock
+
 	if(..())
 		return 1
 

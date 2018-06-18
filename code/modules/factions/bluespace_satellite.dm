@@ -9,13 +9,13 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	plane = LIGHTING_PLANE
 	layer = LIGHTING_LAYER
 	should_save = 0
-	
-	
+
+
 /obj/structure/hologram/dockzone
 	icon = 'icons/obj/machines/dock_beacon.dmi'
 	icon_state = "dockzone"
-	
-	
+
+
 /obj/item/weapon/circuitboard/docking_beacon
 	name = T_BOARD("docking beacon")
 	build_path = /obj/machinery/docking_beacon
@@ -25,7 +25,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 							/obj/item/stack/cable_coil = 1,
 							/obj/item/weapon/stock_parts/subspace/filter = 1)
 
-	
+
 /obj/machinery/docking_beacon
 	name = "docking beacon"
 	desc = "Can be installed to provide a landing and launch zone for shuttles, and to facilitate the construction of shuttles.."
@@ -43,22 +43,22 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/visible_mode = 0 // 0 = invisible, 1 = visible, docking auth required, 2 = visible, anyone can dock
 	var/datum/shuttle/shuttle
 	var/obj/machinery/computer/bridge_computer/bridge
-	circuit = /obj/item/weapon/circuitboard/docking_beacon
+
 /obj/machinery/docking_beacon/New()
 	..()
 	GLOB.all_docking_beacons |= src
-	
-	
+
+
 /obj/machinery/docking_beacon/after_load()
 	if(req_access_faction && req_access_faction != "" || (faction && faction.uid != req_access_faction))
 		faction = get_faction(req_access_faction)
 	check_shuttle()
-	
-	
+
+
 /obj/machinery/docking_beacon/attack_hand(var/mob/user as mob)
 	ui_interact(user)
-	
-	
+
+
 /obj/machinery/docking_beacon/attackby(var/obj/item/W, var/mob/user)
 	if(isWrench(W))
 		if(status)
@@ -78,7 +78,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 
 	return ..()
 
-	
+
 /obj/machinery/docking_beacon/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 
 	if(user.stat)
@@ -137,8 +137,8 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			icon_state = "yellow"
 		if(4 to 5)
 			icon_state = "red"
-			
-			
+
+
 /obj/machinery/docking_beacon/Topic(href, href_list)
 	if(stat & (NOPOWER|BROKEN))
 		return 0 // don't update UIs attached to this object
@@ -147,7 +147,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	if(href_list["change_dimension"])
 		check_shuttle()
 		if(shuttle)
-			if(shuttle.size > text2num(href_list["change_dimension"])) 
+			if(shuttle.size > text2num(href_list["change_dimension"]))
 				to_chat(usr, "The dock is occupied by a shuttle that is too large for this dimension.")
 				return
 		dimensions = text2num(href_list["change_dimension"])
@@ -222,23 +222,23 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		holo.loc = null
 		qdel(holo)
 
-		
+
 /obj/machinery/docking_beacon/proc/check_obstructed()
 	var/list/turfs = get_turfs()
 	for(var/turf/T in turfs)
 		if(!istype(T, /turf/space) && !istype(T, /turf/simulated/open))
 			return 1
 	return 0
-	
-	
+
+
 /obj/machinery/docking_beacon/proc/check_occupied()
 	var/list/turfs = get_turfs()
 	for(var/turf/T in turfs)
 		if(!istype(T.loc, /area/space))
 			return 1
 	return 0
-	
-	
+
+
 /obj/machinery/docking_beacon/proc/check_shuttle()
 	var/list/turfs = get_turfs()
 	for(var/turf/T in turfs)
@@ -251,8 +251,8 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 				status = 4
 				return
 	return 0
-	
-	
+
+
 /obj/machinery/docking_beacon/proc/finalize(var/mob/user)
 	if(shuttle)
 		return 0
@@ -296,15 +296,15 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	A.always_unpowered = 0
 	A.contents.Add(turfs)
 
-	
+
 	shuttle = new(name, src)
 	shuttle.size = dimensions
 	bridge.shuttle = shuttle
 	shuttle.shuttle_area = A
 	shuttle.bridge = bridge
 	bridge.dock = src
-	
-	
+
+
 /obj/machinery/docking_beacon/proc/get_turfs()
 	var/list/return_turfs = list()
 	/**
@@ -328,8 +328,8 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		else
 			return_turfs = block(locate(x-2,y-1,z), locate(x+2,y-8,z))
 	return return_turfs
-	
-	
+
+
 /obj/machinery/bluespace_satellite
 	name = "bluespace satellite"
 	desc = "Can be configured and launched to create a new logistics network."
@@ -346,7 +346,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/starting_leader
 	var/chosen_netuid
 
-	
+
 /obj/machinery/bluespace_satellite/New()
 	..()
 
@@ -354,7 +354,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 /obj/machinery/bluespace_satellite/attack_hand(var/mob/user as mob)
 	ui_interact(user)
 
-	
+
 /obj/machinery/bluespace_satellite/attackby(var/obj/I as obj, var/mob/user as mob)
 	if(istype(I, /obj/item/weapon/card/id))
 		var/obj/item/weapon/card/id/id = I

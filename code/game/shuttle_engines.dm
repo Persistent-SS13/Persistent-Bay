@@ -32,18 +32,6 @@
 
 	return ..()
 
-
-
-/obj/item/weapon/circuitboard/shuttle_engine
-	name = T_BOARD("shuttle engine")
-	build_path = /obj/structure/shuttle/engine/propulsion
-	origin_tech = list(TECH_ENGINEERING = 5, TECH_BLUESPACE = 3)
-	req_components = list(
-							/obj/item/stack/cable_coil = 10,
-							/obj/item/device/assembly/igniter = 1,
-							/obj/item/weapon/stock_parts/capacitor = 5)
-							
-	
 /obj/structure/shuttle/engine
 	name = "engine"
 	density = 1
@@ -130,7 +118,7 @@
 	RefreshParts()
 
 /obj/machinery/shuttleengine/attackby(var/obj/O as obj, var/mob/user as mob)
-	if(isWrench(W))
+	if(isWrench(O))
 		if(permaanchor)
 			to_chat(user, "The engine is wired in to an active shuttle and cannot be wrenched.")
 			return
@@ -153,7 +141,7 @@
 	if(default_deconstruction_crowbar(user, O))
 		return
 	..()
-	
+
 /obj/machinery/shuttleengine/verb/rotate()
 	set name = "Rotate Clockwise"
 	set category = "Object"

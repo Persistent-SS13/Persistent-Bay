@@ -25,6 +25,7 @@
 	var/owner
 	var/ownertype = 1 // 1 = personal, 2 = factional
 	var/obj/machinery/computer/bridge_computer/bridge
+	var/size = 1
 /datum/shuttle/New(_name, var/obj/effect/shuttle_landmark/initial_location)
 	..()
 	if(_name)

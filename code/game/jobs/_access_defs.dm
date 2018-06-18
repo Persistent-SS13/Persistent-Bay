@@ -23,3 +23,4 @@
 #define core_access_door_configuration 7
 #define core_access_order_approval 8
 #define core_access_science_programs 9
+#define core_access_shuttle_programs 10

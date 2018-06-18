@@ -102,7 +102,7 @@
 
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
-		ui = new(user, src, ui_key, ui_template, "[shuttle_tag] Shuttle Control", 470, 450)
+		ui = new(user, src, ui_key, ui_template, "[shuttle_tag] Shuttle Control", 400, 300)
 		ui.set_initial_data(data)
 		ui.open()
 		ui.set_auto_update(1)
@@ -131,7 +131,8 @@
 
 
 /obj/machinery/computer/bridge_computer/Topic(href, href_list)
-
+	if(!allowed(usr))
+		return 1
 	if(href_list["set_name"])
 		var/curr_name = desired_name
 		var/select_name = sanitizeName(input(usr,"Enter the name of the vessel","Shuttle name", desired_name) as null|text, MAX_NAME_LEN, 1, 0)
@@ -173,7 +174,7 @@
 				req_access = list(999)
 			else
 				req_access_faction = locked_to
-				req_access = list(core_access_command_programs)
+				req_access = list(core_access_shuttle_programs)
 			to_chat(usr, "Shuttle finalization complete.")
 		else
 			to_chat(usr, "Shuttle finalization failed, check details.")
@@ -190,6 +191,7 @@
 		dock.bridge = src
 		dock.shuttle = shuttle
 		shuttle.current_location = dock
+	
 	if(..())
 		return 1
 

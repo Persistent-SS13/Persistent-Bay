@@ -27,7 +27,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/status = 0 // 0 = unpowered, 1 = closed 2 = open 3 = contruction mode 4 = occupied 5 = obstructed
 	req_access = list(core_access_command_programs)
 	var/datum/world_faction/faction
-	var/dimensions = 1 // 1 = 5*7, 2 = 7*7
+	var/dimensions = 1 // 1 = 5*7, 2 = 7*7, 3 = 9*9
 	var/highlighted = 0
 	var/id = "docking port"
 	var/visible_mode = 0 // 0 = invisible, 1 = visible, docking auth required, 2 = visible, anyone can dock
@@ -133,6 +133,19 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 /obj/machinery/docking_beacon/Topic(href, href_list)
 	if(stat & (NOPOWER|BROKEN))
 		return 0 // don't update UIs attached to this object
+	if(!allowed(usr))
+		return 1
+	if(href_list["change_dimension"])
+		check_shuttle()
+		if(shuttle)
+			if(shuttle.size > text2num(href_list["change_dimension"])) 
+				to_chat(usr, "The dock is occupied by a shuttle that is too large for this dimension.")
+				return
+		dimensions = text2num(href_list["change_dimension"])
+	if(href_list["disconnect"])
+		if(allowed(usr))
+			faction = null
+			req_access_faction = ""
 	if(href_list["power_off"])
 		status = 0
 	if(href_list["power_on"])
@@ -142,15 +155,17 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		else
 			to_chat(usr, "The beacon must be anchored first.")
 	if(href_list["status_close"])
-		if(check_obstructed())
+		if(check_occupied())
+			status = 4
+		else if(check_obstructed())
 			status = 5
 		else
 			status = 1
 	if(href_list["status_open"])
-		if(check_obstructed())
-			status = 5
-		else if(check_occupied())
+		if(check_occupied())
 			status = 4
+		else if(check_obstructed())
+			status = 5
 		else
 			status = 2
 	if(href_list["status_construct"])
@@ -274,6 +289,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 
 	
 	shuttle = new(name, src)
+	shuttle.size = dimensions
 	bridge.shuttle = shuttle
 	shuttle.shuttle_area = A
 	shuttle.bridge = bridge
@@ -293,7 +309,15 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		if(EAST)
 			return_turfs = block(locate(x-1,y+2,z), locate(x-8,y-2,z))
 	**/
-	return_turfs = block(locate(x-2,y-1,z), locate(x+2,y-8,z))
+	switch(dimensions)
+		if(1)
+			return_turfs = block(locate(x-2,y-1,z), locate(x+2,y-8,z))
+		if(2)
+			return_turfs = block(locate(x-3,y-1,z), locate(x+3,y-8,z))
+		if(3)
+			return_turfs = block(locate(x-4,y-1,z), locate(x+4,y-10,z))
+		else
+			return_turfs = block(locate(x-2,y-1,z), locate(x+2,y-8,z))
 	return return_turfs
 	
 	

@@ -16,6 +16,16 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	icon_state = "dockzone"
 	
 	
+/obj/item/weapon/circuitboard/docking_beacon
+	name = T_BOARD("docking beacon")
+	build_path = /obj/machinery/docking_beacon
+	origin_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 4, TECH_BLUESPACE = 4)
+	req_components = list(
+							/obj/item/weapon/stock_parts/manipulator = 2,
+							/obj/item/stack/cable_coil = 1,
+							/obj/item/weapon/stock_parts/subspace/filter = 1)
+
+	
 /obj/machinery/docking_beacon
 	name = "docking beacon"
 	desc = "Can be installed to provide a landing and launch zone for shuttles, and to facilitate the construction of shuttles.."
@@ -33,8 +43,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/visible_mode = 0 // 0 = invisible, 1 = visible, docking auth required, 2 = visible, anyone can dock
 	var/datum/shuttle/shuttle
 	var/obj/machinery/computer/bridge_computer/bridge
-	
-	
+	circuit = /obj/item/weapon/circuitboard/docking_beacon
 /obj/machinery/docking_beacon/New()
 	..()
 	GLOB.all_docking_beacons |= src

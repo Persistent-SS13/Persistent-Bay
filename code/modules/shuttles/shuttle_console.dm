@@ -1,3 +1,8 @@
+/obj/item/weapon/circuitboard/bridge_computer
+	name = T_BOARD("Bridge Computer")
+	build_path = /obj/machinery/computer/bridge_computer
+	origin_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 4)
+	
 /obj/machinery/computer/bridge_computer
 	name = "shuttle bridge console"
 	icon = 'icons/obj/computer.dmi'
@@ -45,8 +50,10 @@
 
 /obj/machinery/computer/bridge_computer/proc/get_docks(mob/user)
 	var/list/beacons = list()
+	if(!shuttle) return
+	var/size = shuttle.size
 	for(var/obj/machinery/docking_beacon/beacon in GLOB.all_docking_beacons)
-		if(beacon == dock || beacon.status != 2 || !beacon.loc)
+		if(beacon == dock || beacon.status != 2 || !beacon.loc || beacon.dimensions < shuttle.size)
 			continue
 		if(beacon.visible_mode)
 			if(beacon.visible_mode == 1)
@@ -184,6 +191,9 @@
 				beacon.check_shuttle()
 			return
 		var/obj/machinery/docking_beacon/beacon = locate(href_list["selected_ref"])
+		if(beacon.dimensions < shuttle.size)
+			to_chat(usr, "Dock is not big enough.")
+			return 1
 		shuttle.short_jump(beacon, dock)
 		dock.status = 2
 		dock = beacon

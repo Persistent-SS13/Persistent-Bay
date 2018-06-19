@@ -63,8 +63,8 @@ var/datum/admin_secrets/admin_secrets = new()
 
 /datum/admin_secret_item/proc/can_execute(var/mob/user)
 	if(can_view(user))
-		if(!warn_before_use || alert("Execute the command '[name]'?", name, "No","Yes") == "Yes")
-			return 1
+		if(!warn_before_use || alert("Execute the command '[name]'?[istext(warn_before_use) ? " [warn_before_use]" : ""]", name, "No","Yes") == "Yes")
+			return can_view(user)
 	return 0
 
 /datum/admin_secret_item/proc/execute(var/mob/user)
@@ -76,7 +76,11 @@ var/datum/admin_secrets/admin_secrets = new()
 	if(feedback)
 		feedback_inc("admin_secrets_used",1)
 		feedback_add_details("admin_secrets_used","[name]")
-	return 1
+	. = 1
+	do_execute(user)
+
+/datum/admin_secret_item/proc/do_execute(var/mob/user)
+	return
 
 /datum/admin_secret_item/Topic()
 	. = ..()
@@ -87,6 +91,9 @@ var/datum/admin_secrets/admin_secrets = new()
 *************************/
 /datum/admin_secret_category/admin_secrets
 	name = "Admin Secrets"
+
+/datum/admin_secret_category/debug
+	name = "Debug Tools"
 
 /datum/admin_secret_category/investigation
 	name = "Investigation"
@@ -108,6 +115,11 @@ var/datum/admin_secrets/admin_secrets = new()
 	category = /datum/admin_secret_category/admin_secrets
 	log = 0
 	permissions = R_ADMIN
+
+/datum/admin_secret_item/debug
+	category = /datum/admin_secret_category/debug
+	log = 1
+	permissions = R_DEBUG
 
 /datum/admin_secret_item/investigation
 	category = /datum/admin_secret_category/investigation

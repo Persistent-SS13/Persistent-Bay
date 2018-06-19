@@ -1,7 +1,4 @@
-/obj/item/weapon/circuitboard/bridge_computer
-	name = T_BOARD("Bridge Computer")
-	build_path = /obj/machinery/computer/bridge_computer
-	origin_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 4)
+
 
 /obj/machinery/computer/bridge_computer
 	name = "shuttle bridge console"

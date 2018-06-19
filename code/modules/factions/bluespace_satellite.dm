@@ -16,15 +16,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	icon_state = "dockzone"
 
 
-/obj/item/weapon/circuitboard/docking_beacon
-	name = T_BOARD("docking beacon")
-	build_path = /obj/machinery/docking_beacon
-	origin_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 4, TECH_BLUESPACE = 4)
-	req_components = list(
-							/obj/item/weapon/stock_parts/manipulator = 2,
-							/obj/item/stack/cable_coil = 1,
-							/obj/item/weapon/stock_parts/subspace/filter = 1)
-
 
 /obj/machinery/docking_beacon
 	name = "docking beacon"
@@ -110,7 +101,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 				data["status"] = "Occupied"
 			if(5)
 				data["status"] = "Obstructed"
-		data["dimenson"] = dimensions
+		data["dimension"] = dimensions
 	message_admins("ui_interact has ran, opening ui")
 	// update the ui if it exists, returns null if no ui is passed/found
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)

@@ -560,7 +560,7 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/stasisclamp
 	name = "stasis clamp"
-	path = /obj/machinery/clamp
+	path = /obj/item/clamp
 	category = "Engineering"
 
 /datum/autolathe/recipe/beerkeg

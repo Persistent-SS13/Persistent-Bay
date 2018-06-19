@@ -13,7 +13,7 @@
 
 /obj/item/organ/internal/appendix/Process()
 	..()
-	if(inflamed && owner)
+	if((inflamed || scarred > 2) && owner)
 		inflamed++
 		if(prob(5))
 			if(owner.can_feel_pain())

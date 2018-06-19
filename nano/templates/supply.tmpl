@@ -106,27 +106,23 @@
 	{{/for}}
 		
 {{else data.screen == 6}}
-	{{if data.is_admin}}
-		<div class="item">
-			<div class="itemLabel">
-				Export Telepad Selection:
-			</div>
-			<div class="itemContent">
-				{{for data.telepads}}
-					{{:helper.link(value.name, '', {'toggle_telepad_export' : value.ref},null, value.selected ? 'selected' : null )}}
-				{{/for}}
-			</div>
+	<div class="item">
+		<div class="itemLabel">
+			Export Telepad Selection:
 		</div>
-		<hr>
-		<div class="item">
-			<div class="itemLabel">
-				Send Valid Exports:
-			</div>
-			<div class="itemContent">
-				{{:helper.link('Initiate Telepads', 'check', {'launch_export' : 1})}}
-			</div>
+		<div class="itemContent">
+			{{for data.telepads}}
+				{{:helper.link(value.name, '', {'toggle_telepad_export' : value.ref},null, value.selected ? 'selected' : null )}}
+			{{/for}}
 		</div>
-	{{else}}
-		<h3>Access denied: Missing identificaton or insufficient permissions.</h3>
-	{{/if}}
+	</div>
+	<hr>
+	<div class="item">
+		<div class="itemLabel">
+			Send Valid Exports:
+		</div>
+		<div class="itemContent">
+			{{:helper.link('Initiate Telepads', 'check', {'launch_export' : 1})}}
+		</div>
+	</div>
 {{/if}}

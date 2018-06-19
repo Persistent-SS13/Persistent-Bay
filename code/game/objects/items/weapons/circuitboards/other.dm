@@ -51,6 +51,9 @@
 	board_type = "machine"
 	origin_tech = list(TECH_DATA = 1)
 	req_components = list(
+							/obj/item/weapon/stock_parts/subspace/ansible = 1,
+							/obj/item/weapon/stock_parts/subspace/filter = 1,
+							/obj/item/weapon/stock_parts/subspace/crystal = 1,
 							/obj/item/weapon/stock_parts/capacitor = 1,
 							/obj/item/weapon/stock_parts/scanning_module = 1)
 
@@ -170,5 +173,21 @@
 							/obj/item/stack/cable_coil = 30,
 							/obj/item/device/assembly/igniter = 1,
 							/obj/item/weapon/stock_parts/capacitor = 5,
-							/obj/item/stack/material/uranium = 10,
-							/obj/item/stack/material/ocp = 20)
+							/obj/item/stack/material/uranium = 5)
+							
+/obj/item/weapon/circuitboard/bridge_computer
+	name = T_BOARD("bridge computer")
+	build_path = /obj/machinery/computer/bridge_computer
+	origin_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 4)
+	board_type = "computer"
+	
+/obj/item/weapon/circuitboard/docking_beacon
+	name = T_BOARD("docking beacon")
+	build_path = /obj/machinery/docking_beacon
+	board_type = "machine"
+	origin_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 4, TECH_BLUESPACE = 4)
+	req_components = list(
+							/obj/item/weapon/stock_parts/manipulator = 2,
+							/obj/item/stack/cable_coil = 1,
+							/obj/item/weapon/stock_parts/subspace/filter = 1)
+

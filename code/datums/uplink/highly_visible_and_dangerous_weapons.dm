@@ -52,7 +52,7 @@
 	antag_roles = list(MODE_MERCENARY = 12)
 	path = /obj/item/weapon/gun/launcher/grenade/loaded
 
-//These are for traitors (or other antags, perhaps) to have the option of purchasing some merc gear.
+/*//These are for traitors (or other antags, perhaps) to have the option of purchasing some merc gear.
 /datum/uplink_item/item/visible_weapons/submachinegun
 	name = "Submachine Gun"
 	item_cost = 52
@@ -68,13 +68,13 @@
 /datum/uplink_item/item/visible_weapons/advanced_energy_gun
 	name = "Advanced Energy Gun"
 	item_cost = 60
-	path = /obj/item/weapon/gun/energy/gun/nuclear
+	path = /obj/item/weapon/gun/energy/gun/nuclear*/
 
 /datum/uplink_item/item/visible_weapons/heavysniper
 	name = "Anti-materiel Rifle with ammunition"
 	item_cost = 68
 	path = /obj/item/weapon/storage/secure/briefcase/heavysniper
-
+/*
 /datum/uplink_item/item/visible_weapons/machine_pistol
 	name = "Machine Pistol"
 	item_cost = 45
@@ -84,17 +84,17 @@
 	name = "Combat Shotgun"
 	item_cost = 52
 	path = /obj/item/weapon/gun/projectile/shotgun/pump/combat
-
+*/
 /datum/uplink_item/item/visible_weapons/sawnoff
 	name = "Sawnoff Shotgun"
 	item_cost = 45
 	path = /obj/item/weapon/gun/projectile/shotgun/doublebarrel/sawn
-
+/*
 /datum/uplink_item/item/visible_weapons/deagle
 	name = "Magnum Pistol"
 	item_cost = 52
 	path = /obj/item/weapon/gun/projectile/magnum_pistol
-
+*/
 /datum/uplink_item/item/visible_weapons/detective_revolver
 	name = "Holdout Revolver"
 	item_cost = 38

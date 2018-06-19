@@ -132,7 +132,7 @@
 	throw_speed = 5
 	throw_range = 7
 	maxcharge = 100
-	matter = list("metal" = 70, "glass" = 5)
+	matter = list(DEFAULT_WALL_MATERIAL = 70, "glass" = 5)
 
 /obj/item/weapon/cell/device/variable/New(newloc, charge_amount)
 	maxcharge = charge_amount
@@ -147,7 +147,7 @@
 	desc = "A small power cell designed to power more energy-demanding devices."
 	icon_state = "hdevice"
 	maxcharge = 100
-	matter = list("metal" = 70, "glass" = 6)
+	matter = list(DEFAULT_WALL_MATERIAL = 70, "glass" = 6)
 
 /obj/item/weapon/cell/crap
 	name = "old power cell"

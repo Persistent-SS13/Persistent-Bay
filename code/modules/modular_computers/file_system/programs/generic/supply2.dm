@@ -240,7 +240,7 @@
 						sent++
 					break
 				break
-		to_chat(usr, "Export protocl completed, [sent] orders were succesfully sent and [earned] $$ was put into the account.")
+		to_chat(usr, "Export protocol completed, [sent] orders were succesfully sent and [earned] $$ was put into the account.")
 	if(href_list["launch_order"])
 		if(!connected_faction.approved_orders) return
 		if(!selected_telepads.len)

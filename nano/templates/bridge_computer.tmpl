@@ -1,0 +1,84 @@
+{{if data.final}}
+	<h3>{{:data.name}}</h3>
+	<div class="item">
+		<div class="itemLabel">
+			Current Status:
+		</div>
+		<div class="itemContent">
+			{{:data.status}}
+		</div>
+	</div>
+	<div class="item">
+		<div class="itemLabel">
+			Current Status:
+		</div>
+		<div class="itemContent">
+			{{:data.status}}
+		</div>
+	</div>
+	{{if data.can_launch}}
+		Transit available, current destinations:<hr><br><br>
+		{{for data.beacons}}
+			{{if value.status == 2}}
+				{{:helper.link(value.name, '', {'request_dock' : '1', 'selected_ref' : value.ref})}}
+			{{else}}
+				{{:helper.link(value.name, '', {'select_dock' : '1', 'selected_ref' : value.ref})}}
+			{{/if}}
+		{{/for}}
+	{{else}}
+		<br>Launch not available!
+	{{/if}}
+{{else data.connected}}
+	<h3>Shuttle Construction</h3>
+	<br><br>
+		Fill out this information to finalize the shuttle construction.
+	<br>
+	<div class="item">
+		<div class="itemLabel">
+			Desired Name:
+		</div>
+		<div class="itemContent">
+			{{:helper.link(data.desired_name, 'pencil', {'set_name' : '1'}, null, null)}}
+		</div>
+	</div>
+	<div class="item">
+		<div class="itemLabel">
+			Shuttle Ownership:
+		</div>
+		<div class="itemContent">
+			{{:helper.link('Personal', '', {'set_personal' : '1'}, data.shuttle_type == 1 ? 'selected' : null, null)}}{{:helper.link('Organization', '', {'set_corporate' : '1'}, data.shuttle_type == 2 ? 'selected' : null, null)}}
+		</div>
+	</div>
+	{{if data.shuttle_type == 2}}
+		<div class="item">
+			<div class="itemLabel">
+				Link Organization:
+			</div>
+			<div class="itemContent">
+				{{:helper.link(data.locked_to, 'pencil', {'set_locked_2' : '1'}, null, null)}}
+			</div>
+		</div>
+	{{else}}
+		<div class="item">
+			<div class="itemLabel">
+				Link Owner:
+			</div>
+			<div class="itemContent">
+				{{:helper.link(data.locked_to, 'pencil', {'set_locked' : '1'}, null, null)}}
+			</div>
+		</div>
+	{{/if}}
+	<div class="item">
+		<div class="itemLabel">
+			Finalize: 
+		</div>
+		<div class="itemContent">
+			{{:helper.link('Finalize Shuttle', 'check', {'finalize' : '1'}, null, null)}}
+		</div>
+	</div>
+{{else}}
+	<h3>Shuttle Construction</h3>
+	<br><br>
+		Build this console inside an empty docking zone, then use the dock to finalize the construction, add an APC and return to this console.
+	<br>
+{{/if}}

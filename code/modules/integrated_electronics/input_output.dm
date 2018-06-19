@@ -206,13 +206,13 @@
 
 /obj/item/integrated_circuit/input/signaler/Initialize()
 	. = ..()
-
-	var/datum/integrated_io/new_freq = inputs[1]
-	var/datum/integrated_io/new_code = inputs[2]
-	// Set the pins so when someone sees them, they won't show as null
-	new_freq.data = frequency
-	new_code.data = 30
-	set_frequency(new_freq.data)
+	if(!map_storage_loaded)
+		var/datum/integrated_io/new_freq = inputs[1]
+		var/datum/integrated_io/new_code = inputs[2]
+		// Set the pins so when someone sees them, they won't show as null
+		new_freq.data = frequency
+		new_code.data = 30
+		set_frequency(new_freq.data)
 
 /obj/item/integrated_circuit/input/signaler/Destroy()
 	if(radio_controller)
@@ -669,7 +669,7 @@
 		text_output += "\an [name]"
 	else
 		text_output += "\an ["\improper[initial_name]"] labeled '[name]'"
-	text_output += " which is currently [get_pin_data(IC_INPUT, 1) ? "lit <font color=[led_color]>¤</font>" : "unlit."]"
+	text_output += " which is currently [get_pin_data(IC_INPUT, 1) ? "lit <font color=[led_color]>ï¿½</font>" : "unlit."]"
 	to_chat(user,jointext(text_output,null))
 /obj/item/integrated_circuit/output/led/get_topic_data()
 	return list("\An [initial(name)] that is currently [get_pin_data(IC_INPUT, 1) ? "lit" : "unlit."]")

@@ -18,6 +18,26 @@ other types of metals and chemistry for reagents).
 */
 //Note: More then one of these can be added to a design.
 
+/var/global/list/protolathe_recipes
+/var/global/list/protolathe_categories
+
+/proc/populate_protolathe_recipes()
+
+	//Create global protolathe recipe list if it hasn't been made already.
+	protolathe_recipes = list()
+	protolathe_categories = list()
+	for(var/R in typesof(/datum/design/item)-/datum/design/item)
+		var/datum/design/item/recipe = new R
+		protolathe_recipes += recipe
+		protolathe_categories |= recipe.category
+
+		var/obj/item/I = new recipe.build_path
+		if(I.matter && !recipe.materials) //This can be overidden in the datums.
+			recipe.materials = list()
+			for(var/material in I.matter)
+				recipe.materials[material] = I.matter[material] * EXTRA_COST_FACTOR
+		qdel(I)
+
 /datum/design						//Datum for object designs, used in construction
 	var/name = null					//Name of the created object. If null it will be 'guessed' from build_path if possible.
 	var/desc = null					//Description of the created object. If null it will use group_desc and name where applicable.
@@ -347,13 +367,21 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/weapon/pickaxe/diamonddrill
 	sort_string = "KAAAE"
 
+/datum/design/item/device/mining_scanner
+	desc = "Scans for ore deposits."
+	id = "mining_scanner"
+	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2)
+	materials = list(DEFAULT_WALL_MATERIAL = 1000,"glass" = 1000)
+	build_path = /obj/item/weapon/mining_scanner
+	sort_string = "KAAAF"
+
 /datum/design/item/device/depth_scanner
 	desc = "Used to check spatial depth and density of rock outcroppings."
 	id = "depth_scanner"
 	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2, TECH_BLUESPACE = 2)
 	materials = list(DEFAULT_WALL_MATERIAL = 1000,"glass" = 1000)
 	build_path = /obj/item/device/depth_scanner
-	sort_string = "KAAAF"
+	sort_string = "KAAAG"
 
 /datum/design/item/medical
 	materials = list(DEFAULT_WALL_MATERIAL = 30, "glass" = 20)
@@ -517,6 +545,14 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/weapon/gun/energy/stunrevolver
 	sort_string = "TAAAA"
 
+/datum/design/item/weapon/laser_carbine
+	id = "laser_carbine"
+	desc = "A laser weapon designed to kill."
+	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 5, TECH_POWER = 5)
+	materials = list(DEFAULT_WALL_MATERIAL = 5000, "glass" = 3000, "silver" = 2000, "gold" = 2000, "diamond" = 6000)
+	build_path = /obj/item/weapon/gun/energy/laser
+	sort_string = "TAAAB"
+/*
 /datum/design/item/weapon/nuclear_gun
 	id = "nuclear_gun"
 	desc = "Self-recharging energy weapon powered by a nuclear core."
@@ -539,7 +575,7 @@ other types of metals and chemistry for reagents).
 	materials = list(DEFAULT_WALL_MATERIAL = 5000, "glass" = 1000, "uranium" = 1000, "phoron" = 6000)
 	build_path = /obj/item/weapon/gun/energy/toxgun
 	sort_string = "TAAAD"
-
+*/
 /datum/design/item/weapon/decloner
 	id = "decloner"
 	req_tech = list(TECH_COMBAT = 8, TECH_MATERIAL = 7, TECH_BIO = 5, TECH_POWER = 6)
@@ -547,13 +583,20 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/weapon/gun/energy/decloner
 	sort_string = "TAAAE"
 
+/datum/design/item/weapon/wt550
+	id = "wt-550"
+	req_tech = list(TECH_COMBAT = 5, TECH_MATERIAL = 3)
+	materials = list(DEFAULT_WALL_MATERIAL = 8000, "silver" = 2000, "diamond" = 1000)
+	build_path = /obj/item/weapon/gun/projectile/automatic/wt550
+	sort_string = "TAABA"
+/*
 /datum/design/item/weapon/smg
 	id = "smg"
 	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
 	materials = list(DEFAULT_WALL_MATERIAL = 8000, "silver" = 2000, "diamond" = 1000)
 	build_path = /obj/item/weapon/gun/projectile/automatic
 	sort_string = "TAABA"
-
+*/
 /datum/design/item/weapon/ammo_9mm
 	id = "ammo_9mm"
 	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
@@ -1084,6 +1127,15 @@ other types of metals and chemistry for reagents).
 	materials = list(DEFAULT_WALL_MATERIAL = 5000, "glass" = 1000, "phoron" = 3000, "diamond" = 3000, "uranium" = 3000)
 	build_path = /obj/item/weapon/computer_hardware/logistic_processor
 	sort_string = "VBABB"
+
+/datum/design/item/jetpack
+	name = "Air Supply and Propulsion System"	//Just a fancy name for a jetpack, heh
+	id = "jetpack"
+	req_tech = list(TECH_ENGINEERING = 4)
+	build_type = PROTOLATHE
+	materials = list(DEFAULT_WALL_MATERIAL = 6000)
+	build_path = /obj/item/weapon/tank/jetpack
+	sort_string = "VBABC"
 
 /*
 CIRCUITS BELOW
@@ -1680,21 +1732,11 @@ CIRCUITS BELOW
 	req_tech = list(TECH_DATA = 3, TECH_BIO = 3)
 	build_path = /obj/item/weapon/circuitboard/splicer
 	sort_string = "ZZZYJ"
-/datum/design/circuit/processing_unit_console
-	name = "Material Processor Console"
-	id = "processing_unit_console"
-	build_path = /obj/item/weapon/circuitboard/processing_unit_console
-	sort_string = "ZZZYI"
 /datum/design/circuit/processing_unit
 	name = "Material Processor"
 	id = "processing_unit"
 	build_path = /obj/item/weapon/circuitboard/processing_unit
 	sort_string = "ZZZYH"
-/datum/design/circuit/stacking_unit_console
-	name = "Stacking Machine Console"
-	id = "stacking_unit_console"
-	build_path = /obj/item/weapon/circuitboard/stacking_unit_console
-	sort_string = "ZZZYG"
 /datum/design/circuit/stacking_machine
 	name = "Stacking Machine"
 	id = "stacking_machine"
@@ -1711,6 +1753,18 @@ CIRCUITS BELOW
 	req_tech = list(TECH_ENGINEERING = 4, TECH_POWER = 4)
 	build_path = /obj/item/weapon/circuitboard/shuttleengine
 	sort_string = "ZZZYD"
+/datum/design/circuit/dockingbeacon
+	name = "Docking Beacon"
+	id = "dockingbeacon"
+	req_tech = list(TECH_ENGINEERING = 4, TECH_BLUESPACE = 4)
+	build_path = /obj/item/weapon/circuitboard/docking_beacon
+	sort_string = "ZZZYF"
+/datum/design/circuit/bridgecomputer
+	name = "Bridge Computer"
+	id = "bridgecomputer"
+	req_tech = list(TECH_ENGINEERING = 4, TECH_BLUESPACE = 4)
+	build_path = /obj/item/weapon/circuitboard/bridge_computer
+	sort_string = "ZZZZG"
 /*
 /datum/design/circuit/
 	name = ""
@@ -1898,12 +1952,12 @@ CIRCUITS BELOW
 	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 3, TECH_BLUESPACE = 2)
 	build_path = /obj/item/weapon/circuitboard/telecomms/receiver
 	sort_string = "PAAAG"
-	
+
 /datum/design/circuit/bluespace_satellite
 	name = "bluespace satellite"
 	id = "bluespace-satellite"
 	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 4, TECH_BLUESPACE = 3)
-	build_path = /obj/item/weapon/circuitboard/bluespace_satellite
+	build_path = /obj/item/weapon/circuitboard/telecomms/bluespace_satellite
 	sort_string = "PAAAH"
 
 

@@ -40,6 +40,9 @@
 	if(istype(A, /obj/item/weapon/reagent_containers/glass))
 		to_chat(user, "<span class='notice'>The label can't stick to the [A.name].  (Try using a pen)</span>")
 		return
+	if(istype(A, /obj/item/weapon/card/id))
+		to_chat(user, "<span class='notice'>The label refuses to stick to [A.name].</span>")
+		return
 	if(istype(A, /obj/machinery/portable_atmospherics/hydroponics))
 		var/obj/machinery/portable_atmospherics/hydroponics/tray = A
 		if(!tray.mechanical)
@@ -48,6 +51,13 @@
 		tray.labelled = label
 		spawn(1)
 			tray.update_icon()
+
+	if(findtext(A.name, "(")) //Check if the item is already labeled
+		A.name = copytext(A.name, 1, findtext(A.name, "(")-1) //Remove any labels
+
+		user.visible_message("<span class='notice'>[user] removes the label from [A].</span>", \
+							 "<span class='notice'>You remove the label from [A].</span>")
+		return
 
 	user.visible_message("<span class='notice'>[user] labels [A] as [label].</span>", \
 						 "<span class='notice'>You label [A] as [label].</span>")

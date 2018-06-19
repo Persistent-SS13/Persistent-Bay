@@ -9,9 +9,14 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	plane = LIGHTING_PLANE
 	layer = LIGHTING_LAYER
 	should_save = 0
+
+
 /obj/structure/hologram/dockzone
 	icon = 'icons/obj/machines/dock_beacon.dmi'
 	icon_state = "dockzone"
+
+
+
 /obj/machinery/docking_beacon
 	name = "docking beacon"
 	desc = "Can be installed to provide a landing and launch zone for shuttles, and to facilitate the construction of shuttles.."
@@ -19,24 +24,51 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	density = 1
 	icon = 'icons/obj/machines/dock_beacon.dmi'
 	icon_state = "unpowered"
-
 	use_power = 0			//1 = idle, 2 = active
 	var/status = 0 // 0 = unpowered, 1 = closed 2 = open 3 = contruction mode 4 = occupied 5 = obstructed
 	req_access = list(core_access_command_programs)
 	var/datum/world_faction/faction
-	var/dimensions = 1 // 1 = 5*7, 2 = 7*7
+	var/dimensions = 1 // 1 = 5*7, 2 = 7*7, 3 = 9*9
 	var/highlighted = 0
 	var/id = "docking port"
 	var/visible_mode = 0 // 0 = invisible, 1 = visible, docking auth required, 2 = visible, anyone can dock
+	var/datum/shuttle/shuttle
+	var/obj/machinery/computer/bridge_computer/bridge
 
 /obj/machinery/docking_beacon/New()
 	..()
 	GLOB.all_docking_beacons |= src
+
+
 /obj/machinery/docking_beacon/after_load()
 	if(req_access_faction && req_access_faction != "" || (faction && faction.uid != req_access_faction))
 		faction = get_faction(req_access_faction)
+	check_shuttle()
+
+
 /obj/machinery/docking_beacon/attack_hand(var/mob/user as mob)
 	ui_interact(user)
+
+
+/obj/machinery/docking_beacon/attackby(var/obj/item/W, var/mob/user)
+	if(isWrench(W))
+		if(status)
+			to_chat(user, "The beacon is powered and cannot be moved.")
+			return
+		anchored = !anchored
+		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
+		if(anchored)
+			user.visible_message("[user.name] secures [src.name] to the floor.", \
+				"You secure the [src.name] to the floor.", \
+				"You hear a ratchet")
+		else
+			user.visible_message("[user.name] unsecures [src.name] from the floor.", \
+				"You unsecure the [src.name] from the floor.", \
+				"You hear a ratchet")
+		return
+
+	return ..()
+
 
 /obj/machinery/docking_beacon/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 
@@ -69,8 +101,8 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 				data["status"] = "Occupied"
 			if(5)
 				data["status"] = "Obstructed"
-		data["dimenson"] = dimensions
-
+		data["dimension"] = dimensions
+	message_admins("ui_interact has ran, opening ui")
 	// update the ui if it exists, returns null if no ui is passed/found
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
@@ -81,6 +113,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		ui.set_initial_data(data)
 		// open the new ui window
 		ui.open()
+		message_admins("ui should be open...")
 
 
 /obj/machinery/docking_beacon/update_icon()
@@ -95,25 +128,44 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			icon_state = "yellow"
 		if(4 to 5)
 			icon_state = "red"
+
+
 /obj/machinery/docking_beacon/Topic(href, href_list)
 	if(stat & (NOPOWER|BROKEN))
 		return 0 // don't update UIs attached to this object
+	if(!allowed(usr))
+		return 1
+	if(href_list["change_dimension"])
+		check_shuttle()
+		if(shuttle)
+			if(shuttle.size > text2num(href_list["change_dimension"]))
+				to_chat(usr, "The dock is occupied by a shuttle that is too large for this dimension.")
+				return
+		dimensions = text2num(href_list["change_dimension"])
+	if(href_list["disconnect"])
+		if(allowed(usr))
+			faction = null
+			req_access_faction = ""
 	if(href_list["power_off"])
 		status = 0
 	if(href_list["power_on"])
 		if(anchored)
 			if(status == 0)
 				status = 1
+		else
+			to_chat(usr, "The beacon must be anchored first.")
 	if(href_list["status_close"])
-		if(check_obstructed())
+		if(check_occupied())
+			status = 4
+		else if(check_obstructed())
 			status = 5
 		else
 			status = 1
 	if(href_list["status_open"])
-		if(check_obstructed())
-			status = 5
-		else if(check_occupied())
+		if(check_occupied())
 			status = 4
+		else if(check_obstructed())
+			status = 5
 		else
 			status = 2
 	if(href_list["status_construct"])
@@ -152,20 +204,24 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/list/turfs = get_turfs()
 	var/list/holos = list()
 	for(var/turf/T in turfs)
-		var/obj/structure/hologram/dockzone/holo = new(T)
-		holos |= holo
+		if(1)//istype(T, /turf/space))
+			var/obj/structure/hologram/dockzone/holo = new(T)
+			holos |= holo
 	sleep(15 SECONDS)
 	highlighted = 0
 	for(var/obj/holo in holos)
 		holo.loc = null
 		qdel(holo)
 
+
 /obj/machinery/docking_beacon/proc/check_obstructed()
 	var/list/turfs = get_turfs()
 	for(var/turf/T in turfs)
-		if(!istype(T, /turf/space))
+		if(!istype(T, /turf/space) && !istype(T, /turf/simulated/open))
 			return 1
 	return 0
+
+
 /obj/machinery/docking_beacon/proc/check_occupied()
 	var/list/turfs = get_turfs()
 	for(var/turf/T in turfs)
@@ -173,7 +229,71 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			return 1
 	return 0
 
+
+/obj/machinery/docking_beacon/proc/check_shuttle()
+	var/list/turfs = get_turfs()
+	for(var/turf/T in turfs)
+		for(var/obj/machinery/computer/bridge_computer/comp in T.contents)
+			if(comp.shuttle)
+				bridge = comp
+				shuttle = comp.shuttle
+				bridge.dock = src
+				shuttle.current_location = src
+				status = 4
+				return
+	return 0
+
+
 /obj/machinery/docking_beacon/proc/finalize(var/mob/user)
+	if(shuttle)
+		return 0
+	var/list/turfs = get_turfs()
+	var/valid_bridge_computer_found = 0
+	var/bcomps = 0
+	var/list/engines = list()
+	var/name
+	var/obj/machinery/computer/bridge_computer/bridge
+	for(var/turf/T in turfs)
+		if(!istype(T.loc, /area/space))
+			status = 4
+			return 0
+		if(istype(T, /turf/space))
+			turfs -= T
+			continue
+		for(var/obj/machinery/computer/bridge_computer/comp in T.contents)
+			bcomps++
+			if(bcomps > 1)
+				to_chat(user, "Multiple bridge computers detected. Shuttle finalization aborted.")
+				return
+			bridge = comp
+			valid_bridge_computer_found = 1
+		for(var/obj/machinery/shuttleengine/engine in T.contents)
+			if(engine.anchored)
+				engines |= engine
+	if(!valid_bridge_computer_found)
+		to_chat(user, "No valid bridge computer found. Shuttle finalization aborted.")
+	if(!engines.len)
+		to_chat(user, "No properly anchored engine found. Shuttle finalization aborted.")
+		return 0
+	for(var/obj/machinery/shuttleengine/engine in engines)
+		engine.permaanchor = 1
+	var/area/shuttle/A = new
+	A.name = "shuttle"
+	//var/ma
+	//ma = A.master ? "[A.master]" : "(null)"
+	A.power_equip = 0
+	A.power_light = 0
+	A.power_environ = 0
+	A.always_unpowered = 0
+	A.contents.Add(turfs)
+
+
+	shuttle = new(name, src)
+	shuttle.size = dimensions
+	bridge.shuttle = shuttle
+	shuttle.shuttle_area = A
+	shuttle.bridge = bridge
+	bridge.dock = src
 
 
 /obj/machinery/docking_beacon/proc/get_turfs()
@@ -189,8 +309,18 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		if(EAST)
 			return_turfs = block(locate(x-1,y+2,z), locate(x-8,y-2,z))
 	**/
-	return_turfs = block(locate(x-2,y-1,z), locate(x+2,y-8,z))
+	switch(dimensions)
+		if(1)
+			return_turfs = block(locate(x-2,y-1,z), locate(x+2,y-8,z))
+		if(2)
+			return_turfs = block(locate(x-3,y-1,z), locate(x+3,y-8,z))
+		if(3)
+			return_turfs = block(locate(x-4,y-1,z), locate(x+4,y-10,z))
+		else
+			return_turfs = block(locate(x-2,y-1,z), locate(x+2,y-8,z))
 	return return_turfs
+
+
 /obj/machinery/bluespace_satellite
 	name = "bluespace satellite"
 	desc = "Can be configured and launched to create a new logistics network."
@@ -207,12 +337,14 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/starting_leader
 	var/chosen_netuid
 
+
 /obj/machinery/bluespace_satellite/New()
 	..()
 
 
 /obj/machinery/bluespace_satellite/attack_hand(var/mob/user as mob)
 	ui_interact(user)
+
 
 /obj/machinery/bluespace_satellite/attackby(var/obj/I as obj, var/mob/user as mob)
 	if(istype(I, /obj/item/weapon/card/id))
@@ -222,6 +354,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		GLOB.nanomanager.update_uis(src)
 		return
 	..()
+
 
 /obj/machinery/bluespace_satellite/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 

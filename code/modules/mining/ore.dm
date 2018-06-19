@@ -45,6 +45,27 @@
 /obj/item/weapon/ore/iron
 	ore = /ore/hematite
 
+/obj/item/weapon/ore/copper
+	ore = /ore/copper
+
+/obj/item/weapon/ore/aluminum
+	ore = /ore/aluminum
+
+/obj/item/weapon/ore/tin
+	ore = /ore/tin
+
+/obj/item/weapon/ore/zinc
+	ore = /ore/zinc
+
+/obj/item/weapon/ore/tungsten
+	ore = /ore/tungsten
+
+/obj/item/weapon/ore/lead
+	ore = /ore/lead
+
+/obj/item/weapon/ore/sulfur
+	ore = /ore/sulfur
+
 /obj/item/weapon/ore/coal
 	ore = /ore/coal
 
@@ -84,6 +105,12 @@
 
 /obj/item/weapon/ore/hydrogen
 	ore = /ore/hydrogen
+
+/obj/item/weapon/ore/ice
+	ore = /ore/ice
+
+/obj/item/weapon/ore/dryice
+	ore = /ore/dryice
 
 /obj/item/weapon/ore/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/device/core_sampler))

@@ -25,7 +25,7 @@
 
 /obj/structure/closet/secure_closet/exile
 	name = "Exile Implants"
-	req_access = list(access_hos)
+	req_access = list(core_access_security_programs, core_access_command_programs)
 
 	New()
 		..()

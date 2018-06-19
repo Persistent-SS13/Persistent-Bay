@@ -244,15 +244,9 @@
 	icon_state = "energykill100"
 
 /obj/random/energy/spawn_choices()
-	return list(/obj/item/weapon/gun/energy/laser = 4,
-				/obj/item/weapon/gun/energy/gun = 3,
+	return list(/obj/item/weapon/gun/energy/gun = 3,
 				/obj/item/weapon/gun/energy/retro = 2,
-				/obj/item/weapon/gun/energy/lasercannon = 2,
-				/obj/item/weapon/gun/energy/xray = 3,
-				/obj/item/weapon/gun/energy/sniperrifle = 1,
-				/obj/item/weapon/gun/energy/gun/nuclear = 1,
 				/obj/item/weapon/gun/energy/ionrifle = 2,
-				/obj/item/weapon/gun/energy/toxgun = 3,
 				/obj/item/weapon/gun/energy/taser = 4,
 				/obj/item/weapon/gun/energy/crossbow/largecrossbow = 2,
 				/obj/item/weapon/gun/energy/stunrevolver = 4)
@@ -265,9 +259,6 @@
 
 /obj/random/projectile/spawn_choices()
 	return list(/obj/item/weapon/gun/projectile/shotgun/pump = 3,
-				/obj/item/weapon/gun/projectile/automatic/c20r = 2,
-				/obj/item/weapon/gun/projectile/automatic/sts35 = 2,
-				/obj/item/weapon/gun/projectile/automatic/z8 = 2,
 				/obj/item/weapon/gun/projectile/colt = 4,
 				/obj/item/weapon/gun/projectile/sec = 4,
 				/obj/item/weapon/gun/projectile/sec/wood = 3,
@@ -279,8 +270,7 @@
 				/obj/item/weapon/gun/projectile/revolver/mateba = 2,
 				/obj/item/weapon/gun/projectile/shotgun/doublebarrel = 4,
 				/obj/item/weapon/gun/projectile/shotgun/doublebarrel/sawn = 3,
-				/obj/item/weapon/gun/projectile/heavysniper = 1,
-				/obj/item/weapon/gun/projectile/shotgun/pump/combat = 2)
+				/obj/item/weapon/gun/projectile/heavysniper = 1)
 
 /obj/random/handgun
 	name = "Random Handgun"
@@ -562,8 +552,6 @@ obj/random/obstruction //Large objects to block things off in maintenance
 obj/random/obstruction/spawn_choices()
 	return list(/obj/structure/barricade,
 				/obj/structure/girder,
-				/obj/structure/girder/displaced,
-				/obj/structure/girder/reinforced,
 				/obj/structure/grille,
 				/obj/structure/grille/broken,
 				/obj/structure/foamedmetal,

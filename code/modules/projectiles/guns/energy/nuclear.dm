@@ -35,7 +35,7 @@
 	name = "mounted energy gun"
 	self_recharge = 1
 	use_external_power = 1
-
+/*
 /obj/item/weapon/gun/energy/gun/nuclear
 	name = "advanced energy gun"
 	desc = "An energy gun with an experimental miniaturized reactor."
@@ -100,3 +100,4 @@
 	new_overlays += get_mode_overlay()
 
 	overlays = new_overlays
+*/

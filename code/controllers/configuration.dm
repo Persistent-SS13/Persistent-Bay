@@ -202,6 +202,9 @@ var/list/gamemode_cache = list()
 	var/ghosts_can_possess_animals = 0
 	var/delist_when_no_admins = FALSE
 
+	var/year_skip = 420 // How many years we are in the future IC. A multiple of 28 (e.g. 392 or 420) will always give you a calendar that exactly matches the current year.
+	var/time_zone = -5 // The IC time-zone in relation to GMT. EST by default.
+
 	var/allow_map_switching = 0 // Whether map switching is allowed
 	var/auto_map_vote = 0 // Automatically call a map vote at end of round and switch to the selected map
 	var/wait_for_sigusr1_reboot = 0 // Don't allow reboot unless it was caused by SIGUSR1
@@ -688,6 +691,11 @@ var/list/gamemode_cache = list()
 
 				if("delist_when_no_admins")
 					config.delist_when_no_admins = TRUE
+
+				if("year_skip")
+					config.year_skip = text2num(value)
+				if("time_zone")
+					config.time_zone = text2num(value)
 
 				if("map_switching")
 					config.allow_map_switching = 1

@@ -101,6 +101,86 @@
 	containername = "\improper Actor Costumes"
 	supply_method = /decl/supply_method/randomized
 
+
+/decl/hierarchy/supply_pack/miscellaneous/clothing
+	num_contained = 10
+	contains = list(/obj/item/clothing/accessory/toggleable/flannel/red,
+					/obj/item/clothing/accessory/toggleable/hawaii,
+					/obj/item/clothing/accessory/toggleable/zhongshan,
+					/obj/item/clothing/accessory/toggleable/nanotrasen_jacket,
+					/obj/item/clothing/accessory/toggleable/navy_jacket,
+					/obj/item/clothing/accessory/toggleable/charcoal_jacket,
+					/obj/item/clothing/accessory/toggleable/burgundy_jacket,
+					/obj/item/clothing/suit/storage/toggle/hoodie,
+					/obj/item/clothing/suit/storage/toggle/track,
+					/obj/item/clothing/suit/storage/toggle/track/blue,
+					/obj/item/clothing/suit/storage/toggle/track/green,
+					/obj/item/clothing/suit/storage/toggle/track/red,
+					/obj/item/clothing/under/skirt,
+					/obj/item/clothing/under/skirt/plaid_blue,
+					/obj/item/clothing/under/skirt/plaid_red,
+					/obj/item/clothing/under/skirt/plaid_purple,
+					/obj/item/clothing/under/skirt/khaki,
+					/obj/item/clothing/under/skirt/swept,
+					/obj/item/clothing/under/skirt_c/dress/black,
+					/obj/item/clothing/under/skirt_c/dress/long/black,
+					/obj/item/clothing/under/shorts/red,
+					/obj/item/clothing/under/shorts/green,
+					/obj/item/clothing/under/shorts/blue,
+					/obj/item/clothing/under/shorts/black,
+					/obj/item/clothing/under/shorts/grey,
+					/obj/item/clothing/under/shorts/jeans,
+					/obj/item/clothing/under/shorts/jeans/female,
+					/obj/item/clothing/under/shorts/jeans/classic,
+					/obj/item/clothing/under/shorts/jeans/classic/female,
+					/obj/item/clothing/under/shorts/jeans/mustang,
+					/obj/item/clothing/under/shorts/jeans/mustang/female,
+					/obj/item/clothing/under/shorts/jeans/youngfolks,
+					/obj/item/clothing/under/shorts/jeans/youngfolks/female,
+					/obj/item/clothing/under/shorts/jeans/black,
+					/obj/item/clothing/under/shorts/jeans/black/female,
+					/obj/item/clothing/under/shorts/jeans/grey,
+					/obj/item/clothing/under/shorts/jeans/grey/female,
+					/obj/item/clothing/under/shorts/khaki,
+					/obj/item/clothing/under/shorts/khaki/female,
+					/obj/item/clothing/under/color/blackjumpshorts,
+					/obj/item/clothing/under/bluepyjamas,
+					/obj/item/clothing/under/redpyjamas,
+					/obj/item/clothing/suit/leathercoat,
+					/obj/item/clothing/suit/browncoat,
+					/obj/item/clothing/suit/neocoat,
+					/obj/item/clothing/suit/stripper/stripper_pink,
+					/obj/item/clothing/under/stripper/mankini,
+					/obj/item/clothing/under/swimsuit/blue,
+					/obj/item/clothing/under/swimsuit/purple,
+					/obj/item/clothing/under/swimsuit/green,
+					/obj/item/clothing/under/swimsuit/red,
+					/obj/item/clothing/under/casual_pants,
+					/obj/item/clothing/under/casual_pants/classicjeans,
+					/obj/item/clothing/under/casual_pants/mustangjeans,
+					/obj/item/clothing/under/casual_pants/blackjeans,
+					/obj/item/clothing/under/casual_pants/greyjeans,
+					/obj/item/clothing/under/casual_pants/youngfolksjeans,
+					/obj/item/clothing/under/casual_pants/track,
+					/obj/item/clothing/under/casual_pants/track/blue,
+					/obj/item/clothing/under/casual_pants/track/green,
+					/obj/item/clothing/under/casual_pants/track/white,
+					/obj/item/clothing/under/casual_pants/track/red,
+					/obj/item/clothing/under/casual_pants/camo,
+					/obj/item/clothing/under/casual_pants/baggy,
+					/obj/item/clothing/under/casual_pants/baggy/classicjeans,
+					/obj/item/clothing/under/casual_pants/baggy/mustangjeans,
+					/obj/item/clothing/under/casual_pants/baggy/blackjeans,
+					/obj/item/clothing/under/casual_pants/baggy/greyjeans,
+					/obj/item/clothing/under/casual_pants/baggy/youngfolksjeans,
+					/obj/item/clothing/under/casual_pants/baggy/track,
+					/obj/item/clothing/under/casual_pants/baggy/camo,
+					)
+	name = "Bulk clothing crate"
+	cost = 50
+	containername = "\improper bulk clothing crate"
+	supply_method = /decl/supply_method/randomized
+
 /decl/hierarchy/supply_pack/miscellaneous/formal_wear
 	contains = list(/obj/item/clothing/head/bowler,
 					/obj/item/clothing/head/that,
@@ -115,7 +195,13 @@
 					/obj/item/clothing/shoes/black,
 					/obj/item/clothing/shoes/black,
 					/obj/item/clothing/shoes/leather,
-					/obj/item/clothing/accessory/wcoat)
+					/obj/item/clothing/accessory/wcoat,
+					/obj/item/clothing/accessory/toggleable/vest,
+					/obj/item/clothing/under/formal_pants,
+					/obj/item/clothing/under/formal_pants/red,
+					/obj/item/clothing/under/formal_pants/black,
+					/obj/item/clothing/under/formal_pants/tan,
+					/obj/item/clothing/under/formal_pants/khaki)
 	name = "Formalwear closet"
 	cost = 30
 	containertype = /obj/structure/closet

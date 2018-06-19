@@ -80,12 +80,12 @@
 /obj/item/weapon/storage/wallet/GetIdCard()
 	return front_id
 
-/obj/item/weapon/storage/wallet/GetAccess()
+/obj/item/weapon/storage/wallet/GetAccess(var/faction_uid)
 	var/obj/item/I = GetIdCard()
 	if(I)
-		return I.GetAccess()
+		return I.GetAccess(faction_uid)
 	else
-		return ..()
+		return ..(faction_uid)
 
 /obj/item/weapon/storage/wallet/random/New()
 	..()

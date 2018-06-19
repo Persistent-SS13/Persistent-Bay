@@ -1040,7 +1040,16 @@ About the new airlock wires panel:
 			else
 				src.p_open = 0
 		else
-			src.p_open = 1
+			if(allowed(usr))
+				src.p_open = 1
+			else
+				to_chat(usr, "<span class='warning'>You begin to carefully pry open the access panel on the [src]...</span>")
+				if(do_after(user,40,src))
+					if(prob(70))
+						usr.visible_message("[usr] forcefully prys open the access panel on the [src]!", "You manage to pry open the access panel on the [src]!")
+						src.p_open = 1
+					else
+						to_chat(usr, "<span class='warning'>Your hand slips!</span>")
 		src.update_icon()
 	else if(isWirecutter(C))
 		return src.attack_hand(user)

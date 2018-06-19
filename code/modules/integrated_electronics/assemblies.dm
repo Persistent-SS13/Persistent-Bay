@@ -42,10 +42,10 @@
 	applied_shell = null
 	. = ..()
 
-/obj/item/device/electronic_assembly/GetAccess()
+/obj/item/device/electronic_assembly/GetAccess(var/faction_uid)
 	. = list()
 	for(var/obj/item/integrated_circuit/part in contents)
-		. |= part.GetAccess()
+		. |= part.GetAccess(faction_uid)
 
 /obj/item/device/electronic_assembly/GetIdCard()
 	. = list()

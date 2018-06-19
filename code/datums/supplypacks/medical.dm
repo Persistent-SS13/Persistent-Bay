@@ -12,7 +12,7 @@
 	cost = 200
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "Bulk Medkit Crate (x10)"
-	access = 4
+	access = core_access_medical_programs
 
 /decl/hierarchy/supply_pack/medical/medical
 	name = "Medical crate"
@@ -146,7 +146,7 @@
 					/obj/item/weapon/storage/box/masks,
 					/obj/item/weapon/storage/box/gloves)
 	cost = 20
-	containertype = /obj/structure/closet/wardrobe/white
+	containertype = /obj/structure/closet/crate/large
 	containername = "\improper Medical scrubs crate"
 
 /decl/hierarchy/supply_pack/medical/autopsy
@@ -179,9 +179,9 @@
 					/obj/item/weapon/storage/box/masks,
 					/obj/item/weapon/storage/box/gloves)
 	cost = 15
-	containertype = /obj/structure/closet/crate/secure
+	containertype = /obj/structure/closet/crate/secure/large
 	containername = "\improper Medical uniform crate"
-	access = 4
+	access = core_access_medical_programs
 
 /decl/hierarchy/supply_pack/medical/medicalbiosuits
 	name = "Medical Biohazard Gear"
@@ -196,7 +196,7 @@
 	cost = 50
 	containertype = /obj/structure/closet/crate/secure
 	containername = "\improper Medical biohazard equipment"
-	access = 4
+	access = core_access_medical_programs
 
 /decl/hierarchy/supply_pack/medical/portablefreezers
 	name = "Portable freezers crate"
@@ -231,11 +231,12 @@
 	cost = 100
 	containername = "\improper Medical voidsuit crate"
 	containertype = /obj/structure/closet/crate/secure/large
-	access = 4
+	access = core_access_medical_programs
 
 /decl/hierarchy/supply_pack/medical/anesthetic
-	name = "Anesthetic Tanks (x10)"
-	contains = list(/obj/item/weapon/tank/anesthetic = 10)
+	name = "Anesthetic Tanks and Masks (x10)"
+	contains = list(/obj/item/weapon/tank/anesthetic = 8,
+					/obj/item/clothing/mask/breath/medical = 2)
 	cost = 75
 	containertype = /obj/structure/closet/crate/medical
 	containername = "\improper Anesthetic Tanks crate"

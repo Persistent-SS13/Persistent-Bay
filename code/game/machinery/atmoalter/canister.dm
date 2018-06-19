@@ -113,6 +113,9 @@
 
 
 /obj/machinery/portable_atmospherics/canister/proc/check_change()
+	if(!air_contents)
+		return 1
+
 	var/old_flag = update_flag
 	update_flag = 0
 	if(holding)
@@ -203,12 +206,10 @@ update_flag
 /obj/machinery/portable_atmospherics/canister/Process()
 	if (destroyed)
 		return
-
 	..()
-
 	if(valve_open)
 		var/datum/gas_mixture/environment
-		if(holding)
+		if(holding && holding.air_contents)
 			environment = holding.air_contents
 		else
 			environment = loc.return_air()
@@ -224,7 +225,7 @@ update_flag
 			if(returnval >= 0)
 				src.update_icon()
 
-	if(air_contents.return_pressure() < 1)
+	if(!air_contents || air_contents.return_pressure() < 1)
 		can_label = 1
 	else
 		can_label = 0

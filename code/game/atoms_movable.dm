@@ -125,7 +125,9 @@
 		dx = EAST
 	else
 		dx = WEST
-
+	if(istype(src, /obj/item))
+		var/obj/item/I = src
+		I.randomize_pixel_offset()
 	var/dy
 	if (target.y > src.y)
 		dy = NORTH

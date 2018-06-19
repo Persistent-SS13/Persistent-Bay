@@ -216,7 +216,9 @@
 	icon = 'icons/obj/vending.dmi'
 	icon_state = "water_cooler"
 	possible_transfer_amounts = null
-	anchored = 1
+	matter = list(DEFAULT_WALL_MATERIAL = 200)
+	anchored = 0
+	density = 0
 	initial_capacity = 500
 	initial_reagent_types = list(/datum/reagent/water = 1)
 
@@ -242,8 +244,16 @@
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "beertankTEMP"
 	amount_per_transfer_from_this = 10
+	matter = list(DEFAULT_WALL_MATERIAL = 200)
+	density = 0
 	initial_reagent_types = list(/datum/reagent/ethanol/beer = 1)
 	flags = OBJ_CLIMBABLE
+
+/obj/structure/reagent_dispensers/water_cooler/empty
+	initial_reagent_types = list()
+
+/obj/structure/reagent_dispensers/beerkeg/empty
+	initial_reagent_types = list()
 
 /obj/structure/reagent_dispensers/virusfood
 	name = "Virus Food Dispenser"

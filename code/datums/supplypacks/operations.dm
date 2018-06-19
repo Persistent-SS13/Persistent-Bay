@@ -14,7 +14,8 @@
 	cost = 12
 	containertype = /obj/structure/closet/secure_closet/engineering_personal
 	containername = "Engineering Equipment"
-	access = 3
+	access = core_access_engineering_programs
+
 /decl/hierarchy/supply_pack/operations/atmostech
 	name = "Atmospheric Technician Equipment"
 	contains = list(/obj/item/clothing/under/rank/atmospheric_technician,
@@ -30,7 +31,8 @@
 	cost = 15
 	containertype = /obj/structure/closet/secure_closet/atmos_personal
 	containername = "Atmospheric Technician Equipment"
-	access = 3
+	access = core_access_engineering_programs
+
 /decl/hierarchy/supply_pack/operations/ce
 	name = "Chief Engineer's Equipment"
 	contains = list(/obj/item/clothing/under/rank/chief_engineer,
@@ -51,7 +53,8 @@
 	cost = 50
 	containertype = /obj/structure/closet/secure_closet/engineering_chief
 	containername = "Chief Engineer's Locker"
-	access = 3
+	access = core_access_engineering_programs
+
 /decl/hierarchy/supply_pack/operations/cargo
 	name = "Cargo Technician Equipment"
 	contains = list(/obj/item/clothing/under/rank/cargotech,
@@ -63,7 +66,8 @@
 	cost = 3
 	containertype = /obj/structure/closet/secure_closet/cargotech
 	containername = "Cargo Rookie Equipment"
-	access = 8	//Closest thing to a cargo permission
+	access = core_access_order_approval	//Closest thing to a cargo permission
+
 /decl/hierarchy/supply_pack/operations/miner
 	name = "Miner Equipment - Voidsuit Included"
 	contains = list(/obj/item/clothing/under/rank/miner,
@@ -71,7 +75,7 @@
 					/obj/item/clothing/glasses/meson,
 					/obj/item/weapon/storage/backpack/industrial,
 					/obj/item/device/flashlight/lantern,
-					/obj/item/device/analyzer,
+					/obj/item/weapon/mining_scanner,
 					/obj/item/clothing/gloves/thick,
 					/obj/item/weapon/storage/ore,
 					/obj/item/weapon/shovel,
@@ -81,7 +85,8 @@
 	cost = 100
 	containertype = /obj/structure/closet/secure_closet/miner
 	containername = "Miner Equipment"
-	access = 8
+	access = core_access_order_approval
+
 /decl/hierarchy/supply_pack/operations/security
 	name = "Security I Equipment"
 	contains = list(/obj/item/clothing/under/rank/security,
@@ -97,6 +102,7 @@
 	cost = 15
 	containertype = /obj/structure/closet/secure_closet/security
 	containername = "Security Cadet Equipment"
+
 /decl/hierarchy/supply_pack/operations/securityofficer
 	name = "Security II Equipment"
 	contains = list(/obj/item/clothing/under/rank/security,
@@ -119,7 +125,8 @@
 	cost = 40
 	containertype = /obj/structure/closet/secure_closet/security
 	containername = "Security Officer Equipment"
-	access = 5
+	access = core_access_security_programs
+
 /decl/hierarchy/supply_pack/operations/hos
 	name = "Security III Equipment"
 	contains = list(/obj/item/clothing/under/rank/head_of_security/corp,
@@ -149,7 +156,8 @@
 	cost = 100
 	containertype = /obj/structure/closet/secure_closet/hos
 	containername = "Security Corporal Equipment"
-	access = 5
+	access = core_access_security_programs
+
 /decl/hierarchy/supply_pack/operations/detective
 	name = "Criminal Investigator Equipment"
 	contains = list(/obj/item/clothing/under/det,
@@ -169,7 +177,8 @@
 	cost = 20
 	containertype = /obj/structure/closet/secure_closet/detective
 	containername = "Criminal Investigator Equipment"
-	access = 5
+	access = core_access_security_programs
+
 /decl/hierarchy/supply_pack/operations/medical
 	name = "Medical Intern Equipment"
 	contains = list(/obj/item/clothing/under/rank/medical,
@@ -178,7 +187,8 @@
 	cost = 5
 	containertype = /obj/structure/closet/secure_closet/medical3
 	containername = "Medical Intern Equipment"
-	access = 4
+	access = core_access_medical_programs
+
 /decl/hierarchy/supply_pack/operations/nurse
 	name = "Nurse Equipment"
 	contains = list(/obj/item/clothing/under/rank/nurse,
@@ -189,7 +199,8 @@
 	cost = 6
 	containertype = /obj/structure/closet/secure_closet/medical3
 	containername = "Nurse Equipment"
-	access = 4
+	access = core_access_medical_programs
+
 /decl/hierarchy/supply_pack/operations/doctor
 	name = "Doctor Equipment"
 	contains = list(/obj/item/clothing/under/rank/medical,
@@ -205,7 +216,8 @@
 	cost = 10
 	containertype = /obj/structure/closet/secure_closet/medical3
 	containername = "Doctor Equipment"
-	access = 4
+	access = core_access_medical_programs
+
 /decl/hierarchy/supply_pack/operations/paramedic
 	name = "Paramedic Equipment"
 	contains = list(/obj/item/clothing/under/rank/medical/paramedic,
@@ -222,7 +234,8 @@
 	cost = 10
 	containertype = /obj/structure/closet/secure_closet/paramedic
 	containername = "Paramedic Equipment"
-	access = 4
+	access = core_access_medical_programs
+
 /decl/hierarchy/supply_pack/operations/psychiatrist
 	name = "Psychiatrist Equipment"
 	contains = list(/obj/item/clothing/under/rank/psych,
@@ -239,7 +252,8 @@
 	cost = 6
 	containertype = /obj/structure/closet/secure_closet/psychiatry
 	containername = "Psychiatrist Equipment"
-	access = 4
+	access = core_access_medical_programs
+
 /decl/hierarchy/supply_pack/operations/virologist
 	name = "Virologist Equipment"
 	contains = list(/obj/item/clothing/under/rank/virologist,
@@ -253,11 +267,13 @@
 	cost = 7
 	containertype = /obj/structure/closet/secure_closet/virology
 	containername = "Virologist Equipment"
-	access = 4
+	access = core_access_medical_programs
+
 /decl/hierarchy/supply_pack/operations/cmo
 	name = "Chief Medical Officer's Equipment"
 	contains = list(/obj/item/clothing/under/rank/chief_medical_officer,
 					/obj/item/clothing/suit/storage/toggle/labcoat/cmoalt,
+					/obj/item/clothing/suit/storage/toggle/labcoat/coat_cmo,
 					/obj/item/clothing/shoes/white,
 					/obj/item/weapon/storage/belt/medical,
 					/obj/item/clothing/glasses/hud/health,
@@ -278,7 +294,8 @@
 	cost = 50
 	containertype = /obj/structure/closet/secure_closet/CMO
 	containername = "Chief Medical Officer's Locker"
-	access = 4
+	access = core_access_medical_programs
+
 /decl/hierarchy/supply_pack/operations/chemist
 	name = "Chemist Equipment"
 	contains = list(/obj/item/clothing/under/rank/medical,
@@ -289,7 +306,8 @@
 	cost = 7
 	containertype = /obj/structure/closet/secure_closet/medical3
 	containername = "Chemist Equipment"
-	access = 4
+	access = core_access_medical_programs
+
 /decl/hierarchy/supply_pack/operations/scienceintern
 	name = "Science Intern Equipment"
 	contains = list(/obj/item/clothing/under/rank/scientist,
@@ -298,7 +316,8 @@
 	cost = 5
 	containertype = /obj/structure/closet/secure_closet/scientist
 	containername = "Science Intern Equipment"
-	access = 9
+	access = core_access_science_programs
+
 /decl/hierarchy/supply_pack/operations/scientist
 	name = "Scientist Equipment"
 	contains = list(/obj/item/clothing/under/rank/scientist,
@@ -310,7 +329,8 @@
 	cost = 7
 	containertype = /obj/structure/closet/secure_closet/scientist
 	containername = "Scientist Equipment"
-	access = 9
+	access = core_access_science_programs
+
 /decl/hierarchy/supply_pack/operations/roboticist
 	name = "Roboticist Equipment"
 	contains = list(/obj/item/clothing/under/rank/roboticist,
@@ -322,7 +342,8 @@
 	cost = 8
 	containertype = /obj/structure/closet/secure_closet/scientist
 	containername = "Roboticist Equipment"
-	access = 9
+	access = core_access_science_programs
+
 /decl/hierarchy/supply_pack/operations/rd
 	name = "Research Director's Equipment"
 	contains = list(/obj/item/clothing/under/rank/research_director,
@@ -342,7 +363,8 @@
 	cost = 50
 	containertype = /obj/structure/closet/secure_closet/RD
 	containername = "Research Director's Locker"
-	access = 9
+	access = core_access_science_programs
+
 /decl/hierarchy/supply_pack/operations/janitor
 	name = "Janitor Equipment"
 	contains = list(/obj/item/clothing/under/rank/janitor,
@@ -355,8 +377,9 @@
 					/obj/item/weapon/storage/bag/trash,
 					/obj/item/device/radio/headset/headset_service)
 	cost = 10
-	containertype = /obj/structure/closet/jcloset
-	containername = "Janitor Equipment"
+	containertype = /obj/structure/closet/crate/large
+	containername = "\improper Janitor Equipment Crate"
+
 /decl/hierarchy/supply_pack/operations/chef
 	name = "Chef Equipment"
 	contains = list(/obj/item/clothing/under/rank/chef,
@@ -368,6 +391,7 @@
 	cost = 6
 	containertype = /obj/structure/closet/chefcloset
 	containername = "Chef Equipment"
+
 /decl/hierarchy/supply_pack/operations/bartender
 	name = "Bartender Equipment"
 	contains = list(/obj/item/clothing/head/that,
@@ -384,6 +408,7 @@
 	cost = 6
 	containertype = /obj/structure/closet/gmcloset
 	containername = "Bartender Equipment"
+
 /decl/hierarchy/supply_pack/operations/botanist
 	name = "Botany Equipment"
 	contains = list(/obj/item/clothing/under/rank/hydroponics,
@@ -397,6 +422,7 @@
 	cost = 7
 	containertype = /obj/structure/closet/secure_closet/hydroponics
 	containername = "Botanist Equipment"
+
 /decl/hierarchy/supply_pack/operations/clown
 	name = "Clown Equipment"
 	contains = list(/obj/item/clothing/under/rank/clown,
@@ -411,6 +437,7 @@
 	cost = 15
 	containertype = /obj/structure/closet/secure_closet
 	containername = "Clown Equipment"
+
 /decl/hierarchy/supply_pack/operations/mime
 	name = "Mime Equipment"
 	contains = list(/obj/item/clothing/under/mime,
@@ -424,6 +451,7 @@
 	cost = 15
 	containertype = /obj/structure/closet/secure_closet
 	containername = "Mime Equipment"
+
 /decl/hierarchy/supply_pack/operations/lawyer
 	name = "Bureaucrat Equipment"
 	contains = list(/obj/item/clothing/under/lawyer/female,
@@ -466,21 +494,24 @@
 	cost = 20
 	containertype = /obj/structure/closet
 	containername = "\improper Beret Locker"
+
 /decl/hierarchy/supply_pack/operations/personal
 	name = "Personal Locker"
-	contains = list() 
+	contains = list()
 	cost = 2
 	containertype = /obj/structure/closet/secure_closet/personal/empty
 	containername = "Personal Locker"
+
 /decl/hierarchy/supply_pack/operations/patient
 	name = "Patient's Closet"
-	contains = list() 
+	contains = list()
 	cost = 2
 	containertype = /obj/structure/closet/secure_closet/personal/patient
 	containername = "Patient's Closet"
+
 /decl/hierarchy/supply_pack/operations/personal_cabinet
 	name = "Personal Cabinet"
-	contains = list() 
+	contains = list()
 	cost = 2
 	containertype = /obj/structure/closet/secure_closet/personal/cabinet/empty
 	containername = "Personal Cabinet"

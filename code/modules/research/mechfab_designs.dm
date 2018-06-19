@@ -420,7 +420,7 @@
 	name = "Cable layer"
 	id = "mech_cable_layer"
 	build_path = /obj/item/mecha_parts/mecha_equipment/tool/cable_layer
-	
+
 /datum/design/item/mecha/flaregun
 	name = "Flare launcher"
 	id = "mecha_flare_gun"
@@ -476,26 +476,26 @@
 	id = "mech_scattershot"
 	req_tech = list(TECH_COMBAT = 4)
 	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/ballistic/scattershot
-
+/*
 /datum/design/item/mecha/weapon/laser
 	name = "CH-PS \"Immolator\" laser"
 	id = "mech_laser"
 	req_tech = list(TECH_COMBAT = 3, TECH_MAGNET = 3)
 	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/energy/laser
-
+*/
 /datum/design/item/mecha/weapon/laser_rigged
 	name = "Jury-rigged welder-laser"
 	desc = "Allows for the construction of a welder-laser assembly package for non-combat exosuits."
 	id = "mech_laser_rigged"
 	req_tech = list(TECH_COMBAT = 2, TECH_MAGNET = 2)
 	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/energy/riggedlaser
-
+/*
 /datum/design/item/mecha/weapon/laser_heavy
 	name = "CH-LC \"Solaris\" laser cannon"
 	id = "mech_laser_heavy"
 	req_tech = list(TECH_COMBAT = 4, TECH_MAGNET = 4)
 	build_path = /obj/item/mecha_parts/mecha_equipment/weapon/energy/laser/heavy
-
+*/
 /datum/design/item/mecha/weapon/ion
 	name = "mkIV ion heavy cannon"
 	id = "mech_ion"

@@ -7,7 +7,7 @@
 	cost = 25
 	containertype = /obj/structure/closet/crate/secure
 	containername = "\improper Virus sample crate"
-	access = access_cmo
+	access = core_access_medical_programs
 
 /decl/hierarchy/supply_pack/science/slimecore
 	name = "Slime core crate"

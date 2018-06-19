@@ -66,7 +66,7 @@
  *  Set these lungs' breath types based on the lungs' species
  */
 /obj/item/organ/internal/lungs/proc/sync_breath_types()
-	min_breath_pressure = species.breath_pressure
+	min_breath_pressure = species.breath_pressure ? species.breath_pressure : 16
 	breath_type = species.breath_type ? species.breath_type : "oxygen"
 	poison_type = species.poison_type ? species.poison_type : "phoron"
 	exhale_type = species.exhale_type ? species.exhale_type : "carbon_dioxide"

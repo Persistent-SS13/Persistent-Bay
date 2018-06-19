@@ -60,25 +60,18 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	onclose(user, "cryopod_console")
 
 
-/obj/machinery/computer/cryopod/Topic(href, href_list)
-	if((. = ..()))
-		return
-
-	var/mob/user = usr
-
+/obj/machinery/computer/cryopod/OnTopic(user, href_list, state)
 	src.add_fingerprint(user)
 
 	if(href_list["log"])
-
 		var/dat = "<b>Recently stored [storage_type]</b><br/><hr/><br/>"
 		for(var/person in frozen_crew)
 			dat += "[person]<br/>"
 		dat += "<hr/>"
+		show_browser(user, dat, "window=cryolog")
+		. = TOPIC_REFRESH
 
-		user << browse(dat, "window=cryolog")
-
-	src.updateUsrDialog()
-	return
+	attack_hand(user)
 
 
 /obj/item/weapon/circuitboard/cryopodcontrol

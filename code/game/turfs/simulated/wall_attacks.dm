@@ -159,8 +159,8 @@
 				if(Weld(W, user, null, "You start to weld the rods into place."))
 					to_chat(user, "<span class='notice'>You finish \the [src].</span>")
 					state = null
-					update_icon()
 					update_connections(1)
+					update_icon()
 					return
 				if(Screwdriver(W, user))
 					to_chat(user, "<span class='notice'>You unsecure the rods from \the [src].</span>")
@@ -171,8 +171,8 @@
 				if(Weld(W, user, null, "You start to unweld the rods from \the [src]."))
 					to_chat(user, "<span class='notice'>You unweld the rods.</span>")
 					state = 6
-					update_icon()
 					update_connections(1)
+					update_icon()
 					return
 	else
 		switch(state)
@@ -201,8 +201,8 @@
 				if(Weld(W, user, null, "You start welding the material to \the [src]."))
 					to_chat(user, "<span class='notice'>You weld the material to \the [src].</span>")
 					state = null
-					update_icon()
 					update_connections(1)
+					update_icon()
 					return
 				if(Crowbar(W, user))
 					to_chat(user, "<span class='notice'>You unbend the material from around \the [src].</span>")
@@ -213,8 +213,8 @@
 				if(Weld(W, user, null, "You start unwelding the material from \the [src]."))
 					to_chat(user, "<span class='notice'>You unweld the material from \the [src].</span>")
 					state = 2
-					update_icon()
 					update_connections(1)
+					update_icon()
 					return
 
 	if(W)

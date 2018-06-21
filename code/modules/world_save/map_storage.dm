@@ -9,12 +9,16 @@ var/global/list/debug_data = list()
 	for(var/datum/pipe_network/net in SSmachines.pipenets)
 		for(var/datum/pipeline/line in net.line_members)
 			line.temporarily_store_air()
+
 /mob/living
 	should_save = 0
+
 /mob/living/simple_animal
 	should_save = 1
+
 /mob/living/bot
 	should_save = 1
+
 /datum/area_holder
 	var/area_type = "/area"
 	var/name
@@ -47,10 +51,13 @@ var/global/list/debug_data = list()
 	var/skip_empty = ""
 	var/skip_icon_state = 0
 	var/map_storage_loaded = 0 // this is special instructions for problematic Initialize()
+
 /atom/movable/lighting_overlay
 	should_save = 0
+
 /turf/space
 	map_storage_saved_vars = "contents"
+
 /turf/space/after_load()
 	..()
 	for(var/atom/movable/lighting_overlay/overlay in contents)
@@ -60,18 +67,22 @@ var/global/list/debug_data = list()
 /turf
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
 	skip_empty = "contents;saved_decals"
+
 /obj
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
 
 /area
 	map_storage_saved_vars = ""
+
 /datum/proc/should_save(var/datum/saver)
 	return should_save
 
 /datum/proc/after_load()
 	return
+
 /area/after_load()
 	power_change()
+
 /datum/proc/before_load()
 	return
 
@@ -86,12 +97,13 @@ var/global/list/debug_data = list()
 /atom/movable/lighting_overlay/after_load()
 	loc = null
 	qdel(src)
+
 /mob/living/carbon/human/after_load()
 	..()
 	regenerate_icons()
 	redraw_inv()
-/datum/proc/StandardWrite(var/savefile/f)
 
+/datum/proc/StandardWrite(var/savefile/f)
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
@@ -119,7 +131,7 @@ var/global/list/debug_data = list()
 				if(!dat.should_save(src))
 					D -= dat
 					return_this += dat
-		f["[variable]"] << vars[variable]
+		to_file(f["[variable]"],vars[variable])
 		if(return_this.len)
 			var/list/D = vars[variable]
 			D += return_this
@@ -139,6 +151,7 @@ var/global/list/debug_data = list()
 /turf/Write(savefile/f)
 	areas_to_save |= loc
 	StandardWrite(f)
+
 /turf/simulated/Write(savefile/f)
 	if(zone)
 		zones_to_save |= zone
@@ -148,11 +161,13 @@ var/global/list/debug_data = list()
 /mob/Write(savefile/f)
 	if(StandardWrite(f))
 		return
+
 /mob/living/Write(savefile/f)
 	should_save = 1
 	if(StandardWrite(f))
 		should_save = 0
 		return
+
 /mob/living/carbon/lace/Write(savefile/f)
 	should_save = 1
 	if(container2)
@@ -161,6 +176,7 @@ var/global/list/debug_data = list()
 		should_save = 0
 		if(container2) container2.should_save = 0
 		return
+
 /area/proc/get_turf_coords()
 	var/list/coord_list = list()
 	var/ind = 0
@@ -169,6 +185,7 @@ var/global/list/debug_data = list()
 		coord_list += "[ind]"
 		coord_list[ind] = list(T.x, T.y, T.z)
 	return coord_list
+
 /zone/proc/get_turf_coords()
 	var/list/coord_list = list()
 	var/ind = 0
@@ -195,13 +212,14 @@ var/global/list/debug_data = list()
 	for(var/ind in 1 to loading.len)
 		var/variable = loading[ind]
 		if(f.dir.Find("[variable]"))
-			f["[variable]"] >> vars[variable]
+			from_file(f["[variable]"],vars[variable])
 	if("[src.type]" in debug_data)
 		var/amount = debug_data["[src.type]"][1]
 		var/time = debug_data["[src.type]"][2]
 		debug_data["[src.type]"] = list(amount++,time+((REALTIMEOFDAY - starttime)/10))
 	else
 		debug_data["[src.type]"] = list(1,(REALTIMEOFDAY - starttime)/10)
+
 /turf/StandardRead(var/savefile/f)
 	var/starttime = REALTIMEOFDAY
 	map_storage_loaded = 1
@@ -220,7 +238,7 @@ var/global/list/debug_data = list()
 		var/variable = loading[ind]
 		if("[variable]" == "x" || "[variable]" == "y" || "[variable]" == "z") continue
 		if(variable in f.dir)
-			f["[variable]"] >> vars[variable]
+			from_file(f["[variable]"],vars[variable])
 	if("[src.type]" in debug_data)
 		var/amount = debug_data["[src.type]"][1]
 		var/time = debug_data["[src.type]"][2]
@@ -229,20 +247,25 @@ var/global/list/debug_data = list()
 		debug_data["[src.type]"] = list(1,(REALTIMEOFDAY - starttime)/10)
 	if((REALTIMEOFDAY - starttime)/10 > 29)
 		world << "[src.type] took [(REALTIMEOFDAY - starttime)/10] seconds to load at [x] [y] [z]"
+
 /datum/Read(savefile/f)
 	StandardRead(f)
+
 /atom/movable/Read(savefile/f)
 	contents = list()
 	StandardRead(f)
+
 /obj/item/weapon/storage/Read(savefile/f)
 	for(var/atom/movable/am in contents)
 		am.loc = null
 	startswith = list()
 	StandardRead(f)
+
 /obj/Read(savefile/f)
 	for(var/atom/movable/am in contents)
 		am.loc = null
 	StandardRead(f)
+
 /turf/Read(savefile/f)
 	StandardRead(f)
 
@@ -260,7 +283,8 @@ var/global/list/debug_data = list()
 			if(!T || ((T.type == /turf/space || T.type == /turf/simulated/open) && (!T.contents || !T.contents.len)))
 				continue
 			lis |= T
-	f << lis
+	to_file(f,lis)
+
 /proc/Save_World()
 	Prepare_Atmos_For_Saving()
 	areas_to_save = list()
@@ -296,11 +320,11 @@ var/global/list/debug_data = list()
 	for(var/zone/Z in zones_to_save)
 		Z.turf_coords = Z.get_turf_coords()
 		zones |= Z
-	f["factions"] << GLOB.all_world_factions
-	f["zones"] << zones
-	f["areas"] << formatted_areas
-	f["turbolifts"] << turbolifts
-	f["records"] << GLOB.all_crew_records
+	to_file(f["factions"],GLOB.all_world_factions)
+	to_file(f["zones"],zones)
+	to_file(f["areas"],formatted_areas)
+	to_file(f["turbolifts"],turbolifts)
+	to_file(f["records"],GLOB.all_crew_records)
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
 	return 1
@@ -314,12 +338,12 @@ var/global/list/debug_data = list()
 	debug_data = list()
 	var/v = null
 	f.cd = "/extras"
-	f["records"] >> GLOB.all_crew_records
+	from_file(f["records"],GLOB.all_crew_records)
 	if(!GLOB.all_crew_records)
 		GLOB.all_crew_records = list()
-	f["factions"] >> GLOB.all_world_factions
+	from_file(f["factions"],GLOB.all_world_factions)
 	var/list/areas
-	f["areas"] >> areas
+	from_file(f["areas"],areas)
 	for(var/datum/area_holder/holder in areas)
 		var/area/A = new holder.area_type
 		A.name = holder.name
@@ -331,6 +355,7 @@ var/global/list/debug_data = list()
 				message_admins("No turf found for area load")
 			turfs |= T
 		A.contents.Add(turfs)
+
 	f.cd = "/"
 	for(var/z in 1 to 27)
 		f.cd = "/map/[z]"
@@ -339,12 +364,12 @@ var/global/list/debug_data = list()
 			f >> v
 			sleep(-1)
 		world << "Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!"
-	f.cd = "/extras"
 
-	f["turbolifts"] >> turbolifts
+	f.cd = "/extras"
+	from_file(f["turbolifts"],turbolifts)
 	var/list/zones
 
-	f["zones"] >> zones
+	from_file(f["zones"],zones)
 	for(var/zone/Z in zones)
 		for(var/ind in 1 to Z.turf_coords.len)
 			var/list/coords = Z.turf_coords[ind]
@@ -354,13 +379,17 @@ var/global/list/debug_data = list()
 				continue
 			T.zone = Z
 			Z.contents |= T
+
 	for(var/zone/Z in zones)
 		Z.rebuild()
+
 	for(var/ind in 1 to all_loaded.len)
 		var/datum/dat = all_loaded[ind]
 		dat.after_load()
+
 	all_loaded = list()
 	SSmachines.makepowernets()
+
 	for(var/x in debug_data)
 		world << "Loaded [debug_data[x][1]] [x] in [debug_data[x][2]] seconds!"
 	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
@@ -375,8 +404,9 @@ var/global/list/debug_data = list()
 	for(var/y in yi to yi + 20)
 		for(var/x in xi to xi + 20)
 			var/turf/T = locate(x,y,z)
-			f["[x]-[y]"] >> T
+			from_file(f["[x]-[y]"],T)
 
+//TODO; make this better.
 /proc/Load_Initialize()
 	for(var/ind in 1 to all_loaded.len)
 		var/datum/dat = all_loaded[ind]

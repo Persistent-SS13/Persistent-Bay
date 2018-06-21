@@ -476,10 +476,7 @@
 	return
 
 
-/obj/machinery/reagentgrinder/Topic(href, href_list)
-	if(..())
-		return 1
-
+/obj/machinery/reagentgrinder/OnTopic(user, href_list)
 	switch(href_list["action"])
 		if ("grind")
 			grind()
@@ -487,23 +484,17 @@
 			eject()
 		if ("detach")
 			detach()
-	src.updateUsrDialog()
-	return 1
+	interact(user)
+	return TOPIC_REFRESH
 
 /obj/machinery/reagentgrinder/proc/detach()
-
-	if (usr.stat != 0)
-		return
 	if (!beaker)
 		return
-	beaker.loc = src.loc
+	beaker.dropInto(loc)
 	beaker = null
 	update_icon()
 
 /obj/machinery/reagentgrinder/proc/eject()
-
-	if (usr.stat != 0)
-		return
 	if (!holdingitems || holdingitems.len == 0)
 		return
 

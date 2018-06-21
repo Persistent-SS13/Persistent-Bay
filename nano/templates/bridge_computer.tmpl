@@ -1,4 +1,4 @@
-{{if data.connected}}
+{{if data.final}}
 	<h3>{{:data.name}}</h3>
 	<div class="item">
 		<div class="itemLabel">
@@ -17,21 +17,21 @@
 		</div>
 	</div>
 	{{if data.can_launch}}
-		Available Destinations
+		Transit available, current destinations:<hr><br><br>
 		{{for data.beacons}}
 			{{if value.status == 2}}
-				{{:helper.link('REQUEST: {{:value.name}}', '', {'action' : 'request_dock', 'selected_ref' : value.ref})}}
+				{{:helper.link(value.name, '', {'request_dock' : '1', 'selected_ref' : value.ref})}}
 			{{else}}
-				{{:helper.link('DOCK: {{:value.name}}', '', {'action' : 'select_dock', 'selected_ref' : value.ref})}}
+				{{:helper.link(value.name, '', {'select_dock' : '1', 'selected_ref' : value.ref})}}
 			{{/if}}
 		{{/for}}
 	{{else}}
 		<br>Launch not available!
 	{{/if}}
-{{else}}
+{{else data.connected}}
 	<h3>Shuttle Construction</h3>
 	<br><br>
-	Build this console inside an empty docking zone, fill out the following information and attach the appropriate amount of engines and then finalize the construction through the docking beacon.
+		Fill out this information to finalize the shuttle construction.
 	<br>
 	<div class="item">
 		<div class="itemLabel">
@@ -68,71 +68,17 @@
 			</div>
 		</div>
 	{{/if}}
-	
-{{/if}}
-<h3>Shuttle Status</h3>
-<div class="item" style="padding-top: 10px">
-	<div class="item">
-		{{:data.shuttle_status}}
-	</div>
-</div>
-<div class="item" style="padding-top: 10px">
 	<div class="item">
 		<div class="itemLabel">
-			Engines:
+			Finalize: 
 		</div>
 		<div class="itemContent">
-			{{if data.shuttle_state == "idle"}}
-				<span class="idle">IDLE</span>
-			{{else data.shuttle_state == "warmup"}}
-				<span style="font-weight: bold;color: #336699">STARTING IGNITION</span>
-			{{else data.shuttle_state == "in_transit"}}
-				<span style="font-weight: bold;color: #336699">ENGAGED</span>
-			{{else}}
-				<span class="bad">ERROR</span>
-			{{/if}}
+			{{:helper.link('Finalize Shuttle', 'check', {'finalize' : '1'}, null, null)}}
 		</div>
 	</div>
-</div>
-{{if data.has_docking}}
-	<div class="item" style="padding-top: 10px">
-		<div class="item">
-			<div class="itemLabel">
-				Docking Status:
-			</div>
-			<div class="itemContent">
-				{{if data.docking_status == "docked"}}
-					<span class="good">DOCKED</span>
-				{{else data.docking_status == "docking"}}
-					{{if !data.docking_override}}
-						<span class="average">DOCKING</span>
-					{{else}}
-						<span class="average">DOCKING-MANUAL</span>
-					{{/if}}
-				{{else data.docking_status == "undocking"}}
-					{{if !data.docking_override}}
-						<span class="average">UNDOCKING</span>
-					{{else}}
-						<span class="average">UNDOCKING-MANUAL</span>
-					{{/if}}
-				{{else data.docking_status == "undocked"}}
-					<span class="idle">UNDOCKED</span>
-				{{else}}
-					<span class="bad">ERROR</span>
-				{{/if}}
-
-			</div>
-		</div>
-	</div>
+{{else}}
+	<h3>Shuttle Construction</h3>
+	<br><br>
+		Build this console inside an empty docking zone, then use the dock to finalize the construction, add an APC and return to this console.
+	<br>
 {{/if}}
-
-<h3>Shuttle Control</h3>
-<div class="item" style="padding-top: 10px">
-	<div class="item">
-		<div class="itemContent" style="padding-top: 2px; width: 100%">
-			{{:helper.link('Launch Shuttle', 'arrowthickstop-1-e', {'move' : '1'}, data.can_launch? null : 'disabled' , null)}}
-			{{:helper.link('Cancel Launch', 'cancel', {'cancel' : '1'}, data.can_cancel ? null : 'disabled' , null)}}
-			{{:helper.link('Force Launch', 'alert', {'force' : '1'}, data.can_force? null : 'disabled' , data.can_force ? 'redButton' : null)}}
-		</div>
-	</div>
-</div>

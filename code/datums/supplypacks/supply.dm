@@ -173,4 +173,4 @@
 	cost = 150
 	containertype = /obj/structure/closet/crate/secure/large/phoron
 	containername = "\improper Blueprints Crate"
-	access = 1	//Access 1 instead of 3 because it would mean only someone with access to logistics program could be trusted to open it
+	access = core_access_leader	//Access 1 instead of 3 because it would mean only someone with access to logistics program could be trusted to open it

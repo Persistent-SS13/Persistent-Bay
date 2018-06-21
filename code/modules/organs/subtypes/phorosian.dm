@@ -36,8 +36,8 @@
 
 //lung stuff - makes phorosians gain blood depending on intake of phoron. Also makes their lungs burn if they breathe oxygen.
 
-/obj/item/organ/internal/lungs/phorosian/handle_breath(datum/gas_mixture/breath, var/forced) //Turns out breathing the stuff everyone dislikes means you need your own breathing proc
-	if(!owner)
+/obj/item/organ/internal/lungs/phorosian/handle_breath(datum/gas_mixture/breath, var/forced)
+	if(!owner || !loc)
 		return 1
 	if(!breath)
 		breath_fail_ratio = 1
@@ -45,14 +45,11 @@
 		return 1
 
 	var/breath_pressure = breath.return_pressure()
-	//exposure to extreme pressures can rupture lungs
-	if(breath_pressure < species.hazard_low_pressure || breath_pressure > species.hazard_high_pressure)
-		var/datum/gas_mixture/environment = loc.return_air_for_internal_lifeform()
-		var/env_pressure = environment.return_pressure()
-		var/lung_rupture_prob =  robotic >= ORGAN_ROBOT ? prob(2.5) : prob(5) //Robotic lungs are less likely to rupture.
-		if(env_pressure < species.hazard_low_pressure || env_pressure > species.hazard_high_pressure)
-			if(!is_bruised() && lung_rupture_prob) //only rupture if NOT already ruptured
-				rupture()
+	check_rupturing(breath_pressure)
+	var/datum/gas_mixture/enviroment = loc.return_air_for_internal_lifeform()
+	last_ext_pressure = enviroment.return_pressure()
+	last_int_pressure = breath_pressure
+
 	if(breath.total_moles == 0)
 		breath_fail_ratio = 1
 		handle_failed_breath()
@@ -80,6 +77,7 @@
 	if(safe_pressure_min)
 		inhale_efficiency = min(round(inhale_pp/safe_pressure_min, 0.001), 3)
 	else
+		message_admins("no safe_pressure_min [safe_pressure_min] [owner] [owner.x] [owner.y] [owner.z]")
 		inhale_efficiency = 3
 	// Not enough to breathe
 	if(inhale_efficiency < 1)
@@ -133,9 +131,11 @@
 		owner.adjustOxyLoss(oxyloss)
 
 	// Too much poison in the air.
+
 	if(toxins_pp > safe_toxins_max)
 		take_damage(0.5)
-		to_chat(owner, "<span class='warning'>Your lungs feel like they are burning!</span>")
+		if(prob(20))
+			to_chat(owner, "<span class='warning'>Your lungs feel like they are burning!</span>")
 		breath.adjust_gas(poison_type, -poison/6, update = 0) //update after
 		owner.phoron_alert = 1
 	else
@@ -152,7 +152,7 @@
 			if(prob(20))
 				owner.emote(pick("giggle", "laugh"))
 
-		breath.adjust_gas("sleeping_agent", -breath.gas["sleeping_agent"]/6, update = 0) //update after
+		breath.adjust_gas("sleeping_agent", -breath.gas["sleeping_agent"], update = 0) //update after
 
 	// Were we able to breathe?
 	var/failed_breath = failed_inhale || failed_exhale
@@ -184,14 +184,19 @@
 		owner.oxygen_alert = 0
 	return failed_breath
 
-/obj/item/organ/internal/lungs/phorosian/handle_failed_breath() //It's not the lack of air killing them, it's the lack of blood.
+/obj/item/organ/internal/lungs/phorosian/handle_failed_breath()
 	if(prob(15) && !owner.nervous_system_failure())
 		if(!owner.is_asystole())
 			if(active_breathing)
 				owner.emote("gasp")
 		else
 			owner.emote(pick("shiver","twitch"))
+
+	if(damage || owner.chem_effects[CE_BREATHLOSS] || world.time > last_failed_breath + 2 MINUTES)
 		owner.remove_blood(HUMAN_MAX_OXYLOSS*breath_fail_ratio)
+
+	owner.oxygen_alert = max(owner.oxygen_alert, 2)
+	last_int_pressure = 0
 
 
 //EXTERNAL ORGANS

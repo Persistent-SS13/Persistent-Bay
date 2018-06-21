@@ -23,6 +23,11 @@
 	var/heat_capacity = 31250
 	var/heat = 9160937.5//T20C * heat_capacity
 	var/temperature = T20C
+	var/upgraded = 0
+
+/obj/machinery/portable_atmospherics/canister/get_saved_vars()
+	..()
+	. |= "upgraded"
 
 /obj/machinery/portable_atmospherics/canister/drain_power()
 	return -1
@@ -241,7 +246,8 @@ update_flag
 		heat -= COSMIC_RADIATION_TEMPERATURE * CANISTER_HEAT_TRANSFER_COEFFICIENT
 		return
 	exchange_heat(loc.return_air())
-	exchange_heat(air_contents)
+	if(!upgraded)
+		exchange_heat(air_contents)
 	if(temperature > temperature_resistance)
 		health -= 1
 		healthcheck()
@@ -300,6 +306,17 @@ update_flag
 			thejetpack.merge(removed)
 			to_chat(user, "You pulse-pressurize your jetpack from the tank.")
 		return
+	if(!upgraded)
+		var/obj/item/stack/material/plasteel/P = W
+		if(istype(P))
+			if(P.amount < 20)
+				user.visible_message("You need at least 20 sheets of plasteel to upgrade \the [src]")
+			else
+				user.visible_message("You start insulating \the [src]...")
+				if(do_after(50, user, src) && P.amount >= 20)
+					P.use(20)
+					user.visible_message("You finish insulating \the [src].")
+					upgraded = 1
 	..()
 
 /obj/machinery/portable_atmospherics/canister/attackby(obj/item/W as obj, mob/user as mob)

@@ -278,7 +278,7 @@
 					if(!rec.load_from_global(perpname))
 						msg += "<span class = 'deptradio'>ERROR:No public records found! Record creation aborted!\n</span>"
 					else
-						msg += "<span class = 'deptradio'>New record successfully created for [faction.name]!\n</span>"
+						msg += "<span class = 'deptradio'>New record successfully created for [perpname] in [faction.name] database!\n</span>"
 						faction.records.faction_records |= rec //Add to faction records
 
 				record = faction.get_record(perpname)

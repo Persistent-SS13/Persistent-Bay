@@ -23,7 +23,9 @@
 	var/heat_capacity = 31250
 	var/heat = 9160937.5//T20C * heat_capacity
 	var/temperature = T20C
-	var/upgraded = 0
+	var/upgraded = 1
+	var/upgrade_stack_type = /obj/item/stack/material/plasteel
+	var/upgrade_stack_amount = 20
 
 /obj/machinery/portable_atmospherics/canister/get_saved_vars()
 	..()
@@ -261,6 +263,11 @@ update_flag
 			return
 		var/loc_heat = environment.heat_capacity()
 		var/transferred_heat = QUANTIZE(((loc_heat / loc_temp) * (loc_temp - temperature)) * CANISTER_HEAT_TRANSFER_COEFFICIENT)
+		//This if else keeps the can from heating/cooling more than 1K per tick.
+		if(transferred_heat > 0)
+			transferred_heat = min(transferred_heat, heat_capacity)
+		else
+			transferred_heat = max(transferred_heat, -heat_capacity)
 		environment.add_thermal_energy(-transferred_heat)
 		heat += transferred_heat
 
@@ -306,17 +313,19 @@ update_flag
 			thejetpack.merge(removed)
 			to_chat(user, "You pulse-pressurize your jetpack from the tank.")
 		return
-	if(!upgraded)
-		var/obj/item/stack/material/plasteel/P = W
-		if(istype(P))
-			if(P.amount < 20)
-				user.visible_message("You need at least 20 sheets of plasteel to upgrade \the [src]")
+	var/obj/item/stack/P = W
+	if(istype(P, upgrade_stack_type))
+		if(!upgraded)
+			if(P.amount < upgrade_stack_amount)
+				user.visible_message("You need at least [upgrade_stack_amount] sheets of [P] to upgrade \the [src]")
 			else
 				user.visible_message("You start insulating \the [src]...")
-				if(do_after(50, user, src) && P.amount >= 20)
-					P.use(20)
+				if(do_after(50, user, src) && P.amount >= upgrade_stack_amount)
+					P.use(upgrade_stack_amount)
 					user.visible_message("You finish insulating \the [src].")
 					upgraded = 1
+		else
+			user.visible_message("\The [src] has already been insulated.")
 	..()
 
 /obj/machinery/portable_atmospherics/canister/attackby(obj/item/W as obj, mob/user as mob)
@@ -325,6 +334,11 @@ update_flag
 		if(WT.remove_fuel(0,user))
 			var/obj/item/stack/material/steel/new_item = new(usr.loc)
 			new_item.add_to_stacks(usr)
+			//!initial allows me to implement this payback on destroy without giving everyone free plasteel.
+			if(upgraded && !initial(upgraded))
+				var/obj/item/stack/P = new upgrade_stack_type(usr.loc)
+				P.add(upgrade_stack_amount)
+				P.add_to_stacks(usr)
 			for (var/mob/M in viewers(src))
 				M.show_message("<span class='notice'>[src] is shaped into metal by [user.name] with the weldingtool.</span>", 3, "<span class='notice'>You hear welding.</span>", 2)
 			qdel(src)

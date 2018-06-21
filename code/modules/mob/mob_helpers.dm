@@ -491,19 +491,19 @@ proc/is_blind(A)
 	return 1
 
 #define SAFE_PERP -50
-/mob/living/proc/assess_perp(var/obj/access_obj, var/check_access, var/auth_weapons, var/check_records, var/check_arrest)
+/mob/living/proc/assess_perp(var/obj/access_obj, var/check_access, var/auth_weapons, var/check_records, var/check_arrest, var/faction)
 	if(stat == DEAD)
 		return SAFE_PERP
 
 	return 0
 
-/mob/living/carbon/assess_perp(var/obj/access_obj, var/check_access, var/auth_weapons, var/check_records, var/check_arrest)
+/mob/living/carbon/assess_perp(var/obj/access_obj, var/check_access, var/auth_weapons, var/check_records, var/check_arrest, var/faction)
 	if(handcuffed)
 		return SAFE_PERP
 
 	return ..()
 
-/mob/living/carbon/human/assess_perp(var/obj/access_obj, var/check_access, var/auth_weapons, var/check_records, var/check_arrest)
+/mob/living/carbon/human/assess_perp(var/obj/access_obj, var/check_access, var/auth_weapons, var/check_records, var/check_arrest, var/datum/world_faction/faction)
 	var/threatcount = ..()
 	if(. == SAFE_PERP)
 		return SAFE_PERP
@@ -533,20 +533,22 @@ proc/is_blind(A)
 			threatcount += 2
 
 	if(check_records || check_arrest)
-		var/perpname = name
-		if(id)
-			perpname = id.registered_name
+		if(faction)
+			var/perpname = name
+			if(id)
+				perpname = id.registered_name
 
-		var/datum/computer_file/crew_record/CR = get_crewmember_record(perpname)
-		if(check_records && !CR && !isMonkey())
-			threatcount += 4
-
-		if(check_arrest && CR && (CR.get_criminalStatus() == GLOB.arrest_security_status))
-			threatcount += 4
+			var/datum/computer_file/crew_record/CR = faction.get_record(perpname)
+			/* Since security records are now properly factionalized, the chance of someone not having a record is pretty high.
+			if(check_records && !CR && !isMonkey())
+				threatcount += 4
+			*/
+			if(check_arrest && CR && (CR.get_criminalStatus() == GLOB.arrest_security_status))
+				threatcount += 8
 
 	return threatcount
 
-/mob/living/simple_animal/hostile/assess_perp(var/obj/access_obj, var/check_access, var/auth_weapons, var/check_records, var/check_arrest)
+/mob/living/simple_animal/hostile/assess_perp(var/obj/access_obj, var/check_access, var/auth_weapons, var/check_records, var/check_arrest, var/faction)
 	var/threatcount = ..()
 	if(. == SAFE_PERP)
 		return SAFE_PERP

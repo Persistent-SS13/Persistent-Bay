@@ -25,11 +25,14 @@
 	var/current_security_level
 	var/list/selected_telepads
 	var/list/selected_telepads_export = list()
+	var/curr_page = 1
+
 /datum/nano_module/program/supply/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
 	var/list/data = host.initial_data()
 	var/datum/world_faction/connected_faction
 	if(program.computer.network_card && program.computer.network_card.connected_network)
 		connected_faction = program.computer.network_card.connected_network.holder
+		selected_telepads.Cut()
 	if(!connected_faction)
 		program.computer.kill_program()
 	if(!selected_telepads)
@@ -38,8 +41,8 @@
 	data["faction_name"] = connected_faction.name
 	data["credits"] = connected_faction.central_account.money
 	data["is_admin"] = is_admin
-		
-		
+
+
 	var/decl/security_state/security_state = decls_repository.get_decl(GLOB.using_map.security_state)
 	if(!category_names || !category_contents || current_security_level != security_state.current_security_level)
 		generate_categories()
@@ -54,14 +57,21 @@
 				data["possible_purchases"] = category_contents[selected_category]
 
 		if(2)// Statistics screen with credit overview
-			data["total_credits"] = supply_controller.point_sources["total"] ? supply_controller.point_sources["total"] : 0
-			data["credits_passive"] = supply_controller.point_sources["time"] ? supply_controller.point_sources["time"] : 0
-			data["credits_crates"] = supply_controller.point_sources["crate"] ? supply_controller.point_sources["crate"] : 0
-			data["credits_phoron"] = supply_controller.point_sources["phoron"] ? supply_controller.point_sources["phoron"] : 0
-			data["credits_platinum"] = supply_controller.point_sources["platinum"] ? supply_controller.point_sources["platinum"] : 0
-			data["credits_paperwork"] = supply_controller.point_sources["manifest"] ? supply_controller.point_sources["manifest"] : 0
-			data["credits_virology"] = supply_controller.point_sources["virology"] ? supply_controller.point_sources["virology"] : 0
-			
+
+			var/list/transactions = connected_faction.central_account.transaction_log
+			var/pages = transactions.len/10
+			if(pages < 1)
+				pages = 1
+			var/list/formatted_transactions[0]
+			for(var/i=0; i<10; i++)
+				var/minus = i+(10*curr_page-1)
+				var/datum/transaction/T = transactions[transactions.len-minus]
+				formatted_transactions[++formatted_transactions.len] = list("date" = T.date, "time" = T.time, "target_name" = T.target_name, "purpose" = T.purpose, "amount" = T.amount)
+			data["transactions"] = formatted_transactions
+			data["page"] = curr_page
+			data["page_up"] = curr_page < pages
+			data["page_down"] = curr_page > 1
+
 		if(3) // order confirmation and telepad control
 			var/list/telepads[0]
 			for(var/obj/machinery/telepad_cargo/telepad in connected_faction.cargo_telepads)
@@ -111,7 +121,7 @@
 					"selected" = (telepad in selected_telepads_export)
 				)))
 				data["telepads"] = telepads
-				
+
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "supply.tmpl", name, 1050, 800, state = state)
@@ -128,8 +138,8 @@
 		connected_faction = program.computer.network_card.connected_network.holder
 	if(!connected_faction)
 		return 1
-		
-		
+
+
 	if(href_list["select_category"])
 		selected_category = href_list["select_category"]
 		return 1
@@ -190,7 +200,7 @@
 		if(!can_print())
 			return
 		print_export(user, href_list["print_export"])
-		
+
 		return 1
 	if(href_list["print_summary"])
 		if(!can_print())
@@ -234,7 +244,7 @@
 			for(var/obj/structure/closet/closet in T.contents)
 				for(var/obj/item/weapon/paper/export/export in closet.contents)
 					var/earn = supply_controller.fill_order(export.export_id, closet)
-					if(earn)	
+					if(earn)
 						connected_faction.central_account.money += earn
 						earned += earn
 						sent++
@@ -327,7 +337,12 @@
 				connected_faction.central_account.money += SO.object.cost*10
 				break
 		return 1
-
+	if(href_list["page_up"])
+		curr_page++
+		return 1
+	if(href_list["page_down"])
+		curr_page--
+		return 1
 /datum/nano_module/program/supply/proc/generate_categories()
 	category_names = list()
 	category_contents = list()

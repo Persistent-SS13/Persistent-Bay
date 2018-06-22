@@ -44,7 +44,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	if(req_access_faction && req_access_faction != "" || (faction && faction.uid != req_access_faction))
 		faction = get_faction(req_access_faction)
 	check_shuttle()
-
+	stat = 0
 
 /obj/machinery/docking_beacon/attack_hand(var/mob/user as mob)
 	ui_interact(user)

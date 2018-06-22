@@ -32,7 +32,8 @@
 	var/datum/world_faction/connected_faction
 	if(program.computer.network_card && program.computer.network_card.connected_network)
 		connected_faction = program.computer.network_card.connected_network.holder
-		selected_telepads.Cut()
+		if(selected_telepads)
+			selected_telepads.Cut()
 	if(!connected_faction)
 		program.computer.kill_program()
 	if(!selected_telepads)

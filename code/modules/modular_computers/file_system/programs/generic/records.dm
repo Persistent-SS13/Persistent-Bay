@@ -6,16 +6,23 @@
 	size = 14
 	requires_ntnet = 1
 	available_on_ntnet = 1
-	nanomodule_path = /datum/nano_module/records
+	nanomodule_path = /datum/nano_module/program/records
 
-/datum/nano_module/records
+/datum/nano_module/program/records
 	name = "Crew Records"
 	var/datum/computer_file/crew_record/active_record
 	var/message = null
 
-/datum/nano_module/records/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
+/datum/nano_module/program/records/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
 	var/list/data = host.initial_data()
 	var/list/user_access = get_record_access(user)
+
+	var/datum/world_faction/connected_faction
+	var/list/faction_records = list()
+	if(program.computer.network_card && program.computer.network_card.connected_network)
+		connected_faction = program.computer.network_card.connected_network.holder
+	if(connected_faction)
+		faction_records = connected_faction.get_records()
 
 	data["message"] = message
 	if(active_record)
@@ -36,18 +43,18 @@
 		data["fields"] = fields
 	else
 		var/list/all_records = list()
-
-		for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
-			all_records.Add(list(list(
-				"name" = R.get_name(),
-				"rank" = R.get_job(),
-				"milrank" = R.get_rank(),
-				"id" = R.uid
-			)))
-		data["all_records"] = all_records
-		data["creation"] = check_access(user, core_access_command_programs) 
-		data["dnasearch"] = check_access(user, core_access_medical_programs) 
-		data["fingersearch"] = check_access(user, core_access_security_programs) 
+		if(faction_records)
+			for(var/datum/computer_file/crew_record/R in faction_records)
+				all_records.Add(list(list(
+					"name" = R.get_name(),
+					"rank" = R.get_job(),
+					"milrank" = R.get_rank(),
+					"id" = R.uid
+				)))
+			data["all_records"] = all_records
+			data["creation"] = check_access(user, core_access_command_programs)
+			data["dnasearch"] = check_access(user, core_access_medical_programs)
+			data["fingersearch"] = check_access(user, core_access_security_programs)
 
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
@@ -57,7 +64,7 @@
 		ui.open()
 
 
-/datum/nano_module/records/proc/get_record_access(var/mob/user)
+/datum/nano_module/program/records/proc/get_record_access(var/mob/user)
 	var/list/user_access = user.GetAccess()
 
 	var/obj/item/modular_computer/PC = nano_host()
@@ -67,7 +74,7 @@
 	
 	return user_access
 
-/datum/nano_module/records/proc/edit_field(var/mob/user, var/field)
+/datum/nano_module/program/records/proc/edit_field(var/mob/user, var/field)
 	var/datum/computer_file/crew_record/R = active_record
 	if(!R)
 		return
@@ -99,8 +106,18 @@
 	if(newValue)
 		return F.set_value(newValue)
 
-/datum/nano_module/records/Topic(href, href_list)
+/datum/nano_module/program/records/Topic(href, href_list)
+
+	var/datum/world_faction/connected_faction
+	var/list/faction_records = list()
+	if(program.computer.network_card && program.computer.network_card.connected_network)
+		connected_faction = program.computer.network_card.connected_network.holder
+	if(connected_faction)
+		faction_records = connected_faction.get_records()
+
 	if(..())
+		return 1
+	if(!faction_records) //safety check
 		return 1
 	if(href_list["clear_active"])
 		active_record = null
@@ -110,7 +127,7 @@
 		return 1
 	if(href_list["set_active"])
 		var/ID = text2num(href_list["set_active"])
-		for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+		for(var/datum/computer_file/crew_record/R in faction_records)
 			if(R.uid == ID)
 				active_record = R
 				break
@@ -120,7 +137,7 @@
 			to_chat(usr, "Access Denied.")
 			return
 		active_record = new/datum/computer_file/crew_record()
-		GLOB.all_crew_records.Add(active_record)
+		faction_records.Add(active_record)
 		return 1
 	if(href_list["print_active"])
 		if(!active_record)
@@ -132,7 +149,7 @@
 		var/search = sanitize(input("Enter the value for search for.") as null|text)
 		if(!search)
 			return
-		for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+		for(var/datum/computer_file/crew_record/R in faction_records)
 			if(lowertext(R.get_field(field)) == lowertext(search))
 				active_record = R
 				return 1
@@ -156,7 +173,7 @@
 		edit_field(usr, text2path(href_list["edit_field"]))
 		return 1
 
-/datum/nano_module/records/proc/get_photo(var/mob/user)
+/datum/nano_module/program/records/proc/get_photo(var/mob/user)
 	if(istype(user.get_active_hand(), /obj/item/weapon/photo))
 		var/obj/item/weapon/photo/photo = user.get_active_hand()
 		return photo.img

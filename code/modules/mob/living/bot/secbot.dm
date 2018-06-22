@@ -244,7 +244,7 @@
 	if(emagged && !M.incapacitated()) //check incapacitated so emagged secbots don't keep attacking the same target forever
 		return 10
 
-	return M.assess_perp(access_scanner, 0, idcheck, check_records, check_arrest)
+	return M.assess_perp(access_scanner, 0, idcheck, check_records, check_arrest, connected_faction)
 
 //Secbot Construction
 

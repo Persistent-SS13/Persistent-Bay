@@ -32,7 +32,34 @@
 		</table>
 	{{/if}}
 {{else data.screen == 2}}
-	<h2>This feature is under construction due to recent changes to the system.</h2>
+	Viewing Transaction Page {{:data.page}}<br><br>
+	{{:helper.link('Newer Page', 'bullet', {'page_down' : 1}, data.page_down ? null : 'disabled')}}{{:helper.link('Older Page', 'bullet', {'page_up' : 1}, data.page_up ? null : 'disabled')}}
+	<div class="statusDisplay" style="overflow: auto;">
+        {{if data.transactions}}
+        <table style='width: 100%'>
+          <thead>
+            <tr>
+              <th><b>Timestamp</b></th>
+              <th><b>Target</b></th>
+              <th><b>Reason</b></th>
+              <th><b>Value</b></th>
+            </th>
+          </thead>
+          <tbody>
+              {{for data.transactions}}
+                <tr>
+                    <td>{{:value.date}} {{:value.time}}</td>
+                    <td>{{:value.target_name}}</td>
+                    <td>{{:value.purpose}}</td>
+                    <td>{{:value.amount}}</td>
+                </tr>
+              {{/for}}
+          </tbody>
+        </table>
+        {{else}}
+          <span class='alert'>This account has no financial transactions on record for today.</span>
+        {{/if}}
+	</div>
 {{else data.screen == 3}}
 	<div class="item">
 		<div class="itemLabel">

@@ -244,8 +244,8 @@
 				for(var/obj/item/weapon/paper/export/export in closet.contents)
 					var/earn = supply_controller.fill_order(export.export_id, closet)
 					if(earn)
-						var/datum/transaction/T = new("Central Authority Exports", "Export ([export.name])", earn, 1)
-						connected_faction.central_account.do_transaction(T)
+						var/datum/transaction/Te = new("Central Authority Exports", "Export ([export.name])", earn, 1)
+						connected_faction.central_account.do_transaction(Te)
 						earned += earn
 						sent++
 					break

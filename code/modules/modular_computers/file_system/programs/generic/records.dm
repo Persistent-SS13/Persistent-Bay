@@ -45,7 +45,7 @@
 				if(!job)
 					assignment = "Unassigned"
 					rank = 0
-				if(active_record.rank > 1)
+				if(active_record.rank > 1  && (active_record.rank-1) <= job.ranks.len) 
 					assignment = job.ranks[active_record.rank-1]
 		fields.Add(list(list(
 			"key" = "assignment", 
@@ -91,7 +91,7 @@
 						if(!job)
 							assignment = "Unassigned"
 							rank = 0
-						if(R.rank > 1)
+						if(R.rank > 1 && (R.rank-1) <= job.ranks.len)
 							assignment = job.ranks[R.rank-1]
 						
 				all_records.Add(list(list(

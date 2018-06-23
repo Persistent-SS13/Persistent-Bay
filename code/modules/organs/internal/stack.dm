@@ -205,8 +205,16 @@
 
 	return 1
 
-/obj/item/organ/internal/stack/removed()
+/obj/item/organ/internal/stack/removed(var/mob/living/user)
 	do_backup()
+	if(!istype(owner))
+		return ..()
+
+	if(name == initial(name))
+		name = "\the [owner.real_name]'s [initial(name)]"
+		
+	transfer_identity(owner)
+
 	..()
 
 /obj/item/organ/internal/stack/vox/removed()

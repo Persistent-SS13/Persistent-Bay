@@ -31,7 +31,39 @@
 		data["pic_edit"] = check_access(user, core_access_command_programs) 
 		data["uid"] = active_record.uid
 		var/list/fields = list()
+		var/assignment = "Unassigned"
+		var/rank = 0
+		if(active_record.terminated)
+			assignment = "Terminated"
+			rank = 0
+		if(active_record.custom_title)
+			assignment = active_record.custom_title	//can be alt title or the actual job
+			rank = active_record.rank
+		else
+			if(connected_faction) 
+				var/datum/assignment/job = connected_faction.get_assignment(active_record.assignment_uid)
+				if(!job)
+					assignment = "Unassigned"
+					rank = 0
+				if(active_record.rank > 1)
+					assignment = job.ranks[active_record.rank-1]
+		fields.Add(list(list(
+			"key" = "assignment", 
+			"name" = "Assignment", 
+			"val" = assignment, 
+			"editable" = 0,
+			"large" = 0
+		)))
+		fields.Add(list(list(
+			"key" = "rank", 
+			"name" = "Rank", 
+			"val" = rank, 
+			"editable" = 0,
+			"large" = 0
+		)))
 		for(var/record_field/F in active_record.fields)
+			if(F.name == "Job" || F.name == "Branch" || F.name == "Rank")
+				continue
 			if(F.can_see(user_access))
 				fields.Add(list(list(
 					"key" = F.type, 
@@ -45,10 +77,27 @@
 		var/list/all_records = list()
 		if(faction_records)
 			for(var/datum/computer_file/crew_record/R in faction_records)
+				var/assignment = "Unassigned"
+				var/rank = 0
+				if(R.terminated)
+					assignment = "Terminated"
+					rank = 0
+				if(R.custom_title)
+					assignment = R.custom_title	//can be alt title or the actual job
+					rank = R.rank
+				else
+					if(connected_faction) 
+						var/datum/assignment/job = connected_faction.get_assignment(R.assignment_uid)
+						if(!job)
+							assignment = "Unassigned"
+							rank = 0
+						if(R.rank > 1)
+							assignment = job.ranks[R.rank-1]
+						
 				all_records.Add(list(list(
 					"name" = R.get_name(),
-					"rank" = R.get_job(),
-					"milrank" = R.get_rank(),
+					"rank" = assignment,
+					"milrank" = rank,
 					"id" = R.uid
 				)))
 			data["all_records"] = all_records

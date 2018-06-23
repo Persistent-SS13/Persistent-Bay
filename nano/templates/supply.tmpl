@@ -33,7 +33,7 @@
 	{{/if}}
 {{else data.screen == 2}}
 	Viewing Transaction Page {{:data.page}}<br><br>
-	{{:helper.link('Newer Page', 'bullet', {'page_down' : 1}, data.page_down ? null : 'disabled')}}{{:helper.link('Older Page', 'bullet', {'page_up' : 1}, data.page_up ? null : 'disabled')}}<nt><nt>
+	{{:helper.link('Newer Page', 'bullet', {'page_down' : 1}, data.page_down ? null : 'disabled')}}{{:helper.link('Older Page', 'bullet', {'page_up' : 1}, data.page_up ? null : 'disabled')}}<br><br>
 	<div class="statusDisplay" style="overflow: auto;">
         {{if data.transactions}}
         <table style='width: 100%'>

@@ -693,13 +693,10 @@ var/list/name_to_material
 	melting_point = T0C + 2000
 	icon_colour = "#fc2bc5"
 	stack_origin_tech = list(TECH_MATERIAL = 4)
+	composite_material = list("platinum" = 1875,"glass" = 3750)
 	created_window = /obj/structure/window/phoronbasic
 	wire_product = null
 	rod_product = /obj/item/stack/material/glass/phoronrglass
-	chem_products = list(
-				/datum/reagent/toxin/phoron = 10,
-				/datum/reagent/silicon = 10
-				)
 
 /material/glass/phoron/reinforced
 	name = "rphglass"
@@ -709,10 +706,8 @@ var/list/name_to_material
 	display_name = "reinforced borosilicate glass"
 	stack_type = /obj/item/stack/material/glass/phoronrglass
 	stack_origin_tech = list(TECH_MATERIAL = 5)
-	composite_material = list() //todo
+	composite_material = list(DEFAULT_WALL_MATERIAL = 1875,"platinum" = 1875,"glass" = 3750)
 	created_window = /obj/structure/window/phoronreinforced
-	stack_origin_tech = list(TECH_MATERIAL = 2)
-	composite_material = list() //todo
 	rod_product = null
 	integrity = 100
 

@@ -7,7 +7,6 @@
 	icon = 'icons/atmos/clamp.dmi'
 	icon_state = "pclamp0"
 	anchored = 1.0
-	matter = list(DEFAULT_WALL_MATERIAL = 300, "glass" = 500)
 	var/obj/machinery/atmospherics/pipe/simple/target = null
 	var/open = 1
 	var/datum/pipe_network/network_node1
@@ -136,6 +135,7 @@
 	desc = "A magnetic clamp which can halt the flow of gas in a pipe, via a localised stasis field."
 	icon = 'icons/atmos/clamp.dmi'
 	icon_state = "pclamp0"
+	matter = list(DEFAULT_WALL_MATERIAL = 300, "glass" = 500)
 
 /obj/item/clamp/afterattack(var/atom/A, mob/user as mob, proximity)
 	if(!proximity)

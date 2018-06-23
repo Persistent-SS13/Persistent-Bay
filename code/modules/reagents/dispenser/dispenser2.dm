@@ -137,7 +137,7 @@
 		ui.set_initial_data(data)
 		ui.open()
 
-/obj/machinery/chemical_dispenser/Topic(user, href_list)
+/obj/machinery/chemical_dispenser/OnTopic(user, href_list)
 	if(href_list["amount"])
 		amount = round(text2num(href_list["amount"]), 1) // round to nearest 1
 		amount = max(0, min(120, amount)) // Since the user can actually type the commands himself, some sanity checking
@@ -154,9 +154,7 @@
 	else if(href_list["ejectBeaker"])
 		if(container)
 			var/obj/item/weapon/reagent_containers/B = container
-			B.forceMove(loc)
-			if(Adjacent(usr) && !issilicon(usr))
-				usr.put_in_hands(B)
+			B.dropInto(loc)
 			container = null
 			update_icon()
 			return TOPIC_REFRESH

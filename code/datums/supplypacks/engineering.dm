@@ -78,7 +78,7 @@
 	cost = 10
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "\improper Emitter crate"
-	access = 3
+	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/engineering/field_gen
 	name = "Field Generator crate"
@@ -86,23 +86,15 @@
 	containertype = /obj/structure/closet/crate/large
 	cost = 10
 	containername = "\improper Field Generator crate"
-	access = 3
-/*	//Singularity = Grief! And there are safer ways to get electricity.
-/decl/hierarchy/supply_pack/engineering/sing_gen
-	name = "Singularity Generator crate"
-	contains = list(/obj/machinery/the_singularitygen)
-	cost = 10
-	containertype = /obj/structure/closet/crate/secure/large
-	containername = "\improper Singularity Generator crate"
-	access = 3
-*/
+	access = core_access_engineering_programs
+
 /decl/hierarchy/supply_pack/engineering/collector
 	name = "Collector crate"
 	contains = list(/obj/machinery/power/rad_collector = 2)
 	cost = 6
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "\improper Collector crate"
-	access = 3
+	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/engineering/PA
 	name = "Particle Accelerator crate"
@@ -116,7 +108,7 @@
 	cost = 40
 	containertype = /obj/structure/largecrate
 	containername = "\improper Particle Accelerator crate"
-	access = 3
+	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/engineering/pacman_parts
 	name = "P.A.C.M.A.N. portable generator parts"
@@ -144,7 +136,7 @@
 	cost = 75
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "\improper Mk1 TEG crate"
-	access = 3
+	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/engineering/circulator
 	name = "Binary atmospheric circulator"
@@ -152,7 +144,7 @@
 	cost = 50
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "\improper Atmospheric circulator crate"
-	access = 3
+	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/engineering/air_dispenser
 	name = "Pipe Dispenser"
@@ -160,7 +152,7 @@
 	cost = 35
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "\improper Pipe Dispenser Crate"
-	access = 3
+	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/engineering/disposals_dispenser
 	name = "Disposals Pipe Dispenser"
@@ -168,7 +160,7 @@
 	cost = 35
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "\improper Disposal Dispenser Crate"
-	access = 3
+	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/engineering/shield_generator
 	name = "Shield Generator Construction Kit"
@@ -176,7 +168,7 @@
 	cost = 50
 	containertype = /obj/structure/closet/crate/secure
 	containername = "\improper shield generator construction kit crate"
-	access = 3
+	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/engineering/smbig
 	name = "Supermatter Core (CAUTION)"
@@ -184,7 +176,7 @@
 	cost = 150
 	containertype = /obj/structure/closet/crate/secure/large/phoron
 	containername = "\improper Supermatter crate (CAUTION)"
-	access = 3
+	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/engineering/fueltank
 	name = "Fuel tank crate"
@@ -239,7 +231,7 @@
 	containername = "\improper Engineering Hardsuits - Bulk Order"
 	containertype = /obj/structure/closet/crate/secure/large
 	cost = 500
-	access = 3
+	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/engineering/antibreach
 	name = "Anti-Breach Shields (x4)"

@@ -1028,18 +1028,20 @@
 			if(I)
 				perpname = I.registered_name
 
-		var/datum/computer_file/crew_record/E = get_crewmember_record(perpname)
-		if(E)
-			switch(E.get_criminalStatus())
-				if("Arrest")
-					holder.icon_state = "hudwanted"
-				if("Incarcerated")
-					holder.icon_state = "hudprisoner"
-				if("Parolled")
-					holder.icon_state = "hudparolled"
-				if("Released")
-					holder.icon_state = "hudreleased"
-		hud_list[WANTED_HUD] = holder
+		var/datum/world_faction/faction = get_faction(src.GetFaction())
+		if(faction)
+			var/datum/computer_file/crew_record/E = faction.get_record(perpname)
+			if(E)
+				switch(E.get_criminalStatus())
+					if("Arrest")
+						holder.icon_state = "hudwanted"
+					if("Incarcerated")
+						holder.icon_state = "hudprisoner"
+					if("Parolled")
+						holder.icon_state = "hudparolled"
+					if("Released")
+						holder.icon_state = "hudreleased"
+			hud_list[WANTED_HUD] = holder
 
 	if (  BITTEST(hud_updateflag, IMPLOYAL_HUD) \
 	   || BITTEST(hud_updateflag,  IMPCHEM_HUD) \

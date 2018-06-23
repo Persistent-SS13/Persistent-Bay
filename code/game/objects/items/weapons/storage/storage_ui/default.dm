@@ -212,6 +212,11 @@
 	var/endpoint = 1
 
 	for(var/obj/item/O in storage.contents)
+		if(!storage)
+			break
+		if(!O)
+			continue
+
 		startpoint = endpoint + 1
 		endpoint += storage_width * O.get_storage_cost()/storage.max_storage_space
 

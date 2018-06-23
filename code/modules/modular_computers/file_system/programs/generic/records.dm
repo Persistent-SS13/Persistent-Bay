@@ -6,17 +6,19 @@
 	size = 14
 	requires_ntnet = 1
 	available_on_ntnet = 1
-	nanomodule_path = /datum/nano_module/records
+	nanomodule_path = /datum/nano_module/program/records
 
-/datum/nano_module/records
+/datum/nano_module/program/records
 	name = "Crew Records"
 	var/datum/computer_file/crew_record/active_record
 	var/message = null
 
-/datum/nano_module/records/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
+/datum/nano_module/program/records/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
 	var/list/data = host.initial_data()
 	var/list/user_access = get_record_access(user)
-
+	var/datum/world_faction/faction
+	if(program.computer.network_card && program.computer.network_card.connected_network)
+		faction = program.computer.network_card.connected_network.holder
 	data["message"] = message
 	if(active_record)
 		user << browse_rsc(active_record.photo_front, "front_[active_record.uid].png")
@@ -24,7 +26,39 @@
 		data["pic_edit"] = check_access(user, core_access_command_programs) 
 		data["uid"] = active_record.uid
 		var/list/fields = list()
+		var/assignment = "Unassigned"
+		var/rank = 0
+		if(active_record.terminated)
+			assignment = "Terminated"
+			rank = 0
+		if(active_record.custom_title)
+			assignment = active_record.custom_title	//can be alt title or the actual job
+			rank = active_record.rank
+		else
+			if(faction) 
+				var/datum/assignment/job = faction.get_assignment(active_record.assignment_uid)
+				if(!job)
+					assignment = "Unassigned"
+					rank = 0
+				if(active_record.rank > 1)
+					assignment = job.ranks[active_record.rank-1]
+		fields.Add(list(list(
+			"key" = "assignment", 
+			"name" = "Assignment", 
+			"val" = assignment, 
+			"editable" = 0,
+			"large" = 0
+		)))
+		fields.Add(list(list(
+			"key" = "rank", 
+			"name" = "Rank", 
+			"val" = rank, 
+			"editable" = 0,
+			"large" = 0
+		)))
 		for(var/record_field/F in active_record.fields)
+			if(F.name == "Job" || F.name == "Branch" || F.name == "Rank")
+				continue
 			if(F.can_see(user_access))
 				fields.Add(list(list(
 					"key" = F.type, 
@@ -37,11 +71,28 @@
 	else
 		var/list/all_records = list()
 
-		for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+		for(var/datum/computer_file/crew_record/R in faction.records.faction_records)
+			var/assignment = "Unassigned"
+			var/rank = 0
+			if(R.terminated)
+				assignment = "Terminated"
+				rank = 0
+			if(R.custom_title)
+				assignment = R.custom_title	//can be alt title or the actual job
+				rank = R.rank
+			else
+				if(faction) 
+					var/datum/assignment/job = faction.get_assignment(R.assignment_uid)
+					if(!job)
+						assignment = "Unassigned"
+						rank = 0
+					if(R.rank > 1)
+						assignment = job.ranks[R.rank-1]
+					
 			all_records.Add(list(list(
 				"name" = R.get_name(),
-				"rank" = R.get_job(),
-				"milrank" = R.get_rank(),
+				"rank" = assignment,
+				"milrank" = rank,
 				"id" = R.uid
 			)))
 		data["all_records"] = all_records
@@ -57,7 +108,7 @@
 		ui.open()
 
 
-/datum/nano_module/records/proc/get_record_access(var/mob/user)
+/datum/nano_module/program/records/proc/get_record_access(var/mob/user)
 	var/list/user_access = user.GetAccess()
 
 	var/obj/item/modular_computer/PC = nano_host()
@@ -67,7 +118,7 @@
 	
 	return user_access
 
-/datum/nano_module/records/proc/edit_field(var/mob/user, var/field)
+/datum/nano_module/program/records/proc/edit_field(var/mob/user, var/field)
 	var/datum/computer_file/crew_record/R = active_record
 	if(!R)
 		return
@@ -99,7 +150,11 @@
 	if(newValue)
 		return F.set_value(newValue)
 
-/datum/nano_module/records/Topic(href, href_list)
+/datum/nano_module/program/records/Topic(href, href_list)
+	var/datum/world_faction/faction
+	if(program.computer.network_card && program.computer.network_card.connected_network)
+		faction = program.computer.network_card.connected_network.holder
+	
 	if(..())
 		return 1
 	if(href_list["clear_active"])
@@ -109,8 +164,9 @@
 		message = null
 		return 1
 	if(href_list["set_active"])
+		if(!faction) return
 		var/ID = text2num(href_list["set_active"])
-		for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+		for(var/datum/computer_file/crew_record/R in faction.records.faction_records)
 			if(R.uid == ID)
 				active_record = R
 				break
@@ -156,7 +212,7 @@
 		edit_field(usr, text2path(href_list["edit_field"]))
 		return 1
 
-/datum/nano_module/records/proc/get_photo(var/mob/user)
+/datum/nano_module/program/records/proc/get_photo(var/mob/user)
 	if(istype(user.get_active_hand(), /obj/item/weapon/photo))
 		var/obj/item/weapon/photo/photo = user.get_active_hand()
 		return photo.img

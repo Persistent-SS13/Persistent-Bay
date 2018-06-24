@@ -13,9 +13,9 @@
 /obj/structure/lattice/Initialize()
 	. = ..()
 ///// Z-Level Stuff
-//	if(!(istype(src.loc, /turf/space) || istype(src.loc, /turf/simulated/open)))
+	if(!(istype(src.loc, /turf/space) || istype(src.loc, /turf/simulated/open) || istype(src.loc, /turf/simulated/asteroid)))
 ///// Z-Level Stuff
-	//	return INITIALIZE_HINT_QDEL
+		return INITIALIZE_HINT_QDEL
 	for(var/obj/structure/lattice/LAT in loc)
 		if(LAT != src)
 			crash_with("Found multiple lattices at '[log_info_line(loc)]'")

@@ -47,6 +47,7 @@
 					rank = 0
 				if(active_record.rank > 1  && (active_record.rank-1) <= job.ranks.len) 
 					assignment = job.ranks[active_record.rank-1]
+					rank = active_record.rank
 		fields.Add(list(list(
 			"key" = "assignment", 
 			"name" = "Assignment", 
@@ -93,7 +94,7 @@
 							rank = 0
 						if(R.rank > 1 && (R.rank-1) <= job.ranks.len)
 							assignment = job.ranks[R.rank-1]
-						
+							rank = R.rank
 				all_records.Add(list(list(
 					"name" = R.get_name(),
 					"rank" = assignment,

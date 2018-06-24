@@ -62,7 +62,8 @@
 			to_chat(user, "<span class='notice'>Slicing lattice joints ...</span>")
 		new /obj/item/stack/rods(loc)
 		qdel(src)
-	if (istype(C, /obj/item/stack/rods))
+
+/**	if (istype(C, /obj/item/stack/rods))
 		var/obj/item/stack/rods/R = C
 		if(R.use(2))
 			src.alpha = 0
@@ -73,6 +74,7 @@
 		else
 			to_chat(user, "<span class='notice'>You require at least two rods to complete the catwalk.</span>")
 			return
+**/
 	return
 
 /obj/structure/lattice/proc/updateOverlays()

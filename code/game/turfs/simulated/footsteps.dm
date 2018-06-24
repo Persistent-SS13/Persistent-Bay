@@ -36,7 +36,14 @@
 		'sound/effects/footstep/asteroid4.ogg',
 		'sound/effects/footstep/asteroid5.ogg')
 	)
-
+/turf/simulated/asteroid/var/list/footstep_sounds = list(
+	FOOTSTEP_ASTEROID = list(
+		'sound/effects/footstep/asteroid1.ogg',
+		'sound/effects/footstep/asteroid2.ogg',
+		'sound/effects/footstep/asteroid3.ogg',
+		'sound/effects/footstep/asteroid4.ogg',
+		'sound/effects/footstep/asteroid5.ogg')
+	)
 /decl/flooring/var/footstep_type
 /decl/flooring/carpet/footstep_type = FOOTSTEP_CARPET
 /decl/flooring/tiling/footstep_type = FOOTSTEP_TILES
@@ -50,7 +57,7 @@
 	else
 		return safepick(footstep_sounds[flooring.footstep_type])
 
-/turf/simulated/floor/asteroid/get_footstep_sound()
+/turf/simulated/asteroid/proc/get_footstep_sound()
 	return safepick(footstep_sounds[FOOTSTEP_ASTEROID])
 
 /turf/simulated/floor/Entered(var/mob/living/carbon/human/H)

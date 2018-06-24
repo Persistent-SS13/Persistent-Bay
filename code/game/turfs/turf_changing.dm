@@ -17,11 +17,19 @@
 
 //Creates a new turf
 /turf/proc/ChangeTurf(var/turf/N, var/tell_universe=1, var/force_lighting_update = 0)
+	var/old_type = src.type
+	var/old_resources = null
+	if(istype(src, /turf/simulated))
+		var/turf/simulated/T = src
+		old_resources = T.resources
 	if (!N)
 		return
 
 	// This makes sure that turfs are not changed to space when one side is part of a zone
 	if(N == /turf/space)
+		for(var/atom/movable/lighting_overlay/overlay in contents)
+			overlay.loc = null
+			qdel(overlay)
 		var/turf/below = GetBelow(src)
 		if(istype(below) && !istype(below,/turf/space))
 			N = below.density ? /turf/simulated/floor/airless : /turf/simulated/open
@@ -55,6 +63,9 @@
 		if(old_fire)
 			fire = old_fire
 		if (istype(W,/turf/simulated/floor))
+			var/turf/simulated/floor/F = W
+			F.prior_floortype = old_type
+			F.prior_resources = old_resources
 			W.RemoveLattice()
 	else if(old_fire)
 		old_fire.RemoveFire()

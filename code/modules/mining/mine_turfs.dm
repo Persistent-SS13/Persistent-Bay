@@ -430,7 +430,17 @@ var/list/mining_floors = list()
 	var/dug = 0       //0 = has not yet been dug, 1 = has already been dug
 	var/overlay_detail
 	has_resources = 1
-
+/turf/simulated/floor/asteroid
+	name = "sand"
+/turf/simulated/floor/asteroid/after_load()
+	var/resource = resources
+	var/xi = x
+	var/yi = y
+	var/zi = z
+	ChangeTurf(/turf/simulated/asteroid)
+	spawn()
+		var/turf/simulated/asteroid = locate(xi,yi,zi)
+		asteroid.resources = resource
 /turf/simulated/asteroid/New()
 	if (!mining_floors["[src.z]"])
 		mining_floors["[src.z]"] = list()

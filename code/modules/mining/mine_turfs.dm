@@ -432,6 +432,10 @@ var/list/mining_floors = list()
 	has_resources = 1
 /turf/simulated/floor/asteroid
 	name = "sand"
+	
+/turf/simulated/asteroid/after_load()
+	updateMineralOverlays(1)
+	
 /turf/simulated/floor/asteroid/after_load()
 	var/resource = resources
 	var/xi = x
@@ -445,14 +449,19 @@ var/list/mining_floors = list()
 	if (!mining_floors["[src.z]"])
 		mining_floors["[src.z]"] = list()
 	mining_floors["[src.z]"] += src
-	if(prob(20))
+	if(prob(70))
 		overlay_detail = "asteroid[rand(0,9)]"
 
 /turf/simulated/asteroid/Destroy()
 	if (mining_floors["[src.z]"])
 		mining_floors["[src.z]"] -= src
 	return ..()
-
+	
+	
+/turf/simulated/asteroid/ReplaceWithLattice()
+	new /obj/structure/lattice(src)
+		
+		
 /turf/simulated/asteroid/ex_act(severity)
 	switch(severity)
 		if(3.0)

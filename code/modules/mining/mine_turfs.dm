@@ -472,7 +472,8 @@ var/list/mining_floors = list()
 		if(1.0)
 			gets_dug()
 	return
-
+/turf/simulated/asteroid/can_build_cable(var/mob/user)
+	return 1
 /turf/simulated/asteroid/is_plating()
 	return 0
 

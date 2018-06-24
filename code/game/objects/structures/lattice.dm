@@ -6,16 +6,12 @@
 	density = 0
 	anchored = 1.0
 	w_class = ITEM_SIZE_NORMAL
-	plane = ABOVE_PLATING_PLANE
+	plane = -18
 	layer = LATTICE_LAYER
 	//	flags = CONDUCT
 
 /obj/structure/lattice/Initialize()
 	. = ..()
-///// Z-Level Stuff
-	if(!(istype(src.loc, /turf/space) || istype(src.loc, /turf/simulated/open) || istype(src.loc, /turf/simulated/asteroid)))
-///// Z-Level Stuff
-		return INITIALIZE_HINT_QDEL
 	for(var/obj/structure/lattice/LAT in loc)
 		if(LAT != src)
 			crash_with("Found multiple lattices at '[log_info_line(loc)]'")

@@ -175,7 +175,7 @@
 	temperature = TCMB
 
 /turf/simulated/floor/airless
-	name = "airless plating"
+	name = "plating"
 	initial_gas = null
 	temperature = TCMB
 

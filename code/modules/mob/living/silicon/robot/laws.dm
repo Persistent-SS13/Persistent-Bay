@@ -4,6 +4,14 @@
 	show_laws()
 
 /mob/living/silicon/robot/show_laws(var/everyone = 0)
+	
+	if(lmi)
+		to_chat(src, "You have no laws, as your neural lace drives the cyborg body.")
+		return
+		
+	/// Everything below is depreciated..
+	
+	
 	laws_sanity_check()
 	var/who
 
@@ -51,4 +59,7 @@
 /mob/living/silicon/robot/proc/robot_checklaws()
 	set category = "Silicon Commands"
 	set name = "State Laws"
+	if(lmi)
+		to_chat(src, "You have no laws as your lace drives the cyborg body.")
+		return
 	open_subsystem(/datum/nano_module/law_manager)

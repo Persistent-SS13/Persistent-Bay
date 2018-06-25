@@ -46,7 +46,7 @@
 	return ..()
 
 /mob/living/carbon/lace/update_canmove()
-	if(in_contents_of(/obj/mecha) || istype(loc, /obj/item/device/mmi))
+	if(in_contents_of(/obj/mecha) || istype(loc, /obj/item/device/lmi))
 		canmove = 1
 		use_me = 1
 	else
@@ -54,7 +54,7 @@
 	return canmove
 
 /mob/living/carbon/lace/isSynthetic()
-	return istype(loc, /obj/item/device/mmi/digital)
+	return 0
 
 /mob/living/carbon/lace/binarycheck()
 	return isSynthetic()

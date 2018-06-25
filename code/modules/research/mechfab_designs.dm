@@ -383,6 +383,266 @@
 	materials = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 15000, "diamond" = 10000)
 	build_path = /obj/item/borg/upgrade/syndicate
 
+// PERSISTENT ROBOT UPGRADES
+
+
+//////////////////////////////////
+///////////CHASSIS MOD////////////////////
+////////////////////////////////////
+/datum/design/item/robot_upgrade/chassis
+	category = "Chassis Mods"
+	materials = list(DEFAULT_WALL_MATERIAL = 6000, "phoron" = 5000, "glass" = 6000)
+	desc = "A chassis mod that can be installed in a cyborg to allow it to change its appearance. It must be using the correct module."
+
+//////////////
+// Service/Clerical
+
+
+/datum/design/item/robot_upgrade/chassis/waitress
+	name = "Service/Clerical Chassis: Waitress"
+	id = "borg_chassis_waitress"
+	build_path = /obj/item/borg/chassis_mod/service/waitress
+
+/datum/design/item/robot_upgrade/chassis/bro
+	name = "Service/Clerical Chassis: Brobot"
+	id = "borg_chassis_bro"
+	build_path = /obj/item/borg/chassis_mod/service/bro
+
+/datum/design/item/robot_upgrade/chassis/fountainbot
+	name = "Service/Clerical Chassis: Fountain-head"
+	id = "borg_chassis_fountain"
+	build_path = /obj/item/borg/chassis_mod/service/fountainbot
+
+/datum/design/item/robot_upgrade/chassis/poshbot
+	name = "Service/Clerical Chassis: Poshbot"
+	id = "borg_chassis_posh"
+	build_path = /obj/item/borg/chassis_mod/service/poshbot
+
+/datum/design/item/robot_upgrade/chassis/waiterbot
+	name = "Service/Clerical Chassis: Waiter"
+	id = "borg_chassis_waiter"
+	build_path = /obj/item/borg/chassis_mod/service/waiterbot
+
+/datum/design/item/robot_upgrade/chassis/serviceeeybot
+	name = "Service/Clerical Chassis: Service Eyebot"
+	id = "borg_chassis_serviceye"
+	build_path = /obj/item/borg/chassis_mod/service/serviceeyebot
+
+
+////////////
+// Mining Chassis
+
+/datum/design/item/robot_upgrade/chassis/minereyebot
+	name = "Mining Chassis: Miner Eyebot"
+	id = "borg_chassis_minereye"
+	build_path = /obj/item/borg/chassis_mod/mining/minereyebot
+
+/datum/design/item/robot_upgrade/chassis/minerbipedal
+	name = "Mining Chassis: Bipedal Miner"
+	id = "borg_chassis_minerbipedal"
+	build_path = /obj/item/borg/chassis_mod/mining/minerbipedal
+
+/datum/design/item/robot_upgrade/chassis/advancedminer
+	name = "Mining Chassis: Advanced Miner"
+	id = "borg_chassis_advancedminer"
+	build_path = /obj/item/borg/chassis_mod/mining/advancedminer
+
+/datum/design/item/robot_upgrade/chassis/treadhead
+	name = "Mining Chassis: Treadhead Miner"
+	id = "borg_chassis_treadheadminer"
+	build_path = /obj/item/borg/chassis_mod/mining/treadhead
+
+/////////////
+// Medical Chassis
+
+/datum/design/item/robot_upgrade/chassis/bipedmedic
+	name = "Mining Chassis: Bipedal Medical Cyborg"
+	id = "borg_chassis_bipedmedical"
+	build_path = /obj/item/borg/chassis_mod/medical/bipedmedic
+
+/datum/design/item/robot_upgrade/chassis/surgicalbot
+	name = "Mining Chassis: Surgical Cyborg"
+	id = "borg_chassis_surgeon"
+	build_path = /obj/item/borg/chassis_mod/medical/surgicalbot
+
+/datum/design/item/robot_upgrade/chassis/doctorneedles
+	name = "Mining Chassis: Doctor Needles"
+	id = "borg_chassis_drneedles"
+	build_path = /obj/item/borg/chassis_mod/medical/doctorneedles
+
+/datum/design/item/robot_upgrade/chassis/medicaleyebot
+	name = "Mining Chassis: Medical Eyebot"
+	id = "borg_chassis_medicaleyebot"
+	build_path = /obj/item/borg/chassis_mod/medical/medicaleyebot
+
+////////////////
+// Security Chassis
+
+/datum/design/item/robot_upgrade/chassis/bipedalsecurity
+	name = "Security Chassis: Bipedal Security Cyborg"
+	id = "borg_chassis_bipedsecurity"
+	build_path = /obj/item/borg/chassis_mod/security/bipedalsecurity
+
+/datum/design/item/robot_upgrade/chassis/redknight
+	name = "Security Chassis: Red Knight Cyborg Model"
+	id = "borg_chassis_redknight"
+	build_path = /obj/item/borg/chassis_mod/security/redknight
+
+/datum/design/item/robot_upgrade/chassis/protector
+	name = "Security Chassis: Protector Cyborg Model"
+	id = "borg_chassis_protector"
+	build_path = /obj/item/borg/chassis_mod/security/protector
+
+/datum/design/item/robot_upgrade/chassis/bloodhound
+	name = "Security Chassis: Bloodhound Cyborg Model"
+	id = "borg_chassis_bloodhound"
+	build_path = /obj/item/borg/chassis_mod/security/bloodhound
+
+/datum/design/item/robot_upgrade/chassis/treadedsecurity
+	name = "Security Chassis: Treaded Bloodhound"
+	id = "borg_chassis_treadedsecurity"
+	build_path = /obj/item/borg/chassis_mod/security/treaded
+
+/datum/design/item/robot_upgrade/chassis/securityeyebot
+	name = "Security Chassis: Security Eyebot"
+	id = "borg_chassis_seceye"
+	build_path = /obj/item/borg/chassis_mod/security/securityeyebot
+
+/datum/design/item/robot_upgrade/chassis/tridroid
+	name = "Security Chassis: Tridroid Cyborg Model"
+	id = "borg_chassis_tridroid"
+	build_path = /obj/item/borg/chassis_mod/security/tridroid
+
+///////////////
+// Engineering Chassis
+
+/datum/design/item/robot_upgrade/chassis/bipedalengineer
+	name = "Engineering Chassis: Bipedal Engineering Cyborg"
+	id = "borg_chassis_engibiped"
+	build_path = /obj/item/borg/chassis_mod/engineering/bipedalengineer
+
+/datum/design/item/robot_upgrade/chassis/antique
+	name = "Engineering Chassis: Outdated Engineer"
+	id = "borg_chassis_antique"
+	build_path = /obj/item/borg/chassis_mod/engineering/antique
+	
+/datum/design/item/robot_upgrade/chassis/landmate
+	name = "Engineering Chassis: Landmate Model"
+	id = "borg_chassis_landmate"
+	build_path = /obj/item/borg/chassis_mod/engineering/landmate
+	
+/datum/design/item/robot_upgrade/chassis/treads
+	name = "Engineering Chassis: Treaded Landmate"
+	id = "borg_chassis_landmatetread"
+	build_path = /obj/item/borg/chassis_mod/engineering/treads
+
+/datum/design/item/robot_upgrade/chassis/eyebotengineering
+	name = "Engineering Chassis: Engineering Eyebot"
+	id = "borg_chassis_engieye"
+	build_path = /obj/item/borg/chassis_mod/engineering/eyebotengineering
+
+///////////////
+// Janitor Chassis
+
+/datum/design/item/robot_upgrade/chassis/bipedaljanitor
+	name = "Janitor Chassis: Bipedal Janitor Cyborg"
+	id = "borg_chassis_janitbiped"
+	build_path = /obj/item/borg/chassis_mod/janitor/bipedaljanitor
+
+/datum/design/item/robot_upgrade/chassis/buckethead
+	name = "Janitor Chassis: Bucket-head Janitor"
+	id = "borg_chassis_buckethead"
+	build_path = /obj/item/borg/chassis_mod/janitor/buckethead
+	
+/datum/design/item/robot_upgrade/chassis/mopgearrex
+	name = "Janitor Chassis: MOP GEAR R.E.X"
+	id = "borg_chassis_rex"
+	build_path = /obj/item/borg/chassis_mod/janitor/mopgearrex
+	
+/datum/design/item/robot_upgrade/chassis/bipedaljanitor
+	name = "Janitor Chassis: Bipedal Janitor Cyborg"
+	id = "borg_chassis_janitbiped"
+	build_path = /obj/item/borg/chassis_mod/janitor/bipedaljanitor
+
+/////////////
+// Science Chassis
+
+/datum/design/item/robot_upgrade/chassis/sciencedroid
+	name = "Research Chassis: Science Droid"
+	id = "borg_chassis_scidroid"
+	build_path = /obj/item/borg/chassis_mod/science/sciencedroid
+	
+/datum/design/item/robot_upgrade/chassis/scienceeyebot
+	name = "Research Chassis: Science Eyebot"
+	id = "borg_chassis_scieye"
+	build_path = /obj/item/borg/chassis_mod/science/scienceeyebot	
+	
+////////////////////////////////////////////////////
+//////////////////////MODULE CHIPS//////////////////
+/////////////////////////////////////////////////////
+	
+/datum/design/item/robot_upgrade/module
+	category = "Cyborg Modules"
+	materials = list(DEFAULT_WALL_MATERIAL = 25000, "phoron" = 10000, "gold" = 1000, "silver" = 1000)
+	desc = "A module that contains tools and equipment that the cyborg can use."
+
+/datum/design/item/robot_upgrade/module/surgeon
+	name = "Module Chip: Medical Surgeon"
+	id = "borg_module_surgeon"
+	build_path = /obj/item/borg/module_chip/medical/surgeon	
+	materials = list(DEFAULT_WALL_MATERIAL = 25000, "glass" = 10000, "phoron" = 5000, "gold" = 2000, "silver" = 2000)
+	
+/datum/design/item/robot_upgrade/module/crisis
+	name = "Module Chip: Medical Crisis"
+	id = "borg_module_crisis"
+	build_path = /obj/item/borg/module_chip/medical
+	materials = list(DEFAULT_WALL_MATERIAL = 25000, "glass" = 10000, "phoron" = 5000, "gold" = 2000, "silver" = 2000)
+		
+/datum/design/item/robot_upgrade/module/engineering
+	name = "Module Chip: Engineering"
+	id = "borg_module_engineering"
+	build_path = /obj/item/borg/module_chip/engineering
+	materials = list(DEFAULT_WALL_MATERIAL = 25000, "glass" = 10000, "phoron" = 5000, "gold" = 2000, "silver" = 2000)
+	
+/datum/design/item/robot_upgrade/module/security
+	name = "Module Chip: Security"
+	id = "borg_module_security"
+	build_path = /obj/item/borg/module_chip/security
+	materials = list(DEFAULT_WALL_MATERIAL = 25000, "glass" = 10000, "phoron" = 5000, "gold" = 2000, "silver" = 2000)
+	
+/datum/design/item/robot_upgrade/module/mining
+	name = "Module Chip: Mining"
+	id = "borg_module_mining"
+	build_path = /obj/item/borg/module_chip/mining
+	materials = list(DEFAULT_WALL_MATERIAL = 15000, "glass" = 5000, "phoron" = 2000, "gold" = 500, "silver" = 500)
+
+/datum/design/item/robot_upgrade/module/research
+	name = "Module Chip: Research"
+	id = "borg_module_research"
+	build_path = /obj/item/borg/module_chip/research
+	materials = list(DEFAULT_WALL_MATERIAL = 15000, "glass" = 5000, "phoron" = 2000, "gold" = 500, "silver" = 500)
+
+/datum/design/item/robot_upgrade/module/janitor
+	name = "Module Chip: Janitor"
+	id = "borg_module_janitor"
+	build_path = /obj/item/borg/module_chip/janitor
+	materials = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 5000, "phoron" = 1000)
+
+/datum/design/item/robot_upgrade/module/clerical
+	name = "Module Chip: Clerical"
+	id = "borg_module_clerical"
+	build_path = /obj/item/borg/module_chip/clerical
+	materials = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 5000, "phoron" = 1000)
+	
+/datum/design/item/robot_upgrade/module/service
+	name = "Module Chip: Service"
+	id = "borg_module_service"
+	build_path = /obj/item/borg/module_chip/service
+	materials = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 5000, "phoron" = 1000)	
+
+
+
+	
 /datum/design/item/mecha_tracking
 	name = "Exosuit tracking beacon"
 	build_type = MECHFAB

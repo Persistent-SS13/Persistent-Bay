@@ -30,21 +30,32 @@
 		ghostize()		//Ghostize checks for key so nothing else is necessary.
 	. = ..()
 
-/mob/living/carbon/lace/say_understands(var/other)//Goddamn is this hackish, but this say code is so odd
+/mob/living/carbon/brain/say_understands(var/other)//Goddamn is this hackish, but this say code is so odd
 	if (istype(other, /mob/living/silicon/ai))
-		return 1
+		if(!(container && istype(container, /obj/item/device/lmi)))
+			return 0
+		else
+			return 1
 	if (istype(other, /mob/living/silicon/decoy))
-		return 1
+		if(!(container && istype(container, /obj/item/device/lmi)))
+			return 0
+		else
+			return 1
 	if (istype(other, /mob/living/silicon/pai))
-		return 1
+		if(!(container && istype(container, /obj/item/device/lmi)))
+			return 0
+		else
+			return 1
 	if (istype(other, /mob/living/silicon/robot))
-		return 1
+		if(!(container && istype(container, /obj/item/device/lmi)))
+			return 0
+		else
+			return 1
 	if (istype(other, /mob/living/carbon/human))
 		return 1
 	if (istype(other, /mob/living/carbon/slime))
 		return 1
 	return ..()
-
 /mob/living/carbon/lace/update_canmove()
 	if(in_contents_of(/obj/mecha) || istype(loc, /obj/item/device/lmi))
 		canmove = 1

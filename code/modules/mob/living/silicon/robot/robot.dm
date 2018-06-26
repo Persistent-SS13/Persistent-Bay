@@ -103,6 +103,8 @@
 	var/obj/item/borg/chassis_mod/chassis_mod = null
 	var/chassis_mod_toggled = 0
 
+	
+	
 /mob/living/silicon/robot/proc/add_lace_action()	
 	var/datum/action/lace/laceaction = new(src)
 	laceaction.Grant(src)
@@ -162,6 +164,10 @@
 	hud_list[IMPCHEM_HUD]     = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[IMPTRACK_HUD]    = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[SPECIALROLE_HUD] = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
+	
+	verbs -= /mob/living/silicon/robot/verb/Namepick
+	
+	
 /mob/living/silicon/robot/after_load()
 	if(lmi)
 		add_lace_action()

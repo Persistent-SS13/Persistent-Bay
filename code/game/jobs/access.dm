@@ -232,6 +232,8 @@
 /mob/living/silicon/GetIdCard()
 	if(stat || (ckey && !client))
 		return // Unconscious, dead or once possessed but now client-less silicons are not considered to have id access.
+	if(idcard)
+		idcard.registered_name = real_name
 	return idcard
 
 /proc/FindNameFromID(var/mob/M, var/missing_id_name = "Unknown")

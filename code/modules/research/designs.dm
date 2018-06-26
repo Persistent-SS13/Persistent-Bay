@@ -774,7 +774,7 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/organ/internal/posibrain
 	category = "Misc"
 	sort_string = "VACAB"
-
+/**
 /datum/design/item/mmi
 	name = "Man-machine interface"
 	id = "mmi"
@@ -792,6 +792,26 @@ other types of metals and chemistry for reagents).
 	build_type = PROTOLATHE | MECHFAB
 	materials = list(DEFAULT_WALL_MATERIAL = 1200, "glass" = 500)
 	build_path = /obj/item/device/mmi/radio_enabled
+	category = "Misc"
+	sort_string = "VACBB"
+**/
+/datum/design/item/lmi
+	name = "Lace-machine interface"
+	id = "lmi"
+	req_tech = list(TECH_DATA = 2, TECH_BIO = 3)
+	build_type = PROTOLATHE | MECHFAB
+	materials = list(DEFAULT_WALL_MATERIAL = 1000, "glass" = 500)
+	build_path = /obj/item/device/lmi
+	category = "Misc"
+	sort_string = "VACBA"
+
+/datum/design/item/lmi_radio
+	name = "Radio-enabled lace-machine interface"
+	id = "lmi_radio"
+	req_tech = list(TECH_DATA = 2, TECH_BIO = 4)
+	build_type = PROTOLATHE | MECHFAB
+	materials = list(DEFAULT_WALL_MATERIAL = 1200, "glass" = 500)
+	build_path = /obj/item/device/lmi/radio_enabled
 	category = "Misc"
 	sort_string = "VACBB"
 

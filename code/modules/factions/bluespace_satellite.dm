@@ -272,6 +272,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 				engines |= engine
 	if(!valid_bridge_computer_found)
 		to_chat(user, "No valid bridge computer found. Shuttle finalization aborted.")
+		return 0
 	if(!engines.len)
 		to_chat(user, "No properly anchored engine found. Shuttle finalization aborted.")
 		return 0
@@ -291,7 +292,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	shuttle = new(name, src)
 	shuttle.size = dimensions
 	bridge.shuttle = shuttle
-	shuttle.shuttle_area = A
+	shuttle.shuttle_area = list(A)
 	shuttle.bridge = bridge
 	bridge.dock = src
 

@@ -360,9 +360,39 @@ var/const/NO_EMAG_ACT = -50
 	assignment = "Synthetic"
 
 /obj/item/weapon/card/id/synthetic/New()
-	access = get_all_station_access() + access_synth
+//	access = get_all_station_access() + access_synth
 	..()
-
+	
+	
+/obj/item/weapon/card/id/synthetic/GetAccess(var/faction_uid)
+//	if(!valid) return list()
+	var/list/final_access[0]
+	var/datum/world_faction/faction = get_faction(faction_uid)
+	if(faction)
+		if(faction.leader_name == registered_name)
+			faction.rebuild_all_access()
+			for(var/x in faction.all_access)
+				final_access |= text2num(x)
+			return final_access
+		var/datum/computer_file/crew_record/record = faction.get_record(registered_name)
+		if(record)
+			for(var/x in record.access)
+				final_access |= text2num(x)
+			if(faction.allow_id_access) final_access |= access
+			var/datum/assignment/assignment = faction.get_assignment(record.try_duty())
+			if(assignment)
+				for(var/x in assignment.accesses)
+					final_access |= text2num(x)
+			return final_access
+		else
+			if(faction.allow_id_access)
+				return access
+			else
+				return list()
+	else
+		return access
+		
+		
 /obj/item/weapon/card/id/centcom
 	name = "\improper CentCom. ID"
 	desc = "An ID straight from Cent. Com."

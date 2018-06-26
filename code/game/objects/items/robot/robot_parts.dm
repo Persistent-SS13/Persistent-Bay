@@ -189,12 +189,14 @@
 			if(!O)	return
 
 			user.drop_item()
-
+			O.real_name = M.brainmob.real_name
 			O.lmi = W
+			O.add_lace_action()
 			O.set_invisibility(0)
 			O.custom_name = created_name
 			O.updatename("Default")
-
+			O.spawn_loc = M.brainmob.spawn_loc
+			O.spawn_loc_2 = M.brainmob.spawn_loc_2
 			M.brainmob.mind.transfer_to(O)
 
 			if(O.mind && O.mind.special_role)
@@ -215,7 +217,7 @@
 
 			feedback_inc("cyborg_birth",1)
 			callHook("borgify", list(O))
-			O.Namepick()
+			O.updatename("Default")
 
 			qdel(src)
 		else

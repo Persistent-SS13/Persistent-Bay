@@ -23,32 +23,32 @@
 	
 /obj/item/borg/chassis_mod/service/waitress
 	name = "Service/Clerical Chassis: Waitress"
-	module_type = /obj/item/weapon/robot_module/clerical/butler
+	module_type = /obj/item/weapon/robot_module/clerical
 	chassis_type = "Service"
 	
 /obj/item/borg/chassis_mod/service/bro
 	name = "Service/Clerical Chassis: Brobot"
-	module_type = /obj/item/weapon/robot_module/clerical/butler
+	module_type = /obj/item/weapon/robot_module/clerical
 	chassis_type = "Brobot"
 	
 /obj/item/borg/chassis_mod/service/fountainbot
 	name = "Service/Clerical Chassis: Fountain-head"
-	module_type = /obj/item/weapon/robot_module/clerical/butler
+	module_type = /obj/item/weapon/robot_module/clerical
 	chassis_type = "toiletbot"
 
 /obj/item/borg/chassis_mod/service/poshbot
 	name = "Service/Clerical Chassis: Poshbot"
-	module_type = /obj/item/weapon/robot_module/clerical/butler
+	module_type = /obj/item/weapon/robot_module/clerical
 	chassis_type = "maximillion"
 	
 /obj/item/borg/chassis_mod/service/waiterbot
 	name = "Service/Clerical Chassis: Waiter"
-	module_type = /obj/item/weapon/robot_module/clerical/butler
+	module_type = /obj/item/weapon/robot_module/clerical
 	chassis_type = "Service2"
 	
 /obj/item/borg/chassis_mod/service/serviceeyebot
 	name = "Service/Clerical Chassis: Eyebot"
-	module_type = /obj/item/weapon/robot_module/clerical/butler
+	module_type = /obj/item/weapon/robot_module/clerical
 	chassis_type = "eyebot-standard"
 	
 /obj/item/borg/chassis_mod/mining/minereyebot
@@ -224,7 +224,7 @@
 /obj/item/borg/module_chip/clerical
 	name = "Clerical Module."
 	desc = "Contains tools and supplies for a clerical cyborg."
-	module_type = /obj/item/weapon/robot_module/clerical
+	module_type = /obj/item/weapon/robot_module/clerical/general
 	default_icon = "robotServ"
 /obj/item/borg/module_chip/service
 	name = "Service Module."

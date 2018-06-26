@@ -103,6 +103,9 @@
 	var/obj/item/borg/chassis_mod/chassis_mod = null
 	var/chassis_mod_toggled = 0
 
+/mob/living/silicon/robot/proc/add_lace_action()	
+	var/datum/action/lace/laceaction = new(src)
+	laceaction.Grant(src)
 
 /mob/living/silicon/robot/New(loc,var/unfinished = 0)
 	spark_system = new /datum/effect/effect/system/spark_spread()
@@ -159,7 +162,10 @@
 	hud_list[IMPCHEM_HUD]     = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[IMPTRACK_HUD]    = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[SPECIALROLE_HUD] = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
-
+/mob/living/silicon/robot/after_load()
+	if(lmi)
+		add_lace_action()
+		
 /mob/living/silicon/robot/verb/ModuleDisable()
 	set category = "Robot Commands"
 	set name = "Deactivate Module"
@@ -415,6 +421,38 @@
 	if(prefix)
 		modtype = prefix
 
+	if(lmi)
+		braintype = "Cyborg"
+	else if(istype(mmi, /obj/item/organ/internal/posibrain))
+		braintype = "Android"
+	else if(istype(mmi, /obj/item/device/mmi/digital/robot))
+		braintype = "Robot"
+	else
+		braintype = "Cyborg"
+
+	name = "[real_name] ([braintype])"
+
+	// if we've changed our name, we also need to update the display name for our PDA
+	setup_PDA()
+
+	//We also need to update name of internal camera.
+	if (camera)
+		camera.c_tag = name
+		
+	//Flavour text.
+	if(client)
+		var/module_flavour = client.prefs.flavour_texts_robot[modtype]
+		if(module_flavour)
+			flavor_text = module_flavour
+		else
+			flavor_text = client.prefs.flavour_texts_robot["Default"]
+
+			
+			
+/mob/living/silicon/robot/proc/updatenameOLD(var/prefix as text)
+	if(prefix)
+		modtype = prefix
+
 
 	if(lmi)
 		braintype = "Cyborg"
@@ -456,6 +494,7 @@
 		else
 			flavor_text = client.prefs.flavour_texts_robot["Default"]
 
+			
 /mob/living/silicon/robot/verb/Namepick()
 	set category = "Silicon Commands"
 	if(custom_name)
@@ -891,7 +930,7 @@
 /mob/living/silicon/robot/update_icon()
 	overlays.Cut()
 	if(stat == CONSCIOUS)
-		var/eye_icon_state = "eyes-[module_sprites[icontype]]"
+		var/eye_icon_state = "eyes-[icon_state]" //[module_sprites[icontype]]"
 		if(eye_icon_state in icon_states(icon))
 			if(!eye_overlays)
 				eye_overlays = list()

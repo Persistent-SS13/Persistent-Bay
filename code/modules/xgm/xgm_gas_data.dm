@@ -17,8 +17,6 @@
 	var/list/flags = list()
 	//Products created when burned. For fuel only for now (not oxidizers)
 	var/list/burn_product = list()
-	//Ratio of the reagents that one mole of the gas is (molecularly) made of. For sanity's sake, we're assuming that each unit of volume is a centiliter
-	var/list/component_reagents = list()
 
 /decl/xgm_gas
 	var/id = ""
@@ -31,7 +29,6 @@
 
 	var/flags = 0
 	var/burn_product = "carbon_dioxide"
-	var/component_reagents = null
 
 /hook/startup/proc/generateGasData()
 	gas_data = new
@@ -52,6 +49,5 @@
 		if(gas.overlay_limit) gas_data.overlay_limit[gas.id] = gas.overlay_limit
 		gas_data.flags[gas.id] = gas.flags
 		gas_data.burn_product[gas.id] = gas.burn_product
-		gas_data.component_reagents[gas.id] = gas.component_reagents
 
 	return 1

@@ -6,17 +6,30 @@
 
 	flags = XGM_GAS_OXIDIZER | XGM_GAS_FUSION_FUEL
 
+	component_reagents = list(
+						/datum/reagent/oxygen = 1
+						)
+
 /decl/xgm_gas/nitrogen
 	id = "nitrogen"
 	name = "Nitrogen"
 	specific_heat = 20	// J/(mol*K)
 	molar_mass = 0.028	// kg/mol
 
+	component_reagents = list(
+						/datum/reagent/nitrogen = 1
+						)
+
 /decl/xgm_gas/carbon_dioxide
 	id = "carbon_dioxide"
 	name = "Carbon Dioxide"
 	specific_heat = 30	// J/(mol*K)
 	molar_mass = 0.044	// kg/mol
+
+	component_reagents = list(
+						/datum/reagent/carbon = 0.33,
+						/datum/reagent/oxygen = 0.66
+						)
 
 /decl/xgm_gas/phoron
 	id = "phoron"
@@ -35,6 +48,10 @@
 	overlay_limit = 0.7
 	flags = XGM_GAS_FUEL | XGM_GAS_CONTAMINANT | XGM_GAS_FUSION_FUEL
 
+	component_reagents = list(
+						/datum/reagent/toxin/phoron = 1
+						)
+
 /decl/xgm_gas/sleeping_agent
 	id = "sleeping_agent"
 	name = "Nitrous Oxide"
@@ -44,6 +61,11 @@
 	tile_overlay = "sleeping_agent"
 	overlay_limit = 1
 	flags = XGM_GAS_OXIDIZER //N2O is a powerful oxidizer
+
+	component_reagents = list(
+						/datum/reagent/nitrogen = 0.66,
+						/datum/reagent/oxygen = 0.33
+						)
 
 /decl/xgm_gas/methane
 	id = "methane"
@@ -81,6 +103,10 @@
 	flags = XGM_GAS_FUEL|XGM_GAS_FUSION_FUEL
 
 	burn_product = "watervapor"
+
+	component_reagents = list(
+						/datum/reagent/hydrogen = 1
+						)
 
 /decl/xgm_gas/hydrogen/deuterium
 	id = "deuterium"
@@ -135,6 +161,11 @@
 	molar_mass = 0.054	// kg/mol
 	flags = XGM_GAS_OXIDIZER
 
+	component_reagents = list(
+						/datum/reagent/nitrogen = 0.33,
+						/datum/reagent/oxygen = 0.66
+						)
+
 /decl/xgm_gas/nitricoxide
 	id = "nitricoxide"
 	name = "Nitric Oxide"
@@ -142,6 +173,11 @@
 	specific_heat = 10	// J/(mol*K)
 	molar_mass = 0.030	// kg/mol
 	flags = XGM_GAS_OXIDIZER
+
+	component_reagents = list(
+						/datum/reagent/nitrogen = 0.5,
+						/datum/reagent/oxygen = 0.5
+						)
 
 /decl/xgm_gas/chlorine
 	id = "chlorine"
@@ -151,9 +187,17 @@
 	molar_mass = 0.017	// kg/mol
 	flags = XGM_GAS_CONTAMINANT
 
+	component_reagents = list(
+						/datum/reagent/toxin/chlorine = 1
+						)
+
 /decl/xgm_gas/vapor
 	id = "watervapor"
 	name = "Water Vapor"
 
 	specific_heat = 30	// J/(mol*K)
 	molar_mass = 0.020	// kg/mol
+
+	component_reagents = list(
+						/datum/reagent/water = 1
+						)

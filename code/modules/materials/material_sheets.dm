@@ -264,17 +264,21 @@
 	default_type = "ice"
 	apply_colour = 1
 
-/obj/item/stack/material/ice/five
-	amount = 5
-
-/obj/item/stack/material/dryice
+/obj/item/stack/material/ice/dryice
 	name = "dry ice"
-	icon_state = "sheet-silver"
 	default_type = "dryice"
-	apply_colour = 1
 
-/obj/item/stack/material/dryice/five
-	amount = 5
+/obj/item/stack/material/ice/oxyice
+	name = "oxygen-rich ice"
+	default_type = "oxyice"
+
+/obj/item/stack/material/ice/hydroice
+	name = "hydrogen-rich ice"
+	default_type = "hydroice"
+
+/obj/item/stack/material/ice/nitroice
+	name = "nitrogen-rich ice"
+	default_type = "nitroice"
 
 /obj/item/stack/material/sulfur
 	name = "sulfur"

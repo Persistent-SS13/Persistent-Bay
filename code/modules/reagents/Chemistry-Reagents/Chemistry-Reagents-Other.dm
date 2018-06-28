@@ -365,3 +365,24 @@
 
 /datum/reagent/luminol/touch_mob(var/mob/living/L)
 	L.reveal_blood()
+
+/datum/reagent/oxygen
+	name = "Oxygen"
+	description = "A oxidizing agent and a key component in the respiration of many species."
+	taste_description = "nothing"
+	reagent_state = LIQUID
+	color = "#d3e2e2"
+
+/datum/reagent/nitrogen
+	name = "Nitrogen"
+	description = "A ubiquitous and largely inert chemical."
+	taste_description = "nothing"
+	reagent_state = LIQUID
+	color = "#c2c4c4"
+
+/datum/reagent/hydrogen
+	name = "Hydrogen"
+	description = "The most common element in the universe."
+	taste_description = "nothing"
+	reagent_state = LIQUID
+	color = "#d3e2e2"

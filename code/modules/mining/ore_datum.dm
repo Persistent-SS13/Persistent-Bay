@@ -257,3 +257,30 @@ var/global/list/ores_by_type = list()
 	ore = /obj/item/weapon/ore/dryice
 	scan_icon = "mineral_common"
 
+/ore/oxyice
+	name = "oxyice"
+	display_name = "unrefined oxygen-rich ice"
+	compresses_to = "oxyice"
+	result_amount = 5
+	spread_chance = 25
+	ore = /obj/item/weapon/ore/oxyice
+	scan_icon = "mineral_common"
+
+/ore/hydroice
+	name = "hydroice"
+	display_name = "unrefined hydrogen-rich ice"
+	compresses_to = "hydroice"
+	result_amount = 5
+	spread_chance = 25
+	ore = /obj/item/weapon/ore/hydroice
+	scan_icon = "mineral_common"
+
+/ore/nitroice
+	name = "nitroice"
+	display_name = "unrefined nitrogen-rich ice"
+	compresses_to = "oxyice"
+	result_amount = 5
+	spread_chance = 25
+	ore = /obj/item/weapon/ore/nitroice
+	scan_icon = "mineral_common"
+

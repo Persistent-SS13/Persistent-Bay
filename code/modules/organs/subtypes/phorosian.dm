@@ -4,7 +4,7 @@
 	icon_state = "lungs-plasma"
 	desc = "A set of lungs seemingly made out of fleshy phoron."
 	breath_type = "phoron"
-	poison_type = "oxygen" //It burns to breathe!
+	poison_types = list("oxygen" = TRUE) //It burns to breathe!
 	exhale_type = "hydrogen"
 
 /obj/item/organ/internal/liver/phorosian
@@ -66,12 +66,8 @@
 	var/failed_exhale = 0
 
 	var/inhaling = breath.gas[breath_type]
-	var/poison = breath.gas[poison_type]
-	var/exhaling = exhale_type ? breath.gas[exhale_type] : 0
 
 	var/inhale_pp = (inhaling/breath.total_moles)*breath_pressure
-	var/toxins_pp = (poison/breath.total_moles)*breath_pressure
-	var/exhaled_pp = (exhaling/breath.total_moles)*breath_pressure
 
 	var/inhale_efficiency
 	if(safe_pressure_min)
@@ -94,65 +90,35 @@
 	var/inhaled_gas_used = inhaling / 4
 	breath.adjust_gas(breath_type, -inhaled_gas_used, update = 0) //update afterwards
 
+	owner.phoron_alert = 0 // Reset our toxins alert for now.
+	if(!failed_inhale) // Enough gas to tell we're being poisoned via chemical burns or whatever.
+		var/poison_total = 0
+		if(poison_types)
+			for(var/gname in breath.gas)
+				if(poison_types[gname])
+					poison_total += breath.gas[gname]
+		if(((poison_total/breath.total_moles)*breath_pressure) > safe_toxins_max)
+			owner.phoron_alert = 1
+
+	// Pass reagents from the gas into our body.
+	// Presumably if you breathe it you have a specialized metabolism for it, so we drop/ignore breath_type. Also avoids
+	// humans processing thousands of units of oxygen over the course of a round for the sole purpose of poisoning vox.
+	var/ratio = (robotic >= ORGAN_ROBOT) ? 0.66 : 1
+	for(var/gasname in breath.gas - breath_type)
+		if(gasname == "oxygen")
+			take_damage(0.5)
+			if(prob(20))
+				to_chat(owner, "<span class='warning'>Your lungs feel like they are burning!</span>")
+		var/breathed_product = gas_data.breathed_product[gasname]
+		if(breathed_product)
+			var/reagent_amount = breath.gas[gasname] * REAGENT_GAS_EXCHANGE_FACTOR * ratio
+			 // Little bit of sanity so we aren't trying to add 0.0000000001 units of CO2, and so we don't end up with 99999 units of CO2.
+			if(reagent_amount >= 0.05)
+				owner.reagents.add_reagent(breathed_product, reagent_amount)
+				breath.adjust_gas(gasname, -breath.gas[gasname], update = 0) //update after
+
 	if(exhale_type)
 		breath.adjust_gas_temp(exhale_type, inhaled_gas_used, owner.bodytemperature, update = 0) //update afterwards
-		// Too much exhaled gas in the air
-		var/word
-		var/warn_prob
-		var/oxyloss
-		var/alert
-
-		if(exhaled_pp > safe_exhaled_max)
-			word = pick("extremely dizzy","short of breath","faint","confused")
-			warn_prob = 15
-			oxyloss = HUMAN_MAX_OXYLOSS
-			alert = 1
-			failed_exhale = 1
-		else if(exhaled_pp > safe_exhaled_max * 0.7)
-			word = pick("dizzy","short of breath","faint","momentarily confused")
-			warn_prob = 10
-			alert = 1
-			failed_exhale = 1
-			var/ratio = 1.0 - (safe_exhaled_max - exhaled_pp)/(safe_exhaled_max*0.3)
-			if (owner.getOxyLoss() < 50*ratio)
-				oxyloss = HUMAN_MAX_OXYLOSS
-		else if(exhaled_pp > safe_exhaled_max * 0.4)
-			word = pick("a little dizzy","short of breath")
-			warn_prob = 10
-		else
-			owner.co2_alert = 0
-
-		if(word)
-			if(!owner.co2_alert)
-				owner.co2_alert = alert
-			if(prob(warn_prob))
-				to_chat(owner, "<span class='warning'>You feel [word].</span>")
-
-		owner.adjustOxyLoss(oxyloss)
-
-	// Too much poison in the air.
-
-	if(toxins_pp > safe_toxins_max)
-		take_damage(0.5)
-		if(prob(20))
-			to_chat(owner, "<span class='warning'>Your lungs feel like they are burning!</span>")
-		breath.adjust_gas(poison_type, -poison/6, update = 0) //update after
-		owner.phoron_alert = 1
-	else
-		owner.phoron_alert = 0
-
-	// If there's some other shit in the air lets deal with it here.
-	if(breath.gas["sleeping_agent"])
-		var/SA_pp = (breath.gas["sleeping_agent"] / breath.total_moles) * breath_pressure
-		if(SA_pp > SA_para_min)		// Enough to make us paralysed for a bit
-			owner.Paralyse(3)	// 3 gives them one second to wake up and run away a bit!
-			if(SA_pp > SA_sleep_min)	// Enough to make us sleep as well
-				owner.Sleeping(5)
-		else if(SA_pp > 0.15)	// There is sleeping gas in their lungs, but only a little, so give them a bit of a warning
-			if(prob(20))
-				owner.emote(pick("giggle", "laugh"))
-
-		breath.adjust_gas("sleeping_agent", -breath.gas["sleeping_agent"], update = 0) //update after
 
 	// Were we able to breathe?
 	var/failed_breath = failed_inhale || failed_exhale

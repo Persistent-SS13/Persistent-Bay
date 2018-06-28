@@ -1098,6 +1098,9 @@ mob/proc/yank_out_object()
 /mob/proc/is_invisible_to(var/mob/viewer)
 	return (!alpha || !mouse_opacity || viewer.see_invisible < invisibility)
 
+/mob/proc/has_chem_effect(chem, threshold)
+	return FALSE
+
 /client/proc/check_has_body_select()
 	return mob && mob.hud_used && istype(mob.zone_sel, /obj/screen/zone_sel)
 

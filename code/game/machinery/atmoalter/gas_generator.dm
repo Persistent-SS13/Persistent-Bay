@@ -82,7 +82,7 @@
 			src.container = O
 			usr.drop_item()
 			O.forceMove(src)
-			to_chat(usr, "<span class='notice'You load \the [O] into \the [src]")
+			to_chat(usr, "<span class='notice'>You load \the [O] into \the [src]")
 
 		update_icon()
 	..()

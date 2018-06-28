@@ -27,7 +27,7 @@
 </div>
 <div class="item">
 	<div class="itemLabel">
-		Produce:
+		React Reagents:
 	</div>
 	<div class="itemContentWide" style="width: 100%;">
 		{{if data.gases.length}}
@@ -35,8 +35,16 @@
 				{{:helper.link(value.name, 'circle-arrow-s', {"generateGas":value.id}, null, 'fixedLeftWide')}}
 			{{/for}}
 		{{else}}
-			<span class='bad'>No potential gases detected</span>
+			<span class='bad'>No potential gases detected!</span>
 		{{/if}}
+	</div>
+</div>
+<div class="item">
+	<div class="itemLabel">
+		Aerosolize Reagents:
+	</div>
+	<div class="itemContentWide" style="width: 100%;">
+		{{:helper.link('Aerosolize', 'circle-arrow-s', {'aerosolize' : 1}, data.containerLoaded ? null : 'disabled', 'fixerLeftWide')}}
 	</div>
 </div>
 <h3>Interior Tank Status</h3>

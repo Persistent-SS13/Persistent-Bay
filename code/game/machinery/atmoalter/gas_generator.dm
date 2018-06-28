@@ -1,3 +1,36 @@
+/proc/create_gas_data_for_reagent(var/datum/reagent/reagent)
+
+	var/kill_later
+	if(ispath(reagent))
+		kill_later = TRUE
+		reagent = new reagent
+
+	if(!istype(reagent))
+		return
+
+	var/gas_id = lowertext(reagent.name)
+	if(gas_id in gas_data.gases)
+		return
+
+	gas_data.gases +=                   gas_id
+	gas_data.name[gas_id] =             reagent.name
+	gas_data.specific_heat[gas_id] =    reagent.gas_specific_heat
+	gas_data.molar_mass[gas_id] =       reagent.gas_molar_mass
+	gas_data.overlay_limit[gas_id] =    reagent.gas_overlay_limit
+	gas_data.flags[gas_id] =            reagent.gas_flags
+	gas_data.burn_product[gas_id] =     reagent.gas_burn_product
+	gas_data.breathed_product[gas_id] = reagent.type
+																//component_reagents intentially left null
+
+	if(reagent.gas_overlay)
+		var/image/I = image('icons/effects/tile_effects.dmi', reagent.gas_overlay, FLY_LAYER)
+		I.appearance_flags = RESET_COLOR
+		I.color = initial(reagent.color)
+		gas_data.tile_overlay[gas_id] = I
+
+	if(kill_later)
+		qdel(reagent)
+
 /obj/machinery/portable_atmospherics/gas_generator
 	name = "gas generator"
 	desc = "A complex machine used to produce gas from liquid reagents"
@@ -125,6 +158,16 @@
 		else
 			visible_message("<span class='notice'>\The [src] flashes an 'Insufficient Reagents' error")
 		return TOPIC_REFRESH
+	if(href_list["aerosolize"]) //Turning reagents into a new type of gas
+		if(!container || !container.reagents)
+			return TOPIC_HANDLED
+		for(var/datum/reagent/R in container.reagents.reagent_list)
+			var/gas_id = lowertext(R.name)
+			if(!(gas_id in gas_data.gases))
+				create_gas_data_for_reagent(R)
+			var/reagents_rmvd = container.reagents.get_reagent_amount(R.type)
+			container.reagents.remove_reagent(R.type,reagents_rmvd)
+			air_contents.adjust_gas(gas_id, reagents_rmvd/REAGENT_GAS_EXCHANGE_FACTOR, 1)
 
 	else if(href_list["ejectContainer"])
 		if(container)

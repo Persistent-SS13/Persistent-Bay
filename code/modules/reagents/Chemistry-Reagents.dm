@@ -21,6 +21,15 @@
 	var/glass_desc = "It's a glass of... what, exactly?"
 	var/list/glass_special = null // null equivalent to list()
 
+	// GAS DATA, generic values copied from base XGM datum type.
+	var/gas_specific_heat = 20
+	var/gas_molar_mass =    0.032
+	var/gas_overlay_limit = 0.7
+	var/gas_flags =         0
+	var/gas_burn_product
+	var/gas_overlay = "generic"
+	// END GAS DATA
+
 /datum/reagent/New(var/datum/reagents/holder)
 	src.holder = holder
 	..()

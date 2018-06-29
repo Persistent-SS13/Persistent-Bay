@@ -81,6 +81,8 @@
 			return global.SSplants;
 		if("SSprocessing")
 			return global.SSprocessing;
+		if("SSradiation")
+			return global.SSradiation;
 		if("SSshuttle")
 			return global.SSshuttle;
 		if("SSskybox")
@@ -777,8 +779,6 @@
 			return global.protolathe_recipes;
 		if("rad_collectors")
 			return global.rad_collectors;
-		if("radiation_repository")
-			return global.radiation_repository;
 		if("radio_controller")
 			return global.radio_controller;
 		if("radiochannels")
@@ -1156,6 +1156,8 @@
 			global.SSplants=newval;
 		if("SSprocessing")
 			global.SSprocessing=newval;
+		if("SSradiation")
+			global.SSradiation=newval;
 		if("SSshuttle")
 			global.SSshuttle=newval;
 		if("SSskybox")
@@ -1852,8 +1854,6 @@
 			global.protolathe_recipes=newval;
 		if("rad_collectors")
 			global.rad_collectors=newval;
-		if("radiation_repository")
-			global.radiation_repository=newval;
 		if("radio_controller")
 			global.radio_controller=newval;
 		if("radiochannels")
@@ -2190,6 +2190,7 @@
 	"SSopen_space",
 	"SSplants",
 	"SSprocessing",
+	"SSradiation",
 	"SSshuttle",
 	"SSskybox",
 	"SStimer",
@@ -2538,7 +2539,6 @@
 	"protolathe_categories",
 	"protolathe_recipes",
 	"rad_collectors",
-	"radiation_repository",
 	"radio_controller",
 	"radiochannels",
 	"raiders",

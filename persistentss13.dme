@@ -159,7 +159,6 @@
 #include "code\controllers\evacuation\~evac.dm"
 #include "code\controllers\Processes\ai.dm"
 #include "code\controllers\Processes\alarm.dm"
-#include "code\controllers\Processes\emergencyShuttle.dm"
 #include "code\controllers\Processes\sun.dm"
 #include "code\controllers\Processes\supply.dm"
 #include "code\controllers\Processes\tgui.dm"

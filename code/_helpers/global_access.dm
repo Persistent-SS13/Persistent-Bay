@@ -89,6 +89,8 @@
 			return global.SSskybox;
 		if("SStimer")
 			return global.SStimer;
+		if("SStrade")
+			return global.SStrade;
 		if("SSvines")
 			return global.SSvines;
 		if("SSxenoarch")
@@ -1164,6 +1166,8 @@
 			global.SSskybox=newval;
 		if("SStimer")
 			global.SStimer=newval;
+		if("SStrade")
+			global.SStrade=newval;
 		if("SSvines")
 			global.SSvines=newval;
 		if("SSxenoarch")
@@ -2194,6 +2198,7 @@
 	"SSshuttle",
 	"SSskybox",
 	"SStimer",
+	"SStrade",
 	"SSvines",
 	"SSxenoarch",
 	"Tier1Runes",

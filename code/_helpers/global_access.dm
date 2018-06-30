@@ -985,8 +985,6 @@
 			return global.tg_self_state;
 		if("tg_z_state")
 			return global.tg_z_state;
-		if("tgui_process")
-			return global.tgui_process;
 		if("ticker")
 			return global.ticker;
 		if("tickerProcess")
@@ -2062,8 +2060,6 @@
 			global.tg_self_state=newval;
 		if("tg_z_state")
 			global.tg_z_state=newval;
-		if("tgui_process")
-			global.tgui_process=newval;
 		if("ticker")
 			global.ticker=newval;
 		if("tickerProcess")
@@ -2646,7 +2642,6 @@
 	"tg_physical_state",
 	"tg_self_state",
 	"tg_z_state",
-	"tgui_process",
 	"ticker",
 	"tickerProcess",
 	"ticket_panels",

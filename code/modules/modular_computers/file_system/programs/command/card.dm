@@ -14,6 +14,7 @@
 	var/mod_mode = 1
 	var/is_centcom = 0
 	var/show_assignments = 0
+	var/show_record = 0
 	var/datum/computer_file/crew_record/record
 	var/manifest_setting = 1
 	var/submode = 0
@@ -139,7 +140,8 @@
 				))
 		data["none_select"] = none_select
 		data["assignment_categories"] = assignment_categories
-		
+		data["record_val"] = pencode2html(record.get_emplRecord())
+		data["record"] = show_record
 	if(program.computer.card_slot && program.computer.card_slot.stored_card)
 		var/obj/item/weapon/card/id/id_card = program.computer.card_slot.stored_card
 		if(is_centcom)
@@ -251,6 +253,13 @@
 				module.show_assignments = 0
 			else
 				module.show_assignments = 1
+				module.show_record = 0
+		if("toggler")
+			if(module.show_record)
+				module.show_record = 0
+			else
+				module.show_assignments = 0
+				module.show_record = 1
 		if("print")
 			if(computer && computer.nano_printer) //This option should never be called if there is no printer
 				if(module.mod_mode)
@@ -347,6 +356,11 @@
 			id_card.selected_faction = connected_faction.uid
 			to_chat(user, "Card successfully resynced to [connected_faction.name]")
 			update_ids(id_card.registered_name)
+		if("edit_record")
+			var/newValue
+			newValue = replacetext(input(usr, "Edit the employee record. You may use HTML paper formatting tags:", "Record edit", replacetext(html_decode(module.record.get_emplRecord()), "\[br\]", "\n")) as null|message, "\n", "\[br\]")
+			if(newValue)
+				module.record.set_emplRecord(newValue)
 	if(id_card)
 		id_card.name = text("[id_card.registered_name]'s ID Card ([id_card.assignment])")
 

@@ -25,7 +25,7 @@
 
 /atom/movable/lighting_overlay/New(var/atom/loc, var/no_update = FALSE)
 	var/turf/T = loc //If this runtimes atleast we'll know what's creating overlays outside of turfs.
-	if(!T || istype(loc, /turf/space))
+	if(!T)
 		loc = null
 		qdel(src)
 		return

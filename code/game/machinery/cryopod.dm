@@ -89,7 +89,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 
 /obj/machinery/cryopod
 	name = "cryogenic freezer"
-	desc = "A man-sized pod for entering suspended animation. Takes three minutes to enter stasis."
+	desc = "A man-sized pod for entering suspended animation. Takes one minutes to enter stasis."
 	icon = 'icons/obj/Cryogenic2.dmi'
 	icon_state = "body_scanner_0"
 	density = 1
@@ -115,6 +115,8 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	req_access = list(core_access_command_programs)
 	var/datum/world_faction/faction
 
+	var/network = "default"
+	
 /obj/machinery/cryopod/New()
 	..()
 	component_parts = list()
@@ -148,8 +150,9 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	dat += "<hr/><br/><b>Cryopod Control</b><br/>"
 	dat += "This cryopod is connected to: [faction ? faction.name : "Not connected"]<br/><br/><hr/>"
 	if(faction)
+		dat += "It's cryonetwork is set to [network]<br><br>"
 		dat += "<a href='?src=\ref[src];enter=1'>Enter pod</a><br><a href='?src=\ref[src];eject=1'>Eject Occupant</a><br><br>"
-		dat += "Those authorized can <a href='?src=\ref[src];disconnect=1'>disconnect this pod from the network</a>"
+		dat += "Those authorized can <a href='?src=\ref[src];disconnect=1'>disconnect this pod from the logistics network</a> or <a href='?src=\ref[src];connect_net=1'>connect to a different cryonetwork</a>."
 	else
 		dat += "Those authorized can <a href='?src=\ref[src];connect=1'>connect this pod to a network</a>"
 
@@ -219,6 +222,13 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 				req_access_faction = ""
 			else
 				req_access_faction = faction.uid
+	if(href_list["connect_net"])
+		if(!faction) return
+		var/list/choices = faction.cryo_networks.Copy()
+		choices |= "default"
+		var/choice = input(usr,"Choose which cryo network [src] should use.","Choose Cryo-net",null) as null|anything in choices
+		if(choice)
+			network = choice
 	src.updateUsrDialog()
 	return
 

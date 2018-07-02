@@ -144,8 +144,7 @@
 					</div>
 				</div>
 				<br><br>
-				
-				{{:helper.link(data.assignments ? "Cancel Reassignment" : "Select New Assignment", 'gear', {'action' : 'togglea'})}}
+				{{:helper.link(data.assignments ? "Cancel Reassignment" : "Select New Assignment", 'gear', {'action' : 'togglea'}, null, data.assignments ? 'selected' : null)}}{{:helper.link(data.record ? "Close Records" : "View/Edit Employee Record", 'folder-open', {'action' : 'toggler'}, null, data.record ? 'selected' : null)}}
 				<div class='item'>
 				  {{if data.assignments}}
 					  <div id="all-value.jobs">
@@ -171,6 +170,13 @@
 						{{/for}}
 						</table>
 					  </div>
+				  {{/if}}
+				  {{if data.record}}
+					{{:helper.link("Edit Record", 'wrench', {'action' : 'edit_record'})}}
+					<br><br>
+					<div class='statusDisplay'>
+						{{:data.record_val}}
+					</div>
 				  {{/if}}
 				</div>
 			{{/if}}

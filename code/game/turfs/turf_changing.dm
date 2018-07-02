@@ -37,9 +37,9 @@
 	var/obj/fire/old_fire = fire
 	var/old_opacity = opacity
 	var/old_dynamic_lighting = dynamic_lighting
-	var/old_affecting_lights = affecting_lights
-	var/old_lighting_overlay = lighting_overlay
-	var/old_corners = corners
+//	var/old_affecting_lights = affecting_lights
+//	var/old_lighting_overlay = lighting_overlay
+//	var/old_corners = corners
 
 //	log_debug("Replacing [src.type] with [N]")
 
@@ -80,7 +80,13 @@
 
 	W.post_change()
 	. = W
-
+	if(dynamic_lighting)
+		lighting_build_overlay()
+	else
+		lighting_clear_overlay()
+	if((old_opacity != opacity) || (dynamic_lighting != old_dynamic_lighting))
+		reconsider_lights()
+	/**
 	if(lighting_overlays_initialised)
 		lighting_overlay = old_lighting_overlay
 		affecting_lights = old_affecting_lights
@@ -92,7 +98,7 @@
 				lighting_build_overlay()
 			else
 				lighting_clear_overlay()
-
+	**/
 /turf/proc/transport_properties_from(turf/other)
 	if(!istype(other, src.type))
 		return 0
@@ -107,7 +113,14 @@
 	return 1
 
 //I would name this copy_from() but we remove the other turf from their air zone for some reason
-/turf/simulated/transport_properties_from(turf/simulated/other)
+/turf/simulated/floor/transport_properties_from(turf/simulated/other)
+	if(!..())
+		return 0
+	if(istype(other, /turf/simulated/floor))
+		var/turf/simulated/floor/F = other
+		set_flooring(F.flooring)
+
+/turf/simulated/floor/transport_properties_from(turf/simulated/other)
 	if(!..())
 		return 0
 

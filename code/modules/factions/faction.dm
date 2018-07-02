@@ -47,6 +47,10 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	var/list/cargo_telepads = list()
 	var/list/approved_orders = list()
 	var/list/pending_orders = list()
+	
+	var/list/cryo_networks = list() // "default" is always a cryo_network
+	
+	
 /datum/world_faction/proc/get_duty_status(var/real_name)
 	for(var/obj/item/organ/internal/stack/stack in connected_laces)
 		if(stack.get_owner_name() == real_name)
@@ -130,13 +134,22 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 
 /datum/assignment
 	var/name = ""
-	var/list/accesses = list()
+	var/list/accesses[0]
 	var/uid = ""
 	var/datum/assignment_category/parent
 	var/payscale = 1.0
 	var/list/ranks = list() // format-- list("Apprentice Engineer (2)" = "1.1", "Journeyman Engineer (3)" = "1.2")
 	var/duty_able = 1
-
+	var/cryo_net = "default"
+/datum/accesses
+	var/list/accesses = list()
+/datum/assignment/after_load()
+	..()
+	if(accesses[1] && !islist(accesses[1]))
+		var/datum/accesses/copy = new()
+		copy.accesses = accesses.Copy()
+		accesses = list()
+		accesses["1"] = copy
 /datum/access_category
 	var/name = ""
 	var/list/accesses = list() // format-- list("11" = "Bridge Access")

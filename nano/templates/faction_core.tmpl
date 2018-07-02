@@ -22,6 +22,7 @@
 		<br><br>{{:helper.link("Assignments Config", 'pencil', {'action' : 'change_menu', 'menu_target' : '7'})}}
 		<br><br>{{:helper.link("Economy Menu", 'calculator', {'action' : 'change_menu', 'menu_target' : '12'})}}
 		<br><br>{{:helper.link("Promotion Control", 'flag', {'action' : 'change_menu', 'menu_target' : '13'})}}
+		<br><br>{{:helper.link("Cryo Network Control", 'gear', {'action' : 'change_menu', 'menu_target' : '14'})}}
 	{{/if}}
 	{{if data.menu == 4}}
 		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
@@ -134,6 +135,7 @@
 		<br><br>{{:helper.link("Change Rank 1 Payscale", 'pencil', {'action' : 'edit_assignment_pay'})}} Pay: {{:data.pay}}
 		<br><br>{{:helper.link("Delete Assignment", 'cross', {'action' : 'delete_assignment'})}}
 		<br><br>{{:helper.link("View/Edit Access", '', {'action' : 'view_access'}, data.view_ranks ? null : 'selected')}}{{:helper.link("View/Edit Ranks", '', {'action' : 'view_ranks'}, data.view_ranks ? 'selected' : null)}}
+		<br><br>{{:helper.link("Change Cryo-network", 'pencil', {'action' : 'edit_assignment_cryonet'})}} Cryo-network: {{:data.cryonetwork}}
 		<br><hr><br>
 		{{if data.view_ranks}}
 			{{:helper.link("Add New Rank", '', {'action' : 'create_rank'})}}{{:helper.link("Delete rank", '', {'action' : 'delete_rank'})}}<br><br><hr>
@@ -141,13 +143,15 @@
 				{{:helper.link(value.name, '', {'action' : 'nothing'})}}
 			{{/for}}
 		{{else}}
-			Select the access that this assignment should have.<br><br><hr>
+			Select the access that this assignment should have when at rank {{:data.selected_rank}} or above.<br><br>
+			{{:helper.link("<-", '', {'action' : 'decrease_selected_rank'}, data.decrease_button ? null : 'disabled')}}{{:helper.link(data.selected_rank, '', {'action' : 'nothing'})}}{{:helper.link("->", '', {'action' : 'increase_selected_rank'}, data.increase_button ? null : 'disabled')}}
+			<br><br><hr>
 			{{for data.access_categories}}
 				{{:value.name}} :<br><br>
 				{{for value.accesses :accessValue:accessIndex}}
 					{{:helper.link(accessValue.name, '', {'action' : 'pick_access', 'selected_ref' : value.ref, 'selected_ind' : accessValue.ind}, null, accessValue.existing ? 'selected' : null)}}
 				{{/for}}
-				<br><br><br><br><hr><br>
+				<br><br><br><br><br><hr><br>
 			{{/for}}	
 		{{/if}}
 	{{/if}}
@@ -215,6 +219,19 @@
 			</div>
 		</div>
 		<br>A promotion vote coming from someone with an assignment that is the leader of the command faction, and they are the highest rank available to that assignment ALWAYS cound as a rank 5 vote.
+	{{/if}}
+	{{if data.menu == 14}}
+		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
+		<h2>Cryo-network Control</h2>
+		<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
+		<br><hr>
+		<br>Assignments can be given different cryo-networks so that no matter which storage unit they go into, they come out of one assigned to their cryo-network.<br>The unassigned or those without a valid storage unit on their cryo-network will use units assigned to default.<br><br>
+		<br><hr>
+		{{for data.cryos}}
+			{{:helper.link(value.name, '', {'action' : 'nothing'})}}
+		{{/for}}
+		<br><br><hr><br>
+		{{:helper.link("Add", '', {'action' : 'add_cryo'})}}  {{:helper.link("Remove", '', {'action' : 'remove_cryo'})}}
 	{{/if}}
 {{else}}
 	<h2><span class='alert'><i>No operational Logistics Processor detected. <br>CHECK LOG PROCESSOR</i></span></h2>

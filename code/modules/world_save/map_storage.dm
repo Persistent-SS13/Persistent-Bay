@@ -89,8 +89,10 @@ var/global/list/debug_data = list()
 /turf/after_load()
 	..()
 	update_icon()
-	lighting_build_overlay()
-
+	if(dynamic_lighting)
+		lighting_build_overlay()
+	else
+		lighting_clear_overlay()
 	for(var/obj/effect/floor_decal/decal in saved_decals)
 		decal.init_for(src)
 
@@ -325,6 +327,7 @@ var/global/list/debug_data = list()
 	to_file(f["areas"],formatted_areas)
 	to_file(f["turbolifts"],turbolifts)
 	to_file(f["records"],GLOB.all_crew_records)
+	to_file(f["email"],ntnet_global.email_accounts)
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
 	return 1
@@ -338,6 +341,7 @@ var/global/list/debug_data = list()
 	debug_data = list()
 	var/v = null
 	f.cd = "/extras"
+	from_file(f["email"],ntnet_global.email_accounts)
 	from_file(f["records"],GLOB.all_crew_records)
 	if(!GLOB.all_crew_records)
 		GLOB.all_crew_records = list()

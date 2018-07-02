@@ -57,5 +57,5 @@
 		gas_data.burn_product[gas.id] = gas.burn_product
 		gas_data.breathed_product[gas.id] = gas.breathed_product
 		gas_data.component_reagents[gas.id] = gas.component_reagents
-	
-  return 1
+
+  	return 1

@@ -148,10 +148,15 @@
 				data["increase_button"] = 1
 			if(selected_rank != 1)
 				data["decrease_button"] = 1
-			if(selected_assignment.accesses[1] && !istype(selected_assignment.accesses["1"], /datum/accesses))
+			if(selected_assignment.accesses.len)
+				if(selected_assignment.accesses["1"] && !istype(selected_assignment.accesses["1"], /datum/accesses))
+					var/datum/accesses/copy = new()
+					copy.accesses = selected_assignment.accesses.Copy()
+					selected_assignment.accesses["1"] = copy
+			else
 				var/datum/accesses/copy = new()
-				copy.accesses = selected_assignment.accesses.Copy()
 				selected_assignment.accesses["1"] = copy
+				
 			var/list/all_access = list()
 			for(var/i=1;i<=selected_rank;i++)
 				if(i > selected_assignment.accesses.len)

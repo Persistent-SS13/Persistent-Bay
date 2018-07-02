@@ -77,12 +77,12 @@
 
 	if(istype(O, /obj/item/weapon/reagent_containers))
 		if(container)
-			to_chat(usr, "<span class='warning'>\The [src] already has \the [container] loaded!")
+			to_chat(usr, "<span class='warning'>\The [src] already has \the [container] loaded!</span>")
 		else
 			src.container = O
 			usr.drop_item()
 			O.forceMove(src)
-			to_chat(usr, "<span class='notice'>You load \the [O] into \the [src]")
+			to_chat(usr, "<span class='notice'>You load \the [O] into \the [src]</span>")
 
 		update_icon()
 	..()
@@ -156,7 +156,7 @@
 				container_reagents.remove_reagent(R, possible_reactions*component_reagents[R])
 			air_contents.adjust_gas(gas, possible_reactions/REAGENT_GAS_EXCHANGE_FACTOR, 1)//Adds the proper amount of moles to the container
 		else
-			visible_message("<span class='notice'>\The [src] flashes an 'Insufficient Reagents' error")
+			visible_message("<span class='notice'>\The [src] flashes an 'Insufficient Reagents' error</span>")
 		return TOPIC_REFRESH
 	if(href_list["aerosolize"]) //Turning reagents into a new type of gas
 		if(!container || !container.reagents)

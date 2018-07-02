@@ -58,6 +58,12 @@
 	containertype = /obj/structure/closet/crate/large
 	containername = "\improper Office supplies crate"
 
+/decl/hierarchy/supply_pack/supply/paper
+	name = "Paper (x50)"
+	contains = list(/obj/item/weapon/paper_package)
+	cost = 4
+	containername = "\improper Paper supplies crate"
+
 /decl/hierarchy/supply_pack/supply/spare_pda
 	name = "Spare PDAs"
 	contains = list(/obj/item/device/pda = 10)

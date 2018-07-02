@@ -19,7 +19,8 @@
 	var/attempted_password = ""
 	var/wrong_password = 0
 	var/wrong_connection = 0
-	var/menu = 1 // 1 = connect to network 2 = login screen 3 = main directory 4 = central options 5 = network options 6 = main access control 7 = main assignment control 8 = access category view 9 = access view 10 = assignment category view 11 = assignment view
+	var/menu = 1 // 1 = connect to network 2 = login screen 3 = main directory 4 = central options 5 = network options 6 = main access control 7 = main assignment control
+				// 8 = access category view 9 = access view 10 = assignment category view 11 = assignment view 12 = economy menu, 13 = promotion control, 14 = cryocontrol
 	var/datum/access_category/selected_accesscategory
 	var/selected_access = 0
 	var/datum/assignment_category/selected_assignmentcategory
@@ -139,6 +140,7 @@
 				return ui_interact(user, ui_key, ui, force_open, state)
 			data["pay"] = selected_assignment.payscale
 			data["title"] = selected_assignment.name
+			data["cryonetwork"] = selected_assignment.cryo_net
 			var/list/access_categories[0]
 			var/datum/access_category/core/core
 			if(!core_access)
@@ -175,6 +177,13 @@
 			data["rank1_req"] = connected_faction.all_promote_req
 			data["rank3_req"] = connected_faction.three_promote_req
 			data["rank5_req"] = connected_faction.five_promote_req
+		if(menu == 14) // cryo menu
+			var/list/cryos[0]
+			cryos[++cryos.len] = list("name" = "default")
+			for(var/cryoname in connected_faction.cryo_networks)
+				cryos[++cryos.len] = list("name" = cryoname)
+			data["cryos"] = cryos
+			
 	else
 		menu = 1
 	if(selected_accesscategory)
@@ -655,4 +664,24 @@
 				to_chat(usr, "Invalid number.")
 				return 1
 			connected_faction.five_promote_req = selected_uid
+		if("add_cryo")
+			var/select_name = sanitizeName(input(usr,"Enter new cryo network name.","Add Cryo-net", "") as null|text, MAX_NAME_LEN, 1, 0)
+			if(select_name)
+				if(select_name in connected_faction.cryo_networks || select_name == "default")
+					to_chat(usr, "Their is already a cryo network with this name.")
+					return 1
+				connected_faction.cryo_networks |= select_name
+			else
+				to_chat(usr, "Invalid cryo network name")
+		if("remove_cryo")
+			var/choice = input(usr,"Choose which cryo network to delete.","Remove Cryo-net",null) as null|anything in connected_faction.cryo_networks
+			if(choice)
+				connected_faction.cryo_networks -= choice
+		if("edit_assignment_cryonet")
+			var/list/choices = connected_faction.cryo_networks.Copy()
+			choices |= "default"
+			var/choice = input(usr,"Choose which cryo network the assignment should use.","Choose Cryo-net",null) as null|anything in choices
+			if(choice)
+				selected_assignment.cryo_net = choice
+			
 	GLOB.nanomanager.update_uis(src)

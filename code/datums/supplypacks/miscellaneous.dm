@@ -7,61 +7,61 @@
 					/obj/item/clothing/suit/wizrobe/fake,
 					/obj/item/clothing/shoes/sandal,
 					/obj/item/clothing/head/wizard/fake)
-	cost = 8
+	cost = 2
 	containername = "\improper Wizard costume crate"
 
 /decl/hierarchy/supply_pack/miscellaneous/carpetbrown
 	name = "Brown carpet"
 	contains = list(/obj/item/stack/tile/carpet/fifty)
-	cost = 15
+	cost = 5
 	containername = "\improper Brown carpet crate"
 
 /decl/hierarchy/supply_pack/miscellaneous/carpetblue
 	name = "Blue and gold carpet"
 	contains = list(/obj/item/stack/tile/carpetblue/fifty)
-	cost = 15
+	cost = 5
 	containername = "\improper Blue and gold carpet crate"
 
 /decl/hierarchy/supply_pack/miscellaneous/carpetblue2
 	name = "Blue and silver carpet"
 	contains = list(/obj/item/stack/tile/carpetblue2/fifty)
-	cost = 15
+	cost = 5
 	containername = "\improper Blue and silver carpet crate"
 
 /decl/hierarchy/supply_pack/miscellaneous/carpetpurple
 	name = "Purple carpet"
 	contains = list(/obj/item/stack/tile/carpetpurple/fifty)
-	cost = 15
+	cost = 5
 	containername = "\improper Purple carpet crate"
 
 /decl/hierarchy/supply_pack/miscellaneous/carpetorange
 	name = "Orange carpet"
 	contains = list(/obj/item/stack/tile/carpetorange/fifty)
-	cost = 15
+	cost = 5
 	containername = "\improper Orange carpet crate"
 
 /decl/hierarchy/supply_pack/miscellaneous/carpetgreen
 	name = "Green carpet"
 	contains = list(/obj/item/stack/tile/carpetgreen/fifty)
-	cost = 15
+	cost = 5
 	containername = "\improper Green carpet crate"
 
 /decl/hierarchy/supply_pack/miscellaneous/carpetred
 	name = "Red carpet"
 	contains = list(/obj/item/stack/tile/carpetred/fifty)
-	cost = 15
+	cost = 5
 	containername = "\improper Red carpet crate"
 
 /decl/hierarchy/supply_pack/miscellaneous/linoleum
 	name = "Linoleum"
 	contains = list(/obj/item/stack/tile/linoleum/fifty)
-	cost = 15
+	cost = 5
 	containername = "\improper Linoleum crate"
 
 /decl/hierarchy/supply_pack/miscellaneous/dark_tiles	//Leaving dark tiles because it is made from plasteel, which is expensive
 	name = "Dark floor tiles"
 	contains = list(/obj/item/stack/tile/floor_dark/fifty)
-	cost = 15
+	cost = 5
 	containername = "\improper Dark floor tile crate"
 
 /decl/hierarchy/supply_pack/miscellaneous/costume
@@ -97,7 +97,7 @@
 					/obj/item/clothing/under/savage_hunter/female,
 					/obj/item/clothing/under/wetsuit)
 	name = "Costumes crate"
-	cost = 10
+	cost = 2
 	containername = "\improper Actor Costumes"
 	supply_method = /decl/supply_method/randomized
 
@@ -177,7 +177,7 @@
 					/obj/item/clothing/under/casual_pants/baggy/camo,
 					)
 	name = "Bulk clothing crate"
-	cost = 50
+	cost = 10
 	containername = "\improper bulk clothing crate"
 	supply_method = /decl/supply_method/randomized
 
@@ -211,7 +211,7 @@
 	contains = list(/obj/item/weapon/deck/cards,
 					/obj/item/weapon/dice = 4)
 	name = "\improper Gambling Crate"
-	cost = 5
+	cost = 2
 	containername = "\improper gambling crate"
 
 /decl/hierarchy/supply_pack/miscellaneous/tabletop
@@ -223,7 +223,7 @@
 					/obj/item/weapon/dice/d12 = 1,
 					/obj/item/weapon/dice/d20 = 1)
 	name = "\improper Tabletop Gaming Crate"
-	cost = 10
+	cost = 3
 	containername = "\improper gambling crate"
 
 /decl/hierarchy/supply_pack/miscellaneous/card_packs
@@ -265,14 +265,14 @@
 					/obj/item/clothing/head/collectable/xenom,
 					/obj/item/clothing/head/collectable/petehat)
 	name = "Collectable hat crate!"
-	cost = 20
+	cost = 4
 	containername = "\improper Collectable hats crate! Brought to you by Bass.inc!"
 	supply_method = /decl/supply_method/randomized
 
 /decl/hierarchy/supply_pack/miscellaneous/cardboard_sheets
 	name = "Cardboard (x50)"
 	contains = list(/obj/item/stack/material/cardboard/fifty)
-	cost = 10
+	cost = 5
 	containername = "\improper Cardboard sheets crate"
 
 /decl/hierarchy/supply_pack/miscellaneous/luxury
@@ -408,7 +408,7 @@
 	num_contained = 3
 	contains = list(/obj/item/weapon/storage/box/mousetraps)
 	name = "\improper Pest Control Crate"
-	cost = 10
+	cost = 2
 	containername = "\improper Pest Control Crate"
 	
 /decl/hierarchy/supply_pack/miscellaneous/phorosian

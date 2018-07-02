@@ -84,6 +84,8 @@
 		lighting_build_overlay()
 	else
 		lighting_clear_overlay()
+	if((old_opacity != opacity) || (dynamic_lighting != old_dynamic_lighting))
+		reconsider_lights()
 	/**
 	if(lighting_overlays_initialised)
 		lighting_overlay = old_lighting_overlay
@@ -116,7 +118,7 @@
 		return 0
 	if(istype(other, /turf/simulated/floor))
 		var/turf/simulated/floor/F = other
-		set_flooring(other.flooring)
+		set_flooring(F.flooring)
 
 /turf/simulated/floor/transport_properties_from(turf/simulated/other)
 	if(!..())

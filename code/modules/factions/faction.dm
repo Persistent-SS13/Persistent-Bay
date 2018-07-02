@@ -134,14 +134,19 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 
 /datum/assignment
 	var/name = ""
-	var/list/accesses = list()
+	var/list/accesses[0]
 	var/uid = ""
 	var/datum/assignment_category/parent
 	var/payscale = 1.0
 	var/list/ranks = list() // format-- list("Apprentice Engineer (2)" = "1.1", "Journeyman Engineer (3)" = "1.2")
 	var/duty_able = 1
 	var/cryo_net = "default"
-	
+/datum/assignment/after_load()
+	..()
+	if(accesses[1] && !islist(accesses[1]))
+		var/list/copy = accesses.Copy()
+		accesses = initial(accesses)
+		accesses[1] = copy
 /datum/access_category
 	var/name = ""
 	var/list/accesses = list() // format-- list("11" = "Bridge Access")

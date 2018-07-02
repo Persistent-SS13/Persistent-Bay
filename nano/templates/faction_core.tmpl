@@ -22,6 +22,7 @@
 		<br><br>{{:helper.link("Assignments Config", 'pencil', {'action' : 'change_menu', 'menu_target' : '7'})}}
 		<br><br>{{:helper.link("Economy Menu", 'calculator', {'action' : 'change_menu', 'menu_target' : '12'})}}
 		<br><br>{{:helper.link("Promotion Control", 'flag', {'action' : 'change_menu', 'menu_target' : '13'})}}
+		<br><br>{{:helper.link("Cryo Network Control", 'gear', {'action' : 'change_menu', 'menu_target' : '14'})}}
 	{{/if}}
 	{{if data.menu == 4}}
 		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
@@ -227,7 +228,7 @@
 			{{:helper.link(value.name, '', {'action' : 'nothing'})}}
 		{{/for}}
 		<br><br>
-		{{:helper.link('Add', '', {'action' : 'add_cryo'})}}{{:helper.link('Remove', '', {'action' : 'remove_cryo})}}
+		{{:helper.link("Add", '', {'action' : 'add_cryo'})}}  {{:helper.link("Remove", '', {'action' : 'remove_cryo'})}}
 	{{/if}}
 {{else}}
 	<h2><span class='alert'><i>No operational Logistics Processor detected. <br>CHECK LOG PROCESSOR</i></span></h2>

@@ -33,7 +33,7 @@
 /turf/proc/lighting_build_overlay()
 	if(lighting_overlay)
 		return
-	for(var/atom/movable/lighting_overlay/O in contents)'
+	for(var/atom/movable/lighting_overlay/O in contents)
 		O.loc = null
 	var/area/A = loc
 	if(A.dynamic_lighting)

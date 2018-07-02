@@ -151,7 +151,7 @@
 				{{for value.accesses :accessValue:accessIndex}}
 					{{:helper.link(accessValue.name, '', {'action' : 'pick_access', 'selected_ref' : value.ref, 'selected_ind' : accessValue.ind}, null, accessValue.existing ? 'selected' : null)}}
 				{{/for}}
-				<br><br><br><br><hr><br>
+				<br><br><br><br><br><hr><br>
 			{{/for}}	
 		{{/if}}
 	{{/if}}
@@ -226,10 +226,11 @@
 		<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
 		<br><hr>
 		<br>Assignments can be given different cryo-networks so that no matter which storage unit they go into, they come out of one assigned to their cryo-network.<br>The unassigned or those without a valid storage unit on their cryo-network will use units assigned to default.<br><br>
+		<br><hr>
 		{{for data.cryos}}
 			{{:helper.link(value.name, '', {'action' : 'nothing'})}}
 		{{/for}}
-		<br><br>
+		<br><br><hr><br>
 		{{:helper.link("Add", '', {'action' : 'add_cryo'})}}  {{:helper.link("Remove", '', {'action' : 'remove_cryo'})}}
 	{{/if}}
 {{else}}

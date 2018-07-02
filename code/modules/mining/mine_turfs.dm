@@ -398,7 +398,7 @@ var/list/mining_floors = list()
 
 /turf/simulated/mineral/random
 	name = "Mineral deposit"
-	var/mineralSpawnChanceList = list("Uranium" = 5, "Platinum" = 5, "Lead" = 6, "Tungsten" = 2, "Iron" = 35, "Copper" = 35, "Aluminum" = 25, "Sulfur" = 20, "Tin" = 20, "Zinc" = 20, "Ice" = 20, "Dryice" = 15, "Carbon" = 35, "Salt" = 20, "Diamond" = 1, "Gold" = 5, "Silver" = 5, "Phoron" = 10)
+	var/mineralSpawnChanceList = list("Uranium" = 5, "Platinum" = 5, "Lead" = 6, "Tungsten" = 2, "Iron" = 35, "Copper" = 35, "Aluminum" = 25, "Sulfur" = 20, "Tin" = 20, "Zinc" = 20, "Ice" = 5, "Dryice" = 5, "Oxyice" = 20, "Nitroice" = 15, "Hydroice" = 15, "Carbon" = 35, "Salt" = 20, "Diamond" = 1, "Gold" = 5, "Silver" = 5, "Phoron" = 10)
 	var/mineralChance = 100 //10 //means 10% chance of this plot changing to a mineral deposit
 
 /turf/simulated/mineral/random/New()
@@ -413,7 +413,7 @@ var/list/mining_floors = list()
 
 /turf/simulated/mineral/random/high_chance
 	mineralChance = 100 //25
-	mineralSpawnChanceList = list("Uranium" = 10, "Platinum" = 10, "Lead" = 12, "Tungsten" = 4, "Iron" = 20, "Copper" = 20, "Aluminum" = 15, "Sulfur" = 10, "Tin" = 10, "Zinc" = 10, "Ice" = 10, "Dryice" = 5, "Carbon" = 20, "Salt" = 10, "Diamond" = 2, "Gold" = 10, "Silver" = 10, "Phoron" = 20)
+	mineralSpawnChanceList = list("Uranium" = 10, "Platinum" = 10, "Lead" = 12, "Tungsten" = 4, "Iron" = 20, "Copper" = 20, "Aluminum" = 15, "Sulfur" = 10, "Tin" = 10, "Zinc" = 10, "Ice" = 2, "Dryice" = 2, "Oxyice" = 10, "Nitroice" = 5, "Hydroice" = 5, "Carbon" = 20, "Salt" = 10, "Diamond" = 2, "Gold" = 10, "Silver" = 10, "Phoron" = 20)
 
 
 /**********************Asteroid**************************/
@@ -432,10 +432,10 @@ var/list/mining_floors = list()
 	has_resources = 1
 /turf/simulated/floor/asteroid
 	name = "sand"
-	
+
 /turf/simulated/asteroid/after_load()
 	updateMineralOverlays(1)
-	
+
 /turf/simulated/floor/asteroid/after_load()
 	var/resource = resources
 	var/xi = x
@@ -456,12 +456,12 @@ var/list/mining_floors = list()
 	if (mining_floors["[src.z]"])
 		mining_floors["[src.z]"] -= src
 	return ..()
-	
-	
+
+
 /turf/simulated/asteroid/ReplaceWithLattice()
 	new /obj/structure/lattice(src)
-		
-		
+
+
 /turf/simulated/asteroid/ex_act(severity)
 	switch(severity)
 		if(3.0)

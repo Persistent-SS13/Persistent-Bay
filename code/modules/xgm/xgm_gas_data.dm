@@ -34,7 +34,7 @@
 	var/flags = 0
 	var/burn_product = "carbon_dioxide"
 	var/breathed_product
-	var/component_reagents = null
+	var/component_reagents
 
 /hook/startup/proc/generateGasData()
 	gas_data = new
@@ -57,4 +57,5 @@
 		gas_data.burn_product[gas.id] = gas.burn_product
 		gas_data.breathed_product[gas.id] = gas.breathed_product
 		gas_data.component_reagents[gas.id] = gas.component_reagents
+
 	return 1

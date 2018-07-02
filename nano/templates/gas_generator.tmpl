@@ -1,4 +1,53 @@
-<h3>Sublimator Status</h3>
+<div class="item">
+	<div class="itemLabel">
+		Chemical contents
+	</div>
+	<div class="itemContent">
+		{{:helper.link('Eject container', 'eject', {'ejectContainer' : 1}, data.containerLoaded ? null : 'disabled', 'floatRight')}}
+	</div>
+</div>
+<div class="statusDisplay" style="min-height: 180px;">
+	<div class="item">
+		<div class="itemContent" style="width: 100%;">
+			{{if data.containerLoaded}}
+				{{for data.containerReagents}}
+					<span class="highlight">{{:value.volume}} units of {{:value.name}}</span><br>
+				{{empty}}
+					<span class="bad">
+						Container is empty
+					</span>
+				{{/for}}
+			{{else}}
+				<span class="average"><i>
+					No container loaded
+				</i></span>
+			{{/if}}
+		</div>
+	</div>
+</div>
+<div class="item">
+	<div class="itemLabel">
+		React Reagents:
+	</div>
+	<div class="itemContentWide" style="width: 100%;">
+		{{if data.gases.length}}
+			{{for data.gases}}
+				{{:helper.link(value.name, 'circle-arrow-s', {"generateGas":value.id}, null, 'fixedLeftWide')}}
+			{{/for}}
+		{{else}}
+			<span class='bad'>No potential gases detected!</span>
+		{{/if}}
+	</div>
+</div>
+<div class="item">
+	<div class="itemLabel">
+		Aerosolize Reagents:
+	</div>
+	<div class="itemContentWide" style="width: 100%;">
+		{{:helper.link('Aerosolize', 'circle-arrow-s', {'aerosolize' : 1}, data.containerLoaded ? null : 'disabled', 'fixerLeftWide')}}
+	</div>
+</div>
+<h3>Interior Tank Status</h3>
 <div class="item">
 	<div class="itemLabel">
 		Tank Pressure:
@@ -7,8 +56,6 @@
 		{{:data.tankPressure}} kPa
 	</div>
 </div>
-
-<div class="item">
 	<div class="itemLabel">
 		Port Status:
 	</div>
@@ -16,8 +63,7 @@
 		{{:data.portConnected ? '<span class="good">Connected</span>' : '<span class="average">Disconnected</span>'}}
 	</div>
 </div>
-
-<h3>Holding Tank Status</h3>
+<h3>Exterior Tank Status</h3>
 {{if data.hasHoldingTank}}
 	<div class="item">
 		<div class="itemLabel">

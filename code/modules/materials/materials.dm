@@ -73,7 +73,6 @@ var/list/name_to_material
 	var/sheet_singular_name = "sheet"
 	var/sheet_plural_name = "sheets"
 	var/is_fusion_fuel
-	var/list/gaseous_products	  		  // Used with sublimator to produce gas
 	var/list/chem_products				  // Used with the grinder to produce chemicals
 
 	// Shards/tables/structures
@@ -372,9 +371,6 @@ var/list/name_to_material
 	sheet_singular_name = "crystal"
 	sheet_plural_name = "crystals"
 	is_fusion_fuel = 1
-	gaseous_products = list(
-				"phoron" = 3.4 // 1360~g / 405g per mole
-				)
 	chem_products = list(
 				/datum/reagent/toxin/phoron = 15
 				)
@@ -434,9 +430,6 @@ var/list/name_to_material
 	icon_colour = "#ffffff"
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
-	gaseous_products = list(
-				"chlorine" = 10.3 // 600~g / 58.4 per mole
-				)
 	chem_products = list(
 				/datum/reagent/sodiumchloride = 20
 				)
@@ -775,9 +768,6 @@ var/list/name_to_material
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
 	is_fusion_fuel = 1
-	gaseous_products = list(
-				"tritium" = 33.3 //(100~g / 3 grams per mole)
-				)
 
 /material/deuterium
 	name = "deuterium"
@@ -787,9 +777,6 @@ var/list/name_to_material
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
 	is_fusion_fuel = 1
-	gaseous_products = list(
-				"deuterium" = 50 //(100~g / 2 grams per mole)
-				)
 
 /material/mhydrogen
 	name = "mhydrogen"
@@ -797,35 +784,45 @@ var/list/name_to_material
 	icon_colour = "#e6c5de"
 	stack_origin_tech = list(TECH_MATERIAL = 6, TECH_POWER = 6, TECH_MAGNET = 5)
 	is_fusion_fuel = 1
-	gaseous_products = list(
-				"hydrogen" = 30 //(30~g / 1 grams per mole) probably don't have a ton of this stuff per stack
-				)
 	chem_products = list(
-				/datum/reagent/hydrazine = 20
+				/datum/reagent/hydrogen = 20
 				)
 
 /material/ice
 	name = "ice"
 	stack_type = /obj/item/stack/material/ice
 	icon_colour = "#c5e5e2"
-	gaseous_products = list(
-				"hydrogen" = 22.2, //(600~g / 18 grams per mole)*2/3
-				"oxygen" = 11.1
-				)
 	chem_products = list(
 				/datum/reagent/drink/ice = 15,
 				/datum/reagent/water = 5
 				)
 
-/material/dryice
+/material/ice/dryice
 	name = "dryice"
-	stack_type = /obj/item/stack/material/dryice
-	icon_colour = "#dce2e2"
-	gaseous_products = list(
-				"carbon_dioxide" = 13.6 //(600~g / 44.01 grams per mole)
-				)
+	stack_type = /obj/item/stack/material/ice/dryice
 	chem_products = list(
 				/datum/reagent/carbon = 20
+				)
+
+/material/ice/oxyice
+	name = "oxyice"
+	stack_type = /obj/item/stack/material/ice/oxyice
+	chem_products = list(
+				/datum/reagent/oxygen = 20
+				)
+
+/material/ice/nitroice
+	name = "nitroice"
+	stack_type = /obj/item/stack/material/ice/nitroice
+	chem_products = list(
+				/datum/reagent/nitrogen = 20
+				)
+
+/material/ice/hydroice
+	name = "hydroice"
+	stack_type = /obj/item/stack/material/ice/hydroice
+	chem_products = list(
+				/datum/reagent/hydrogen = 20
 				)
 
 /material/platinum

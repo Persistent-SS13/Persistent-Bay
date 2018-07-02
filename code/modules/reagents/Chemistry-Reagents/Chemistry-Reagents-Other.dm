@@ -365,7 +365,7 @@
 
 /datum/reagent/luminol/touch_mob(var/mob/living/L)
 	L.reveal_blood()
-
+ 
 // This is only really used to poison vox and to produce other gases.
 /datum/reagent/oxygen
 	name = "Oxygen"
@@ -386,6 +386,20 @@
 	color = "#cccccc"
 	metabolism = 0.1
 
+/datum/reagent/nitrogen
+	name = "Nitrogen"
+	description = "A ubiquitous and largely inert chemical."
+	taste_description = "nothing"
+	reagent_state = LIQUID
+	color = "#c2c4c4"
+
+/datum/reagent/hydrogen
+	name = "Hydrogen"
+	description = "The most common element in the universe."
+	taste_description = "nothing"
+	reagent_state = LIQUID
+	color = "#d3e2e2"
+  
 /datum/reagent/carbon_dioxide/affect_blood(var/mob/living/carbon/human/M, var/alien, var/removed)
 	if(!istype(M) || alien == IS_DIONA)
 		return
@@ -409,17 +423,3 @@
 		M.co2_alert = 0
 	if(warning_message && prob(warning_prob))
 		to_chat(M, "<span class='warning'>You feel [warning_message].</span>")
-
-/datum/reagent/nitrogen
-	name = "Nitrogen"
-	description = "A ubiquitous and largely inert chemical."
-	taste_description = "nothing"
-	reagent_state = LIQUID
-	color = "#c2c4c4"
-
-/datum/reagent/hydrogen
-	name = "Hydrogen"
-	description = "The most common element in the universe."
-	taste_description = "nothing"
-	reagent_state = LIQUID
-	color = "#d3e2e2"

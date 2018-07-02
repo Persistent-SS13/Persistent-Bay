@@ -56,7 +56,7 @@
 			. += "<br>You have left your previous home in a desperate search for a better life. You've been offered free passage to a gateway that will teleport you to a free-station deep inside the frontier.<br><br>"
 		if("Entrepreneur")
 			. += "<br>You have heard about an unexplored frontier rich in rare materials and untapped research opprotunties. Theirs money to be made everywhere, and theirs even free passage to a gateway that will teleport you to a free-station.<br>"
-			
+
 	. += "<br><br>Bank Account Pin:<br>"
 	. += "<a href='?src=\ref[src];set_pin=1'>[pref.chosen_pin]</a><br>"
 	. += "<br><br>Email Account Password:<br>"
@@ -142,7 +142,7 @@
 	else if(href_list["set_password"])
 		var/chose = sanitize(input(user, "Please enter a email password.", "Email Password")  as text|null, MAX_NAME_LEN)
 		if(chose)
-			chosen_password = chose
+			pref.chosen_password = chose
 		else
 			to_chat(usr, "The password was invalid.")
 		return TOPIC_REFRESH

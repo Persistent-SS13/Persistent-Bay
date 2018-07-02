@@ -327,7 +327,7 @@ var/global/list/debug_data = list()
 	to_file(f["areas"],formatted_areas)
 	to_file(f["turbolifts"],turbolifts)
 	to_file(f["records"],GLOB.all_crew_records)
-	to_file(f{"email"},ntnet_global.email_accounts)
+	to_file(f["email"],ntnet_global.email_accounts)
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
 	return 1

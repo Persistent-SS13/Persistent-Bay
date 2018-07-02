@@ -148,17 +148,16 @@
 				data["increase_button"] = 1
 			if(selected_rank != 1)
 				data["decrease_button"] = 1
-			if(selected_assignment.accesses[1] && !istype(selected_assignment.accesses[1], /datum/accesses))
+			if(selected_assignment.accesses[1] && !istype(selected_assignment.accesses["1"], /datum/accesses))
 				var/datum/accesses/copy = new()
 				copy.accesses = selected_assignment.accesses.Copy()
-				selected_assignment.accesses = list()
 				selected_assignment.accesses["1"] = copy
 			var/list/all_access = list()
 			for(var/i=1;i<=selected_rank;i++)
 				if(i > selected_assignment.accesses.len)
-					selected_assignment.accesses["[i]"] = list()
+					selected_assignment.accesses["[i]"] = new /datum/accesses()
 					continue
-				var/datum/accesses/copy = selected_assignment.accesses[i]
+				var/datum/accesses/copy = selected_assignment.accesses["[i]"]
 				if(istype(copy))
 					all_access |= copy.accesses
 			var/list/access_categories[0]
@@ -656,9 +655,9 @@
 			var/x = category.accesses[ind]
 			for(var/i=1;i<=selected_rank;i++)
 				if(i > selected_assignment.accesses.len)
-					selected_assignment.accesses[i] = new /datum/accesses()
+					selected_assignment.accesses["[i]"] = new /datum/accesses()
 					continue
-				var/datum/accesses/copy = selected_assignment.accesses[i]
+				var/datum/accesses/copy = selected_assignment.accesses["[i]"]
 				if(istype(copy))
 					var/list/all_access = copy.accesses
 					if(all_access.Find(x))
@@ -666,7 +665,7 @@
 					else if(i == selected_rank)
 						all_access |= x
 				else
-					selected_assignment.accesses[i] = new /datum/accesses()
+					selected_assignment.accesses["[i]"] = new /datum/accesses()
 		if("money_change")
 			var/choice = input(usr,"Are you sure you want to change the payrate? This could bankrupt the network! Remember that the payrate is multiplied by an employees payscale") in list("Confirm", "Cancel")
 			if(choice == "Confirm")

@@ -5,7 +5,7 @@
 /decl/hierarchy/supply_pack/materials/steel200
 	name = "Bulk Steel Order - 200"
 	contains = list(/obj/item/stack/material/steel/fifty = 4)
-	cost = 100
+	cost = 90
 	containername = "\improper Bulk Steel Shipment"
 
 /decl/hierarchy/supply_pack/materials/glass200
@@ -24,7 +24,7 @@
 /decl/hierarchy/supply_pack/materials/glass50
 	name = "Glass (x50)"
 	contains = list(/obj/item/stack/material/glass/fifty)
-	cost = 14
+	cost = 15
 	containername = "\improper Glass sheets crate"
 
 /decl/hierarchy/supply_pack/materials/wood50

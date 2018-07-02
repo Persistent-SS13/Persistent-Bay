@@ -141,12 +141,15 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	var/list/ranks = list() // format-- list("Apprentice Engineer (2)" = "1.1", "Journeyman Engineer (3)" = "1.2")
 	var/duty_able = 1
 	var/cryo_net = "default"
+/datum/accesses
+	var/list/accesses = list()
 /datum/assignment/after_load()
 	..()
 	if(accesses[1] && !islist(accesses[1]))
-		var/list/copy = accesses.Copy()
-		accesses = initial(accesses)
-		accesses[1] = copy
+		var/datum/accesses/copy = new()
+		copy.accesses = accesses.Copy()
+		accesses = list()
+		accesses["1"] = copy
 /datum/access_category
 	var/name = ""
 	var/list/accesses = list() // format-- list("11" = "Bridge Access")

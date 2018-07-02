@@ -10,14 +10,14 @@
 					/obj/item/weapon/reagent_containers/food/snacks/tofu = 4,
 					/obj/item/weapon/reagent_containers/food/snacks/meat = 4
 					)
-	cost = 10
+	cost = 5
 	containertype = /obj/structure/closet/crate/freezer
 	containername = "\improper Food crate"
 
 /decl/hierarchy/supply_pack/supply/toner
 	name = "Toner cartridges"
 	contains = list(/obj/item/device/toner = 20)
-	cost = 10
+	cost = 3
 	containername = "\improper Toner cartridges"
 
 /decl/hierarchy/supply_pack/supply/janitor
@@ -120,7 +120,7 @@
 					/obj/item/device/flashlight/glowstick/yellow,
 					/obj/item/device/flashlight/glowstick/orange,
 					/obj/item/device/flashlight/glowstick/blue)
-	cost = 20
+	cost = 2
 	containername = "\improper Glowstick Crate"
 	num_contained = 20
 	supply_method = /decl/supply_method/randomized
@@ -134,7 +134,7 @@
 					/obj/item/weapon/light/tube/pink = 3,
 					/obj/item/weapon/light/tube/yellow = 3,
 					/obj/item/weapon/light/tube/orange = 3)
-	cost = 40
+	cost = 4
 	containername = "\improper Light Tube Crate"
 
 /decl/hierarchy/supply_pack/supply/colorbulbs
@@ -146,7 +146,7 @@
 					/obj/item/weapon/light/bulb/pink = 3,
 					/obj/item/weapon/light/bulb/yellow = 3,
 					/obj/item/weapon/light/bulb/orange = 3)
-	cost = 30
+	cost = 3
 	containername = "\improper Light Bulb Crate"
 
 /decl/hierarchy/supply_pack/supply/softsuits

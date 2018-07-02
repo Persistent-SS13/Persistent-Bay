@@ -116,7 +116,7 @@ var/const/NO_EMAG_ACT = -50
 					continue
 			else
 				continue
-			
+
 /obj/item/weapon/card/id
 	name = "identification card"
 	desc = "A card used to provide ID and determine access."
@@ -158,7 +158,7 @@ var/const/NO_EMAG_ACT = -50
 		if(j)
 			rank = j.title
 			assignment = rank
-			access |= j.get_access()	
+			access |= j.get_access()
 /obj/item/weapon/card/id/examine(mob/user)
 	set src in oview(1)
 	if(in_range(usr, src))
@@ -295,7 +295,7 @@ var/const/NO_EMAG_ACT = -50
 				var/datum/assignment/assignment = faction.get_assignment(record.try_duty())
 				if(assignment)
 					for(var/i=1; i<=record.rank; i++)
-						var/datum/accesses/copy = assignment.access["[i]"]
+						var/datum/accesses/copy = assignment.accesses["[i]"]
 						if(copy)
 							for(var/x in copy.accesses)
 								final_access |= text2num(x)
@@ -365,8 +365,8 @@ var/const/NO_EMAG_ACT = -50
 /obj/item/weapon/card/id/synthetic/New()
 //	access = get_all_station_access() + access_synth
 	..()
-	
-	
+
+
 /obj/item/weapon/card/id/synthetic/GetAccess(var/faction_uid)
 //	if(!valid) return list()
 	var/list/final_access[0]
@@ -394,8 +394,8 @@ var/const/NO_EMAG_ACT = -50
 				return list()
 	else
 		return access
-		
-		
+
+
 /obj/item/weapon/card/id/centcom
 	name = "\improper CentCom. ID"
 	desc = "An ID straight from Cent. Com."

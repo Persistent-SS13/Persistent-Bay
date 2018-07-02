@@ -79,12 +79,17 @@
 	mannequin.dna.b_type = client.prefs.b_type
 	mannequin.sync_organ_dna()
 	mannequin.internal_organs_by_name[BP_STACK] = new /obj/item/organ/internal/stack(mannequin,1)
+	var/datum/computer_file/data/email_account/email = new()
+	email.login = "[replacetext(mannequin.real_name, " ", "_")]@freemail.nt"
+	email.password = chosen_password
 	var/money_amount = 500
 	var/datum/money_account/M = create_account(mannequin.real_name, money_amount, null)
 	M.remote_access_pin = chosen_pin
 	if(!mannequin.mind)
 		mannequin.mind = new()
 	var/remembered_info = ""
+	remembered_info += "<b>Your email account is :</b> [email.login]<br>"
+	remembered_info += "<b>Your email password is :</b> [email.password]<br>"
 	remembered_info += "<b>Your account number is:</b> #[M.account_number]<br>"
 	remembered_info += "<b>Your account pin is:</b> [M.remote_access_pin]<br>"
 	remembered_info += "<b>Your account funds are:</b> [M.money]<br>"

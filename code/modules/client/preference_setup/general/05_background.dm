@@ -5,6 +5,7 @@
 	var/nanotrasen_relation = "Neutral"
 	var/memory = ""
 	var/chosen_pin = 1000
+	var/chosen_password = "nopassword"
 	//Some faction information.
 	var/home_system           //System of birth.
 	var/citizenship = "None"            //Current home system.
@@ -58,6 +59,8 @@
 			
 	. += "<br><br>Bank Account Pin:<br>"
 	. += "<a href='?src=\ref[src];set_pin=1'>[pref.chosen_pin]</a><br>"
+	. += "<br><br>Email Account Password:<br>"
+	. += "<a href='?src=\ref[src];set_password=1'>[pref.chosen_password]</a><br>"
 /datum/category_item/player_setup_item/general/background/OnTopic(var/href,var/list/href_list, var/mob/user)
 	if(href_list["nt_relation"])
 		var/new_relation = input(user, "Choose your relation to [GLOB.using_map.company_name]. Note that this represents what others can find out about your character by researching your background, not what your character actually thinks.", "Character Preference", pref.nanotrasen_relation)  as null|anything in COMPANY_ALIGNMENTS
@@ -135,5 +138,12 @@
 			to_chat(user, "Your pin must be between 1000 and 9999")
 		else
 			pref.chosen_pin = chose
+		return TOPIC_REFRESH
+	else if(href_list["set_password"])
+		var/chose = sanitize(input(user, "Please enter a email password.", "Email Password")  as text|null, MAX_NAME_LEN)
+		if(chose)
+			chosen_password = chose
+		else
+			to_chat(usr, "The password was invalid.")
 		return TOPIC_REFRESH
 	return ..()

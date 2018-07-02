@@ -143,7 +143,9 @@
 				{{:helper.link(value.name, '', {'action' : 'nothing'})}}
 			{{/for}}
 		{{else}}
-			Select the access that this assignment should have.<br><br><hr>
+			Select the access that this assignment should have when at rank {{:data.selected_rank}} or above.<br><br>
+			{{:helper.link("<-", '', {'action' : 'decrease_selected_rank'}, data.decrease_button ? null : 'disabled')}}{{:helper.link(data.selected_rank, '', {'action' : 'nothing'})}}{{:helper.link("->", '', {'action' : 'increase_selected_rank'}, data.increase_button ? null : 'disabled')}}
+			<br><br><hr>
 			{{for data.access_categories}}
 				{{:value.name}} :<br><br>
 				{{for value.accesses :accessValue:accessIndex}}

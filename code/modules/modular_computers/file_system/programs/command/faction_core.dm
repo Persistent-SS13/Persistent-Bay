@@ -28,6 +28,8 @@
 	var/viewing_ranks = 0
 	var/prior_menu = 3
 	var/datum/access_category/core_access
+	var/selected_rank = 1
+
 /datum/nano_module/program/faction_core/proc/try_connect()
 
 	if(!program.computer.logistic_processor || !program.computer.logistic_processor.check_functionality())
@@ -59,7 +61,7 @@
 		menu = 1
 		return
 
-	
+
 /datum/nano_module/program/faction_core/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	try_connect()
 	var/list/data = host.initial_data()
@@ -73,7 +75,7 @@
 			menu = 3
 		data["faction_name"] = connected_faction.name
 		data["faction_uid"] = connected_faction.uid
-		if(menu == 4)			
+		if(menu == 4)
 			data["faction_abbreviation"] = connected_faction.abbreviation
 			var/regex/allregex = regex(".")
 			data["faction_purpose"] = connected_faction.purpose
@@ -129,7 +131,7 @@
 			data["membership_faction"] = selected_assignmentcategory.member_faction
 			data["account_status"] = selected_assignmentcategory.account_status
 			data["faction_leader"] = selected_assignmentcategory.head_position ? selected_assignmentcategory.head_position.uid : "None"
-			
+
 			var/list/assignments[0]
 			for(var/datum/assignment/assignment in selected_assignmentcategory.assignments)
 				assignments[++assignments.len] = list("name" = "([assignment.uid]) [assignment.name]", "ref" = "\ref[assignment]")
@@ -141,6 +143,21 @@
 			data["pay"] = selected_assignment.payscale
 			data["title"] = selected_assignment.name
 			data["cryonetwork"] = selected_assignment.cryo_net
+			data["selected_rank"] = selected_rank
+			if(selected_rank < selected_assignment.ranks.len+1)
+				data["increase_button"] = 1
+			if(selected_rank != 1)
+				data["decrease_button"] = 1
+			if(selected_assignment.accesses[1] && !islist(selected_assignment.accesses[1]))
+				var/list/copy = selected_assignment.accesses.Copy()
+				selected_assignment.accesses = initial(selected_assignment.accesses)
+				selected_assignment.accesses[1] = copy
+			var/list/all_access = list()
+			for(var/i=1;i<=selected_rank;i++)
+				if(i > selected_assignment.accesses.len)
+					selected_assignment.accesses[i] = list()
+					continue
+				all_access |= selected_assignment.accesses[i]
 			var/list/access_categories[0]
 			var/datum/access_category/core/core
 			if(!core_access)
@@ -154,7 +171,7 @@
 				var/ind = 0
 				for(var/x in category.accesses)
 					var/existing = 0
-					if(selected_assignment.accesses.Find(x))
+					if(all_access.Find(x))
 						existing = 1
 					ind++
 					var/name = category.accesses[x]
@@ -183,7 +200,7 @@
 			for(var/cryoname in connected_faction.cryo_networks)
 				cryos[++cryos.len] = list("name" = cryoname)
 			data["cryos"] = cryos
-			
+
 	else
 		menu = 1
 	if(selected_accesscategory)
@@ -252,6 +269,7 @@
 		if("change_menu")
 			var/select_menu = text2num(href_list["menu_target"])
 			menu = select_menu
+			selected_rank = 1
 			prior_menu = 3
 		if("change_name")
 			var/curr_name = connected_faction.name
@@ -465,7 +483,7 @@
 		if("assignmentcategory_membership_yes")
 			selected_assignmentcategory.member_faction = 1
 		if("assignmentcategory_membership_no")
-			selected_assignmentcategory.member_faction = 0	
+			selected_assignmentcategory.member_faction = 0
 		if("assignmentcategory_account_on")
 			selected_assignmentcategory.account_status = 1
 		if("assignmentcategory_account_off")
@@ -575,6 +593,7 @@
 			viewing_ranks = 0
 		if("view_ranks")
 			viewing_ranks = 1
+			selected_rank = 1
 		if("create_rank")
 			var/select_name = sanitizeName(input(usr,"Enter new rank title.","New rank title", "") as null|text, MAX_NAME_LEN, 1, 0)
 			if(select_name)
@@ -610,7 +629,7 @@
 				if(new_pay < min)
 					to_chat(usr, "Pay under minimum. Rank creaton failed.")
 					return 1
-						
+
 				selected_assignment.ranks.Insert(ind, select_name)
 				selected_assignment.ranks[select_name] = new_pay
 				to_chat(usr, "Rank successfully created.")
@@ -632,10 +651,18 @@
 			var/datum/access_category/category = locate(href_list["selected_ref"])
 			var/ind = text2num(href_list["selected_ind"])
 			var/x = category.accesses[ind]
-			if(selected_assignment.accesses.Find(x))
-				selected_assignment.accesses -= x
-			else
-				selected_assignment.accesses |= x
+			for(var/i=1;i<=selected_rank;i++)
+				if(i > selected_assignment.accesses.len)
+					selected_assignment.accesses[i] = list()
+					continue
+				var/list/all_access = selected_assignment.accesses[i]
+				if(!all_access || !islist(all_access))
+					selected_assignment.accesses[i] = list()
+				if(all_access.Find(x))
+					all_access -= x
+				else if(i == selected_rank)
+					all_access |= x
+
 		if("money_change")
 			var/choice = input(usr,"Are you sure you want to change the payrate? This could bankrupt the network! Remember that the payrate is multiplied by an employees payscale") in list("Confirm", "Cancel")
 			if(choice == "Confirm")
@@ -683,5 +710,10 @@
 			var/choice = input(usr,"Choose which cryo network the assignment should use.","Choose Cryo-net",null) as null|anything in choices
 			if(choice)
 				selected_assignment.cryo_net = choice
-			
+		if("increase_selected_rank")
+			if(selected_rank < selected_assignment.ranks.len+1)
+				selected_rank++
+		if("decrease_selected_rank")
+			if(selected_rank != 1)
+				selected_rank--
 	GLOB.nanomanager.update_uis(src)

@@ -37,9 +37,9 @@
 	var/obj/fire/old_fire = fire
 	var/old_opacity = opacity
 	var/old_dynamic_lighting = dynamic_lighting
-	var/old_affecting_lights = affecting_lights
-	var/old_lighting_overlay = lighting_overlay
-	var/old_corners = corners
+//	var/old_affecting_lights = affecting_lights
+//	var/old_lighting_overlay = lighting_overlay
+//	var/old_corners = corners
 
 //	log_debug("Replacing [src.type] with [N]")
 

@@ -111,6 +111,10 @@
 	if(.)
 		update_icon()
 
+/obj/machinery/docking_beacon/power_change()
+	stat = 0
+	return 1
+		
 // connect the machine to a powernet if a node cable is present on the turf
 /obj/machinery/power/proc/connect_to_network()
 	var/turf/T = src.loc

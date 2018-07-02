@@ -44,7 +44,7 @@
 	contains = list(
 			/obj/item/weapon/storage/fancy/cigar,
 			/obj/item/weapon/flame/lighter/zippo)
-	cost = 100
+	cost = 60
 	containername = "\improper Imported cigars"
 
 /decl/hierarchy/supply_pack/hospitality/barsupplies
@@ -139,11 +139,11 @@
 	/obj/item/weapon/reagent_containers/glass/paint/white,
 	/obj/item/weapon/contraband/poster,
 	/obj/item/weapon/wrapping_paper = 3)
-	cost = 10
+	cost = 5
 	containername = "\improper Arts and Crafts crate"
 
 /decl/hierarchy/supply_pack/hospitality/posters
 	name = "Assorted Posters (x4)"
 	contains = list(/obj/item/weapon/contraband/poster = 4)
-	cost = 20
+	cost = 4
 	containername = "\improper Posters crate"

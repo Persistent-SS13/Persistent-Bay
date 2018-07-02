@@ -140,7 +140,7 @@
 				))
 		data["none_select"] = none_select
 		data["assignment_categories"] = assignment_categories
-		data["record_val"] = record.get_emplRecord()
+		data["record_val"] = pencode2html(record.get_emplRecord())
 		data["record"] = show_record
 	if(program.computer.card_slot && program.computer.card_slot.stored_card)
 		var/obj/item/weapon/card/id/id_card = program.computer.card_slot.stored_card

@@ -576,23 +576,40 @@
 		
 	
 	if(!spawn_turf)
-
+		
 		if(new_character.spawn_type == 1)
 			if(!GLOB.cryopods.len)
 				message_admins("WARNING! No cryopods avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
 				spawn_turf = locate(102, 98, 1)
 			else
+				var/list/possible_spawn_turfs = list()
+				var/list/faction_spawns = list()
 				for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
 					if(!pod.loc) continue
 					if(pod.req_access_faction == new_character.spawn_loc)
-						spawn_turf = pod.loc
-						break
-				if(!spawn_turf)
-					for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
-						if(!pod.loc) continue
-						if(pod.req_access_faction == "refugee")
-							spawn_turf = pod.loc
-							break
+						faction_spawns |= pod
+				if(faction_spawns.len)
+					var/key = "default"
+					var/datum/world_faction/faction = get_faction(new_character.spawn_loc)
+					if(faction)
+						var/datum/computer_file/crew_record/record = faction.get_record(new_character.real_name)
+						if(record)
+							var/datum/assignment/curr_assignment = faction.get_assignment(record.assignment)
+							if(curr_assignment)
+								key = curr_assignment.cryo_net
+					for(var/obj/machinery/cryopod/pod2 in faction_spawns)
+						if(pod2.network == key)
+							possible_spawn_turfs |= pod2.loc
+					if(!possible_spawn_turfs.len)
+						key = "default"
+						for(var/obj/machinery/cryopod/pod2 in faction_spawns)
+							if(pod2.network == key)
+								possible_spawn_turfs |= pod2.loc
+					if(!possible_spawn_turfs.len)
+						for(var/obj/machinery/cryopod/pod2 in faction_spawns)
+							possible_spawn_turfs |= pod2.loc
+				if(possible_spawn_turfs.len)
+					spawn_turf = pick(possible_spawn_turfs)
 				if(!spawn_turf)
 					for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
 						if(!pod.loc) continue

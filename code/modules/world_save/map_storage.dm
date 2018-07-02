@@ -89,8 +89,10 @@ var/global/list/debug_data = list()
 /turf/after_load()
 	..()
 	update_icon()
-	lighting_build_overlay()
-
+	if(dynamic_lighting)
+		lighting_build_overlay()
+	else
+		lighting_clear_overlay()
 	for(var/obj/effect/floor_decal/decal in saved_decals)
 		decal.init_for(src)
 

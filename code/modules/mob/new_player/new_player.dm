@@ -109,7 +109,7 @@
 		slots += 2
 	if(!client.prefs.character_list || (client.prefs.character_list.len < slots))
 		client.prefs.load_characters()
-	
+
 	var/dat  = list()
 	dat += "<body>"
 	dat += "<tt><center>"
@@ -175,11 +175,11 @@
 			load_panel.close()
 			new_player_panel_proc()
 		else
-			close_spawn_windows()	
+			close_spawn_windows()
 			AttemptLateSpawn()
 		return 0
 	if(href_list["pickslot_delete"])
-		
+
 		chosen_slot = text2num(href_list["pickslot_delete"])
 		var/mob/M = client.prefs.character_list[chosen_slot]
 		if(input("Are you SURE you want to delete [M.real_name]. THIS IS PERMANENT. Enter the characters full name to confirm","DELETE A CHARACTER","") == M.real_name)
@@ -187,7 +187,7 @@
 			for(var/mob/mobbie in GLOB.all_cryo_mobs)
 				if(mobbie.real_name == M.real_name)
 					GLOB.all_cryo_mobs -= mobbie
-					qdel(mobbie)	
+					qdel(mobbie)
 			client.prefs.delete_character(chosen_slot)
 			load_panel.close()
 		return 0
@@ -573,10 +573,10 @@
 		if(client.prefs.memory)
 			mind.store_memory(client.prefs.memory)
 		mind.transfer_to(new_character)					//won't transfer key since the mind is not active
-		
-	
+
+
 	if(!spawn_turf)
-		
+
 		if(new_character.spawn_type == 1)
 			if(!GLOB.cryopods.len)
 				message_admins("WARNING! No cryopods avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
@@ -594,7 +594,7 @@
 					if(faction)
 						var/datum/computer_file/crew_record/record = faction.get_record(new_character.real_name)
 						if(record)
-							var/datum/assignment/curr_assignment = faction.get_assignment(record.assignment)
+							var/datum/assignment/curr_assignment = faction.get_assignment(record.assignment_uid)
 							if(curr_assignment)
 								key = curr_assignment.cryo_net
 					for(var/obj/machinery/cryopod/pod2 in faction_spawns)
@@ -676,7 +676,7 @@
 
 
 
-	close_spawn_windows()	
+	close_spawn_windows()
 	new_character.loc = spawn_turf
 	new_character.key = key		//Manually transfer the key to log them in
 	new_character.save_slot = chosen_slot
@@ -736,7 +736,7 @@
 	else
 		client.prefs.copy_to(new_character)
 
-	
+
 
 	if(mind)
 		mind.active = 0					//we wish to transfer the key manually

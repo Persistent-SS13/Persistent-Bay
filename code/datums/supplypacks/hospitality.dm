@@ -33,8 +33,7 @@
 			/obj/item/weapon/storage/fancy/cigarettes/menthols,
 			/obj/item/weapon/storage/fancy/cigarettes/carcinomas,
 			/obj/item/weapon/storage/fancy/cigarettes/professionals,
-			/obj/item/weapon/flame/lighter,
-			/obj/item/weapon/flame/lighter/zippo)
+			/obj/item/weapon/flame/lighter)
 	cost = 30
 	containername = "\improper Imported cigarettes"
 	supply_method = /decl/supply_method/randomized
@@ -44,7 +43,7 @@
 	contains = list(
 			/obj/item/weapon/storage/fancy/cigar,
 			/obj/item/weapon/flame/lighter/zippo)
-	cost = 60
+	cost = 100
 	containername = "\improper Imported cigars"
 
 /decl/hierarchy/supply_pack/hospitality/barsupplies

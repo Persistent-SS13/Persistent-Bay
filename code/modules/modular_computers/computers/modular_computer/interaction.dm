@@ -184,7 +184,7 @@
 		to_chat(user, "\The [src] reports that it successfully stored a readng from \the [W].")
 		update_uis()
 		return
-	if(istype(W, /obj/item/weapon/paper) || istype(W, /obj/item/weapon/paper_bundle))
+	if(istype(W, /obj/item/weapon/paper) || istype(W, /obj/item/weapon/paper_bundle) || istype(W, /obj/item/weapon/shreddedp))
 		if(!nano_printer)
 			return
 		nano_printer.attackby(W, user)

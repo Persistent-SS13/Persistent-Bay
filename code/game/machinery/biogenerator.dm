@@ -43,7 +43,9 @@
 			/obj/item/clothing/suit/storage/toggle/bomber = 500,
 			/obj/item/clothing/suit/storage/hooded/wintercoat = 500),
 		"Other" = list(
-			/obj/item/weapon/paper = 5))
+			/obj/item/weapon/paper = 5,
+			/obj/item/weapon/paper_package = 250)
+			)
 
 /obj/machinery/biogenerator/New()
 	..()

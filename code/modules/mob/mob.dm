@@ -22,7 +22,7 @@
 
 /mob/proc/get_stack()
 	return 0
-	
+
 /mob/proc/remove_screen_obj_references()
 	hands = null
 	pullin = null
@@ -47,6 +47,7 @@
 
 /mob/Initialize()
 	. = ..()
+	move_intent = decls_repository.get_decl(move_intent)
 	START_PROCESSING(SSmobs, src)
 
 /mob/proc/show_message(msg, type, alt, alt_type)//Message, type of message (1 or 2), alternative message, alt message type (1 or 2)
@@ -147,6 +148,11 @@
 	if(istype(loc, /turf))
 		var/turf/T = loc
 		. += T.movement_delay
+	if ((drowsyness > 0) && !MOVING_DELIBERATELY(src))
+		. += 6
+	if(lying) //Crawling, it's slower
+		. += 8 + (weakened * 2)
+	. += move_intent.move_delay
 	if(pulling)
 		if(istype(pulling, /obj))
 			var/obj/O = pulling
@@ -729,7 +735,7 @@
 	set_dir(ndir)
 	if(buckled && buckled.buckle_movable)
 		buckled.set_dir(ndir)
-	setMoveCooldown(movement_delay())
+	SetMoveCooldown(movement_delay())
 	return 1
 
 

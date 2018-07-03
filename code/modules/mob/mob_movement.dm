@@ -1,6 +1,5 @@
 /mob
-	var/move_delay		= 1
-	var/moving			= FALSE
+	var/moving           = FALSE
 
 /mob/proc/SelfMove(var/direction)
 	if(DoMove(direction, src) & MOVEMENT_HANDLED)
@@ -18,7 +17,12 @@
 		return (!mover.density || !density || lying)
 	return
 
-/mob/proc/setMoveCooldown(var/timeout)
+/mob/proc/SetMoveCooldown(var/timeout)
+	var/datum/movement_handler/mob/delay/delay = GetMovementHandler(/datum/movement_handler/mob/delay)
+	if(delay)
+		delay.SetDelay(timeout)
+
+/mob/proc/ExtraMoveCooldown(var/timeout)
 	var/datum/movement_handler/mob/delay/delay = GetMovementHandler(/datum/movement_handler/mob/delay)
 	if(delay)
 		delay.AddDelay(timeout)
@@ -221,6 +225,8 @@
 		return 0
 	if(Check_Shoegrip())
 		return 0
+	if(MOVING_DELIBERATELY(src))
+		prob_slip *= 0.5
 	return prob_slip
 
 #define DO_MOVE(this_dir) var/final_dir = turn(this_dir, -dir2angle(dir)); Move(get_step(mob, final_dir), final_dir);

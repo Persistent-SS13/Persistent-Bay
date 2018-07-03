@@ -224,11 +224,12 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 				req_access_faction = faction.uid
 	if(href_list["connect_net"])
 		if(!faction) return
-		var/list/choices = faction.cryo_networks.Copy()
-		choices |= "default"
-		var/choice = input(usr,"Choose which cryo network [src] should use.","Choose Cryo-net",null) as null|anything in choices
-		if(choice)
-			network = choice
+		if(allowed(usr))
+			var/list/choices = faction.cryo_networks.Copy()
+			choices |= "default"
+			var/choice = input(usr,"Choose which cryo network [src] should use.","Choose Cryo-net",null) as null|anything in choices
+			if(choice)
+				network = choice
 	src.updateUsrDialog()
 	return
 

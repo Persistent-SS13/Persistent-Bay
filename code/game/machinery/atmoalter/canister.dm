@@ -20,6 +20,16 @@
 	interact_offline = 1 // Allows this to be used when not in powered area.
 	var/release_log = ""
 	var/update_flag = 0
+	var/heat_capacity = 31250
+	var/heat = 9160937.5//T20C * heat_capacity
+	var/temperature = T20C
+	var/upgraded = 1
+	var/upgrade_stack_type = /obj/item/stack/material/plasteel
+	var/upgrade_stack_amount = 20
+
+/obj/machinery/portable_atmospherics/canister/get_saved_vars()
+	..()
+	. |= "upgraded"
 
 /obj/machinery/portable_atmospherics/canister/drain_power()
 	return -1
@@ -207,6 +217,7 @@ update_flag
 	if (destroyed)
 		return
 	..()
+	handle_heat_exchange()
 	if(valve_open)
 		var/datum/gas_mixture/environment
 		if(holding && holding.air_contents)
@@ -231,6 +242,36 @@ update_flag
 		can_label = 0
 
 	air_contents.react() //cooking up air cans - add phoron and oxygen, then heat above PHORON_MINIMUM_BURN_TEMPERATURE
+
+/obj/machinery/portable_atmospherics/canister/proc/handle_heat_exchange()
+	if(istype(src.loc, /turf/space))
+		heat -= COSMIC_RADIATION_TEMPERATURE * CANISTER_HEAT_TRANSFER_COEFFICIENT
+		return
+	exchange_heat(loc.return_air())
+	if(!upgraded)
+		exchange_heat(air_contents)
+	if(temperature > temperature_resistance)
+		health -= 1
+		healthcheck()
+
+
+/obj/machinery/portable_atmospherics/canister/proc/exchange_heat(var/datum/gas_mixture/environment)
+	var/relative_density = (environment.total_moles/environment.volume) / (MOLES_CELLSTANDARD/CELL_VOLUME)
+	if(relative_density > 0.02) //don't bother if we are in vacuum or near-vacuum
+		var/loc_temp = environment.temperature
+		if(loc_temp == temperature)
+			return
+		var/loc_heat = environment.heat_capacity()
+		var/transferred_heat = QUANTIZE(((loc_heat / loc_temp) * (loc_temp - temperature)) * CANISTER_HEAT_TRANSFER_COEFFICIENT)
+		//This if else keeps the can from heating/cooling more than 1K per tick.
+		if(transferred_heat > 0)
+			transferred_heat = min(transferred_heat, heat_capacity)
+		else
+			transferred_heat = max(transferred_heat, -heat_capacity)
+		environment.add_thermal_energy(-transferred_heat)
+		heat += transferred_heat
+
+		temperature = QUANTIZE(heat / heat_capacity)
 
 /obj/machinery/portable_atmospherics/canister/proc/return_temperature()
 	var/datum/gas_mixture/GM = src.return_air()
@@ -272,6 +313,19 @@ update_flag
 			thejetpack.merge(removed)
 			to_chat(user, "You pulse-pressurize your jetpack from the tank.")
 		return
+	var/obj/item/stack/P = W
+	if(istype(P, upgrade_stack_type))
+		if(!upgraded)
+			if(P.amount < upgrade_stack_amount)
+				user.visible_message("You need at least [upgrade_stack_amount] sheets of [P] to upgrade \the [src]")
+			else
+				user.visible_message("You start insulating \the [src]...")
+				if(do_after(50, user, src) && P.amount >= upgrade_stack_amount)
+					P.use(upgrade_stack_amount)
+					user.visible_message("You finish insulating \the [src].")
+					upgraded = 1
+		else
+			user.visible_message("\The [src] has already been insulated.")
 	..()
 
 /obj/machinery/portable_atmospherics/canister/attackby(obj/item/W as obj, mob/user as mob)
@@ -280,6 +334,11 @@ update_flag
 		if(WT.remove_fuel(0,user))
 			var/obj/item/stack/material/steel/new_item = new(usr.loc)
 			new_item.add_to_stacks(usr)
+			//!initial allows me to implement this payback on destroy without giving everyone free plasteel.
+			if(upgraded && !initial(upgraded))
+				var/obj/item/stack/P = new upgrade_stack_type(usr.loc)
+				P.add(upgrade_stack_amount)
+				P.add_to_stacks(usr)
 			for (var/mob/M in viewers(src))
 				M.show_message("<span class='notice'>[src] is shaped into metal by [user.name] with the weldingtool.</span>", 3, "<span class='notice'>You hear welding.</span>", 2)
 			qdel(src)

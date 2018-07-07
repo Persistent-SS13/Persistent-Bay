@@ -33,8 +33,7 @@
 			/obj/item/weapon/storage/fancy/cigarettes/menthols,
 			/obj/item/weapon/storage/fancy/cigarettes/carcinomas,
 			/obj/item/weapon/storage/fancy/cigarettes/professionals,
-			/obj/item/weapon/flame/lighter,
-			/obj/item/weapon/flame/lighter/zippo)
+			/obj/item/weapon/flame/lighter)
 	cost = 30
 	containername = "\improper Imported cigarettes"
 	supply_method = /decl/supply_method/randomized
@@ -139,11 +138,11 @@
 	/obj/item/weapon/reagent_containers/glass/paint/white,
 	/obj/item/weapon/contraband/poster,
 	/obj/item/weapon/wrapping_paper = 3)
-	cost = 10
+	cost = 5
 	containername = "\improper Arts and Crafts crate"
 
 /decl/hierarchy/supply_pack/hospitality/posters
 	name = "Assorted Posters (x4)"
 	contains = list(/obj/item/weapon/contraband/poster = 4)
-	cost = 20
+	cost = 4
 	containername = "\improper Posters crate"

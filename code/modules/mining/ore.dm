@@ -26,7 +26,7 @@
 	if(!ore)
 		return
 	var/material/M
-	if(ore.smelts_to) 
+	if(ore.smelts_to)
 		M = get_material_by_name(ore.smelts_to)
 	else if (ore.compresses_to)
 		M = get_material_by_name(ore.compresses_to)
@@ -111,6 +111,15 @@
 
 /obj/item/weapon/ore/dryice
 	ore = /ore/dryice
+
+/obj/item/weapon/ore/oxyice
+	ore = /ore/oxyice
+
+/obj/item/weapon/ore/hydroice
+	ore = /ore/hydroice
+
+/obj/item/weapon/ore/nitroice
+	ore = /ore/nitroice
 
 /obj/item/weapon/ore/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/device/core_sampler))

@@ -145,6 +145,7 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	var/list/accesses = list()
 /datum/assignment/after_load()
 	..()
+	
 /datum/access_category
 	var/name = ""
 	var/list/accesses = list() // format-- list("11" = "Bridge Access")

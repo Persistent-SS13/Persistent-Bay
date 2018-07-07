@@ -257,12 +257,13 @@
 	allow_multiple = 1
 
 ////////////////////////STAGE 2/////////////////////////////////
+/**
 /datum/disease2/effect/drowsness
 	name = "Automated Sleeping Syndrome"
 	stage = 2
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		mob.drowsyness += 10
-
+**/
 /datum/disease2/effect/sleepy
 	name = "Resting Syndrome"
 	stage = 2

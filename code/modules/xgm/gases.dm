@@ -194,6 +194,9 @@
 	id = "chlorine"
 	name = "Chlorine"
 
+	tile_overlay = "chlorine"
+	overlay_limit = 0.7
+
 	specific_heat = 5	// J/(mol*K)
 	molar_mass = 0.017	// kg/mol
 

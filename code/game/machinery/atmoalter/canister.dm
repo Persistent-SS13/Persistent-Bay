@@ -425,6 +425,7 @@ update_flag
 			"\[CO2\]" = "black", \
 			"\[Air\]" = "grey", \
 			"\[CAUTION\]" = "yellow", \
+			"\[Reagents\]" = "cyanws", \
 		)
 		var/label = input(user, "Choose canister label", "Gas canister") as null|anything in colors
 		if (label && CanUseTopic(user, state))

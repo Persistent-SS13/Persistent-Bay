@@ -62,6 +62,7 @@ var/list/admin_verbs_admin = list(
 	/datum/admins/proc/toggleoocdead,	//toggles ooc on/off for everyone who is dead,
 	/datum/admins/proc/toggledsay,		//toggles dsay on/off for everyone,
 	/datum/admins/proc/savenow,			//persistent edit, savenow saves the station,
+	/client/proc/bonus_panel,
 	/datum/admins/proc/changeambience,
 	/datum/admins/proc/buildaccounts,
 	/datum/admins/proc/retrieve_account,
@@ -515,6 +516,18 @@ var/list/admin_verbs_mentor = list(
 		holder.Secrets()
 	feedback_add_details("admin_verb","S") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	return
+	
+/client/proc/bonus_panel()
+
+	set category = "Server"
+	set desc="Open Host Panel"
+	set name="Host Panel"
+
+	if(!check_rights(R_ADMIN))
+		return
+	if(holder)
+		holder.bonus_panel()
+		
 
 /client/proc/colorooc()
 	set category = "Fun"

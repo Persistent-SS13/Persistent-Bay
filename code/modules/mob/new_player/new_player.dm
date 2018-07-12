@@ -78,6 +78,7 @@
 	var/slots = config.character_slots
 	if(check_rights(R_ADMIN, 0, client))
 		slots += 2
+	slots += client.prefs.bonus_slots
 	if(!client.prefs.character_list || (client.prefs.character_list.len < slots))
 		client.prefs.load_characters()
 		sleep(20)
@@ -107,6 +108,7 @@
 	var/slots = config.character_slots
 	if(check_rights(R_ADMIN, 0, client))
 		slots += 2
+	slots += client.prefs.bonus_slots
 	if(!client.prefs.character_list || (client.prefs.character_list.len < slots))
 		client.prefs.load_characters()
 
@@ -574,7 +576,7 @@
 			mind.store_memory(client.prefs.memory)
 		mind.transfer_to(new_character)					//won't transfer key since the mind is not active
 
-
+	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1))// MAD JAMS cant last forever yo
 	if(!spawn_turf)
 
 		if(new_character.spawn_type == 1)

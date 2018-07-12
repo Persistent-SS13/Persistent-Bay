@@ -657,6 +657,54 @@ var/global/floorIsLava = 0
 	popup.open()
 	return
 
+	
+/datum/admins/proc/bonus_panel()
+	if(!check_rights(R_ADMIN))
+		return
+	var/ckey = lowertext(input(usr, "Enter the ckey of the person you want to edit", "Bonus Panel", "") as text|null)
+	if(!ckey) return
+	var/datum/preferences/prefs
+	prefs = preferences_datums[ckey]
+	if(!prefs)
+		prefs = new /datum/preferences(src)
+		preferences_datums[ckey] = prefs
+	var/bonus_slots = prefs.bonus_slots
+	var/bonus_notes = prefs.bonus_notes
+
+	var/dat = ""
+	dat += "<h2>Bonus Panel</h2>"
+	dat += "Currently viewing [ckey]<br><br>"
+	dat += "Bonus Slots: [bonus_slots] <a href='?src=\ref[src];increaseslots=\ref[prefs]'>Increase Slots</a>    <a href='?src=\ref[src];decreaseslots=\ref[prefs]'>Decrease Slots</a><br><br>"
+	dat += "Bonus Notes: [bonus_notes] <br><a href='?src=\ref[src];editnotes=\ref[prefs]'>Edit Bonus Notes</a><br><br>"
+	
+	
+	var/datum/browser/popup = new(usr, "bonus", "Bonus", 300, 400)
+	popup.set_content(dat)
+	popup.open()
+	return
+/datum/admins/proc/bonus_panel_refresh(var/mob/user, var/ckey)
+	if(!check_rights(R_ADMIN))
+		return
+	var/datum/preferences/prefs
+	prefs = preferences_datums[ckey]
+	if(!prefs)
+		prefs = new /datum/preferences(src)
+		preferences_datums[ckey] = prefs
+	var/bonus_slots = prefs.bonus_slots
+	var/bonus_notes = prefs.bonus_notes
+	var/dat = ""
+	dat += "<h2>Bonus Panel</h2>"
+	dat += "Currently viewing [ckey]<br><br>"
+	dat += "Bonus Slots: [bonus_slots] <a href='?src=\ref[src];increaseslots=\ref[prefs]'>Increase Slots</a>    <a href='?src=\ref[src];decreaseslots=\ref[prefs]'>Decrease Slots</a><br><br>"
+	dat += "Bonus Notes: [bonus_notes] <br><a href='?src=\ref[src];editnotes=\ref[prefs]'>Edit Bonus Notes</a><br><br>"
+	var/datum/browser/popup = new(user, "bonus", "Bonus", 300, 400)
+	popup.set_content(dat)
+	popup.open()
+	return
+	
+		
+	
+	
 /////////////////////////////////////////////////////////////////////////////////////////////////admins2.dm merge
 //i.e. buttons/verbs
 
@@ -771,6 +819,8 @@ var/global/floorIsLava = 0
 	if(!check_rights(R_ADMIN))
 		return
 	Save_World()
+
+
 /datum/admins/proc/changeambience()
 	set category = "Server"
 	set desc="Change ambience tone"
@@ -817,7 +867,7 @@ var/global/floorIsLava = 0
 			if(record.get_name() == real_name)
 				to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
 				break
-			
+
 /datum/admins/proc/delete_account()
 	set category = "Server"
 	set desc="Delete Record"
@@ -831,7 +881,7 @@ var/global/floorIsLava = 0
 			if(record.get_name() == real_name)
 				GLOB.all_crew_records -= record
 				qdel(record)
-			
+
 /datum/admins/proc/savechars()
 	set category = "Server"
 	set desc="Saves Characters"

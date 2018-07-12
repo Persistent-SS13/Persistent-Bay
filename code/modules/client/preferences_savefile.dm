@@ -167,6 +167,8 @@
 
 /datum/preferences/proc/sanitize_preferences()
 	player_setup.sanitize_setup()
+	if(!bonus_slots) bonus_slots = 0
+	if(!bonus_notes) bonus_notes = ""
 	return 1
 
 /datum/preferences/proc/update_setup(var/savefile/preferences, var/savefile/character)

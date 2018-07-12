@@ -35,6 +35,9 @@ datum/preferences
 	// Persistent Edit, Adding the character list..
 	var/list/character_list = list()
 	var/list/icon_list = list()
+	
+	var/bonus_slots = 0
+	var/bonus_notes = ""
 /datum/preferences/New(client/C)
 	player_setup = new(src)
 	gender = pick(MALE, FEMALE)
@@ -377,6 +380,7 @@ datum/preferences
 	var/slots = config.character_slots
 	if(check_rights(R_ADMIN, 0, client))
 		slots += 2
+	slots += client.prefs.bonus_slots
 	for(var/i=1, i<= slots, i++)
 		if(fexists("[path_to][i].sav"))
 			var/savefile/S =  new("[path_to][i].sav")
@@ -397,6 +401,7 @@ datum/preferences
 	var/slots = config.character_slots
 	if(check_rights(R_ADMIN, 0, client))
 		slots += 2
+	slots += client.prefs.bonus_slots
 	var/savefile/S = new /savefile(path)
 	if(S)
 		dat += "<b>Select a character slot to load</b><hr>"
@@ -419,6 +424,7 @@ datum/preferences
 	var/slots = config.character_slots
 	if(check_rights(R_ADMIN, 0, client))
 		slots += 2
+	slots += client.prefs.bonus_slots
 	if(!character_list || (character_list.len < slots))
 		load_characters()
 	var/dat  = list()

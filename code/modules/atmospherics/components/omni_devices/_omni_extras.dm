@@ -11,6 +11,7 @@
 #define ATM_P		6	//Phoron
 #define ATM_N2O		7
 #define ATM_H2		8
+#define ATM_RG		9	//Reagent Gases
 
 //--------------------------------------------
 // Omni port datum
@@ -95,16 +96,23 @@
 
 /proc/mode_to_gasid(var/mode)
 	switch(mode)
-		if(ATM_O2) 
-			return "oxygen"
-		if(ATM_N2) 
-			return "nitrogen"
-		if(ATM_CO2) 
-			return "carbon_dioxide"
-		if(ATM_P) 
-			return "phoron"
-		if(ATM_N2O) 
-			return "sleeping_agent"
-			return "hydrogen"
+		if(ATM_O2)
+			return list("oxygen")
+		if(ATM_N2)
+			return list("nitrogen")
+		if(ATM_CO2)
+			return list("carbon_dioxide")
+		if(ATM_P)
+			return list("phoron")
+		if(ATM_N2O)
+			return list("sleeping_agent")
+		if(ATM_H2)
+			return list("hydrogen")
+		if(ATM_RG)
+			var/list/reagent_gases_list = list()
+			for(var/g in gas_data.gases) //This only fires when initially selecting the filter type, so impact on performance is minimal
+				if(gas_data.flags[g] & XGM_GAS_REAGENT_GAS)
+					reagent_gases_list += g
+			return reagent_gases_list
 		else
 			return null

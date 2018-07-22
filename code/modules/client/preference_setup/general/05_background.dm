@@ -91,10 +91,13 @@
 		return TOPIC_REFRESH
 
 	else if(href_list["faction"])
-		var/list/joinable = list("Nanotrasen", "Refugees", "Entrepreneur")
-		var/choice = input(user, "Please choose a reason for coming to the frontier", "Character Preference", pref.faction) as null|anything in joinable
+		var/list/joinable = list()
+		for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
+			var/fac_uid = beacon.req_access_faction
+			joinable |= get_faction(fac_uid)
+		var/datum/world_faction/choice = input(user, "Please choose a starting organization.", "Character Preference", pref.faction) as null|anything in joinable
 		if(choice)
-			pref.faction = choice
+			pref.faction = choice.uid
 		return TOPIC_REFRESH
 
 	else if(href_list["religion"])

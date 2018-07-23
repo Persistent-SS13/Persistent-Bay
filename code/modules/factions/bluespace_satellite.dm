@@ -334,6 +334,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/chosen_uid
 	var/chosen_name
 	var/chosen_short
+	var/chosen_tag
 	var/chosen_password
 	var/starting_leader
 	var/chosen_netuid
@@ -365,6 +366,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	data["chosen_uid"] = chosen_uid ? chosen_uid : "*UNSET*"
 	data["chosen_name"] = chosen_name ? chosen_name : "*UNSET*"
 	data["chosen_short"] = chosen_short ? chosen_short : "*UNSET*"
+	data["chosen_tag"] = chosen_tag ? chosen_tag : "*UNSET*"
 	data["chosen_password"] = chosen_password ? chosen_password : "*UNSET*"
 	data["chosen_netuid"] = chosen_netuid ? chosen_netuid : "*UNSET*"
 	data["starting_leader"] = starting_leader ? starting_leader : "*UNSET*"
@@ -401,6 +403,15 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		var/select_name = sanitizeName(input(usr,"Enter the short name of your organization","Lognet Short Name", chosen_short) as null|text, MAX_NAME_LEN, 1, 0)
 		if(select_name)
 			chosen_short = select_name
+	if(href_list["change_tag"])
+		var/select_name = sanitizeName(input(usr,"Enter the tag of your organization","Lognet Tag Name", chosen_tag) as null|text, 4, 1, 0)
+		if(select_name)
+			for(var/datum/world_faction/fac in GLOB.all_world_factions)
+				if(fac.short_tag == select_name)
+					to_chat(usr, "That Tag is already in use.")
+					return
+				else
+					chosen_tag = select_name
 	if(href_list["change_password"])
 		var/select_name = sanitizeName(input(usr,"Enter the lognet password","Lognet Password", chosen_password) as null|text, MAX_NAME_LEN, 1, 0)
 		if(select_name)
@@ -414,7 +425,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 					return 1
 			chosen_netuid = select_name
 	if(href_list["launch"])
-		if(!chosen_uid || !chosen_name || !chosen_short || !chosen_password || !starting_leader || !chosen_netuid)
+		if(!chosen_uid || !chosen_name || !chosen_short || !chosen_tag || !chosen_password || !starting_leader || !chosen_netuid)
 			to_chat(usr, "Network not configured correctly. Check settings.")
 			return 1
 		if(get_faction(chosen_uid))
@@ -430,6 +441,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		new_faction.uid = chosen_uid
 		new_faction.name = chosen_name
 		new_faction.abbreviation = chosen_short
+		new_faction.short_tag = chosen_tag
 		new_faction.password = chosen_password
 		new_faction.leader_name = starting_leader
 		new_faction.network.invisible = 1

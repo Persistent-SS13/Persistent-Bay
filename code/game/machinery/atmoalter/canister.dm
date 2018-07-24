@@ -27,10 +27,6 @@
 	var/upgrade_stack_type = /obj/item/stack/material/plasteel
 	var/upgrade_stack_amount = 20
 
-/obj/machinery/portable_atmospherics/canister/get_saved_vars()
-	..()
-	. |= "upgraded"
-
 /obj/machinery/portable_atmospherics/canister/drain_power()
 	return -1
 

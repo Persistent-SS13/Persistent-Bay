@@ -4,23 +4,28 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	if(password)
 		var/datum/world_faction/found_faction
 		for(var/datum/world_faction/fac in GLOB.all_world_factions)
-			if(fac.uid == name) 
-				found_faction = fac 
+			if(fac.uid == name)
+				found_faction = fac
 				break
 		if(!found_faction) return
 		if(found_faction.password != password) return
 		return found_faction
 	var/datum/world_faction/found_faction
 	for(var/datum/world_faction/fac in GLOB.all_world_factions)
-		if(fac.uid == name) 
-			found_faction = fac 
+		if(fac.uid == name)
+			found_faction = fac
 			break
 	if(!found_faction) return
 	return found_faction
 
+/proc/get_faction_tag(var/name)
+	var/datum/world_faction/fac = get_faction(name)
+	return fac.short_tag
+
 /datum/world_faction
 	var/name = "" // can be safely changed
 	var/abbreviation = "" // can be safely changed
+	var/short_tag = "" // This can be safely changed as long as it doesn't conflict
 	var/purpose = "" // can be safely changed
 	var/uid = "" // THIS SHOULD NEVER BE CHANGED!
 	var/password = "password" // this is used to access the faction, can be safely changed
@@ -47,10 +52,10 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	var/list/cargo_telepads = list()
 	var/list/approved_orders = list()
 	var/list/pending_orders = list()
-	
+
 	var/list/cryo_networks = list() // "default" is always a cryo_network
-	
-	
+
+
 /datum/world_faction/proc/get_duty_status(var/real_name)
 	for(var/obj/item/organ/internal/stack/stack in connected_laces)
 		if(stack.get_owner_name() == real_name)
@@ -67,7 +72,7 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 		if(!money_transfer(central_account,x,"Postpaid Payroll",debt))
 			return 0
 		debts -= x
-	
+
 /datum/world_faction/New()
 	network = new()
 	network.holder = src
@@ -116,7 +121,7 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	for(var/datum/computer_file/crew_record/R in records.faction_records)
 		if(R.get_name() == real_name)
 			return R
-	
+
 /datum/world_faction/proc/create_faction_account()
 	central_account = create_account(name, 0)
 /datum/assignment_category
@@ -145,7 +150,7 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	var/list/accesses = list()
 /datum/assignment/after_load()
 	..()
-	
+
 /datum/access_category
 	var/name = ""
 	var/list/accesses = list() // format-- list("11" = "Bridge Access")
@@ -164,9 +169,11 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	accesses["8"] = "Import Approval"
 	accesses["9"] = "Science Machinery & Programs"
 	accesses["10"] = "Shuttle Control & Access"
+
 /obj/faction_spawner
 	name = "Name to start faction with"
 	var/name_short = "Faction Abbreviation"
+	var/name_tag = "Faction Tag"
 	var/uid = "faction_uid"
 	var/password = "starting_password"
 	var/network_name = "network name"
@@ -184,6 +191,7 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 	var/datum/world_faction/fact = new()
 	fact.name = name
 	fact.abbreviation = name_short
+	fact.short_tag = name_tag
 	fact.uid = uid
 	fact.password = password
 	fact.network.name = network_name
@@ -199,13 +207,16 @@ GLOBAL_LIST_EMPTY(all_world_factions)
 /obj/faction_spawner/Nanotrasen
 	name = "Nanotrasen Corporate Colony"
 	name_short = "Nanotrasen"
+	name_tag = "NT"
 	uid = "nanotrasen"
 	password = "rosebud"
 	network_name = "Nanotrasen Network"
 	network_uid = "nt_net"
+
 /obj/faction_spawner/Refugee
 	name = "Refugee Network"
 	name_short = "Refugee Net"
+	name_tag = "RG"
 	uid = "refugee"
 	password = "Hope97"
 	network_name = "freenet"

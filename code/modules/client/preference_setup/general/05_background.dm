@@ -49,14 +49,10 @@
 		if(background)
 			. += "<br>[background]<br>"
 	. += "<br><br>Starting Employer: <a href='?src=\ref[src];faction=1'>[pref.faction ? pref.faction : "Unset*"]</a>"
-	switch(pref.faction)
-		if("Nanotrasen")
-			. += "<br>You're offered a job as an employee in Nanotrasen, one of the newest and fastest research firms in the Galaxy. Nanotrasen provides you passage to a gateway that teleports you to their outpost deep inside the frontier.<br>"
-		if("Refugees")
-			. += "<br>You have left your previous home in a desperate search for a better life. You've been offered free passage to a gateway that will teleport you to a free-station deep inside the frontier.<br><br>"
-		if("Entrepreneur")
-			. += "<br>You have heard about an unexplored frontier rich in rare materials and untapped research opprotunties. Theirs money to be made everywhere, and theirs even free passage to a gateway that will teleport you to a free-station.<br>"
-
+	
+	var/datum/world_faction/faction = get_faction(pref.faction)
+	if(faction)
+		. += "<br>[faction.purpose]<br><br>"
 	. += "<br><br>Bank Account Pin:<br>"
 	. += "<a href='?src=\ref[src];set_pin=1'>[pref.chosen_pin]</a><br>"
 	. += "<br><br>Email Account Password:<br>"
@@ -91,10 +87,13 @@
 		return TOPIC_REFRESH
 
 	else if(href_list["faction"])
-		var/list/joinable = list("Nanotrasen", "Refugees", "Entrepreneur")
-		var/choice = input(user, "Please choose a reason for coming to the frontier", "Character Preference", pref.faction) as null|anything in joinable
+		var/list/joinable = list()
+		for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
+			var/fac_uid = beacon.req_access_faction
+			joinable |= get_faction(fac_uid)
+		var/datum/world_faction/choice = input(user, "Please choose a starting organization.", "Character Preference", pref.faction) as null|anything in joinable
 		if(choice)
-			pref.faction = choice
+			pref.faction = choice.uid
 		return TOPIC_REFRESH
 
 	else if(href_list["religion"])

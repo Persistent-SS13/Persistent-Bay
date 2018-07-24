@@ -159,6 +159,7 @@ var/const/NO_EMAG_ACT = -50
 			rank = j.title
 			assignment = rank
 			access |= j.get_access()
+
 /obj/item/weapon/card/id/examine(mob/user)
 	set src in oview(1)
 	if(in_range(usr, src))
@@ -166,6 +167,7 @@ var/const/NO_EMAG_ACT = -50
 		to_chat(usr, desc)
 	else
 		to_chat(usr, "<span class='warning'>It is too far away.</span>")
+
 /obj/item/weapon/card/id/proc/sync_from_record(var/datum/computer_file/crew_record/record)
 	age = record.get_age()
 	blood_type = record.get_bloodtype()
@@ -187,22 +189,25 @@ var/const/NO_EMAG_ACT = -50
 		if(!job)
 			assignment = "Unassigned"
 			rank = 0
-			name = text("[registered_name]'s ID Card ([assignment])")
+			name = text("[registered_name]'s ID Card [get_faction_tag(selected_faction)]-([assignment])")
 			return
 		if(record.rank > 1)
 			assignment = job.ranks[record.rank-1]
 		else
 			assignment = job.name
 	rank = record.rank	//actual job
-	name = text("[registered_name]'s ID Card ([assignment])")
+	name = text("[registered_name]'s ID Card [get_faction_tag(selected_faction)]-([assignment])")
+
 /obj/item/weapon/card/id/proc/prevent_tracking()
 	return 0
+
 /obj/item/weapon/card/id/proc/devalidate()
 	rank = "Devalidated"
 	assignment = "Devalidated"
 	registered_name = "Devalidated"
 	valid = 0
 	update_name()
+
 /obj/item/weapon/card/id/proc/show(mob/user as mob)
 	if(front && side)
 		user << browse_rsc(front, "front.png")
@@ -218,7 +223,7 @@ var/const/NO_EMAG_ACT = -50
 	if(military_rank && military_rank.name_short)
 		name = military_rank.name_short + " " + name
 	if(assignment)
-		name = name + " ([assignment])"
+		name = name + " [get_faction_tag(selected_faction)]-([assignment])"
 
 /obj/item/weapon/card/id/proc/set_id_photo(var/mob/M)
 	front = getFlatIcon(M, SOUTH, always_use_defdir = 1)
@@ -267,8 +272,8 @@ var/const/NO_EMAG_ACT = -50
 	return jointext(dat,null)
 
 /obj/item/weapon/card/id/attack_self(mob/user as mob)
-	user.visible_message("\The [user] shows you: \icon[src] [src.name]. The assignment on the card: [src.assignment]",\
-		"You flash your ID card: \icon[src] [src.name]. The assignment on the card: [src.assignment]")
+	user.visible_message("\The [user] shows you: \icon[src] [src.name]. The assignment on the card: <font color=navy>[get_faction_tag(selected_faction)]</font>-([src.assignment])",\
+		"You flash your ID card: \icon[src] [src.name]. The assignment on the card: <font color=navy>[get_faction_tag(selected_faction)]</font>-([src.assignment])")
 
 	src.add_fingerprint(user)
 	return

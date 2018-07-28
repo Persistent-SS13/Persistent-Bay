@@ -39,7 +39,7 @@
 		"ra", "ar", "re", "er", "ri", "ir", "ro", "or", "ru", "ur", "rs", "sr",
 		"a",  "a",  "e",  "e",  "i",  "i",  "o",  "o",  "u",  "u",  "s",  "s"
 	)
-
+/*
 /datum/language/tajaran
 	name = LANGUAGE_SIIK_MAAS
 	desc = "The traditionally employed tongue of Ahdomai, composed of expressive yowls and chirps. Native to the Tajaran."
@@ -53,7 +53,7 @@
 	"mi","jri","dynh","manq","rhe","zar","rrhaz","kal","chur","eech","thaa","dra","jurl","mah","sanu","dra","ii'r",
 	"ka","aasi","far","wa","baq","ara","qara","zir","sam","mak","hrar","nja","rir","khan","jun","dar","rik","kah",
 	"hal","ket","jurl","mah","tul","cresh","azu","ragh","mro","mra","mrro","mrra")
-
+*/
 /datum/language/tajaran/get_random_name(var/gender)
 
 	var/new_name = ..(gender,1)

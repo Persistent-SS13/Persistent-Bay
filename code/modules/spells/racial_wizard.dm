@@ -12,7 +12,7 @@
 	var/list/potentials = list(
 		SPECIES_HUMAN = /obj/item/weapon/storage/bag/cash/infinite,
 		SPECIES_VOX = /spell/targeted/shapeshift/true_form,
-		SPECIES_TAJARA = /spell/messa_shroud,
+		//SPECIES_TAJARA = /spell/messa_shroud,
 		SPECIES_UNATHI = /spell/moghes_blessing,
 		SPECIES_DIONA = /spell/aoe_turf/conjure/grove/gestalt,
 		SPECIES_SKRELL = /obj/item/weapon/contract/apprentice/skrell,
@@ -51,7 +51,7 @@
 			var/obj/item/I = new /obj/item/weapon/spacecash/bundle/c1000()
 			src.handle_item_insertion(I,1)
 
-
+/*
 //Tajaran
 /spell/messa_shroud
 	name = "Messa's Shroud"
@@ -84,7 +84,7 @@
 
 	spawn(duration)
 		qdel(O)
-
+*/
 //VOX
 /spell/targeted/shapeshift/true_form
 	name = "True Form"

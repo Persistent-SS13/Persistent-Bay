@@ -295,7 +295,7 @@ datum/unit_test/mob_damage/unathi/halloss
 // =================================================================
 // SpessKahjit aka Tajaran
 // =================================================================
-
+/*
 datum/unit_test/mob_damage/tajaran
 	name = "MOB: Tajaran damage check template"
 	mob_type = /mob/living/carbon/human/tajaran
@@ -325,7 +325,7 @@ datum/unit_test/mob_damage/tajaran/clone
 datum/unit_test/mob_damage/tajaran/halloss
 	name = "MOB: Tajaran Halloss Damage Check"
 	damagetype = PAIN
-
+*/
 // =================================================================
 // Skrell
 // =================================================================

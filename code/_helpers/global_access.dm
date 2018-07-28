@@ -55,6 +55,8 @@
 			return global.SSmapping;
 		if("SSmobs")
 			return global.SSmobs;
+		if("SSmaterials")
+			return global.SSmaterials;
 		if("SSobj")
 			return global.SSobj;
 		if("SSopen_space")
@@ -691,10 +693,6 @@
 			return global.nuke_disks;
 		if("num_financial_terminals")
 			return global.num_financial_terminals;
-		if("ore_data")
-			return global.ore_data;
-		if("ores_by_type")
-			return global.ores_by_type;
 		if("organ_cache")
 			return global.organ_cache;
 		if("organ_rel_size")
@@ -1079,7 +1077,7 @@
 			return global.zone_blocked;
 		if("zones_to_save")
 			return global.zones_to_save;
-		
+
 /proc/writeglobal(which, newval)
 	switch(which)
 		if("ALL_ANTIGENS")
@@ -1134,6 +1132,8 @@
 			global.SSmachines=newval;
 		if("SSmapping")
 			global.SSmapping=newval;
+		if("SSmaterials")
+			global.SSmaterials=newval;
 		if("SSmobs")
 			global.SSmobs=newval;
 		if("SSobj")
@@ -1772,10 +1772,6 @@
 			global.nuke_disks=newval;
 		if("num_financial_terminals")
 			global.num_financial_terminals=newval;
-		if("ore_data")
-			global.ore_data=newval;
-		if("ores_by_type")
-			global.ores_by_type=newval;
 		if("organ_cache")
 			global.organ_cache=newval;
 		if("organ_rel_size")
@@ -2160,7 +2156,7 @@
 			global.zone_blocked=newval;
 		if("zones_to_save")
 			global.zones_to_save=newval;
-		
+
 /var/list/_all_globals=list(
 	"ALL_ANTIGENS",
 	"ANTAG_FREQS",
@@ -2188,6 +2184,7 @@
 	"SSlegacy",
 	"SSmachines",
 	"SSmapping",
+	"SSmaterials",
 	"SSmobs",
 	"SSobj",
 	"SSopen_space",
@@ -2507,8 +2504,6 @@
 	"nttransfer_uid",
 	"nuke_disks",
 	"num_financial_terminals",
-	"ore_data",
-	"ores_by_type",
 	"organ_cache",
 	"organ_rel_size",
 	"outfits_decls_",

@@ -77,6 +77,7 @@ var/list/name_to_material
 	var/conductive = 1           // Objects with this var add CONDUCTS to flags on spawn.
 	var/luminescence
 	var/list/composite_material  // If set, object matter var will be a list containing these values.
+	var/units_per_sheet = SHEET_MATERIAL_AMOUNT
 
 	// Placeholder vars for the time being, todo properly integrate windows/light tiles/rods.
 	var/created_window
@@ -98,6 +99,20 @@ var/list/name_to_material
 	var/stack_type
 	// Wallrot crumble message.
 	var/rotting_touch_message = "crumbles under your touch"
+
+	// Mining behavior.
+	var/alloy_product
+	var/ore_name
+	var/ore_desc
+	var/ore_smelts_to
+	var/ore_compresses_to
+	var/ore_result_amount
+	var/ore_spread_chance
+	var/ore_scan_icon
+	var/ore_icon_overlay
+ 	// Xenoarch behavior.
+	var/list/xarch_ages = list("thousand" = 999, "million" = 999)
+	var/xarch_source_mineral = "iron"
 
 // Placeholders for light tiles and rglass.
 /material/proc/build_rod_product(var/mob/user, var/obj/item/stack/used_stack, var/obj/item/stack/target_stack)
@@ -228,11 +243,17 @@ var/list/name_to_material
 	burn_armor = 50		// Diamond walls are immune to fire, therefore it makes sense for them to be almost undamageable by burn damage type.
 	stack_origin_tech = list(TECH_MATERIAL = 6)
 	conductive = 0
+	ore_compresses_to = "diamond"
+	ore_result_amount = 5
+	ore_spread_chance = 10
+	ore_scan_icon = "mineral_rare"
+	xarch_source_mineral = "nitrogen"
+	ore_icon_overlay = "gems"
 
 /material/gold
 	name = "gold"
 	stack_type = /obj/item/stack/material/gold
-	icon_colour = "#edd12f"
+	icon_colour = "#ffcc33"
 	weight = 25
 	hardness = 25
 	integrity = 100
@@ -242,6 +263,18 @@ var/list/name_to_material
 	chem_products = list(
 				/datum/reagent/gold = 15
 				)
+	ore_smelts_to = "gold"
+	ore_result_amount = 5
+	ore_name = "native gold"
+	ore_spread_chance = 10
+	ore_scan_icon = "mineral_uncommon"
+	xarch_ages = list(
+		"thousand" = 999,
+		"million" = 999,
+		"billion" = 4,
+		"billion_lower" = 3
+		)
+	ore_icon_overlay = "nugget"
 
 /material/copper
 	name = "copper"
@@ -257,69 +290,6 @@ var/list/name_to_material
 				/datum/reagent/copper = 20
 				)
 
-/material/bronze //copper and tin
-	name = "bronze"
-	stack_type = /obj/item/stack/material/bronze
-	icon_colour = "#ffb900"
-	weight = 20
-	hardness = 50
-	integrity = 125
-	stack_origin_tech = list(TECH_MATERIAL = 3)
-	sheet_singular_name = "ingot"
-	sheet_plural_name = "ingots"
-	composite_material = list("copper" = 7500, "tin" = 3750)
-	chem_products = list(
-				/datum/reagent/copper = 15
-				)
-
-/material/brass //copper and zinc
-	name = "brass"
-	stack_type = /obj/item/stack/material/brass
-	icon_colour = "#edd12f"
-	weight = 20
-	hardness = 35
-	integrity = 130
-	stack_origin_tech = list(TECH_MATERIAL = 3)
-	sheet_singular_name = "ingot"
-	sheet_plural_name = "ingots"
-	composite_material = list("copper" = 7500, "zinc" = 3750)
-	chem_products = list(
-				/datum/reagent/copper = 15
-				)
-
-/material/tin
-	name = "tin"
-	stack_type = /obj/item/stack/material/tin
-	icon_colour = "#e1f6f3"
-	weight = 18
-	hardness = 25
-	stack_origin_tech = list(TECH_MATERIAL = 2)
-	sheet_singular_name = "ingot"
-	sheet_plural_name = "ingots"
-
-/material/zinc
-	name = "zinc"
-	stack_type = /obj/item/stack/material/zinc
-	icon_colour = "#c1d6d3"
-	weight = 18
-	hardness = 50
-	stack_origin_tech = list(TECH_MATERIAL = 2)
-	sheet_singular_name = "ingot"
-	sheet_plural_name = "ingots"
-
-/material/aluminum
-	name = "aluminum"
-	stack_type = /obj/item/stack/material/aluminum
-	icon_colour = "#c1d6d3"
-	weight = 18
-	hardness = 50
-	stack_origin_tech = list(TECH_MATERIAL = 2)
-	sheet_singular_name = "ingot"
-	sheet_plural_name = "ingots"
-	chem_products = list(
-				/datum/reagent/aluminum = 20
-				)
-
 /material/silver
 	name = "silver"
 	stack_type = /obj/item/stack/material/silver
@@ -332,6 +302,12 @@ var/list/name_to_material
 	chem_products = list(
 				/datum/reagent/silver = 15
 				)
+	ore_smelts_to = "silver"
+	ore_result_amount = 5
+	ore_spread_chance = 10
+	ore_name = "native silver"
+	ore_scan_icon = "mineral_uncommon"
+	ore_icon_overlay = "shiny"
 
 /material/phoron
 	name = "phoron"
@@ -349,6 +325,19 @@ var/list/name_to_material
 	chem_products = list(
 				/datum/reagent/toxin/phoron = 15
 				)
+	ore_name = "phoron"
+	ore_compresses_to = "phoron"
+	ore_result_amount = 5
+	ore_spread_chance = 25
+	ore_scan_icon = "mineral_uncommon"
+	xarch_ages = list(
+		"thousand" = 999,
+		"million" = 999,
+		"billion" = 13,
+		"billion_lower" = 10
+		)
+	xarch_source_mineral = "phoron"
+	ore_icon_overlay = "gems"
 
 /material/phoron/supermatter
 	name = "supermatter"
@@ -357,6 +346,7 @@ var/list/name_to_material
 	stack_origin_tech = list(TECH_BLUESPACE = 2, TECH_MATERIAL = 6, TECH_PHORON = 4)
 	stack_type = null
 	luminescence = 3
+	ore_compresses_to = null
 
 
 //Controls phoron and phoron based objects reaction to being in a turf over 200c -- Phoron's flashpoint.
@@ -432,6 +422,8 @@ var/list/name_to_material
 				/datum/reagent/iron = 15,
 				/datum/reagent/carbon = 5
 				)
+	composite_material = list("hematite" = 1875, "graphene" = 1875)
+	alloy_product = TRUE
 
 /material/diona
 	name = "biomass"
@@ -467,7 +459,8 @@ var/list/name_to_material
 	hardness = 80
 	weight = 23
 	stack_origin_tech = list(TECH_MATERIAL = 2)
-	composite_material = list(DEFAULT_WALL_MATERIAL = 3750, "platinum" = 3750) //todo
+	composite_material = list("hematite" = 1250, "graphene" = 1250, "platinum" = 1250)
+	alloy_product = TRUE
 
 /material/plasteel/titanium
 	name = "titanium"
@@ -478,6 +471,8 @@ var/list/name_to_material
 	stack_type = null
 	icon_colour = "#d1e6e3"
 	icon_reinf = "metal"
+	composite_material = null
+	alloy_product = FALSE
 
 /material/plasteel/ocp
 	name = "osmium-carbide plasteel"
@@ -490,6 +485,7 @@ var/list/name_to_material
 	weight = 27
 	stack_origin_tech = list(TECH_MATERIAL = 3)
 	composite_material = list("plasteel" = 7500, "osmium" = 3750)
+	alloy_product = TRUE
 
 /material/tungsten
 	name = "tungsten"
@@ -503,31 +499,6 @@ var/list/name_to_material
 	sheet_plural_name = "ingots"
 	chem_products = list(
 				/datum/reagent/tungsten = 20
-				)
-
-/material/lead
-	name = "lead"
-	stack_type = /obj/item/stack/material/lead
-	icon_colour = "#6677bb"
-	radioactivity = 2 // Simulated lead poisoning using VERY weak radiation
-	weight = 28
-	stack_origin_tech = list(TECH_MATERIAL = 2)
-	sheet_singular_name = "ingot"
-	sheet_plural_name = "ingots"
-
-/material/sulfur
-	name = "sulfur"
-	stack_type = /obj/item/stack/material/sulfur
-	icon_colour = "#4f8cbb"
-	integrity = 5
-	hardness = 1
-	melting_point = T0C + 80
-	ignition_point = T0C + 70
-	weight = 3
-	sheet_singular_name = "brick"
-	sheet_plural_name = "bricks"
-	chem_products = list(
-				/datum/reagent/sulfur = 20
 				)
 
 /material/glass
@@ -665,6 +636,8 @@ var/list/name_to_material
 	created_window = /obj/structure/window/phoronbasic
 	wire_product = null
 	rod_product = /obj/item/stack/material/glass/phoronrglass
+	alloy_product = TRUE
+	composite_material = list("sand" = 2500, "platinum" = 1250)
 
 /material/glass/phoron/reinforced
 	name = "rphglass"
@@ -755,6 +728,7 @@ var/list/name_to_material
 
 /material/mhydrogen
 	name = "mhydrogen"
+	display_name = "metallic hydrogen"
 	stack_type = /obj/item/stack/material/mhydrogen
 	icon_colour = "#e6c5de"
 	stack_origin_tech = list(TECH_MATERIAL = 6, TECH_POWER = 6, TECH_MAGNET = 5)
@@ -762,43 +736,11 @@ var/list/name_to_material
 	chem_products = list(
 				/datum/reagent/hydrogen = 20
 				)
-
-/material/ice
-	name = "ice"
-	stack_type = /obj/item/stack/material/ice
-	icon_colour = "#c5e5e2"
-	chem_products = list(
-				/datum/reagent/drink/ice = 15,
-				/datum/reagent/water = 5
-				)
-
-/material/ice/dryice
-	name = "dryice"
-	stack_type = /obj/item/stack/material/ice/dryice
-	chem_products = list(
-				/datum/reagent/carbon = 20
-				)
-
-/material/ice/oxyice
-	name = "oxyice"
-	stack_type = /obj/item/stack/material/ice/oxyice
-	chem_products = list(
-				/datum/reagent/oxygen = 20
-				)
-
-/material/ice/nitroice
-	name = "nitroice"
-	stack_type = /obj/item/stack/material/ice/nitroice
-	chem_products = list(
-				/datum/reagent/nitrogen = 20
-				)
-
-/material/ice/hydroice
-	name = "hydroice"
-	stack_type = /obj/item/stack/material/ice/hydroice
-	chem_products = list(
-				/datum/reagent/hydrogen = 20
-				)
+	ore_smelts_to = "tritium"
+	ore_compresses_to = "mhydrogen"
+	ore_name = "raw hydrogen"
+	ore_scan_icon = "mineral_rare"
+	ore_icon_overlay = "gems"
 
 /material/platinum
 	name = "platinum"
@@ -808,6 +750,13 @@ var/list/name_to_material
 	stack_origin_tech = list(TECH_MATERIAL = 2)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
+	ore_smelts_to = "platinum"
+	ore_compresses_to = "osmium"
+	ore_result_amount = 5
+	ore_spread_chance = 10
+	ore_name = "raw platinum"
+	ore_scan_icon = "mineral_rare"
+	ore_icon_overlay = "shiny"
 
 /material/iron
 	name = "iron"
@@ -1049,3 +998,60 @@ var/list/name_to_material
 	ignition_point = T0C+232
 	melting_point = T0C+300
 	conductive = 0
+
+/material/hematite
+	name = "hematite"
+	stack_type = null
+	icon_colour = "#aa6666"
+	ore_smelts_to = "iron"
+	ore_result_amount = 5
+	ore_spread_chance = 25
+	ore_scan_icon = "mineral_common"
+	ore_name = "hematite"
+	ore_icon_overlay = "lump"
+
+ /material/sand
+	name = "sand"
+	stack_type = null
+	icon_colour = "#e2dbb5"
+	ore_smelts_to = "glass"
+	ore_compresses_to = "sandstone"
+	ore_name = "sand"
+	ore_icon_overlay = "dust"
+
+ /material/pitchblende
+	name = "pitchblende"
+	stack_type = null
+	icon_colour = "#917d1a"
+	ore_smelts_to = "uranium"
+	ore_result_amount = 5
+	ore_spread_chance = 10
+	ore_name = "pitchblende"
+	ore_scan_icon = "mineral_uncommon"
+	stack_origin_tech = list(TECH_MATERIAL = 5)
+	xarch_ages = list(
+		"thousand" = 999,
+		"million" = 704
+		)
+	xarch_source_mineral = "potassium"
+	ore_icon_overlay = "nugget"
+
+ /material/graphene
+	name = "graphene"
+	stack_type = null
+	icon_colour = "#444444"
+	ore_smelts_to = "plastic"
+	ore_name = "graphene"
+	ore_smelts_to = "plastic"
+	ore_result_amount = 5
+	ore_spread_chance = 25
+	ore_scan_icon = "mineral_common"
+	ore_icon_overlay = "lump"
+
+ /material/waste
+	name = "waste"
+	stack_type = null
+	icon_colour = "#2e3a07"
+	ore_name = "slag"
+	ore_desc = "Someone messed up..."
+	ore_icon_overlay = "lump"

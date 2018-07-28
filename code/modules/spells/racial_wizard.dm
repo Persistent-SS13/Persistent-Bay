@@ -14,7 +14,7 @@
 		SPECIES_VOX = /spell/targeted/shapeshift/true_form,
 		//SPECIES_TAJARA = /spell/messa_shroud,
 		SPECIES_UNATHI = /spell/moghes_blessing,
-		SPECIES_DIONA = /spell/aoe_turf/conjure/grove/gestalt,
+		//SPECIES_DIONA = /spell/aoe_turf/conjure/grove/gestalt,
 		SPECIES_SKRELL = /obj/item/weapon/contract/apprentice/skrell,
 		SPECIES_IPC = /spell/camera_connection)
 
@@ -155,6 +155,7 @@
 	I.color = "#663300"
 
 //DIONA
+/*
 /spell/aoe_turf/conjure/grove/gestalt
 	name = "Convert Gestalt"
 	desc = "Converts the surrounding area into a Dionaea gestalt."
@@ -173,7 +174,7 @@
 	seed_type = /datum/seed/diona
 
 	hud_state = "wiz_diona"
-
+*/
 //SKRELL
 /obj/item/weapon/contract/apprentice/skrell
 	name = "skrellian apprenticeship contract"

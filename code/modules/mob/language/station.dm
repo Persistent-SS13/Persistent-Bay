@@ -1,3 +1,4 @@
+/*
 /datum/language/diona
 	name = LANGUAGE_ROOTLOCAL
 	desc = "A complex language known instinctively by Dionaea, 'spoken' by emitting modulated radio waves. This version uses high frequency waves for quick communication at short ranges."
@@ -19,7 +20,7 @@
 	desc = "A complex language known instinctively by Dionaea, 'spoken' by emitting modulated radio waves. This version uses low frequency waves for slow communication at long ranges."
 	key = "w"
 	flags = RESTRICTED | HIVEMIND
-
+*/
 /datum/language/unathi
 	name = LANGUAGE_UNATHI
 	desc = "The common language of Moghes, composed of sibilant hisses and rattles. Spoken natively by Unathi."

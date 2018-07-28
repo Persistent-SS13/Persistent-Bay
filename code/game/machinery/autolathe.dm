@@ -316,7 +316,7 @@
 	for(var/obj/item/weapon/stock_parts/manipulator/M in component_parts)
 		man_rating += M.rating
 
-	var/material/M = get_material_by_name(DEFAULT_WALL_MATERIAL)
+	var/material/M = SSmaterials.get_material_by_name(DEFAULT_WALL_MATERIAL)
 	var/obj/item/stack/material/S = M.stack_type
 	storage_capacity = mb_rating * initial(S.perunit) * 15
 	build_time = 45 / man_rating
@@ -324,7 +324,7 @@
 
 /obj/machinery/autolathe/dismantle()
 	for(var/mat in stored_material)
-		var/material/M = get_material_by_name(mat)
+		var/material/M = SSmaterials.get_material_by_name(mat)
 		if(!istype(M))
 			continue
 		var/obj/item/stack/material/S = new M.stack_type(get_turf(src))

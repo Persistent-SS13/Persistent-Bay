@@ -165,18 +165,18 @@
 /obj/structure/girder/proc/update_material(var/update_Integrity)
 	if(!istype(material, /material))
 		if(istext(material))
-			material = get_material_by_name(material)
+			material = SSmaterials.get_material_by_name(material)
 			update_Integrity = 1
 		else
 			material = null
 	if(!istype(r_material, /material))
 		if(istext(r_material))
-			r_material = get_material_by_name(r_material)
+			r_material = SSmaterials.get_material_by_name(r_material)
 			update_Integrity = 1
 		else
 			r_material = null
 	if(!material)
-		material = get_material_by_name("steel")
+		material = SSmaterials.get_material_by_name("steel")
 		update_Integrity = 1
 
 	if(update_Integrity)

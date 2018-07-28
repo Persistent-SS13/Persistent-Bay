@@ -107,7 +107,7 @@ var/const/SAFETY_COOLDOWN = 100
 		if(istype(I) && I.matter)
 			for(var/mat in I.matter)
 				stored_material[mat] += I.matter[mat]
-				var/material/M = get_material_by_name(mat)
+				var/material/M = SSmaterials.get_material_by_name(mat)
 				if(!istype(M))
 					continue
 				var/obj/item/stack/material/S = new M.stack_type(loc)

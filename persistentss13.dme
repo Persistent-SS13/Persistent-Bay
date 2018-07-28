@@ -181,6 +181,7 @@
 #include "code\controllers\subsystems\mapping.dm"
 #include "code\controllers\subsystems\open_space_controller.dm"
 #include "code\controllers\subsystems\skybox.dm"
+#include "code\controllers\subsystems\initialization\materials.dm"
 #include "code\controllers\subsystems\processing\airflow.dm"
 #include "code\controllers\subsystems\processing\fastprocess.dm"
 #include "code\controllers\subsystems\processing\mobs.dm"

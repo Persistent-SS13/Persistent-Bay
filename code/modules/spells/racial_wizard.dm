@@ -51,8 +51,9 @@
 			var/obj/item/I = new /obj/item/weapon/spacecash/bundle/c1000()
 			src.handle_item_insertion(I,1)
 
-/*
+
 //Tajaran
+/*
 /spell/messa_shroud
 	name = "Messa's Shroud"
 	desc = "This spell causes darkness at the point of the caster for a duration of time."

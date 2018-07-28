@@ -53,7 +53,7 @@
 	"mi","jri","dynh","manq","rhe","zar","rrhaz","kal","chur","eech","thaa","dra","jurl","mah","sanu","dra","ii'r",
 	"ka","aasi","far","wa","baq","ara","qara","zir","sam","mak","hrar","nja","rir","khan","jun","dar","rik","kah",
 	"hal","ket","jurl","mah","tul","cresh","azu","ragh","mro","mra","mrro","mrra")
-*/
+
 /datum/language/tajaran/get_random_name(var/gender)
 
 	var/new_name = ..(gender,1)
@@ -62,7 +62,7 @@
 	else
 		new_name += " [..(gender,1)]"
 	return new_name
-
+*/
 /datum/language/skrell
 	name = LANGUAGE_SKRELLIAN
 	desc = "A melodic and complex language spoken by the Skrell of Qerrbalak. Some of the notes are inaudible to humans."
@@ -182,7 +182,7 @@
 "le", "me", "nd", "ne", "ng", "nt", "on", "or", "ou", "re", "se", "st", "te", "th", "ti", "to",
 "ve", "wa", "all", "and", "are", "but", "ent", "era", "ere", "eve", "for", "had", "hat", "hen", "her", "hin",
 "his", "ing", "ion", "ith", "not", "ome", "oul", "our", "sho", "ted", "ter", "tha", "the", "thi")
-
+/*
 /datum/language/tajsign
 	name = LANGUAGE_SIIK_TAJR
 	desc = "A type of sign language mostly based on tail movements that was used during the Tajaran rebellion."
@@ -190,7 +190,7 @@
 	colour = "tajaran"
 	key = "l"
 	flags = WHITELISTED | SIGNLANG | NO_STUTTER | NONVERBAL
-
+*/
 /datum/language/confederate
 	name = LANGUAGE_INDEPENDENT
 	desc = "The official language of the Terran Colonial Confederation, evolved from a pidgin of Eastern European languages and English."

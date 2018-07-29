@@ -30,3 +30,4 @@
 	sheet_singular_name = "blob"
 	sheet_plural_name = "blobs"
 	conductive = 0
+	stack_type = null

@@ -56,7 +56,6 @@
 	chem_products = list(
 				/datum/reagent/silver = 20
 				)
-
 	ore_smelts_to = "silver"
 	ore_result_amount = 5
 	ore_spread_chance = 10
@@ -254,3 +253,10 @@
 	chem_products = list(
 				/datum/reagent/tungsten = 20
 				)
+
+	ore_smelts_to = "tungsten"
+	ore_result_amount = 5
+	ore_spread_chance = 10
+	ore_name = "tungsten"
+	ore_scan_icon = "mineral_uncommon"
+	ore_icon_overlay = "shiny"

@@ -81,6 +81,7 @@
 	flags = MATERIAL_PADDING
 	brute_armor = 1
 	conductive = 0
+	stack_type = null
 
 //TODO PLACEHOLDERS:
 /material/leather
@@ -91,6 +92,7 @@
 	ignition_point = T0C+300
 	melting_point = T0C+300
 	conductive = 0
+	stack_type = null
 
 /material/carpet
 	name = "carpet"
@@ -103,6 +105,7 @@
 	sheet_singular_name = "tile"
 	sheet_plural_name = "tiles"
 	conductive = 0
+	stack_type = null
 
 /material/cotton
 	name = "cotton"
@@ -112,6 +115,7 @@
 	ignition_point = T0C+232
 	melting_point = T0C+300
 	conductive = 0
+	stack_type = null
 
 /material/cloth_yellow
 	name = "yellow"
@@ -121,6 +125,7 @@
 	ignition_point = T0C+232
 	melting_point = T0C+300
 	conductive = 0
+	stack_type = null
 
 /material/cloth_teal
 	name = "teal"
@@ -131,6 +136,7 @@
 	ignition_point = T0C+232
 	melting_point = T0C+300
 	conductive = 0
+	stack_type = null
 
 /material/cloth_black
 	name = "black"
@@ -141,6 +147,7 @@
 	ignition_point = T0C+232
 	melting_point = T0C+300
 	conductive = 0
+	stack_type = null
 
 /material/cloth_green
 	name = "green"
@@ -151,6 +158,7 @@
 	ignition_point = T0C+232
 	melting_point = T0C+300
 	conductive = 0
+	stack_type = null
 
 /material/cloth_puple
 	name = "purple"
@@ -161,6 +169,7 @@
 	ignition_point = T0C+232
 	melting_point = T0C+300
 	conductive = 0
+	stack_type = null
 
 /material/cloth_blue
 	name = "blue"
@@ -171,6 +180,7 @@
 	ignition_point = T0C+232
 	melting_point = T0C+300
 	conductive = 0
+	stack_type = null
 
 /material/cloth_beige
 	name = "beige"
@@ -181,6 +191,7 @@
 	ignition_point = T0C+232
 	melting_point = T0C+300
 	conductive = 0
+	stack_type = null
 
 /material/cloth_lime
 	name = "lime"
@@ -191,3 +202,4 @@
 	ignition_point = T0C+232
 	melting_point = T0C+300
 	conductive = 0
+	stack_type = null

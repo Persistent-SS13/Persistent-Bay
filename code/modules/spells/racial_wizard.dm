@@ -12,9 +12,9 @@
 	var/list/potentials = list(
 		SPECIES_HUMAN = /obj/item/weapon/storage/bag/cash/infinite,
 		SPECIES_VOX = /spell/targeted/shapeshift/true_form,
-		SPECIES_TAJARA = /spell/messa_shroud,
+		//SPECIES_TAJARA = /spell/messa_shroud,
 		SPECIES_UNATHI = /spell/moghes_blessing,
-		SPECIES_DIONA = /spell/aoe_turf/conjure/grove/gestalt,
+		//SPECIES_DIONA = /spell/aoe_turf/conjure/grove/gestalt,
 		SPECIES_SKRELL = /obj/item/weapon/contract/apprentice/skrell,
 		SPECIES_IPC = /spell/camera_connection)
 
@@ -53,6 +53,7 @@
 
 
 //Tajaran
+/*
 /spell/messa_shroud
 	name = "Messa's Shroud"
 	desc = "This spell causes darkness at the point of the caster for a duration of time."
@@ -84,7 +85,7 @@
 
 	spawn(duration)
 		qdel(O)
-
+*/
 //VOX
 /spell/targeted/shapeshift/true_form
 	name = "True Form"
@@ -154,6 +155,7 @@
 	I.color = "#663300"
 
 //DIONA
+/*
 /spell/aoe_turf/conjure/grove/gestalt
 	name = "Convert Gestalt"
 	desc = "Converts the surrounding area into a Dionaea gestalt."
@@ -172,7 +174,7 @@
 	seed_type = /datum/seed/diona
 
 	hud_state = "wiz_diona"
-
+*/
 //SKRELL
 /obj/item/weapon/contract/apprentice/skrell
 	name = "skrellian apprenticeship contract"

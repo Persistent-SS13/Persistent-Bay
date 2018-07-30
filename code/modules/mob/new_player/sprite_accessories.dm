@@ -823,7 +823,7 @@
 	name = "Shaved"
 	icon_state = "bald"
 	gender = NEUTER
-	species_allowed = list(SPECIES_HUMAN,SPECIES_UNATHI,SPECIES_TAJARA,SPECIES_SKRELL,SPECIES_VOX,SPECIES_IPC)
+	species_allowed = list(SPECIES_HUMAN,SPECIES_UNATHI,SPECIES_SKRELL,SPECIES_VOX,SPECIES_IPC)
 
 /datum/sprite_accessory/facial_hair/watson
 	name = "Watson Mustache"
@@ -986,7 +986,7 @@
 	icon_state = "skrell_hair_f"
 	species_allowed = list(SPECIES_SKRELL)
 	gender = FEMALE
-
+/*
 /datum/sprite_accessory/hair/taj_ears
 	name = "Tajaran Ears"
 	icon_state = "ears_plain"
@@ -1071,14 +1071,14 @@
 	name = "Tajara Finger Curls"
 	icon_state = "hair_fingerwave"
 	species_allowed = list(SPECIES_TAJARA)
-
+*/
 /datum/sprite_accessory/hair/vox_quills_long
 	name = "Long Vox Quills"
 	icon_state = "vox_longquills"
 	species_allowed = list(SPECIES_VOX)
 
 //facial hair
-
+/*
 /datum/sprite_accessory/facial_hair/taj_sideburns
 	name = "Tajara Sideburns"
 	icon_state = "facial_sideburns"
@@ -1108,7 +1108,7 @@
 	name = "Tajara Smallsatche"
 	icon_state = "facial_smallstache"
 	species_allowed = list(SPECIES_TAJARA)
-
+*/
 //skin styles - WIP
 //going to have to re-integrate this with surgery
 //let the icon_state hold an icon preview for now
@@ -1124,13 +1124,13 @@
 	name = "Tatt01 human skin"
 	icon_state = "tatt1"
 	species_allowed = list(SPECIES_HUMAN)
-
+/*
 /datum/sprite_accessory/skin/tajaran
 	name = "Default tajaran skin"
 	icon_state = "default"
 	icon = 'icons/mob/human_races/r_tajaran.dmi'
 	species_allowed = list(SPECIES_TAJARA)
-
+*/
 /datum/sprite_accessory/skin/unathi
 	name = "Default Unathi skin"
 	icon_state = "default"
@@ -1195,7 +1195,7 @@
 	icon_state = "tat_tiger"
 	body_parts = list(BP_L_FOOT,BP_R_FOOT,BP_L_LEG,BP_R_LEG,BP_L_ARM,BP_R_ARM,BP_L_HAND,BP_R_HAND,BP_CHEST,BP_GROIN)
 	species_allowed = list(SPECIES_HUMAN)
-
+/*
 /datum/sprite_accessory/marking/taj_paw_socks
 	name = "Socks Coloration (Taj)"
 	icon_state = "taj_pawsocks"
@@ -1237,7 +1237,7 @@
 	icon_state = "patchesface"
 	body_parts = list(BP_HEAD)
 	species_allowed = list(SPECIES_TAJARA)
-
+*/
 /datum/sprite_accessory/marking/bands
 	name = "Color Bands"
 	icon_state = "bands"
@@ -1247,7 +1247,7 @@
 	name = "Color Bands (Face)"
 	icon_state = "bandsface"
 	body_parts = list(BP_HEAD)
-
+/*
 /datum/sprite_accessory/marking/tiger_stripes
 	name = "Tiger Stripes"
 	icon_state = "tiger"
@@ -1265,12 +1265,12 @@
 	icon_state = "tigerface"
 	body_parts = list(BP_HEAD)
 	species_allowed = list(SPECIES_TAJARA) //There's a tattoo for non-cats
-
+*/
 /datum/sprite_accessory/marking/backstripe
 	name = "Back Stripe"
 	icon_state = "backstripe"
 	body_parts = list(BP_CHEST)
-
+/*
 //Taj specific stuff
 /datum/sprite_accessory/marking/taj_belly
 	name = "Belly Fur (Taj)"
@@ -1325,3 +1325,4 @@
 	icon_state = "taj_all"
 	body_parts = list(BP_HEAD)
 	species_allowed = list(SPECIES_TAJARA)
+*/

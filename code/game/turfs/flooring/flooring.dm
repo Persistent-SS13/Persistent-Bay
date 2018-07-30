@@ -142,7 +142,7 @@ var/list/flooring_types
 /decl/flooring/tiling/dark/mono
 	icon_base = "monotile"
 	build_type = null
-	
+
 /decl/flooring/tiling/freezer
 	desc = "Don't slip."
 	icon_base = "freezer"
@@ -231,10 +231,11 @@ var/list/flooring_types
 
 /decl/flooring/reinforced/shuttle/black
 	icon_base = "floor7"
-
+/*
 /decl/flooring/diona
 	name = "biomass"
 	desc = "a mass of small intertwined aliens forming a floor... Creepy."
 	icon = 'icons/turf/floors.dmi'
 	icon_base = "diona"
 	flags = TURF_ACID_IMMUNE | TURF_REMOVE_SHOVEL
+*/

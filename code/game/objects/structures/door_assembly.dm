@@ -107,6 +107,21 @@
 	airlock_type = "/maintenance_hatch"
 	glass = -1
 
+/obj/structure/door_assembly/door_assembly_fake
+	base_icon_state = "fake"
+	base_name = "wall"
+	airlock_type = "/fake"
+	glass = -1
+	
+/obj/structure/door_assembly/door_assembly_fake/L
+	airlock_type = "/fake/L"
+	
+/obj/structure/door_assembly/door_assembly_fake/LR
+	airlock_type = "/fake/LR"
+	
+/obj/structure/door_assembly/door_assembly_fake/R
+	airlock_type = "/fake/R"
+
 /obj/structure/door_assembly/door_assembly_highsecurity // Borrowing this until WJohnston makes sprites for the assembly
 	base_icon_state = "highsec"
 	base_name = "High Security Airlock"

@@ -65,7 +65,7 @@
 		BP_BRAIN =    /obj/item/organ/internal/brain/xeno,
 		BP_PLASMA =   /obj/item/organ/internal/xenos/plasmavessel,
 		BP_HIVE =     /obj/item/organ/internal/xenos/hivenode,
-		BP_NUTRIENT = /obj/item/organ/internal/diona/nutrients
+		BP_NUTRIENT = /obj/item/organ/internal/xenos/nutrients
 		)
 
 	has_limbs = list(
@@ -193,7 +193,7 @@
 		BP_ACID =     /obj/item/organ/internal/xenos/acidgland,
 		BP_HIVE =     /obj/item/organ/internal/xenos/hivenode,
 		BP_RESIN =    /obj/item/organ/internal/xenos/resinspinner,
-		BP_NUTRIENT = /obj/item/organ/internal/diona/nutrients
+		BP_NUTRIENT = /obj/item/organ/internal/xenos/nutrients
 		)
 
 	inherent_verbs = list(
@@ -231,7 +231,7 @@
 		BP_BRAIN =    /obj/item/organ/internal/brain/xeno,
 		BP_PLASMA =   /obj/item/organ/internal/xenos/plasmavessel/hunter,
 		BP_HIVE =     /obj/item/organ/internal/xenos/hivenode,
-		BP_NUTRIENT = /obj/item/organ/internal/diona/nutrients
+		BP_NUTRIENT = /obj/item/organ/internal/xenos/nutrients
 		)
 
 	inherent_verbs = list(
@@ -260,7 +260,7 @@
 		BP_PLASMA =   /obj/item/organ/internal/xenos/plasmavessel/sentinel,
 		BP_ACID =     /obj/item/organ/internal/xenos/acidgland,
 		BP_HIVE =     /obj/item/organ/internal/xenos/hivenode,
-		BP_NUTRIENT = /obj/item/organ/internal/diona/nutrients
+		BP_NUTRIENT = /obj/item/organ/internal/xenos/nutrients
 		)
 
 	inherent_verbs = list(
@@ -294,7 +294,7 @@
 		BP_ACID =     /obj/item/organ/internal/xenos/acidgland,
 		BP_HIVE =     /obj/item/organ/internal/xenos/hivenode,
 		BP_RESIN =    /obj/item/organ/internal/xenos/resinspinner,
-		BP_NUTRIENT = /obj/item/organ/internal/diona/nutrients
+		BP_NUTRIENT = /obj/item/organ/internal/xenos/nutrients
 		)
 
 	inherent_verbs = list(

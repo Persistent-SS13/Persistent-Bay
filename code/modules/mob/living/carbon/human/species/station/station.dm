@@ -140,7 +140,7 @@
 /datum/species/unathi/equip_survival_gear(var/mob/living/carbon/human/H)
 	..()
 	H.equip_to_slot_or_del(new /obj/item/clothing/shoes/sandal(H),slot_shoes)
-
+/*
 /datum/species/tajaran
 	name = SPECIES_TAJARA
 	name_plural = "Tajaran"
@@ -203,7 +203,7 @@
 	..()
 	H.equip_to_slot_or_del(new /obj/item/clothing/shoes/sandal(H),slot_shoes)
 	H.equip_to_slot_or_del(new /obj/item/clothing/glasses/tajblind(H),slot_glasses)
-
+*/
 /datum/species/skrell
 	name = SPECIES_SKRELL
 	name_plural = SPECIES_SKRELL
@@ -256,7 +256,7 @@
 		BP_L_FOOT = list("path" = /obj/item/organ/external/foot),
 		BP_R_FOOT = list("path" = /obj/item/organ/external/foot/right)
 		)
-
+/*
 /datum/species/diona
 	name = SPECIES_DIONA
 	name_plural = "Dionaea"
@@ -429,3 +429,4 @@
 					for(var/datum/wound/W in E.wounds)
 						if (W.wound_damage() == 0 && prob(50))
 							E.wounds -= W
+*/

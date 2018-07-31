@@ -163,38 +163,53 @@
 
 	//Resources are being loaded.
 	var/obj/item/eating = O
-	if(!eating.matter)
-		to_chat(user, "\The [eating] does not contain significant amounts of useful materials and cannot be accepted.")
+
+	var/list/taking_matter
+	if(istype(eating, /obj/item/stack/material))
+		var/obj/item/stack/material/mat = eating
+		taking_matter = list()
+		for(var/matname in eating.matter)
+			taking_matter[matname] = Floor(eating.matter[matname]/mat.amount)
+	else
+		taking_matter = eating.matter
+
+	var/found_useful_mat
+	if(LAZYLEN(taking_matter))
+		for(var/material in taking_matter)
+			if(!isnull(stored_material[material])) //Checks if the matter is actually useable. Currently copper, steel, and glass.
+				found_useful_mat = TRUE
+				break
+
+	if(!found_useful_mat)
+		to_chat(user, "<span class='warning'>\The [eating] does not contain any accessible useful materials and cannot be accepted.</span>")
 		return
 
 	var/filltype = 0       // Used to determine message.
 	var/total_used = 0     // Amount of material used.
 	var/mass_per_sheet = 0 // Amount of material constituting one sheet.
 
-	for(var/material in eating.matter)
-		if(!stored_material[material])
-			stored_material[material] = 0
+	for(var/material in taking_matter)
+
 		if(stored_material[material] >= storage_capacity)
 			continue
 
-		var/total_material = eating.matter[material]
+		var/total_material = taking_matter[material]
 
 		//If it's a stack, we eat multiple sheets.
 		if(istype(eating,/obj/item/stack))
 			var/obj/item/stack/stack = eating
 			total_material *= stack.get_amount()
-		else
-			total_material *= 0.7 + (1 - mat_efficiency)	//everything else gets a multiplier of 0.7 + 0.1 for each manipulator level above 1, totals a maximum of 0.9
-			total_material = round(total_material)
 
 		if(stored_material[material] + total_material > storage_capacity)
 			total_material = storage_capacity - stored_material[material]
 			filltype = 1
 		else
 			filltype = 2
+
 		stored_material[material] += total_material
 		total_used += total_material
-		mass_per_sheet += eating.matter[material]
+		mass_per_sheet += taking_matter[material]
+
 	if(!filltype)
 		to_chat(user, "<span class='notice'>\The [src] is full. Please remove material from the autolathe in order to insert more.</span>")
 		return
@@ -208,12 +223,10 @@
 	if(istype(eating,/obj/item/stack))
 		var/obj/item/stack/stack = eating
 		stack.use(max(1, round(total_used/mass_per_sheet))) // Always use at least 1 to prevent infinite materials.
-	else
-		user.remove_from_mob(O)
+	else if(user.unEquip(O))
 		qdel(O)
 
 	updateUsrDialog()
-	return
 
 /obj/machinery/autolathe/attack_hand(mob/user as mob)
 	user.set_machine(src)
@@ -287,14 +300,16 @@
 				if(!src) return
 				//Create the desired item.
 				var/obj/item/I = new making.path(loc)
-				if(stack_multiplier > 1 && istype(I, /obj/item/stack))
+				if(istype(I, /obj/item/stack))
 					var/obj/item/stack/S = I
-					S.amount = stack_multiplier
-					S.update_icon()
-				//Time to prevent free materials at higher levels, 0.8 cost multiplier + 0.9 gain multiplier hmmmm yumyum spicey
-				if(!istype(I, /obj/item/stack))
-					for(var/material in I.matter)
-						I.matter[material] = round(I.matter[material] * actual_efficiency)
+					if(stack_multiplier > 1)
+						S.amount = stack_multiplier
+						S.update_icon()
+					for(var/material in I.matter) //Time to prevent free materials at higher levels, 0.8 cost multiplier + 0.9 gain multiplier hmmmm yumyum spicey
+						S.matter[material] = round(S.matter[material] * actual_efficiency)
+
+					S.update_strings() //Updates matter values for material strings.
+
 				//Fancy autolathe animation.
 				flick("autolathe_n", src)
 		spawn(longest_spawn)

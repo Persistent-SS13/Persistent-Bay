@@ -110,7 +110,7 @@
 	brute_armor = 2
 	burn_armor = 3
 	stack_origin_tech = list(TECH_MATERIAL = 2)
-	composite_material = list(DEFAULT_WALL_MATERIAL = 1875,"glass" = 3750)
+	alloy_materials = list("steel" = 1875,"glass" = 3750)
 	window_options = list("One Direction" = 1, "Full Window" = 4, "Windoor" = 5)
 	created_window = /obj/structure/window/reinforced
 	wire_product = null
@@ -131,7 +131,7 @@
 	wire_product = null
 	rod_product = /obj/item/stack/material/glass/phoronrglass
 	alloy_product = TRUE
-	composite_material = list("sand" = 2500, "platinum" = 1250)
+	alloy_materials = list("sand" = 2500, "platinum" = 1250)
 
 /material/glass/phoron/reinforced
 	name = "rphglass"
@@ -141,10 +141,9 @@
 	display_name = "reinforced borosilicate glass"
 	stack_type = /obj/item/stack/material/glass/phoronrglass
 	stack_origin_tech = list(TECH_MATERIAL = 5)
-	composite_material = list() //todo
 	created_window = /obj/structure/window/phoronreinforced
 	stack_origin_tech = list(TECH_MATERIAL = 2)
-	composite_material = list() //todo
+	alloy_materials = list("plasteel" = 1875, "phglass" = 3750)
 	rod_product = null
 	integrity = 100
 

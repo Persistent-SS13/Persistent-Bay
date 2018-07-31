@@ -2,7 +2,7 @@
 	name = "ore processing console"
 	icon = 'icons/obj/machines/mining_machines.dmi'
 	icon_state = "console"
-	req_access = list(access_cargo)
+	req_access = list(core_access_engineering_programs)
 	circuit = /obj/item/weapon/circuitboard/mineral_processing
 	var/obj/machinery/mineral/connected
 

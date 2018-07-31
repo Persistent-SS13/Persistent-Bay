@@ -10,7 +10,7 @@
 /obj/machinery/mineral/Destroy()
 	input_turf = null
 	output_turf = null
-	if(console)
+	if(console && !ispath(console))
 		if(console.connected == src)
 			console.connected = null
 		console = null
@@ -20,6 +20,22 @@
 	set_input(input_turf)
 	set_output(output_turf)
 	find_console()
+	. = ..()
+
+/obj/machinery/mineral/after_load()
+	..()
+	set_input(input_turf)
+	set_output(output_turf)
+	find_console()
+
+/obj/machinery/mineral/attackby(var/obj/item/O, var/mob/user)
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
 	. = ..()
 
 /obj/machinery/mineral/proc/set_input(var/_dir)

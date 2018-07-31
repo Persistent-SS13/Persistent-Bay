@@ -44,6 +44,25 @@
 	ore_smelts_to = null
 	ore_compresses_to = null
 
+/material/copper
+	name = "copper"
+	icon_colour = "#b87333"
+	weight = 15
+	hardness = 30
+	stack_origin_tech = list(TECH_MATERIAL = 2)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
+	chem_products = list(
+		/datum/reagent/copper = 12,
+		/datum/reagent/silver = 8
+		)
+	ore_smelts_to = "copper"
+	ore_result_amount = 5
+	ore_spread_chance = 10
+	ore_name = "tetrahedrite"
+	ore_scan_icon = "mineral_common"
+	ore_icon_overlay = "shiny"
+
 /material/silver
 	name = "silver"
 	stack_type = /obj/item/stack/material/silver
@@ -63,7 +82,6 @@
 	ore_scan_icon = "mineral_uncommon"
 	ore_icon_overlay = "shiny"
 
-
 /material/steel
 	name = DEFAULT_WALL_MATERIAL
 	stack_type = /obj/item/stack/material/steel
@@ -77,8 +95,9 @@
 				/datum/reagent/iron = 15,
 				/datum/reagent/carbon = 5
 				)
-	composite_material = list("hematite" = 1875, "graphene" = 1875)
+	alloy_materials = list("hematite" = 1875, "graphene" = 1875)
 	alloy_product = TRUE
+	ore_smelts_to = "steel"
 
 /material/steel/holographic
 	name = "holo" + DEFAULT_WALL_MATERIAL
@@ -86,7 +105,7 @@
 	stack_type = null
 	shard_type = SHARD_NONE
 	conductive = 0
-	composite_material = null
+	alloy_materials = null
 	alloy_product = FALSE
 
 /material/plasteel
@@ -103,10 +122,10 @@
 	hardness = 80
 	weight = 23
 	stack_origin_tech = list(TECH_MATERIAL = 2)
-	composite_material = list(DEFAULT_WALL_MATERIAL = 3750, "platinum" = 3750) //todo
 	hitsound = 'sound/weapons/smash.ogg'
-	composite_material = list("hematite" = 1250, "graphene" = 1250, "platinum" = 1250)
+	alloy_materials = list("steel" = 2500, "platinum" = 1250)
 	alloy_product = TRUE
+	ore_smelts_to = "plasteel"
 
 /material/plasteel/titanium
 	name = "titanium"
@@ -120,7 +139,7 @@
 	door_icon_base = "metal"
 	icon_colour = "#d1e6e3"
 	icon_reinf = "reinf_metal"
-	composite_material = null
+	alloy_materials = null
 	alloy_product = FALSE
 
 /material/plasteel/ocp
@@ -135,7 +154,7 @@
 	burn_armor = 20
 	weight = 27
 	stack_origin_tech = list(TECH_MATERIAL = 3)
-	composite_material = list("plasteel" = 7500, "osmium" = 3750)
+	alloy_materials = list("plasteel" = 7500, "osmium" = 3750)
 	alloy_product = TRUE
 
 /material/osmium
@@ -145,6 +164,7 @@
 	stack_origin_tech = list(TECH_MATERIAL = 5)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
+	ore_smelts_to = "osmium"
 
 /material/tritium
 	name = "tritium"
@@ -163,7 +183,6 @@
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
 	is_fusion_fuel = 1
-
 
 /material/mhydrogen
 	name = "mhydrogen"
@@ -189,7 +208,6 @@
 	stack_origin_tech = list(TECH_MATERIAL = 2)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
-
 	ore_smelts_to = "platinum"
 	ore_compresses_to = "osmium"
 	ore_result_amount = 5
@@ -221,7 +239,6 @@
 	explosion_resistance = 200 // Hull plating.
 	hardness = 500
 	weight = 500
-
 
 // Likewise.
 /material/voxalloy/elevatorium

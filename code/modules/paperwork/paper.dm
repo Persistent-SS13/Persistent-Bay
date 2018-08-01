@@ -36,7 +36,7 @@
 	var/const/crayonfont = "Comic Sans MS"
 /obj/item/weapon/paper/Write(savefile/f)
 	info_links = replacetext(info_links,"\ref[src]","***MY_REF***")
-	
+
 	StandardWrite(f)
 
 /obj/item/weapon/paper/after_load()
@@ -264,6 +264,10 @@
 			else
 				to_chat(user, "<span class='warning'>You must hold \the [P] steady to burn \the [src].</span>")
 
+/obj/item/weapon/paper/fire_act(datum/gas_mixture/air, temperature, volume)
+	new /obj/effect/decal/cleanable/ash(src.loc)
+	qdel(src)
+	return
 
 /obj/item/weapon/paper/Topic(href, href_list)
 	..()

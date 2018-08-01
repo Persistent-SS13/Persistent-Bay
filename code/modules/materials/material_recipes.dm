@@ -69,10 +69,10 @@
 
 		))
 	recipes += new/datum/stack_recipe_list("fake walls", list( \
-		new/datum/stack_recipe("fake wall", /obj/structure/door_assembly/door_assembly_fake, 4 time = 50, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("fake wall left", /obj/structure/door_assembly/door_assembly_fake/L, 4 time = 50, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("fake wall fused", /obj/structure/door_assembly/door_assembly_fake/LR, 4 time = 50, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("fake wall right", /obj/structure/door_assembly/door_assembly_fake/R, 4 time = 50, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("fake wall", /obj/structure/door_assembly/door_assembly_fake, 4, time = 50, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("fake wall left", /obj/structure/door_assembly/door_assembly_fake/L, 4, time = 50, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("fake wall fused", /obj/structure/door_assembly/door_assembly_fake/LR, 4, time = 50, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("fake wall right", /obj/structure/door_assembly/door_assembly_fake/R, 4, time = 50, one_per_turf = 1, on_floor = 1), \
 		))
 	recipes += new/datum/stack_recipe_list("modular computer frames", list( \
 		new/datum/stack_recipe("modular console frame", /obj/item/modular_computer/console, 20),\

@@ -841,11 +841,12 @@
 				to_chat(user, "You start prying out the circuit.")
 				playsound(src.loc, 'sound/items/Crowbar.ogg', 50, 1)
 				if(do_after(user,20))
-					to_chat(user, "You pry out the circuit!")
-					var/obj/item/weapon/airalarm_electronics/circuit = new /obj/item/weapon/airalarm_electronics()
-					circuit.dropInto(user.loc)
-					buildstage = 0
-					update_icon()
+					if(buildstage == 1) //Prevents circuit duplication
+						to_chat(user, "You pry out the circuit!")
+						var/obj/item/weapon/airalarm_electronics/circuit = new /obj/item/weapon/airalarm_electronics()
+						circuit.dropInto(user.loc)
+						buildstage = 0
+						update_icon()
 				return
 		if(0)
 			if(istype(W, /obj/item/weapon/airalarm_electronics))
@@ -995,10 +996,11 @@ FIRE ALARM
 					to_chat(user, "You pry out the circuit!")
 					playsound(src.loc, 'sound/items/Crowbar.ogg', 50, 1)
 					spawn(20)
-						var/obj/item/weapon/firealarm_electronics/circuit = new /obj/item/weapon/firealarm_electronics()
-						circuit.dropInto(user.loc)
-						buildstage = 0
-						update_icon()
+						if(buildstage == 1) //Prevents circuit duplication
+							var/obj/item/weapon/firealarm_electronics/circuit = new /obj/item/weapon/firealarm_electronics()
+							circuit.dropInto(user.loc)
+							buildstage = 0
+							update_icon()
 			if(0)
 				if(istype(W, /obj/item/weapon/firealarm_electronics))
 					to_chat(user, "You insert the circuit!")

@@ -107,7 +107,7 @@
 	recipes += new/datum/stack_recipe("key", /obj/item/weapon/key, 1, time = 10)
 	recipes += new/datum/stack_recipe("table frame", /obj/structure/table, 1, time = 10, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("Paper Shredder", /obj/machinery/papershredder, 3, time = 25, one_per_turf = 1, on_floor = 1)
-	recipes += new/datum/stack_recipe("rack", /obj/structure/table/rack, 1, time = 5, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("rack", /obj/structure/table/rack, 2, time = 5, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("weight lifter", /obj/structure/fitness/weightlifter, 4, time = 50, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("closet", /obj/structure/closet, 5, time = 50, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("Metal crate", /obj/structure/closet/crate, 5, time = 50, one_per_turf = 1)

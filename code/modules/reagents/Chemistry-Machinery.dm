@@ -338,7 +338,11 @@
 	beaker = new /obj/item/weapon/reagent_containers/glass/beaker/large(src)
 	return
 
-/obj/machinery/reagentgrinder/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)
+/obj/machinery/reagentgrinder/update_icon()
+	icon_state = "juicer"+num2text(!isnull(beaker))
+	return
+
+/obj/machinery/reagentgrinder/attackby(var/obj/item/O as obj, var/mob/user as mob)
 
 	if(default_deconstruction_screwdriver(user, O))
 		updateUsrDialog()
@@ -347,12 +351,6 @@
 		return
 	if(default_part_replacement(user, O))
 		return
-
-/obj/machinery/reagentgrinder/update_icon()
-	icon_state = "juicer"+num2text(!isnull(beaker))
-	return
-
-/obj/machinery/reagentgrinder/attackby(var/obj/item/O as obj, var/mob/user as mob)
 
 	if (istype(O,/obj/item/weapon/reagent_containers/glass) || \
 		istype(O,/obj/item/weapon/reagent_containers/food/drinks/glass2) || \

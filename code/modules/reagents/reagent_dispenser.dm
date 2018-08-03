@@ -265,7 +265,7 @@
 			to_chat(usr, "<span class='notice>You begin dismantling \the [src].</span>")
 			if(do_after(user, 20, src))
 				if(!src) return
-				to_chat(usr, "<span class='notice>You finish dismantling \the [src].</span>)
+				to_chat(usr, "<span class='notice>You finish dismantling \the [src].</span>")
 				new /obj/item/stack/material/plastic(src.loc, 10)
 				qdel(src)
 		else

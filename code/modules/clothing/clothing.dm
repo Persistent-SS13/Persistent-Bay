@@ -203,6 +203,7 @@ BLIND     // can't see anything
 	var/light_protection = 0
 	sprite_sheets = list(
 		SPECIES_VOX = 'icons/mob/species/vox/eyes.dmi',
+		SPECIES_UNATHI = 'icons/mob/onmob/Unathi/eyes.dmi'
 		)
 
 /obj/item/clothing/glasses/get_icon_state(mob/user_mob, slot)
@@ -237,6 +238,7 @@ BLIND     // can't see anything
 	sprite_sheets = list(
 		SPECIES_VOX = 'icons/mob/species/vox/gloves.dmi',
 		SPECIES_NABBER = 'icons/mob/species/nabber/gloves.dmi',
+		SPECIES_UNATHI = 'icons/mob/onmob/Unathi/hands.dmi'
 		)
 	blood_overlay_type = "bloodyhands"
 
@@ -345,6 +347,7 @@ BLIND     // can't see anything
 
 	sprite_sheets = list(
 		SPECIES_VOX = 'icons/mob/species/vox/head.dmi',
+		SPECIES_UNATHI = 'icons/mob/onmob/Unathi/head.dmi'
 		)
 	blood_overlay_type = "helmetblood"
 
@@ -454,6 +457,7 @@ BLIND     // can't see anything
 	body_parts_covered = FACE|EYES
 	sprite_sheets = list(
 		SPECIES_VOX = 'icons/mob/species/vox/masks.dmi',
+		SPECIES_UNATHI = 'icons/mob/onmob/Unathi/mask.dmi'
 		)
 
 	var/voicechange = 0
@@ -536,6 +540,7 @@ BLIND     // can't see anything
 	species_restricted = list("exclude", SPECIES_NABBER, SPECIES_UNATHI, SPECIES_VOX)
 	sprite_sheets = list(
 		SPECIES_VOX = 'icons/mob/species/vox/shoes.dmi',
+		SPECIES_UNATHI = 'icons/mob/onmob/Unathi/feet.dmi'
 		)
 	blood_overlay_type = "shoeblood"
 
@@ -613,6 +618,7 @@ BLIND     // can't see anything
 
 	sprite_sheets = list(
 		SPECIES_VOX = 'icons/mob/species/vox/suit.dmi',
+		SPECIES_UNATHI = 'icons/mob/onmob/Unathi/suit.dmi'
 		)
 
 /obj/item/clothing/suit/update_clothing_icon()
@@ -661,7 +667,8 @@ BLIND     // can't see anything
 	var/rolled_sleeves = -1 //0 = unrolled, 1 = rolled, -1 = cannot be toggled
 	sprite_sheets = list(
 		SPECIES_VOX = 'icons/mob/species/vox/uniform.dmi',
-		SPECIES_NABBER = 'icons/mob/species/nabber/uniform.dmi'
+		SPECIES_NABBER = 'icons/mob/species/nabber/uniform.dmi',
+		SPECIES_UNATHI = 'icons/mob/onmob/Unathi/uniform.dmi'
 		)
 
 	//convenience var for defining the icon state for the overlay used when the clothing is worn.

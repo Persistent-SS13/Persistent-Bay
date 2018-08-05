@@ -10,7 +10,7 @@
 	rarity_value = 3
 	health_hud_intensity = 1
 
-	icon_template = 'icons/mob/human_races/xenos/r_xenos_drone.dmi'
+	icon_template = 'icons/mob/human_races/species/xenos/template.dmi'
 	has_floating_eyes = TRUE
 
 	// temp until someone who isn't me makes some for this icon set
@@ -182,8 +182,8 @@
 	slowdown = 1
 	rarity_value = 5
 	base_color = "#000d1a"
-	icobase = 'icons/mob/human_races/xenos/r_xenos_drone.dmi'
-	deform =  'icons/mob/human_races/xenos/r_xenos_drone.dmi'
+	icobase = 'icons/mob/human_races/species/xenos/body_drone.dmi'
+	deform =  'icons/mob/human_races/species/xenos/body_drone.dmi'
 
 	has_organ = list(
 		BP_EYES =     /obj/item/organ/internal/eyes/xenos,
@@ -222,8 +222,8 @@
 	total_health = 300
 	base_color = "#001a33"
 
-	icobase = 'icons/mob/human_races/xenos/r_xenos_hunter.dmi'
-	deform =  'icons/mob/human_races/xenos/r_xenos_hunter.dmi'
+	icobase = 'icons/mob/human_races/species/xenos/body_hunter.dmi'
+	deform =  'icons/mob/human_races/species/xenos/body_hunter.dmi'
 
 	has_organ = list(
 		BP_EYES =     /obj/item/organ/internal/eyes/xenos,
@@ -250,8 +250,8 @@
 	slowdown = 0
 	base_color = "#00284d"
 	total_health = 250
-	icobase = 'icons/mob/human_races/xenos/r_xenos_sentinel.dmi'
-	deform =  'icons/mob/human_races/xenos/r_xenos_sentinel.dmi'
+	icobase = 'icons/mob/human_races/species/xenos/body_sentinel.dmi'
+	deform =  'icons/mob/human_races/species/xenos/body_sentinel.dmi'
 
 	has_organ = list(
 		BP_EYES =     /obj/item/organ/internal/eyes/xenos,
@@ -282,8 +282,8 @@
 	slowdown = 4
 	rarity_value = 10
 
-	icobase = 'icons/mob/human_races/xenos/r_xenos_queen.dmi'
-	deform =  'icons/mob/human_races/xenos/r_xenos_queen.dmi'
+	icobase = 'icons/mob/human_races/species/xenos/body_queen.dmi'
+	deform =  'icons/mob/human_races/species/xenos/body_queen.dmi'
 
 	has_organ = list(
 		BP_EYES =     /obj/item/organ/internal/eyes/xenos,

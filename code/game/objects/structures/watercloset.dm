@@ -43,6 +43,16 @@
 	icon_state = "toilet[open][cistern]"
 
 /obj/structure/toilet/attackby(obj/item/I as obj, mob/living/user as mob)
+	if(isWrench(I))
+		to_chat(usr, "<span class='notice'>You begin to dismantle \the [src].</span>")
+		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
+		if(do_after(usr, 30, src))
+			if(!src) return
+			to_chat(usr, "<span class='notice'>You finish dismantling \the [src].</span>")
+			new /obj/item/stack/material/steel(src.loc, 5)
+			qdel(src)
+			return
+
 	if(isCrowbar(I))
 		to_chat(user, "<span class='notice'>You start to [cistern ? "replace the lid on the cistern" : "lift the lid off the cistern"].</span>")
 		playsound(loc, 'sound/effects/stonedoor_openclose.ogg', 50, 1)
@@ -126,6 +136,19 @@
 			watertemp = newtemp
 			user.visible_message("<span class='notice'>\The [user] adjusts \the [src] with \the [I].</span>", "<span class='notice'>You adjust the shower with \the [I].</span>")
 			add_fingerprint(user)
+
+	if(isScrewdriver(I))
+		if(on)
+			to_chat(usr, "Turn \the [src] off first!")
+			return
+		to_chat(usr, "<span class='notice'>You begin to unscrew \the [src] from the wall.</span>")
+		playsound(src.loc, 'sound/items/Screwdriver.ogg', 75, 1)
+		if(do_after(usr, 30, src))
+			if(!src) return
+			to_chat(usr, "<span class='notice'>You finish dismantling \the [src].</span>")
+			new /obj/item/frame/shower(src.loc)
+			qdel(src)
+			return
 
 /obj/machinery/shower/update_icon()	//this is terribly unreadable, but basically it makes the shower mist up
 	overlays.Cut()					//once it's been on for a while, in addition to handling the water overlay.
@@ -300,6 +323,7 @@
 	icon_state = "sink"
 	desc = "A sink used for washing one's hands and face."
 	anchored = 1
+	var/frame_type = /obj/item/frame/sink/
 	var/busy = 0 	//Something's being washed at the moment
 
 /obj/structure/sink/MouseDrop_T(var/obj/item/thing, var/mob/user)
@@ -385,6 +409,16 @@
 		playsound(loc, 'sound/effects/slosh.ogg', 25, 1)
 		return
 
+	else if(isWrench(O))
+		to_chat(usr, "<span class='notice'>You begin to unsecure \the [src] from the floor.</span>")
+		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
+		if(do_after(usr, 30, src))
+			if(!src) return
+			to_chat(usr, "<span class='notice'>You finish dismantling \the [src].</span>")
+			new frame_type(src.loc)
+			qdel(src)
+			return
+
 	var/turf/location = user.loc
 	if(!isturf(location)) return
 
@@ -410,6 +444,7 @@
 /obj/structure/sink/kitchen
 	name = "kitchen sink"
 	icon_state = "sink_alt"
+	frame_type = /obj/item/frame/kitchensink/
 
 /obj/structure/sink/puddle	//splishy splashy ^_^
 	name = "puddle"

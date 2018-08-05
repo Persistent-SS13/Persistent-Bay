@@ -28,6 +28,13 @@
 	..()
 	update_icon()
 
+/obj/item/weapon/gun/energy/afterattack(atom/A, mob/living/user, adjacent, params)
+	if(cover_open)
+		to_chat(user, "<span class='danger'> You can't fire \the [src] while the housing is unsecured! </span>")
+		return
+
+	..()
+
 /obj/item/weapon/gun/energy/New()
 	..()
 	if(cell_type)
@@ -86,14 +93,14 @@
 	var/shots_remaining = round(power_supply.charge / charge_cost)
 	to_chat(user, "Has [shots_remaining] shot\s remaining.")
 	return
-/obj/item/weapon/gun/energy/attack_hand(var/mob/user)
+/obj/item/weapon/gun/energy/attack_self(var/mob/user)
 	if(cover_open && power_supply)
 		user.put_in_hands(power_supply)
 
 		power_supply.add_fingerprint(user)
 		power_supply.update_icon()
 
-		to_chat(user, "You remove the power cell from its housing.")
+		to_chat(user, "<span class='notice'>You remove the power cell from its housing.</span>")
 		src.power_supply = null
 		update_icon()
 
@@ -104,17 +111,17 @@
 /obj/item/weapon/gun/energy/attackby(var/obj/item/weapon/W, var/mob/user)
 	if(isScrewdriver(W))
 		if(self_recharge) //Shouldn't be able to remove the cells of self recharging guns.
-			to_chat(user, "The cell housing is firmly secured, you can't remove it.")
+			to_chat(user, "<span class='warning'>The cell housing is firmly secured, you can't remove it.</span>")
 			return
 		cover_open = !cover_open
-		to_chat(user, "You [cover_open ? "unscrew" : "secure"] the housing holding the power cell in place.")
+		to_chat(user, "<span class='notice'>You [cover_open ? "unscrew" : "secure"] the housing holding the power cell in place.</span>")
 		return
 
 	if(istype(W, /obj/item/weapon/cell))
 		var/obj/item/weapon/cell/C = usr.get_active_hand()
 		if(cover_open)
 			if(power_supply)
-				to_chat(user, "There is already a cell installed here!")
+				to_chat(user, "<span class='warning'>There is already a cell installed here!</span>")
 				return
 			if(cell_type)
 				if(istype(C, cell_type))
@@ -124,7 +131,7 @@
 					C.add_fingerprint(user)
 
 					update_icon()
-					to_chat(user, "You install the power cell into the [src].")
+					to_chat(user, "<span class='notice'>You install the power cell into the [src].</span>")
 					return
 			else
 				if(istype(C, /obj/item/weapon/cell/device/variable) && (C.maxcharge == max_shots*charge_cost)) //If the cell type isn't defined, this'll check it's got the right maxcharge
@@ -134,14 +141,15 @@
 					C.add_fingerprint(user)
 
 					update_icon()
-					to_chat(user, "You install the power cell into the [src].")
+					to_chat(user, "<span class='notice'>You install the power cell into the [src].</span>")
 					return
 				else
-					to_chat(user, "The cell doesn't fit!")
+					to_chat(user, "<span class='warning'>The cell doesn't fit!</span>")
 					return
 		else
-			to_chat(user, "The housing must be open to insert a power cell.")
+			to_chat(user, "<span class='warning'>The housing must be open to insert a power cell.</span>")
 			return
+
 /obj/item/weapon/gun/energy/update_icon()
 	..()
 	if(charge_meter)
@@ -156,7 +164,7 @@
 				ratio = max(round(ratio, 25), 25)
 		else
 			ratio = 0
-      
+
 		if(modifystate)
 			icon_state = "[modifystate][ratio]"
 		else

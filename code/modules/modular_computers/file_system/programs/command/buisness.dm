@@ -150,6 +150,10 @@
 			data["ceo_payrate"] = viewing.ceo_payrate
 			data["ceo_dividend"] = viewing.ceo_dividend
 			data["holders_dividend"] = viewing.stock_holders_dividend
+			if(user_id_card)
+				data["personal_holding"] = get_stocks(user_id_card.registered_name)
+			else
+				data["personal_holding"] = 0
 	else
 		data["submenu"] = submenu
 		menu = 1

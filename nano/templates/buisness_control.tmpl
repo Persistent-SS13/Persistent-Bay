@@ -1,4 +1,3 @@
-
 {{if data.found_buisness}}
 	{{if data.allowed}}
 		{{:helper.link('Storefront', '', {'action' : 'switchm', 'target' : 'sale'}, data.menu == 1 ? 'disabled' : null)}}
@@ -28,7 +27,7 @@
 			{{:helper.link('Create Sale', '', {'action' : 'sale'})}}
 				
 		{{/if}}
-		{{if data.menu == 2}
+		{{if data.menu == 2}}
 			<h2>{{:data.buisness_name}} Budget</h2><hr>
 			<br><br>
 			<div class='item'>
@@ -58,40 +57,42 @@
 			{{:helper.link('Newer Page', 'bullet', {'page_down' : 1}, data.page_down ? null : 'disabled')}}{{:helper.link('Older Page', 'bullet', {'page_up' : 1}, data.page_up ? null : 'disabled')}}<br><br>
 			<div class="statusDisplay" style="overflow: auto;">
 				{{if data.transactions}}
-				<table style='width: 100%'>
-				  <thead>
-					<tr>
-					  <th><b>Timestamp</b></th>
-					  <th><b>Target</b></th>
-					  <th><b>Reason</b></th>
-					  <th><b>Ethericoin</b></th>
-					</th>
-				  </thead>
-				  <tbody>
-					  {{for data.transactions}}
+					<table style='width: 100%'>
+					  <thead>
 						<tr>
-							<td>{{:value.date}} {{:value.time}}</td>
-							<td>{{:value.target_name}}</td>
-							<td>{{:value.purpose}}</td>
-							<td>$${{:value.amount}}</td>
-						</tr>
-					  {{/for}}
-				  </tbody>
-				</table>
+						  <th><b>Timestamp</b></th>
+						  <th><b>Target</b></th>
+						  <th><b>Reason</b></th>
+						  <th><b>Ethericoin</b></th>
+						</th>
+					  </thead>
+					  <tbody>
+						  {{for data.transactions}}
+							<tr>
+								<td>{{:value.date}} {{:value.time}}</td>
+								<td>{{:value.target_name}}</td>
+								<td>{{:value.purpose}}</td>
+								<td>$${{:value.amount}}</td>
+							</tr>
+						  {{/for}}
+					  </tbody>
+					</table>
 				{{else}}
 				  <span class='alert'>This account has no financial transactions on record.</span>
 				{{/if}}
 			</div>
 
 		{{/if}}
-		{{if data.menu == 3}
+		
+		
+		{{if data.menu == 3}}
 			<h2>{{:data.buisness_name}} Employee Management</h2><hr>
 			<br><br>
 			{{:helper.link('Edit Employee', '', {'action' : 'editemployee'}, null)}}
 			{{:helper.link('Hire new Employee', '', {'action' : 'addemployee'}, null)}}<hr>
 			{{if data.employee_selected}}
 				<h3>{{:data.employee_name}}</h3>
-				{{:helper.link('Close Profile', 'cross', {'action' : 'employee_close'}, null)}}{{:helper.link('Print Name Tag', '', {'action' : 'employee_print'}, null)}}
+				{{:helper.link('Close Profile', '', {'action' : 'employee_close'}, null)}}{{:helper.link('Print Name Tag', '', {'action' : 'employee_print'}, null)}}
 				<div class='item'>
 					<div class='itemLabel'>
 						Job Title:
@@ -133,8 +134,9 @@
 					{{:helper.link(value.name, '', {'action' : 'employee_select', 'target' : value.name}, null)}}<br><br>
 				{{/for}}
 			{{/if}}
-		
 		{{/if}}
+		
+		
 		{{if data.menu == 4}}
 			<h2>{{:data.buisness_name}} Upper Management</h2><hr>
 			<br><br>
@@ -319,6 +321,5 @@
 				{{:helper.link('Complete Registration', '', {'action' : 'buisness_finalize'}, data.finish_ready ? null : 'disabled')}}
 			</div>
 		</div>
-	<br>
 	{{/if}}
 {{/if}}	

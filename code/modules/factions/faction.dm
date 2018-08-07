@@ -1,5 +1,5 @@
 GLOBAL_LIST_EMPTY(all_world_factions)
-GLOBAL_LIST_EMPTY(all_buisness)
+GLOBAL_LIST_EMPTY(all_business)
 
 // CONTRACTS
 
@@ -149,7 +149,7 @@ GLOBAL_LIST_EMPTY(all_buisness)
 	var/denyrequired = 49
 	var/deny = 0
 	var/connected_uid = ""
-	var/connected_type = 1 // 1 = faction, 2 = buisness
+	var/connected_type = 1 // 1 = faction, 2 = business
 	var/list/supporters = list() //format = list(real_name = "10")
 	var/list/deniers = list()
 	var/func = 1
@@ -207,21 +207,21 @@ GLOBAL_LIST_EMPTY(all_buisness)
 		var/datum/world_faction/connected_faction = get_faction(connected_uid)
 		connected_faction.proposal_approved(src)
 	else
-		var/datum/small_buisness/connected_buisness = get_buisness(connected_uid)
-		connected_buisness.proposal_approved(src)
+		var/datum/small_business/connected_business = get_business(connected_uid)
+		connected_business.proposal_approved(src)
 
 /datum/proposal/proc/denied()
 	if(connected_type == 1)
 		var/datum/world_faction/connected_faction = get_faction(connected_uid)
 		connected_faction.proposal_denied(src)
 	else
-		var/datum/small_buisness/connected_buisness = get_buisness(connected_uid)
-		connected_buisness.proposal_denied(src)
+		var/datum/small_business/connected_business = get_business(connected_uid)
+		connected_business.proposal_denied(src)
 	
 		
-// BUISNESS
+// business
 
-/datum/small_buisness
+/datum/small_business
 	var/name = "" // can should never be changed and must be unique
 	var/list/stock_holders = list() // Format list("real_name" = numofstocks) adding up to 100
 	var/list/employees = list() // format list("real_name" = employee_data)
@@ -254,10 +254,10 @@ GLOBAL_LIST_EMPTY(all_buisness)
 	
 	var/status = 1 // 1 = opened, 0 = closed
 		
-/datum/small_buisness/New()
+/datum/small_business/New()
 	central_account = create_account(name, 0)
 	
-/datum/small_buisness/contract_signed(var/obj/item/weapon/paper/contract/contract)
+/datum/small_business/contract_signed(var/obj/item/weapon/paper/contract/contract)
 	if(get_stocks(contract.created_by) < contract.ownership)
 		contract.cancel()
 		return 0
@@ -270,7 +270,7 @@ GLOBAL_LIST_EMPTY(all_buisness)
 		transfer_stock(contract.created_by, contract.signed_by, contract.ownership)
 		return 1
 
-/datum/small_buisness/proc/transfer_stock(var/owner, var/new_owner, var/amount)
+/datum/small_business/proc/transfer_stock(var/owner, var/new_owner, var/amount)
 	var/holding = get_stocks(owner) 
 	if(holding < amount)
 		return 0
@@ -289,7 +289,7 @@ GLOBAL_LIST_EMPTY(all_buisness)
 		else
 			stock_holders[new_owner] = amount
 			
-/datum/small_buisness/proc/has_proposal(var/real_name)
+/datum/small_business/proc/has_proposal(var/real_name)
 	for(var/datum/proposal/proposal in proposals)
 		if(proposal.started_by == real_name)
 			return 1
@@ -297,14 +297,14 @@ GLOBAL_LIST_EMPTY(all_buisness)
 		
 
 	
-/datum/small_buisness/proc/close()
+/datum/small_business/proc/close()
 	for(var/obj/item/organ/internal/stack/stack in connected_laces)
 		clock_out(stack)
 	status = 0
 	
-/datum/small_buisness/proc/open()
+/datum/small_business/proc/open()
 	status = 1
-/datum/small_buisness/proc/is_allowed(var/real_name)
+/datum/small_business/proc/is_allowed(var/real_name)
 	if(real_name in employees)
 		return 1
 	if(real_name in stock_holders)
@@ -312,30 +312,30 @@ GLOBAL_LIST_EMPTY(all_buisness)
 	if(real_name == ceo_name)
 		return 1
 		
-/datum/small_buisness/proc/is_stock_holder(var/real_name)
+/datum/small_business/proc/is_stock_holder(var/real_name)
 	if(real_name in stock_holders)
 		return 1 
 		
-/datum/small_buisness/proc/get_stocks(var/real_name)
+/datum/small_business/proc/get_stocks(var/real_name)
 	if(real_name in stock_holders)
 		return text2num(stock_holders[real_name])
 	return 0
-/datum/small_buisness/proc/is_clocked_in(var/real_name)
+/datum/small_business/proc/is_clocked_in(var/real_name)
 	for(var/obj/item/organ/internal/stack/stack in connected_laces)
 		if(stack.get_owner_name() == real_name) return 1
 	return 0
 	
-/datum/small_buisness/proc/clock_in(var/obj/item/organ/internal/stack/stack)
+/datum/small_business/proc/clock_in(var/obj/item/organ/internal/stack/stack)
 	if(!stack) return
 	connected_laces |= stack
-	stack.buisness_mode = 1
-	stack.connected_buisness = src.name
-/datum/small_buisness/proc/clock_out(var/obj/item/organ/internal/stack/stack)
+	stack.business_mode = 1
+	stack.connected_business = src.name
+/datum/small_business/proc/clock_out(var/obj/item/organ/internal/stack/stack)
 	connected_laces -= stack
-	stack.buisness_mode = 0
-	stack.connected_buisness = ""
+	stack.business_mode = 0
+	stack.connected_business = ""
 
-/datum/small_buisness/proc/proposal_approved(var/datum/proposal/proposal)
+/datum/small_business/proc/proposal_approved(var/datum/proposal/proposal)
 	switch(proposal.func)
 		if(1)
 			if(ceo_name && ceo_name != "")
@@ -366,11 +366,11 @@ GLOBAL_LIST_EMPTY(all_buisness)
 	proposals -= proposal
 	proposals_old += "*APPROVED* [proposal.name](Started by [proposal.started_by])"
 	
-/datum/small_buisness/proc/proposal_denied(var/datum/proposal/proposal)
+/datum/small_business/proc/proposal_denied(var/datum/proposal/proposal)
 	proposals -= proposal
 	proposals_old += "*DENIED* [proposal.name] (Started by [proposal.started_by])"
 	
-/datum/small_buisness/proc/proposal_cancelled(var/datum/proposal/proposal)
+/datum/small_business/proc/proposal_cancelled(var/datum/proposal/proposal)
 	proposals -= proposal
 	proposals_old += "*CANCELLED* [proposal.name] (Started by [proposal.started_by])"
 
@@ -383,36 +383,36 @@ GLOBAL_LIST_EMPTY(all_buisness)
 	var/expense_limit = 0
 	var/expenses = 0
 	
-/datum/small_buisness/proc/get_expense_limit(var/real_name)
+/datum/small_business/proc/get_expense_limit(var/real_name)
 	if(real_name in employees)
 		var/datum/employee_data/employee = employees[real_name]
 		return employee.expense_limit
 	return 0
 	
-/datum/small_buisness/proc/get_expenses(var/real_name)
+/datum/small_business/proc/get_expenses(var/real_name)
 	if(real_name in employees)
 		var/datum/employee_data/employee = employees[real_name]
 		return employee.expenses
 	return 0
 
-/datum/small_buisness/proc/add_expenses(var/real_name, amount)
+/datum/small_business/proc/add_expenses(var/real_name, amount)
 	if(real_name in employees)
 		var/datum/employee_data/employee = employees[real_name]
 		employee.expenses += amount
 		return 1
 	return 0	
 	
-/datum/small_buisness/proc/get_employee_data(var/real_name)
+/datum/small_business/proc/get_employee_data(var/real_name)
 	if(real_name in employees)
 		var/datum/employee_data/employee = employees[real_name]
 		return employee
 	return 0
-/datum/small_buisness/proc/is_employee(var/real_name)
+/datum/small_business/proc/is_employee(var/real_name)
 	if(real_name in employees)
 		return 1
 	return 0	
 	
-/datum/small_buisness/proc/add_employee(var/real_name)
+/datum/small_business/proc/add_employee(var/real_name)
 	if(real_name in employees)
 		return 0
 	var/datum/employee_data/employee = new()
@@ -420,19 +420,19 @@ GLOBAL_LIST_EMPTY(all_buisness)
 	employees[real_name] = employee
 	return 1
 	
-/datum/small_buisness/proc/get_title(var/real_name)
+/datum/small_business/proc/get_title(var/real_name)
 	if(real_name in employees)
 		var/datum/employee_data/employee = employees[real_name]
 		return employee.job_title
 	return 0	
 	
-/datum/small_buisness/proc/get_access(var/real_name)
+/datum/small_business/proc/get_access(var/real_name)
 	if(real_name in employees)
 		var/datum/employee_data/employee = employees[real_name]
 		return employee.accesses
 	return 0	
 
-/datum/small_buisness/proc/has_access(var/real_name, access)
+/datum/small_business/proc/has_access(var/real_name, access)
 	if(real_name == ceo_name) return 1
 	if(real_name in employees)
 		var/datum/employee_data/employee = employees[real_name]
@@ -441,7 +441,7 @@ GLOBAL_LIST_EMPTY(all_buisness)
 	return 0	
 	
 	
-/datum/small_buisness/proc/pay_tax(var/amount)
+/datum/small_business/proc/pay_tax(var/amount)
 	if(!tax_network || tax_network == "") return 0
 	var/datum/world_faction/connected_faction = get_faction(tax_network)
 	if(!connected_faction) return 0
@@ -453,17 +453,17 @@ GLOBAL_LIST_EMPTY(all_buisness)
 	
 	
 	
-/proc/get_buisness(var/name)
-	var/datum/small_buisness/found_faction
-	for(var/datum/small_buisness/fac in GLOB.all_buisness)
+/proc/get_business(var/name)
+	var/datum/small_business/found_faction
+	for(var/datum/small_business/fac in GLOB.all_business)
 		if(fac.name == name) 
 			found_faction = fac 
 			break
 	return found_faction
 
-/proc/get_buisnesses(var/real_name)	
+/proc/get_businesses(var/real_name)	
 	var/list/lis = list()
-	for(var/datum/small_buisness/fac in GLOB.all_buisness)
+	for(var/datum/small_business/fac in GLOB.all_business)
 		if(fac.is_allowed(real_name)) lis |= fac		
 	return lis
 	

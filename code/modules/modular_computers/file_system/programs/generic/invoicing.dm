@@ -176,7 +176,7 @@
 				var/datum/world_faction/fac = get_faction(expense_card.linked)
 				account_name = fac.name
 			else
-				var/datum/small_buisness/bus = get_buisness(expense_card.linked)
+				var/datum/small_business/bus = get_business(expense_card.linked)
 				account_name = bus.name
 			var/datum/transaction/Te = new("[account_name]", purpose, transaction_amount, "Digital Invoice")
 			target_account.do_transaction(Te)
@@ -223,18 +223,18 @@
 		
 		
 		
-/obj/item/weapon/paper/invoice/buisness
-	var/linked_buisness
+/obj/item/weapon/paper/invoice/business
+	var/linked_business
 		
 		
-/obj/item/weapon/paper/invoice/buisness/attackby(obj/item/weapon/P as obj, mob/user as mob)
+/obj/item/weapon/paper/invoice/business/attackby(obj/item/weapon/P as obj, mob/user as mob)
 	if(istype(P, /obj/item/weapon/pen))
 		return
 	else if(istype(P, /obj/item/weapon/card/id))
 		if(paid) return 1
-		var/datum/small_buisness/connected_buisness = get_buisness(linked_buisness)
-		if(!connected_buisness) return
-		var/datum/money_account/target_account = connected_buisness.central_account
+		var/datum/small_business/connected_business = get_business(linked_business)
+		if(!connected_business) return
+		var/datum/money_account/target_account = connected_business.central_account
 		var/obj/item/weapon/card/id/id = P
 		if(!id.valid) return 0
 		var/datum/money_account/account = get_account(id.associated_account_number)
@@ -249,13 +249,13 @@
 			to_chat(user, "Unable to complete transaction: insufficient funds.")
 			return
 		else
-			var/datum/transaction/T = new("[connected_buisness.name] (via digital invoice)", purpose, -transaction_amount, "Digital Invoice")
+			var/datum/transaction/T = new("[connected_business.name] (via digital invoice)", purpose, -transaction_amount, "Digital Invoice")
 			account.do_transaction(T)
 			//transfer the money
 			var/datum/transaction/Te = new("[account.owner_name]", purpose, transaction_amount, "Digital Invoice")
 			target_account.do_transaction(Te)
-			connected_buisness.pay_tax(transaction_amount)
-			connected_buisness.sales_short += transaction_amount
+			connected_business.pay_tax(transaction_amount)
+			connected_business.sales_short += transaction_amount
 			paid = 1
 			info = replacetext(info, "*Unpaid*", "Paid")
 			info = replacetext(info, "*None*", "[account.owner_name]")
@@ -263,9 +263,9 @@
 			update_icon()
 		return
 	else if(istype(P, /obj/item/weapon/card/expense))
-		var/datum/small_buisness/connected_buisness = get_buisness(linked_buisness)
-		if(!connected_buisness) return
-		var/datum/money_account/target_account = connected_buisness.central_account
+		var/datum/small_business/connected_business = get_business(linked_business)
+		if(!connected_business) return
+		var/datum/money_account/target_account = connected_business.central_account
 		var/obj/item/weapon/card/expense/expense_card = P
 		if(expense_card.pay(transaction_amount, user, src))
 			var/account_name
@@ -273,27 +273,27 @@
 				var/datum/world_faction/fac = get_faction(expense_card.linked)
 				account_name = fac.name
 			else
-				var/datum/small_buisness/bus = get_buisness(expense_card.linked)
+				var/datum/small_business/bus = get_business(expense_card.linked)
 				account_name = bus.name
 			var/datum/transaction/Te = new("[account_name]", purpose, transaction_amount, "Digital Invoice")
 			target_account.do_transaction(Te)
 			paid = 1
-			connected_buisness.pay_tax(transaction_amount)
-			connected_buisness.sales_short += transaction_amount
+			connected_business.pay_tax(transaction_amount)
+			connected_business.sales_short += transaction_amount
 			info = replacetext(info, "*Unpaid*", "Paid")
 			info = replacetext(info, "*None*", "[account_name]")
 			to_chat(user, "Payment succesful")
 			update_icon()
 		return
 	..()
-/obj/item/weapon/paper/invoice/buisness/Topic(href, href_list)
+/obj/item/weapon/paper/invoice/business/Topic(href, href_list)
 	if(!usr || (usr.stat || usr.restrained()))
 		return
 	if(href_list["pay"])
 		if(paid) return 1
-		var/datum/small_buisness/connected_buisness = get_buisness(linked_buisness)
-		if(!connected_buisness) return
-		var/datum/money_account/target_account = connected_buisness.central_account
+		var/datum/small_business/connected_business = get_business(linked_business)
+		if(!connected_business) return
+		var/datum/money_account/target_account = connected_business.central_account
 		var/datum/money_account/linked_account
 		var/attempt_account_num = input("Enter account number to pay the digital invoice with.", "account number") as num
 		var/attempt_pin = input("Enter pin code", "Account pin") as num
@@ -308,13 +308,13 @@
 		else
 			to_chat(usr, "\icon[src]<span class='warning'>Account not found.</span>")
 		if(!linked_account) return
-		var/datum/transaction/T = new("[connected_buisness.name] (via digital invoice)", purpose, -transaction_amount, "Digital Invoice")
+		var/datum/transaction/T = new("[connected_business.name] (via digital invoice)", purpose, -transaction_amount, "Digital Invoice")
 		linked_account.do_transaction(T)
 		var/datum/transaction/Te = new("[linked_account.owner_name]", purpose, transaction_amount, "Digital Invoice")
 		target_account.do_transaction(Te)
 		paid = 1
-		connected_buisness.pay_tax(transaction_amount)
-		connected_buisness.sales_short += transaction_amount
+		connected_business.pay_tax(transaction_amount)
+		connected_business.sales_short += transaction_amount
 		info = replacetext(info, "*Unpaid*", "*Paid*")
 		info = replacetext(info, "*None*", "[linked_account.owner_name]")
 		to_chat(usr, "Payment succesful")

@@ -35,8 +35,8 @@
 	var/mob/living/carbon/lace/lacemob
 	var/sensor = 0
 	
-	var/buisness_mode = 0
-	var/connected_buisness = ""
+	var/business_mode = 0
+	var/connected_business = ""
 	
 	
 /obj/item/organ/internal/stack/proc/transfer_identity(var/mob/living/carbon/H)
@@ -105,9 +105,9 @@
 	if(lacemob)
 		data["lacemob"] = 1
 		data["sensor"] = sensor
-	if(buisness_mode)
-		var/datum/small_buisness/buisness = get_buisness(connected_buisness)
-		data["buisness_name"] = buisness.name	
+	if(business_mode)
+		var/datum/small_business/business = get_business(connected_business)
+		data["business_name"] = business.name	
 	else if(faction)
 		data["faction_name"] = faction.name
 		if(duty_status == 1)

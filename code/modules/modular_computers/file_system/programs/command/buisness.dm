@@ -1,35 +1,35 @@
-/datum/computer_file/program/buisness
-	filename = "buisness"
-	filedesc = "Buisness control program"
-	nanomodule_path = /datum/nano_module/program/buisness
+/datum/computer_file/program/business
+	filename = "business"
+	filedesc = "business control program"
+	nanomodule_path = /datum/nano_module/program/business
 	program_icon_state = "id"
 	program_menu_icon = "key"
-	extended_desc = "Used to manage everything buisness related."
+	extended_desc = "Used to manage everything business related."
 	requires_ntnet = 1
 	size = 8
 
-/datum/nano_module/program/buisness
-	name = "Buisness control program"
-	var/datum/small_buisness/viewing
+/datum/nano_module/program/business
+	name = "business control program"
+	var/datum/small_business/viewing
 	var/menu = 1
 	var/submenu = 1
 	var/viewing_employee = ""
 	var/curr_page = 1
-	var/buisness_name = ""
+	var/business_name = ""
 	var/list/pending_contracts = list()
 	var/list/signed_contracts = list()
 	var/potential_name = ""
-/datum/nano_module/program/buisness/Destroy()
+/datum/nano_module/program/business/Destroy()
 	cancel_contracts()
 	. = ..()
 	
-/datum/nano_module/program/buisness/proc/cancel_contracts()
+/datum/nano_module/program/business/proc/cancel_contracts()
 	for(var/obj/item/weapon/paper/contract/contract in pending_contracts)
 		contract.cancel()
 	for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
 		contract.cancel()
 	
-/datum/nano_module/program/buisness/proc/get_distributed()
+/datum/nano_module/program/business/proc/get_distributed()
 	var/distributed = 0
 	for(var/obj/item/weapon/paper/contract/contract in pending_contracts)
 		distributed += contract.ownership
@@ -38,25 +38,25 @@
 		return 0
 	return distributed
 
-/datum/nano_module/program/buisness/proc/get_contributed()
+/datum/nano_module/program/business/proc/get_contributed()
 	var/contributed = 0
 	for(var/obj/item/weapon/paper/contract/contract in pending_contracts)
 		contributed += contract.required_cash
 	return contributed
 	
 	
-/datum/nano_module/program/buisness/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
+/datum/nano_module/program/business/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/obj/item/weapon/card/id/user_id_card = user.GetIdCard()
 	if(!user_id_card.valid) user_id_card = null
 	var/list/data = list()
 	data["src"] = "\ref[src]"
-	if(!viewing && buisness_name)
-		viewing = get_buisness(buisness_name)
-		if(!viewing) buisness_name = ""
+	if(!viewing && business_name)
+		viewing = get_business(business_name)
+		if(!viewing) business_name = ""
 	if(viewing)
 		submenu = 1
-		data["found_buisness"] = 1
-		data["buisness_name"] = viewing.name
+		data["found_business"] = 1
+		data["business_name"] = viewing.name
 		if(user_id_card)
 			data["allowed"] = viewing.is_allowed(user_id_card.registered_name)
 			data["user_name"] = user_id_card.registered_name
@@ -153,11 +153,11 @@
 		menu = 1
 		if(submenu == 1)
 			if(user_id_card)
-				var/list/lis = get_buisnesses(user_id_card.registered_name)
+				var/list/lis = get_businesses(user_id_card.registered_name)
 				var/list/formatted_names[0]
-				for(var/datum/small_buisness/buisness in lis)
-					formatted_names[++formatted_names.len] = list("name" = buisness.name)
-				data["buisnesses"] = formatted_names
+				for(var/datum/small_business/business in lis)
+					formatted_names[++formatted_names.len] = list("name" = business.name)
+				data["businesses"] = formatted_names
 		else if(submenu == 2)
 			data["chosen_name"] = potential_name
 			var/list/formatted_names[0]
@@ -178,32 +178,32 @@
 
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
-		ui = new(user, src, ui_key, "buisness_control.tmpl", name, 600, 700, state = state)
+		ui = new(user, src, ui_key, "business_control.tmpl", name, 600, 700, state = state)
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
 		ui.open()
 	
-/datum/nano_module/program/buisness/contract_signed(var/obj/item/weapon/paper/contract/contract)
+/datum/nano_module/program/business/contract_signed(var/obj/item/weapon/paper/contract/contract)
 	pending_contracts -= contract
 	signed_contracts |= contract
 	GLOB.nanomanager.update_uis(src)
 	return 1
 	
-/datum/nano_module/program/buisness/contract_cancelled(var/obj/item/weapon/paper/contract/contract)
+/datum/nano_module/program/business/contract_cancelled(var/obj/item/weapon/paper/contract/contract)
 	pending_contracts -= contract
 	signed_contracts -= contract
 	GLOB.nanomanager.update_uis(src)
 	return 1
 		
 	
-/datum/nano_module/program/buisness/Topic(href, href_list)
+/datum/nano_module/program/business/Topic(href, href_list)
 	if(..())
 		return 1
 
 	var/mob/user = usr
 	var/obj/item/weapon/card/id/user_id_card = user.GetIdCard()
-	var/datum/small_buisness/connected_buisness
-	if(buisness_name && buisness_name != "") connected_buisness = get_buisness(buisness_name)
+	var/datum/small_business/connected_business
+	if(business_name && business_name != "") connected_business = get_business(business_name)
 	if(!user_id_card) return
 	if(href_list["page_up"])
 		curr_page++
@@ -216,49 +216,49 @@
 			if(href_list["target"] == "sale")
 				menu = 1
 			else if (href_list["target"] == "budget")
-				if(!connected_buisness.has_access(user_id_card.registered_name, "Budget View"))
+				if(!connected_business.has_access(user_id_card.registered_name, "Budget View"))
 					to_chat(usr, "Access denied.")
 					return
 				menu = 2
 			else if (href_list["target"] == "employee")
-				if(!connected_buisness.has_access(user_id_card.registered_name, "Employee Control"))
+				if(!connected_business.has_access(user_id_card.registered_name, "Employee Control"))
 					to_chat(usr, "Access denied.")
 					return
 				menu = 3
 			else if (href_list["target"] == "management")
-				if(!connected_buisness.has_access(user_id_card.registered_name, "Upper Mangagement"))
+				if(!connected_business.has_access(user_id_card.registered_name, "Upper Mangagement"))
 					to_chat(usr, "Access denied.")
 					return
 				menu = 4
 			else if (href_list["target"] == "stock")
 				
-				if(!connected_buisness.is_stock_holder(user_id_card.registered_name))
+				if(!connected_business.is_stock_holder(user_id_card.registered_name))
 					to_chat(usr, "Access denied.")
 					return
 				menu = 5
 			else if (href_list["target"] == "logout")
 				viewing = null
-				buisness_name = ""
+				business_name = ""
 				
 				
 		if("clockout")
-			if(!connected_buisness) return
-			connected_buisness.clock_out(user.get_stack())
+			if(!connected_business) return
+			connected_business.clock_out(user.get_stack())
 		
 		if("clockin")
-			if(!connected_buisness) return
-			if(!connected_buisness.status)
-				to_chat(usr, "The buisness is closed and so you cannot clock in.")
+			if(!connected_business) return
+			if(!connected_business.status)
+				to_chat(usr, "The business is closed and so you cannot clock in.")
 				return
-			connected_buisness.clock_in(user.get_stack())
+			connected_business.clock_in(user.get_stack())
 		
 		if("sale")
-			if(!connected_buisness) return
+			if(!connected_business) return
 			if(!user_id_card) return
-			if(!connected_buisness.status)
-				to_chat(usr, "The buisness is closed and so you cannot create a sale.")
+			if(!connected_business.status)
+				to_chat(usr, "The business is closed and so you cannot create a sale.")
 				return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Sales"))
+			if(!connected_business.has_access(user_id_card.registered_name, "Sales"))
 				to_chat(usr, "Access denied.")
 				return
 			var/reason = sanitize(input(usr, "Enter the reason for the sale.", "Sale reason", "") as message|null, MAX_TEXTFILE_LENGTH)
@@ -271,33 +271,33 @@
 				return 1
 				
 			var/idname = user_id_card.registered_name
-			var/idrank = connected_buisness.get_title(user_id_card.registered_name)
+			var/idrank = connected_business.get_title(user_id_card.registered_name)
 			
 			var/t = ""
-			t += "<font face='Verdana' color=blue><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'><center></td><tr><td><H1>[connected_buisness.name]</td>"
+			t += "<font face='Verdana' color=blue><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'><center></td><tr><td><H1>[connected_business.name]</td>"
 			t += "<tr><td><br><b>Status:</b>*Unpaid*<br>"
 			t += "<b>Total:</b> [amount] $$ Ethericoins<br><br><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>"
 			t += "<td>Authorized by:<br>[idname] [idrank]<br><td>Paid by:<br>*None*</td></tr></table><br></td>"
 			t += "<tr><td><h3>Reason</H3><font size = '1'>[reason]<br></td></tr></table><br><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>"
 			t += "<td></font><font size='4'><b>Swipe ID to confirm transaction.</b></font></center></font>"
-			var/obj/item/weapon/paper/invoice/buisness/invoice = new()
+			var/obj/item/weapon/paper/invoice/business/invoice = new()
 			invoice.info = t
 			invoice.purpose = reason
 			invoice.transaction_amount = amount
-			invoice.linked_buisness = connected_buisness.name
+			invoice.linked_business = connected_business.name
 			invoice.loc = get_turf(program.computer)
 			playsound(get_turf(program.computer), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
-			invoice.name = "[connected_buisness.name] digital invoice"
+			invoice.name = "[connected_business.name] digital invoice"
 		
 		if("addemployee")
 			if(!user_id_card) return
-			if(!connected_buisness) return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Employee Control"))
+			if(!connected_business) return
+			if(!connected_business.has_access(user_id_card.registered_name, "Employee Control"))
 				to_chat(usr, "Access denied.")
 				return
 			var/select_name = sanitizeName(input(usr,"Enter full name of the new hire.","Add new employee", "") as null|text, MAX_NAME_LEN, 1, 0)
 			if(select_name)
-				if(select_name == connected_buisness.ceo_name)
+				if(select_name == connected_business.ceo_name)
 					to_chat(usr, "[select_name] is the CEO.")
 					return
 				var/found = 0
@@ -309,44 +309,44 @@
 					to_chat(usr, "No record found for [select_name]. Verify Employee Identity.")
 					return
 					
-				if(connected_buisness.add_employee(select_name))
+				if(connected_business.add_employee(select_name))
 					viewing_employee = select_name
 				else
 					to_chat(usr, "Employee hire failed. Either they are already hired or the name was invalid.")
 				
 		if("editemployee")
 			if(!user_id_card) return
-			if(!connected_buisness) return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Employee Control"))
+			if(!connected_business) return
+			if(!connected_business.has_access(user_id_card.registered_name, "Employee Control"))
 				to_chat(usr, "Access denied.")
 				return
 			var/select_name = sanitizeName(input(usr,"Enter full name of the employee.","Edit employee", "") as null|text, MAX_NAME_LEN, 1, 0)
 			if(select_name)
-				if(select_name == connected_buisness.ceo_name)
+				if(select_name == connected_business.ceo_name)
 					to_chat(usr, "[select_name] is the CEO, only stockholders can edit.")
 					return
-				if(connected_buisness.is_employee(select_name))
+				if(connected_business.is_employee(select_name))
 					viewing_employee = select_name
 				else
 					to_chat(usr, "Employee not found.")
 		if("employee_close")
 			if(!user_id_card) return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Employee Control"))
+			if(!connected_business.has_access(user_id_card.registered_name, "Employee Control"))
 				to_chat(usr, "Access denied.")
 				return
 			viewing_employee = ""
 		if("employee_print")
 			if(!user_id_card) return
-			if(!connected_buisness) return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Employee Control"))
+			if(!connected_business) return
+			if(!connected_business.has_access(user_id_card.registered_name, "Employee Control"))
 				to_chat(usr, "Access denied.")
 				return
-			if(connected_buisness.last_id_print > world.realtime)
+			if(connected_business.last_id_print > world.realtime)
 				to_chat(usr, "Your  print was rejected. You have printed a nametag in the last 5 mintues.")
 				return
 			if(!viewing_employee || viewing_employee == "")
 				return
-			var/datum/employee_data/employee = connected_buisness.get_employee_data(viewing_employee)
+			var/datum/employee_data/employee = connected_business.get_employee_data(viewing_employee)
 			if(!employee)
 				viewing_employee = ""
 				return
@@ -360,11 +360,11 @@
 				to_chat(usr, "No record found for [usr.real_name].. contact software developer.")
 				return
 			var/obj/item/weapon/card/id/id = new()
-			if(connected_buisness)
+			if(connected_business)
 				var/datum/world_faction/connected_faction
 				if(program.computer.network_card && program.computer.network_card.connected_network)
 					connected_faction = program.computer.network_card.connected_network.holder
-				id.selected_buisness = connected_buisness.name
+				id.selected_business = connected_business.name
 				if(connected_faction)
 					id.approved_factions |= connected_faction.uid
 				id.registered_name = viewing_employee
@@ -373,20 +373,20 @@
 					id.associated_account_number = record.linked_account.account_number
 				id.update_name()
 				id.rank = 1	//actual job
-				connected_buisness.last_id_print = world.realtime + 5 MINUTES
+				connected_business.last_id_print = world.realtime + 5 MINUTES
 				playsound(get_turf(program.computer), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
 				id.forceMove(get_turf(program.computer))
 				id.assignment = employee.job_title
 				
 		if("employee_title")		
-			if(!connected_buisness) return
+			if(!connected_business) return
 			if(!user_id_card) return
 			if(!viewing_employee || viewing_employee == "")
 				return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Employee Control"))
+			if(!connected_business.has_access(user_id_card.registered_name, "Employee Control"))
 				to_chat(usr, "Access denied.")
 				return
-			var/datum/employee_data/employee = connected_buisness.get_employee_data(viewing_employee)
+			var/datum/employee_data/employee = connected_business.get_employee_data(viewing_employee)
 			if(!employee)
 				viewing_employee = ""
 				return
@@ -397,13 +397,13 @@
 										
 		if("employee_pay")
 			if(!user_id_card) return
-			if(!connected_buisness) return
+			if(!connected_business) return
 			if(!viewing_employee || viewing_employee == "")
 				return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Employee Control"))
+			if(!connected_business.has_access(user_id_card.registered_name, "Employee Control"))
 				to_chat(usr, "Access denied.")
 				return
-			var/datum/employee_data/employee = connected_buisness.get_employee_data(viewing_employee)
+			var/datum/employee_data/employee = connected_business.get_employee_data(viewing_employee)
 			if(!employee)
 				viewing_employee = ""
 				return
@@ -415,13 +415,13 @@
 			
 		if("employee_expense_limit")
 			if(!user_id_card) return
-			if(!connected_buisness) return
+			if(!connected_business) return
 			if(!viewing_employee || viewing_employee == "")
 				return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Employee Control"))
+			if(!connected_business.has_access(user_id_card.registered_name, "Employee Control"))
 				to_chat(usr, "Access denied.")
 				return
-			var/datum/employee_data/employee = connected_buisness.get_employee_data(viewing_employee)
+			var/datum/employee_data/employee = connected_business.get_employee_data(viewing_employee)
 			if(!employee)
 				viewing_employee = ""
 				return
@@ -433,13 +433,13 @@
 			
 		if("employee_expenses")
 			if(!user_id_card) return
-			if(!connected_buisness) return
+			if(!connected_business) return
 			if(!viewing_employee || viewing_employee == "")
 				return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Employee Control"))
+			if(!connected_business.has_access(user_id_card.registered_name, "Employee Control"))
 				to_chat(usr, "Access denied.")
 				return
-			var/datum/employee_data/employee = connected_buisness.get_employee_data(viewing_employee)
+			var/datum/employee_data/employee = connected_business.get_employee_data(viewing_employee)
 			if(!employee)
 				viewing_employee = ""
 				return
@@ -449,13 +449,13 @@
 			
 		if("toggleAccess")
 			if(!user_id_card) return
-			if(!connected_buisness) return
+			if(!connected_business) return
 			if(!viewing_employee || viewing_employee == "")
 				return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Employee Control"))
+			if(!connected_business.has_access(user_id_card.registered_name, "Employee Control"))
 				to_chat(usr, "Access denied.")
 				return
-			var/datum/employee_data/employee = connected_buisness.get_employee_data(viewing_employee)
+			var/datum/employee_data/employee = connected_business.get_employee_data(viewing_employee)
 			if(!employee)
 				viewing_employee = ""
 				return
@@ -469,102 +469,102 @@
 				
 		if("employee_select")
 			if(!user_id_card) return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Employee Control"))
+			if(!connected_business.has_access(user_id_card.registered_name, "Employee Control"))
 				to_chat(usr, "Access denied.")
 				return
 			var/select_name = href_list["target"]
 			if(select_name)
-				if(select_name == connected_buisness.ceo_name)
+				if(select_name == connected_business.ceo_name)
 					to_chat(usr, "[select_name] is the CEO, only stockholders can edit.")
 					return
-				if(connected_buisness.is_employee(select_name))
+				if(connected_business.is_employee(select_name))
 					viewing_employee = select_name
 				else
 					to_chat(usr, "Employee not found.")
 						
 		if("edit_tasks")
 			if(!user_id_card) return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Upper Management"))
+			if(!connected_business.has_access(user_id_card.registered_name, "Upper Management"))
 				to_chat(usr, "Access denied.")
 				return
-			var/oldtext = html_decode(connected_buisness.tasks)
+			var/oldtext = html_decode(connected_business.tasks)
 			oldtext = replacetext(oldtext, "\[editorbr\]", "\n")
 			var/newtext = sanitize(replacetext(input(usr, "Enter the new tasks. You may use most tags from paper formatting", "Task edit", oldtext) as message|null, "\n", "\[editorbr\]"), 20000)
 			if(newtext)
-				connected_buisness.tasks = newtext
+				connected_business.tasks = newtext
 		
 		
 		
 		
-		if("close_buisness")
+		if("close_business")
 			if(!user_id_card) return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Upper Management"))
+			if(!connected_business.has_access(user_id_card.registered_name, "Upper Management"))
 				to_chat(usr, "Access denied.")
 				return
-			connected_buisness.close()
+			connected_business.close()
 		
 		
-		if("open_buisness")
+		if("open_business")
 			if(!user_id_card) return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Upper Management"))
+			if(!connected_business.has_access(user_id_card.registered_name, "Upper Management"))
 				to_chat(usr, "Access denied.")
 				return
-			connected_buisness.open()
+			connected_business.open()
 			
 		if("expense_print")
-			if(!connected_buisness) return
-			if(connected_buisness.last_id_print > world.realtime)
+			if(!connected_business) return
+			if(connected_business.last_id_print > world.realtime)
 				to_chat(usr, "Your  print was rejected. You have printed an expense card in the last 10 minutes.")
 				return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Upper Management"))
+			if(!connected_business.has_access(user_id_card.registered_name, "Upper Management"))
 				to_chat(usr, "Access denied.")
 				return
 			var/obj/item/weapon/card/expense/expense = new()
 			expense.ctype = 2
-			expense.linked = connected_buisness.name
-			connected_buisness.last_expense_print = world.realtime + 10 MINUTES
+			expense.linked = connected_business.name
+			connected_business.last_expense_print = world.realtime + 10 MINUTES
 			playsound(get_turf(program.computer), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
 			expense.forceMove(get_turf(program.computer))
 				
 		if("expense_devalidate")
 			if(!user_id_card) return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Upper Management"))
+			if(!connected_business.has_access(user_id_card.registered_name, "Upper Management"))
 				to_chat(usr, "Access denied.")
 				return
-			devalidate_expense_cards(2, connected_buisness.name)
+			devalidate_expense_cards(2, connected_business.name)
 			
 		if("tax_disconnect")
 			if(!user_id_card) return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Upper Management"))
+			if(!connected_business.has_access(user_id_card.registered_name, "Upper Management"))
 				to_chat(usr, "Access denied.")
 				return
 			var/choice = input(usr,"Leaving this tax network will show up on the factions records. Are you sure?") in list("Confirm", "Cancel")
 			if(choice == "Confirm")
-				var/datum/world_faction/connected_faction = get_faction(connected_buisness.tax_network)
+				var/datum/world_faction/connected_faction = get_faction(connected_business.tax_network)
 				if(connected_faction)
-					var/datum/transaction/T = new("Buisness ([connected_buisness.name]) disconnects from our tax network", "TAX DISCONNECT", 0, "Buisness Program")
+					var/datum/transaction/T = new("business ([connected_business.name]) disconnects from our tax network", "TAX DISCONNECT", 0, "business Program")
 					connected_faction.central_account.transaction_log |= T
-				connected_buisness.tax_network = ""
+				connected_business.tax_network = ""
 		if("tax_connect")
 			if(!user_id_card) return
-			if(!connected_buisness.has_access(user_id_card.registered_name, "Upper Management"))
+			if(!connected_business.has_access(user_id_card.registered_name, "Upper Management"))
 				to_chat(usr, "Access denied.")
 				return
 			var/select_title = sanitizeName(input(usr,"Enter Faction UID","Connet to tax network", "") as null|text, MAX_NAME_LEN, 1, 0)
 			if(select_title)
 				var/datum/world_faction/connected_faction = get_faction(select_title)
 				if(connected_faction)
-					var/datum/transaction/T = new("Buisness ([connected_buisness.name]) connects to our tax network", "TAX CONNECTION", 0, "Buisness Program")
+					var/datum/transaction/T = new("business ([connected_business.name]) connects to our tax network", "TAX CONNECTION", 0, "business Program")
 					connected_faction.central_account.transaction_log |= T
-					connected_buisness.tax_network = select_title
+					connected_business.tax_network = select_title
 				else
 					to_chat(usr, "Network not found.")
 					return			
 			
 		if("toggleSupport")
-			if(!connected_buisness) return
+			if(!connected_business) return
 			if(!user_id_card) return
-			if(!connected_buisness.is_stock_holder(user_id_card.registered_name))
+			if(!connected_business.is_stock_holder(user_id_card.registered_name))
 				to_chat(usr, "Access denied.")
 				return
 			var/datum/proposal/proposal = locate(href_list["target"])	
@@ -572,14 +572,14 @@
 				message_admins("couldnt find proposal")
 				return
 			if(user_id_card.registered_name in proposal.supporters)
-				proposal.add_support(user_id_card.registered_name, connected_buisness.get_stocks(user_id_card.registered_name))
+				proposal.add_support(user_id_card.registered_name, connected_business.get_stocks(user_id_card.registered_name))
 			else
 				proposal.remove_support(user_id_card.registered_name)
 				
 		if("toggleDeny")
-			if(!connected_buisness) return
+			if(!connected_business) return
 			if(!user_id_card) return
-			if(!connected_buisness.is_stock_holder(user_id_card.registered_name))
+			if(!connected_business.is_stock_holder(user_id_card.registered_name))
 				to_chat(usr, "Access denied.")
 				return
 			var/datum/proposal/proposal = locate(href_list["target"])	
@@ -587,13 +587,13 @@
 				message_admins("couldnt find proposal")
 				return
 			if(user_id_card.registered_name in proposal.supporters)
-				proposal.add_denial(user_id_card.registered_name, connected_buisness.get_stocks(user_id_card.registered_name))
+				proposal.add_denial(user_id_card.registered_name, connected_business.get_stocks(user_id_card.registered_name))
 			else
 				proposal.remove_denial(user_id_card.registered_name)
 		if("proposal_cancel")
-			if(!connected_buisness) return
+			if(!connected_business) return
 			if(!user_id_card) return
-			if(!connected_buisness.is_stock_holder(user_id_card.registered_name))
+			if(!connected_business.is_stock_holder(user_id_card.registered_name))
 				to_chat(usr, "Access denied.")
 				return
 			var/datum/proposal/proposal = locate(href_list["target"])	
@@ -601,22 +601,22 @@
 				message_admins("couldnt find proposal")
 				return
 			if(user_id_card.registered_name == proposal.started_by)
-				connected_buisness.proposal_cancelled(proposal)
+				connected_business.proposal_cancelled(proposal)
 			
 		if("ceo_change")
-			if(!connected_buisness) return
+			if(!connected_business) return
 			if(!user_id_card) return
-			if(!connected_buisness.is_stock_holder(user_id_card.registered_name))
+			if(!connected_business.is_stock_holder(user_id_card.registered_name))
 				to_chat(usr, "Access denied.")
 				return
-			if(connected_buisness.has_proposal(user_id_card.registered_name))
+			if(connected_business.has_proposal(user_id_card.registered_name))
 				to_chat(usr, "You can only have one active proposal at a time.")
 				return
 			var/choice = input(usr,"This will create a proposal to appoint a new CEO. Are you sure?") in list("Confirm", "Cancel")
 			if(choice == "Confirm")
 				var/select_name = sanitizeName(input(usr,"Enter full name of the new CEO.","New CEO", "") as null|text, MAX_NAME_LEN, 1, 0)
 				if(select_name)
-					if(select_name == connected_buisness.ceo_name)
+					if(select_name == connected_business.ceo_name)
 						to_chat(usr, "[select_name] is the current CEO.")
 						return
 					var/found = 0
@@ -631,67 +631,67 @@
 					var/datum/proposal/proposal = new()
 					proposal.name = "Proposal to change the CEO to [select_name]"
 					proposal.started_by = user_id_card.registered_name
-					proposal.connected_uid = connected_buisness.name
+					proposal.connected_uid = connected_business.name
 					proposal.connected_type = 2
 					proposal.func = 1
 					proposal.change = select_name
-					connected_buisness.proposals |= proposal
-					proposal.add_support(user_id_card.registered_name, connected_buisness.get_stocks(user_id_card.registered_name))
+					connected_business.proposals |= proposal
+					proposal.add_support(user_id_card.registered_name, connected_business.get_stocks(user_id_card.registered_name))
 				
 		if("ceo_fire")		
-			if(!connected_buisness) return
+			if(!connected_business) return
 			if(!user_id_card) return
-			if(!connected_buisness.is_stock_holder(user_id_card.registered_name))
+			if(!connected_business.is_stock_holder(user_id_card.registered_name))
 				to_chat(usr, "Access denied.")
 				return
-			if(connected_buisness.has_proposal(user_id_card.registered_name))
+			if(connected_business.has_proposal(user_id_card.registered_name))
 				to_chat(usr, "You can only have one active proposal at a time.")
 				return
-			if(!connected_buisness.ceo_name || connected_buisness.ceo_name == "") return 0
+			if(!connected_business.ceo_name || connected_business.ceo_name == "") return 0
 			var/choice = input(usr,"This will create a proposal to fire the current CEO, are you sure?") in list("Confirm", "Cancel")
 			if(choice == "Confirm")
 				var/datum/proposal/proposal = new()
-				proposal.name = "Proposal to fire the CEO, [connected_buisness.ceo_name]"
+				proposal.name = "Proposal to fire the CEO, [connected_business.ceo_name]"
 				proposal.started_by = user_id_card.registered_name
-				proposal.connected_uid = connected_buisness.name
+				proposal.connected_uid = connected_business.name
 				proposal.connected_type = 2
 				proposal.func = 2
-				connected_buisness.proposals |= proposal
-				proposal.add_support(user_id_card.registered_name, connected_buisness.get_stocks(user_id_card.registered_name))
+				connected_business.proposals |= proposal
+				proposal.add_support(user_id_card.registered_name, connected_business.get_stocks(user_id_card.registered_name))
 
 		if("ceo_title")
-			if(!connected_buisness) return
+			if(!connected_business) return
 			if(!user_id_card) return
-			if(!connected_buisness.is_stock_holder(user_id_card.registered_name))
+			if(!connected_business.is_stock_holder(user_id_card.registered_name))
 				to_chat(usr, "Access denied.")
 				return
-			if(connected_buisness.has_proposal(user_id_card.registered_name))
+			if(connected_business.has_proposal(user_id_card.registered_name))
 				to_chat(usr, "You can only have one active proposal at a time.")
 				return
 			
-			var/select_title = sanitizeName(input(usr,"Enter CEO Job Title","Edit CEO Job title", connected_buisness.ceo_title) as null|text, MAX_NAME_LEN, 1, 0)
+			var/select_title = sanitizeName(input(usr,"Enter CEO Job Title","Edit CEO Job title", connected_business.ceo_title) as null|text, MAX_NAME_LEN, 1, 0)
 			if(select_title)
 				var/datum/proposal/proposal = new()
 				proposal.name = "Proposal to change title of CEO to [select_title]"
 				proposal.started_by = user_id_card.registered_name
-				proposal.connected_uid = connected_buisness.name
+				proposal.connected_uid = connected_business.name
 				proposal.connected_type = 2
 				proposal.func = 3
 				proposal.change = select_title
-				connected_buisness.proposals |= proposal
-				proposal.add_support(user_id_card.registered_name, connected_buisness.get_stocks(user_id_card.registered_name))
+				connected_business.proposals |= proposal
+				proposal.add_support(user_id_card.registered_name, connected_business.get_stocks(user_id_card.registered_name))
 	
 		if("ceo_payrate")
-			if(!connected_buisness) return
+			if(!connected_business) return
 			if(!user_id_card) return
-			if(!connected_buisness.is_stock_holder(user_id_card.registered_name))
+			if(!connected_business.is_stock_holder(user_id_card.registered_name))
 				to_chat(usr, "Access denied.")
 				return
-			if(connected_buisness.has_proposal(user_id_card.registered_name))
+			if(connected_business.has_proposal(user_id_card.registered_name))
 				to_chat(usr, "You can only have one active proposal at a time.")
 				return
 			
-			var/amount = round(input("Edit CEO ([connected_buisness.ceo_name]) Hourly Pay", "Edit ceo pay", connected_buisness.ceo_payrate) as null|num)
+			var/amount = round(input("Edit CEO ([connected_business.ceo_name]) Hourly Pay", "Edit ceo pay", connected_business.ceo_payrate) as null|num)
 			if(!amount)
 				amount = 0
 			var/choice = input(usr,"This will create a proposal to change the CEO hourly pay to [amount]") in list("Confirm", "Cancel")
@@ -699,25 +699,25 @@
 				var/datum/proposal/proposal = new()
 				proposal.name = "Proposal to change payrate of CEO to [amount]"
 				proposal.started_by = user_id_card.registered_name
-				proposal.connected_uid = connected_buisness.name
+				proposal.connected_uid = connected_business.name
 				proposal.connected_type = 2
 				proposal.func = 4
 				proposal.change = amount
-				connected_buisness.proposals |= proposal
-				proposal.add_support(user_id_card.registered_name, connected_buisness.get_stocks(user_id_card.registered_name))
+				connected_business.proposals |= proposal
+				proposal.add_support(user_id_card.registered_name, connected_business.get_stocks(user_id_card.registered_name))
 			
 			
 		if("ceo_dividend")
-			if(!connected_buisness) return
+			if(!connected_business) return
 			if(!user_id_card) return
-			if(!connected_buisness.is_stock_holder(user_id_card.registered_name))
+			if(!connected_business.is_stock_holder(user_id_card.registered_name))
 				to_chat(usr, "Access denied.")
 				return
-			if(connected_buisness.has_proposal(user_id_card.registered_name))
+			if(connected_business.has_proposal(user_id_card.registered_name))
 				to_chat(usr, "You can only have one active proposal at a time.")
 				return
 			
-			var/amount = round(input("Edit [connected_buisness.ceo_name] Dividend", "Edit CEO Dividend", connected_buisness.ceo_dividend) as null|num)
+			var/amount = round(input("Edit [connected_business.ceo_name] Dividend", "Edit CEO Dividend", connected_business.ceo_dividend) as null|num)
 			if(!amount)
 				amount = 0
 			if(amount > 20)
@@ -728,23 +728,23 @@
 				var/datum/proposal/proposal = new()
 				proposal.name = "Proposal to change dividend of CEO to [amount]%"
 				proposal.started_by = user_id_card.registered_name
-				proposal.connected_uid = connected_buisness.name
+				proposal.connected_uid = connected_business.name
 				proposal.connected_type = 2
 				proposal.func = 5
 				proposal.change = amount
-				connected_buisness.proposals |= proposal
-				proposal.add_support(user_id_card.registered_name, connected_buisness.get_stocks(user_id_card.registered_name))
+				connected_business.proposals |= proposal
+				proposal.add_support(user_id_card.registered_name, connected_business.get_stocks(user_id_card.registered_name))
 		
 		if("holders_dividend")
-			if(!connected_buisness) return
+			if(!connected_business) return
 			if(!user_id_card) return
-			if(!connected_buisness.is_stock_holder(user_id_card.registered_name))
+			if(!connected_business.is_stock_holder(user_id_card.registered_name))
 				to_chat(usr, "Access denied.")
 				return
-			if(connected_buisness.has_proposal(user_id_card.registered_name))
+			if(connected_business.has_proposal(user_id_card.registered_name))
 				to_chat(usr, "You can only have one active proposal at a time.")
 				return
-			var/amount = round(input("Edit Stockholders Dividend", "Edit Holder Dividend", connected_buisness.stock_holders_dividend) as null|num)
+			var/amount = round(input("Edit Stockholders Dividend", "Edit Holder Dividend", connected_business.stock_holders_dividend) as null|num)
 			if(!amount)
 				amount = 0
 			if(amount > 10)
@@ -755,20 +755,20 @@
 				var/datum/proposal/proposal = new()
 				proposal.name = "Proposal to change dividend of stock holders to [amount]% per 10 stocks"
 				proposal.started_by = user_id_card.registered_name
-				proposal.connected_uid = connected_buisness.name
+				proposal.connected_uid = connected_business.name
 				proposal.connected_type = 2
 				proposal.func = 6
 				proposal.change = amount
-				connected_buisness.proposals |= proposal
-				proposal.add_support(user_id_card.registered_name, connected_buisness.get_stocks(user_id_card.registered_name))
+				connected_business.proposals |= proposal
+				proposal.add_support(user_id_card.registered_name, connected_business.get_stocks(user_id_card.registered_name))
 			
 		if("holders_sale")
-			if(!connected_buisness) return
+			if(!connected_business) return
 			if(!user_id_card) return
-			if(!connected_buisness.is_stock_holder(user_id_card.registered_name))
+			if(!connected_business.is_stock_holder(user_id_card.registered_name))
 				to_chat(usr, "Access denied.")
 				return
-			var/holding = connected_buisness.get_stocks(user_id_card.registered_name)
+			var/holding = connected_business.get_stocks(user_id_card.registered_name)
 			var/amount = round(input("How many stocks do you want to sell?", "Sell stocks", holding) as null|num)
 			if(!amount)
 				to_chat(user, "Sale cancelled.")
@@ -783,15 +783,15 @@
 			if(choice == "Confirm")	
 				var/obj/item/weapon/paper/contract/contract = new()
 				contract.required_cash = cost
-				contract.linked = connected_buisness
+				contract.linked = connected_business
 				contract.created_by = user_id_card.registered_name
 				contract.purpose = "Stock contract for [amount] stocks at [cost]$$"
 				contract.ownership = amount
-				contract.name = "[connected_buisness.name] stock contract"
+				contract.name = "[connected_business.name] stock contract"
 				contract.pay_to = user_id_card.registered_name
 				var/t = ""
 				t += "<font face='Verdana' color=blue><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'><center></td><tr><td><H1>Stock Purchase Contract</td>"
-				t += "<tr><td><br><b>Stock:</b>[connected_buisness.name] (Buisness)<br>"
+				t += "<tr><td><br><b>Stock:</b>[connected_business.name] (business)<br>"
 				t += "<b>Stock Owner:</b>[contract.created_by]<br>"
 				t += "<b>Stock Amount:</b> [amount] stocks<br>"
 				t += "<b>Cost:</b> [cost] $$ Ethericoins<br><br>"
@@ -803,46 +803,46 @@
 		
 		if("login")
 			if(!user_id_card) return
-			var/select_name = input(usr,"Enter the full name of the buisness.","Log in", "") as null|text
-			var/datum/small_buisness/viewing = get_buisness(select_name)
+			var/select_name = input(usr,"Enter the full name of the business.","Log in", "") as null|text
+			var/datum/small_business/viewing = get_business(select_name)
 			if(!viewing)
-				to_chat(usr, "Buisness not found,")
+				to_chat(usr, "business not found,")
 			if(viewing && viewing.is_allowed(user_id_card.registered_name))
-				buisness_name = select_name
+				business_name = select_name
 			else
 				to_chat(usr, "Access denied.")
-		if("buisness_select")
+		if("business_select")
 			if(!user_id_card) return
 			var/select_name = href_list["target"]
-			var/datum/small_buisness/viewing = get_buisness(select_name)
+			var/datum/small_business/viewing = get_business(select_name)
 			if(!viewing)
-				to_chat(usr, "Buisness not found,")
+				to_chat(usr, "business not found,")
 			if(viewing && viewing.is_allowed(user_id_card.registered_name))
-				buisness_name = select_name
+				business_name = select_name
 			else
 				to_chat(usr, "Access denied.")	
-		if("buisness_create")
+		if("business_create")
 			submenu = 2
-		if("buisness_cancel")
+		if("business_cancel")
 			var/choice = input(usr,"Warning! This will cancel all pending contracts and reset the form") in list("Confirm", "Cancel")
 			if(choice == "Confirm")	
 				submenu = 1
 				cancel_contracts()
 				potential_name = ""
 		if("potential_name")
-			var/choice = input(usr,"Warning! Changing the name of the buisness will reset any pending contracts!") in list("Confirm", "Cancel")
+			var/choice = input(usr,"Warning! Changing the name of the business will reset any pending contracts!") in list("Confirm", "Cancel")
 			if(choice == "Confirm")	
-				var/select_name = input(usr,"Enter the full name of the new buisness.","Buisness name", "") as null|text
-				var/datum/small_buisness/viewing = get_buisness(select_name)
+				var/select_name = input(usr,"Enter the full name of the new business.","business name", "") as null|text
+				var/datum/small_business/viewing = get_business(select_name)
 				if(viewing)
-					to_chat(usr, "That buisness already exists!")
+					to_chat(usr, "That business already exists!")
 					return
 				if(select_name && select_name != "")
 					cancel_contracts()
 					potential_name = select_name
-		if("buisness_contract")
+		if("business_contract")
 			if(!potential_name || potential_name == "")
-				to_chat(usr, "A name for the buisness must be chosen first.")
+				to_chat(usr, "A name for the business must be chosen first.")
 				return
 			var/to_be = 100 - get_distributed()
 			var/amount = round(input("How many stocks are being distributed", "Investment", to_be) as null|num)
@@ -861,10 +861,10 @@
 				contract.linked = src
 				contract.purpose = "Investment contract for [amount] stocks at [cost]$$"
 				contract.ownership = amount
-				contract.name = "[connected_buisness.name] investment contract"
+				contract.name = "[connected_business.name] investment contract"
 				var/t = ""
 				t += "<font face='Verdana' color=blue><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'><center></td><tr><td><H1>Investment Contract</td>"
-				t += "<tr><td><br><b>Stock:</b>[potential_name] (Buisness)<br>"
+				t += "<tr><td><br><b>Stock:</b>[potential_name] (business)<br>"
 				t += "<b>Stock Amount:</b> [amount] stocks<br>"
 				t += "<b>Cost:</b> [cost] $$ Ethericoins<br><br>"
 				t += "<tr><td><h3>Status</H3>*Unsigned*<br></td></tr></table><br><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>"
@@ -874,30 +874,30 @@
 				pending_contracts |= contract
 				playsound(get_turf(program.computer), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
 		
-		if("buisness_finalize")
+		if("business_finalize")
 			var/commitment = get_contributed()
 			var/signed_stocks = get_distributed()
 			if(commitment < 2500 || signed_stocks != 100)
 				return 0
 			commitment -= 2500			
 			if(!potential_name || potential_name == "")
-				to_chat(usr, "A name for the buisness must be chosen first.")
+				to_chat(usr, "A name for the business must be chosen first.")
 				return
 			for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
 				if(!contract.is_solvent())
 					contract.cancel()
 					GLOB.nanomanager.update_uis(src)
 					return 0
-			var/datum/small_buisness/new_buisness = new()
-			new_buisness.name = potential_name
+			var/datum/small_business/new_business = new()
+			new_business.name = potential_name
 			if(commitment)
-				new_buisness.central_account.money += commitment					
+				new_business.central_account.money += commitment					
 			for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
 				contract.finalize()
-				new_buisness.stock_holders[contract.signed_by] = contract.ownership
+				new_business.stock_holders[contract.signed_by] = contract.ownership
 				signed_contracts -= contract
-			GLOB.all_buisness |= new_buisness
-			buisness_name = potential_name
+			GLOB.all_business |= new_business
+			business_name = potential_name
 			potential_name = ""
 			menu = 5
 			cancel_contracts()

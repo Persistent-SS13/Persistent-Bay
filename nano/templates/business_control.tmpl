@@ -1,4 +1,4 @@
-{{if data.found_buisness}}
+{{if data.found_business}}
 	{{if data.allowed}}
 		{{:helper.link('Storefront', '', {'action' : 'switchm', 'target' : 'sale'}, data.menu == 1 ? 'disabled' : null)}}
 		{{:helper.link('Budget', '', {'action' : 'switchm', 'target' : 'budget'}, data.menu == 2 ? 'disabled' : null)}}
@@ -7,7 +7,7 @@
 		{{:helper.link('Stockholders', '', {'action' : 'switchm', 'target' : 'stock'}, data.menu == 5 ? 'disabled' : null)}}
 		{{:helper.link('Log Out', '', {'action' : 'switchm', 'target' : 'logout'}, null)}}
 		{{if data.menu == 1}}
-			<h2>{{:data.buisness_name}} Storefront</h2><hr>
+			<h2>{{:data.business_name}} Storefront</h2><hr>
 			<br><br>
 			Welcome, {{:data.user_name}}. You are {{:data.clock_in}}.<br>
 			{{:helper.link('Clock out', '', {'action' : 'clockout'}, data.clocked_in ? null : 'disabled')}}{{:helper.link('Clock in', '', {'action' : 'clockin'}, data.clocked_in ? 'disabled' : null)}}<br><br>
@@ -28,7 +28,7 @@
 				
 		{{/if}}
 		{{if data.menu == 2}}
-			<h2>{{:data.buisness_name}} Budget</h2><hr>
+			<h2>{{:data.business_name}} Budget</h2><hr>
 			<br><br>
 			<div class='item'>
 				<div class='itemLabel'>
@@ -86,7 +86,7 @@
 		
 		
 		{{if data.menu == 3}}
-			<h2>{{:data.buisness_name}} Employee Management</h2><hr>
+			<h2>{{:data.business_name}} Employee Management</h2><hr>
 			<br><br>
 			{{:helper.link('Edit Employee', '', {'action' : 'editemployee'}, null)}}
 			{{:helper.link('Hire new Employee', '', {'action' : 'addemployee'}, null)}}<hr>
@@ -138,7 +138,7 @@
 		
 		
 		{{if data.menu == 4}}
-			<h2>{{:data.buisness_name}} Upper Management</h2><hr>
+			<h2>{{:data.business_name}} Upper Management</h2><hr>
 			<br><br>
 			<h3>Current Tasks</h3><hr>
 			{{:data.tasks}}
@@ -147,13 +147,13 @@
 			<br><br>
 			<div class='item'>
 				<div class='itemLabel'>
-					Buisness Status:
+					business Status:
 				</div>
 				<div class='itemContent'>
-					{{:helper.link('Closed', '', {'action' : 'close_buisness'}, data.closed ? 'selected' : null)}}{{:helper.link('Open', '', {'action' : 'open_buisness'}, data.closed ? 'selected' : null)}}
+					{{:helper.link('Closed', '', {'action' : 'close_business'}, data.closed ? 'selected' : null)}}{{:helper.link('Open', '', {'action' : 'open_business'}, data.closed ? 'selected' : null)}}
 				</div>
 			</div>
-			When a buisness is closed, employees cant clock in and invoices cant be created.<br>
+			When a business is closed, employees cant clock in and invoices cant be created.<br>
 			<div class='item'>
 				<div class='itemLabel'>
 					Expense Cards:
@@ -181,7 +181,7 @@
 		
 		{{/if}}
 		{{if data.menu == 5}}
-			<h2>{{:data.buisness_name}} Ownership Panel</h2><hr>
+			<h2>{{:data.business_name}} Ownership Panel</h2><hr>
 			<br><br>
 			<h4>Current Holders</h4>
 			{{for data.stock_holders}}
@@ -258,39 +258,39 @@
 			</div>
 		{{/if}}	
 	{{else}}
-		<h2>You do not have access to this buisness.</h2><br><br>
+		<h2>You do not have access to this business.</h2><br><br>
 		{{:helper.link('Log Out', '', {'action' : 'switchm', 'target' : 'logout'}, null)}}
 	{{/if}}
 {{else}}
 	{{if data.submenu == 1}}
-		{{:helper.link('Enter buisness UID to log in', '', {'action' : 'login'}, null)}}<br><br>
+		{{:helper.link('Enter business UID to log in', '', {'action' : 'login'}, null)}}<br><br>
 		or<br><br>
-		{{:helper.link('Register new buisness', '', {'action' : 'buisness_create'}, null)}}
+		{{:helper.link('Register new business', '', {'action' : 'business_create'}, null)}}
 		<br><hr>
-		<h2>Available Buisnesses</h2>
-		{{for data.buisnesses}}
-			<br><br>{{:helper.link(value.name, '', {'action' : 'buisness_select', 'target' : value.name}, null)}}
+		<h2>Available businesses</h2>
+		{{for data.businesses}}
+			<br><br>{{:helper.link(value.name, '', {'action' : 'business_select', 'target' : value.name}, null)}}
 		{{/for}}
 	{{/if}}
 	{{if data.submenu == 2}}
-		<h2>Buisness Registration</h2>
-		<br>{{:helper.link('Cancel', '', {'action' : 'buisness_cancel'}, null)}}<br><hr><br>
+		<h2>business Registration</h2>
+		<br>{{:helper.link('Cancel', '', {'action' : 'business_cancel'}, null)}}<br><hr><br>
 		Warning! This program has no access restrictions. Make sure only trusted associates have access to this terminal.
 		<div class='item'>
 			<div class='itemLabel'>
-				Buisness Name:
+				business Name:
 			</div>
 			<div class='itemContent'>
-				{{:helper.link(data.chosen_name, '', {'action' : 'buisness_name'}, null)}}
+				{{:helper.link(data.chosen_name, '', {'action' : 'business_name'}, null)}}
 			</div>
-			The buisness name must be unique cannot be changed after finalization! Be sure this is the name the owners want!
+			The business name must be unique cannot be changed after finalization! Be sure this is the name the owners want!
 		</div>
 		This must be unique and cannot be changed.<br><hr>
 		<h3>Ownership & Licensing</h3>
 		<br>
-		To create a buisness, a license fee of 2500$$ must be paid, and ownership of the buisness must be fully distributed. The buisness will have 100 stocks, each stock representing 1% ownership of the buisness.
-		Use stock contracts to get at least 2500$$ commited and the stocks fully distributed. Anything past the 2500$$ will be deposited into the new buisness account.<br><br>
-		{{:helper.link('Print new stock contract', '', {'action' : 'buisness_contract'}, null)}}<br><br>
+		To create a business, a license fee of 2500$$ must be paid, and ownership of the business must be fully distributed. The business will have 100 stocks, each stock representing 1% ownership of the business.
+		Use stock contracts to get at least 2500$$ commited and the stocks fully distributed. Anything past the 2500$$ will be deposited into the new business account.<br><br>
+		{{:helper.link('Print new stock contract', '', {'action' : 'business_contract'}, null)}}<br><br>
 		<h4>Signed Stock Contracts</h4>
 		<div class="statusDisplay" style="overflow: auto;">
 			{{for data.signed_contracts}}
@@ -318,7 +318,7 @@
 				Finalize:
 			</div>
 			<div class='itemContent'>
-				{{:helper.link('Complete Registration', '', {'action' : 'buisness_finalize'}, data.finish_ready ? null : 'disabled')}}
+				{{:helper.link('Complete Registration', '', {'action' : 'business_finalize'}, data.finish_ready ? null : 'disabled')}}
 			</div>
 		</div>
 	{{/if}}

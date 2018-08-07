@@ -13,7 +13,7 @@
 			{{:helper.link('Clock out', '', {'action' : 'clockout'}, data.clocked_in ? null : 'disabled')}}{{:helper.link('Clock in', '', {'action' : 'clockin'}, data.clocked_in ? 'disabled' : null)}}<br><br>
 			<div class='item'>
 				<div class='itemLabel'>
-					Your current hourly pay rate:
+					Hourly Pay Rate:
 				</div>
 				<div class='itemContent'>
 					{{:data.current_pay}}
@@ -89,7 +89,7 @@
 			<h2>{{:data.business_name}} Employee Management</h2><hr>
 			<br><br>
 			{{:helper.link('Edit Employee', '', {'action' : 'editemployee'}, null)}}
-			{{:helper.link('Hire new Employee', '', {'action' : 'addemployee'}, null)}}<hr>
+			{{:helper.link('Hire new Employee', '', {'action' : 'addemployee'}, null)}}<br><br><hr>
 			{{if data.employee_selected}}
 				<h3>{{:data.employee_name}}</h3>
 				{{:helper.link('Close Profile', '', {'action' : 'employee_close'}, null)}}{{:helper.link('Print Name Tag', '', {'action' : 'employee_print'}, null)}}
@@ -147,10 +147,10 @@
 			<br><br>
 			<div class='item'>
 				<div class='itemLabel'>
-					business Status:
+					Business Status:
 				</div>
 				<div class='itemContent'>
-					{{:helper.link('Closed', '', {'action' : 'close_business'}, data.closed ? 'selected' : null)}}{{:helper.link('Open', '', {'action' : 'open_business'}, data.closed ? 'selected' : null)}}
+					{{:helper.link('Closed', '', {'action' : 'close_business'}, data.closed ? 'selected' : null)}}{{:helper.link('Open', '', {'action' : 'open_business'}, data.closed ? null : 'selected')}}
 				</div>
 			</div>
 			When a business is closed, employees cant clock in and invoices cant be created.<br>

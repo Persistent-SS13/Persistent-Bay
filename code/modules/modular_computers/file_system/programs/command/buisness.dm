@@ -1,6 +1,6 @@
 /datum/computer_file/program/business
 	filename = "business"
-	filedesc = "business control program"
+	filedesc = "Business control program"
 	nanomodule_path = /datum/nano_module/program/business
 	program_icon_state = "id"
 	program_menu_icon = "key"
@@ -9,7 +9,7 @@
 	size = 8
 
 /datum/nano_module/program/business
-	name = "business control program"
+	name = "Business control program"
 	var/datum/small_business/viewing
 	var/menu = 1
 	var/submenu = 1
@@ -829,7 +829,7 @@
 				submenu = 1
 				cancel_contracts()
 				potential_name = ""
-		if("potential_name")
+		if("business_name")
 			var/choice = input(usr,"Warning! Changing the name of the business will reset any pending contracts!") in list("Confirm", "Cancel")
 			if(choice == "Confirm")	
 				var/select_name = input(usr,"Enter the full name of the new business.","business name", "") as null|text
@@ -861,7 +861,7 @@
 				contract.linked = src
 				contract.purpose = "Investment contract for [amount] stocks at [cost]$$"
 				contract.ownership = amount
-				contract.name = "[connected_business.name] investment contract"
+				contract.name = "[potential_name] investment contract"
 				var/t = ""
 				t += "<font face='Verdana' color=blue><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'><center></td><tr><td><H1>Investment Contract</td>"
 				t += "<tr><td><br><b>Stock:</b>[potential_name] (business)<br>"

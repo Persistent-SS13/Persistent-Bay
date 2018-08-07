@@ -456,7 +456,7 @@
 
 
 /*---Tajaran-specific Eyewear---*/
-
+/*
 /obj/item/clothing/glasses/tajblind
 	name = "embroidered veil"
 	desc = "An Ahdominian made veil that allows the user to see while obscuring their eyes."
@@ -487,3 +487,4 @@
 	item_state = "tajblind_meson"
 	off_state = "tajblind_meson"
 	body_parts_covered = EYES
+*/

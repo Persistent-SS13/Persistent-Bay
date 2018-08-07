@@ -77,6 +77,7 @@
 		data["faction_uid"] = connected_faction.uid
 		if(menu == 4)
 			data["faction_abbreviation"] = connected_faction.abbreviation
+			data["faction_tag"] = connected_faction.short_tag
 			var/regex/allregex = regex(".")
 			data["faction_purpose"] = connected_faction.purpose
 			data["faction_password"] = allregex.Replace(connected_faction.password, "*")
@@ -304,6 +305,19 @@
 							return 1
 					connected_faction.abbreviation = select_name
 					to_chat(usr, "Lognet abbreviation successfully changed.")
+		if("change_tag")
+			var/curr_name = connected_faction.short_tag
+			var/select_name = sanitizeName(input(usr,"Enter the tag of your organization","Lognet Tag", connected_faction.short_tag) as null|text, 4, 1, 0)
+			if(select_name)
+				if(curr_name != connected_faction.short_tag)
+					to_chat(usr, "Your inputs expired because someone used the terminal first.")
+				else
+					for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
+						if(existing_faction.short_tag == select_name)
+							to_chat(usr, "Error! A Lognet with that tag already exists!")
+							return 1
+					connected_faction.short_tag = select_name
+					to_chat(usr, "Lognet tag successfully changed.")
 		if("change_purpose")
 			var/curr_name = connected_faction.purpose
 			var/select_name = sanitize(input(usr,"Enter a description or purpose for your organization.","Lognet Desc.", connected_faction.purpose) as null|text, 126)

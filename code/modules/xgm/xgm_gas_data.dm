@@ -58,4 +58,29 @@
 		gas_data.breathed_product[gas.id] = gas.breathed_product
 		gas_data.component_reagents[gas.id] = gas.component_reagents
 
+	//Reagent gases
+	for(var/r in (typesof(/datum/reagent) - /datum/reagent))
+		var/datum/reagent/reagent = new r
+
+		var/gas_id = lowertext(reagent.name)
+		if(gas_id in gas_data.gases) //Prevents the creation of reagent gases that already exist IE: Phoron
+			continue
+		gas_data.gases +=                     gas_id					//Default values for reagent gases can be found in Chemistry-Reagents.dm
+		gas_data.name[gas_id] =               reagent.name
+		gas_data.specific_heat[gas_id] =      reagent.gas_specific_heat
+		gas_data.molar_mass[gas_id] =         reagent.gas_molar_mass
+		gas_data.overlay_limit[gas_id] =      reagent.gas_overlay_limit
+		gas_data.flags[gas_id] =              reagent.gas_flags
+		gas_data.burn_product[gas_id] =       reagent.gas_burn_product
+		gas_data.breathed_product[gas_id] =   reagent.type
+		gas_data.component_reagents[gas_id] = list(reagent.type = 1)
+
+		if(reagent.gas_overlay)
+			var/image/I = image('icons/effects/tile_effects.dmi', reagent.gas_overlay, FLY_LAYER)
+			I.appearance_flags = RESET_COLOR
+			I.color = initial(reagent.color)
+			gas_data.tile_overlay[gas_id] = I
+
+		qdel(reagent)
+
 	return 1

@@ -322,6 +322,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	M.loc = locate(100,100,28)
 	occupant.stored_ckey = occupant.ckey
 	M.key = occupant.key
+	M.client.eye = M
 	var/role_alt_title = occupant.mind ? occupant.mind.role_alt_title : "Unknown"
 	if(control_computer)
 		control_computer.frozen_crew += "[occupant.real_name], [role_alt_title] - [stationtime2text()]"

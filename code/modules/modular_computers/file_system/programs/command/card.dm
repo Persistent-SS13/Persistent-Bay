@@ -362,7 +362,7 @@
 			if(newValue)
 				module.record.set_emplRecord(newValue)
 	if(id_card)
-		id_card.name = text("[id_card.registered_name]'s ID Card ([id_card.assignment])")
+		id_card.name = text("[id_card.registered_name]'s ID Card [get_faction_tag(id_card.selected_faction)]-([id_card.assignment])")
 
 	GLOB.nanomanager.update_uis(NM)
 	return 1

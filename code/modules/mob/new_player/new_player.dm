@@ -74,6 +74,21 @@
 	return
 
 /mob/new_player/proc/slot_select_load()
+	for(var/mob/loaded_mob in SSmobs.mob_list)
+		if(loaded_mob.type != /mob/new_player && loaded_mob.saved_ckey == ckey)
+			if(ticker.current_state <= GAME_STATE_PREGAME)
+				to_chat(src, "A character is already in game, selecting on start")
+				ready = 1
+				close_spawn_windows()
+				new_player_panel_proc()
+				return 0
+			else
+				close_spawn_windows()
+				loaded_mob.ckey = ckey
+				loaded_mob.saved_ckey = ""
+				sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1)) // MAD JAMS cant last forever yo
+				qdel(src)
+				return 0
 	var/mob/user = src
 	var/slots = config.character_slots
 	if(check_rights(R_ADMIN, 0, client))
@@ -194,6 +209,7 @@
 			load_panel.close()
 		return 0
 	if(href_list["ready"])
+		ready = text2num(href_list["ready"])
 		slot_select_load()
 		return 0
 	//	if(!ticker || ticker.current_state <= GAME_STATE_PREGAME) // Make sure we don't ready up after the round has started
@@ -323,6 +339,7 @@
 	if(!ready && href_list["preference"])
 		if(client)
 			client.prefs.process_link(src, href_list)
+			
 	else if(!href_list["late_join"])
 		new_player_panel()
 

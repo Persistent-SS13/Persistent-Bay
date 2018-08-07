@@ -22,6 +22,8 @@
 
 /datum/money_account/proc/do_transaction(var/datum/transaction/T)
 	money = max(0, money + T.amount)
+	if(transaction_log.len > 50)
+		transaction_log.Cut(1,2)
 	transaction_log += T
 
 /datum/money_account/proc/get_balance()
@@ -127,6 +129,8 @@
 
 	//create a transaction log entry
 	var/datum/transaction/T = new(source_name, purpose, amount, terminal_id)
+	if(D.transaction_log.len > 50)
+		D.transaction_log.Cut(1,2)
 	D.transaction_log.Add(T)
 
 	return 1
@@ -142,6 +146,8 @@
 
 	//create a transaction log entry
 	var/datum/transaction/T = new(payer.owner_name, purpose, amount, 0)
+	if(D.transaction_log.len > 50)
+		D.transaction_log.Cut(1,2)
 	D.transaction_log.Add(T)
 
 	return 1

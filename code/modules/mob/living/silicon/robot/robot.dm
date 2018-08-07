@@ -172,6 +172,11 @@
 	if(lmi)
 		add_lace_action()
 		
+/mob/living/silicon/robot/get_stack()
+	if(lmi)
+		return lmi.brainobj
+		
+		
 /mob/living/silicon/robot/verb/ModuleDisable()
 	set category = "Robot Commands"
 	set name = "Deactivate Module"

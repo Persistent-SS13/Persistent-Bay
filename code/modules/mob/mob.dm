@@ -20,6 +20,9 @@
 	..()
 	return QDEL_HINT_HARDDEL
 
+/mob/proc/get_stack()
+	return 0
+	
 /mob/proc/remove_screen_obj_references()
 	hands = null
 	pullin = null

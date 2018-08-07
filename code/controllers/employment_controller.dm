@@ -32,6 +32,7 @@ var/datum/controller/employment_controller/employment_controller
 						if(M.real_name == stack.get_owner_name() && M.client && M.client.inactivity <= 10 * 60 * 10)
 							// Log a five-minute unit of work on their crew record.
 							record.worked += 1	
+							connected_faction.unpaid |= record
 							break
 
 				if(round_duration_in_ticks > timerbuffer)
@@ -42,7 +43,7 @@ var/datum/controller/employment_controller/employment_controller
 			// See if it is payday...
 			if(round_duration_in_ticks > timerbuffer)
 				// It is payday, pay the employee.
-				for(var/datum/computer_file/crew_record/record in connected_faction.get_records())
+				for(var/datum/computer_file/crew_record/record in connected_faction.unpaid)
 					if(record.worked)
 						var/datum/assignment/assignment = connected_faction.get_assignment(record.assignment_uid)
 						if(!assignment) 
@@ -64,7 +65,7 @@ var/datum/controller/employment_controller/employment_controller
 							else
 								connected_faction.debts[record.get_name()] = "[to_pay]"
 						record.worked = 0
-
+				connected_faction.unpaid = list()
 		// For everyone: advance the payday timer by one hour, but only if it's payday
 		if (round_duration_in_ticks > timerbuffer)
 			timerbuffer = round_duration_in_ticks + 1 HOUR

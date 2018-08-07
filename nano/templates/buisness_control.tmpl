@@ -1,0 +1,324 @@
+
+{{if data.found_buisness}}
+	{{if data.allowed}}
+		{{:helper.link('Storefront', '', {'action' : 'switchm', 'target' : 'sale'}, data.menu == 1 ? 'disabled' : null)}}
+		{{:helper.link('Budget', '', {'action' : 'switchm', 'target' : 'budget'}, data.menu == 2 ? 'disabled' : null)}}
+		{{:helper.link('Employee Control', '', {'action' : 'switchm', 'target' : 'employee'}, data.menu == 3 ? 'disabled' : null)}}
+		{{:helper.link('Upper Management', '', {'action' : 'switchm', 'target' : 'management'}, data.menu == 4 ? 'disabled' : null)}}
+		{{:helper.link('Stockholders', '', {'action' : 'switchm', 'target' : 'stock'}, data.menu == 5 ? 'disabled' : null)}}
+		{{:helper.link('Log Out', '', {'action' : 'switchm', 'target' : 'logout'}, null)}}
+		{{if data.menu == 1}}
+			<h2>{{:data.buisness_name}} Storefront</h2><hr>
+			<br><br>
+			Welcome, {{:data.user_name}}. You are {{:data.clock_in}}.<br>
+			{{:helper.link('Clock out', '', {'action' : 'clockout'}, data.clocked_in ? null : 'disabled')}}{{:helper.link('Clock in', '', {'action' : 'clockin'}, data.clocked_in ? 'disabled' : null)}}<br><br>
+			<div class='item'>
+				<div class='itemLabel'>
+					Your current hourly pay rate:
+				</div>
+				<div class='itemContent'>
+					{{:data.current_pay}}
+				</div>
+			</div>		
+			<h3>Current Tasks</h3><hr>
+			{{:data.tasks}}
+			<hr>
+			<h3>Sales</h3><hr>
+			Sales during this pay-period:{{:data.sales}}<br>
+			{{:helper.link('Create Sale', '', {'action' : 'sale'})}}
+				
+		{{/if}}
+		{{if data.menu == 2}
+			<h2>{{:data.buisness_name}} Budget</h2><hr>
+			<br><br>
+			<div class='item'>
+				<div class='itemLabel'>
+					Revenue (6 hours):
+				</div>
+				<div class='itemContent'>
+					{{:data.sales_long}}
+				</div>
+			</div>
+			<div class='item'>
+				<div class='itemLabel'>
+					Revenue (Current pay-period):
+				</div>
+				<div class='itemContent'>
+					{{:data.sales}}
+				</div>
+			</div>
+			<div class='item'>
+				<div class='itemLabel'>
+					Your Expenses/Limit:
+				</div>
+				<div class='itemContent'>
+					{{:data.expenses}}/{{:data.expense_limit}}
+				</div>
+			</div>		
+			{{:helper.link('Newer Page', 'bullet', {'page_down' : 1}, data.page_down ? null : 'disabled')}}{{:helper.link('Older Page', 'bullet', {'page_up' : 1}, data.page_up ? null : 'disabled')}}<br><br>
+			<div class="statusDisplay" style="overflow: auto;">
+				{{if data.transactions}}
+				<table style='width: 100%'>
+				  <thead>
+					<tr>
+					  <th><b>Timestamp</b></th>
+					  <th><b>Target</b></th>
+					  <th><b>Reason</b></th>
+					  <th><b>Ethericoin</b></th>
+					</th>
+				  </thead>
+				  <tbody>
+					  {{for data.transactions}}
+						<tr>
+							<td>{{:value.date}} {{:value.time}}</td>
+							<td>{{:value.target_name}}</td>
+							<td>{{:value.purpose}}</td>
+							<td>$${{:value.amount}}</td>
+						</tr>
+					  {{/for}}
+				  </tbody>
+				</table>
+				{{else}}
+				  <span class='alert'>This account has no financial transactions on record.</span>
+				{{/if}}
+			</div>
+
+		{{/if}}
+		{{if data.menu == 3}
+			<h2>{{:data.buisness_name}} Employee Management</h2><hr>
+			<br><br>
+			{{:helper.link('Edit Employee', '', {'action' : 'editemployee'}, null)}}
+			{{:helper.link('Hire new Employee', '', {'action' : 'addemployee'}, null)}}<hr>
+			{{if data.employee_selected}}
+				<h3>{{:data.employee_name}}</h3>
+				{{:helper.link('Close Profile', 'cross', {'action' : 'employee_close'}, null)}}{{:helper.link('Print Name Tag', '', {'action' : 'employee_print'}, null)}}
+				<div class='item'>
+					<div class='itemLabel'>
+						Job Title:
+					</div>
+					<div class='itemContent'>
+						{{:helper.link(data.employee_title, '', {'action' : 'employee_title'}, null)}}
+					</div>
+				</div>
+				<div class='item'>
+					<div class='itemLabel'>
+						Hourly Pay Rate:
+					</div>
+					<div class='itemContent'>
+						{{:helper.link(data.employee_pay, '', {'action' : 'employee_pay'}, null)}}
+					</div>
+				</div>
+				<div class='item'>
+					<div class='itemLabel'>
+						Current Expense Limit:
+					</div>
+					<div class='itemContent'>
+						{{:helper.link(data.employee_expense_limit, '', {'action' : 'employee_expense_limit'}, null)}}
+					</div>
+				</div>
+				<div class='item'>
+					<div class='itemLabel'>
+						Current Expenses:
+					</div>
+					<div class='itemContent'>
+						{{:data.employee_expenses}}{{:helper.link('Reset Expenses', '', {'action' : 'employee_expenses'}, null)}}
+					</div>
+				</div>
+				
+				{{for data.accesses}}
+					{{:helper.link(value.access, '', {'action' : 'toggleAccess', 'target' : value.access}, null, value.select ? 'selected' : null)}}
+				{{/for}}
+			{{else}}
+				{{for data.employees}}
+					{{:helper.link(value.name, '', {'action' : 'employee_select', 'target' : value.name}, null)}}<br><br>
+				{{/for}}
+			{{/if}}
+		
+		{{/if}}
+		{{if data.menu == 4}}
+			<h2>{{:data.buisness_name}} Upper Management</h2><hr>
+			<br><br>
+			<h3>Current Tasks</h3><hr>
+			{{:data.tasks}}
+			<hr>
+			{{:helper.link('Edit Tasks', '', {'action' : 'edit_tasks'}, null)}}
+			<br><br>
+			<div class='item'>
+				<div class='itemLabel'>
+					Buisness Status:
+				</div>
+				<div class='itemContent'>
+					{{:helper.link('Closed', '', {'action' : 'close_buisness'}, data.closed ? 'selected' : null)}}{{:helper.link('Open', '', {'action' : 'open_buisness'}, data.closed ? 'selected' : null)}}
+				</div>
+			</div>
+			When a buisness is closed, employees cant clock in and invoices cant be created.<br>
+			<div class='item'>
+				<div class='itemLabel'>
+					Expense Cards:
+				</div>
+				<div class='itemContent'>
+					{{:helper.link('Print Expense Card', '', {'action' : 'expense_print'}, null)}}{{:helper.link('Devalidate Expense Cards', '', {'action' : 'expense_devalidate'}, null)}}
+				</div>
+			</div>
+			Expense cards can be used to pay invoices by employees with an expense limit, by swiping the invoice while wearing an ID. Devalidating expense cards will make all existing expense cards nonfunctional.
+			<div class='item'>
+				<div class='itemLabel'>
+					Tax Network:
+				</div>
+				{{if data.taxed}}
+					<div class='itemContent'>
+						{{:data.tax_network}}{{:helper.link('Disconnect', '', {'action' : 'tax_disconnect'}, null)}}
+					</div>
+				{{else}}
+					<div class='itemContent'>
+						{{:helper.link('Connect', '', {'action' : 'tax_connect'}, null)}}
+					</div>
+				{{/if}}
+			</div>
+		
+		
+		{{/if}}
+		{{if data.menu == 5}}
+			<h2>{{:data.buisness_name}} Ownership Panel</h2><hr>
+			<br><br>
+			<h4>Current Holders</h4>
+			{{for data.stock_holders}}
+				{{:value.holder_name}} : {{:value.holding}}<br>
+			{{/for}}<hr>
+			<h4>Current Proposals</h4>
+			<hr>
+			{{for data.proposals}}
+				{{:value.proposal}}<br>
+				{{:helper.link('Support', '', {'action' : 'toggleSupport', 'target' : value.proposal_ref}, null, value.supported ? 'selected' : null)}}{{:helper.link('Deny', '', {'action' : 'toggleDeny', 'target' : value.proposal_ref}, null, value.denied ? 'selected' : null)}}
+				{{if value.cancel}}
+					{{:helper.link('Cancel', '', {'action' : 'proposal_cancel', 'target' : value.proposal_ref}, null, null)}}
+				{{/if}}
+				<br><hr>
+			{{/for}}<hr>
+			<h4>Recent Proposals</h4>
+			<hr>
+			<div class="statusDisplay" style="overflow: auto;">
+				{{for data.recent_proposals}}
+					{{:value.recent_proposal}}<br><hr>
+				{{/for}}
+			</div>
+			<h4>CEO Control</h4>
+			<hr>
+			<div class='item'>
+				<div class='itemLabel'>
+					Current CEO:
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.ceo_name, '', {'action' : 'ceo_change'}, null)}}{{:helper.link('Propose Firing', '', {'action' : 'ceo_fire'}, null)}}
+				</div>
+			</div>
+			<div class='item'>
+				<div class='itemLabel'>
+					Title:
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.ceo_title, '', {'action' : 'ceo_title'}, null)}}
+				</div>
+			</div>
+			<div class='item'>
+				<div class='itemLabel'>
+					Hourly Payrate:
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.ceo_payrate, '', {'action' : 'ceo_payrate'}, null)}}
+				</div>
+			</div>
+			<div class='item'>
+				<div class='itemLabel'>
+					Dividend (% of hourly profit):
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.ceo_dividend, '', {'action' : 'ceo_dividend'}, null)}}
+				</div>
+			</div>
+			<hr>
+			<h4>Shareholders</h4>
+			<div class='item'>
+				<div class='itemLabel'>
+					Dividend per 10 stocks(% of hourly profit):
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.holders_dividend, '', {'action' : 'holders_dividend'}, null)}}
+				</div>
+			</div>
+			<div class='item'>
+				<div class='itemLabel'>
+					Your Holdings: 
+				</div>
+				<div class='itemContent'>
+					{{:data.personal_holding}} {{:helper.link('Create stock sale contract', '', {'action' : 'holders_sale'}, null)}}
+				</div>
+			</div>
+		{{/if}}	
+	{{else}}
+		<h2>You do not have access to this buisness.</h2><br><br>
+		{{:helper.link('Log Out', '', {'action' : 'switchm', 'target' : 'logout'}, null)}}
+	{{/if}}
+{{else}}
+	{{if data.submenu == 1}}
+		{{:helper.link('Enter buisness UID to log in', '', {'action' : 'login'}, null)}}<br><br>
+		or<br><br>
+		{{:helper.link('Register new buisness', '', {'action' : 'buisness_create'}, null)}}
+		<br><hr>
+		<h2>Available Buisnesses</h2>
+		{{for data.buisnesses}}
+			<br><br>{{:helper.link(value.name, '', {'action' : 'buisness_select', 'target' : value.name}, null)}}
+		{{/for}}
+	{{/if}}
+	{{if data.submenu == 2}}
+		<h2>Buisness Registration</h2>
+		<br>{{:helper.link('Cancel', '', {'action' : 'buisness_cancel'}, null)}}<br><hr><br>
+		Warning! This program has no access restrictions. Make sure only trusted associates have access to this terminal.
+		<div class='item'>
+			<div class='itemLabel'>
+				Buisness Name:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link(data.chosen_name, '', {'action' : 'buisness_name'}, null)}}
+			</div>
+			The buisness name must be unique cannot be changed after finalization! Be sure this is the name the owners want!
+		</div>
+		This must be unique and cannot be changed.<br><hr>
+		<h3>Ownership & Licensing</h3>
+		<br>
+		To create a buisness, a license fee of 2500$$ must be paid, and ownership of the buisness must be fully distributed. The buisness will have 100 stocks, each stock representing 1% ownership of the buisness.
+		Use stock contracts to get at least 2500$$ commited and the stocks fully distributed. Anything past the 2500$$ will be deposited into the new buisness account.<br><br>
+		{{:helper.link('Print new stock contract', '', {'action' : 'buisness_contract'}, null)}}<br><br>
+		<h4>Signed Stock Contracts</h4>
+		<div class="statusDisplay" style="overflow: auto;">
+			{{for data.signed_contracts}}
+				{{:value.signed_contract}}<br><hr>
+			{{/for}}
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Current Commitment:
+			</div>
+			<div class='itemContent'>
+				{{:data.commitment}}/2500
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Distributed Stocks:
+			</div>
+			<div class='itemContent'>
+				{{:data.signed_stocks}}/100
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Finalize:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link('Complete Registration', '', {'action' : 'buisness_finalize'}, data.finish_ready ? null : 'disabled')}}
+			</div>
+		</div>
+	<br>
+	{{/if}}
+{{/if}}	

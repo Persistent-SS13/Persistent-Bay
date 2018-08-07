@@ -31,7 +31,7 @@
 	
 /datum/nano_module/program/business/proc/get_distributed()
 	var/distributed = 0
-	for(var/obj/item/weapon/paper/contract/contract in pending_contracts)
+	for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
 		distributed += contract.ownership
 	if(distributed > 100)
 		cancel_contracts()
@@ -40,14 +40,14 @@
 
 /datum/nano_module/program/business/proc/get_contributed()
 	var/contributed = 0
-	for(var/obj/item/weapon/paper/contract/contract in pending_contracts)
+	for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
 		contributed += contract.required_cash
 	return contributed
 	
 	
 /datum/nano_module/program/business/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/obj/item/weapon/card/id/user_id_card = user.GetIdCard()
-	if(!user_id_card.valid) user_id_card = null
+	if(user_id_card && !user_id_card.valid) user_id_card = null
 	var/list/data = list()
 	data["src"] = "\ref[src]"
 	if(!viewing && business_name)

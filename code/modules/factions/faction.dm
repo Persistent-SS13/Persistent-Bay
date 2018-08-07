@@ -82,11 +82,12 @@ GLOBAL_LIST_EMPTY(all_business)
 				to_chat(user, "Unable to complete transaction: insufficient funds.")
 				return
 			signed_account = account 
+		signed_by = id.registered_name
 		if(linked.contract_signed(src))
-			signed_by = id.registered_name
 			signed = 1
 			info = replacetext(info, "*Unsigned*", "[signed_account.owner_name]")
 		else
+			signed_by = ""
 			signed_account = null
 		update_icon()
 		return 1
@@ -113,11 +114,12 @@ GLOBAL_LIST_EMPTY(all_business)
 			else
 				to_chat(usr, "\icon[src]<span class='warning'>Account not found.</span>")
 				return
+		signed_by = signed_account.owner_name
 		if(linked.contract_signed(src))
-			signed_by = signed_account.owner_name
 			signed = 1
 			info = replacetext(info, "*Unsigned*", "[signed_account.owner_name]")
 		else
+			signed_by = ""
 			signed_account = null
 		update_icon()
 		

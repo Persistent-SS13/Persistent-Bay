@@ -263,22 +263,23 @@
 	{{/if}}
 {{else}}
 	{{if data.submenu == 1}}
+		<br><br><br>
 		{{:helper.link('Enter business UID to log in', '', {'action' : 'login'}, null)}}<br><br>
 		or<br><br>
 		{{:helper.link('Register new business', '', {'action' : 'business_create'}, null)}}
 		<br><hr>
-		<h2>Available businesses</h2>
+		<h2>Available Businesses:</h2>
 		{{for data.businesses}}
 			<br><br>{{:helper.link(value.name, '', {'action' : 'business_select', 'target' : value.name}, null)}}
 		{{/for}}
 	{{/if}}
 	{{if data.submenu == 2}}
-		<h2>business Registration</h2>
+		<h2>Business Registration</h2>
 		<br>{{:helper.link('Cancel', '', {'action' : 'business_cancel'}, null)}}<br><hr><br>
 		Warning! This program has no access restrictions. Make sure only trusted associates have access to this terminal.
 		<div class='item'>
 			<div class='itemLabel'>
-				business Name:
+				Business Name:
 			</div>
 			<div class='itemContent'>
 				{{:helper.link(data.chosen_name, '', {'action' : 'business_name'}, null)}}

@@ -149,6 +149,7 @@
 			data["ceo_dividend"] = viewing.ceo_dividend
 			data["holders_dividend"] = viewing.stock_holders_dividend
 	else
+		data["submenu"] = submenu
 		menu = 1
 		if(submenu == 1)
 			if(user_id_card)

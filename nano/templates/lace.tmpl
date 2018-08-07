@@ -14,8 +14,8 @@
 	{{:helper.link("Off Duty", '', {'action' : 'off_duty'}, !data.duty_status_num ? 'selected' : null)}}{{:helper.link("On Duty", '', {'action' : 'on_duty'}, data.duty_status_num ? 'selected' : null)}}
 	<br><br>{{:helper.link("Disconnect from employment network", 'cross', {'action' : 'disconnect'})}}
 {{else}}
-	{{if data.buisness_name}}
-		<h2>Connected to {{:data.buisness_name}} (Buisness Network)</h2>
+	{{if data.business_name}}
+		<h2>Connected to {{:data.business_name}} (business Network)</h2>
 		<br><br>
 		{{:helper.link("Clock out", '', {'action' : 'clock_out'},  null)}}
 	{{else}}

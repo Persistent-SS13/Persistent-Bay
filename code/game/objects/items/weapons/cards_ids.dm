@@ -100,8 +100,8 @@ var/const/NO_EMAG_ACT = -50
 	name = "expense card"
 	icon_state = "permit"
 	item_state = "card-id"
-	var/ctype = 1 // 1 = faction, 2 = buisness
-	var/linked = "" // either buisness or faction
+	var/ctype = 1 // 1 = faction, 2 = business
+	var/linked = "" // either business or faction
 	var/valid = 1
 	
 /obj/item/weapon/card/expense/New()
@@ -119,10 +119,10 @@ var/const/NO_EMAG_ACT = -50
 		
 		
 	var/linked_name	
-	if(istype(invoice, /obj/item/weapon/paper/invoice/buisness))
-		var/obj/item/weapon/paper/invoice/buisness/buis_invoice = invoice
-		var/datum/small_buisness/buisness = get_buisness(buis_invoice.linked_buisness)
-		linked_name = buisness.name
+	if(istype(invoice, /obj/item/weapon/paper/invoice/business))
+		var/obj/item/weapon/paper/invoice/business/buis_invoice = invoice
+		var/datum/small_business/business = get_business(buis_invoice.linked_business)
+		linked_name = business.name
 	else
 		var/datum/world_faction/linked_faction = get_faction(invoice.linked_faction)
 		linked_name = linked_faction.name
@@ -142,19 +142,19 @@ var/const/NO_EMAG_ACT = -50
 		record.expenses += amount
 		return 1
 	else
-		var/datum/small_buisness/buisness = get_buisness(linked)
-		if(!buisness)
-			message_admins("expense card without valid buisness at [loc]")
+		var/datum/small_business/business = get_business(linked)
+		if(!business)
+			message_admins("expense card without valid business at [loc]")
 			return 0
-		var/expenses = buisness.get_expenses(username)
-		var/expense_limit = buisness.get_expense_limit(username)
+		var/expenses = business.get_expenses(username)
+		var/expense_limit = business.get_expense_limit(username)
 		var/available = expenses - expense_limit
 		if(available < amount)
 			to_chat(user, "This exceeds your expense limit.")
 			return 0
 		var/datum/transaction/T = new("[linked_name] (via [username] expense card)", invoice.purpose, -amount, "Digital Invoice")
-		buisness.central_account.do_transaction(T)
-		buisness.add_expenses(username, amount)
+		business.central_account.do_transaction(T)
+		business.add_expenses(username, amount)
 		return 1
 		
 		
@@ -191,16 +191,16 @@ var/const/NO_EMAG_ACT = -50
 						continue
 				else
 					continue
-			else if(id.selected_buisness)
+			else if(id.selected_business)
 				if(id.valid)
-					var/datum/small_buisness/buisness = get_buisness(id.selected_buisness)
-					if(buisness)
-						if(id.registered_name == buisness.ceo_name)
-							id.assignment = buisness.ceo_title
+					var/datum/small_business/business = get_business(id.selected_business)
+					if(business)
+						if(id.registered_name == business.ceo_name)
+							id.assignment = business.ceo_title
 							id.rank = 2	//actual job
 							id.name = text("[id.registered_name]'s Name Tag ([id.assignment])")
 						else
-							var/datum/employee_data/employee = buisness.get_employee_data(id.registered_name)
+							var/datum/employee_data/employee = business.get_employee_data(id.registered_name)
 							if(employee)
 								id.assignment = employee.job_title
 								id.rank = 1	//actual job
@@ -243,7 +243,7 @@ var/const/NO_EMAG_ACT = -50
 
 	var/selected_faction // faction this ID syncs to.. where should this be set?
 	
-	var/selected_buisness 
+	var/selected_business 
 	
 	var/list/approved_factions = list() // factions that have approved this card for use on their machines. format-- list("[faction.uid]")
 	var/validate_time = 0 // this should be set at the time of creation to check if the card is valid
@@ -317,7 +317,7 @@ var/const/NO_EMAG_ACT = -50
 	return
 
 /obj/item/weapon/card/id/proc/update_name()
-	if(!selected_buisness || selected_buisness == "")
+	if(!selected_business || selected_business == "")
 	
 		name = "[registered_name]'s ID Card"
 		if(military_rank && military_rank.name_short)

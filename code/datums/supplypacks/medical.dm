@@ -143,6 +143,8 @@
 					/obj/item/clothing/head/surgery/lilac = 2,
 					/obj/item/clothing/head/surgery/teal = 2,
 					/obj/item/clothing/head/surgery/heliodor = 2,
+					/obj/item/clothing/suit/patientgown = 2,
+					/obj/item/clothing/suit/surgicalapron = 2,
 					/obj/item/weapon/storage/box/masks,
 					/obj/item/weapon/storage/box/gloves)
 	cost = 20

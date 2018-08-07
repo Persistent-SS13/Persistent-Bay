@@ -1,8 +1,10 @@
 /datum/species/phorosian
 	name = SPECIES_PHOROSIAN
 	name_plural = "Phorosians"
-	icobase = 'icons/mob/human_races/r_phorosian_sb.dmi'
-	deform = 'icons/mob/human_races/r_phorosian_pb.dmi'  // TODO: Need deform.
+	icobase = 'icons/mob/human_races/species/phorosian/body.dmi'
+	deform = 'icons/mob/human_races/species/phorosian/deformed_body.dmi'  // TODO: Need deform.
+	husk_icon = 'icons/mob/human_races/species/phorosian/husk.dmi'
+	preview_icon = 'icons/mob/human_races/species/phorosian/preview.dmi'
 	rarity_value = 5
 	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick, /datum/unarmed_attack/punch, /datum/unarmed_attack/bite)
 	blurb = "Victims of Phoron Restructurant Syndrome, Phorosians are forced \

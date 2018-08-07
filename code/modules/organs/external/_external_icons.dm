@@ -53,9 +53,9 @@ var/list/limb_icon_cache = list()
 	for(var/M in markings)
 		var/datum/sprite_accessory/marking/mark_style = markings[M]["datum"]
 		var/icon/mark_s = new/icon("icon" = mark_style.icon, "icon_state" = "[mark_style.icon_state]-[organ_tag]")
-		mark_s.Blend(markings[M]["color"], ICON_ADD)
+		mark_s.Blend(markings[M]["color"], mark_style.blend)
 		overlays |= mark_s //So when it's not on your body, it has icons
-		mob_icon.Blend(mark_s, ICON_OVERLAY) //So when it's on your body, it has icons
+		mob_icon.Blend(mark_s, mark_style.layer_blend) //So when it's on your body, it has icons
 		icon_cache_key += "[M][markings[M]["color"]]"
 
 /obj/item/organ/external/var/icon_cache_key
@@ -74,13 +74,13 @@ var/list/limb_icon_cache = list()
 	if(force_icon)
 		icon = force_icon
 	else if (!dna)
-		icon = 'icons/mob/human_races/r_human.dmi'
+		icon = 'icons/mob/human_races/species/human/body.dmi'
 	else if (robotic >= ORGAN_ROBOT)
-		icon = 'icons/mob/human_races/robotic.dmi'
+		icon = 'icons/mob/human_races/cyberlimbs/robotic.dmi'
 	else if (status & ORGAN_MUTATED)
 		icon = species.deform
 	else if (owner && (SKELETON in owner.mutations))
-		icon = 'icons/mob/human_races/r_skeleton.dmi'
+		icon = 'icons/mob/human_races/species/human/skeleton.dmi'
 	else
 		icon = species.get_icobase(owner)
 

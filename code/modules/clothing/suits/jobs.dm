@@ -2,7 +2,7 @@
  * Job related
  */
 
-//Botonist
+//Botanist
 /obj/item/clothing/suit/apron
 	name = "apron"
 	desc = "A basic blue apron."
@@ -204,3 +204,11 @@
 	allowed = list(/obj/item/stack/medical, /obj/item/weapon/reagent_containers/dropper, /obj/item/weapon/reagent_containers/hypospray, /obj/item/weapon/reagent_containers/syringe, \
 	/obj/item/device/healthanalyzer, /obj/item/device/flashlight, /obj/item/device/radio, /obj/item/weapon/tank/emergency,/obj/item/weapon/scalpel,/obj/item/weapon/retractor,/obj/item/weapon/hemostat, \
 	/obj/item/weapon/cautery,/obj/item/weapon/bonegel,/obj/item/weapon/FixOVein)
+
+/obj/item/clothing/suit/patientgown
+	name = "patient gown"
+	desc = "A sterile, translucent gown used to make medical examination easier."
+	icon_state = "patient_gown"
+	item_state = "patient_gown"
+	blood_overlay_type = "armor"
+	body_parts_covered = 0

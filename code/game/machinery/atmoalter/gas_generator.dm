@@ -1,36 +1,3 @@
-/proc/create_gas_data_for_reagent(var/datum/reagent/reagent)
-
-	var/kill_later
-	if(ispath(reagent))
-		kill_later = TRUE
-		reagent = new reagent
-
-	if(!istype(reagent))
-		return
-
-	var/gas_id = lowertext(reagent.name)
-	if(gas_id in gas_data.gases)
-		return
-
-	gas_data.gases +=                   gas_id
-	gas_data.name[gas_id] =             reagent.name
-	gas_data.specific_heat[gas_id] =    reagent.gas_specific_heat
-	gas_data.molar_mass[gas_id] =       reagent.gas_molar_mass
-	gas_data.overlay_limit[gas_id] =    reagent.gas_overlay_limit
-	gas_data.flags[gas_id] =            reagent.gas_flags
-	gas_data.burn_product[gas_id] =     reagent.gas_burn_product
-	gas_data.breathed_product[gas_id] = reagent.type
-																//component_reagents intentially left null
-
-	if(reagent.gas_overlay)
-		var/image/I = image('icons/effects/tile_effects.dmi', reagent.gas_overlay, FLY_LAYER)
-		I.appearance_flags = RESET_COLOR
-		I.color = initial(reagent.color)
-		gas_data.tile_overlay[gas_id] = I
-
-	if(kill_later)
-		qdel(reagent)
-
 /obj/machinery/portable_atmospherics/gas_generator
 	name = "gas generator"
 	desc = "A complex machine used to produce gas from liquid reagents"
@@ -99,7 +66,7 @@
 
 
 /obj/machinery/portable_atmospherics/gas_generator/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
-	//container and gas generation
+	//Reagent container and gas generation
 	var/data[0]
 	data["containerLoaded"] = container ? 1 : 0
 
@@ -110,11 +77,18 @@
 	data["containerReagents"] = container_reagents
 
 	var gases[0]
-	for(var/gas in gas_data.gases)
-		if(gas_data.component_reagents[gas]) //Only gases with component reagents
-			gases[++gases.len] = list("name" = gas_data.name[gas], "id" = gas)
-	data["gases"] = gases
 
+	if(container && container.reagents)
+		var/datum/reagents/reagents = container.reagents
+		gas_iteration_loop:
+			for(var/gas in gas_data.gases)
+				var/list/component_reagents = gas_data.component_reagents[gas]
+				if(component_reagents)//Only gases with component reagents
+					for(var/R in component_reagents)
+						if(!reagents.get_reagent_amount(R)) //We won't list gases that can't be generated to keep the ui clean
+							continue gas_iteration_loop		//So if we're missing a component_reagent, we continue onto the next gas.
+					gases[++gases.len] = list("name" = gas_data.name[gas], "id" = gas)
+	data["gases"] = gases
 	//gas control
 	data["name"] = name
 	data["portConnected"] = connected_port ? 1 : 0
@@ -138,7 +112,7 @@
 
 /obj/machinery/portable_atmospherics/gas_generator/OnTopic(user, href_list)
 
-	if(href_list["generateGas"])
+	if(href_list["generateGas"])// Producing gas from reagents.
 		if(!container)
 			return TOPIC_HANDLED
 		var/gas = href_list["generateGas"]
@@ -154,20 +128,35 @@
 			playsound(src.loc, 'sound/machines/blender.ogg', 50, 1)
 			for(var/R in component_reagents)
 				container_reagents.remove_reagent(R, possible_reactions*component_reagents[R])
-			air_contents.adjust_gas(gas, possible_reactions/REAGENT_GAS_EXCHANGE_FACTOR, 1)//Adds the proper amount of moles to the container
+			air_contents.adjust_gas_temp(gas, possible_reactions/REAGENT_GAS_EXCHANGE_FACTOR, T20C, 1)//Adds the proper amount of moles to the container
 		else
 			visible_message("<span class='notice'>\The [src] flashes an 'Insufficient Reagents' error</span>")
 		return TOPIC_REFRESH
-	if(href_list["aerosolize"]) //Turning reagents into a new type of gas
+
+	if(href_list["condense"]) //Reverting gas back into reagents.
 		if(!container || !container.reagents)
 			return TOPIC_HANDLED
-		for(var/datum/reagent/R in container.reagents.reagent_list)
-			var/gas_id = lowertext(R.name)
-			if(!(gas_id in gas_data.gases))
-				create_gas_data_for_reagent(R)
-			var/reagents_rmvd = container.reagents.get_reagent_amount(R.type)
-			container.reagents.remove_reagent(R.type,reagents_rmvd)
-			air_contents.adjust_gas(gas_id, reagents_rmvd/REAGENT_GAS_EXCHANGE_FACTOR, 1)
+		if(!container.reagents.get_free_space())
+			to_chat(user, "<span class='notice'>The container is full.</span>")
+			return TOPIC_HANDLED
+		for(var/gas in air_contents.gas)
+			if(!gas_data.component_reagents[gas])
+				continue
+
+			var/list/component_reagents = gas_data.component_reagents[gas]
+			var/datum/reagents/container_reagents = container.reagents
+			var/free_space = container_reagents.get_free_space()
+
+			var/possible_transfers = min(free_space/REAGENT_GAS_EXCHANGE_FACTOR, air_contents.get_gas(gas))
+
+			if(!possible_transfers) //If we're out of free space, stop the loop
+				break
+
+			for(var/R in component_reagents)
+				container_reagents.add_reagent(R, possible_transfers*component_reagents[R]*REAGENT_GAS_EXCHANGE_FACTOR) //Adding reagents back into the container
+
+			air_contents.adjust_gas(gas, -possible_transfers, 1)//Removes the proper amount of moles from the container
+
 
 	else if(href_list["ejectContainer"])
 		if(container)

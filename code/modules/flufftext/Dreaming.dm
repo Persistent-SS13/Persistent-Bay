@@ -11,7 +11,7 @@ var/list/dreams = list(
 	"a cargo technician","the botanist","a shaft miner","the psychologist","the chemist",
 	"the virologist","the roboticist","a chef","the bartender","a chaplain","a librarian","a mouse",
 	"a beach","the holodeck","a smokey room","a voice","the cold","a mouse","an operating table","the rain","a skrell",
-	"an unathi","a tajaran","the ai core","a beaker of strange liquid","the supermatter"
+	"an unathi","the ai core","a beaker of strange liquid","the supermatter"
 	)
 
 mob/living/carbon/proc/dream()

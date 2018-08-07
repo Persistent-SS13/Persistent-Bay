@@ -142,7 +142,7 @@
 		harvest()
 
 /obj/machinery/portable_atmospherics/hydroponics/attack_generic(var/mob/user)
-
+/*
 	// Why did I ever think this was a good idea. TODO: move this onto the nymph mob.
 	if(istype(user,/mob/living/carbon/alien/diona))
 		var/mob/living/carbon/alien/diona/nymph = user
@@ -161,7 +161,7 @@
 		else
 			nymph.visible_message("<font color='blue'><b>[nymph]</b> rolls around in [src] for a bit.</font>","<font color='blue'>You roll around in [src] for a bit.</font>")
 		return
-
+	*/
 /obj/machinery/portable_atmospherics/hydroponics/New()
 	..()
 	temp_chem_holder = new()

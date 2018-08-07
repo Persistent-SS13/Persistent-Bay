@@ -10,15 +10,6 @@ var/global/list/debug_data = list()
 		for(var/datum/pipeline/line in net.line_members)
 			line.temporarily_store_air()
 
-/mob/living
-	should_save = 0
-
-/mob/living/simple_animal
-	should_save = 1
-
-/mob/living/bot
-	should_save = 1
-
 /datum/area_holder
 	var/area_type = "/area"
 	var/name
@@ -51,7 +42,8 @@ var/global/list/debug_data = list()
 	var/skip_empty = ""
 	var/skip_icon_state = 0
 	var/map_storage_loaded = 0 // this is special instructions for problematic Initialize()
-
+/mob
+	var/saved_ckey = ""
 /atom/movable/lighting_overlay
 	should_save = 0
 
@@ -161,23 +153,8 @@ var/global/list/debug_data = list()
 	StandardWrite(f)
 
 /mob/Write(savefile/f)
-	if(StandardWrite(f))
-		return
-
-/mob/living/Write(savefile/f)
-	should_save = 1
-	if(StandardWrite(f))
-		should_save = 0
-		return
-
-/mob/living/carbon/lace/Write(savefile/f)
-	should_save = 1
-	if(container2)
-		container2.should_save = 1
-	if(StandardWrite(f))
-		should_save = 0
-		if(container2) container2.should_save = 0
-		return
+	StandardWrite(f)
+	to_file(f["ckey"], ckey)
 
 /area/proc/get_turf_coords()
 	var/list/coord_list = list()
@@ -267,6 +244,10 @@ var/global/list/debug_data = list()
 	for(var/atom/movable/am in contents)
 		am.loc = null
 	StandardRead(f)
+
+/mob/Read(savefile/f)
+	StandardRead(f)
+	from_file(f["ckey"], saved_ckey)
 
 /turf/Read(savefile/f)
 	StandardRead(f)

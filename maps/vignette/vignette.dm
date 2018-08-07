@@ -7,7 +7,7 @@
 	#include "../../code/modules/lobby_music/comet_haley.dm"
 	#include "../../code/modules/lobby_music/lysendraa.dm"
 
-	#include "vignette.dmm"
+	#include "vignette-large.dmm"
 
 	#include "vignette_areas.dm"
 	#include "vignette_elevator.dm"

@@ -25,7 +25,7 @@
 	var/gas_specific_heat = 20
 	var/gas_molar_mass =    0.032
 	var/gas_overlay_limit = 0.7
-	var/gas_flags =         0
+	var/gas_flags =    		XGM_GAS_REAGENT_GAS
 	var/gas_burn_product
 	var/gas_overlay = "generic"
 	// END GAS DATA

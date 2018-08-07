@@ -34,6 +34,11 @@
 	var/datum/world_faction/faction
 	var/mob/living/carbon/lace/lacemob
 	var/sensor = 0
+	
+	var/buisness_mode = 0
+	var/connected_buisness = ""
+	
+	
 /obj/item/organ/internal/stack/proc/transfer_identity(var/mob/living/carbon/H)
 
 	if(!lacemob)
@@ -65,6 +70,7 @@
 	ui_interact(lacemob)
 /obj/item/organ/internal/stack/Topic(href, href_list)
 	switch (href_list["action"])
+		if("clock_out")
 		if("off_duty")
 			duty_status = 0
 		if("on_duty")
@@ -99,7 +105,10 @@
 	if(lacemob)
 		data["lacemob"] = 1
 		data["sensor"] = sensor
-	if(faction)
+	if(buisness_mode)
+		var/datum/small_buisness/buisness = get_buisness(connected_buisness)
+		data["buisness_name"] = buisness.name	
+	else if(faction)
 		data["faction_name"] = faction.name
 		if(duty_status == 1)
 			try_duty()

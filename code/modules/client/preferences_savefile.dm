@@ -93,10 +93,6 @@
 	remembered_info += "<b>Your account number is:</b> #[M.account_number]<br>"
 	remembered_info += "<b>Your account pin is:</b> [M.remote_access_pin]<br>"
 	remembered_info += "<b>Your account funds are:</b> [M.money]<br>"
-
-	if(M.transaction_log.len)
-		var/datum/transaction/T = M.transaction_log[1]
-		remembered_info += "<b>Your account was created:</b> [T.time], [T.date] at [T.source_terminal]<br>"
 	mannequin.mind.store_memory(remembered_info)
 	var/decl/backpack_outfit/bo
 	var/metadata

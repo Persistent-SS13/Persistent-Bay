@@ -62,10 +62,12 @@
 			if(pages < 1)
 				pages = 1
 			var/list/formatted_transactions[0]
-			for(var/i=0; i<10; i++)
-				var/minus = i+(10*curr_page-1)
-				var/datum/transaction/T = transactions[transactions.len-minus]
-				formatted_transactions[++formatted_transactions.len] = list("date" = T.date, "time" = T.time, "target_name" = T.target_name, "purpose" = T.purpose, "amount" = T.amount)
+			if(transactions.len)
+				for(var/i=0; i<10; i++)
+					var/minus = i+(10*curr_page-1)
+					if(minus == transactions.len) break
+					var/datum/transaction/T = transactions[transactions.len-minus]
+					formatted_transactions[++formatted_transactions.len] = list("date" = T.date, "time" = T.time, "target_name" = T.target_name, "purpose" = T.purpose, "amount" = T.amount)
 			data["transactions"] = formatted_transactions
 			data["page"] = curr_page
 			data["page_up"] = curr_page < pages

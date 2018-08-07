@@ -57,19 +57,21 @@
 		submenu = 1
 		data["found_business"] = 1
 		data["business_name"] = viewing.name
+		data["closed"] = !viewing.status
 		if(user_id_card)
 			data["allowed"] = viewing.is_allowed(user_id_card.registered_name)
 			data["user_name"] = user_id_card.registered_name
 			data["clocked_in"] = viewing.is_clocked_in(user_id_card.registered_name)
 			data["clock_in"] = data["clocked_in"] ? "clocked in" : "not clocked in"
-		if(menu == 1)
-			data["tasks"] = pencode2html(viewing.tasks)
-			data["sales"] = viewing.sales_short
 			var/datum/employee_data/employee = viewing.get_employee_data(user_id_card.registered_name)
 			if(employee)
 				data["current_pay"] = employee.pay_rate
 			else
 				data["current_pay"] = 0
+		if(menu == 1)
+			data["tasks"] = pencode2html(viewing.tasks)
+			data["sales"] = viewing.sales_short
+			
 		if(menu == 2)
 			var/sales_long = 0
 			for(var/num in viewing.sales_long)
@@ -88,7 +90,7 @@
 			if(transactions.len)
 				for(var/i=0; i<10; i++)
 					var/minus = i+(10*curr_page-1)
-					if(minus == transactions.len) break
+					if(minus >= transactions.len) break
 					var/datum/transaction/T = transactions[transactions.len-minus]
 					formatted_transactions[++formatted_transactions.len] = list("date" = T.date, "time" = T.time, "target_name" = T.target_name, "purpose" = T.purpose, "amount" = T.amount)
 			data["transactions"] = formatted_transactions
@@ -789,6 +791,7 @@
 				contract.ownership = amount
 				contract.name = "[connected_business.name] stock contract"
 				contract.pay_to = user_id_card.registered_name
+				contract.update_icon()
 				var/t = ""
 				t += "<font face='Verdana' color=blue><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'><center></td><tr><td><H1>Stock Purchase Contract</td>"
 				t += "<tr><td><br><b>Stock:</b>[connected_business.name] (business)<br>"
@@ -871,6 +874,7 @@
 				t += "<td><font size='4'><b>Swipe ID to sign contract.</b></font></center></font>"
 				contract.info = t
 				contract.loc = get_turf(program.computer)
+				contract.update_icon()
 				pending_contracts |= contract
 				playsound(get_turf(program.computer), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
 		

@@ -392,6 +392,7 @@ GLOBAL_LIST_EMPTY(all_business)
 	return 0
 	
 /datum/small_business/proc/get_expenses(var/real_name)
+	if(real_name == ceo_name) return INFINITY
 	if(real_name in employees)
 		var/datum/employee_data/employee = employees[real_name]
 		return employee.expenses

@@ -896,6 +896,7 @@
 				contract.finalize()
 				new_business.stock_holders[contract.signed_by] = contract.ownership
 				signed_contracts -= contract
+			if(!GLOB.all_business) GLOB.all_business = list()
 			GLOB.all_business |= new_business
 			business_name = potential_name
 			potential_name = ""

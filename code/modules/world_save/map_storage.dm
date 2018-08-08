@@ -96,7 +96,7 @@ var/global/list/debug_data = list()
 	..()
 	regenerate_icons()
 	redraw_inv()
-
+	handle_organs(1)
 /datum/proc/StandardWrite(var/savefile/f)
 	var/list/saving
 	if(found_vars.Find("[type]"))

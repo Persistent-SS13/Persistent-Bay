@@ -19,14 +19,12 @@
 	if(!locked)
 		data["connected_faction"] = viewing.name
 		var/list/all_access = list("Sales", "Budget View", "Employee Control", "Upper Management", "Door Access 1", "Door Access 2", "Door Access 3")
-		var/id = 0
 		var/list/region = list()
 		var/list/accesses = list()
 		for(var/j in all_access)
-			id++
 			var/list/access = list()
 			access["name"] = j
-			access["id"] = id
+			access["id"] = j
 			access["req"] = (j in src.business_access)
 			accesses[++accesses.len] = access
 		region["name"] = "Business Accesses"

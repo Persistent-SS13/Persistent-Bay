@@ -100,6 +100,10 @@
 			data["page"] = curr_page
 			data["page_up"] = curr_page < pages
 			data["page_down"] = curr_page > 1
+			
+			data["money"] = viewing.central_account.money
+			data["debt"] = viewing.get_debt()
+			
 		if(menu == 3)
 			var/list/formatted_names[0]
 			for(var/real_name in viewing.employees)
@@ -248,8 +252,13 @@
 			else if (href_list["target"] == "logout")
 				viewing = null
 				business_name = ""
-
-
+		if("paydebt")
+			if(!connected_business) return
+			if(!user_id_card) return
+			if(!connected_business.has_access(user_id_card.registered_name, "Budget View"))
+				to_chat(usr, "Access denied.")
+				return
+			connected_business.pay_dept()
 		if("clockout")
 			if(!connected_business) return
 			connected_business.clock_out(user.get_stack())
@@ -475,7 +484,7 @@
 				amount = 0
 			employee.expense_limit = amount
 
-
+		
 		if("employee_expenses")
 			if(!user_id_card) return
 			if(!connected_business) return

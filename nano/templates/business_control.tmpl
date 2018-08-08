@@ -31,6 +31,22 @@
 			<br><br>
 			<div class='item'>
 				<div class='itemLabel'>
+					Current Account Balance:
+				</div>
+				<div class='itemContent'>
+					{{:data.money}}
+				</div>
+			</div>
+			<div class='item'>
+				<div class='itemLabel'>
+					Current Debt:
+				</div>
+				<div class='itemContent'>
+					{{:helper.link('Pay Debt', '', {'action' : 'paydebt'}, null)}}{{:data.debt}}
+				</div>
+			</div>
+			<div class='item'>
+				<div class='itemLabel'>
 					Revenue (6 hours):
 				</div>
 				<div class='itemContent'>

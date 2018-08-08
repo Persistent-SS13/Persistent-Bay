@@ -92,7 +92,6 @@
 				for(var/i=0; i<10; i++)
 					var/minus = i+(10*(curr_page-1))
 					if(minus < transactions.len)
-						message_admins("minus: [minus]")
 						var/datum/transaction/T = transactions[transactions.len-minus]
 						if(T && istype(T))
 							formatted_transactions[++formatted_transactions.len] = list("date" = T.date, "time" = T.time, "target_name" = T.target_name, "purpose" = T.purpose, "amount" = T.amount ? T.amount : 0)
@@ -101,7 +100,6 @@
 			data["page"] = curr_page
 			data["page_up"] = curr_page < pages
 			data["page_down"] = curr_page > 1
-			message_admins("menu 2 complete")
 		if(menu == 3)
 			var/list/formatted_names[0]
 			for(var/real_name in viewing.employees)
@@ -346,11 +344,22 @@
 				to_chat(usr, "Access denied.")
 				return
 			viewing_employee = ""
+			
+		if("employee_fire")
+			if(!user_id_card) return
+			if(!connected_business.has_access(user_id_card.registered_name, "Employee Control"))
+				to_chat(usr, "Access denied.")
+				return
+			if(!viewing_employee || viewing_employee == "") return 	
+			var/choice = input(usr,"This will fire [viewing_employee] and remove them from the network. Are you sure?") in list("Confirm", "Cancel")
+			if(choice == "Confirm")
+				connected_business.employees -= viewing_employee
+				viewing_employee = ""
 		if("employee_print")
 			if(!user_id_card) return
 			if(!connected_business) return
 			if(connected_business.last_id_print > world.realtime)
-				to_chat(usr, "Your  print was rejected. The buisness has printed a nametag in the last 5 mintues.")
+				to_chat(usr, "Your  print was rejected. The business has printed a nametag in the last 5 mintues.")
 				return
 
 			if(user_id_card.registered_name == connected_business.ceo_name)
@@ -843,7 +852,7 @@
 			var/select_name = input(usr,"Enter the full name of the business.","Log in", "") as null|text
 			var/datum/small_business/viewing = get_business(select_name)
 			if(!viewing)
-				to_chat(usr, "business not found,")
+				to_chat(usr, "Business not found,")
 			if(viewing && viewing.is_allowed(user_id_card.registered_name))
 				business_name = select_name
 			else

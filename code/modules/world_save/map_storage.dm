@@ -310,6 +310,7 @@ var/global/list/debug_data = list()
 	to_file(f["turbolifts"],turbolifts)
 	to_file(f["records"],GLOB.all_crew_records)
 	to_file(f["email"],ntnet_global.email_accounts)
+	to_file(f["next_account_number"],next_account_number)
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
 	return 1
@@ -329,6 +330,7 @@ var/global/list/debug_data = list()
 		GLOB.all_crew_records = list()
 	from_file(f["factions"],GLOB.all_world_factions)
 	from_file(f["businesses"],GLOB.all_business)
+	from_file(f["next_account_number"],next_account_number)
 	var/list/areas
 	from_file(f["areas"],areas)
 	for(var/datum/area_holder/holder in areas)

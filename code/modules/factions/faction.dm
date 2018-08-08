@@ -258,6 +258,18 @@ GLOBAL_LIST_EMPTY(all_business)
 		
 /datum/small_business/New()
 	central_account = create_account(name, 0)
+
+/datum/small_business/proc/get_debt()
+	var/debt = 0
+	for(var/x in debts)
+		debt += text2num(debts[x])
+	return debt
+/datum/small_business/proc/pay_debt()
+	for(var/x in debts)
+		var/debt = text2num(debts[x])
+		if(!money_transfer(central_account,x,"Postpaid Payroll",debt))
+			return 0
+		debts -= x
 	
 /datum/small_business/contract_signed(var/obj/item/weapon/paper/contract/contract)
 	if(get_stocks(contract.created_by) < contract.ownership)

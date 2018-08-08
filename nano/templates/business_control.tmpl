@@ -91,7 +91,7 @@
 			{{:helper.link('Hire new Employee', '', {'action' : 'addemployee'}, null)}}<br><br><hr>
 			{{if data.employee_selected}}
 				<h3>{{:data.employee_name}}</h3>
-				{{:helper.link('Close Profile', '', {'action' : 'employee_close'}, null)}}
+				{{:helper.link('Close Profile', '', {'action' : 'employee_close'}, null)}}{{:helper.link('Fire Employee', '', {'action' : 'employee_fire'}, null)}}
 				<div class='item'>
 					<div class='itemLabel'>
 						Job Title:

@@ -67,7 +67,7 @@
 					var/minus = i+(10*(curr_page-1))
 					if(minus >= transactions.len) break
 					var/datum/transaction/T = transactions[transactions.len-minus]
-					formatted_transactions[++formatted_transactions.len] = list("date" = T.date, "time" = T.time, "target_name" = T.target_name, "purpose" = T.purpose, "amount" = T.amount)
+					formatted_transactions[++formatted_transactions.len] = list("date" = T.date, "time" = T.time, "target_name" = T.target_name, "purpose" = T.purpose, "amount" = T.amount ? T.amount : 0)
 			data["transactions"] = formatted_transactions
 			data["page"] = curr_page
 			data["page_up"] = curr_page < pages

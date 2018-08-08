@@ -154,7 +154,10 @@ var/global/list/debug_data = list()
 
 /mob/Write(savefile/f)
 	StandardWrite(f)
-	to_file(f["ckey"], ckey)
+	if(ckey)
+		to_file(f["ckey"], ckey)
+	else
+		to_file(f["ckey"], saved_ckey)
 
 /area/proc/get_turf_coords()
 	var/list/coord_list = list()

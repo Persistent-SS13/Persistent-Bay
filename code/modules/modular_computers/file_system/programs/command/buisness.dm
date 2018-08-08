@@ -48,7 +48,7 @@
 /datum/nano_module/program/business/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/obj/item/weapon/card/id/user_id_card = user.GetIdCard()
 	if(user_id_card && !user_id_card.valid) user_id_card = null
-	var/list/data = list()
+	var/list/data = host.initial_data()
 	data["src"] = "\ref[src]"
 	if(!viewing && business_name)
 		viewing = get_business(business_name)
@@ -89,7 +89,7 @@
 			var/list/formatted_transactions[0]
 			if(transactions.len)
 				for(var/i=0; i<10; i++)
-					var/minus = i+(10*curr_page-1)
+					var/minus = i+(10*(curr_page-1))
 					if(minus >= transactions.len) break
 					var/datum/transaction/T = transactions[transactions.len-minus]
 					formatted_transactions[++formatted_transactions.len] = list("date" = T.date, "time" = T.time, "target_name" = T.target_name, "purpose" = T.purpose, "amount" = T.amount)

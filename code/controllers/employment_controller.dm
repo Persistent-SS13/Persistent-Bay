@@ -43,6 +43,18 @@ var/datum/controller/employment_controller/employment_controller
 								
 				connected_business.unpaid = list()	
 				connected_business.pay_debt()
+				var/profit = connected_business.central_account.money - connected_business.last_balance
+				var/ceo_dividend = round(profit/100*connected_business.ceo_dividend)
+				
+				if(ceo_dividend && connected_business.ceo_name && connected_business.ceo_name != "")
+					money_transfer(connected_business.central_account,connected_business.ceo_name,"CEO Dividend",ceo_dividend)
+				
+				if(connected_business.stock_holders_dividend)
+					for(var/stock_holder in connected_business.stock_holders)
+						var/holding = text2num(connected_business.stock_holders[stock_holder])
+						var/stock_holders_dividend = profit/100*(connected_business.stock_holders_dividend/10*holding)
+						money_transfer(connected_business.central_account,stock_holder,"Stock Holders Dividend", stock_holders_dividend)
+				connected_business.last_balance = connected_business.central_account.money		
 		// For each faction...
 		for(var/datum/world_faction/connected_faction in GLOB.all_world_factions)
 

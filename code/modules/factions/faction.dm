@@ -253,7 +253,7 @@ GLOBAL_LIST_EMPTY(all_business)
 	var/tax_network = ""
 	var/last_id_print = 0
 	var/last_expense_print = 0
-	
+	var/last_balance = 0
 	var/status = 1 // 1 = opened, 0 = closed
 		
 /datum/small_business/New()

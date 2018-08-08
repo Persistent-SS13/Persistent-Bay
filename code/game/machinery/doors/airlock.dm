@@ -1295,14 +1295,23 @@ About the new airlock wires panel:
 
 		//update the door's access to match the electronics'
 		secured_wires = electronics.secure
-		if(electronics.one_access)
-			req_access.Cut()
-			req_one_access = src.electronics.conf_access
+		if(electronics.business_name)
+			if(electronics.one_access)
+				req_one_access_business_list = src.electronics.business_access
+
+			else
+				req_one_access_business_list = src.electronics.business_access
+			req_access_business = electronics.business_name
 
 		else
-			req_one_access.Cut()
-			req_access = src.electronics.conf_access
-		req_access_faction = electronics.req_access_faction
+			if(electronics.one_access)
+				req_access.Cut()
+				req_one_access = src.electronics.conf_access
+
+			else
+				req_one_access.Cut()
+				req_access = src.electronics.conf_access
+			req_access_faction = electronics.req_access_faction
 		//get the name from the assembly
 		if(assembly.created_name)
 			name = assembly.created_name

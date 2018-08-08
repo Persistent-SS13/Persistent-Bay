@@ -24,8 +24,7 @@
 			<hr>
 			<h3>Sales</h3><hr>
 			Sales during this pay-period:{{:data.sales}}<br>
-			{{:helper.link('Create Sale', '', {'action' : 'sale'})}}
-				
+			{{:helper.link('Create Sale', '', {'action' : 'sale'})}}{{:helper.link('Print Name Tag', '', {'action' : 'employee_print'}, null)}}
 		{{/if}}
 		{{if data.menu == 2}}
 			<h2>{{:data.business_name}} Budget</h2><hr>
@@ -92,7 +91,7 @@
 			{{:helper.link('Hire new Employee', '', {'action' : 'addemployee'}, null)}}<br><br><hr>
 			{{if data.employee_selected}}
 				<h3>{{:data.employee_name}}</h3>
-				{{:helper.link('Close Profile', '', {'action' : 'employee_close'}, null)}}{{:helper.link('Print Name Tag', '', {'action' : 'employee_print'}, null)}}
+				{{:helper.link('Close Profile', '', {'action' : 'employee_close'}, null)}}
 				<div class='item'>
 					<div class='itemLabel'>
 						Job Title:

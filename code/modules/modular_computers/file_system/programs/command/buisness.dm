@@ -344,46 +344,71 @@
 		if("employee_print")
 			if(!user_id_card) return
 			if(!connected_business) return
-			if(!connected_business.has_access(user_id_card.registered_name, "Employee Control"))
-				to_chat(usr, "Access denied.")
-				return
 			if(connected_business.last_id_print > world.realtime)
-				to_chat(usr, "Your  print was rejected. You have printed a nametag in the last 5 mintues.")
+				to_chat(usr, "Your  print was rejected. The buisness has printed a nametag in the last 5 mintues.")
 				return
-			if(!viewing_employee || viewing_employee == "")
-				return
-			var/datum/employee_data/employee = connected_business.get_employee_data(viewing_employee)
-			if(!employee)
-				viewing_employee = ""
-				return
-			var/datum/computer_file/crew_record/record
-			for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
-				if(R.get_name() == viewing_employee)
-					record = R
-					break	
-			if(!record)
-				message_admins("NO global record found for [usr.real_name]")
-				to_chat(usr, "No record found for [usr.real_name].. contact software developer.")
-				return
-			var/obj/item/weapon/card/id/id = new()
-			if(connected_business)
+				
+			if(user_id_card.registered_name == connected_business.ceo_name)
+				var/datum/computer_file/crew_record/record
+				for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+					if(R.get_name() == user_id_card.registered_name)
+						record = R
+						break	
+				if(!record)
+					message_admins("NO global record found for [usr.real_name]")
+					to_chat(usr, "No record found for [usr.real_name].. contact software developer.")
+					return
+				var/obj/item/weapon/card/id/id = new()
 				var/datum/world_faction/connected_faction
 				if(program.computer.network_card && program.computer.network_card.connected_network)
 					connected_faction = program.computer.network_card.connected_network.holder
 				id.selected_business = connected_business.name
 				if(connected_faction)
 					id.approved_factions |= connected_faction.uid
-				id.registered_name = viewing_employee
+				id.registered_name = user_id_card.registered_name
 				id.validate_time = world.realtime
 				if(record.linked_account)
 					id.associated_account_number = record.linked_account.account_number
+				id.rank = 2	//actual job
+				connected_business.last_id_print = world.realtime + 5 MINUTES
+				playsound(get_turf(program.computer), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
+				id.forceMove(get_turf(program.computer))
+				id.assignment = connected_business.ceo_title
+				id.icon_state = "name_tag"
 				id.update_name()
+			else
+				
+				var/datum/employee_data/employee = connected_business.get_employee_data(user_id_card.registered_name)
+				if(!employee)
+					return
+				var/datum/computer_file/crew_record/record
+				for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+					if(R.get_name() == user_id_card.registered_name)
+						record = R
+						break	
+				if(!record)
+					message_admins("NO global record found for [usr.real_name]")
+					to_chat(usr, "No record found for [usr.real_name].. contact software developer.")
+					return
+				var/obj/item/weapon/card/id/id = new()
+				var/datum/world_faction/connected_faction
+				if(program.computer.network_card && program.computer.network_card.connected_network)
+					connected_faction = program.computer.network_card.connected_network.holder
+				id.selected_business = connected_business.name
+				if(connected_faction)
+					id.approved_factions |= connected_faction.uid
+				id.registered_name = user_id_card.registered_name
+				id.validate_time = world.realtime
+				if(record.linked_account)
+					id.associated_account_number = record.linked_account.account_number
 				id.rank = 1	//actual job
 				connected_business.last_id_print = world.realtime + 5 MINUTES
 				playsound(get_turf(program.computer), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
 				id.forceMove(get_turf(program.computer))
 				id.assignment = employee.job_title
-				
+				id.icon_state = "name_tag"
+				id.update_name()
+
 		if("employee_title")		
 			if(!connected_business) return
 			if(!user_id_card) return

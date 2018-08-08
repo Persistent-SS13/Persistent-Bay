@@ -258,7 +258,7 @@
 			if(!connected_business.has_access(user_id_card.registered_name, "Budget View"))
 				to_chat(usr, "Access denied.")
 				return
-			connected_business.pay_dept()
+			connected_business.pay_debt()
 		if("clockout")
 			if(!connected_business) return
 			connected_business.clock_out(user.get_stack())

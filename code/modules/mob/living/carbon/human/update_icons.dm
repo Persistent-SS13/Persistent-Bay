@@ -153,32 +153,32 @@ Please contact me on #coderbus IRC. ~Carn x
 	update_hud()		//TODO: remove the need for this
 	overlays.Cut()
 
+	var/list/visible_overlays = overlays_standing
+
 	if (icon_update)
 		if(is_cloaked())
 
 			icon = 'icons/mob/human.dmi'
 			icon_state = "blank"
 
-			for(var/entry in list(overlays_standing[R_HAND_LAYER], overlays_standing[L_HAND_LAYER]))
-				if(istype(entry, /image))
-					overlays += entry
-				else if(istype(entry, /list))
-					for(var/inner_entry in entry)
-						overlays += inner_entry
-
-			if(species.has_floating_eyes)
-				overlays |= species.get_eyes(src)
+			visible_overlays = list(visible_overlays[R_HAND_LAYER], visible_overlays[L_HAND_LAYER])
 
 		else
 			icon = stand_icon
 			icon_state = null
 
-			for(var/entry in overlays_standing)
+			var/matrix/M = matrix()
+			if(lying && (species.prone_overlay_offset[1] || species.prone_overlay_offset[2]))
+				M.Translate(species.prone_overlay_offset[1], species.prone_overlay_offset[2])
+			for(var/entry in visible_overlays)
 				if(istype(entry, /image))
-					overlays += entry
+					var/image/overlay = entry
+					overlay.transform = M
+					overlays += overlay
 				else if(istype(entry, /list))
-					for(var/inner_entry in entry)
-						overlays += inner_entry
+					for(var/image/overlay in entry)
+						overlay.transform = M
+						overlays += overlay
 			if(species.has_floating_eyes)
 				overlays |= species.get_eyes(src)
 

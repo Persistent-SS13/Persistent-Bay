@@ -197,6 +197,8 @@
 	var/list/equip_adjust = list()
 	var/list/equip_overlays = list()
 
+	var/list/prone_overlay_offset = list(0,0)// amount to shift overlays when lying down
+
 	var/list/backgrounds = list() // format list("Outer World Colonist" = "blurbtext")
 
 /*

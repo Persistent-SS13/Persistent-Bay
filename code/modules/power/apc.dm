@@ -234,6 +234,8 @@
 		if(!loc)
 			qdel(src)
 			return
+		if(!terminal)
+			make_terminal() //This will create all the terminals for the APCs on initial map start.
 	if(loc)
 		var/area/A = src.loc.loc
 

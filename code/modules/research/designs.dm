@@ -1785,6 +1785,13 @@ CIRCUITS BELOW
 	req_tech = list(TECH_ENGINEERING = 4, TECH_BLUESPACE = 4)
 	build_path = /obj/item/weapon/circuitboard/bridge_computer
 	sort_string = "ZZZZG"
+
+/datum/design/circuit/metal_detector
+	name= "Metal Detector"
+	id = "metal_detector"
+	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 3)
+	build_path = /obj/item/weapon/circuitboard/metal_detector
+	sort_string = "ZZZYG"
 /*
 /datum/design/circuit/
 	name = ""

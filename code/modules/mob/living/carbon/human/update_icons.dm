@@ -310,7 +310,8 @@ var/global/list/damage_icon_parts = list()
 		//BEGIN CACHED ICON GENERATION.
 		var/obj/item/organ/external/chest = get_organ(BP_CHEST)
 		base_icon = chest.get_icon()
-
+		var/icon/temp = new('icons/mob/human.dmi',"blank")
+		base_icon.Blend(temp, ICON_UNDERLAY)
 		for(var/obj/item/organ/external/part in (organs-chest))
 			var/icon/temp = part.get_icon()
 			//That part makes left and right legs drawn topmost and lowermost when human looks WEST or EAST

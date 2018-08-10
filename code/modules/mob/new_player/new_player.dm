@@ -704,6 +704,23 @@
 	CreateModularRecord(new_character)
 	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1))// MAD JAMS cant last forever yo
 	if(new_character.spawn_type == 2)
+		var/obj/screen/cinematic
+
+		cinematic = new
+		cinematic.icon = 'icons/effects/gateway_intro.dmi'
+		cinematic.icon_state = "blank"
+		cinematic.plane = HUD_PLANE
+		cinematic.layer = HUD_ABOVE_ITEM_LAYER
+		cinematic.mouse_opacity = 2
+		cinematic.screen_loc = "WEST,SOUTH"
+
+		if(new_character.client)
+			new_character.client.screen += cinematic
+
+			flick("neurallaceboot",cinematic)
+			sleep(150)
+			new_character.client.screen -= cinematic
+
 		new_character.spawn_type = 1
 		sound_to(new_character, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = 1))
 		spawn()

@@ -3,7 +3,8 @@
 	desc = "A advanced metal detector used to detect weapons."
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "metal_detector"
-	plane = FLY_LAYER
+	plane = ABOVE_HUMAN_PLANE
+	layer = ABOVE_HUMAN_LAYER
 	anchored = 1
 
 	var/list/banned_objects=list(/obj/item/weapon/gun,

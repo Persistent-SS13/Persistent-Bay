@@ -754,7 +754,12 @@ About the new airlock wires panel:
 
 /obj/machinery/door/airlock/attack_ai(mob/user as mob)
 	ui_interact(user)
-
+	
+	
+/obj/machinery/door/airlock/attack_robot(mob/user as mob)
+	if(Adjacent(user))
+		attack_hand(user)
+		
 /obj/machinery/door/airlock/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/data[0]
 

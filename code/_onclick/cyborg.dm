@@ -161,5 +161,6 @@
 	A.attack_robot(src)
 
 /atom/proc/attack_robot(mob/user as mob)
-	attack_ai(user)
+	if(Adjacent(user))
+		attack_ai(user)
 	return

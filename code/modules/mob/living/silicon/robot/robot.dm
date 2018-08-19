@@ -105,9 +105,11 @@
 
 	
 	
-/mob/living/silicon/robot/proc/add_lace_action()	
-	var/datum/action/lace/laceaction = new(src)
-	laceaction.Grant(src)
+/mob/living/silicon/robot/proc/add_lace_action()
+	if(lmi)
+		if(lmi.brainobj)
+			var/datum/action/lace/laceaction = new(lmi.brainobj)
+			laceaction.Grant(src)
 
 /mob/living/silicon/robot/New(loc,var/unfinished = 0)
 	spark_system = new /datum/effect/effect/system/spark_spread()

@@ -208,6 +208,16 @@
 		<br> The pay for each employee is determined by taking the hourly pay rate, divided by the time they didn't work (it's possible for an employee to be paid for working half a shift), multiplied by their payscale. This is automatically hourly.
 		<div class='item'>
 			<div class='itemLabel'>
+				Sales Tax %:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Change", 'pencil', {'action' : 'tax_change'})}}{{:data.tax_rate}}
+			</div>
+		</div>
+		<br> Small businesses can be made to connect to your tax network if they want to use your services (like your wireless network, accesses, imports or exports). 
+		When one of their invoices is paid, this percentage of the sale will be paid to the network account..
+		<div class='item'>
+			<div class='itemLabel'>
 				Import Profit %:
 			</div>
 			<div class='itemContent'>

@@ -284,7 +284,7 @@ var/global/list/debug_data = list()
 	fdel("map_saves/game.sav")
 	var/savefile/f = new("map_saves/game.sav")
 	found_vars = list()
-	for(var/z in 1 to 27)
+	for(var/z in 1 to 50)
 		f.cd = "/map/[z]"
 		for(var/x in 1 to world.maxx step 20)
 			for(var/y in 1 to world.maxy step 20)
@@ -346,7 +346,7 @@ var/global/list/debug_data = list()
 		A.contents.Add(turfs)
 
 	f.cd = "/"
-	for(var/z in 1 to 27)
+	for(var/z in 1 to 50)
 		f.cd = "/map/[z]"
 		var/starttime2 = REALTIMEOFDAY
 		while(!f.eof)

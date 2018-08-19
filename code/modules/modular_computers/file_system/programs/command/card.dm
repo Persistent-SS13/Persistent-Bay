@@ -418,7 +418,7 @@
 					return 0
 				var/t1 = href_list["assign_target"]
 				if(t1 == "Custom")
-					if(!isleader && connected_faction.in_command(user_id_card.registered_name))
+					if(isleader || connected_faction.in_command(user_id_card.registered_name))
 						var/temp_t = sanitize(input("Enter a custom title.","Assignment", module.record.custom_title), 45)
 						//let custom jobs function as an impromptu alt title, mainly for sechuds
 						if(temp_t)
@@ -431,7 +431,7 @@
 					var/datum/assignment/user_assignment = connected_faction.get_assignment(record.assignment_uid)
 					var/datum/assignment/assignment = locate(href_list["assign_target"])
 					if(!assignment) return 0
-					if(connected_faction.in_command(user_id_card.registered_name) || user_assignment.parent.name == assignment.parent.name || isleader)
+					if(connected_faction.in_command(user_id_card.registered_name) || (user_assignment && user_assignment.parent.name == assignment.parent.name) || isleader)
 						module.record.assignment_data[module.record.assignment_uid] = "[module.record.rank]"
 						module.record.assignment_uid = assignment.uid
 						module.record.rank = text2num(module.record.assignment_data[assignment.uid])

@@ -101,7 +101,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	var/on_store_message = "has entered long-term storage."
 	var/on_store_name = "Cryogenic Oversight"
 	var/on_enter_occupant_message = "You feel cool air surround you. You go numb as your senses turn inward."
-	var/allow_occupant_types = list(/mob/living/carbon/human)
+	var/allow_occupant_types = list(/mob/living/carbon/human, /mob/living/silicon/robot, /mob/living/carbon/lace)
 	var/disallow_occupant_types = list()
 
 	var/mob/occupant = null       // Person waiting to be despawned.
@@ -132,6 +132,26 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 			return
 		if(default_deconstruction_crowbar(user, O))
 			return
+		if(istype(O, /obj/item/organ/internal/stack))
+			var/obj/item/organ/internal/stack/lace = O
+			if(!lace.lacemob)
+				to_chat(user, "This lace is inert.")
+				return 0
+			user.visible_message("<span class='notice'>\The [user] begins placing \the [lace] into \the [src].</span>", "<span class='notice'>You start placing \the [lace] into \the [src].</span>")
+			if(!do_after(user, 30, src))
+				return
+			if(src.occupant)
+				to_chat(usr, "<span class='notice'><B>\The [src] is in use.</B></span>")
+				return
+			set_occupant(lace.lacemob)
+			icon_state = occupied_icon_state
+			lace.lacemob.spawn_loc = req_access_faction
+			lace.loc = cryopod
+			to_chat(target, "<span class='notice'>[on_enter_occupant_message]</span>")
+			to_chat(target, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
+			time_entered = world.time
+			src.add_fingerprint(user)
+			
 	..()
 
 /obj/machinery/cryopod/attack_hand(mob/user = usr)
@@ -317,7 +337,12 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 // This function can not be undone; do not call this unless you are sure
 // Also make sure there is a valid control computer
 /obj/machinery/cryopod/proc/despawn_occupant()
-	occupant.loc = null
+	if(istype(occupant, /mob/living/carbon/lace))
+		var/mob/living/carbon/lace/lacemob = occupant
+		lacemob.loc = lacemob.container
+		lacemob.container.loc = null
+	else
+		occupant.loc = null
 	var/mob/new_player/M = new /mob/new_player()
 	M.loc = locate(100,100,28)
 	occupant.stored_ckey = occupant.ckey
@@ -506,6 +531,8 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		occupant.client.perspective = MOB_PERSPECTIVE
 
 	occupant.forceMove(get_turf(src))
+	for(var/obj/item/organ/internal/stack/lace in contents)
+		lace.loc = get_turf(src)
 	set_occupant(null)
 
 	icon_state = base_icon_state

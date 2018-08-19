@@ -239,7 +239,7 @@
 					return
 				menu = 3
 			else if (href_list["target"] == "management")
-				if(!connected_business.has_access(user_id_card.registered_name, "Upper Mangagement"))
+				if(!connected_business.has_access(user_id_card.registered_name, "Upper Management"))
 					to_chat(usr, "Access denied.")
 					return
 				menu = 4
@@ -950,7 +950,10 @@
 				new_business.central_account.money += commitment
 			for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
 				contract.finalize()
-				new_business.stock_holders[contract.signed_by] = contract.ownership
+				if(new_business.stock_holders[contract.signed_by])
+					new_business.stock_holders[contract.signed_by] = new_business.stock_holders[contract.signed_by]+contract.ownership
+				else
+					new_business.stock_holders[contract.signed_by] = contract.ownership
 				signed_contracts -= contract
 			if(!GLOB.all_business) GLOB.all_business = list()
 			GLOB.all_business |= new_business

@@ -106,6 +106,8 @@
 	
 	
 /mob/living/silicon/robot/proc/add_lace_action()
+	for(var/datum/action/lace/laceac in actions)
+		return 1
 	if(lmi)
 		if(lmi.brainobj)
 			var/datum/action/lace/laceaction = new(lmi.brainobj)

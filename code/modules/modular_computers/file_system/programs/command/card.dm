@@ -244,9 +244,11 @@
 /datum/computer_file/program/card_mod/Topic(href, href_list)
 	if(..())
 		return 1
-
+	var/isleader = 0
 	var/mob/user = usr
 	var/obj/item/weapon/card/id/user_id_card = user.GetIdCard()
+	if(!user_id_card || !user_id_card.valid)
+		return 0
 	var/obj/item/weapon/card/id/id_card
 	var/datum/computer_file/crew_record/user_record
 	var/list/user_accesses = list()
@@ -260,6 +262,8 @@
 		user_record = connected_faction.get_record(user_id_card.registered_name)
 		if(user_record)
 			user_accesses = user_record.access
+		if(connected_faction.leader_name == user_id_card.registered_name)
+			isleader = 1
 	else
 		return 0
 	var/datum/nano_module/program/card_mod/module = NM
@@ -270,6 +274,14 @@
 			module.record = null
 			var/datum/computer_file/crew_record/record = connected_faction.get_record(id_card.registered_name)
 			if(!record && id_card.registered_name)
+				if(!user_id_card) return
+				if(!isleader && !(core_access_reassignment in user_accesses))
+					to_chat(usr, "No record is on file for [select_name]. Insufficent access to add new members.")
+					return 0
+				if(!connected_faction.hiring_policy)
+					if(!isleader && !connected_faction.in_command(user_id_card.registered_name))
+						to_chat(usr, "No record is on file for [select_name]. Only members of Command categories can add new names to the records.")
+						return 0
 				var/choice = input(usr,"No record is on file for [id_card.registered_name]. Would you like to create a new record for [id_card.registered_name] based on information found in public records?") in list("Create", "Cancel")
 				if(choice == "Cancel") return 1
 				if(!connected_faction.get_record(id_card.registered_name) && module)
@@ -288,11 +300,11 @@
 				var/datum/computer_file/crew_record/record = connected_faction.get_record(select_name)
 				if(!record)
 					if(!user_id_card) return
-					if(!(core_access_reassignment in user_accesses))
+					if(!isleader && !(core_access_reassignment in user_accesses))
 						to_chat(usr, "No record is on file for [select_name]. Insufficent access to add new members.")
 						return 0
 					if(!connected_faction.hiring_policy)
-						if(!connected_faction.in_command(user_id_card.registered_name))
+						if(!isleader && !connected_faction.in_command(user_id_card.registered_name))
 							to_chat(usr, "No record is on file for [select_name]. Only members of Command categories can add new names to the records.")
 							return 0
 					var/choice = input(usr,"No record is on file for [select_name]. Would you like to create a new record for [select_name] based on information found in public records?") in list("Create", "Cancel")
@@ -371,42 +383,42 @@
 				computer.proc_eject_id(user)
 		if("terminate")
 			if(computer && can_run(user, 1))
-				if(!(core_access_termination in user_accesses))
+				if(!isleader && !(core_access_termination in user_accesses))
 					to_chat(usr, "Access Denied.")
 					return 0
-				if(!connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+				if(!isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
 					to_chat(usr, "Insufficent Rank.")
 					return 0
 				module.record.terminated = 1
 				update_ids(module.record.get_name())
 		if("unterminate")
 			if(computer && can_run(user, 1))
-				if(!(core_access_termination in user_accesses))
+				if(!isleader && !(core_access_termination in user_accesses))
 					to_chat(usr, "Access Denied.")
 					return 0
-				if(!connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+				if(!isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
 					to_chat(usr, "Insufficent Rank.")
 					return 0
 				module.record.terminated = 0
 				update_ids(module.record.get_name())
 		if("reset_expenses")
 			if(computer && can_run(user, 1))
-				if(!(core_access_expenses in user_accesses))
+				if(!isleader && !(core_access_expenses in user_accesses))
 					to_chat(usr, "Access Denied.")
 					return 0
 				module.record.expenses = 0
 		if("assign")
 			if(computer && can_run(user, 1))
 				if(!user_id_card) return
-				if(!(core_access_reassignment in user_accesses))
+				if(!isleader && !(core_access_reassignment in user_accesses))
 					to_chat(usr, "Access Denied.")
 					return 0
-				if(!connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+				if(!isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
 					to_chat(usr, "Insufficent Rank.")
 					return 0
 				var/t1 = href_list["assign_target"]
 				if(t1 == "Custom")
-					if(connected_faction.in_command(user_id_card.registered_name))
+					if(!isleader && connected_faction.in_command(user_id_card.registered_name))
 						var/temp_t = sanitize(input("Enter a custom title.","Assignment", module.record.custom_title), 45)
 						//let custom jobs function as an impromptu alt title, mainly for sechuds
 						if(temp_t)
@@ -419,7 +431,7 @@
 					var/datum/assignment/user_assignment = connected_faction.get_assignment(record.assignment_uid)
 					var/datum/assignment/assignment = locate(href_list["assign_target"])
 					if(!assignment) return 0
-					if(connected_faction.in_command(user_id_card.registered_name) || user_assignment.parent.name == assignment.parent.name)
+					if(!isleader && connected_faction.in_command(user_id_card.registered_name) || user_assignment.parent.name == assignment.parent.name)
 						module.record.assignment_data[module.record.assignment_uid] = "[module.record.rank]"
 						module.record.assignment_uid = assignment.uid
 						module.record.rank = text2num(module.record.assignment_data[assignment.uid])

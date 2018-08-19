@@ -406,20 +406,30 @@
 					return 0
 				var/t1 = href_list["assign_target"]
 				if(t1 == "Custom")
-					var/temp_t = sanitize(input("Enter a custom title.","Assignment", module.record.custom_title), 45)
-					//let custom jobs function as an impromptu alt title, mainly for sechuds
-					if(temp_t)
-						module.record.custom_title = temp_t
+					if(connected_faction.in_command(user_id_card.registered_name))
+						var/temp_t = sanitize(input("Enter a custom title.","Assignment", module.record.custom_title), 45)
+						//let custom jobs function as an impromptu alt title, mainly for sechuds
+						if(temp_t)
+							module.record.custom_title = temp_t
+					else
+						to_chat(usr, "Only command staff can grant custom titles.")
+						return 0
 				else
+					var/datum/computer_file/crew_record/record = connected_faction.get_record(user_id_card.registered_name)
+					var/datum/assignment/user_assignment = connected_faction.get_assignment(record.assignment_uid)
 					var/datum/assignment/assignment = locate(href_list["assign_target"])
 					if(!assignment) return 0
-					module.record.assignment_data[module.record.assignment_uid] = "[module.record.rank]"
-					module.record.assignment_uid = assignment.uid
-					module.record.rank = text2num(module.record.assignment_data[assignment.uid])
-					if(!module.record.rank)
-						module.record.rank = 1
-					module.record.custom_title = null
-				update_ids(module.record.get_name())
+					if(connected_faction.in_command(user_id_card.registered_name) || user_assignment.parent.name == assignment.parent.name)
+						module.record.assignment_data[module.record.assignment_uid] = "[module.record.rank]"
+						module.record.assignment_uid = assignment.uid
+						module.record.rank = text2num(module.record.assignment_data[assignment.uid])
+						if(!module.record.rank)
+							module.record.rank = 1
+						module.record.custom_title = null
+					else
+						to_chat(usr, "You can only make assignments in your own category.")
+						return 0
+					update_ids(module.record.get_name())
 		if("access")
 			if(href_list["allowed"] && computer && can_run(user, 1))
 				var/access_type = text2num(href_list["access_target"])

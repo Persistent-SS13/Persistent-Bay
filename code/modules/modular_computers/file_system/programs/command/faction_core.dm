@@ -86,6 +86,7 @@
 			data["network_uid"] = connected_faction.network.net_uid
 			data["network_password"] = connected_faction.network.password
 			data["network_visible"] = connected_faction.network.invisible ? "No" : "Yes"
+			data["hiring_policy"] = connected_faction.hiring_policy
 		if(menu == 6)
 			var/list/access_categories[0]
 			for(var/datum/access_category/category in connected_faction.access_categories)
@@ -205,6 +206,7 @@
 			data["money_rate"] = connected_faction.payrate
 			data["money_debt"] = connected_faction.get_debt()
 			data["money_balance"] = connected_faction.central_account.money
+			data["import_rate"] = connected_faction.import_profit
 		if(menu == 13)
 			data["rank1_req"] = connected_faction.all_promote_req
 			data["rank3_req"] = connected_faction.three_promote_req
@@ -384,6 +386,10 @@
 				connected_faction.network.password = null
 		if("change_networkvisible")
 			connected_faction.network.invisible = !connected_faction.network.invisible
+		if("hiring_command")
+			connected_faction.hiring_policy = 0
+		if("hiring_anyone")
+			connected_faction.hiring_policy = 1
 		if("menu_back")
 			menu = 3
 		if("create_accesscategory")
@@ -719,6 +725,12 @@
 					to_chat(usr, "Invalid number.")
 					return 1
 				connected_faction.payrate = selected_uid
+		if("import_change")
+			var/selected_uid = input(usr,"Enter new import profit %", "Import Profit") as null|num
+			if(!selected_uid || selected_uid < 0 || selected_uid > 1000)
+				to_chat(usr, "Invalid number.")
+				return 1
+			connected_faction.import_profit = selected_uid
 		if("money_settle")
 			connected_faction.pay_debt()
 		if("req1_change")

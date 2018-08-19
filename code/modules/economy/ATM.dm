@@ -193,10 +193,6 @@
 
 /obj/machinery/atm/interact(mob/user)
 
-	if(istype(user, /mob/living/silicon))
-		to_chat(user, "\icon[src] <span class='warning'>Artificial unit recognized. Artificial units do not currently receive monetary compensation, as per system banking regulation #1005.</span>")
-		return
-
 	if(get_dist(src,user) <= 1)
 		//make the window the user interacts with, divided out into welcome message, card 'slot', then login/data screen
 		var/list/t = list()

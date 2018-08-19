@@ -47,7 +47,8 @@ var/list/mechtoys = list(
 	var/comment = null
 	var/reason = null
 	var/orderedrank = null //used for supply console printing
-
+	var/paidby = null
+	var/last_print = 0
 var/list/point_source_descriptions = list(
 	"time" = "Base station supply",
 	"manifest" = "From exported manifests",

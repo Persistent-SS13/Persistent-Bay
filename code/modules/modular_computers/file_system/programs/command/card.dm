@@ -5,10 +5,48 @@
 	program_icon_state = "id"
 	program_menu_icon = "key"
 	extended_desc = "Program for programming crew ."
-	required_access = core_access_command_programs
+	required_access = core_access_reassignment
 	requires_ntnet = 1
 	size = 8
 
+/datum/computer_file/program/card_mod/can_run(var/mob/living/user, var/loud = 0, var/access_to_check)
+	// Defaults to required_access
+	if(!access_to_check)
+		access_to_check = required_access
+	if(!access_to_check) // No required_access, allow it.
+		return 1
+	var/list/accesses_to_check = list()
+	accesses_to_check |= access_to_check
+	accesses_to_check |= core_access_promotion
+	accesses_to_check |= core_access_employee_records
+	accesses_to_check |= core_access_expenses
+	accesses_to_check |= core_access_termination
+	// Admin override - allows operation of any computer as aghosted admin, as if you had any required access.
+	if(isghost(user) && check_rights(R_ADMIN, 0, user))
+		return 1
+
+	if(!istype(user))
+		return 0
+
+	var/obj/item/weapon/card/id/I = user.GetIdCard()
+	if(!I)
+		if(loud)
+			to_chat(user, "<span class='notice'>\The [computer] flashes an \"RFID Error - Unable to scan ID\" warning.</span>")
+		return 0
+	if(computer && computer.network_card && computer.network_card.connected_network && computer.network_card.connected_network.holder)
+		
+		for(var/access in accesses_to_check)
+			if(access in I.GetAccess(computer.network_card.connected_network.holder.uid))
+				return 1
+		if(loud)
+			to_chat(user, "<span class='notice'>\The [computer] flashes an \"Access Denied\" warning.</span>")
+	else
+		for(var/access in accesses_to_check)
+			if(access in I.GetAccess(computer.network_card.connected_network.holder.uid))
+				return 1
+			else if(loud)
+				to_chat(user, "<span class='notice'>\The [computer] flashes an \"Access Denied\" warning.</span>")
+		
 /datum/nano_module/program/card_mod
 	name = "Account modification program"
 	var/mod_mode = 1
@@ -22,6 +60,7 @@
 
 	var/list/data = host.initial_data()
 	var/obj/item/weapon/card/id/user_id_card = user.GetIdCard()
+	
 	data["src"] = "\ref[src]"
 	data["station_name"] = station_name()
 	data["assignments"] = show_assignments
@@ -29,6 +68,8 @@
 	if(program.computer.network_card && program.computer.network_card.connected_network)
 		connected_faction = program.computer.network_card.connected_network.holder
 	if(connected_faction)
+	
+	
 		data["found_faction"] = 1
 		data["faction_name"] = connected_faction.name
 		data["manifest"] = html_crew_manifest_faction(null, null, connected_faction, manifest_setting)
@@ -100,6 +141,12 @@
 						demote_button = 1
 			data["promote_button"] = promote_button
 			data["demote_button"] = demote_button
+			var/expense_limit = 0
+			var/datum/accesses/expenses = assignment.accesses["[record.rank]"]
+			if(expenses)
+				expense_limit = expenses.expense_limit
+			data["expense_limit"] = expense_limit
+			data["expenses"] = record.expenses
 			if(record.rank == 1)
 				data["title"] = assignment.name
 			else
@@ -175,6 +222,10 @@
 		ui.set_initial_data(data)
 		ui.open()
 
+		
+		
+
+		
 /datum/nano_module/program/card_mod/proc/format_jobs(list/jobs)
 	var/obj/item/weapon/card/id/id_card = program.computer.card_slot ? program.computer.card_slot.stored_card : null
 	var/list/formatted = list()
@@ -197,11 +248,20 @@
 	var/mob/user = usr
 	var/obj/item/weapon/card/id/user_id_card = user.GetIdCard()
 	var/obj/item/weapon/card/id/id_card
+	var/datum/computer_file/crew_record/user_record
+	var/list/user_accesses = list()
 	if (computer.card_slot)
 		id_card = computer.card_slot.stored_card
 	var/datum/world_faction/connected_faction
 	if(computer.network_card && computer.network_card.connected_network)
 		connected_faction = computer.network_card.connected_network.holder
+		
+	if(connected_faction)
+		user_record = connected_faction.get_record(user_id_card.registered_name)
+		if(user_record)
+			user_accesses = user_record.access
+	else
+		return 0
 	var/datum/nano_module/program/card_mod/module = NM
 	switch(href_list["action"])
 		if("scan_id")
@@ -227,6 +287,14 @@
 			if(select_name)
 				var/datum/computer_file/crew_record/record = connected_faction.get_record(select_name)
 				if(!record)
+					if(!user_id_card) return
+					if(!(core_access_reassignment in user_accesses))
+						to_chat(usr, "No record is on file for [select_name]. Insufficent access to add new members.")
+						return 0
+					if(!connected_faction.hiring_policy)
+						if(!connected_faction.in_command(user_id_card.registered_name))
+							to_chat(usr, "No record is on file for [select_name]. Only members of Command categories can add new names to the records.")
+							return 0
 					var/choice = input(usr,"No record is on file for [select_name]. Would you like to create a new record for [select_name] based on information found in public records?") in list("Create", "Cancel")
 					if(choice == "Cancel") return 1
 					if(!connected_faction.get_record(select_name) && module)
@@ -238,6 +306,7 @@
 						module.record = record
 				else
 					module.record = record
+					
 		if("switchm")
 			if(href_list["target"] == "mod")
 				module.mod_mode = 1
@@ -302,14 +371,39 @@
 				computer.proc_eject_id(user)
 		if("terminate")
 			if(computer && can_run(user, 1))
+				if(!(core_access_termination in user_accesses))
+					to_chat(usr, "Access Denied.")
+					return 0
+				if(!connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+					to_chat(usr, "Insufficent Rank.")
+					return 0
 				module.record.terminated = 1
 				update_ids(module.record.get_name())
 		if("unterminate")
 			if(computer && can_run(user, 1))
+				if(!(core_access_termination in user_accesses))
+					to_chat(usr, "Access Denied.")
+					return 0
+				if(!connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+					to_chat(usr, "Insufficent Rank.")
+					return 0
 				module.record.terminated = 0
 				update_ids(module.record.get_name())
+		if("reset_expenses")
+			if(computer && can_run(user, 1))
+				if(!(core_access_expenses in user_accesses))
+					to_chat(usr, "Access Denied.")
+					return 0
+				module.record.expenses = 0
 		if("assign")
 			if(computer && can_run(user, 1))
+				if(!user_id_card) return
+				if(!(core_access_reassignment in user_accesses))
+					to_chat(usr, "Access Denied.")
+					return 0
+				if(!connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+					to_chat(usr, "Insufficent Rank.")
+					return 0
 				var/t1 = href_list["assign_target"]
 				if(t1 == "Custom")
 					var/temp_t = sanitize(input("Enter a custom title.","Assignment", module.record.custom_title), 45)
@@ -336,10 +430,22 @@
 						id_card.access += access_type
 		if("promote")
 			if(!user_id_card) return
+			if(!(core_access_promotion in user_accesses))
+				to_chat(usr, "Access Denied.")
+				return 0
+			if(!connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+				to_chat(usr, "Insufficent Rank.")
+				return 0
 			module.record.promote_votes |= user_id_card.registered_name
 			module.record.check_rank_change(connected_faction)
 		if("demote")
 			if(!user_id_card) return
+			if(!(core_access_promotion in user_accesses))
+				to_chat(usr, "Access Denied.")
+				return 0
+			if(!connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+				to_chat(usr, "Insufficent Rank.")
+				return 0
 			module.record.demote_votes |= user_id_card.registered_name
 			module.record.check_rank_change(connected_faction)
 		if("promote_cancel")
@@ -357,6 +463,12 @@
 			to_chat(user, "Card successfully resynced to [connected_faction.name]")
 			update_ids(id_card.registered_name)
 		if("edit_record")
+			if(!(core_access_employee_records in user_accesses))
+				to_chat(usr, "Access Denied.")
+				return 0
+			if(!connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+				to_chat(usr, "Insufficent Rank.")
+				return 0
 			var/newValue
 			newValue = replacetext(input(usr, "Edit the employee record. You may use HTML paper formatting tags:", "Record edit", replacetext(html_decode(module.record.get_emplRecord()), "\[br\]", "\n")) as null|message, "\n", "\[br\]")
 			if(newValue)

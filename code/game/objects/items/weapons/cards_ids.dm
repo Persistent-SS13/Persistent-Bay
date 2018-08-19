@@ -133,7 +133,15 @@ var/const/NO_EMAG_ACT = -50
 			message_admins("expense card without valid faction at [loc]")
 			return 0
 		var/datum/computer_file/crew_record/record = faction.get_record(username)
-		var/available = record.expense_limit - record.expenses
+		if(!record)
+			return 0
+		var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
+		if(!assignment)
+			return 0
+		var/datum/accesses/copy = assignment.accesses["[record.rank]"]
+		if(!copy)
+			return 0
+		var/available = copy.expense_limit - record.expenses
 		if(available < amount)
 			to_chat(user, "This exceeds your expense limit.")
 			return 0

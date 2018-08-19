@@ -47,11 +47,11 @@ FIELD_SHORT_SECURE("DNA", dna, core_access_security_programs)
 FIELD_SHORT_SECURE("Fingerprint", fingerprint, core_access_security_programs)
 
 // EMPLOYMENT RECORDS
-FIELD_LONG_SECURE("Employment Record", emplRecord, core_access_command_programs)
-FIELD_SHORT_SECURE("Home System", homeSystem, core_access_command_programs)
-FIELD_SHORT_SECURE("Citizenship", citizenship, core_access_command_programs)
-FIELD_SHORT_SECURE("Faction", faction, core_access_command_programs)
-FIELD_SHORT_SECURE("Religion", religion, core_access_command_programs)
+FIELD_LONG_SECURE("Employment Record", emplRecord, core_access_employee_records)
+FIELD_SHORT_SECURE("Home System", homeSystem, core_access_employee_records)
+FIELD_SHORT_SECURE("Citizenship", citizenship, core_access_employee_records)
+FIELD_SHORT_SECURE("Faction", faction, core_access_employee_records)
+FIELD_SHORT_SECURE("Religion", religion, core_access_employee_records)
 
 // ANTAG RECORDS
 FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
@@ -79,7 +79,6 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/assignment_data = list() // format = list(assignment_uid = rank)
 	var/validate_time = 0
 	var/worked = 0
-	var/expense_limit = 0
 	var/expenses = 0
 	
 	

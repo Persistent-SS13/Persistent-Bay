@@ -28,7 +28,7 @@ GLOBAL_LIST_EMPTY(all_business)
 	if(signed_account)
 		if(signed_account.money < required_cash)
 			return 0
-		if(signed_account.reserved < signed_account.money)
+		if(signed_account.reserved > signed_account.money)
 			return 0
 		if(signed_account.reserved < required_cash)
 			return 0
@@ -98,28 +98,26 @@ GLOBAL_LIST_EMPTY(all_business)
 		return 1
 	..()
 /obj/item/weapon/paper/contract/Topic(href, href_list)
-	..()
 	if(!usr || (usr.stat || usr.restrained()))
 		return
 	if(href_list["pay"])
 		if(signed || !linked || approved || cancelled) return 1
-		if(required_cash)
-			var/datum/money_account/linked_account
-			var/attempt_account_num = input("Enter account number to pay the contract with.", "account number") as num
-			var/attempt_pin = input("Enter pin code", "Account pin") as num
-			linked_account = attempt_account_access(attempt_account_num, attempt_pin, 1)
-			if(linked_account)
-				if(linked_account.suspended)
-					linked_account = null
-					to_chat(usr, "\icon[src]<span class='warning'>Account has been suspended.</span>")
-				if(required_cash > linked_account.money-linked_account.reserved)
-					to_chat(usr, "Unable to complete transaction: insufficient funds.")
-					return
-				signed_account = linked_account
-				signed_account.reserved += required_cash
-			else
-				to_chat(usr, "\icon[src]<span class='warning'>Account not found.</span>")
+		var/datum/money_account/linked_account
+		var/attempt_account_num = input("Enter account number to pay the contract with.", "account number") as num
+		var/attempt_pin = input("Enter pin code", "Account pin") as num
+		linked_account = attempt_account_access(attempt_account_num, attempt_pin, 1)
+		if(linked_account)
+			if(linked_account.suspended)
+				linked_account = null
+				to_chat(usr, "\icon[src]<span class='warning'>Account has been suspended.</span>")
+			if(required_cash > linked_account.money-linked_account.reserved)
+				to_chat(usr, "Unable to complete transaction: insufficient funds.")
 				return
+			signed_account = linked_account
+			signed_account.reserved += required_cash
+		else
+			to_chat(usr, "\icon[src]<span class='warning'>Account not found.</span>")
+			return
 		signed_by = signed_account.owner_name
 		if(linked.contract_signed(src))
 			signed = 1
@@ -128,7 +126,7 @@ GLOBAL_LIST_EMPTY(all_business)
 			signed_by = ""
 			signed_account = null
 		update_icon()
-		
+	..()	
 /obj/item/weapon/paper/contract/proc/cancel()
 	if(linked)
 		linked.contract_cancelled(src)

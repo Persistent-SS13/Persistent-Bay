@@ -133,13 +133,23 @@
 		ui.set_initial_data(data)
 		ui.open()
 /obj/item/organ/internal/stack/proc/get_potential()
-	if(!owner) return list()
+	if(!owner)
+		var/list/potential[0]
+		if(istype(loc, /obj/item/device/lmi))
+			if(istype(loc.loc, /mob/living/silicon/robot))
+				var/mob/living/silicon/robot/robot = loc.loc
+				for(var/datum/world_faction/fact in GLOB.all_world_factions)
+					var/datum/computer_file/crew_record/record = fact.get_record(robot.real_name)
+					if(record)
+						potential |= fact
+		return potential
+
 	var/list/potential[0]
 	for(var/datum/world_faction/fact in GLOB.all_world_factions)
 		var/datum/computer_file/crew_record/record = fact.get_record(owner.real_name)
 		if(record)
 			potential |= fact
-		else
+			
 	return potential
 /obj/item/organ/internal/stack/proc/try_duty()
 	if(!owner || !faction)

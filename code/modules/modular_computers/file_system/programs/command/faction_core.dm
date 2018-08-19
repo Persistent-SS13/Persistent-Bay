@@ -207,6 +207,7 @@
 			data["money_debt"] = connected_faction.get_debt()
 			data["money_balance"] = connected_faction.central_account.money
 			data["import_rate"] = connected_faction.import_profit
+			data["export_rate"] = connected_faction.export_profit
 		if(menu == 13)
 			data["rank1_req"] = connected_faction.all_promote_req
 			data["rank3_req"] = connected_faction.three_promote_req
@@ -726,11 +727,18 @@
 					return 1
 				connected_faction.payrate = selected_uid
 		if("import_change")
-			var/selected_uid = input(usr,"Enter new import profit %", "Import Profit") as null|num
+			var/selected_uid = input(usr,"Enter new import profit %", "Import Profit", connected_faction.import_profit) as null|num
 			if(!selected_uid || selected_uid < 0 || selected_uid > 1000)
 				to_chat(usr, "Invalid number.")
 				return 1
 			connected_faction.import_profit = selected_uid
+		if("export_change")
+			var/selected_uid = input(usr,"Enter new export tax %", "Export Tax", connected_faction.export_profit) as null|num
+			if(!selected_uid || selected_uid < 0 || selected_uid > 100)
+				to_chat(usr, "Invalid number.")
+				return 1
+			connected_faction.export_profit = selected_uid	
+			
 		if("money_settle")
 			connected_faction.pay_debt()
 		if("req1_change")

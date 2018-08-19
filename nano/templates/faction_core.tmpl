@@ -218,6 +218,15 @@
 		The invoice will increase the cost of the import by this percentage and pay it the network when the invoice is paid.
 		<div class='item'>
 			<div class='itemLabel'>
+				Export Tax %:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Change", 'pencil', {'action' : 'export_change'})}}{{:data.export_rate}}
+			</div>
+		</div>
+		<br> Export orders can be printed which small businesses can connect to can fill with their own exports. When the export order is sent, the business will collect the profit and then pay this percentage as tax to the network. 
+		<div class='item'>
+			<div class='itemLabel'>
 				Expense Card Control:
 			</div>
 			<div class='itemContent'>

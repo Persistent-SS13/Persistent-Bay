@@ -202,6 +202,15 @@
 		print_export(user, href_list["print_export"])
 
 		return 1
+		
+	if(href_list["print_export2"])
+		if(!check_access(core_access_invoicing)) return
+		if(!can_print())
+			return
+		print_export_business(user, href_list["print_export"])
+
+		return 1	
+		
 	if(href_list["print_summary"])
 		if(!can_print())
 			return
@@ -245,13 +254,24 @@
 			if(T.density)	continue
 			for(var/obj/structure/closet/closet in T.contents)
 				for(var/obj/item/weapon/paper/export/export in closet.contents)
-					var/earn = supply_controller.fill_order(export.export_id, closet)
-					if(earn)
-						var/datum/transaction/Te = new("Central Authority Exports", "Export ([export.name])", earn, 1)
-						connected_faction.central_account.do_transaction(Te)
-						earned += earn
-						sent++
-					break
+					if(export.business_name)
+						var/earn = supply_controller.fill_order(export.export_id, closet)
+						if(earn)
+							var/datum/small_business/business = get_business(export.business_name)
+							if(business)
+								var/datum/transaction/Te = new("Central Authority Exports", "Export ([export.name])", earn, 1)
+								business.central_account.do_transaction(Te)
+								earned += business.pay_export_tax(earn, connected_faction)
+								sent++
+						break
+					else if(export.business_name == 0)
+						var/earn = supply_controller.fill_order(export.export_id, closet)
+						if(earn)
+							var/datum/transaction/Te = new("Central Authority Exports", "Export ([export.name])", earn, 1)
+							connected_faction.central_account.do_transaction(Te)
+							earned += earn
+							sent++
+						break
 				break
 		to_chat(usr, "Export protocol completed, [sent] orders were succesfully sent and [earned] $$ was put into the account.")
 	if(href_list["launch_order"])
@@ -495,8 +515,29 @@
 	t += "<h3>[connected_faction.name] Export Manifest</h3><hr>"
 	t += "EXPORT: [order.name]<br>"
 	t += "PRINTED BY: [user.name]<br>"
-	t += "SUPPLIED/REQUESTED: [order.supplied]/[order.required]<br>"
+	if(order.required)
+		t += "SUPPLIED/REQUESTED: [order.supplied]/[order.required]<br>"
 	t += "<hr>"
 	var/obj/item/weapon/paper/export/export = new(program.computer.loc)
 	export.info = t
 	export.export_id = order.id
+
+/datum/nano_module/program/supply/proc/print_export_business(var/mob/user, var/id)
+	var/datum/world_faction/connected_faction
+	if(program.computer.network_card && program.computer.network_card.connected_network)
+		connected_faction = program.computer.network_card.connected_network.holder
+	if(!connected_faction)
+		return 1
+	var/datum/export_order/order = locate(id)
+	var/t = ""
+	t += "<h3>Business Export Manifest</h3><hr>"
+	t += "EXPORT: [order.name]<br>"
+	t += "PRINTED BY: [user.name]<br>"
+	if(order.required)
+		t += "SUPPLIED/REQUESTED: [order.supplied]/[order.required]<br>"
+	t += "<hr><br>"
+	var/obj/item/weapon/paper/export/business/export = new(program.computer.loc)
+	export.info = t
+	export.export_id = order.id
+	
+	

@@ -207,7 +207,7 @@
 		if(!check_access(core_access_invoicing)) return
 		if(!can_print())
 			return
-		print_export_business(user, href_list["print_export"])
+		print_export_business(user, href_list["print_export2"])
 
 		return 1	
 		

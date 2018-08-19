@@ -6,7 +6,9 @@
 		return
 
 	src.blinded = null
-
+	if(last_hud_update > world.time)
+		last_hud_update = world.time + 15 SECONDS
+		update_action_buttons()
 	//Status updates, death etc.
 	clamp_values()
 	handle_regular_status_updates()

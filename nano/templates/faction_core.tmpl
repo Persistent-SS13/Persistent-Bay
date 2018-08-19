@@ -34,6 +34,13 @@
 		<br><br>{{:helper.link("Change Tag", 'pencil', {'action' : 'change_tag'})}} Tag: <b>{{:data.faction_tag}}</b>
 		<br><br>{{:helper.link("Change Description/Mission Statement", 'pencil', {'action' : 'change_purpose'})}} Purpose: <b>{{:data.faction_purpose}}</b>
 		<br><br>{{:helper.link("Change LogNet Password", 'radiation', {'action' : 'change_password'})}}
+		<div class='itemLabel'>
+			Hiring Policy:
+		</div>
+		<div class='itemContent'>
+			{{:helper.link("Only command staff can hire new employees.", '', {'action' : 'hiring_command'}, data.hiring_policy ? null : 'selected')}}{{:helper.link("Anyone with reassignment access can hire new employees.", '', {'action' : 'hiring_anyone'}, data.hiring_policy ? 'selected' : null)}}
+		</div>
+		
 	{{/if}}
 	{{if data.menu == 5}}
 		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>

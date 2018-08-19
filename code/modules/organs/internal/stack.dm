@@ -105,7 +105,7 @@
 			M.key = lacemob.key
 	GLOB.nanomanager.update_uis(src)
 
-/obj/item/organ/internal/stack/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
+/obj/item/organ/internal/stack/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.interactive_state)
 	var/list/data = list()
 	try_connect()
 	if(lacemob)

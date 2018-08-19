@@ -57,7 +57,11 @@
 	to_chat(lacemob, "<span class='notice'>You feel slightly disoriented. Your conciousness suddenly shifts into a neural lace.</span>")
 
 /obj/item/organ/internal/stack/proc/get_owner_name()
-	if(!owner) return 0
+	if(!owner)
+		if(istype(loc, /obj/item/device/lmi))
+			if(istype(loc.loc, /mob/living/silicon/robot))
+				var/mob/living/silicon/robot/robot = loc.loc
+				return robot.real_name
 	return owner.real_name
 
 /obj/item/organ/internal/stack/ui_action_click()

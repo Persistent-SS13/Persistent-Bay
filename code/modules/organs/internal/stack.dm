@@ -61,9 +61,15 @@
 	return owner.real_name
 
 /obj/item/organ/internal/stack/ui_action_click()
-	if(!owner && !lacemob) return
+	var/mob/living/silicon/robot/robot
+	if(istype(loc, /obj/item/device/lmi))
+		if(istype(loc.loc, /mob/living/silicon/robot))
+			robot = loc.loc
+	if(!owner && !lacemob && !robot) return
 	if(lacemob)
 		ui_interact(lacemob)
+	else if(robot)
+		ui_interact(robot)
 	else
 		ui_interact(owner)
 /obj/item/organ/internal/stack/proc/ui_mobaction_click()

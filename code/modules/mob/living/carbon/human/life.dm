@@ -46,7 +46,7 @@
 		return
 	if (transforming)
 		return
-	if(last_hud_update > world.time)
+	if(last_hud_update < world.time)
 		last_hud_update = world.time + 15 SECONDS
 		update_action_buttons()
 	fire_alert = 0 //Reset this here, because both breathe() and handle_environment() have a chance to set it.

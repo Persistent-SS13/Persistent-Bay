@@ -206,6 +206,7 @@
 			data["money_rate"] = connected_faction.payrate
 			data["money_debt"] = connected_faction.get_debt()
 			data["money_balance"] = connected_faction.central_account.money
+			data["tax_rate"] = connected_faction.tax_rate
 			data["import_rate"] = connected_faction.import_profit
 			data["export_rate"] = connected_faction.export_profit
 		if(menu == 13)
@@ -726,6 +727,12 @@
 					to_chat(usr, "Invalid number.")
 					return 1
 				connected_faction.payrate = selected_uid
+		if("tax_change")
+			var/selected_uid = input(usr,"Enter new sales tax %", "Sales Tax", connected_faction.tax_rate) as null|num
+			if(!selected_uid || selected_uid < 0 || selected_uid > 100)
+				to_chat(usr, "Invalid number.")
+				return 1
+			connected_faction.tax_rate = selected_uid
 		if("import_change")
 			var/selected_uid = input(usr,"Enter new import profit %", "Import Profit", connected_faction.import_profit) as null|num
 			if(!selected_uid || selected_uid < 0 || selected_uid > 1000)

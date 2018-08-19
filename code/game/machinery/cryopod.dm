@@ -137,6 +137,9 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 			if(!lace.lacemob)
 				to_chat(user, "This lace is inert.")
 				return 0
+			if(!req_access_faction || req_access_faction == "")
+				to_chat(usr, "<span class='notice'><B>\The [src] is not connected to a network.</B></span>")
+				return
 			user.visible_message("<span class='notice'>\The [user] begins placing \the [lace] into \the [src].</span>", "<span class='notice'>You start placing \the [lace] into \the [src].</span>")
 			if(!do_after(user, 30, src))
 				return

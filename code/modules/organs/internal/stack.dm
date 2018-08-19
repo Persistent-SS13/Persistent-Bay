@@ -104,11 +104,19 @@
 			sensor = 1
 		if("logoff")
 			var/mob/new_player/M = new /mob/new_player()
-			M.loc = locate(100,100,28)
+			M.loc = null
 			lacemob.stored_ckey = lacemob.ckey
 			M.key = lacemob.key
+		if("die")
+			var/choice = input(usr,"THIS WILL PERMANENTLY KILL YOUR CHARACTER! YOU WILL NOT BE ALLOWED TO REMAKE THE SAME CHARACTER.") in list("Kill my character, return to character creation", "Cancel")
+			if(choice == "Kill my character, return to character creation")
+				lacemob.perma_dead = 1
+				var/mob/new_player/M = new /mob/new_player()
+				M.loc = null
+				lacemob.stored_ckey = lacemob.ckey
+				M.key = lacemob.key
 	GLOB.nanomanager.update_uis(src)
-
+/mob/var/perma_dead = 0
 /obj/item/organ/internal/stack/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.interactive_state)
 	var/list/data = list()
 	try_connect()

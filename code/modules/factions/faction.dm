@@ -474,13 +474,17 @@ GLOBAL_LIST_EMPTY(all_business)
 	if(!tax_network || tax_network == "") return 0
 	var/datum/world_faction/connected_faction = get_faction(tax_network)
 	if(!connected_faction) return 0
-	var/datum/transaction/Te = new("Tax from [name]", "Tax", round(amount/100*connected_faction.tax_rate), "Tax Network")
+	var/datum/transaction/Te = new("Sales Tax from [name]", "Tax", round(amount/100*connected_faction.tax_rate), "Tax Network")
 	connected_faction.central_account.do_transaction(Te)
-	Te = new("Tax to [connected_faction.name]", "Tax", round(-amount/100*connected_faction.tax_rate), "Tax Network")
+	Te = new("Sales Tax to [connected_faction.name]", "Tax", round(-amount/100*connected_faction.tax_rate), "Tax Network")
 	central_account.do_transaction(Te)
 	
-	
-	
+/datum/small_business/proc/pay_export_tax(var/amount, var/datum/world_faction/connected_faction)
+	var/datum/transaction/Te = new("Export from [name]", "Tax", round(amount/100*connected_faction.export_profit), "Tax Network")
+	connected_faction.central_account.do_transaction(Te)
+	Te = new("Export Tax to [connected_faction.name]", "Tax", round(-amount/100*connected_faction.export_profit), "Tax Network")
+	central_account.do_transaction(Te)
+	return (amount/100*connected_faction.export_profit)
 	
 /proc/get_business(var/name)
 	var/datum/small_business/found_faction
@@ -556,7 +560,7 @@ GLOBAL_LIST_EMPTY(all_business)
 	
 	var/tax_rate = 10
 	var/import_profit = 10
-	
+	var/export_profit = 20
 	
 	var/hiring_policy = 0 // if hiring_policy, anyone with reassignment can add people to the network, else only people in command a command category with reassignment can add people
 	var/last_expense_print = 0

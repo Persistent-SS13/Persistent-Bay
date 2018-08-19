@@ -124,7 +124,7 @@
 		<h2>{{:value.name}}</h2>
 		<h3>{{:value.supplied}} / {{:value.required}} Supplied</h3>
 		<br><br>
-		{{:helper.link('Print Export Manifest', 'print', {'print_export' : value.id}, data.can_print ? null : 'disabled')}}
+		{{:helper.link('Print Export Manifest', 'print', {'print_export' : value.id}, data.can_print ? null : 'disabled')}}{{:helper.link('Print Business Export Manifest', 'print', {'print_export2' : value.id}, data.can_print ? null : 'disabled')}}
 		{{if !data.can_print}}
 			No printer detected! Install a printer.
 		{{/if}}

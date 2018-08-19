@@ -465,7 +465,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			to_chat(usr, "A UID for the network must be chosen first.")
 			return	
 			
-		var/cost = round(input("How much ethericoin should be the funding contract be for?", "Funding", 10000-get_contributed()) as null|num)
+		var/cost = round(input("How much ethericoin should be the funding contract be for?", "Funding", 25000-get_contributed()) as null|num)
 		if(!cost || cost < 0)
 			return 0
 		var/choice = input(usr,"This will create a funding contract for [cost] ethericoin.") in list("Confirm", "Cancel")
@@ -492,8 +492,8 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		if(!chosen_uid || !chosen_name || !chosen_short || !chosen_tag || !chosen_password || !starting_leader || !chosen_netuid)
 			to_chat(usr, "Network not configured correctly. Check settings.")
 			return 1
-		if(get_contributed() < 10000)
-			to_chat(usr, "10000$ needs to be committed in order to proceed.")
+		if(get_contributed() < 25000)
+			to_chat(usr, "25000$ needs to be committed in order to proceed.")
 			
 		if(get_faction(chosen_uid))
 			chosen_uid = null

@@ -431,7 +431,7 @@
 					var/datum/assignment/user_assignment = connected_faction.get_assignment(record.assignment_uid)
 					var/datum/assignment/assignment = locate(href_list["assign_target"])
 					if(!assignment) return 0
-					if(!isleader && connected_faction.in_command(user_id_card.registered_name) || user_assignment.parent.name == assignment.parent.name)
+					if(connected_faction.in_command(user_id_card.registered_name) || user_assignment.parent.name == assignment.parent.name || isleader)
 						module.record.assignment_data[module.record.assignment_uid] = "[module.record.rank]"
 						module.record.assignment_uid = assignment.uid
 						module.record.rank = text2num(module.record.assignment_data[assignment.uid])
@@ -452,20 +452,20 @@
 						id_card.access += access_type
 		if("promote")
 			if(!user_id_card) return
-			if(!(core_access_promotion in user_accesses))
+			if(!isleader && !(core_access_promotion in user_accesses))
 				to_chat(usr, "Access Denied.")
 				return 0
-			if(!connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+			if(!isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
 				to_chat(usr, "Insufficent Rank.")
 				return 0
 			module.record.promote_votes |= user_id_card.registered_name
 			module.record.check_rank_change(connected_faction)
 		if("demote")
 			if(!user_id_card) return
-			if(!(core_access_promotion in user_accesses))
+			if(!isleader && !(core_access_promotion in user_accesses))
 				to_chat(usr, "Access Denied.")
 				return 0
-			if(!connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+			if(!isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
 				to_chat(usr, "Insufficent Rank.")
 				return 0
 			module.record.demote_votes |= user_id_card.registered_name
@@ -485,10 +485,10 @@
 			to_chat(user, "Card successfully resynced to [connected_faction.name]")
 			update_ids(id_card.registered_name)
 		if("edit_record")
-			if(!(core_access_employee_records in user_accesses))
+			if(!isleader && !(core_access_employee_records in user_accesses))
 				to_chat(usr, "Access Denied.")
 				return 0
-			if(!connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+			if(!isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
 				to_chat(usr, "Insufficent Rank.")
 				return 0
 			var/newValue

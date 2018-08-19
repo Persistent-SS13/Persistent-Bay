@@ -143,12 +143,15 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 			if(src.occupant)
 				to_chat(usr, "<span class='notice'><B>\The [src] is in use.</B></span>")
 				return
+			if(!lace.lacemob)
+				to_chat(user, "This lace is inert.")
+				return 0
 			set_occupant(lace.lacemob)
 			icon_state = occupied_icon_state
 			lace.lacemob.spawn_loc = req_access_faction
-			lace.loc = cryopod
-			to_chat(target, "<span class='notice'>[on_enter_occupant_message]</span>")
-			to_chat(target, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
+			lace.loc = src
+			to_chat(lace.lacemob, "<span class='notice'>[on_enter_occupant_message]</span>")
+			to_chat(lace.lacemob, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
 			time_entered = world.time
 			src.add_fingerprint(user)
 			

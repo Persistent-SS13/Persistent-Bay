@@ -6,7 +6,7 @@
 	program_menu_icon = "flag"
 	nanomodule_path = /datum/nano_module/program/faction_core
 	extended_desc = "Uses a Logistic Processor to connect to and modify bluespace networks over satalite."
-	required_access = core_access_command_programs
+	required_access = core_access_leader
 	requires_ntnet = 0
 	size = 65
 	usage_flags = PROGRAM_CONSOLE
@@ -159,13 +159,20 @@
 				selected_assignment.accesses["1"] = copy
 				
 			var/list/all_access = list()
+			var/expense_limit = 0
 			for(var/i=1;i<=selected_rank;i++)
 				if(i > selected_assignment.accesses.len)
-					selected_assignment.accesses["[i]"] = new /datum/accesses()
+					var/datum/accesses/copy = new /datum/accesses()
+					var/datum/accesses/copy2 = selected_assignment.accesses["[i-1]"] 
+					if(copy2)
+						copy.expense_limit = copy2.expense_limit
+					selected_assignment.accesses["[i]"] = copy
 					continue
 				var/datum/accesses/copy = selected_assignment.accesses["[i]"]
 				if(istype(copy))
+					expense_limit = copy.expense_limit
 					all_access |= copy.accesses
+			data["expense_limit"] = expense_limit
 			var/list/access_categories[0]
 			var/datum/access_category/core/core
 			if(!core_access)
@@ -421,8 +428,8 @@
 			menu = 9
 			prior_menu = 6
 		if("create_access")
-			var/selected_uid = input(usr,"Enter unique access number (11 - 99)", "Enter Access Number") as null|num
-			if(!selected_uid || selected_uid < 11 || selected_uid > 99)
+			var/selected_uid = input(usr,"Enter unique access number (21 - 99)", "Enter Access Number") as null|num
+			if(!selected_uid || selected_uid < 21 || selected_uid > 99)
 				to_chat(usr, "Invalid number.")
 				return 1
 			var/text_uid = num2text(selected_uid)
@@ -436,8 +443,8 @@
 				to_chat(usr, "Access successfully created.")
 		if("create_access_two")
 			var/datum/access_category/selected_accesscategory2 = locate(href_list["selected_ref"])
-			var/selected_uid = input(usr,"Enter unique access number (11 - 99)", "Enter Access Number") as null|num
-			if(!selected_uid || selected_uid < 11 || selected_uid > 99)
+			var/selected_uid = input(usr,"Enter unique access number (21 - 99)", "Enter Access Number") as null|num
+			if(!selected_uid || selected_uid < 21 || selected_uid > 99)
 				to_chat(usr, "Invalid number.")
 				return 1
 			var/text_uid = num2text(selected_uid)
@@ -650,7 +657,14 @@
 				if(new_pay < min)
 					to_chat(usr, "Pay under minimum. Rank creaton failed.")
 					return 1
-
+				var/ranknum = ind
+				if(!ranknum)
+					ranknum = selected_assignment.ranks.len+1
+				var/datum/accesses/copy2 = selected_assignment.accesses["[ranknum-1]"]
+				var/datum/accesses/copy = new()
+				selected_assignment.accesses["[ranknum]"] = copy
+				if(copy2)
+					copy.expense_limit = copy2.expense_limit
 				selected_assignment.ranks.Insert(ind, select_name)
 				selected_assignment.ranks[select_name] = new_pay
 				to_chat(usr, "Rank successfully created.")
@@ -685,6 +699,18 @@
 						all_access |= x
 				else
 					selected_assignment.accesses["[i]"] = new /datum/accesses()
+					
+					
+		if("change_expense_limit")
+			var/datum/accesses/copy = selected_assignment.accesses["[selected_rank]"]
+			if(istype(copy))
+				var/new_pay = input("Enter new expense limit. Expenses are used when approving orders and paying invoices with an expense card.","Change expense limit") as null|num
+				if(!new_pay && new_pay != 0) return 1
+				copy.expense_limit = new_pay				
+			else
+				selected_assignment.accesses["[selected_rank]"] = new /datum/accesses()
+					
+					
 		if("money_change")
 			var/choice = input(usr,"Are you sure you want to change the payrate? This could bankrupt the network! Remember that the payrate is multiplied by an employees payscale") in list("Confirm", "Cancel")
 			if(choice == "Confirm")
@@ -738,4 +764,18 @@
 		if("decrease_selected_rank")
 			if(selected_rank != 1)
 				selected_rank--
+		if("print_expense")
+			if(connected_faction.last_expense_print > world.realtime)
+				to_chat(usr, "Your  print was rejected. You have printed an expense card in the last 3 minutes.")
+				return
+			var/obj/item/weapon/card/expense/expense = new()
+			expense.ctype = 1
+			expense.linked = connected_faction.uid
+			connected_faction.last_expense_print = world.realtime + 3 MINUTES
+			playsound(get_turf(program.computer), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
+			expense.forceMove(get_turf(program.computer))
+		if("devalidate_expense")
+			var/choice = input(usr,"This will devalidate all existing expense cards, and you will need to print new ones.") in list("Confirm", "Cancel")
+			if(choice == "Confirm")
+				devalidate_expense_cards(1, connected_faction.uid)
 	GLOB.nanomanager.update_uis(src)

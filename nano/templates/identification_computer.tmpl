@@ -94,8 +94,8 @@
 						Duty Mangement:
 					</div>
 					<div class='itemContent'>
-						{{:helper.link('Suspend ' + data.record_name, 'gear', {'action' : 'suspend'}, data.suspended ? 'disabled' : null, data.suspended ? 'disabled' : 'linkDanger')}}{{:helper.link('Terminate ' + data.record_name, 'gear', {'action' : 'terminate'}, data.terminated ? 'disabled' : null, data.terminated ? 'disabled' : 'linkDanger')}}
-						{{:helper.link('Unsuspend', 'gear', {'action' : 'unsuspend'}, !data.suspended ? 'disabled' : null, data.suspended ? 'disabled' : null)}}{{:helper.link('Renew', 'gear', {'action' : 'unterminate'}, !data.terminated ? 'disabled' : null, !data.terminated ? 'disabled' : null)}}
+						{{:helper.link('Terminate ' + data.record_name, 'gear', {'action' : 'terminate'}, data.terminated ? 'disabled' : null, data.terminated ? 'disabled' : 'linkDanger')}}
+						{{:helper.link('Renew', 'gear', {'action' : 'unterminate'}, !data.terminated ? 'disabled' : null, !data.terminated ? 'disabled' : null)}}
 					</div>
 				</div>
 
@@ -141,6 +141,14 @@
 					</div>
 					<div class='itemContent'>
 						{{:data.custom_title}}
+					</div>
+				</div>
+				<div class='item'>
+					<div class='itemLabel'>
+						Expenses:
+					</div>
+					<div class='itemContent'>
+						{{:helper.link('Reset', '', {'action' : 'reset_expenses'}, null)}}{{:data.expenses}}/{{:data.expense_limit}}
 					</div>
 				</div>
 				<br><br>

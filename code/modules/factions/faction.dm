@@ -28,6 +28,10 @@ GLOBAL_LIST_EMPTY(all_business)
 	if(signed_account)
 		if(signed_account.money < required_cash)
 			return 0
+		if(signed_account.reserved < signed_account.money)
+			return 0
+		if(signed_account.reserved < required_cash)
+			return 0
 		return 1
 	return 0
 /obj/item/weapon/paper/contract/after_load()
@@ -78,10 +82,11 @@ GLOBAL_LIST_EMPTY(all_business)
 					to_chat(user, "Unable to access account: incorrect credentials.")
 					return
 
-			if(required_cash > account.money)
+			if(required_cash > account.money-account.reserved)
 				to_chat(user, "Unable to complete transaction: insufficient funds.")
 				return
-			signed_account = account 
+			signed_account = account
+			signed_account.reserved += required_cash
 		signed_by = id.registered_name
 		if(linked.contract_signed(src))
 			signed = 1
@@ -107,10 +112,11 @@ GLOBAL_LIST_EMPTY(all_business)
 				if(linked_account.suspended)
 					linked_account = null
 					to_chat(usr, "\icon[src]<span class='warning'>Account has been suspended.</span>")
-				if(required_cash > linked_account.money)
+				if(required_cash > linked_account.money-linked_account.reserved)
 					to_chat(usr, "Unable to complete transaction: insufficient funds.")
 					return
 				signed_account = linked_account
+				signed_account.reserved += required_cash
 			else
 				to_chat(usr, "\icon[src]<span class='warning'>Account not found.</span>")
 				return
@@ -126,6 +132,10 @@ GLOBAL_LIST_EMPTY(all_business)
 /obj/item/weapon/paper/contract/proc/cancel()
 	if(linked)
 		linked.contract_cancelled(src)
+	if(signed_account)
+		signed_account.reserved -= required_cash
+		if(signed_account.reserved < 0)
+			signed_account.reserved = 0
 	cancelled = 1
 	info = replacetext(info, "*Unsigned*", "*Cancelled*")
 	update_icon()
@@ -137,6 +147,9 @@ GLOBAL_LIST_EMPTY(all_business)
 	if(required_cash)
 		var/datum/transaction/T = new("[pay_to] (via digital contract)", purpose, -required_cash, "Digital Contract")
 		signed_account.do_transaction(T)
+	signed_account.reserved -= required_cash
+	if(signed_account.reserved < 0)
+		signed_account.reserved = 0
 	approved = 1
 	update_icon()
 	return 1
@@ -542,6 +555,11 @@ GLOBAL_LIST_EMPTY(all_business)
 	var/list/unpaid = list()
 	
 	var/tax_rate = 10
+	var/import_profit = 10
+	
+	
+	var/hiring_policy = 0 // if hiring_policy, anyone with reassignment can add people to the network, else only people in command a command category with reassignment can add people
+	var/last_expense_print = 0
 
 /datum/world_faction/proc/get_duty_status(var/real_name)
 	for(var/obj/item/organ/internal/stack/stack in connected_laces)
@@ -586,6 +604,17 @@ GLOBAL_LIST_EMPTY(all_business)
 	all_access |= "8"
 	all_access |= "9"
 	all_access |= "10"
+	all_access |= "11"
+	all_access |= "12"
+	all_access |= "13"
+	all_access |= "14"
+	all_access |= "15"
+	all_access |= "16"
+	all_access |= "17"
+	all_access |= "18"
+	all_access |= "19"
+	all_access |= "20"
+	
 /datum/world_faction/proc/rebuild_all_assignments()
 	all_assignments = list()
 	for(var/datum/assignment_category/assignment_category in assignment_categories)
@@ -609,6 +638,68 @@ GLOBAL_LIST_EMPTY(all_business)
 		if(R.get_name() == real_name)
 			return R
 
+/datum/world_faction/proc/in_command(var/real_name)
+	var/datum/computer_file/crew_record/R = get_record(real_name)
+	if(R)
+		var/datum/assignment/assignment = get_assignment(R.assignment_uid)
+		if(assignment)
+			if(assignment.parent)
+				return assignment.parent.command_faction
+	return 0
+
+/datum/world_faction/proc/outranks(var/real_name, var/target)
+	if(real_name == leader_name)
+		return 1
+	var/datum/computer_file/crew_record/R = get_record(real_name)
+	if(!R) return 0
+	var/datum/computer_file/crew_record/target_record = get_record(target)
+	if(!target_record) return 1
+	var/user_command = 0
+	var/target_command = 0
+	var/user_rank = R.rank
+	var/target_rank = target_record.rank
+	var/user_leader = 0
+	var/target_leader = 0
+	var/same_department = 0
+	var/datum/assignment/assignment = get_assignment(R.assignment_uid)
+	if(assignment)
+		if(assignment.parent)
+			user_command = assignment.parent.command_faction
+			if(assignment.parent.head_position && assignment.parent.head_position.name == assignment.name)
+				user_leader = 1
+	else
+		return 0
+	var/datum/assignment/target_assignment = get_assignment(target_record.assignment_uid)
+	if(target_assignment)
+		if(target_assignment.any_assign)
+			same_department = 1
+		if(target_assignment.parent)
+			target_command = target_assignment.parent.command_faction
+			if(target_assignment.parent.head_position && target_assignment.parent.head_position.name == target_assignment.name)
+				target_leader = 1
+			if(assignment.parent && target_assignment.parent.name == assignment.parent.name)
+				same_department = 1
+	else
+		return 1
+	if(user_command)
+		if(!target_command) return 1
+		if(user_leader)
+			if(!target_leader) return 1
+		else
+			if(target_leader) return 0
+		if(user_rank >= target_rank) return 1
+		else return 0
+	if(same_department)
+		if(user_leader)
+			if(!target_leader) return 1
+		else
+			if(target_leader) return 0
+		if(user_rank >= target_rank) return 1
+		else return 0
+	return 0
+	
+	
+	
 /datum/world_faction/proc/create_faction_account()
 	central_account = create_account(name, 0)
 	
@@ -640,8 +731,11 @@ GLOBAL_LIST_EMPTY(all_business)
 	var/list/ranks = list() // format-- list("Apprentice Engineer (2)" = "1.1", "Journeyman Engineer (3)" = "1.2")
 	var/duty_able = 1
 	var/cryo_net = "default"
+	var/any_assign = 0 // this makes it so that the assignment can be assigned by anyone with the reassignment access,
+	
 /datum/accesses
 	var/list/accesses = list()
+	var/expense_limit = 0
 /datum/assignment/after_load()
 	..()
 
@@ -654,15 +748,21 @@ GLOBAL_LIST_EMPTY(all_business)
 
 /datum/access_category/core/New()
 	accesses["1"] = "Logistics Control, Leadership"
-	accesses["2"] = "Command, Ranking Authority"
-	accesses["3"] = "Engineering Programs"
-	accesses["4"] = "Medical Programs"
-	accesses["5"] = "Security Programs"
-	accesses["6"] = "Networking Programs"
-	accesses["7"] = "Lock Electronics"
-	accesses["8"] = "Import Approval"
-	accesses["9"] = "Science Machinery & Programs"
-	accesses["10"] = "Shuttle Control & Access"
+	accesses["2"] = "Command Machinery"
+	accesses["3"] = "Promotion/Demotion Vote"
+	accesses["4"] = "Reassignment"
+	accesses["5"] = "Edit Employment Records"
+	accesses["6"] = "Reset Expenses"
+	accesses["7"] = "Suspension/Termination"
+	accesses["8"] = "Engineering Programs"
+	accesses["9"] = "Medical Programs"
+	accesses["10"] = "Security Programs"
+	accesses["11"] = "Networking Programs"
+	accesses["12"] = "Lock Electronics"
+	accesses["13"] = "Import Approval"
+	accesses["14"] = "Invoicing & Exports"
+	accesses["15"] = "Science Machinery & Programs"
+	accesses["16"] = "Shuttle Control & Access"
 
 /obj/faction_spawner
 	name = "Name to start faction with"

@@ -567,7 +567,7 @@
 
 		if("expense_print")
 			if(!connected_business) return
-			if(connected_business.last_id_print > world.realtime)
+			if(connected_business.last_expense_print > world.realtime)
 				to_chat(usr, "Your  print was rejected. You have printed an expense card in the last 10 minutes.")
 				return
 			if(!connected_business.has_access(user_id_card.registered_name, "Upper Management"))
@@ -901,13 +901,13 @@
 				return
 			var/to_be = 100 - get_distributed()
 			var/amount = round(input("How many stocks are being distributed", "Investment", to_be) as null|num)
-			if(!amount)
-				amount =0
+			if(!amount || amount < 0)
+				amount = 0
 			if(amount > to_be)
 				to_chat(user, "Theirs not that many stocks left to be distributed.")
 				return
 			var/cost = round(input("How much ethericoin should be invested for the [amount] stocks?", "Price", 25*amount) as null|num)
-			if(!cost)
+			if(!cost || cost < 0)
 				cost = 0
 			var/choice = input(usr,"This will create an investment contract for [amount] stocks at [cost] ethericoin.") in list("Confirm", "Cancel")
 			if(choice == "Confirm")

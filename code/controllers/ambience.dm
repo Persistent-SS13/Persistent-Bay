@@ -71,16 +71,31 @@ var/datum/controller/ambient_controller/ambient_controller
 	neutral |= new /datum/music_file/theclient()
 
 	zlevel_data = list()
-	zlevel_data["3"] = new /datum/music_controller()
+	zlevel_data["2"] = new /datum/music_controller()
+	zlevel_data["4"] = new /datum/music_controller()
 	zlevel_data["6"] = new /datum/music_controller()
-	zlevel_data["9"] = new /datum/music_controller()
+	zlevel_data["8"] = new /datum/music_controller()
+	zlevel_data["10"] = new /datum/music_controller()
 	zlevel_data["12"] = new /datum/music_controller()
-	zlevel_data["15"] = new /datum/music_controller()
+	zlevel_data["14"] = new /datum/music_controller()
+	zlevel_data["16"] = new /datum/music_controller()
 	zlevel_data["18"] = new /datum/music_controller()
-	zlevel_data["21"] = new /datum/music_controller()
+	zlevel_data["20"] = new /datum/music_controller()
+	zlevel_data["22"] = new /datum/music_controller()
 	zlevel_data["24"] = new /datum/music_controller()
-	zlevel_data["27"] = new /datum/music_controller()
-
+	zlevel_data["26"] = new /datum/music_controller()
+	zlevel_data["28"] = new /datum/music_controller()
+	zlevel_data["30"] = new /datum/music_controller()
+	zlevel_data["32"] = new /datum/music_controller()
+	zlevel_data["34"] = new /datum/music_controller()
+	zlevel_data["36"] = new /datum/music_controller()
+	zlevel_data["38"] = new /datum/music_controller()
+	zlevel_data["40"] = new /datum/music_controller()
+	zlevel_data["42"] = new /datum/music_controller()
+	zlevel_data["44"] = new /datum/music_controller()
+	zlevel_data["46"] = new /datum/music_controller()
+	zlevel_data["48"] = new /datum/music_controller()
+	zlevel_data["50"] = new /datum/music_controller()
 	START_PROCESSING(SSprocessing, src)
 
 /datum/controller/ambient_controller/Destroy()
@@ -113,7 +128,6 @@ var/datum/controller/ambient_controller/ambient_controller
 						choices -= controller.lastplayed
 					to_play[x] = pick(choices)
 					to_play["[text2num(x)-1]"] = to_play[x]
-					to_play["[text2num(x)-2]"] = to_play[x]
 					controller.lastplayed = to_play[x]
 					controller.timetostop = controller.lastplayed.length + world.time
 				if("fun")
@@ -122,7 +136,6 @@ var/datum/controller/ambient_controller/ambient_controller
 						choices -= controller.lastplayed
 					to_play[x] = pick(choices)
 					to_play["[text2num(x)-1]"] = to_play[x]
-					to_play["[text2num(x)-2]"] = to_play[x]
 					controller.lastplayed = to_play[x]
 					controller.timetostop = controller.lastplayed.length + world.time
 				if("dark")
@@ -131,7 +144,6 @@ var/datum/controller/ambient_controller/ambient_controller
 						choices -= controller.lastplayed
 					to_play[x] = pick(choices)
 					to_play["[text2num(x)-1]"] = to_play[x]
-					to_play["[text2num(x)-2]"] = to_play[x]
 					controller.lastplayed = to_play[x]
 					controller.timetostop = controller.lastplayed.length + world.time
 				if("action")
@@ -140,7 +152,6 @@ var/datum/controller/ambient_controller/ambient_controller
 						choices -= controller.lastplayed
 					to_play[x] = pick(choices)
 					to_play["[text2num(x)-1]"] = to_play[x]
-					to_play["[text2num(x)-2]"] = to_play[x]
 					controller.lastplayed = to_play[x]
 					controller.timetostop = controller.lastplayed.length + world.time
 		for(var/client/C in GLOB.clients)

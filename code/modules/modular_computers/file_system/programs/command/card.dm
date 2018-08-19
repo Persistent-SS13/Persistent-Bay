@@ -276,11 +276,11 @@
 			if(!record && id_card.registered_name)
 				if(!user_id_card) return
 				if(!isleader && !(core_access_reassignment in user_accesses))
-					to_chat(usr, "No record is on file for [select_name]. Insufficent access to add new members.")
+					to_chat(usr, "No record is on file for [id_card.registered_name]. Insufficent access to add new members.")
 					return 0
 				if(!connected_faction.hiring_policy)
 					if(!isleader && !connected_faction.in_command(user_id_card.registered_name))
-						to_chat(usr, "No record is on file for [select_name]. Only members of Command categories can add new names to the records.")
+						to_chat(usr, "No record is on file for [id_card.registered_name]. Only members of Command categories can add new names to the records.")
 						return 0
 				var/choice = input(usr,"No record is on file for [id_card.registered_name]. Would you like to create a new record for [id_card.registered_name] based on information found in public records?") in list("Create", "Cancel")
 				if(choice == "Cancel") return 1

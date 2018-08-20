@@ -64,7 +64,7 @@
 		ports += new_port
 
 	build_icons()
-	
+
 /obj/machinery/atmospherics/omni/update_icon()
 	if(stat & NOPOWER)
 		overlays = overlays_off
@@ -191,7 +191,7 @@
 			if(ATM_OUTPUT)
 				ic_on += "_out_glow"
 				ic_off += "_out"
-			if(ATM_O2 to ATM_N2O)
+			if(ATM_O2 to ATM_RG)
 				ic_on += "_filter"
 				ic_off += "_out"
 

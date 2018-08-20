@@ -88,17 +88,17 @@ proc/getsensorlevel(A)
 
 //The base miss chance for the different defence zones
 var/list/global/base_miss_chance = list(
-	BP_HEAD = 40,
+	BP_HEAD = 50,
 	BP_CHEST = 10,
 	BP_GROIN = 20,
-	BP_L_LEG = 20,
-	BP_R_LEG = 20,
-	BP_L_ARM = 20,
-	BP_R_ARM = 20,
+	BP_L_LEG = 50,
+	BP_R_LEG = 50,
+	BP_L_ARM = 30,
+	BP_R_ARM = 30,
 	BP_L_HAND = 50,
 	BP_R_HAND = 50,
-	BP_L_FOOT = 50,
-	BP_R_FOOT = 50,
+	BP_L_FOOT = 60,
+	BP_R_FOOT = 60,
 )
 
 //Used to weight organs when an organ is hit randomly (i.e. not a directed, aimed attack).
@@ -182,32 +182,44 @@ var/list/global/organ_rel_size = list(
 	return zone
 
 
-/proc/stars(n, pr)
-	if (pr == null)
-		pr = 25
+//Replaces some of the characters with *, used in whispers. pr = probability of no star.
+//Will try to preserve HTML formatting. re_encode controls whether the returned text is HTML encoded outside tags.
+/proc/stars(n, pr = 25, re_encode = 1)
 	if (pr < 0)
 		return null
-	else
-		if (pr >= 100)
-			return n
-	var/te = n
-	var/t = ""
-	n = length(n)
-	var/p = null
-	p = 1
+	else if (pr >= 100)
+		return n
+
 	var/intag = 0
-	while(p <= n)
-		var/char = copytext(te, p, p + 1)
-		if (char == "<") //let's try to not break tags
-			intag = !intag
-		if (intag || char == " " || prob(pr))
-			t = text("[][]", t, char)
+	var/block = list()
+	. = list()
+	for(var/i = 1, i <= length(n), i++)
+		var/char = copytext(n, i, i+1)
+		if(!intag && (char == "<"))
+			intag = 1
+			. += stars_no_html(JOINTEXT(block), pr, re_encode) //stars added here
+			block = list()
+		block += char
+		if(intag && (char == ">"))
+			intag = 0
+			. += block //We don't mess up html tags with stars
+			block = list()
+	. += (intag ? block : stars_no_html(JOINTEXT(block), pr, re_encode))
+	. = JOINTEXT(.)
+
+//Ingnores the possibility of breaking tags.
+/proc/stars_no_html(text, pr, re_encode)
+	text = html_decode(text) //We don't want to screw up escaped characters
+	. = list()
+	for(var/i = 1, i <= length(text), i++)
+		var/char = copytext(text, i, i+1)
+		if(char == " " || prob(pr))
+			. += char
 		else
-			t = text("[]*", t)
-		if (char == ">")
-			intag = !intag
-		p++
-	return t
+			. += "*"
+	. = JOINTEXT(.)
+	if(re_encode)
+		. = html_encode(.)
 
 proc/slur(phrase)
 	phrase = html_decode(phrase)
@@ -479,19 +491,19 @@ proc/is_blind(A)
 	return 1
 
 #define SAFE_PERP -50
-/mob/living/proc/assess_perp(var/obj/access_obj, var/check_access, var/auth_weapons, var/check_records, var/check_arrest)
+/mob/living/proc/assess_perp(var/obj/access_obj, var/check_access, var/auth_weapons, var/check_records, var/check_arrest, var/faction)
 	if(stat == DEAD)
 		return SAFE_PERP
 
 	return 0
 
-/mob/living/carbon/assess_perp(var/obj/access_obj, var/check_access, var/auth_weapons, var/check_records, var/check_arrest)
+/mob/living/carbon/assess_perp(var/obj/access_obj, var/check_access, var/auth_weapons, var/check_records, var/check_arrest, var/faction)
 	if(handcuffed)
 		return SAFE_PERP
 
 	return ..()
 
-/mob/living/carbon/human/assess_perp(var/obj/access_obj, var/check_access, var/auth_weapons, var/check_records, var/check_arrest)
+/mob/living/carbon/human/assess_perp(var/obj/access_obj, var/check_access, var/auth_weapons, var/check_records, var/check_arrest, var/datum/world_faction/faction)
 	var/threatcount = ..()
 	if(. == SAFE_PERP)
 		return SAFE_PERP
@@ -521,20 +533,24 @@ proc/is_blind(A)
 			threatcount += 2
 
 	if(check_records || check_arrest)
-		var/perpname = name
-		if(id)
-			perpname = id.registered_name
+		if(faction)
+			var/perpname = name
+			if(id)
+				perpname = id.registered_name
 
-		var/datum/computer_file/crew_record/CR = get_crewmember_record(perpname)
-		if(check_records && !CR && !isMonkey())
-			threatcount += 4
-
-		if(check_arrest && CR && (CR.get_criminalStatus() == GLOB.arrest_security_status))
-			threatcount += 4
+			var/datum/computer_file/crew_record/CR = faction.get_record(perpname)
+			/* Since security records are now properly factionalized, the chance of someone not having a record is pretty high.
+			if(check_records && !CR && !isMonkey())
+				threatcount += 4
+			*/
+			if(perpname == "Unknown")
+				threatcount += 4
+			if(check_arrest && CR && (CR.get_criminalStatus() == GLOB.arrest_security_status))
+				threatcount += 8
 
 	return threatcount
 
-/mob/living/simple_animal/hostile/assess_perp(var/obj/access_obj, var/check_access, var/auth_weapons, var/check_records, var/check_arrest)
+/mob/living/simple_animal/hostile/assess_perp(var/obj/access_obj, var/check_access, var/auth_weapons, var/check_records, var/check_arrest, var/faction)
 	var/threatcount = ..()
 	if(. == SAFE_PERP)
 		return SAFE_PERP

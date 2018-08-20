@@ -819,6 +819,37 @@
 		user.visible_message("[user] attaches [W] to [src].", "You attach [W] to [src]")
 		return
 
+#define LOCKED 1
+#define OCCUPIED 2
+	else if(istype(W, /obj/item/grab))
+		if ((locate(/obj/item/mecha_parts/mecha_equipment/tool/passenger) in contents))
+			var/obj/item/grab/G = W
+			if(iscarbon(G.affecting))
+				var/result = 0
+				for(var/obj/item/mecha_parts/mecha_equipment/tool/passenger/P in contents) //clarity for user
+					if (P.occupant)
+						result |= OCCUPIED
+						continue
+
+					if (P.door_locked)
+						result |= LOCKED
+						continue
+
+					P.stuff_inside(G, user)
+					return
+
+				switch (result)
+					if (OCCUPIED)
+						to_chat(user, "<span class='danger'>The passenger compartment is already occupied!</span>")
+					if (LOCKED)
+						to_chat(user, "<span class='warning'>The passenger compartment hatch is locked!</span>")
+					if (OCCUPIED|LOCKED)
+						to_chat(user, "<span class='danger'>All of the passenger compartments are already occupied or locked!</span>")
+					if (0)
+						to_chat(user, "<span class='warning'>\The [src] doesn't have a passenger compartment.</span>")
+#undef LOCKED
+#undef OCCUPIED
+
 	else
 		src.log_message("Attacked by [W]. Attacker - [user]")
 
@@ -1441,10 +1472,10 @@
 		return
 	if(usr.stat > 0)
 		return
-	var/datum/topic_input/filter = new /datum/topic_input(href,href_list)
+	var/datum/topic_input/F = new /datum/topic_input(href,href_list)
 	if(href_list["select_equip"])
 		if(usr != src.occupant)	return
-		var/obj/item/mecha_parts/mecha_equipment/equip = filter.getObj("select_equip")
+		var/obj/item/mecha_parts/mecha_equipment/equip = F.getObj("select_equip")
 		if(equip)
 			src.selected = equip
 			src.occupant_message("You switch to [equip]")
@@ -1475,7 +1506,7 @@
 		return
 	if(href_list["rfreq"])
 		if(usr != src.occupant)	return
-		var/new_frequency = (radio.frequency + filter.getNum("rfreq"))
+		var/new_frequency = (radio.frequency + F.getNum("rfreq"))
 		if ((radio.frequency < PUBLIC_LOW_FREQ || radio.frequency > PUBLIC_HIGH_FREQ))
 			new_frequency = sanitize_frequency(new_frequency)
 		radio.set_frequency(new_frequency)
@@ -1517,11 +1548,11 @@
 		return
 	if(href_list["req_access"] && add_req_access)
 		if(!in_range(src, usr))	return
-		output_access_dialog(filter.getObj("id_card"),filter.getMob("user"))
+		output_access_dialog(F.getObj("id_card"),F.getMob("user"))
 		return
 	if(href_list["maint_access"] && maint_access)
 		if(!in_range(src, usr))	return
-		var/mob/user = filter.getMob("user")
+		var/mob/user = F.getMob("user")
 		if(user)
 			if(state==0)
 				state = 1
@@ -1529,18 +1560,18 @@
 			else if(state==1)
 				state = 0
 				to_chat(user, "The securing bolts are now hidden.")
-			output_maintenance_dialog(filter.getObj("id_card"),user)
+			output_maintenance_dialog(F.getObj("id_card"),user)
 		return
 	if(href_list["set_internal_tank_valve"] && state >=1)
 		if(!in_range(src, usr))	return
-		var/mob/user = filter.getMob("user")
+		var/mob/user = F.getMob("user")
 		if(user)
 			var/new_pressure = input(user,"Input new output pressure","Pressure setting",internal_tank_valve) as num
 			if(new_pressure)
 				internal_tank_valve = new_pressure
 				to_chat(user, "The internal pressure valve has been set to [internal_tank_valve]kPa.")
 	if(href_list["remove_passenger"] && state >= 1)
-		var/mob/user = filter.getMob("user")
+		var/mob/user = F.getMob("user")
 		var/list/passengers = list()
 		for (var/obj/item/mecha_parts/mecha_equipment/tool/passenger/P in contents)
 			if (P.occupant)
@@ -1566,20 +1597,20 @@
 		P.go_out()
 		P.log_message("[occupant] was removed.")
 		return
-	if(href_list["add_req_access"] && add_req_access && filter.getObj("id_card"))
+	if(href_list["add_req_access"] && add_req_access && F.getObj("id_card"))
 		if(!in_range(src, usr))	return
-		operation_req_access += filter.getNum("add_req_access")
-		output_access_dialog(filter.getObj("id_card"),filter.getMob("user"))
+		operation_req_access += F.getNum("add_req_access")
+		output_access_dialog(F.getObj("id_card"),F.getMob("user"))
 		return
-	if(href_list["del_req_access"] && add_req_access && filter.getObj("id_card"))
+	if(href_list["del_req_access"] && add_req_access && F.getObj("id_card"))
 		if(!in_range(src, usr))	return
-		operation_req_access -= filter.getNum("del_req_access")
-		output_access_dialog(filter.getObj("id_card"),filter.getMob("user"))
+		operation_req_access -= F.getNum("del_req_access")
+		output_access_dialog(F.getObj("id_card"),F.getMob("user"))
 		return
 	if(href_list["finish_req_access"])
 		if(!in_range(src, usr))	return
 		add_req_access = 0
-		var/mob/user = filter.getMob("user")
+		var/mob/user = F.getMob("user")
 		user << browse(null,"window=exosuit_add_access")
 		return
 	if(href_list["dna_lock"])
@@ -1612,9 +1643,9 @@
 	/*
 	if(href_list["debug"])
 		if(href_list["set_i_dam"])
-			setInternalDamage(filter.getNum("set_i_dam"))
+			setInternalDamage(F.getNum("set_i_dam"))
 		if(href_list["clear_i_dam"])
-			clearInternalDamage(filter.getNum("clear_i_dam"))
+			clearInternalDamage(F.getNum("clear_i_dam"))
 		return
 	*/
 

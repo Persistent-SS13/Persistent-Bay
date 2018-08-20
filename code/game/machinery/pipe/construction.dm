@@ -155,6 +155,12 @@ Buildable meters
 			src.color = PIPE_COLOR_ORANGE
 		else if(istype(make_from, /obj/machinery/atmospherics/pipe/zpipe/down))
 			src.pipe_type = PIPE_DOWN
+		else if(istype(make_from, /obj/machinery/atmospherics/unary/outlet_injector))
+			src.pipe_type = INJECTOR
+		else if(istype(make_from, /obj/machinery/atmospherics/pipe/simple/reinforced))
+			src.pipe_type = PIPE_R_STRAIGHT + is_bent
+			connect_types = CONNECT_TYPE_SUPPLY
+			src.color = PIPE_COLOR_RED
 ///// Z-Level stuff
 	else
 		src.pipe_type = pipe_type
@@ -164,6 +170,8 @@ Buildable meters
 			src.color = PIPE_COLOR_BLUE
 		else if (pipe_type == 31 || pipe_type == 32 || pipe_type == 34 || pipe_type == 36 || pipe_type == 38 || pipe_type == 40 || pipe_type == 42)
 			connect_types = CONNECT_TYPE_SCRUBBER
+			src.color = PIPE_COLOR_RED
+		else if (pipe_type == 52 || pipe_type == 53)
 			src.color = PIPE_COLOR_RED
 		else if (pipe_type == 45 || pipe_type == 46 || pipe_type == 47 || pipe_type == 48 || pipe_type == 49 || pipe_type == 50 || pipe_type == 51)
 			src.color = PIPE_COLOR_ORANGE
@@ -236,6 +244,9 @@ Buildable meters
 		"fuel pipe up",\
 		"fuel down",\
 		"fuel pipe cap",\
+		"reinforced pipe",\
+		"reinforced bent pipe",\
+		"gas injector",\
 	)
 	name = nlist[pipe_type+1] + " fitting"
 	var/list/islist = list( \
@@ -295,13 +306,16 @@ Buildable meters
 		"cap", \
 		"cap", \
 		"cap", \
+		"reinforced",\
+		"reinforced",\
+		"injector",\
 	)
 	icon_state = islist[pipe_type + 1]
 
 //called when a turf is attacked with a pipe item
-/obj/item/pipe/afterattack(turf/simulated/floor/target, mob/user, proximity)
+/obj/item/pipe/afterattack(var/turf/simulated/floor/target, mob/user, proximity)
 	if(!proximity) return
-	if(istype(target))
+	if(istype(target) || istype(target, /turf/simulated/asteroid))
 		user.drop_from_inventory(src, target)
 	else
 		return ..()
@@ -363,11 +377,12 @@ Buildable meters
 			PIPE_SCRUBBERS_STRAIGHT, \
 			PIPE_UNIVERSAL, \
 			PIPE_FUEL_STRAIGHT, \
+			PIPE_R_STRAIGHT, \
 		)
 			return dir|flip
-		if(PIPE_SIMPLE_BENT, PIPE_HE_BENT, PIPE_SUPPLY_BENT, PIPE_SCRUBBERS_BENT, PIPE_FUEL_BENT)
+		if(PIPE_SIMPLE_BENT, PIPE_HE_BENT, PIPE_SUPPLY_BENT, PIPE_SCRUBBERS_BENT, PIPE_FUEL_BENT, PIPE_R_BENT)
 			return dir //dir|acw
-		if(PIPE_CONNECTOR,PIPE_UVENT,PIPE_SCRUBBER,PIPE_HEAT_EXCHANGE)
+		if(PIPE_CONNECTOR,PIPE_UVENT,PIPE_SCRUBBER,PIPE_HEAT_EXCHANGE,INJECTOR)
 			return dir
 		if(PIPE_MANIFOLD4W, PIPE_SUPPLY_MANIFOLD4W, PIPE_SCRUBBERS_MANIFOLD4W, PIPE_OMNI_MIXER, PIPE_OMNI_FILTER, PIPE_FUEL_MANIFOLD4W)
 			return dir|flip|cw|acw
@@ -1262,6 +1277,38 @@ Buildable meters
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
 			P.build_network()
+///// Reinforced pipes
+		if(PIPE_R_STRAIGHT, PIPE_R_BENT)
+			var/obj/machinery/atmospherics/pipe/simple/reinforced/P = new( src.loc )
+			P.pipe_color = color
+			P.set_dir(src.dir)
+			P.initialize_directions = pipe_dir
+			var/turf/T = P.loc
+			P.level = !T.is_plating() ? 2 : 1
+			P.atmos_init()
+			if (QDELETED(P))
+				to_chat(usr, pipefailtext)
+				return 1
+			P.build_network()
+			if (P.node1)
+				P.node1.atmos_init()
+				P.node1.build_network()
+			if (P.node2)
+				P.node2.atmos_init()
+				P.node2.build_network()
+		if(INJECTOR)		//scrubber
+			var/obj/machinery/atmospherics/unary/outlet_injector/S = new(src.loc)
+			S.set_dir(dir)
+			S.initialize_directions = pipe_dir
+			if (pipename)
+				S.name = pipename
+			var/turf/T = S.loc
+			S.level = !T.is_plating() ? 2 : 1
+			S.atmos_init()
+			S.build_network()
+			if (S.node)
+				S.node.atmos_init()
+				S.node.build_network()
 
 	playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 	user.visible_message( \
@@ -1298,6 +1345,7 @@ Buildable meters
 	to_chat(user, "<span class='notice'>You have fastened the meter to the pipe</span>")
 	qdel(src)
 //not sure why these are necessary
+//so you don't clot up the rest of the code with obsolete defs
 #undef PIPE_SIMPLE_STRAIGHT
 #undef PIPE_SIMPLE_BENT
 #undef PIPE_HE_STRAIGHT

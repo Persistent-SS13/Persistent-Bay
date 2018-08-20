@@ -281,6 +281,14 @@ var/global/datum/controller/gameticker/ticker
 		message_admins("create_characters ran")
 		for(var/mob/new_player/player in GLOB.player_list)
 			if(player && player.ready && player.mind)
+				for(var/mob/loaded_mob in SSmobs.mob_list)
+					if(loaded_mob.type != /mob/new_player && loaded_mob.saved_ckey == player.ckey && get_turf(loaded_mob))
+						player.close_spawn_windows()
+						loaded_mob.ckey = player.ckey
+						loaded_mob.saved_ckey = ""
+						sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1)) // MAD JAMS cant last forever yo
+						qdel(player)
+						continue
 				if(player.mind.assigned_role=="AI")
 					player.close_spawn_windows()
 					player.AIize()

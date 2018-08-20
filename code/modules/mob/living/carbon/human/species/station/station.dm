@@ -78,10 +78,19 @@
 /datum/species/unathi
 	name = SPECIES_UNATHI
 	name_plural = SPECIES_UNATHI
-	icobase = 'icons/mob/human_races/r_lizard.dmi'
-	deform = 'icons/mob/human_races/r_def_lizard.dmi'
+	icon_template = 'icons/mob/human_races/species/template_tall.dmi'
+	icobase = 'icons/mob/human_races/species/unathi/body.dmi'
+	deform = 'icons/mob/human_races/species/unathi/deformed_body.dmi'
+	husk_icon = 'icons/mob/human_races/species/unathi/husk.dmi'
+	preview_icon = 'icons/mob/human_races/species/unathi/preview.dmi'
 	tail = "sogtail"
 	tail_animation = 'icons/mob/species/unathi/tail.dmi'
+	limb_blend = ICON_MULTIPLY
+	tail_blend = ICON_MULTIPLY
+
+	eye_icon = "eyes_lizard"
+	eye_icon_location = 'icons/mob/human_races/species/unathi/eyes.dmi'
+
 	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/tail, /datum/unarmed_attack/claws, /datum/unarmed_attack/bite/sharp)
 	primitive_form = "Stok"
 	darksight = 3
@@ -119,6 +128,7 @@
 	reagent_tag = IS_UNATHI
 	base_color = "#066000"
 	blood_color = "#f24b2e"
+	organs_icon = 'icons/mob/human_races/species/unathi/organs.dmi'
 
 	move_trail = /obj/effect/decal/cleanable/blood/tracks/claw
 
@@ -137,10 +147,12 @@
 		)
 	breathing_sound = 'sound/voice/lizard.ogg'
 
+	prone_overlay_offset = list(-4, -4)
+
 /datum/species/unathi/equip_survival_gear(var/mob/living/carbon/human/H)
 	..()
 	H.equip_to_slot_or_del(new /obj/item/clothing/shoes/sandal(H),slot_shoes)
-
+/*
 /datum/species/tajaran
 	name = SPECIES_TAJARA
 	name_plural = "Tajaran"
@@ -203,12 +215,13 @@
 	..()
 	H.equip_to_slot_or_del(new /obj/item/clothing/shoes/sandal(H),slot_shoes)
 	H.equip_to_slot_or_del(new /obj/item/clothing/glasses/tajblind(H),slot_glasses)
-
+*/
 /datum/species/skrell
 	name = SPECIES_SKRELL
 	name_plural = SPECIES_SKRELL
-	icobase = 'icons/mob/human_races/r_skrell.dmi'
-	deform = 'icons/mob/human_races/r_def_skrell.dmi'
+	icobase ='icons/mob/human_races/species/skrell/body.dmi'
+	deform = 'icons/mob/human_races/species/skrell/deformed_body.dmi'
+	preview_icon = 'icons/mob/human_races/species/skrell/preview.dmi'
 	primitive_form = "Neaera"
 	unarmed_types = list(/datum/unarmed_attack/punch)
 	blurb = "An amphibious species, Skrell come from the star system known as Qerr'Vallis, which translates to 'Star of \
@@ -232,6 +245,7 @@
 	flesh_color = "#8cd7a3"
 	blood_color = "#1d2cbf"
 	base_color = "#006666"
+	organs_icon = 'icons/mob/human_races/species/skrell/organs.dmi'
 
 	cold_level_1 = 280 //Default 260 - Lower is better
 	cold_level_2 = 220 //Default 200
@@ -256,7 +270,7 @@
 		BP_L_FOOT = list("path" = /obj/item/organ/external/foot),
 		BP_R_FOOT = list("path" = /obj/item/organ/external/foot/right)
 		)
-
+/*
 /datum/species/diona
 	name = SPECIES_DIONA
 	name_plural = "Dionaea"
@@ -384,7 +398,7 @@
 	return "sap"
 
 /datum/species/diona/handle_environment_special(var/mob/living/carbon/human/H)
-	if(H.in_stasis || H.stat == DEAD)
+	if(H.InStasis() || H.stat == DEAD)
 		return
 	if(H.nutrition < 10)
 		H.take_overall_damage(2,0)
@@ -429,3 +443,4 @@
 					for(var/datum/wound/W in E.wounds)
 						if (W.wound_damage() == 0 && prob(50))
 							E.wounds -= W
+*/

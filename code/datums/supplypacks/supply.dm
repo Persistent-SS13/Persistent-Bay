@@ -10,14 +10,14 @@
 					/obj/item/weapon/reagent_containers/food/snacks/tofu = 4,
 					/obj/item/weapon/reagent_containers/food/snacks/meat = 4
 					)
-	cost = 10
+	cost = 5
 	containertype = /obj/structure/closet/crate/freezer
 	containername = "\improper Food crate"
 
 /decl/hierarchy/supply_pack/supply/toner
 	name = "Toner cartridges"
 	contains = list(/obj/item/device/toner = 20)
-	cost = 10
+	cost = 3
 	containername = "\improper Toner cartridges"
 
 /decl/hierarchy/supply_pack/supply/janitor
@@ -58,6 +58,12 @@
 	containertype = /obj/structure/closet/crate/large
 	containername = "\improper Office supplies crate"
 
+/decl/hierarchy/supply_pack/supply/paper
+	name = "Paper (x50)"
+	contains = list(/obj/item/weapon/paper_package)
+	cost = 4
+	containername = "\improper Paper supplies crate"
+
 /decl/hierarchy/supply_pack/supply/spare_pda
 	name = "Spare PDAs"
 	contains = list(/obj/item/device/pda = 10)
@@ -70,6 +76,13 @@
 	cost = 20
 	containertype = /obj/structure/largecrate/animal/mulebot
 	containername = "Mulebot Crate"
+
+/decl/hierarchy/supply_pack/supply/janicart
+	name = "Janitorial Cart Crate"
+	contains = list(/obj/structure/janitorialcart)
+	cost = 50
+	containertype = /obj/structure/largecrate
+	containername = "Janitorial Cart Crate"
 
 /decl/hierarchy/supply_pack/supply/cargotrain
 	name = "Cargo Train Tug"
@@ -91,7 +104,7 @@
 	cost = 80
 	containertype = /obj/structure/largecrate/hoverpod
 	containername = "\improper Hoverpod Crate"
-
+/*
 /decl/hierarchy/supply_pack/supply/webbing
 	name = "Webbing crate"
 	num_contained = 4
@@ -105,7 +118,7 @@
 					/obj/item/clothing/accessory/storage/webbing)
 	cost = 15
 	containername = "\improper Webbing crate"
-
+*/
 /decl/hierarchy/supply_pack/supply/glowsticks
 	name = "Glowsticks (x20)"
 	contains = list(/obj/item/device/flashlight/glowstick,
@@ -113,10 +126,34 @@
 					/obj/item/device/flashlight/glowstick/yellow,
 					/obj/item/device/flashlight/glowstick/orange,
 					/obj/item/device/flashlight/glowstick/blue)
-	cost = 20
+	cost = 2
 	containername = "\improper Glowstick Crate"
 	num_contained = 20
 	supply_method = /decl/supply_method/randomized
+
+/decl/hierarchy/supply_pack/supply/colortubes
+	name = "Colored Light Tubes"
+	contains = list(/obj/item/weapon/light/tube/red = 3,
+					/obj/item/weapon/light/tube/green = 3,
+					/obj/item/weapon/light/tube/blue = 3,
+					/obj/item/weapon/light/tube/purple = 3,
+					/obj/item/weapon/light/tube/pink = 3,
+					/obj/item/weapon/light/tube/yellow = 3,
+					/obj/item/weapon/light/tube/orange = 3)
+	cost = 4
+	containername = "\improper Light Tube Crate"
+
+/decl/hierarchy/supply_pack/supply/colorbulbs
+	name = "Colored Light Bulbs"
+	contains = list(/obj/item/weapon/light/bulb/red = 3,
+					/obj/item/weapon/light/bulb/green = 3,
+					/obj/item/weapon/light/bulb/blue = 3,
+					/obj/item/weapon/light/bulb/purple = 3,
+					/obj/item/weapon/light/bulb/pink = 3,
+					/obj/item/weapon/light/bulb/yellow = 3,
+					/obj/item/weapon/light/bulb/orange = 3)
+	cost = 3
+	containername = "\improper Light Bulb Crate"
 
 /decl/hierarchy/supply_pack/supply/softsuits
 	name = "EVA Softsuit w/ Small Airtank"
@@ -142,4 +179,4 @@
 	cost = 150
 	containertype = /obj/structure/closet/crate/secure/large/phoron
 	containername = "\improper Blueprints Crate"
-	access = 1	//Access 1 instead of 3 because it would mean only someone with access to logistics program could be trusted to open it
+	access = core_access_leader	//Access 1 instead of 3 because it would mean only someone with access to logistics program could be trusted to open it

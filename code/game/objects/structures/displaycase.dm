@@ -26,16 +26,27 @@
 		if(1)
 			if(isScrewdriver(W))
 				var/obj/structure/displaycase/C=new(T)
-				if(circuit.one_access)
-					C.req_access = null
-					C.req_one_access = circuit.conf_access
+				if(circuit.business_name)
+					C.req_access_business = circuit.business_name
+					if(circuit.one_access)
+						C.req_one_access_business_list = circuit.business_access
+					else
+						C.req_access_business_list = circuit.business_access
+					playsound(get_turf(src), 'sound/items/Screwdriver.ogg', 50, 1)
+					del(src)
+					return
+				
 				else
-					C.req_access = circuit.conf_access
-					C.req_one_access = null
-				C.req_access_faction = circuit.req_access_faction
-				playsound(get_turf(src), 'sound/items/Screwdriver.ogg', 50, 1)
-				del(src)
-				return
+					if(circuit.one_access)
+						C.req_access = null
+						C.req_one_access = circuit.conf_access
+					else
+						C.req_access = circuit.conf_access
+						C.req_one_access = null
+					C.req_access_faction = circuit.req_access_faction
+					playsound(get_turf(src), 'sound/items/Screwdriver.ogg', 50, 1)
+					del(src)
+					return
 			if(istype(W, /obj/item/weapon/crowbar))
 				circuit.loc=T
 				circuit=null

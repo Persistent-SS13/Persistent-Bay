@@ -6,16 +6,12 @@
 	density = 0
 	anchored = 1.0
 	w_class = ITEM_SIZE_NORMAL
-	plane = ABOVE_PLATING_PLANE
+	plane = -18
 	layer = LATTICE_LAYER
 	//	flags = CONDUCT
 
 /obj/structure/lattice/Initialize()
 	. = ..()
-///// Z-Level Stuff
-	if(!(istype(src.loc, /turf/space) || istype(src.loc, /turf/simulated/open)))
-///// Z-Level Stuff
-		return INITIALIZE_HINT_QDEL
 	for(var/obj/structure/lattice/LAT in loc)
 		if(LAT != src)
 			crash_with("Found multiple lattices at '[log_info_line(loc)]'")
@@ -62,7 +58,8 @@
 			to_chat(user, "<span class='notice'>Slicing lattice joints ...</span>")
 		new /obj/item/stack/rods(loc)
 		qdel(src)
-	if (istype(C, /obj/item/stack/rods))
+
+/**	if (istype(C, /obj/item/stack/rods))
 		var/obj/item/stack/rods/R = C
 		if(R.use(2))
 			src.alpha = 0
@@ -73,6 +70,7 @@
 		else
 			to_chat(user, "<span class='notice'>You require at least two rods to complete the catwalk.</span>")
 			return
+**/
 	return
 
 /obj/structure/lattice/proc/updateOverlays()

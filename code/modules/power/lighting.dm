@@ -39,7 +39,7 @@
 		if(istype(fixture, /obj/machinery/light))
 			fixture_type = fixture.type
 		fixture.transfer_fingerprints_to(src)
-		stage = 2
+		stage = 1
 
 	update_icon()
 
@@ -561,6 +561,42 @@
 	brightness_range = 8
 	brightness_power = 3
 
+/obj/item/weapon/light/tube/red
+	name = "red light tube"
+	color = "#da0205"
+	brightness_color = "#da0205"
+
+/obj/item/weapon/light/tube/green
+	name = "green light tube"
+	color = "#71da02"
+	brightness_color = "#71da02"
+
+/obj/item/weapon/light/tube/blue
+	name = "blue light tube"
+	color = "#0271da"
+	brightness_color = "#0271da"
+
+/obj/item/weapon/light/tube/purple
+	name = "purple light tube"
+	color = "#6b02da"
+	brightness_color = "#6b02da"
+
+/obj/item/weapon/light/tube/pink
+	name = "pink light tube"
+	color = "#da0271"
+	brightness_color = "#da0271"
+
+/obj/item/weapon/light/tube/yellow
+	name = "yellow light tube"
+	color = "#dad702"
+	brightness_color = "#dad702"
+
+/obj/item/weapon/light/tube/orange
+	name = "orange light tube"
+	color = "#da6b02"
+	brightness_color = "#da6b02"
+
+
 /obj/item/weapon/light/bulb
 	name = "light bulb"
 	desc = "A replacement light bulb."
@@ -578,8 +614,40 @@
 		)
 
 /obj/item/weapon/light/bulb/red
+	name = "red light bulb"
 	color = "#da0205"
 	brightness_color = "#da0205"
+
+/obj/item/weapon/light/bulb/green
+	name = "green light bulb"
+	color = "#71da02"
+	brightness_color = "#71da02"
+
+/obj/item/weapon/light/bulb/blue
+	name = "blue light bulb"
+	color = "#0271da"
+	brightness_color = "#0271da"
+
+/obj/item/weapon/light/bulb/purple
+	name = "purple light bulb"
+	color = "#6b02da"
+	brightness_color = "#6b02da"
+
+/obj/item/weapon/light/bulb/pink
+	name = "pink light bulb"
+	color = "#da0271"
+	brightness_color = "#da0271"
+
+/obj/item/weapon/light/bulb/yellow
+
+	name = "yellow light bulb"
+	color = "#dad702"
+	brightness_color = "#dad702"
+
+/obj/item/weapon/light/bulb/orange
+	name = "orange light bulb"
+	color = "#da6b02"
+	brightness_color = "#da6b02"
 
 /obj/item/weapon/light/bulb/red/readylight
 	brightness_range = 5

@@ -16,6 +16,7 @@ exactly() { # exactly N name search [mode]
 		echo "$num $name"
 	else
 		echo "$(tput setaf 9)$num $name (expecting exactly $count)$(tput sgr0)"
+		echo "If this is not in error, you can change the value in test\check-paths.sh"
 		FAILED=1
 	fi
 }
@@ -31,7 +32,7 @@ exactly 13 "/obj text paths" '"/obj'
 exactly 8 "/turf text paths" '"/turf'
 exactly 8 "world<< uses" 'world<<|world[[:space:]]<<'
 exactly 46 "world.log<< uses" 'world.log<<|world.log[[:space:]]<<'
-exactly 840 "<< uses" '(?<!<)<<(?!<)' -P
+exactly 773 "<< uses" '(?<!<)<<(?!<)' -P
 exactly 0 "incorrect indentations" '^( {4,})' -P
 exactly 38 "text2path uses" 'text2path'
 # With the potential exception of << if you increase any of these numbers you're probably doing it wrong

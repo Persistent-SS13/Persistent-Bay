@@ -25,11 +25,58 @@ var/list/mechtoys = list(
 	name = "supply manifest"
 	var/is_copy = 1
 	icon_state = "paper_words"
+	
+	
+	
 /obj/item/weapon/paper/export
 	name = "export manifest"
 	var/is_copy = 1
 	var/export_id = 0
 	icon_state = "paper_words"
+	var/business_name = 0
+
+/obj/item/weapon/paper/export/business
+	name = "export manifest"
+	business_name = null
+	
+/obj/item/weapon/paper/export/business/show_content(mob/user, forceshow)
+	var/can_read = (istype(user, /mob/living/carbon/human) || isghost(user) || istype(user, /mob/living/silicon)) || forceshow
+	if(!forceshow && istype(user,/mob/living/silicon/ai))
+		var/mob/living/silicon/ai/AI = user
+		can_read = get_dist(src, AI.camera) < 2
+	var/info2 = info
+	info2 += "LINKED BUSINESS: [business_name]<br>"
+	if(src.Adjacent(user))
+		info2 += "<br>Swipe business name-tag <A href='?src=\ref[src];connect=1'>or enter full business name here.</A>"
+	else
+		info2 += "<br>Swipe business name-tag or enter full business name here."
+	user << browse("<HTML><HEAD><TITLE>[name]</TITLE></HEAD><BODY bgcolor='[color]'>[can_read ? info2 : stars(info)][stamps]</BODY></HTML>", "window=[name]")
+	onclose(user, "[name]")	
+
+	
+/obj/item/weapon/paper/export/business/attackby(obj/item/weapon/P as obj, mob/user as mob)
+	if(istype(P, /obj/item/weapon/pen))
+		return
+	else if(istype(P, /obj/item/weapon/card/id))	
+		var/obj/item/weapon/card/id/id = P
+		if(id.selected_business)
+			var/datum/small_business/business = get_business(id.selected_business)
+			if(business)
+				business_name = business.name	
+				to_chat(user, "Business linked to export.")
+		return
+	..()
+/obj/item/weapon/paper/export/business/Topic(href, href_list)
+	..()
+	if(!usr || (usr.stat || usr.restrained()))
+		return
+	if(href_list["connect"])
+		var/select_name = input(usr,"Enter the full name of the business.","Connect Business", "") as null|text
+		var/datum/small_business/viewing = get_business(select_name)
+		if(viewing && src.Adjacent(usr))
+			business_name = viewing
+			to_chat(usr, "Business linked to export.")
+	
 /*
 /obj/effect/marker/supplymarker
 	icon_state = "X"
@@ -47,7 +94,8 @@ var/list/mechtoys = list(
 	var/comment = null
 	var/reason = null
 	var/orderedrank = null //used for supply console printing
-
+	var/paidby = null
+	var/last_print = 0
 var/list/point_source_descriptions = list(
 	"time" = "Base station supply",
 	"manifest" = "From exported manifests",
@@ -103,6 +151,36 @@ var/list/point_source_descriptions = list(
 			if(supplied >= required)
 				supply_controller.close_order(src)
 
+				
+/obj/var/export_value = 10
+	
+/datum/export_order/static			
+	
+/datum/export_order/static/fill(var/obj/structure/closet/crate)
+	var/filled = 0
+	var/total = 0
+	var/list/filling = list()
+	for(var/obj/A in crate.contents)
+		if(istype(A, /obj/item/weapon/paper/export))
+			filling |= A
+			continue
+		if(!istype(A, typepath))
+			message_admins("fill failed due to invalid object [A.name]")
+			return 0
+		filling |= A
+		total += A.export_value
+		filled++
+
+	if(filled)
+		crate.loc = null
+		playsound(crate.loc,'sound/effects/teleport.ogg',40,1)
+		qdel(crate)
+		. = total
+				
+				
+				
+				
+				
 /datum/export_order/stack
 
 /datum/export_order/stack/fill(var/obj/structure/closet/crate)
@@ -180,11 +258,12 @@ var/list/point_source_descriptions = list(
 
 /datum/controller/supply/proc/generate_initial()
 	generate_export("manufacturing-basic")
-	generate_export("manufacturing-basic")
-	generate_export("manufacturing-advanced")
 	generate_export("manufacturing-advanced")
 	generate_export("material")
 	generate_export("material")
+	generate_export("xenobiology")
+	generate_export("cooking")
+	generate_export("cooking")
 /datum/controller/supply/proc/close_order(var/datum/export_order/export)
 	var/order_type = export.order_type
 	old_exports |= export
@@ -254,6 +333,33 @@ var/list/point_source_descriptions = list(
 				export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each item."
 				all_exports |= export
 				return export
+				
+		if("cooking")
+			export = new()
+			var/list/possible_designs = list()
+			for(var/D in subtypesof(/obj/item/weapon/reagent_containers/food/snacks/variable))
+				possible_designs += D
+			export.required = rand(12, 32)
+			var/per = rand(30,50)
+			export.typepath = pick(possible_designs)
+			export.rate = per
+			export.order_type = typee
+			export.id = exportnum
+			var/obj/ob = new export.typepath()
+			export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each item."
+			all_exports |= export
+			qdel(ob)
+			return export
+			
+		if("xenobiology")
+			export = new /datum/export_order/static()
+			export.typepath = /obj/item/slime_extract
+			export.name = "Order for slime extracts of any type. Payment depends on the rarity of the extract."
+			export.order_type = typee
+			export.id = exportnum
+			all_exports |= export
+			return export
+				
 		if("material")
 			export = new /datum/export_order/stack()
 			var/list/possible = list(

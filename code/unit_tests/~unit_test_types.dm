@@ -10,6 +10,9 @@
 
 /datum/fake_client
 
+/datum/map_storage_test
+	should_save = 0
+
 /mob/fake_mob
 	var/datum/fake_client/fake_client
 

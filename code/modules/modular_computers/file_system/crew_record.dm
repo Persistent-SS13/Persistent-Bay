@@ -30,7 +30,7 @@ FIELD_LIST("Sex", sex, record_genders())
 FIELD_NUM("Age", age)
 
 FIELD_LIST("Status", status, GLOB.physical_statuses)
-/record_field/status/acccess_edit = access_medical
+/record_field/status/acccess_edit = core_access_medical_programs
 
 FIELD_SHORT("Species",species)
 FIELD_LIST("Branch", branch, record_branches())
@@ -38,20 +38,20 @@ FIELD_LIST("Rank", rank, record_ranks())
 
 // MEDICAL RECORDS
 FIELD_LIST("Blood Type", bloodtype, GLOB.blood_types)
-FIELD_LONG_SECURE("Medical Record", medRecord, access_medical)
+FIELD_LONG_SECURE("Medical Record", medRecord, core_access_medical_programs)
 
 // SECURITY RECORDS
-FIELD_LIST_SECURE("Criminal Status", criminalStatus, GLOB.security_statuses, access_security)
-FIELD_LONG_SECURE("Security Record", secRecord, access_security)
-FIELD_SHORT_SECURE("DNA", dna, access_security)
-FIELD_SHORT_SECURE("Fingerprint", fingerprint, access_security)
+FIELD_LIST_SECURE("Criminal Status", criminalStatus, GLOB.security_statuses, core_access_security_programs)
+FIELD_LONG_SECURE("Security Record", secRecord, core_access_security_programs)
+FIELD_SHORT_SECURE("DNA", dna, core_access_security_programs)
+FIELD_SHORT_SECURE("Fingerprint", fingerprint, core_access_security_programs)
 
 // EMPLOYMENT RECORDS
-FIELD_LONG_SECURE("Employment Record", emplRecord, access_heads)
-FIELD_SHORT_SECURE("Home System", homeSystem, access_heads)
-FIELD_SHORT_SECURE("Citizenship", citizenship, access_heads)
-FIELD_SHORT_SECURE("Faction", faction, access_heads)
-FIELD_SHORT_SECURE("Religion", religion, access_heads)
+FIELD_LONG_SECURE("Employment Record", emplRecord, core_access_employee_records)
+FIELD_SHORT_SECURE("Home System", homeSystem, core_access_employee_records)
+FIELD_SHORT_SECURE("Citizenship", citizenship, core_access_employee_records)
+FIELD_SHORT_SECURE("Faction", faction, core_access_employee_records)
+FIELD_SHORT_SECURE("Religion", religion, core_access_employee_records)
 
 // ANTAG RECORDS
 FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
@@ -79,6 +79,9 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/assignment_data = list() // format = list(assignment_uid = rank)
 	var/validate_time = 0
 	var/worked = 0
+	var/expenses = 0
+	
+	
 /datum/computer_file/crew_record/New()
 	..()
 	for(var/T in subtypesof(/record_field/))
@@ -263,23 +266,23 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 
 	// Medical record
 	set_bloodtype(H ? H.b_type : "Unset")
-	set_medRecord((H && H.med_record && !jobban_isbanned(H, "Records") ? H.med_record : "No record supplied"))
+	set_medRecord((H && H.med_record && !jobban_isbanned(H, "Records") ? html_decode(H.med_record) : "No record supplied"))
 
 	// Security record
 	set_criminalStatus(GLOB.default_security_status)
 	set_dna(H ? H.dna.unique_enzymes : "")
 	set_fingerprint(H ? md5(H.dna.uni_identity) : "")
-	set_secRecord((H && H.sec_record && !jobban_isbanned(H, "Records") ? H.sec_record : "No record supplied"))
+	set_secRecord((H && H.sec_record && !jobban_isbanned(H, "Records") ? html_decode(H.sec_record) : "No record supplied"))
 
 	// Employment record
-	set_emplRecord((H && H.gen_record && !jobban_isbanned(H, "Records") ? H.gen_record : "No record supplied"))
+	set_emplRecord((H && H.gen_record && !jobban_isbanned(H, "Records") ? html_decode(H.gen_record) : "No record supplied"))
 	set_homeSystem(H ? H.home_system : "Unset")
 	set_citizenship(H ? H.citizenship : "Unset")
 	set_faction(H ? H.personal_faction : "Unset")
 	set_religion(H ? H.religion : "Unset")
 
 	// Antag record
-	set_antagRecord((H && H.exploit_record && !jobban_isbanned(H, "Records") ? H.exploit_record : ""))
+	set_antagRecord((H && H.exploit_record && !jobban_isbanned(H, "Records") ? html_decode(H.exploit_record) : ""))
 
 // Returns independent copy of this file.
 /datum/computer_file/crew_record/clone(var/rename = 0)

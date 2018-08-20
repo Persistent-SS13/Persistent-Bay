@@ -153,32 +153,32 @@ Please contact me on #coderbus IRC. ~Carn x
 	update_hud()		//TODO: remove the need for this
 	overlays.Cut()
 
+	var/list/visible_overlays = overlays_standing
+
 	if (icon_update)
 		if(is_cloaked())
 
 			icon = 'icons/mob/human.dmi'
 			icon_state = "blank"
 
-			for(var/entry in list(overlays_standing[R_HAND_LAYER], overlays_standing[L_HAND_LAYER]))
-				if(istype(entry, /image))
-					overlays += entry
-				else if(istype(entry, /list))
-					for(var/inner_entry in entry)
-						overlays += inner_entry
-
-			if(species.has_floating_eyes)
-				overlays |= species.get_eyes(src)
+			visible_overlays = list(visible_overlays[R_HAND_LAYER], visible_overlays[L_HAND_LAYER])
 
 		else
 			icon = stand_icon
 			icon_state = null
 
-			for(var/entry in overlays_standing)
+			var/matrix/M = matrix()
+			if(lying && (species.prone_overlay_offset[1] || species.prone_overlay_offset[2]))
+				M.Translate(species.prone_overlay_offset[1], species.prone_overlay_offset[2])
+			for(var/entry in visible_overlays)
 				if(istype(entry, /image))
-					overlays += entry
+					var/image/overlay = entry
+					overlay.transform = M
+					overlays += overlay
 				else if(istype(entry, /list))
-					for(var/inner_entry in entry)
-						overlays += inner_entry
+					for(var/image/overlay in entry)
+						overlay.transform = M
+						overlays += overlay
 			if(species.has_floating_eyes)
 				overlays |= species.get_eyes(src)
 
@@ -342,12 +342,14 @@ var/global/list/damage_icon_parts = list()
 				base_icon.MapColors(rgb(tone[1],0,0),rgb(0,tone[2],0),rgb(0,0,tone[3]))
 
 		//Handle husk overlay.
-		if(husk && ("overlay_husk" in icon_states(species.get_icobase(src))))
-			var/icon/mask = new(base_icon)
-			var/icon/husk_over = new(species.get_icobase(src),"overlay_husk")
-			mask.MapColors(0,0,0,1, 0,0,0,1, 0,0,0,1, 0,0,0,1, 0,0,0,0)
-			husk_over.Blend(mask, ICON_ADD)
-			base_icon.Blend(husk_over, ICON_OVERLAY)
+		if(husk)
+			var/husk_icon = species.get_husk_icon(src)
+			if(husk_icon)
+				var/icon/mask = new(base_icon)
+				var/icon/husk_over = new(species.husk_icon,"")
+				mask.MapColors(0,0,0,1, 0,0,0,1, 0,0,0,1, 0,0,0,1, 0,0,0,0)
+				husk_over.Blend(mask, ICON_ADD)
+				base_icon.Blend(husk_over, ICON_OVERLAY)
 
 		human_icon_cache[icon_key] = base_icon
 
@@ -668,7 +670,7 @@ var/global/list/damage_icon_parts = list()
 		var/species_tail_anim = species.get_tail_animation(src)
 		if(!species_tail_anim) species_tail_anim = 'icons/effects/species.dmi'
 		tail_icon = new/icon(species_tail_anim)
-		tail_icon.Blend(rgb(r_skin, g_skin, b_skin), ICON_ADD)
+		tail_icon.Blend(rgb(r_skin, g_skin, b_skin), species.tail_blend)
 		// The following will not work with animated tails.
 		var/use_species_tail = species.get_tail_hair(src)
 		if(use_species_tail)
@@ -758,8 +760,8 @@ var/global/list/damage_icon_parts = list()
 	overlays_standing[SURGERY_LEVEL] = null
 	var/image/total = new
 	for(var/obj/item/organ/external/E in organs)
-		if(E.robotic < ORGAN_ROBOT && E.open())
-			var/image/I = image("icon"='icons/mob/surgery.dmi', "icon_state"="[E.icon_name][round(E.open())]", "layer"=-SURGERY_LEVEL)
+		if(E.robotic < ORGAN_ROBOT && E.how_open())
+			var/image/I = image("icon"='icons/mob/surgery.dmi', "icon_state"="[E.icon_name][round(E.how_open())]", "layer"=-SURGERY_LEVEL)
 			total.overlays += I
 	total.appearance_flags = RESET_COLOR
 	overlays_standing[SURGERY_LEVEL] = total

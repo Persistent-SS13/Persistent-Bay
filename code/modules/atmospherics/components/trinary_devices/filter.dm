@@ -22,6 +22,8 @@
 	 2: Nitrogen: Nitrogen ONLY
 	 3: Carbon Dioxide: Carbon Dioxide ONLY
 	 4: Sleeping Agent (N2O)
+	 5: Hydrogen (H2)
+	 6: Reagent Gases
 	*/
 	var/filter_type = -1
 	var/list/filtered_out = list()
@@ -49,6 +51,13 @@
 			filtered_out = list("carbon_dioxide")
 		if(4)//removing N2O
 			filtered_out = list("sleeping_agent")
+		if(5)//removing H2
+			filtered_out = list("hydrogen")
+		if(6)//removing reagent gases
+			for(var/g in gas_data.gases)
+				if(gas_data.flags[g] & XGM_GAS_REAGENT_GAS)
+					filtered_out = gas_data.gases[g]
+
 
 	air1.volume = ATMOS_DEFAULT_VOLUME_FILTER
 	air2.volume = ATMOS_DEFAULT_VOLUME_FILTER
@@ -163,6 +172,10 @@
 			current_filter_type = "Carbon Dioxide"
 		if(4)
 			current_filter_type = "Nitrous Oxide"
+		if(5)
+			current_filter_type = "Hydrogen"
+		if(6)
+			current_filter_type = "Reagent Gases"
 		if(-1)
 			current_filter_type = "Nothing"
 		else
@@ -177,6 +190,8 @@
 			<A href='?src=\ref[src];filterset=2'>Nitrogen</A><BR>
 			<A href='?src=\ref[src];filterset=3'>Carbon Dioxide</A><BR>
 			<A href='?src=\ref[src];filterset=4'>Nitrous Oxide</A><BR>
+			<A href='?src=\ref[src];filterset=5'>Hydrogen</A><BR>
+			<A href='?src=\ref[src];filterset=6'>Reagent Gases</a><BR>
 			<A href='?src=\ref[src];filterset=-1'>Nothing</A><BR>
 			<HR>
 			<B>Set Flow Rate Limit:</B>
@@ -208,6 +223,13 @@
 				filtered_out += "carbon_dioxide"
 			if(4)//removing N2O
 				filtered_out += "sleeping_agent"
+			if(5)//removing H2
+				filtered_out += "hydrogen"
+			if(6)//removing reagent gases
+				for(var/g in gas_data.gases) //This only fires when initially selecting the filter type, so impact on performance is minimal
+					if(gas_data.flags[g] & XGM_GAS_REAGENT_GAS)
+						to_chat(usr, "<span class='notice'>[g]</span>")
+						filtered_out += g
 
 	if (href_list["temp"])
 		src.temp = null

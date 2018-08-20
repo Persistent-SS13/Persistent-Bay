@@ -21,7 +21,7 @@
 	var/turf/base_turf
 	//If set, will set base area and turf type to same as where it was spawned at
 	var/autoset
-
+	should_save = 0
 /obj/effect/shuttle_landmark/New()
 	..()
 	tag = landmark_tag //since tags cannot be set at compile time

@@ -103,6 +103,8 @@
 	contains = list(/obj/item/weapon/material/hatchet = 2,
 					/obj/item/weapon/reagent_containers/spray/plantbgone = 4,
 					/obj/item/clothing/mask/gas = 2,
+					/obj/item/weapon/shovel,
+					/obj/item/weapon/shovel/spade,
 					/obj/item/weapon/grenade/chem_grenade/antiweed = 2)
 	cost = 25
 	containername = "\improper Weed control crate"
@@ -110,8 +112,7 @@
 
 /decl/hierarchy/supply_pack/hydroponics/exoticseeds
 	name = "Exotic seeds crate"
-	contains = list(/obj/item/seeds/replicapod = 2,
-					/obj/item/seeds/libertymycelium,
+	contains = list(/obj/item/seeds/libertymycelium,
 					/obj/item/seeds/reishimycelium,
 					/obj/item/seeds/random = 6,
 					/obj/item/seeds/kudzuseed)

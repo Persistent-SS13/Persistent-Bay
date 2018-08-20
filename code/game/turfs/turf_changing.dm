@@ -17,11 +17,19 @@
 
 //Creates a new turf
 /turf/proc/ChangeTurf(var/turf/N, var/tell_universe=1, var/force_lighting_update = 0)
+	var/old_type = src.type
+	var/old_resources = null
+	if(istype(src, /turf/simulated))
+		var/turf/simulated/T = src
+		old_resources = T.resources
 	if (!N)
 		return
 
 	// This makes sure that turfs are not changed to space when one side is part of a zone
 	if(N == /turf/space)
+		for(var/atom/movable/lighting_overlay/overlay in contents)
+			overlay.loc = null
+			qdel(overlay)
 		var/turf/below = GetBelow(src)
 		if(istype(below) && !istype(below,/turf/space))
 			N = below.density ? /turf/simulated/floor/airless : /turf/simulated/open
@@ -29,9 +37,9 @@
 	var/obj/fire/old_fire = fire
 	var/old_opacity = opacity
 	var/old_dynamic_lighting = dynamic_lighting
-	var/old_affecting_lights = affecting_lights
-	var/old_lighting_overlay = lighting_overlay
-	var/old_corners = corners
+//	var/old_affecting_lights = affecting_lights
+//	var/old_lighting_overlay = lighting_overlay
+//	var/old_corners = corners
 
 //	log_debug("Replacing [src.type] with [N]")
 
@@ -55,6 +63,9 @@
 		if(old_fire)
 			fire = old_fire
 		if (istype(W,/turf/simulated/floor))
+			var/turf/simulated/floor/F = W
+			F.prior_floortype = old_type
+			F.prior_resources = old_resources
 			W.RemoveLattice()
 	else if(old_fire)
 		old_fire.RemoveFire()
@@ -69,7 +80,13 @@
 
 	W.post_change()
 	. = W
-
+	if(dynamic_lighting)
+		lighting_build_overlay()
+	else
+		lighting_clear_overlay()
+	if((old_opacity != opacity) || (dynamic_lighting != old_dynamic_lighting))
+		reconsider_lights()
+	/**
 	if(lighting_overlays_initialised)
 		lighting_overlay = old_lighting_overlay
 		affecting_lights = old_affecting_lights
@@ -81,7 +98,7 @@
 				lighting_build_overlay()
 			else
 				lighting_clear_overlay()
-
+	**/
 /turf/proc/transport_properties_from(turf/other)
 	if(!istype(other, src.type))
 		return 0
@@ -96,7 +113,14 @@
 	return 1
 
 //I would name this copy_from() but we remove the other turf from their air zone for some reason
-/turf/simulated/transport_properties_from(turf/simulated/other)
+/turf/simulated/floor/transport_properties_from(turf/simulated/other)
+	if(!..())
+		return 0
+	if(istype(other, /turf/simulated/floor))
+		var/turf/simulated/floor/F = other
+		set_flooring(F.flooring)
+
+/turf/simulated/floor/transport_properties_from(turf/simulated/other)
 	if(!..())
 		return 0
 

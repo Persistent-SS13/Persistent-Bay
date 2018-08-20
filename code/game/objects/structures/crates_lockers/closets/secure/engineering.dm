@@ -1,6 +1,6 @@
 /obj/structure/closet/secure_closet/engineering_chief
 	name = "chief engineer's locker"
-	req_access = list(access_ce)
+	req_access = list(core_access_engineering_programs)
 	icon_state = "securece1"
 	icon_closed = "securece"
 	icon_locked = "securece1"
@@ -51,7 +51,7 @@
 */
 /obj/structure/closet/secure_closet/engineering_welding
 	name = "welding supplies"
-	req_access = list(access_construction)
+	req_access = list(core_access_engineering_programs)
 	icon_state = "secureengweld1"
 	icon_closed = "secureengweld"
 	icon_locked = "secureengweld1"

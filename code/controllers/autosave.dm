@@ -31,7 +31,6 @@ var/datum/controller/save_controller/save_controller
 			fdel("[save_path][mobbie.save_slot].sav")
 		var/savefile/f = new("[save_path][mobbie.save_slot].sav")
 		f << mobbie
-		mobbie.should_save = 0
 	for(var/datum/mind/employee in ticker.minds)
 		if(!employee.current || !employee.current.ckey) continue
 		var/save_path = load_path(employee.current.ckey, "")
@@ -39,6 +38,5 @@ var/datum/controller/save_controller/save_controller
 			fdel("[save_path][employee.current.save_slot].sav")
 		var/savefile/f = new("[save_path][employee.current.save_slot].sav")
 		f << employee.current
-		employee.current.should_save = 0
 		to_chat(employee.current, "You character has been autosaved.")
 

@@ -118,7 +118,7 @@
 	desc = "A custom-built weapon of some kind."
 	icon_state = "xray"
 	projectile_type = /obj/item/projectile/beam/mindflayer
-
+/*
 /obj/item/weapon/gun/energy/toxgun
 	name = "phoron pistol"
 	desc = "A specialized firearm designed to fire lethal bolts of phoron."
@@ -126,7 +126,7 @@
 	w_class = ITEM_SIZE_NORMAL
 	origin_tech = list(TECH_COMBAT = 5, TECH_PHORON = 4)
 	projectile_type = /obj/item/projectile/energy/phoron
-
+*/
 /* Staves */
 
 /obj/item/weapon/gun/energy/staff
@@ -209,12 +209,12 @@ obj/item/weapon/gun/energy/staff/focus
 /obj/item/weapon/gun/energy/plasmacutter/attackby(obj/item/A, mob/user)
 	if(istype(A, /obj/item/stack/material/phoron))
 		var/obj/item/stack/material/S = A
-		
+
 		if(power_supply.charge==300)
 			return 0
 		S.use(1)
 		power_supply.give(150)
 		to_chat(user, "<span class='notice'>You insert [A] in [src], recharging it.</span>")
-		
+
 	else
 		..()

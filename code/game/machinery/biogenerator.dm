@@ -32,6 +32,7 @@
 			/obj/item/weapon/storage/wallet/leather = 100,
 			/obj/item/clothing/gloves/thick/botany = 250,
 			/obj/item/weapon/storage/belt/utility = 300,
+			/obj/item/weapon/storage/belt/security = 300,
 			/obj/item/weapon/storage/backpack/satchel = 400,
 			/obj/item/weapon/storage/bag/cash = 400,
 			/obj/item/clothing/shoes/workboots = 400,
@@ -40,7 +41,11 @@
 			/obj/item/clothing/suit/leathercoat = 500,
 			/obj/item/clothing/suit/storage/toggle/brown_jacket = 500,
 			/obj/item/clothing/suit/storage/toggle/bomber = 500,
-			/obj/item/clothing/suit/storage/hooded/wintercoat = 500))
+			/obj/item/clothing/suit/storage/hooded/wintercoat = 500),
+		"Other" = list(
+			/obj/item/weapon/paper = 5,
+			/obj/item/weapon/paper_package = 250)
+			)
 
 /obj/machinery/biogenerator/New()
 	..()
@@ -160,10 +165,7 @@
 		ui.set_initial_data(data)
 		ui.open()
 
-/obj/machinery/biogenerator/Topic(href, href_list)
-	if(..())
-		return 1
-
+/obj/machinery/biogenerator/OnTopic(user, href_list)
 	switch (href_list["action"])
 		if("activate")
 			activate()
@@ -175,19 +177,18 @@
 				update_icon()
 		if("create")
 			if (state == BG_PROCESSING)
-				return 1
+				return TOPIC_REFRESH
 			var/type = href_list["type"]
 			var/product_index = text2num(href_list["product_index"])
 			if (isnull(products[type]))
-				return 1
+				return TOPIC_REFRESH
 			var/list/sub_products = products[type]
 			if (product_index < 1 || product_index > sub_products.len)
-				return 1
+				return TOPIC_REFRESH
 			create_product(type, sub_products[product_index])
-			return 1
 		if("return")
 			state = BG_READY
-	return 1
+	return TOPIC_REFRESH
 
 /obj/machinery/biogenerator/attack_hand(mob/user as mob)
 	if(stat & (BROKEN|NOPOWER))

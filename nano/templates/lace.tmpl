@@ -2,10 +2,10 @@
 	<h2>Your conciousness is being held in this device.</h2>
 	<br><br>
 	You may turn on the emergency broadcast sensor, which will make this device and its coordinates appear on every crew sensor.<br><br>
-	You may also put the device into standby, letting your conciousness rest while you await rescue. ((Return to character creation.)))
+	You may also release your conciousness from the lace. This will allow you leave this existence and finally die. ((You will be returned to the character selection screen but your character will be unselectable.)))
 	<br><br>
 	{{:helper.link("Sensor off", '', {'action' : 'sensor_off'}, !data.sensor ? 'selected' : null)}}{{:helper.link("Sensor on", '', {'action' : 'sensor_on'}, data.sensor ? 'selected' : null)}}<br><br>
-	{{:helper.link("Enter Standby Mode", 'cross', {'action' : 'logoff'})}}
+	{{:helper.link("Accept Death, Release Conciousness.", 'cross', {'action' : 'die'})}}
 {{/if}}
 {{if data.faction_name}}
 	<h2>Connected to {{:data.faction_name}}</h2>
@@ -14,11 +14,17 @@
 	{{:helper.link("Off Duty", '', {'action' : 'off_duty'}, !data.duty_status_num ? 'selected' : null)}}{{:helper.link("On Duty", '', {'action' : 'on_duty'}, data.duty_status_num ? 'selected' : null)}}
 	<br><br>{{:helper.link("Disconnect from employment network", 'cross', {'action' : 'disconnect'})}}
 {{else}}
-	<h2>Connect to Employment Network</h2>
-	<br><br>
-	<h4>Available networks: </h4><br><br>
-	{{for data.potential}}
-		{{:helper.link(value.name, 'cross', {'action' : 'connect', 'selected_ref' : value.ref})}}
+	{{if data.business_name}}
+		<h2>Connected to {{:data.business_name}} (business Network)</h2>
 		<br><br>
-	{{/for}}
+		{{:helper.link("Clock out", '', {'action' : 'clock_out'},  null)}}
+	{{else}}
+		<h2>Connect to Employment Network</h2>
+		<br><br>
+		<h4>Available networks: </h4><br><br>
+		{{for data.potential}}
+			{{:helper.link(value.name, 'cross', {'action' : 'connect', 'selected_ref' : value.ref})}}
+			<br><br>
+		{{/for}}
+	{{/if}}
 {{/if}}

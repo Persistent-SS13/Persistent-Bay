@@ -3,10 +3,10 @@
 	sort_order = 3
 
 /datum/category_item/player_setup_item/player_global/language/load_preferences(var/savefile/S)
-	S["language_prefixes"]	>> pref.language_prefixes
+	from_file(S["language_prefixes"],pref.language_prefixes)
 
 /datum/category_item/player_setup_item/player_global/language/save_preferences(var/savefile/S)
-	S["language_prefixes"]	<< pref.language_prefixes
+	to_file(S["language_prefixes"],pref.language_prefixes)
 
 /datum/category_item/player_setup_item/player_global/language/sanitize_preferences()
 	if(isnull(pref.language_prefixes) || !pref.language_prefixes.len)

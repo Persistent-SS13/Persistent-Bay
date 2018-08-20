@@ -94,3 +94,6 @@
 		update_underlays()
 
 		return null
+
+obj/machinery/atmospherics/unary/atmos_scan()
+	return air_contents

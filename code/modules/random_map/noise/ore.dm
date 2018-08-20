@@ -60,21 +60,35 @@
 
 			if(tmp_cell < rare_val)      // Surface metals.
 				T.resources["iron"] =     rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
+				T.resources["copper"] =   rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
 				T.resources["salt"] =     rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
+				T.resources["aluminum"] = rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
+				T.resources["tin"] =      rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["zinc"] =     rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["lead"] =     rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["sulfur"] =   rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["gold"] =     rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["silver"] =   rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["uranium"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["ice"] = 	  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["dryice"] =   rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["diamond"] =  0
 				T.resources["phoron"] =   0
 				T.resources["osmium"] =   0
+				T.resources["tungsten"] = 0
 				T.resources["hydrogen"] = 0
 				T.resources["bluespace crystal"] = 0
 			else if(tmp_cell < deep_val) // Rare metals.
+				T.resources["tin"] =      rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
+				T.resources["zinc"] =     rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
+				T.resources["lead"] =     rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
+				T.resources["sulfur"] =   rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
 				T.resources["gold"] =     rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
 				T.resources["silver"] =   rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
 				T.resources["uranium"] =  rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
 				T.resources["phoron"] =   rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
 				T.resources["osmium"] =   rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
+				T.resources["tungsten"] = 0
 				T.resources["hydrogen"] = 0
 				if(prob(1)) // 1 percent
 					T.resources["bluespace crystal"] = 1
@@ -82,10 +96,15 @@
 					T.resources["bluespace crystal"] = 0
 				T.resources["diamond"] =  0
 				T.resources["iron"] =     0
+				T.resources["copper"] =   0
+				T.resources["aluminum"] = 0
 				T.resources["salt"] =     0
+				T.resources["ice"] = 	  0
+				T.resources["dryice"] =   0
 			else                             // Deep metals.
 				T.resources["uranium"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["diamond"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["tungsten"] = rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["phoron"] =   rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
 				T.resources["osmium"] =   rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
 				T.resources["hydrogen"] = rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
@@ -94,10 +113,17 @@
 				else
 					T.resources["bluespace crystal"] = 0
 				T.resources["iron"] =     0
+				T.resources["copper"] =   0
+				T.resources["aluminum"] = 0
+				T.resources["tin"] =      0
+				T.resources["zinc"] =     0
+				T.resources["sulfur"] =   0
+				T.resources["lead"] =     0
 				T.resources["gold"] =     0
 				T.resources["silver"] =   0
 				T.resources["salt"] =     0
-
+				T.resources["ice"] = 	  0
+				T.resources["dryice"] =   0
 /datum/random_map/noise/ore/get_map_char(var/value)
 	if(value < rare_val)
 		return "S"

@@ -34,91 +34,91 @@
 /obj/item/slime_extract/grey
 	name = "grey slime extract"
 	icon_state = "grey slime extract"
-
+	export_value = 20
 /obj/item/slime_extract/gold
 	name = "gold slime extract"
 	icon_state = "gold slime extract"
-
+	export_value = 80
 /obj/item/slime_extract/silver
 	name = "silver slime extract"
 	icon_state = "silver slime extract"
-
+	export_value = 60
 /obj/item/slime_extract/metal
 	name = "metal slime extract"
 	icon_state = "metal slime extract"
-
+	export_value = 40
 /obj/item/slime_extract/purple
 	name = "purple slime extract"
 	icon_state = "purple slime extract"
-
+	export_value = 40
 /obj/item/slime_extract/darkpurple
 	name = "dark purple slime extract"
 	icon_state = "dark purple slime extract"
-
+	export_value = 60
 /obj/item/slime_extract/orange
 	name = "orange slime extract"
 	icon_state = "orange slime extract"
-
+	export_value = 40
 /obj/item/slime_extract/yellow
 	name = "yellow slime extract"
 	icon_state = "yellow slime extract"
-
+	export_value = 60
 /obj/item/slime_extract/red
 	name = "red slime extract"
 	icon_state = "red slime extract"
-
+	export_value = 80
 /obj/item/slime_extract/blue
 	name = "blue slime extract"
 	icon_state = "blue slime extract"
-
+	export_value = 40
 /obj/item/slime_extract/darkblue
 	name = "dark blue slime extract"
 	icon_state = "dark blue slime extract"
-
+	export_value = 60
 /obj/item/slime_extract/pink
 	name = "pink slime extract"
 	icon_state = "pink slime extract"
-
+	export_value = 80
 /obj/item/slime_extract/green
 	name = "green slime extract"
 	icon_state = "green slime extract"
-
+	export_value = 80
 /obj/item/slime_extract/lightpink
 	name = "light pink slime extract"
 	icon_state = "light pink slime extract"
-
+	export_value = 100
 /obj/item/slime_extract/black
 	name = "black slime extract"
 	icon_state = "black slime extract"
-
+	export_value = 100
 /obj/item/slime_extract/oil
 	name = "oil slime extract"
 	icon_state = "oil slime extract"
-
+	export_value = 100
 /obj/item/slime_extract/adamantine
 	name = "adamantine slime extract"
 	icon_state = "adamantine slime extract"
-
+	export_value = 100
 /obj/item/slime_extract/bluespace
 	name = "bluespace slime extract"
 	icon_state = "bluespace slime extract"
-
+	export_value = 80
 /obj/item/slime_extract/pyrite
 	name = "pyrite slime extract"
 	icon_state = "pyrite slime extract"
-
+	export_value = 80
 /obj/item/slime_extract/cerulean
 	name = "cerulean slime extract"
 	icon_state = "cerulean slime extract"
-
+	export_value = 80
 /obj/item/slime_extract/sepia
 	name = "sepia slime extract"
 	icon_state = "sepia slime extract"
-
+	export_value = 80
 /obj/item/slime_extract/rainbow
 	name = "rainbow slime extract"
 	icon_state = "rainbow slime extract"
-
+	export_value = 120
 ////Pet Slime Creation///
 
 /obj/item/weapon/slimepotion

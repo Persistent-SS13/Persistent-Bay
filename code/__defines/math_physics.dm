@@ -4,6 +4,8 @@
 #define R_IDEAL_GAS_EQUATION       8.31    // kPa*L/(K*mol).
 #define ONE_ATMOSPHERE             101.325 // kPa.
 #define IDEAL_GAS_ENTROPY_CONSTANT 1164    // (mol^3 * s^3) / (kg^3 * L).
+#define REAGENT_GAS_EXCHANGE_FACTOR 10 // Amount of reagents per gaseous mole. This is pretty arbritary, as how much a "unit" is is never defined
+								 	   // and any reasonable estimation would be far too low.
 
 // Radiation constants.
 #define STEFAN_BOLTZMANN_CONSTANT    5.6704e-8 // W/(m^2*K^4).

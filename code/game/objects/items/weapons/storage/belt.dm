@@ -5,6 +5,7 @@
 	icon_state = "utilitybelt"
 	item_state = "utility"
 	storage_slots = 7
+	item_flags = IS_BELT
 	max_w_class = ITEM_SIZE_NORMAL
 	slot_flags = SLOT_BELT
 	attack_verb = list("whipped", "lashed", "disciplined")
@@ -146,6 +147,7 @@
 		/obj/item/device/megaphone,
 		/obj/item/weapon/melee,
 		/obj/item/weapon/gun/projectile/sec,
+		/obj/item/weapon/gun/projectile/colt/detective,
 		/obj/item/taperoll,
 		/obj/item/device/holowarrant,
 		/obj/item/weapon/magnetic_ammo
@@ -186,6 +188,13 @@
 	desc = "Can hold security gear like handcuffs and flashes, with more pouches for more storage."
 	icon_state = "swatbelt"
 	item_state = "swatbelt"
+	storage_slots = 9
+
+/obj/item/weapon/storage/belt/security/tactical/fed
+	name = "federation combat belt"
+	desc = "Can hold combat gear such as ammo magazines and grenades."
+	icon_state = "ammobelt"
+	item_state = "ammobelt"
 	storage_slots = 9
 
 /obj/item/weapon/storage/belt/waistpack

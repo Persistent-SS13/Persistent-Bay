@@ -18,7 +18,7 @@ var/list/mining_floors = list()
 	density = 1
 	blocks_air = 1
 	temperature = T0C
-	var/mined_turf = /turf/simulated/floor/asteroid
+	var/mined_turf = /turf/simulated/asteroid
 	var/ore/mineral
 	var/mined_ore = 0
 	var/last_act = 0
@@ -40,7 +40,7 @@ var/list/mining_floors = list()
 	if (!mining_walls["[src.z]"])
 		mining_walls["[src.z]"] = list()
 	mining_walls["[src.z]"] += src
-	
+
 /turf/simulated/mineral/proc/setup()
 	spawn(0)
 		MineralSpread()
@@ -70,8 +70,8 @@ var/list/mining_floors = list()
 
 	for(var/direction in GLOB.cardinal)
 		var/turf/turf_to_check = get_step(src,direction)
-		if(update_neighbors && istype(turf_to_check,/turf/simulated/floor/asteroid))
-			var/turf/simulated/floor/asteroid/T = turf_to_check
+		if(update_neighbors && istype(turf_to_check,/turf/simulated/asteroid))
+			var/turf/simulated/asteroid/T = turf_to_check
 			T.updateMineralOverlays()
 		else if(istype(turf_to_check,/turf/space) || istype(turf_to_check,/turf/simulated/floor))
 			var/image/rock_side = image('icons/turf/walls.dmi', "rock_side", dir = turn(direction, 180))
@@ -115,12 +115,12 @@ var/list/mining_floors = list()
 		if(emitter_blasts_taken > 2) // 3 blasts per tile
 			mined_ore = 1
 			GetDrilled()
-			
+
 	//Plasma Cutter Blasts
 	else if(istype(Proj, /obj/item/projectile/plasma))
 		mined_ore = 1
 		GetDrilled()
-				
+
 /turf/simulated/mineral/Bumped(AM)
 	. = ..()
 	if(istype(AM,/mob/living/carbon/human))
@@ -330,7 +330,7 @@ var/list/mining_floors = list()
 		radiation_repository.flat_radiate(src, 25, 200)
 	//Add some rubble,  you did just clear out a big chunk of rock.
 
-	var/turf/simulated/floor/asteroid/N = ChangeTurf(mined_turf)
+	var/turf/simulated/asteroid/N = ChangeTurf(mined_turf)
 
 	if(istype(N))
 		N.overlay_detail = "asteroid[rand(0,9)]"
@@ -398,7 +398,7 @@ var/list/mining_floors = list()
 
 /turf/simulated/mineral/random
 	name = "Mineral deposit"
-	var/mineralSpawnChanceList = list("Uranium" = 5, "Platinum" = 5, "Iron" = 35, "Carbon" = 35, "Salt" = 20, "Diamond" = 1, "Gold" = 5, "Silver" = 5, "Phoron" = 10)
+	var/mineralSpawnChanceList = list("Uranium" = 5, "Platinum" = 5, "Lead" = 6, "Tungsten" = 2, "Iron" = 35, "Copper" = 35, "Aluminum" = 25, "Sulfur" = 20, "Tin" = 20, "Zinc" = 20, "Ice" = 5, "Dryice" = 5, "Oxyice" = 20, "Nitroice" = 15, "Hydroice" = 15, "Carbon" = 35, "Salt" = 20, "Diamond" = 1, "Gold" = 5, "Silver" = 5, "Phoron" = 10)
 	var/mineralChance = 100 //10 //means 10% chance of this plot changing to a mineral deposit
 
 /turf/simulated/mineral/random/New()
@@ -413,42 +413,56 @@ var/list/mining_floors = list()
 
 /turf/simulated/mineral/random/high_chance
 	mineralChance = 100 //25
-	mineralSpawnChanceList = list("Uranium" = 10, "Platinum" = 10, "Iron" = 20, "Carbon" = 20, "Salt" = 10, "Diamond" = 2, "Gold" = 10, "Silver" = 10, "Phoron" = 20)
+	mineralSpawnChanceList = list("Uranium" = 10, "Platinum" = 10, "Lead" = 12, "Tungsten" = 4, "Iron" = 20, "Copper" = 20, "Aluminum" = 15, "Sulfur" = 10, "Tin" = 10, "Zinc" = 10, "Ice" = 2, "Dryice" = 2, "Oxyice" = 10, "Nitroice" = 5, "Hydroice" = 5, "Carbon" = 20, "Salt" = 10, "Diamond" = 2, "Gold" = 10, "Silver" = 10, "Phoron" = 20)
 
 
 /**********************Asteroid**************************/
 
 // Setting icon/icon_state initially will use these values when the turf is built on/replaced.
 // This means you can put grass on the asteroid etc.
-/turf/simulated/floor/asteroid
+/turf/simulated/asteroid
 	name = "sand"
 	icon = 'icons/turf/flooring/asteroid.dmi'
 	icon_state = "asteroid"
-	base_name = "sand"
-	base_desc = "Gritty and unpleasant."
-	base_icon = 'icons/turf/flooring/asteroid.dmi'
-	base_icon_state = "asteroid"
 
-	initial_flooring = null
 	initial_gas = null
 	temperature = TCMB
 	var/dug = 0       //0 = has not yet been dug, 1 = has already been dug
 	var/overlay_detail
 	has_resources = 1
+/turf/simulated/floor/asteroid
+	name = "sand"
 
-/turf/simulated/floor/asteroid/New()
+/turf/simulated/asteroid/after_load()
+	updateMineralOverlays(1)
+
+/turf/simulated/floor/asteroid/after_load()
+	var/resource = resources
+	var/xi = x
+	var/yi = y
+	var/zi = z
+	ChangeTurf(/turf/simulated/asteroid)
+	spawn()
+		var/turf/simulated/asteroid = locate(xi,yi,zi)
+		asteroid.resources = resource
+/turf/simulated/asteroid/New()
 	if (!mining_floors["[src.z]"])
 		mining_floors["[src.z]"] = list()
 	mining_floors["[src.z]"] += src
-	if(prob(20))
+	if(prob(70))
 		overlay_detail = "asteroid[rand(0,9)]"
 
-/turf/simulated/floor/asteroid/Destroy()
+/turf/simulated/asteroid/Destroy()
 	if (mining_floors["[src.z]"])
 		mining_floors["[src.z]"] -= src
 	return ..()
 
-/turf/simulated/floor/asteroid/ex_act(severity)
+
+/turf/simulated/asteroid/ReplaceWithLattice()
+	new /obj/structure/lattice(src)
+
+
+/turf/simulated/asteroid/ex_act(severity)
 	switch(severity)
 		if(3.0)
 			return
@@ -458,13 +472,40 @@ var/list/mining_floors = list()
 		if(1.0)
 			gets_dug()
 	return
+/turf/simulated/asteroid/can_build_cable(var/mob/user)
+	return 1
+/turf/simulated/asteroid/is_plating()
+	return 0
 
-/turf/simulated/floor/asteroid/is_plating()
-	return !density
-
-/turf/simulated/floor/asteroid/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/turf/simulated/asteroid/attackby(obj/item/W as obj, mob/user as mob)
 	if(!W || !user)
 		return 0
+
+	if (istype(W, /obj/item/stack/rods))
+		var/obj/structure/lattice/L = locate(/obj/structure/lattice, src)
+		if(L)
+			return L.attackby(W, user)
+		var/obj/item/stack/rods/R = W
+		if (R.use(1))
+			to_chat(user, "<span class='notice'>Constructing support lattice ...</span>")
+			playsound(src, 'sound/weapons/Genhit.ogg', 50, 1)
+			ReplaceWithLattice()
+		return
+
+	if (istype(W, /obj/item/stack/tile/floor))
+		var/obj/structure/lattice/L = locate(/obj/structure/lattice, src)
+		if(L)
+			var/obj/item/stack/tile/floor/S = W
+			if (S.get_amount() < 1)
+				return
+			qdel(L)
+			playsound(src, 'sound/weapons/Genhit.ogg', 50, 1)
+			S.use(1)
+			ChangeTurf(/turf/simulated/floor/airless)
+			return
+		else
+			to_chat(user, "<span class='warning'>The plating is going to need some support.</span>")
+	return
 
 	var/list/usable_tools = list(
 		/obj/item/weapon/shovel,
@@ -513,7 +554,7 @@ var/list/mining_floors = list()
 		..(W,user)
 	return
 
-/turf/simulated/floor/asteroid/proc/gets_dug()
+/turf/simulated/asteroid/proc/gets_dug()
 
 	if(dug)
 		return
@@ -525,7 +566,7 @@ var/list/mining_floors = list()
 	icon_state = "asteroid_dug"
 	return
 
-/turf/simulated/floor/asteroid/proc/updateMineralOverlays(var/update_neighbors)
+/turf/simulated/asteroid/proc/updateMineralOverlays(var/update_neighbors)
 
 	overlays.Cut()
 
@@ -551,12 +592,12 @@ var/list/mining_floors = list()
 	if(update_neighbors)
 		var/list/all_step_directions = list(NORTH,NORTHEAST,EAST,SOUTHEAST,SOUTH,SOUTHWEST,WEST,NORTHWEST)
 		for(var/direction in all_step_directions)
-			var/turf/simulated/floor/asteroid/A
-			if(istype(get_step(src, direction), /turf/simulated/floor/asteroid))
+			var/turf/simulated/asteroid/A
+			if(istype(get_step(src, direction), /turf/simulated/asteroid))
 				A = get_step(src, direction)
 				A.updateMineralOverlays()
 
-/turf/simulated/floor/asteroid/Entered(atom/movable/M as mob|obj)
+/turf/simulated/asteroid/Entered(atom/movable/M as mob|obj)
 	..()
 	if(istype(M,/mob/living/silicon/robot))
 		var/mob/living/silicon/robot/R = M

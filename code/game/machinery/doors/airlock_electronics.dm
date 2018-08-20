@@ -1,5 +1,82 @@
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:31
 
+
+/obj/item/weapon/airlock_electronics/business
+	name = "business airlock electronics"
+	icon = 'icons/obj/doors/door_assembly.dmi'
+	icon_state = "door_electronics"
+	w_class = ITEM_SIZE_SMALL //It should be tiny! -Agouri
+	desc = "airlock electronics that connect to business networks"
+	matter = list(DEFAULT_WALL_MATERIAL = 50,"glass" = 50)
+
+	req_access = list()
+
+/obj/item/weapon/airlock_electronics/business/ui_data(mob/user)
+	var/list/data = list()
+	var/list/regions = list()
+	var/datum/small_business/viewing = get_business(business_name)
+	if(!viewing) locked = 1
+	if(!locked)
+		data["connected_faction"] = viewing.name
+		var/list/all_access = list("Sales", "Budget View", "Employee Control", "Upper Management", "Door Access 1", "Door Access 2", "Door Access 3")
+		var/list/region = list()
+		var/list/accesses = list()
+		for(var/j in all_access)
+			var/list/access = list()
+			access["name"] = j
+			access["id"] = j
+			access["req"] = (j in src.business_access)
+			accesses[++accesses.len] = access
+		region["name"] = "Business Accesses"
+		region["accesses"] = accesses
+		regions[++regions.len] = region
+	data["regions"] = regions
+	data["oneAccess"] = one_access
+	data["locked"] = locked
+	data["lockable"] = lockable
+
+	return data
+	
+	
+/obj/item/weapon/airlock_electronics/ui_act(action, params)
+	if(..())
+		return TRUE
+	switch(action)
+		if("clear")
+			conf_access = list()
+			one_access = 0
+			return TRUE
+		if("one_access")
+			one_access = !one_access
+			return TRUE
+		if("set")
+			var/access = params["access"]
+			if (!(access in conf_access))
+				business_access += access
+			else
+				business_access -= access
+			return TRUE
+		if("unlock")
+		
+			var/select_name = input(usr,"Enter the full name of the business.","Unlock", "") as null|text
+			var/datum/small_business/viewing = get_business(select_name)
+			if(!viewing)
+				to_chat(usr, "Business not found")
+				return FALSE
+			locked = 0
+			business_name = select_name
+			
+		if("lock")
+			if(!lockable)
+				return TRUE
+			conf_access.Cut()
+			connected_faction = null
+			business_name = null
+			locked = 1
+			. = TRUE
+	
+	
+	
 /obj/item/weapon/airlock_electronics
 	name = "airlock electronics"
 	icon = 'icons/obj/doors/door_assembly.dmi'
@@ -17,7 +94,8 @@
 	var/locked = 1
 	var/lockable = 1
 	var/datum/world_faction/connected_faction
-
+	var/business_name = ""
+	var/list/business_access = list()
 
 /obj/item/weapon/airlock_electronics/attack_self(mob/user as mob)
 	if (!ishuman(user) && !istype(user,/mob/living/silicon/robot))

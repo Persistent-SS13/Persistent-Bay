@@ -233,7 +233,7 @@
 		switch(href_list["simplemake"])
 			if("observer")			M.change_mob_type( /mob/observer/ghost , null, null, delmob )
 			if("larva")				M.change_mob_type( /mob/living/carbon/alien/larva , null, null, delmob )
-			if("nymph")				M.change_mob_type( /mob/living/carbon/alien/diona , null, null, delmob )
+			//if("nymph")				M.change_mob_type( /mob/living/carbon/alien/diona , null, null, delmob )
 			if("human")				M.change_mob_type( /mob/living/carbon/human , null, null, delmob, href_list["species"])
 			if("slime")				M.change_mob_type( /mob/living/carbon/slime , null, null, delmob )
 			if("monkey")			M.change_mob_type( /mob/living/carbon/human/monkey , null, null, delmob )
@@ -852,6 +852,24 @@
 				var/job = t_split[2]
 				DB_ban_unban(ckey(key), BANTYPE_JOB_PERMA, job)
 
+
+	else if(href_list["increaseslots"])
+		var/datum/preferences/prefs = locate(href_list["increaseslots"])
+		prefs.bonus_slots++
+		usr.client.holder.bonus_panel_refresh(usr, prefs.client_ckey)
+		prefs.save_preferences()
+	else if(href_list["decreaseslots"])
+		var/datum/preferences/prefs = locate(href_list["decreaseslots"])
+		prefs.bonus_slots--
+		usr.client.holder.bonus_panel_refresh(usr, prefs.client_ckey)
+		prefs.save_preferences()
+	else if(href_list["editnotes"])
+		var/datum/preferences/prefs = locate(href_list["editnotes"])
+		var/notes = sanitize(input(usr,"Edit Bonus Notes","bonus notes",prefs.bonus_notes) as text|null)
+		if(notes)
+			prefs.bonus_notes = notes
+			usr.client.holder.bonus_panel_refresh(usr, prefs.client_ckey)
+		prefs.save_preferences()
 	else if(href_list["newban"])
 		if(!check_rights(R_MOD,0) && !check_rights(R_BAN, 0))
 			to_chat(usr, "<span class='warning'>You do not have the appropriate permissions to add bans!</span>")

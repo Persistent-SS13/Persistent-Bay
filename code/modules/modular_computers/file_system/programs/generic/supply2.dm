@@ -25,6 +25,8 @@
 	var/current_security_level
 	var/list/selected_telepads
 	var/list/selected_telepads_export = list()
+	var/curr_page = 1
+
 /datum/nano_module/program/supply/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
 	var/list/data = host.initial_data()
 	var/datum/world_faction/connected_faction
@@ -38,8 +40,8 @@
 	data["faction_name"] = connected_faction.name
 	data["credits"] = connected_faction.central_account.money
 	data["is_admin"] = is_admin
-		
-		
+
+
 	var/decl/security_state/security_state = decls_repository.get_decl(GLOB.using_map.security_state)
 	if(!category_names || !category_contents || current_security_level != security_state.current_security_level)
 		generate_categories()
@@ -54,14 +56,23 @@
 				data["possible_purchases"] = category_contents[selected_category]
 
 		if(2)// Statistics screen with credit overview
-			data["total_credits"] = supply_controller.point_sources["total"] ? supply_controller.point_sources["total"] : 0
-			data["credits_passive"] = supply_controller.point_sources["time"] ? supply_controller.point_sources["time"] : 0
-			data["credits_crates"] = supply_controller.point_sources["crate"] ? supply_controller.point_sources["crate"] : 0
-			data["credits_phoron"] = supply_controller.point_sources["phoron"] ? supply_controller.point_sources["phoron"] : 0
-			data["credits_platinum"] = supply_controller.point_sources["platinum"] ? supply_controller.point_sources["platinum"] : 0
-			data["credits_paperwork"] = supply_controller.point_sources["manifest"] ? supply_controller.point_sources["manifest"] : 0
-			data["credits_virology"] = supply_controller.point_sources["virology"] ? supply_controller.point_sources["virology"] : 0
-			
+
+			var/list/transactions = connected_faction.central_account.transaction_log
+			var/pages = transactions.len/10
+			if(pages < 1)
+				pages = 1
+			var/list/formatted_transactions[0]
+			if(transactions.len)
+				for(var/i=0; i<10; i++)
+					var/minus = i+(10*(curr_page-1))
+					if(minus >= transactions.len) break
+					var/datum/transaction/T = transactions[transactions.len-minus]
+					formatted_transactions[++formatted_transactions.len] = list("date" = T.date, "time" = T.time, "target_name" = T.target_name, "purpose" = T.purpose, "amount" = T.amount ? T.amount : 0)
+			data["transactions"] = formatted_transactions
+			data["page"] = curr_page
+			data["page_up"] = curr_page < pages
+			data["page_down"] = curr_page > 1
+
 		if(3) // order confirmation and telepad control
 			var/list/telepads[0]
 			for(var/obj/machinery/telepad_cargo/telepad in connected_faction.cargo_telepads)
@@ -79,7 +90,7 @@
 					"id" = SO.ordernum,
 					"object" = SO.object.name,
 					"orderer" = SO.orderedby,
-					"cost" = SO.object.cost*10,
+					"cost" = "[SO.object.cost*10]/[SO.object.cost*10+(SO.object.cost*10/100*connected_faction.import_profit)]",
 					"reason" = SO.reason
 				)))
 			for(var/datum/supply_order/SO in connected_faction.pending_orders)
@@ -111,7 +122,7 @@
 					"selected" = (telepad in selected_telepads_export)
 				)))
 				data["telepads"] = telepads
-				
+
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "supply.tmpl", name, 1050, 800, state = state)
@@ -124,12 +135,13 @@
 	if(..())
 		return 1
 	var/datum/world_faction/connected_faction
+	var/obj/item/weapon/card/id/user_id_card = usr.GetIdCard()
 	if(program.computer.network_card && program.computer.network_card.connected_network)
 		connected_faction = program.computer.network_card.connected_network.holder
 	if(!connected_faction)
 		return 1
-		
-		
+
+
 	if(href_list["select_category"])
 		selected_category = href_list["select_category"]
 		return 1
@@ -182,24 +194,30 @@
 		O.orderedrank = idrank
 		O.comment = "#[O.ordernum]"
 		connected_faction.pending_orders += O
-
-		if(can_print() && alert(user, "Would you like to print a confirmation receipt?", "Print receipt?", "Yes", "No") == "Yes")
-			print_order(O, user)
 		return 1
 	if(href_list["print_export"])
+		if(!check_access(core_access_invoicing)) return
 		if(!can_print())
 			return
 		print_export(user, href_list["print_export"])
-		
+
 		return 1
+		
+	if(href_list["print_export2"])
+		if(!check_access(core_access_invoicing)) return
+		if(!can_print())
+			return
+		print_export_business(user, href_list["print_export2"])
+
+		return 1	
+		
 	if(href_list["print_summary"])
 		if(!can_print())
 			return
 		print_summary(user)
 
 	// Items requiring cargo access go below this entry. Other items go above.
-	if(!check_access(access_cargo))
-		return 1
+	
 
 	if(href_list["launch_shuttle"])
 		var/datum/shuttle/autodock/ferry/supply/shuttle = supply_controller.shuttle
@@ -224,6 +242,9 @@
 			frequency.post_signal(src, status_signal)
 		return 1
 	if(href_list["launch_export"])
+		if(!check_access(core_access_invoicing))
+			to_chat(usr, "Access Denied.")
+			return 1
 		var/sent = 0
 		var/earned = 0
 		if(!selected_telepads_export.len)
@@ -233,15 +254,30 @@
 			if(T.density)	continue
 			for(var/obj/structure/closet/closet in T.contents)
 				for(var/obj/item/weapon/paper/export/export in closet.contents)
-					var/earn = supply_controller.fill_order(export.export_id, closet)
-					if(earn)	
-						connected_faction.central_account.money += earn
-						earned += earn
-						sent++
-					break
+					if(export.business_name)
+						var/earn = supply_controller.fill_order(export.export_id, closet)
+						if(earn)
+							var/datum/small_business/business = get_business(export.business_name)
+							if(business)
+								var/datum/transaction/Te = new("Central Authority Exports", "Export ([export.name])", earn, 1)
+								business.central_account.do_transaction(Te)
+								earned += business.pay_export_tax(earn, connected_faction)
+								sent++
+						break
+					else if(export.business_name == 0)
+						var/earn = supply_controller.fill_order(export.export_id, closet)
+						if(earn)
+							var/datum/transaction/Te = new("Central Authority Exports", "Export ([export.name])", earn, 1)
+							connected_faction.central_account.do_transaction(Te)
+							earned += earn
+							sent++
+						break
 				break
-		to_chat(usr, "Export protocl completed, [sent] orders were succesfully sent and [earned] $$ was put into the account.")
+		to_chat(usr, "Export protocol completed, [sent] orders were succesfully sent and [earned] $$ was put into the account.")
 	if(href_list["launch_order"])
+		if(!check_access(core_access_order_approval))
+			to_chat(usr, "Access Denied.")
+			return 1
 		if(!connected_faction.approved_orders) return
 		if(!selected_telepads.len)
 			to_chat(usr, "No telepads selected to use.")
@@ -272,7 +308,7 @@
 			var/decl/hierarchy/supply_pack/SP = SO.object
 			playsound(pickedloc,'sound/effects/teleport.ogg',40,1)
 			var/obj/A = new SP.containertype(pickedloc)
-			A.name = "[SP.containername][SO.comment ? " ([SO.comment])":"" ]"
+			A.name = "[SP.containername][SO.comment ? " ([SO.comment])":"" ][SO.paidby ? "(For [SO.paidby])":""]"
 			//supply manifest generation begin
 
 			var/obj/item/weapon/paper/manifest/slip
@@ -298,20 +334,84 @@
 		return 1
 
 	if(href_list["approve_order"])
+		if(!check_access(core_access_order_approval))
+			to_chat(usr, "Access Denied.")
+			return 1
+		if(!user_id_card) return 0
+		var/datum/computer_file/crew_record/R = connected_faction.get_record(user_id_card.registered_name)
+		if(!R) return 0
+		var/expense_limit = 0
+		var/datum/assignment/assignment = connected_faction.get_assignment(R.assignment_uid)
+		if(assignment)
+			var/datum/accesses/expenses = assignment.accesses["[R.rank]"]
+			if(expenses)
+				expense_limit = expenses.expense_limit
 		var/id = text2num(href_list["approve_order"])
 		for(var/datum/supply_order/SO in connected_faction.pending_orders)
 			if(SO.ordernum != id)
 				continue
+			if(SO.object.cost*10 > expense_limit-R.expenses)
+				to_chat(usr, "<span class='warning'>Your expense limit is too low to approve the order for \the [SO.object.name]! Either directly invoice the order or speak to command about resetting your expenses.</span>")
+				return 1
 			if(SO.object.cost*10 > connected_faction.central_account.money)
 				to_chat(usr, "<span class='warning'>Not enough Ethericoin $$ to purchase \the [SO.object.name]!</span>")
 				return 1
+				
+			R.expenses += SO.object.cost*10
 			connected_faction.pending_orders -= SO
 			connected_faction.approved_orders += SO
-			connected_faction.central_account.money -= SO.object.cost*10 // make transaction log here...
+			var/datum/transaction/T = new("Central Authority Imports", "Import ([SO.object.name]) Auth: [user_id_card.registered_name]", SO.object.cost*-10, 1)
+			connected_faction.central_account.do_transaction(T)
 			break
 		return 1
+		
+	if(href_list["invoice_order"])
+		if(!check_access(core_access_invoicing) && !check_access(core_access_order_approval))
+			to_chat(usr, "Access Denied.")
+			return 1
+		var/id = text2num(href_list["invoice_order"])
+		for(var/datum/supply_order/SO in connected_faction.pending_orders)
+		
+			if(SO.ordernum != id)
+				continue
+			if(SO.last_print > world.time)
+				to_chat(usr, "You can only print one invoice for each order, every three minutes.")
+				return 0
+			var/idname = "*None Provided*"
+			var/idrank = "*None Provided*"
+			if(ishuman(user))
+				var/mob/living/carbon/human/H = user
+				idname = H.get_authentification_name()
+				idrank = H.get_assignment()
+			else if(issilicon(user))
+				idname = user.real_name
+			var/reason = "Import for [SO.object.name] by [connected_faction.name]."
+			var/t = ""
+			var/amount = SO.object.cost*10+(SO.object.cost*10/100*connected_faction.import_profit)
+			t += "<font face='Verdana' color=blue><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'><center></td><tr><td><H1>[connected_faction.name]</td>"
+			t += "<tr><td><br><b>Status:</b>*Unpaid*<br>"
+			t += "<b>Total:</b> [amount] $$ Ethericoins<br><br><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>"
+			t += "<td>Authorized by:<br>[idname] [idrank]<br><td>Paid by:<br>*None*</td></tr></table><br></td>"
+			t += "<tr><td><h3>Reason</H3><font size = '1'>[reason]<br></td></tr></table><br><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>"
+			t += "<td></font><font size='4'><b>Order will be approved upon payment. Swipe ID to confirm transaction.</b></font></center></font>"
+			var/obj/item/weapon/paper/invoice/import/invoice = new()
+			invoice.info = t
+			invoice.linked_order = SO
+			invoice.purpose = reason
+			invoice.transaction_amount = amount
+			invoice.true_amount = SO.object.cost*10
+			invoice.linked_faction = connected_faction.uid
+			invoice.loc = get_turf(program.computer)
+			playsound(get_turf(program.computer), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
+			invoice.name = "[connected_faction.short_tag] digital import invoice"	
+			SO.last_print = world.time + 3 MINUTES
+			break
+		return 1	
 
 	if(href_list["deny_order"])
+		if(!check_access(core_access_order_approval))
+			to_chat(usr, "Access Denied.")
+			return 1
 		var/id = text2num(href_list["deny_order"])
 		for(var/datum/supply_order/SO in connected_faction.pending_orders)
 			if(SO.ordernum == id)
@@ -320,6 +420,9 @@
 		return 1
 
 	if(href_list["cancel_order"])
+		if(!check_access(core_access_order_approval))
+			to_chat(usr, "Access Denied.")
+			return 1
 		var/id = text2num(href_list["cancel_order"])
 		for(var/datum/supply_order/SO in connected_faction.approved_orders)
 			if(SO.ordernum == id)
@@ -327,8 +430,18 @@
 				connected_faction.central_account.money += SO.object.cost*10
 				break
 		return 1
-
+	if(href_list["page_up"])
+		curr_page++
+		return 1
+	if(href_list["page_down"])
+		curr_page--
+		return 1
 /datum/nano_module/program/supply/proc/generate_categories()
+	var/datum/world_faction/connected_faction
+	if(program.computer.network_card && program.computer.network_card.connected_network)
+		connected_faction = program.computer.network_card.connected_network.holder
+	if(!connected_faction)
+		return 1
 	category_names = list()
 	category_contents = list()
 	for(var/decl/hierarchy/supply_pack/sp in cargo_supply_pack_root.children)
@@ -340,7 +453,7 @@
 					continue
 				category.Add(list(list(
 					"name" = spc.name,
-					"cost" = spc.cost*10,
+					"cost" = spc.cost*10+(spc.cost*10/100*connected_faction.import_profit),
 					"ref" = "\ref[spc]"
 				)))
 			category_contents[sp.name] = category
@@ -402,8 +515,29 @@
 	t += "<h3>[connected_faction.name] Export Manifest</h3><hr>"
 	t += "EXPORT: [order.name]<br>"
 	t += "PRINTED BY: [user.name]<br>"
-	t += "SUPPLIED/REQUESTED: [order.supplied]/[order.required]<br>"
+	if(order.required)
+		t += "SUPPLIED/REQUESTED: [order.supplied]/[order.required]<br>"
 	t += "<hr>"
 	var/obj/item/weapon/paper/export/export = new(program.computer.loc)
 	export.info = t
 	export.export_id = order.id
+
+/datum/nano_module/program/supply/proc/print_export_business(var/mob/user, var/id)
+	var/datum/world_faction/connected_faction
+	if(program.computer.network_card && program.computer.network_card.connected_network)
+		connected_faction = program.computer.network_card.connected_network.holder
+	if(!connected_faction)
+		return 1
+	var/datum/export_order/order = locate(id)
+	var/t = ""
+	t += "<h3>Business Export Manifest</h3><hr>"
+	t += "EXPORT: [order.name]<br>"
+	t += "PRINTED BY: [user.name]<br>"
+	if(order.required)
+		t += "SUPPLIED/REQUESTED: [order.supplied]/[order.required]<br>"
+	t += "<hr><br>"
+	var/obj/item/weapon/paper/export/business/export = new(program.computer.loc)
+	export.info = t
+	export.export_id = order.id
+	
+	

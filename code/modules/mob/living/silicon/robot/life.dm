@@ -6,7 +6,7 @@
 		return
 
 	src.blinded = null
-
+	
 	//Status updates, death etc.
 	clamp_values()
 	handle_regular_status_updates()
@@ -84,7 +84,11 @@
 
 	if(health < config.health_threshold_dead && src.stat != 2) //die only once
 		death()
-
+		
+	if(last_hud_update < world.time)
+		last_hud_update = world.time + 15 SECONDS
+		update_action_buttons()
+		
 	if (src.stat != DEAD) //Alive.
 		if (src.paralysis || src.stunned || src.weakened || !src.has_power) //Stunned etc.
 			src.set_stat(UNCONSCIOUS)

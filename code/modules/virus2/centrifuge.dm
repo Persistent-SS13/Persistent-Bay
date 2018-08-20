@@ -101,22 +101,14 @@
 		if(isolating == 0)
 			isolate()
 
-/obj/machinery/centrifuge/Topic(href, href_list)
-	if (..()) return 1
-
-	var/mob/user = usr
-	var/datum/nanoui/ui = GLOB.nanomanager.get_open_ui(user, src, "main")
-
-	src.add_fingerprint(user)
-
+/obj/machinery/centrifuge/OnTopic(user, href_list)
 	if (href_list["close"])
-		user.unset_machine()
-		ui.close()
-		return 0
+		GLOB.nanomanager.close_user_uis(user, src, "main")
+		return TOPIC_HANDLED
 
 	if (href_list["print"])
 		print(user)
-		return 1
+		return TOPIC_REFRESH
 
 	if(href_list["isolate"])
 		var/datum/reagent/blood/B = locate(/datum/reagent/blood) in sample.reagents.reagent_list
@@ -125,7 +117,7 @@
 			virus2 = virus.getcopy()
 			isolating = 40
 			update_icon()
-		return 1
+		return TOPIC_REFRESH
 
 	switch(href_list["action"])
 		if ("antibody")
@@ -133,7 +125,7 @@
 			var/datum/reagent/blood/B = locate(/datum/reagent/blood) in sample.reagents.reagent_list
 			if (!B)
 				state("\The [src] buzzes, \"No antibody carrier detected.\"", "blue")
-				return 1
+				return TOPIC_HANDLED
 
 			var/has_toxins = locate(/datum/reagent/toxin) in sample.reagents.reagent_list
 			var/has_radium = sample.reagents.has_reagent(/datum/reagent/radium)
@@ -147,15 +139,13 @@
 			curing = round(delay)
 			playsound(src.loc, 'sound/machines/juicer.ogg', 50, 1)
 			update_icon()
-			return 1
+			return TOPIC_REFRESH
 
 		if("sample")
 			if(sample)
 				sample.loc = src.loc
 				sample = null
-			return 1
-
-	return 0
+			return TOPIC_REFRESH
 
 /obj/machinery/centrifuge/proc/cure()
 	if (!sample) return

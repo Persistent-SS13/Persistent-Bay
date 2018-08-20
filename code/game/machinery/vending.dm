@@ -16,7 +16,7 @@
 
 	var/icon_vend //Icon_state when vending
 	var/icon_deny //Icon_state when denying access
-	var/diona_spawn_chance = 0.1
+	//var/diona_spawn_chance = 0.1
 
 	// Power
 	use_power = 1
@@ -475,17 +475,17 @@
 	if (src.icon_vend) //Show the vending animation if needed
 		flick(src.icon_vend,src)
 	spawn(src.vend_delay) //Time to vend
-		if(prob(diona_spawn_chance)) //Hehehe
+		/*if(prob(diona_spawn_chance)) //Hehehe
 			var/turf/T = get_turf(src)
 			var/mob/living/carbon/alien/diona/S = new(T)
-			src.visible_message("<span class='notice'>\The [src] makes an odd grinding noise before coming to a halt as \a [S.name] slurmps out from the receptacle.</span>")
-		else //Just a normal vend, then
-			R.get_product(get_turf(src))
-			src.visible_message("\The [src] whirs as it vends \the [R.item_name].")
-			if(prob(1)) //The vending gods look favorably upon you
-				sleep(3)
-				if(R.get_product(get_turf(src)))
-					src.visible_message("<span class='notice'>\The [src] clunks as it vends an additional [R.item_name].</span>")
+			src.visible_message("<span class='notice'>\The [src] makes an odd grinding noise before coming to a halt as \a [S.name] slurmps out from the receptacle.</span>") */
+//Just a normal vend, then
+		R.get_product(get_turf(src))
+		src.visible_message("\The [src] whirs as it vends \the [R.item_name].")
+		if(prob(1)) //The vending gods look favorably upon you
+			sleep(3)
+			if(R.get_product(get_turf(src)))
+				src.visible_message("<span class='notice'>\The [src] clunks as it vends an additional [R.item_name].</span>")
 
 		src.status_message = ""
 		src.status_error = 0
@@ -651,7 +651,6 @@
 	idle_power_usage = 211 //refrigerator - believe it or not, this is actually the average power consumption of a refrigerated vending machine according to NRCan.
 	product_slogans = "I hope nobody asks me for a bloody cup o' tea...;Alcohol is humanity's friend. Would you abandon a friend?;Quite delighted to serve you!;Is nobody thirsty on this station?"
 	product_ads = "Drink up!;Booze is good for you!;Alcohol is humanity's best friend.;Quite delighted to serve you!;Care for a nice, cold beer?;Nothing cures you like booze!;Have a sip!;Have a drink!;Have a beer!;Beer is good for you!;Only the finest alcohol!;Best quality booze since 2053!;Award-winning wine!;Maximum alcohol!;Man loves beer.;A toast for progress!"
-	req_access = list(access_bar)
 
 /obj/machinery/vending/assist
 	products = list(	/obj/item/device/assembly/prox_sensor = 5,/obj/item/device/assembly/igniter = 3,/obj/item/device/assembly/signaler = 4,
@@ -887,7 +886,7 @@
 	icon_deny = "sec-deny"
 	icon_vend = "sec-vend"
 	vend_delay = 14
-	req_access = list(access_security)
+	req_access = list(core_access_security_programs)
 	products = list(/obj/item/weapon/handcuffs = 8,/obj/item/weapon/grenade/flashbang = 4,/obj/item/weapon/grenade/chem_grenade/teargas = 4,/obj/item/device/flash = 5,
 					/obj/item/weapon/reagent_containers/food/snacks/donut/normal = 12,/obj/item/weapon/storage/box/evidence = 6)
 	contraband = list(/obj/item/clothing/glasses/sunglasses = 2,/obj/item/weapon/storage/box/donut = 2)
@@ -915,7 +914,7 @@
 	icon_vend = "seeds-vend"
 	vend_delay = 13
 	products = list(/obj/item/seeds/bananaseed = 3,/obj/item/seeds/berryseed = 3,/obj/item/seeds/carrotseed = 3,/obj/item/seeds/chantermycelium = 3,/obj/item/seeds/chiliseed = 3,
-					/obj/item/seeds/cornseed = 3, /obj/item/seeds/eggplantseed = 3, /obj/item/seeds/potatoseed = 3, /obj/item/seeds/replicapod = 3,/obj/item/seeds/soyaseed = 3,
+					/obj/item/seeds/cornseed = 3, /obj/item/seeds/eggplantseed = 3, /obj/item/seeds/potatoseed = 3,/obj/item/seeds/soyaseed = 3,
 					/obj/item/seeds/sunflowerseed = 3,/obj/item/seeds/tomatoseed = 3,/obj/item/seeds/towermycelium = 3,/obj/item/seeds/wheatseed = 3,/obj/item/seeds/appleseed = 3,
 					/obj/item/seeds/poppyseed = 3,/obj/item/seeds/sugarcaneseed = 3,/obj/item/seeds/ambrosiavulgarisseed = 3,/obj/item/seeds/peanutseed = 3,/obj/item/seeds/whitebeetseed = 3,/obj/item/seeds/watermelonseed = 3,/obj/item/seeds/limeseed = 3,
 					/obj/item/seeds/lemonseed = 3,/obj/item/seeds/orangeseed = 3,/obj/item/seeds/grassseed = 3,/obj/item/seeds/cocoapodseed = 3,/obj/item/seeds/plumpmycelium = 2,
@@ -1007,7 +1006,6 @@
 	icon_deny = "tool-deny"
 	icon_vend = "tool-vend"
 	vend_delay = 11
-	//req_access = list(access_maint_tunnels) //Maintenance access
 	products = list(/obj/item/stack/cable_coil/random = 10,/obj/item/weapon/crowbar = 5,/obj/item/weapon/weldingtool = 3,/obj/item/weapon/wirecutters = 5,
 					/obj/item/weapon/wrench = 5,/obj/item/device/analyzer = 5,/obj/item/device/t_scanner = 5,/obj/item/weapon/screwdriver = 5,
 					/obj/item/device/flashlight/glowstick = 3, /obj/item/device/flashlight/glowstick/red = 3)

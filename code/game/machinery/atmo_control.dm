@@ -19,6 +19,8 @@
 	// 8 for phoron concentration
 	// 16 for nitrogen concentration
 	// 32 for carbon dioxide concentration
+	// 64 for hydrogen concentration
+	// 128 for reagent gas concentration
 
 	var/datum/radio_frequency/radio_connection
 
@@ -50,11 +52,21 @@
 					signal.data["nitrogen"] = round(100*air_sample.gas["nitrogen"]/total_moles,0.1)
 				if(output&32)
 					signal.data["carbon_dioxide"] = round(100*air_sample.gas["carbon_dioxide"]/total_moles,0.1)
+				if(output&64)
+					signal.data["hydrogen"] = round(100*air_sample.gas["hydrogen"]/total_moles,0.1)
+				if(output&128)
+					var/total_reagent_moles
+					for(var/g in air_sample.gas)
+						if(gas_data.flags[g] & XGM_GAS_REAGENT_GAS)
+							total_reagent_moles += round(100*air_sample.gas[g]/total_moles,0.1)
+					signal.data["reagent"] = total_reagent_moles
 			else
 				signal.data["oxygen"] = 0
 				signal.data["phoron"] = 0
 				signal.data["nitrogen"] = 0
 				signal.data["carbon_dioxide"] = 0
+				signal.data["hydrogen"] = 0
+				signal.data["reagent"] = 0
 		signal.data["sigtype"]="status"
 		radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
 
@@ -124,7 +136,7 @@ obj/machinery/computer/general_air_control/Destroy()
 					sensor_part += "   <B>Pressure:</B> [data["pressure"]] kPa<BR>"
 				if(data["temperature"])
 					sensor_part += "   <B>Temperature:</B> [data["temperature"]] K<BR>"
-				if(data["oxygen"]||data["phoron"]||data["nitrogen"]||data["carbon_dioxide"])
+				if(data["oxygen"]||data["phoron"]||data["nitrogen"]||data["carbon_dioxide"]||data["hydrogen"])
 					sensor_part += "   <B>Gas Composition :</B>"
 					if(data["oxygen"])
 						sensor_part += "[data["oxygen"]]% O2; "
@@ -134,6 +146,10 @@ obj/machinery/computer/general_air_control/Destroy()
 						sensor_part += "[data["carbon_dioxide"]]% CO2; "
 					if(data["phoron"])
 						sensor_part += "[data["phoron"]]% TX; "
+					if(data["hydogen"])
+						sensor_part += "[data["hydrogen"]]% H2; "
+					if(data["reagent"])
+						sensor_part += "[data["reagent"]]% REAG; "
 				sensor_part += "<HR>"
 
 			else

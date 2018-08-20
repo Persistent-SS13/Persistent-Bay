@@ -29,7 +29,13 @@
 		"hydrogen" = /obj/item/weapon/ore/hydrogen,
 		"silicates" = /obj/item/weapon/ore/glass,
 		"carbonaceous rock" = /obj/item/weapon/ore/coal,
-		"bluespace crystal" = /obj/item/bluespace_crystal
+		"bluespace crystal" = /obj/item/bluespace_crystal,
+		"rock salt" = /obj/item/weapon/ore/salt,
+		"ice" = /obj/item/weapon/ore/ice/,
+		"dry ice" = /obj/item/weapon/ore/dryice/,
+		"oxygen-rich ice" = /obj/item/weapon/ore/oxyice/,
+		"hydrogen-rich ice" = /obj/item/weapon/ore/hydroice/,
+		"nitrogen-rich ice" = /obj/item/weapon/ore/nitroice/
 		)
 
 	//Upgrades
@@ -77,8 +83,8 @@
 		return
 
 	//Drill through the flooring, if any.
-	if(istype(get_turf(src), /turf/simulated/floor/asteroid))
-		var/turf/simulated/floor/asteroid/T = get_turf(src)
+	if(istype(get_turf(src), /turf/simulated/asteroid))
+		var/turf/simulated/asteroid/T = get_turf(src)
 		if(!T.dug)
 			T.gets_dug()
 	else if(istype(get_turf(src), /turf/simulated/floor/exoplanet))

@@ -18,8 +18,11 @@
 		spellremove(src)
 	ghostize()
 	..()
-	return QDEL_HINT_HARDDEL_NOW
+	return QDEL_HINT_HARDDEL
 
+/mob/proc/get_stack()
+	return 0
+	
 /mob/proc/remove_screen_obj_references()
 	hands = null
 	pullin = null
@@ -736,6 +739,9 @@
 		reset_plane_and_layer()
 
 /mob/proc/facedir(var/ndir)
+	if(!isnull(client))
+		client.pixel_x = 0
+		client.pixel_y = 0
 	if(!canface() || client.moving || world.time < client.move_delay)
 		return 0
 	set_dir(ndir)
@@ -848,9 +854,6 @@
 
 /mob/proc/get_species()
 	return ""
-
-/mob/proc/flash_weak_pain()
-	flick("weak_pain",pain)
 
 /mob/proc/get_visible_implants(var/class = 0)
 	var/list/visible_implants = list()
@@ -992,6 +995,9 @@ mob/proc/yank_out_object()
 		facing_dir = dir
 
 /mob/set_dir()
+	if(!isnull(client))
+		client.pixel_x = 0
+		client.pixel_y = 0
 	if(facing_dir)
 		if(!canface() || lying || buckled || restrained())
 			facing_dir = null
@@ -1019,6 +1025,38 @@ mob/proc/yank_out_object()
 /mob/verb/westfaceperm()
 	set hidden = 1
 	set_face_dir(client.client_dir(WEST))
+
+/mob/verb/eastfacepeek()
+	set hidden = 1
+	if(!canface())	return 0
+	dir = EAST
+	if(!client)		return 0
+	client.pixel_x = min(160, client.pixel_x + 160)
+	return 1
+
+/mob/verb/northfacepeek()
+	set hidden = 1
+	if(!canface())	return 0
+	dir = NORTH
+	if(!client)		return 0
+	client.pixel_y = min(160, client.pixel_y + 160)
+	return 1
+
+/mob/verb/westfacepeek()
+	set hidden = 1
+	if(!canface())	return 0
+	dir = WEST
+	if(!client)		return 0
+	client.pixel_x = max(-160, client.pixel_x - 160)
+	return 1
+
+/mob/verb/southfacepeek()
+	set hidden = 1
+	if(!canface())	return 0
+	dir = SOUTH
+	if(!client)		return 0
+	client.pixel_y = min(160, client.pixel_y - 160)
+	return 1
 
 /mob/proc/adjustEarDamage()
 	return
@@ -1062,6 +1100,9 @@ mob/proc/yank_out_object()
 		to_chat(usr, "You must be observing or in the lobby to join the antag pool.")
 /mob/proc/is_invisible_to(var/mob/viewer)
 	return (!alpha || !mouse_opacity || viewer.see_invisible < invisibility)
+
+/mob/proc/has_chem_effect(chem, threshold)
+	return FALSE
 
 /client/proc/check_has_body_select()
 	return mob && mob.hud_used && istype(mob.zone_sel, /obj/screen/zone_sel)

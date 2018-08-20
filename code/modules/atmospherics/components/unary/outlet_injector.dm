@@ -12,15 +12,12 @@
 	use_power = 0
 	idle_power_usage = 150		//internal circuitry, friction losses and stuff
 	power_rating = 15000	//15000 W ~ 20 HP
-
+	connect_types = CONNECT_TYPE_REGULAR|CONNECT_TYPE_SUPPLY|CONNECT_TYPE_SCRUBBER
 	var/injecting = 0
-
 	var/volume_rate = 50	//flow rate limit
-
 	var/frequency = 0
 	var/id = null
 	var/datum/radio_frequency/radio_connection
-
 	level = 1
 
 /obj/machinery/atmospherics/unary/outlet_injector/New()
@@ -144,3 +141,25 @@
 
 /obj/machinery/atmospherics/unary/outlet_injector/hide(var/i)
 	update_underlays()
+
+/obj/machinery/atmospherics/unary/outlet_injector/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
+	if(!isWrench(W))
+		return ..()
+	if(use_power)
+		to_chat(user, "<span class='notice'>You have to turn \the [src] off before detaching it.</span>")
+	playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
+	to_chat(user, "<span class='notice'>You begin to unfasten \the [src]...</span>")
+	if (do_after(user, 40, src))
+		user.visible_message( \
+			"<span class='notice'>\The [user] unfastens \the [src].</span>", \
+			"<span class='notice'>You have unfastened \the [src].</span>", \
+			"You hear a ratchet.")
+		new /obj/item/pipe(loc, make_from=src)
+		qdel(src)
+
+/obj/machinery/atmospherics/unary/outlet_injector/attack_hand(mob/user)
+	use_power = !use_power
+	user.visible_message( \
+		"<span class='notice'>\The [user] turns \the [src] [use_power ? "on" : "off"].</span>", \
+		"<span class='notice'>You turn \the [src] [use_power ? "on" : "off"].</span>")
+	update_icon()

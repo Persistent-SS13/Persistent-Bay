@@ -4,7 +4,7 @@
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "register_idle"
 	flags = NOBLUDGEON
-	req_access = list(access_heads)
+	req_access = list(core_access_command_programs)
 	anchored = 1
 
 	var/locked = 1
@@ -257,6 +257,8 @@
 					T.source_terminal = machine_id
 					T.date = current_date_string
 					T.time = worldtime2text()
+					if(D.transaction_log.len > 50)
+						D.transaction_log.Cut(1,2)
 					D.transaction_log.Add(T)
 
 					// Create log entry in owner's account
@@ -267,6 +269,9 @@
 					T.source_terminal = machine_id
 					T.date = current_date_string
 					T.time = worldtime2text()
+					
+					if(linked_account.transaction_log.len > 50)
+						linked_account.transaction_log.Cut(1,2)
 					linked_account.transaction_log.Add(T)
 
 					// Save log

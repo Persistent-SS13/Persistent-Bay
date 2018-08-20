@@ -22,6 +22,11 @@
 	name = "black tie"
 	color = "#ffffff"
 
+/obj/item/clothing/accessory/black/expensive
+	name = "expensive black tie"
+	color = "#1c1c1c"
+	desc = "A tie made from real silk, or so the label leads you to believe."
+
 /obj/item/clothing/accessory/yellow
 	name = "yellow tie"
 	icon_state = "longtie"

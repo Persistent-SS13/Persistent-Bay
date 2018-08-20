@@ -74,10 +74,26 @@
 	return
 
 /mob/new_player/proc/slot_select_load()
+	for(var/mob/loaded_mob in SSmobs.mob_list)
+		if(loaded_mob.type != /mob/new_player && loaded_mob.saved_ckey == ckey && get_turf(loaded_mob))
+			if(ticker.current_state <= GAME_STATE_PREGAME)
+				to_chat(src, "A character is already in game, selecting on start")
+				ready = 1
+				close_spawn_windows()
+				new_player_panel_proc()
+				return 0
+			else
+				close_spawn_windows()
+				loaded_mob.ckey = ckey
+				loaded_mob.saved_ckey = ""
+				sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1)) // MAD JAMS cant last forever yo
+				qdel(src)
+				return 0
 	var/mob/user = src
 	var/slots = config.character_slots
 	if(check_rights(R_ADMIN, 0, client))
 		slots += 2
+	slots += client.prefs.bonus_slots
 	if(!client.prefs.character_list || (client.prefs.character_list.len < slots))
 		client.prefs.load_characters()
 		sleep(20)
@@ -107,9 +123,10 @@
 	var/slots = config.character_slots
 	if(check_rights(R_ADMIN, 0, client))
 		slots += 2
+	slots += client.prefs.bonus_slots
 	if(!client.prefs.character_list || (client.prefs.character_list.len < slots))
 		client.prefs.load_characters()
-	
+
 	var/dat  = list()
 	dat += "<body>"
 	dat += "<tt><center>"
@@ -175,11 +192,11 @@
 			load_panel.close()
 			new_player_panel_proc()
 		else
-			close_spawn_windows()	
+			close_spawn_windows()
 			AttemptLateSpawn()
 		return 0
 	if(href_list["pickslot_delete"])
-		
+
 		chosen_slot = text2num(href_list["pickslot_delete"])
 		var/mob/M = client.prefs.character_list[chosen_slot]
 		if(input("Are you SURE you want to delete [M.real_name]. THIS IS PERMANENT. Enter the characters full name to confirm","DELETE A CHARACTER","") == M.real_name)
@@ -187,11 +204,12 @@
 			for(var/mob/mobbie in GLOB.all_cryo_mobs)
 				if(mobbie.real_name == M.real_name)
 					GLOB.all_cryo_mobs -= mobbie
-					qdel(mobbie)	
+					qdel(mobbie)
 			client.prefs.delete_character(chosen_slot)
 			load_panel.close()
 		return 0
 	if(href_list["ready"])
+		ready = text2num(href_list["ready"])
 		slot_select_load()
 		return 0
 	//	if(!ticker || ticker.current_state <= GAME_STATE_PREGAME) // Make sure we don't ready up after the round has started
@@ -321,6 +339,7 @@
 	if(!ready && href_list["preference"])
 		if(client)
 			client.prefs.process_link(src, href_list)
+			
 	else if(!href_list["late_join"])
 		new_player_panel()
 
@@ -573,8 +592,8 @@
 		if(client.prefs.memory)
 			mind.store_memory(client.prefs.memory)
 		mind.transfer_to(new_character)					//won't transfer key since the mind is not active
-		
-	
+
+	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1))// MAD JAMS cant last forever yo
 	if(!spawn_turf)
 
 		if(new_character.spawn_type == 1)
@@ -582,17 +601,34 @@
 				message_admins("WARNING! No cryopods avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
 				spawn_turf = locate(102, 98, 1)
 			else
+				var/list/possible_spawn_turfs = list()
+				var/list/faction_spawns = list()
 				for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
 					if(!pod.loc) continue
 					if(pod.req_access_faction == new_character.spawn_loc)
-						spawn_turf = pod.loc
-						break
-				if(!spawn_turf)
-					for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
-						if(!pod.loc) continue
-						if(pod.req_access_faction == "refugee")
-							spawn_turf = pod.loc
-							break
+						faction_spawns |= pod
+				if(faction_spawns.len)
+					var/key = "default"
+					var/datum/world_faction/faction = get_faction(new_character.spawn_loc)
+					if(faction)
+						var/datum/computer_file/crew_record/record = faction.get_record(new_character.real_name)
+						if(record)
+							var/datum/assignment/curr_assignment = faction.get_assignment(record.assignment_uid)
+							if(curr_assignment)
+								key = curr_assignment.cryo_net
+					for(var/obj/machinery/cryopod/pod2 in faction_spawns)
+						if(pod2.network == key)
+							possible_spawn_turfs |= pod2.loc
+					if(!possible_spawn_turfs.len)
+						key = "default"
+						for(var/obj/machinery/cryopod/pod2 in faction_spawns)
+							if(pod2.network == key)
+								possible_spawn_turfs |= pod2.loc
+					if(!possible_spawn_turfs.len)
+						for(var/obj/machinery/cryopod/pod2 in faction_spawns)
+							possible_spawn_turfs |= pod2.loc
+				if(possible_spawn_turfs.len)
+					spawn_turf = pick(possible_spawn_turfs)
 				if(!spawn_turf)
 					for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
 						if(!pod.loc) continue
@@ -659,7 +695,7 @@
 
 
 
-	close_spawn_windows()	
+	close_spawn_windows()
 	new_character.loc = spawn_turf
 	new_character.key = key		//Manually transfer the key to log them in
 	new_character.save_slot = chosen_slot
@@ -668,6 +704,23 @@
 	CreateModularRecord(new_character)
 	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1))// MAD JAMS cant last forever yo
 	if(new_character.spawn_type == 2)
+		var/obj/screen/cinematic
+
+		cinematic = new
+		cinematic.icon = 'icons/effects/gateway_intro.dmi'
+		cinematic.icon_state = "blank"
+		cinematic.plane = HUD_PLANE
+		cinematic.layer = HUD_ABOVE_ITEM_LAYER
+		cinematic.mouse_opacity = 2
+		cinematic.screen_loc = "WEST,SOUTH"
+
+		if(new_character.client)
+			new_character.client.screen += cinematic
+
+			flick("neurallaceboot",cinematic)
+			sleep(150)
+			new_character.client.screen -= cinematic
+
 		new_character.spawn_type = 1
 		sound_to(new_character, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = 1))
 		spawn()
@@ -719,7 +772,7 @@
 	else
 		client.prefs.copy_to(new_character)
 
-	
+
 
 	if(mind)
 		mind.active = 0					//we wish to transfer the key manually

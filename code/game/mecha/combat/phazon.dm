@@ -20,7 +20,7 @@
 	var/phasing_energy_drain = 5 KILOWATTS
 	max_equip = 4
 
-
+/**
 /obj/mecha/combat/phazon/New()
 	..()
 	var/obj/item/mecha_parts/mecha_equipment/ME = new /obj/item/mecha_parts/mecha_equipment/tool/rcd
@@ -28,7 +28,7 @@
 	ME = new /obj/item/mecha_parts/mecha_equipment/gravcatapult
 	ME.attach(src)
 	return
-
+**/
 /obj/mecha/combat/phazon/Bump(var/atom/obstacle)
 	if(phasing && get_charge()>=phasing_energy_drain)
 		spawn()

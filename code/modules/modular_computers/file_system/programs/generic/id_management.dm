@@ -51,7 +51,7 @@
 			for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
 				if(R.get_name() == usr.real_name)
 					record = R
-					break	
+					break
 			if(!record)
 				message_admins("NO global record found for [usr.real_name]")
 				to_chat(usr, "No record found for [usr.real_name].. contact software developer.")

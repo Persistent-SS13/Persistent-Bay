@@ -342,6 +342,16 @@ obj/structure/closet/crate
 	icon_opened = "largermetalopen"
 	icon_closed = "largermetal"
 
+/obj/structure/closet/crate/secure/large/reinforced/slice_into_parts(obj/item/weapon/weldingtool/WT, mob/user)
+	if(!WT.remove_fuel(0,user))
+		to_chat(user, "<span class='notice'>You need more welding fuel to complete this task.</span>")
+		return
+	new /obj/item/stack/material/plasteel(src.loc)	//Made of plasteel, will return only 1 sheet
+	user.visible_message("<span class='notice'>\The [src] has been cut apart by [user] with \the [WT].</span>", \
+						 "<span class='notice'>You have cut \the [src] apart with \the [WT].</span>", \
+						 "You hear welding.")
+	qdel(src)
+
 /obj/structure/closet/crate/hydroponics
 	name = "hydroponics crate"
 	desc = "All you need to destroy those pesky weeds and pests."
@@ -367,7 +377,7 @@ obj/structure/closet/crate
 	icon_closed = "biohazard"
 	open_sound = 'sound/items/Deconstruct.ogg'
 	close_sound = 'sound/items/Deconstruct.ogg'
-	req_access = list(access_xenobiology)
+	req_access = list(core_access_science_programs)
 	storage_types = CLOSET_STORAGE_ITEMS|CLOSET_STORAGE_MOBS
 
 /obj/structure/closet/crate/secure/biohazard/blanks/WillContain()

@@ -34,6 +34,11 @@
 	var/datum/world_faction/faction
 	var/mob/living/carbon/lace/lacemob
 	var/sensor = 0
+	
+	var/business_mode = 0
+	var/connected_business = ""
+	
+	
 /obj/item/organ/internal/stack/proc/transfer_identity(var/mob/living/carbon/H)
 
 	if(!lacemob)
@@ -52,19 +57,30 @@
 	to_chat(lacemob, "<span class='notice'>You feel slightly disoriented. Your conciousness suddenly shifts into a neural lace.</span>")
 
 /obj/item/organ/internal/stack/proc/get_owner_name()
-	if(!owner) return 0
+	if(!owner)
+		if(istype(loc, /obj/item/device/lmi))
+			if(istype(loc.loc, /mob/living/silicon/robot))
+				var/mob/living/silicon/robot/robot = loc.loc
+				return robot.real_name
 	return owner.real_name
 
 /obj/item/organ/internal/stack/ui_action_click()
-	if(!owner && !lacemob) return
+	var/mob/living/silicon/robot/robot
+	if(istype(loc, /obj/item/device/lmi))
+		if(istype(loc.loc, /mob/living/silicon/robot))
+			robot = loc.loc
+	if(!owner && !lacemob && !robot) return
 	if(lacemob)
 		ui_interact(lacemob)
+	else if(robot)
+		ui_interact(robot)
 	else
 		ui_interact(owner)
 /obj/item/organ/internal/stack/proc/ui_mobaction_click()
 	ui_interact(lacemob)
 /obj/item/organ/internal/stack/Topic(href, href_list)
 	switch (href_list["action"])
+		if("clock_out")
 		if("off_duty")
 			duty_status = 0
 		if("on_duty")
@@ -88,18 +104,29 @@
 			sensor = 1
 		if("logoff")
 			var/mob/new_player/M = new /mob/new_player()
-			M.loc = locate(100,100,28)
+			M.loc = null
 			lacemob.stored_ckey = lacemob.ckey
 			M.key = lacemob.key
+		if("die")
+			var/choice = input(usr,"THIS WILL PERMANENTLY KILL YOUR CHARACTER! YOU WILL NOT BE ALLOWED TO REMAKE THE SAME CHARACTER.") in list("Kill my character, return to character creation", "Cancel")
+			if(choice == "Kill my character, return to character creation")
+				lacemob.perma_dead = 1
+				var/mob/new_player/M = new /mob/new_player()
+				M.loc = null
+				lacemob.stored_ckey = lacemob.ckey
+				M.key = lacemob.key
 	GLOB.nanomanager.update_uis(src)
-
-/obj/item/organ/internal/stack/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
+/mob/var/perma_dead = 0
+/obj/item/organ/internal/stack/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.interactive_state)
 	var/list/data = list()
 	try_connect()
 	if(lacemob)
 		data["lacemob"] = 1
 		data["sensor"] = sensor
-	if(faction)
+	if(business_mode)
+		var/datum/small_business/business = get_business(connected_business)
+		data["business_name"] = business.name	
+	else if(faction)
 		data["faction_name"] = faction.name
 		if(duty_status == 1)
 			try_duty()
@@ -118,13 +145,23 @@
 		ui.set_initial_data(data)
 		ui.open()
 /obj/item/organ/internal/stack/proc/get_potential()
-	if(!owner) return list()
+	if(!owner)
+		var/list/potential[0]
+		if(istype(loc, /obj/item/device/lmi))
+			if(istype(loc.loc, /mob/living/silicon/robot))
+				var/mob/living/silicon/robot/robot = loc.loc
+				for(var/datum/world_faction/fact in GLOB.all_world_factions)
+					var/datum/computer_file/crew_record/record = fact.get_record(robot.real_name)
+					if(record)
+						potential |= fact
+		return potential
+
 	var/list/potential[0]
 	for(var/datum/world_faction/fact in GLOB.all_world_factions)
 		var/datum/computer_file/crew_record/record = fact.get_record(owner.real_name)
 		if(record)
 			potential |= fact
-		else
+			
 	return potential
 /obj/item/organ/internal/stack/proc/try_duty()
 	if(!owner || !faction)
@@ -205,8 +242,16 @@
 
 	return 1
 
-/obj/item/organ/internal/stack/removed()
+/obj/item/organ/internal/stack/removed(var/mob/living/user)
 	do_backup()
+	if(!istype(owner))
+		return ..()
+
+	if(name == initial(name))
+		name = "\the [owner.real_name]'s [initial(name)]"
+		
+	transfer_identity(owner)
+
 	..()
 
 /obj/item/organ/internal/stack/vox/removed()

@@ -25,6 +25,7 @@
 
 /obj/machinery/power/generator/New()
 	..()
+	component_parts = list()
 	component_parts += new /obj/item/weapon/circuitboard/generator(src)
 	component_parts += new /obj/item/stack/cable_coil(src, 30)
 	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)

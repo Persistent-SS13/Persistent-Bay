@@ -363,6 +363,8 @@
 			return global.economic_species_modifier;
 		if("employment_controller")
 			return global.employment_controller;
+		if("aggression_controller")
+			return global.aggression_controller;	
 		if("empty_playable_ai_cores")
 			return global.empty_playable_ai_cores;
 		if("endgame_exits")
@@ -2343,6 +2345,7 @@
 	"dummy_lighting_corner",
 	"economic_species_modifier",
 	"employment_controller",
+	"aggression_controller"
 	"empty_playable_ai_cores",
 	"endgame_exits",
 	"endgame_safespawns",

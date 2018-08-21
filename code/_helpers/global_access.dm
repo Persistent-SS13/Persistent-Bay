@@ -2345,7 +2345,7 @@
 	"dummy_lighting_corner",
 	"economic_species_modifier",
 	"employment_controller",
-	"aggression_controller"
+	"aggression_controller",
 	"empty_playable_ai_cores",
 	"endgame_exits",
 	"endgame_safespawns",

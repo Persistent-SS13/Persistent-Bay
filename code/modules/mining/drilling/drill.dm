@@ -30,12 +30,6 @@
 		"silicates" = /obj/item/weapon/ore/glass,
 		"carbonaceous rock" = /obj/item/weapon/ore/coal,
 		"bluespace crystal" = /obj/item/bluespace_crystal,
-		"rock salt" = /obj/item/weapon/ore/salt,
-		"ice" = /obj/item/weapon/ore/ice/,
-		"dry ice" = /obj/item/weapon/ore/dryice/,
-		"oxygen-rich ice" = /obj/item/weapon/ore/oxyice/,
-		"hydrogen-rich ice" = /obj/item/weapon/ore/hydroice/,
-		"nitrogen-rich ice" = /obj/item/weapon/ore/nitroice/
 		)
 
 	//Upgrades

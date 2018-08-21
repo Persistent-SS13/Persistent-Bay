@@ -1,4 +1,3 @@
-
 /obj/machinery/gibber
 	name = "meat grinder"
 	desc = "The name isn't descriptive enough?"
@@ -17,16 +16,6 @@
 	use_power = 1
 	idle_power_usage = 2
 	active_power_usage = 500
-
-/obj/machinery/gibber/autogibber/Bumped(var/atom/movable/A)
-	if(ismob(A))
-		var/mob/M = A
-		if(!(istype(A, /mob/living/carbon) && (M.stat || M.restrained()) ))
-			M.forceMove(src)
-			M.gib()
-	if(A)
-		A.forceMove(src.loc)
-
 
 /obj/machinery/gibber/Initialize()
 	. = ..()

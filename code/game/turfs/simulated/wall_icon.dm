@@ -8,27 +8,27 @@
 
 	if(!istype(material, /material))
 		if(istext(material))
-			material = get_material_by_name(material)
+			material = SSmaterials.get_material_by_name(material)
 			updateIntegrity = 1
 		else
 			material = null
 	if(!istype(r_material, /material))
 		if(istext(r_material))
-			r_material = get_material_by_name(r_material)
+			r_material = SSmaterials.get_material_by_name(r_material)
 			updateIntegrity = 1
 		else
 			r_material = null
 	if(!istype(p_material, /material))
 		if(istext(p_material))
-			p_material = get_material_by_name(p_material)
+			p_material = SSmaterials.get_material_by_name(p_material)
 			updateIntegrity = 1
 		else
 			r_material = null
 
 	if(!material)
-		material = get_material_by_name("steel")
+		material = SSmaterials.get_material_by_name("steel")
 	if(!p_material)
-		p_material = get_material_by_name("steel")
+		p_material = SSmaterials.get_material_by_name("steel")
 
 	explosion_resistance = ExplosionArmor()
 

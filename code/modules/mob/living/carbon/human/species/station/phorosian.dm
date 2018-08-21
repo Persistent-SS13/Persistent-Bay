@@ -12,7 +12,7 @@
 	Problems with short term and long term memory alongside other mental \
 	impairments are rampant among them,and they often have to go through many \
 	months of therapy to relearn how to do many tasks."
-	meat_type = /ore/phoron
+	meat_type = /material/phoron
 	taste_sensitivity = TASTE_DULL //Question is how could they taste anything in the first place?
 	virus_immune = 1
 	has_floating_eyes = 1

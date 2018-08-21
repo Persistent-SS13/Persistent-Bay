@@ -29,9 +29,10 @@ Small, little HP, poisonous.
 	max_gas = null
 	minbodytemp = 0
 /mob/living/simple_animal/hostile/voxslug/Move()
-	pixel_x = rand(-10,10)
-	pixel_y = rand(-10,10)
-	..()
+	. = ..()
+	if(.)
+		pixel_x = rand(-10,10)
+		pixel_y = rand(-10,10)
 /mob/living/simple_animal/hostile/voxslug/ListTargets(var/dist = 7)
 	var/list/L = list()
 	for(var/a in hearers(src, dist))

@@ -124,7 +124,7 @@ var/datum/controller/aggression_controller/aggression_controller
 						M.playsound_local(M.loc, pick('sound/effects/yewbic_amb1.ogg', 'sound/effects/yewbic_amb2.ogg', 'sound/effects/yewbic_amb3.ogg', 'sound/effects/yewbic_amb4.ogg'), 50, 0)
 
 				if(3)
-					switch(pick(list(1,2)))
+					switch(pick(list(1,1,1,2)))
 						if(1)
 							var/slugs = rand(2,4)
 							for(var/i=0; i<slugs; i++)
@@ -154,7 +154,7 @@ var/datum/controller/aggression_controller/aggression_controller
 
 
 					if(3)
-						switch(pick(list(1,2,2)))
+						switch(pick(list(1,1,1,2)))
 							if(1)
 								var/slugs = rand(3,6)
 								for(var/i=0; i<slugs; i++)

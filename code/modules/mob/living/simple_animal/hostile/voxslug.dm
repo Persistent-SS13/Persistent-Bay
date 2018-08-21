@@ -25,6 +25,9 @@ Small, little HP, poisonous.
 	melee_damage_upper = 10
 	holder_type = /obj/item/weapon/holder/voxslug
 	faction = SPECIES_VOX
+	min_gas = null
+	max_gas = null
+	minbodytemp = 0
 /mob/living/simple_animal/hostile/voxslug/Move()
 	pixel_x = rand(-10,10)
 	pixel_y = rand(-10,10)

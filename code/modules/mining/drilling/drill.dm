@@ -142,10 +142,10 @@
 				for(var/i=1, i <= create_ore, i++)
 					if(metal == "phoron")
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 25
+						zone.asteroid_aggression += 5
 					if(metal == "bluespace crystal")
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 100
+						zone.asteroid_aggression += 25
 					var/oretype = ore_types[metal]
 					new oretype(src)
 

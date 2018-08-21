@@ -436,7 +436,7 @@ var/list/mining_floors = list()
 
 /turf/simulated/asteroid/Entered(atom/movable/M)
 	. = ..()
-	if(istype(M) && !istype(M, /mob/living/simple_animal))
+	if(istype(M) && !istype(M, /mob/living/simple_animal) && !istype(M, /mob/observer) )
 		if(aggression_controller)
 			var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
 			if(zone)

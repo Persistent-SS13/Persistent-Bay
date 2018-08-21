@@ -142,14 +142,34 @@
 				for(var/i=1, i <= create_ore, i++)
 					if(metal == "phoron")
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 10
+						zone.asteroid_aggression += 5
+						zone.asteroid_targets |= src
+					else if(metal == "bluespace crystal")
+						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
+						zone.asteroid_aggression += 25
+						zone.asteroid_targets |= src
+					else if(metal == "osmium")
+						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
+						zone.asteroid_aggression += 1
+						zone.asteroid_targets |= src
+					else if(metal == "diamond")
+						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
+						zone.asteroid_aggression += 1
+						zone.asteroid_targets |= src
+					else if(metal == "uranium")
+						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
+						zone.asteroid_aggression += 1
+						zone.asteroid_targets |= src
+					else if(metal == "gold")
+						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
+						zone.asteroid_aggression += 1
 						zone.asteroid_targets |= src
 					if(metal == "bluespace crystal")
-						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 50
-						zone.asteroid_targets |= src
-					var/oretype = ore_types[metal]
-					new oretype(src)
+						var/oretype = ore_types[metal]
+						new oretype(get_turf(src))
+					else
+						var/oretype = ore_types[metal]
+						new oretype(src)
 
 		if(!found_resource)
 			harvesting.has_resources = 0

@@ -143,7 +143,6 @@
 					if(metal == "phoron")
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
 						zone.asteroid_aggression += 25
-						message_admins("zone aggression up!!!")
 					if(metal == "bluespace crystal")
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
 						zone.asteroid_aggression += 100

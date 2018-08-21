@@ -261,6 +261,7 @@ var/list/point_source_descriptions = list(
 	generate_export("manufacturing-advanced")
 	generate_export("material")
 	generate_export("phoron")
+	generate_export("bluespace crystal")
 	generate_export("xenobiology")
 	generate_export("cooking")
 	generate_export("cooking")
@@ -367,8 +368,7 @@ var/list/point_source_descriptions = list(
 								/obj/item/stack/material/uranium = 30,
 								/obj/item/stack/material/gold = 30,
 								/obj/item/stack/material/platinum = 30,
-								/obj/item/stack/material/phoron = 80,
-								/obj/item/stack/material/osmium = 50,
+								/obj/item/stack/material/osmium = 30,
 								)
 			var/x = pick(possible)
 			var/per = possible[x]+rand(0,5)
@@ -382,18 +382,29 @@ var/list/point_source_descriptions = list(
 			qdel(ob)
 			all_exports |= export
 			return export
+			
 		if("phoron")	
 			export = new /datum/export_order/stack()
 			export.typepath = /obj/item/stack/material/phoron
-			export.rate = rand(90,150)
+			export.rate = rand(100,160)
 			export.order_type = typee
 			export.id = exportnum
-			export.required = rand(300, 50)
+			export.required = rand(300, 500)
 			var/obj/ob = new export.typepath()
 			export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each unit."
 			qdel(ob)
 			all_exports |= export
 			return export
+			
+		if("bluespace crystal")
+			export = new /datum/export_order/static()
+			export.typepath = /obj/item/bluespace_crystal
+			export.name = "Order for bluespace crystals. $$800 per crystal."
+			export.order_type = typee
+			export.id = exportnum
+			all_exports |= export
+			return export	
+			
 /datum/controller/supply/proc/process()
 	add_points_from_source(points_per_process, "time")
 

@@ -3,7 +3,7 @@ Small, little HP, poisonous.
 */
 
 /mob/living/simple_animal/hostile/voxslug
-	name = "slug"
+	name = "glutslug"
 	desc = "A viscious little creature, it has a mouth of too many teeth and a penchant for blood."
 	icon_state = "voxslug"
 	icon_living = "voxslug"
@@ -17,7 +17,7 @@ Small, little HP, poisonous.
 	maxHealth = 15
 	speed = 0
 	move_to_delay = 0
-	density = 1
+	density = 0
 	min_gas = null
 	mob_size = MOB_MINISCULE
 	pass_flags = PASSTABLE
@@ -25,14 +25,17 @@ Small, little HP, poisonous.
 	melee_damage_upper = 10
 	holder_type = /obj/item/weapon/holder/voxslug
 	faction = SPECIES_VOX
-
+/mob/living/simple_animal/hostile/voxslug/Move()
+	pixel_x = rand(-10,10)
+	pixel_y = rand(-10,10)
+	..()
 /mob/living/simple_animal/hostile/voxslug/ListTargets(var/dist = 7)
 	var/list/L = list()
 	for(var/a in hearers(src, dist))
-		if(istype(a,/mob/living/carbon/human))
-			var/mob/living/carbon/human/H = a
-			if(H.species.get_bodytype() == SPECIES_VOX)
-				continue
+	//	if(istype(a,/mob/living/carbon/human))
+		//	var/mob/living/carbon/human/H = a
+		//	if(H.species.get_bodytype() == SPECIES_VOX)
+		//		continue
 		if(isliving(a))
 			var/mob/living/M = a
 			if(M.faction == faction)
@@ -46,10 +49,10 @@ Small, little HP, poisonous.
 	return L
 
 /mob/living/simple_animal/hostile/voxslug/get_scooped(var/mob/living/carbon/grabber)
-	if(grabber.species.get_bodytype() != SPECIES_VOX)
-		to_chat(grabber, "<span class='warning'>\The [src] wriggles out of your hands before you can pick it up!</span>")
-		return
-	else return ..()
+//	if(grabber.species.get_bodytype() != SPECIES_VOX)
+	to_chat(grabber, "<span class='warning'>\The [src] wriggles out of your hands before you can pick it up!</span>")
+	return
+//	else return ..()
 
 /mob/living/simple_animal/hostile/voxslug/proc/attach(var/mob/living/carbon/human/H)
 	var/obj/item/organ/external/chest = H.organs_by_name["chest"]

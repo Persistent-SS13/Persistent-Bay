@@ -14,7 +14,10 @@
 	attack_sound = 'sound/weapons/bite.ogg'
 	faction = "creature"
 	speed = 4
-
+	//Space carp aren't affected by atmos.
+	min_gas = null
+	max_gas = null
+	minbodytemp = 0
 /mob/living/simple_animal/hostile/creature/cult
 	faction = "cult"
 

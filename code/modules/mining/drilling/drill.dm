@@ -150,19 +150,19 @@
 						zone.asteroid_targets |= src
 					else if(metal == "osmium")
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 1
+						zone.asteroid_aggression += 0.5
 						zone.asteroid_targets |= src
 					else if(metal == "diamond")
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 1
+						zone.asteroid_aggression += 0.5
 						zone.asteroid_targets |= src
 					else if(metal == "uranium")
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 1
+						zone.asteroid_aggression += 0.5
 						zone.asteroid_targets |= src
 					else if(metal == "gold")
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 1
+						zone.asteroid_aggression += 0.5
 						zone.asteroid_targets |= src
 					if(metal == "bluespace crystal")
 						var/oretype = ore_types[metal]

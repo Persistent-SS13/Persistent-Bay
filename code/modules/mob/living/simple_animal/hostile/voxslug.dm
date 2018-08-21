@@ -24,7 +24,7 @@ Small, little HP, poisonous.
 	melee_damage_lower = 5
 	melee_damage_upper = 10
 	holder_type = /obj/item/weapon/holder/voxslug
-	faction = SPECIES_VOX
+	faction = "asteroid"
 	min_gas = null
 	max_gas = null
 	minbodytemp = 0

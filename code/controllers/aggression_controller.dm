@@ -18,9 +18,9 @@ var/datum/controller/aggression_controller/aggression_controller
 	var/datum/controller/aggression_controller/parent
 	var/list/affecting_zlevels = list()
 	var/checkbuffer = 0
-	var/asteroid_aggression = 0
-	var/space_aggression = 0
-	var/base_aggression = 0
+	var/asteroid_aggression = 0.0
+	var/space_aggression = 0.0
+	var/base_aggression = 0.0
 
 	var/list/spawned_space_monsters = list()
 	var/list/spawned_asteroid_monsters = list()

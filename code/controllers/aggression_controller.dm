@@ -41,12 +41,12 @@ var/datum/controller/aggression_controller/aggression_controller
 			spawned_asteroid_monsters -= M
 			dead_monsters |= M
 /datum/aggression_machine/proc/get_asteroid_spawn(var/atom/movable/A)
-	for(var/turf/simulated/asteroid in shuffle(orange(7, get_turf(A))))
+	for(var/turf/simulated/asteroid/asteroid in shuffle(orange(7, get_turf(A))))
 		return asteroid
 
 /datum/aggression_machine/proc/spawn_glutslug(var/turf/T)
 	if(spawned_asteroid_monsters.len > 100) return
-	T.visible_message("<span class='userdanger'>The ground trembles as a vile glutslug burrows up!</span>")
+	T.visible_message("<span class='danger'>The ground trembles as a vile glutslug burrows up!</span>")
 	playsound(T, pick('sound/effects/asteroid/earthquake_short.ogg','sound/effects/asteroid/earthquake_short2.ogg'), 50, 1, 5)
 	for(var/mob/M in view(T))
 		if(M.client)
@@ -58,11 +58,11 @@ var/datum/controller/aggression_controller/aggression_controller
 
 /datum/aggression_machine/proc/spawn_greed(var/turf/T)
 	if(spawned_asteroid_monsters.len > 100) return
-	T.visible_message("<span class='userdanger'>A scream runs through your mind as a portal opens!</span>")
+	T.visible_message("<span class='danger'>A scream runs through your mind as a portal opens!</span>")
 	var/obj/structure/hostile_portal/red/portal = new(T)
 	playsound(T, 'sound/effects/ghost2.ogg', 50, 1, 5)
 	spawn(rand(1 SECOND, 2 SECONDS))
-		T.visible_message("<span class='userdanger'>And a viscious greed emerges!</span>")
+		T.visible_message("<span class='danger'>And a terrible greed emerges!</span>")
 		spawned_asteroid_monsters |= new /mob/living/simple_animal/hostile/creature(T)
 		playsound(T, 'sound/voice/hiss5.ogg', 50, 1, 5)
 		sleep(1 SECOND)
@@ -110,7 +110,7 @@ var/datum/controller/aggression_controller/aggression_controller
 					if(M)
 						if(istype(M.loc, /turf/simulated))
 							shake_camera(M, 25, 3)
-							to_chat(M, "<span class='userdanger'>The asteroid rattles under you, you struggle to maintain balance!</span>")
+							to_chat(M, "<span class='danger'>The asteroid rattles under you, you struggle to maintain balance!</span>")
 							if(!prob(60))
 								M.fall(1)
 							M.playsound_local(M.loc, pick('sound/effects/asteroid/earthquake_short.ogg','sound/effects/asteroid/earthquake_short2.ogg'), 70, 0)
@@ -139,7 +139,7 @@ var/datum/controller/aggression_controller/aggression_controller
 						if(M)
 							if(istype(M.loc, /turf/simulated))
 								shake_camera(M, 25, 3)
-								to_chat(M, "<span class='userdanger'>The asteroid rattles under you, you struggle to maintain balance!</span>")
+								to_chat(M, "<span class='danger'>The asteroid rattles under you, you struggle to maintain balance!</span>")
 								if(!prob(60))
 									M.fall(1)
 								M.playsound_local(M.loc, pick('sound/effects/asteroid/earthquake_short.ogg','sound/effects/asteroid/earthquake_short2.ogg'), 70, 0)
@@ -166,34 +166,35 @@ var/datum/controller/aggression_controller/aggression_controller
 
 /datum/aggression_machine/Process()
 	if(round_duration_in_ticks > checkbuffer)
-		checkbuffer = round_duration_in_ticks + rand(15 SECONDS, 30 SECONDS)
+		checkbuffer = round_duration_in_ticks + rand(20 SECONDS, 40 SECONDS)
 		check_dead()
 		if(asteroid_aggression)
 			switch(asteroid_aggression)
 				if(51 to 100)
 					var/list/potentials = asteroid_targets.Copy()
-					var/targets = max(rand(1,3),asteroid_targets.len)
+					var/targets = min(rand(1,3),asteroid_targets.len)
 					for(var/i=1; i<targets; i++)
 						if(potentials.len)
 							execute_asteroid_aggression(pick_n_take(potentials),1)
 
 				if(101 to 250)
 					var/list/potentials = asteroid_targets.Copy()
-					var/targets = max(rand(2,6),asteroid_targets.len)
+					var/targets = min(rand(1,3),asteroid_targets.len)
 					for(var/i=1; i<targets; i++)
 						if(potentials.len)
 							execute_asteroid_aggression(pick_n_take(potentials),2)
 
 				if(251 to 500)
+					checkbuffer -= 5 SECONDS
 					var/list/potentials = asteroid_targets.Copy()
-					var/targets = max(rand(3,10),asteroid_targets.len)
+					var/targets = min(rand(3,6),asteroid_targets.len)
 					for(var/i=1; i<targets; i++)
 						if(potentials.len)
 							execute_asteroid_aggression(pick_n_take(potentials),3)
 				if(501 to INFINITY)
-					checkbuffer -= 5 SECONDS
+					checkbuffer -= 10 SECONDS
 					var/list/potentials = asteroid_targets.Copy()
-					var/targets = max(rand(5, 10), asteroid_targets.len)
+					var/targets = min(rand(5, 8), asteroid_targets.len)
 					for(var/i=0; i<targets; i++)
 						if(potentials.len)
 							execute_asteroid_aggression(pick_n_take(potentials),4)

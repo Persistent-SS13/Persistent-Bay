@@ -260,7 +260,7 @@ var/list/point_source_descriptions = list(
 	generate_export("manufacturing-basic")
 	generate_export("manufacturing-advanced")
 	generate_export("material")
-	generate_export("material")
+	generate_export("phoron")
 	generate_export("xenobiology")
 	generate_export("cooking")
 	generate_export("cooking")
@@ -378,6 +378,18 @@ var/list/point_source_descriptions = list(
 			export.id = exportnum
 			export.required = rand(50, 150)
 			var/obj/ob = new x()
+			export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each unit."
+			qdel(ob)
+			all_exports |= export
+			return export
+		if("phoron")	
+			export = new /datum/export_order/stack()
+			export.typepath = /obj/item/stack/material/phoron
+			export.rate = rand(90,150)
+			export.order_type = typee
+			export.id = exportnum
+			export.required = rand(300, 50)
+			var/obj/ob = new export.typepath()
 			export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each unit."
 			qdel(ob)
 			all_exports |= export

@@ -62,7 +62,7 @@
 	if(ispath(N, /turf/simulated))
 		if(old_fire)
 			fire = old_fire
-		if (istype(W,/turf/simulated/floor))
+		if (istype(W,/turf/simulated/floor) && old_type == /turf/simulated/asteroid)
 			var/turf/simulated/floor/F = W
 			F.prior_floortype = old_type
 			F.prior_resources = old_resources

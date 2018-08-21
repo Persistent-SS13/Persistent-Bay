@@ -127,6 +127,7 @@
 #include "code\_onclick\hud\screen_objects.dm"
 #include "code\_onclick\hud\skybox.dm"
 #include "code\controllers\admin.dm"
+#include "code\controllers\aggression_controller.dm"
 #include "code\controllers\ambience.dm"
 #include "code\controllers\autosave.dm"
 #include "code\controllers\autotransfer.dm"

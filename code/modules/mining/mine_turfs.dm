@@ -433,6 +433,15 @@ var/list/mining_floors = list()
 /turf/simulated/floor/asteroid
 	name = "sand"
 
+
+/turf/simulated/asteroid/Entered(atom/movable/M)
+	. = ..()
+	if(istype(M) && !istype(M, /mob/living/simple_animal))
+		if(aggression_controller)
+			var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
+			if(zone)
+				zone.asteroid_targets |= M
+
 /turf/simulated/asteroid/after_load()
 	updateMineralOverlays(1)
 

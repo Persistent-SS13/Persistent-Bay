@@ -75,7 +75,7 @@
 
 /mob/new_player/proc/slot_select_load()
 	for(var/mob/loaded_mob in SSmobs.mob_list)
-		if(loaded_mob.type != /mob/new_player && loaded_mob.saved_ckey == ckey && get_turf(loaded_mob))
+		if(!loaded_mob.perma_dead && loaded_mob.type != /mob/new_player && loaded_mob.saved_ckey == ckey && get_turf(loaded_mob))
 			if(ticker.current_state <= GAME_STATE_PREGAME)
 				to_chat(src, "A character is already in game, selecting on start")
 				ready = 1
@@ -182,6 +182,8 @@
 		src << browse(null, "window=saves")
 		chosen_slot = text2num(href_list["pickslot_load"])
 		var/mob/M = client.prefs.character_list[chosen_slot]
+		if(M.perma_dead)
+			to_chat(usr, "This character is permanently dead. Your only option is to delete it and remake a new character.")
 		for(var/mob/mobbie in GLOB.all_cryo_mobs)
 			if(mobbie.real_name == M.real_name)
 				client.prefs.character_list[chosen_slot] = mobbie

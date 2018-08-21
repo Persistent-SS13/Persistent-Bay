@@ -165,7 +165,7 @@ var/datum/controller/aggression_controller/aggression_controller
 
 /datum/aggression_machine/Process()
 	if(round_duration_in_ticks > checkbuffer)
-		checkbuffer = round_duration_in_ticks + rand(20 SECONDS, 40 SECONDS)
+		checkbuffer = round_duration_in_ticks + rand(10 SECONDS, 25 SECONDS)
 		check_dead()
 		if(asteroid_aggression)
 			switch(asteroid_aggression)

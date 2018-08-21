@@ -13,9 +13,9 @@ Small, little HP, poisonous.
 	response_disarm = "gently pushes aside"
 	response_harm   = "stamps on"
 	destroy_surroundings = 0
-	health = 15
-	maxHealth = 15
-	speed = 0
+	health = 5
+	maxHealth = 5
+	speed = 3
 	move_to_delay = 0
 	density = 0
 	min_gas = null

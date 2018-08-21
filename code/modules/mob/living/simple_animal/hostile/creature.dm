@@ -13,7 +13,7 @@
 	melee_damage_upper = 50
 	attacktext = "chomped"
 	attack_sound = 'sound/weapons/bite.ogg'
-	faction = "creature"
+	faction = "asteroid"
 	speed = 8
 	//Space carp aren't affected by atmos.
 	min_gas = null

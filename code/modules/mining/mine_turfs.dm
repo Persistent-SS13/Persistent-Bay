@@ -48,6 +48,7 @@ var/list/mining_floors = list()
 		update_icon(1)
 /turf/simulated/mineral/after_load()
 	update_icon(0)
+	..()
 /turf/simulated/mineral/Destroy()
 	if (mining_walls["[src.z]"])
 		mining_walls["[src.z]"] -= src
@@ -444,7 +445,7 @@ var/list/mining_floors = list()
 
 /turf/simulated/asteroid/after_load()
 	updateMineralOverlays(1)
-
+	..()
 /turf/simulated/floor/asteroid/after_load()
 	var/resource = resources
 	var/xi = x
@@ -454,6 +455,7 @@ var/list/mining_floors = list()
 	spawn()
 		var/turf/simulated/asteroid = locate(xi,yi,zi)
 		asteroid.resources = resource
+	..()
 /turf/simulated/asteroid/New()
 	if (!mining_floors["[src.z]"])
 		mining_floors["[src.z]"] = list()

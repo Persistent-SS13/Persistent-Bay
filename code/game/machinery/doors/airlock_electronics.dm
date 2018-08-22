@@ -38,7 +38,7 @@
 	return data
 	
 	
-/obj/item/weapon/airlock_electronics/ui_act(action, params)
+/obj/item/weapon/airlock_electronics/business/ui_act(action, params)
 	if(..())
 		return TRUE
 	switch(action)

@@ -43,7 +43,7 @@
 /obj/machinery/mineral/stacking_machine/get_console_data()
 	. = ..()
 	. += "<h1>Sheet Stacking</h1>"
-	. += "Stacking: [stack_amt] <a href='?srcsay =\ref[src];change_stack=1'>\[change\]</a>"
+	. += "Stacking: [stack_amt] <A href='?src=\ref[src];change_stack=1'>\[change\]</a>"
 	var/line = ""
 	for(var/stacktype in stacks)
 		if(stacks[stacktype] > 0)

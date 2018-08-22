@@ -154,7 +154,7 @@
 		var/hide_item = !has_edge(W) || !can_slice_here
 
 		if (hide_item && user.a_intent != I_HURT)
-			if (W.w_class >= src.w_class || is_robot_module(W))
+			if (W.w_class >= src.w_class || is_robot_module(W) || istype(W, /obj/item/organ/internal/stack))
 				return
 
 			to_chat(user, "<span class='warning'>You slip \the [W] inside \the [src].</span>")

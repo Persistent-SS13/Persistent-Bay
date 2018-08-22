@@ -38,6 +38,8 @@
 	var/business_mode = 0
 	var/connected_business = ""
 	
+/obj/item/organ/internal/stack/ex_act(severity)
+	return ":)"
 	
 /obj/item/organ/internal/stack/proc/transfer_identity(var/mob/living/carbon/H)
 

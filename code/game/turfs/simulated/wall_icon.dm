@@ -48,10 +48,10 @@
 
 	if(r_material)
 		name = "[state != null ? "incomplete " : ""][r_material.display_name] reinforced [p_material.display_name] [initial(name)]"
-		desc = "It seems to be [state == null ? "an incomplete " : "a"] section of hull reinforced with [r_material.display_name] and plated with [p_material.display_name]."
+		desc = "It seems to be [state != null ? "an incomplete" : "a"] section of hull reinforced with [r_material.display_name] and plated with [p_material.display_name]."
 	else
 		name = "[state != null ? "incomplete " : ""][p_material.display_name] [initial(name)]"
-		desc = "It seems to be [state == null ? "an incomplete" : "a"] section of hull plated with [p_material.display_name]."
+		desc = "It seems to be [state != null ? "an incomplete" : "a"] section of hull plated with [p_material.display_name]."
 
 	overlays.Cut()
 	var/image/I

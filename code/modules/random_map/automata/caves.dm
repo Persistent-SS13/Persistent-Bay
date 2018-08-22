@@ -16,7 +16,8 @@ GLOBAL_LIST_INIT(weighted_minerals_sparse, \
 		"rock salt" =    3, \
 		"potash" =       3, \
 		"bauxite" =      3,	\
-		"tungsten" = 	 8  \
+		"tungsten" = 	 8, \
+		"copper" = 		10  \
 	))
 
 GLOBAL_LIST_INIT(weighted_minerals_rich, \
@@ -37,7 +38,8 @@ GLOBAL_LIST_INIT(weighted_minerals_rich, \
 		"rock salt" =    1, \
 		"potash" =       1, \
 		"bauxite" =      1, \
-		"tungsten" =     10 \
+		"tungsten" =    10, \
+		"copper" = 		 5  \
 	))
 
 /datum/random_map/automata/cave_system

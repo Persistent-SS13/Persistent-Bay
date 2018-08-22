@@ -11,22 +11,20 @@
 	input_turf = null
 	output_turf = null
 	if(console && !ispath(console))
-		if(console.connected == src)
-			console.connected = null
+		if(src in console.connected)
+			console.connected -= src
 		console = null
 	. = ..()
 
 /obj/machinery/mineral/Initialize()
 	set_input(input_turf)
 	set_output(output_turf)
-	find_console()
 	. = ..()
 
 /obj/machinery/mineral/after_load()
 	..()
 	set_input(input_turf)
 	set_output(output_turf)
-	find_console()
 
 /obj/machinery/mineral/attackby(var/obj/item/O, var/mob/user)
 	if(default_deconstruction_screwdriver(user, O))
@@ -47,14 +45,14 @@
 /obj/machinery/mineral/proc/get_console_data()
 	. = list("<h1>Input/Output</h1>")
 	if(input_turf)
-		. += "<b>Input</b>: [dir2text(get_dir(src, input_turf))]."
+		. += "<b>Input</b>: [dir2text(get_dir(src, input_turf))]"
 	else
-		. += "<b>Input</b>: disabled."
+		. += "<b>Input</b>: disabled"
 	if(output_turf)
-		. += "<b>Output</b>: [dir2text(get_dir(src, output_turf))]."
+		. += "<b>Output</b>: [dir2text(get_dir(src, output_turf))]"
 	else
-		. += "<b>Output</b>: disabled."
-	. += "<br><a href='?src=\ref[src];configure_input_output=1'>Configure.</a>"
+		. += "<b>Output</b>: disabled"
+	. += "<br><a href='?src=\ref[src];configure_input_output=1'>Configure</a>"
 
 /obj/machinery/mineral/CanUseTopic(var/mob/user)
 	return max(..(), (console && console.CanUseTopic(user)))
@@ -105,7 +103,7 @@
 	if(isnull(choice) || !can_configure(user)) return
 
 	var/list/_dirs = list("North" = NORTH, "South" = SOUTH, "East" = EAST, "West" = WEST, "Clear" = 0)
-	var/dchoice = input("Do you wish to change the input direction, or the output direction?") as null|anything in _dirs
+	var/dchoice = input("[choice] should be...") as null|anything in _dirs
 	if(isnull(dchoice) || !can_configure(user)) return
 
 	if(choice == "Input")

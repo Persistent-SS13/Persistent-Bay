@@ -191,7 +191,11 @@
 
 // Debris product. Used ALL THE TIME.
 /material/proc/place_sheet(var/turf/target, var/amount = 1)
-	return stack_type ? new stack_type(target, amount, name) : null
+	if(stack_type)
+		var/obj/item/stack/material/stack = new stack_type(target, amount, name)
+		stack.update_strings()
+		return stack
+	return null
 
 // As above.
 /material/proc/place_shard(var/turf/target)

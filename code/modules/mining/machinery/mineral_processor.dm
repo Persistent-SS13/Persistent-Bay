@@ -44,7 +44,7 @@
 				for(var/o_material in I.matter)
 					if(!isnull(ores_stored[o_material]))
 						ores_stored[o_material] += I.matter[o_material]
-			qdel(I)
+				qdel(I)
 
 	if(!active)
 		return

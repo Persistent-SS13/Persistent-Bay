@@ -19,17 +19,26 @@
 	var/list/resource_field = list()
 
 	var/ore_types = list(
-		"iron" = /obj/item/weapon/ore/iron,
-		"uranium" = /obj/item/weapon/ore/uranium,
-		"gold" = /obj/item/weapon/ore/gold,
-		"silver" = /obj/item/weapon/ore/silver,
-		"diamond" = /obj/item/weapon/ore/diamond,
-		"phoron" = /obj/item/weapon/ore/phoron,
-		"osmium" = /obj/item/weapon/ore/osmium,
-		"hydrogen" = /obj/item/weapon/ore/hydrogen,
-		"silicates" = /obj/item/weapon/ore/glass,
-		"carbonaceous rock" = /obj/item/weapon/ore/coal,
-		"bluespace crystal" = /obj/item/bluespace_crystal,
+		"pitchblende",
+		"platinum",
+		"hematite",
+		"graphene",
+		"diamond",
+		"gold",
+		"silver",
+		"phoron",
+		"quartz",
+		"pyrite",
+		"spodumene",
+		"cinnabar",
+		"phosphorite",
+		"rock salt",
+		"potash",
+		"bauxite",
+		"tungsten",
+		"sand",
+		"copper",
+		"bluespace crystal"
 		)
 
 	//Upgrades
@@ -142,7 +151,7 @@
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
 						zone.asteroid_aggression += 25
 						zone.asteroid_targets |= src
-					else if(metal == "osmium")
+					else if(metal == "platinum")
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
 						zone.asteroid_aggression += 0.5
 						zone.asteroid_targets |= src
@@ -150,7 +159,7 @@
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
 						zone.asteroid_aggression += 0.5
 						zone.asteroid_targets |= src
-					else if(metal == "uranium")
+					else if(metal == "pitchblende")
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
 						zone.asteroid_aggression += 0.5
 						zone.asteroid_targets |= src
@@ -158,12 +167,11 @@
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
 						zone.asteroid_aggression += 0.5
 						zone.asteroid_targets |= src
+
 					if(metal == "bluespace crystal")
-						var/oretype = ore_types[metal]
-						new oretype(get_turf(src))
+						new /obj/item/bluespace_crystal(get_turf(src))
 					else
-						var/oretype = ore_types[metal]
-						new oretype(src)
+						new /obj/item/weapon/ore(src, metal)
 
 		if(!found_resource)
 			harvesting.has_resources = 0

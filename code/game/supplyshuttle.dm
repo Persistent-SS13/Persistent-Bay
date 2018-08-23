@@ -118,8 +118,10 @@ var/list/point_source_descriptions = list(
 	var/supplied = 0
 	var/id = 0
 	var/typepath // should be the typepath of the item we're looking for..
+	var/looking_name = ""
 	var/rate = 0
 	var/order_type = ""
+	
 /datum/export_order/proc/fill(var/obj/structure/closet/crate)
 	var/filled = 0
 	var/overfilled = 0
@@ -128,7 +130,7 @@ var/list/point_source_descriptions = list(
 		if(istype(A, /obj/item/weapon/paper/export))
 			filling |= A
 			continue
-		if(!istype(A, typepath))
+		if(!istype(A, typepath && A.name != looking_name))
 			message_admins("fill failed due to invalid object [A.name]")
 			return 0
 		if(filled >= (required - supplied))
@@ -164,7 +166,7 @@ var/list/point_source_descriptions = list(
 		if(istype(A, /obj/item/weapon/paper/export))
 			filling |= A
 			continue
-		if(!istype(A, typepath))
+		if(!istype(A, typepath) && A.name != looking_name)
 			message_admins("fill failed due to invalid object [A.name]")
 			return 0
 		filling |= A
@@ -193,7 +195,7 @@ var/list/point_source_descriptions = list(
 		if(istype(A, /obj/item/weapon/paper/export))
 			filling |= A
 			continue
-		if(!istype(A, typepath))
+		if(!istype(A, typepath) && A.name != looking_name)
 			return 0
 		var/obj/item/stack/stack = A
 		var/max = (required - (supplied+filled))

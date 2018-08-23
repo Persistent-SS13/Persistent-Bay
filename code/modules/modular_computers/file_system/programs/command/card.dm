@@ -261,7 +261,7 @@
 	if(connected_faction)
 		user_record = connected_faction.get_record(user_id_card.registered_name)
 		if(user_record)
-			user_accesses = user_record.access
+			user_accesses = user_id_card.GetAccess(connected_faction.uid)
 		if(connected_faction.leader_name == user_id_card.registered_name)
 			isleader = 1
 	else
@@ -275,11 +275,11 @@
 			var/datum/computer_file/crew_record/record = connected_faction.get_record(id_card.registered_name)
 			if(!record && id_card.registered_name)
 				if(!user_id_card) return
-				if(!isleader && !(core_access_reassignment in user_accesses))
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_reassignment in user_accesses))
 					to_chat(usr, "No record is on file for [id_card.registered_name]. Insufficent access to add new members.")
 					return 0
 				if(!connected_faction.hiring_policy)
-					if(!isleader && !connected_faction.in_command(user_id_card.registered_name))
+					if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.in_command(user_id_card.registered_name))
 						to_chat(usr, "No record is on file for [id_card.registered_name]. Only members of Command categories can add new names to the records.")
 						return 0
 				var/choice = input(usr,"No record is on file for [id_card.registered_name]. Would you like to create a new record for [id_card.registered_name] based on information found in public records?") in list("Create", "Cancel")
@@ -300,11 +300,11 @@
 				var/datum/computer_file/crew_record/record = connected_faction.get_record(select_name)
 				if(!record)
 					if(!user_id_card) return
-					if(!isleader && !(core_access_reassignment in user_accesses))
+					if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_reassignment in user_accesses))
 						to_chat(usr, "No record is on file for [select_name]. Insufficent access to add new members.")
 						return 0
 					if(!connected_faction.hiring_policy)
-						if(!isleader && !connected_faction.in_command(user_id_card.registered_name))
+						if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.in_command(user_id_card.registered_name))
 							to_chat(usr, "No record is on file for [select_name]. Only members of Command categories can add new names to the records.")
 							return 0
 					var/choice = input(usr,"No record is on file for [select_name]. Would you like to create a new record for [select_name] based on information found in public records?") in list("Create", "Cancel")
@@ -383,37 +383,37 @@
 				computer.proc_eject_id(user)
 		if("terminate")
 			if(computer && can_run(user, 1))
-				if(!isleader && !(core_access_termination in user_accesses))
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_termination in user_accesses))
 					to_chat(usr, "Access Denied.")
 					return 0
-				if(!isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
 					to_chat(usr, "Insufficent Rank.")
 					return 0
 				module.record.terminated = 1
 				update_ids(module.record.get_name())
 		if("unterminate")
 			if(computer && can_run(user, 1))
-				if(!isleader && !(core_access_termination in user_accesses))
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_termination in user_accesses))
 					to_chat(usr, "Access Denied.")
 					return 0
-				if(!isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
 					to_chat(usr, "Insufficent Rank.")
 					return 0
 				module.record.terminated = 0
 				update_ids(module.record.get_name())
 		if("reset_expenses")
 			if(computer && can_run(user, 1))
-				if(!isleader && !(core_access_expenses in user_accesses))
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_expenses in user_accesses))
 					to_chat(usr, "Access Denied.")
 					return 0
 				module.record.expenses = 0
 		if("assign")
 			if(computer && can_run(user, 1))
 				if(!user_id_card) return
-				if(!isleader && !(core_access_reassignment in user_accesses))
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_reassignment in user_accesses))
 					to_chat(usr, "Access Denied.")
 					return 0
-				if(!isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
 					to_chat(usr, "Insufficent Rank.")
 					return 0
 				var/t1 = href_list["assign_target"]
@@ -452,20 +452,20 @@
 						id_card.access += access_type
 		if("promote")
 			if(!user_id_card) return
-			if(!isleader && !(core_access_promotion in user_accesses))
+			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_promotion in user_accesses))
 				to_chat(usr, "Access Denied.")
 				return 0
-			if(!isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
 				to_chat(usr, "Insufficent Rank.")
 				return 0
 			module.record.promote_votes |= user_id_card.registered_name
 			module.record.check_rank_change(connected_faction)
 		if("demote")
 			if(!user_id_card) return
-			if(!isleader && !(core_access_promotion in user_accesses))
+			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_promotion in user_accesses))
 				to_chat(usr, "Access Denied.")
 				return 0
-			if(!isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
 				to_chat(usr, "Insufficent Rank.")
 				return 0
 			module.record.demote_votes |= user_id_card.registered_name
@@ -485,10 +485,10 @@
 			to_chat(user, "Card successfully resynced to [connected_faction.name]")
 			update_ids(id_card.registered_name)
 		if("edit_record")
-			if(!isleader && !(core_access_employee_records in user_accesses))
+			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_employee_records in user_accesses))
 				to_chat(usr, "Access Denied.")
 				return 0
-			if(!isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
 				to_chat(usr, "Insufficent Rank.")
 				return 0
 			var/newValue

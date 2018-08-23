@@ -76,7 +76,7 @@
 /obj/machinery/bodyscanner/proc/go_out()
 	if ((!( src.occupant ) || src.locked))
 		return
-	for(var/obj/O in src)
+	for(var/obj/O in InsertedContents())
 		O.dropInto(loc)
 		//Foreach goto(30)
 	if (src.occupant.client)
@@ -95,6 +95,9 @@
 	if (target.abiotic())
 		to_chat(user, "<span class='warning'>The subject cannot have abiotic items on.</span>")
 		return FALSE
+	if(panel_open)
+		to_chat(user, "<span class='warning'>Close the panel first!</span>")
+		return FALSE
 	user.visible_message("<span class='notice'>\The [user] begins placing \the [target] into \the [src].</span>", "<span class='notice'>You start placing \the [target] into \the [src].</span>")
 	if(!do_after(user, 30, target))
 		return FALSE
@@ -106,16 +109,10 @@
 	src.occupant = target
 	update_use_power(2)
 	src.icon_state = "body_scanner_1"
-	for(var/obj/O in src)
+	for(var/obj/O in InsertedContents())
 		O.forceMove(loc)
 	src.add_fingerprint(user)
 	return TRUE
-
-/obj/machinery/bodyscanner/attackby(obj/item/grab/normal/G, var/mob/user)
-	if (!ismob(G.affecting))
-		return
-	if(go_in(G.affecting, user))
-		qdel(G)
 
 //Like grap-put, but for mouse-drop.
 /obj/machinery/bodyscanner/MouseDrop_T(var/mob/target, var/mob/user)
@@ -213,6 +210,17 @@
 
 
 /obj/machinery/bodyscanner/attackby(var/obj/item/O as obj, var/mob/user as mob)
+	if(istype(O, /obj/item/grab/normal))
+		var/obj/item/grab/normal/G = O
+		if (!ismob(G.affecting))
+			return
+		if(go_in(G.affecting, user))
+			qdel(G)
+			return
+
+	if(occupant && (isScrewdriver(O) || isCrowbar(O) || istype(O, /obj/item/weapon/storage/part_replacer)))
+		to_chat(user, "<span class='notice'>Remove the occupant first!</span>")
+		return
 
 	if(default_deconstruction_screwdriver(user, O))
 		updateUsrDialog()
@@ -221,7 +229,13 @@
 		return
 	if(default_part_replacement(user, O))
 		return
+
 	return ..()
+
+/obj/machinery/bodyscanner/dismantle()
+	for(var/mob/M in src)
+		M.forceMove(get_turf(src))
+	..()
 
 /obj/machinery/body_scanconsole/attackby(var/obj/item/O as obj, var/mob/user as mob)
 

@@ -273,25 +273,25 @@
 
 //Misc
 /obj/item/clothing/head/helmet/space/void/engineering/salvage
-	name = "salvage voidsuit helmet"
-	desc = "A heavily modified salvage voidsuit helmet. It has been fitted with radiation-resistant plating."
+	name = "salvaged voidsuit helmet"
+	desc = "A hand-me-down salvage voidsuit helmet. It has obviously had a lot of repair work done to it, and is fitted with radiation shielding."
 	icon_state = "rig0-salvage"
 	item_state = "salvage_helm"
 	item_state_slots = list(
 		slot_l_hand_str = "eng_helm",
 		slot_r_hand_str = "eng_helm",
 		)
-	armor = list(melee = 50, bullet = 10, laser = 30,energy = 15, bomb = 35, bio = 100, rad = 80)
+	armor = list(melee = 20, bullet = 5, laser = 10,energy = 5, bomb = 20, bio = 100, rad = 50)
 
 /obj/item/clothing/suit/space/void/engineering/salvage
-	name = "salvage voidsuit"
-	desc = "A hand-me-down salvage voidsuit. It has obviously had a lot of repair work done to its radiation shielding."
+	name = "salvaged voidsuit"
+	desc = "A hand-me-down salvage voidsuit. It has obviously had a lot of repair work done to it, and is fitted with radiation shielding."
 	icon_state = "rig-salvage"
 	item_state_slots = list(
 		slot_l_hand_str = "eng_voidsuit",
 		slot_r_hand_str = "eng_voidsuit",
 	)
-	armor = list(melee = 50, bullet = 10, laser = 30,energy = 15, bomb = 35, bio = 100, rad = 80)
+	armor = list(melee = 20, bullet = 5, laser = 10,energy = 5, bomb = 20, bio = 100, rad = 50)
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit,/obj/item/weapon/storage/toolbox,/obj/item/weapon/storage/briefcase/inflatable,/obj/item/device/t_scanner,/obj/item/weapon/rcd)
 
 /obj/item/clothing/suit/space/void/engineering/salvage/prepared

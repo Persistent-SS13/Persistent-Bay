@@ -173,6 +173,15 @@
 	cost = 150
 	containername = "\improper Bulk Softsuit crate"
 
+/decl/hierarchy/supply_pack/supply/salvagedsuit
+	name = "Salvaged Voidsuit with Airtank"
+	contains = list(/obj/item/weapon/tank/oxygen,
+			 		/obj/item/clothing/suit/space/void/engineering/salvage,
+					/obj/item/clothing/head/helmet/space/void/engineering/salvage,
+					/obj/item/clothing/shoes/magboots)
+	cost = 50
+	containername = "\improper Salvaged Voidsuit crate"
+
 /decl/hierarchy/supply_pack/supply/blueprints
 	name = "Blueprints"
 	contains = list(/obj/item/blueprints)

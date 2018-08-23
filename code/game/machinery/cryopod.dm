@@ -157,7 +157,40 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 			to_chat(lace.lacemob, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
 			time_entered = world.time
 			src.add_fingerprint(user)
-			
+	if(isMultitool(G))
+		to_chat(user, "<span class='notice'>\The [src] was [find_control_computer() ? "" : "unable to be"] linked to a control computer</span>")
+
+	if(istype(G, /obj/item/grab))
+		var/obj/item/grab/grab = G
+		if(occupant)
+			to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
+			return
+
+		if(!ismob(grab.affecting))
+			return
+
+		if(!check_occupant_allowed(grab.affecting))
+			return
+
+		var/willing = null //We don't want to allow people to be forced into despawning.
+		var/mob/M = G:affecting
+
+		willing = 1
+		if(willing)
+
+			visible_message("[user] starts putting [grab.affecting:name] into \the [src].", 3)
+
+			if(do_after(user, 20, src))
+				if(!M || !grab || !grab.affecting) return
+
+			set_occupant(M)
+
+			var/turf/location = get_turf(src)
+			log_admin("[key_name_admin(M)] has entered a stasis pod. (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[location.x];Y=[location.y];Z=[location.z]'>JMP</a>)")
+			message_admins("<span class='notice'>[key_name_admin(M)] has entered a stasis pod.</span>")
+
+			//Despawning occurs when process() is called with an occupant without a client.
+			src.add_fingerprint(M)		
 	..()
 
 /obj/machinery/cryopod/attack_hand(mob/user = usr)
@@ -358,10 +391,11 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	if(occupant.client && occupant.client.prefs)
 		occupant.client.prefs.character_list = list()
 	var/mob/new_player/M = new /mob/new_player()
-	M.loc = locate(100,100,28)
+	M.loc = null
 	occupant.stored_ckey = occupant.ckey
 	M.key = occupant.key
-	M.client.eye = M
+	if(M.client)
+		M.client.eye = M
 	var/role_alt_title = occupant.mind ? occupant.mind.role_alt_title : "Unknown"
 	if(control_computer)
 		control_computer.frozen_crew += "[occupant.real_name], [role_alt_title] - [stationtime2text()]"
@@ -374,41 +408,6 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	set_occupant(null)
 	icon_state = base_icon_state
 
-/obj/machinery/cryopod/attackby(var/obj/item/weapon/G as obj, var/mob/user as mob)
-	if(isMultitool(G))
-		to_chat(user, "<span class='notice'>\The [src] was [find_control_computer() ? "" : "unable to be"] linked to a control computer</span>")
-
-	if(istype(G, /obj/item/grab))
-		var/obj/item/grab/grab = G
-		if(occupant)
-			to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
-			return
-
-		if(!ismob(grab.affecting))
-			return
-
-		if(!check_occupant_allowed(grab.affecting))
-			return
-
-		var/willing = null //We don't want to allow people to be forced into despawning.
-		var/mob/M = G:affecting
-
-		willing = 1
-		if(willing)
-
-			visible_message("[user] starts putting [grab.affecting:name] into \the [src].", 3)
-
-			if(do_after(user, 20, src))
-				if(!M || !grab || !grab.affecting) return
-
-			set_occupant(M)
-
-			var/turf/location = get_turf(src)
-			log_admin("[key_name_admin(M)] has entered a stasis pod. (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[location.x];Y=[location.y];Z=[location.z]'>JMP</a>)")
-			message_admins("<span class='notice'>[key_name_admin(M)] has entered a stasis pod.</span>")
-
-			//Despawning occurs when process() is called with an occupant without a client.
-			src.add_fingerprint(M)
 
 /obj/machinery/cryopod/verb/eject()
 	set name = "Eject Pod"

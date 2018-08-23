@@ -4,7 +4,7 @@
 	var/deposit_success = 0
 
 /datum/event/money_lotto/start()
-	winner_sum = pick(500, 1000, 2000, 3000, 4000)
+	winner_sum = pick(150, 250, 500, 1000, 1500, 2000, 2500, 4000)
 	if(prob(50))
 		if(all_money_accounts.len)
 			var/datum/money_account/D = pick(all_money_accounts)

@@ -130,7 +130,7 @@ var/list/point_source_descriptions = list(
 		if(istype(A, /obj/item/weapon/paper/export))
 			filling |= A
 			continue
-		if(!istype(A, typepath) && A.name != looking_name))
+		if(!istype(A, typepath) && A.name != looking_name)
 			message_admins("fill failed due to invalid object [A.name]")
 			return 0
 		if(filled >= (required - supplied))

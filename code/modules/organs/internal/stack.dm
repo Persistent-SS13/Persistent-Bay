@@ -38,11 +38,22 @@
 	var/business_mode = 0
 	var/connected_business = ""
 	
+/obj/item/organ/internal/stack/ex_act(severity)
+	return ":)"
 	
 /obj/item/organ/internal/stack/proc/transfer_identity(var/mob/living/carbon/H)
 
 	if(!lacemob)
 		lacemob = new(src)
+		lacemob.name = H.real_name
+		lacemob.real_name = H.real_name
+		lacemob.dna = H.dna.Clone()
+		lacemob.timeofhostdeath = H.timeofdeath
+		lacemob.container = src
+		if(owner)
+			lacemob.container2 = owner
+		lacemob.spawn_loc = H.spawn_loc
+	else
 		lacemob.name = H.real_name
 		lacemob.real_name = H.real_name
 		lacemob.dna = H.dna.Clone()

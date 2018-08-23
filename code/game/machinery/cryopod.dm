@@ -356,7 +356,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		var/savefile/f = new("[save_path][occupant.save_slot].sav")
 		f << occupant
 	if(occupant.client && occupant.client.prefs)
-		occupant.client.prefs.character_list[occupant.save_slot] = occupant
+		occupant.client.prefs.character_list = list()
 	var/mob/new_player/M = new /mob/new_player()
 	M.loc = locate(100,100,28)
 	occupant.stored_ckey = occupant.ckey

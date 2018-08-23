@@ -157,11 +157,11 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 			to_chat(lace.lacemob, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
 			time_entered = world.time
 			src.add_fingerprint(user)
-	if(isMultitool(G))
+	if(isMultitool(O))
 		to_chat(user, "<span class='notice'>\The [src] was [find_control_computer() ? "" : "unable to be"] linked to a control computer</span>")
 
-	if(istype(G, /obj/item/grab))
-		var/obj/item/grab/grab = G
+	if(istype(O, /obj/item/grab))
+		var/obj/item/grab/grab = O
 		if(occupant)
 			to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
 			return

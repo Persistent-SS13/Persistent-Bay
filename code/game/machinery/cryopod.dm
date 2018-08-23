@@ -173,7 +173,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 			return
 
 		var/willing = null //We don't want to allow people to be forced into despawning.
-		var/mob/M = G:affecting
+		var/mob/M = O:affecting
 
 		willing = 1
 		if(willing)

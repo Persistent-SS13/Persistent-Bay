@@ -392,7 +392,8 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		occupant.client.prefs.character_list = list()
 	var/mob/new_player/M = new /mob/new_player()
 	M.loc = null
-	occupant.stored_ckey = occupant.ckey
+	if(occupant.ckey)
+		occupant.stored_ckey = occupant.ckey
 	M.key = occupant.key
 	if(M.client)
 		M.client.eye = M

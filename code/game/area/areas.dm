@@ -268,8 +268,8 @@ var/list/mob/living/forced_ambiance_list = new
 	// Ambience goes down here -- make sure to list each area seperately for ease of adding things in later, thanks! Note: areas adjacent to each other should have the same sounds to prevent cutoff when possible.- LastyScratch
 	if(!L.client) return
 	if(!(L && L.get_preference_value(/datum/client_preference/play_ambiance) == GLOB.PREF_YES))	return
-	if(ambience_controller)
-		var/datum/music_controller/controller = ambience_controller.zlevel_data["[(L.z+(L.z%2))]"]
+	if(ambient_controller)
+		var/datum/music_controller/controller = ambient_controller.zlevel_data["[(L.z+(L.z%2))]"]
 		if(controller)
 			if(controller.tone && controller.tone != "none")
 				return 0

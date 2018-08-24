@@ -9,7 +9,7 @@
 	var/datum/browser/load_panel
 	var/show_invalid_jobs = 0
 	universal_speak = 1
-
+	should_save = 0
 	invisibility = 101
 
 	density = 0

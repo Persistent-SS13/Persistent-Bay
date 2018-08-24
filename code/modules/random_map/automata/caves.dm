@@ -46,7 +46,7 @@ GLOBAL_LIST_INIT(weighted_minerals_rich, \
 	iterations = 5
 	descriptor = "moon caves"
 	wall_type =  /turf/simulated/mineral
-	floor_type = /turf/simulated/floor/asteroid
+	floor_type = /turf/simulated/asteroid
 	target_turf_type = /turf/unsimulated/mask
 
 	var/mineral_turf = /turf/simulated/mineral/random

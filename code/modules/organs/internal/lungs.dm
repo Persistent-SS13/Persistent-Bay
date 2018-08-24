@@ -238,7 +238,7 @@
 		owner.adjustOxyLoss(-5 * inhale_efficiency)
 		if(robotic < ORGAN_ROBOT && species.breathing_sound && is_below_sound_pressure(get_turf(owner)))
 			if(breathing || owner.shock_stage >= 10)
-				sound_to(owner, sound(species.breathing_sound,0,0,0,5))
+				sound_to(owner, sound(species.breathing_sound,0,0,0,3))
 				breathing = 0
 			else
 				breathing = 1

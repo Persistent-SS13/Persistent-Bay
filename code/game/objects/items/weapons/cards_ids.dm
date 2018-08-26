@@ -478,6 +478,9 @@ var/const/NO_EMAG_ACT = -50
 	item_state = "tdgreen"
 	assignment = "Synthetic"
 
+/obj/item/weapon/card/id/synthetic/devalidate()	
+	valid = 1
+	return
 /obj/item/weapon/card/id/synthetic/New()
 //	access = get_all_station_access() + access_synth
 	..()

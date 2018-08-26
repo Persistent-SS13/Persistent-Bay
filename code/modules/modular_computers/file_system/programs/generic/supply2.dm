@@ -36,7 +36,7 @@
 		program.computer.kill_program()
 	if(!selected_telepads)
 		selected_telepads = connected_faction.cargo_telepads.Copy()
-	var/is_admin = check_access(user, core_access_order_approval, connected_faction.uid)
+	var/is_admin = (check_access(user, core_access_order_approval, connected_faction.uid) || check_access(user, core_access_order_approval, connected_faction.uid))
 	data["faction_name"] = connected_faction.name
 	data["credits"] = connected_faction.central_account.money
 	data["is_admin"] = is_admin
@@ -202,22 +202,22 @@
 		print_export(user, href_list["print_export"])
 
 		return 1
-		
+
 	if(href_list["print_export2"])
 		if(!check_access(core_access_invoicing)) return
 		if(!can_print())
 			return
 		print_export_business(user, href_list["print_export2"])
 
-		return 1	
-		
+		return 1
+
 	if(href_list["print_summary"])
 		if(!can_print())
 			return
 		print_summary(user)
 
 	// Items requiring cargo access go below this entry. Other items go above.
-	
+
 
 	if(href_list["launch_shuttle"])
 		var/datum/shuttle/autodock/ferry/supply/shuttle = supply_controller.shuttle
@@ -356,7 +356,7 @@
 			if(SO.object.cost*10 > connected_faction.central_account.money)
 				to_chat(usr, "<span class='warning'>Not enough Ethericoin $$ to purchase \the [SO.object.name]!</span>")
 				return 1
-				
+
 			R.expenses += SO.object.cost*10
 			connected_faction.pending_orders -= SO
 			connected_faction.approved_orders += SO
@@ -364,14 +364,14 @@
 			connected_faction.central_account.do_transaction(T)
 			break
 		return 1
-		
+
 	if(href_list["invoice_order"])
 		if(!check_access(core_access_invoicing) && !check_access(core_access_order_approval))
 			to_chat(usr, "Access Denied.")
 			return 1
 		var/id = text2num(href_list["invoice_order"])
 		for(var/datum/supply_order/SO in connected_faction.pending_orders)
-		
+
 			if(SO.ordernum != id)
 				continue
 			if(SO.last_print > world.time)
@@ -403,10 +403,10 @@
 			invoice.linked_faction = connected_faction.uid
 			invoice.loc = get_turf(program.computer)
 			playsound(get_turf(program.computer), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
-			invoice.name = "[connected_faction.short_tag] digital import invoice"	
+			invoice.name = "[connected_faction.short_tag] digital import invoice"
 			SO.last_print = world.time + 3 MINUTES
 			break
-		return 1	
+		return 1
 
 	if(href_list["deny_order"])
 		if(!check_access(core_access_order_approval))
@@ -539,5 +539,4 @@
 	var/obj/item/weapon/paper/export/business/export = new(program.computer.loc)
 	export.info = t
 	export.export_id = order.id
-	
-	
+

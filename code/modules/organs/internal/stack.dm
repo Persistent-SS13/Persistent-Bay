@@ -175,10 +175,19 @@
 			
 	return potential
 /obj/item/organ/internal/stack/proc/try_duty()
-	if(!owner || !faction)
+	var/mob/living/silicon/robot/robot
+	if(istype(loc, /obj/item/device/lmi))
+			if(istype(loc.loc, /mob/living/silicon/robot))
+				robot = loc.loc
+	if(!owner || !faction || robot)
 		duty_status = 0
 		return
-	var/datum/computer_file/crew_record/record = faction.get_record(owner.real_name)
+	if(!robot)
+	var/datum/computer_file/crew_record/record
+	if(!robot)
+		record = faction.get_record(owner.real_name)
+	else
+		record = faction.get_record(robot.real_name)
 	if(!record)
 		faction = null
 		duty_status = 0

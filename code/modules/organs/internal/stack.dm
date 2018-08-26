@@ -177,12 +177,11 @@
 /obj/item/organ/internal/stack/proc/try_duty()
 	var/mob/living/silicon/robot/robot
 	if(istype(loc, /obj/item/device/lmi))
-			if(istype(loc.loc, /mob/living/silicon/robot))
-				robot = loc.loc
+		if(istype(loc.loc, /mob/living/silicon/robot))
+			robot = loc.loc
 	if(!owner || !faction || robot)
 		duty_status = 0
 		return
-	if(!robot)
 	var/datum/computer_file/crew_record/record
 	if(!robot)
 		record = faction.get_record(owner.real_name)

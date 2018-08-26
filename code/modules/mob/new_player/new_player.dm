@@ -75,7 +75,7 @@
 
 /mob/new_player/proc/slot_select_load()
 	for(var/mob/loaded_mob in SSmobs.mob_list)
-		if(!loaded_mob.perma_dead && loaded_mob.type != /mob/new_player && loaded_mob.saved_ckey == ckey && get_turf(loaded_mob))
+		if(!loaded_mob.perma_dead && loaded_mob.type != /mob/new_player && (loaded_mob.saved_ckey == ckey || loaded_mob.saved_ckey == "@[ckey]") && get_turf(loaded_mob))
 			if(ticker.current_state <= GAME_STATE_PREGAME)
 				to_chat(src, "A character is already in game, selecting on start")
 				ready = 1

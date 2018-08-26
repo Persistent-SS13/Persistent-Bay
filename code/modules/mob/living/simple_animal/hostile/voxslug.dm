@@ -69,7 +69,7 @@ Small, little HP, poisonous.
 	. = ..()
 	if(istype(., /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = .
-		if(prob(H.getBruteLoss()/2))
+		if(prob(H.getBruteLoss()/4))
 			attach(H)
 
 /mob/living/simple_animal/hostile/voxslug/Life()

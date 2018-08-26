@@ -268,3 +268,10 @@
 #define STASIS_MISC "misc"
 #define STASIS_CRYOBAG "cryobag"
 #define STASIS_COLD "cold"
+
+#define SLIME_EVOLUTION_THRESHOLD 30
+
+//Used in mob/proc/get_input
+#define MOB_INPUT_TEXT "text"
+#define MOB_INPUT_MESSAGE "message"
+#define MOB_INPUT_NUM "num"

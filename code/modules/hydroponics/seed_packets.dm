@@ -10,7 +10,8 @@ var/global/list/plant_seed_sprites = list()
 	var/seed_type
 	var/datum/seed/seed
 	var/modified = 0
-
+/obj/item/seeds/after_load()
+	update_seed()
 /obj/item/seeds/Initialize()
 	update_seed()
 	. = ..()

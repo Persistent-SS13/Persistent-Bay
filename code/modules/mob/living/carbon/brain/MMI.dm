@@ -53,10 +53,7 @@
 	if(istype(O,/obj/item/organ/internal/stack) && !brainmob) //Time to stick a brain in it --NEO
 
 		var/obj/item/organ/internal/stack/B = O
-		if(B.damage >= B.max_damage)
-			to_chat(user, "<span class='warning'>That lace is well and truly dead.</span>")
-			return
-		else if(!B.lacemob)
+		if(!B.lacemob)
 			to_chat(user, "<span class='notice'>This lace is completely useless to you.</span>")
 			return
 

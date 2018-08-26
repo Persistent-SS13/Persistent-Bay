@@ -156,7 +156,7 @@ var/const/NO_EMAG_ACT = -50
 			return 0
 		var/expenses = business.get_expenses(username)
 		var/expense_limit = business.get_expense_limit(username)
-		var/available = expenses - expense_limit
+		var/available = expense_limit - expenses
 		if(available < amount)
 			to_chat(user, "This exceeds your expense limit.")
 			return 0

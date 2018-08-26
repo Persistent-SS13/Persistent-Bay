@@ -9,7 +9,7 @@
 	use_me = 0 //Can't use the me verb, it's a freaking immobile brain
 	icon = 'icons/obj/surgery.dmi'
 	icon_state = "cortical-stack"
-
+	default_language = LANGUAGE_GALCOM
 /mob/living/carbon/lace/New()
 	container = loc
 	var/datum/action/lace/laceaction = new(container)

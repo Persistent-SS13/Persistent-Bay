@@ -487,7 +487,6 @@ var/const/NO_EMAG_ACT = -50
 
 
 /obj/item/weapon/card/id/synthetic/GetAccess(var/faction_uid)
-//	if(!valid) return list()
 	var/list/final_access[0]
 	var/datum/world_faction/faction = get_faction(faction_uid)
 	if(faction)
@@ -503,8 +502,11 @@ var/const/NO_EMAG_ACT = -50
 			if(faction.allow_id_access) final_access |= access
 			var/datum/assignment/assignment = faction.get_assignment(record.try_duty())
 			if(assignment)
-				for(var/x in assignment.accesses)
-					final_access |= text2num(x)
+				for(var/i=1; i<=record.rank; i++)
+					var/datum/accesses/copy = assignment.accesses["[i]"]
+					if(copy)
+						for(var/x in copy.accesses)
+							final_access |= text2num(x)
 			return final_access
 		else
 			if(faction.allow_id_access)

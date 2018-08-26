@@ -179,7 +179,7 @@
 	if(istype(loc, /obj/item/device/lmi))
 		if(istype(loc.loc, /mob/living/silicon/robot))
 			robot = loc.loc
-	if(!owner || !faction || robot)
+	if(!owner || !faction || !robot)
 		duty_status = 0
 		return
 	var/datum/computer_file/crew_record/record

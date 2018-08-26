@@ -36,7 +36,7 @@
 		program.computer.kill_program()
 	if(!selected_telepads)
 		selected_telepads = connected_faction.cargo_telepads.Copy()
-	var/is_admin = (check_access(user, core_access_order_approval, connected_faction.uid) || check_access(user, core_access_order_approval, connected_faction.uid))
+	var/is_admin = (check_access(user, core_access_order_approval, connected_faction.uid) || check_access(user, core_access_invoicing, connected_faction.uid))
 	data["faction_name"] = connected_faction.name
 	data["credits"] = connected_faction.central_account.money
 	data["is_admin"] = is_admin

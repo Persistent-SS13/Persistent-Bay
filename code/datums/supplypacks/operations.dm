@@ -81,7 +81,8 @@
 					/obj/item/weapon/shovel,
 					/obj/item/weapon/pickaxe,
 					/obj/item/clothing/suit/space/void/mining/prepared,
-					/obj/item/device/radio/headset/headset_cargo)
+					/obj/item/device/radio/headset/headset_cargo,
+					/obj/item/clothing/shoes/magboots)
 	cost = 100
 	containertype = /obj/structure/closet/secure_closet/miner
 	containername = "Miner Equipment"

@@ -93,10 +93,10 @@
 	var/obj/item/device/flash/flash2 = null
 
 /obj/item/robot_parts/head/can_install(mob/user)
-	var/success = TRUE;
+	var/success = TRUE
 	if(!(flash1 && flash2))
 		to_chat(user, "<span class='warning'>You need to attach a flash to it first!</span>")
-		success = FALSE:
+		success = FALSE
 	return success && ..();
 
 /obj/item/robot_parts/robot_suit
@@ -155,8 +155,8 @@
 			src.parts[part.bp_tag] = part
 			src.update_icon()
 
-			
-			
+
+
 	if(istype(W, /obj/item/device/lmi))
 		var/obj/item/device/lmi/M = W
 		if(check_completion())
@@ -221,8 +221,8 @@
 
 			qdel(src)
 		else
-			to_chat(user, "<span class='warning'>The LMI must go in after everything else!</span>")		
-			
+			to_chat(user, "<span class='warning'>The LMI must go in after everything else!</span>")
+
 	if(istype(W, /obj/item/device/mmi))
 		var/obj/item/device/mmi/M = W
 		if(check_completion())

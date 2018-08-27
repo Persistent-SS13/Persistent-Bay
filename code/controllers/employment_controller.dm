@@ -33,7 +33,7 @@ var/datum/controller/employment_controller/employment_controller
 			if(payday)
 				if(istype(employer, /datum/small_business))
 					var/datum/small_business/business = employer
-					var/payment = business.get_employee_data(employee.real_name).pay_rate * 12 * business.unpaid["[employee.real_name]"]
+					var/payment = business.get_employee_data(employee.real_name).pay_rate * business.unpaid["[employee.real_name]"] / 12
 					if(payment && !money_transfer(business.central_account, employee.real_name, "Payroll", payment))
 						business.debts["[employee.real_name]"] += payment
 
@@ -41,7 +41,7 @@ var/datum/controller/employment_controller/employment_controller
 					var/datum/world_faction/faction = employer
 					var/datum/computer_file/crew_record/record = faction.get_record(employee.real_name)
 					var/datum/assignment/job = faction.get_assignment(record.assignment_uid)
-					var/payment = (record.rank > 1 ? text2num(job.ranks[job.ranks[record.rank - 1]]) : job.payscale) * 12 * faction.unpaid["[employee.real_name]"]
+					var/payment = job != null ? (record.rank > 1 ? text2num(job.ranks[job.ranks[record.rank - 1]]) : job.payscale) * faction.unpaid["[employee.real_name]"] / 12 : 0
 					if(payment && !money_transfer(faction.central_account, employee.real_name, "Payroll", payment))
 						faction.debts["[employee.real_name]"] += payment
 

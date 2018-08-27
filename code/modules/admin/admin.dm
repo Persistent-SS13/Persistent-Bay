@@ -1670,4 +1670,5 @@ datum/admins/var/obj/item/weapon/paper/admin/faxreply // var to hold fax replies
 	var/obj/structure/frontier_beacon/beacon
 	beacon = new /obj/structure/frontier_beacon(locate(100,100,1)) //
 	beacon.req_access_faction = "nanotrasen"
+	to_chat(usr, "<b>Frontier Beacon and faction_spawner (Nanotrasen) generated.)</b>")
 	return

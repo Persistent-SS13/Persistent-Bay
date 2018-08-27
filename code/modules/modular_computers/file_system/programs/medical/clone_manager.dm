@@ -75,7 +75,7 @@
 		if(choice == "Confirm")
 			var/obj/item/weapon/paper/contract/contract = new()
 			contract.required_cash = cost
-			contract.linked = src
+			contract.linked = NM
 			contract.purpose = "Funding contract for [cost]$$ to clone [computer.dna_scanner.stored_dna.real_name]."
 			contract.name = "cloning funding contract"
 			var/t = ""

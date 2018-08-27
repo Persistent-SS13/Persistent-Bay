@@ -207,6 +207,19 @@
 	else
 		to_chat(src, "You dont have a module activated.")
 
+/mob/living/silicon/robot/verb/CoverLock()
+	set category = "Robot Commands"
+	set name = "Toggle Cover Lock"
+	if(opened)
+		to_chat(src, "You cant lock your cover when its open.")
+		return
+	if(locked)
+		to_chat(src, "You unlock your cover panel.")
+		locked = 0
+	else
+		locked = 1
+		to_chat(src, "You lock your cover panel.")
+		
 /mob/living/silicon/robot/verb/ChassisToggle()
 	set category = "Robot Commands"
 	set name = "Toggle Chassis Mod"

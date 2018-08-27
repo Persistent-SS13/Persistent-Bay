@@ -9,21 +9,8 @@
 
 /obj/item/weapon/ore/get_material()
 	return material
-
-/obj/item/weapon/ore/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(istype(W,/obj/item/device/core_sampler))
-		var/obj/item/device/core_sampler/C = W
-		C.sample_item(src, user)
-	else
-		return ..()
-
-/obj/item/weapon/ore/New(var/newloc, var/_mat)
-	if(_mat)
-		matter = list()
-		matter[_mat] = SHEET_MATERIAL_AMOUNT
-	..(newloc)
-
-/obj/item/weapon/ore/Initialize()
+	
+/obj/item/weapon/ore/after_load()
 	for(var/stuff in matter)
 		var/material/M = SSmaterials.get_material_by_name(stuff)
 		if(M)
@@ -39,6 +26,22 @@
 			break
 	. = ..()
 
+	
+/obj/item/weapon/ore/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	if(istype(W,/obj/item/device/core_sampler))
+		var/obj/item/device/core_sampler/C = W
+		C.sample_item(src, user)
+	else
+		return ..()
+
+/obj/item/weapon/ore/New(var/newloc, var/_mat)
+	if(_mat)
+		matter = list()
+		matter[_mat] = SHEET_MATERIAL_AMOUNT
+	..(newloc)
+
+/obj/item/weapon/ore/Initialize()
+	
 // POCKET SAND!
 /obj/item/weapon/ore/throw_impact(atom/hit_atom)
 	..()

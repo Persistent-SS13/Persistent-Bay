@@ -626,10 +626,9 @@
 				message_admins("couldnt find proposal")
 				return
 			if(user_id_card.registered_name in proposal.supporters)
-				proposal.add_support(user_id_card.registered_name, connected_business.get_stocks(user_id_card.registered_name))
-			else
 				proposal.remove_support(user_id_card.registered_name)
-
+			else
+				proposal.add_support(user_id_card.registered_name, connected_business.get_stocks(user_id_card.registered_name))
 		if("toggleDeny")
 			if(!connected_business) return
 			if(!user_id_card) return

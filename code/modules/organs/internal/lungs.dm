@@ -157,8 +157,8 @@
 
 	var/breath_pressure = breath.return_pressure()
 	check_rupturing(breath_pressure)
-	var/datum/gas_mixture/enviroment = loc.return_air_for_internal_lifeform()
-	last_ext_pressure = enviroment.return_pressure()
+	var/datum/gas_mixture/environment = loc.return_air_for_internal_lifeform()
+	last_ext_pressure = environment.return_pressure()
 	last_int_pressure = breath_pressure
 
 	if(breath.total_moles == 0)
@@ -238,7 +238,7 @@
 		owner.adjustOxyLoss(-5 * inhale_efficiency)
 		if(robotic < ORGAN_ROBOT && species.breathing_sound && is_below_sound_pressure(get_turf(owner)))
 			if(breathing || owner.shock_stage >= 10)
-				sound_to(owner, sound(species.breathing_sound,0,0,0,5))
+				sound_to(owner, sound(species.breathing_sound,0,0,0,3))
 				breathing = 0
 			else
 				breathing = 1

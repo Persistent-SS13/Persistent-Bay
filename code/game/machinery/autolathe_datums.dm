@@ -616,6 +616,11 @@ var/const/EXTRA_COST_FACTOR = 1
 	path = /obj/item/weapon/airlock_electronics/keypad_electronics
 	category = "Engineering"
 
+/datum/autolathe/recipe/business
+	name = "business airlock electronics"
+	path = /obj/item/weapon/airlock_electronics/business
+	category = "Engineering"
+
 /datum/autolathe/recipe/analyzer
 	name = "gas analyzer"
 	path = /obj/item/device/analyzer

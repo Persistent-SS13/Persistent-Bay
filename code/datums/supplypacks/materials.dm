@@ -81,7 +81,7 @@
 /decl/hierarchy/supply_pack/materials/phoron10
 	name = "Phoron (x10)"
 	contains = list(/obj/item/stack/material/phoron/ten)
-	cost = 120 // When sold yields 67 points.
+	cost = 150
 	containername = "\improper Phoron sheets crate"
 
 /decl/hierarchy/supply_pack/materials/gold10

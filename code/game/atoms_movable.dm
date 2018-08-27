@@ -254,7 +254,7 @@
 		if(x <= TRANSITIONEDGE) 						// West
 			new_x = world.maxx - TRANSITIONEDGE - 1
 			new_z -= worldHeight
-			if(new_z % (worldHeight * worldWidth) <= 0 || new_z % (worldHeight * worldWidth) >= (worldWidth - 1) * worldHeight) 
+			if(new_z % (worldHeight * worldWidth) <= 0 || new_z % (worldHeight * worldWidth) > (worldWidth - 1) * worldHeight) 
 				new_z += worldWidth * worldHeight
 
 		else if (x >= (world.maxx - TRANSITIONEDGE))	// East

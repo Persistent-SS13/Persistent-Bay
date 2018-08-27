@@ -157,8 +157,8 @@
 
 	var/breath_pressure = breath.return_pressure()
 	check_rupturing(breath_pressure)
-	var/datum/gas_mixture/enviroment = loc.return_air_for_internal_lifeform()
-	last_ext_pressure = enviroment.return_pressure()
+	var/datum/gas_mixture/environment = loc.return_air_for_internal_lifeform()
+	last_ext_pressure = environment.return_pressure()
 	last_int_pressure = breath_pressure
 
 	if(breath.total_moles == 0)

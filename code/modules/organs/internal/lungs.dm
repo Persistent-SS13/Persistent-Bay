@@ -5,9 +5,9 @@
 	organ_tag = BP_LUNGS
 	parent_organ = BP_CHEST
 	w_class = ITEM_SIZE_NORMAL
-	min_bruised_damage = 25
-	min_broken_damage = 45
-	max_damage = 70
+	min_bruised_damage = 50
+	min_broken_damage = 70
+	max_damage = 90
 	relative_size = 60
 	scarring_effect = 4
 

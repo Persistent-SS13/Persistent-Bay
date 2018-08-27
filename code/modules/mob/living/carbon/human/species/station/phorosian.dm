@@ -31,7 +31,7 @@
 	flesh_color = "#3b1077"
 	blood_color = "#4d224d"
 	reagent_tag = IS_PHOROSIAN
-	breath_volume= 1.4
+	breath_volume= 0.1
 
 	var/list/eye_overlays = list()
 

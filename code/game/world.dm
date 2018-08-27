@@ -577,7 +577,7 @@ var/world_topic_spam_protect_time = world.timeofday
 	s += "<a href='https://persistentss13.com/'>"
 	s += "Persistent Station 13, Characters, Stations and Factions in a persistent world</a> "
 	//Change this to wherever you want the hub to link to.
-	s += " | Enter the frontier and find your fortune. Grab a piece of and make it your own. Collaborative storytelling RPG, IC ENFORCED.<br>"
+	s += " | Enter the frontier and find your fortune. Grab a piece of it and make it your own. Collaborative storytelling RPG, IC ENFORCED.<br>"
 	var/list/features = list()
 	var/n = 0
 	for (var/mob/M in GLOB.player_list)

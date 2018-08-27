@@ -2037,13 +2037,6 @@ CIRCUITS BELOW
 	build_path = /obj/item/weapon/circuitboard/aicore
 	sort_string = "XAAAA"
 
-/datum/design/circuit/integrated
-	name = "integrated circuit"
-	id = "integrated"
-	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
-	build_path = /obj/item/weapon/circuitboard/integrated_printer
-	sort_string = "WAAAS"
-
 /datum/design/circuit/cellcharger
 	name = "cell charger"
 	id = "cellcharger"
@@ -2464,6 +2457,7 @@ CIRCUITS BELOW
 	materials = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 5000)
 	build_path = /obj/item/device/integrated_circuit_printer
 	sort_string = "WCLAC"
+
 /datum/design/item/integrated_printer_upgrade_advanced
 	name = "Integrated Circuit Printer Upgrade Disk"
 	desc = "This disk allows for integrated circuit printers to print advanced circuitry designs."
@@ -2472,6 +2466,7 @@ CIRCUITS BELOW
 	materials = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 10000)
 	build_path = /obj/item/disk/integrated_circuit/upgrade/advanced
 	sort_string = "WCLAD"
+	
 /datum/design/item/integrated_printer_upgrade_clone
 	name = "Integrated Circuit Printer Clone Disk"
 	desc = "This disk allows for integrated circuit printers to copy and clone designs instantaneously."

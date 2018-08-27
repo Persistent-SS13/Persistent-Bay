@@ -4,7 +4,7 @@ var/datum/controller/employment_controller/employment_controller
 	var/timerbuffer = 0 //buffer for time check
 	var/checkbuffer = 0
 /datum/controller/employment_controller/New()
-	timerbuffer = 1 HOUR 
+	timerbuffer = 1 HOUR
 	checkbuffer = 5 MINUTES
 	START_PROCESSING(SSprocessing, src)
 
@@ -13,101 +13,59 @@ var/datum/controller/employment_controller/employment_controller
 	. = ..()
 
 /datum/controller/employment_controller/Process()
-	if(round_duration_in_ticks > checkbuffer)
-		var/list/notify = list()
-		// For everyone: always advance the check countdown by five minutes when logging time worked
-		checkbuffer = round_duration_in_ticks + 5 MINUTES
+	if(round_duration_in_ticks < checkbuffer)
+		return
 
-		
-		// For each business...
-		for(var/datum/small_business/connected_business in GLOB.all_business)
-			for(var/obj/item/organ/internal/stack/stack in connected_business.connected_laces)
-				if(stack.get_owner_name() in connected_business.unpaid)
-					connected_business.unpaid[stack.get_owner_name()] = connected_business.unpaid[stack.get_owner_name()] + 1
+	checkbuffer += 5 MINUTES
+
+	var/payday = round_duration_in_ticks >= timerbuffer
+
+	for(var/obj/item/organ/internal/stack/stack in GLOB.neural_laces)
+		var/mob/employee = stack.get_owner()
+		if(!(employee?.client)) continue
+		var/datum/employer = get_faction(stack.connected_faction)
+		if(employer)
+			if(employee.client.inactivity <= 5 MINUTES && stack.duty_status)
+				if(!employer:unpaid["[employee.real_name]"])
+					employer:unpaid["[employee.real_name]"] = 1
 				else
-					connected_business.unpaid[stack.get_owner_name()] = 1
-				notify |= stack
-			if(round_duration_in_ticks > timerbuffer)
-				// It is payday, pay the employee.
-				for(var/real_name in connected_business.unpaid)
-					var/datum/employee_data/employee = connected_business.get_employee_data(real_name)
-					if(employee)
-						var/worked = connected_business.unpaid[real_name]
-						var/to_pay = employee.pay_rate/12*worked
-						if(!money_transfer(connected_business.central_account,real_name,"Payroll",to_pay))
-							if(real_name in connected_business.debts)
-								var/curr = text2num(connected_business.debts[real_name])
-								connected_business.debts[real_name] = "[curr+to_pay]"
-							else
-								connected_business.debts[real_name] = "[to_pay]"
-								
-				connected_business.unpaid = list()	
-				connected_business.pay_debt()
-				var/profit = connected_business.central_account.money - connected_business.last_balance
-				var/ceo_dividend = round(profit/100*connected_business.ceo_dividend)
-				
-				if(ceo_dividend && connected_business.ceo_name && connected_business.ceo_name != "")
-					money_transfer(connected_business.central_account,connected_business.ceo_name,"CEO Dividend",ceo_dividend)
-				
-				if(connected_business.stock_holders_dividend)
-					for(var/stock_holder in connected_business.stock_holders)
-						var/holding = text2num(connected_business.stock_holders[stock_holder])
-						var/stock_holders_dividend = profit/100*(connected_business.stock_holders_dividend/10*holding)
-						money_transfer(connected_business.central_account,stock_holder,"Stock Holders Dividend", stock_holders_dividend)
-				connected_business.last_balance = connected_business.central_account.money		
-		// For each faction...
-		for(var/datum/world_faction/connected_faction in GLOB.all_world_factions)
+					employer:unpaid["[employee.real_name]"]++
+			if(payday)
+				if(istype(employer, /datum/small_business))
+					var/datum/small_business/business = employer
+					var/payment = business.get_employee_data(employee.real_name).pay_rate * 12 * business.unpaid["[employee.real_name]"]
+					if(payment && !money_transfer(business.central_account, employee.real_name, "Payroll", payment))
+						business.debts["[employee.real_name]"] += payment
 
-			// LOG WORK
-			// Find neural laces that are currently connected...
-			for(var/obj/item/organ/internal/stack/stack in connected_faction.connected_laces)
-				// Find their crew record ...
-				var/datum/computer_file/crew_record/record = connected_faction.get_record(stack.get_owner_name())
-				if(!record) continue
-				// Make sure they are still on duty...
-				if(stack.duty_status)
-					for(var/mob/M in GLOB.player_list)
-						if(M.real_name == stack.get_owner_name() && M.client && M.client.inactivity <= 10 * 60 * 10)
-							// Log a five-minute unit of work on their crew record.
-							record.worked += 1	
-							connected_faction.unpaid |= record
-							notify |= stack
-							break
-						
+				else if(istype(employer, /datum/world_faction))
+					var/datum/world_faction/faction = employer
+					var/datum/computer_file/crew_record/record = faction.get_record(employee.real_name)
+					var/datum/assignment/job = faction.get_assignment(record.assignment_uid)
+					var/payment = (record.rank > 1 ? text2num(job.ranks[job.ranks[record.rank - 1]]) : job.payscale) * 12 * faction.unpaid["[employee.real_name]"]
+					if(payment && !money_transfer(faction.central_account, employee.real_name, "Payroll", payment))
+						faction.debts["[employee.real_name]"] += payment
 
-			// PAY PEOPLE
-			// See if it is payday...
-			if(round_duration_in_ticks > timerbuffer)
-				// It is payday, pay the employee.
-				for(var/datum/computer_file/crew_record/record in connected_faction.unpaid)
-					if(record.worked)
-						var/datum/assignment/assignment = connected_faction.get_assignment(record.assignment_uid)
-						if(!assignment) 
-							record.worked = 0
-							continue
-						var/payscale = 0
-						if(record.rank > 1)
-							var/use_rank = record.rank
-							if(record.rank > assignment.ranks.len+1)
-								use_rank = assignment.ranks.len+1
-							payscale = text2num(assignment.ranks[assignment.ranks[use_rank-1]])
-						else
-							payscale = assignment.payscale
-						var/to_pay = connected_faction.payrate/12*record.worked*payscale
-						if(!money_transfer(connected_faction.central_account,record.get_name(),"Payroll",to_pay))
-							if(record.get_name() in connected_faction.debts)
-								var/curr = text2num(connected_faction.debts[record.get_name()])
-								connected_faction.debts[record.get_name()] = "[curr+to_pay]"
-							else
-								connected_faction.debts[record.get_name()] = "[to_pay]"
-						record.worked = 0
-				connected_faction.unpaid = list()
-				connected_faction.pay_debt()
-		// For everyone: advance the payday timer by one hour, but only if it's payday
-		if (round_duration_in_ticks > timerbuffer)
-			for(var/obj/item/organ/internal/stack/stack in notify)
-				if(stack.owner)
-					to_chat(stack.owner, "Your [stack] buzzes, letting you know that you should be getting paid.")
-			timerbuffer = round_duration_in_ticks + 1 HOUR
-					
-			
+				to_chat(stack.owner, "Your [stack] buzzes, letting you know that you should be getting paid.")
+
+	if(payday)
+		timerbuffer = round_duration_in_ticks + 1 HOUR
+
+		for(var/datum/small_business/business in GLOB.all_business)
+			business.unpaid = list()
+			business.pay_debt()
+
+			var/profit = business.central_account.money - business.last_balance
+
+			if(profit > 0)
+				if(length(business.ceo_name))
+					money_transfer(business.central_account, business.ceo_name, "CEO Dividend", round(profit / 100 * business.ceo_dividend))
+				for(var/stock_holder in business.stock_holders)
+					money_transfer(business.central_account, stock_holder, "Stock Holders Dividend", round(profit / 1000 * business.stock_holders[stock_holder] * business.stock_holders_dividend))
+
+			business.last_balance = business.central_account.money
+
+		for(var/datum/world_faction/faction in GLOB.all_world_factions)
+			faction.unpaid = list()
+			faction.pay_debt()
+
+

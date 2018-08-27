@@ -23,7 +23,7 @@
 	. = ..()
 	station = locate(/obj/machinery/teleport/station, get_step(src, dir))
 	if(station)
-		hubz = locate(/obj/machinery/teleport/hubz, get_step(station, dir))
+		hubz = locate(/obj/machinery/teleport/hub, get_step(station, dir))
 
 	if(istype(station))
 		station.com = hubz

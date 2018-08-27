@@ -5,15 +5,54 @@
 	program_icon_state = "id"
 	program_menu_icon = "key"
 	extended_desc = "Program for programming crew ."
-	required_access = core_access_command_programs
+	required_access = core_access_reassignment
 	requires_ntnet = 1
 	size = 8
 
+/datum/computer_file/program/card_mod/can_run(var/mob/living/user, var/loud = 0, var/access_to_check)
+	// Defaults to required_access
+	if(!access_to_check)
+		access_to_check = required_access
+	if(!access_to_check) // No required_access, allow it.
+		return 1
+	var/list/accesses_to_check = list()
+	accesses_to_check |= access_to_check
+	accesses_to_check |= core_access_promotion
+	accesses_to_check |= core_access_employee_records
+	accesses_to_check |= core_access_expenses
+	accesses_to_check |= core_access_termination
+	// Admin override - allows operation of any computer as aghosted admin, as if you had any required access.
+	if(isghost(user) && check_rights(R_ADMIN, 0, user))
+		return 1
+
+	if(!istype(user))
+		return 0
+
+	var/obj/item/weapon/card/id/I = user.GetIdCard()
+	if(!I)
+		if(loud)
+			to_chat(user, "<span class='notice'>\The [computer] flashes an \"RFID Error - Unable to scan ID\" warning.</span>")
+		return 0
+	if(computer && computer.network_card && computer.network_card.connected_network && computer.network_card.connected_network.holder)
+		
+		for(var/access in accesses_to_check)
+			if(access in I.GetAccess(computer.network_card.connected_network.holder.uid))
+				return 1
+		if(loud)
+			to_chat(user, "<span class='notice'>\The [computer] flashes an \"Access Denied\" warning.</span>")
+	else
+		for(var/access in accesses_to_check)
+			if(access in I.GetAccess(computer.network_card.connected_network.holder.uid))
+				return 1
+			else if(loud)
+				to_chat(user, "<span class='notice'>\The [computer] flashes an \"Access Denied\" warning.</span>")
+		
 /datum/nano_module/program/card_mod
 	name = "Account modification program"
 	var/mod_mode = 1
 	var/is_centcom = 0
 	var/show_assignments = 0
+	var/show_record = 0
 	var/datum/computer_file/crew_record/record
 	var/manifest_setting = 1
 	var/submode = 0
@@ -21,6 +60,7 @@
 
 	var/list/data = host.initial_data()
 	var/obj/item/weapon/card/id/user_id_card = user.GetIdCard()
+	
 	data["src"] = "\ref[src]"
 	data["station_name"] = station_name()
 	data["assignments"] = show_assignments
@@ -28,6 +68,8 @@
 	if(program.computer.network_card && program.computer.network_card.connected_network)
 		connected_faction = program.computer.network_card.connected_network.holder
 	if(connected_faction)
+	
+	
 		data["found_faction"] = 1
 		data["faction_name"] = connected_faction.name
 		data["manifest"] = html_crew_manifest_faction(null, null, connected_faction, manifest_setting)
@@ -99,6 +141,12 @@
 						demote_button = 1
 			data["promote_button"] = promote_button
 			data["demote_button"] = demote_button
+			var/expense_limit = 0
+			var/datum/accesses/expenses = assignment.accesses["[record.rank]"]
+			if(expenses)
+				expense_limit = expenses.expense_limit
+			data["expense_limit"] = expense_limit
+			data["expenses"] = record.expenses
 			if(record.rank == 1)
 				data["title"] = assignment.name
 			else
@@ -139,7 +187,8 @@
 				))
 		data["none_select"] = none_select
 		data["assignment_categories"] = assignment_categories
-		
+		data["record_val"] = pencode2html(record.get_emplRecord())
+		data["record"] = show_record
 	if(program.computer.card_slot && program.computer.card_slot.stored_card)
 		var/obj/item/weapon/card/id/id_card = program.computer.card_slot.stored_card
 		if(is_centcom)
@@ -173,6 +222,10 @@
 		ui.set_initial_data(data)
 		ui.open()
 
+		
+		
+
+		
 /datum/nano_module/program/card_mod/proc/format_jobs(list/jobs)
 	var/obj/item/weapon/card/id/id_card = program.computer.card_slot ? program.computer.card_slot.stored_card : null
 	var/list/formatted = list()
@@ -191,15 +244,28 @@
 /datum/computer_file/program/card_mod/Topic(href, href_list)
 	if(..())
 		return 1
-
+	var/isleader = 0
 	var/mob/user = usr
 	var/obj/item/weapon/card/id/user_id_card = user.GetIdCard()
+	if(!user_id_card || !user_id_card.valid)
+		return 0
 	var/obj/item/weapon/card/id/id_card
+	var/datum/computer_file/crew_record/user_record
+	var/list/user_accesses = list()
 	if (computer.card_slot)
 		id_card = computer.card_slot.stored_card
 	var/datum/world_faction/connected_faction
 	if(computer.network_card && computer.network_card.connected_network)
 		connected_faction = computer.network_card.connected_network.holder
+		
+	if(connected_faction)
+		user_record = connected_faction.get_record(user_id_card.registered_name)
+		if(user_record)
+			user_accesses = user_id_card.GetAccess(connected_faction.uid)
+		if(connected_faction.leader_name == user_id_card.registered_name)
+			isleader = 1
+	else
+		return 0
 	var/datum/nano_module/program/card_mod/module = NM
 	switch(href_list["action"])
 		if("scan_id")
@@ -208,6 +274,14 @@
 			module.record = null
 			var/datum/computer_file/crew_record/record = connected_faction.get_record(id_card.registered_name)
 			if(!record && id_card.registered_name)
+				if(!user_id_card) return
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_reassignment in user_accesses))
+					to_chat(usr, "No record is on file for [id_card.registered_name]. Insufficent access to add new members.")
+					return 0
+				if(!connected_faction.hiring_policy)
+					if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.in_command(user_id_card.registered_name))
+						to_chat(usr, "No record is on file for [id_card.registered_name]. Only members of Command categories can add new names to the records.")
+						return 0
 				var/choice = input(usr,"No record is on file for [id_card.registered_name]. Would you like to create a new record for [id_card.registered_name] based on information found in public records?") in list("Create", "Cancel")
 				if(choice == "Cancel") return 1
 				if(!connected_faction.get_record(id_card.registered_name) && module)
@@ -225,6 +299,14 @@
 			if(select_name)
 				var/datum/computer_file/crew_record/record = connected_faction.get_record(select_name)
 				if(!record)
+					if(!user_id_card) return
+					if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_reassignment in user_accesses))
+						to_chat(usr, "No record is on file for [select_name]. Insufficent access to add new members.")
+						return 0
+					if(!connected_faction.hiring_policy)
+						if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.in_command(user_id_card.registered_name))
+							to_chat(usr, "No record is on file for [select_name]. Only members of Command categories can add new names to the records.")
+							return 0
 					var/choice = input(usr,"No record is on file for [select_name]. Would you like to create a new record for [select_name] based on information found in public records?") in list("Create", "Cancel")
 					if(choice == "Cancel") return 1
 					if(!connected_faction.get_record(select_name) && module)
@@ -236,6 +318,7 @@
 						module.record = record
 				else
 					module.record = record
+					
 		if("switchm")
 			if(href_list["target"] == "mod")
 				module.mod_mode = 1
@@ -251,6 +334,13 @@
 				module.show_assignments = 0
 			else
 				module.show_assignments = 1
+				module.show_record = 0
+		if("toggler")
+			if(module.show_record)
+				module.show_record = 0
+			else
+				module.show_assignments = 0
+				module.show_record = 1
 		if("print")
 			if(computer && computer.nano_printer) //This option should never be called if there is no printer
 				if(module.mod_mode)
@@ -293,30 +383,65 @@
 				computer.proc_eject_id(user)
 		if("terminate")
 			if(computer && can_run(user, 1))
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_termination in user_accesses))
+					to_chat(usr, "Access Denied.")
+					return 0
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+					to_chat(usr, "Insufficent Rank.")
+					return 0
 				module.record.terminated = 1
 				update_ids(module.record.get_name())
 		if("unterminate")
 			if(computer && can_run(user, 1))
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_termination in user_accesses))
+					to_chat(usr, "Access Denied.")
+					return 0
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+					to_chat(usr, "Insufficent Rank.")
+					return 0
 				module.record.terminated = 0
 				update_ids(module.record.get_name())
+		if("reset_expenses")
+			if(computer && can_run(user, 1))
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_expenses in user_accesses))
+					to_chat(usr, "Access Denied.")
+					return 0
+				module.record.expenses = 0
 		if("assign")
 			if(computer && can_run(user, 1))
+				if(!user_id_card) return
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_reassignment in user_accesses))
+					to_chat(usr, "Access Denied.")
+					return 0
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+					to_chat(usr, "Insufficent Rank.")
+					return 0
 				var/t1 = href_list["assign_target"]
 				if(t1 == "Custom")
-					var/temp_t = sanitize(input("Enter a custom title.","Assignment", module.record.custom_title), 45)
-					//let custom jobs function as an impromptu alt title, mainly for sechuds
-					if(temp_t)
-						module.record.custom_title = temp_t
+					if(isleader || connected_faction.in_command(user_id_card.registered_name))
+						var/temp_t = sanitize(input("Enter a custom title.","Assignment", module.record.custom_title), 45)
+						//let custom jobs function as an impromptu alt title, mainly for sechuds
+						if(temp_t)
+							module.record.custom_title = temp_t
+					else
+						to_chat(usr, "Only command staff can grant custom titles.")
+						return 0
 				else
+					var/datum/computer_file/crew_record/record = connected_faction.get_record(user_id_card.registered_name)
+					var/datum/assignment/user_assignment = connected_faction.get_assignment(record.assignment_uid)
 					var/datum/assignment/assignment = locate(href_list["assign_target"])
 					if(!assignment) return 0
-					module.record.assignment_data[module.record.assignment_uid] = "[module.record.rank]"
-					module.record.assignment_uid = assignment.uid
-					module.record.rank = text2num(module.record.assignment_data[assignment.uid])
-					if(!module.record.rank)
-						module.record.rank = 1
-					module.record.custom_title = null
-				update_ids(module.record.get_name())
+					if(connected_faction.in_command(user_id_card.registered_name) || (user_assignment && user_assignment.parent.name == assignment.parent.name) || isleader)
+						module.record.assignment_data[module.record.assignment_uid] = "[module.record.rank]"
+						module.record.assignment_uid = assignment.uid
+						module.record.rank = text2num(module.record.assignment_data[assignment.uid])
+						if(!module.record.rank)
+							module.record.rank = 1
+						module.record.custom_title = null
+					else
+						to_chat(usr, "You can only make assignments in your own category.")
+						return 0
+					update_ids(module.record.get_name())
 		if("access")
 			if(href_list["allowed"] && computer && can_run(user, 1))
 				var/access_type = text2num(href_list["access_target"])
@@ -327,10 +452,22 @@
 						id_card.access += access_type
 		if("promote")
 			if(!user_id_card) return
+			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_promotion in user_accesses))
+				to_chat(usr, "Access Denied.")
+				return 0
+			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+				to_chat(usr, "Insufficent Rank.")
+				return 0
 			module.record.promote_votes |= user_id_card.registered_name
 			module.record.check_rank_change(connected_faction)
 		if("demote")
 			if(!user_id_card) return
+			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_promotion in user_accesses))
+				to_chat(usr, "Access Denied.")
+				return 0
+			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+				to_chat(usr, "Insufficent Rank.")
+				return 0
 			module.record.demote_votes |= user_id_card.registered_name
 			module.record.check_rank_change(connected_faction)
 		if("promote_cancel")
@@ -347,8 +484,19 @@
 			id_card.selected_faction = connected_faction.uid
 			to_chat(user, "Card successfully resynced to [connected_faction.name]")
 			update_ids(id_card.registered_name)
+		if("edit_record")
+			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_employee_records in user_accesses))
+				to_chat(usr, "Access Denied.")
+				return 0
+			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
+				to_chat(usr, "Insufficent Rank.")
+				return 0
+			var/newValue
+			newValue = replacetext(input(usr, "Edit the employee record. You may use HTML paper formatting tags:", "Record edit", replacetext(html_decode(module.record.get_emplRecord()), "\[br\]", "\n")) as null|message, "\n", "\[br\]")
+			if(newValue)
+				module.record.set_emplRecord(newValue)
 	if(id_card)
-		id_card.name = text("[id_card.registered_name]'s ID Card ([id_card.assignment])")
+		id_card.name = text("[id_card.registered_name]'s ID Card [get_faction_tag(id_card.selected_faction)]-([id_card.assignment])")
 
 	GLOB.nanomanager.update_uis(NM)
 	return 1

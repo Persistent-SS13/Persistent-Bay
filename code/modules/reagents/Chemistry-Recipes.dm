@@ -878,7 +878,7 @@
 	required_reagents = list(/datum/reagent/glycerol = 1, /datum/reagent/space_cleaner = 1, /datum/reagent/gold = 1)
 	result_amount = 1
 
-/datum/chemical_reaction/soap/on_reaction(var/datum/reagents/holder, var/created_volume)
+/datum/chemical_reaction/gold_soap/on_reaction(var/datum/reagents/holder, var/created_volume)
 	var/location = get_turf(holder.my_atom)
 	for(var/i = 1, i <= created_volume, i++)
 		new /obj/item/weapon/soap/gold(location)
@@ -889,7 +889,7 @@
 	required_reagents = list(/datum/reagent/glycerol = 1, /datum/reagent/space_cleaner = 1, /datum/reagent/toxin/phoron = 1)
 	result_amount = 1
 
-/datum/chemical_reaction/soap/on_reaction(var/datum/reagents/holder, var/created_volume)
+/datum/chemical_reaction/nt_soap/on_reaction(var/datum/reagents/holder, var/created_volume)
 	var/location = get_turf(holder.my_atom)
 	for(var/i = 1, i <= created_volume, i++)
 		new /obj/item/weapon/soap/nanotrasen(location)
@@ -900,7 +900,7 @@
 	required_reagents = list(/datum/reagent/glycerol = 1, /datum/reagent/space_cleaner = 1, /datum/reagent/blood = 1)
 	result_amount = 1
 
-/datum/chemical_reaction/soap/on_reaction(var/datum/reagents/holder, var/created_volume)
+/datum/chemical_reaction/syndie_soap/on_reaction(var/datum/reagents/holder, var/created_volume)
 	var/location = get_turf(holder.my_atom)
 	for(var/i = 1, i <= created_volume, i++)
 		new /obj/item/weapon/soap/syndie(location)

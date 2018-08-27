@@ -321,7 +321,7 @@ var/list/turret_icons
 			to_chat(user, "<span class='notice'>Controls are now [locked ? "locked" : "unlocked"].</span>")
 			updateUsrDialog()
 		else
-			to_chat(user, "<span class='notice'>Access denied.</span>")
+			to_chat(user, "<span class='notice'>Access Denied.</span>")
 
 	else
 		//if the turret was attacked with the intention of harming it:
@@ -473,6 +473,9 @@ var/list/turret_icons
 	if(iscuffed(L)) // If the target is handcuffed, leave it alone
 		return TURRET_NOT_TARGET
 
+	if(ishostile(L))// Spiders are very dangerous
+		return TURRET_PRIORITY_TARGET
+
 	if(isanimal(L) || issmall(L)) // Animals are not so dangerous
 		return TURRET_NOT_TARGET
 
@@ -509,17 +512,18 @@ var/list/turret_icons
 	if(check_access)
 		for(var/access in H.GetAccess(connected_faction.uid))
 			if(req_access["[access]"] > 0)
-				return H.assess_perp(src, 0, 0, 1, 1)
+				return H.assess_perp(src, 0, 0, 1, 1, connected_faction)
 		return 10 //if they don't have any of the required access
 
-	return H.assess_perp(src, 0, 0, 1, 1)
+	return H.assess_perp(src, 0, 0, 1, 1, connected_faction) //if we're not checking faction or access, we're solely looking at wanted status, Arrest = pew pew
 
 /obj/machinery/porta_turret/proc/assess_bot(var/mob/living/bot/B)
 	if(!B || !istype(B))
 		return 1
 	if(emagged)
 		return 0
-
+	if(!istype(B, /mob/living/bot/secbot)) //Enemy cleanbots are not a threat to our existence
+		return 1
 	return B.req_access_faction == req_access_faction
 
 /obj/machinery/porta_turret/proc/tryToShootAt(var/list/mob/living/targets)

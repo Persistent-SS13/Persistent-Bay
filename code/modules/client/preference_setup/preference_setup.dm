@@ -1,6 +1,3 @@
-#define TOPIC_NOACTION 0
-#define TOPIC_HANDLED 1
-#define TOPIC_REFRESH 2
 #define TOPIC_UPDATE_PREVIEW 4
 #define TOPIC_REFRESH_UPDATE_PREVIEW (TOPIC_REFRESH|TOPIC_UPDATE_PREVIEW)
 
@@ -106,11 +103,14 @@ prompts
 /datum/category_collection/player_setup_collection/proc/load_preferences(var/savefile/S)
 	for(var/datum/category_group/player_setup_category/PS in categories)
 		PS.load_preferences(S)
-
+	from_file(S["bonus_slots"],preferences.bonus_slots)
+	from_file(S["bonus_notes"],preferences.bonus_notes)
 /datum/category_collection/player_setup_collection/proc/save_preferences(var/savefile/S)
 	for(var/datum/category_group/player_setup_category/PS in categories)
 		PS.save_preferences(S)
-
+	to_file(S["bonus_slots"],preferences.bonus_slots)
+	to_file(S["bonus_notes"],preferences.bonus_notes)
+	
 /datum/category_collection/player_setup_collection/proc/update_setup(var/savefile/preferences, var/savefile/character)
 	for(var/datum/category_group/player_setup_category/PS in categories)
 		. = PS.update_setup(preferences, character) || .

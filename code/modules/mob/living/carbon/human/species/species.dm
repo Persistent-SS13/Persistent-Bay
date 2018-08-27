@@ -10,13 +10,14 @@
 	var/blurb = "A completely nondescript species."      // A brief lore summary for use in the chargen screen.
 
 	// Icon/appearance vars.
-	var/icobase = 'icons/mob/human_races/r_human.dmi'    // Normal icon set.
-	var/deform = 'icons/mob/human_races/r_def_human.dmi' // Mutated icon set.
-
+	var/icobase = 	   'icons/mob/human_races/species/human/body.dmi'    // Normal icon set.
+	var/deform = 	   'icons/mob/human_races/species/human/deformed_body.dmi' // Mutated icon set.
+	var/preview_icon = 'icons/mob/human_races/species/human/preview.dmi'
+	var/husk_icon =    'icons/mob/human_races/species/default_husk.dmi'
 	// Damage overlay and masks.
-	var/damage_overlays = 'icons/mob/human_races/masks/dam_human.dmi'
-	var/damage_mask = 'icons/mob/human_races/masks/dam_mask_human.dmi'
-	var/blood_mask = 'icons/mob/human_races/masks/blood_human.dmi'
+	var/damage_overlays = 'icons/mob/human_races/species/human/damage_overlay.dmi'
+	var/damage_mask = 	  'icons/mob/human_races/species/human/damage_mask.dmi'
+	var/blood_mask =      'icons/mob/human_races/species/human/blood_mask.dmi'
 
 	var/prone_icon                            // If set, draws this from icobase when mob is prone.
 	var/has_floating_eyes                     // Eyes will overlay over darkness (glow)
@@ -25,15 +26,22 @@
 	var/flesh_color = "#ffc896"               // Pink.
 	var/blood_oxy = 1
 	var/base_color                            // Used by changelings. Should also be used for icon previes..
+	var/limb_blend = ICON_ADD
 	var/tail                                  // Name of tail state in species effects icon file.
 	var/tail_animation                        // If set, the icon to obtain tail animation states from.
+	var/tail_blend = ICON_ADD
 	var/tail_hair
+
+	var/eye_icon = "eyes_s"
+	var/eye_icon_location = 'icons/mob/human_face.dmi'
+
+	var/organs_icon							  //species specific internal organs icons
 
 	var/default_h_style = "Bald"
 	var/default_f_style = "Shaved"
 
 	var/race_key = 0                          // Used for mob icon cache string.
-	var/icon/icon_template                    // Used for mob icon generation for non-32x32 species.
+	var/icon/icon_template = 'icons/mob/human_races/species/template.dmi'// Used for mob icon generation for non-32x32 species.
 	var/pixel_offset_x = 0                    // Used for offsetting large icons.
 	var/pixel_offset_y = 0                    // Used for offsetting large icons.
 
@@ -90,29 +98,29 @@
 
 	var/spawns_with_stack = 0
 	// Environment tolerance/life processes vars.
-	var/reagent_tag                                   //Used for metabolizing reagents.
-	var/breath_pressure = 16                          // Minimum partial pressure safe for breathing, kPa
+	var/reagent_tag                                   			//Used for metabolizing reagents.
+	var/breath_pressure = 16                          			// Minimum partial pressure safe for breathing, kPa
 	var/breath_volume = STD_BREATH_VOLUME
-	var/breath_type = "oxygen"                        // Non-oxygen gas breathed, if any.
-	var/poison_type = "phoron"                        // Poisonous air.
-	var/exhale_type = "carbon_dioxide"                // Exhaled gas type.
-	var/max_pressure_diff = 2*ONE_ATMOSPHERE		  // Maximum pressure difference that is safe for lungs
-	var/cold_level_1 = 260                            // Cold damage level 1 below this point.
-	var/cold_level_2 = 200                            // Cold damage level 2 below this point.
-	var/cold_level_3 = 120                            // Cold damage level 3 below this point.
-	var/heat_level_1 = 360                            // Heat damage level 1 above this point.
-	var/heat_level_2 = 400                            // Heat damage level 2 above this point.
-	var/heat_level_3 = 1000                           // Heat damage level 3 above this point.
-	var/passive_temp_gain = 0		                  // Species will gain this much temperature every second
-	var/hazard_high_pressure = HAZARD_HIGH_PRESSURE   // Dangerously high pressure.
-	var/warning_high_pressure = WARNING_HIGH_PRESSURE // High pressure warning.
-	var/warning_low_pressure = WARNING_LOW_PRESSURE   // Low pressure warning.
-	var/hazard_low_pressure = HAZARD_LOW_PRESSURE     // Dangerously low pressure.
-	var/body_temperature = 310.15	                  // Species will try to stabilize at this temperature.
-	                                                  // (also affects temperature processing)
+	var/breath_type = "oxygen"                        			// Non-oxygen gas breathed, if any.
+	var/poison_types = list("phoron" = TRUE, "chlorine" = TRUE) // Poisonous air.
+	var/exhale_type = "carbon_dioxide"                			// Exhaled gas type.
+	var/max_pressure_diff = 2*ONE_ATMOSPHERE		  			// Maximum pressure difference that is safe for lungs
+	var/cold_level_1 = 260                           			// Cold damage level 1 below this point.
+	var/cold_level_2 = 200                            			// Cold damage level 2 below this point.
+	var/cold_level_3 = 120                            			// Cold damage level 3 below this point.
+	var/heat_level_1 = 360                            			// Heat damage level 1 above this point.
+	var/heat_level_2 = 400                            			// Heat damage level 2 above this point.
+	var/heat_level_3 = 1000                           			// Heat damage level 3 above this point.
+	var/passive_temp_gain = 0		                  			// Species will gain this much temperature every second
+	var/hazard_high_pressure = HAZARD_HIGH_PRESSURE   			// Dangerously high pressure.
+	var/warning_high_pressure = WARNING_HIGH_PRESSURE 			// High pressure warning.
+	var/warning_low_pressure = WARNING_LOW_PRESSURE   			// Low pressure warning.
+	var/hazard_low_pressure = HAZARD_LOW_PRESSURE     			// Dangerously low pressure.
+	var/body_temperature = 310.15	                			//Species will try to stabilize at this temperature.
+	                                                  			// (also affects temperature processing)
 
-	var/heat_discomfort_level = 315                   // Aesthetic messages about feeling warm.
-	var/cold_discomfort_level = 285                   // Aesthetic messages about feeling chilly.
+	var/heat_discomfort_level = 315                   			// Aesthetic messages about feeling warm.
+	var/cold_discomfort_level = 285                   			// Aesthetic messages about feeling chilly.
 	var/list/heat_discomfort_strings = list(
 		"You feel sweat drip down your neck.",
 		"You feel uncomfortably warm.",
@@ -188,9 +196,11 @@
 	var/breathing_sound = 'sound/voice/monkey.ogg'
 	var/list/equip_adjust = list()
 	var/list/equip_overlays = list()
-	
+
+	var/list/prone_overlay_offset = list(0,0)// amount to shift overlays when lying down
+
 	var/list/backgrounds = list() // format list("Outer World Colonist" = "blurbtext")
-	
+
 /*
 These are all the things that can be adjusted for equipping stuff and
 each one can be in the NORTH, SOUTH, EAST, and WEST direction. Specify
@@ -250,13 +260,15 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 /datum/species/proc/create_organs(var/mob/living/carbon/human/H, var/new_stack = 0) //Handles creation of mob organs.
 	H.mob_size = mob_size
 	var/stack_type = /obj/item/organ/internal/stack
-	
+
 	var/obj/item/organ/internal/stack/stack = H.internal_organs_by_name["stack"]
 	if(stack) stack_type = stack.type
 	for(var/obj/item/organ/organ in H.contents)
-		if((organ in H.organs) || (organ in H.internal_organs))
+		if((organ in H.internal_organs))
 			qdel(organ)
-
+	for(var/obj/item/organ/organ in H.contents)		
+		if((organ in H.organs))	
+			qdel(organ)
 	if(H.organs)                  H.organs.Cut()
 	if(H.internal_organs)         H.internal_organs.Cut()
 	if(H.organs_by_name)          H.organs_by_name.Cut()

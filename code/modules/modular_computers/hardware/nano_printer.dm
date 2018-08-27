@@ -42,6 +42,14 @@
 		to_chat(user, "You insert \the [W] into [src].")
 		qdel(W)
 		stored_paper++
+	else if(istype(W, /obj/item/weapon/shreddedp))
+		if(stored_paper >= max_paper)
+			to_chat(user, "You try to add \the [W] into \the [src], but its paper bin is full.")
+			return
+
+		to_chat(user, "You insert \the [W] into [src].")
+		qdel(W)
+		stored_paper++
 	else if(istype(W, /obj/item/weapon/paper_bundle))
 		var/obj/item/weapon/paper_bundle/B = W
 		var/num_of_pages_added = 0

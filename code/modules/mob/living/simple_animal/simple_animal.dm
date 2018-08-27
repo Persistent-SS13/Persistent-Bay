@@ -63,6 +63,10 @@
 	// contained in a cage
 	var/in_stasis = 0
 
+/mob/living/simple_animal/after_load()
+	if(stat == 2)
+		death()
+	
 /mob/living/simple_animal/Life()
 	..()
 

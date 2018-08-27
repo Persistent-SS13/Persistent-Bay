@@ -65,7 +65,7 @@
 	spawn(5)
 		sleep(-1)
 		update_growth_stages()
-	
+
 	uid = plant_controller.seeds.len + 1
 
 /datum/seed/proc/get_trait(var/trait)
@@ -740,7 +740,7 @@
 			//Handle spawning in living, mobile products (like dionaea).
 			if(istype(product,/mob/living))
 				product.visible_message("<span class='notice'>The pod disgorges [product]!</span>")
-				handle_living_product(product)
+				//handle_living_product(product) //diona proc
 				if(istype(product,/mob/living/simple_animal/mushroom)) // Gross.
 					var/mob/living/simple_animal/mushroom/mush = product
 					mush.seed = src

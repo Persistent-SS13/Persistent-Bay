@@ -11,7 +11,7 @@
 		speaking = parse_language(message)
 		if (speaking)
 			message = copytext(message,2+length(speaking.key))
-		else 
+		else
 			speaking = get_default_language()
 
 	message = sanitize(message)
@@ -77,9 +77,9 @@
 
 	//These only pertain to common. Languages are handled by mob/say_understands()
 	if (!speaking)
-		if (istype(other, /mob/living/carbon/alien/diona))
+		/*if (istype(other, /mob/living/carbon/alien/diona))
 			if(other.languages.len >= 2) //They've sucked down some blood and can speak common now.
-				return 1
+				return 1 */
 		if (istype(other, /mob/living/silicon))
 			return 1
 		if (istype(other, /mob/living/carbon/brain))

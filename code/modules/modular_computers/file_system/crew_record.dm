@@ -30,7 +30,7 @@ FIELD_LIST("Sex", sex, record_genders())
 FIELD_NUM("Age", age)
 
 FIELD_LIST("Status", status, GLOB.physical_statuses)
-/record_field/status/acccess_edit = access_medical
+/record_field/status/acccess_edit = core_access_medical_programs
 
 FIELD_SHORT("Species",species)
 FIELD_LIST("Branch", branch, record_branches())
@@ -38,20 +38,20 @@ FIELD_LIST("Rank", rank, record_ranks())
 
 // MEDICAL RECORDS
 FIELD_LIST("Blood Type", bloodtype, GLOB.blood_types)
-FIELD_LONG_SECURE("Medical Record", medRecord, access_medical)
+FIELD_LONG_SECURE("Medical Record", medRecord, core_access_medical_programs)
 
 // SECURITY RECORDS
-FIELD_LIST_SECURE("Criminal Status", criminalStatus, GLOB.security_statuses, access_security)
-FIELD_LONG_SECURE("Security Record", secRecord, access_security)
-FIELD_SHORT_SECURE("DNA", dna, access_security)
-FIELD_SHORT_SECURE("Fingerprint", fingerprint, access_security)
+FIELD_LIST_SECURE("Criminal Status", criminalStatus, GLOB.security_statuses, core_access_security_programs)
+FIELD_LONG_SECURE("Security Record", secRecord, core_access_security_programs)
+FIELD_SHORT_SECURE("DNA", dna, core_access_security_programs)
+FIELD_SHORT_SECURE("Fingerprint", fingerprint, core_access_security_programs)
 
 // EMPLOYMENT RECORDS
-FIELD_LONG_SECURE("Employment Record", emplRecord, access_heads)
-FIELD_SHORT_SECURE("Home System", homeSystem, access_heads)
-FIELD_SHORT_SECURE("Citizenship", citizenship, access_heads)
-FIELD_SHORT_SECURE("Faction", faction, access_heads)
-FIELD_SHORT_SECURE("Religion", religion, access_heads)
+FIELD_LONG_SECURE("Employment Record", emplRecord, core_access_employee_records)
+FIELD_SHORT_SECURE("Home System", homeSystem, core_access_employee_records)
+FIELD_SHORT_SECURE("Citizenship", citizenship, core_access_employee_records)
+FIELD_SHORT_SECURE("Faction", faction, core_access_employee_records)
+FIELD_SHORT_SECURE("Religion", religion, core_access_employee_records)
 
 // ANTAG RECORDS
 FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
@@ -79,6 +79,9 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/assignment_data = list() // format = list(assignment_uid = rank)
 	var/validate_time = 0
 	var/worked = 0
+	var/expenses = 0
+	
+	
 /datum/computer_file/crew_record/New()
 	..()
 	for(var/T in subtypesof(/record_field/))

@@ -1090,7 +1090,7 @@
 	set_trait(TRAIT_PLANT_COLOUR,"#6f7a63")
 	set_trait(TRAIT_PLANT_ICON,"vine2")
 	set_trait(TRAIT_WATER_CONSUMPTION, 0.5)
-
+/*
 /datum/seed/diona
 	name = "diona"
 	seed_name = "diona"
@@ -1111,7 +1111,7 @@
 	set_trait(TRAIT_PRODUCT_COLOUR,"#799957")
 	set_trait(TRAIT_PLANT_COLOUR,"#66804b")
 	set_trait(TRAIT_PLANT_ICON,"alien4")
-
+*/
 /datum/seed/shand
 	name = "shand"
 	seed_name = "S'randar's hand"

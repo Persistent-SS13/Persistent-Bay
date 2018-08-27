@@ -187,7 +187,7 @@ var/const/MAP_HAS_RANK = 2		//Rank system, also togglable
 		var/turf/simulated/mineral/M = thing
 		M.update_icon()
 	for(var/thing in mining_floors["[zlevel]"])
-		var/turf/simulated/floor/asteroid/M = thing
+		var/turf/simulated/asteroid/M = thing
 		M.updateMineralOverlays()
 
 /datum/map/proc/get_network_access(var/network)

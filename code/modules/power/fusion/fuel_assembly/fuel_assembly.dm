@@ -21,7 +21,7 @@
 /obj/item/weapon/fuel_assembly/Initialize()
 	. = ..()
 	if(!map_storage_loaded)
-		var/material/material = get_material_by_name(fuel_type)
+		var/material/material = SSmaterials.get_material_by_name(fuel_type)
 		if(istype(material))
 			name = "[material.use_name] fuel rod assembly"
 			desc = "A fuel rod for a fusion reactor. This one is made from [material.use_name]."

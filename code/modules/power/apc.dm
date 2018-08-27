@@ -132,8 +132,6 @@
 /obj/machinery/power/apc/connect_to_network()
 	//Override because the APC does not directly connect to the network; it goes through a terminal.
 	//The terminal is what the power computer looks for anyway.
-	if(!terminal)
-		make_terminal()
 	if(terminal)
 		terminal.connect_to_network()
 
@@ -216,10 +214,10 @@
 	if(emp_hardened)
 		return
 	failure_timer = max(failure_timer, round(duration))
-/obj/machinery/power/apc/before_load()
-	if(terminal)
-		terminal.loc = null
-		qdel(terminal)
+
+/obj/machinery/power/apc/after_load()
+	connect_to_network()
+
 /obj/machinery/power/apc/proc/make_terminal()
 	// create a terminal object at the same position as original turf loc
 	// wires will attach to this
@@ -236,6 +234,8 @@
 		if(!loc)
 			qdel(src)
 			return
+		if(!terminal)
+			make_terminal() //This will create all the terminals for the APCs on initial map start.
 	if(loc)
 		var/area/A = src.loc.loc
 

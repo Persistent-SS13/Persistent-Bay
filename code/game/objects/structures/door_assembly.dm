@@ -107,6 +107,21 @@
 	airlock_type = "/maintenance_hatch"
 	glass = -1
 
+/obj/structure/door_assembly/door_assembly_fake
+	base_icon_state = "fake"
+	base_name = "wall"
+	airlock_type = "/fake"
+	glass = -1
+
+/obj/structure/door_assembly/door_assembly_fake/L
+	airlock_type = "/fake/L"
+
+/obj/structure/door_assembly/door_assembly_fake/LR
+	airlock_type = "/fake/LR"
+
+/obj/structure/door_assembly/door_assembly_fake/R
+	airlock_type = "/fake/R"
+
 /obj/structure/door_assembly/door_assembly_highsecurity // Borrowing this until WJohnston makes sprites for the assembly
 	base_icon_state = "highsec"
 	base_name = "High Security Airlock"
@@ -169,7 +184,7 @@
 			else if(glass == 1)
 				user.visible_message("[user] welds the glass panel out of the airlock assembly.", "You start to weld the glass panel out of the airlock assembly.")
 				if(do_after(user, 40,src))
-					if(!src || !WT.isOn()) return
+					if(!src || !WT.isOn() || glass == 0) return
 					to_chat(user, "<span class='notice'>You welded the glass panel out!</span>")
 					new /obj/item/stack/material/glass/reinforced(src.loc)
 					glass = 0
@@ -212,8 +227,8 @@
 		user.visible_message("[user] cuts the wires from the airlock assembly.", "You start to cut the wires from airlock assembly.")
 
 		if(do_after(user, 40,src))
-			if(!src) return
-			to_chat(user, "<span class='notice'>You cut the airlock wires.!</span>")
+			if(!src || state != 1) return
+			to_chat(user, "<span class='notice'>You cut the airlock wires!</span>")
 			new/obj/item/stack/cable_coil(src.loc, 1)
 			src.state = 0
 

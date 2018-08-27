@@ -16,6 +16,7 @@
 
 //Taj clothing.
 
+/*
 /obj/item/clothing/suit/tajaran/furs
 	name = "heavy furs"
 	desc = "A traditional Zhan-Khazan garment."
@@ -53,6 +54,7 @@
 	icon_state = "blackcaligae"
 	item_state = "blackcaligae"
 
+*/
 //Voxclothing
 
 /obj/item/clothing/suit/armor/vox_scrap

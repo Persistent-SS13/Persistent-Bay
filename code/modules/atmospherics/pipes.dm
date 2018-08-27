@@ -6,7 +6,7 @@
 	var/leaking = 0
 	use_power = 0
 
-	var/alert_pressure = 125*ONE_ATMOSPHERE
+	var/alert_pressure = 170*ONE_ATMOSPHERE
 	var/in_stasis = 0
 		//minimum pressure before check_pressure(...) should be called
 
@@ -160,21 +160,11 @@
 	var/minimum_temperature_difference = 300
 	var/thermal_conductivity = 0 //WALL_HEAT_TRANSFER_COEFFICIENT No
 
-	var/maximum_pressure = 140*ONE_ATMOSPHERE	//this way setting the high pressure pump to the maximum like a shit will heck your stuff up
-	var/fatigue_pressure = 125*ONE_ATMOSPHERE
-	alert_pressure = 110*ONE_ATMOSPHERE			//little grace period
+	var/maximum_pressure = 210*ONE_ATMOSPHERE
+	var/fatigue_pressure = 170*ONE_ATMOSPHERE
+	alert_pressure = 170*ONE_ATMOSPHERE
 
 	level = 1
-
-/obj/machinery/atmospherics/pipe/simple/reinforced
-	icon_connect_type = "reinforced" //what kind of pipe it is and from which dmi is the icon manager getting its icons, "" for simple pipes, "hepipe" for HE pipes, "hejunction" for HE junctions
-	name = " reinforced pipe"
-	desc = "A one meter section of reinforced pipe able to withstand high and extreme pressures."
-
-	maximum_pressure = 1400*ONE_ATMOSPHERE	//this way setting the high pressure pump to the maximum like a shit will heck your stuff up
-	fatigue_pressure = 1250*ONE_ATMOSPHERE
-	alert_pressure = 1100*ONE_ATMOSPHERE			//little grace period
-	color = PIPE_COLOR_RED					//RED for DANGER
 
 /obj/machinery/atmospherics/pipe/simple/New()
 	..()
@@ -272,6 +262,7 @@
 		return
 	if(!check_icon_cache())
 		return
+
 	alpha = 255
 
 	overlays.Cut()
@@ -385,6 +376,9 @@
 /obj/machinery/atmospherics/pipe/simple/visible/fuel
 	name = "Fuel pipe"
 	color = PIPE_COLOR_ORANGE
+	maximum_pressure = 420*ONE_ATMOSPHERE
+	fatigue_pressure = 350*ONE_ATMOSPHERE
+	alert_pressure = 350*ONE_ATMOSPHERE
 
 /obj/machinery/atmospherics/pipe/simple/hidden
 	icon_state = "intact"
@@ -428,6 +422,9 @@
 /obj/machinery/atmospherics/pipe/simple/hidden/fuel
 	name = "Fuel pipe"
 	color = PIPE_COLOR_ORANGE
+	maximum_pressure = 420*ONE_ATMOSPHERE
+	fatigue_pressure = 350*ONE_ATMOSPHERE
+	alert_pressure = 350*ONE_ATMOSPHERE
 
 /obj/machinery/atmospherics/pipe/manifold
 	icon = 'icons/atmos/manifold.dmi'

@@ -19,10 +19,22 @@
 	var/decl/flooring/flooring
 	var/mineral = DEFAULT_WALL_MATERIAL
 
+	var/prior_floortype = /turf/space
+	var/prior_resources = list()
+	
 	thermal_conductivity = 0.040
 	heat_capacity = 10000
 	var/lava = 0
-
+/turf/simulated/floor/ReplaceWithLattice()
+	var/resources = prior_resources
+	var/floortype = prior_floortype
+	src.ChangeTurf(prior_floortype)
+	spawn()
+		var/turf/simulated/T = locate(src.x, src.y, src.z)
+		if(ispath(floortype, /turf/simulated))
+			T.resources = resources
+		new /obj/structure/lattice(T)
+		
 /turf/simulated/floor/is_plating()
 	return !flooring
 	

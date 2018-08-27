@@ -86,6 +86,7 @@
 		to_chat(user, "This one seems particularly lifeless. Perhaps it will regain some of its luster later..")
 
 /obj/item/organ/internal/brain/removed(var/mob/living/user)
+	/**
 	if(!istype(owner))
 		return ..()
 
@@ -100,7 +101,7 @@
 	transfer_identity(owner)
 
 	..()
-
+	**/
 /obj/item/organ/internal/brain/replaced(var/mob/living/target)
 
 	if(!..()) return 0

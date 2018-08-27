@@ -117,6 +117,7 @@
 		"filter_co2" = ("carbon_dioxide" in scrubbing_gas),
 		"filter_phoron" = ("phoron" in scrubbing_gas),
 		"filter_n2o" = ("sleeping_agent" in scrubbing_gas),
+		"filter_reag" = ("reagents" in scrubbing_gas),
 		"sigtype" = "status"
 	)
 	if(!initial_loc.air_scrub_names[id_tag])
@@ -138,7 +139,7 @@
 	if(!scrubbing_gas)
 		scrubbing_gas = list()
 		for(var/g in gas_data.gases)
-			if(g != "oxygen" && g != "nitrogen")
+			if(g != "oxygen" && g != "nitrogen" && !(gas_data.flags[g] & XGM_GAS_REAGENT_GAS))
 				scrubbing_gas += g
 
 /obj/machinery/atmospherics/unary/vent_scrubber/Process()
@@ -161,8 +162,15 @@
 	if(scrubbing)
 		//limit flow rate from turfs
 		var/transfer_moles = min(environment.total_moles, environment.total_moles*MAX_SCRUBBER_FLOWRATE/environment.volume)	//group_multiplier gets divided out here
+		//checking what reagent gases need to be filtered
+		var/list/scrubbed_gases_final
+		if("reagents" in scrubbing_gas)
+			scrubbed_gases_final = (scrubbing_gas - "reagents") //new list so that scrubbing_gas doesn't get flooded with reagent gases.
+			for(var/g in environment.gas)
+				if(gas_data.flags[g] & XGM_GAS_REAGENT_GAS)
+					scrubbed_gases_final += g
 
-		power_draw = scrub_gas(src, scrubbing_gas, environment, air_contents, transfer_moles, power_rating)
+		power_draw = scrub_gas(src, scrubbed_gases_final ? scrubbed_gases_final : scrubbing_gas, environment, air_contents, transfer_moles, power_rating)
 	else //Just siphon all air
 		//limit flow rate from turfs
 		var/transfer_moles = min(environment.total_moles, environment.total_moles*MAX_SIPHON_FLOWRATE/environment.volume)	//group_multiplier gets divided out here
@@ -247,6 +255,11 @@
 		toggle += "sleeping_agent"
 	else if(signal.data["toggle_n2o_scrub"])
 		toggle += "sleeping_agent"
+
+	if(!isnull(signal.data["reag_scrub"]) && text2num(signal.data["reag_scrub"]) != ("reagents" in scrubbing_gas))
+		toggle += "reagents"
+	else if(signal.data["toggle_reag_scrub"])
+		toggle += "reagents"
 
 	scrubbing_gas ^= toggle
 

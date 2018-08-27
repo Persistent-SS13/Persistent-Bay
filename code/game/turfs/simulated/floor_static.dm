@@ -35,7 +35,7 @@
 
 /turf/simulated/floor/fixed/alium/New()
 	..()
-	var/material/A = get_material_by_name("alien alloy")
+	var/material/A = SSmaterials.get_material_by_name("alien alloy")
 	if(!A)
 		return
 	color = A.icon_colour
@@ -44,7 +44,7 @@
 /turf/simulated/floor/fixed/alium/curves
 	icon_state = "curvy"
 /turf/simulated/floor/fixed/alium/ex_act(severity)
-	var/material/A = get_material_by_name("alien alloy")
+	var/material/A = SSmaterials.get_material_by_name("alien alloy")
 	if(prob(A.explosion_resistance))
 		return
 	if(severity == 1)

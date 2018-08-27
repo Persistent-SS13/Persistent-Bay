@@ -26,7 +26,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	icon_state = "unpowered"
 	use_power = 0			//1 = idle, 2 = active
 	var/status = 0 // 0 = unpowered, 1 = closed 2 = open 3 = contruction mode 4 = occupied 5 = obstructed
-	req_access = list(core_access_command_programs)
+	req_access = list(core_access_shuttle_programs)
 	var/datum/world_faction/faction
 	var/dimensions = 1 // 1 = 5*7, 2 = 7*7, 3 = 9*9
 	var/highlighted = 0
@@ -44,7 +44,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	if(req_access_faction && req_access_faction != "" || (faction && faction.uid != req_access_faction))
 		faction = get_faction(req_access_faction)
 	check_shuttle()
-
+	stat = 0
 
 /obj/machinery/docking_beacon/attack_hand(var/mob/user as mob)
 	ui_interact(user)
@@ -102,7 +102,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			if(5)
 				data["status"] = "Obstructed"
 		data["dimension"] = dimensions
-	message_admins("ui_interact has ran, opening ui")
 	// update the ui if it exists, returns null if no ui is passed/found
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
@@ -195,10 +194,10 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		var/select_name = sanitizeName(input(usr,"Enter a new dock ID","DOCK ID") as null|text, MAX_NAME_LEN)
 		if(select_name)
 			id = select_name
+	
 	update_icon()
 	add_fingerprint(usr)
 	return 1 // update UIs attached to this object
-
 
 /obj/machinery/docking_beacon/proc/highlight()
 	var/list/turfs = get_turfs()
@@ -272,6 +271,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 				engines |= engine
 	if(!valid_bridge_computer_found)
 		to_chat(user, "No valid bridge computer found. Shuttle finalization aborted.")
+		return 0
 	if(!engines.len)
 		to_chat(user, "No properly anchored engine found. Shuttle finalization aborted.")
 		return 0
@@ -291,7 +291,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	shuttle = new(name, src)
 	shuttle.size = dimensions
 	bridge.shuttle = shuttle
-	shuttle.shuttle_area = A
+	shuttle.shuttle_area = list(A)
 	shuttle.bridge = bridge
 	bridge.dock = src
 
@@ -333,15 +333,42 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/chosen_uid
 	var/chosen_name
 	var/chosen_short
+	var/chosen_tag
 	var/chosen_password
 	var/starting_leader
 	var/chosen_netuid
-
+	var/list/pending_contracts = list()
+	var/list/signed_contracts = list()
 
 /obj/machinery/bluespace_satellite/New()
 	..()
 
+/obj/machinery/bluespace_satellite/proc/cancel_contracts()
+	for(var/obj/item/weapon/paper/contract/contract in pending_contracts)
+		contract.cancel()
+	for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
+		contract.cancel()
 
+/obj/machinery/bluespace_satellite/proc/get_contributed()
+	var/contributed = 0
+	for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
+		contributed += contract.required_cash
+	return contributed
+
+/obj/machinery/bluespace_satellite/contract_signed(var/obj/item/weapon/paper/contract/contract)
+	pending_contracts -= contract
+	signed_contracts |= contract
+	GLOB.nanomanager.update_uis(src)
+	return 1
+
+/obj/machinery/bluespace_satellite/contract_cancelled(var/obj/item/weapon/paper/contract/contract)
+	pending_contracts -= contract
+	signed_contracts -= contract
+	GLOB.nanomanager.update_uis(src)
+	return 1
+
+	
+	
 /obj/machinery/bluespace_satellite/attack_hand(var/mob/user as mob)
 	ui_interact(user)
 
@@ -350,6 +377,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	if(istype(I, /obj/item/weapon/card/id))
 		var/obj/item/weapon/card/id/id = I
 		starting_leader = id.registered_name
+		cancel_contracts()
 		loc.visible_message("The \icon[src] [src] reports that the card was successfully scanned and the leadership has been set to '[starting_leader]'.")
 		GLOB.nanomanager.update_uis(src)
 		return
@@ -364,6 +392,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	data["chosen_uid"] = chosen_uid ? chosen_uid : "*UNSET*"
 	data["chosen_name"] = chosen_name ? chosen_name : "*UNSET*"
 	data["chosen_short"] = chosen_short ? chosen_short : "*UNSET*"
+	data["chosen_tag"] = chosen_tag ? chosen_tag : "*UNSET*"
 	data["chosen_password"] = chosen_password ? chosen_password : "*UNSET*"
 	data["chosen_netuid"] = chosen_netuid ? chosen_netuid : "*UNSET*"
 	data["starting_leader"] = starting_leader ? starting_leader : "*UNSET*"
@@ -392,14 +421,25 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 				return
 			else
 				chosen_uid = select_name
+				cancel_contracts()
 	if(href_list["change_name"])
 		var/select_name = sanitizeName(input(usr,"Enter the full name of your organization","Lognet Full Name", chosen_name) as null|text, MAX_NAME_LEN, 1, 0)
 		if(select_name)
 			chosen_name = select_name
+			cancel_contracts()
 	if(href_list["change_short"])
 		var/select_name = sanitizeName(input(usr,"Enter the short name of your organization","Lognet Short Name", chosen_short) as null|text, MAX_NAME_LEN, 1, 0)
 		if(select_name)
 			chosen_short = select_name
+	if(href_list["change_tag"])
+		var/select_name = sanitizeName(input(usr,"Enter the tag of your organization","Lognet Tag Name", chosen_tag) as null|text, 4, 1, 0)
+		if(select_name)
+			for(var/datum/world_faction/fac in GLOB.all_world_factions)
+				if(fac.short_tag == select_name)
+					to_chat(usr, "That Tag is already in use.")
+					return
+				else
+					chosen_tag = select_name
 	if(href_list["change_password"])
 		var/select_name = sanitizeName(input(usr,"Enter the lognet password","Lognet Password", chosen_password) as null|text, MAX_NAME_LEN, 1, 0)
 		if(select_name)
@@ -412,10 +452,48 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 					to_chat(usr, "Error! A network with that UID already exists!")
 					return 1
 			chosen_netuid = select_name
+			
+	if(href_list["contract"])
+		if(!chosen_name || chosen_name == "")
+			to_chat(usr, "A name for the network must be chosen first.")
+			return
+		if(!starting_leader)
+			to_chat(usr, "A leader for the network must be chosen first.")
+			return
+		if(!chosen_uid)
+			to_chat(usr, "A UID for the network must be chosen first.")
+			return	
+			
+		var/cost = round(input("How much ethericoin should be the funding contract be for?", "Funding", 25000-get_contributed()) as null|num)
+		if(!cost || cost < 0)
+			return 0
+		var/choice = input(usr,"This will create a funding contract for [cost] ethericoin.") in list("Confirm", "Cancel")
+		if(choice == "Confirm")
+			var/obj/item/weapon/paper/contract/contract = new()
+			contract.required_cash = cost
+			contract.linked = src
+			contract.purpose = "Funding contract for [cost]$$ to [chosen_name] ([chosen_uid]) led by [starting_leader]."
+			contract.name = "[chosen_name] funding contract"
+			var/t = ""
+			t += "<font face='Verdana' color=blue><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'><center></td><tr><td><H1>Investment Contract</td>"
+			t += "<tr><td><br><b>For:</b>[chosen_name] ([chosen_uid]) led by [starting_leader]<br>"
+			t += "<b>Cost:</b> [cost] $$ Ethericoins<br><br>"
+			t += "<tr><td><h3>Status</H3>*Unsigned*<br></td></tr></table><br><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>"
+			t += "<td><font size='4'><b>Swipe ID to sign contract.</b></font></center></font>"
+			contract.info = t
+			contract.loc = get_turf(src)
+			contract.update_icon()
+			pending_contracts |= contract
+			playsound(get_turf(src), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
+			
+			
 	if(href_list["launch"])
-		if(!chosen_uid || !chosen_name || !chosen_short || !chosen_password || !starting_leader || !chosen_netuid)
+		if(!chosen_uid || !chosen_name || !chosen_short || !chosen_tag || !chosen_password || !starting_leader || !chosen_netuid)
 			to_chat(usr, "Network not configured correctly. Check settings.")
 			return 1
+		if(get_contributed() < 25000)
+			to_chat(usr, "25000$ needs to be committed in order to proceed.")
+			
 		if(get_faction(chosen_uid))
 			chosen_uid = null
 			to_chat(usr, "Chosen UID was already in use, choose new UID.")
@@ -424,16 +502,26 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		if(!T || !istype(T))
 			to_chat(usr, "The satellite can only be launched from space.")
 			return 1
+		for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
+			if(!contract.is_solvent())
+				contract.cancel()
+				GLOB.nanomanager.update_uis(src)
+				return 0
+		for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
+			contract.finalize()
+			signed_contracts -= contract
 		var/datum/world_faction/new_faction = new()
 		GLOB.all_world_factions |= new_faction
 		new_faction.uid = chosen_uid
 		new_faction.name = chosen_name
 		new_faction.abbreviation = chosen_short
+		new_faction.short_tag = chosen_tag
 		new_faction.password = chosen_password
 		new_faction.leader_name = starting_leader
 		new_faction.network.invisible = 1
 		new_faction.network.net_uid = chosen_netuid
 		new_faction.network.name = chosen_netuid
+		cancel_contracts()
 		var/obj/effect/portal/portal = new(loc)
 		loc.visible_message("The \icon[src] [src] beams away!.")
 		sleep(1 SECOND)
@@ -442,6 +530,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		qdel(portal)
 		loc = null
 		qdel(src)
-
 	add_fingerprint(usr)
 	return 1 // update UIs attached to this object
+
+	

@@ -10,15 +10,6 @@ var/global/list/debug_data = list()
 		for(var/datum/pipeline/line in net.line_members)
 			line.temporarily_store_air()
 
-/mob/living
-	should_save = 0
-
-/mob/living/simple_animal
-	should_save = 1
-
-/mob/living/bot
-	should_save = 1
-
 /datum/area_holder
 	var/area_type = "/area"
 	var/name
@@ -51,7 +42,8 @@ var/global/list/debug_data = list()
 	var/skip_empty = ""
 	var/skip_icon_state = 0
 	var/map_storage_loaded = 0 // this is special instructions for problematic Initialize()
-
+/mob
+	var/saved_ckey = ""
 /atom/movable/lighting_overlay
 	should_save = 0
 
@@ -89,8 +81,10 @@ var/global/list/debug_data = list()
 /turf/after_load()
 	..()
 	update_icon()
-	lighting_build_overlay()
-
+	if(dynamic_lighting)
+		lighting_build_overlay()
+	else
+		lighting_clear_overlay()
 	for(var/obj/effect/floor_decal/decal in saved_decals)
 		decal.init_for(src)
 
@@ -102,7 +96,7 @@ var/global/list/debug_data = list()
 	..()
 	regenerate_icons()
 	redraw_inv()
-
+	handle_organs(1)
 /datum/proc/StandardWrite(var/savefile/f)
 	var/list/saving
 	if(found_vars.Find("[type]"))
@@ -159,23 +153,11 @@ var/global/list/debug_data = list()
 	StandardWrite(f)
 
 /mob/Write(savefile/f)
-	if(StandardWrite(f))
-		return
-
-/mob/living/Write(savefile/f)
-	should_save = 1
-	if(StandardWrite(f))
-		should_save = 0
-		return
-
-/mob/living/carbon/lace/Write(savefile/f)
-	should_save = 1
-	if(container2)
-		container2.should_save = 1
-	if(StandardWrite(f))
-		should_save = 0
-		if(container2) container2.should_save = 0
-		return
+	StandardWrite(f)
+	if(ckey)
+		to_file(f["ckey"], ckey)
+	else
+		to_file(f["ckey"], saved_ckey)
 
 /area/proc/get_turf_coords()
 	var/list/coord_list = list()
@@ -266,6 +248,10 @@ var/global/list/debug_data = list()
 		am.loc = null
 	StandardRead(f)
 
+/mob/Read(savefile/f)
+	StandardRead(f)
+	from_file(f["ckey"], saved_ckey)
+
 /turf/Read(savefile/f)
 	StandardRead(f)
 
@@ -301,7 +287,7 @@ var/global/list/debug_data = list()
 	fdel("map_saves/game.sav")
 	var/savefile/f = new("map_saves/game.sav")
 	found_vars = list()
-	for(var/z in 1 to 27)
+	for(var/z in 1 to 50)
 		f.cd = "/map/[z]"
 		for(var/x in 1 to world.maxx step 20)
 			for(var/y in 1 to world.maxy step 20)
@@ -321,10 +307,13 @@ var/global/list/debug_data = list()
 		Z.turf_coords = Z.get_turf_coords()
 		zones |= Z
 	to_file(f["factions"],GLOB.all_world_factions)
+	to_file(f["businesses"],GLOB.all_business)
 	to_file(f["zones"],zones)
 	to_file(f["areas"],formatted_areas)
 	to_file(f["turbolifts"],turbolifts)
 	to_file(f["records"],GLOB.all_crew_records)
+	to_file(f["email"],ntnet_global.email_accounts)
+	to_file(f["next_account_number"],next_account_number)
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
 	return 1
@@ -338,10 +327,13 @@ var/global/list/debug_data = list()
 	debug_data = list()
 	var/v = null
 	f.cd = "/extras"
+	from_file(f["email"],ntnet_global.email_accounts)
 	from_file(f["records"],GLOB.all_crew_records)
 	if(!GLOB.all_crew_records)
 		GLOB.all_crew_records = list()
 	from_file(f["factions"],GLOB.all_world_factions)
+	from_file(f["businesses"],GLOB.all_business)
+	from_file(f["next_account_number"],next_account_number)
 	var/list/areas
 	from_file(f["areas"],areas)
 	for(var/datum/area_holder/holder in areas)
@@ -357,7 +349,7 @@ var/global/list/debug_data = list()
 		A.contents.Add(turfs)
 
 	f.cd = "/"
-	for(var/z in 1 to 27)
+	for(var/z in 1 to 50)
 		f.cd = "/map/[z]"
 		var/starttime2 = REALTIMEOFDAY
 		while(!f.eof)

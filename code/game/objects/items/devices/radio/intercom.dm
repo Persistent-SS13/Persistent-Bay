@@ -111,8 +111,13 @@
 	spawn (0)
 		attack_self(user)
 
-/obj/item/device/radio/intercom/receive_range(freq, level)
+/obj/item/device/radio/intercom/receive_range(freq, level, faction)
 	if (!on)
+		return -1
+//	if(!faction || faction == "")
+//		if(!public_mode)
+//			return -1
+	if(faction && faction != "" && faction != faction_uid)
 		return -1
 	if(!(0 in level))
 		var/turf/position = get_turf(src)

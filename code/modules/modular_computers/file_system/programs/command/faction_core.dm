@@ -6,7 +6,7 @@
 	program_menu_icon = "flag"
 	nanomodule_path = /datum/nano_module/program/faction_core
 	extended_desc = "Uses a Logistic Processor to connect to and modify bluespace networks over satalite."
-	required_access = core_access_command_programs
+	required_access = core_access_leader
 	requires_ntnet = 0
 	size = 65
 	usage_flags = PROGRAM_CONSOLE
@@ -19,7 +19,8 @@
 	var/attempted_password = ""
 	var/wrong_password = 0
 	var/wrong_connection = 0
-	var/menu = 1 // 1 = connect to network 2 = login screen 3 = main directory 4 = central options 5 = network options 6 = main access control 7 = main assignment control 8 = access category view 9 = access view 10 = assignment category view 11 = assignment view
+	var/menu = 1 // 1 = connect to network 2 = login screen 3 = main directory 4 = central options 5 = network options 6 = main access control 7 = main assignment control
+				// 8 = access category view 9 = access view 10 = assignment category view 11 = assignment view 12 = economy menu, 13 = promotion control, 14 = cryocontrol
 	var/datum/access_category/selected_accesscategory
 	var/selected_access = 0
 	var/datum/assignment_category/selected_assignmentcategory
@@ -27,6 +28,8 @@
 	var/viewing_ranks = 0
 	var/prior_menu = 3
 	var/datum/access_category/core_access
+	var/selected_rank = 1
+
 /datum/nano_module/program/faction_core/proc/try_connect()
 
 	if(!program.computer.logistic_processor || !program.computer.logistic_processor.check_functionality())
@@ -58,7 +61,7 @@
 		menu = 1
 		return
 
-	
+
 /datum/nano_module/program/faction_core/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	try_connect()
 	var/list/data = host.initial_data()
@@ -72,8 +75,9 @@
 			menu = 3
 		data["faction_name"] = connected_faction.name
 		data["faction_uid"] = connected_faction.uid
-		if(menu == 4)			
+		if(menu == 4)
 			data["faction_abbreviation"] = connected_faction.abbreviation
+			data["faction_tag"] = connected_faction.short_tag
 			var/regex/allregex = regex(".")
 			data["faction_purpose"] = connected_faction.purpose
 			data["faction_password"] = allregex.Replace(connected_faction.password, "*")
@@ -82,6 +86,7 @@
 			data["network_uid"] = connected_faction.network.net_uid
 			data["network_password"] = connected_faction.network.password
 			data["network_visible"] = connected_faction.network.invisible ? "No" : "Yes"
+			data["hiring_policy"] = connected_faction.hiring_policy
 		if(menu == 6)
 			var/list/access_categories[0]
 			for(var/datum/access_category/category in connected_faction.access_categories)
@@ -128,7 +133,7 @@
 			data["membership_faction"] = selected_assignmentcategory.member_faction
 			data["account_status"] = selected_assignmentcategory.account_status
 			data["faction_leader"] = selected_assignmentcategory.head_position ? selected_assignmentcategory.head_position.uid : "None"
-			
+
 			var/list/assignments[0]
 			for(var/datum/assignment/assignment in selected_assignmentcategory.assignments)
 				assignments[++assignments.len] = list("name" = "([assignment.uid]) [assignment.name]", "ref" = "\ref[assignment]")
@@ -139,6 +144,36 @@
 				return ui_interact(user, ui_key, ui, force_open, state)
 			data["pay"] = selected_assignment.payscale
 			data["title"] = selected_assignment.name
+			data["cryonetwork"] = selected_assignment.cryo_net
+			data["selected_rank"] = selected_rank
+			if(selected_rank < selected_assignment.ranks.len+1)
+				data["increase_button"] = 1
+			if(selected_rank != 1)
+				data["decrease_button"] = 1
+			if(selected_assignment.accesses.len)
+				if(selected_assignment.accesses["1"] && !istype(selected_assignment.accesses["1"], /datum/accesses))
+					var/datum/accesses/copy = new()
+					copy.accesses = selected_assignment.accesses.Copy()
+					selected_assignment.accesses["1"] = copy
+			else
+				var/datum/accesses/copy = new()
+				selected_assignment.accesses["1"] = copy
+				
+			var/list/all_access = list()
+			var/expense_limit = 0
+			for(var/i=1;i<=selected_rank;i++)
+				if(i > selected_assignment.accesses.len)
+					var/datum/accesses/copy = new /datum/accesses()
+					var/datum/accesses/copy2 = selected_assignment.accesses["[i-1]"] 
+					if(copy2)
+						copy.expense_limit = copy2.expense_limit
+					selected_assignment.accesses["[i]"] = copy
+					continue
+				var/datum/accesses/copy = selected_assignment.accesses["[i]"]
+				if(istype(copy))
+					expense_limit = copy.expense_limit
+					all_access |= copy.accesses
+			data["expense_limit"] = expense_limit
 			var/list/access_categories[0]
 			var/datum/access_category/core/core
 			if(!core_access)
@@ -152,7 +187,7 @@
 				var/ind = 0
 				for(var/x in category.accesses)
 					var/existing = 0
-					if(selected_assignment.accesses.Find(x))
+					if(all_access.Find(x))
 						existing = 1
 					ind++
 					var/name = category.accesses[x]
@@ -171,10 +206,20 @@
 			data["money_rate"] = connected_faction.payrate
 			data["money_debt"] = connected_faction.get_debt()
 			data["money_balance"] = connected_faction.central_account.money
+			data["tax_rate"] = connected_faction.tax_rate
+			data["import_rate"] = connected_faction.import_profit
+			data["export_rate"] = connected_faction.export_profit
 		if(menu == 13)
 			data["rank1_req"] = connected_faction.all_promote_req
 			data["rank3_req"] = connected_faction.three_promote_req
 			data["rank5_req"] = connected_faction.five_promote_req
+		if(menu == 14) // cryo menu
+			var/list/cryos[0]
+			cryos[++cryos.len] = list("name" = "default")
+			for(var/cryoname in connected_faction.cryo_networks)
+				cryos[++cryos.len] = list("name" = cryoname)
+			data["cryos"] = cryos
+
 	else
 		menu = 1
 	if(selected_accesscategory)
@@ -243,6 +288,7 @@
 		if("change_menu")
 			var/select_menu = text2num(href_list["menu_target"])
 			menu = select_menu
+			selected_rank = 1
 			prior_menu = 3
 		if("change_name")
 			var/curr_name = connected_faction.name
@@ -270,6 +316,19 @@
 							return 1
 					connected_faction.abbreviation = select_name
 					to_chat(usr, "Lognet abbreviation successfully changed.")
+		if("change_tag")
+			var/curr_name = connected_faction.short_tag
+			var/select_name = sanitizeName(input(usr,"Enter the tag of your organization","Lognet Tag", connected_faction.short_tag) as null|text, 4, 1, 0)
+			if(select_name)
+				if(curr_name != connected_faction.short_tag)
+					to_chat(usr, "Your inputs expired because someone used the terminal first.")
+				else
+					for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
+						if(existing_faction.short_tag == select_name)
+							to_chat(usr, "Error! A Lognet with that tag already exists!")
+							return 1
+					connected_faction.short_tag = select_name
+					to_chat(usr, "Lognet tag successfully changed.")
 		if("change_purpose")
 			var/curr_name = connected_faction.purpose
 			var/select_name = sanitize(input(usr,"Enter a description or purpose for your organization.","Lognet Desc.", connected_faction.purpose) as null|text, 126)
@@ -329,6 +388,10 @@
 				connected_faction.network.password = null
 		if("change_networkvisible")
 			connected_faction.network.invisible = !connected_faction.network.invisible
+		if("hiring_command")
+			connected_faction.hiring_policy = 0
+		if("hiring_anyone")
+			connected_faction.hiring_policy = 1
 		if("menu_back")
 			menu = 3
 		if("create_accesscategory")
@@ -373,8 +436,8 @@
 			menu = 9
 			prior_menu = 6
 		if("create_access")
-			var/selected_uid = input(usr,"Enter unique access number (11 - 99)", "Enter Access Number") as null|num
-			if(!selected_uid || selected_uid < 11 || selected_uid > 99)
+			var/selected_uid = input(usr,"Enter unique access number (21 - 99)", "Enter Access Number") as null|num
+			if(!selected_uid || selected_uid < 21 || selected_uid > 99)
 				to_chat(usr, "Invalid number.")
 				return 1
 			var/text_uid = num2text(selected_uid)
@@ -388,8 +451,8 @@
 				to_chat(usr, "Access successfully created.")
 		if("create_access_two")
 			var/datum/access_category/selected_accesscategory2 = locate(href_list["selected_ref"])
-			var/selected_uid = input(usr,"Enter unique access number (11 - 99)", "Enter Access Number") as null|num
-			if(!selected_uid || selected_uid < 11 || selected_uid > 99)
+			var/selected_uid = input(usr,"Enter unique access number (21 - 99)", "Enter Access Number") as null|num
+			if(!selected_uid || selected_uid < 21 || selected_uid > 99)
 				to_chat(usr, "Invalid number.")
 				return 1
 			var/text_uid = num2text(selected_uid)
@@ -456,7 +519,7 @@
 		if("assignmentcategory_membership_yes")
 			selected_assignmentcategory.member_faction = 1
 		if("assignmentcategory_membership_no")
-			selected_assignmentcategory.member_faction = 0	
+			selected_assignmentcategory.member_faction = 0
 		if("assignmentcategory_account_on")
 			selected_assignmentcategory.account_status = 1
 		if("assignmentcategory_account_off")
@@ -566,6 +629,7 @@
 			viewing_ranks = 0
 		if("view_ranks")
 			viewing_ranks = 1
+			selected_rank = 1
 		if("create_rank")
 			var/select_name = sanitizeName(input(usr,"Enter new rank title.","New rank title", "") as null|text, MAX_NAME_LEN, 1, 0)
 			if(select_name)
@@ -601,7 +665,14 @@
 				if(new_pay < min)
 					to_chat(usr, "Pay under minimum. Rank creaton failed.")
 					return 1
-						
+				var/ranknum = ind
+				if(!ranknum)
+					ranknum = selected_assignment.ranks.len+1
+				var/datum/accesses/copy2 = selected_assignment.accesses["[ranknum-1]"]
+				var/datum/accesses/copy = new()
+				selected_assignment.accesses["[ranknum]"] = copy
+				if(copy2)
+					copy.expense_limit = copy2.expense_limit
 				selected_assignment.ranks.Insert(ind, select_name)
 				selected_assignment.ranks[select_name] = new_pay
 				to_chat(usr, "Rank successfully created.")
@@ -623,10 +694,31 @@
 			var/datum/access_category/category = locate(href_list["selected_ref"])
 			var/ind = text2num(href_list["selected_ind"])
 			var/x = category.accesses[ind]
-			if(selected_assignment.accesses.Find(x))
-				selected_assignment.accesses -= x
+			for(var/i=1;i<=selected_rank;i++)
+				if(i > selected_assignment.accesses.len)
+					selected_assignment.accesses["[i]"] = new /datum/accesses()
+					continue
+				var/datum/accesses/copy = selected_assignment.accesses["[i]"]
+				if(istype(copy))
+					var/list/all_access = copy.accesses
+					if(all_access.Find(x))
+						all_access -= x
+					else if(i == selected_rank)
+						all_access |= x
+				else
+					selected_assignment.accesses["[i]"] = new /datum/accesses()
+					
+					
+		if("change_expense_limit")
+			var/datum/accesses/copy = selected_assignment.accesses["[selected_rank]"]
+			if(istype(copy))
+				var/new_pay = input("Enter new expense limit. Expenses are used when approving orders and paying invoices with an expense card.","Change expense limit") as null|num
+				if(!new_pay && new_pay != 0) return 1
+				copy.expense_limit = new_pay				
 			else
-				selected_assignment.accesses |= x
+				selected_assignment.accesses["[selected_rank]"] = new /datum/accesses()
+					
+					
 		if("money_change")
 			var/choice = input(usr,"Are you sure you want to change the payrate? This could bankrupt the network! Remember that the payrate is multiplied by an employees payscale") in list("Confirm", "Cancel")
 			if(choice == "Confirm")
@@ -635,6 +727,25 @@
 					to_chat(usr, "Invalid number.")
 					return 1
 				connected_faction.payrate = selected_uid
+		if("tax_change")
+			var/selected_uid = input(usr,"Enter new sales tax %", "Sales Tax", connected_faction.tax_rate) as null|num
+			if(!selected_uid || selected_uid < 0 || selected_uid > 100)
+				to_chat(usr, "Invalid number.")
+				return 1
+			connected_faction.tax_rate = selected_uid
+		if("import_change")
+			var/selected_uid = input(usr,"Enter new import profit %", "Import Profit", connected_faction.import_profit) as null|num
+			if(!selected_uid || selected_uid < 0 || selected_uid > 1000)
+				to_chat(usr, "Invalid number.")
+				return 1
+			connected_faction.import_profit = selected_uid
+		if("export_change")
+			var/selected_uid = input(usr,"Enter new export tax %", "Export Tax", connected_faction.export_profit) as null|num
+			if(!selected_uid || selected_uid < 0 || selected_uid > 100)
+				to_chat(usr, "Invalid number.")
+				return 1
+			connected_faction.export_profit = selected_uid	
+			
 		if("money_settle")
 			connected_faction.pay_debt()
 		if("req1_change")
@@ -655,4 +766,43 @@
 				to_chat(usr, "Invalid number.")
 				return 1
 			connected_faction.five_promote_req = selected_uid
+		if("add_cryo")
+			var/select_name = sanitizeName(input(usr,"Enter new cryo network name.","Add Cryo-net", "") as null|text, MAX_NAME_LEN, 1, 0)
+			if(select_name)
+				if(select_name in connected_faction.cryo_networks || select_name == "default")
+					to_chat(usr, "Their is already a cryo network with this name.")
+					return 1
+				connected_faction.cryo_networks |= select_name
+			else
+				to_chat(usr, "Invalid cryo network name")
+		if("remove_cryo")
+			var/choice = input(usr,"Choose which cryo network to delete.","Remove Cryo-net",null) as null|anything in connected_faction.cryo_networks
+			if(choice)
+				connected_faction.cryo_networks -= choice
+		if("edit_assignment_cryonet")
+			var/list/choices = connected_faction.cryo_networks.Copy()
+			choices |= "default"
+			var/choice = input(usr,"Choose which cryo network the assignment should use.","Choose Cryo-net",null) as null|anything in choices
+			if(choice)
+				selected_assignment.cryo_net = choice
+		if("increase_selected_rank")
+			if(selected_rank < selected_assignment.ranks.len+1)
+				selected_rank++
+		if("decrease_selected_rank")
+			if(selected_rank != 1)
+				selected_rank--
+		if("print_expense")
+			if(connected_faction.last_expense_print > world.realtime)
+				to_chat(usr, "Your  print was rejected. You have printed an expense card in the last 3 minutes.")
+				return
+			var/obj/item/weapon/card/expense/expense = new()
+			expense.ctype = 1
+			expense.linked = connected_faction.uid
+			connected_faction.last_expense_print = world.realtime + 3 MINUTES
+			playsound(get_turf(program.computer), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
+			expense.forceMove(get_turf(program.computer))
+		if("devalidate_expense")
+			var/choice = input(usr,"This will devalidate all existing expense cards, and you will need to print new ones.") in list("Confirm", "Cancel")
+			if(choice == "Confirm")
+				devalidate_expense_cards(1, connected_faction.uid)
 	GLOB.nanomanager.update_uis(src)

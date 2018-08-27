@@ -40,6 +40,7 @@
 	. = ..()
 	if(_wifi_id)
 		wifi_receiver = new(_wifi_id, src)
+
 	if(!map_storage_loaded)
 		if(!begins_closed)
 			icon_state = icon_state_open
@@ -47,7 +48,7 @@
 			set_opacity(0)
 			layer = open_layer
 
-		implicit_material = get_material_by_name("plasteel")
+		implicit_material = SSmaterials.get_material_by_name("plasteel")
 
 /obj/machinery/door/airlock/Destroy()
 	qdel(wifi_receiver)

@@ -222,16 +222,24 @@ obj/structure/windoor_assembly/Destroy()
 							windoor.base_state = "rightsecure"
 						windoor.set_dir(src.dir)
 						windoor.set_density(0)
+						if(electronics.business_name)
+							if(electronics.one_access)
+								windoor.req_one_access_business_list = src.electronics.business_access
 
-						if(src.electronics.one_access)
-							windoor.req_access = null
-							windoor.req_one_access = src.electronics.conf_access
+							else
+								windoor.req_one_access_business_list = src.electronics.business_access
+							windoor.req_access_business = electronics.business_name
+
 						else
-							windoor.req_access = src.electronics.conf_access
-						
-						windoor.electronics = src.electronics
-						src.electronics.loc = windoor
-						windoor.req_access_faction = electronics.req_access_faction
+							if(src.electronics.one_access)
+								windoor.req_access = null
+								windoor.req_one_access = src.electronics.conf_access
+							else
+								windoor.req_access = src.electronics.conf_access
+							
+							windoor.electronics = src.electronics
+							src.electronics.loc = windoor
+							windoor.req_access_faction = electronics.req_access_faction
 					else
 						var/obj/machinery/door/window/windoor = new /obj/machinery/door/window(src.loc)
 						if(src.facing == "l")

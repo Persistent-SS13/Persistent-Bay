@@ -25,11 +25,58 @@ var/list/mechtoys = list(
 	name = "supply manifest"
 	var/is_copy = 1
 	icon_state = "paper_words"
+
+
+
 /obj/item/weapon/paper/export
 	name = "export manifest"
 	var/is_copy = 1
 	var/export_id = 0
 	icon_state = "paper_words"
+	var/business_name = 0
+
+/obj/item/weapon/paper/export/business
+	name = "export manifest"
+	business_name = null
+
+/obj/item/weapon/paper/export/business/show_content(mob/user, forceshow)
+	var/can_read = (istype(user, /mob/living/carbon/human) || isghost(user) || istype(user, /mob/living/silicon)) || forceshow
+	if(!forceshow && istype(user,/mob/living/silicon/ai))
+		var/mob/living/silicon/ai/AI = user
+		can_read = get_dist(src, AI.camera) < 2
+	var/info2 = info
+	info2 += "LINKED BUSINESS: [business_name]<br>"
+	if(src.Adjacent(user))
+		info2 += "<br>Swipe business name-tag <A href='?src=\ref[src];connect=1'>or enter full business name here.</A>"
+	else
+		info2 += "<br>Swipe business name-tag or enter full business name here."
+	user << browse("<HTML><HEAD><TITLE>[name]</TITLE></HEAD><BODY bgcolor='[color]'>[can_read ? info2 : stars(info)][stamps]</BODY></HTML>", "window=[name]")
+	onclose(user, "[name]")
+
+
+/obj/item/weapon/paper/export/business/attackby(obj/item/weapon/P as obj, mob/user as mob)
+	if(istype(P, /obj/item/weapon/pen))
+		return
+	else if(istype(P, /obj/item/weapon/card/id))
+		var/obj/item/weapon/card/id/id = P
+		if(id.selected_business)
+			var/datum/small_business/business = get_business(id.selected_business)
+			if(business)
+				business_name = business.name
+				to_chat(user, "Business linked to export.")
+		return
+	..()
+/obj/item/weapon/paper/export/business/Topic(href, href_list)
+	..()
+	if(!usr || (usr.stat || usr.restrained()))
+		return
+	if(href_list["connect"])
+		var/select_name = input(usr,"Enter the full name of the business.","Connect Business", "") as null|text
+		var/datum/small_business/viewing = get_business(select_name)
+		if(viewing && src.Adjacent(usr))
+			business_name = viewing
+			to_chat(usr, "Business linked to export.")
+
 /*
 /obj/effect/marker/supplymarker
 	icon_state = "X"
@@ -47,7 +94,8 @@ var/list/mechtoys = list(
 	var/comment = null
 	var/reason = null
 	var/orderedrank = null //used for supply console printing
-
+	var/paidby = null
+	var/last_print = 0
 var/list/point_source_descriptions = list(
 	"time" = "Base station supply",
 	"manifest" = "From exported manifests",
@@ -70,8 +118,11 @@ var/list/point_source_descriptions = list(
 	var/supplied = 0
 	var/id = 0
 	var/typepath // should be the typepath of the item we're looking for..
+	var/parent_typepath
+	var/looking_name = ""
 	var/rate = 0
 	var/order_type = ""
+
 /datum/export_order/proc/fill(var/obj/structure/closet/crate)
 	var/filled = 0
 	var/overfilled = 0
@@ -80,7 +131,7 @@ var/list/point_source_descriptions = list(
 		if(istype(A, /obj/item/weapon/paper/export))
 			filling |= A
 			continue
-		if(!istype(A, typepath))
+		if(!istype(A, typepath) && (A.name != looking_name || !istype(A, parent_typepath)))
 			message_admins("fill failed due to invalid object [A.name]")
 			return 0
 		if(filled >= (required - supplied))
@@ -103,6 +154,36 @@ var/list/point_source_descriptions = list(
 			if(supplied >= required)
 				supply_controller.close_order(src)
 
+
+/obj/var/export_value = 10
+
+/datum/export_order/static
+
+/datum/export_order/static/fill(var/obj/structure/closet/crate)
+	var/filled = 0
+	var/total = 0
+	var/list/filling = list()
+	for(var/obj/A in crate.contents)
+		if(istype(A, /obj/item/weapon/paper/export))
+			filling |= A
+			continue
+		if(!istype(A, typepath) && A.name != looking_name)
+			message_admins("fill failed due to invalid object [A.name]")
+			return 0
+		filling |= A
+		total += A.export_value
+		filled++
+
+	if(filled)
+		crate.loc = null
+		playsound(crate.loc,'sound/effects/teleport.ogg',40,1)
+		qdel(crate)
+		. = total
+
+
+
+
+
 /datum/export_order/stack
 
 /datum/export_order/stack/fill(var/obj/structure/closet/crate)
@@ -115,7 +196,7 @@ var/list/point_source_descriptions = list(
 		if(istype(A, /obj/item/weapon/paper/export))
 			filling |= A
 			continue
-		if(!istype(A, typepath))
+		if(!istype(A, typepath) && A.name != looking_name)
 			return 0
 		var/obj/item/stack/stack = A
 		var/max = (required - (supplied+filled))
@@ -180,17 +261,27 @@ var/list/point_source_descriptions = list(
 
 /datum/controller/supply/proc/generate_initial()
 	generate_export("manufacturing-basic")
-	generate_export("manufacturing-basic")
-	generate_export("manufacturing-advanced")
 	generate_export("manufacturing-advanced")
 	generate_export("material")
-	generate_export("material")
+	generate_export("phoron")
+	generate_export("bluespace crystal")
+	generate_export("xenobiology")
+	generate_export("cooking")
+	generate_export("cooking")
 /datum/controller/supply/proc/close_order(var/datum/export_order/export)
 	var/order_type = export.order_type
 	old_exports |= export
 	all_exports -= export
 	sleep(rand(25 MINUTES, 35 MINUTES))
 	generate_export(order_type)
+
+
+/datum/controller/supply/proc/get_export_name(var/id)
+	for(var/datum/export_order/export in all_exports)
+		if(export.id == id)
+			return export.name
+	return "None"
+
 /datum/controller/supply/proc/fill_order(var/id, var/closet)
 	for(var/datum/export_order/export in all_exports)
 		if(export.id == id)
@@ -217,6 +308,8 @@ var/list/point_source_descriptions = list(
 			export.order_type = typee
 			export.id = exportnum
 			var/obj/ob = new recipe.path()
+			export.parent_typepath = ob.parent_type
+			export.looking_name = ob.name
 			export.name = recipe.is_stack ? "Order for [export.required] [ob.name]\s at [export.rate] for each unit." : "Order for [export.required] [ob.name]\s at [export.rate] for each item."
 			all_exports |= export
 			return export
@@ -251,9 +344,38 @@ var/list/point_source_descriptions = list(
 			export.id = exportnum
 			if(design.build_path)
 				var/obj/ob = new design.build_path()
+				export.typepath = ob.parent_type
+				export.parent_typepath = ob.parent_type
 				export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each item."
 				all_exports |= export
 				return export
+
+		if("cooking")
+			export = new()
+			var/list/possible_designs = list()
+			for(var/D in subtypesof(/obj/item/weapon/reagent_containers/food/snacks/variable))
+				possible_designs += D
+			export.required = rand(12, 32)
+			var/per = rand(30,50)
+			export.typepath = pick(possible_designs)
+			export.rate = per
+			export.order_type = typee
+			export.id = exportnum
+			var/obj/ob = new export.typepath()
+			export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each item."
+			all_exports |= export
+			qdel(ob)
+			return export
+
+		if("xenobiology")
+			export = new /datum/export_order/static()
+			export.typepath = /obj/item/slime_extract
+			export.name = "Order for slime extracts of any type. Payment depends on the rarity of the extract."
+			export.order_type = typee
+			export.id = exportnum
+			all_exports |= export
+			return export
+
 		if("material")
 			export = new /datum/export_order/stack()
 			var/list/possible = list(
@@ -261,8 +383,7 @@ var/list/point_source_descriptions = list(
 								/obj/item/stack/material/uranium = 30,
 								/obj/item/stack/material/gold = 30,
 								/obj/item/stack/material/platinum = 30,
-								/obj/item/stack/material/phoron = 80,
-								/obj/item/stack/material/osmium = 50,
+								/obj/item/stack/material/osmium = 30,
 								)
 			var/x = pick(possible)
 			var/per = possible[x]+rand(0,5)
@@ -276,6 +397,29 @@ var/list/point_source_descriptions = list(
 			qdel(ob)
 			all_exports |= export
 			return export
+
+		if("phoron")
+			export = new /datum/export_order/stack()
+			export.typepath = /obj/item/stack/material/phoron
+			export.rate = rand(100,160)
+			export.order_type = typee
+			export.id = exportnum
+			export.required = rand(300, 500)
+			var/obj/ob = new export.typepath()
+			export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each unit."
+			qdel(ob)
+			all_exports |= export
+			return export
+
+		if("bluespace crystal")
+			export = new /datum/export_order/static()
+			export.typepath = /obj/item/bluespace_crystal
+			export.name = "Order for bluespace crystals. $$800 per crystal."
+			export.order_type = typee
+			export.id = exportnum
+			all_exports |= export
+			return export
+
 /datum/controller/supply/proc/process()
 	add_points_from_source(points_per_process, "time")
 

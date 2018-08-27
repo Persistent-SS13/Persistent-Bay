@@ -100,6 +100,12 @@
 		qdel(i)
 		if(was_there_a_photo)
 			to_chat(user, "<span class='notice'>The photo cannot go into \the [src].</span>")
+	else if(istype(i, /obj/item/weapon/paper_package))
+		var/obj/item/weapon/paper_package/p = i
+		to_chat(user, "<span class='notice'>You open \the [i] and add its papers into \the [src].</span>")
+		amount += p.amount
+		qdel(i)
+
 	return
 
 

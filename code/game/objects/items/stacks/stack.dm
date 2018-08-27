@@ -195,6 +195,9 @@
 			var/datum/matter_synth/S = synths[i]
 			S.use_charge(charge_costs[i] * used) // Doesn't need to be deleted
 		return 1
+
+	src.update_strings()
+
 	return 0
 
 /obj/item/stack/proc/add(var/extra)
@@ -210,6 +213,8 @@
 		for(var/i = 1 to uses_charge)
 			var/datum/matter_synth/S = synths[i]
 			S.add_charge(charge_costs[i] * extra)
+
+	src.update_strings()
 
 /*
 	The transfer and split procs work differently than use() and add().
@@ -312,10 +317,14 @@
 		var/N = input("How many stacks of [src] would you like to split off?", "Split stacks", 1) as num|null
 		if(N)
 			var/obj/item/stack/F = src.split(N)
-			if (F)
+			if(F)
 				user.put_in_hands(F)
 				src.add_fingerprint(user)
 				F.add_fingerprint(user)
+
+				F.update_strings()
+				src.update_strings()
+
 				spawn(0)
 					if (src && usr.machine==src)
 						src.interact(usr)
@@ -336,6 +345,7 @@
 	else
 		return ..()
 
+/obj/item/stack/proc/update_strings() //Hacky way to update material stacks matter values
 /*
  * Recipe datum
  */

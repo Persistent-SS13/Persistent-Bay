@@ -67,9 +67,9 @@ var/datum/controller/employment_controller/employment_controller
 				// Make sure they are still on duty...
 				if(stack.duty_status)
 					for(var/mob/M in GLOB.player_list)
-						if(M.real_name == stack.get_owner_name() && M.client && M.client.inactivity <= 10 * 60 * 10)
+						if(M.real_name == stack.get_owner_name() && M.client && M.client.inactivity <= 15 MINUTES)
 							// Log a five-minute unit of work on their crew record.
-							record.worked += 1	
+							record.worked += 1
 							connected_faction.unpaid |= record
 							notify |= stack
 							break

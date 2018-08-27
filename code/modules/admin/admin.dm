@@ -1660,3 +1660,14 @@ datum/admins/var/obj/item/weapon/paper/admin/faxreply // var to hold fax replies
 		qdel(P)
 		faxreply = null
 	return
+
+/datum/admins/proc/generate_beacon()
+	set category = "Debug"
+	set desc = "Spawn the Nanotrasen frontier beacon at (100,100,1)"
+	set name = "Generate Faction Beacon"
+
+	new /obj/faction_spawner/Nanotrasen(locate(100,100,1))
+	var/obj/structure/frontier_beacon/beacon
+	beacon = new /obj/structure/frontier_beacon(locate(100,100,1)) //
+	beacon.req_access_faction = "nanotrasen"
+	return

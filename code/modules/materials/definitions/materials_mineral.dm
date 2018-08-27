@@ -15,8 +15,8 @@
 	xarch_source_mineral = "potassium"
 	ore_icon_overlay = "nugget"
 	chem_products = list(
-		/datum/reagent/radium = 10,
-		/datum/reagent/uranium = 10
+		/datum/reagent/radium = 20,
+		/datum/reagent/uranium = 40
 		)
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
@@ -33,8 +33,8 @@
 	ore_scan_icon = "mineral_common"
 	ore_icon_overlay = "lump"
 	chem_products = list(
-		/datum/reagent/carbon = 15,
-		/datum/reagent/acetone = 5
+		/datum/reagent/carbon = 20,
+		/datum/reagent/acetone = 10
 		)
 
 /material/quartz
@@ -64,8 +64,8 @@
 	ore_icon_overlay = "lump"
 	icon_colour = "#ccc9a3"
 	chem_products = list(
-		/datum/reagent/sulfur = 15,
-		/datum/reagent/iron = 5
+		/datum/reagent/sulfur = 10,
+		/datum/reagent/iron = 35
 		)
 	door_icon_base = "stone"
 	sheet_singular_name = "brick"

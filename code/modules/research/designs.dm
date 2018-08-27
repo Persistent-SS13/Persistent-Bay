@@ -2044,6 +2044,15 @@ CIRCUITS BELOW
 	build_path = /obj/item/weapon/circuitboard/integrated_printer
 	sort_string = "WAAAS"
 
+
+/datum/design/circuit/cellcharger
+	name = "cell charger"
+	id = "cellcharger"
+	req_tech = list(TECH_DATA = 3, TECH_ENGINEERING = 3)
+	build_path = /obj/item/weapon/circuitboard/machinery/cell_charger
+	sort_string = "WAAAT"
+
+
 /datum/design/aimodule
 	build_type = IMPRINTER
 	materials = list("glass" = 2000, "gold" = 100)

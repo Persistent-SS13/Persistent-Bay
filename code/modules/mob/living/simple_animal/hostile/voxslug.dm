@@ -4,7 +4,7 @@ Small, little HP, poisonous.
 
 /mob/living/simple_animal/hostile/voxslug
 	name = "slug"
-	desc = "A viscious little creature, it has a mouth of too many teeth and a penchant for blood."
+	desc = "A viscious little creature, it has a mouth of too many teeth and a penchant for blood. It looks very engaging."
 	icon_state = "voxslug"
 	icon_living = "voxslug"
 	item_state = "voxslug"
@@ -47,7 +47,7 @@ Small, little HP, poisonous.
 
 /mob/living/simple_animal/hostile/voxslug/get_scooped(var/mob/living/carbon/grabber)
 	if(grabber.species.get_bodytype() != SPECIES_VOX)
-		to_chat(grabber, "<span class='warning'>\The [src] wriggles out of your hands before you can pick it up!</span>")
+		to_chat(grabber, "<span class='warning'>\The [src] disengages from your hands before you can pick it up!</span>")
 		return
 	else return ..()
 

@@ -2037,6 +2037,20 @@ CIRCUITS BELOW
 	build_path = /obj/item/weapon/circuitboard/aicore
 	sort_string = "XAAAA"
 
+/datum/design/circuit/integrated
+	name = "integrated circuit"
+	id = "integrated"
+	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
+	build_path = /obj/item/weapon/circuitboard/integrated_printer
+	sort_string = "WAAAS"
+
+/datum/design/circuit/cellcharger
+	name = "cell charger"
+	id = "cellcharger"
+	req_tech = list(TECH_DATA = 3, TECH_ENGINEERING = 3)
+	build_path = /obj/item/weapon/circuitboard/machinery/cell_charger
+	sort_string = "WAAAT"
+
 /datum/design/aimodule
 	build_type = IMPRINTER
 	materials = list("glass" = 2000, "gold" = 100)

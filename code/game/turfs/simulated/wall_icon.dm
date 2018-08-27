@@ -103,7 +103,7 @@
 			W.update_connections()
 		if(can_join_with(W))
 			dirs += get_dir(src, W)
-		w.update_icon()
+		W.update_icon()
 
 	wall_connections = dirs_to_corner_states(dirs)
 

@@ -1,3 +1,5 @@
+GLOBAL_LIST_EMPTY(neural_laces)
+
 /mob/living/carbon/human/proc/create_stack()
 	set waitfor=0
 	sleep(10)
@@ -9,7 +11,7 @@
 		to_chat(user, "This one looks occupied and ready for cloning, the conciousness clearly present and active.")
 	else if(lacemob && lacemob.stored_ckey)
 		to_chat(user, "This one appears inactive, the conciousness is resting and the transfer cannot complete until it 'wakes'.")
-	else 
+	else
 		to_chat(user, "This one seems particularly lifeless. Perhaps it will regain some of its luster later..")
 
 /obj/item/organ/internal/stack
@@ -34,13 +36,23 @@
 	var/datum/world_faction/faction
 	var/mob/living/carbon/lace/lacemob
 	var/sensor = 0
-	
+
 	var/business_mode = 0
 	var/connected_business = ""
-	
+
+/obj/item/organ/internal/stack/New()
+	..()
+	GLOB.neural_laces |= src
+	do_backup()
+	robotize()
+
+/obj/item/organ/internal/stack/Destroy()
+	GLOB.neural_laces -= src
+	. = ..()
+
 /obj/item/organ/internal/stack/ex_act(severity)
 	return ":)"
-	
+
 /obj/item/organ/internal/stack/proc/transfer_identity(var/mob/living/carbon/H)
 
 	if(!lacemob)
@@ -68,12 +80,19 @@
 	to_chat(lacemob, "<span class='notice'>You feel slightly disoriented. Your conciousness suddenly shifts into a neural lace.</span>")
 
 /obj/item/organ/internal/stack/proc/get_owner_name()
-	if(!owner)
-		if(istype(loc, /obj/item/device/lmi))
-			if(istype(loc.loc, /mob/living/silicon/robot))
-				var/mob/living/silicon/robot/robot = loc.loc
-				return robot.real_name
-	return owner.real_name
+	var/mob/M = get_owner()
+	if(M)
+		return M.real_name
+	return 0
+
+/obj/item/organ/internal/stack/proc/get_owner()
+	if(owner)
+		return owner
+	if(istype(loc.loc, /mob/living/silicon/robot))
+		return loc.loc
+	if(lacemob)
+		return lacemob
+	return 0
 
 /obj/item/organ/internal/stack/ui_action_click()
 	var/mob/living/silicon/robot/robot
@@ -136,7 +155,7 @@
 		data["sensor"] = sensor
 	if(business_mode)
 		var/datum/small_business/business = get_business(connected_business)
-		data["business_name"] = business.name	
+		data["business_name"] = business.name
 	else if(faction)
 		data["faction_name"] = faction.name
 		if(duty_status == 1)
@@ -172,7 +191,7 @@
 		var/datum/computer_file/crew_record/record = fact.get_record(owner.real_name)
 		if(record)
 			potential |= fact
-			
+
 	return potential
 /obj/item/organ/internal/stack/proc/try_duty()
 	var/mob/living/silicon/robot/robot
@@ -230,10 +249,7 @@
 		if(owner.ckey)
 			ownerckey = owner.ckey
 
-/obj/item/organ/internal/stack/New()
-	..()
-	do_backup()
-	robotize()
+
 /obj/item/organ/internal/stack/after_load()
 	..()
 	try_connect()
@@ -268,7 +284,7 @@
 
 	if(name == initial(name))
 		name = "\the [owner.real_name]'s [initial(name)]"
-		
+
 	transfer_identity(owner)
 
 	..()

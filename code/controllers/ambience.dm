@@ -155,6 +155,7 @@ var/datum/controller/ambient_controller/ambient_controller
 					controller.lastplayed = to_play[x]
 					controller.timetostop = controller.lastplayed.length + world.time
 		for(var/client/C in GLOB.clients)
+			if(!(C && C.get_preference_value(/datum/client_preference/play_ambiance) == GLOB.PREF_YES))	continue
 			var/mob/M = C.mob
 			if(M && to_play["[M.z]"] && C.get_preference_value(/datum/client_preference/play_ambiance) == GLOB.PREF_YES)
 				var/turf/T = M.loc

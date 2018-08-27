@@ -1623,7 +1623,7 @@
 
 	var/wrapped = 0
 	var/monkey_type = /mob/living/carbon/human/monkey
-
+	var/expanding = 0
 /obj/item/weapon/reagent_containers/food/snacks/monkeycube/New()
 	..()
 	reagents.add_reagent(/datum/reagent/nutriment/protein, 10)
@@ -1633,10 +1633,12 @@
 		Unwrap(user)
 
 /obj/item/weapon/reagent_containers/food/snacks/monkeycube/proc/Expand()
-	src.visible_message("<span class='notice'>\The [src] expands!</span>")
-	var/mob/monkey = new monkey_type
-	monkey.dropInto(src.loc)
-	qdel(src)
+	if(!expanding)
+		expanding = 1
+		src.visible_message("<span class='notice'>\The [src] expands!</span>")
+		var/mob/monkey = new monkey_type
+		monkey.dropInto(src.loc)
+		qdel(src)
 
 /obj/item/weapon/reagent_containers/food/snacks/monkeycube/proc/Unwrap(var/mob/user)
 	icon_state = "monkeycube"

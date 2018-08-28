@@ -213,7 +213,8 @@ var/list/admin_verbs_debug = list(
 	/client/proc/cmd_analyse_health_context,
 	/client/proc/cmd_analyse_health_panel,
 	/client/proc/visualpower,
-	/client/proc/visualpower_remove
+	/client/proc/visualpower_remove,
+	/datum/admins/proc/generate_beacon			//Generates the Nanotrasen faction beacon
 	)
 
 var/list/admin_verbs_paranoid_debug = list(
@@ -516,7 +517,7 @@ var/list/admin_verbs_mentor = list(
 		holder.Secrets()
 	feedback_add_details("admin_verb","S") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	return
-	
+
 /client/proc/bonus_panel()
 
 	set category = "Server"
@@ -527,7 +528,7 @@ var/list/admin_verbs_mentor = list(
 		return
 	if(holder)
 		holder.bonus_panel()
-		
+
 
 /client/proc/colorooc()
 	set category = "Fun"

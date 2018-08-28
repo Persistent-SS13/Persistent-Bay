@@ -22,7 +22,7 @@ var/datum/controller/employment_controller/employment_controller
 
 	for(var/obj/item/organ/internal/stack/stack in GLOB.neural_laces)
 		var/mob/employee = stack.get_owner()
-		if(!(employee?.client)) continue
+		if(!employee ||  !employee.client) continue
 		var/datum/employer = get_faction(stack.connected_faction)
 		if(employer)
 			if(employee.client.inactivity <= 5 MINUTES && stack.duty_status)
@@ -33,7 +33,8 @@ var/datum/controller/employment_controller/employment_controller
 			if(payday)
 				if(istype(employer, /datum/small_business))
 					var/datum/small_business/business = employer
-					var/payment = business.get_employee_data(employee.real_name).pay_rate * 12 * business.unpaid["[employee.real_name]"]
+					var/datum/employee_data/employeed = business.get_employee_data(employee.real_name)
+					var/payment = employeed.pay_rate * 12 * business.unpaid["[employee.real_name]"]
 					if(payment && !money_transfer(business.central_account, employee.real_name, "Payroll", payment))
 						business.debts["[employee.real_name]"] += payment
 

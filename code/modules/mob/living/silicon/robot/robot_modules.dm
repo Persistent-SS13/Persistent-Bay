@@ -68,6 +68,7 @@ var/global/list/robot_modules = list(
 	for(var/obj/item/I in modules)
 		I.canremove = 0
 
+
 /obj/item/weapon/robot_module/proc/Reset(var/mob/living/silicon/robot/R)
 	remove_camera_networks(R)
 	remove_languages(R)

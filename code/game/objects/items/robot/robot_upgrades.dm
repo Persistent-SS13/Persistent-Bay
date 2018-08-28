@@ -198,7 +198,7 @@
 		to_chat(usr, "There's already an installed module!")
 		return 0	
 	R.installed_module = src
-	installed = 1
+	installed = loo
 	return 1
 	
 /obj/item/borg/module_chip/medical/surgeon

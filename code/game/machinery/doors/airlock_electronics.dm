@@ -39,8 +39,6 @@
 	
 	
 /obj/item/weapon/airlock_electronics/business/ui_act(action, params)
-	if(..())
-		return TRUE
 	switch(action)
 		if("clear")
 			conf_access = list()
@@ -74,7 +72,8 @@
 			business_name = null
 			locked = 1
 			. = TRUE
-	
+	if(..())
+		return TRUE
 	
 	
 /obj/item/weapon/airlock_electronics

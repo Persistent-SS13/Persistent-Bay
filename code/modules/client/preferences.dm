@@ -387,12 +387,12 @@ datum/preferences
 			var/mob/M
 			S >> M
 			if(M)
-				for(var/mob/loaded_mob in SSmobs.mob_list)
-					if(!loaded_mob.perma_dead && loaded_mob.type != /mob/new_player && (loaded_mob.real_name == M.real_name) && get_turf(loaded_mob))
-						M = loaded_mob
 				M.after_load()
 				for(var/datum/D in M.contents)
 					D.after_load()
+				for(var/mob/loaded_mob in SSmobs.mob_list)
+					if(!loaded_mob.perma_dead && loaded_mob.type != /mob/new_player && (loaded_mob.real_name == M.real_name) && get_turf(loaded_mob))
+						M = loaded_mob
 				character_list += M
 				M.save_slot = i
 		else

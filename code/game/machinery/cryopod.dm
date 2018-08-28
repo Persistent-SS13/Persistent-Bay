@@ -389,7 +389,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		var/savefile/f = new("[save_path][occupant.save_slot].sav")
 		f << occupant
 	if(occupant.client && occupant.client.prefs)
-		occupant.client.prefs.character_list = list()
+		occupant.client.prefs.load_characters()
 	var/mob/new_player/M = new /mob/new_player()
 	M.loc = null
 	if(occupant.ckey)

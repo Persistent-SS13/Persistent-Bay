@@ -22,10 +22,10 @@ var/datum/controller/employment_controller/employment_controller
 
 	for(var/obj/item/organ/internal/stack/stack in GLOB.neural_laces)
 		var/mob/employee = stack.get_owner()
-		if(!employee ||  !employee.client) continue
+		if(!employee || !employee.client) continue
 		var/datum/employer = get_faction(stack.connected_faction)
 		if(employer)
-			if(employee.client.inactivity <= 5 MINUTES && stack.duty_status)
+			if(employee.client.inactivity <= 15 MINUTES && stack.duty_status)
 				if(!employer:unpaid["[employee.real_name]"])
 					employer:unpaid["[employee.real_name]"] = 1
 				else
@@ -41,7 +41,7 @@ var/datum/controller/employment_controller/employment_controller
 					var/datum/world_faction/faction = employer
 					var/datum/computer_file/crew_record/record = faction.get_record(employee.real_name)
 					var/datum/assignment/job = faction.get_assignment(record.assignment_uid)
-					var/payment = job != null ? (record.rank > 1 ? text2num(job.ranks[job.ranks[record.rank - 1]]) : job.payscale) * faction.unpaid["[employee.real_name]"] / 12 : 0
+					var/payment = job != null ? (record.rank > 1 ? text2num(job.ranks[job.ranks[record.rank - 1]]) : job.payscale) * faction.payrate * faction.unpaid["[employee.real_name]"] / 12 : 0
 					if(payment && !money_transfer(faction.central_account, employee.real_name, "Payroll", payment))
 						faction.debts["[employee.real_name]"] += payment
 

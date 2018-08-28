@@ -366,7 +366,7 @@
 		if("employment_controller")
 			return global.employment_controller;
 		if("aggression_controller")
-			return global.aggression_controller;	
+			return global.aggression_controller;
 		if("empty_playable_ai_cores")
 			return global.empty_playable_ai_cores;
 		if("endgame_exits")
@@ -509,8 +509,6 @@
 			return global.init;
 		if("initialization_stage")
 			return global.initialization_stage;
-		if("integrated_circuit_blacklist")
-			return global.integrated_circuit_blacklist;
 		if("intents")
 			return global.intents;
 		if("intercom_range_display_status")
@@ -1586,8 +1584,6 @@
 			global.init=newval;
 		if("initialization_stage")
 			global.initialization_stage=newval;
-		if("integrated_circuit_blacklist")
-			global.integrated_circuit_blacklist=newval;
 		if("intents")
 			global.intents=newval;
 		if("intercom_range_display_status")

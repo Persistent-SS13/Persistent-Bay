@@ -282,7 +282,7 @@ var/global/datum/controller/gameticker/ticker
 		for(var/mob/new_player/player in GLOB.player_list)
 			if(player && player.ready && player.mind)
 				for(var/mob/loaded_mob in SSmobs.mob_list)
-					if(loaded_mob.type != /mob/new_player && loaded_mob.saved_ckey == player.ckey && get_turf(loaded_mob))
+					if(loaded_mob.type != /mob/new_player && (loaded_mob.saved_ckey == player.ckey || loaded_mob.saved_ckey == "@[player.ckey]") && get_turf(loaded_mob))
 						player.close_spawn_windows()
 						loaded_mob.ckey = player.ckey
 						loaded_mob.saved_ckey = ""

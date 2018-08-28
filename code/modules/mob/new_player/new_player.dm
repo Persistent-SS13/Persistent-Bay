@@ -74,6 +74,10 @@
 	return
 
 /mob/new_player/proc/slot_select_load()
+	if(!client.prefs.character_list || (client.prefs.character_list.len < slots))
+		client.prefs.load_characters()
+		sleep(20)
+		return slot_select_load()
 	for(var/mob/loaded_mob in SSmobs.mob_list)
 		if(!loaded_mob.perma_dead && loaded_mob.type != /mob/new_player && (loaded_mob.saved_ckey == ckey || loaded_mob.saved_ckey == "@[ckey]") && get_turf(loaded_mob))
 			if(ticker.current_state <= GAME_STATE_PREGAME)
@@ -94,10 +98,7 @@
 	if(check_rights(R_ADMIN, 0, client))
 		slots += 2
 	slots += client.prefs.bonus_slots
-	if(!client.prefs.character_list || (client.prefs.character_list.len < slots))
-		client.prefs.load_characters()
-		sleep(20)
-		return slot_select_load()
+	
 	var/dat  = list()
 	dat += "<body>"
 	dat += "<tt><center>"

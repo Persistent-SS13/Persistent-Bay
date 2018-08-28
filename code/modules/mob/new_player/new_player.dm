@@ -74,6 +74,7 @@
 	return
 
 /mob/new_player/proc/slot_select_load()
+	var/slots = config.character_slots
 	if(!client.prefs.character_list || (client.prefs.character_list.len < slots))
 		client.prefs.load_characters()
 		sleep(20)
@@ -94,7 +95,7 @@
 				qdel(src)
 				return 0
 	var/mob/user = src
-	var/slots = config.character_slots
+	
 	if(check_rights(R_ADMIN, 0, client))
 		slots += 2
 	slots += client.prefs.bonus_slots

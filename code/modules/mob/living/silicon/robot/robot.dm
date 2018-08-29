@@ -337,9 +337,11 @@
 			if(lmi.brainmob)
 				mind.transfer_to(lmi.brainmob)
 			else
-				to_chat(src, "<span class='danger'>Oops! Something went very wrong, your LMI was unable to receive your mind. You have been ghosted. Please make a bug report so we can fix this bug.</span>")
-				ghostize()
-				//ERROR("A borg has been destroyed, but its MMI lacked a brainmob, so the mind could not be transferred. Player: [ckey].")
+				lmi.brainmob = new()
+				mind.transfer_to(lmi.brainmob)	
+			//	to_chat(src, "<span class='danger'>Oops! Something went very wrong, your LMI was unable to receive your mind. You have been ghosted. Please make a bug report so we can fix this bug.</span>")
+			//	ghostize()
+			//	//ERROR("A borg has been destroyed, but its MMI lacked a brainmob, so the mind could not be transferred. Player: [ckey].")
 			lmi = null
 		else
 			QDEL_NULL(lmi)

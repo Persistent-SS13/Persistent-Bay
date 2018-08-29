@@ -48,6 +48,7 @@
 	make_blood()
 
 /mob/living/carbon/human/Destroy()
+	if(get_turf(src))
 	GLOB.human_mob_list -= src
 	worn_underwear = null
 	for(var/organ in organs)

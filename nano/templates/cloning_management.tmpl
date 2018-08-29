@@ -1,33 +1,58 @@
 {{if data.has_scanner}}
-	{{if data.has_dna}}
-		<h2>Current DNA: {{:data.dna}}</h2><br>
-	{{else}}
-		<h2><span class='alert'><i>No DNA scanned.</i></span><h2><br>
-	{{/if}}
-	<hr>
-	<h2>Cloning Pods</h2><br>
-	{{for data.connected_pods}}
-		<hr>
-		- {{:value.name}} -<br>
-		Status: 
-		{{if value.attempting}}
-			<font color='008000'><b>Currently Cloning</b></font>
+	{{if data.menu == 1}}
+	
+		{{if data.has_dna}}
+			<h2>Current DNA: {{:data.dna}}</h2><br>
 		{{else}}
-			{{if value.status}}
-				<font color='FF0000'><b>Issue Detected</b></font>
+			<h2><span class='alert'><i>No DNA scanned.</i></span><h2><br>
+		{{/if}}
+		<hr>
+		<h2>Cloning Pods</h2><br>
+		{{for data.connected_pods}}
+			<hr>
+			- {{:value.name}} -<br>
+			Status: 
+			{{if value.attempting}}
+				<font color='008000'><b>Currently Cloning</b></font>
 			{{else}}
-				Normal
+				{{if value.status}}
+					<font color='FF0000'><b>Issue Detected</b></font>
+				{{else}}
+					Normal
+				{{/if}}
 			{{/if}}
-		{{/if}}
-		<br>
-		Biomass: {{:value.biomass}} / {{:data.clone_biomass}}
-		<br>
-		{{if value.can_select}}
-			{{:helper.link('Select for Cloning', '', {'select_pod' : '1', 'target' : value.pod_ref}, null)}}
-		{{/if}}
-		{{:helper.link('Disconnect from Manager', '', {'disconnect_pod' : '1', 'target' : value.pod_ref}, null)}}
-	{{/for}}
-	{{:helper.link('Scan for Pods', '', {'connect' : '1'}, null)}}
+			<br>
+			Biomass: {{:value.biomass}} / {{:data.clone_biomass}}
+			<br>
+			{{if value.can_select}}
+				{{:helper.link('Select for Cloning', '', {'select_pod' : '1', 'target' : value.pod_ref}, null)}}
+			{{/if}}
+			{{:helper.link('Disconnect from Manager', '', {'disconnect_pod' : '1', 'target' : value.pod_ref}, null)}}
+		{{/for}}
+		{{:helper.link('Scan for Pods', '', {'connect' : '1'}, null)}}
+	{{else}}
+		<h2>Current DNA: {{:data.dna}}</h2><br>
+		{{:helper.link('Back', '', {'back' : '1'}, null)}}<br><br>
+		To create a viable clone, a fee of 5000$$ must be paid to the Vox Arkship so they align their equipment to send a signal, rapidly developing the clones cortical node.
+		Use funding contracts to get 5000$$ commited.<br><br>
+		{{:helper.link('Print Funding Contract', '', {'contract' : 1}, null)}}<br><br>
+		<h4>Signed Contracts</h4>
+		<div class="statusDisplay" style="overflow: auto;">
+			{{for data.signed_contracts}}
+				{{:value.signed_contract}}<br><hr>
+			{{/for}}
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Current Commitment:
+			</div>
+			<div class='itemContent'>
+				{{:data.commitment}}/5000$$
+			</div>
+		</div>
+		{{:helper.link('Finalize', '', {'finish' : '1'}, data.finishable ? null : 'disabled')}}
+	{{/if}}
+	
 {{else}}
 	<span class='alert'><i>This program requires a dna scanner to function. Please install a dna scanner to continue.</i></span><br>
 {{/if}}

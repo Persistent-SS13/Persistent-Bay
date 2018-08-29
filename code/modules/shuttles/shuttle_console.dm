@@ -1,3 +1,5 @@
+
+
 /obj/machinery/computer/bridge_computer
 	name = "shuttle bridge console"
 	icon = 'icons/obj/computer.dmi'
@@ -45,8 +47,9 @@
 
 /obj/machinery/computer/bridge_computer/proc/get_docks(mob/user)
 	var/list/beacons = list()
+	if(!shuttle) return
 	for(var/obj/machinery/docking_beacon/beacon in GLOB.all_docking_beacons)
-		if(beacon == dock)
+		if(beacon == dock || beacon.status != 2 || !beacon.loc || beacon.dimensions < shuttle.size)
 			continue
 		if(beacon.visible_mode)
 			if(beacon.visible_mode == 1)
@@ -86,7 +89,12 @@
 			var/list/formatted_beacons[0]
 			for(var/obj/machinery/docking_beacon/beacon in beacons)
 				var/dock_status = beacons[beacon]
-				formatted_beacons[++formatted_beacons.len] = list("name" = beacon.id, "status" = dock_status, "ref" = "\ref[beacon]")
+				var/dock_name
+				if(dock_status == 2)
+					dock_name = "REQUEST: [beacon.id]"
+				else
+					dock_name = "DOCK: [beacon.id]"
+				formatted_beacons[++formatted_beacons.len] = list("name" = dock_name, "status" = dock_status, "ref" = "\ref[beacon]")
 			data["beacons"] = formatted_beacons
 		else
 			data["desired_name"] = desired_name != "" ? desired_name : "Unset!"
@@ -97,7 +105,7 @@
 
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
-		ui = new(user, src, ui_key, ui_template, "[shuttle_tag] Shuttle Control", 470, 450)
+		ui = new(user, src, ui_key, ui_template, "[shuttle_tag] Shuttle Control", 400, 300)
 		ui.set_initial_data(data)
 		ui.open()
 		ui.set_auto_update(1)
@@ -126,7 +134,8 @@
 
 
 /obj/machinery/computer/bridge_computer/Topic(href, href_list)
-
+	if(!allowed(usr))
+		return 1
 	if(href_list["set_name"])
 		var/curr_name = desired_name
 		var/select_name = sanitizeName(input(usr,"Enter the name of the vessel","Shuttle name", desired_name) as null|text, MAX_NAME_LEN, 1, 0)
@@ -161,7 +170,14 @@
 			shuttle.name = desired_name
 			shuttle.ownertype = shuttle_type
 			shuttle.owner = locked_to
-			shuttle.shuttle_area.name = desired_name
+			loc.loc.name = desired_name
+
+			if(shuttle_type == 1)
+				req_access_personal = locked_to
+				req_access = list(999)
+			else
+				req_access_faction = locked_to
+				req_access = list(core_access_shuttle_programs)
 			to_chat(usr, "Shuttle finalization complete.")
 		else
 			to_chat(usr, "Shuttle finalization failed, check details.")
@@ -171,11 +187,19 @@
 				beacon.check_shuttle()
 			return
 		var/obj/machinery/docking_beacon/beacon = locate(href_list["selected_ref"])
+		if(beacon.dimensions < shuttle.size)
+			to_chat(usr, "Dock is not big enough.")
+			return 1
 		shuttle.short_jump(beacon, dock)
+		dock.status = 2
+		dock = beacon
+		dock.status = 4
+		dock.bridge = src
+		dock.shuttle = shuttle
+		shuttle.current_location = dock
+
 	if(..())
 		return 1
-
-	handle_topic_href(shuttle_controller.shuttles[shuttle_tag], href_list)
 
 /obj/machinery/computer/bridge_computer/emag_act(var/remaining_charges, var/mob/user)
 	if (!hacked)
@@ -193,35 +217,6 @@
 
 /obj/machinery/computer/bridge_computer/emp_act()
 	return
-
-
-
-
-
-
-
-/obj/machinery/computer/shuttle_control
-	name = "shuttle control console"
-	icon = 'icons/obj/computer.dmi'
-	icon_keyboard = "atmos_key"
-	icon_screen = "shuttle"
-	circuit = null
-
-	var/shuttle_tag  // Used to coordinate data in shuttle controller.
-	var/hacked = 0   // Has been emagged, no access restrictions.
-
-	var/ui_template = "shuttle_control_console.tmpl"
-
-
-/obj/machinery/computer/shuttle_control/attack_hand(user as mob)
-	if(..(user))
-		return
-	//src.add_fingerprint(user)	//shouldn't need fingerprints just for looking at it.
-	if(!allowed(user))
-		to_chat(user, "<span class='warning'>Access Denied.</span>")
-		return 1
-
-	ui_interact(user)
 
 /obj/machinery/computer/shuttle_control/proc/get_ui_data(var/datum/shuttle/autodock/shuttle)
 	var/shuttle_state
@@ -269,6 +264,37 @@
 		shuttle.force_launch(src)
 	else if(href_list["cancel"])
 		shuttle.cancel_launch(src)
+
+
+/obj/machinery/computer/bridge_computer/after_load()
+	..()
+	if(shuttle && loc && loc.loc)
+		shuttle.shuttle_area |= loc.loc
+
+
+/obj/machinery/computer/shuttle_control
+	name = "shuttle control console"
+	icon = 'icons/obj/computer.dmi'
+	icon_keyboard = "atmos_key"
+	icon_screen = "shuttle"
+	circuit = null
+
+	var/shuttle_tag  // Used to coordinate data in shuttle controller.
+	var/hacked = 0   // Has been emagged, no access restrictions.
+
+	var/ui_template = "shuttle_control_console.tmpl"
+
+
+/obj/machinery/computer/shuttle_control/attack_hand(user as mob)
+	if(..(user))
+		return
+	//src.add_fingerprint(user)	//shouldn't need fingerprints just for looking at it.
+	if(!allowed(user))
+		to_chat(user, "<span class='warning'>Access Denied.</span>")
+		return 1
+
+	ui_interact(user)
+
 
 /obj/machinery/computer/shuttle_control/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 	var/datum/shuttle/autodock/shuttle = shuttle_controller.shuttles[shuttle_tag]

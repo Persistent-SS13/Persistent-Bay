@@ -65,6 +65,13 @@
 	organ_tag = BP_RESIN
 	associated_power = /mob/living/carbon/human/proc/resin
 
+/obj/item/organ/internal/xenos/nutrients
+	name = BP_NUTRIENT
+	parent_organ = BP_CHEST
+	organ_tag = BP_NUTRIENT
+	icon = 'icons/mob/alien.dmi'
+	icon_state = "claw"
+
 /obj/item/organ/internal/eyes/xenos/update_colour()
 	if(!owner)
 		return
@@ -96,4 +103,4 @@
 
 /obj/item/organ/external/head/unbreakable/xeno
 	eye_icon = "eyes"
-	eye_icon_location = 'icons/mob/human_races/xenos/r_xenos_drone.dmi'
+	eye_icon_location = 'icons/mob/human_races/species/xenos/eyes.dmi'

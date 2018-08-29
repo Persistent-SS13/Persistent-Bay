@@ -30,7 +30,7 @@ FIELD_LIST("Sex", sex, record_genders())
 FIELD_NUM("Age", age)
 
 FIELD_LIST("Status", status, GLOB.physical_statuses)
-/record_field/status/acccess_edit = access_medical
+/record_field/status/acccess_edit = core_access_medical_programs
 
 FIELD_SHORT("Species",species)
 FIELD_LIST("Branch", branch, record_branches())
@@ -38,20 +38,20 @@ FIELD_LIST("Rank", rank, record_ranks())
 
 // MEDICAL RECORDS
 FIELD_LIST("Blood Type", bloodtype, GLOB.blood_types)
-FIELD_LONG_SECURE("Medical Record", medRecord, access_medical)
+FIELD_LONG_SECURE("Medical Record", medRecord, core_access_medical_programs)
 
 // SECURITY RECORDS
-FIELD_LIST_SECURE("Criminal Status", criminalStatus, GLOB.security_statuses, access_security)
-FIELD_LONG_SECURE("Security Record", secRecord, access_security)
-FIELD_SHORT_SECURE("DNA", dna, access_security)
-FIELD_SHORT_SECURE("Fingerprint", fingerprint, access_security)
+FIELD_LIST_SECURE("Criminal Status", criminalStatus, GLOB.security_statuses, core_access_security_programs)
+FIELD_LONG_SECURE("Security Record", secRecord, core_access_security_programs)
+FIELD_SHORT_SECURE("DNA", dna, core_access_security_programs)
+FIELD_SHORT_SECURE("Fingerprint", fingerprint, core_access_security_programs)
 
 // EMPLOYMENT RECORDS
-FIELD_LONG_SECURE("Employment Record", emplRecord, access_heads)
-FIELD_SHORT_SECURE("Home System", homeSystem, access_heads)
-FIELD_SHORT_SECURE("Citizenship", citizenship, access_heads)
-FIELD_SHORT_SECURE("Faction", faction, access_heads)
-FIELD_SHORT_SECURE("Religion", religion, access_heads)
+FIELD_LONG_SECURE("Employment Record", emplRecord, core_access_employee_records)
+FIELD_SHORT_SECURE("Home System", homeSystem, core_access_employee_records)
+FIELD_SHORT_SECURE("Citizenship", citizenship, core_access_employee_records)
+FIELD_SHORT_SECURE("Faction", faction, core_access_employee_records)
+FIELD_SHORT_SECURE("Religion", religion, core_access_employee_records)
 
 // ANTAG RECORDS
 FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
@@ -79,6 +79,9 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/assignment_data = list() // format = list(assignment_uid = rank)
 	var/validate_time = 0
 	var/worked = 0
+	var/expenses = 0
+	
+	
 /datum/computer_file/crew_record/New()
 	..()
 	for(var/T in subtypesof(/record_field/))
@@ -103,22 +106,27 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/datum/assignment/curr_assignment = faction.get_assignment(assignment_uid)
 	if(!curr_assignment) return 0
 	for(var/name in promote_votes)
+		if(name == faction.leader_name)
+			five_promotes |= name
+			three_promotes |= name
+			all_promotes |= name
+			continue
 		if(name == get_name()) continue
 		var/datum/computer_file/crew_record/record = faction.get_record(name)
 		if(record)
 			var/head_position = 0
 			var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
 			if(assignment)
-				if(curr_assignment.parent)
-					if(curr_assignment.parent.command_faction)
-						if(curr_assignment.parent.head_position.uid == curr_assignment.uid) head_position = 1
+				if(assignment.parent)
+					if(assignment.parent.command_faction)
+						if(assignment.parent.head_position.uid == assignment.uid) head_position = 1
 				if(assignment.parent.command_faction || assignment.parent.name == curr_assignment.parent.name) // either the promotion is coming from a command position or its coming from an internal promotion request
 					if(assignment.parent)
-						if(assignment.parent.head_position.uid != assignment.uid && curr_assignment.parent.head_position.uid == curr_assignment.uid) // The promoted position is a head position and the promoter is not
+						if(!assignment.parent.command_faction && assignment.parent.head_position.uid != assignment.uid && curr_assignment.parent.head_position.uid == curr_assignment.uid) // The promoted position is a head position and the promoter is not
 							continue
 						if((assignment.uid == curr_assignment.uid || assignment.parent.head_position.uid != assignment.uid) && record.rank <= rank) // they have the same assignment and we are equal or less rank
 							continue
-					if(assignment.accesses.Find("2"))
+					if(assignment.accesses.Find("3"))
 						if(record.rank >= 5 || (record.rank >= assignment.ranks.len && head_position))
 							five_promotes |= name
 						if(record.rank >= 3 || (record.rank >= assignment.ranks.len && head_position))

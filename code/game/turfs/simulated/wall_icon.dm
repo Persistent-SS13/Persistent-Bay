@@ -8,27 +8,27 @@
 
 	if(!istype(material, /material))
 		if(istext(material))
-			material = get_material_by_name(material)
+			material = SSmaterials.get_material_by_name(material)
 			updateIntegrity = 1
 		else
 			material = null
 	if(!istype(r_material, /material))
 		if(istext(r_material))
-			r_material = get_material_by_name(r_material)
+			r_material = SSmaterials.get_material_by_name(r_material)
 			updateIntegrity = 1
 		else
 			r_material = null
 	if(!istype(p_material, /material))
 		if(istext(p_material))
-			p_material = get_material_by_name(p_material)
+			p_material = SSmaterials.get_material_by_name(p_material)
 			updateIntegrity = 1
 		else
 			r_material = null
 
 	if(!material)
-		material = get_material_by_name("steel")
+		material = SSmaterials.get_material_by_name("steel")
 	if(!p_material)
-		p_material = get_material_by_name("steel")
+		p_material = SSmaterials.get_material_by_name("steel")
 
 	explosion_resistance = ExplosionArmor()
 
@@ -48,10 +48,10 @@
 
 	if(r_material)
 		name = "[state != null ? "incomplete " : ""][r_material.display_name] reinforced [p_material.display_name] [initial(name)]"
-		desc = "It seems to be [state == null ? "an incomplete " : "a"] section of hull reinforced with [r_material.display_name] and plated with [p_material.display_name]."
+		desc = "It seems to be [state != null ? "an incomplete" : "a"] section of hull reinforced with [r_material.display_name] and plated with [p_material.display_name]."
 	else
 		name = "[state != null ? "incomplete " : ""][p_material.display_name] [initial(name)]"
-		desc = "It seems to be [state == null ? "an incomplete" : "a"] section of hull plated with [p_material.display_name]."
+		desc = "It seems to be [state != null ? "an incomplete" : "a"] section of hull plated with [p_material.display_name]."
 
 	overlays.Cut()
 	var/image/I
@@ -103,6 +103,7 @@
 			W.update_connections()
 		if(can_join_with(W))
 			dirs += get_dir(src, W)
+		W.update_icon()
 
 	wall_connections = dirs_to_corner_states(dirs)
 

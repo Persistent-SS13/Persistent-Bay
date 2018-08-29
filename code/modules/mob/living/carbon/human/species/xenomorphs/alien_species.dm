@@ -10,7 +10,7 @@
 	rarity_value = 3
 	health_hud_intensity = 1
 
-	icon_template = 'icons/mob/human_races/xenos/r_xenos_drone.dmi'
+	icon_template = 'icons/mob/human_races/species/xenos/template.dmi'
 	has_floating_eyes = TRUE
 
 	// temp until someone who isn't me makes some for this icon set
@@ -55,7 +55,7 @@
 	speech_chance = 100
 
 	breath_type = null
-	poison_type = null
+	poison_types = null
 
 	vision_flags = SEE_SELF|SEE_MOBS
 
@@ -65,7 +65,7 @@
 		BP_BRAIN =    /obj/item/organ/internal/brain/xeno,
 		BP_PLASMA =   /obj/item/organ/internal/xenos/plasmavessel,
 		BP_HIVE =     /obj/item/organ/internal/xenos/hivenode,
-		BP_NUTRIENT = /obj/item/organ/internal/diona/nutrients
+		BP_NUTRIENT = /obj/item/organ/internal/xenos/nutrients
 		)
 
 	has_limbs = list(
@@ -182,8 +182,8 @@
 	slowdown = 1
 	rarity_value = 5
 	base_color = "#000d1a"
-	icobase = 'icons/mob/human_races/xenos/r_xenos_drone.dmi'
-	deform =  'icons/mob/human_races/xenos/r_xenos_drone.dmi'
+	icobase = 'icons/mob/human_races/species/xenos/body_drone.dmi'
+	deform =  'icons/mob/human_races/species/xenos/body_drone.dmi'
 
 	has_organ = list(
 		BP_EYES =     /obj/item/organ/internal/eyes/xenos,
@@ -193,7 +193,7 @@
 		BP_ACID =     /obj/item/organ/internal/xenos/acidgland,
 		BP_HIVE =     /obj/item/organ/internal/xenos/hivenode,
 		BP_RESIN =    /obj/item/organ/internal/xenos/resinspinner,
-		BP_NUTRIENT = /obj/item/organ/internal/diona/nutrients
+		BP_NUTRIENT = /obj/item/organ/internal/xenos/nutrients
 		)
 
 	inherent_verbs = list(
@@ -222,8 +222,8 @@
 	total_health = 300
 	base_color = "#001a33"
 
-	icobase = 'icons/mob/human_races/xenos/r_xenos_hunter.dmi'
-	deform =  'icons/mob/human_races/xenos/r_xenos_hunter.dmi'
+	icobase = 'icons/mob/human_races/species/xenos/body_hunter.dmi'
+	deform =  'icons/mob/human_races/species/xenos/body_hunter.dmi'
 
 	has_organ = list(
 		BP_EYES =     /obj/item/organ/internal/eyes/xenos,
@@ -231,7 +231,7 @@
 		BP_BRAIN =    /obj/item/organ/internal/brain/xeno,
 		BP_PLASMA =   /obj/item/organ/internal/xenos/plasmavessel/hunter,
 		BP_HIVE =     /obj/item/organ/internal/xenos/hivenode,
-		BP_NUTRIENT = /obj/item/organ/internal/diona/nutrients
+		BP_NUTRIENT = /obj/item/organ/internal/xenos/nutrients
 		)
 
 	inherent_verbs = list(
@@ -250,8 +250,8 @@
 	slowdown = 0
 	base_color = "#00284d"
 	total_health = 250
-	icobase = 'icons/mob/human_races/xenos/r_xenos_sentinel.dmi'
-	deform =  'icons/mob/human_races/xenos/r_xenos_sentinel.dmi'
+	icobase = 'icons/mob/human_races/species/xenos/body_sentinel.dmi'
+	deform =  'icons/mob/human_races/species/xenos/body_sentinel.dmi'
 
 	has_organ = list(
 		BP_EYES =     /obj/item/organ/internal/eyes/xenos,
@@ -260,7 +260,7 @@
 		BP_PLASMA =   /obj/item/organ/internal/xenos/plasmavessel/sentinel,
 		BP_ACID =     /obj/item/organ/internal/xenos/acidgland,
 		BP_HIVE =     /obj/item/organ/internal/xenos/hivenode,
-		BP_NUTRIENT = /obj/item/organ/internal/diona/nutrients
+		BP_NUTRIENT = /obj/item/organ/internal/xenos/nutrients
 		)
 
 	inherent_verbs = list(
@@ -282,8 +282,8 @@
 	slowdown = 4
 	rarity_value = 10
 
-	icobase = 'icons/mob/human_races/xenos/r_xenos_queen.dmi'
-	deform =  'icons/mob/human_races/xenos/r_xenos_queen.dmi'
+	icobase = 'icons/mob/human_races/species/xenos/body_queen.dmi'
+	deform =  'icons/mob/human_races/species/xenos/body_queen.dmi'
 
 	has_organ = list(
 		BP_EYES =     /obj/item/organ/internal/eyes/xenos,
@@ -294,7 +294,7 @@
 		BP_ACID =     /obj/item/organ/internal/xenos/acidgland,
 		BP_HIVE =     /obj/item/organ/internal/xenos/hivenode,
 		BP_RESIN =    /obj/item/organ/internal/xenos/resinspinner,
-		BP_NUTRIENT = /obj/item/organ/internal/diona/nutrients
+		BP_NUTRIENT = /obj/item/organ/internal/xenos/nutrients
 		)
 
 	inherent_verbs = list(

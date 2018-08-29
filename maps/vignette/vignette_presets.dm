@@ -12,3 +12,7 @@
 
 /obj/machinery/camera/network/refugee
 	network = list(NETWORK_REFUGEE)
+
+/obj/effect/landmark/map_data/vignette
+	height = 2
+

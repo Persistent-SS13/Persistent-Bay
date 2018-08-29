@@ -45,7 +45,7 @@
 	icon_state = "trashbag0"
 	item_state = "trashbag"
 
-	w_class = ITEM_SIZE_SMALL
+	w_class = ITEM_SIZE_HUGE
 	max_w_class = ITEM_SIZE_HUGE //can fit a backpack inside a trash bag, seems right
 	max_storage_space = DEFAULT_BACKPACK_STORAGE
 	can_hold = list() // any
@@ -91,4 +91,4 @@
 	max_storage_space = 100
 	max_w_class = ITEM_SIZE_HUGE
 	w_class = ITEM_SIZE_SMALL
-	can_hold = list(/obj/item/weapon/coin,/obj/item/weapon/spacecash)
+	can_hold = list(/obj/item/weapon/material/coin,/obj/item/weapon/spacecash)

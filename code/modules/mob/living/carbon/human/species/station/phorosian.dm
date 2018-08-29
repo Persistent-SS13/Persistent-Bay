@@ -1,8 +1,10 @@
 /datum/species/phorosian
 	name = SPECIES_PHOROSIAN
 	name_plural = "Phorosians"
-	icobase = 'icons/mob/human_races/r_phorosian_sb.dmi'
-	deform = 'icons/mob/human_races/r_phorosian_pb.dmi'  // TODO: Need deform.
+	icobase = 'icons/mob/human_races/species/phorosian/body.dmi'
+	deform = 'icons/mob/human_races/species/phorosian/deformed_body.dmi'  // TODO: Need deform.
+	husk_icon = 'icons/mob/human_races/species/phorosian/husk.dmi'
+	preview_icon = 'icons/mob/human_races/species/phorosian/preview.dmi'
 	rarity_value = 5
 	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick, /datum/unarmed_attack/punch, /datum/unarmed_attack/bite)
 	blurb = "Victims of Phoron Restructurant Syndrome, Phorosians are forced \
@@ -10,18 +12,18 @@
 	Problems with short term and long term memory alongside other mental \
 	impairments are rampant among them,and they often have to go through many \
 	months of therapy to relearn how to do many tasks."
-	meat_type = /ore/phoron
+	meat_type = /material/phoron
 	taste_sensitivity = TASTE_DULL //Question is how could they taste anything in the first place?
-	virus_immune = 1 
-	has_floating_eyes = 1 
+	virus_immune = 1
+	has_floating_eyes = 1
 	num_alternate_languages = 1
-	hunger_factor = 0  
+	hunger_factor = 0
 	breath_type = "phoron"
-	poison_type = "oxygen" //Getting oxygen into your lungs HURTS
+	poison_types = list("oxygen" = TRUE) //Getting oxygen into your lungs HURTS
 	exhale_type = "hydrogen"
 	siemens_coefficient = 0.7
 	flags = NO_POISON | NO_PAIN //They're sorta made out of poison
-	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED 
+	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED
 	appearance_flags = HAS_EYE_COLOR
 	brute_mod =     0.7 //Phoron has made them resistant to damage
 	burn_mod =      1.5 //Shame they burn good though.
@@ -29,10 +31,10 @@
 	flesh_color = "#3b1077"
 	blood_color = "#4d224d"
 	reagent_tag = IS_PHOROSIAN
-	breath_volume= 1.4
-	
+	breath_volume= 0.1
+
 	var/list/eye_overlays = list()
-	
+
 	cold_level_1 = 240 //Default 260 - Lower is better
 	cold_level_2 = 180 //Default 200
 	cold_level_3 = 100 //Default 120
@@ -40,11 +42,11 @@
 	heat_level_1 = 370 //Default 360 - Higher is better
 	heat_level_2 = 480 //Default 400
 	heat_level_3 = 1100 //Default 1000
-	
+
 
 	body_temperature = 330
 	heat_discomfort_level = 360                   // Aesthetic messages about feeling warm.
-	cold_discomfort_level = 250	
+	cold_discomfort_level = 250
 	heat_discomfort_strings = list(
 		"You feel uncomfortably warm.",
 		)
@@ -76,22 +78,22 @@
 		BP_BRAIN =    /obj/item/organ/internal/brain/phorosian,
 		BP_EYES =     /obj/item/organ/internal/eyes/phorosian,
 		)
-		
+
 
 /mob/living/carbon/human/phorosian/pl_effects() //you're made of the stuff why would it hurt you?
 	return
-	
+
 /mob/living/carbon/human/phorosian/vomit(var/toxvomit = 0, var/timevomit = 1, var/level = 3) //nothing to really vomit out, considering they don't eat
 	return
-	
-	
+
+
 /mob/living/carbon/human/phorosian/get_breath_volume()
 	return 2 //gives them more time between tank refills
-	
+
 
 /datum/species/phorosian/get_blood_name()
 	return "phoronic plasma"
-	
+
 /datum/species/phorosian/equip_survival_gear(var/mob/living/carbon/human/H)
 	H.equip_to_slot_or_del(new /obj/item/clothing/head/helmet/space/phorosian(H), slot_head)
 	H.equip_to_slot_or_del(new /obj/item/clothing/suit/space/phorosian(H), slot_wear_suit)
@@ -100,10 +102,10 @@
 	if(H.internals)
 		H.internals.icon_state = "internal1"
 
-	
+
 /datum/species/phorosian/handle_environment_special(var/mob/living/carbon/human/H)
 	H.nutrition = 400 //if someone knows how to stop something from even needing nutrition, please change this.
-	
+
 	//Should they get exposed to oxygen, things get heated.
 	if(H.get_pressure_weakness()>0.6) //If air gets in, then well there's a problem.
 		var/datum/gas_mixture/environment = H.loc.return_air()

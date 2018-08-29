@@ -2,7 +2,7 @@
 
 /datum/shuttle
 	var/name = ""
-	var/warmup_time = 0
+	var/warmup_time = 10
 	var/moving_status = SHUTTLE_IDLE
 
 	var/area/shuttle_area //can be both single area type or a list of areas
@@ -25,6 +25,7 @@
 	var/owner
 	var/ownertype = 1 // 1 = personal, 2 = factional
 	var/obj/machinery/computer/bridge_computer/bridge
+	var/size = 1
 /datum/shuttle/New(_name, var/obj/effect/shuttle_landmark/initial_location)
 	..()
 	if(_name)
@@ -32,7 +33,10 @@
 
 	var/list/areas = list()
 	if(!islist(shuttle_area))
-		shuttle_area = list(shuttle_area)
+		if(shuttle_area)
+			shuttle_area = list(shuttle_area)
+		else
+			shuttle_area = list()
 	for(var/T in shuttle_area)
 		var/area/A = locate(T)
 		if(!istype(A))
@@ -44,19 +48,20 @@
 		current_location = initial_location
 	else
 		current_location = locate(current_location)
-	if(!istype(current_location))
-		CRASH("Shuttle \"[name]\" could not find its starting location.")
 
-	if(src.name in shuttle_controller.shuttles)
-		CRASH("A shuttle with the name '[name]' is already defined.")
 	shuttle_controller.shuttles[src.name] = src
 	if(flags & SHUTTLE_FLAGS_PROCESS)
 		shuttle_controller.process_shuttles += src
+	
 	if(flags & SHUTTLE_FLAGS_SUPPLY)
 		if(supply_controller.shuttle)
 			CRASH("A supply shuttle is already defined.")
 		supply_controller.shuttle = src
+	if(!istype(current_location))
+		CRASH("Shuttle \"[name]\" could not find its starting location.")
 
+//	if(src.name in shuttle_controller.shuttles)
+//		CRASH("A shuttle with the name '[name]' is already defined.")
 /datum/shuttle/Destroy()
 	current_location = null
 
@@ -71,21 +76,20 @@
 	if(moving_status != SHUTTLE_IDLE) return
 
 	moving_status = SHUTTLE_WARMUP
-	if(sound_takeoff)
-		playsound(current_location, sound_takeoff, 100, 20, 0.2)
-	spawn(warmup_time*10)
-		if (moving_status == SHUTTLE_IDLE)
-			return FALSE	//someone cancelled the launch
+	playsound(current_location.loc, sound_takeoff, 100, 20, 1)
+	sleep(warmup_time*10)
+	if (moving_status == SHUTTLE_IDLE)
+		return FALSE	//someone cancelled the launch
 
-		if(!fuel_check()) //fuel error (probably out of fuel) occured, so cancel the launch
-			var/datum/shuttle/autodock/S = src
-			if(istype(S))
-				S.cancel_launch(null)
-			return
+	if(!fuel_check()) //fuel error (probably out of fuel) occured, so cancel the launch
+		var/datum/shuttle/autodock/S = src
+		if(istype(S))
+			S.cancel_launch(null)
+		return
 
-		moving_status = SHUTTLE_INTRANSIT //shouldn't matter but just to be safe
-		attempt_move(destination, location)
-		moving_status = SHUTTLE_IDLE
+	moving_status = SHUTTLE_INTRANSIT //shouldn't matter but just to be safe
+	attempt_move(destination, location)
+	moving_status = SHUTTLE_IDLE
 
 /datum/shuttle/proc/long_jump(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/interim, var/travel_time)
 	if(moving_status != SHUTTLE_IDLE) return

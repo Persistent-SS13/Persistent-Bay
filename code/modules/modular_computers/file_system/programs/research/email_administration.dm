@@ -8,7 +8,7 @@
 	requires_ntnet = 1
 	available_on_ntnet = 1
 	nanomodule_path = /datum/nano_module/email_administration
-	required_access = core_access_wireless_programs
+	required_access = 999 // This program should be basically disabled this way
 
 
 

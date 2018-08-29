@@ -46,7 +46,7 @@
 		return
 	if (transforming)
 		return
-	if(last_hud_update > world.time)
+	if(last_hud_update < world.time)
 		last_hud_update = world.time + 15 SECONDS
 		update_action_buttons()
 	fire_alert = 0 //Reset this here, because both breathe() and handle_environment() have a chance to set it.
@@ -212,7 +212,7 @@
 		if(species.appearance_flags & RADIATION_GLOWS)
 			set_light(max(1,min(10,radiation/10)), max(1,min(20,radiation/20)), species.get_flesh_colour(src))
 		// END DOGSHIT SNOWFLAKE
-
+		/*
 		var/obj/item/organ/internal/diona/nutrients/rad_organ = locate() in internal_organs
 		if (rad_organ && !rad_organ.is_broken())
 			var/rads = radiation/25
@@ -226,7 +226,7 @@
 			nutrition = Clamp(nutrition, 0, 550)
 
 			return
-
+		*/
 		var/damage = 0
 		radiation -= 1 * RADIATION_SPEED_COEFFICIENT
 		if(prob(25))
@@ -1028,18 +1028,20 @@
 			if(I)
 				perpname = I.registered_name
 
-		var/datum/computer_file/crew_record/E = get_crewmember_record(perpname)
-		if(E)
-			switch(E.get_criminalStatus())
-				if("Arrest")
-					holder.icon_state = "hudwanted"
-				if("Incarcerated")
-					holder.icon_state = "hudprisoner"
-				if("Parolled")
-					holder.icon_state = "hudparolled"
-				if("Released")
-					holder.icon_state = "hudreleased"
-		hud_list[WANTED_HUD] = holder
+		var/datum/world_faction/faction = get_faction(src.GetFaction())
+		if(faction)
+			var/datum/computer_file/crew_record/E = faction.get_record(perpname)
+			if(E)
+				switch(E.get_criminalStatus())
+					if("Arrest")
+						holder.icon_state = "hudwanted"
+					if("Incarcerated")
+						holder.icon_state = "hudprisoner"
+					if("Parolled")
+						holder.icon_state = "hudparolled"
+					if("Released")
+						holder.icon_state = "hudreleased"
+			hud_list[WANTED_HUD] = holder
 
 	if (  BITTEST(hud_updateflag, IMPLOYAL_HUD) \
 	   || BITTEST(hud_updateflag,  IMPCHEM_HUD) \

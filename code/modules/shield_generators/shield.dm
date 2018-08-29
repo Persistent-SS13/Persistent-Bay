@@ -184,7 +184,8 @@
 
 
 /obj/effect/shield/c_airblock(turf/other)
-	return gen.check_flag(MODEFLAG_ATMOSPHERIC)
+	if(gen)
+		return gen.check_flag(MODEFLAG_ATMOSPHERIC)
 
 
 // EMP. It may seem weak but keep in mind that multiple shield segments are likely to be affected.

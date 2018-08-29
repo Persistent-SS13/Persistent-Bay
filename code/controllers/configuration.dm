@@ -74,7 +74,7 @@ var/list/gamemode_cache = list()
 	var/cult_ghostwriter = 1               //Allows ghosts to write in blood in cult rounds...
 	var/cult_ghostwriter_req_cultists = 10 //...so long as this many cultists are active.
 
-	var/character_slots = 10				// The number of available character slots
+	var/character_slots = 2				// The number of available character slots
 	var/loadout_slots = 3					// The number of loadout slots per character
 
 	var/max_maint_drones = 5				//This many drones can spawn,
@@ -222,6 +222,8 @@ var/list/gamemode_cache = list()
 	var/error_msg_delay = 50 // How long to wait between messaging admins about occurrences of a unique error
 
 	var/max_gear_cost = 10 // Used in chargen for accessory loadout limit. 0 disables loadout, negative allows infinite points.
+
+	var/allow_ic_printing = TRUE // Whether players should be allowed to print IC circuits from scripts.
 
 /datum/configuration/New()
 	var/list/L = typesof(/datum/game_mode) - /datum/game_mode
@@ -641,6 +643,9 @@ var/list/gamemode_cache = list()
 
 				if("disable_welder_vision")
 					config.welder_vision = 0
+
+				if ("disable_circuit_printing")
+					config.allow_ic_printing = FALSE
 
 				if("allow_extra_antags")
 					config.allow_extra_antags = 1

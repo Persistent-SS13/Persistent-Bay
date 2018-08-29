@@ -19,20 +19,26 @@
 	var/list/resource_field = list()
 
 	var/ore_types = list(
-		"iron" = /obj/item/weapon/ore/iron,
-		"uranium" = /obj/item/weapon/ore/uranium,
-		"gold" = /obj/item/weapon/ore/gold,
-		"silver" = /obj/item/weapon/ore/silver,
-		"diamond" = /obj/item/weapon/ore/diamond,
-		"phoron" = /obj/item/weapon/ore/phoron,
-		"osmium" = /obj/item/weapon/ore/osmium,
-		"hydrogen" = /obj/item/weapon/ore/hydrogen,
-		"silicates" = /obj/item/weapon/ore/glass,
-		"carbonaceous rock" = /obj/item/weapon/ore/coal,
-		"bluespace crystal" = /obj/item/bluespace_crystal,
-		"rock salt" = /obj/item/weapon/ore/salt,
-		"ice" = /obj/item/weapon/ore/ice/,
-		"dry ice" = /obj/item/weapon/ore/dryice/
+		"pitchblende",
+		"platinum",
+		"hematite",
+		"graphene",
+		"diamond",
+		"gold",
+		"silver",
+		"phoron",
+		"quartz",
+		"pyrite",
+		"spodumene",
+		"cinnabar",
+		"phosphorite",
+		"rock salt",
+		"potash",
+		"bauxite",
+		"tungsten",
+		"sand",
+		"copper",
+		"bluespace crystal"
 		)
 
 	//Upgrades
@@ -80,8 +86,8 @@
 		return
 
 	//Drill through the flooring, if any.
-	if(istype(get_turf(src), /turf/simulated/floor/asteroid))
-		var/turf/simulated/floor/asteroid/T = get_turf(src)
+	if(istype(get_turf(src), /turf/simulated/asteroid))
+		var/turf/simulated/asteroid/T = get_turf(src)
 		if(!T.dug)
 			T.gets_dug()
 	else if(istype(get_turf(src), /turf/simulated/floor/exoplanet))
@@ -137,8 +143,35 @@
 					harvesting.resources[metal] = 0
 
 				for(var/i=1, i <= create_ore, i++)
-					var/oretype = ore_types[metal]
-					new oretype(src)
+					if(metal == "phoron")
+						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
+						zone.asteroid_aggression += 5
+						zone.asteroid_targets |= src
+					else if(metal == "bluespace crystal")
+						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
+						zone.asteroid_aggression += 25
+						zone.asteroid_targets |= src
+					else if(metal == "platinum")
+						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
+						zone.asteroid_aggression += 0.5
+						zone.asteroid_targets |= src
+					else if(metal == "diamond")
+						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
+						zone.asteroid_aggression += 0.5
+						zone.asteroid_targets |= src
+					else if(metal == "pitchblende")
+						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
+						zone.asteroid_aggression += 0.5
+						zone.asteroid_targets |= src
+					else if(metal == "gold")
+						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
+						zone.asteroid_aggression += 0.5
+						zone.asteroid_targets |= src
+
+					if(metal == "bluespace crystal")
+						new /obj/item/bluespace_crystal(get_turf(src))
+					else
+						new /obj/item/weapon/ore(src, metal)
 
 		if(!found_resource)
 			harvesting.has_resources = 0

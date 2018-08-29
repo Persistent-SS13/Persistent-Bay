@@ -43,7 +43,7 @@
 		return
 	else
 		icon_state = "atm"
-		
+
 /obj/machinery/atm/attackby(obj/item/W as obj, mob/user as mob)	//Build code
 	src.add_fingerprint(user)
 
@@ -75,10 +75,11 @@
 					to_chat(user, "You pry out the circuit!")
 					playsound(src.loc, 'sound/items/Crowbar.ogg', 50, 1)
 					spawn(20)
-						var/obj/item/weapon/circuitboard/atm/circuit = new /obj/item/weapon/circuitboard/atm()
-						circuit.dropInto(user.loc)
-						buildstage = 0
-						update_icon()
+						if(buildstage == 1) //Prevents circuit duplication
+							var/obj/item/weapon/circuitboard/atm/circuit = new /obj/item/weapon/circuitboard/atm()
+							circuit.dropInto(user.loc)
+							buildstage = 0
+							update_icon()
 			if(0)
 				if(istype(W, /obj/item/weapon/circuitboard/atm))
 					to_chat(user, "You insert the circuit!")
@@ -191,10 +192,6 @@
 		interact(user)
 
 /obj/machinery/atm/interact(mob/user)
-
-	if(istype(user, /mob/living/silicon))
-		to_chat(user, "\icon[src] <span class='warning'>Artificial unit recognized. Artificial units do not currently receive monetary compensation, as per system banking regulation #1005.</span>")
-		return
 
 	if(get_dist(src,user) <= 1)
 		//make the window the user interacts with, divided out into welcome message, card 'slot', then login/data screen

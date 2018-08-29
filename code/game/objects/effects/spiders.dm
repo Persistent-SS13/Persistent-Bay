@@ -84,7 +84,7 @@
 		pixel_y = rand(3,-3)
 		START_PROCESSING(SSobj, src)
 
-/obj/effect/spider/eggcluster/New(var/location, var/atom/parent)
+/obj/effect/spider/eggcluster/New(var/mapload, var/atom/parent)
 	get_light_and_color(parent)
 	..()
 

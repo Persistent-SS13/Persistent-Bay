@@ -4,7 +4,13 @@
 	specific_heat = 20	// J/(mol*K)
 	molar_mass = 0.032	// kg/mol
 
+	breathed_product = /datum/reagent/oxygen
+	component_reagents = list(
+						/datum/reagent/oxygen = 1
+						)
+
 	flags = XGM_GAS_OXIDIZER | XGM_GAS_FUSION_FUEL
+
 
 /decl/xgm_gas/nitrogen
 	id = "nitrogen"
@@ -12,11 +18,21 @@
 	specific_heat = 20	// J/(mol*K)
 	molar_mass = 0.028	// kg/mol
 
+	component_reagents = list(
+						/datum/reagent/nitrogen = 1
+						)
+
 /decl/xgm_gas/carbon_dioxide
 	id = "carbon_dioxide"
 	name = "Carbon Dioxide"
 	specific_heat = 30	// J/(mol*K)
 	molar_mass = 0.044	// kg/mol
+
+	breathed_product = /datum/reagent/carbon_dioxide
+	component_reagents = list(
+						/datum/reagent/carbon = 0.33,
+						/datum/reagent/oxygen = 0.66
+						)
 
 /decl/xgm_gas/phoron
 	id = "phoron"
@@ -33,6 +49,12 @@
 
 	tile_overlay = "phoron"
 	overlay_limit = 0.7
+
+	breathed_product = /datum/reagent/toxin/phoron
+	component_reagents = list(
+						/datum/reagent/toxin/phoron = 1
+						)
+
 	flags = XGM_GAS_FUEL | XGM_GAS_CONTAMINANT | XGM_GAS_FUSION_FUEL
 
 /decl/xgm_gas/sleeping_agent
@@ -43,7 +65,16 @@
 
 	tile_overlay = "sleeping_agent"
 	overlay_limit = 1
+
+	breathed_product = /datum/reagent/nitrous_oxide
+	component_reagents = list(
+						/datum/reagent/nitrogen = 0.66,
+						/datum/reagent/oxygen = 0.33
+						)
+
 	flags = XGM_GAS_OXIDIZER //N2O is a powerful oxidizer
+
+
 
 /decl/xgm_gas/methane
 	id = "methane"
@@ -81,6 +112,10 @@
 	flags = XGM_GAS_FUEL|XGM_GAS_FUSION_FUEL
 
 	burn_product = "watervapor"
+
+	component_reagents = list(
+						/datum/reagent/hydrogen = 1
+						)
 
 /decl/xgm_gas/hydrogen/deuterium
 	id = "deuterium"
@@ -126,6 +161,7 @@
 
 	specific_heat = 3	// J/(mol*K)
 	molar_mass = 0.054	// kg/mol
+	breathed_product = /datum/reagent/nitrous_oxide/xenon
 
 /decl/xgm_gas/nitrodioxide
 	id = "nitrodioxide"
@@ -134,6 +170,12 @@
 	specific_heat = 37	// J/(mol*K)
 	molar_mass = 0.054	// kg/mol
 	flags = XGM_GAS_OXIDIZER
+	breathed_product = /datum/reagent/toxin
+
+	component_reagents = list(
+						/datum/reagent/nitrogen = 0.33,
+						/datum/reagent/oxygen = 0.66
+						)
 
 /decl/xgm_gas/nitricoxide
 	id = "nitricoxide"
@@ -141,14 +183,27 @@
 
 	specific_heat = 10	// J/(mol*K)
 	molar_mass = 0.030	// kg/mol
+
+	component_reagents = list(
+						/datum/reagent/nitrogen = 0.5,
+						/datum/reagent/oxygen = 0.5
+						)
 	flags = XGM_GAS_OXIDIZER
 
 /decl/xgm_gas/chlorine
 	id = "chlorine"
 	name = "Chlorine"
 
+	tile_overlay = "chlorine"
+	overlay_limit = 0.7
+
 	specific_heat = 5	// J/(mol*K)
 	molar_mass = 0.017	// kg/mol
+
+	breathed_product = /datum/reagent/toxin/chlorine
+	component_reagents = list(
+						/datum/reagent/toxin/chlorine = 1
+						)
 	flags = XGM_GAS_CONTAMINANT
 
 /decl/xgm_gas/vapor
@@ -157,3 +212,8 @@
 
 	specific_heat = 30	// J/(mol*K)
 	molar_mass = 0.020	// kg/mol
+
+	breathed_product = /datum/reagent/water
+	component_reagents = list(
+						/datum/reagent/water = 1
+						)

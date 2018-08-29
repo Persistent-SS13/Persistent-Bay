@@ -338,7 +338,11 @@
 	beaker = new /obj/item/weapon/reagent_containers/glass/beaker/large(src)
 	return
 
-/obj/machinery/reagentgrinder/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)
+/obj/machinery/reagentgrinder/update_icon()
+	icon_state = "juicer"+num2text(!isnull(beaker))
+	return
+
+/obj/machinery/reagentgrinder/attackby(var/obj/item/O as obj, var/mob/user as mob)
 
 	if(default_deconstruction_screwdriver(user, O))
 		updateUsrDialog()
@@ -347,12 +351,6 @@
 		return
 	if(default_part_replacement(user, O))
 		return
-
-/obj/machinery/reagentgrinder/update_icon()
-	icon_state = "juicer"+num2text(!isnull(beaker))
-	return
-
-/obj/machinery/reagentgrinder/attackby(var/obj/item/O as obj, var/mob/user as mob)
 
 	if (istype(O,/obj/item/weapon/reagent_containers/glass) || \
 		istype(O,/obj/item/weapon/reagent_containers/food/drinks/glass2) || \
@@ -476,10 +474,7 @@
 	return
 
 
-/obj/machinery/reagentgrinder/Topic(href, href_list)
-	if(..())
-		return 1
-
+/obj/machinery/reagentgrinder/OnTopic(user, href_list)
 	switch(href_list["action"])
 		if ("grind")
 			grind()
@@ -487,23 +482,17 @@
 			eject()
 		if ("detach")
 			detach()
-	src.updateUsrDialog()
-	return 1
+	interact(user)
+	return TOPIC_REFRESH
 
 /obj/machinery/reagentgrinder/proc/detach()
-
-	if (usr.stat != 0)
-		return
 	if (!beaker)
 		return
-	beaker.loc = src.loc
+	beaker.dropInto(loc)
 	beaker = null
 	update_icon()
 
 /obj/machinery/reagentgrinder/proc/eject()
-
-	if (usr.stat != 0)
-		return
 	if (!holdingitems || holdingitems.len == 0)
 		return
 

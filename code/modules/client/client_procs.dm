@@ -124,9 +124,9 @@
 		return
 
 	// Change the way they should download resources.
-	if(config.resource_urls && config.resource_urls.len)
-		src.preload_rsc = pick(config.resource_urls)
-	else src.preload_rsc = 2 // If config.resource_urls is not set, preload like normal.
+//	if(config.resource_urls && config.resource_urls.len)
+//		src.preload_rsc = pick(config.resource_urls)
+//	else src.preload_rsc = 2 // If config.resource_urls is not set, preload like normal.
 
 	if(byond_version < DM_VERSION)
 		to_chat(src, "<span class='warning'>You are running an older version of BYOND than the server and may experience issues.</span>")

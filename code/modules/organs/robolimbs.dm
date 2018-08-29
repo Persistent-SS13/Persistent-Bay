@@ -11,11 +11,11 @@ var/datum/robolimb/basic_robolimb
 			chargen_robolimbs[R.company] = R
 
 /datum/robolimb
-	var/company = "Unbranded"                            // Shown when selecting the limb.
-	var/desc = "A generic unbranded robotic prosthesis." // Seen when examining a limb.
-	var/icon = 'icons/mob/human_races/robotic.dmi'       // Icon base to draw from.
-	var/unavailable_at_chargen                           // If set, not available at chargen.
-	var/unavailable_at_fab                               // If set, cannot be fabricated.
+	var/company = "Unbranded"                            				 // Shown when selecting the limb.
+	var/desc = "A generic unbranded robotic prosthesis." 				 // Seen when examining a limb.
+	var/icon = 'icons/mob/human_races/cyberlimbs/robotic.dmi' 			 // Icon base to draw from.
+	var/unavailable_at_chargen                           				 // If set, not available at chargen.
+	var/unavailable_at_fab                               				 // If set, cannot be fabricated.
 	var/can_eat
 	var/use_eye_icon = "eyes_s"
 	var/can_feel_pain
@@ -67,7 +67,6 @@ var/datum/robolimb/basic_robolimb
 	icon = 'icons/mob/human_races/cyberlimbs/zenghu/zenghu_main.dmi'
 	can_eat = 1
 	unavailable_at_fab = 1
-	species_cannot_use = list(SPECIES_TAJARA)
 
 /datum/robolimb/xion
 	company = "Xion"
@@ -134,4 +133,3 @@ var/datum/robolimb/basic_robolimb
 	can_eat = 1
 	skintone = 1
 	unavailable_at_fab = 1
-	species_cannot_use = list(SPECIES_TAJARA)

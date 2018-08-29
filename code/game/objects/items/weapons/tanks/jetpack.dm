@@ -21,8 +21,8 @@
 	ion_trail.set_up(src)
 
 /obj/item/weapon/tank/jetpack/Destroy()
+	. = ..()
 	qdel(ion_trail)
-	..()
 
 /obj/item/weapon/tank/jetpack/examine(mob/living/user)
 	. = ..()

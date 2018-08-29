@@ -19,8 +19,19 @@ This saves us from having to call add_fingerprint() any time something is put in
 				update_inv_l_hand(0)
 			else
 				update_inv_r_hand(0)
-		else if(!equip_to_storage(I))
-			to_chat(H, "<span class='warning'>You are unable to equip that.</span>")
+		else if(!isnull(H.s_active) && H.s_active.can_be_inserted(I, H, 1))
+			H.s_active.handle_item_insertion(I)
+			return
+
+		var/obj/item/weapon/storage/S = H.belt
+		if(istype(S) && S != H.s_active && S.can_be_inserted(I, H, 1))
+			S.handle_item_insertion(I)
+			return
+		S = H.back
+		if(istype(S) && S != H.s_active && S.can_be_inserted(I, H, 1))
+			S.handle_item_insertion(I)
+			return
+		to_chat(H, "<span class='warning'>You are unable to equip that.</span>")
 
 /mob/living/carbon/human/proc/equip_in_one_of_slots(obj/item/W, list/slots, del_on_fail = 1)
 	for (var/slot in slots)

@@ -59,7 +59,7 @@
 	var/list/components = list()
 
 	var/obj/item/device/mmi/mmi = null
-
+	var/obj/item/device/lmi/lmi = null
 	var/obj/item/device/pda/ai/rbPDA = null
 
 	var/obj/item/weapon/stock_parts/matter_bin/storage = null
@@ -99,6 +99,20 @@
 		/mob/living/silicon/robot/proc/robot_checklaws
 	)
 
+	var/obj/item/borg/module_chip/installed_module = null
+	var/obj/item/borg/chassis_mod/chassis_mod = null
+	var/chassis_mod_toggled = 0
+
+	
+	
+/mob/living/silicon/robot/proc/add_lace_action()
+	for(var/datum/action/lace/laceac in actions)
+		return 1
+	if(lmi)
+		if(lmi.brainobj)
+			var/datum/action/lace/laceaction = new(lmi.brainobj)
+			laceaction.Grant(src)
+
 /mob/living/silicon/robot/New(loc,var/unfinished = 0)
 	spark_system = new /datum/effect/effect/system/spark_spread()
 	spark_system.set_up(5, 0, src)
@@ -117,13 +131,14 @@
 	updatename(modtype)
 	update_icon()
 
+	/**
 	if(!scrambledcodes && !camera)
 		camera = new /obj/machinery/camera(src)
 		camera.c_tag = real_name
 		camera.replace_networks(list(NETWORK_EXODUS,NETWORK_ROBOTS))
 		if(wires.IsIndexCut(BORG_WIRE_CAMERA))
 			camera.status = 0
-
+	**/
 	..() // Laws, among other things, are initialized in parent New()
 	init()
 	initialize_components()
@@ -153,6 +168,96 @@
 	hud_list[IMPCHEM_HUD]     = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[IMPTRACK_HUD]    = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[SPECIALROLE_HUD] = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
+	
+	verbs -= /mob/living/silicon/robot/verb/Namepick
+	
+	
+/mob/living/silicon/robot/after_load()
+	if(lmi)
+		add_lace_action()
+		
+/mob/living/silicon/robot/get_stack()
+	if(lmi)
+		return lmi.brainobj
+		
+		
+/mob/living/silicon/robot/verb/ModuleDisable()
+	set category = "Robot Commands"
+	set name = "Deactivate Module"
+	if(module)
+		src.visible_message("[src] starts to deactivate their module.", "You begin deactivating your module.")
+		playsound(loc, 'sound/items/rped.ogg', 75, 1)
+		if(do_after(src,3 SECONDS, target = src.loc))
+			src.shown_robot_modules = 0
+			src.uneq_all()
+			for(var/obj/Ob in module.contents)
+				module.contents -= Ob
+				installed_module.contents += Ob
+				Ob.loc = installed_module
+			module.remove_subsystems(src)
+			choose_icon_new("robot")
+			chassis_mod_toggled = 0
+			hands.icon_state = lowertext("nomod")
+	//		radio.config(list())
+			//qdel(module)
+			installed_module.stored_module = module
+			module.loc = installed_module
+			module = null
+			return 1
+	else
+		to_chat(src, "You dont have a module activated.")
+
+/mob/living/silicon/robot/verb/CoverLock()
+	set category = "Robot Commands"
+	set name = "Toggle Cover Lock"
+	if(opened)
+		to_chat(src, "You cant lock your cover when its open.")
+		return
+	if(locked)
+		to_chat(src, "You unlock your cover panel.")
+		locked = 0
+	else
+		locked = 1
+		to_chat(src, "You lock your cover panel.")
+		
+/mob/living/silicon/robot/verb/ChassisToggle()
+	set category = "Robot Commands"
+	set name = "Toggle Chassis Mod"
+	if(chassis_mod)
+		if(chassis_mod_toggled)
+			src.visible_message("[src] starts to deactivate their chassis mod, radically altering their appearance.", "You begin deactivating your chassis mod.")
+			playsound(loc, 'sound/items/rped.ogg', 75, 1)
+			if(do_after(src,3 SECONDS, target = src.loc))
+				if(src.module)
+					src.icon_state = src.module.robo_icon_state
+				else
+					src.icon_state = "robot"
+				chassis_mod_toggled = 0
+				return 1
+		else
+			if(chassis_mod.req_module)
+				if(istype(src.module, chassis_mod.module_type))
+					src.visible_message("[src] starts to activate their chassis mod, radically altering their appearance.", "You begin activating your chassis mod.")
+					playsound(loc, 'sound/items/rped.ogg', 75, 1)
+					if(do_after(src,3 SECONDS, target = src.loc))
+						src.icon_state = chassis_mod.chassis_type
+						chassis_mod_toggled = 1
+						return 1
+				else
+					to_chat(src, "You do not have the right module activated to use [chassis_mod].")
+					return 0
+
+
+			else
+				src.visible_message("[src] starts to activate their chassis mod, radically altering their appearance.", "You begin activating your chassis mod.")
+				playsound(loc, 'sound/items/rped.ogg', 75, 1)
+				if(do_after(src,3 SECONDS, target = src.loc))
+					src.icon_state = chassis_mod.chassis_type
+					chassis_mod_toggled = 1
+					return 1
+	else
+		to_chat(src, "You dont have a chassis mod installed.")
+
 
 /mob/living/silicon/robot/proc/recalculate_synth_capacities()
 	if(!module || !module.synths)
@@ -174,7 +279,7 @@
 		else
 			lawupdate = 0
 
-	playsound(loc, spawn_sound, 75, pitch_toggle)
+	//	playsound(loc, spawn_sound, 75, pitch_toggle)
 
 /mob/living/silicon/robot/fully_replace_character_name(pickedName as text)
 	custom_name = pickedName
@@ -225,6 +330,22 @@
 			mmi = null
 		else
 			QDEL_NULL(mmi)
+
+	if(lmi)//Safety for when a cyborg gets dust()ed. Or there is no MMI inside.
+		if(mind)
+			lmi.dropInto(loc)
+			if(lmi.brainmob)
+				mind.transfer_to(lmi.brainmob)
+			else
+				lmi.brainmob = new()
+				mind.transfer_to(lmi.brainmob)	
+			//	to_chat(src, "<span class='danger'>Oops! Something went very wrong, your LMI was unable to receive your mind. You have been ghosted. Please make a bug report so we can fix this bug.</span>")
+			//	ghostize()
+			//	//ERROR("A borg has been destroyed, but its MMI lacked a brainmob, so the mind could not be transferred. Player: [ckey].")
+			lmi = null
+		else
+			QDEL_NULL(lmi)
+
 	if(connected_ai)
 		connected_ai.connected_robots -= src
 	connected_ai = null
@@ -251,8 +372,56 @@
 		icon_state = module_sprites[icontype]
 	update_icon()
 	return module_sprites
+/mob/living/silicon/robot/proc/choose_icon_new(var/icon)
+	icon_state = icon
 
-/mob/living/silicon/robot/proc/pick_module()
+/mob/living/silicon/robot/proc/pick_module() // used
+	if(module)
+		to_chat(src, "Something is very wrong, you already have a module.")
+		return 0
+	if(installed_module)
+		src.visible_message("[src] begins to activate its module, emitting a set of grinding sounds.", "You begin activating your module.")
+		playsound(loc, 'sound/items/rped.ogg', 75, 1)
+		if(do_after(src,3 SECONDS, target = src.loc))
+			if(installed_module.contents.len)
+				if(installed_module.stored_module)
+					module = installed_module.stored_module
+					installed_module.stored_module.loc = src
+				else
+					module = new installed_module.module_type(src)
+				module.modules = installed_module.contents.Copy()
+				module.contents = installed_module.contents.Copy()
+
+				installed_module.contents.Cut()
+				//languages
+			if(!module)
+				module = new installed_module.module_type(src)
+			module.add_languages(src)
+			//subsystems
+			module.add_subsystems(src)
+			choose_icon_new(installed_module.default_icon)
+			//Custom_sprite check and entry
+		//	if(custom_sprite == 1)
+		//		module_sprites["Custom"] = "[src.ckey]-[modtype]"
+
+			hands.icon_state = lowertext(module.module_type)
+			feedback_inc("cyborg_[lowertext(modtype)]",1)
+		//	rename_character(real_name, get_default_name())
+
+		//	if(modtype == "Medical" || modtype == "Security" || modtype == "Combat" || modtype == "Peacekeeper")
+		//		status_flags &= ~CANPUSH
+
+
+
+		//	radio.config(module.channels)
+			notify_ai(2)
+			return 1
+	else
+		to_chat(src, "No module detected! Get a module chip installed.")
+		return 0
+
+
+/mob/living/silicon/robot/proc/pick_module_old()
 	if(module)
 		return
 	var/list/modules = list()
@@ -282,7 +451,42 @@
 	if(prefix)
 		modtype = prefix
 
-	if(istype(mmi, /obj/item/organ/internal/posibrain))
+	if(lmi)
+		braintype = "Cyborg"
+	else if(istype(mmi, /obj/item/organ/internal/posibrain))
+		braintype = "Android"
+	else if(istype(mmi, /obj/item/device/mmi/digital/robot))
+		braintype = "Robot"
+	else
+		braintype = "Cyborg"
+
+	name = "[real_name] ([braintype])"
+
+	// if we've changed our name, we also need to update the display name for our PDA
+	setup_PDA()
+
+	//We also need to update name of internal camera.
+	if (camera)
+		camera.c_tag = name
+		
+	//Flavour text.
+	if(client)
+		var/module_flavour = client.prefs.flavour_texts_robot[modtype]
+		if(module_flavour)
+			flavor_text = module_flavour
+		else
+			flavor_text = client.prefs.flavour_texts_robot["Default"]
+
+			
+			
+/mob/living/silicon/robot/proc/updatenameOLD(var/prefix as text)
+	if(prefix)
+		modtype = prefix
+
+
+	if(lmi)
+		braintype = "Cyborg"
+	else if(istype(mmi, /obj/item/organ/internal/posibrain))
 		braintype = "Android"
 	else if(istype(mmi, /obj/item/device/mmi/digital/robot))
 		braintype = "Robot"
@@ -320,6 +524,7 @@
 		else
 			flavor_text = client.prefs.flavour_texts_robot["Default"]
 
+			
 /mob/living/silicon/robot/verb/Namepick()
 	set category = "Silicon Commands"
 	if(custom_name)
@@ -520,21 +725,33 @@
 
 			else if(wiresexposed && wires.IsAllCut())
 				//Cell is out, wires are exposed, remove MMI, produce damaged chassis, baleet original mob.
-				if(!mmi)
-					to_chat(user, "\The [src] has no brain to remove.")
+				if(!mmi && !lmi)
+					to_chat(user, "\The [src] has no brain or lace to remove.")
 					return
-
-				user.visible_message("<span class='notice'>\The [user] begins ripping [mmi] from [src].</span>", "<span class='notice'>You jam the crowbar into the robot and begin levering [mmi].</span>")
-				if(do_after(user, 50, src))
-					to_chat(user, "<span class='notice'>You damage some parts of the chassis, but eventually manage to rip out [mmi]!</span>")
-					var/obj/item/robot_parts/robot_suit/C = new/obj/item/robot_parts/robot_suit(loc)
-					C.parts[BP_L_LEG] = new/obj/item/robot_parts/l_leg(C)
-					C.parts[BP_R_LEG] = new/obj/item/robot_parts/r_leg(C)
-					C.parts[BP_L_ARM] = new/obj/item/robot_parts/l_arm(C)
-					C.parts[BP_R_ARM] = new/obj/item/robot_parts/r_arm(C)
-					C.update_icon()
-					new/obj/item/robot_parts/chest(loc)
-					qdel(src)
+				if(lmi)
+					user.visible_message("<span class='notice'>\The [user] begins ripping [lmi] from [src].</span>", "<span class='notice'>You jam the crowbar into the robot and begin levering [lmi].</span>")
+					if(do_after(user, 50, src))
+						to_chat(user, "<span class='notice'>You damage some parts of the chassis, but eventually manage to rip out [lmi]!</span>")
+						var/obj/item/robot_parts/robot_suit/C = new/obj/item/robot_parts/robot_suit(loc)
+						C.parts[BP_L_LEG] = new/obj/item/robot_parts/l_leg(C)
+						C.parts[BP_R_LEG] = new/obj/item/robot_parts/r_leg(C)
+						C.parts[BP_L_ARM] = new/obj/item/robot_parts/l_arm(C)
+						C.parts[BP_R_ARM] = new/obj/item/robot_parts/r_arm(C)
+						C.update_icon()
+						new/obj/item/robot_parts/chest(loc)
+						qdel(src)
+				else
+					user.visible_message("<span class='notice'>\The [user] begins ripping [mmi] from [src].</span>", "<span class='notice'>You jam the crowbar into the robot and begin levering [mmi].</span>")
+					if(do_after(user, 50, src))
+						to_chat(user, "<span class='notice'>You damage some parts of the chassis, but eventually manage to rip out [mmi]!</span>")
+						var/obj/item/robot_parts/robot_suit/C = new/obj/item/robot_parts/robot_suit(loc)
+						C.parts[BP_L_LEG] = new/obj/item/robot_parts/l_leg(C)
+						C.parts[BP_R_LEG] = new/obj/item/robot_parts/r_leg(C)
+						C.parts[BP_L_ARM] = new/obj/item/robot_parts/l_arm(C)
+						C.parts[BP_R_ARM] = new/obj/item/robot_parts/r_arm(C)
+						C.update_icon()
+						new/obj/item/robot_parts/chest(loc)
+						qdel(src)
 
 			else
 				// Okay we're not removing the cell or an MMI, but maybe something else?
@@ -570,6 +787,28 @@
 					to_chat(user, "<span class='notice'>You open \the [src]'s maintenance hatch.</span>")
 					opened = 1
 					update_icon()
+
+
+	else if(istype(W, /obj/item/borg/module_chip) && opened)	// trying to put a module inside
+		var/obj/item/borg/module_chip/M = W
+		if(M.action(src))
+			user.drop_item()
+			W.loc = src
+			to_chat(user, "You insert the module.")
+	else if(istype(W, /obj/item/borg/module_chip))	// trying to put a module inside panel closed
+		to_chat(user, "You need to open the panel first.")
+
+	else if(istype(W, /obj/item/borg/chassis_mod) && opened)
+		var/obj/item/borg/chassis_mod/C = W
+		if(C.action(src))
+			user.drop_item()
+			W.loc = src
+			to_chat(user, "You insert the chassis mod.")
+			to_chat(src, "You have recieved a chassis mod. Use 'toggle chassis mod' in your 'Robot Commands' tab to enable it.")
+	else if(istype(W, /obj/item/borg/chassis_mod))	// trying to put a module inside panel closed
+		to_chat(user, "You need to open the panel first.")
+
+
 
 	else if (istype(W, /obj/item/weapon/stock_parts/matter_bin) && opened) // Installing/swapping a matter bin
 		if(storage)
@@ -721,7 +960,7 @@
 /mob/living/silicon/robot/update_icon()
 	overlays.Cut()
 	if(stat == CONSCIOUS)
-		var/eye_icon_state = "eyes-[module_sprites[icontype]]"
+		var/eye_icon_state = "eyes-[icon_state]" //[module_sprites[icontype]]"
 		if(eye_icon_state in icon_states(icon))
 			if(!eye_overlays)
 				eye_overlays = list()

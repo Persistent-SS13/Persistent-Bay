@@ -27,6 +27,7 @@ datum/report_topic_handler
 var/datum/report_topic_handler/report_topic_handler
 
 world/New()
+	world.visibility = 0
 	..()
 	report_topic_handler = new
 

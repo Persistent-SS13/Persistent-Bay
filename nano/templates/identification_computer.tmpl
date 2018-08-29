@@ -94,8 +94,8 @@
 						Duty Mangement:
 					</div>
 					<div class='itemContent'>
-						{{:helper.link('Suspend ' + data.record_name, 'gear', {'action' : 'suspend'}, data.suspended ? 'disabled' : null, data.suspended ? 'disabled' : 'linkDanger')}}{{:helper.link('Terminate ' + data.record_name, 'gear', {'action' : 'terminate'}, data.terminated ? 'disabled' : null, data.terminated ? 'disabled' : 'linkDanger')}}
-						{{:helper.link('Unsuspend', 'gear', {'action' : 'unsuspend'}, !data.suspended ? 'disabled' : null, data.suspended ? 'disabled' : null)}}{{:helper.link('Renew', 'gear', {'action' : 'unterminate'}, !data.terminated ? 'disabled' : null, !data.terminated ? 'disabled' : null)}}
+						{{:helper.link('Terminate ' + data.record_name, 'gear', {'action' : 'terminate'}, data.terminated ? 'disabled' : null, data.terminated ? 'disabled' : 'linkDanger')}}
+						{{:helper.link('Renew', 'gear', {'action' : 'unterminate'}, !data.terminated ? 'disabled' : null, !data.terminated ? 'disabled' : null)}}
 					</div>
 				</div>
 
@@ -143,9 +143,16 @@
 						{{:data.custom_title}}
 					</div>
 				</div>
+				<div class='item'>
+					<div class='itemLabel'>
+						Expenses:
+					</div>
+					<div class='itemContent'>
+						{{:helper.link('Reset', '', {'action' : 'reset_expenses'}, null)}}{{:data.expenses}}/{{:data.expense_limit}}
+					</div>
+				</div>
 				<br><br>
-				
-				{{:helper.link(data.assignments ? "Cancel Reassignment" : "Select New Assignment", 'gear', {'action' : 'togglea'})}}
+				{{:helper.link(data.assignments ? "Cancel Reassignment" : "Select New Assignment", 'gear', {'action' : 'togglea'}, null, data.assignments ? 'selected' : null)}}{{:helper.link(data.record ? "Close Records" : "View/Edit Employee Record", 'folder-open', {'action' : 'toggler'}, null, data.record ? 'selected' : null)}}
 				<div class='item'>
 				  {{if data.assignments}}
 					  <div id="all-value.jobs">
@@ -171,6 +178,13 @@
 						{{/for}}
 						</table>
 					  </div>
+				  {{/if}}
+				  {{if data.record}}
+					{{:helper.link("Edit Record", 'wrench', {'action' : 'edit_record'})}}
+					<br><br>
+					<div class='statusDisplay'>
+						{{:data.record_val}}
+					</div>
 				  {{/if}}
 				</div>
 			{{/if}}

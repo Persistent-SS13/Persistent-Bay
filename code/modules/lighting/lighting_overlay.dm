@@ -26,6 +26,7 @@
 /atom/movable/lighting_overlay/New(var/atom/loc, var/no_update = FALSE)
 	var/turf/T = loc //If this runtimes atleast we'll know what's creating overlays outside of turfs.
 	if(!T)
+		loc = null
 		qdel(src)
 		return
 	if(T.dynamic_lighting)
@@ -39,8 +40,9 @@
 			return
 		update_overlay()
 	else
-		qdel(src)
 		loc = null
+		qdel(src)
+		
 /atom/movable/lighting_overlay/proc/update_overlay()
 	set waitfor = FALSE
 	var/turf/T = loc

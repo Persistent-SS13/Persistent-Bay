@@ -116,7 +116,9 @@
 
 	if(internal_organs)
 		for(var/obj/item/organ/O in internal_organs)
-			qdel(O)
+			O.removed()
+			if(owner && istype(owner.loc,/turf))
+				O.throw_at(get_edge_target_turf(owner,pick(GLOB.alldirs)),rand(1,3),30)
 
 	applied_pressure = null
 	if(splinted && splinted.loc == src)
@@ -133,6 +135,10 @@
 	if(autopsy_data)    autopsy_data.Cut()
 
 	return ..()
+
+/obj/item/organ/external/set_dna(var/datum/dna/new_dna)
+	..()
+	s_col_blend = species.limb_blend
 
 /obj/item/organ/external/emp_act(severity)
 	var/burn_damage = 0

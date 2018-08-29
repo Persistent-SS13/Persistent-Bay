@@ -47,7 +47,7 @@
 					input = P
 				if(ATM_OUTPUT)
 					output = P
-				if(ATM_O2 to ATM_H2)
+				if(ATM_O2 to ATM_RG)
 					gas_filters += P
 
 /obj/machinery/atmospherics/omni/filter/error_check()
@@ -129,7 +129,7 @@
 			if(ATM_OUTPUT)
 				output = 1
 				filter = 0
-			if(ATM_O2 to ATM_H2)
+			if(ATM_O2 to ATM_RG)
 				f_type = mode_send_switch(P.mode)
 
 		portData[++portData.len] = list("dir" = dir_name(P.dir, capitalize = 1), \
@@ -160,6 +160,8 @@
 			return "Hydrogen"
 		if(ATM_N2O)
 			return "Nitrous Oxide"
+		if(ATM_RG)
+			return "Reagents"
 		else
 			return null
 
@@ -185,7 +187,7 @@
 			if("switch_mode")
 				switch_mode(dir_flag(href_list["dir"]), mode_return_switch(href_list["mode"]))
 			if("switch_filter")
-				var/new_filter = input(usr,"Select filter mode:","Change filter",href_list["mode"]) in list("None", "Oxygen", "Nitrogen", "Carbon Dioxide", "Phoron", "Nitrous Oxide", "Hydrogen")
+				var/new_filter = input(usr,"Select filter mode:","Change filter",href_list["mode"]) in list("None", "Oxygen", "Nitrogen", "Carbon Dioxide", "Phoron", "Nitrous Oxide", "Hydrogen", "Reagents")
 				switch_filter(dir_flag(href_list["dir"]), mode_return_switch(new_filter))
 
 	update_icon()
@@ -206,6 +208,8 @@
 			return ATM_H2
 		if("Nitrous Oxide")
 			return ATM_N2O
+		if("Reagents")
+			return ATM_RG
 		if("in")
 			return ATM_INPUT
 		if("out")
@@ -260,9 +264,10 @@
 /obj/machinery/atmospherics/omni/filter/proc/rebuild_filtering_list()
 	filtering_outputs.Cut()
 	for(var/datum/omni_port/P in ports)
-		var/gasid = mode_to_gasid(P.mode)
-		if(gasid)
-			filtering_outputs[gasid] = P.air
+		var/list/gasids = mode_to_gasid(P.mode)
+		if(gasids)
+			for(var/gid in gasids)
+				filtering_outputs[gid] = P.air
 
 /obj/machinery/atmospherics/omni/filter/proc/handle_port_change(var/datum/omni_port/P)
 	switch(P.mode)

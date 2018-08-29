@@ -17,7 +17,7 @@
 		</div>
 	</div>
 	{{if data.can_launch}}
-		Available Destinations
+		Transit available, current destinations:<hr><br><br>
 		{{for data.beacons}}
 			{{if value.status == 2}}
 				{{:helper.link(value.name, '', {'request_dock' : '1', 'selected_ref' : value.ref})}}

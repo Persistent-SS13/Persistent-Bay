@@ -46,6 +46,21 @@
 /mob/living/carbon/brain/can_emote()
 	return (istype(container, /obj/item/device/mmi) && ..())
 
+/mob/living/carbon/lace/can_emote()
+	return (istype(container, /obj/item/device/lmi) && ..())
+
+/mob/living/carbon/lace
+	default_emotes = list(
+		/decl/emote/audible/alarm,
+		/decl/emote/audible/alert,
+		/decl/emote/audible/notice,
+		/decl/emote/audible/whistle,
+		/decl/emote/audible/synth,
+		/decl/emote/audible/boop,
+		/decl/emote/visible/blink,
+		/decl/emote/visible/flash
+		)
+	
 /mob/living/carbon/brain
 	default_emotes = list(
 		/decl/emote/audible/alarm,

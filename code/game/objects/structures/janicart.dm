@@ -18,7 +18,8 @@
 /obj/structure/janitorialcart/New()
 	create_reagents(180)
 
-
+/obj/structure/janitorialcart/after_load()
+	update_icon()
 /obj/structure/janitorialcart/examine(mob/user)
 	if(..(user, 1))
 		to_chat(user, "[src] \icon[src] contains [reagents.total_volume] unit\s of liquid!")

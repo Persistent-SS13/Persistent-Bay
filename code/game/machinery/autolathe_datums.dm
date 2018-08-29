@@ -177,18 +177,21 @@ var/const/EXTRA_COST_FACTOR = 1
 	path = /obj/item/stack/material/steel
 	category = "General"
 	is_stack = 1
+	resources = list("steel" = SHEET_MATERIAL_AMOUNT * EXTRA_COST_FACTOR)
 
 /datum/autolathe/recipe/glass
 	name = "glass sheets"
 	path = /obj/item/stack/material/glass
 	category = "General"
 	is_stack = 1
+	resources = list("glass" = SHEET_MATERIAL_AMOUNT * EXTRA_COST_FACTOR)
 
 /datum/autolathe/recipe/rglass
 	name = "reinforced glass sheets"
 	path = /obj/item/stack/material/glass/reinforced
 	category = "General"
 	is_stack = 1
+	resources = list("glass" = (SHEET_MATERIAL_AMOUNT/2) * EXTRA_COST_FACTOR, "steel" = (SHEET_MATERIAL_AMOUNT/2) * EXTRA_COST_FACTOR)
 
 /datum/autolathe/recipe/rods
 	name = "metal rods"
@@ -560,7 +563,7 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/stasisclamp
 	name = "stasis clamp"
-	path = /obj/machinery/clamp
+	path = /obj/item/clamp
 	category = "Engineering"
 
 /datum/autolathe/recipe/beerkeg
@@ -611,6 +614,11 @@ var/const/EXTRA_COST_FACTOR = 1
 /datum/autolathe/recipe/keypad
 	name = "airlock keypad electronics"
 	path = /obj/item/weapon/airlock_electronics/keypad_electronics
+	category = "Engineering"
+
+/datum/autolathe/recipe/business
+	name = "business airlock electronics"
+	path = /obj/item/weapon/airlock_electronics/business
 	category = "Engineering"
 
 /datum/autolathe/recipe/analyzer

@@ -13,24 +13,6 @@
 /material/silver
 	value = 35
 
-/material/copper
-	value = 15
-
-/material/bronze
-	value = 20
-
-/material/brass
-	value = 20
-
-/material/tin
-	value = 5
-
-/material/zinc
-	value = 5
-
-/material/aluminum
-	value = 5
-
 /material/phoron
 	value = 200
 
@@ -40,8 +22,8 @@
 /material/steel
 	value = 4
 
-/material/diona
-	value = 5
+///material/diona
+//	value = 5
 
 /material/steel/holographic
 	value = 0
@@ -79,25 +61,7 @@
 /material/tungsten
 	value = 60
 
-/material/lead
-	value = 20
-
-/material/sulfur
-	value = 15
-
 /material/iron
-	value = 5
-
-/material/salt
-	value = 1
-
-/material/carbon
-	value = 1
-
-/material/ice
-	value = 10
-
-/material/dryice
 	value = 5
 
 /material/voxalloy

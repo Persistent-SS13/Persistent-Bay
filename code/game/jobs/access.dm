@@ -3,6 +3,10 @@
 /obj/var/list/req_access = list()
 /obj/var/list/req_one_access = list()
 /obj/var/req_access_faction = ""
+/obj/var/req_access_personal
+/obj/var/req_access_business
+/obj/var/list/req_access_business_list = list()
+/obj/var/list/req_one_access_business_list = list()
 //returns 1 if this mob has sufficient access to use this object
 /obj/proc/allowed(mob/M)
 	//check if it doesn't require any access at all
@@ -10,6 +14,28 @@
 		return 1
 	if(!istype(M))
 		return 0
+	if(req_access_personal)
+		if(M.get_id_name() == req_access_personal)
+			return 1
+		return 0
+	if(req_access_business)
+		var/datum/small_business/business = get_business(req_access_business)
+		if(business)
+			if(M.get_id_name() == business.ceo_name) return 1
+			var/datum/employee_data/employee = business.get_employee_data(M.get_id_name())
+			if(employee)
+				var/pass = 1
+				var/one_pass = 0
+				for(var/x in req_access_business_list)
+					if(!(x in employee.accesses))
+						pass = 0
+				for(var/x in req_one_access_business_list)
+					if(!(x in employee.accesses))
+						one_pass = 1
+				if(!req_one_access_business_list.len) one_pass = 1
+				if(pass && one_pass)
+					return 1
+			return 0
 	return check_access_list(M.GetAccess(req_access_faction))
 
 /atom/movable/proc/GetAccess(var/faction_uid)
@@ -228,6 +254,8 @@
 /mob/living/silicon/GetIdCard()
 	if(stat || (ckey && !client))
 		return // Unconscious, dead or once possessed but now client-less silicons are not considered to have id access.
+	if(idcard)
+		idcard.registered_name = real_name
 	return idcard
 
 /proc/FindNameFromID(var/mob/M, var/missing_id_name = "Unknown")

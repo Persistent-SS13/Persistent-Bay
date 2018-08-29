@@ -44,6 +44,7 @@
 // The numbers just define the ordering, they are meaningless otherwise.
 
 #define INIT_ORDER_SKYBOX 8
+#define INIT_ORDER_MATERIALS 7
 #define INIT_ORDER_DBCORE 18
 #define INIT_ORDER_BLACKBOX 17
 #define INIT_ORDER_SERVER_MAINT 16
@@ -54,6 +55,7 @@
 #define INIT_ORDER_ATOMS 11
 #define INIT_ORDER_LANGUAGE 10
 #define INIT_ORDER_MACHINES 9
+#define INIT_ORDER_CIRCUIT 4
 #define INIT_ORDER_SHUTTLE 3
 #define INIT_ORDER_TIMER 1
 #define INIT_ORDER_DEFAULT 0

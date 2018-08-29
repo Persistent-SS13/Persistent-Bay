@@ -1,3 +1,4 @@
+/*
 /datum/language/diona
 	name = LANGUAGE_ROOTLOCAL
 	desc = "A complex language known instinctively by Dionaea, 'spoken' by emitting modulated radio waves. This version uses high frequency waves for quick communication at short ranges."
@@ -19,7 +20,7 @@
 	desc = "A complex language known instinctively by Dionaea, 'spoken' by emitting modulated radio waves. This version uses low frequency waves for slow communication at long ranges."
 	key = "w"
 	flags = RESTRICTED | HIVEMIND
-
+*/
 /datum/language/unathi
 	name = LANGUAGE_UNATHI
 	desc = "The common language of Moghes, composed of sibilant hisses and rattles. Spoken natively by Unathi."
@@ -39,7 +40,7 @@
 		"ra", "ar", "re", "er", "ri", "ir", "ro", "or", "ru", "ur", "rs", "sr",
 		"a",  "a",  "e",  "e",  "i",  "i",  "o",  "o",  "u",  "u",  "s",  "s"
 	)
-
+/*
 /datum/language/tajaran
 	name = LANGUAGE_SIIK_MAAS
 	desc = "The traditionally employed tongue of Ahdomai, composed of expressive yowls and chirps. Native to the Tajaran."
@@ -62,7 +63,7 @@
 	else
 		new_name += " [..(gender,1)]"
 	return new_name
-
+*/
 /datum/language/skrell
 	name = LANGUAGE_SKRELLIAN
 	desc = "A melodic and complex language spoken by the Skrell of Qerrbalak. Some of the notes are inaudible to humans."
@@ -182,7 +183,7 @@
 "le", "me", "nd", "ne", "ng", "nt", "on", "or", "ou", "re", "se", "st", "te", "th", "ti", "to",
 "ve", "wa", "all", "and", "are", "but", "ent", "era", "ere", "eve", "for", "had", "hat", "hen", "her", "hin",
 "his", "ing", "ion", "ith", "not", "ome", "oul", "our", "sho", "ted", "ter", "tha", "the", "thi")
-
+/*
 /datum/language/tajsign
 	name = LANGUAGE_SIIK_TAJR
 	desc = "A type of sign language mostly based on tail movements that was used during the Tajaran rebellion."
@@ -190,7 +191,7 @@
 	colour = "tajaran"
 	key = "l"
 	flags = WHITELISTED | SIGNLANG | NO_STUTTER | NONVERBAL
-
+*/
 /datum/language/confederate
 	name = LANGUAGE_INDEPENDENT
 	desc = "The official language of the Terran Colonial Confederation, evolved from a pidgin of Eastern European languages and English."

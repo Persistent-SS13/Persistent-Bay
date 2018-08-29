@@ -162,11 +162,8 @@ var/global/floorIsLava = 0
 				<A href='?src=\ref[src];simplemake=human;species=Xenophage Queen;mob=\ref[M]'>Queen</A> \] |
 				\[ Crew: <A href='?src=\ref[src];simplemake=human;mob=\ref[M]'>Human</A>
 				<A href='?src=\ref[src];simplemake=human;species=Unathi;mob=\ref[M]'>Unathi</A>
-				<A href='?src=\ref[src];simplemake=human;species=Tajaran;mob=\ref[M]'>Tajaran</A>
 				<A href='?src=\ref[src];simplemake=human;species=Skrell;mob=\ref[M]'>Skrell</A>
-				<A href='?src=\ref[src];simplemake=human;species=Vox;mob=\ref[M]'>Vox</A> \] | \[
-				<A href='?src=\ref[src];simplemake=nymph;mob=\ref[M]'>Nymph</A>
-				<A href='?src=\ref[src];simplemake=human;species='Diona';mob=\ref[M]'>Diona</A> \] |
+				<A href='?src=\ref[src];simplemake=human;species=Vox;mob=\ref[M]'>Vox</A> \] |
 				\[ slime: <A href='?src=\ref[src];simplemake=slime;mob=\ref[M]'>Baby</A>,
 				<A href='?src=\ref[src];simplemake=adultslime;mob=\ref[M]'>Adult</A> \]
 				<A href='?src=\ref[src];simplemake=monkey;mob=\ref[M]'>Monkey</A> |
@@ -657,6 +654,54 @@ var/global/floorIsLava = 0
 	popup.open()
 	return
 
+
+/datum/admins/proc/bonus_panel()
+	if(!check_rights(R_ADMIN))
+		return
+	var/ckey = lowertext(input(usr, "Enter the ckey of the person you want to edit", "Bonus Panel", "") as text|null)
+	if(!ckey) return
+	var/datum/preferences/prefs
+	prefs = preferences_datums[ckey]
+	if(!prefs)
+		prefs = new /datum/preferences(src)
+		preferences_datums[ckey] = prefs
+	var/bonus_slots = prefs.bonus_slots
+	var/bonus_notes = prefs.bonus_notes
+
+	var/dat = ""
+	dat += "<h2>Bonus Panel</h2>"
+	dat += "Currently viewing [ckey]<br><br>"
+	dat += "Bonus Slots: [bonus_slots] <a href='?src=\ref[src];increaseslots=\ref[prefs]'>Increase Slots</a>    <a href='?src=\ref[src];decreaseslots=\ref[prefs]'>Decrease Slots</a><br><br>"
+	dat += "Bonus Notes: [bonus_notes] <br><a href='?src=\ref[src];editnotes=\ref[prefs]'>Edit Bonus Notes</a><br><br>"
+
+
+	var/datum/browser/popup = new(usr, "bonus", "Bonus", 300, 400)
+	popup.set_content(dat)
+	popup.open()
+	return
+/datum/admins/proc/bonus_panel_refresh(var/mob/user, var/ckey)
+	if(!check_rights(R_ADMIN))
+		return
+	var/datum/preferences/prefs
+	prefs = preferences_datums[ckey]
+	if(!prefs)
+		prefs = new /datum/preferences(src)
+		preferences_datums[ckey] = prefs
+	var/bonus_slots = prefs.bonus_slots
+	var/bonus_notes = prefs.bonus_notes
+	var/dat = ""
+	dat += "<h2>Bonus Panel</h2>"
+	dat += "Currently viewing [ckey]<br><br>"
+	dat += "Bonus Slots: [bonus_slots] <a href='?src=\ref[src];increaseslots=\ref[prefs]'>Increase Slots</a>    <a href='?src=\ref[src];decreaseslots=\ref[prefs]'>Decrease Slots</a><br><br>"
+	dat += "Bonus Notes: [bonus_notes] <br><a href='?src=\ref[src];editnotes=\ref[prefs]'>Edit Bonus Notes</a><br><br>"
+	var/datum/browser/popup = new(user, "bonus", "Bonus", 300, 400)
+	popup.set_content(dat)
+	popup.open()
+	return
+
+
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////admins2.dm merge
 //i.e. buttons/verbs
 
@@ -771,6 +816,8 @@ var/global/floorIsLava = 0
 	if(!check_rights(R_ADMIN))
 		return
 	Save_World()
+
+
 /datum/admins/proc/changeambience()
 	set category = "Server"
 	set desc="Change ambience tone"
@@ -817,7 +864,7 @@ var/global/floorIsLava = 0
 			if(record.get_name() == real_name)
 				to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
 				break
-			
+
 /datum/admins/proc/delete_account()
 	set category = "Server"
 	set desc="Delete Record"
@@ -831,7 +878,7 @@ var/global/floorIsLava = 0
 			if(record.get_name() == real_name)
 				GLOB.all_crew_records -= record
 				qdel(record)
-			
+
 /datum/admins/proc/savechars()
 	set category = "Server"
 	set desc="Saves Characters"
@@ -846,7 +893,6 @@ var/global/floorIsLava = 0
 			fdel("[save_path][mobbie.save_slot].sav")
 		var/savefile/f = new("[save_path][mobbie.save_slot].sav")
 		f << mobbie
-		mobbie.should_save = 0
 	for(var/datum/mind/employee in ticker.minds)
 		if(!employee.current || !employee.current.ckey) continue
 		var/save_path = load_path(employee.current.ckey, "")
@@ -854,7 +900,6 @@ var/global/floorIsLava = 0
 			fdel("[save_path][employee.current.save_slot].sav")
 		var/savefile/f = new("[save_path][employee.current.save_slot].sav")
 		f << employee.current
-		employee.current.should_save = 0
 		to_chat(employee.current, "You character has been saved.")
 
 /datum/admins/proc/loadnow()
@@ -1614,4 +1659,16 @@ datum/admins/var/obj/item/weapon/paper/admin/faxreply // var to hold fax replies
 	spawn(100)
 		qdel(P)
 		faxreply = null
+	return
+
+/datum/admins/proc/generate_beacon()
+	set category = "Debug"
+	set desc = "Spawn the Nanotrasen frontier beacon at (100,100,1)"
+	set name = "Generate Faction Beacon"
+
+	new /obj/faction_spawner/Nanotrasen(locate(100,100,1))
+	var/obj/structure/frontier_beacon/beacon
+	beacon = new /obj/structure/frontier_beacon(locate(100,100,1)) //
+	beacon.req_access_faction = "nanotrasen"
+	to_chat(usr, "<b>Frontier Beacon and faction_spawner (Nanotrasen) generated.)</b>")
 	return

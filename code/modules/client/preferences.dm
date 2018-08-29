@@ -381,16 +381,19 @@ datum/preferences
 	if(check_rights(R_ADMIN, 0, client))
 		slots += 2
 	slots += client.prefs.bonus_slots
+	var/list/loaded = list()
 	for(var/i=1, i<= slots, i++)
 		if(fexists("[path_to][i].sav"))
 			var/savefile/S =  new("[path_to][i].sav")
 			var/mob/M
 			S >> M
+			loaded |= M
 			if(M)
 				M.after_load()
 				for(var/datum/D in M.contents)
 					D.after_load()
 				for(var/mob/loaded_mob in SSmobs.mob_list)
+					if(loaded_mob in loaded) continue
 					if(!loaded_mob.perma_dead && loaded_mob.type != /mob/new_player && (loaded_mob.real_name == M.real_name) && get_turf(loaded_mob))
 						M = loaded_mob
 				character_list += M

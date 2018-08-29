@@ -155,7 +155,9 @@
 		data["connected_pods"] = format_pods()
 		data["clone_biomass"] = CLONE_BIOMASS
 	data["menu"] = menu
-	data["commitment"] = get_contributed()
+	var/commitment = get_contributed()
+	data["commitment"] = commitment
+	data["finishable"] = commitment >= 5000
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "cloning_management.tmpl", "Cloning Management", 400, 450, state = state)

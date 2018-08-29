@@ -376,6 +376,8 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 // This function can not be undone; do not call this unless you are sure
 // Also make sure there is a valid control computer
 /obj/machinery/cryopod/proc/despawn_occupant()
+	if(occupant.client && occupant.client.prefs)
+		occupant.client.prefs.load_characters()
 	if(istype(occupant, /mob/living/carbon/lace))
 		var/mob/living/carbon/lace/lacemob = occupant
 		lacemob.loc = lacemob.container
@@ -388,8 +390,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 			fdel("[save_path][occupant.save_slot].sav")
 		var/savefile/f = new("[save_path][occupant.save_slot].sav")
 		f << occupant
-	if(occupant.client && occupant.client.prefs)
-		occupant.client.prefs.load_characters()
+	
 	var/mob/new_player/M = new /mob/new_player()
 	M.loc = null
 	if(occupant.ckey)

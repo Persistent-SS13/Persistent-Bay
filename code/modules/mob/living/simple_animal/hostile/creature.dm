@@ -1,6 +1,6 @@
 /mob/living/simple_animal/hostile/creature
-	name = "greed"
-	desc = "You cant bear the sight of her."
+	name = "greedling"
+	desc = "An old shaft miner's tale said to punish those who've dug too deep, its abhorrent sight is not looking too fictional."
 	icon = 'icons/mob/critter.dmi'
 	speak_emote = list("gibbers")
 	icon_state = "otherthing"
@@ -8,18 +8,23 @@
 	icon_dead = "otherthing-dead"
 	health = 40
 	maxHealth = 40
+	speed = 8
 	destroy_surroundings = 1
+
 	melee_damage_lower = 25
 	melee_damage_upper = 50
 	attacktext = "chomped"
 	attack_sound = 'sound/weapons/bite.ogg'
+
 	faction = "asteroid"
-	speed = 8
+
 	//Space carp aren't affected by atmos.
 	min_gas = null
 	max_gas = null
 	minbodytemp = 0
+
 /mob/living/simple_animal/hostile/creature/cult
+
 	faction = "cult"
 
 	min_gas = null

@@ -382,7 +382,7 @@ datum/preferences
 		slots += 2
 	slots += client.prefs.bonus_slots
 	var/list/loaded = list()
-	for(var/i=1, i<= slots, i++
+	for(var/i=1, i<= slots, i++)
 		if(fexists("[path_to][i].sav"))
 			var/savefile/S =  new("[path_to][i].sav")
 			var/mob/M

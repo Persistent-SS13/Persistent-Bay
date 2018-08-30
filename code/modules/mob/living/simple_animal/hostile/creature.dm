@@ -1,6 +1,6 @@
 /mob/living/simple_animal/hostile/creature
-	name = "greedling"
-	desc = "An old shaft miner's tale said to punish those who've dug too deep, its abhorrent sight is not looking too fictional."
+	name = "greed"
+	desc = "You cant bear the sight of her."
 	icon = 'icons/mob/critter.dmi'
 	speak_emote = list("gibbers")
 	icon_state = "otherthing"

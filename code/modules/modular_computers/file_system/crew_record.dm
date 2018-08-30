@@ -143,12 +143,12 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 							if(record.rank <= rank)
 								continue
 		
-	if(record.rank <= 5)
-		five_promotes |= record.get_name()
-	if(record.rank <= 3)
-		three_promotes |= record.get_name()
-	all_promotes |= record.get_name()
-	
+		if(record.rank <= 5)
+			five_promotes |= record.get_name()
+		if(record.rank <= 3)
+			three_promotes |= record.get_name()
+		all_promotes |= record.get_name()
+		
 		
 	if(five_promotes.len >= faction.five_promote_req)
 		rank++

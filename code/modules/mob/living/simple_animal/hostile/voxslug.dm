@@ -58,7 +58,7 @@ Small, little HP, poisonous.
 	return L
 
 /mob/living/simple_animal/hostile/voxslug/Allow_Spacemove(var/check_drift = 0)
-return 1 // Ripped from space carp, no more floating
+	return 1 // Ripped from space carp, no more floating
 
 /mob/living/simple_animal/hostile/voxslug/get_scooped(var/mob/living/carbon/grabber)
 //	if(grabber.species.get_bodytype() != SPECIES_VOX)

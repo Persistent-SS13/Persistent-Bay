@@ -475,7 +475,7 @@
 	catalysts = list(/datum/reagent/toxin/plasticide = 8)
 	result_amount = 1
 
-/datum/chemical_reaction/plastication/on_reaction(var/datum/reagents/holder, var/created_volume)
+/datum/chemical_reaction/pultrusion/on_reaction(var/datum/reagents/holder, var/created_volume)
 	new /obj/item/stack/material/glass/fiberglass(get_turf(holder.my_atom), created_volume)
 
 /datum/chemical_reaction/latticing
@@ -484,7 +484,7 @@
 	required_reagents = list(/datum/reagent/acid/polyacid = 1, /datum/reagent/silicon = 20)
 	result_amount = 1
 
-/datum/chemical_reaction/plastication/on_reaction(var/datum/reagents/holder, var/created_volume)
+/datum/chemical_reaction/latticing/on_reaction(var/datum/reagents/holder, var/created_volume)
 	new /obj/item/stack/material/glass(get_turf(holder.my_atom), created_volume)
 
 /* Grenade reactions */

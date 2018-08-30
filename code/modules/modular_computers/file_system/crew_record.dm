@@ -114,7 +114,6 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		if(name == get_name()) continue
 		var/datum/computer_file/crew_record/record = faction.get_record(name)
 		if(record)
-			var/head_position = 0
 			var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
 			if(assignment)
 				if(assignment.parent)
@@ -142,7 +141,14 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 						else
 							if(record.rank <= rank)
 								continue
-								
+		
+		if(record.rank <= 5)
+			five_promotes |= record.get_name()
+		if(record.rank <= 3)
+			three_promotes |= record.get_name()
+		all_promotes |= record.get_name()
+		
+		
 	if(five_promotes.len >= faction.five_promote_req)
 		rank++
 		promote_votes.Cut()

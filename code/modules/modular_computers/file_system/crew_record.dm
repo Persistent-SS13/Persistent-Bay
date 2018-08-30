@@ -114,7 +114,6 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		if(name == get_name()) continue
 		var/datum/computer_file/crew_record/record = faction.get_record(name)
 		if(record)
-			var/head_position = 0
 			var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
 			if(assignment)
 				if(assignment.parent)

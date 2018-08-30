@@ -41,7 +41,7 @@ var/datum/controller/employment_controller/employment_controller
 							business.debts["[employee.real_name]"] += payment
 
 					else
-						var/datum/empdata = bsuiness.get_employee_data(employee.real_name)
+						var/datum/empdata = business.get_employee_data(employee.real_name)
 						if(empdata)
 							var/payment = business.get_employee_data(employee.real_name).pay_rate * business.unpaid["[employee.real_name]"] / 12
 							if(payment && !money_transfer(business.central_account, employee.real_name, "Payroll", payment))

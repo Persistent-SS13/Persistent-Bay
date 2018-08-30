@@ -13,8 +13,8 @@ Small, little HP, poisonous.
 	response_disarm = "gently pushes aside"
 	response_harm   = "stamps on"
 	destroy_surroundings = 0
-	health = 6
-	maxHealth = 6
+	health = 5
+	maxHealth = 5
 	speed = 3
 	move_to_delay = 0
 	density = 0
@@ -57,7 +57,7 @@ Small, little HP, poisonous.
 
 	return L
 
-/mob/living/simple_animal/hostile/carp/Allow_Spacemove(var/check_drift = 0)
+/mob/living/simple_animal/hostile/voxslug/Allow_Spacemove(var/check_drift = 0)
 return 1 // Ripped from space carp, no more floating
 
 /mob/living/simple_animal/hostile/voxslug/get_scooped(var/mob/living/carbon/grabber)

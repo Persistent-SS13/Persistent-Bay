@@ -162,7 +162,7 @@
 	recipes += new/datum/stack_recipe("plastic flaps", /obj/structure/plasticflaps, 15, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("Mop Bucket", /obj/structure/mopbucket, 3, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe_list("Plumbing",list( \
-		new/datum/stack_recipe("shower frame", /obj/item/frame/plastic/hower, 2), \
+		new/datum/stack_recipe("shower frame", /obj/item/frame/plastic/shower, 2), \
 		new/datum/stack_recipe("toilet", /obj/structure/toilet, 5, one_per_turf = 1, on_floor = 1),\
 		new/datum/stack_recipe("sink frame", /obj/item/frame/plastic/sink, 2),\
 		new/datum/stack_recipe("kitchen sink frame", /obj/item/frame/plastic/kitchensink, 2),\

@@ -5,38 +5,38 @@
 /decl/hierarchy/supply_pack/materials/steel200
 	name = "Bulk Steel Order - 200"
 	contains = list(/obj/item/stack/material/steel/fifty = 4)
-	cost = 40
+	cost = 90
 	containername = "\improper Bulk Steel Shipment"
 
 /decl/hierarchy/supply_pack/materials/glass200
 	name = "Bulk Glass Order - 200"
 	contains = list(/obj/item/stack/material/glass/fifty = 4)
-	cost = 40
+	cost = 50
 	containername = "\improper Bulk Glass Shipment"
 
 // Material sheets (50 - full stack)
 /decl/hierarchy/supply_pack/materials/steel50
 	name = "Steel (x50)"
 	contains = list(/obj/item/stack/material/steel/fifty)
-	cost = 10
+	cost = 30
 	containername = "\improper Steel sheets crate"
 
 /decl/hierarchy/supply_pack/materials/glass50
 	name = "Glass (x50)"
 	contains = list(/obj/item/stack/material/glass/fifty)
-	cost = 10
+	cost = 15
 	containername = "\improper Glass sheets crate"
 
 /decl/hierarchy/supply_pack/materials/wood50
 	name = "Wooden Planks (x50)"
 	contains = list(/obj/item/stack/material/wood/fifty)
-	cost = 10
+	cost = 100
 	containername = "\improper Wooden planks crate"
 
 /decl/hierarchy/supply_pack/materials/plastic50
 	name = "Plastic (x50)"
 	contains = list(/obj/item/stack/material/plastic/fifty)
-	cost = 10
+	cost = 8
 	containername = "\improper Plastic sheets crate"
 
 /decl/hierarchy/supply_pack/materials/marble50
@@ -81,7 +81,7 @@
 /decl/hierarchy/supply_pack/materials/phoron10
 	name = "Phoron (x10)"
 	contains = list(/obj/item/stack/material/phoron/ten)
-	cost = 75 // When sold yields 67 points.
+	cost = 150
 	containername = "\improper Phoron sheets crate"
 
 /decl/hierarchy/supply_pack/materials/gold10
@@ -93,7 +93,7 @@
 /decl/hierarchy/supply_pack/materials/silver10
 	name = "Silver (x10)"
 	contains = list(/obj/item/stack/material/silver/ten)
-	cost = 100
+	cost = 80
 	containername = "\improper Silver sheets crate"
 
 /decl/hierarchy/supply_pack/materials/uranium10

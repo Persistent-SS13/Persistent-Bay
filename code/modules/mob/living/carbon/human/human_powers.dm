@@ -157,7 +157,7 @@
 		to_chat(M, "<span class='alium'>You hear a strange, alien voice in your head... <i>[msg]</i></span>")
 		to_chat(src, "<span class='alium'>You channel a message: \"[msg]\" to [M]</span>")
 	return
-
+/*
 /mob/living/carbon/human/proc/diona_split_nymph()
 	set name = "Split"
 	set desc = "Split your humanoid form into its constituent nymphs."
@@ -216,7 +216,7 @@
 
 	visible_message("<span class='warning'>\The [src] quivers slightly, then splits apart with a wet slithering noise.</span>")
 	qdel(src)
-
+*/
 /mob/living/carbon/human/proc/can_nab(var/mob/living/target)
 	if(QDELETED(src))
 		return FALSE

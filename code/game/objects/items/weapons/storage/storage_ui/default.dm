@@ -60,7 +60,6 @@
 	QDEL_NULL(storage_continue)
 	QDEL_NULL(storage_end)
 	QDEL_NULL(stored_start)
-	QDEL_NULL(stored_continue)
 	QDEL_NULL(stored_end)
 	QDEL_NULL(closer)
 	. = ..()
@@ -213,6 +212,11 @@
 	var/endpoint = 1
 
 	for(var/obj/item/O in storage.contents)
+		if(!storage)
+			break
+		if(!O)
+			continue
+
 		startpoint = endpoint + 1
 		endpoint += storage_width * O.get_storage_cost()/storage.max_storage_space
 

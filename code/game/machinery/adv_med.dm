@@ -76,7 +76,7 @@
 /obj/machinery/bodyscanner/proc/go_out()
 	if ((!( src.occupant ) || src.locked))
 		return
-	for(var/obj/O in src)
+	for(var/obj/O in InsertedContents())
 		O.dropInto(loc)
 		//Foreach goto(30)
 	if (src.occupant.client)
@@ -88,24 +88,31 @@
 	src.icon_state = "body_scanner_0"
 	return
 
-/obj/machinery/bodyscanner/attackby(obj/item/grab/normal/G, user as mob)
-	if (!ismob(G.affecting))
-		return
+/obj/machinery/bodyscanner/proc/go_in(var/mob/target, var/mob/user)
 	if (src.occupant)
 		to_chat(user, "<span class='warning'>The scanner is already occupied!</span>")
-		return
-	if (G.affecting.abiotic())
-		to_chat(user, "<span class='warning'>Subject cannot have abiotic items on.</span>")
-		return
-	var/mob/M = G.affecting
-	M.forceMove(src)
-	src.occupant = M
+		return FALSE
+	if (target.abiotic())
+		to_chat(user, "<span class='warning'>The subject cannot have abiotic items on.</span>")
+		return FALSE
+	if(panel_open)
+		to_chat(user, "<span class='warning'>Close the panel first!</span>")
+		return FALSE
+	user.visible_message("<span class='notice'>\The [user] begins placing \the [target] into \the [src].</span>", "<span class='notice'>You start placing \the [target] into \the [src].</span>")
+	if(!do_after(user, 30, target))
+		return FALSE
+	if (target.buckled)
+		target.buckled.user_unbuckle_mob(user)
+		if (target.buckled)
+			return FALSE
+	target.forceMove(src)
+	src.occupant = target
 	update_use_power(2)
 	src.icon_state = "body_scanner_1"
-	for(var/obj/O in src)
+	for(var/obj/O in InsertedContents())
 		O.forceMove(loc)
 	src.add_fingerprint(user)
-	qdel(G)
+	return TRUE
 
 //Like grap-put, but for mouse-drop.
 /obj/machinery/bodyscanner/MouseDrop_T(var/mob/target, var/mob/user)
@@ -113,26 +120,7 @@
 		return
 	if (!CanMouseDrop(target, user))
 		return
-	if (src.occupant)
-		to_chat(user, "<span class='warning'>The scanner is already occupied!</span>")
-		return
-	if (target.abiotic())
-		to_chat(user, "<span class='warning'>The subject cannot have abiotic items on.</span>")
-		return
-	if (target.buckled)
-		to_chat(user, "<span class='warning'>Unbuckle the subject before attempting to move them.</span>")
-		return
-	user.visible_message("<span class='notice'>\The [user] begins placing \the [target] into \the [src].</span>", "<span class='notice'>You start placing \the [target] into \the [src].</span>")
-	if(!do_after(user, 30, src))
-		return
-	var/mob/M = target
-	M.forceMove(src)
-	src.occupant = M
-	update_use_power(2)
-	src.icon_state = "body_scanner_1"
-	for(var/obj/O in src)
-		O.forceMove(loc)
-	src.add_fingerprint(user)
+	go_in(target, user)
 
 /obj/machinery/bodyscanner/ex_act(severity)
 	switch(severity)
@@ -222,6 +210,17 @@
 
 
 /obj/machinery/bodyscanner/attackby(var/obj/item/O as obj, var/mob/user as mob)
+	if(istype(O, /obj/item/grab/normal))
+		var/obj/item/grab/normal/G = O
+		if (!ismob(G.affecting))
+			return
+		if(go_in(G.affecting, user))
+			qdel(G)
+			return
+
+	if(occupant && (isScrewdriver(O) || isCrowbar(O) || istype(O, /obj/item/weapon/storage/part_replacer)))
+		to_chat(user, "<span class='notice'>Remove the occupant first!</span>")
+		return
 
 	if(default_deconstruction_screwdriver(user, O))
 		updateUsrDialog()
@@ -230,7 +229,13 @@
 		return
 	if(default_part_replacement(user, O))
 		return
+
 	return ..()
+
+/obj/machinery/bodyscanner/dismantle()
+	for(var/mob/M in src)
+		M.forceMove(get_turf(src))
+	..()
 
 /obj/machinery/body_scanconsole/attackby(var/obj/item/O as obj, var/mob/user as mob)
 
@@ -299,23 +304,20 @@
 	return
 
 
-/obj/machinery/body_scanconsole/Topic(href, href_list)
-	if (..())
-		return
-
+/obj/machinery/body_scanconsole/OnTopic(user, href_list)
 	if (href_list["print"])
 		if (!src.connected)
-			to_chat(usr, "\icon[src]<span class='warning'>Error: No body scanner connected.</span>")
-			return
+			to_chat(user, "\icon[src]<span class='warning'>Error: No body scanner connected.</span>")
+			return TOPIC_REFRESH
 		var/mob/living/carbon/human/occupant = src.connected.occupant
 		if (!src.connected.occupant)
-			to_chat(usr, "\icon[src]<span class='warning'>The body scanner is empty.</span>")
-			return
+			to_chat(user, "\icon[src]<span class='warning'>The body scanner is empty.</span>")
+			return TOPIC_REFRESH
 		if (!istype(occupant,/mob/living/carbon/human))
-			to_chat(usr, "\icon[src]<span class='warning'>The body scanner cannot scan that lifeform.</span>")
-			return
+			to_chat(user, "\icon[src]<span class='warning'>The body scanner cannot scan that lifeform.</span>")
+			return TOPIC_REFRESH
 		new/obj/item/weapon/paper/(loc, "<tt>[connected.occupant.get_medical_data()]</tt>", "Body scan report - [occupant]")
-
+		return TOPIC_REFRESH
 
 /proc/get_severity(amount)
 	if(!amount)
@@ -401,9 +403,9 @@
 		else
 			table += "<td>"
 			if(E.brute_dam)
-				table += "[capitalize(get_wound_severity(E.brute_ratio, E.vital))] physical trauma"
+				table += "[capitalize(get_wound_severity(E.brute_ratio, E.can_heal_overkill))] physical trauma"
 			if(E.burn_dam)
-				table += " [capitalize(get_wound_severity(E.burn_ratio, E.vital))] burns"
+				table += " [capitalize(get_wound_severity(E.burn_ratio, E.can_heal_overkill))] burns"
 			if(E.brute_dam + E.burn_dam == 0)
 				table += "None"
 			table += "</td><td>[english_list(E.get_scan_results(), nothing_text = "", and_text = ", ")]</td></tr>"

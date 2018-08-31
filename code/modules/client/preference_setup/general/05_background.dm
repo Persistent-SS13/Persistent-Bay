@@ -5,6 +5,7 @@
 	var/nanotrasen_relation = "Neutral"
 	var/memory = ""
 	var/chosen_pin = 1000
+	var/chosen_password = "nopassword"
 	//Some faction information.
 	var/home_system           //System of birth.
 	var/citizenship = "None"            //Current home system.
@@ -48,16 +49,14 @@
 		if(background)
 			. += "<br>[background]<br>"
 	. += "<br><br>Starting Employer: <a href='?src=\ref[src];faction=1'>[pref.faction ? pref.faction : "Unset*"]</a>"
-	switch(pref.faction)
-		if("Nanotrasen")
-			. += "<br>You're offered a job as an employee in Nanotrasen, one of the newest and fastest research firms in the Galaxy. Nanotrasen provides you passage to a gateway that teleports you to their outpost deep inside the frontier.<br>"
-		if("Refugees")
-			. += "<br>You have left your previous home in a desperate search for a better life. You've been offered free passage to a gateway that will teleport you to a free-station deep inside the frontier.<br><br>"
-		if("Entrepreneur")
-			. += "<br>You have heard about an unexplored frontier rich in rare materials and untapped research opprotunties. Theirs money to be made everywhere, and theirs even free passage to a gateway that will teleport you to a free-station.<br>"
-			
+	
+	var/datum/world_faction/faction = get_faction(pref.faction)
+	if(faction)
+		. += "<br>[faction.purpose]<br><br>"
 	. += "<br><br>Bank Account Pin:<br>"
 	. += "<a href='?src=\ref[src];set_pin=1'>[pref.chosen_pin]</a><br>"
+	. += "<br><br>Email Account Password:<br>"
+	. += "<a href='?src=\ref[src];set_password=1'>[pref.chosen_password]</a><br>"
 /datum/category_item/player_setup_item/general/background/OnTopic(var/href,var/list/href_list, var/mob/user)
 	if(href_list["nt_relation"])
 		var/new_relation = input(user, "Choose your relation to [GLOB.using_map.company_name]. Note that this represents what others can find out about your character by researching your background, not what your character actually thinks.", "Character Preference", pref.nanotrasen_relation)  as null|anything in COMPANY_ALIGNMENTS
@@ -88,10 +87,13 @@
 		return TOPIC_REFRESH
 
 	else if(href_list["faction"])
-		var/list/joinable = list("Nanotrasen", "Refugees", "Entrepreneur")
-		var/choice = input(user, "Please choose a reason for coming to the frontier", "Character Preference", pref.faction) as null|anything in joinable
+		var/list/joinable = list()
+		for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
+			var/fac_uid = beacon.req_access_faction
+			joinable |= get_faction(fac_uid)
+		var/datum/world_faction/choice = input(user, "Please choose a starting organization.", "Character Preference", pref.faction) as null|anything in joinable
 		if(choice)
-			pref.faction = choice
+			pref.faction = choice.uid
 		return TOPIC_REFRESH
 
 	else if(href_list["religion"])
@@ -101,7 +103,7 @@
 		if(choice == "Other")
 			var/raw_choice = sanitize(input(user, "Please enter a religon.", "Character Preference")  as text|null, MAX_NAME_LEN)
 			if(raw_choice)
-				pref.religion = sanitize(raw_choice)
+				pref.religion = raw_choice
 		else
 			pref.religion = choice
 		return TOPIC_REFRESH
@@ -135,5 +137,12 @@
 			to_chat(user, "Your pin must be between 1000 and 9999")
 		else
 			pref.chosen_pin = chose
+		return TOPIC_REFRESH
+	else if(href_list["set_password"])
+		var/chose = sanitize(input(user, "Please enter a email password.", "Email Password")  as text|null, MAX_NAME_LEN)
+		if(chose)
+			pref.chosen_password = chose
+		else
+			to_chat(usr, "The password was invalid.")
 		return TOPIC_REFRESH
 	return ..()

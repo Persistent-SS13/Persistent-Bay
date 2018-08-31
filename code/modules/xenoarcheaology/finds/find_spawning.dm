@@ -204,7 +204,7 @@
 	apply_image_decorations = 1
 
 /obj/item/weapon/archaeological_find/coin/spawn_item()
-	var/obj/item/weapon/coin/C = pick(subtypesof(/obj/item/weapon/coin))
+	var/obj/item/weapon/material/coin/C = pick(subtypesof(/obj/item/weapon/material/coin))
 	C = new C(loc)
 	return C
 
@@ -376,7 +376,7 @@
 	possible_spawns -= /obj/item/weapon/stock_parts/subspace
 	var/new_type = pick(possible_spawns)
 	return new new_type(loc)
-
+/*
 /obj/item/weapon/archaeological_find/laser
 	item_type = "gun"
 	icon_state = "egun1"
@@ -407,7 +407,7 @@
 	additional_desc = "This is an antique energy weapon, you're not sure if it will fire or not."
 
 	return new_gun
-
+*/
 /obj/item/weapon/archaeological_find/gun
 	item_type = "gun"
 	icon_state = "gun1"

@@ -14,6 +14,7 @@ var/const/SAFETY_COOLDOWN = 100
 	var/blood = 0
 	var/eat_dir = WEST
 	var/amount_produced = 1
+	var/list/stored_material = list()
 
 /obj/machinery/recycler/New()
 	// On us
@@ -76,7 +77,6 @@ var/const/SAFETY_COOLDOWN = 100
 
 
 /obj/machinery/recycler/Bumped(var/atom/movable/AM)
-
 	if(stat & (BROKEN|NOPOWER))
 		return
 	if(safety_mode)
@@ -88,7 +88,6 @@ var/const/SAFETY_COOLDOWN = 100
 			grinding = 0
 	else
 		return
-
 	var/move_dir = get_dir(loc, AM.loc)
 	if(move_dir == eat_dir)
 		if(isliving(AM))
@@ -104,16 +103,20 @@ var/const/SAFETY_COOLDOWN = 100
 
 /obj/machinery/recycler/proc/recycle(var/obj/item/I, var/sound = 1)
 	I.loc = src.loc
-	if(!istype(I, /obj/item/weapon/disk/nuclear))
-		del(I)
-		if(prob(15))
-			new /obj/item/stack/material/steel(loc)
-		if(prob(10))
-			new /obj/item/stack/material/glass(loc)
-		if(prob(2))
-			new /obj/item/stack/material/plasteel(loc)
-		if(prob(1))
-			new /obj/item/stack/material/glass(loc)
+	if(!istype(I, /obj/item/weapon/disk/nuclear) && !istype(I, /obj/item/stack))
+		if(istype(I) && I.matter)
+			for(var/mat in I.matter)
+				stored_material[mat] += I.matter[mat]
+				var/material/M = SSmaterials.get_material_by_name(mat)
+				if(!istype(M))
+					continue
+				var/obj/item/stack/material/S = new M.stack_type(loc)
+				if(stored_material[mat] > S.perunit)
+					S.amount = round(stored_material[mat] / S.perunit)
+					stored_material[mat] -= S.amount * S.perunit
+				else
+					qdel(S)
+		qdel(I)
 		if(sound)
 			playsound(src.loc, 'sound/items/Welder.ogg', 50, 1)
 

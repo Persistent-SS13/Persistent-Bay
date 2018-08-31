@@ -35,6 +35,9 @@ datum/preferences
 	// Persistent Edit, Adding the character list..
 	var/list/character_list = list()
 	var/list/icon_list = list()
+	
+	var/bonus_slots = 0
+	var/bonus_notes = ""
 /datum/preferences/New(client/C)
 	player_setup = new(src)
 	gender = pick(MALE, FEMALE)
@@ -377,16 +380,24 @@ datum/preferences
 	var/slots = config.character_slots
 	if(check_rights(R_ADMIN, 0, client))
 		slots += 2
+	slots += client.prefs.bonus_slots
+	var/list/loaded = list()
 	for(var/i=1, i<= slots, i++)
 		if(fexists("[path_to][i].sav"))
 			var/savefile/S =  new("[path_to][i].sav")
 			var/mob/M
 			S >> M
+			loaded |= M
 			if(M)
 				M.after_load()
 				for(var/datum/D in M.contents)
 					D.after_load()
+				for(var/mob/loaded_mob in SSmobs.mob_list)
+					if(loaded_mob in loaded) continue
+					if(!loaded_mob.perma_dead && loaded_mob.type != /mob/new_player && (loaded_mob.real_name == M.real_name) && (get_turf(loaded_mob) || loaded_mob in GLOB.all_cryo_mobs))
+						loaded_mob.save_slot = i
 				character_list += M
+				M.save_slot = i
 		else
 			character_list += "empty"
 	return 1
@@ -397,6 +408,7 @@ datum/preferences
 	var/slots = config.character_slots
 	if(check_rights(R_ADMIN, 0, client))
 		slots += 2
+	slots += client.prefs.bonus_slots
 	var/savefile/S = new /savefile(path)
 	if(S)
 		dat += "<b>Select a character slot to load</b><hr>"
@@ -419,6 +431,7 @@ datum/preferences
 	var/slots = config.character_slots
 	if(check_rights(R_ADMIN, 0, client))
 		slots += 2
+	slots += client.prefs.bonus_slots
 	if(!character_list || (character_list.len < slots))
 		load_characters()
 	var/dat  = list()

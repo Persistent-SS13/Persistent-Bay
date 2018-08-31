@@ -40,7 +40,10 @@
 		parent.build_pipeline(src)
 
 	return parent.air
-
+/obj/machinery/atmospherics/pipe/atmos_scan()
+	if(parent)
+		return parent.air
+	return null
 /obj/machinery/atmospherics/pipe/build_network()
 	if(!parent)
 		parent = new /datum/pipeline()

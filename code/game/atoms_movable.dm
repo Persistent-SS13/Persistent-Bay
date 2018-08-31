@@ -125,7 +125,9 @@
 		dx = EAST
 	else
 		dx = WEST
-
+	if(istype(src, /obj/item))
+		var/obj/item/I = src
+		I.randomize_pixel_offset()
 	var/dy
 	if (target.y > src.y)
 		dy = NORTH
@@ -241,55 +243,42 @@
 		overmap_spacetravel(get_turf(src), src)
 		return
 
-	var/list/L = list(	"1" = list("NORTH" = 19, "SOUTH" = 10, "EAST" = 4, "WEST" = 7),
-						"2" = list("NORTH" = 20, "SOUTH" = 11, "EAST" = 5, "WEST" = 8),
-						"3" = list("NORTH" = 21, "SOUTH" = 12, "EAST" = 6, "WEST" = 9),
-						"4" = list("NORTH" = 22, "SOUTH" = 13, "EAST" = 7, "WEST" = 1),
-						"5" = list("NORTH" = 23, "SOUTH" = 14, "EAST" = 8, "WEST" = 2),
-						"6" = list("NORTH" = 24, "SOUTH" = 15, "EAST" = 9, "WEST" = 3),
-						"7" = list("NORTH" = 25, "SOUTH" = 16, "EAST" = 1, "WEST" = 4),
-						"8" = list("NORTH" = 26, "SOUTH" = 17, "EAST" = 2, "WEST" = 5),
-						"9" = list("NORTH" = 27, "SOUTH" = 18, "EAST" = 3, "WEST" = 6),
-						"10" = list("NORTH" = 1, "SOUTH" = 19, "EAST" = 13, "WEST" = 16),
-						"11" = list("NORTH" = 2, "SOUTH" = 20, "EAST" = 14, "WEST" = 17),
-						"12" = list("NORTH" = 3, "SOUTH" = 21, "EAST" = 15, "WEST" = 18),
-						"13" = list("NORTH" = 4, "SOUTH" = 22, "EAST" = 16, "WEST" = 10),
-						"14" = list("NORTH" = 5, "SOUTH" = 23, "EAST" = 17, "WEST" = 11),
-						"15" = list("NORTH" = 6, "SOUTH" = 24, "EAST" = 18, "WEST" = 12),
-						"16" = list("NORTH" = 7, "SOUTH" = 25, "EAST" = 10, "WEST" = 13),
-						"17" = list("NORTH" = 8, "SOUTH" = 26, "EAST" = 11, "WEST" = 14),
-						"18" = list("NORTH" = 9, "SOUTH" = 27, "EAST" = 12, "WEST" = 15),
-						"19" = list("NORTH" = 10, "SOUTH" = 1, "EAST" = 22, "WEST" = 25),
-						"20" = list("NORTH" = 11, "SOUTH" = 2, "EAST" = 23, "WEST" = 26),
-						"21" = list("NORTH" = 12, "SOUTH" = 3, "EAST" = 24, "WEST" = 27),
-						"22" = list("NORTH" = 13, "SOUTH" = 4, "EAST" = 25, "WEST" = 19),
-						"23" = list("NORTH" = 14, "SOUTH" = 5, "EAST" = 26, "WEST" = 20),
-						"24" = list("NORTH" = 15, "SOUTH" = 6, "EAST" = 27, "WEST" = 21),
-						"25" = list("NORTH" = 16, "SOUTH" = 7, "EAST" = 19, "WEST" = 22),
-						"26" = list("NORTH" = 17, "SOUTH" = 8, "EAST" = 20, "WEST" = 23),
-						"27" = list("NORTH" = 28, "SOUTH" = 9, "EAST" = 21, "WEST" = 24)
-					)
+	#define worldWidth 5
+	#define worldLength 5
+	#define worldHeight 2
 
 	var/new_x = x
 	var/new_y = y
 	var/new_z = z
 	if(new_z)
-		if(x <= TRANSITIONEDGE)
+		if(x <= TRANSITIONEDGE) 						// West
 			new_x = world.maxx - TRANSITIONEDGE - 1
-			new_z = L["[z]"]["WEST"]
+			new_z -= worldHeight
+			if(new_z % (worldHeight * worldWidth) <= 0 || new_z % (worldHeight * worldWidth) > (worldWidth - 1) * worldHeight) 
+				new_z += worldWidth * worldHeight
 
-		else if (x >= (world.maxx - TRANSITIONEDGE))
+		else if (x >= (world.maxx - TRANSITIONEDGE))	// East
 			new_x = TRANSITIONEDGE + 1
-			new_z = L["[z]"]["EAST"]
+			new_z += worldHeight
+			if(new_z % (worldHeight * worldWidth) != 0 && new_z % (worldHeight * worldWidth) <= worldHeight)
+				new_z -= worldWidth * worldHeight
 
-		else if (y <= TRANSITIONEDGE)
+		else if (y <= TRANSITIONEDGE) 					// South
 			new_y = world.maxy - TRANSITIONEDGE - 1
-			new_z = L["[z]"]["SOUTH"]
+			new_z -= worldWidth * worldHeight
+			if(new_z <= 0)
+				new_z += worldWidth * worldHeight * worldLength
 
-		else if (y >= (world.maxy - TRANSITIONEDGE))
+		else if (y >= (world.maxy - TRANSITIONEDGE))	// North
 			new_y = TRANSITIONEDGE + 1
-			new_z = L["[z]"]["NORTH"]
+			new_z += worldWidth * worldHeight
+			if(new_z > worldWidth * worldHeight * worldLength)
+				new_z -= worldWidth * worldHeight * worldLength
 
 		var/turf/T = locate(new_x, new_y, new_z)
 		if(T)
 			forceMove(T)
+
+#undef worldWidth
+#undef worldLength
+#undef worldHeight

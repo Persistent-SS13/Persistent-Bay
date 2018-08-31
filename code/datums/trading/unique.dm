@@ -37,8 +37,6 @@
 
 	possible_trading_items = list(/obj/mecha/combat                                                    = TRADER_SUBTYPES_ONLY,
 							/obj/item/weapon/gun/projectile/automatic                                  = TRADER_SUBTYPES_ONLY,
-							/obj/item/weapon/gun/projectile/automatic/mini_uzi/usi                     = TRADER_BLACKLIST,
-							/obj/item/weapon/gun/projectile/automatic/l6_saw/mag                       = TRADER_BLACKLIST
 							)
 
 	blacklisted_trade_items = null

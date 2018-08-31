@@ -115,6 +115,7 @@ Class Procs:
 	var/interact_offline = 0 // Can the machine be interacted with while de-powered.
 	var/clicksound			// sound played on succesful interface use by a carbon lifeform
 	var/clickvol = 40		// sound played on succesful interface use
+	var/multiplier = 0
 
 /obj/machinery/Initialize(mapload, d=0)
 	. = ..()
@@ -353,3 +354,35 @@ Class Procs:
 	..()
 	if(clicksound && istype(user, /mob/living/carbon))
 		playsound(src, clicksound, clickvol)
+
+//Defined at machinery level so that it can be used everywhere with little effort.
+/obj/machinery/proc/HasMultiplier()
+	return initial(multiplier) > 0
+
+/obj/machinery/proc/GetMultiplierForm(var/obj/machinery/M)
+	var/dat = ""
+	if(!M.HasMultiplier())
+		return dat
+	dat += {"<form name='update_mult' action='?src=\ref[M]'>
+				<input type='hidden' name='src' value='\ref[M]'>
+				<input type='hidden' name='update_mult' value='input'>
+				Multiplier:
+				<input type='text' name='input' value='[M:multiplier]' size='3'>
+				<input type='submit' class='button' value='Enter'>
+				<A href='?src=\ref[M];update_mult=1;input=1'>X</A>
+			</form>"}
+	dat += "<hr>"
+	return dat
+
+/obj/machinery/proc/ProcessMultiplierForm(var/obj/machinery/M, var/list/href_list)
+	if(!M.HasMultiplier())
+		return 0
+	var/new_mult = text2num(href_list["input"])
+	if(isnum(new_mult))
+		new_mult = min(25, max(1, round(new_mult, 1))) //multiplier has to be at least 1, maximum of 20
+		M.multiplier = new_mult
+		return 1
+	return 0
+
+/obj/machinery/after_load()
+	RefreshParts()

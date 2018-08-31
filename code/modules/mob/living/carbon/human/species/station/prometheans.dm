@@ -24,7 +24,7 @@ var/datum/species/shapeshifter/promethean/prometheans
 	spawn_flags =      SPECIES_IS_RESTRICTED
 
 	breath_type = null
-	poison_type = null
+	poison_types = null
 
 	gluttonous =          GLUT_TINY | GLUT_SMALLER | GLUT_ITEM_ANYTHING | GLUT_PROJECTILE_VOMIT
 	virus_immune =        1
@@ -63,7 +63,7 @@ var/datum/species/shapeshifter/promethean/prometheans
 		/mob/living/carbon/human/proc/shapeshifter_select_gender
 		)
 
-	valid_transform_species = list(SPECIES_HUMAN, SPECIES_UNATHI, SPECIES_TAJARA, SPECIES_SKRELL, SPECIES_DIONA, "Monkey")
+	valid_transform_species = list(SPECIES_HUMAN, SPECIES_UNATHI, SPECIES_SKRELL, "Monkey")
 	monochromatic = 1
 
 	var/heal_rate = 5 // Temp. Regen per tick.

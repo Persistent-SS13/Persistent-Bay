@@ -153,8 +153,8 @@
 		var/can_slice_here = isturf(src.loc) && ((locate(/obj/structure/table) in src.loc) || (locate(/obj/machinery/optable) in src.loc) || (locate(/obj/item/weapon/tray) in src.loc))
 		var/hide_item = !has_edge(W) || !can_slice_here
 
-		if (hide_item)
-			if (W.w_class >= src.w_class || is_robot_module(W))
+		if (hide_item && user.a_intent != I_HURT)
+			if (W.w_class >= src.w_class || is_robot_module(W) || istype(W, /obj/item/organ/internal/stack))
 				return
 
 			to_chat(user, "<span class='warning'>You slip \the [W] inside \the [src].</span>")
@@ -1623,7 +1623,7 @@
 
 	var/wrapped = 0
 	var/monkey_type = /mob/living/carbon/human/monkey
-
+	var/expanding = 0
 /obj/item/weapon/reagent_containers/food/snacks/monkeycube/New()
 	..()
 	reagents.add_reagent(/datum/reagent/nutriment/protein, 10)
@@ -1633,10 +1633,12 @@
 		Unwrap(user)
 
 /obj/item/weapon/reagent_containers/food/snacks/monkeycube/proc/Expand()
-	src.visible_message("<span class='notice'>\The [src] expands!</span>")
-	var/mob/monkey = new monkey_type
-	monkey.dropInto(src.loc)
-	qdel(src)
+	if(!expanding)
+		expanding = 1
+		src.visible_message("<span class='notice'>\The [src] expands!</span>")
+		var/mob/monkey = new monkey_type
+		monkey.dropInto(src.loc)
+		qdel(src)
 
 /obj/item/weapon/reagent_containers/food/snacks/monkeycube/proc/Unwrap(var/mob/user)
 	icon_state = "monkeycube"

@@ -107,8 +107,14 @@
 //Returns an assoc list that describes how turfs would be changed if the
 //turfs in turfs_src were translated by shifting the src_origin to the dst_origin
 /proc/get_turf_translation(turf/src_origin, turf/dst_origin, list/turfs_src)
+	if(!src_origin || !dst_origin || !turfs_src)
+		error("Missing arguments")
+
 	var/list/turf_map = list()
 	for(var/turf/source in turfs_src)
+		if(!source)
+			continue
+
 		var/x_pos = (source.x - src_origin.x)
 		var/y_pos = (source.y - src_origin.y)
 		var/z_pos = (source.z - src_origin.z)
@@ -146,7 +152,10 @@
 	for(var/obj/O in source)
 		if(O.simulated)
 			O.forceMove(new_turf)
-
+		else
+			if(istype(O, /atom/movable/lighting_overlay))
+				O.loc = null
+				qdel(O)
 	for(var/mob/M in source)
 		if(isEye(M)) continue // If we need to check for more mobs, I'll add a variable
 		M.forceMove(new_turf)

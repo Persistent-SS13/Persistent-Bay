@@ -11,11 +11,9 @@
 	var/expiration_time = 0
 	var/reason = "NOT SPECIFIED"
 
-/obj/item/weapon/card/id/guest/GetAccess()
-	if (world.time > expiration_time)
-		return access
-	else
-		return temp_access
+/obj/item/weapon/card/id/guest/GetAccess(var/faction_uid)
+	if (world.time < expiration_time)
+		return ..(faction_uid)
 
 /obj/item/weapon/card/id/guest/examine(mob/user)
 	. = ..()

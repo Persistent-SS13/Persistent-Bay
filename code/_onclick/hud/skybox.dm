@@ -57,6 +57,7 @@
 	if(!skybox)
 		skybox = new(src)
 	client.screen += skybox
+	redraw_inv()
 	..()
 
 /mob/Destroy()

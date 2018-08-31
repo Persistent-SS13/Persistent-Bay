@@ -48,6 +48,7 @@
 	make_blood()
 
 /mob/living/carbon/human/Destroy()
+	if(get_turf(src))
 	GLOB.human_mob_list -= src
 	worn_underwear = null
 	for(var/organ in organs)
@@ -309,22 +310,26 @@
 		else
 			return "Unknown"
 	return real_name
-
+/mob/proc/get_id_name(var/if_no_id = "Unknown")
+	return if_no_id
+/mob/proc/get_idcard()
+	return
 //gets name from ID or PDA itself, ID inside PDA doesn't matter
 //Useful when player is being seen by other mobs
-/mob/living/carbon/human/proc/get_id_name(var/if_no_id = "Unknown")
+/mob/living/carbon/human/get_id_name(var/if_no_id = "Unknown")
 	. = if_no_id
 	if(istype(wear_id,/obj/item/device/pda))
 		var/obj/item/device/pda/P = wear_id
-		return P.owner
+		if(P.id && P.id.valid)
+			return P.id.registered_name
 	if(wear_id)
 		var/obj/item/weapon/card/id/I = wear_id.GetIdCard()
-		if(I)
+		if(I && I.valid)
 			return I.registered_name
 	return
 
 //gets ID card object from special clothes slot or null.
-/mob/living/carbon/human/proc/get_idcard()
+/mob/living/carbon/human/get_idcard()
 	if(wear_id)
 		return wear_id.GetIdCard()
 
@@ -418,114 +423,131 @@
 
 	if (href_list["criminal"])
 		if(hasHUD(usr,"security"))
+			var/datum/world_faction/faction = get_faction(usr.GetFaction())
+			if(faction) //in case someone drops their ID before attempting to change status
+				if(has_access(list(core_access_security_programs), list(), usr.GetAccess(faction.uid))) //User must have security access to change criminal status.
+					var/modified = 0
+					var/perpname = "wot"
+					if(wear_id)
+						var/obj/item/weapon/card/id/I = wear_id.GetIdCard()
+						if(I)
+							perpname = I.registered_name
+						else
+							perpname = name
+					else
+						perpname = name
 
-			var/modified = 0
-			var/perpname = "wot"
-			if(wear_id)
-				var/obj/item/weapon/card/id/I = wear_id.GetIdCard()
-				if(I)
-					perpname = I.registered_name
+					var/datum/computer_file/crew_record/R = faction.get_record(perpname)
+					if(R)
+						var/setcriminal = input(usr, "Specify a new criminal status for this person.", "Security HUD", R.get_criminalStatus()) in GLOB.security_statuses as null|text
+						if(hasHUD(usr, "security") && setcriminal)
+							R.set_criminalStatus(setcriminal)
+							modified = 1
+
+							spawn()
+								BITSET(hud_updateflag, WANTED_HUD)
+								if(istype(usr,/mob/living/carbon/human))
+									var/mob/living/carbon/human/U = usr
+									U.handle_regular_hud_updates()
+								if(istype(usr,/mob/living/silicon/robot))
+									var/mob/living/silicon/robot/U = usr
+									U.handle_regular_hud_updates()
+
+					if(!modified)
+						to_chat(usr, "<span class='warning'>Unable to locate a data core entry for this person.</span>")
 				else
-					perpname = name
-			else
-				perpname = name
+					to_chat(usr, "<span class='warning'>Access Denied</span>")
 
-			var/datum/computer_file/crew_record/R = get_crewmember_record(perpname)
-			if(R)
-				var/setcriminal = input(usr, "Specify a new criminal status for this person.", "Security HUD", R.get_criminalStatus()) in GLOB.security_statuses as null|text
-				if(hasHUD(usr, "security") && setcriminal)
-					R.set_criminalStatus(setcriminal)
-					modified = 1
-
-					spawn()
-						BITSET(hud_updateflag, WANTED_HUD)
-						if(istype(usr,/mob/living/carbon/human))
-							var/mob/living/carbon/human/U = usr
-							U.handle_regular_hud_updates()
-						if(istype(usr,/mob/living/silicon/robot))
-							var/mob/living/silicon/robot/U = usr
-							U.handle_regular_hud_updates()
-
-			if(!modified)
-				to_chat(usr, "<span class='warning'>Unable to locate a data core entry for this person.</span>")
 	if (href_list["secrecord"])
 		if(hasHUD(usr,"security"))
-			var/perpname = "wot"
-			var/read = 0
+			var/datum/world_faction/faction = get_faction(usr.GetFaction())
+			if(faction)
+				if(has_access(list(core_access_security_programs), list(), usr.GetAccess(faction.uid)))
+					var/perpname = "wot"
+					var/read = 0
 
-			if(wear_id)
-				if(istype(wear_id,/obj/item/weapon/card/id))
-					perpname = wear_id:registered_name
-				else if(istype(wear_id,/obj/item/device/pda))
-					var/obj/item/device/pda/tempPda = wear_id
-					perpname = tempPda.owner
-			else
-				perpname = src.name
-			var/datum/computer_file/crew_record/E = get_crewmember_record(perpname)
-			if(E)
-				if(hasHUD(usr,"security"))
-					to_chat(usr, "<b>Name:</b> [E.get_name()]")
-					to_chat(usr, "<b>Criminal Status:</b> [E.get_criminalStatus()]")
-					to_chat(usr, "<b>Details:</b> [pencode2html(E.get_criminalStatus())]")
-					read = 1
+					if(wear_id)
+						if(istype(wear_id,/obj/item/weapon/card/id))
+							perpname = wear_id:registered_name
+						else if(istype(wear_id,/obj/item/device/pda))
+							var/obj/item/device/pda/tempPda = wear_id
+							perpname = tempPda.owner
+					else
+						perpname = src.name
+					var/datum/computer_file/crew_record/E = faction.get_record(perpname)
+					if(E)
+						if(hasHUD(usr,"security"))
+							to_chat(usr, "<b>Name:</b> [E.get_name()]")
+							to_chat(usr, "<b>Criminal Status:</b> [E.get_criminalStatus()]")
+							to_chat(usr, "<b>Details:</b> [pencode2html(E.get_criminalStatus())]")
+							read = 1
 
-			if(!read)
-				to_chat(usr, "<span class='warning'>Unable to locate a data core entry for this person.</span>")
+					if(!read)
+						to_chat(usr, "<span class='warning'>Unable to locate a data core entry for this person.</span>")
+				else
+					to_chat(usr, "<span class='warning'>Access Denied</span>")
+
 	if (href_list["medical"])
 		if(hasHUD(usr,"medical"))
-			var/perpname = "wot"
-			var/modified = 0
+			var/datum/world_faction/faction = get_faction(usr.GetFaction())
+			if(faction)
+				if(has_access(list(core_access_medical_programs), list(), usr.GetAccess(faction.uid)))
+					var/perpname = "wot"
+					var/modified = 0
 
-			if(wear_id)
-				if(istype(wear_id,/obj/item/weapon/card/id))
-					perpname = wear_id:registered_name
-				else if(istype(wear_id,/obj/item/device/pda))
-					var/obj/item/device/pda/tempPda = wear_id
-					perpname = tempPda.owner
-			else
-				perpname = src.name
+					if(wear_id)
+						if(istype(wear_id,/obj/item/weapon/card/id))
+							perpname = wear_id:registered_name
+					else if(istype(wear_id,/obj/item/device/pda))
+						var/obj/item/device/pda/tempPda = wear_id
+						perpname = tempPda.owner
+					else
+						perpname = src.name
 
-			var/datum/computer_file/crew_record/E = get_crewmember_record(perpname)
-			if(E)
-				var/setmedical = input(usr, "Specify a new medical status for this person.", "Medical HUD", E.get_status()) in GLOB.physical_statuses as null|text
-				if(hasHUD(usr,"medical") && setmedical)
-					E.set_status(setmedical)
-					modified = 1
+					var/datum/computer_file/crew_record/E = faction.get_record(perpname)
+					if(E)
+						var/setmedical = input(usr, "Specify a new medical status for this person.", "Medical HUD", E.get_status()) in GLOB.physical_statuses as null|text
+						if(hasHUD(usr,"medical") && setmedical)
+							E.set_status(setmedical)
+							modified = 1
 
-					spawn()
-						if(istype(usr,/mob/living/carbon/human))
-							var/mob/living/carbon/human/U = usr
-							U.handle_regular_hud_updates()
-						if(istype(usr,/mob/living/silicon/robot))
-							var/mob/living/silicon/robot/U = usr
-							U.handle_regular_hud_updates()
+							spawn()
+								if(istype(usr,/mob/living/carbon/human))
+									var/mob/living/carbon/human/U = usr
+									U.handle_regular_hud_updates()
+								if(istype(usr,/mob/living/silicon/robot))
+									var/mob/living/silicon/robot/U = usr
+									U.handle_regular_hud_updates()
 
-			if(!modified)
-				to_chat(usr, "<span class='warning'>Unable to locate a data core entry for this person.</span>")
+					if(!modified)
+						to_chat(usr, "<span class='warning'>Unable to locate a data core entry for this person.</span>")
 	if (href_list["medrecord"])
 		if(hasHUD(usr,"medical"))
-			var/perpname = "wot"
-			var/read = 0
+			var/datum/world_faction/faction = get_faction(usr.GetFaction())
+			if(faction)
+				if(has_access(list(core_access_medical_programs), list(), usr.GetAccess(faction.uid)))
+					var/perpname = "wot"
+					var/read = 0
 
-			if(wear_id)
-				if(istype(wear_id,/obj/item/weapon/card/id))
-					perpname = wear_id:registered_name
-				else if(istype(wear_id,/obj/item/device/pda))
-					var/obj/item/device/pda/tempPda = wear_id
-					perpname = tempPda.owner
-			else
-				perpname = src.name
-			var/datum/computer_file/crew_record/E = get_crewmember_record(perpname)
-			if(E)
-				if(hasHUD(usr,"medical"))
-					to_chat(usr, "<b>Name:</b> [E.get_name()]")
-					to_chat(usr, "<b>Gender:</b> [E.get_sex()]")
-					to_chat(usr, "<b>Species:</b> [E.get_species()]")
-					to_chat(usr, "<b>Blood Type:</b> [E.get_bloodtype()]")
-					to_chat(usr, "<b>Details:</b> [pencode2html(E.get_medRecord())]")
-					read = 1
-			if(!read)
-				to_chat(usr, "<span class='warning'>Unable to locate a data core entry for this person.</span>")
+					if(wear_id)
+						if(istype(wear_id,/obj/item/weapon/card/id))
+							perpname = wear_id:registered_name
+						else if(istype(wear_id,/obj/item/device/pda))
+							var/obj/item/device/pda/tempPda = wear_id
+							perpname = tempPda.owner
+					else
+						perpname = src.name
+					var/datum/computer_file/crew_record/E = get_crewmember_record(perpname)
+					if(E)
+						if(hasHUD(usr,"medical"))
+							to_chat(usr, "<b>Name:</b> [E.get_name()]")
+							to_chat(usr, "<b>Gender:</b> [E.get_sex()]")
+							to_chat(usr, "<b>Species:</b> [E.get_species()]")
+							to_chat(usr, "<b>Blood Type:</b> [E.get_bloodtype()]")
+							to_chat(usr, "<b>Details:</b> [pencode2html(E.get_medRecord())]")
+							read = 1
+					if(!read)
+						to_chat(usr, "<span class='warning'>Unable to locate a data core entry for this person.</span>")
 
 	if (href_list["lookitem"])
 		var/obj/item/I = locate(href_list["lookitem"])
@@ -846,7 +868,7 @@
 		vessel.add_reagent(/datum/reagent/blood,species.blood_volume-vessel.total_volume)
 		fixblood()
 
-	species.create_organs(src) // Reset our organs/limbs.
+	species.create_organs(src,1) // Reset our organs/limbs with a new stack.
 	restore_all_organs()       // Reapply robotics/amputated status from preferences.
 
 	if(!client || !key) //Don't boot out anyone already in the mob.

@@ -9,7 +9,7 @@
 		{{:helper.link(data.chosen_uid, '', {'change_uid' : '1'})}}
 	</div>
 </div>
-The network UID is permanent and can never be changed. It is used when connecting to the network through he core logistics program.<br><br><br>
+The network UID is permanent and can never be changed. It is used when connecting to the network through he core logistics program. Changing this now will cancel all current contracts.<br><br><br>
 <div class='item'>
 	<div class='itemLabel'>
 		Full Network Name:
@@ -18,7 +18,7 @@ The network UID is permanent and can never be changed. It is used when connectin
 		{{:helper.link(data.chosen_name, '', {'change_name' : '1'})}}
 	</div>
 </div>
-This can be changed at any time and should be the full unabbreviated name for the government, corperation or whatever is being managed by the logistics network.<br><br><br>
+This can be changed at any time and should be the full unabbreviated name for the government, corperation or whatever is being managed by the logistics network. Changing this now will cancel all current contracts.<br><br><br>
 <div class='item'>
 	<div class='itemLabel'>
 		Short Network Name:
@@ -28,6 +28,15 @@ This can be changed at any time and should be the full unabbreviated name for th
 	</div>
 </div>
 This is the abbreviated or shortened name for the network. This can be changed at any time.<br><br><br>
+<div class='item'>
+	<div class='itemLabel'>
+		Network Tag:
+	</div>
+	<div class='itemContent'>
+		{{:helper.link(data.chosen_tag, '', {'change_tag' : '1'})}}
+	</div>
+</div>
+This is the tag for the network. This can be changed at any time, but must be unique and less then 4 characters.<br><br><br>
 <div class='item'>
 	<div class='itemLabel'>
 		Network password:
@@ -55,6 +64,28 @@ This is the starting uid for the wireless network that devices will connect to t
 	</div>
 </div>
 Swipe an ID card to set the leader. The network leader always has all-access no matter what their assignment is. The network leader will be the only person able to access the logistics network until they create additional assignments with leadership access (1).<br>
-<br><br><br><br>
+
+<h3>Funding</h3>
+<br>
+To create a logistics network, a license fee of 25000$$ must be paid to the Central Authority for them to allow your satellite into their territory.
+Use funding contracts to get at least 25000$$ commited. Anything past the 25000$$ will be deposited into the new account.<br><br>
+{{:helper.link('Print Funding Contract', '', {'contract' : 1}, null)}}<br><br>
+<h4>Signed Contracts</h4>
+<div class="statusDisplay" style="overflow: auto;">
+	{{for data.signed_contracts}}
+		{{:value.signed_contract}}<br><hr>
+	{{/for}}
+</div>
+<div class='item'>
+	<div class='itemLabel'>
+		Current Commitment:
+	</div>
+	<div class='itemContent'>
+		{{:data.commitment}}/25000$$
+	</div>
+</div>
+<hr>
+<br><br>
+<br><br>
 {{:helper.link('Launch', '', {'launch' : '1'})}}
 The satellite will only launch once the network is configured and the device is positioned in space.

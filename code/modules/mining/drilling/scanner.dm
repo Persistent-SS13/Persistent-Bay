@@ -4,8 +4,8 @@
 	name = "ore detector"
 	desc = "A complex device used to locate ore deep underground."
 	icon = 'icons/obj/device.dmi'
-	icon_state = "forensic0-old" //GET A BETTER SPRITE.
-	item_state = "electronic"
+	icon_state = "mining1" //GET A BETTER SPRITE. //Done
+	item_state = "electronic"	//I don't know what this does, so I will just leave it
 	origin_tech = list(TECH_MAGNET = 1, TECH_ENGINEERING = 1)
 	matter = list(DEFAULT_WALL_MATERIAL = 150)
 	var/survey_data = 0
@@ -37,15 +37,15 @@
 			var/data_value = 1
 
 			switch(metal)
-				if("silicates", "carbonaceous rock", "iron")	
+				if("sand", "graphene", "hematite", "tetrahedrite", "rock salt", "pyrite")
 					ore_type = "surface minerals"
-				if("gold", "silver", "diamond")					
+				if("gold", "silver", "diamond", "platinum", "tungsten")
 					ore_type = "precious metals"
 					data_value = 2
-				if("uranium")									
+				if("pitchblende")
 					ore_type = "nuclear fuel"
 					data_value = 3
-				if("phoron", "osmium", "hydrogen")				
+				if("phoron", "hydrogen")
 					ore_type = "exotic matter"
 					data_value = 4
 

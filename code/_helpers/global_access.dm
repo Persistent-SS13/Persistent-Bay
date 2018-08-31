@@ -55,6 +55,8 @@
 			return global.SSmapping;
 		if("SSmobs")
 			return global.SSmobs;
+		if("SSmaterials")
+			return global.SSmaterials;
 		if("SSobj")
 			return global.SSobj;
 		if("SSopen_space")
@@ -363,6 +365,8 @@
 			return global.economic_species_modifier;
 		if("employment_controller")
 			return global.employment_controller;
+		if("aggression_controller")
+			return global.aggression_controller;
 		if("empty_playable_ai_cores")
 			return global.empty_playable_ai_cores;
 		if("endgame_exits")
@@ -505,8 +509,6 @@
 			return global.init;
 		if("initialization_stage")
 			return global.initialization_stage;
-		if("integrated_circuit_blacklist")
-			return global.integrated_circuit_blacklist;
 		if("intents")
 			return global.intents;
 		if("intercom_range_display_status")
@@ -653,8 +655,6 @@
 			return global.moving_levels;
 		if("multi_point_spawns")
 			return global.multi_point_spawns;
-		if("name_to_material")
-			return global.name_to_material;
 		if("narsie_behaviour")
 			return global.narsie_behaviour;
 		if("narsie_cometh")
@@ -691,10 +691,6 @@
 			return global.nuke_disks;
 		if("num_financial_terminals")
 			return global.num_financial_terminals;
-		if("ore_data")
-			return global.ore_data;
-		if("ores_by_type")
-			return global.ores_by_type;
 		if("organ_cache")
 			return global.organ_cache;
 		if("organ_rel_size")
@@ -773,6 +769,10 @@
 			return global.prometheans;
 		if("protected_objects")
 			return global.protected_objects;
+		if("protolathe_categories")
+			return global.protolathe_categories;
+		if("protolathe_recipes")
+			return global.protolathe_recipes;
 		if("rad_collectors")
 			return global.rad_collectors;
 		if("radiation_repository")
@@ -823,8 +823,8 @@
 			return global.round_progressing;
 		if("round_start_time")
 			return global.round_start_time;
-		if("roundstart_hour")
-			return global.roundstart_hour;
+		if("roundstart_timeofday")
+			return global.roundstart_timeofday;
 		if("rune_list")
 			return global.rune_list;
 		if("runtime_diary")
@@ -1075,7 +1075,7 @@
 			return global.zone_blocked;
 		if("zones_to_save")
 			return global.zones_to_save;
-		
+
 /proc/writeglobal(which, newval)
 	switch(which)
 		if("ALL_ANTIGENS")
@@ -1130,6 +1130,8 @@
 			global.SSmachines=newval;
 		if("SSmapping")
 			global.SSmapping=newval;
+		if("SSmaterials")
+			global.SSmaterials=newval;
 		if("SSmobs")
 			global.SSmobs=newval;
 		if("SSobj")
@@ -1582,8 +1584,6 @@
 			global.init=newval;
 		if("initialization_stage")
 			global.initialization_stage=newval;
-		if("integrated_circuit_blacklist")
-			global.integrated_circuit_blacklist=newval;
 		if("intents")
 			global.intents=newval;
 		if("intercom_range_display_status")
@@ -1730,8 +1730,6 @@
 			global.moving_levels=newval;
 		if("multi_point_spawns")
 			global.multi_point_spawns=newval;
-		if("name_to_material")
-			global.name_to_material=newval;
 		if("narsie_behaviour")
 			global.narsie_behaviour=newval;
 		if("narsie_cometh")
@@ -1768,10 +1766,6 @@
 			global.nuke_disks=newval;
 		if("num_financial_terminals")
 			global.num_financial_terminals=newval;
-		if("ore_data")
-			global.ore_data=newval;
-		if("ores_by_type")
-			global.ores_by_type=newval;
 		if("organ_cache")
 			global.organ_cache=newval;
 		if("organ_rel_size")
@@ -1850,6 +1844,10 @@
 			global.prometheans=newval;
 		if("protected_objects")
 			global.protected_objects=newval;
+		if("protolathe_categories")
+			global.protolathe_categories=newval;
+		if("protolathe_recipes")
+			global.protolathe_recipes=newval;
 		if("rad_collectors")
 			global.rad_collectors=newval;
 		if("radiation_repository")
@@ -1900,8 +1898,8 @@
 			global.round_progressing=newval;
 		if("round_start_time")
 			global.round_start_time=newval;
-		if("roundstart_hour")
-			global.roundstart_hour=newval;
+		if("roundstart_timeofday")
+			global.roundstart_timeofday=newval;
 		if("rune_list")
 			global.rune_list=newval;
 		if("runtime_diary")
@@ -2152,7 +2150,7 @@
 			global.zone_blocked=newval;
 		if("zones_to_save")
 			global.zones_to_save=newval;
-		
+
 /var/list/_all_globals=list(
 	"ALL_ANTIGENS",
 	"ANTAG_FREQS",
@@ -2180,6 +2178,7 @@
 	"SSlegacy",
 	"SSmachines",
 	"SSmapping",
+	"SSmaterials",
 	"SSmobs",
 	"SSobj",
 	"SSopen_space",
@@ -2335,6 +2334,7 @@
 	"dummy_lighting_corner",
 	"economic_species_modifier",
 	"employment_controller",
+	"aggression_controller",
 	"empty_playable_ai_cores",
 	"endgame_exits",
 	"endgame_safespawns",
@@ -2480,7 +2480,6 @@
 	"motion_alarm",
 	"moving_levels",
 	"multi_point_spawns",
-	"name_to_material",
 	"narsie_behaviour",
 	"narsie_cometh",
 	"narsie_list",
@@ -2499,8 +2498,6 @@
 	"nttransfer_uid",
 	"nuke_disks",
 	"num_financial_terminals",
-	"ore_data",
-	"ores_by_type",
 	"organ_cache",
 	"organ_rel_size",
 	"outfits_decls_",
@@ -2540,6 +2537,8 @@
 	"processing_turfs",
 	"prometheans",
 	"protected_objects",
+	"protolathe_categories",
+	"protolathe_recipes",
 	"rad_collectors",
 	"radiation_repository",
 	"radio_controller",
@@ -2565,7 +2564,7 @@
 	"robot_modules",
 	"round_progressing",
 	"round_start_time",
-	"roundstart_hour",
+	"roundstart_timeofday",
 	"rune_list",
 	"runtime_diary",
 	"same_wires",

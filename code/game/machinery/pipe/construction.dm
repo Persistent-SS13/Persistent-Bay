@@ -155,6 +155,8 @@ Buildable meters
 			src.color = PIPE_COLOR_ORANGE
 		else if(istype(make_from, /obj/machinery/atmospherics/pipe/zpipe/down))
 			src.pipe_type = PIPE_DOWN
+		else if(istype(make_from, /obj/machinery/atmospherics/unary/outlet_injector))
+			src.pipe_type = INJECTOR
 ///// Z-Level stuff
 	else
 		src.pipe_type = pipe_type
@@ -236,6 +238,7 @@ Buildable meters
 		"fuel pipe up",\
 		"fuel down",\
 		"fuel pipe cap",\
+		"gas injector",\
 	)
 	name = nlist[pipe_type+1] + " fitting"
 	var/list/islist = list( \
@@ -295,13 +298,14 @@ Buildable meters
 		"cap", \
 		"cap", \
 		"cap", \
+		"injector",\
 	)
 	icon_state = islist[pipe_type + 1]
 
 //called when a turf is attacked with a pipe item
-/obj/item/pipe/afterattack(turf/simulated/floor/target, mob/user, proximity)
+/obj/item/pipe/afterattack(var/turf/simulated/floor/target, mob/user, proximity)
 	if(!proximity) return
-	if(istype(target))
+	if(istype(target) || istype(target, /turf/simulated/asteroid))
 		user.drop_from_inventory(src, target)
 	else
 		return ..()
@@ -367,7 +371,7 @@ Buildable meters
 			return dir|flip
 		if(PIPE_SIMPLE_BENT, PIPE_HE_BENT, PIPE_SUPPLY_BENT, PIPE_SCRUBBERS_BENT, PIPE_FUEL_BENT)
 			return dir //dir|acw
-		if(PIPE_CONNECTOR,PIPE_UVENT,PIPE_SCRUBBER,PIPE_HEAT_EXCHANGE)
+		if(PIPE_CONNECTOR,PIPE_UVENT,PIPE_SCRUBBER,PIPE_HEAT_EXCHANGE,INJECTOR)
 			return dir
 		if(PIPE_MANIFOLD4W, PIPE_SUPPLY_MANIFOLD4W, PIPE_SCRUBBERS_MANIFOLD4W, PIPE_OMNI_MIXER, PIPE_OMNI_FILTER, PIPE_FUEL_MANIFOLD4W)
 			return dir|flip|cw|acw
@@ -1262,6 +1266,19 @@ Buildable meters
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
 			P.build_network()
+		if(INJECTOR)		//scrubber
+			var/obj/machinery/atmospherics/unary/outlet_injector/S = new(src.loc)
+			S.set_dir(dir)
+			S.initialize_directions = pipe_dir
+			if (pipename)
+				S.name = pipename
+			var/turf/T = S.loc
+			S.level = !T.is_plating() ? 2 : 1
+			S.atmos_init()
+			S.build_network()
+			if (S.node)
+				S.node.atmos_init()
+				S.node.build_network()
 
 	playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 	user.visible_message( \
@@ -1298,6 +1315,7 @@ Buildable meters
 	to_chat(user, "<span class='notice'>You have fastened the meter to the pipe</span>")
 	qdel(src)
 //not sure why these are necessary
+//so you don't clot up the rest of the code with obsolete defs
 #undef PIPE_SIMPLE_STRAIGHT
 #undef PIPE_SIMPLE_BENT
 #undef PIPE_HE_STRAIGHT

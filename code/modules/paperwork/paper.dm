@@ -36,7 +36,7 @@
 	var/const/crayonfont = "Comic Sans MS"
 /obj/item/weapon/paper/Write(savefile/f)
 	info_links = replacetext(info_links,"\ref[src]","***MY_REF***")
-	
+
 	StandardWrite(f)
 
 /obj/item/weapon/paper/after_load()
@@ -264,6 +264,10 @@
 			else
 				to_chat(user, "<span class='warning'>You must hold \the [P] steady to burn \the [src].</span>")
 
+/obj/item/weapon/paper/fire_act(datum/gas_mixture/air, temperature, volume)
+	new /obj/effect/decal/cleanable/ash(src.loc)
+	qdel(src)
+	return
 
 /obj/item/weapon/paper/Topic(href, href_list)
 	..()
@@ -421,7 +425,24 @@
 
 	add_fingerprint(user)
 	return
+/*
+ * Paper packages (not to be confused with bundled paper)
+ */
+/obj/item/weapon/paper_package
+	name = "package of paper"
+	gender = NEUTER
+	icon = 'icons/obj/bureaucracy.dmi'
+	icon_state = "paperpackage"
+	item_state = "paperpackage"
+	randpixel = 8
+	throwforce = 0
+	w_class = ITEM_SIZE_SMALL
+	throw_range = 2
+	throw_speed = 1
+	layer = ABOVE_OBJ_LAYER
+	attack_verb = list("bureaucratized")
 
+	var/amount = 50 //How much paper is stored
 /*
  * Premade paper
  */

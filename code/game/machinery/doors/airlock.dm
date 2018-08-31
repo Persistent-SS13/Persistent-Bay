@@ -146,8 +146,26 @@
 
 /obj/machinery/door/airlock/get_material()
 	if(mineral)
-		return get_material_by_name(mineral)
-	return get_material_by_name(DEFAULT_WALL_MATERIAL)
+		return SSmaterials.get_material_by_name(mineral)
+	return SSmaterials.get_material_by_name(DEFAULT_WALL_MATERIAL)
+
+/obj/machinery/door/airlock/fake
+	name = "wall"
+	icon = 'icons/obj/doors/fake/default.dmi'
+	desc = "A huge chunk of metal used to seperate rooms."
+	assembly_type = /obj/structure/door_assembly/door_assembly_fake
+
+/obj/machinery/door/airlock/fake/L
+	icon = 'icons/obj/doors/fake/L.dmi'
+	assembly_type = /obj/structure/door_assembly/door_assembly_fake/L
+	
+/obj/machinery/door/airlock/fake/LR
+	icon = 'icons/obj/doors/fake/LR.dmi'
+	assembly_type = /obj/structure/door_assembly/door_assembly_fake/LR
+	
+/obj/machinery/door/airlock/fake/R
+	icon = 'icons/obj/doors/fake/R.dmi'
+	assembly_type = /obj/structure/door_assembly/door_assembly_fake/R
 
 /obj/machinery/door/airlock/command
 	name = "Airlock"
@@ -736,7 +754,12 @@ About the new airlock wires panel:
 
 /obj/machinery/door/airlock/attack_ai(mob/user as mob)
 	ui_interact(user)
-
+	
+	
+/obj/machinery/door/airlock/attack_robot(mob/user as mob)
+	if(Adjacent(user))
+		bumpopen(user)
+		
 /obj/machinery/door/airlock/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/data[0]
 
@@ -1040,7 +1063,16 @@ About the new airlock wires panel:
 			else
 				src.p_open = 0
 		else
-			src.p_open = 1
+			if(allowed(usr))
+				src.p_open = 1
+			else
+				to_chat(usr, "<span class='warning'>You begin to carefully pry open the access panel on the [src]...</span>")
+				if(do_after(user,40,src))
+					if(prob(70))
+						usr.visible_message("[usr] forcefully prys open the access panel on the [src]!", "You manage to pry open the access panel on the [src]!")
+						src.p_open = 1
+					else
+						to_chat(usr, "<span class='warning'>Your hand slips!</span>")
 		src.update_icon()
 	else if(isWirecutter(C))
 		return src.attack_hand(user)
@@ -1268,14 +1300,23 @@ About the new airlock wires panel:
 
 		//update the door's access to match the electronics'
 		secured_wires = electronics.secure
-		if(electronics.one_access)
-			req_access.Cut()
-			req_one_access = src.electronics.conf_access
+		if(electronics.business_name)
+			if(electronics.one_access)
+				req_one_access_business_list = src.electronics.business_access
+
+			else
+				req_one_access_business_list = src.electronics.business_access
+			req_access_business = electronics.business_name
 
 		else
-			req_one_access.Cut()
-			req_access = src.electronics.conf_access
-		req_access_faction = electronics.req_access_faction
+			if(electronics.one_access)
+				req_access.Cut()
+				req_one_access = src.electronics.conf_access
+
+			else
+				req_one_access.Cut()
+				req_access = src.electronics.conf_access
+			req_access_faction = electronics.req_access_faction
 		//get the name from the assembly
 		if(assembly.created_name)
 			name = assembly.created_name

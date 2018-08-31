@@ -101,7 +101,7 @@
 	if(prefs)
 		var/datum/client_preference/cp = get_client_preference(preference)
 		if(cp)
-			return prefs.preference_values[cp.key]
+			return prefs.preference_values[cp.key] ? prefs.preference_values[cp.key] : null
 		else
 			return null
 	else

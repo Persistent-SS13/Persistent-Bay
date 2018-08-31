@@ -162,7 +162,8 @@ obj/machinery/atmospherics/pipe/zpipe/up/atmos_init()
 
 
 	var/turf/T = src.loc			// hide if turf is not intact
-	hide(!T.is_plating())
+	if(T)
+		hide(!T.is_plating())
 
 ///////////////////////
 // and the down pipe //
@@ -201,7 +202,8 @@ obj/machinery/atmospherics/pipe/zpipe/down/atmos_init()
 
 
 	var/turf/T = src.loc			// hide if turf is not intact
-	hide(!T.is_plating())
+	if(T)
+		hide(!T.is_plating())
 
 ///////////////////////
 // supply/scrubbers  //

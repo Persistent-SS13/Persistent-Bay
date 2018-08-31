@@ -54,7 +54,6 @@
 		/obj/item/seeds/cocoapodseed = 30,
 		/obj/item/seeds/cornseed = 30,
 		/obj/item/seeds/peanutseed = 30,
-		/obj/item/seeds/replicapod = 30,
 		/obj/item/seeds/eggplantseed = 30,
 		/obj/item/seeds/amanitamycelium = 30,
 		/obj/item/seeds/glowshroom = 30,
@@ -105,7 +104,6 @@
 		/obj/item/seeds/cocoapodseed = 30,
 		/obj/item/seeds/cornseed = 30,
 		/obj/item/seeds/peanutseed = 30,
-		/obj/item/seeds/replicapod = 30,
 		/obj/item/seeds/eggplantseed = 30,
 		/obj/item/seeds/amanitamycelium = 30,
 		/obj/item/seeds/glowshroom = 30,
@@ -150,7 +148,7 @@
 /obj/machinery/seed_storage/interact(mob/user as mob)
 	if (..())
 		return
-	
+
 	if (!seeds_initialized)
 		if(!map_storage_loaded)
 			for(var/typepath in starting_seeds)

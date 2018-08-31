@@ -62,9 +62,11 @@ var/list/admin_verbs_admin = list(
 	/datum/admins/proc/toggleoocdead,	//toggles ooc on/off for everyone who is dead,
 	/datum/admins/proc/toggledsay,		//toggles dsay on/off for everyone,
 	/datum/admins/proc/savenow,			//persistent edit, savenow saves the station,
+	/client/proc/bonus_panel,
 	/datum/admins/proc/changeambience,
 	/datum/admins/proc/buildaccounts,
 	/datum/admins/proc/retrieve_account,
+	/datum/admins/proc/delete_account,
 	/datum/admins/proc/savechars,
 	/datum/admins/proc/loadnow,			//persistent edit, loadnow loads the station,
 	/client/proc/game_panel,			//game panel, allows to change game-mode etc,
@@ -211,7 +213,8 @@ var/list/admin_verbs_debug = list(
 	/client/proc/cmd_analyse_health_context,
 	/client/proc/cmd_analyse_health_panel,
 	/client/proc/visualpower,
-	/client/proc/visualpower_remove
+	/client/proc/visualpower_remove,
+	/datum/admins/proc/generate_beacon			//Generates the Nanotrasen faction beacon
 	)
 
 var/list/admin_verbs_paranoid_debug = list(
@@ -514,6 +517,18 @@ var/list/admin_verbs_mentor = list(
 		holder.Secrets()
 	feedback_add_details("admin_verb","S") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	return
+
+/client/proc/bonus_panel()
+
+	set category = "Server"
+	set desc="Open Host Panel"
+	set name="Host Panel"
+
+	if(!check_rights(R_ADMIN))
+		return
+	if(holder)
+		holder.bonus_panel()
+
 
 /client/proc/colorooc()
 	set category = "Fun"
@@ -825,7 +840,7 @@ var/list/admin_verbs_mentor = list(
 	if(!istype(M, /mob/living/carbon/human))
 		to_chat(usr, "<span class='warning'>You can only do this to humans!</span>")
 		return
-	switch(alert("Are you sure you wish to edit this mob's appearance? Skrell, Unathi, Vox and Tajaran can result in unintended consequences.",,"Yes","No"))
+	switch(alert("Are you sure you wish to edit this mob's appearance? Skrell, Unathi and Vox can result in unintended consequences.",,"Yes","No"))
 		if("No")
 			return
 	var/new_facial = input("Please select facial hair color.", "Character Generation") as color
@@ -847,7 +862,7 @@ var/list/admin_verbs_mentor = list(
 		M.b_eyes = hex2num(copytext(new_eyes, 6, 8))
 		M.update_eyes()
 
-	var/new_skin = input("Please select body color. This is for Tajaran, Unathi, and Skrell only!", "Character Generation") as color
+	var/new_skin = input("Please select body color. This is for Unathi, and Skrell only!", "Character Generation") as color
 	if(new_skin)
 		M.r_skin = hex2num(copytext(new_skin, 2, 4))
 		M.g_skin = hex2num(copytext(new_skin, 4, 6))

@@ -103,9 +103,6 @@
 	// Set up roundstart seed list.
 	plant_controller = new()
 
-	// This is kinda important. Set up details of what the hell things are made of.
-	populate_material_list()
-
 	if(config.generate_map)
 		GLOB.using_map.perform_map_generation()
 	GLOB.using_map.build_exoplanets()
@@ -372,7 +369,7 @@ var/world_topic_spam_protect_time = world.timeofday
 		C.received_irc_pm = world.time
 		C.irc_admin = input["sender"]
 
-		sound_to(C, 'sound/effects/adminhelp.ogg')
+		sound_to(C, 'sound/effects/pleasant.ogg')
 		to_chat(C, message)
 
 		for(var/client/A in GLOB.admins)
@@ -577,10 +574,10 @@ var/world_topic_spam_protect_time = world.timeofday
 
 /world/proc/update_status()
 	var/s = ""
-	s += "<a href='https://discord.gg/UUpHSPp'>"
-	s += "(HRP) Persistent Station 13, Characters and Stations Save & Load (HRP)</a> "
+	s += "<a href='https://persistentss13.com/'>"
+	s += "Persistent Station 13, Characters, Stations and Factions in a persistent world</a> "
 	//Change this to wherever you want the hub to link to.
-	s += " | Create your own custom faction and carve out a piece of the frontier. Final alpha testing before true public release.<br>"
+	s += " | Enter the frontier and find your fortune. Grab a piece of it and make it your own. Collaborative storytelling RPG, IC ENFORCED.<br>"
 	var/list/features = list()
 	var/n = 0
 	for (var/mob/M in GLOB.player_list)

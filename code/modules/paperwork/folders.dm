@@ -57,6 +57,11 @@
 	add_fingerprint(usr)
 	return
 
+/obj/item/weapon/folder/fire_act(datum/gas_mixture/air, temperature, volume)
+	new /obj/effect/decal/cleanable/ash(src.loc)
+	qdel(src)
+	return
+
 /obj/item/weapon/folder/Topic(href, href_list)
 	..()
 	if((usr.stat || usr.restrained()))

@@ -22,8 +22,8 @@
 /material/steel
 	value = 4
 
-/material/diona
-	value = 5
+///material/diona
+//	value = 5
 
 /material/steel/holographic
 	value = 0
@@ -43,6 +43,9 @@
 /material/glass/phoron/reinforced
 	value = 40
 
+/material/glass/fiberglass
+	value = 10
+
 /material/osmium
 	value = 30
 
@@ -54,6 +57,9 @@
 
 /material/platinum
 	value = 80
+
+/material/tungsten
+	value = 60
 
 /material/iron
 	value = 5

@@ -2,7 +2,7 @@
 	{{if data.is_admin}}
 		You are authenticated. You may access all functions of this program.
 	{{else}}
-		You are unauthenticated. Some functions may me unavailable.
+		You are unauthenticated. Some functions may be unavailable.
 	{{/if}}
 </div>
 <div class="item">
@@ -32,7 +32,34 @@
 		</table>
 	{{/if}}
 {{else data.screen == 2}}
-	<h2>This feature is under construction due to recent changes to the system.</h2>
+	Viewing Transaction Page {{:data.page}}<br><br>
+	{{:helper.link('Newer Page', 'bullet', {'page_down' : 1}, data.page_down ? null : 'disabled')}}{{:helper.link('Older Page', 'bullet', {'page_up' : 1}, data.page_up ? null : 'disabled')}}<br><br>
+	<div class="statusDisplay" style="overflow: auto;">
+        {{if data.transactions}}
+        <table style='width: 100%'>
+          <thead>
+            <tr>
+              <th><b>Timestamp</b></th>
+              <th><b>Target</b></th>
+              <th><b>Reason</b></th>
+              <th><b>Ethericoin</b></th>
+            </th>
+          </thead>
+          <tbody>
+              {{for data.transactions}}
+                <tr>
+                    <td>{{:value.date}} {{:value.time}}</td>
+                    <td>{{:value.target_name}}</td>
+                    <td>{{:value.purpose}}</td>
+                    <td>$${{:value.amount}}</td>
+                </tr>
+              {{/for}}
+          </tbody>
+        </table>
+        {{else}}
+          <span class='alert'>This account has no financial transactions on record for today.</span>
+        {{/if}}
+	</div>
 {{else data.screen == 3}}
 	<div class="item">
 		<div class="itemLabel">
@@ -58,15 +85,15 @@
 		<div class="item">
 			<center><h3>Pending orders</h3></span>
 			<table style="width:100%">
-				<tr><th style="width:10%">ID<th style="width:25%">Requested item<th style="width:20%">Requested by<th style="width:20%">Reason<th style="width:10%">Cost<th style="width:15%">Options
+				<tr><th style="width:10%">ID<th style="width:25%">Requested item<th style="width:20%">Requested by<th style="width:20%">Reason<th style="width:10%">Direct Cost/Invoice Cost<th style="width:15%">Options
 				{{for data.requests}}
 					<tr>
 					<td>{{:value.id}}
 					<td>{{:value.object}}
 					<td>{{:value.orderer}}
 					<td>{{:value.reason}}
-					<td>{{:value.cost}} Cr.
-					<td>{{:helper.link('Approve', 'check', {'approve_order' : value.id}, value.cost > data.credits ? 'disabled' : null )}}{{:helper.link('Deny', 'cancel', {'deny_order' : value.id})}}
+					<td>{{:value.cost}} $$.
+					<td> {{:helper.link('Invoice', 'cart', {'invoice_order' : value.id},  null)}} {{:helper.link('Approve', 'check', {'approve_order' : value.id}, value.cost > data.credits ? 'disabled' : null )}}{{:helper.link('Deny', 'cancel', {'deny_order' : value.id})}}
 				{{/for}}
 			</table>
 		</div>
@@ -97,7 +124,7 @@
 		<h2>{{:value.name}}</h2>
 		<h3>{{:value.supplied}} / {{:value.required}} Supplied</h3>
 		<br><br>
-		{{:helper.link('Print Export Manifest', 'print', {'print_export' : value.id}, data.can_print ? null : 'disabled')}}
+		{{:helper.link('Print Export Manifest', 'print', {'print_export' : value.id}, data.can_print ? null : 'disabled')}}{{:helper.link('Print Business Export Manifest', 'print', {'print_export2' : value.id}, data.can_print ? null : 'disabled')}}
 		{{if !data.can_print}}
 			No printer detected! Install a printer.
 		{{/if}}
@@ -106,27 +133,23 @@
 	{{/for}}
 		
 {{else data.screen == 6}}
-	{{if data.is_admin}}
-		<div class="item">
-			<div class="itemLabel">
-				Export Telepad Selection:
-			</div>
-			<div class="itemContent">
-				{{for data.telepads}}
-					{{:helper.link(value.name, '', {'toggle_telepad_export' : value.ref},null, value.selected ? 'selected' : null )}}
-				{{/for}}
-			</div>
+	<div class="item">
+		<div class="itemLabel">
+			Export Telepad Selection:
 		</div>
-		<hr>
-		<div class="item">
-			<div class="itemLabel">
-				Send Valid Exports:
-			</div>
-			<div class="itemContent">
-				{{:helper.link('Initiate Telepads', 'check', {'launch_export' : 1})}}
-			</div>
+		<div class="itemContent">
+			{{for data.telepads}}
+				{{:helper.link(value.name, '', {'toggle_telepad_export' : value.ref},null, value.selected ? 'selected' : null )}}
+			{{/for}}
 		</div>
-	{{else}}
-		<h3>Access denied: Missing identificaton or insufficient permissions.</h3>
-	{{/if}}
+	</div>
+	<hr>
+	<div class="item">
+		<div class="itemLabel">
+			Send Valid Exports:
+		</div>
+		<div class="itemContent">
+			{{:helper.link('Initiate Telepads', 'check', {'launch_export' : 1})}}
+		</div>
+	</div>
 {{/if}}

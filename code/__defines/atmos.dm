@@ -37,12 +37,13 @@
 #define MINIMUM_TEMPERATURE_START_SUPERCONDUCTION (T20C + 200)
 
 // Must be between 0 and 1. Values closer to 1 equalize temperature faster. Should not exceed 0.4, else strange heat flow occurs.
-#define  FLOOR_HEAT_TRANSFER_COEFFICIENT 0.4
-#define   WALL_HEAT_TRANSFER_COEFFICIENT 0.0
-#define   DOOR_HEAT_TRANSFER_COEFFICIENT 0.0
-#define  SPACE_HEAT_TRANSFER_COEFFICIENT 0.2 // A hack to partly simulate radiative heat.
-#define   OPEN_HEAT_TRANSFER_COEFFICIENT 0.4
-#define WINDOW_HEAT_TRANSFER_COEFFICIENT 0.1 // A hack for now.
+#define FLOOR_HEAT_TRANSFER_COEFFICIENT		0.4
+#define WALL_HEAT_TRANSFER_COEFFICIENT		0.0
+#define DOOR_HEAT_TRANSFER_COEFFICIENT		0.0
+#define SPACE_HEAT_TRANSFER_COEFFICIENT		0.2 // A hack to partly simulate radiative heat.
+#define OPEN_HEAT_TRANSFER_COEFFICIENT		0.4
+#define WINDOW_HEAT_TRANSFER_COEFFICIENT	0.1 // A hack for now.
+#define CANISTER_HEAT_TRANSFER_COEFFICIENT	0.05
 
 // Fire damage.
 #define CARBON_LIFEFORM_FIRE_RESISTANCE (T0C + 200)
@@ -73,6 +74,7 @@
 #define XGM_GAS_OXIDIZER    2
 #define XGM_GAS_CONTAMINANT 4
 #define XGM_GAS_FUSION_FUEL 8
+#define XGM_GAS_REAGENT_GAS 16
 
 #define TANK_LEAK_PRESSURE     (30.*ONE_ATMOSPHERE) // Tank starts leaking.
 #define TANK_RUPTURE_PRESSURE  (40.*ONE_ATMOSPHERE) // Tank spills all contents into atmosphere.

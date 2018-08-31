@@ -361,19 +361,22 @@
 
 /obj/item/device/destTagger/attack_self(mob/user as mob)
 	openwindow(user)
-	return
 
-/obj/item/device/destTagger/Topic(href, href_list)
-	src.add_fingerprint(usr)
+/obj/item/device/destTagger/OnTopic(user, href_list, state)
 	if(href_list["nextTag"] && href_list["nextTag"] in GLOB.tagger_locations)
 		src.currTag = href_list["nextTag"]
+		. = TOPIC_REFRESH
 	if(href_list["nextTag"] == "CUSTOM")
-		var/dest = input("Please enter custom location.", "Location", src.currTag ? src.currTag : "None")
-		if(dest != "None")
-			src.currTag = dest
-		else
-			src.currTag = 0
-	openwindow(usr)
+		var/dest = input(user, "Please enter custom location.", "Location", src.currTag ? src.currTag : "None")
+		if(CanUseTopic(user, state))
+			if(dest != "None")
+				src.currTag = dest
+			else
+				src.currTag = 0
+			. = TOPIC_REFRESH
+
+	if(. == TOPIC_REFRESH)
+		openwindow(user)
 
 /obj/machinery/disposal/deliveryChute
 	name = "Delivery chute"
@@ -398,6 +401,7 @@
 
 /obj/machinery/disposal/deliveryChute/Bumped(var/atom/movable/AM) //Go straight into the chute
 	if(istype(AM, /obj/item/projectile) || istype(AM, /obj/effect))	return
+	if(istype(AM, /obj/mecha))	return
 	switch(dir)
 		if(NORTH)
 			if(AM.loc.y != src.loc.y+1) return

@@ -128,6 +128,7 @@ var/list/ghost_traps
 /***********************************
 * Diona pods and walking mushrooms *
 ***********************************/
+/*
 /datum/ghosttrap/plant
 	object = "living plant"
 	ban_checks = list("Dionaea")
@@ -141,6 +142,7 @@ var/list/ghost_traps
 	if(istype(target,/mob/living/carbon/alien/diona))
 		to_chat(target, "<B>You are \a [target], one of a race of drifting interstellar plantlike creatures that sometimes share their seeds with human traders.</B>")
 		to_chat(target, "<B>Too much darkness will send you into shock and starve you, but light will help you heal.</B>")
+*/
 /*****************
 * Cortical Borer *
 *****************/

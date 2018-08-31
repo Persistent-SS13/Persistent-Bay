@@ -109,7 +109,7 @@ proc/get_radio_key_from_channel(var/channel)
 		verb = pick("slobbers","slurs")
 		. = 1
 	if(stuttering)
-		message = stutter(message)
+		message = NewStutter(message)
 		verb = pick("stammers","stutters")
 		. = 1
 
@@ -258,9 +258,7 @@ proc/get_radio_key_from_channel(var/channel)
 
 	var/speech_bubble_test = say_test(message)
 	var/image/speech_bubble = image('icons/mob/talk.dmi',src,"h[speech_bubble_test]")
-	spawn(30) qdel(speech_bubble)
 
-	// VOREStation Port - Attempt Multi-Z Talking
 	var/mob/above = src.shadow
 	while(!QDELETED(above))
 		var/turf/ST = get_turf(above)
@@ -271,12 +269,14 @@ proc/get_radio_key_from_channel(var/channel)
 			spawn(30) qdel(z_speech_bubble)
 		above = above.shadow
 
-	// VOREStation Port End
-
+	var/list/speech_bubble_recipients = list()
 	for(var/mob/M in listening)
 		if(M)
-			show_image(M, speech_bubble)
 			M.hear_say(message, verb, speaking, alt_name, italics, src, speech_sound, sound_vol)
+			if(M.client)
+				speech_bubble_recipients += M.client
+
+	flick_overlay(speech_bubble, speech_bubble_recipients, 30)
 
 	for(var/obj/O in listening_obj)
 		spawn(0)
@@ -300,7 +300,7 @@ proc/get_radio_key_from_channel(var/channel)
 				if(O) //It's possible that it could be deleted in the meantime.
 					O.hear_talk(src, stars(message), verb, speaking)
 
-	
+
 	if(whispering)
 		log_whisper("[name]/[key] : [message]")
 	else

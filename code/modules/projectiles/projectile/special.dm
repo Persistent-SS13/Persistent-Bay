@@ -163,15 +163,14 @@
 	check_armour = "energy"
 	sharp = 1
 	edge = 1
-	damage = 45
+	damage = 35
 	var/pressure_decrease_active = FALSE
 	var/pressure_decrease = 0.25
 	kill_count=15
-	
+
 	Initialize()
 		. = ..()
 		if(!is_below_sound_pressure(get_turf(src)))
 			name = "weakened [name]"
 			damage = damage * pressure_decrease
 			pressure_decrease_active = TRUE
-			

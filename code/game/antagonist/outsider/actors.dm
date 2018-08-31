@@ -37,7 +37,7 @@ var/datum/antagonist/actor/actor
 	player.equip_to_slot_or_del(C,slot_wear_id)
 
 	return 1
-
+/**
 /client/verb/join_as_actor()
 	set category = "IC"
 	set name = "Join as Actor"
@@ -58,3 +58,4 @@ var/datum/antagonist/actor/actor
 		return
 
 	to_chat(usr, "You must be observing or be a new player to spawn as an actor.")
+**/

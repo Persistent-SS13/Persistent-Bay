@@ -11,7 +11,7 @@ LEGACY_RECORD_STRUCTURE(virus_records, virus_record)
 	var/list/datum/disease2/effect/effects = list()
 	var/antigen = list() // 16 bits describing the antigens, when one bit is set, a cure with that bit can dock here
 	var/max_stage = 4
-	var/list/affected_species = list(SPECIES_HUMAN,SPECIES_UNATHI,SPECIES_SKRELL,SPECIES_TAJARA)
+	var/list/affected_species = list(SPECIES_HUMAN,SPECIES_UNATHI,SPECIES_SKRELL)
 
 /datum/disease2/disease/New()
 	uniqueID = rand(0,10000)
@@ -192,7 +192,7 @@ LEGACY_RECORD_STRUCTURE(virus_records, virus_record)
 var/global/list/virusDB = list()
 
 /datum/disease2/disease/proc/name()
-	.= "stamm #[add_zero("[uniqueID]", 4)]"
+	.= "strain #[add_zero("[uniqueID]", 4)]"
 	if ("[uniqueID]" in virusDB)
 		var/datum/computer_file/data/virus_record/V = virusDB["[uniqueID]"]
 		.= V.fields["name"]

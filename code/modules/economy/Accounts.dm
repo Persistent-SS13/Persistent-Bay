@@ -4,6 +4,7 @@
 	var/account_number = 0
 	var/remote_access_pin = 0
 	var/money = 0
+	var/reserved = 0
 	var/list/transaction_log = list()
 	var/suspended = 0
 	var/security_level = 1	//0 - auto-identify from worn ID, require only account number
@@ -22,6 +23,8 @@
 
 /datum/money_account/proc/do_transaction(var/datum/transaction/T)
 	money = max(0, money + T.amount)
+	if(transaction_log.len > 50)
+		transaction_log.Cut(1,2)
 	transaction_log += T
 
 /datum/money_account/proc/get_balance()
@@ -77,10 +80,9 @@
 	T.purpose = "Account creation"
 	T.amount = starting_funds
 	if(!source_db)
-		//set a random date, time and location some time over the past few decades
-		T.date = "[num2text(rand(1,31))] [pick("January","February","March","April","May","June","July","August","September","October","November","December")], [game_year]"
-		T.time = "[rand(0,24)]:[rand(11,59)]"
-		T.source_terminal = "NTGalaxyNet Terminal #[rand(111,1111)]"
+		T.date = stationdate2text()
+		T.time = stationtime2text()
+		T.source_terminal = "NTGalaxyNet Frontier Accounts"
 
 		M.account_number = random_id("station_account_number", 111111, 999999)
 	else
@@ -127,6 +129,8 @@
 
 	//create a transaction log entry
 	var/datum/transaction/T = new(source_name, purpose, amount, terminal_id)
+	if(D.transaction_log.len > 50)
+		D.transaction_log.Cut(1,2)
 	D.transaction_log.Add(T)
 
 	return 1
@@ -142,6 +146,8 @@
 
 	//create a transaction log entry
 	var/datum/transaction/T = new(payer.owner_name, purpose, amount, 0)
+	if(D.transaction_log.len > 50)
+		D.transaction_log.Cut(1,2)
 	D.transaction_log.Add(T)
 
 	return 1

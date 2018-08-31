@@ -29,3 +29,11 @@
 	icon_state = "greydress"
 	item_state = "greydress"
 	worn_state = "greydress"
+	
+/obj/item/clothing/under/fed/gov
+	desc = "A Sectorial governor's uniform."
+	name = "sectorial governor's uniform"
+	icon_state = "lasky"
+	item_state = "lasky"
+	worn_state = "lasky"
+

@@ -6,7 +6,7 @@
 	circuit = /obj/item/weapon/circuitboard/teleporter
 	dir = 4
 	var/obj/machinery/teleport/station/station = null
-	var/obj/machinery/teleport/hub/hub = null
+	var/obj/machinery/teleport/hub/hubz = null
 	var/obj/item/locked = null
 	var/id = null
 	var/one_time_use = 0 //Used for one-time-use teleport cards (such as clown planet coordinates.)
@@ -23,15 +23,15 @@
 	. = ..()
 	station = locate(/obj/machinery/teleport/station, get_step(src, dir))
 	if(station)
-		hub = locate(/obj/machinery/teleport/hub, get_step(station, dir))
+		hubz = locate(/obj/machinery/teleport/hub, get_step(station, dir))
 
 	if(istype(station))
-		station.com = hub
+		station.com = hubz
 		station.set_dir(dir)
 
-	if(istype(hub))
-		hub.com = src
-		hub.set_dir(dir)
+	if(istype(hubz))
+		hubz.com = src
+		hubz.set_dir(dir)
 
 /obj/machinery/computer/teleporter/examine(mob/user)
 	. = ..()
@@ -120,8 +120,10 @@
 				if (M.timeofdeath + 6000 < world.time)
 					continue
 			var/turf/T = get_turf(M)
-			if(T)	continue
-			if(T.z == 2)	continue
+			if(!T)
+				continue
+			if(!(T.z in GLOB.using_map.player_levels))
+				continue
 			var/tmpname = M.real_name
 			if(areaindex[tmpname])
 				tmpname = "[tmpname] ([++areaindex[tmpname]])"

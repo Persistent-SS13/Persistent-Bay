@@ -12,6 +12,9 @@
 	var/obj/item/weapon/reagent_containers/glass/beaker = null
 	var/filtering = 0
 	var/pump
+	var/list/stasis_settings = list(1, 2, 5)
+	var/stasis = 1
+
 	var/efficiency
 	var/initial_bin_rating = 1
 	var/min_health = 25
@@ -48,6 +51,9 @@
 					occupant.ingested.trans_to_obj(beaker, 3)
 		else
 			toggle_pump()
+
+	if(iscarbon(occupant) && stasis > 1)
+		occupant.SetStasis(stasis)
 
 /obj/machinery/sleeper/update_icon()
 	icon_state = "sleeper_[occupant ? "1" : "0"]"
@@ -86,6 +92,7 @@
 		data["beaker"] = -1
 	data["filtering"] = filtering
 	data["pump"] = pump
+	data["stasis"] = stasis
 
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
@@ -94,32 +101,39 @@
 		ui.open()
 		ui.set_auto_update(1)
 
-/obj/machinery/sleeper/Topic(href, href_list)
-	if(..())
-		return 1
-
-	if(usr == occupant)
+/obj/machinery/sleeper/CanUseTopic(user)
+	if(user == occupant)
 		to_chat(usr, "<span class='warning'>You can't reach the controls from the inside.</span>")
-		return
+		return STATUS_CLOSE
+	return ..()
 
-	add_fingerprint(usr)
+/obj/machinery/sleeper/OnTopic(user, href_list)
+	add_fingerprint(user)
 
 	if(href_list["eject"])
 		go_out()
+		return TOPIC_REFRESH
 	if(href_list["beaker"])
 		remove_beaker()
+		return TOPIC_REFRESH
 	if(href_list["filter"])
 		if(filtering != text2num(href_list["filter"]))
 			toggle_filter()
+			return TOPIC_REFRESH
 	if(href_list["pump"])
 		if(filtering != text2num(href_list["pump"]))
 			toggle_pump()
+			return TOPIC_REFRESH
 	if(href_list["chemical"] && href_list["amount"])
 		if(occupant && occupant.stat != DEAD)
 			if(href_list["chemical"] in available_chemicals) // Your hacks are bad and you should feel bad
 				inject_chemical(usr, href_list["chemical"], text2num(href_list["amount"]))
-
-	return 1
+				return TOPIC_REFRESH
+	if(href_list["stasis"])
+		var/nstasis = text2num(href_list["stasis"])
+		if(stasis != nstasis && nstasis in stasis_settings)
+			stasis = text2num(href_list["stasis"])
+			return TOPIC_REFRESH
 
 /obj/machinery/sleeper/attack_ai(var/mob/user)
 	return attack_hand(user)
@@ -136,13 +150,17 @@
 			to_chat(user, "<span class='warning'>\The [src] has a beaker already.</span>")
 		return
 
+	if(istype(I, /obj/item/grab/normal))
+		var/obj/item/grab/normal/G = I
+		if (!ismob(G.affecting))
+			return
+		if(go_in(G.affecting, user))
+			qdel(G)
+
 /obj/machinery/sleeper/MouseDrop_T(var/mob/target, var/mob/user)
 	if(!CanMouseDrop(target, user))
 		return
 	if(!istype(target))
-		return
-	if(target.buckled)
-		to_chat(user, "<span class='warning'>Unbuckle the subject before attempting to move them.</span>")
 		return
 	go_in(target, user)
 
@@ -178,22 +196,26 @@
 
 /obj/machinery/sleeper/proc/go_in(var/mob/M, var/mob/user)
 	if(!M)
-		return
+		return FALSE
 	if(stat & (BROKEN|NOPOWER))
-		return
+		return FALSE
 	if(occupant)
 		to_chat(user, "<span class='warning'>\The [src] is already occupied.</span>")
-		return
+		return FALSE
 
 	if(M == user)
 		visible_message("\The [user] starts climbing into \the [src].")
 	else
 		visible_message("\The [user] starts putting [M] into \the [src].")
 
-	if(do_after(user, 20, src))
+	if(do_after(user, 20, M))
 		if(occupant)
 			to_chat(user, "<span class='warning'>\The [src] is already occupied.</span>")
-			return
+			return FALSE
+		if (M.buckled)
+			M.buckled.user_unbuckle_mob(user)
+			if (M.buckled)
+				return FALSE
 		M.stop_pulling()
 		if(M.client)
 			M.client.perspective = EYE_PERSPECTIVE
@@ -202,6 +224,8 @@
 		update_use_power(2)
 		occupant = M
 		update_icon()
+		return TRUE
+	return FALSE
 
 /obj/machinery/sleeper/proc/go_out()
 	if(!occupant)

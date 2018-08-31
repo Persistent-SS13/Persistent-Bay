@@ -49,12 +49,12 @@
 	icon = 'icons/turf/flooring/grass.dmi'
 	icon_state = "grass0"
 	initial_flooring = /decl/flooring/grass
-
+/*
 /turf/simulated/floor/diona
 	name = "biomass"
 	icon = 'icons/turf/floors.dmi'
 	initial_flooring = /decl/flooring/diona
-
+*/
 /turf/simulated/floor/tiled
 	name = "steel floor"
 	icon = 'icons/turf/flooring/tiles.dmi'
@@ -175,7 +175,7 @@
 	temperature = TCMB
 
 /turf/simulated/floor/airless
-	name = "airless plating"
+	name = "plating"
 	initial_gas = null
 	temperature = TCMB
 

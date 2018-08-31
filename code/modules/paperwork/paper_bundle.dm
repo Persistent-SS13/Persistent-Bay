@@ -93,6 +93,11 @@
 			else
 				to_chat(user, "<span class='warning'>You must hold \the [P] steady to burn \the [src].</span>")
 
+/obj/item/weapon/paper_bundle/fire_act(datum/gas_mixture/air, temperature, volume)
+	new /obj/effect/decal/cleanable/ash(src.loc)
+	qdel(src)
+	return
+
 /obj/item/weapon/paper_bundle/examine(mob/user)
 	if(..(user, 1))
 		src.show_content(user)

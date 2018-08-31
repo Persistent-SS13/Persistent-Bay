@@ -14,11 +14,16 @@
 	var/perunit = SHEET_MATERIAL_AMOUNT
 	var/apply_colour //temp pending icon rewrite
 
-/obj/item/stack/material/Initialize()
-	. = ..()
+/obj/item/stack/material/New(var/loc, var/amount, var/_material)
+	if(_material)
+		default_type = _material
 	if(!default_type)
 		default_type = DEFAULT_WALL_MATERIAL
-	material = get_material_by_name("[default_type]")
+	..()
+
+/obj/item/stack/material/Initialize()
+	. = ..()
+	material = SSmaterials.get_material_by_name("[default_type]")
 	if(!material)
 		return INITIALIZE_HINT_QDEL
 
@@ -35,15 +40,22 @@
 	else
 		flags &= (~CONDUCT)
 
-	matter = material.get_matter()
+	update_strings()
+
+/obj/item/stack/material/proc/set_amount(var/_amount)
+	amount = max(1, min(_amount, max_amount))
 	update_strings()
 
 /obj/item/stack/material/get_material()
 	return material
 
-/obj/item/stack/material/proc/update_strings()
+/obj/item/stack/material/update_strings()
 	// Update from material datum.
 	singular_name = material.sheet_singular_name
+
+	matter = material.get_matter()
+	for(var/mat in matter)
+		matter[mat] *= amount
 
 	if(amount>1)
 		name = "[material.use_name] [material.sheet_plural_name]"
@@ -114,6 +126,15 @@
 /obj/item/stack/material/salt/fifty
 	amount = 50
 
+/obj/item/stack/material/carbon
+	name = "coal brick"
+	icon_state = "sheet-marble"
+	default_type = "carbon"
+	apply_colour = 1
+
+/obj/item/stack/material/carbon/ten
+	amount = 10
+
 /obj/item/stack/material/diamond
 	name = "diamond"
 	icon_state = "sheet-diamond"
@@ -168,6 +189,15 @@
 /obj/item/stack/material/silver/ten
 	amount = 10
 
+/obj/item/stack/material/copper
+	name = "copper"
+	icon_state = "sheet-silver"
+	default_type = "copper"
+	apply_colour = 1
+
+/obj/item/stack/material/copper/ten
+	amount = 10
+
 //Valuable resource, cargo can sell it.
 /obj/item/stack/material/platinum
 	name = "platinum"
@@ -177,23 +207,29 @@
 /obj/item/stack/material/platinum/ten
 	amount = 10
 
-/obj/item/stack/material/ice
-	name = "ice"
-	icon_state = "sheet-marble"
-	default_type = "ice"
-	apply_colour = 1
-
-/obj/item/stack/material/ice/five
-	amount = 5
-
-/obj/item/stack/material/dryice
-	name = "dry ice"
+/obj/item/stack/material/tungsten
+	name = "tungsten"
 	icon_state = "sheet-silver"
-	default_type = "dryice"
+	default_type = "tungsten"
 	apply_colour = 1
 
-/obj/item/stack/material/dryice/five
-	amount = 5
+/obj/item/stack/material/tungsten/ten
+	amount = 10
+
+/obj/item/stack/material/lead
+	name = "lead"
+	icon_state = "sheet-silver"
+	default_type = "lead"
+	apply_colour = 1
+
+/obj/item/stack/material/lead/ten
+	amount = 10
+
+/obj/item/stack/material/sulfur
+	name = "sulfur"
+	icon_state = "sheet-marble"
+	default_type = "sulfur"
+	apply_colour = 1
 
 //Extremely valuable to Research.
 /obj/item/stack/material/mhydrogen
@@ -343,3 +379,18 @@
 
 /obj/item/stack/material/glass/phoronrglass/ten
 	amount = 10
+
+/obj/item/stack/material/glass/fiberglass
+	name = "fiberglass"
+	icon_state = "sheet-fiberglass"
+	default_type = "fiberglass"
+
+/obj/item/stack/material/glass/fiberglass/ten
+	amount = 10
+
+/obj/item/stack/material/generic
+	icon_state = "sheet-silver"
+
+/obj/item/stack/material/generic/Initialize()
+	. = ..()
+	if(material) color = material.icon_colour

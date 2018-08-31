@@ -20,6 +20,12 @@
 	interact_offline = 1 // Allows this to be used when not in powered area.
 	var/release_log = ""
 	var/update_flag = 0
+	var/heat_capacity = 31250
+	var/heat = 9160937.5//T20C * heat_capacity
+	var/temperature = T20C
+	var/upgraded = 1
+	var/upgrade_stack_type = /obj/item/stack/material/plasteel
+	var/upgrade_stack_amount = 20
 
 /obj/machinery/portable_atmospherics/canister/drain_power()
 	return -1
@@ -113,6 +119,9 @@
 
 
 /obj/machinery/portable_atmospherics/canister/proc/check_change()
+	if(!air_contents)
+		return 1
+
 	var/old_flag = update_flag
 	update_flag = 0
 	if(holding)
@@ -203,12 +212,11 @@ update_flag
 /obj/machinery/portable_atmospherics/canister/Process()
 	if (destroyed)
 		return
-
 	..()
-
+	handle_heat_exchange()
 	if(valve_open)
 		var/datum/gas_mixture/environment
-		if(holding)
+		if(holding && holding.air_contents)
 			environment = holding.air_contents
 		else
 			environment = loc.return_air()
@@ -224,12 +232,42 @@ update_flag
 			if(returnval >= 0)
 				src.update_icon()
 
-	if(air_contents.return_pressure() < 1)
+	if(!air_contents || air_contents.return_pressure() < 1)
 		can_label = 1
 	else
 		can_label = 0
 
 	air_contents.react() //cooking up air cans - add phoron and oxygen, then heat above PHORON_MINIMUM_BURN_TEMPERATURE
+
+/obj/machinery/portable_atmospherics/canister/proc/handle_heat_exchange()
+	if(istype(src.loc, /turf/space))
+		heat -= COSMIC_RADIATION_TEMPERATURE * CANISTER_HEAT_TRANSFER_COEFFICIENT
+		return
+	exchange_heat(loc.return_air())
+	if(!upgraded)
+		exchange_heat(air_contents)
+	if(temperature > temperature_resistance)
+		health -= 1
+		healthcheck()
+
+
+/obj/machinery/portable_atmospherics/canister/proc/exchange_heat(var/datum/gas_mixture/environment)
+	var/relative_density = (environment.total_moles/environment.volume) / (MOLES_CELLSTANDARD/CELL_VOLUME)
+	if(relative_density > 0.02) //don't bother if we are in vacuum or near-vacuum
+		var/loc_temp = environment.temperature
+		if(loc_temp == temperature)
+			return
+		var/loc_heat = environment.heat_capacity()
+		var/transferred_heat = QUANTIZE(((loc_heat / loc_temp) * (loc_temp - temperature)) * CANISTER_HEAT_TRANSFER_COEFFICIENT)
+		//This if else keeps the can from heating/cooling more than 1K per tick.
+		if(transferred_heat > 0)
+			transferred_heat = min(transferred_heat, heat_capacity)
+		else
+			transferred_heat = max(transferred_heat, -heat_capacity)
+		environment.add_thermal_energy(-transferred_heat)
+		heat += transferred_heat
+
+		temperature = QUANTIZE(heat / heat_capacity)
 
 /obj/machinery/portable_atmospherics/canister/proc/return_temperature()
 	var/datum/gas_mixture/GM = src.return_air()
@@ -271,6 +309,19 @@ update_flag
 			thejetpack.merge(removed)
 			to_chat(user, "You pulse-pressurize your jetpack from the tank.")
 		return
+	var/obj/item/stack/P = W
+	if(istype(P, upgrade_stack_type))
+		if(!upgraded)
+			if(P.amount < upgrade_stack_amount)
+				user.visible_message("You need at least [upgrade_stack_amount] sheets of [P] to upgrade \the [src]")
+			else
+				user.visible_message("You start insulating \the [src]...")
+				if(do_after(50, user, src) && P.amount >= upgrade_stack_amount)
+					P.use(upgrade_stack_amount)
+					user.visible_message("You finish insulating \the [src].")
+					upgraded = 1
+		else
+			user.visible_message("\The [src] has already been insulated.")
 	..()
 
 /obj/machinery/portable_atmospherics/canister/attackby(obj/item/W as obj, mob/user as mob)
@@ -279,6 +330,11 @@ update_flag
 		if(WT.remove_fuel(0,user))
 			var/obj/item/stack/material/steel/new_item = new(usr.loc)
 			new_item.add_to_stacks(usr)
+			//!initial allows me to implement this payback on destroy without giving everyone free plasteel.
+			if(upgraded && !initial(upgraded))
+				var/obj/item/stack/P = new upgrade_stack_type(usr.loc)
+				P.add(upgrade_stack_amount)
+				P.add_to_stacks(usr)
 			for (var/mob/M in viewers(src))
 				M.show_message("<span class='notice'>[src] is shaped into metal by [user.name] with the weldingtool.</span>", 3, "<span class='notice'>You hear welding.</span>", 2)
 			qdel(src)
@@ -316,37 +372,34 @@ update_flag
 		ui.open()
 		ui.set_auto_update(1)
 
-/obj/machinery/portable_atmospherics/canister/Topic(href, href_list)
-
-	if(..())
-		return 1
-	else if(href_list["toggle"])
+/obj/machinery/portable_atmospherics/canister/OnTopic(var/mob/user, href_list, state)
+	if(href_list["toggle"])
 		if (valve_open)
 			if (holding)
-				release_log += "Valve was <b>closed</b> by [usr] ([usr.ckey]), stopping the transfer into the [holding]<br>"
+				release_log += "Valve was <b>closed</b> by [user] ([user.ckey]), stopping the transfer into the [holding]<br>"
 			else
-				release_log += "Valve was <b>closed</b> by [usr] ([usr.ckey]), stopping the transfer into the <font color='red'><b>air</b></font><br>"
+				release_log += "Valve was <b>closed</b> by [user] ([user.ckey]), stopping the transfer into the <font color='red'><b>air</b></font><br>"
 		else
 			if (holding)
-				release_log += "Valve was <b>opened</b> by [usr] ([usr.ckey]), starting the transfer into the [holding]<br>"
+				release_log += "Valve was <b>opened</b> by [user] ([user.ckey]), starting the transfer into the [holding]<br>"
 			else
-				release_log += "Valve was <b>opened</b> by [usr] ([usr.ckey]), starting the transfer into the <font color='red'><b>air</b></font><br>"
+				release_log += "Valve was <b>opened</b> by [user] ([user.ckey]), starting the transfer into the <font color='red'><b>air</b></font><br>"
 				log_open()
 		valve_open = !valve_open
-		. = 1
+		. = TOPIC_REFRESH
 
 	else if (href_list["remove_tank"])
 		if(!holding)
-			return 0
+			return TOPIC_HANDLED
 		if (valve_open)
 			valve_open = 0
-			release_log += "Valve was <b>closed</b> by [usr] ([usr.ckey]), stopping the transfer into the [holding]<br>"
+			release_log += "Valve was <b>closed</b> by [user] ([user.ckey]), stopping the transfer into the [holding]<br>"
 		if(istype(holding, /obj/item/weapon/tank))
-			holding.manipulated_by = usr.real_name
-		holding.forceMove(get_turf(src))
+			holding.manipulated_by = user.real_name
+		holding.dropInto(loc)
 		holding = null
 		update_icon()
-		. = 1
+		. = TOPIC_REFRESH
 
 	else if (href_list["pressure_adj"])
 		var/diff = text2num(href_list["pressure_adj"])
@@ -354,7 +407,7 @@ update_flag
 			release_pressure = min(10*ONE_ATMOSPHERE, release_pressure+diff)
 		else
 			release_pressure = max(ONE_ATMOSPHERE/10, release_pressure+diff)
-		. = 1
+		. = TOPIC_REFRESH
 
 	else if (href_list["relabel"])
 		if (!can_label)
@@ -368,14 +421,15 @@ update_flag
 			"\[CO2\]" = "black", \
 			"\[Air\]" = "grey", \
 			"\[CAUTION\]" = "yellow", \
+			"\[Reagents\]" = "cyanws", \
 		)
-		var/label = input("Choose canister label", "Gas canister") as null|anything in colors
-		if (label)
+		var/label = input(user, "Choose canister label", "Gas canister") as null|anything in colors
+		if (label && CanUseTopic(user, state))
 			canister_color = colors[label]
 			icon_state = colors[label]
 			name = "\improper Canister: [label]"
 		update_icon()
-		. = 1
+		. = TOPIC_REFRESH
 
 /obj/machinery/portable_atmospherics/canister/CanUseTopic()
 	if(destroyed)

@@ -77,7 +77,7 @@
 	if(!upgrab)
 		return
 
-	if (can_upgrade())
+	if (can_upgrade(G))
 		upgrade_effect(G)
 		admin_attack_log(G.assailant, G.affecting, "tightens their grip on their victim to [upgrab.state_name]", "was grabbed more tightly to [upgrab.state_name]", "tightens grip to [upgrab.state_name] on")
 		return upgrab
@@ -111,9 +111,17 @@
 	var/mob/living/carbon/human/affecting = G.affecting
 
 	if(can_throw)
+		. = affecting
+		var/mob/thrower = G.loc
+
 		animate(affecting, pixel_x = 0, pixel_y = 0, 4, 1)
 		qdel(G)
-		return affecting
+
+		// check if we're grabbing with our inactive hand
+		G = thrower.get_inactive_hand()
+		if(!istype(G))	return
+		qdel(G)
+		return
 	return null
 
 /datum/grab/proc/hit_with_grab(var/obj/item/grab/G)

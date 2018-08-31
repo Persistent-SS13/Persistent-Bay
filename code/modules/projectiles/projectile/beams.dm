@@ -29,7 +29,7 @@
 	damage = 25
 
 /obj/item/projectile/beam/midlaser
-	damage = 40
+	damage = 50
 	armor_penetration = 10
 
 /obj/item/projectile/beam/heavylaser
@@ -84,16 +84,6 @@
 	if(isturf(target))
 		target.ex_act(2)
 	..()
-
-/obj/item/projectile/beam/pulse/bogani
-	name = "pulsar"
-	icon_state = "bogb"
-	fire_sound='sound/weapons/blaster.ogg'
-	damage = 30
-
-	muzzle_type = /obj/effect/projectile/laser_bogani/muzzle
-	tracer_type = /obj/effect/projectile/laser_bogani/tracer
-	impact_type = /obj/effect/projectile/laser_bogani/impact
 
 /obj/item/projectile/beam/emitter
 	name = "emitter beam"
@@ -191,7 +181,6 @@
 /obj/item/projectile/beam/stun/heavy
 	name = "heavy stun beam"
 	agony = 60
-	armor_penetration = 10
 
 /obj/item/projectile/beam/stun/shock
 	name = "shock beam"

@@ -56,13 +56,13 @@
 
 	return ..()
 
-/obj/item/device/radio/headset/receive_range(freq, level, aiOverride = 0)
+/obj/item/device/radio/headset/receive_range(freq, level, faction_uid, aiOverride = 0)
 	if (aiOverride)
 		return ..(freq, level)
 	if(ishuman(src.loc))
 		var/mob/living/carbon/human/H = src.loc
 		if(H.l_ear == src || H.r_ear == src)
-			return ..(freq, level)
+			return ..(freq, level, faction_uid)
 	return -1
 
 /obj/item/device/radio/headset/syndicate

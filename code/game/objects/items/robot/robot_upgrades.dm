@@ -1,5 +1,253 @@
 // robot_upgrades.dm
 // Contains various borg upgrades.
+// CHASIS AND MODULE CHIPS VVVVVVV
+// robot_upgrades.dm
+// Contains various borg upgrades.
+
+/obj/item/borg/chassis_mod
+	name = "Chassis Mod."
+	desc = "Insert this into a cyborg to allow it to change its appearance."
+	icon = 'icons/obj/module.dmi'
+	icon_state = "mainboard"
+	var/req_module = 1
+	var/module_type = ""
+	var/chassis_type = ""
+
+/obj/item/borg/chassis_mod/proc/action(mob/living/silicon/robot/R)
+	if(R.chassis_mod && istype(R.chassis_mod, /obj/item/borg/chassis_mod))
+		to_chat(R, "Chassis mod slot already filled!")
+		to_chat(usr, "There's already an installed chassis mod!")
+		return 0
+	R.chassis_mod = src
+	return 1
+
+/obj/item/borg/chassis_mod/service/waitress
+	name = "Service/Clerical Chassis: Waitress"
+	module_type = /obj/item/weapon/robot_module/clerical
+	chassis_type = "Service"
+
+/obj/item/borg/chassis_mod/service/bro
+	name = "Service/Clerical Chassis: Brobot"
+	module_type = /obj/item/weapon/robot_module/clerical
+	chassis_type = "Brobot"
+
+/obj/item/borg/chassis_mod/service/fountainbot
+	name = "Service/Clerical Chassis: Fountain-head"
+	module_type = /obj/item/weapon/robot_module/clerical
+	chassis_type = "toiletbot"
+
+/obj/item/borg/chassis_mod/service/poshbot
+	name = "Service/Clerical Chassis: Poshbot"
+	module_type = /obj/item/weapon/robot_module/clerical
+	chassis_type = "maximillion"
+
+/obj/item/borg/chassis_mod/service/waiterbot
+	name = "Service/Clerical Chassis: Waiter"
+	module_type = /obj/item/weapon/robot_module/clerical
+	chassis_type = "Service2"
+
+/obj/item/borg/chassis_mod/service/serviceeyebot
+	name = "Service/Clerical Chassis: Eyebot"
+	module_type = /obj/item/weapon/robot_module/clerical
+	chassis_type = "eyebot-standard"
+
+/obj/item/borg/chassis_mod/mining/minereyebot
+	name = "Mining Chassis: Mining Eyebot"
+	module_type = /obj/item/weapon/robot_module/miner
+	chassis_type = "eyebot-miner"
+
+/obj/item/borg/chassis_mod/mining/minerbipedal
+	name = "Mining Chassis: Bipedal Miner"
+	module_type = /obj/item/weapon/robot_module/miner
+	chassis_type = "Miner_old"
+
+/obj/item/borg/chassis_mod/mining/advancedminer
+	name = "Mining Chassis: Advanced Miner"
+	module_type = /obj/item/weapon/robot_module/miner
+	chassis_type = "droid-miner"
+
+/obj/item/borg/chassis_mod/mining/treadhead
+	name = "Mining Chassis: Treadhead Miner"
+	module_type = /obj/item/weapon/robot_module/miner
+	chassis_type = "Miner"
+
+/obj/item/borg/chassis_mod/medical/bipedmedic
+	name = "Medical Chassis: Bipedal Medical Cyborg"
+	module_type = /obj/item/weapon/robot_module/medical
+	chassis_type = "Medbot"
+
+/obj/item/borg/chassis_mod/medical/surgicalbot
+	name = "Medical Chassis: Surgical Cyborg"
+	module_type = /obj/item/weapon/robot_module/medical
+	chassis_type = "surgeon"
+
+/obj/item/borg/chassis_mod/medical/doctorneedles
+	name = "Medical Chassis: Doctor Needles"
+	module_type = /obj/item/weapon/robot_module/medical
+	chassis_type = "medicalrobot"
+
+/obj/item/borg/chassis_mod/medical/medicaleyebot
+	name = "Medical Chassis: Medical Eyebot"
+	module_type = /obj/item/weapon/robot_module/medical
+	chassis_type = "eyebot-medical"
+
+/obj/item/borg/chassis_mod/security/bipedalsecurity
+	name = "Security Chassis: Bipedal Security Cyborg"
+	module_type = /obj/item/weapon/robot_module/security
+	chassis_type = "secborg"
+
+/obj/item/borg/chassis_mod/security/redknight
+	name = "Security Chassis: Red Knight Cyborg Model"
+	module_type = /obj/item/weapon/robot_module/security
+	chassis_type = "Security"
+
+/obj/item/borg/chassis_mod/security/protector
+	name = "Security Chassis: Protector Cyborg Model"
+	module_type = /obj/item/weapon/robot_module/security
+	chassis_type = "securityrobot"
+
+/obj/item/borg/chassis_mod/security/bloodhound
+	name = "Security Chassis: Bloodhound Cyborg Model"
+	module_type = /obj/item/weapon/robot_module/security
+	chassis_type = "bloodhound"
+
+/obj/item/borg/chassis_mod/security/treaded
+	name = "Security Chassis: Treaded Bloodhound"
+	module_type = /obj/item/weapon/robot_module/security
+	chassis_type = "secborg+tread"
+
+/obj/item/borg/chassis_mod/security/securityeyebot
+	name = "Security Chassis: Security Eyebot"
+	module_type = /obj/item/weapon/robot_module/security
+	chassis_type = "eyebot-security"
+
+/obj/item/borg/chassis_mod/security/tridroid
+	name = "Security Chassis: Tridoid Cyborg Model"
+	module_type = /obj/item/weapon/robot_module/security
+	chassis_type = "orb-security"
+
+/obj/item/borg/chassis_mod/engineering/bipedalengineer
+	name = "Engineering Chassis: Bipedal Engineering Cyborg"
+	module_type = /obj/item/weapon/robot_module/engineering
+	chassis_type = "Engineering"
+
+/obj/item/borg/chassis_mod/engineering/antique
+	name = "Engineering Chassis: Outdated Engineer"
+	module_type = /obj/item/weapon/robot_module/engineering
+	chassis_type = "engineerrobot"
+
+/obj/item/borg/chassis_mod/engineering/landmate
+	name = "Engineering Chassis: Landmate Model"
+	module_type = /obj/item/weapon/robot_module/engineering
+	chassis_type = "landmate"
+
+/obj/item/borg/chassis_mod/engineering/treads
+	name = "Engineering Chassis: Treaded Landmate"
+	module_type = /obj/item/weapon/robot_module/engineering
+	chassis_type = "engiborg+tread"
+
+/obj/item/borg/chassis_mod/engineering/eyebotengineering
+	name = "Engineering Chassis: Engineering Eyebot"
+	module_type = /obj/item/weapon/robot_module/engineering
+	chassis_type = "eyebot-engineering"
+
+
+/obj/item/borg/chassis_mod/janitor/bipedaljanitor
+	name = "Janitor Chassis: Bipedal Janitor Cyborg"
+	module_type = /obj/item/weapon/robot_module/janitor
+	chassis_type = "JanBot2"
+
+/obj/item/borg/chassis_mod/janitor/buckethead
+	name = "Janitor Chassis: Bucket-head Janitor"
+	module_type = /obj/item/weapon/robot_module/janitor
+	chassis_type = "janitorrobot"
+
+/obj/item/borg/chassis_mod/janitor/mopgearrex
+	name = "Janitor Chassis: MOP GEAR R.E.X"
+	module_type = /obj/item/weapon/robot_module/janitor
+	chassis_type = "mopgearrex"
+
+/obj/item/borg/chassis_mod/janitor/janitoreyebot
+	name = "Janitor Chassis: Janitorial Eyebot"
+	module_type = /obj/item/weapon/robot_module/janitor
+	chassis_type = "eyebot-janitor"
+
+/obj/item/borg/chassis_mod/science/sciencedroid
+	name = "Research Chassis: Science Droid"
+	module_type = /obj/item/weapon/robot_module/research
+	chassis_type = "droid-science"
+
+/obj/item/borg/chassis_mod/science/scienceeyebot
+	name = "Research Chassis: Science Eyebot"
+	module_type = /obj/item/weapon/robot_module/research
+	chassis_type = "eyebot-research"
+
+/obj/item/borg/module_chip
+	name = "cyborg module."
+	desc = "Contains tools and objects that a cyborg can access."
+	icon = 'icons/obj/module.dmi'
+	icon_state = "cyborg_upgrade3"
+	var/installed = 0
+	var/module_type = ""
+	var/default_icon = ""
+	var/obj/item/weapon/robot_module/stored_module = null // used when the module gets unloaded and reloaded, preserving a single instance of /robot_module/ per chip each round
+
+/obj/item/borg/module_chip/proc/action(mob/living/silicon/robot/R)
+	if(R.installed_module && istype(R.installed_module, /obj/item/borg/module_chip))
+		to_chat(R, "Module mounting error! Module slot already filled!")
+		to_chat(usr, "There's already an installed module!")
+		return 0
+	R.installed_module = src
+	installed = 1
+	return 1
+
+/obj/item/borg/module_chip/medical/surgeon
+	name = "Surgeon Module."
+	desc = "Contains tools and supplies for a surgeon class medical cyborg."
+	module_type = /obj/item/weapon/robot_module/medical/surgeon
+	default_icon = "robotMedi"
+/obj/item/borg/module_chip/medical
+	name = "Medi-Crisis Module."
+	desc = "Contains tools and supplies for a crisis class medical cyborg."
+	module_type = /obj/item/weapon/robot_module/medical/crisis
+	default_icon = "robotMedi"
+/obj/item/borg/module_chip/research
+	name = "Research Module."
+	desc = "Contains tools and supplies for a research cyborg."
+	module_type = /obj/item/weapon/robot_module/research
+	default_icon = "robotMedi"
+/obj/item/borg/module_chip/security
+	name = "Security Module."
+	desc = "Contains tools and supplies for a security cyborg."
+	module_type = /obj/item/weapon/robot_module/security
+	default_icon = "robotSecy"
+/obj/item/borg/module_chip/clerical
+	name = "Clerical Module."
+	desc = "Contains tools and supplies for a clerical cyborg."
+	module_type = /obj/item/weapon/robot_module/clerical/general
+	default_icon = "robotServ"
+/obj/item/borg/module_chip/service
+	name = "Service Module."
+	desc = "Contains tools and supplies for a service cyborg."
+	module_type = /obj/item/weapon/robot_module/clerical/butler
+	default_icon = "robotServ"
+/obj/item/borg/module_chip/mining
+	name = "Mining Module."
+	desc = "Contains tools and supplies for a mining cyborg."
+	module_type = /obj/item/weapon/robot_module/miner
+	default_icon = "robotMine"
+/obj/item/borg/module_chip/engineering
+	name = "Engineering Module."
+	desc = "Contains tools and supplies for an engineering cyborg."
+	module_type = /obj/item/weapon/robot_module/engineering
+	default_icon = "robotEngi"
+/obj/item/borg/module_chip/janitor
+	name = "Service Module."
+	desc = "Contains tools and supplies for a janitorial cyborg."
+	module_type = /obj/item/weapon/robot_module/janitor
+	default_icon = "robotJani"
+
+//////////// CHASIS AND MODULE CHIPS ^^^^
 
 /obj/item/borg/upgrade
 	name = "borg upgrade module."

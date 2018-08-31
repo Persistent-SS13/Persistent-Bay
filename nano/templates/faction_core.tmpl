@@ -22,6 +22,7 @@
 		<br><br>{{:helper.link("Assignments Config", 'pencil', {'action' : 'change_menu', 'menu_target' : '7'})}}
 		<br><br>{{:helper.link("Economy Menu", 'calculator', {'action' : 'change_menu', 'menu_target' : '12'})}}
 		<br><br>{{:helper.link("Promotion Control", 'flag', {'action' : 'change_menu', 'menu_target' : '13'})}}
+		<br><br>{{:helper.link("Cryo Network Control", 'gear', {'action' : 'change_menu', 'menu_target' : '14'})}}
 	{{/if}}
 	{{if data.menu == 4}}
 		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
@@ -30,8 +31,16 @@
 		<br><hr>
 		<br><br>{{:helper.link("Change Full Name", 'pencil', {'action' : 'change_name'})}} Full Name: <b>{{:data.faction_name}}</b>
 		<br><br>{{:helper.link("Change Abbreviation", 'pencil', {'action' : 'change_abbreviation'})}} Abbreviation: <b>{{:data.faction_abbreviation}}</b>
+		<br><br>{{:helper.link("Change Tag", 'pencil', {'action' : 'change_tag'})}} Tag: <b>{{:data.faction_tag}}</b>
 		<br><br>{{:helper.link("Change Description/Mission Statement", 'pencil', {'action' : 'change_purpose'})}} Purpose: <b>{{:data.faction_purpose}}</b>
-		<br><br>{{:helper.link("Change LogNet Password", 'radiation', {'action' : 'change_password'})}} Password: <b>{{:data.faction_password}}</b>
+		<br><br>{{:helper.link("Change LogNet Password", 'radiation', {'action' : 'change_password'})}}
+		<div class='itemLabel'>
+			Hiring Policy:
+		</div>
+		<div class='itemContent'>
+			{{:helper.link("Only command staff can hire new employees.", '', {'action' : 'hiring_command'}, data.hiring_policy ? null : 'selected')}}{{:helper.link("Anyone with reassignment access can hire new employees.", '', {'action' : 'hiring_anyone'}, data.hiring_policy ? 'selected' : null)}}
+		</div>
+		
 	{{/if}}
 	{{if data.menu == 5}}
 		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
@@ -51,8 +60,12 @@
 		<br><hr>
 		Core Access - Core access cannot be deleted or used outside their named purpose.<br>
 		<br>
-		{{:helper.link("(1) Logistic Control, Leadership", '', {'action' : 'none'})}}{{:helper.link("(2) Command Programs", '', {'action' : 'none'})}}{{:helper.link("(3) Engineering Programs", '', {'action' : 'none'})}}
-		{{:helper.link("(4) Medical Programs", '', {'action' : 'none'})}}{{:helper.link("(5) Security Programs", '', {'action' : 'none'})}}{{:helper.link("(6) Networking Programs", '', {'action' : 'none'})}}{{:helper.link("(7) Lock Electronics", '', {'action' : 'none'})}}{{:helper.link("(8) Import/Export Approval", '', {'action' : 'none'})}}{{:helper.link("(9) Science Machinery & Programs", '', {'action' : 'none'})}}{{:helper.link("(10) Reserved", '', {'action' : 'none'})}}
+		{{:helper.link("(1) Logistic Control, Leadership", '', {'action' : 'none'})}}{{:helper.link("(2) Command Machinery", '', {'action' : 'none'})}}{{:helper.link("(3) Promotion/Demotion Vote", '', {'action' : 'none'})}}
+		{{:helper.link("(4) Reassignment", '', {'action' : 'none'})}}{{:helper.link("(5) Edit Employment Records", '', {'action' : 'none'})}}{{:helper.link("(6) Reset Expenses", '', {'action' : 'none'})}}
+		{{:helper.link("(7) Suspension/Termination", '', {'action' : 'none'})}}{{:helper.link("(8) Engineering Programs", '', {'action' : 'none'})}}
+		{{:helper.link("(9) Medical Programs", '', {'action' : 'none'})}}{{:helper.link("(10) Security Programs", '', {'action' : 'none'})}}{{:helper.link("(11) Networking Programs", '', {'action' : 'none'})}}
+		{{:helper.link("(12) Lock Electronics", '', {'action' : 'none'})}}{{:helper.link("(13) Import Approval", '', {'action' : 'none'})}}{{:helper.link("(14) Invoicing & Exports", '', {'action' : 'none'})}}
+		{{:helper.link("(15) Science Machinery & Programs", '', {'action' : 'none'})}}{{:helper.link("(16) Shuttle Control & Access", '', {'action' : 'none'})}}
 		<br><br><br><br><hr><br>
 		{{for data.access_categories}}
 			{{:helper.link(value.name, '', {'action' : 'select_accesscategory', 'selected_ref' : value.ref})}}{{:helper.link("Create new access", '', {'action' : 'create_access_two', 'selected_ref' : value.ref})}}:<br><br>
@@ -134,6 +147,7 @@
 		<br><br>{{:helper.link("Change Rank 1 Payscale", 'pencil', {'action' : 'edit_assignment_pay'})}} Pay: {{:data.pay}}
 		<br><br>{{:helper.link("Delete Assignment", 'cross', {'action' : 'delete_assignment'})}}
 		<br><br>{{:helper.link("View/Edit Access", '', {'action' : 'view_access'}, data.view_ranks ? null : 'selected')}}{{:helper.link("View/Edit Ranks", '', {'action' : 'view_ranks'}, data.view_ranks ? 'selected' : null)}}
+		<br><br>{{:helper.link("Change Cryo-network", 'pencil', {'action' : 'edit_assignment_cryonet'})}} Cryo-network: {{:data.cryonetwork}}
 		<br><hr><br>
 		{{if data.view_ranks}}
 			{{:helper.link("Add New Rank", '', {'action' : 'create_rank'})}}{{:helper.link("Delete rank", '', {'action' : 'delete_rank'})}}<br><br><hr>
@@ -141,13 +155,23 @@
 				{{:helper.link(value.name, '', {'action' : 'nothing'})}}
 			{{/for}}
 		{{else}}
-			Select the access that this assignment should have.<br><br><hr>
+			Select the expense limit and access that this assignment should have when at rank {{:data.selected_rank}} or above.<br><br>
+			{{:helper.link("<-", '', {'action' : 'decrease_selected_rank'}, data.decrease_button ? null : 'disabled')}}{{:helper.link(data.selected_rank, '', {'action' : 'nothing'})}}{{:helper.link("->", '', {'action' : 'increase_selected_rank'}, data.increase_button ? null : 'disabled')}}
+			<br><br><hr>
+			<div class='item'>
+				<div class='itemLabel'>
+					Expense Limit:
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.expense_limit, '', {'action' : 'change_expense_limit'})}}
+				</div>
+			</div>
 			{{for data.access_categories}}
 				{{:value.name}} :<br><br>
 				{{for value.accesses :accessValue:accessIndex}}
 					{{:helper.link(accessValue.name, '', {'action' : 'pick_access', 'selected_ref' : value.ref, 'selected_ind' : accessValue.ind}, null, accessValue.existing ? 'selected' : null)}}
 				{{/for}}
-				<br><br><br><br><hr><br>
+				<br><br><br><br><br><hr><br>
 			{{/for}}	
 		{{/if}}
 	{{/if}}
@@ -182,6 +206,45 @@
 			</div>
 		</div>
 		<br> The pay for each employee is determined by taking the hourly pay rate, divided by the time they didn't work (it's possible for an employee to be paid for working half a shift), multiplied by their payscale. This is automatically hourly.
+		<div class='item'>
+			<div class='itemLabel'>
+				Sales Tax %:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Change", 'pencil', {'action' : 'tax_change'})}}{{:data.tax_rate}}
+			</div>
+		</div>
+		<br> Small businesses can be made to connect to your tax network if they want to use your services (like your wireless network, accesses, imports or exports). 
+		When one of their invoices is paid, this percentage of the sale will be paid to the network account..
+		<div class='item'>
+			<div class='itemLabel'>
+				Import Profit %:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Change", 'pencil', {'action' : 'import_change'})}}{{:data.import_rate}}
+			</div>
+		</div>
+		<br> When people make import requests, anyone with the invoicing or order approval access can print an invoice that when paid causes the order to become approved (at no cost to the network). 
+		The invoice will increase the cost of the import by this percentage and pay it the network when the invoice is paid.
+		<div class='item'>
+			<div class='itemLabel'>
+				Export Tax %:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Change", 'pencil', {'action' : 'export_change'})}}{{:data.export_rate}}
+			</div>
+		</div>
+		<br> Export orders can be printed which small businesses can connect to can fill with their own exports. When the export order is sent, the business will collect the profit and then pay this percentage as tax to the network. 
+		<div class='item'>
+			<div class='itemLabel'>
+				Expense Card Control:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link("Print Card", 'print', {'action' : 'print_expense'})}}{{:helper.link("Devalidate all cards", 'cross', {'action' : 'devalidate_expense'})}}
+			</div>
+		</div>
+		<br> Expense cards can be swiped on any invoice to pay it directly out of the network account. The expense card looks for the users ID and only works if the user has enough expenses left. It is still important to control the networks expense cards, if some get lost you can devalidate all of the existing cards.
+	
 	{{/if}}
 	{{if data.menu == 13}}
 		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
@@ -215,6 +278,19 @@
 			</div>
 		</div>
 		<br>A promotion vote coming from someone with an assignment that is the leader of the command faction, and they are the highest rank available to that assignment ALWAYS cound as a rank 5 vote.
+	{{/if}}
+	{{if data.menu == 14}}
+		<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
+		<h2>Cryo-network Control</h2>
+		<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
+		<br><hr>
+		<br>Assignments can be given different cryo-networks so that no matter which storage unit they go into, they come out of one assigned to their cryo-network.<br>The unassigned or those without a valid storage unit on their cryo-network will use units assigned to default.<br><br>
+		<br><hr>
+		{{for data.cryos}}
+			{{:helper.link(value.name, '', {'action' : 'nothing'})}}
+		{{/for}}
+		<br><br><hr><br>
+		{{:helper.link("Add", '', {'action' : 'add_cryo'})}}  {{:helper.link("Remove", '', {'action' : 'remove_cryo'})}}
 	{{/if}}
 {{else}}
 	<h2><span class='alert'><i>No operational Logistics Processor detected. <br>CHECK LOG PROCESSOR</i></span></h2>

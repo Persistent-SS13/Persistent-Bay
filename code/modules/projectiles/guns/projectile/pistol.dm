@@ -56,7 +56,7 @@
 	load_method = MAGAZINE
 	magazine_type = /obj/item/ammo_magazine/c45m
 	allowed_magazines = /obj/item/ammo_magazine/c45m
-
+/*
 /obj/item/weapon/gun/projectile/magnum_pistol
 	name = ".50 magnum pistol"
 	desc = "A robust handgun that uses .50 AE ammo."
@@ -94,7 +94,7 @@
 		icon_state = "gyropistolloaded"
 	else
 		icon_state = "gyropistol"
-
+*/
 /obj/item/weapon/gun/projectile/pistol
 	name = "holdout pistol"
 	desc = "The Lumoco Arms P3 Whisper. A small, easily concealable gun. Uses 9mm rounds."
@@ -174,6 +174,7 @@
 		/obj/item/ammo_casing/shotgun/pellet    = "12 gauge",
 		/obj/item/ammo_casing/shotgun/pellet    = "12 gauge",
 		/obj/item/ammo_casing/shotgun/beanbag   = "12 gauge",
+		/obj/item/ammo_casing/shotgun/rubber    = "12 gauge",
 		/obj/item/ammo_casing/shotgun/stunshell = "12 gauge",
 		/obj/item/ammo_casing/shotgun/flash     = "12 gauge",
 		/obj/item/ammo_casing/a762              = "7.62mm",

@@ -1,4 +1,3 @@
-
 /obj/machinery/gibber
 	name = "meat grinder"
 	desc = "The name isn't descriptive enough?"
@@ -17,37 +16,6 @@
 	use_power = 1
 	idle_power_usage = 2
 	active_power_usage = 500
-
-//auto-gibs anything that bumps into it
-/obj/machinery/gibber/autogibber
-	var/turf/input_plate
-
-/obj/machinery/gibber/autogibber/New()
-	..()
-	spawn(5)
-		for(var/i in GLOB.cardinal)
-			var/obj/machinery/mineral/input/input_obj = locate( /obj/machinery/mineral/input, get_step(src.loc, i) )
-			if(input_obj)
-				if(isturf(input_obj.loc))
-					input_plate = input_obj.loc
-					gib_throw_dir = i
-					qdel(input_obj)
-					break
-
-		if(!input_plate)
-			log_misc("a [src] didn't find an input plate.")
-			return
-
-/obj/machinery/gibber/autogibber/Bumped(var/atom/A)
-	if(!input_plate) return
-
-	if(ismob(A))
-		var/mob/M = A
-
-		if(M.loc == input_plate)
-			M.forceMove(src)
-			M.gib()
-
 
 /obj/machinery/gibber/Initialize()
 	. = ..()

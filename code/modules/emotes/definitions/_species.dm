@@ -29,7 +29,7 @@
 		/decl/emote/human/swag,
 		/decl/emote/human/stopsway
 		)
-
+/*
 /datum/species/tajaran
 	default_emotes = list(
 		/decl/emote/human/swish,
@@ -40,7 +40,7 @@
 		/decl/emote/human/swag,
 		/decl/emote/human/stopsway
 		)
-
+*/
 /datum/species/nabber
 	default_emotes = list(
 		/decl/emote/audible/bug_hiss,

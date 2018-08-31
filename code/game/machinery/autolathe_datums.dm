@@ -1,8 +1,10 @@
 /var/global/list/autolathe_recipes
 /var/global/list/autolathe_categories
 
-var/const/EXTRA_COST_FACTOR = 1.25
+var/const/EXTRA_COST_FACTOR = 1
 // Items are more expensive to produce than they are to recycle.
+// Yeah but just make recycling bad
+// Extra cost factor implies you are DELETING steel (1st law of thermodynamics)
 
 /proc/populate_lathe_recipes()
 
@@ -65,6 +67,11 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/weapon/extinguisher
 	category = "General"
 
+/datum/autolathe/recipe/tank/proc/Fabricate()
+	var/obj/item/weapon/tank/T = ..()
+	T.air_contents = new /datum/gas_mixture(T.volume, T20C)  //Empty air tanks only
+	return T
+
 /datum/autolathe/recipe/tank
 	name = "air tank"
 	path = /obj/item/weapon/tank/oxygen/yellow
@@ -111,7 +118,7 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	category = "Tools"
 
 /datum/autolathe/recipe/t_scanner
-	name = "t-ray scanner"
+	name = "T-ray scanner"
 	path = /obj/item/device/t_scanner
 	category = "Tools"
 
@@ -170,18 +177,21 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/stack/material/steel
 	category = "General"
 	is_stack = 1
+	resources = list("steel" = SHEET_MATERIAL_AMOUNT * EXTRA_COST_FACTOR)
 
 /datum/autolathe/recipe/glass
 	name = "glass sheets"
 	path = /obj/item/stack/material/glass
 	category = "General"
 	is_stack = 1
+	resources = list("glass" = SHEET_MATERIAL_AMOUNT * EXTRA_COST_FACTOR)
 
 /datum/autolathe/recipe/rglass
 	name = "reinforced glass sheets"
 	path = /obj/item/stack/material/glass/reinforced
 	category = "General"
 	is_stack = 1
+	resources = list("glass" = (SHEET_MATERIAL_AMOUNT/2) * EXTRA_COST_FACTOR, "steel" = (SHEET_MATERIAL_AMOUNT/2) * EXTRA_COST_FACTOR)
 
 /datum/autolathe/recipe/rods
 	name = "metal rods"
@@ -305,6 +315,12 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	hidden = 1
 	category = "Arms and Ammunition"
 
+/datum/autolathe/recipe/shotgun_rubber
+	name = "ammunition (shotgun, rubber)"
+	path = /obj/item/ammo_casing/shotgun/rubber
+	hidden = 1
+	category = "Arms and Ammunition"
+
 /datum/autolathe/recipe/shotgun_flash
 	name = "ammunition (shotgun, flash)"
 	path = /obj/item/ammo_casing/shotgun/flash
@@ -367,7 +383,7 @@ var/const/EXTRA_COST_FACTOR = 1.25
 
 /datum/autolathe/recipe/cable_coil
 	name = "cable coil"
-	path = /obj/item/stack/cable_coil/single
+	path = /obj/item/stack/cable_coil
 	category = "Devices and Components"
 	is_stack = 1
 
@@ -547,17 +563,12 @@ var/const/EXTRA_COST_FACTOR = 1.25
 
 /datum/autolathe/recipe/stasisclamp
 	name = "stasis clamp"
-	path = /obj/machinery/clamp
+	path = /obj/item/clamp
 	category = "Engineering"
 
 /datum/autolathe/recipe/beerkeg
 	name = "beer keg"
 	path = /obj/structure/reagent_dispensers/beerkeg/empty
-	category = "General"
-
-/datum/autolathe/recipe/watercooler
-	name = "water cooler"
-	path = /obj/structure/reagent_dispensers/water_cooler/empty
 	category = "General"
 
 /datum/autolathe/recipe/electropack
@@ -597,12 +608,17 @@ var/const/EXTRA_COST_FACTOR = 1.25
 /datum/autolathe/recipe/ecig
 	// We get it, you vape
 	name = "ecigarette"
-	path = /obj/item/clothing/mask/smokable/ecig
+	path = /obj/item/clothing/mask/smokable/ecig/lathed
 	category = "Devices and Components"
 
 /datum/autolathe/recipe/keypad
 	name = "airlock keypad electronics"
 	path = /obj/item/weapon/airlock_electronics/keypad_electronics
+	category = "Engineering"
+
+/datum/autolathe/recipe/business
+	name = "business airlock electronics"
+	path = /obj/item/weapon/airlock_electronics/business
 	category = "Engineering"
 
 /datum/autolathe/recipe/analyzer
@@ -650,6 +666,61 @@ var/const/EXTRA_COST_FACTOR = 1.25
 	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/carafe
 	category = "General"
 
+/datum/autolathe/recipe/lipstick
+	name = "lipstick"
+	path = /obj/item/weapon/lipstick
+	category = "General"
+
+/datum/autolathe/recipe/lipstick_purple
+	name = "purple lipstick"
+	path = /obj/item/weapon/lipstick/purple
+	category = "General"
+
+/datum/autolathe/recipe/lipstick_jade
+	name = "jade lipstick"
+	path = /obj/item/weapon/lipstick/jade
+	category = "General"
+
+/datum/autolathe/recipe/lipstick_black
+	name = "black lipstick"
+	path = /obj/item/weapon/lipstick/black
+	category = "General"
+
+/datum/autolathe/recipe/comb
+	name = "comb"
+	path = /obj/item/weapon/haircomb
+	category = "General"
+
+/datum/autolathe/recipe/red_doll
+	name = "red doll"
+	path = /obj/item/toy/therapy_red
+	category = "General"
+
+/datum/autolathe/recipe/purple_doll
+	name = "purple doll"
+	path = /obj/item/toy/therapy_purple
+	category = "General"
+
+/datum/autolathe/recipe/blue_doll
+	name = "blue doll"
+	path = /obj/item/toy/therapy_blue
+	category = "General"
+
+/datum/autolathe/recipe/yellow_doll
+	name = "yellow doll"
+	path = /obj/item/toy/therapy_yellow
+	category = "General"
+
+/datum/autolathe/recipe/green_doll
+	name = "green doll"
+	path = /obj/item/toy/therapy_green
+	category = "General"
+
+/datum/autolathe/recipe/water_balloon
+	name = "water balloon"
+	path = /obj/item/toy/water_balloon
+	category = "General"
+
 /datum/autolathe/recipe/coffeecup
 	name = "coffee cup"
 	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup
@@ -673,10 +744,6 @@ var/const/EXTRA_COST_FACTOR = 1.25
 
 /datum/autolathe/recipe/coffeecup/rainbow
 	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/rainbow
-
-/datum/autolathe/recipe/coffeecup/tall
-	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/tall
-	hidden = 1 // Yuki can't be trusted with this.
 
 /datum/autolathe/recipe/coffeecup/NT
 	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/NT

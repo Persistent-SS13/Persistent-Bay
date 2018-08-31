@@ -1,5 +1,5 @@
 #ifndef T_BOARD
-#error T_BOARD macro is not defined but we need it! 
+#error T_BOARD macro is not defined but we need it!
 #endif
 
 /obj/item/weapon/circuitboard/miningdrill
@@ -20,41 +20,37 @@
 	origin_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
 	req_components = list()
 
-//Mining machines, no tech levels since they are simple machines and are essential to any station
-/obj/item/weapon/circuitboard/processing_unit_console
-	name = T_BOARD("Material Processor Console")
-	build_path = /obj/machinery/mineral/processing_unit_console
-	board_type = "machine"
-	origin_tech = list()
-	req_components = list(/obj/item/weapon/stock_parts/console_screen = 1)
+/obj/item/weapon/circuitboard/mineral_processing
+	name = T_BOARD("mineral processing console")
+	build_path = /obj/machinery/computer/mining
+	origin_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
 
-/obj/item/weapon/circuitboard/processing_unit
-	name = T_BOARD("Material Processor")
+//Mining machines, no tech levels since they are simple machines and are essential to any station
+/obj/item/weapon/circuitboard/mining_processor
+	name = T_BOARD("ore processor")
 	build_path = /obj/machinery/mineral/processing_unit
 	board_type = "machine"
 	origin_tech = list()
 	req_components = list(
-							/obj/item/weapon/stock_parts/matter_bin = 1,
-							/obj/item/weapon/stock_parts/micro_laser = 1,
-							/obj/item/device/assembly/igniter = 1)
+		/obj/item/weapon/stock_parts/manipulator = 1,
+		/obj/item/weapon/stock_parts/micro_laser = 2
+		)
 
-/obj/item/weapon/circuitboard/stacking_unit_console
-	name = T_BOARD("Stacking Machine Console")
-	build_path = /obj/machinery/mineral/stacking_unit_console
-	board_type = "machine"
-	origin_tech = list()
-	req_components = list(/obj/item/weapon/stock_parts/console_screen = 1)
-
-/obj/item/weapon/circuitboard/stacking_machine
-	name = T_BOARD("Stacking Machine")
-	build_path = /obj/machinery/mineral/stacking_machine
-	board_type = "machine"
-	origin_tech = list()
-	req_components = list(/obj/item/stack/material/steel = 5)
-
-/obj/item/weapon/circuitboard/unloading_machine
-	name = T_BOARD("Unloading Machine")
+/obj/item/weapon/circuitboard/mining_unloader
+	name = T_BOARD("unloading machine")
 	build_path = /obj/machinery/mineral/unloading_machine
 	board_type = "machine"
 	origin_tech = list()
-	req_components = list(/obj/item/stack/material/steel = 5)
+	req_components = list(
+		/obj/item/weapon/stock_parts/manipulator = 2
+		)
+
+/obj/item/weapon/circuitboard/mining_stacker
+	name = T_BOARD("stacking machine")
+	build_path = /obj/machinery/mineral/stacking_machine
+	board_type = "machine"
+	origin_tech = list()
+	req_components = list(
+		/obj/item/weapon/stock_parts/matter_bin = 1,
+		/obj/item/weapon/stock_parts/manipulator = 1
+		)

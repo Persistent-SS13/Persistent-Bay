@@ -1,3 +1,5 @@
+#ifdef UNIT_TEST
+
 // These tests are intended to verify functionality of overrides in ~unit_test_overrides.dm
 
 /datum/unit_test/override
@@ -76,3 +78,5 @@
 		fail("[log_info_line(W)] failed to create its heaviest object.")
 
 	return 1
+
+#endif

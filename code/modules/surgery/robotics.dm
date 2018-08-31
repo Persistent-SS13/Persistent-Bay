@@ -26,7 +26,7 @@
 /datum/surgery_step/robotics/unscrew_hatch
 	allowed_tools = list(
 		/obj/item/weapon/screwdriver = 100,
-		/obj/item/weapon/coin = 50,
+		/obj/item/weapon/material/coin = 50,
 		/obj/item/weapon/material/kitchen/utensil/knife = 50
 	)
 
@@ -61,7 +61,7 @@
 /datum/surgery_step/robotics/screw_hatch
 	allowed_tools = list(
 		/obj/item/weapon/screwdriver = 100,
-		/obj/item/weapon/coin = 50,
+		/obj/item/weapon/material/coin = 50,
 		/obj/item/weapon/material/kitchen/utensil/knife = 50
 	)
 
@@ -279,7 +279,7 @@
 		if(I.isrobotic() && I.damage > 0)
 			if(I.surface_accessible)
 				return TRUE
-			if(affected.open() >= (affected.encased ? SURGERY_ENCASED : SURGERY_RETRACTED) || affected.hatch_state == HATCH_OPENED)
+			if(affected.how_open() >= (affected.encased ? SURGERY_ENCASED : SURGERY_RETRACTED) || affected.hatch_state == HATCH_OPENED)
 				return TRUE
 
 /datum/surgery_step/robotics/fix_organ_robotic/begin_step(mob/user, mob/living/carbon/human/target, target_zone, obj/item/tool)

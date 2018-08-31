@@ -67,7 +67,6 @@ var/list/admin_verbs_admin = list(
 	/datum/admins/proc/buildaccounts,
 	/datum/admins/proc/retrieve_account,
 	/datum/admins/proc/delete_account,
-	/datum/admins/proc/savechars,
 	/datum/admins/proc/loadnow,			//persistent edit, loadnow loads the station,
 	/client/proc/game_panel,			//game panel, allows to change game-mode etc,
 	/client/proc/cmd_admin_say,			//admin-only ooc chat,

@@ -43,7 +43,8 @@ var/global/list/debug_data = list()
 	var/skip_icon_state = 0
 	var/map_storage_loaded = 0 // this is special instructions for problematic Initialize()
 /mob
-	var/saved_ckey = ""
+	var/stored_ckey = ""
+
 /atom/movable/lighting_overlay
 	should_save = 0
 
@@ -97,7 +98,12 @@ var/global/list/debug_data = list()
 	regenerate_icons()
 	redraw_inv()
 	handle_organs(1)
+
+/datum/proc/before_save()
+	return
+
 /datum/proc/StandardWrite(var/savefile/f)
+	before_save()
 	var/list/saving
 	if(found_vars.Find("[type]"))
 		saving = found_vars["[type]"]
@@ -157,7 +163,7 @@ var/global/list/debug_data = list()
 	if(ckey)
 		to_file(f["ckey"], ckey)
 	else
-		to_file(f["ckey"], saved_ckey)
+		to_file(f["ckey"], stored_ckey)
 
 /area/proc/get_turf_coords()
 	var/list/coord_list = list()
@@ -250,7 +256,7 @@ var/global/list/debug_data = list()
 
 /mob/Read(savefile/f)
 	StandardRead(f)
-	from_file(f["ckey"], saved_ckey)
+	from_file(f["ckey"], stored_ckey)
 
 /turf/Read(savefile/f)
 	StandardRead(f)

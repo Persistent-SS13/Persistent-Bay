@@ -35,7 +35,7 @@ datum/preferences
 	// Persistent Edit, Adding the character list..
 	var/list/character_list = list()
 	var/list/icon_list = list()
-	
+
 	var/bonus_slots = 0
 	var/bonus_notes = ""
 /datum/preferences/New(client/C)
@@ -368,6 +368,35 @@ datum/preferences
 		character.nutrition = rand(140,360)
 
 	return
+
+/datum/preferences/proc/Character(var/ind)
+	if(!fexists(load_path(client.ckey, "[ind].sav")))
+		return
+
+	var/savefile/F = new(load_path(client.ckey, "[ind].sav"))
+	var/mob/M
+	F["mob"] >> M
+	return M
+
+/datum/preferences/proc/CharacterName(var/ind)
+	if(!fexists(load_path(client.ckey, "[ind].sav")))
+		return
+
+	var/savefile/F = new(load_path(client.ckey, "[ind].sav"))
+	var/name
+	F["name"] >> name
+	return name
+
+/datum/preferences/proc/CharacterIcon(var/ind)
+	if(!fexists(load_path(client.ckey, "[ind].sav")))
+		return
+
+	var/savefile/F = new(load_path(client.ckey, "[ind].sav"))
+	var/icon/I
+	F["icon"] >> I
+	I.Scale(16,16)
+	return I
+
 /datum/preferences/proc/delete_character(var/slot)
 	var/path_to = load_path(client.ckey, "")
 	if(!slot) return
@@ -453,3 +482,12 @@ datum/preferences
 /datum/preferences/proc/close_load_dialog(mob/user)
 	user << browse(null, "window=saves")
 	panel.close()
+
+
+/datum/preferences/proc/Slots()
+	var/slots = config.character_slots + bonus_slots
+
+	if(check_rights(R_ADMIN, 0, client))
+		slots += 2
+
+	return slots

@@ -4,7 +4,7 @@ Small, little HP, poisonous.
 
 /mob/living/simple_animal/hostile/voxslug
 	name = "glutslug"
-	desc = "A viscious little creature, it has a mouth of too many teeth and a penchant for blood."
+	desc = "A viscious little creature, it has a mouth of razors and a it writhes like mad it can sense blood."
 	icon_state = "voxslug"
 	icon_living = "voxslug"
 	item_state = "voxslug"
@@ -13,21 +13,26 @@ Small, little HP, poisonous.
 	response_disarm = "gently pushes aside"
 	response_harm   = "stamps on"
 	destroy_surroundings = 0
-	health = 5
-	maxHealth = 5
-	speed = 3
+	health = 8
+	maxHealth = 8
+	speed = 1 // mus go faster...
 	move_to_delay = 0
 	density = 0
-	min_gas = null
 	mob_size = MOB_MINISCULE
 	pass_flags = PASSTABLE
+	holder_type = /obj/item/weapon/holder/voxslug
+
 	melee_damage_lower = 5
 	melee_damage_upper = 10
-	holder_type = /obj/item/weapon/holder/voxslug
-	faction = "asteroid"
-	min_gas = null
+	attacktext = "bitten"
+	attack_sound = 'sound/weapons/bite.ogg'
+
+	min_gas = null // Immune to space
 	max_gas = null
 	minbodytemp = 0
+
+	faction = "asteroid"
+
 /mob/living/simple_animal/hostile/voxslug/Move()
 	. = ..()
 	if(.)
@@ -51,6 +56,9 @@ Small, little HP, poisonous.
 			L += M
 
 	return L
+
+/mob/living/simple_animal/hostile/voxslug/Allow_Spacemove(var/check_drift = 0)
+	return 1 // Ripped from space carp, no more floating
 
 /mob/living/simple_animal/hostile/voxslug/get_scooped(var/mob/living/carbon/grabber)
 //	if(grabber.species.get_bodytype() != SPECIES_VOX)

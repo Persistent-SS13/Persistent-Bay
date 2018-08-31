@@ -355,11 +355,12 @@ GLOBAL_LIST_EMPTY(all_business)
 	connected_laces |= stack
 	stack.business_mode = 1
 	stack.connected_business = src.name
+	stack.duty_status = 1
 /datum/small_business/proc/clock_out(var/obj/item/organ/internal/stack/stack)
 	connected_laces -= stack
 	stack.business_mode = 0
 	stack.connected_business = ""
-
+	stack.duty_status = 0
 /datum/small_business/proc/proposal_approved(var/datum/proposal/proposal)
 	switch(proposal.func)
 		if(1)

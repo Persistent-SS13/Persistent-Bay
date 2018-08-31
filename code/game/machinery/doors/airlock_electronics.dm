@@ -41,7 +41,7 @@
 /obj/item/weapon/airlock_electronics/business/ui_act(action, params)
 	switch(action)
 		if("clear")
-			conf_access = list()
+			business_access = list()
 			one_access = 0
 			return TRUE
 		if("one_access")
@@ -49,7 +49,7 @@
 			return TRUE
 		if("set")
 			var/access = params["access"]
-			if (!(access in conf_access))
+			if (!(access in business_access))
 				business_access += access
 			else
 				business_access -= access
@@ -67,7 +67,7 @@
 		if("lock")
 			if(!lockable)
 				return TRUE
-			conf_access.Cut()
+			business_access.Cut()
 			connected_faction = null
 			business_name = null
 			locked = 1

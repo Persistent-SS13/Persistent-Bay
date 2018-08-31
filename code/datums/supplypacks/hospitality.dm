@@ -157,5 +157,5 @@
 					/obj/item/clothing/gloves/boxing
 					/obj/item/weapon/basketball = 2)
 	cost = 10
-	containertype = /obj/structure/largecrate
-	containername = "\improper coolant tank crate"
+	containertype = /obj/structure/closet/athletic_mixed
+	containername = "\improper athletics crate"

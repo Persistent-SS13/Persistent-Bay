@@ -78,5 +78,8 @@ var/datum/controller/employment_controller/employment_controller
 		for(var/datum/world_faction/faction in GLOB.all_world_factions)
 			faction.unpaid = list()
 			faction.pay_debt()
+		for(var/datum/small_business/business in GLOB.all_business)
+			business.unpaid = list()
+			business.pay_debt()
 
 

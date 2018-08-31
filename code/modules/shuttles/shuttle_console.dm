@@ -18,6 +18,7 @@
 	var/locked_to = "" // either the real_name or the faction_uid
 	var/ready = 0 // this is set to 1 to confirm construction is completed, and then the dock finalizes it
 	var/obj/machinery/docking_beacon/dock
+
 /obj/machinery/computer/bridge_computer/attack_hand(user as mob)
 	if(..(user))
 		return

@@ -10,13 +10,7 @@
 //returns 1 if this mob has sufficient access to use this object
 /obj/proc/allowed(mob/M)
 	//check if it doesn't require any access at all
-	if(src.check_access(null))
-		return 1
 	if(!istype(M))
-		return 0
-	if(req_access_personal)
-		if(M.get_id_name() == req_access_personal)
-			return 1
 		return 0
 	if(req_access_business)
 		var/datum/small_business/business = get_business(req_access_business)
@@ -36,6 +30,15 @@
 				if(pass && one_pass)
 					return 1
 			return 0
+	if(req_access_personal)
+		if(M.get_id_name() == req_access_personal)
+			return 1
+		return 0
+		
+	if(src.check_access(null))
+		return 1
+	
+
 	return check_access_list(M.GetAccess(req_access_faction))
 
 /atom/movable/proc/GetAccess(var/faction_uid)

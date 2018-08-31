@@ -1302,7 +1302,7 @@ About the new airlock wires panel:
 		secured_wires = electronics.secure
 		if(electronics.business_name)
 			if(electronics.one_access)
-				req_one_access_business_list = src.electronics.business_access
+				req_access_business_list = src.electronics.business_access
 
 			else
 				req_one_access_business_list = src.electronics.business_access

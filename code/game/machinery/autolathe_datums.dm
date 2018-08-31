@@ -42,6 +42,11 @@ var/const/EXTRA_COST_FACTOR = 1
 	path = /obj/item/device/flashlight
 	category = "General"
 
+/datum/autolathe/recipe/butcherknife
+	name = "butcher's knife
+	path = /obj/item/weapon/material/knife/butch
+	category = "General"
+
 /datum/autolathe/recipe/maglight
 	name = "maglight"
 	path = /obj/item/device/flashlight/maglight

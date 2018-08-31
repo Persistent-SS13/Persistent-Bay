@@ -145,27 +145,27 @@
 				for(var/i=1, i <= create_ore, i++)
 					if(metal == "phoron")
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 5
+						zone.asteroid_aggression += 10
 						zone.asteroid_targets |= src
 					else if(metal == "bluespace crystal")
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 25
+						zone.asteroid_aggression += 50
 						zone.asteroid_targets |= src
 					else if(metal == "platinum")
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 0.5
+						zone.asteroid_aggression += 1
 						zone.asteroid_targets |= src
 					else if(metal == "diamond")
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 0.5
+						zone.asteroid_aggression += 1
 						zone.asteroid_targets |= src
 					else if(metal == "pitchblende")
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 0.5
+						zone.asteroid_aggression += 1
 						zone.asteroid_targets |= src
 					else if(metal == "gold")
 						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 0.5
+						zone.asteroid_aggression += 1
 						zone.asteroid_targets |= src
 
 					if(metal == "bluespace crystal")

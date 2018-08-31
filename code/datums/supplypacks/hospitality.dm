@@ -149,12 +149,12 @@
 	
 /decl/hierarchy/supply_pack/hospitality/athletic
 	name = "Athletics Crate"
-	contains = list(/obj/item/clothing/under/shorts/blue
-					/obj/item/clothing/under/shorts/red
-					/obj/item/clothing/under/shorts/green
-					/obj/item/clothing/under/shorts/black
-					/obj/item/clothing/gloves/boxing/green
-					/obj/item/clothing/gloves/boxing
+	contains = list(/obj/item/clothing/under/shorts/blue,
+					/obj/item/clothing/under/shorts/red,
+					/obj/item/clothing/under/shorts/green,
+					/obj/item/clothing/under/shorts/black,
+					/obj/item/clothing/gloves/boxing/green,
+					/obj/item/clothing/gloves/boxing,
 					/obj/item/weapon/basketball = 2)
 	cost = 10
 	containertype = /obj/structure/closet/athletic_mixed

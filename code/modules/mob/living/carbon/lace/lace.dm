@@ -14,6 +14,7 @@
 	container = loc
 	var/datum/action/lace/laceaction = new(container)
 	laceaction.Grant(src)
+	default_language = all_languages[LANGUAGE_GALCOM]
 	..()
 /mob/living/carbon/lace/after_load()
 	if(container)

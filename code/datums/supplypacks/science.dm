@@ -22,3 +22,16 @@
 	cost = 16
 	containertype = /obj/structure/largecrate
 	containername = "\improper coolant tank crate"
+	
+/decl/hierarchy/supply_pack/science/rnd
+	name = "Research and Development Boards"
+	contains = list(/obj/item/weapon/circuitboard/rdserver
+					/obj/item/weapon/circuitboard/destructive_analyzer
+					/obj/item/weapon/circuitboard/autolathe
+					/obj/item/weapon/circuitboard/protolathe
+					/obj/item/weapon/circuitboard/circuit_imprinter
+					/obj/item/weapon/circuitboard/rdservercontrol
+					/obj/item/weapon/circuitboard/rdconsole)
+	cost = 300
+	containertype = /obj/structure/largecrate
+	containername = "\improper research startup crate"

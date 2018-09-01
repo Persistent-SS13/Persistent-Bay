@@ -153,9 +153,9 @@ var/datum/controller/aggression_controller/aggression_controller
 
 
 				if(3)
-					switch(pick(list(1,1,1,1,2,2,3)))
+					switch(pick(list(1,1,1,2,3)))
 						if(1)
-							var/slugs = rand(2,5)
+							var/slugs = rand(3,6)
 							for(var/i=0; i<slugs; i++)
 								var/turf/T = get_asteroid_spawn(A)
 								spawn_glutslug(T)
@@ -165,7 +165,7 @@ var/datum/controller/aggression_controller/aggression_controller
 							T = get_asteroid_spawn(A)
 							spawn_greed(T)
 						if(3)
-							var/slugs = rand(3,5)
+							var/slugs = rand(3,6)
 							var/turf/T = get_asteroid_spawn(A)
 							spawn_greed(T)
 							for(var/i=0; i<slugs; i++)

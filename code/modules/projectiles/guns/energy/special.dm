@@ -118,7 +118,7 @@
 	desc = "A custom-built weapon of some kind."
 	icon_state = "xray"
 	projectile_type = /obj/item/projectile/beam/mindflayer
-/*
+
 /obj/item/weapon/gun/energy/toxgun
 	name = "phoron pistol"
 	desc = "A specialized firearm designed to fire lethal bolts of phoron."
@@ -126,7 +126,7 @@
 	w_class = ITEM_SIZE_NORMAL
 	origin_tech = list(TECH_COMBAT = 5, TECH_PHORON = 4)
 	projectile_type = /obj/item/projectile/energy/phoron
-*/
+
 /* Staves */
 
 /obj/item/weapon/gun/energy/staff
@@ -199,11 +199,11 @@ obj/item/weapon/gun/energy/staff/focus
 	var/toolspeed = 0.7 //plasmacutters can be used as welders for a few things, and are faster than standard welders
 	fire_sound = 'sound/weapons/pulse.ogg'
 	fire_sound_text = "plasma blast"
-	projectile_type= /obj/item/projectile/plasma
+	projectile_type = /obj/item/projectile/plasma
 	charge_cost = 10 //How much energy is needed to fire.
 	max_shots = 30 //Determines the capacity of the weapon's power cell. Specifying a cell_type overrides this value.
-	sharp=1
-	edge=1
+	sharp = 1
+	edge = 1
 
 
 /obj/item/weapon/gun/energy/plasmacutter/attackby(obj/item/A, mob/user)

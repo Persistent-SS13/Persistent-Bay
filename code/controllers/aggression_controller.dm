@@ -125,7 +125,7 @@ var/datum/controller/aggression_controller/aggression_controller
 				if(3)
 					switch(pick(list(1,1,1,2)))
 						if(1)
-							var/slugs = rand(1,4)
+							var/slugs = rand(2,4)
 							for(var/i=0; i<slugs; i++)
 								var/turf/T = get_asteroid_spawn(A)
 								spawn_glutslug(T)
@@ -153,16 +153,25 @@ var/datum/controller/aggression_controller/aggression_controller
 
 
 				if(3)
-					switch(pick(list(1,1,1,2)))
+					switch(pick(list(1,1,1,2,3))) // 3 MEANS FUCK YOU
 						if(1)
-							var/slugs = rand(2,4)
+							var/slugs = rand(3,6)
 							for(var/i=0; i<slugs; i++)
 								var/turf/T = get_asteroid_spawn(A)
 								spawn_glutslug(T)
 						if(2)
 							var/turf/T = get_asteroid_spawn(A)
 							spawn_greed(T)
-
+							T = get_asteroid_spawn(A)
+							spawn_greed(T)
+						if(3) // FUCK YOU
+							var/slugs = rand(3,6)
+							var/turf/T = get_asteroid_spawn(A)
+							spawn_greed(T)
+							for(var/i=0; i<slugs; i++)
+								var/turf/Te = get_asteroid_spawn(A)
+								spawn_glutslug(Te)
+							
 /datum/aggression_machine/Process()
 	if(round_duration_in_ticks > checkbuffer)
 		checkbuffer = round_duration_in_ticks + rand(10 SECONDS, 25 SECONDS)
@@ -198,7 +207,7 @@ var/datum/controller/aggression_controller/aggression_controller
 						if(potentials.len)
 							execute_asteroid_aggression(pick_n_take(potentials),4)
 			asteroid_aggression = min(asteroid_aggression, 1000)
-			asteroid_aggression = max(asteroid_aggression-5,0)
+			asteroid_aggression = max(asteroid_aggression-1,0)
 		for(var/atom/movable/A in asteroid_targets)
 			if(!(A.z in affecting_zlevels) || !istype(A.loc, /turf/simulated/asteroid))
 				asteroid_targets -= A

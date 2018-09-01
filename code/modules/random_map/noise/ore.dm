@@ -85,7 +85,7 @@
 				T.resources["tungsten"] = 0
 				T.resources["platinum"] = 0
 				T.resources["hydrogen"] = 0
-				if(prob(1)) // 1 percent
+				if(prob(0.3)) // 1 percent
 					T.resources["bluespace crystal"] = 1
 				else
 					T.resources["bluespace crystal"] = 0
@@ -107,7 +107,7 @@
 				T.resources["phoron"] =   rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
 				T.resources["platinum"] =   rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
 				T.resources["hydrogen"] = rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
-				if(prob(5)) // 5 percent
+				if(prob(1)) // 1 percent
 					T.resources["bluespace crystal"] = 1
 				else
 					T.resources["bluespace crystal"] = 0

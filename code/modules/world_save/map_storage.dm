@@ -47,9 +47,13 @@ var/global/list/debug_data = list()
 /atom/movable/lighting_overlay
 	should_save = 0
 
+
+	
 /turf/space
 	map_storage_saved_vars = "contents"
 
+	
+	
 /turf/space/after_load()
 	..()
 	for(var/atom/movable/lighting_overlay/overlay in contents)
@@ -63,6 +67,9 @@ var/global/list/debug_data = list()
 /obj
 	map_storage_saved_vars = "density;icon_state;name;pixel_x;pixel_y;contents;dir"
 
+/obj/after_load()
+	..()
+	update_icon()
 /area
 	map_storage_saved_vars = ""
 

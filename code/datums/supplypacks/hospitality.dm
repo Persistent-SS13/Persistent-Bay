@@ -155,7 +155,7 @@
 					/obj/item/clothing/under/shorts/black,
 					/obj/item/clothing/gloves/boxing/green,
 					/obj/item/clothing/gloves/boxing,
-					/obj/item/weapon/basketball = 2)
+					/obj/item/weapon/beach_ball/holoball = 2)
 	cost = 10
 	containertype = /obj/structure/closet/athletic_mixed
 	containername = "\improper athletics crate"

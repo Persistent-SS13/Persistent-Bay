@@ -13,9 +13,9 @@ Small, little HP, poisonous.
 	response_disarm = "gently pushes aside"
 	response_harm   = "stamps on"
 	destroy_surroundings = 0
-	health = 8
-	maxHealth = 8
-	speed = 1 // mus go faster...
+	health = 6
+	maxHealth = 6
+	speed = 2 // May return back to 3, we'll see if 2 is enough.
 	move_to_delay = 0
 	density = 0
 	mob_size = MOB_MINISCULE

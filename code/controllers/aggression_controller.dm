@@ -153,9 +153,9 @@ var/datum/controller/aggression_controller/aggression_controller
 
 
 				if(3)
-					switch(pick(list(1,1,1,2,3))) // 3 MEANS FUCK YOU
+					switch(pick(list(1,1,1,1,2,2,3)))
 						if(1)
-							var/slugs = rand(3,6)
+							var/slugs = rand(2,5)
 							for(var/i=0; i<slugs; i++)
 								var/turf/T = get_asteroid_spawn(A)
 								spawn_glutslug(T)
@@ -164,14 +164,14 @@ var/datum/controller/aggression_controller/aggression_controller
 							spawn_greed(T)
 							T = get_asteroid_spawn(A)
 							spawn_greed(T)
-						if(3) // FUCK YOU
-							var/slugs = rand(3,6)
+						if(3)
+							var/slugs = rand(3,5)
 							var/turf/T = get_asteroid_spawn(A)
 							spawn_greed(T)
 							for(var/i=0; i<slugs; i++)
 								var/turf/Te = get_asteroid_spawn(A)
 								spawn_glutslug(Te)
-							
+
 /datum/aggression_machine/Process()
 	if(round_duration_in_ticks > checkbuffer)
 		checkbuffer = round_duration_in_ticks + rand(10 SECONDS, 25 SECONDS)

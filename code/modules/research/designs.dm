@@ -552,7 +552,7 @@ other types of metals and chemistry for reagents).
 	materials = list(DEFAULT_WALL_MATERIAL = 5000, "glass" = 3000, "silver" = 2000, "gold" = 2000, "diamond" = 6000)
 	build_path = /obj/item/weapon/gun/energy/laser
 	sort_string = "TAAAB"
-
+/*
 /datum/design/item/weapon/nuclear_gun
 	id = "nuclear_gun"
 	desc = "Self-recharging energy weapon powered by a nuclear core."
@@ -568,7 +568,7 @@ other types of metals and chemistry for reagents).
 	materials = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 1000, "silver" = 2000, "diamond" = 6000)
 	build_path = /obj/item/weapon/gun/energy/lasercannon
 	sort_string = "TAAAC"
-
+*/
 /datum/design/item/weapon/phoronpistol
 	id = "ppistol"
 	req_tech = list(TECH_COMBAT = 5, TECH_PHORON = 4)

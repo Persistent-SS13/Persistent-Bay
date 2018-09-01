@@ -4,7 +4,7 @@ Small, little HP, poisonous.
 
 /mob/living/simple_animal/hostile/voxslug
 	name = "glutslug"
-	desc = "A viscious little creature, it has a mouth of too many teeth and a penchant for blood."
+	desc = "A viscious little creature, it has a mouth of razors and a it writhes like mad it can sense blood."
 	icon_state = "voxslug"
 	icon_living = "voxslug"
 	item_state = "voxslug"
@@ -13,9 +13,9 @@ Small, little HP, poisonous.
 	response_disarm = "gently pushes aside"
 	response_harm   = "stamps on"
 	destroy_surroundings = 0
-	health = 5
-	maxHealth = 5
-	speed = 3
+	health = 8
+	maxHealth = 8
+	speed = 1 // mus go faster...
 	move_to_delay = 0
 	density = 0
 	mob_size = MOB_MINISCULE

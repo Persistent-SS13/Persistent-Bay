@@ -48,11 +48,11 @@
 	make_blood()
 
 /mob/living/carbon/human/Destroy()
-	if(get_turf(src))
+	for(var/organ in organs)
+		if(!src.loc || istype(organ, /obj/item/organ/internal/stack))
+			qdel(organ)
 	GLOB.human_mob_list -= src
 	worn_underwear = null
-	for(var/organ in organs)
-		qdel(organ)
 	return ..()
 
 /mob/living/carbon/human/Stat()

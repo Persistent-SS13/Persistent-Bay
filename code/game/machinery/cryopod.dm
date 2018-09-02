@@ -257,7 +257,7 @@
 		log_and_message_admins("Warning! [key]'s [occupant] failed to find a save_slot, and is picking one!")
 		while(fexists(load_path(key, "[dir].sav")))
 			dir++
-	message_admins("[load_path(key, "[dir].sav")] and [key] and [dir]")
+			
 	var/savefile/F = new(load_path(key, "[dir].sav"))
 	var/icon/I = getFlatIcon(occupant, SOUTH, always_use_defdir = 1)
 	I.Scale(16,16)

@@ -80,7 +80,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/validate_time = 0
 	var/worked = 0
 	var/expenses = 0
-	
+	var/datum/computer_file/data/email_account/email
 	
 /datum/computer_file/crew_record/New()
 	..()

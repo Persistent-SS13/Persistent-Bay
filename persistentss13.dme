@@ -1446,7 +1446,6 @@
 #include "code\modules\ext_scripts\irc.dm"
 #include "code\modules\factions\bluespace_satellite.dm"
 #include "code\modules\factions\faction.dm"
-#include "code\modules\factions\frontier_beacon.dm"
 #include "code\modules\flufftext\Dreaming.dm"
 #include "code\modules\flufftext\TextFilters.dm"
 #include "code\modules\food\recipes_microwave.dm"

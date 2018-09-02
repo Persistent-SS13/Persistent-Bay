@@ -376,7 +376,12 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 // This function can not be undone; do not call this unless you are sure
 // Also make sure there is a valid control computer
 /obj/machinery/cryopod/proc/despawn_occupant()
-	GLOB.all_cryo_mobs |= occupant
+	if(istype(occupant, /mob/living/carbon/lace))
+		var/mob/living/carbon/lace/lacemob = occupant
+		lacemob.loc = lacemob.container
+		lacemob.container.loc = null
+	else
+		occupant.loc = null
 	if(occupant && occupant.ckey)
 		var/save_path = load_path(occupant.ckey, "")
 		if(fexists("[save_path][occupant.save_slot].sav"))
@@ -385,14 +390,6 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 		f << occupant
 	if(occupant.client && occupant.client.prefs)
 		occupant.client.prefs.load_characters()
-	if(istype(occupant, /mob/living/carbon/lace))
-		var/mob/living/carbon/lace/lacemob = occupant
-		lacemob.loc = lacemob.container
-		lacemob.container.loc = null
-	else
-		occupant.loc = null
-	
-	
 	var/mob/new_player/M = new /mob/new_player()
 	M.loc = null
 	if(occupant.ckey)
@@ -408,7 +405,7 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 
 	announce.autosay("[occupant.real_name], [role_alt_title], [on_store_message]", "[on_store_name]")
 	visible_message("<span class='notice'>\The [initial(name)] hums and hisses as it moves [occupant.real_name] into storage.</span>", 3)
-	
+	GLOB.all_cryo_mobs |= occupant
 	set_occupant(null)
 	icon_state = base_icon_state
 

@@ -47,8 +47,9 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	robotize()
 
 /obj/item/organ/internal/stack/Destroy()
-	loc = get_turf(loc)
-	return QDEL_HINT_LETMELIVE
+	if(lacemob)
+		loc = get_turf(loc)
+		return QDEL_HINT_LETMELIVE
 //	GLOB.neural_laces -= src
 //	. = ..()
 

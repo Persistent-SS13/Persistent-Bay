@@ -1,91 +1,5 @@
 
-GLOBAL_LIST_EMPTY(all_cryo_mobs)
-/*
- * Cryogenic refrigeration unit. Basically a despawner.
- */
-
-//Main cryopod console.
-
-/obj/machinery/computer/cryopod
-	name = "cryogenic oversight console"
-	desc = "An interface between crew and the cryogenic storage oversight systems."
-	icon = 'icons/obj/Cryogenic2.dmi'
-	icon_state = "cellconsole"
-	circuit = /obj/item/weapon/circuitboard/cryopodcontrol
-	density = 0
-	interact_offline = 1
-
-	//Used for logging people entering cryosleep and important items they are carrying.
-	var/list/frozen_crew = list()
-	var/list/_admin_logs = list() // _ so it shows first in VV
-
-	var/storage_type = "crewmembers"
-	var/storage_name = "Cryogenic Oversight Control"
-	var/allow_items = 1
-
-
-/obj/machinery/computer/cryopod/robot
-	name = "robotic storage console"
-	desc = "An interface between crew and the robotic storage systems."
-	icon = 'icons/obj/robot_storage.dmi'
-	icon_state = "console"
-	circuit = /obj/item/weapon/circuitboard/robotstoragecontrol
-
-	storage_type = "cyborgs"
-	storage_name = "Robotic Storage Control"
-	allow_items = 0
-
-
-/obj/machinery/computer/cryopod/attack_ai()
-	src.attack_hand()
-
-
-/obj/machinery/computer/cryopod/attack_hand(mob/user = usr)
-	if(stat & (NOPOWER|BROKEN))
-		return
-
-	user.set_machine(src)
-	src.add_fingerprint(usr)
-
-	var/dat
-
-	if (!( ticker ))
-		return
-
-	dat += "<hr/><br/><b>[storage_name]</b><br/>"
-	dat += "<i>Welcome, [user.real_name].</i><br/><br/><hr/>"
-	dat += "<a href='?src=\ref[src];log=1'>View storage log</a>.<br>"
-
-	user << browse(dat, "window=cryopod_console")
-	onclose(user, "cryopod_console")
-
-
-/obj/machinery/computer/cryopod/OnTopic(user, href_list, state)
-	src.add_fingerprint(user)
-
-	if(href_list["log"])
-		var/dat = "<b>Recently stored [storage_type]</b><br/><hr/><br/>"
-		for(var/person in frozen_crew)
-			dat += "[person]<br/>"
-		dat += "<hr/>"
-		show_browser(user, dat, "window=cryolog")
-		. = TOPIC_REFRESH
-
-	attack_hand(user)
-
-
-/obj/item/weapon/circuitboard/cryopodcontrol
-	name = "Circuit board (Cryogenic Oversight Console)"
-	build_path = /obj/machinery/computer/cryopod
-	origin_tech = list(TECH_DATA = 3)
-
-
-/obj/item/weapon/circuitboard/robotstoragecontrol
-	name = "Circuit board (Robotic Storage Console)"
-	build_path = /obj/machinery/computer/cryopod/robot
-	origin_tech = list(TECH_DATA = 3)
-
-//Cryopods themselves.
+#define allowedOccupants list(/mob/living/carbon/human, /mob/living/silicon/robot, /obj/item/organ/internal/stack)
 
 /obj/machinery/cryopod
 	name = "cryogenic freezer"
@@ -95,30 +9,16 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	density = 1
 	anchored = 1
 	dir = WEST
-
-	var/base_icon_state = "body_scanner_0"
-	var/occupied_icon_state = "body_scanner_1"
-	var/on_store_message = "has entered long-term storage."
-	var/on_store_name = "Cryogenic Oversight"
-	var/on_enter_occupant_message = "You feel cool air surround you. You go numb as your senses turn inward."
-	var/allow_occupant_types = list(/mob/living/carbon/human, /mob/living/silicon/robot, /mob/living/carbon/lace)
-	var/disallow_occupant_types = list()
-
-	var/mob/occupant = null       // Person waiting to be despawned.
-	var/time_till_despawn = 1 MINUTE  // 3 minutes till despawn
-	var/time_entered = 0          // Used to keep track of the safe period.
-	var/obj/item/device/radio/intercom/announce //
-
-	var/obj/machinery/computer/cryopod/control_computer
-	var/last_no_computer_message = 0
-	var/super_locked = 1
-	req_access = list(core_access_command_programs)
-	var/datum/world_faction/faction
+	req_access = core_access_command_programs
 
 	var/network = "default"
-	
+
+	var/tmp/timeEntered = 0
+	var/tmp/atom/movable/occupant
+
 /obj/machinery/cryopod/New()
 	..()
+	GLOB.cryopods |= src
 	component_parts = list()
 	component_parts += new /obj/item/weapon/circuitboard/cryopod(src)
 	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
@@ -126,466 +26,248 @@ GLOBAL_LIST_EMPTY(all_cryo_mobs)
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
 	RefreshParts()
 
-/obj/machinery/cryopod/attackby(var/obj/item/O as obj, var/mob/user as mob)
-	if(!occupant)
-		if(default_deconstruction_screwdriver(user, O))
-			return
-		if(default_deconstruction_crowbar(user, O))
-			return
-		if(istype(O, /obj/item/organ/internal/stack))
-			var/obj/item/organ/internal/stack/lace = O
-			if(!lace.lacemob)
-				to_chat(user, "This lace is inert.")
-				return 0
-			if(!req_access_faction || req_access_faction == "")
-				to_chat(usr, "<span class='notice'><B>\The [src] is not connected to a network.</B></span>")
-				return
-			user.visible_message("<span class='notice'>\The [user] begins placing \the [lace] into \the [src].</span>", "<span class='notice'>You start placing \the [lace] into \the [src].</span>")
-			if(!do_after(user, 30, src))
-				return
-			if(src.occupant)
-				to_chat(usr, "<span class='notice'><B>\The [src] is in use.</B></span>")
-				return
-			if(!lace.lacemob)
-				to_chat(user, "This lace is inert.")
-				return 0
-			set_occupant(lace.lacemob)
-			icon_state = occupied_icon_state
-			lace.lacemob.spawn_loc = req_access_faction
-			lace.loc = src
-			to_chat(lace.lacemob, "<span class='notice'>[on_enter_occupant_message]</span>")
-			to_chat(lace.lacemob, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
-			time_entered = world.time
-			src.add_fingerprint(user)
-	if(isMultitool(O))
-		to_chat(user, "<span class='notice'>\The [src] was [find_control_computer() ? "" : "unable to be"] linked to a control computer</span>")
+/obj/machinery/cryopod/Destroy()
+	for(var/atom/movable/A in InsertedContents())
+		A.forceMove(get_turf(src))
+	. = ..()
 
-	if(istype(O, /obj/item/grab))
-		var/obj/item/grab/grab = O
-		if(occupant)
-			to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
-			return
-
-		if(!ismob(grab.affecting))
-			return
-
-		if(!check_occupant_allowed(grab.affecting))
-			return
-
-		var/willing = null //We don't want to allow people to be forced into despawning.
-		var/mob/M = O:affecting
-
-		willing = 1
-		if(willing)
-
-			visible_message("[user] starts putting [grab.affecting:name] into \the [src].", 3)
-
-			if(do_after(user, 20, src))
-				if(!M || !grab || !grab.affecting) return
-
-			set_occupant(M)
-
-			var/turf/location = get_turf(src)
-			log_admin("[key_name_admin(M)] has entered a stasis pod. (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[location.x];Y=[location.y];Z=[location.z]'>JMP</a>)")
-			message_admins("<span class='notice'>[key_name_admin(M)] has entered a stasis pod.</span>")
-
-			//Despawning occurs when process() is called with an occupant without a client.
-			src.add_fingerprint(M)		
+/obj/machinery/cryopod/before_save()
+	if(occupant)
+		despawnOccupant()
 	..()
 
-/obj/machinery/cryopod/attack_hand(mob/user = usr)
-	if(stat & (NOPOWER|BROKEN))
+/obj/machinery/cryopod/attackby(var/obj/item/O, var/mob/user = usr)
+	src.add_fingerprint(user)
+
+	if(!req_access_faction)
+		to_chat(user, "<span class='notice'>\The [src] hasn't been connected to a faction.</span>")
+		return
+
+	if(occupant)
+		to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
+		return
+
+	if(istype(O, /obj/item/grab))
+		var/obj/item/grab/G = O
+		if(checkOccupantAllowed(G.affecting))
+			user.visible_message("<span class='notice'>\The [user] begins placing \the [G.affecting] into \the [src].</span>", "<span class='notice'>You start placing \the [G.affecting] into \the [src].</span>")
+			if(do_after(user, 20, src))
+				if(!G || !G.affecting) return
+			insertOccupant(G.affecting, user)
+
+	if(istype(O, /obj/item/organ/internal/stack))
+		insertOccupant(O, user)
+
+	if(InsertedContents())
+		to_chat(user, "<span class='notice'>\The [src] must be emptied of all stored users first.</span>")
+		return
+
+	if(default_deconstruction_screwdriver(user, O))
+		return
+
+	if(default_deconstruction_crowbar(user, O))
+		return
+
+/obj/machinery/cryopod/attack_hand(var/mob/user = usr)
+	if(stat)	// If there are any status flags, it shouldn't be opperable
 		return
 
 	user.set_machine(src)
-	src.add_fingerprint(usr)
+	src.add_fingerprint(user)
 
-	var/dat
-
-	if (!( ticker ))
+	if(!ticker)
 		return
-	if(req_access_faction && req_access_faction != "" || (faction && faction.uid != req_access_faction))
-		faction = get_faction(req_access_faction)
-	dat += "<hr/><br/><b>Cryopod Control</b><br/>"
-	dat += "This cryopod is connected to: [faction ? faction.name : "Not connected"]<br/><br/><hr/>"
-	if(faction)
-		dat += "It's cryonetwork is set to [network]<br><br>"
-		dat += "<a href='?src=\ref[src];enter=1'>Enter pod</a><br><a href='?src=\ref[src];eject=1'>Eject Occupant</a><br><br>"
-		dat += "Those authorized can <a href='?src=\ref[src];disconnect=1'>disconnect this pod from the logistics network</a> or <a href='?src=\ref[src];connect_net=1'>connect to a different cryonetwork</a>."
-	else
-		dat += "Those authorized can <a href='?src=\ref[src];connect=1'>connect this pod to a network</a>"
 
-	user << browse(dat, "window=cryopod")
+	var/datum/world_faction/faction = get_faction(req_access_faction)
+
+	var/data[]
+	data += "<hr><br><b>Cryopod Control</b></br>"
+	data += "This cryopod is [faction ? "connected to " + faction.name : "Not Connected"]<br><hr>"
+	if(faction)
+		data += "It's cryopod network is set to [network]<br><br>"
+		data += "<a href='?src=\ref[src];enter=1'>Enter Pod</a><br>"
+		data += "<a href='?src=\ref[src];eject=1'>Eject Occupant</a><br><br>"
+		data += "Those authorized can <a href='?src=\ref[src];disconnect=1'>disconnect this pod from the logistics network</a> or <a href='?src=\ref[src];connect_net=1'>connect to a different cryonetwork</a>."
+	else
+		data += "Those authorized can <a href='?src=\ref[src];connect=1'>connect this pod to a network</a>"
+
+	user << browse(data, "window=cryopod")
 	onclose(user, "cryopod")
 
 /obj/machinery/cryopod/MouseDrop_T(var/mob/target, var/mob/user)
-	if(!istype(target))
-		return
-	if (!CanMouseDrop(target, user))
-		return
-	if (src.occupant)
-		to_chat(user, "<span class='warning'>The cryopod is already occupied!</span>")
-		return
-	if (target.buckled)
-		to_chat(user, "<span class='warning'>Unbuckle the subject before attempting to move them.</span>")
-		return
-	if(!req_access_faction || req_access_faction == "")
-		to_chat(usr, "<span class='notice'><B>\The [src] is not connected to a network.</B></span>")
-		return
-	if(!check_occupant_allowed(target))
-		return
-	user.visible_message("<span class='notice'>\The [user] begins placing \the [target] into \the [src].</span>", "<span class='notice'>You start placing \the [target] into \the [src].</span>")
-	if(!do_after(user, 30, src))
-		return
-	if(src.occupant)
-		to_chat(usr, "<span class='notice'><B>\The [src] is in use.</B></span>")
-		return
-	target.stop_pulling()
-	if(target.client)
-		target.client.perspective = EYE_PERSPECTIVE
-		target.client.eye = src
-	target.forceMove(src)
-	set_occupant(target)
-	icon_state = occupied_icon_state
-	target.spawn_loc = req_access_faction
-	to_chat(target, "<span class='notice'>[on_enter_occupant_message]</span>")
-	to_chat(target, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
-	time_entered = world.time
-	src.add_fingerprint(user)
-
-
-
-/obj/machinery/cryopod/Topic(href, href_list)
-	if((. = ..()))
+	if(!CanMouseDrop(target, user))
 		return
 
-	var/mob/user = usr
+	if(occupant)
+		to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
+		return
 
-	src.add_fingerprint(user)
+	if(checkOccupantAllowed(target))
+		user.visible_message("<span class='notice'>\The [user] begins placing \the [target] into \the [src].</span>", "<span class='notice'>You start placing \the [target] into \the [src].</span>")
+		if(do_after(user, 30, src))
+			insertOccupant(target, user)
 
+/obj/machinery/cryopod/OnTopic(var/mob/user = usr, href_list)
 	if(href_list["enter"])
-		if(faction)
-			move_inside_proc(usr)
+		insertOccupant(user, user)
 	if(href_list["eject"])
-		eject_proc(usr)
-	if(href_list["disconnect"])
-		if(allowed(usr))
-			faction = null
-			req_access_faction = null
+		ejectOccupant()
 	if(href_list["connect"])
-		faction = get_faction(usr.GetFaction())
-		if(faction)
-			req_access_faction = faction.uid
-			if(!allowed(usr))
-				faction = null
-				req_access_faction = ""
-			else
-				req_access_faction = faction.uid
+		req_access_faction = user.GetFaction()
+		if(!allowed(user))
+			req_access_faction = ""
+	if(href_list["disconnect"])
+		if(allowed(user))
+			req_access_faction = ""
 	if(href_list["connect_net"])
-		if(!faction) return
-		if(allowed(usr))
-			var/list/choices = faction.cryo_networks.Copy()
+		if(allowed(user))
+			var/list/choices = get_faction(req_access_faction).cryo_networks.Copy()
 			choices |= "default"
 			var/choice = input(usr,"Choose which cryo network [src] should use.","Choose Cryo-net",null) as null|anything in choices
 			if(choice)
 				network = choice
-	src.updateUsrDialog()
-	return
-
-
-/obj/machinery/cryopod/robot
-	name = "robotic storage unit"
-	desc = "A storage unit for robots."
-	icon = 'icons/obj/robot_storage.dmi'
-	icon_state = "pod_0"
-	base_icon_state = "pod_0"
-	occupied_icon_state = "pod_1"
-	on_store_message = "has entered robotic storage."
-	on_store_name = "Robotic Storage Oversight"
-	on_enter_occupant_message = "The storage unit broadcasts a sleep signal to you. Your systems start to shut down, and you enter low-power mode."
-	allow_occupant_types = list(/mob/living/silicon/robot)
-	disallow_occupant_types = list(/mob/living/silicon/robot/drone)
-
-
-
-/obj/machinery/cryopod/New()
-	GLOB.cryopods |= src
-	announce = new /obj/item/device/radio/intercom(src)
-	..()
-
-
-/obj/machinery/cryopod/Destroy()
-	if(occupant)
-		occupant.forceMove(loc)
-		occupant.resting = 1
-	return ..()
-
-
-/obj/machinery/cryopod/Initialize()
-	. = ..()
-	find_control_computer()
-
-
-/obj/machinery/cryopod/after_load()
-	find_control_computer()
-
-
-/obj/machinery/cryopod/proc/find_control_computer()
-	var/turf/T = src.loc
-	if(!T)
-		return
-
-	for(var/obj/machinery/computer/cryopod/C in T.loc)
-		control_computer = C
-		break
-
-	return control_computer != null
-
-
-/obj/machinery/cryopod/proc/check_occupant_allowed(mob/M)
-	var/correct_type = 0
-	for(var/type in allow_occupant_types)
-		if(istype(M, type))
-			correct_type = 1
-			break
-
-	if(!correct_type)
-		return 0
-
-	for(var/type in disallow_occupant_types)
-		if(istype(M, type))
-			return 0
-
-	return 1
-
 
 /obj/machinery/cryopod/Process()
-	if(!loc)
-		GLOB.cryopods -= src
-		qdel(src)
-
 	if(occupant)
+		if(world.time - timeEntered >= 1 MINUTE)
+			despawnOccupant()
 
-		if(world.time - time_entered < time_till_despawn)
-			return
-		despawn_occupant()
-
-/mob/var/stored_ckey = ""
-
-
-// This function can not be undone; do not call this unless you are sure
-// Also make sure there is a valid control computer
-/obj/machinery/cryopod/proc/despawn_occupant()
-	GLOB.all_cryo_mobs |= occupant
-	if(occupant && occupant.ckey)
-		var/save_path = load_path(occupant.ckey, "")
-		if(fexists("[save_path][occupant.save_slot].sav"))
-			fdel("[save_path][occupant.save_slot].sav")
-		var/savefile/f = new("[save_path][occupant.save_slot].sav")
-		f << occupant
-	if(occupant.client && occupant.client.prefs)
-		occupant.client.prefs.load_characters()
-	if(istype(occupant, /mob/living/carbon/lace))
-		var/mob/living/carbon/lace/lacemob = occupant
-		lacemob.loc = lacemob.container
-		lacemob.container.loc = null
-	else
-		occupant.loc = null
-	
-	
-	var/mob/new_player/M = new /mob/new_player()
-	M.loc = null
-	if(occupant.ckey)
-		occupant.stored_ckey = occupant.ckey
-	M.key = occupant.key
-	if(M.client)
-		M.client.eye = M
-	var/role_alt_title = occupant.mind ? occupant.mind.role_alt_title : "Unknown"
-	if(control_computer)
-		control_computer.frozen_crew += "[occupant.real_name], [role_alt_title] - [stationtime2text()]"
-		control_computer._admin_logs += "[key_name(occupant)] ([role_alt_title]) at [stationtime2text()]"
-	log_and_message_admins("[key_name(occupant)] ([role_alt_title]) entered cryostorage.")
-
-	announce.autosay("[occupant.real_name], [role_alt_title], [on_store_message]", "[on_store_name]")
-	visible_message("<span class='notice'>\The [initial(name)] hums and hisses as it moves [occupant.real_name] into storage.</span>", 3)
-	
-	set_occupant(null)
-	icon_state = base_icon_state
-
-
-/obj/machinery/cryopod/verb/eject()
+/obj/machinery/cryopod/verb/EjectPod()
 	set name = "Eject Pod"
 	set category = "Object"
 	set src in oview(1)
-	if(usr.stat != 0)
+
+	if(usr.stat)
 		return
 
-	icon_state = base_icon_state
+	ejectOccupant()
 
-	//Eject any items that aren't meant to be in the pod.
-	/**
-	var/list/items = src.contents
-	if(occupant) items -= occupant
-	if(announce) items -= announce
-
-	for(var/obj/item/W in items)
-		W.forceMove(get_turf(src))
-	**/
-	src.go_out()
-	add_fingerprint(usr)
-
-	name = initial(name)
-	return
-/obj/machinery/cryopod/proc/eject_proc(var/mob/usr)
-	set name = "Eject Pod"
-	set category = "Object"
-	set src in oview(1)
-	if(usr.stat != 0)
-		return
-
-	icon_state = base_icon_state
-	/**
-	//Eject any items that aren't meant to be in the pod.
-	var/list/items = src.contents
-	if(occupant) items -= occupant
-	if(announce) items -= announce
-
-	for(var/obj/item/W in items)
-		W.forceMove(get_turf(src))
-	**/
-	src.go_out()
-	add_fingerprint(usr)
-
-	name = initial(name)
-	return
-/obj/machinery/cryopod/proc/move_inside_proc(var/mob/usr)
-	if(usr.stat != 0 || !check_occupant_allowed(usr))
-		return
-	if(!req_access_faction || req_access_faction == "")
-		to_chat(usr, "<span class='notice'><B>\The [src] is not connected to a network.</B></span>")
-		return
-	if(src.occupant)
-		to_chat(usr, "<span class='notice'><B>\The [src] is in use.</B></span>")
-		return
-
-	for(var/mob/living/carbon/slime/M in range(1,usr))
-		if(M.Victim == usr)
-			to_chat(usr, "You're too busy getting your life sucked out of you.")
-			return
-
-	visible_message("[usr] starts climbing into \the [src].", 3)
-
-	if(do_after(usr, 20, src))
-
-		if(!usr || !usr.client)
-			return
-
-		if(src.occupant)
-			to_chat(usr, "<span class='notice'><B>\The [src] is in use.</B></span>")
-			return
-
-		usr.stop_pulling()
-		usr.client.perspective = EYE_PERSPECTIVE
-		usr.client.eye = src
-		usr.forceMove(src)
-		set_occupant(usr)
-		usr.spawn_loc = req_access_faction
-		icon_state = occupied_icon_state
-
-		to_chat(usr, "<span class='notice'>[on_enter_occupant_message]</span>")
-		to_chat(usr, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
-
-		time_entered = world.time
-
-		src.add_fingerprint(usr)
-
-	return
-
-
-/obj/machinery/cryopod/verb/move_inside()
+/obj/machinery/cryopod/verb/EnterPod()
 	set name = "Enter Pod"
 	set category = "Object"
 	set src in oview(1)
-	if(!req_access_faction || req_access_faction == "")
-		to_chat(usr, "<span class='notice'><B>\The [src] is not connected to a network.</B></span>")
-		return
-	if(usr.stat != 0 || !check_occupant_allowed(usr))
+
+	if(usr.stat)
 		return
 
-	if(src.occupant)
-		to_chat(usr, "<span class='notice'><B>\The [src] is in use.</B></span>")
-		return
+	if(checkOccupantAllowed(usr))
+		visible_message("[usr] starts climbing into \the [src].", 3)
+		if(do_after(usr, 20, src))
+			insertOccupant(usr, usr)
 
-	for(var/mob/living/carbon/slime/M in range(1,usr))
-		if(M.Victim == usr)
-			to_chat(usr, "You're too busy getting your life sucked out of you.")
-			return
+/obj/machinery/cryopod/proc/checkOccupantAllowed(var/atom/A)
+	for(var/type in allowedOccupants)
+		if(istype(A, type))
+			return 1
+	return 0
 
-	visible_message("[usr] starts climbing into \the [src].", 3)
 
-	if(do_after(usr, 20, src))
+/obj/machinery/cryopod/proc/insertOccupant(var/atom/movable/A, var/mob/user = usr)
+	if(!req_access_faction)
+		to_chat(user, "<span class='notice'>\The [src] hasn't been connected to a faction.</span>")
+		return 0
 
-		if(!usr || !usr.client)
-			return
+	if(occupant)
+		to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
+		return 0
 
-		if(src.occupant)
-			to_chat(usr, "<span class='notice'><B>\The [src] is in use.</B></span>")
-			return
+	if(!checkOccupantAllowed(A))
+		to_chat(user, "<span class='notice'>\The [A] cannot be inserted into \the [src].</span>")
+		return 0
 
-		set_occupant(usr)
+	var/mob/M
+	if(istype(A, /mob))
+		M = A
+		if(M.buckled)
+			to_chat(user, "<span class='warning'>Unbuckle the subject before attempting to move them.</span>")
+			return 0
 
-		src.add_fingerprint(usr)
+		src.add_fingerprint(M)
+		M.stop_pulling()
+		to_chat(M, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
 
-	return
+	if(istype(A, /obj/item/organ/internal/stack))
+		var/obj/item/organ/internal/stack/S = A
+		if(!S.lacemob)
+			to_chat(user, "<span class='notice'>\The [S] is inert.</span>")
+			return 0
+		M = S.lacemob
 
-/obj/machinery/cryopod/proc/go_out()
+	name = "[initial(name)] ([M.real_name])"
+	icon_state = "body_scanner_1"
 
+	occupant = A
+	A.forceMove(src)
+	timeEntered = world.time
+
+	src.add_fingerprint(user)
+
+/obj/machinery/cryopod/proc/ejectOccupant()
+	name = initial(name)
+	icon_state = initial(icon_state)
+
+	if(occupant)
+		occupant.forceMove(get_turf(src))
+		occupant = null
+
+/obj/machinery/cryopod/proc/despawnOccupant()
 	if(!occupant)
-		return
+		return 0
 
-	if(occupant.client)
-		occupant.client.eye = src.occupant.client.mob
-		occupant.client.perspective = MOB_PERSPECTIVE
+	var/mob/new_player/player = new(locate(100,100,51))
+	var/key
+	var/name = ""
+	var/dir = 0
 
-	occupant.forceMove(get_turf(src))
-	for(var/obj/item/organ/internal/stack/lace in contents)
-		lace.loc = get_turf(src)
-	set_occupant(null)
+	if(istype(occupant, /obj/item/organ/internal/stack))
+		var/obj/item/organ/internal/stack/S = occupant
+		if(S.lacemob.ckey)
+			S.lacemob.stored_ckey = S.lacemob.ckey
+			key = S.lacemob.ckey
+			player.ckey = S.lacemob.ckey
+		else
+			key = S.lacemob.stored_ckey
+			player.ckey = S.lacemob.stored_ckey
+		name = S.get_owner_name()
+		dir = S.lacemob.save_slot
+		S.lacemob.spawn_loc = req_access_faction
+		S.lacemob.spawn_loc_2 = network
+		S.lacemob.spawn_type = 1
+		S.loc = null
 
-	icon_state = base_icon_state
+	else
+		var/mob/M = occupant
+		if(M.ckey)
+			M.stored_ckey = M.ckey
+			key = M.ckey
+			player.ckey = M.ckey
+		else
+			key = M.stored_ckey
+			player.ckey = M.stored_ckey
+		name = M.real_name
+		dir = M.save_slot
+		M.spawn_loc = req_access_faction
+		M.spawn_loc_2 = network
+		M.spawn_type = 1
+		M.loc = null
 
-	return
+	key = copytext(key, max(findtext(key, "@"), 1))
 
-/obj/machinery/cryopod/proc/set_occupant(var/mob/living/carbon/occupant)
-	src.occupant = occupant
-	if(!occupant)
-		name = initial(name)
-		return
+	if(!dir)
+		log_and_message_admins("Warning! [key]'s [occupant] failed to find a save_slot, and is picking one!")
+		while(fexists(load_path(key, "[dir].sav")))
+			dir++
+	message_admins("[load_path(key, "[dir].sav")] and [key] and [dir]")
+	var/savefile/F = new(load_path(key, "[dir].sav"))
+	var/icon/I = getFlatIcon(occupant, SOUTH, always_use_defdir = 1)
+	I.Scale(16,16)
+	F["name"] << name
+	F["icon"] << getFlatIcon(occupant, SOUTH, always_use_defdir = 1)
+	F["mob"] << occupant
 
-	occupant.stop_pulling()
-	if(occupant.client)
-		usr.spawn_loc = req_access_faction
-		to_chat(usr, "<span class='notice'>[on_enter_occupant_message]</span>")
-		to_chat(usr, "<span class='notice'><b>Simply wait one full minute to be sent back to the lobby where you can switch characters.</b></span>")
-		occupant.client.perspective = EYE_PERSPECTIVE
-		occupant.client.eye = src
+	src.name = initial(src.name)
+	icon_state = initial(icon_state)
 
-	occupant.forceMove(src)
-	time_entered = world.time
+	QDEL_NULL(occupant)
 
-	name = "[name] ([occupant])"
-	icon_state = occupied_icon_state
-
-/obj/structure/frontier_beacon
-	name = "Frontier Beacon"
-	desc = "A huge bluespace beacon. The technology is unlike anything you've ever seen, but its apparent that this recieves teleportation signals from the gateway outside the frontier."
-	icon = 'icons/obj/stationobjs.dmi'
-	icon_state = "frontier_beacon"
-	anchored = 1
-	density = 0
-
-/obj/structure/frontier_beacon/New()
-	..()
-	GLOB.frontierbeacons |= src
-
-
+#undef allowedOccupants

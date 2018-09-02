@@ -54,9 +54,11 @@
 			if(do_after(user, 20, src))
 				if(!G || !G.affecting) return
 			insertOccupant(G.affecting, user)
+			return
 
 	if(istype(O, /obj/item/organ/internal/stack))
 		insertOccupant(O, user)
+		return
 
 	if(InsertedContents())
 		to_chat(user, "<span class='notice'>\The [src] must be emptied of all stored users first.</span>")
@@ -192,6 +194,7 @@
 			to_chat(user, "<span class='notice'>\The [S] is inert.</span>")
 			return 0
 		M = S.lacemob
+		user.drop_from_inventory(A)
 
 	name = "[initial(name)] ([M.real_name])"
 	icon_state = "body_scanner_1"
@@ -257,7 +260,7 @@
 		log_and_message_admins("Warning! [key]'s [occupant] failed to find a save_slot, and is picking one!")
 		while(fexists(load_path(key, "[dir].sav")))
 			dir++
-			
+
 	var/savefile/F = new(load_path(key, "[dir].sav"))
 	var/icon/I = getFlatIcon(occupant, SOUTH, always_use_defdir = 1)
 	I.Scale(16,16)

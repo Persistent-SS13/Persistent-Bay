@@ -413,7 +413,7 @@ datum/preferences
 	if(character_list && (character_list.len >= slot))
 		character_list[slot] = "nothing"
 /datum/preferences/proc/load_characters()
-	var/path_to = load_path(client.ckey, "")
+/*	var/path_to = load_path(client.ckey, "")
 	character_list = list()
 	var/slots = config.character_slots
 	if(check_rights(R_ADMIN, 0, client))
@@ -439,6 +439,7 @@ datum/preferences
 		else
 			character_list += "empty"
 	return 1
+	*/
 /datum/preferences/proc/open_load_dialog(mob/user)
 	var/dat  = list()
 	dat += "<body>"

@@ -186,8 +186,12 @@
 
 	for(var/mob/M in SSmobs.mob_list)
 		if(M.loc && !M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
+			if(istype(M, /mob/observer))
+				qdel(M)
+				continue
 			M.ckey = ckey
 			qdel(src)
+			return
 
 	if(chosen_slot == -1)
 		var/mob/observer/ghost/observer = new()
@@ -255,6 +259,7 @@
 	character.after_spawn()
 	sleep(3 SECONDS)
 	character.forceMove(spawnTurf)
+	character.after_spawn()
 	character.stored_ckey = key
 	character.key = key
 	character.save_slot = chosen_slot

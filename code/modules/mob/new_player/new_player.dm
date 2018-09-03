@@ -130,9 +130,10 @@
 		var/mob/M = client.prefs.Character(ind)
 		sleep(20)
 		var/icon/preview
+		var/cname
 		if(M)
-			var/cname = M.real_name
-			preview = get_preview_icon(M)
+			cname = M.real_name
+			preview = client.prefs.get_preview_icon(M)
 		if(cname)
 			send_rsc(src, preview, "[ind]preview.png")
 			data += "<img src=[ind]preview.png width=[preview.Width()] height=[preview.Height()]><br>"

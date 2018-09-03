@@ -126,9 +126,9 @@
 	var/data = "<div align='center'><br>"
 	data += "<b>Select the character you want to [action].</b><br>"
 
-	for(var/ind = 1, ind < client.prefs.Slots(), ind++)
+	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
 		var/mob/M = client.prefs.Character(ind)
-		sleep(20)
+		sleep(10)
 		var/icon/preview
 		var/cname
 		if(M)

@@ -198,8 +198,8 @@
 	recipes += new/datum/stack_recipe("stick", /obj/item/weapon/material/stick, 1)
 	recipes += new/datum/stack_recipe("dog bed", /obj/structure/dogbed, 2)
 	recipes += new/datum/stack_recipe("wooden Saloon Door", /obj/machinery/door/unpowered/simple/wood/saloon, 10, time = 10, one_per_turf = 1, on_floor = 1)
-
-
+	recipes += new/datum/stack_recipe("Gavel Hammer", /obj/item/gavelhammer, 2, time = 5)
+	recipes += new/datum/stack_recipe("Gavel Block", /obj/item/gavelblock, 2, time = 3)
 
 
 /material/cardboard/generate_recipes()

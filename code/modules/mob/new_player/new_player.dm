@@ -98,9 +98,10 @@
 	var/data = "<div align='center'><br>"
 	data += "<b>Select the slot you want to save this character under.</b><br>"
 
-	for(var/ind = 1, ind < client.prefs.Slots(), ind++)
-		if(client.prefs.CharacterName(ind))
-			data += "<b>[client.prefs.CharacterName(ind)]</b><br>"
+	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
+		var/cname = client.prefs.CharacterName(ind)
+		if(cname)
+			data += "<b>[cname]</b><br>"
 		else
 			data += "<b><a href='byond://?src=\ref[src];pickSlot=[ind]create'>Open Slot</a></b><br>"
 
@@ -126,11 +127,12 @@
 	data += "<b>Select the character you want to [action].</b><br>"
 
 	for(var/ind = 1, ind < client.prefs.Slots(), ind++)
-		if(client.prefs.CharacterName(ind))
-			var/icon/preview = client.prefs.CharacterIcon(ind)
+		var/cname = client.prefs.CharacterName(ind)
+		if(cname)
+			var/icon/preview = cname
 			send_rsc(src, preview, "[ind]preview.png")
 			data += "<img src=[ind]preview.png width=[preview.Width()] height=[preview.Height()]><br>"
-			data += "<b><a href='?src=\ref[src];pickSlot=[ind][action]'>[client.prefs.CharacterName(ind)]</a></b><hr>"
+			data += "<b><a href='?src=\ref[src];pickSlot=[ind][action]'>[cname]</a></b><hr>"
 		else
 			data += "<b>Open Slot</b><hr>"
 

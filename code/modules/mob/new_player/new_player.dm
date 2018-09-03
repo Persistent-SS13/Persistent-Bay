@@ -113,9 +113,11 @@
 	for(var/mob/M in SSmobs.mob_list)
 		if(!M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
 			chosen_slot = M.save_slot
-			to_chat(src, "<span class='notice'>A character is already in game, selecting.</span>")
+			to_chat(src, "<span class='notice'>A character is already in game.</span>")
 			if(ticker.current_state > GAME_STATE_PREGAME)
-				loadCharacter()
+				M.key = key
+			else
+				to_chat(src, "<span class='notice'>Wait until the round starts to join.</span>")
 			return
 
 	var/data = "<div align='center'><br>"

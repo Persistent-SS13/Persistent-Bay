@@ -391,10 +391,10 @@ datum/preferences
 	if(!fexists(load_path(client.ckey, "[ind].sav")))
 		return
 
-	var/savefile/F = new(load_path(client.ckey, "[ind].sav"))
-	var/icon/I
-	F["icon"] >> I
-	I.Scale(16,16)
+	var/mob/M = Character(ind)
+	sleep(10)
+	var/icon/I = get_preview_icon(M)
+//	qdel(M)
 	return I
 
 /datum/preferences/proc/delete_character(var/slot)

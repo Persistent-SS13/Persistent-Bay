@@ -379,7 +379,6 @@ datum/preferences
 		F >> M
 	else
 		F["mob"] >> M
-	sleep(10)
 	return M
 
 /datum/preferences/proc/CharacterName(var/ind)

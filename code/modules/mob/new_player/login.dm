@@ -4,6 +4,7 @@
 	name = "Baystation12"
 	desc = "This shouldn't be read."
 	screen_loc = "WEST,SOUTH"
+	plane = 10
 
 /obj/effect/lobby_image/Initialize()
 	icon = GLOB.using_map.lobby_icon
@@ -37,7 +38,7 @@
 	set_sight(sight|SEE_TURFS)
 	GLOB.player_list |= src
 
-	new_player_panel()
+	newPlayerPanel()
 	spawn(40)
 		if(client)
 			handle_privacy_poll()

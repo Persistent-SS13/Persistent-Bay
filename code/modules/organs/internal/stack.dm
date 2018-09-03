@@ -47,7 +47,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	robotize()
 
 /obj/item/organ/internal/stack/Destroy()
-	if(lacemob)
+	if(lacemob && lacemob.key && lacemob.key != "")
 		loc = get_turf(loc)
 		return QDEL_HINT_LETMELIVE
 //	GLOB.neural_laces -= src
@@ -68,6 +68,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		if(owner)
 			lacemob.container2 = owner
 		lacemob.spawn_loc = H.spawn_loc
+		lacemob.spawn_loc_2 = H.spawn_loc_2
 	else
 		lacemob.name = H.real_name
 		lacemob.real_name = H.real_name
@@ -77,6 +78,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		if(owner)
 			lacemob.container2 = owner
 		lacemob.spawn_loc = H.spawn_loc
+		lacemob.spawn_loc_2 = H.spawn_loc_2
 	if(H.mind)
 		H.mind.transfer_to(lacemob)
 

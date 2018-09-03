@@ -127,9 +127,13 @@
 	data += "<b>Select the character you want to [action].</b><br>"
 
 	for(var/ind = 1, ind < client.prefs.Slots(), ind++)
-		var/cname = client.prefs.CharacterName(ind)
+		var/mob/M = client.prefs.Character(ind)
+		sleep(20)
+		var/icon/preview
+		if(M)
+			var/cname = M.real_name
+			preview = get_preview_icon(M)
 		if(cname)
-			var/icon/preview = cname
 			send_rsc(src, preview, "[ind]preview.png")
 			data += "<img src=[ind]preview.png width=[preview.Width()] height=[preview.Height()]><br>"
 			data += "<b><a href='?src=\ref[src];pickSlot=[ind][action]'>[cname]</a></b><hr>"

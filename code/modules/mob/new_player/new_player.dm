@@ -111,10 +111,12 @@
 
 /mob/new_player/proc/selectCharacterPanel(var/action = "")
 	for(var/mob/M in SSmobs.mob_list)
-		if(!M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
+		if(M.loc && !M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
 			chosen_slot = M.save_slot
 			to_chat(src, "<span class='notice'>A character is already in game.</span>")
 			if(ticker.current_state > GAME_STATE_PREGAME)
+				panel?.close()
+				load_panel?.close()
 				M.key = key
 			else
 				to_chat(src, "<span class='notice'>Wait until the round starts to join.</span>")
@@ -141,6 +143,7 @@
 	var/list/factions = list()
 
 	for(var/obj/item/organ/internal/stack/stack in GLOB.neural_laces)
+		if(!stack.loc) continue
 		var/faction = get_faction(stack.connected_faction)?.name
 		if(factions["[faction]"])
 			factions["[faction]"] += stack
@@ -182,7 +185,7 @@
 	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1))
 
 	for(var/mob/M in SSmobs.mob_list)
-		if(!M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
+		if(M.loc && !M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
 			M.ckey = ckey
 			qdel(src)
 
@@ -195,14 +198,9 @@
 		return
 
 	var/mob/character = client.prefs.Character(chosen_slot)
+	
 	var/turf/spawnTurf
 
-	if(!character.mind)		// Not entirely sure what this if() block does, but keeping it just in case
-		mind.active = 0
-		mind.original = character
-		if(client.prefs.memory)
-			mind.store_memory(client.prefs.memory)
-			mind.transfer_to(character)
 
 	if(character.spawn_type == 1)
 		var/datum/world_faction/faction = get_faction(character.spawn_loc)
@@ -247,15 +245,24 @@
 	if(!spawnTurf)
 		log_and_message_admins("WARNING! Unable To Find Any Spawn Turf!!! Prehaps you didn't include a map?")
 		return
-
+	if(!character.mind)		// Not entirely sure what this if() block does, but keeping it just in case
+		mind.active = 0
+		mind.original = character
+		if(client && client.prefs.memory)
+			mind.store_memory(client.prefs.memory)
+			mind.transfer_to(character)
+	sleep(3 SECONDS)		
+	character.after_spawn()
+	sleep(3 SECONDS)
 	character.forceMove(spawnTurf)
 	character.stored_ckey = key
 	character.key = key
 	character.save_slot = chosen_slot
+	
 	ticker.minds |= character.mind
 	character.redraw_inv()
 	CreateModularRecord(character)
-	character.after_spawn()
+	
 
 	if(character.spawn_type == 2)
 		var/obj/screen/cinematic

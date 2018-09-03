@@ -164,7 +164,11 @@ var/global/list/debug_data = list()
 		zones_to_save |= zone
 	areas_to_save |= loc
 	StandardWrite(f)
-
+/turf/StandardWrite(f)
+	var/starttime = REALTIMEOFDAY
+	..()
+	if((REALTIMEOFDAY - starttime)/10 > 29)
+		world << "[src.type] took [(REALTIMEOFDAY - starttime)/10] seconds to save at [x] [y] [z]"
 /mob/Write(savefile/f)
 	StandardWrite(f)
 	if(ckey)
@@ -330,6 +334,7 @@ var/global/list/debug_data = list()
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
 	return 1
+
 
 /proc/Load_World()
 	var/starttime = REALTIMEOFDAY

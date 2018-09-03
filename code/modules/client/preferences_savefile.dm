@@ -138,11 +138,8 @@
 			var/is_species_lang = (chosen_language.name in mannequin.species.secondary_langs)
 			if(is_species_lang || ((!(chosen_language.flags & RESTRICTED) || check_rights(R_ADMIN, 0, client))))
 				mannequin.add_language(lang)
-	var/icon/I = getFlatIcon(mannequin, SOUTH, always_use_defdir = 1)
-	I.Scale(16,16)
 	S["name"] << mannequin.real_name
 	S["mob"] << mannequin
-	S["icon"] << I
 	character_list = list()
 	qdel(mannequin)
 

@@ -97,6 +97,7 @@
 			old.verbs -= /datum/changeling/proc/EvolutionMenu
 		old.mind = null
 		old.ckey = null
+		old.saved_ckey = null
 		old.stored_ckey = null
 		GLOB.nanomanager.user_transferred(old, new_character) // transfer active NanoUI instances to new user
 /datum/mind/proc/store_memory(new_text)

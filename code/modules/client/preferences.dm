@@ -376,7 +376,7 @@ datum/preferences
 	var/savefile/F = new(load_path(client.ckey, "[ind].sav"))
 	var/mob/M
 	if(!F.dir.Find("mob"))
-		M << F
+		F >> M
 	else
 		F["mob"] >> M
 	sleep(10)
@@ -390,9 +390,11 @@ datum/preferences
 	var/name
 	if(!F.dir.Find("name"))
 		var/mob/M
-		M << F
+		F >> M
 		if(M)
 			name = M.real_name
+		else
+			name = "BROKE! RESTARTING!"
 	else
 		F["name"] >> name
 	return name

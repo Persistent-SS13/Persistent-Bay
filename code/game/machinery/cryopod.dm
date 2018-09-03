@@ -14,7 +14,7 @@
 	var/network = "default"
 
 	var/tmp/timeEntered = 0
-	var/tmp/atom/movable/occupant
+	var/tmp/mob/occupant
 
 /obj/machinery/cryopod/New()
 	..()
@@ -259,10 +259,7 @@
 			dir++
 	message_admins("[load_path(key, "[dir].sav")] and [key] and [dir]")
 	var/savefile/F = new(load_path(key, "[dir].sav"))
-	var/icon/I = getFlatIcon(occupant, SOUTH, always_use_defdir = 1)
-	I.Scale(16,16)
-	F["name"] << name
-	F["icon"] << getFlatIcon(occupant, SOUTH, always_use_defdir = 1)
+	F["name"] << occupant.real_name
 	F["mob"] << occupant
 
 	src.name = initial(src.name)

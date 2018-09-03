@@ -391,7 +391,7 @@ datum/preferences
 	if(!F.dir.Find("name"))
 		var/mob/M
 		F >> M
-		sleep(10)
+		sleep(25)
 		if(M)
 			name = M.real_name
 		else

@@ -379,7 +379,6 @@ datum/preferences
 		F >> M
 	else
 		F["mob"] >> M
-	sleep(10)
 	return M
 
 /datum/preferences/proc/CharacterName(var/ind)
@@ -391,6 +390,7 @@ datum/preferences
 	if(!F.dir.Find("name"))
 		var/mob/M
 		F >> M
+		sleep(25)
 		if(M)
 			name = M.real_name
 		else
@@ -500,7 +500,7 @@ datum/preferences
 
 
 /datum/preferences/proc/Slots()
-	var/slots = config.character_slots + bonus_slots
+	var/slots = 2 + bonus_slots
 
 	if(check_rights(R_ADMIN, 0, client))
 		slots += 2

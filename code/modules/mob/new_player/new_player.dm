@@ -35,7 +35,6 @@
 		output += "<span class='average'><b>The Game Is Loading!</b></span><br><br>"
 	else
 		output += "<a href='byond://?src=\ref[src];joinGame=1'>Join Game!</a><br><br>"
-		output += "<a href='byond://?src=\ref[src];crewManifest=1'>View Crew Manifest</a><br><br>"
 
 	if(check_rights(R_DEBUG, 0, client))
 		output += "<a href='byond://?src=\ref[src];observeGame=1'>Observe</a><br><br>"
@@ -98,9 +97,10 @@
 	var/data = "<div align='center'><br>"
 	data += "<b>Select the slot you want to save this character under.</b><br>"
 
-	for(var/ind = 1, ind < client.prefs.Slots(), ind++)
-		if(client.prefs.CharacterName(ind))
-			data += "<b>[client.prefs.CharacterName(ind)]</b><br>"
+	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
+		var/cname = client.prefs.CharacterName(ind)
+		if(cname)
+			data += "<b>[cname]</b><br>"
 		else
 			data += "<b><a href='byond://?src=\ref[src];pickSlot=[ind]create'>Open Slot</a></b><br>"
 
@@ -125,15 +125,22 @@
 	var/data = "<div align='center'><br>"
 	data += "<b>Select the character you want to [action].</b><br>"
 
-	for(var/ind = 1, ind < client.prefs.Slots(), ind++)
-		if(client.prefs.CharacterName(ind))
-			var/icon/preview = client.prefs.CharacterIcon(ind)
+	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
+		var/mob/M = client.prefs.Character(ind)
+		sleep(10)
+		var/icon/preview
+		var/cname
+		if(M)
+			M.deleting_char = 1
+			cname = M.real_name
+			preview = client.prefs.get_preview_icon(M)
+		if(cname)
 			send_rsc(src, preview, "[ind]preview.png")
 			data += "<img src=[ind]preview.png width=[preview.Width()] height=[preview.Height()]><br>"
-			data += "<b><a href='?src=\ref[src];pickSlot=[ind][action]'>[client.prefs.CharacterName(ind)]</a></b><hr>"
+			data += "<b><a href='?src=\ref[src];pickSlot=[ind][action]'>[cname]</a></b><hr>"
 		else
 			data += "<b>Open Slot</b><hr>"
-
+		qdel(M)
 	data += "</div>"
 	load_panel = new(src, "Select Character", "Select Character", 300, 500, src)
 	load_panel.set_content(data)

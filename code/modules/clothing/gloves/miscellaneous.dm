@@ -95,7 +95,7 @@
 	icon_state = "latex"
 	item_state = "lgloves"
 	siemens_coefficient = 1.1 //thin latex gloves, much more conductive than fabric gloves (basically a capacitor for AC)
-	permeability_coefficient = 0.01
+	permeability_coefficient = 0.03
 	germ_level = 0
 
 /obj/item/clothing/gloves/latex/modified
@@ -106,6 +106,7 @@
 	desc = "Sterile nitrile gloves"
 	icon_state = "nitrile"
 	item_state = "ngloves"
+	permeability_coefficient = 0.005
 
 /obj/item/clothing/gloves/latex/nitrile/modified
 	item_flags = PREMODIFIED

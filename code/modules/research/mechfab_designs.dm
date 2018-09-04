@@ -399,8 +399,30 @@
 	desc = "A chassis mod that can be installed in a cyborg to allow it to change its appearance. It must be using the correct module."
 
 //////////////
-// Service/Clerical
+// Standard
 
+/datum/design/item/robot_upgrade/chassis/droid
+	name = "Standard Chassis: Droid"
+	id = "borg_chassis_droid"
+	build_path = /obj/item/borg/chassis_mod/standard/droid
+
+/datum/design/item/robot_upgrade/chassis/old
+	name = "Standard Chassis: Bipedal Standard"
+	id = "borg_chassis_old"
+	build_path = /obj/item/borg/chassis_mod/standard/old
+
+/datum/design/item/robot_upgrade/chassis/drone
+	name = "Standard Chassis: Drone"
+	id = "borg_chassis_drone"
+	build_path = /obj/item/borg/chassis_mod/standard/drone
+
+/datum/design/item/robot_upgrade/chassis/eyebot
+	name = "Standard Chassis: Eyebot"
+	id = "borg_chassis_eyebot"
+	build_path = /obj/item/borg/chassis_mod/standard/eyebot
+
+//////////////
+// Service/Clerical
 
 /datum/design/item/robot_upgrade/chassis/waitress
 	name = "Service/Clerical Chassis: Waitress"
@@ -431,7 +453,6 @@
 	name = "Service/Clerical Chassis: Service Eyebot"
 	id = "borg_chassis_serviceye"
 	build_path = /obj/item/borg/chassis_mod/service/serviceeyebot
-
 
 ////////////
 // Mining Chassis
@@ -589,6 +610,12 @@
 	category = "Cyborg Modules"
 	materials = list(DEFAULT_WALL_MATERIAL = 25000, "phoron" = 10000, "gold" = 1000, "silver" = 1000)
 	desc = "A module that contains tools and equipment that the cyborg can use."
+
+/datum/design/item/robot_upgrade/module/standard
+	name = "Module Chip: Standard"
+	id = "borg_module_standard"
+	build_path = /obj/item/borg/module_chip/standard
+	materials = list(DEFAULT_WALL_MATERIAL = 25000, "glass" = 7500, "phoron" = 1500, "gold" = 2500, "silver" = 2500)
 
 /datum/design/item/robot_upgrade/module/surgeon
 	name = "Module Chip: Medical Surgeon"

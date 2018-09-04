@@ -136,6 +136,7 @@
 	var/dist_travelled = 0
 	var/dist_since_sleep = 0
 	var/area/a = get_area(src.loc)
+	var/firstStep	//only a flag to prevent splashing contents on the first step
 	if(dist_x > dist_y)
 		var/error = dist_x/2 - dist_y
 
@@ -148,6 +149,10 @@
 				if(!step) // going off the edge of the map makes get_step return null, don't let things go off the edge
 					break
 				src.Move(step)
+				if (istype(src, /obj/item/weapon/reagent_containers) && src.is_open_container())
+					if(!firstStep) //i figured i wanted to start splashing one turf ahead and not directly next to the player
+						firstStep = 1
+					else src.reagents.splash(loc, src.reagents.maximum_volume/4)
 				hit_check(speed)
 				error += dist_x
 				dist_travelled++
@@ -160,6 +165,10 @@
 				if(!step) // going off the edge of the map makes get_step return null, don't let things go off the edge
 					break
 				src.Move(step)
+				if (istype(src, /obj/item/weapon/reagent_containers) && src.is_open_container())
+					if(!firstStep) //i figured i wanted to start splashing one turf ahead and not directly next to the player
+						firstStep = 1
+					else src.reagents.splash(loc, src.reagents.maximum_volume/4)
 				hit_check(speed)
 				error -= dist_y
 				dist_travelled++
@@ -177,6 +186,10 @@
 				if(!step) // going off the edge of the map makes get_step return null, don't let things go off the edge
 					break
 				src.Move(step)
+				if (istype(src, /obj/item/weapon/reagent_containers) && src.is_open_container())
+					if(!firstStep) //i figured i wanted to start splashing one turf ahead and not directly next to the player
+						firstStep = 1
+					else src.reagents.splash(loc, src.reagents.maximum_volume/4)
 				hit_check(speed)
 				error += dist_y
 				dist_travelled++
@@ -189,6 +202,10 @@
 				if(!step) // going off the edge of the map makes get_step return null, don't let things go off the edge
 					break
 				src.Move(step)
+				if (istype(src, /obj/item/weapon/reagent_containers) && src.is_open_container())
+					if(!firstStep) //i figured i wanted to start splashing one turf ahead and not directly next to the player
+						firstStep = 1
+					else src.reagents.splash(loc, src.reagents.maximum_volume/4)
 				hit_check(speed)
 				error -= dist_x
 				dist_travelled++
@@ -254,7 +271,7 @@
 		if(x <= TRANSITIONEDGE) 						// West
 			new_x = world.maxx - TRANSITIONEDGE - 1
 			new_z -= worldHeight
-			if(new_z % (worldHeight * worldWidth) <= 0 || new_z % (worldHeight * worldWidth) > (worldWidth - 1) * worldHeight) 
+			if(new_z % (worldHeight * worldWidth) <= 0 || new_z % (worldHeight * worldWidth) > (worldWidth - 1) * worldHeight)
 				new_z += worldWidth * worldHeight
 
 		else if (x >= (world.maxx - TRANSITIONEDGE))	// East

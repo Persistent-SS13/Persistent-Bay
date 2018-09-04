@@ -267,7 +267,8 @@
 
 	src.name = initial(src.name)
 	icon_state = initial(icon_state)
-
+	occupant.loc = null
+	occupant.deleting_char = 1
 	QDEL_NULL(occupant)
 
 #undef allowedOccupants

@@ -379,7 +379,6 @@ datum/preferences
 		F >> M
 	else
 		F["mob"] >> M
-	sleep(10)
 	return M
 
 /datum/preferences/proc/CharacterName(var/ind)
@@ -391,7 +390,7 @@ datum/preferences
 	if(!F.dir.Find("name"))
 		var/mob/M
 		F >> M
-		sleep(10)
+		sleep(25)
 		if(M)
 			name = M.real_name
 		else

@@ -24,14 +24,11 @@
 /obj/item/weapon/gun/projectile/colt/detective/verb/rename_gun()
 	set name = "Name Gun"
 	set category = "Object"
-	set desc = "Rename your gun. If you're the detective."
+	set desc = "Rename your gun."
 
 	var/mob/M = usr
 	if(!M.mind)	return 0
 	if(M.incapacitated()) return 0
-	if(!M.mind.assigned_role == "Detective")
-		to_chat(M, "<span class='notice'>You don't feel cool enough to name this gun, chump.</span>")
-		return 0
 
 	var/input = sanitizeSafe(input("What do you want to name the gun?","Rename gun"), MAX_NAME_LEN)
 

@@ -47,6 +47,9 @@
 /datum/reagent/proc/touch_turf(var/turf/T, var/amount) // Cleaner cleaning, lube lubbing, etc, all go here
 	return
 
+/datum/reagent/proc/touch_target(var/mob/M, var/amount, var/bodypart, var/blocked)
+	return
+
 /datum/reagent/proc/on_mob_life(var/mob/living/carbon/M, var/alien, var/location) // Currently, on_mob_life is called on carbons. Any interaction with non-carbon mobs (lube) will need to be done in touch_mob.
 	if(!istype(M))
 		return

@@ -173,8 +173,34 @@
 		to_chat(user, "<span class='notice'>[target] is full.</span>")
 		return 1
 
-	var/trans = reagents.trans_to(target, amount_per_transfer_from_this)
-	to_chat(user, "<span class='notice'>You transfer [trans] unit\s of the solution to \the [target].</span>")
+	var/amount
+	var/amount_to_puddle
+	if( prob(10) ) // adds 10% probability of splashing the solution while handling it. Should have other factors once there is skills
+		var/targetPart = HANDS
+		var/havePart = 0
+		var/blocked = 100
+		for(var/obj/item/clothing/C in user.get_equipped_items())
+			if(C.permeability_coefficient == 1 || !C.body_parts_covered)
+				continue
+			if(C.body_parts_covered & targetPart)
+				havePart = 1
+				blocked -= 100*C.permeability_coefficient
+				break
+		if (!havePart) blocked = 0 //sets to 0% of damage being blocked. Better get at least a rag to protect those feet
+		if (blocked < 100)
+			for(var/datum/reagent/current in reagents.reagent_list)
+				amount = current.volume*0.80 // 80% will be considered to be touched on the hands
+				current.touch_target(usr, amount, pick(BP_L_HAND, BP_R_HAND), blocked )
+			amount_to_puddle = round(amount_per_transfer_from_this*0.85) //85% is spilled into the ground at the container's location
+			reagents.create_puddle(user.loc, amount_to_puddle)
+
+	var/trans
+	if(isnull(blocked) || blocked == 100)
+		trans = reagents.trans_to(target, amount_per_transfer_from_this)
+		to_chat(user, "<span class='notice'>You transfer [trans] unit\s of the solution to \the [target].</span>")
+	else
+		trans = reagents.trans_to(target, round(amount_per_transfer_from_this - amount_to_puddle) )
+		to_chat(user, "<span class='warning'>You spilled some of the solution! Transfered [trans] unit\s of the solution to \the [target].</span>")
 	return 1
 
 /obj/item/weapon/reagent_containers/do_surgery(mob/living/carbon/M, mob/living/user)

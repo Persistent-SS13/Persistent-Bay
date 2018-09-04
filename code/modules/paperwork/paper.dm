@@ -333,9 +333,6 @@
 
 /obj/item/weapon/paper/attackby(obj/item/weapon/P as obj, mob/user as mob)
 	..()
-	var/clown = 0
-	if(user.mind && (user.mind.assigned_role == "Clown"))
-		clown = 1
 
 	if(istype(P, /obj/item/weapon/tape_roll))
 		var/obj/item/weapon/tape_roll/tape = P
@@ -397,11 +394,6 @@
 		offset_y += y
 		stampoverlay.pixel_x = x
 		stampoverlay.pixel_y = y
-
-		if(istype(P, /obj/item/weapon/stamp/clown))
-			if(!clown)
-				to_chat(user, "<span class='notice'>You are totally unable to use the stamp. HONK!</span>")
-				return
 
 		if(!ico)
 			ico = new

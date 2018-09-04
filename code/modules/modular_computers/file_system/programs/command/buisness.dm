@@ -284,7 +284,7 @@
 				to_chat(usr,"Text was not valid.")
 				return 1
 			var/amount = input("Sale amount", "Sale amount", 0) as null|num
-			if(!amount)
+			if(!amount || amount < 0)
 				to_chat(usr,"You cannot create a sale for nothing.")
 				return 1
 

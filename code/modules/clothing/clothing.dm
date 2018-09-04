@@ -534,7 +534,7 @@ BLIND     // can't see anything
 	var/can_hold_knife
 	var/obj/item/holding
 
-	permeability_coefficient = 0.50
+	permeability_coefficient = 0.20  //almost all shoes have no set permeability_coefficient. I'm lowering it down a 'bit' cause they do protect a little. Also was causing boots like Work books to still let feet melt on touching acid too quick. Decreasing the damage won't do case there needs to be a big difference from having shoes to non at all.
 	force = 2
 	var/overshoes = 0
 	species_restricted = list("exclude", SPECIES_NABBER, SPECIES_UNATHI, SPECIES_VOX)

@@ -324,31 +324,6 @@ datum/unit_test/ladder_check/start_test()
 
 //=======================================================================================
 
-/datum/unit_test/cryopod_comp_check
-	name = "MAP: Cryopod Validity Check"
-
-/datum/unit_test/cryopod_comp_check/start_test()
-	var/pass = TRUE
-
-	for(var/obj/machinery/cryopod/C in SSmachines.machinery)
-		if(!C.control_computer)
-			log_bad("[get_area(C)] lacks a cryopod control computer while holding a cryopod.")
-			pass = FALSE
-
-	for(var/obj/machinery/computer/cryopod/C in SSmachines.machinery)
-		if(!(locate(/obj/machinery/cryopod) in get_area(C)))
-			log_bad("[get_area(C)] lacks a cryopod while holding a control computer.")
-			pass = FALSE
-
-	if(pass)
-		pass("All cryopods have their respective control computers.")
-	else
-		fail("Cryopods were not set up correctly.")
-
-	return 1
-
-//=======================================================================================
-
 /datum/unit_test/camera_nil_c_tag_check
 	name = "MAP: Camera nil c_tag check"
 

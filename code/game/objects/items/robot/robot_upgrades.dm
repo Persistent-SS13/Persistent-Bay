@@ -21,6 +21,26 @@
 	R.chassis_mod = src
 	return 1
 
+/obj/item/borg/chassis_mod/standard/droid
+	name = "Standard Chassis: Droid"
+	module_type = /obj/item/weapon/robot_module/standard
+	chassis_type = "droid"
+
+/obj/item/borg/chassis_mod/standard/old
+	name = "Standard Chassis: Old"
+	module_type = /obj/item/weapon/robot_module/standard
+	chassis_type = "robot_old"
+
+/obj/item/borg/chassis_mod/standard/drone
+	name = "Standard Chassis: Drone"
+	module_type = /obj/item/weapon/robot_module/standard
+	chassis_type = "drone-standard"
+/**
+/obj/item/borg/chassis_mod/standard/eyebot
+	name = "Standard Chassis: Eyebot"
+	module_type = /obj/item/weapon/robot_module/eyebot
+	chassis_type = "eyebot-stand"
+**/
 /obj/item/borg/chassis_mod/service/waitress
 	name = "Service/Clerical Chassis: Waitress"
 	module_type = /obj/item/weapon/robot_module/clerical
@@ -201,6 +221,11 @@
 	installed = 1
 	return 1
 
+/obj/item/borg/module_chip/standard
+	name = "Standard Module."
+	desc = "Contains tools and supplies for a standard cyborg."
+	module_type = /obj/item/weapon/robot_module/standard
+	default_icon = "robot"
 /obj/item/borg/module_chip/medical/surgeon
 	name = "Surgeon Module."
 	desc = "Contains tools and supplies for a surgeon class medical cyborg."

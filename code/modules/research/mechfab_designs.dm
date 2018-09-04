@@ -316,6 +316,10 @@
 	time = 60
 	materials = list(DEFAULT_WALL_MATERIAL = 50000, "uranium" = 10000)
 
+///////////////////////////////////
+////////// Roboot Upgrade /////////
+///////////////////////////////////
+
 /datum/design/item/robot_upgrade
 	build_type = MECHFAB
 	time = 12
@@ -365,7 +369,7 @@
 	name = "Jetpack module"
 	desc = "A carbon dioxide jetpack suitable for low-gravity mining operations."
 	id = "borg_jetpack_module"
-	materials = list(DEFAULT_WALL_MATERIAL = 10000, "phoron" = 15000, "uranium" = 20000)
+	materials = list(DEFAULT_WALL_MATERIAL = 10000, "phoron" = 5000, "uranium" = 20000)
 	build_path = /obj/item/borg/upgrade/jetpack
 
 /datum/design/item/robot_upgrade/rcd
@@ -380,7 +384,7 @@
 	desc = "Allows for the construction of lethal upgrades for cyborgs."
 	id = "borg_syndicate_module"
 	req_tech = list(TECH_COMBAT = 4, TECH_ILLEGAL = 3)
-	materials = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 15000, "diamond" = 10000)
+	materials = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 15000, "phoron" = 1000, "diamond" = 10000)
 	build_path = /obj/item/borg/upgrade/syndicate
 
 // PERSISTENT ROBOT UPGRADES
@@ -391,7 +395,7 @@
 ////////////////////////////////////
 /datum/design/item/robot_upgrade/chassis
 	category = "Chassis Mods"
-	materials = list(DEFAULT_WALL_MATERIAL = 6000, "phoron" = 5000, "glass" = 6000)
+	materials = list(DEFAULT_WALL_MATERIAL = 6000, "silver" = 5000, "glass" = 6000)
 	desc = "A chassis mod that can be installed in a cyborg to allow it to change its appearance. It must be using the correct module."
 
 //////////////
@@ -525,12 +529,12 @@
 	name = "Engineering Chassis: Outdated Engineer"
 	id = "borg_chassis_antique"
 	build_path = /obj/item/borg/chassis_mod/engineering/antique
-	
+
 /datum/design/item/robot_upgrade/chassis/landmate
 	name = "Engineering Chassis: Landmate Model"
 	id = "borg_chassis_landmate"
 	build_path = /obj/item/borg/chassis_mod/engineering/landmate
-	
+
 /datum/design/item/robot_upgrade/chassis/treads
 	name = "Engineering Chassis: Treaded Landmate"
 	id = "borg_chassis_landmatetread"
@@ -553,12 +557,12 @@
 	name = "Janitor Chassis: Bucket-head Janitor"
 	id = "borg_chassis_buckethead"
 	build_path = /obj/item/borg/chassis_mod/janitor/buckethead
-	
+
 /datum/design/item/robot_upgrade/chassis/mopgearrex
 	name = "Janitor Chassis: MOP GEAR R.E.X"
 	id = "borg_chassis_rex"
 	build_path = /obj/item/borg/chassis_mod/janitor/mopgearrex
-	
+
 /datum/design/item/robot_upgrade/chassis/bipedaljanitor
 	name = "Janitor Chassis: Bipedal Janitor Cyborg"
 	id = "borg_chassis_janitbiped"
@@ -571,16 +575,16 @@
 	name = "Research Chassis: Science Droid"
 	id = "borg_chassis_scidroid"
 	build_path = /obj/item/borg/chassis_mod/science/sciencedroid
-	
+
 /datum/design/item/robot_upgrade/chassis/scienceeyebot
 	name = "Research Chassis: Science Eyebot"
 	id = "borg_chassis_scieye"
-	build_path = /obj/item/borg/chassis_mod/science/scienceeyebot	
-	
+	build_path = /obj/item/borg/chassis_mod/science/scienceeyebot
+
 ////////////////////////////////////////////////////
 //////////////////////MODULE CHIPS//////////////////
 /////////////////////////////////////////////////////
-	
+
 /datum/design/item/robot_upgrade/module
 	category = "Cyborg Modules"
 	materials = list(DEFAULT_WALL_MATERIAL = 25000, "phoron" = 10000, "gold" = 1000, "silver" = 1000)
@@ -589,32 +593,32 @@
 /datum/design/item/robot_upgrade/module/surgeon
 	name = "Module Chip: Medical Surgeon"
 	id = "borg_module_surgeon"
-	build_path = /obj/item/borg/module_chip/medical/surgeon	
-	materials = list(DEFAULT_WALL_MATERIAL = 25000, "glass" = 10000, "phoron" = 5000, "gold" = 2000, "silver" = 2000)
-	
+	build_path = /obj/item/borg/module_chip/medical/surgeon
+	materials = list(DEFAULT_WALL_MATERIAL = 25000, "glass" = 10000, "phoron" = 500, "gold" = 2000, "silver" = 3000)
+
 /datum/design/item/robot_upgrade/module/crisis
 	name = "Module Chip: Medical Crisis"
 	id = "borg_module_crisis"
 	build_path = /obj/item/borg/module_chip/medical
-	materials = list(DEFAULT_WALL_MATERIAL = 25000, "glass" = 10000, "phoron" = 5000, "gold" = 2000, "silver" = 2000)
-		
+	materials = list(DEFAULT_WALL_MATERIAL = 25000, "glass" = 10000, "phoron" = 500, "gold" = 2000, "silver" = 3000)
+
 /datum/design/item/robot_upgrade/module/engineering
 	name = "Module Chip: Engineering"
 	id = "borg_module_engineering"
 	build_path = /obj/item/borg/module_chip/engineering
-	materials = list(DEFAULT_WALL_MATERIAL = 25000, "glass" = 10000, "phoron" = 5000, "gold" = 2000, "silver" = 2000)
-	
+	materials = list(DEFAULT_WALL_MATERIAL = 25000, "glass" = 10000, "phoron" = 500, "gold" = 3000, "silver" = 2000)
+
 /datum/design/item/robot_upgrade/module/security
 	name = "Module Chip: Security"
 	id = "borg_module_security"
 	build_path = /obj/item/borg/module_chip/security
 	materials = list(DEFAULT_WALL_MATERIAL = 25000, "glass" = 10000, "phoron" = 5000, "gold" = 2000, "silver" = 2000)
-	
+
 /datum/design/item/robot_upgrade/module/mining
 	name = "Module Chip: Mining"
 	id = "borg_module_mining"
 	build_path = /obj/item/borg/module_chip/mining
-	materials = list(DEFAULT_WALL_MATERIAL = 15000, "glass" = 5000, "phoron" = 2000, "gold" = 500, "silver" = 500)
+	materials = list(DEFAULT_WALL_MATERIAL = 15000, "glass" = 5000, "uranium" = 500)
 
 /datum/design/item/robot_upgrade/module/research
 	name = "Module Chip: Research"
@@ -626,23 +630,23 @@
 	name = "Module Chip: Janitor"
 	id = "borg_module_janitor"
 	build_path = /obj/item/borg/module_chip/janitor
-	materials = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 5000, "phoron" = 1000)
+	materials = list(DEFAULT_WALL_MATERIAL = 12000, "glass" = 6000, "gold" = 500, "silver" = 500)
 
 /datum/design/item/robot_upgrade/module/clerical
 	name = "Module Chip: Clerical"
 	id = "borg_module_clerical"
 	build_path = /obj/item/borg/module_chip/clerical
-	materials = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 5000, "phoron" = 1000)
-	
+	materials = list(DEFAULT_WALL_MATERIAL = 12000, "glass" = 6000, "gold" = 500, "silver" = 500)
+
 /datum/design/item/robot_upgrade/module/service
 	name = "Module Chip: Service"
 	id = "borg_module_service"
 	build_path = /obj/item/borg/module_chip/service
-	materials = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 5000, "phoron" = 1000)	
+	materials = list(DEFAULT_WALL_MATERIAL = 12000, "glass" = 6000, "gold" = 500, "silver" = 500)
 
 
 
-	
+
 /datum/design/item/mecha_tracking
 	name = "Exosuit tracking beacon"
 	build_type = MECHFAB

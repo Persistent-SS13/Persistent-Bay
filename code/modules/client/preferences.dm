@@ -375,7 +375,10 @@ datum/preferences
 
 	var/savefile/F = new(load_path(client.ckey, "[ind].sav"))
 	var/mob/M
-	F["mob"] >> M
+	if(!F.dir.Find("mob"))
+		F >> M
+	else
+		F["mob"] >> M
 	return M
 
 /datum/preferences/proc/CharacterName(var/ind)
@@ -384,7 +387,16 @@ datum/preferences
 
 	var/savefile/F = new(load_path(client.ckey, "[ind].sav"))
 	var/name
-	F["name"] >> name
+	if(!F.dir.Find("name"))
+		var/mob/M
+		F >> M
+		sleep(25)
+		if(M)
+			name = M.real_name
+		else
+			name = "BROKE! RESTARTING!"
+	else
+		F["name"] >> name
 	return name
 
 /datum/preferences/proc/CharacterIcon(var/ind)
@@ -392,9 +404,8 @@ datum/preferences
 		return
 
 	var/mob/M = Character(ind)
-	sleep(10)
 	var/icon/I = get_preview_icon(M)
-//	qdel(M)
+	qdel(M)
 	return I
 
 /datum/preferences/proc/delete_character(var/slot)
@@ -489,7 +500,7 @@ datum/preferences
 
 
 /datum/preferences/proc/Slots()
-	var/slots = config.character_slots + bonus_slots
+	var/slots = 2 + bonus_slots
 
 	if(check_rights(R_ADMIN, 0, client))
 		slots += 2

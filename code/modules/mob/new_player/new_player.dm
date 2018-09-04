@@ -35,7 +35,6 @@
 		output += "<span class='average'><b>The Game Is Loading!</b></span><br><br>"
 	else
 		output += "<a href='byond://?src=\ref[src];joinGame=1'>Join Game!</a><br><br>"
-		output += "<a href='byond://?src=\ref[src];crewManifest=1'>View Crew Manifest</a><br><br>"
 
 	if(check_rights(R_DEBUG, 0, client))
 		output += "<a href='byond://?src=\ref[src];observeGame=1'>Observe</a><br><br>"
@@ -98,9 +97,10 @@
 	var/data = "<div align='center'><br>"
 	data += "<b>Select the slot you want to save this character under.</b><br>"
 
-	for(var/ind = 1, ind < client.prefs.Slots(), ind++)
-		if(client.prefs.CharacterName(ind))
-			data += "<b>[client.prefs.CharacterName(ind)]</b><br>"
+	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
+		var/cname = client.prefs.CharacterName(ind)
+		if(cname)
+			data += "<b>[cname]</b><br>"
 		else
 			data += "<b><a href='byond://?src=\ref[src];pickSlot=[ind]create'>Open Slot</a></b><br>"
 
@@ -111,10 +111,12 @@
 
 /mob/new_player/proc/selectCharacterPanel(var/action = "")
 	for(var/mob/M in SSmobs.mob_list)
-		if(!M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
+		if(M.loc && !M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
 			chosen_slot = M.save_slot
 			to_chat(src, "<span class='notice'>A character is already in game.</span>")
 			if(ticker.current_state > GAME_STATE_PREGAME)
+				panel?.close()
+				load_panel?.close()
 				M.key = key
 			else
 				to_chat(src, "<span class='notice'>Wait until the round starts to join.</span>")
@@ -123,15 +125,22 @@
 	var/data = "<div align='center'><br>"
 	data += "<b>Select the character you want to [action].</b><br>"
 
-	for(var/ind = 1, ind < client.prefs.Slots(), ind++)
-		if(client.prefs.CharacterName(ind))
-			var/icon/preview = client.prefs.CharacterIcon(ind)
+	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
+		var/mob/M = client.prefs.Character(ind)
+		sleep(10)
+		var/icon/preview
+		var/cname
+		if(M)
+			M.deleting_char = 1
+			cname = M.real_name
+			preview = client.prefs.get_preview_icon(M)
+		if(cname)
 			send_rsc(src, preview, "[ind]preview.png")
 			data += "<img src=[ind]preview.png width=[preview.Width()] height=[preview.Height()]><br>"
-			data += "<b><a href='?src=\ref[src];pickSlot=[ind][action]'>[client.prefs.CharacterName(ind)]</a></b><hr>"
+			data += "<b><a href='?src=\ref[src];pickSlot=[ind][action]'>[cname]</a></b><hr>"
 		else
 			data += "<b>Open Slot</b><hr>"
-
+		qdel(M)
 	data += "</div>"
 	load_panel = new(src, "Select Character", "Select Character", 300, 500, src)
 	load_panel.set_content(data)
@@ -141,6 +150,7 @@
 	var/list/factions = list()
 
 	for(var/obj/item/organ/internal/stack/stack in GLOB.neural_laces)
+		if(!stack.loc) continue
 		var/faction = get_faction(stack.connected_faction)?.name
 		if(factions["[faction]"])
 			factions["[faction]"] += stack
@@ -182,7 +192,7 @@
 	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1))
 
 	for(var/mob/M in SSmobs.mob_list)
-		if(!M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
+		if(M.loc && !M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
 			if(istype(M, /mob/observer))
 				qdel(M)
 				continue
@@ -199,14 +209,9 @@
 		return
 
 	var/mob/character = client.prefs.Character(chosen_slot)
+	
 	var/turf/spawnTurf
 
-	if(!character.mind)		// Not entirely sure what this if() block does, but keeping it just in case
-		mind.active = 0
-		mind.original = character
-		if(client.prefs.memory)
-			mind.store_memory(client.prefs.memory)
-			mind.transfer_to(character)
 
 	if(character.spawn_type == 1)
 		var/datum/world_faction/faction = get_faction(character.spawn_loc)
@@ -251,12 +256,21 @@
 	if(!spawnTurf)
 		log_and_message_admins("WARNING! Unable To Find Any Spawn Turf!!! Prehaps you didn't include a map?")
 		return
-
+	if(!character.mind)		// Not entirely sure what this if() block does, but keeping it just in case
+		mind.active = 0
+		mind.original = character
+		if(client && client.prefs.memory)
+			mind.store_memory(client.prefs.memory)
+			mind.transfer_to(character)
+	sleep(3 SECONDS)		
+	character.after_spawn()
+	sleep(3 SECONDS)
 	character.forceMove(spawnTurf)
 	character.after_spawn()
 	character.stored_ckey = key
 	character.key = key
 	character.save_slot = chosen_slot
+	
 	ticker.minds |= character.mind
 	character.redraw_inv()
 	CreateModularRecord(character)

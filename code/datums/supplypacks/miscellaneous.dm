@@ -292,7 +292,8 @@
 					/obj/item/clothing/ring/material/silver,
 					/obj/item/clothing/accessory/locket,
 					/obj/item/clothing/accessory/black/expensive,
-					/obj/item/clothing/accessory/scarf
+					/obj/item/clothing/accessory/scarf,
+					/obj/item/clothing/head/crown,
 
 					)
 	cost = 100
@@ -410,7 +411,7 @@
 	name = "\improper Pest Control Crate"
 	cost = 2
 	containername = "\improper Pest Control Crate"
-	
+
 /decl/hierarchy/supply_pack/miscellaneous/phorosian
 	num_contained = 1
 	contains = list(/obj/item/device/phorosiansuit_changer)

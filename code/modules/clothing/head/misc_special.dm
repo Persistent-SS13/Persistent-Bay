@@ -206,3 +206,9 @@
 	icon_state = "richard"
 	body_parts_covered = HEAD|FACE
 	flags_inv = BLOCKHAIR
+
+/obj/item/clothing/head/crown
+	name = "crown"
+	desc = "A crown fit for a king, a pretty king maybe? Who are we to judge this day in age."
+	icon_state = "crown"
+	armor = list(melee = 15, bullet = 0, laser = 0, energy = 15, bomb = 0, bio = 0, rad = 0)

@@ -415,12 +415,12 @@
 	name = "Standard Chassis: Drone"
 	id = "borg_chassis_drone"
 	build_path = /obj/item/borg/chassis_mod/standard/drone
-
+/**
 /datum/design/item/robot_upgrade/chassis/eyebot
 	name = "Standard Chassis: Eyebot"
 	id = "borg_chassis_eyebot"
 	build_path = /obj/item/borg/chassis_mod/standard/eyebot
-
+**/
 //////////////
 // Service/Clerical
 
@@ -638,7 +638,7 @@
 /datum/design/item/robot_upgrade/module/security
 	name = "Module Chip: Security"
 	id = "borg_module_security"
-	build_path = /obj/item/borg/module_chip/security/general
+	build_path = /obj/item/borg/module_chip/security
 	materials = list(DEFAULT_WALL_MATERIAL = 25000, "glass" = 10000, "phoron" = 5000, "gold" = 2000, "silver" = 2000)
 
 /datum/design/item/robot_upgrade/module/mining

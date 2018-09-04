@@ -35,12 +35,12 @@
 	name = "Standard Chassis: Drone"
 	module_type = /obj/item/weapon/robot_module/standard
 	chassis_type = "drone-standard"
-
+/**
 /obj/item/borg/chassis_mod/standard/eyebot
 	name = "Standard Chassis: Eyebot"
 	module_type = /obj/item/weapon/robot_module/eyebot
 	chassis_type = "eyebot-stand"
-
+**/
 /obj/item/borg/chassis_mod/service/waitress
 	name = "Service/Clerical Chassis: Waitress"
 	module_type = /obj/item/weapon/robot_module/clerical

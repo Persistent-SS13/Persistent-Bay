@@ -583,7 +583,7 @@
 
 ////////////////////////////////////////////////////
 //////////////////////MODULE CHIPS//////////////////
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////
 
 /datum/design/item/robot_upgrade/module
 	category = "Cyborg Modules"
@@ -611,7 +611,7 @@
 /datum/design/item/robot_upgrade/module/security
 	name = "Module Chip: Security"
 	id = "borg_module_security"
-	build_path = /obj/item/borg/module_chip/security
+	build_path = /obj/item/borg/module_chip/security/general
 	materials = list(DEFAULT_WALL_MATERIAL = 25000, "glass" = 10000, "phoron" = 5000, "gold" = 2000, "silver" = 2000)
 
 /datum/design/item/robot_upgrade/module/mining

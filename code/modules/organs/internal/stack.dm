@@ -281,7 +281,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	do_backup()
 
 	return 1
-var/mob/deleting_char = 0
+mob/var/deleting_char = 0
 /obj/item/organ/internal/stack/removed(var/mob/living/user)
 	do_backup()
 	if(!istype(owner))
@@ -289,7 +289,7 @@ var/mob/deleting_char = 0
 
 	if(name == initial(name))
 		name = "\the [owner.real_name]'s [initial(name)]"
-	if(!deleting_char)
+	if(!owner.deleting_char)
 		transfer_identity(owner)
 
 	..()

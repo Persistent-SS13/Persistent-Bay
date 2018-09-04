@@ -35,7 +35,6 @@
 		output += "<span class='average'><b>The Game Is Loading!</b></span><br><br>"
 	else
 		output += "<a href='byond://?src=\ref[src];joinGame=1'>Join Game!</a><br><br>"
-		output += "<a href='byond://?src=\ref[src];crewManifest=1'>View Crew Manifest</a><br><br>"
 
 	if(check_rights(R_DEBUG, 0, client))
 		output += "<a href='byond://?src=\ref[src];observeGame=1'>Observe</a><br><br>"
@@ -132,6 +131,7 @@
 		var/icon/preview
 		var/cname
 		if(M)
+			M.deleting_char = 1
 			cname = M.real_name
 			preview = client.prefs.get_preview_icon(M)
 		if(cname)
@@ -140,7 +140,7 @@
 			data += "<b><a href='?src=\ref[src];pickSlot=[ind][action]'>[cname]</a></b><hr>"
 		else
 			data += "<b>Open Slot</b><hr>"
-
+		qdel(M)
 	data += "</div>"
 	load_panel = new(src, "Select Character", "Select Character", 300, 500, src)
 	load_panel.set_content(data)

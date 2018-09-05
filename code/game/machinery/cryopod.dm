@@ -263,6 +263,9 @@
 		log_and_message_admins("Warning! [key]'s [occupant] failed to find a save_slot, and is picking one!")
 		dir++
 		while(fexists(load_path(key, "[dir].sav")))
+			var/mob/M = Character_prefless(key, dir)
+			if(M.real_name == name)
+				break
 			dir++
 
 	var/savefile/F = new(load_path(key, "[dir].sav"))

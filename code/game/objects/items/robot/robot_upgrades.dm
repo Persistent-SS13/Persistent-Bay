@@ -35,12 +35,12 @@
 	name = "Standard Chassis: Drone"
 	module_type = /obj/item/weapon/robot_module/standard
 	chassis_type = "drone-standard"
-/**
+
 /obj/item/borg/chassis_mod/standard/eyebot
 	name = "Standard Chassis: Eyebot"
-	module_type = /obj/item/weapon/robot_module/eyebot
+	module_type = /obj/item/weapon/robot_module/standard
 	chassis_type = "eyebot-stand"
-**/
+
 /obj/item/borg/chassis_mod/service/waitress
 	name = "Service/Clerical Chassis: Waitress"
 	module_type = /obj/item/weapon/robot_module/clerical
@@ -244,7 +244,7 @@
 /obj/item/borg/module_chip/security
 	name = "Security Module."
 	desc = "Contains tools and supplies for a security cyborg."
-	module_type = /obj/item/weapon/robot_module/security
+	module_type = /obj/item/weapon/robot_module/security/general
 	default_icon = "robotSecy"
 /obj/item/borg/module_chip/clerical
 	name = "Clerical Module."
@@ -264,7 +264,7 @@
 /obj/item/borg/module_chip/engineering
 	name = "Engineering Module."
 	desc = "Contains tools and supplies for an engineering cyborg."
-	module_type = /obj/item/weapon/robot_module/engineering
+	module_type = /obj/item/weapon/robot_module/engineering/general
 	default_icon = "robotEngi"
 /obj/item/borg/module_chip/janitor
 	name = "Service Module."

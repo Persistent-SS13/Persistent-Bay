@@ -270,6 +270,7 @@
 					log_and_message_admins("[key]'s [occupant] found a savefile with it's realname [file]")
 					break
 		if(!dir)
+			dir++
 			while(fexists(load_path(key, "[dir].sav")))
 				dir++
 

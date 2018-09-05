@@ -369,56 +369,44 @@ datum/preferences
 
 	return
 
-/datum/preferences/proc/UpdateCharacter(var/ind)
-	var/savefile/F = new(load_path(client.ckey, "[ind].sav"))
+/proc/UpdateCharacter(var/ind, var/ckey)
+	var/savefile/F = new(load_path(ckey, "[ind].sav"))
 	var/mob/M
 	F >> M
 	fdel(F)
 	F["name"] << M.real_name
 	F["mob"] << M
 	qdel(M)
-
-/proc/Character_prefless(var/ckey, var/ind)
+	
+/proc/Character(var/ind, var/ckey)
 	if(!fexists(load_path(ckey, "[ind].sav")))
 		return
 
 	var/savefile/F = new(load_path(ckey, "[ind].sav"))
 	var/mob/M
 	if(!F.dir.Find("mob"))
-		UpdateCharacter(ind)
-
-	F["mob"] >> M
-	return M
-	
-/datum/preferences/proc/Character(var/ind)
-	if(!fexists(load_path(client.ckey, "[ind].sav")))
-		return
-
-	var/savefile/F = new(load_path(client.ckey, "[ind].sav"))
-	var/mob/M
-	if(!F.dir.Find("mob"))
-		UpdateCharacter(ind)
+		UpdateCharacter(ind, ckey)
 
 	F["mob"] >> M
 	return M
 
-/datum/preferences/proc/CharacterName(var/ind)
-	if(!fexists(load_path(client.ckey, "[ind].sav")))
+/proc/CharacterName(var/ind, var/ckey)
+	if(!fexists(load_path(ckey, "[ind].sav")))
 		return
 
-	var/savefile/F = new(load_path(client.ckey, "[ind].sav"))
+	var/savefile/F = new(load_path(ckey, "[ind].sav"))
 	var/name
 	if(!F.dir.Find("name"))
-		UpdateCharacter(ind)
+		UpdateCharacter(ind, ckey)
 
 	F["name"] >> name
 	return name
 
-/datum/preferences/proc/CharacterIcon(var/ind)
-	if(!fexists(load_path(client.ckey, "[ind].sav")))
+/proc/CharacterIcon(var/ind, var/ckey)
+	if(!fexists(load_path(ckey, "[ind].sav")))
 		return
 
-	var/mob/M = Character(ind)
+	var/mob/M = Character(ind, ckey)
 	M.regenerate_icons()
 	var/icon/I = get_preview_icon(M)
 	qdel(M)

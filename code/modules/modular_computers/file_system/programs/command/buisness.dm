@@ -119,7 +119,7 @@
 					data["employee_expenses"] = employee.expenses
 					data["employee_expense_limit"] = employee.expense_limit
 					var/list/formatted[0]
-					var/list/all_access = list("Sales", "Budget View", "Employee Control", "Upper Management", "Door Access 1", "Door Access 2", "Door Access 3")
+					var/list/all_access = ACCESS_BUSINESS_DEFAULT_ALL
 					for(var/x in all_access)
 						var/select = 0
 						if(x in employee.accesses)

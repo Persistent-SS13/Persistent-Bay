@@ -118,6 +118,7 @@
 	//see: setup.dm for list of mutations
 
 	var/radiation = 0.0//Carbon
+	var/phoronation = 0.0//Phoron effect
 
 	var/voice_name = "unidentifiable voice"
 

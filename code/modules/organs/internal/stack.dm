@@ -1,18 +1,11 @@
 GLOBAL_LIST_EMPTY(neural_laces)
+/mob/var/perma_dead = 0
 
 /mob/living/carbon/human/proc/create_stack()
 	set waitfor=0
 	sleep(10)
 	internal_organs_by_name[BP_STACK] = new /obj/item/organ/internal/stack(src,1)
 	to_chat(src, "<span class='notice'>You feel a faint sense of vertigo as your neural lace boots.</span>")
-/obj/item/organ/internal/stack/examine(mob/user) // -- TLE
-	. = ..(user)
-	if(lacemob && lacemob.key)//if thar be a brain inside... the brain.
-		to_chat(user, "This one looks occupied and ready for cloning, the conciousness clearly present and active.")
-	else if(lacemob && lacemob.stored_ckey)
-		to_chat(user, "This one appears inactive, the conciousness is resting and the transfer cannot complete until it 'wakes'.")
-	else
-		to_chat(user, "This one seems particularly lifeless. Perhaps it will regain some of its luster later..")
 
 /obj/item/organ/internal/stack
 	name = "neural lace"
@@ -27,6 +20,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	var/ownerckey
 	var/invasive
 	var/default_language
+	var/save_slot
 	var/list/languages = list()
 	var/datum/mind/backup
 	action_button_name = "Access Neural Lace UI"
@@ -49,36 +43,41 @@ GLOBAL_LIST_EMPTY(neural_laces)
 /obj/item/organ/internal/stack/Destroy()
 	if(lacemob && lacemob.key && lacemob.key != "")
 		loc = get_turf(loc)
+		log_and_message_admins("Attempted to destroy an in-use neural lace!")
 		return QDEL_HINT_LETMELIVE
-//	GLOB.neural_laces -= src
-//	. = ..()
+	QDEL_NULL(lacemob)
+	GLOB.neural_laces -= src
+	. = ..()
+
+/obj/item/organ/internal/stack/examine(mob/user) // -- TLE
+	. = ..(user)
+	if(lacemob?.key)	// Ff thar be a brain inside... the brain.
+		to_chat(user, "This one looks occupied and ready for cloning, the conciousness clearly present and active.")
+
+	else if(lacemob?.stored_ckey)
+		to_chat(user, "This one appears inactive, the conciousness is resting and the transfer cannot complete until it 'wakes'.")
+
+	else
+		to_chat(user, "This one seems particularly lifeless. Perhaps it will regain some of its luster later..")
 
 /obj/item/organ/internal/stack/ex_act(severity)
-	return ":)"
+	return
 
 /obj/item/organ/internal/stack/proc/transfer_identity(var/mob/living/carbon/H)
 
 	if(!lacemob)
 		lacemob = new(src)
-		lacemob.name = H.real_name
-		lacemob.real_name = H.real_name
-		lacemob.dna = H.dna.Clone()
-		lacemob.timeofhostdeath = H.timeofdeath
-		lacemob.container = src
-		if(owner)
-			lacemob.container2 = owner
-		lacemob.spawn_loc = H.spawn_loc
-		lacemob.spawn_loc_2 = H.spawn_loc_2
-	else
-		lacemob.name = H.real_name
-		lacemob.real_name = H.real_name
-		lacemob.dna = H.dna.Clone()
-		lacemob.timeofhostdeath = H.timeofdeath
-		lacemob.container = src
-		if(owner)
-			lacemob.container2 = owner
-		lacemob.spawn_loc = H.spawn_loc
-		lacemob.spawn_loc_2 = H.spawn_loc_2
+
+	lacemob.name = H.real_name
+	lacemob.real_name = H.real_name
+	lacemob.dna = H.dna.Clone()
+	lacemob.timeofhostdeath = H.timeofdeath
+	lacemob.container = src
+	if(owner && isnull(owner.gc_destroyed))
+		lacemob.container2 = owner
+	lacemob.spawn_loc = H.spawn_loc
+	lacemob.spawn_loc_2 = H.spawn_loc_2
+
 	if(H.mind)
 		H.mind.transfer_to(lacemob)
 
@@ -100,19 +99,15 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	return 0
 
 /obj/item/organ/internal/stack/ui_action_click()
-	var/mob/living/silicon/robot/robot
-	if(istype(loc, /obj/item/device/lmi))
-		if(istype(loc.loc, /mob/living/silicon/robot))
-			robot = loc.loc
-	if(!owner && !lacemob && !robot) return
-	if(lacemob)
-		ui_interact(lacemob)
-	else if(robot)
-		ui_interact(robot)
-	else
+	if(owner)
 		ui_interact(owner)
-/obj/item/organ/internal/stack/proc/ui_mobaction_click()
-	ui_interact(lacemob)
+	else if(istype(loc, /obj/item/device/lmi) && istype(loc.loc, /mob/living/silicon/robot))
+		ui_interact(loc.loc)	// A robot
+	else if(lacemob)
+		ui_interact(lacemob)
+	else
+		log_and_message_admins("[src] called ui_action_click without any owner!")
+
 /obj/item/organ/internal/stack/Topic(href, href_list)
 	switch (href_list["action"])
 		if("clock_out")
@@ -151,7 +146,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 				lacemob.stored_ckey = lacemob.ckey
 				M.key = lacemob.key
 	GLOB.nanomanager.update_uis(src)
-/mob/var/perma_dead = 0
+
 /obj/item/organ/internal/stack/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.interactive_state)
 	var/list/data = list()
 	try_connect()
@@ -179,6 +174,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
 		ui.open()
+
 /obj/item/organ/internal/stack/proc/get_potential()
 	if(!owner)
 		var/list/potential[0]
@@ -198,6 +194,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 			potential |= fact
 
 	return potential
+
 /obj/item/organ/internal/stack/proc/try_duty()
 	var/mob/living/silicon/robot/robot
 	if(istype(loc, /obj/item/device/lmi))
@@ -226,6 +223,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	else
 		duty_status = 0
 		return
+
 /obj/item/organ/internal/stack/proc/try_connect()
 	if(!owner) return 0
 	faction = get_faction(connected_faction)
@@ -246,13 +244,16 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	name = "cortical stack"
 	invasive = 1
 	action_button_name = "Access Cortical Stack UI"
+
 /obj/item/organ/internal/stack/proc/do_backup()
 	if(owner && owner.stat != DEAD && !is_broken() && owner.mind)
 		languages = owner.languages.Copy()
 		backup = owner.mind
 		default_language = owner.default_language
+		save_slot = owner.save_slot
 		if(owner.ckey)
-			ownerckey = owner.ckey
+			ownerckey = owner.ckey ? owner.ckey : owner.stored_ckey
+
 
 
 /obj/item/organ/internal/stack/after_load()
@@ -260,6 +261,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	try_connect()
 	if(duty_status)
 		try_duty()
+
 /obj/item/organ/internal/stack/proc/backup_inviable()
 	return 	(!istype(backup) || backup == owner.mind || (backup.current && backup.current.stat != DEAD))
 
@@ -270,7 +272,10 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 	if(lacemob)
 		overwrite()
+		lacemob.ckey = null
+		QDEL_NULL(lacemob)
 		return 1
+
 	if(owner && !backup_inviable())
 		var/current_owner = owner
 		var/response = input(find_dead_player(ownerckey, 1), "Your neural backup has been placed into a new body. Do you wish to return to life?", "Resleeving") as anything in list("Yes", "No")
@@ -281,18 +286,20 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	do_backup()
 
 	return 1
-mob/var/deleting_char = 0
+
 /obj/item/organ/internal/stack/removed(var/mob/living/user)
 	do_backup()
 	if(!istype(owner))
-		return ..()
+		message_admins("Removed Failed")
+		return ..(user)
 
 	if(name == initial(name))
 		name = "\the [owner.real_name]'s [initial(name)]"
-	if(!owner.deleting_char)
-		transfer_identity(owner)
 
-	..()
+	transfer_identity(owner)
+
+
+	..(user)
 
 /obj/item/organ/internal/stack/vox/removed()
 	var/obj/item/organ/external/head = owner.get_organ(parent_organ)
@@ -305,16 +312,12 @@ mob/var/deleting_char = 0
 /obj/item/organ/internal/stack/proc/overwrite()
 	if(owner.mind && owner.ckey) //Someone is already in this body!
 		owner.visible_message("<span class='danger'>\The [owner] spasms violently!</span>")
-		if(prob(66))
-			to_chat(owner, "<span class='danger'>You fight off the invading tendrils of another mind, holding onto your own body!</span>")
-			return
-		owner.ghostize() // Remove the previous owner to avoid their client getting reset.
-	//owner.dna.real_name = backup.name
-	//owner.real_name = owner.dna.real_name
-	//owner.name = owner.real_name
-	//The above three lines were commented out for
+		to_chat(owner, "<span class='danger'>You fight off the invading tendrils of another mind, holding onto your own body!</span>")
+		return	// People should not be able to overwrite someone else.
 	backup.active = 1
 	backup.transfer_to(owner)
-	if(default_language) owner.default_language = default_language
+	if(default_language)
+		owner.default_language = default_language
 	owner.languages = languages.Copy()
+	owner.save_slot = save_slot
 	to_chat(owner, "<span class='notice'>Consciousness slowly creeps over you as your new body awakens.</span>")

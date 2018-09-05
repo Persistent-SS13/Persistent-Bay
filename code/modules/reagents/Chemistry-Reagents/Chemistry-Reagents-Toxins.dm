@@ -92,7 +92,7 @@
 /datum/reagent/toxin/phoron/affect_touch(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien != IS_PHOROSIAN)
 		M.take_organ_damage(0, removed * 0.1) //being splashed directly with phoron causes minor chemical burns
-		M.phoronation += 0.05
+		M.phoronation += removed * 0.1
 		if(prob(10 * fire_mult))
 			M.pl_effects()
 

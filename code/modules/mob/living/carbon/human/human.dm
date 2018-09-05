@@ -50,6 +50,9 @@
 /mob/living/carbon/human/Destroy()
 	for(var/organ in internal_organs)
 		if(src.loc && istype(organ, /obj/item/organ/internal/stack))
+			var/obj/item/organ/internal/stack/lace = organ
+			lace.removed()
+			lace.loc = loc
 			continue
 		qdel(organ)
 	for(var/organ in organs)

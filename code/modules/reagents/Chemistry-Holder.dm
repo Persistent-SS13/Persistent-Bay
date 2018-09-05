@@ -242,7 +242,7 @@ GLOBAL_DATUM_INIT(temp_reagents_holder, /obj, new)
 	return amount
 
 /datum/reagents/proc/trans_to_holder(var/datum/reagents/target, var/amount = 1, var/multiplier = 1, var/copy = 0) // Transfers [amount] reagents from [src] to [target], multiplying them by [multiplier]. Returns actual amount removed from [src] (not amount transferred to [target]).
-	if(!target || !istype(target))
+	if( (!target || !istype(target)) )	//The puddle can also hold ragents even tho its not the usual type.
 		return
 
 	amount = max(0, min(amount, total_volume, target.get_free_space() / multiplier))
@@ -276,7 +276,7 @@ GLOBAL_DATUM_INIT(temp_reagents_holder, /obj, new)
 		return splash_mob(target, amount, copy)
 	if(isturf(target))
 		return trans_to_turf(target, amount, multiplier, copy)
-	if(isobj(target) && target.is_open_container())
+	if( isobj(target) && ( target.is_open_container() || istype(target,/obj/effect/decal/cleanable/puddle_chem) ) )
 		return trans_to_obj(target, amount, multiplier, copy)
 	return 0
 
@@ -286,9 +286,14 @@ GLOBAL_DATUM_INIT(temp_reagents_holder, /obj, new)
 	if(!isturf(target) && target.loc)
 		spill = amount*(rand(min_spill, max_spill)/100)
 		amount -= spill
+	else if(isturf(target))
+		spill = amount
+		amount -= spill
 	if(spill)
-		splash(target.loc, spill, multiplier, copy, min_spill, max_spill)
-
+		create_puddle(target, spill, multiplier, copy) // creates puddle on loc or adds reagents to it if there is already one
+	if(istype(target, /obj/effect/decal/cleanable/puddle_chem)) //Prevents transfering directly to a puddle, instead we let create_puddle() proc determine what to do
+		create_puddle(target, amount, multiplier, copy)
+		return //we should not attempt to transfer to the targeted puddle, as the new puddle on top of it will merge.
 	trans_to(target, amount, multiplier, copy)
 
 /datum/reagents/proc/trans_type_to(var/atom/target, var/type, var/amount = 1)
@@ -411,3 +416,27 @@ GLOBAL_DATUM_INIT(temp_reagents_holder, /obj, new)
 	else
 		reagents = new/datum/reagents(max_vol, src)
 	return reagents
+
+/datum/reagents/proc/create_puddle(var/atom/target, var/amount = 1, var/multiplier = 1, var/copy = 0)
+	if (amount < 3)
+		return
+	var/hasLiquid = 0
+	for(var/datum/reagent/R in reagent_list)	//Checks if the current container has any liquid reagents
+		if (R.reagent_state == LIQUID)
+			hasLiquid = 1
+	if(!hasLiquid)								//Otherwise we simply don't create a puddle out of SOLID only reagents
+		return
+	//The actual puddle creation below.
+	if (!isturf(target))
+		target = target.loc
+	var/obj/effect/decal/cleanable/puddle_chem/P
+	for (var/obj/effect/decal/cleanable/puddle_chem/puddle in target)
+		P = puddle
+		break
+	if (!P)
+		P = new /obj/effect/decal/cleanable/puddle_chem(target)
+
+	trans_to(P, amount, multiplier, copy)
+	P.update_neighbours()
+
+	P.mix_with_neighbours()

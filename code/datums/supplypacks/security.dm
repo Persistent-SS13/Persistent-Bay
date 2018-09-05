@@ -98,12 +98,18 @@
 	access = core_access_security_programs
 
 /decl/hierarchy/supply_pack/security/voidsuit
-	name = "Armor - Security Voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/security/alt,
-					/obj/item/clothing/head/helmet/space/void/security/alt,
-					/obj/item/clothing/shoes/magboots)
-	cost = 100
+	name = "Security Voidsuit"
+	contains = list(/obj/item/clothing/suit/space/void/security/prepared)
+	cost = 150
 	containername = "\improper Security voidsuit crate"
+	containertype = /obj/structure/closet/crate/secure/large
+	access = core_access_security_programs
+
+/decl/hierarchy/supply_pack/security/voidsuit_heavyduty
+	name = "Heavy Duty Security Voidsuit"
+	contains = list(/obj/item/clothing/suit/space/void/security/alt/prepared)
+	cost = 250
+	containername = "\improper Heavy Duty Security voidsuit crate"
 	containertype = /obj/structure/closet/crate/secure/large
 	access = core_access_security_programs
 

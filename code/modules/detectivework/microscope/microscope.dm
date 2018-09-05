@@ -19,11 +19,6 @@
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
 	RefreshParts()
 
-/obj/machinery/cryopod/attackby(var/obj/item/O as obj, var/mob/user as mob)
-	if(default_deconstruction_screwdriver(user, O))
-		return
-	if(default_deconstruction_crowbar(user, O))
-		return
 /obj/machinery/microscope/attackby(obj/item/weapon/W as obj, mob/user as mob)
 
 	if(sample)

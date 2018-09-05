@@ -134,8 +134,8 @@ obj/machinery/resleever/Process()
 		return TRUE
 	switch(action)
 		if("begin")
-			sleeve()
-			resleeving = 1
+			if(sleeve())
+				resleeving = 1
 		if("eject")
 			eject_occupant()
 		if("ejectlace")
@@ -148,11 +148,13 @@ obj/machinery/resleever/Process()
 		var/obj/item/organ/O = occupant.get_organ(lace.parent_organ)
 		if(istype(O))
 			lace.status &= ~ORGAN_CUT_AWAY //ensure the lace is properly attached
-			lace.replaced(occupant, O)
-			lace = null
-			lace_name = null
-	else
-		return
+			if(lace.replaced())	// Laces don't use the two inputs
+				lace = null
+				lace_name = null
+				return 1
+			return 0
+
+	return 0
 
 /obj/machinery/resleever/proc/go_in(var/mob/target, var/mob/user)
 	if(occupant)

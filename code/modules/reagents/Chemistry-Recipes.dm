@@ -505,7 +505,15 @@
 		if(L.stat != DEAD)
 			e.amount *= 0.5
 	e.start()
-	holder.clear_reagents()
+	var/waterAmount = holder.get_reagent_amount(/datum/reagent/water)
+	var/potassiumAmount = holder.get_reagent_amount(/datum/reagent/potassium)
+	if (potassiumAmount >= waterAmount) //If this breaks anything please kill me. I thought it made more sense to leave the rest of the reagents behind. It does in fact make sense deleting all reagents since the explosion can just vaporise them. If needed to change i'll just add this behaviour to puddle_chem
+		holder.del_reagent(/datum/reagent/water)
+	else
+		holder.del_reagent(/datum/reagent/potassium)
+	if ( istype(holder.my_atom,/obj/effect/decal/cleanable/puddle_chem) )
+		var/obj/effect/decal/cleanable/puddle_chem/puddle = holder.my_atom
+		puddle.mix_with_neighbours()
 
 /datum/chemical_reaction/flash_powder
 	name = "Flash powder"

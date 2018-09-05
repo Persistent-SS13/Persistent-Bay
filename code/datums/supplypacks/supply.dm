@@ -175,9 +175,7 @@
 /decl/hierarchy/supply_pack/supply/salvagedsuit
 	name = "Salvaged Voidsuit with Airtank"
 	contains = list(/obj/item/weapon/tank/oxygen,
-			 		/obj/item/clothing/suit/space/void/engineering/salvage,
-					/obj/item/clothing/head/helmet/space/void/engineering/salvage,
-					/obj/item/clothing/shoes/magboots)
+			 		/obj/item/clothing/suit/space/void/engineering/salvage/prepared)
 	cost = 50
 	containername = "\improper Salvaged Voidsuit crate"
 

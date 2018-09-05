@@ -5,7 +5,7 @@
 	icon_state = "void"
 
 	heat_protection = HEAD
-	armor = list(melee = 30, bullet = 5, laser = 10,energy = 5, bomb = 20, bio = 100, rad = 20)
+	armor = list(melee = 40, bullet = 5, laser = 20,energy = 5, bomb = 35, bio = 100, rad = 20)
 	max_heat_protection_temperature = SPACE_SUIT_MAX_HEAT_PROTECTION_TEMPERATURE
 	siemens_coefficient = 0.4
 
@@ -35,10 +35,6 @@
 	heat_protection = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
 	max_heat_protection_temperature = SPACE_SUIT_MAX_HEAT_PROTECTION_TEMPERATURE
 	siemens_coefficient = 0.4
-
-/obj/item/clothing/suit/space/void/mining/prepared
-	helmet = /obj/item/clothing/head/helmet/space/void/mining
-	boots = /obj/item/clothing/shoes/magboots
 
 	species_restricted = list(SPECIES_HUMAN, SPECIES_SKRELL, SPECIES_IPC)
 	sprite_sheets = list(
@@ -279,3 +275,7 @@ else if(##equipment_var) {\
 
 /obj/item/clothing/suit/space/void/attack_self() //sole purpose of existence is to toggle the helmet
 	toggle_helmet()
+
+/obj/item/clothing/suit/space/void/prepared
+	helmet = /obj/item/clothing/head/helmet/space/void
+	boots = /obj/item/clothing/shoes/magboots

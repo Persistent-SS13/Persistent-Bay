@@ -265,8 +265,8 @@ GLOBAL_LIST_EMPTY(neural_laces)
 /obj/item/organ/internal/stack/proc/backup_inviable()
 	return 	(!istype(backup) || backup == owner.mind || (backup.current && backup.current.stat != DEAD))
 
-/obj/item/organ/internal/stack/replaced()
-	if(!..())
+/obj/item/organ/internal/stack/replaced(var/mob/living/carbon/human/target, var/obj/item/organ/external/affected)
+	if(!..(target, affected))
 		message_admins("stack replace() failed")
 		return 0
 

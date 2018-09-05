@@ -261,9 +261,22 @@
 
 	if(!dir)
 		log_and_message_admins("Warning! [key]'s [occupant] failed to find a save_slot, and is picking one!")
-		dir++
-		while(fexists(load_path(key, "[dir].sav")))
+		for(var/file in flist(load_path(key, "")))
+			var/firstNumber = text2num(copytext(file, 1, 2))
+			if(firstNumber)
+				var/savefile/F = new(load_path(key, "[file]"))
+				if(!F.dir.Find("mob"))
+					character.client.prefs.UpdateCharacter(firstNumber)
+				var/storedName
+				F["name"] >> storedName
+				if(storedName == name)
+					dir = firstNumber
+					log_and_message_admins("[key]'s [occupant] found a savefile with it's realname [F]")
+					break
+		if(!dir)
 			dir++
+			while(fexists(load_path(key, "[dir].sav")))
+				dir++
 
 	var/savefile/F = new(load_path(key, "[dir].sav"))
 	F["name"] << name

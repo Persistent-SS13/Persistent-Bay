@@ -305,7 +305,6 @@
 
 /mob/new_player/proc/deleteCharacter()
 	if(input("Are you SURE you want to delete [CharacterName(chosen_slot, ckey)]? THIS IS PERMANENT. enter the character\'s full name to conform.", "DELETE A CHARACTER", "") == CharacterName(chosen_slot, ckey))
-		fdel(load_path(ckey, "[chosen_slot]preview.png"))
 		fdel(load_path(ckey, "[chosen_slot].sav"))
 	load_panel.close()
 

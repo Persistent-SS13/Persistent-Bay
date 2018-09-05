@@ -38,6 +38,91 @@
 		return 0
 	else
 		return 1
+/datum/random_map/noise/ore/rich/apply_to_turf(var/x,var/y)
+
+	var/tx = ((origin_x-1)+x)*chunk_size
+	var/ty = ((origin_y-1)+y)*chunk_size
+
+	for(var/i=0,i<chunk_size,i++)
+		for(var/j=0,j<chunk_size,j++)
+			var/turf/simulated/T = locate(tx+j, ty+i, origin_z)
+			if(!istype(T) || !T.has_resources)
+				continue
+			if(!priority_process)
+				CHECK_TICK
+			T.resources = list()
+			T.resources["sand"] = rand(3,5)
+			T.resources["graphene"] = rand(3,5)
+
+			var/tmp_cell
+			TRANSLATE_AND_VERIFY_COORD(x, y)
+
+			if(tmp_cell < rare_val)      // Surface metals.
+				T.resources["hematite"] =     rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
+				T.resources["copper"] = rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
+				T.resources["gold"] =     	  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["silver"] =		  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["pitchblende"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["rock salt"] =    rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
+				T.resources["pyrite"] =   	  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["cinnabar"] =     rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["phosphorite"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["potash"] =		  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["bauxite"] =   	  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["quartz"] =   	  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["spodumene"] =    rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["diamond"] =  0
+				T.resources["phoron"] =   0
+				T.resources["platinum"] = 0
+				T.resources["tungsten"] = 0
+				T.resources["hydrogen"] = 0
+				T.resources["bluespace crystal"] = 0
+			else if(tmp_cell < deep_val) // Rare metals.
+				T.resources["gold"] =     rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
+				T.resources["silver"] =   rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
+				T.resources["pitchblende"] =  rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
+				T.resources["phoron"] =   rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
+				T.resources["tungsten"] = 0
+				T.resources["platinum"] = 0
+				T.resources["hydrogen"] = 0
+				if(prob(0.5)) // .5 percent
+					T.resources["bluespace crystal"] = 1
+				else
+					T.resources["bluespace crystal"] = 0
+				T.resources["diamond"] =  0
+				T.resources["hematite"] =     0
+				T.resources["copper"] =   0
+				T.resources["rock salt"] =     0
+				T.resources["pyrite"] =   0
+				T.resources["cinnabar"] =   0
+				T.resources["phosphorite"] =   0
+				T.resources["potash"] =  0
+				T.resources["bauxite"] =   0
+				T.resources["quartz"] =  0
+				T.resources["spodumene"] =  0
+			else                             // Deep metals.
+				T.resources["pitchblende"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["diamond"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["tungsten"] = rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["phoron"] =   rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
+				T.resources["platinum"] =   rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
+				T.resources["hydrogen"] = rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
+				if(prob(2.5)) // 2.5 percent
+					T.resources["bluespace crystal"] = 1
+				else
+					T.resources["bluespace crystal"] = 0
+				T.resources["hematite"] =     0
+				T.resources["copper"] =   0
+				T.resources["rock salt"] =     0
+				T.resources["pyrite"] =   0
+				T.resources["cinnabar"] =   0
+				T.resources["phosphorite"] =   0
+				T.resources["potash"] =  0
+				T.resources["bauxite"] =   0
+				T.resources["quartz"] =  0
+				T.resources["spodumene"] =  0
+
+
 
 /datum/random_map/noise/ore/apply_to_turf(var/x,var/y)
 
@@ -52,78 +137,78 @@
 			if(!priority_process)
 				CHECK_TICK
 			T.resources = list()
-			T.resources["silicates"] = rand(3,5)
-			T.resources["carbonaceous rock"] = rand(3,5)
+			T.resources["sand"] = rand(3,5)
+			T.resources["graphene"] = rand(3,5)
 
 			var/tmp_cell
 			TRANSLATE_AND_VERIFY_COORD(x, y)
 
 			if(tmp_cell < rare_val)      // Surface metals.
-				T.resources["iron"] =     rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
+				T.resources["hematite"] =     rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
 				T.resources["copper"] =   rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
-				T.resources["salt"] =     rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
-				T.resources["aluminum"] = rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
-				T.resources["tin"] =      rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
-				T.resources["zinc"] =     rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
-				T.resources["lead"] =     rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
-				T.resources["sulfur"] =   rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["rock salt"] =     rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
+				T.resources["pyrite"] =   rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["cinnabar"] =   rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["phosphorite"] =   rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["potash"] =   rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["bauxite"] =   rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["quartz"] =   rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["spodumene"] =   rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["gold"] =     rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["silver"] =   rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
-				T.resources["uranium"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
-				T.resources["ice"] = 	  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
-				T.resources["dryice"] =   rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["pitchblende"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["diamond"] =  0
 				T.resources["phoron"] =   0
-				T.resources["osmium"] =   0
 				T.resources["tungsten"] = 0
 				T.resources["hydrogen"] = 0
 				T.resources["bluespace crystal"] = 0
 			else if(tmp_cell < deep_val) // Rare metals.
-				T.resources["tin"] =      rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
-				T.resources["zinc"] =     rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
-				T.resources["lead"] =     rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
-				T.resources["sulfur"] =   rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
 				T.resources["gold"] =     rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
 				T.resources["silver"] =   rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
-				T.resources["uranium"] =  rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
-				T.resources["phoron"] =   rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
-				T.resources["osmium"] =   rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
+				T.resources["pitchblende"] =  rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
+		//		T.resources["phoron"] =   rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
 				T.resources["tungsten"] = 0
 				T.resources["hydrogen"] = 0
-				if(prob(1)) // 1 percent
-					T.resources["bluespace crystal"] = 1
-				else
-					T.resources["bluespace crystal"] = 0
-				T.resources["diamond"] =  0
-				T.resources["iron"] =     0
-				T.resources["copper"] =   0
-				T.resources["aluminum"] = 0
-				T.resources["salt"] =     0
-				T.resources["ice"] = 	  0
-				T.resources["dryice"] =   0
+		//		if(prob(1)) // 1 percent
+		//			T.resources["bluespace crystal"] = 1
+		//		else
+		//			T.resources["bluespace crystal"] = 0
+				T.resources["diamond"] =  	  0
+				T.resources["hematite"] =     0
+				T.resources["copper"] = 0
+				T.resources["rock salt"] =    0
+				T.resources["pyrite"] =   	  0
+				T.resources["cinnabar"] =     0
+				T.resources["phosphorite"] =  0
+				T.resources["potash"] =		  0
+				T.resources["bauxite"] =      0
+				T.resources["quartz"] =   	  0
+				T.resources["spodumene"] = 	  0
 			else                             // Deep metals.
-				T.resources["uranium"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["pitchblende"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["diamond"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["tungsten"] = rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
-				T.resources["phoron"] =   rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
-				T.resources["osmium"] =   rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
+		//		T.resources["phoron"] =   rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
+				T.resources["platinum"] = rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
 				T.resources["hydrogen"] = rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
-				if(prob(5)) // 5 percent
-					T.resources["bluespace crystal"] = 1
-				else
-					T.resources["bluespace crystal"] = 0
-				T.resources["iron"] =     0
-				T.resources["copper"] =   0
-				T.resources["aluminum"] = 0
-				T.resources["tin"] =      0
-				T.resources["zinc"] =     0
-				T.resources["sulfur"] =   0
-				T.resources["lead"] =     0
+		//		if(prob(5)) // 5 percent
+		//			T.resources["bluespace crystal"] = 1
+		//		else
+		//			T.resources["bluespace crystal"] = 0
+				T.resources["hematite"] =     0
+				T.resources["copper"] = 0
 				T.resources["gold"] =     0
 				T.resources["silver"] =   0
-				T.resources["salt"] =     0
-				T.resources["ice"] = 	  0
-				T.resources["dryice"] =   0
+				T.resources["rock salt"] =    0
+				T.resources["pyrite"] =   	  0
+				T.resources["cinnabar"] =     0
+				T.resources["phosphorite"] =  0
+				T.resources["potash"] =		  0
+				T.resources["bauxite"] =      0
+				T.resources["quartz"] =   	  0
+				T.resources["spodumene"] = 	  0
+
+
 /datum/random_map/noise/ore/get_map_char(var/value)
 	if(value < rare_val)
 		return "S"

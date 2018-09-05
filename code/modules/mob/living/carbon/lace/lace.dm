@@ -6,14 +6,16 @@
 	var/timeofhostdeath = 0
 	var/emp_damage = 0//Handles a type of MMI damage
 	var/alert = null
-	use_me = 0 //Can't use the me verb, it's a freaking immobile brain
+	use_me = 1 //Can't use the me verb, it's a freaking immobile brain
 	icon = 'icons/obj/surgery.dmi'
 	icon_state = "cortical-stack"
-
+	default_language = LANGUAGE_GALCOM
 /mob/living/carbon/lace/New()
 	container = loc
 	var/datum/action/lace/laceaction = new(container)
 	laceaction.Grant(src)
+	default_language = all_languages[LANGUAGE_GALCOM]
+	add_language(LANGUAGE_GALCOM)
 	..()
 /mob/living/carbon/lace/after_load()
 	if(container)

@@ -79,6 +79,7 @@
 	return 1
 
 /datum/nano_module/program/invoicing/proc/print_invoice(var/mob/user)
+	if(amount < 0) return
 	var/datum/world_faction/connected_faction
 	if(program.computer.network_card && program.computer.network_card.connected_network)
 		connected_faction = program.computer.network_card.connected_network.holder

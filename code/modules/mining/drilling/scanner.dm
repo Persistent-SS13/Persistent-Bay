@@ -37,15 +37,15 @@
 			var/data_value = 1
 
 			switch(metal)
-				if("silicates", "carbonaceous rock", "iron")	
+				if("sand", "graphene", "hematite", "tetrahedrite", "rock salt", "pyrite")
 					ore_type = "surface minerals"
-				if("gold", "silver", "diamond")					
+				if("gold", "silver", "diamond", "platinum", "tungsten")
 					ore_type = "precious metals"
 					data_value = 2
-				if("uranium")									
+				if("pitchblende")
 					ore_type = "nuclear fuel"
 					data_value = 3
-				if("phoron", "osmium", "hydrogen")				
+				if("phoron", "hydrogen")
 					ore_type = "exotic matter"
 					data_value = 4
 

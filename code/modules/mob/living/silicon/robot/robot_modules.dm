@@ -68,6 +68,7 @@ var/global/list/robot_modules = list(
 	for(var/obj/item/I in modules)
 		I.canremove = 0
 
+
 /obj/item/weapon/robot_module/proc/Reset(var/mob/living/silicon/robot/R)
 	remove_camera_networks(R)
 	remove_languages(R)
@@ -181,14 +182,35 @@ var/global/list/robot_modules = list(
 					"Doot" = "eyebot-standard"
 				  )
 	module_type = "standard"
+	robo_icon_state = "robot"
 /obj/item/weapon/robot_module/standard/New()
 	src.modules += new /obj/item/device/flash(src)
 	src.modules += new /obj/item/weapon/melee/baton/loaded(src)
 	src.modules += new /obj/item/weapon/extinguisher(src)
+	src.modules += new /obj/item/weapon/pickaxe(src)
+	src.modules += new /obj/item/weapon/soap(src)
 	src.modules += new /obj/item/weapon/wrench(src)
 	src.modules += new /obj/item/weapon/crowbar(src)
+	src.modules += new /obj/item/weapon/weldingtool/largetank(src)
+	src.modules += new /obj/item/weapon/reagent_containers/borghypo/standard(src)
 	src.modules += new /obj/item/device/healthanalyzer(src)
 	src.emag = new /obj/item/weapon/melee/energy/sword(src)
+
+	var/datum/matter_synth/metal = new /datum/matter_synth/metal(40000)
+	synths += metal
+
+	var/obj/item/stack/material/cyborg/steel/M = new (src)
+	M.synths = list(metal)
+	src.modules += M
+
+	var/obj/item/stack/rods/cyborg/R = new /obj/item/stack/rods/cyborg(src)
+	R.synths = list(metal)
+	src.modules += R
+
+	var/obj/item/stack/tile/floor/cyborg/S = new /obj/item/stack/tile/floor/cyborg(src)
+	S.synths = list(metal)
+	src.modules += S
+
 	..()
 
 /obj/item/weapon/robot_module/medical
@@ -316,7 +338,7 @@ var/global/list/robot_modules = list(
 
 	..()
 
-	
+
 /obj/item/weapon/robot_module/engineering
 	name = "engineering robot module"
 	channels = list("Engineering" = 1)

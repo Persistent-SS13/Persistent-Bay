@@ -44,6 +44,7 @@ datum/controller/game_controller/proc/setup()
 	transfer_controller = new
 	save_controller = new
 	employment_controller = new
+	aggression_controller = new
 	ambient_controller = new
 	report_progress("Initializations complete")
 	initialization_stage |= INITIALIZATION_COMPLETE

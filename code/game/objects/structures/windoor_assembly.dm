@@ -224,7 +224,7 @@ obj/structure/windoor_assembly/Destroy()
 						windoor.set_density(0)
 						if(electronics.business_name)
 							if(electronics.one_access)
-								windoor.req_one_access_business_list = src.electronics.business_access
+								windoor.req_access_business_list = src.electronics.business_access
 
 							else
 								windoor.req_one_access_business_list = src.electronics.business_access

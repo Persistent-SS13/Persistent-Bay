@@ -12,7 +12,7 @@
 	Problems with short term and long term memory alongside other mental \
 	impairments are rampant among them,and they often have to go through many \
 	months of therapy to relearn how to do many tasks."
-	meat_type = /ore/phoron
+	meat_type = /material/phoron
 	taste_sensitivity = TASTE_DULL //Question is how could they taste anything in the first place?
 	virus_immune = 1
 	has_floating_eyes = 1
@@ -31,7 +31,7 @@
 	flesh_color = "#3b1077"
 	blood_color = "#4d224d"
 	reagent_tag = IS_PHOROSIAN
-	breath_volume= 1.4
+	breath_volume= 0.1
 
 	var/list/eye_overlays = list()
 

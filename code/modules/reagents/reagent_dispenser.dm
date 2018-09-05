@@ -83,17 +83,18 @@
 	initial_reagent_types = list(/datum/reagent/water = 1)
 	flags = OBJ_CLIMBABLE
 
-/obj/structure/reagent_dispensers/watertank/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/obj/structure/reagent_dispensers/watertank/attackby(var/obj/item/weapon/W as obj, mob/user as mob)
 	if(isScrewdriver(W))
+		src.add_fingerprint(user)
 		if(reagents.total_volume == 0)
-			to_chat(usr, "<span class='notice>You begin dismantling \the [src].</span>")
+			to_chat(user, "<span class='notice'>You begin dismantling \the [src].</span>")
 			if(do_after(user, 20, src))
 				if(!src) return
-				to_chat(usr, "<span class='notice>You finish dismantiling \the [src].</span>")
-				new /obj/item/stack/material/plastic(src.loc, 10)
+				to_chat(user, "<span class='notice'>You finish dismantling \the [src].</span>")
+				new /obj/item/stack/material/steel(src.loc, 10)
 				qdel(src)
 		else
-			to_chat(usr, "<span class='notice>Empty it first!</span>")
+			to_chat(user, "<span class='notice'>Empty it first!</span>")
 	else
 		return ..()
 
@@ -163,15 +164,16 @@
 		return
 
 	else if(isScrewdriver(W))
+		src.add_fingerprint(user)
 		if(reagents.total_volume == 0)
-			to_chat(usr, "<span class='notice>You begin dismantling \the [src].</span>")
+			to_chat(user, "<span class='notice'>You begin dismantling \the [src].</span>")
 			if(do_after(user, 20, src))
 				if(!src) return
-				to_chat(usr, "<span class='notice>You finish dismantiling \the [src].</span>")
+				to_chat(user, "<span class='notice'>You finish dismantling \the [src].</span>")
 				new /obj/item/stack/material/steel(src.loc, 10)
 				qdel(src)
 		else
-			to_chat(usr, "<span class='notice>Empty it first!</span>")
+			to_chat(user, "<span class='notice'>Empty it first!</span>")
 
 	return ..()
 
@@ -243,7 +245,6 @@
 	possible_transfer_amounts = null
 	matter = list(DEFAULT_WALL_MATERIAL = 200)
 	anchored = 0
-	density = 0
 	initial_capacity = 500
 	initial_reagent_types = list(/datum/reagent/water = 1)
 
@@ -261,15 +262,16 @@
 			anchored = !anchored
 		return
 	else if(isScrewdriver(W))
+		src.add_fingerprint(user)
 		if(reagents.total_volume == 0)
-			to_chat(usr, "<span class='notice>You begin dismantling \the [src].</span>")
+			to_chat(user, "<span class='notice'>You begin dismantling \the [src].</span>")
 			if(do_after(user, 20, src))
 				if(!src) return
-				to_chat(usr, "<span class='notice>You finish dismantling \the [src].</span>")
-				new /obj/item/stack/material/plastic(src.loc, 10)
+				to_chat(user, "<span class='notice'>You finish dismantling \the [src].</span>")
+				new /obj/item/stack/material/steel(src.loc, 10)
 				qdel(src)
 		else
-			to_chat(usr, "<span class='notice>Empty it first!</span>")
+			to_chat(user, "<span class='notice'>Empty it first!</span>")
 	else
 		return ..()
 
@@ -280,23 +282,24 @@
 	icon_state = "beertankTEMP"
 	amount_per_transfer_from_this = 10
 	matter = list(DEFAULT_WALL_MATERIAL = 20000)
-	density = 0
 	initial_reagent_types = list(/datum/reagent/ethanol/beer = 1)
 	flags = OBJ_CLIMBABLE
 
 /obj/structure/reagent_dispensers/beerkeg/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(isScrewdriver(W))
+		src.add_fingerprint(user)
 		if(reagents.total_volume == 0)
-			to_chat(usr, "<span class='notice'>You begin dismantling \the [src].</span>")
+			to_chat(user, "<span class='notice'>You begin dismantling \the [src].</span>")
 			if(do_after(user, 20, src))
 				if(!src) return
-				to_chat(usr, "<span class='notice'You finish dismantling \the [src].</span>")
+				to_chat(user, "<span class='notice'>You finish dismantling \the [src].</span>")
 				new /obj/item/stack/material/steel(src.loc, 10)
 				qdel(src)
 		else
-			to_chat(usr, "<span class='notice>Empty it first!</span>")
+			to_chat(user, "<span class='notice'>Empty it first!</span>")
 	else
 		return ..()
+		
 /obj/structure/reagent_dispensers/water_cooler/empty
 	initial_reagent_types = list()
 
@@ -313,6 +316,7 @@
 	icon_state = "virusfoodtank"
 	amount_per_transfer_from_this = 10
 	anchored = 1
+	density = 0
 	initial_reagent_types = list(/datum/reagent/nutriment/virus_food = 1)
 
 /obj/structure/reagent_dispensers/acid
@@ -322,4 +326,5 @@
 	icon_state = "acidtank"
 	amount_per_transfer_from_this = 10
 	anchored = 1
+	density = 0
 	initial_reagent_types = list(/datum/reagent/acid = 1)

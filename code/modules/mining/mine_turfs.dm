@@ -19,7 +19,7 @@ var/list/mining_floors = list()
 	blocks_air = 1
 	temperature = T0C
 	var/mined_turf = /turf/simulated/asteroid
-	var/ore/mineral
+	var/material/mineral
 	var/mined_ore = 0
 	var/last_act = 0
 	var/emitter_blasts_taken = 0 // EMITTER MINING! Muhehe.
@@ -48,6 +48,7 @@ var/list/mining_floors = list()
 		update_icon(1)
 /turf/simulated/mineral/after_load()
 	update_icon(0)
+	..()
 /turf/simulated/mineral/Destroy()
 	if (mining_walls["[src.z]"])
 		mining_walls["[src.z]"] -= src
@@ -60,11 +61,11 @@ var/list/mining_floors = list()
 	return 1
 
 /turf/simulated/mineral/update_icon(var/update_neighbors)
-	if(!mineral)
+	if(!istype(mineral))
 		name = "rock"
 		icon_state = "rock"
 	else
-		name = "[mineral.display_name] deposit"
+		name = "[mineral.ore_name] deposit"
 
 	overlays.Cut()
 
@@ -141,11 +142,11 @@ var/list/mining_floors = list()
 			M.selected.action(src)
 
 /turf/simulated/mineral/proc/MineralSpread()
-	if(mineral && mineral.spread)
+	if(mineral && mineral.ore_spread_chance > 0)
 		for(var/trydir in GLOB.cardinal)
-			if(prob(mineral.spread_chance))
+			if(prob(mineral.ore_spread_chance))
 				var/turf/simulated/mineral/target_turf = get_step(src, trydir)
-				if(istype(target_turf) && !target_turf.mineral)
+				if(istype(target_turf) && isnull(target_turf.mineral))
 					target_turf.mineral = mineral
 					target_turf.UpdateMineral()
 					target_turf.MineralSpread()
@@ -153,8 +154,13 @@ var/list/mining_floors = list()
 
 /turf/simulated/mineral/proc/UpdateMineral()
 	clear_ore_effects()
-	ore_overlay = image('icons/obj/mining.dmi', "rock_[mineral.icon_tag]")
+	ore_overlay = image('icons/turf/mining_decals.dmi', "[mineral.ore_icon_overlay]")
 	ore_overlay.appearance_flags = RESET_COLOR
+	if(prob(50))
+		var/matrix/M = matrix()
+		M.Scale(-1,1)
+		ore_overlay.transform = M
+	ore_overlay.color = mineral.icon_colour
 	ore_overlay.turf_decal_layerise()
 	update_icon()
 
@@ -297,7 +303,7 @@ var/list/mining_floors = list()
 		return
 
 	clear_ore_effects()
-	var/obj/item/weapon/ore/O = new mineral.ore (src)
+	var/obj/item/weapon/ore/O = new(src, mineral.name)
 	if(geologic_data && istype(O))
 		geologic_data.UpdateNearbyArtifactInfo(src)
 		O.geologic_data = geologic_data
@@ -305,10 +311,10 @@ var/list/mining_floors = list()
 
 /turf/simulated/mineral/proc/GetDrilled(var/artifact_fail = 0)
 	//var/destroyed = 0 //used for breaking strange rocks
-	if (mineral && mineral.result_amount)
+	if (mineral && mineral.ore_result_amount)
 
 		//if the turf has already been excavated, some of it's ore has been removed
-		for (var/i = 1 to mineral.result_amount - mined_ore)
+		for (var/i = 1 to mineral.ore_result_amount - mined_ore)
 			DropMineral()
 
 	//destroyed artifacts have weird, unpleasant effects
@@ -397,24 +403,20 @@ var/list/mining_floors = list()
 				R.amount = rand(5,25)
 
 /turf/simulated/mineral/random
-	name = "Mineral deposit"
-	var/mineralSpawnChanceList = list("Uranium" = 5, "Platinum" = 5, "Lead" = 6, "Tungsten" = 2, "Iron" = 35, "Copper" = 35, "Aluminum" = 25, "Sulfur" = 20, "Tin" = 20, "Zinc" = 20, "Ice" = 5, "Dryice" = 5, "Oxyice" = 20, "Nitroice" = 15, "Hydroice" = 15, "Carbon" = 35, "Salt" = 20, "Diamond" = 1, "Gold" = 5, "Silver" = 5, "Phoron" = 10)
-	var/mineralChance = 100 //10 //means 10% chance of this plot changing to a mineral deposit
+	name = "mineral deposit"
 
-/turf/simulated/mineral/random/New()
-	if (prob(mineralChance) && !mineral)
-		var/mineral_name = pickweight(mineralSpawnChanceList) //temp mineral name
-		mineral_name = lowertext(mineral_name)
-		if (mineral_name && (mineral_name in ore_data))
-			mineral = ore_data[mineral_name]
-			UpdateMineral()
+/turf/simulated/mineral/random/New(var/newloc, var/mineral_name, var/default_mineral_list = GLOB.weighted_minerals_sparse)
+	if(!mineral_name && LAZYLEN(default_mineral_list))
+		mineral_name = pickweight(default_mineral_list)
 
-	. = ..()
+	if(!mineral && mineral_name)
+		mineral = SSmaterials.get_material_by_name(mineral_name)
+	if(istype(mineral))
+		UpdateMineral()
+	..(newloc)
 
-/turf/simulated/mineral/random/high_chance
-	mineralChance = 100 //25
-	mineralSpawnChanceList = list("Uranium" = 10, "Platinum" = 10, "Lead" = 12, "Tungsten" = 4, "Iron" = 20, "Copper" = 20, "Aluminum" = 15, "Sulfur" = 10, "Tin" = 10, "Zinc" = 10, "Ice" = 2, "Dryice" = 2, "Oxyice" = 10, "Nitroice" = 5, "Hydroice" = 5, "Carbon" = 20, "Salt" = 10, "Diamond" = 2, "Gold" = 10, "Silver" = 10, "Phoron" = 20)
-
+/turf/simulated/mineral/random/high_chance/New(var/newloc, var/mineral_name, var/default_mineral_list)
+	..(newloc, mineral_name, GLOB.weighted_minerals_rich)
 
 /**********************Asteroid**************************/
 
@@ -433,9 +435,18 @@ var/list/mining_floors = list()
 /turf/simulated/floor/asteroid
 	name = "sand"
 
+
+/turf/simulated/asteroid/Entered(atom/movable/M)
+	. = ..()
+	if(istype(M) && !istype(M, /mob/living/simple_animal) && !istype(M, /mob/observer) )
+		if(aggression_controller)
+			var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
+			if(zone)
+				zone.asteroid_targets |= M
+
 /turf/simulated/asteroid/after_load()
 	updateMineralOverlays(1)
-
+	..()
 /turf/simulated/floor/asteroid/after_load()
 	var/resource = resources
 	var/xi = x
@@ -445,6 +456,7 @@ var/list/mining_floors = list()
 	spawn()
 		var/turf/simulated/asteroid = locate(xi,yi,zi)
 		asteroid.resources = resource
+	..()
 /turf/simulated/asteroid/New()
 	if (!mining_floors["[src.z]"])
 		mining_floors["[src.z]"] = list()

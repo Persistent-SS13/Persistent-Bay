@@ -66,8 +66,10 @@ var/list/admin_verbs_admin = list(
 	/datum/admins/proc/changeambience,
 	/datum/admins/proc/buildaccounts,
 	/datum/admins/proc/retrieve_account,
+	/datum/admins/proc/retrieve_email,
+	/datum/admins/proc/fixemail,
+	/datum/admins/proc/buildemail,
 	/datum/admins/proc/delete_account,
-	/datum/admins/proc/savechars,
 	/datum/admins/proc/loadnow,			//persistent edit, loadnow loads the station,
 	/client/proc/game_panel,			//game panel, allows to change game-mode etc,
 	/client/proc/cmd_admin_say,			//admin-only ooc chat,
@@ -213,7 +215,8 @@ var/list/admin_verbs_debug = list(
 	/client/proc/cmd_analyse_health_context,
 	/client/proc/cmd_analyse_health_panel,
 	/client/proc/visualpower,
-	/client/proc/visualpower_remove
+	/client/proc/visualpower_remove,
+	/datum/admins/proc/generate_beacon			//Generates the Nanotrasen faction beacon
 	)
 
 var/list/admin_verbs_paranoid_debug = list(
@@ -516,7 +519,7 @@ var/list/admin_verbs_mentor = list(
 		holder.Secrets()
 	feedback_add_details("admin_verb","S") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	return
-	
+
 /client/proc/bonus_panel()
 
 	set category = "Server"
@@ -527,7 +530,7 @@ var/list/admin_verbs_mentor = list(
 		return
 	if(holder)
 		holder.bonus_panel()
-		
+
 
 /client/proc/colorooc()
 	set category = "Fun"

@@ -355,11 +355,12 @@ GLOBAL_LIST_EMPTY(all_business)
 	connected_laces |= stack
 	stack.business_mode = 1
 	stack.connected_business = src.name
+	stack.duty_status = 1
 /datum/small_business/proc/clock_out(var/obj/item/organ/internal/stack/stack)
 	connected_laces -= stack
 	stack.business_mode = 0
 	stack.connected_business = ""
-
+	stack.duty_status = 0
 /datum/small_business/proc/proposal_approved(var/datum/proposal/proposal)
 	switch(proposal.func)
 		if(1)
@@ -563,6 +564,10 @@ GLOBAL_LIST_EMPTY(all_business)
 	var/hiring_policy = 0 // if hiring_policy, anyone with reassignment can add people to the network, else only people in command a command category with reassignment can add people
 	var/last_expense_print = 0
 
+/datum/world_faction/after_load()	
+	if(!debts)
+		debts = list()
+	..()
 /datum/world_faction/proc/get_duty_status(var/real_name)
 	for(var/obj/item/organ/internal/stack/stack in connected_laces)
 		if(stack.get_owner_name() == real_name)

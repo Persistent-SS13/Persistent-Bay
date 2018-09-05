@@ -475,7 +475,7 @@
 	catalysts = list(/datum/reagent/toxin/plasticide = 8)
 	result_amount = 1
 
-/datum/chemical_reaction/plastication/on_reaction(var/datum/reagents/holder, var/created_volume)
+/datum/chemical_reaction/pultrusion/on_reaction(var/datum/reagents/holder, var/created_volume)
 	new /obj/item/stack/material/glass/fiberglass(get_turf(holder.my_atom), created_volume)
 
 /datum/chemical_reaction/latticing
@@ -484,7 +484,7 @@
 	required_reagents = list(/datum/reagent/acid/polyacid = 1, /datum/reagent/silicon = 20)
 	result_amount = 1
 
-/datum/chemical_reaction/plastication/on_reaction(var/datum/reagents/holder, var/created_volume)
+/datum/chemical_reaction/latticing/on_reaction(var/datum/reagents/holder, var/created_volume)
 	new /obj/item/stack/material/glass(get_turf(holder.my_atom), created_volume)
 
 /* Grenade reactions */
@@ -505,7 +505,15 @@
 		if(L.stat != DEAD)
 			e.amount *= 0.5
 	e.start()
-	holder.clear_reagents()
+	var/waterAmount = holder.get_reagent_amount(/datum/reagent/water)
+	var/potassiumAmount = holder.get_reagent_amount(/datum/reagent/potassium)
+	if (potassiumAmount >= waterAmount) //If this breaks anything please kill me. I thought it made more sense to leave the rest of the reagents behind. It does in fact make sense deleting all reagents since the explosion can just vaporise them. If needed to change i'll just add this behaviour to puddle_chem
+		holder.del_reagent(/datum/reagent/water)
+	else
+		holder.del_reagent(/datum/reagent/potassium)
+	if ( istype(holder.my_atom,/obj/effect/decal/cleanable/puddle_chem) )
+		var/obj/effect/decal/cleanable/puddle_chem/puddle = holder.my_atom
+		puddle.mix_with_neighbours()
 
 /datum/chemical_reaction/flash_powder
 	name = "Flash powder"
@@ -878,7 +886,7 @@
 	required_reagents = list(/datum/reagent/glycerol = 1, /datum/reagent/space_cleaner = 1, /datum/reagent/gold = 1)
 	result_amount = 1
 
-/datum/chemical_reaction/soap/on_reaction(var/datum/reagents/holder, var/created_volume)
+/datum/chemical_reaction/gold_soap/on_reaction(var/datum/reagents/holder, var/created_volume)
 	var/location = get_turf(holder.my_atom)
 	for(var/i = 1, i <= created_volume, i++)
 		new /obj/item/weapon/soap/gold(location)
@@ -889,7 +897,7 @@
 	required_reagents = list(/datum/reagent/glycerol = 1, /datum/reagent/space_cleaner = 1, /datum/reagent/toxin/phoron = 1)
 	result_amount = 1
 
-/datum/chemical_reaction/soap/on_reaction(var/datum/reagents/holder, var/created_volume)
+/datum/chemical_reaction/nt_soap/on_reaction(var/datum/reagents/holder, var/created_volume)
 	var/location = get_turf(holder.my_atom)
 	for(var/i = 1, i <= created_volume, i++)
 		new /obj/item/weapon/soap/nanotrasen(location)
@@ -900,7 +908,7 @@
 	required_reagents = list(/datum/reagent/glycerol = 1, /datum/reagent/space_cleaner = 1, /datum/reagent/blood = 1)
 	result_amount = 1
 
-/datum/chemical_reaction/soap/on_reaction(var/datum/reagents/holder, var/created_volume)
+/datum/chemical_reaction/syndie_soap/on_reaction(var/datum/reagents/holder, var/created_volume)
 	var/location = get_turf(holder.my_atom)
 	for(var/i = 1, i <= created_volume, i++)
 		new /obj/item/weapon/soap/syndie(location)

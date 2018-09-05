@@ -53,10 +53,7 @@
 	if(istype(O,/obj/item/organ/internal/stack) && !brainmob) //Time to stick a brain in it --NEO
 
 		var/obj/item/organ/internal/stack/B = O
-		if(B.damage >= B.max_damage)
-			to_chat(user, "<span class='warning'>That lace is well and truly dead.</span>")
-			return
-		else if(!B.lacemob)
+		if(!B.lacemob)
 			to_chat(user, "<span class='notice'>This lace is completely useless to you.</span>")
 			return
 
@@ -109,7 +106,7 @@
 			brainobj = null
 		else	//Or make a new one if empty.
 			brain = new(user.loc)
-		brainmob.container = null//Reset brainmob mmi var.
+		brainmob.container = brain//Reset brainmob mmi var.
 		brainmob.loc = brain//Throw mob into brain.
 		brainmob.remove_from_living_mob_list() //Get outta here
 		brain.lacemob = brainmob//Set the brain to use the brainmob
@@ -141,7 +138,14 @@
 	if(isrobot(loc))
 		var/mob/living/silicon/robot/borg = loc
 		borg.mmi = null
-	QDEL_NULL(brainmob)
+	if(brainmob)
+		brainmob.loc = brainobj
+	if(brainobj)
+		brainobj.loc = get_turf(src)
+		brainobj = null
+		brainmob.container = brainobj
+	else
+		QDEL_NULL(brainmob)
 	return ..()
 
 /obj/item/device/lmi/radio_enabled

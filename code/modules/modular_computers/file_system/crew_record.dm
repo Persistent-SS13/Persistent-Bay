@@ -80,7 +80,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/validate_time = 0
 	var/worked = 0
 	var/expenses = 0
-	
+	var/datum/computer_file/data/email_account/email
 	
 /datum/computer_file/crew_record/New()
 	..()
@@ -106,27 +106,49 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/datum/assignment/curr_assignment = faction.get_assignment(assignment_uid)
 	if(!curr_assignment) return 0
 	for(var/name in promote_votes)
+		if(name == faction.leader_name)
+			five_promotes |= name
+			three_promotes |= name
+			all_promotes |= name
+			continue
 		if(name == get_name()) continue
 		var/datum/computer_file/crew_record/record = faction.get_record(name)
 		if(record)
-			var/head_position = 0
 			var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
 			if(assignment)
-				if(curr_assignment.parent)
-					if(curr_assignment.parent.command_faction)
-						if(curr_assignment.parent.head_position.uid == curr_assignment.uid) head_position = 1
-				if(assignment.parent.command_faction || assignment.parent.name == curr_assignment.parent.name) // either the promotion is coming from a command position or its coming from an internal promotion request
-					if(assignment.parent)
-						if(assignment.parent.head_position.uid != assignment.uid && curr_assignment.parent.head_position.uid == curr_assignment.uid) // The promoted position is a head position and the promoter is not
-							continue
-						if((assignment.uid == curr_assignment.uid || assignment.parent.head_position.uid != assignment.uid) && record.rank <= rank) // they have the same assignment and we are equal or less rank
-							continue
-					if(assignment.accesses.Find("2"))
-						if(record.rank >= 5 || (record.rank >= assignment.ranks.len && head_position))
-							five_promotes |= name
-						if(record.rank >= 3 || (record.rank >= assignment.ranks.len && head_position))
-							three_promotes |= name
-						all_promotes |= name
+				if(assignment.parent)
+					var/promoter_command = (assignment.parent.command_faction)
+					var/promoter_head = (assignment.parent.head_position && assignment.parent.head_position.uid == assignment.uid)
+					var/curr_command = curr_assignment.parent.command_faction
+					var/curr_head = (curr_assignment.parent.head_position && curr_assignment.parent.head_position.uid == curr_assignment.uid) 
+					var/same_dept = (assignment.parent.name == curr_assignment.parent.name)
+					if(promoter_command)
+						if(curr_command)
+							if(curr_head)
+								if(promoter_head)
+									if(record.rank <= rank)
+										continue
+								else
+									continue
+					else
+						if(curr_command) continue
+						if(curr_head && !promoter_head) continue
+						if(!same_dept) continue
+						if(promoter_head)
+							if(curr_head)
+								if(record.rank <= rank)
+									continue
+						else
+							if(record.rank <= rank)
+								continue
+		
+		if(record.rank <= 5)
+			five_promotes |= record.get_name()
+		if(record.rank <= 3)
+			three_promotes |= record.get_name()
+		all_promotes |= record.get_name()
+		
+		
 	if(five_promotes.len >= faction.five_promote_req)
 		rank++
 		promote_votes.Cut()

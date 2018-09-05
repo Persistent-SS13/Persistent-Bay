@@ -36,6 +36,7 @@
 	icon_state = "workboots"
 	item_state = "workboots"
 	armor = list(melee = 40, bullet = 0, laser = 0, energy = 15, bomb = 20, bio = 0, rad = 20)
+	permeability_coefficient = 0.03
 	siemens_coefficient = 0.7
 	can_hold_knife = 1
 

@@ -42,11 +42,11 @@ var/datum/controller/ambient_controller/ambient_controller
 
 
 /datum/music_controller
-	var/tone
+	var/tone = "none"
 	var/timetostop = 0
 	var/datum/music_file/lastplayed
 /datum/music_controller/proc/should_play()
-	if(timetostop < world.time)
+	if(timetostop < world.time && tone != "none")
 		return tone
 /datum/controller/ambient_controller
 	var/list/zlevel_data
@@ -155,8 +155,12 @@ var/datum/controller/ambient_controller/ambient_controller
 					controller.lastplayed = to_play[x]
 					controller.timetostop = controller.lastplayed.length + world.time
 		for(var/client/C in GLOB.clients)
+			if(!(C && C.get_preference_value(/datum/client_preference/play_ambiance) == GLOB.PREF_YES))	continue
 			var/mob/M = C.mob
 			if(M && to_play["[M.z]"] && C.get_preference_value(/datum/client_preference/play_ambiance) == GLOB.PREF_YES)
 				var/turf/T = M.loc
 				var/datum/music_file/file = to_play["[M.z]"]
-				M.playsound_local(T, sound(file.path, repeat = 0, wait = 0, volume = 15, channel = 1))
+				if(file)
+					M.playsound_local(T, sound(file.path, repeat = 0, wait = 0, volume = 15, channel = 1))
+				else
+					M.playsound_local(T, sound(null, repeat = 0, wait = 0, volume = 15, channel = 1))

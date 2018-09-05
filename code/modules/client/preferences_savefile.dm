@@ -132,7 +132,14 @@
 	mannequin.spawn_type = 2
 	mannequin.species.equip_survival_gear(mannequin)
 	mannequin.equip_to_slot_or_del(new /obj/item/clothing/shoes/black(mannequin),slot_shoes)
-	S << mannequin
+	for(var/lang in alternate_languages)
+		var/datum/language/chosen_language = all_languages[lang]
+		if(chosen_language)
+			var/is_species_lang = (chosen_language.name in mannequin.species.secondary_langs)
+			if(is_species_lang || ((!(chosen_language.flags & RESTRICTED) || check_rights(R_ADMIN, 0, client))))
+				mannequin.add_language(lang)
+	S["name"] << mannequin.real_name
+	S["mob"] << mannequin
 	character_list = list()
 	qdel(mannequin)
 

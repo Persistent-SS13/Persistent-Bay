@@ -839,22 +839,53 @@ var/global/floorIsLava = 0
 					controller.timetostop = 0
 					controller.tone = choice2
 
-/datum/admins/proc/buildaccounts()
+					
+/datum/admins/proc/fixemail()					
 	set category = "Server"
-	set desc="Build accounts"
-	set name="Build accounts"
+	set desc="Refactor Email accounts"
+	set name="Refactor Email accounts"
+
+	if(!check_rights(R_ADMIN))
+		return
+	for(var/datum/computer_file/data/email_account/account in ntnet_global.email_accounts)
+		for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
+			if(replacetext(record.get_name(), " ", "_") == account.login)
+				record.email = account
+	
+/datum/admins/proc/buildemail()
+	set category = "Server"
+	set desc="Build Email accounts"
+	set name="Build Email accounts"
 
 	if(!check_rights(R_ADMIN))
 		return
 	for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
-		if(!record.linked_account)
-			record.linked_account = create_account(record.get_name(), 0, null)
-			record.linked_account.remote_access_pin = 1111
+		if(!record.email)
+			record.email = new()
+			record.email.login = "[replacetext(record.get_name(), " ", "_")]@freemail.nt"
+			record.email.password = "recovery[rand(1,99)]"
 
+/datum/admins/proc/retrieve_email()
+	set category = "Server"
+	set desc = "Retrieve Email"
+	set name = "Retrieve Email"
+
+	if(!check_rights(R_ADMIN))
+		return
+	var/real_name = input("Enter the real name to search for", "Real name") as text|null
+	if(real_name)
+		for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
+			if(record.get_name() == real_name)
+				if(!record.email)
+					to_chat(usr, "THE ACCOUNT FOR [real_name] is broken")
+					return
+				to_chat(usr, "Account details: login:[record.email.login] password: [record.email.password]")
+				break
+			
 /datum/admins/proc/retrieve_account()
 	set category = "Server"
-	set desc="Retrieve Account"
-	set name="Retrieve Account"
+	set desc ="Retrieve Money Account"
+	set name ="Retrieve Money Account"
 
 	if(!check_rights(R_ADMIN))
 		return
@@ -864,6 +895,21 @@ var/global/floorIsLava = 0
 			if(record.get_name() == real_name)
 				to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
 				break
+
+					
+					
+/datum/admins/proc/buildaccounts()
+	set category = "Server"
+	set desc="Build Money accounts"
+	set name="Build Money accounts"
+
+	if(!check_rights(R_ADMIN))
+		return
+	for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
+		if(!record.linked_account)
+			record.linked_account = create_account(record.get_name(), 0, null)
+			record.linked_account.remote_access_pin = 1111
+
 
 /datum/admins/proc/delete_account()
 	set category = "Server"
@@ -878,29 +924,6 @@ var/global/floorIsLava = 0
 			if(record.get_name() == real_name)
 				GLOB.all_crew_records -= record
 				qdel(record)
-
-/datum/admins/proc/savechars()
-	set category = "Server"
-	set desc="Saves Characters"
-	set name="Save Characters"
-
-	if(!check_rights(R_ADMIN))
-		return
-	for(var/mob/mobbie in GLOB.all_cryo_mobs)
-		if(!mobbie.stored_ckey) continue
-		var/save_path = load_path(mobbie.stored_ckey, "")
-		if(fexists("[save_path][mobbie.save_slot].sav"))
-			fdel("[save_path][mobbie.save_slot].sav")
-		var/savefile/f = new("[save_path][mobbie.save_slot].sav")
-		f << mobbie
-	for(var/datum/mind/employee in ticker.minds)
-		if(!employee.current || !employee.current.ckey) continue
-		var/save_path = load_path(employee.current.ckey, "")
-		if(fexists("[save_path][employee.current.save_slot].sav"))
-			fdel("[save_path][employee.current.save_slot].sav")
-		var/savefile/f = new("[save_path][employee.current.save_slot].sav")
-		f << employee.current
-		to_chat(employee.current, "You character has been saved.")
 
 /datum/admins/proc/loadnow()
 	set category = "Server"
@@ -1659,4 +1682,16 @@ datum/admins/var/obj/item/weapon/paper/admin/faxreply // var to hold fax replies
 	spawn(100)
 		qdel(P)
 		faxreply = null
+	return
+
+/datum/admins/proc/generate_beacon()
+	set category = "Debug"
+	set desc = "Spawn the Nanotrasen frontier beacon at (100,100,1)"
+	set name = "Generate Faction Beacon"
+
+	new /obj/faction_spawner/Nanotrasen(locate(100,100,1))
+	var/obj/structure/frontier_beacon/beacon
+	beacon = new /obj/structure/frontier_beacon(locate(100,100,1)) //
+	beacon.req_access_faction = "nanotrasen"
+	to_chat(usr, "<b>Frontier Beacon and faction_spawner (Nanotrasen) generated.)</b>")
 	return

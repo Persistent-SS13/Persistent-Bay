@@ -26,9 +26,9 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	icon_state = "unpowered"
 	use_power = 0			//1 = idle, 2 = active
 	var/status = 0 // 0 = unpowered, 1 = closed 2 = open 3 = contruction mode 4 = occupied 5 = obstructed
-	req_access = list(core_access_command_programs)
+	req_access = list(core_access_shuttle_programs)
 	var/datum/world_faction/faction
-	var/dimensions = 1 // 1 = 5*7, 2 = 7*7, 3 = 9*9
+	var/dimensions = 1 // 1 = 5*7, 2 = 7*7, 3 = 9*9 4 = 12*12 5 = 20*20
 	var/highlighted = 0
 	var/id = "docking port"
 	var/visible_mode = 0 // 0 = invisible, 1 = visible, docking auth required, 2 = visible, anyone can dock
@@ -102,7 +102,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			if(5)
 				data["status"] = "Obstructed"
 		data["dimension"] = dimensions
-	message_admins("ui_interact has ran, opening ui")
 	// update the ui if it exists, returns null if no ui is passed/found
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)

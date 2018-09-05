@@ -49,7 +49,7 @@
 		if(do_after(usr, 30, src))
 			if(!src) return
 			to_chat(usr, "<span class='notice'>You finish dismantling \the [src].</span>")
-			new /obj/item/stack/material/steel(src.loc, 5)
+			new /obj/item/stack/material/plastic(src.loc, 5)
 			qdel(src)
 			return
 
@@ -146,7 +146,7 @@
 		if(do_after(usr, 30, src))
 			if(!src) return
 			to_chat(usr, "<span class='notice'>You finish dismantling \the [src].</span>")
-			new /obj/item/frame/shower(src.loc)
+			new /obj/item/frame/plastic/shower(src.loc)
 			qdel(src)
 			return
 
@@ -323,7 +323,7 @@
 	icon_state = "sink"
 	desc = "A sink used for washing one's hands and face."
 	anchored = 1
-	var/frame_type = /obj/item/frame/sink/
+	var/frame_type = /obj/item/frame/plastic/sink/
 	var/busy = 0 	//Something's being washed at the moment
 
 /obj/structure/sink/MouseDrop_T(var/obj/item/thing, var/mob/user)
@@ -444,7 +444,7 @@
 /obj/structure/sink/kitchen
 	name = "kitchen sink"
 	icon_state = "sink_alt"
-	frame_type = /obj/item/frame/kitchensink/
+	frame_type = /obj/item/frame/plastic/kitchensink/
 
 /obj/structure/sink/puddle	//splishy splashy ^_^
 	name = "puddle"

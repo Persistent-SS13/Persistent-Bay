@@ -207,6 +207,19 @@
 	else
 		to_chat(src, "You dont have a module activated.")
 
+/mob/living/silicon/robot/verb/CoverLock()
+	set category = "Robot Commands"
+	set name = "Toggle Cover Lock"
+	if(opened)
+		to_chat(src, "You cant lock your cover when its open.")
+		return
+	if(locked)
+		to_chat(src, "You unlock your cover panel.")
+		locked = 0
+	else
+		locked = 1
+		to_chat(src, "You lock your cover panel.")
+		
 /mob/living/silicon/robot/verb/ChassisToggle()
 	set category = "Robot Commands"
 	set name = "Toggle Chassis Mod"
@@ -324,9 +337,11 @@
 			if(lmi.brainmob)
 				mind.transfer_to(lmi.brainmob)
 			else
-				to_chat(src, "<span class='danger'>Oops! Something went very wrong, your LMI was unable to receive your mind. You have been ghosted. Please make a bug report so we can fix this bug.</span>")
-				ghostize()
-				//ERROR("A borg has been destroyed, but its MMI lacked a brainmob, so the mind could not be transferred. Player: [ckey].")
+				lmi.brainmob = new()
+				mind.transfer_to(lmi.brainmob)	
+			//	to_chat(src, "<span class='danger'>Oops! Something went very wrong, your LMI was unable to receive your mind. You have been ghosted. Please make a bug report so we can fix this bug.</span>")
+			//	ghostize()
+			//	//ERROR("A borg has been destroyed, but its MMI lacked a brainmob, so the mind could not be transferred. Player: [ckey].")
 			lmi = null
 		else
 			QDEL_NULL(lmi)

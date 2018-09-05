@@ -36,7 +36,7 @@ var/list/gamemode_cache = list()
 	var/vote_no_default = 0				// vote does not default to nochange/norestart (tbi)
 	var/vote_no_dead = 0        		// dead people can't vote (tbi)
 	var/autosave_initial =  3 HOUR		//Length of time before the first autoSave
-	var/autosave_interval = 2 HOUR  //Length of time before next sequential autosave
+	var/autosave_interval = 3 HOUR  //Length of time before next sequential autosave
 //	var/enable_authentication = 0		// goon authentication
 	var/del_new_on_log = 1				// del's new players if they log before they spawn in
 	var/feature_object_spell_system = 0 //spawns a spellbook which gives object-type spells instead of verb-type spells for the wizard
@@ -222,6 +222,8 @@ var/list/gamemode_cache = list()
 	var/error_msg_delay = 50 // How long to wait between messaging admins about occurrences of a unique error
 
 	var/max_gear_cost = 10 // Used in chargen for accessory loadout limit. 0 disables loadout, negative allows infinite points.
+
+	var/allow_ic_printing = TRUE // Whether players should be allowed to print IC circuits from scripts.
 
 /datum/configuration/New()
 	var/list/L = typesof(/datum/game_mode) - /datum/game_mode
@@ -641,6 +643,9 @@ var/list/gamemode_cache = list()
 
 				if("disable_welder_vision")
 					config.welder_vision = 0
+
+				if ("disable_circuit_printing")
+					config.allow_ic_printing = FALSE
 
 				if("allow_extra_antags")
 					config.allow_extra_antags = 1

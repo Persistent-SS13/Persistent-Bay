@@ -46,18 +46,7 @@
 			if(has_access(list(core_access_security_programs), list(), M.GetAccess(req_access_faction)) && (M.GetFaction() == req_access_faction))
 				return //Faction-members with security access are immune.
 
-	var/list/checked_items = list()
-	checked_items += A
-	if(A.contents.len)
-		checked_items += A.contents // Double-recursive check. A gun in a satchel will set it off, a knife in a box in a satchel will too.
-		for(var/obj/O in A.contents) // A knife in a bible in a box in a satchel will not.
-			if(O.contents.len)
-				checked_items += O.contents
-				for(var/obj/OT in O.contents)
-					if(OT.contents.len)
-						checked_items += OT.contents
-
-	check_items(checked_items)
+	check_items(recursive_content_check(src.loc, sight_check = FALSE, include_mobs = FALSE, recursion_limit = 4))
 	..()
 
 /obj/machinery/metal_detector/proc/check_items(var/list/L)

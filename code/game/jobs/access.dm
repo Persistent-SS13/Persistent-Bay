@@ -20,17 +20,14 @@
 			if(employee)
 				var/pass = 1
 				var/one_pass = 0
-				for(var/x in req_access_business_list)		//needs all
+				for(var/x in req_access_business_list)
 					if(!(x in employee.accesses))
 						pass = 0
-						break								//Break since we found one required access that we don't have on a list that we need ALL
-				if(req_one_access_business_list.len)
-					for(var/x in req_one_access_business_list)
-						if(x in employee.accesses)
-							one_pass = 1
-							break
-
-				if(pass && (one_pass || !req_one_access_business_list.len) )
+				for(var/x in req_one_access_business_list)
+					if(!(x in employee.accesses))
+						one_pass = 1
+				if(!req_one_access_business_list.len) one_pass = 1
+				if(pass && one_pass)
 					return 1
 			return 0
 	if(req_access_personal)

@@ -1,6 +1,4 @@
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:31
-#define ACCESS_BUSINESS_ELETRONICS "Electronics Control"
-#define ACCESS_BUSINESS_DEFAULT_ALL list(ACCESS_BUSINESS_ELETRONICS,"Sales", "Budget View", "Employee Control", "Upper Management", "Door Access 1", "Door Access 2", "Door Access 3")
 
 
 /obj/item/weapon/airlock_electronics/business
@@ -20,7 +18,7 @@
 	if(!viewing) locked = 1
 	if(!locked)
 		data["connected_faction"] = viewing.name
-		var/list/all_access = ACCESS_BUSINESS_DEFAULT_ALL
+		var/list/all_access = list("Sales", "Budget View", "Employee Control", "Upper Management", "Door Access 1", "Door Access 2", "Door Access 3")
 		var/list/region = list()
 		var/list/accesses = list()
 		for(var/j in all_access)
@@ -38,8 +36,8 @@
 	data["lockable"] = lockable
 
 	return data
-
-
+	
+	
 /obj/item/weapon/airlock_electronics/business/ui_act(action, params)
 	switch(action)
 		if("clear")
@@ -57,33 +55,21 @@
 				business_access -= access
 			return TRUE
 		if("unlock")
-			var/select_name = input(usr,"Enter the full name of the business.\n (This [name] will be bound to that business until an employee clears the access list and locks it.)","Unlock", "") as null|text
+		
+			var/select_name = input(usr,"Enter the full name of the business.","Unlock", "") as null|text
 			var/datum/small_business/viewing = get_business(select_name)
-
-			if (business_name && (select_name != business_name) )
-				to_chat(usr, "This [name] has been locked by the business [business_name] .")
-				return FALSE
 			if(!viewing)
-				to_chat(usr, "Business not found.")
+				to_chat(usr, "Business not found")
 				return FALSE
-			var/datum/employee_data/employee = viewing.get_employee_data(usr.get_id_name())
-			if ( !(usr.get_id_name() == viewing.ceo_name) && !employee)
-				to_chat(usr, "You're not part of that business.")
-				return FALSE
-			else if ( usr.get_id_name() == viewing.ceo_name || ( ACCESS_BUSINESS_ELETRONICS in employee.accesses) )
-				locked = 0
-				business_name = select_name
-				return TRUE
-			else
-				to_chat(usr, "Only the CEO or permitted employees are able to unlock the [name].")
-				return FALSE
-
+			locked = 0
+			business_name = select_name
+			
 		if("lock")
 			if(!lockable)
 				return TRUE
-			if (!business_access.len)
-				business_name = ""
-				connected_faction = null
+			business_access.Cut()
+			connected_faction = null
+			business_name = null
 			locked = 1
 			. = TRUE
 	if(..())
@@ -198,8 +184,8 @@
 		if("lock")
 			if(!lockable)
 				return TRUE
-			if (!conf_access.len)
-				connected_faction = null
+			conf_access.Cut()
+			connected_faction = null
 			locked = 1
 			. = TRUE
 

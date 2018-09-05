@@ -35,10 +35,3 @@
 	cost = 300
 	containertype = /obj/structure/largecrate
 	containername = "\improper research startup crate"
-
-/decl/hierarchy/supply_pack/science/voidsuit
-	name = "Scientist Voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/excavation/prepared)
-	cost = 100
-	containertype = /obj/structure/closet/crate/secure/large
-	containername = "\improper Scientist Voidsuit"

@@ -69,18 +69,12 @@
 	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/atmospherics/voidsuit
-	name = "Atmospherics Voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/atmos/prepared)
+	name = "Atmospherics voidsuit"
+	contains = list(/obj/item/clothing/suit/space/void/atmos/alt,
+					/obj/item/clothing/head/helmet/space/void/atmos/alt,
+					/obj/item/clothing/shoes/magboots)
 	cost = 100
-	containername = "\improper Atmospherics Voidsuit crate"
-	containertype = /obj/structure/closet/crate/secure/large
-	access = core_access_engineering_programs
-
-	/decl/hierarchy/supply_pack/atmospherics/voidsuit_heavyduty
-	name = "Heavy Duty Atmospherics voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/atmos/alt/prepared)
-	cost = 150
-	containername = "\improper Heavy Duty Atmospherics Voidsuit crate"
+	containername = "\improper Atmospherics voidsuit crate"
 	containertype = /obj/structure/closet/crate/secure/large
 	access = core_access_engineering_programs
 

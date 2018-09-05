@@ -69,7 +69,7 @@
 	access = core_access_order_approval	//Closest thing to a cargo permission
 
 /decl/hierarchy/supply_pack/operations/miner
-	name = "Miner Equipment"
+	name = "Miner Equipment - Voidsuit Included"
 	contains = list(/obj/item/clothing/under/rank/miner,
 					/obj/item/clothing/shoes/workboots,
 					/obj/item/clothing/glasses/meson,
@@ -80,26 +80,12 @@
 					/obj/item/weapon/storage/ore,
 					/obj/item/weapon/shovel,
 					/obj/item/weapon/pickaxe,
-					/obj/item/device/radio/headset/headset_cargo)
-	cost = 10
+					/obj/item/clothing/suit/space/void/mining/prepared,
+					/obj/item/device/radio/headset/headset_cargo,
+					/obj/item/clothing/shoes/magboots)
+	cost = 100
 	containertype = /obj/structure/closet/secure_closet/miner
 	containername = "Miner Equipment"
-	access = core_access_order_approval
-
-/decl/hierarchy/supply_pack/operations/minervoidsuit
-	name = "Mining Voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/mining/prepared)
-	cost = 100
-	containertype = /obj/structure/closet/crate/secure/large
-	containername = "Mining Voidsuit"
-	access = core_access_order_approval
-
-/decl/hierarchy/supply_pack/operations/minervoidsuit_heavyduty
-	name = "Heavy Duty Mining Voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/mining/alt/prepared)
-	cost = 200
-	containertype = /obj/structure/closet/crate/secure/large
-	containername = "Heavy Duty Mining Voidsuit"
 	access = core_access_order_approval
 
 /decl/hierarchy/supply_pack/operations/security

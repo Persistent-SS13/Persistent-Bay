@@ -148,7 +148,7 @@ obj/machinery/resleever/Process()
 		var/obj/item/organ/O = occupant.get_organ(lace.parent_organ)
 		if(istype(O))
 			lace.status &= ~ORGAN_CUT_AWAY //ensure the lace is properly attached
-			if(lace.replaced())	// Laces don't use the two inputs
+			if(lace.replaced(occupant, O))	// Laces don't use the two inputs
 				lace = null
 				lace_name = null
 				return 1

@@ -99,7 +99,7 @@
 	data += "<b>Select the slot you want to save this character under.</b><br>"
 
 	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
-		var/characterName = client.prefs.CharacterName(ind)
+		var/characterName = CharacterName(ind, ckey)
 		if(characterName)
 			data += "<b>[characterName]</b><br>"
 		else
@@ -127,9 +127,9 @@
 	data += "<b>Select the character you want to [action].</b><br>"
 
 	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
-		var/characterName = client.prefs.CharacterName(ind)
+		var/characterName = CharacterName(ind, ckey)
 		if(characterName)
-			var/icon/preview = client.prefs.CharacterIcon(ind)
+			var/icon/preview = CharacterIcon(ind, ckey)
 			send_rsc(src, preview, "[ind]preview.png")
 			data += "<img src=[ind]preview.png width=[preview.Width()] height=[preview.Height()]><br>"
 			data += "<b><a href='?src=\ref[src];pickSlot=[ind][action]'>[characterName]</a></b><hr>"
@@ -202,7 +202,7 @@
 		qdel(src)
 		return
 
-	var/mob/character = client.prefs.Character(chosen_slot)
+	var/mob/character = Character(chosen_slot, ckey)
 
 	var/turf/spawnTurf
 
@@ -268,9 +268,11 @@
 	ticker.minds |= character.mind
 	character.redraw_inv()
 	CreateModularRecord(character)
+	character.finishLoadCharacter()	// This is ran because new_players don't like to stick around long.
+	return 1	
 
-
-	if(character.spawn_type == 2)
+/mob/proc/finishLoadCharacter()
+	if(spawn_type == 2)
 		var/obj/screen/cinematic
 
 		cinematic = new
@@ -281,30 +283,28 @@
 		cinematic.mouse_opacity = 2
 		cinematic.screen_loc = "WEST,SOUTH"
 
-		if(character.client)
-			character.client.screen += cinematic
+		if(client)
+			client.screen += cinematic
 
 			flick("neurallaceboot",cinematic)
 			sleep(106)
-			character.client.screen -= cinematic
+			client.screen -= cinematic
 
-		character.spawn_type = 1
-		sound_to(character, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = 1))
+		spawn_type = 1
+		sound_to(src, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = 1))
 		spawn()
-			shake_camera(character, 3, 1)
-		character.druggy = 3
-		character.Weaken(3)
-		to_chat(character, "<span class='danger'>Your trip through the frontier gateway is like nothing you have ever experienced!</span>")
-		to_chat(character, "In fact, it was like your consciousness was ripped from your body and then hammered back inside moments later.")
-		to_chat(character, "However, you've made it to the uncharted frontier. You don't know when you'll be able to return to the places you've left behind.")
-		to_chat(character, "No time to think about that, your first priority is to get your bearings and find a job that pays. Whatever you decide to do in this new frontier, you're going to need a lot more cash than what you have now.")
+			shake_camera(src, 3, 1)
+		druggy = 3
+		Weaken(3)
+		to_chat(src, "<span class='danger'>Your trip through the frontier gateway is like nothing you have ever experienced!</span>")
+		to_chat(src, "In fact, it was like your consciousness was ripped from your body and then hammered back inside moments later.")
+		to_chat(src, "However, you've made it to the uncharted frontier. You don't know when you'll be able to return to the places you've left behind.")
+		to_chat(src, "No time to think about that, your first priority is to get your bearings and find a job that pays. Whatever you decide to do in this new frontier, you're going to need a lot more cash than what you have now.")
 	else
-		to_chat(character, "You eject from your cryosleep, ready to resume life in the frontier.")
-
-	return 1	// Simply because otherwise the code doesn't complete for some reason.
+		to_chat(src, "You eject from your cryosleep, ready to resume life in the frontier.")
 
 /mob/new_player/proc/deleteCharacter()
-	if(input("Are you SURE you want to delete [client.prefs.CharacterName(chosen_slot)]? THIS IS PERMANENT. enter the character\'s full name to conform.", "DELETE A CHARACTER", "") == client.prefs.CharacterName(chosen_slot))
+	if(input("Are you SURE you want to delete [CharacterName(chosen_slot, ckey)]? THIS IS PERMANENT. enter the character\'s full name to conform.", "DELETE A CHARACTER", "") == CharacterName(chosen_slot, ckey))
 		fdel(load_path(ckey, "[chosen_slot]preview.png"))
 		fdel(load_path(ckey, "[chosen_slot].sav"))
 	load_panel.close()

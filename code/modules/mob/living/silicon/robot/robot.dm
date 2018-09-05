@@ -103,8 +103,8 @@
 	var/obj/item/borg/chassis_mod/chassis_mod = null
 	var/chassis_mod_toggled = 0
 
-	
-	
+
+
 /mob/living/silicon/robot/proc/add_lace_action()
 	for(var/datum/action/lace/laceac in actions)
 		return 1
@@ -168,19 +168,19 @@
 	hud_list[IMPCHEM_HUD]     = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[IMPTRACK_HUD]    = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
 	hud_list[SPECIALROLE_HUD] = new /image/hud_overlay('icons/mob/hud.dmi', src, "hudblank")
-	
+
 	verbs -= /mob/living/silicon/robot/verb/Namepick
-	
-	
+
+
 /mob/living/silicon/robot/after_load()
 	if(lmi)
 		add_lace_action()
-		
+
 /mob/living/silicon/robot/get_stack()
 	if(lmi)
 		return lmi.brainobj
-		
-		
+
+
 /mob/living/silicon/robot/verb/ModuleDisable()
 	set category = "Robot Commands"
 	set name = "Deactivate Module"
@@ -219,7 +219,7 @@
 	else
 		locked = 1
 		to_chat(src, "You lock your cover panel.")
-		
+
 /mob/living/silicon/robot/verb/ChassisToggle()
 	set category = "Robot Commands"
 	set name = "Toggle Chassis Mod"
@@ -338,7 +338,7 @@
 				mind.transfer_to(lmi.brainmob)
 			else
 				lmi.brainmob = new()
-				mind.transfer_to(lmi.brainmob)	
+				mind.transfer_to(lmi.brainmob)
 			//	to_chat(src, "<span class='danger'>Oops! Something went very wrong, your LMI was unable to receive your mind. You have been ghosted. Please make a bug report so we can fix this bug.</span>")
 			//	ghostize()
 			//	//ERROR("A borg has been destroyed, but its MMI lacked a brainmob, so the mind could not be transferred. Player: [ckey].")
@@ -468,7 +468,7 @@
 	//We also need to update name of internal camera.
 	if (camera)
 		camera.c_tag = name
-		
+
 	//Flavour text.
 	if(client)
 		var/module_flavour = client.prefs.flavour_texts_robot[modtype]
@@ -477,8 +477,8 @@
 		else
 			flavor_text = client.prefs.flavour_texts_robot["Default"]
 
-			
-			
+
+
 /mob/living/silicon/robot/proc/updatenameOLD(var/prefix as text)
 	if(prefix)
 		modtype = prefix
@@ -524,7 +524,7 @@
 		else
 			flavor_text = client.prefs.flavour_texts_robot["Default"]
 
-			
+
 /mob/living/silicon/robot/verb/Namepick()
 	set category = "Silicon Commands"
 	if(custom_name)
@@ -929,33 +929,8 @@
 	return ..(user,Floor(damage/2),attack_message)
 
 /mob/living/silicon/robot/proc/allowed(mob/M)
-	//check if it doesn't require any access at all
-	if(check_access(null))
-		return 1
-	if(istype(M, /mob/living/carbon/human))
-		var/mob/living/carbon/human/H = M
-		//if they are holding or wearing a card that has access, that works
-		if(check_access(H.get_active_hand()) || check_access(H.wear_id))
-			return 1
-	else if(istype(M, /mob/living/silicon/robot))
-		var/mob/living/silicon/robot/R = M
-		if(check_access(R.get_active_hand()) || istype(R.get_active_hand(), /obj/item/weapon/card/robot))
-			return 1
-	return 0
 
-/mob/living/silicon/robot/proc/check_access(obj/item/weapon/card/id/I)
-	if(!istype(req_access, /list)) //something's very wrong
-		return 1
-
-	var/list/L = req_access
-	if(!L.len) //no requirements
-		return 1
-	if(!I || !istype(I, /obj/item/weapon/card/id) || !I.access) //not ID or no access
-		return 0
-	for(var/req in req_access)
-		if(req in I.access) //have one of the required accesses
-			return 1
-	return 0
+	return has_access(req_access, list(), M.GetAccess(M.GetFaction()))
 
 /mob/living/silicon/robot/update_icon()
 	overlays.Cut()

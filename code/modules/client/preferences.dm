@@ -378,6 +378,18 @@ datum/preferences
 	F["mob"] << M
 	qdel(M)
 
+/proc/Character_prefless(var/ckey, var/ind)
+	if(!fexists(load_path(ckey, "[ind].sav")))
+		return
+
+	var/savefile/F = new(load_path(ckey, "[ind].sav"))
+	var/mob/M
+	if(!F.dir.Find("mob"))
+		UpdateCharacter(ind)
+
+	F["mob"] >> M
+	return M
+	
 /datum/preferences/proc/Character(var/ind)
 	if(!fexists(load_path(client.ckey, "[ind].sav")))
 		return

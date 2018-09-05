@@ -238,7 +238,7 @@
 	name = "heavy duty atmospherics voidsuit helmet"
 	icon_state = "rig0-atmosalt"
 	item_state = "atmosalt_helm"
-	armor = list(melee = 20, bullet = 5, laser = 20,energy = 15, bomb = 45, bio = 100, rad = 50)
+	armor = list(melee = 20, bullet = 5, laser = 20,energy = 15, bomb = 45, bio = 100, rad = 55)
 	max_heat_protection_temperature = FIRE_HELMET_MAX_HEAT_PROTECTION_TEMPERATURE
 	light_overlay = "hardhat_light"
 

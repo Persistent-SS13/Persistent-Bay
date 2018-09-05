@@ -97,7 +97,7 @@
 /decl/hierarchy/supply_pack/operations/minervoidsuit_heavyduty
 	name = "Heavy Duty Mining Voidsuit"
 	contains = list(/obj/item/clothing/suit/space/void/mining/alt/prepared)
-	cost = 150
+	cost = 200
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "Heavy Duty Mining Voidsuit"
 	access = core_access_order_approval

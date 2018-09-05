@@ -238,7 +238,7 @@
 	contains = list(/obj/item/clothing/suit/space/void/engineering/alt/prepared)
 	containername = "\improper Heavy Duty Engineering Hardsuit"
 	containertype = /obj/structure/closet/crate/secure/large
-	cost = 150
+	cost = 180
 	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/engineering/antibreach

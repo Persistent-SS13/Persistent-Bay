@@ -160,7 +160,7 @@
 	contains = list(/obj/item/weapon/tank/emergency/oxygen/engi,
 			 		/obj/item/clothing/suit/space/emergency,
 					/obj/item/clothing/head/helmet/space/emergency)
-	cost = 10
+	cost = 15
 	containername = "\improper Emergency Softsuit crate"
 
 /decl/hierarchy/supply_pack/supply/softsuit

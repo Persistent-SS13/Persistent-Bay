@@ -1,7 +1,7 @@
 //NASA Voidsuit
 /obj/item/clothing/head/helmet/space/void
 	name = "void helmet"
-	desc = "A high-tech dark red space suit helmet. Used for AI satellite maintenance."
+	desc = "A primitive red space suit helmet. Its simple, yet effective design is an all time favorite for novice explorers throughout the generations."
 	icon_state = "void"
 
 	heat_protection = HEAD
@@ -29,8 +29,8 @@
 	icon_state = "void"
 	//item_state = "syndie_hardsuit"
 	w_class = ITEM_SIZE_HUGE//bulky item
-	desc = "A high-tech dark red space suit. Used for AI satellite maintenance."
-	armor = list(melee = 30, bullet = 5, laser = 10,energy = 5, bomb = 20, bio = 100, rad = 20)
+	desc = "A primitive dark red space suit. Its simple, yet effective design is an all time favorite for novice explorers throughout the generations."
+	armor = list(melee = 40, bullet = 5, laser = 20,energy = 5, bomb = 20, bio = 100, rad = 20)
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit)
 	heat_protection = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
 	max_heat_protection_temperature = SPACE_SUIT_MAX_HEAT_PROTECTION_TEMPERATURE

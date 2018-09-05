@@ -14,7 +14,7 @@
 	var/network = "default"
 
 	var/tmp/timeEntered = 0
-	var/tmp/mob/occupant
+	var/tmp/atom/movable/occupant
 
 /obj/machinery/cryopod/New()
 	..()
@@ -218,6 +218,7 @@
 		return 0
 
 	var/mob/new_player/player = new(locate(100,100,51))
+	var/mob/character
 	var/key
 	var/name = ""
 	var/dir = 0
@@ -232,6 +233,7 @@
 			key = S.lacemob.stored_ckey
 			player.ckey = S.lacemob.stored_ckey
 		name = S.get_owner_name()
+		character = S.lacemob
 		dir = S.lacemob.save_slot
 		S.lacemob.spawn_loc = req_access_faction
 		S.lacemob.spawn_loc_2 = network
@@ -248,6 +250,7 @@
 			key = M.stored_ckey
 			player.ckey = M.stored_ckey
 		name = M.real_name
+		character = M
 		dir = M.save_slot
 		M.spawn_loc = req_access_faction
 		M.spawn_loc_2 = network
@@ -258,17 +261,17 @@
 
 	if(!dir)
 		log_and_message_admins("Warning! [key]'s [occupant] failed to find a save_slot, and is picking one!")
+		dir++
 		while(fexists(load_path(key, "[dir].sav")))
 			dir++
 
 	var/savefile/F = new(load_path(key, "[dir].sav"))
-	F["name"] << occupant.real_name
-	F["mob"] << occupant
+	F["name"] << name
+	F["mob"] << character
 
 	src.name = initial(src.name)
 	icon_state = initial(icon_state)
 	occupant.loc = null
-	occupant.deleting_char = 1
 	QDEL_NULL(occupant)
 
 #undef allowedOccupants

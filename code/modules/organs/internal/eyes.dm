@@ -35,7 +35,7 @@
 	..()
 	robotize()
 
-/obj/item/organ/internal/removed(var/mob/living/user)
+/obj/item/organ/internal/eyes/removed(var/mob/living/user)
 	..()
 	// Your eyes can't be disabled if you don't have eyes ;)
 	if(user.disabilities & NEARSIGHTED)

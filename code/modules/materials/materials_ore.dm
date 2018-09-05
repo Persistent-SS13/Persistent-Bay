@@ -9,7 +9,7 @@
 
 /obj/item/weapon/ore/get_material()
 	return material
-	
+
 /obj/item/weapon/ore/after_load()
 	for(var/stuff in matter)
 		var/material/M = SSmaterials.get_material_by_name(stuff)
@@ -26,7 +26,7 @@
 			break
 	. = ..()
 
-	
+
 /obj/item/weapon/ore/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/device/core_sampler))
 		var/obj/item/device/core_sampler/C = W
@@ -41,7 +41,7 @@
 	..(newloc)
 
 /obj/item/weapon/ore/Initialize()
-	
+
 // POCKET SAND!
 /obj/item/weapon/ore/throw_impact(atom/hit_atom)
 	..()
@@ -90,7 +90,8 @@
 					prot = 1
 	else
 		prot = 1
- 	if(prot > 0)
+
+	if(prot > 0)
 		return
 	else
 		H.phoronation += 1

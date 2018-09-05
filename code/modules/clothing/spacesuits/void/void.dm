@@ -1,7 +1,7 @@
 //NASA Voidsuit
 /obj/item/clothing/head/helmet/space/void
-	name = "void helmet"
-	desc = "A primitive red space suit helmet. Its simple, yet effective design is an all time favorite for novice explorers throughout the generations."
+	name = "voidsuit helmet"
+	desc = "A primitive dark red space suit helmet. Its simple, yet effective design is an all time favorite for novice explorers throughout the generations."
 	icon_state = "void"
 
 	heat_protection = HEAD

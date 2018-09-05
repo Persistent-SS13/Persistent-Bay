@@ -228,7 +228,7 @@
 /decl/hierarchy/supply_pack/engineering/voidsuit
 	name = "Engineering Voidsuit"
 	contains = list(/obj/item/clothing/suit/space/void/engineering/prepared)
-	containername = "\improper Engineering Hardsuit"
+	containername = "\improper Engineering Voidsuit"
 	containertype = /obj/structure/closet/crate/secure/large
 	cost = 100
 	access = core_access_engineering_programs
@@ -236,7 +236,7 @@
 /decl/hierarchy/supply_pack/engineering/voidsuit_heavyduty
 	name = "Heavy Duty Engineering Voidsuit"
 	contains = list(/obj/item/clothing/suit/space/void/engineering/alt/prepared)
-	containername = "\improper Heavy Duty Engineering Hardsuit"
+	containername = "\improper Heavy Duty Engineering Voidsuit"
 	containertype = /obj/structure/closet/crate/secure/large
 	cost = 180
 	access = core_access_engineering_programs

@@ -369,6 +369,27 @@ datum/preferences
 
 	return
 
+/datum/preferences/proc/UpdateCharacter(var/ind)
+	var/savefile/F = new(load_path(client.ckey, "[ind].sav"))
+	var/mob/M
+	F >> M
+	fdel(F)
+	F["name"] << M.real_name
+	F["mob"] << M
+	qdel(M)
+
+/proc/Character_prefless(var/ckey, var/ind)
+	if(!fexists(load_path(ckey, "[ind].sav")))
+		return
+
+	var/savefile/F = new(load_path(ckey, "[ind].sav"))
+	var/mob/M
+	if(!F.dir.Find("mob"))
+		UpdateCharacter(ind)
+
+	F["mob"] >> M
+	return M
+	
 /datum/preferences/proc/Character(var/ind)
 	if(!fexists(load_path(client.ckey, "[ind].sav")))
 		return
@@ -376,9 +397,9 @@ datum/preferences
 	var/savefile/F = new(load_path(client.ckey, "[ind].sav"))
 	var/mob/M
 	if(!F.dir.Find("mob"))
-		F >> M
-	else
-		F["mob"] >> M
+		UpdateCharacter(ind)
+
+	F["mob"] >> M
 	return M
 
 /datum/preferences/proc/CharacterName(var/ind)
@@ -388,15 +409,9 @@ datum/preferences
 	var/savefile/F = new(load_path(client.ckey, "[ind].sav"))
 	var/name
 	if(!F.dir.Find("name"))
-		var/mob/M
-		F >> M
-		sleep(25)
-		if(M)
-			name = M.real_name
-		else
-			name = "BROKE! RESTARTING!"
-	else
-		F["name"] >> name
+		UpdateCharacter(ind)
+
+	F["name"] >> name
 	return name
 
 /datum/preferences/proc/CharacterIcon(var/ind)
@@ -404,6 +419,7 @@ datum/preferences
 		return
 
 	var/mob/M = Character(ind)
+	M.regenerate_icons()
 	var/icon/I = get_preview_icon(M)
 	qdel(M)
 	return I

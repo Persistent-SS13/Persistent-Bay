@@ -415,12 +415,12 @@
 	name = "Standard Chassis: Drone"
 	id = "borg_chassis_drone"
 	build_path = /obj/item/borg/chassis_mod/standard/drone
-/**
+
 /datum/design/item/robot_upgrade/chassis/eyebot
 	name = "Standard Chassis: Eyebot"
 	id = "borg_chassis_eyebot"
 	build_path = /obj/item/borg/chassis_mod/standard/eyebot
-**/
+
 //////////////
 // Service/Clerical
 

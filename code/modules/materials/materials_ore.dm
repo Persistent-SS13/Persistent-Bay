@@ -77,22 +77,3 @@
 	..(newloc, "waste")
 /obj/item/weapon/ore/phoron/New(var/newloc)
 	..(newloc, "phoron")
-
-// Phoron ore is just as engaging!
-/obj/item/weapon/ore/phoron/pickup(mob/user)
-	var/mob/living/carbon/human/H = user
-	var/prot = 0
-	if(istype(H))
-		if(H.gloves)
-			var/obj/item/clothing/gloves/G = H.gloves
-			if(G.permeability_coefficient)
-				if(G.permeability_coefficient < 0.2)
-					prot = 1
-	else
-		prot = 1
- 	if(prot > 0)
-		return
-	else
-		H.phoronation += 1
-		to_chat(user, "<span class='warning'>The phoron ore stings your hands as you pick it up.</span>")
-		return

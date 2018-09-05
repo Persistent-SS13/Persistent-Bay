@@ -117,8 +117,7 @@
 	var/list/mutations = list() //Carbon -- Doohl
 	//see: setup.dm for list of mutations
 
-	var/radiation = 0.0 // Carbon
-	var/phoronation = 0.0 // Sanity meter related to phoron exposure which carbons can have - more is scarier
+	var/radiation = 0.0//Carbon
 
 	var/voice_name = "unidentifiable voice"
 

@@ -71,7 +71,6 @@ Small, little HP, poisonous.
 	var/obj/item/weapon/holder/voxslug/holder = new(get_turf(src))
 	src.forceMove(holder)
 	chest.embed(holder,0,"\The [src] latches itself onto \the [H]!")
-	H.phoronation += 3
 	holder.sync(src)
 
 /mob/living/simple_animal/hostile/voxslug/AttackingTarget()

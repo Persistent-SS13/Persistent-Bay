@@ -342,21 +342,20 @@
 		max_storage_space = storage_slots*base_storage_cost(max_w_class)
 
 	prepare_ui()
-	spawn(100)
-		if(!map_storage_loaded)
-			if(startswith)
-				for(var/item_path in startswith)
-					var/list/data = startswith[item_path]
-					if(islist(data))
-						var/qty = data[1]
-						var/list/argsl = data.Copy()
-						argsl[1] = src
-						for(var/i in 1 to qty)
-							new item_path(arglist(argsl))
-					else
-						for(var/i in 1 to (isnull(data)? 1 : data))
-							new item_path(src)
-				update_icon()
+	if(!map_storage_loaded)
+		if(startswith)
+			for(var/item_path in startswith)
+				var/list/data = startswith[item_path]
+				if(islist(data))
+					var/qty = data[1]
+					var/list/argsl = data.Copy()
+					argsl[1] = src
+					for(var/i in 1 to qty)
+						new item_path(arglist(argsl))
+				else
+					for(var/i in 1 to (isnull(data)? 1 : data))
+						new item_path(src)
+			update_icon()
 
 /obj/item/weapon/storage/after_load()
 	. = ..()

@@ -155,32 +155,35 @@
 	cost = 3
 	containername = "\improper Light Bulb Crate"
 
-/decl/hierarchy/supply_pack/supply/softsuits
+/decl/hierarchy/supply_pack/supply/softsuit_emergency
+	name = "Emergency Softsuit w/ Small Airtank"
+	contains = list(/obj/item/weapon/tank/emergency/oxygen/engi,
+			 		/obj/item/clothing/suit/space/emergency,
+					/obj/item/clothing/head/helmet/space/emergency)
+	cost = 15
+	containername = "\improper Emergency Softsuit crate"
+
+/decl/hierarchy/supply_pack/supply/softsuit
 	name = "EVA Softsuit w/ Small Airtank"
 	contains = list(/obj/item/weapon/tank/emergency/oxygen/engi,
 			 		/obj/item/clothing/suit/space,
 					/obj/item/clothing/head/helmet/space,
-					/obj/item/clothing/mask/gas)
+					/obj/item/clothing/shoes/magboots)
 	cost = 30
 	containername = "\improper Softsuit crate"
-
-/decl/hierarchy/supply_pack/supply/softsuits_bulk
-	name = "Bulk Shipment of EVA Softsuits (x5) w/ Small Airtanks"
-	contains = list(/obj/item/weapon/tank/emergency/oxygen/engi = 5,
-			 		/obj/item/clothing/suit/space = 5,
-					/obj/item/clothing/head/helmet/space = 5,
-					/obj/item/clothing/mask/gas = 5)
-	cost = 150
-	containername = "\improper Bulk Softsuit crate"
 
 /decl/hierarchy/supply_pack/supply/salvagedsuit
 	name = "Salvaged Voidsuit with Airtank"
 	contains = list(/obj/item/weapon/tank/oxygen,
-			 		/obj/item/clothing/suit/space/void/engineering/salvage,
-					/obj/item/clothing/head/helmet/space/void/engineering/salvage,
-					/obj/item/clothing/shoes/magboots)
+			 		/obj/item/clothing/suit/space/void/engineering/salvage/prepared)
 	cost = 50
 	containername = "\improper Salvaged Voidsuit crate"
+
+/decl/hierarchy/supply_pack/supply/voidsuit
+	name = "Voidsuit"
+	contains = list(/obj/item/clothing/suit/space/void/prepared)
+	cost = 100
+	containername = "\improper Voidsuit crate"
 
 /decl/hierarchy/supply_pack/supply/blueprints
 	name = "Blueprints"

@@ -1,6 +1,6 @@
 /obj/structure/closet/secure_closet/engineering_chief
 	name = "chief engineer's locker"
-	req_access = list(core_access_engineering_programs)
+	req_access = list(core_access_engineering_programs, core_access_leader)
 	icon_state = "securece1"
 	icon_closed = "securece"
 	icon_locked = "securece1"

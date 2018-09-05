@@ -51,8 +51,8 @@
 			user.update_inv_glasses()
 			flash_protection = FLASH_PROTECTION_NONE
 			tint = TINT_NONE
-			vision_flags = !initial(vision_Flags)
-			see_invisable = !initial(see_invisable)
+			vision_flags = !initial(vision_flags)
+			see_invisible = !initial(see_invisible)
 			to_chat(usr, "You deactivate the optical matrix on the [src].")
 		else
 			active = 1
@@ -61,7 +61,7 @@
 			if(activation_sound)
 				sound_to(usr, activation_sound)
 			vision_flags = initial(vision_flags)
-			see_invisable = initial(see_invisable)
+			see_invisible = initial(see_invisible)
 			flash_protection = initial(flash_protection)
 			tint = initial(tint)
 			to_chat(usr, "You activate the optical matrix on the [src].")

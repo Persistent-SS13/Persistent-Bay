@@ -22,6 +22,7 @@
 
 	// Persitent Edit, chosen slot
 	var/chosen_slot = 0
+
 /mob/new_player/New()
 	..()
 
@@ -98,9 +99,9 @@
 	data += "<b>Select the slot you want to save this character under.</b><br>"
 
 	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
-		var/cname = client.prefs.CharacterName(ind)
-		if(cname)
-			data += "<b>[cname]</b><br>"
+		var/characterName = client.prefs.CharacterName(ind)
+		if(characterName)
+			data += "<b>[characterName]</b><br>"
 		else
 			data += "<b><a href='byond://?src=\ref[src];pickSlot=[ind]create'>Open Slot</a></b><br>"
 
@@ -126,21 +127,14 @@
 	data += "<b>Select the character you want to [action].</b><br>"
 
 	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
-		var/mob/M = client.prefs.Character(ind)
-		sleep(10)
-		var/icon/preview
-		var/cname
-		if(M)
-			M.deleting_char = 1
-			cname = M.real_name
-			preview = client.prefs.get_preview_icon(M)
-		if(cname)
+		var/characterName = client.prefs.CharacterName(ind)
+		if(characterName)
+			var/icon/preview = client.prefs.CharacterIcon(ind)
 			send_rsc(src, preview, "[ind]preview.png")
 			data += "<img src=[ind]preview.png width=[preview.Width()] height=[preview.Height()]><br>"
-			data += "<b><a href='?src=\ref[src];pickSlot=[ind][action]'>[cname]</a></b><hr>"
+			data += "<b><a href='?src=\ref[src];pickSlot=[ind][action]'>[characterName]</a></b><hr>"
 		else
 			data += "<b>Open Slot</b><hr>"
-		qdel(M)
 	data += "</div>"
 	load_panel = new(src, "Select Character", "Select Character", 300, 500, src)
 	load_panel.set_content(data)
@@ -209,7 +203,7 @@
 		return
 
 	var/mob/character = client.prefs.Character(chosen_slot)
-	
+
 	var/turf/spawnTurf
 
 
@@ -256,25 +250,25 @@
 	if(!spawnTurf)
 		log_and_message_admins("WARNING! Unable To Find Any Spawn Turf!!! Prehaps you didn't include a map?")
 		return
+
+	character.after_spawn()
+
 	if(!character.mind)		// Not entirely sure what this if() block does, but keeping it just in case
 		mind.active = 0
 		mind.original = character
 		if(client && client.prefs.memory)
 			mind.store_memory(client.prefs.memory)
 			mind.transfer_to(character)
-	sleep(3 SECONDS)		
-	character.after_spawn()
-	sleep(3 SECONDS)
+
 	character.forceMove(spawnTurf)
-	character.after_spawn()
 	character.stored_ckey = key
 	character.key = key
 	character.save_slot = chosen_slot
-	
+
 	ticker.minds |= character.mind
 	character.redraw_inv()
 	CreateModularRecord(character)
-	
+
 
 	if(character.spawn_type == 2)
 		var/obj/screen/cinematic

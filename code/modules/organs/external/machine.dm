@@ -126,7 +126,7 @@
 	update_from_mmi()
 	if(owner)
 		persistantMind = owner.mind
-		ownerckey = owner.ckey
+		ownerckey = owner.ckey ? owner.ckey : owner.stored_ckey
 
 /obj/item/organ/internal/mmi_holder/proc/update_from_mmi()
 	if(!owner) return
@@ -160,7 +160,7 @@
 	if(owner && owner.mind)
 		persistantMind = owner.mind
 		if(owner.ckey)
-			ownerckey = owner.ckey
+			ownerckey = owner.ckey ? owner.ckey : owner.stored_ckey
 	..()
 
 /obj/item/organ/internal/mmi_holder/proc/transfer_and_delete()

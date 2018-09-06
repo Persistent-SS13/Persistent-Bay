@@ -42,8 +42,8 @@
  */
 
 /obj/item/weapon/storage/backpack/holding
-	name = "bag of holding"
-	desc = "A backpack that opens into a localized pocket of Blue Space."
+	name = "quantum bag"
+	desc = "A backpack that uses phoron reaction to allow matter to overlap in the bag."
 	origin_tech = list(TECH_BLUESPACE = 4)
 	icon_state = "holdingpack"
 	max_w_class = ITEM_SIZE_NORMAL

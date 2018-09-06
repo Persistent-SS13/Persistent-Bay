@@ -385,8 +385,9 @@ datum/preferences
 	var/savefile/F = new(load_path(ckey, "[ind].sav"))
 	var/mob/M
 	if(!F.dir.Find("mob"))
-		UpdateCharacter(ind, ckey)
-
+		F >> M
+		sleep(10)
+		return M
 	F["mob"] >> M
 	return M
 
@@ -397,8 +398,10 @@ datum/preferences
 	var/savefile/F = new(load_path(ckey, "[ind].sav"))
 	var/name
 	if(!F.dir.Find("name"))
-		UpdateCharacter(ind, ckey)
-
+		var/mob/M
+		F >> M
+		sleep(10)
+		return M.real_name
 	F["name"] >> name
 	return name
 

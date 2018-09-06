@@ -90,21 +90,21 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	return 0
 
 /obj/item/organ/internal/stack/proc/get_owner()
-	if(owner)
-		return owner
-	if(istype(loc.loc, /mob/living/silicon/robot))
-		return loc.loc
 	if(lacemob)
 		return lacemob
+	if(istype(loc.loc, /mob/living/silicon/robot))
+		return loc.loc
+	if(owner)
+		return owner
 	return 0
 
 /obj/item/organ/internal/stack/ui_action_click()
-	if(owner)
-		ui_interact(owner)
+	if(lacemob)
+		ui_interact(lacemob)
 	else if(istype(loc, /obj/item/device/lmi) && istype(loc.loc, /mob/living/silicon/robot))
 		ui_interact(loc.loc)	// A robot
-	else if(lacemob)
-		ui_interact(lacemob)
+	else if(owner)
+		ui_interact(owner)
 	else
 		log_and_message_admins("[src] called ui_action_click without any owner!")
 
@@ -140,11 +140,23 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		if("die")
 			var/choice = input(usr,"THIS WILL PERMANENTLY KILL YOUR CHARACTER! YOU WILL NOT BE ALLOWED TO REMAKE THE SAME CHARACTER.") in list("Kill my character, return to character creation", "Cancel")
 			if(choice == "Kill my character, return to character creation")
-				lacemob.perma_dead = 1
+				if(input("Are you SURE you want to delete [CharacterName(save_slot, lacemob.ckey)]? THIS IS PERMANENT. enter the character\'s full name to conform.", "DELETE A CHARACTER", "") == CharacterName(save_slot, lacemob.ckey))
+					fdel(load_path(lacemob.ckey, "[save_slot].sav"))
+
 				var/mob/new_player/M = new /mob/new_player()
 				M.loc = null
-				lacemob.stored_ckey = lacemob.ckey
 				M.key = lacemob.key
+
+				lacemob.perma_dead = 1
+				lacemob.ckey = null
+				lacemob.stored_ckey = null
+				lacemob.save_slot = 0
+
+				owner?.perma_dead = 1
+				owner?.ckey = null
+				owner?.stored_ckey = null
+				owner?.save_slot = 0
+
 	GLOB.nanomanager.update_uis(src)
 
 /obj/item/organ/internal/stack/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.interactive_state)
@@ -265,16 +277,16 @@ GLOBAL_LIST_EMPTY(neural_laces)
 /obj/item/organ/internal/stack/proc/backup_inviable()
 	return 	(!istype(backup) || backup == owner.mind || (backup.current && backup.current.stat != DEAD))
 
-/obj/item/organ/internal/stack/replaced()
-	if(!..())
+/obj/item/organ/internal/stack/replaced(var/mob/living/carbon/human/target, var/obj/item/organ/external/affected)
+	if(!..(target, affected))
 		message_admins("stack replace() failed")
 		return 0
 
 	if(lacemob)
-		overwrite()
+		. = overwrite()		// If overwrite returns 0, then we pass it on
 		lacemob.ckey = null
 		QDEL_NULL(lacemob)
-		return 1
+		return
 
 	if(owner && !backup_inviable())
 		var/current_owner = owner
@@ -287,11 +299,11 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 	return 1
 
-/obj/item/organ/internal/stack/removed(var/mob/living/user)
+/obj/item/organ/internal/stack/removed(var/mob/living/user, var/drop_organ=1, var/detach=1)
 	do_backup()
 	if(!istype(owner))
 		message_admins("Removed Failed")
-		return ..(user)
+		return ..(user, drop_organ, detach)
 
 	if(name == initial(name))
 		name = "\the [owner.real_name]'s [initial(name)]"
@@ -299,7 +311,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	transfer_identity(owner)
 
 
-	..(user)
+	..(user, drop_organ, detach)
 
 /obj/item/organ/internal/stack/vox/removed()
 	var/obj/item/organ/external/head = owner.get_organ(parent_organ)
@@ -313,7 +325,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	if(owner.mind && owner.ckey) //Someone is already in this body!
 		owner.visible_message("<span class='danger'>\The [owner] spasms violently!</span>")
 		to_chat(owner, "<span class='danger'>You fight off the invading tendrils of another mind, holding onto your own body!</span>")
-		return	// People should not be able to overwrite someone else.
+		return 0	// People should not be able to overwrite someone else.
 	backup.active = 1
 	backup.transfer_to(owner)
 	if(default_language)
@@ -321,3 +333,4 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	owner.languages = languages.Copy()
 	owner.save_slot = save_slot
 	to_chat(owner, "<span class='notice'>Consciousness slowly creeps over you as your new body awakens.</span>")
+	return 1

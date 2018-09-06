@@ -1,6 +1,8 @@
 /material/pitchblende
 	name = "pitchblende"
 	ore_compresses_to = "pitchblende"
+	icon_base = "stone"
+	icon_reinf = "reinf_stone"
 	icon_colour = "#917d1a"
 	ore_smelts_to = "uranium"
 	ore_result_amount = 5
@@ -24,6 +26,8 @@
 /material/graphene
 	name = "graphene"
 	ore_compresses_to = "graphene"
+	icon_base = "stone"
+	icon_reinf = "reinf_stone"
 	icon_colour = "#444444"
 	ore_smelts_to = "plastic"
 	ore_name = "graphene"
@@ -45,6 +49,8 @@
 	ore_spread_chance = 10
 	ore_scan_icon = "mineral_common"
 	ore_icon_overlay = "lump"
+	icon_base = "stone"
+	icon_reinf = "reinf_stone"
 	icon_colour = "#effffe"
 	chem_products = list(
 		/datum/reagent/silicon = 20
@@ -52,8 +58,7 @@
 	door_icon_base = "stone"
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
-	icon_base = "stone"
-	icon_reinf = "reinf_stone"
+
 
 /material/pyrite
 	name = "pyrite"
@@ -179,11 +184,14 @@
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
 	icon_base = "stone"
+	icon_reinf = "reinf_stone"
 	ore_compresses_to = "bauxite"
 
 /material/sand
 	name = "sand"
 	stack_type = null
+	icon_base = "stone"
+	icon_reinf = "reinf_stone"
 	icon_colour = "#e2dbb5"
 	ore_smelts_to = "glass"
 	ore_compresses_to = "sandstone"
@@ -198,6 +206,7 @@
 	stack_type = /obj/item/stack/material/phoron
 	ignition_point = PHORON_MINIMUM_BURN_TEMPERATURE
 	icon_base = "stone"
+	icon_reinf = "reinf_stone"
 	icon_colour = "#e37108"
 	shard_type = SHARD_SHARD
 	hardness = 30

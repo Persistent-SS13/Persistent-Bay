@@ -3,6 +3,8 @@
 	stack_type = /obj/item/stack/material/diamond
 	flags = MATERIAL_UNMELTABLE
 	cut_delay = 60
+	icon_base = "curvy"
+	icon_reinf = "curvy"
 	icon_colour = "#00ffe1"
 	opacity = 0.4
 	shard_type = SHARD_SHARD
@@ -30,6 +32,7 @@
 	name = "sandstone"
 	stack_type = /obj/item/stack/material/sandstone
 	icon_base = "stone"
+	icon_reinf = "reinf_stone"
 	icon_colour = "#d9c179"
 	shard_type = SHARD_STONE_PIECE
 	weight = 22

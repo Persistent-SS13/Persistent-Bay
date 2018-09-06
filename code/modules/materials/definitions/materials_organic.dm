@@ -2,8 +2,8 @@
 	name = "plastic"
 	stack_type = /obj/item/stack/material/plastic
 	flags = MATERIAL_BRITTLE
-	icon_base = "solid"
-	icon_reinf = "reinf_over"
+	icon_base = "curvy"
+	icon_reinf = "jaggy"
 	icon_colour = "#cccccc"
 	hardness = 10
 	weight = 5
@@ -24,9 +24,10 @@
 	name = "wood"
 	adjective_name = "wooden"
 	stack_type = /obj/item/stack/material/wood
+	icon_base = "jaggy"
+	icon_reinf = "jaggy"
 	icon_colour = "#824b28"
 	integrity = 50
-	icon_base = "solid"
 	explosion_resistance = 2
 	shard_type = SHARD_SPLINTER
 	shard_can_repair = 0 // you can't weld splinters back into planks
@@ -59,8 +60,8 @@
 	stack_type = /obj/item/stack/material/cardboard
 	flags = MATERIAL_BRITTLE
 	integrity = 10
-	icon_base = "solid"
-	icon_reinf = "reinf_over"
+	icon_base = "jaggy"
+	icon_reinf = "jaggy"
 	icon_colour = "#aaaaaa"
 	hardness = 1
 	brute_armor = 1

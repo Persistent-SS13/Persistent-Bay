@@ -235,7 +235,7 @@ datum/preferences
 
 	preview_icon.Scale(preview_icon.Width() * 2, preview_icon.Height() * 2) // Scaling here to prevent blurring in the browser.
 
-/datum/preferences/proc/get_preview_icon(var/atom/movable/mannequin)
+/proc/get_preview_icon(var/atom/movable/mannequin)
 	var/icon/ico = icon('icons/effects/128x48.dmi', "steel")
 	ico.Scale(48+32, 16+32)
 

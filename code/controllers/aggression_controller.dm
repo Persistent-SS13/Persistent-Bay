@@ -118,11 +118,11 @@ var/datum/controller/aggression_controller/aggression_controller
 				if(2)
 					if(istype(M))
 						switch(pick(list(1,2)))
-							M.phoronation += 0.2 // Big sanity event
 							if(1)
 								to_chat(M, pick("<span class='userdanger>You want off of this asteroid, NOW! You can't contain your dread!</span>", "<span class='userdanger>The voices! You don't want to understand!</span>"))
 							if(2)
 								to_chat(M, pick("<span class='userdanger>Voices layered over themselves... you struggle to block out the noise!</span>", "<span class='userdanger>You've got to steel yourself against these terrors!</span>"))
+						M.phoronation += 0.2 // Big sanity event
 						M.playsound_local(M.loc, pick('sound/effects/yewbic_amb1.ogg', 'sound/effects/yewbic_amb2.ogg', 'sound/effects/yewbic_amb3.ogg', 'sound/effects/yewbic_amb4.ogg'), 50, 0)
 
 				if(3)
@@ -236,6 +236,3 @@ var/datum/controller/aggression_controller/aggression_controller
 /datum/controller/aggression_controller/Process()
 	for(var/datum/aggression_machine/sector in sectors)
 		sector.Process()
-
-
-

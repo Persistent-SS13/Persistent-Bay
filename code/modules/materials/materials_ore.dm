@@ -90,7 +90,8 @@
 					prot = 1
 	else
 		prot = 1
- 	if(prot > 0)
+
+	if(prot > 0)
 		return
 	else
 		H.phoronation += 1

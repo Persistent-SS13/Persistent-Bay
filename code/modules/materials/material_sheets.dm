@@ -156,6 +156,27 @@
 	icon_state = "sheet-phoron"
 	default_type = "phoron"
 
+
+// Lay the groundwork for an engaging phoron experience
+/obj/item/stack/material/phoron/pickup(mob/user)
+	var/mob/living/carbon/human/H = user
+	var/prot = 0
+	if(istype(H))
+		if(H.gloves)
+			var/obj/item/clothing/gloves/G = H.gloves
+			if(G.permeability_coefficient)
+				if(G.permeability_coefficient < 0.2)
+					prot = 1
+	else
+		prot = 1
+
+	if(prot > 0)
+		return
+	else
+		H.phoronation += 2
+		to_chat(user, "<span class='warning'>The phoron crystal stings your hands as you pick it up.</span>")
+		return
+
 /obj/item/stack/material/phoron/ten
 	amount = 10
 

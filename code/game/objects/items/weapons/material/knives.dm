@@ -7,8 +7,8 @@
 	var/active = 0
 	w_class = ITEM_SIZE_TINY
 	attack_verb = list("patted", "tapped")
-	force_divisor = 0.25 // 15 when wielded with hardness 60 (steel)
-	thrown_force_divisor = 0.25 // 5 when thrown with weight 20 (steel)
+	force_divisor = 0.10
+	thrown_force_divisor = 0.15 // 5 when thrown with weight 20 (steel)
 
 /obj/item/weapon/material/butterfly/update_force()
 	if(active)
@@ -56,7 +56,7 @@
 	flags = CONDUCT
 	sharp = 1
 	edge = 1
-	force_divisor = 0.15 // 9 when wielded with hardness 60 (steel)
+	force_divisor = 0.20 // 9 when wielded with hardness 60 (steel)
 	matter = list(DEFAULT_WALL_MATERIAL = 12000)
 	origin_tech = list(TECH_MATERIAL = 1)
 	attack_verb = list("slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")

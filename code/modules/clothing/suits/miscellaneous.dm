@@ -500,12 +500,12 @@
 	name = "human suit"
 	desc = "A Human suit made out of rubber."
 	icon_state = "mansuit"
-/*
-/obj/item/clothing/suit/rubber/tajaran
-	name = "tajara suit"
-	desc = "A Tajara suit made out of rubber."
+
+/obj/item/clothing/suit/rubber/cat
+	name = "cat suit"
+	desc = "A cat suit made out of rubber."
 	icon_state = "catsuit"
-*/
+
 /obj/item/clothing/suit/rubber/skrell
 	name = "skrell suit"
 	desc = "A Skrell suit made out of rubber."

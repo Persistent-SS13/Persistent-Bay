@@ -75,7 +75,7 @@
 /obj/item/clothing/accessory/shouldercape/general
 	name = "general's cape"
 	desc = "An extremely decorated cape with an intricately runed design has been woven into the fabric of this cape with great care."
-icon_state = "leadercape"
+	icon_state = "leadercape"
 
 //Voxclothing
 

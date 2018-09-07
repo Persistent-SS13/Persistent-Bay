@@ -15,36 +15,10 @@
 	throw_range = 8
 	max_w_class = ITEM_SIZE_SMALL
 	max_storage_space = DEFAULT_BOX_STORAGE
-	use_sound = 'sound/effects/storage/box.ogg'
 
 /obj/item/weapon/storage/firstaid/empty
 	icon_state = "firstaid"
 	name = "First-Aid (empty)"
-
-/obj/item/weapon/storage/firstaid/regular
-	icon_state = "firstaid"
-
-	startswith = list(
-		/obj/item/stack/medical/bruise_pack = 2,
-		/obj/item/stack/medical/ointment = 2,
-		/obj/item/weapon/storage/pill_bottle/antidexafen,
-		/obj/item/weapon/storage/pill_bottle/paracetamol,
-		/obj/item/stack/medical/splint
-		)
-
-/obj/item/weapon/storage/firstaid/trauma
-	name = "trauma first-aid kit"
-	desc = "It's an emergency medical kit for when people brought ballistic weapons to a laser fight."
-	icon_state = "radfirstaid"
-	item_state = "firstaid-ointment"
-
-	startswith = list(
-		/obj/item/weapon/storage/med_pouch/trauma = 4
-		)
-
-/obj/item/weapon/storage/firstaid/trauma/New()
-	..()
-	icon_state = pick("radfirstaid", "radfirstaid2", "radfirstaid3")
 
 /obj/item/weapon/storage/firstaid/fire
 	name = "fire first-aid kit"
@@ -53,12 +27,28 @@
 	item_state = "firstaid-ointment"
 
 	startswith = list(
-		/obj/item/weapon/storage/med_pouch/burn = 4
+		/obj/item/device/healthanalyzer,
+		/obj/item/weapon/reagent_containers/hypospray/autoinjector,
+		/obj/item/stack/medical/ointment,
+		/obj/item/weapon/storage/pill_bottle/kelotane,
+		/obj/item/weapon/storage/pill_bottle/paracetamol
 		)
 
 /obj/item/weapon/storage/firstaid/fire/New()
 	..()
 	icon_state = pick("ointment","firefirstaid")
+
+/obj/item/weapon/storage/firstaid/regular
+	icon_state = "firstaid"
+
+	startswith = list(
+		/obj/item/stack/medical/bruise_pack = 2,
+		/obj/item/stack/medical/ointment = 1,
+		/obj/item/device/healthanalyzer,
+		/obj/item/weapon/reagent_containers/hypospray/autoinjector,
+		/obj/item/weapon/storage/pill_bottle/antidexafen,
+		/obj/item/weapon/storage/pill_bottle/paracetamol
+		)
 
 /obj/item/weapon/storage/firstaid/toxin
 	name = "toxin first aid"
@@ -67,7 +57,9 @@
 	item_state = "firstaid-toxin"
 
 	startswith = list(
-		/obj/item/weapon/storage/med_pouch/toxin = 4
+		/obj/item/weapon/reagent_containers/syringe/antitoxin = 3,
+		/obj/item/weapon/storage/pill_bottle/antitox,
+		/obj/item/device/healthanalyzer,
 		)
 
 /obj/item/weapon/storage/firstaid/toxin/New()
@@ -81,17 +73,20 @@
 	item_state = "firstaid-o2"
 
 	startswith = list(
-		/obj/item/weapon/storage/med_pouch/oxyloss = 4
+		/obj/item/weapon/storage/pill_bottle/dexalin,
+		/obj/item/weapon/reagent_containers/hypospray/autoinjector,
+		/obj/item/weapon/reagent_containers/syringe/inaprovaline,
+		/obj/item/device/healthanalyzer,
 		)
 
 /obj/item/weapon/storage/firstaid/adv
 	name = "advanced first-aid kit"
 	desc = "Contains advanced medical treatments."
-	icon_state = "purplefirstaid"
+	icon_state = "advfirstaid"
 	item_state = "firstaid-advanced"
 
 	startswith = list(
-		/obj/item/weapon/storage/pill_bottle/assorted,
+		/obj/item/weapon/reagent_containers/hypospray/autoinjector,
 		/obj/item/stack/medical/advanced/bruise_pack = 3,
 		/obj/item/stack/medical/advanced/ointment = 2,
 		/obj/item/stack/medical/splint
@@ -113,20 +108,6 @@
 		/obj/item/stack/medical/splint,
 		)
 
-/obj/item/weapon/storage/firstaid/stab
-	name = "stabilisation first aid"
-	desc = "Stocked with medical pouches and a stasis bag."
-	icon_state = "stabfirstaid"
-	item_state = "firstaid-advanced"
-
-	startswith = list(
-		/obj/item/weapon/storage/med_pouch/trauma,
-		/obj/item/weapon/storage/med_pouch/burn,
-		/obj/item/weapon/storage/med_pouch/oxyloss,
-		/obj/item/weapon/storage/med_pouch/toxin,
-		/obj/item/bodybag/cryobag
-		)
-
 /obj/item/weapon/storage/firstaid/surgery
 	name = "surgery kit"
 	desc = "Contains tools for surgery. Has precise foam fitting for safe transport and automatically sterilizes the content between uses."
@@ -136,7 +117,6 @@
 	storage_slots = 14
 	max_w_class = ITEM_SIZE_NORMAL
 	max_storage_space = null
-	use_sound = 'sound/effects/storage/briefcase.ogg'
 
 	can_hold = list(
 		/obj/item/weapon/bonesetter,
@@ -181,9 +161,7 @@
 	can_hold = list(/obj/item/weapon/reagent_containers/pill,/obj/item/weapon/dice,/obj/item/weapon/paper)
 	allow_quick_gather = 1
 	use_to_pickup = 1
-	use_sound = 'sound/effects/storage/pillbottle.ogg'
-	var/wrapper_color
-	var/label
+	use_sound = null
 
 /obj/item/weapon/storage/pill_bottle/afterattack(mob/living/target, mob/living/user, proximity_flag)
 	if(!proximity_flag || !istype(target) || target != user)
@@ -202,133 +180,93 @@
 			P.attack(target,user)
 			return 1
 
-/obj/item/weapon/storage/pill_bottle/Initialize()
-	. = ..()
-	update_icon()
-
-/obj/item/weapon/storage/pill_bottle/update_icon()
-	overlays.Cut()
-	if(wrapper_color)
-		var/image/I = image(icon, "pillbottle_wrap")
-		I.color = wrapper_color
-		overlays += I
-
 /obj/item/weapon/storage/pill_bottle/antitox
-	name = "pill bottle (Dylovene)"
+	name = "bottle of Dylovene pills"
 	desc = "Contains pills used to counter toxins."
 
 	startswith = list(/obj/item/weapon/reagent_containers/pill/antitox = 21)
-	wrapper_color = COLOR_GREEN
 
 /obj/item/weapon/storage/pill_bottle/bicaridine
-	name = "pill bottle (Bicaridine)"
+	name = "bottle of Bicaridine pills"
 	desc = "Contains pills used to stabilize the severely injured."
 
 	startswith = list(/obj/item/weapon/reagent_containers/pill/bicaridine = 21)
-	wrapper_color = COLOR_MAROON
 
 /obj/item/weapon/storage/pill_bottle/dexalin_plus
-	name = "pill bottle (Dexalin Plus)"
+	name = "bottle of Dexalin Plus pills"
 	desc = "Contains pills used to treat extreme cases of oxygen deprivation."
 
 	startswith = list(/obj/item/weapon/reagent_containers/pill/dexalin_plus = 14)
-	wrapper_color = COLOR_CYAN_BLUE
 
 /obj/item/weapon/storage/pill_bottle/dexalin
-	name = "pill bottle (Dexalin)"
+	name = "bottle of Dexalin pills"
 	desc = "Contains pills used to treat oxygen deprivation."
 
 	startswith = list(/obj/item/weapon/reagent_containers/pill/dexalin = 21)
-	wrapper_color = COLOR_LIGHT_CYAN
 
 /obj/item/weapon/storage/pill_bottle/dermaline
-	name = "pill bottle (Dermaline)"
+	name = "bottle of Dermaline pills"
 	desc = "Contains pills used to treat burn wounds."
 
 	startswith = list(/obj/item/weapon/reagent_containers/pill/dermaline = 14)
-	wrapper_color = "#e8d131"
 
 /obj/item/weapon/storage/pill_bottle/dylovene
-	name = "pill bottle (Dylovene)"
+	name = "bottle of Dylovene pills"
 	desc = "Contains pills used to treat toxic substances in the blood."
 
 	startswith = list(/obj/item/weapon/reagent_containers/pill/dylovene = 21)
-	wrapper_color = COLOR_GREEN
 
 /obj/item/weapon/storage/pill_bottle/inaprovaline
-	name = "pill bottle (Inaprovaline)"
+	name = "bottle of Inaprovaline pills"
 	desc = "Contains pills used to stabilize patients."
 
 	startswith = list(/obj/item/weapon/reagent_containers/pill/inaprovaline = 21)
-	wrapper_color = COLOR_PALE_BLUE_GRAY
 
 /obj/item/weapon/storage/pill_bottle/kelotane
-	name = "pill bottle (Kelotane)"
+	name = "bottle of kelotane pills"
 	desc = "Contains pills used to treat burns."
 
 	startswith = list(/obj/item/weapon/reagent_containers/pill/kelotane = 21)
-	wrapper_color = COLOR_SUN
 
 /obj/item/weapon/storage/pill_bottle/spaceacillin
-	name = "pill bottle (Spaceacillin)"
+	name = "bottle of Spaceacillin pills"
 	desc = "A theta-lactam antibiotic. Effective against many diseases likely to be encountered in space."
 
 	startswith = list(/obj/item/weapon/reagent_containers/pill/spaceacillin = 14)
-	wrapper_color = COLOR_PALE_GREEN_GRAY
 
 /obj/item/weapon/storage/pill_bottle/tramadol
-	name = "pill bottle (Tramadol)"
+	name = "bottle of Tramadol pills"
 	desc = "Contains pills used to relieve pain."
 
 	startswith = list(/obj/item/weapon/reagent_containers/pill/tramadol = 14)
-	wrapper_color = COLOR_PURPLE_GRAY
 
 //Baycode specific Psychiatry pills.
 /obj/item/weapon/storage/pill_bottle/citalopram
-	name = "pill bottle (Citalopram)"
+	name = "bottle of Citalopram pills"
 	desc = "Mild antidepressant. For use in individuals suffering from depression or anxiety. 15u dose per pill."
 
 	startswith = list(/obj/item/weapon/reagent_containers/pill/citalopram = 21)
-	wrapper_color = COLOR_GRAY
 
 /obj/item/weapon/storage/pill_bottle/methylphenidate
-	name = "pill bottle (Methylphenidate)"
+	name = "bottle of Methylphenidate pills"
 	desc = "Mental stimulant. For use in individuals suffering from ADHD, or general concentration issues. 15u dose per pill."
 
 	startswith = list(/obj/item/weapon/reagent_containers/pill/methylphenidate = 21)
-	wrapper_color = COLOR_GRAY
 
 /obj/item/weapon/storage/pill_bottle/paroxetine
-	name = "pill bottle (Paroxetine)"
+	name = "bottle of Paroxetine pills"
 	desc = "High-strength antidepressant. Only for use in severe depression. 10u dose per pill. <span class='warning'>WARNING: side-effects may include hallucinations.</span>"
 
 	startswith = list(/obj/item/weapon/reagent_containers/pill/paroxetine = 14)
-	wrapper_color = COLOR_GRAY
 
 /obj/item/weapon/storage/pill_bottle/antidexafen
-	name = "pill bottle (cold medicine)"
-	desc = "All-in-one cold medicine. 15u dose per pill. Safe for babies like you!"
+	name = "bottle of cold medicine pills"
+	desc = "All-in-one cold medicine. 10u dose per pill. Safe for babies like you!"
 
 	startswith = list(/obj/item/weapon/reagent_containers/pill/antidexafen = 21)
-	wrapper_color = COLOR_VIOLET
 
 /obj/item/weapon/storage/pill_bottle/paracetamol
-	name = "pill bottle (Paracetamol)"
+	name = "bottle of paracetamol"
 	desc = "Mild painkiller, also known as Tylenol. Won't fix the cause of your headache (unlike cyanide), but might make it bearable."
 
 	startswith = list(/obj/item/weapon/reagent_containers/pill/paracetamol = 21)
-	wrapper_color = "#a2819e"
-
-/obj/item/weapon/storage/pill_bottle/assorted
-	name = "pill bottle (assorted)"
-	desc = "Commonly found on paramedics, these assorted pill bottles contain all the basics."
-
-	startswith = list(
-			/obj/item/weapon/reagent_containers/pill/inaprovaline = 6,
-			/obj/item/weapon/reagent_containers/pill/dylovene = 6,
-			/obj/item/weapon/reagent_containers/pill/sugariron = 2,
-			/obj/item/weapon/reagent_containers/pill/tramadol = 2,
-			/obj/item/weapon/reagent_containers/pill/dexalin = 2,
-			/obj/item/weapon/reagent_containers/pill/kelotane = 2,
-			/obj/item/weapon/reagent_containers/pill/hyronalin
-)

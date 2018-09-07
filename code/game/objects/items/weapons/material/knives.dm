@@ -80,6 +80,7 @@
 	icon = 'icons/obj/kitchen.dmi'
 	icon_state = "butch"
 	desc = "A huge thing used for chopping and chopping up meat. This includes clowns and clown-by-products."
+	matter = list(DEFAULT_WALL_MATERIAL = 14000)
+	w_class = ITEM_SIZE_LARGE
 	force_divisor = 0.25 // 15 when wielded with hardness 60 (steel)
 	attack_verb = list("cleaved", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
-	w_class = ITEM_SIZE_LARGE

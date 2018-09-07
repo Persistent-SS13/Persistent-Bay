@@ -2,6 +2,7 @@
 
 /obj/machinery/computer/engines
 	name = "engine control console"
+	icon_state = "thick"
 	icon_keyboard = "tech_key"
 	icon_screen = "engines"
 	var/state = "status"

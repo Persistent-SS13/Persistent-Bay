@@ -130,7 +130,8 @@
 		var/characterName = CharacterName(ind, ckey)
 		if(characterName)
 			var/icon/preview = CharacterIcon(ind, ckey)
-			send_rsc(src, preview, "[ind]preview.png")
+			if(preview)
+				send_rsc(src, preview, "[ind]preview.png")
 			data += "<img src=[ind]preview.png width=[preview.Width()] height=[preview.Height()]><br>"
 			data += "<b><a href='?src=\ref[src];pickSlot=[ind][action]'>[characterName]</a></b><hr>"
 		else

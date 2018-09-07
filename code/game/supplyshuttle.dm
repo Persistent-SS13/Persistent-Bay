@@ -333,7 +333,7 @@ var/list/point_source_descriptions = list(
 							design = pick(possible_designs)
 					if(!restart) valid = 1
 			export.required = rand(30, 70)
-			var/per = rand(10,25)
+			var/per = rand(30,40)
 			for(var/x in design.materials)
 				per += round(design.materials[x]/500,0.01)
 			for(var/x in design.req_tech)
@@ -356,7 +356,7 @@ var/list/point_source_descriptions = list(
 			for(var/D in subtypesof(/obj/item/weapon/reagent_containers/food/snacks/variable))
 				possible_designs += D
 			export.required = rand(12, 32)
-			var/per = rand(30,50)
+			var/per = rand(10,30)
 			export.typepath = pick(possible_designs)
 			export.rate = per
 			export.order_type = typee
@@ -401,7 +401,7 @@ var/list/point_source_descriptions = list(
 		if("phoron")
 			export = new /datum/export_order/stack()
 			export.typepath = /obj/item/stack/material/phoron
-			export.rate = rand(100,160)
+			export.rate = rand(60,100)
 			export.order_type = typee
 			export.id = exportnum
 			export.required = rand(300, 500)
@@ -414,9 +414,10 @@ var/list/point_source_descriptions = list(
 		if("bluespace crystal")
 			export = new /datum/export_order/static()
 			export.typepath = /obj/item/bluespace_crystal
-			export.name = "Order for bluespace crystals. $$800 per crystal."
+			export.name = "Order for bluespace crystals. $$500 per crystal."
 			export.order_type = typee
 			export.id = exportnum
+			export.rate = 500
 			all_exports |= export
 			return export
 

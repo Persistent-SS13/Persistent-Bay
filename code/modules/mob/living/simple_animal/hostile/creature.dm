@@ -6,8 +6,8 @@
 	icon_state = "otherthing"
 	icon_living = "otherthing"
 	icon_dead = "otherthing-dead"
-	health = 40
-	maxHealth = 40
+	health = 30
+	maxHealth = 30
 	speed = 8
 	destroy_surroundings = 1
 

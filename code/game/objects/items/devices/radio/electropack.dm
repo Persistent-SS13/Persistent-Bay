@@ -99,7 +99,7 @@
 
 		M.Weaken(10)
 
-	if(master && wires & 1)
+	if(master) //before: if(master && wires & 1) not sure what to do here but clearing these fixed some of the issues
 		master.receive_signal()
 	return
 

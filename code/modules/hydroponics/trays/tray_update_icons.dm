@@ -30,7 +30,7 @@
 				log_error("<span class='danger'>Seed type [seed.get_trait(TRAIT_PLANT_ICON)] cannot find a growth stage value.</span>")
 				return
 			var/overlay_stage = get_overlay_stage()
-			
+
 			var/ikey = "\ref[seed]-plant-[overlay_stage]"
 			if(!plant_controller.plant_icon_cache[ikey])
 				plant_controller.plant_icon_cache[ikey] = seed.get_icon(overlay_stage)
@@ -49,7 +49,7 @@
 	if(mechanical)
 		//Draw the cover.
 		if(closed_system)
-			new_overlays += "hydrocover"
+			new_overlays += "hydrocover2"
 		if(seed && health <= (seed.get_trait(TRAIT_ENDURANCE) / 2))
 			new_overlays += "over_lowhealth3"
 		if(waterlevel <= 10)

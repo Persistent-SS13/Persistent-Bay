@@ -77,13 +77,14 @@ var/datum/controller/aggression_controller/aggression_controller
 				if(1)
 					if(istype(M))
 						if(istype(M.loc, /turf/simulated))
-							to_chat(M, "<span class='danger'>The ground lightly trembles beneath your feet..</span>")
+							to_chat(M, "<span class='danger'>The ground lightly trembles beneath your feet...</span>")
 							M.playsound_local(M.loc, pick('sound/effects/asteroid/earthquake_short.ogg','sound/effects/asteroid/earthquake_short2.ogg'), 30, 0)
 							shake_camera(M, 5, 1)
 				if(2)
 					if(istype(M))
-						to_chat(M, pick("You feel a sudden sense of dread..", "You feel shame.. but you cant tell why.."))
+						to_chat(M, pick("You feel a sudden sense of dread...", "You feel shame... but you can't tell why..."))
 						M.playsound_local(M.loc, pick('sound/ambience/ambigen5.ogg','sound/ambience/ambigen4.ogg'), 50, 0)
+						M.phoronation += 0.05 // Mild sanity event
 
 
 		if(2)
@@ -91,13 +92,14 @@ var/datum/controller/aggression_controller/aggression_controller
 				if(1)
 					if(istype(M))
 						if(istype(M.loc, /turf/simulated))
-							to_chat(M, "<span class='danger'>The ground angrily trembles beneath your feet..</span>")
+							to_chat(M, "<span class='danger'>The ground angrily trembles beneath your feet...</span>")
 							M.playsound_local(M.loc, pick('sound/effects/asteroid/earthquake_short.ogg','sound/effects/asteroid/earthquake_short2.ogg'), 50, 0)
 							shake_camera(M, 10, 2)
 				if(2)
 					if(istype(M))
-						to_chat(M, pick("A whisper in your head.. pain..", "Being on this asteroid is making you depressed.."))
+						to_chat(M, pick("A whisper in your head... pain...", "Being on this asteroid is making you depressed..."))
 						M.playsound_local(M.loc, pick('sound/ambience/ambigen5.ogg','sound/ambience/ambigen4.ogg'), 50, 0)
+						M.phoronation += 0.1 // Sanity event
 
 				if(3)
 					var/turf/T = get_asteroid_spawn(A)
@@ -117,9 +119,10 @@ var/datum/controller/aggression_controller/aggression_controller
 					if(istype(M))
 						switch(pick(list(1,2)))
 							if(1)
-								to_chat(M, pick("<span class='userdanger>You want off of this asteroid, NOW! You cant contain your dread!</span>", "<span class='userdanger>The voices! You dont want to understand!</span>"))
+								to_chat(M, pick("<span class='userdanger>You want off of this asteroid, NOW! You can't contain your dread!</span>", "<span class='userdanger>The voices! You don't want to understand!</span>"))
 							if(2)
-								to_chat(M, pick("<span class='userdanger>Voices layered over themselves.. You struggle to block out the noise!</span>", "<span class='userdanger>You've got to steel yourself against these terrors!</span>"))
+								to_chat(M, pick("<span class='userdanger>Voices layered over themselves... you struggle to block out the noise!</span>", "<span class='userdanger>You've got to steel yourself against these terrors!</span>"))
+						M.phoronation += 0.2 // Big sanity event
 						M.playsound_local(M.loc, pick('sound/effects/yewbic_amb1.ogg', 'sound/effects/yewbic_amb2.ogg', 'sound/effects/yewbic_amb3.ogg', 'sound/effects/yewbic_amb4.ogg'), 50, 0)
 
 				if(3)
@@ -233,6 +236,3 @@ var/datum/controller/aggression_controller/aggression_controller
 /datum/controller/aggression_controller/Process()
 	for(var/datum/aggression_machine/sector in sectors)
 		sector.Process()
-
-
-

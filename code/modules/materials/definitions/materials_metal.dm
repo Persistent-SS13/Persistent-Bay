@@ -87,8 +87,6 @@
 	stack_type = /obj/item/stack/material/steel
 	integrity = 150
 	brute_armor = 5
-	icon_base = "solid"
-	icon_reinf = "reinf_over"
 	icon_colour = "#666666"
 	hitsound = 'sound/weapons/smash.ogg'
 	chem_products = list(
@@ -113,8 +111,6 @@
 	stack_type = /obj/item/stack/material/plasteel
 	integrity = 400
 	melting_point = 6000
-	icon_base = "solid"
-	icon_reinf = "reinf_over"
 	icon_colour = "#777777"
 	explosion_resistance = 25
 	brute_armor = 6
@@ -138,7 +134,6 @@
 	icon_base = "metal"
 	door_icon_base = "metal"
 	icon_colour = "#d1e6e3"
-	icon_reinf = "reinf_metal"
 	alloy_materials = null
 	alloy_product = FALSE
 
@@ -147,8 +142,6 @@
 	stack_type = /obj/item/stack/material/ocp
 	integrity = 200
 	melting_point = 12000
-	icon_base = "solid"
-	icon_reinf = "reinf_over"
 	icon_colour = "#9bc6f2"
 	brute_armor = 4
 	burn_armor = 20
@@ -219,6 +212,7 @@
 /material/iron
 	name = "iron"
 	stack_type = /obj/item/stack/material/iron
+	icon_reinf = "jaggy"
 	icon_colour = "#5c5454"
 	weight = 22
 	sheet_singular_name = "ingot"
@@ -249,6 +243,8 @@
 /material/hematite
 	name = "hematite"
 	stack_type = null
+	icon_base = "stone"
+	icon_reinf = "reinf_stone"
 	icon_colour = "#aa6666"
 	ore_smelts_to = "iron"
 	ore_result_amount = 5

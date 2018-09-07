@@ -11,7 +11,7 @@
 	display_name = "disturbing stone"
 	icon_base = "cult"
 	icon_colour = "#402821"
-	icon_reinf = "reinf_cult"
+	icon_reinf = "cult"
 	shard_type = SHARD_STONE_PIECE
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"

@@ -418,7 +418,7 @@ GLOBAL_DATUM_INIT(temp_reagents_holder, /obj, new)
 	return reagents
 
 /datum/reagents/proc/create_puddle(var/atom/target, var/amount = 1, var/multiplier = 1, var/copy = 0)
-	if (amount < 3)
+	if (!target || amount < 3)
 		return
 	var/hasLiquid = 0
 	for(var/datum/reagent/R in reagent_list)	//Checks if the current container has any liquid reagents

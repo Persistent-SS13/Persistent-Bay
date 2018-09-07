@@ -130,7 +130,8 @@
 		var/characterName = CharacterName(ind, ckey)
 		if(characterName)
 			var/icon/preview = CharacterIcon(ind, ckey)
-			send_rsc(src, preview, "[ind]preview.png")
+			if(preview)
+				send_rsc(src, preview, "[ind]preview.png")
 			data += "<img src=[ind]preview.png width=[preview.Width()] height=[preview.Height()]><br>"
 			data += "<b><a href='?src=\ref[src];pickSlot=[ind][action]'>[characterName]</a></b><hr>"
 		else
@@ -305,7 +306,6 @@
 
 /mob/new_player/proc/deleteCharacter()
 	if(input("Are you SURE you want to delete [CharacterName(chosen_slot, ckey)]? THIS IS PERMANENT. enter the character\'s full name to conform.", "DELETE A CHARACTER", "") == CharacterName(chosen_slot, ckey))
-		fdel(load_path(ckey, "[chosen_slot]preview.png"))
 		fdel(load_path(ckey, "[chosen_slot].sav"))
 	load_panel.close()
 

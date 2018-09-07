@@ -175,10 +175,10 @@
 
 	var/amount
 	var/amount_to_puddle
-	if( prob(10) ) // adds 10% probability of splashing the solution while handling it. Should have other factors once there is skills
+	var/blocked = 100
+	if( prob(5) ) // adds 10% probability of splashing the solution while handling it. Should have other factors once there is skills
 		var/targetPart = HANDS
 		var/havePart = 0
-		var/blocked = 100
 		for(var/obj/item/clothing/C in user.get_equipped_items())
 			if(C.permeability_coefficient == 1 || !C.body_parts_covered)
 				continue

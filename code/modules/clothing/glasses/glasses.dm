@@ -456,3 +456,34 @@
 /obj/item/clothing/glasses/eyepatch/hud/meson/New()
 	..()
 	overlay = GLOB.global_hud.meson
+
+/obj/item/clothing/glasses/veil
+	name = "embroidered veil"
+	desc = "An alien made veil that allows the user to see while obscuring their eyes."
+	icon_state = "xenoblind"
+	item_state = "xenoblind"
+	prescription = 5
+	body_parts_covered = EYES
+
+/obj/item/clothing/glasses/hud/health/veil
+	name = "lightweight veil"
+	desc = "An alien made veil that allows the user to see while obscuring their eyes. This one has an installed medical HUD."
+	icon_state = "xenoblind_med"
+	item_state = "xenoblind_med"
+	body_parts_covered = EYES
+
+/obj/item/clothing/glasses/sunglasses/sechud/veil
+	name = "sleek veil"
+	desc = "An alien made veil that allows the user to see while obscuring their eyes. This one has an in-built security HUD."
+	icon_state = "xenoblind_sec"
+	item_state = "xenoblind_sec"
+	prescription = 5
+	body_parts_covered = EYES
+
+/obj/item/clothing/glasses/meson/prescription/veil
+	name = "industrial veil"
+	desc = "An alien made veil that allows the user to see while obscuring their eyes. This one has installed mesons."
+	icon_state = "xenoblind_meson"
+	item_state = "xenoblind_meson"
+	off_state = "xenoblind_meson"
+	body_parts_covered = EYES

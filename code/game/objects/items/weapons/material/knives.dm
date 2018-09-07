@@ -5,10 +5,10 @@
 	item_state = null
 	hitsound = null
 	var/active = 0
-	w_class = ITEM_SIZE_TINY
+	w_class = ITEM_SIZE_SMALL
 	attack_verb = list("patted", "tapped")
-	force_divisor = 0.10
-	thrown_force_divisor = 0.15 // 5 when thrown with weight 20 (steel)
+	force_divisor = 0.1 // 6 when wieldness with hardness 60 (steel)
+	thrown_force_divisor = 0.2 // 4 when thrown with weight 20 (steel)
 
 /obj/item/weapon/material/butterfly/update_force()
 	if(active)
@@ -18,7 +18,7 @@
 		throwforce = max(3,force-3)
 		hitsound = 'sound/weapons/bladeslice.ogg'
 		icon_state += "_open"
-		w_class = ITEM_SIZE_SMALL
+		w_class = ITEM_SIZE_NORMAL
 		attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
 	else
 		force = 3
@@ -56,19 +56,17 @@
 	flags = CONDUCT
 	sharp = 1
 	edge = 1
-	force_divisor = 0.20 // 9 when wielded with hardness 60 (steel)
+	force_divisor = 0.15 // 9 when wielded with hardness 60 (steel)
 	matter = list(DEFAULT_WALL_MATERIAL = 12000)
 	origin_tech = list(TECH_MATERIAL = 1)
 	attack_verb = list("slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
 	unbreakable = 1
-	w_class = ITEM_SIZE_NORMAL
 
 /obj/item/weapon/material/knife/hook
 	name = "meat hook"
 	desc = "A sharp, metal hook what sticks into things."
 	icon_state = "hook_knife"
 	item_state = "hook_knife"
-	w_class = ITEM_SIZE_LARGE
 
 /obj/item/weapon/material/knife/ritual
 	name = "ritual knife"
@@ -82,6 +80,6 @@
 	icon = 'icons/obj/kitchen.dmi'
 	icon_state = "butch"
 	desc = "A huge thing used for chopping and chopping up meat. This includes clowns and clown-by-products."
-	force_divisor = 0.20
+	force_divisor = 0.25 // 15 when wielded with hardness 60 (steel)
 	attack_verb = list("cleaved", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
 	w_class = ITEM_SIZE_LARGE

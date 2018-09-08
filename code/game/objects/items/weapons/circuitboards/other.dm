@@ -173,7 +173,7 @@
 							/obj/item/stack/cable_coil = 30,
 							/obj/item/device/assembly/igniter = 1,
 							/obj/item/weapon/stock_parts/capacitor = 5,
-							/obj/item/stack/material/uranium = 5)
+							/obj/item/stack/material/phoron = 5)
 							
 /obj/item/weapon/circuitboard/bridge_computer
 	name = T_BOARD("bridge computer")

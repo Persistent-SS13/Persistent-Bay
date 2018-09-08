@@ -80,7 +80,7 @@
 	..()
 	H.item_state = lowertext(name)
 
-/datum/species/monkey/tajaran
+/datum/species/monkey/xeno
 	name = "Farwa"
 	name_plural = "Farwa"
 	health_hud_intensity = 2
@@ -88,7 +88,6 @@
 	icobase = 'icons/mob/human_races/species/monkey/farwa_body.dmi'
 	deform = 'icons/mob/human_races/species/monkey/farwa_body.dmi'
 
-	greater_form = "Tajaran"
 	default_language = "Farwa"
 	flesh_color = "#afa59e"
 	base_color = "#333333"

@@ -6,7 +6,7 @@
 		return
 
 	src.blinded = null
-	
+
 	//Status updates, death etc.
 	clamp_values()
 	handle_regular_status_updates()
@@ -84,11 +84,11 @@
 
 	if(health < config.health_threshold_dead && src.stat != 2) //die only once
 		death()
-		
+
 	if(last_hud_update < world.time)
 		last_hud_update = world.time + 15 SECONDS
 		update_action_buttons()
-		
+
 	if (src.stat != DEAD) //Alive.
 		if (src.paralysis || src.stunned || src.weakened || !src.has_power) //Stunned etc.
 			src.set_stat(UNCONSCIOUS)
@@ -283,7 +283,7 @@
 		set_see_invisible(SEE_INVISIBLE_LEVEL_TWO)
 	else if (src.stat != DEAD)
 		set_sight(sight&(~SEE_TURFS)&(~SEE_MOBS)&(~SEE_OBJS))
-		set_see_in_dark(8) 			 // see_in_dark means you can FAINTLY see in the dark, humans have a range of 3 or so, tajaran have it at 8
+		set_see_in_dark(8) 			 // see_in_dark means you can FAINTLY see in the dark, humans have a range of 3 or so
 		set_see_invisible(SEE_INVISIBLE_LIVING) // This is normal vision (25), setting it lower for normal vision means you don't "see" things like darkness since darkness
 							 // has a "invisible" value of 15
 

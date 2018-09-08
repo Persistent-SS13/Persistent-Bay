@@ -1,6 +1,5 @@
 /decl/hierarchy/supply_pack/atmospherics
 	name = "Atmospherics"
-	containertype = /obj/structure/closet/crate/internals
 
 /decl/hierarchy/supply_pack/atmospherics/internals
 	name = "Internals crate"
@@ -76,7 +75,7 @@
 	containertype = /obj/structure/closet/crate/secure/large
 	access = core_access_engineering_programs
 
-	/decl/hierarchy/supply_pack/atmospherics/voidsuit_heavyduty
+/decl/hierarchy/supply_pack/atmospherics/voidsuit_heavyduty
 	name = "Heavy Duty Atmospherics voidsuit"
 	contains = list(/obj/item/clothing/suit/space/void/atmos/alt/prepared)
 	cost = 150

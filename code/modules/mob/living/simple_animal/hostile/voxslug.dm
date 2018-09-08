@@ -22,8 +22,8 @@ Small, little HP, poisonous.
 	pass_flags = PASSTABLE
 	holder_type = /obj/item/weapon/holder/voxslug
 
-	melee_damage_lower = 5
-	melee_damage_upper = 10
+	melee_damage_lower = 3
+	melee_damage_upper = 7
 	attacktext = "bitten"
 	attack_sound = 'sound/weapons/bite.ogg'
 
@@ -71,6 +71,7 @@ Small, little HP, poisonous.
 	var/obj/item/weapon/holder/voxslug/holder = new(get_turf(src))
 	src.forceMove(holder)
 	chest.embed(holder,0,"\The [src] latches itself onto \the [H]!")
+	H.phoronation += 3
 	holder.sync(src)
 
 /mob/living/simple_animal/hostile/voxslug/AttackingTarget()

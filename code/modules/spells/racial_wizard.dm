@@ -12,7 +12,6 @@
 	var/list/potentials = list(
 		SPECIES_HUMAN = /obj/item/weapon/storage/bag/cash/infinite,
 		SPECIES_VOX = /spell/targeted/shapeshift/true_form,
-		//SPECIES_TAJARA = /spell/messa_shroud,
 		SPECIES_UNATHI = /spell/moghes_blessing,
 		//SPECIES_DIONA = /spell/aoe_turf/conjure/grove/gestalt,
 		SPECIES_SKRELL = /obj/item/weapon/contract/apprentice/skrell,
@@ -52,40 +51,6 @@
 			src.handle_item_insertion(I,1)
 
 
-//Tajaran
-/*
-/spell/messa_shroud
-	name = "Messa's Shroud"
-	desc = "This spell causes darkness at the point of the caster for a duration of time."
-
-	school = "racial"
-	spell_flags = 0
-	invocation_type = SpI_EMOTE
-	invocation = "mutters a small prayer, the light around them darkening."
-	charge_max = 300 //30 seconds
-
-	range = 5
-	duration = 150 //15 seconds
-
-	cast_sound = 'sound/effects/bamf.ogg'
-
-	hud_state = "wiz_tajaran"
-
-/spell/messa_shroud/choose_targets()
-	return list(get_turf(holder))
-
-/spell/messa_shroud/cast(var/list/targets, mob/user)
-	var/turf/T = targets[1]
-
-	if(!istype(T))
-		return
-
-	var/obj/O = new /obj(T)
-	O.set_light(range, -10, "#ffffff")
-
-	spawn(duration)
-		qdel(O)
-*/
 //VOX
 /spell/targeted/shapeshift/true_form
 	name = "True Form"

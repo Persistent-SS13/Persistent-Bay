@@ -5,26 +5,42 @@
 	density = 0
 	anchored = 1
 	light_range = 1
+
 	icon = 'icons/effects/puddle_chem.dmi'
 	icon_state = "def1"
+	var/icon_def = "def1"
+	var/icon_corner = "corner"
+	var/icon_side = "side"
+	var/icon_uni = "uni"
+	var/icon_straight = "straight"
+	var/icon_fill = "fill"
+	var/high_volume = 0
+
 	initialized = 0
 	alpha = 255
 	var/volume = 700
 	var/divide_treshold = 150
 	var/direc = (NORTH|SOUTH|EAST|WEST) //forces new lone puddles to have their icons updated once created
 	var/old_direc = (NORTH|SOUTH|EAST|WEST) //prevents spaget code from running unnecessarily if we dont need to change icon states
+	var/evaporation_treshold_high = 0.1
+	var/evaporation_treshold_low = 0.02
+	var/max_drain_dist = 2
+	var/timer_delay = 5
+	var/timer_last = 0
 
 	proc/destroy()
-		spawn(1) qdel(src)
+		qdel(src)
 
 	New()
 		create_reagents(volume)
 		var/icon/I = new(icon)
-		//I -= rgb( 0,0,0,150 -( (reagents.total_volume *(100))/reagents.maximum_volume ) )
-		alpha = 80 + (reagents.total_volume *(130))/reagents.maximum_volume
+		if (reagents.total_volume > 60)
+			alpha = 95 + (reagents.total_volume *(150))/reagents.maximum_volume
+		else
+			alpha = 10 + (reagents.total_volume *(85))/60
 		icon = I
-		icon_state = "def1"
-		if (loc.density == 1)
+		icon_state = icon_def
+		if (loc && loc.density == 1)
 			icon_state = "wall1"
 			alpha += 20
 			divide_treshold = 60
@@ -61,6 +77,7 @@
 		spawn(15) loop()
 
 	after_load()
+		initialized = 0
 		on_reagent_change()
 		loop()
 
@@ -78,6 +95,8 @@
 			reagents.trans_to_obj(I, reagents.total_volume/4)
 
 	Cross(var/mob/living/O)
+		if (!istype(O))
+			return
 		if(O.buckled || (O.m_intent == "walk" && prob(95) || prob(20) ) ) //95% chance of not slipping if walking, 20% chance of chance to not slip while running
 			return
 		O.slip("the [src.name]",4)
@@ -106,10 +125,21 @@
 				reagents.trans_to(O, reagents.total_volume *0.03)
 
 	update_icon()
+		if (!reagents)
+			return
 		color = reagents.get_color()
 		old_direc = direc
 		direc = 0
-		alpha = 80 + (reagents.total_volume *(130))/reagents.maximum_volume
+		if (!high_volume && reagents.total_volume >= 170)
+			initialized = 0
+			high_volume = 1
+		else if (high_volume && reagents.total_volume < 170)
+			high_volume = 0
+			initialized = 0
+		if (reagents.total_volume > 60)
+			alpha = 95 + (reagents.total_volume *(150))/reagents.maximum_volume
+		else
+			alpha = 10 + (reagents.total_volume *(85))/60
 		for(var/direction in GLOB.cardinal)
 			var/turf/T = get_step(src, direction)
 			if(!T) continue
@@ -121,12 +151,13 @@
 				direc |= direction
 		if (direc == old_direc && initialized)
 			return
-		if (loc.density == 1)
+		if (loc && loc.density == 1)
 			alpha += 20
+			icon_state = "wall1"
 			return
 		icon = 'icons/effects/puddle_chem.dmi'
 		var/icon/I = new(icon)
-		if (loc.density == 1)
+		if (loc && loc.density == 1)
 			icon = I
 			icon_state = "wall1"
 			var/tempDir = dir
@@ -159,77 +190,80 @@
 			icon = I
 			qdel(I)
 			return
+
 		var/ALLDIR = (NORTH|SOUTH|EAST|WEST)
 		if (direc == 0)							//too much spaghetti  in here. There are probably better ways of doing this but fuck it
-			icon_state = "def1"
+			icon_state = icon_def
 		else if (direc == NORTHEAST)
-			icon_state = "corner"
+			icon_state = icon_corner
 		else if (direc == NORTHWEST)
-			icon_state = "corner"
+			icon_state = icon_corner
 			I.Flip(WEST)
 		else if (direc == SOUTHWEST)
-			icon_state = "corner"
+			icon_state = icon_corner
 			I.Flip(WEST)
 			I.Flip(SOUTH)
 		else if (direc == SOUTHEAST)
-			icon_state = "corner"
+			icon_state = icon_corner
 			I.Flip(SOUTH)
+
 		else if (direc == NORTH)
-			icon_state = "uni"
+			icon_state = icon_uni
 		else if (direc == SOUTH)
-			icon_state = "uni"
+			icon_state = icon_uni
 			I.Flip(SOUTH)
 		else if (direc == EAST)
-			icon_state = "uni"
+			icon_state = icon_uni
 			I.Turn(90)
 			I.Flip(NORTH)
 		else if (direc == WEST)
-			icon_state = "uni"
+			icon_state = icon_uni
 			I.Turn(-90)
+
 		else if (direc == (EAST|WEST) )
-			icon_state = "straight"
+			icon_state = icon_straight
 			I.Turn(pick(-90,90))
 		else if (direc == (NORTH|SOUTH) )
-			icon_state = "straight"
-			if (prob(50))
-				I.Flip(NORTH)
-		else if (direc == (NORTH|SOUTH) )
-			icon_state = "straight"
+			icon_state = icon_straight
 			if (prob(50))
 				I.Flip(NORTH)
 
 		else if (direc == ALLDIR - WEST)
-			icon_state = "side"
+			icon_state = icon_side
 			if (prob(50))
 				I.Flip(NORTH)
 		else if (direc == ALLDIR - EAST)
-			icon_state = "side"
+			icon_state = icon_side
 			I.Flip(EAST)
 			if (prob(50))
 				I.Flip(NORTH)
 		else if (direc == ALLDIR - NORTH)
-			icon_state = "side"
+			icon_state = icon_side
 			I.Turn(90)
 			if (prob(50))
 				I.Flip(EAST)
 		else if (direc == ALLDIR - SOUTH)
-			icon_state = "side"
+			icon_state = icon_side
 			I.Turn(-90)
 			if (prob(50))
 				I.Flip(EAST)
 
 		else if (direc == ALLDIR )
-			icon_state = "fill"
+			icon_state = icon_fill
 			if (prob(50))
 				I.Flip(NORTH)
 			if (prob(50))
 				I.Flip(EAST)
 		else
-			icon_state = "def1"
+			icon_state = icon_def
 			if (prob(50))
 				I.Flip(NORTH)
 			if (prob(50))
 				I.Flip(EAST)
+
+
+		if (reagents.total_volume >= 170)
+			icon_state += "_hv"
 		icon = I
 		if (!initialized)
 			initialized = 1
@@ -270,19 +304,60 @@
 	if (isnull(reagents) || reagents.total_volume < 3) // random low capacity number to simply not matter the existence of a puddle
 		destroy()
 		return
-	//reagents.total_volume = round(reagents.total_volume)
-	spawn(5)	loop()
+	//shitty evaporation here
+	if (reagents.total_volume <= 60)
+		reagents.remove_any(evaporation_treshold_low)
+	else if (reagents.total_volume >= 60)
+		reagents.remove_any(evaporation_treshold_high)
+
+	//handles events of the effects of the reagents on Mobs/Objs/Turfs
 	for (var/atom/O in loc)
 		if (ismob(O))	//Either only touches the mob, or else it transfers some contents to the object that is currently in the puddle
 			Crossed(O) //keep harrassing that mob who thinks he can chill on sulphoric acid
 		else if (!istype(O, /obj/effect/decal/cleanable/puddle_chem) )  //We don't want it to interact with a second puddle on the same turf as it may lead to issues since we're already merging the new puddle with the old one, but that does not happen entirely instantly
 			if ( O.is_open_container() && O.reagents.total_volume < reagents.maximum_volume/250 )
 				reagents.trans_to(O, reagents.total_volume*0.02 ) //Transfers some of the contents to open containers on the ground SLOWLY and up to a low ammount.
-			else if(!O.is_open_container())
+			else if(!O.is_open_container() && !istype(O,/obj/machinery/shower) )
 				reagents.trans_to(O, reagents.total_volume*0.05 ) //molests whatever object or turf that is on the puddle (or whatever the puddle is on). It transfers 5% of the currect contents of the puddle. It might be absolutely aborved by whatever the atom on it is, but will probably only proc touch reactions
+
 	mix_with_neighbours()
 
+	//handles draining
+	var/at_drain
+	for (var/obj/machinery/drain/D in loc)
+		evaporation_treshold_high = 5* initial(evaporation_treshold_high)
+		evaporation_treshold_low = 8* initial(evaporation_treshold_low)
+		at_drain = D
+	if (!at_drain && (world.time - timer_last >= timer_delay) )
+		evaporation_treshold_high = initial(evaporation_treshold_high)
+		evaporation_treshold_low = initial(evaporation_treshold_low)
+		var/list/possible_drains = new/list()
+		for (var/obj/machinery/drain/D in oview(max_drain_dist,src))
+			if (get_dist(src, D) > max_drain_dist )
+				return
+			possible_drains |= D
+			if (possible_drains.len == 1)
+				continue
+			if (get_dist(src, D) < get_dist(src, possible_drains[1]) )
+				possible_drains.Swap(possible_drains[1], possible_drains[possible_drains.len])
+		if (possible_drains.len)
+			var/obj/effect/decal/cleanable/dummy = new /obj/effect/decal/cleanable(loc)
+			var/contains_puddle
+			step_to(dummy, possible_drains[1])
+			for (var/obj/effect/decal/cleanable/puddle_chem/puddle in dummy.loc)
+				contains_puddle = 1
+				break
+			if (!contains_puddle)
+				step_to(src, possible_drains[1])
+			qdel(dummy)
+		timer_last = world.time
+
+	update_icon()
+	spawn(1)	loop()
+
 /obj/effect/decal/cleanable/puddle_chem/proc/mix_with_neighbours()
+	if (!reagents)
+		return
 	var/list/shuffledCardinal = shuffle(GLOB.cardinal)
 	for(var/direction in shuffledCardinal)//finds the puddle's equal neighbors and mixes a lil(10%) bit with each of them (a maximum of 40% of the initial solution will be lost to the neighbours, which then is retrieved as a mixed solution of those neighbours)
 		var/turf/T = get_step(src, direction)
@@ -290,7 +365,23 @@
 		for (var/obj/effect/decal/cleanable/puddle_chem/neighbour in T)
 			var/multiplier = 1
 			var/amountMixed = reagents.total_volume*0.1
-			if (reagents.total_volume > reagents.maximum_volume/2 && reagents.total_volume > neighbour.reagents.total_volume) //badly simulates higher-pressure-to-lower movement of the volumes
+			if (reagents.total_volume > neighbour.reagents.total_volume) //badly simulates higher-pressure-to-lower movement of the volumes
 				multiplier = reagents.total_volume/neighbour.reagents.total_volume
+			if (reagents.total_volume <= 15 && neighbour.reagents.total_volume > reagents.total_volume)
+				if(!reagents)
+					break
+				else if(!neighbour || !neighbour.reagents)
+					continue
+				reagents.trans_to(neighbour, 15)
+				break
+			if ( abs(reagents.total_volume - neighbour.reagents.total_volume) < 1)
+				continue
+			if(!reagents)
+				break
+			else if(!neighbour || !neighbour.reagents)
+				continue
 			reagents.trans_to(neighbour, amountMixed*multiplier)
-			spawn(5) neighbour.reagents.trans_to(src, amountMixed) //just imagine a little wave of splash going out and then coming back in with mixed reagents.
+			spawn(5)
+				if (!neighbour || !neighbour.reagents || !src || !amountMixed)
+					break
+				neighbour.reagents.trans_to(src, amountMixed) //just imagine a little wave of splash going out and then coming back in with mixed reagents.

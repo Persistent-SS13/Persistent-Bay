@@ -1,7 +1,9 @@
 /obj/structure/bed/chair/e_chair
 	name = "electric chair"
 	desc = "Looks absolutely SHOCKING!"
+	icon = 'icons/obj/objects.dmi'
 	icon_state = "echair0"
+	base_icon = "echair0"
 	var/on = 0
 	var/obj/item/assembly/shock_kit/part = null
 	var/last_time = 1.0
@@ -39,6 +41,15 @@
 
 /obj/structure/bed/chair/e_chair/rotate()
 	..()
+	overlays.Cut()
+	overlays += image('icons/obj/objects.dmi', src, "echair_over", MOB_LAYER + 1, dir)	//there's probably a better way of handling this, but eh. -Pete
+	return
+
+/obj/structure/bed/chair/e_chair/update_icon()
+	..()
+	if(on)	icon_state = "echair0"
+	else	icon_state = "echair1"
+	icon_state = "echair0"
 	overlays.Cut()
 	overlays += image('icons/obj/objects.dmi', src, "echair_over", MOB_LAYER + 1, dir)	//there's probably a better way of handling this, but eh. -Pete
 	return

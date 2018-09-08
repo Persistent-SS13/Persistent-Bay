@@ -164,7 +164,7 @@ other types of metals and chemistry for reagents).
 /datum/design/item/stock_part/adv_matter_bin
 	id = "adv_matter_bin"
 	req_tech = list(TECH_MATERIAL = 3)
-	materials = list(DEFAULT_WALL_MATERIAL = 80, "phoron" = 250))
+	materials = list(DEFAULT_WALL_MATERIAL = 80, "phoron" = 250)
 	build_path = /obj/item/weapon/stock_parts/matter_bin/adv
 	sort_string = "CAACB"
 
@@ -185,14 +185,14 @@ other types of metals and chemistry for reagents).
 /datum/design/item/stock_part/high_micro_laser
 	id = "high_micro_laser"
 	req_tech = list(TECH_MAGNET = 3)
-	materials = list(DEFAULT_WALL_MATERIAL = 10, "glass" = 20, "uranium" = 500, phoron" = 500)
+	materials = list(DEFAULT_WALL_MATERIAL = 10, "glass" = 20, "uranium" = 500, "phoron" = 500)
 	build_path = /obj/item/weapon/stock_parts/micro_laser/high
 	sort_string = "CAADB"
 
 /datum/design/item/stock_part/ultra_micro_laser
 	id = "ultra_micro_laser"
 	req_tech = list(TECH_MAGNET = 5, TECH_MATERIAL = 5)
-	materials = list(DEFAULT_WALL_MATERIAL = 10, "glass" = 20, "uranium" = 1000, phoron" = 1000)
+	materials = list(DEFAULT_WALL_MATERIAL = 10, "glass" = 20, "uranium" = 1000, "phoron" = 1000)
 	build_path = /obj/item/weapon/stock_parts/micro_laser/ultra
 	sort_string = "CAADC"
 
@@ -206,14 +206,14 @@ other types of metals and chemistry for reagents).
 /datum/design/item/stock_part/adv_sensor
 	id = "adv_sensor"
 	req_tech = list(TECH_MAGNET = 3)
-	materials = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 20, "silver" = 1000, phoron" = 500)
+	materials = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 20, "silver" = 1000, "phoron" = 500)
 	build_path = /obj/item/weapon/stock_parts/scanning_module/adv
 	sort_string = "CAAEB"
 
 /datum/design/item/stock_part/phasic_sensor
 	id = "phasic_sensor"
 	req_tech = list(TECH_MAGNET = 5, TECH_MATERIAL = 3)
-	materials = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 20, "silver" = 2000, phoron" = 1000)
+	materials = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 20, "silver" = 2000, "phoron" = 1000)
 	build_path = /obj/item/weapon/stock_parts/scanning_module/phasic
 	sort_string = "CAAEC"
 
@@ -258,7 +258,7 @@ other types of metals and chemistry for reagents).
 	name = "high-capacity"
 	id = "high_cell"
 	req_tech = list(TECH_POWER = 2)
-	materials = list(DEFAULT_WALL_MATERIAL = 700, "glass" = 60, gold" = 100, "silver" = 100)
+	materials = list(DEFAULT_WALL_MATERIAL = 700, "glass" = 60, "gold" = 100, "silver" = 100)
 	build_path = /obj/item/weapon/cell/high
 	sort_string = "DAAAB"
 
@@ -266,7 +266,7 @@ other types of metals and chemistry for reagents).
 	name = "super-capacity"
 	id = "super_cell"
 	req_tech = list(TECH_POWER = 3, TECH_MATERIAL = 2)
-	materials = list(DEFAULT_WALL_MATERIAL = 700, "glass" = 70, gold" = 500, "silver" = 500, "phoron" = 100)
+	materials = list(DEFAULT_WALL_MATERIAL = 700, "glass" = 70, "gold" = 500, "silver" = 500, "phoron" = 100)
 	build_path = /obj/item/weapon/cell/super
 	sort_string = "DAAAC"
 
@@ -2466,7 +2466,7 @@ CIRCUITS BELOW
 	materials = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 10000)
 	build_path = /obj/item/disk/integrated_circuit/upgrade/advanced
 	sort_string = "WCLAD"
-	
+
 /datum/design/item/integrated_printer_upgrade_clone
 	name = "Integrated Circuit Printer Clone Disk"
 	desc = "This disk allows for integrated circuit printers to copy and clone designs instantaneously."

@@ -204,6 +204,11 @@ var/const/EXTRA_COST_FACTOR = 1
 	path = /obj/item/weapon/material/knife
 	category = "General"
 
+/datum/autolathe/recipe/knife/butch
+	name = "butcher knife"
+	path = /obj/item/weapon/material/knife/butch
+	category = "General"
+
 /datum/autolathe/recipe/taperecorder
 	name = "tape recorder"
 	path = /obj/item/device/taperecorder/empty

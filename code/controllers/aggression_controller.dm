@@ -45,7 +45,7 @@ var/datum/controller/aggression_controller/aggression_controller
 		return asteroid
 
 /datum/aggression_machine/proc/spawn_glutslug(var/turf/T)
-	if(spawned_asteroid_monsters.len > 100) return
+//	if(spawned_asteroid_monsters.len > 100) return
 	T.visible_message("<span class='danger'>The ground trembles as a vile glutslug burrows up!</span>")
 	playsound(T, pick('sound/effects/asteroid/earthquake_short.ogg','sound/effects/asteroid/earthquake_short2.ogg'), 50, 1, 5)
 	for(var/mob/M in view(T))
@@ -57,7 +57,7 @@ var/datum/controller/aggression_controller/aggression_controller
 		spawned_asteroid_monsters |= new /mob/living/simple_animal/hostile/voxslug(T)
 
 /datum/aggression_machine/proc/spawn_greed(var/turf/T)
-	if(spawned_asteroid_monsters.len > 100) return
+//	if(spawned_asteroid_monsters.len > 100) return
 	T.visible_message("<span class='danger'>A scream runs through your mind as a portal opens!</span>")
 	var/obj/structure/hostile_portal/red/portal = new(T)
 	playsound(T, 'sound/effects/ghost2.ogg', 50, 1, 5)

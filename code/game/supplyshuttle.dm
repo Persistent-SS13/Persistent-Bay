@@ -74,7 +74,7 @@ var/list/mechtoys = list(
 		var/select_name = input(usr,"Enter the full name of the business.","Connect Business", "") as null|text
 		var/datum/small_business/viewing = get_business(select_name)
 		if(viewing && src.Adjacent(usr))
-			business_name = viewing
+			business_name = viewing.name
 			to_chat(usr, "Business linked to export.")
 
 /*

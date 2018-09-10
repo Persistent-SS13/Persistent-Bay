@@ -369,7 +369,7 @@ mob/new_player/MayRespawn()
 
 /mob/proc/after_spawn()
 	after_load()
-	for(var/datum/D in contents)
+	for(var/datum/D in recursive_content_check(src))
 		D.after_load()
 	return
 

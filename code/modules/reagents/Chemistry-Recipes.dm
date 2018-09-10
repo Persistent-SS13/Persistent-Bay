@@ -589,11 +589,13 @@
 		spawn (0) target_tile.hotspot_expose(700, 400)
 	holder.del_reagent("napalm")
 
+/*
 /datum/chemical_reaction/chemsmoke
 	name = "Chemsmoke"
 	result = null
 	required_reagents = list(/datum/reagent/potassium = 1, /datum/reagent/sugar = 1, /datum/reagent/phosphorus = 1)
 	result_amount = 0.4
+*/
 
 /datum/chemical_reaction/chemsmoke/on_reaction(var/datum/reagents/holder, var/created_volume)
 	var/location = get_turf(holder.my_atom)

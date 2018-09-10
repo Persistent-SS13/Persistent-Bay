@@ -39,6 +39,30 @@
 	show_browser(src, file(LORE_FILE), "window=lore;size=480x320")
 #undef LORE_FILE
 
+/client/verb/discord()
+	set name = "Discord"
+	set desc = "Join Our Discord, Talk with our community"
+	set hidden = 1
+	if(config.discordurl)
+		if(alert("This will open the discord. Are you sure?",,"Yes","No")=="No")
+			return
+		src << link(config.discordurl)
+	else
+		to_chat(src, "<span class='danger'>The rules URL is not set in the server configuration.</span>")
+	return
+
+/client/verb/donate()
+	set name = "Donate"
+	set desc = "Donate to help with hosting costs."
+	set hidden = 1
+	if(config.donationsurl)
+		if(alert("This will open the donation page in your browser. Are you sure?",,"Yes","No")=="No")
+			return
+		src << link(config.donationsurl)
+	else
+		to_chat(src, "<span class='danger'>The rules URL is not set in the server configuration.</span>")
+	return
+
 /client/verb/hotkeys_help()
 	set name = "hotkeys-help"
 	set category = "OOC"

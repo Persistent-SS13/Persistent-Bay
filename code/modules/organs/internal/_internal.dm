@@ -30,7 +30,7 @@
 	if(istype(H))
 		var/obj/item/organ/external/E = H.get_organ(parent_organ)
 		E.cavity_max_w_class = max(E.cavity_max_w_class, w_class)
-		
+	..()
 /obj/item/organ/internal/Destroy()
 	if(owner)
 		owner.internal_organs.Remove(src)

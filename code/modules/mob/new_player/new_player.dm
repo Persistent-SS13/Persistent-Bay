@@ -181,6 +181,11 @@
 	if(!chosen_slot)
 		return
 
+	if(spawning)
+		return
+
+	spawning = 1
+
 	panel?.close()
 	load_panel?.close()
 

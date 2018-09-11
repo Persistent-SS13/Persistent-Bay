@@ -293,12 +293,8 @@ var/global/list/debug_data = list()
 	to_file(f,lis)
 
 /proc/Save_World()
-	to_world("The world is saving! You won't be able to join or move at this time.")
+	to_world("The world is saving! You won't be able to join at this time.")
 	config.enter_allowed = 0
-	for(var/mob/living/M in GLOB.player_list)
-		if(!isliving(M))
-			continue
-		M.paralysis = 8000
 	Prepare_Atmos_For_Saving()
 	areas_to_save = list()
 	zones_to_save = list()
@@ -342,10 +338,6 @@ var/global/list/debug_data = list()
 	to_file(f["email"],ntnet_global.email_accounts)
 	to_file(f["next_account_number"],next_account_number)
 	config.enter_allowed = 1
-	for(var/mob/living/M in GLOB.player_list)
-		if(!isliving(M))
-			continue
-		M.paralysis = 0
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
 	return 1

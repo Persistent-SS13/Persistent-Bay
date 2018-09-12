@@ -148,8 +148,8 @@
 
 	if(!wires)
 		wires = new(src)
-		
-`	if(!map_storage_loaded)
+
+	if(!map_storage_loaded)
 		TLV["oxygen"] =			list(16, 19, 135, 140) // Partial pressure, kpa
 		TLV["carbon dioxide"] = list(-1.0, -1.0, 5, 10) // Partial pressure, kpa
 		TLV["phoron"] =			list(-1.0, -1.0, 0.2, 0.5) // Partial pressure, kpa

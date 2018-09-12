@@ -62,6 +62,7 @@
 /obj/item/organ/internal/lungs/after_load()
 	..()
 	sync_breath_types()
+	
 /**
  *  Set these lungs' breath types based on the lungs' species
  */

@@ -99,6 +99,7 @@
 		old.ckey = null
 		old.stored_ckey = null
 		GLOB.nanomanager.user_transferred(old, new_character) // transfer active NanoUI instances to new user
+		
 /datum/mind/proc/store_memory(new_text)
 	memory += "[new_text]<BR>"
 

@@ -181,6 +181,11 @@
 	if(!chosen_slot)
 		return
 
+	if(spawning)
+		return
+
+	spawning = 1
+
 	panel?.close()
 	load_panel?.close()
 
@@ -369,7 +374,7 @@ mob/new_player/MayRespawn()
 
 /mob/proc/after_spawn()
 	after_load()
-	for(var/datum/D in contents)
+	for(var/datum/D in recursive_content_check(src, client_check = FALSE, sight_check = FALSE, include_mobs = TRUE))
 		D.after_load()
 	return
 

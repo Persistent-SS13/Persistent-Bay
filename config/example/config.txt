@@ -202,6 +202,12 @@ GUEST_BAN
 ## GitHub address
 # GITHUBURL https://github.com/example-user/example-repository
 
+## Donations address
+# DONATIONSURL http://example.com
+
+## Discord address
+# DISCORDURL http://example.com
+
 ## Ban appeals URL - usually for a forum or wherever people should go to contact your admins.
 # BANAPPEALS http://example.com
 

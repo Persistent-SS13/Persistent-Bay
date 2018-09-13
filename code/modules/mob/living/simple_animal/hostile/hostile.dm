@@ -21,7 +21,12 @@
 
 	var/damtype = BRUTE
 	var/defense = "melee" //what armor protects against its attacks
-
+	
+	var/list/obj_targets = list()
+	
+	var/clean_up_time = 0
+	
+	
 /mob/living/simple_animal/hostile/proc/FindTarget()
 	if(!faction) //No faction, no reason to attack anybody.
 		return null
@@ -132,10 +137,13 @@
 
 /mob/living/simple_animal/hostile/death(gibbed, deathmessage, show_dead_message)
 	..(gibbed, deathmessage, show_dead_message)
+	clean_up_time = rand(world.realtime+45 MINUTES, world.realtime+75 MINUTES)
 	walk(src, 0)
 
 /mob/living/simple_animal/hostile/Life()
-
+	if(stat && world.realtime > clean_up_time)
+		loc = null
+		qdel(src)
 	. = ..()
 	if(!.)
 		walk(src, 0)

@@ -4,7 +4,7 @@ Small, little HP, poisonous.
 
 /mob/living/simple_animal/hostile/voxslug
 	name = "glutslug"
-	desc = "A viscious little creature, it has a mouth of razors and a it writhes like mad it can sense blood."
+	desc = "A viscious little creature, its teeth are razor sharp."
 	icon_state = "voxslug"
 	icon_living = "voxslug"
 	item_state = "voxslug"
@@ -15,7 +15,7 @@ Small, little HP, poisonous.
 	destroy_surroundings = 0
 	health = 6
 	maxHealth = 6
-	speed = 2 // May return back to 3, we'll see if 2 is enough.
+	speed = 4 // May return back to 3, we'll see if 2 is enough.
 	move_to_delay = 0
 	density = 0
 	mob_size = MOB_MINISCULE
@@ -30,14 +30,29 @@ Small, little HP, poisonous.
 	min_gas = null // Immune to space
 	max_gas = null
 	minbodytemp = 0
-
+	
 	faction = "asteroid"
 
+	should_save = 0
+	
+	var/starting_zlevel = 0
+	var/inited = 0
+	
+/mob/living/simple_animal/hostile/voxslug/New()
+	..()
+	starting_zlevel = z
+	inited = 1
 /mob/living/simple_animal/hostile/voxslug/Move()
 	. = ..()
 	if(.)
 		pixel_x = rand(-10,10)
 		pixel_y = rand(-10,10)
+		if(inited && starting_zlevel != z)
+			loc = null
+			qdel(src)
+			
+			
+			
 /mob/living/simple_animal/hostile/voxslug/ListTargets(var/dist = 7)
 	var/list/L = list()
 	for(var/a in hearers(src, dist))

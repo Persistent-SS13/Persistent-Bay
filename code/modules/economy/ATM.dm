@@ -113,6 +113,7 @@
 		set_dir(ndir)
 		pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 30 : -30)
 		pixel_y = (src.dir & 3)? (src.dir ==1 ? 30 : -30) : 0
+
 /obj/machinery/atm/Process()
 	if(stat & NOPOWER)
 		return
@@ -147,6 +148,17 @@
 		var/response = pick("Initiating withdraw. Have a nice day!", "CRITICAL ERROR: Activating cash chamber panic siphon.","PIN Code accepted! Emptying account balance.", "Jackpot!")
 		to_chat(user, "\icon[src] <span class='warning'>The [src] beeps: \"[response]\"</span>")
 		return 1
+
+/obj/item/frame/atm/try_build(turf/on_wall)
+	if (get_dist(on_wall,usr)>1)
+		return
+	var/ndir = get_dir(usr,on_wall)
+	if (!(ndir in GLOB.cardinal))
+		return
+	var/turf/loc = get_turf(usr)
+
+	new /obj/machinery/atm(loc, 1, src, ndir)
+	qdel(src)
 
 /obj/machinery/atm/attackby(obj/item/I as obj, mob/user as mob)
 	if(..())

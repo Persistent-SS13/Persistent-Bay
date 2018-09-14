@@ -1,5 +1,9 @@
 /mob/Destroy()//This makes sure that mobs with clients/keys are not just deleted from the game.
-	STOP_PROCESSING(SSmobs, src)
+	if (is_user_process)
+		is_user_process = 0
+		STOP_PROCESSING(SSuser, src)
+	else
+		STOP_PROCESSING(SSmobs, src)
 	GLOB.dead_mob_list_ -= src
 	GLOB.living_mob_list_ -= src
 	unset_machine()
@@ -160,11 +164,12 @@
 /mob/proc/Life()
 //	if(organStructure)
 //		organStructure.ProcessOrgans()
-	if (ckey && !is_user_process)
+	if (ckey && !is_user_process && istype(src, /mob/living/carbon/human) )
 		is_user_process = 1
 		STOP_PROCESSING(SSmobs, src)
 		START_PROCESSING(SSuser, src)
-	if (!ckey && is_user_process)
+	if (!ckey && is_user_process && istype(src, /mob/living/carbon/human) )
+		is_user_process = 0
 		STOP_PROCESSING(SSuser, src)
 		START_PROCESSING(SSmobs, src)
 

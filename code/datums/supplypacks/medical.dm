@@ -38,7 +38,7 @@
 /decl/hierarchy/supply_pack/medical/blood
 	name = "O- blood crate"
 	contains = list(/obj/item/weapon/reagent_containers/blood/OMinus = 4)
-	cost = 15
+	cost = 100
 	containername = "\improper O- blood crate"
 
 /decl/hierarchy/supply_pack/medical/firstaid

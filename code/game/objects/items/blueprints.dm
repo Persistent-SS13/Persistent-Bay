@@ -168,7 +168,7 @@
 	for(var/dir in GLOB.cardinal)
 		var/turf/T = get_step(usr, dir)
 		var/area/area = getArea(T)
-		if(area && !area.apc && area != A && !istype(area, /area/turbolift))
+		if(area && !area.apc && !area.aro && area != A && !istype(area, /area/turbolift))
 			if(n || !isspace(area))
 				areas.Add(area)
 	if(!areas.len)

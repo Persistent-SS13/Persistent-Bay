@@ -22,6 +22,33 @@
 	var/damtype = BRUTE
 	var/defense = "melee" //what armor protects against its attacks
 
+/mob/living/simple_animal/hostile/Initialize()
+	. = ..()
+	STOP_PROCESSING(SSmobs, src) //initialize comes with the mob processing on the main SSmobs, so we move it here without shitting on the init code any more than we did with Destroy()
+	START_PROCESSING(SSmobslow, src)
+//these two procs were established in order to have hostile mobs lag the fuck out of the server when it gets filled. handling them in a different subsystem.
+/mob/living/simple_animal/hostile/Destroy() //copypasted 100% from mob.dm so nothing is missed before deleting.
+	STOP_PROCESSING(SSmobslow, src)
+	GLOB.dead_mob_list_ -= src
+	GLOB.living_mob_list_ -= src
+	unset_machine()
+	QDEL_NULL(hud_used)
+	for(var/obj/item/grab/G in grabbed_by)
+		qdel(G)
+	clear_fullscreen()
+	if(client)
+		remove_screen_obj_references()
+		for(var/atom/movable/AM in client.screen)
+			var/obj/screen/screenobj = AM
+			if(!istype(screenobj) || !screenobj.globalscreen)
+				qdel(screenobj)
+		client.screen = list()
+	if(mind && mind.current == src)
+		spellremove(src)
+	ghostize()
+	..()
+	return QDEL_HINT_HARDDEL
+
 /mob/living/simple_animal/hostile/proc/FindTarget()
 	if(!faction) //No faction, no reason to attack anybody.
 		return null

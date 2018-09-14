@@ -575,6 +575,11 @@
 	canhear_range = 0
 	subspace_transmission = 1
 
+/obj/item/device/radio/borg/after_load()
+	..()
+	if(!myborg && istype(loc, /mob/living))
+		myborg = loc
+
 /obj/item/device/radio/borg/ert
 	keyslot = /obj/item/device/encryptionkey/ert
 

@@ -110,6 +110,8 @@ var/global/list/debug_data = list()
 	return
 
 /datum/proc/StandardWrite(var/savefile/f)
+	if(QDELETED(src))	// If we are deleted, we shouldn't be saving
+		return
 	before_save()
 	var/list/saving
 	if(found_vars.Find("[type]"))
@@ -127,6 +129,8 @@ var/global/list/debug_data = list()
 		var/list/return_this = list()
 		if(istype(vars[variable], /datum))
 			var/datum/D = vars[variable]
+			if(QDELETED(D))
+				continue
 			if(!D.should_save(src))
 				continue
 		if(istype(vars[variable], /list))
@@ -289,6 +293,8 @@ var/global/list/debug_data = list()
 	to_file(f,lis)
 
 /proc/Save_World()
+	to_world("The world is saving! You won't be able to join at this time.")
+	config.enter_allowed = 0
 	Prepare_Atmos_For_Saving()
 	areas_to_save = list()
 	zones_to_save = list()
@@ -331,6 +337,7 @@ var/global/list/debug_data = list()
 	to_file(f["records"],GLOB.all_crew_records)
 	to_file(f["email"],ntnet_global.email_accounts)
 	to_file(f["next_account_number"],next_account_number)
+	config.enter_allowed = 1
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
 	return 1

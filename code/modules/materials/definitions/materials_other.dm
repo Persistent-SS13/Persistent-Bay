@@ -25,7 +25,7 @@
 	name = "resin"
 	icon_colour = "#e85dd8"
 	dooropen_noise = 'sound/effects/attackblob.ogg'
-	door_icon_base = "resin"
+	icon_door = "resin"
 	melting_point = T0C+300
 	sheet_singular_name = "blob"
 	sheet_plural_name = "blobs"

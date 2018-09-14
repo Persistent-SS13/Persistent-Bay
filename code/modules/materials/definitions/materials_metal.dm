@@ -2,10 +2,11 @@
 	name = "uranium"
 	stack_type = /obj/item/stack/material/uranium
 	radioactivity = 12
-	icon_base = "stone"
-	door_icon_base = "stone"
-	icon_reinf = "reinf_stone"
 	icon_colour = "#007a00"
+	icon_base = "stone"
+	icon_reinf = "reinf_stone"
+	icon_door = "stone"
+	icon_table = "stone"
 	weight = 22
 	stack_origin_tech = list(TECH_MATERIAL = 5)
 	chem_products = list(
@@ -16,6 +17,10 @@
 	name = "gold"
 	stack_type = /obj/item/stack/material/gold
 	icon_colour = "#ffcc33"
+	icon_base = "metal"
+	icon_reinf = "metal"
+	icon_door = "metal"
+	icon_table = "metal"
 	weight = 25
 	hardness = 25
 	integrity = 100
@@ -67,6 +72,10 @@
 	name = "silver"
 	stack_type = /obj/item/stack/material/silver
 	icon_colour = "#d1e6e3"
+	icon_base = "metal"
+	icon_reinf = "metal"
+	icon_door = "metal"
+	icon_table = "metal"
 	weight = 22
 	hardness = 50
 	stack_origin_tech = list(TECH_MATERIAL = 3)
@@ -88,6 +97,9 @@
 	integrity = 150
 	brute_armor = 5
 	icon_colour = "#666666"
+	icon_reinf = "metal"
+	icon_door = "metal"
+	icon_table = "metal"
 	hitsound = 'sound/weapons/smash.ogg'
 	chem_products = list(
 				/datum/reagent/iron = 15,
@@ -131,9 +143,11 @@
 	melting_point = 3000
 	weight = 18
 	stack_type = null
-	icon_base = "metal"
-	door_icon_base = "metal"
 	icon_colour = "#d1e6e3"
+	icon_base = "metal"
+	icon_reinf = "metal"
+	icon_door = "metal"
+	icon_table = "metal"
 	alloy_materials = null
 	alloy_product = FALSE
 
@@ -239,13 +253,16 @@
 	name = "elevatorium"
 	display_name = "elevator panelling"
 	icon_colour = "#666666"
+	icon_base = "metal"
+	icon_reinf = "metal"
+
 
 /material/hematite
 	name = "hematite"
 	stack_type = null
+	icon_colour = "#aa6666"
 	icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	icon_colour = "#aa6666"
 	ore_smelts_to = "iron"
 	ore_result_amount = 5
 	ore_spread_chance = 25

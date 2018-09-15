@@ -27,7 +27,7 @@
 	maxhealth = max(100, material.integrity*10)
 	health = maxhealth
 	if(!icon_base)
-		icon_base = material.door_icon_base
+		icon_base = material.icon_door
 	hitsound = material.hitsound
 	name = "[material.display_name] door"
 	color = material.icon_colour

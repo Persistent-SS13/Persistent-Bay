@@ -310,7 +310,7 @@
 		// Standard table image
 		if(material)
 			for(var/i = 1 to 4)
-				I = image(icon, "[material.icon_base]_[connections[i]]", dir = 1<<(i-1))
+				I = image(icon, "[material.icon_table]_[connections[i]]", dir = 1<<(i-1))
 				if(material.icon_colour) I.color = material.icon_colour
 				I.alpha = 255 * material.opacity
 				overlays += I
@@ -318,7 +318,7 @@
 		// Reinforcements
 		if(reinforced)
 			for(var/i = 1 to 4)
-				I = image(icon, "[reinforced.icon_reinf]_[connections[i]]", dir = 1<<(i-1))
+				I = image(icon, "reinf_over_[connections[i]]", dir = 1<<(i-1))
 				I.color = reinforced.icon_colour
 				I.alpha = 255 * reinforced.opacity
 				overlays += I

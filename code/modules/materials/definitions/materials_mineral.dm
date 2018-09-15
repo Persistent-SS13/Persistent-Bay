@@ -1,9 +1,9 @@
 /material/pitchblende
 	name = "pitchblende"
 	ore_compresses_to = "pitchblende"
+	icon_colour = "#917d1a"
 	icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	icon_colour = "#917d1a"
 	ore_smelts_to = "uranium"
 	ore_result_amount = 5
 	ore_spread_chance = 10
@@ -26,9 +26,9 @@
 /material/graphene
 	name = "graphene"
 	ore_compresses_to = "graphene"
+	icon_colour = "#444444"
 	icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	icon_colour = "#444444"
 	ore_smelts_to = "plastic"
 	ore_name = "graphene"
 	ore_smelts_to = "plastic"
@@ -49,13 +49,14 @@
 	ore_spread_chance = 10
 	ore_scan_icon = "mineral_common"
 	ore_icon_overlay = "lump"
+	icon_colour = "#effffe"
 	icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	icon_colour = "#effffe"
+	icon_door = "stone"
+	icon_table = "stone"
 	chem_products = list(
 		/datum/reagent/silicon = 20
 		)
-	door_icon_base = "stone"
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
 
@@ -68,15 +69,15 @@
 	ore_scan_icon = "mineral_common"
 	ore_icon_overlay = "lump"
 	icon_colour = "#ccc9a3"
+	icon_base = "stone"
+	icon_reinf = "reinf_stone"
+	icon_door = "stone"
 	chem_products = list(
 		/datum/reagent/sulfur = 10,
 		/datum/reagent/iron = 35
 		)
-	door_icon_base = "stone"
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
-	icon_base = "stone"
-	icon_reinf = "reinf_stone"
 	ore_compresses_to = "pyrite"
 
 /material/spodumene
@@ -88,14 +89,15 @@
 	ore_scan_icon = "mineral_common"
 	ore_icon_overlay = "lump"
 	icon_colour = "#e5becb"
+	icon_base = "stone"
+	icon_reinf = "reinf_stone"
+	icon_door = "stone"
 	chem_products = list(
 		/datum/reagent/lithium = 20
 		)
-	door_icon_base = "stone"
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
-	icon_base = "stone"
-	icon_reinf = "reinf_stone"
+	
 
 /material/cinnabar
 	name = "cinnabar"
@@ -106,15 +108,15 @@
 	ore_scan_icon = "mineral_common"
 	ore_icon_overlay = "lump"
 	icon_colour = "#e54e4e"
+	icon_base = "stone"
+	icon_reinf = "reinf_stone"
+	icon_door = "stone"
 	chem_products = list(
 		/datum/reagent/mercury  = 20
 	)
-	door_icon_base = "stone"
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
-	icon_base = "stone"
-	icon_reinf = "reinf_stone"
-
+	
 /material/phosphorite
 	name = "phosphorite"
 	ore_compresses_to = "phosphorite"
@@ -124,14 +126,14 @@
 	ore_scan_icon = "mineral_common"
 	ore_icon_overlay = "lump"
 	icon_colour = "#acad95"
+	icon_base = "stone"
+	icon_reinf = "reinf_stone"
+	icon_door = "stone"
 	chem_products = list(
 		/datum/reagent/phosphorus = 20
 	)
-	door_icon_base = "stone"
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
-	icon_base = "stone"
-	icon_reinf = "reinf_stone"
 
 /material/rocksalt
 	name = "rock salt"
@@ -142,14 +144,15 @@
 	ore_scan_icon = "mineral_common"
 	ore_icon_overlay = "lump"
 	icon_colour = "#d1c0bc"
+	icon_base = "stone"
+	icon_reinf = "reinf_stone"
+	icon_door = "stone"
 	chem_products = list(
 		/datum/reagent/sodium = 20
 	)
-	door_icon_base = "stone"
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
-	icon_base = "stone"
-	icon_reinf = "reinf_stone"
+	
 
 /material/potash
 	name = "potash"
@@ -160,14 +163,15 @@
 	ore_scan_icon = "mineral_common"
 	ore_icon_overlay = "lump"
 	icon_colour = "#b77464"
+	icon_base = "stone"
+	icon_reinf = "reinf_stone"
+	icon_door = "stone"
 	chem_products = list(
 		/datum/reagent/potassium = 20
 		)
-	door_icon_base = "stone"
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
-	icon_base = "stone"
-	icon_reinf = "reinf_stone"
+	
 
 /material/bauxite
 	name = "bauxite"
@@ -177,22 +181,22 @@
 	ore_scan_icon = "mineral_common"
 	ore_icon_overlay = "lump"
 	icon_colour = "#d8ad97"
+	icon_base = "stone"
+	icon_reinf = "reinf_stone"
+	icon_door = "stone"
 	chem_products = list(
 		/datum/reagent/aluminum = 20
 		)
-	door_icon_base = "stone"
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
-	icon_base = "stone"
-	icon_reinf = "reinf_stone"
 	ore_compresses_to = "bauxite"
 
 /material/sand
 	name = "sand"
 	stack_type = null
+	icon_colour = "#e2dbb5"
 	icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	icon_colour = "#e2dbb5"
 	ore_smelts_to = "glass"
 	ore_compresses_to = "sandstone"
 	ore_name = "sand"
@@ -205,13 +209,13 @@
 	name = "phoron"
 	stack_type = /obj/item/stack/material/phoron
 	ignition_point = PHORON_MINIMUM_BURN_TEMPERATURE
+	icon_colour = "#e37108"
 	icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	icon_colour = "#e37108"
 	shard_type = SHARD_SHARD
 	hardness = 30
 	stack_origin_tech = list(TECH_MATERIAL = 2, TECH_PHORON = 2)
-	door_icon_base = "stone"
+	icon_door = "stone"
 	sheet_singular_name = "crystal"
 	sheet_plural_name = "crystals"
 	is_fusion_fuel = 1

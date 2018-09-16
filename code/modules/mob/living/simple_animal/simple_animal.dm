@@ -313,7 +313,7 @@
 		var/obj/mecha/M = target_mob
 		if (M.occupant)
 			return (0)
-	return 0
+	return 1
 
 /mob/living/simple_animal/say(var/message)
 	var/verb = "says"

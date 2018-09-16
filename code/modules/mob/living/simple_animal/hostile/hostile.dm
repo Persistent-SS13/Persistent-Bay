@@ -130,7 +130,8 @@
 	walk(src, 0)
 
 
-/mob/living/simple_animal/hostile/proc/ListTargets(var/dist = 7)
+/mob/living/simple_animal/hostile/proc/ListTargets(var/dist = 5)'
+	if(!loc) return list()
 	var/list/L = view(dist, src)
 
 //	for (var/obj/mecha/M in mechas_list)
@@ -140,17 +141,10 @@
 	return L
 
 /mob/living/simple_animal/hostile/death(gibbed, deathmessage, show_dead_message)
-	clean_up_time = rand(world.time+45 MINUTES, world.time+75 MINUTES)
 	..(gibbed, deathmessage, show_dead_message)
 	walk(src, 0)
 
 /mob/living/simple_animal/hostile/Life()
-	if(stat && world.time > clean_up_time)
-		loc = null
-		qdel(src)
-	if(last_found < world.time - 1 HOUR)
-		loc = null
-		qdel(src)
 	. = ..()
 	if(!.)
 		walk(src, 0)
@@ -161,7 +155,10 @@
 		if(!stat)
 			switch(stance)
 				if(HOSTILE_STANCE_IDLE)
-					target_mob = FindTarget()
+					if(target_mob)
+						stance = HOSTILE_STANCE_ATTACK
+					else
+						target_mob = FindTarget()
 
 				if(HOSTILE_STANCE_ATTACK)
 					if(destroy_surroundings)

@@ -181,7 +181,7 @@
 				T.resources["spodumene"] = 	  0
 			else                             // Deep metals.
 				T.resources["pitchblende"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
-				T.resources["diamond"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
+				T.resources["diamond"] =  rand(RESOURCE_LOWEST_MIN,  RESOURCE_LOWEST_MAX)
 				T.resources["tungsten"] = rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["platinum"] = rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
 				T.resources["hydrogen"] = rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)

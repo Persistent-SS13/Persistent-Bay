@@ -247,4 +247,4 @@ var/datum/controller/ambient_controller/ambient_controller
 				var/turf/T = M.loc
 				var/datum/music_file/file = to_play["[M.z]"]
 				if(file)
-					M.playsound_local(T, sound(file.path, repeat = 0, wait = 0, volume = 15, channel = 1))
+					M.playsound_local(T, sound(file.path, repeat = 0, wait = 0, volume = 30, channel = 1))

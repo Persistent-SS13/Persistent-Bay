@@ -29,7 +29,6 @@
 	last_found = world.time
 /mob/living/simple_animal/hostile/Initialize()
 	. = ..()
-	last_found = round_duration_in_ticks
 	STOP_PROCESSING(SSmobs, src) //initialize comes with the mob processing on the main SSmobs, so we move it here without shitting on the init code any more than we did with Destroy()
 	START_PROCESSING(SSmobslow, src)
 //these two procs were established in order to have hostile mobs lag the fuck out of the server when it gets filled. handling them in a different subsystem.

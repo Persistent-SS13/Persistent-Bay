@@ -130,7 +130,7 @@
 	walk(src, 0)
 
 
-/mob/living/simple_animal/hostile/proc/ListTargets(var/dist = 5)'
+/mob/living/simple_animal/hostile/proc/ListTargets(var/dist = 5)
 	if(!loc) return list()
 	var/list/L = view(dist, src)
 

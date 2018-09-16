@@ -52,7 +52,7 @@
 				CHECK_TICK
 			T.resources = list()
 			T.resources["sand"] = rand(3,5)
-			T.resources["graphene"] = rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
+			T.resources["graphene"] = rand(RESOURCE_HIGH_MIN,  RESOURCE_HIGH_MAX)
 
 			var/tmp_cell
 			TRANSLATE_AND_VERIFY_COORD(x, y)

@@ -23,9 +23,12 @@
 	var/defense = "melee" //what armor protects against its attacks
 	var/clean_up_time = 0
 	var/last_found = 0
+
+/mob/living/simple_animal/hostile/New()
+	..()
+	last_found = world.time
 /mob/living/simple_animal/hostile/Initialize()
 	. = ..()
-	last_found = world.time
 	STOP_PROCESSING(SSmobs, src) //initialize comes with the mob processing on the main SSmobs, so we move it here without shitting on the init code any more than we did with Destroy()
 	START_PROCESSING(SSmobslow, src)
 //these two procs were established in order to have hostile mobs lag the fuck out of the server when it gets filled. handling them in a different subsystem.
@@ -163,12 +166,12 @@
 	return L
 
 /mob/living/simple_animal/hostile/death(gibbed, deathmessage, show_dead_message)
+	clean_up_time = rand(world.time+45 MINUTES, world.time+75 MINUTES)
 	..(gibbed, deathmessage, show_dead_message)
-	clean_up_time = rand(world.realtime+45 MINUTES, world.realtime+75 MINUTES)
 	walk(src, 0)
 
 /mob/living/simple_animal/hostile/Life()
-	if(stat && world.realtime > clean_up_time)
+	if(stat && world.time > clean_up_time)
 		loc = null
 		qdel(src)
 	if(last_found < world.time - 1 HOUR)

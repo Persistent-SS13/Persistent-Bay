@@ -100,7 +100,7 @@
 		var/coreType = target.GetCoreType()
 		new coreType(target.loc)
 	if(target.cores <= 0)
-		target.icon_state = "[target.colour] baby slime dead-nocore"
+		qdel(mob/living/carbon/slime/target)
 
 
 /datum/surgery_step/slime/saw_core/fail_step(mob/living/user, mob/living/carbon/slime/target, target_zone, obj/item/tool)

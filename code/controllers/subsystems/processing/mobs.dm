@@ -12,7 +12,7 @@ PROCESSING_SUBSYSTEM_DEF(mobs)
 /datum/controller/subsystem/processing/mobs/PreInit()
 	mob_list = processing // Simply setups a more recognizable var name than "processing"
 
-// Currently only in use by the hostile mobs.
+/*// Currently only in use by the hostile mobs.
 PROCESSING_SUBSYSTEM_DEF(mobslow)
 	name = "Mobs (Low Priority)"
 	priority = SS_PRIORITY_MOB - 30
@@ -26,3 +26,4 @@ PROCESSING_SUBSYSTEM_DEF(mobslow)
 
 /datum/controller/subsystem/processing/mobslow/PreInit()
 	mob_list = processing
+*/

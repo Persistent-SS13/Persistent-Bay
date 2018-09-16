@@ -8,7 +8,8 @@
 	icon_dead = "otherthing-dead"
 	health = 60
 	maxHealth = 60
-	speed = 8
+	speed = 12
+	move_to_delay = 12
 	destroy_surroundings = 1
 
 	melee_damage_lower = 30

@@ -267,7 +267,6 @@ var/list/point_source_descriptions = list(
 	generate_export("bluespace crystal")
 	generate_export("xenobiology")
 	generate_export("cooking")
-	generate_export("cooking")
 /datum/controller/supply/proc/close_order(var/datum/export_order/export)
 	var/order_type = export.order_type
 	old_exports |= export
@@ -379,8 +378,8 @@ var/list/point_source_descriptions = list(
 		if("material")
 			export = new /datum/export_order/stack()
 			var/list/possible = list(
-								/obj/item/stack/material/diamond = 30,
-								/obj/item/stack/material/uranium = 30,
+								/obj/item/stack/material/diamond = 50,
+								/obj/item/stack/material/uranium = 50,
 								/obj/item/stack/material/gold = 30,
 								/obj/item/stack/material/platinum = 30,
 								/obj/item/stack/material/osmium = 30,

@@ -5,7 +5,7 @@
 	density = 1
 	plane = ABOVE_HUMAN_PLANE
 	layer = ABOVE_HUMAN_LAYER //So it draws over mobs in the tile north of it.
-
+	var/statu = 0
 /obj/machinery/mining/drill
 	name = "mining drill head"
 	desc = "An enormous drill."
@@ -69,7 +69,7 @@
 /obj/machinery/mining/drill/attack_generic(var/mob/user, var/damage)
 	health = max(0, health-damage)
 	if(!health)
-		stat = 2
+		statu = 2
 		active = 0
 		need_player_check = 1
 		stacks_needed = rand(5, 10)
@@ -207,7 +207,7 @@
 	return src.attack_hand(user)
 
 /obj/machinery/mining/drill/attackby(obj/item/O as obj, mob/user as mob)
-	if(stat == 2)
+	if(statu == 2)
 		if(stacks_needed && istype(O, /obj/item/stack/material) && O.get_material_name() == "steel")
 			var/obj/item/stack/material/sheets = O
 			if(sheets.amount >= stacks_needed)
@@ -231,7 +231,7 @@
 			if(do_after(user, 50, src))
 				if(!src || !WT.remove_fuel(3, user)) return
 				health = 100
-				stat = 0
+				statu = 0
 				need_player_check = 0
 				update_icon()
 				return
@@ -257,7 +257,7 @@
 			if(do_after(user, 50, src))
 				if(!src || !WT.remove_fuel(3, user) || active) return
 				health = 100
-				stat = 0
+				statu = 0
 				need_player_check = 0
 				update_icon()
 				return
@@ -283,7 +283,7 @@
 		component_parts -= cell
 		cell = null
 		return
-	if(stat == 2)
+	if(statu == 2)
 		to_chat(user, "The drill is damaged and needs repair.")
 		if(stacks_needed)
 			to_chat(user, "Apply [stacks_needed] steel sheets and then weld the drill.")

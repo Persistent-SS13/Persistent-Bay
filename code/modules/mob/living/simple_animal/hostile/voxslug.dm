@@ -15,15 +15,15 @@ Small, little HP, poisonous.
 	destroy_surroundings = 1
 	health = 20
 	maxHealth = 20
-	speed = 8 // May return back to 3, we'll see if 2 is enough.
-	move_to_delay = 4
+	speed = 10 // May return back to 3, we'll see if 2 is enough.
+	move_to_delay = 10
 	density = 0
 	mob_size = MOB_MINISCULE
 	pass_flags = PASSTABLE
 	holder_type = /obj/item/weapon/holder/voxslug
 
-	melee_damage_lower = 10
-	melee_damage_upper = 20
+	melee_damage_lower = 5
+	melee_damage_upper = 10
 	attacktext = "bitten"
 	attack_sound = 'sound/weapons/bite.ogg'
 

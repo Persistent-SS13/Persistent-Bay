@@ -23,9 +23,10 @@
 	var/defense = "melee" //what armor protects against its attacks
 	var/clean_up_time = 0
 	var/last_found = 0
-/mob/living/simple_animal/hostile/Initialize()
-	. = ..()
-	last_found = round_duration_in_ticks
+
+/mob/living/simple_animal/hostile/New()
+	..()
+	last_found = world.time
 
 /mob/living/simple_animal/hostile/proc/FindTarget()
 	if(!faction) //No faction, no reason to attack anybody.
@@ -40,7 +41,7 @@
 		var/atom/F = Found(A)
 		if(F)
 			T = F
-			last_found = round_duration_in_ticks
+			last_found = world.time
 			break
 
 		if(isliving(A))
@@ -57,7 +58,7 @@
 							continue
 					stance = HOSTILE_STANCE_ATTACK
 					T = L
-					last_found = round_duration_in_ticks
+					last_found = world.time
 					break
 
 		else if(istype(A, /obj/mecha)) // Our line of sight stuff was already done in ListTargets().
@@ -65,7 +66,7 @@
 			if (M.occupant)
 				stance = HOSTILE_STANCE_ATTACK
 				T = M
-				last_found = round_duration_in_ticks
+				last_found = world.time
 				break
 	return T
 
@@ -139,15 +140,15 @@
 	return L
 
 /mob/living/simple_animal/hostile/death(gibbed, deathmessage, show_dead_message)
+	clean_up_time = rand(world.time+45 MINUTES, world.time+75 MINUTES)
 	..(gibbed, deathmessage, show_dead_message)
-	clean_up_time = rand(world.realtime+45 MINUTES, world.realtime+75 MINUTES)
 	walk(src, 0)
 
 /mob/living/simple_animal/hostile/Life()
-	if(stat && world.realtime > clean_up_time)
+	if(stat && world.time > clean_up_time)
 		loc = null
 		qdel(src)
-	if(last_found < round_duration_in_ticks + 1 HOUR)
+	if(last_found < world.time - 1 HOUR)
 		loc = null
 		qdel(src)
 	. = ..()

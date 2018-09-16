@@ -45,6 +45,10 @@
 #define CE_MIND    		 "mindbending"  // Stabilizes or wrecks mind. Used for hallucinations
 #define CE_CRYO			 "cryogenic"	// Prevents damage from being frozen
 
+#define CE_COKE			 "cocaine"		// Cocaine like effects
+#define CE_PHORON		 "phoraine"		// Special phoron-drug events
+
+
 //reagent flags
 #define IGNORE_MOB_SIZE 0x1
 #define AFFECTS_DEAD    0x2

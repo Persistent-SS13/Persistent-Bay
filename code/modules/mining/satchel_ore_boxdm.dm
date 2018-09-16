@@ -11,7 +11,7 @@
 	var/list/stored_ore = list()
 	var/health = 40
 	
-/obj/machinery/mining/drill/attack_generic(var/mob/user, var/damage)
+/obj/structure/ore_box/attack_generic(var/mob/user, var/damage)
 	health = max(0, health-damage)
 	if(!health)
 		for (var/obj/item/weapon/ore/O in contents)

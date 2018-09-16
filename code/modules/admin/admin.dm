@@ -825,7 +825,7 @@ var/global/floorIsLava = 0
 
 	if(!check_rights(R_ADMIN))
 		return
-	var/choice = input("Choose the zlevel to change ambience on. The 2 lower zlevels are included.", "Zlevel") as anything in ambient_controller.zlevel_data|null
+	var/choice = input("Choose the zlevel to change ambience on. The lower zlevel is included.", "Zlevel") as anything in ambient_controller.zlevel_data|null
 	if(choice)
 		var/datum/music_controller/controller = ambient_controller.zlevel_data[choice]
 		if(!controller)

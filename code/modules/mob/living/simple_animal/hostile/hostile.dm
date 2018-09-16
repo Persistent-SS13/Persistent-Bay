@@ -25,7 +25,7 @@
 	var/last_found = 0
 /mob/living/simple_animal/hostile/Initialize()
 	. = ..()
-	last_found = round_duration_in_ticks
+	last_found = world.time
 	STOP_PROCESSING(SSmobs, src) //initialize comes with the mob processing on the main SSmobs, so we move it here without shitting on the init code any more than we did with Destroy()
 	START_PROCESSING(SSmobslow, src)
 //these two procs were established in order to have hostile mobs lag the fuck out of the server when it gets filled. handling them in a different subsystem.
@@ -64,7 +64,7 @@
 		var/atom/F = Found(A)
 		if(F)
 			T = F
-			last_found = round_duration_in_ticks
+			last_found = world.time
 			break
 
 		if(isliving(A))
@@ -81,7 +81,7 @@
 							continue
 					stance = HOSTILE_STANCE_ATTACK
 					T = L
-					last_found = round_duration_in_ticks
+					last_found = world.time
 					break
 
 		else if(istype(A, /obj/mecha)) // Our line of sight stuff was already done in ListTargets().
@@ -89,7 +89,7 @@
 			if (M.occupant)
 				stance = HOSTILE_STANCE_ATTACK
 				T = M
-				last_found = round_duration_in_ticks
+				last_found = world.time
 				break
 	return T
 
@@ -171,7 +171,7 @@
 	if(stat && world.realtime > clean_up_time)
 		loc = null
 		qdel(src)
-	if(last_found < round_duration_in_ticks + 1 HOUR)
+	if(last_found < world.time - 1 HOUR)
 		loc = null
 		qdel(src)
 	. = ..()

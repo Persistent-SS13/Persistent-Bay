@@ -85,7 +85,9 @@
 	should_save = 0
 	
 	
-	
+/obj/mecha/after_load()
+	qdel(src)
+	return 0
 	
 /obj/mecha/drain_power(var/drain_check)
 

@@ -9,7 +9,21 @@
 	density = 1
 	var/last_update = 0
 	var/list/stored_ore = list()
-
+	var/health = 40
+	
+/obj/machinery/mining/drill/attack_generic(var/mob/user, var/damage)
+	health = max(0, health-damage)
+	if(!health)
+		for (var/obj/item/weapon/ore/O in contents)
+			contents -= O
+			O.loc = src.loc
+		user.visible_message("<span class='notice'>[user] smashes \the [src].</span>", \
+							 "<span class='notice'>You take apart \the [src].</span>", \
+							 "<span class='notice'>You hear splitting wood.</span>")
+		if(istype(user, /mob/living/simple_animal/hostile))
+			var/mob/living/simple_animal/hostile/attacker = user
+			attacker.target_mob = null
+		qdel(src)
 /obj/structure/ore_box/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if (istype(W, /obj/item/weapon/ore))
 		user.remove_from_mob(W)

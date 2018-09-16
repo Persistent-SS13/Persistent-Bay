@@ -58,7 +58,7 @@
 			TRANSLATE_AND_VERIFY_COORD(x, y)
 
 			if(tmp_cell < rare_val)      // Surface metals.
-				T.resources["hematite"] =     rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
+				T.resources["hematite"] =     rand(RESOURCE_HIGHEST_MIN, RESOURCE_HIGHEST_MAX)
 				T.resources["copper"] = rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
 				T.resources["gold"] =     	  rand(RESOURCE_LOWEST_MIN,  RESOURCE_LOWEST_MAX)
 				T.resources["silver"] =		  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
@@ -166,13 +166,8 @@
 				T.resources["gold"] =     rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
 				T.resources["silver"] =   rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
 				T.resources["pitchblende"] =  rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
-		//		T.resources["phoron"] =   rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
 				T.resources["tungsten"] = 0
 				T.resources["hydrogen"] = 0
-		//		if(prob(1)) // 1 percent
-		//			T.resources["bluespace crystal"] = 1
-		//		else
-		//			T.resources["bluespace crystal"] = 0
 				T.resources["diamond"] =  	  0
 				T.resources["hematite"] =     0
 				T.resources["copper"] = 0
@@ -188,13 +183,8 @@
 				T.resources["pitchblende"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["diamond"] =  rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
 				T.resources["tungsten"] = rand(RESOURCE_LOW_MIN,  RESOURCE_LOW_MAX)
-		//		T.resources["phoron"] =   rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
 				T.resources["platinum"] = rand(RESOURCE_HIGH_MIN, RESOURCE_HIGH_MAX)
 				T.resources["hydrogen"] = rand(RESOURCE_MID_MIN,  RESOURCE_MID_MAX)
-		//		if(prob(5)) // 5 percent
-		//			T.resources["bluespace crystal"] = 1
-		//		else
-		//			T.resources["bluespace crystal"] = 0
 				T.resources["hematite"] =     0
 				T.resources["copper"] = 0
 				T.resources["gold"] =     0

@@ -21,12 +21,36 @@
 
 	var/damtype = BRUTE
 	var/defense = "melee" //what armor protects against its attacks
-	
-	var/list/obj_targets = list()
-	
 	var/clean_up_time = 0
-	
-	
+	var/last_found = 0
+/mob/living/simple_animal/hostile/Initialize()
+	. = ..()
+	last_found = round_duration_in_ticks
+	STOP_PROCESSING(SSmobs, src) //initialize comes with the mob processing on the main SSmobs, so we move it here without shitting on the init code any more than we did with Destroy()
+	START_PROCESSING(SSmobslow, src)
+//these two procs were established in order to have hostile mobs lag the fuck out of the server when it gets filled. handling them in a different subsystem.
+/mob/living/simple_animal/hostile/Destroy() //copypasted 100% from mob.dm so nothing is missed before deleting.
+	STOP_PROCESSING(SSmobslow, src)
+	GLOB.dead_mob_list_ -= src
+	GLOB.living_mob_list_ -= src
+	unset_machine()
+	QDEL_NULL(hud_used)
+	for(var/obj/item/grab/G in grabbed_by)
+		qdel(G)
+	clear_fullscreen()
+	if(client)
+		remove_screen_obj_references()
+		for(var/atom/movable/AM in client.screen)
+			var/obj/screen/screenobj = AM
+			if(!istype(screenobj) || !screenobj.globalscreen)
+				qdel(screenobj)
+		client.screen = list()
+	if(mind && mind.current == src)
+		spellremove(src)
+	ghostize()
+	..()
+	return QDEL_HINT_HARDDEL
+
 /mob/living/simple_animal/hostile/proc/FindTarget()
 	if(!faction) //No faction, no reason to attack anybody.
 		return null
@@ -40,6 +64,7 @@
 		var/atom/F = Found(A)
 		if(F)
 			T = F
+			last_found = round_duration_in_ticks
 			break
 
 		if(isliving(A))
@@ -56,6 +81,7 @@
 							continue
 					stance = HOSTILE_STANCE_ATTACK
 					T = L
+					last_found = round_duration_in_ticks
 					break
 
 		else if(istype(A, /obj/mecha)) // Our line of sight stuff was already done in ListTargets().
@@ -63,6 +89,7 @@
 			if (M.occupant)
 				stance = HOSTILE_STANCE_ATTACK
 				T = M
+				last_found = round_duration_in_ticks
 				break
 	return T
 
@@ -111,8 +138,8 @@
 		var/mob/living/L = target_mob
 		L.attack_generic(src,rand(melee_damage_lower,melee_damage_upper),attacktext,damtype,defense)
 		return L
-	if(istype(target_mob,/obj/mecha))
-		var/obj/mecha/M = target_mob
+	else
+		var/obj/M = target_mob
 		M.attack_generic(src,rand(melee_damage_lower,melee_damage_upper),attacktext)
 		return M
 
@@ -127,11 +154,11 @@
 
 
 /mob/living/simple_animal/hostile/proc/ListTargets(var/dist = 7)
-	var/list/L = hearers(src, dist)
+	var/list/L = view(dist, src)
 
-	for (var/obj/mecha/M in mechas_list)
-		if (M.z == src.z && get_dist(src, M) <= dist)
-			L += M
+//	for (var/obj/mecha/M in mechas_list)
+//		if (M.z == src.z && get_dist(src, M) <= dist)
+//			L += M
 
 	return L
 
@@ -142,6 +169,9 @@
 
 /mob/living/simple_animal/hostile/Life()
 	if(stat && world.realtime > clean_up_time)
+		loc = null
+		qdel(src)
+	if(last_found < round_duration_in_ticks + 1 HOUR)
 		loc = null
 		qdel(src)
 	. = ..()

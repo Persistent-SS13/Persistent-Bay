@@ -83,6 +83,8 @@
 	brute_armor = 1
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 //TODO PLACEHOLDERS:
 /material/leather
@@ -94,6 +96,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/carpet
 	name = "carpet"
@@ -107,6 +111,8 @@
 	sheet_plural_name = "tiles"
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cotton
 	name = "cotton"
@@ -117,6 +123,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cloth_yellow
 	name = "yellow"
@@ -127,6 +135,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cloth_teal
 	name = "teal"
@@ -138,6 +148,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cloth_black
 	name = "black"
@@ -149,6 +161,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cloth_green
 	name = "green"
@@ -160,6 +174,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cloth_puple
 	name = "purple"
@@ -171,6 +187,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cloth_blue
 	name = "blue"
@@ -182,6 +200,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cloth_beige
 	name = "beige"
@@ -193,6 +213,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cloth_lime
 	name = "lime"
@@ -204,3 +226,5 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1

@@ -93,7 +93,13 @@
 
 	if(href_list["preference"])
 		client.prefs.process_link(src, href_list)
-
+		client.prefs.randomize_appearance_and_body_for()
+		client.prefs.real_name = null
+		client.prefs.preview_icon = null
+		client.prefs.home_system = null
+		client.prefs.faction = null
+		client.prefs.selected_under = null
+		client.prefs.sanitize_preferences()
 /mob/new_player/proc/newCharacterPanel()
 	var/data = "<div align='center'><br>"
 	data += "<b>Select the slot you want to save this character under.</b><br>"

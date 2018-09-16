@@ -443,6 +443,10 @@ var/list/mining_floors = list()
 			var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
 			if(zone)
 				zone.asteroid_targets |= M
+				if(istype(M, /mob/living))
+					var/mob/living/mobbie = M
+					if(!mobbie.stat)
+						zone.mob_targets |= M
 
 /turf/simulated/asteroid/after_load()
 	updateMineralOverlays(1)

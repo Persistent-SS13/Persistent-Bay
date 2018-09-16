@@ -380,7 +380,7 @@ var/global/list/debug_data = list()
 		while(!f.eof)
 			f >> v
 			sleep(-1)
-		world << "Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!"
+		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
 
 	f.cd = "/extras"
 	from_file(f["turbolifts"],turbolifts)

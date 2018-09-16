@@ -104,7 +104,7 @@
 	if(data["species"] == SPECIES_PHOROSIAN)
 		if(istype(L))
 			L.adjust_fire_stacks(amount / 5)
-			
+
 /datum/reagent/blood/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	M.inject_blood(src, volume)
 	remove_self(volume)
@@ -172,7 +172,7 @@
 
 	else if(volume >= 10)
 		var/turf/simulated/S = T
-		S.wet_floor(1, TRUE)
+		S.wet_floor(8, TRUE)
 
 
 /datum/reagent/water/touch_obj(var/obj/O)

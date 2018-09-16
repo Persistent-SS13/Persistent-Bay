@@ -155,7 +155,7 @@
 		if(!stat)
 			switch(stance)
 				if(HOSTILE_STANCE_IDLE)
-					if(target_mob)
+					if(target_mob && target_mob.loc)
 						stance = HOSTILE_STANCE_ATTACK
 					else
 						target_mob = FindTarget()

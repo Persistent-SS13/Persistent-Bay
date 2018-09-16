@@ -55,7 +55,9 @@
 			T.resources["graphene"] = rand(RESOURCE_HIGH_MIN,  RESOURCE_HIGH_MAX)
 
 			var/tmp_cell
-			TRANSLATE_AND_VERIFY_COORD(x, y)
+			var/current_cell = get_map_cell(x,y)
+			if(current_cell)
+				tmp_cell = map[current_cell]
 
 			if(tmp_cell < rare_val)      // Surface metals.
 				T.resources["hematite"] =     rand(RESOURCE_HIGHEST_MIN, RESOURCE_HIGHEST_MAX)

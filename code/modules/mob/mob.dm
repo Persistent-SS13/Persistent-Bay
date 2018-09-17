@@ -160,14 +160,6 @@
 /mob/proc/Life()
 //	if(organStructure)
 //		organStructure.ProcessOrgans()
-	if (ckey && !is_user_process)
-		is_user_process = 1
-		STOP_PROCESSING(SSmobs, src)
-		START_PROCESSING(SSuser, src)
-	if (!ckey && is_user_process)
-		STOP_PROCESSING(SSuser, src)
-		START_PROCESSING(SSmobs, src)
-
 	return
 
 #define UNBUCKLED 0

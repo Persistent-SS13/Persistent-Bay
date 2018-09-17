@@ -2,9 +2,9 @@
 	name = "plastic"
 	stack_type = /obj/item/stack/material/plastic
 	flags = MATERIAL_BRITTLE
+	icon_colour = "#cccccc"
 	icon_base = "curvy"
 	icon_reinf = "jaggy"
-	icon_colour = "#cccccc"
 	hardness = 10
 	weight = 5
 	melting_point = T0C+371 //assuming heat resistant plastic
@@ -24,9 +24,10 @@
 	name = "wood"
 	adjective_name = "wooden"
 	stack_type = /obj/item/stack/material/wood
+	icon_colour = "#824b28"
 	icon_base = "jaggy"
 	icon_reinf = "jaggy"
-	icon_colour = "#824b28"
+	icon_door = "wood"
 	integrity = 50
 	explosion_resistance = 2
 	shard_type = SHARD_SPLINTER
@@ -38,7 +39,6 @@
 	ignition_point = T0C+288
 	stack_origin_tech = list(TECH_MATERIAL = 1, TECH_BIO = 1)
 	dooropen_noise = 'sound/effects/doorcreaky.ogg'
-	door_icon_base = "wood"
 	destruction_desc = "splinters"
 	sheet_singular_name = "plank"
 	sheet_plural_name = "planks"
@@ -60,29 +60,31 @@
 	stack_type = /obj/item/stack/material/cardboard
 	flags = MATERIAL_BRITTLE
 	integrity = 10
+	icon_colour = "#aaaaaa"
 	icon_base = "jaggy"
 	icon_reinf = "jaggy"
-	icon_colour = "#aaaaaa"
+	icon_door = "wood"
 	hardness = 1
 	brute_armor = 1
 	weight = 1
 	ignition_point = T0C+232 //"the temperature at which book-paper catches fire, and burns." close enough
 	melting_point = T0C+232 //temperature at which cardboard walls would be destroyed
 	stack_origin_tech = list(TECH_MATERIAL = 1)
-	door_icon_base = "wood"
 	destruction_desc = "crumples"
 	conductive = 0
 
 /material/cloth //todo
 	name = "cloth"
 	stack_origin_tech = list(TECH_MATERIAL = 2)
-	door_icon_base = "wood"
+	icon_door = "wood"
 	ignition_point = T0C+232
 	melting_point = T0C+300
 	flags = MATERIAL_PADDING
 	brute_armor = 1
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 //TODO PLACEHOLDERS:
 /material/leather
@@ -94,6 +96,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/carpet
 	name = "carpet"
@@ -107,6 +111,8 @@
 	sheet_plural_name = "tiles"
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cotton
 	name = "cotton"
@@ -117,6 +123,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cloth_yellow
 	name = "yellow"
@@ -127,6 +135,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cloth_teal
 	name = "teal"
@@ -138,6 +148,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cloth_black
 	name = "black"
@@ -149,6 +161,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cloth_green
 	name = "green"
@@ -160,6 +174,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cloth_puple
 	name = "purple"
@@ -171,6 +187,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cloth_blue
 	name = "blue"
@@ -182,6 +200,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cloth_beige
 	name = "beige"
@@ -193,6 +213,8 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1
 
 /material/cloth_lime
 	name = "lime"
@@ -204,3 +226,5 @@
 	melting_point = T0C+300
 	conductive = 0
 	stack_type = null
+	hardness = 1
+	weight = 1

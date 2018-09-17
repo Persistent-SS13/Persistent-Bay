@@ -418,7 +418,7 @@ var/list/point_source_descriptions = list(
 
 		if("xenobiology")
 			export = new /datum/export_order/static()
-			export.typepath = /obj/item/slime_extractgenerate_export("manufacturing-advanced")
+			export.typepath = /obj/item/slime_extract
 			export.name = "Order for slime extracts of any type. Payment depends on the rarity of the extract."
 			export.order_type = typee
 			export.id = exportnum

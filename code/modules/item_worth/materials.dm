@@ -2,7 +2,7 @@
 	var/value = 1
 
 /material/uranium
-	value = 100
+	value = 80
 
 /material/diamond
 	value = 70
@@ -14,7 +14,7 @@
 	value = 35
 
 /material/phoron
-	value = 200
+	value = 100
 
 /material/stone/marble
 	value = 4
@@ -50,13 +50,13 @@
 	value = 30
 
 /material/tritium
-	value = 300
-
-/material/mhydrogen
 	value = 100
 
-/material/platinum
+/material/mhydrogen
 	value = 80
+
+/material/platinum
+	value = 70
 
 /material/tungsten
 	value = 60

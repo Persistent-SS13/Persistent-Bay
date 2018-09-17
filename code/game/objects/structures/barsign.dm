@@ -66,4 +66,4 @@
 		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 		qdel(src)
 		return
-
+	return ..()

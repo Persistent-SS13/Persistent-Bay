@@ -111,6 +111,8 @@
 	setClickCooldown(attack_delay)
 	if(!Adjacent(target_mob))
 		return
+	if(attack_sound)
+		playsound(loc, attack_sound, 50, 1, 1)	
 	if(isliving(target_mob))
 		var/mob/living/L = target_mob
 		L.attack_generic(src,rand(melee_damage_lower,melee_damage_upper),attacktext,damtype,defense)

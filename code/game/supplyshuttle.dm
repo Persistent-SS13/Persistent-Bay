@@ -191,13 +191,13 @@ var/list/point_source_descriptions = list(
 	var/list/filling = list()
 	for(var/obj/A in crate.contents)
 		if(istype(A, /obj/item/weapon/paper/export))
-			filling |= Av.
+			filling |= A
 			continue
 		if(!istype(A, typepath) && A.name != looking_name)
 			message_admins("fill failed due to invalid object [A.name]")
 			return 0
 		filling |= A
-		total += A.value
+		total += A.export_value
 		filled++
 
 	if(filled)
@@ -418,7 +418,7 @@ var/list/point_source_descriptions = list(
 
 		if("xenobiology")
 			export = new /datum/export_order/static()
-			export.typepath = /obj/item/slime_extract
+			export.typepath = /obj/item/slime_extractgenerate_export("manufacturing-advanced")
 			export.name = "Order for slime extracts of any type. Payment depends on the rarity of the extract."
 			export.order_type = typee
 			export.id = exportnum

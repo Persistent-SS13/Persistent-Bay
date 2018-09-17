@@ -215,11 +215,14 @@
 /obj/item/blueprints/proc/detectRoom(var/turf/first)
 	var/list/turf/found = new
 	var/list/turf/pending = list(first)
+	var/list/turf/rejected = list()
 	while(pending.len)
-	//	if (found.len+pending.len > 300)
-	//		return ROOM_ERR_TOOLARGE
+		if (found.len+pending.len > 1000)
+			return ROOM_ERR_TOOLARGE
 		var/turf/T = pending[1] //why byond havent list::pop()?
 		pending -= T
+		if(T in rejected) continue
+		if(T in found) continue
 		for (var/dir in GLOB.cardinal)
 			var/skip = 0
 			for (var/obj/structure/window/W in T)
@@ -240,7 +243,7 @@
 				if(BORDER_NONE)
 					pending+=NT
 				if(BORDER_BETWEEN)
-					//do nothing, may be later i'll add 'rejected' list as optimization
+					rejected +=NT//do nothing, may be later i'll add 'rejected' list as optimization
 				if(BORDER_2NDTILE)
 					found+=NT //tile included to new area, but we dont seek more
 				if(BORDER_SPACE)

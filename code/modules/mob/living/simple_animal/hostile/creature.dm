@@ -42,6 +42,9 @@
 		stance = HOSTILE_STANCE_ATTACK
 		return A
 
+
+/mob/living/simple_animal/hostile/creature/Allow_Spacemove(var/check_drift = 0)
+	return 1 // Ripped from space carp, no more floating
 	
 	
 /mob/living/simple_animal/hostile/creature/New()

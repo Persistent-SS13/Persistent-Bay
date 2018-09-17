@@ -145,6 +145,10 @@ var/const/NO_EMAG_ACT = -50
 		if(available < amount)
 			to_chat(user, "This exceeds your expense limit.")
 			return 0
+		if(faction.central_account.money < amount)
+			to_chat(user, "Insufficent funds.")
+			return 0
+			
 		var/datum/transaction/T = new("[linked_name] (via [username] expense card)", invoice.purpose, -amount, "Digital Invoice")
 		faction.central_account.do_transaction(T)
 		record.expenses += amount
@@ -159,6 +163,9 @@ var/const/NO_EMAG_ACT = -50
 		var/available = expense_limit - expenses
 		if(available < amount)
 			to_chat(user, "This exceeds your expense limit.")
+			return 0
+		if(business.central_account.money < amount)
+			to_chat(user, "Insufficent funds.")
 			return 0
 		var/datum/transaction/T = new("[linked_name] (via [username] expense card)", invoice.purpose, -amount, "Digital Invoice")
 		business.central_account.do_transaction(T)

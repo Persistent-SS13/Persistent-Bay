@@ -145,6 +145,18 @@
 											req_components[I] -= camt
 											update_desc()
 											break
+									if(istype(P, /obj/item/stack))
+										var/obj/item/stack/CP = P
+										if(CP.get_amount() > 1)
+											var/camt = min(CP.amount, req_components[I]) // amount of cable to take, idealy amount required, but limited by amount provided
+											var/obj/item/stack/CC = new P.type(src)
+											CC.amount = camt
+											CC.update_icon()
+											CP.use(camt)
+											components += CC
+											req_components[I] -= camt
+											update_desc()
+											break
 									user.drop_item()
 									P.loc = src
 									components += P

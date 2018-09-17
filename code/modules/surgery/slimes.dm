@@ -100,7 +100,8 @@
 		var/coreType = target.GetCoreType()
 		new coreType(target.loc)
 	if(target.cores <= 0)
-		target.icon_state = "[target.colour] baby slime dead-nocore"
+		qdel(target)
+		user.visible_message("<span class='notice'>The [target] abruptly bubbles and burbles before dissolving away!</span>")
 
 
 /datum/surgery_step/slime/saw_core/fail_step(mob/living/user, mob/living/carbon/slime/target, target_zone, obj/item/tool)

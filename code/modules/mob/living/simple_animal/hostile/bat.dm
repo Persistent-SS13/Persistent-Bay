@@ -1,6 +1,6 @@
 /mob/living/simple_animal/hostile/scarybat
-	name = "space bats"
-	desc = "A swarm of cute little blood sucking bats that looks pretty upset."
+	name = "locusectums"
+	desc = "A swarm of of terrible locusectum."
 	icon = 'icons/mob/bats.dmi'
 	icon_state = "bat"
 	icon_living = "bat"
@@ -12,13 +12,13 @@
 	response_help = "pets the"
 	response_disarm = "gently pushes aside the"
 	response_harm = "hits the"
-	speed = 4
+	speed = 2
 	maxHealth = 20
 	health = 20
 
 	harm_intent_damage = 8
 	melee_damage_lower = 10
-	melee_damage_upper = 10
+	melee_damage_upper = 25
 	attacktext = "bites"
 	attack_sound = 'sound/weapons/bite.ogg'
 
@@ -28,7 +28,7 @@
 
 	environment_smash = 1
 
-	faction = "scarybat"
+	faction = "asteroid"
 	var/mob/living/owner
 
 /mob/living/simple_animal/hostile/scarybat/New(loc, mob/living/L as mob)
@@ -39,7 +39,7 @@
 /mob/living/simple_animal/hostile/scarybat/FindTarget()
 	. = ..()
 	if(.)
-		emote("flutters towards [.]")
+		emote("jets towards [.]")
 
 /mob/living/simple_animal/hostile/scarybat/Found(var/atom/A)//This is here as a potential override to pick a specific target if available
 	if(istype(A) && A == owner)
@@ -50,9 +50,9 @@
 	. =..()
 	var/mob/living/L = .
 	if(istype(L))
-		if(prob(15))
+		if(prob(25))
 			L.Stun(1)
-			L.visible_message("<span class='danger'>\the [src] scares \the [L]!</span>")
+			L.visible_message("<span class='danger'>One of \the [src] stings \the [L]!</span>")
 
 /mob/living/simple_animal/hostile/scarybat/cult
 	faction = "cult"

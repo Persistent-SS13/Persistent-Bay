@@ -7,6 +7,8 @@
 	var/material/material
 	var/datum/geosample/geologic_data
 
+/obj/item/weapon/ore/attack_generic()	
+	qdel(src) // eaten
 /obj/item/weapon/ore/get_material()
 	return material
 	

@@ -689,26 +689,3 @@
 	cost = 18
 	containertype = /obj/structure/closet/secure_closet/hop2
 	access = core_access_command_programs
-
-/decl/hierarchy/supply_pack/operations/russian
-	name = "Soviet - Russian surplus equipment"
-	contains = list(/obj/item/clothing/under/soviet = 4,
-					/obj/item/clothing/head/ushanka = 4,
-					/obj/item/clothing/gloves/thick,
-					/obj/item/clothing/shoes/jackboots = 4)
-	cost = 8
-	containertype = /obj/structure/closet/gimmick/russian
-	contraband = 1
-
-/decl/hierarchy/supply_pack/operations/russianlead
-	name = "Soviet - Russian admiral equipment"
-	contains = list(/obj/item/clothing/under/soviet,
-					/obj/item/clothing/suit/hgpirate,
-					/obj/item/clothing/head/hgpiratecap,
-					/obj/item/clothing/gloves/thick,
-					/obj/item/clothing/shoes/jackboots)
-	cost = 50
-	containertype = /obj/structure/closet/secure_closet
-	containername = "russian admiral equipment"
-	access = core_access_leader
-	contraband = 1

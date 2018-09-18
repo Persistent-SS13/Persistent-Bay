@@ -194,7 +194,7 @@
 
 	reagent_tag = IS_SKRELL
 
-	has_organ |= list(
+	has_organ = list(
 		BP_HEART =    /obj/item/organ/internal/heart,
 		BP_LUNGS =    /obj/item/organ/internal/lungs,
 		BP_LIVER =    /obj/item/organ/internal/liver,

@@ -154,7 +154,7 @@
 		return
 	var/area/newArea = locate(world.area)
 	if(newArea)
- 		for(var/turf/T in A.contents)
+		for(var/turf/T in A.contents)
 			newArea.contents.Add(T)
 		A.contents.Cut()
 		qdel(A)

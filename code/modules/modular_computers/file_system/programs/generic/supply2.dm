@@ -35,8 +35,6 @@
 		connected_faction = program.computer.network_card.connected_network.holder
 	if(!connected_faction)
 		program.computer.kill_program()
-	if(!selected_telepads)
-		// That is fine, don't select all telepads by default
 	var/is_admin = (check_access(user, core_access_order_approval, connected_faction.uid) || check_access(user, core_access_invoicing, connected_faction.uid))
 	var/is_superadmin = (check_access(user, core_access_command_programs, connected_faction.uid))
 

@@ -48,8 +48,8 @@
 			new/obj/structure/quicksand(T)
 
 /datum/random_map/noise/ore/rich
-	deep_val = 0.8
-	rare_val = 0.7
+	deep_val = 0.75
+	rare_val = 0.65
 
 	
 /area/exoplanet/desert

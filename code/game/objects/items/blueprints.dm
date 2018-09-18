@@ -152,8 +152,9 @@
 	if (isspace(A) || A.apc || A.aro)	// Let's just check this one last time, just in case
 		interact()
 		return
-	var/area/newArea = locate(world.area)
+	var/area/newArea = locate(/area/space)
 	newArea.contents.Add(A.contents)
+	sleep(20)
 	A.contents.Cut()
 	qdel(A)
 	to_chat(usr, "<span class='notice'>You scrub [A.name] off the blueprint.</span>")

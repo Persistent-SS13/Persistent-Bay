@@ -49,12 +49,12 @@ var/global/list/debug_data = list()
 	should_save = 0
 
 
-	
+
 /turf/space
 	map_storage_saved_vars = "contents"
 
-	
-	
+
+
 /turf/space/after_load()
 	..()
 	for(var/atom/movable/lighting_overlay/overlay in contents)
@@ -293,7 +293,7 @@ var/global/list/debug_data = list()
 	to_file(f,lis)
 
 /proc/Save_World()
-	to_world("The world is saving! You won't be able to join at this time.")
+	to_world("<font size=4 color='green'>The world is saving! You won't be able to join at this time.</font>")
 	config.enter_allowed = 0
 	Prepare_Atmos_For_Saving()
 	areas_to_save = list()

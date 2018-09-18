@@ -25,6 +25,7 @@
 	var/current_security_level
 	var/list/selected_telepads
 	var/list/selected_telepads_export = list()
+	var/list/selected_telepads_revoke = list()
 	var/curr_page = 1
 
 /datum/nano_module/program/supply/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
@@ -35,11 +36,14 @@
 	if(!connected_faction)
 		program.computer.kill_program()
 	if(!selected_telepads)
-		selected_telepads = connected_faction.cargo_telepads.Copy()
+		// That is fine, don't select all telepads by default
 	var/is_admin = (check_access(user, core_access_order_approval, connected_faction.uid) || check_access(user, core_access_invoicing, connected_faction.uid))
+	var/is_superadmin = (check_access(user, core_access_command_programs, connected_faction.uid))
+
 	data["faction_name"] = connected_faction.name
 	data["credits"] = connected_faction.central_account.money
 	data["is_admin"] = is_admin
+	data["is_superadmin"] = is_superadmin
 
 
 	var/decl/security_state/security_state = decls_repository.get_decl(GLOB.using_map.security_state)
@@ -122,6 +126,15 @@
 					"selected" = (telepad in selected_telepads_export)
 				)))
 				data["telepads"] = telepads
+		if(7) // revoke telepads
+			var/list/telepads[0]
+			for(var/obj/machinery/telepad_cargo/telepad in connected_faction.cargo_telepads)
+				telepads.Add(list(list(
+					"name" = telepad.name,
+					"ref" = "\ref[telepad]",
+					"selected" = (telepad in selected_telepads_revoke)
+				)))
+				data["telepads"] = telepads
 
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
@@ -162,6 +175,13 @@
 			selected_telepads_export -= telepad
 		else
 			selected_telepads_export |= telepad
+		return 1
+	if(href_list["toggle_telepad_revoke"])
+		var/obj/machinery/telepad_cargo/telepad = locate(href_list["toggle_telepad_revoke"])
+		if(telepad in selected_telepads_revoke)
+			selected_telepads_revoke -= telepad
+		else
+			selected_telepads_revoke |= telepad
 		return 1
 	if(href_list["order"])
 		var/decl/hierarchy/supply_pack/P = locate(href_list["order"]) in supply_controller.master_supply_list
@@ -241,6 +261,18 @@
 			status_signal.data["command"] = "supply"
 			frequency.post_signal(src, status_signal)
 		return 1
+	if(href_list["revoke_pad"])
+		if(!check_access(core_access_command_programs))
+			to_chat(usr, "Access Denied.")
+			return 1
+		var/revoked = 0
+		for(var/obj/machinery/telepad_cargo/telepad in selected_telepads_revoke)
+			if(telepad.connected_faction)
+				telepad.connected_faction.cargo_telepads -= src
+			telepad.connected_faction = null
+			telepad.req_access_faction = null
+			revoked += 1
+		to_chat("Revoked network connection for " + revoked + " telepads.")
 	if(href_list["launch_export"])
 		if(!check_access(core_access_invoicing))
 			to_chat(usr, "Access Denied.")

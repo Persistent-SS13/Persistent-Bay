@@ -149,7 +149,7 @@
 	return O
 
 /obj/machinery/organ_printer/robot/attackby(var/obj/item/weapon/W, var/mob/user)
-	if(istype(W, /obj/item/stack/material) && W.get_material_name() == matter_type)
+	if(istype(W, /obj/item/stack/material) && W.get_material_name() == "ocp")
 		if((max_stored_matter-stored_matter) < matter_amount_per_sheet)
 			to_chat(user, "<span class='warning'>\The [src] is too full.</span>")
 			return

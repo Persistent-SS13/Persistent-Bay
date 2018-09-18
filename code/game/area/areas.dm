@@ -271,7 +271,7 @@ var/list/mob/living/forced_ambiance_list = new
 	if(ambient_controller)
 		var/datum/music_controller/controller = ambient_controller.zlevel_data["[(L.z+(L.z%2))]"]
 		if(controller)
-			if(controller.tone && controller.tone != "none")
+			if(controller.override || controller.tone && controller.tone != "none")
 				return 0
 	// If we previously were in an area with force-played ambiance, stop it.
 	if(L in forced_ambiance_list)

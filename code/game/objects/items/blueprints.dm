@@ -47,9 +47,9 @@
 	if(!istype(A, /area/turbolift))
 		text += "<br>" + (isspace(A) ? "<a href='?src=\ref[src];action=create_area'>Create Area</a>" : "Create Area - An area already exists here")
 		text += "<br>" + (isspace(A) ? "Modify Area - You can't edit space!" : "<a href='?src=\ref[src];action=edit_area'>Modify Area</a>")
-		text += "<br>" + (isspace(A) ? "Merge Areas - You can't combine space!" : A.apc ? "Merge Areas - The APC must be removed first" : getAdjacentAreas() ? "<a href='?src=\ref[src];action=merge_area'>Merge Areas</a>" : "Merge Areas - There are no valid areas to merge with")
-		text += "<br>" + (isspace(A) ? "Add to Area - You can't add to space!" : A.apc ? "Add to Area - The APC must be removed first" : getAdjacentAreas(1) ? "<a href='?src=\ref[src];action=add_to_area'>Add to Area</a>" : "Add to Area - There are no valid areas to add tiles from")
-		text += "<br>" + (isspace(A) ? "Remove Area - You can't remove space!" : A.apc ? "Remove Area - The APC must be removed first" : "<a href='?src=\ref[src];action=remove_area'>Remove Area</a>")
+		text += "<br>" + (isspace(A) ? "Merge Areas - You can't combine space!" : A.apc || A.aro ? "Merge Areas - The APC/ARO must be removed first" : getAdjacentAreas() ? "<a href='?src=\ref[src];action=merge_area'>Merge Areas</a>" : "Merge Areas - There are no valid areas to merge with")
+		text += "<br>" + (isspace(A) ? "Add to Area - You can't add to space!" : A.apc || A.aro ? "Add to Area - The APC/ARO must be removed first" : getAdjacentAreas(1) ? "<a href='?src=\ref[src];action=add_to_area'>Add to Area</a>" : "Add to Area - There are no valid areas to add tiles from")
+		text += "<br>" + (isspace(A) ? "Remove Area - You can't remove space!" : A.apc || A.aro ? "Remove Area - The APC/ARO must be removed first" : "<a href='?src=\ref[src];action=remove_area'>Remove Area</a>")
 	else
 		text += "You may not touch turbolifts"
 		text += "</BODY></HTML>"
@@ -111,7 +111,7 @@
 		to_chat(usr, "<span class='notice'>You merge [oldArea.name] into [A.name]</span>")
 		deleteArea(oldArea)
 	else
-		to_chat(usr, "<span class='notice'>No valid areas could be found. Make sure they don't have an APC and are adjacent to you.</span>")
+		to_chat(usr, "<span class='notice'>No valid areas could be found. Make sure they don't have an APC/ARO and are adjacent to you.</span>")
 	interact()
 
 /obj/item/blueprints/proc/addToArea()
@@ -121,7 +121,7 @@
 	for(var/dir in GLOB.cardinal)
 		var/turf/T = get_step(usr, dir)
 		oldArea = get_area(T)
-		if(oldArea && !oldArea.apc && oldArea != A && !istype(oldArea, /area/turbolift))
+		if(oldArea && !oldArea.apc && !oldArea.aro && oldArea != A && !istype(oldArea, /area/turbolift))
 			turfs["[dir2text(dir)]"] = T
 	var/turf/T = turfs[input("Choose turf to merge into [A.name]", "Area") as null|anything in turfs]
 	if(!T)
@@ -141,7 +141,7 @@
 	var/list/areas = list()
 	for(var/dir in GLOB.cardinal)
 		var/area/selectedArea = get_area(get_step(usr, dir))
-		if(selectedArea && !selectedArea.apc && selectedArea != A && !istype(selectedArea, /area/turbolift))
+		if(selectedArea && !selectedArea.apc && !selectedArea.aro && selectedArea != A && !istype(selectedArea, /area/turbolift))
 			if(includeSpace || !isspace(selectedArea))
 				areas.Add(selectedArea)
 
@@ -149,11 +149,12 @@
 
 /obj/item/blueprints/proc/deleteArea()
 	var/area/A = get_area(usr)
-	if (isspace(A) || A.apc)	// Let's just check this one last time, just in case
+	if (isspace(A) || A.apc || A.aro)	// Let's just check this one last time, just in case
 		interact()
 		return
-	var/area/newArea = locate(world.area)
+	var/area/newArea = locate(/area/space)
 	newArea.contents.Add(A.contents)
+	sleep(20)
 	A.contents.Cut()
 	qdel(A)
 	to_chat(usr, "<span class='notice'>You scrub [A.name] off the blueprint.</span>")
@@ -215,11 +216,14 @@
 /obj/item/blueprints/proc/detectRoom(var/turf/first)
 	var/list/turf/found = new
 	var/list/turf/pending = list(first)
+	var/list/turf/rejected = list()
 	while(pending.len)
-	//	if (found.len+pending.len > 300)
-	//		return ROOM_ERR_TOOLARGE
+		if (found.len+pending.len > 1000)
+			return ROOM_ERR_TOOLARGE
 		var/turf/T = pending[1] //why byond havent list::pop()?
 		pending -= T
+		if(T in rejected) continue
+		if(T in found) continue
 		for (var/dir in GLOB.cardinal)
 			var/skip = 0
 			for (var/obj/structure/window/W in T)
@@ -240,7 +244,7 @@
 				if(BORDER_NONE)
 					pending+=NT
 				if(BORDER_BETWEEN)
-					//do nothing, may be later i'll add 'rejected' list as optimization
+					rejected +=NT//do nothing, may be later i'll add 'rejected' list as optimization
 				if(BORDER_2NDTILE)
 					found+=NT //tile included to new area, but we dont seek more
 				if(BORDER_SPACE)

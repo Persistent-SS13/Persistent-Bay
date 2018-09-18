@@ -4,7 +4,7 @@ Small, little HP, poisonous.
 
 /mob/living/simple_animal/hostile/voxslug
 	name = "glutslug"
-	desc = "A viscious little creature, it has a mouth of razors and a it writhes like mad it can sense blood."
+	desc = "A viscious little creature, its teeth are razor sharp."
 	icon_state = "voxslug"
 	icon_living = "voxslug"
 	item_state = "voxslug"
@@ -12,50 +12,57 @@ Small, little HP, poisonous.
 	response_help  = "pets"
 	response_disarm = "gently pushes aside"
 	response_harm   = "stamps on"
-	destroy_surroundings = 0
-	health = 6
-	maxHealth = 6
-	speed = 2 // May return back to 3, we'll see if 2 is enough.
-	move_to_delay = 0
+	destroy_surroundings = 1
+	health = 20
+	maxHealth = 20
+	speed = 10 // May return back to 3, we'll see if 2 is enough.
+	move_to_delay = 10
 	density = 0
 	mob_size = MOB_MINISCULE
 	pass_flags = PASSTABLE
 	holder_type = /obj/item/weapon/holder/voxslug
 
-	melee_damage_lower = 3
-	melee_damage_upper = 7
+	melee_damage_lower = 5
+	melee_damage_upper = 10
 	attacktext = "bitten"
 	attack_sound = 'sound/weapons/bite.ogg'
 
 	min_gas = null // Immune to space
 	max_gas = null
 	minbodytemp = 0
-
+	
 	faction = "asteroid"
 
+	should_save = 0
+	
+	var/starting_zlevel = 0
+	var/inited = 0
+	
+/mob/living/simple_animal/hostile/voxslug/New()
+	..()
+	starting_zlevel = z
+	inited = 1
 /mob/living/simple_animal/hostile/voxslug/Move()
 	. = ..()
 	if(.)
 		pixel_x = rand(-10,10)
 		pixel_y = rand(-10,10)
-/mob/living/simple_animal/hostile/voxslug/ListTargets(var/dist = 7)
-	var/list/L = list()
-	for(var/a in hearers(src, dist))
-	//	if(istype(a,/mob/living/carbon/human))
-		//	var/mob/living/carbon/human/H = a
-		//	if(H.species.get_bodytype() == SPECIES_VOX)
-		//		continue
-		if(isliving(a))
-			var/mob/living/M = a
-			if(M.faction == faction)
-				continue
-		L += a
-
-	for (var/obj/mecha/M in mechas_list)
-		if (M.z == src.z && get_dist(src, M) <= dist)
-			L += M
-
-	return L
+		if(inited && starting_zlevel != z)
+			loc = null
+			qdel(src)
+			
+/mob/living/simple_animal/hostile/voxslug/Found(var/atom/A)
+	if(istype(A, /obj/machinery/mining/drill))
+		var/obj/machinery/mining/drill/drill = A
+		if(!drill.stat)
+			stance = HOSTILE_STANCE_ATTACK
+			return A
+	if(istype(A, /obj/structure/ore_box))
+		stance = HOSTILE_STANCE_ATTACK
+		return A
+	if(istype(A, /obj/item/weapon/ore))	
+		stance = HOSTILE_STANCE_ATTACK
+		return A
 
 /mob/living/simple_animal/hostile/voxslug/Allow_Spacemove(var/check_drift = 0)
 	return 1 // Ripped from space carp, no more floating
@@ -78,7 +85,7 @@ Small, little HP, poisonous.
 	. = ..()
 	if(istype(., /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = .
-		if(prob(H.getBruteLoss()/4))
+		if(H.getBruteLoss() > 30 && prob(H.getBruteLoss()/4))
 			attach(H)
 
 /mob/living/simple_animal/hostile/voxslug/Life()

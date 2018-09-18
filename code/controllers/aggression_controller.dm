@@ -611,7 +611,7 @@ var/datum/controller/aggression_controller/aggression_controller
 		sectors |= sector
 		sectors_by_zlevel["[i*2]"] = sector
 		sectors_by_zlevel["[i*2-1]"] = sector
-//	START_PROCESSING(SSprocessing, src)
+	START_PROCESSING(SSprocessing, src)
 
 /datum/controller/aggression_controller/Destroy()
 	STOP_PROCESSING(SSprocessing, src)

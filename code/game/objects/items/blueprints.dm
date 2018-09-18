@@ -152,11 +152,14 @@
 	if (isspace(A) || A.apc)	// Let's just check this one last time, just in case
 		interact()
 		return
-	var/area/newArea = locate(/area/space)
-	newArea.contents.Add(A.contents)
-	sleep(20)
-	A.contents.Cut()
-	qdel(A)
+	var/area/newArea = locate(world.area)
+	if(newArea)
+ 		for(var/turf/T in A.contents)
+			newArea.contents.Add(T)
+		A.contents.Cut()
+		qdel(A)
+	else
+		message_admins("blueprints area not found!")
 	to_chat(usr, "<span class='notice'>You scrub [A.name] off the blueprint.</span>")
 	log_and_message_admins("deleted area [A.name] via station blueprints.")
 	interact()

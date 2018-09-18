@@ -322,8 +322,8 @@
 
 			//spawn the stuff, finish generating the manifest while you're at it
 			if(A.req_access.len)
-			//	SP.access.len
-				A.req_access = list(core_access_order_approval)
+			//
+				A.req_access = list(SP.access)
 
 			var/list/spawned = SP.spawn_contents(A)
 			if(slip)

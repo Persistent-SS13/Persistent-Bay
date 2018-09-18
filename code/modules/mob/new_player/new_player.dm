@@ -222,10 +222,10 @@
 	if(character.spawn_type == 1)
 		var/datum/world_faction/faction = get_faction(character.spawn_loc)
 		var/assignmentSpawnLocation = faction?.get_assignment(faction?.get_record(character.real_name)?.assignment_uid)?.cryo_net
-		if (spawnLocation == "Last Known Cryonet")
+		if (assignmentSpawnLocation == "Last Known Cryonet")
 			// The character's assignment is set to spawn in their last cryo location
 			// Do nothing, leave it the way it is.
-		else if (spawnLocation)
+		else if (assignmentSpawnLocation)
 			// The character has a special cryo network set to override their normal spawn location
 			character.spawn_loc_2 = assignmentSpawnLocation
 		else

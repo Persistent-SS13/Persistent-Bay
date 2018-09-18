@@ -191,7 +191,6 @@
 					/obj/item/clothing/accessory/holster/waist,
 					/obj/item/weapon/storage/belt/security,
 					/obj/item/weapon/storage/backpack/satchel_sec,
-					/obj/item/weapon/gun/energy/gun,
 					/obj/item/weapon/melee/telebaton,
 					/obj/item/weapon/cell,
 					/obj/item/weapon/handcuffs,
@@ -202,7 +201,7 @@
 					/obj/item/device/flash,
 					/obj/item/device/pda/heads/hos,
 					/obj/item/device/radio/headset/heads/hos)
-	cost = 115
+	cost = 100
 	containertype = /obj/structure/closet/secure_closet/hos
 	containername = "security corporal equipment"
 	access = core_access_security_programs
@@ -222,12 +221,11 @@
 					/obj/item/weapon/storage/box/holobadge,
 					/obj/item/weapon/reagent_containers/spray/pepper,
 					/obj/item/weapon/melee/baton/loaded,
-					/obj/item/weapon/gun/energy/gun,
 					/obj/item/weapon/stamp/ward,
 					/obj/item/taperoll/police,
 					/obj/item/device/holowarrant,
 					/obj/item/device/radio/headset/headset_sec)
-	cost = 65
+	cost = 50
 	containertype = /obj/structure/closet/secure_closet/warden
 	access = core_access_security_programs
 
@@ -707,12 +705,9 @@
 	contains = list(/obj/item/clothing/under/soviet,
 					/obj/item/clothing/suit/hgpirate,
 					/obj/item/clothing/head/hgpiratecap,
-					/obj/item/clothing/gloves/thick/combat,
-					/obj/item/clothing/glasses/thermal/plain/eyepatch,
-					/obj/item/clothing/shoes/combat,
-					/obj/item/weapon/gun/projectile/revolver/mateba,
-					/obj/item/device/radio/headset/heads/captain)
-	cost = 65
+					/obj/item/clothing/gloves/thick,
+					/obj/item/clothing/shoes/jackboots)
+	cost = 50
 	containertype = /obj/structure/closet/secure_closet
 	containername = "russian admiral equipment"
 	access = core_access_leader

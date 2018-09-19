@@ -88,6 +88,8 @@ So, hopefully this is helpful if any more icons are to be added/changed/wonderin
 	..()
 	return
 
+/obj/structure/particle_accelerator/AltClick()
+	rotate()
 
 /obj/structure/particle_accelerator/verb/rotate()
 	set name = "Rotate Clockwise"
@@ -267,6 +269,8 @@ So, hopefully this is helpful if any more icons are to be added/changed/wonderin
 	var/strength = 0
 	var/desc_holder = null
 
+/obj/machinery/particle_accelerator/AltClick()
+	rotate()
 
 /obj/machinery/particle_accelerator/verb/rotate()
 	set name = "Rotate Clockwise"

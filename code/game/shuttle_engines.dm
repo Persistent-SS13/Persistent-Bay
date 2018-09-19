@@ -138,6 +138,8 @@
 		return
 	..()
 
+/obj/machinery/shuttleengine/AltClick()
+	rotate()
 /obj/machinery/shuttleengine/verb/rotate()
 	set name = "Rotate Clockwise"
 	set category = "Object"

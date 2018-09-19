@@ -5,6 +5,8 @@
 	icon_state = "chiefengineer"
 	item_state = "g_suit"
 	worn_state = "chief"
+	heat_protection = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	max_heat_protection_temperature = 1000
 	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 10)
 
 /obj/item/clothing/under/rank/atmospheric_technician
@@ -13,6 +15,8 @@
 	icon_state = "atmos"
 	item_state = "atmos_suit"
 	worn_state = "atmos"
+	heat_protection = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	max_heat_protection_temperature = 1000
 
 /obj/item/clothing/under/rank/engineer
 	desc = "It's an orange high visibility jumpsuit worn by engineers. It has minor radiation shielding."
@@ -20,6 +24,8 @@
 	icon_state = "engine"
 	item_state = "engi_suit"
 	worn_state = "engine"
+	heat_protection = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	max_heat_protection_temperature = 800
 	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 10)
 
 /obj/item/clothing/under/rank/roboticist

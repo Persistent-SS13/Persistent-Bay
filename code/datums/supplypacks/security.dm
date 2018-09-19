@@ -192,6 +192,12 @@
 	cost = 20
 	containername = "\improper brig uniform supply crate"
 
+/decl/hierarchy/supply_pack/security/holowarrants
+	name = "Holowarrant Projectors"
+	contains = list(/obj/item/device/holowarrant = 4)
+	cost = 50
+	containername = "\improper holowarrant supply crate"
+
 /decl/hierarchy/supply_pack/security/forensics
 	name = "Forensics Kit"
 	contains = list(/obj/item/weapon/storage/box/evidence = 2,

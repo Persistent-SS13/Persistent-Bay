@@ -59,6 +59,9 @@
 
 #define INJECTOR				52
 
+#define PIPE_DRAIN				53
+#define PIPE_ARO        		54
+
 #define CONNECT_TYPE_REGULAR	1
 #define CONNECT_TYPE_SUPPLY		2
 #define CONNECT_TYPE_SCRUBBER	4

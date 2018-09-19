@@ -236,7 +236,7 @@ obj/structure/windoor_assembly/Destroy()
 								windoor.req_one_access = src.electronics.conf_access
 							else
 								windoor.req_access = src.electronics.conf_access
-							
+
 							windoor.electronics = src.electronics
 							src.electronics.loc = windoor
 							windoor.req_access_faction = electronics.req_access_faction
@@ -271,6 +271,9 @@ obj/structure/windoor_assembly/Destroy()
 
 
 //Rotates the windoor assembly clockwise
+/obj/structure/windoor_assembly/AltClick()
+	revrotate()
+
 /obj/structure/windoor_assembly/verb/revrotate()
 	set name = "Rotate Windoor Assembly"
 	set category = "Object"

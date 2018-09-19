@@ -474,6 +474,9 @@
 	connected.check_supports()
 	connected = null
 
+/obj/machinery/mining/brace/AltClick()
+	rotate()
+
 /obj/machinery/mining/brace/verb/rotate()
 	set name = "Rotate"
 	set category = "Object"

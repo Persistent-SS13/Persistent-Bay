@@ -319,6 +319,8 @@ Buildable meters
 		return ..()
 
 // rotate the pipe item clockwise
+/obj/item/pipe/AltClick()
+	rotate()
 
 /obj/item/pipe/verb/rotate()
 	set category = "Object"

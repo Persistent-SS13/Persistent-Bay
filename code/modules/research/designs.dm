@@ -864,8 +864,8 @@ other types of metals and chemistry for reagents).
 	desc = "A kit of dangerous, high-tech equipment with changeable looks."
 	id = "chameleon"
 	req_tech = list(TECH_ILLEGAL = 2)
-	materials = list(DEFAULT_WALL_MATERIAL = 500, "diamond" = 300, "gold" = 200, "phoron" = 10000)
-	build_path = /obj/item/weapon/storage/box/syndie_kit/chameleon
+	materials = list(DEFAULT_WALL_MATERIAL = 5000, "diamond" = 4000, "gold" = 4000, "phoron" = 20000)
+	build_path = /obj/item/weapon/storage/backpack/chameleon/sydie_kit
 	sort_string = "VASBA"
 /datum/design/item/chameleon_gun
 	name = "Holographic Gun"

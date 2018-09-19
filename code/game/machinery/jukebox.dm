@@ -3,17 +3,19 @@
 datum/track
 	var/title
 	var/sound
+	var/genre
 
-datum/track/New(var/title_name, var/audio)
+datum/track/New(var/title_name, var/audio, var/genre_name)
 	title = title_name
 	sound = audio
+	genre = genre_name
 
 /obj/machinery/media/jukebox
 	name = "space jukebox"
 	icon = 'icons/obj/jukebox.dmi'
 	icon_state = "jukebox2-nopower"
 	var/state_base = "jukebox2"
-	anchored = 1
+	anchored = 0
 	density = 1
 	power_channel = EQUIP
 	use_power = 1
@@ -28,16 +30,25 @@ datum/track/New(var/title_name, var/audio)
 	var/datum/sound_token/sound_token
 
 	var/datum/track/current_track
-	var/list/datum/track/tracks = list(
-		new/datum/track("Beyond", 'sound/ambience/ambispace.ogg'),
-		new/datum/track("Clouds of Fire", 'sound/music/clouds.s3m'),
-		new/datum/track("D`Bert", 'sound/music/title2.ogg'),
-		new/datum/track("D`Fort", 'sound/ambience/song_game.ogg'),
-		new/datum/track("Floating", 'sound/music/main.ogg'),
-		new/datum/track("Endless Space", 'sound/music/space.ogg'),
-		new/datum/track("Part A", 'sound/misc/TestLoop1.ogg'),
-		new/datum/track("Scratch", 'sound/music/title1.ogg'),
-		new/datum/track("Trai`Tor", 'sound/music/traitor.ogg'),
+	var/list/datum/track/tracks = list(		
+		new/datum/track("Beyond", 'sound/ambience/ambispace.ogg', "SS13"),
+		new/datum/track("Clouds of Fire", 'sound/music/clouds.s3m', "SS13"),
+		new/datum/track("D`Bert", 'sound/music/title2.ogg', "SS13"),
+		new/datum/track("D`Fort", 'sound/ambience/song_game.ogg', "SS13"),
+		new/datum/track("Floating", 'sound/music/main.ogg', "SS13"),
+		new/datum/track("Endless Space", 'sound/music/space.ogg', "SS13"),
+		new/datum/track("Part A", 'sound/misc/TestLoop1.ogg', "SS13"),
+		new/datum/track("Scratch", 'sound/music/title1.ogg', "SS13"),
+		new/datum/track("Trai`Tor", 'sound/music/traitor.ogg', "SS13"),
+		new/datum/track("A Little Bit", 'sound/music/jukebox/A Little Bit.ogg', "SS13"),
+		new/datum/track("Astrogenesis", 'sound/music/jukebox/Astrogenesis.ogg', "Cyberpunk"),
+		new/datum/track("Decay", 'sound/music/jukebox/Decay.ogg', "Cyberpunk"),
+		new/datum/track("Drunk", 'sound/music/jukebox/Drunk.ogg', "Cyberpunk"),
+		new/datum/track("Half Moon", 'sound/music/jukebox/Half Moon.ogg', "Cyberpunk"),
+		new/datum/track("Metropolis", 'sound/music/jukebox/Metropolis.ogg', "Cyberpunk"),
+		new/datum/track("Midnight Market", 'sound/music/jukebox/Midnight Market.ogg', "Cyberpunk"),
+		new/datum/track("Native", 'sound/music/jukebox/Native.ogg', "Cyberpunk"),
+		new/datum/track("When I'm Gone", "sound/music/jukebox/When I'm Gone.ogg", "Cyberpunk"),
 	)
 
 /obj/machinery/media/jukebox/New()
@@ -95,14 +106,22 @@ datum/track/New(var/title_name, var/audio)
 		ui.open()
 
 /obj/machinery/media/jukebox/ui_data()
-	var/list/juke_tracks = new
+
+	var/list/tracks_ss13 = new
 	for(var/datum/track/T in tracks)
-		juke_tracks.Add(T.title)
+		if (T.genre == "SS13")
+			tracks_ss13.Add(T.title)
+
+	var/list/tracks_cyberpunk = new
+	for(var/datum/track/T in tracks)
+		if (T.genre == "cyberpunk")
+			tracks_cyberpunk.Add(T.title)
 
 	var/list/data = list(
 		"current_track" = current_track != null ? current_track.title : "No track selected",
 		"playing" = playing,
-		"tracks" = juke_tracks,
+		"tracks_ss13" = tracks_ss13,
+		"tracks_cyberpunk" = tracks_cyberpunk,
 		"volume" = volume
 	)
 
@@ -209,6 +228,6 @@ datum/track/New(var/title_name, var/audio)
 	update_icon()
 
 /obj/machinery/media/jukebox/proc/AdjustVolume(var/new_volume)
-	volume = Clamp(new_volume, 0, 50)
+	volume = Clamp(new_volume, 0, 100)
 	if(sound_token)
 		sound_token.SetVolume(volume)

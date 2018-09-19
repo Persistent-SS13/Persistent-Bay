@@ -2018,6 +2018,7 @@
 #include "code\modules\organs\internal\stack.dm"
 #include "code\modules\organs\internal\voicebox.dm"
 #include "code\modules\organs\subtypes\phorosian.dm"
+#include "code\modules\organs\subtypes\skrell.dm"
 #include "code\modules\overmap\_defines.dm"
 #include "code\modules\overmap\overmap_shuttle.dm"
 #include "code\modules\overmap\sectors.dm"

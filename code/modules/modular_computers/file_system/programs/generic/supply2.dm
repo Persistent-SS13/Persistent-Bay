@@ -270,7 +270,7 @@
 			telepad.connected_faction = null
 			telepad.req_access_faction = null
 			revoked += 1
-		to_chat("Revoked network connection for " + revoked + " telepads.")
+		to_chat(usr, "Revoked network connection for " + revoked + " telepads.")
 	if(href_list["launch_export"])
 		if(!check_access(core_access_invoicing))
 			to_chat(usr, "Access Denied.")

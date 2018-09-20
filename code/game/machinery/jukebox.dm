@@ -92,7 +92,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 		to_chat(usr, "\The [src] doesn't appear to function.")
 		return
 
-	tg_ui_interact(user)
+	ui_interact(user)
 
 /obj/machinery/media/jukebox/ui_status(mob/user, datum/ui_state/state)
 	if(!anchored || inoperable())

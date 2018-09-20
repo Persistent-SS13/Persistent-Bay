@@ -350,7 +350,7 @@ var/list/organ_cache = list()
 		if (INFECTION_LEVEL_THREE to INFINITY)
 			. +=  "Septic"
 	if(rejecting)
-		. += "Genetic Rejection"
+		. += "Organ Rejection"
 
 /obj/item/organ/proc/isrobotic()
 	return robotic >= ORGAN_ROBOT

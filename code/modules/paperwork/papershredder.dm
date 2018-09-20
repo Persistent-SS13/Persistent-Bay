@@ -6,14 +6,15 @@
 	density = 1
 	anchored = 1
 	flags = OBJ_ANCHORABLE|OBJ_CLIMBABLE
-	var/max_paper = 10
+	var/max_paper = 20
 	var/paperamount = 0
 	var/list/shred_amounts = list(
 		/obj/item/weapon/photo = 1,
 		/obj/item/weapon/shreddedp = 1,
 		/obj/item/weapon/paper = 1,
 		/obj/item/weapon/newspaper = 3,
-		/obj/item/weapon/card/id = 3,
+		/obj/item/weapon/card/id = 1,
+		/obj/item/weapon/card/expense = 1,
 		/obj/item/weapon/paper_bundle = 3,
 		)
 

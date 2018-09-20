@@ -46,7 +46,7 @@
 				to_chat(user, "<span class='notice'>You dismantle \the [src].</span>")
 				dismantle()
 				return
-			if(Wrench(W, user, null, "You start to disassemble \the [src]"))
+			if(!anchored && Wrench(W, user, null, "You start to disassemble \the [src]"))
 				to_chat(user, "<span class='notice'>You disassemble \the [src] into parts.</span>")
 				new /obj/item/girderpart(get_turf(src), material)
 				qdel(src)

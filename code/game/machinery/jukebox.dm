@@ -30,7 +30,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 	var/datum/sound_token/sound_token
 
 	var/datum/track/current_track
-	var/list/datum/track/tracks = list(		
+	var/list/datum/track/tracks = list(
 		new/datum/track("Beyond", 'sound/ambience/ambispace.ogg', "SS13"),
 		new/datum/track("Clouds of Fire", 'sound/music/clouds.s3m', "SS13"),
 		new/datum/track("D`Bert", 'sound/music/title2.ogg', "SS13"),
@@ -102,22 +102,23 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 /obj/machinery/media/jukebox/ui_interact(mob/user, ui_key = "jukebox", var/datum/nanoui/ui = null, var/force_open = 1)
 	var/title = "RetroBox - Space Style"
 	var/data[0]
- 	if(!(stat & (NOPOWER|BROKEN)))
+	if(!(stat & (NOPOWER|BROKEN)))
 		data["current_track"] = current_track != null ? current_track.title : ""
 		data["playing"] = playing
-
- 		var/list/tracks_ss13 = new
+		var/list/tracks_ss13 = list()
 		for(var/datum/track/T in tracks)
-			tracks_ss13[++tracks_ss13.len] = list("track" = T.title)
+			if(T.genre == "SS13")
+				tracks_ss13[++tracks_ss13.len] = list("track" = T.title)
  		data["tracks_ss13"] = tracks_ss13
 
- 		var/list/tracks_cyberpunk = new
+		var/list/tracks_cyberpunk = list()
 		for(var/datum/track/T in tracks)
-			tracks_cyberpunk[++tracks_cyberpunk.len] = list("track" = T.title)
- 		data["tracks_cyberpunk"] = tracks_cyberpunk
+			if(T.genre == "Cyberpunk")
+				tracks_cyberpunk[++tracks_cyberpunk.len] = list("track" = T.title)
+		data["tracks_cyberpunk"] = tracks_cyberpunk
 
  	// update the ui if it exists, returns null if no ui is passed/found
-	ui = nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		// the ui does not exist, so we'll create a new() one
         // for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm

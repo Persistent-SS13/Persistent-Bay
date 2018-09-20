@@ -145,9 +145,9 @@ GLOBAL_LIST_EMPTY(all_business)
 	if(required_cash)
 		var/datum/transaction/T = new("[pay_to] (via digital contract)", purpose, -required_cash, "Digital Contract")
 		signed_account.do_transaction(T)
-	signed_account.reserved -= required_cash
-	if(signed_account.reserved < 0)
-		signed_account.reserved = 0
+		signed_account.reserved -= required_cash
+		if(signed_account.reserved < 0)
+			signed_account.reserved = 0
 	approved = 1
 	update_icon()
 	return 1
@@ -520,7 +520,10 @@ GLOBAL_LIST_EMPTY(all_business)
 
 /proc/get_faction_tag(var/name)
 	var/datum/world_faction/fac = get_faction(name)
-	return fac.short_tag
+	if(fac)
+		return fac.short_tag
+	else
+		return "BROKE"
 
 /datum/world_faction
 	var/name = "" // can be safely changed

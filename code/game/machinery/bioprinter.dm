@@ -133,8 +133,8 @@
 	stored_matter = max_stored_matter
 
 /obj/machinery/organ_printer/robot/dismantle()
-	if(stored_matter >= matter_amount_per_sheet)
-		new /obj/item/stack/material/osc(get_turf(src), Floor(stored_matter/matter_amount_per_sheet))
+//	if(stored_matter >= matter_amount_per_sheet)
+	//	new /obj/item/stack/material/oc(get_turf(src), Floor(stored_matter/matter_amount_per_sheet))
 	return ..()
 
 /obj/machinery/organ_printer/robot/New()

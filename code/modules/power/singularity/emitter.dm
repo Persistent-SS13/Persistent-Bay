@@ -35,6 +35,8 @@
 	anchored = 1
 	state = 2
 
+/obj/machinery/power/emitter/AltClick()
+	rotate()
 /obj/machinery/power/emitter/verb/rotate()
 	set name = "Rotate"
 	set category = "Object"

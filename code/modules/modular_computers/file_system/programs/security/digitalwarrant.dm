@@ -73,7 +73,7 @@ LEGACY_RECORD_STRUCTURE(all_warrants, warrant)
 				activewarrant = W
 				break
 
-	// The following actions will only be possible if the user has an ID with security access equipped. This is in line with modular computer framework's authentication methods,
+	// The following actions will only be possible if the user has an ID with command access equipped. This is in line with modular computer framework's authentication methods,
 	// which also use RFID scanning to allow or disallow access to some functions. Anyone can view warrants, editing requires ID. This also prevents situations where you show a tablet
 	// to someone who is to be arrested, which allows them to change the stuff there.
 
@@ -81,9 +81,12 @@ LEGACY_RECORD_STRUCTURE(all_warrants, warrant)
 	if(!istype(user))
 		return
 	var/obj/item/weapon/card/id/I = user.GetIdCard()
-	if(!istype(I) || !I.registered_name || !(core_access_security_programs in I.access))
-		to_chat(user, "Authentication error: Unable to locate ID with apropriate access to allow this operation.")
+	if(I && ((core_access_command_programs || core_access_security_programs) in I.access))
+		to_chat(user, "Authentication successful. Select this warrant on a holoprojector and swipe the authorizer's ID.")
+	else 
+		to_chat(user, "Authentication error: only Security or Command personnel may request warrants.")
 		return
+
 
 	if(href_list["sendtoarchive"])
 		. = 1

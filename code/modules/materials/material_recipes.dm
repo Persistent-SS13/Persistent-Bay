@@ -32,7 +32,7 @@
 
 /material/steel/generate_recipes()
 	..()
-	recipes += new/datum/stack_recipe("wall girders", /obj/structure/girder, 4, time = 50, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("wall girders", /obj/structure/girder, 6, time = 50, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("metal rod", /obj/item/stack/rods, 1, 2, 60)
 	recipes += new/datum/stack_recipe("regular floor tile", /obj/item/stack/tile/floor, 1, 4, 20)
 	recipes += new/datum/stack_recipe("machine frame", /obj/machinery/constructable_frame/machine_frame, 5, time = 25, one_per_turf = 1, on_floor = 1)
@@ -116,7 +116,6 @@
 	recipes += new/datum/stack_recipe("canister", /obj/machinery/portable_atmospherics/canister, 10, time = 15, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("cannon frame", /obj/item/weapon/cannonframe, 10, time = 15, one_per_turf = 0, on_floor = 0)
 	recipes += new/datum/stack_recipe("meat spike frame", /obj/structure/kitchenspike_frame, 4, time = 40, one_per_turf = 1, on_floor = 1)
-	recipes += new/datum/stack_recipe("drain", /obj/machinery/drain/, 2, time = 40, one_per_turf = 1, on_floor = 1)
 
 /material/plasteel/generate_recipes()
 	..()
@@ -200,8 +199,9 @@
 	recipes += new/datum/stack_recipe("stick", /obj/item/weapon/material/stick, 1)
 	recipes += new/datum/stack_recipe("dog bed", /obj/structure/dogbed, 2)
 	recipes += new/datum/stack_recipe("wooden Saloon Door", /obj/machinery/door/unpowered/simple/wood/saloon, 10, time = 10, one_per_turf = 1, on_floor = 1)
-	recipes += new/datum/stack_recipe("Gavel Hammer", /obj/item/gavelhammer, 2, time = 5)
-	recipes += new/datum/stack_recipe("Gavel Block", /obj/item/gavelblock, 2, time = 3)
+	recipes += new/datum/stack_recipe("gavel hammer", /obj/item/gavelhammer, 2, time = 5)
+	recipes += new/datum/stack_recipe("gavel block", /obj/item/gavelblock, 2, time = 3)
+	recipes += new/datum/stack_recipe("rolling pin", /obj/item/weapon/material/kitchen/rollingpin, 2, time = 5)
 
 
 /material/cardboard/generate_recipes()

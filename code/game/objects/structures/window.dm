@@ -266,6 +266,8 @@
 	take_damage(damage)
 	return
 
+/obj/structure/window/AltClick()
+	rotate()
 
 /obj/structure/window/proc/rotate()
 	set name = "Rotate Window Counter-Clockwise"

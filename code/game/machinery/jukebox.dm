@@ -99,33 +99,33 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 		return UI_CLOSE
 	return ..()
 
-/obj/machinery/media/jukebox/tg_ui_interact(mob/user, ui_key = "main", datum/tgui/ui = null, force_open = 0, datum/tgui/master_ui = null, datum/ui_state/state = tg_default_state)
-	ui = tgui_process.try_update_ui(user, src, ui_key, ui, force_open)
-	if(!ui)
-		ui = new(user, src, ui_key, "jukebox", "RetroBox - Space Style", 340, 440, master_ui, state)
-		ui.open()
+/obj/machinery/media/jukebox/ui_interact(mob/user, ui_key = "jukebox", var/datum/nanoui/ui = null, var/force_open = 1)
+	var/title = "RetroBox - Space Style"
+	var/data[0]
+ 	if(!(stat & (NOPOWER|BROKEN)))
+		data["current_track"] = current_track != null ? current_track.title : ""
+		data["playing"] = playing
 
-/obj/machinery/media/jukebox/ui_data()
+ 		var/list/tracks_ss13 = new
+		for(var/datum/track/T in tracks)
+			tracks_ss13[++tracks_ss13.len] = list("track" = T.title)
+ 		data["tracks_ss13"] = tracks_ss13
 
-	var/list/tracks_ss13 = new
-	for(var/datum/track/T in tracks)
-		if (T.genre == "SS13")
-			tracks_ss13.Add(T.title)
+ 		var/list/tracks_cyberpunk = new
+		for(var/datum/track/T in tracks)
+			tracks_cyberpunk[++tracks_cyberpunk.len] = list("track" = T.title)
+ 		data["tracks_cyberpunk"] = tracks_cyberpunk
 
-	var/list/tracks_cyberpunk = new
-	for(var/datum/track/T in tracks)
-		if (T.genre == "cyberpunk")
-			tracks_cyberpunk.Add(T.title)
+ 	// update the ui if it exists, returns null if no ui is passed/found
+	ui = nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	if (!ui)
+		// the ui does not exist, so we'll create a new() one
+        // for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
+		ui = new(user, src, ui_key, "jukebox.tmpl", title, 450, 600)
+		// when the ui is first opened this is the data it will use
+		ui.set_initial_data(data)
+		// open the new ui window
 
-	var/list/data = list(
-		"current_track" = current_track != null ? current_track.title : "No track selected",
-		"playing" = playing,
-		"tracks_ss13" = tracks_ss13,
-		"tracks_cyberpunk" = tracks_cyberpunk,
-		"volume" = volume
-	)
-
-	return data
 
 /obj/machinery/media/jukebox/ui_act(action, params)
 	if(..())

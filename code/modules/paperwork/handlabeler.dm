@@ -93,7 +93,12 @@
 
 		for(var/obj/Obj in world)
 			if(Obj.name && findtext(Obj.name, badlabel)) // If the bad label can be found
-				Obj.name = copytext(Obj.name, 1, findtext(Obj.name, "(")-1) // Remove the label
+				Obj.name = copytext(Obj.name, 1, findtext(Obj.name, "(")-1) // Remove the label from the object
+				i++
+
+		for(var/turf/T in world)
+			if(T.name && findtext(T.name, badlabel)) // If the bad label can be found
+				T.name = copytext(T.name, 1, findtext(T.name, "(")-1) // Remove the label from the turf
 				i++
 
 		log_admin("[key_name(user)] used the bluespace delabeler against the following: [badlabel] ([i] objects delabeled)")

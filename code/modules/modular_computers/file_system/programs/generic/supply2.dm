@@ -265,8 +265,8 @@
 			return 1
 		var/revoked = 0
 		for(var/obj/machinery/telepad_cargo/telepad in selected_telepads_revoke)
-			if(telepad.connected_faction)
-				telepad.connected_faction.cargo_telepads -= src
+			if(connected_faction)
+				connected_faction.cargo_telepads -= telepad
 			telepad.connected_faction = null
 			telepad.req_access_faction = null
 			revoked += 1

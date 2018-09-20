@@ -176,7 +176,7 @@ var/list/organ_cache = list()
 		return
 	if(dna)
 		if(!rejecting)
-			if(owner.blood_incompatible(dna.b_type, species))
+			if(owner.blood_incompatible(b_type, species))
 				rejecting = 1
 		else
 			rejecting++ //Rejection severity increases over time.
@@ -350,7 +350,7 @@ var/list/organ_cache = list()
 		if (INFECTION_LEVEL_THREE to INFINITY)
 			. +=  "Septic"
 	if(rejecting)
-		. += "Genetic Rejection"
+		. += "Organ Rejection"
 
 /obj/item/organ/proc/isrobotic()
 	return robotic >= ORGAN_ROBOT

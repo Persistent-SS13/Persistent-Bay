@@ -23,7 +23,7 @@
 	var/list/category_contents
 	var/emagged = FALSE	// TODO: Implement synchronisation with modular computer framework.
 	var/current_security_level
-	var/list/selected_telepads
+	var/list/selected_telepads = list()
 	var/list/selected_telepads_export = list()
 	var/list/selected_telepads_revoke = list()
 	var/curr_page = 1
@@ -162,6 +162,7 @@
 		return 1
 	if(href_list["toggle_telepad"])
 		var/obj/machinery/telepad_cargo/telepad = locate(href_list["toggle_telepad"])
+		if(!selected_telepads) selected_telepads = list()
 		if(telepad in selected_telepads)
 			selected_telepads -= telepad
 		else

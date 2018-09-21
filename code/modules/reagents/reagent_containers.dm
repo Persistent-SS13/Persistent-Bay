@@ -176,7 +176,7 @@
 	var/amount
 	var/amount_to_puddle
 	var/blocked = 100
-	if( prob(1/2) ) // adds 0.5% probability of splashing the solution while handling it. Should have other factors once there is skills
+	if( prob(5) ) // adds 10% probability of splashing the solution while handling it. Should have other factors once there is skills
 		var/targetPart = HANDS
 		var/havePart = 0
 		for(var/obj/item/clothing/C in user.get_equipped_items())
@@ -186,14 +186,12 @@
 				havePart = 1
 				blocked -= 100*C.permeability_coefficient
 				break
-		if (!havePart) blocked = 0 //sets to 0% of damage being blocked. Better get at least a rag to protect those hands
+		if (!havePart) blocked = 0 //sets to 0% of damage being blocked. Better get at least a rag to protect those feet
 		if (blocked < 100)
 			for(var/datum/reagent/current in reagents.reagent_list)
-				// random% will be considered to be touched on the hands.
-				//This is not the actual amount that is going to get spilled, its just for it to be more punishing without spilling too much
-				amount = current.volume*rand(0.40,0.75)
+				amount = current.volume*0.80 // 80% will be considered to be touched on the hands
 				current.touch_target(usr, amount, pick(BP_L_HAND, BP_R_HAND), blocked )
-			amount_to_puddle = round(amount_per_transfer_from_this*rand(0.10,0.45) ) //85% is spilled into the ground at the container's location
+			amount_to_puddle = round(amount_per_transfer_from_this*0.85) //85% is spilled into the ground at the container's location
 			reagents.create_puddle(user.loc, amount_to_puddle)
 
 	var/trans

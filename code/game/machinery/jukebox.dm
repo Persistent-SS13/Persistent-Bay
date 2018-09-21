@@ -147,58 +147,11 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 		StopPlaying()
 		GLOB.nanomanager.update_uis(src)
 	if(href_list["play"])
-		if(emagged)
-			emag_play()
-		else if(!current_track)
+		if(!current_track)
 			to_chat(usr, "No track selected.")
 		else
 			StartPlaying()
 		GLOB.nanomanager.update_uis(src)
-
-/obj/machinery/media/jukebox/ui_act(action, params)
-	if(..())
-		return TRUE
-	switch(action)
-		if("change_track")
-			for(var/datum/track/T in tracks)
-				if(T.title == params["title"])
-					current_track = T
-					StartPlaying()
-					break
-			. = TRUE
-		if("stop")
-			StopPlaying()
-			. = TRUE
-		if("play")
-			if(emagged)
-				emag_play()
-			else if(!current_track)
-				to_chat(usr, "No track selected.")
-			else
-				StartPlaying()
-			. = TRUE
-		if("volume")
-			AdjustVolume(text2num(params["level"]))
-			. = TRUE
-
-/obj/machinery/media/jukebox/proc/emag_play()
-	playsound(loc, 'sound/items/AirHorn.ogg', 100, 1)
-	for(var/mob/living/carbon/M in ohearers(6, src))
-		if(istype(M, /mob/living/carbon/human))
-			var/mob/living/carbon/human/H = M
-			if(istype(H.l_ear, /obj/item/clothing/ears/earmuffs) || istype(H.r_ear, /obj/item/clothing/ears/earmuffs))
-				continue
-		M.sleeping = 0
-		M.stuttering += 20
-		M.ear_deaf += 30
-		M.Weaken(3)
-		if(prob(30))
-			M.Stun(10)
-			M.Paralyse(4)
-		else
-			M.make_jittery(400)
-	spawn(15)
-		explode()
 
 /obj/machinery/media/jukebox/attack_ai(mob/user as mob)
 	return src.attack_hand(user)

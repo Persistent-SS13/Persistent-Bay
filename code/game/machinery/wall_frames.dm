@@ -81,7 +81,7 @@ var/refund_type = /obj/item/stack/material/plastic
 	icon_state = "bulb-construct-item"
 	refund_amt = 1
 	build_machine_type = /obj/machinery/light_construct/small
-
+/*
 /obj/item/frame/driver_button
 	name = "mass driver button frame"
 	desc = "Used for repairing or building mass driver buttons"
@@ -89,6 +89,7 @@ var/refund_type = /obj/item/stack/material/plastic
 	icon_state = "launcherbtt_frame"
 	refund_amt = 1
 //	build_machine_type =
+*/
 
 /obj/item/frame/light_switch
 	name = "light switch frame"
@@ -114,6 +115,17 @@ var/refund_type = /obj/item/stack/material/plastic
 	refund_amt = 2
 	refund_type = /obj/item/stack/material/cardboard
 	build_machine_type = /obj/structure/noticeboard
+
+/obj/item/frame/noticeboard/try_build(turf/on_wall)
+	if (get_dist(on_wall,usr)>1)
+		return
+	var/ndir = get_dir(usr,on_wall)
+	if (!(ndir in GLOB.cardinal))
+		return
+	var/turf/loc = get_turf(usr)
+
+	new /obj/structure/noticeboard(loc, 1, src, ndir)
+	qdel(src)
 
 /obj/item/frame/mirror
 	name = "Mirror Frame"
@@ -166,8 +178,14 @@ var/refund_type = /obj/item/stack/material/plastic
 	refund_amt = 2
 	build_machine_type = /obj/structure/sink/kitchen
 
+/obj/item/frame/newscaster
+	name = "News Caster Frame"
+	desc = "Used for building News Casters"
+	icon = 'icons/obj/watercloset.dmi'
+	icon_state = "sink_alt"
+	refund_amt = 2
+	build_machine_type = /obj/machinery/newscaster
 
-// /obj/machinery/newscaster
 // /obj/machinery/newscaster/security_unit
 
 /obj/item/frame/atm
@@ -176,16 +194,7 @@ var/refund_type = /obj/item/stack/material/plastic
 	icon = 'icons/obj/terminals.dmi'
 	icon_state = "atm_frame"
 	build_machine_type = /obj/machinery/atm
-	
-	
-/obj/item/frame/atm/try_build(turf/on_wall)
-	if (get_dist(on_wall,usr)>1)
-		return
-	var/ndir = get_dir(usr,on_wall)
-	if (!(ndir in GLOB.cardinal))
-		return
-	var/turf/loc = get_turf(usr)
-	
-	new /obj/machinery/atm(loc, 1, src, ndir)
-	qdel(src)
+
+
+
 

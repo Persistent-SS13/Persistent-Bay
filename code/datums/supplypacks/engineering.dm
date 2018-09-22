@@ -40,12 +40,18 @@
 /decl/hierarchy/supply_pack/engineering/electrical
 	name = "Electrical maintenance crate"
 	contains = list(/obj/item/weapon/storage/toolbox/electrical = 3,
-					/obj/item/clothing/gloves/insulated = 3,
-					/obj/item/weapon/cell = 4,
+					/obj/item/weapon/cell = 3,
 					/obj/item/device/flashlight = 3)
-	cost = 12
+	cost = 35
 	containername = "\improper Electrical maintenance crate"
 
+/decl/hierarchy/supply_pack/engineering/engineering_electrical
+	name = "Engineer - Electrical equipment"
+	contains = list(/obj/item/clothing/gloves/insulated = 1) // Pay for your captain's ID.
+	cost = 17
+	containertype = /obj/structure/closet/secure_closet/engineering_electrical
+	access = access_ce
+	
 /decl/hierarchy/supply_pack/engineering/mechanical
 	name = "Mechanical maintenance crate"
 	contains = list(/obj/item/weapon/storage/belt/utility/full = 3,

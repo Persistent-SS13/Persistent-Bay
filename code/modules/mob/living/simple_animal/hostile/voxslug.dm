@@ -22,8 +22,8 @@ Small, little HP, poisonous.
 	pass_flags = PASSTABLE
 	holder_type = /obj/item/weapon/holder/voxslug
 
-	melee_damage_lower = 5
-	melee_damage_upper = 10
+	melee_damage_lower = 3
+	melee_damage_upper = 6
 	attacktext = "bitten"
 	attack_sound = 'sound/weapons/bite.ogg'
 
@@ -54,7 +54,7 @@ Small, little HP, poisonous.
 /mob/living/simple_animal/hostile/voxslug/Found(var/atom/A)
 	if(istype(A, /obj/machinery/mining/drill))
 		var/obj/machinery/mining/drill/drill = A
-		if(!drill.stat)
+		if(!drill.statu)
 			stance = HOSTILE_STANCE_ATTACK
 			return A
 	if(istype(A, /obj/structure/ore_box))

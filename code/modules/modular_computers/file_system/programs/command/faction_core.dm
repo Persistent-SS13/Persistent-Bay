@@ -554,6 +554,7 @@
 					new_assignment.parent = selected_assignmentcategory
 					new_assignment.name = select_title
 					new_assignment.uid = select_name
+					new_assignment.cryo_net = "Last Known Cryonet"
 					selected_assignmentcategory.assignments |= new_assignment
 					to_chat(usr, "Assignment successfully created.")
 		if("create_assignment_two")
@@ -576,6 +577,7 @@
 					new_assignment.parent = selected_assignmentcategory2
 					new_assignment.name = select_title
 					new_assignment.uid = select_name
+					new_assignment.cryo_net = "Last Known Cryonet"
 					selected_assignmentcategory2.assignments |= new_assignment
 					to_chat(usr, "Assignment successfully created.")
 		if("edit_assignmentcategory")
@@ -781,6 +783,7 @@
 				connected_faction.cryo_networks -= choice
 		if("edit_assignment_cryonet")
 			var/list/choices = connected_faction.cryo_networks.Copy()
+			choices |= "Last Known Cryonet"
 			choices |= "default"
 			var/choice = input(usr,"Choose which cryo network the assignment should use.","Choose Cryo-net",null) as null|anything in choices
 			if(choice)

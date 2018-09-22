@@ -45,8 +45,8 @@
 					stored_materials[M.material.type] += M.amount
 					qdel(M)
 		for(var/M in stored_materials)
-			if(!processing && stored_materials[M] >= 4)
-				stored_materials[M] -= 4
+			if(!processing && stored_materials[M] >= 2)
+				stored_materials[M] -= 2
 				processing = 1
 				sleep(80)
 				flick("lathe_o", src)

@@ -35,8 +35,8 @@
 
 	if(istype(frame))
 
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -40 : 40)
-		pixel_y = (dir & 3)? (dir ==1 ? -40 : 40) : 0
+		pixel_x = (dir & 3)? 0 : (dir == 4 ? -64 : 32)
+		pixel_y = (dir & 3)? (dir ==1 ? -64 : 32) : 0
 		frame.transfer_fingerprints_to(src)
 
 	icon_state = pick(get_valid_states())

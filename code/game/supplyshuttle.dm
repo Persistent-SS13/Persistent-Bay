@@ -21,6 +21,32 @@ var/list/mechtoys = list(
 	/obj/item/toy/prize/phazon
 )
 
+
+var/list/valid_phoron_designs = list(
+	/datum/design/item/stock_part/super_capacitor,
+	/datum/design/item/stock_part/adv_capacitor,
+	/datum/design/item/stock_part/super_capacitor,
+	/datum/design/item/stock_part/nano_mani,
+	/datum/design/item/stock_part/pico_mani,
+	/datum/design/item/stock_part/adv_matter_bin,
+	/datum/design/item/stock_part/super_matter_bin,
+	/datum/design/item/stock_part/high_micro_laser,
+	/datum/design/item/stock_part/ultra_micro_laser,
+	/datum/design/item/stock_part/adv_sensor,
+	/datum/design/item/stock_part/phasic_sensor,
+	/datum/design/item/stock_part/RPED,
+	/datum/design/item/powercell/super,
+	/datum/design/item/powercell/hyper,
+	/datum/design/item/beaker/noreact,
+	/datum/design/item/beaker/bluespace,
+	/datum/design/item/scalpel_laser2,
+	/datum/design/item/scalpel_laser3,
+	/datum/design/item/scalpel_manager,
+	/datum/design/item/modularcomponent/logistic_processor,
+	/datum/design/item/jetpack
+)
+
+
 /obj/item/weapon/paper/manifest
 	name = "supply manifest"
 	var/is_copy = 1
@@ -262,7 +288,8 @@ var/list/point_source_descriptions = list(
 /datum/controller/supply/proc/generate_initial()
 	generate_export("manufacturing-basic")
 	generate_export("manufacturing-advanced")
-	generate_export("material")
+	generate_export("manufacturing-phoron")
+	generate_export("manufacturing-phoron")
 	generate_export("phoron")
 	generate_export("bluespace crystal")
 	generate_export("xenobiology")
@@ -292,14 +319,13 @@ var/list/point_source_descriptions = list(
 	switch(typee)
 		if("manufacturing-basic")
 			var/datum/autolathe/recipe/recipe = pick(autolathe_recipes)
-			var/per = rand(5,10)
+			var/per = rand(1,5)
 			if(recipe.is_stack)
 				export = new /datum/export_order/stack()
-				export.required = rand(100,250)
+				export.required = rand(50,150)
 			else
 				export = new()
-				export.required = rand(30, 100)
-				per += rand(5,10)
+				export.required = rand(25, 50)
 			for(var/x in recipe.resources)
 				per += round(recipe.resources[x]/800,0.01)
 			export.typepath = recipe.path
@@ -331,8 +357,8 @@ var/list/point_source_descriptions = list(
 							restart = 1
 							design = pick(possible_designs)
 					if(!restart) valid = 1
-			export.required = rand(30, 70)
-			var/per = rand(30,40)
+			export.required = rand(10, 50)
+			var/per = rand(5,10)
 			for(var/x in design.materials)
 				per += round(design.materials[x]/500,0.01)
 			for(var/x in design.req_tech)
@@ -348,7 +374,31 @@ var/list/point_source_descriptions = list(
 				export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each item."
 				all_exports |= export
 				return export
-
+		if("manufacturing-phoron")
+			export = new()
+			var/list/possible_designs = list()
+			for(var/D in valid_phoron_designs)
+				possible_designs += new D(src)
+			if(!possible_designs.len)
+				return
+			var/datum/design/design = pick(possible_designs)
+			export.required = rand(50, 100)
+			var/per = rand(10,30)
+			for(var/x in design.materials)
+				per += round(design.materials[x]/500,0.01)
+			for(var/x in design.req_tech)
+				per += design.req_tech[x]*5
+			export.typepath = design.build_path
+			export.rate = per
+			export.order_type = typee
+			export.id = exportnum
+			if(design.build_path)
+				var/obj/ob = new design.build_path()
+				export.typepath = ob.parent_type
+				export.parent_typepath = ob.parent_type
+				export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each item."
+				all_exports |= export
+				return export
 		if("cooking")
 			export = new()
 			var/list/possible_designs = list()
@@ -400,7 +450,7 @@ var/list/point_source_descriptions = list(
 		if("phoron")
 			export = new /datum/export_order/stack()
 			export.typepath = /obj/item/stack/material/phoron
-			export.rate = rand(60,100)
+			export.rate = rand(50,75)
 			export.order_type = typee
 			export.id = exportnum
 			export.required = rand(300, 500)
@@ -413,10 +463,10 @@ var/list/point_source_descriptions = list(
 		if("bluespace crystal")
 			export = new /datum/export_order/static()
 			export.typepath = /obj/item/bluespace_crystal
-			export.name = "Order for bluespace crystals. $$500 per crystal."
+			export.name = "Order for bluespace crystals. $$750 per crystal."
 			export.order_type = typee
 			export.id = exportnum
-			export.rate = 500
+			export.rate = 750
 			all_exports |= export
 			return export
 

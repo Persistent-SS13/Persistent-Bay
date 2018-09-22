@@ -1,6 +1,6 @@
 /obj/machinery/drain
-	name = "drain"
-	desc = "Guess we can lower the janitor's payroll ?"
+	name = "DEPRECATED DRAIN - DECONSTRUCT"
+	desc = "DEPRECATED - DECONSTRUCT IT. OBTAIN A NEW IMPROVED DRAIN ON PIPE DISPENSER."
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "drain"
 	layer = 2

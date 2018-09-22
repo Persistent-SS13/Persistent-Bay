@@ -146,7 +146,7 @@
 	contains = list(/obj/item/weapon/contraband/poster = 4)
 	cost = 4
 	containername = "\improper Posters crate"
-	
+
 /decl/hierarchy/supply_pack/hospitality/athletic
 	name = "Athletics Crate"
 	contains = list(/obj/item/clothing/under/shorts/blue,
@@ -159,3 +159,30 @@
 	cost = 10
 	containertype = /obj/structure/closet/athletic_mixed
 	containername = "\improper athletics crate"
+
+/decl/hierarchy/supply_pack/hospitality/jukebox
+	name = "Jukebox"
+	contains = list(/obj/machinery/media/jukebox)
+	cost = 200
+	containertype = /obj/structure/largecrate
+	containername = "\improper Jukebox Crate"
+
+/decl/hierarchy/supply_pack/hospitality/piano
+	name = "Piano Crate"
+	contains = list(/obj/structure/synthesized_instrument/synthesizer/piano = 1)
+	cost = 50
+	containername = "\improper Piano crate"
+
+
+/decl/hierarchy/supply_pack/hospitality/rguitar
+	name = "Regular Guitar Crate"
+	contains = list(/obj/item/device/synthesized_instrument/guitar = 1)
+	cost = 10
+	containername = "\improper Guitar crate"
+
+
+/decl/hierarchy/supply_pack/hospitality/eguitar
+	name = "Electric Guitar Crate"
+	contains = list(/obj/item/device/synthesized_instrument/guitar/multi = 1)
+	cost = 12
+	containername = "\improper Electric Guitar crate"

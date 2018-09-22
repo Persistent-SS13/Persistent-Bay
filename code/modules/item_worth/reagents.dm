@@ -52,7 +52,7 @@
 	value = 1
 
 /datum/reagent/radium
-	value = 50 //Radium is crazy expensive, like 100k+ per gram. So probably a bit less expensive in the future.
+	value = 1 //Radium is crazy expensive, like 100k+ per gram. So probably a bit less expensive in the future.
 
 /datum/reagent/acid
 	value = 0.2
@@ -528,7 +528,7 @@
 	value = 3
 
 /datum/reagent/toxin/phoron
-	value = 10
+	value = 4
 
 /datum/reagent/toxin/cyanide
 	value = 3.3

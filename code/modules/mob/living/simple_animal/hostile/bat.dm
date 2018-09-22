@@ -17,8 +17,8 @@
 	health = 20
 
 	harm_intent_damage = 8
-	melee_damage_lower = 10
-	melee_damage_upper = 25
+	melee_damage_lower = 4
+	melee_damage_upper = 12
 	attacktext = "bites"
 	attack_sound = 'sound/weapons/bite.ogg'
 
@@ -35,6 +35,9 @@
 	..()
 	if(istype(L))
 		owner = L
+
+/mob/living/simple_animal/hostile/scarybat/Allow_Spacemove(var/check_drift = 0)
+	return 1 // Ripped from space carp, no more floating
 
 /mob/living/simple_animal/hostile/scarybat/FindTarget()
 	. = ..()

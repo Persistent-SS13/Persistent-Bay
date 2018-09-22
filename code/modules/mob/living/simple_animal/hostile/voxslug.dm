@@ -54,7 +54,7 @@ Small, little HP, poisonous.
 /mob/living/simple_animal/hostile/voxslug/Found(var/atom/A)
 	if(istype(A, /obj/machinery/mining/drill))
 		var/obj/machinery/mining/drill/drill = A
-		if(!drill.stat)
+		if(!drill.statu)
 			stance = HOSTILE_STANCE_ATTACK
 			return A
 	if(istype(A, /obj/structure/ore_box))

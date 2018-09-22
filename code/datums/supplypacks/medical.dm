@@ -2,18 +2,6 @@
 	name = "Medical"
 	containertype = /obj/structure/closet/crate/medical
 
-/decl/hierarchy/supply_pack/medical/bpack
-	name = "Bandage Pack Crate"
-	contains = list(/obj/item/weapon/storage/box/bpack = 10)
-	cost = 15
-	containername = "Bandages (x10)"
-
-/decl/hierarchy/supply_pack/medical/traumakit
-	name = "Advance Trauma Kit Crate"
-	contains = list(/obj/item/weapon/storage/box/traumakit = 10)
-	cost = 30
-	containername = "Advance Trauma Kit (x10)"
-
 /decl/hierarchy/supply_pack/medical/bulkfirstaid
 	name = "Bulk Medkit Crate"
 	contains = list(/obj/item/weapon/storage/firstaid/regular = 10,

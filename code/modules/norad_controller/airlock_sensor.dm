@@ -49,21 +49,21 @@
 	//force controller cycle
 	if (controller && controller.state_current == NORAD_STATE_IDLE)
 		if (sensor_type == "cycle")
-			controller.cycle_air("cycle")
+			controller.cycle_air("cycle",user)
 		else if (sensor_type == "exterior")
-			controller.cycle_air("ext")
+			controller.cycle_air("ext",user)
 		else if (sensor_type == "interior")
-			controller.cycle_air("int")
+			controller.cycle_air("int",user)
 		return
 
 	to_chat(user, "<span class='warning'>The [src] doesn't seem to be responsive.</span>")
 
 	if (controller && controller.check_for_errors())
-		if(user.a_intent == I_HURT)
+		if(user.a_intent == I_HURT && do_after(user, 50, src))
 			if (sensor_type == "exterior")
-				controller.cycle_doors("ext")
+				controller.cycle_doors("ext",user)
 			else if (sensor_type == "interior")
-				controller.cycle_doors("int")
+				controller.cycle_doors("int",user)
 			else
 				return //might only happen if something buggy happened or the doors were badly setup somehow.
 			user.visible_message( \

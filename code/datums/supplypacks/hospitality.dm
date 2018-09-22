@@ -174,3 +174,15 @@
 	containername = "\improper Piano crate"
 
 
+/decl/hierarchy/supply_pack/hospitality/rguitar
+	name = "Regular Guitar Crate"
+	contains = list(/obj/item/device/synthesized_instrument/guitar = 1)
+	cost = 10
+	containername = "\improper Guitar crate"
+
+
+/decl/hierarchy/supply_pack/hospitality/eguitar
+	name = "Electric Guitar Crate"
+	contains = list(/obj/item/device/synthesized_instrument/guitar/multi = 1)
+	cost = 12
+	containername = "\improper Electric Guitar crate"

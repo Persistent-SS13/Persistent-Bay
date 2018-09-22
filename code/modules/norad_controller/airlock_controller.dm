@@ -52,7 +52,8 @@
 	pixel_y = (src.dir & 3)? (src.dir ==1 ? -30 : 30) : 0
 
 /obj/machinery/airlock_controller_norad/CanUseTopic(var/mob/user)
-	if(!allowed(user))
+	if (!is_authorized(user))
+		to_chat(user, "<span class='warning'>Access Denied. (You need access on both airlocks.)</span>")
 		return min(STATUS_UPDATE, ..())
 	else
 		return ..()
@@ -291,6 +292,9 @@
 		state_target = state_current
 
 /obj/machinery/airlock_controller_norad/proc/cycle_doors(var/door)
+	if (!is_authorized(usr))
+		to_chat(usr, "<span class='warning'>Access Denied. (You need access on both airlocks.)</span>")
+		return
 	if (door) //specific door toggle
 		var/door_state
 		if (door == "int")
@@ -333,3 +337,8 @@
 	if (target == "ext" && tag_exterior_sensor && air_exterior) //if no exterior sensor, it'll act as if target pressure is 0kpa.
 		pressure = round(air_exterior.return_pressure(), 0.1)
 	return pressure
+
+/obj/machinery/airlock_controller_norad/proc/is_authorized(var/mob/pl)
+	if (!tag_interior_door || !tag_exterior_door) //If a door is missing, we'll be skipping this part.
+		return 1
+	return tag_interior_door.allowed(pl) && tag_exterior_door.allowed(pl)

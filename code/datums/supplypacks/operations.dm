@@ -560,7 +560,7 @@
 	contains = list(/obj/item/clothing/ears/earmuffs/headphones,
 					/obj/item/clothing/glasses/regular/hipster,
 					/obj/item/instrument/guitar,
-					/obj/item/device/violin,
+					/obj/item/device/synthesized_instrument/violin,
 					/obj/item/device/radio/headset/entertainment)
 	cost = 10
 	containertype = /obj/structure/closet

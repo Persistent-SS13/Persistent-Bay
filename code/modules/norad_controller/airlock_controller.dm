@@ -18,6 +18,15 @@
 	var/obj/machinery/atmospherics/unary/vent_scrubber/tag_scrubber_secondary
 	var/obj/machinery/airlock_sensor_norad/tag_exterior_sensor
 	var/obj/machinery/airlock_sensor_norad/tag_interior_sensor
+
+	var/UID_tag_exterior_door
+	var/UID_tag_interior_door
+	var/UID_tag_airpump
+	var/UID_tag_scrubber
+	var/UID_tag_scrubber_secondary
+	var/UID_tag_exterior_sensor
+	var/UID_tag_interior_sensor
+
 	var/tag_secure = 0
 
 	var/state_current = NORAD_STATE_IDLE
@@ -43,6 +52,95 @@
 
 	set_dir(ndir)
 
+/obj/machinery/airlock_controller_norad/before_save()
+	var/id
+
+	if(tag_exterior_door)
+		id = 1
+		while (1)
+			var/unique = 1
+			for (var/obj/machinery/door/airlock/airlock in oview(NORAD_MAX_RANGE,tag_exterior_door) )
+				if (airlock.norad_UID == id)
+					id += 1
+					unique = 0
+			if (unique)	break
+		tag_exterior_door = id
+		UID_tag_exterior_door = id
+	if(tag_interior_door)
+		id = 1
+		while (1)
+			var/unique = 1
+			for (var/obj/machinery/door/airlock/airlock in oview(NORAD_MAX_RANGE,tag_interior_door) )
+				if (airlock.norad_UID == id)
+					id += 1
+					unique = 0
+					break
+			if (unique)	break
+		tag_interior_door = id
+		UID_tag_interior_door = id
+
+	if(tag_exterior_sensor)
+		id = 1
+		while (1)
+			var/unique = 1
+			for (var/obj/machinery/airlock_sensor_norad/sensor in oview(NORAD_MAX_RANGE,tag_exterior_sensor) )
+				if (sensor.norad_UID == id)
+					id += 1
+					unique = 0
+					break
+			if (unique)	break
+		tag_exterior_sensor = id
+		UID_tag_exterior_sensor = id
+	if(tag_interior_sensor)
+		id = 1
+		while (1)
+			var/unique = 1
+			for (var/obj/machinery/airlock_sensor_norad/sensor in oview(NORAD_MAX_RANGE,tag_interior_sensor) )
+				if (sensor.norad_UID == id)
+					id += 1
+					unique = 0
+					break
+			if (unique)	break
+		tag_interior_sensor = id
+		UID_tag_interior_sensor = id
+
+	if(tag_airpump)
+		id = 1
+		while (1)
+			var/unique = 1
+			for (var/obj/machinery/atmospherics/unary/vent_pump/airpump in oview(NORAD_MAX_RANGE,tag_airpump) )
+				if (airpump.norad_UID == id)
+					id += 1
+					unique = 0
+					break
+			if (unique)	break
+		tag_airpump = id
+		UID_tag_airpump = id
+	if(tag_scrubber)
+		id = 1
+		while (1)
+			var/unique = 1
+			for (var/obj/machinery/atmospherics/unary/vent_scrubber/scrubber in oview(NORAD_MAX_RANGE,tag_scrubber) )
+				if (scrubber.norad_UID == id)
+					id += 1
+					unique = 0
+					break
+			if (unique)	break
+		tag_scrubber = id
+		UID_tag_scrubber = id
+	if(tag_scrubber_secondary)
+		id = 1
+		while (1)
+			var/unique = 1
+			for (var/obj/machinery/atmospherics/unary/vent_scrubber/scrubber in oview(NORAD_MAX_RANGE,tag_scrubber_secondary) )
+				if (scrubber.norad_UID == id)
+					id += 1
+					unique = 0
+					break
+			if (unique)	break
+		tag_scrubber_secondary = id
+		UID_tag_scrubber_secondary = id
+
 /obj/machinery/airlock_controller_norad/Initialize()
 	..()
 	after_load()
@@ -50,6 +148,58 @@
 /obj/machinery/airlock_controller_norad/after_load()
 	pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? -30 : 30)
 	pixel_y = (src.dir & 3)? (src.dir ==1 ? -30 : 30) : 0
+
+	if (UID_tag_exterior_door)
+		for (var/obj/machinery/door/airlock/airlock in oview(NORAD_MAX_RANGE))
+			if (airlock.norad_UID == UID_tag_exterior_door)
+				UID_tag_exterior_door = null
+				airlock.norad_UID = null
+				tag_exterior_door = airlock
+				airlock.norad_controller = src
+	if (UID_tag_interior_door)
+		for (var/obj/machinery/door/airlock/airlock in oview(NORAD_MAX_RANGE))
+			if (airlock.norad_UID == UID_tag_interior_door)
+				UID_tag_interior_door = null
+				airlock.norad_UID = null
+				tag_interior_door = airlock
+				airlock.norad_controller = src
+
+	if (UID_tag_airpump)
+		for (var/obj/machinery/atmospherics/unary/vent_pump/airpump in oview(NORAD_MAX_RANGE))
+			if (airpump.norad_UID == UID_tag_airpump)
+				UID_tag_airpump = null
+				airpump.norad_UID = null
+				tag_airpump = airpump
+				airpump.norad_controller = src
+	if (UID_tag_scrubber)
+		for (var/obj/machinery/atmospherics/unary/vent_scrubber/scrubber in oview(NORAD_MAX_RANGE))
+			if (scrubber.norad_UID == UID_tag_scrubber)
+				UID_tag_scrubber = null
+				scrubber.norad_UID = null
+				tag_scrubber = scrubber
+				scrubber.norad_controller = src
+	if (UID_tag_scrubber_secondary)
+		for (var/obj/machinery/atmospherics/unary/vent_scrubber/scrubber in oview(NORAD_MAX_RANGE))
+			if (scrubber.norad_UID == UID_tag_scrubber_secondary)
+				UID_tag_scrubber_secondary = null
+				scrubber.norad_UID = null
+				tag_scrubber_secondary = scrubber
+				scrubber.norad_controller = src
+
+	if (UID_tag_exterior_sensor)
+		for (var/obj/machinery/airlock_sensor_norad/sensor in oview(NORAD_MAX_RANGE))
+			if (sensor.norad_UID == UID_tag_exterior_sensor)
+				UID_tag_exterior_sensor = null
+				sensor.norad_UID = null
+				tag_exterior_sensor = sensor
+				sensor.controller = src
+	if (UID_tag_interior_sensor)
+		for (var/obj/machinery/airlock_sensor_norad/sensor in oview(NORAD_MAX_RANGE))
+			if (sensor.norad_UID == UID_tag_interior_sensor)
+				UID_tag_interior_sensor = null
+				sensor.norad_UID = null
+				tag_interior_sensor = sensor
+				sensor.controller = src
 
 /obj/machinery/airlock_controller_norad/CanUseTopic(var/mob/user)
 	if (!is_authorized(user))

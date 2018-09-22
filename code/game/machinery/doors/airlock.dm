@@ -55,6 +55,7 @@
 	var/haskeypad = 0
 
 	var/obj/machinery/airlock_controller_norad/norad_controller // For the no radio controller (code/modules/norad_controller)
+	var/norad_UID
 
 /obj/machinery/door/airlock/keypad // HERE
 	name = "Keypad Entry Airlock"
@@ -1323,7 +1324,7 @@ About the new airlock wires panel:
 	return 1
 
 /obj/machinery/door/airlock/allowed(mob/M)
-	if(locked)
+	if(locked && !norad_controller)
 		return 0
 	return ..(M)
 

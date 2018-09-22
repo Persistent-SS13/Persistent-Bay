@@ -19,6 +19,8 @@
 	var/alert = 0
 	var/previousPressure
 
+	var/norad_UID
+
 /obj/machinery/airlock_sensor_norad/New(location, ndir, source)
 	set_dir(ndir)
 	after_load()

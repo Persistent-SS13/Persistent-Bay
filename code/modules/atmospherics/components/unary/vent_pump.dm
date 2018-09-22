@@ -49,6 +49,7 @@
 	var/radio_filter_in
 
 	var/obj/machinery/airlock_controller_norad/norad_controller // For the no radio controller (code/modules/norad_controller)
+	var/norad_UID
 
 /obj/machinery/atmospherics/unary/vent_pump/on
 	use_power = 1

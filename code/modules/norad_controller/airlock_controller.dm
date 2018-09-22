@@ -15,12 +15,14 @@
 	var/obj/machinery/door/airlock/tag_interior_door
 	var/obj/machinery/atmospherics/unary/vent_pump/tag_airpump
 	var/obj/machinery/atmospherics/unary/vent_scrubber/tag_scrubber
+	var/obj/machinery/atmospherics/unary/vent_scrubber/tag_scrubber_secondary
 	var/obj/machinery/airlock_sensor_norad/tag_exterior_sensor
 	var/obj/machinery/airlock_sensor_norad/tag_interior_sensor
 	var/tag_secure = 0
 
-	var/state = NORAD_STATE_IDLE
-	var/target_state = NORAD_STATE_IDLE
+	var/state_current = NORAD_STATE_IDLE
+	var/state_target = NORAD_STATE_IDLE
+	var/last_cycle_type = NORAD_TARGET_INOPEN
 
 	var/cycle_to_external_air = 0
 
@@ -37,12 +39,17 @@
 	memory["target_pressure"] = ONE_ATMOSPHERE
 	memory["purge"] = 0
 	memory["secure"] = 0
-	memory["processing"] = (state != target_state)
+	memory["processing"] = state_current
 
 	set_dir(ndir)
-	pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 30 : -30)
-	pixel_y = (src.dir & 3)? (src.dir ==1 ? 30 : -30) : 0
 
+/obj/machinery/airlock_controller_norad/Initialize()
+	..()
+	after_load()
+
+/obj/machinery/airlock_controller_norad/after_load()
+	pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? -30 : 30)
+	pixel_y = (src.dir & 3)? (src.dir ==1 ? -30 : 30) : 0
 
 /obj/machinery/airlock_controller_norad/CanUseTopic(var/mob/user)
 	if(!allowed(user))
@@ -57,13 +64,14 @@
 		to_chat(user, "<span class='warning'>Error: [err]</span>")
 		return
 
-	memory["processing"] = (state != target_state)
+	memory["processing"] = state_current
 	var/data[0]
 	data = list(
 		"chamber_pressure" = round(memory["chamber_sensor_pressure"]),
 		"external_pressure" = round(memory["external_sensor_pressure"]),
 		"internal_pressure" = round(memory["internal_sensor_pressure"]),
 		"processing" = memory["processing"],
+		"is_siphon" = (state_target == NORAD_TARGET_OUTOPEN),
 		"purge" = memory["purge"],
 		"secure" = safety_lock
 	)
@@ -71,7 +79,7 @@
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 
 	if (!ui)
-		ui = new(user, src, ui_key, "advanced_airlock_console_norad.tmpl", name, 470, 290, state = state)
+		ui = new(user, src, ui_key, "advanced_airlock_console_norad.tmpl", name, 480, 290, state = state)
 
 		ui.set_initial_data(data)
 
@@ -102,12 +110,27 @@
 			cycle_doors("int")
 		if("abort")
 			clean = 1
-			if (target_state == NORAD_TARGET_INOPEN)
-				target_state = NORAD_TARGET_OUTOPEN
-			if (target_state == NORAD_TARGET_OUTOPEN)
-				target_state = NORAD_TARGET_INOPEN
+			state_current = NORAD_STATE_IDLE
+			state_target = NORAD_STATE_IDLE
+			memory["purge"] = 0
+			reset_atmos()
 		if("purge")
 			clean = 1
+			memory["purge"] = !memory["purge"]
+			if (memory["purge"])
+				tag_airpump.use_power = 1
+				tag_airpump.pump_direction = 0
+
+				tag_airpump.external_pressure_bound = 0
+				tag_airpump.internal_pressure_bound = MAX_PUMP_PRESSURE
+				tag_airpump.pressure_checks = 2
+			else
+				tag_airpump.pump_direction = 1
+
+				tag_airpump.external_pressure_bound = tag_airpump.external_pressure_bound_default
+				tag_airpump.internal_pressure_bound = tag_airpump.internal_pressure_bound_default
+				tag_airpump.pressure_checks = tag_airpump.pressure_checks_default
+			tag_airpump.update_icon()
 		if("secure")
 			clean = 1
 			safety_lock = !safety_lock
@@ -120,9 +143,9 @@
 
 /obj/machinery/airlock_controller_norad/Process()
 	..()
-	if (state != target_state)
-		state = NORAD_STATE_PREPARE
-	if (state == NORAD_STATE_IDLE || check_for_errors())
+	if (state_current != state_target)
+		state_current = NORAD_STATE_PREPARE
+	if (state_current == NORAD_STATE_IDLE || check_for_errors())
 		return
 
 	var/datum/gas_mixture/air_chamber = return_air()
@@ -133,22 +156,24 @@
 	memory["internal_sensor_pressure"] = get_pressure("int")
 
 	var/target_pressure
-	if (target_state == NORAD_TARGET_INOPEN)
+	if (state_target == NORAD_TARGET_INOPEN)
 		target_pressure = get_pressure("int")
-	else if (target_state == NORAD_TARGET_OUTOPEN)
+	else if (state_target == NORAD_TARGET_OUTOPEN)
 		target_pressure = get_pressure("ext")
 
 	if (target_pressure > current_pressure)
-		vent("in", target_pressure)
+		vent("to_chamber", target_pressure)
 	if (target_pressure < current_pressure)
-		vent("out", target_pressure)
-	if (target_pressure -3 < current_pressure && current_pressure < target_pressure +3) // Hardcoded pressure tolerance of -/+3 (6kPa difference max)
-		vent("stop")
-		state = target_state
-	if (state == target_state) //finish the process, open the door,
+		vent("from_chamber", target_pressure)
+	if (target_pressure -2 < current_pressure && current_pressure < target_pressure +2) // Hardcoded pressure tolerance of -/+2 (4kPa difference max)
+		state_current = state_target
+	if (state_current == state_target) //finish the process, open the door,
 		cycle_doors()
-		state = NORAD_STATE_IDLE
-		target_state = state
+		memory["purge"] = 0
+		state_current = NORAD_STATE_IDLE
+		last_cycle_type = state_target
+		state_target = state_current
+		reset_atmos()
 
 /obj/machinery/airlock_controller_norad/attackby(var/obj/item/O as obj, var/mob/user as mob)
 	if (isCrowbar(O) && !safety_lock)
@@ -176,42 +201,84 @@
 	src.ui_interact(user)
 
 /obj/machinery/airlock_controller_norad/proc/check_for_errors()
-	if ( !tag_exterior_door || !tag_interior_door || !tag_airpump || !tag_scrubber || !tag_interior_sensor)
-		return "Missing device"
-	var/gced = 0
+	if ( tag_exterior_door && tag_interior_door && tag_airpump && (tag_scrubber || tag_scrubber_secondary) && tag_interior_sensor)
+		return
+	var/list/devices = new()
 
-	if (QDELETED(tag_exterior_door))
+	if (!tag_exterior_door || QDELETED(tag_exterior_door))
 		tag_exterior_door = null
-		gced = -1
-	if (QDELETED(tag_interior_door))
+		devices += "exterior airlock"
+	if (!tag_interior_door || QDELETED(tag_interior_door))
 		tag_interior_door = null
-		gced = -1
-	if (QDELETED(tag_airpump))
+		devices += "interior airlock"
+	if (!tag_airpump || QDELETED(tag_airpump))
 		tag_airpump = null
-		gced = -1
-	if (QDELETED(tag_scrubber))
+		devices += "air vent"
+	if (!tag_scrubber || QDELETED(tag_scrubber))
 		tag_scrubber = null
-		gced = -1
-	if (QDELETED(tag_interior_sensor))
+		devices += "scrubber"
+	if (!tag_interior_sensor || QDELETED(tag_interior_sensor))
 		tag_interior_sensor = null
-		gced = -1
+		devices += "interior sensor"
 
-	return gced //-1 if something was gc'ed
+	var/output = null
+	if (devices.len >= 1)
+		output = "Missing device ("
+		var/first = 1
+		for(var/str in devices)
+			if (first)
+				first = 0
+				output += str
+			else
+				output += ", " + str
+		output += ")"
+	return output
 
 /obj/machinery/airlock_controller_norad/proc/vent(var/stat, var/pressure)
-	if (stat == "from_chamber")
-		tag_scrubber.scrubbing = 0
-	if (stat == "to_chamber")
-		tag_scrubber.scrubbing = 1
-	tag_airpump.external_pressure_bound = pressure
+	reset_atmos()
+	if (!tag_scrubber.use_power || !tag_airpump.use_power)
+		tag_scrubber.use_power = 1
+		if (tag_scrubber_secondary) tag_scrubber_secondary.use_power = 1
+		tag_airpump.use_power = 1
+		if (stat == "from_chamber")
+			tag_scrubber.scrubbing = 0
+			if (tag_scrubber_secondary) tag_scrubber_secondary.scrubbing = 0
+		if (stat == "to_chamber")
+			tag_scrubber.scrubbing = 1
+			if (tag_scrubber_secondary) tag_scrubber_secondary.scrubbing = 1
+
+		tag_scrubber.update_icon()
+		if (tag_scrubber_secondary) tag_scrubber_secondary.update_icon()
+		tag_airpump.update_icon()
+		tag_airpump.external_pressure_bound = pressure
+
+/obj/machinery/airlock_controller_norad/proc/reset_atmos()
+	tag_scrubber.scrubbing = 1
+	tag_scrubber.use_power = 0
+	tag_scrubber.update_icon()
+	if(tag_scrubber_secondary)
+		tag_scrubber_secondary.scrubbing = 1
+		tag_scrubber_secondary.use_power = 0
+		tag_scrubber_secondary.update_icon()
+
+	tag_airpump.pump_direction = 1
+	tag_airpump.internal_pressure_bound = tag_airpump.internal_pressure_bound_default
+	tag_airpump.pressure_checks = tag_airpump.pressure_checks_default
+	tag_airpump.external_pressure_bound = ONE_ATMOSPHERE
+	tag_airpump.use_power = 0
+	tag_airpump.update_icon()
 
 /obj/machinery/airlock_controller_norad/proc/cycle_air(var/target)
-	if (!target)
-		return 0
-	if (target == "ext")
-		target_state = NORAD_TARGET_OUTOPEN
+	if (!target || target == "cycle")
+		if (last_cycle_type == NORAD_TARGET_INOPEN)
+			state_target = NORAD_TARGET_OUTOPEN
+		else if (last_cycle_type == NORAD_TARGET_OUTOPEN)
+			state_target = NORAD_TARGET_INOPEN
+	else if (target == "ext")
+		state_target = NORAD_TARGET_OUTOPEN
 	else if (target == "int")
-		target_state = NORAD_TARGET_INOPEN
+		memory["purge"] = 0
+		state_target = NORAD_TARGET_INOPEN
 
 	tag_interior_door.locked = 0
 	tag_exterior_door.locked = 0
@@ -221,11 +288,13 @@
 	tag_exterior_door.locked = 1
 
 	if (!tag_exterior_door.density || !tag_interior_door.density) //if any of the doors remains open, we won't initiate the process.
-		target_state = state
+		state_target = state_current
 
-/obj/machinery/airlock_controller_norad/proc/cycle_doors(var/door, var/door_state)
+/obj/machinery/airlock_controller_norad/proc/cycle_doors(var/door)
 	if (door) //specific door toggle
+		var/door_state
 		if (door == "int")
+			door_state = tag_interior_door.density
 			if (door_state)
 				tag_interior_door.locked = 0
 				tag_interior_door.open()
@@ -233,6 +302,7 @@
 				tag_interior_door.close()
 				tag_interior_door.locked = 1
 		if (door == "ext")
+			door_state = tag_exterior_door.density
 			if (door_state)
 				tag_exterior_door.locked = 0
 				tag_exterior_door.open()
@@ -241,10 +311,10 @@
 				tag_exterior_door.locked = 1
 		return
 	else
-		if (target_state == NORAD_TARGET_INOPEN)
+		if (state_target == NORAD_TARGET_INOPEN)
 			tag_interior_door.locked = 0
 			tag_interior_door.open()
-		if (target_state == NORAD_TARGET_OUTOPEN)
+		if (state_target == NORAD_TARGET_OUTOPEN)
 			tag_exterior_door.locked = 0
 			tag_exterior_door.open()
 

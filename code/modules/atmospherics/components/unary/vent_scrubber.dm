@@ -350,14 +350,27 @@
 				to_chat(user, "<span class='warning'>\The [link] is too far away. Its effective range should be around [NORAD_MAX_RANGE] tiles.</span>")
 				return
 			//the actual (un)linkage below
-			if (norad_controller)
+			if (norad_controller && !QDELETED(norad_controller) )
 				to_chat(user, "<span class='warning'>You unlink \the [src] from \the [norad_controller].</span>")
 				if (norad_controller.tag_scrubber == src)
 					norad_controller.tag_scrubber = null
+					if (norad_controller.tag_scrubber_secondary)
+						//switches secondary srubber to main, if any.
+						norad_controller.tag_scrubber = norad_controller.tag_scrubber_secondary
+						norad_controller.tag_scrubber_secondary = null
+				// Checks for the secondary scrubber as well
+				if(norad_controller.tag_scrubber_secondary == src)
+					norad_controller.tag_scrubber_secondary = null
 				norad_controller = null
 			else
 				norad_controller = link
-				norad_controller.tag_scrubber = src
+				if (!norad_controller.tag_scrubber)
+					norad_controller.tag_scrubber = src
+				else if (!norad_controller.tag_scrubber_secondary)
+					norad_controller.tag_scrubber_secondary = src
+				else
+					to_chat(user, "<span class='warning'>There is already two scrubbers linked. Unlink them before linking more scrubbers.</span>")
+					return
 				to_chat(user, "<span class='notice'>You link \the [src] to \the [link].</span>")
 			return
 		broadcast_status()

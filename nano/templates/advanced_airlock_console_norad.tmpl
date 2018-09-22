@@ -44,10 +44,10 @@
 			{{:helper.link('Force interior door', 'alert', {'command' : 'force_int'}, null, data.processing ? 'yellowButton' : null)}}
 		</div>
 	</div>
-	<div style="padding-left: 10px; width: 80px; float: left">
+	<div style="width: 500px; float: left">
 		<div class="item">
 			<div class="itemContent" style="padding-bottom: 2px; width: auto">
-				{{:helper.link('Purge', 'refresh', {'command' : 'purge'}, data.processing ? 'disabled' : null, data.purge ? 'linkOn' : null)}}
+				{{:helper.link('Fast Syphon (Warning: Air will be syphoned by the vent, into supply pipes.)', 'refresh', {'command' : 'purge'}, data.is_siphon ? null : "disabled", data.purge ? 'linkOn' : null)}}
 			</div>
 			<div class="itemContent" style="width: auto">
 				{{:helper.link('Secure', data.secure ? 'locked' : 'unlocked', {'command' : 'secure'}, data.processing ? 'disabled' : null, data.secure ? 'linkOn' : null)}}

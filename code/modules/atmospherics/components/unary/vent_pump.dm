@@ -413,7 +413,7 @@
 				to_chat(user, "<span class='warning'>\The [link] is too far away. Its effective range should be around [NORAD_MAX_RANGE] tiles.</span>")
 				return
 			//the actual (un)linkage below
-			if (norad_controller)
+			if (norad_controller && !QDELETED(norad_controller) )
 				to_chat(user, "<span class='warning'>You unlink \the [src] from \the [norad_controller].</span>")
 				if (norad_controller.tag_airpump == src)
 					norad_controller.tag_airpump = null

@@ -1093,7 +1093,7 @@ About the new airlock wires panel:
 				to_chat(user, "<span class='warning'>You unlink \the [src] from \the [norad_controller].</span>")
 				if (norad_controller.tag_exterior_door == src)
 					norad_controller.tag_exterior_door = null
-				else if (norad_controller.tag_interior_door == src)
+				if (norad_controller.tag_interior_door == src)
 					norad_controller.tag_interior_door = null
 				norad_controller = null
 			else

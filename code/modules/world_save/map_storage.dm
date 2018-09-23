@@ -382,7 +382,7 @@ var/global/list/debug_data = list()
 		while(!f.eof && !breakout)
 			f >> v
 			sleep(-1)
-			if(((REALTIMEOFDAY - starttime2)/10) > 300)'
+			if(((REALTIMEOFDAY - starttime2)/10) > 300)
 				breakout = 1
 		if(breakout)
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")

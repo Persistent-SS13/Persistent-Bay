@@ -376,6 +376,7 @@ var/global/list/debug_data = list()
 
 	f.cd = "/"
 	for(var/z in 1 to 50)
+		if(z == 29) continue
 		f.cd = "/map/[z]"
 		var/starttime2 = REALTIMEOFDAY
 		var/breakout = 0

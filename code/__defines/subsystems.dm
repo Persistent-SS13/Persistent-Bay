@@ -44,12 +44,13 @@
 // The numbers just define the ordering, they are meaningless otherwise.
 
 
-#define SS_INIT_GARBAGE          8
+#define SS_INIT_GARBAGE          10
+#define SS_INIT_CHEMISTRY        9
+#define SS_INIT_MATERIALS        8
 #define SS_INIT_ANTAGS           7
 #define SS_INIT_SKYBOX           6
-#define SS_INIT_MATERIALS        5
-#define SS_INIT_CIRCUIT          5
-#define SS_INIT_MAPPING          4
+#define SS_INIT_MAPPING          5
+#define SS_INIT_CIRCUIT          4
 #define SS_INIT_ATOMS            3
 #define SS_INIT_ICON_UPDATE      2
 #define SS_INIT_MACHINES         1

@@ -43,6 +43,8 @@
 			return global.SSairflow;
 		if("SSatoms")
 			return global.SSatoms;
+		if("SSchemistry")
+			return global.SSchemistry;
 		if("SSfastprocess")
 			return global.SSfastprocess;
 		if("SSgarbage")
@@ -273,8 +275,6 @@
 			return global.checked_for_inactives;
 		if("chemical_reaction_logs")
 			return global.chemical_reaction_logs;
-		if("chemical_reactions_list")
-			return global.chemical_reactions_list;
 		if("chicken_count")
 			return global.chicken_count;
 		if("church_name")
@@ -1108,6 +1108,8 @@
 			global.SSairflow=newval;
 		if("SSatoms")
 			global.SSatoms=newval;
+		if("SSchemistry")
+			global.SSchemistry=newval;
 		if("SSfastprocess")
 			global.SSfastprocess=newval;
 		if("SSgarbage")
@@ -1338,8 +1340,6 @@
 			global.checked_for_inactives=newval;
 		if("chemical_reaction_logs")
 			global.chemical_reaction_logs=newval;
-		if("chemical_reactions_list")
-			global.chemical_reactions_list=newval;
 		if("chicken_count")
 			global.chicken_count=newval;
 		if("church_name")
@@ -2149,6 +2149,7 @@
 	"SSair",
 	"SSairflow",
 	"SSatoms",
+	"SSchemistry",
 	"SSfastprocess",
 	"SSgarbage",
 	"SSicon_update",
@@ -2264,7 +2265,6 @@
 	"chargen_robolimbs",
 	"checked_for_inactives",
 	"chemical_reaction_logs",
-	"chemical_reactions_list",
 	"chicken_count",
 	"church_name",
 	"client_preference_stats_",

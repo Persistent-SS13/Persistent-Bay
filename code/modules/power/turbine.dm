@@ -63,40 +63,13 @@
 	gas_contained = new
 	inturf = get_step(src, dir)
 
-/obj/machinery/compressor/Initialize()
-	. = ..()
-	inturf = get_step(src, dir)
-	locate_turbine()
-
-/obj/machinery/compressor/proc/locate_turbine()
-	inturf = get_step(src, dir)
-	turbine = locate() in get_step(src, get_dir(inturf, src))
-	if(turbine)
-		turbine.link_compressor(src)
-		link_turbine(turbine)
-
-/obj/machinery/compressor/proc/link_turbine(var/obj/machinery/power/turbine/srcturbine)
-	if(!srcturbine)
-		stat |= BROKEN
-	else
-		stat &= !BROKEN
-		turbine = srcturbine
-
-/obj/machinery/compressor/attackby(obj/item/I, mob/user, params)
-	if(default_deconstruction_screwdriver(user, I))
-		return
-
-	if(default_change_direction_wrench(user, I))
-		turbine = null
-		inturf = get_step(src, dir)
-		locate_turbine()
-		if(turbine)
-			to_chat(user, "<span class='notice'>Turbine connected.</span>")
+	spawn(5)
+		turbine = locate() in get_step(src, get_dir(inturf, src))
+		if(!turbine)
+			stat |= BROKEN
 		else
-			to_chat(user, "<span class='alert'>Turbine not connected.</span>")
-		return
-
-	default_deconstruction_crowbar(I)
+			turbine.stat &= !BROKEN
+			turbine.compressor = src
 
 
 #define COMPFRICTION 5e5
@@ -161,26 +134,15 @@
 
 	outturf = get_step(src, dir)
 
-/obj/machinery/power/turbine/Initialize()
-	. = ..()
-	outturf = get_step(src, dir)
-	locate_compressor()
-	connect_to_network()
+	spawn(5)
 
-/obj/machinery/power/turbine/proc/locate_compressor()
-	if(compressor)
-		return
-	compressor = locate() in get_step(src, get_dir(outturf, src))
-	if(compressor)
-		compressor.link_turbine(src)
-		link_compressor(compressor)
+		compressor = locate() in get_step(src, get_dir(outturf, src))
+		if(!compressor)
+			stat |= BROKEN
+		else
+			compressor.stat &= !BROKEN
+			compressor.turbine = src
 
-/obj/machinery/power/turbine/proc/link_compressor(var/obj/machinery/compressor/srccompressor)
-	if(!srccompressor)
-		stat |= BROKEN
-	else
-		stat &= !BROKEN
-		compressor = srccompressor
 
 #define TURBPRES 9000000
 #define TURBGENQ 20000
@@ -217,22 +179,6 @@
 		if ((M.client && M.machine == src))
 			src.interact(M)
 	AutoUpdateAI(src)
-
-/obj/machinery/power/turbine/attackby(obj/item/weapon/W, mob/user)
-	if(default_deconstruction_screwdriver(user, W))
-		return
-
-	if(default_change_direction_wrench(user, W))
-		compressor = null
-		outturf = get_step(src, dir)
-		locate_compressor()
-		if(compressor)
-			to_chat(user, "<span class='notice'>Compressor connected.</span>")
-		else
-			to_chat(user, "<span class='alert'>Compressor not connected.</span>")
-		return
-
-	default_deconstruction_crowbar(W)
 
 /obj/machinery/power/turbine/interact(mob/user)
 

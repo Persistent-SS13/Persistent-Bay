@@ -81,12 +81,6 @@ LEGACY_RECORD_STRUCTURE(all_warrants, warrant)
 	if(!istype(user))
 		return
 	var/obj/item/weapon/card/id/I = user.GetIdCard()
-	if(I && ((core_access_command_programs || core_access_security_programs) in I.access))
-		to_chat(user, "Authentication successful. Select this warrant on a holoprojector and swipe the authorizer's ID.")
-	else 
-		to_chat(user, "Authentication error: only Security or Command personnel may request warrants.")
-		return
-
 
 	if(href_list["sendtoarchive"])
 		. = 1

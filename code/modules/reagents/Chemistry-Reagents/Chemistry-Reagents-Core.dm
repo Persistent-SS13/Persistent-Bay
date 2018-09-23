@@ -139,11 +139,6 @@
 	glass_name = "water"
 	glass_desc = "The father of all refreshments."
 
-	gas_specific_heat = 30
-	gas_molar_mass =    0.020
-
-	base_boil_point = 373.2
-
 /datum/reagent/water/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(!istype(M, /mob/living/carbon/slime) && alien != IS_SLIME)
 		return

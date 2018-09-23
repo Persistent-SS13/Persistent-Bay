@@ -46,7 +46,6 @@ var/list/valid_phoron_designs = list(
 	/datum/design/item/jetpack
 )
 
-
 /obj/item/weapon/paper/manifest
 	name = "supply manifest"
 	var/is_copy = 1
@@ -319,15 +318,17 @@ var/list/point_source_descriptions = list(
 	switch(typee)
 		if("manufacturing-basic")
 			var/datum/autolathe/recipe/recipe = pick(autolathe_recipes)
-			var/per = rand(1,5)
+			var/per = rand(5,10)
 			if(recipe.is_stack)
 				export = new /datum/export_order/stack()
 				export.required = rand(50,150)
 			else
 				export = new()
-				export.required = rand(25, 50)
+				export.required = rand(30, 50)
 			for(var/x in recipe.resources)
-				per += round(recipe.resources[x]/800,0.01)
+				var/material/mat = SSmaterials.get_material_by_name(x)
+				if(mat)
+					per += round(mat.value*recipe.resources[x]/2000,0.01)
 			export.typepath = recipe.path
 			export.rate = per
 			export.order_type = typee
@@ -347,6 +348,7 @@ var/list/point_source_descriptions = list(
 				return
 			var/datum/design/design = pick(possible_designs)
 			var/valid = 0
+			var/per = rand(10,20)
 			while(!valid)
 				if(TECH_ILLEGAL in design.req_tech)
 					design = pick(possible_designs)
@@ -357,9 +359,11 @@ var/list/point_source_descriptions = list(
 							restart = 1
 							design = pick(possible_designs)
 					if(!restart) valid = 1
-			export.required = rand(10, 50)
-			var/per = rand(5,10)
+			export.required = rand(30, 70)
 			for(var/x in design.materials)
+				var/material/mat = SSmaterials.get_material_by_name(x)
+				if(mat)
+					per += round(mat.value*design.materials[x]/2000,0.01)
 				per += round(design.materials[x]/500,0.01)
 			for(var/x in design.req_tech)
 				per += design.req_tech[x]*5
@@ -374,31 +378,7 @@ var/list/point_source_descriptions = list(
 				export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each item."
 				all_exports |= export
 				return export
-		if("manufacturing-phoron")
-			export = new()
-			var/list/possible_designs = list()
-			for(var/D in valid_phoron_designs)
-				possible_designs += new D(src)
-			if(!possible_designs.len)
-				return
-			var/datum/design/design = pick(possible_designs)
-			export.required = rand(50, 100)
-			var/per = rand(10,30)
-			for(var/x in design.materials)
-				per += round(design.materials[x]/500,0.01)
-			for(var/x in design.req_tech)
-				per += design.req_tech[x]*5
-			export.typepath = design.build_path
-			export.rate = per
-			export.order_type = typee
-			export.id = exportnum
-			if(design.build_path)
-				var/obj/ob = new design.build_path()
-				export.typepath = ob.parent_type
-				export.parent_typepath = ob.parent_type
-				export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each item."
-				all_exports |= export
-				return export
+
 		if("cooking")
 			export = new()
 			var/list/possible_designs = list()
@@ -450,7 +430,7 @@ var/list/point_source_descriptions = list(
 		if("phoron")
 			export = new /datum/export_order/stack()
 			export.typepath = /obj/item/stack/material/phoron
-			export.rate = rand(50,75)
+			export.rate = rand(60,100)
 			export.order_type = typee
 			export.id = exportnum
 			export.required = rand(300, 500)
@@ -463,12 +443,40 @@ var/list/point_source_descriptions = list(
 		if("bluespace crystal")
 			export = new /datum/export_order/static()
 			export.typepath = /obj/item/bluespace_crystal
-			export.name = "Order for bluespace crystals. $$750 per crystal."
+			export.name = "Order for bluespace crystals. $$500 per crystal."
 			export.order_type = typee
 			export.id = exportnum
-			export.rate = 750
+			export.rate = 500
 			all_exports |= export
 			return export
+
+
+		if("manufacturing-phoron")
+			export = new()
+			var/list/possible_designs = list()
+			for(var/D in valid_phoron_designs)
+				possible_designs += new D(src)
+			if(!possible_designs.len)
+				return
+			var/datum/design/design = pick(possible_designs)
+			export.required = rand(50, 100)
+			var/per = rand(10,30)
+			for(var/x in design.materials)
+				per += round(design.materials[x]/500,0.01)
+			for(var/x in design.req_tech)
+				per += design.req_tech[x]*5
+			export.typepath = design.build_path
+			export.rate = per
+			export.order_type = typee
+			export.id = exportnum
+			if(design.build_path)
+				var/obj/ob = new design.build_path()
+				export.typepath = ob.parent_type
+				export.parent_typepath = ob.parent_type
+				export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each item."
+				all_exports |= export
+				return export
+
 
 /datum/controller/supply/proc/process()
 	add_points_from_source(points_per_process, "time")

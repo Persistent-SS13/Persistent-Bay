@@ -1,0 +1,45 @@
+################################
+# Example Changelog File
+#
+# Note: This file, and files beginning with ".", and files that don't end in ".yml" will not be read. If you change this file, you will look really dumb.
+#
+# Your changelog will be merged with a master changelog. (New stuff added only, and only on the date entry for the day it was merged.)
+# When it is, any changes listed below will disappear.
+#
+# Valid Prefixes: 
+#   bugfix
+#   wip (For works in progress)
+#   tweak
+#   soundadd
+#   sounddel
+#   rscadd (general adding of nice things)
+#   rscdel (general deleting of nice things)
+#   imageadd
+#   imagedel
+#   maptweak
+#   spellcheck (typo fixes)
+#   experiment
+#################################
+
+# Your name.  
+author: Unknown
+
+# Optional: Remove this file after generating master changelog.  Useful for PR changelogs that won't get used again.
+delete-after: True
+
+# Any changes you've made.  See valid prefix list above.
+# INDENT WITH TWO SPACES.  NOT TABS.  SPACES.
+# SCREW THIS UP AND IT WON'T WORK.
+# Also, all entries are changed into a single [] after a master changelog generation. Just remove the brackets when you add new entries.
+# Please surround your changes in  double quotes ("), as certain characters otherwise screws up compiling. The quotes will not show up in the changelog.
+changes: 
+  - wip: "State Of Matter Pt.2 - Unifies reagents and gases, condensing/evaporation system."
+  - rscadd: "Area Reagent Outlet - APC concept - Pumps reagents to whatever object requests it. Can be connected to a pipe network."
+  - tweak: "Big changes to puddles, including fixes and real evaporation mechanism. Puddles should be comprehended as general liquid mechanism. (Gas counter-part)"
+  - tweak: "Big changes to the drains. Deprecated drains will automatically destroy on load, refunding 2 steel sheets. New drains drain nearby liquids (puddles) into a pipe network."
+  - tweak: "Changes Showers and Sinks in order to request water from the ARO. No longer pumps infinite water."
+  - tweak: "Pipe-dispenser now has ARO and Drain available to be dispensed."
+  - tweak: "Removes drains (deprecated) from recipe list on Steel."
+  - wip: "Reagents and Gases now have a base boiling point (At one atmosphere) (TODO: Set boiling points to the rest of the gases and reagents)"
+  - tweak: "Canisters, uvents and dp vents will check for gas's boiling point before outputting them as a gas."
+  - tweak: "Lowers spilling amount and rate of reagents when transferring from a container to another."

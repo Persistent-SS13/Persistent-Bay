@@ -38,9 +38,6 @@ D [1]/  ||
 
 	holder = loc
 
-	if(!istype(holder))
-		message_admins("ERROR: An integrated_io ([name]) spawned without a valid holder!  This is a bug.")
-
 /datum/integrated_io/Destroy()
 	disconnect_all()
 	data = null

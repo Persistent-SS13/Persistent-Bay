@@ -374,11 +374,16 @@ var/global/list/debug_data = list()
 		A.contents.Add(turfs)
 
 	f.cd = "/"
-	for(var/z in 1 to 28)
+	for(var/z in 1 to 50)
 		f.cd = "/map/[z]"
 		var/starttime2 = REALTIMEOFDAY
-		while(!f.eof)
-			f >> v
+		try
+			while(!f.eof)
+				f >> v
+				sleep(-1)
+		catch(var/exception/e)
+			message_admins("[e] on [e.file]:[e.line]")
+					
 		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
 
 	f.cd = "/extras"

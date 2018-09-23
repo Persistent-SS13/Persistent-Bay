@@ -136,7 +136,6 @@
 	recipes += new/datum/stack_recipe("linen bin", /obj/structure/bedsheetbin, 4, time = 10, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("Operating Table", /obj/machinery/optable, 10, time = 50, one_per_turf = 1)
 	recipes += new/datum/stack_recipe("Item Safe", /obj/structure/safe, 10, time = 50, one_per_turf = 1)
-	recipes += new/datum/stack_recipe("Plasteel Ladder", /obj/item/weapon/plasteel_ladder, 50, time = 50, one_per_turf = 1)
 //	recipes += new/datum/stack_recipe_list("Blast Doors Assemblies", list( \
 	new/datum/stack_recipe("assembly", /obj/structure/door_assembly/, 4, time = 50, one_per_turf = 1, on_floor = 1), \
 		))

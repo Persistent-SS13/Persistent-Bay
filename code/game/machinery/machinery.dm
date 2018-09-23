@@ -295,14 +295,6 @@ Class Procs:
 	update_icon()
 	return 1
 
-/obj/machinery/proc/default_change_direction_wrench(var/mob/user, var/obj/item/weapon/wrench/I)
-	if(panel_open && istype(I))
-		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
-		dir = turn(dir,-90)
-		to_chat(user, "<span class='notice'>You rotate [src].</span>")
-		return 1
-	return 0
-
 /obj/machinery/proc/default_part_replacement(var/mob/user, var/obj/item/weapon/storage/part_replacer/R)
 	if(!istype(R))
 		return 0

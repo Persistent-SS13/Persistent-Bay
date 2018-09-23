@@ -12,8 +12,8 @@
 	move_to_delay = 12
 	destroy_surroundings = 1
 
-	melee_damage_lower = 30
-	melee_damage_upper = 50
+	melee_damage_lower = 40
+	melee_damage_upper = 60
 	attacktext = "chomped"
 	attack_sound = 'sound/weapons/bite.ogg'
 
@@ -32,7 +32,7 @@
 /mob/living/simple_animal/hostile/creature/Found(var/atom/A)
 	if(istype(A, /obj/machinery/mining/drill))
 		var/obj/machinery/mining/drill/drill = A
-		if(!drill.stat)
+		if(!drill.statu)
 			stance = HOSTILE_STANCE_ATTACK
 			return A
 	if(istype(A, /obj/structure/ore_box))

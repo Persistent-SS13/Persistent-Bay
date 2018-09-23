@@ -27,6 +27,9 @@
 	var/radio_filter_out
 	var/radio_filter_in
 
+	var/obj/machinery/airlock_controller_norad/norad_controller // For the no radio controller (code/modules/norad_controller)
+	var/norad_UID
+
 	var/welded = 0
 
 /obj/machinery/atmospherics/unary/vent_scrubber/on
@@ -44,13 +47,13 @@
 	if(loc)
 		initial_loc = get_area(loc)
 		area_uid = initial_loc.uid
-		
+
 /obj/machinery/atmospherics/unary/vent_scrubber/after_load()
 	..()
 	if(loc)
 		initial_loc = get_area(loc)
 		area_uid = initial_loc.uid
-	
+
 /obj/machinery/atmospherics/unary/vent_scrubber/Destroy()
 	unregister_radio(src, frequency)
 	..()
@@ -338,6 +341,39 @@
 		return 1
 
 	if(isMultitool(W))
+		var/obj/item/device/multitool/mt = W
+		if (istype(mt.get_buffer(), /obj/machinery/airlock_controller_norad))
+			var/obj/machinery/airlock_controller_norad/link = mt.get_buffer()
+			if (!istype(link) )
+				return 0
+			//checks if the linked airlock_controller_norad is in range.
+			if (!(link in view(NORAD_MAX_RANGE) ) )
+				to_chat(user, "<span class='warning'>\The [link] is too far away. Its effective range should be around [NORAD_MAX_RANGE] tiles.</span>")
+				return
+			//the actual (un)linkage below
+			if (norad_controller && !QDELETED(norad_controller) )
+				to_chat(user, "<span class='warning'>You unlink \the [src] from \the [norad_controller].</span>")
+				if (norad_controller.tag_scrubber == src)
+					norad_controller.tag_scrubber = null
+					if (norad_controller.tag_scrubber_secondary)
+						//switches secondary srubber to main, if any.
+						norad_controller.tag_scrubber = norad_controller.tag_scrubber_secondary
+						norad_controller.tag_scrubber_secondary = null
+				// Checks for the secondary scrubber as well
+				if(norad_controller.tag_scrubber_secondary == src)
+					norad_controller.tag_scrubber_secondary = null
+				norad_controller = null
+			else
+				norad_controller = link
+				if (!norad_controller.tag_scrubber)
+					norad_controller.tag_scrubber = src
+				else if (!norad_controller.tag_scrubber_secondary)
+					norad_controller.tag_scrubber_secondary = src
+				else
+					to_chat(user, "<span class='warning'>There is already two scrubbers linked. Unlink them before linking more scrubbers.</span>")
+					return
+				to_chat(user, "<span class='notice'>You link \the [src] to \the [link].</span>")
+			return
 		broadcast_status()
 		to_chat(user, "<span class='notice'>A [name == "Air Vent" ? "red" : "green"] light appears on \the [src] as it broadcasts atmospheric data.</span>")
 		flick("broadcast", src)

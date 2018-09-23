@@ -99,76 +99,59 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 		return UI_CLOSE
 	return ..()
 
-/obj/machinery/media/jukebox/ui_interact(mob/user, ui_key = "jukebox", var/datum/nanoui/ui = null, var/force_open = 1)
+/obj/machinery/media/jukebox/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 	var/title = "RetroBox - Space Style"
 	var/data[0]
-	if(!(stat & (NOPOWER|BROKEN)))
-		data["current_track"] = current_track != null ? current_track.title : ""
-		data["playing"] = playing
-		var/list/tracks_ss13 = list()
-		for(var/datum/track/T in tracks)
-			if(T.genre == "SS13")
-				tracks_ss13[++tracks_ss13.len] = list("track" = T.title)
- 		data["tracks_ss13"] = tracks_ss13
+	data["current_track"] = current_track != null ? current_track.title : ""
+	data["playing"] = playing
+	var/list/tracks_ss13 = list()
+	for(var/datum/track/T in tracks)
+		if(T.genre == "SS13")
+			tracks_ss13[++tracks_ss13.len] = list("track" = T.title)
+	data["tracks_ss13"] = tracks_ss13
 
-		var/list/tracks_cyberpunk = list()
-		for(var/datum/track/T in tracks)
-			if(T.genre == "Cyberpunk")
-				tracks_cyberpunk[++tracks_cyberpunk.len] = list("track" = T.title)
-		data["tracks_cyberpunk"] = tracks_cyberpunk
+	var/list/tracks_cyberpunk = list()
+	for(var/datum/track/T in tracks)
+		if(T.genre == "Cyberpunk")
+			tracks_cyberpunk[++tracks_cyberpunk.len] = list("track" = T.title)
+	data["tracks_cyberpunk"] = tracks_cyberpunk
 
  	// update the ui if it exists, returns null if no ui is passed/found
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if (!ui)
+	if(!ui)
 		// the ui does not exist, so we'll create a new() one
         // for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
 		ui = new(user, src, ui_key, "jukebox.tmpl", title, 450, 600)
 		// when the ui is first opened this is the data it will use
 		ui.set_initial_data(data)
 		// open the new ui window
+		ui.open()
 
 
 /obj/machinery/media/jukebox/Topic(href, href_list)
-	if(..() || !(Adjacent(usr) || istype(usr, /mob/living/silicon)))
+	if(!anchored)
+		to_chat(usr,"<span class='warning'>You must secure \the [src] first.</span>")
 		return
- 	if(!anchored)
-		usr << "<span class='warning'>You must secure \the [src] first.</span>"
+	if(stat & (NOPOWER|BROKEN))
+		to_chat(usr,"\The [src] doesn't appear to function.")
 		return
- 	if(stat & (NOPOWER|BROKEN))
-		usr << "\The [src] doesn't appear to function."
+	if(!(Adjacent(usr) || istype(usr, /mob/living/silicon)))
 		return
- 	if(href_list["change_track"])
+	if(href_list["change_track"])
 		for(var/datum/track/T in tracks)
 			if(T.title == href_list["title"])
 				current_track = T
 				StartPlaying()
-				break
-	else if(href_list["stop"])
+		GLOB.nanomanager.update_uis(src)
+	if(href_list["stop"])
 		StopPlaying()
-	else if(href_list["play"])
-		if(emagged)
-			playsound(src.loc, 'sound/items/AirHorn.ogg', 100, 1)
-			for(var/mob/living/carbon/M in ohearers(6, src))
-				if(istype(M, /mob/living/carbon/human))
-					var/mob/living/carbon/human/H = M
-					if(istype(H.l_ear, /obj/item/clothing/ears/earmuffs) || istype(H.r_ear, /obj/item/clothing/ears/earmuffs))
-						continue
-				M.sleeping = 0
-				M.stuttering += 20
-				M.ear_deaf += 30
-				M.Weaken(3)
-				if(prob(30))
-					M.Stun(10)
-					M.Paralyse(4)
-				else
-					M.make_jittery(500)
-			spawn(15)
-				explode()
-		else if(current_track == null)
-			usr << "No track selected."
+		GLOB.nanomanager.update_uis(src)
+	if(href_list["play"])
+		if(!current_track)
+			to_chat(usr, "No track selected.")
 		else
 			StartPlaying()
- 	return 1
+		GLOB.nanomanager.update_uis(src)
 
 /obj/machinery/media/jukebox/attack_ai(mob/user as mob)
 	return src.attack_hand(user)
@@ -219,8 +202,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 		return
 
 	// Jukeboxes cheat massively and actually don't share id. This is only done because it's music rather than ambient noise.
-	sound_token = sound_player.PlayLoopingSound(src, sound_id, current_track.sound, volume = volume, range = 7, falloff = 3, prefer_mute = TRUE)
-
+	sound_token = GLOB.sound_player.PlayLoopingSound(src, sound_id, current_track.sound, volume = volume, range = 7, falloff = 3, prefer_mute = TRUE)
 	playing = 1
 	update_use_power(2)
 	update_icon()

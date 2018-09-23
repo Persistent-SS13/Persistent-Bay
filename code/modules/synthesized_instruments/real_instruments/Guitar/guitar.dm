@@ -1,3 +1,7 @@
+/datum/sound_player/guitar
+	volume = 25
+	range = 10 //Kinda don't want this horrible thing to be heard from far away
+
 /obj/item/device/synthesized_instrument/guitar
 	name = "guitar"
 	desc = "A wooden musical instrument with six strings. This one looks like it may actually work."

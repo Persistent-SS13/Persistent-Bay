@@ -417,26 +417,3 @@ GLOBAL_DATUM_INIT(temp_reagents_holder, /obj, new)
 		reagents = new/datum/reagents(max_vol, src)
 	return reagents
 
-/datum/reagents/proc/create_puddle(var/atom/target, var/amount = 1, var/multiplier = 1, var/copy = 0)
-	if (!target || amount < 3)
-		return
-	var/hasLiquid = 0
-	for(var/datum/reagent/R in reagent_list)	//Checks if the current container has any liquid reagents
-		if (R.reagent_state == LIQUID)
-			hasLiquid = 1
-	if(!hasLiquid)								//Otherwise we simply don't create a puddle out of SOLID only reagents
-		return
-	//The actual puddle creation below.
-	if (!isturf(target))
-		target = target.loc
-	var/obj/effect/decal/cleanable/puddle_chem/P
-	for (var/obj/effect/decal/cleanable/puddle_chem/puddle in target)
-		P = puddle
-		break
-	if (!P)
-		P = new /obj/effect/decal/cleanable/puddle_chem(target)
-
-	trans_to(P, amount, multiplier, copy)
-	P.update_neighbours()
-
-	P.mix_with_neighbours()

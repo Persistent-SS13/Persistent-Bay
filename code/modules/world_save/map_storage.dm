@@ -351,7 +351,7 @@ var/global/list/debug_data = list()
 	all_loaded = list()
 	found_vars = list()
 	debug_data = list()
-	var/turf/v = null
+	var/v = null
 	f.cd = "/extras"
 	from_file(f["email"],ntnet_global.email_accounts)
 	from_file(f["records"],GLOB.all_crew_records)

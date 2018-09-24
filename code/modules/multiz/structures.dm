@@ -17,7 +17,7 @@
 
 	var/const/climb_time = 2 SECONDS
 	var/static/list/climbsounds = list('sound/effects/ladder.ogg','sound/effects/ladder2.ogg','sound/effects/ladder3.ogg','sound/effects/ladder4.ogg')
-	var/dnr = 0
+
 /obj/structure/ladder/Initialize()
 	. = ..()
 	// the upper will connect to the lower

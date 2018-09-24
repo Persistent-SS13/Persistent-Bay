@@ -65,8 +65,6 @@
 			return global.SSprocessing;
 		if("SSskybox")
 			return global.SSskybox;
-		if("SStimer")
-			return global.SStimer;
 		if("SSvines")
 			return global.SSvines;
 		if("Tier1Runes")
@@ -837,6 +835,8 @@
 			return global.save_controller;
 		if("saved")
 			return global.saved;
+		if("scheduler")
+			return global.scheduler;
 		if("secondary_mode")
 			return global.secondary_mode;
 		if("secret_force_mode")
@@ -869,6 +869,8 @@
 			return global.solars_list;
 		if("sortInstance")
 			return global.sortInstance;
+		if("sound_player")
+			return global.sound_player;
 		if("sounds_cache")
 			return global.sounds_cache;
 		if("spacevines_spawned")
@@ -947,6 +949,8 @@
 			return global.tank_gauge_cache;
 		if("tape_roll_applications")
 			return global.tape_roll_applications;
+		if("task_triggered_event")
+			return global.task_triggered_event;
 		if("telecomms_list")
 			return global.telecomms_list;
 		if("tertiary_mode")
@@ -1138,8 +1142,6 @@
 			global.SSprocessing=newval;
 		if("SSskybox")
 			global.SSskybox=newval;
-		if("SStimer")
-			global.SStimer=newval;
 		if("SSvines")
 			global.SSvines=newval;
 		if("Tier1Runes")
@@ -1908,6 +1910,8 @@
 			global.save_controller=newval;
 		if("saved")
 			global.saved=newval;
+		if("scheduler")
+			global.scheduler=newval;
 		if("secondary_mode")
 			global.secondary_mode=newval;
 		if("secret_force_mode")
@@ -1940,6 +1944,8 @@
 			global.solars_list=newval;
 		if("sortInstance")
 			global.sortInstance=newval;
+		if("sound_player")
+			global.sound_player=newval;
 		if("sounds_cache")
 			global.sounds_cache=newval;
 		if("spacevines_spawned")
@@ -2018,6 +2024,8 @@
 			global.tank_gauge_cache=newval;
 		if("tape_roll_applications")
 			global.tape_roll_applications=newval;
+		if("task_triggered_event")
+			global.task_triggered_event=newval;
 		if("telecomms_list")
 			global.telecomms_list=newval;
 		if("tertiary_mode")
@@ -2176,7 +2184,6 @@
 	"SSopen_space",
 	"SSprocessing",
 	"SSskybox",
-	"SStimer",
 	"SSvines",
 	"Tier1Runes",
 	"Tier2Runes",
@@ -2563,6 +2570,7 @@
 	"same_wires",
 	"save_controller",
 	"saved",
+	"scheduler",
 	"secondary_mode",
 	"secret_force_mode",
 	"send_emergency_team",
@@ -2619,6 +2627,7 @@
 	"tail_icon_cache",
 	"tank_gauge_cache",
 	"tape_roll_applications",
+	"task_triggered_event",
 	"telecomms_list",
 	"tertiary_mode",
 	"text_tag_icons",

@@ -351,7 +351,7 @@ var/global/list/debug_data = list()
 	all_loaded = list()
 	found_vars = list()
 	debug_data = list()
-	var/turf/v = null
+	var/turf/ve = null
 	f.cd = "/extras"
 	from_file(f["email"],ntnet_global.email_accounts)
 	from_file(f["records"],GLOB.all_crew_records)
@@ -380,9 +380,9 @@ var/global/list/debug_data = list()
 		var/starttime2 = REALTIMEOFDAY
 		var/breakout = 0
 		while(!f.eof && !breakout)
-			f >> v
+			f >> ve
 			if(z == 29)
-				world << "[v.x] [v.y]"
+				world << "[ve.x] [ve.y]"
 			sleep(-1)
 			if(((REALTIMEOFDAY - starttime2)/10) > 300)
 				breakout = 1

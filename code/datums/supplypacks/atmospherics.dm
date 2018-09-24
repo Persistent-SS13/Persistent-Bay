@@ -98,13 +98,6 @@
 	containername = "Portable Air Pump Shipment"
 	containertype = /obj/structure/largecrate
 
-/decl/hierarchy/supply_pack/atmospherics/scrubber
-	name = "Portable Air Scrubber (x4)"
-	contains = list(/obj/machinery/portable_atmospherics/powered/scrubber = 4)
-	cost = 25
-	containername = "Portable Air scrubber Shipment"
-	containertype = /obj/structure/largecrate
-
 /decl/hierarchy/supply_pack/atmospherics/gas_generator
 	name = "Gas Generator"
 	contains = list(/obj/machinery/portable_atmospherics/gas_generator)

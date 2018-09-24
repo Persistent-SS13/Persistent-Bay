@@ -381,7 +381,7 @@ var/global/list/debug_data = list()
 		var/breakout = 0
 		while(!f.eof && !breakout)
 			f >> v
-			if(verbos && v)
+			if(z == 29)
 				world << "[v.x] [v.y]"
 			sleep(-1)
 			if(((REALTIMEOFDAY - starttime2)/10) > 300)

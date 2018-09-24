@@ -48,9 +48,6 @@
 	var/radio_filter_out
 	var/radio_filter_in
 
-	var/obj/machinery/airlock_controller_norad/norad_controller // For the no radio controller (code/modules/norad_controller)
-	var/norad_UID
-
 /obj/machinery/atmospherics/unary/vent_pump/on
 	use_power = 1
 	icon_state = "map_vent_out"
@@ -403,26 +400,6 @@
 		return 1
 
 	if(isMultitool(W))
-		var/obj/item/device/multitool/mt = W
-		if (istype(mt.get_buffer(), /obj/machinery/airlock_controller_norad))
-			var/obj/machinery/airlock_controller_norad/link = mt.get_buffer()
-			if (!istype(link) )
-				return 0
-			//checks if the linked airlock_controller_norad is in range.
-			if (!(link in view(NORAD_MAX_RANGE) ) )
-				to_chat(user, "<span class='warning'>\The [link] is too far away. Its effective range should be around [NORAD_MAX_RANGE] tiles.</span>")
-				return
-			//the actual (un)linkage below
-			if (norad_controller && !QDELETED(norad_controller) )
-				to_chat(user, "<span class='warning'>You unlink \the [src] from \the [norad_controller].</span>")
-				if (norad_controller.tag_airpump == src)
-					norad_controller.tag_airpump = null
-				norad_controller = null
-			else
-				norad_controller = link
-				norad_controller.tag_airpump = src
-				to_chat(user, "<span class='notice'>You link \the [src] to \the [link].</span>")
-			return
 		broadcast_status()
 		to_chat(user, "<span class='notice'>A [name == "Air Vent" ? "red" : "green"] light appears on \the [src] as it broadcasts atmospheric data.</span>")
 		flick("broadcast", src)

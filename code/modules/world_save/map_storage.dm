@@ -382,7 +382,7 @@ var/global/list/debug_data = list()
 		while(!f.eof && !breakout)
 			f >> ve
 			if(z == 29)
-				message_admns("[ve.x] [ve.y]")
+				message_admins("[ve.x] [ve.y]")
 			sleep(-1)
 			if(((REALTIMEOFDAY - starttime2)/10) > 300)
 				breakout = 1

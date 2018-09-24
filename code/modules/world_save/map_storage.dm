@@ -293,6 +293,7 @@ var/global/list/debug_data = list()
 	to_file(f,lis)
 
 /proc/Save_World()
+	SetUniversalState(/datum/universal_state/save)
 	to_world("<font size=4 color='green'>The world is saving! You won't be able to join at this time.</font>")
 	config.enter_allowed = 0
 	Prepare_Atmos_For_Saving()
@@ -301,7 +302,7 @@ var/global/list/debug_data = list()
 	var/starttime = REALTIMEOFDAY
 	var/backup = 0
 	var/dir = 1
-	
+
 	while(!backup)
 		if(fexists("backups/[dir].sav"))
 			dir++
@@ -341,6 +342,7 @@ var/global/list/debug_data = list()
 	config.enter_allowed = 1
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
+	SetUniversalState(/datum/universal_state)
 	return 1
 
 
@@ -392,7 +394,7 @@ var/global/list/debug_data = list()
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
-			
+
 		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
 
 	f.cd = "/extras"
@@ -426,7 +428,7 @@ var/global/list/debug_data = list()
 	world << "Loading Complete"
 	return 1
 
-	
+
 
 /proc/Load_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
 	var/z = zi

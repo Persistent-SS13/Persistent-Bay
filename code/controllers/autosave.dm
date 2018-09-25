@@ -24,4 +24,3 @@ var/datum/controller/save_controller/save_controller
 
 /datum/controller/save_controller/proc/save()
 	Save_World()
-

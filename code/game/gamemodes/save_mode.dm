@@ -17,32 +17,31 @@
 	for(var/mob/M in GLOB.player_list)
 		apply_savescreen(M)
 		start_cinematic_intro()
-	for(var/mob/H as mob in GLOB.player_list)
-		H.paralysis = 8000
 	SSmobs.disable()
 
 /datum/universal_state/save/OnPlayerLatejoin()
-	for(var/mob/M in GLOB.player_list)
+	for(var/mob/M)
 		apply_savescreen(M)
 
 /datum/universal_state/save/OnExit()
 	for(var/mob/M in GLOB.player_list)
 		clear_savescreen(M)
 		remove_cinematic_to_players()
-	for(var/mob/H as mob in GLOB.player_list)
-		H.paralysis = 0
 	SSmobs.enable()
 
 /datum/universal_state/save/proc/apply_savescreen(var/mob/living/M)
 	if(M.client)
+		M.Paralyse(100)
 		to_chat(M,"<span class='notice'>You feel frozen, and somewhat disoriented as everything around you goes black.</span>")
 		show_cinematic_to_players()
 
 
 /datum/universal_state/save/proc/clear_savescreen(var/mob/living/M)
 	if(M.client)
+		M.Paralyse(0)
 		to_chat(M,"<span class='notice'>You feel rooted in material world again.</span>")
 		remove_cinematic_to_players()
+
 
 /obj/screen/fullscreen/savescreen
 	//create the cinematic screen obj
@@ -52,7 +51,6 @@
 	layer = HUD_ABOVE_ITEM_LAYER
 	mouse_opacity = 2
 	screen_loc = "WEST,SOUTH"
-
 
 /datum/universal_state/save/proc/start_cinematic_intro()
 	for(var/mob/M in GLOB.player_list) //I guess so that people in the lobby only hear the explosion

@@ -47,6 +47,7 @@ Class Procs:
 /zone/var/list/fuel_objs = list()
 
 /zone/var/needs_update = 0
+/zone/var/condense_buffer = 0
 
 /zone/var/list/edges = list()
 
@@ -170,6 +171,9 @@ Class Procs:
 // At the same time we might as well just check for any needs of condesating (? english)
 // TO-DO : Perhaps polish it a bit if it starts to lag
 /zone/proc/condensation_check()
+	if (world.time < condense_buffer)
+		return
+	condense_buffer = world.time + 15 // 1.5 seconds between condensing
 	var/datum/gas_mixture/air_data = air //So i was sleepy and I decided not to change every "air_data" back to just air
 	if(air_data)
 		var/turf/location = pick(contents)

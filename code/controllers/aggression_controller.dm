@@ -128,7 +128,7 @@ var/datum/controller/aggression_controller/aggression_controller
 						if(2)
 							to_chat(M, pick("You feel a sudden sense of dread...", "You feel shame... but you can't tell why..."))
 							M.playsound_local(M.loc, pick('sound/ambience/ambigen5.ogg','sound/ambience/ambigen4.ogg'), 50, 0)
-							M.phoronation += 0.05 // Mild sanity event
+							M.phoronation += 0.1 // Mild sanity event
 		if(3)
 			var/targets = ceil(mob_targets.len/3)
 			for(var/i=0; i<=targets; i++)
@@ -142,7 +142,7 @@ var/datum/controller/aggression_controller/aggression_controller
 						if(2)
 							to_chat(M, pick("A whisper in your head... pain...", "Being on this asteroid is making you depressed..."))
 							M.playsound_local(M.loc, pick('sound/ambience/ambigen5.ogg','sound/ambience/ambigen4.ogg'), 50, 0)
-							M.phoronation += 0.1 // Sanity event
+							M.phoronation += 0.5 // Sanity event
 					
 		if(4)
 			var/targets = ceil(mob_targets.len/2)
@@ -162,7 +162,7 @@ var/datum/controller/aggression_controller/aggression_controller
 									to_chat(M, pick("<span class='danger'>You want off of this asteroid, NOW! You can't contain your dread!</span>", "<span class='danger'>The voices! You don't want to understand!</span>"))
 								if(2)
 									to_chat(M, pick("<span class='danger'>Voices layered over themselves... you struggle to block out the noise!</span>", "<span class='danger'>You want to flee! You want to escape!</span>"))
-							M.phoronation += 0.2 // Big sanity event
+							M.phoronation += 1 // Big sanity event
 							M.playsound_local(M.loc, pick('sound/effects/yewbic_amb1.ogg', 'sound/effects/yewbic_amb2.ogg', 'sound/effects/yewbic_amb3.ogg', 'sound/effects/yewbic_amb4.ogg'), 50, 0)
 
 
@@ -184,7 +184,7 @@ var/datum/controller/aggression_controller/aggression_controller
 									to_chat(M, pick("<span class='danger'>You want off of this asteroid, NOW! You can't contain your dread!</span>", "<span class='danger'>The voices! You don't want to understand!</span>"))
 								if(2)
 									to_chat(M, pick("<span class='danger'>Voices layered over themselves... you struggle to block out the noise!</span>", "<span class='danger'>AHHHHHHHHHHHHHH!</span>"))
-							M.phoronation += 0.5 // Big sanity event
+							M.phoronation += 2 // Big sanity event
 							M.playsound_local(M.loc, pick('sound/effects/yewbic_amb1.ogg', 'sound/effects/yewbic_amb2.ogg', 'sound/effects/yewbic_amb3.ogg', 'sound/effects/yewbic_amb4.ogg'), 50, 0)
 					
 	events_since_stage_change++				

@@ -43,12 +43,18 @@
 			return global.SSairflow;
 		if("SSatoms")
 			return global.SSatoms;
+		if("SSchemistry")
+			return global.SSchemistry;
 		if("SSfastprocess")
 			return global.SSfastprocess;
 		if("SSgarbage")
 			return global.SSgarbage;
+		if("SSicon_update")
+			return global.SSicon_update;
 		if("SSlegacy")
 			return global.SSlegacy;
+		if("SSlighting")
+			return global.SSlighting;
 		if("SSmachines")
 			return global.SSmachines;
 		if("SSmapping")
@@ -65,8 +71,6 @@
 			return global.SSprocessing;
 		if("SSskybox")
 			return global.SSskybox;
-		if("SStimer")
-			return global.SStimer;
 		if("SSvines")
 			return global.SSvines;
 		if("Tier1Runes")
@@ -269,8 +273,6 @@
 			return global.checked_for_inactives;
 		if("chemical_reaction_logs")
 			return global.chemical_reaction_logs;
-		if("chemical_reactions_list")
-			return global.chemical_reactions_list;
 		if("chicken_count")
 			return global.chicken_count;
 		if("church_name")
@@ -547,18 +549,6 @@
 			return global.light_overlay_cache;
 		if("lighting_overlays_initialised")
 			return global.lighting_overlays_initialised;
-		if("lighting_update_corners")
-			return global.lighting_update_corners;
-		if("lighting_update_corners_old")
-			return global.lighting_update_corners_old;
-		if("lighting_update_lights")
-			return global.lighting_update_lights;
-		if("lighting_update_lights_old")
-			return global.lighting_update_lights_old;
-		if("lighting_update_overlays")
-			return global.lighting_update_overlays;
-		if("lighting_update_overlays_old")
-			return global.lighting_update_overlays_old;
 		if("limb_icon_cache")
 			return global.limb_icon_cache;
 		if("list_of_ais")
@@ -837,6 +827,8 @@
 			return global.save_controller;
 		if("saved")
 			return global.saved;
+		if("scheduler")
+			return global.scheduler;
 		if("secondary_mode")
 			return global.secondary_mode;
 		if("secret_force_mode")
@@ -869,6 +861,8 @@
 			return global.solars_list;
 		if("sortInstance")
 			return global.sortInstance;
+		if("sound_player")
+			return global.sound_player;
 		if("sounds_cache")
 			return global.sounds_cache;
 		if("spacevines_spawned")
@@ -947,6 +941,8 @@
 			return global.tank_gauge_cache;
 		if("tape_roll_applications")
 			return global.tape_roll_applications;
+		if("task_triggered_event")
+			return global.task_triggered_event;
 		if("telecomms_list")
 			return global.telecomms_list;
 		if("tertiary_mode")
@@ -1116,12 +1112,18 @@
 			global.SSairflow=newval;
 		if("SSatoms")
 			global.SSatoms=newval;
+		if("SSchemistry")
+			global.SSchemistry=newval;
 		if("SSfastprocess")
 			global.SSfastprocess=newval;
 		if("SSgarbage")
 			global.SSgarbage=newval;
+		if("SSicon_update")
+			global.SSicon_update=newval;
 		if("SSlegacy")
 			global.SSlegacy=newval;
+		if("SSlighting")
+			global.SSlighting=newval;
 		if("SSmachines")
 			global.SSmachines=newval;
 		if("SSmapping")
@@ -1138,8 +1140,6 @@
 			global.SSprocessing=newval;
 		if("SSskybox")
 			global.SSskybox=newval;
-		if("SStimer")
-			global.SStimer=newval;
 		if("SSvines")
 			global.SSvines=newval;
 		if("Tier1Runes")
@@ -1342,8 +1342,6 @@
 			global.checked_for_inactives=newval;
 		if("chemical_reaction_logs")
 			global.chemical_reaction_logs=newval;
-		if("chemical_reactions_list")
-			global.chemical_reactions_list=newval;
 		if("chicken_count")
 			global.chicken_count=newval;
 		if("church_name")
@@ -1618,18 +1616,6 @@
 			global.light_overlay_cache=newval;
 		if("lighting_overlays_initialised")
 			global.lighting_overlays_initialised=newval;
-		if("lighting_update_corners")
-			global.lighting_update_corners=newval;
-		if("lighting_update_corners_old")
-			global.lighting_update_corners_old=newval;
-		if("lighting_update_lights")
-			global.lighting_update_lights=newval;
-		if("lighting_update_lights_old")
-			global.lighting_update_lights_old=newval;
-		if("lighting_update_overlays")
-			global.lighting_update_overlays=newval;
-		if("lighting_update_overlays_old")
-			global.lighting_update_overlays_old=newval;
 		if("limb_icon_cache")
 			global.limb_icon_cache=newval;
 		if("list_of_ais")
@@ -1908,6 +1894,8 @@
 			global.save_controller=newval;
 		if("saved")
 			global.saved=newval;
+		if("scheduler")
+			global.scheduler=newval;
 		if("secondary_mode")
 			global.secondary_mode=newval;
 		if("secret_force_mode")
@@ -1940,6 +1928,8 @@
 			global.solars_list=newval;
 		if("sortInstance")
 			global.sortInstance=newval;
+		if("sound_player")
+			global.sound_player=newval;
 		if("sounds_cache")
 			global.sounds_cache=newval;
 		if("spacevines_spawned")
@@ -2018,6 +2008,8 @@
 			global.tank_gauge_cache=newval;
 		if("tape_roll_applications")
 			global.tape_roll_applications=newval;
+		if("task_triggered_event")
+			global.task_triggered_event=newval;
 		if("telecomms_list")
 			global.telecomms_list=newval;
 		if("tertiary_mode")
@@ -2165,9 +2157,12 @@
 	"SSair",
 	"SSairflow",
 	"SSatoms",
+	"SSchemistry",
 	"SSfastprocess",
 	"SSgarbage",
+	"SSicon_update",
 	"SSlegacy",
+	"SSlighting",
 	"SSmachines",
 	"SSmapping",
 	"SSmaterials",
@@ -2176,7 +2171,6 @@
 	"SSopen_space",
 	"SSprocessing",
 	"SSskybox",
-	"SStimer",
 	"SSvines",
 	"Tier1Runes",
 	"Tier2Runes",
@@ -2278,7 +2272,6 @@
 	"chargen_robolimbs",
 	"checked_for_inactives",
 	"chemical_reaction_logs",
-	"chemical_reactions_list",
 	"chicken_count",
 	"church_name",
 	"client_preference_stats_",
@@ -2418,12 +2411,6 @@
 	"license_to_url",
 	"light_overlay_cache",
 	"lighting_overlays_initialised",
-	"lighting_update_corners",
-	"lighting_update_corners_old",
-	"lighting_update_lights",
-	"lighting_update_lights_old",
-	"lighting_update_overlays",
-	"lighting_update_overlays_old",
 	"limb_icon_cache",
 	"list_of_ais",
 	"loadout_categories",
@@ -2563,6 +2550,7 @@
 	"same_wires",
 	"save_controller",
 	"saved",
+	"scheduler",
 	"secondary_mode",
 	"secret_force_mode",
 	"send_emergency_team",
@@ -2619,6 +2607,7 @@
 	"tail_icon_cache",
 	"tank_gauge_cache",
 	"tape_roll_applications",
+	"task_triggered_event",
 	"telecomms_list",
 	"tertiary_mode",
 	"text_tag_icons",

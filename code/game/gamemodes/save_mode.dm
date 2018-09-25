@@ -28,11 +28,12 @@
 	SSatoms.disable()
 	SSprocessing.disable()
 	SSgarbage.disable()
-
-/datum/universal_state/save/OnPlayerLatejoin()
+	turbolift_controller.disable()
+/*
+/datum/universal_state/save/OnPlayerLatejoin() // Not needed
 	for(var/mob/M)
 		apply_savescreen(M)
-
+*/
 /datum/universal_state/save/OnExit()
 	for(var/mob/M in GLOB.player_list)
 		clear_savescreen(M)
@@ -48,6 +49,7 @@
 	SSatoms.enable()
 	SSprocessing.enable()
 	SSgarbage.enable()
+	turbolift_controller.enable()
 
 /datum/universal_state/save/proc/apply_savescreen(var/mob/living/M)
 	if(M.client)

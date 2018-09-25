@@ -195,7 +195,7 @@
 	panel?.close()
 	load_panel?.close()
 
-	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1))
+	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
 
 	for(var/mob/M in SSmobs.mob_list)
 		if(M.loc && !M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
@@ -289,7 +289,7 @@
 	character.redraw_inv()
 	CreateModularRecord(character)
 	character.finishLoadCharacter()	// This is ran because new_players don't like to stick around long.
-	return 1	
+	return 1
 
 /mob/proc/finishLoadCharacter()
 	if(spawn_type == 2)
@@ -311,7 +311,7 @@
 			client.screen -= cinematic
 
 		spawn_type = 1
-		sound_to(src, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = 1))
+		sound_to(src, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
 		spawn()
 			shake_camera(src, 3, 1)
 		druggy = 3

@@ -163,3 +163,10 @@
 	cost = 260
 	containertype = /obj/structure/largecrate
 	containername = "\improper Jukebox crate"
+
+/decl/hierarchy/supply_pack/hospitality/piano
+	name = "Piano Crate"
+	contains = list(/obj/structure/device/piano/New = 1)
+	cost = 500
+	containertype = /obj/structure/largecrate
+	containername = "\improper Piano crate"

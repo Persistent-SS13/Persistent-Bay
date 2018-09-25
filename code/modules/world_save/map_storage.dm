@@ -380,17 +380,22 @@ var/global/list/debug_data = list()
 		var/starttime2 = REALTIMEOFDAY
 		var/breakout = 0
 		var/ind = 0
-		while(!f.eof && !breakout)
-			if(z == 29)
-				ind++
-				if(ind < 60 || (ind > 120 && ind < 130))
+		if(z == 29)
+			var/savefile/fee = new("map_saves/zlevel19.sav")
+			fee.cd= "/map/29"
+			while(!fee.eof)
+				if((ind > 50 && ind < 60) || (ind > 120 && ind < 130))
 					continue
-				message_admins("[ind]")
 			sleep(-1)
-			if(((REALTIMEOFDAY - starttime2)/10) > 300)
-				breakout = 1
-			f >> ve
+			fee >> ve
 			
+		else
+			
+			while(!f.eof && !breakout)
+				sleep(-1)
+				if(((REALTIMEOFDAY - starttime2)/10) > 300)
+					breakout = 1
+				f >> ve
 		if(breakout)
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")

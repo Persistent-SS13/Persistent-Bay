@@ -47,9 +47,9 @@
 	if(!istype(A, /area/turbolift))
 		text += "<br>" + (isspace(A) ? "<a href='?src=\ref[src];action=create_area'>Create Area</a>" : "Create Area - An area already exists here")
 		text += "<br>" + (isspace(A) ? "Modify Area - You can't edit space!" : "<a href='?src=\ref[src];action=edit_area'>Modify Area</a>")
-		text += "<br>" + (isspace(A) ? "Merge Areas - You can't combine space!" : A.apc ? "Merge Areas - The APC must be removed first" : getAdjacentAreas() ? "<a href='?src=\ref[src];action=merge_area'>Merge Areas</a>" : "Merge Areas - There are no valid areas to merge with")
-		text += "<br>" + (isspace(A) ? "Add to Area - You can't add to space!" : A.apc ? "Add to Area - The APC must be removed first" : getAdjacentAreas(1) ? "<a href='?src=\ref[src];action=add_to_area'>Add to Area</a>" : "Add to Area - There are no valid areas to add tiles from")
-		text += "<br>" + (isspace(A) ? "Remove Area - You can't remove space!" : A.apc ? "Remove Area - The APC must be removed first" : "<a href='?src=\ref[src];action=remove_area'>Remove Area</a>")
+		text += "<br>" + (isspace(A) ? "Merge Areas - You can't combine space!" : A.apc || A.aro ? "Merge Areas - The APC/ARO must be removed first" : getAdjacentAreas() ? "<a href='?src=\ref[src];action=merge_area'>Merge Areas</a>" : "Merge Areas - There are no valid areas to merge with")
+		text += "<br>" + (isspace(A) ? "Add to Area - You can't add to space!" : A.apc || A.aro ? "Add to Area - The APC/ARO must be removed first" : getAdjacentAreas(1) ? "<a href='?src=\ref[src];action=add_to_area'>Add to Area</a>" : "Add to Area - There are no valid areas to add tiles from")
+		text += "<br>" + (isspace(A) ? "Remove Area - You can't remove space!" : A.apc || A.aro ? "Remove Area - The APC/ARO must be removed first" : "<a href='?src=\ref[src];action=remove_area'>Remove Area</a>")
 	else
 		text += "You may not touch turbolifts"
 		text += "</BODY></HTML>"
@@ -149,7 +149,7 @@
 	for(var/dir in GLOB.cardinal)
 		var/turf/T = get_step(usr, dir)
 		var/area/area = getArea(T)
-		if(area && !area.apc && area != A && !istype(area, /area/turbolift))
+		if(area && !area.apc && !area.aro && area != A && !istype(area, /area/turbolift))
 			turfs["[dir2text(dir)]"] = T
 	var/turf/T = turfs[input("Choose turf to merge into [A.name]", "Area") as null|anything in turfs]
 	if(!T)
@@ -168,7 +168,7 @@
 	for(var/dir in GLOB.cardinal)
 		var/turf/T = get_step(usr, dir)
 		var/area/area = getArea(T)
-		if(area && !area.apc && area != A && !istype(area, /area/turbolift))
+		if(area && !area.apc && !area.aro && area != A && !istype(area, /area/turbolift))
 			if(n || !isspace(area))
 				areas.Add(area)
 	if(!areas.len)
@@ -178,7 +178,7 @@
 
 /obj/item/blueprints/proc/delete_area()
 	var/area/A = getArea(usr)
-	if (isspace(A) || A.apc) //let's just check this one last time, just in case
+	if (isspace(A) || (A.apc || A.aro) ) //let's just check this one last time, just in case
 		interact()
 		return
 	to_chat(usr, "<span class='notice'>You scrub [A.name] off the blueprint.</span>")

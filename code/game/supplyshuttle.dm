@@ -364,7 +364,6 @@ var/list/point_source_descriptions = list(
 				var/material/mat = SSmaterials.get_material_by_name(x)
 				if(mat)
 					per += round(mat.value*design.materials[x]/2000,0.01)
-				per += round(design.materials[x]/500,0.01)
 			for(var/x in design.req_tech)
 				per += design.req_tech[x]*5
 			export.typepath = design.build_path
@@ -462,7 +461,9 @@ var/list/point_source_descriptions = list(
 			export.required = rand(50, 100)
 			var/per = rand(10,30)
 			for(var/x in design.materials)
-				per += round(design.materials[x]/500,0.01)
+				var/material/mat = SSmaterials.get_material_by_name(x)
+				if(mat)
+					per += round(mat.value*design.materials[x]/2000,0.01)
 			for(var/x in design.req_tech)
 				per += design.req_tech[x]*5
 			export.typepath = design.build_path

@@ -94,7 +94,7 @@ var/list/_client_preferences_by_type
 	if(new_value == GLOB.PREF_YES)
 		GLOB.using_map.lobby_music.play_to(preference_mob)
 	else
-		sound_to(preference_mob, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
+		sound_to(preference_mob, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1))
 
 /datum/client_preference/play_ambiance
 	description ="Play ambience"
@@ -102,8 +102,8 @@ var/list/_client_preferences_by_type
 
 /datum/client_preference/play_ambiance/changed(var/mob/preference_mob, var/new_value)
 	if(new_value == GLOB.PREF_NO)
-		sound_to(preference_mob, sound(null, repeat = 0, wait = 0, volume = 0, channel = GLOB.lobby_sound_channel))
-		sound_to(preference_mob, sound(null, repeat = 0, wait = 0, volume = 0, channel = GLOB.ambience_sound_channel))
+		sound_to(preference_mob, sound(null, repeat = 0, wait = 0, volume = 0, channel = 1))
+		sound_to(preference_mob, sound(null, repeat = 0, wait = 0, volume = 0, channel = 2))
 
 /datum/client_preference/ghost_ears
 	description ="Ghost ears"
@@ -188,10 +188,6 @@ var/list/_client_preferences_by_type
 	description = "Hardsuit Module Activation Key"
 	key = "HARDSUIT_ACTIVATION"
 	options = list(GLOB.PREF_MIDDLE_CLICK, GLOB.PREF_CTRL_CLICK, GLOB.PREF_ALT_CLICK, GLOB.PREF_CTRL_SHIFT_CLICK)
-
-/datum/client_preference/play_instruments
-	description ="Play instruments"
-	key = "SOUND_INSTRUMENTS"
 
 /********************
 * General Staff Preferences *

@@ -294,7 +294,7 @@ var/global/list/debug_data = list()
 
 /proc/Save_World()
 	SetUniversalState(/datum/universal_state/save)
-	to_world("<font size=4 color='green'>The world is saving! You won't be able to join at this time.</font>")
+	to_world("<font size=4 color='green'>Routine Neural Lace Diagnositcs has begun, You will not be able to interface with your lace.</font>")
 	config.enter_allowed = 0
 	Prepare_Atmos_For_Saving()
 	areas_to_save = list()
@@ -340,8 +340,8 @@ var/global/list/debug_data = list()
 	to_file(f["email"],ntnet_global.email_accounts)
 	to_file(f["next_account_number"],next_account_number)
 	config.enter_allowed = 1
-	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
-	world << "Saving Complete"
+	world << "Routine Neural Lace Diagnositcs took [(REALTIMEOFDAY - starttime)/10] seconds!"
+	world << "Diagnositcs Complete"
 	SetUniversalState(/datum/universal_state)
 	return 1
 

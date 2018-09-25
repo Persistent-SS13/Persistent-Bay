@@ -17,8 +17,13 @@ var/datum/controller/save_controller/save_controller
 	if (time_till_autosave() <= 0)
 		timerbuffer += config.autosave_interval
 		save()
-
-
+	if (time_till_autosave() == 5 MINUTE)
+		to_world("<span class='notice'>Routine Neural Lace Diagnositcs in 5 Minutes.</font>")
+	if (time_till_autosave() == 1 MINUTE)
+		to_world("<span class='notice'>Routine Neural Lace Diagnositcs in 1 Minute.</font>")
+	if (time_till_autosave() == 10 SECOND)
+		to_world("<font size=4 color='green'>Routine Neural Lace Diagnositcs in 10 Seconds.</font>")
+		//
 /datum/controller/save_controller/proc/time_till_autosave()
 	return timerbuffer - round_duration_in_ticks
 

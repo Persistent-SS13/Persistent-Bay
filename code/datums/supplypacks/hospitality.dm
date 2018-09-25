@@ -166,7 +166,7 @@
 
 /decl/hierarchy/supply_pack/hospitality/piano
 	name = "Music - Piano crate"
-	contains = list(/obj/structure/device/piano/New)
+	contains = list(/obj/structure/device/piano)
 	cost = 500
 	containertype = /obj/structure/largecrate
 	containername = "\improper Piano crate"

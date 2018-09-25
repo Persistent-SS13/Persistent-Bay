@@ -33,7 +33,6 @@ delete-after: True
 # Also, all entries are changed into a single [] after a master changelog generation. Just remove the brackets when you add new entries.
 # Please surround your changes in  double quotes ("), as certain characters otherwise screws up compiling. The quotes will not show up in the changelog.
 changes:
-  - rscadd: "Added a changelog."
   - rscadd: "Added Auto Save Screen with SS Pausing."
   - spellcheck: "Fixed typos in the saving screen."
   - tweak: "changed saving notifications to be more IC friendly."

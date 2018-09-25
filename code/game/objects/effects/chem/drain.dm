@@ -8,6 +8,8 @@
 	anchored = 1
 	use_power = 0
 
+	var/is_deleted //might as well check if it was deleted since it does on process and we never know how long it takes to qdel right..
+
 /obj/machinery/drain/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
 	if(isWelder(W))
 		var/obj/item/weapon/weldingtool/WT = W
@@ -22,3 +24,9 @@
 					"You hear a ratchet.")
 				new /obj/item/stack/material/steel( src.loc, 2 )
 				qdel(src)
+
+/obj/machinery/drain/Process() //Its deprecated, drop those precious sheets and kill yourself, drain.
+	if(!is_deleted && !QDELETED(src) )
+		is_deleted = 1
+		new /obj/item/stack/material/steel( src.loc, 2 )
+		qdel(src)

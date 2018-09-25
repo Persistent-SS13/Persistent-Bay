@@ -301,6 +301,7 @@ var/global/list/debug_data = list()
 	var/starttime = REALTIMEOFDAY
 	var/backup = 0
 	var/dir = 1
+	
 	while(!backup)
 		if(fexists("backups/[dir].sav"))
 			dir++
@@ -350,7 +351,7 @@ var/global/list/debug_data = list()
 	all_loaded = list()
 	found_vars = list()
 	debug_data = list()
-	var/v = null
+	var/turf/ve = null
 	f.cd = "/extras"
 	from_file(f["email"],ntnet_global.email_accounts)
 	from_file(f["records"],GLOB.all_crew_records)
@@ -377,9 +378,21 @@ var/global/list/debug_data = list()
 	for(var/z in 1 to 50)
 		f.cd = "/map/[z]"
 		var/starttime2 = REALTIMEOFDAY
-		while(!f.eof)
-			f >> v
+		var/breakout = 0
+		var/ind = 0
+		while(!f.eof && !breakout)
+			f >> ve
+			if(z == 29)
+				ind++
+				message_admins("[ind]")
 			sleep(-1)
+			if(((REALTIMEOFDAY - starttime2)/10) > 300)
+				breakout = 1
+		if(breakout)
+			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
+			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
+			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
+			
 		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
 
 	f.cd = "/extras"
@@ -412,6 +425,8 @@ var/global/list/debug_data = list()
 	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Loading Complete"
 	return 1
+
+	
 
 /proc/Load_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
 	var/z = zi

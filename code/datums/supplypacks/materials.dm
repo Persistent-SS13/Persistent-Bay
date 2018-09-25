@@ -87,7 +87,7 @@
 /decl/hierarchy/supply_pack/materials/phoron10
 	name = "Exotic Material - Phoron (x10)"
 	contains = list(/obj/item/stack/material/phoron/ten)
-	cost = 150
+	cost = 350
 	containername = "\improper Phoron sheets crate"
 	containertype = /obj/structure/closet/crate/secure/phoron
 	access = core_access_engineering_programs

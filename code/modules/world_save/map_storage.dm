@@ -383,7 +383,7 @@ var/global/list/debug_data = list()
 		while(!f.eof && !breakout)
 			if(z == 29)
 				ind++
-				if(ind == 77 || ind == 78)
+				if(ind > 70 && ind < 80)
 					continue
 				message_admins("[ind]")
 			sleep(-1)

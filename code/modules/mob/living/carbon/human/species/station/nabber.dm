@@ -10,7 +10,7 @@
 
 	language = LANGUAGE_NABBER
 	default_language = LANGUAGE_NABBER
-	assisted_langs = list(LANGUAGE_GALCOM, LANGUAGE_LUNAR, LANGUAGE_GUTTER, LANGUAGE_UNATHI, LANGUAGE_SKRELLIAN, LANGUAGE_SOL_COMMON, LANGUAGE_EAL, LANGUAGE_INDEPENDENT, LANGUAGE_SPACER)
+	assisted_langs = list(LANGUAGE_GALCOM, LANGUAGE_LUNAR, LANGUAGE_GUTTER, LANGUAGE_UNATHI, LANGUAGE_SIIK_MAAS, LANGUAGE_SKRELLIAN, LANGUAGE_SOL_COMMON, LANGUAGE_EAL, LANGUAGE_INDEPENDENT, LANGUAGE_SPACER)
 	additional_langs = list(LANGUAGE_GALCOM)
 	name_language = LANGUAGE_NABBER
 	min_age = 8
@@ -56,7 +56,7 @@
 	heat_level_2 = 440 //Default 400
 	heat_level_3 = 800 //Default 1000
 
-	flags = NO_SLIP | CAN_NAB | NO_BLOCK | NO_MINOR_CUT
+	species_flags = SPECIES_FLAG_NO_SLIP | SPECIES_FLAG_CAN_NAB | SPECIES_FLAG_NO_BLOCK | SPECIES_FLAG_NO_MINOR_CUT | SPECIES_FLAG_NEED_DIRECT_ABSORB
 	appearance_flags = HAS_SKIN_COLOR | HAS_EYE_COLOR
 	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED | SPECIES_NO_FBP_CONSTRUCTION | SPECIES_NO_FBP_CHARGEN | SPECIES_NO_LACE
 
@@ -106,7 +106,7 @@
 	equip_adjust = list(
 		slot_back_str = list(NORTH = list("x" = 0, "y" = 7), EAST = list("x" = 0, "y" = 8), SOUTH = list("x" = 0, "y" = 8), WEST = list("x" = 0, "y" = 8))
 			)
-	spawn_flags = SPECIES_IS_RESTRICTED
+
 /datum/species/nabber/get_eyes(var/mob/living/carbon/human/H)
 	var/obj/item/organ/internal/eyes/nabber/O = H.internal_organs_by_name[BP_EYES]
 	if(!O || !istype(O))

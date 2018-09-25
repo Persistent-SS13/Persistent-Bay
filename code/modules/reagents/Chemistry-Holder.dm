@@ -7,6 +7,8 @@ GLOBAL_DATUM_INIT(temp_reagents_holder, /obj, new)
 	var/atom/my_atom = null
 
 /datum/reagents/New(var/maximum_volume = 120, var/atom/my_atom)
+	if(!istype(my_atom))
+		CRASH("Invalid reagents holder: [log_info_line(my_atom)]")
 	..()
 	src.my_atom = my_atom
 	src.maximum_volume = maximum_volume
@@ -70,13 +72,13 @@ GLOBAL_DATUM_INIT(temp_reagents_holder, /obj, new)
 		return 0
 	if(!my_atom.loc) //No reactions inside GC'd containers
 		return 0
-	if(my_atom.flags & NOREACT) // No reactions here
+	if(my_atom.atom_flags & ATOM_FLAG_NO_REACT) // No reactions here
 		return 0
 
 	var/reaction_occured = 0
-	
+
 	var/list/datum/chemical_reaction/eligible_reactions = list()
-	
+
 	for(var/datum/reagent/R in reagent_list)
 		eligible_reactions |= SSchemistry.chemical_reactions_by_id[R.type]
 
@@ -419,4 +421,3 @@ GLOBAL_DATUM_INIT(temp_reagents_holder, /obj, new)
 	else
 		reagents = new/datum/reagents(max_vol, src)
 	return reagents
-

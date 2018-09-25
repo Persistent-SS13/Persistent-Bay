@@ -165,8 +165,20 @@
 	containername = "\improper Jukebox crate"
 
 /decl/hierarchy/supply_pack/hospitality/piano
-	name = "Piano Crate"
-	contains = list(/obj/structure/device/piano/New = 1)
+	name = "Music - Piano crate"
+	contains = list(/obj/structure/device/piano/New)
 	cost = 500
 	containertype = /obj/structure/largecrate
 	containername = "\improper Piano crate"
+
+/decl/hierarchy/supply_pack/hospitality/guitar
+	name = "Music - Guitar crate"
+	contains = list(/obj/item/instrument/guitar)
+	cost = 20
+	containername = "\improper Guitar crate"
+
+/decl/hierarchy/supply_pack/hospitality/piano
+	name = "Music - Violin crate"
+	contains = list(/obj/item/device/violin)
+	cost = 40
+	containername = "\improper Violin crate"

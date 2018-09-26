@@ -5,10 +5,10 @@
 
 SUBSYSTEM_DEF(atoms)
 	name = "Atoms"
-	init_order = INIT_ORDER_ATOMS
+	init_order = SS_INIT_ATOMS
 	flags = SS_NO_FIRE
 
-	var/initialized = INITIALIZATION_INSSATOMS
+	initialized = INITIALIZATION_INSSATOMS
 	var/old_initialized
 
 	var/list/late_loaders
@@ -49,6 +49,7 @@ SUBSYSTEM_DEF(atoms)
 				CHECK_TICK
 
 	report_progress("Initialized [count] atom\s")
+	pass(count)
 
 	initialized = INITIALIZATION_INNEW_REGULAR
 

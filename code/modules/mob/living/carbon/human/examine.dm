@@ -190,7 +190,6 @@
 	var/list/wound_flavor_text = list()
 	var/applying_pressure = ""
 	var/list/shown_objects = list()
-	var/list/hidden_bleeders = list()
 
 	for(var/organ_tag in species.has_limbs)
 
@@ -215,10 +214,8 @@
 				break
 
 		if(hidden && user != src)
-			if(E.status & ORGAN_BLEEDING && !(hidden.item_flags & THICKMATERIAL)) //not through a spacesuit
-				if(!hidden_bleeders[hidden])
-					hidden_bleeders[hidden] = list()
-				hidden_bleeders[hidden] += E.name
+			if(E.status & ORGAN_BLEEDING && !(hidden.item_flags & ITEM_FLAG_THICKMATERIAL)) //not through a spacesuit
+				wound_flavor_text[hidden.name] = "<span class='danger'>[T.He] [T.has] blood soaking through [hidden]!</span><br>"
 		else
 			if(E.is_stump())
 				wound_flavor_text[E.name] += "<b>[T.He] [T.has] a stump where [T.his] [organ_descriptor] should be.</b>\n"
@@ -241,10 +238,7 @@
 				shown_objects += wound.embedded_objects
 				wound_flavor_text["[E.name]"] += "The [wound.desc] on [T.his] [E.name] has \a [english_list(wound.embedded_objects, and_text = " and \a ", comma_text = ", \a ")] sticking out of it!<br>"
 
-	for(var/hidden in hidden_bleeders)
-		wound_flavor_text[hidden] = "[T.He] [T.has] blood soaking through [hidden] around [T.his] [english_list(hidden_bleeders[hidden])]!<br>"
 	msg += "<span class='warning'>"
-
 	for(var/limb in wound_flavor_text)
 		msg += wound_flavor_text[limb]
 	msg += "</span>"
@@ -280,8 +274,7 @@
 					else
 						msg += "<span class = 'deptradio'>New record successfully created for [perpname] in [faction.name] database!\n</span>"
 						faction.records.faction_records |= rec //Add to faction records
-
-				record = faction.get_record(perpname)
+ 				record = faction.get_record(perpname)
 
 				if(record)
 					criminal = record.get_criminalStatus()
@@ -309,7 +302,6 @@
 
 			msg += "<span class = 'deptradio'>Physical status:</span> <a href='?src=\ref[src];medical=1'>\[[medical]\]</a>\n"
 			msg += "<span class = 'deptradio'>Medical records:</span> <a href='?src=\ref[src];medrecord=`'>\[View\]</a>\n"
-
 
 	if(print_flavor_text()) msg += "[print_flavor_text()]\n"
 

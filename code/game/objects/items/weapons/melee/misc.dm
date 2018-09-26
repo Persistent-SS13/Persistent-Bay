@@ -3,7 +3,7 @@
 	desc = "A generic whip."
 	icon_state = "chain"
 	item_state = "chain"
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	flags = CONDUCT
 	slot_flags = SLOT_BELT
 	force = 10
 	throwforce = 7
@@ -17,7 +17,7 @@
 	desc = "A weapon from the abyss. Requires 70 attack to wield."
 	icon_state = "whip"
 	item_state = "whip"
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	flags = CONDUCT
 	slot_flags = SLOT_BELT
 	force = 16 //max hit with 60 strength and no equipment. Duel Arena no No forfeit - Snapshot
 	throwforce = 7

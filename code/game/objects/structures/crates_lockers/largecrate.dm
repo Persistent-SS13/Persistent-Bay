@@ -4,7 +4,7 @@
 	icon = 'icons/obj/storage.dmi'
 	icon_state = "densecrate"
 	density = 1
-	atom_flags = ATOM_FLAG_CLIMBABLE
+	flags = OBJ_CLIMBABLE
 
 /obj/structure/largecrate/Initialize()
 	. = ..()

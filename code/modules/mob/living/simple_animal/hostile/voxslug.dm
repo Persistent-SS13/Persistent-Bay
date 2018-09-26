@@ -19,7 +19,7 @@ Small, little HP, poisonous.
 	move_to_delay = 10
 	density = 0
 	mob_size = MOB_MINISCULE
-	pass_flags = PASSTABLE
+	pass_flags = PASS_FLAG_TABLE
 	holder_type = /obj/item/weapon/holder/voxslug
 
 	melee_damage_lower = 3
@@ -68,10 +68,10 @@ Small, little HP, poisonous.
 	return 1 // Ripped from space carp, no more floating
 
 /mob/living/simple_animal/hostile/voxslug/get_scooped(var/mob/living/carbon/grabber)
-//	if(grabber.species.get_bodytype() != SPECIES_VOX)
-	to_chat(grabber, "<span class='warning'>\The [src] wriggles out of your hands before you can pick it up!</span>")
-	return
-//	else return ..()
+	if(grabber.species.get_bodytype() != SPECIES_VOX)
+		to_chat(grabber, "<span class='warning'>\The [src] wriggles out of your hands before you can pick it up!</span>")
+		return
+	else return ..()
 
 /mob/living/simple_animal/hostile/voxslug/proc/attach(var/mob/living/carbon/human/H)
 	var/obj/item/organ/external/chest = H.organs_by_name["chest"]

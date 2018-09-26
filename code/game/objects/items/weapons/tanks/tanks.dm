@@ -11,10 +11,9 @@ var/list/global/tank_gauge_cache = list()
 	var/gauge_icon = "indicator_tank"
 	var/gauge_cap = 6
 
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BACK
 	w_class = ITEM_SIZE_LARGE
-	matter = list("steel" = 1000)
 
 	force = 5.0
 	throwforce = 10.0
@@ -51,6 +50,7 @@ var/list/global/tank_gauge_cache = list()
 	Wired and assembled tanks may be disarmed with a set of wirecutters. Any exploding or rupturing tank will generate shrapnel, assuming their relief valves have been welded beforehand. Even if not, they can be incited to expel hot gas on ignition if pushed above 173�C. \
 	Relatively easy to make, the single tank bomb requries no tank transfer valve, and is still a fairly formidable weapon that can be manufactured from any tank."
 
+
 /obj/item/weapon/tank/Initialize()
 	. = ..()
 	proxyassembly = new /obj/item/device/tankassemblyproxy(src)
@@ -62,7 +62,7 @@ var/list/global/tank_gauge_cache = list()
 	air_contents.update_values()
 
 	START_PROCESSING(SSobj, src)
-	update_icon()
+	update_icon(override = TRUE)
 
 /obj/item/weapon/tank/Destroy()
 	QDEL_NULL(air_contents)
@@ -100,7 +100,7 @@ var/list/global/tank_gauge_cache = list()
 		to_chat(user, "<span class='notice'>\The [src] feels [descriptive].</span>")
 
 	if(proxyassembly.assembly || wired)
-		to_chat(user, "<span class='warning'>It seems to have [wired? "some wires ": ""][wired && src.proxyassembly.assembly? "and ":""][src.proxyassembly.assembly ? "some sort of assembly ":""]attached to it.</span>")
+		to_chat(user, "<span class='warning'>It seems to have [wired? "some wires ": ""][wired && proxyassembly.assembly? "and ":""][proxyassembly.assembly ? "some sort of assembly ":""]attached to it.</span>")
 	if(valve_welded)
 		to_chat(user, "<span class='warning'>\The [src] emergency relief valve has been welded shut!</span>")
 
@@ -112,6 +112,7 @@ var/list/global/tank_gauge_cache = list()
 
 	if (istype(W, /obj/item/device/analyzer))
 		return
+
 	if (istype(W,/obj/item/latexballon))
 		var/obj/item/latexballon/LB = W
 		LB.blow(src)
@@ -122,7 +123,7 @@ var/list/global/tank_gauge_cache = list()
 		if(C.use(1))
 			wired = 1
 			to_chat(user, "<span class='notice'>You attach the wires to the tank.</span>")
-			update_icon()
+			update_icon(override = TRUE)
 
 	if(isWirecutter(W))
 		if(wired && proxyassembly.assembly)
@@ -144,7 +145,7 @@ var/list/global/tank_gauge_cache = list()
 						assy.a_right = null
 						proxyassembly.assembly = null
 						qdel(assy)
-				update_icon()
+				update_icon(override = TRUE)
 
 			else
 				to_chat(user, "<span class='danger'>You slip and bump the igniter!</span>")
@@ -155,12 +156,10 @@ var/list/global/tank_gauge_cache = list()
 			if(do_after(user, 10, src))
 				to_chat(user, "<span class='notice'>You quickly clip the wire from the tank.</span>")
 				wired = 0
-				update_icon()
+				update_icon(override = TRUE)
 
 		else
 			to_chat(user, "<span class='notice'>There are no wires to cut!</span>")
-
-
 
 	if(istype(W, /obj/item/device/assembly_holder))
 		if(wired)
@@ -174,7 +173,6 @@ var/list/global/tank_gauge_cache = list()
 				to_chat(user, "<span class='notice'>You stop attaching the assembly.</span>")
 		else
 			to_chat(user, "<span class='notice'>You need to wire the device up first.</span>")
-
 
 	if(isWelder(W))
 		var/obj/item/weapon/weldingtool/WT = W
@@ -247,11 +245,11 @@ var/list/global/tank_gauge_cache = list()
 				mask_check = 1
 
 		if(mask_check)
-			if(location.wear_mask && (location.wear_mask.item_flags & AIRTIGHT))
+			if(location.wear_mask && (location.wear_mask.item_flags & ITEM_FLAG_AIRTIGHT))
 				data["maskConnected"] = 1
 			else if(istype(location, /mob/living/carbon/human))
 				var/mob/living/carbon/human/H = location
-				if(H.head && (H.head.item_flags & AIRTIGHT))
+				if(H.head && (H.head.item_flags & ITEM_FLAG_AIRTIGHT))
 					data["maskConnected"] = 1
 
 	// update the ui if it exists, returns null if no ui is passed/found
@@ -281,6 +279,7 @@ var/list/global/tank_gauge_cache = list()
 			distribute_pressure += cp
 		distribute_pressure = min(max(round(distribute_pressure), 0), TANK_MAX_RELEASE_PRESSURE)
 		return TOPIC_REFRESH
+
 	if (href_list["stat"])
 		toggle_valve(usr)
 		return TOPIC_REFRESH
@@ -296,11 +295,11 @@ var/list/global/tank_gauge_cache = list()
 				location.internals.icon_state = "internal0"
 		else
 			var/can_open_valve
-			if(location.wear_mask && (location.wear_mask.item_flags & AIRTIGHT))
+			if(location.wear_mask && (location.wear_mask.item_flags & ITEM_FLAG_AIRTIGHT))
 				can_open_valve = 1
 			else if(istype(location,/mob/living/carbon/human))
 				var/mob/living/carbon/human/H = location
-				if(H.head && (H.head.item_flags & AIRTIGHT))
+				if(H.head && (H.head.item_flags & ITEM_FLAG_AIRTIGHT))
 					can_open_valve = 1
 
 			if(can_open_valve)
@@ -310,8 +309,6 @@ var/list/global/tank_gauge_cache = list()
 					location.internals.icon_state = "internal1"
 			else
 				to_chat(user, "<span class='warning'>You need something to connect to \the [src].</span>")
-
-
 
 /obj/item/weapon/tank/remove_air(amount)
 	return air_contents.remove(amount)
@@ -343,8 +340,9 @@ var/list/global/tank_gauge_cache = list()
 	update_icon()
 	check_status()
 
-
-/obj/item/weapon/tank/update_icon()
+/obj/item/weapon/tank/update_icon(var/override)
+	if(initialized && istype(loc, /obj/) && !istype(loc, /obj/item/clothing/suit/) && !override) //So we don't eat up our tick. Every tick, when we're not actually in play.
+		return
 	overlays.Cut()
 	if(proxyassembly.assembly || wired)
 		overlays += image(icon,"bomb_assembly")
@@ -373,12 +371,10 @@ var/list/global/tank_gauge_cache = list()
 
 //Handle exploding, leaking, and rupturing of the tank
 /obj/item/weapon/tank/proc/check_status()
-
 	if(!air_contents)
 		return 0
 
 	var/pressure = air_contents.return_pressure()
-
 
 	if(pressure > TANK_FRAGMENT_PRESSURE)
 		if(integrity <= 7)
@@ -397,8 +393,6 @@ var/list/global/tank_gauge_cache = list()
 			var/mult = ((air_contents.volume/140)**(1/2)) * (air_contents.total_moles**2/3)/((29*0.64) **2/3) //tanks appear to be experiencing a reduction on scale of about 0.64 total moles
 			//tanks appear to be experiencing a reduction on scale of about 0.64 total moles
 
-
-
 			var/turf/simulated/T = get_turf(src)
 			T.hotspot_expose(air_contents.temperature, 70, 1)
 			if(!T)
@@ -413,7 +407,6 @@ var/list/global/tank_gauge_cache = list()
 				round(min(BOMBCAP_FLASH_RADIUS, ((mult)*strength)*1.20)),
 				)
 
-
 			var/num_fragments = round(rand(8,10) * sqrt(strength * mult))
 			fragmentate(T, num_fragments, 7, list(/obj/item/projectile/bullet/pellet/fragment/tank/small = 7,/obj/item/projectile/bullet/pellet/fragment/tank = 2,/obj/item/projectile/bullet/pellet/fragment/strong = 1))
 
@@ -422,14 +415,10 @@ var/list/global/tank_gauge_cache = list()
 				TTV.remove_tank(src)
 				qdel(TTV)
 
-
 			if(src)
 				qdel(src)
-
 		else
 			integrity -=7
-
-
 	else if(pressure > TANK_RUPTURE_PRESSURE)
 		#ifdef FIREDBG
 		log_debug("<span class='warning'>[x],[y] tank is rupturing: [pressure] kPa, integrity [integrity]</span>")
@@ -444,7 +433,6 @@ var/list/global/tank_gauge_cache = list()
 			visible_message("\icon[src] <span class='danger'>\The [src] flies apart!</span>", "<span class='warning'>You hear a bang!</span>")
 			T.hotspot_expose(air_contents.temperature, 70, 1)
 
-
 			var/strength = 1+((pressure-TANK_LEAK_PRESSURE)/TANK_FRAGMENT_SCALE)
 
 			var/mult = (air_contents.total_moles**2/3)/((29*0.64) **2/3) //tanks appear to be experiencing a reduction on scale of about 0.64 total moles
@@ -456,15 +444,10 @@ var/list/global/tank_gauge_cache = list()
 				var/obj/item/device/transfer_valve/TTV = loc
 				TTV.remove_tank(src)
 
-
 			qdel(src)
-
 		else
 			integrity-= 5
-
-
 	else if(pressure > TANK_LEAK_PRESSURE || air_contents.temperature - T0C > failure_temp)
-
 		if((integrity <= 19 || leaking) && !valve_welded)
 			var/turf/simulated/T = get_turf(src)
 			if(!T)
@@ -485,12 +468,8 @@ var/list/global/tank_gauge_cache = list()
 				#ifdef FIREDBG
 				log_debug("<span class='warning'>[x],[y] tank is leaking: [pressure] kPa, integrity [integrity]</span>")
 				#endif
-
-
 		else
 			integrity-= 2
-
-
 	else
 		if(integrity < maxintegrity)
 			integrity++
@@ -507,7 +486,6 @@ var/list/global/tank_gauge_cache = list()
 	valve_welded = 1
 /obj/item/weapon/tank/oxygen/welded
 	valve_welded = 1
-
 
 /////////////////////////////////
 ///Onetankbombs (added as actual items)
@@ -529,7 +507,8 @@ var/list/global/tank_gauge_cache = list()
 	proxyassembly.assembly = H
 	H.master = proxyassembly
 
-	update_icon()
+	H.update_icon()
+	update_icon(override = TRUE)
 
 /obj/item/weapon/tank/phoron/onetankbomb/Initialize()
 	. = ..()
@@ -543,18 +522,14 @@ var/list/global/tank_gauge_cache = list()
 ///Pulled from rewritten bomb.dm
 /////////////////////////////////
 
-
-
 /obj/item/device/tankassemblyproxy
 	name = "Tank assembly proxy"
 	desc = "Used as a stand in to trigger single tank assemblies... but you shouldn't see this."
 	var/obj/item/weapon/tank/tank = null
 	var/obj/item/device/assembly_holder/assembly = null
 
-
 /obj/item/device/tankassemblyproxy/receive_signal()	//This is mainly called by the sensor through sense() to the holder, and from the holder to here.
 	tank.ignite()	//boom (or not boom if you made shijwtty mix)
-
 
 /obj/item/weapon/tank/proc/assemble_bomb(W,user)	//Bomb assembly proc. This turns assembly+tank into a bomb
 	var/obj/item/device/assembly_holder/S = W
@@ -564,17 +539,15 @@ var/list/global/tank_gauge_cache = list()
 	if(isigniter(S.a_left) == isigniter(S.a_right))		//Check if either part of the assembly has an igniter, but if both parts are igniters, then fuck it
 		return
 
-
 	M.drop_item()			//Remove the assembly from your hands
 	M.remove_from_mob(src)	//Remove the tank from your character,in case you were holding it
 	M.put_in_hands(src)		//Equips the bomb if possible, or puts it on the floor.
 
-	proxyassembly.assembly = S			//Tell the bomb about its assembly part
-	S.master = src.proxyassembly		//Tell the assembly about its new owner
+	proxyassembly.assembly = S	//Tell the bomb about its assembly part
+	S.master = proxyassembly	//Tell the assembly about its new owner
 	S.forceMove(src)			//Move the assembly
 
 	update_icon()
-
 
 /obj/item/weapon/tank/proc/ignite()	//This happens when a bomb is told to explode
 	var/obj/item/device/assembly_holder/assy = proxyassembly.assembly
@@ -601,8 +574,8 @@ var/list/global/tank_gauge_cache = list()
 	if(assembly)
 		assembly.HasProximity(AM)
 
-
 //Fragmentation projectiles
+
 /obj/item/projectile/bullet/pellet/fragment/tank
 	name = "metal fragment"
 	damage = 9  //Big chunks flying off.

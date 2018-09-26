@@ -11,6 +11,7 @@ Class Vars:
 	edges - A list of edges that connect to this zone.
 	air - The gas mixture that any turfs in this zone will return. Values are per-tile with a group multiplier.
 
+	
 Class Procs:
 	add(turf/simulated/T)
 		Adds a turf to the contents, sets its zone and merges its air.

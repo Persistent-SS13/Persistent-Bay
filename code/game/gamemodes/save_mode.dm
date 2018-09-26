@@ -53,12 +53,14 @@
 
 /datum/universal_state/save/proc/apply_savescreen(var/mob/living/M)
 	if(M.client)
+		M.canmove = 0
 		to_chat(M,"<span class='notice'>You feel frozen, and somewhat disoriented as everything around you goes black.</span>")
 		show_cinematic_to_players()
 
 
 /datum/universal_state/save/proc/clear_savescreen(var/mob/living/M)
 	if(M.client)
+		M.canmove = 1
 		to_chat(M,"<span class='notice'>You feel rooted in material world again.</span>")
 		remove_cinematic_to_players()
 
@@ -76,4 +78,3 @@
 	for(var/mob/M in GLOB.player_list)
 		if(M.client)
 			M.client.screen -= cinematic
-

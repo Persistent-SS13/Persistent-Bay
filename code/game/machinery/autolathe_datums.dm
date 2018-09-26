@@ -219,6 +219,16 @@ var/const/EXTRA_COST_FACTOR = 1
 	path = /obj/item/device/tape
 	category = "General"
 
+/datum/autolathe/recipe/norad_airlock_controller
+	name = "airlock controller (no radio)"
+	path = /obj/item/frame/airlock_controller_norad
+	category = "Engineering"
+
+/datum/autolathe/recipe/norad_airlock_sensor
+	name = "airlock sensor (no radio)"
+	path = /obj/item/frame/airlock_sensor_norad
+	category = "Engineering"
+
 /datum/autolathe/recipe/airlockmodule
 	name = "airlock electronics"
 	path = /obj/item/weapon/airlock_electronics

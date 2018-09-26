@@ -7,7 +7,7 @@
 	w_class = ITEM_SIZE_SMALL
 	icon = 'icons/obj/assemblies/electronic_setups.dmi'
 	icon_state = "setup_small"
-	item_flags = NOBLUDGEON
+	item_flags = ITEM_FLAG_NO_BLUDGEON
 	matter = list()		// To be filled later
 	var/list/assembly_components = list()
 	var/list/ckeys_allowed_to_scan = list() // Players who built the circuit can scan it as a ghost.

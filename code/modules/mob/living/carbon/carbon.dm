@@ -441,7 +441,7 @@
 /mob/living/carbon/proc/can_feel_pain(var/check_organ)
 	if(isSynthetic())
 		return 0
-	return !(species && species.flags & NO_PAIN)
+	return !(species && species.species_flags & SPECIES_FLAG_NO_PAIN)
 
 /mob/living/carbon/proc/get_adjusted_metabolism(metabolism)
 	return metabolism
@@ -449,20 +449,32 @@
 /mob/living/carbon/proc/need_breathe()
 	return
 
+/mob/living/carbon/check_has_mouth()
+	// carbon mobs have mouths by default
+	// behavior of this proc for humans is overridden in human.dm
+	return 1
+
 /mob/living/carbon/proc/SetStasis(var/factor, var/source = "misc")
-	if((species && (species.flags & NO_SCAN)) || isSynthetic())
+	if((species && (species.species_flags & SPECIES_FLAG_NO_SCAN)) || isSynthetic())
 		return
 	stasis_sources[source] = factor
 
+/mob/living/carbon/proc/GetStasis()
+	if((species && (species.species_flags & SPECIES_FLAG_NO_SCAN)) || isSynthetic())
+		return 0
+	. = 0
+	for(var/source in stasis_sources)
+		. += stasis_sources[source]
+
 /mob/living/carbon/proc/InStasis()
 	if(!stasis_value)
-		return 0
+		return FALSE
 	return life_tick % stasis_value
 
 // call only once per run of life
 /mob/living/carbon/proc/UpdateStasis()
 	stasis_value = 0
-	if((species && (species.flags & NO_SCAN)) || isSynthetic())
+	if((species && (species.species_flags & SPECIES_FLAG_NO_SCAN)) || isSynthetic())
 		return
 	for(var/source in stasis_sources)
 		stasis_value += stasis_sources[source]
@@ -470,5 +482,3 @@
 
 /mob/living/carbon/has_chem_effect(chem, threshold)
 	return (chem_effects[chem] >= threshold)
-
-

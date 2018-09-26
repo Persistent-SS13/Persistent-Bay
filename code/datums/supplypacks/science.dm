@@ -22,7 +22,7 @@
 	cost = 16
 	containertype = /obj/structure/largecrate
 	containername = "\improper coolant tank crate"
-	
+
 /decl/hierarchy/supply_pack/science/rnd
 	name = "Research and Development Boards"
 	contains = list(/obj/item/weapon/circuitboard/rdserver,
@@ -42,3 +42,4 @@
 	cost = 100
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "\improper Scientist Voidsuit"
+	access = core_access_science_programs

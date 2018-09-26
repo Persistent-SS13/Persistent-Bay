@@ -379,7 +379,9 @@
 	name = "thermoncle"
 	desc = "A monocle thermal."
 	icon_state = "thermoncle"
-	body_parts_covered = 0 //doesn't protect eyes because it's a monocle, duh
+	flags = null //doesn't protect eyes because it's a monocle, duh
+
+	body_parts_covered = 0
 
 /obj/item/clothing/glasses/thermal/plain/eyepatch
 	name = "optical thermal eyepatch"

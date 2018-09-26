@@ -5,7 +5,7 @@
 	name = "Coin"
 	icon_state = "coin"
 	randpixel = 8
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	flags = CONDUCT
 	force = 0.0
 	throwforce = 0.0
 	w_class = ITEM_SIZE_TINY

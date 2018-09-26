@@ -18,7 +18,7 @@
 	attacktext = "nipped"
 	friendly = "prods"
 	wander = 0
-	pass_flags = PASS_FLAG_TABLE
+	pass_flags = PASSTABLE
 	universal_understand = 1
 	holder_type = /obj/item/weapon/holder/borer
 	mob_size = MOB_SMALL

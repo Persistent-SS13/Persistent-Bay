@@ -22,7 +22,7 @@
 #################################
 
 # Your name.  
-author: Kurgis
+author: Nappist
 
 # Optional: Remove this file after generating master changelog.  Useful for PR changelogs that won't get used again.
 delete-after: True
@@ -33,10 +33,4 @@ delete-after: True
 # Also, all entries are changed into a single [] after a master changelog generation. Just remove the brackets when you add new entries.
 # Please surround your changes in  double quotes ("), as certain characters otherwise screws up compiling. The quotes will not show up in the changelog.
 changes: 
-  - rscadd: "Added Bridge Secretary to the job orders in Operations, allowing access to a command headset."
-  - bugfix: "Certain crates & lockers ordered from supply will no longer be nameless."
-  - bugfix: "Access requirements on supply packs have been correctly set on all orders with secure crates or lockers. Orders which includes a secure locker or crate should no longer spawn with 'null' access, preventing anyone from opening it."
-  - rscdel: "Removed entertainment headsets from the Clown, Mime, and Journalist supply orders. Removed guns from all operations supply orders."
-  - rscdel: "Removed musician supply order from Operations, as it lacked proper content. Moved music devices to a seperate supply order."
-  - tweak: "Adjusted the cost & contents of various supply pack orders."
-  - tweak: "The Head of Security crate now requires leader access, all other head of staff job orders including warden now require command access to open.
+  - tweak: "makes windoors deconstructable"

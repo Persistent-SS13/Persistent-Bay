@@ -13,7 +13,7 @@
 	var/hitsound = null
 	var/slot_flags = 0		//This is used to determine on which slots an item can fit.
 	var/no_attack_log = 0			//If it's an item we don't want to log attack_logs with, set this to 1
-	pass_flags = PASSTABLE
+	pass_flags = PASS_FLAG_TABLE
 //	causeerrorheresoifixthis
 	var/obj/item/master = null
 	var/list/origin_tech = null	//Used by R&D to determine what research bonuses it grants.
@@ -337,7 +337,7 @@ var/list/global/slot_flags_enumeration = list(
 			if( (slot_flags & SLOT_TWOEARS) && H.get_equipped_item(slot_other_ear) )
 				return 0
 		if(slot_belt, slot_wear_id)
-			if(slot == slot_belt && (item_flags & IS_BELT))
+			if(slot == slot_belt && (item_flags & SLOT_BELT))
 				return 1
 			else if(!H.w_uniform && (slot_w_uniform in mob_equip))
 				if(!disable_warning)

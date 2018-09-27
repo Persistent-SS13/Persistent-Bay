@@ -116,7 +116,6 @@
 	recipes += new/datum/stack_recipe("canister", /obj/machinery/portable_atmospherics/canister, 10, time = 15, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("cannon frame", /obj/item/weapon/cannonframe, 10, time = 15, one_per_turf = 0, on_floor = 0)
 	recipes += new/datum/stack_recipe("meat spike frame", /obj/structure/kitchenspike_frame, 4, time = 40, one_per_turf = 1, on_floor = 1)
-	recipes += new/datum/stack_recipe("drain", /obj/machinery/drain/, 2, time = 40, one_per_turf = 1, on_floor = 1)
 
 /material/plasteel/generate_recipes()
 	..()
@@ -220,7 +219,6 @@
 		new/datum/stack_recipe("pizza box", /obj/item/pizzabox), \
 		))
 	recipes += new/datum/stack_recipe("empty cigarette pack", /obj/item/weapon/storage/fancy/cigarettes/blank)
-	recipes += new/datum/stack_recipe("empty cigarette", /obj/item/clothing/mask/smokable/cigarette/custom)
 	recipes += new/datum/stack_recipe("cardborg suit", /obj/item/clothing/suit/cardborg, 3)
 	recipes += new/datum/stack_recipe("cardborg helmet", /obj/item/clothing/head/cardborg)
 	recipes += new/datum/stack_recipe_list("folders",list( \

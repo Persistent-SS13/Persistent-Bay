@@ -211,7 +211,7 @@ datum/preferences
 		selected_under.loc = mannequin
 		mannequin.equip_to_slot_if_possible(selected_under,slot_w_uniform)
 	else
-		selected_under = pick(possible_under)
+		selected_under = new /obj/item/clothing/under/color/grey()
 		mannequin.equip_to_slot_if_possible(selected_under,slot_w_uniform)
 	mannequin.equip_to_slot_or_del(selected_under,slot_w_uniform)
 	if(update_icon)

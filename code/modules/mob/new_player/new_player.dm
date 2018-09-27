@@ -54,6 +54,7 @@
 	if(!client)	return 0
 
 	if(href_list["createCharacter"])
+		client.prefs.randomize_appearance_and_body_for()
 		newCharacterPanel()
 		return 0
 

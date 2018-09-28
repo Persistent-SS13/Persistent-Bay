@@ -17,13 +17,13 @@
 	allowed_spawns = list("Cryogenic Storage", "Cyborg Storage")
 	default_spawn = "Cryogenic Storage"
 
-	station_name  = "NTSS Vignette Permanent Station"
-	station_short = "Vignette"
+	station_name  = "Frontier Sector A"
+	station_short = "Sector A"
 	dock_name     = "TBD"
-	boss_name     = "NT Central Command"
-	boss_short    = "Centcom"
-	company_name  = "Nanotrasen"
-	company_short = "NT"
+	boss_name     = "CA Relay Outpost"
+	boss_short    = "Relay Post"
+	company_name  = "Central Authority"
+	company_short = "CA"
 
 //Overriding event containers to remove random versions of overmap events - electrical storm, dust and meteor
 /datum/event_container/mundane

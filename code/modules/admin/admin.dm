@@ -865,6 +865,20 @@ var/global/floorIsLava = 0
 			record.email.login = "[replacetext(record.get_name(), " ", "_")]@freemail.nt"
 			record.email.password = "recovery[rand(1,99)]"
 
+/datum/admins/proc/fixrecords()
+	set category = "Server"
+	set desc="Fixes crew records"
+	set name="fix crew recrods"
+
+	if(!check_rights(R_ADMIN))
+		return
+	for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
+		if(record.linked_account)
+			record.set_name(record.linked_account.owner_name)
+			
+			
+			
+			
 /datum/admins/proc/retrieve_email()
 	set category = "Server"
 	set desc = "Retrieve Email"

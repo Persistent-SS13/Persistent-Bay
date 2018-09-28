@@ -233,6 +233,15 @@
 	containertype = /obj/structure/closet/crate/secure/large
 	access = core_access_medical_programs
 
+/decl/hierarchy/supply_pack/medical/traumaimplant
+	name = "Trauma Implant"
+	contains = list(/obj/item/weapon/implantcase/trauma_alarm,
+					/obj/item/weapon/implanter)
+	cost = 100
+	containername = "\improper Trauma implant box"
+	containertype = /obj/structure/closet/crate/secure
+	access = core_access_command_programs
+
 /decl/hierarchy/supply_pack/medical/voidsuit_heavyduty
 	name = "Heavy Duty Medical Voidsuit"
 	contains = list(/obj/item/clothing/suit/space/void/medical/alt/prepared)

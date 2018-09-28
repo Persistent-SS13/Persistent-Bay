@@ -872,9 +872,11 @@ var/global/floorIsLava = 0
 
 	if(!check_rights(R_ADMIN))
 		return
-	for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
-		if(record.linked_account)
-			record.set_name(record.linked_account.owner_name)
+	var/savefile/f = new("map_saves/records.sav")
+	from_file(f["records"],GLOB.all_crew_records)
+	if(!GLOB.all_crew_records)
+		message_admins("BROKE AS FUCK!!")
+		GLOB.all_crew_records = list()
 			
 			
 			

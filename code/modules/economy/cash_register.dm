@@ -3,7 +3,7 @@
 	desc = "Swipe your ID card to make purchases electronically."
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "register_idle"
-	flags = ITEM_FLAG_NO_BLUDGEON
+	flags = NOBLUDGEON
 	req_access = list(core_access_command_programs)
 	anchored = 1
 

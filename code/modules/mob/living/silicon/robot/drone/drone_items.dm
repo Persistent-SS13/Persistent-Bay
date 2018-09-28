@@ -6,7 +6,7 @@
 	icon = 'icons/obj/device.dmi'
 	icon_state = "gripper"
 
-	item_flags = ITEM_FLAG_NO_BLUDGEON
+	flags = NOBLUDGEON
 
 	//Has a list of items that it can hold.
 	var/list/can_hold = list(

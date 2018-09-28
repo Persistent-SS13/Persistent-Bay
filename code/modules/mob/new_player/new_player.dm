@@ -290,7 +290,7 @@
 	character.redraw_inv()
 	CreateModularRecord(character)
 	character.finishLoadCharacter()	// This is ran because new_players don't like to stick around long.
-	return 1
+	return 1	
 
 /mob/proc/finishLoadCharacter()
 	if(spawn_type == 2)

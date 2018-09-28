@@ -16,8 +16,7 @@
 	icon_state = "filingcabinet"
 	density = 1
 	anchored = 1
-	atom_flags = ATOM_FLAG_CLIMBABLE
-	obj_flags = OBJ_FLAG_ANCHORABLE
+	flags = OBJ_ANCHORABLE|OBJ_CLIMBABLE
 	var/list/can_hold = list(
 		/obj/item/weapon/paper,
 		/obj/item/weapon/folder,
@@ -34,7 +33,7 @@
 	desc = "A filing cabinet installed into a cavity in the wall to save space. Wow!"
 	icon_state = "wallcabinet"
 	density = 0
-	obj_flags = 0
+	flags = 0
 
 
 /obj/structure/filingcabinet/filingcabinet	//not changing the path to avoid unecessary map issues, but please don't name stuff like this in the future -Pete

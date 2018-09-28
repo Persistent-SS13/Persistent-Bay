@@ -4,7 +4,7 @@
 	gender = PLURAL
 	icon = 'icons/obj/items.dmi'
 	icon_state = "soap"
-	atom_flags = ATOM_FLAG_OPEN_CONTAINER
+	flags = OPENCONTAINER
 	w_class = ITEM_SIZE_SMALL
 	throwforce = 0
 	throw_speed = 4

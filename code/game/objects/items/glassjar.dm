@@ -5,7 +5,7 @@
 	icon_state = "jar"
 	w_class = ITEM_SIZE_SMALL
 	matter = list("glass" = 200)
-	item_flags = ITEM_FLAG_NO_BLUDGEON
+	flags = NOBLUDGEON
 	var/list/accept_mobs = list(/mob/living/simple_animal/lizard, /mob/living/simple_animal/mouse)
 	var/contains = 0 // 0 = nothing, 1 = money, 2 = animal, 3 = spiderling
 

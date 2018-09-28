@@ -1,7 +1,6 @@
 /decl/hierarchy/supply_pack/operations
 	name = "Operations"
 
-//engineering
 /decl/hierarchy/supply_pack/operations/engineer
 	name = "Engineering - Engineer equipment"
 	contains = list(/obj/item/clothing/under/rank/engineer,
@@ -18,7 +17,6 @@
 					/obj/item/device/radio/headset/headset_eng)
 	cost = 12
 	containertype = /obj/structure/closet/secure_closet/engineering_personal
-	containername = "engineer's locker"
 	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/operations/atmostech
@@ -36,7 +34,6 @@
 					/obj/item/device/radio/headset/headset_eng)
 	cost = 12
 	containertype = /obj/structure/closet/secure_closet/atmos_personal
-	containername = "atmospheric technician's locker"
 	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/operations/ce
@@ -46,10 +43,10 @@
 					/obj/item/clothing/suit/storage/hazardvest,
 					/obj/item/clothing/head/hardhat/white,
 					/obj/item/clothing/cloak/ce,
+					/obj/item/clothing/shoes/brown,
 					/obj/item/clothing/gloves/insulated,
 					/obj/item/clothing/glasses/meson,
 					/obj/item/clothing/mask/gas,
-					/obj/item/clothing/shoes/brown,
 					/obj/item/clothing/shoes/workboots,
 					/obj/item/weapon/storage/belt/utility/full,
 					/obj/item/weapon/storage/backpack/satchel_eng,
@@ -61,20 +58,18 @@
 					/obj/item/weapon/cartridge/ce,
 					/obj/item/taperoll/engineering,
 					/obj/item/device/flash,
-					/obj/item/device/pda/heads/ce,
 					/obj/item/device/radio/headset/heads/ce)
 	cost = 50
 	containertype = /obj/structure/closet/secure_closet/engineering_chief
-	containername = "chief engineer's locker"
-	access = core_access_command_programs
+	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/operations/engberet
 	name = "Engineering - Beret crate"
 	contains = list(/obj/item/clothing/head/beret/engineering = 5)
 	cost = 8
+	containertype = /obj/structure/closet/crate
 	containername = "engineering berets"
 
-//cargo
 /decl/hierarchy/supply_pack/operations/cargo
 	name = "Cargo - Cargo technician equipment"
 	contains = list(/obj/item/clothing/under/rank/cargotech,
@@ -85,7 +80,6 @@
 					/obj/item/device/radio/headset/headset_cargo)
 	cost = 3
 	containertype = /obj/structure/closet/secure_closet/cargotech
-	containername = "cargo tech equipment"
 	access = core_access_order_approval	//Closest thing to a cargo permission
 
 /decl/hierarchy/supply_pack/operations/miner
@@ -105,7 +99,6 @@
 					/obj/item/device/radio/headset/headset_cargo)
 	cost = 10
 	containertype = /obj/structure/closet/secure_closet/miner
-	containername = "miner equipment"
 	access = core_access_order_approval
 
 /decl/hierarchy/supply_pack/operations/qm
@@ -125,7 +118,6 @@
 					/obj/item/device/radio/headset/headset_cargo)
 	cost = 35
 	containertype = /obj/structure/closet/secure_closet/quartermaster
-	containername = "quartermaster equipment"
 	access = core_access_order_approval
 
 /decl/hierarchy/supply_pack/operations/minervoidsuit
@@ -141,10 +133,9 @@
 	contains = list(/obj/item/clothing/suit/space/void/mining/alt/prepared)
 	cost = 200
 	containertype = /obj/structure/closet/crate/secure/large
-	containername = "\improper Heavy-duty mining voidsuit"
+	containername = "\improper heavy-duty mining voidsuit"
 	access = core_access_order_approval
 
-//security
 /decl/hierarchy/supply_pack/operations/security
 	name = "Security - Security I equipment"
 	contains = list(/obj/item/clothing/under/rank/dispatch,
@@ -160,20 +151,19 @@
 	cost = 12
 	containertype = /obj/structure/closet/secure_closet/security
 	containername = "security cadet equipment"
-	access = core_access_security_programs
 
 /decl/hierarchy/supply_pack/operations/securityofficer
 	name = "Security - Security II equipment"
 	contains = list(/obj/item/clothing/under/rank/security,
-					/obj/item/clothing/suit/armor/vest,
+					/obj/item/clothing/suit/armor/vest/nt,
 					/obj/item/clothing/suit/storage/hooded/wintercoat/security,
-					/obj/item/clothing/head/helmet,
+					/obj/item/clothing/head/helmet/nt,
 					/obj/item/clothing/glasses/sunglasses/sechud,
 					/obj/item/clothing/shoes/jackboots,
 					/obj/item/weapon/storage/belt/security,
 					/obj/item/weapon/storage/backpack/security,
 					/obj/item/weapon/handcuffs,
-					/obj/item/weapon/cell,
+					/obj/item/weapon/cell/crap,
 					/obj/item/weapon/reagent_containers/spray/pepper,
 					/obj/item/weapon/book/manual/nt_regs,
 					/obj/item/taperoll/police,
@@ -182,7 +172,6 @@
 					/obj/item/device/radio/headset/headset_sec)
 	cost = 25
 	containertype = /obj/structure/closet/secure_closet/security
-	containername = "security officer's locker"
 	access = core_access_security_programs
 
 /decl/hierarchy/supply_pack/operations/hos
@@ -214,8 +203,8 @@
 					/obj/item/device/radio/headset/heads/hos)
 	cost = 100
 	containertype = /obj/structure/closet/secure_closet/hos
-	containername = "head of security's locker"
-	access = core_access_leader
+	containername = "security corporal equipment"
+	access = core_access_security_programs
 
 /decl/hierarchy/supply_pack/operations/warden
 	name = "Security - Warden equipment"
@@ -238,8 +227,7 @@
 					/obj/item/device/radio/headset/headset_sec)
 	cost = 50
 	containertype = /obj/structure/closet/secure_closet/warden
-	containername = "warden's locker"
-	access = core_access_command_programs
+	access = core_access_security_programs
 
 /decl/hierarchy/supply_pack/operations/detective
 	name = "Security - Criminal investigator equipment"
@@ -249,9 +237,12 @@
 					/obj/item/clothing/gloves/thick,
 					/obj/item/clothing/head/det,
 					/obj/item/clothing/shoes/laceup,
+					/obj/item/clothing/accessory/black,
 					/obj/item/clothing/accessory/holster/armpit,
+					/obj/item/clothing/glasses/hud/security,
 					/obj/item/clothing/glasses/sunglasses,
 					/obj/item/weapon/storage/backpack/security,
+					/obj/item/weapon/gun/projectile/revolver/detective,
 					/obj/item/weapon/handcuffs,
 					/obj/item/weapon/book/manual/nt_regs,
 					/obj/item/weapon/reagent_containers/food/drinks/flask/detflask,
@@ -270,14 +261,13 @@
 					/obj/item/clothing/head/beret/sec = 3,
 					/obj/item/clothing/head/beret/sec/corporate/officer = 2)
 	cost = 15
+	containertype = /obj/structure/closet/crate
 	containername = "security berets"
 
-//medical
 /decl/hierarchy/supply_pack/operations/nurse
 	name = "Medical - Nurse equipment"
 	contains = list(/obj/item/clothing/under/rank/nurse,
 					/obj/item/clothing/under/rank/nursesuit,
-					/obj/item/clothing/under/rank/orderly,
 					/obj/item/clothing/head/nursehat,
 					/obj/item/clothing/shoes/white,
 					/obj/item/weapon/storage/backpack/messenger/med,
@@ -345,7 +335,6 @@
 					/obj/item/device/radio/headset/headset_med)
 	cost = 10
 	containertype = /obj/structure/closet/secure_closet/psychiatry
-	containername = "Psychiatrist's locker"
 	access = core_access_medical_programs
 
 /decl/hierarchy/supply_pack/operations/virologist
@@ -363,7 +352,6 @@
 	cost = 6
 	containertype = /obj/structure/closet/secure_closet/virology
 	access = core_access_medical_programs
-	containername = "/improper Virologist equipment"
 
 /decl/hierarchy/supply_pack/operations/cmo
 	name = "Medical - Chief medical officer's equipment"
@@ -392,8 +380,7 @@
 					/obj/item/device/radio/headset/heads/cmo)
 	cost = 50
 	containertype = /obj/structure/closet/secure_closet/CMO
-	containername = "chief medical officer's locker"
-	access = core_access_command_programs
+	access = core_access_medical_programs
 
 /decl/hierarchy/supply_pack/operations/chemist
 	name = "Medical - Chemist equipment"
@@ -410,7 +397,6 @@
 	containername = "chemist equipment"
 	access = core_access_medical_programs
 
-//science
 /decl/hierarchy/supply_pack/operations/scientist
 	name = "Science - Scientist equipment"
 	contains = list(/obj/item/clothing/under/rank/scientist,
@@ -429,15 +415,15 @@
 	access = core_access_science_programs
 
 /decl/hierarchy/supply_pack/operations/roboticist
-	name = "Science - Roboticist equipment"
+	name = "SciEng - Roboticist equipment"
 	contains = list(/obj/item/clothing/under/rank/roboticist,
 					/obj/item/clothing/suit/storage/toggle/labcoat,
 					/obj/item/weapon/storage/belt/utility/full,
 					/obj/item/weapon/storage/backpack/toxins,
 					/obj/item/device/robotanalyzer,
 					/obj/item/device/pda/roboticist,
-					/obj/item/device/radio/headset/headset_sci)
-	cost = 6
+					/obj/item/device/radio/headset/headset_rob)
+	cost = 8
 	containertype = /obj/structure/closet/secure_closet/scientist
 	containername = "roboticist equipment"
 	access = core_access_science_programs
@@ -460,10 +446,8 @@
 					/obj/item/device/radio/headset/heads/rd)
 	cost = 50
 	containertype = /obj/structure/closet/secure_closet/RD
-	containername = "research director's locker"
-	access = core_access_command_programs
+	access = core_access_science_programs
 
-//service
 /decl/hierarchy/supply_pack/operations/janitor
 	name = "Service - Janitor equipment"
 	contains = list(/obj/item/clothing/under/rank/janitor,
@@ -480,7 +464,6 @@
 					/obj/item/device/radio/headset/headset_service)
 	cost = 8
 	containertype = /obj/structure/closet/jcloset
-	containername = "janitor equipment"
 
 /decl/hierarchy/supply_pack/operations/chef
 	name = "Service - Chef equipment"
@@ -493,7 +476,6 @@
 					/obj/item/device/radio/headset/headset_service)
 	cost = 6
 	containertype = /obj/structure/closet/chefcloset
-	containername = "chef equipment"
 
 /decl/hierarchy/supply_pack/operations/bartender
 	name = "Service - Bartender equipment"
@@ -514,7 +496,7 @@
 /decl/hierarchy/supply_pack/operations/botanist
 	name = "Service - Botany equipment"
 	contains = list(/obj/item/clothing/under/rank/hydroponics,
-					/obj/item/clothing/suit/apron/overalls,
+					/obj/item/clothing/suit/apron,
 					/obj/item/clothing/suit/storage/hooded/wintercoat/hydro,
 					/obj/item/clothing/head/greenbandana,
 					/obj/item/clothing/gloves/thick/botany,
@@ -525,22 +507,64 @@
 					/obj/item/device/radio/headset/headset_service)
 	cost = 6
 	containertype = /obj/structure/closet/secure_closet/hydroponics
-	containername = "botany equipment"
-	access = core_access_reassignment //imperfect, but the closest thing to service access
 
-//civilian
+/decl/hierarchy/supply_pack/operations/clown
+	name = "Entertainment - Clown equipment"
+	contains = list(/obj/item/clothing/under/rank/clown,
+					/obj/item/clothing/mask/gas/clown_hat,
+					/obj/item/clothing/shoes/clown_shoes,
+					/obj/item/weapon/storage/backpack/clown,
+					/obj/item/weapon/bikehorn,
+					/obj/item/weapon/pen/crayon/rainbow,
+					/obj/item/weapon/bedsheet/clown,
+					/obj/item/weapon/stamp/clown,
+					/obj/item/device/pda/clown,
+					/obj/item/device/radio/headset/entertainment)
+	cost = 15
+	containertype = /obj/structure/closet/secure_closet
+	containername = "clown equipment"
+
+/decl/hierarchy/supply_pack/operations/mime
+	name = "Entertainment - Mime equipment"
+	contains = list(/obj/item/clothing/under/mime,
+					/obj/item/clothing/mask/gas/mime,
+					/obj/item/clothing/shoes/mime,
+					/obj/item/clothing/head/beret,
+					/obj/item/clothing/head/soft/mime,
+					/obj/item/clothing/accessory/suspenders,
+					/obj/item/weapon/storage/backpack/mime,
+					/obj/item/weapon/pen/crayon/mime,
+					/obj/item/weapon/bedsheet/mime,
+					/obj/item/device/pda/mime,
+					/obj/item/device/radio/headset/entertainment)
+	cost = 15
+	containertype = /obj/structure/closet/secure_closet
+	containername = "mime equipment"
+
 /decl/hierarchy/supply_pack/operations/journalist
-	name = "Civilian - Journalist equipment"
+	name = "Entertainment - Journalist equipment"
 	contains = list(/obj/item/clothing/accessory/badge/press,
 					/obj/item/clothing/accessory/armor/tag/press,
 					/obj/item/clothing/suit/armor/vest/press,
 					/obj/item/device/tvcamera,
 					/obj/item/device/taperecorder,
 					/obj/item/device/camera_film = 2,
-					/obj/item/device/camera)
+					/obj/item/device/camera,
+					/obj/item/device/radio/headset/entertainment)
 	cost = 15
 	containertype = /obj/structure/closet
 	containername = "journalist equipment"
+
+/decl/hierarchy/supply_pack/operations/musician
+	name = "Entertainment - Musician equipment"
+	contains = list(/obj/item/clothing/ears/earmuffs/headphones,
+					/obj/item/clothing/glasses/regular/hipster,
+					/obj/item/instrument/guitar,
+					/obj/item/device/violin,
+					/obj/item/device/radio/headset/entertainment)
+	cost = 10
+	containertype = /obj/structure/closet
+	containername = "musician equipment"
 
 /decl/hierarchy/supply_pack/operations/lawyer
 	name = "Civilian - Bureaucrat equipment"
@@ -552,40 +576,9 @@
 					/obj/item/clothing/suit/storage/toggle/suit/blue,
 					/obj/item/clothing/suit/storage/toggle/suit/purple,
 					/obj/item/clothing/shoes/brown = 2)
-	cost = 9
+	cost = 8
 	containertype = /obj/structure/closet/lawcloset
 	containername = "bureaucrat equipment"
-
-/decl/hierarchy/supply_pack/operations/clown
-	name = "Civilian - Clown equipment"
-	contains = list(/obj/item/clothing/under/rank/clown,
-					/obj/item/clothing/mask/gas/clown_hat,
-					/obj/item/clothing/shoes/clown_shoes,
-					/obj/item/weapon/storage/backpack/clown,
-					/obj/item/weapon/bikehorn,
-					/obj/item/weapon/pen/crayon/rainbow,
-					/obj/item/weapon/bedsheet/clown,
-					/obj/item/weapon/stamp/clown,
-					/obj/item/device/pda/clown)
-	cost = 15
-	containertype = /obj/structure/closet
-	containername = "clown equipment"
-
-/decl/hierarchy/supply_pack/operations/mime
-	name = "Civilian - Mime equipment"
-	contains = list(/obj/item/clothing/under/mime,
-					/obj/item/clothing/mask/gas/mime,
-					/obj/item/clothing/shoes/mime,
-					/obj/item/clothing/head/beret,
-					/obj/item/clothing/head/soft/mime,
-					/obj/item/clothing/accessory/suspenders,
-					/obj/item/weapon/storage/backpack/mime,
-					/obj/item/weapon/pen/crayon/mime,
-					/obj/item/weapon/bedsheet/mime,
-					/obj/item/device/pda/mime)
-	cost = 15
-	containertype = /obj/structure/closet
-	containername = "mime equipment"
 
 /decl/hierarchy/supply_pack/operations/iaa
 	name = "Civilian - Internal affairs agent equipment"
@@ -599,7 +592,6 @@
 					/obj/item/device/radio/headset/ia = 2)
 	cost = 20
 	containertype = /obj/structure/closet/secure_closet/lawyer
-	containername = "internal affairs agent equipment"
 	access = core_access_security_programs
 
 /decl/hierarchy/supply_pack/operations/librarian
@@ -636,56 +628,52 @@
 					/obj/item/clothing/head/beret/plaincolor = 2,
 					/obj/item/clothing/head/beret/purple = 2)
 	cost = 5
+	containertype = /obj/structure/closet/crate
 	containername = "\improper beret crate"
 
-//personal
 /decl/hierarchy/supply_pack/operations/personal
-	name = "Personal - Personal locker"
+	name = "Civilian - Personal locker"
 	contains = list()
 	cost = 2
 	containertype = /obj/structure/closet/secure_closet/personal/empty
 	containername = "personal locker"
-	access = core_access_command_programs //personal locker code should still allow any player to claim the locker
 
 /decl/hierarchy/supply_pack/operations/patient
-	name = "Personal - Patient's closet"
+	name = "Medical - Patient's closet"
 	contains = list()
 	cost = 2
 	containertype = /obj/structure/closet/secure_closet/personal/patient
 	containername = "patient's closet"
-	access = core_access_command_programs
 
 /decl/hierarchy/supply_pack/operations/personal_cabinet
-	name = "Personal - Personal cabinet"
+	name = "Civilian - Personal cabinet"
 	contains = list()
 	cost = 2
 	containertype = /obj/structure/closet/secure_closet/personal/cabinet/empty
 	containername = "personal cabinet"
-	access = core_access_command_programs
 
-//command
 /decl/hierarchy/supply_pack/operations/hop
 	name = "Command - Personnel officer equipment"
 	contains = list(/obj/item/clothing/under/rank/head_of_personnel,
 					/obj/item/clothing/head/caphat/hop,
 					/obj/item/clothing/head/helmet,
-					/obj/item/clothing/suit/armor/vest,
+					/obj/item/clothing/suit/armor/vest/nt,
 					/obj/item/clothing/shoes/brown,
 					/obj/item/clothing/glasses/sunglasses,
 					/obj/item/weapon/storage/backpack/satchel/pocketbook,
+					/obj/item/weapon/gun/projectile/sec/flash,
 					/obj/item/weapon/stamp/hop,
 					/obj/item/device/flash,
 					/obj/item/device/pda/heads/hop,
 					/obj/item/device/radio/headset/heads/hop)
 	cost = 50
 	containertype = /obj/structure/closet/secure_closet/hop
-	containername = "head of personnel's locker"
 	access = core_access_command_programs
 
 /decl/hierarchy/supply_pack/operations/hopattire
 	name = "Command - Assorted personnel officer attire"
 	contains = list(/obj/item/clothing/under/rank/head_of_personnel,
-//					/obj/item/clothing/under/gimmick/rank/head_of_personnel/suit, //belongs to Costumes crate, it's not missing.
+					/obj/item/clothing/under/gimmick/rank/head_of_personnel/suit,
 					/obj/item/clothing/under/rank/head_of_personnel_whimsy,
 					/obj/item/clothing/under/dress/dress_hop,
 					/obj/item/clothing/under/dress/dress_hr,
@@ -698,19 +686,6 @@
 					/obj/item/clothing/shoes/black,
 					/obj/item/clothing/shoes/leather,
 					/obj/item/clothing/shoes/white)
-	cost = 20
+	cost = 18
 	containertype = /obj/structure/closet/secure_closet/hop2
-	containername = "personnel officer attire locker"
 	access = core_access_command_programs
-
-/decl/hierarchy/supply_pack/operations/secretary
-	name = "Command - Bridge secretary equipment"
-	contains = list(/obj/item/clothing/under/lawyer/black,
-					/obj/item/clothing/shoes/brown,
-					/obj/item/device/flash,
-					/obj/item/device/pda/heads,
-					/obj/item/device/radio/headset/headset_com)
-	cost = 12
-	containertype = /obj/structure/closet/secure_closet/hop
-	containername = "/improper bridge secretary equipment"
-	access = core_access_reassignment

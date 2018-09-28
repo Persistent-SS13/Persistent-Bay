@@ -95,7 +95,7 @@
 	<b>Implant Details:</b><BR>
 	<b>Function:</b> Contains a compact radio signaler that triggers when the host's lifesigns enter a critical range.<BR>
 	<b>Special Features:</b> Alerts trauma responders to client in critical condition.<BR>
-	<b>Integrity:</b> Implant will occasionally be degraded by the body's immune system and thus will occasionally malfunction."}
+	<b>Integrity:</b> Once tripped, the implant must be removed and reimplanted to reset it."}
 
 
 /obj/item/weapon/implant/death_alarm/Process()
@@ -140,10 +140,10 @@
 		crit_message = "[mobname] is in acute condition in [location] ([x], [y], [z])."
 	if(cause == "death")
 		crit_message = "[mobname] has died in [location] ([x], [y], [z])."
-		STOP_PROCESSING(SSobj, src)
 	if(!cause)
 		crit_message = "[mobname] has die-zzzzt in-in-in..."
-		STOP_PROCESSING(SSobj, src)
+
+	STOP_PROCESSING(SSobj, src)
 
 	for(var/channel in list("Security", "Medical", "Command", "Trauma Response"))
 		GLOB.global_headset.autosay(crit_message, "[mobname]'s Medical Implant", channel)

@@ -169,7 +169,6 @@
 // -----------------------------
 //        Secure Safe
 // -----------------------------
-
 /obj/item/weapon/storage/secure/safe
 	name = "secure safe"
 	icon = 'icons/obj/storage.dmi'
@@ -177,18 +176,13 @@
 	icon_opened = "safe0"
 	icon_locking = "safeb"
 	icon_sparking = "safespark"
-	force = 8.0
+	force = 8 // how do you hit someone with something stuck in the wall?
 	w_class = ITEM_SIZE_NO_CONTAINER
 	max_w_class = ITEM_SIZE_HUGE
 	max_storage_space = 56
-	anchored = 1.0
+	anchored = 1
 	density = 0
 	cant_hold = list(/obj/item/weapon/storage/secure/briefcase)
-
-	New()
-		..()
-		new /obj/item/weapon/paper(src)
-		new /obj/item/weapon/pen(src)
 
 	attack_hand(mob/user as mob)
 		return attack_self(user)

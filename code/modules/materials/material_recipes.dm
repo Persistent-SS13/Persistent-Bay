@@ -44,6 +44,7 @@
 		new/datum/stack_recipe("fire alarm frame", /obj/item/frame/fire_alarm, 2),\
 		new/datum/stack_recipe("ATM", /obj/item/frame/atm, 2),\
 		new/datum/stack_recipe("intercom frame", /obj/item/frame/intercom, 2),\
+		new/datum/stack_recipe("secure safe frame", /obj/item/frame/wallsafe, 5),\
 		new/datum/stack_recipe("light switch frame", /obj/item/frame/light_switch, 1),\
 		))
 	recipes += new/datum/stack_recipe("light fixture frame", /obj/item/frame/light, 2)

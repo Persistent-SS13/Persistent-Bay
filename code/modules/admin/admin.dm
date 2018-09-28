@@ -873,6 +873,7 @@ var/global/floorIsLava = 0
 	if(!check_rights(R_ADMIN))
 		return
 	var/savefile/f = new("map_saves/records.sav")
+	f.cd = "/extras"
 	from_file(f["records"],GLOB.all_crew_records)
 	if(!GLOB.all_crew_records)
 		message_admins("BROKE AS FUCK!!")

@@ -200,7 +200,7 @@
 			visible_message("<span class='warning'>The glass door was sliced open by [user]!</span>")
 		return 1
 	//If it's emagged, crowbar can pry electronics out. Now deconstructable!
-	if (isCrowbar(I))
+	if (isCrowbar(I) && p_open)
 		playsound(src.loc, 'sound/items/Crowbar.ogg', 100, 1)
 		user.visible_message("[user] removes the electronics from the windoor.", "You start to remove electronics from the windoor.")
 		if (do_after(user,40,src))
@@ -217,7 +217,9 @@
 			wa.set_dir(src.dir)
 			wa.state = "02"
 			wa.update_icon()
-
+			
+			qdel(src)
+			
 			var/obj/item/weapon/airlock_electronics/ae
 			if(!electronics)
 				ae = new/obj/item/weapon/airlock_electronics( src.loc )

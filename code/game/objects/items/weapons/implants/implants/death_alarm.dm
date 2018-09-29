@@ -79,11 +79,11 @@
 	name = "biomonitor implant"
 	desc = "An alarm which monitors host vital signs and transmits a radio message upon critical condition."
 	known = 1
-	var/mobname = "Medical Response Client"
+	mobname = "Medical Response Client"
 
 /obj/item/weapon/implantcase/trauma_alarm
 	name = "glass case - 'trauma alarm'"
-	imp = /obj/item/weapon/implant/trauma_alarm
+	imp = /obj/item/weapon/implant/death_alarm
 
 /obj/item/weapon/implant/death_alarm/trauma/get_data()
 	return {"
@@ -100,7 +100,7 @@
 
 /obj/item/weapon/implant/death_alarm/Process()
 	if (!implanted) return
-	var/mob/M = imp_in
+	var/mob/living/carbon/human/M = imp_in
 	var/blood_oxygenation = M.get_blood_oxygenation()
 	var/oxygen_damage = M.getOxyLoss()
 	var/toxin_damage = M.getToxLoss()
@@ -118,7 +118,7 @@
 		activate("death")
 	else if(isnull(M)) // If the mob got gibbed
 		activate()
-	else if(should_crit_alert) 
+	else if(should_crit_alert)
 		activate("crit")
 
 /obj/item/weapon/implant/death_alarm/trauma/activate(var/cause)

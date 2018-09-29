@@ -198,13 +198,13 @@
 	deleteArea(A)
 	interact()
 
-/obj/item/blueprints/admin/delete_area	
-	var/area/A = getArea(usr)
-	if (isspace(A) || A.apc) //let's just check this one last time, just in case
-	to_chat(usr, "<span class='notice'>You scrub [A.name] off the blueprint.</span>")
-	log_and_message_admins("deleted area [A.name] via station blueprints.")
-	deleteArea(A)
-	interact()
+/obj/item/blueprints/admin/delete_area(var/area/A)
+	var/area/newArea = locate(world.area)
+	for(var/turf/T in A.contents)
+		move_turfs_to_area(T, newArea)
+	spawn(10)
+		A.contents.Cut()
+		qdel(A)
 /obj/item/blueprints/proc/deleteArea(var/area/A)
 	var/area/newArea = locate(world.area)
 	for(var/turf/T in A.contents)

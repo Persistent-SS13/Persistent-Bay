@@ -198,7 +198,7 @@
 	deleteArea(A)
 	interact()
 
-/obj/item/blueprints/admin/delete_area(var/area/A)
+/obj/item/blueprints/admin/delete_area()
 	var/area/A = getArea(usr)
 	if (isspace(A) || A.apc) //let's just check this one last time, just in case
 		interact()

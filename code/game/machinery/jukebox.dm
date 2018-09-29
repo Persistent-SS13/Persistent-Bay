@@ -31,7 +31,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 
 	var/datum/track/current_track
 	var/list/datum/track/tracks = list(
-		new/datum/track("The Ball & Diner", 'sound/music/jukebox/theball.mid', "Pleasent"),
+		new/datum/track("The Ball and Diner", 'sound/music/jukebox/theball.mid', "Pleasent"),
 		new/datum/track("Pleasantly Understated", 'sound/music/jukebox/02 - A Pleasantly Understated Credit Sequence.mid', "Pleasent"),
 		new/datum/track("Surfin' the Highway", 'sound/music/jukebox/06 - Surfin The Highway.mid', "Rockin"),
 		new/datum/track("Snuckey's Muzak", 'sound/music/jukebox/09 - Snuckeys Greatest Muzaks #2.mid', "Pleasent"),
@@ -145,7 +145,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 	for(var/datum/track/T in tracks)
 		if(T.genre == "Moody")
 			tracks_moody[++tracks_moody.len] = list("track" = T.title)
-	data["tracks_country"] = tracks_country
+	data["tracks_moody"] = tracks_moody
 
 	var/list/tracks_ss13 = list()
 	for(var/datum/track/T in tracks)

@@ -56,7 +56,14 @@ Used In File(s): \code\game\machinery\jukebox.dm
     {{/for}}
 </div>
 
-
+<H3><span class="white">Cultural:</span></H3>
+<div class="itemContent">
+    {{for data.tracks_cultural}}
+        <div class="item">
+            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
+        </div>
+    {{/for}}
+</div>
 
 <H3><span class="white">SS13:</span></H3>
 <div class="itemContent">

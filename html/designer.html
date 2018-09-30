@@ -237,21 +237,22 @@ var canvas = document.getElementById("divMain");
 var bg = document.getElementById("bg");
 var height = canvas.offsetHeight;
 var pixelScale = Math.floor((height-(3*2)) /32);
-canvas.style.width = pixelScale*32 +"px" ;
-canvas.style.height = pixelScale*32 +"px";
-bg.style.width = canvas.style.width;
-bg.style.height = canvas.style.height;
 var mouseDown = 0;
 var selectedColor = "rgb(255,0,0)";
 var selectedAlpha = 1;
 var source = ""
 var isProcessing = false;
-// main
 
+var max_x = 32
+var max_y = 32
 
 function main(){
-	for (var i = 0; i<32; i++){
-		for (var j = 0; j<32; j++){
+	canvas.style.width = pixelScale*max_x +"px" ;
+	canvas.style.height = pixelScale*max_y +"px";
+	bg.style.width = canvas.style.width;
+	bg.style.height = canvas.style.height;
+	for (var i = 0; i<max_x; i++){
+		for (var j = 0; j<max_y; j++){
 			var pixel = document.createElement("DIV");
 			pixel.id = i + "_" + j;
 			pixel.className = "pixel";
@@ -325,12 +326,27 @@ function startProcess(pixels, index ,isBegin) {
 	
 	var str = ";action=pixel;x="+elem.px+";"+"y="+elem.py+";"+"r="+args[1]+";"+"g="+args[2]+";"+"b="+args[3]+";"+"a="+args[4];
 	location.href = source + str;
-	setTimeout(startProcess, 0.000000000000001,pixels,index+1)
+	
+	if (index % 2 == 0) {
+		startProcess(pixels, index+1)
+	} else {
+		setTimeout(startProcess, 0.000000000000001,pixels,index+1)
+	}
 }
 
-function getRef(ref){
+function getData(ref,p_width,p_height){
 	source = ref
 	source = source.replace("href='", "byond://")
+
+	var remake = false
+	if (p_width != max_x || p_height != max_y) {
+		remake = true
+	}
+	max_x = p_width
+	max_y = p_height
+	if (remake) {
+		main()
+	}
 }
 
 function pickColor(){
@@ -369,7 +385,6 @@ document.onmousedown = function() {
 document.onmouseup = function() {
   mouseDown = 0;
 }
-main();
 pickColor();
  
 </script>

@@ -1,6 +1,7 @@
 //Yet another spaget cooked by Stigma. The HTML file is at html/designer.html. -- https://github.com/ingles98
 
-/atom/proc/GetDesign(var/icon/design) //Adds a general proc so any atom may be able to hook into the designer feature.
+/atom/var/designer_creator_ckey = "None - This icon wasn't created by the Designer feature."	//For blaming reasons
+/atom/proc/GetDesign(var/icon/design, var/ckey) //Adds a general proc so any atom may be able to hook into the designer feature.
 
 /obj/item/design_item //test item
 	name = "designs"
@@ -22,7 +23,7 @@
 	design.pixel_height = text2num( input("Max Width:", "Designer DEBUG", 32) )
 	design.Design()
 
-/obj/item/design_item/GetDesign(var/icon/ico)
+/obj/item/design_item/GetDesign(var/icon/ico, ckey)
 	if (!ico || !istype(ico) )
 		return
 	var/offset_x = text2num( input("Offset X:", "Designer DEBUG", 0) )
@@ -30,6 +31,9 @@
 	ico.Shift(EAST, offset_x)
 	ico.Shift(SOUTH, offset_y)
 	icon = ico
+
+	if (ckey)
+		designer_creator_ckey = ckey
 
 /datum/designer
 	var/pixel_width = 8
@@ -39,6 +43,8 @@
 
 	var/list/colors
 	var/icon/icon_custom
+
+	var/creator_ckey
 
 /datum/designer/New(source = null)
 	if (source)
@@ -64,6 +70,7 @@
 			processIcon(color,x,y)
 		if ("start")
 			icon_custom = icon('icons/effects/effects.dmi', "icon_state"="nothing")
+			creator_ckey = usr.ckey
 		if ("stop")
 			finishIcon()
 
@@ -76,21 +83,4 @@
 	icon_custom.Flip(NORTH)
 
 	if (my_atom)
-		my_atom.GetDesign(icon_custom)
-
-/*
-client
-    var
-        browser
-        browser_version
-    verb
-        setBrowser(Browser as text,Version as num)
-            set hidden = 1
-            browser = Browser
-            browser_version = Version
-
-mob/living/verb/DESIGNER()
-    set name = "Designer tool by Stigma"
-
-    usr << browse(file("html/designer.html"), "window=hiddenbrowser;size=600x400;can_close=1" )
-*/
+		my_atom.GetDesign(icon_custom, ckey = creator_ckey)

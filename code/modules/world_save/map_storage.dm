@@ -381,12 +381,8 @@ var/global/list/debug_data = list()
 		f.cd = "/map/[z]"
 		var/starttime2 = REALTIMEOFDAY
 		var/breakout = 0
-		var/ind = 0
 		while(!f.eof && !breakout)
 			f >> ve
-			if(z == 29)
-				ind++
-				message_admins("[ind]")
 			sleep(-1)
 			if(((REALTIMEOFDAY - starttime2)/10) > 300)
 				breakout = 1

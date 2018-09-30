@@ -208,6 +208,6 @@
 
 /decl/hierarchy/supply_pack/supply/duct_tape_crate
 	name = "Duct tape crate x10"
-	contains = list(obj/item/weapon/tape_roll=10)
+	contains = list(/obj/item/weapon/tape_roll=10)
 	cost = 5
 	containername = "\improper Duct Tape crate"

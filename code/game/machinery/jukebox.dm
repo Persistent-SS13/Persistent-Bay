@@ -164,7 +164,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 	var/list/tracks_cultural = list()
 	for(var/datum/track/T in tracks)
 		if(T.genre == "Cultural")
-			tracks_moody[++tracks_cultural.len] = list("track" = T.title)
+			tracks_cultural[++tracks_cultural.len] = list("track" = T.title)
 	data["tracks_cultural"] = tracks_cultural
 	
 	var/list/tracks_ss13 = list()

@@ -251,3 +251,5 @@
 		return
 	else
 		..()
+
+#undef DUCTTAPE_ZIPGUN_NEEDED

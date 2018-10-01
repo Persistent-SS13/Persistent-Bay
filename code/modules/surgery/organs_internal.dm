@@ -524,3 +524,6 @@
 	"<span class='warning'>Your hand slips, applying [trans] units of the solution to the wrong place in [target]'s [affected.name] with the [tool]!</span>")
 
 	//no damage or anything, just wastes medicine
+
+#undef DUCTTAPE_NEEDED_ORGANATTACH
+#undef DUCTTAPE_NEEDED_ORGANMENDING

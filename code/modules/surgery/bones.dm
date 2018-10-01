@@ -193,3 +193,6 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='warning'>[user]'s hand slips, smearing [tool] in the incision in [target]'s [affected.name]!</span>" , \
 	"<span class='warning'>Your hand slips, smearing [tool] in the incision in [target]'s [affected.name]!</span>")
+
+#undef DUCTTAPE_NEEDED_BONEGELLING
+#undef DUCTTAPE_NEEDED_POST_BONEGELLING

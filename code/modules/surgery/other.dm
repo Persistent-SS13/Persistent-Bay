@@ -240,3 +240,6 @@
 	"<span class='warning'>Your hand slips, spilling \the [tool]'s contents over the [target]'s [affected.name]!</span>")
 	affected.disinfect()
 
+
+#undef DUCTTAPE_NEEDED_TENDONFIX
+#undef DUCTTAPE_NEEDED_IBFIX

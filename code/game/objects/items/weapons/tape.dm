@@ -13,10 +13,6 @@
 /obj/item/weapon/tape_roll/proc/has_enough_tape_left(var/amount_needed)
 	return (uses_left >= amount_needed)? TRUE : FALSE
 
-/obj/item/weapon/tape_roll/proc/delete_if_empty()
-	if(uses_left < 1)
-		qdel(src)
-
 //Meant to be used by external entities wanting tape for their purpose
 //It does a check to see if there's enough and then delete the roll if its empty after use
 //Return 0 when not enough tape, returns true when there was enough
@@ -24,7 +20,8 @@
 	if(!has_enough_tape_left(amount))
 		return FALSE
 	uses_left -= amount
-	delete_if_empty()
+	if(uses_left < 1)
+		qdel(src)
 	return TRUE
 
 /obj/item/weapon/tape_roll/examine(mob/user)
@@ -194,3 +191,7 @@
 				pixel_y += 32
 			else if(dir_offset & SOUTH)
 				pixel_y -= 32
+
+#undef DUCTTAPE_NEEDED_BLINDFOLD
+#undef DUCTTAPE_NEEDED_GAG
+#undef DUCTTAPE_NEEDED_CUFF

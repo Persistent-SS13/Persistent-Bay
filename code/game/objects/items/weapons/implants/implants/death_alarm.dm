@@ -98,7 +98,7 @@
 	<b>Integrity:</b> Once tripped, the implant must be removed and reimplanted to reset it."}
 
 
-/obj/item/weapon/implant/death_alarm/Process()
+/obj/item/weapon/implant/death_alarm/trauma/Process()
 	if (!implanted) return
 	var/mob/living/carbon/human/M = imp_in
 	var/blood_oxygenation = M.get_blood_oxygenation()

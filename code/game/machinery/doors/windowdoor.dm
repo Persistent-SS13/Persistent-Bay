@@ -217,7 +217,7 @@
 			wa.set_dir(src.dir)
 			wa.state = "02"
 			wa.update_icon()
-			
+
 			var/obj/item/weapon/airlock_electronics/ae
 			if(!electronics)
 				ae = new/obj/item/weapon/airlock_electronics( src.loc )

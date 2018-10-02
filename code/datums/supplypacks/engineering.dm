@@ -296,3 +296,9 @@ decl/hierarchy/supply_pack/engineering/pipelayer
 	containername = "AutoMatic Piper"
 	containertype = /obj/structure/closet/crate/large
 	cost = 50
+
+/decl/hierarchy/supply_pack/engineering/engineering_cables
+	name = "Bulk Cables Crate x300"
+	contains = list(/obj/item/stack/cable_coil=10)
+	cost = 35
+	containername = "\improper Bulk Cables Crate"

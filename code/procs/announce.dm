@@ -10,8 +10,8 @@
 	var/newscast = 0
 	var/channel_name = "Announcements"
 	var/announcement_type = "Announcement"
-  var/sector = 1
-  var/faction = ""
+	var/sector = 1
+	var/faction = ""
 /datum/announcement/priority
 	title = "Priority Announcement"
 	announcement_type = "Priority Announcement"
@@ -41,19 +41,19 @@
 	message_title = sanitizeSafe(message_title)
 
 	var/msg = FormMessage(message, message_title)
-  if(faction && faction != "")
-  	for(var/mob/M in GLOB.player_list)
-  		if((M.z+(M.z % 2) == sector) && !istype(M,/mob/new_player) && !isdeaf(M))
-  			to_chat(M, msg)
-  			if(message_sound)
-  				sound_to(M, message_sound)
-  else
-    for(var/mob/M in GLOB.player_list)
-  		if((M.z in (GLOB.using_map.contact_levels | GLOB.using_map.admin_levels)) && !istype(M,/mob/new_player) && !isdeaf(M))
-  			to_chat(M, msg)
-  			if(message_sound)
-  				sound_to(M, message_sound)
-    
+	if(faction && faction != "")
+		for(var/mob/M in GLOB.player_list)
+			if((M.z+(M.z % 2) == sector) && !istype(M,/mob/new_player) && !isdeaf(M))
+				to_chat(M, msg)
+			if(message_sound)
+				sound_to(M, message_sound)
+	else
+		for(var/mob/M in GLOB.player_list)
+			if((M.z in (GLOB.using_map.contact_levels | GLOB.using_map.admin_levels)) && !istype(M,/mob/new_player) && !isdeaf(M))
+				to_chat(M, msg)
+				if(message_sound)
+					sound_to(M, message_sound)
+
   faction = ""
 	if(do_newscast)
 		NewsCast(message, message_title)
@@ -65,9 +65,9 @@
 datum/announcement/proc/FormMessage(message as text, message_title as text)
 	. = "<h2 class='alert'>[message_title]</h2>"
 	. += "<br><span class='alert'>[message]</span>"
-  if(faction && faction != "")
-	  . += "<br><span class='alert'> -([faction]) [html_encode(announcer)]</span>"
-  else if (announcer)
+	if(faction && faction != "")
+		. += "<br><span class='alert'> -([faction]) [html_encode(announcer)]</span>"
+	else if (announcer)
 		. += "<br><span class='alert'> -[html_encode(announcer)]</span>"
 
 datum/announcement/minor/FormMessage(message as text, message_title as text)
@@ -77,8 +77,8 @@ datum/announcement/priority/FormMessage(message as text, message_title as text)
 	. = "<h1 class='alert'>[message_title]</h1>"
 	. += "<br><span class='alert'>[message]</span>"
 	if(faction && faction != "")
-	  . += "<br><span class='alert'> -([faction]) [html_encode(announcer)]</span>"
-  else if (announcer)
+		. += "<br><span class='alert'> -([faction]) [html_encode(announcer)]</span>"
+	else if (announcer)
 		. += "<br><span class='alert'> -[html_encode(announcer)]</span>"
 	. += "<br>"
 

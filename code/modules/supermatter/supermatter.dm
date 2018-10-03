@@ -38,6 +38,8 @@
 
 #define WARNING_DELAY 20			//seconds between warnings.
 
+#define DUCTTAPE_NEEDED_SUPERMATTERFIX 30
+
 /obj/machinery/power/supermatter
 	name = "Supermatter"
 	desc = "A strangely translucent and iridescent crystal. <span class='danger'>You get headaches just from looking at it.</span>"
@@ -447,15 +449,19 @@
 
 /obj/machinery/power/supermatter/attackby(obj/item/weapon/W as obj, mob/living/user as mob)
 	if(istype(W, /obj/item/weapon/tape_roll))
+		var/obj/item/weapon/tape_roll/thetape = W
+		if(!thetape.use_tape(DUCTTAPE_NEEDED_SUPERMATTERFIX))
+			to_chat(user, "<span class='warning'>You need at least [DUCTTAPE_NEEDED_SUPERMATTERFIX] strips of tape to do this!</span>")
+			return
 		to_chat(user, "You repair some of the damage to \the [src] with \the [W].")
 		damage = max(damage -10, 0)
+	else
+		user.drop_from_inventory(W)
+		Consume(W)
 
 	user.visible_message("<span class=\"warning\">\The [user] touches \a [W] to \the [src] as a silence fills the room...</span>",\
 		"<span class=\"danger\">You touch \the [W] to \the [src] when everything suddenly goes silent.\"</span>\n<span class=\"notice\">\The [W] flashes into dust as you flinch away from \the [src].</span>",\
 		"<span class=\"warning\">Everything suddenly goes silent.</span>")
-
-	user.drop_from_inventory(W)
-	Consume(W)
 
 	user.apply_effect(150, IRRADIATE, blocked = user.getarmor(null, "rad"))
 
@@ -543,3 +549,4 @@
 #undef DETONATION_SHUTDOWN_RNG_FACTOR
 #undef DETONATION_SOLAR_BREAK_CHANCE
 #undef WARNING_DELAY
+#undef DUCTTAPE_NEEDED_SUPERMATTERFIX

@@ -1,3 +1,5 @@
+#define DUCTTAPE_COILGUN_NEEDED 30
+
 // We really need some datums for this.
 /obj/item/weapon/coilgun_assembly
 	name = "coilgun stock"
@@ -22,6 +24,10 @@
 			return
 
 	if(istype(thing, /obj/item/weapon/tape_roll) && construction_stage == 2)
+		var/obj/item/weapon/tape_roll/thetape = thing
+		if(!thetape.use_tape(DUCTTAPE_COILGUN_NEEDED))
+			to_chat(user, "<span class='warning'>You need at least [DUCTTAPE_COILGUN_NEEDED] strips of tape to do this!</span>")
+			return
 		user.visible_message("<span class='notice'>\The [user] secures \the [src] together with \the [thing].</span>")
 		increment_construction_stage()
 		return
@@ -99,3 +105,5 @@
 			if(7) to_chat(user, "<span class='notice'>It has a single superconducting coil threaded onto the barrel.</span>")
 			if(8) to_chat(user, "<span class='notice'>It has a pair of superconducting coils threaded onto the barrel.</span>")
 			if(9) to_chat(user, "<span class='notice'>It has three superconducting coils attached to the body, waiting to be secured.</span>")
+
+#undef DUCTTAPE_COILGUN_NEEDED

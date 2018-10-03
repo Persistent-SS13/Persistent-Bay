@@ -62,7 +62,7 @@
 			user.visible_message("<span class='warning'>You need at least a [singular_name] to make a splint!</span>")
 			return
 		var/obj/item/weapon/tape_roll/thetape = W
-		if(!thetape.has_enough_tape_left(DUCTTAPE_NEEDED_SPLINT))
+		if(!thetape.use_tape(DUCTTAPE_NEEDED_SPLINT))
 			user.visible_message("<span class='warning'>You need at least [DUCTTAPE_NEEDED_SPLINT] strips of tape to make a splint!</span>")
 			return
 		var/obj/item/stack/medical/splint/ghetto/new_splint = new(user.loc)
@@ -70,7 +70,6 @@
 		new_splint.add_fingerprint(user)
 		user.visible_message("<span class='notice'>\The [user] constructs \a [new_splint] out of a [singular_name].</span>", \
 				"<span class='notice'>You use make \a [new_splint] out of a [singular_name].</span>")
-		thetape.use_tape(DUCTTAPE_NEEDED_SPLINT)
 		src.use(1)
 		return
 

@@ -32,9 +32,6 @@
 	if(istype(H))
 		if(user.zone_sel.selecting == BP_EYES)
 
-			if(!has_enough_tape_left(DUCTTAPE_NEEDED_BLINDFOLD))
-				to_chat(user, "<span class='warning'>You need [DUCTTAPE_NEEDED_BLINDFOLD] strips of tape to blindfold \the [H]!</span>")
-				return
 			if(!H.organs_by_name[BP_HEAD])
 				to_chat(user, "<span class='warning'>\The [H] doesn't have a head.</span>")
 				return
@@ -56,9 +53,13 @@
 			if(!H || !src || !H.organs_by_name[BP_HEAD] || !H.has_eyes() || H.glasses || (H.head && (H.head.body_parts_covered & FACE)))
 				return
 
+			if(!use_tape(DUCTTAPE_NEEDED_BLINDFOLD))
+				to_chat(user, "<span class='warning'>You need [DUCTTAPE_NEEDED_BLINDFOLD] strips of tape to blindfold \the [H]!</span>")
+				return
+
 			user.visible_message("<span class='danger'>\The [user] has taped up \the [H]'s eyes!</span>")
 			H.equip_to_slot_or_del(new /obj/item/clothing/glasses/sunglasses/blindfold/tape(H), slot_glasses)
-			use_tape(DUCTTAPE_NEEDED_BLINDFOLD)
+
 
 		else if(user.zone_sel.selecting == BP_MOUTH || user.zone_sel.selecting == BP_HEAD)
 			if(!has_enough_tape_left(DUCTTAPE_NEEDED_GAG))
@@ -85,19 +86,22 @@
 			if(!H || !src || !H.organs_by_name[BP_HEAD] || !H.check_has_mouth() || H.wear_mask || (H.head && (H.head.body_parts_covered & FACE)))
 				return
 
+			if(!use_tape(DUCTTAPE_NEEDED_GAG))
+				to_chat(user, "<span class='warning'>You need [DUCTTAPE_NEEDED_GAG] strips of tape to gag \the [H]!</span>")
+				return
+
 			user.visible_message("<span class='danger'>\The [user] has taped up \the [H]'s mouth!</span>")
 			H.equip_to_slot_or_del(new /obj/item/clothing/mask/muzzle/tape(H), slot_wear_mask)
-			use_tape(DUCTTAPE_NEEDED_GAG)
+
 
 		else if(user.zone_sel.selecting == BP_R_HAND || user.zone_sel.selecting == BP_L_HAND)
-			if(!has_enough_tape_left(DUCTTAPE_NEEDED_CUFF))
-				to_chat(user, "<span class='warning'>You need [DUCTTAPE_NEEDED_CUFF] strips of tape to cuff \the [H]'s hands!</span>")
-				return
 			var/obj/item/weapon/handcuffs/cable/tape/T = new(user)
 			if(!T.place_handcuffs(H, user))
 				user.unEquip(T)
 				qdel(T)
-			use_tape(DUCTTAPE_NEEDED_CUFF)
+			if(!use_tape(DUCTTAPE_NEEDED_CUFF))
+				to_chat(user, "<span class='warning'>You need [DUCTTAPE_NEEDED_CUFF] strips of tape to cuff \the [H]'s hands!</span>")
+				return
 
 		else if(user.zone_sel.selecting == BP_CHEST)
 			if(H.wear_suit && istype(H.wear_suit, /obj/item/clothing/suit/space))
@@ -113,13 +117,12 @@
 /obj/item/weapon/tape_roll/proc/stick(var/obj/item/weapon/W, mob/user)
 	if(!istype(W, /obj/item/weapon/paper))
 		return
-	if(!has_enough_tape_left(1)) //This should never happen it would get deleted before that. But just in case
+	if(!use_tape(1))
 		return
 	user.drop_from_inventory(W)
 	var/obj/item/weapon/ducttape/tape = new(get_turf(src))
 	tape.attach(W)
 	user.put_in_hands(tape)
-	use_tape(1)
 
 
 /obj/item/weapon/ducttape

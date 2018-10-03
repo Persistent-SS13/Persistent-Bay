@@ -222,7 +222,7 @@
 				target_breach = B
 
 		var/obj/item/weapon/tape_roll/thetape = W
-		if(!thetape.has_enough_tape_left(DUCTTAPE_NEEDED_SUITFIX))
+		if(!thetape.use_tape(DUCTTAPE_NEEDED_SUITFIX))
 			user.visible_message("<span class='warning'>You need [DUCTTAPE_NEEDED_SUITFIX] strips of tape to seal \the [target_breach] on \the [src].</span>")
 			return
 		if(!target_breach)
@@ -232,7 +232,6 @@
 			target_breach.patched = 1
 			target_breach.update_descriptor()
 			calc_breach_damage()
-			thetape.use_tape(DUCTTAPE_NEEDED_SUITFIX)
 		return
 
 	..()

@@ -43,12 +43,18 @@
 			return global.SSairflow;
 		if("SSatoms")
 			return global.SSatoms;
+		if("SSchemistry")
+			return global.SSchemistry;
 		if("SSfastprocess")
 			return global.SSfastprocess;
 		if("SSgarbage")
 			return global.SSgarbage;
+		if("SSicon_update")
+			return global.SSicon_update;
 		if("SSlegacy")
 			return global.SSlegacy;
+		if("SSlighting")
+			return global.SSlighting;
 		if("SSmachines")
 			return global.SSmachines;
 		if("SSmapping")
@@ -267,8 +273,6 @@
 			return global.checked_for_inactives;
 		if("chemical_reaction_logs")
 			return global.chemical_reaction_logs;
-		if("chemical_reactions_list")
-			return global.chemical_reactions_list;
 		if("chicken_count")
 			return global.chicken_count;
 		if("church_name")
@@ -545,18 +549,6 @@
 			return global.light_overlay_cache;
 		if("lighting_overlays_initialised")
 			return global.lighting_overlays_initialised;
-		if("lighting_update_corners")
-			return global.lighting_update_corners;
-		if("lighting_update_corners_old")
-			return global.lighting_update_corners_old;
-		if("lighting_update_lights")
-			return global.lighting_update_lights;
-		if("lighting_update_lights_old")
-			return global.lighting_update_lights_old;
-		if("lighting_update_overlays")
-			return global.lighting_update_overlays;
-		if("lighting_update_overlays_old")
-			return global.lighting_update_overlays_old;
 		if("limb_icon_cache")
 			return global.limb_icon_cache;
 		if("list_of_ais")
@@ -1120,12 +1112,18 @@
 			global.SSairflow=newval;
 		if("SSatoms")
 			global.SSatoms=newval;
+		if("SSchemistry")
+			global.SSchemistry=newval;
 		if("SSfastprocess")
 			global.SSfastprocess=newval;
 		if("SSgarbage")
 			global.SSgarbage=newval;
+		if("SSicon_update")
+			global.SSicon_update=newval;
 		if("SSlegacy")
 			global.SSlegacy=newval;
+		if("SSlighting")
+			global.SSlighting=newval;
 		if("SSmachines")
 			global.SSmachines=newval;
 		if("SSmapping")
@@ -1344,8 +1342,6 @@
 			global.checked_for_inactives=newval;
 		if("chemical_reaction_logs")
 			global.chemical_reaction_logs=newval;
-		if("chemical_reactions_list")
-			global.chemical_reactions_list=newval;
 		if("chicken_count")
 			global.chicken_count=newval;
 		if("church_name")
@@ -1620,18 +1616,6 @@
 			global.light_overlay_cache=newval;
 		if("lighting_overlays_initialised")
 			global.lighting_overlays_initialised=newval;
-		if("lighting_update_corners")
-			global.lighting_update_corners=newval;
-		if("lighting_update_corners_old")
-			global.lighting_update_corners_old=newval;
-		if("lighting_update_lights")
-			global.lighting_update_lights=newval;
-		if("lighting_update_lights_old")
-			global.lighting_update_lights_old=newval;
-		if("lighting_update_overlays")
-			global.lighting_update_overlays=newval;
-		if("lighting_update_overlays_old")
-			global.lighting_update_overlays_old=newval;
 		if("limb_icon_cache")
 			global.limb_icon_cache=newval;
 		if("list_of_ais")
@@ -2173,9 +2157,12 @@
 	"SSair",
 	"SSairflow",
 	"SSatoms",
+	"SSchemistry",
 	"SSfastprocess",
 	"SSgarbage",
+	"SSicon_update",
 	"SSlegacy",
+	"SSlighting",
 	"SSmachines",
 	"SSmapping",
 	"SSmaterials",
@@ -2285,7 +2272,6 @@
 	"chargen_robolimbs",
 	"checked_for_inactives",
 	"chemical_reaction_logs",
-	"chemical_reactions_list",
 	"chicken_count",
 	"church_name",
 	"client_preference_stats_",
@@ -2425,12 +2411,6 @@
 	"license_to_url",
 	"light_overlay_cache",
 	"lighting_overlays_initialised",
-	"lighting_update_corners",
-	"lighting_update_corners_old",
-	"lighting_update_lights",
-	"lighting_update_lights_old",
-	"lighting_update_overlays",
-	"lighting_update_overlays_old",
 	"limb_icon_cache",
 	"list_of_ais",
 	"loadout_categories",

@@ -41,7 +41,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	robotize()
 
 /obj/item/organ/internal/stack/Destroy()
-	if(lacemob && ((lacemob.key && lacemob.key != "") || (lacemob.stored_ckey && lacemob.stored_ckey != "")))
+	if(lacemob && ((lacemob.key && lacemob.key != "") || (lacemob.key && lacemob.key != "")))
 		loc = get_turf(loc)
 		log_and_message_admins("Attempted to destroy an in-use neural lace!")
 		return QDEL_HINT_LETMELIVE

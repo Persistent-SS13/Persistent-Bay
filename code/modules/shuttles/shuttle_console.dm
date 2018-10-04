@@ -191,7 +191,6 @@
 		if(beacon.dimensions < shuttle.size)
 			to_chat(usr, "Dock is not big enough.")
 			return 1
-		beacon.status = 4
 		shuttle.short_jump(beacon, dock)
 		dock.status = 2
 		dock = beacon

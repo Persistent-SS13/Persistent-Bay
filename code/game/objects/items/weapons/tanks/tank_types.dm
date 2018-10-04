@@ -58,7 +58,7 @@
 	desc = "Contains dangerous phoron. Do not inhale. Warning: extremely flammable."
 	icon_state = "phoron"
 	gauge_icon = null
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = null	//they have no straps!
 	starting_pressure = list("phoron" = 3*ONE_ATMOSPHERE)
 	volume = 180
@@ -68,8 +68,8 @@
 
 	if (istype(W, /obj/item/weapon/flamethrower))
 		var/obj/item/weapon/flamethrower/F = W
-		if (!F.status||F.ptank)	return
-		master = F
+		if ((!F.status)||(F.ptank))	return
+		src.master = F
 		F.ptank = src
 		user.remove_from_mob(src)
 		forceMove(F)
@@ -93,7 +93,7 @@
 	icon_state = "emergency"
 	gauge_icon = "indicator_emergency"
 	gauge_cap = 4
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
 	w_class = ITEM_SIZE_SMALL
 	force = 4

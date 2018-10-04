@@ -3,7 +3,7 @@
 PROCESSING_SUBSYSTEM_DEF(circuit)
 	name = "Circuit"
 	priority = SS_PRIORITY_CIRCUIT
-	init_order = INIT_ORDER_CIRCUIT
+	init_order = SS_INIT_CIRCUIT
 	flags = SS_BACKGROUND
 
 	var/cipherkey

@@ -10,8 +10,7 @@
 	throwforce = 0.0
 	throw_speed = 1
 	throw_range = 20
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
-	
+	flags = CONDUCT
 
 	afterattack(atom/target as mob|obj|turf|area, mob/user as mob)
 		user.drop_item()

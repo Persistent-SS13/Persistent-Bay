@@ -4,7 +4,7 @@
 	icon = 'icons/obj/weapons.dmi'
 	icon_state = "cane"
 	item_state = "stick"
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	flags = CONDUCT
 	force = 5.0
 	throwforce = 7.0
 	w_class = ITEM_SIZE_SMALL

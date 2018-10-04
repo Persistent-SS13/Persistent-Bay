@@ -77,7 +77,7 @@
 #define effect_update(BYOND)            \
 	if(!needs_update)                  \
 	{                                   \
-		SSlighting.light_queue += src;  \
+		lighting_update_lights += src;  \
 		needs_update            = TRUE; \
 	}
 

@@ -118,7 +118,6 @@
 	if(pressure_delta > 0.5)
 		if(pump_direction) //internal -> external
 			if (node1 && (environment.temperature || air1.temperature))
-				condense_before_pump(src, air1)
 				var/transfer_moles = calculate_transfer_moles(air1, environment, pressure_delta)
 				power_draw = pump_gas(src, air1, environment, transfer_moles, power_rating)
 

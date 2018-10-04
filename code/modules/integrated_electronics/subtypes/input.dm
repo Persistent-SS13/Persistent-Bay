@@ -840,7 +840,7 @@
 	icon_state = "recorder"
 	complexity = 8
 	inputs = list()
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	flags = CONDUCT
 	outputs = list(
 	"speaker" = IC_PINTYPE_STRING,
 	"message" = IC_PINTYPE_STRING

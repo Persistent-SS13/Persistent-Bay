@@ -16,13 +16,6 @@
 	max_amount = 100
 	icon = 'icons/obj/tiles.dmi'
 
-	force = 1
-	throwforce = 1
-	throw_speed = 5
-	throw_range = 20
-	item_flags = 0
-	obj_flags = 0
-
 /*
  * Grass
  */
@@ -31,6 +24,11 @@
 	singular_name = "grass floor tile"
 	desc = "A patch of grass like they often use on golf courses."
 	icon_state = "tile_grass"
+	force = 1.0
+	throwforce = 1.0
+	throw_speed = 5
+	throw_range = 20
+	flags = 0
 	origin_tech = list(TECH_BIO = 1)
 
 /*
@@ -41,6 +39,11 @@
 	singular_name = "wood floor tile"
 	desc = "An easy to fit wooden floor tile."
 	icon_state = "tile-wood"
+	force = 1.0
+	throwforce = 1.0
+	throw_speed = 5
+	throw_range = 20
+	flags = 0
 
 /obj/item/stack/tile/wood/cyborg
 	name = "wood floor tile synthesizer"
@@ -55,10 +58,12 @@
 	singular_name = "steel floor tile"
 	desc = "Those could work as a pretty decent throwing weapon." //why?
 	icon_state = "tile"
-	force = 6
+	force = 6.0
 	matter = list(DEFAULT_WALL_MATERIAL = 937.5)
-	throwforce = 15
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	throwforce = 15.0
+	throw_speed = 5
+	throw_range = 20
+	flags = CONDUCT
 
 /obj/item/stack/tile/floor_white
 	name = "white floor tile"
@@ -102,6 +107,11 @@
 	singular_name = "linoleum"
 	desc = "A piece of linoleum. It is the same size as a normal floor tile!"
 	icon_state = "tile-linoleum"
+	force = 1.0
+	throwforce = 1.0
+	throw_speed = 5
+	throw_range = 20
+	flags = 0
 
 /obj/item/stack/tile/linoleum/fifty
 	amount = 50
@@ -114,6 +124,11 @@
 	singular_name = "brown carpet"
 	desc = "A piece of brown carpet."
 	icon_state = "tile_carpetbrown"
+	force = 1.0
+	throwforce = 1.0
+	throw_speed = 5
+	throw_range = 20
+	flags = 0
 
 /obj/item/stack/tile/carpet/fifty
 	amount = 50
@@ -123,6 +138,11 @@
 	desc = "A piece of blue and gold carpet."
 	singular_name = "blue carpet"
 	icon_state = "tile_carpetblue"
+	force = 1.0
+	throwforce = 1.0
+	throw_speed = 5
+	throw_range = 20
+	flags = 0
 
 /obj/item/stack/tile/carpetblue/fifty
 	amount = 50
@@ -132,6 +152,11 @@
 	desc = "A piece of blue and silver carpet."
 	singular_name = "pale blue carpet"
 	icon_state = "tile_carpetblue2"
+	force = 1.0
+	throwforce = 1.0
+	throw_speed = 5
+	throw_range = 20
+	flags = 0
 
 /obj/item/stack/tile/carpetblue2/fifty
 	amount = 50
@@ -141,6 +166,11 @@
 	desc = "A piece of purple carpet."
 	singular_name = "purple carpet"
 	icon_state = "tile_carpetpurple"
+	force = 1.0
+	throwforce = 1.0
+	throw_speed = 5
+	throw_range = 20
+	flags = 0
 
 /obj/item/stack/tile/carpetpurple/fifty
 	amount = 50
@@ -150,6 +180,11 @@
 	desc = "A piece of orange carpet."
 	singular_name = "orange carpet"
 	icon_state = "tile_carpetorange"
+	force = 1.0
+	throwforce = 1.0
+	throw_speed = 5
+	throw_range = 20
+	flags = 0
 
 /obj/item/stack/tile/carpetorange/fifty
 	amount = 50
@@ -159,6 +194,11 @@
 	desc = "A piece of green carpet."
 	singular_name = "green carpet"
 	icon_state = "tile_carpetgreen"
+	force = 1.0
+	throwforce = 1.0
+	throw_speed = 5
+	throw_range = 20
+	flags = 0
 
 /obj/item/stack/tile/carpetgreen/fifty
 	amount = 50
@@ -168,6 +208,11 @@
 	desc = "A piece of red carpet."
 	singular_name = "red carpet"
 	icon_state = "tile_carpetred"
+	force = 1.0
+	throwforce = 1.0
+	throw_speed = 5
+	throw_range = 20
+	flags = 0
 
 /obj/item/stack/tile/carpetred/fifty
 	amount = 50

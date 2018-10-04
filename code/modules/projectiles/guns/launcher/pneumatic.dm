@@ -5,7 +5,7 @@
 	item_state = "pneumatic"
 	slot_flags = SLOT_BELT
 	w_class = ITEM_SIZE_HUGE
-	obj_flags =  OBJ_FLAG_CONDUCTIBLE
+	flags =  CONDUCT
 	fire_sound_text = "a loud whoosh of moving air"
 	fire_delay = 50
 	fire_sound = 'sound/weapons/tablehit1.ogg'

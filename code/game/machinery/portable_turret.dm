@@ -534,7 +534,7 @@ var/list/turret_icons
  	if(check_access)
 		for(var/access in R.GetAccess(connected_faction.uid))
 			if(req_access["[access]"] > 0)
-				return R.assess_borgo(src, 0, 0, 1, 1, connected_faction)
+				return 0 // wtf? R.assess_borgo(src, 0, 0, 1, 1, connected_faction)
 		return 10 //if they don't have any of the required access
 		
 /obj/machinery/porta_turret/proc/assess_bot(var/mob/living/bot/B)

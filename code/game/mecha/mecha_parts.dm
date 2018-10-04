@@ -9,7 +9,7 @@
 	icon = 'icons/mecha/mech_construct.dmi'
 	icon_state = "blank"
 	w_class = ITEM_SIZE_HUGE
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	flags = CONDUCT
 	origin_tech = list(TECH_DATA = 2, TECH_MATERIAL = 2)
 
 
@@ -18,7 +18,7 @@
 	icon_state = "backbone"
 	randpixel = 0
 	var/datum/construction/construct
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	flags = CONDUCT
 
 	attackby(obj/item/W as obj, mob/user as mob)
 		if(!construct || !construct.action(W, user))

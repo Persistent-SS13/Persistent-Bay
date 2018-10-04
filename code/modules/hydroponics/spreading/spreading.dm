@@ -46,7 +46,7 @@
 	icon_state = ""
 	plane = OBJ_PLANE
 	layer = OBJ_LAYER
-	pass_flags = PASS_FLAG_TABLE
+	pass_flags = PASSTABLE
 	mouse_opacity = 1
 
 	var/health = 10

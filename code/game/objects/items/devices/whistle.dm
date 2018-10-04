@@ -4,7 +4,7 @@
 	icon_state = "voice0"
 	item_state = "flashbang"	//looks exactly like a flash (and nothing like a flashbang)
 	w_class = ITEM_SIZE_TINY
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	flags = CONDUCT
 
 	var/use_message = "Halt! Security!"
 	var/spamcheck = 0

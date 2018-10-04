@@ -30,7 +30,7 @@
 	if(istype(below, /turf/space))
 		return
 	var/area/A = below.loc
-	if(A.area_flags & AREA_FLAG_EXTERNAL)
+	if(A.flags & AREA_EXTERNAL)
 		return
 
 	return INITIALIZE_HINT_LATELOAD // oh no! we need to switch to being a different kind of turf!

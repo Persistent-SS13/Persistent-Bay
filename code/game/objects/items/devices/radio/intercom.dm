@@ -1,13 +1,12 @@
 /obj/item/device/radio/intercom
-	name = "intercom (General)"
+	name = "intercom"
 	desc = "Talk through this."
 	icon_state = "intercom"
 	randpixel = 0
 	anchored = 1
 	w_class = ITEM_SIZE_HUGE
 	canhear_range = 2
-	atom_flags = ATOM_FLAG_NO_BLOOD
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	flags = CONDUCT
 	layer = ABOVE_WINDOW_LAYER
 	var/number = 0
 	var/last_tick //used to delay the powercheck

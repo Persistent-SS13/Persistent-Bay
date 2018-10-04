@@ -71,21 +71,20 @@
 				continue
 			M.ingested.remove_reagent(R.type, removed * effect)
 
-/*/datum/reagent/carbon/touch_turf(var/turf/T) // commented out to prevent deleting the puddle
+/datum/reagent/carbon/touch_turf(var/turf/T)
 	if(!istype(T, /turf/space))
 		var/obj/effect/decal/cleanable/dirt/dirtoverlay = locate(/obj/effect/decal/cleanable/dirt, T)
 		if (!dirtoverlay)
 			dirtoverlay = new/obj/effect/decal/cleanable/dirt(T)
 			dirtoverlay.alpha = volume * 30
 		else
-			dirtoverlay.alpha = min(dirtoverlay.alpha + volume * 30, 255)*/
+			dirtoverlay.alpha = min(dirtoverlay.alpha + volume * 30, 255)
 
 /datum/reagent/copper
 	name = "Copper"
 	description = "A highly ductile metal."
 	taste_description = "copper"
 	color = "#6e3b08"
-	reagent_state = SOLID
 
 /datum/reagent/ethanol
 	name = "Ethanol" //Parent class for all alcoholic reagents.
@@ -102,8 +101,6 @@
 	var/adj_temp = 0
 	var/targ_temp = 310
 	var/halluci = 0
-
-	base_boil_point = 351.5
 
 	glass_name = "ethanol"
 	glass_desc = "A well-known alcohol with a variety of applications."

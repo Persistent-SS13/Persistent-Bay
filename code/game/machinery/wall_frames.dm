@@ -195,6 +195,10 @@ var/refund_type = /obj/item/stack/material/plastic
 	icon_state = "atm_frame"
 	build_machine_type = /obj/machinery/atm
 
-
-
-
+/obj/item/frame/wallsafe
+	name = "secure safe frame"
+	desc = "A starting frame for building a secure as can be safe."
+	icon = 'icons/obj/storage.dmi'
+	icon_state = "safe"
+	refund_amt = 3
+	build_machine_type = /obj/item/weapon/storage/secure/safe

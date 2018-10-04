@@ -274,8 +274,12 @@
 	set category = "Object"
 	set src in oview(1)
 
+	if(!usr || !Adjacent(usr))
+		return
+	
 	if(usr.incapacitated())
-		return 0
+		return
+
 
 	if(anchored)
 		to_chat(usr, "It is fastened to the floor therefore you can't rotate it!")

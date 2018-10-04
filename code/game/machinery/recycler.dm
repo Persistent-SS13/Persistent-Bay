@@ -103,7 +103,7 @@ var/const/SAFETY_COOLDOWN = 100
 
 /obj/machinery/recycler/proc/recycle(var/obj/item/I, var/sound = 1)
 	I.loc = src.loc
-	if(!istype(I, /obj/item/weapon/disk/nuclear) && !istype(I, /obj/item/organ/internal/stack))
+	if(!istype(I, /obj/item/weapon/disk/nuclear) && !istype(I, /obj/item/stack))
 		if(istype(I) && I.matter)
 			for(var/mat in I.matter)
 				stored_material[mat] += I.matter[mat]

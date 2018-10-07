@@ -18,6 +18,7 @@
 #define SPECIES_NO_FBP_CONSTRUCTION 0x8    // FBP of this species can't be made in-game.
 #define SPECIES_NO_FBP_CHARGEN      0x10   // FBP of this species can't be selected at chargen.
 #define SPECIES_NO_LACE             0x20   // This species can't have a neural lace.
+#define SPECIES_HAS_VATCHIP         0x30   // This species starts with a vat chip instead of a lace.
 
 // Species appearance flags
 #define HAS_SKIN_TONE_NORMAL                                                      0x1    // Skin tone selectable in chargen for baseline humans (0-220)
@@ -29,6 +30,7 @@
 #define RADIATION_GLOWS                                                           0x40   // Radiation causes this character to glow.
 #define HAS_SKIN_TONE_GRAV                                                        0x80   // Skin tone selectable in chargen for grav-adapted humans (0-100)
 #define HAS_SKIN_TONE_SPCR                                                        0x100  // Skin tone selectable in chargen for spacer humans (0-165)
+#define IS_VATGROWN                                                               0x200  // Has vatgrown default traits in creation
 
 #define HAS_A_SKIN_TONE (HAS_SKIN_TONE_NORMAL | HAS_SKIN_TONE_GRAV | HAS_SKIN_TONE_SPCR) // Species has a numeric skintone
 

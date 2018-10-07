@@ -130,8 +130,8 @@
 
 /decl/hierarchy/supply_pack/operations/minervoidsuit
 	name = "Cargo - Mining voidsuit"
-	contains = list(/obj/item/clothing/head/helmet/space/void/mining
-					/obj/item/clothing/suit/space/void/mining
+	contains = list(/obj/item/clothing/head/helmet/space/void/mining,
+					/obj/item/clothing/suit/space/void/mining,
 					/obj/item/clothing/shoes/magboots)
 	cost = 100
 	containertype = /obj/structure/closet/crate/secure/large
@@ -140,8 +140,8 @@
 
 /decl/hierarchy/supply_pack/operations/minervoidsuit_heavyduty
 	name = "Cargo - Heavy-duty mining voidsuit"
-	contains = list(/obj/item/clothing/head/helmet/space/void/mining/alt
-					/obj/item/clothing/suit/space/void/mining/alt
+	contains = list(/obj/item/clothing/head/helmet/space/void/mining/alt,
+					/obj/item/clothing/suit/space/void/mining/alt,
 					/obj/item/clothing/shoes/magboots)
 	cost = 200
 	containertype = /obj/structure/closet/crate/secure/large

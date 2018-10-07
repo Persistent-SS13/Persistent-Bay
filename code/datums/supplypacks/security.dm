@@ -100,8 +100,8 @@
 
 /decl/hierarchy/supply_pack/security/voidsuit
 	name = "Voidsuit - Security voidsuit"
-	contains = list(/obj/item/clothing/head/helmet/space/void/security
-					/obj/item/clothing/suit/space/void/security
+	contains = list(/obj/item/clothing/head/helmet/space/void/security,
+					/obj/item/clothing/suit/space/void/security,
 					/obj/item/clothing/shoes/magboots)
 	cost = 150
 	containername = "\improper Security voidsuit crate"
@@ -110,8 +110,8 @@
 
 /decl/hierarchy/supply_pack/security/voidsuit_heavyduty
 	name = "Voidsuit - Heavy-duty security voidsuit"
-	contains = list(/obj/item/clothing/head/helmet/space/void/security/alt
-					/obj/item/clothing/suit/space/void/security/alt
+	contains = list(/obj/item/clothing/head/helmet/space/void/security/alt,
+					/obj/item/clothing/suit/space/void/security/alt,
 					/obj/item/clothing/shoes/magboots)
 	cost = 250
 	containername = "\improper Heavy-duty security voidsuit crate"

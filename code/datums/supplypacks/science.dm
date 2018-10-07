@@ -38,8 +38,8 @@
 
 /decl/hierarchy/supply_pack/science/voidsuit
 	name = "Scientist Voidsuit"
-	contains = list(/obj/item/clothing/head/helmet/space/void/excavation
-					/obj/item/clothing/suit/space/void/excavation
+	contains = list(/obj/item/clothing/head/helmet/space/void/excavation,
+					/obj/item/clothing/suit/space/void/excavation,
 					/obj/item/clothing/shoes/magboots)
 	cost = 100
 	containertype = /obj/structure/closet/crate/secure/large

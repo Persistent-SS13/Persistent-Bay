@@ -80,7 +80,7 @@
 	attack_verb = list("burnt")
 	rushed = FALSE
 
-/obj/item/weapon/hemostat/attack_self(mob/user)
+/obj/item/weapon/cautery/attack_self(mob/user)
 	if (rushed)
 		rushed = FALSE
 		to_chat(user, "<span class='notice'>You steadily hold \the [src], preparing to carefully cauterize an incision.</span> ")
@@ -88,7 +88,7 @@
 		rushed = TRUE
 		to_chat(user, "<span class='notice'>You tightly grip \the [src], preparing to hurriedly cauterize an incision.</span> ")
 
-/obj/item/weapon/hemostat/pickup(mob/user)
+/obj/item/weapon/cautery/pickup(mob/user)
 	if (rushed)
 		to_chat(user, "<span class='notice'>You grab \the [src], preparing to hurriedly cauterize an incision</span> ")
 	else
@@ -111,6 +111,20 @@
 	attack_verb = list("drilled")
 	rushed = FALSE
 
+/obj/item/weapon/surgicaldrill/attack_self(mob/user)
+	if (rushed)
+		rushed = FALSE
+		to_chat(user, "<span class='notice'>You steadily hold \the [src], preparing to carefully drill something.</span> ")
+	else
+		rushed = TRUE
+		to_chat(user, "<span class='notice'>You whirr \the [src] dramatically, preparing to recklessly drill something.</span> ")
+
+/obj/item/weapon/surgicaldrill/pickup(mob/user)
+	if (rushed)
+		to_chat(user, "<span class='notice'>You grab \the [src], preparing to recklessly drill something.</span> ")
+	else
+		to_chat(user, "<span class='notice'>You pick up \the [src], preparing to carefully drill something.</span> ")
+
 /*
  * Scalpel
  */
@@ -132,6 +146,20 @@
 	matter = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 5000)
 	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
 	rushed = FALSE
+
+/obj/item/weapon/scalpel/attack_self(mob/user)
+	if (rushed)
+		rushed = FALSE
+		to_chat(user, "<span class='notice'>You steadily hold \the [src], preparing to make a careful cut.</span> ")
+	else
+		rushed = TRUE
+		to_chat(user, "<span class='notice'>You grip \the [src] tightly, preparing to make a hurried cut.</span> ")
+
+/obj/item/weapon/scalpel/pickup(mob/user)
+	if (rushed)
+		to_chat(user, "<span class='notice'>You grab \the [src], preparing to make a hurried cut.</span> ")
+	else
+		to_chat(user, "<span class='notice'>You pick up \the [src], preparing to make a careful cut.</span> ")
 
 /*
  * Researchable Scalpels
@@ -184,6 +212,20 @@
 	edge = 1
 	rushed = FALSE
 
+/obj/item/weapon/circular_saw/attack_self(mob/user)
+	if (rushed)
+		rushed = FALSE
+		to_chat(user, "<span class='notice'>You steadily hold \the [src], preparing to carefully saw through bone.</span> ")
+	else
+		rushed = TRUE
+		to_chat(user, "<span class='notice'>You whirr \the [src] dramatically, preparing to recklessly saw through bone.</span> ")
+
+/obj/item/weapon/circular_saw/pickup(mob/user)
+	if (rushed)
+		to_chat(user, "<span class='notice'>You grab \the [src], preparing to recklessly saw through bone.</span> ")
+	else
+		to_chat(user, "<span class='notice'>You pick up \the [src], preparing to carefully saw through bone.</span> ")
+
 //misc, formerly from code/defines/weapons.dm
 /obj/item/weapon/bonegel
 	name = "bone gel"
@@ -214,3 +256,17 @@
 	w_class = ITEM_SIZE_SMALL
 	attack_verb = list("attacked", "hit", "bludgeoned")
 	rushed = FALSE
+
+/obj/item/weapon/bonesetter/attack_self(mob/user)
+	if (rushed)
+		rushed = FALSE
+		to_chat(user, "<span class='notice'>You steadily hold \the [src], preparing to carefully set bones.</span> ")
+	else
+		rushed = TRUE
+		to_chat(user, "<span class='notice'>You tightly grip \the [src], preparing to hurriedly set bones.</span> ")
+
+/obj/item/weapon/bonesetter/pickup(mob/user)
+	if (rushed)
+		to_chat(user, "<span class='notice'>You grab \the [src], preparing to carefully set bones.</span> ")
+	else
+		to_chat(user, "<span class='notice'>You pick up \the [src], preparing to hurriedly set bones.</span> ")

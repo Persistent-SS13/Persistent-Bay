@@ -106,7 +106,9 @@
 //void suits
 /decl/hierarchy/supply_pack/atmospherics/voidsuit
 	name = "Voidsuits - Atmospherics Voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/atmos/prepared)
+	contains = list(/obj/item/clothing/head/helmet/space/void/atmos
+					/obj/item/clothing/suit/space/void/atmos
+					/obj/item/clothing/shoes/magboots)
 	cost = 100
 	containername = "\improper Atmospherics Voidsuit crate"
 	containertype = /obj/structure/closet/crate/secure/large
@@ -114,7 +116,9 @@
 
 /decl/hierarchy/supply_pack/atmospherics/voidsuit_heavyduty
 	name = "Voidsuits - Heavy-duty atmospherics voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/atmos/alt/prepared)
+	contains = list(/obj/item/clothing/head/helmet/space/void/atmos/alt
+					/obj/item/clothing/suit/space/void/atmos/alt
+					/obj/item/clothing/shoes/magboots)
 	cost = 150
 	containername = "\improper Heavy-duty atmospherics voidsuit crate"
 	containertype = /obj/structure/closet/crate/secure/large

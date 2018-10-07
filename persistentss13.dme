@@ -870,6 +870,7 @@
 #include "code\game\objects\items\weapons\circuitboards\machinery\research.dm"
 #include "code\game\objects\items\weapons\circuitboards\machinery\security.dm"
 #include "code\game\objects\items\weapons\circuitboards\machinery\shieldgen.dm"
+#include "code\game\objects\items\weapons\circuitboards\machinery\suit_storage_unit.dm"
 #include "code\game\objects\items\weapons\circuitboards\machinery\telecomms.dm"
 #include "code\game\objects\items\weapons\circuitboards\machinery\unary_atmos.dm"
 #include "code\game\objects\items\weapons\grenades\anti_photon_grenade.dm"

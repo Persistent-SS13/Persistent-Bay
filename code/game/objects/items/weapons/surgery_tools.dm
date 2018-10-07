@@ -20,6 +20,21 @@
 	flags = CONDUCT
 	w_class = ITEM_SIZE_SMALL
 	origin_tech = list(TECH_MATERIAL = 1, TECH_BIO = 1)
+	rushed = FALSE
+
+/obj/item/weapon/retractor/attack_self(mob/user)
+	if (rushed)
+		rushed = FALSE
+		to_chat(user, "<span class='notice'>You steadily hold \the [src], preparing for a careful retraction.</span> ")
+	else
+		rushed = TRUE
+		to_chat(user, "<span class='notice'>You tightly grip \the [src], preparing for a rushed retraction.</span> ")
+
+/obj/item/weapon/retractor/pickup(mob/user)
+	if (rushed)
+		to_chat(user, "<span class='notice'>You hurriedly grab \the [src], preparing for a rushed retraction.</span> ")
+	else
+		to_chat(user, "<span class='notice'>You pick up \the [src], preparing for a careful retraction.</span> ")
 
 /*
  * Hemostat
@@ -34,6 +49,21 @@
 	w_class = ITEM_SIZE_SMALL
 	origin_tech = list(TECH_MATERIAL = 1, TECH_BIO = 1)
 	attack_verb = list("attacked", "pinched")
+	rushed = FALSE
+
+/obj/item/weapon/hemostat/attack_self(mob/user)
+	if (rushed)
+		rushed = FALSE
+		to_chat(user, "<span class='notice'>You steadily hold \the [src], preparing to carefully clamp blood flow.</span> ")
+	else
+		rushed = TRUE
+		to_chat(user, "<span class='notice'>You tightly grip \the [src], preparing to hurriedly clamp blood flow.</span> ")
+
+/obj/item/weapon/hemostat/pickup(mob/user)
+	if (rushed)
+		to_chat(user, "<span class='notice'>You grab \the [src], preparing to hurriedly clamp blood flow.</span> ")
+	else
+		to_chat(user, "<span class='notice'>You pick up \the [src], preparing to carefully clamp blood flow.</span> ")
 
 /*
  * Cautery
@@ -48,6 +78,21 @@
 	w_class = ITEM_SIZE_SMALL
 	origin_tech = list(TECH_MATERIAL = 1, TECH_BIO = 1)
 	attack_verb = list("burnt")
+	rushed = FALSE
+
+/obj/item/weapon/hemostat/attack_self(mob/user)
+	if (rushed)
+		rushed = FALSE
+		to_chat(user, "<span class='notice'>You steadily hold \the [src], preparing to carefully cauterize an incision.</span> ")
+	else
+		rushed = TRUE
+		to_chat(user, "<span class='notice'>You tightly grip \the [src], preparing to hurriedly cauterize an incision.</span> ")
+
+/obj/item/weapon/hemostat/pickup(mob/user)
+	if (rushed)
+		to_chat(user, "<span class='notice'>You grab \the [src], preparing to hurriedly cauterize an incision</span> ")
+	else
+		to_chat(user, "<span class='notice'>You pick up \the [src], preparing to carefully cauterize an incision.</span> ")
 
 /*
  * Surgical Drill
@@ -64,6 +109,7 @@
 	w_class = ITEM_SIZE_NORMAL
 	origin_tech = list(TECH_MATERIAL = 1, TECH_BIO = 1)
 	attack_verb = list("drilled")
+	rushed = FALSE
 
 /*
  * Scalpel
@@ -85,6 +131,7 @@
 	origin_tech = list(TECH_MATERIAL = 1, TECH_BIO = 1)
 	matter = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 5000)
 	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
+	rushed = FALSE
 
 /*
  * Researchable Scalpels
@@ -135,6 +182,7 @@
 	attack_verb = list("attacked", "slashed", "sawed", "cut")
 	sharp = 1
 	edge = 1
+	rushed = FALSE
 
 //misc, formerly from code/defines/weapons.dm
 /obj/item/weapon/bonegel
@@ -165,3 +213,4 @@
 	throw_range = 5
 	w_class = ITEM_SIZE_SMALL
 	attack_verb = list("attacked", "hit", "bludgeoned")
+	rushed = FALSE

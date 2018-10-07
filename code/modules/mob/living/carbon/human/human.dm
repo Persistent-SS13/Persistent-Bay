@@ -1118,7 +1118,10 @@
 		InitializeHud()
 
 	if(config && config.use_cortical_stacks && client && client.prefs.has_cortical_stack)
-		create_stack()
+		if (client.prefs.has_vatgrown_chip)
+			create_stack("vat")
+		else
+			create_stack("standard")
 	full_prosthetic = null
 
 	//recheck species-restricted clothing

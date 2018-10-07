@@ -12,6 +12,7 @@
 
 	var/static/list/backpacks_by_name
 	var/list/possible_under
+	var/list/possible_under_vatgrown
 	var/list/possible_under_extra = list()
 	var/last_background = ""
 /datum/category_item/player_setup_item/general/equipment/New()
@@ -28,6 +29,9 @@
 		possible_under |= new /obj/item/clothing/under/color/green()
 		possible_under |= new /obj/item/clothing/under/color/white()
 		possible_under |= new /obj/item/clothing/under/color/black()
+	if(!possible_under_vatgrown)
+		possible_under = list()
+		possible_under |= new /obj/item/clothing/under/color/white()
 
 /datum/category_item/player_setup_item/general/equipment/load_character(var/savefile/S)
 	var/load_backbag
@@ -122,6 +126,8 @@
 				possible_under_extra |= new /obj/item/clothing/under/wardt
 				possible_under_extra |= new	/obj/item/clothing/under/pcrc
 		pref.selected_under = pick(possible_under_extra)
+		if(pref.home_system == "Vatgrown")
+			pref.selected_under = pick(possible_under_vatgrown)
 		pref.preview_icon = null
 		pref.ShowChoices(usr)
 	

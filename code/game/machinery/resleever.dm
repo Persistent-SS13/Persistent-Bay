@@ -198,6 +198,9 @@ obj/machinery/resleever/Process()
 			to_chat(user, "<span class='warning'>You need to remove the occupant first!</span>")
 			return
 	if(istype(W, /obj/item/organ/internal/stack))
+		if(istype(W, /obj/item/organ/internal/stack/vat))
+			to_chat(user, "<span class='notice'>The [W] does not fit into [src], and you get the horrifying feeling that it was not meant to.</span>")
+			return
 		if(isnull(lace))
 			to_chat(user, "<span class='notice'>You insert \the [W] into [src].</span>")
 			user.drop_from_inventory(W)

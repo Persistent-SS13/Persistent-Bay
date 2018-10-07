@@ -1,11 +1,15 @@
 GLOBAL_LIST_EMPTY(neural_laces)
 /mob/var/perma_dead = 0
 
-/mob/living/carbon/human/proc/create_stack()
+/mob/living/carbon/human/proc/create_stack(stacktype)
 	set waitfor=0
 	sleep(10)
-	internal_organs_by_name[BP_STACK] = new /obj/item/organ/internal/stack(src,1)
-	to_chat(src, "<span class='notice'>You feel a faint sense of vertigo as your neural lace boots.</span>")
+	if (stacktype == "vat")
+		internal_organs_by_name[BP_STACK] = new /obj/item/organ/internal/stack/vat(src,1)
+		to_chat(src, "<span class='notice'>You feel a faint sense of vertigo as the chip in your brain connects.</span>")
+	else
+		internal_organs_by_name[BP_STACK] = new /obj/item/organ/internal/stack(src,1)
+		to_chat(src, "<span class='notice'>You feel a faint sense of vertigo as your neural lace boots.</span>")
 
 /obj/item/organ/internal/stack
 	name = "neural lace"
@@ -267,7 +271,6 @@ GLOBAL_LIST_EMPTY(neural_laces)
 			ownerckey = owner.ckey ? owner.ckey : owner.stored_ckey
 
 
-
 /obj/item/organ/internal/stack/after_load()
 	..()
 	try_connect()
@@ -334,3 +337,14 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	owner.save_slot = save_slot
 	to_chat(owner, "<span class='notice'>Consciousness slowly creeps over you as your new body awakens.</span>")
 	return 1
+
+/obj/item/organ/internal/stack/vat
+	action_button_name = "Access Vatchip UI"
+	name = "vatgrown chip"
+	parent_organ = BP_HEAD
+	icon_state = "implant"
+	w_class = ITEM_SIZE_TINY
+
+/obj/item/organ/internal/stack/vat/examine(mob/user) // -- TLE
+	. = ..(user)
+	to_chat(user, "These are the remnants of a small implant used to quickly train vatgrown and connect them to bluespace networks. Vatgrown can never be cloned.")

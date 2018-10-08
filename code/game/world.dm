@@ -576,7 +576,7 @@ var/world_topic_spam_protect_time = world.timeofday
 	var/s = ""
 	
 	if (config && config.hub_link)
-		s += "<a>" + config.hub_link
+		s += "<a href='" + config.hub_link + "'>"
 	if (config && config.hub_name)
 		s += config.hub_name + "</a> "
 	if (config && config.hub_desc)

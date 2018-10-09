@@ -865,6 +865,35 @@ var/global/floorIsLava = 0
 			record.email.login = "[replacetext(record.get_name(), " ", "_")]@freemail.nt"
 			record.email.password = "recovery[rand(1,99)]"
 
+/datum/admins/proc/fixrecords()
+	set category = "Server"
+	set desc="Fixes crew records"
+	set name="fix crew recrods"
+
+	if(!check_rights(R_ADMIN))
+		return
+	var/savefile/f = new("map_saves/records.sav")
+	f.cd = "/extras"
+	from_file(f["records"],GLOB.all_crew_records)
+	if(!GLOB.all_crew_records)
+		message_admins("BROKE AS FUCK!!")
+		GLOB.all_crew_records = list()
+			
+			
+	
+/datum/admins/proc/autocryo()
+	set category = "Server"
+	set desc="Autocryo"
+	set name="autocryo"
+
+	if(!check_rights(R_ADMIN))
+		return
+	var/obj/machinery/cryopod/cryo = new()
+	for(var/mob/living/carbon/human/H in world)
+		cryo.occupant = H
+		cryo.despawnOccupant()
+					
+			
 /datum/admins/proc/retrieve_email()
 	set category = "Server"
 	set desc = "Retrieve Email"

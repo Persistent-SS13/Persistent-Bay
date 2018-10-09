@@ -891,7 +891,7 @@ var/global/floorIsLava = 0
 	var/obj/machinery/cryopod/cryo = new()
 	for(var/mob/living/carbon/human/H in world)
 		cryo.occupant = H
-		cryo.despawnOccupant()
+		cryo.despawnOccupant(1)
 					
 			
 /datum/admins/proc/retrieve_email()

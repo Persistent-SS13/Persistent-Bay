@@ -107,3 +107,8 @@
 	contains = list(/obj/item/stack/material/diamond/ten)
 	cost = 200
 	containername = "\improper Diamond sheets crate"
+/decl/hierarchy/supply_pack/materials/copper10
+	name = "Copper (x10)"
+	contains = list(/obj/item/stack/material/copper/ten)
+	cost = 80
+	containername = "\improper Copper bar crate"

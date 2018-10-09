@@ -880,7 +880,19 @@ var/global/floorIsLava = 0
 		GLOB.all_crew_records = list()
 			
 			
-			
+	
+/datum/admins/proc/autocryo()
+	set category = "Server"
+	set desc="Autocryo"
+	set name="autocryo"
+
+	if(!check_rights(R_ADMIN))
+		return
+	var/obj/machinery/cryopod/cryo = new()
+	for(var/mob/living/carbon/human/H in world)
+		cryo.occupant = H
+		cryo.despawnOccupant()
+					
 			
 /datum/admins/proc/retrieve_email()
 	set category = "Server"

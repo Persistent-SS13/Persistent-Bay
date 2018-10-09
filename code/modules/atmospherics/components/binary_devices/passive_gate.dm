@@ -49,7 +49,7 @@
 	update_underlays()
 
 /obj/machinery/atmospherics/binary/passive_gate/Process()
-	//..() //Don't base class doesn't like stuff the do't use power
+	//..() //Don't, the machinery base class process kill anything that doesn't use power..
 
 	last_flow_rate = 0
 

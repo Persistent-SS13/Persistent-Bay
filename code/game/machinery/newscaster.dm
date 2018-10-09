@@ -721,6 +721,11 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 
 
 /obj/machinery/newscaster/attackby(obj/item/I as obj, mob/user as mob)
+	if(isWrench(I))
+		to_chat(user, "<span class='notice'>You detach \the [src] from the wall.</span>")
+		new/obj/item/frame/newscaster(get_turf(src))
+		qdel(src)
+		return 1
 	if (stat & BROKEN)
 		playsound(src.loc, 'sound/effects/hit_on_shattered_glass.ogg', 100, 1)
 		for (var/mob/O in hearers(5, src.loc))

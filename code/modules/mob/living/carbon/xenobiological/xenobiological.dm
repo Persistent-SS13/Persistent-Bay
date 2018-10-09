@@ -52,6 +52,8 @@
 
 	var/core_removal_stage = 0 //For removing cores.
 
+/mob/living/carbon/slime/after_load()
+	regenerate_icons()
 
 /mob/living/carbon/slime/getToxLoss()
 	return toxloss

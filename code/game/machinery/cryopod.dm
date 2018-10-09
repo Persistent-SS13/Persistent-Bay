@@ -213,7 +213,7 @@
 		occupant.forceMove(get_turf(src))
 		occupant = null
 
-/obj/machinery/cryopod/proc/despawnOccupant()
+/obj/machinery/cryopod/proc/despawnOccupant(var/autocryo = 0)
 	if(!occupant)
 		return 0
 
@@ -252,10 +252,11 @@
 		name = M.real_name
 		character = M
 		dir = M.save_slot
-		M.spawn_loc = req_access_faction
-		M.spawn_loc_2 = network
-		M.spawn_type = 1
-		M.loc = null
+		if(!autocryo)
+			M.spawn_loc = req_access_faction
+			M.spawn_loc_2 = network
+			M.spawn_type = 1
+			M.loc = null
 
 	key = copytext(key, max(findtext(key, "@"), 1))
 

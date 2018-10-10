@@ -904,7 +904,7 @@ var/global/floorIsLava = 0
 	for(var/turf/space/T in world)
 		var/found_lattice
 		for(var/obj/structure/lattice/lattice in T.contents)
-			found_lattice = 1'
+			found_lattice = 1
 			break
 		for(var/obj/structure/grille/grille in T.contents)
 			found_lattice = 1

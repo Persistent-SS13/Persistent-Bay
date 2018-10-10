@@ -2,8 +2,7 @@
 	name = "Dispenser Cartridges"
 
 //refill packs
-
-/decl/hierarchy/supply_pack/reagents/alcohol_reagents
+/decl/hierarchy/supply_pack/dispenser_cartridges/alcohol_reagents
 	name = "Refills - Bar alcoholic dispenser refill"
 	contains = list(
 			/obj/item/weapon/reagent_containers/chem_disp_cartridge/beer,
@@ -21,7 +20,7 @@
 	cost = 50
 	containername = "alcoholic drinks crate"
 
-/decl/hierarchy/supply_pack/reagents/softdrink_reagents
+/decl/hierarchy/supply_pack/dispenser_cartridges/softdrink_reagents
 	name = "Refills - Bar soft drink dispenser refill"
 	contains = list(
 			/obj/item/weapon/reagent_containers/chem_disp_cartridge/water,

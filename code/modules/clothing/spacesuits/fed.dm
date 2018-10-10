@@ -3,7 +3,7 @@
 	desc = "Standard issue short-EVA capable helmet issued to Federation forces"
 	item_state = "federation_helmet"
 	icon_state = "federation_helmet"
-	item_flags = STOPPRESSUREDAMAGE | THICKMATERIAL | AIRTIGHT
+	item_flags = ITEM_FLAG_STOPPRESSUREDAMAGE | ITEM_FLAG_THICKMATERIAL | ITEM_FLAG_AIRTIGHT
 	body_parts_covered = HEAD|FACE
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|BLOCKHAIR
 	cold_protection = HEAD
@@ -25,7 +25,7 @@
 	icon_state = "federation_armor"
 	blood_overlay_type = "armor"
 	armor = list(melee = 55, bullet = 45, laser = 55, energy = 55, bomb = 45, bio = 30, rad = 25)
-	item_flags = STOPPRESSUREDAMAGE|THICKMATERIAL
+	item_flags = ITEM_FLAG_STOPPRESSUREDAMAGE|ITEM_FLAG_THICKMATERIAL
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT|HIDETAIL
 	cold_protection = UPPER_TORSO | LOWER_TORSO | LEGS | FEET | ARMS | HANDS
@@ -79,7 +79,7 @@
 	name = "\improper Federation engineer armour"
 	icon_state = "federation_armor_engineer"
 	item_state ="federation_armor_engineer"
-	
+
 /obj/item/clothing/head/helmet/space/fed/squadleader
 	name = "\improper Federation squad leader helmet"
 	item_state = "federation_helmet_squad_leader"

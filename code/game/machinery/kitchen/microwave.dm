@@ -9,7 +9,8 @@
 	use_power = 1
 	idle_power_usage = 5
 	active_power_usage = 100
-	flags = OPENCONTAINER | NOREACT
+	atom_flags = ATOM_FLAG_NO_REACT
+	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	var/operating = 0 // Is it on?
 	var/dirty = 0 // = {0..100} Does it need cleaning?
 	var/broken = 0 // ={0,1,2} How broken is it???
@@ -18,6 +19,7 @@
 	var/global/list/acceptable_reagents // List of the reagents you can put in
 	var/global/max_n_of_items = 0
 	var/efficiency
+
 
 // see code/modules/food/recipes_microwave.dm for recipes
 
@@ -47,7 +49,6 @@
 		acceptable_items |= /obj/item/weapon/holder
 		acceptable_items |= /obj/item/weapon/reagent_containers/food/snacks/grown
 
-
 	component_parts = list()
 	component_parts += new /obj/item/weapon/circuitboard/microwave(null)
 	component_parts += new /obj/item/weapon/stock_parts/micro_laser(null)
@@ -55,112 +56,89 @@
 	component_parts += new /obj/item/stack/cable_coil(null, 2)
 	RefreshParts()
 
-
-/obj/machinery/microwave/upgraded/New()
-	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/microwave(null)
-	component_parts += new /obj/item/weapon/stock_parts/micro_laser/ultra(null)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
-	component_parts += new /obj/item/stack/cable_coil(null, 2)
-	RefreshParts()
-
 /obj/machinery/microwave/RefreshParts()
-	var/E
+	var/E = 0
 	for(var/obj/item/weapon/stock_parts/micro_laser/M in component_parts)
 		E += M.rating
 	efficiency = E
-
 
 /*******************
 *   Item Adding
 ********************/
 
-/obj/machinery/microwave/attackby(var/obj/item/O as obj, var/mob/user as mob, params)
-	if(operating)
-		return
-	if(!broken && dirty < 100)
-		if(default_deconstruction_screwdriver(user, "mw-o", "mw", O))
-			return
-	if(!broken && istype(O, /obj/item/weapon/wrench))
-		playsound(src, 'sound/items/Ratchet.ogg', 50, 1)
-		if(anchored)
-			anchored = 0
-			user << "<span class='caution'>The [src] can now be moved.</span>"
-			return
-		else if(!anchored)
-			anchored = 1
-			user << "<span class='caution'>The [src] is now secured.</span>"
-			return
-
-	default_deconstruction_crowbar(O)
-
+/obj/machinery/microwave/attackby(var/obj/item/O as obj, var/mob/user as mob)
 	if(src.broken > 0)
-		if(src.broken == 2 && istype(O, /obj/item/weapon/screwdriver)) // If it's broken and they're using a screwdriver
+		if(src.broken == 2 && isScrewdriver(O)) // If it's broken and they're using a screwdriver
 			user.visible_message( \
-				"\blue [user] starts to fix part of the microwave.", \
-				"\blue You start to fix part of the microwave." \
+				"<span class='notice'>\The [user] starts to fix part of the microwave.</span>", \
+				"<span class='notice'>You start to fix part of the microwave.</span>" \
 			)
-			if (do_after(user,20))
+			if (do_after(user, 20, src))
 				user.visible_message( \
-					"\blue [user] fixes part of the microwave.", \
-					"\blue You have fixed part of the microwave." \
+					"<span class='notice'>\The [user] fixes part of the microwave.</span>", \
+					"<span class='notice'>You have fixed part of the microwave.</span>" \
 				)
 				src.broken = 1 // Fix it a bit
-		else if(src.broken == 1 && istype(O, /obj/item/weapon/wrench)) // If it's broken and they're doing the wrench
+		else if(src.broken == 1 && isWrench(O)) // If it's broken and they're doing the wrench
 			user.visible_message( \
-				"\blue [user] starts to fix part of the microwave.", \
-				"\blue You start to fix part of the microwave." \
+				"<span class='notice'>\The [user] starts to fix part of the microwave.</span>", \
+				"<span class='notice'>You start to fix part of the microwave.</span>" \
 			)
-			if (do_after(user,20))
+			if (do_after(user, 20, src))
 				user.visible_message( \
-					"\blue [user] fixes the microwave.", \
-					"\blue You have fixed the microwave." \
+					"<span class='notice'>\The [user] fixes the microwave.</span>", \
+					"<span class='notice'>You have fixed the microwave.</span>" \
 				)
-				src.icon_state = "mw"
 				src.broken = 0 // Fix it!
 				src.dirty = 0 // just to be sure
-				src.flags = OPENCONTAINER
+				src.update_icon()
+				src.atom_flags = ATOM_FLAG_OPEN_CONTAINER
 		else
-			user << "\red It's broken!"
+			to_chat(user, "<span class='warning'>It's broken!</span>")
 			return 1
 	else if(src.dirty==100) // The microwave is all dirty so can't be used!
-		if(istype(O, /obj/item/weapon/reagent_containers/spray/cleaner) || istype(O, /obj/item/weapon/soap)) // If they're trying to clean it then let them
+		if(istype(O, /obj/item/weapon/reagent_containers/spray/cleaner) || istype(O, /obj/item/weapon/reagent_containers/glass/rag)) // If they're trying to clean it then let them
 			user.visible_message( \
-				"\blue [user] starts to clean the microwave.", \
-				"\blue You start to clean the microwave." \
+				"<span class='notice'>\The [user] starts to clean the microwave.</span>", \
+				"<span class='notice'>You start to clean the microwave.</span>" \
 			)
-			if (do_after(user,20))
+			if (do_after(user, 20, src))
 				user.visible_message( \
-					"\blue [user]  has cleaned  the microwave.", \
-					"\blue You have cleaned the microwave." \
+					"<span class='notice'>\The [user] has cleaned the microwave.</span>", \
+					"<span class='notice'>You have cleaned the microwave.</span>" \
 				)
 				src.dirty = 0 // It's clean!
 				src.broken = 0 // just to be sure
-				src.icon_state = "mw"
-				src.flags = OPENCONTAINER
+				src.update_icon()
+				src.atom_flags = ATOM_FLAG_OPEN_CONTAINER
 		else //Otherwise bad luck!!
-			user << "\red It's dirty!"
+			to_chat(user, "<span class='warning'>It's dirty!</span>")
 			return 1
+	else if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+	else if(default_deconstruction_crowbar(user, O))
+		updateUsrDialog()
+	else if(default_part_replacement(user, O))
+		updateUsrDialog()
 	else if(is_type_in_list(O,acceptable_items))
-		if (contents.len>=max_n_of_items)
-			user << "\red This [src] is full of ingredients, you cannot put more."
+		if (contents.len >= max_n_of_items)
+			to_chat(user, "<span class='warning'>This [src] is full of ingredients, you cannot put more.</span>")
 			return 1
-		if (istype(O,/obj/item/stack) && O:amount>1)
-			new O.type (src)
-			O:use(1)
-			user.visible_message( \
-				"\blue [user] has added one of [O] to \the [src].", \
-				"\blue You add one of [O] to \the [src].")
+		if(istype(O, /obj/item/stack)) // This is bad, but I can't think of how to change it
+			var/obj/item/stack/S = O
+			if(S.get_amount() > 1)
+				new O.type (src)
+				S.use(1)
+				user.visible_message( \
+					"<span class='notice'>\The [user] has added one of [O] to \the [src].</span>", \
+					"<span class='notice'>You add one of [O] to \the [src].</span>")
+			return
 		else
-		//	user.unEquip(O)	//This just causes problems so far as I can tell. -Pete
-			if(!user.drop_item())
-				user << "<span class='notice'>\the [O] is stuck to your hand, you cannot put it in \the [src]</span>"
-				return 0
-			O.loc = src
+			user.drop_item(src)
 			user.visible_message( \
-				"\blue [user] has added \the [O] to \the [src].", \
-				"\blue You add \the [O] to \the [src].")
+				"<span class='notice'>\The [user] has added \the [O] to \the [src].</span>", \
+				"<span class='notice'>You add \the [O] to \the [src].</span>")
+			return
 	else if(istype(O,/obj/item/weapon/reagent_containers/glass) || \
 	        istype(O,/obj/item/weapon/reagent_containers/food/drinks) || \
 	        istype(O,/obj/item/weapon/reagent_containers/food/condiment) \
@@ -172,19 +150,32 @@
 				to_chat(user, "<span class='warning'>Your [O] contains components unsuitable for cookery.</span>")
 				return 1
 		return
-		//G.reagents.trans_to(src,G.amount_per_transfer_from_this)
 	else if(istype(O,/obj/item/grab))
 		var/obj/item/grab/G = O
-		user << "\red This is ridiculous. You can not fit \the [G.affecting] in this [src]."
+		to_chat(user, "<span class='warning'>This is ridiculous. You can not fit \the [G.affecting] in this [src].</span>")
 		return 1
+	else if(isCrowbar(O))
+		user.visible_message( \
+			"<span class='notice'>\The [user] begins [src.anchored ? "securing" : "unsecuring"] the microwave.</span>", \
+			"<span class='notice'>You attempt to [src.anchored ? "secure" : "unsecure"] the microwave.</span>"
+			)
+		if (do_after(user,20, src))
+			user.visible_message( \
+			"<span class='notice'>\The [user] [src.anchored ? "secures" : "unsecures"] the microwave.</span>", \
+			"<span class='notice'>You [src.anchored ? "secure" : "unsecure"] the microwave.</span>"
+			)
+			src.anchored = !src.anchored
+		else
+			to_chat(user, "<span class='notice'>You decide not to do that.</span>")
 	else
-		user << "\red You have no idea what you can cook with this [O]."
-		return 1
+
+		to_chat(user, "<span class='warning'>You have no idea what you can cook with this [O].</span>")
+	..()
 	src.updateUsrDialog()
 
-
 /obj/machinery/microwave/attack_ai(mob/user as mob)
-	return 0
+	if(istype(user, /mob/living/silicon/robot) && Adjacent(user))
+		attack_hand(user)
 
 /obj/machinery/microwave/attack_hand(mob/user as mob)
 	user.set_machine(src)
@@ -364,7 +355,7 @@
 	playsound(src.loc, 'sound/machines/ding.ogg', 50, 1)
 	src.visible_message("<span class='warning'>The microwave gets covered in muck!</span>")
 	src.dirty = 100 // Make it dirty so it can't be used util cleaned
-	src.flags = null //So you can't add condiments
+	src.obj_flags = null //So you can't add condiments
 	src.operating = 0 // Turn it off again aferwards
 	src.updateUsrDialog()
 	src.update_icon()
@@ -375,7 +366,7 @@
 	s.start()
 	src.visible_message("<span class='warning'>The microwave breaks!</span>") //Let them know they're stupid
 	src.broken = 2 // Make it broken so it can't be used util fixed
-	src.flags = null //So you can't add condiments
+	src.obj_flags = null //So you can't add condiments
 	src.operating = 0 // Turn it off again aferwards
 	src.updateUsrDialog()
 	src.update_icon()

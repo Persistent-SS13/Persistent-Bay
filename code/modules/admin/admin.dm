@@ -892,8 +892,7 @@ var/global/floorIsLava = 0
 	for(var/mob/living/carbon/human/H in world)
 		cryo.occupant = H
 		cryo.despawnOccupant(1)
-					
-			
+		
 /datum/admins/proc/retrieve_email()
 	set category = "Server"
 	set desc = "Retrieve Email"

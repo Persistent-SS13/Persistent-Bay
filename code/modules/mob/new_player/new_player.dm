@@ -54,7 +54,6 @@
 	if(!client)	return 0
 
 	if(href_list["createCharacter"])
-		client.prefs.randomize_appearance_and_body_for()
 		newCharacterPanel()
 		return 0
 
@@ -253,9 +252,6 @@
 		to_chat(character, "You eject from your cryosleep, ready to resume life in the frontier.")
 
 	else if(character.spawn_type == 2)
-		var/mob/living/carbon/human/char = character
-		if(!char.w_uniform)
-			char.equip_to_slot_or_del(new /obj/item/clothing/under/color/grey(char), slot_w_uniform)
 		for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
 			if(!beacon.loc)
 				qdel(beacon)
@@ -293,7 +289,7 @@
 	character.redraw_inv()
 	CreateModularRecord(character)
 	character.finishLoadCharacter()	// This is ran because new_players don't like to stick around long.
-	return 1	
+	return 1
 
 /mob/proc/finishLoadCharacter()
 	if(spawn_type == 2)

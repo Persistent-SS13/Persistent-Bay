@@ -181,12 +181,10 @@ var/refund_type = /obj/item/stack/material/plastic
 /obj/item/frame/newscaster
 	name = "News Caster Frame"
 	desc = "Used for building News Casters"
-	icon = 'icons/obj/watercloset.dmi'
-	icon_state = "sink_alt"
+	icon = 'icons/obj/terminals.dmi'
+	icon_state = "newscaster_frame"
 	refund_amt = 2
 	build_machine_type = /obj/machinery/newscaster
-
-// /obj/machinery/newscaster/security_unit
 
 /obj/item/frame/atm
 	name = "atm"

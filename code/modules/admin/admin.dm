@@ -879,8 +879,6 @@ var/global/floorIsLava = 0
 		message_admins("BROKE AS FUCK!!")
 		GLOB.all_crew_records = list()
 			
-			
-	
 /datum/admins/proc/autocryo()
 	set category = "Server"
 	set desc="Autocryo"
@@ -893,7 +891,7 @@ var/global/floorIsLava = 0
 		cryo.occupant = H
 		cryo.despawnOccupant(1)
 					
-			
+
 /datum/admins/proc/retrieve_email()
 	set category = "Server"
 	set desc = "Retrieve Email"
@@ -923,9 +921,7 @@ var/global/floorIsLava = 0
 		for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
 			if(record.get_name() == real_name)
 				to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
-				break
-
-					
+				break	
 					
 /datum/admins/proc/buildaccounts()
 	set category = "Server"

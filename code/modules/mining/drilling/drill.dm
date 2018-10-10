@@ -69,9 +69,6 @@
 /obj/machinery/mining/drill/attack_generic(var/mob/user, var/damage)
 	health = max(0, health-damage)
 	if(!health)
-		for(var/obj/item/weapon/ore/O in contents)
-			O.loc = loc
-		src.visible_message("<span class='notice'>\The [src] is smashed open and spills any ore inside.</span>")
 		statu = 2
 		active = 0
 		need_player_check = 1

@@ -515,3 +515,31 @@
 		return jointext(status, " ")
 	else
 		return status.len
+
+
+/proc/condense_before_pump(var/obj/machinery/source, var/datum/gas_mixture/air_contents) // checks for liquid/solid state reagents before pumping them out from the canisters/vents
+	var/turf/local = source.loc
+	var/datum/gas_mixture/air_data = local.air
+	for(var/gas in air_contents.gas) // Copied my own condensation code. This prevents liquid/solid reagents from getting out of the canister as Gases until we have proper values set on them for boiling point
+		if(!gas_data.component_reagents[gas] || !gas_data.generated_from_reagent[gas])
+			continue	//we don't need to (nor we can) proceed if the gas wasn't made out of a 'known' reagent.
+
+		var/list/component_reagents = gas_data.component_reagents[gas]
+
+		var/possible_transfers = air_contents.get_gas(gas)
+		if(!possible_transfers) //If we're out of gas boi. Shouldn't probably happen to be honest as the gas should be removed from the list of gases before
+			break //Doesnt mean we shouldn't prevent condensating non existent gas anyways so fuck it.
+
+		for(var/R in component_reagents)
+			var/datum/reagent/reagent_data = new R() //hacky
+			var/base_boil_point = reagent_data.base_boil_point
+			var/boilPoint = base_boil_point+(BOIL_PRESSURE_MULTIPLIER*(air_data.return_pressure() - ONE_ATMOSPHERE))
+			if ( (reagent_data.reagent_state == LIQUID || reagent_data.reagent_state == SOLID) && ( air_data.temperature < boilPoint *0.99 || reagent_data.base_boil_point == 0 ) ) //99% just to make it so fluids dont flicker between states
+				//START CONDENSATION PROCESS
+				var/obj/R_HOLDER = new(source.loc)
+				R_HOLDER.create_reagents(2000)
+				R_HOLDER.reagents.add_reagent(R, possible_transfers*component_reagents[R]*REAGENT_GAS_EXCHANGE_FACTOR) // Get those sweet gas reagents back to liquid state by creating em on the puddlez
+				air_contents.adjust_gas(gas, -possible_transfers, 1) //Removes from gas from the atmosphere. Doesn't work on farts doe you gotta vent the place.
+				R_HOLDER.reagents.create_puddle(R_HOLDER.loc, R_HOLDER.reagents.total_volume, force_solid = 1)
+				qdel(R_HOLDER)
+			qdel(reagent_data)

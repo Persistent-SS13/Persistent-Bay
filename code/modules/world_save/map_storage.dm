@@ -400,7 +400,7 @@ var/global/list/debug_data = list()
 	return 1
 
 
-/proc/Load_World()
+/proc/Load_World_Old()
 	var/starttime = REALTIMEOFDAY
 	if(!fexists("map_saves/game.sav")) return
 	var/savefile/f = new("map_saves/game.sav")
@@ -478,7 +478,7 @@ var/global/list/debug_data = list()
 	world << "Loading Complete"
 	return 1
 
-/proc/Load_World_New()
+/proc/Load_World()
 	var/starttime = REALTIMEOFDAY
 	if(!fexists("map_saves/game.sav")) return
 	var/savefile/f = new("map_saves/extras.sav")

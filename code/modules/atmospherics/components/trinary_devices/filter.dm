@@ -175,7 +175,9 @@
 		if(5)
 			current_filter_type = "Hydrogen"
 		if(6)
-			current_filter_type = "Reagent Gases"
+			current_filter_type = "Any Reagents (Mostly liquids)"
+		if(7)
+			current_filter_type = "Specific Reagent ([filtered_out[1]])"
 		if(-1)
 			current_filter_type = "Nothing"
 		else
@@ -191,7 +193,8 @@
 			<A href='?src=\ref[src];filterset=3'>Carbon Dioxide</A><BR>
 			<A href='?src=\ref[src];filterset=4'>Nitrous Oxide</A><BR>
 			<A href='?src=\ref[src];filterset=5'>Hydrogen</A><BR>
-			<A href='?src=\ref[src];filterset=6'>Reagent Gases</a><BR>
+			<A href='?src=\ref[src];filterset=6'>Any Reagents (Mostly liquids)</a><BR>
+			<A href='?src=\ref[src];filterset=7'>Specific Reagent</a><BR>
 			<A href='?src=\ref[src];filterset=-1'>Nothing</A><BR>
 			<HR>
 			<B>Set Flow Rate Limit:</B>
@@ -230,7 +233,12 @@
 					if(gas_data.flags[g] & XGM_GAS_REAGENT_GAS)
 						to_chat(usr, "<span class='notice'>[g]</span>")
 						filtered_out += g
-
+			if(7)
+				var/list/matches = new()
+				for(var/g in gas_data.gases) //This only fires when initially selecting the filter type, so impact on performance is minimal
+					if(gas_data.flags[g] & XGM_GAS_REAGENT_GAS)
+						matches += g
+				filtered_out += input("Specify the reagent", "Reagents", matches[1]) as null|anything in matches
 	if (href_list["temp"])
 		src.temp = null
 	if(href_list["set_flow_rate"])

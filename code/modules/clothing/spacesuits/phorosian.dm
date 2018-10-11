@@ -4,7 +4,7 @@
 	icon = 'icons/obj/clothing/species/phorosian/suits.dmi'
 	icon_state = "phorosiansuit"
 	item_state = "phorosiansuit"
-	item_flags = STOPPRESSUREDAMAGE | THICKMATERIAL | PHORONGUARD
+	item_flags = ITEM_FLAG_STOPPRESSUREDAMAGE | ITEM_FLAG_THICKMATERIAL | ITEM_FLAG_PHORONGUARD
 	allowed = list(/obj/item/weapon/tank)
 	desc = "A special containment suit designed to protect a phorosians volatile body from outside exposure."
 	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 100, rad = 20)
@@ -15,8 +15,8 @@
 	breach_threshold = 6
 	can_breach = 1
 	resilience = 0.1
-	
-	
+
+
 /obj/item/clothing/head/helmet/space/phorosian
 	name = "Phorosian helmet"
 	desc = "A helmet made to connect with a Phorosian containment suit. Has a plasma-glass visor."
@@ -24,15 +24,15 @@
 	icon_state = "phorosian_helmet0"
 	item_state = "phorosian_helmet0"
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|BLOCKHAIR
-	item_flags = STOPPRESSUREDAMAGE | THICKMATERIAL | AIRTIGHT | PHORONGUARD
+	item_flags = ITEM_FLAG_STOPPRESSUREDAMAGE | ITEM_FLAG_THICKMATERIAL | ITEM_FLAG_AIRTIGHT | ITEM_FLAG_PHORONGUARD
 	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 100, rad = 20)
 	species_restricted = list(SPECIES_PHOROSIAN)
 	light_overlay = "helmet_light"
 	sprite_sheets = list(
 		SPECIES_PHOROSIAN = 'icons/mob/species/phorosian/helmet.dmi'
 		)
-		
-		
+
+
 /obj/item/clothing/suit/space/phorosian/assistant
 	name = "Phorosian assistant suit"
 	icon_state = "phorosianAssistant_suit"
@@ -48,7 +48,7 @@
 	item_state = "phorosianAtmos_suit"
 	armor = list(melee = 40, bullet = 5, laser = 20,energy = 5, bomb = 35, bio = 100, rad = 50)
 	max_heat_protection_temperature = FIRESUIT_MAX_HEAT_PROTECTION_TEMPERATURE
-	
+
 /obj/item/clothing/head/helmet/space/phorosian/atmostech
 	name = "Phorosian atmospheric helmet"
 	icon_state = "phorosianAtmos_helmet0"
@@ -67,7 +67,7 @@
 	icon_state = "phorosianEngineer_helmet0"
 	item_state = "phorosianEngineer_helmet0"
 	armor = list(melee = 40, bullet = 5, laser = 20,energy = 5, bomb = 35, bio = 100, rad = 80)
-	
+
 /obj/item/clothing/suit/space/phorosian/engineer/ce
 	name = "Phorosian chief engineer suit"
 	icon_state = "phorosianCE"
@@ -162,7 +162,7 @@
 	icon_state = "phorosianMiner_suit"
 	item_state = "phorosianMiner_suit"
 	armor = list(melee = 50, bullet = 5, laser = 20,energy = 5, bomb = 55, bio = 100, rad = 20)
-	
+
 
 /obj/item/clothing/head/helmet/space/phorosian/miner
 	name = "Phorosian miner helmet"
@@ -173,7 +173,7 @@
 /obj/item/clothing/suit/space/phorosian/miner/alt
 	icon_state = "phorosianMiner_suit_alt"
 	item_state = "phorosianMiner_suit_alt"
-	
+
 /obj/item/clothing/head/helmet/space/phorosian/miner/alt
 	icon_state = "phorosianMiner_helmet_alt0"
 	item_state = "phorosianMiner_helmet_alt0"
@@ -191,7 +191,7 @@
 	icon_state = "phorosianMedical_helmet0"
 	item_state = "phorosianMedical_helmet0"
 	armor = list(melee = 30, bullet = 5, laser = 20,energy = 5, bomb = 25, bio = 100, rad = 50)
-	
+
 /obj/item/clothing/suit/space/phorosian/medical/paramedic
 	name = "Phorosian paramedic suit"
 	icon_state = "phorosianParamedic"
@@ -311,8 +311,8 @@
 	icon_state = "phorosianNukeops_helmet0"
 	item_state = "phorosianNukeops_helmet0"
 	armor = list(melee = 60, bullet = 50, laser = 30, energy = 15, bomb = 35, bio = 100, rad = 50)
-	
-	
+
+
 /obj/item/device/phorosiansuit_changer //Can be used to change the type of plasmaman suit.
 	var/used = 0
 	name = "Phorosian suit adapter kit"
@@ -323,9 +323,9 @@
 	force = 0
 	throwforce = 0
 	var/chosensuit
-	
+
 /obj/item/device/phorosiansuit_changer/attack_self(mob/living/user)
-	var/list/suits= list("Scientist" , "Research Director", "Engineer", "Chief Engineer", "Atmospheric Technician", "Security Officer", "Warden", "Captain", "Head of Personnel", "Medical Doctor", "Paramedic", "Chemist", "Chief Medical Officer", "Chef", "Cargo Technician", "Shaft Miner", "Shaft Miner (alt)", "Gardener", "Chaplain", "Janitor", "Civilian")     
+	var/list/suits= list("Scientist" , "Research Director", "Engineer", "Chief Engineer", "Atmospheric Technician", "Security Officer", "Warden", "Captain", "Head of Personnel", "Medical Doctor", "Paramedic", "Chemist", "Chief Medical Officer", "Chef", "Cargo Technician", "Shaft Miner", "Shaft Miner (alt)", "Gardener", "Chaplain", "Janitor", "Civilian")
 	chosensuit = input(user, "Pick the type of suit you would like to wear.") as null|anything in suits
 
 #define USED_ADAPT_HELM 1
@@ -401,12 +401,12 @@
 		if("Civilian")
 			suit=/obj/item/clothing/suit/space/phorosian/assistant
 			helm=/obj/item/clothing/head/helmet/space/phorosian/assistant
-	
+
 	if(istype(target, /obj/item/clothing/head/helmet/space/phorosian))
 		if(used & USED_ADAPT_HELM)
 			to_chat(H, "<span class='notice'>The kit's helmet modifier has already been used.</span>")
 			return
-		H.equip_to_slot(new helm(H), slot_head)		
+		H.equip_to_slot(new helm(H), slot_head)
 		qdel(target)
 		to_chat(H, "<span class='notice'>You use the kit on [target], adapting it to suit your current job.</span>")
 		used |= USED_ADAPT_HELM
@@ -420,6 +420,6 @@
 		used |= USED_ADAPT_SUIT
 	return
 	to_chat(user, "<span class='warning'>You can't modify [target]!</span>")
-	
+
 #undef USED_ADAPT_HELM
 #undef USED_ADAPT_SUIT

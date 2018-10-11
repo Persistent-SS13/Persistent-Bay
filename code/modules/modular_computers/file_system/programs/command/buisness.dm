@@ -180,7 +180,7 @@
 			var/commitment = get_contributed()
 			var/signed_stocks = get_distributed()
 			var/finalize = 0
-			if(commitment >= 2500 && signed_stocks == 100 && potential_name && potential_name != "") finalize = 1
+			if(commitment >= 5000 && signed_stocks == 100 && potential_name && potential_name != "") finalize = 1
 			data["commitment"] = commitment
 			data["signed_stocks"] = signed_stocks
 			data["finish_ready"] = finalize
@@ -932,9 +932,9 @@
 		if("business_finalize")
 			var/commitment = get_contributed()
 			var/signed_stocks = get_distributed()
-			if(commitment < 2500 || signed_stocks != 100)
+			if(commitment < 5000 || signed_stocks != 100)
 				return 0
-			commitment -= 2500
+			commitment -= 5000
 			if(!potential_name || potential_name == "")
 				to_chat(usr, "A name for the business must be chosen first.")
 				return

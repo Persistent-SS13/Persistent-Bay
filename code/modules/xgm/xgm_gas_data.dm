@@ -22,6 +22,9 @@
 	//Ratio of the reagents that one mole of the gas is (molecularly) made of.
 	var/list/component_reagents = list()
 
+	var/list/base_boil_point = list()
+	var/list/generated_from_reagent = list()
+
 /decl/xgm_gas
 	var/id = ""
 	var/name = "Unnamed Gas"
@@ -36,6 +39,8 @@
 	var/breathed_product
 	var/component_reagents
 
+	var/base_boiling_point = 100 //value in K (kelvins) until we don't define a boiling point specifically for each gas/reagent
+	var/generated_from_reagent = 0
 /hook/startup/proc/generateGasData()
 	gas_data = new
 	for(var/p in (typesof(/decl/xgm_gas) - /decl/xgm_gas))
@@ -74,6 +79,9 @@
 		gas_data.burn_product[gas_id] =       reagent.gas_burn_product
 		gas_data.breathed_product[gas_id] =   reagent.type
 		gas_data.component_reagents[gas_id] = list(reagent.type = 1)
+
+		gas_data.base_boil_point[gas_id] =    reagent.base_boil_point
+		gas_data.generated_from_reagent[gas_id] = 1
 
 		if(reagent.gas_overlay)
 			var/image/I = image('icons/effects/tile_effects.dmi', reagent.gas_overlay, FLY_LAYER)

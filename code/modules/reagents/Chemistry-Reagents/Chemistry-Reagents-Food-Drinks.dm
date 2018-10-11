@@ -360,7 +360,7 @@
 			if(I.body_parts_covered & EYES)
 				eyes_covered = 1
 				eye_protection = I.name
-			if((I.body_parts_covered & FACE) && !(I.item_flags & FLEXIBLEMATERIAL))
+			if((I.body_parts_covered & FACE) && !(I.item_flags & ITEM_FLAG_FLEXIBLEMATERIAL))
 				mouth_covered = 1
 				face_protection = I.name
 
@@ -401,6 +401,22 @@
 	if(istype(M, /mob/living/carbon/slime))
 		M.bodytemperature += rand(15, 30)
 	holder.remove_reagent(/datum/reagent/frostoil, 5)
+
+/datum/reagent/nutriment/vinegar
+	name = "Vinegar"
+	description = "A weak solution of acetic acid. Usually used for seasoning food."
+	taste_description = "vinegar"
+	reagent_state = LIQUID
+	color = "#e8dfd0"
+	taste_mult = 3
+
+/datum/reagent/nutriment/mayo
+	name = "Mayonnaise"
+	description = "A mixture of egg yolk with lemon juice or vinegar. Usually put on bland food to make it more edible."
+	taste_description = "mayo"
+	reagent_state = LIQUID
+	color = "#efede8"
+	taste_mult = 2
 
 /* Drinks */
 

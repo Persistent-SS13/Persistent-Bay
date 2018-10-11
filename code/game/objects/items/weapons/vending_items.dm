@@ -5,7 +5,7 @@
 	icon = 'icons/obj/vending_restock.dmi'
 	icon_state = "refill_snack"
 	item_state = "restock_unit"
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	force = 7.0
 	throwforce = 10.0
 	throw_speed = 1

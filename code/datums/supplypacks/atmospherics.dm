@@ -67,22 +67,6 @@
 	containertype = /obj/structure/closet/crate/secure/large
 	access = core_access_engineering_programs
 
-/decl/hierarchy/supply_pack/atmospherics/voidsuit
-	name = "Atmospherics Voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/atmos/prepared)
-	cost = 100
-	containername = "\improper Atmospherics Voidsuit crate"
-	containertype = /obj/structure/closet/crate/secure/large
-	access = core_access_engineering_programs
-
-/decl/hierarchy/supply_pack/atmospherics/voidsuit_heavyduty
-	name = "Heavy Duty Atmospherics voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/atmos/alt/prepared)
-	cost = 150
-	containername = "\improper Heavy Duty Atmospherics Voidsuit crate"
-	containertype = /obj/structure/closet/crate/secure/large
-	access = core_access_engineering_programs
-
 /decl/hierarchy/supply_pack/atmospherics/canister_hydrogen
 	name = "Hydrogen canister"
 	contains = list(/obj/machinery/portable_atmospherics/canister/hydrogen)
@@ -98,6 +82,13 @@
 	containername = "Portable Air Pump Shipment"
 	containertype = /obj/structure/largecrate
 
+/decl/hierarchy/supply_pack/atmospherics/scrubber
+	name = "Portable Air Scrubber (x4)"
+	contains = list(/obj/machinery/portable_atmospherics/powered/scrubber = 4)
+	cost = 25
+	containername = "Portable Air scrubber Shipment"
+	containertype = /obj/structure/largecrate
+
 /decl/hierarchy/supply_pack/atmospherics/gas_generator
 	name = "Gas Generator"
 	contains = list(/obj/machinery/portable_atmospherics/gas_generator)
@@ -111,3 +102,20 @@
 	cost = 100
 	containername = "\improper Large Air Canister Crate"
 	containertype = /obj/structure/largecrate
+
+//void suits
+/decl/hierarchy/supply_pack/atmospherics/voidsuit
+	name = "Voidsuits - Atmospherics Voidsuit"
+	contains = list(/obj/item/clothing/suit/space/void/atmos/prepared)
+	cost = 100
+	containername = "\improper Atmospherics Voidsuit crate"
+	containertype = /obj/structure/closet/crate/secure/large
+	access = core_access_engineering_programs
+
+/decl/hierarchy/supply_pack/atmospherics/voidsuit_heavyduty
+	name = "Voidsuits - Heavy-duty atmospherics voidsuit"
+	contains = list(/obj/item/clothing/suit/space/void/atmos/alt/prepared)
+	cost = 150
+	containername = "\improper Heavy-duty atmospherics voidsuit crate"
+	containertype = /obj/structure/closet/crate/secure/large
+	access = core_access_engineering_programs

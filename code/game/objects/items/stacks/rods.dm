@@ -5,7 +5,7 @@
 	desc = "Some rods. Can be used for building, or something."
 	singular_name = "metal rod"
 	icon_state = "rods"
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	flags = CONDUCT
 	w_class = ITEM_SIZE_LARGE
 	force = 9.0
 	throwforce = 15.0

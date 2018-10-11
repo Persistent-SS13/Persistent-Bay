@@ -2,7 +2,7 @@
 	name = "baby slime"
 	icon = 'icons/mob/slimes.dmi'
 	icon_state = "grey baby slime"
-	pass_flags = PASS_FLAG_TABLE
+	pass_flags = PASSTABLE
 	speak_emote = list("chirps")
 
 	maxHealth = 200

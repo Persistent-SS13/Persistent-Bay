@@ -30,12 +30,10 @@ atom/var/var/fingerprintslast = null
 	src.fingerprintshidden += "\[[time_stamp()]\] Real name: [M.real_name], Key: [M.key]"
 	return 1
 
-/atom/proc/add_fingerprint(mob/M, ignoregloves, obj/item/tool)
+/atom/proc/add_fingerprint(mob/M, ignoregloves)
 	if(isnull(M)) return
 	if(isAI(M)) return
 	if(!M || !M.key)
-		return
-	if(istype(tool) && (tool.item_flags & ITEM_FLAG_NO_PRINT))
 		return
 
 	add_hiddenprint(M)

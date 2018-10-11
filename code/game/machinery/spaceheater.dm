@@ -11,7 +11,7 @@
 	var/set_temperature = T0C + 20	//K
 	var/active = 0
 	var/heating_power = 40 KILOWATTS
-	atom_flags = ATOM_FLAG_CLIMBABLE
+	flags = OBJ_CLIMBABLE
 	clicksound = "switch"
 
 

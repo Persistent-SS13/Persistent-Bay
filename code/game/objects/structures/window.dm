@@ -7,7 +7,7 @@
 
 	layer = SIDE_WINDOW_LAYER
 	anchored = 1.0
-	flags = ON_BORDER
+	atom_flags = ATOM_FLAG_CHECKS_BORDER
 	var/maxhealth = 14.0
 	var/maximal_heat = T0C + 100 		// Maximal heat before this window begins taking damage from fire
 	var/damage_per_fire_tick = 2.0 		// Amount of damage per fire tick. Regular windows are not fireproof so they might as well break quickly.
@@ -134,7 +134,7 @@
 	return (dir == SOUTHWEST || dir == SOUTHEAST || dir == NORTHWEST || dir == NORTHEAST)
 
 /obj/structure/window/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
-	if(istype(mover) && mover.checkpass(PASSGLASS))
+	if(istype(mover) && mover.checkpass(PASS_FLAG_GLASS))
 		return 1
 	if(is_full_window())
 		return 0	//full tile window, you can't move into it!
@@ -145,7 +145,7 @@
 
 
 /obj/structure/window/CheckExit(atom/movable/O as mob|obj, target as turf)
-	if(istype(O) && O.checkpass(PASSGLASS))
+	if(istype(O) && O.checkpass(PASS_FLAG_GLASS))
 		return 1
 	if(get_dir(O.loc, target) == dir)
 		return 0
@@ -216,7 +216,7 @@
 /obj/structure/window/attackby(obj/item/W as obj, mob/user as mob)
 	if(!istype(W)) return//I really wish I did not need this
 
-	if(W.flags & NOBLUDGEON) return
+	if(W.item_flags & ITEM_FLAG_NO_BLUDGEON) return
 
 	if(isScrewdriver(W))
 		if(reinf && state >= 1)
@@ -274,8 +274,12 @@
 	set category = "Object"
 	set src in oview(1)
 
+	if(!usr || !Adjacent(usr))
+		return
+	
 	if(usr.incapacitated())
-		return 0
+		return
+
 
 	if(anchored)
 		to_chat(usr, "It is fastened to the floor therefore you can't rotate it!")

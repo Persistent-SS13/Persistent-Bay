@@ -96,6 +96,12 @@ So, hopefully this is helpful if any more icons are to be added/changed/wonderin
 	set category = "Object"
 	set src in oview(1)
 
+	if(!usr || !Adjacent(usr))
+		return
+	
+	if(usr.incapacitated())
+		return
+	
 	if (src.anchored || usr:stat)
 		to_chat(usr, "It is fastened to the floor!")
 		return 0

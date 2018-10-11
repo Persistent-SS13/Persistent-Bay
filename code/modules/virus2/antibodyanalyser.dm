@@ -28,16 +28,17 @@
 		icon_state = "analyser"
 
 /obj/machinery/disease2/antibodyanalyser/attackby(var/obj/I as obj, var/mob/user as mob)
+	if(default_deconstruction_screwdriver(user, I))
+		return
+
+	if(default_deconstruction_crowbar(user, I))
+		return
+
 	if(istype(I,/obj/item/weapon/reagent_containers))
 		if(!container && user.unEquip(I))
 			container = I
 			I.forceMove(src)
 			user.visible_message("[user] adds a sample to \the [src]!", "You add a sample to \the [src]!")
-		return
-
-	if(default_deconstruction_screwdriver(user, I))
-		return
-	if(default_deconstruction_crowbar(user, I))
 		return
 	..()
 

@@ -133,8 +133,8 @@
 	stored_matter = max_stored_matter
 
 /obj/machinery/organ_printer/robot/dismantle()
-//	if(stored_matter >= matter_amount_per_sheet)
-	//	new /obj/item/stack/material/oc(get_turf(src), Floor(stored_matter/matter_amount_per_sheet))
+	if(stored_matter >= matter_amount_per_sheet)
+		new /obj/item/stack/material/steel(get_turf(src), Floor(stored_matter/matter_amount_per_sheet))
 	return ..()
 
 /obj/machinery/organ_printer/robot/New()
@@ -149,7 +149,7 @@
 	return O
 
 /obj/machinery/organ_printer/robot/attackby(var/obj/item/weapon/W, var/mob/user)
-	if(istype(W, /obj/item/stack/material/ocp) && W.get_material_name() == "matter_type")
+	if(istype(W, /obj/item/stack/material) && W.get_material_name() == matter_type)
 		if((max_stored_matter-stored_matter) < matter_amount_per_sheet)
 			to_chat(user, "<span class='warning'>\The [src] is too full.</span>")
 			return

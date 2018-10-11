@@ -9,12 +9,6 @@
 	desc = "They suspend the illusion of the mime's play."
 	icon_state = "suspenders"
 
-/obj/item/clothing/accessory/maidapron
-	name = "maid apron"
-	desc = "An white apron."
-	icon_state = "maidapron"
-	
-	
 /obj/item/clothing/accessory/nt_tunic
 	name = "\improper Nanotrasen tunic"
 	desc = "A fashionable tunic that Nanotrasen gives to its lab workers."

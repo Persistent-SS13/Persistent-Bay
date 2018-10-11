@@ -9,20 +9,9 @@ Used In File(s): \code\game\machinery\jukebox.dm
     {{:helper.link('Stop' , 'stop', {'stop' : 1}, data.playing == 0 ? 'disabled' : null, null)}}
 </div>
 
-
-
-<H3><span class="white">Pleasent Boppers:</span></H3>
+<H3><span class="white">SS13:</span></H3>
 <div class="itemContent">
-    {{for data.tracks_pleasent}}
-        <div class="item">
-            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
-        </div>
-    {{/for}}
-</div>
-
-<H3><span class="white">Country Classics:</span></H3>
-<div class="itemContent">
-    {{for data.tracks_country}}
+    {{for data.tracks_ss13}}
         <div class="item">
             {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
         </div>
@@ -32,42 +21,6 @@ Used In File(s): \code\game\machinery\jukebox.dm
 <H3><span class="white">Cyberpunk:</span></H3>
 <div class="itemContent">
     {{for data.tracks_cyberpunk}}
-        <div class="item">
-            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
-        </div>
-    {{/for}}
-</div>
-
-<H3><span class="white">Moody Melodies:</span></H3>
-<div class="itemContent">
-    {{for data.tracks_moody}}
-        <div class="item">
-            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
-        </div>
-    {{/for}}
-</div>
-
-<H3><span class="white">Rockin Tracks:</span></H3>
-<div class="itemContent">
-    {{for data.tracks_rockin}}
-        <div class="item">
-            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
-        </div>
-    {{/for}}
-</div>
-
-<H3><span class="white">Cultural:</span></H3>
-<div class="itemContent">
-    {{for data.tracks_cultural}}
-        <div class="item">
-            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
-        </div>
-    {{/for}}
-</div>
-
-<H3><span class="white">SS13:</span></H3>
-<div class="itemContent">
-    {{for data.tracks_ss13}}
         <div class="item">
             {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
         </div>

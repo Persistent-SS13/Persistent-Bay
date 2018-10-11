@@ -31,38 +31,6 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 
 	var/datum/track/current_track
 	var/list/datum/track/tracks = list(
-		new/datum/track("Canon - Sol Classic", 'sound/music/jukebox/canon4.mid', "Cultural"),
-		new/datum/track("Agarthan Battle Hymn", 'sound/music/jukebox/SF64_Corneria-KM.mid', "Cultural"),
-		new/datum/track("The Passenger - Corporate Colonist Fave", 'sound/music/jukebox/The_Passenger.mid', "Cultural"),
-		new/datum/track("Wedding March", 'sound/music/jukebox/mendelssohn-wedding-march.mid', "Cultural"),
-	
-	
-	
-		new/datum/track("The Ball and Diner", 'sound/music/jukebox/theball.mid', "Pleasent"),
-		new/datum/track("Pleasantly Understated", 'sound/music/jukebox/02 - A Pleasantly Understated Credit Sequence.mid', "Pleasent"),
-		new/datum/track("Surfin' the Highway", 'sound/music/jukebox/06 - Surfin The Highway.mid', "Rockin"),
-		new/datum/track("Snuckey's Muzak", 'sound/music/jukebox/09 - Snuckeys Greatest Muzaks #2.mid', "Pleasent"),
-		new/datum/track("Twoson", 'sound/music/jukebox/eb_twoson.mid', "Pleasent"),
-		new/datum/track("Red Liccorice Candy", 'sound/music/jukebox/11 - Snuckeys Greatest Muzaks #4.mid', "Pleasent"),
-		new/datum/track("Goodbye and Goodnight", 'sound/music/jukebox/SMW_Ending_and_Credits.mid', "Pleasent"),
-		new/datum/track("Doug, The Moleman", 'sound/music/jukebox/17 - Doug, The Moleman.mid', "Moody"),
-		new/datum/track("I'm a Trout, Stupid!", 'sound/music/jukebox/21 - Im A Trout, Stupid!.mid', "Country"),
-		new/datum/track("GatorGolf", 'sound/music/jukebox/23 - GatorGolf.mid', "Country"),
-		new/datum/track("Nobody Makes Fun Of My Hair!", 'sound/music/jukebox/24 - Nobody Makes Fun Of My Hair.mid', "Rockin"),
-		new/datum/track("Mystery Vortex", 'sound/music/jukebox/25 - Mystery Vortex.mid', "Moody"),
-		new/datum/track("Shuv-Oohl", 'sound/music/jukebox/27 - Shuv-Oohl.mid', "Moody"),
-		new/datum/track("BumpusVille", 'sound/music/jukebox/29 - BumpusVille.mid', "Country"),
-		new/datum/track("King of The Creatures", 'sound/music/jukebox/33 - King Of The Creatures.mid', "Rockin"),
-		new/datum/track("Celebrity Vegetable Museum", 'sound/music/jukebox/36 - Celebrity Vegetable Museum.mid', "Country"),
-		new/datum/track("Buy something, will ya?", 'sound/music/jukebox/earthbound-drugstore-buysomethinwillya-v2.mid', "Country"),
-		
-		
-		new/datum/track("Savage Jungle Inn", 'sound/music/jukebox/40 - Savage Jungle Inn.mid', "Moody"),
-		new/datum/track("Hotel Rhumba", 'sound/music/jukebox/eb_hotelrhumbaremix.mid', "Moody"),
-		new/datum/track("Dino Bungee National Memorial", 'sound/music/jukebox/37 - Dino Bungee National Memorial.mid', "Pleasent"),
-		new/datum/track("Bigfoot Shuffle", 'sound/music/jukebox/41 - Bigfoot Shuffle.mid', "Pleasent"),
-	
-		
 		new/datum/track("Beyond", 'sound/ambience/ambispace.ogg', "SS13"),
 		new/datum/track("Clouds of Fire", 'sound/music/clouds.s3m', "SS13"),
 		new/datum/track("D`Bert", 'sound/music/title2.ogg', "SS13"),
@@ -136,37 +104,6 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 	var/data[0]
 	data["current_track"] = current_track != null ? current_track.title : ""
 	data["playing"] = playing
-
-	var/list/tracks_rockin = list()
-	for(var/datum/track/T in tracks)
-		if(T.genre == "Rockin")
-			tracks_rockin[++tracks_rockin.len] = list("track" = T.title)
-	data["tracks_rockin"] = tracks_rockin
-
-	var/list/tracks_pleasent = list()
-	for(var/datum/track/T in tracks)
-		if(T.genre == "Pleasent")
-			tracks_pleasent[++tracks_pleasent.len] = list("track" = T.title)
-	data["tracks_pleasent"] = tracks_pleasent
-
-	var/list/tracks_country = list()
-	for(var/datum/track/T in tracks)
-		if(T.genre == "Country")
-			tracks_country[++tracks_country.len] = list("track" = T.title)
-	data["tracks_country"] = tracks_country
-
-	var/list/tracks_moody = list()
-	for(var/datum/track/T in tracks)
-		if(T.genre == "Moody")
-			tracks_moody[++tracks_moody.len] = list("track" = T.title)
-	data["tracks_moody"] = tracks_moody
-
-	var/list/tracks_cultural = list()
-	for(var/datum/track/T in tracks)
-		if(T.genre == "Cultural")
-			tracks_cultural[++tracks_cultural.len] = list("track" = T.title)
-	data["tracks_cultural"] = tracks_cultural
-	
 	var/list/tracks_ss13 = list()
 	for(var/datum/track/T in tracks)
 		if(T.genre == "SS13")

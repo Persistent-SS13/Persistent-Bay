@@ -100,7 +100,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 
 /obj/item/clothing/mask/smokable/New()
 	..()
-	flags |= NOREACT // so it doesn't react until you light it
+	atom_flags |= ATOM_FLAG_NO_REACT // so it doesn't react until you light it
 	create_reagents(chem_volume) // making the cigarrete a chemical holder with a maximum volume of 15
 
 /obj/item/clothing/mask/smokable/Destroy()
@@ -156,7 +156,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 			e.start()
 			qdel(src)
 			return
-		flags &= ~NOREACT // allowing reagents to react after being lit
+		atom_flags &= ~ATOM_FLAG_NO_REACT // allowing reagents to react after being lit
 		reagents.process_reactions()
 		update_icon()
 		var/turf/T = get_turf(src)
@@ -228,6 +228,12 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	if(lit)
 		overlays += overlay_image(icon, "cigon", flags=RESET_COLOR)
 
+/obj/item/clothing/mask/smokable/cigarette/trident/update_icon()
+	..()
+	overlays.Cut()
+	if(lit)
+		overlays += overlay_image(icon, "cigarello-on", flags=RESET_COLOR)
+
 /obj/item/clothing/mask/smokable/cigarette/die(var/nomessage = 0)
 	..()
 	if (type_butt)
@@ -242,12 +248,6 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 				to_chat(M, "<span class='notice'>Your [name] goes out.</span>")
 			M.remove_from_mob(src) //un-equip it so the overlays can update
 		qdel(src)
-
-/obj/item/clothing/mask/smokable/cigarette/custom
-	name = "hand-rolled cigarette"
-	desc = "A tightly rolled smokeable, ready to deliver whatever it's been dipped in."
-	filling = list() // Starts with nothing, dip it in a reageant to finish.
-	color = "#dcdcdc"
 
 /obj/item/clothing/mask/smokable/cigarette/menthol
 	name = "menthol cigarette"
@@ -296,6 +296,47 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 /obj/item/clothing/mask/smokable/cigarette/dromedaryco
 	brand = "\improper Dromedary Co. cigarette"
 
+/obj/item/clothing/mask/smokable/cigarette/trident
+	name = "wood tip cigar"
+	brand = "\improper Trident cigar"
+	desc = "A narrow cigar with a wooden tip."
+	icon_state = "cigarello"
+	item_state = "cigaroff"
+	smoketime = 600
+	chem_volume = 10
+	type_butt = /obj/item/weapon/cigbutt/woodbutt
+	filling = list(/datum/reagent/tobacco/fine = 2)
+
+/obj/item/clothing/mask/smokable/cigarette/trident/mint
+	icon_state = "cigarelloMi"
+	filling = list(/datum/reagent/tobacco/fine = 2, /datum/reagent/menthol = 2)
+
+/obj/item/clothing/mask/smokable/cigarette/trident/berry
+	icon_state = "cigarelloBe"
+	filling = list(/datum/reagent/tobacco/fine = 2, /datum/reagent/drink/juice/berry = 2)
+
+/obj/item/clothing/mask/smokable/cigarette/trident/cherry
+	icon_state = "cigarelloCh"
+	filling = list(/datum/reagent/tobacco/fine = 2, /datum/reagent/nutriment/cherryjelly = 2)
+
+/obj/item/clothing/mask/smokable/cigarette/trident/grape
+	icon_state = "cigarelloGr"
+	filling = list(/datum/reagent/tobacco/fine = 2, /datum/reagent/drink/juice/grape = 2)
+
+/obj/item/clothing/mask/smokable/cigarette/trident/watermelon
+	icon_state = "cigarelloWm"
+	filling = list(/datum/reagent/tobacco/fine = 2, /datum/reagent/drink/juice/watermelon = 2)
+
+/obj/item/clothing/mask/smokable/cigarette/trident/orange
+	icon_state = "cigarelloOr"
+	filling = list(/datum/reagent/tobacco/fine = 2, /datum/reagent/drink/juice/orange = 2)
+
+/obj/item/weapon/cigbutt/woodbutt
+	name = "wooden tip"
+	desc = "A wooden mouthpiece from a cigar. Smells rather bad."
+	icon_state = "woodbutt"
+	matter = list("Wood" = 1)
+
 /obj/item/clothing/mask/smokable/cigarette/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	..()
 
@@ -322,6 +363,9 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	if(!proximity)
 		return
 	if(istype(glass)) //you can dip cigarettes into beakers
+		if(!glass.is_open_container())
+			to_chat(user, "<span class='notice'>You need to take the lid off first.</span>")
+			return
 		var/transfered = glass.reagents.trans_to_obj(src, chem_volume)
 		if(transfered)	//if reagents were transfered, show the message
 			to_chat(user, "<span class='notice'>You dip \the [src] into \the [glass].</span>")
@@ -525,11 +569,10 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	item_state = "lighter-g"
 	w_class = ITEM_SIZE_TINY
 	throwforce = 4
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
 	attack_verb = list("burnt", "singed")
 	var/max_fuel = 5
-	matter = list(DEFAULT_WALL_MATERIAL = 250, "glass" = 250)
 
 /obj/item/weapon/flame/lighter/New()
 	..()

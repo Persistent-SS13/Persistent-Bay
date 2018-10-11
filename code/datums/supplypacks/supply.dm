@@ -24,6 +24,7 @@
 	name = "Janitorial supplies"
 	contains = list(/obj/item/weapon/reagent_containers/glass/bucket,
 					/obj/item/weapon/mop,
+					/obj/structure/mopbucket,
 					/obj/item/weapon/caution = 4,
 					/obj/item/weapon/storage/bag/trash,
 					/obj/item/device/lightreplacer,
@@ -43,16 +44,16 @@
 
 /decl/hierarchy/supply_pack/supply/bureaucracy
 	contains = list(/obj/item/weapon/clipboard,
-					 /obj/item/weapon/clipboard,
-					 /obj/item/weapon/pen/red,
-					 /obj/item/weapon/pen/blue = 2,
-					 /obj/item/device/camera_film,
-					 /obj/item/weapon/folder/blue,
-					 /obj/item/weapon/folder/red,
-					 /obj/item/weapon/folder/yellow,
-					 /obj/item/weapon/hand_labeler,
-					 /obj/item/weapon/tape_roll,
-					 /obj/item/weapon/paper_bin)
+					/obj/item/weapon/clipboard,
+					/obj/item/weapon/pen/red,
+					/obj/item/weapon/pen/blue = 2,
+					/obj/item/device/camera_film,
+					/obj/item/weapon/folder/blue,
+					/obj/item/weapon/folder/red,
+					/obj/item/weapon/folder/yellow,
+					/obj/item/weapon/hand_labeler,
+					/obj/item/weapon/tape_roll,
+					/obj/item/weapon/paper_bin)
 	name = "Office supplies"
 	cost = 10
 	containertype = /obj/structure/closet/crate/large
@@ -71,39 +72,39 @@
 	containername = "\improper Spare PDA crate"
 
 /decl/hierarchy/supply_pack/supply/mule
-	name = "MULEbot Crate"
+	name = "MULEbot crate"
 	contains = list()
 	cost = 20
 	containertype = /obj/structure/largecrate/animal/mulebot
-	containername = "Mulebot Crate"
+	containername = "Mulebot crate"
 
 /decl/hierarchy/supply_pack/supply/janicart
-	name = "Janitorial Cart Crate"
+	name = "Janitorial Cart crate"
 	contains = list(/obj/structure/janitorialcart)
-	cost = 50
+	cost = 35
 	containertype = /obj/structure/largecrate
-	containername = "Janitorial Cart Crate"
+	containername = "Janitorial Cart crate"
 
 /decl/hierarchy/supply_pack/supply/cargotrain
 	name = "Cargo Train Tug"
 	contains = list(/obj/vehicle/train/cargo/engine)
 	cost = 45
 	containertype = /obj/structure/largecrate
-	containername = "\improper Cargo Train Tug Crate"
+	containername = "\improper Cargo Train Tug crate"
 
 /decl/hierarchy/supply_pack/supply/cargotrailer
 	name = "Cargo Train Trolley"
 	contains = list(/obj/vehicle/train/cargo/trolley)
 	cost = 15
 	containertype = /obj/structure/largecrate
-	containername = "\improper Cargo Train Trolley Crate"
+	containername = "\improper Cargo Train Trolley crate"
 
 /decl/hierarchy/supply_pack/supply/hoverpod
 	name = "Hoverpod Shipment"
 	contains = list()
-	cost = 80
+	cost = 120
 	containertype = /obj/structure/largecrate/hoverpod
-	containername = "\improper Hoverpod Crate"
+	containername = "\improper Hoverpod crate"
 /*
 /decl/hierarchy/supply_pack/supply/webbing
 	name = "Webbing crate"
@@ -127,7 +128,7 @@
 					/obj/item/device/flashlight/glowstick/orange,
 					/obj/item/device/flashlight/glowstick/blue)
 	cost = 2
-	containername = "\improper Glowstick Crate"
+	containername = "\improper Glowstick crate"
 	num_contained = 20
 	supply_method = /decl/supply_method/randomized
 
@@ -141,19 +142,19 @@
 					/obj/item/weapon/light/tube/yellow = 3,
 					/obj/item/weapon/light/tube/orange = 3)
 	cost = 4
-	containername = "\improper Light Tube Crate"
+	containername = "\improper Light Tube crate"
 
 /decl/hierarchy/supply_pack/supply/colorbulbs
 	name = "Colored Light Bulbs"
-	contains = list(/obj/item/weapon/light/bulb/red = 3,
-					/obj/item/weapon/light/bulb/green = 3,
-					/obj/item/weapon/light/bulb/blue = 3,
-					/obj/item/weapon/light/bulb/purple = 3,
-					/obj/item/weapon/light/bulb/pink = 3,
-					/obj/item/weapon/light/bulb/yellow = 3,
-					/obj/item/weapon/light/bulb/orange = 3)
-	cost = 3
-	containername = "\improper Light Bulb Crate"
+	contains = list(/obj/item/weapon/light/bulb/red = 4,
+					/obj/item/weapon/light/bulb/green = 4,
+					/obj/item/weapon/light/bulb/blue = 4,
+					/obj/item/weapon/light/bulb/purple = 4,
+					/obj/item/weapon/light/bulb/pink = 4,
+					/obj/item/weapon/light/bulb/yellow = 4,
+					/obj/item/weapon/light/bulb/orange = 4)
+	cost = 4
+	containername = "\improper Light Bulb crate"
 
 /decl/hierarchy/supply_pack/supply/softsuit_emergency
 	name = "Emergency Softsuit w/ Small Airtank"
@@ -201,6 +202,12 @@
 	name = "Blueprints"
 	contains = list(/obj/item/blueprints)
 	cost = 150
-	containertype = /obj/structure/closet/crate/secure/large/phoron
-	containername = "\improper Blueprints Crate"
-	access = core_access_leader	//Access 1 instead of 3 because it would mean only someone with access to logistics program could be trusted to open it
+	containertype = /obj/structure/closet/crate/secure/large
+	containername = "\improper Blueprints crate"
+	access = core_access_leader
+
+/decl/hierarchy/supply_pack/supply/duct_tape_crate
+	name = "Duct tape crate x10"
+	contains = list(/obj/item/weapon/tape_roll=10)
+	cost = 5
+	containername = "\improper Duct Tape crate"

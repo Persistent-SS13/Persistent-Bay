@@ -880,8 +880,39 @@ var/global/floorIsLava = 0
 		GLOB.all_crew_records = list()
 			
 			
-			
-			
+	
+/datum/admins/proc/autocryo()
+	set category = "Server"
+	set desc="Autocryo"
+	set name="autocryo"
+
+	if(!check_rights(R_ADMIN))
+		return
+	var/obj/machinery/cryopod/cryo = new()
+	for(var/mob/living/carbon/human/H in world)
+		if(!H.loc) continue
+		cryo.occupant = H
+		cryo.despawnOccupant(1)
+					
+/datum/admins/proc/spacejunk()
+	set category = "Server"
+	set desc="Delete Space Junk"
+	set name="Delete Space Junk"
+
+	if(!check_rights(R_ADMIN))
+		return
+	for(var/turf/space/T in world)
+		var/found_lattice
+		for(var/obj/structure/lattice/lattice in T.contents)
+			found_lattice = 1
+			break
+		for(var/obj/structure/grille/grille in T.contents)
+			found_lattice = 1
+		if(found_lattice) continue
+		for(var/obj/ob in T.contents)
+			ob.loc = null
+			qdel(ob)					
+	
 /datum/admins/proc/retrieve_email()
 	set category = "Server"
 	set desc = "Retrieve Email"

@@ -2,7 +2,7 @@
 	name = "towel"
 	icon = 'icons/obj/weapons.dmi'
 	icon_state = "towel"
-	item_flags = IS_BELT
+	item_flags = SLOT_BELT
 	slot_flags = SLOT_HEAD | SLOT_BELT | SLOT_OCLOTHING
 	force = 3.0
 	w_class = ITEM_SIZE_NORMAL

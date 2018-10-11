@@ -54,6 +54,9 @@
 	var/obj/item/weapon/airlock_brace/brace = null
 	var/haskeypad = 0
 
+	var/obj/machinery/airlock_controller_norad/norad_controller // For the no radio controller (code/modules/norad_controller)
+	var/norad_UID
+
 /obj/machinery/door/airlock/keypad // HERE
 	name = "Keypad Entry Airlock"
 	icon = 'icons/obj/doors/Doorkeypad.dmi'
@@ -158,11 +161,11 @@
 /obj/machinery/door/airlock/fake/L
 	icon = 'icons/obj/doors/fake/L.dmi'
 	assembly_type = /obj/structure/door_assembly/door_assembly_fake/L
-	
+
 /obj/machinery/door/airlock/fake/LR
 	icon = 'icons/obj/doors/fake/LR.dmi'
 	assembly_type = /obj/structure/door_assembly/door_assembly_fake/LR
-	
+
 /obj/machinery/door/airlock/fake/R
 	icon = 'icons/obj/doors/fake/R.dmi'
 	assembly_type = /obj/structure/door_assembly/door_assembly_fake/R
@@ -754,12 +757,12 @@ About the new airlock wires panel:
 
 /obj/machinery/door/airlock/attack_ai(mob/user as mob)
 	ui_interact(user)
-	
-	
+
+
 /obj/machinery/door/airlock/attack_robot(mob/user as mob)
 	if(Adjacent(user))
 		bumpopen(user)
-		
+
 /obj/machinery/door/airlock/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/data[0]
 
@@ -1077,6 +1080,43 @@ About the new airlock wires panel:
 	else if(isWirecutter(C))
 		return src.attack_hand(user)
 	else if(isMultitool(C))
+		var/obj/item/device/multitool/mt = C
+		if (istype(mt.get_buffer(), /obj/machinery/airlock_controller_norad))
+			var/obj/machinery/airlock_controller_norad/link = mt.get_buffer()
+			if (!istype(link) )
+				return 0
+			//checks if the linked airlock_controller_norad is in range.
+			if (!(link in view(NORAD_MAX_RANGE) ) )
+				to_chat(user, "<span class='warning'>\The [link] is too far away. Its effective range should be around [NORAD_MAX_RANGE] tiles.</span>")
+				return
+			//the actual (un)linkage below
+			if (norad_controller)
+				to_chat(user, "<span class='warning'>You unlink \the [src] from \the [norad_controller].</span>")
+				if (norad_controller.tag_exterior_door == src)
+					norad_controller.tag_exterior_door = null
+				if (norad_controller.tag_interior_door == src)
+					norad_controller.tag_interior_door = null
+				norad_controller = null
+			else
+				norad_controller = link
+				var/sensor_type = input("Select a sensor type.","Airlock Sensor", "cycle") in list("exterior","interior")
+				if (sensor_type == "exterior")
+					if (norad_controller.tag_exterior_door)
+						sensor_type = "cycle"
+					else
+						norad_controller.tag_exterior_door = src
+				if (sensor_type == "interior")
+					if (norad_controller.tag_interior_door)
+						sensor_type = "cycle"
+					else
+						norad_controller.tag_interior_door = src
+
+				if (sensor_type == "cycle")
+					norad_controller = null
+					to_chat(user, "<span class='warning'>You attempted to link \the [src] to \the [link], but it failed.</span>")
+					return
+				to_chat(user, "<span class='notice'>You link \the [src] to \the [link].</span>")
+			return
 		return src.attack_hand(user)
 	else if(istype(C, /obj/item/device/assembly/signaler))
 		return src.attack_hand(user)
@@ -1284,7 +1324,7 @@ About the new airlock wires panel:
 	return 1
 
 /obj/machinery/door/airlock/allowed(mob/M)
-	if(locked)
+	if(locked && !norad_controller)
 		return 0
 	return ..(M)
 

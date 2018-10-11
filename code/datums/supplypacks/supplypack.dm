@@ -37,9 +37,9 @@ var/decl/hierarchy/supply_pack/cargo_supply_packs	// Non-category supply packs
 	switch(security_level)
 		if(SUPPLY_SECURITY_ELEVATED)
 			if(security_state.all_security_levels.len > 1)
-				security_level = security_state.all_security_levels[2] 
+				security_level = security_state.all_security_levels[2]
 			else
-				security_level = security_state.high_security_level 
+				security_level = security_state.high_security_level
 		if(SUPPLY_SECURITY_HIGH)
 			security_level = security_state.high_security_level
 	if(!istype(security_level))
@@ -54,9 +54,9 @@ var/decl/hierarchy/supply_pack/cargo_supply_packs	// Non-category supply packs
 //SUPPLY PACKS
 //NOTE: only secure crate types use the access var (and are lockable)
 //NOTE: hidden packs only show up when the computer has been hacked.
-//ANOTER NOTE: Contraband is obtainable through modified supplycomp circuitboards.
+//ANOTER NOTE: Contraband is obtainable through e-magged supplycomp computers.
 //BIG NOTE: Don't add living things to crates, that's bad, it will break the shuttle.
-//NEW NOTE: Do NOT set the price of any crates below 7 points. Doing so allows infinite points.
+//NEW NOTE: Do NOT set the price of any crates below 7 points. Doing so allows infinite points. //May not be true any longer.
 */
 
 var/list/supply_methods_

@@ -18,7 +18,7 @@ var/global/list/robot_modules = list(
 	icon_state = "std_module"
 	w_class = ITEM_SIZE_NO_CONTAINER
 	item_state = "electronic"
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	var/hide_on_manifest = 0
 	var/channels = list()
 	var/networks = list()
@@ -600,6 +600,7 @@ var/global/list/robot_modules = list(
 					"Drone" = "drone-miner",
 					"Doot" = "eyebot-miner"
 				)
+	no_slip = 1
 	supported_upgrades = list(/obj/item/borg/upgrade/jetpack)
 	module_type = "miner"
 	robo_icon_state = "robotMine"

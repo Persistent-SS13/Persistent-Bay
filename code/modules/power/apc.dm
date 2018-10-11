@@ -113,6 +113,7 @@
 	var/list/update_overlay_chan		// Used to determine if there is a change in channels
 	var/is_critical = 0
 	var/global/status_overlays = 0
+	var/updating_icon = 0
 	var/failure_timer = 0
 	var/force_update = 0
 	var/emp_hardened = 0
@@ -427,6 +428,16 @@
 	if(last_update_overlay != update_overlay || last_update_overlay_chan != update_overlay_chan)
 		results += 2
 	return results
+
+// Used in process so it doesn't update the icon too much
+/obj/machinery/power/apc/proc/queue_icon_update()
+
+	if(!updating_icon)
+		updating_icon = 1
+		// Start the update
+		spawn(APC_UPDATE_ICON_COOLDOWN)
+			update_icon()
+			updating_icon = 0
 
 //attack with an item - open/close cover, insert cell, or (un)lock interface
 
@@ -1271,7 +1282,7 @@ obj/machinery/power/apc/proc/autoset(var/cur_state, var/on)
 	item_state = "electronic"
 	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
 	w_class = ITEM_SIZE_SMALL
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	flags = CONDUCT
 
 /obj/machinery/power/apc/malf_upgrade(var/mob/living/silicon/ai/user)
 	..()

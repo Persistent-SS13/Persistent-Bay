@@ -95,7 +95,7 @@
 
 	if (!needs_update)
 		needs_update = TRUE
-		SSlighting.corner_queue += src
+		lighting_update_corners += src
 
 /datum/lighting_corner/proc/update_overlays()
 	// Cache these values a head of time so 4 individual lighting overlays don't all calculate them individually.
@@ -126,7 +126,7 @@
 		if (T.lighting_overlay)
 			if (!T.lighting_overlay.needs_update)
 				T.lighting_overlay.needs_update = TRUE
-				SSlighting.overlay_queue += T.lighting_overlay
+				lighting_update_overlays += T.lighting_overlay
 
 
 /datum/lighting_corner/dummy/New()

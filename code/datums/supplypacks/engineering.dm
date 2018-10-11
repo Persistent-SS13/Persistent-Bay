@@ -37,36 +37,27 @@
 	cost = 35
 	containername = "\improper Superconductive Transmission Coil crate"
 
-/decl/hierarchy/supply_pack/engineering/engineering_electrical
-	name = "Electrical maintenance crate"
-	contains = list(/obj/item/clothing/gloves/insulated/cheap = 2,
-					/obj/item/weapon/storage/toolbox/electrical = 3,
-					/obj/item/weapon/module/power_control = 3,
-					/obj/item/weapon/cell = 4,
-					/obj/item/device/flashlight = 3,
-					/obj/item/device/multitool = 3
-					)
-	cost = 35
-	containername = "\improper electrical supplies"
-	containertype = /obj/structure/closet/secure_closet/engineering_electrical
-	access = core_access_engineering_programs
-
 /decl/hierarchy/supply_pack/engineering/electrical
-	name = "Insulated glove crate"
-	contains = list(/obj/item/clothing/gloves/insulated
-					)
-	cost = 17
-	containername = "\improper insulated glove crate"
-	containertype = /obj/structure/closet/crate/secure
-	access = core_access_engineering_programs
+	name = "Electrical maintenance crate"
+	contains = list(/obj/item/weapon/storage/toolbox/electrical = 3,
+					/obj/item/weapon/cell = 3,
+					/obj/item/device/flashlight = 3)
+	cost = 35
+	containername = "\improper Electrical maintenance crate"
 
+/decl/hierarchy/supply_pack/engineering/engineering_electrical
+	name = "Engineer - Electrical equipment"
+	contains = list(/obj/item/clothing/gloves/insulated = 1) // Pay for your captain's ID.
+	cost = 17
+	containertype = /obj/structure/closet/secure_closet/engineering_electrical
+	access = access_ce
+	
 /decl/hierarchy/supply_pack/engineering/mechanical
 	name = "Mechanical maintenance crate"
 	contains = list(/obj/item/weapon/storage/belt/utility/full = 3,
 					/obj/item/clothing/suit/storage/hazardvest = 3,
 					/obj/item/clothing/head/welding = 3,
-					/obj/item/device/flashlight = 3
-					)
+					/obj/item/device/flashlight = 3)
 	cost = 12
 	containername = "\improper Mechanical maintenance crate"
 
@@ -76,7 +67,7 @@
 					/obj/item/weapon/paper/solar
 					)
 	containertype = /obj/structure/largecrate
-	cost = 48
+	cost = 50
 	containername = "\improper Large Solar Panel crate"
 
 /decl/hierarchy/supply_pack/engineering/solar_small	//Less solars
@@ -90,7 +81,7 @@
 /decl/hierarchy/supply_pack/engineering/emitter
 	name = "Emitter crate"
 	contains = list(/obj/machinery/power/emitter = 2)
-	cost = 12
+	cost = 10
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "\improper Emitter crate"
 	access = core_access_engineering_programs
@@ -128,9 +119,10 @@
 					/obj/structure/particle_accelerator/particle_emitter/right,
 					/obj/structure/particle_accelerator/power_box,
 					/obj/structure/particle_accelerator/end_cap)
-	cost = 60
+	cost = 40
 	containertype = /obj/structure/largecrate
 	containername = "\improper Particle Accelerator crate"
+	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/engineering/pacman_parts
 	name = "P.A.C.M.A.N. portable generator parts"
@@ -173,7 +165,7 @@
 	contains = list(/obj/machinery/pipedispenser/orderable)
 	cost = 35
 	containertype = /obj/structure/closet/crate/secure/large
-	containername = "\improper Pipe Dispenser crate"
+	containername = "\improper Pipe Dispenser Crate"
 	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/engineering/disposals_dispenser
@@ -181,16 +173,12 @@
 	contains = list(/obj/machinery/pipedispenser/disposal/orderable)
 	cost = 35
 	containertype = /obj/structure/closet/crate/secure/large
-	containername = "\improper Disposal Dispenser crate"
+	containername = "\improper Disposal Dispenser Crate"
 	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/engineering/shield_generator
 	name = "Shield Generator Construction Kit"
-	contains = list(/obj/item/weapon/circuitboard/shield_generator,
-					/obj/item/weapon/stock_parts/capacitor,
-					/obj/item/weapon/stock_parts/micro_laser,
-					/obj/item/weapon/smes_coil,
-					/obj/item/weapon/stock_parts/console_screen)
+	contains = list(/obj/item/weapon/circuitboard/shield_generator, /obj/item/weapon/stock_parts/capacitor, /obj/item/weapon/stock_parts/micro_laser, /obj/item/weapon/smes_coil, /obj/item/weapon/stock_parts/console_screen)
 	cost = 50
 	containertype = /obj/structure/closet/crate/secure
 	containername = "\improper shield generator construction kit crate"
@@ -231,8 +219,6 @@
 					/obj/item/weapon/storage/toolbox/electrical)
 	cost = 75
 	containername = "\improper emergency bluespace relay assembly kit"
-	containertype = /obj/structure/closet/crate/secure
-	access = core_access_leader
 
 /decl/hierarchy/supply_pack/engineering/firefighter
 	name = "Firefighting equipment"
@@ -264,7 +250,7 @@
 /decl/hierarchy/supply_pack/engineering/antibreach
 	name = "Anti-Breach Shields (x4)"
 	contains = list(/obj/machinery/shieldgen = 4)
-	containername = "\improper Anti-Breach Shield crate (x4)"
+	containername = "\improper Anti-Breach Shield Crate (x4)"
 	containertype = /obj/structure/largecrate
 	cost = 40
 
@@ -274,7 +260,6 @@
 	cost = 20
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "\improper wall shield generators crate"
-	access = core_access_engineering_programs
 
 decl/hierarchy/supply_pack/engineering/cablelayer
 	name = "AutoMatic Cable Layer"

@@ -7,7 +7,7 @@
 	anchored = 1
 	use_power = 1
 	idle_power_usage = 40
-	obj_flags = OBJ_FLAG_ANCHORABLE
+	flags = OBJ_ANCHORABLE
 	var/biomass = 100
 	var/biomass_max = 100
 	var/biomass_per = 10

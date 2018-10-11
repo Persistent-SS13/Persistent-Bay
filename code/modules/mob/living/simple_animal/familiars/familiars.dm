@@ -134,7 +134,7 @@
 
 	speak_emote = list("squeeks")
 	holder_type = /obj/item/weapon/holder/mouse
-	pass_flags = PASS_FLAG_TABLE
+	pass_flags = PASSTABLE
 	mob_size = MOB_MINISCULE
 
 	response_harm = "stamps on"

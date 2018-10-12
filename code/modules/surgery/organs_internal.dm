@@ -2,9 +2,6 @@
 //////////////////////////////////////////////////////////////////
 //						INTERNAL ORGANS							//
 //////////////////////////////////////////////////////////////////
-#define DUCTTAPE_NEEDED_ORGANATTACH 10
-#define DUCTTAPE_NEEDED_ORGANMENDING 20
-
 /datum/surgery_step/internal
 	priority = 2
 	can_infect = 1
@@ -42,11 +39,6 @@
 
 	if (!hasorgans(target))
 		return FALSE
-	if(istype(tool, /obj/item/weapon/tape_roll))
-		var/obj/item/weapon/tape_roll/thetape = tool
-		if(!thetape.has_enough_tape_left(DUCTTAPE_NEEDED_ORGANMENDING))
-			user.visible_message("<span class='warning'>You need at least [DUCTTAPE_NEEDED_ORGANMENDING] tape strip\s to do this!</span>")
-			return 0
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	if(!affected)
 		return FALSE
@@ -101,9 +93,6 @@
 				user.visible_message("<span class='notice'>[user] treats damage to [target]'s [I.name] with [tool_name].</span>", \
 				"<span class='notice'>You treat damage to [target]'s [I.name] with [tool_name].</span>" )
 			I.damage = 0
-	if(istype(tool, /obj/item/weapon/tape_roll))
-		var/obj/item/weapon/tape_roll/thetape = tool
-		thetape.use_tape(DUCTTAPE_NEEDED_ORGANMENDING)
 
 /datum/surgery_step/internal/fix_organ/fail_step(mob/living/user, mob/living/carbon/human/target, target_zone, obj/item/tool)
 
@@ -367,12 +356,6 @@
 
 	target.op_stage.current_organ = null
 
-	if(istype(tool, /obj/item/weapon/tape_roll))
-		var/obj/item/weapon/tape_roll/thetape = tool
-		if(!thetape.has_enough_tape_left(DUCTTAPE_NEEDED_ORGANATTACH))
-			user.visible_message("<span class='warning'>You need at least [DUCTTAPE_NEEDED_ORGANATTACH] tape strip\s to do this!</span>")
-			return 0
-
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	if(!affected || affected.robotic >= ORGAN_ROBOT)
 		// robotic attachment handled via screwdriver
@@ -416,10 +399,6 @@
 		I.status &= ~ORGAN_CUT_AWAY //apply fixovein
 		affected.implants -= I
 		I.replaced(target, affected)
-
-	if(istype(tool, /obj/item/weapon/tape_roll))
-		var/obj/item/weapon/tape_roll/thetape = tool
-		thetape.use_tape(DUCTTAPE_NEEDED_ORGANATTACH)
 
 /datum/surgery_step/internal/attach_organ/fail_step(mob/living/user, mob/living/carbon/human/target, target_zone, obj/item/tool)
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
@@ -524,6 +503,3 @@
 	"<span class='warning'>Your hand slips, applying [trans] units of the solution to the wrong place in [target]'s [affected.name] with the [tool]!</span>")
 
 	//no damage or anything, just wastes medicine
-
-#undef DUCTTAPE_NEEDED_ORGANATTACH
-#undef DUCTTAPE_NEEDED_ORGANMENDING

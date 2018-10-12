@@ -205,7 +205,9 @@
 
 /decl/hierarchy/supply_pack/medical/voidsuit
 	name = "Medical Voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/medical/prepared)
+	contains = list(/obj/item/clothing/head/helmet/space/void/medical,
+					/obj/item/clothing/suit/space/void/medical,
+					/obj/item/clothing/shoes/magboots)
 	cost = 100
 	containername = "\improper Medical voidsuit crate"
 	containertype = /obj/structure/closet/crate/secure/large
@@ -213,7 +215,9 @@
 
 /decl/hierarchy/supply_pack/medical/voidsuit_heavyduty
 	name = "Heavy Duty Medical Voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/medical/alt/prepared)
+	contains = list(/obj/item/clothing/head/helmet/space/void/medical/alt,
+					/obj/item/clothing/suit/space/void/medical/alt,
+					/obj/item/clothing/shoes/magboots)
 	cost = 150
 	containername = "\improper Medical voidsuit crate"
 	containertype = /obj/structure/closet/crate/secure/large

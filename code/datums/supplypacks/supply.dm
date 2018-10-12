@@ -176,25 +176,33 @@
 /decl/hierarchy/supply_pack/supply/salvagedsuit
 	name = "Salvaged Voidsuit with Airtank"
 	contains = list(/obj/item/weapon/tank/oxygen,
-			 		/obj/item/clothing/suit/space/void/engineering/salvage/prepared)
+					/obj/item/clothing/head/helmet/space/void/engineering/salvage,
+			 		/obj/item/clothing/suit/space/void/engineering/salvage,
+					 /obj/item/clothing/shoes/magboots)
 	cost = 50
 	containername = "\improper Salvaged Voidsuit crate"
 
 /decl/hierarchy/supply_pack/supply/voidsuit
 	name = "Basic Voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/prepared)
+	contains = list(/obj/item/clothing/head/helmet/space/void,
+					/obj/item/clothing/suit/space/void,
+					/obj/item/clothing/shoes/magboots)
 	cost = 100
 	containername = "\improper Basic Voidsuit crate"
 
 /decl/hierarchy/supply_pack/supply/voidsuit_purple
 	name = "Deluxe Purple Voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/exploration/prepared)
+	contains = list(/obj/item/clothing/head/helmet/space/void/exploration,
+					/obj/item/clothing/suit/space/void/exploration,
+					/obj/item/clothing/shoes/magboots)
 	cost = 300 //Expensive because moderately protects armor & heat
 	containername = "\improper Purple Voidsuit crate"
 
 /decl/hierarchy/supply_pack/supply/voidsuit_red
 	name = "Red Voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/pilot/prepared)
+	contains = list(/obj/item/clothing/head/helmet/space/void/pilot,
+					/obj/item/clothing/suit/space/void/pilot,
+					/obj/item/clothing/shoes/magboots)
 	cost = 100
 	containername = "\improper Red Voidsuit crate"
 

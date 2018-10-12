@@ -72,6 +72,9 @@
 		if(shuttle.finalized)
 			data["final"] = 1
 			data["name"] = shuttle.name
+			
+			data["shuttle_type"] = shuttle_type
+			
 			switch(shuttle.moving_status)
 				if(SHUTTLE_IDLE)
 					data["status"] = "Idle"
@@ -192,7 +195,7 @@
 			to_chat(usr, "Dock is not big enough.")
 			return 1
 		beacon.status = 4
-		shuttle.short_jump(beacon, dock)
+		shuttle.short_jump(beacon.get_top_turf(), dock.get_top_turf())
 		dock.status = 2
 		dock = beacon
 		dock.status = 4

@@ -298,21 +298,22 @@ var/global/list/debug_data = list()
 		fcopy("record_saves/[key].sav", "backups/[backup_dir]/records/[key].sav")
 		fdel("record_saves/[key].sav")
 		var/savefile/f = new("record_saves/[key].sav")
-		var/key2 = L.linked_account.account_number
-		fdel("record_saves/[key2].sav")
-		var/savefile/fa = new("record_saves/[key2].sav")
 		f << L
-		fa << L
-		
+		if(L.linked_account)
+			var/key2 = L.linked_account.account_number
+			fdel("record_saves/[key2].sav")
+			var/savefile/fa = new("record_saves/[key2].sav")
+			fa << L
+
 	for(var/datum/world_faction/faction in GLOB.all_world_factions)
-		var/list/records = faction.get_records
+		var/list/records = faction.get_records()
 		for(var/datum/computer_file/crew_record/L in records)
 			var/key = L.get_name()
 			fcopy("record_saves/[faction.uid]/[key].sav", "backups/[backup_dir]/records/[faction.uid]/[key].sav")
 			fdel("record_saves/[faction.uid]/[key].sav")
 			var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
 			f << L
-		
+
 /proc/Save_World()
 	to_world("<font size=4 color='green'>The world is saving! You won't be able to join at this time.</font>")
 	var/reallow = 0
@@ -361,7 +362,7 @@ var/global/list/debug_data = list()
 	to_file(f["areas"],formatted_areas)
 	to_file(f["turbolifts"],turbolifts)
 	Save_Records(dir)
-	
+
 //	to_file(f["records"],GLOB.all_crew_records)
 	to_file(f["next_account_number"],next_account_number)
 	if(reallow) config.enter_allowed = 1
@@ -371,16 +372,17 @@ var/global/list/debug_data = list()
 	return 1
 
 
-/proc/Retrieve_Record(var/key)	
+/proc/Retrieve_Record(var/key)
 	if(!fexists("record_saves/[key].sav")) return
 	var/savefile/f = new("record_saves/[key].sav")
-	var/v
+	var/datum/computer_file/crew_record/v
 	f >> v
+	if(v && v.linked_account) v.linked_account.after_load()
 	GLOB.all_crew_records |= v
 	f = null
 	return v
 
-/proc/Retrieve_Record_Faction(var/key, var/datum/world_faction/faction)	
+/proc/Retrieve_Record_Faction(var/key, var/datum/world_faction/faction)
 	if(!fexists("record_saves/[faction.uid]/[key].sav")) return
 	var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
 	var/v
@@ -389,8 +391,8 @@ var/global/list/debug_data = list()
 	records |= v
 	f = null
 	return v
-	
-	
+
+
 /proc/Load_World()
 	var/starttime = REALTIMEOFDAY
 	if(!fexists("map_saves/game.sav")) return

@@ -171,3 +171,9 @@
 	contains = list(/obj/item/stack/tile/floor_dark/fifty)
 	cost = 5
 	containername = "\improper Dark floor tile crate"
+
+/decl/hierarchy/supply_pack/materials/copper10
+	name = "Copper (x10)"
+	contains = list(/obj/item/stack/material/copper/ten)
+	cost = 80
+	containername = "\improper Copper bar crate"

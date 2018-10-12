@@ -292,9 +292,34 @@ var/global/list/debug_data = list()
 			lis |= T
 	to_file(f,lis)
 
+/proc/Save_Records(var/backup_dir)
+	for(var/datum/computer_file/crew_record/L in GLOB.all_crew_records)
+		var/key = L.get_name()
+		fcopy("record_saves/[key].sav", "backups/[backup_dir]/records/[key].sav")
+		fdel("record_saves/[key].sav")
+		var/savefile/f = new("record_saves/[key].sav")
+		f << L
+		if(L.linked_account)
+			var/key2 = L.linked_account.account_number
+			fdel("record_saves/[key2].sav")
+			var/savefile/fa = new("record_saves/[key2].sav")
+			fa << L
+
+
+	for(var/datum/world_faction/faction in GLOB.all_world_factions)
+		var/list/records = faction.get_records()
+		for(var/datum/computer_file/crew_record/L in records)
+			var/key = L.get_name()
+			fcopy("record_saves/[faction.uid]/[key].sav", "backups/[backup_dir]/records/[faction.uid]/[key].sav")
+			fdel("record_saves/[faction.uid]/[key].sav")
+			var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
+			f << L
+
 /proc/Save_World()
 	SetUniversalState(/datum/universal_state/save)
 	to_world("<font size=4 color='green'>Routine Neural Lace Diagnostics has begun, You will not be able to interface with your lace.</font>")
+	var/reallow = 0
+	if(config.enter_allowed) reallow = 1
 	config.enter_allowed = 0
 	Prepare_Atmos_For_Saving()
 	areas_to_save = list()
@@ -304,21 +329,23 @@ var/global/list/debug_data = list()
 	var/dir = 1
 
 	while(!backup)
-		if(fexists("backups/[dir].sav"))
+		if(fexists("backups/[dir]/z1.sav"))
 			dir++
 		else
 			backup = 1
-			fcopy("map_saves/game.sav", "backups/[dir].sav")
-	fdel("map_saves/game.sav")
-	var/savefile/f = new("map_saves/game.sav")
 	found_vars = list()
 	for(var/z in 1 to 50)
-		f.cd = "/map/[z]"
+		fcopy("map_saves/z[z].sav", "backups/[dir]/z[z].sav")
+		fdel("map_saves/z[z].sav")
+		var/savefile/f = new("map_saves/z[z].sav")
 		for(var/x in 1 to world.maxx step 20)
 			for(var/y in 1 to world.maxy step 20)
 				Save_Chunk(x,y,z, f)
 				CHECK_TICK
-	f.cd = "/extras"
+		f = null
+	fcopy("map_saves/extras.sav", "backups/[dir]/extras.sav")
+	fdel("map_saves/extras.sav")
+	var/savefile/f = new("map_saves/extras.sav")
 	var/list/formatted_areas = list()
 	for(var/area/A in areas_to_save)
 		if(istype(A, /area/space)) continue
@@ -336,25 +363,47 @@ var/global/list/debug_data = list()
 	to_file(f["zones"],zones)
 	to_file(f["areas"],formatted_areas)
 	to_file(f["turbolifts"],turbolifts)
-	to_file(f["records"],GLOB.all_crew_records)
-	to_file(f["email"],ntnet_global.email_accounts)
+	Save_Records(dir)
+
+//	to_file(f["records"],GLOB.all_crew_records)
 	to_file(f["next_account_number"],next_account_number)
-	config.enter_allowed = 1
+	if(reallow) config.enter_allowed = 1
 	world << "Routine Neural Lace Diagnostics took [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Diagnostics Complete"
 	SetUniversalState(/datum/universal_state)
+	f = null
 	return 1
+
+
+/proc/Retrieve_Record(var/key)
+	if(!fexists("record_saves/[key].sav")) return
+	var/savefile/f = new("record_saves/[key].sav")
+	var/datum/computer_file/crew_record/v
+	f >> v
+	if(v && v.linked_account) v.linked_account.after_load()
+	GLOB.all_crew_records |= v
+	f = null
+	return v
+
+/proc/Retrieve_Record_Faction(var/key, var/datum/world_faction/faction)
+	if(!fexists("record_saves/[faction.uid]/[key].sav")) return
+	var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
+	var/v
+	f >> v
+	var/list/records = faction.get_records()
+	records |= v
+	f = null
+	return v
 
 
 /proc/Load_World()
 	var/starttime = REALTIMEOFDAY
 	if(!fexists("map_saves/game.sav")) return
-	var/savefile/f = new("map_saves/game.sav")
+	var/savefile/f = new("map_saves/extras.sav")
 	all_loaded = list()
 	found_vars = list()
 	debug_data = list()
 	var/turf/ve = null
-	f.cd = "/extras"
 	from_file(f["email"],ntnet_global.email_accounts)
 	from_file(f["records"],GLOB.all_crew_records)
 	if(!GLOB.all_crew_records)
@@ -375,25 +424,23 @@ var/global/list/debug_data = list()
 				message_admins("No turf found for area load")
 			turfs |= T
 		A.contents.Add(turfs)
-
-	f.cd = "/"
+	f = null
 	for(var/z in 1 to 50)
-		f.cd = "/map/[z]"
+		f = new("map_saves/z[z].sav")
 		var/starttime2 = REALTIMEOFDAY
 		var/breakout = 0
 		while(!f.eof && !breakout)
-			f >> ve
 			sleep(-1)
 			if(((REALTIMEOFDAY - starttime2)/10) > 300)
 				breakout = 1
+			f >> ve
 		if(breakout)
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
-
 		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
-
-	f.cd = "/extras"
+		f = null
+	f = new("map_saves/extras.sav")
 	from_file(f["turbolifts"],turbolifts)
 	var/list/zones
 
@@ -423,7 +470,6 @@ var/global/list/debug_data = list()
 	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Loading Complete"
 	return 1
-
 
 
 /proc/Load_Chunk(var/xi, var/yi, var/zi, var/savefile/f)

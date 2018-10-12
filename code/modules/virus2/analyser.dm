@@ -20,11 +20,6 @@
 	RefreshParts()
 
 /obj/machinery/disease2/diseaseanalyser/attackby(var/obj/O as obj, var/mob/user as mob)
-	if(default_deconstruction_screwdriver(user, O))
-		return
-
-	if(default_deconstruction_crowbar(user, O))
-		return
 	if(!istype(O,/obj/item/weapon/virusdish)) return
 
 	if(dish)
@@ -36,7 +31,11 @@
 	O.loc = src
 
 	user.visible_message("[user] adds \a [O] to \the [src]!", "You add \a [O] to \the [src]!")
-	return
+
+	if(default_deconstruction_screwdriver(user, O))
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
 	..()
 
 /obj/machinery/disease2/diseaseanalyser/Process()

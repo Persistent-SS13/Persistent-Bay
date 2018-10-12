@@ -292,7 +292,27 @@ var/global/list/debug_data = list()
 			lis |= T
 	to_file(f,lis)
 
-	
+/proc/Save_Records(var/backup_dir)
+	for(var/datum/computer_file/crew_record/L in GLOB.all_crew_records)
+		var/key = L.get_name()
+		fcopy("record_saves/[key].sav", "backups/[backup_dir]/records/[key].sav")
+		fdel("record_saves/[key].sav")
+		var/savefile/f = new("record_saves/[key].sav")
+		var/key2 = L.linked_account.account_number
+		fdel("record_saves/[key2].sav")
+		var/savefile/fa = new("record_saves/[key2].sav")
+		f << L
+		fa << L
+		
+	for(var/datum/world_faction/faction in GLOB.all_world_factions)
+		var/list/records = faction.get_records
+		for(var/datum/computer_file/crew_record/L in records)
+			var/key = L.get_name()
+			fcopy("record_saves/[faction.uid]/[key].sav", "backups/[backup_dir]/records/[faction.uid]/[key].sav")
+			fdel("record_saves/[faction.uid]/[key].sav")
+			var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
+			f << L
+		
 /proc/Save_World()
 	to_world("<font size=4 color='green'>The world is saving! You won't be able to join at this time.</font>")
 	var/reallow = 0
@@ -340,13 +360,16 @@ var/global/list/debug_data = list()
 	to_file(f["zones"],zones)
 	to_file(f["areas"],formatted_areas)
 	to_file(f["turbolifts"],turbolifts)
-	to_file(f["records"],GLOB.all_crew_records)
+	Save_Records(dir)
+	
+//	to_file(f["records"],GLOB.all_crew_records)
 	to_file(f["next_account_number"],next_account_number)
 	if(reallow) config.enter_allowed = 1
 	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
 	world << "Saving Complete"
 	f = null
 	return 1
+
 	
 /proc/Save_World_Old()
 	to_world("<font size=4 color='green'>The world is saving! You won't be able to join at this time.</font>")
@@ -447,37 +470,27 @@ var/global/list/debug_data = list()
 
 		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
 
-	f.cd = "/extras"
-	from_file(f["turbolifts"],turbolifts)
-	var/list/zones
 
-	from_file(f["zones"],zones)
-	for(var/zone/Z in zones)
-		for(var/ind in 1 to Z.turf_coords.len)
-			var/list/coords = Z.turf_coords[ind]
-			var/turf/simulated/T = locate(text2num(coords[1]),text2num(coords[2]),text2num(coords[3]))
-			if(!T || !istype(T))
-				message_admins("No turf found for zone load")
-				continue
-			T.zone = Z
-			Z.contents |= T
+/proc/Retrieve_Record(var/key)	
+	if(!fexists("record_saves/[key].sav")) return
+	var/savefile/f = new("record_saves/[key].sav")
+	var/v
+	f >> v
+	GLOB.all_crew_records |= v
+	f = null
+	return v
 
-	for(var/zone/Z in zones)
-		Z.rebuild()
-
-	for(var/ind in 1 to all_loaded.len)
-		var/datum/dat = all_loaded[ind]
-		dat.after_load()
-
-	all_loaded = list()
-	SSmachines.makepowernets()
-
-	for(var/x in debug_data)
-		world << "Loaded [debug_data[x][1]] [x] in [debug_data[x][2]] seconds!"
-	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
-	world << "Loading Complete"
-	return 1
-
+/proc/Retrieve_Record_Faction(var/key, var/datum/world_faction/faction)	
+	if(!fexists("record_saves/[faction.uid]/[key].sav")) return
+	var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
+	var/v
+	f >> v
+	var/list/records = faction.get_records()
+	records |= v
+	f = null
+	return v
+	
+	
 /proc/Load_World()
 	var/starttime = REALTIMEOFDAY
 	if(!fexists("map_saves/game.sav")) return

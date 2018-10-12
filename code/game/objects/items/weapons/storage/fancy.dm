@@ -132,8 +132,9 @@
 
 /obj/item/weapon/storage/fancy/cigarettes/New()
 	..()
-	atom_flags |= ATOM_FLAG_NO_REACT|ATOM_FLAG_OPEN_CONTAINER
+	flags |= NOREACT
 	create_reagents(5 * max_storage_space)//so people can inject cigarettes without opening a packet, now with being able to inject the whole one
+	flags |= OPENCONTAINER
 
 /obj/item/weapon/storage/fancy/cigarettes/remove_from_storage(obj/item/W as obj, atom/new_location)
 	// Don't try to transfer reagents to lighters
@@ -252,7 +253,7 @@
 
 /obj/item/weapon/storage/fancy/cigar/New()
 	..()
-	atom_flags |= ATOM_FLAG_NO_REACT
+	flags |= NOREACT
 	create_reagents(10 * storage_slots)
 
 /obj/item/weapon/storage/fancy/cigar/remove_from_storage(obj/item/W as obj, atom/new_location)

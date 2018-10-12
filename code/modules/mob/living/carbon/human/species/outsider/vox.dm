@@ -35,7 +35,7 @@
 	poison_types = list("oxygen" = TRUE)
 	siemens_coefficient = 0.2
 
-	species_flags = SPECIES_FLAG_NO_SCAN
+	flags = NO_SCAN
 	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED
 	appearance_flags = HAS_EYE_COLOR | HAS_HAIR_COLOR
 

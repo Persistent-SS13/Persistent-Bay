@@ -134,6 +134,8 @@
 	D.transaction_log.Add(T)
 
 	return 1
+	
+	
 /proc/money_transfer(var/datum/money_account/payer, var/attempt_real_name, var/purpose, var/amount)
 	if(!payer || amount > payer.money)
 		return 0
@@ -162,7 +164,13 @@
 	for(var/datum/money_account/D in all_money_accounts)
 		if(D.account_number == account_number)
 			return D
+	var/datum/computer_file/crew_record/L = Retrieve_Record(account_number)
+	if(L)
+		return L.linked_account
 /proc/get_account_record(var/real_name)
 	for(var/datum/computer_file/crew_record/L in GLOB.all_crew_records)
 		if(L.get_name() == real_name)
 			return L.linked_account
+	var/datum/computer_file/crew_record/L = Retrieve_Record(real_name)
+	if(L)
+		return L.linked_account

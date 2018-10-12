@@ -2,7 +2,7 @@
 	var/list/motionTargets = list()
 	var/detectTime = 0
 	var/alarm_delay = 100 // Don't forget, there's another 10 seconds in queueAlarm()
-	movable_flags = MOVABLE_FLAG_PROXMOVE
+	flags = PROXMOVE
 
 /obj/machinery/camera/internal_process()
 	..()

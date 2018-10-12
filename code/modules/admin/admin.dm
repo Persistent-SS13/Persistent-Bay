@@ -903,6 +903,8 @@ var/global/floorIsLava = 0
 		return
 	for(var/turf/space/T in world)
 		var/found_lattice
+		if(!istype(T.loc, /area/space))
+			continue
 		for(var/obj/structure/lattice/lattice in T.contents)
 			found_lattice = 1
 			break

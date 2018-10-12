@@ -60,9 +60,9 @@
 		if(material.products_need_process())
 			START_PROCESSING(SSobj, src)
 		if(material.conductive)
-			obj_flags |= OBJ_FLAG_CONDUCTIBLE
+			flags |= CONDUCT
 		else
-			obj_flags &= (~OBJ_FLAG_CONDUCTIBLE)
+			flags &= (~CONDUCT)
 		update_force()
 
 /obj/item/weapon/material/Destroy()

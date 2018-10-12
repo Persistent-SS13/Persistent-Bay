@@ -37,7 +37,7 @@
 	swap_flags = MONKEY|SLIME|SIMPLE_ANIMAL
 	push_flags = MONKEY|SLIME|SIMPLE_ANIMAL|ALIEN
 
-	pass_flags = PASS_FLAG_TABLE
+	pass_flags = PASSTABLE
 	holder_type = /obj/item/weapon/holder
 	has_limbs = list(
 		BP_CHEST =  list("path" = /obj/item/organ/external/chest),

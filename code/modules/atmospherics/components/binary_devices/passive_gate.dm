@@ -49,7 +49,7 @@
 	update_underlays()
 
 /obj/machinery/atmospherics/binary/passive_gate/Process()
-	//..() //Don't, the machinery base class process kill anything that doesn't use power..
+	..()
 
 	last_flow_rate = 0
 
@@ -165,10 +165,6 @@
 	update_icon()
 	return
 
-//Makes passive gate operable on no power
-/obj/machinery/atmospherics/binary/passive_gate/inoperable(additional_flags = 0)
-	return (stat & (BROKEN|additional_flags))
-
 /obj/machinery/atmospherics/binary/passive_gate/attack_hand(user as mob)
 	if(..())
 		return
@@ -181,7 +177,7 @@
 	return
 
 /obj/machinery/atmospherics/binary/passive_gate/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
-	if(inoperable())
+	if(stat & BROKEN)
 		return
 
 	// this is the data which will be sent to the ui

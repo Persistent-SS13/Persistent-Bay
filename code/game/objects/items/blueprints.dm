@@ -11,6 +11,7 @@
 	icon = 'icons/obj/items.dmi'
 	icon_state = "blueprints"
 	attack_verb = list("attacked", "bapped", "hit")
+/obj/item/blueprints/admin
 
 
 /obj/item/blueprints/attack_self(mob/M as mob)
@@ -39,6 +40,17 @@
 			add_to_area()
 		if ("remove_area")
 			delete_area()
+/obj/item/blueprints/admin/interact()
+	var/area/A = getArea(usr)
+	var/text = "<HTML><head><title>[src]</title></head><BODY>"
+	text += "<p>According to the blueprints, you are now in <b>[A.name]</b>.</p>"
+	text += "<br>" + (isspace(A) ? "<a href='?src=\ref[src];action=create_area'>Create Area</a>" : "Create Area - An area already exists here")
+	text += "<br>" + (isspace(A) ? "Modify Area - You can't edit space!" : "<a href='?src=\ref[src];action=edit_area'>Modify Area</a>")
+	text += "<br>" + (isspace(A) ? "Merge Areas - You can't combine space!" : A.apc ? "Merge Areas - The APC must be removed first" : getAdjacentAreas() ? "<a href='?src=\ref[src];action=merge_area'>Merge Areas</a>" : "Merge Areas - There are no valid areas to merge with")
+	text += "<br>" + (isspace(A) ? "Add to Area - You can't add to space!" : A.apc ? "Add to Area - The APC must be removed first" : getAdjacentAreas(1) ? "<a href='?src=\ref[src];action=add_to_area'>Add to Area</a>" : "Add to Area - There are no valid areas to add tiles from")
+	text += "<br>" + (isspace(A) ? "Remove Area - You can't remove space!" : A.apc ? "Remove Area - The APC must be removed first" : "<a href='?src=\ref[src];action=remove_area'>Remove Area</a>")
+	usr << browse(text, "window=blueprints")
+	onclose(usr, "blueprints")
 
 /obj/item/blueprints/interact()
 	var/area/A = getArea(usr)
@@ -186,6 +198,15 @@
 	deleteArea(A)
 	interact()
 
+/obj/item/blueprints/admin/delete_area()
+	var/area/A = getArea(usr)
+	if (isspace(A) || A.apc) //let's just check this one last time, just in case
+		interact()
+		return
+	to_chat(usr, "<span class='notice'>You scrub [A.name] off the blueprint.</span>")
+	log_and_message_admins("deleted area [A.name] via station blueprints.")
+	deleteArea(A)
+	interact()
 /obj/item/blueprints/proc/deleteArea(var/area/A)
 	var/area/newArea = locate(world.area)
 	for(var/turf/T in A.contents)

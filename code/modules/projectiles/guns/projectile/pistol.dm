@@ -1,5 +1,3 @@
-#define DUCTTAPE_ZIPGUN_NEEDED 30
-
 /obj/item/weapon/gun/projectile/colt
 	name = "vintage .45 pistol"
 	desc = "A cheap Martian knock-off of a Colt M1911. Uses .45 rounds."
@@ -220,10 +218,6 @@
 		update_icon()
 		return
 	else if(istype(thing,/obj/item/weapon/tape_roll) && buildstate == 1)
-		var/obj/item/weapon/tape_roll/thetape = thing
-		if(!thetape.use_tape(DUCTTAPE_ZIPGUN_NEEDED))
-			to_chat(user, "<span class='warning'>You need at least [DUCTTAPE_ZIPGUN_NEEDED] strips of tape to do this!</span>")
-			return
 		user.visible_message("<span class='notice'>\The [user] secures the assembly with \the [thing].</span>")
 		add_fingerprint(user)
 		buildstate++
@@ -251,5 +245,3 @@
 		return
 	else
 		..()
-
-#undef DUCTTAPE_ZIPGUN_NEEDED

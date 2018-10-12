@@ -199,8 +199,9 @@
 			playsound(src.loc, 'sound/weapons/blade1.ogg', 50, 1)
 			visible_message("<span class='warning'>The glass door was sliced open by [user]!</span>")
 		return 1
-	//If it's emagged, crowbar can pry electronics out. Now deconstructable!
-	if (isCrowbar(I) && p_open)
+
+	//If it's emagged, crowbar can pry electronics out.
+	if (src.operating == -1 && isCrowbar(I))
 		playsound(src.loc, 'sound/items/Crowbar.ogg', 100, 1)
 		user.visible_message("[user] removes the electronics from the windoor.", "You start to remove electronics from the windoor.")
 		if (do_after(user,40,src))
@@ -217,9 +218,7 @@
 			wa.set_dir(src.dir)
 			wa.state = "02"
 			wa.update_icon()
-			
-			qdel(src)
-			
+
 			var/obj/item/weapon/airlock_electronics/ae
 			if(!electronics)
 				ae = new/obj/item/weapon/airlock_electronics( src.loc )
@@ -231,6 +230,14 @@
 					ae.conf_access = src.req_one_access
 					ae.one_access = 1
 				ae.req_access_faction = req_access_faction
+			else
+				ae = electronics
+				electronics = null
+				ae.loc = src.loc
+			ae.icon_state = "door_electronics_smoked"
+
+			operating = 0
+			shatter(src)
 			return
 
 	//If it's a weapon, smash windoor. Unless it's an id card, agent card, ect.. then ignore it (Cards really shouldnt damage a door anyway)

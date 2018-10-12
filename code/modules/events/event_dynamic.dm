@@ -62,6 +62,7 @@ var/list/event_last_fired = list()
 
 	possibleEvents[/datum/event/communications_blackout] = 50 + 25 * active_with_role["AI"] + active_with_role["Scientist"] * 25
 	possibleEvents[/datum/event/ionstorm] = active_with_role["AI"] * 25 + active_with_role["Cyborg"] * 25 + active_with_role["Engineer"] * 10 + active_with_role["Scientist"] * 5
+	possibleEvents[/datum/event/grid_check] = 25 + 10 * active_with_role["Engineer"]
 	possibleEvents[/datum/event/electrical_storm] = 15 * active_with_role["Janitor"] + 5 * active_with_role["Engineer"]
 	possibleEvents[/datum/event/wallrot] = 30 * active_with_role["Engineer"] + 50 * active_with_role["Gardener"]
 
@@ -164,6 +165,8 @@ var/list/event_last_fired = list()
 			spacevine_infestation()
 		if("Communications")
 			communications_blackout()
+		if("Grid Check")
+			grid_check()
 		if("Meteor")
 			meteor_shower()*/
 

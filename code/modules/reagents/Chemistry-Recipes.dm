@@ -1,21 +1,3 @@
-//Chemical Reactions - Initialises all /datum/chemical_reaction into a list
-// It is filtered into multiple lists within a list.
-// For example:
-// chemical_reaction_list[/datum/reagent/toxin/phoron] is a list of all reactions relating to phoron
-// Note that entries in the list are NOT duplicated. So if a reaction pertains to
-// more than one chemical it will still only appear in only one of the sublists.
-/proc/initialize_chemical_reactions()
-	var/paths = typesof(/datum/chemical_reaction) - /datum/chemical_reaction
-	chemical_reactions_list = list()
-
-	for(var/path in paths)
-		var/datum/chemical_reaction/D = new path()
-		if(D.required_reagents && D.required_reagents.len)
-			var/reagent_id = D.required_reagents[1]
-			if(!chemical_reactions_list[reagent_id])
-				chemical_reactions_list[reagent_id] = list()
-			chemical_reactions_list[reagent_id] += D
-
 /datum/chemical_reaction
 	var/name = null
 	var/result = null
@@ -355,12 +337,6 @@
 	required_reagents = list (/datum/reagent/ammonia = 1, /datum/reagent/ethanol = 1)
 	result_amount = 2
 
-/datum/chemical_reaction/adrenaline
-	name = "Adrenaline"
-	result = /datum/reagent/adrenaline
-	required_reagents = list (/datum/reagent/hyperzine = 1, /datum/reagent/adrenaline = 1, /datum/reagent/acid/hydrochloric = 1)
-	result_amount = 3
-
 /datum/chemical_reaction/space_cleaner
 	name = "Space cleaner"
 	result = /datum/reagent/space_cleaner
@@ -408,7 +384,7 @@
 /datum/chemical_reaction/rezadone
 	name = "Rezadone"
 	result = /datum/reagent/rezadone
-	required_reagents = list(/datum/reagent/ryetalyn = 1, /datum/reagent/cryptobiolin = 1, /datum/reagent/copper = 1)
+	required_reagents = list(/datum/reagent/toxin/carpotoxin = 1, /datum/reagent/cryptobiolin = 1, /datum/reagent/copper = 1)
 	result_amount = 3
 
 /datum/chemical_reaction/lexorin
@@ -1356,6 +1332,12 @@
 	for(var/i = 1, i <= created_volume, i++)
 		new /obj/item/weapon/reagent_containers/food/snacks/chocolatebar(location)
 
+/datum/chemical_reaction/chocolate_milk
+	name = "Chocolate Milk"
+	result = /datum/reagent/drink/milk/chocolate
+	required_reagents = list(/datum/reagent/drink/milk = 5, /datum/reagent/nutriment/coco = 1)
+	result_amount = 5
+
 /datum/chemical_reaction/hot_coco
 	name = "Hot Coco"
 	result = /datum/reagent/drink/hot_coco
@@ -1365,7 +1347,13 @@
 /datum/chemical_reaction/soysauce
 	name = "Soy Sauce"
 	result = /datum/reagent/nutriment/soysauce
-	required_reagents = list(/datum/reagent/drink/milk/soymilk = 4, /datum/reagent/acid = 1)
+	required_reagents = list(/datum/reagent/drink/milk/soymilk = 5, /datum/reagent/nutriment/vinegar = 5)
+	result_amount = 10
+
+/datum/chemical_reaction/soysauce_acid
+	name = "Bitey Soy Sauce"
+	result = /datum/reagent/nutriment/soysauce
+	required_reagents = list(/datum/reagent/drink/milk/soymilk = 4, /datum/reagent/acid = 1) 
 	result_amount = 5
 
 /datum/chemical_reaction/ketchup
@@ -1377,7 +1365,7 @@
 /datum/chemical_reaction/barbecue
 	name = "Barbecue Sauce"
 	result = /datum/reagent/nutriment/barbecue
-	required_reagents = list(/datum/reagent/nutriment/ketchup = 2, "pepper" = 1, "salt" = 1)
+	required_reagents = list(/datum/reagent/nutriment/ketchup = 2, /datum/reagent/blackpepper = 1, /datum/reagent/sodiumchloride = 1)
 	result_amount = 4
 
 /datum/chemical_reaction/garlicsauce
@@ -1398,21 +1386,21 @@
 	for(var/i = 1, i <= created_volume, i++)
 		new /obj/item/weapon/reagent_containers/food/snacks/sliceable/cheesewheel(location)
 
-/datum/chemical_reaction/meatball
-	name = "Meatball"
+/datum/chemical_reaction/rawmeatball
+	name = "Raw Meatball"
 	result = null
 	required_reagents = list(/datum/reagent/nutriment/protein = 3, /datum/reagent/nutriment/flour = 5)
 	result_amount = 3
 
-/datum/chemical_reaction/meatball/on_reaction(var/datum/reagents/holder, var/created_volume)
+/datum/chemical_reaction/rawmeatball/on_reaction(var/datum/reagents/holder, var/created_volume)
 	var/location = get_turf(holder.my_atom)
 	for(var/i = 1, i <= created_volume, i++)
-		new /obj/item/weapon/reagent_containers/food/snacks/meatball(location)
+		new /obj/item/weapon/reagent_containers/food/snacks/rawmeatball(location)
 
 /datum/chemical_reaction/dough
 	name = "Dough"
 	result = null
-	required_reagents = list(/datum/reagent/nutriment/protein/egg = 3, /datum/reagent/nutriment/flour = 10, /datum/reagent/water = 5)
+	required_reagents = list(/datum/reagent/nutriment/protein/egg = 3, /datum/reagent/nutriment/flour = 10, /datum/reagent/water = 10)
 	result_amount = 1
 
 /datum/chemical_reaction/dough/on_reaction(var/datum/reagents/holder, var/created_volume)
@@ -1466,8 +1454,14 @@
 /datum/chemical_reaction/icetea
 	name = "Iced Tea"
 	result = /datum/reagent/drink/tea/icetea
-	required_reagents = list(/datum/reagent/drink/ice = 1, /datum/reagent/drink/tea = 2)
+	required_reagents = list(/datum/reagent/drink/ice = 1, /datum/reagent/drink/tea = 2, /datum/reagent/sugar = 1)
 	result_amount = 3
+
+/datum/chemical_reaction/sweettea
+	name = "Sweet Tea"
+	result = /datum/reagent/drink/tea/icetea
+	required_reagents = list(/datum/chemical_reaction/icetea = 3, /datum/reagent/sugar = 1)
+	result_amount = 4
 
 /datum/chemical_reaction/icecoffee
 	name = "Iced Coffee"
@@ -2016,3 +2010,22 @@
 	result = /datum/reagent/antidexafen
 	required_reagents = list(/datum/reagent/paracetamol = 1, /datum/reagent/carbon = 1)
 	result_amount = 2
+
+/datum/chemical_reaction/vinegar2
+	name = "Clear Vinegar"
+	result = /datum/reagent/nutriment/vinegar
+	required_reagents = list(/datum/reagent/ethanol = 10)
+	catalysts = list(/datum/reagent/enzyme = 5)
+	result_amount = 10
+
+/datum/chemical_reaction/mayo
+	name = "Vinegar Mayo"
+	result = /datum/reagent/nutriment/mayo
+	required_reagents = list(/datum/reagent/nutriment/vinegar = 5, /datum/reagent/nutriment/protein/egg = 5)
+	result_amount = 10
+
+/datum/chemical_reaction/mayo2
+	name = "Lemon Mayo"
+	result = /datum/reagent/nutriment/mayo
+	required_reagents = list(/datum/reagent/drink/juice/lemon = 5, /datum/reagent/nutriment/protein/egg = 5)
+	result_amount = 10

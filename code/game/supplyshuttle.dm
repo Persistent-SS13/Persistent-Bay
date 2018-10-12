@@ -39,6 +39,8 @@ var/list/valid_phoron_designs = list(
 	/datum/design/item/powercell/hyper,
 	/datum/design/item/beaker/noreact,
 	/datum/design/item/beaker/bluespace,
+	/datum/design/item/scalpel_laser2,
+	/datum/design/item/scalpel_laser3,
 	/datum/design/item/scalpel_manager,
 	/datum/design/item/modularcomponent/logistic_processor,
 	/datum/design/item/jetpack

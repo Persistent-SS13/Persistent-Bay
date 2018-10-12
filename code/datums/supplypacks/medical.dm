@@ -3,7 +3,7 @@
 	containertype = /obj/structure/closet/crate/medical
 
 /decl/hierarchy/supply_pack/medical/bulkfirstaid
-	name = "Bulk Medkit Crate"
+	name = "Bulk Medkit crate"
 	contains = list(/obj/item/weapon/storage/firstaid/regular = 10,
 					/obj/item/weapon/storage/firstaid/fire = 10,
 					/obj/item/weapon/storage/firstaid/toxin = 10,
@@ -11,7 +11,7 @@
 					/obj/item/weapon/storage/firstaid/o2 = 10)
 	cost = 200
 	containertype = /obj/structure/closet/crate/secure/large
-	containername = "Bulk Medkit Crate (x10)"
+	containername = "/improper Bulk Medkit crate"
 	access = core_access_medical_programs
 
 /decl/hierarchy/supply_pack/medical/medical
@@ -32,7 +32,7 @@
 /decl/hierarchy/supply_pack/medical/bloodpack
 	name = "Blood pack crate"
 	contains = list(/obj/item/weapon/storage/box/bloodpacks = 4)
-	cost = 10
+	cost = 5
 	containername = "\improper Blood pack crate"
 
 /decl/hierarchy/supply_pack/medical/blood
@@ -62,7 +62,7 @@
 /decl/hierarchy/supply_pack/medical/firstaido2
 	name = "O2 first-aid kits"
 	contains = list(/obj/item/weapon/storage/firstaid/o2 = 3)
-	cost = 20
+	cost = 18
 	containername = "\improper O2 first-aid crate"
 
 /decl/hierarchy/supply_pack/medical/firstaidadv
@@ -74,13 +74,13 @@
 /decl/hierarchy/supply_pack/medical/bodybag
 	name = "Body bag crate"
 	contains = list(/obj/item/weapon/storage/box/bodybags = 3)
-	cost = 10
+	cost = 8
 	containername = "\improper Body bag crate"
 
 /decl/hierarchy/supply_pack/medical/belts
 	name = "Medical Belts crate"
 	contains = list(/obj/item/weapon/storage/belt/medical = 3)
-	cost = 20
+	cost = 16
 	containername = "\improper Medical Belts crate"
 
 /decl/hierarchy/supply_pack/medical/cryobag
@@ -165,37 +165,15 @@
 	containertype = /obj/structure/closet/crate/plastic
 	containername = "\improper Autopsy equipment crate"
 
-/decl/hierarchy/supply_pack/medical/medicaluniforms
-	name = "Professional Medical Uniforms"
-	contains = list(/obj/item/clothing/shoes/white = 11,
-					/obj/item/clothing/under/rank/chemist,
-					/obj/item/clothing/under/rank/virologist,
-					/obj/item/clothing/under/rank/nursesuit,
-					/obj/item/clothing/under/rank/nurse,
-					/obj/item/clothing/under/rank/orderly,
-					/obj/item/clothing/under/rank/medical = 5,
-					/obj/item/clothing/under/rank/medical/paramedic,
-					/obj/item/clothing/suit/storage/toggle/labcoat = 5,
-					/obj/item/clothing/suit/storage/toggle/labcoat/virologist,
-					/obj/item/clothing/suit/storage/toggle/labcoat/chemist,
-					/obj/item/weapon/storage/box/masks,
-					/obj/item/weapon/storage/box/gloves)
-	cost = 15
-	containertype = /obj/structure/closet/crate/secure/large
-	containername = "\improper Medical uniform crate"
-	access = core_access_medical_programs
-
 /decl/hierarchy/supply_pack/medical/medicalbiosuits
-	name = "Medical Biohazard Gear"
+	name = "Medical Bio-suit Gear"
 	contains = list(/obj/item/clothing/head/bio_hood = 3,
 					/obj/item/clothing/suit/bio_suit = 3,
 					/obj/item/clothing/head/bio_hood/virology = 2,
 					/obj/item/clothing/suit/bio_suit/virology = 2,
 					/obj/item/clothing/mask/gas = 5,
-					/obj/item/weapon/tank/oxygen = 5,
-					/obj/item/weapon/storage/box/masks,
-					/obj/item/weapon/storage/box/gloves)
-	cost = 50
+					/obj/item/weapon/tank/oxygen = 5)
+	cost = 40
 	containertype = /obj/structure/closet/crate/secure
 	containername = "\improper Medical biohazard equipment"
 	access = core_access_medical_programs
@@ -232,15 +210,6 @@
 	containername = "\improper Medical voidsuit crate"
 	containertype = /obj/structure/closet/crate/secure/large
 	access = core_access_medical_programs
-
-/decl/hierarchy/supply_pack/medical/traumaimplant
-	name = "Trauma Implant"
-	contains = list(/obj/item/weapon/implantcase/trauma_alarm,
-					/obj/item/weapon/implanter)
-	cost = 100
-	containername = "\improper Trauma implant box"
-	containertype = /obj/structure/closet/crate/secure
-	access = core_access_command_programs
 
 /decl/hierarchy/supply_pack/medical/voidsuit_heavyduty
 	name = "Heavy Duty Medical Voidsuit"

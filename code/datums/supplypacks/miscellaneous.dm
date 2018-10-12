@@ -1,106 +1,34 @@
 /decl/hierarchy/supply_pack/miscellaneous
 	name = "Miscellaneous"
 
-/decl/hierarchy/supply_pack/miscellaneous/wizard
-	name = "Wizard costume"
-	contains = list(/obj/item/weapon/staff,
-					/obj/item/clothing/suit/wizrobe/fake,
-					/obj/item/clothing/shoes/sandal,
-					/obj/item/clothing/head/wizard/fake)
-	cost = 2
-	containername = "\improper Wizard costume crate"
-
-/decl/hierarchy/supply_pack/miscellaneous/carpetbrown
-	name = "Brown carpet"
-	contains = list(/obj/item/stack/tile/carpet/fifty)
-	cost = 5
-	containername = "\improper Brown carpet crate"
-
-/decl/hierarchy/supply_pack/miscellaneous/carpetblue
-	name = "Blue and gold carpet"
-	contains = list(/obj/item/stack/tile/carpetblue/fifty)
-	cost = 5
-	containername = "\improper Blue and gold carpet crate"
-
-/decl/hierarchy/supply_pack/miscellaneous/carpetblue2
-	name = "Blue and silver carpet"
-	contains = list(/obj/item/stack/tile/carpetblue2/fifty)
-	cost = 5
-	containername = "\improper Blue and silver carpet crate"
-
-/decl/hierarchy/supply_pack/miscellaneous/carpetpurple
-	name = "Purple carpet"
-	contains = list(/obj/item/stack/tile/carpetpurple/fifty)
-	cost = 5
-	containername = "\improper Purple carpet crate"
-
-/decl/hierarchy/supply_pack/miscellaneous/carpetorange
-	name = "Orange carpet"
-	contains = list(/obj/item/stack/tile/carpetorange/fifty)
-	cost = 5
-	containername = "\improper Orange carpet crate"
-
-/decl/hierarchy/supply_pack/miscellaneous/carpetgreen
-	name = "Green carpet"
-	contains = list(/obj/item/stack/tile/carpetgreen/fifty)
-	cost = 5
-	containername = "\improper Green carpet crate"
-
-/decl/hierarchy/supply_pack/miscellaneous/carpetred
-	name = "Red carpet"
-	contains = list(/obj/item/stack/tile/carpetred/fifty)
-	cost = 5
-	containername = "\improper Red carpet crate"
-
-/decl/hierarchy/supply_pack/miscellaneous/linoleum
-	name = "Linoleum"
-	contains = list(/obj/item/stack/tile/linoleum/fifty)
-	cost = 5
-	containername = "\improper Linoleum crate"
-
-/decl/hierarchy/supply_pack/miscellaneous/dark_tiles	//Leaving dark tiles because it is made from plasteel, which is expensive
-	name = "Dark floor tiles"
-	contains = list(/obj/item/stack/tile/floor_dark/fifty)
-	cost = 5
-	containername = "\improper Dark floor tile crate"
-
 /decl/hierarchy/supply_pack/miscellaneous/costume
 	num_contained = 2
-	contains = list(/obj/item/clothing/suit/pirate,
-					/obj/item/clothing/suit/judgerobe,
-					/obj/item/clothing/accessory/wcoat,
-					/obj/item/clothing/suit/hastur,
-					/obj/item/clothing/suit/holidaypriest,
-					/obj/item/clothing/suit/nun,
-					/obj/item/clothing/suit/imperium_monk,
-					/obj/item/clothing/suit/ianshirt,
-					/obj/item/clothing/under/gimmick/rank/captain/suit,
+	contains = list(/obj/item/clothing/under/gimmick/rank/captain/suit,
 					/obj/item/clothing/under/gimmick/rank/head_of_personnel/suit,
-					/obj/item/clothing/under/lawyer/purpsuit,
 					/obj/item/clothing/under/rank/mailman,
 					/obj/item/clothing/under/dress/dress_saloon,
-					/obj/item/clothing/accessory/suspenders,
-					/obj/item/clothing/suit/storage/toggle/labcoat/mad,
-					/obj/item/clothing/suit/bio_suit/plaguedoctorsuit,
 					/obj/item/clothing/under/schoolgirl,
 					/obj/item/clothing/under/owl,
-					/obj/item/clothing/under/waiter,
 					/obj/item/clothing/under/gladiator,
 					/obj/item/clothing/under/soviet,
 					/obj/item/clothing/under/scratch,
-					/obj/item/clothing/under/wedding/bride_white,
-					/obj/item/clothing/suit/chef,
-					/obj/item/clothing/suit/apron/overalls,
 					/obj/item/clothing/under/redcoat,
 					/obj/item/clothing/under/kilt,
 					/obj/item/clothing/under/savage_hunter,
 					/obj/item/clothing/under/savage_hunter/female,
-					/obj/item/clothing/under/wetsuit)
+					/obj/item/clothing/under/wetsuit,
+					/obj/item/clothing/suit/chef,
+					/obj/item/clothing/suit/pirate,
+					/obj/item/clothing/suit/judgerobe,
+					/obj/item/clothing/suit/hastur,
+					/obj/item/clothing/suit/imperium_monk,
+					/obj/item/clothing/suit/ianshirt,
+					/obj/item/clothing/suit/bio_suit/plaguedoctorsuit,
+					/obj/item/clothing/suit/storage/toggle/labcoat/mad)
 	name = "Costumes crate"
-	cost = 2
+	cost = 6
 	containername = "\improper Actor Costumes"
 	supply_method = /decl/supply_method/randomized
-
 
 /decl/hierarchy/supply_pack/miscellaneous/clothing
 	num_contained = 10
@@ -192,8 +120,7 @@
 					/obj/item/clothing/under/suit_jacket/red,
 					/obj/item/clothing/under/lawyer/bluesuit,
 					/obj/item/clothing/under/lawyer/purpsuit,
-					/obj/item/clothing/shoes/black,
-					/obj/item/clothing/shoes/black,
+					/obj/item/clothing/shoes/black = 2,
 					/obj/item/clothing/shoes/leather,
 					/obj/item/clothing/accessory/wcoat,
 					/obj/item/clothing/accessory/toggleable/vest,
@@ -210,7 +137,7 @@
 /decl/hierarchy/supply_pack/miscellaneous/gambling
 	contains = list(/obj/item/weapon/deck/cards,
 					/obj/item/weapon/dice = 4)
-	name = "\improper Gambling Crate"
+	name = "\improper Gambling crate"
 	cost = 2
 	containername = "\improper gambling crate"
 
@@ -222,7 +149,7 @@
 					/obj/item/weapon/dice/d10 = 1,
 					/obj/item/weapon/dice/d12 = 1,
 					/obj/item/weapon/dice/d20 = 1)
-	name = "\improper Tabletop Gaming Crate"
+	name = "\improper Tabletop Gaming crate"
 	cost = 3
 	containername = "\improper gambling crate"
 
@@ -231,7 +158,7 @@
 	contains = list(/obj/item/weapon/pack/cardemon,
 					/obj/item/weapon/pack/spaceball,
 					/obj/item/weapon/deck/holder)
-	name = "\improper Trading Card Crate"
+	name = "\improper Trading Card crate"
 	cost = 5
 	containername = "\improper cards crate"
 	supply_method = /decl/supply_method/randomized
@@ -265,15 +192,9 @@
 					/obj/item/clothing/head/collectable/xenom,
 					/obj/item/clothing/head/collectable/petehat)
 	name = "Collectable hat crate!"
-	cost = 4
+	cost = 15
 	containername = "\improper Collectable hats crate! Brought to you by Bass.inc!"
 	supply_method = /decl/supply_method/randomized
-
-/decl/hierarchy/supply_pack/miscellaneous/cardboard_sheets
-	name = "Cardboard (x50)"
-	contains = list(/obj/item/stack/material/cardboard/fifty)
-	cost = 5
-	containername = "\improper Cardboard sheets crate"
 
 /decl/hierarchy/supply_pack/miscellaneous/luxury
 	name = "Luxury Crate"
@@ -286,29 +207,38 @@
 					/obj/item/clothing/ears/earring/dangle/silver,
 					/obj/item/clothing/ears/earring/dangle/platinum,
 					/obj/item/clothing/ears/earring/stud/silver,
-					/obj/item/clothing/gloves/captain,
 					/obj/item/clothing/gloves/color/evening,
 					/obj/item/clothing/ring/material/gold,
 					/obj/item/clothing/ring/material/silver,
 					/obj/item/clothing/accessory/locket,
 					/obj/item/clothing/accessory/black/expensive,
 					/obj/item/clothing/accessory/scarf,
-					/obj/item/clothing/head/crown,
-
+					/obj/item/clothing/head/crown
 					)
-	cost = 100
+	cost = 95
 	containername = "\improper Luxury crate"
 	supply_method = /decl/supply_method/randomized
 
 /decl/hierarchy/supply_pack/miscellaneous/witch
 	name = "Witch costume"
-	contains = list(/obj/item/clothing/suit/wizrobe/marisa/fake,
-					/obj/item/clothing/shoes/sandal,
+	contains = list(/obj/item/clothing/under/color/lightpurple,
+					/obj/item/clothing/suit/wizrobe/marisa/fake,
 					/obj/item/clothing/head/wizard/marisa/fake,
+					/obj/item/clothing/shoes/sandal,
 					/obj/item/weapon/staff/broom)
 	cost = 8
 	containername = "\improper Witch costume"
 	containertype = /obj/structure/closet
+
+/decl/hierarchy/supply_pack/miscellaneous/wizard
+	name = "Wizard costume"
+	contains = list(/obj/item/clothing/under/color/lightpurple,
+					/obj/item/clothing/suit/wizrobe/fake,
+					/obj/item/clothing/head/wizard/fake,
+					/obj/item/clothing/shoes/sandal,
+					/obj/item/weapon/staff)
+	cost = 8
+	containername = "\improper Wizard costume crate"
 
 /decl/hierarchy/supply_pack/miscellaneous/costume_hats
 	name = "Costume hats"
@@ -363,7 +293,7 @@
 		/obj/item/device/kit/paint/ripley/flames_blue
 		)
 	cost = 10
-	containername = "heavy crate"
+	containername = "\improper exosuit modkit crate"
 	supply_method = /decl/supply_method/randomized
 
 /decl/hierarchy/supply_pack/miscellaneous/exosuit_mod_durand
@@ -375,7 +305,7 @@
 		/obj/item/device/kit/paint/durand/phazon
 		)
 	cost = 10
-	containername = "heavy crate"
+	containername = "\improper exosuit modkit crate"
 	supply_method = /decl/supply_method/randomized
 
 /decl/hierarchy/supply_pack/miscellaneous/exosuit_mod_gygax
@@ -387,7 +317,7 @@
 		/obj/item/device/kit/paint/gygax/recitence
 		)
 	cost = 10
-	containername = "heavy crate"
+	containername = "\improper exosuit modkit crate"
 	supply_method = /decl/supply_method/randomized
 
 /decl/hierarchy/supply_pack/miscellaneous/chaplaingear
@@ -408,12 +338,11 @@
 /decl/hierarchy/supply_pack/miscellaneous/mousetrap
 	num_contained = 3
 	contains = list(/obj/item/weapon/storage/box/mousetraps)
-	name = "\improper Pest Control Crate"
+	name = "\improper Pest Control crate"
 	cost = 2
-	containername = "\improper Pest Control Crate"
+	containername = "\improper Pest Control crate"
 
 /decl/hierarchy/supply_pack/miscellaneous/phorosian
-	num_contained = 1
 	contains = list(/obj/item/device/phorosiansuit_changer)
 	name = "\improper Phorosian Suit Adapter"
 	cost = 12
@@ -431,4 +360,4 @@
 					/obj/item/weapon/bedsheet/brown,
 					/obj/item/weapon/bedsheet/rainbow)
 	cost = 7
-	containername = "Bedsheet Crate"
+	containername = "/improper Bedsheet crate"

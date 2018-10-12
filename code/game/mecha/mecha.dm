@@ -81,14 +81,14 @@
 	var/max_equip = 3
 	var/datum/events/events
 
-	
-	should_save = 0
-	
-	
+	skip_icon_state = 0
+	should_save = 1
+
+
 /obj/mecha/after_load()
-	qdel(src)
-	return 0
-	
+	add_iterators()
+	//icon_state = reset_icon()
+
 /obj/mecha/drain_power(var/drain_check)
 
 	if(drain_check)

@@ -305,6 +305,7 @@ var/global/list/debug_data = list()
 			var/savefile/fa = new("record_saves/[key2].sav")
 			fa << L
 
+			
 	for(var/datum/world_faction/faction in GLOB.all_world_factions)
 		var/list/records = faction.get_records()
 		for(var/datum/computer_file/crew_record/L in records)

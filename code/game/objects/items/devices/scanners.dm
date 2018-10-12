@@ -14,7 +14,7 @@ REAGENT SCANNER
 	desc = "A hand-held body scanner able to distinguish vital signs of the subject."
 	icon_state = "health"
 	item_state = "analyzer"
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
 	throwforce = 3
 	w_class = ITEM_SIZE_SMALL
@@ -189,9 +189,9 @@ proc/medical_scan_results(var/mob/living/carbon/human/H, var/verbose)
 			for(var/obj/item/organ/external/org in damaged)
 				var/limb_result = "[capitalize(org.name)][(org.robotic >= ORGAN_ROBOT) ? " (Cybernetic)" : ""]:"
 				if(org.brute_dam > 0)
-					limb_result = "[limb_result] \[<font color = 'red'><b>[get_wound_severity(org.brute_ratio, org.can_heal_overkill)] physical trauma</b></font>\]"
+					limb_result = "[limb_result] \[<font color = 'red'><b>[get_wound_severity(org.brute_ratio, org.vital)] physical trauma</b></font>\]"
 				if(org.burn_dam > 0)
-					limb_result = "[limb_result] \[<font color = '#ffa500'><b>[get_wound_severity(org.burn_ratio, org.can_heal_overkill)] burns</b></font>\]"
+					limb_result = "[limb_result] \[<font color = '#ffa500'><b>[get_wound_severity(org.burn_ratio, org.vital)] burns</b></font>\]"
 				if(org.status & ORGAN_BLEEDING)
 					limb_result = "[limb_result] \[<span class='danger'>bleeding</span>\]"
 				. += limb_result
@@ -254,7 +254,7 @@ proc/medical_scan_results(var/mob/living/carbon/human/H, var/verbose)
 	. = jointext(.,"<br>")
 
 // Calculates severity based on the ratios defined external limbs.
-proc/get_wound_severity(var/damage_ratio, var/can_heal_overkill = 0)
+proc/get_wound_severity(var/damage_ratio, var/vital = 0)
 	var/degree
 
 	switch(damage_ratio)
@@ -269,7 +269,7 @@ proc/get_wound_severity(var/damage_ratio, var/can_heal_overkill = 0)
 		if(0.75 to 1)
 			degree = "extreme"
 		else
-			if(can_heal_overkill)
+			if(vital)
 				degree = "critical"
 			else
 				degree = "irreparable"
@@ -292,7 +292,7 @@ proc/get_wound_severity(var/damage_ratio, var/can_heal_overkill = 0)
 	icon_state = "atmos"
 	item_state = "analyzer"
 	w_class = ITEM_SIZE_SMALL
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
 	throwforce = 5
 	throw_speed = 4
@@ -338,7 +338,8 @@ proc/get_wound_severity(var/damage_ratio, var/can_heal_overkill = 0)
 	icon_state = "spectrometer"
 	item_state = "analyzer"
 	w_class = ITEM_SIZE_SMALL
-	flags = CONDUCT | OPENCONTAINER
+	atom_flags = ATOM_FLAG_OPEN_CONTAINER
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
 	throwforce = 5
 	throw_speed = 4
@@ -407,7 +408,7 @@ proc/get_wound_severity(var/damage_ratio, var/can_heal_overkill = 0)
 	icon_state = "spectrometer"
 	item_state = "analyzer"
 	w_class = ITEM_SIZE_SMALL
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
 	throwforce = 5
 	throw_speed = 4
@@ -453,6 +454,7 @@ proc/get_wound_severity(var/damage_ratio, var/can_heal_overkill = 0)
 	name = "price scanner"
 	desc = "Using an up-to-date database of various costs and prices, this device estimates the market price of an item up to 0.001% accuracy."
 	icon_state = "price_scanner"
+	origin_tech = list(TECH_MATERIAL = 6, TECH_MAGNET = 4)
 	slot_flags = SLOT_BELT
 	w_class = ITEM_SIZE_SMALL
 	throwforce = 0
@@ -466,7 +468,7 @@ proc/get_wound_severity(var/damage_ratio, var/can_heal_overkill = 0)
 
 	var/value = get_value(target)
 	user.visible_message("\The [user] scans \the [target] with \the [src]")
-	user.show_message("Price estimation of \the [target]: [value ? value : "N/A"] Ethericoins")
+	user.show_message("Price estimation of \the [target]: [value ? value : "N/A"] Thalers")
 
 /obj/item/device/slime_scanner
 	name = "xenolife scanner"
@@ -475,8 +477,8 @@ proc/get_wound_severity(var/damage_ratio, var/can_heal_overkill = 0)
 	item_state = "analyzer"
 	slot_flags = SLOT_BELT
 	w_class = ITEM_SIZE_SMALL
-	origin_tech = list(TECH_BIO = 1)
-	flags = CONDUCT
+	origin_tech = list(TECH_MAGNET = 1, TECH_BIO = 1)
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	matter = list(DEFAULT_WALL_MATERIAL = 30,"glass" = 20)
 
 /obj/item/device/slime_scanner/proc/list_gases(var/gases)
@@ -499,7 +501,7 @@ proc/get_wound_severity(var/damage_ratio, var/can_heal_overkill = 0)
 		user.show_message("Species:\t[H.species]")
 		user.show_message("Breathes:\t[gas_data.name[H.species.breath_type]]")
 		user.show_message("Exhales:\t[gas_data.name[H.species.exhale_type]]")
-		user.show_message("Known toxins:\t[english_list(H.species.poison_types)]")
+		user.show_message("Known toxins:\t[gas_data.name[H.species.poison_types]]")
 		user.show_message("Temperature comfort zone:\t[H.species.cold_discomfort_level] K to [H.species.heat_discomfort_level] K")
 		user.show_message("Pressure comfort zone:\t[H.species.warning_low_pressure] kPa to [H.species.warning_high_pressure] kPa")
 	else if(istype(target, /mob/living/simple_animal))

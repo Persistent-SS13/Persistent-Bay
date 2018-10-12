@@ -209,11 +209,7 @@ datum/preferences
 	mannequin.real_name = real_name
 	if(selected_under)
 		selected_under.loc = mannequin
-		mannequin.equip_to_slot_if_possible(selected_under,slot_w_uniform)
-	else
-		selected_under = new /obj/item/clothing/under/color/grey()
-		mannequin.equip_to_slot_if_possible(selected_under,slot_w_uniform)
-	mannequin.equip_to_slot_or_del(selected_under,slot_w_uniform)
+		mannequin.equip_to_slot_or_del(selected_under,slot_w_uniform)
 	if(update_icon)
 		mannequin.update_icons()
 

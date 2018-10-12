@@ -68,6 +68,10 @@ Buildable meters
 			src.color = PIPE_COLOR_ORANGE
 		else if(istype(make_from, /obj/machinery/atmospherics/unary/vent_pump))
 			src.pipe_type = PIPE_UVENT
+		else if(istype(make_from, /obj/machinery/atmospherics/unary/drain))
+			src.pipe_type = PIPE_DRAIN
+		else if(istype(make_from, /obj/machinery/atmospherics/unary/aro))
+			src.pipe_type = PIPE_ARO
 		else if(istype(make_from, /obj/machinery/atmospherics/valve/shutoff))
 			src.pipe_type = PIPE_SVALVE
 		else if(istype(make_from, /obj/machinery/atmospherics/valve/digital))
@@ -239,6 +243,8 @@ Buildable meters
 		"fuel down",\
 		"fuel pipe cap",\
 		"gas injector",\
+		"drain",\
+		"area reagent outlet",\
 	)
 	name = nlist[pipe_type+1] + " fitting"
 	var/list/islist = list( \
@@ -299,6 +305,8 @@ Buildable meters
 		"cap", \
 		"cap", \
 		"injector",\
+		"drain",\
+		"reagent_outlet",\
 	)
 	icon_state = islist[pipe_type + 1]
 
@@ -318,6 +326,12 @@ Buildable meters
 	set category = "Object"
 	set name = "Rotate Pipe"
 	set src in view(1)
+
+	if(!usr || !Adjacent(usr))
+		return
+	
+	if(usr.incapacitated())
+		return
 
 	if ( usr.stat || usr.restrained() )
 		return
@@ -373,7 +387,7 @@ Buildable meters
 			return dir|flip
 		if(PIPE_SIMPLE_BENT, PIPE_HE_BENT, PIPE_SUPPLY_BENT, PIPE_SCRUBBERS_BENT, PIPE_FUEL_BENT)
 			return dir //dir|acw
-		if(PIPE_CONNECTOR,PIPE_UVENT,PIPE_SCRUBBER,PIPE_HEAT_EXCHANGE,INJECTOR)
+		if(PIPE_CONNECTOR,PIPE_UVENT,PIPE_DRAIN,PIPE_ARO,PIPE_SCRUBBER,PIPE_HEAT_EXCHANGE,INJECTOR)
 			return dir
 		if(PIPE_MANIFOLD4W, PIPE_SUPPLY_MANIFOLD4W, PIPE_SCRUBBERS_MANIFOLD4W, PIPE_OMNI_MIXER, PIPE_OMNI_FILTER, PIPE_FUEL_MANIFOLD4W)
 			return dir|flip|cw|acw
@@ -812,6 +826,37 @@ Buildable meters
 				V.node.atmos_init()
 				V.node.build_network()
 
+		if(PIPE_DRAIN)		//drain
+			var/obj/machinery/atmospherics/unary/drain/V = new( src.loc )
+			V.set_dir(dir)
+			V.initialize_directions = pipe_dir
+			if (pipename)
+				V.name = pipename
+			var/turf/T = V.loc
+			V.level = !T.is_plating() ? 2 : 1
+			V.atmos_init()
+			V.build_network()
+			if (V.node)
+				V.node.atmos_init()
+				V.node.build_network()
+
+		if(PIPE_ARO)		//drain
+			var/area/this_area = get_area(src)
+			if (this_area.aro)
+				to_chat(usr,  "<span class='warning'>There is already a Reagent Outlet in this area.</span>")
+				return
+			var/obj/machinery/atmospherics/unary/aro/V = new( src.loc )
+			V.set_dir(dir)
+			V.initialize_directions = pipe_dir
+			if (pipename)
+				V.name = pipename
+			var/turf/T = V.loc
+			V.level = !T.is_plating() ? 2 : 1
+			V.atmos_init()
+			V.build_network()
+			if (V.node)
+				V.node.atmos_init()
+				V.node.build_network()
 
 		if(PIPE_MVALVE)		//manual valve
 			var/obj/machinery/atmospherics/valve/V = new( src.loc)
@@ -1326,6 +1371,8 @@ Buildable meters
 #undef PIPE_MANIFOLD
 #undef PIPE_JUNCTION
 #undef PIPE_UVENT
+#undef PIPE_DRAIN
+#undef PIPE_ARO
 #undef PIPE_MVALVE
 #undef PIPE_DVALVE
 #undef PIPE_SVALVE

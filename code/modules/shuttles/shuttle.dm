@@ -141,7 +141,16 @@
 	shuttle_moved(destination, translation)
 	return TRUE
 
-
+/datum/shuttle/proc/get_corner_turf()
+	var/list/turfs = list()
+	for(var/area/A in shuttle_area)
+		for(var/turf/T in A.contents)
+			turfs |= T
+	var/turf/corner		
+	for(var/turf/T in turfs)
+		if(!corner || (T.x <= corner.x && T.y <= corner.y))
+			corner = T
+	return corner
 //just moves the shuttle from A to B, if it can be moved
 //A note to anyone overriding move in a subtype. shuttle_moved() must absolutely not, under any circumstances, fail to move the shuttle.
 //If you want to conditionally cancel shuttle launches, that logic must go in short_jump(), long_jump() or attempt_move()

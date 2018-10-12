@@ -23,12 +23,12 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	anchored = 0
 	density = 1
 	icon = 'icons/obj/machines/dock_beacon.dmi'
-	icon_state = "unpowered2"
+	icon_state = "unpowered"
 	use_power = 0			//1 = idle, 2 = active
 	var/status = 0 // 0 = unpowered, 1 = closed 2 = open 3 = contruction mode 4 = occupied 5 = obstructed
 	req_access = list(core_access_shuttle_programs)
 	var/datum/world_faction/faction
-	var/dimensions = 1 // 1 = 5*8, 2 = 7*8, 3 = 9*10 4 = 12*12 5 = 20*20
+	var/dimensions = 1 // 1 = 5*7, 2 = 7*7, 3 = 9*9 4 = 12*12 5 = 20*20
 	var/highlighted = 0
 	var/id = "docking port"
 	var/visible_mode = 0 // 0 = invisible, 1 = visible, docking auth required, 2 = visible, anyone can dock
@@ -39,34 +39,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	..()
 	GLOB.all_docking_beacons |= src
 
-/obj/machinery/docking_beacon/proc/get_top_turf()
-	switch(dir)
-		if(SOUTH)
-			return loc
-		if(NORTH)
-			switch(dimensions)
-				if(1)
-					return locate(x, y+9, z)
-				if(2)
-					return locate(x, y+9, z)
-				if(3)
-					return locate(x, y+11, z)
-		if(EAST)
-			switch(dimensions)
-				if(1)
-					return locate(x-4, y+4, z)
-				if(2)
-					return locate(x-5, y+4, z)
-				if(3)
-					return locate(x-6, y+5, z)
-		if(WEST)
-			switch(dimensions)
-				if(1)
-					return locate(x+4, y+4, z)
-				if(2)
-					return locate(x+5, y+4, z)
-				if(3)
-					return locate(x+6, y+5, z)
 
 /obj/machinery/docking_beacon/after_load()
 	if(req_access_faction && req_access_faction != "" || (faction && faction.uid != req_access_faction))
@@ -77,19 +49,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 /obj/machinery/docking_beacon/attack_hand(var/mob/user as mob)
 	ui_interact(user)
 
-/obj/machinery/docking_beacon/AltClick()
-	rotate()
-
-/obj/machinery/docking_beacon/verb/rotate()
-	set name = "Rotate Clockwise"
-	set category = "Object"
-	set src in oview(1)
-
-	if (src.anchored || usr:stat)
-		to_chat(usr, "It is fastened to the floor!")
-		return 0
-	src.set_dir(turn(src.dir, 270))
-	return 1
 
 /obj/machinery/docking_beacon/attackby(var/obj/item/W, var/mob/user)
 	if(isWrench(W))
@@ -159,15 +118,15 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 /obj/machinery/docking_beacon/update_icon()
 	switch(status)
 		if(0)
-			icon_state = "unpowered2"
+			icon_state = "unpowered"
 		if(1)
-			icon_state = "red2"
+			icon_state = "red"
 		if(2)
-			icon_state = "green2"
+			icon_state = "green"
 		if(3)
-			icon_state = "yellow2"
+			icon_state = "yellow"
 		if(4 to 5)
-			icon_state = "red2"
+			icon_state = "red"
 
 
 /obj/machinery/docking_beacon/Topic(href, href_list)
@@ -235,7 +194,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		var/select_name = sanitizeName(input(usr,"Enter a new dock ID","DOCK ID") as null|text, MAX_NAME_LEN)
 		if(select_name)
 			id = select_name
-
+	
 	update_icon()
 	add_fingerprint(usr)
 	return 1 // update UIs attached to this object
@@ -257,8 +216,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 /obj/machinery/docking_beacon/proc/check_obstructed()
 	var/list/turfs = get_turfs()
 	for(var/turf/T in turfs)
-		if(x < 7 || y < 7 || x > 193 || y > 193)
-			return 1
 		if(!istype(T, /turf/space) && !istype(T, /turf/simulated/open))
 			return 1
 	return 0
@@ -352,47 +309,15 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		if(EAST)
 			return_turfs = block(locate(x-1,y+2,z), locate(x-8,y-2,z))
 	**/
-	switch(dir)
-		if(SOUTH)
-			switch(dimensions)
-				if(1)
-					return_turfs = block(locate(x-2,y-1,z), locate(x+2,y-8,z))
-				if(2)
-					return_turfs = block(locate(x-3,y-1,z), locate(x+3,y-8,z))
-				if(3)
-					return_turfs = block(locate(x-4,y-1,z), locate(x+4,y-10,z))
-				else
-					return_turfs = block(locate(x-2,y-1,z), locate(x+2,y-8,z))
-		if(NORTH)
-			switch(dimensions)
-				if(1)
-					return_turfs = block(locate(x-2,y+1,z), locate(x+2,y+8,z))
-				if(2)
-					return_turfs = block(locate(x-3,y+1,z), locate(x+3,y+8,z))
-				if(3)
-					return_turfs = block(locate(x-4,y+1,z), locate(x+4,y+10,z))
-				else
-					return_turfs = block(locate(x-2,y+1,z), locate(x+2,y+8,z))
-		if(WEST)
-			switch(dimensions)
-				if(1)
-					return_turfs = block(locate(x+1,y+3,z), locate(x+6,y-4,z))
-				if(2)
-					return_turfs = block(locate(x+1,y+3,z), locate(x+8,y-4,z))
-				if(3)
-					return_turfs = block(locate(x+1,y+4,z), locate(x+10,y-5,z))
-				else
-					return_turfs = block(locate(x+1,y+3,z), locate(x+6,y-4,z))
-		if(EAST)
-			switch(dimensions)
-				if(1)
-					return_turfs = block(locate(x-1,y+3,z), locate(x-6,y-4,z))
-				if(2)
-					return_turfs = block(locate(x-1,y+3,z), locate(x-8,y-4,z))
-				if(3)
-					return_turfs = block(locate(x-1,y+4,z), locate(x-10,y-5,z))
-				else
-					return_turfs = block(locate(x-1,y+3,z), locate(x-6,y-4,z))
+	switch(dimensions)
+		if(1)
+			return_turfs = block(locate(x-2,y-1,z), locate(x+2,y-8,z))
+		if(2)
+			return_turfs = block(locate(x-3,y-1,z), locate(x+3,y-8,z))
+		if(3)
+			return_turfs = block(locate(x-4,y-1,z), locate(x+4,y-10,z))
+		else
+			return_turfs = block(locate(x-2,y-1,z), locate(x+2,y-8,z))
 	return return_turfs
 
 
@@ -442,8 +367,8 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	GLOB.nanomanager.update_uis(src)
 	return 1
 
-
-
+	
+	
 /obj/machinery/bluespace_satellite/attack_hand(var/mob/user as mob)
 	ui_interact(user)
 
@@ -527,7 +452,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 					to_chat(usr, "Error! A network with that UID already exists!")
 					return 1
 			chosen_netuid = select_name
-
+			
 	if(href_list["contract"])
 		if(!chosen_name || chosen_name == "")
 			to_chat(usr, "A name for the network must be chosen first.")
@@ -537,8 +462,8 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			return
 		if(!chosen_uid)
 			to_chat(usr, "A UID for the network must be chosen first.")
-			return
-
+			return	
+			
 		var/cost = round(input("How much ethericoin should be the funding contract be for?", "Funding", 25000-get_contributed()) as null|num)
 		if(!cost || cost < 0)
 			return 0
@@ -560,15 +485,15 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			contract.update_icon()
 			pending_contracts |= contract
 			playsound(get_turf(src), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
-
-
+			
+			
 	if(href_list["launch"])
 		if(!chosen_uid || !chosen_name || !chosen_short || !chosen_tag || !chosen_password || !starting_leader || !chosen_netuid)
 			to_chat(usr, "Network not configured correctly. Check settings.")
 			return 1
 		if(get_contributed() < 25000)
 			to_chat(usr, "25000$ needs to be committed in order to proceed.")
-
+			
 		if(get_faction(chosen_uid))
 			chosen_uid = null
 			to_chat(usr, "Chosen UID was already in use, choose new UID.")
@@ -608,3 +533,4 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	add_fingerprint(usr)
 	return 1 // update UIs attached to this object
 
+	

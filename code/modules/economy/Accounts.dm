@@ -164,13 +164,7 @@
 	for(var/datum/money_account/D in all_money_accounts)
 		if(D.account_number == account_number)
 			return D
-	var/datum/computer_file/crew_record/L = Retrieve_Record(account_number)
-	if(L)
-		return L.linked_account
 /proc/get_account_record(var/real_name)
 	for(var/datum/computer_file/crew_record/L in GLOB.all_crew_records)
 		if(L.get_name() == real_name)
 			return L.linked_account
-	var/datum/computer_file/crew_record/L = Retrieve_Record(real_name)
-	if(L)
-		return L.linked_account

@@ -120,7 +120,6 @@
 	var/ntn_comm = program ? !!program.get_signal(NTNET_COMMUNICATION) : 1
 	var/ntn_cont = program ? !!program.get_signal(NTNET_SYSTEMCONTROL) : 1
 	var/datum/comm_message_listener/l = obtain_message_listener()
-	var/datum/world_faction/connected_faction = program.computer.network_card.connected_network.holder
 	switch(href_list["action"])
 		if("sw_menu")
 			. = 1
@@ -139,8 +138,6 @@
 				var/input = input(usr, "Please write a message to announce to the [station_name()].", "Priority Announcement") as null|text
 				if(!input || !can_still_topic())
 					return 1
-				crew_announcement.faction = connected_faction.name
-				crew_announcement.sector = program.computer.z+(program.computer.z % 2)
 				crew_announcement.Announce(input)
 				announcment_cooldown = 1
 				spawn(600)//One minute cooldown

@@ -370,6 +370,106 @@ var/global/list/debug_data = list()
 	f = null
 	return 1
 
+	
+/proc/Save_World_Old()
+	to_world("<font size=4 color='green'>The world is saving! You won't be able to join at this time.</font>")
+	config.enter_allowed = 0
+	Prepare_Atmos_For_Saving()
+	areas_to_save = list()
+	zones_to_save = list()
+	var/starttime = REALTIMEOFDAY
+	var/backup = 0
+	var/dir = 1
+
+	while(!backup)
+		if(fexists("backups/[dir].sav"))
+			dir++
+		else
+			backup = 1
+			fcopy("map_saves/game.sav", "backups/[dir].sav")
+	fdel("map_saves/game.sav")
+	var/savefile/f = new("map_saves/game.sav")
+	found_vars = list()
+	for(var/z in 1 to 50)
+		f.cd = "/map/[z]"
+		for(var/x in 1 to world.maxx step 20)
+			for(var/y in 1 to world.maxy step 20)
+				Save_Chunk(x,y,z, f)
+				CHECK_TICK
+	f.cd = "/extras"
+	var/list/formatted_areas = list()
+	for(var/area/A in areas_to_save)
+		if(istype(A, /area/space)) continue
+		var/datum/area_holder/holder = new()
+		holder.area_type = A.type
+		holder.name = A.name
+		holder.turfs = A.get_turf_coords()
+		formatted_areas += holder
+	var/list/zones = list()
+	for(var/zone/Z in zones_to_save)
+		Z.turf_coords = Z.get_turf_coords()
+		zones |= Z
+	to_file(f["factions"],GLOB.all_world_factions)
+	to_file(f["businesses"],GLOB.all_business)
+	to_file(f["zones"],zones)
+	to_file(f["areas"],formatted_areas)
+	to_file(f["turbolifts"],turbolifts)
+	to_file(f["records"],GLOB.all_crew_records)
+	to_file(f["email"],ntnet_global.email_accounts)
+	to_file(f["next_account_number"],next_account_number)
+	config.enter_allowed = 1
+	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
+	world << "Saving Complete"
+	return 1
+
+
+/proc/Load_World_Old()
+	var/starttime = REALTIMEOFDAY
+	if(!fexists("map_saves/game.sav")) return
+	var/savefile/f = new("map_saves/game.sav")
+	all_loaded = list()
+	found_vars = list()
+	debug_data = list()
+	var/turf/ve = null
+	f.cd = "/extras"
+	from_file(f["email"],ntnet_global.email_accounts)
+	from_file(f["records"],GLOB.all_crew_records)
+	if(!GLOB.all_crew_records)
+		GLOB.all_crew_records = list()
+	from_file(f["factions"],GLOB.all_world_factions)
+	from_file(f["businesses"],GLOB.all_business)
+	from_file(f["next_account_number"],next_account_number)
+	var/list/areas
+	from_file(f["areas"],areas)
+	for(var/datum/area_holder/holder in areas)
+		var/area/A = new holder.area_type
+		A.name = holder.name
+		var/list/turfs = list()
+		for(var/ind in 1 to holder.turfs.len)
+			var/list/coords = holder.turfs[ind]
+			var/turf/T = locate(text2num(coords[1]),text2num(coords[2]),text2num(coords[3]))
+			if(!T)
+				message_admins("No turf found for area load")
+			turfs |= T
+		A.contents.Add(turfs)
+
+	f.cd = "/"
+	for(var/z in 1 to 50)
+		f.cd = "/map/[z]"
+		var/starttime2 = REALTIMEOFDAY
+		var/breakout = 0
+		while(!f.eof && !breakout)
+			f >> ve
+			sleep(-1)
+			if(((REALTIMEOFDAY - starttime2)/10) > 300)
+				breakout = 1
+		if(breakout)
+			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
+			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
+			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
+
+		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
+
 
 /proc/Retrieve_Record(var/key)	
 	if(!fexists("record_saves/[key].sav")) return

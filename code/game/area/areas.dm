@@ -6,6 +6,7 @@
 /area
 	var/global/global_uid = 0
 	var/uid
+	var/area_flags
 
 /area/New()
 	icon_state = ""
@@ -271,7 +272,7 @@ var/list/mob/living/forced_ambiance_list = new
 	if(ambient_controller)
 		var/datum/music_controller/controller = ambient_controller.zlevel_data["[(L.z+(L.z%2))]"]
 		if(controller)
-			if(controller.tone && controller.tone != "none")
+			if(controller.override || controller.tone && controller.tone != "none")
 				return 0
 	// If we previously were in an area with force-played ambiance, stop it.
 	if(L in forced_ambiance_list)
@@ -321,7 +322,7 @@ var/list/mob/living/forced_ambiance_list = new
 
 	if(istype(mob,/mob/living/carbon/human/))
 		var/mob/living/carbon/human/H = mob
-		if(istype(H.shoes, /obj/item/clothing/shoes/magboots) && (H.shoes.item_flags & NOSLIP))
+		if(istype(H.shoes, /obj/item/clothing/shoes/magboots) && (H.shoes.item_flags & ITEM_FLAG_NOSLIP))
 			return
 
 		if(H.m_intent == "run")

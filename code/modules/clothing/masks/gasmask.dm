@@ -3,7 +3,7 @@
 	desc = "A face-covering mask that can be connected to an air supply. Filters harmful gases from the air."
 	icon_state = "fullgas"
 	item_state = "fullgas"
-	item_flags = BLOCK_GAS_SMOKE_EFFECT | AIRTIGHT
+	item_flags = ITEM_FLAG_BLOCK_GAS_SMOKE_EFFECT | ITEM_FLAG_AIRTIGHT
 	flags_inv = HIDEEARS|HIDEEYES|HIDEFACE
 	body_parts_covered = FACE|EYES
 	w_class = ITEM_SIZE_NORMAL
@@ -36,9 +36,6 @@
 	body_parts_covered = FACE
 	w_class = ITEM_SIZE_SMALL
 	armor = list(melee = 10, bullet = 10, laser = 10, energy = 0, bomb = 0, bio = 55, rad = 0)
-	sprite_sheets = list(
-		//SPECIES_TAJARA = 'icons/mob/species/tajaran/mask.dmi',
-		)
 
 //Plague Dr suit can be found in clothing/suits/bio.dm
 /obj/item/clothing/mask/gas/plaguedoctor
@@ -76,7 +73,8 @@
 	icon_state = "clown"
 	item_state = "clown_hat"
 	item_state = "clown"
-	item_flags = AIRTIGHT | BLOCKHAIR
+	item_flags = ITEM_FLAG_AIRTIGHT
+	flags_inv = BLOCKHAIR
 
 /obj/item/clothing/mask/gas/sexyclown
 	name = "sexy-clown wig and mask"

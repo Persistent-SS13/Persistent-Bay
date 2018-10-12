@@ -98,10 +98,12 @@
 	strength = STR_HIGH
 	slowdown = 0.5
 	brute_mod = 0.8
+	blood_volume = 800
 	num_alternate_languages = 2
 	secondary_langs = list(LANGUAGE_UNATHI)
 	name_language = LANGUAGE_UNATHI
 	health_hud_intensity = 2
+	hunger_factor = DEFAULT_HUNGER_FACTOR * 3
 
 	min_age = 18
 	max_age = 260
@@ -152,70 +154,7 @@
 /datum/species/unathi/equip_survival_gear(var/mob/living/carbon/human/H)
 	..()
 	H.equip_to_slot_or_del(new /obj/item/clothing/shoes/sandal(H),slot_shoes)
-/*
-/datum/species/tajaran
-	name = SPECIES_TAJARA
-	name_plural = "Tajaran"
-	icobase = 'icons/mob/human_races/r_tajaran.dmi'
-	deform = 'icons/mob/human_races/r_def_tajaran.dmi'
-	tail = "tajtail"
-	tail_animation = 'icons/mob/species/tajaran/tail.dmi'
-	default_h_style = "Tajaran Ears"
-	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick, /datum/unarmed_attack/claws, /datum/unarmed_attack/bite/sharp)
-	darksight = 8
-	slowdown = -0.5
-	brute_mod = 1.15
-	burn_mod =  1.15
-	gluttonous = GLUT_TINY
-	num_alternate_languages = 2
-	secondary_langs = list(LANGUAGE_SIIK_MAAS, LANGUAGE_SIIK_TAJR)
-	name_language = LANGUAGE_SIIK_MAAS
-	health_hud_intensity = 1.75
 
-	min_age = 19
-	max_age = 140
-
-	blurb = "The Tajaran are a species of furred mammalian bipeds hailing from the chilly planet of Ahdomai \
-	in the Zamsiin-lr system. They are a naturally superstitious species, with the new generations growing up with tales \
-	of the heroic struggles of their forebears against the Overseers. This spirit has led them forward to the \
-	reconstruction and advancement of their society to what they are today. Their pride for the struggles they \
-	went through is heavily tied to their spiritual beliefs. Recent discoveries have jumpstarted the progression \
-	of highly advanced cybernetic technology, causing a culture shock within Tajaran society."
-
-	cold_level_1 = 200 //Default 260
-	cold_level_2 = 140 //Default 200
-	cold_level_3 = 80  //Default 120
-
-	heat_level_1 = 330 //Default 360
-	heat_level_2 = 380 //Default 400
-	heat_level_3 = 800 //Default 1000
-
-	primitive_form = "Farwa"
-
-	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED
-	appearance_flags = HAS_HAIR_COLOR | HAS_LIPS | HAS_UNDERWEAR | HAS_SKIN_COLOR | HAS_EYE_COLOR
-
-	flesh_color = "#afa59e"
-	base_color = "#333333"
-	blood_color = "#862a51"
-
-	reagent_tag = IS_TAJARA
-
-	move_trail = /obj/effect/decal/cleanable/blood/tracks/paw
-
-	heat_discomfort_level = 292
-	heat_discomfort_strings = list(
-		"Your fur prickles in the heat.",
-		"You feel uncomfortably warm.",
-		"Your overheated skin itches."
-		)
-	cold_discomfort_level = 275
-
-/datum/species/tajaran/equip_survival_gear(var/mob/living/carbon/human/H)
-	..()
-	H.equip_to_slot_or_del(new /obj/item/clothing/shoes/sandal(H),slot_shoes)
-	H.equip_to_slot_or_del(new /obj/item/clothing/glasses/tajblind(H),slot_glasses)
-*/
 /datum/species/skrell
 	name = SPECIES_SKRELL
 	name_plural = SPECIES_SKRELL
@@ -256,6 +195,15 @@
 	heat_level_3 = 1100 //Default 1000
 
 	reagent_tag = IS_SKRELL
+
+	has_organ = list(
+		BP_HEART =    /obj/item/organ/internal/heart,
+		BP_LUNGS =    /obj/item/organ/internal/lungs,
+		BP_LIVER =    /obj/item/organ/internal/liver,
+		BP_KIDNEYS =  /obj/item/organ/internal/kidneys,
+		BP_BRAIN =    /obj/item/organ/internal/brain,
+		BP_EYES =     /obj/item/organ/internal/eyes,
+		BP_NERVECLUSTER = /obj/item/organ/internal/skrell/nervecluser)
 
 	has_limbs = list(
 		BP_CHEST =  list("path" = /obj/item/organ/external/chest),
@@ -344,7 +292,7 @@
 
 	body_temperature = T0C + 15		//make the plant people have a bit lower body temperature, why not
 
-	flags = NO_SCAN | IS_PLANT | NO_PAIN | NO_SLIP
+	species_flags = SPECIES_FLAG_NO_SCAN | SPECIES_FLAG_IS_PLANT | SPECIES_FLAG_NO_PAIN | SPECIES_FLAG_NO_SLIP
 	appearance_flags = 0
 	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED | SPECIES_NO_FBP_CONSTRUCTION | SPECIES_NO_FBP_CHARGEN | SPECIES_NO_LACE
 
@@ -421,8 +369,8 @@
 			if(I.damage > 0)
 				I.damage = max(I.damage - 2, 0)
 				H.nutrition -= 2
-				if (prob(1))
-					to_chat(H, "<span class='warning'>You sense your [I.name] regenerating...</span>")
+				if (prob(5))
+					to_chat(H, "<span class='warning'>You sense your nymphs shifting internally to regenerate your [I.name]...</span>")
 
 		if (prob(10) && H.nutrition > 70)
 			for(var/limb_type in has_limbs)
@@ -434,7 +382,7 @@
 				if(!E)
 					var/list/organ_data = has_limbs[limb_type]
 					var/limb_path = organ_data["path"]
-					var/obj/item/organ/O = new limb_path(src)
+					var/obj/item/organ/O = new limb_path(H)
 					organ_data["descriptor"] = O.name
 					to_chat(H, "<span class='warning'>Some of your nymphs split and hurry to reform your [O.name].</span>")
 					H.nutrition -= 60

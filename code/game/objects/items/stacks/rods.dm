@@ -1,9 +1,11 @@
+#define DUCTTAPE_NEEDED_SPLINT 8
+
 /obj/item/stack/rods
 	name = "metal rod"
 	desc = "Some rods. Can be used for building, or something."
 	singular_name = "metal rod"
 	icon_state = "rods"
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	w_class = ITEM_SIZE_LARGE
 	force = 9.0
 	throwforce = 15.0
@@ -56,10 +58,16 @@
 		return
 
 	if (istype(W, /obj/item/weapon/tape_roll))
+		if(get_amount() < 1)
+			user.visible_message("<span class='warning'>You need at least a [singular_name] to make a splint!</span>")
+			return
+		var/obj/item/weapon/tape_roll/thetape = W
+		if(!thetape.use_tape(DUCTTAPE_NEEDED_SPLINT))
+			user.visible_message("<span class='warning'>You need at least [DUCTTAPE_NEEDED_SPLINT] strips of tape to make a splint!</span>")
+			return
 		var/obj/item/stack/medical/splint/ghetto/new_splint = new(user.loc)
 		new_splint.dropInto(loc)
 		new_splint.add_fingerprint(user)
-
 		user.visible_message("<span class='notice'>\The [user] constructs \a [new_splint] out of a [singular_name].</span>", \
 				"<span class='notice'>You use make \a [new_splint] out of a [singular_name].</span>")
 		src.use(1)

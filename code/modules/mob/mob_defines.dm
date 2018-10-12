@@ -4,7 +4,7 @@
 
 	appearance_flags = PIXEL_SCALE
 	animate_movement = 2
-	flags = PROXMOVE
+	movable_flags = MOVABLE_FLAG_PROXMOVE
 
 	virtual_mob = /mob/observer/virtual/mob
 
@@ -117,7 +117,8 @@
 	var/list/mutations = list() //Carbon -- Doohl
 	//see: setup.dm for list of mutations
 
-	var/radiation = 0.0//Carbon
+	var/radiation = 0.0 // Carbon
+	var/phoronation = 0.0 // Sanity meter related to phoron exposure which carbons can have - more is scarier
 
 	var/voice_name = "unidentifiable voice"
 

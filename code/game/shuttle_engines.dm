@@ -110,7 +110,7 @@
 	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
 	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
 	component_parts += new /obj/item/stack/cable_coil(src, 30)
-	component_parts += new /obj/item/stack/material/uranium(src, 5)
+	component_parts += new /obj/item/stack/material/phoron(src, 5)
 	RefreshParts()
 
 /obj/machinery/shuttleengine/attackby(var/obj/O as obj, var/mob/user as mob)
@@ -138,6 +138,8 @@
 		return
 	..()
 
+/obj/machinery/shuttleengine/AltClick()
+	rotate()
 /obj/machinery/shuttleengine/verb/rotate()
 	set name = "Rotate Clockwise"
 	set category = "Object"

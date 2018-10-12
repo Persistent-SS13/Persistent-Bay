@@ -3,17 +3,19 @@
 datum/track
 	var/title
 	var/sound
+	var/genre
 
-datum/track/New(var/title_name, var/audio)
+datum/track/New(var/title_name, var/audio, var/genre_name)
 	title = title_name
 	sound = audio
+	genre = genre_name
 
 /obj/machinery/media/jukebox
 	name = "space jukebox"
 	icon = 'icons/obj/jukebox.dmi'
 	icon_state = "jukebox2-nopower"
 	var/state_base = "jukebox2"
-	anchored = 1
+	anchored = 0
 	density = 1
 	power_channel = EQUIP
 	use_power = 1
@@ -29,15 +31,24 @@ datum/track/New(var/title_name, var/audio)
 
 	var/datum/track/current_track
 	var/list/datum/track/tracks = list(
-		new/datum/track("Beyond", 'sound/ambience/ambispace.ogg'),
-		new/datum/track("Clouds of Fire", 'sound/music/clouds.s3m'),
-		new/datum/track("D`Bert", 'sound/music/title2.ogg'),
-		new/datum/track("D`Fort", 'sound/ambience/song_game.ogg'),
-		new/datum/track("Floating", 'sound/music/main.ogg'),
-		new/datum/track("Endless Space", 'sound/music/space.ogg'),
-		new/datum/track("Part A", 'sound/misc/TestLoop1.ogg'),
-		new/datum/track("Scratch", 'sound/music/title1.ogg'),
-		new/datum/track("Trai`Tor", 'sound/music/traitor.ogg'),
+		new/datum/track("Beyond", 'sound/ambience/ambispace.ogg', "SS13"),
+		new/datum/track("Clouds of Fire", 'sound/music/clouds.s3m', "SS13"),
+		new/datum/track("D`Bert", 'sound/music/title2.ogg', "SS13"),
+		new/datum/track("D`Fort", 'sound/ambience/song_game.ogg', "SS13"),
+		new/datum/track("Floating", 'sound/music/main.ogg', "SS13"),
+		new/datum/track("Endless Space", 'sound/music/space.ogg', "SS13"),
+		new/datum/track("Part A", 'sound/misc/TestLoop1.ogg', "SS13"),
+		new/datum/track("Scratch", 'sound/music/title1.ogg', "SS13"),
+		new/datum/track("Trai`Tor", 'sound/music/traitor.ogg', "SS13"),
+		new/datum/track("A Little Bit", 'sound/music/jukebox/A Little Bit.ogg', "SS13"),
+		new/datum/track("Astrogenesis", 'sound/music/jukebox/Astrogenesis.ogg', "Cyberpunk"),
+		new/datum/track("Decay", 'sound/music/jukebox/Decay.ogg', "Cyberpunk"),
+		new/datum/track("Drunk", 'sound/music/jukebox/Drunk.ogg', "Cyberpunk"),
+		new/datum/track("Half Moon", 'sound/music/jukebox/Half Moon.ogg', "Cyberpunk"),
+		new/datum/track("Metropolis", 'sound/music/jukebox/Metropolis.ogg', "Cyberpunk"),
+		new/datum/track("Midnight Market", 'sound/music/jukebox/Midnight Market.ogg', "Cyberpunk"),
+		new/datum/track("Native", 'sound/music/jukebox/Native.ogg', "Cyberpunk"),
+		new/datum/track("When I'm Gone", "sound/music/jukebox/When I'm Gone.ogg", "Cyberpunk"),
 	)
 
 /obj/machinery/media/jukebox/New()
@@ -81,77 +92,66 @@ datum/track/New(var/title_name, var/audio)
 		to_chat(usr, "\The [src] doesn't appear to function.")
 		return
 
-	tg_ui_interact(user)
+	ui_interact(user)
 
 /obj/machinery/media/jukebox/ui_status(mob/user, datum/ui_state/state)
 	if(!anchored || inoperable())
 		return UI_CLOSE
 	return ..()
 
-/obj/machinery/media/jukebox/tg_ui_interact(mob/user, ui_key = "main", datum/tgui/ui = null, force_open = 0, datum/tgui/master_ui = null, datum/ui_state/state = tg_default_state)
-	ui = tgui_process.try_update_ui(user, src, ui_key, ui, force_open)
+/obj/machinery/media/jukebox/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
+	var/title = "RetroBox - Space Style"
+	var/data[0]
+	data["current_track"] = current_track != null ? current_track.title : ""
+	data["playing"] = playing
+	var/list/tracks_ss13 = list()
+	for(var/datum/track/T in tracks)
+		if(T.genre == "SS13")
+			tracks_ss13[++tracks_ss13.len] = list("track" = T.title)
+	data["tracks_ss13"] = tracks_ss13
+
+	var/list/tracks_cyberpunk = list()
+	for(var/datum/track/T in tracks)
+		if(T.genre == "Cyberpunk")
+			tracks_cyberpunk[++tracks_cyberpunk.len] = list("track" = T.title)
+	data["tracks_cyberpunk"] = tracks_cyberpunk
+
+ 	// update the ui if it exists, returns null if no ui is passed/found
+	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
-		ui = new(user, src, ui_key, "jukebox", "RetroBox - Space Style", 340, 440, master_ui, state)
+		// the ui does not exist, so we'll create a new() one
+        // for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
+		ui = new(user, src, ui_key, "jukebox.tmpl", title, 450, 600)
+		// when the ui is first opened this is the data it will use
+		ui.set_initial_data(data)
+		// open the new ui window
 		ui.open()
 
-/obj/machinery/media/jukebox/ui_data()
-	var/list/juke_tracks = new
-	for(var/datum/track/T in tracks)
-		juke_tracks.Add(T.title)
 
-	var/list/data = list(
-		"current_track" = current_track != null ? current_track.title : "No track selected",
-		"playing" = playing,
-		"tracks" = juke_tracks,
-		"volume" = volume
-	)
-
-	return data
-
-/obj/machinery/media/jukebox/ui_act(action, params)
-	if(..())
-		return TRUE
-	switch(action)
-		if("change_track")
-			for(var/datum/track/T in tracks)
-				if(T.title == params["title"])
-					current_track = T
-					StartPlaying()
-					break
-			. = TRUE
-		if("stop")
-			StopPlaying()
-			. = TRUE
-		if("play")
-			if(emagged)
-				emag_play()
-			else if(!current_track)
-				to_chat(usr, "No track selected.")
-			else
+/obj/machinery/media/jukebox/Topic(href, href_list)
+	if(!anchored)
+		to_chat(usr,"<span class='warning'>You must secure \the [src] first.</span>")
+		return
+	if(stat & (NOPOWER|BROKEN))
+		to_chat(usr,"\The [src] doesn't appear to function.")
+		return
+	if(!(Adjacent(usr) || istype(usr, /mob/living/silicon)))
+		return
+	if(href_list["change_track"])
+		for(var/datum/track/T in tracks)
+			if(T.title == href_list["title"])
+				current_track = T
 				StartPlaying()
-			. = TRUE
-		if("volume")
-			AdjustVolume(text2num(params["level"]))
-			. = TRUE
-
-/obj/machinery/media/jukebox/proc/emag_play()
-	playsound(loc, 'sound/items/AirHorn.ogg', 100, 1)
-	for(var/mob/living/carbon/M in ohearers(6, src))
-		if(istype(M, /mob/living/carbon/human))
-			var/mob/living/carbon/human/H = M
-			if(istype(H.l_ear, /obj/item/clothing/ears/earmuffs) || istype(H.r_ear, /obj/item/clothing/ears/earmuffs))
-				continue
-		M.sleeping = 0
-		M.stuttering += 20
-		M.ear_deaf += 30
-		M.Weaken(3)
-		if(prob(30))
-			M.Stun(10)
-			M.Paralyse(4)
+		GLOB.nanomanager.update_uis(src)
+	if(href_list["stop"])
+		StopPlaying()
+		GLOB.nanomanager.update_uis(src)
+	if(href_list["play"])
+		if(!current_track)
+			to_chat(usr, "No track selected.")
 		else
-			M.make_jittery(400)
-	spawn(15)
-		explode()
+			StartPlaying()
+		GLOB.nanomanager.update_uis(src)
 
 /obj/machinery/media/jukebox/attack_ai(mob/user as mob)
 	return src.attack_hand(user)
@@ -209,6 +209,6 @@ datum/track/New(var/title_name, var/audio)
 	update_icon()
 
 /obj/machinery/media/jukebox/proc/AdjustVolume(var/new_volume)
-	volume = Clamp(new_volume, 0, 50)
+	volume = Clamp(new_volume, 0, 100)
 	if(sound_token)
 		sound_token.SetVolume(volume)

@@ -4,7 +4,7 @@
 	icon_state = "electropack0"
 	item_state = "electropack"
 	frequency = 1449
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BACK
 	w_class = ITEM_SIZE_HUGE
 
@@ -99,7 +99,7 @@
 
 		M.Weaken(10)
 
-	if(master && wires & 1)
+	if(master) //before: if(master && wires & 1) not sure what to do here but clearing these fixed some of the issues
 		master.receive_signal()
 	return
 

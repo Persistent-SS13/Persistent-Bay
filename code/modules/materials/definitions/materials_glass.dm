@@ -13,7 +13,7 @@
 	weight = 14
 	brute_armor = 1
 	burn_armor = 2
-	door_icon_base = "stone"
+	icon_door = "stone"
 	destruction_desc = "shatters"
 	window_options = list("One Direction" = 1, "Full Window" = 4)
 	created_window = /obj/structure/window/basic

@@ -5,22 +5,22 @@
 	value = 100
 
 /material/diamond
-	value = 70
+	value = 125
 
 /material/gold
-	value = 40
+	value = 80
 
 /material/silver
-	value = 35
+	value = 60
 
 /material/phoron
-	value = 200
+	value = 175
 
 /material/stone/marble
 	value = 4
 
 /material/steel
-	value = 4
+	value = 10
 
 ///material/diona
 //	value = 5
@@ -29,16 +29,16 @@
 	value = 0
 
 /material/plasteel
-	value = 12
+	value = 20
 
 /material/plasteel/titanium
-	value = 10
+	value = 20
 
 /material/glass/reinforced
-	value = 2
+	value = 10
 
 /material/glass/phoron
-	value = 30
+	value = 100
 
 /material/glass/phoron/reinforced
 	value = 40
@@ -50,13 +50,13 @@
 	value = 30
 
 /material/tritium
-	value = 300
-
-/material/mhydrogen
 	value = 100
 
-/material/platinum
+/material/mhydrogen
 	value = 80
+
+/material/platinum
+	value = 70
 
 /material/tungsten
 	value = 60

@@ -93,7 +93,13 @@
 
 	if(href_list["preference"])
 		client.prefs.process_link(src, href_list)
-
+		client.prefs.randomize_appearance_and_body_for()
+		client.prefs.real_name = null
+		client.prefs.preview_icon = null
+		client.prefs.home_system = null
+		client.prefs.faction = null
+		client.prefs.selected_under = null
+		client.prefs.sanitize_preferences()
 /mob/new_player/proc/newCharacterPanel()
 	var/data = "<div align='center'><br>"
 	data += "<b>Select the slot you want to save this character under.</b><br>"
@@ -130,7 +136,8 @@
 		var/characterName = CharacterName(ind, ckey)
 		if(characterName)
 			var/icon/preview = CharacterIcon(ind, ckey)
-			send_rsc(src, preview, "[ind]preview.png")
+			if(preview)
+				send_rsc(src, preview, "[ind]preview.png")
 			data += "<img src=[ind]preview.png width=[preview.Width()] height=[preview.Height()]><br>"
 			data += "<b><a href='?src=\ref[src];pickSlot=[ind][action]'>[characterName]</a></b><hr>"
 		else
@@ -180,6 +187,11 @@
 	if(!chosen_slot)
 		return
 
+	if(spawning)
+		return
+
+	spawning = 1
+
 	panel?.close()
 	load_panel?.close()
 
@@ -209,8 +221,16 @@
 
 	if(character.spawn_type == 1)
 		var/datum/world_faction/faction = get_faction(character.spawn_loc)
-		var/spawnLocation = faction?.get_assignment(faction?.get_record(character.real_name)?.assignment_uid)?.cryo_net
-		character.spawn_loc_2 = spawnLocation ? spawnLocation : " default"
+		var/assignmentSpawnLocation = faction?.get_assignment(faction?.get_record(character.real_name)?.assignment_uid)?.cryo_net
+		if (assignmentSpawnLocation == "Last Known Cryonet")
+			// The character's assignment is set to spawn in their last cryo location
+			// Do nothing, leave it the way it is.
+		else if (assignmentSpawnLocation)
+			// The character has a special cryo network set to override their normal spawn location
+			character.spawn_loc_2 = assignmentSpawnLocation
+		else
+			// The character doesn't have a spawn_loc_2, so use the one for their assignment or the default
+			character.spawn_loc_2 = " default"
 
 		for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
 			if(!pod.loc)
@@ -269,7 +289,7 @@
 	character.redraw_inv()
 	CreateModularRecord(character)
 	character.finishLoadCharacter()	// This is ran because new_players don't like to stick around long.
-	return 1	
+	return 1
 
 /mob/proc/finishLoadCharacter()
 	if(spawn_type == 2)
@@ -305,7 +325,6 @@
 
 /mob/new_player/proc/deleteCharacter()
 	if(input("Are you SURE you want to delete [CharacterName(chosen_slot, ckey)]? THIS IS PERMANENT. enter the character\'s full name to conform.", "DELETE A CHARACTER", "") == CharacterName(chosen_slot, ckey))
-		fdel(load_path(ckey, "[chosen_slot]preview.png"))
 		fdel(load_path(ckey, "[chosen_slot].sav"))
 	load_panel.close()
 
@@ -369,7 +388,7 @@ mob/new_player/MayRespawn()
 
 /mob/proc/after_spawn()
 	after_load()
-	for(var/datum/D in contents)
+	for(var/datum/D in recursive_content_check(src, client_check = FALSE, sight_check = FALSE, include_mobs = TRUE))
 		D.after_load()
 	return
 

@@ -1,6 +1,8 @@
 //A 'wound' system for space suits.
 //Breaches greatly increase the amount of lost gas and decrease the armour rating of the suit.
 //They can be healed with plastic or metal sheeting.
+#define DUCTTAPE_NEEDED_SUITFIX 10
+
 
 /datum/breach
 	var/class = 0                           // Size. Lower is smaller. Uses floating point values!
@@ -219,6 +221,10 @@
 			if(!target_breach || (B.class > target_breach.class))
 				target_breach = B
 
+		var/obj/item/weapon/tape_roll/thetape = W
+		if(!thetape.use_tape(DUCTTAPE_NEEDED_SUITFIX))
+			user.visible_message("<span class='warning'>You need [DUCTTAPE_NEEDED_SUITFIX] strips of tape to seal \the [target_breach] on \the [src].</span>")
+			return
 		if(!target_breach)
 			to_chat(user, "There are no open breaches to seal with \the [W].")
 		else if(user != loc || do_after(user, 30, src))		//Doing this in your own inventory is awkward.
@@ -235,3 +241,5 @@
 	if(can_breach && breaches && breaches.len)
 		for(var/datum/breach/B in breaches)
 			to_chat(user, "<span class='danger'>It has \a [B.descriptor].</span>")
+
+#undef DUCTTAPE_NEEDED_SUITFIX

@@ -21,6 +21,12 @@
 
 	var/damtype = BRUTE
 	var/defense = "melee" //what armor protects against its attacks
+	var/clean_up_time = 0
+	var/last_found = 0
+
+/mob/living/simple_animal/hostile/New()
+	..()
+	last_found = world.time
 
 /mob/living/simple_animal/hostile/proc/FindTarget()
 	if(!faction) //No faction, no reason to attack anybody.
@@ -35,6 +41,7 @@
 		var/atom/F = Found(A)
 		if(F)
 			T = F
+			last_found = world.time
 			break
 
 		if(isliving(A))
@@ -51,6 +58,7 @@
 							continue
 					stance = HOSTILE_STANCE_ATTACK
 					T = L
+					last_found = world.time
 					break
 
 		else if(istype(A, /obj/mecha)) // Our line of sight stuff was already done in ListTargets().
@@ -58,6 +66,7 @@
 			if (M.occupant)
 				stance = HOSTILE_STANCE_ATTACK
 				T = M
+				last_found = world.time
 				break
 	return T
 
@@ -102,12 +111,14 @@
 	setClickCooldown(attack_delay)
 	if(!Adjacent(target_mob))
 		return
+	if(attack_sound)
+		playsound(loc, attack_sound, 50, 1, 1)	
 	if(isliving(target_mob))
 		var/mob/living/L = target_mob
 		L.attack_generic(src,rand(melee_damage_lower,melee_damage_upper),attacktext,damtype,defense)
 		return L
-	if(istype(target_mob,/obj/mecha))
-		var/obj/mecha/M = target_mob
+	else
+		var/obj/M = target_mob
 		M.attack_generic(src,rand(melee_damage_lower,melee_damage_upper),attacktext)
 		return M
 
@@ -121,12 +132,13 @@
 	walk(src, 0)
 
 
-/mob/living/simple_animal/hostile/proc/ListTargets(var/dist = 7)
-	var/list/L = hearers(src, dist)
+/mob/living/simple_animal/hostile/proc/ListTargets(var/dist = 5)
+	if(!loc) return list()
+	var/list/L = view(dist, src)
 
-	for (var/obj/mecha/M in mechas_list)
-		if (M.z == src.z && get_dist(src, M) <= dist)
-			L += M
+//	for (var/obj/mecha/M in mechas_list)
+//		if (M.z == src.z && get_dist(src, M) <= dist)
+//			L += M
 
 	return L
 
@@ -135,7 +147,6 @@
 	walk(src, 0)
 
 /mob/living/simple_animal/hostile/Life()
-
 	. = ..()
 	if(!.)
 		walk(src, 0)
@@ -146,7 +157,10 @@
 		if(!stat)
 			switch(stance)
 				if(HOSTILE_STANCE_IDLE)
-					target_mob = FindTarget()
+					if(target_mob && target_mob.loc)
+						stance = HOSTILE_STANCE_ATTACK
+					else
+						target_mob = FindTarget()
 
 				if(HOSTILE_STANCE_ATTACK)
 					if(destroy_surroundings)

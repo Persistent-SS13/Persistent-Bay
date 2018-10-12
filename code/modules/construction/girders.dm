@@ -46,6 +46,11 @@
 				to_chat(user, "<span class='notice'>You dismantle \the [src].</span>")
 				dismantle()
 				return
+			if(!anchored && Wrench(W, user, null, "You start to disassemble \the [src]"))
+				to_chat(user, "<span class='notice'>You disassemble \the [src] into parts.</span>")
+				new /obj/item/girderpart(get_turf(src), material)
+				qdel(src)
+				return
 			if(Crowbar(W, user))
 				to_chat(user, "<span class='notice'>You pry \the [src] [anchored ? "out of" : "into"] place</span>")
 				anchored = !anchored
@@ -202,9 +207,9 @@
 /obj/structure/girder/proc/dismantle(var/devastated)
 	playsound(get_turf(src), 'sound/items/Welder.ogg', 100, 1)
 	if(!devastated)
-		new material.stack_type(get_turf(src), 4)
+		new material.stack_type(get_turf(src), 2)
 		if(r_material)
-			new r_material.stack_type(get_turf(src), 6)
+			new r_material.stack_type(get_turf(src), 4)
 
 	material = null
 	r_material = null

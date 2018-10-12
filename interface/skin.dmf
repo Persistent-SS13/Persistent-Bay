@@ -1096,7 +1096,6 @@ window "mainwindow"
 		size = 1038x564
 		anchor1 = none
 		anchor2 = none
-		background-color = none
 		is-default = true
 		saved-params = "pos;size;is-minimized;is-maximized"
 		icon = 'icons\\ss13_64.png'
@@ -1135,7 +1134,6 @@ window "mainwindow"
 		size = 1038x520
 		anchor1 = 0,0
 		anchor2 = 100,100
-		background-color = none
 		saved-params = "splitter"
 		right = "rpane"
 		is-vert = true
@@ -1181,7 +1179,6 @@ window "mainwindow"
 		size = 1x1
 		anchor1 = none
 		anchor2 = none
-		background-color = none
 		is-visible = false
 		saved-params = ""
 	elem "hotkey_toggle"
@@ -1190,7 +1187,6 @@ window "mainwindow"
 		size = 104x16
 		anchor1 = 100,100
 		anchor2 = none
-		background-color = none
 		border = line
 		saved-params = ""
 		text = "Hotkey Mode"
@@ -1213,7 +1209,7 @@ window "mainwindow"
 window "mapwindow"
 	elem "mapwindow"
 		type = MAIN
-		pos = 281,69
+		pos = 281,0
 		size = 640x411
 		anchor1 = none
 		anchor2 = none
@@ -1270,6 +1266,7 @@ window "rpane"
 		size = 640x480
 		anchor1 = none
 		anchor2 = none
+		background-color = none
 		saved-params = "pos;size;is-minimized;is-maximized"
 		is-pane = true
 	elem "rpanewindow"
@@ -1278,15 +1275,41 @@ window "rpane"
 		size = 638x474
 		anchor1 = 0,0
 		anchor2 = 100,100
+		background-color = none
 		saved-params = "splitter"
 		right = "outputwindow"
 		is-vert = false
+	elem "donate"
+		type = BUTTON
+		pos = 546,0
+		size = 67x16
+		anchor1 = none
+		anchor2 = none
+		background-color = #ff8040
+		border = line
+		saved-params = "is-checked"
+		text = "Donate"
+		command = "donate"
+		group = "rpanemode"
+	elem "discord"
+		type = BUTTON
+		pos = 478,0
+		size = 67x16
+		anchor1 = none
+		anchor2 = none
+		text-color = #ffffff
+		background-color = #8697d2
+		saved-params = "is-checked"
+		text = "Discord"
+		command = "discord"
+		group = "rpanemode"
 	elem "rulesb"
 		type = BUTTON
 		pos = 278,0
 		size = 60x16
 		anchor1 = none
 		anchor2 = none
+		background-color = none
 		saved-params = "is-checked"
 		text = "Rules"
 		command = "rules"
@@ -1297,16 +1320,18 @@ window "rpane"
 		size = 67x16
 		anchor1 = none
 		anchor2 = none
+		background-color = none
 		saved-params = "is-checked"
 		text = "Changelog"
 		command = "Changelog"
 		group = "rpanemode"
 	elem "Lore"
 		type = BUTTON
-		pos = 413,0
+		pos = 410,0
 		size = 67x16
 		anchor1 = none
 		anchor2 = none
+		background-color = none
 		saved-params = "is-checked"
 		text = "Lore"
 		command = "Lore"
@@ -1317,6 +1342,7 @@ window "rpane"
 		size = 60x16
 		anchor1 = none
 		anchor2 = none
+		background-color = none
 		saved-params = "is-checked"
 		text = "Forum"
 		command = "forum"
@@ -1327,6 +1353,7 @@ window "rpane"
 		size = 60x16
 		anchor1 = none
 		anchor2 = none
+		background-color = none
 		saved-params = "is-checked"
 		text = "Wiki"
 		command = "wiki"
@@ -1337,23 +1364,12 @@ window "rpane"
 		size = 60x16
 		anchor1 = none
 		anchor2 = none
+		background-color = none
 		is-visible = false
 		saved-params = "is-checked"
 		text = "Text"
 		command = ".winset \"rpanewindow.left=;\""
 		is-checked = true
-		group = "rpanemode"
-		button-type = pushbox
-	elem "browseb"
-		type = BUTTON
-		pos = 464,0
-		size = 60x16
-		anchor1 = none
-		anchor2 = none
-		is-visible = false
-		saved-params = "is-checked"
-		text = "Browser"
-		command = ".winset \"rpanewindow.left=browserwindow\""
 		group = "rpanemode"
 		button-type = pushbox
 	elem "infob"
@@ -1362,6 +1378,7 @@ window "rpane"
 		size = 60x16
 		anchor1 = none
 		anchor2 = none
+		background-color = none
 		is-visible = false
 		saved-params = "is-checked"
 		text = "Info"

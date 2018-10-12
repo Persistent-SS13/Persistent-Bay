@@ -42,8 +42,8 @@
  */
 
 /obj/item/weapon/storage/backpack/holding
-	name = "bag of holding"
-	desc = "A backpack that opens into a localized pocket of Blue Space."
+	name = "quantum bag"
+	desc = "A backpack that uses phoron reaction to allow matter to overlap in the bag."
 	origin_tech = list(TECH_BLUESPACE = 4)
 	icon_state = "holdingpack"
 	max_w_class = ITEM_SIZE_NORMAL
@@ -141,13 +141,13 @@
 	name = "chemistry backpack"
 	desc = "It's an orange backpack which was designed to hold beakers, pill bottles and bottles."
 	icon_state = "chempack"
-	
+/*
 /obj/item/weapon/storage/backpack/fed
 	name = "\improper Federation backpack"
 	desc = "A backpack made out of tough fibers for use in the field."
 	icon_state = "federation_backpack"
 	item_state = "federation_backpack"
-	
+
 /obj/item/weapon/storage/backpack/fed/cqb
 	name = "\improper Federation CQB backpack"
 	icon_state = "federation_backpack_cqb"
@@ -172,7 +172,7 @@
 	name = "\improper Federation squad leader backpack"
 	icon_state = "federation_backpack_squad_leader"
 	item_state = "federation_backpack_squad_leader"
-
+*/
 /*
  * Duffle Types
  */

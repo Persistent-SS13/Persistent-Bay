@@ -88,7 +88,7 @@
 					/obj/item/weapon/tank/emergency/nitrogen = 1,
 					/obj/item/device/flashlight/glowstick = 1,
 					/obj/item/weapon/reagent_containers/food/snacks/candy/proteinbar = 1)
-		
+
 /obj/item/weapon/storage/box/phoron/
 	name = "Phorosian survival kit"
 	desc = "A box decorated in warning colors that contains a limited supply of survival tools. The panel and purple stripe indicate this one contains Phoron."
@@ -295,7 +295,7 @@
 
 /obj/item/weapon/storage/box/monkeycubes/farwacubes
 	name = "farwa cube box"
-	desc = "Drymate brand farwa cubes, shipped from Ahdomai. Just add water!"
+	desc = "Drymate brand farwa cubes. Just add water!"
 	startswith = list(/obj/item/weapon/reagent_containers/food/snacks/monkeycube/wrapped/farwacube = 5)
 
 /obj/item/weapon/storage/box/monkeycubes/stokcubes

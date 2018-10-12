@@ -202,6 +202,12 @@ GUEST_BAN
 ## GitHub address
 # GITHUBURL https://github.com/example-user/example-repository
 
+## Donations address
+# DONATIONSURL http://example.com
+
+## Discord address
+# DISCORDURL http://example.com
+
 ## Ban appeals URL - usually for a forum or wherever people should go to contact your admins.
 # BANAPPEALS http://example.com
 
@@ -346,7 +352,7 @@ EVENT_CUSTOM_START_MAJOR 80;100
 STARLIGHT 0
 
 ## Defines which races are allowed to join as ERT, in singular form. If unset, defaults to only human. Casing matters, separate using ;
-## Example races include: Human, Tajara, Skrell, Unathi
+## Example races include: Human, Skrell, Unathi
 # ERT_SPECIES Human;Skrell;Unathi
 
 ## Defines how Law Zero is phrased. Primarily used in the Malfunction gamemode.

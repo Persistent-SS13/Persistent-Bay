@@ -51,9 +51,19 @@ var/datum/controller/employment_controller/employment_controller
 				else if(istype(employer, /datum/world_faction))
 					var/datum/world_faction/faction = employer
 					var/datum/computer_file/crew_record/record = faction.get_record(employee.real_name)
+					if(!record)
+						message_admins("no record found for [employee.real_name] during payday")
+						continue
 					var/datum/assignment/job = faction.get_assignment(record.assignment_uid)
-					var/payment = job != null ? (record.rank > 1 ? text2num(job.ranks[job.ranks[record.rank - 1]]) : job.payscale) * faction.payrate * faction.unpaid["[employee.real_name]"] / 12 : 0
-					if(payment && !money_transfer(faction.central_account, employee.real_name, "Payroll", payment))
+					var/sanity = (record.rank > 1 ? job.ranks.len >= record.rank -1 : 1)
+					var/payment
+					if(sanity)
+						payment = job != null ? (record.rank > 1 ? text2num(job.ranks[job.ranks[record.rank - 1]]) : job.payscale) * faction.payrate * faction.unpaid["[employee.real_name]"] / 12 : 0
+					else
+						message_admins("INSANE PAY!! for [employee.real_name], DEFAULTING TO BASIC PAY")
+						payment = job.payscale * faction.payrate * faction.unpaid["[employee.real_name]"] / 12
+					if(payment && !money_transfer(faction.central_account, employee.real_name, "Payroll", 
+					payment))
 						faction.debts["[employee.real_name]"] += payment
 
 				to_chat(stack.owner, "Your [stack] buzzes, letting you know that you should be getting paid.")

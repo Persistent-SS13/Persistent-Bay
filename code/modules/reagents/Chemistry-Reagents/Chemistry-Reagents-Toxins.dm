@@ -85,11 +85,14 @@
 	if(alien == IS_PHOROSIAN ) //pure phoron helps them regain blood, since it's a staple in their blood. Also promotes healing.
 		M.add_chemical_effect(CE_BLOODRESTORE, 8 * removed)
 		M.heal_organ_damage(3 * removed, 3 * removed)
+	if(alien != IS_PHOROSIAN)
+		M.phoronation += removed //you should definitely not inject phoron what are you doing
 	..()
 
 /datum/reagent/toxin/phoron/affect_touch(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien != IS_PHOROSIAN)
 		M.take_organ_damage(0, removed * 0.1) //being splashed directly with phoron causes minor chemical burns
+		M.phoronation += removed * 0.1
 		if(prob(10 * fire_mult))
 			M.pl_effects()
 
@@ -295,7 +298,7 @@
 		return
 
 	var/mob/living/carbon/human/H = M
-	if(istype(H) && (H.species.flags & NO_SCAN))
+	if(istype(H) && (H.species.species_flags & SPECIES_FLAG_NO_SCAN))
 		return
 
 	if(M.dna)

@@ -409,18 +409,22 @@
 						src.state = 4
 						src.icon_state = "[frame_type]_4"
 				return
-
+	if(istype(P, /obj/item/stack)
+		if(state == 3)
+			if(frame_type in machines)
+				for(var/I in req_components)
+					
 	if(istype(P, /obj/item))
 		if(state == 3)
 			if(frame_type in machines)
 				for(var/I in req_components)
 					if(istype(P, I) && (req_components[I] > 0))
 						playsound(src.loc, 'sound/items/Deconstruct.ogg', 50, 1)
-						if(istype(P, /obj/item/stack/cable_coil))
-							var/obj/item/stack/cable_coil/CP = P
+						if(istype(P, /obj/item/stack))
+							var/obj/item/stack/CP = P
 							if(CP.get_amount() > 1)
 								var/camt = min(CP.amount, req_components[I]) // amount of cable to take, idealy amount required, but limited by amount provided
-								var/obj/item/stack/cable_coil/CC = new /obj/item/stack/cable_coil(src)
+								var/obj/item/stack/CC = new P.type(src)
 								CC.amount = camt
 								CC.update_icon()
 								CP.use(camt)
@@ -428,7 +432,7 @@
 								req_components[I] -= camt
 								update_desc()
 								break
-
+						/**
 						if(istype(P, /obj/item/stack/material/glass/reinforced))
 							var/obj/item/stack/material/glass/reinforced/CP = P
 							if(CP.get_amount() > 1)
@@ -441,7 +445,7 @@
 								req_components[I] -= camt
 								update_desc()
 								break
-
+						**/
 						user.drop_item()
 						P.forceMove(src)
 						components += P

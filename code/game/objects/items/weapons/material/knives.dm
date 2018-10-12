@@ -7,8 +7,8 @@
 	var/active = 0
 	w_class = ITEM_SIZE_SMALL
 	attack_verb = list("patted", "tapped")
-	force_divisor = 0.25 // 15 when wielded with hardness 60 (steel)
-	thrown_force_divisor = 0.25 // 5 when thrown with weight 20 (steel)
+	force_divisor = 0.1 // 6 when wieldness with hardness 60 (steel)
+	thrown_force_divisor = 0.2 // 4 when thrown with weight 20 (steel)
 
 /obj/item/weapon/material/butterfly/update_force()
 	if(active)
@@ -53,7 +53,7 @@
 	icon = 'icons/obj/kitchen.dmi'
 	icon_state = "knife"
 	desc = "A general purpose Chef's Knife made by SpaceCook Incorporated. Guaranteed to stay sharp for years to come."
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	sharp = 1
 	edge = 1
 	force_divisor = 0.15 // 9 when wielded with hardness 60 (steel)
@@ -80,5 +80,7 @@
 	icon = 'icons/obj/kitchen.dmi'
 	icon_state = "butch"
 	desc = "A huge thing used for chopping and chopping up meat. This includes clowns and clown-by-products."
+	matter = list(DEFAULT_WALL_MATERIAL = 14000)
+	w_class = ITEM_SIZE_LARGE
 	force_divisor = 0.25 // 15 when wielded with hardness 60 (steel)
 	attack_verb = list("cleaved", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")

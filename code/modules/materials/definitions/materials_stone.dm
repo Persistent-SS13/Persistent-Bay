@@ -4,6 +4,10 @@
 	flags = MATERIAL_UNMELTABLE
 	cut_delay = 60
 	icon_colour = "#00ffe1"
+	icon_base = "curvy"
+	icon_reinf = "curvy"
+	icon_door = "metal"
+	icon_table = "metal"
 	opacity = 0.4
 	shard_type = SHARD_SHARD
 	tableslam_noise = 'sound/effects/Glasshit.ogg'
@@ -29,13 +33,15 @@
 /material/stone
 	name = "sandstone"
 	stack_type = /obj/item/stack/material/sandstone
-	icon_base = "stone"
 	icon_colour = "#d9c179"
+	icon_base = "stone"
+	icon_reinf = "reinf_stone"
+	icon_door = "stone"
 	shard_type = SHARD_STONE_PIECE
 	weight = 22
 	hardness = 55
 	brute_armor = 3
-	door_icon_base = "stone"
+	icon_door = "stone"
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
 	conductive = 0

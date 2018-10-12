@@ -12,7 +12,7 @@
 	unacidable = 1
 	volume = 30
 	possible_transfer_amounts = null
-	flags = OPENCONTAINER
+	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	slot_flags = SLOT_BELT
 
 ///obj/item/weapon/reagent_containers/hypospray/New() //comment this to make hypos start off empty
@@ -92,7 +92,7 @@
 			if(!do_after(user,10) || loaded_vial || !(W in user))
 				return 0
 			if(W.is_open_container())
-				W.flags ^= OPENCONTAINER
+				W.atom_flags ^= ATOM_FLAG_OPEN_CONTAINER
 				W.update_icon()
 			user.drop_item()
 			W.forceMove(src)
@@ -126,7 +126,7 @@
 /obj/item/weapon/reagent_containers/hypospray/autoinjector/attack(mob/M as mob, mob/user as mob)
 	..()
 	if(reagents.total_volume <= 0) //Prevents autoinjectors to be refilled.
-		flags &= ~OPENCONTAINER
+		atom_flags &= ~ATOM_FLAG_OPEN_CONTAINER
 	update_icon()
 	return
 

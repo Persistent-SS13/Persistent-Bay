@@ -60,6 +60,8 @@
 	W.opaque_counter = opaque_counter
 
 	if(ispath(N, /turf/simulated))
+		var/turf/simulated/simu = W
+		simu.resources = old_resources
 		if(old_fire)
 			fire = old_fire
 		if (istype(W,/turf/simulated/floor) && old_type == /turf/simulated/asteroid)
@@ -111,7 +113,14 @@
 		src.decals = other.decals.Copy()
 		src.update_icon()
 	return 1
-
+	
+/turf/simulated/wall/transport_properties_from(turf/simulated/wall/other)
+	if(!..())
+		return 0
+	material = other.material
+	p_material = other.p_material
+	
+	
 //I would name this copy_from() but we remove the other turf from their air zone for some reason
 /turf/simulated/floor/transport_properties_from(turf/simulated/other)
 	if(!..())
@@ -119,11 +128,6 @@
 	if(istype(other, /turf/simulated/floor))
 		var/turf/simulated/floor/F = other
 		set_flooring(F.flooring)
-
-/turf/simulated/floor/transport_properties_from(turf/simulated/other)
-	if(!..())
-		return 0
-
 	if(other.zone)
 		if(!src.air)
 			src.make_air()

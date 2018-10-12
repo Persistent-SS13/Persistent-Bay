@@ -41,7 +41,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	robotize()
 
 /obj/item/organ/internal/stack/Destroy()
-	if(lacemob && lacemob.key && lacemob.key != "")
+	if(lacemob && ((lacemob.key && lacemob.key != "") || (lacemob.key && lacemob.key != "")))
 		loc = get_turf(loc)
 		log_and_message_admins("Attempted to destroy an in-use neural lace!")
 		return QDEL_HINT_LETMELIVE
@@ -90,21 +90,21 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	return 0
 
 /obj/item/organ/internal/stack/proc/get_owner()
-	if(owner)
-		return owner
-	if(istype(loc.loc, /mob/living/silicon/robot))
-		return loc.loc
 	if(lacemob)
 		return lacemob
+	if(istype(loc.loc, /mob/living/silicon/robot))
+		return loc.loc
+	if(owner)
+		return owner
 	return 0
 
 /obj/item/organ/internal/stack/ui_action_click()
-	if(owner)
-		ui_interact(owner)
+	if(lacemob)
+		ui_interact(lacemob)
 	else if(istype(loc, /obj/item/device/lmi) && istype(loc.loc, /mob/living/silicon/robot))
 		ui_interact(loc.loc)	// A robot
-	else if(lacemob)
-		ui_interact(lacemob)
+	else if(owner)
+		ui_interact(owner)
 	else
 		log_and_message_admins("[src] called ui_action_click without any owner!")
 
@@ -140,11 +140,23 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		if("die")
 			var/choice = input(usr,"THIS WILL PERMANENTLY KILL YOUR CHARACTER! YOU WILL NOT BE ALLOWED TO REMAKE THE SAME CHARACTER.") in list("Kill my character, return to character creation", "Cancel")
 			if(choice == "Kill my character, return to character creation")
-				lacemob.perma_dead = 1
+				if(input("Are you SURE you want to delete [CharacterName(save_slot, lacemob.ckey)]? THIS IS PERMANENT. enter the character\'s full name to conform.", "DELETE A CHARACTER", "") == CharacterName(save_slot, lacemob.ckey))
+					fdel(load_path(lacemob.ckey, "[save_slot].sav"))
+
 				var/mob/new_player/M = new /mob/new_player()
 				M.loc = null
-				lacemob.stored_ckey = lacemob.ckey
 				M.key = lacemob.key
+
+				lacemob.perma_dead = 1
+				lacemob.ckey = null
+				lacemob.stored_ckey = null
+				lacemob.save_slot = 0
+
+				owner?.perma_dead = 1
+				owner?.ckey = null
+				owner?.stored_ckey = null
+				owner?.save_slot = 0
+
 	GLOB.nanomanager.update_uis(src)
 
 /obj/item/organ/internal/stack/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.interactive_state)

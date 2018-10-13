@@ -193,13 +193,14 @@ Class Procs:
 					var/base_boil_point = min(gas_data.base_boil_point[lowertext(reagent_data.name)], gas_data.base_boil_point[gas])
 
 					var/boilPoint = base_boil_point+(BOIL_PRESSURE_MULTIPLIER*(air_data.return_pressure() - ONE_ATMOSPHERE))
-					if (air_data.temperature < boilPoint *0.99) //99% just to make it so fluids dont flicker between states
+					if (air_data.temperature < boilPoint *0.9991) //99% just to make it so fluids dont flicker between states
 						//START CONDENSATION PROCESS
 						var/obj/effect/decal/cleanable/puddle_chem/R_HOLDER = new(location) // game / objects / effects / chem / chempuddle.dm - Its basically liquid state substance.
 						R_HOLDER.reagents.add_reagent(R, possible_transfers*component_reagents[R]*REAGENT_GAS_EXCHANGE_FACTOR) // Get those sweet gas reagents back to liquid state by creating em on the puddlez
-						air_data.adjust_gas(gas, -possible_transfers, 1) //Removes from gas from the atmosphere. Doesn't work on farts doe you gotta vent the place.
+						air_data.adjust_gas(gas, -possible_transfers, update=0) //Removes from gas from the atmosphere. Doesn't work on farts doe you gotta vent the place.
 				qdel(reagent_data)
 
+		air_data.update_values()
 
 /zone/proc/dbg_data(mob/M)
 	to_chat(M, name)

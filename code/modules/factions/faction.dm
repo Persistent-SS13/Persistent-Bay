@@ -647,7 +647,7 @@ GLOBAL_LIST_EMPTY(all_business)
 	for(var/datum/computer_file/crew_record/R in records.faction_records)
 		if(R.get_name() == real_name)
 			return R
-	var/datum/computer_file/crew_record/L = Retrieve_Record_Faction(real_name, faction)
+	var/datum/computer_file/crew_record/L = Retrieve_Record_Faction(real_name, uid)
 	return L
 
 /datum/world_faction/proc/in_command(var/real_name)

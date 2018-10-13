@@ -13,7 +13,7 @@
 	var/account_type = 0	//0 - personal account
 							//1 - assignment category account
 							//3 - central faction account
-/datum/money_account/New()
+/datum/money_account/after_load()
 	if(get_account(account_number))
 	//	message_admins("duplicate account loaded owner: [owner_name] account_number: [account_number]")
 		qdel(src)

@@ -143,6 +143,7 @@
 	gas_molar_mass =    0.020
 
 	base_boil_point = 373.2
+	base_fusion_point = 273.15
 
 /datum/reagent/water/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(!istype(M, /mob/living/carbon/slime) && alien != IS_SLIME)
@@ -233,4 +234,3 @@
 /datum/reagent/fuel/touch_mob(var/mob/living/L, var/amount)
 	if(istype(L))
 		L.adjust_fire_stacks(amount / 10) // Splashing people with welding fuel to make them easy to ignite!
-

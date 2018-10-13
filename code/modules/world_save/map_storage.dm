@@ -378,10 +378,12 @@ var/global/list/debug_data = list()
 	var/savefile/f = new("record_saves/[key].sav")
 	var/datum/computer_file/crew_record/v
 	f >> v
-	if(v && v.linked_account) v.linked_account.after_load()
-	GLOB.all_crew_records |= v
-	f = null
-	return v
+	. = v
+	spawn(10)
+		if(v && v.linked_account) v.linked_account.after_load()
+		GLOB.all_crew_records |= v
+		f = null
+	
 
 /proc/Retrieve_Record_Faction(var/key, var/datum/world_faction/faction)
 	if(!fexists("record_saves/[faction.uid]/[key].sav")) return

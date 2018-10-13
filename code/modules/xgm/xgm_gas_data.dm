@@ -22,9 +22,9 @@
 	//Ratio of the reagents that one mole of the gas is (molecularly) made of.
 	var/list/component_reagents = list()
 
-	var/list/base_boil_point = list()
-	var/list/base_fusion_point = list()
-	var/list/generated_from_reagent = list()
+	var/list/base_boil_point = list() //stores all the gas and reagent's boiling point
+	var/list/base_fusion_point = list() //stores all the gas and reagent's fusion (aka melting) point values
+	var/list/generated_from_reagent = list() //consists of TRUE or FALSE values. gas_data.generated_from_reagent[gas/reagent] = 1 if the gas/reagent was generated from the reagent datums
 
 /decl/xgm_gas
 	var/id = ""
@@ -40,8 +40,10 @@
 	var/breathed_product
 	var/component_reagents
 
-	var/base_boiling_point = 100 //value in K (kelvins) until we don't define a boiling point specifically for each gas/reagent
+	var/base_boil_point = 100 //value in K (kelvins) until we don't define a boiling point specifically for each gas/reagent
+	var/base_fusion_point = 10
 	var/generated_from_reagent = 0
+
 /hook/startup/proc/generateGasData()
 	gas_data = new
 	for(var/p in (typesof(/decl/xgm_gas) - /decl/xgm_gas))
@@ -63,6 +65,10 @@
 		gas_data.burn_product[gas.id] = gas.burn_product
 		gas_data.breathed_product[gas.id] = gas.breathed_product
 		gas_data.component_reagents[gas.id] = gas.component_reagents
+
+		gas_data.base_boil_point[gas.id] = gas.base_boil_point
+		gas_data.base_fusion_point[gas.id] = gas.base_fusion_point
+		gas_data.generated_from_reagent[gas.id] = 0
 
 	//Reagent gases
 	for(var/r in (typesof(/datum/reagent) - /datum/reagent))

@@ -326,7 +326,7 @@ var/global/list/debug_data = list()
 	var/starttime = REALTIMEOFDAY
 	var/backup = 0
 	var/dir = 1
-
+	
 	while(!backup)
 		if(fexists("backups/[dir]/z1.sav"))
 			dir++
@@ -438,6 +438,8 @@ var/global/list/debug_data = list()
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
+			
+			
 		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
 		f = null
 	f = new("map_saves/extras.sav")

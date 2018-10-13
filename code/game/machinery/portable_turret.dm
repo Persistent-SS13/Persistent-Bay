@@ -490,6 +490,10 @@ var/list/turret_icons
 		if(assess_borgo(L) < 4)
 			return TURRET_NOT_TARGET	//if threat level < 4, keep going
 
+	if(issilicon(L)) // if the target is a silicon, analyze threat level
+		if(assess_borgo(L) < 4)
+			return TURRET_NOT_TARGET	//if threat level < 4, keep going
+
 	if(istype(L, /mob/living/bot)) //if the target is a bot, decide if it is ours
 		if(assess_bot(L))
 			return TURRET_NOT_TARGET

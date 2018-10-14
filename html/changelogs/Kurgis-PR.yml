@@ -36,7 +36,7 @@ changes:
   - rscadd: "Created new cargo tabs, along with various new orderables. This being flooring, custodial, livecargo, non-essentials, and assignments."
   - rscdel: "Removed the miscellaneous cargo tab."
   - rscdel: "Removed empty regeant cartridge order as you can craft them."
-  - rscdel: "Removed various \improper tags and labels from cargo which didn't need them."
+  - rscdel: "Removed various improper tags and labels from cargo which didn't need them."
   - rscdel: "Removed mention of the word crate or order from cargo orders, as it's already implied they will come in such a container."
   - tweak: "Adjusts the price of job crates, after moving their gear into other orders."
   - tweak: "Re-arranged cargo contents into various tabs, operations now focuses on the actual operation of Cargo. Job equipment/clothes have been moved into the new assignments tab. Various orders split between non-essentials and hospitality, with hospitality focusing on the usual duties of a Kitchen and Bar."

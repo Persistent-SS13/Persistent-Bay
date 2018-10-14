@@ -373,6 +373,8 @@
 	taste_description = "nothing"
 	reagent_state = LIQUID
 	color = "#cccccc"
+	base_boil_point = 90.19
+	base_fusion_point = 10.15 // fake fusion point for now
 
 /datum/reagent/oxygen/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_VOX || alien == IS_PHOROSIAN)
@@ -392,6 +394,8 @@
 	taste_description = "nothing"
 	reagent_state = LIQUID
 	color = "#c2c4c4"
+	base_boil_point = 77.36
+	base_fusion_point = 5.15 // fake fusion point for now
 
 /datum/reagent/hydrogen
 	name = "Hydrogen"

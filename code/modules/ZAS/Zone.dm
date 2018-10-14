@@ -180,9 +180,6 @@ Class Procs:
 		if(!isturf(location)) //should already be a turf but double check tho cuz weird shit happened on testing
 			location = pick(location.contents)
 		for(var/gas in air_data.gas)
-			if(!gas_data.component_reagents[gas])
-				continue	//we don't need to (nor we can) proceed if the gas wasn't made out of a 'known' reagent.
-
 			var/list/component_reagents = gas_data.component_reagents[gas]
 
 			var/possible_transfers = air_data.get_gas(gas)
@@ -191,15 +188,19 @@ Class Procs:
 
 			for(var/R in component_reagents)
 				var/datum/reagent/reagent_data = new R() //hacky
-				var/base_boil_point = reagent_data.base_boil_point
-				var/boilPoint = base_boil_point+(BOIL_PRESSURE_MULTIPLIER*(air_data.return_pressure() - ONE_ATMOSPHERE))
-				if (air_data.temperature < boilPoint *0.99) //99% just to make it so fluids dont flicker between states
-					//START CONDENSATION PROCESS
-					var/obj/effect/decal/cleanable/puddle_chem/R_HOLDER = new(location) // game / objects / effects / chem / chempuddle.dm - Its basically liquid state substance.
-					R_HOLDER.reagents.add_reagent(R, possible_transfers*component_reagents[R]*REAGENT_GAS_EXCHANGE_FACTOR) // Get those sweet gas reagents back to liquid state by creating em on the puddlez
-					air_data.adjust_gas(gas, -possible_transfers, 1) //Removes from gas from the atmosphere. Doesn't work on farts doe you gotta vent the place.
+				if (min(gas_data.base_boil_point[lowertext(reagent_data.name)], gas_data.base_boil_point[gas]) > 0 )
+					//if the component reagent has lower boiling point than the copound gas itself, the gas' boiling point will be used to calculate
+					var/base_boil_point = min(gas_data.base_boil_point[lowertext(reagent_data.name)], gas_data.base_boil_point[gas])
+
+					var/boilPoint = base_boil_point+(BOIL_PRESSURE_MULTIPLIER*(air_data.return_pressure() - ONE_ATMOSPHERE))
+					if (air_data.temperature < boilPoint *0.9991) //99% just to make it so fluids dont flicker between states
+						//START CONDENSATION PROCESS
+						var/obj/effect/decal/cleanable/puddle_chem/R_HOLDER = new(location) // game / objects / effects / chem / chempuddle.dm - Its basically liquid state substance.
+						R_HOLDER.reagents.add_reagent(R, possible_transfers*component_reagents[R]*REAGENT_GAS_EXCHANGE_FACTOR) // Get those sweet gas reagents back to liquid state by creating em on the puddlez
+						air_data.adjust_gas(gas, -possible_transfers, update=0) //Removes from gas from the atmosphere. Doesn't work on farts doe you gotta vent the place.
 				qdel(reagent_data)
 
+		air_data.update_values()
 
 /zone/proc/dbg_data(mob/M)
 	to_chat(M, name)

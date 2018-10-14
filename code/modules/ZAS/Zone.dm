@@ -171,6 +171,7 @@ Class Procs:
 // At the same time we might as well just check for any needs of condesating (? english)
 // TO-DO : Perhaps polish it a bit if it starts to lag
 /zone/proc/condensation_check()
+	/**
 	if (world.time < condense_buffer)
 		return
 	condense_buffer = world.time + 15 // 1.5 seconds between condensing
@@ -201,7 +202,7 @@ Class Procs:
 				qdel(reagent_data)
 
 		air_data.update_values()
-
+	**/
 /zone/proc/dbg_data(mob/M)
 	to_chat(M, name)
 	for(var/g in air.gas)

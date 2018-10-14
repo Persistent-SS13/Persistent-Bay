@@ -873,13 +873,19 @@ var/global/floorIsLava = 0
 	if(!check_rights(R_ADMIN))
 		return
 	var/savefile/f = new("map_saves/records.sav")
-	f.cd = "/extras"
-	from_file(f["records"],GLOB.all_crew_records)
-	if(!GLOB.all_crew_records)
-		message_admins("BROKE AS FUCK!!")
-		GLOB.all_crew_records = list()
-	from_file(f["factions"],GLOB.all_world_factions)	
-			
+	var/list/recovered = list()
+	var/list/recovering = list()
+	from_file(f["records"],recovered)
+	for(var/datum/computer_file/crew_record/record in recovered)
+		var/found = 0
+		for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+			found = 1
+			if(!record2.linked_account)
+				record2.linked_account = record.linked_account
+				record2.linked_account.after_load()
+		if(!found)
+			recovering |= record	
+	GLOB.all_crew_records |= recovering
 	
 /datum/admins/proc/autocryo()
 	set category = "Server"
@@ -959,7 +965,8 @@ var/global/floorIsLava = 0
 		if(!record.linked_account)
 			record.linked_account = create_account(record.get_name(), 0, null)
 			record.linked_account.remote_access_pin = 1111
-
+			record.linked_account.after_load()
+			record.linked_account.money = 1000
 
 /datum/admins/proc/delete_account()
 	set category = "Server"

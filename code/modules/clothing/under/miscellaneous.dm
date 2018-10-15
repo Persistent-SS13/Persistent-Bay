@@ -377,9 +377,113 @@
 	worn_state = "plaid_purple"
 
 //wedding stuff
+
+/obj/item/clothing/under/dress/red_evening_gown
+	name = "red evening gown"
+	desc = "A fancy red evening gown. Gorgeous."
+	icon_state = "red_evening_gown"
+	item_state = "kilt"
+	worn_state = "red_evening_gown"
+
+/obj/item/clothing/under/maid
+	name = "maid uniform"
+	desc = "A black maid uniform."
+	icon_state = "maid"
+	item_state = "w_suit"
+	worn_state = "maid"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+
+/obj/item/clothing/under/finemaid
+	name = "fine maid uniform"
+	desc = "A fine black maid uniform. The apron comes built in."
+	icon_state = "janimaid"
+	item_state = "w_suit"
+	worn_state = "janimaid"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+
+/obj/item/clothing/under/purpleskirt
+	name = "purple skirt"
+	desc = "A dark purple skirt."
+	icon_state = "purpleskirt"
+	item_state = "w_suit"
+	worn_state = "purpleskirt"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+
+/obj/item/clothing/under/dress/striped_dress
+	name = "striped dress"
+	desc = "A striped dress."
+	icon_state = "striped_dress"
+	item_state = "kilt"
+	worn_state = "striped_dress"
+
+/obj/item/clothing/under/blueskirt
+	name = "blue skirt"
+	desc = "A blue skirt."
+	icon_state = "blueskirt"
+	item_state = "w_suit"
+	worn_state = "blueskirt"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+
+/obj/item/clothing/under/redskirt
+	name = "red skirt"
+	desc = "A red skirt."
+	icon_state = "redskirt"
+	item_state = "w_suit"
+	worn_state = "redskirt"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO	
+	
+
+/obj/item/clothing/under/dress/sailor_dress
+	name = "sailor dress"
+	desc = "A red sailor dress."
+	icon_state = "sailor_dress"
+	item_state = "kilt"
+	worn_state = "sailor_dress"
+	
+	
+/obj/item/clothing/under/dress/geisha
+	name = "geisha dress"
+	desc = "A traditional geisha dress."
+	icon_state = "geisha"
+	item_state = "kilt"
+	worn_state = "geisha"	
+	
+/obj/item/clothing/under/dress/draculass
+	name = "sexy black coat"
+	desc = "A sexy black coat with a red blouse and lace."
+	icon_state = "geisha"
+	item_state = "kilt"
+	worn_state = "geisha"	
+	
+/obj/item/clothing/under/dress/ysing
+	name = "eastern dress"
+	desc = "A dress in the style of the far east."
+	icon_state = "ysing"
+	item_state = "kilt"
+	worn_state = "ysing"		
+	
+	
+/obj/item/clothing/under/secskirt
+	name = "security skirt"
+	desc = "A skirt in traditional security red and black."
+	icon_state = "secskirt"
+	item_state = "w_suit"
+	worn_state = "secskirt"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO	
+		
+	
+	
+	
 /obj/item/clothing/under/wedding/
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS
 
+	
+	
+	
+	
+	
+	
+	
 /obj/item/clothing/under/wedding/bride_orange
 	name = "orange wedding dress"
 	desc = "A big and puffy orange dress."

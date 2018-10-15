@@ -865,6 +865,62 @@ var/global/floorIsLava = 0
 			record.email.login = "[replacetext(record.get_name(), " ", "_")]@freemail.nt"
 			record.email.password = "recovery[rand(1,99)]"
 
+/datum/admins/proc/fixrecords()
+	set category = "Server"
+	set desc="Fixes crew records"
+	set name="fix crew recrods"
+
+	if(!check_rights(R_ADMIN))
+		return
+	var/savefile/f = new("map_saves/records.sav")
+	var/list/recovered = list()
+	var/list/recovering = list()
+	from_file(f["records"],recovered)
+	for(var/datum/computer_file/crew_record/record in recovered)
+		var/found = 0
+		for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+			found = 1
+			if(!record2.linked_account)
+				record2.linked_account = record.linked_account
+				record2.linked_account.after_load()
+		if(!found)
+			recovering |= record	
+	GLOB.all_crew_records |= recovering
+	
+/datum/admins/proc/autocryo()
+	set category = "Server"
+	set desc="Autocryo"
+	set name="autocryo"
+
+	if(!check_rights(R_ADMIN))
+		return
+	var/obj/machinery/cryopod/cryo = new()
+	for(var/mob/living/carbon/human/H in world)
+		if(!H.loc) continue
+		cryo.occupant = H
+		cryo.despawnOccupant(1)
+					
+/datum/admins/proc/spacejunk()
+	set category = "Server"
+	set desc="Delete Space Junk"
+	set name="Delete Space Junk"
+
+	if(!check_rights(R_ADMIN))
+		return
+	for(var/turf/space/T in world)
+		var/found_lattice
+		if(!istype(T.loc, /area/space))
+			continue
+		for(var/obj/structure/lattice/lattice in T.contents)
+			found_lattice = 1
+			break
+		for(var/obj/structure/grille/grille in T.contents)
+			found_lattice = 1
+		if(found_lattice) continue
+		for(var/obj/ob in T.contents)
+			ob.loc = null
+			qdel(ob)					
+	
 /datum/admins/proc/retrieve_email()
 	set category = "Server"
 	set desc = "Retrieve Email"
@@ -909,7 +965,8 @@ var/global/floorIsLava = 0
 		if(!record.linked_account)
 			record.linked_account = create_account(record.get_name(), 0, null)
 			record.linked_account.remote_access_pin = 1111
-
+			record.linked_account.after_load()
+			record.linked_account.money = 1000
 
 /datum/admins/proc/delete_account()
 	set category = "Server"

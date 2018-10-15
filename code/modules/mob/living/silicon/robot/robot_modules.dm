@@ -600,6 +600,7 @@ var/global/list/robot_modules = list(
 					"Drone" = "drone-miner",
 					"Doot" = "eyebot-miner"
 				)
+	no_slip = 1
 	supported_upgrades = list(/obj/item/borg/upgrade/jetpack)
 	module_type = "miner"
 	robo_icon_state = "robotMine"

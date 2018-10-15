@@ -425,7 +425,7 @@
 	result_amount = 2
 
 /* Solidification */
-
+/**
 /datum/chemical_reaction/phoronsolidification
 	name = "Solid Phoron"
 	result = null
@@ -434,7 +434,7 @@
 
 /datum/chemical_reaction/phoronsolidification/on_reaction(var/datum/reagents/holder, var/created_volume)
 	new /obj/item/stack/material/phoron(get_turf(holder.my_atom), created_volume)
-
+**/
 /datum/chemical_reaction/plastication
 	name = "Plastic"
 	result = null

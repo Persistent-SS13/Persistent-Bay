@@ -324,6 +324,9 @@
 						found = 1
 						break
 				if(!found)
+					var/datum/computer_file/crew_record/L = Retrieve_Record(select_name)
+					if(L) found = 1
+				if(!found)
 					to_chat(usr, "No record found for [select_name]. Verify Employee Identity.")
 					return
 
@@ -378,6 +381,8 @@
 						record = R
 						break
 				if(!record)
+					record = Retrieve_Record(user_id_card.registered_name)
+				if(!record)
 					message_admins("NO global record found for [usr.real_name]")
 					to_chat(usr, "No record found for [usr.real_name].. contact software developer.")
 					return
@@ -409,6 +414,8 @@
 					if(R.get_name() == user_id_card.registered_name)
 						record = R
 						break
+				if(!record)
+					record = Retrieve_Record(user_id_card.registered_name)
 				if(!record)
 					message_admins("NO global record found for [usr.real_name]")
 					to_chat(usr, "No record found for [usr.real_name].. contact software developer.")
@@ -677,6 +684,9 @@
 						if(R.get_name() == select_name)
 							found = 1
 							break
+					if(!found)
+						var/datum/computer_file/crew_record/L = Retrieve_Record(select_name)
+						if(L) found = 1
 					if(!found)
 						to_chat(usr, "No record found for [select_name]. Verify Identity.")
 						return

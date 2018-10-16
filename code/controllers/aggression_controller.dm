@@ -396,7 +396,7 @@ var/datum/controller/aggression_controller/aggression_controller
 			for(var/mob/M in mob_targets)
 				to_chat(M, pick("The ground trembles below you, you feel as if your worst fears are coming true.", "You dont want to die on this asteroid!"))
 				M.playsound_local(M.loc, pick('sound/effects/earthquake_short.ogg','sound/effects/earthquake_short2.ogg'), 40, 0)
-				M << 'sound/ambience/ambigen5.ogg'
+				sound_to(M, 'sound/ambience/ambigen5.ogg')
 				shake_camera(M, 15, 3)
 			if(drill_targets.len || mob_targets.len)
 				var/forced_spawns = 3
@@ -436,7 +436,7 @@ var/datum/controller/aggression_controller/aggression_controller
 			for(var/mob/M in mob_targets)
 				to_chat(M, pick("<span class='danger'>A constant drone in your ear suddenly manifests as a flurry of thoughts an emotions, overlapping so you cant make any sense of it. You feel you are being driven mad!</span>", "<span class='danger'>You imagine your own gruesome death at the hands of a creature of abject hatred!</span>"))
 				M.playsound_local(M.loc, pick('sound/effects/earthquake_short.ogg','sound/effects/earthquake_short2.ogg'), 60, 0)
-				M << 'sound/ambience/ambigen11.ogg'
+				sound_to(M, 'sound/ambience/ambigen11.ogg')
 				shake_camera(M, 20, 4)
 				
 			if(drill_targets.len || mob_targets.len)
@@ -477,7 +477,7 @@ var/datum/controller/aggression_controller/aggression_controller
 			for(var/mob/M in mob_targets)
 				to_chat(M, pick("<span class='danger'>'You are violating creation itself. Your death will be a mercy' One of the voices booms, and you feel queezy</span>", "<span class='danger'>You get an incredible sense of the pain that these monsters will cause! Block out the voices!</span>"))
 				M.playsound_local(M.loc, pick('sound/effects/earthquake_short.ogg','sound/effects/earthquake_short2.ogg'), 75, 0)
-				M << 'sound/ambience/yewbic_ambience.ogg'
+				sound_to(M, 'sound/ambience/yewbic_ambience.ogg')
 				shake_camera(M, 30, 4)
 				
 			if(drill_targets.len || mob_targets.len)
@@ -521,7 +521,7 @@ var/datum/controller/aggression_controller/aggression_controller
 			for(var/mob/M in mob_targets)
 				to_chat(M, pick("<span class='danger'>'YOU SAVAGE! YOU WELP! YOU DESERVE THE END THAT IS COMING!', Block the voices out! Block them out!</span>", "<span class='danger'>'A POX ON CREATION, AN END TO ALL THINGS! VOID--..' You don't want to understand! Your mind recoils into itself!</span>"))
 				M.playsound_local(M.loc, pick('sound/effects/earthquake_short.ogg','sound/effects/earthquake_short2.ogg'), 100, 0)
-				M << 'sound/ambience/yewbic_ambience2.ogg'
+				sound_to(M, 'sound/ambience/yewbic_ambience2.ogg')
 				shake_camera(M, 45, 4)
 				
 			if(drill_targets.len || mob_targets.len)

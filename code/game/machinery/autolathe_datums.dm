@@ -191,7 +191,7 @@ var/const/EXTRA_COST_FACTOR = 1
 	path = /obj/item/stack/material/glass/reinforced
 	category = "General"
 	is_stack = 1
-	resources = list("glass" = (SHEET_MATERIAL_AMOUNT/2) * EXTRA_COST_FACTOR, "steel" = (SHEET_MATERIAL_AMOUNT/2) * EXTRA_COST_FACTOR)
+	resources = list("glass" = (SHEET_MATERIAL_AMOUNT * EXTRA_COST_FACTOR / 2), "steel" = (SHEET_MATERIAL_AMOUNT * EXTRA_COST_FACTOR / 2))
 
 /datum/autolathe/recipe/rods
 	name = "metal rods"

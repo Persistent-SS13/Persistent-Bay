@@ -277,33 +277,33 @@
 			if(prob(0.01 * phoronation))
 				if(chem_effects[CE_MIND] > 0)
 					to_chat(src, pick(
-                         "You feel calm.",
-                        "You feel pleasantly enagaged.",
-                        "You feel fine."))
+						 "You feel calm.",
+						"You feel pleasantly enagaged.",
+						"You feel fine."))
 				else
 					to_chat(src, pick(
-                        "<span class='warning'>You feel shame.</span>",
-                        "<span class='warning'>You feel anxious.</span>",
-                        "<span class='warning'>You feel regret.</span>",
-                        "<span class='warning'>The ground beneath you feels unsteady.</span>",
-                        "<span class='warning'>The world flashes orange for a second.</span>"))
+						"<span class='warning'>You feel shame.</span>",
+						"<span class='warning'>You feel anxious.</span>",
+						"<span class='warning'>You feel regret.</span>",
+						"<span class='warning'>The ground beneath you feels unsteady.</span>",
+						"<span class='warning'>The world flashes orange for a second.</span>"))
 		if (phoronation > 40)
 			if(prob(0.01 * phoronation))
 				if(chem_effects[CE_MIND] > 0)
 					to_chat(src, pick (
-                        "You feel calm.",
-                        "You feel quite engaged.",
-                        "You briefly think about the Rock."))
+						"You feel calm.",
+						"You feel quite engaged.",
+						"You briefly think about the Rock."))
 				else
 					to_chat(src, pick(
-                        "<span class='warning'>The floor rattles under you, you struggle to maintain balance!</span>",
-                        "<span class='warning'>A whisper in your head... pain...</span>",
-                        "<span class='warning'>The silence of the Rock echoes in your mind.</span>",
-                        "<span class='warning'>You hear a mining drill in the distance.</span>",
-                        "<span class='warning'>You hear the squeal of a mining cyborg's gears.</span>",
-                        "<span class='warning'>The creature in your mind has thousands of teeth.</span>",
-                        "<span class='warning'>The ground angrily trembles beneath your feet.</span>",
-                        "<span class='warning'>You can see slugs, for a brief moment, as far as the eye can see.</span>"))
+						"<span class='warning'>The floor rattles under you, you struggle to maintain balance!</span>",
+						"<span class='warning'>A whisper in your head... pain...</span>",
+						"<span class='warning'>The silence of the Rock echoes in your mind.</span>",
+						"<span class='warning'>You hear a mining drill in the distance.</span>",
+						"<span class='warning'>You hear the squeal of a mining cyborg's gears.</span>",
+						"<span class='warning'>The creature in your mind has thousands of teeth.</span>",
+						"<span class='warning'>The ground angrily trembles beneath your feet.</span>",
+						"<span class='warning'>You can see slugs, for a brief moment, as far as the eye can see.</span>"))
 					src.hallucination(50, 50)
 
 	/** breathing **/

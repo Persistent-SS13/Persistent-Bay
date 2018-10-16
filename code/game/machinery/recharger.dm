@@ -11,18 +11,43 @@ obj/machinery/recharger
 	active_power_usage = 30 KILOWATTS
 	var/obj/item/charging = null
 	var/list/allowed_devices = list(/obj/item/weapon/gun/energy, /obj/item/weapon/gun/magnetic/railgun, /obj/item/weapon/melee/baton, /obj/item/weapon/cell, /obj/item/modular_computer/, /obj/item/device/suit_sensor_jammer, /obj/item/weapon/computer_hardware/battery_module, /obj/item/weapon/shield_diffuser)
+	var/list/disallowed_devices = list(/obj/item/weapon/gun/energy/plasmacutter, /obj/item/weapon/gun/energy/staff, /obj/item/weapon/gun/energy/gun/nuclear, /obj/item/weapon/gun/energy/crossbow)
 	var/icon_state_charged = "recharger2"
 	var/icon_state_charging = "recharger1"
 	var/icon_state_idle = "recharger0" //also when unpowered
 	var/portable = 1
 
-obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
+/obj/machinery/recharger/New()
+	..()
+	//Create parts for Machine
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/machinery/recharger(src)
+	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	RefreshParts()
+
+/obj/machinery/recharger/Destroy()
+	if(charging)
+		charging.forceMove(get_turf(src))
+	qdel()
+	return ..()
+
+/obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 	if(istype(user,/mob/living/silicon))
 		return
 
 	var/allowed = 0
-	for (var/allowed_type in allowed_devices)
-		if (istype(G, allowed_type)) allowed = 1
+
+	checking_allowed:
+		for(var/allowed_type in allowed_devices)
+			if(istype(G, allowed_type))
+				for(var/disallowed_type in disallowed_devices)
+					if(istype(G, disallowed_type))
+						break checking_allowed
+				allowed = 1
+				break checking_allowed
 
 	if(allowed)
 		if(charging)
@@ -31,11 +56,6 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 		// Checks to make sure he's not in space doing it, and that the area got proper power.
 		if(!powered())
 			to_chat(user, "<span class='warning'>The [name] blinks red as you try to insert the item!</span>")
-			return
-		if (istype(G, /obj/item/weapon/gun/energy/gun/nuclear) || istype(G, /obj/item/weapon/gun/energy/crossbow))
-			to_chat(user, "<span class='notice'>Your gun's recharge port was removed to make room for a miniaturized reactor.</span>")
-			return
-		if (istype(G, /obj/item/weapon/gun/energy/staff))
 			return
 		if(istype(G, /obj/item/modular_computer))
 			var/obj/item/modular_computer/C = G
@@ -65,7 +85,17 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 		to_chat(user, "You [anchored ? "attached" : "detached"] the recharger.")
 		playsound(loc, 'sound/items/Ratchet.ogg', 75, 1)
 
-obj/machinery/recharger/attack_hand(mob/user as mob)
+/obj/machinery/recharger/attackby(var/obj/item/O as obj, var/mob/user as mob)
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, O))
+		return
+	if(default_part_replacement(user, O))
+		return
+	return ..()
+
+/obj/machinery/recharger/attack_hand(mob/user as mob)
 	if(istype(user,/mob/living/silicon))
 		return
 
@@ -77,7 +107,7 @@ obj/machinery/recharger/attack_hand(mob/user as mob)
 		charging = null
 		update_icon()
 
-obj/machinery/recharger/Process()
+/obj/machinery/recharger/Process()
 	if(stat & (NOPOWER|BROKEN) || !anchored)
 		update_use_power(0)
 		icon_state = icon_state_idle
@@ -121,7 +151,7 @@ obj/machinery/recharger/Process()
 				update_use_power(1)
 			return
 
-obj/machinery/recharger/emp_act(severity)
+/obj/machinery/recharger/emp_act(severity)
 	if(stat & (NOPOWER|BROKEN) || !anchored)
 		..(severity)
 		return
@@ -142,14 +172,14 @@ obj/machinery/recharger/emp_act(severity)
 			RG.cell.charge = 0
 	..(severity)
 
-obj/machinery/recharger/update_icon()	//we have an update_icon() in addition to the stuff in process to make it feel a tiny bit snappier.
+/obj/machinery/recharger/update_icon()	//we have an update_icon() in addition to the stuff in process to make it feel a tiny bit snappier.
 	if(charging)
 		icon_state = icon_state_charging
 	else
 		icon_state = icon_state_idle
 
 
-obj/machinery/recharger/wallcharger
+/obj/machinery/recharger/wallcharger
 	name = "wall recharger"
 	desc = "A heavy duty wall recharger specialized for energy weaponry."
 	icon = 'icons/obj/stationobjs.dmi'

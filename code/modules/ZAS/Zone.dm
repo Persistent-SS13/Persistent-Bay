@@ -171,6 +171,7 @@ Class Procs:
 // At the same time we might as well just check for any needs of condesating (? english)
 // TO-DO : Perhaps polish it a bit if it starts to lag
 /zone/proc/condensation_check()
+	/**
 	if (world.time < condense_buffer)
 		return
 	condense_buffer = world.time + 5 // 1.5 seconds between condensing
@@ -201,7 +202,7 @@ Class Procs:
 						air_data.adjust_gas(gas, -possible_transfers, update=0) //Removes from gas from the atmosphere. Doesn't work on farts doe you gotta vent the place.
 
 		air_data.update_values()
-
+	**/
 /zone/proc/dbg_data(mob/M)
 	to_chat(M, name)
 	for(var/g in air.gas)

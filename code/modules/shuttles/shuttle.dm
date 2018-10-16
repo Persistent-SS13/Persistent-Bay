@@ -136,9 +136,6 @@
 	testing("[src] moving to [destination]. Areas are [english_list(shuttle_area)]")
 	var/list/translation = list()
 	for(var/area/A in shuttle_area)
-		if(istype(A, /area/space))
-			message_admins("OHHH GOD [src] IS TRYING TO MOVE SPACE!! NOOOOOOOOO")
-			return
 		testing("Moving [A]")
 		translation += get_turf_translation(get_turf(current_location), get_turf(destination), A.contents)
 	shuttle_moved(destination, translation)

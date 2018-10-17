@@ -129,7 +129,7 @@ area/space/atmosalert()
 	icon_state = "sec_prison"
 
 /area/maintenance
-	flags = AREA_RAD_SHIELDED
+	area_flags = AREA_FLAG_RAD_SHIELDED
 	sound_env = TUNNEL_ENCLOSED
 
 /area/rnd/xenobiology

@@ -105,7 +105,7 @@ I said no!
 /datum/recipe/fishburger
 	items = list(
 		/obj/item/weapon/reagent_containers/food/snacks/bun,
-		/obj/item/weapon/reagent_containers/food/snacks/carpmeat
+		/obj/item/weapon/reagent_containers/food/snacks/fish
 	)
 	result = /obj/item/weapon/reagent_containers/food/snacks/fishburger
 
@@ -383,7 +383,7 @@ I said no!
 	fruit = list("chili" = 1)
 	items = list(
 		/obj/item/weapon/reagent_containers/food/snacks/dough,
-		/obj/item/weapon/reagent_containers/food/snacks/carpmeat
+		/obj/item/weapon/reagent_containers/food/snacks/fish
 	)
 	result = /obj/item/weapon/reagent_containers/food/snacks/cubancarp
 
@@ -599,7 +599,7 @@ I said no!
 /datum/recipe/fishandchips
 	items = list(
 		/obj/item/weapon/reagent_containers/food/snacks/fries,
-		/obj/item/weapon/reagent_containers/food/snacks/carpmeat,
+		/obj/item/weapon/reagent_containers/food/snacks/fish,
 	)
 	result = /obj/item/weapon/reagent_containers/food/snacks/fishandchips
 
@@ -837,7 +837,7 @@ I said no!
 	reagents = list(/datum/reagent/nutriment/flour = 10)
 	items = list(
 		/obj/item/weapon/reagent_containers/food/snacks/egg,
-		/obj/item/weapon/reagent_containers/food/snacks/carpmeat,
+		/obj/item/weapon/reagent_containers/food/snacks/fish,
 	)
 	result = /obj/item/weapon/reagent_containers/food/snacks/fishfingers
 

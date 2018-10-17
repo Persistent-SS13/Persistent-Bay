@@ -2,8 +2,8 @@
 //////////////////////////////////////////////////////////////////
 //						BONE SURGERY							//
 //////////////////////////////////////////////////////////////////
-
-
+#define DUCTTAPE_NEEDED_BONEGELLING 30
+#define DUCTTAPE_NEEDED_POST_BONEGELLING 15
 
 
 
@@ -23,6 +23,11 @@
 	shock_level = 20
 
 /datum/surgery_step/glue_bone/can_use(mob/living/user, mob/living/carbon/human/target, target_zone, obj/item/tool)
+	if(istype(tool, /obj/item/weapon/tape_roll))
+		var/obj/item/weapon/tape_roll/thetape = tool
+		if(!thetape.has_enough_tape_left(DUCTTAPE_NEEDED_BONEGELLING))
+			user.visible_message("<span class='warning'>You need at least [DUCTTAPE_NEEDED_BONEGELLING] tape strip\s to do this!</span>")
+			return 0
 	if (!hasorgans(target))
 		return 0
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
@@ -43,6 +48,9 @@
 	user.visible_message("<span class='notice'>[user] applies some [tool.name] to [bone]</span>", \
 		"<span class='notice'>You apply some [tool.name] to [bone].</span>")
 	affected.stage = 1
+	if(istype(tool, /obj/item/weapon/tape_roll))
+		var/obj/item/weapon/tape_roll/thetape = tool
+		thetape.use_tape(DUCTTAPE_NEEDED_BONEGELLING)
 
 /datum/surgery_step/glue_bone/fail_step(mob/living/user, mob/living/carbon/human/target, target_zone, obj/item/tool)
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
@@ -153,6 +161,11 @@
 	shock_level = 20
 
 /datum/surgery_step/finish_bone/can_use(mob/living/user, mob/living/carbon/human/target, target_zone, obj/item/tool)
+	if(istype(tool, /obj/item/weapon/tape_roll))
+		var/obj/item/weapon/tape_roll/thetape = tool
+		if(!thetape.has_enough_tape_left(DUCTTAPE_NEEDED_POST_BONEGELLING))
+			user.visible_message("<span class='warning'>You need at least [DUCTTAPE_NEEDED_POST_BONEGELLING] tape strip\s to do this!</span>")
+			return 0
 	if (!hasorgans(target))
 		return 0
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
@@ -172,8 +185,14 @@
 		"<span class='notice'>You have mended the damaged [bone] with \the [tool].</span>" )
 	affected.status &= ~ORGAN_BROKEN
 	affected.stage = 0
+	if(istype(tool, /obj/item/weapon/tape_roll))
+		var/obj/item/weapon/tape_roll/thetape = tool
+		thetape.use_tape(DUCTTAPE_NEEDED_POST_BONEGELLING)
 
 /datum/surgery_step/finish_bone/fail_step(mob/living/user, mob/living/carbon/human/target, target_zone, obj/item/tool)
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='warning'>[user]'s hand slips, smearing [tool] in the incision in [target]'s [affected.name]!</span>" , \
 	"<span class='warning'>Your hand slips, smearing [tool] in the incision in [target]'s [affected.name]!</span>")
+
+#undef DUCTTAPE_NEEDED_BONEGELLING
+#undef DUCTTAPE_NEEDED_POST_BONEGELLING

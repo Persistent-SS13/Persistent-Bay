@@ -136,12 +136,24 @@
 	testing("[src] moving to [destination]. Areas are [english_list(shuttle_area)]")
 	var/list/translation = list()
 	for(var/area/A in shuttle_area)
+		if(istype(A, /area/space))
+			message_admins("OHHH GOD [src] IS TRYING TO MOVE SPACE!! NOOOOOOOOO")
+			return
 		testing("Moving [A]")
 		translation += get_turf_translation(get_turf(current_location), get_turf(destination), A.contents)
 	shuttle_moved(destination, translation)
 	return TRUE
 
-
+/datum/shuttle/proc/get_corner_turf()
+	var/list/turfs = list()
+	for(var/area/A in shuttle_area)
+		for(var/turf/T in A.contents)
+			turfs |= T
+	var/turf/corner		
+	for(var/turf/T in turfs)
+		if(!corner || (T.x <= corner.x && T.y <= corner.y))
+			corner = T
+	return corner
 //just moves the shuttle from A to B, if it can be moved
 //A note to anyone overriding move in a subtype. shuttle_moved() must absolutely not, under any circumstances, fail to move the shuttle.
 //If you want to conditionally cancel shuttle launches, that logic must go in short_jump(), long_jump() or attempt_move()
@@ -154,7 +166,7 @@
 		var/turf/dst_turf = turf_translation[src_turf]
 		if(src_turf.is_solid_structure()) //in case someone put a hole in the shuttle and you were lucky enough to be under it
 			for(var/atom/movable/AM in dst_turf)
-				if(!AM.simulated)
+				if(1)//!AM.simulated)
 					continue
 				if(isliving(AM))
 					var/mob/living/bug = AM

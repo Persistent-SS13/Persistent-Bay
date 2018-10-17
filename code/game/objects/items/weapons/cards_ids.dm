@@ -201,6 +201,8 @@ var/const/NO_EMAG_ACT = -50
 			record = record2
 			break
 	if(!record)
+		record = Retrieve_Record(name)
+	if(!record)
 		message_admins("no record found for [name]")
 		return
 

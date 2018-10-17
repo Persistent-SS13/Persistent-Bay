@@ -327,6 +327,12 @@ Buildable meters
 	set name = "Rotate Pipe"
 	set src in view(1)
 
+	if(!usr || !Adjacent(usr))
+		return
+	
+	if(usr.incapacitated())
+		return
+
 	if ( usr.stat || usr.restrained() )
 		return
 

@@ -526,34 +526,23 @@
 	//var/datum/gas_mixture/environment = local.air
 
 	for(var/gas in air_contents.gas)
-		var/possible_transfers = min(air_contents.get_gas(gas),  transfer_moles, air_contents.get_gas(gas)/air_contents.total_moles *transfer_moles )
+		var/list/component_reagents = gas_data.component_reagents[gas]
+
+		var/possible_transfers = air_contents.get_gas(gas)
 		if(!possible_transfers) //If we're out of gas boi. Shouldn't probably happen to be honest as the gas should be removed from the list
 			break //Doesnt mean we shouldn't prevent condensating non existent gas anyways so fuck it.
 
-		var/list/component_reagents = gas_data.component_reagents[gas]
 		for(var/R in component_reagents)
 			var/datum/reagent/reagent_data = new R() //hacky
-			if (min(gas_data.base_boil_point[lowertext(reagent_data.name)], gas_data.base_boil_point[gas]) > 0 )
+			if (gas_data.base_boil_point[lowertext(reagent_data.name)] > 0)
 				//if the component reagent has lower boiling point than the copound gas itself, the gas' boiling point will be used to calculate
 				var/base_boil_point = min(gas_data.base_boil_point[lowertext(reagent_data.name)], gas_data.base_boil_point[gas])
 
 				var/boilPoint = base_boil_point+(BOIL_PRESSURE_MULTIPLIER*(air_contents.return_pressure() - ONE_ATMOSPHERE))
-				if (air_contents.temperature < boilPoint *0.9991) //99% just to make it so fluids dont flicker between states
+				if (air_contents.temperature < boilPoint *0.99) //99% just to make it so fluids dont flicker between states
 					//START CONDENSATION PROCESS
-					var/obj/effect/decal/cleanable/puddle_chem/R_HOLDER
-					var/has_puddle = 0
-					for (var/obj/effect/decal/cleanable/puddle_chem/puddle in local.contents)
-						has_puddle += 1
-						if(puddle.reagents.total_volume + possible_transfers*component_reagents[R]*REAGENT_GAS_EXCHANGE_FACTOR <= puddle.reagents.maximum_volume )
-							R_HOLDER = puddle
-						break
-
-					if (has_puddle && !R_HOLDER)
-						continue // skip, the tile is full.
-					if (!has_puddle)
-						R_HOLDER = new(local) // game / objects / effects / chem / chempuddle.dm - Its basically liquid state substance.
+					var/obj/effect/decal/cleanable/puddle_chem/R_HOLDER = new(local) // game / objects / effects / chem / chempuddle.dm - Its basically liquid state substance.
 					R_HOLDER.reagents.add_reagent(R, possible_transfers*component_reagents[R]*REAGENT_GAS_EXCHANGE_FACTOR) // Get those sweet gas reagents back to liquid state by creating em on the puddlez
 					air_contents.adjust_gas(gas, -possible_transfers, 1) //Removes from gas from the atmosphere. Doesn't work on farts doe you gotta vent the place.
-					transfer_moles -= possible_transfers*component_reagents[R]
 			qdel(reagent_data)
 	return transfer_moles //todo: return the actual amount of transfers

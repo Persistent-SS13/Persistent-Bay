@@ -5,7 +5,7 @@
 	icon = 'icons/obj/computer.dmi'
 	icon_keyboard = "atmos_key"
 	icon_screen = "shuttle"
-	circuit = null
+	circuit = /obj/item/weapon/circuitboard/bridge_computer
 
 	var/shuttle_tag  // Used to coordinate data in shuttle controller.
 	var/hacked = 0   // Has been emagged, no access restrictions.

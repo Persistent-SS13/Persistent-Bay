@@ -273,6 +273,18 @@ obj/machinery/atmospherics/trinary/filter/m_filter/New()
 		if(WEST)
 			initialize_directions = WEST|SOUTH|EAST
 
+obj/machinery/atmospherics/trinary/filter/m_filter/after_load()
+	..()
+	switch(dir)
+		if(NORTH)
+			initialize_directions = WEST|NORTH|SOUTH
+		if(SOUTH)
+			initialize_directions = SOUTH|EAST|NORTH
+		if(EAST)
+			initialize_directions = EAST|WEST|NORTH
+		if(WEST)
+			initialize_directions = WEST|SOUTH|EAST
+
 /obj/machinery/atmospherics/trinary/filter/m_filter/Initialize()
 	. = ..()
 	set_frequency(frequency)

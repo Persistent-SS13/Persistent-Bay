@@ -872,15 +872,20 @@ var/global/floorIsLava = 0
 
 	if(!check_rights(R_ADMIN))
 		return
-	var/savefile/f = new("map_saves/extras.sav")
-	var/list/restore_records
-	from_file(f["records"],restore_records)
-	for(var/datum/computer_file/crew_record/record in restore_records)
-	
+	var/savefile/f = new("map_saves/records.sav")
+	var/list/recovered = list()
+	var/list/recovering = list()
+	from_file(f["records"],recovered)
+	for(var/datum/computer_file/crew_record/record in recovered)
+		var/found = 0
 		for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
-			if(record.get_name() == record2.get_name())
-				if(!record2.linked_account)
-					record2.linked_account = record.linked_account
+			found = 1
+			if(!record2.linked_account)
+				record2.linked_account = record.linked_account
+				record2.linked_account.after_load()
+		if(!found)
+			recovering |= record	
+	GLOB.all_crew_records |= recovering
 	
 /datum/admins/proc/autocryo()
 	set category = "Server"
@@ -960,7 +965,8 @@ var/global/floorIsLava = 0
 		if(!record.linked_account)
 			record.linked_account = create_account(record.get_name(), 0, null)
 			record.linked_account.remote_access_pin = 1111
-
+			record.linked_account.after_load()
+			record.linked_account.money = 1000
 
 /datum/admins/proc/delete_account()
 	set category = "Server"
@@ -1215,16 +1221,16 @@ var/global/floorIsLava = 0
 
 	return 0
 
-/datum/admins/proc/spawn_fruit(seedtype in plant_controller.seeds)
+/datum/admins/proc/spawn_fruit(seedtype in SSplants.seeds)
 	set category = "Debug"
 	set desc = "Spawn the product of a seed."
 	set name = "Spawn Fruit"
 
 	if(!check_rights(R_SPAWN))	return
 
-	if(!seedtype || !plant_controller.seeds[seedtype])
+	if(!seedtype || !SSplants.seeds[seedtype])
 		return
-	var/datum/seed/S = plant_controller.seeds[seedtype]
+	var/datum/seed/S = SSplants.seeds[seedtype]
 	S.harvest(usr,0,0,1)
 	log_admin("[key_name(usr)] spawned [seedtype] fruit at ([usr.x],[usr.y],[usr.z])")
 
@@ -1268,16 +1274,16 @@ var/global/floorIsLava = 0
 		for(var/datum/custom_item/item in current_items)
 			to_chat(usr, "- name: [item.name] icon: [item.item_icon] path: [item.item_path] desc: [item.item_desc]")
 
-/datum/admins/proc/spawn_plant(seedtype in plant_controller.seeds)
+/datum/admins/proc/spawn_plant(seedtype in SSplants.seeds)
 	set category = "Debug"
 	set desc = "Spawn a spreading plant effect."
 	set name = "Spawn Plant"
 
 	if(!check_rights(R_SPAWN))	return
 
-	if(!seedtype || !plant_controller.seeds[seedtype])
+	if(!seedtype || !SSplants.seeds[seedtype])
 		return
-	new /obj/effect/vine(get_turf(usr), plant_controller.seeds[seedtype])
+	new /obj/effect/vine(get_turf(usr), SSplants.seeds[seedtype])
 	log_admin("[key_name(usr)] spawned [seedtype] vines at ([usr.x],[usr.y],[usr.z])")
 
 /datum/admins/proc/spawn_atom(var/object as text)

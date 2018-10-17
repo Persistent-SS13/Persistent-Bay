@@ -43,6 +43,8 @@
 		if(togglelock(user, I))
 			if(!src.registered_name)
 				src.registered_name = I.registered_name
+				if(I.GetFaction())
+					req_access_faction = I.GetFaction()
 				src.name += " ([I.registered_name])"
 				src.desc = "Owned by [I.registered_name]."
 		else
@@ -51,7 +53,7 @@
 		..()
 
 /obj/structure/closet/secure_closet/personal/CanToggleLock(var/mob/user, var/obj/item/weapon/card/id/id_card)
-	return ..() || (istype(id_card) && id_card.registered_name && (!registered_name || (registered_name == id_card.registered_name)))
+	return ((req_access_faction = "") && ..()) || (user.GetFaction() == req_access_faction && ..()) || (istype(id_card) && id_card.registered_name && (!registered_name || (registered_name == id_card.registered_name)))
 
 /obj/structure/closet/secure_closet/personal/verb/reset()
 	set src in oview(1) // One square distance
@@ -74,3 +76,4 @@
 			src.registered_name = null
 			src.name = initial(name)
 			src.desc = initial(desc)
+			req_access_faction = ""

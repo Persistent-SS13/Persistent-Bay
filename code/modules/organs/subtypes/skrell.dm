@@ -1,6 +1,7 @@
 /obj/item/organ/internal/skrell/nervecluser
 	name = "nerve cluster"
 	parent_organ = BP_HEAD
+	organ_tag = BP_NERVECLUSTER
 
 /obj/item/organ/internal/skrell/nervecluser/removed(var/mob/living/user)
 	if(user && ishuman(user))

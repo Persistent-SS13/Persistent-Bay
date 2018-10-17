@@ -61,7 +61,7 @@
 	description = "A highly poisonous liquid. Smells strongly of bleach."
 	reagent_state = LIQUID
 	taste_description = "bleach"
-	color = "#707C13"
+	color = "#707c13"
 	strength = 15
 	metabolism = REM
 
@@ -298,7 +298,7 @@
 		return
 
 	var/mob/living/carbon/human/H = M
-	if(istype(H) && (H.species.flags & NO_SCAN))
+	if(istype(H) && (H.species.species_flags & SPECIES_FLAG_NO_SCAN))
 		return
 
 	if(M.dna)

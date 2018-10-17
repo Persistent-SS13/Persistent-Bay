@@ -180,7 +180,7 @@
 			var/commitment = get_contributed()
 			var/signed_stocks = get_distributed()
 			var/finalize = 0
-			if(commitment >= 2500 && signed_stocks == 100 && potential_name && potential_name != "") finalize = 1
+			if(commitment >= 5000 && signed_stocks == 100 && potential_name && potential_name != "") finalize = 1
 			data["commitment"] = commitment
 			data["signed_stocks"] = signed_stocks
 			data["finish_ready"] = finalize
@@ -324,6 +324,9 @@
 						found = 1
 						break
 				if(!found)
+					var/datum/computer_file/crew_record/L = Retrieve_Record(select_name)
+					if(L) found = 1
+				if(!found)
 					to_chat(usr, "No record found for [select_name]. Verify Employee Identity.")
 					return
 
@@ -378,6 +381,8 @@
 						record = R
 						break
 				if(!record)
+					record = Retrieve_Record(user_id_card.registered_name)
+				if(!record)
 					message_admins("NO global record found for [usr.real_name]")
 					to_chat(usr, "No record found for [usr.real_name].. contact software developer.")
 					return
@@ -409,6 +414,8 @@
 					if(R.get_name() == user_id_card.registered_name)
 						record = R
 						break
+				if(!record)
+					record = Retrieve_Record(user_id_card.registered_name)
 				if(!record)
 					message_admins("NO global record found for [usr.real_name]")
 					to_chat(usr, "No record found for [usr.real_name].. contact software developer.")
@@ -678,6 +685,9 @@
 							found = 1
 							break
 					if(!found)
+						var/datum/computer_file/crew_record/L = Retrieve_Record(select_name)
+						if(L) found = 1
+					if(!found)
 						to_chat(usr, "No record found for [select_name]. Verify Identity.")
 						return
 
@@ -932,9 +942,9 @@
 		if("business_finalize")
 			var/commitment = get_contributed()
 			var/signed_stocks = get_distributed()
-			if(commitment < 2500 || signed_stocks != 100)
+			if(commitment < 5000 || signed_stocks != 100)
 				return 0
-			commitment -= 2500
+			commitment -= 5000
 			if(!potential_name || potential_name == "")
 				to_chat(usr, "A name for the business must be chosen first.")
 				return

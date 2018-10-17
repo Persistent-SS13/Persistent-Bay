@@ -33,9 +33,9 @@ var/const/SAFETY_COOLDOWN = 100
 /obj/machinery/recycler/examine()
 	set src in view()
 	..()
-	usr << "The power light is [(stat & NOPOWER) ? "off" : "on"]."
-	usr << "The safety-mode light is [safety_mode ? "on" : "off"]."
-	usr << "The safety-sensors status light is [emagged ? "off" : "on"]."
+	to_chat(usr, "The power light is [(stat & NOPOWER) ? "off" : "on"].")
+	to_chat(usr, "The safety-mode light is [safety_mode ? "on" : "off"].")
+	to_chat(usr, "The safety-sensors status light is [emagged ? "off" : "on"].")
 
 /obj/machinery/recycler/power_change()
 	..()
@@ -103,7 +103,7 @@ var/const/SAFETY_COOLDOWN = 100
 
 /obj/machinery/recycler/proc/recycle(var/obj/item/I, var/sound = 1)
 	I.loc = src.loc
-	if(!istype(I, /obj/item/weapon/disk/nuclear) && !istype(I, /obj/item/stack))
+	if(!istype(I, /obj/item/weapon/disk/nuclear) && !istype(I, /obj/item/organ/internal/stack))
 		if(istype(I) && I.matter)
 			for(var/mat in I.matter)
 				stored_material[mat] += I.matter[mat]

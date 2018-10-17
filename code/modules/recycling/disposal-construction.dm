@@ -108,10 +108,16 @@
 		set category = "Object"
 		set name = "Rotate Pipe"
 		set src in view(1)
-
+		
+		if(!usr || !Adjacent(usr))
+			return
+	
+		if(usr.incapacitated())
+			return
+		
 		if(usr.stat)
 			return
-
+		
 		if(anchored)
 			to_chat(usr, "You must unfasten the pipe before rotating it.")
 			return

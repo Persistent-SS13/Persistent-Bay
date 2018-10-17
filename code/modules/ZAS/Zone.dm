@@ -11,7 +11,6 @@ Class Vars:
 	edges - A list of edges that connect to this zone.
 	air - The gas mixture that any turfs in this zone will return. Values are per-tile with a group multiplier.
 
-	
 Class Procs:
 	add(turf/simulated/T)
 		Adds a turf to the contents, sets its zone and merges its air.
@@ -40,7 +39,6 @@ Class Procs:
 
 */
 
-
 /zone/var/name
 /zone/var/invalid = 0
 /zone/var/list/contents = list()
@@ -48,6 +46,7 @@ Class Procs:
 /zone/var/list/fuel_objs = list()
 
 /zone/var/needs_update = 0
+/zone/var/condense_buffer = 0
 
 /zone/var/list/edges = list()
 
@@ -62,6 +61,7 @@ Class Procs:
 	air.temperature = TCMB
 	air.group_multiplier = 1
 	air.volume = CELL_VOLUME
+	condense_buffer = world.time + ZONE_CONDENSATION_DELAY
 
 /zone/proc/add(turf/simulated/T)
 #ifdef ZASDBG
@@ -165,6 +165,7 @@ Class Procs:
 	for(var/connection_edge/E in edges)
 		if(E.sleeping)
 			E.recheck()
+	condensation_check()
 
 /zone/proc/dbg_data(mob/M)
 	to_chat(M, name)

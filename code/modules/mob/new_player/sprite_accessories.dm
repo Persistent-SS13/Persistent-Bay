@@ -983,15 +983,15 @@
 	blend = ICON_MULTIPLY
 	species_allowed = list(SPECIES_UNATHI)
 
- /datum/sprite_accessory/hair/una/swept_horn
+/datum/sprite_accessory/hair/una/swept_horn
 	name = "Swept Horns"
 	icon_state = "swept_horn"
 
- /datum/sprite_accessory/hair/una/ram_horn
+/datum/sprite_accessory/hair/una/ram_horn
 	name = "Ram Horns"
 	icon_state = "ram_horn"
 
- /datum/sprite_accessory/hair/una/fin_hawk
+/datum/sprite_accessory/hair/una/fin_hawk
 	name = "Fin Hawk"
 	icon_state = "fin_hawk"
 

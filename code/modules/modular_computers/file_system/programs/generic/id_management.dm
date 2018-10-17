@@ -53,6 +53,8 @@
 					record = R
 					break
 			if(!record)
+				record = Retrieve_Record(usr.real_name)
+			if(!record)
 				message_admins("NO global record found for [usr.real_name]")
 				to_chat(usr, "No record found for [usr.real_name].. contact software developer.")
 				return
@@ -87,6 +89,8 @@
 				message_admins("NO global record found for [usr.real_name]")
 				to_chat(usr, "No record found for [usr.real_name].. contact software developer.")
 				return
+			if(!record)
+				record = Retrieve_Record(usr.real_name)
 			record.validate_time = world.realtime
 			usr.last_id_devalidate = world.realtime + 5 MINUTES
 			update_ids(usr.real_name)

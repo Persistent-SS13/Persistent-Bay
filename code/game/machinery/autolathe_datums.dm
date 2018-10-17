@@ -191,7 +191,7 @@ var/const/EXTRA_COST_FACTOR = 1
 	path = /obj/item/stack/material/glass/reinforced
 	category = "General"
 	is_stack = 1
-	resources = list("glass" = (SHEET_MATERIAL_AMOUNT/2) * EXTRA_COST_FACTOR, "steel" = (SHEET_MATERIAL_AMOUNT/2) * EXTRA_COST_FACTOR)
+	resources = list("glass" = (SHEET_MATERIAL_AMOUNT * EXTRA_COST_FACTOR / 2), "steel" = (SHEET_MATERIAL_AMOUNT * EXTRA_COST_FACTOR / 2))
 
 /datum/autolathe/recipe/rods
 	name = "metal rods"
@@ -218,6 +218,16 @@ var/const/EXTRA_COST_FACTOR = 1
 	name = "tape"
 	path = /obj/item/device/tape
 	category = "General"
+
+/datum/autolathe/recipe/norad_airlock_controller
+	name = "airlock controller (no radio)"
+	path = /obj/item/frame/airlock_controller_norad
+	category = "Engineering"
+
+/datum/autolathe/recipe/norad_airlock_sensor
+	name = "airlock sensor (no radio)"
+	path = /obj/item/frame/airlock_sensor_norad
+	category = "Engineering"
 
 /datum/autolathe/recipe/airlockmodule
 	name = "airlock electronics"

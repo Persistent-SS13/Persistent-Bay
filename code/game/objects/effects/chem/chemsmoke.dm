@@ -7,7 +7,7 @@
 	plane = EFFECTS_BELOW_LIGHTING_PLANE
 	layer = ABOVE_PROJECTILE_LAYER
 	time_to_live = 300
-	pass_flags = PASSTABLE | PASSGRILLE | PASSGLASS //PASSGLASS is fine here, it's just so the visual effect can "flow" around glass
+	pass_flags = PASS_FLAG_TABLE | PASS_FLAG_GRILLE | PASS_FLAG_GLASS //PASS_FLAG_GLASS is fine here, it's just so the visual effect can "flow" around glass
 	var/splash_amount = 10 //atoms moving through a smoke cloud get splashed with up to 10 units of reagent
 	var/turf/destination
 
@@ -91,8 +91,8 @@
 	var/datum/seed/seed
 
 /datum/effect/effect/system/smoke_spread/chem/spores/New(seed_name)
-	if(seed_name && plant_controller)
-		seed = plant_controller.seeds[seed_name]
+	if(seed_name)
+		seed = SSplants.seeds[seed_name]
 	if(!seed)
 		qdel(src)
 	..()

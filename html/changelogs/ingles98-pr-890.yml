@@ -35,8 +35,8 @@ delete-after: True
 changes: 
   - bugfix: "Diagnosed and fixed yet another critical problem with condensation, this time a gameplay issue caused by dumbness of my part."
   - bugfix: "Should fix an issue that seems to occur when pumping contents from a canister to a tank."
-  - tweak:"Some reworks on ARO were done to insure better gameplay by removing the water buffer."
-  - "Future compatibility for individual filters for anything that uses ARO pumping."
-  - "ARO and Drain contents no longer vanish with them."
-  - "Sinks and showers have been tweaked to embrace ARO for good. Also future compatibility for individual tube filters."
-  - "Overall performance boost on SoM."
+  - tweak: "Some reworks on ARO were done to insure better gameplay by removing the water buffer."
+  - tweak: "Future compatibility for individual filters for anything that uses ARO pumping."
+  - bugfix: "ARO and Drain contents no longer vanish with them."
+  - tweak: "Sinks and showers have been tweaked to embrace ARO for good. Also future compatibility for individual tube filters."
+  - tweak: "Overall performance boost on SoM."

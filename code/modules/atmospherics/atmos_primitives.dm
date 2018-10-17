@@ -532,10 +532,10 @@
 
 		var/list/component_reagents = gas_data.component_reagents[gas]
 		for(var/R in component_reagents)
-			var/reagent_name = gas_data.reagent_typeToId[R]
-			if (min(gas_data.base_boil_point[reagent_name], gas_data.base_boil_point[gas]) > 0 )
+			var/datum/reagent/reagent_data = new R() //hacky
+			if (min(gas_data.base_boil_point[lowertext(reagent_data.name)], gas_data.base_boil_point[gas]) > 0 )
 				//if the component reagent has lower boiling point than the copound gas itself, the gas' boiling point will be used to calculate
-				var/base_boil_point = min(gas_data.base_boil_point[reagent_name], gas_data.base_boil_point[gas])
+				var/base_boil_point = min(gas_data.base_boil_point[lowertext(reagent_data.name)], gas_data.base_boil_point[gas])
 
 				var/boilPoint = base_boil_point+(BOIL_PRESSURE_MULTIPLIER*(air_contents.return_pressure() - ONE_ATMOSPHERE))
 				if (air_contents.temperature < boilPoint *0.9991) //99% just to make it so fluids dont flicker between states
@@ -555,4 +555,5 @@
 					R_HOLDER.reagents.add_reagent(R, possible_transfers*component_reagents[R]*REAGENT_GAS_EXCHANGE_FACTOR) // Get those sweet gas reagents back to liquid state by creating em on the puddlez
 					air_contents.adjust_gas(gas, -possible_transfers, 1) //Removes from gas from the atmosphere. Doesn't work on farts doe you gotta vent the place.
 					transfer_moles -= possible_transfers*component_reagents[R]
+			qdel(reagent_data)
 	return transfer_moles //todo: return the actual amount of transfers

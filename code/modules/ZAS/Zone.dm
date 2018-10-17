@@ -171,9 +171,10 @@ Class Procs:
 // At the same time we might as well just check for any needs of condesating (? english)
 // TO-DO : Perhaps polish it a bit if it starts to lag
 /zone/proc/condensation_check()
+	/**
 	if (world.time < condense_buffer)
 		return
-	condense_buffer = world.time + 5 // 1.5 seconds between condensing
+	condense_buffer = world.time + 15 // 1.5 seconds between condensing
 	var/datum/gas_mixture/air_data = air //So i was sleepy and I decided not to change every "air_data" back to just air
 	if(air_data)
 		var/turf/location = pick(contents)
@@ -187,11 +188,10 @@ Class Procs:
 				break //Doesnt mean we shouldn't prevent condensating non existent gas anyways so fuck it.
 
 			for(var/R in component_reagents)
-				var/reagent_name = gas_data.reagent_typeToId[R] // retrieves the gas name(id) respectively to the type of the reagent
-
-				if (min(gas_data.base_boil_point[reagent_name], gas_data.base_boil_point[gas]) > 0 )
+				var/datum/reagent/reagent_data = new R() //hacky
+				if (min(gas_data.base_boil_point[lowertext(reagent_data.name)], gas_data.base_boil_point[gas]) > 0 )
 					//if the component reagent has lower boiling point than the copound gas itself, the gas' boiling point will be used to calculate
-					var/base_boil_point = min(gas_data.base_boil_point[reagent_name], gas_data.base_boil_point[gas])
+					var/base_boil_point = min(gas_data.base_boil_point[lowertext(reagent_data.name)], gas_data.base_boil_point[gas])
 
 					var/boilPoint = base_boil_point+(BOIL_PRESSURE_MULTIPLIER*(air_data.return_pressure() - ONE_ATMOSPHERE))
 					if (air_data.temperature < boilPoint *0.9991) //99% just to make it so fluids dont flicker between states
@@ -199,9 +199,10 @@ Class Procs:
 						var/obj/effect/decal/cleanable/puddle_chem/R_HOLDER = new(location) // game / objects / effects / chem / chempuddle.dm - Its basically liquid state substance.
 						R_HOLDER.reagents.add_reagent(R, possible_transfers*component_reagents[R]*REAGENT_GAS_EXCHANGE_FACTOR) // Get those sweet gas reagents back to liquid state by creating em on the puddlez
 						air_data.adjust_gas(gas, -possible_transfers, update=0) //Removes from gas from the atmosphere. Doesn't work on farts doe you gotta vent the place.
+				qdel(reagent_data)
 
 		air_data.update_values()
-
+	**/
 /zone/proc/dbg_data(mob/M)
 	to_chat(M, name)
 	for(var/g in air.gas)

@@ -5,7 +5,7 @@
 	icon = 'icons/obj/computer.dmi'
 	icon_keyboard = "atmos_key"
 	icon_screen = "shuttle"
-	circuit = null
+	circuit = /obj/item/weapon/circuitboard/bridge_computer
 
 	var/shuttle_tag  // Used to coordinate data in shuttle controller.
 	var/hacked = 0   // Has been emagged, no access restrictions.
@@ -72,6 +72,9 @@
 		if(shuttle.finalized)
 			data["final"] = 1
 			data["name"] = shuttle.name
+			
+			data["shuttle_type"] = shuttle_type
+			
 			switch(shuttle.moving_status)
 				if(SHUTTLE_IDLE)
 					data["status"] = "Idle"
@@ -191,7 +194,8 @@
 		if(beacon.dimensions < shuttle.size)
 			to_chat(usr, "Dock is not big enough.")
 			return 1
-		shuttle.short_jump(beacon, dock)
+		beacon.status = 4
+		shuttle.short_jump(beacon.get_top_turf(), dock.get_top_turf())
 		dock.status = 2
 		dock = beacon
 		dock.status = 4

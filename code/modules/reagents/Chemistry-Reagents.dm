@@ -30,7 +30,14 @@
 	var/gas_overlay = "generic"
 	// END GAS DATA
 
+	//-----------------------------------------------------------------------------------------------------------------------------------------
 	// Stigma's reagent-gas system values. 0 values will be ignored to not break things. Set a custom value on each reagent to have it working.
+	// These values are for ONE TIME REFERENCE which is on xgm_gas_data loading, the way to access these should be done the following way:
+	//
+	// " var/boiling_point = gas_data.base_boil_point[reagent.xgm_id] "
+	//
+	// So this means these values shouldn't be accessed as reagent.base_boil_point
+	//-----------------------------------------------------------------------------------------------------------------------------------------
 	var/base_boil_point = 0 //value in K (kelvins) until we don't define a boiling point specifically for each gas/reagent
 	var/base_fusion_point = 0 //value in K (kelvins) until we don't define a boiling point specifically for each gas/reagent
 

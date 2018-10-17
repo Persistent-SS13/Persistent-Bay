@@ -22,8 +22,18 @@
 	//Ratio of the reagents that one mole of the gas is (molecularly) made of.
 	var/list/component_reagents = list()
 
-	var/list/base_boil_point = list()
-	var/list/generated_from_reagent = list()
+	var/list/base_boil_point = list() //stores all the gas and reagent's boiling point
+	var/list/base_fusion_point = list() //stores all the gas and reagent's fusion (aka melting) point values
+	var/list/generated_from_reagent = list() //consists of TRUE or FALSE values. gas_data.generated_from_reagent[gas/reagent] = 1 if the gas/reagent was generated from the reagent datums
+	var/list/reagent_typeToId = list() // Contains a list of reagent types with the attributed value of their gas id
+	var/list/reagent_idToType = list() // Contains a list of reagent gas id's with the attributed value of their respective reagent type (/datum/reagent/...)
+
+	var/list/dense_product = list() //contains a list of gases associated to their condensation reagent type
+	// IMPORTANT!
+	// - All reagent gases have their dense product set to their respective reagent types automatically
+	// - Any xgm Gas that doesn't have their dense product set will use their component reagent, by default,
+	// ONLY if they have ONE, AND ONLY ONE, NOTHING LESS NOR MORE THAN ONE, component_reagents.
+	// - Any gas that doesn't have a dense product won't be stored on the list for obvious reasons.
 
 /decl/xgm_gas
 	var/id = ""
@@ -37,10 +47,13 @@
 	var/flags = 0
 	var/burn_product = "carbon_dioxide"
 	var/breathed_product
-	var/component_reagents
+	var/list/component_reagents
 
-	var/base_boiling_point = 100 //value in K (kelvins) until we don't define a boiling point specifically for each gas/reagent
-	var/generated_from_reagent = 0
+	var/base_boil_point = 100 //value in K (kelvins) until we don't define a boiling point specifically for each gas/reagent
+	var/base_fusion_point = 10
+	var/generated_from_reagent = 0 //possibly never used!
+	var/dense_product
+
 /hook/startup/proc/generateGasData()
 	gas_data = new
 	for(var/p in (typesof(/decl/xgm_gas) - /decl/xgm_gas))
@@ -63,6 +76,20 @@
 		gas_data.breathed_product[gas.id] = gas.breathed_product
 		gas_data.component_reagents[gas.id] = gas.component_reagents
 
+		gas_data.base_boil_point[gas.id] = gas.base_boil_point
+		gas_data.base_fusion_point[gas.id] = gas.base_fusion_point
+		gas_data.generated_from_reagent[gas.id] = 0
+
+		gas_data.reagent_typeToId[p] =			gas.id
+		gas_data.reagent_idToType[gas.id] =		p
+
+		if (gas.dense_product)
+			gas_data.dense_product[gas.id] = gas.dense_product
+		else if (!gas.dense_product)
+			if (gas.component_reagents && gas.component_reagents.len == 1)
+				for(var/comp in gas.component_reagents)
+					gas_data.dense_product[gas.id] = comp
+
 	//Reagent gases
 	for(var/r in (typesof(/datum/reagent) - /datum/reagent))
 		var/datum/reagent/reagent = new r
@@ -81,13 +108,18 @@
 		gas_data.component_reagents[gas_id] = list(reagent.type = 1)
 
 		gas_data.base_boil_point[gas_id] =    reagent.base_boil_point
+		gas_data.base_fusion_point[gas_id] =    reagent.base_fusion_point
 		gas_data.generated_from_reagent[gas_id] = 1
 
+		gas_data.reagent_typeToId[r] =			gas_id
+		gas_data.reagent_idToType[gas_id] =		r
 		if(reagent.gas_overlay)
 			var/image/I = image('icons/effects/tile_effects.dmi', reagent.gas_overlay, FLY_LAYER)
 			I.appearance_flags = RESET_COLOR
 			I.color = initial(reagent.color)
 			gas_data.tile_overlay[gas_id] = I
+
+		gas_data.dense_product[gas_id] = r
 
 		qdel(reagent)
 

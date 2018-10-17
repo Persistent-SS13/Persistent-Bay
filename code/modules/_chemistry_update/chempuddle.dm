@@ -1,11 +1,11 @@
 /*  Any questions and suggestions, you can find me at github.com/ingles98 (aka Stigma).
-    Code originally created for Persistent-SS13/Persistent-Bay.
-    Feel free to credit back to us... Or don't :c
+	Code originally created for Persistent-SS13/Persistent-Bay.
+	Feel free to credit back to us... Or don't :c
 	Currently the code is pretty much spaget so i'd be really glad if you told me any changes you make or simple suggestions.
 
 	TO-DO: Comment in all the changes and where this is applied.
 
-    This proc has been moved from Chemistry-Holder.dm to here since it made more sense. */
+	This proc has been moved from Chemistry-Holder.dm to here since it made more sense. */
 /datum/reagents/proc/create_puddle(var/atom/target, var/amount = 1, var/multiplier = 1, var/copy = 0, var/force_solid = null)
 	if (!target || amount < 3)
 		return
@@ -452,25 +452,34 @@
 /obj/effect/decal/cleanable/puddle_chem/proc/process_evaporation()
 	if (reagents && reagents.reagent_list && world.time - statecheck_timer_last >= statecheck_timer_delay)
 		statecheck_timer_last = world.time
+
+		var/turf/T = loc
+		if (!T || !T.air)	return -1 //happens on server init.
+
+		var/datum/gas_mixture/air_data = T.return_air()
+
 		for(var/datum/reagent/R in reagents.reagent_list)
-			if (!R.base_boil_point) //so we don't break things that aren't properly set
+
+			var/xgm_id = lowertext(R.name)
+			if(!xgm_id in gas_data.gases)
 				continue
-			var/turf/T = loc
-			if (!T || !T.air)	break //happens on server init.
 
-			var/datum/gas_mixture/air_data = T.air
-			var/boilPoint = R.base_boil_point+(BOIL_PRESSURE_MULTIPLIER*(air_data.return_pressure() - ONE_ATMOSPHERE))
-			if (air_data.temperature > boilPoint*1.01) //101% for preventing flickering between states
-				if(!lowertext(R.name) in gas_data.gases)
-					continue
-				var/possible_transfers = R.volume*0.1
-				if (!possible_transfers || possible_transfers < 1) continue
+			var/possible_transfers = R.volume*0.1
+			if (!possible_transfers || possible_transfers < 0.1)
+				continue
+
+			var/boilPoint = gas_data.base_boil_point[xgm_id]+(BOIL_PRESSURE_MULTIPLIER*(air_data.return_pressure() - ONE_ATMOSPHERE))
+			//if(xgm_id == "oxygen")
+				//message_admins("boilpoint: [boilPoint] base: [gas_data.base_boil_point[xgm_id]] pressure_delta: [air_data.return_pressure() - ONE_ATMOSPHERE] current_air_temp: [air_data.temperature]")
+			if (air_data.temperature > boilPoint*1.0009) //101% for preventing flickering between states
 				reagents.remove_reagent(R.type, possible_transfers)
-
-				var/datum/gas_mixture/GM = new (_temperature = air_data.temperature)
-				GM.gas[lowertext(R.name)] = possible_transfers/REAGENT_GAS_EXCHANGE_FACTOR
-				air_data.merge(GM)
+				//var/datum/gas_mixture/GM = new (_temperature = air_data.temperature)
+				//GM.gas[xgm_id] = possible_transfers/REAGENT_GAS_EXCHANGE_FACTOR
+				air_data.adjust_gas(xgm_id, possible_transfers/REAGENT_GAS_EXCHANGE_FACTOR, update=0)
+				//air_data.merge(GM)
 				active = 1
+
+		air_data.update_values()
 
 /obj/effect/decal/cleanable/puddle_chem/proc/process_drain_attraction()
 	if (reagents && reagents.reagent_list && world.time - timer_last >= timer_delay)

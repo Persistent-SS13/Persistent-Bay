@@ -23,7 +23,6 @@
 	var/list/component_reagents = list()
 
 	var/list/base_boil_point = list()
-	var/list/base_fusion_point = list()
 	var/list/generated_from_reagent = list()
 
 /decl/xgm_gas
@@ -82,7 +81,6 @@
 		gas_data.component_reagents[gas_id] = list(reagent.type = 1)
 
 		gas_data.base_boil_point[gas_id] =    reagent.base_boil_point
-		gas_data.base_fusion_point[gas_id] =    reagent.base_fusion_point
 		gas_data.generated_from_reagent[gas_id] = 1
 
 		if(reagent.gas_overlay)

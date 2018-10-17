@@ -181,9 +181,8 @@ Class Procs:
 		if(!isturf(location)) //should already be a turf but double check tho cuz weird shit happened on testing
 			location = pick(location.contents)
 		for(var/gas in air_data.gas)
-			/*if(!gas_data.component_reagents[gas])
+			if(!gas_data.component_reagents[gas])
 				continue	//we don't need to (nor we can) proceed if the gas wasn't made out of a 'known' reagent.
-			*/
 
 			var/list/component_reagents = gas_data.component_reagents[gas]
 

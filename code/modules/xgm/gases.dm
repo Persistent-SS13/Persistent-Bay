@@ -33,7 +33,8 @@
 
 	breathed_product = /datum/reagent/carbon_dioxide
 	component_reagents = list(
-						/datum/reagent/carbon_dioxide = 1
+						/datum/reagent/carbon = 0.33,
+						/datum/reagent/oxygen = 0.66
 						)
 
 /decl/xgm_gas/phoron

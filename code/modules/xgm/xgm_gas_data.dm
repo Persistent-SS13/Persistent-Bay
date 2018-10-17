@@ -28,6 +28,13 @@
 	var/list/reagent_typeToId = list() // Contains a list of reagent types with the attributed value of their gas id
 	var/list/reagent_idToType = list() // Contains a list of reagent gas id's with the attributed value of their respective reagent type (/datum/reagent/...)
 
+	var/list/dense_product = list() //contains a list of gases associated to their condensation reagent type
+	// IMPORTANT!
+	// - All reagent gases have their dense product set to their respective reagent types automatically
+	// - Any xgm Gas that doesn't have their dense product set will use their component reagent, by default,
+	// ONLY if they have ONE, AND ONLY ONE, NOTHING LESS NOR MORE THAN ONE, component_reagents.
+	// - Any gas that doesn't have a dense product won't be stored on the list for obvious reasons.
+
 /decl/xgm_gas
 	var/id = ""
 	var/name = "Unnamed Gas"
@@ -40,11 +47,12 @@
 	var/flags = 0
 	var/burn_product = "carbon_dioxide"
 	var/breathed_product
-	var/component_reagents
+	var/list/component_reagents
 
 	var/base_boil_point = 100 //value in K (kelvins) until we don't define a boiling point specifically for each gas/reagent
 	var/base_fusion_point = 10
-	var/generated_from_reagent = 0
+	var/generated_from_reagent = 0 //possibly never used!
+	var/dense_product
 
 /hook/startup/proc/generateGasData()
 	gas_data = new
@@ -75,6 +83,13 @@
 		gas_data.reagent_typeToId[p] =			gas.id
 		gas_data.reagent_idToType[gas.id] =		p
 
+		if (gas.dense_product)
+			gas_data.dense_product[gas.id] = gas.dense_product
+		else if (!gas.dense_product)
+			if (gas.component_reagents && gas.component_reagents.len == 1)
+				for(var/comp in gas.component_reagents)
+					gas_data.dense_product[gas.id] = comp
+
 	//Reagent gases
 	for(var/r in (typesof(/datum/reagent) - /datum/reagent))
 		var/datum/reagent/reagent = new r
@@ -103,6 +118,8 @@
 			I.appearance_flags = RESET_COLOR
 			I.color = initial(reagent.color)
 			gas_data.tile_overlay[gas_id] = I
+
+		gas_data.dense_product[gas_id] = r
 
 		qdel(reagent)
 

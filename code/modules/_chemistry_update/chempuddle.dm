@@ -453,22 +453,22 @@
 	if (reagents && reagents.reagent_list && world.time - statecheck_timer_last >= statecheck_timer_delay)
 		statecheck_timer_last = world.time
 		for(var/datum/reagent/R in reagents.reagent_list)
-			var/xgm_id = lowertext(R.name)
-			if(!xgm_id in gas_data.gases)
+			if (!R.base_boil_point) //so we don't break things that aren't properly set
 				continue
-
 			var/turf/T = loc
 			if (!T || !T.air)	break //happens on server init.
 
 			var/datum/gas_mixture/air_data = T.air
-			var/boilPoint = gas_data.base_boil_point[xgm_id]+(BOIL_PRESSURE_MULTIPLIER*(air_data.return_pressure() - ONE_ATMOSPHERE))
+			var/boilPoint = R.base_boil_point+(BOIL_PRESSURE_MULTIPLIER*(air_data.return_pressure() - ONE_ATMOSPHERE))
 			if (air_data.temperature > boilPoint*1.01) //101% for preventing flickering between states
+				if(!lowertext(R.name) in gas_data.gases)
+					continue
 				var/possible_transfers = R.volume*0.1
 				if (!possible_transfers || possible_transfers < 1) continue
 				reagents.remove_reagent(R.type, possible_transfers)
 
 				var/datum/gas_mixture/GM = new (_temperature = air_data.temperature)
-				GM.gas[xgm_id] = possible_transfers/REAGENT_GAS_EXCHANGE_FACTOR
+				GM.gas[lowertext(R.name)] = possible_transfers/REAGENT_GAS_EXCHANGE_FACTOR
 				air_data.merge(GM)
 				active = 1
 

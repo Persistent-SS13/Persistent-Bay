@@ -1,7 +1,7 @@
 /decl/xgm_gas/oxygen
 	id = "oxygen"
 	name = "Oxygen"
-	base_boil_point = 90.19
+	base_boiling_point = 90.19
 	specific_heat = 20	// J/(mol*K)
 	molar_mass = 0.032	// kg/mol
 
@@ -16,7 +16,7 @@
 /decl/xgm_gas/nitrogen
 	id = "nitrogen"
 	name = "Nitrogen"
-	base_boil_point = 77.36
+	base_boiling_point = 77.36
 	specific_heat = 20	// J/(mol*K)
 	molar_mass = 0.028	// kg/mol
 
@@ -27,7 +27,7 @@
 /decl/xgm_gas/carbon_dioxide
 	id = "carbon_dioxide"
 	name = "Carbon Dioxide"
-	base_boil_point = 194.7
+	base_boiling_point = 194.7
 	specific_heat = 30	// J/(mol*K)
 	molar_mass = 0.044	// kg/mol
 
@@ -207,3 +207,4 @@
 						/datum/reagent/toxin/chlorine = 1
 						)
 	flags = XGM_GAS_CONTAMINANT
+

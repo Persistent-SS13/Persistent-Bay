@@ -181,6 +181,10 @@ Class Procs:
 		if(!isturf(location)) //should already be a turf but double check tho cuz weird shit happened on testing
 			location = pick(location.contents)
 		for(var/gas in air_data.gas)
+			/*if(!gas_data.component_reagents[gas])
+				continue	//we don't need to (nor we can) proceed if the gas wasn't made out of a 'known' reagent.
+			*/
+
 			var/list/component_reagents = gas_data.component_reagents[gas]
 
 			var/possible_transfers = air_data.get_gas(gas)
@@ -189,10 +193,8 @@ Class Procs:
 
 			for(var/R in component_reagents)
 				var/datum/reagent/reagent_data = new R() //hacky
-				if (min(gas_data.base_boil_point[lowertext(reagent_data.name)], gas_data.base_boil_point[gas]) > 0 )
-					//if the component reagent has lower boiling point than the copound gas itself, the gas' boiling point will be used to calculate
-					var/base_boil_point = min(gas_data.base_boil_point[lowertext(reagent_data.name)], gas_data.base_boil_point[gas])
-
+				if (reagent_data.base_boil_point > 0)
+					var/base_boil_point = min(reagent_data.base_boil_point, gas_data.base_boil_point[gas])
 					var/boilPoint = base_boil_point+(BOIL_PRESSURE_MULTIPLIER*(air_data.return_pressure() - ONE_ATMOSPHERE))
 					if (air_data.temperature < boilPoint *0.9991) //99% just to make it so fluids dont flicker between states
 						//START CONDENSATION PROCESS

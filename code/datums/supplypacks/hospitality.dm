@@ -61,17 +61,6 @@
 	containername = "soy milk crate"
 	cost = 12
 
-/decl/hierarchy/supply_pack/hospitality/seafood
-	name = "Foodstuffs - Seafood crate"
-	contains = list(
-		/obj/item/weapon/reagent_containers/food/snacks/fish = 2,
-		/obj/item/weapon/reagent_containers/food/snacks/fish/shark = 2,
-		/obj/item/weapon/reagent_containers/food/snacks/fish/octopus = 2
-		)
-	containertype = /obj/structure/closet/crate/freezer
-	containername = "seafood crate"
-	cost = 20
-
 //bar
 /decl/hierarchy/supply_pack/hospitality/party
 	name = "Bar - Party equipment"

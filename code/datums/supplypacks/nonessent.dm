@@ -53,15 +53,6 @@
 					/obj/item/clothing/suit/imperium_monk,
 					/obj/item/clothing/suit/ianshirt,
 					/obj/item/clothing/suit/bio_suit/plaguedoctorsuit,
-					/obj/item/clothing/suit/skeleton,
-					/obj/item/clothing/suit/engicost,
-					/obj/item/clothing/suit/maxman,
-					/obj/item/clothing/suit/iasexy,
-					/obj/item/clothing/suit/sexyminer,
-					/obj/item/clothing/suit/sumo,
-					/obj/item/clothing/suit/hackercost,
-					/obj/item/clothing/suit/lumber,
-					/obj/item/clothing/suit/eccentricjudge,
 					/obj/item/clothing/suit/storage/toggle/labcoat/mad)
 	cost = 6
 	containername = "actor costume crate"

@@ -1795,7 +1795,7 @@
 	glass_name = "Blue Bird"
 	glass_desc = "A classy drink that you know only the prettiest of birds have."
 	
-/datum/chemical_reaction/bj
+/datum/reagent/ethanol/bj
 	name = "BJ"
 	description = "Nothing like a good BJ to get you started."
 	taste_description = "creamy chocolate alcohol"
@@ -1806,7 +1806,7 @@
 	glass_name = "BJ"
 	glass_desc = "Nothing like a good BJ to get you started."
 	
-/datum/chemical_reaction/starrycola
+/datum/reagent/ethanol/starrycola
 	name = "Starry Cola"
 	description = "Looking at it, you'd think you're looking at space."
 	taste_description = "sweet twinkling fizz with a bite"
@@ -1818,7 +1818,7 @@
 	glass_desc = "Looking at it, you'd think you're looking at space."
 	glass_special = list(DRINK_FIZZ)
 	
-/datum/chemical_reaction/calvincraig
+/datum/reagent/ethanol/calvincraig
 	name = "Calvin Craig"
 	description = "A sweet something-or-other for that special someone."
 	taste_description = "sweet and sour melon candies"

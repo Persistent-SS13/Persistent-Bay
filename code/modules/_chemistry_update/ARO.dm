@@ -5,9 +5,10 @@
 
 	Uses the same concept as APC's, by supplying the whole area with reagents "wirelessly" or should I say "pipelessly" heh..
 */
-#define ARO_BASEINPUT_GAS         	100		//Input in MOLS
-#define ARO_BASEOUTPUT_REAGENT    	20		//Output in UNITS, transfered reagents to machines that need it
-#define ARO_MAX_QUEUE_TIME			100		//Max time in seconds a machine will persist on the queue before being removed
+#define ARO_BASEINPUT_GAS         100		//Input in MOLS
+#define ARO_BASEOUTPUT_REAGENT    20		//Output in UNITS, transfered water to machines that need it
+/area/proc/get_aro()
+	return aro
 
 /obj/machinery/atmospherics/unary/aro
 	name = "Area Reagent Outlet"
@@ -30,20 +31,15 @@
 	var/max_reagent_output = ARO_BASEOUTPUT_REAGENT
 	var/area/area
 	var/list/machines_to_pump = new()
-	var/list/machines_queue_time = new()
 
 /obj/machinery/atmospherics/unary/aro/New()
 	..()
 	create_reagents(max_volume) //holds up to *max_volume* amounts of water
 	if (!area)
 		area = get_area(src)
-		if (area)	area.aro = src
+		area.aro = src
 	if (!area.aro) //really just to make sure tbh
 		area.aro = src
-
-/obj/machinery/atmospherics/unary/aro/Destroy()
-	reagents.splash(loc, reagents.total_volume)
-	. = ..()
 
 /obj/machinery/atmospherics/unary/aro/after_load()
 	..()
@@ -55,8 +51,6 @@
 
 	if (isnull(machines_to_pump))
 		machines_to_pump = new()
-	if (isnull(machines_queue_time))
-		machines_queue_time = new()
 
 /obj/machinery/atmospherics/unary/aro/Process()
 	..()
@@ -64,73 +58,48 @@
 		return
 
 	var/active = 0
-	var/update_network = 0 //update gas flow on network IF WE ACTUALLY PUMPED SOMETHING
+	var/update_network = 0
 
-	var/world_time = world.time								//so we don't call it a bunch of times.
-	for (var/atom/holder in machines_to_pump) 				//no longer just the reagent holder
-		if ( QDELETED(holder) || isnull(holder) || isnull(holder.reagents) )
-			machines_to_pump.Remove(holder)
-			machines_queue_time.Remove(holder)
-			continue
-		if (world_time >= machines_queue_time[holder] )		//Removes the machine if the time in the queue had exceeded.
-			machines_to_pump.Remove(holder)
-			machines_queue_time.Remove(holder)
-			continue
+	//stores water for structures that request water like "sink" (/obj/structure/sink) that doesn't have Process() and needs instant reagent access.
+	if (reagents.total_volume < reagents.maximum_volume *0.80) //we worry about getting more water if we're actually using it
+		if (air_contents.gas["water"])
+			var/water_input = air_contents.gas["water"]
+			var/free_volume = reagents.get_free_space()
+			var/transfer = min(max_input, water_input, free_volume/REAGENT_GAS_EXCHANGE_FACTOR)
+			air_contents.adjust_gas("water",- transfer)
+			reagents.add_reagent(/datum/reagent/water, transfer*REAGENT_GAS_EXCHANGE_FACTOR)
+			active = 1
+			update_network = 1
 
-		active = 1 											//Will remain active as long as there is machines in the queue
-		var/type = machines_to_pump[holder]
-
-		if (type == "any")									//It's asking for anything the ARO has, pump all the gases/liquids inside at their current ratio
-			var/free_vol_moles = holder.reagents.get_free_space() / REAGENT_GAS_EXCHANGE_FACTOR
-			var/air_contents_moles = air_contents.total_moles
-			for(var/gas in air_contents.gas)
-				var/reagent_type
-				if ( (!gas_data.generated_from_reagent[gas] && gas_data.component_reagents[gas].len == 1) ) //Not generated from reagents but is the gas state of one
-					for (var/r in gas_data.component_reagents[gas])
-						reagent_type = r
-				else if ( (!gas_data.generated_from_reagent[gas] && gas_data.component_reagents[gas].len != 1) )
-					air_contents_moles -= air_contents.gas[gas] //removes the amount of moles to calculate from this gas
-					continue //Not a reagent gas nor its made outta only one reagent so, proceed to the next.
-				else
-					reagent_type = gas_data.reagent_idToType[gas]
-
-				var/ratio = air_contents.gas[gas]/air_contents_moles
-				var/transfer = min(ratio*free_vol_moles, ratio*air_contents_moles) * REAGENT_GAS_EXCHANGE_FACTOR
-
-				transfer = holder.aro_pump_receive(reagent_type, transfer) 	//'transfer' should mostly not change here but still double check
-				air_contents.adjust_gas(gas,- transfer/REAGENT_GAS_EXCHANGE_FACTOR)
-				update_network = 1
-
-			machines_to_pump.Remove(holder)
-			machines_queue_time.Remove(holder)
-			continue										//"ANY" TYPE PROCESSED SUCCESSFULY, MOVE ON
-
-		var/reagent_gas_id = gas_data.reagent_typeToId[type]
-
+	for (var/datum/reagents/holder in machines_to_pump) //not actual machines, but their holders but yeah..
+		active = 1 // will remain active as long as there is machines in the queue
+		var/datum/reagent/reagent = machines_to_pump[holder]
+		var/datum/reagent/TEMP = new reagent()
 		//checks if the specified reagent gas exists in the current pipeline
-		if ( !air_contents.gas[ reagent_gas_id ] )
+		if ( !air_contents.gas[ lowertext(TEMP.name) ] )
+			qdel(TEMP)
 			continue
 
 		//checks for the minimum amount that can be transfered - skips if none, without removing from queue.
-		var/transfer = min(holder.reagents.get_free_space() , max_reagent_output, air_contents.gas[ reagent_gas_id ]*REAGENT_GAS_EXCHANGE_FACTOR )
+		var/transfer = min(holder.get_free_space() , max_reagent_output, air_contents.gas[ lowertext(TEMP.name) ]*REAGENT_GAS_EXCHANGE_FACTOR )
 		if (!transfer)
+			qdel(TEMP)
 			continue
 
 		//perfoms the exchange
-		transfer = holder.aro_pump_receive(type, transfer) 	//'transfer' should mostly not change here but still double check
-		air_contents.adjust_gas(reagent_gas_id,- transfer/REAGENT_GAS_EXCHANGE_FACTOR)
-		update_network = 1
+		holder.add_reagent(reagent, transfer)
+		air_contents.adjust_gas(lowertext(TEMP.name),- transfer/REAGENT_GAS_EXCHANGE_FACTOR)
 
 		//removes the 'sink' from the queue.
 		machines_to_pump.Remove(holder)
-		machines_queue_time.Remove(holder)
+		qdel(TEMP)
 
 	if (update_network)
 		network.update = 1
 	if (!active)
 		hibernate = 1
 		update_underlays()
-		spawn (rand(10,50))
+		spawn (rand(50,100))
 			if (hibernate) hibernate = 0
 
 /obj/machinery/atmospherics/unary/aro/update_underlays()
@@ -148,8 +117,8 @@
 				add_underlay(T,, dir)
 
 		var/datum/reagents/TEMP_HOLDER = new()
+		TEMP_HOLDER.maximum_volume = 0
 		var/datum/gas_mixture/air_data = air_contents
-		TEMP_HOLDER.maximum_volume = air_data.total_moles*REAGENT_GAS_EXCHANGE_FACTOR
 		for(var/gas in air_data.gas)
 			if(!gas_data.component_reagents[gas])
 				continue	//we don't need to (nor we can) proceed if the gas wasn't made out of a 'known' reagent.
@@ -161,10 +130,13 @@
 				break //Doesnt mean we shouldn't prevent condensating non existent gas anyways so fuck it.
 
 			for(var/R in component_reagents)
+				var/datum/reagent/reagent_data = new R() //hacky
+				TEMP_HOLDER.maximum_volume += possible_transfers*component_reagents[R]*REAGENT_GAS_EXCHANGE_FACTOR
 				TEMP_HOLDER.add_reagent(R, possible_transfers*component_reagents[R]*REAGENT_GAS_EXCHANGE_FACTOR) // Get those sweet gas reagents back to liquid state by creating em on the puddlez
+				qdel(reagent_data)
 
 		var/image/under = image('icons/obj/watercloset.dmi', src, "aro_underlay")
-		under.alpha = 165
+		under.alpha = 135
 		under.color = reagents.get_color()
 		underlays += under
 		qdel(TEMP_HOLDER)
@@ -200,13 +172,15 @@
 		area.aro = null
 		qdel(src)
 
+/obj/machinery/atmospherics/unary/aro/attack_hand(mob/user as mob)
+	to_chat(user, "<span class='notice'>You read the meter. The [src] currently has a total [reagents.total_volume] unit\s of water in the buffer. (Buffers only store water and are only required for Sinks to function. Everything else is exchanged and queued on the fly. Removing this note once there is a complete information on the Wiki around this.)</span>")
+
 // Queues up whatever requested it for a 'reagent' supply. Returns 1 if it sucessfuly queued, does not confirm if it will actually get supplied.
-/obj/machinery/atmospherics/unary/aro/proc/request_reagent(var/atom/holder, var/reagent)
-	if (!holder || !reagent || !holder.reagents)
+/obj/machinery/atmospherics/unary/aro/proc/request_reagent(var/datum/reagents/holder, var/datum/reagent/reagent)
+	if (!holder || !reagent || !istype(holder) )
 		return 0
 	if ( machines_to_pump[holder] ) return 0
 	machines_to_pump[holder] = reagent
-	machines_queue_time[holder] = world.time + ARO_MAX_QUEUE_TIME
 	hibernate = 0
 	return 1
 
@@ -218,4 +192,3 @@
 
 #undef ARO_BASEINPUT_GAS
 #undef ARO_BASEOUTPUT_REAGENT
-#undef ARO_MAX_QUEUE_TIME

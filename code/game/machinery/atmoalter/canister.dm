@@ -215,11 +215,9 @@ update_flag
 	..()
 	handle_heat_exchange()
 	if(valve_open)
-		var/has_tank_on // checked so we don't condense to the environment if we're pumping to a tank canister
 		var/datum/gas_mixture/environment
 		if(holding && holding.air_contents)
 			environment = holding.air_contents
-			has_tank_on = 1
 		else
 			environment = loc.return_air()
 
@@ -230,10 +228,7 @@ update_flag
 			var/transfer_moles = calculate_transfer_moles(air_contents, environment, pressure_delta)
 			transfer_moles = min(transfer_moles, (release_flow_rate/air_contents.volume)*air_contents.total_moles) //flow rate limit
 
-			if (!has_tank_on)
-				transfer_moles = condense_before_pump(src, air_contents, transfer_moles)
-				//transfer_moles get removed here depending on whether we're pumping to the atmosphere or to a tank. If it is to a tank we
-				//dont need to condense it before pumping the gases
+			transfer_moles = condense_before_pump(src, air_contents, transfer_moles)
 
 			var/returnval = pump_gas_passive(src, air_contents, environment, transfer_moles)
 			if(returnval >= 0)

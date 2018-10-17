@@ -98,10 +98,12 @@
 	strength = STR_HIGH
 	slowdown = 0.5
 	brute_mod = 0.8
+	blood_volume = 800
 	num_alternate_languages = 2
 	secondary_langs = list(LANGUAGE_UNATHI)
 	name_language = LANGUAGE_UNATHI
 	health_hud_intensity = 2
+	hunger_factor = DEFAULT_HUNGER_FACTOR * 3
 
 	min_age = 18
 	max_age = 260
@@ -290,7 +292,7 @@
 
 	body_temperature = T0C + 15		//make the plant people have a bit lower body temperature, why not
 
-	flags = NO_SCAN | IS_PLANT | NO_PAIN | NO_SLIP
+	species_flags = SPECIES_FLAG_NO_SCAN | SPECIES_FLAG_IS_PLANT | SPECIES_FLAG_NO_PAIN | SPECIES_FLAG_NO_SLIP
 	appearance_flags = 0
 	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED | SPECIES_NO_FBP_CONSTRUCTION | SPECIES_NO_FBP_CHARGEN | SPECIES_NO_LACE
 
@@ -367,8 +369,8 @@
 			if(I.damage > 0)
 				I.damage = max(I.damage - 2, 0)
 				H.nutrition -= 2
-				if (prob(1))
-					to_chat(H, "<span class='warning'>You sense your [I.name] regenerating...</span>")
+				if (prob(5))
+					to_chat(H, "<span class='warning'>You sense your nymphs shifting internally to regenerate your [I.name]...</span>")
 
 		if (prob(10) && H.nutrition > 70)
 			for(var/limb_type in has_limbs)
@@ -380,7 +382,7 @@
 				if(!E)
 					var/list/organ_data = has_limbs[limb_type]
 					var/limb_path = organ_data["path"]
-					var/obj/item/organ/O = new limb_path(src)
+					var/obj/item/organ/O = new limb_path(H)
 					organ_data["descriptor"] = O.name
 					to_chat(H, "<span class='warning'>Some of your nymphs split and hurry to reform your [O.name].</span>")
 					H.nutrition -= 60

@@ -41,7 +41,7 @@
 				Dimension:
 			</div>
 			<div class='itemContent'>
-				{{:helper.link('5X7', '', {'change_dimension' : '1'}, data.dimension == 1 ? 'selected' : null)}}{{:helper.link('7X7', '', {'change_dimension' : '2'}, data.dimension == 2 ? 'selected' : null)}}{{:helper.link('9X9', '', {'change_dimension' : '3'}, data.dimension == 3 ? 'selected' : null)}}
+				{{:helper.link('5X8', '', {'change_dimension' : '1'}, data.dimension == 1 ? 'selected' : null)}}{{:helper.link('7X8', '', {'change_dimension' : '2'}, data.dimension == 2 ? 'selected' : null)}}{{:helper.link('9X10', '', {'change_dimension' : '3'}, data.dimension == 3 ? 'selected' : null)}}
 			</div>
 		</div>
 		This defines the maxmimum shuttle size that can be constructed and docked at this beacon.
@@ -50,7 +50,7 @@
 				Visibility Mode:
 			</div>
 			<div class='itemContent'>
-				{{:helper.link('Authorized Only', '', {'set_visible' : '0'}, data.visible == 0 ? 'selected' : null)}}{{:helper.link('Visible, Restricted', '', {'set_visible' : '1'}, data.visible == 1 ? 'selected' : null)}}{{:helper.link('Any Access', '', {'set_visible' : '2'}, data.visible == 2 ? 'selected' : null)}}
+				{{:helper.link('Authorized Only', '', {'set_visible' : '0'}, data.visible == 0 ? 'selected' : null)}}{{:helper.link('Any Access', '', {'set_visible' : '1'}, data.visible == 1 ? 'selected' : null)}}{{:helper.link('Visible, Restricted', '', {'set_visible' : '2'}, data.visible == 2 ? 'selected' : null)}}
 			</div>
 		</div>
 		Authorized Only: Only those with proper access on the docks network can see and use the dock<br>
@@ -81,7 +81,7 @@
 					{{:helper.link('Finalize', '', {'finalize' : '1'}, null)}}
 				</div>
 			</div>
-			When theirs an appropriate amount of engines and a valid bridge computer in the beacon area, you can finalize the shuttle construction here. A roof will be automatically constructed if needed after finalization.
+			Construct and anchor the appropriate amount of engines,
 		{{/if}}
 	{{/if}}
 {{else}}

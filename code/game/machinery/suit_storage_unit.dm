@@ -155,6 +155,18 @@
 	if(MASK_TYPE)
 		MASK = new MASK_TYPE(src)
 
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/suit_storage_unit(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	RefreshParts()
+
+/obj/machinery/suit_storage_unit/dismantle()
+	src.dump_everything()
+	return ..()
+
+
 /obj/machinery/suit_storage_unit/update_icon()
 	var/hashelmet = 0
 	var/hassuit = 0
@@ -595,14 +607,23 @@
 
 
 /obj/machinery/suit_storage_unit/attackby(obj/item/I as obj, mob/user as mob)
-	if(!src.ispowered)
+	if(isScrewdriver(I) && src.islocked)
+		to_chat(user, "<span class='warning'>The maintenance panel is locked.</span>")
 		return
-	if(isScrewdriver(I))
-		src.panelopen = !src.panelopen
-		playsound(src.loc, 'sound/items/Screwdriver.ogg', 100, 1)
-		to_chat(user, text("<span class='notice'>You [] the unit's maintenance panel.</span>",(src.panelopen ? "open up" : "close") ))
+
+	if(default_deconstruction_screwdriver(user, I))
 		src.updateUsrDialog()
 		return
+	if(default_deconstruction_crowbar(user, I))
+		src.updateUsrDialog()
+		return
+	if(default_part_replacement(user, I))
+		src.updateUsrDialog()
+		return
+
+	if(!src.ispowered)
+		return
+
 	if ( istype(I, /obj/item/grab) )
 		var/obj/item/grab/G = I
 		if( !(ismob(G.affecting)) )
@@ -761,9 +782,24 @@
 	target_species = species[1]
 	if(!target_department || !target_species) qdel(src)
 
+	component_parts = list()
+	component_parts += new /obj/item/weapon/circuitboard/suit_cycler(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+	component_parts += new /obj/item/stack/cable_coil(src,1)
+	RefreshParts()
+
 /obj/machinery/suit_cycler/Destroy()
 	qdel(wires)
 	wires = null
+	return ..()
+
+/obj/machinery/suit_cycler/dismantle()
+	force_eject_occupant(usr)
+	eject_suit()
+	eject_helmet()
 	return ..()
 
 /obj/machinery/suit_cycler/engineering
@@ -816,10 +852,29 @@
 	departments = list("Pilot")
 	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI)
 
+/obj/machinery/suit_cycler/eva
+	name = "EVA suit cycler"
+	model_text = "Explorer"
+	req_access = list(access_eva)
+	departments = list("EVA")
+	species = list(SPECIES_HUMAN,SPECIES_SKRELL,SPECIES_UNATHI)
+
 /obj/machinery/suit_cycler/attack_ai(mob/user as mob)
 	return src.attack_hand(user)
 
 /obj/machinery/suit_cycler/attackby(obj/item/I as obj, mob/user as mob)
+
+	if(isScrewdriver(I) && locked) //Don't let random people dismantle the thing to get the stuff inside
+		to_chat(user, "<span class='warning'>The maintenance panel is locked.</span>")
+		return
+
+	if(default_deconstruction_screwdriver(user, I))
+		src.updateUsrDialog()
+		return
+	if(default_deconstruction_crowbar(user, I))
+		return
+	if(default_part_replacement(user, I))
+		return
 
 	if(electrified != 0)
 		if(src.shock(user, 100))
@@ -841,7 +896,7 @@
 			to_chat(user, "<span class='danger'>The suit cycler is locked.</span>")
 			return
 
-		if(src.contents.len > 0)
+		if(src.occupant || src.suit || src.helmet)
 			to_chat(user, "<span class='danger'>There is no room inside the cycler for [G.affecting.name].</span>")
 			return
 
@@ -862,12 +917,6 @@
 			src.updateUsrDialog()
 
 			return
-	else if(isScrewdriver(I))
-
-		panel_open = !panel_open
-		to_chat(user, "You [panel_open ?  "open" : "close"] the maintenance panel.")
-		src.updateUsrDialog()
-		return
 
 	else if(istype(I,/obj/item/clothing/head/helmet/space) && !istype(I, /obj/item/clothing/head/helmet/space/rig))
 
@@ -982,15 +1031,21 @@
 	onclose(user, "suit_cycler")
 	return
 
+/obj/machinery/suit_cycler/proc/eject_suit()
+	if(!suit) return
+	suit.loc = get_turf(src)
+	suit = null
+
+/obj/machinery/suit_cycler/proc/eject_helmet()
+	if(!helmet) return
+	helmet.loc = get_turf(src)
+	helmet = null
+
 /obj/machinery/suit_cycler/Topic(href, href_list)
 	if(href_list["eject_suit"])
-		if(!suit) return
-		suit.loc = get_turf(src)
-		suit = null
+		eject_suit()
 	else if(href_list["eject_helmet"])
-		if(!helmet) return
-		helmet.loc = get_turf(src)
-		helmet = null
+		eject_helmet()
 	else if(href_list["select_department"])
 		var/choice = input("Please select the target department paintjob.","Suit cycler",null) as null|anything in departments
 		if(choice) target_department = choice
@@ -1111,15 +1166,7 @@
 
 	eject_occupant(usr)
 
-/obj/machinery/suit_cycler/proc/eject_occupant(mob/user as mob)
-
-	if(locked || active)
-		to_chat(user, "<span class='warning'>The cycler is locked.</span>")
-		return
-
-	if (!occupant)
-		return
-
+/obj/machinery/suit_cycler/proc/force_eject_occupant(mob/user as mob)
 	if (occupant.client)
 		occupant.client.eye = occupant.client.mob
 		occupant.client.perspective = MOB_PERSPECTIVE
@@ -1130,6 +1177,17 @@
 	add_fingerprint(usr)
 	src.updateUsrDialog()
 	src.update_icon()
+
+/obj/machinery/suit_cycler/proc/eject_occupant(mob/user as mob)
+
+	if(locked || active)
+		to_chat(user, "<span class='warning'>The cycler is locked.</span>")
+		return
+
+	if (!occupant)
+		return
+
+	force_eject_occupant()
 
 	return
 

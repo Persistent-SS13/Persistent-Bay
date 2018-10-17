@@ -485,7 +485,11 @@ var/list/turret_icons
 	if(ishuman(L))	//if the target is a human, analyze threat level
 		if(assess_perp(L) < 4)
 			return TURRET_NOT_TARGET	//if threat level < 4, keep going
-			
+
+	if(issilicon(L)) // if the target is a silicon, analyze threat level
+		if(assess_borgo(L) < 4)
+			return TURRET_NOT_TARGET	//if threat level < 4, keep going
+
 	if(issilicon(L)) // if the target is a silicon, analyze threat level
 		if(assess_borgo(L) < 4)
 			return TURRET_NOT_TARGET	//if threat level < 4, keep going
@@ -524,14 +528,14 @@ var/list/turret_icons
 /obj/machinery/porta_turret/proc/assess_borgo(var/mob/living/silicon/robot/R)
 	if(!R || !istype(R))
 		return 0
- 	if(emagged)
+	if(emagged)
 		return 10
- 	if(connected_faction == null) //safety check
+	if(connected_faction == null) //safety check
 		check_faction = 0
 		check_access = 0
- 	if(check_faction && R.GetFaction() != connected_faction.uid)
+	if(check_faction && R.GetFaction() != connected_faction.uid)
 		return 10
- 	if(check_access)
+	if(check_access)
 		for(var/access in R.GetAccess(connected_faction.uid))
 			if(req_access["[access]"] > 0)
 				// Robots can call assess_perp too since they are mob/livings

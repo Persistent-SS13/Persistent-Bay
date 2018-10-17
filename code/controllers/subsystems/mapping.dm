@@ -1,6 +1,6 @@
 SUBSYSTEM_DEF(mapping)
 	name = "Mapping"
-	init_order = INIT_ORDER_MAPPING
+	init_order = SS_INIT_MAPPING
 	flags = SS_NO_FIRE
 
 	var/list/map_templates = list()
@@ -11,8 +11,9 @@ SUBSYSTEM_DEF(mapping)
 /datum/controller/subsystem/mapping/Initialize(timeofday)
 	preloadTemplates()
 	..()
-	Load_World()
 	world.visibility = 0
+	Load_World()
+	
 /datum/controller/subsystem/mapping/Recover()
 	flags |= SS_NO_INIT
 	map_templates = SSmapping.map_templates

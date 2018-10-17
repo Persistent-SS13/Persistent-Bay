@@ -41,12 +41,12 @@ datum/controller/vote
 				result()
 				for(var/client/C in voting)
 					if(C)
-						C << browse(null,"window=vote;size=450x740")
+						close_browser(C, "window=vote;size=450x740")
 				reset()
 			else
 				for(var/client/C in voting)
 					if(C)
-						C << browse(vote.interface(C),"window=vote;size=450x740")
+						show_browser(C, vote.interface(C), "window=vote;size=450x740")
 
 				voting.Cut()
 
@@ -437,7 +437,7 @@ datum/controller/vote
 			switch(href_list["vote"])
 				if("close")
 					voting -= usr.client
-					usr << browse(null, "window=vote;size=450x740")
+					close_browser(usr, "window=vote;size=450x740")
 					return
 				if("cancel")
 					if(usr.client.holder)
@@ -500,4 +500,4 @@ datum/controller/vote/proc/is_addantag_allowed(var/automatic)
 	set name = "Vote"
 
 	if(vote)
-		src << browse(vote.interface(client),"window=vote;size=450x740")
+		show_browser(src, vote.interface(client), "window=vote;size=450x740")

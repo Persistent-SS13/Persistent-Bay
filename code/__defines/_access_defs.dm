@@ -16,11 +16,17 @@
 
 #define core_access_leader 1
 #define core_access_command_programs 2
-#define core_access_engineering_programs 3
-#define core_access_medical_programs 4
-#define core_access_security_programs 5
-#define core_access_wireless_programs 6
-#define core_access_door_configuration 7
-#define core_access_order_approval 8
-#define core_access_science_programs 9
-#define core_access_shuttle_programs 10
+#define core_access_promotion 3
+#define core_access_reassignment 4
+#define core_access_employee_records 5
+#define core_access_expenses 6
+#define core_access_termination 7
+#define core_access_engineering_programs 8
+#define core_access_medical_programs 9
+#define core_access_security_programs 10
+#define core_access_wireless_programs 11
+#define core_access_door_configuration 12
+#define core_access_order_approval 13
+#define core_access_invoicing 14
+#define core_access_science_programs 15
+#define core_access_shuttle_programs 16

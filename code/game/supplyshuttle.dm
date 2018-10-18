@@ -324,6 +324,9 @@ var/list/point_source_descriptions = list(
 				export = new()
 				export.required = rand(30, 50)
 			for(var/x in recipe.resources)
+				if(!x)
+					to_world("[recipe] had a blank resource")
+					continue
 				var/material/mat = SSmaterials.get_material_by_name(x)
 				if(mat)
 					per += round(mat.value*recipe.resources[x]/2000,0.01)
@@ -359,6 +362,9 @@ var/list/point_source_descriptions = list(
 					if(!restart) valid = 1
 			export.required = rand(30, 70)
 			for(var/x in design.materials)
+				if(!x)
+					to_world("[design] had a blank resource")
+					continue
 				var/material/mat = SSmaterials.get_material_by_name(x)
 				if(mat)
 					per += round(mat.value*design.materials[x]/2000,0.01)
@@ -459,6 +465,9 @@ var/list/point_source_descriptions = list(
 			export.required = rand(50, 100)
 			var/per = rand(10,30)
 			for(var/x in design.materials)
+				if(!x)
+					to_world("[design] had a blank resource")
+					continue
 				var/material/mat = SSmaterials.get_material_by_name(x)
 				if(mat)
 					per += round(mat.value*design.materials[x]/2000,0.01)

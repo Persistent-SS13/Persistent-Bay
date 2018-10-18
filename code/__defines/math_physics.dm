@@ -32,6 +32,3 @@
 
 #define SIMPLE_SIGN(X) ((X) < 0 ? -1 : 1)
 #define SIGN(X)        ((X) ? SIMPLE_SIGN(X) : 0)
-
-#define WATER_BOIL                  373.2   // The boiling point of water in Kelvins. If it exists already somewhere then i am so sorry
-#define BOIL_PRESSURE_MULTIPLIER    0.43    // A multiplier for the boiling point divergence depending on the pressure (base_boil_point + 0.43 * pressure_difference) since we don't have all the variables we need for accurate boiling point.

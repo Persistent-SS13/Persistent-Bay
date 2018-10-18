@@ -45,7 +45,6 @@ NOTE: there are two lists of areas in the end of this file: centcom and station 
 
 	var/has_gravity = 1
 	var/obj/machinery/power/apc/apc = null
-	var/obj/machinery/atmospherics/unary/aro/aro = null
 	var/no_air = null
 //	var/list/lights				// list of all lights on this area
 	var/list/all_doors = null		//Added by Strumpetplaya - Alarm Change - Contains a list of doors adjacent to this area
@@ -132,7 +131,6 @@ area/space/atmosalert()
 /area/maintenance
 	area_flags = AREA_FLAG_RAD_SHIELDED
 	sound_env = TUNNEL_ENCLOSED
-	turf_initializer = /decl/turf_initializer/maintenance
 
 /area/rnd/xenobiology
 	name = "\improper Xenobiology Lab"

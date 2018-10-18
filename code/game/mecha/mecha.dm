@@ -81,14 +81,16 @@
 	var/max_equip = 3
 	var/datum/events/events
 
-	
-	should_save = 0
-	
-	
+
+	should_save = 1
+
+
 /obj/mecha/after_load()
-	qdel(src)
-	return 0
-	
+	if(occupant)
+		icon_state = reset_icon()
+	update_connect_verbs()
+
+
 /obj/mecha/drain_power(var/drain_check)
 
 	if(drain_check)
@@ -101,22 +103,45 @@
 
 /obj/mecha/New()
 	..()
-	events = new
-
 	icon_state += "-open"
+	events = new
 	add_radio()
 	add_cabin()
-	add_airtank() //All mecha currently have airtanks. No need to check unless changes are made.
 	spark_system.set_up(2, 0, src)
 	spark_system.attach(src)
-	add_cell()
 	add_iterators()
 	removeVerb(/obj/mecha/verb/disconnect_from_port)
 	log_message("[src.name] created.")
 	mechas_list += src //global mech list
 	return
 
+/obj/mecha/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		add_airtank() //All mecha currently have airtanks. No need to check unless changes are made.
+		add_cell()
+
 /obj/mecha/Destroy()
+	src.go_out()
+	for(var/mob/M in src) //Let's just be ultra sure
+		M.Move(loc)
+
+	for(var/obj/item/mecha_parts/mecha_equipment/E in equipment)
+		E.detach(loc)
+		E.destroy()
+	QDEL_NULL(cell)
+	QDEL_NULL(internal_tank)
+	QDEL_NULL(pr_int_temp_processor)
+	QDEL_NULL(pr_inertial_movement)
+	QDEL_NULL(pr_give_air)
+	QDEL_NULL(pr_internal_damage)
+	QDEL_NULL(spark_system)
+
+	mechas_list -= src //global mech list
+	. = ..()
+
+//When the mech "dies" this is what should be called, not Destroy or qdel...
+/obj/mecha/proc/destroy_mech()
 	src.go_out()
 	for(var/mob/M in src) //Let's just be ultra sure
 		M.Move(loc)
@@ -144,26 +169,8 @@
 		if(internal_tank)
 			WR.crowbar_salvage += internal_tank
 			internal_tank.forceMove(WR)
-	else
-		for(var/obj/item/mecha_parts/mecha_equipment/E in equipment)
-			E.detach(loc)
-			E.destroy()
-		if(cell)
-			qdel(cell)
-		if(internal_tank)
-			qdel(internal_tank)
 	equipment.Cut()
-	cell = null
-	internal_tank = null
-
-	QDEL_NULL(pr_int_temp_processor)
-	QDEL_NULL(pr_inertial_movement)
-	QDEL_NULL(pr_give_air)
-	QDEL_NULL(pr_internal_damage)
-	QDEL_NULL(spark_system)
-
-	mechas_list -= src //global mech list
-	. = ..()
+	qdel(src)
 
 ////////////////////////
 ////// Helpers /////////
@@ -560,7 +567,7 @@
 	if(src.health > 0)
 		src.spark_system.start()
 	else
-		qdel(src)
+		destroy_mech()
 	return
 
 /obj/mecha/attack_hand(mob/user as mob)
@@ -661,16 +668,16 @@
 		src.log_append_to_last("Armor saved, changing severity to [severity].")
 	switch(severity)
 		if(1.0)
-			qdel(src)
+			destroy_mech()
 		if(2.0)
 			if (prob(30))
-				qdel(src)
+				destroy_mech()
 			else
 				src.take_damage(initial(src.health)/2)
 				src.check_for_internal_damage(list(MECHA_INT_FIRE,MECHA_INT_TEMP_CONTROL,MECHA_INT_TANK_BREACH,MECHA_INT_CONTROL_LOST,MECHA_INT_SHORT_CIRCUIT),1)
 		if(3.0)
 			if (prob(5))
-				qdel(src)
+				destroy_mech()
 			else
 				src.take_damage(initial(src.health)/5)
 				src.check_for_internal_damage(list(MECHA_INT_FIRE,MECHA_INT_TEMP_CONTROL,MECHA_INT_TANK_BREACH,MECHA_INT_CONTROL_LOST,MECHA_INT_SHORT_CIRCUIT),1)
@@ -948,6 +955,7 @@
 		network.gases += internal_tank.return_air()
 		network.update = 1
 	log_message("Connected to gas port.")
+	update_connect_verbs()
 	return 1
 
 /obj/mecha/proc/disconnect()
@@ -961,12 +969,21 @@
 	connected_port.connected_device = null
 	connected_port = null
 	src.log_message("Disconnected from gas port.")
+	update_connect_verbs()
 	return 1
 
 
 /////////////////////////
 ////////  Verbs  ////////
 /////////////////////////
+
+/obj/mecha/proc/update_connect_verbs()
+	if(connected_port)
+		src.verbs += /obj/mecha/verb/disconnect_from_port
+		src.verbs -= /obj/mecha/verb/connect_to_port
+	else
+		src.verbs -= /obj/mecha/verb/disconnect_from_port
+		src.verbs += /obj/mecha/verb/connect_to_port
 
 
 /obj/mecha/verb/connect_to_port()
@@ -981,8 +998,6 @@
 	if(possible_port)
 		if(connect(possible_port))
 			src.occupant_message("<span class='notice'>\The [name] connects to the port.</span>")
-			src.verbs += /obj/mecha/verb/disconnect_from_port
-			src.verbs -= /obj/mecha/verb/connect_to_port
 			return
 		else
 			src.occupant_message("<span class='danger'>\The [name] failed to connect to the port.</span>")
@@ -1001,8 +1016,6 @@
 		return
 	if(disconnect())
 		src.occupant_message("<span class='notice'>[name] disconnects from the port.</span>")
-		src.verbs -= /obj/mecha/verb/disconnect_from_port
-		src.verbs += /obj/mecha/verb/connect_to_port
 	else
 		src.occupant_message("<span class='danger'>[name] is not connected to the port at the moment.</span>")
 

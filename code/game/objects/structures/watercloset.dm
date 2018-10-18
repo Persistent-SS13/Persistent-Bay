@@ -94,35 +94,19 @@
 	anchored = 1
 	use_power = 0
 	var/on = 0
-	var/mistdelay = 0
+	var/obj/effect/mist/mymist = null
 	var/ismist = 0				//needs a var so we can make it linger~
 	var/watertemp = "normal"	//freezing, normal, or boiling
 	var/is_washing = 0
 	var/list/temperature_settings = list("normal" = 310, "boiling" = T0C+100, "freezing" = T0C)
 
-	var/node = null
-	var/network = null
-
-	var/filter = "any"
-	var/is_pumping = 0
-	var/was_pumping = 0
-	var/shutoff_buffer
-	var/shutoff_autotimer = 200 // The time the shower is on before it automatically shuts of
-	var/request_timer = 30 //The time it takes before the the shower automatically shuts off for not receiving reagents
-	var/last_request
-	// The values for this var should be:
-	// - 'null'	- for not requesting (has enough reagents)
-	// - '0'	- for forcing shut off (happens while requesting when no ARO is present)
-	// - '> 0'	- for when its currently waiting on the request to take effect
-
 /obj/machinery/shower/New()
 	..()
 	create_reagents(50)
-	shutoff_buffer = world.time - shutoff_autotimer
 
 //add heat controls? when emagged, you can freeze to death in it?
 
-/obj/effect/mist //no use, might as well be used as overlay and not an actual object, for now.
+/obj/effect/mist
 	name = "mist"
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "mist"
@@ -133,13 +117,13 @@
 
 /obj/machinery/shower/attack_hand(mob/M as mob)
 	on = !on
-	if (on)
-		last_request = null
-		shutoff_buffer = world.time + shutoff_autotimer
-		update_icon()
-	else if (!on)
-		shutoff_buffer = world.time
-		return
+	update_icon()
+	if(on)
+		if (M.loc == loc)
+			wash(M)
+			process_heat(M)
+		for (var/atom/movable/G in src.loc)
+			G.clean_blood()
 
 /obj/machinery/shower/attackby(obj/item/I as obj, mob/user as mob)
 	if(I.type == /obj/item/device/analyzer)
@@ -168,28 +152,30 @@
 
 /obj/machinery/shower/update_icon()	//this is terribly unreadable, but basically it makes the shower mist up
 	overlays.Cut()					//once it's been on for a while, in addition to handling the water overlay.
+	if(mymist)
+		qdel(mymist)
+		mymist = null
 
-	if(on && is_pumping)
+	if(on)
 		overlays += image('icons/obj/watercloset.dmi', src, "water", MOB_LAYER + 1, dir)
 		if(temperature_settings[watertemp] < T20C)
 			return //no mist for cold water
-		if(!ismist && !mistdelay)
-			mistdelay = 1
+		if(!ismist)
 			spawn(50)
 				if(src && on)
 					ismist = 1
-					mistdelay = 0
-					overlays += image('icons/obj/watercloset.dmi', src, "mist", MOB_LAYER + 1, dir)
-		else if (ismist)
-			overlays += image('icons/obj/watercloset.dmi', src, "mist", MOB_LAYER + 1, dir)
-	if(!on && ismist && !mistdelay)
-		overlays += image('icons/obj/watercloset.dmi', src, "mist", MOB_LAYER + 1, dir)
-		mistdelay = 1
-		spawn(100)
-			if (src && !on && ismist && mistdelay)
+					mymist = new /obj/effect/mist(loc)
+		else
+			ismist = 1
+			mymist = new /obj/effect/mist(loc)
+	else if(ismist)
+		ismist = 1
+		mymist = new /obj/effect/mist(loc)
+		spawn(250)
+			if(src && !on)
+				qdel(mymist)
+				mymist = null
 				ismist = 0
-				mistdelay = 0
-				update_icon()
 
 //Yes, showers are super powerful as far as washing goes.
 /obj/machinery/shower/proc/wash(atom/movable/O as obj|mob)
@@ -285,51 +271,29 @@
 			if(istype(E,/obj/effect/rune) || istype(E,/obj/effect/decal/cleanable) || istype(E,/obj/effect/overlay))
 				qdel(E)
 
-	reagents.splash_mob(O, 10)
+	reagents.splash(O, 10)
 
 /obj/machinery/shower/Process()
-	if (is_pumping != was_pumping)
-		update_icon()
-
 	if(!on) return
-	if(shutoff_buffer <= world.time)
-		on = 0
-		update_icon()
-		src.visible_message("<span class='notice'>\The [src] automatically shuts off.</span>")
-		return
-	//Request
-	if (reagents.total_volume <= reagents.maximum_volume /5 && !last_request)
-		aro_pump_request()
-	//Deploy
-	was_pumping = is_pumping
-	if (reagents.total_volume >= 1)
-		is_pumping = 1
-		for(var/thing in loc)
-			var/atom/movable/AM = thing
-			var/mob/living/L = thing
-			if(istype(AM) && AM.simulated)
-				wash(AM)
-				if(istype(L))
-					process_heat(L)
-		wash_floor()
-	else
-		is_pumping = 0
-	//Turn off (If too long without receiving reagents)
-	if (!isnull(last_request) && world.time >= last_request + request_timer)
-		last_request = null
-		on = 0
-		update_icon()
-		src.visible_message("<span class='warning'>\The [src] automatically goes off as there was no fluid coming out.</span>")
 
+	for(var/thing in loc)
+		var/atom/movable/AM = thing
+		var/mob/living/L = thing
+		if(istype(AM) && AM.simulated)
+			wash(AM)
+			if(istype(L))
+				process_heat(L)
+	wash_floor()
+	reagents.add_reagent(/datum/reagent/water, reagents.get_free_space())
 
 /obj/machinery/shower/proc/wash_floor()
-	if(is_washing) //doesn't always splash water on the floor.
+	if(!ismist && is_washing)
 		return
 	is_washing = 1
 	var/turf/T = loc
-	reagents.splash(T, 10)
-	//T.clean(src) //why do we clean ourselves tbh
-	spawn(50) //every 5 seconds splashes the floor.
+	reagents.splash(T, reagents.total_volume)
+	T.clean(src)
+	spawn(100)
 		is_washing = 0
 
 /obj/machinery/shower/proc/process_heat(mob/living/M)
@@ -337,7 +301,7 @@
 
 	var/temperature = temperature_settings[watertemp]
 	var/temp_adj = between(BODYTEMP_COOLING_MAX, temperature - M.bodytemperature, BODYTEMP_HEATING_MAX)
-	M.bodytemperature += temp_adj*0.1
+	M.bodytemperature += temp_adj
 
 	if(ishuman(M))
 		var/mob/living/carbon/human/H = M
@@ -345,26 +309,6 @@
 			to_chat(H, "<span class='danger'>The water is searing hot!</span>")
 		else if(temperature <= H.species.cold_level_1)
 			to_chat(H, "<span class='warning'>The water is freezing cold!</span>")
-
-/obj/machinery/shower/aro_pump_request()
-	last_request = world.time
-	var/area/this_area = get_area(src)
-	var/obj/machinery/atmospherics/unary/aro/aro = this_area.aro
-	if (aro)
-		aro.request_reagent(src, filter) //first argument sends in the reagents holder, second argument should be type (not string)
-		//like ' /datum/reagent/water ' but use ' "any" ' for pumping in whatever the aro has (makes more sense)
-		//I will add a filter on ARO/Machine/structure specific in the future
-	else
-		last_request = 0
-		src.visible_message("<span class='warning'>There is no tubing on this [src].</span>")
-		return null
-	last_request = world.time
-
-/obj/machinery/shower/aro_pump_receive()
-	. = ..()
-	if (. > 0)
-		last_request = null
-
 
 /obj/item/weapon/bikehorn/rubberducky
 	name = "rubber ducky"
@@ -383,7 +327,6 @@
 	anchored = 1
 	var/frame_type = /obj/item/frame/plastic/sink/
 	var/busy = 0 	//Something's being washed at the moment
-	var/filter = "any"
 
 /obj/machinery/sink/New(loc, dir, atom/frame)
 	..(loc)
@@ -395,7 +338,6 @@
 
 		pixel_x = (dir & 3)? 0 : (dir == 4 ? -20 : 20)
 		pixel_y = (dir & 3)? (dir ==1 ? -32 : 32) : 0
-
 /obj/structure/sink/MouseDrop_T(var/obj/item/thing, var/mob/user)
 	..()
 	if(!istype(thing) || !thing.is_open_container())
@@ -411,14 +353,6 @@
 	thing.update_icon()
 
 /obj/structure/sink/attack_hand(mob/user as mob)
-	if (!reagents)
-		create_reagents(30)
-	var/area/this_area = get_area(src)
-	var/obj/machinery/atmospherics/unary/aro/aro = this_area.aro
-	if (!aro)
-		to_chat(usr, "<span class='warning'>There is apparently no tubing in this. This area doesn't seem to have an Area Reagent Outlet.</span>")
-		return
-
 	if (ishuman(user))
 		var/mob/living/carbon/human/H = user
 		var/obj/item/organ/external/temp = H.organs_by_name[BP_R_HAND]
@@ -438,13 +372,6 @@
 		to_chat(user, "<span class='warning'>Someone's already washing here.</span>")
 		return
 
-	if ( reagents.total_volume < 1 )
-		if (this_area.aro)
-			this_area.aro.request_reagent(src, filter)
-		else
-			to_chat(usr, "<span class='warning'>There seems to be no tubing on this...</span>")
-			return
-
 	to_chat(usr, "<span class='notice'>You start washing your hands.</span>")
 
 	busy = 1
@@ -452,9 +379,6 @@
 	busy = 0
 
 	if(!Adjacent(user)) return		//Person has moved away from the sink
-	if(reagents.total_volume < 1)	//No watah
-		to_chat(usr, "<span class='warning'>Nothing really comes out of this sink...</span>")
-		return
 
 	user.clean_blood()
 	if(ishuman(user))
@@ -464,43 +388,13 @@
 
 
 /obj/structure/sink/attackby(obj/item/O as obj, mob/living/user as mob)
-	if (!reagents)
-		create_reagents(30)
 	if(busy)
 		to_chat(user, "<span class='warning'>Someone's already washing here.</span>")
 		return
-	else if(isWrench(O))
-		to_chat(usr, "<span class='notice'>You begin to unsecure \the [src] from the floor.</span>")
-		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
-		if(do_after(usr, 30, src))
-			if(!src) return
-			to_chat(usr, "<span class='notice'>You finish dismantling \the [src].</span>")
-			new frame_type(src.loc)
-			qdel(src)
-			return
-
-	var/area/this_area = get_area(src)
-	var/obj/machinery/atmospherics/unary/aro/aro = this_area.aro
-	if (!aro)
-		to_chat(user, "<span class='warning'>There is apparently no tubing in this. This area doesn't seem to have an Area Reagent Outlet.</span>")
-		return
-
-	if (reagents.total_volume < 1)
-		aro.request_reagent(src, filter)
-		busy = 1
-		sleep(15)
-		busy = 0
-		if(!Adjacent(user)) return
-		if (reagents.total_volume < 1)
-			to_chat(user, "<span class='warning'>Nothing is coming out of it...</span>")
-			return
 
 	var/obj/item/weapon/reagent_containers/RG = O
 	if (istype(RG) && RG.is_open_container())
-		var/transfer = min(RG.volume - RG.reagents.total_volume, RG.amount_per_transfer_from_this, reagents.total_volume )
-		if (!transfer)
-			return
-		reagents.trans_to_holder(RG.reagents, transfer)
+		RG.reagents.add_reagent(/datum/reagent/water, min(RG.volume - RG.reagents.total_volume, RG.amount_per_transfer_from_this))
 		user.visible_message("<span class='notice'>[user] fills \the [RG] using \the [src].</span>","<span class='notice'>You fill \the [RG] using \the [src].</span>")
 		return 1
 
@@ -522,12 +416,20 @@
 					"<span class='userdanger'>[user] was stunned by \his wet [O]!</span>")
 				return 1
 	else if(istype(O, /obj/item/weapon/mop))
-		var/obj/item/weapon/mop/M = O
-		var/transfer = min(M.reagents.maximum_volume - M.reagents.total_volume, reagents.total_volume, 10 )
-		reagents.trans_to_holder(M.reagents, transfer)
-		to_chat(user, "<span class='notice'>You wet \the [M] in \the [src].</span>")
+		O.reagents.add_reagent(/datum/reagent/water, 5)
+		to_chat(user, "<span class='notice'>You wet \the [O] in \the [src].</span>")
 		playsound(loc, 'sound/effects/slosh.ogg', 25, 1)
 		return
+
+	else if(isWrench(O))
+		to_chat(usr, "<span class='notice'>You begin to unsecure \the [src] from the floor.</span>")
+		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
+		if(do_after(usr, 30, src))
+			if(!src) return
+			to_chat(usr, "<span class='notice'>You finish dismantling \the [src].</span>")
+			new frame_type(src.loc)
+			qdel(src)
+			return
 
 	var/turf/location = user.loc
 	if(!isturf(location)) return
@@ -545,15 +447,11 @@
 	if(!I) return 								//Item's been destroyed while washing
 	if(user.get_active_hand() != I) return		//Person has switched hands or the item in their hands
 
-	if (reagents.total_volume < 1)
-		to_chat(user, "<span class='warning'>Nothing is coming out of it...</span>")
-		return
 	O.clean_blood()
 	user.visible_message( \
 		"<span class='notice'>[user] washes \a [I] using \the [src].</span>", \
 		"<span class='notice'>You wash \a [I] using \the [src].</span>")
-	reagents.trans_to(I, min(1, reagents.total_volume) )
-	//TODO: ADD ACTUAL TOUCH EFFECTS TO THE ITEM SINCE ANY REAGENT COULD BE COMING OUT OF THIS HEHE
+
 
 /obj/structure/sink/kitchen
 	name = "kitchen sink"

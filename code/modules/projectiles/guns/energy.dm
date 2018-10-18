@@ -36,7 +36,7 @@
 	..()
 
 /obj/item/weapon/gun/energy/Initialize()
-	..()
+	. = ..()
 	if(!map_storage_loaded)
 		if(cell_type)
 			power_supply = new cell_type(src)

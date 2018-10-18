@@ -38,7 +38,7 @@
 	//var/list/ammo_states = list()	//values
 
 /obj/item/weapon/gun/projectile/Initialize()
-	..()
+	. = ..()
 	if(!map_storage_loaded)
 		if(starts_loaded)
 			if(ispath(ammo_type) && (load_method & (SINGLE_CASING|SPEEDLOADER)))

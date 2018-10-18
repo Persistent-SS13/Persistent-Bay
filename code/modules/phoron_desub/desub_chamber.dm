@@ -73,8 +73,8 @@
 		return
 
 	var/choice = input( user, "What would you like to do?", \
-                        "Resonant Chamber", \
-                        "Cancel") in list("Combine", "Eject", "Cancel")
+						"Resonant Chamber", \
+						"Cancel") in list("Combine", "Eject", "Cancel")
 
 	switch( choice )
 		if( "Combine" )
@@ -123,8 +123,8 @@
 
 /obj/machinery/phoron_desublimer/resonant_chamber/proc/eject( mob/user as mob )
 	var/obj/sm_piece = input( user, "What would you like to eject?", \
-                    		  		"Resonant Chamber", \
-                    		  		null ) in sm_pieces
+							  		"Resonant Chamber", \
+							  		null ) in sm_pieces
 
 	if( !sm_piece )
 		return

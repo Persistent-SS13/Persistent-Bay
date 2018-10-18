@@ -58,7 +58,6 @@
 	var/obj/machinery/portable_atmospherics/canister/internal_tank
 	var/datum/gas_mixture/cabin_air
 	var/obj/machinery/atmospherics/portables_connector/connected_port = null
-	//var/is_connected_port = 0 //Mainly used for saving and checking on reload if we gotta try to re-connect
 
 	var/obj/item/device/radio/radio = null
 

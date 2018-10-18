@@ -207,6 +207,10 @@ obj/item/weapon/gun/energy/staff/focus
 
 
 /obj/item/weapon/gun/energy/plasmacutter/attackby(obj/item/A, mob/user)
+	if(isScrewdriver(A))
+		to_chat(user, "<span class='warning'>The cell housing is firmly secured, you can't remove it.</span>")
+		return
+
 	if(istype(A, /obj/item/stack/material/phoron))
 		var/obj/item/stack/material/S = A
 

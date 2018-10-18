@@ -373,6 +373,10 @@ var/global/list/debug_data = list()
 
 
 /proc/Retrieve_Record(var/key)
+	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+		if(record2.get_name() == ley)
+			message_admins("retrieve_record ran for existing record [key]")
+			return record2
 	if(!fexists("record_saves/[key].sav")) return
 	var/savefile/f = new("record_saves/[key].sav")
 	var/datum/computer_file/crew_record/v

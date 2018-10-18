@@ -16,7 +16,7 @@
 	var/spent_icon = "s-casing-spent"
 
 /obj/item/ammo_casing/Initialize()
-	..()
+	. = ..()
 	if(!map_storage_loaded)
 		if(ispath(projectile_type))
 			BB = new projectile_type(src)
@@ -117,6 +117,7 @@
 	update_icon()
 
 /obj/item/ammo_magazine/Initialize()
+	. = ..()
 	if(!map_storage_loaded)
 		if(isnull(initial_ammo))
 			initial_ammo = max_ammo

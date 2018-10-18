@@ -136,6 +136,7 @@
 	return 1
 	
 	
+	
 /proc/money_transfer(var/datum/money_account/payer, var/attempt_real_name, var/purpose, var/amount)
 	if(!payer || amount > payer.money)
 		return 0

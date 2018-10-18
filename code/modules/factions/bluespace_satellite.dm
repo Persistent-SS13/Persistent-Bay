@@ -73,7 +73,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		faction = get_faction(req_access_faction)
 	check_shuttle()
 	stat = 0
-	dir = 2
+	update_icon()
 /obj/machinery/docking_beacon/attack_hand(var/mob/user as mob)
 	ui_interact(user)
 

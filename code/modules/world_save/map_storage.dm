@@ -374,6 +374,11 @@ var/global/list/debug_data = list()
 
 
 /proc/Retrieve_Record(var/key)
+	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+		if(record2.get_name() == ley)
+			message_admins("retrieve_record ran for existing record [key]")
+			return record2
+			
 	if(!fexists("record_saves/[key].sav")) return
 	var/savefile/f = new("record_saves/[key].sav")
 	var/datum/computer_file/crew_record/v
@@ -381,6 +386,7 @@ var/global/list/debug_data = list()
 	. = v
 	spawn(10)
 		if(v && v.linked_account) v.linked_account.after_load()
+		else message_admins("null account for [key]")
 		GLOB.all_crew_records |= v
 		f = null
 	

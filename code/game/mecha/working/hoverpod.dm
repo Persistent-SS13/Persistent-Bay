@@ -62,15 +62,15 @@
 
 /obj/mecha/working/hoverpod/mechstep(direction)
 	var/result = step(src,direction)
-	if(result)
-		playsound(src,'sound/machines/hiss.ogg',40,1)
+//	if(result)
+//		playsound(src,'sound/machines/hiss.ogg',40,1) //That noise is horrible
 	return result
 
 
 /obj/mecha/working/hoverpod/mechsteprand()
 	var/result = step_rand(src)
-	if(result)
-		playsound(src,'sound/machines/hiss.ogg',40,1)
+//	if(result)
+//		playsound(src,'sound/machines/hiss.ogg',40,1) //That noise is horrible
 	return result
 
 

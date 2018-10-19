@@ -61,7 +61,6 @@ Class Procs:
 	air.temperature = TCMB
 	air.group_multiplier = 1
 	air.volume = CELL_VOLUME
-	condense_buffer = world.time + ZONE_CONDENSATION_DELAY
 
 /zone/proc/add(turf/simulated/T)
 #ifdef ZASDBG
@@ -165,7 +164,6 @@ Class Procs:
 	for(var/connection_edge/E in edges)
 		if(E.sleeping)
 			E.recheck()
-	condensation_check()
 
 /zone/proc/dbg_data(mob/M)
 	to_chat(M, name)

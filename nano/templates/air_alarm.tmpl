@@ -205,6 +205,24 @@ Used In File(s): \code\game\machinery\alarm.dm
 			</div>
 		{{/for}}
     {{else data.screen == 5}}
+		<H3>Settings</H3>
+		Which sensor feature is enabled on this alarm.
+		<div class="item">
+			<div class="itemLabel">
+				Breach Detection:
+			</div>
+			<div class="itemContent">
+				{{:helper.link(data.breach_detection ? 'On' : 'Off', null, { 'toggle_breach_detection' : 1 }, null, data.breach_detection ? null : 'redButton')}}
+			</div>
+		</div>
+		<div class="item">
+			<div class="itemLabel">
+				Danger Threshold Detection:
+			</div>
+			<div class="itemContent">
+				{{:helper.link(data.report_danger_level ? 'On' : 'Off', null, { 'toggle_report_danger_level' : 1 }, null, data.report_danger_level ? null : 'redButton')}}
+			</div>
+		</div>
 		<H3>Alarm Threshold</H3>
 		Partial pressure for gases.
 		<table class='fixed'>

@@ -121,6 +121,7 @@
 		pixel_y = (dir & 3)? (dir ==1 ? -24 : 24) : 0
 		update_icon()
 		frame.transfer_fingerprints_to(src)
+
 /obj/machinery/alarm/after_load()
 	. = ..()
 	alarm_area = get_area(src)
@@ -567,7 +568,7 @@
 						"power"		= info["power"],
 						"checks"	= info["checks"],
 						"direction"	= info["direction"],
-						"external"	= info["external"]
+						"external"	= info["external"],
 						"internal"  = info["internal"]
 					)
 			data["vents"] = vents
@@ -628,8 +629,9 @@
 			for(var/i = 1, i <= 4, i++)
 				thresholds[thresholds.len]["settings"] += list(list("env" = "temperature", "val" = i, "selected" = selected[i]))
 
-
 			data["thresholds"] = thresholds
+			data["report_danger_level"] = report_danger_level
+			data["breach_detection"] = breach_detection
 
 /obj/machinery/alarm/CanUseTopic(var/mob/user, var/datum/topic_state/state, var/href_list = list())
 	if(buildstage != 2)
@@ -795,6 +797,14 @@
 		if(href_list["mode"])
 			mode = text2num(href_list["mode"])
 			apply_mode()
+			return TOPIC_REFRESH
+
+		if(href_list["toggle_breach_detection"])
+			breach_detection = !breach_detection
+			return TOPIC_REFRESH
+
+		if(href_list["toggle_report_danger_level"])
+			report_danger_level = !report_danger_level
 			return TOPIC_REFRESH
 
 /obj/machinery/alarm/attackby(obj/item/W as obj, mob/user as mob)

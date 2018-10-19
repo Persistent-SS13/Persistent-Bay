@@ -13,6 +13,7 @@
 	var/account_type = 0	//0 - personal account
 							//1 - assignment category account
 							//3 - central faction account
+	var/list/recently_paid = list()
 /datum/money_account/after_load()
 	if(get_account(account_number))
 		message_admins("duplicate account loaded owner: [owner_name] account_number: [account_number]")
@@ -144,6 +145,7 @@
 	if(!D || D.suspended)
 		message_admins("no account found for [attempt_real_name]")
 		return 0
+	payer.recently_paid |= D
 	var/datum/transaction/Te = new("[attempt_real_name]", purpose, -amount, 0)
 	payer.do_transaction(Te)
 	D.money = D.money + amount

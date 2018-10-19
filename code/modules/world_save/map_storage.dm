@@ -381,11 +381,9 @@ var/global/list/debug_data = list()
 	var/savefile/f = new("record_saves/[key].sav")
 	var/datum/computer_file/crew_record/v
 	f >> v
-	. = v
-	spawn(10)
-		if(v && v.linked_account) v.linked_account.after_load()
-		GLOB.all_crew_records |= v
-		f = null
+	if(v && v.linked_account) v.linked_account.after_load()
+	else message_admins("record without account [key]")
+	GLOB.all_crew_records |= v
 	
 
 /proc/Retrieve_Record_Faction(var/key, var/datum/world_faction/faction)
@@ -395,7 +393,6 @@ var/global/list/debug_data = list()
 	f >> v
 	var/list/records = faction.get_records()
 	records |= v
-	f = null
 	return v
 
 

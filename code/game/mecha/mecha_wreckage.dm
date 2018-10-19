@@ -72,6 +72,16 @@
 			to_chat(user, "You don't see anything that can be pried with [W].")
 	else
 		..()
+
+	//In case you wanna get rid of a wreck
+	if(istype(W,/obj/item/weapon/pickaxe))
+		to_chat(usr, "<span class='notice'>You begin taking down \the [src].</span>")
+		if(do_after(usr, 30, src))
+			to_chat(usr, "<span class='notice'>You hammered \the [src] to scraps.</span>")
+			var/turf/ground = get_turf(src)
+			new /obj/effect/decal/cleanable/blood/oil(ground)
+			new /obj/effect/decal/cleanable/blood/gibs/robot(ground)
+			qdel(src)
 	return
 
 

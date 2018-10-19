@@ -566,6 +566,7 @@ GLOBAL_LIST_EMPTY(all_business)
 	
 	var/hiring_policy = 0 // if hiring_policy, anyone with reassignment can add people to the network, else only people in command a command category with reassignment can add people
 	var/last_expense_print = 0
+	
 
 /datum/world_faction/after_load()	
 	if(!debts)

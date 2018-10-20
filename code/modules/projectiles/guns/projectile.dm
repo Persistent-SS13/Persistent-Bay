@@ -37,14 +37,15 @@
 	//var/list/icon_keys = list()		//keys
 	//var/list/ammo_states = list()	//values
 
-/obj/item/weapon/gun/projectile/New()
-	..()
-	if (starts_loaded)
-		if(ispath(ammo_type) && (load_method & (SINGLE_CASING|SPEEDLOADER)))
-			for(var/i in 1 to max_shells)
-				loaded += new ammo_type(src)
-		if(ispath(magazine_type) && (load_method & MAGAZINE))
-			ammo_magazine = new magazine_type(src)
+/obj/item/weapon/gun/projectile/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		if(starts_loaded)
+			if(ispath(ammo_type) && (load_method & (SINGLE_CASING|SPEEDLOADER)))
+				for(var/i in 1 to max_shells)
+					loaded += new ammo_type(src)
+			if(ispath(magazine_type) && (load_method & MAGAZINE))
+				ammo_magazine = new magazine_type(src)
 	update_icon()
 
 /obj/item/weapon/gun/projectile/consume_next_projectile()

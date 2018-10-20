@@ -35,12 +35,13 @@
 
 	..()
 
-/obj/item/weapon/gun/energy/New()
-	..()
-	if(cell_type)
-		power_supply = new cell_type(src)
-	else
-		power_supply = new /obj/item/weapon/cell/device/variable(src, max_shots*charge_cost)
+/obj/item/weapon/gun/energy/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		if(cell_type)
+			power_supply = new cell_type(src)
+		else
+			power_supply = new /obj/item/weapon/cell/device/variable(src, max_shots*charge_cost)
 	if(self_recharge)
 		START_PROCESSING(SSobj, src)
 	update_icon()

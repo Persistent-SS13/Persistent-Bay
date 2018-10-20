@@ -249,6 +249,12 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 			M.remove_from_mob(src) //un-equip it so the overlays can update
 		qdel(src)
 
+/obj/item/clothing/mask/smokable/cigarette/custom
+	name = "hand-rolled cigarette"
+	desc = "A tightly rolled smokeable, ready to deliver whatever it's been dipped in."
+	filling = list() // Starts with nothing, dip it in a reageant to finish.
+	color = "#dcdcdc"
+
 /obj/item/clothing/mask/smokable/cigarette/menthol
 	name = "menthol cigarette"
 	desc = "A cigarette with a little minty kick. Well, minty in theory."
@@ -459,7 +465,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 /////////////////
 /obj/item/clothing/mask/smokable/pipe
 	name = "smoking pipe"
-	desc = "A pipe, for smoking. Probably made of meershaum or something."
+	desc = "A pipe, for smoking. Probably made of meerschaum or something."
 	icon_state = "pipeoff"
 	item_state = "pipeoff"
 	w_class = ITEM_SIZE_TINY
@@ -552,7 +558,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 
 /obj/item/clothing/mask/smokable/pipe/cobpipe
 	name = "corn cob pipe"
-	desc = "A nicotine delivery system popularized by folksy backwoodsmen, kept popular in the modern age and beyond by space hipsters."
+	desc = "A nicotine delivery system popularized by folksy backwoodsmen, nowadays are often seen in backwater worlds where even the most basic techonology is a luxury for many people."
 	icon_state = "cobpipeoff"
 	item_state = "cobpipeoff"
 	icon_on = "cobpipeon"  //Note - these are in masks.dmi

@@ -12,7 +12,6 @@
 	var/projectile_type = /obj/item/projectile/beam/practice
 	var/modifystate
 	var/charge_meter = 1	//if set, the icon state will be chosen based on the current charge
-	var/cover_open = 0
 	//self-recharging
 	var/self_recharge = 0	//if set, the weapon will recharge itself
 	var/use_external_power = 0 //if set, the weapon will look for an external power source to draw from, otherwise it recharges magically
@@ -28,19 +27,13 @@
 	..()
 	update_icon()
 
-/obj/item/weapon/gun/energy/afterattack(atom/A, mob/living/user, adjacent, params)
-	if(cover_open)
-		to_chat(user, "<span class='danger'> You can't fire \the [src] while the housing is unsecured! </span>")
-		return
-
-	..()
-
-/obj/item/weapon/gun/energy/New()
-	..()
-	if(cell_type)
-		power_supply = new cell_type(src)
-	else
-		power_supply = new /obj/item/weapon/cell/device/variable(src, max_shots*charge_cost)
+/obj/item/weapon/gun/energy/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		if(cell_type)
+			power_supply = new cell_type(src)
+		else
+			power_supply = new /obj/item/weapon/cell/device/variable(src, max_shots*charge_cost)
 	if(self_recharge)
 		START_PROCESSING(SSobj, src)
 	update_icon()
@@ -93,80 +86,18 @@
 	var/shots_remaining = round(power_supply.charge / charge_cost)
 	to_chat(user, "Has [shots_remaining] shot\s remaining.")
 	return
-/obj/item/weapon/gun/energy/attack_self(var/mob/user)
-	if(cover_open && power_supply)
-		user.put_in_hands(power_supply)
-
-		power_supply.add_fingerprint(user)
-		power_supply.update_icon()
-
-		to_chat(user, "<span class='notice'>You remove the power cell from its housing.</span>")
-		src.power_supply = null
-		update_icon()
-
-		return
-
-	..()
-
-/obj/item/weapon/gun/energy/attackby(var/obj/item/weapon/W, var/mob/user)
-	if(isScrewdriver(W))
-		if(self_recharge) //Shouldn't be able to remove the cells of self recharging guns.
-			to_chat(user, "<span class='warning'>The cell housing is firmly secured, you can't remove it.</span>")
-			return
-		cover_open = !cover_open
-		to_chat(user, "<span class='notice'>You [cover_open ? "unscrew" : "secure"] the housing holding the power cell in place.</span>")
-		return
-
-	if(istype(W, /obj/item/weapon/cell))
-		var/obj/item/weapon/cell/C = usr.get_active_hand()
-		if(cover_open)
-			if(power_supply)
-				to_chat(user, "<span class='warning'>There is already a cell installed here!</span>")
-				return
-			if(cell_type)
-				if(istype(C, cell_type))
-					user.drop_item()
-					power_supply = C
-					C.forceMove(src)
-					C.add_fingerprint(user)
-
-					update_icon()
-					to_chat(user, "<span class='notice'>You install the power cell into the [src].</span>")
-					return
-			else
-				if(istype(C, /obj/item/weapon/cell/device/variable) && (C.maxcharge == max_shots*charge_cost)) //If the cell type isn't defined, this'll check it's got the right maxcharge
-					user.drop_item()
-					power_supply = C
-					C.forceMove(src)
-					C.add_fingerprint(user)
-
-					update_icon()
-					to_chat(user, "<span class='notice'>You install the power cell into the [src].</span>")
-					return
-				else
-					to_chat(user, "<span class='warning'>The cell doesn't fit!</span>")
-					return
-		else
-			to_chat(user, "<span class='warning'>The housing must be open to insert a power cell.</span>")
-			return
 
 /obj/item/weapon/gun/energy/update_icon()
 	..()
 	if(charge_meter)
-		var/ratio
-		if(power_supply)
-			ratio = power_supply.percent()
-
-			//make sure that rounding down will not give us the empty state even if we have charge for a shot left.
-			if(power_supply.charge < charge_cost)
-				ratio = 0
-			else
-				ratio = max(round(ratio, 25), 25)
-		else
+		var/ratio = power_supply.percent()
+		//make sure that rounding down will not give us the empty state even if we have charge for a shot left.
+		if(power_supply.charge < charge_cost)
 			ratio = 0
+		else
+			ratio = max(round(ratio, 25), 25)
 
 		if(modifystate)
 			icon_state = "[modifystate][ratio]"
 		else
 			icon_state = "[initial(icon_state)][ratio]"
-

@@ -2046,6 +2046,13 @@ CIRCUITS BELOW
 	build_path = /obj/item/weapon/circuitboard/machinery/cell_charger
 	sort_string = "WAAAT"
 
+/datum/design/circuit/recharger
+	name = "recharger"
+	id = "recharger"
+	req_tech = list(TECH_DATA = 3, TECH_ENGINEERING = 3)
+	build_path = /obj/item/weapon/circuitboard/machinery/recharger
+	sort_string = "WAAAT"
+
 /datum/design/circuit/suit_storage_unit
 	name = "Suit Storage Unit"
 	id = "suit_storage_unit"

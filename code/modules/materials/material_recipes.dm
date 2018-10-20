@@ -202,6 +202,7 @@
 	recipes += new/datum/stack_recipe("gavel hammer", /obj/item/gavelhammer, 2, time = 5)
 	recipes += new/datum/stack_recipe("gavel block", /obj/item/gavelblock, 2, time = 3)
 	recipes += new/datum/stack_recipe("rolling pin", /obj/item/weapon/material/kitchen/rollingpin, 2, time = 5)
+	recipes += new/datum/stack_recipe("corn cob pipe", /obj/item/clothing/mask/smokable/pipe/cobpipe)
 
 
 /material/cardboard/generate_recipes()
@@ -218,6 +219,7 @@
 		new/datum/stack_recipe("mouse traps box", /obj/item/weapon/storage/box/mousetraps/empty), \
 		new/datum/stack_recipe("pizza box", /obj/item/pizzabox), \
 		))
+	recipes += new/datum/stack_recipe("hand-rolled cigarette", /obj/item/clothing/mask/smokable/cigarette/custom)
 	recipes += new/datum/stack_recipe("empty cigarette pack", /obj/item/weapon/storage/fancy/cigarettes/blank)
 	recipes += new/datum/stack_recipe("cardborg suit", /obj/item/clothing/suit/cardborg, 3)
 	recipes += new/datum/stack_recipe("cardborg helmet", /obj/item/clothing/head/cardborg)

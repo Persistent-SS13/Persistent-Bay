@@ -1,4 +1,5 @@
-//This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:31
+#define allowed_devices list(/obj/item/weapon/gun/energy, /obj/item/weapon/gun/magnetic/railgun, /obj/item/weapon/melee/baton, /obj/item/weapon/cell, /obj/item/modular_computer/, /obj/item/device/suit_sensor_jammer, /obj/item/weapon/computer_hardware/battery_module, /obj/item/weapon/shield_diffuser)
+#define disallowed_devices list(/obj/item/weapon/gun/energy/plasmacutter, /obj/item/weapon/gun/energy/staff, /obj/item/weapon/gun/energy/gun/nuclear, /obj/item/weapon/gun/energy/crossbow)
 
 /obj/machinery/recharger
 	name = "recharger"
@@ -10,8 +11,6 @@
 	idle_power_usage = 4
 	active_power_usage = 30 KILOWATTS
 	var/obj/item/charging = null
-	var/list/allowed_devices = list(/obj/item/weapon/gun/energy, /obj/item/weapon/gun/magnetic/railgun, /obj/item/weapon/melee/baton, /obj/item/weapon/cell, /obj/item/modular_computer/, /obj/item/device/suit_sensor_jammer, /obj/item/weapon/computer_hardware/battery_module, /obj/item/weapon/shield_diffuser)
-	var/list/disallowed_devices = list(/obj/item/weapon/gun/energy/plasmacutter, /obj/item/weapon/gun/energy/staff, /obj/item/weapon/gun/energy/gun/nuclear, /obj/item/weapon/gun/energy/crossbow)
 	var/icon_state_charged = "recharger2"
 	var/icon_state_charging = "recharger1"
 	var/icon_state_idle = "recharger0" //also when unpowered
@@ -181,8 +180,10 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "wrecharger0"
 	active_power_usage = 50 KILOWATTS	//It's more specialized than the standalone recharger (guns and batons only) so make it more powerful
-	allowed_devices = list(/obj/item/weapon/gun/magnetic/railgun, /obj/item/weapon/gun/energy, /obj/item/weapon/melee/baton)
 	icon_state_charged = "wrecharger2"
 	icon_state_charging = "wrecharger1"
 	icon_state_idle = "wrecharger0"
 	portable = 0
+
+#undef allowed_devices
+#undef disallowed_devices

@@ -13,9 +13,10 @@
 	var/account_type = 0	//0 - personal account
 							//1 - assignment category account
 							//3 - central faction account
+	var/list/recently_paid = list()
 /datum/money_account/after_load()
 	if(get_account(account_number))
-	//	message_admins("duplicate account loaded owner: [owner_name] account_number: [account_number]")
+		message_admins("duplicate account loaded owner: [owner_name] account_number: [account_number]")
 		qdel(src)
 	else
 		all_money_accounts.Add(src)
@@ -136,12 +137,15 @@
 	return 1
 	
 	
+	
 /proc/money_transfer(var/datum/money_account/payer, var/attempt_real_name, var/purpose, var/amount)
 	if(!payer || amount > payer.money)
 		return 0
 	var/datum/money_account/D = get_account_record(attempt_real_name)
 	if(!D || D.suspended)
-		return 1
+		message_admins("no account found for [attempt_real_name]")
+		return 0
+	payer.recently_paid |= D
 	var/datum/transaction/Te = new("[attempt_real_name]", purpose, -amount, 0)
 	payer.do_transaction(Te)
 	D.money = D.money + amount
@@ -170,6 +174,9 @@
 /proc/get_account_record(var/real_name)
 	for(var/datum/computer_file/crew_record/L in GLOB.all_crew_records)
 		if(L.get_name() == real_name)
+			if(!L.linked_account)
+				message_admins("NULL ACCOUNT FOR [real_name]")
+				return null
 			return L.linked_account
 	var/datum/computer_file/crew_record/L = Retrieve_Record(real_name)
 	if(L)

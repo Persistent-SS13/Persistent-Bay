@@ -51,6 +51,9 @@ var/datum/controller/employment_controller/employment_controller
 				else if(istype(employer, /datum/world_faction))
 					var/datum/world_faction/faction = employer
 					var/datum/computer_file/crew_record/record = faction.get_record(employee.real_name)
+					if(!record)
+						message_admins("no record found for [employee.real_name] during payday")
+						continue
 					var/datum/assignment/job = faction.get_assignment(record.assignment_uid)
 					var/sanity = (record.rank > 1 ? job.ranks.len >= record.rank -1 : 1)
 					var/payment

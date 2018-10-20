@@ -43,7 +43,7 @@ SUBSYSTEM_DEF(garbage)
 	var/list/counts = list()
 	for (var/list/L in queues)
 		counts += length(L)
-	msg += "Q:[counts.Join(",")]|D:[delslasttick]|G:[gcedlasttick]|"
+	msg += "Q:[counts.Join(" | ")]|D:[delslasttick]|G:[gcedlasttick]|"
 	msg += "GR:"
 	if (!(delslasttick+gcedlasttick))
 		msg += "n/a|"

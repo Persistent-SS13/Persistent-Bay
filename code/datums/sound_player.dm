@@ -138,7 +138,7 @@ datum/sound_token/proc/Mute()
 		PrivRemoveListener(listener, null_sound)
 	listeners = null
 
-	GLOB.destroyed_event.unregister(source, src, /datum/sound_token/proc/Stop)
+	GLOB.destroyed_event.unregister(source, src, /datum/proc/qdel_self)
 	QDEL_NULL(proxy_listener)
 	source = null
 

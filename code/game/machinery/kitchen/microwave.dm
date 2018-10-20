@@ -1,4 +1,3 @@
-
 /obj/machinery/microwave
 	name = "microwave"
 	icon = 'icons/obj/kitchen.dmi'
@@ -67,6 +66,18 @@
 ********************/
 
 /obj/machinery/microwave/attackby(var/obj/item/O as obj, var/mob/user as mob)
+
+	if(src.broken != 1 && default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		update_icon()
+		return
+	else if(default_deconstruction_crowbar(user, O))
+		updateUsrDialog()
+		return
+	else if(default_part_replacement(user, O))
+		updateUsrDialog()
+		return
+
 	if(src.broken > 0)
 		if(src.broken == 2 && isScrewdriver(O)) // If it's broken and they're using a screwdriver
 			user.visible_message( \
@@ -79,6 +90,7 @@
 					"<span class='notice'>You have fixed part of the microwave.</span>" \
 				)
 				src.broken = 1 // Fix it a bit
+			return
 		else if(src.broken == 1 && isWrench(O)) // If it's broken and they're doing the wrench
 			user.visible_message( \
 				"<span class='notice'>\The [user] starts to fix part of the microwave.</span>", \
@@ -93,6 +105,7 @@
 				src.dirty = 0 // just to be sure
 				src.update_icon()
 				src.atom_flags = ATOM_FLAG_OPEN_CONTAINER
+			return
 		else
 			to_chat(user, "<span class='warning'>It's broken!</span>")
 			return 1
@@ -114,12 +127,6 @@
 		else //Otherwise bad luck!!
 			to_chat(user, "<span class='warning'>It's dirty!</span>")
 			return 1
-	else if(default_deconstruction_screwdriver(user, O))
-		updateUsrDialog()
-	else if(default_deconstruction_crowbar(user, O))
-		updateUsrDialog()
-	else if(default_part_replacement(user, O))
-		updateUsrDialog()
 	else if(is_type_in_list(O,acceptable_items))
 		if (contents.len >= max_n_of_items)
 			to_chat(user, "<span class='warning'>This [src] is full of ingredients, you cannot put more.</span>")
@@ -165,12 +172,11 @@
 			"<span class='notice'>You [src.anchored ? "secure" : "unsecure"] the microwave.</span>"
 			)
 			src.anchored = !src.anchored
+			return
 		else
 			to_chat(user, "<span class='notice'>You decide not to do that.</span>")
 	else
-
-		to_chat(user, "<span class='warning'>You have no idea what you can cook with this [O].</span>")
-	..()
+		..()
 	src.updateUsrDialog()
 
 /obj/machinery/microwave/attack_ai(mob/user as mob)
@@ -212,9 +218,9 @@
 				display_name = "Turnovers"
 				items_measures[display_name] = "turnover"
 				items_measures_p[display_name] = "turnovers"
-			if (istype(O,/obj/item/weapon/reagent_containers/food/snacks/carpmeat))
-				items_measures[display_name] = "fillet of meat"
-				items_measures_p[display_name] = "fillets of meat"
+			if (istype(O,/obj/item/weapon/reagent_containers/food/snacks/fish))
+				items_measures[display_name] = "fillet of fish"
+				items_measures_p[display_name] = "fillets of fish"
 			items_counts[display_name]++
 		for (var/O in items_counts)
 			var/N = items_counts[O]

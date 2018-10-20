@@ -40,6 +40,8 @@
 	var/bad_tests = 0
 
 	for(var/datum/autolathe/recipe/R in autolathe_recipes)
+		if(R.path == /obj/item/stack/material/glass/reinforced)	// Single exception
+			continue
 		var/failures = 0
 		var/obj/item/I = new R.path
 		if(I.matter)

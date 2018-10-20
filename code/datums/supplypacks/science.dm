@@ -1,30 +1,30 @@
 /decl/hierarchy/supply_pack/science
 	name = "Science"
 
+/decl/hierarchy/supply_pack/science/chemistry_dispenser
+	name = "Equipment - Chemical reagent dispenser"
+	contains = list(/obj/machinery/chemical_dispenser{anchored = 0})
+	cost = 25
+	containertype = /obj/structure/largecrate
+	containername = "reagent dispenser crate"
+
 /decl/hierarchy/supply_pack/science/virus
-	name = "Virus sample crate"
+	name = "Samples - Virus dishes"
 	contains = list(/obj/item/weapon/virusdish/random = 4)
 	cost = 25
 	containertype = /obj/structure/closet/crate/secure
-	containername = "\improper Virus sample crate"
+	containername = "virus sample crate"
 	access = core_access_medical_programs
 
-/decl/hierarchy/supply_pack/science/slimecore
-	name = "Slime core crate"
-	contains = list(/obj/item/slime_extract/grey = 2)
-	cost = 50
-	containertype = /obj/structure/closet/crate/freezer
-	containername = "\improper Slime core crate"
-
 /decl/hierarchy/supply_pack/science/coolanttank
-	name = "Coolant tank crate"
+	name = "Liquid - Coolant tank"
 	contains = list(/obj/structure/reagent_dispensers/coolanttank)
 	cost = 16
 	containertype = /obj/structure/largecrate
-	containername = "\improper coolant tank crate"
+	containername = "coolant tank crate"
 
 /decl/hierarchy/supply_pack/science/rnd
-	name = "Research and Development Boards"
+	name = "Parts - Research and Development boards"
 	contains = list(/obj/item/weapon/circuitboard/rdserver,
 					/obj/item/weapon/circuitboard/destructive_analyzer,
 					/obj/item/weapon/circuitboard/autolathe,
@@ -34,12 +34,14 @@
 					/obj/item/weapon/circuitboard/rdconsole)
 	cost = 300
 	containertype = /obj/structure/largecrate
-	containername = "\improper research startup crate"
+	containername = "research startup crate"
 
 /decl/hierarchy/supply_pack/science/voidsuit
-	name = "Scientist Voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/excavation/prepared)
+	name = "EVA - Scientist voidsuit"
+	contains = list(/obj/item/clothing/suit/space/void/excavation,
+					/obj/item/clothing/head/helmet/space/void/excavation,
+					/obj/item/clothing/shoes/magboots)
 	cost = 100
 	containertype = /obj/structure/closet/crate/secure/large
-	containername = "\improper Scientist Voidsuit"
+	containername = "excavation voidsuit crate"
 	access = core_access_science_programs

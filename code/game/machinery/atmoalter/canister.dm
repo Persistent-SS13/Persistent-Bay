@@ -225,9 +225,6 @@ update_flag
 		var/pressure_delta = release_pressure - env_pressure
 
 		if((air_contents.temperature > 0) && (pressure_delta > 0))
-
-			condense_before_pump(src, air_contents)
-
 			var/transfer_moles = calculate_transfer_moles(air_contents, environment, pressure_delta)
 			transfer_moles = min(transfer_moles, (release_flow_rate/air_contents.volume)*air_contents.total_moles) //flow rate limit
 

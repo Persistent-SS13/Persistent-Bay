@@ -142,6 +142,9 @@ var/list/gamemode_cache = list()
 	var/animal_delay = 0
 	var/maximum_mushrooms = 15 //After this amount alive, mushrooms will not boom boom
 
+	var/hub_link = ""
+	var/hub_name = ""
+	var/hub_desc = ""
 
 	var/admin_legacy_system = 0	//Defines whether the server uses the legacy admin system with admins.txt or the SQL system. Config option in config.txt
 	var/ban_legacy_system = 0	//Defines whether the server uses the legacy banning system with the files in /data or the SQL system. Config option in config.txt
@@ -413,6 +416,13 @@ var/list/gamemode_cache = list()
 
 				if ("serversuffix")
 					config.server_suffix = 1
+					
+				if("hub_name")
+					config.hub_name = value
+				if("hub_link")
+					config.hub_link = value
+				if("hub_desc")
+					config.hub_desc = value
 
 				if ("hostedby")
 					config.hostedby = value

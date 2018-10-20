@@ -39,8 +39,6 @@ var/list/valid_phoron_designs = list(
 	/datum/design/item/powercell/hyper,
 	/datum/design/item/beaker/noreact,
 	/datum/design/item/beaker/bluespace,
-	/datum/design/item/scalpel_laser2,
-	/datum/design/item/scalpel_laser3,
 	/datum/design/item/scalpel_manager,
 	/datum/design/item/modularcomponent/logistic_processor,
 	/datum/design/item/jetpack
@@ -326,6 +324,9 @@ var/list/point_source_descriptions = list(
 				export = new()
 				export.required = rand(30, 50)
 			for(var/x in recipe.resources)
+				if(!x)
+					to_world("[recipe] had a blank resource")
+					continue
 				var/material/mat = SSmaterials.get_material_by_name(x)
 				if(mat)
 					per += round(mat.value*recipe.resources[x]/2000,0.01)
@@ -361,6 +362,9 @@ var/list/point_source_descriptions = list(
 					if(!restart) valid = 1
 			export.required = rand(30, 70)
 			for(var/x in design.materials)
+				if(!x)
+					to_world("[design] had a blank resource")
+					continue
 				var/material/mat = SSmaterials.get_material_by_name(x)
 				if(mat)
 					per += round(mat.value*design.materials[x]/2000,0.01)
@@ -461,6 +465,9 @@ var/list/point_source_descriptions = list(
 			export.required = rand(50, 100)
 			var/per = rand(10,30)
 			for(var/x in design.materials)
+				if(!x)
+					to_world("[design] had a blank resource")
+					continue
 				var/material/mat = SSmaterials.get_material_by_name(x)
 				if(mat)
 					per += round(mat.value*design.materials[x]/2000,0.01)

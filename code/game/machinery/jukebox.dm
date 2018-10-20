@@ -31,6 +31,24 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 
 	var/datum/track/current_track
 	var/list/datum/track/tracks = list(
+		new/datum/track("The Ball & Diner", 'sound/music/jukebox/20 - The Ball, The Diner, The Bender And The Binoculars.mid', "Pleasent"),
+		new/datum/track("Pleasantly Understated", 'sound/music/jukebox/02 - A Pleasantly Understated Credit Sequence.mid', "Pleasent"),
+		new/datum/track("Surfin' the Highway", 'sound/music/jukebox/06 - Surfin The Highway.mid', "Rockin"),
+		new/datum/track("Snuckey's Muzak", 'sound/music/jukebox/09 - Snuckeys Greatest Muzaks #2.mid', "Pleasent"),
+		new/datum/track("Red Liccorice Candy", 'sound/music/jukebox/11 - Snuckeys Greatest Muzaks #4.mid', "Pleasent"),
+		new/datum/track("Doug, The Moleman", 'sound/music/jukebox/17 - Doug, The Moleman.mid', "Moody"),
+		new/datum/track("I'm a Trout, Stupid!", 'sound/music/jukebox/21 - Im A Trout, Stupid!.mid', "Country"),
+		new/datum/track("GatorGolf", 'sound/music/jukebox/23 - GatorGolf.mid', "Country"),
+		new/datum/track("Nobody Makes Fun Of My Hair!", 'sound/music/jukebox/24 - Nobody Makes Fun Of My Hair.mid', "Rockin"),
+		new/datum/track("Mystery Vortex", 'sound/music/jukebox/25 - Mystery Vortex.mid', "Moody"),
+		new/datum/track("Shuv-Oohl", 'sound/music/jukebox/27 - Shuv-Oohl.mid', "Moody"),
+		new/datum/track("BumpusVille", 'sound/music/jukebox/29 - BumpusVille.mid', "Country"),
+		new/datum/track("King of The Creatures", 'sound/music/jukebox/33 - King Of The Creatures.mid', "Rockin"),
+		new/datum/track("Celebrity Vegetable Museum", 'sound/music/jukebox/36 - Celebrity Vegetable Museum.mid', "Country"),
+		new/datum/track("Savage Jungle Inn", 'sound/music/jukebox/40 - Savage Jungle Inn.mid', "Pleasent"),
+		new/datum/track("Dino Bungee National Memorial", 'sound/music/jukebox/37 - Dino Bungee National Memorial.mid', "Pleasent"),
+		new/datum/track("Bigfoot Shuffle", 'sound/music/jukebox/41 - Bigfoot Shuffle.mid', "Pleasent"),
+
 		new/datum/track("Beyond", 'sound/ambience/ambispace.ogg', "SS13"),
 		new/datum/track("Clouds of Fire", 'sound/music/clouds.s3m', "SS13"),
 		new/datum/track("D`Bert", 'sound/music/title2.ogg', "SS13"),
@@ -104,6 +122,26 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 	var/data[0]
 	data["current_track"] = current_track != null ? current_track.title : ""
 	data["playing"] = playing
+
+	var/list/tracks_rockin = list()
+	for(var/datum/track/T in tracks)
+		if(T.genre == "Rockin")
+			tracks_rockin[++tracks_rockin.len] = list("track" = T.title)
+	data["tracks_rockin"] = tracks_rockin
+
+	var/list/tracks_pleasent = list()
+	for(var/datum/track/T in tracks)
+		if(T.genre == "Pleasent")
+			tracks_pleasent[++tracks_pleasent.len] = list("track" = T.title)
+	data["tracks_pleasent"] = tracks_pleasent
+
+	var/list/tracks_country = list()
+	for(var/datum/track/T in tracks)
+		if(T.genre == "Country")
+			tracks_country[++tracks_country.len] = list("track" = T.title)
+	data["tracks_country"] = tracks_country
+
+
 	var/list/tracks_ss13 = list()
 	for(var/datum/track/T in tracks)
 		if(T.genre == "SS13")
@@ -120,7 +158,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		// the ui does not exist, so we'll create a new() one
-        // for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
+		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
 		ui = new(user, src, ui_key, "jukebox.tmpl", title, 450, 600)
 		// when the ui is first opened this is the data it will use
 		ui.set_initial_data(data)

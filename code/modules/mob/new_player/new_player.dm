@@ -252,6 +252,7 @@
 		to_chat(character, "You eject from your cryosleep, ready to resume life in the frontier.")
 
 	else if(character.spawn_type == 2)
+		character.equip_to_slot_or_del(new /obj/item/clothing/under/color/grey(character), slot_w_uniform)
 		for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
 			if(!beacon.loc)
 				qdel(beacon)

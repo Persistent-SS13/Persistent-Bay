@@ -84,6 +84,7 @@
 		/decl/emote/visible/nod,
 		/decl/emote/visible/shake,
 		/decl/emote/visible/shiver,
+		/decl/emote/visible/snap,
 		/decl/emote/visible/collapse,
 		/decl/emote/audible/gasp,
 		/decl/emote/audible/sneeze,

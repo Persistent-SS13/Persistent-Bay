@@ -261,6 +261,8 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 			record = R
 			break
 	if(!record)
+		record = Retrieve_Record(real_name)
+	if(!record)
 		return 0
 	photo_front = record.photo_front
 	photo_side = record.photo_side
@@ -351,6 +353,8 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		if(R.get_name() == H.real_name)
 			message_admins("record already found heh")
 			return R
+	var/datum/computer_file/crew_record/R = Retrieve_Record(H.real_name)
+	if(R) return R
 	var/datum/computer_file/crew_record/CR = new/datum/computer_file/crew_record()
 	GLOB.all_crew_records.Add(CR)
 	CR.load_from_mob(H)
@@ -387,6 +391,8 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	for(var/datum/computer_file/crew_record/CR in GLOB.all_crew_records)
 		if(CR.get_name() == name)
 			return CR
+	var/datum/computer_file/crew_record/R = Retrieve_Record(name)
+	if(R) return R
 	return null
 
 /proc/GetAssignment(var/mob/living/carbon/human/H)

@@ -30,10 +30,6 @@
 	var/gas_overlay = "generic"
 	// END GAS DATA
 
-	// Stigma's reagent-gas system values. 0 values will be ignored to not break things. Set a custom value on each reagent to have it working.
-	var/base_boil_point = 0 //value in K (kelvins) until we don't define a boiling point specifically for each gas/reagent
-	var/base_fusion_point = 0 //value in K (kelvins) until we don't define a boiling point specifically for each gas/reagent
-
 /datum/reagent/New(var/datum/reagents/holder)
 	src.holder = holder
 	..()

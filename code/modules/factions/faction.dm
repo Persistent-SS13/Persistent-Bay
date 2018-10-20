@@ -566,6 +566,7 @@ GLOBAL_LIST_EMPTY(all_business)
 	
 	var/hiring_policy = 0 // if hiring_policy, anyone with reassignment can add people to the network, else only people in command a command category with reassignment can add people
 	var/last_expense_print = 0
+	
 
 /datum/world_faction/after_load()	
 	if(!debts)
@@ -647,6 +648,8 @@ GLOBAL_LIST_EMPTY(all_business)
 	for(var/datum/computer_file/crew_record/R in records.faction_records)
 		if(R.get_name() == real_name)
 			return R
+	var/datum/computer_file/crew_record/L = Retrieve_Record_Faction(real_name, src)
+	return L
 
 /datum/world_faction/proc/in_command(var/real_name)
 	var/datum/computer_file/crew_record/R = get_record(real_name)

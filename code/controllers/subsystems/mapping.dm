@@ -11,8 +11,9 @@ SUBSYSTEM_DEF(mapping)
 /datum/controller/subsystem/mapping/Initialize(timeofday)
 	preloadTemplates()
 	..()
-	Load_World()
 	world.visibility = 0
+	Load_World()
+	
 /datum/controller/subsystem/mapping/Recover()
 	flags |= SS_NO_INIT
 	map_templates = SSmapping.map_templates

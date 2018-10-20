@@ -93,7 +93,7 @@
 	else
 		data += "Those authorized can <a href='?src=\ref[src];connect=1'>connect this pod to a network</a>"
 
-	user << browse(data, "window=cryopod")
+	show_browser(user, data, "window=cryopod")
 	onclose(user, "cryopod")
 
 /obj/machinery/cryopod/MouseDrop_T(var/mob/target, var/mob/user)
@@ -213,7 +213,7 @@
 		occupant.forceMove(get_turf(src))
 		occupant = null
 
-/obj/machinery/cryopod/proc/despawnOccupant()
+/obj/machinery/cryopod/proc/despawnOccupant(var/autocryo = 0)
 	if(!occupant)
 		return 0
 
@@ -252,10 +252,11 @@
 		name = M.real_name
 		character = M
 		dir = M.save_slot
-		M.spawn_loc = req_access_faction
-		M.spawn_loc_2 = network
-		M.spawn_type = 1
-		M.loc = null
+		if(!autocryo)
+			M.spawn_loc = req_access_faction
+			M.spawn_loc_2 = network
+			M.spawn_type = 1
+			M.loc = null
 
 	key = copytext(key, max(findtext(key, "@"), 1))
 
@@ -276,8 +277,8 @@
 
 
 	var/savefile/F = new(load_path(key, "[dir].sav"))
-	F["name"] << name
-	F["mob"] << character
+	to_file(F["name"], name)
+	to_file(F["mob"], character)
 
 	src.name = initial(src.name)
 	icon_state = initial(icon_state)

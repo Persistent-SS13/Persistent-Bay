@@ -189,6 +189,7 @@
 #define BP_POLYP    "polyp segment"
 #define BP_ANCHOR   "anchoring ligament"
 #define BP_PHORON   "phoron filter"
+#define BP_NERVECLUSTER "nerve cluster"
 
 // Robo Organs.
 #define BP_POSIBRAIN	"posibrain"

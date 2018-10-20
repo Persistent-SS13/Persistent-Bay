@@ -15,8 +15,3 @@
 	name = "Neaera"
 	desc = "Squik squik squik."
 	key = "8"
-
-/datum/language/xeno/monkey
-	name = "Farwa"
-	desc = "Meow meow meow."
-	key = "9"

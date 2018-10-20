@@ -39,7 +39,6 @@ Class Procs:
 
 */
 
-
 /zone/var/name
 /zone/var/invalid = 0
 /zone/var/list/contents = list()
@@ -165,41 +164,6 @@ Class Procs:
 	for(var/connection_edge/E in edges)
 		if(E.sleeping)
 			E.recheck()
-	condensation_check()
-
-// Yet another spaget by Stigma. This code is run everytime air suffers changes.
-// At the same time we might as well just check for any needs of condesating (? english)
-// TO-DO : Perhaps polish it a bit if it starts to lag
-/zone/proc/condensation_check()
-	if (world.time < condense_buffer)
-		return
-	condense_buffer = world.time + 15 // 1.5 seconds between condensing
-	var/datum/gas_mixture/air_data = air //So i was sleepy and I decided not to change every "air_data" back to just air
-	if(air_data)
-		var/turf/location = pick(contents)
-		if(!isturf(location)) //should already be a turf but double check tho cuz weird shit happened on testing
-			location = pick(location.contents)
-		for(var/gas in air_data.gas)
-			if(!gas_data.component_reagents[gas])
-				continue	//we don't need to (nor we can) proceed if the gas wasn't made out of a 'known' reagent.
-
-			var/list/component_reagents = gas_data.component_reagents[gas]
-
-			var/possible_transfers = air_data.get_gas(gas)
-			if(!possible_transfers) //If we're out of gas boi. Shouldn't probably happen to be honest as the gas should be removed from the list
-				break //Doesnt mean we shouldn't prevent condensating non existent gas anyways so fuck it.
-
-			for(var/R in component_reagents)
-				var/datum/reagent/reagent_data = new R() //hacky
-				var/base_boil_point = reagent_data.base_boil_point
-				var/boilPoint = base_boil_point+(BOIL_PRESSURE_MULTIPLIER*(air_data.return_pressure() - ONE_ATMOSPHERE))
-				if (air_data.temperature < boilPoint *0.99) //99% just to make it so fluids dont flicker between states
-					//START CONDENSATION PROCESS
-					var/obj/effect/decal/cleanable/puddle_chem/R_HOLDER = new(location) // game / objects / effects / chem / chempuddle.dm - Its basically liquid state substance.
-					R_HOLDER.reagents.add_reagent(R, possible_transfers*component_reagents[R]*REAGENT_GAS_EXCHANGE_FACTOR) // Get those sweet gas reagents back to liquid state by creating em on the puddlez
-					air_data.adjust_gas(gas, -possible_transfers, 1) //Removes from gas from the atmosphere. Doesn't work on farts doe you gotta vent the place.
-				qdel(reagent_data)
-
 
 /zone/proc/dbg_data(mob/M)
 	to_chat(M, name)

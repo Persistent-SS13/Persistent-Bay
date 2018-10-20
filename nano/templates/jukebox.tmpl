@@ -9,9 +9,20 @@ Used In File(s): \code\game\machinery\jukebox.dm
     {{:helper.link('Stop' , 'stop', {'stop' : 1}, data.playing == 0 ? 'disabled' : null, null)}}
 </div>
 
+<h2>Genre</h2>
+{{:helper.link("Pleasent", '', {'change_genre' : 'Pleasent'}, data.genre == 'Pleasent' ? 'disabled' : null, null)}}
+{{:helper.link("Cyberpunk", '', {'change_genre' : 'Cyberpunk'}, data.genre == 'Cyberpunk' ? 'disabled' : null, null)}}
+{{:helper.link("Moody", '', {'change_genre' : 'Moody'}, data.genre == 'Moody' ? 'disabled' : null, null)}}
+{{:helper.link("Country", '', {'change_genre' : 'Classical'}, data.genre == 'Classical' ? 'disabled' : null, null)}}
+{{:helper.link("Jazz", '', {'change_genre' : 'Jazz'}, data.genre == 'Jazz' ? 'disabled' : null, null)}}
+{{:helper.link("Classical", '', {'change_genre' : 'Classical'}, data.genre == 'Classical' ? 'disabled' : null, null)}}
+{{:helper.link("Agarthan", '', {'change_genre' : 'Agarthan'}, data.genre == 'Agarthan' ? 'disabled' : null, null)}}
+{{:helper.link("Rockin", '', {'change_genre' : 'Rockin'}, data.genre == 'Rockin' ? 'disabled' : null, null)}}
+{{:helper.link("SS13", '', {'change_genre' : 'SS13'}, data.genre == 'SS13' ? 'disabled' : null, null)}}
+{{:helper.link("ALL", '', {'change_genre' : 'ALL'}, data.genre == 'ALL' ? 'disabled' : null, null)}}
 
-
-<H3><span class="white">Pleasent Boppers:</span></H3>
+{{if data.genre == 'Pleasent'}}
+<H3><span class="white">Pleasent:</span></H3>
 <div class="itemContent">
     {{for data.tracks_pleasent}}
         <div class="item">
@@ -20,7 +31,124 @@ Used In File(s): \code\game\machinery\jukebox.dm
     {{/for}}
 </div>
 
-<H3><span class="white">Country Classics:</span></H3>
+
+{{/if}}
+
+{{if data.genre == 'Cyberpunk'}}
+<H3><span class="white">Cyberpunk:</span></H3>
+<div class="itemContent">
+    {{for data.tracks_cyberpunk}}
+        <div class="item">
+            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
+        </div>
+    {{/for}}
+</div>
+
+
+{{/if}}
+
+{{if data.genre == 'Moody'}}
+<H3><span class="white">Moody:</span></H3>
+<div class="itemContent">
+    {{for data.tracks_moody}}
+        <div class="item">
+            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
+        </div>
+    {{/for}}
+</div>
+
+
+
+{{/if}}
+
+{{if data.genre == 'Country'}}
+<H3><span class="white">Country:</span></H3>
+<div class="itemContent">
+    {{for data.tracks_country}}
+        <div class="item">
+            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
+        </div>
+    {{/for}}
+</div>
+
+
+{{/if}}
+
+{{if data.genre == 'Jazz'}}
+<H3><span class="white">Jazz:</span></H3>
+<div class="itemContent">
+    {{for data.tracks_jazz}}
+        <div class="item">
+            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
+        </div>
+    {{/for}}
+</div>
+
+{{/if}}
+
+{{if data.genre == 'Classical'}}
+<H3><span class="white">Classical:</span></H3>
+<div class="itemContent">
+    {{for data.tracks_classical}}
+        <div class="item">
+            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
+        </div>
+    {{/for}}
+</div>
+
+{{/if}}
+
+{{if data.genre == 'Agarthan'}}
+<H3><span class="white">Agarthan:</span></H3>
+<div class="itemContent">
+    {{for data.tracks_agarthan}}
+        <div class="item">
+            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
+        </div>
+    {{/for}}
+</div>
+
+
+{{/if}}
+
+{{if data.genre == 'Rockin'}}
+
+<H3><span class="white">Rockin:</span></H3>
+<div class="itemContent">
+    {{for data.tracks_rockin}}
+        <div class="item">
+            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
+        </div>
+    {{/for}}
+</div>
+
+
+{{/if}}
+
+
+{{if data.genre == 'SS13'}}
+<H3><span class="white">SS13:</span></H3>
+<div class="itemContent">
+    {{for data.tracks_ss13}}
+        <div class="item">
+            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
+        </div>
+    {{/for}}
+</div>
+
+{{/if}}
+
+{{if data.genre == 'ALL'}}
+<H3><span class="white">Pleasent:</span></H3>
+<div class="itemContent">
+    {{for data.tracks_pleasent}}
+        <div class="item">
+            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
+        </div>
+    {{/for}}
+</div>
+
+<H3><span class="white">Country:</span></H3>
 <div class="itemContent">
     {{for data.tracks_country}}
         <div class="item">
@@ -38,7 +166,7 @@ Used In File(s): \code\game\machinery\jukebox.dm
     {{/for}}
 </div>
 
-<H3><span class="white">Moody Melodies:</span></H3>
+<H3><span class="white">Moody:</span></H3>
 <div class="itemContent">
     {{for data.tracks_moody}}
         <div class="item">
@@ -47,7 +175,36 @@ Used In File(s): \code\game\machinery\jukebox.dm
     {{/for}}
 </div>
 
-<H3><span class="white">Rockin Tracks:</span></H3>
+<H3><span class="white">Jazz:</span></H3>
+<div class="itemContent">
+    {{for data.tracks_jazz}}
+        <div class="item">
+            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
+        </div>
+    {{/for}}
+</div>
+
+<H3><span class="white">Classical:</span></H3>
+<div class="itemContent">
+    {{for data.tracks_classical}}
+        <div class="item">
+            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
+        </div>
+    {{/for}}
+</div>
+
+
+<H3><span class="white">Agarthan:</span></H3>
+<div class="itemContent">
+    {{for data.tracks_agarthan}}
+        <div class="item">
+            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
+        </div>
+    {{/for}}
+</div>
+
+
+<H3><span class="white">Rockin:</span></H3>
 <div class="itemContent">
     {{for data.tracks_rockin}}
         <div class="item">
@@ -66,3 +223,5 @@ Used In File(s): \code\game\machinery\jukebox.dm
         </div>
     {{/for}}
 </div>
+{{/if}}
+

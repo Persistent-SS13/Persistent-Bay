@@ -172,7 +172,7 @@ var/global/list/debug_data = list()
 	var/starttime = REALTIMEOFDAY
 	..()
 	if((REALTIMEOFDAY - starttime)/10 > 29)
-		world << "[src.type] took [(REALTIMEOFDAY - starttime)/10] seconds to save at [x] [y] [z]"
+		to_world("[src.type] took [(REALTIMEOFDAY - starttime)/10] seconds to save at [x] [y] [z]")
 /mob/Write(savefile/f)
 	StandardWrite(f)
 	if(ckey)
@@ -249,7 +249,7 @@ var/global/list/debug_data = list()
 	else
 		debug_data["[src.type]"] = list(1,(REALTIMEOFDAY - starttime)/10)
 	if((REALTIMEOFDAY - starttime)/10 > 29)
-		world << "[src.type] took [(REALTIMEOFDAY - starttime)/10] seconds to load at [x] [y] [z]"
+		to_world("[src.type] took [(REALTIMEOFDAY - starttime)/10] seconds to load at [x] [y] [z]")
 
 /datum/Read(savefile/f)
 	StandardRead(f)
@@ -361,19 +361,22 @@ var/global/list/debug_data = list()
 	to_file(f["businesses"],GLOB.all_business)
 	to_file(f["zones"],zones)
 	to_file(f["areas"],formatted_areas)
-	to_file(f["turbolifts"],turbolifts)
 	Save_Records(dir)
 
 //	to_file(f["records"],GLOB.all_crew_records)
 	to_file(f["next_account_number"],next_account_number)
 	if(reallow) config.enter_allowed = 1
-	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
-	world << "Saving Complete"
+	to_world("Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!")
+	to_world("Saving Complete")
 	f = null
 	return 1
 
 
 /proc/Retrieve_Record(var/key)
+	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+		if(record2.get_name() == key)
+			message_admins("retrieve_record ran for existing record [key]")
+			return record2
 	if(!fexists("record_saves/[key].sav")) return
 	var/savefile/f = new("record_saves/[key].sav")
 	var/datum/computer_file/crew_record/v
@@ -443,7 +446,6 @@ var/global/list/debug_data = list()
 		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
 		f = null
 	f = new("map_saves/extras.sav")
-	from_file(f["turbolifts"],turbolifts)
 	var/list/zones
 
 	from_file(f["zones"],zones)
@@ -468,9 +470,9 @@ var/global/list/debug_data = list()
 	SSmachines.makepowernets()
 
 	for(var/x in debug_data)
-		world << "Loaded [debug_data[x][1]] [x] in [debug_data[x][2]] seconds!"
-	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
-	world << "Loading Complete"
+		to_world("Loaded [debug_data[x][1]] [x] in [debug_data[x][2]] seconds!")
+	to_world("Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!")
+	to_world("Loading Complete")
 	return 1
 
 

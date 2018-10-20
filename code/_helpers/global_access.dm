@@ -45,6 +45,8 @@
 			return global.SSatoms;
 		if("SSchemistry")
 			return global.SSchemistry;
+		if("SScircuit")
+			return global.SScircuit;
 		if("SSfastprocess")
 			return global.SSfastprocess;
 		if("SSgarbage")
@@ -59,14 +61,16 @@
 			return global.SSmachines;
 		if("SSmapping")
 			return global.SSmapping;
-		if("SSmobs")
-			return global.SSmobs;
 		if("SSmaterials")
 			return global.SSmaterials;
+		if("SSmobs")
+			return global.SSmobs;
 		if("SSobj")
 			return global.SSobj;
 		if("SSopen_space")
 			return global.SSopen_space;
+		if("SSplants")
+			return global.SSplants;
 		if("SSprocessing")
 			return global.SSprocessing;
 		if("SSskybox")
@@ -139,6 +143,8 @@
 			return global.adminhelp_ignored_words;
 		if("adminlog")
 			return global.adminlog;
+		if("aggression_controller")
+			return global.aggression_controller;
 		if("ai_list")
 			return global.ai_list;
 		if("ai_status_emotions")
@@ -369,8 +375,6 @@
 			return global.economic_species_modifier;
 		if("employment_controller")
 			return global.employment_controller;
-		if("aggression_controller")
-			return global.aggression_controller;
 		if("empty_playable_ai_cores")
 			return global.empty_playable_ai_cores;
 		if("endgame_exits")
@@ -467,8 +471,6 @@
 			return global.ghost_sightless_images;
 		if("ghost_traps")
 			return global.ghost_traps;
-		if("globalBlankCanvases")
-			return global.globalBlankCanvases;
 		if("global_message_listener")
 			return global.global_message_listener;
 		if("global_vars_")
@@ -709,8 +711,6 @@
 			return global.pipe_colors;
 		if("pipe_processing_killed")
 			return global.pipe_processing_killed;
-		if("plant_controller")
-			return global.plant_controller;
 		if("plant_seed_sprites")
 			return global.plant_seed_sprites;
 		if("playable_species")
@@ -783,6 +783,8 @@
 			return global.random_useful_;
 		if("recentmessages")
 			return global.recentmessages;
+		if("refund_type")
+			return global.refund_type;
 		if("registered_macros_by_ckey_")
 			return global.registered_macros_by_ckey_;
 		if("religion_name")
@@ -1001,8 +1003,6 @@
 			return global.transfer_controller;
 		if("turbolift_controller")
 			return global.turbolift_controller;
-		if("turbolifts")
-			return global.turbolifts;
 		if("turret_icons")
 			return global.turret_icons;
 		if("uniqueness_repository")
@@ -1017,6 +1017,8 @@
 			return global.uplink_random_selections_;
 		if("valid_bloodtypes")
 			return global.valid_bloodtypes;
+		if("valid_phoron_designs")
+			return global.valid_phoron_designs;
 		if("vendor_account")
 			return global.vendor_account;
 		if("ventcrawl_machinery")
@@ -1067,7 +1069,7 @@
 			return global.zone_blocked;
 		if("zones_to_save")
 			return global.zones_to_save;
-
+		
 /proc/writeglobal(which, newval)
 	switch(which)
 		if("ALL_ANTIGENS")
@@ -1114,6 +1116,8 @@
 			global.SSatoms=newval;
 		if("SSchemistry")
 			global.SSchemistry=newval;
+		if("SScircuit")
+			global.SScircuit=newval;
 		if("SSfastprocess")
 			global.SSfastprocess=newval;
 		if("SSgarbage")
@@ -1136,6 +1140,8 @@
 			global.SSobj=newval;
 		if("SSopen_space")
 			global.SSopen_space=newval;
+		if("SSplants")
+			global.SSplants=newval;
 		if("SSprocessing")
 			global.SSprocessing=newval;
 		if("SSskybox")
@@ -1208,6 +1214,8 @@
 			global.adminhelp_ignored_words=newval;
 		if("adminlog")
 			global.adminlog=newval;
+		if("aggression_controller")
+			global.aggression_controller=newval;
 		if("ai_list")
 			global.ai_list=newval;
 		if("ai_status_emotions")
@@ -1534,8 +1542,6 @@
 			global.ghost_sightless_images=newval;
 		if("ghost_traps")
 			global.ghost_traps=newval;
-		if("globalBlankCanvases")
-			global.globalBlankCanvases=newval;
 		if("global_message_listener")
 			global.global_message_listener=newval;
 		if("global_vars_")
@@ -1776,8 +1782,6 @@
 			global.pipe_colors=newval;
 		if("pipe_processing_killed")
 			global.pipe_processing_killed=newval;
-		if("plant_controller")
-			global.plant_controller=newval;
 		if("plant_seed_sprites")
 			global.plant_seed_sprites=newval;
 		if("playable_species")
@@ -1850,6 +1854,8 @@
 			global.random_useful_=newval;
 		if("recentmessages")
 			global.recentmessages=newval;
+		if("refund_type")
+			global.refund_type=newval;
 		if("registered_macros_by_ckey_")
 			global.registered_macros_by_ckey_=newval;
 		if("religion_name")
@@ -2068,8 +2074,6 @@
 			global.transfer_controller=newval;
 		if("turbolift_controller")
 			global.turbolift_controller=newval;
-		if("turbolifts")
-			global.turbolifts=newval;
 		if("turret_icons")
 			global.turret_icons=newval;
 		if("uniqueness_repository")
@@ -2084,6 +2088,8 @@
 			global.uplink_random_selections_=newval;
 		if("valid_bloodtypes")
 			global.valid_bloodtypes=newval;
+		if("valid_phoron_designs")
+			global.valid_phoron_designs=newval;
 		if("vendor_account")
 			global.vendor_account=newval;
 		if("ventcrawl_machinery")
@@ -2134,7 +2140,7 @@
 			global.zone_blocked=newval;
 		if("zones_to_save")
 			global.zones_to_save=newval;
-
+		
 /var/list/_all_globals=list(
 	"ALL_ANTIGENS",
 	"ANTAG_FREQS",
@@ -2158,6 +2164,7 @@
 	"SSairflow",
 	"SSatoms",
 	"SSchemistry",
+	"SScircuit",
 	"SSfastprocess",
 	"SSgarbage",
 	"SSicon_update",
@@ -2169,6 +2176,7 @@
 	"SSmobs",
 	"SSobj",
 	"SSopen_space",
+	"SSplants",
 	"SSprocessing",
 	"SSskybox",
 	"SSvines",
@@ -2205,6 +2213,7 @@
 	"admin_verbs_spawn",
 	"adminhelp_ignored_words",
 	"adminlog",
+	"aggression_controller",
 	"ai_list",
 	"ai_status_emotions",
 	"ai_verbs_default",
@@ -2320,7 +2329,6 @@
 	"dummy_lighting_corner",
 	"economic_species_modifier",
 	"employment_controller",
-	"aggression_controller",
 	"empty_playable_ai_cores",
 	"endgame_exits",
 	"endgame_safespawns",
@@ -2369,7 +2377,6 @@
 	"ghost_darkness_images",
 	"ghost_sightless_images",
 	"ghost_traps",
-	"globalBlankCanvases",
 	"global_message_listener",
 	"global_vars_",
 	"godcult",
@@ -2392,7 +2399,6 @@
 	"inactive_keys",
 	"init",
 	"initialization_stage",
-	"integrated_circuit_blacklist",
 	"intents",
 	"intercom_range_display_status",
 	"invalid_zone",
@@ -2491,7 +2497,6 @@
 	"photo_count",
 	"pipe_colors",
 	"pipe_processing_killed",
-	"plant_controller",
 	"plant_seed_sprites",
 	"playable_species",
 	"point_source_descriptions",
@@ -2528,6 +2533,7 @@
 	"random_maps",
 	"random_useful_",
 	"recentmessages",
+	"refund_type",
 	"registered_macros_by_ckey_",
 	"religion_name",
 	"renegades",
@@ -2637,7 +2643,6 @@
 	"traitors",
 	"transfer_controller",
 	"turbolift_controller",
-	"turbolifts",
 	"turret_icons",
 	"uniqueness_repository",
 	"universe_has_ended",
@@ -2645,6 +2650,7 @@
 	"uplink_purchase_repository",
 	"uplink_random_selections_",
 	"valid_bloodtypes",
+	"valid_phoron_designs",
 	"vendor_account",
 	"ventcrawl_machinery",
 	"view_variables_dont_expand",

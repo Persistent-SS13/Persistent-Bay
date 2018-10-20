@@ -124,9 +124,10 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	..()
 
 /obj/machinery/telecomms/Initialize()
+	. = ..()
 	//Set the listening_levels if there's none.
 	if(!loc)
-		return
+		return INITIALIZE_HINT_QDEL
 	if(!listening_levels)
 		//Defaults to our Z level!
 		var/turf/position = get_turf(src)
@@ -144,14 +145,14 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 					continue
 				add_link(T)
 	update_power()
-	. = ..()
+	
 
 /obj/machinery/telecomms/Destroy()
 	telecomms_list -= src
 	for(var/obj/machinery/telecomms/comm in telecomms_list)
 		comm.links -= src
 	links = list()
-	..()
+	. = ..()
 
 // Used in auto linking
 /obj/machinery/telecomms/proc/add_link(var/obj/machinery/telecomms/T)

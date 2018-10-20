@@ -93,7 +93,7 @@
 	else
 		data += "Those authorized can <a href='?src=\ref[src];connect=1'>connect this pod to a network</a>"
 
-	user << browse(data, "window=cryopod")
+	show_browser(user, data, "window=cryopod")
 	onclose(user, "cryopod")
 
 /obj/machinery/cryopod/MouseDrop_T(var/mob/target, var/mob/user)
@@ -277,8 +277,8 @@
 
 
 	var/savefile/F = new(load_path(key, "[dir].sav"))
-	F["name"] << name
-	F["mob"] << character
+	to_file(F["name"], name)
+	to_file(F["mob"], character)
 
 	src.name = initial(src.name)
 	icon_state = initial(icon_state)

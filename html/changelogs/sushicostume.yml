@@ -1,0 +1,5 @@
+author: AnAngrySlugReceptionist
+delete-after: True
+changes: 
+  - rscadd: "Ports Sushi from BS12"
+  - rscadd: "Ports some costumes from Polaris"

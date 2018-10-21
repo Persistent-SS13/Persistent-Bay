@@ -31,7 +31,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 
 	var/datum/track/current_track
 	var/list/datum/track/tracks = list(
-		new/datum/track("The Ball & Diner", 'sound/music/jukebox/ballanddiner.mid', "Pleasent"),
+		new/datum/track("The Ball and Diner", 'sound/music/jukebox/ballanddiner.mid', "Pleasent"),
 		new/datum/track("Pleasantly Understated", 'sound/music/jukebox/02 - A Pleasantly Understated Credit Sequence.mid', "Pleasent"),
 		new/datum/track("Surfin' the Highway", 'sound/music/jukebox/06 - Surfin The Highway.mid', "Rockin"),
 		new/datum/track("Snuckey's Muzak", 'sound/music/jukebox/09 - Snuckeys Greatest Muzaks #2.mid', "Pleasent"),
@@ -50,7 +50,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 		new/datum/track("Bigfoot Shuffle", 'sound/music/jukebox/41 - Bigfoot Shuffle.mid', "Pleasent"),
 		new/datum/track("Ice Cavern", 'sound/music/jukebox/son3ice.mid', "Pleasent"),
 		new/datum/track("Special Zone", 'sound/music/jukebox/SMW-Special_Zone.mid', "Pleasent"),
-		new/datum/track("Goodbye and Goodnight", 'sound/music/jukebox/SMW-Special_Zone.mid', "Pleasent"),
+		new/datum/track("Goodbye and Goodnight", 'sound/music/jukebox/SMW_Ending_and_Credits.mid', "Pleasent"),
 		new/datum/track("Enter, Vanguard (Agarthan Battle Music)", 'sound/music/jukebox/SF64_Corneria-KM.mid', "Agarthan"),
 		new/datum/track("The Harvest Moon", 'sound/music/jukebox/HM64_-_Ending_Credits.mid', "Country"),
 		new/datum/track("Mirthful Victory", 'sound/music/jukebox/Ending487.mid', "Pleasent"),
@@ -63,7 +63,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 		new/datum/track("Angela", 'sound/music/jukebox/Angela.mid', "Jazz"),
 		new/datum/track("Anything goes", 'sound/music/jukebox/anythgo_.mid', "Jazz"),
 		new/datum/track("Blues 'N' Boogie", 'sound/music/jukebox/Bluenboo.mid', "Jazz"),
-		new/datum/track("Previously Used", 'sound/music/jukebox/stan.mid', "Jazz"),
+		new/datum/track("Previously Used", 'sound/music/jukebox/stan.mid', "Pleasent"),
 		new/datum/track("Swamp", 'sound/music/jukebox/swamp.mid', "Moody"),
 		new/datum/track("Celebrate!", 'sound/music/jukebox/5565.mid', "Pleasent"),
 		new/datum/track("Liberty Soil (Agarthan Battle Music)", 'sound/music/jukebox/Command_And_Conquer_Tiberian_Sun_-_Mechanical_Man_Target.mid', "Agarthan"),

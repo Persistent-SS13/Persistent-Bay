@@ -238,7 +238,8 @@
 					/obj/item/clothing/accessory/locket,
 					/obj/item/clothing/accessory/black/expensive,
 					/obj/item/clothing/accessory/scarf,
-					/obj/item/clothing/head/crown
+					/obj/item/clothing/head/crown,
+					/obj/item/clothing/mask/smokable/pipe
 					)
 	cost = 95
 	containername = "luxury crate"

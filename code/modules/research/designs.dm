@@ -7,14 +7,11 @@ For the materials datum, it assumes you need reagents unless specified otherwise
 you use one of the material IDs below. These are NOT ids in the usual sense (they aren't defined in the object or part of a datum),
 they are simply references used as part of a "has materials?" type proc. They all start with a  to denote that they aren't reagents.
 The currently supporting non-reagent materials:
-
 Don't add new keyword/IDs if they are made from an existing one (such as rods which are made from metal). Only add raw materials.
-
 Design Guidlines
 - When adding new designs, check rdreadme.dm to see what kind of things have already been made and where new stuff is needed.
 - A single sheet of anything is 2000 units of material. Materials besides metal/glass require help from other jobs (mining for
 other types of metals and chemistry for reagents).
-
 */
 //Note: More then one of these can be added to a design.
 
@@ -560,7 +557,6 @@ other types of metals and chemistry for reagents).
 	materials = list(DEFAULT_WALL_MATERIAL = 5000, "glass" = 1000, "silver" = 1000, "gold" = 2000, "uranium" = 10000, "phoron" = 6000)
 	build_path = /obj/item/weapon/gun/energy/gun/nuclear
 	sort_string = "TAAAB"
-
 /datum/design/item/weapon/lasercannon
 	desc = "The lasing medium of this prototype is enclosed in a tube lined with uranium-235 and subjected to high neutron flux in a nuclear reactor core."
 	id = "lasercannon"
@@ -568,7 +564,6 @@ other types of metals and chemistry for reagents).
 	materials = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 1000, "silver" = 2000, "diamond" = 6000, "phoron" = 6000)
 	build_path = /obj/item/weapon/gun/energy/lasercannon
 	sort_string = "TAAAC"
-
 /datum/design/item/weapon/phoronpistol
 	id = "ppistol"
 	req_tech = list(TECH_COMBAT = 5, TECH_PHORON = 4)
@@ -784,7 +779,6 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/device/mmi
 	category = "Misc"
 	sort_string = "VACBA"
-
 /datum/design/item/mmi_radio
 	name = "Radio-enabled man-machine interface"
 	id = "mmi_radio"
@@ -794,6 +788,23 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/device/mmi/radio_enabled
 	category = "Misc"
 	sort_string = "VACBB"
+	
+/datum/design/item/defib
+	name = "auto-resuscitator"
+	id = "defibrillator"
+	req_tech = list(TECH_BIO = 5, TECH_ENGINEERING = 3, TECH_POWER = 4)
+	materials = list(DEFAULT_WALL_MATERIAL = 50000, "glass" = 30000, "gold" = 20000, "silver" = 10000, "phoron" = 1000)
+	build_path = /obj/item/weapon/defibrillator
+	sort_string = "VACBC"
+
+/datum/design/item/defib
+	name = "compact auto-resuscitator"
+	id = "compact_defibrillator"
+	req_tech = list(TECH_BIO = 5, TECH_ENGINEERING = 5, TECH_POWER = 6)
+	materials = list(DEFAULT_WALL_MATERIAL = 30000, "glass" = 20000, "gold" = 15000, "silver" = 10000, "phoron" = 8000)
+	build_path = /obj/item/weapon/defibrillator/compact
+	sort_string = "VACBD"
+
 **/
 /datum/design/item/lmi
 	name = "Lace-machine interface"

@@ -156,7 +156,7 @@
 					/obj/item/clothing/head/soft/sec,
 					/obj/item/weapon/storage/backpack/messenger/sec,
 					/obj/item/weapon/melee/baton,
-					/obj/item/weapon/cell/crap,
+					/obj/item/weapon/cell/device/high,
 					/obj/item/weapon/handcuffs,
 					/obj/item/weapon/book/manual/nt_regs,
 					/obj/item/taperoll/police,

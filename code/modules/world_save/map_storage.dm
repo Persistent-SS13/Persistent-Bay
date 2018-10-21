@@ -385,7 +385,7 @@ var/global/list/debug_data = list()
 	if(v.linked_account) v.linked_account.after_load()
 	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
 		if(record2.get_name() == v.get_name())
-			if(v.linked_account && !record2.linked_account)
+			if(v.linked_account && !record2.linked_account || (record2.linked_account && v.linked_account && record2.linked_account.money < v.linked_account))
 				message_admins("recovered account found for [key] [v.get_name()]")
 				record2.linked_account = v.linked_account
 			return record2

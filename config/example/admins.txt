@@ -5,4 +5,5 @@
 # Ranks can be anything defined in admin_ranks.txt           ~Carn   #
 ######################################################################
 
-EmmaJ - Host
+
+#Not_a_user - Host

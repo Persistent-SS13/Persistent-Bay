@@ -67,19 +67,14 @@ var/const/EXTRA_COST_FACTOR = 1
 	path = /obj/item/weapon/extinguisher
 	category = "General"
 
-/datum/autolathe/recipe/tank/proc/Fabricate()
-	var/obj/item/weapon/tank/T = ..()
-	T.air_contents = new /datum/gas_mixture(T.volume, T20C)  //Empty air tanks only
-	return T
-
 /datum/autolathe/recipe/tank
 	name = "air tank"
-	path = /obj/item/weapon/tank/oxygen/yellow
+	path = /obj/item/weapon/tank/oxygen/empty
 	category = "General"
 
 /datum/autolathe/recipe/tank_double
 	name = "emergency air tank"
-	path = /obj/item/weapon/tank/emergency/oxygen/engi
+	path = /obj/item/weapon/tank/emergency/oxygen/engi/empty
 	category = "General"
 
 /datum/autolathe/recipe/jar
@@ -398,7 +393,7 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/cable_coil
 	name = "cable coil"
-	path = /obj/item/stack/cable_coil
+	path = /obj/item/stack/cable_coil/single		//must be /single path, else printing 1x will instead print a whole stack
 	category = "Devices and Components"
 	is_stack = 1
 

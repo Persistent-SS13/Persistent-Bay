@@ -153,3 +153,13 @@
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
 	starting_pressure = list("nitrogen" = 6*ONE_ATMOSPHERE)
 	volume = 180
+
+/*
+ * Empty Tanks
+ */
+/obj/item/weapon/tank/oxygen/empty
+	starting_pressure = 0
+
+/obj/item/weapon/tank/emergency/oxygen/engi/empty
+	starting_pressure = 0
+	

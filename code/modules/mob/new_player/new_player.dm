@@ -215,7 +215,7 @@
 		return
 
 	var/mob/character = Character(chosen_slot, ckey)
-
+	Retrieve_Record(character.real_name)
 	var/turf/spawnTurf
 
 

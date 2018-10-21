@@ -23,6 +23,7 @@
 							/obj/item/weapon/stock_parts/capacitor = 2,
 							/obj/item/weapon/stock_parts/manipulator = 2)
 
+
 /obj/item/weapon/circuitboard/machinery/recharger
 	name = T_BOARD("Recharger")
 	build_path = /obj/machinery/recharger

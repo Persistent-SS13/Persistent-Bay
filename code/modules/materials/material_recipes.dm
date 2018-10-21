@@ -135,6 +135,7 @@
 	recipes += new/datum/stack_recipe("linen bin", /obj/structure/bedsheetbin, 4, time = 10, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("Operating Table", /obj/machinery/optable, 10, time = 50, one_per_turf = 1)
 	recipes += new/datum/stack_recipe("Item Safe", /obj/structure/safe, 10, time = 50, one_per_turf = 1)
+	recipes += new/datum/stack_recipe("Target stake", /obj/structure/target_stake, 5, time = 10, one_per_turf = 1)
 //	recipes += new/datum/stack_recipe_list("Blast Doors Assemblies", list( \
 	new/datum/stack_recipe("assembly", /obj/structure/door_assembly/, 4, time = 50, one_per_turf = 1, on_floor = 1), \
 		))
@@ -168,7 +169,6 @@
 		new/datum/stack_recipe("sink frame", /obj/item/frame/plastic/sink, 2),\
 		new/datum/stack_recipe("kitchen sink frame", /obj/item/frame/plastic/kitchensink, 2),\
 		))
-	recipes += new/datum/stack_recipe("Punching bag", /obj/structure/fitness/punchingbag, 5, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe_list("Curtains",list( \
 		new/datum/stack_recipe("Curtain", /obj/structure/curtain, 3, one_per_turf = 1, on_floor = 1), \
 		new/datum/stack_recipe("Black Curtain", /obj/structure/curtain/black, 3, one_per_turf = 1, on_floor = 1), \
@@ -180,7 +180,12 @@
 		))
 	recipes += new/datum/stack_recipe("Water Cooler", /obj/structure/reagent_dispensers/water_cooler/empty, 10, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("Water Tank", /obj/structure/reagent_dispensers/watertank/empty, 10, one_per_turf = 1, on_floor = 1)
-
+	recipes += new/datum/stack_recipe_list("Training Equipment",list( \
+		recipes += new/datum/stack_recipe("Punching bag", /obj/structure/fitness/punchingbag, 5, one_per_turf = 1, on_floor = 1, time = 5), \
+		recipes += new/datum/stack_recipe("Human target", /obj/item/target, 4, on_floor = 1, time = 2), \
+		recipes += new/datum/stack_recipe("Alien target", /obj/item/target/alien, 6, on_floor = 1, time = 2), \
+		recipes += new/datum/stack_recipe("Agent Target", /obj/item/target/syndicate, 8, on_floor = 1, time = 2), \
+		))
 /material/wood/generate_recipes()
 	..()
 	recipes += new/datum/stack_recipe("Ore Box", /obj/structure/ore_box, 5, time = 30, one_per_turf = 1)
@@ -202,6 +207,7 @@
 	recipes += new/datum/stack_recipe("gavel hammer", /obj/item/gavelhammer, 2, time = 5)
 	recipes += new/datum/stack_recipe("gavel block", /obj/item/gavelblock, 2, time = 3)
 	recipes += new/datum/stack_recipe("rolling pin", /obj/item/weapon/material/kitchen/rollingpin, 2, time = 5)
+  recipes += new/datum/stack_recipe("Walking Cane", /obj/item/weapon/cane, 5, time = 8)
 	recipes += new/datum/stack_recipe("corn cob pipe", /obj/item/clothing/mask/smokable/pipe/cobpipe)
 
 

@@ -222,10 +222,10 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 			if(T.title == href_list["title"])
 				current_track = T
 				StartPlaying()
-		GLOB.nanomanager.update_uis(src)
+		SSnano.update_uis(src)
 	if(href_list["change_genre"])
 		selected_genre = href_list["change_genre"]
-		GLOB.nanomanager.update_uis(src)
+		SSnano.update_uis(src)
 	if(href_list["stop"])
 		StopPlaying()
 		SSnano.update_uis(src)

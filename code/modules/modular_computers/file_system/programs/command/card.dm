@@ -215,7 +215,7 @@
 					"accesses" = accesses)))
 			data["regions"] = regions
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "identification_computer.tmpl", name, 600, 700, state = state)
 		ui.auto_update_layout = 1
@@ -498,7 +498,7 @@
 	if(id_card)
 		id_card.name = text("[id_card.registered_name]'s ID Card [get_faction_tag(id_card.selected_faction)]-([id_card.assignment])")
 
-	GLOB.nanomanager.update_uis(NM)
+	SSnano.update_uis(NM)
 	return 1
 
 /datum/computer_file/program/card_mod/proc/remove_nt_access(var/obj/item/weapon/card/id/id_card)

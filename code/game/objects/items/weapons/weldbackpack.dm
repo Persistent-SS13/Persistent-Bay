@@ -8,13 +8,20 @@
 	icon = 'icons/obj/storage.dmi'
 	icon_state = "welderpack"
 	w_class = ITEM_SIZE_HUGE
+	var/start_with_fuel = 1
 	var/max_fuel = 350
 	var/obj/item/weapon/weldingtool/welder
+
+/obj/item/weapon/weldpack/empty
+	start_with_fuel = 0
 
 /obj/item/weapon/weldpack/Initialize()
 	if(!map_storage_loaded)
 		create_reagents(max_fuel)
-		reagents.add_reagent(/datum/reagent/fuel, max_fuel)
+		if (start_with_fuel == 0)
+			(reagents.add_reagent(max_fuel))
+			return
+		else(reagents.add_reagent(/datum/reagent/fuel, max_fuel))
 
 	. = ..()
 

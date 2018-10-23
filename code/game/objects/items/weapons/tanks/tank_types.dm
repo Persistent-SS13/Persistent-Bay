@@ -22,7 +22,7 @@
 /obj/item/weapon/tank/oxygen/yellow
 	desc = "A tank of oxygen. This one is yellow."
 	icon_state = "oxygen_f"
-	matter = list("steel" = 250)
+	matter = list("steel" = 850)
 	starting_pressure = list("oxygen" = 0)
 
 /obj/item/weapon/tank/oxygen/red

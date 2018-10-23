@@ -480,7 +480,6 @@
 		create_reagents(max_fuel)
 		if (start_with_fuel == 0)
 			(reagents.add_reagent(max_fuel))
-			return
 		else(reagents.add_reagent(/datum/reagent/fuel, max_fuel))
 
 	. = ..()

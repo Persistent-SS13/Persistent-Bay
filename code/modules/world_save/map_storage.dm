@@ -381,9 +381,16 @@ var/global/list/debug_data = list()
 	var/savefile/f = new("record_saves/[key].sav")
 	var/datum/computer_file/crew_record/v
 	f >> v
-	if(v && v.linked_account) v.linked_account.after_load()
-	else message_admins("record without account [key]")
+	sleep(10)
+	if(v.linked_account) v.linked_account.after_load()
+	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+		if(record2.get_name() == v.get_name())
+			if(v.linked_account && !record2.linked_account || (record2.linked_account && v.linked_account && record2.linked_account.money < v.linked_account))
+				message_admins("recovered account found for [key] [v.get_name()]")
+				record2.linked_account = v.linked_account
+			return record2
 	GLOB.all_crew_records |= v
+	return v
 	
 
 /proc/Retrieve_Record_Faction(var/key, var/datum/world_faction/faction)

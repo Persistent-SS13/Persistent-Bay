@@ -757,6 +757,8 @@ var/list/gamemode_cache = list()
 					radiation_material_resistance_divisor = text2num(value)
 				if("radiation_lower_limit")
 					radiation_lower_limit = text2num(value)
+				if("hub")
+					world.update_hub_visibility()
 
 				else
 					log_misc("Unknown setting in configuration: '[name]'")

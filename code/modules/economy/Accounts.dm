@@ -15,9 +15,14 @@
 							//3 - central faction account
 	var/list/recently_paid = list()
 /datum/money_account/after_load()
-	if(get_account(account_number))
+	var/datum/money_account/M = get_account_loadless(account_number)
+	if(M && M.money >= money)
 		message_admins("duplicate account loaded owner: [owner_name] account_number: [account_number]")
 		qdel(src)
+	else if(M && M.money < money)
+		all_money_accounts.Remove(M)
+		all_money_accounts.Add(src)
+		qdel(M)
 	else
 		all_money_accounts.Add(src)
 	..()
@@ -164,6 +169,10 @@
 	if(D && D.security_level <= security_level_passed && (!D.security_level || D.remote_access_pin == attempt_pin_number) )
 		return D
 
+/proc/get_account_loadless(var/account_number)		
+	for(var/datum/money_account/D in all_money_accounts)
+		if(D.account_number == account_number)
+			return D
 /proc/get_account(var/account_number)
 	for(var/datum/money_account/D in all_money_accounts)
 		if(D.account_number == account_number)

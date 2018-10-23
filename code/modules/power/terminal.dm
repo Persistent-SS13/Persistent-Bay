@@ -25,7 +25,7 @@
 /obj/machinery/power/terminal/after_load()
 	..()
 	if(!loc)
-		initialized = 1	// This prevents the subsystem from getting upset
+		atom_flags |= ATOM_FLAG_INITIALIZED	// This prevents the subsystem from getting upset
 		qdel(src)
 		return
 	var/turf/T = get_turf(src)

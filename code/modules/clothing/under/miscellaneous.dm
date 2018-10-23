@@ -789,27 +789,47 @@
 /obj/item/clothing/under/shinypurple
 	name = "Shiny purple suit"
 	desc = "A shiny purple suit made of synthread. It has a flower pinned to it."
-	icon_state = "shinypurple"
-	item_state = "shinypurple"
-	worn_state = "shinypurple"
+	icon_state = "purpletux"
+	worn_state = "purpletux"
 
+/obj/item/clothing/under/blacktux
+	name = "Black Tuxedo"
+	desc = "A shiny black suit made of synthread. It has a flower pinned to it."
+	icon_state = "blacktux"
+	worn_state = "blacktux"	
+	
+/obj/item/clothing/under/bouqet
+	name = "Bouqet"
+	desc = "A shiny black suit made of synthread. It has a flower pinned to it."
+	icon_state = "bouqet"
+	item_state = "bouqet"
+	worn_state = "bouqet"		
+	
 /obj/item/clothing/under/maydress
 	name = "Special Wedding Dress"
 	desc = "A beautiful gown specially ordered and tailored. Embroidered along the inside of the dress, in cursive, May Crystalia."
 	icon_state = "maydress"
-	item_state = "maydress"
 	worn_state = "maydress"
 
 /obj/item/clothing/under/tulledress
 	name = "Silk Dress"
 	desc = "A silk dress padded with tulle fabric. Sleek, modest, and beauty all in one article."
 	icon_state = "tulledress"
-	item_state = "tulledress"
 	worn_state = "tulledress"
 
 /obj/item/clothing/under/bridesmaid
 	name = "Purple bridesmaid dress"
 	desc = "A form fitted bridesmaid dress made of purple silk. Really shows those curves."
 	icon_state = "purplemaid"
-	item_state = "purplemaid"
 	worn_state = "purplemaid"
+	
+/obj/item/clothing/under/greendress
+	name = "Green dress"
+	desc = "A green dress."
+	icon_state = "greendress"
+	worn_state = "greendress"
+		
+	
+	
+	
+	

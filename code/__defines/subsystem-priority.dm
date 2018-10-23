@@ -22,6 +22,7 @@
 #define SS_PRIORITY_PLANTS        30	// Spreading vine effects.
 #define SS_PRIORITY_GARBAGE       25	// Garbage collection.
 #define SS_PRIORITY_VINES         25	// Spreading vine effects.
+#define SS_PRIORITY_NANO          20    // Updates to nanoui uis.
 #define SS_PRIORITY_WIRELESS      10	// Wireless connection setup.
 
 

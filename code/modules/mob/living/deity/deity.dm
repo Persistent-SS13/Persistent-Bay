@@ -31,7 +31,7 @@
 	. = ..()
 	if(. && mob_uplink.uses < power_min && --power_tick == 0)
 		mob_uplink.uses += 1
-		GLOB.nanomanager.update_uis(mob_uplink)
+		SSnano.update_uis(mob_uplink)
 		power_tick = initial(power_tick)
 
 /mob/living/deity/death()

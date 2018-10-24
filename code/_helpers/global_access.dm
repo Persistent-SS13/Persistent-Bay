@@ -65,6 +65,8 @@
 			return global.SSmaterials;
 		if("SSmobs")
 			return global.SSmobs;
+		if("SSnano")
+			return global.SSnano;
 		if("SSobj")
 			return global.SSobj;
 		if("SSopen_space")
@@ -75,8 +77,12 @@
 			return global.SSprocessing;
 		if("SSskybox")
 			return global.SSskybox;
+		if("SStimer")
+			return global.SStimer;
 		if("SSvines")
 			return global.SSvines;
+		if("SSxenoarch")
+			return global.SSxenoarch;
 		if("Tier1Runes")
 			return global.Tier1Runes;
 		if("Tier2Runes")
@@ -829,8 +835,6 @@
 			return global.save_controller;
 		if("saved")
 			return global.saved;
-		if("scheduler")
-			return global.scheduler;
 		if("secondary_mode")
 			return global.secondary_mode;
 		if("secret_force_mode")
@@ -943,8 +947,6 @@
 			return global.tank_gauge_cache;
 		if("tape_roll_applications")
 			return global.tape_roll_applications;
-		if("task_triggered_event")
-			return global.task_triggered_event;
 		if("telecomms_list")
 			return global.telecomms_list;
 		if("tertiary_mode")
@@ -1136,6 +1138,8 @@
 			global.SSmaterials=newval;
 		if("SSmobs")
 			global.SSmobs=newval;
+		if("SSnano")
+			global.SSnano=newval;
 		if("SSobj")
 			global.SSobj=newval;
 		if("SSopen_space")
@@ -1146,8 +1150,12 @@
 			global.SSprocessing=newval;
 		if("SSskybox")
 			global.SSskybox=newval;
+		if("SStimer")
+			global.SStimer=newval;
 		if("SSvines")
 			global.SSvines=newval;
+		if("SSxenoarch")
+			global.SSxenoarch=newval;
 		if("Tier1Runes")
 			global.Tier1Runes=newval;
 		if("Tier2Runes")
@@ -1900,8 +1908,6 @@
 			global.save_controller=newval;
 		if("saved")
 			global.saved=newval;
-		if("scheduler")
-			global.scheduler=newval;
 		if("secondary_mode")
 			global.secondary_mode=newval;
 		if("secret_force_mode")
@@ -2014,8 +2020,6 @@
 			global.tank_gauge_cache=newval;
 		if("tape_roll_applications")
 			global.tape_roll_applications=newval;
-		if("task_triggered_event")
-			global.task_triggered_event=newval;
 		if("telecomms_list")
 			global.telecomms_list=newval;
 		if("tertiary_mode")
@@ -2174,12 +2178,15 @@
 	"SSmapping",
 	"SSmaterials",
 	"SSmobs",
+	"SSnano",
 	"SSobj",
 	"SSopen_space",
 	"SSplants",
 	"SSprocessing",
 	"SSskybox",
+	"SStimer",
 	"SSvines",
+	"SSxenoarch",
 	"Tier1Runes",
 	"Tier2Runes",
 	"Tier3Runes",
@@ -2556,7 +2563,6 @@
 	"same_wires",
 	"save_controller",
 	"saved",
-	"scheduler",
 	"secondary_mode",
 	"secret_force_mode",
 	"send_emergency_team",
@@ -2613,7 +2619,6 @@
 	"tail_icon_cache",
 	"tank_gauge_cache",
 	"tape_roll_applications",
-	"task_triggered_event",
 	"telecomms_list",
 	"tertiary_mode",
 	"text_tag_icons",

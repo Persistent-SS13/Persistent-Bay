@@ -144,7 +144,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 				data["status"] = "Obstructed"
 		data["dimension"] = dimensions
 	// update the ui if it exists, returns null if no ui is passed/found
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		// the ui does not exist, so we'll create a new() one
 		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
@@ -433,13 +433,13 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 /obj/machinery/bluespace_satellite/contract_signed(var/obj/item/weapon/paper/contract/contract)
 	pending_contracts -= contract
 	signed_contracts |= contract
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	return 1
 
 /obj/machinery/bluespace_satellite/contract_cancelled(var/obj/item/weapon/paper/contract/contract)
 	pending_contracts -= contract
 	signed_contracts -= contract
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	return 1
 
 
@@ -454,7 +454,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		starting_leader = id.registered_name
 		cancel_contracts()
 		loc.visible_message("The \icon[src] [src] reports that the card was successfully scanned and the leadership has been set to '[starting_leader]'.")
-		GLOB.nanomanager.update_uis(src)
+		SSnano.update_uis(src)
 		return
 	..()
 
@@ -473,7 +473,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	data["starting_leader"] = starting_leader ? starting_leader : "*UNSET*"
 
 	// update the ui if it exists, returns null if no ui is passed/found
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		// the ui does not exist, so we'll create a new() one
 		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
@@ -580,7 +580,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
 			if(!contract.is_solvent())
 				contract.cancel()
-				GLOB.nanomanager.update_uis(src)
+				SSnano.update_uis(src)
 				return 0
 		for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
 			contract.finalize()

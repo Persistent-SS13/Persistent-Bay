@@ -301,9 +301,9 @@ var/global/list/debug_data = list()
 		f << L
 		if(!L.linked_account)
 			message_admins("RECORD [key] HAS NO LINKED ACCOUNT!!! GENERATING ONE")
-			L.linked_account = create_account(record.get_name(), 0, null)
+			L.linked_account = create_account(L.get_name(), 0, null)
 			L.linked_account.remote_access_pin = rand(1111,9999)
-			L.linked_account = record.linked_account.after_load()
+			L.linked_account = L.linked_account.after_load()
 			L.linked_account.money = 1000
 		f << L.linked_account
 		if(L.linked_account)

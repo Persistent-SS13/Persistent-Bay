@@ -382,6 +382,8 @@ var/global/list/debug_data = list()
 	var/datum/computer_file/crew_record/v
 	f >> v
 	sleep(10)
+	if(!v)
+		message_admins("fucked up record [key] [v]")
 	if(v.linked_account) v.linked_account.after_load()
 	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
 		if(record2.get_name() == v.get_name())

@@ -965,7 +965,7 @@ var/global/floorIsLava = 0
 		if(!record.linked_account)
 			record.linked_account = create_account(record.get_name(), 0, null)
 			record.linked_account.remote_access_pin = 1111
-			record.linked_account.after_load()
+			record.linked_account = record.linked_account.after_load()
 			record.linked_account.money = 1000
 
 /datum/admins/proc/delete_account()

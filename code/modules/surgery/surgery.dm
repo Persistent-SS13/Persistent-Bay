@@ -74,6 +74,8 @@
 
 /datum/surgery_step/proc/success_chance(mob/living/user, mob/living/carbon/human/target, obj/item/tool)
 	. = tool_quality(tool)
+	if (tool.rushed)
+		. -= 10 // 10% chance to fail the step when rushing
 	if(user == target)
 		. -= 10
 	if(ishuman(user))
@@ -122,12 +124,15 @@
 		if(S.tool_quality(src))
 			var/step_is_valid = S.can_use(user, M, zone, src)
 			if(step_is_valid && S.is_valid_target(M))
+				var/step_duration_multiplier = 2 // Careful procedures take this many times as long
+				if (src.rushed)
+					step_duration_multiplier = 0.9 // Rushed procedures are even quicker than vanilla
 				if(step_is_valid == SURGERY_FAILURE) // This is a failure that already has a message for failing.
 					return 1
 				M.op_stage.in_progress += zone
 				S.begin_step(user, M, zone, src)		//start on it
 				//We had proper tools! (or RNG smiled.) and user did not move or change hands.
-				if(prob(S.success_chance(user, M, src)) &&  do_mob(user, M, rand(S.min_duration, S.max_duration)))
+				if((prob(S.success_chance(user, M, src)) &&  do_mob(user, M, rand(S.min_duration * step_duration_multiplier, S.max_duration * step_duration_multiplier))))
 					S.end_step(user, M, zone, src)		//finish successfully
 				else if ((src in user.contents) && user.Adjacent(M))			//or
 					S.fail_step(user, M, zone, src)		//malpractice~

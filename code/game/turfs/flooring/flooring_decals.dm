@@ -35,7 +35,7 @@ var/list/floor_decals = list()
 		T.decals |= floor_decals[cache_key]
 		T.overlays |= floor_decals[cache_key]
 		T.saved_decals |= src
-	initialized = TRUE
+	atom_flags |= ATOM_FLAG_INITIALIZED
 	loc = null
 	return 1
 //	return INITIALIZE_HINT_QDEL
@@ -54,7 +54,7 @@ var/list/floor_decals = list()
 		if(!T.decals) T.decals = list()
 		T.decals |= floor_decals[cache_key]
 		T.overlays |= floor_decals[cache_key]
-	initialized = TRUE
+	atom_flags |= ATOM_FLAG_INITIALIZED
 	return 1
 
 
@@ -69,7 +69,7 @@ var/list/floor_decals = list()
 		return
 	T.remove_decals()
 	T.update_icon()
-	initialized = TRUE
+	atom_flags |= ATOM_FLAG_INITIALIZED
 	return INITIALIZE_HINT_QDEL
 
 /obj/effect/floor_decal/carpet

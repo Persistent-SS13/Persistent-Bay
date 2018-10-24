@@ -41,9 +41,8 @@ var/bomb_set
 	if(timing)
 		timeleft = max(timeleft - (wait / 10), 0)
 		if(timeleft <= 0)
-			spawn
-				explode()
-		GLOB.nanomanager.update_uis(src)
+			addtimer(CALLBACK(src, .proc/explode), 0)
+		SSnano.update_uis(src)
 
 /obj/machinery/nuclearbomb/attackby(obj/item/weapon/O as obj, mob/user as mob, params)
 	if(isScrewdriver(O))
@@ -75,8 +74,8 @@ var/bomb_set
 
 	if(src.extended)
 		if(istype(O, /obj/item/weapon/disk/nuclear))
-			usr.drop_item()
-			O.forceMove(src)
+			if(!user.unEquip(O, src))
+				return
 			src.auth = O
 			src.add_fingerprint(user)
 			return attack_hand(user)
@@ -193,7 +192,7 @@ var/bomb_set
 		if(yes_code)
 			data["message"] = "*****"
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "nuclear_bomb.tmpl", "Nuke Control Panel", 300, 510)
 		ui.set_initial_data(data)
@@ -235,8 +234,8 @@ var/bomb_set
 		else
 			var/obj/item/I = usr.get_active_hand()
 			if(istype(I, /obj/item/weapon/disk/nuclear))
-				usr.drop_item()
-				I.forceMove(src)
+				if(!usr.unEquip(I, src))
+					return 1
 				auth = I
 	if(is_auth(usr))
 		if(href_list["type"])
@@ -370,12 +369,10 @@ var/bomb_set
 	item_state = "card-id"
 	w_class = ITEM_SIZE_TINY
 
-/obj/item/weapon/disk/nuclear/New()
-	..()
-	nuke_disks |= src
 
 /obj/item/weapon/disk/nuclear/Initialize()
 	. = ..()
+	nuke_disks |= src
 	// Can never be quite sure that a game mode has been properly initiated or not at this point, so always register
 	GLOB.moved_event.register(src, src, /obj/item/weapon/disk/nuclear/proc/check_z_level)
 
@@ -401,24 +398,27 @@ var/bomb_set
 
 //====the nuclear football (holds the disk and instructions)====
 /obj/item/weapon/storage/secure/briefcase/nukedisk
+	desc = "A large briefcase with a digital locking system."
 	startswith = list(
 		/obj/item/weapon/disk/nuclear,
 		/obj/item/weapon/pinpointer,
-		/obj/item/smallDelivery/nuke_instructions,
+		/obj/item/weapon/folder/envelope/nuke_instructions,
 		/obj/item/modular_computer/laptop/preset/custom_loadout/cheap/
 	)
-	desc = "A large briefcase with a digital locking system. On closer inspection, you see an \
-	Expeditionary Corps emblem is etched into the front of it."
 
-/obj/item/smallDelivery/nuke_instructions
-	name = "classified instructions"
+/obj/item/weapon/storage/secure/briefcase/nukedisk/examine(var/user)
+	..()
+	to_chat(user,"On closer inspection, you see \a [GLOB.using_map.company_name] emblem is etched into the front of it.")
+
+/obj/item/weapon/folder/envelope/nuke_instructions
+	name = "instructions envelope"
 	desc = "A small envelope. The label reads 'open only in event of high emergency'."
 
-/obj/item/smallDelivery/nuke_instructions/Initialize()
+/obj/item/weapon/folder/envelope/nuke_instructions/Initialize()
 	. = ..()
 	var/obj/item/weapon/paper/R = new(src)
 	R.set_content("<center><img src=sollogo.png><br><br>\
-	<b>Warning: Classified<br>NTF Shambhala Self Destruct System - Instructions</b></center><br><br>\
+	<b>Warning: Classified<br>[GLOB.using_map.station_name] Self Destruct System - Instructions</b></center><br><br>\
 	In the event of a Delta-level emergency, this document will guide you through the activation of the vessel's \
 	on-board nuclear self destruct system. Please read carefully.<br><br>\
 	1) (Optional) Announce the imminent activation to any surviving crew members, and begin evacuation procedures.<br>\
@@ -445,7 +445,6 @@ var/bomb_set
 	R.stamped += /obj/item/weapon/stamp
 	R.overlays += stampoverlay
 	R.stamps += "<HR><i>This paper has been stamped as 'Top Secret'.</i>"
-	src.wrapped = R
 
 //====vessel self-destruct system====
 /obj/machinery/nuclearbomb/station

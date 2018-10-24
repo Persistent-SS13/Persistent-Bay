@@ -40,7 +40,7 @@
 		for(var/obj/item/weapon/paper/contract/contract in cloneNM.signed_contracts)
 			if(!contract.is_solvent())
 				contract.cancel()
-				GLOB.nanomanager.update_uis(src)
+				SSnano.update_uis(src)
 				return 0
 		if(pod.growclone(computer.dna_scanner.stored_dna))
 			for(var/obj/item/weapon/paper/contract/contract in cloneNM.signed_contracts)
@@ -116,12 +116,12 @@
 /datum/nano_module/program/clone_manager/contract_signed(var/obj/item/weapon/paper/contract/contract)
 	pending_contracts -= contract
 	signed_contracts |= contract
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	return 1
 /datum/nano_module/program/clone_manager/contract_cancelled(var/obj/item/weapon/paper/contract/contract)
 	pending_contracts -= contract
 	signed_contracts -= contract
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	return 1
 
 		
@@ -158,7 +158,7 @@
 	var/commitment = get_contributed()
 	data["commitment"] = commitment
 	data["finishable"] = commitment >= 5000
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "cloning_management.tmpl", "Cloning Management", 400, 450, state = state)
 

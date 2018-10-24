@@ -761,6 +761,7 @@
 // Sleeping agent, produced by breathing N2O.
 /datum/reagent/nitrous_oxide
 	name = "Nitrous Oxide"
+	gas_id = "sleeping_agent"
 	description = "An ubiquitous sleeping agent also known as laughing gas."
 	taste_description = "dental surgery"
 	reagent_state = LIQUID

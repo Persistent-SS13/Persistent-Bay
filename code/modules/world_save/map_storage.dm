@@ -389,9 +389,9 @@ var/global/list/debug_data = list()
 	if(!fexists("record_saves/[key].sav")) return
 	var/savefile/f = new("record_saves/[key].sav")
 	var/datum/computer_file/crew_record/v
-	f >> v
+	to_file(f, L)
 	var/datum/money_account/account
-	f >> account
+	to_file(f, account)
 	if(!v)
 		message_admins("fucked up record [key]")
 	if(!account)

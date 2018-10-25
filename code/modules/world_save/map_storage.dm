@@ -110,7 +110,7 @@ var/global/list/debug_data = list()
 	return
 
 /datum/proc/StandardWrite(var/savefile/f)
-	if(QDELETED(src))	// If we are deleted, we shouldn't be saving
+	if(QDELETED(src) && !istype(src, /datum/money_account))	// If we are deleted, we shouldn't be saving
 		return
 	before_save()
 	var/list/saving
@@ -404,6 +404,7 @@ var/global/list/debug_data = list()
 		if(record2.get_name() == v.get_name())
 			if(v.linked_account && !record2.linked_account || (record2.linked_account && v.linked_account && record2.linked_account.money < v.linked_account))
 				message_admins("recovered account found for [key] [v.get_name()]")
+				all_money_accounts.Remove(v.linked_account)
 				record2.linked_account = v.linked_account
 			return record2
 	GLOB.all_crew_records |= v

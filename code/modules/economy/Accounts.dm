@@ -17,15 +17,18 @@
 /datum/money_account/after_load()
 	var/datum/money_account/M = get_account_loadless(account_number)
 	if(M && M.money >= money)
-		message_admins("duplicate account loaded owner: [owner_name] account_number: [account_number]")
+		message_admins("duplicate account loaded owner: [owner_name] account_number: [M.account_number]")
 		qdel(src)
+		return M
 	else if(M && M.money < money)
 		all_money_accounts.Remove(M)
 		all_money_accounts.Add(src)
 		qdel(M)
+		return src
 	else
 		all_money_accounts.Add(src)
 	..()
+	return src
 
 /datum/money_account/proc/do_transaction(var/datum/transaction/T)
 	money = max(0, money + T.amount)

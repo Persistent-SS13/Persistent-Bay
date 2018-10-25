@@ -298,12 +298,21 @@ var/global/list/debug_data = list()
 		fcopy("record_saves/[key].sav", "backups/[backup_dir]/records/[key].sav")
 		fdel("record_saves/[key].sav")
 		var/savefile/f = new("record_saves/[key].sav")
-		f << L
+		to_file(f, L)
+		if(!L.linked_account)
+			message_admins("RECORD [key] HAS NO LINKED ACCOUNT!!! GENERATING ONE")
+			L.linked_account = create_account(L.get_name(), 0, null)
+			L.linked_account.remote_access_pin = rand(1111,9999)
+			L.linked_account = L.linked_account.after_load()
+			L.linked_account.money = 1000
+		to_file(f, L.linked_account)
 		if(L.linked_account)
 			var/key2 = L.linked_account.account_number
+			
 			fdel("record_saves/[key2].sav")
 			var/savefile/fa = new("record_saves/[key2].sav")
-			fa << L
+			to_file(fa, L)
+			to_file(fa, L.linked_account)
 
 			
 	for(var/datum/world_faction/faction in GLOB.all_world_factions)
@@ -313,7 +322,7 @@ var/global/list/debug_data = list()
 			fcopy("record_saves/[faction.uid]/[key].sav", "backups/[backup_dir]/records/[faction.uid]/[key].sav")
 			fdel("record_saves/[faction.uid]/[key].sav")
 			var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
-			f << L
+			to_file(f, L)
 
 /proc/Save_World()
 	to_world("<font size=4 color='green'>The world is saving! You won't be able to join at this time.</font>")
@@ -381,9 +390,19 @@ var/global/list/debug_data = list()
 	var/savefile/f = new("record_saves/[key].sav")
 	var/datum/computer_file/crew_record/v
 	f >> v
-	if(v && v.linked_account) v.linked_account.after_load()
-	else message_admins("record without account [key]")
+	sleep(10)
+	if(!v)
+		message_admins("fucked up record [key] [v]")
+	if(v.linked_account) 
+		v.linked_account = v.linked_account.after_load()
+	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+		if(record2.get_name() == v.get_name())
+			if(v.linked_account && !record2.linked_account || (record2.linked_account && v.linked_account && record2.linked_account.money < v.linked_account))
+				message_admins("recovered account found for [key] [v.get_name()]")
+				record2.linked_account = v.linked_account
+			return record2
 	GLOB.all_crew_records |= v
+	return v
 	
 
 /proc/Retrieve_Record_Faction(var/key, var/datum/world_faction/faction)
@@ -622,4 +641,4 @@ var/global/list/debug_data = list()
 		dat += "[x] <a href='?_src_=vars;Remove_Var=[ind];Varsx=\ref[src]'>(Remove)</a><br>"
 	dat += "<hr><br>"
 	dat += "<a href='?_src_=vars;Varsx=\ref[src];Add_Var=1'>(Add new var)</a>"
-	M << browse(dat, "window=roundstats;size=500x600")
+	show_browser(M, dat, "window=roundstats;size=500x600")

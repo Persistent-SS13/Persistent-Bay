@@ -389,7 +389,7 @@ var/global/list/debug_data = list()
 	if(!fexists("record_saves/[key].sav")) return
 	var/savefile/f = new("record_saves/[key].sav")
 	var/datum/computer_file/crew_record/v
-	to_file(f, L)
+	to_file(f, v)
 	var/datum/money_account/account
 	to_file(f, account)
 	if(!v)

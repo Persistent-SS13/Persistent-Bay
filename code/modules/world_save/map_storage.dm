@@ -171,7 +171,7 @@ var/global/list/debug_data = list()
 /turf/StandardWrite(f)
 	var/starttime = REALTIMEOFDAY
 	..()
-	if((REALTIMEOFDAY - starttime)/10 > 29)
+	if((REALTIMEOFDAY - starttime)/10 > 2)
 		to_world("[src.type] took [(REALTIMEOFDAY - starttime)/10] seconds to save at [x] [y] [z]")
 /mob/Write(savefile/f)
 	StandardWrite(f)
@@ -390,9 +390,14 @@ var/global/list/debug_data = list()
 	var/savefile/f = new("record_saves/[key].sav")
 	var/datum/computer_file/crew_record/v
 	f >> v
-	sleep(10)
+	var/datum/money_account/account
+	f >> account
 	if(!v)
-		message_admins("fucked up record [key] [v]")
+		message_admins("fucked up record [key]")
+	if(!account)
+		message_admins("broken account for [key]")
+	else
+		v.linked_account = account
 	if(v.linked_account) 
 		v.linked_account = v.linked_account.after_load()
 	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)

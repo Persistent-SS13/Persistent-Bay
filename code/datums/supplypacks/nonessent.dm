@@ -238,7 +238,8 @@
 					/obj/item/clothing/accessory/locket,
 					/obj/item/clothing/accessory/black/expensive,
 					/obj/item/clothing/accessory/scarf,
-					/obj/item/clothing/head/crown
+					/obj/item/clothing/head/crown,
+					/obj/item/clothing/mask/smokable/pipe
 					)
 	cost = 95
 	containername = "luxury crate"
@@ -276,7 +277,17 @@
 					/obj/item/clothing/under/dress/dress_pink,
 					/obj/item/clothing/under/dress/dress_orange,
 					/obj/item/clothing/under/dress/dress_yellow,
-					/obj/item/clothing/under/dress/dress_saloon)
+					/obj/item/clothing/under/dress/dress_saloon,
+					/obj/item/clothing/under/dress/red_evening_gown,
+					/obj/item/clothing/under/dress/striped_dress,
+					/obj/item/clothing/under/cheongsam,
+					/obj/item/clothing/under/abaya,
+					/obj/item/clothing/under/dress/dress_fire,
+					/obj/item/clothing/under/dress/dress_hr,
+					/obj/item/clothing/under/dress/dress_purple,
+					/obj/item/clothing/under/sundress_white,
+					/obj/item/clothing/under/dress/ysing,
+					/obj/item/clothing/under/dress/geisha)
 	cost = 10
 	containername = "pretty dress closet"
 	containertype = /obj/structure/closet

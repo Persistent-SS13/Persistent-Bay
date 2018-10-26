@@ -134,7 +134,7 @@
 
 	move_trail = /obj/effect/decal/cleanable/blood/tracks/claw
 
-	heat_discomfort_level = 295
+	heat_discomfort_level = 305
 	heat_discomfort_strings = list(
 		"You feel soothingly warm.",
 		"You feel the heat sink into your bones.",

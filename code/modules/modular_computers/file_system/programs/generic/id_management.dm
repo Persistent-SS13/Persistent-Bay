@@ -25,7 +25,7 @@
 	else
 		data["have_printer"] = 0
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "id_management.tmpl", name, 700, 540, state = state)
 		ui.auto_update_layout = 1
@@ -84,13 +84,13 @@
 			for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
 				if(R.get_name() == usr.real_name)
 					record = R
-					break	
+					break
+			if(!record)
+				record = Retrieve_Record(usr.real_name)
 			if(!record)
 				message_admins("NO global record found for [usr.real_name]")
 				to_chat(usr, "No record found for [usr.real_name].. contact software developer.")
 				return
-			if(!record)
-				record = Retrieve_Record(usr.real_name)
 			record.validate_time = world.realtime
 			usr.last_id_devalidate = world.realtime + 5 MINUTES
 			update_ids(usr.real_name)

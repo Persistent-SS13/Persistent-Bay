@@ -139,6 +139,9 @@
 		if(istype(A, /area/space))
 			message_admins("OHHH GOD [src] IS TRYING TO MOVE SPACE!! NOOOOOOOOO")
 			return
+		if(!istype(A, /area/shuttle))
+			message_admins("broken shuttle [src] with areas [english_list(shuttle_area)] trying to move")
+			return
 		testing("Moving [A]")
 		translation += get_turf_translation(get_turf(current_location), get_turf(destination), A.contents)
 	shuttle_moved(destination, translation)

@@ -110,7 +110,7 @@ var/global/list/debug_data = list()
 	return
 
 /datum/proc/StandardWrite(var/savefile/f)
-	if(QDELETED(src))	// If we are deleted, we shouldn't be saving
+	if(QDELETED(src) && !istype(src, /datum/money_account))	// If we are deleted, we shouldn't be saving
 		return
 	before_save()
 	var/list/saving
@@ -171,7 +171,7 @@ var/global/list/debug_data = list()
 /turf/StandardWrite(f)
 	var/starttime = REALTIMEOFDAY
 	..()
-	if((REALTIMEOFDAY - starttime)/10 > 29)
+	if((REALTIMEOFDAY - starttime)/10 > 2)
 		to_world("[src.type] took [(REALTIMEOFDAY - starttime)/10] seconds to save at [x] [y] [z]")
 /mob/Write(savefile/f)
 	StandardWrite(f)
@@ -298,14 +298,23 @@ var/global/list/debug_data = list()
 		fcopy("record_saves/[key].sav", "backups/[backup_dir]/records/[key].sav")
 		fdel("record_saves/[key].sav")
 		var/savefile/f = new("record_saves/[key].sav")
-		f << L
+		to_file(f, L)
+		if(!L.linked_account)
+			message_admins("RECORD [key] HAS NO LINKED ACCOUNT!!! GENERATING ONE")
+			L.linked_account = create_account(L.get_name(), 0, null)
+			L.linked_account.remote_access_pin = rand(1111,9999)
+			L.linked_account = L.linked_account.after_load()
+			L.linked_account.money = 1000
+		to_file(f, L.linked_account)
 		if(L.linked_account)
 			var/key2 = L.linked_account.account_number
+
 			fdel("record_saves/[key2].sav")
 			var/savefile/fa = new("record_saves/[key2].sav")
-			fa << L
+			to_file(fa, L)
+			to_file(fa, L.linked_account)
 
-			
+
 	for(var/datum/world_faction/faction in GLOB.all_world_factions)
 		var/list/records = faction.get_records()
 		for(var/datum/computer_file/crew_record/L in records)
@@ -313,7 +322,7 @@ var/global/list/debug_data = list()
 			fcopy("record_saves/[faction.uid]/[key].sav", "backups/[backup_dir]/records/[faction.uid]/[key].sav")
 			fdel("record_saves/[faction.uid]/[key].sav")
 			var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
-			f << L
+			to_file(f, L)
 
 /proc/Save_World()
 	to_world("<font size=4 color='green'>The world is saving! You won't be able to join at this time.</font>")
@@ -326,7 +335,7 @@ var/global/list/debug_data = list()
 	var/starttime = REALTIMEOFDAY
 	var/backup = 0
 	var/dir = 1
-	
+
 	while(!backup)
 		if(fexists("backups/[dir]/z1.sav"))
 			dir++
@@ -372,7 +381,7 @@ var/global/list/debug_data = list()
 	return 1
 
 
-/proc/Retrieve_Record(var/key)
+/proc/Retrieve_Record(var/key, var/func = 1) // 2 = ATM account
 	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
 		if(record2.get_name() == key)
 			message_admins("retrieve_record ran for existing record [key]")
@@ -380,11 +389,36 @@ var/global/list/debug_data = list()
 	if(!fexists("record_saves/[key].sav")) return
 	var/savefile/f = new("record_saves/[key].sav")
 	var/datum/computer_file/crew_record/v
-	f >> v
-	if(v && v.linked_account) v.linked_account.after_load()
-	else message_admins("record without account [key]")
+	from_file(f, v)
+	var/datum/money_account/account
+	from_file(f, account)
+	if(!v)
+		message_admins("fucked up record [key]")
+		if(func == 1)
+			v = new()
+			v.set_name(key)
+		else
+			return
+	if(!account)
+		message_admins("broken account for [key]")
+		v.linked_account = create_account(v.get_name(), 0, null)
+		v.linked_account.remote_access_pin = rand(1111,9999)
+		v.linked_account = v.linked_account.after_load()
+		v.linked_account.money = 1000
+	else
+		v.linked_account = account
+	if(v.linked_account)
+		v.linked_account = v.linked_account.after_load()
+	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+		if(record2.get_name() == v.get_name())
+			if(v.linked_account && !record2.linked_account || (record2.linked_account && v.linked_account && record2.linked_account.money < v.linked_account))
+				message_admins("recovered account found for [key] [v.get_name()]")
+				all_money_accounts.Remove(v.linked_account)
+				record2.linked_account = v.linked_account
+			return record2
 	GLOB.all_crew_records |= v
-	
+	return v
+
 
 /proc/Retrieve_Record_Faction(var/key, var/datum/world_faction/faction)
 	if(!fexists("record_saves/[faction.uid]/[key].sav")) return
@@ -438,8 +472,8 @@ var/global/list/debug_data = list()
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
-			
-			
+
+
 		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
 		f = null
 	f = new("map_saves/extras.sav")
@@ -622,4 +656,4 @@ var/global/list/debug_data = list()
 		dat += "[x] <a href='?_src_=vars;Remove_Var=[ind];Varsx=\ref[src]'>(Remove)</a><br>"
 	dat += "<hr><br>"
 	dat += "<a href='?_src_=vars;Varsx=\ref[src];Add_Var=1'>(Add new var)</a>"
-	M << browse(dat, "window=roundstats;size=500x600")
+	show_browser(M, dat, "window=roundstats;size=500x600")

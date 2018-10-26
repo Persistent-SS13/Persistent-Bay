@@ -5,7 +5,7 @@
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "target_h"
 	density = 0
-	var/hp = 1800
+	var/hp = 2400
 	var/icon/virtualIcon
 	var/list/bulletholes = list()
 
@@ -73,11 +73,11 @@
 	syndicate
 		icon_state = "target_s"
 		desc = "A shooting target that looks like a hostile agent."
-		hp = 2600 // i guess syndie targets are sturdier?
+		hp = 3400 // i guess syndie targets are sturdier?
 	alien
 		icon_state = "target_q"
 		desc = "A shooting target with a threatening silhouette."
-		hp = 2350 // alium onest too kinda
+		hp = 2800 // alium onest too kinda
 
 /obj/item/target/bullet_act(var/obj/item/projectile/Proj)
 	var/p_x = Proj.p_x + pick(0,0,0,0,0,-1,1) // really ugly way of coding "sometimes offset Proj.p_x!"

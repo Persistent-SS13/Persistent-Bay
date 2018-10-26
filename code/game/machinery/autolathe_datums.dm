@@ -117,9 +117,14 @@ var/const/EXTRA_COST_FACTOR = 1
 	path = /obj/item/device/t_scanner
 	category = "Tools"
 
+/datum/autolathe/recipe/welder_mini
+	name = "miniature welding tool"
+	path = /obj/item/weapon/weldingtool/mini/empty
+	category = "Tools"
+
 /datum/autolathe/recipe/weldertool
 	name = "welding tool"
-	path = /obj/item/weapon/weldingtool
+	path = /obj/item/weapon/weldingtool/empty
 	category = "Tools"
 
 /datum/autolathe/recipe/screwdriver
@@ -595,7 +600,13 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/welder_industrial
 	name = "industrial welding tool"
-	path = /obj/item/weapon/weldingtool/largetank
+	path = /obj/item/weapon/weldingtool/largetank/empty
+	hidden = 1
+	category = "Tools"
+
+/datum/autolathe/recipe/welder_huge
+	name = "high capacity welding tool"
+	path = /obj/item/weapon/weldingtool/hugetank/empty
 	hidden = 1
 	category = "Tools"
 

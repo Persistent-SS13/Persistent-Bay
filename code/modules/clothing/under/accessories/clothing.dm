@@ -13,8 +13,8 @@
 	name = "maid apron"
 	desc = "An white apron."
 	icon_state = "maidapron"
-	
-	
+
+
 /obj/item/clothing/accessory/nt_tunic
 	name = "\improper Nanotrasen tunic"
 	desc = "A fashionable tunic that Nanotrasen gives to its lab workers."
@@ -81,9 +81,17 @@
 
 /obj/item/clothing/accessory/toggleable
 	var/icon_closed
+
 /obj/item/clothing/accessory/toggleable/New()
 	if(!icon_closed)
 		icon_closed = icon_state
+	..()
+
+/obj/item/clothing/accessory/toggleable/after_load()
+	if(!icon_closed)
+		icon_closed = icon_state
+	if(has_suit)
+		has_suit.verbs += /obj/item/clothing/accessory/toggleable/verb/toggle
 	..()
 
 /obj/item/clothing/accessory/toggleable/on_attached(obj/item/clothing/under/S, mob/user as mob)

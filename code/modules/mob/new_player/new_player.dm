@@ -121,6 +121,7 @@
 		if(M.loc && !M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
 			chosen_slot = M.save_slot
 			to_chat(src, "<span class='notice'>A character is already in game.</span>")
+			Retrieve_Record(M.real_name)
 			if(ticker.current_state > GAME_STATE_PREGAME)
 				panel?.close()
 				load_panel?.close()
@@ -215,7 +216,7 @@
 		return
 
 	var/mob/character = Character(chosen_slot, ckey)
-
+	Retrieve_Record(character.real_name)
 	var/turf/spawnTurf
 
 

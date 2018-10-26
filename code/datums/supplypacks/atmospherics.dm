@@ -4,11 +4,18 @@
 //gear
 /decl/hierarchy/supply_pack/atmospherics/internals
 	name = "Gear - Internals"
-	contains = list(/obj/item/clothing/mask/gas = 3,
-					/obj/item/weapon/tank/air = 3)
-	cost = 10
+	contains = list(/obj/item/clothing/mask/breath = 8,
+					/obj/item/weapon/tank/emergency/oxygen/double = 8)
+	cost = 11
 	containername = "internals crate"
 	containertype = /obj/structure/closet/crate/internals
+
+/decl/hierarchy/supply_pack/atmospherics/assorted_gas_masks
+	name = "Gear - Assorted gas masks (x10)"
+	contains = list(/obj/item/clothing/mask/gas = 5,
+					/obj/item/clothing/mask/gas/half = 5)
+	cost = 12
+	containername = "gas masks crate"
 
 //equipment
 /decl/hierarchy/supply_pack/atmospherics/inflatable
@@ -29,6 +36,13 @@
 	contains = list(/obj/machinery/portable_atmospherics/powered/scrubber = 4)
 	cost = 25
 	containername = "portable air scrubbers crate"
+	containertype = /obj/structure/largecrate
+
+/decl/hierarchy/supply_pack/atmospherics/huge_scrubber
+	name = "Equipment - Two large air scrubbers"
+	contains = list(/obj/machinery/portable_atmospherics/powered/scrubber/huge = 2)
+	cost = 35
+	containername = "portable large air scrubber crate"
 	containertype = /obj/structure/largecrate
 
 /decl/hierarchy/supply_pack/atmospherics/gas_generator

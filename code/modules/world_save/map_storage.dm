@@ -110,7 +110,7 @@ var/global/list/debug_data = list()
 	return
 
 /datum/proc/StandardWrite(var/savefile/f)
-	if(QDELETED(src))	// If we are deleted, we shouldn't be saving
+	if(QDELETED(src) && !istype(src, /datum/money_account))	// If we are deleted, we shouldn't be saving
 		return
 	before_save()
 	var/list/saving
@@ -171,7 +171,7 @@ var/global/list/debug_data = list()
 /turf/StandardWrite(f)
 	var/starttime = REALTIMEOFDAY
 	..()
-	if((REALTIMEOFDAY - starttime)/10 > 29)
+	if((REALTIMEOFDAY - starttime)/10 > 2)
 		to_world("[src.type] took [(REALTIMEOFDAY - starttime)/10] seconds to save at [x] [y] [z]")
 /mob/Write(savefile/f)
 	StandardWrite(f)
@@ -389,16 +389,22 @@ var/global/list/debug_data = list()
 	if(!fexists("record_saves/[key].sav")) return
 	var/savefile/f = new("record_saves/[key].sav")
 	var/datum/computer_file/crew_record/v
-	f >> v
-	sleep(10)
+	to_file(f, v)
+	var/datum/money_account/account
+	to_file(f, account)
 	if(!v)
-		message_admins("fucked up record [key] [v]")
+		message_admins("fucked up record [key]")
+	if(!account)
+		message_admins("broken account for [key]")
+	else
+		v.linked_account = account
 	if(v.linked_account) 
 		v.linked_account = v.linked_account.after_load()
 	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
 		if(record2.get_name() == v.get_name())
 			if(v.linked_account && !record2.linked_account || (record2.linked_account && v.linked_account && record2.linked_account.money < v.linked_account))
 				message_admins("recovered account found for [key] [v.get_name()]")
+				all_money_accounts.Remove(v.linked_account)
 				record2.linked_account = v.linked_account
 			return record2
 	GLOB.all_crew_records |= v

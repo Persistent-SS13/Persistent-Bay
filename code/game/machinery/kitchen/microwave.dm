@@ -345,7 +345,7 @@
 	src.update_icon()
 
 /obj/machinery/microwave/proc/dispose()
-	for (var/obj/O in src)
+	for (var/obj/O in InsertedContents())
 		O.dropInto(loc)
 	if (src.reagents.total_volume)
 		src.dirty++

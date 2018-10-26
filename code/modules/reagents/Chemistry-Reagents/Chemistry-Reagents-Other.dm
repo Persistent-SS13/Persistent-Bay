@@ -366,7 +366,7 @@
 /datum/reagent/luminol/touch_mob(var/mob/living/L)
 	L.reveal_blood()
 
-// This is only really used to poison vox and to produce other gases.
+// This is only really used to poison vox.
 /datum/reagent/oxygen
 	name = "Oxygen"
 	description = "An ubiquitous oxidizing agent."
@@ -380,6 +380,7 @@
 
 /datum/reagent/carbon_dioxide
 	name = "Carbon Dioxide"
+	gas_id = "carbon_dioxide"
 	description = "A byproduct of human respiration."
 	taste_description = "stale air"
 	reagent_state = LIQUID

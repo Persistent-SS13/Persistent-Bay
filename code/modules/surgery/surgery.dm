@@ -124,7 +124,7 @@
 		if(S.tool_quality(src))
 			var/step_is_valid = S.can_use(user, M, zone, src)
 			if(step_is_valid && S.is_valid_target(M))
-				var/step_duration_multiplier = 2 // Careful procedures take this many times as long
+				var/step_duration_multiplier = 1.5 // Careful procedures take this many times as long
 				if (src.rushed)
 					step_duration_multiplier = 0.9 // Rushed procedures are even quicker than vanilla
 				if(step_is_valid == SURGERY_FAILURE) // This is a failure that already has a message for failing.

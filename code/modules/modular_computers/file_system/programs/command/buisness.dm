@@ -942,9 +942,9 @@
 		if("business_finalize")
 			var/commitment = get_contributed()
 			var/signed_stocks = get_distributed()
-			if(commitment < 5000 || signed_stocks != 100)
+			if(commitment < 2500 || signed_stocks != 100)
 				return 0
-			commitment -= 5000
+			commitment -= 2500
 			if(!potential_name || potential_name == "")
 				to_chat(usr, "A name for the business must be chosen first.")
 				return

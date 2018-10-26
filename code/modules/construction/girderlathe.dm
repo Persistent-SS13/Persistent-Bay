@@ -69,7 +69,7 @@
 		L.Add(list(list("type" = "[item]", "amount" = stored_materials[item])))
 	data["contents"] = L
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "girderlathe.tmpl", src.name, 325, 625, master_ui = master_ui, state = state)
 		ui.set_initial_data(data)
@@ -80,7 +80,7 @@
 	if(..()) return 0
 
 	var/mob/user = usr
-	var/datum/nanoui/ui = GLOB.nanomanager.get_open_ui(user, src, "main")
+	var/datum/nanoui/ui = SSnano.get_open_ui(user, src, "main")
 
 	if(href_list["close"])
 		user.unset_machine()

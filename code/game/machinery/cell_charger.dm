@@ -26,6 +26,8 @@
 	RefreshParts()
 
 /obj/machinery/cell_charger/Destroy()
+	if(charging)
+		charging.forceMove(get_turf(src))
 	qdel()
 	return ..()
 

@@ -82,7 +82,7 @@
 	var/datum/events/events
 
 
-	should_save = 1
+	should_save = 0
 
 
 /obj/mecha/after_load()

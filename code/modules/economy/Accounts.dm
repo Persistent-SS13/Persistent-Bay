@@ -18,12 +18,10 @@
 	var/datum/money_account/M = get_account_loadless(account_number)
 	if(M && M.money >= money)
 		message_admins("duplicate account loaded owner: [owner_name] account_number: [M.account_number]")
-		qdel(src)
 		return M
 	else if(M && M.money < money)
 		all_money_accounts.Remove(M)
 		all_money_accounts.Add(src)
-		qdel(M)
 		return src
 	else
 		all_money_accounts.Add(src)

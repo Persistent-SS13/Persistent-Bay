@@ -6,6 +6,11 @@
 	var/obj/item/holstered = null
 	var/list/can_hold
 
+/obj/item/clothing/accessory/holster/after_load()
+	..()
+	if(has_suit)
+		has_suit.verbs += /obj/item/clothing/accessory/holster/verb/holster_verb
+
 /obj/item/clothing/accessory/holster/proc/holster(var/obj/item/I, var/mob/living/user)
 	if(holstered && istype(user))
 		to_chat(user, "<span class='warning'>There is already \a [holstered] holstered here!</span>")

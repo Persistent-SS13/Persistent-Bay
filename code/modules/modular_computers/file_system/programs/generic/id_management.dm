@@ -86,7 +86,7 @@
 					record = R
 					break
 			if(!record)
-				record = Retrieve_Record(sr.real_name)
+				record = Retrieve_Record(usr.real_name)
 			if(!record)
 				message_admins("NO global record found for [usr.real_name]")
 				to_chat(usr, "No record found for [usr.real_name].. contact software developer.")

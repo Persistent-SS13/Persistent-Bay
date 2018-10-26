@@ -42,8 +42,7 @@
 
 	icon = null
 	if (!id_tag)
-		assign_uid()
-		id_tag = num2text(uid)
+		id_tag = make_loc_string_id()
 	if(loc)
 		initial_loc = get_area(loc)
 		area_uid = initial_loc.uid
@@ -380,6 +379,7 @@
 		broadcast_status()
 		to_chat(user, "<span class='notice'>A [name == "Air Vent" ? "red" : "green"] light appears on \the [src] as it broadcasts atmospheric data.</span>")
 		flick("broadcast", src)
+		return 1
 
 	return ..()
 

@@ -71,7 +71,7 @@
 	data["beacon"] = stage ? "Unsecured" : "Secured"
 	data["label"] = name
 	data["connected"] = !!connected_faction
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "cargo_telepad.tmpl", "[name]", 400, 430)
 		ui.set_initial_data(data)
@@ -109,7 +109,7 @@
 				name = select_name
 		. = 1
 	if(.)
-		GLOB.nanomanager.update_uis(src)
+		SSnano.update_uis(src)
 
 
 /obj/machinery/telepad_cargo/attack_hand(mob/user as mob)

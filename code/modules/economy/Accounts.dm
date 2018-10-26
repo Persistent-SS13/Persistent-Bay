@@ -15,12 +15,18 @@
 							//3 - central faction account
 	var/list/recently_paid = list()
 /datum/money_account/after_load()
-	if(get_account(account_number))
-		message_admins("duplicate account loaded owner: [owner_name] account_number: [account_number]")
-		qdel(src)
+	var/datum/money_account/M = get_account_loadless(account_number)
+	if(M && M.money >= money)
+		message_admins("duplicate account loaded owner: [owner_name] account_number: [M.account_number]")
+		return M
+	else if(M && M.money < money)
+		all_money_accounts.Remove(M)
+		all_money_accounts.Add(src)
+		return src
 	else
 		all_money_accounts.Add(src)
 	..()
+	return src
 
 /datum/money_account/proc/do_transaction(var/datum/transaction/T)
 	money = max(0, money + T.amount)
@@ -164,11 +170,15 @@
 	if(D && D.security_level <= security_level_passed && (!D.security_level || D.remote_access_pin == attempt_pin_number) )
 		return D
 
+/proc/get_account_loadless(var/account_number)		
+	for(var/datum/money_account/D in all_money_accounts)
+		if(D.account_number == account_number)
+			return D
 /proc/get_account(var/account_number)
 	for(var/datum/money_account/D in all_money_accounts)
 		if(D.account_number == account_number)
 			return D
-	var/datum/computer_file/crew_record/L = Retrieve_Record(account_number)
+	var/datum/computer_file/crew_record/L = Retrieve_Record(account_number, 2)
 	if(L)
 		return L.linked_account
 /proc/get_account_record(var/real_name)

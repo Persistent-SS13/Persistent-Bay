@@ -67,7 +67,7 @@
 
 /obj/machinery/microwave/attackby(var/obj/item/O as obj, var/mob/user as mob)
 
-	if(src.broken != 1 && default_deconstruction_screwdriver(user, O))
+	if(src.broken != 2 && default_deconstruction_screwdriver(user, O))
 		updateUsrDialog()
 		update_icon()
 		return
@@ -345,7 +345,7 @@
 	src.update_icon()
 
 /obj/machinery/microwave/proc/dispose()
-	for (var/obj/O in src)
+	for (var/obj/O in InsertedContents())
 		O.dropInto(loc)
 	if (src.reagents.total_volume)
 		src.dirty++

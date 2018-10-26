@@ -84,6 +84,13 @@
 		load_panel?.close()
 		switch(copytext(href_list["pickSlot"], 2))
 			if("create")
+				client.prefs.randomize_appearance_and_body_for()
+				client.prefs.real_name = null
+				client.prefs.preview_icon = null
+				client.prefs.home_system = null
+				client.prefs.faction = null
+				client.prefs.selected_under = null
+				client.prefs.sanitize_preferences()
 				client.prefs.ShowChoices(src)
 			if("load")
 				loadCharacter()

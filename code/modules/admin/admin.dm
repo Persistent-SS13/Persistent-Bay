@@ -949,30 +949,19 @@ var/global/floorIsLava = 0
 	if(real_name)
 		for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
 			if(record.get_name() == real_name)
-				to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
-				break
-				
-/datum/admins/proc/recover_account()
-	set category = "Server"
-	set desc ="Recover Money Account"
-	set name ="Recover Money Account"
-
-	if(!check_rights(R_ADMIN))
-		return
-	var/real_name = input("Enter the real name to search for", "Real name") as text|null
-	if(real_name)
-		for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
-			if(record.get_name() == real_name)
-				if(record.linked_account)
+				if(record.linked_account && istype(record.linked_account, /datum/money_account))
 					to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
-					record.linked_account = round(input("Enter money amount", "New amount") as num)
+					var/money = round(input("Enter money amount", "New amount") as num|null)
+					if(money)
+						record.linked_account.money = money
+					
 				else
 					message_admins("BROKEN ACCOUNT FOR [real_name] GENERATING")
 					record.linked_account = create_account(record.get_name(), 0, null)
 					record.linked_account.remote_access_pin = rand(1111,9999)
 					record.linked_account = record.linked_account.after_load()
 					record.linked_account.money = 1000
-
+					to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
 					
 					
 /datum/admins/proc/buildaccounts()
@@ -983,7 +972,7 @@ var/global/floorIsLava = 0
 	if(!check_rights(R_ADMIN))
 		return
 	for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
-		if(!record.linked_account)
+		if(!record.linked_account || !istype(record.linked_account, /datum/money_account))
 			record.linked_account = create_account(record.get_name(), 0, null)
 			record.linked_account.remote_access_pin = rand(1111,9999)
 			record.linked_account = record.linked_account.after_load()

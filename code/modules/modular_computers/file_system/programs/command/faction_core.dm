@@ -237,7 +237,7 @@
 	data["menu"] = menu
 	data["wrong_connection"] = wrong_connection
 	data["wrong_password"] = wrong_password
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "faction_core.tmpl", name, 550, 650, state = state)
 		ui.auto_update_layout = 1
@@ -529,7 +529,7 @@
 			var/datum/assignment/selected = input(usr,"Choose which assignment","Enter Parameter",null) as null|anything in (selected_assignmentcategory.assignments + "None")
 			if(selected_assignmentcategory.head_position != curr)
 				to_chat(usr, "Your inputs expired because someone used the terminal first.")
-				GLOB.nanomanager.update_uis(src)
+				SSnano.update_uis(src)
 				return 1
 			if(!selected || selected == "None")
 				selected_assignmentcategory.head_position = null
@@ -548,12 +548,13 @@
 				if(select_title)
 					if(x != selected_assignmentcategory)
 						to_chat(usr, "Your inputs expired because someone used the terminal first.")
-						GLOB.nanomanager.update_uis(src)
+						SSnano.update_uis(src)
 						return 1
 					var/datum/assignment/new_assignment = new()
 					new_assignment.parent = selected_assignmentcategory
 					new_assignment.name = select_title
 					new_assignment.uid = select_name
+					new_assignment.cryo_net = "Last Known Cryonet"
 					selected_assignmentcategory.assignments |= new_assignment
 					to_chat(usr, "Assignment successfully created.")
 		if("create_assignment_two")
@@ -570,12 +571,13 @@
 				if(select_title)
 					if(x != selected_assignmentcategory2)
 						to_chat(usr, "Your inputs expired because someone used the terminal first.")
-						GLOB.nanomanager.update_uis(src)
+						SSnano.update_uis(src)
 						return 1
 					var/datum/assignment/new_assignment = new()
 					new_assignment.parent = selected_assignmentcategory2
 					new_assignment.name = select_title
 					new_assignment.uid = select_name
+					new_assignment.cryo_net = "Last Known Cryonet"
 					selected_assignmentcategory2.assignments |= new_assignment
 					to_chat(usr, "Assignment successfully created.")
 		if("edit_assignmentcategory")
@@ -584,7 +586,7 @@
 			if(select_name)
 				if(curr_name != selected_assignmentcategory.name)
 					to_chat(usr, "Your inputs expired because someone used the terminal first.")
-					GLOB.nanomanager.update_uis(src)
+					SSnano.update_uis(src)
 					return 1
 				selected_assignmentcategory.name = select_name
 		if("edit_assignment")
@@ -593,7 +595,7 @@
 			if(select_name)
 				if(curr_name != selected_assignment.name)
 					to_chat(usr, "Your inputs expired because someone used the terminal first.")
-					GLOB.nanomanager.update_uis(src)
+					SSnano.update_uis(src)
 					return 1
 				selected_assignment.name = select_name
 		if("edit_assignment_pay")
@@ -781,6 +783,7 @@
 				connected_faction.cryo_networks -= choice
 		if("edit_assignment_cryonet")
 			var/list/choices = connected_faction.cryo_networks.Copy()
+			choices |= "Last Known Cryonet"
 			choices |= "default"
 			var/choice = input(usr,"Choose which cryo network the assignment should use.","Choose Cryo-net",null) as null|anything in choices
 			if(choice)
@@ -805,4 +808,4 @@
 			var/choice = input(usr,"This will devalidate all existing expense cards, and you will need to print new ones.") in list("Confirm", "Cancel")
 			if(choice == "Confirm")
 				devalidate_expense_cards(1, connected_faction.uid)
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)

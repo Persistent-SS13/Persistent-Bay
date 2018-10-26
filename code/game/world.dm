@@ -99,10 +99,6 @@
 	log_unit_test("Unit Tests Enabled. This will destroy the world when testing is complete.")
 	load_unit_test_changes()
 #endif
-
-	// Set up roundstart seed list.
-	plant_controller = new()
-
 	if(config.generate_map)
 		GLOB.using_map.perform_map_generation()
 	GLOB.using_map.build_exoplanets()
@@ -574,10 +570,12 @@ var/world_topic_spam_protect_time = world.timeofday
 
 /world/proc/update_status()
 	var/s = ""
-	s += "<a href='https://persistentss13.com/'>"
-	s += "Persistent Station 13, Characters, Stations and Factions in a persistent world</a> "
-	//Change this to wherever you want the hub to link to.
-	s += " | Enter the frontier and find your fortune. Grab a piece of it and make it your own. Collaborative storytelling RPG, IC ENFORCED.<br>"
+	if (config && config.hub_link)
+		s += "<a href='" + config.hub_link + "'>"
+	if (config && config.hub_name)
+		s += config.hub_name + "</a> "
+	if (config && config.hub_desc)
+		s += ("| " + config.hub_desc + "<br>")
 	var/list/features = list()
 	var/n = 0
 	for (var/mob/M in GLOB.player_list)

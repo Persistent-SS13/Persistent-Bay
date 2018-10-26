@@ -60,6 +60,8 @@
 	W.opaque_counter = opaque_counter
 
 	if(ispath(N, /turf/simulated))
+		var/turf/simulated/simu = W
+		simu.resources = old_resources
 		if(old_fire)
 			fire = old_fire
 		if (istype(W,/turf/simulated/floor) && old_type == /turf/simulated/asteroid)

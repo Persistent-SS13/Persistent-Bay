@@ -1,0 +1,42 @@
+################################
+# Example Changelog File
+#
+# Note: This file, and files beginning with ".", and files that don't end in ".yml" will not be read. If you change this file, you will look really dumb.
+#
+# Your changelog will be merged with a master changelog. (New stuff added only, and only on the date entry for the day it was merged.)
+# When it is, any changes listed below will disappear.
+#
+# Valid Prefixes: 
+#   bugfix
+#   wip (For works in progress)
+#   tweak
+#   soundadd
+#   sounddel
+#   rscadd (general adding of nice things)
+#   rscdel (general deleting of nice things)
+#   imageadd
+#   imagedel
+#   maptweak
+#   spellcheck (typo fixes)
+#   experiment
+#################################
+
+# Your name.  
+author: Unknown
+
+# Optional: Remove this file after generating master changelog.  Useful for PR changelogs that won't get used again.
+delete-after: True
+
+# Any changes you've made.  See valid prefix list above.
+# INDENT WITH TWO SPACES.  NOT TABS.  SPACES.
+# SCREW THIS UP AND IT WON'T WORK.
+# Also, all entries are changed into a single [] after a master changelog generation. Just remove the brackets when you add new entries.
+# Please surround your changes in  double quotes ("), as certain characters otherwise screws up compiling. The quotes will not show up in the changelog.
+changes: 
+  - bugfix: "Diagnosed and fixed yet another critical problem with condensation, this time a gameplay issue caused by dumbness of my part."
+  - bugfix: "Should fix an issue that seems to occur when pumping contents from a canister to a tank."
+  - tweak: "Some reworks on ARO were done to insure better gameplay by removing the water buffer."
+  - tweak: "Future compatibility for individual filters for anything that uses ARO pumping."
+  - bugfix: "ARO and Drain contents no longer vanish with them."
+  - tweak: "Sinks and showers have been tweaked to embrace ARO for good. Also future compatibility for individual tube filters."
+  - tweak: "Overall performance boost on SoM."

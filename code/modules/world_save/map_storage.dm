@@ -49,12 +49,12 @@ var/global/list/debug_data = list()
 	should_save = 0
 
 
-	
+
 /turf/space
 	map_storage_saved_vars = "contents"
 
-	
-	
+
+
 /turf/space/after_load()
 	..()
 	for(var/atom/movable/lighting_overlay/overlay in contents)
@@ -110,6 +110,8 @@ var/global/list/debug_data = list()
 	return
 
 /datum/proc/StandardWrite(var/savefile/f)
+	if(QDELETED(src) && !istype(src, /datum/money_account))	// If we are deleted, we shouldn't be saving
+		return
 	before_save()
 	var/list/saving
 	if(found_vars.Find("[type]"))
@@ -127,6 +129,8 @@ var/global/list/debug_data = list()
 		var/list/return_this = list()
 		if(istype(vars[variable], /datum))
 			var/datum/D = vars[variable]
+			if(QDELETED(D))
+				continue
 			if(!D.should_save(src))
 				continue
 		if(istype(vars[variable], /list))
@@ -167,8 +171,8 @@ var/global/list/debug_data = list()
 /turf/StandardWrite(f)
 	var/starttime = REALTIMEOFDAY
 	..()
-	if((REALTIMEOFDAY - starttime)/10 > 29)
-		world << "[src.type] took [(REALTIMEOFDAY - starttime)/10] seconds to save at [x] [y] [z]"
+	if((REALTIMEOFDAY - starttime)/10 > 2)
+		to_world("[src.type] took [(REALTIMEOFDAY - starttime)/10] seconds to save at [x] [y] [z]")
 /mob/Write(savefile/f)
 	StandardWrite(f)
 	if(ckey)
@@ -245,7 +249,7 @@ var/global/list/debug_data = list()
 	else
 		debug_data["[src.type]"] = list(1,(REALTIMEOFDAY - starttime)/10)
 	if((REALTIMEOFDAY - starttime)/10 > 29)
-		world << "[src.type] took [(REALTIMEOFDAY - starttime)/10] seconds to load at [x] [y] [z]"
+		to_world("[src.type] took [(REALTIMEOFDAY - starttime)/10] seconds to load at [x] [y] [z]")
 
 /datum/Read(savefile/f)
 	StandardRead(f)
@@ -288,29 +292,68 @@ var/global/list/debug_data = list()
 			lis |= T
 	to_file(f,lis)
 
+/proc/Save_Records(var/backup_dir)
+	for(var/datum/computer_file/crew_record/L in GLOB.all_crew_records)
+		var/key = L.get_name()
+		fcopy("record_saves/[key].sav", "backups/[backup_dir]/records/[key].sav")
+		fdel("record_saves/[key].sav")
+		var/savefile/f = new("record_saves/[key].sav")
+		to_file(f, L)
+		if(!L.linked_account)
+			message_admins("RECORD [key] HAS NO LINKED ACCOUNT!!! GENERATING ONE")
+			L.linked_account = create_account(L.get_name(), 0, null)
+			L.linked_account.remote_access_pin = rand(1111,9999)
+			L.linked_account = L.linked_account.after_load()
+			L.linked_account.money = 1000
+		to_file(f, L.linked_account)
+		if(L.linked_account)
+			var/key2 = L.linked_account.account_number
+			
+			fdel("record_saves/[key2].sav")
+			var/savefile/fa = new("record_saves/[key2].sav")
+			to_file(fa, L)
+			to_file(fa, L.linked_account)
+
+			
+	for(var/datum/world_faction/faction in GLOB.all_world_factions)
+		var/list/records = faction.get_records()
+		for(var/datum/computer_file/crew_record/L in records)
+			var/key = L.get_name()
+			fcopy("record_saves/[faction.uid]/[key].sav", "backups/[backup_dir]/records/[faction.uid]/[key].sav")
+			fdel("record_saves/[faction.uid]/[key].sav")
+			var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
+			to_file(f, L)
+
 /proc/Save_World()
+	to_world("<font size=4 color='green'>The world is saving! You won't be able to join at this time.</font>")
+	var/reallow = 0
+	if(config.enter_allowed) reallow = 1
+	config.enter_allowed = 0
 	Prepare_Atmos_For_Saving()
 	areas_to_save = list()
 	zones_to_save = list()
 	var/starttime = REALTIMEOFDAY
 	var/backup = 0
 	var/dir = 1
+	
 	while(!backup)
-		if(fexists("backups/[dir].sav"))
+		if(fexists("backups/[dir]/z1.sav"))
 			dir++
 		else
 			backup = 1
-			fcopy("map_saves/game.sav", "backups/[dir].sav")
-	fdel("map_saves/game.sav")
-	var/savefile/f = new("map_saves/game.sav")
 	found_vars = list()
 	for(var/z in 1 to 50)
-		f.cd = "/map/[z]"
+		fcopy("map_saves/z[z].sav", "backups/[dir]/z[z].sav")
+		fdel("map_saves/z[z].sav")
+		var/savefile/f = new("map_saves/z[z].sav")
 		for(var/x in 1 to world.maxx step 20)
 			for(var/y in 1 to world.maxy step 20)
 				Save_Chunk(x,y,z, f)
 				CHECK_TICK
-	f.cd = "/extras"
+		f = null
+	fcopy("map_saves/extras.sav", "backups/[dir]/extras.sav")
+	fdel("map_saves/extras.sav")
+	var/savefile/f = new("map_saves/extras.sav")
 	var/list/formatted_areas = list()
 	for(var/area/A in areas_to_save)
 		if(istype(A, /area/space)) continue
@@ -327,24 +370,65 @@ var/global/list/debug_data = list()
 	to_file(f["businesses"],GLOB.all_business)
 	to_file(f["zones"],zones)
 	to_file(f["areas"],formatted_areas)
-	to_file(f["turbolifts"],turbolifts)
-	to_file(f["records"],GLOB.all_crew_records)
-	to_file(f["email"],ntnet_global.email_accounts)
+	Save_Records(dir)
+
+//	to_file(f["records"],GLOB.all_crew_records)
 	to_file(f["next_account_number"],next_account_number)
-	world << "Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
-	world << "Saving Complete"
+	if(reallow) config.enter_allowed = 1
+	to_world("Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!")
+	to_world("Saving Complete")
+	f = null
 	return 1
+
+
+/proc/Retrieve_Record(var/key)
+	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+		if(record2.get_name() == key)
+			message_admins("retrieve_record ran for existing record [key]")
+			return record2
+	if(!fexists("record_saves/[key].sav")) return
+	var/savefile/f = new("record_saves/[key].sav")
+	var/datum/computer_file/crew_record/v
+	to_file(f, v)
+	var/datum/money_account/account
+	to_file(f, account)
+	if(!v)
+		message_admins("fucked up record [key]")
+	if(!account)
+		message_admins("broken account for [key]")
+	else
+		v.linked_account = account
+	if(v.linked_account) 
+		v.linked_account = v.linked_account.after_load()
+	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+		if(record2.get_name() == v.get_name())
+			if(v.linked_account && !record2.linked_account || (record2.linked_account && v.linked_account && record2.linked_account.money < v.linked_account))
+				message_admins("recovered account found for [key] [v.get_name()]")
+				all_money_accounts.Remove(v.linked_account)
+				record2.linked_account = v.linked_account
+			return record2
+	GLOB.all_crew_records |= v
+	return v
+	
+
+/proc/Retrieve_Record_Faction(var/key, var/datum/world_faction/faction)
+	if(!fexists("record_saves/[faction.uid]/[key].sav")) return
+	var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
+	var/v
+	f >> v
+	var/list/records = faction.get_records()
+	records |= v
+	return v
 
 
 /proc/Load_World()
 	var/starttime = REALTIMEOFDAY
 	if(!fexists("map_saves/game.sav")) return
-	var/savefile/f = new("map_saves/game.sav")
+	var/savefile/f = new("map_saves/extras.sav")
 	all_loaded = list()
 	found_vars = list()
 	debug_data = list()
-	var/v = null
-	f.cd = "/extras"
+	var/turf/ve = null
 	from_file(f["email"],ntnet_global.email_accounts)
 	from_file(f["records"],GLOB.all_crew_records)
 	if(!GLOB.all_crew_records)
@@ -365,18 +449,25 @@ var/global/list/debug_data = list()
 				message_admins("No turf found for area load")
 			turfs |= T
 		A.contents.Add(turfs)
-
-	f.cd = "/"
+	f = null
 	for(var/z in 1 to 50)
-		f.cd = "/map/[z]"
+		f = new("map_saves/z[z].sav")
 		var/starttime2 = REALTIMEOFDAY
-		while(!f.eof)
-			f >> v
+		var/breakout = 0
+		while(!f.eof && !breakout)
 			sleep(-1)
-		world << "Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!"
-
-	f.cd = "/extras"
-	from_file(f["turbolifts"],turbolifts)
+			if(((REALTIMEOFDAY - starttime2)/10) > 300)
+				breakout = 1
+			f >> ve
+		if(breakout)
+			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
+			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
+			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
+			
+			
+		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
+		f = null
+	f = new("map_saves/extras.sav")
 	var/list/zones
 
 	from_file(f["zones"],zones)
@@ -401,10 +492,11 @@ var/global/list/debug_data = list()
 	SSmachines.makepowernets()
 
 	for(var/x in debug_data)
-		world << "Loaded [debug_data[x][1]] [x] in [debug_data[x][2]] seconds!"
-	world << "Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!"
-	world << "Loading Complete"
+		to_world("Loaded [debug_data[x][1]] [x] in [debug_data[x][2]] seconds!")
+	to_world("Loading Completed in [(REALTIMEOFDAY - starttime)/10] seconds!")
+	to_world("Loading Complete")
 	return 1
+
 
 /proc/Load_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
 	var/z = zi
@@ -555,4 +647,4 @@ var/global/list/debug_data = list()
 		dat += "[x] <a href='?_src_=vars;Remove_Var=[ind];Varsx=\ref[src]'>(Remove)</a><br>"
 	dat += "<hr><br>"
 	dat += "<a href='?_src_=vars;Varsx=\ref[src];Add_Var=1'>(Add new var)</a>"
-	M << browse(dat, "window=roundstats;size=500x600")
+	show_browser(M, dat, "window=roundstats;size=500x600")

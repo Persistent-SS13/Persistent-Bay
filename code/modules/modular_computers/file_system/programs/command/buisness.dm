@@ -189,7 +189,7 @@
 	data["menu"] = menu
 
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "business_control.tmpl", name, 600, 700, state = state)
 		ui.auto_update_layout = 1
@@ -199,13 +199,13 @@
 /datum/nano_module/program/business/contract_signed(var/obj/item/weapon/paper/contract/contract)
 	pending_contracts -= contract
 	signed_contracts |= contract
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	return 1
 
 /datum/nano_module/program/business/contract_cancelled(var/obj/item/weapon/paper/contract/contract)
 	pending_contracts -= contract
 	signed_contracts -= contract
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	return 1
 
 
@@ -324,6 +324,9 @@
 						found = 1
 						break
 				if(!found)
+					var/datum/computer_file/crew_record/L = Retrieve_Record(select_name)
+					if(L) found = 1
+				if(!found)
 					to_chat(usr, "No record found for [select_name]. Verify Employee Identity.")
 					return
 
@@ -378,6 +381,8 @@
 						record = R
 						break
 				if(!record)
+					record = Retrieve_Record(user_id_card.registered_name)
+				if(!record)
 					message_admins("NO global record found for [usr.real_name]")
 					to_chat(usr, "No record found for [usr.real_name].. contact software developer.")
 					return
@@ -409,6 +414,8 @@
 					if(R.get_name() == user_id_card.registered_name)
 						record = R
 						break
+				if(!record)
+					record = Retrieve_Record(user_id_card.registered_name)
 				if(!record)
 					message_admins("NO global record found for [usr.real_name]")
 					to_chat(usr, "No record found for [usr.real_name].. contact software developer.")
@@ -678,6 +685,9 @@
 							found = 1
 							break
 					if(!found)
+						var/datum/computer_file/crew_record/L = Retrieve_Record(select_name)
+						if(L) found = 1
+					if(!found)
 						to_chat(usr, "No record found for [select_name]. Verify Identity.")
 						return
 
@@ -941,7 +951,7 @@
 			for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
 				if(!contract.is_solvent())
 					contract.cancel()
-					GLOB.nanomanager.update_uis(src)
+					SSnano.update_uis(src)
 					return 0
 			var/datum/small_business/new_business = new()
 			new_business.name = potential_name
@@ -961,5 +971,5 @@
 			menu = 5
 			cancel_contracts()
 
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	return 1

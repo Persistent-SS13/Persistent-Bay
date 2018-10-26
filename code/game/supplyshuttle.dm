@@ -21,6 +21,29 @@ var/list/mechtoys = list(
 	/obj/item/toy/prize/phazon
 )
 
+
+var/list/valid_phoron_designs = list(
+	/datum/design/item/stock_part/super_capacitor,
+	/datum/design/item/stock_part/adv_capacitor,
+	/datum/design/item/stock_part/super_capacitor,
+	/datum/design/item/stock_part/nano_mani,
+	/datum/design/item/stock_part/pico_mani,
+	/datum/design/item/stock_part/adv_matter_bin,
+	/datum/design/item/stock_part/super_matter_bin,
+	/datum/design/item/stock_part/high_micro_laser,
+	/datum/design/item/stock_part/ultra_micro_laser,
+	/datum/design/item/stock_part/adv_sensor,
+	/datum/design/item/stock_part/phasic_sensor,
+	/datum/design/item/stock_part/RPED,
+	/datum/design/item/powercell/super,
+	/datum/design/item/powercell/hyper,
+	/datum/design/item/beaker/noreact,
+	/datum/design/item/beaker/bluespace,
+	/datum/design/item/scalpel_manager,
+	/datum/design/item/modularcomponent/logistic_processor,
+	/datum/design/item/jetpack
+)
+
 /obj/item/weapon/paper/manifest
 	name = "supply manifest"
 	var/is_copy = 1
@@ -74,7 +97,7 @@ var/list/mechtoys = list(
 		var/select_name = input(usr,"Enter the full name of the business.","Connect Business", "") as null|text
 		var/datum/small_business/viewing = get_business(select_name)
 		if(viewing && src.Adjacent(usr))
-			business_name = viewing
+			business_name = viewing.name
 			to_chat(usr, "Business linked to export.")
 
 /*
@@ -262,11 +285,11 @@ var/list/point_source_descriptions = list(
 /datum/controller/supply/proc/generate_initial()
 	generate_export("manufacturing-basic")
 	generate_export("manufacturing-advanced")
-	generate_export("material")
+	generate_export("manufacturing-phoron")
+	generate_export("manufacturing-phoron")
 	generate_export("phoron")
 	generate_export("bluespace crystal")
 	generate_export("xenobiology")
-	generate_export("cooking")
 	generate_export("cooking")
 /datum/controller/supply/proc/close_order(var/datum/export_order/export)
 	var/order_type = export.order_type
@@ -296,13 +319,17 @@ var/list/point_source_descriptions = list(
 			var/per = rand(5,10)
 			if(recipe.is_stack)
 				export = new /datum/export_order/stack()
-				export.required = rand(100,250)
+				export.required = rand(50,150)
 			else
 				export = new()
-				export.required = rand(30, 100)
-				per += rand(5,10)
+				export.required = rand(30, 50)
 			for(var/x in recipe.resources)
-				per += round(recipe.resources[x]/800,0.01)
+				if(!x)
+					to_world("[recipe] had a blank resource")
+					continue
+				var/material/mat = SSmaterials.get_material_by_name(x)
+				if(mat)
+					per += round(mat.value*recipe.resources[x]/2000,0.01)
 			export.typepath = recipe.path
 			export.rate = per
 			export.order_type = typee
@@ -322,6 +349,7 @@ var/list/point_source_descriptions = list(
 				return
 			var/datum/design/design = pick(possible_designs)
 			var/valid = 0
+			var/per = rand(10,20)
 			while(!valid)
 				if(TECH_ILLEGAL in design.req_tech)
 					design = pick(possible_designs)
@@ -333,9 +361,13 @@ var/list/point_source_descriptions = list(
 							design = pick(possible_designs)
 					if(!restart) valid = 1
 			export.required = rand(30, 70)
-			var/per = rand(30,40)
 			for(var/x in design.materials)
-				per += round(design.materials[x]/500,0.01)
+				if(!x)
+					to_world("[design] had a blank resource")
+					continue
+				var/material/mat = SSmaterials.get_material_by_name(x)
+				if(mat)
+					per += round(mat.value*design.materials[x]/2000,0.01)
 			for(var/x in design.req_tech)
 				per += design.req_tech[x]*5
 			export.typepath = design.build_path
@@ -379,8 +411,8 @@ var/list/point_source_descriptions = list(
 		if("material")
 			export = new /datum/export_order/stack()
 			var/list/possible = list(
-								/obj/item/stack/material/diamond = 30,
-								/obj/item/stack/material/uranium = 30,
+								/obj/item/stack/material/diamond = 50,
+								/obj/item/stack/material/uranium = 50,
 								/obj/item/stack/material/gold = 30,
 								/obj/item/stack/material/platinum = 30,
 								/obj/item/stack/material/osmium = 30,
@@ -420,6 +452,39 @@ var/list/point_source_descriptions = list(
 			export.rate = 500
 			all_exports |= export
 			return export
+
+
+		if("manufacturing-phoron")
+			export = new()
+			var/list/possible_designs = list()
+			for(var/D in valid_phoron_designs)
+				possible_designs += new D(src)
+			if(!possible_designs.len)
+				return
+			var/datum/design/design = pick(possible_designs)
+			export.required = rand(50, 100)
+			var/per = rand(10,30)
+			for(var/x in design.materials)
+				if(!x)
+					to_world("[design] had a blank resource")
+					continue
+				var/material/mat = SSmaterials.get_material_by_name(x)
+				if(mat)
+					per += round(mat.value*design.materials[x]/2000,0.01)
+			for(var/x in design.req_tech)
+				per += design.req_tech[x]*5
+			export.typepath = design.build_path
+			export.rate = per
+			export.order_type = typee
+			export.id = exportnum
+			if(design.build_path)
+				var/obj/ob = new design.build_path()
+				export.typepath = ob.parent_type
+				export.parent_typepath = ob.parent_type
+				export.name = "Order for [export.required] [ob.name]\s at [export.rate] for each item."
+				all_exports |= export
+				return export
+
 
 /datum/controller/supply/proc/process()
 	add_points_from_source(points_per_process, "time")

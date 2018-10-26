@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# This is the entrypoint to the testing system, written for Baystation12 and
+# This is the entrypoint to the testing system, written for persistentss13 and
 # inspired by Rust's configure system
 #
 # The tests are split up into groups by the `case` at the bottom, and the
@@ -165,6 +165,7 @@ function find_code_deps {
     need_cmd awk
     need_cmd md5sum
     need_cmd python2
+    need_cmd python3
     need_cmd pip
 }
 
@@ -207,6 +208,7 @@ function run_code_tests {
     run_test "indentation check" "awk -f tools/indentation.awk **/*.dm"
     run_test "check changelog example unchanged" "md5sum -c - <<< '79e058ac02ed52aad99a489ab4c8f75b *html/changelogs/example.yml'"
     run_test "check tags" "python2 tools/TagMatcher/tag-matcher.py ."
+    run_test "check color hex" "python3 tools/ColorHexChecker/color-hex-checker.py ."
     run_test "check punctuation" "python2 tools/PunctuationChecker/punctuation-checker.py ."
     run_test "check icon state limit" "python2 tools/dmitool/check_icon_state_limit.py ."
     run_test_ci "check changelog builds" "python2 tools/GenerateChangelog/ss13_genchangelog.py html/changelog.html html/changelogs"
@@ -239,8 +241,8 @@ function run_byond_tests {
         ./install-byond.sh || exit 1
         source $HOME/BYOND-${BYOND_MAJOR}.${BYOND_MINOR}/byond/bin/byondsetup
     fi
-    run_test_ci "check globals build" "python tools/GenerateGlobalVarAccess/gen_globals.py persistentss13.dme code/_helpers/global_access.dm"
-    run_test "check globals unchanged" "md5sum -c - <<< 'c7f079cc11d86682698b4d6f80a6ddee *code/_helpers/global_access.dm'"
+    run_test_ci "check globals build" "python3 tools/GenerateGlobalVarAccess/gen_globals.py persistentss13.dme code/_helpers/global_access.dm"
+    run_test "check globals unchanged" "md5sum -c - <<< 'a9eab67d431cdde988aa81e1bb42b72d *code/_helpers/global_access.dm'"
     run_test "build map unit tests" "scripts/dm.sh -DUNIT_TEST -M$MAP_PATH persistentss13.dme"
     run_test "check no warnings in build" "grep ', 0 warnings' build_log.txt"
     run_test "run unit tests" "DreamDaemon persistentss13.dmb -invisible -trusted -core 2>&1 | tee log.txt"
@@ -260,9 +262,9 @@ function run_all_tests {
 
 function run_configured_tests {
     if [[ -z ${TEST+z} ]]; then
+        msg_bad "You must provide TEST in environment; valid options ALL,MAP,WEB,CODE"
         msg_meh "Note: map tests require MAP_PATH set"
-        msg_bad "Please input TEST environment; valid options ALL,MAP,WEB,CODE"
-        read TEST
+        exit 1
     fi
     case $TEST in
         "ALL")

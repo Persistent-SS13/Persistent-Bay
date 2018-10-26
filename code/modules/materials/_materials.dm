@@ -16,12 +16,21 @@
 			stone
 			metal
 			solid
+			comp_solid
 			cult
+			reinf_stone
+			jaggy
+			curvy
 		DOORS
 			stone
 			metal
 			resin
 			wood
+		TABLES
+			stone
+			metal
+			solid
+			carpet
 */
 
 //Returns the material the object is made of, if applicable.
@@ -41,24 +50,26 @@
 	var/display_name                      // Prettier name for display.
 	var/adjective_name
 	var/use_name
-	var/flags = 0                         // Various status modifiers.
+	var/flags = 0							// Various status modifiers.
 	var/sheet_singular_name = "sheet"
 	var/sheet_plural_name = "sheets"
 	var/is_fusion_fuel
-	var/list/chem_products				  // Used with the grinder to produce chemicals
+	var/list/chem_products					// Used with the grinder to produce chemicals
 
 	// Shards/tables/structures
-	var/shard_type = SHARD_SHRAPNEL       // Path of debris object.
-	var/shard_icon                        // Related to above.
-	var/shard_can_repair = 1              // Can shards be turned into sheets with a welder?
-	var/list/recipes                      // Holder for all recipes usable with a sheet of this material.
-	var/destruction_desc = "breaks apart" // Fancy string for barricades/tables/objects exploding.
+	var/shard_type = SHARD_SHRAPNEL			// Path of debris object.
+	var/shard_icon							// Related to above.
+	var/shard_can_repair = 1				// Can shards be turned into sheets with a welder?
+	var/list/recipes						// Holder for all recipes usable with a sheet of this material.
+	var/destruction_desc = "breaks apart"	// Fancy string for barricades/tables/objects exploding.
 
 	// Icons
-	var/icon_colour                                      // Colour applied to products of this material.
-	var/icon_base = "solid"                              // Wall and table base icon tag. See header.
-	var/door_icon_base = "metal"                         // Door base icon tag. See header.
-	var/icon_reinf = "metal"                       // Overlay used
+	var/icon_colour							// Colour applied to products of this material.
+	var/icon_base = "comp_solid"			// Regular wall icon tag. See header for valid icons.
+	var/icon_reinf = "comp_solid"				// Reinforced wall icon tag. See header for valid icons.
+	var/icon_door = "metal"					// Door icon tag. See header for valid icons.
+	var/icon_table = "solid"				// Table icon tag. See header for valid icons.
+	
 	var/list/stack_origin_tech = list(TECH_MATERIAL = 1) // Research level for stacks.
 
 	// Attributes

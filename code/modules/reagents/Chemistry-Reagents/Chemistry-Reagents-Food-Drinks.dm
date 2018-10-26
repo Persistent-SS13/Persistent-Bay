@@ -360,7 +360,7 @@
 			if(I.body_parts_covered & EYES)
 				eyes_covered = 1
 				eye_protection = I.name
-			if((I.body_parts_covered & FACE) && !(I.item_flags & FLEXIBLEMATERIAL))
+			if((I.body_parts_covered & FACE) && !(I.item_flags & ITEM_FLAG_FLEXIBLEMATERIAL))
 				mouth_covered = 1
 				face_protection = I.name
 
@@ -401,6 +401,22 @@
 	if(istype(M, /mob/living/carbon/slime))
 		M.bodytemperature += rand(15, 30)
 	holder.remove_reagent(/datum/reagent/frostoil, 5)
+
+/datum/reagent/nutriment/vinegar
+	name = "Vinegar"
+	description = "A weak solution of acetic acid. Usually used for seasoning food."
+	taste_description = "vinegar"
+	reagent_state = LIQUID
+	color = "#e8dfd0"
+	taste_mult = 3
+
+/datum/reagent/nutriment/mayo
+	name = "Mayonnaise"
+	description = "A mixture of egg yolk with lemon juice or vinegar. Usually put on bland food to make it more edible."
+	taste_description = "mayo"
+	reagent_state = LIQUID
+	color = "#efede8"
+	taste_mult = 2
 
 /* Drinks */
 
@@ -1767,6 +1783,52 @@
 
 	glass_name = "moonshine"
 	glass_desc = "You've really hit rock bottom now... your liver packed its bags and left last night."
+	
+/datum/reagent/ethanol/bluebird
+	name = "Blue Bird"
+	description = "A classy drink that you know only the prettiest of birds have."
+	taste_description = "fluttering sourness"
+	reagent_state = LIQUID
+	color = "#5a92ed"
+	strength = 15
+
+	glass_name = "Blue Bird"
+	glass_desc = "A classy drink that you know only the prettiest of birds have."
+	
+/datum/reagent/ethanol/bj
+	name = "BJ"
+	description = "Nothing like a good BJ to get you started."
+	taste_description = "creamy chocolate alcohol"
+	reagent_state = LIQUID
+	color = "#ccb280"
+	strength = 15
+
+	glass_name = "BJ"
+	glass_desc = "Nothing like a good BJ to get you started."
+	
+/datum/reagent/ethanol/starrycola
+	name = "Starry Cola"
+	description = "Looking at it, you'd think you're looking at space."
+	taste_description = "sweet twinkling fizz with a bite"
+	reagent_state = LIQUID
+	color = "#1c2168"
+	strength = 12
+
+	glass_name = "Starry Cola"
+	glass_desc = "Looking at it, you'd think you're looking at space."
+	glass_special = list(DRINK_FIZZ)
+	
+/datum/reagent/ethanol/calvincraig
+	name = "Calvin Craig"
+	description = "A sweet something-or-other for that special someone."
+	taste_description = "sweet and sour melon candies"
+	reagent_state = LIQUID
+	color = "#6dcea2"
+	strength = 18
+
+	glass_name = "Calvin Craig"
+	glass_desc = "A sweet something-or-other for that special someone."
+	glass_special = list(DRINK_FIZZ)
 
 /datum/reagent/ethanol/neurotoxin
 	name = "Neurotoxin"

@@ -1,12 +1,12 @@
 // Basically they are for the firing range
 /obj/structure/target_stake
 	name = "target stake"
-	desc = "A thin platform with negatively-magnetized wheels."
+	desc = "A thin panel with negatively-magnetized wheels, it has a pin for hanging targets."
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "target_stake"
 	density = 1
 	w_class = ITEM_SIZE_NO_CONTAINER
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	var/obj/item/target/pinned_target // the current pinned target
 
 	Move()

@@ -39,7 +39,6 @@ Class Procs:
 
 */
 
-
 /zone/var/name
 /zone/var/invalid = 0
 /zone/var/list/contents = list()
@@ -47,6 +46,7 @@ Class Procs:
 /zone/var/list/fuel_objs = list()
 
 /zone/var/needs_update = 0
+/zone/var/condense_buffer = 0
 
 /zone/var/list/edges = list()
 

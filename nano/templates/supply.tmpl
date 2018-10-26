@@ -12,6 +12,7 @@
 	{{:helper.link('Recieve Imports', 'bullet', {'set_screen' : 3}, data.screen == 3 ? 'selected' : null)}}
 	{{:helper.link('View Export Orders', 'cart', {'set_screen' : 5}, data.screen == 5 ? 'selected' : null)}}
 	{{:helper.link('Send Exports', 'bullet', {'set_screen' : 6}, data.screen == 6 ? 'selected' : null)}}
+	{{:helper.link('Admin', 'bullet', {'set_screen' : 7}, data.screen == 7 ? 'selected' : null)}}
 </div>
 <hr>
 <span>Current Account: {{:data.faction_name}}<br>Current balance: {{:data.credits}} $$</span>
@@ -152,4 +153,29 @@
 			{{:helper.link('Initiate Telepads', 'check', {'launch_export' : 1})}}
 		</div>
 	</div>
+
+{{else data.screen == 7}}
+	{{if data.is_superadmin}}
+		<div class="item">
+			<div class="itemLabel">
+				Connected Telepads:
+			</div>
+			<div class="itemContent">
+				{{for data.telepads}}
+					{{:helper.link(value.name, '', {'toggle_telepad_revoke' : value.ref},null, value.selected ? 'selected' : null )}}
+				{{/for}}
+			</div>
+		</div>
+		<hr>
+		<div class="item">
+			<div class="itemLabel">
+				Actions Available:
+			</div>
+			<div class="itemContent">
+				{{:helper.link('Revoke Telepads', 'check', {'revoke_pad' : 1})}}
+			</div>
+		</div>	
+	{{else}}
+		<h3>Access denied: Missing identificaton or insufficient permissions.</h3>
+	{{/if}}
 {{/if}}

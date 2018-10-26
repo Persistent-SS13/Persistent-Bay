@@ -16,3 +16,4 @@
 	response_harm   = "stomps on"
 	mob_size = MOB_MINISCULE
 	possession_candidate = 1
+	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat

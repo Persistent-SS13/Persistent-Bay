@@ -168,26 +168,49 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		update_ids(get_name())
 		return
 	for(var/name in demote_votes)
+		
+		if(name == faction.leader_name)
+			five_promotes |= name
+			three_promotes |= name
+			all_promotes |= name
+			continue
+		if(name == get_name()) continue
 		var/datum/computer_file/crew_record/record = faction.get_record(name)
 		if(record)
-			var/head_position = 0
 			var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
 			if(assignment)
-				if(curr_assignment.parent)
-					if(curr_assignment.parent.command_faction)
-						if(curr_assignment.parent.head_position.uid == curr_assignment.uid) head_position = 1
-				if(assignment.parent.head_position.uid != assignment.uid && curr_assignment.parent.head_position.uid == curr_assignment.uid) // The promoted position is a head position and the promoter is not
-					message_admins("disregard 1")
-					continue
-				if((assignment.uid == curr_assignment.uid || assignment.parent.head_position.uid != assignment.uid) && record.rank <= rank) // they have the same assignment and we are equal or less rank
-					message_admins("disregard 2")
-					continue
-				if(assignment.accesses.Find("2") || record.access.Find("2"))
-					if(record.rank >= 5 || (record.rank >= assignment.ranks.len && head_position))
-						five_demotes |= name
-					if(record.rank >= 3 || (record.rank >= assignment.ranks.len && head_position))
-						three_demotes |= name
-					all_demotes |= name
+				if(assignment.parent)
+					var/promoter_command = (assignment.parent.command_faction)
+					var/promoter_head = (assignment.parent.head_position && assignment.parent.head_position.uid == assignment.uid)
+					var/curr_command = curr_assignment.parent.command_faction
+					var/curr_head = (curr_assignment.parent.head_position && curr_assignment.parent.head_position.uid == curr_assignment.uid) 
+					var/same_dept = (assignment.parent.name == curr_assignment.parent.name)
+					if(promoter_command)
+						if(curr_command)
+							if(curr_head)
+								if(promoter_head)
+									if(record.rank <= rank)
+										continue
+								else
+									continue
+					else
+						if(curr_command) continue
+						if(curr_head && !promoter_head) continue
+						if(!same_dept) continue
+						if(promoter_head)
+							if(curr_head)
+								if(record.rank <= rank)
+									continue
+						else
+							if(record.rank <= rank)
+								continue
+		
+		if(record.rank <= 5)
+			five_demotes |= record.get_name()
+		if(record.rank <= 3)
+			three_demotes |= record.get_name()
+		all_demotes |= record.get_name()
+		
 	if(five_demotes.len >= faction.five_promote_req)
 		rank--
 		promote_votes.Cut()
@@ -237,6 +260,8 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		if(R.get_name() == real_name)
 			record = R
 			break
+	if(!record)
+		record = Retrieve_Record(real_name)
 	if(!record)
 		return 0
 	photo_front = record.photo_front
@@ -328,6 +353,8 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		if(R.get_name() == H.real_name)
 			message_admins("record already found heh")
 			return R
+	var/datum/computer_file/crew_record/R = Retrieve_Record(H.real_name)
+	if(R) return R
 	var/datum/computer_file/crew_record/CR = new/datum/computer_file/crew_record()
 	GLOB.all_crew_records.Add(CR)
 	CR.load_from_mob(H)
@@ -364,6 +391,8 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	for(var/datum/computer_file/crew_record/CR in GLOB.all_crew_records)
 		if(CR.get_name() == name)
 			return CR
+	var/datum/computer_file/crew_record/R = Retrieve_Record(name)
+	if(R) return R
 	return null
 
 /proc/GetAssignment(var/mob/living/carbon/human/H)

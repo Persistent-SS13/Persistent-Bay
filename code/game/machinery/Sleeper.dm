@@ -94,7 +94,7 @@
 	data["pump"] = pump
 	data["stasis"] = stasis
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "sleeper.tmpl", "Sleeper UI", 600, 600, state = state)
 		ui.set_initial_data(data)
@@ -235,10 +235,10 @@
 		occupant.client.perspective = MOB_PERSPECTIVE
 	occupant.dropInto(loc)
 	occupant = null
-	for(var/atom/movable/A in src) // In case an object was dropped inside or something
-		if(A == beaker)
+	for(var/obj/O in (contents - component_parts)) // In case an object was dropped inside or something. Excludes the beaker and component parts.
+		if(O == beaker)
 			continue
-		A.dropInto(loc)
+		O.dropInto(loc)
 	update_use_power(1)
 	update_icon()
 	toggle_filter()

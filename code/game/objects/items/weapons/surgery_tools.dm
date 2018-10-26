@@ -11,16 +11,30 @@
 /*
  * Retractor
  */
+
+/obj/item/var/rushed = FALSE
 /obj/item/weapon/retractor
 	name = "retractor"
 	desc = "Retracts stuff."
 	icon = 'icons/obj/surgery.dmi'
 	icon_state = "retractor"
 	matter = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 5000)
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	w_class = ITEM_SIZE_SMALL
 	origin_tech = list(TECH_MATERIAL = 1, TECH_BIO = 1)
 
+/obj/item/weapon/retractor/attack_self(mob/user)
+	if (rushed)
+		rushed = FALSE
+		to_chat(user, "<span class='notice'>You steadily hold \the [src], preparing for a careful retraction.</span> ")
+	else
+		rushed = TRUE
+		to_chat(user, "<span class='notice'>You tightly grip \the [src], preparing for a rushed retraction.</span> ")
+/obj/item/weapon/retractor/pickup(mob/user)
+	if (rushed)
+		to_chat(user, "<span class='notice'>You hurriedly grab \the [src], preparing for a rushed retraction.</span> ")
+	else
+		to_chat(user, "<span class='notice'>You pick up \the [src], preparing for a careful retraction.</span> ")
 /*
  * Hemostat
  */
@@ -30,11 +44,22 @@
 	icon = 'icons/obj/surgery.dmi'
 	icon_state = "hemostat"
 	matter = list(DEFAULT_WALL_MATERIAL = 5000, "glass" = 2500)
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	w_class = ITEM_SIZE_SMALL
 	origin_tech = list(TECH_MATERIAL = 1, TECH_BIO = 1)
 	attack_verb = list("attacked", "pinched")
-
+/obj/item/weapon/hemostat/attack_self(mob/user)
+	if (rushed)
+		rushed = FALSE
+		to_chat(user, "<span class='notice'>You steadily hold \the [src], preparing to carefully clamp blood flow.</span> ")
+	else
+		rushed = TRUE
+		to_chat(user, "<span class='notice'>You tightly grip \the [src], preparing to hurriedly clamp blood flow.</span> ")
+/obj/item/weapon/hemostat/pickup(mob/user)
+	if (rushed)
+		to_chat(user, "<span class='notice'>You grab \the [src], preparing to hurriedly clamp blood flow.</span> ")
+	else
+		to_chat(user, "<span class='notice'>You pick up \the [src], preparing to carefully clamp blood flow.</span> ")
 /*
  * Cautery
  */
@@ -44,11 +69,22 @@
 	icon = 'icons/obj/surgery.dmi'
 	icon_state = "cautery"
 	matter = list(DEFAULT_WALL_MATERIAL = 5000, "glass" = 2500)
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	w_class = ITEM_SIZE_SMALL
 	origin_tech = list(TECH_MATERIAL = 1, TECH_BIO = 1)
 	attack_verb = list("burnt")
-
+/obj/item/weapon/cautery/attack_self(mob/user)
+	if (rushed)
+		rushed = FALSE
+		to_chat(user, "<span class='notice'>You steadily hold \the [src], preparing to carefully cauterize an incision.</span> ")
+	else
+		rushed = TRUE
+		to_chat(user, "<span class='notice'>You tightly grip \the [src], preparing to hurriedly cauterize an incision.</span> ")
+/obj/item/weapon/cautery/pickup(mob/user)
+	if (rushed)
+		to_chat(user, "<span class='notice'>You grab \the [src], preparing to hurriedly cauterize an incision</span> ")
+	else
+		to_chat(user, "<span class='notice'>You pick up \the [src], preparing to carefully cauterize an incision.</span> ")
 /*
  * Surgical Drill
  */
@@ -59,12 +95,23 @@
 	icon_state = "drill"
 	hitsound = 'sound/weapons/circsawhit.ogg'
 	matter = list(DEFAULT_WALL_MATERIAL = 15000, "glass" = 10000)
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	force = 15.0
 	w_class = ITEM_SIZE_NORMAL
 	origin_tech = list(TECH_MATERIAL = 1, TECH_BIO = 1)
 	attack_verb = list("drilled")
-
+/obj/item/weapon/surgicaldrill/attack_self(mob/user)
+	if (rushed)
+		rushed = FALSE
+		to_chat(user, "<span class='notice'>You steadily hold \the [src], preparing to carefully drill something.</span> ")
+	else
+		rushed = TRUE
+		to_chat(user, "<span class='notice'>You whirr \the [src] dramatically, preparing to recklessly drill something.</span> ")
+/obj/item/weapon/surgicaldrill/pickup(mob/user)
+	if (rushed)
+		to_chat(user, "<span class='notice'>You grab \the [src], preparing to recklessly drill something.</span> ")
+	else
+		to_chat(user, "<span class='notice'>You pick up \the [src], preparing to carefully drill something.</span> ")
 /*
  * Scalpel
  */
@@ -73,7 +120,7 @@
 	desc = "Cut, cut, and once more cut."
 	icon = 'icons/obj/surgery.dmi'
 	icon_state = "scalpel"
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	force = 10.0
 	sharp = 1
 	edge = 1
@@ -85,7 +132,18 @@
 	origin_tech = list(TECH_MATERIAL = 1, TECH_BIO = 1)
 	matter = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 5000)
 	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
-
+/obj/item/weapon/scalpel/attack_self(mob/user)
+	if (rushed)
+		rushed = FALSE
+		to_chat(user, "<span class='notice'>You steadily hold \the [src], preparing to make a careful cut.</span> ")
+	else
+		rushed = TRUE
+		to_chat(user, "<span class='notice'>You grip \the [src] tightly, preparing to make a hurried cut.</span> ")
+/obj/item/weapon/scalpel/pickup(mob/user)
+	if (rushed)
+		to_chat(user, "<span class='notice'>You grab \the [src], preparing to make a hurried cut.</span> ")
+	else
+		to_chat(user, "<span class='notice'>You pick up \the [src], preparing to make a careful cut.</span> ")
 /*
  * Researchable Scalpels
  */
@@ -96,14 +154,14 @@
 	damtype = "fire"
 
 /obj/item/weapon/scalpel/laser2
-	name = "laser scalpel"
+	name = "improved laser scalpel"
 	desc = "A scalpel augmented with a directed laser, for more precise cutting without blood entering the field.  This one looks somewhat advanced."
 	icon_state = "scalpel_laser2_on"
 	damtype = "fire"
 	force = 12.0
 
 /obj/item/weapon/scalpel/laser3
-	name = "laser scalpel"
+	name = "advanced laser scalpel"
 	desc = "A scalpel augmented with a directed laser, for more precise cutting without blood entering the field.  This one looks to be the pinnacle of precision energy cutlery!"
 	icon_state = "scalpel_laser3_on"
 	damtype = "fire"
@@ -124,7 +182,7 @@
 	icon = 'icons/obj/surgery.dmi'
 	icon_state = "saw3"
 	hitsound = 'sound/weapons/circsawhit.ogg'
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	force = 15.0
 	w_class = ITEM_SIZE_NORMAL
 	throwforce = 9.0
@@ -135,7 +193,18 @@
 	attack_verb = list("attacked", "slashed", "sawed", "cut")
 	sharp = 1
 	edge = 1
-
+/obj/item/weapon/circular_saw/attack_self(mob/user)
+	if (rushed)
+		rushed = FALSE
+		to_chat(user, "<span class='notice'>You steadily hold \the [src], preparing to carefully saw through bone.</span> ")
+	else
+		rushed = TRUE
+		to_chat(user, "<span class='notice'>You whirr \the [src] dramatically, preparing to recklessly saw through bone.</span> ")
+/obj/item/weapon/circular_saw/pickup(mob/user)
+	if (rushed)
+		to_chat(user, "<span class='notice'>You grab \the [src], preparing to recklessly saw through bone.</span> ")
+	else
+		to_chat(user, "<span class='notice'>You pick up \the [src], preparing to carefully saw through bone.</span> ")
 //misc, formerly from code/defines/weapons.dm
 /obj/item/weapon/bonegel
 	name = "bone gel"
@@ -165,3 +234,15 @@
 	throw_range = 5
 	w_class = ITEM_SIZE_SMALL
 	attack_verb = list("attacked", "hit", "bludgeoned")
+/obj/item/weapon/bonesetter/attack_self(mob/user)
+	if (rushed)
+		rushed = FALSE
+		to_chat(user, "<span class='notice'>You steadily hold \the [src], preparing to carefully set bones.</span> ")
+	else
+		rushed = TRUE
+		to_chat(user, "<span class='notice'>You tightly grip \the [src], preparing to hurriedly set bones.</span> ")
+/obj/item/weapon/bonesetter/pickup(mob/user)
+	if (rushed)
+		to_chat(user, "<span class='notice'>You grab \the [src], preparing to carefully set bones.</span> ")
+	else
+		to_chat(user, "<span class='notice'>You pick up \the [src], preparing to hurriedly set bones.</span> ")

@@ -41,7 +41,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	robotize()
 
 /obj/item/organ/internal/stack/Destroy()
-	if(lacemob && lacemob.key && lacemob.key != "")
+	if(lacemob && ((lacemob.key && lacemob.key != "") || (lacemob.key && lacemob.key != "")))
 		loc = get_turf(loc)
 		log_and_message_admins("Attempted to destroy an in-use neural lace!")
 		return QDEL_HINT_LETMELIVE
@@ -157,7 +157,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 				owner?.stored_ckey = null
 				owner?.save_slot = 0
 
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 
 /obj/item/organ/internal/stack/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.interactive_state)
 	var/list/data = list()
@@ -180,7 +180,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		for(var/datum/world_faction/fact in potential)
 			formatted[++formatted.len] = list("name" = fact.name, "ref" = "\ref[fact]")
 		data["potential"] = formatted
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "lace.tmpl", "[name] UI", 550, 450, state = state)
 		ui.auto_update_layout = 1

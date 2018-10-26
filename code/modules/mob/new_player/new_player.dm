@@ -93,7 +93,13 @@
 
 	if(href_list["preference"])
 		client.prefs.process_link(src, href_list)
-
+		client.prefs.randomize_appearance_and_body_for()
+		client.prefs.real_name = null
+		client.prefs.preview_icon = null
+		client.prefs.home_system = null
+		client.prefs.faction = null
+		client.prefs.selected_under = null
+		client.prefs.sanitize_preferences()
 /mob/new_player/proc/newCharacterPanel()
 	var/data = "<div align='center'><br>"
 	data += "<b>Select the slot you want to save this character under.</b><br>"
@@ -181,6 +187,11 @@
 	if(!chosen_slot)
 		return
 
+	if(spawning)
+		return
+
+	spawning = 1
+
 	panel?.close()
 	load_panel?.close()
 
@@ -204,14 +215,22 @@
 		return
 
 	var/mob/character = Character(chosen_slot, ckey)
-
+	Retrieve_Record(character.real_name)
 	var/turf/spawnTurf
 
 
 	if(character.spawn_type == 1)
 		var/datum/world_faction/faction = get_faction(character.spawn_loc)
-		var/spawnLocation = faction?.get_assignment(faction?.get_record(character.real_name)?.assignment_uid)?.cryo_net
-		character.spawn_loc_2 = spawnLocation ? spawnLocation : " default"
+		var/assignmentSpawnLocation = faction?.get_assignment(faction?.get_record(character.real_name)?.assignment_uid)?.cryo_net
+		if (assignmentSpawnLocation == "Last Known Cryonet")
+			// The character's assignment is set to spawn in their last cryo location
+			// Do nothing, leave it the way it is.
+		else if (assignmentSpawnLocation)
+			// The character has a special cryo network set to override their normal spawn location
+			character.spawn_loc_2 = assignmentSpawnLocation
+		else
+			// The character doesn't have a spawn_loc_2, so use the one for their assignment or the default
+			character.spawn_loc_2 = " default"
 
 		for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
 			if(!pod.loc)
@@ -233,6 +252,7 @@
 		to_chat(character, "You eject from your cryosleep, ready to resume life in the frontier.")
 
 	else if(character.spawn_type == 2)
+		character.equip_to_slot_or_del(new /obj/item/clothing/under/color/grey(character), slot_w_uniform)
 		for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
 			if(!beacon.loc)
 				qdel(beacon)
@@ -270,7 +290,7 @@
 	character.redraw_inv()
 	CreateModularRecord(character)
 	character.finishLoadCharacter()	// This is ran because new_players don't like to stick around long.
-	return 1	
+	return 1
 
 /mob/proc/finishLoadCharacter()
 	if(spawn_type == 2)
@@ -369,7 +389,7 @@ mob/new_player/MayRespawn()
 
 /mob/proc/after_spawn()
 	after_load()
-	for(var/datum/D in contents)
+	for(var/datum/D in recursive_content_check(src, client_check = FALSE, sight_check = FALSE, include_mobs = TRUE))
 		D.after_load()
 	return
 

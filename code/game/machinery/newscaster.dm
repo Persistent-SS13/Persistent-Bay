@@ -173,7 +173,17 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 	name = "Security Newscaster"
 	securityCaster = 1
 
-/obj/machinery/newscaster/New()         //Constructor, ho~
+/obj/machinery/newscaster/New(loc, dir, atom/frame, var/ndir)
+	..(loc)
+
+	if(istype(frame))
+		frame.transfer_fingerprints_to(src)
+	..()
+
+	if(ndir)
+		set_dir(ndir)
+		pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 30 : -30)
+		pixel_y = (src.dir & 3)? (src.dir ==1 ? 30 : -30) : 0
 	allCasters += src
 	src.paper_remaining = 15            // Will probably change this to something better
 	for(var/obj/machinery/newscaster/NEWSCASTER in allCasters) // Let's give it an appropriate unit number
@@ -976,3 +986,14 @@ obj/item/weapon/newspaper/attackby(obj/item/weapon/W as obj, mob/user as mob)
 			O.show_message("<span class='newscaster'><EM>[src.name]</EM> beeps, \"Attention! Wanted issue distributed!\"</span>",2)
 		playsound(src.loc, 'sound/machines/warning-buzzer.ogg', 75, 1)
 	return
+
+/obj/item/frame/newscaster/try_build(turf/on_wall)
+	if (get_dist(on_wall,usr)>1)
+		return
+	var/ndir = get_dir(usr,on_wall)
+	if (!(ndir in GLOB.cardinal))
+		return
+	var/turf/loc = get_turf(usr)
+
+	new /obj/machinery/newscaster(loc, 1, src, ndir)
+	qdel(src)

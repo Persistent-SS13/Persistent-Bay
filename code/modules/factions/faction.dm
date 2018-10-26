@@ -145,9 +145,9 @@ GLOBAL_LIST_EMPTY(all_business)
 	if(required_cash)
 		var/datum/transaction/T = new("[pay_to] (via digital contract)", purpose, -required_cash, "Digital Contract")
 		signed_account.do_transaction(T)
-	signed_account.reserved -= required_cash
-	if(signed_account.reserved < 0)
-		signed_account.reserved = 0
+		signed_account.reserved -= required_cash
+		if(signed_account.reserved < 0)
+			signed_account.reserved = 0
 	approved = 1
 	update_icon()
 	return 1
@@ -520,7 +520,10 @@ GLOBAL_LIST_EMPTY(all_business)
 
 /proc/get_faction_tag(var/name)
 	var/datum/world_faction/fac = get_faction(name)
-	return fac.short_tag
+	if(fac)
+		return fac.short_tag
+	else
+		return "BROKE"
 
 /datum/world_faction
 	var/name = "" // can be safely changed
@@ -563,6 +566,7 @@ GLOBAL_LIST_EMPTY(all_business)
 	
 	var/hiring_policy = 0 // if hiring_policy, anyone with reassignment can add people to the network, else only people in command a command category with reassignment can add people
 	var/last_expense_print = 0
+	
 
 /datum/world_faction/after_load()	
 	if(!debts)
@@ -644,6 +648,8 @@ GLOBAL_LIST_EMPTY(all_business)
 	for(var/datum/computer_file/crew_record/R in records.faction_records)
 		if(R.get_name() == real_name)
 			return R
+	var/datum/computer_file/crew_record/L = Retrieve_Record_Faction(real_name, src)
+	return L
 
 /datum/world_faction/proc/in_command(var/real_name)
 	var/datum/computer_file/crew_record/R = get_record(real_name)

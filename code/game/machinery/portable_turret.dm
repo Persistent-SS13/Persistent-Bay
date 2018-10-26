@@ -196,7 +196,7 @@ var/list/turret_icons
 					accesses[++accesses.len] = button_data
 				data["access"] = accesses
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "turret_control.tmpl", "Turret Controls", 500, 300)
 		ui.set_initial_data(data)
@@ -486,6 +486,14 @@ var/list/turret_icons
 		if(assess_perp(L) < 4)
 			return TURRET_NOT_TARGET	//if threat level < 4, keep going
 
+	if(issilicon(L)) // if the target is a silicon, analyze threat level
+		if(assess_borgo(L) < 4)
+			return TURRET_NOT_TARGET	//if threat level < 4, keep going
+
+	if(issilicon(L)) // if the target is a silicon, analyze threat level
+		if(assess_borgo(L) < 4)
+			return TURRET_NOT_TARGET	//if threat level < 4, keep going
+
 	if(istype(L, /mob/living/bot)) //if the target is a bot, decide if it is ours
 		if(assess_bot(L))
 			return TURRET_NOT_TARGET
@@ -516,6 +524,25 @@ var/list/turret_icons
 		return 10 //if they don't have any of the required access
 
 	return H.assess_perp(src, 0, 0, 1, 1, connected_faction) //if we're not checking faction or access, we're solely looking at wanted status, Arrest = pew pew
+
+/obj/machinery/porta_turret/proc/assess_borgo(var/mob/living/silicon/robot/R)
+	if(!R || !istype(R))
+		return 0
+	if(emagged)
+		return 10
+	if(connected_faction == null) //safety check
+		check_faction = 0
+		check_access = 0
+	if(check_faction && R.GetFaction() != connected_faction.uid)
+		return 10
+	if(check_access)
+		for(var/access in R.GetAccess(connected_faction.uid))
+			if(req_access["[access]"] > 0)
+				// Robots can call assess_perp too since they are mob/livings
+				return R.assess_perp(src, 0, 0, 1, 1, connected_faction)
+		return 10 //if they don't have any of the required access
+
+	return R.assess_perp(src, 0, 0, 1, 1, connected_faction) //if we're not checking faction or access, we're solely looking at wanted status, Arrest = pew pew
 
 /obj/machinery/porta_turret/proc/assess_bot(var/mob/living/bot/B)
 	if(!B || !istype(B))

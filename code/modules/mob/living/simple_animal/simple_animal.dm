@@ -304,7 +304,9 @@
 	..()
 	updatehealth()
 
-/mob/living/simple_animal/proc/SA_attackable(target_mob)
+/mob/living/simple_animal/proc/SA_attackable(var/atom/movable/target_mob)
+	if(target_mob.loc)
+		return 0
 	if (isliving(target_mob))
 		var/mob/living/L = target_mob
 		if(!L.stat && L.health >= 0)
@@ -313,7 +315,7 @@
 		var/obj/mecha/M = target_mob
 		if (M.occupant)
 			return (0)
-	return 1
+	return 0
 
 /mob/living/simple_animal/say(var/message)
 	var/verb = "says"

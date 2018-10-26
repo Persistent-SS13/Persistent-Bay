@@ -4,7 +4,7 @@
 	icon = 'icons/obj/ammo.dmi'
 	icon_state = "s-casing"
 	randpixel = 10
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT | SLOT_EARS
 	throwforce = 1
 	w_class = ITEM_SIZE_TINY
@@ -15,10 +15,11 @@
 	var/obj/item/projectile/BB = null	//The loaded bullet - make it so that the projectiles are created only when needed?
 	var/spent_icon = "s-casing-spent"
 
-/obj/item/ammo_casing/New()
-	..()
-	if(ispath(projectile_type))
-		BB = new projectile_type(src)
+/obj/item/ammo_casing/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		if(ispath(projectile_type))
+			BB = new projectile_type(src)
 
 //removes the projectile from the ammo casing
 /obj/item/ammo_casing/proc/expend()
@@ -84,7 +85,7 @@
 	desc = "A magazine for some kind of gun."
 	icon_state = "357"
 	icon = 'icons/obj/ammo.dmi'
-	flags = CONDUCT
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
 	item_state = "syringe_kit"
 	matter = list(DEFAULT_WALL_MATERIAL = 500)
@@ -113,14 +114,19 @@
 	..()
 	if(multiple_sprites)
 		initialize_magazine_icondata(src)
-
-	if(isnull(initial_ammo))
-		initial_ammo = max_ammo
-
-	if(initial_ammo)
-		for(var/i in 1 to initial_ammo)
-			stored_ammo += new ammo_type(src)
 	update_icon()
+
+/obj/item/ammo_magazine/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		if(isnull(initial_ammo))
+			initial_ammo = max_ammo
+
+		if(initial_ammo)
+			for(var/i in 1 to initial_ammo)
+				stored_ammo += new ammo_type(src)
+
+		update_icon()
 
 /obj/item/ammo_magazine/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/ammo_casing))

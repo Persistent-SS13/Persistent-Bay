@@ -6,7 +6,7 @@
 	origin_tech = list(TECH_COMBAT = 2, TECH_MAGNET = 4)
 	w_class = ITEM_SIZE_HUGE
 	force = 10
-	flags =  CONDUCT
+	obj_flags =  OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BACK
 	one_hand_penalty = 4
 	charge_cost = 30
@@ -72,12 +72,12 @@
 	set category = "Object"
 	set src in view(1)
 
-	var/genemask = input("Choose a gene to modify.") as null|anything in plant_controller.plant_gene_datums
+	var/genemask = input("Choose a gene to modify.") as null|anything in SSplants.plant_gene_datums
 
 	if(!genemask)
 		return
 
-	gene = plant_controller.plant_gene_datums[genemask]
+	gene = SSplants.plant_gene_datums[genemask]
 
 	to_chat(usr, "<span class='info'>You set the [src]'s targeted genetic area to [genemask].</span>")
 
@@ -137,7 +137,7 @@
 	icon_state = "staffofchange"
 	item_state = "staffofchange"
 	fire_sound = 'sound/weapons/emitter.ogg'
-	flags =  CONDUCT
+	obj_flags =  OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BACK
 	w_class = ITEM_SIZE_HUGE
 	max_shots = 5
@@ -207,6 +207,10 @@ obj/item/weapon/gun/energy/staff/focus
 
 
 /obj/item/weapon/gun/energy/plasmacutter/attackby(obj/item/A, mob/user)
+	if(isScrewdriver(A))
+		to_chat(user, "<span class='warning'>The cell housing is firmly secured, you can't remove it.</span>")
+		return
+
 	if(istype(A, /obj/item/stack/material/phoron))
 		var/obj/item/stack/material/S = A
 

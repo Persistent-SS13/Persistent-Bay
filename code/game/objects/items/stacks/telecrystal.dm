@@ -7,7 +7,7 @@
 	icon_state = "telecrystal"
 	w_class = ITEM_SIZE_TINY
 	max_amount = 50
-	flags = NOBLUDGEON
+	item_flags = ITEM_FLAG_NO_BLUDGEON
 	origin_tech = list(TECH_MATERIAL = 6, TECH_BLUESPACE = 4)
 
 /obj/item/stack/telecrystal/afterattack(var/obj/item/I as obj, mob/user as mob, proximity)
@@ -17,7 +17,7 @@
 		if(I.hidden_uplink && I.hidden_uplink.active) //No metagaming by using this on every PDA around just to see if it gets used up.
 			I.hidden_uplink.uses += amount
 			I.hidden_uplink.update_nano_data()
-			GLOB.nanomanager.update_uis(I.hidden_uplink)
+			SSnano.update_uis(I.hidden_uplink)
 			use(amount)
 			to_chat(user, "<span class='notice'>You slot \the [src] into \the [I] and charge its internal uplink.</span>")
 

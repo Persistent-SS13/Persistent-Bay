@@ -52,7 +52,7 @@ LEGACY_RECORD_STRUCTURE(all_warrants, warrant)
 		data["searchwarrants"] = searchwarrants.len ? searchwarrants : null
 		data["archivedwarrants"] = archivedwarrants.len? archivedwarrants :null
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "digitalwarrant.tmpl", name, 700, 450, state = state)
 		ui.auto_update_layout = 1
@@ -73,7 +73,7 @@ LEGACY_RECORD_STRUCTURE(all_warrants, warrant)
 				activewarrant = W
 				break
 
-	// The following actions will only be possible if the user has an ID with security access equipped. This is in line with modular computer framework's authentication methods,
+	// The following actions will only be possible if the user has an ID with command access equipped. This is in line with modular computer framework's authentication methods,
 	// which also use RFID scanning to allow or disallow access to some functions. Anyone can view warrants, editing requires ID. This also prevents situations where you show a tablet
 	// to someone who is to be arrested, which allows them to change the stuff there.
 
@@ -81,9 +81,6 @@ LEGACY_RECORD_STRUCTURE(all_warrants, warrant)
 	if(!istype(user))
 		return
 	var/obj/item/weapon/card/id/I = user.GetIdCard()
-	if(!istype(I) || !I.registered_name || !(access_security in I.access))
-		to_chat(user, "Authentication error: Unable to locate ID with apropriate access to allow this operation.")
-		return
 
 	if(href_list["sendtoarchive"])
 		. = 1

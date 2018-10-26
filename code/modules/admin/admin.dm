@@ -825,7 +825,7 @@ var/global/floorIsLava = 0
 
 	if(!check_rights(R_ADMIN))
 		return
-	var/choice = input("Choose the zlevel to change ambience on. The 2 lower zlevels are included.", "Zlevel") as anything in ambient_controller.zlevel_data|null
+	var/choice = input("Choose the zlevel to change ambience on. The lower zlevel is included.", "Zlevel") as anything in ambient_controller.zlevel_data|null
 	if(choice)
 		var/datum/music_controller/controller = ambient_controller.zlevel_data[choice]
 		if(!controller)
@@ -865,6 +865,62 @@ var/global/floorIsLava = 0
 			record.email.login = "[replacetext(record.get_name(), " ", "_")]@freemail.nt"
 			record.email.password = "recovery[rand(1,99)]"
 
+/datum/admins/proc/fixrecords()
+	set category = "Server"
+	set desc="Fixes crew records"
+	set name="fix crew recrods"
+
+	if(!check_rights(R_ADMIN))
+		return
+	var/savefile/f = new("map_saves/records.sav")
+	var/list/recovered = list()
+	var/list/recovering = list()
+	from_file(f["records"],recovered)
+	for(var/datum/computer_file/crew_record/record in recovered)
+		var/found = 0
+		for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+			found = 1
+			if(!record2.linked_account)
+				record2.linked_account = record.linked_account
+				record2.linked_account.after_load()
+		if(!found)
+			recovering |= record	
+	GLOB.all_crew_records |= recovering
+	
+/datum/admins/proc/autocryo()
+	set category = "Server"
+	set desc="Autocryo"
+	set name="autocryo"
+
+	if(!check_rights(R_ADMIN))
+		return
+	var/obj/machinery/cryopod/cryo = new()
+	for(var/mob/living/carbon/human/H in world)
+		if(!H.loc) continue
+		cryo.occupant = H
+		cryo.despawnOccupant(1)
+					
+/datum/admins/proc/spacejunk()
+	set category = "Server"
+	set desc="Delete Space Junk"
+	set name="Delete Space Junk"
+
+	if(!check_rights(R_ADMIN))
+		return
+	for(var/turf/space/T in world)
+		var/found_lattice
+		if(!istype(T.loc, /area/space))
+			continue
+		for(var/obj/structure/lattice/lattice in T.contents)
+			found_lattice = 1
+			break
+		for(var/obj/structure/grille/grille in T.contents)
+			found_lattice = 1
+		if(found_lattice) continue
+		for(var/obj/ob in T.contents)
+			ob.loc = null
+			qdel(ob)					
+	
 /datum/admins/proc/retrieve_email()
 	set category = "Server"
 	set desc = "Retrieve Email"
@@ -893,9 +949,16 @@ var/global/floorIsLava = 0
 	if(real_name)
 		for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
 			if(record.get_name() == real_name)
-				to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
-				break
-
+				if(record.linked_account && istype(record.linked_account))
+					to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
+					record.linked_account.money = round(input("Enter money amount", "New amount") as num)
+				else
+					message_admins("BROKEN ACCOUNT FOR [real_name] GENERATING")
+					record.linked_account = create_account(record.get_name(), 0, null)
+					record.linked_account.remote_access_pin = rand(1111,9999)
+					record.linked_account = record.linked_account.after_load()
+					record.linked_account.money = 1000
+					to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
 					
 					
 /datum/admins/proc/buildaccounts()
@@ -906,10 +969,11 @@ var/global/floorIsLava = 0
 	if(!check_rights(R_ADMIN))
 		return
 	for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
-		if(!record.linked_account)
+		if(!record.linked_account || !istype(record.linked_account))
 			record.linked_account = create_account(record.get_name(), 0, null)
-			record.linked_account.remote_access_pin = 1111
-
+			record.linked_account.remote_access_pin = rand(1111,9999)
+			record.linked_account = record.linked_account.after_load()
+			record.linked_account.money = 1000
 
 /datum/admins/proc/delete_account()
 	set category = "Server"
@@ -954,11 +1018,14 @@ var/global/floorIsLava = 0
 	if(!check_rights(R_ADMIN))
 		return
 
-	world.visibility = !(world.visibility)
-	var/long_message = " toggled hub visibility.  The server is now [world.visibility ? "visible" : "invisible"] ([world.visibility])."
+	//BYOND hates actually changing world.visibility at runtime, so let's just change if we give it the hub password.
+	world.update_hub_visibility() //proc defined in hub.dm
+	var/long_message = "toggled hub visibility. The server is now [GLOB.visibility_pref ? "visible" : "invisible"] ([GLOB.visibility_pref])."
+	if (GLOB.visibility_pref && !world.reachable)
+		message_admins("WARNING: The server will not show up on the hub because byond is detecting that a firewall is blocking incoming connections.")
 
 	send2adminirc("[key_name(src)]" + long_message)
-	log_and_message_admins("toggled hub visibility ([long_message]).")
+	log_and_message_admins(long_message)
 	feedback_add_details("admin_verb","THUB") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc
 
 /datum/admins/proc/toggletraitorscaling()
@@ -1164,16 +1231,16 @@ var/global/floorIsLava = 0
 
 	return 0
 
-/datum/admins/proc/spawn_fruit(seedtype in plant_controller.seeds)
+/datum/admins/proc/spawn_fruit(seedtype in SSplants.seeds)
 	set category = "Debug"
 	set desc = "Spawn the product of a seed."
 	set name = "Spawn Fruit"
 
 	if(!check_rights(R_SPAWN))	return
 
-	if(!seedtype || !plant_controller.seeds[seedtype])
+	if(!seedtype || !SSplants.seeds[seedtype])
 		return
-	var/datum/seed/S = plant_controller.seeds[seedtype]
+	var/datum/seed/S = SSplants.seeds[seedtype]
 	S.harvest(usr,0,0,1)
 	log_admin("[key_name(usr)] spawned [seedtype] fruit at ([usr.x],[usr.y],[usr.z])")
 
@@ -1217,16 +1284,16 @@ var/global/floorIsLava = 0
 		for(var/datum/custom_item/item in current_items)
 			to_chat(usr, "- name: [item.name] icon: [item.item_icon] path: [item.item_path] desc: [item.item_desc]")
 
-/datum/admins/proc/spawn_plant(seedtype in plant_controller.seeds)
+/datum/admins/proc/spawn_plant(seedtype in SSplants.seeds)
 	set category = "Debug"
 	set desc = "Spawn a spreading plant effect."
 	set name = "Spawn Plant"
 
 	if(!check_rights(R_SPAWN))	return
 
-	if(!seedtype || !plant_controller.seeds[seedtype])
+	if(!seedtype || !SSplants.seeds[seedtype])
 		return
-	new /obj/effect/vine(get_turf(usr), plant_controller.seeds[seedtype])
+	new /obj/effect/vine(get_turf(usr), SSplants.seeds[seedtype])
 	log_admin("[key_name(usr)] spawned [seedtype] vines at ([usr.x],[usr.y],[usr.z])")
 
 /datum/admins/proc/spawn_atom(var/object as text)

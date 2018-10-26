@@ -7,14 +7,11 @@ For the materials datum, it assumes you need reagents unless specified otherwise
 you use one of the material IDs below. These are NOT ids in the usual sense (they aren't defined in the object or part of a datum),
 they are simply references used as part of a "has materials?" type proc. They all start with a  to denote that they aren't reagents.
 The currently supporting non-reagent materials:
-
 Don't add new keyword/IDs if they are made from an existing one (such as rods which are made from metal). Only add raw materials.
-
 Design Guidlines
 - When adding new designs, check rdreadme.dm to see what kind of things have already been made and where new stuff is needed.
 - A single sheet of anything is 2000 units of material. Materials besides metal/glass require help from other jobs (mining for
 other types of metals and chemistry for reagents).
-
 */
 //Note: More then one of these can be added to a design.
 
@@ -122,7 +119,7 @@ other types of metals and chemistry for reagents).
 /datum/design/item/stock_part/adv_capacitor
 	id = "adv_capacitor"
 	req_tech = list(TECH_POWER = 3)
-	materials = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	materials = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50, "gold" = 500, "phoron" = 500)
 	build_path = /obj/item/weapon/stock_parts/capacitor/adv
 	sort_string = "CAAAB"
 
@@ -222,7 +219,7 @@ other types of metals and chemistry for reagents).
 	desc = "Special mechanical module made to store, sort, and apply standard machine parts."
 	id = "rped"
 	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 3)
-	materials = list(DEFAULT_WALL_MATERIAL = 15000, "glass" = 5000, , "glass" = 5000, "gold" = 5000, "phoron" = 10000)
+	materials = list(DEFAULT_WALL_MATERIAL = 15000, "glass" = 6000, , "glass" = 6000, "gold" = 6000, "phoron" = 8000)
 	build_path = /obj/item/weapon/storage/part_replacer
 	sort_string = "CBAAA"
 
@@ -258,7 +255,7 @@ other types of metals and chemistry for reagents).
 	name = "high-capacity"
 	id = "high_cell"
 	req_tech = list(TECH_POWER = 2)
-	materials = list(DEFAULT_WALL_MATERIAL = 700, "glass" = 60, "gold" = 100, "silver" = 100)
+	materials = list(DEFAULT_WALL_MATERIAL = 700, "glass" = 60, "gold" = 200, "silver" = 200)
 	build_path = /obj/item/weapon/cell/high
 	sort_string = "DAAAB"
 
@@ -266,7 +263,7 @@ other types of metals and chemistry for reagents).
 	name = "super-capacity"
 	id = "super_cell"
 	req_tech = list(TECH_POWER = 3, TECH_MATERIAL = 2)
-	materials = list(DEFAULT_WALL_MATERIAL = 700, "glass" = 70, "gold" = 500, "silver" = 500, "phoron" = 100)
+	materials = list(DEFAULT_WALL_MATERIAL = 700, "glass" = 70, "gold" = 500, "silver" = 500, "phoron" = 500)
 	build_path = /obj/item/weapon/cell/super
 	sort_string = "DAAAC"
 
@@ -274,7 +271,7 @@ other types of metals and chemistry for reagents).
 	name = "hyper-capacity"
 	id = "hyper_cell"
 	req_tech = list(TECH_POWER = 5, TECH_MATERIAL = 4)
-	materials = list(DEFAULT_WALL_MATERIAL = 400, "diamond" = 500, "gold" = 1000, "silver" = 1000, "glass" = 70, "phoron" = 300)
+	materials = list(DEFAULT_WALL_MATERIAL = 400, "diamond" = 1000, "gold" = 1000, "silver" = 1000, "glass" = 70, "phoron" = 1000)
 	build_path = /obj/item/weapon/cell/hyper
 	sort_string = "DAAAD"
 
@@ -291,7 +288,7 @@ other types of metals and chemistry for reagents).
 	build_type = PROTOLATHE | MECHFAB
 	id = "device_cell_high"
 	req_tech = list(TECH_POWER = 2)
-	materials = list(DEFAULT_WALL_MATERIAL = 70, "glass" = 6)
+	materials = list(DEFAULT_WALL_MATERIAL = 70, "glass" = 6,"phoron" = 100)
 	build_path = /obj/item/weapon/cell/device/high
 	sort_string = "DAAAF"
 
@@ -324,7 +321,7 @@ other types of metals and chemistry for reagents).
 	desc = "Using the meson-scanning technology those glasses allow you to see through walls, floor or anything else."
 	id = "mesons"
 	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2)
-	materials = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50, "phoron" = 100)
+	materials = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50, "phoron" = 1000)
 	build_path = /obj/item/clothing/glasses/meson
 	sort_string = "GAAAC"
 
@@ -349,21 +346,21 @@ other types of metals and chemistry for reagents).
 /datum/design/item/weapon/mining/plasmacutter
 	id = "plasmacutter"
 	req_tech = list(TECH_MATERIAL = 4, TECH_PHORON = 3, TECH_ENGINEERING = 3)
-	materials = list(DEFAULT_WALL_MATERIAL = 1500, "glass" = 500, "gold" = 500, "phoron" = 1500)
+	materials = list(DEFAULT_WALL_MATERIAL = 1500, "glass" = 500, "gold" = 500, "phoron" = 4000)
 	build_path = /obj/item/weapon/gun/energy/plasmacutter
 	sort_string = "KAAAC"
 
 /datum/design/item/weapon/mining/pick_diamond
 	id = "pick_diamond"
 	req_tech = list(TECH_MATERIAL = 6)
-	materials = list("diamond" = 3000)
+	materials = list("diamond" = 4000)
 	build_path = /obj/item/weapon/pickaxe/diamond
 	sort_string = "KAAAD"
 
 /datum/design/item/weapon/mining/drill_diamond
 	id = "drill_diamond"
 	req_tech = list(TECH_MATERIAL = 6, TECH_POWER = 4, TECH_ENGINEERING = 4)
-	materials = list(DEFAULT_WALL_MATERIAL = 3000, "glass" = 1000, "diamond" = 2000)
+	materials = list(DEFAULT_WALL_MATERIAL = 4000, "glass" = 2000, "diamond" = 6000)
 	build_path = /obj/item/weapon/pickaxe/diamonddrill
 	sort_string = "KAAAE"
 
@@ -384,7 +381,7 @@ other types of metals and chemistry for reagents).
 	sort_string = "KAAAG"
 
 /datum/design/item/medical
-	materials = list(DEFAULT_WALL_MATERIAL = 30, "glass" = 20)
+	materials = list(DEFAULT_WALL_MATERIAL = 100, "glass" = 100)
 
 /datum/design/item/medical/AssembleDesignName()
 	..()
@@ -441,7 +438,7 @@ other types of metals and chemistry for reagents).
 	desc = "A cryostasis beaker that allows for chemical storage without reactions. Can hold up to 50 units."
 	id = "splitbeaker"
 	req_tech = list(TECH_MATERIAL = 2)
-	materials = list(DEFAULT_WALL_MATERIAL = 3000, "phoron" = 1000)
+	materials = list(DEFAULT_WALL_MATERIAL = 3000, "phoron" = 2000)
 	build_path = /obj/item/weapon/reagent_containers/glass/beaker/noreact
 	sort_string = "MADAA"
 
@@ -450,7 +447,7 @@ other types of metals and chemistry for reagents).
 	desc = "A bluespace beaker, powered by experimental bluespace technology and Element Cuban combined with the Compound Pete. Can hold up to 300 units."
 	id = "bluespacebeaker"
 	req_tech = list(TECH_BLUESPACE = 2, TECH_MATERIAL = 6)
-	materials = list(DEFAULT_WALL_MATERIAL = 3000, "phoron" = 4000, "diamond" = 1000)
+	materials = list(DEFAULT_WALL_MATERIAL = 3000, "phoron" = 4000, "diamond" = 2000)
 	build_path = /obj/item/weapon/reagent_containers/glass/beaker/bluespace
 	sort_string = "MADAB"
 
@@ -497,14 +494,14 @@ other types of metals and chemistry for reagents).
 	materials = list (DEFAULT_WALL_MATERIAL = 12500, "glass" = 7500, "silver" = 3000, "gold" = 3000, "diamond" = 1000, "phoron" = 6000)
 	build_path = /obj/item/weapon/scalpel/manager
 	sort_string = "MBBAD"
-
+/**
 /datum/design/item/neural_lace
 	id = "neural lace"
 	req_tech = list(TECH_BIO = 4, TECH_MATERIAL = 4, TECH_MAGNET = 2, TECH_DATA = 3)
 	materials = list (DEFAULT_WALL_MATERIAL = 10000, "glass" = 7500, "silver" = 1000, "gold" = 1000)
 	build_path = /obj/item/organ/internal/stack
 	sort_string = "MBBAE"
-
+**/
 /datum/design/item/implant
 	materials = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
 
@@ -549,7 +546,7 @@ other types of metals and chemistry for reagents).
 	id = "laser_carbine"
 	desc = "A laser weapon designed to kill."
 	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 5, TECH_POWER = 5)
-	materials = list(DEFAULT_WALL_MATERIAL = 5000, "glass" = 3000, "silver" = 4000, "gold" = 4000, "diamond" = 12000, "phoron" = "4000")
+	materials = list(DEFAULT_WALL_MATERIAL = 5000, "glass" = 3000, "silver" = 4000, "gold" = 4000, "diamond" = 12000, "phoron" = 8000)
 	build_path = /obj/item/weapon/gun/energy/laser
 	sort_string = "TAAAB"
 /*
@@ -560,7 +557,6 @@ other types of metals and chemistry for reagents).
 	materials = list(DEFAULT_WALL_MATERIAL = 5000, "glass" = 1000, "silver" = 1000, "gold" = 2000, "uranium" = 10000, "phoron" = 6000)
 	build_path = /obj/item/weapon/gun/energy/gun/nuclear
 	sort_string = "TAAAB"
-
 /datum/design/item/weapon/lasercannon
 	desc = "The lasing medium of this prototype is enclosed in a tube lined with uranium-235 and subjected to high neutron flux in a nuclear reactor core."
 	id = "lasercannon"
@@ -568,7 +564,6 @@ other types of metals and chemistry for reagents).
 	materials = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 1000, "silver" = 2000, "diamond" = 6000, "phoron" = 6000)
 	build_path = /obj/item/weapon/gun/energy/lasercannon
 	sort_string = "TAAAC"
-
 /datum/design/item/weapon/phoronpistol
 	id = "ppistol"
 	req_tech = list(TECH_COMBAT = 5, TECH_PHORON = 4)
@@ -784,7 +779,6 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/device/mmi
 	category = "Misc"
 	sort_string = "VACBA"
-
 /datum/design/item/mmi_radio
 	name = "Radio-enabled man-machine interface"
 	id = "mmi_radio"
@@ -794,6 +788,23 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/device/mmi/radio_enabled
 	category = "Misc"
 	sort_string = "VACBB"
+	
+/datum/design/item/defib
+	name = "auto-resuscitator"
+	id = "defibrillator"
+	req_tech = list(TECH_BIO = 5, TECH_ENGINEERING = 3, TECH_POWER = 4)
+	materials = list(DEFAULT_WALL_MATERIAL = 50000, "glass" = 30000, "gold" = 20000, "silver" = 10000, "phoron" = 1000)
+	build_path = /obj/item/weapon/defibrillator
+	sort_string = "VACBC"
+
+/datum/design/item/defib
+	name = "compact auto-resuscitator"
+	id = "compact_defibrillator"
+	req_tech = list(TECH_BIO = 5, TECH_ENGINEERING = 5, TECH_POWER = 6)
+	materials = list(DEFAULT_WALL_MATERIAL = 30000, "glass" = 20000, "gold" = 15000, "silver" = 10000, "phoron" = 8000)
+	build_path = /obj/item/weapon/defibrillator/compact
+	sort_string = "VACBD"
+
 **/
 /datum/design/item/lmi
 	name = "Lace-machine interface"
@@ -1153,7 +1164,7 @@ other types of metals and chemistry for reagents).
 	id = "jetpack"
 	req_tech = list(TECH_ENGINEERING = 4)
 	build_type = PROTOLATHE
-	materials = list(DEFAULT_WALL_MATERIAL = 6000)
+	materials = list(DEFAULT_WALL_MATERIAL = 6000, "gold" = 2000, "phoron" = 4000)
 	build_path = /obj/item/weapon/tank/jetpack
 	sort_string = "VBABC"
 
@@ -1230,12 +1241,14 @@ CIRCUITS BELOW
 	build_path = /obj/item/weapon/circuitboard/crew
 	sort_string = "FAGAI"
 
+/*
 /datum/design/circuit/bioprinter
 	name = "bioprinter"
 	id = "bioprinter"
 	req_tech = list(TECH_ENGINEERING = 1, TECH_BIO = 3, TECH_DATA = 3)
 	build_path = /obj/item/weapon/circuitboard/bioprinter
 	sort_string = "FAGAK"
+*/
 
 /datum/design/circuit/roboprinter
 	name = "prosthetic organ fabricator"
@@ -2043,6 +2056,27 @@ CIRCUITS BELOW
 	req_tech = list(TECH_DATA = 3, TECH_ENGINEERING = 3)
 	build_path = /obj/item/weapon/circuitboard/machinery/cell_charger
 	sort_string = "WAAAT"
+
+/datum/design/circuit/recharger
+	name = "recharger"
+	id = "recharger"
+	req_tech = list(TECH_DATA = 3, TECH_ENGINEERING = 3)
+	build_path = /obj/item/weapon/circuitboard/machinery/recharger
+	sort_string = "WAAAT"
+
+/datum/design/circuit/suit_storage_unit
+	name = "Suit Storage Unit"
+	id = "suit_storage_unit"
+	req_tech = list(TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/suit_storage_unit
+	sort_string = "WAATT"
+
+/datum/design/circuit/suit_cycler
+	name = "Suit Cycler"
+	id = "suit_cycler"
+	req_tech = list(TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/suit_cycler
+	sort_string = "WAATT"
 
 /datum/design/aimodule
 	build_type = IMPRINTER

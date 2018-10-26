@@ -308,13 +308,13 @@ var/global/list/debug_data = list()
 		to_file(f, L.linked_account)
 		if(L.linked_account)
 			var/key2 = L.linked_account.account_number
-			
+
 			fdel("record_saves/[key2].sav")
 			var/savefile/fa = new("record_saves/[key2].sav")
 			to_file(fa, L)
 			to_file(fa, L.linked_account)
 
-			
+
 	for(var/datum/world_faction/faction in GLOB.all_world_factions)
 		var/list/records = faction.get_records()
 		for(var/datum/computer_file/crew_record/L in records)
@@ -335,7 +335,7 @@ var/global/list/debug_data = list()
 	var/starttime = REALTIMEOFDAY
 	var/backup = 0
 	var/dir = 1
-	
+
 	while(!backup)
 		if(fexists("backups/[dir]/z1.sav"))
 			dir++
@@ -381,7 +381,7 @@ var/global/list/debug_data = list()
 	return 1
 
 
-/proc/Retrieve_Record(var/key)
+/proc/Retrieve_Record(var/key, var/func = 1) // 2 = ATM account
 	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
 		if(record2.get_name() == key)
 			message_admins("retrieve_record ran for existing record [key]")
@@ -389,16 +389,25 @@ var/global/list/debug_data = list()
 	if(!fexists("record_saves/[key].sav")) return
 	var/savefile/f = new("record_saves/[key].sav")
 	var/datum/computer_file/crew_record/v
-	to_file(f, v)
+	from_file(f, v)
 	var/datum/money_account/account
-	to_file(f, account)
+	from_file(f, account)
 	if(!v)
 		message_admins("fucked up record [key]")
+		if(func == 1)
+			v = new()
+			v.set_name(key)
+		else
+			return
 	if(!account)
 		message_admins("broken account for [key]")
+		v.linked_account = create_account(v.get_name(), 0, null)
+		v.linked_account.remote_access_pin = rand(1111,9999)
+		v.linked_account = v.linked_account.after_load()
+		v.linked_account.money = 1000
 	else
 		v.linked_account = account
-	if(v.linked_account) 
+	if(v.linked_account)
 		v.linked_account = v.linked_account.after_load()
 	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
 		if(record2.get_name() == v.get_name())
@@ -409,7 +418,7 @@ var/global/list/debug_data = list()
 			return record2
 	GLOB.all_crew_records |= v
 	return v
-	
+
 
 /proc/Retrieve_Record_Faction(var/key, var/datum/world_faction/faction)
 	if(!fexists("record_saves/[faction.uid]/[key].sav")) return
@@ -463,8 +472,8 @@ var/global/list/debug_data = list()
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
 			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
-			
-			
+
+
 		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
 		f = null
 	f = new("map_saves/extras.sav")

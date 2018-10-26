@@ -17,15 +17,16 @@
 /datum/money_account/after_load()
 	var/datum/money_account/M = get_account_loadless(account_number)
 	if(M && M.money >= money)
-		message_admins("duplicate account loaded owner: [owner_name] account_number: [account_number]")
-		qdel(src)
+		message_admins("duplicate account loaded owner: [owner_name] account_number: [M.account_number]")
+		return M
 	else if(M && M.money < money)
 		all_money_accounts.Remove(M)
 		all_money_accounts.Add(src)
-		qdel(M)
+		return src
 	else
 		all_money_accounts.Add(src)
 	..()
+	return src
 
 /datum/money_account/proc/do_transaction(var/datum/transaction/T)
 	money = max(0, money + T.amount)
@@ -177,7 +178,7 @@
 	for(var/datum/money_account/D in all_money_accounts)
 		if(D.account_number == account_number)
 			return D
-	var/datum/computer_file/crew_record/L = Retrieve_Record(account_number)
+	var/datum/computer_file/crew_record/L = Retrieve_Record(account_number, 2)
 	if(L)
 		return L.linked_account
 /proc/get_account_record(var/real_name)

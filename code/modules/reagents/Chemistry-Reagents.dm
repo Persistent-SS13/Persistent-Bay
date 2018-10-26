@@ -28,6 +28,7 @@
 	var/gas_flags =    		XGM_GAS_REAGENT_GAS
 	var/gas_burn_product
 	var/gas_overlay = "generic"
+	var/gas_id									// Override for reagents inwhich name != id of parent gas
 	// END GAS DATA
 
 /datum/reagent/New(var/datum/reagents/holder)

@@ -164,7 +164,7 @@
 	w_class = ITEM_SIZE_NORMAL
 
 	//Cost to make in the autolathe
-	matter = list(DEFAULT_WALL_MATERIAL = 70, "glass" = 30)
+	matter = list(DEFAULT_WALL_MATERIAL = 210, "glass" = 90)
 
 	//R&D tech level
 	origin_tech = list(TECH_ENGINEERING = 1)
@@ -462,6 +462,9 @@
 					spawn(100)
 						H.disabilities &= ~NEARSIGHTED
 
+/obj/item/weapon/weldingtool/empty
+	tank = /obj/item/weapon/welder_tank/empty
+
 /obj/item/weapon/welder_tank
 	name = "welding fuel tank"
 	desc = "An interchangeable fuel tank meant for a welding tool."
@@ -469,12 +472,16 @@
 	icon_state = "fuel_m"
 	w_class = ITEM_SIZE_SMALL
 	var/max_fuel = 20
+	var/start_with_fuel = 1
 	var/can_remove = 1
 
 /obj/item/weapon/welder_tank/Initialize()
 	if(!map_storage_loaded)
 		create_reagents(max_fuel)
-		reagents.add_reagent(/datum/reagent/fuel, max_fuel)
+		if (start_with_fuel == 0)
+			(reagents.add_reagent(max_fuel))
+		else(reagents.add_reagent(/datum/reagent/fuel, max_fuel))
+
 	. = ..()
 
 /obj/item/weapon/welder_tank/afterattack(obj/O as obj, mob/user as mob, proximity)
@@ -485,15 +492,20 @@
 		playsound(src.loc, 'sound/effects/refill.ogg', 50, 1, -6)
 		return
 
+/obj/item/weapon/welder_tank/empty
+	start_with_fuel = 0
+
 /obj/item/weapon/weldingtool/mini
 	name = "miniature welding tool"
 	icon_state = "welder_s"
 	item_state = "welder"
 	desc = "A smaller welder, meant for quick or emergency use."
-	origin_tech = list(TECH_ENGINEERING = 2)
-	matter = list(DEFAULT_WALL_MATERIAL = 15, "glass" = 5)
+	matter = list(DEFAULT_WALL_MATERIAL = 70, "glass" = 30)
 	w_class = ITEM_SIZE_SMALL
 	tank = /obj/item/weapon/welder_tank/mini
+
+/obj/item/weapon/weldingtool/mini/empty
+	tank = /obj/item/weapon/welder_tank/mini/empty
 
 /obj/item/weapon/welder_tank/mini
 	name = "small welding fuel tank"
@@ -502,15 +514,21 @@
 	max_fuel = 5
 	can_remove = 0
 
+/obj/item/weapon/welder_tank/mini/empty
+	start_with_fuel = 0
+
 /obj/item/weapon/weldingtool/largetank
 	name = "industrial welding tool"
 	icon_state = "welder_l"
 	item_state = "welder"
 	desc = "A heavy-duty portable welder, made to ensure it won't suddenly go cold on you."
 	origin_tech = list(TECH_ENGINEERING = 2)
-	matter = list(DEFAULT_WALL_MATERIAL = 70, "glass" = 60)
+	matter = list(DEFAULT_WALL_MATERIAL = 420, "glass" = 180)
 	w_class = ITEM_SIZE_LARGE
 	tank = /obj/item/weapon/welder_tank/large
+
+/obj/item/weapon/weldingtool/largetank/empty
+	tank = /obj/item/weapon/welder_tank/large/empty
 
 /obj/item/weapon/welder_tank/large
 	name = "large welding fuel tank"
@@ -518,15 +536,22 @@
 	w_class = ITEM_SIZE_NORMAL
 	max_fuel = 40
 
+/obj/item/weapon/welder_tank/large/empty
+	start_with_fuel = 0
+
 /obj/item/weapon/weldingtool/hugetank
 	name = "upgraded welding tool"
 	icon_state = "welder_h"
 	item_state = "welder"
 	desc = "A sizable welding tool with room to accomodate the largest of fuel tanks."
 	w_class = ITEM_SIZE_HUGE
+	slot_flags = null	//80 units of fuel should have a drawback
 	origin_tech = list(TECH_ENGINEERING = 3)
-	matter = list(DEFAULT_WALL_MATERIAL = 70, "glass" = 120)
+	matter = list(DEFAULT_WALL_MATERIAL = 840, "glass" = 360)
 	tank = /obj/item/weapon/welder_tank/huge
+
+/obj/item/weapon/weldingtool/hugetank/empty
+	tank = /obj/item/weapon/welder_tank/huge/empty
 
 /obj/item/weapon/welder_tank/huge
 	name = "huge welding fuel tank"
@@ -534,20 +559,24 @@
 	w_class = ITEM_SIZE_LARGE
 	max_fuel = 80
 
+/obj/item/weapon/welder_tank/huge/empty
+	start_with_fuel = 0
+
 /obj/item/weapon/weldingtool/experimental
 	name = "experimental welding tool"
 	icon_state = "welder_l"
 	item_state = "welder"
-	desc = "This welding tool feels heavier in your possession than is normal. There appears to be no external fuel port."
-	w_class = ITEM_SIZE_LARGE
+	desc = "A heavily modified welding tool that uses a nonstandard fuel mix. The internal fuel tank feels uncomfortably warm."
+	w_class = ITEM_SIZE_HUGE
+	slot_flags = null	//unlimited fuel needs a drawback
 	origin_tech = list(TECH_ENGINEERING = 4, TECH_PHORON = 3)
-	matter = list(DEFAULT_WALL_MATERIAL = 70, "glass" = 120)
+	matter = list(DEFAULT_WALL_MATERIAL = 840, "glass" = 360)
 	tank = /obj/item/weapon/welder_tank/experimental
 
 /obj/item/weapon/welder_tank/experimental
 	name = "experimental welding fuel tank"
 	icon_state = "fuel_x"
-	w_class = ITEM_SIZE_NORMAL
+	w_class = ITEM_SIZE_LARGE
 	max_fuel = 40
 	can_remove = 0
 	var/last_gen = 0
@@ -562,7 +591,7 @@
 /obj/item/weapon/welder_tank/experimental/Process()
 	var/cur_fuel = reagents.get_reagent_amount(/datum/reagent/fuel)
 	if(cur_fuel < max_fuel)
-		var/gen_amount = ((world.time-last_gen)/25)
+		var/gen_amount = ((world.time-last_gen)/40)
 		reagents.add_reagent(/datum/reagent/fuel, gen_amount)
 		last_gen = world.time
 

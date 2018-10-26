@@ -1,7 +1,7 @@
 // Basically they are for the firing range
 /obj/structure/target_stake
 	name = "target stake"
-	desc = "A thin platform with negatively-magnetized wheels."
+	desc = "A thin panel with negatively-magnetized wheels, it has a pin for hanging targets."
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "target_stake"
 	density = 1

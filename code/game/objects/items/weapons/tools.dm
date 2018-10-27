@@ -464,6 +464,7 @@
 
 /obj/item/weapon/weldingtool/empty
 	tank = /obj/item/weapon/welder_tank/empty
+	var/start_with_fuel = 1
 
 /obj/item/weapon/welder_tank
 	name = "welding fuel tank"

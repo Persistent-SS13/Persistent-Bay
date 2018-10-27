@@ -22,13 +22,14 @@
 	cost = 15
 	containertype = /obj/structure/largecrate
 	containername = "train trolley crate"
-
+/**
 /decl/hierarchy/supply_pack/operations/hoverpod
 	name = "Equipment - Hoverpod"
 	contains = list()
 	cost = 120
 	containertype = /obj/structure/largecrate/hoverpod
 	containername = "hoverpod crate"
+**/	
 /*
 //gear
 /decl/hierarchy/supply_pack/operations/webbing

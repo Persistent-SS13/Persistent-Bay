@@ -80,9 +80,6 @@
 	if(loc)
 		initial_loc = get_area(loc)
 		area_uid = initial_loc.uid
-		if (!id_tag)
-			assign_uid()
-			id_tag = num2text(uid)
 
 /obj/machinery/atmospherics/unary/vent_pump/after_load()
 	..()
@@ -92,9 +89,10 @@
 	if(loc)
 		initial_loc = get_area(loc)
 		area_uid = initial_loc.uid
-		if (!id_tag)
-			assign_uid()
-			id_tag = num2text(uid)
+
+/obj/machinery/atmospherics/unary/vent_pump/Initialize()
+	.=..()
+	id_tag = make_loc_string_id()
 
 
 /obj/machinery/atmospherics/unary/vent_pump/Destroy()

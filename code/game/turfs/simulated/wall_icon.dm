@@ -148,10 +148,9 @@
 	other_connections = dirs_to_corner_states(other_dirs)
 
 /turf/simulated/wall/proc/can_join_with(var/turf/simulated/wall/W)
-	if(p_material && p_material.name)
+	if(p_material && W && W.p_material)
 		if(state == null && W.state == null && p_material.name == W.p_material.name)
 			return 1
-
 	for(var/wb_type in blend_turfs)
 		if(istype(W, wb_type))
 			return 2

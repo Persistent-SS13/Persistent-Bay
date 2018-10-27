@@ -109,7 +109,6 @@
 
 /obj/machinery/sleeper/OnTopic(user, href_list)
 	add_fingerprint(user)
-
 	if(href_list["eject"])
 		go_out()
 		return TOPIC_REFRESH
@@ -255,15 +254,20 @@
 		return
 
 	var/chemical_type = available_chemicals[chemical_name]
-	if(occupant && occupant.reagents)
-		if(occupant.reagents.get_reagent_amount(chemical_type) + amount <= 20)
-			use_power(amount * CHEM_SYNTH_ENERGY)
-			occupant.reagents.add_reagent(chemical_type, amount)
-			to_chat(user, "Occupant now has [occupant.reagents.get_reagent_amount(chemical_type)] unit\s of [chemical_name] in their bloodstream.")
+	if(beaker.reagents.get_reagent_amount(chemical_type) > 0)
+		if(beaker.reagents.get_reagent_amount(chemical_type) < amount)
+			amount = beaker.reagents.get_reagent_amount(chemical_type)
+		if(occupant && occupant.reagents)
+			if(occupant.reagents.get_reagent_amount(chemical_type) + amount <= 20)
+				use_power(amount * CHEM_SYNTH_ENERGY)
+				occupant.reagents.add_reagent(chemical_type, amount)
+				to_chat(user, "Occupant now has [occupant.reagents.get_reagent_amount(chemical_type)] unit\s of [chemical_name] in their bloodstream.")
+			else
+				to_chat(user, "The subject has too many chemicals.")
 		else
-			to_chat(user, "The subject has too many chemicals.")
+			to_chat(user, "There's no suitable occupant in \the [src].")
 	else
-		to_chat(user, "There's no suitable occupant in \the [src].")
+		to_chat(user, "There is no [chemical_name] in the beaker")
 
 
 /obj/machinery/sleeper/New()

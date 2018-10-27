@@ -164,3 +164,5 @@
 #define send_link(target, url) target << link(url)
 
 #define JOINTEXT(X) jointext(X, null)
+
+#define cast_new(type, num, args...) if((num) == 1) { new type(args) } else { for(var/i=0;i<(num),i++) { new type(args) } }

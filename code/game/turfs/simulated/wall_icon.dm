@@ -55,24 +55,39 @@
 
 	overlays.Cut()
 	var/image/I
+	var/base_color = paint_color ? paint_color : p_material.icon_colour
+
 	for(var/i = 1 to 4)
-		I = image('icons/turf/wall_masks.dmi', "[r_material ? p_material.icon_reinf : p_material.icon_base][wall_connections[i]]", dir = 1<<(i-1))
-		I.color = p_material.icon_colour
-		overlays = overlays.Copy() + I
+		if(other_connections[i] != "0")
+			I = image('icons/turf/wall_masks.dmi', "[material.icon_base]_other[wall_connections[i]]", dir = 1<<(i-1))
+		else
+			I = image('icons/turf/wall_masks.dmi', "[material.icon_base][wall_connections[i]]", dir = 1<<(i-1))
+		I.color = base_color
+		overlays += I
 
 	if(r_material)
+		var/reinf_color = paint_color ? paint_color : r_material.icon_colour
 		if(state == null)
 			I = image('icons/turf/wall_masks.dmi', "reinf_over")
-			I.color = r_material.icon_colour
+			I.color = reinf_color
 			overlays = overlays.Copy() + I
 		else
 			I = image('icons/turf/wall_masks.dmi', "reinf_construct-[state]")
-			I.color = r_material.icon_colour
+			I.color = reinf_color
 			overlays = overlays.Copy() + I
 		if(state >= 5 || state == null)
 			I = image('icons/turf/wall_masks.dmi', "reinf_metal")
 			I.color = "#666666"
 			overlays = overlays.Copy() + I
+
+	if(stripe_color)
+		for(var/i = 1 to 4)
+			if(other_connections[i] != "0")
+				I = image('icons/turf/wall_masks.dmi', "stripe_other[wall_connections[i]]", dir = 1<<(i-1))
+			else
+				I = image('icons/turf/wall_masks.dmi', "stripe[wall_connections[i]]", dir = 1<<(i-1))
+			I.color = stripe_color
+			overlays += I
 
 	if(integrity != MaxIntegrity())
 		var/overlay = round(damage_overlays.len * (1 / (integrity / MaxIntegrity())))
@@ -95,19 +110,49 @@
 /turf/simulated/wall/proc/update_connections(propagate = 0)
 	if(!p_material)
 		return
-	var/list/dirs = list()
+	var/list/wall_dirs = list()
+	var/list/other_dirs = list()
 	for(var/turf/simulated/wall/W in orange(src, 1))
-		if(!W.p_material)
-			continue
+		switch(can_join_with(W))
+			if(0)
+				continue
+			if(1)
+				wall_dirs += get_dir(src, W)
+			if(2)
+				wall_dirs += get_dir(src, W)
+				other_dirs += get_dir(src, W)
 		if(propagate)
 			W.update_connections()
-		if(can_join_with(W))
-			dirs += get_dir(src, W)
-		W.update_icon()
+			W.update_icon()
 
-	wall_connections = dirs_to_corner_states(dirs)
+	for(var/turf/T in orange(src, 1))
+		var/success = 0
+		for(var/obj/O in T)
+			for(var/b_type in blend_objects)
+				if(istype(O, b_type))
+					success = 1
+				for(var/nb_type in noblend_objects)
+					if(istype(O, nb_type))
+						success = 0
+				if(success)
+					break
+			if(success)
+				break
+
+		if(success)
+			wall_dirs += get_dir(src, T)
+			if(get_dir(src, T) in GLOB.cardinal)
+				other_dirs += get_dir(src, T)
+
+	wall_connections = dirs_to_corner_states(wall_dirs)
+	other_connections = dirs_to_corner_states(other_dirs)
 
 /turf/simulated/wall/proc/can_join_with(var/turf/simulated/wall/W)
-	if(state == null && W.state == null && p_material.name == W.p_material.name)
-		return 1
+	if(p_material && p_material.name)
+		if(state == null && W.state == null && p_material.name == W.p_material.name)
+			return 1
+
+	for(var/wb_type in blend_turfs)
+		if(istype(W, wb_type))
+			return 2
 	return 0

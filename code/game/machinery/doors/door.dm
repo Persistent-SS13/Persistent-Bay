@@ -152,6 +152,7 @@
 			open()
 		else
 			do_animate("deny")
+	update_icon()
 	return
 
 /obj/machinery/door/bullet_act(var/obj/item/projectile/Proj)

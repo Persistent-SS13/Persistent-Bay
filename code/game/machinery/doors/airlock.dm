@@ -1561,6 +1561,7 @@ About the new airlock wires panel:
 		brace.take_damage(amount)
 	else
 		..(amount)
+	update_icon()
 
 /obj/machinery/door/airlock/examine()
 	. = ..()

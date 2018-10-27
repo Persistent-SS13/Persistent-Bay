@@ -67,7 +67,7 @@
 		if(can_visually_connect_to(S))
 			if(S.can_visually_connect())
 				if(propagate)
-					S.update_connections()
+					S.update_connections(1)
 					S.update_icon()
 				dirs += get_dir(src, S)
 

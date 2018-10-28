@@ -13,7 +13,7 @@
 
 	var/canister_color = "yellow"
 	var/can_label = 1
-	start_pressure = 45 * ONE_ATMOSPHERE
+	start_pressure = 148 * ONE_ATMOSPHERE
 	var/temperature_resistance = 1000 + T0C
 	volume = 1000
 	use_power = 0
@@ -27,96 +27,12 @@
 	var/upgrade_stack_type = /obj/item/stack/material/plasteel
 	var/upgrade_stack_amount = 20
 
+/obj/machinery/portable_atmospherics/canister/after_load()
+	..()
+	update_icon()
+
 /obj/machinery/portable_atmospherics/canister/drain_power()
 	return -1
-
-/obj/machinery/portable_atmospherics/canister/sleeping_agent
-	name = "\improper Canister: \[N2O\]"
-	icon_state = "redws"
-	canister_color = "redws"
-	can_label = 0
-
-/obj/machinery/portable_atmospherics/canister/nitrogen
-	name = "\improper Canister: \[N2\]"
-	icon_state = "red"
-	canister_color = "red"
-	can_label = 0
-
-/obj/machinery/portable_atmospherics/canister/nitrogen/prechilled
-	name = "\improper Canister: \[N2 (Cooling)\]"
-
-/obj/machinery/portable_atmospherics/canister/oxygen
-	name = "\improper Canister: \[O2\]"
-	icon_state = "blue"
-	canister_color = "blue"
-	can_label = 0
-
-/obj/machinery/portable_atmospherics/canister/oxygen/prechilled
-	name = "\improper Canister: \[O2 (Cryo)\]"
-	start_pressure = 20 * ONE_ATMOSPHERE
-
-/obj/machinery/portable_atmospherics/canister/hydrogen
-	name = "\improper Canister: \[Hydrogen\]"
-	icon_state = "purple"
-	canister_color = "purple"
-	can_label = 0
-
-
-/obj/machinery/portable_atmospherics/canister/phoron
-	name = "\improper Canister \[Phoron\]"
-	icon_state = "orange"
-	canister_color = "orange"
-	can_label = 0
-
-/obj/machinery/portable_atmospherics/canister/carbon_dioxide
-	name = "\improper Canister \[CO2\]"
-	icon_state = "black"
-	canister_color = "black"
-	can_label = 0
-
-/obj/machinery/portable_atmospherics/canister/air
-	name = "\improper Canister \[Air\]"
-	icon_state = "grey"
-	canister_color = "grey"
-	can_label = 0
-
-/obj/machinery/portable_atmospherics/canister/air/airlock
-	start_pressure = 3 * ONE_ATMOSPHERE
-
-/obj/machinery/portable_atmospherics/canister/empty
-	start_pressure = 0
-	can_label = 1
-	var/obj/machinery/portable_atmospherics/canister/canister_type = /obj/machinery/portable_atmospherics/canister
-
-/obj/machinery/portable_atmospherics/canister/empty/New()
-	..()
-	name = 	initial(canister_type.name)
-	icon_state = 	initial(canister_type.icon_state)
-	canister_color = 	initial(canister_type.canister_color)
-
-/obj/machinery/portable_atmospherics/canister/empty/air
-	icon_state = "grey"
-	canister_type = /obj/machinery/portable_atmospherics/canister/air
-/obj/machinery/portable_atmospherics/canister/empty/oxygen
-	icon_state = "blue"
-	canister_type = /obj/machinery/portable_atmospherics/canister/oxygen
-/obj/machinery/portable_atmospherics/canister/empty/phoron
-	icon_state = "orange"
-	canister_type = /obj/machinery/portable_atmospherics/canister/phoron
-/obj/machinery/portable_atmospherics/canister/empty/nitrogen
-	icon_state = "red"
-	canister_type = /obj/machinery/portable_atmospherics/canister/nitrogen
-/obj/machinery/portable_atmospherics/canister/empty/carbon_dioxide
-	icon_state = "black"
-	canister_type = /obj/machinery/portable_atmospherics/canister/carbon_dioxide
-/obj/machinery/portable_atmospherics/canister/empty/sleeping_agent
-	icon_state = "redws"
-	canister_type = /obj/machinery/portable_atmospherics/canister/sleeping_agent
-/obj/machinery/portable_atmospherics/canister/empty/hydrogen
-	icon_state = "purple"
-	canister_type = /obj/machinery/portable_atmospherics/canister/hydrogen
-
-
 
 /obj/machinery/portable_atmospherics/canister/proc/check_change()
 	if(!air_contents)
@@ -134,7 +50,7 @@
 		update_flag |= 4
 	else if(tank_pressure < ONE_ATMOSPHERE)
 		update_flag |= 8
-	else if(tank_pressure < 15*ONE_ATMOSPHERE)
+	else if(tank_pressure < (start_pressure/2))
 		update_flag |= 16
 	else
 		update_flag |= 32
@@ -436,39 +352,138 @@ update_flag
 		return STATUS_CLOSE
 	return ..()
 
-/obj/machinery/portable_atmospherics/canister/phoron/New()
-	..()
+//--------------------------------------------------------
+// N2O Canister
+//--------------------------------------------------------
+/obj/machinery/portable_atmospherics/canister/sleeping_agent
+	name = "\improper Canister: \[N2O\]"
+	icon_state = "redws"
+	canister_color = "redws"
+	can_label = 0
 
-	src.air_contents.adjust_gas("phoron", MolesForPressure())
+/obj/machinery/portable_atmospherics/canister/sleeping_agent/New()
+	..()
+	air_contents.adjust_gas("sleeping_agent", MolesForPressure())
 	src.update_icon()
-	return 1
+
+//--------------------------------------------------------
+// N2 Canister
+//--------------------------------------------------------
+/obj/machinery/portable_atmospherics/canister/nitrogen
+	name = "\improper Canister: \[N2\]"
+	icon_state = "red"
+	canister_color = "red"
+	can_label = 0
+
+/obj/machinery/portable_atmospherics/canister/nitrogen/New()
+	..()
+	src.air_contents.adjust_gas("nitrogen", MolesForPressure())
+	src.update_icon()
+
+//--------------------------------------------------------
+// N2O Pre-Chilled Canister
+//--------------------------------------------------------
+/obj/machinery/portable_atmospherics/canister/nitrogen/prechilled
+	name = "\improper Canister: \[N2 (Cooling)\]"
+
+/obj/machinery/portable_atmospherics/canister/nitrogen/prechilled/New()
+	..()
+	src.air_contents.temperature = 80
+	src.update_icon()
+
+//--------------------------------------------------------
+// O2 Canister
+//--------------------------------------------------------
+/obj/machinery/portable_atmospherics/canister/oxygen
+	name = "\improper Canister: \[O2\]"
+	icon_state = "blue"
+	canister_color = "blue"
+	can_label = 0
 
 /obj/machinery/portable_atmospherics/canister/oxygen/New()
 	..()
-
 	src.air_contents.adjust_gas("oxygen", MolesForPressure())
 	src.update_icon()
-	return 1
 
-/obj/machinery/portable_atmospherics/canister/hydrogen/New()
-	..()
-	src.air_contents.adjust_gas("hydrogen", MolesForPressure())
-	src.update_icon()
-	return 1
+//--------------------------------------------------------
+// O2 Pre-Chilled Canister
+//--------------------------------------------------------
+/obj/machinery/portable_atmospherics/canister/oxygen/prechilled
+	name = "\improper Canister: \[O2 (Cryo)\]"
+	start_pressure = 20 * ONE_ATMOSPHERE
 
 /obj/machinery/portable_atmospherics/canister/oxygen/prechilled/New()
 	..()
 	src.air_contents.temperature = 80
 	src.update_icon()
-	return 1
 
-/obj/machinery/portable_atmospherics/canister/sleeping_agent/New()
+//--------------------------------------------------------
+// H2 Canister
+//--------------------------------------------------------
+/obj/machinery/portable_atmospherics/canister/hydrogen
+	name = "\improper Canister: \[Hydrogen\]"
+	icon_state = "purple"
+	canister_color = "purple"
+	can_label = 0
+
+/obj/machinery/portable_atmospherics/canister/hydrogen/New()
 	..()
-
-	air_contents.adjust_gas("sleeping_agent", MolesForPressure())
+	src.air_contents.adjust_gas("hydrogen", MolesForPressure())
 	src.update_icon()
-	return 1
 
+//--------------------------------------------------------
+// Phoron Canister
+//--------------------------------------------------------
+/obj/machinery/portable_atmospherics/canister/phoron
+	name = "\improper Canister \[Phoron\]"
+	icon_state = "orange"
+	canister_color = "orange"
+	can_label = 0
+
+/obj/machinery/portable_atmospherics/canister/phoron/New()
+	..()
+	src.air_contents.adjust_gas("phoron", MolesForPressure())
+	src.update_icon()
+
+//--------------------------------------------------------
+// CO2 Canister
+//--------------------------------------------------------
+/obj/machinery/portable_atmospherics/canister/carbon_dioxide
+	name = "\improper Canister \[CO2\]"
+	icon_state = "black"
+	canister_color = "black"
+	can_label = 0
+
+/obj/machinery/portable_atmospherics/canister/carbon_dioxide/New()
+	..()
+	src.air_contents.adjust_gas("carbon_dioxide", MolesForPressure())
+	src.update_icon()
+
+//--------------------------------------------------------
+// Air Canister
+//--------------------------------------------------------
+/obj/machinery/portable_atmospherics/canister/air
+	name = "\improper Canister \[Air\]"
+	icon_state = "grey"
+	canister_color = "grey"
+	can_label = 0
+
+/obj/machinery/portable_atmospherics/canister/air/New()
+	..()
+	var/list/air_mix = StandardAirMix()
+	src.air_contents.adjust_multi("oxygen", air_mix["oxygen"], "nitrogen", air_mix["nitrogen"])
+	src.update_icon()
+
+//--------------------------------------------------------
+// Airlock Air Canister
+//--------------------------------------------------------
+/obj/machinery/portable_atmospherics/canister/air/airlock
+	start_pressure = 3 * ONE_ATMOSPHERE
+
+
+//--------------------------------------------------------
+// N2O Roomfiller Canister
+//--------------------------------------------------------
 //Dirty way to fill room with gas. However it is a bit easier to do than creating some floor/engine/n2o -rastaf0
 /obj/machinery/portable_atmospherics/canister/sleeping_agent/roomfiller/New()
 	..()
@@ -480,37 +495,10 @@ update_flag
 				sleep(10)
 			location.assume_air(air_contents)
 			air_contents = new
-	return 1
 
-/obj/machinery/portable_atmospherics/canister/nitrogen/New()
-	..()
-	src.air_contents.adjust_gas("nitrogen", MolesForPressure())
-	src.update_icon()
-	return 1
-
-/obj/machinery/portable_atmospherics/canister/nitrogen/prechilled/New()
-	..()
-	src.air_contents.temperature = 80
-	src.update_icon()
-	return 1
-
-/obj/machinery/portable_atmospherics/canister/carbon_dioxide/New()
-	..()
-	src.air_contents.adjust_gas("carbon_dioxide", MolesForPressure())
-	src.update_icon()
-	return 1
-
-
-/obj/machinery/portable_atmospherics/canister/air/New()
-	..()
-	var/list/air_mix = StandardAirMix()
-	src.air_contents.adjust_multi("oxygen", air_mix["oxygen"], "nitrogen", air_mix["nitrogen"])
-
-	src.update_icon()
-	return 1
-
-
-
+//--------------------------------------------------------
+// N2 Engine Setup Canister
+//--------------------------------------------------------
 // Special types used for engine setup admin verb, they contain double amount of that of normal canister.
 /obj/machinery/portable_atmospherics/canister/nitrogen/engine_setup/New()
 	..()
@@ -518,14 +506,63 @@ update_flag
 	src.update_icon()
 	return 1
 
+//--------------------------------------------------------
+// CO2 Engine Setup Canister
+//--------------------------------------------------------
 /obj/machinery/portable_atmospherics/canister/carbon_dioxide/engine_setup/New()
 	..()
 	src.air_contents.adjust_gas("carbon_dioxide", MolesForPressure())
 	src.update_icon()
 	return 1
 
+//--------------------------------------------------------
+// Phoron Engine Setup Canister
+//--------------------------------------------------------
 /obj/machinery/portable_atmospherics/canister/phoron/engine_setup/New()
 	..()
 	src.air_contents.adjust_gas("phoron", MolesForPressure())
 	src.update_icon()
 	return 1
+
+//--------------------------------------------------------
+// Empty Canister
+//--------------------------------------------------------
+/obj/machinery/portable_atmospherics/canister/empty
+	start_pressure = 0
+	can_label = 1
+	var/obj/machinery/portable_atmospherics/canister/canister_type = /obj/machinery/portable_atmospherics/canister
+
+/obj/machinery/portable_atmospherics/canister/empty/New()
+	..()
+	name = 	initial(canister_type.name)
+	icon_state = 	initial(canister_type.icon_state)
+	canister_color = 	initial(canister_type.canister_color)
+
+/obj/machinery/portable_atmospherics/canister/empty/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		name = 	initial(canister_type.name)
+		icon_state = initial(canister_type.icon_state)
+		canister_color = initial(canister_type.canister_color)
+
+/obj/machinery/portable_atmospherics/canister/empty/air
+	icon_state = "grey"
+	canister_type = /obj/machinery/portable_atmospherics/canister/air
+/obj/machinery/portable_atmospherics/canister/empty/oxygen
+	icon_state = "blue"
+	canister_type = /obj/machinery/portable_atmospherics/canister/oxygen
+/obj/machinery/portable_atmospherics/canister/empty/phoron
+	icon_state = "orange"
+	canister_type = /obj/machinery/portable_atmospherics/canister/phoron
+/obj/machinery/portable_atmospherics/canister/empty/nitrogen
+	icon_state = "red"
+	canister_type = /obj/machinery/portable_atmospherics/canister/nitrogen
+/obj/machinery/portable_atmospherics/canister/empty/carbon_dioxide
+	icon_state = "black"
+	canister_type = /obj/machinery/portable_atmospherics/canister/carbon_dioxide
+/obj/machinery/portable_atmospherics/canister/empty/sleeping_agent
+	icon_state = "redws"
+	canister_type = /obj/machinery/portable_atmospherics/canister/sleeping_agent
+/obj/machinery/portable_atmospherics/canister/empty/hydrogen
+	icon_state = "purple"
+	canister_type = /obj/machinery/portable_atmospherics/canister/hydrogen

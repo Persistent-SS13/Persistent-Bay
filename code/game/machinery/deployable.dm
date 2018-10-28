@@ -99,28 +99,33 @@ for reference:
 					visible_message("<span class='notice'>[user] repairs \the [src].</span>")
 				return
 		return
-	else
-		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-		switch(W.damtype)
-			if("fire")
-				src.health -= W.force * 1
-			if("brute")
-				src.health -= W.force * 0.75
-			else
-		if (src.health <= 0)
-			visible_message("<span class='danger'>The barricade is smashed apart!</span>")
-			dismantle()
-			qdel(src)
-			return
-		..()
 
-/obj/structure/barricade/attackby(obj/item/W as obj, mob/user as mob)
 	if((isScrewdriver(W)) && (istype(loc, /turf/simulated) || anchored))
 		playsound(loc, 'sound/items/Screwdriver.ogg', 100, 1)
 		anchored = !anchored
 		user.visible_message("<span class='notice'>[user] [anchored ? "fastens" : "unfastens"] the [src].</span>", \
 								 "<span class='notice'>You have [anchored ? "fastened the [src] to" : "unfastened the [src] from"] the floor.</span>")
 		return
+
+	user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
+	var/damage_dealt = 1
+	switch(W.damtype)
+		if("fire")
+			damage_dealt = W.force * 1
+		if("brute")
+			damage_dealt = W.force * 0.75
+	var/attack_message = "hits"
+	if(W.damtype == "fire")
+		attack_message = "burns"
+	attack_generic(user,damage_dealt,attack_message)
+
+	if (src.health <= 0)
+		visible_message("<span class='danger'>The barricade is smashed apart!</span>")
+		dismantle()
+		qdel(src)
+		return
+	..()
+
 
 /obj/structure/barricade/proc/dismantle()
 	material.place_dismantled_product(get_turf(src))

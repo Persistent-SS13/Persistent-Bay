@@ -38,8 +38,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	var/overloaded_for = 0
 	var/outage_probability = 75			// Probability of failing during a ionospheric storm
 
-	var/links_coords = list()
-	
+	var/list/links_coords = list()
 	
 /obj/machinery/telecomms/before_save()
 	links_coords = list()

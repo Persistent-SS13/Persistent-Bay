@@ -41,8 +41,6 @@
 	air_contents.volume = ATMOS_DEFAULT_VOLUME_FILTER
 
 	icon = null
-	if (!id_tag)
-		id_tag = make_loc_string_id()
 	if(loc)
 		initial_loc = get_area(loc)
 		area_uid = initial_loc.uid

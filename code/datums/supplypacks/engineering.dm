@@ -277,6 +277,13 @@ decl/hierarchy/supply_pack/engineering/pipelayer
 	cost = 35
 	containername = "\improper Bulk Cables Crate"
 
+/decl/hierarchy/supply_pack/engineering/emergency_floodlights
+	name = "Equipment - Emergency floodlights(x4)"
+	contains = list(/obj/machinery/floodlight = 4)
+	cost = 30
+	containertype = /obj/structure/closet/crate/large
+	containername = "emergency floodlights crate"
+
 //eva
 /decl/hierarchy/supply_pack/engineering/voidsuit
 	name = "EVA - Engineering voidsuit"

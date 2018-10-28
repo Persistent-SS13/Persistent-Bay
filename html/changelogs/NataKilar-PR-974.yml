@@ -35,8 +35,8 @@ changes:
   - imageadd: "Added new sprites for grilles"
   - imageadd: "Added new sprites for alarms and APCs"
   - rscadd: "Added lowwalls, which effectively act as windowframes for connection to the new wall sprites"
-  - rscadd: "Airlocks and Walls are now paintable, using the floor painter."
+  - rscadd: "Airlocks and Walls are now paintable, using the floor painter"
   - rscadd: "Added paint color presets to the paintgun"
-  - rscadd: "Added an option for painting stripes on walls and airlocks with the paintgun""
-  - tweak: "The floor painter has been renamed to paintgun."
+  - rscadd: "Added an option for painting stripes on walls and airlocks with the paintgun"
+  - tweak: "The floor painter has been renamed to paintgun"
   

@@ -260,6 +260,9 @@
 			P.set_dir(dir)
 			P.health = health
 			P.state = state
+			P.icon_state = icon_state
+			P.basestate = basestate
+			P.update_icon()
 			qdel(src)
 	else
 		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)

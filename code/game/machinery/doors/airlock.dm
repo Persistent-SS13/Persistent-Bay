@@ -683,6 +683,8 @@ About the new airlock wires panel:
 		return 0
 
 /obj/machinery/door/airlock/update_icon(state=0, override=0)
+	update_connections()
+
 	if(connections in list(NORTH, SOUTH, NORTH|SOUTH))
 		if(connections in list(WEST, EAST, EAST|WEST))
 			set_dir(SOUTH)
@@ -1498,6 +1500,8 @@ About the new airlock wires panel:
 		brace.airlock = src
 		brace.forceMove(src)
 		update_icon()
+
+	update_connections()
 	. = ..()
 
 /obj/machinery/door/airlock/Destroy()

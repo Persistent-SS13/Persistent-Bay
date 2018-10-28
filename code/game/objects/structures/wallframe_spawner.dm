@@ -79,6 +79,7 @@
 		for(var/obj/O in T)
 			if( istype(O, /obj/machinery/door))
 				var/obj/machinery/door/D = O
+				D.update_connections()
 				D.update_icon()
 
 /obj/effect/wallframe_spawn/proc/handle_window_spawn(var/obj/structure/window/W)

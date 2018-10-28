@@ -40,7 +40,6 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 
 	var/list/links_coords = list()
 	
-	
 /obj/machinery/telecomms/before_save()
 	links_coords = list()
 	for(var/obj/ob in links)

@@ -92,7 +92,7 @@
 
 /obj/machinery/atmospherics/unary/vent_pump/Initialize()
 	.=..()
-	id_tag = make_loc_string_id()
+	id_tag = make_loc_string_id("AVP")
 
 
 /obj/machinery/atmospherics/unary/vent_pump/Destroy()

@@ -53,7 +53,7 @@
 
 /obj/machinery/atmospherics/unary/vent_scrubber/Initialize()
 	.=..()
-	id_tag = make_loc_string_id()
+	id_tag = make_loc_string_id("ASV")
 
 /obj/machinery/atmospherics/unary/vent_scrubber/Destroy()
 	unregister_radio(src, frequency)

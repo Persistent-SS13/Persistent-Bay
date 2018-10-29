@@ -172,4 +172,4 @@
 	key ="hiss"
 	emote_message_3p_target = "USER hisses at TARGET."
 	emote_message_3p = "USER hisses."
-	emote_sound = 'sound/voice/unathihiss.ogg'
+	emote_sound = 'sound/voice/unathihiss.ogg' //Credit for sound: www.zapsplat.com

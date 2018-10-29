@@ -74,7 +74,7 @@
 /obj/item/clothing/head/helmet/space/mining
 	name = "mining softsuit helmet"
 	icon_state = "miner_softhelm"
-	desc = "A flimsy helmet with extra thick fabric, you still aren't if it'll be enough to protect you."
+	desc = "A flimsy helmet with extra thick fabric, you still aren't sure if it'll be enough to protect you."
 	item_state_slots = list(
 		slot_l_hand_str = "mining_helm",
 		slot_r_hand_str = "mining_helm",

@@ -13,7 +13,8 @@
 	var/brightness_on = 8		//can't remember what the maxed out value is
 
 /obj/machinery/floodlight/New()
-	cell = new/obj/item/weapon/cell/crap(src)
+	if(!map_storage_loaded)
+		cell = new/obj/item/weapon/cell/apc(src)
 	..()
 
 /obj/machinery/floodlight/update_icon()
@@ -94,6 +95,8 @@
 	else
 		if(!turn_on(1))
 			to_chat(user, "You try to turn on \the [src] but it does not work.")
+			return
+	playsound(src, "sound/machines/switch-big-power.ogg", 30)
 
 	update_icon()
 

@@ -38,7 +38,20 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	var/overloaded_for = 0
 	var/outage_probability = 75			// Probability of failing during a ionospheric storm
 
-
+	var/list/links_coords = list()
+	
+/obj/machinery/telecomms/before_save()
+	links_coords = list()
+	for(var/obj/ob in links)
+		links_coords += list(ob.x, ob.y, ob.z)
+/obj/machinery/telecomms/after_load()
+	if(links_coords && links_coords.len)
+		for(var/list/lis in links_coords)
+			var/turf/T = locate(lis[1],lis[2],lis[3])
+			if(T)
+				for(var/obj/machinery/telecomms/tele in T.contents)
+					links |= tele
+					
 /obj/machinery/telecomms/proc/relay_information(datum/signal/signal, filter, copysig, amount = 20)
 	// relay signal to all linked machinery that are of type [filter]. If signal has been sent [amount] times, stop sending
 

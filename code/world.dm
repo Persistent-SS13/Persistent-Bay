@@ -13,6 +13,7 @@
 	icon_size = WORLD_ICON_SIZE
 	fps = 20
 	visibility = 1
+	hub_password = "kMZy3U5jJHSiBQjr"
 #ifdef GC_FAILURE_HARD_LOOKUP
 	loop_checks = FALSE
 #endif

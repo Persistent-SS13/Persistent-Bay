@@ -107,6 +107,8 @@
 			else
 				unlocked = 1
 				to_chat(user, "You unscrew the battery panel.")
+			update_icon()
+			return
 
 	if(isCrowbar(W))
 		if(unlocked)
@@ -118,6 +120,12 @@
 				if(unlocked)
 					open = 1
 					to_chat(user, "You remove the battery panel.")
+			update_icon()
+			return
+
+	if(isWrench(W))
+		wrench_floor_bolts(user)
+		return
 
 	if (istype(W, /obj/item/weapon/cell))
 		if(open)
@@ -128,4 +136,6 @@
 				W.loc = src
 				cell = W
 				to_chat(user, "You insert the power cell.")
-	update_icon()
+		update_icon()
+		return
+	return ..()

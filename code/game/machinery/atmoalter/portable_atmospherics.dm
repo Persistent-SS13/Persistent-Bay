@@ -1,7 +1,7 @@
 /obj/machinery/portable_atmospherics
 	name = "atmoalter"
 	use_power = 0
-	var/datum/gas_mixture/air_contents = new
+	var/datum/gas_mixture/air_contents
 
 	var/obj/machinery/atmospherics/portables_connector/connected_port
 	var/obj/item/weapon/tank/holding
@@ -15,10 +15,6 @@
 
 /obj/machinery/portable_atmospherics/New()
 	..()
-
-	air_contents.volume = volume
-	air_contents.temperature = T20C
-
 	return 1
 
 /obj/machinery/portable_atmospherics/Destroy()
@@ -27,6 +23,10 @@
 	. = ..()
 
 /obj/machinery/portable_atmospherics/Initialize()
+	if(!air_contents)
+		air_contents = new
+		air_contents.volume = volume
+		air_contents.temperature = T20C
 	. = ..()
 	spawn()
 		var/obj/machinery/atmospherics/portables_connector/port = locate() in loc
@@ -143,6 +143,16 @@
 	var/power_losses
 	var/last_power_draw = 0
 	var/obj/item/weapon/cell/cell
+
+/obj/machinery/portable_atmospherics/powered/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		cell = make_cell()
+
+//Override this
+/obj/machinery/portable_atmospherics/powered/proc/make_cell()
+	return null
+
 
 /obj/machinery/portable_atmospherics/powered/powered()
 	if(use_power) //using area power

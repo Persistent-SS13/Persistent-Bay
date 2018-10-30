@@ -594,9 +594,7 @@ var/world_topic_spam_protect_time = world.timeofday
 	if (features)
 		s += ": [jointext(features, ", ")]"
 
-	/* does this help? I do not know */
-	if (src.status != s)
-		src.status = s
+	src.status = s
 
 #define WORLD_LOG_START(X) WRITE_FILE(GLOB.world_##X##_log, "\n\nStarting up round ID [game_id]. [time_stamp()]\n---------------------")
 #define WORLD_SETUP_LOG(X) GLOB.world_##X##_log = file("[GLOB.log_directory]/[#X].log") ; WORLD_LOG_START(X)

@@ -39,15 +39,23 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	var/outage_probability = 75			// Probability of failing during a ionospheric storm
 
 	var/list/links_coords = list()
-	
+/datum/coord_holder
+	var/x
+	var/y
+	var/z
+	map_storage_saved_vars = "x;y;z"
 /obj/machinery/telecomms/before_save()
 	links_coords = list()
 	for(var/obj/ob in links)
-		links_coords += list(ob.x, ob.y, ob.z)
+		var/datum/coord_holder/holder = new()
+		holder.x = ob.x
+		holder.y = ob.y
+		holder.z = ob.z
+		links_coords += holder
 /obj/machinery/telecomms/after_load()
 	if(links_coords && links_coords.len)
-		for(var/list/lis in links_coords)
-			var/turf/T = locate(lis[1],lis[2],lis[3])
+		for(var/datum/coord_holder/holder in links_coords)
+			var/turf/T = locate(holder.x,holder.y,holder.z)
 			if(T)
 				for(var/obj/machinery/telecomms/tele in T.contents)
 					links |= tele

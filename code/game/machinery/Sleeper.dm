@@ -259,8 +259,8 @@
 			amount = beaker.reagents.get_reagent_amount(chemical_type)
 		if(occupant && occupant.reagents)
 			if(occupant.reagents.get_reagent_amount(chemical_type) + amount <= 20)
-				use_power(amount * CHEM_SYNTH_ENERGY)
 				occupant.reagents.add_reagent(chemical_type, amount)
+				use_power(10)
 				beaker.reagents.remove_reagent(chemical_type, amount)	
 				to_chat(user, "Occupant now has [occupant.reagents.get_reagent_amount(chemical_type)] unit\s of [chemical_name] in their bloodstream.")
 			else

@@ -11,7 +11,6 @@ SUBSYSTEM_DEF(mapping)
 /datum/controller/subsystem/mapping/Initialize(timeofday)
 	preloadTemplates()
 	..()
-	world.visibility = 0
 	Load_World()
 	
 /datum/controller/subsystem/mapping/Recover()

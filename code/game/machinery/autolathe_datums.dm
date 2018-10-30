@@ -62,9 +62,14 @@ var/const/EXTRA_COST_FACTOR = 1
 	path = /obj/machinery/floor_light
 	category = "General"
 
+/datum/autolathe/recipe/extinguisher_mini
+	name = "compact extinguisher"
+	path = /obj/item/weapon/extinguisher/mini/empty
+	category = "General"
+
 /datum/autolathe/recipe/extinguisher
 	name = "extinguisher"
-	path = /obj/item/weapon/extinguisher
+	path = /obj/item/weapon/extinguisher/empty
 	category = "General"
 
 /datum/autolathe/recipe/tank

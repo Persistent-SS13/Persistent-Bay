@@ -542,6 +542,15 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/weapon/gun/energy/stunrevolver
 	sort_string = "TAAAA"
 
+
+/datum/design/item/weapon/advancedflash
+	id = “advancedflash”
+	desc = "An advanced flash. Much more powerful than the basic design, designed for use by VIPs.”
+	req_tech = list(TECH_COMBAT = 5, TECH_MATERIAL = 3, TECH_POWER = 4)
+	materials = list(DEFAULT_WALL_MATERIAL = 8000, "silver" = 2000, “gold” = 500, “phoron” = 500,)
+	build_path = /obj/item/device/flash/advanced
+	sort_string = "TAAAA"
+
 /datum/design/item/weapon/laser_carbine
 	id = "laser_carbine"
 	desc = "A laser weapon designed to kill."

@@ -34,7 +34,7 @@
 			to_chat(user, "<span class='notice'>\The [computer] flashes an \"RFID Error - Unable to scan ID\" warning.</span>")
 		return 0
 	if(computer && computer.network_card && computer.network_card.connected_network && computer.network_card.connected_network.holder)
-		
+
 		for(var/access in accesses_to_check)
 			if(access in I.GetAccess(computer.network_card.connected_network.holder.uid))
 				return 1
@@ -46,7 +46,7 @@
 				return 1
 			else if(loud)
 				to_chat(user, "<span class='notice'>\The [computer] flashes an \"Access Denied\" warning.</span>")
-		
+
 /datum/nano_module/program/card_mod
 	name = "Account modification program"
 	var/mod_mode = 1
@@ -60,7 +60,7 @@
 
 	var/list/data = host.initial_data()
 	var/obj/item/weapon/card/id/user_id_card = user.GetIdCard()
-	
+
 	data["src"] = "\ref[src]"
 	data["station_name"] = station_name()
 	data["assignments"] = show_assignments
@@ -68,8 +68,8 @@
 	if(program.computer.network_card && program.computer.network_card.connected_network)
 		connected_faction = program.computer.network_card.connected_network.holder
 	if(connected_faction)
-	
-	
+
+
 		data["found_faction"] = 1
 		data["faction_name"] = connected_faction.name
 		data["manifest"] = html_crew_manifest_faction(null, null, connected_faction, manifest_setting)
@@ -222,10 +222,10 @@
 		ui.set_initial_data(data)
 		ui.open()
 
-		
-		
 
-		
+
+
+
 /datum/nano_module/program/card_mod/proc/format_jobs(list/jobs)
 	var/obj/item/weapon/card/id/id_card = program.computer.card_slot ? program.computer.card_slot.stored_card : null
 	var/list/formatted = list()
@@ -257,7 +257,7 @@
 	var/datum/world_faction/connected_faction
 	if(computer.network_card && computer.network_card.connected_network)
 		connected_faction = computer.network_card.connected_network.holder
-		
+
 	if(connected_faction)
 		user_record = connected_faction.get_record(user_id_card.registered_name)
 		if(user_record)
@@ -318,7 +318,7 @@
 						module.record = record
 				else
 					module.record = record
-					
+
 		if("switchm")
 			if(href_list["target"] == "mod")
 				module.mod_mode = 1
@@ -418,7 +418,7 @@
 					return 0
 				var/t1 = href_list["assign_target"]
 				if(t1 == "Custom")
-					if(isleader || connected_faction.in_command(user_id_card.registered_name))
+					if(isleader || connected_faction.in_command(user_id_card.registered_name) || check_rights(R_ADMIN, 0, user)) // edit
 						var/temp_t = sanitize(input("Enter a custom title.","Assignment", module.record.custom_title), 45)
 						//let custom jobs function as an impromptu alt title, mainly for sechuds
 						if(temp_t)
@@ -428,20 +428,29 @@
 						return 0
 				else
 					var/datum/computer_file/crew_record/record = connected_faction.get_record(user_id_card.registered_name)
-					var/datum/assignment/user_assignment = connected_faction.get_assignment(record.assignment_uid)
 					var/datum/assignment/assignment = locate(href_list["assign_target"])
 					if(!assignment) return 0
-					if(connected_faction.in_command(user_id_card.registered_name) || (user_assignment && user_assignment.parent.name == assignment.parent.name) || isleader)
+					if (!isghost(user))
+						var/datum/assignment/user_assignment = connected_faction.get_assignment(record.assignment_uid)
+						if(connected_faction.in_command(user_id_card.registered_name) || (user_assignment && user_assignment.parent.name == assignment.parent.name) || isleader)
+							module.record.assignment_data[module.record.assignment_uid] = "[module.record.rank]"
+							module.record.assignment_uid = assignment.uid
+							module.record.rank = text2num(module.record.assignment_data[assignment.uid])
+							if(!module.record.rank)
+								module.record.rank = 1
+							module.record.custom_title = null
+						else
+							to_chat(usr, "You can only make assignments in your own category.")
+							return 0
+						update_ids(module.record.get_name())
+					if(isghost(user) && check_rights(R_ADMIN, 0, user))
 						module.record.assignment_data[module.record.assignment_uid] = "[module.record.rank]"
 						module.record.assignment_uid = assignment.uid
 						module.record.rank = text2num(module.record.assignment_data[assignment.uid])
 						if(!module.record.rank)
 							module.record.rank = 1
 						module.record.custom_title = null
-					else
-						to_chat(usr, "You can only make assignments in your own category.")
-						return 0
-					update_ids(module.record.get_name())
+						update_ids(module.record.get_name())
 		if("access")
 			if(href_list["allowed"] && computer && can_run(user, 1))
 				var/access_type = text2num(href_list["access_target"])

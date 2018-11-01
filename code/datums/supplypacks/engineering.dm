@@ -280,8 +280,8 @@ decl/hierarchy/supply_pack/engineering/pipelayer
 /decl/hierarchy/supply_pack/engineering/emergency_floodlights
 	name = "Equipment - Emergency floodlights(x4)"
 	contains = list(/obj/machinery/floodlight = 4)
-	cost = 30
-	containertype = /obj/structure/closet/crate/large
+	cost = 50
+	containertype = /obj/structure/largecrate
 	containername = "emergency floodlights crate"
 
 //eva

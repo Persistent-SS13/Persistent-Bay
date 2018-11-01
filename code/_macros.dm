@@ -164,3 +164,9 @@
 #define send_link(target, url) target << link(url)
 
 #define JOINTEXT(X) jointext(X, null)
+
+#define SPAN_NOTICE(X) "<span class='notice'>[X]</span>"
+
+#define SPAN_WARNING(X) "<span class='warning'>[X]</span>"
+
+#define SPAN_DANGER(X) "<span class='danger'>[X]</span>"

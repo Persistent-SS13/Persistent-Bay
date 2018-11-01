@@ -1,5 +1,6 @@
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:31
 #define DOOR_REPAIR_AMOUNT 50	//amount of health regained per stack amount used
+#define BLEND_OBJECTS 	   list(/obj/structure/wall_frame, /obj/structure/window, /obj/structure/grille, /obj/machinery/door) // Objects which to blend with
 
 /obj/machinery/door
 	name = "Door"
@@ -31,7 +32,7 @@
 	var/block_air_zones = 1 //If set, air zones cannot merge across the door even when it is opened.
 	var/close_door_at = 0 //When to automatically close the door, if possible
 	var/list/connections = list("0", "0", "0", "0")
-	var/list/blend_objects = list(/obj/structure/wall_frame, /obj/structure/window, /obj/structure/grille, /obj/machinery/door) // Objects which to blend with
+
 
 	//Multi-tile doors
 	dir = SOUTH
@@ -509,7 +510,7 @@
 			success = 1
 		else
 			for(var/obj/O in T)
-				for(var/b_type in blend_objects)
+				for(var/b_type in BLEND_OBJECTS)
 					if( istype(O, b_type))
 						success = 1
 

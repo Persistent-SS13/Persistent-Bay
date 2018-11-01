@@ -20,6 +20,15 @@
 	opacity = 1
 	assembly_type = /obj/structure/door_assembly/multi_tile
 
+/obj/machinery/door/airlock/multi_tile/should_save(var/datum/caller)
+	if(istype(caller, /turf))
+		var/turf/T = caller
+		if(src in T.contents)
+			..()
+		else
+			return 0
+	..()
+
 /obj/machinery/door/airlock/multi_tile/New()
 	..()
 	SetBounds()
@@ -68,10 +77,9 @@
 			success = 1
 		else
 			for(var/obj/O in T)
-				for(var/b_type in blend_objects)
+				for(var/b_type in BLEND_OBJECTS)
 					if( istype(O, b_type))
 						success = 1
-
 					if(success)
 						break
 				if(success)
@@ -183,3 +191,5 @@
 
 /obj/machinery/door/airlock/multi_tile/glass/civilian
 	stripe_color = COLOR_CIVIE_GREEN
+
+#undef BLEND_OBJECTS

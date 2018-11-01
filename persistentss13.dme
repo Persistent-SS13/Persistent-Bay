@@ -1309,6 +1309,7 @@
 #include "code\modules\clothing\spacesuits\fed.dm"
 #include "code\modules\clothing\spacesuits\miscellaneous.dm"
 #include "code\modules\clothing\spacesuits\phorosian.dm"
+#include "code\modules\clothing\spacesuits\softsuits.dm"
 #include "code\modules\clothing\spacesuits\spacesuits.dm"
 #include "code\modules\clothing\spacesuits\syndi.dm"
 #include "code\modules\clothing\spacesuits\rig\rig.dm"

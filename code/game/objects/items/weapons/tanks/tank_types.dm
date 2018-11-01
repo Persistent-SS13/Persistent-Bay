@@ -18,10 +18,12 @@
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
 	starting_pressure = list("oxygen" = 10*ONE_ATMOSPHERE)
 	volume = 180
-
+ 
 /obj/item/weapon/tank/oxygen/yellow
 	desc = "A tank of oxygen. This one is yellow."
 	icon_state = "oxygen_f"
+	matter = list("steel" = 850)
+	starting_pressure = list("oxygen" = 0)
 
 /obj/item/weapon/tank/oxygen/red
 	desc = "A tank of oxygen. This one is red."
@@ -153,3 +155,13 @@
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
 	starting_pressure = list("nitrogen" = 6*ONE_ATMOSPHERE)
 	volume = 180
+
+/*
+ * Empty Tanks
+ */
+/obj/item/weapon/tank/oxygen/empty
+	starting_pressure = 0
+
+/obj/item/weapon/tank/emergency/oxygen/engi/empty
+	starting_pressure = 0
+	

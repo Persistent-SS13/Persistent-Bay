@@ -178,7 +178,7 @@
 	for(var/datum/money_account/D in all_money_accounts)
 		if(D.account_number == account_number)
 			return D
-	var/datum/computer_file/crew_record/L = Retrieve_Record(account_number)
+	var/datum/computer_file/crew_record/L = Retrieve_Record(account_number, 2)
 	if(L)
 		return L.linked_account
 /proc/get_account_record(var/real_name)

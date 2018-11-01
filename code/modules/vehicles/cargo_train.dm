@@ -41,13 +41,22 @@
 //-------------------------------------------
 /obj/vehicle/train/cargo/engine/New()
 	..()
-	cell = new /obj/item/weapon/cell/high(src)
-	key = new(src)
 	var/image/I = new(icon = 'icons/obj/vehicles.dmi', icon_state = "cargo_engine_overlay")
 	I.plane = plane
 	I.layer = layer
 	overlays += I
-	turn_off()	//so engine verbs are correctly set
+	update_engine_verbs()	//so engine verbs are correctly set
+
+/obj/vehicle/train/cargo/engine/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		cell = new /obj/item/weapon/cell/high(src)
+		key = new(src)
+	update_key_verbs()
+
+/obj/vehicle/train/cargo/engine/after_load()
+	..()
+	update_engine_verbs()
 
 /obj/vehicle/train/cargo/engine/Move(var/turf/destination)
 	if(on && cell.charge < (charge_use * CELLRATE))
@@ -122,31 +131,35 @@
 //-------------------------------------------
 // Train procs
 //-------------------------------------------
+/obj/vehicle/train/cargo/engine/proc/update_engine_verbs()
+	verbs -= /obj/vehicle/train/cargo/engine/verb/stop_engine
+	verbs -= /obj/vehicle/train/cargo/engine/verb/start_engine
+
+	if(on)
+		verbs += /obj/vehicle/train/cargo/engine/verb/stop_engine
+	else
+		verbs += /obj/vehicle/train/cargo/engine/verb/start_engine
+
+/obj/vehicle/train/cargo/engine/proc/update_key_verbs()
+	verbs -= /obj/vehicle/train/cargo/engine/verb/remove_key
+	if(key)
+		verbs += /obj/vehicle/train/cargo/engine/verb/remove_key
+	else
+		verbs -= /obj/vehicle/train/cargo/engine/verb/remove_key
+
+
+
 /obj/vehicle/train/cargo/engine/turn_on()
 	if(!key)
 		return
 	else
 		..()
 		update_stats()
-
-		verbs -= /obj/vehicle/train/cargo/engine/verb/stop_engine
-		verbs -= /obj/vehicle/train/cargo/engine/verb/start_engine
-
-		if(on)
-			verbs += /obj/vehicle/train/cargo/engine/verb/stop_engine
-		else
-			verbs += /obj/vehicle/train/cargo/engine/verb/start_engine
+	update_engine_verbs()
 
 /obj/vehicle/train/cargo/engine/turn_off()
 	..()
-
-	verbs -= /obj/vehicle/train/cargo/engine/verb/stop_engine
-	verbs -= /obj/vehicle/train/cargo/engine/verb/start_engine
-
-	if(!on)
-		verbs += /obj/vehicle/train/cargo/engine/verb/start_engine
-	else
-		verbs += /obj/vehicle/train/cargo/engine/verb/stop_engine
+	update_engine_verbs()
 
 /obj/vehicle/train/cargo/RunOver(var/mob/living/carbon/human/H)
 	var/list/parts = list(BP_HEAD, BP_CHEST, BP_L_LEG, BP_R_LEG, BP_L_ARM, BP_R_ARM)

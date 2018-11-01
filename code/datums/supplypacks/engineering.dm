@@ -278,6 +278,17 @@ decl/hierarchy/supply_pack/engineering/pipelayer
 	containername = "\improper Bulk Cables Crate"
 
 //eva
+/decl/hierarchy/supply_pack/engineering/softsuit
+	name = "EVA - Engineering softsuit"
+	contains = list(/obj/item/clothing/suit/space/engineering,
+					/obj/item/clothing/head/helmet/space/engineering,
+					/obj/item/clothing/shoes/magboots,
+					/obj/item/weapon/tank/emergency/oxygen/engi)
+	containername = "engineering softsuit crate"
+	containertype = /obj/structure/closet/crate/secure/large
+	cost = 30
+	access = core_access_engineering_programs
+
 /decl/hierarchy/supply_pack/engineering/voidsuit
 	name = "EVA - Engineering voidsuit"
 	contains = list(/obj/item/clothing/suit/space/void/engineering,

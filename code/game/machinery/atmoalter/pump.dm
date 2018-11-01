@@ -18,10 +18,11 @@
 	power_rating = 7500 //7500 W ~ 10 HP
 	power_losses = 150
 
-/obj/machinery/portable_atmospherics/powered/pump/New()
+/obj/machinery/portable_atmospherics/powered/pump/init_air_content()
 	..()
 	var/list/air_mix = StandardAirMix()
 	src.air_contents.adjust_multi("oxygen", air_mix["oxygen"], "nitrogen", air_mix["nitrogen"])
+
 
 /obj/machinery/portable_atmospherics/powered/scrubber/make_cell()
 	return new/obj/item/weapon/cell/apc(src)

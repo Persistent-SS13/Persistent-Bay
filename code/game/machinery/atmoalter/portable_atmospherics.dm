@@ -24,15 +24,20 @@
 
 /obj/machinery/portable_atmospherics/Initialize()
 	if(!air_contents)
-		air_contents = new
-		air_contents.volume = volume
-		air_contents.temperature = T20C
+		init_air_content()
 	. = ..()
 	spawn()
 		var/obj/machinery/atmospherics/portables_connector/port = locate() in loc
 		if(port)
 			connect(port)
 			update_icon()
+
+// Override this to change the initial air content!
+//
+/obj/machinery/portable_atmospherics/proc/init_air_content()
+	air_contents = new
+	air_contents.volume = volume
+	air_contents.temperature = T20C
 
 /obj/machinery/portable_atmospherics/Process()
 	if(!connected_port) //only react when pipe_network will ont it do it for you

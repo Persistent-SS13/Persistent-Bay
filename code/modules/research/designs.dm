@@ -574,7 +574,8 @@ other types of metals and chemistry for reagents).
 /datum/design/item/weapon/decloner
 	id = "decloner"
 	req_tech = list(TECH_COMBAT = 8, TECH_MATERIAL = 7, TECH_BIO = 5, TECH_POWER = 6)
-	materials = list("gold" = 5000,"uranium" = 10000, "mutagen" = 40)
+	materials = list("gold" = 5000,"uranium" = 10000)
+	chemicals = list(/datum/reagent/mutagen = 40)
 	build_path = /obj/item/weapon/gun/energy/decloner
 	sort_string = "TAAAE"
 
@@ -2302,10 +2303,11 @@ CIRCUITS BELOW
 
 /datum/design/item/experimental_welder
 	name = "experimental welding tool"
-	desc = "This welding tool feels heavier in your possession than is normal. There appears to be no external fuel port."
+	desc = "A heavily modified welding tool that uses a nonstandard fuel mix. The internal fuel tank feels uncomfortably warm."
 	id = "experimental_welder"
 	req_tech = list(TECH_ENGINEERING = 5, TECH_PHORON = 4)
-	materials = list(DEFAULT_WALL_MATERIAL = 120, "glass" = 50)
+	materials = list(DEFAULT_WALL_MATERIAL = 6000, "glass" = 500, "plasteel" = 2000)
+	chemicals = list(/datum/reagent/toxin/phoron/oxygen = 80)	//hopefully this makes a good detterant for obtaining OP welding tool
 	build_path = /obj/item/weapon/weldingtool/experimental
 	sort_string = "VBAAT"
 

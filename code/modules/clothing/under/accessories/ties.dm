@@ -58,6 +58,12 @@
 	icon_tied = icon_tied || icon_state
 	..()
 
+/obj/item/clothing/accessory/bowtie/after_load()
+	if(has_suit)
+		has_suit.verbs += /obj/item/clothing/accessory/bowtie/verb/toggle
+	icon_tied = icon_tied || icon_state
+	..()
+
 /obj/item/clothing/accessory/bowtie/on_attached(obj/item/clothing/under/S, mob/user as mob)
 	..()
 	has_suit.verbs += /obj/item/clothing/accessory/bowtie/verb/toggle

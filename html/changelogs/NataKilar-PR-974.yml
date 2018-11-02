@@ -1,0 +1,42 @@
+################################
+# Example Changelog File
+#
+# Note: This file, and files beginning with ".", and files that don't end in ".yml" will not be read. If you change this file, you will look really dumb.
+#
+# Your changelog will be merged with a master changelog. (New stuff added only, and only on the date entry for the day it was merged.)
+# When it is, any changes listed below will disappear.
+#
+# Valid Prefixes: 
+#   bugfix
+#   wip (For works in progress)
+#   tweak
+#   soundadd
+#   sounddel
+#   rscadd (general adding of nice things)
+#   rscdel (general deleting of nice things)
+#   imageadd
+#   imagedel
+#   maptweak
+#   spellcheck (typo fixes)
+#   experiment
+#################################
+ # Your name.  
+author: NataKilar
+ # Optional: Remove this file after generating master changelog.  Useful for PR changelogs that won't get used again.
+delete-after: True
+ # Any changes you've made.  See valid prefix list above.
+# INDENT WITH TWO SPACES.  NOT TABS.  SPACES.
+# SCREW THIS UP AND IT WON'T WORK.
+# Also, all entries are changed into a single [] after a master changelog generation. Just remove the brackets when you add new entries.
+# Please surround your changes in  double quotes ("), as certain characters otherwise screws up compiling. The quotes will not show up in the changelog.
+changes: 
+  - imageadd: "Added new sprites for walls"
+  - imageadd: "Added new sprites for airlocks"
+  - imageadd: "Added new sprites for grilles"
+  - imageadd: "Added new sprites for alarms and APCs"
+  - rscadd: "Added lowwalls, which effectively act as windowframes for connection to the new wall sprites"
+  - rscadd: "Airlocks and Walls are now paintable, using the floor painter"
+  - rscadd: "Added paint color presets to the paintgun"
+  - rscadd: "Added an option for painting stripes on walls and airlocks with the paintgun"
+  - tweak: "The floor painter has been renamed to paintgun"
+  

@@ -69,10 +69,11 @@
 /obj/machinery/power/apc
 	name = "area power controller"
 	desc = "A control terminal for the area electrical systems."
-
+	icon = 'icons/obj/apc.dmi'
 	icon_state = "apc0"
 	anchored = 1
 	use_power = 0
+	layer = ABOVE_WINDOW_LAYER
 	req_access = list(core_access_engineering_programs)
 	clicksound = "switch"
 	var/area/area
@@ -168,8 +169,8 @@
 	if (building)
 		set_dir(ndir)
 
-	pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 24 : -24)
-	pixel_y = (src.dir & 3)? (src.dir ==1 ? 24 : -24) : 0
+	pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 21 : -21)
+	pixel_y = (src.dir & 3)? (src.dir ==1 ? 23 : -28) : 0
 
 	if (building==0)
 		init_round_start()

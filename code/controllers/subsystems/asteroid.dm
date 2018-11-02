@@ -32,6 +32,7 @@ SUBSYSTEM_DEF(asteroid)
 		for(var/mob/living/M in L)
 			M.stat = DEAD
 			dead_monsters |= M
+	. = ..()
 
 
 /datum/controller/subsystem/asteroid/stat_entry()

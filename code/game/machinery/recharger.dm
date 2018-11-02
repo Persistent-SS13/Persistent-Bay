@@ -1,5 +1,5 @@
 #define allowed_devices list(/obj/item/weapon/gun/energy, /obj/item/weapon/gun/magnetic/railgun, /obj/item/weapon/melee/baton, /obj/item/weapon/cell, /obj/item/modular_computer/, /obj/item/device/suit_sensor_jammer, /obj/item/weapon/computer_hardware/battery_module, /obj/item/weapon/shield_diffuser)
-#define disallowed_devices list(/obj/item/weapon/gun/energy/plasmacutter, /obj/item/weapon/gun/energy/staff, /obj/item/weapon/gun/energy/gun/nuclear, /obj/item/weapon/gun/energy/crossbow)
+#define disallowed_devices list(/obj/item/weapon/gun/energy/staff, /obj/item/weapon/gun/energy/gun/nuclear, /obj/item/weapon/gun/energy/crossbow)
 
 /obj/machinery/recharger
 	name = "recharger"

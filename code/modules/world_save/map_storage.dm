@@ -325,7 +325,8 @@ var/global/list/debug_data = list()
 			to_file(f, L)
 
 /proc/Save_World()
-	to_world("<font size=4 color='green'>The world is saving! You won't be able to join at this time.</font>")
+	SetUniversalState(/datum/universal_state/save)
+	to_world("<font size=4 color='green'>Routine Neural Lace Diagnostics has begun, You will not be able to interface with your lace.</font>")
 	var/reallow = 0
 	if(config.enter_allowed) reallow = 1
 	config.enter_allowed = 0
@@ -375,8 +376,9 @@ var/global/list/debug_data = list()
 //	to_file(f["records"],GLOB.all_crew_records)
 	to_file(f["next_account_number"],next_account_number)
 	if(reallow) config.enter_allowed = 1
-	to_world("Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!")
-	to_world("Saving Complete")
+	world << "Routine Neural Lace Diagnostics took [(REALTIMEOFDAY - starttime)/10] seconds!"
+	world << "Diagnostics Complete"
+	SetUniversalState(/datum/universal_state)
 	f = null
 	return 1
 

@@ -13,7 +13,8 @@
 #define SS_PRIORITY_MACHINERY      100	// Machinery + powernet ticks.
 #define SS_PRIORITY_AIR            80	// ZAS processing.
 #define SS_PRIORITY_CHEMISTRY      60	// Multi-tick chemical reactions.
-#define SS_PRIORITY_CIRCUIT        20    // Processing Circuit's ticks and all that.
+#define SS_PRIORITY_EVENT          20	// Event processing and queue handling.
+#define SS_PRIORITY_CIRCUIT        20   // Processing Circuit's ticks and all that.
 #define SS_PRIORITY_AIRFLOW        15	// Object movement from ZAS airflow.
 
 // SS_BACKGROUND

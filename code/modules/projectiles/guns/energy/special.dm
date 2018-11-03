@@ -201,6 +201,33 @@ obj/item/weapon/gun/energy/staff/focus
 	fire_sound_text = "plasma blast"
 	projectile_type= /obj/item/projectile/plasma
 	charge_cost = 10 //How much energy is needed to fire.
-	max_shots = 30 //Determines the capacity of the weapon's power cell. Specifying a cell_type overrides this value.
+	max_shots = 15 //Determines the capacity of the weapon's power cell. Specifying a cell_type overrides this value.
 	sharp=1
 	edge=1
+	
+/obj/item/plasmacell
+	w_class = ITEM_SIZE_SMALL
+	name = "plasma cutter cell"
+	icon = 'icons/obj/ammo.dmi'
+	icon_state = "plasmacell"
+	desc = "A small disposable battery. Used as ammo for the Plasma Cutter."
+	matter = list(DEFAULT_WALL_MATERIAL = 600)
+	
+	
+/obj/item/weapon/gun/energy/plasmacutter/attackby(obj/item/A, mob/user)
+	if(isScrewdriver(A))
+		to_chat(user, "<span class='warning'>The cell housing is firmly secured, you can't remove it.</span>")
+		return
+
+	if(istype(A, /obj/item/plasmacell))
+		if(power_supply.charge!=0)
+			to_chat(user, "<span class='warning'>The cell in the gun hasn't been fully used up.</span>")	
+			return 0
+		user.remove_from_mob(A)
+		qdel(A)
+		power_supply.give(150)
+		to_chat(user, "<span class='notice'>You insert [A] in [src], recharging it.</span>")
+		playsound(src.loc, 'sound/weapons/empty.ogg', 50, 1)
+
+	else
+		..()

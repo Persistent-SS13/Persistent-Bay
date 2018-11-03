@@ -371,6 +371,12 @@ var/const/EXTRA_COST_FACTOR = 1
 	hidden = 1
 	category = "Arms and Ammunition"
 
+/datum/autolathe/recipe/plasmacell
+	name = "plasma cutter cell"
+	path = /obj/item/plasmacell
+	hidden = 1
+	category = "Arms and Ammunition"
+
 /datum/autolathe/recipe/consolescreen
 	name = "console screen"
 	path = /obj/item/weapon/stock_parts/console_screen

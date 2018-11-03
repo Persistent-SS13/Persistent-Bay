@@ -19,7 +19,11 @@
 	var/state
 	var/hitsound = 'sound/weapons/Genhit.ogg'
 	var/list/wall_connections = list("0", "0", "0", "0")
+	var/list/other_connections = list("0", "0", "0", "0")
 	var/floor_type = /turf/simulated/floor/plating //turf it leaves after destruction
+	var/paint_color
+	var/stripe_color
+	var/global/list/wall_stripe_cache = list()
 
 	var/global/damage_overlays[16]
 
@@ -90,7 +94,8 @@
 	if(ismob(AM))
 		return
 
-	var/tforce = AM:throwforce * (speed/THROWFORCE_SPEED_DIVISOR)
+	var/obj/O = AM
+	var/tforce = O.throwforce * (speed/THROWFORCE_SPEED_DIVISOR)
 
 	take_damage(tforce, "brute")
 
@@ -121,7 +126,8 @@
 		to_chat(user, "<span class='warning'>It looks moderately damaged.</span>")
 	else
 		to_chat(user, "<span class='danger'>It looks heavily damaged.</span>")
-
+	if(paint_color)
+		to_chat(user, "<span class='notice'>It has a coat of paint applied.</span>")
 	if(locate(/obj/effect/overlay/wallrot) in src)
 		to_chat(user, "<span class='warning'>There is fungus growing on [src].</span>")
 
@@ -311,3 +317,6 @@
 
 /turf/simulated/wall/proc/ExplosionArmor()
 	return p_material.hardness + (r_material ? r_material.hardness + (p_material.integrity * r_material.hardness / 100) : 0) + (material.hardness / 2)
+
+/turf/simulated/wall/get_color()
+	return paint_color

@@ -35,21 +35,14 @@ Small, little HP, poisonous.
 
 	should_save = 0
 	
-	var/starting_zlevel = 0
-	var/inited = 0
-	
 /mob/living/simple_animal/hostile/voxslug/New()
 	..()
-	starting_zlevel = z
-	inited = 1
+
 /mob/living/simple_animal/hostile/voxslug/Move()
 	. = ..()
 	if(.)
 		pixel_x = rand(-10,10)
 		pixel_y = rand(-10,10)
-		if(inited && starting_zlevel != z)
-			loc = null
-			qdel(src)
 			
 /mob/living/simple_animal/hostile/voxslug/Found(var/atom/A)
 	if(istype(A, /obj/machinery/mining/drill))

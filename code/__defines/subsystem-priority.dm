@@ -16,6 +16,7 @@
 #define SS_PRIORITY_EVENT          20	// Event processing and queue handling.
 #define SS_PRIORITY_CIRCUIT        20   // Processing Circuit's ticks and all that.
 #define SS_PRIORITY_AIRFLOW        15	// Object movement from ZAS airflow.
+#define SS_PRIORITY_INACTIVITY     10	// Idle kicking.
 
 // SS_BACKGROUND
 #define SS_PRIORITY_OBJECTS       60	// processing_objects processing.

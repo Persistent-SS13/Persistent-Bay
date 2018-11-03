@@ -15,6 +15,10 @@
 	var/charge			                // Current charge
 	var/maxcharge = 1000 // Capacity in Wh
 	var/overlay_state
+	var/self_recharge = 0
+	var/charge_tick = 0
+	var/charge_tick_rate= 4
+	var/selfchargeamt = 0
 	matter = list(DEFAULT_WALL_MATERIAL = 700, "glass" = 50)
 
 
@@ -26,7 +30,23 @@
 
 /obj/item/weapon/cell/Initialize()
 	. = ..()
+	if(self_recharge)
+		START_PROCESSING(SSobj, src)
 	update_icon()
+
+/obj/item/weapon/cell/Destroy()
+	if(self_recharge)
+		STOP_PROCESSING(SSobj, src)
+	return ..()
+
+/obj/item/weapon/cell/Process()
+	if(self_recharge)
+		if(charge == maxcharge) return 0
+		charge_tick++
+		if(charge_tick < charge_tick_rate) return 0
+		charge_tick = 0
+		src.give(selfchargeamt)
+		update_icon()
 
 /obj/item/weapon/cell/drain_power(var/drain_check, var/surge, var/power = 0)
 
@@ -249,13 +269,20 @@
 	icon = 'icons/obj/power.dmi' //'icons/obj/harvest.dmi'
 	icon_state = "potato_cell" //"potato_battery"
 	maxcharge = 20
-
+	charge_tick = 0
+	charge_tick_rate = 10
+	selfchargeamt = 1
+	self_recharge = 1
 
 /obj/item/weapon/cell/slime
 	name = "charged slime core"
-	desc = "A yellow slime core infused with phoron, it crackles with power."
+	desc = "A yellow slime core infused with plasma, it crackles with power."
 	origin_tech = list(TECH_POWER = 2, TECH_BIO = 4)
 	icon = 'icons/mob/slimes.dmi' //'icons/obj/harvest.dmi'
 	icon_state = "yellow slime extract" //"potato_battery"
 	maxcharge = 200
+	charge_tick = 0
+	charge_tick_rate = 10
+	selfchargeamt = 5
+	self_recharge = 1
 	matter = null

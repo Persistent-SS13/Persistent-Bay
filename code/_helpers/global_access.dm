@@ -49,12 +49,16 @@
 			return global.SSchemistry;
 		if("SScircuit")
 			return global.SScircuit;
+		if("SSevent")
+			return global.SSevent;
 		if("SSfastprocess")
 			return global.SSfastprocess;
 		if("SSgarbage")
 			return global.SSgarbage;
 		if("SSicon_update")
 			return global.SSicon_update;
+		if("SSinactivity")
+			return global.SSinactivity;
 		if("SSlegacy")
 			return global.SSlegacy;
 		if("SSlighting")
@@ -77,6 +81,8 @@
 			return global.SSplants;
 		if("SSprocessing")
 			return global.SSprocessing;
+		if("SSshuttle")
+			return global.SSshuttle;
 		if("SSskybox")
 			return global.SSskybox;
 		if("SStimer")
@@ -723,8 +729,6 @@
 			return global.playable_species;
 		if("point_source_descriptions")
 			return global.point_source_descriptions;
-		if("points_of_interest")
-			return global.points_of_interest;
 		if("possible_cable_coil_colours")
 			return global.possible_cable_coil_colours;
 		if("possible_changeling_IDs")
@@ -849,8 +853,6 @@
 			return global.severity_to_string;
 		if("ship_engines")
 			return global.ship_engines;
-		if("shuttle_controller")
-			return global.shuttle_controller;
 		if("side_effects")
 			return global.side_effects;
 		if("skin_styles_female_list")
@@ -1122,12 +1124,16 @@
 			global.SSchemistry=newval;
 		if("SScircuit")
 			global.SScircuit=newval;
+		if("SSevent")
+			global.SSevent=newval;
 		if("SSfastprocess")
 			global.SSfastprocess=newval;
 		if("SSgarbage")
 			global.SSgarbage=newval;
 		if("SSicon_update")
 			global.SSicon_update=newval;
+		if("SSinactivity")
+			global.SSinactivity=newval;
 		if("SSlegacy")
 			global.SSlegacy=newval;
 		if("SSlighting")
@@ -1150,6 +1156,8 @@
 			global.SSplants=newval;
 		if("SSprocessing")
 			global.SSprocessing=newval;
+		if("SSshuttle")
+			global.SSshuttle=newval;
 		if("SSskybox")
 			global.SSskybox=newval;
 		if("SStimer")
@@ -1796,8 +1804,6 @@
 			global.playable_species=newval;
 		if("point_source_descriptions")
 			global.point_source_descriptions=newval;
-		if("points_of_interest")
-			global.points_of_interest=newval;
 		if("possible_cable_coil_colours")
 			global.possible_cable_coil_colours=newval;
 		if("possible_changeling_IDs")
@@ -1922,8 +1928,6 @@
 			global.severity_to_string=newval;
 		if("ship_engines")
 			global.ship_engines=newval;
-		if("shuttle_controller")
-			global.shuttle_controller=newval;
 		if("side_effects")
 			global.side_effects=newval;
 		if("skin_styles_female_list")
@@ -2170,9 +2174,11 @@
 	"SSatoms",
 	"SSchemistry",
 	"SScircuit",
+	"SSevent",
 	"SSfastprocess",
 	"SSgarbage",
 	"SSicon_update",
+	"SSinactivity",
 	"SSlegacy",
 	"SSlighting",
 	"SSmachines",
@@ -2184,6 +2190,7 @@
 	"SSopen_space",
 	"SSplants",
 	"SSprocessing",
+	"SSshuttle",
 	"SSskybox",
 	"SStimer",
 	"SSvines",
@@ -2507,7 +2514,6 @@
 	"plant_seed_sprites",
 	"playable_species",
 	"point_source_descriptions",
-	"points_of_interest",
 	"possible_cable_coil_colours",
 	"possible_changeling_IDs",
 	"poster_designs",
@@ -2570,7 +2576,6 @@
 	"server_name",
 	"severity_to_string",
 	"ship_engines",
-	"shuttle_controller",
 	"side_effects",
 	"skin_styles_female_list",
 	"skipped_unit_tests",

@@ -451,9 +451,9 @@
 /obj/item/clothing/under/dress/draculass
 	name = "sexy black coat"
 	desc = "A sexy black coat with a red blouse and lace."
-	icon_state = "draculass"
+	icon_state = "geisha"
 	item_state = "kilt"
-	worn_state = "draculass"
+	worn_state = "geisha"
 
 /obj/item/clothing/under/dress/ysing
 	name = "eastern dress"

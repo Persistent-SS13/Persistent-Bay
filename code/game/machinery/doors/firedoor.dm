@@ -11,16 +11,14 @@
 /obj/machinery/door/firedoor
 	name = "\improper Emergency Shutter"
 	desc = "Emergency air-tight shutter, capable of sealing off breached areas."
-	icon = 'icons/obj/doors/hazard/door.dmi'
-	var/panel_file = 'icons/obj/doors/hazard/panel.dmi'
-	var/welded_file = 'icons/obj/doors/hazard/welded.dmi'
-	icon_state = "open"
+	icon = 'icons/obj/doors/DoorHazard.dmi'
+	icon_state = "door_open"
 	req_one_access = list(core_access_engineering_programs, core_access_engineering_programs)
 	opacity = 0
 	density = 0
 	layer = BELOW_DOOR_LAYER
 	open_layer = BELOW_DOOR_LAYER
-	closed_layer = ABOVE_WINDOW_LAYER
+	closed_layer = ABOVE_DOOR_LAYER
 
 	//These are frequenly used with windows, so make sure zones can pass.
 	//Generally if a firedoor is at a place where there should be a zone boundery then there will be a regular door underneath it.
@@ -373,38 +371,28 @@
 			return
 	return TRUE
 
-obj/machinery/door/firedoor/do_animate(animation)
+/obj/machinery/door/firedoor/do_animate(animation)
 	switch(animation)
 		if("opening")
-			flick("opening", src)
+			flick("door_opening", src)
 		if("closing")
-			flick("closing", src)
+			flick("door_closing", src)
 	return
 
 
 /obj/machinery/door/firedoor/update_icon()
-	var/icon/lights_overlay
-	var/icon/panel_overlay
-	var/icon/weld_overlay
-
 	overlays.Cut()
 	set_light(0)
 	var/do_set_light = FALSE
 
-	if(connections in list(NORTH, SOUTH, NORTH|SOUTH))
-		if(connections in list(WEST, EAST, EAST|WEST))
-			set_dir(SOUTH)
-		else
-			set_dir(EAST)
-	else
-		set_dir(SOUTH)
-
 	if(density)
-		icon_state = "closed"
+		icon_state = "door_closed"
 		if(hatch_open)
-			overlays = panel_overlay
+			overlays += "hatch"
+		if(blocked)
+			overlays += "welded"
 		if(pdiff_alert)
-			lights_overlay += "palert"
+			overlays += "palert"
 			do_set_light = TRUE
 		if(dir_alerts)
 			for(var/d=1;d<=4;d++)
@@ -414,17 +402,12 @@ obj/machinery/door/firedoor/do_animate(animation)
 						overlays += new/icon(icon,"alert_[ALERT_STATES[i]]", dir=cdir)
 						do_set_light = TRUE
 	else
-		icon_state = "open"
-
-	if(blocked)
-		weld_overlay = welded_file
+		icon_state = "door_open"
+		if(blocked)
+			overlays += "welded_open"
 
 	if(do_set_light)
-		set_light(0.25, 0.1, 1, 2, COLOR_SUN)
-
-	overlays += panel_overlay
-	overlays += weld_overlay
-	overlays += lights_overlay
+		set_light(1.5, 0.5, COLOR_SUN)
 
 //These are playing merry hell on ZAS.  Sorry fellas :(
 

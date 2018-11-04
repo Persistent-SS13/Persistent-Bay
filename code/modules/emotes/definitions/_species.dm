@@ -21,7 +21,6 @@
 
 /datum/species/unathi
 	default_emotes = list(
-		/decl/emote/audible/unathi_hiss,
 		/decl/emote/human/swish,
 		/decl/emote/human/wag,
 		/decl/emote/human/sway,

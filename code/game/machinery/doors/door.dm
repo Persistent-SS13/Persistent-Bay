@@ -1,6 +1,5 @@
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:31
 #define DOOR_REPAIR_AMOUNT 50	//amount of health regained per stack amount used
-#define BLEND_OBJECTS 	   list(/obj/structure/wall_frame, /obj/structure/window, /obj/structure/grille, /obj/machinery/door) // Objects which to blend with
 
 /obj/machinery/door
 	name = "Door"
@@ -11,7 +10,6 @@
 	opacity = 1
 	density = 1
 	layer = CLOSED_DOOR_LAYER
-
 	var/open_layer = OPEN_DOOR_LAYER
 	var/closed_layer = CLOSED_DOOR_LAYER
 
@@ -31,11 +29,9 @@
 	var/obj/item/stack/material/repairing
 	var/block_air_zones = 1 //If set, air zones cannot merge across the door even when it is opened.
 	var/close_door_at = 0 //When to automatically close the door, if possible
-	var/list/connections = list("0", "0", "0", "0")
-
 
 	//Multi-tile doors
-	dir = SOUTH
+	dir = EAST
 	var/width = 1
 
 	// turf animation
@@ -43,12 +39,9 @@
 
 	atmos_canpass = CANPASS_PROC
 
-/obj/machinery/door/attack_generic(var/mob/user, var/damage, var/attack_verb, var/environment_smash)
-	if(environment_smash >= 1)
-		damage = max(damage, 10)
-
+/obj/machinery/door/attack_generic(var/mob/user, var/damage)
 	if(damage >= 10)
-		visible_message("<span class='danger'>\The [user] [attack_verb] into \the [src]!</span>")
+		visible_message("<span class='danger'>\The [user] smashes into \the [src]!</span>")
 		take_damage(damage)
 	else
 		visible_message("<span class='notice'>\The [user] bonks \the [src] harmlessly.</span>")
@@ -58,9 +51,11 @@
 	. = ..()
 	if(density)
 		layer = closed_layer
+		explosion_resistance = initial(explosion_resistance)
 		update_heat_protection(get_turf(src))
 	else
 		layer = open_layer
+		explosion_resistance = 0
 
 
 	if(width > 1)
@@ -72,10 +67,10 @@
 			bound_height = width * world.icon_size
 
 	health = maxhealth
-	update_connections(1)
 	update_icon()
 
 	update_nearby_tiles(need_rebuild=1)
+	return
 
 /obj/machinery/door/Destroy()
 	set_density(0)
@@ -91,12 +86,12 @@
 			close_door_at = 0
 
 /obj/machinery/door/proc/can_open()
-	if(!density || operating)
+	if(!density || operating || !ticker)
 		return 0
 	return 1
 
 /obj/machinery/door/proc/can_close()
-	if(density || operating)
+	if(density || operating || !ticker)
 		return 0
 	return 1
 
@@ -149,11 +144,8 @@
 		return
 	src.add_fingerprint(user)
 	if(density)
-		if(allowed(user))
-			open()
-		else
-			do_animate("deny")
-	update_icon()
+		if(allowed(user))	open()
+		else				do_animate("deny")
 	return
 
 /obj/machinery/door/bullet_act(var/obj/item/projectile/Proj)
@@ -205,7 +197,7 @@
 	..()
 
 /obj/machinery/door/attackby(obj/item/I as obj, mob/user as mob)
-	src.add_fingerprint(user, 0, I)
+	src.add_fingerprint(user)
 
 	if(istype(I, /obj/item/stack/material) && I.get_material_name() == src.get_material_name())
 		if(stat & BROKEN)
@@ -264,7 +256,19 @@
 		repairing = null
 		return
 
-	check_force(I, user)
+	//psa to whoever coded this, there are plenty of objects that need to call attack() on doors without bludgeoning them.
+	if(src.density && istype(I, /obj/item/weapon) && user.a_intent == I_HURT && !istype(I, /obj/item/weapon/card))
+		var/obj/item/weapon/W = I
+		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
+		if(W.damtype == BRUTE || W.damtype == BURN)
+			user.do_attack_animation(src)
+			if(W.force < min_force)
+				user.visible_message("<span class='danger'>\The [user] hits \the [src] with \the [W] with no visible effect.</span>")
+			else
+				user.visible_message("<span class='danger'>\The [user] forcefully strikes \the [src] with \the [W]!</span>")
+				playsound(src.loc, hitsound, 100, 1)
+				take_damage(W.force)
+		return
 
 	if(src.operating > 0 || isrobot(user))	return //borgs can't attack doors open because it conflicts with their AI-like interaction with them.
 
@@ -279,30 +283,15 @@
 
 	if(src.density)
 		do_animate("deny")
-	update_icon()
 	return
 
 /obj/machinery/door/emag_act(var/remaining_charges)
 	if(density && operable())
-		do_animate("emag")
+		do_animate("spark")
 		sleep(6)
 		open()
 		operating = -1
 		return 1
-
-//psa to whoever coded this, there are plenty of objects that need to call attack() on doors without bludgeoning them.
-/obj/machinery/door/proc/check_force(obj/item/I as obj, mob/user as mob)
-	if(src.density && istype(I, /obj/item/weapon) && user.a_intent == I_HURT && !istype(I, /obj/item/weapon/card))
-		var/obj/item/weapon/W = I
-		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-		if(W.damtype == BRUTE || W.damtype == BURN)
-			user.do_attack_animation(src)
-			if(W.force < min_force)
-				user.visible_message("<span class='danger'>\The [user] hits \the [src] with \the [W] with no visible effect.</span>")
-			else
-				user.visible_message("<span class='danger'>\The [user] forcefully strikes \the [src] with \the [W]!</span>")
-				playsound(src.loc, hitsound, 100, 1)
-				take_damage(W.force)
 
 /obj/machinery/door/proc/take_damage(var/damage)
 	var/initialhealth = src.health
@@ -321,9 +310,7 @@
 
 /obj/machinery/door/examine(mob/user)
 	. = ..()
-	if(src.health <= 0)
-		to_chat(user, "\The [src] is broken!")
-	else if(src.health < src.maxhealth / 4)
+	if(src.health < src.maxhealth / 4)
 		to_chat(user, "\The [src] looks like it's about to break!")
 	else if(src.health < src.maxhealth / 2)
 		to_chat(user, "\The [src] looks seriously damaged!")
@@ -339,39 +326,31 @@
 
 /obj/machinery/door/ex_act(severity)
 	switch(severity)
-		if(1)
+		if(1.0)
 			qdel(src)
-		if(2)
+		if(2.0)
 			if(prob(25))
 				qdel(src)
 			else
-				take_damage(100)
-			take_damage(200)
-		if(3)
+				take_damage(300)
+		if(3.0)
 			if(prob(80))
 				var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
 				s.set_up(2, 1, src)
 				s.start()
 			else
-				take_damage(100)
-			take_damage(100)
+				take_damage(150)
+	return
 
 
 /obj/machinery/door/update_icon()
-	if(connections in list(NORTH, SOUTH, NORTH|SOUTH))
-		if(connections in list(WEST, EAST, EAST|WEST))
-			set_dir(SOUTH)
-		else
-			set_dir(EAST)
-	else
-		set_dir(SOUTH)
-
 	if(density)
 		icon_state = "door1"
 	else
 		icon_state = "door0"
 	radiation_repository.resistance_cache.Remove(get_turf(src))
 	return
+
 
 /obj/machinery/door/proc/do_animate(animation)
 	switch(animation)
@@ -401,14 +380,14 @@
 	operating = 1
 
 	do_animate("opening")
-	icon_state = "door0"
-	set_opacity(0)
 	sleep(3)
+	set_opacity(0)
 	src.set_density(0)
+	update_icon()
 	update_nearby_tiles()
 	sleep(7)
 	src.layer = open_layer
-	update_icon()
+	explosion_resistance = 0
 	set_opacity(0)
 	operating = 0
 
@@ -429,10 +408,12 @@
 	do_animate("closing")
 	sleep(3)
 	src.set_density(1)
+	update_icon()
+	explosion_resistance = initial(explosion_resistance)
 	src.layer = closed_layer
 	update_nearby_tiles()
 	sleep(7)
-	update_icon()
+	
 	if(visible && !glass)
 		set_opacity(1)	//caaaaarn!
 	operating = 0
@@ -480,45 +461,9 @@
 	if(.)
 		deconstruct(null, TRUE)
 
-/obj/machinery/door/proc/CheckPenetration(var/base_chance, var/damage)
-	. = damage/maxhealth*180
-	if(glass)
-		. *= 2
-	. = round(.)
 
 /obj/machinery/door/proc/deconstruct(mob/user, var/moved = FALSE)
 	return null
 
 /obj/machinery/door/morgue
 	icon = 'icons/obj/doors/doormorgue.dmi'
-
-/obj/machinery/door/proc/update_connections(var/propagate = 0)
-	var/dirs = 0
-
-	for(var/direction in GLOB.cardinal)
-		var/turf/T = get_step(src, direction)
-		var/success = 0
-
-		if( istype(T, /turf/simulated/wall))
-			success = 1
-			if(propagate)
-				var/turf/simulated/wall/W = T
-				W.update_connections(1)
-				W.update_icon()
-
-		else if( istype(T, /turf/simulated/shuttle/wall) ||  istype(T, /turf/unsimulated/wall))
-			success = 1
-		else
-			for(var/obj/O in T)
-				for(var/b_type in BLEND_OBJECTS)
-					if( istype(O, b_type))
-						success = 1
-
-					if(success)
-						break
-				if(success)
-					break
-
-		if(success)
-			dirs |= direction
-	connections = dirs

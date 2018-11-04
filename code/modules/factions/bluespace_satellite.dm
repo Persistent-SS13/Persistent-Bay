@@ -25,7 +25,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	icon = 'icons/obj/machines/dock_beacon.dmi'
 	icon_state = "unpowered2"
 	use_power = 0			//1 = idle, 2 = active
-	var/status = 0 // 0 = unpowered, 1 = closed 2 = open 3 = contruction mode 4 = occupied 5 = obstructed
+	var/status = 0 // 0 = unpowered, 1 = closed 2 = open 3 = construction mode 4 = occupied 5 = obstructed
 	req_access = list(core_access_shuttle_programs)
 	var/datum/world_faction/faction
 	var/dimensions = 1 // 1 = 5*8, 2 = 7*8, 3 = 9*10 4 = 12*12 5 = 20*20
@@ -51,6 +51,10 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 					return locate(x, y+9, z)
 				if(3)
 					return locate(x, y+11, z)
+				if(4)
+					return locate(x, y+13, z)
+				if (5)
+					return locate(x, y+21, z)
 		if(WEST)
 			switch(dimensions)
 				if(1)
@@ -59,6 +63,10 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 					return locate(x-4, y+4, z)
 				if(3)
 					return locate(x-3, y+5, z)
+				if(4)
+					return locate(x-3, y+6, z)
+				if(5)
+					return locate(x-3, y+10, z)
 		if(EAST)
 			switch(dimensions)
 				if(1)
@@ -287,7 +295,9 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 
 
 /obj/machinery/docking_beacon/proc/finalize(var/mob/user)
+	log_debug("Finalize shuttle called")
 	if(shuttle)
+		to_chat(user, "Shuttle is already constructed!")
 		return 0
 	var/list/turfs = get_turfs()
 	var/valid_bridge_computer_found = 0
@@ -298,6 +308,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	for(var/turf/T in turfs)
 		if(!istype(T.loc, /area/space))
 			status = 4
+			log_debug("Found space area in shuttle")
 			return 0
 		if(istype(T, /turf/space))
 			turfs -= T
@@ -309,6 +320,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 				return
 			bridge = comp
 			valid_bridge_computer_found = 1
+			log_debug("Found valid bridge computer")
 		for(var/obj/machinery/shuttleengine/engine in T.contents)
 			if(engine.anchored)
 				engines |= engine
@@ -322,6 +334,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		engine.permaanchor = 1
 	var/area/shuttle/A = new
 	A.name = "shuttle"
+	log_debug("Created shuttle area")
 	//var/ma
 	//ma = A.master ? "[A.master]" : "(null)"
 	A.power_equip = 0
@@ -330,13 +343,15 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	A.always_unpowered = 0
 	A.contents.Add(turfs)
 
-
+	log_debug("Creating shuttle object")
 	shuttle = new(name, src)
 	shuttle.size = dimensions
 	bridge.shuttle = shuttle
 	shuttle.shuttle_area = list(A)
 	shuttle.bridge = bridge
 	bridge.dock = src
+	shuttle.setup()
+	to_chat(user, "Construction complete, finalize with bridge computer.")
 
 
 /obj/machinery/docking_beacon/proc/get_turfs()

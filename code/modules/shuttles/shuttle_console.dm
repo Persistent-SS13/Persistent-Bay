@@ -195,6 +195,12 @@
 			to_chat(usr, "Dock is not big enough.")
 			return 1
 		beacon.status = 4
+		//debug.chryseus
+		var/beacon_loc = beacon.get_top_turf() 
+		var/dock_loc = dock.get_top_turf()
+		visible_message("beacon loc: [beacon_loc]")
+		visible_message("dock loc: [dock_loc]")
+		//end
 		shuttle.short_jump(beacon.get_top_turf(), dock.get_top_turf())
 		dock.status = 2
 		dock = beacon

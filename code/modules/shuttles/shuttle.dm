@@ -5,7 +5,7 @@
 	var/warmup_time = 10
 	var/moving_status = SHUTTLE_IDLE
 
-	var/area/shuttle_area //can be both single area type or a list of areas
+	var/area/shuttle_area = null //can be both single area type or a list of areas
 	var/obj/effect/shuttle_landmark/current_location
 
 	var/arrive_time = 0	//the time at which the shuttle arrives when long jumping
@@ -26,23 +26,29 @@
 	var/ownertype = 1 // 1 = personal, 2 = factional
 	var/obj/machinery/computer/bridge_computer/bridge
 	var/size = 1
-/datum/shuttle/New(_name, var/obj/effect/shuttle_landmark/initial_location)
+	var/initial_location
+	
+/datum/shuttle/New(_name, var/obj/effect/shuttle_landmark/initial_loc)
 	..()
+	log_debug("Shuttle new, _name: [_name], [initial_loc.x] [initial_loc.y] [initial_loc.z]")
+	initial_location = initial_loc
 	if(_name)
 		src.name = _name
 
+/datum/shuttle/proc/setup()
 	var/list/areas = list()
 	if(!islist(shuttle_area))
 		if(shuttle_area)
 			shuttle_area = list(shuttle_area)
 		else
 			shuttle_area = list()
-	for(var/T in shuttle_area)
+	/* for(var/T in shuttle_area)
 		var/area/A = locate(T)
+		log_debug("Shuttle_area: [shuttle_area], T: [T], result: [A]")
 		if(!istype(A))
 			CRASH("Shuttle \"[name]\" couldn't locate area [T].")
 		areas += A
-	shuttle_area = areas
+	shuttle_area = areas*/
 
 	if(initial_location)
 		current_location = initial_location
@@ -57,8 +63,8 @@
 		if(supply_controller.shuttle)
 			CRASH("A supply shuttle is already defined.")
 		supply_controller.shuttle = src
-	if(!istype(current_location))
-		CRASH("Shuttle \"[name]\" could not find its starting location.")
+	/*if(!istype(current_location))
+		CRASH("Shuttle \"[name]\" could not find its starting location.")*/
 
 //	if(src.name in shuttle_controller.shuttles)
 //		CRASH("A shuttle with the name '[name]' is already defined.")

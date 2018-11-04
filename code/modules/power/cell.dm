@@ -32,7 +32,6 @@
 	update_icon()
 
 /obj/item/weapon/cell/Destroy()
-	if(self_recharge != 0)
 		STOP_PROCESSING(SSobj, src)
 	return ..()
 

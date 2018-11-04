@@ -27,20 +27,18 @@
 
 /obj/item/weapon/cell/Initialize()
 	. = ..()
-	if(self_recharge != 0)
-		START_PROCESSING(SSobj, src)
+	START_PROCESSING(SSobj, src)
 	update_icon()
 
 /obj/item/weapon/cell/Destroy()
-	if(self_recharge != 0)
-		STOP_PROCESSING(SSobj, src)
+	STOP_PROCESSING(SSobj, src)
 	return ..()
 
 /obj/item/weapon/cell/Process()
-	if(self_recharge != 0)
-		if(charge == maxcharge) return 0
-		src.give(self_recharge)
-		update_icon()
+    var/power = Clamp(charge + self_recharge, 0, maxcharge)
+    if(charge != power)
+        update_icon()
+    charge = power
 
 /obj/item/weapon/cell/drain_power(var/drain_check, var/surge, var/power = 0)
 
@@ -263,7 +261,7 @@
 	icon = 'icons/obj/power.dmi' //'icons/obj/harvest.dmi'
 	icon_state = "potato_cell" //"potato_battery"
 	maxcharge = 20
-	const/self_recharge = 0.2
+	self_recharge = 0.2
 
 /obj/item/weapon/cell/slime
 	name = "charged slime core"
@@ -272,5 +270,5 @@
 	icon = 'icons/mob/slimes.dmi' //'icons/obj/harvest.dmi'
 	icon_state = "yellow slime extract" //"potato_battery"
 	maxcharge = 200
-	const/self_recharge = 1
+	self_recharge = 1
 	matter = null

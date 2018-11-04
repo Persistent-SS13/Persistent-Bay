@@ -303,7 +303,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/valid_bridge_computer_found = 0
 	var/bcomps = 0
 	var/list/engines = list()
-	var/name
 	var/obj/machinery/computer/bridge_computer/bridge
 	for(var/turf/T in turfs)
 		if(!istype(T.loc, /area/space))
@@ -342,7 +341,9 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	A.contents.Add(turfs)
 
 	message_admins("Creating shuttle object")
-	shuttle = new(name, src)
+	shuttle = new()
+	shuttle.initial_location = src
+	shuttle.name = "Shuttle"
 	shuttle.size = dimensions
 	bridge.shuttle = shuttle
 	shuttle.shuttle_area = list(A)

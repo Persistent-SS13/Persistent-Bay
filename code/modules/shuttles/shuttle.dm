@@ -25,15 +25,10 @@
 	var/size = 1
 	var/initial_location
 	
-/datum/shuttle/New(_name, var/obj/effect/shuttle_landmark/initial_loc)
+/datum/shuttle/New()
 	..()
-	message_admins("Shuttle new, _name: [_name], [initial_loc.x] [initial_loc.y] [initial_loc.z]")
-	initial_location = initial_loc
-	if(_name)
-		src.name = _name
 
 /datum/shuttle/proc/setup()
-	var/list/areas = list()
 	if(!islist(shuttle_area))
 		if(shuttle_area)
 			shuttle_area = list(shuttle_area)
@@ -87,11 +82,11 @@
 	if (moving_status == SHUTTLE_IDLE)
 		return FALSE	//someone cancelled the launch
 
-	if(!fuel_check()) //fuel error (probably out of fuel) occured, so cancel the launch
+	/*if(!fuel_check()) //fuel error (probably out of fuel) occured, so cancel the launch
 		var/datum/shuttle/autodock/S = src
 		if(istype(S))
 			S.cancel_launch(null)
-		return
+		return*/
 
 	moving_status = SHUTTLE_INTRANSIT //shouldn't matter but just to be safe
 	attempt_move(destination, location)
@@ -109,11 +104,11 @@
 		if(moving_status == SHUTTLE_IDLE)
 			return	//someone cancelled the launch
 
-		if(!fuel_check()) //fuel error (probably out of fuel) occured, so cancel the launch
+		/*if(!fuel_check()) //fuel error (probably out of fuel) occured, so cancel the launch
 			var/datum/shuttle/autodock/S = src
 			if(istype(S))
 				S.cancel_launch(null)
-			return
+			return*/
 
 		arrive_time = world.time + travel_time*10
 		moving_status = SHUTTLE_INTRANSIT
@@ -189,7 +184,7 @@
 			message_admins("Removing old shuttle ceiling")
 			for(var/turf/TO in A.contents)
 				var/turf/TA = GetAbove(TO)
-				if(istype(TA, ceiling_type))
+				if(istype(TA, ceiling_type) || istype(TA, "/turf/simulated/floor/airless"))
 					TA.ChangeTurf(get_base_turf_by_area(TA), 1, 1)
 		if(knockdown)
 			for(var/mob/M in A)

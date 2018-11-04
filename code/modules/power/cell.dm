@@ -35,10 +35,10 @@
 	return ..()
 
 /obj/item/weapon/cell/Process()
-    var/power = Clamp(charge + self_recharge, 0, maxcharge)
-    if(charge != power)
-        update_icon()
-    charge = power
+	var/power = Clamp(charge + self_recharge, 0, maxcharge)
+	if(charge != power)
+		update_icon()
+	charge = power
 
 /obj/item/weapon/cell/drain_power(var/drain_check, var/surge, var/power = 0)
 

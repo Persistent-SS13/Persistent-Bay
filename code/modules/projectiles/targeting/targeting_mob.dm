@@ -26,6 +26,14 @@
 		for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
 			if(record.get_name() == M.real_name)
 				if(record.linked_account && istype(record.linked_account, /datum/money_account))
+					if(record.linked_account.account_number == 0)
+						message_admins("BROKEN ACCOUNT FOR [real_name] GENERATING")
+						record.linked_account = create_account(record.get_name(), 0, null)
+						record.linked_account.remote_access_pin = rand(1111,9999)
+						record.linked_account = record.linked_account.after_load()
+						record.linked_account.money = 1000
+						to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
+			`			return
 					to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
 				else
 					message_admins("BROKEN ACCOUNT FOR [real_name] GENERATING")

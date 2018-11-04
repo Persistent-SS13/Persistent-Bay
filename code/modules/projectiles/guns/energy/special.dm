@@ -210,9 +210,24 @@ obj/item/weapon/gun/energy/staff/focus
 	name = "plasma cutter cell"
 	icon = 'icons/obj/ammo.dmi'
 	icon_state = "plasmacell"
-	desc = "A small disposable battery. Used as ammo for the Plasma Cutter."
-	matter = list(DEFAULT_WALL_MATERIAL = 600)
+	desc = "A small disposable battery, used as ammo for the Plasma Cutter."
+	matter = list(DEFAULT_WALL_MATERIAL = 1200)
 	
+/obj/item/drainedplasmacell
+	w_class = ITEM_SIZE_SMALL
+	name = "drained plasma cutter cell"
+	desc = "A small disposable battery, used as ammo for the Plasma Cutter. This one looks like it was used already."
+	icon = 'icons/obj/ammo.dmi'
+	icon_state = "plasmacell_drained"
+	matter = list(DEFAULT_WALL_MATERIAL = 300)
+	
+/obj/item/weapon/gun/energy/plasmacutter/handle_post_fire(obj/item/A, mob/user)
+	..()
+	if(power_supply.charge==0)
+		var/obj/item/I = new /obj/item/drainedplasmacell
+		I.loc = get_turf(src.loc)
+		playsound(src.loc, 'sound/weapons/smg_empty_alarm.ogg', 50, 1)
+		
 	
 /obj/item/weapon/gun/energy/plasmacutter/attackby(obj/item/A, mob/user)
 	if(isScrewdriver(A))

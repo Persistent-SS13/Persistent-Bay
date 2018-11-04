@@ -295,7 +295,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 
 
 /obj/machinery/docking_beacon/proc/finalize(var/mob/user)
-	log_debug("Finalize shuttle called")
+	message_admins("Finalize shuttle called by [user.name]")
 	if(shuttle)
 		to_chat(user, "Shuttle is already constructed!")
 		return 0
@@ -308,7 +308,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	for(var/turf/T in turfs)
 		if(!istype(T.loc, /area/space))
 			status = 4
-			log_debug("Found space area in shuttle")
+			message_admins("Found space area in shuttle")
 			return 0
 		if(istype(T, /turf/space))
 			turfs -= T
@@ -320,7 +320,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 				return
 			bridge = comp
 			valid_bridge_computer_found = 1
-			log_debug("Found valid bridge computer")
+			message_admins("Found valid bridge computer [bridge]")
 		for(var/obj/machinery/shuttleengine/engine in T.contents)
 			if(engine.anchored)
 				engines |= engine
@@ -334,16 +334,14 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		engine.permaanchor = 1
 	var/area/shuttle/A = new
 	A.name = "shuttle"
-	log_debug("Created shuttle area")
-	//var/ma
-	//ma = A.master ? "[A.master]" : "(null)"
+	message_admins("Created shuttle area")
 	A.power_equip = 0
 	A.power_light = 0
 	A.power_environ = 0
 	A.always_unpowered = 0
 	A.contents.Add(turfs)
 
-	log_debug("Creating shuttle object")
+	message_admins("Creating shuttle object")
 	shuttle = new(name, src)
 	shuttle.size = dimensions
 	bridge.shuttle = shuttle
@@ -354,19 +352,8 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	to_chat(user, "Construction complete, finalize with bridge computer.")
 
 
-/obj/machinery/docking_beacon/proc/get_turfs()
+/obj/machinery/docking_beacon/proc/get_turfs() // Gets the corners
 	var/list/return_turfs = list()
-	/**
-	switch(dir)
-		if(NORTH)
-			return_turfs = block(locate(x-2,y+1,z), locate(x+2,y+8,z))
-		if(WEST)
-			return_turfs = block(locate(x+1,y+2,z), locate(x+8,y-2,z))
-		if(SOUTH)
-			return_turfs = block(locate(x-2,y-1,z), locate(x+2,y-8,z))
-		if(EAST)
-			return_turfs = block(locate(x-1,y+2,z), locate(x-8,y-2,z))
-	**/
 	switch(dir)
 		if(SOUTH)
 			switch(dimensions)

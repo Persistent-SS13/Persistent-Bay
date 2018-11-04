@@ -12,15 +12,12 @@
 	var/flags = SHUTTLE_FLAGS_PROCESS
 	var/category = /datum/shuttle
 
-	var/ceiling_type = /turf/unsimulated/floor/shuttle_ceiling
-
+	// var/ceiling_type = /turf/unsimulated/floor/shuttle_ceiling
+	var/ceiling_type = /turf/simulated/floor/plating
 	var/sound_takeoff = 'sound/effects/shuttle_takeoff.ogg'
 	var/sound_landing = 'sound/effects/shuttle_landing.ogg'
-
 	var/knockdown = 1 //whether shuttle downs non-buckled people when it moves
-
-	var/defer_initialisation = FALSE //this shuttle will/won't be initialised by something after roundstart
-
+	var/defer_initialisation = FALSE //this shuttle will/won't be initialized by something after roundstart
 	var/finalized = 0
 	var/owner
 	var/ownertype = 1 // 1 = personal, 2 = factional
@@ -30,7 +27,7 @@
 	
 /datum/shuttle/New(_name, var/obj/effect/shuttle_landmark/initial_loc)
 	..()
-	log_debug("Shuttle new, _name: [_name], [initial_loc.x] [initial_loc.y] [initial_loc.z]")
+	message_admins("Shuttle new, _name: [_name], [initial_loc.x] [initial_loc.y] [initial_loc.z]")
 	initial_location = initial_loc
 	if(_name)
 		src.name = _name
@@ -51,9 +48,11 @@
 	shuttle_area = areas*/
 
 	if(initial_location)
+		message_admins("Current location set to initial location: [initial_location]")
 		current_location = initial_location
 	else
 		current_location = locate(current_location)
+		message_admins("Current location set to [current_location]")
 
 	shuttle_controller.shuttles[src.name] = src
 	if(flags & SHUTTLE_FLAGS_PROCESS)
@@ -68,16 +67,17 @@
 
 //	if(src.name in shuttle_controller.shuttles)
 //		CRASH("A shuttle with the name '[name]' is already defined.")
+
+
 /datum/shuttle/Destroy()
 	current_location = null
-
 	shuttle_controller.shuttles -= src.name
 	shuttle_controller.process_shuttles -= src
 	if(supply_controller.shuttle == src)
 		supply_controller.shuttle = null
-
 	. = ..()
 
+	
 /datum/shuttle/proc/short_jump(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/location)
 	if(moving_status != SHUTTLE_IDLE) return
 
@@ -133,13 +133,14 @@
 	return 1 //fuel check should always pass in non-overmap shuttles (they have magic engines)
 
 /datum/shuttle/proc/attempt_move(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/location)
+	message_admins("Attempting shuttle move, dest: [destination], location: [location]")
 	if(location) current_location = location
 	if(current_location == destination)
 		return FALSE
 
 	if(istype(destination) && !destination.is_valid(src))
 		return FALSE
-	testing("[src] moving to [destination]. Areas are [english_list(shuttle_area)]")
+	message_admins("[src] moving to [destination]. Areas are [english_list(shuttle_area)]")
 	var/list/translation = list()
 	for(var/area/A in shuttle_area)
 		if(istype(A, /area/space))
@@ -148,7 +149,7 @@
 		if(!istype(A, /area/shuttle))
 			message_admins("broken shuttle [src] with areas [english_list(shuttle_area)] trying to move")
 			return
-		testing("Moving [A]")
+		message_admins("Moving [A]")
 		translation += get_turf_translation(get_turf(current_location), get_turf(destination), A.contents)
 	shuttle_moved(destination, translation)
 	return TRUE
@@ -166,11 +167,10 @@
 //just moves the shuttle from A to B, if it can be moved
 //A note to anyone overriding move in a subtype. shuttle_moved() must absolutely not, under any circumstances, fail to move the shuttle.
 //If you want to conditionally cancel shuttle launches, that logic must go in short_jump(), long_jump() or attempt_move()
+
 /datum/shuttle/proc/shuttle_moved(var/obj/effect/shuttle_landmark/destination, var/list/turf_translation)
 
-//	log_debug("move_shuttle() called for [shuttle_tag] leaving [origin] en route to [destination].")
-//	log_degug("area_coming_from: [origin]")
-//	log_debug("destination: [destination]")
+	message_admins("shuttle_moved() called for [name] going to [destination.x] [destination.y] [destination.z].")
 	for(var/turf/src_turf in turf_translation)
 		var/turf/dst_turf = turf_translation[src_turf]
 		if(src_turf.is_solid_structure()) //in case someone put a hole in the shuttle and you were lucky enough to be under it
@@ -186,6 +186,7 @@
 	for(var/area/A in shuttle_area)
 		// if there was a zlevel above our origin, erase our ceiling now we're leaving
 		if(HasAbove(current_location.z))
+			message_admins("Removing old shuttle ceiling")
 			for(var/turf/TO in A.contents)
 				var/turf/TA = GetAbove(TO)
 				if(istype(TA, ceiling_type))

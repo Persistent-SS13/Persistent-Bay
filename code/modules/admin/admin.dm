@@ -957,7 +957,7 @@ var/global/floorIsLava = 0
 						record.linked_account = record.linked_account.after_load()
 						record.linked_account.money = 1000
 						to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
-			`			return
+						return
 					to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
 					var/money = round(input("Enter money amount", "New amount") as num|null)
 					if(money)

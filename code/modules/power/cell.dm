@@ -263,7 +263,7 @@
 	icon = 'icons/obj/power.dmi' //'icons/obj/harvest.dmi'
 	icon_state = "potato_cell" //"potato_battery"
 	maxcharge = 20
-	const/self_recharge = 0.1
+	const/self_recharge = 0.2
 
 /obj/item/weapon/cell/slime
 	name = "charged slime core"
@@ -272,5 +272,5 @@
 	icon = 'icons/mob/slimes.dmi' //'icons/obj/harvest.dmi'
 	icon_state = "yellow slime extract" //"potato_battery"
 	maxcharge = 200
-	const/self_recharge = 0.5
+	const/self_recharge = 1
 	matter = null

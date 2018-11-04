@@ -31,7 +31,11 @@
 	update_icon()
 
 /obj/item/weapon/cell/Destroy()
+<<<<<<< HEAD
 	STOP_PROCESSING(SSobj, src)
+=======
+		STOP_PROCESSING(SSobj, src)
+>>>>>>> efa672bc364263a824d88a150959bf71cabd7650
 	return ..()
 
 /obj/item/weapon/cell/Process()

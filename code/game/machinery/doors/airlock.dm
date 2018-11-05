@@ -170,6 +170,102 @@
 
 //Glass airlock presets
 
+
+
+
+
+
+
+/obj/machinery/door/airlock/maintenance_hatch
+	name = "Maintenance Hatch"
+	explosion_resistance = 20
+	opacity = 1
+
+/obj/machinery/door/airlock/maintenance_hatch/bolted
+	locked = 1
+	icon_state = "door_locked"
+
+/obj/machinery/door/airlock/glass_command
+	name = "Maintenance Hatch"
+	hitsound = 'sound/effects/Glasshit.ogg'
+	maxhealth = 300
+	explosion_resistance = 5
+	opacity = 0
+	glass = 1
+
+/obj/machinery/door/airlock/glass_external
+	name = "External Airlock"
+	hitsound = 'sound/effects/Glasshit.ogg'
+	maxhealth = 300
+	explosion_resistance = 5
+	opacity = 0
+	glass = 1
+
+/obj/machinery/door/airlock/glass_external/bolted
+	icon_state = "door_locked"
+	locked = 1
+
+/obj/machinery/door/airlock/glass_external/bolted/cycling
+	frequency = 1379
+
+/obj/machinery/door/airlock/glass_external/bolted_open
+	icon_state = "door_open"
+	density = 0
+	locked = 1
+	opacity = 0
+
+/obj/machinery/door/airlock/glass_engineering
+	name = "Maintenance Hatch"
+	hitsound = 'sound/effects/Glasshit.ogg'
+	maxhealth = 300
+	explosion_resistance = 5
+	opacity = 0
+	glass = 1
+
+/obj/machinery/door/airlock/glass_security
+	name = "Maintenance Hatch"
+	hitsound = 'sound/effects/Glasshit.ogg'
+	maxhealth = 300
+	explosion_resistance = 5
+	opacity = 0
+	glass = 1
+
+/obj/machinery/door/airlock/glass_medical
+	name = "Maintenance Hatch"
+	hitsound = 'sound/effects/Glasshit.ogg'
+	maxhealth = 300
+	explosion_resistance = 5
+	opacity = 0
+	glass = 1
+
+/obj/machinery/door/airlock/glass_virology
+	name = "Maintenance Hatch"
+	hitsound = 'sound/effects/Glasshit.ogg'
+	maxhealth = 300
+	explosion_resistance = 5
+	opacity = 0
+	glass = 1
+
+/obj/machinery/door/airlock/glass_sol
+	name = "Maintenance Hatch"
+	hitsound = 'sound/effects/Glasshit.ogg'
+	maxhealth = 300
+	explosion_resistance = 5
+	opacity = 0
+	glass = 1
+
+
+
+
+
+
+
+
+
+
+
+
+
 /obj/machinery/door/airlock/glass
 	name = "Glass Airlock"
 	hitsound = 'sound/effects/Glasshit.ogg'

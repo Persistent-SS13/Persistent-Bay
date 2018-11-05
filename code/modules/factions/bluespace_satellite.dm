@@ -294,7 +294,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 
 
 /obj/machinery/docking_beacon/proc/finalize(var/mob/user)
-	message_admins("Finalize shuttle called by [user.name]")
 	if(shuttle)
 		to_chat(user, "Shuttle is already constructed!")
 		return 0
@@ -306,7 +305,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	for(var/turf/T in turfs)
 		if(!istype(T.loc, /area/space))
 			status = 4
-			message_admins("Found space area in shuttle")
 			return 0
 		if(istype(T, /turf/space))
 			turfs -= T
@@ -318,7 +316,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 				return
 			bridge = comp
 			valid_bridge_computer_found = 1
-			message_admins("Found valid bridge computer [bridge]")
 		for(var/obj/machinery/shuttleengine/engine in T.contents)
 			if(engine.anchored)
 				engines |= engine
@@ -332,14 +329,12 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		engine.permaanchor = 1
 	var/area/shuttle/A = new
 	A.name = "shuttle"
-	message_admins("Created shuttle area")
 	A.power_equip = 0
 	A.power_light = 0
 	A.power_environ = 0
 	A.always_unpowered = 0
 	A.contents.Add(turfs)
 
-	message_admins("Creating shuttle object")
 	shuttle = new()
 	shuttle.initial_location = src
 	shuttle.name = "Shuttle"

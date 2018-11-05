@@ -174,6 +174,7 @@
 			shuttle.name = desired_name
 			shuttle.ownertype = shuttle_type
 			shuttle.owner = locked_to
+			dock.status = 4
 			loc.loc.name = desired_name
 
 			if(shuttle_type == 1)
@@ -191,20 +192,12 @@
 				beacon.check_shuttle()
 			return
 		var/obj/machinery/docking_beacon/beacon = locate(href_list["selected_ref"])
-		message_admins("Selected destination [beacon], [beacon.x] [beacon.y] [beacon.z]")
 		if(beacon.dimensions < shuttle.size)
 			to_chat(usr, "Dock is not big enough.")
 			return 1
-		//debug.chryseus
-		var/atom/beacon_loc = beacon.get_top_turf() 
-		var/atom/dock_loc = dock.get_top_turf()
-		message_admins("beacon loc: [beacon_loc.type] [beacon_loc.x] [beacon_loc.y] [beacon_loc.z]")
-		message_admins("dock loc: [dock_loc.type] [dock_loc.x] [dock_loc.y] [dock_loc.z]")
-		//end
-		message_admins("Performing short jump.")
 		shuttle.short_jump(beacon.get_top_turf(), dock.get_top_turf())
 		dock.status = 2 // Set source dock open
-		dock.shuttle = null // testing ##################################################
+		dock.shuttle = null
 		dock = beacon
 		dock.status = 4 // Set destination dock occupied
 		dock.bridge = src

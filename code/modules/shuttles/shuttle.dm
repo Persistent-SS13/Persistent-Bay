@@ -37,26 +37,16 @@
 				qdel(A)
 
 /datum/shuttle/proc/setup()
-	message_admins("Shuttle setup() called.")
 	if(!islist(shuttle_area))
 		if(shuttle_area)
 			shuttle_area = list(shuttle_area)
 		else
 			shuttle_area = list()
-	/* for(var/T in shuttle_area)
-		var/area/A = locate(T)
-		log_debug("Shuttle_area: [shuttle_area], T: [T], result: [A]")
-		if(!istype(A))
-			CRASH("Shuttle \"[name]\" couldn't locate area [T].")
-		areas += A
-	shuttle_area = areas*/
 
 	if(initial_location)
-		message_admins("Current location set to initial location")
 		current_location = initial_location
 	else
 		current_location = locate(current_location)
-		message_admins("Current location set to current_location")
 
 	shuttle_controller.shuttles[src.name] = src
 	if(flags & SHUTTLE_FLAGS_PROCESS)
@@ -66,15 +56,9 @@
 		if(supply_controller.shuttle)
 			CRASH("A supply shuttle is already defined.")
 		supply_controller.shuttle = src
-	/*if(!istype(current_location))
-		CRASH("Shuttle \"[name]\" could not find its starting location.")*/
-
-//	if(src.name in shuttle_controller.shuttles)
-//		CRASH("A shuttle with the name '[name]' is already defined.")
 
 
 /datum/shuttle/Destroy()
-	message_admins("Shuttle [name] Destroy() called.")
 	current_location = null
 	shuttle_controller.shuttles -= src.name
 	shuttle_controller.process_shuttles -= src
@@ -84,7 +68,6 @@
 
 	
 /datum/shuttle/proc/short_jump(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/location)
-	message_admins("short_jump() called with destination [destination.x] [destination.y] [destination.z], location: [location.x] [location.y] [location.z]")
 	verify_areas()
 	if(moving_status != SHUTTLE_IDLE) 
 		message_admins("Cannot short jump, shuttle is not in idle state.")
@@ -97,18 +80,17 @@
 		message_admins("Launch canceled")
 		return FALSE
 
-	/*if(!fuel_check()) //fuel error (probably out of fuel) occured, so cancel the launch
+	if(!fuel_check()) //fuel error (probably out of fuel) occured, so cancel the launch
 		var/datum/shuttle/autodock/S = src
 		if(istype(S))
 			S.cancel_launch(null)
-		return*/
+		return
 
 	moving_status = SHUTTLE_INTRANSIT //shouldn't matter but just to be safe
 	attempt_move(destination, location)
 	moving_status = SHUTTLE_IDLE
 
 /datum/shuttle/proc/long_jump(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/interim, var/travel_time)
-	message_admins("long_jump() called.")
 	verify_areas()
 	if(moving_status != SHUTTLE_IDLE) return
 
@@ -121,11 +103,11 @@
 		if(moving_status == SHUTTLE_IDLE)
 			return	//someone cancelled the launch
 
-		/*if(!fuel_check()) //fuel error (probably out of fuel) occured, so cancel the launch
+		if(!fuel_check()) //fuel error (probably out of fuel) occured, so cancel the launch
 			var/datum/shuttle/autodock/S = src
 			if(istype(S))
 				S.cancel_launch(null)
-			return*/
+			return
 
 		arrive_time = world.time + travel_time*10
 		moving_status = SHUTTLE_INTRANSIT
@@ -145,7 +127,6 @@
 	return 1 //fuel check should always pass in non-overmap shuttles (they have magic engines)
 
 /datum/shuttle/proc/attempt_move(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/location)
-	message_admins("attempt_move() called, destination: [destination.x] [destination.y] [destination.z], source: [location.x] [location.y] [location.z]")
 	if(location) current_location = location
 	if(current_location == destination)
 		message_admins("Shuttle [name] current location is same as destination!")
@@ -162,7 +143,7 @@
 		if(!istype(A, /area/shuttle))
 			message_admins("Broken shuttle [name] with areas [english_list(shuttle_area)] trying to move")
 			return
-		message_admins("Building turf translation for area: [A]")
+
 		translation += get_turf_translation(get_turf(current_location), get_turf(destination), A.contents)
 	shuttle_moved(destination, translation)
 	return TRUE
@@ -184,7 +165,7 @@
 
 /datum/shuttle/proc/shuttle_moved(var/obj/effect/shuttle_landmark/destination, var/list/turf_translation)
 
-	message_admins("shuttle_moved() called for [name] going to [destination.x] [destination.y] [destination.z].")
+	message_admins("Shuttle [name] going to [destination.x] [destination.y] [destination.z].")
 	for(var/turf/src_turf in turf_translation)
 		var/turf/dst_turf = turf_translation[src_turf]
 		if(src_turf.is_solid_structure()) //in case someone put a hole in the shuttle and you were lucky enough to be under it
@@ -201,15 +182,15 @@
 	for(var/area/A in shuttle_area)
 		// Remove ceiling we are leaving behind if it exists
 		if(HasAbove(current_location.z))
-			message_admins("Removing shuttle ceilings.")
 			for(var/turf/TO in A.contents)
 				var/turf/TA = GetAbove(TO)
 				if(istype(TA, ceiling_type) || istype(TA, /turf/simulated/floor/airless) || istype(TA, /turf/simulated/open))
 					//TA.ChangeTurf(get_base_turf_by_area(TA), 1, 1)
 					TA.ChangeTurf("/turf/space", 1, 1)
-					for(var/obj/O in TA.contents)
-						if(istype(O, /atom/movable/lighting_overlay))
-							qdel(O)
+					for(var/atom/AT in TA.contents)
+						message_admins("AT type [AT.type]")
+						if(istype(AT, /atom/movable/lighting_overlay))
+							qdel(AT)
 		// Handle knockdown when moving
 		if(knockdown)
 			for(var/mob/M in A)
@@ -229,11 +210,7 @@
 			powernets |= C.powernet
 
 	// Move the shuttle
-	message_admins("Translating: [english_list(turf_translation)]")
-	//translate_turfs(turf_translation, get_area(current_location), /turf/space)
-	//translate_turfs(turf_translation, current_location.base_area, current_location.base_turf)
 	for (var/area/A in shuttle_area)
-		message_admins("Moving area [A]")
 		translate_turfs(turf_translation, A, get_base_turf_by_area(A))
 	
 	
@@ -244,11 +221,7 @@
 		for(var/turf/T in A.contents)
 			if(istype(T, /turf/space) && !istype(T, /turf/simulated/floor))
 				A.contents -= T
-				message_admins("Moving turf [T]")
 				newArea.contents.Add(T)
-				/*spawn(10)
-					newArea.contents.Cut()
-					qdel(newArea)*/
 	
 	current_location = destination
 	

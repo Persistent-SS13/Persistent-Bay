@@ -210,6 +210,10 @@
 	assembly_type = /obj/structure/door_assembly/door_assembly_ext
 	door_color = COLOR_NT_RED
 	paintable = AIRLOCK_PAINTABLE
+	hitsound = 'sound/effects/Glasshit.ogg'
+	maxhealth = 300
+	explosion_resistance = 5
+	opacity = 0
 	glass = 1
 
 /obj/machinery/door/airlock/glass_external/bolted
@@ -271,15 +275,6 @@
 	glass = 1
 	door_color = COLOR_BLUE_GRAY
 	stripe_color = COLOR_AMBER
-
-
-
-
-
-
-
-
-
 
 
 

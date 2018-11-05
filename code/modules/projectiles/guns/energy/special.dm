@@ -123,7 +123,6 @@
 	icon_state = "xray"
 	projectile_type = /obj/item/projectile/beam/mindflayer
 	load_method = ENERGY_LOAD_FIXED_CELL
-/*
 /obj/item/weapon/gun/energy/toxgun
 	name = "phoron pistol"
 	desc = "A specialized firearm designed to fire lethal bolts of phoron."
@@ -132,7 +131,6 @@
 	origin_tech = list(TECH_COMBAT = 5, TECH_PHORON = 4)
 	projectile_type = /obj/item/projectile/energy/phoron
 	load_method = ENERGY_LOAD_FIXED_CELL
-*/
 /* Staves */
 
 /obj/item/weapon/gun/energy/staff

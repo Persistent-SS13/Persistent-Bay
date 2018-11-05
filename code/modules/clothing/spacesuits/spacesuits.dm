@@ -1,11 +1,11 @@
-//Civilian Softsuit
+//Spacesuit
 //Note: Everything in modules/clothing/spacesuits should have the entire suit grouped together.
 //      Meaning the the suit is defined directly after the corrisponding helmet. Just like below!
 
 /obj/item/clothing/head/helmet/space
-	name = "EVA softsuit helmet"
-	icon_state = "civ_softhelm"
-	desc = "A flimsy helmet designed for work in a hazardous, low-pressure environment."
+	name = "Space helmet"
+	icon_state = "space"
+	desc = "A special helmet designed for work in a hazardous, low-pressure environment."
 	item_flags = ITEM_FLAG_STOPPRESSUREDAMAGE | ITEM_FLAG_THICKMATERIAL | ITEM_FLAG_AIRTIGHT
 	flags_inv = BLOCKHAIR
 	item_state_slots = list(
@@ -63,9 +63,9 @@
 		to_chat(user, "This helmet has a built-in camera. Its [!ispath(camera) && camera.status ? "" : "in"]active.")
 
 /obj/item/clothing/suit/space
-	name = "EVA softsuit"
-	desc = "Your average general use softsuit. Though lacking in protection that modern voidsuits give, its cheap cost and portable size makes it perfect for those still getting used to life on the frontier."
-	icon_state = "civ_softsuit"
+	name = "Space suit"
+	desc = "A suit that protects against low pressure environments."
+	icon_state = "space"
 	item_icons = list(
 		slot_l_hand_str = 'icons/mob/items/lefthand_spacesuits.dmi',
 		slot_r_hand_str = 'icons/mob/items/righthand_spacesuits.dmi',

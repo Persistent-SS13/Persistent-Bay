@@ -2899,7 +2899,7 @@
 
 	var/open = 0 // Is the box open?
 	var/ismessy = 0 // Fancy mess on the lid
-	var/obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/pizza // Content pizza
+	var/obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/pizza  // Content pizza
 	var/list/boxes = list() // If the boxes are stacked, they come here
 	var/boxtag = ""
 
@@ -3051,21 +3051,29 @@
 		return
 	..()
 
-/obj/item/pizzabox/margherita/New()
-	pizza = new /obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/margherita(src)
-	boxtag = "Margherita Deluxe"
+/obj/item/pizzabox/margherita/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		pizza = new /obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/margherita(src)
+		boxtag = "Margherita Deluxe"
 
-/obj/item/pizzabox/vegetable/New()
-	pizza = new /obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/vegetablepizza(src)
-	boxtag = "Gourmet Vegatable"
+/obj/item/pizzabox/vegetable/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		pizza = new /obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/vegetablepizza(src)
+		boxtag = "Gourmet Vegatable"
 
-/obj/item/pizzabox/mushroom/New()
-	pizza = new /obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/mushroompizza(src)
-	boxtag = "Mushroom Special"
+/obj/item/pizzabox/mushroom/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		pizza = new /obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/mushroompizza(src)
+		boxtag = "Mushroom Special"
 
-/obj/item/pizzabox/meat/New()
-	pizza = new /obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/meatpizza(src)
-	boxtag = "Meatlover's Supreme"
+/obj/item/pizzabox/meat/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		pizza = new /obj/item/weapon/reagent_containers/food/snacks/sliceable/pizza/meatpizza(src)
+		boxtag = "Meatlover's Supreme"
 
 /obj/item/weapon/reagent_containers/food/snacks/dionaroast
 	name = "roast diona"

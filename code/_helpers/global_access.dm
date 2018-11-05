@@ -41,6 +41,8 @@
 			return global.SSair;
 		if("SSairflow")
 			return global.SSairflow;
+		if("SSasteroid")
+			return global.SSasteroid;
 		if("SSatoms")
 			return global.SSatoms;
 		if("SSchemistry")
@@ -149,8 +151,6 @@
 			return global.adminhelp_ignored_words;
 		if("adminlog")
 			return global.adminlog;
-		if("aggression_controller")
-			return global.aggression_controller;
 		if("ai_list")
 			return global.ai_list;
 		if("ai_status_emotions")
@@ -1114,6 +1114,8 @@
 			global.SSair=newval;
 		if("SSairflow")
 			global.SSairflow=newval;
+		if("SSasteroid")
+			global.SSasteroid=newval;
 		if("SSatoms")
 			global.SSatoms=newval;
 		if("SSchemistry")
@@ -1222,8 +1224,6 @@
 			global.adminhelp_ignored_words=newval;
 		if("adminlog")
 			global.adminlog=newval;
-		if("aggression_controller")
-			global.aggression_controller=newval;
 		if("ai_list")
 			global.ai_list=newval;
 		if("ai_status_emotions")
@@ -2166,6 +2166,7 @@
 	"SKILLS",
 	"SSair",
 	"SSairflow",
+	"SSasteroid",
 	"SSatoms",
 	"SSchemistry",
 	"SScircuit",
@@ -2220,7 +2221,6 @@
 	"admin_verbs_spawn",
 	"adminhelp_ignored_words",
 	"adminlog",
-	"aggression_controller",
 	"ai_list",
 	"ai_status_emotions",
 	"ai_verbs_default",

@@ -15,6 +15,7 @@
 		list(mode_name="shock", projectile_type=/obj/item/projectile/beam/stun/shock, modifystate="energyshock"),
 		list(mode_name="lethal", projectile_type=/obj/item/projectile/beam, modifystate="energykill"),
 		)
+	load_method = ENERGY_LOAD_HOTSWAP_CELL
 
 /obj/item/weapon/gun/energy/gun/small
 	name = "small energy gun"
@@ -30,12 +31,13 @@
 		list(mode_name="shock", projectile_type=/obj/item/projectile/beam/stun/shock, modifystate="smallgunshock"),
 		list(mode_name="lethal", projectile_type=/obj/item/projectile/beam/smalllaser, modifystate="smallgunkill"),
 		)
+	load_method = ENERGY_LOAD_HOTSWAP_CELL
 
 /obj/item/weapon/gun/energy/gun/mounted
 	name = "mounted energy gun"
 	self_recharge = 1
 	use_external_power = 1
-/*
+	load_method = ENERGY_LOAD_FIXED_CELL
 /obj/item/weapon/gun/energy/gun/nuclear
 	name = "advanced energy gun"
 	desc = "An energy gun with an experimental miniaturized reactor."
@@ -55,6 +57,7 @@
 		)
 
 	var/fail_counter = 0
+	load_method = ENERGY_LOAD_FIXED_CELL
 
 //override for failcheck behaviour
 /obj/item/weapon/gun/energy/gun/nuclear/Process()
@@ -100,4 +103,3 @@
 	new_overlays += get_mode_overlay()
 
 	overlays = new_overlays
-*/

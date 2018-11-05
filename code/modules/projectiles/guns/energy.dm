@@ -1,3 +1,7 @@
+#define ENERGY_LOAD_FIXED_CELL 0
+#define ENERGY_LOAD_HOTSWAP_CELL 1
+#define ENERGY_LOAD_REMOVABLE_CELL 2
+
 /obj/item/weapon/gun/energy
 	name = "energy gun"
 	desc = "A basic energy-based gun."
@@ -9,6 +13,7 @@
 	var/charge_cost = 20 //How much energy is needed to fire.
 	var/max_shots = 10 //Determines the capacity of the weapon's power cell. Specifying a cell_type overrides this value.
 	var/cell_type = null
+	var/accepted_cell_types = list()
 	var/projectile_type = /obj/item/projectile/beam/practice
 	var/modifystate
 	var/charge_meter = 1	//if set, the icon state will be chosen based on the current charge
@@ -17,15 +22,8 @@
 	var/use_external_power = 0 //if set, the weapon will look for an external power source to draw from, otherwise it recharges magically
 	var/recharge_time = 4
 	var/charge_tick = 0
-
-/obj/item/weapon/gun/energy/switch_firemodes()
-	. = ..()
-	if(.)
-		update_icon()
-
-/obj/item/weapon/gun/energy/emp_act(severity)
-	..()
-	update_icon()
+	var/load_method = ENERGY_LOAD_REMOVABLE_CELL
+	var/cell_secured = TRUE //For energy weapons that needs their cells unsecured first
 
 /obj/item/weapon/gun/energy/Initialize()
 	. = ..()
@@ -60,6 +58,15 @@
 		power_supply.give(charge_cost) //... to recharge the shot
 		update_icon()
 	return 1
+
+/obj/item/weapon/gun/energy/switch_firemodes()
+	. = ..()
+	if(.)
+		update_icon()
+
+/obj/item/weapon/gun/energy/emp_act(severity)
+	..()
+	update_icon()
 
 /obj/item/weapon/gun/energy/consume_next_projectile()
 	if(!power_supply) return null
@@ -101,3 +108,86 @@
 			icon_state = "[modifystate][ratio]"
 		else
 			icon_state = "[initial(icon_state)][ratio]"
+
+
+/obj/item/weapon/gun/energy/proc/load_ammo(var/obj/item/A, mob/user)
+	if(istype(A, cell_type))
+		var/cell_type/pcell = A
+		if(power_supply)
+			user.visible_message("[user] quickly swap [power_supply] for a [pcell] into \the [src]!", "<span class='warning'>You quickly swap the current [power_supply] for the new [pcell], dropping the old one!</span>")
+			power_supply.dropInto(user.loc)
+			power_supply = null
+		else
+			user.visible_message("[user] insert \the [pcell] into [src].", "<span class='notice'>You insert the [pcell]!</span>")
+		power_supply = pcell
+	update_icon()
+
+/obj/item/weapon/gun/energy/proc/unload_ammo(mob/user)
+	if(!power_supply)
+		to_chat(user, "<span class='warning'>There is no cell in the [src]!</span>")
+		return
+	switch(load_method)
+		if(ENERGY_LOAD_HOTSWAP_CELL)
+			user.put_in_hands(power_supply)
+			user.visible_message("[user] removes [power_supply] from [src].", "<span class='notice'>You remove [power_supply] from [src].</span>")
+			power_supply = null
+		if(ENERGY_LOAD_REMOVABLE_CELL)
+
+/obj/item/weapon/gun/energy/attackby(var/obj/item/A as obj, mob/user as mob)
+	if(istype(A, cell_type))
+		var/cell_type/pcell = A
+		if(!is_valid_cell(pcell))
+			to_chat(user,"<span class='warning'>This weapon is not compatible with \the [pcell]!</span>")
+			return
+		switch(load_method)
+			if(ENERGY_LOAD_HOTSWAP_CELL)
+				load_ammo(A, user)
+				return
+			if(ENERGY_LOAD_REMOVABLE_CELL)
+				if(check_cover_open())
+					load_ammo(A, user)
+				return
+			else
+				to_chat(user,"<span class='warning'>This weapon does not accepts powercells!</span>")
+				return
+	else if(isScrewdriver(A))
+		switch(load_method)
+			if(ENERGY_LOAD_REMOVABLE_CELL)
+				var/curact = cell_secured? "unscrew": "screw"
+				user.visible_message("[user] [curact] the cover.","<span class='notice'>You [curact] the cover.</span>")
+				cell_secured = !cell_secured
+			else
+				to_chat(user,"<span class='warning'>There are no covers to unscrew on this weapon!</span>")
+				return
+	return ..()
+
+/obj/item/weapon/gun/energy/proc/check_cover_open()
+	if(cell_secured)
+		to_chat(usr,"<span class='warning'>You must first unscrew the cover!</span>")
+	return cell_secured
+
+/obj/item/weapon/gun/energy/attack_self(mob/user as mob)
+	if(firemodes.len > 1)
+		..()
+	else
+		switch(load_method)
+			if(ENERGY_LOAD_REMOVABLE_CELL)
+				if(check_cover_open())
+					unload_ammo(user)
+			if(ENERGY_LOAD_HOTSWAP_CELL)
+				unload_ammo(user)
+
+/obj/item/weapon/gun/energy/attack_hand(mob/user as mob)
+	if(user.get_inactive_hand() == src)
+		switch(load_method)
+			if(ENERGY_LOAD_REMOVABLE_CELL)
+				if(check_cover_open())
+					unload_ammo(user)
+			if(ENERGY_LOAD_HOTSWAP_CELL)
+				unload_ammo(user)
+				return
+	else
+		return ..()
+
+/obj/item/weapon/gun/energy/proc/is_valid_cell(var/obj/item/weapon/cell/pcell)
+	return(ispath(accepted_cell_types) && !istype(pcell, accepted_cell_types) || islist(accepted_cell_types) && !is_type_in_list(pcell, accepted_cell_types))

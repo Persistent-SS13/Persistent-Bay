@@ -13,6 +13,7 @@
 	matter = list(DEFAULT_WALL_MATERIAL = 2000)
 	projectile_type = /obj/item/projectile/beam/midlaser
 	wielded_item_state = "laser-wielded"
+	load_method = ENERGY_LOAD_HOTSWAP_CELL
 
 /obj/item/weapon/gun/energy/laser/mounted
 	self_recharge = 1
@@ -71,6 +72,7 @@ obj/item/weapon/gun/energy/retro
 	max_shots = 5 //to compensate a bit for self-recharging
 	one_hand_penalty = 1 //a little bulky
 	self_recharge = 1
+	load_method = ENERGY_LOAD_FIXED_CELL
 */
 /obj/item/weapon/gun/energy/lasercannon
 	name = "laser cannon"
@@ -87,6 +89,7 @@ obj/item/weapon/gun/energy/retro
 	accuracy = 2
 	fire_delay = 20
 	wielded_item_state = "gun_wielded"
+	load_method = ENERGY_LOAD_HOTSWAP_CELL
 
 /obj/item/weapon/gun/energy/lasercannon/mounted
 	name = "mounted laser cannon"
@@ -137,6 +140,7 @@ obj/item/weapon/gun/energy/retro
 	accuracy = -2 //shooting at the hip
 	scoped_accuracy = 0
 	wielded_item_state = "gun_wielded"
+	load_method = ENERGY_LOAD_HOTSWAP_CELL
 
 /obj/item/weapon/gun/energy/sniperrifle/update_icon()
 	..()

@@ -10,6 +10,7 @@
 		list(mode_name="stun", projectile_type=/obj/item/projectile/beam/stun),
 		list(mode_name="shock", projectile_type=/obj/item/projectile/beam/stun/shock),
 		)
+	load_method = ENERGY_LOAD_HOTSWAP_CELL
 
 /obj/item/weapon/gun/energy/taser/carbine
 	name = "taser carbine"
@@ -29,6 +30,7 @@
 		list(mode_name="stun", projectile_type=/obj/item/projectile/beam/stun/heavy),
 		list(mode_name="shock", projectile_type=/obj/item/projectile/beam/stun/shock/heavy),
 		)
+	load_method = ENERGY_LOAD_HOTSWAP_CELL
 
 /obj/item/weapon/gun/energy/taser/mounted
 	name = "mounted taser gun"

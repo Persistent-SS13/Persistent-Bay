@@ -95,7 +95,7 @@ obj/item/weapon/gun/energy/retro
 	recharge_time = 10
 	accuracy = 0 //mounted laser cannons don't need any help, thanks
 	one_hand_penalty = 0
-/*
+
 /obj/item/weapon/gun/energy/xray
 	name = "x-ray laser carbine"
 	desc = "A high-power laser gun capable of emitting concentrated x-ray blasts, that are able to penetrate laser-resistant armor much more readily than standard photonic beams."
@@ -148,7 +148,7 @@ obj/item/weapon/gun/energy/retro
 	set popup_menu = 1
 
 	toggle_scope(usr, 2.0)
-*/
+
 ////////Laser Tag////////////////////
 
 /obj/item/weapon/gun/energy/lasertag

@@ -35,6 +35,17 @@
 	cost = 300
 	containertype = /obj/structure/largecrate
 	containername = "research startup crate"
+//eva
+/decl/hierarchy/supply_pack/science/softsuit
+	name = "EVA - Scientist softsuit"
+	contains = list(/obj/item/clothing/suit/space/science,
+					/obj/item/clothing/head/helmet/space/science,
+					/obj/item/clothing/shoes/magboots,
+					/obj/item/weapon/tank/emergency/oxygen/engi)
+	cost = 30
+	containertype = /obj/structure/closet/crate/secure/large
+	containername = "scientist softsuit crate"
+	access = core_access_science_programs
 
 /decl/hierarchy/supply_pack/science/voidsuit
 	name = "EVA - Scientist voidsuit"
@@ -43,5 +54,5 @@
 					/obj/item/clothing/shoes/magboots)
 	cost = 100
 	containertype = /obj/structure/closet/crate/secure/large
-	containername = "excavation voidsuit crate"
+	containername = "scientist voidsuit crate"
 	access = core_access_science_programs

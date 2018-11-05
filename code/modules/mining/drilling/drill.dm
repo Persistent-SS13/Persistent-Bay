@@ -161,36 +161,19 @@
 					harvesting.resources[metal] = 0
 
 				for(var/i=1, i <= create_ore, i++)
-					if(metal == "phoron")
-						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 5
-						zone.asteroid_targets |= src
-						zone.drill_targets |= src
-					else if(metal == "bluespace crystal")
-						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 25
-						zone.asteroid_targets |= src
-						zone.drill_targets |= src
-					else if(metal == "platinum")
-						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 0.25
-						zone.asteroid_targets |= src
-						zone.drill_targets |= src
-					else if(metal == "diamond")
-						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 0.25
-						zone.asteroid_targets |= src
-						zone.drill_targets |= src
-					else if(metal == "pitchblende")
-						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 0.25
-						zone.asteroid_targets |= src
-						zone.drill_targets |= src
-					else if(metal == "gold")
-						var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-						zone.asteroid_aggression += 0.25
-						zone.asteroid_targets |= src
-						zone.drill_targets |= src
+					switch(metal)
+						if("phoron")
+							SSasteroid.agitate(src, 5)
+						if("bluespace crystal")
+							SSasteroid.agitate(src, 25)
+						if("platinum")
+							SSasteroid.agitate(src, 0.25)
+						if("diamond")
+							SSasteroid.agitate(src, 0.25)
+						if("pitchblende")
+							SSasteroid.agitate(src, 0.25)
+						if("gold")
+							SSasteroid.agitate(src, 0.25)
 
 					if(metal == "bluespace crystal")
 						new /obj/item/bluespace_crystal(get_turf(src))

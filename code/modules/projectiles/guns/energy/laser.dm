@@ -19,6 +19,7 @@
 	self_recharge = 1
 	use_external_power = 1
 	one_hand_penalty = 0 //just in case
+	load_method = ENERGY_LOAD_FIXED_CELL
 
 /obj/item/weapon/gun/energy/laser/practice
 	name = "practice laser carbine"
@@ -26,6 +27,7 @@
 	icon_state = "laserp"
 	projectile_type = /obj/item/projectile/beam/practice
 	charge_cost = 10 //How much energy is needed to fire.
+	load_method = ENERGY_LOAD_FIXED_CELL
 /*
 /obj/item/weapon/gun/energy/laser/practice/proc/hacked()
 	return projectile_type != /obj/item/projectile/beam/practice
@@ -98,6 +100,7 @@ obj/item/weapon/gun/energy/retro
 	recharge_time = 10
 	accuracy = 0 //mounted laser cannons don't need any help, thanks
 	one_hand_penalty = 0
+	load_method = ENERGY_LOAD_FIXED_CELL
 /*
 /obj/item/weapon/gun/energy/xray
 	name = "x-ray laser carbine"
@@ -112,6 +115,7 @@ obj/item/weapon/gun/energy/retro
 	charge_cost = 15
 	max_shots = 10
 	wielded_item_state = "gun_wielded"
+	load_method = ENERGY_LOAD_HOTSWAP_CELL
 
 /obj/item/weapon/gun/energy/xray/pistol
 	name = "x-ray laser gun"
@@ -122,6 +126,7 @@ obj/item/weapon/gun/energy/retro
 	one_hand_penalty = 1
 	w_class = ITEM_SIZE_NORMAL
 	fire_delay = 10
+	load_method = ENERGY_LOAD_HOTSWAP_CELL
 
 /obj/item/weapon/gun/energy/sniperrifle
 	name = "marksman energy rifle"

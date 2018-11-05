@@ -30,6 +30,10 @@
 a creative player the means to solve many problems.  Circuits are held inside an electronic assembly, and are wired using special tools.
 */
 
+/obj/item/integrated_circuit/New()
+	qdel(src)
+	
+
 /obj/item/integrated_circuit/examine(mob/user)
 	. = ..()
 	if(.)

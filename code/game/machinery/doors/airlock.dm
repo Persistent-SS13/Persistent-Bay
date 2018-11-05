@@ -170,6 +170,119 @@
 
 //Glass airlock presets
 
+
+
+
+
+
+
+/obj/machinery/door/airlock/maintenance_hatch
+	name = "Maintenance Hatch"
+	explosion_resistance = 20
+	opacity = 1
+
+/obj/machinery/door/airlock/maintenance_hatch/bolted
+	locked = 1
+	icon_state = "door_locked"
+
+/obj/machinery/door/airlock/glass_command
+	name = "Maintenance Hatch"
+	hitsound = 'sound/effects/Glasshit.ogg'
+	maxhealth = 300
+	explosion_resistance = 5
+	opacity = 0
+	glass = 1
+	door_color = COLOR_COMMAND_BLUE
+	stripe_color = COLOR_SKY_BLUE
+	
+/obj/machinery/door/airlock/glass_external
+	airlock_type = "External"
+	name = "External Airlock"
+	icon = 'icons/obj/doors/external/door.dmi'
+	fill_file = 'icons/obj/doors/external/fill_steel.dmi'
+	color_file = 'icons/obj/doors/external/color.dmi'
+	color_fill_file = 'icons/obj/doors/external/fill_color.dmi'
+	glass_file = 'icons/obj/doors/external/fill_glass.dmi'
+	bolts_file = 'icons/obj/doors/external/lights_bolts.dmi'
+	deny_file = 'icons/obj/doors/external/lights_deny.dmi'
+	lights_file = 'icons/obj/doors/external/lights_green.dmi'
+	emag_file = 'icons/obj/doors/external/emag.dmi'
+	assembly_type = /obj/structure/door_assembly/door_assembly_ext
+	door_color = COLOR_NT_RED
+	paintable = AIRLOCK_PAINTABLE
+	glass = 1
+
+/obj/machinery/door/airlock/glass_external/bolted
+	icon_state = "door_locked"
+	locked = 1
+
+/obj/machinery/door/airlock/glass_external/bolted/cycling
+	frequency = 1379
+
+/obj/machinery/door/airlock/glass_external/bolted_open
+	icon_state = "door_open"
+	density = 0
+	locked = 1
+	opacity = 0
+
+/obj/machinery/door/airlock/glass_engineering
+	name = "Maintenance Hatch"
+	hitsound = 'sound/effects/Glasshit.ogg'
+	maxhealth = 300
+	explosion_resistance = 5
+	opacity = 0
+	glass = 1
+	door_color = COLOR_AMBER
+	stripe_color = COLOR_RED
+/obj/machinery/door/airlock/glass_security
+	name = "Maintenance Hatch"
+	hitsound = 'sound/effects/Glasshit.ogg'
+	maxhealth = 300
+	explosion_resistance = 5
+	opacity = 0
+	glass = 1
+	door_color = COLOR_NT_RED
+	stripe_color = COLOR_ORANGE
+/obj/machinery/door/airlock/glass_medical
+	name = "Maintenance Hatch"
+	hitsound = 'sound/effects/Glasshit.ogg'
+	maxhealth = 300
+	explosion_resistance = 5
+	opacity = 0
+	glass = 1
+	door_color = COLOR_WHITE
+	stripe_color = COLOR_DEEP_SKY_BLUE
+/obj/machinery/door/airlock/glass_virology
+	name = "Maintenance Hatch"
+	hitsound = 'sound/effects/Glasshit.ogg'
+	maxhealth = 300
+	explosion_resistance = 5
+	opacity = 0
+	glass = 1
+	door_color = COLOR_WHITE
+	stripe_color = COLOR_GREEN
+
+/obj/machinery/door/airlock/glass_sol
+	name = "Maintenance Hatch"
+	hitsound = 'sound/effects/Glasshit.ogg'
+	maxhealth = 300
+	explosion_resistance = 5
+	opacity = 0
+	glass = 1
+	door_color = COLOR_BLUE_GRAY
+	stripe_color = COLOR_AMBER
+
+
+
+
+
+
+
+
+
+
+
+
 /obj/machinery/door/airlock/glass
 	name = "Glass Airlock"
 	hitsound = 'sound/effects/Glasshit.ogg'

@@ -98,18 +98,7 @@
 	containername = "ballistic armor crate"
 	access = core_access_security_programs
 
-//eva
-/decl/hierarchy/supply_pack/security/softsuit
-	name = "EVA - Security softsuit"
-	contains = list(/obj/item/clothing/suit/space/security,
-					/obj/item/clothing/head/helmet/space/security,
-					/obj/item/clothing/shoes/magboots,
-					/obj/item/weapon/tank/emergency/oxygen/engi)
-	cost = 30
-	containername = "security softsuit crate"
-	containertype = /obj/structure/closet/crate/secure/large
-	access = core_access_security_programs
-
+//voidsuits
 /decl/hierarchy/supply_pack/security/voidsuit
 	name = "EVA - Security voidsuit"
 	contains = list(/obj/item/clothing/suit/space/void/security,

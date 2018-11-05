@@ -78,7 +78,6 @@
 					/obj/item/clothing/head/helmet/space/emergency,
 					/obj/item/weapon/tank/emergency/oxygen/engi)
 	cost = 15
-	containertype = /obj/structure/closet/crate/large
 	containername = "emergency softsuit crate"
 
 /decl/hierarchy/supply_pack/operations/softsuit
@@ -88,8 +87,7 @@
 					/obj/item/clothing/shoes/magboots,
 					/obj/item/weapon/tank/emergency/oxygen/engi)
 	cost = 30
-	containertype = /obj/structure/closet/crate/large
-	containername = "EVA softsuit crate"
+	containername = "softsuit crate"
 
 /decl/hierarchy/supply_pack/operations/salvagedsuit
 	name = "EVA - Salvaged voidsuit"
@@ -97,7 +95,6 @@
 					/obj/item/clothing/head/helmet/space/void/engineering/salvage,
 					/obj/item/clothing/shoes/magboots)
 	cost = 50
-	containertype = /obj/structure/closet/crate/large
 	containername = "salvaged voidsuit crate"
 
 /decl/hierarchy/supply_pack/operations/voidsuit
@@ -106,7 +103,6 @@
 					/obj/item/clothing/head/helmet/space/void,
 					/obj/item/clothing/shoes/magboots)
 	cost = 100
-	containertype = /obj/structure/closet/crate/large
 	containername = "basic voidsuit crate"
 
 /decl/hierarchy/supply_pack/operations/voidsuit_purple
@@ -115,7 +111,6 @@
 					/obj/item/clothing/head/helmet/space/void/exploration,
 					/obj/item/clothing/shoes/magboots)
 	cost = 300 //Expensive because moderately protects armor & heat
-	containertype = /obj/structure/closet/crate/large
 	containername = "purple voidsuit crate"
 
 /decl/hierarchy/supply_pack/operations/voidsuit_red
@@ -124,5 +119,4 @@
 					/obj/item/clothing/head/helmet/space/void/pilot,
 					/obj/item/clothing/shoes/magboots)
 	cost = 100
-	containertype = /obj/structure/closet/crate/large
 	containername = "red voidsuit crate"

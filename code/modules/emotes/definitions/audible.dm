@@ -167,9 +167,3 @@
 	key ="chitter"
 	emote_message_3p = "USER chitters."
 	emote_sound = 'sound/voice/Bug.ogg'
-
-/decl/emote/audible/unathi_hiss
-	key ="hiss"
-	emote_message_3p_target = "USER hisses at TARGET."
-	emote_message_3p = "USER hisses."
-	emote_sound = 'sound/voice/unathihiss.ogg' //Credit for sound: www.zapsplat.com

@@ -128,18 +128,6 @@
 	containername = "quartermaster equipment locker"
 	access = core_access_order_approval
 
-//eva
-/decl/hierarchy/supply_pack/assignments/minersoftsuit
-	name = "Cargo - Mining softsuit"
-	contains = list(/obj/item/clothing/suit/space/mining,
-					/obj/item/clothing/head/helmet/space/mining,
-					/obj/item/clothing/shoes/magboots,
-					/obj/item/weapon/tank/emergency/oxygen/engi)
-	cost = 30
-	containertype = /obj/structure/closet/crate/secure/large
-	containername = "mining softsuit crate"
-	access = core_access_order_approval
-
 /decl/hierarchy/supply_pack/assignments/minervoidsuit
 	name = "Cargo - Mining voidsuit"
 	contains = list(/obj/item/clothing/suit/space/void/mining,

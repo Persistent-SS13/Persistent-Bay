@@ -432,6 +432,7 @@ var/global/list/debug_data = list()
 
 /proc/Load_World()
 	var/starttime = REALTIMEOFDAY
+	if(!fexists("map_saves/game.sav")) return
 	var/savefile/f = new("map_saves/extras.sav")
 	all_loaded = list()
 	found_vars = list()

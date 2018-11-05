@@ -180,17 +180,6 @@
 	containername = "medical scrubs crate"
 
 //eva
-/decl/hierarchy/supply_pack/medical/softsuit
-	name = "EVA - Medical softsuit"
-	contains = list(/obj/item/clothing/suit/space/medical,
-					/obj/item/clothing/head/helmet/space/medical,
-					/obj/item/clothing/shoes/magboots,
-					/obj/item/weapon/tank/emergency/oxygen/engi)
-	cost = 30
-	containername = "medical voidsuit crate"
-	containertype = /obj/structure/closet/crate/secure/large
-	access = core_access_medical_programs
-
 /decl/hierarchy/supply_pack/medical/voidsuit
 	name = "EVA - Medical voidsuit"
 	contains = list(/obj/item/clothing/suit/space/void/medical,

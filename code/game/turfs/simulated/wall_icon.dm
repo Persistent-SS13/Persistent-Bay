@@ -79,10 +79,6 @@
 			I = image('icons/turf/wall_masks.dmi', "reinf_construct-[state]")
 			I.color = reinf_color
 			overlays = overlays.Copy() + I
-		if(state >= 5 || state == null)
-			I = image('icons/turf/wall_masks.dmi', "reinf_metal")
-			I.color = "#666666"
-			overlays = overlays.Copy() + I
 
 	if(stripe_color)
 		for(var/i = 1 to 4)

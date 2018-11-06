@@ -31,6 +31,9 @@ obj/item/weapon/circuitboard/rdserver
 							/obj/item/weapon/stock_parts/manipulator = 1,
 							/obj/item/weapon/stock_parts/console_screen = 1)
 
+	var/list/names_paths = list(/obj/machinery/autolathe/ = "Autolathe",
+							/obj/machinery/autolathe/ammo_fab = "Ammunition Fabricator",)
+
 /obj/item/weapon/circuitboard/protolathe
 	name = T_BOARD("protolathe")
 	build_path = /obj/machinery/r_n_d/protolathe

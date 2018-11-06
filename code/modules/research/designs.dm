@@ -789,7 +789,7 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/device/mmi/radio_enabled
 	category = "Misc"
 	sort_string = "VACBB"
-	
+
 /datum/design/item/defib
 	name = "auto-resuscitator"
 	id = "defibrillator"

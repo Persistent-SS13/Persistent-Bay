@@ -7,7 +7,7 @@
 	icon_state = "38"
 	caliber = "357"
 	ammo_type = /obj/item/ammo_casing/a357
-	matter = list(DEFAULT_WALL_MATERIAL = 1260)
+	matter = list(DEFAULT_WALL_MATERIAL = 1260, /datum/reagent/aluminum = 30)//Speadloaders are less efficient, and should be balanced
 	max_ammo = 6
 	multiple_sprites = 1
 
@@ -17,7 +17,7 @@
 	icon_state = "38"
 	caliber = ".50"
 	ammo_type = /obj/item/ammo_casing/a50
-	matter = list(DEFAULT_WALL_MATERIAL = 1260)
+	matter = list(DEFAULT_WALL_MATERIAL = 1260, /datum/reagent/aluminum = 40)//The fucking instant kill device costs more
 	max_ammo = 6
 	multiple_sprites = 1
 
@@ -26,7 +26,7 @@
 	desc = "A speed loader for revolvers."
 	icon_state = "38"
 	caliber = "38"
-	matter = list(DEFAULT_WALL_MATERIAL = 360)
+	matter = list(DEFAULT_WALL_MATERIAL = 360, /datum/reagent/aluminum = 20)
 	ammo_type = /obj/item/ammo_casing/c38
 	max_ammo = 6
 	multiple_sprites = 1
@@ -34,6 +34,7 @@
 /obj/item/ammo_magazine/c38/rubber
 	name = "speed loader (.38, rubber)"
 	icon_state = "R38"
+	matter =list("plastic" = 1260, /datum/reagent/aluminum = 10)
 	ammo_type = /obj/item/ammo_casing/c38/rubber
 
 /obj/item/ammo_magazine/c44
@@ -41,7 +42,7 @@
 	desc = "A speed loader for revolvers."
 	icon_state = "38"
 	ammo_type = /obj/item/ammo_casing/c44
-	matter = list(DEFAULT_WALL_MATERIAL = 450)
+	matter = list(DEFAULT_WALL_MATERIAL = 450, /datum/reagent/aluminum = 20)
 	caliber = ".44"
 	max_ammo = 6
 	multiple_sprites = 1
@@ -49,6 +50,7 @@
 /obj/item/ammo_magazine/c44/rubber
 	name = "speed loader (.44 magnum, rubber)"
 	icon_state = "R38"
+	matter = list("plastic" = 1300, /datum/reagent/aluminum = 10)
 	ammo_type = /obj/item/ammo_casing/c44/rubber
 
 /obj/item/ammo_magazine/c45m
@@ -56,7 +58,7 @@
 	icon_state = "45"
 	mag_type = MAGAZINE
 	ammo_type = /obj/item/ammo_casing/c45
-	matter = list(DEFAULT_WALL_MATERIAL = 525) //metal costs are very roughly based around 1 .45 casing = 75 metal
+	matter = list(DEFAULT_WALL_MATERIAL = 525, /datum/reagent/aluminum = 20) //metal costs are very roughly based around 1 .45 casing = 75 metal
 	caliber = ".45"
 	max_ammo = 7
 	multiple_sprites = 1
@@ -66,6 +68,7 @@
 
 /obj/item/ammo_magazine/c45m/rubber
 	name = "magazine (.45, rubber)"
+	matter = list("plastic" = 1200, /datum/reagent/aluminum = 10)
 	ammo_type = /obj/item/ammo_casing/c45/rubber
 
 /obj/item/ammo_magazine/c45m/practice
@@ -74,6 +77,7 @@
 
 /obj/item/ammo_magazine/c45m/flash
 	name = "magazine (.45, flash)"
+	matter = list(DEFAULT_WALL_MATERIAL = 525, /datum/reagent/aluminum = 20, /datum/reagent/sulfur = 10)
 	ammo_type = /obj/item/ammo_casing/c45/flash
 
 /obj/item/ammo_magazine/c45uzi
@@ -81,7 +85,7 @@
 	icon_state = "uzi45"
 	mag_type = MAGAZINE
 	ammo_type = /obj/item/ammo_casing/c45
-	matter = list(DEFAULT_WALL_MATERIAL = 1200)
+	matter = list(DEFAULT_WALL_MATERIAL = 1200, /datum/reagent/aluminum = 20)
 	caliber = ".45"
 	max_ammo = 16
 	multiple_sprites = 1
@@ -94,7 +98,7 @@
 	icon_state = "9x19p"
 	origin_tech = list(TECH_COMBAT = 2)
 	mag_type = MAGAZINE
-	matter = list(DEFAULT_WALL_MATERIAL = 600)
+	matter = list(DEFAULT_WALL_MATERIAL = 600,/datum/reagent/aluminum = 20)
 	caliber = "9mm"
 	ammo_type = /obj/item/ammo_casing/c9mm
 	max_ammo = 10
@@ -105,13 +109,14 @@
 
 /obj/item/ammo_magazine/mc9mm/flash
 	name = "magazine (9mm, flash)"
+	matter = list(DEFAULT_WALL_MATERIAL = 600,/datum/reagent/aluminum = 20, /datum/reagent/sulfur = 10)
 	ammo_type = /obj/item/ammo_casing/c9mm/flash
 
 /obj/item/ammo_magazine/box/c9mm
 	name = "ammunition box (9mm)"
 	icon_state = "9mm"
 	origin_tech = list(TECH_COMBAT = 2)
-	matter = list(DEFAULT_WALL_MATERIAL = 1800)
+	matter = list(DEFAULT_WALL_MATERIAL = 1800, /datum/reagent/aluminum = 40)
 	caliber = "9mm"
 	ammo_type = /obj/item/ammo_casing/c9mm
 	max_ammo = 30
@@ -142,7 +147,7 @@
 	icon_state = "9mmt"
 	mag_type = MAGAZINE
 	ammo_type = /obj/item/ammo_casing/c9mm
-	matter = list(DEFAULT_WALL_MATERIAL = 1200)
+	matter = list(DEFAULT_WALL_MATERIAL = 1200, /datum/reagent/aluminum = 20)
 	caliber = "9mm"
 	max_ammo = 20
 	multiple_sprites = 1
@@ -152,6 +157,7 @@
 
 /obj/item/ammo_magazine/mc9mmt/rubber
 	name = "top mounted magazine (9mm, rubber)"
+	matter = list("plastic" = 1000, /datum/reagent/aluminum = 10)
 	ammo_type = /obj/item/ammo_casing/c9mm/rubber
 
 /obj/item/ammo_magazine/mc9mmt/practice
@@ -163,7 +169,7 @@
 	icon_state = "9mm"
 	origin_tech = list(TECH_COMBAT = 2)
 	caliber = ".45"
-	matter = list(DEFAULT_WALL_MATERIAL = 2250)
+	matter = list(DEFAULT_WALL_MATERIAL = 2250, /datum/reagent/aluminum = 40)
 	ammo_type = /obj/item/ammo_casing/c45
 	max_ammo = 30
 
@@ -176,7 +182,7 @@
 	origin_tech = list(TECH_COMBAT = 2)
 	mag_type = MAGAZINE
 	caliber = "10mm"
-	matter = list(DEFAULT_WALL_MATERIAL = 1500)
+	matter = list(DEFAULT_WALL_MATERIAL = 1500, /datum/reagent/aluminum = 20)
 	ammo_type = /obj/item/ammo_casing/a10mm
 	max_ammo = 20
 	multiple_sprites = 1
@@ -190,7 +196,7 @@
 	origin_tech = list(TECH_COMBAT = 2)
 	mag_type = MAGAZINE
 	caliber = "a762"
-	matter = list(DEFAULT_WALL_MATERIAL = 1800)
+	matter = list(DEFAULT_WALL_MATERIAL = 1800, /datum/reagent/aluminum = 25)
 	ammo_type = /obj/item/ammo_casing/a762
 	max_ammo = 15 //if we lived in a world where normal mags had 30 rounds, this would be a 20 round mag
 	multiple_sprites = 1
@@ -208,7 +214,7 @@
 	origin_tech = list(TECH_COMBAT = 2)
 	mag_type = MAGAZINE
 	caliber = ".50"
-	matter = list(DEFAULT_WALL_MATERIAL = 1260)
+	matter = list(DEFAULT_WALL_MATERIAL = 1260, /datum/reagent/aluminum = 35)//Slightly less than the death revolver, but still expensive.
 	ammo_type = /obj/item/ammo_casing/a50
 	max_ammo = 7
 	multiple_sprites = 1
@@ -234,7 +240,7 @@
 	origin_tech = list(TECH_COMBAT = 2)
 	mag_type = MAGAZINE
 	caliber = "a556"
-	matter = list(DEFAULT_WALL_MATERIAL = 4500)
+	matter = list(DEFAULT_WALL_MATERIAL = 4500, /datum/reagent/aluminum = 50)
 	ammo_type = /obj/item/ammo_casing/a556
 	max_ammo = 50
 	multiple_sprites = 1
@@ -247,7 +253,7 @@
 	icon_state = "c762"
 	mag_type = MAGAZINE
 	caliber = "a556"
-	matter = list(DEFAULT_WALL_MATERIAL = 1800)
+	matter = list(DEFAULT_WALL_MATERIAL = 1800, /datum/reagent/aluminum = 35)
 	ammo_type = /obj/item/ammo_casing/a556
 	max_ammo = 20
 	multiple_sprites = 1
@@ -259,6 +265,6 @@
 	caliber = "caps"
 	color = "#ff0000"
 	ammo_type = /obj/item/ammo_casing/cap
-	matter = list(DEFAULT_WALL_MATERIAL = 600)
+	matter = list("plastic" = 400)
 	max_ammo = 7
 	multiple_sprites = 1

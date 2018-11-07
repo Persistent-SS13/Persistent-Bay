@@ -41,10 +41,14 @@
 			return global.SSair;
 		if("SSairflow")
 			return global.SSairflow;
+		if("SSalarm")
+			return global.SSalarm;
 		if("SSasteroid")
 			return global.SSasteroid;
 		if("SSatoms")
 			return global.SSatoms;
+		if("SSautosave")
+			return global.SSautosave;
 		if("SSchemistry")
 			return global.SSchemistry;
 		if("SScircuit")
@@ -95,6 +99,8 @@
 			return global.SStimer;
 		if("SStrade")
 			return global.SStrade;
+		if("SSturf")
+			return global.SSturf;
 		if("SSvines")
 			return global.SSvines;
 		if("SSwireless")
@@ -247,6 +253,8 @@
 			return global.assigned;
 		if("assigned_blocks")
 			return global.assigned_blocks;
+		if("atmosphere_alarm")
+			return global.atmosphere_alarm;
 		if("attack_log_repository")
 			return global.attack_log_repository;
 		if("autolathe_categories")
@@ -271,6 +279,8 @@
 			return global.cached_icons;
 		if("cached_space")
 			return global.cached_space;
+		if("camera_alarm")
+			return global.camera_alarm;
 		if("camera_range_display_status")
 			return global.camera_range_display_status;
 		if("camera_repository")
@@ -435,6 +445,8 @@
 			return global.fileaccess_timer;
 		if("finds_as_strings")
 			return global.finds_as_strings;
+		if("fire_alarm")
+			return global.fire_alarm;
 		if("flesh_hud_colours")
 			return global.flesh_hud_colours;
 		if("floorIsLava")
@@ -655,6 +667,8 @@
 			return global.mob_hat_cache;
 		if("mob_repository")
 			return global.mob_repository;
+		if("motion_alarm")
+			return global.motion_alarm;
 		if("moving_levels")
 			return global.moving_levels;
 		if("multi_point_spawns")
@@ -733,6 +747,8 @@
 			return global.possible_changeling_IDs;
 		if("poster_designs")
 			return global.poster_designs;
+		if("power_alarm")
+			return global.power_alarm;
 		if("powerinstances")
 			return global.powerinstances;
 		if("powers")
@@ -827,8 +843,6 @@
 			return global.runtime_diary;
 		if("same_wires")
 			return global.same_wires;
-		if("save_controller")
-			return global.save_controller;
 		if("saved")
 			return global.saved;
 		if("secondary_mode")
@@ -1104,10 +1118,14 @@
 			global.SSair=newval;
 		if("SSairflow")
 			global.SSairflow=newval;
+		if("SSalarm")
+			global.SSalarm=newval;
 		if("SSasteroid")
 			global.SSasteroid=newval;
 		if("SSatoms")
 			global.SSatoms=newval;
+		if("SSautosave")
+			global.SSautosave=newval;
 		if("SSchemistry")
 			global.SSchemistry=newval;
 		if("SScircuit")
@@ -1158,6 +1176,8 @@
 			global.SStimer=newval;
 		if("SStrade")
 			global.SStrade=newval;
+		if("SSturf")
+			global.SSturf=newval;
 		if("SSvines")
 			global.SSvines=newval;
 		if("SSwireless")
@@ -1310,6 +1330,8 @@
 			global.assigned=newval;
 		if("assigned_blocks")
 			global.assigned_blocks=newval;
+		if("atmosphere_alarm")
+			global.atmosphere_alarm=newval;
 		if("attack_log_repository")
 			global.attack_log_repository=newval;
 		if("autolathe_categories")
@@ -1334,6 +1356,8 @@
 			global.cached_icons=newval;
 		if("cached_space")
 			global.cached_space=newval;
+		if("camera_alarm")
+			global.camera_alarm=newval;
 		if("camera_range_display_status")
 			global.camera_range_display_status=newval;
 		if("camera_repository")
@@ -1498,6 +1522,8 @@
 			global.fileaccess_timer=newval;
 		if("finds_as_strings")
 			global.finds_as_strings=newval;
+		if("fire_alarm")
+			global.fire_alarm=newval;
 		if("flesh_hud_colours")
 			global.flesh_hud_colours=newval;
 		if("floorIsLava")
@@ -1718,6 +1744,8 @@
 			global.mob_hat_cache=newval;
 		if("mob_repository")
 			global.mob_repository=newval;
+		if("motion_alarm")
+			global.motion_alarm=newval;
 		if("moving_levels")
 			global.moving_levels=newval;
 		if("multi_point_spawns")
@@ -1796,6 +1824,8 @@
 			global.possible_changeling_IDs=newval;
 		if("poster_designs")
 			global.poster_designs=newval;
+		if("power_alarm")
+			global.power_alarm=newval;
 		if("powerinstances")
 			global.powerinstances=newval;
 		if("powers")
@@ -1890,8 +1920,6 @@
 			global.runtime_diary=newval;
 		if("same_wires")
 			global.same_wires=newval;
-		if("save_controller")
-			global.save_controller=newval;
 		if("saved")
 			global.saved=newval;
 		if("secondary_mode")
@@ -2146,8 +2174,10 @@
 	"SKILLS",
 	"SSair",
 	"SSairflow",
+	"SSalarm",
 	"SSasteroid",
 	"SSatoms",
+	"SSautosave",
 	"SSchemistry",
 	"SScircuit",
 	"SSevent",
@@ -2173,6 +2203,7 @@
 	"SStgui",
 	"SStimer",
 	"SStrade",
+	"SSturf",
 	"SSvines",
 	"SSwireless",
 	"SSxenoarch",
@@ -2249,6 +2280,7 @@
 	"asset_datums",
 	"assigned",
 	"assigned_blocks",
+	"atmosphere_alarm",
 	"attack_log_repository",
 	"autolathe_categories",
 	"autolathe_recipes",
@@ -2261,6 +2293,7 @@
 	"cable_list",
 	"cached_icons",
 	"cached_space",
+	"camera_alarm",
 	"camera_range_display_status",
 	"camera_repository",
 	"cameranet",
@@ -2343,6 +2376,7 @@
 	"file_uid",
 	"fileaccess_timer",
 	"finds_as_strings",
+	"fire_alarm",
 	"flesh_hud_colours",
 	"floorIsLava",
 	"floor_decals",
@@ -2453,6 +2487,7 @@
 	"minor_announcement",
 	"mob_hat_cache",
 	"mob_repository",
+	"motion_alarm",
 	"moving_levels",
 	"multi_point_spawns",
 	"narsie_behaviour",
@@ -2492,6 +2527,7 @@
 	"possible_cable_coil_colours",
 	"possible_changeling_IDs",
 	"poster_designs",
+	"power_alarm",
 	"powerinstances",
 	"powers",
 	"preferences_datums",
@@ -2539,7 +2575,6 @@
 	"rune_list",
 	"runtime_diary",
 	"same_wires",
-	"save_controller",
 	"saved",
 	"secondary_mode",
 	"secret_force_mode",

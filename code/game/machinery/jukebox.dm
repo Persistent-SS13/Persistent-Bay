@@ -24,7 +24,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 	clicksound = 'sound/machines/buttonbeep.ogg'
 	var/selected_genre = "ALL"
 	var/playing = 0
-	var/volume = 20
+	var/volume = 10
 
 	var/sound_id
 	var/datum/sound_token/sound_token
@@ -45,7 +45,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 		new/datum/track("BumpusVille", 'sound/music/jukebox/29 - BumpusVille.mid', "Country"),
 		new/datum/track("King of The Creatures", 'sound/music/jukebox/33 - King Of The Creatures.mid', "Rockin"),
 		new/datum/track("Celebrity Vegetable Museum", 'sound/music/jukebox/36 - Celebrity Vegetable Museum.mid', "Country"),
-		new/datum/track("Savage Jungle Inn", 'sound/music/jukebox/40 - Savage Jungle Inn.mid', "Pleasent"),
+		new/datum/track("Savage Jungle Inn", 'sound/music/jukebox/40 - Savage Jungle Inn.mid', "Moody"),
 		new/datum/track("Dino Bungee National Memorial", 'sound/music/jukebox/37 - Dino Bungee National Memorial.mid', "Pleasent"),
 		new/datum/track("Bigfoot Shuffle", 'sound/music/jukebox/41 - Bigfoot Shuffle.mid', "Pleasent"),
 		new/datum/track("Ice Cavern", 'sound/music/jukebox/son3ice.mid', "Pleasent"),

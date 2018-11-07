@@ -31,8 +31,15 @@ obj/item/weapon/circuitboard/rdserver
 							/obj/item/weapon/stock_parts/manipulator = 1,
 							/obj/item/weapon/stock_parts/console_screen = 1)
 
-	var/list/names_paths = list(/obj/machinery/autolathe/ = "Autolathe",
-							/obj/machinery/autolathe/ammo_fab = "Ammunition Fabricator",)
+/obj/item/weapon/circuitboard/ammo_fab
+	name = T_BOARD("ammunition fabricator")
+	build_path = /obj/machinery/autolathe/ammo_fab
+	board_type = "machine"
+	origin_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 3, TECH_COMBAT = 2)
+	req_components = list(
+							/obj/item/weapon/stock_parts/matter_bin = 3,
+							/obj/item/weapon/stock_parts/manipulator = 1,
+							/obj/item/weapon/stock_parts/console_screen = 1)
 
 /obj/item/weapon/circuitboard/protolathe
 	name = T_BOARD("protolathe")

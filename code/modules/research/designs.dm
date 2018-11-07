@@ -1356,6 +1356,13 @@ CIRCUITS BELOW
 	build_path = /obj/item/weapon/circuitboard/autolathe
 	sort_string = "HABAD"
 
+/datum/design/circuit/ammo_fab
+	name = "ammo fabricator board"
+	id = "ammo_fab"
+	req_tech = list(TECH_DATA = 3, TECH_ENGINEERING = 2, TECH_COMBAT = 2)
+	build_path = /obj/item/weapon/circuitboard/ammo_fab
+	sort_string = "HAEBD"
+
 /datum/design/circuit/mining_console
 	name = "mining console board"
 	id = "mining_console"

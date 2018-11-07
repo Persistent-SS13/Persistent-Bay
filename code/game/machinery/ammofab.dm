@@ -15,5 +15,5 @@
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
 	RefreshParts()
 
-	machine_recipes = (autolathe_categories = "Arms and Ammunition")
+	machine_recipes = (autolathe_categories = "Ammunition")
 

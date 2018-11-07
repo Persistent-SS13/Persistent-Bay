@@ -322,7 +322,7 @@ var/const/EXTRA_COST_FACTOR = 1
 /datum/autolathe/recipe/syringegun_ammo
 	name = "syringe gun cartridge"
 	path = /obj/item/weapon/syringe_cartridge
-	category = "Arms and Ammunition"
+	category = "Medical"
 
 /datum/autolathe/recipe/consolescreen
 	name = "console screen"
@@ -424,14 +424,14 @@ var/const/EXTRA_COST_FACTOR = 1
 	name = "flamethrower"
 	path = /obj/item/weapon/flamethrower/full
 	hidden = 1
-	category = "Arms and Ammunition"
+	category = "Weaponry"
 
 
 /datum/autolathe/recipe/tacknife
 	name = "tactical knife"
 	path = /obj/item/weapon/material/hatchet/tacknife
 	hidden = 1
-	category = "Arms and Ammunition"
+	category = "Weaponry"
 
 /datum/autolathe/recipe/rcd
 	name = "rapid construction device"

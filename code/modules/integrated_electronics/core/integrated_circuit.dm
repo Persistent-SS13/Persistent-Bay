@@ -30,8 +30,6 @@
 a creative player the means to solve many problems.  Circuits are held inside an electronic assembly, and are wired using special tools.
 */
 
-/obj/item/integrated_circuit/New()
-	qdel(src)
 	
 
 /obj/item/integrated_circuit/examine(mob/user)
@@ -84,6 +82,9 @@ a creative player the means to solve many problems.  Circuits are held inside an
 		return CanUseTopic(user)
 
 /obj/item/integrated_circuit/Initialize()
+	spawn(0)
+		qdel(src)
+	return
 	displayed_name = name
 	setup_io(inputs, /datum/integrated_io, inputs_default, IC_INPUT)
 	inputs_default = null

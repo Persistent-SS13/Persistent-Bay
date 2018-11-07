@@ -173,7 +173,7 @@
 				var/selected = 0
 				var/x = text2num(record.assignment_data[assignmentz.uid])
 				var/title = ""
-				if(x && x > 1)
+				if(x && x > 1 && assignmentz.ranks.len >= x-1)
 					title = assignmentz.ranks[x-1]
 				else
 					title = assignmentz.name

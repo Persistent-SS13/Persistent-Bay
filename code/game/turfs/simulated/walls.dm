@@ -43,8 +43,6 @@
 	r_material = r_mat
 	p_material = p_mat
 	update_full(1, 1)
-
-/turf/simulated/wall/Initialize()
 	START_PROCESSING(SSturf, src) //Used for radiation.
 
 /turf/simulated/wall/after_load()

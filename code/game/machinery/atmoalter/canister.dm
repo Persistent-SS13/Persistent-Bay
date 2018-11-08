@@ -129,7 +129,8 @@ update_flag
 	if (destroyed)
 		return
 	..()
-	handle_heat_exchange()
+	if(loc)
+		handle_heat_exchange()
 	if(valve_open)
 		var/datum/gas_mixture/environment
 		if(holding && holding.air_contents)
@@ -361,7 +362,7 @@ update_flag
 	canister_color = "redws"
 	can_label = 0
 
-/obj/machinery/portable_atmospherics/canister/sleeping_agent/New()
+/obj/machinery/portable_atmospherics/canister/sleeping_agent/init_air_content()
 	..()
 	air_contents.adjust_gas("sleeping_agent", MolesForPressure())
 	src.update_icon()
@@ -375,7 +376,7 @@ update_flag
 	canister_color = "red"
 	can_label = 0
 
-/obj/machinery/portable_atmospherics/canister/nitrogen/New()
+/obj/machinery/portable_atmospherics/canister/nitrogen/init_air_content()
 	..()
 	src.air_contents.adjust_gas("nitrogen", MolesForPressure())
 	src.update_icon()
@@ -386,7 +387,7 @@ update_flag
 /obj/machinery/portable_atmospherics/canister/nitrogen/prechilled
 	name = "\improper Canister: \[N2 (Cooling)\]"
 
-/obj/machinery/portable_atmospherics/canister/nitrogen/prechilled/New()
+/obj/machinery/portable_atmospherics/canister/nitrogen/prechilled/init_air_content()
 	..()
 	src.air_contents.temperature = 80
 	src.update_icon()
@@ -400,7 +401,7 @@ update_flag
 	canister_color = "blue"
 	can_label = 0
 
-/obj/machinery/portable_atmospherics/canister/oxygen/New()
+/obj/machinery/portable_atmospherics/canister/oxygen/init_air_content()
 	..()
 	src.air_contents.adjust_gas("oxygen", MolesForPressure())
 	src.update_icon()
@@ -412,7 +413,7 @@ update_flag
 	name = "\improper Canister: \[O2 (Cryo)\]"
 	start_pressure = 20 * ONE_ATMOSPHERE
 
-/obj/machinery/portable_atmospherics/canister/oxygen/prechilled/New()
+/obj/machinery/portable_atmospherics/canister/oxygen/prechilled/init_air_content()
 	..()
 	src.air_contents.temperature = 80
 	src.update_icon()
@@ -426,7 +427,7 @@ update_flag
 	canister_color = "purple"
 	can_label = 0
 
-/obj/machinery/portable_atmospherics/canister/hydrogen/New()
+/obj/machinery/portable_atmospherics/canister/hydrogen/init_air_content()
 	..()
 	src.air_contents.adjust_gas("hydrogen", MolesForPressure())
 	src.update_icon()
@@ -440,7 +441,7 @@ update_flag
 	canister_color = "orange"
 	can_label = 0
 
-/obj/machinery/portable_atmospherics/canister/phoron/New()
+/obj/machinery/portable_atmospherics/canister/phoron/init_air_content()
 	..()
 	src.air_contents.adjust_gas("phoron", MolesForPressure())
 	src.update_icon()
@@ -454,7 +455,7 @@ update_flag
 	canister_color = "black"
 	can_label = 0
 
-/obj/machinery/portable_atmospherics/canister/carbon_dioxide/New()
+/obj/machinery/portable_atmospherics/canister/carbon_dioxide/init_air_content()
 	..()
 	src.air_contents.adjust_gas("carbon_dioxide", MolesForPressure())
 	src.update_icon()
@@ -468,7 +469,7 @@ update_flag
 	canister_color = "grey"
 	can_label = 0
 
-/obj/machinery/portable_atmospherics/canister/air/New()
+/obj/machinery/portable_atmospherics/canister/air/init_air_content()
 	..()
 	var/list/air_mix = StandardAirMix()
 	src.air_contents.adjust_multi("oxygen", air_mix["oxygen"], "nitrogen", air_mix["nitrogen"])
@@ -485,7 +486,7 @@ update_flag
 // N2O Roomfiller Canister
 //--------------------------------------------------------
 //Dirty way to fill room with gas. However it is a bit easier to do than creating some floor/engine/n2o -rastaf0
-/obj/machinery/portable_atmospherics/canister/sleeping_agent/roomfiller/New()
+/obj/machinery/portable_atmospherics/canister/sleeping_agent/roomfiller/init_air_content()
 	..()
 	air_contents.gas["sleeping_agent"] = 9*4000
 	spawn(10)
@@ -500,29 +501,26 @@ update_flag
 // N2 Engine Setup Canister
 //--------------------------------------------------------
 // Special types used for engine setup admin verb, they contain double amount of that of normal canister.
-/obj/machinery/portable_atmospherics/canister/nitrogen/engine_setup/New()
+/obj/machinery/portable_atmospherics/canister/nitrogen/engine_setup/init_air_content()
 	..()
 	src.air_contents.adjust_gas("nitrogen", MolesForPressure())
 	src.update_icon()
-	return 1
 
 //--------------------------------------------------------
 // CO2 Engine Setup Canister
 //--------------------------------------------------------
-/obj/machinery/portable_atmospherics/canister/carbon_dioxide/engine_setup/New()
+/obj/machinery/portable_atmospherics/canister/carbon_dioxide/engine_setup/init_air_content()
 	..()
 	src.air_contents.adjust_gas("carbon_dioxide", MolesForPressure())
 	src.update_icon()
-	return 1
 
 //--------------------------------------------------------
 // Phoron Engine Setup Canister
 //--------------------------------------------------------
-/obj/machinery/portable_atmospherics/canister/phoron/engine_setup/New()
+/obj/machinery/portable_atmospherics/canister/phoron/engine_setup/init_air_content()
 	..()
 	src.air_contents.adjust_gas("phoron", MolesForPressure())
 	src.update_icon()
-	return 1
 
 //--------------------------------------------------------
 // Empty Canister

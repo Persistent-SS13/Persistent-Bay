@@ -815,7 +815,7 @@ var/global/floorIsLava = 0
 
 	if(!check_rights(R_ADMIN))
 		return
-	Save_World()
+	SSautosave.Save()
 
 
 /datum/admins/proc/changeambience()

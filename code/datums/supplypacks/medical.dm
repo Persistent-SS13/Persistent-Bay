@@ -212,7 +212,7 @@
 
 /decl/hierarchy/supply_pack/medical/voidsuit_heavyduty
 	name = "EVA - Heavy-duty medical voidsuit"
-	contains = list(/obj/item/clothing/suit/space/void/medical/alt/prepared,
+	contains = list(/obj/item/clothing/suit/space/void/medical/alt/,
 					/obj/item/clothing/head/helmet/space/void/medical/alt,
 					/obj/item/clothing/shoes/magboots)
 	cost = 150

@@ -1,6 +1,6 @@
 /obj/machinery/portable_atmospherics/powered/scrubber
 	name = "Portable Air Scrubber"
-
+	desc = "Portable air contaminant scrubber. Works on rechargeable power cells."
 	icon = 'icons/obj/atmos.dmi'
 	icon_state = "pscrubber:0"
 	density = 1
@@ -19,9 +19,8 @@
 
 	var/list/scrubbing_gas
 
-/obj/machinery/portable_atmospherics/powered/scrubber/New()
-	..()
-	cell = new/obj/item/weapon/cell/apc(src)
+/obj/machinery/portable_atmospherics/powered/scrubber/make_cell()
+	return new/obj/item/weapon/cell/apc(src)
 
 /obj/machinery/portable_atmospherics/powered/scrubber/Initialize()
 	. = ..()
@@ -149,6 +148,7 @@
 //Huge scrubber
 /obj/machinery/portable_atmospherics/powered/scrubber/huge
 	name = "Huge Air Scrubber"
+	desc = "A larger variant of the smaller portable scrubber. Work on APC power, controlled via Area Air Control Console."
 	icon_state = "scrubber:0"
 	anchored = 1
 	volume = 50000
@@ -188,7 +188,7 @@
 		update_icon()
 
 /obj/machinery/portable_atmospherics/powered/scrubber/huge/Process()
-	if(!on || (stat & (NOPOWER|BROKEN)))
+	if(!on || inoperable())
 		update_use_power(0)
 		last_flow_rate = 0
 		last_power_draw = 0

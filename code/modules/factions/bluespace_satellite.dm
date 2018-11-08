@@ -153,7 +153,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		ui.set_initial_data(data)
 		// open the new ui window
 		ui.open()
-		message_admins("ui should be open...")
 
 
 /obj/machinery/docking_beacon/update_icon()

@@ -3,7 +3,7 @@
 	desc = "Fabricates many types of ammunition, magazines and boxes."
 	icon_state = "autolathe"
 
-/obj/machinery/autolathe/New()
+/obj/machinery/autolathe/ammo_fab/New()
 	wires = new(src)
 	//Create parts for lathe.
 	component_parts = list()

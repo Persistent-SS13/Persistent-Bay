@@ -7,7 +7,7 @@
 	icon_state = "38"
 	caliber = "357"
 	ammo_type = /obj/item/ammo_casing/a357
-	matter = list(DEFAULT_WALL_MATERIAL = 1260, /datum/reagent/aluminum = 30)//Speadloaders are less efficient, and should be balanced
+	matter = list(DEFAULT_WALL_MATERIAL = 1260, /datum/reagent/aluminum = 30)	//Speedloaders are less efficient, and should be balanced
 	max_ammo = 6
 	multiple_sprites = 1
 
@@ -17,7 +17,7 @@
 	icon_state = "38"
 	caliber = ".50"
 	ammo_type = /obj/item/ammo_casing/a50
-	matter = list(DEFAULT_WALL_MATERIAL = 1260, /datum/reagent/aluminum = 40)//The fucking instant kill device costs more
+	matter = list(DEFAULT_WALL_MATERIAL = 1260, /datum/reagent/aluminum = 40)	//The fucking instant kill device costs more
 	max_ammo = 6
 	multiple_sprites = 1
 
@@ -214,7 +214,7 @@
 	origin_tech = list(TECH_COMBAT = 2)
 	mag_type = MAGAZINE
 	caliber = ".50"
-	matter = list(DEFAULT_WALL_MATERIAL = 1260, /datum/reagent/aluminum = 35)//Slightly less than the death revolver, but still expensive.
+	matter = list(DEFAULT_WALL_MATERIAL = 1260, /datum/reagent/aluminum = 35)	//Slightly less than the death revolver, but still expensive.
 	ammo_type = /obj/item/ammo_casing/a50
 	max_ammo = 7
 	multiple_sprites = 1

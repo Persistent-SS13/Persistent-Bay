@@ -10,7 +10,7 @@ SUBSYSTEM_DEF(mapping)
 
 /datum/controller/subsystem/mapping/Initialize(timeofday)
 	GLOB.visibility_pref = 1
-	update_hub_visibility()
+	world.update_hub_visibility()
 	preloadTemplates()
 	..()
 	Load_World()

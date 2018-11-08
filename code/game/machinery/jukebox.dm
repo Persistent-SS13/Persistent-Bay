@@ -24,7 +24,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 	clicksound = 'sound/machines/buttonbeep.ogg'
 	var/selected_genre = "ALL"
 	var/playing = 0
-	var/volume = 20
+	var/volume = 10
 
 	var/sound_id
 	var/datum/sound_token/sound_token
@@ -45,7 +45,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 		new/datum/track("BumpusVille", 'sound/music/jukebox/29 - BumpusVille.mid', "Country"),
 		new/datum/track("King of The Creatures", 'sound/music/jukebox/33 - King Of The Creatures.mid', "Rockin"),
 		new/datum/track("Celebrity Vegetable Museum", 'sound/music/jukebox/36 - Celebrity Vegetable Museum.mid', "Country"),
-		new/datum/track("Savage Jungle Inn", 'sound/music/jukebox/40 - Savage Jungle Inn.mid', "Pleasent"),
+		new/datum/track("Savage Jungle Inn", 'sound/music/jukebox/40 - Savage Jungle Inn.mid', "Moody"),
 		new/datum/track("Dino Bungee National Memorial", 'sound/music/jukebox/37 - Dino Bungee National Memorial.mid', "Pleasent"),
 		new/datum/track("Bigfoot Shuffle", 'sound/music/jukebox/41 - Bigfoot Shuffle.mid', "Pleasent"),
 		new/datum/track("Ice Cavern", 'sound/music/jukebox/son3ice.mid', "Pleasent"),
@@ -86,6 +86,23 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 		new/datum/track("Midnight Market", 'sound/music/jukebox/Midnight Market.ogg', "Cyberpunk"),
 		new/datum/track("Native", 'sound/music/jukebox/Native.ogg', "Cyberpunk"),
 		new/datum/track("When I'm Gone", "sound/music/jukebox/When I'm Gone.ogg", "Cyberpunk"),
+		new/datum/track("All Systems Go!", 'sound/music/jukebox/all_systems_go.mid', "Rockin"),
+		new/datum/track("Bloody Stream", 'sound/music/jukebox/Bloody_Stream.mid', "Rockin"),
+		new/datum/track("Drinkin'", 'sound/music/jukebox/Drinking.mid', "Mercenary/Spacer"),
+		new/datum/track("End of the World'", 'sound/music/jukebox/End_Of_The_World.mid', "Rockin"),
+		new/datum/track("Every Day is Night", 'sound/music/jukebox/Every_Day_Is_Night.mid', "Rockin"),
+		new/datum/track("Con te Partiro", 'sound/music/jukebox/Con_te_Partiro.mid', "Classical"),
+		new/datum/track("Dalida Besame Mucho'", 'sound/music/jukebox/Dalida_Besame_Mucho.mid', "Moody"),
+		new/datum/track("Hua Hao Yue Yuan", 'sound/music/jukebox/Hua_Hao_Yue_Yuan.mid', "Faeren"),
+		new/datum/track("Largo's Town", 'sound/music/jukebox/LARGSTAB.mid', "Mercenary/Spacer"),
+		new/datum/track("Dive Bar'n", 'sound/music/jukebox/mkdive.mid', "Mercenary/Spacer"),
+		new/datum/track("Ghost Pirates", 'sound/music/jukebox/ghostpirate.mid', "Mercenary/Spacer"),
+		new/datum/track("Slight Scabb", 'sound/music/jukebox/scabbmap.mid', "Mercenary/Spacer"),
+		new/datum/track("Sono Chi No Sadame", 'sound/music/jukebox/Sono_Chi_No_Sadame.mid', "Faeren"),
+		new/datum/track("Tarantella", 'sound/music/jukebox/tarantella.mid', "Pleasent"),
+		new/datum/track("Stand Proud", 'sound/music/jukebox/Stand_Proud.mid', "Rockin"),
+		new/datum/track("Xiang Jian Xiao Lu", 'sound/music/jukebox/Xiang_Jian_Xiao_Lu.mid', "Faeren"),
+		new/datum/track("Xin Tai Ruan", 'sound/music/jukebox/Xin_Tai_Ruan.mid', "Faeren"),
 	)
 
 /obj/machinery/media/jukebox/New()
@@ -183,6 +200,18 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 		if(T.genre == "Classical")
 			tracks_classical[++tracks_classical.len] = list("track" = T.title)
 	data["tracks_classical"] = tracks_classical
+	
+	var/list/tracks_faeren = list()
+	for(var/datum/track/T in tracks)
+		if(T.genre == "Faeren")
+			tracks_faeren[++tracks_faeren.len] = list("track" = T.title)
+	data["tracks_faeren"] = tracks_faeren
+	
+	var/list/tracks_spacer = list()
+	for(var/datum/track/T in tracks)
+		if(T.genre == "Mercenary/Spacer")
+			tracks_spacer[++tracks_spacer.len] = list("track" = T.title)
+	data["tracks_spacer"] = tracks_spacer
 	
 	var/list/tracks_ss13 = list()
 	for(var/datum/track/T in tracks)

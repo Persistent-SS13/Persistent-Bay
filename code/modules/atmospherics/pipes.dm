@@ -33,7 +33,11 @@
 	//Return null if parent should stop checking other pipes. Recall: qdel(src) will by default return null
 
 	return 1
-
+	
+/obj/machinery/atmospherics/pipe/after_load()
+	..()
+	build_network()
+	
 /obj/machinery/atmospherics/pipe/return_air()
 	if(!parent)
 		parent = new /datum/pipeline()

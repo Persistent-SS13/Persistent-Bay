@@ -25,7 +25,7 @@
 	var/obj/machinery/computer/bridge_computer/bridge
 	var/size = 1
 	var/initial_location
-	
+
 /datum/shuttle/New()
 	..()
 
@@ -52,7 +52,7 @@
 	SSshuttle.shuttles[src.name] = src
 	if(flags & SHUTTLE_FLAGS_PROCESS)
 		SSshuttle.process_shuttles += src
-	
+
 	if(flags & SHUTTLE_FLAGS_SUPPLY)
 		if(supply_controller.shuttle)
 			CRASH("A supply shuttle is already defined.")
@@ -63,6 +63,7 @@
 
 //	if(src.name in SSshuttle.shuttles)
 //		CRASH("A shuttle with the name '[name]' is already defined.")
+
 /datum/shuttle/Destroy()
 	current_location = null
 
@@ -72,10 +73,10 @@
 		supply_controller.shuttle = null
 	. = ..()
 
-	
+
 /datum/shuttle/proc/short_jump(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/location)
 	verify_areas()
-	if(moving_status != SHUTTLE_IDLE) 
+	if(moving_status != SHUTTLE_IDLE)
 		message_admins("Cannot short jump, shuttle is not in idle state.")
 		return
 
@@ -159,12 +160,12 @@
 	for(var/area/A in shuttle_area)
 		for(var/turf/T in A.contents)
 			turfs |= T
-	var/turf/corner		
+	var/turf/corner
 	for(var/turf/T in turfs)
 		if(!corner || (T.x <= corner.x && T.y <= corner.y))
 			corner = T
 	return corner
-	
+
 //just moves the shuttle from A to B, if it can be moved
 //A note to anyone overriding move in a subtype. shuttle_moved() must absolutely not, under any circumstances, fail to move the shuttle.
 //If you want to conditionally cancel shuttle launches, that logic must go in short_jump(), long_jump() or attempt_move()
@@ -183,20 +184,20 @@
 					bug.gib()
 				else
 					qdel(AM) //it just gets atomized I guess? TODO throw it into space somewhere, prevents people from using shuttles as an atom-smasher
-	var/list/powernets = list()	
-	
+	var/list/powernets = list()
+
 	for(var/area/A in shuttle_area)
 		// Remove ceiling we are leaving behind if it exists
+		// Need to check if we are inside or in space
 		if(HasAbove(current_location.z))
 			for(var/turf/TO in A.contents)
 				var/turf/TA = GetAbove(TO)
-				if(istype(TA, ceiling_type) || istype(TA, /turf/simulated/floor/airless) || istype(TA, /turf/simulated/open))
+				if(istype(TA, ceiling_type))
 					//TA.ChangeTurf(get_base_turf_by_area(TA), 1, 1)
+					var/content_save = TA.contents
 					TA.ChangeTurf("/turf/space", 1, 1)
-					for(var/atom/AT in TA.contents)
-						message_admins("AT type [AT.type]")
-						if(istype(AT, /atom/movable/lighting_overlay))
-							qdel(AT)
+					TA.contents = content_save
+
 		// Handle knockdown when moving
 		if(knockdown)
 			for(var/mob/M in A)
@@ -218,8 +219,8 @@
 	// Move the shuttle
 	for (var/area/A in shuttle_area)
 		translate_turfs(turf_translation, A, get_base_turf_by_area(A))
-	
-	
+
+
 	// Remove old area
 	var/area/newArea = locate(world.area)
 	for (var/area/A in shuttle_area)
@@ -228,17 +229,19 @@
 			if(istype(T, /turf/space) && !istype(T, /turf/simulated/floor))
 				A.contents -= T
 				newArea.contents.Add(T)
-	
+
 	current_location = destination
-	
+
 	// if there's a zlevel above our destination, paint in a ceiling on it so we retain our air
 	if(HasAbove(current_location.z))
 		for(var/area/A in shuttle_area)
 			for(var/turf/TD in A.contents)
 				var/turf/TA = GetAbove(TD)
 				if(istype(TA, get_base_turf_by_area(TA)) || istype(TA, /turf/simulated/open))
+					var/content_save = TA.contents
 					TA.ChangeTurf(ceiling_type, 1, 1)
-					
+					TA.contents = content_save
+
 	// Remove all powernets that were affected, and rebuild them.
 	var/list/cables = list()
 	for(var/datum/powernet/P in powernets)

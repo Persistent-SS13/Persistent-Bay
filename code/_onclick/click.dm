@@ -145,6 +145,11 @@
 
 			trigger_aiming(TARGET_CAN_CLICK)
 	return 1
+	
+/mob/living/ClickOn()
+	if(SSautosave.saving)
+		return
+	. = ..()
 
 /mob/proc/setClickCooldown(var/timeout)
 	next_move = max(world.time + timeout, next_move)

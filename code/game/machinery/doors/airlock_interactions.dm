@@ -22,6 +22,9 @@
 /obj/machinery/shield/blocks_airlock()
 	return 0
 
+/obj/effect/shield/blocks_airlock()
+	return 0
+
 /mob/living/blocks_airlock()
 	return 1
 

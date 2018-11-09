@@ -15,6 +15,7 @@
 	move_delay = 4
 	accuracy = -1
 	wielded_item_state = "gun_wielded"
+	load_method = ENERGY_LOAD_FIXED_CELL
 
 /obj/item/weapon/gun/energy/pulse_rifle/carbine
 	name = "pulse carbine"
@@ -28,6 +29,7 @@
 	one_hand_penalty= 3
 	burst_delay = 2
 	move_delay = 2
+	load_method = ENERGY_LOAD_FIXED_CELL
 
 /obj/item/weapon/gun/energy/pulse_rifle/pistol
 	name = "pulse pistol"
@@ -42,10 +44,12 @@
 	burst_delay = 1
 	move_delay = 1
 	wielded_item_state = null
+	load_method = ENERGY_LOAD_FIXED_CELL
 
 /obj/item/weapon/gun/energy/pulse_rifle/mounted
 	self_recharge = 1
 	use_external_power = 1
+	load_method = ENERGY_LOAD_FIXED_CELL
 
 /obj/item/weapon/gun/energy/pulse_rifle/destroyer
 	name = "pulse destroyer"
@@ -54,6 +58,7 @@
 	fire_delay = 25
 	projectile_type=/obj/item/projectile/beam/pulse/destroy
 	charge_cost= 40
+	load_method = ENERGY_LOAD_FIXED_CELL
 
 /obj/item/weapon/gun/energy/pulse_rifle/destroyer/attack_self(mob/living/user as mob)
 	to_chat(user, "<span class='warning'>[src.name] has three settings, and they are all DESTROY.</span>")

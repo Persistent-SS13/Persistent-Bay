@@ -1,16 +1,18 @@
 //===================================================================================
 //Overmap object representing zlevel(s)
 //===================================================================================
-var/list/points_of_interest = list()
-
 /obj/effect/overmap
 	name = "map object"
 	icon = 'icons/obj/overmap.dmi'
 	icon_state = "object"
 	var/list/map_z = list()
 
+	var/list/initial_generic_waypoints //store landmark_tag of landmarks that should be added to the actual lists below on init.
+	var/list/initial_restricted_waypoints //For use with non-automatic landmarks (automatic ones add themselves).
+
 	var/list/generic_waypoints = list()    //waypoints that any shuttle can use
 	var/list/restricted_waypoints = list() //waypoints for specific shuttles
+	var/docking_codes
 
 	var/start_x			//coordinates on the
 	var/start_y			//overmap zlevel
@@ -21,7 +23,6 @@ var/list/points_of_interest = list()
 
 /obj/effect/overmap/Initialize()
 	. = ..()
-
 	if(!GLOB.using_map.use_overmap)
 		return INITIALIZE_HINT_QDEL
 
@@ -32,12 +33,13 @@ var/list/points_of_interest = list()
 	for(var/zlevel in map_z)
 		map_sectors["[zlevel]"] = src
 
+	docking_codes = "[ascii2text(rand(65,90))][ascii2text(rand(65,90))][ascii2text(rand(65,90))][ascii2text(rand(65,90))]"
+
 	start_x = start_x || rand(OVERMAP_EDGE, GLOB.using_map.overmap_size - OVERMAP_EDGE)
 	start_y = start_y || rand(OVERMAP_EDGE, GLOB.using_map.overmap_size - OVERMAP_EDGE)
 
 	forceMove(locate(start_x, start_y, GLOB.using_map.overmap_z))
 	testing("Located sector \"[name]\" at [start_x],[start_y], containing Z [english_list(map_z)]")
-	points_of_interest += name
 
 	GLOB.using_map.player_levels |= map_z
 
@@ -47,35 +49,19 @@ var/list/points_of_interest = list()
 	if(base)
 		GLOB.using_map.station_levels |= map_z
 		GLOB.using_map.contact_levels |= map_z
-	//handle automatic waypoints that spawned before us
-	for(var/obj/effect/shuttle_landmark/automatic/L in world)
-		if(L.z in map_z)
-			L.add_to_sector(src, 1)
 
-	//find shuttle waypoints
-	var/list/found_waypoints = list()
-	for(var/waypoint_tag in generic_waypoints)
-		var/obj/effect/shuttle_landmark/WP = locate(waypoint_tag)
-		if(WP)
-			found_waypoints += WP
-		else
-			log_error("Sector \"[name]\" containing Z [english_list(map_z)] could not find waypoint with tag [waypoint_tag]!")
-	generic_waypoints = found_waypoints
-
-	for(var/shuttle_name in restricted_waypoints)
-		found_waypoints = list()
-		for(var/waypoint_tag in restricted_waypoints[shuttle_name])
-			var/obj/effect/shuttle_landmark/WP = locate(waypoint_tag)
-			if(WP)
-				found_waypoints += WP
-			else
-				log_error("Sector \"[name]\" containing Z [english_list(map_z)] could not find waypoint with tag [waypoint_tag]!")
-		restricted_waypoints[shuttle_name] = found_waypoints
+	SSshuttle.initialize_sector(src) //Will populate the waypoint lists; waypoints not spawned yet will be added in as they spawn.
 
 	for(var/obj/machinery/computer/sensors/S in SSmachines.machinery)
 		if (S.z in map_z)
 			S.linked = src
-			testing("Sensor console at level [S.z] linked to overmap object '[name]'.")
+
+//If shuttle_name is false, will add to generic waypoints; otherwise will add to restricted. Does not do checks.
+obj/effect/overmap/proc/add_landmark(obj/effect/shuttle_landmark/landmark, shuttle_name)
+	if(shuttle_name)
+		LAZYADD(restricted_waypoints[shuttle_name], landmark)
+	else
+		generic_waypoints += landmark
 
 /obj/effect/overmap/proc/get_waypoints(var/shuttle_name)
 	. = generic_waypoints.Copy()

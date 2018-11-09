@@ -342,7 +342,7 @@ var/global/list/debug_data = list()
 		else
 			backup = 1
 	found_vars = list()
-	for(var/z in 1 to 50)
+	for(var/z in 1 to 52)
 		fcopy("map_saves/z[z].sav", "backups/[dir]/z[z].sav")
 		fdel("map_saves/z[z].sav")
 		var/savefile/f = new("map_saves/z[z].sav")
@@ -458,7 +458,7 @@ var/global/list/debug_data = list()
 			turfs |= T
 		A.contents.Add(turfs)
 	f = null
-	for(var/z in 1 to 50)
+	for(var/z in 1 to 52)
 		f = new("map_saves/z[z].sav")
 		var/starttime2 = REALTIMEOFDAY
 		var/breakout = 0

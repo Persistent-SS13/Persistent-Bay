@@ -10,6 +10,10 @@
 	var/list/blend_objects = newlist() // Objects which to blend with
 	var/list/noblend_objects = newlist() //Objects to avoid blending with (such as children of listed blend objects.
 
+/obj/structure/after_load()
+	update_connections(1)
+	..()
+
 /obj/structure/Destroy()
 	if(parts)
 		new parts(loc)

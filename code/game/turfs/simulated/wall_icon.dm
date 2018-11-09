@@ -41,7 +41,8 @@
 
 	set_opacity(p_material.opacity >= 0.5)
 
-	radiation_repository.resistance_cache.Remove(src)
+	SSradiation.resistance_cache.Remove(src)
+
 
 /turf/simulated/wall/update_icon()
 	if(!material || !p_material)
@@ -78,10 +79,6 @@
 		else
 			I = image('icons/turf/wall_masks.dmi', "reinf_construct-[state]")
 			I.color = reinf_color
-			overlays = overlays.Copy() + I
-		if(state >= 5 || state == null)
-			I = image('icons/turf/wall_masks.dmi', "reinf_metal")
-			I.color = "#666666"
 			overlays = overlays.Copy() + I
 
 	if(stripe_color)

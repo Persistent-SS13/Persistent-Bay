@@ -63,9 +63,9 @@
 
 	for(var/i = 1 to 4)
 		if(other_connections[i] != "0")
-			I = image('icons/turf/wall_masks.dmi', "[material.icon_base]_other[wall_connections[i]]", dir = 1<<(i-1))
+			I = image('icons/turf/wall_masks.dmi', "[p_material.icon_base]_other[wall_connections[i]]", dir = 1<<(i-1))
 		else
-			I = image('icons/turf/wall_masks.dmi', "[material.icon_base][wall_connections[i]]", dir = 1<<(i-1))
+			I = image('icons/turf/wall_masks.dmi', "[p_material.icon_base][wall_connections[i]]", dir = 1<<(i-1))
 		I.color = base_color
 		overlays += I
 

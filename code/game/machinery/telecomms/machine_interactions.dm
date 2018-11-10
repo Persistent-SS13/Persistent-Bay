@@ -13,7 +13,7 @@
 /obj/machinery/telecomms
 	var/temp = "" // output message
 	var/construct_op = 0
-
+	
 
 /obj/machinery/telecomms/attackby(obj/item/P as obj, mob/user as mob)
 

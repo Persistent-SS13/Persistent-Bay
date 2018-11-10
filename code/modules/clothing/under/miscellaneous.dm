@@ -430,8 +430,8 @@
 	icon_state = "redskirt"
 	item_state = "w_suit"
 	worn_state = "redskirt"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO	
-	
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+
 
 /obj/item/clothing/under/dress/sailor_dress
 	name = "sailor dress"
@@ -439,51 +439,51 @@
 	icon_state = "sailor_dress"
 	item_state = "kilt"
 	worn_state = "sailor_dress"
-	
-	
+
+
 /obj/item/clothing/under/dress/geisha
 	name = "geisha dress"
 	desc = "A traditional geisha dress."
 	icon_state = "geisha"
 	item_state = "kilt"
-	worn_state = "geisha"	
-	
+	worn_state = "geisha"
+
 /obj/item/clothing/under/dress/draculass
 	name = "sexy black coat"
 	desc = "A sexy black coat with a red blouse and lace."
-	icon_state = "geisha"
+	icon_state = "draculass"
 	item_state = "kilt"
-	worn_state = "geisha"	
-	
+	worn_state = "draculass"
+
 /obj/item/clothing/under/dress/ysing
 	name = "eastern dress"
 	desc = "A dress in the style of the far east."
 	icon_state = "ysing"
 	item_state = "kilt"
-	worn_state = "ysing"		
-	
-	
+	worn_state = "ysing"
+
+
 /obj/item/clothing/under/secskirt
 	name = "security skirt"
 	desc = "A skirt in traditional security red and black."
 	icon_state = "secskirt"
 	item_state = "w_suit"
 	worn_state = "secskirt"
-	body_parts_covered = UPPER_TORSO|LOWER_TORSO	
-		
-	
-	
-	
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO
+
+
+
+
 /obj/item/clothing/under/wedding/
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS
 
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
 /obj/item/clothing/under/wedding/bride_orange
 	name = "orange wedding dress"
 	desc = "A big and puffy orange dress."
@@ -629,7 +629,7 @@
 	item_state = "lb_suit"
 	icon_state = "grayson"
 	worn_state = "mechanic"
-	
+
 /obj/item/clothing/under/cheongsam
 	name = "cheongsam"
 	desc = "It is a cheongsam dress."
@@ -785,3 +785,51 @@
 	worn_state = "sterile"
 	permeability_coefficient = 0.50
 	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 30, rad = 0)
+
+/obj/item/clothing/under/shinypurple
+	name = "Shiny purple suit"
+	desc = "A shiny purple suit made of synthread. It has a flower pinned to it."
+	icon_state = "purpletux"
+	worn_state = "purpletux"
+
+/obj/item/clothing/under/blacktux
+	name = "Black Tuxedo"
+	desc = "A shiny black suit made of synthread. It has a flower pinned to it."
+	icon_state = "blacktux"
+	worn_state = "blacktux"	
+	
+/obj/item/clothing/under/bouqet
+	name = "Bouqet"
+	desc = "A shiny black suit made of synthread. It has a flower pinned to it."
+	icon_state = "bouqet"
+	item_state = "bouqet"
+	worn_state = "bouqet"		
+	
+/obj/item/clothing/under/maydress
+	name = "Special Wedding Dress"
+	desc = "A beautiful gown specially ordered and tailored. Embroidered along the inside of the dress, in cursive, May Crystalia."
+	icon_state = "maydress"
+	worn_state = "maydress"
+
+/obj/item/clothing/under/tulledress
+	name = "Silk Dress"
+	desc = "A silk dress padded with tulle fabric. Sleek, modest, and beauty all in one article."
+	icon_state = "tulledress"
+	worn_state = "tulledress"
+
+/obj/item/clothing/under/bridesmaid
+	name = "Purple bridesmaid dress"
+	desc = "A form fitted bridesmaid dress made of purple silk. Really shows those curves."
+	icon_state = "purplemaid"
+	worn_state = "purplemaid"
+	
+/obj/item/clothing/under/greendress
+	name = "Green dress"
+	desc = "A green dress."
+	icon_state = "greendress"
+	worn_state = "greendress"
+		
+	
+	
+	
+	

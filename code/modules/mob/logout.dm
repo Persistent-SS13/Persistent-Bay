@@ -1,6 +1,6 @@
 /mob/Logout()
-	GLOB.nanomanager.user_logout(src) // this is used to clean up (remove) this user's Nano UIs
-	tgui_process && tgui_process.on_logout(src)
+	SSnano.user_logout(src) // this is used to clean up (remove) this user's Nano UIs
+	SStgui && SStgui.on_logout(src)
 	GLOB.player_list -= src
 	log_access("Logout: [key_name(src)]")
 	handle_admin_logout()
@@ -16,6 +16,6 @@
 		message_staff("[holder.rank] logout: [key_name(src)]")
 		if(!GLOB.admins.len) //Apparently the admin logging out is no longer an admin at this point, so we have to check this towards 0 and not towards 1. Awell.
 			send2adminirc("[key_name(src)] logged out - no more admins online.")
-			if(config.delist_when_no_admins && world.visibility)
-				world.visibility = FALSE
-				send2adminirc("Toggled hub visibility. The server is now invisible ([world.visibility]).")
+			if(config.delist_when_no_admins && GLOB.visibility_pref)
+				world.update_hub_visibility()
+				send2adminirc("Toggled hub visibility. The server is now invisible ([GLOB.visibility_pref]).")

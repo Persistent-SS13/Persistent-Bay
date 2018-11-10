@@ -19,7 +19,11 @@
 	var/state
 	var/hitsound = 'sound/weapons/Genhit.ogg'
 	var/list/wall_connections = list("0", "0", "0", "0")
+	var/list/other_connections = list("0", "0", "0", "0")
 	var/floor_type = /turf/simulated/floor/plating //turf it leaves after destruction
+	var/paint_color
+	var/stripe_color
+	var/global/list/wall_stripe_cache = list()
 
 	var/global/damage_overlays[16]
 
@@ -39,7 +43,7 @@
 	r_material = r_mat
 	p_material = p_mat
 	update_full(1, 1)
-	processing_turfs |= src
+	START_PROCESSING(SSturf, src) //Used for radiation.
 
 /turf/simulated/wall/after_load()
 	..()
@@ -50,7 +54,7 @@
 	update_full(1, 1)
 
 /turf/simulated/wall/Destroy()
-	processing_turfs -= src
+	STOP_PROCESSING(SSturf, src)
 	dismantle_wall(1)
 	. = ..()
 
@@ -63,8 +67,12 @@
 	var/obj/O = A
 	return (istype(O) && O.hides_under_flooring()) || ..()
 
-/turf/simulated/wall/process()
-	// Calling parent will kill processing
+/turf/simulated/wall/Process(wait, times_fired)
+	var/how_often = max(round(2 SECONDS / wait), 1)
+	
+	if(times_fired % how_often)
+		return //We only work about every 2 seconds
+
 	if(!radiate())
 		return PROCESS_KILL
 
@@ -90,7 +98,8 @@
 	if(ismob(AM))
 		return
 
-	var/tforce = AM:throwforce * (speed/THROWFORCE_SPEED_DIVISOR)
+	var/obj/O = AM
+	var/tforce = O.throwforce * (speed/THROWFORCE_SPEED_DIVISOR)
 
 	take_damage(tforce, "brute")
 
@@ -121,7 +130,8 @@
 		to_chat(user, "<span class='warning'>It looks moderately damaged.</span>")
 	else
 		to_chat(user, "<span class='danger'>It looks heavily damaged.</span>")
-
+	if(paint_color)
+		to_chat(user, "<span class='notice'>It has a coat of paint applied.</span>")
 	if(locate(/obj/effect/overlay/wallrot) in src)
 		to_chat(user, "<span class='warning'>There is fungus growing on [src].</span>")
 
@@ -242,7 +252,7 @@
 	if(!total_radiation)
 		return
 
-	radiation_repository.radiate(src, total_radiation)
+	SSradiation.radiate(src, total_radiation)
 	return total_radiation
 
 /turf/simulated/wall/proc/burn(temperature)
@@ -311,3 +321,6 @@
 
 /turf/simulated/wall/proc/ExplosionArmor()
 	return p_material.hardness + (r_material ? r_material.hardness + (p_material.integrity * r_material.hardness / 100) : 0) + (material.hardness / 2)
+
+/turf/simulated/wall/get_color()
+	return paint_color

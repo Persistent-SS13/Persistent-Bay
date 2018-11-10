@@ -51,22 +51,22 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 					return locate(x, y+9, z)
 				if(3)
 					return locate(x, y+11, z)
-		if(EAST)
-			switch(dimensions)
-				if(1)
-					return locate(x-4, y+4, z)
-				if(2)
-					return locate(x-5, y+4, z)
-				if(3)
-					return locate(x-6, y+5, z)
 		if(WEST)
 			switch(dimensions)
 				if(1)
-					return locate(x+4, y+4, z)
+					return locate(x-5, y+4, z)
 				if(2)
-					return locate(x+5, y+4, z)
+					return locate(x-4, y+4, z)
 				if(3)
-					return locate(x+6, y+5, z)
+					return locate(x-3, y+5, z)
+		if(EAST)
+			switch(dimensions)
+				if(1)
+					return locate(x+3, y+4, z)
+				if(2)
+					return locate(x+4, y+4, z)
+				if(3)
+					return locate(x+5, y+5, z)
 
 /obj/machinery/docking_beacon/after_load()
 	if(req_access_faction && req_access_faction != "" || (faction && faction.uid != req_access_faction))
@@ -144,7 +144,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 				data["status"] = "Obstructed"
 		data["dimension"] = dimensions
 	// update the ui if it exists, returns null if no ui is passed/found
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		// the ui does not exist, so we'll create a new() one
 		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
@@ -153,7 +153,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		ui.set_initial_data(data)
 		// open the new ui window
 		ui.open()
-		message_admins("ui should be open...")
 
 
 /obj/machinery/docking_beacon/update_icon()
@@ -373,26 +372,26 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 					return_turfs = block(locate(x-4,y+1,z), locate(x+4,y+10,z))
 				else
 					return_turfs = block(locate(x-2,y+1,z), locate(x+2,y+8,z))
-		if(WEST)
-			switch(dimensions)
-				if(1)
-					return_turfs = block(locate(x+1,y+3,z), locate(x+6,y-4,z))
-				if(2)
-					return_turfs = block(locate(x+1,y+3,z), locate(x+8,y-4,z))
-				if(3)
-					return_turfs = block(locate(x+1,y+4,z), locate(x+10,y-5,z))
-				else
-					return_turfs = block(locate(x+1,y+3,z), locate(x+6,y-4,z))
 		if(EAST)
 			switch(dimensions)
 				if(1)
-					return_turfs = block(locate(x-1,y+3,z), locate(x-6,y-4,z))
+					return_turfs = block(locate(x+1,y+3,z), locate(x+5,y-4,z))
 				if(2)
-					return_turfs = block(locate(x-1,y+3,z), locate(x-8,y-4,z))
+					return_turfs = block(locate(x+1,y+3,z), locate(x+7,y-4,z))
 				if(3)
-					return_turfs = block(locate(x-1,y+4,z), locate(x-10,y-5,z))
+					return_turfs = block(locate(x+1,y+4,z), locate(x+9,y-5,z))
 				else
-					return_turfs = block(locate(x-1,y+3,z), locate(x-6,y-4,z))
+					return_turfs = block(locate(x+1,y+3,z), locate(x+5,y-4,z))
+		if(WEST)
+			switch(dimensions)
+				if(1)
+					return_turfs = block(locate(x-1,y+3,z), locate(x-5,y-4,z))
+				if(2)
+					return_turfs = block(locate(x-1,y+3,z), locate(x-7,y-4,z))
+				if(3)
+					return_turfs = block(locate(x-1,y+4,z), locate(x-9,y-5,z))
+				else
+					return_turfs = block(locate(x-1,y+3,z), locate(x-5,y-4,z))
 	return return_turfs
 
 
@@ -433,13 +432,13 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 /obj/machinery/bluespace_satellite/contract_signed(var/obj/item/weapon/paper/contract/contract)
 	pending_contracts -= contract
 	signed_contracts |= contract
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	return 1
 
 /obj/machinery/bluespace_satellite/contract_cancelled(var/obj/item/weapon/paper/contract/contract)
 	pending_contracts -= contract
 	signed_contracts -= contract
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	return 1
 
 
@@ -454,7 +453,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		starting_leader = id.registered_name
 		cancel_contracts()
 		loc.visible_message("The \icon[src] [src] reports that the card was successfully scanned and the leadership has been set to '[starting_leader]'.")
-		GLOB.nanomanager.update_uis(src)
+		SSnano.update_uis(src)
 		return
 	..()
 
@@ -473,7 +472,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	data["starting_leader"] = starting_leader ? starting_leader : "*UNSET*"
 
 	// update the ui if it exists, returns null if no ui is passed/found
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		// the ui does not exist, so we'll create a new() one
 		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
@@ -580,7 +579,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
 			if(!contract.is_solvent())
 				contract.cancel()
-				GLOB.nanomanager.update_uis(src)
+				SSnano.update_uis(src)
 				return 0
 		for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
 			contract.finalize()

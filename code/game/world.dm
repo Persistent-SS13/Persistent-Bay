@@ -570,10 +570,12 @@ var/world_topic_spam_protect_time = world.timeofday
 
 /world/proc/update_status()
 	var/s = ""
-	s += "<a href='https://persistentss13.com/'>"
-	s += "Persistent Station 13, Characters, Stations and Factions in a persistent world</a> "
-	//Change this to wherever you want the hub to link to.
-	s += " | Enter the frontier and find your fortune. Grab a piece of it and make it your own. Collaborative storytelling RPG, IC ENFORCED.<br>"
+	if (config && config.hub_link)
+		s += "<a href='" + config.hub_link + "'>"
+	if (config && config.hub_name)
+		s += config.hub_name + "</a> "
+	if (config && config.hub_desc)
+		s += ("| " + config.hub_desc + "<br>")
 	var/list/features = list()
 	var/n = 0
 	for (var/mob/M in GLOB.player_list)
@@ -592,9 +594,7 @@ var/world_topic_spam_protect_time = world.timeofday
 	if (features)
 		s += ": [jointext(features, ", ")]"
 
-	/* does this help? I do not know */
-	if (src.status != s)
-		src.status = s
+	src.status = s
 
 #define WORLD_LOG_START(X) WRITE_FILE(GLOB.world_##X##_log, "\n\nStarting up round ID [game_id]. [time_stamp()]\n---------------------")
 #define WORLD_SETUP_LOG(X) GLOB.world_##X##_log = file("[GLOB.log_directory]/[#X].log") ; WORLD_LOG_START(X)

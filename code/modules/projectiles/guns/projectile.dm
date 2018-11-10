@@ -31,7 +31,7 @@
 	var/auto_eject_sound = null
 
 	var/is_jammed = 0           //Whether this gun is jammed
-	var/jam_chance = 0          //Chance it jams on fire
+	var/jam_chance = 5          //Chance it jams on fire
 	//TODO generalize ammo icon states for guns
 	//var/magazine_states = 0
 	//var/list/icon_keys = list()		//keys
@@ -49,7 +49,7 @@
 	update_icon()
 
 /obj/item/weapon/gun/projectile/consume_next_projectile()
-	if(!is_jammed && prob(jam_chance))
+	if(!is_jammed && prob(jam_chance/5))
 		src.visible_message("<span class='danger'>\The [src] jams!</span>")
 		is_jammed = 1
 	if(is_jammed)

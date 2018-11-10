@@ -20,8 +20,6 @@
 
 	var/list/climbers = list()
 
-	var/initialized = FALSE
-
 /atom/New(loc, ...)
 	//atom creation method that preloads variables at creation
 	if(GLOB.use_preloader && (src.type == GLOB._preloader.target_path))//in case the instanciated atom is creating other atoms in New()
@@ -52,9 +50,9 @@
 //Must return an Initialize hint. Defined in __DEFINES/subsystems.dm
 
 /atom/proc/Initialize(mapload, ...)
-	if(initialized)
+	if(atom_flags & ATOM_FLAG_INITIALIZED)
 		crash_with("Warning: [src]([type]) initialized multiple times!")
-	initialized = TRUE
+	atom_flags |= ATOM_FLAG_INITIALIZED
 
 	if(light_power && light_range)
 		update_light()
@@ -543,3 +541,6 @@ its easier to just keep the beam vertical.
 		do_climb(target)
 	else
 		return ..()
+
+/atom/proc/get_color()
+	return color

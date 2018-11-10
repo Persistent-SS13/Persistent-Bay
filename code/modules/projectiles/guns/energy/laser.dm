@@ -8,16 +8,18 @@
 	w_class = ITEM_SIZE_LARGE
 	force = 10
 	one_hand_penalty = 2
-	accuracy = 2
+	accuracy = 5
 	origin_tech = list(TECH_COMBAT = 3, TECH_MAGNET = 2)
 	matter = list(DEFAULT_WALL_MATERIAL = 2000)
 	projectile_type = /obj/item/projectile/beam/midlaser
 	wielded_item_state = "laser-wielded"
+	load_method = ENERGY_LOAD_HOTSWAP_CELL
 
 /obj/item/weapon/gun/energy/laser/mounted
 	self_recharge = 1
 	use_external_power = 1
 	one_hand_penalty = 0 //just in case
+	load_method = ENERGY_LOAD_FIXED_CELL
 
 /obj/item/weapon/gun/energy/laser/practice
 	name = "practice laser carbine"
@@ -25,6 +27,7 @@
 	icon_state = "laserp"
 	projectile_type = /obj/item/projectile/beam/practice
 	charge_cost = 10 //How much energy is needed to fire.
+	load_method = ENERGY_LOAD_FIXED_CELL
 /*
 /obj/item/weapon/gun/energy/laser/practice/proc/hacked()
 	return projectile_type != /obj/item/projectile/beam/practice
@@ -71,6 +74,7 @@ obj/item/weapon/gun/energy/retro
 	max_shots = 5 //to compensate a bit for self-recharging
 	one_hand_penalty = 1 //a little bulky
 	self_recharge = 1
+	load_method = ENERGY_LOAD_FIXED_CELL
 */
 /obj/item/weapon/gun/energy/lasercannon
 	name = "laser cannon"
@@ -87,6 +91,7 @@ obj/item/weapon/gun/energy/retro
 	accuracy = 2
 	fire_delay = 20
 	wielded_item_state = "gun_wielded"
+	load_method = ENERGY_LOAD_HOTSWAP_CELL
 
 /obj/item/weapon/gun/energy/lasercannon/mounted
 	name = "mounted laser cannon"
@@ -95,7 +100,7 @@ obj/item/weapon/gun/energy/retro
 	recharge_time = 10
 	accuracy = 0 //mounted laser cannons don't need any help, thanks
 	one_hand_penalty = 0
-/*
+	load_method = ENERGY_LOAD_FIXED_CELL
 /obj/item/weapon/gun/energy/xray
 	name = "x-ray laser carbine"
 	desc = "A high-power laser gun capable of emitting concentrated x-ray blasts, that are able to penetrate laser-resistant armor much more readily than standard photonic beams."
@@ -109,6 +114,7 @@ obj/item/weapon/gun/energy/retro
 	charge_cost = 15
 	max_shots = 10
 	wielded_item_state = "gun_wielded"
+	load_method = ENERGY_LOAD_HOTSWAP_CELL
 
 /obj/item/weapon/gun/energy/xray/pistol
 	name = "x-ray laser gun"
@@ -119,6 +125,7 @@ obj/item/weapon/gun/energy/retro
 	one_hand_penalty = 1
 	w_class = ITEM_SIZE_NORMAL
 	fire_delay = 10
+	load_method = ENERGY_LOAD_HOTSWAP_CELL
 
 /obj/item/weapon/gun/energy/sniperrifle
 	name = "marksman energy rifle"
@@ -137,6 +144,7 @@ obj/item/weapon/gun/energy/retro
 	accuracy = -2 //shooting at the hip
 	scoped_accuracy = 0
 	wielded_item_state = "gun_wielded"
+	load_method = ENERGY_LOAD_HOTSWAP_CELL
 
 /obj/item/weapon/gun/energy/sniperrifle/update_icon()
 	..()
@@ -148,7 +156,7 @@ obj/item/weapon/gun/energy/retro
 	set popup_menu = 1
 
 	toggle_scope(usr, 2.0)
-*/
+
 ////////Laser Tag////////////////////
 
 /obj/item/weapon/gun/energy/lasertag

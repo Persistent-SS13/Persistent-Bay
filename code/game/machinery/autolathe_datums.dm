@@ -62,24 +62,24 @@ var/const/EXTRA_COST_FACTOR = 1
 	path = /obj/machinery/floor_light
 	category = "General"
 
-/datum/autolathe/recipe/extinguisher
-	name = "extinguisher"
-	path = /obj/item/weapon/extinguisher
+/datum/autolathe/recipe/extinguisher_mini
+	name = "compact extinguisher"
+	path = /obj/item/weapon/extinguisher/mini/empty
 	category = "General"
 
-/datum/autolathe/recipe/tank/proc/Fabricate()
-	var/obj/item/weapon/tank/T = ..()
-	T.air_contents = new /datum/gas_mixture(T.volume, T20C)  //Empty air tanks only
-	return T
+/datum/autolathe/recipe/extinguisher
+	name = "extinguisher"
+	path = /obj/item/weapon/extinguisher/empty
+	category = "General"
 
 /datum/autolathe/recipe/tank
 	name = "air tank"
-	path = /obj/item/weapon/tank/oxygen/yellow
+	path = /obj/item/weapon/tank/oxygen/empty
 	category = "General"
 
 /datum/autolathe/recipe/tank_double
 	name = "emergency air tank"
-	path = /obj/item/weapon/tank/emergency/oxygen/engi
+	path = /obj/item/weapon/tank/emergency/oxygen/engi/empty
 	category = "General"
 
 /datum/autolathe/recipe/jar
@@ -122,9 +122,14 @@ var/const/EXTRA_COST_FACTOR = 1
 	path = /obj/item/device/t_scanner
 	category = "Tools"
 
+/datum/autolathe/recipe/welder_mini
+	name = "miniature welding tool"
+	path = /obj/item/weapon/weldingtool/mini/empty
+	category = "Tools"
+
 /datum/autolathe/recipe/weldertool
 	name = "welding tool"
-	path = /obj/item/weapon/weldingtool
+	path = /obj/item/weapon/weldingtool/empty
 	category = "Tools"
 
 /datum/autolathe/recipe/screwdriver
@@ -398,7 +403,7 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/cable_coil
 	name = "cable coil"
-	path = /obj/item/stack/cable_coil
+	path = /obj/item/stack/cable_coil/single		//must be /single path, else printing 1x will instead print a whole stack
 	category = "Devices and Components"
 	is_stack = 1
 
@@ -600,7 +605,13 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/welder_industrial
 	name = "industrial welding tool"
-	path = /obj/item/weapon/weldingtool/largetank
+	path = /obj/item/weapon/weldingtool/largetank/empty
+	hidden = 1
+	category = "Tools"
+
+/datum/autolathe/recipe/welder_huge
+	name = "high capacity welding tool"
+	path = /obj/item/weapon/weldingtool/hugetank/empty
 	hidden = 1
 	category = "Tools"
 

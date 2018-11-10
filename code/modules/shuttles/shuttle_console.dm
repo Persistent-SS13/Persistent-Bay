@@ -107,7 +107,7 @@
 			data["locked_to"] = locked_to != "" ? locked_to : "Unset!"
 
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, ui_template, "[shuttle_tag] Shuttle Control", 400, 300)
 		ui.set_initial_data(data)
@@ -302,14 +302,14 @@
 
 
 /obj/machinery/computer/shuttle_control/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
-	var/datum/shuttle/autodock/shuttle = shuttle_controller.shuttles[shuttle_tag]
+	var/datum/shuttle/autodock/shuttle = SSshuttle.shuttles[shuttle_tag]
 	if (!istype(shuttle))
 		to_chat(usr,"<span class='warning'>Unable to establish link with the shuttle.</span>")
 		return
 
 	var/list/data = get_ui_data(shuttle)
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, ui_template, "[shuttle_tag] Shuttle Control", 470, 450)
 		ui.set_initial_data(data)
@@ -320,7 +320,7 @@
 	if(..())
 		return 1
 
-	handle_topic_href(shuttle_controller.shuttles[shuttle_tag], href_list)
+	handle_topic_href(SSshuttle.shuttles[shuttle_tag], href_list)
 
 /obj/machinery/computer/shuttle_control/emag_act(var/remaining_charges, var/mob/user)
 	if (!hacked)

@@ -333,7 +333,7 @@ var/list/mining_floors = list()
 				M.flash_eyes()
 				if(prob(50))
 					M.Stun(5)
-		radiation_repository.flat_radiate(src, 25, 200)
+		SSradiation.flat_radiate(src, 25, 200)
 	//Add some rubble,  you did just clear out a big chunk of rock.
 
 	var/turf/simulated/asteroid/N = ChangeTurf(mined_turf)
@@ -438,15 +438,8 @@ var/list/mining_floors = list()
 
 /turf/simulated/asteroid/Entered(atom/movable/M)
 	. = ..()
-	if(istype(M) && !istype(M, /mob/living/simple_animal) && !istype(M, /mob/observer) )
-		if(aggression_controller)
-			var/datum/aggression_machine/zone = aggression_controller.sectors_by_zlevel["[z]"]
-			if(zone)
-				zone.asteroid_targets |= M
-				if(istype(M, /mob/living))
-					var/mob/living/mobbie = M
-					if(!mobbie.stat)
-						zone.mob_targets |= M
+	if(istype(M, /mob/living/carbon) || istype(M, /mob/living/silicon))
+		SSasteroid.agitate(M)
 
 /turf/simulated/asteroid/after_load()
 	updateMineralOverlays(1)

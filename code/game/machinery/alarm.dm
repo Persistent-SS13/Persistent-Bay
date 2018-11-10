@@ -117,10 +117,11 @@
 	if(istype(frame))
 		buildstage = 0
 		wiresexposed = 1
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -24 : 24)
-		pixel_y = (dir & 3)? (dir ==1 ? -24 : 24) : 0
+		pixel_x = (dir & 3)? 0 : (dir == 4 ? -21 : 21)
+		pixel_y = (dir & 3)? (dir ==1 ? -21 : 21) : 0
 		update_icon()
 		frame.transfer_fingerprints_to(src)
+
 /obj/machinery/alarm/after_load()
 	. = ..()
 	alarm_area = get_area(src)
@@ -136,6 +137,7 @@
 	set_frequency(frequency)
 	if (!master_is_operating())
 		elect_master()
+	update_icon()
 
 /obj/machinery/alarm/Initialize()
 	. = ..()
@@ -164,6 +166,8 @@
 	set_frequency(frequency)
 	if (!master_is_operating())
 		elect_master()
+
+	update_icon()
 
 /obj/machinery/alarm/Process()
 	if((stat & (NOPOWER|BROKEN)) || shorted || buildstage != 2)
@@ -345,6 +349,19 @@
 			icon_state = "alarm1"
 			new_color = COLOR_RED_LIGHT
 
+	pixel_x = 0
+	pixel_y = 0
+	var/turf/T = get_step(get_turf(src), turn(dir, 180))
+	if(istype(T) && T.density)
+		if(dir == NORTH)
+			pixel_y = -21
+		else if(dir == SOUTH)
+			pixel_y = 21
+		else if(dir == WEST)
+			pixel_x = 21
+		else if(dir == EAST)
+			pixel_x = -21
+
 	set_light(l_range = 2, l_power = 0.6, l_color = new_color)
 
 /obj/machinery/alarm/receive_signal(datum/signal/signal)
@@ -517,7 +534,7 @@
 	if(!(locked && !remote_connection) || remote_access || issilicon(user))
 		populate_controls(data)
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "air_alarm.tmpl", src.name, 325, 625, master_ui = master_ui, state = state)
 		ui.set_initial_data(data)
@@ -567,7 +584,8 @@
 						"power"		= info["power"],
 						"checks"	= info["checks"],
 						"direction"	= info["direction"],
-						"external"	= info["external"]
+						"external"	= info["external"],
+						"internal"  = info["internal"]
 					)
 			data["vents"] = vents
 		if(AALARM_SCREEN_SCRUB)
@@ -627,8 +645,9 @@
 			for(var/i = 1, i <= 4, i++)
 				thresholds[thresholds.len]["settings"] += list(list("env" = "temperature", "val" = i, "selected" = selected[i]))
 
-
 			data["thresholds"] = thresholds
+			data["report_danger_level"] = report_danger_level
+			data["breach_detection"] = breach_detection
 
 /obj/machinery/alarm/CanUseTopic(var/mob/user, var/datum/topic_state/state, var/href_list = list())
 	if(buildstage != 2)
@@ -688,6 +707,16 @@
 
 				if("reset_external_pressure")
 					send_signal(device_id, list(href_list["command"] = ONE_ATMOSPHERE))
+					return TOPIC_REFRESH
+
+				if("set_internal_pressure")
+					var/input_pressure = input(user, "What pressure you like the system to mantain?", "Pressure Controls") as num|null
+					if(isnum(input_pressure) && CanUseTopic(user, state))
+						send_signal(device_id, list(href_list["command"] = input_pressure))
+					return TOPIC_REFRESH
+
+				if("reset_internal_pressure")
+					send_signal(device_id, list(href_list["command"] = 0))
 					return TOPIC_REFRESH
 
 				if( "power",
@@ -784,6 +813,14 @@
 		if(href_list["mode"])
 			mode = text2num(href_list["mode"])
 			apply_mode()
+			return TOPIC_REFRESH
+
+		if(href_list["toggle_breach_detection"])
+			breach_detection = !breach_detection
+			return TOPIC_REFRESH
+
+		if(href_list["toggle_report_danger_level"])
+			report_danger_level = !report_danger_level
 			return TOPIC_REFRESH
 
 /obj/machinery/alarm/attackby(obj/item/W as obj, mob/user as mob)
@@ -898,13 +935,43 @@ FIRE ALARM
 	var/buildstage = 2 // 2 = complete, 1 = no wires,  0 = circuit gone
 	var/seclevel
 
+/obj/machinery/firealarm/New(var/loc, var/dir, atom/frame)
+	..(loc)
+
+	if(dir)
+		src.set_dir(dir)
+
+	if(istype(frame))
+		buildstage = 0
+		wiresexposed = 1
+		pixel_x = (dir & 3)? 0 : (dir == 4 ? -21 : 21)
+		pixel_y = (dir & 3)? (dir ==1 ? -21 : 21) : 0
+		update_icon()
+		frame.transfer_fingerprints_to(src)
+
 /obj/machinery/firealarm/examine(mob/user)
 	. = ..(user)
 	var/decl/security_state/security_state = decls_repository.get_decl(GLOB.using_map.security_state)
 	to_chat(user, "The current alert level is [security_state.current_security_level.name].")
 
+/obj/machinery/firealarm/Initialize()
+	. = ..()
+	update_icon()
+
 /obj/machinery/firealarm/update_icon()
 	overlays.Cut()
+
+	var/walldir = (dir & (NORTH|SOUTH)) ? GLOB.reverse_dir[dir] : dir
+	var/turf/T = get_step(get_turf(src), walldir)
+	if(istype(T) && T.density)
+		if(dir == SOUTH)
+			pixel_y = 21
+		else if(dir == NORTH)
+			pixel_y = -21
+		else if(dir == EAST)
+			pixel_x = 21
+		else if(dir == WEST)
+			pixel_x = -21
 
 	if(wiresexposed)
 		switch(buildstage)
@@ -1131,8 +1198,8 @@ FIRE ALARM
 	if(istype(frame))
 		buildstage = 0
 		wiresexposed = 1
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -24 : 24)
-		pixel_y = (dir & 3)? (dir ==1 ? -24 : 24) : 0
+		pixel_x = (dir & 3)? 0 : (dir == 4 ? -21 : 21)
+		pixel_y = (dir & 3)? (dir ==1 ? -21 : 21) : 0
 		frame.transfer_fingerprints_to(src)
 
 /obj/machinery/firealarm/Initialize()

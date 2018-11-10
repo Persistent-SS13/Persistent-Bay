@@ -39,6 +39,7 @@
 	origin_tech = list(TECH_COMBAT = 5, TECH_MATERIAL = 4, TECH_POWER = 3)
 	max_shots = 10
 	projectile_type = /obj/item/projectile/energy/declone
+	load_method = ENERGY_LOAD_FIXED_CELL
 
 /obj/item/weapon/gun/energy/floragun
 	name = "floral somatoray"
@@ -58,6 +59,7 @@
 		list(mode_name="increase yield", projectile_type=/obj/item/projectile/energy/florayield, modifystate="florayield"),
 		list(mode_name="induce specific mutations", projectile_type=/obj/item/projectile/energy/floramut/gene, modifystate="floramut"),
 		)
+	load_method = ENERGY_LOAD_FIXED_CELL
 
 /obj/item/weapon/gun/energy/floragun/afterattack(obj/target, mob/user, adjacent_flag)
 	//allow shooting into adjacent hydrotrays regardless of intent
@@ -102,6 +104,7 @@
 	self_recharge = 1
 	recharge_time = 5 //Time it takes for shots to recharge (in ticks)
 	charge_meter = 0
+	load_method = ENERGY_LOAD_FIXED_CELL
 
 /obj/item/weapon/gun/energy/meteorgun/pen
 	name = "meteor pen"
@@ -111,6 +114,7 @@
 	item_state = "pen"
 	w_class = ITEM_SIZE_TINY
 	slot_flags = SLOT_BELT
+	load_method = ENERGY_LOAD_FIXED_CELL
 
 
 /obj/item/weapon/gun/energy/mindflayer
@@ -118,7 +122,7 @@
 	desc = "A custom-built weapon of some kind."
 	icon_state = "xray"
 	projectile_type = /obj/item/projectile/beam/mindflayer
-/*
+	load_method = ENERGY_LOAD_FIXED_CELL
 /obj/item/weapon/gun/energy/toxgun
 	name = "phoron pistol"
 	desc = "A specialized firearm designed to fire lethal bolts of phoron."
@@ -126,7 +130,7 @@
 	w_class = ITEM_SIZE_NORMAL
 	origin_tech = list(TECH_COMBAT = 5, TECH_PHORON = 4)
 	projectile_type = /obj/item/projectile/energy/phoron
-*/
+	load_method = ENERGY_LOAD_FIXED_CELL
 /* Staves */
 
 /obj/item/weapon/gun/energy/staff
@@ -145,6 +149,7 @@
 	origin_tech = null
 	self_recharge = 1
 	charge_meter = 0
+	load_method = ENERGY_LOAD_FIXED_CELL
 
 /obj/item/weapon/gun/energy/staff/special_check(var/mob/user)
 	if((user.mind && !wizards.is_antagonist(user.mind)))
@@ -165,6 +170,7 @@
 	desc = "An artefact that spits bolts of life-force which causes objects which are hit by it to animate and come to life! This magic doesn't affect machines."
 	projectile_type = /obj/item/projectile/animate
 	max_shots = 10
+	load_method = ENERGY_LOAD_FIXED_CELL
 
 obj/item/weapon/gun/energy/staff/focus
 	name = "mental focus"
@@ -174,6 +180,7 @@ obj/item/weapon/gun/energy/staff/focus
 	item_state = "focus"
 	slot_flags = SLOT_BACK
 	projectile_type = /obj/item/projectile/forcebolt
+	load_method = ENERGY_LOAD_FIXED_CELL
 	/*
 	attack_self(mob/living/user as mob)
 		if(projectile_type == /obj/item/projectile/forcebolt)
@@ -207,6 +214,10 @@ obj/item/weapon/gun/energy/staff/focus
 
 
 /obj/item/weapon/gun/energy/plasmacutter/attackby(obj/item/A, mob/user)
+	if(isScrewdriver(A))
+		to_chat(user, "<span class='warning'>The cell housing is firmly secured, you can't remove it.</span>")
+		return
+
 	if(istype(A, /obj/item/stack/material/phoron))
 		var/obj/item/stack/material/S = A
 

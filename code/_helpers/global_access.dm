@@ -41,18 +41,28 @@
 			return global.SSair;
 		if("SSairflow")
 			return global.SSairflow;
+		if("SSalarm")
+			return global.SSalarm;
+		if("SSasteroid")
+			return global.SSasteroid;
 		if("SSatoms")
 			return global.SSatoms;
+		if("SSautosave")
+			return global.SSautosave;
 		if("SSchemistry")
 			return global.SSchemistry;
 		if("SScircuit")
 			return global.SScircuit;
+		if("SSevent")
+			return global.SSevent;
 		if("SSfastprocess")
 			return global.SSfastprocess;
 		if("SSgarbage")
 			return global.SSgarbage;
 		if("SSicon_update")
 			return global.SSicon_update;
+		if("SSinactivity")
+			return global.SSinactivity;
 		if("SSlegacy")
 			return global.SSlegacy;
 		if("SSlighting")
@@ -65,6 +75,8 @@
 			return global.SSmaterials;
 		if("SSmobs")
 			return global.SSmobs;
+		if("SSnano")
+			return global.SSnano;
 		if("SSobj")
 			return global.SSobj;
 		if("SSopen_space")
@@ -73,10 +85,28 @@
 			return global.SSplants;
 		if("SSprocessing")
 			return global.SSprocessing;
+		if("SSradiation")
+			return global.SSradiation;
+		if("SSshuttle")
+			return global.SSshuttle;
 		if("SSskybox")
 			return global.SSskybox;
+		if("SSsun")
+			return global.SSsun;
+		if("SStgui")
+			return global.SStgui;
+		if("SStimer")
+			return global.SStimer;
+		if("SStrade")
+			return global.SStrade;
+		if("SSturf")
+			return global.SSturf;
 		if("SSvines")
 			return global.SSvines;
+		if("SSwireless")
+			return global.SSwireless;
+		if("SSxenoarch")
+			return global.SSxenoarch;
 		if("Tier1Runes")
 			return global.Tier1Runes;
 		if("Tier2Runes")
@@ -143,8 +173,6 @@
 			return global.adminhelp_ignored_words;
 		if("adminlog")
 			return global.adminlog;
-		if("aggression_controller")
-			return global.aggression_controller;
 		if("ai_list")
 			return global.ai_list;
 		if("ai_status_emotions")
@@ -157,8 +185,6 @@
 			return global.air_blocked;
 		if("air_processing_killed")
 			return global.air_processing_killed;
-		if("alarm_manager")
-			return global.alarm_manager;
 		if("alien_whitelist")
 			return global.alien_whitelist;
 		if("allCasters")
@@ -553,8 +579,6 @@
 			return global.lighting_overlays_initialised;
 		if("limb_icon_cache")
 			return global.limb_icon_cache;
-		if("list_of_ais")
-			return global.list_of_ais;
 		if("loadout_categories")
 			return global.loadout_categories;
 		if("lobby_image")
@@ -717,8 +741,6 @@
 			return global.playable_species;
 		if("point_source_descriptions")
 			return global.point_source_descriptions;
-		if("points_of_interest")
-			return global.points_of_interest;
 		if("possible_cable_coil_colours")
 			return global.possible_cable_coil_colours;
 		if("possible_changeling_IDs")
@@ -755,8 +777,6 @@
 			return global.priv_syndicate_access;
 		if("processScheduler")
 			return global.processScheduler;
-		if("processing_turfs")
-			return global.processing_turfs;
 		if("prometheans")
 			return global.prometheans;
 		if("protected_objects")
@@ -767,8 +787,6 @@
 			return global.protolathe_recipes;
 		if("rad_collectors")
 			return global.rad_collectors;
-		if("radiation_repository")
-			return global.radiation_repository;
 		if("radio_controller")
 			return global.radio_controller;
 		if("radiochannels")
@@ -825,12 +843,8 @@
 			return global.runtime_diary;
 		if("same_wires")
 			return global.same_wires;
-		if("save_controller")
-			return global.save_controller;
 		if("saved")
 			return global.saved;
-		if("scheduler")
-			return global.scheduler;
 		if("secondary_mode")
 			return global.secondary_mode;
 		if("secret_force_mode")
@@ -845,8 +859,6 @@
 			return global.severity_to_string;
 		if("ship_engines")
 			return global.ship_engines;
-		if("shuttle_controller")
-			return global.shuttle_controller;
 		if("side_effects")
 			return global.side_effects;
 		if("skin_styles_female_list")
@@ -943,8 +955,6 @@
 			return global.tank_gauge_cache;
 		if("tape_roll_applications")
 			return global.tape_roll_applications;
-		if("task_triggered_event")
-			return global.task_triggered_event;
 		if("telecomms_list")
 			return global.telecomms_list;
 		if("tertiary_mode")
@@ -979,8 +989,6 @@
 			return global.tg_self_state;
 		if("tg_z_state")
 			return global.tg_z_state;
-		if("tgui_process")
-			return global.tgui_process;
 		if("ticker")
 			return global.ticker;
 		if("tickerProcess")
@@ -1047,8 +1055,6 @@
 			return global.whitelisted_species;
 		if("wireColours")
 			return global.wireColours;
-		if("wirelessProcess")
-			return global.wirelessProcess;
 		if("wizards")
 			return global.wizards;
 		if("world_topic_spam_protect_ip")
@@ -1112,18 +1118,28 @@
 			global.SSair=newval;
 		if("SSairflow")
 			global.SSairflow=newval;
+		if("SSalarm")
+			global.SSalarm=newval;
+		if("SSasteroid")
+			global.SSasteroid=newval;
 		if("SSatoms")
 			global.SSatoms=newval;
+		if("SSautosave")
+			global.SSautosave=newval;
 		if("SSchemistry")
 			global.SSchemistry=newval;
 		if("SScircuit")
 			global.SScircuit=newval;
+		if("SSevent")
+			global.SSevent=newval;
 		if("SSfastprocess")
 			global.SSfastprocess=newval;
 		if("SSgarbage")
 			global.SSgarbage=newval;
 		if("SSicon_update")
 			global.SSicon_update=newval;
+		if("SSinactivity")
+			global.SSinactivity=newval;
 		if("SSlegacy")
 			global.SSlegacy=newval;
 		if("SSlighting")
@@ -1136,6 +1152,8 @@
 			global.SSmaterials=newval;
 		if("SSmobs")
 			global.SSmobs=newval;
+		if("SSnano")
+			global.SSnano=newval;
 		if("SSobj")
 			global.SSobj=newval;
 		if("SSopen_space")
@@ -1144,10 +1162,28 @@
 			global.SSplants=newval;
 		if("SSprocessing")
 			global.SSprocessing=newval;
+		if("SSradiation")
+			global.SSradiation=newval;
+		if("SSshuttle")
+			global.SSshuttle=newval;
 		if("SSskybox")
 			global.SSskybox=newval;
+		if("SSsun")
+			global.SSsun=newval;
+		if("SStgui")
+			global.SStgui=newval;
+		if("SStimer")
+			global.SStimer=newval;
+		if("SStrade")
+			global.SStrade=newval;
+		if("SSturf")
+			global.SSturf=newval;
 		if("SSvines")
 			global.SSvines=newval;
+		if("SSwireless")
+			global.SSwireless=newval;
+		if("SSxenoarch")
+			global.SSxenoarch=newval;
 		if("Tier1Runes")
 			global.Tier1Runes=newval;
 		if("Tier2Runes")
@@ -1214,8 +1250,6 @@
 			global.adminhelp_ignored_words=newval;
 		if("adminlog")
 			global.adminlog=newval;
-		if("aggression_controller")
-			global.aggression_controller=newval;
 		if("ai_list")
 			global.ai_list=newval;
 		if("ai_status_emotions")
@@ -1228,8 +1262,6 @@
 			global.air_blocked=newval;
 		if("air_processing_killed")
 			global.air_processing_killed=newval;
-		if("alarm_manager")
-			global.alarm_manager=newval;
 		if("alien_whitelist")
 			global.alien_whitelist=newval;
 		if("allCasters")
@@ -1624,8 +1656,6 @@
 			global.lighting_overlays_initialised=newval;
 		if("limb_icon_cache")
 			global.limb_icon_cache=newval;
-		if("list_of_ais")
-			global.list_of_ais=newval;
 		if("loadout_categories")
 			global.loadout_categories=newval;
 		if("lobby_image")
@@ -1788,8 +1818,6 @@
 			global.playable_species=newval;
 		if("point_source_descriptions")
 			global.point_source_descriptions=newval;
-		if("points_of_interest")
-			global.points_of_interest=newval;
 		if("possible_cable_coil_colours")
 			global.possible_cable_coil_colours=newval;
 		if("possible_changeling_IDs")
@@ -1826,8 +1854,6 @@
 			global.priv_syndicate_access=newval;
 		if("processScheduler")
 			global.processScheduler=newval;
-		if("processing_turfs")
-			global.processing_turfs=newval;
 		if("prometheans")
 			global.prometheans=newval;
 		if("protected_objects")
@@ -1838,8 +1864,6 @@
 			global.protolathe_recipes=newval;
 		if("rad_collectors")
 			global.rad_collectors=newval;
-		if("radiation_repository")
-			global.radiation_repository=newval;
 		if("radio_controller")
 			global.radio_controller=newval;
 		if("radiochannels")
@@ -1896,12 +1920,8 @@
 			global.runtime_diary=newval;
 		if("same_wires")
 			global.same_wires=newval;
-		if("save_controller")
-			global.save_controller=newval;
 		if("saved")
 			global.saved=newval;
-		if("scheduler")
-			global.scheduler=newval;
 		if("secondary_mode")
 			global.secondary_mode=newval;
 		if("secret_force_mode")
@@ -1916,8 +1936,6 @@
 			global.severity_to_string=newval;
 		if("ship_engines")
 			global.ship_engines=newval;
-		if("shuttle_controller")
-			global.shuttle_controller=newval;
 		if("side_effects")
 			global.side_effects=newval;
 		if("skin_styles_female_list")
@@ -2014,8 +2032,6 @@
 			global.tank_gauge_cache=newval;
 		if("tape_roll_applications")
 			global.tape_roll_applications=newval;
-		if("task_triggered_event")
-			global.task_triggered_event=newval;
 		if("telecomms_list")
 			global.telecomms_list=newval;
 		if("tertiary_mode")
@@ -2050,8 +2066,6 @@
 			global.tg_self_state=newval;
 		if("tg_z_state")
 			global.tg_z_state=newval;
-		if("tgui_process")
-			global.tgui_process=newval;
 		if("ticker")
 			global.ticker=newval;
 		if("tickerProcess")
@@ -2118,8 +2132,6 @@
 			global.whitelisted_species=newval;
 		if("wireColours")
 			global.wireColours=newval;
-		if("wirelessProcess")
-			global.wirelessProcess=newval;
 		if("wizards")
 			global.wizards=newval;
 		if("world_topic_spam_protect_ip")
@@ -2162,24 +2174,39 @@
 	"SKILLS",
 	"SSair",
 	"SSairflow",
+	"SSalarm",
+	"SSasteroid",
 	"SSatoms",
+	"SSautosave",
 	"SSchemistry",
 	"SScircuit",
+	"SSevent",
 	"SSfastprocess",
 	"SSgarbage",
 	"SSicon_update",
+	"SSinactivity",
 	"SSlegacy",
 	"SSlighting",
 	"SSmachines",
 	"SSmapping",
 	"SSmaterials",
 	"SSmobs",
+	"SSnano",
 	"SSobj",
 	"SSopen_space",
 	"SSplants",
 	"SSprocessing",
+	"SSradiation",
+	"SSshuttle",
 	"SSskybox",
+	"SSsun",
+	"SStgui",
+	"SStimer",
+	"SStrade",
+	"SSturf",
 	"SSvines",
+	"SSwireless",
+	"SSxenoarch",
 	"Tier1Runes",
 	"Tier2Runes",
 	"Tier3Runes",
@@ -2213,14 +2240,12 @@
 	"admin_verbs_spawn",
 	"adminhelp_ignored_words",
 	"adminlog",
-	"aggression_controller",
 	"ai_list",
 	"ai_status_emotions",
 	"ai_verbs_default",
 	"air_alarm_topic",
 	"air_blocked",
 	"air_processing_killed",
-	"alarm_manager",
 	"alien_whitelist",
 	"allCasters",
 	"allConsoles",
@@ -2418,7 +2443,6 @@
 	"light_overlay_cache",
 	"lighting_overlays_initialised",
 	"limb_icon_cache",
-	"list_of_ais",
 	"loadout_categories",
 	"lobby_image",
 	"log_end",
@@ -2500,7 +2524,6 @@
 	"plant_seed_sprites",
 	"playable_species",
 	"point_source_descriptions",
-	"points_of_interest",
 	"possible_cable_coil_colours",
 	"possible_changeling_IDs",
 	"poster_designs",
@@ -2519,13 +2542,11 @@
 	"priv_station_access",
 	"priv_syndicate_access",
 	"processScheduler",
-	"processing_turfs",
 	"prometheans",
 	"protected_objects",
 	"protolathe_categories",
 	"protolathe_recipes",
 	"rad_collectors",
-	"radiation_repository",
 	"radio_controller",
 	"radiochannels",
 	"raiders",
@@ -2554,9 +2575,7 @@
 	"rune_list",
 	"runtime_diary",
 	"same_wires",
-	"save_controller",
 	"saved",
-	"scheduler",
 	"secondary_mode",
 	"secret_force_mode",
 	"send_emergency_team",
@@ -2564,7 +2583,6 @@
 	"server_name",
 	"severity_to_string",
 	"ship_engines",
-	"shuttle_controller",
 	"side_effects",
 	"skin_styles_female_list",
 	"skipped_unit_tests",
@@ -2613,7 +2631,6 @@
 	"tail_icon_cache",
 	"tank_gauge_cache",
 	"tape_roll_applications",
-	"task_triggered_event",
 	"telecomms_list",
 	"tertiary_mode",
 	"text_tag_icons",
@@ -2631,7 +2648,6 @@
 	"tg_physical_state",
 	"tg_self_state",
 	"tg_z_state",
-	"tgui_process",
 	"ticker",
 	"tickerProcess",
 	"ticket_panels",
@@ -2665,7 +2681,6 @@
 	"whitelist",
 	"whitelisted_species",
 	"wireColours",
-	"wirelessProcess",
 	"wizards",
 	"world_topic_spam_protect_ip",
 	"world_topic_spam_protect_time",

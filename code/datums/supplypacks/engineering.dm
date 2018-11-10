@@ -96,6 +96,17 @@
 	containertype = /obj/structure/closet/firecloset
 	containername = "fire-safety closet"
 
+/decl/hierarchy/supply_pack/engineering/weldingmaskpainted
+	num_contained = 1
+	name = "Gear - Painted welding mask"
+	contains = list(/obj/item/clothing/head/welding/demon,
+					/obj/item/clothing/head/welding/knight,
+					/obj/item/clothing/head/welding/fancy,
+					/obj/item/clothing/head/welding/engie,
+					/obj/item/clothing/head/welding/carp)
+	cost = 5
+	containername = "painted welding mask"
+
 //power
 /decl/hierarchy/supply_pack/engineering/solar	//Removed solar control and tracker circuit, can be made in circuit imprinter
 	name = "Power - Solar panels (x50)"
@@ -266,7 +277,25 @@ decl/hierarchy/supply_pack/engineering/pipelayer
 	cost = 35
 	containername = "\improper Bulk Cables Crate"
 
+/decl/hierarchy/supply_pack/engineering/emergency_floodlights
+	name = "Equipment - Emergency floodlights(x4)"
+	contains = list(/obj/machinery/floodlight = 4)
+	cost = 50
+	containertype = /obj/structure/largecrate
+	containername = "emergency floodlights crate"
+
 //eva
+/decl/hierarchy/supply_pack/engineering/softsuit
+	name = "EVA - Engineering softsuit"
+	contains = list(/obj/item/clothing/suit/space/engineering,
+					/obj/item/clothing/head/helmet/space/engineering,
+					/obj/item/clothing/shoes/magboots,
+					/obj/item/weapon/tank/emergency/oxygen/engi)
+	containername = "engineering softsuit crate"
+	containertype = /obj/structure/closet/crate/secure/large
+	cost = 30
+	access = core_access_engineering_programs
+
 /decl/hierarchy/supply_pack/engineering/voidsuit
 	name = "EVA - Engineering voidsuit"
 	contains = list(/obj/item/clothing/suit/space/void/engineering,
@@ -291,6 +320,12 @@ decl/hierarchy/supply_pack/engineering/pipelayer
 /decl/hierarchy/supply_pack/engineering/fueltank
 	name = "Liquid - Fuel tank"
 	contains = list(/obj/structure/reagent_dispensers/fueltank)
-	cost = 8
+	cost = 10
 	containertype = /obj/structure/largecrate
 	containername = "fuel tank crate"
+
+/decl/hierarchy/supply_pack/engineering/fuelbackpack
+	name = "Liquid - Back-strapped fuel tank"
+	contains = list(/obj/item/weapon/weldpack)
+	cost = 8
+	containername = "back-strapped fuel tank crate"

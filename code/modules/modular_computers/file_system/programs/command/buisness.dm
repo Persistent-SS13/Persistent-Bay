@@ -189,7 +189,7 @@
 	data["menu"] = menu
 
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "business_control.tmpl", name, 600, 700, state = state)
 		ui.auto_update_layout = 1
@@ -199,13 +199,13 @@
 /datum/nano_module/program/business/contract_signed(var/obj/item/weapon/paper/contract/contract)
 	pending_contracts -= contract
 	signed_contracts |= contract
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	return 1
 
 /datum/nano_module/program/business/contract_cancelled(var/obj/item/weapon/paper/contract/contract)
 	pending_contracts -= contract
 	signed_contracts -= contract
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	return 1
 
 
@@ -942,16 +942,16 @@
 		if("business_finalize")
 			var/commitment = get_contributed()
 			var/signed_stocks = get_distributed()
-			if(commitment < 5000 || signed_stocks != 100)
+			if(commitment < 2500 || signed_stocks != 100)
 				return 0
-			commitment -= 5000
+			commitment -= 2500
 			if(!potential_name || potential_name == "")
 				to_chat(usr, "A name for the business must be chosen first.")
 				return
 			for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
 				if(!contract.is_solvent())
 					contract.cancel()
-					GLOB.nanomanager.update_uis(src)
+					SSnano.update_uis(src)
 					return 0
 			var/datum/small_business/new_business = new()
 			new_business.name = potential_name
@@ -971,5 +971,5 @@
 			menu = 5
 			cancel_contracts()
 
-	GLOB.nanomanager.update_uis(src)
+	SSnano.update_uis(src)
 	return 1

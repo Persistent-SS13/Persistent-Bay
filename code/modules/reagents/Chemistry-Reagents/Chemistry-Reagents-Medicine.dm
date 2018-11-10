@@ -530,7 +530,7 @@
 
 /* Antidepressants */
 
-#define ANTIDEPRESSANT_MESSAGE_DELAY 5*60*10
+#define ANTIDEPRESSANT_MESSAGE_DELAY 5 MINUTES
 
 /datum/reagent/methylphenidate
 	name = "Methylphenidate"
@@ -761,11 +761,12 @@
 // Sleeping agent, produced by breathing N2O.
 /datum/reagent/nitrous_oxide
 	name = "Nitrous Oxide"
+	gas_id = "sleeping_agent"
 	description = "An ubiquitous sleeping agent also known as laughing gas."
 	taste_description = "dental surgery"
 	reagent_state = LIQUID
 	color = "#cccccc"
-	metabolism = 0.05 // So that low dosages have a chance to build up in the body.
+	metabolism = 0.1
 	var/do_giggle = TRUE
 
 /datum/reagent/nitrous_oxide/xenon
@@ -779,11 +780,15 @@
 	if(alien == IS_DIONA)
 		return
 	var/dosage = M.chem_doses[type]
-	if(dosage >= 1)
-		if(prob(5)) M.Sleeping(3)
+	if(dosage >= 5)
+		M.sleeping = max(M.sleeping, 20)
+		M.drowsyness = max(M.drowsyness, 60)
+		if(volume >= 5)
+			remove_self(5) // If the patient is sleeping already, the nitrous oxide won't build up in the blood until the end of time.
+	if(dosage >= 3)
 		M.dizziness =  max(M.dizziness, 3)
 		M.confused =   max(M.confused, 3)
-	if(dosage >= 0.3)
+	if(dosage >= 1)
 		if(prob(5)) M.Paralyse(1)
 		M.drowsyness = max(M.drowsyness, 3)
 		M.slurring =   max(M.slurring, 3)

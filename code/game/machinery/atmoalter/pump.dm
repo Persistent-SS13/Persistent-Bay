@@ -1,6 +1,6 @@
 /obj/machinery/portable_atmospherics/powered/pump
 	name = "portable air pump"
-
+	desc = "Portable air pump. Works on power cells."
 	icon = 'icons/obj/atmos.dmi'
 	icon_state = "psiphon:0"
 	density = 1
@@ -18,15 +18,14 @@
 	power_rating = 7500 //7500 W ~ 10 HP
 	power_losses = 150
 
-/obj/machinery/portable_atmospherics/powered/pump/filled
-	start_pressure = 90 * ONE_ATMOSPHERE
-
-/obj/machinery/portable_atmospherics/powered/pump/New()
+/obj/machinery/portable_atmospherics/powered/pump/init_air_content()
 	..()
-	cell = new/obj/item/weapon/cell/apc(src)
-
 	var/list/air_mix = StandardAirMix()
 	src.air_contents.adjust_multi("oxygen", air_mix["oxygen"], "nitrogen", air_mix["nitrogen"])
+
+
+/obj/machinery/portable_atmospherics/powered/scrubber/make_cell()
+	return new/obj/item/weapon/cell/apc(src)
 
 /obj/machinery/portable_atmospherics/powered/pump/update_icon()
 	src.overlays = 0
@@ -135,7 +134,7 @@
 	if (holding)
 		data["holdingTank"] = list("name" = holding.name, "tankPressure" = round(holding.air_contents.return_pressure() > 0 ? holding.air_contents.return_pressure() : 0))
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "portpump.tmpl", "Portable Pump", 480, 410, state = GLOB.physical_state)
 		ui.set_initial_data(data)

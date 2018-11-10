@@ -14,6 +14,7 @@ var/list/global/tank_gauge_cache = list()
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BACK
 	w_class = ITEM_SIZE_LARGE
+	matter = list(DEFAULT_WALL_MATERIAL = 1000)
 
 	force = 5.0
 	throwforce = 10.0
@@ -53,13 +54,15 @@ var/list/global/tank_gauge_cache = list()
 
 /obj/item/weapon/tank/Initialize()
 	. = ..()
-	proxyassembly = new /obj/item/device/tankassemblyproxy(src)
-	proxyassembly.tank = src
 
-	air_contents = new /datum/gas_mixture(volume, T20C)
-	for(var/gas in starting_pressure)
-		air_contents.adjust_gas(gas, starting_pressure[gas]*volume/(R_IDEAL_GAS_EQUATION*T20C), 0)
-	air_contents.update_values()
+	if(!map_storage_loaded)
+		proxyassembly = new /obj/item/device/tankassemblyproxy(src)
+		proxyassembly.tank = src
+
+		air_contents = new /datum/gas_mixture(volume, T20C)
+		for(var/gas in starting_pressure)
+			air_contents.adjust_gas(gas, starting_pressure[gas]*volume/(R_IDEAL_GAS_EQUATION*T20C), 0)
+		air_contents.update_values()
 
 	START_PROCESSING(SSobj, src)
 	update_icon(override = TRUE)
@@ -253,7 +256,7 @@ var/list/global/tank_gauge_cache = list()
 					data["maskConnected"] = 1
 
 	// update the ui if it exists, returns null if no ui is passed/found
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		// the ui does not exist, so we'll create a new() one
 		// for a list of parameters and their descriptions see the code docs in \code\modules\nano\nanoui.dm
@@ -341,10 +344,10 @@ var/list/global/tank_gauge_cache = list()
 	check_status()
 
 /obj/item/weapon/tank/update_icon(var/override)
-	if(initialized && istype(loc, /obj/) && !istype(loc, /obj/item/clothing/suit/) && !override) //So we don't eat up our tick. Every tick, when we're not actually in play.
+	if((atom_flags & ATOM_FLAG_INITIALIZED) && istype(loc, /obj/) && !istype(loc, /obj/item/clothing/suit/) && !override) //So we don't eat up our tick. Every tick, when we're not actually in play.
 		return
 	overlays.Cut()
-	if(proxyassembly.assembly || wired)
+	if((proxyassembly && proxyassembly.assembly) || wired)
 		overlays += image(icon,"bomb_assembly")
 		if(proxyassembly.assembly)
 			var/image/bombthing = image(proxyassembly.assembly.icon, proxyassembly.assembly.icon_state)

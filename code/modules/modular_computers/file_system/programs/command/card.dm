@@ -173,7 +173,7 @@
 				var/selected = 0
 				var/x = text2num(record.assignment_data[assignmentz.uid])
 				var/title = ""
-				if(x && x > 1)
+				if(x && x > 1 && assignmentz.ranks.len >= x-1)
 					title = assignmentz.ranks[x-1]
 				else
 					title = assignmentz.name
@@ -215,7 +215,7 @@
 					"accesses" = accesses)))
 			data["regions"] = regions
 
-	ui = GLOB.nanomanager.try_update_ui(user, src, ui_key, ui, data, force_open)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "identification_computer.tmpl", name, 600, 700, state = state)
 		ui.auto_update_layout = 1
@@ -418,7 +418,7 @@
 					return 0
 				var/t1 = href_list["assign_target"]
 				if(t1 == "Custom")
-					if(isleader || connected_faction.in_command(user_id_card.registered_name))
+					if( check_rights(R_ADMIN, 0, user) || isleader || connected_faction.in_command(user_id_card.registered_name))
 						var/temp_t = sanitize(input("Enter a custom title.","Assignment", module.record.custom_title), 45)
 						//let custom jobs function as an impromptu alt title, mainly for sechuds
 						if(temp_t)
@@ -428,10 +428,12 @@
 						return 0
 				else
 					var/datum/computer_file/crew_record/record = connected_faction.get_record(user_id_card.registered_name)
-					var/datum/assignment/user_assignment = connected_faction.get_assignment(record.assignment_uid)
+					var/datum/assignment/user_assignment = null
+					if(!isghost(user))
+						user_assignment = connected_faction.get_assignment(record.assignment_uid)
 					var/datum/assignment/assignment = locate(href_list["assign_target"])
 					if(!assignment) return 0
-					if(connected_faction.in_command(user_id_card.registered_name) || (user_assignment && user_assignment.parent.name == assignment.parent.name) || isleader)
+					if(check_rights(R_ADMIN, 0, user) || connected_faction.in_command(user_id_card.registered_name) || (user_assignment && user_assignment.parent.name == assignment.parent.name) || isleader)
 						module.record.assignment_data[module.record.assignment_uid] = "[module.record.rank]"
 						module.record.assignment_uid = assignment.uid
 						module.record.rank = text2num(module.record.assignment_data[assignment.uid])
@@ -498,7 +500,7 @@
 	if(id_card)
 		id_card.name = text("[id_card.registered_name]'s ID Card [get_faction_tag(id_card.selected_faction)]-([id_card.assignment])")
 
-	GLOB.nanomanager.update_uis(NM)
+	SSnano.update_uis(NM)
 	return 1
 
 /datum/computer_file/program/card_mod/proc/remove_nt_access(var/obj/item/weapon/card/id/id_card)

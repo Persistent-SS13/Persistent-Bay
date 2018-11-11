@@ -45,6 +45,7 @@
 
 
 	body_temperature = 330
+	base_temperature = 330
 	heat_discomfort_level = 360                   // Aesthetic messages about feeling warm.
 	cold_discomfort_level = 250
 	heat_discomfort_strings = list(

@@ -14,6 +14,7 @@
 
 	projectile_type = /obj/item/projectile/temp
 	cell_type = /obj/item/weapon/cell/high
+	load_method = ENERGY_LOAD_HOTSWAP_CELL
 
 
 /obj/item/weapon/gun/energy/temperature/Initialize()

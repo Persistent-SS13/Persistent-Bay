@@ -1,4 +1,3 @@
-
 /material/glass
 	name = "glass"
 	stack_type = /obj/item/stack/material/glass

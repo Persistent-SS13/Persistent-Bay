@@ -4,8 +4,6 @@
 	flags = MATERIAL_UNMELTABLE
 	cut_delay = 60
 	icon_colour = "#00ffe1"
-	icon_base = "curvy"
-	icon_reinf = "curvy"
 	icon_door = "metal"
 	icon_table = "metal"
 	opacity = 0.4

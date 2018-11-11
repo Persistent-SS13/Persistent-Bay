@@ -1,0 +1,49 @@
+<!-- 
+Title: Bioballistic Delivery System UI
+Used In File(s): \code\modules\hydroponics\seed_machines.dm
+ -->
+ 
+{{if data.running}}
+	<h3>Currently printing... please wait.</h3>
+{{else}}
+	<h3>Book Binder</h3>
+	<div class="item">
+		<div class="itemLabel">
+			Inserted:
+		</div>
+		<div class="itemContent">
+			{{if data.held}}
+				{{:helper.link(data.held, '', {'remove' : 1}, null)}}
+			{{else}}
+				{{:helper.link('None', '', {'insert' : 1}, null)}}
+			{{/if}}
+		</div>
+		<div class="itemLabel">
+			Pages:
+		</div>
+		<div class="itemContent">
+			{{:data.pages}}
+		</div>
+		<div class="itemLabel">
+			Title:
+		</div>
+		<div class="itemContent">
+			{{:helper.link(data.title, '', {'title' : 1}, null)}}
+		</div>
+		<div class="itemLabel">
+			Author:
+		</div>
+		<div class="itemContent">
+			{{:helper.link(data.author, '', {'author' : 1}, null)}}
+		</div>
+		<div class="itemLabel">
+			Cover Design:
+		</div>
+		<div class="itemContent">
+			{{:helper.link(data.cover, '', {'cover' : 1}, null)}}
+		</div>
+		
+		{{:helper.link('Print Book', 'printer', {'print' : 1}, null)}}	
+		
+	</div>
+{{/if}}

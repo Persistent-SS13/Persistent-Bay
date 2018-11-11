@@ -3,6 +3,7 @@
 	stack_type = /obj/item/stack/material/plastic
 	flags = MATERIAL_BRITTLE
 	icon_colour = "#cccccc"
+	icon_base = "solid"
 	icon_reinf = "jaggy"
 	hardness = 10
 	weight = 5
@@ -24,6 +25,7 @@
 	adjective_name = "wooden"
 	stack_type = /obj/item/stack/material/wood
 	icon_colour = "#824b28"
+	icon_base = "solid"
 	icon_reinf = "jaggy"
 	icon_door = "wood"
 	integrity = 50
@@ -59,6 +61,7 @@
 	flags = MATERIAL_BRITTLE
 	integrity = 10
 	icon_colour = "#aaaaaa"
+	icon_base = "solid"
 	icon_reinf = "jaggy"
 	icon_door = "wood"
 	hardness = 1

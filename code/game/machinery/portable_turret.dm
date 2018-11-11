@@ -495,8 +495,8 @@ var/list/turret_icons
 			return TURRET_NOT_TARGET	//if threat level < 4, keep going
 
 	if(istype(L, /mob/living/bot)) //if the target is a bot, decide if it is ours
-		if(assess_bot(L))
-			return TURRET_NOT_TARGET
+	//	if(assess_bot(L))
+		return TURRET_NOT_TARGET
 
 	if(L.lying)		//if the perp is lying down, it's still a target but a less-important target
 		return lethal ? TURRET_SECONDARY_TARGET : TURRET_NOT_TARGET

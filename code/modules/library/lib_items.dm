@@ -328,8 +328,6 @@
 		return 1
 	if((src in usr.contents) || Adjacent(usr))
 		usr.set_machine(src)
-		var/obj/item/weapon/in_hand = usr.get_active_hand()
-			
 		if(href_list["choice"])
 			switch(href_list["choice"])			
 				if("next_page")

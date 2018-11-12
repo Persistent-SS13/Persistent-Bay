@@ -1380,6 +1380,7 @@
 #include "code\modules\construction\girderparts.dm"
 #include "code\modules\construction\girders.dm"
 #include "code\modules\customitems\item_spawning.dm"
+#include "code\modules\designer\canvas.dm"
 #include "code\modules\designer\designer.dm"
 #include "code\modules\detectivework\footprints.dm"
 #include "code\modules\detectivework\forensics.dm"

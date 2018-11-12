@@ -118,6 +118,8 @@
 	var/hazard_low_pressure = HAZARD_LOW_PRESSURE     			// Dangerously low pressure.
 	var/body_temperature = 310.15	                			//Species will try to stabilize at this temperature.
 	                                                  			// (also affects temperature processing)
+	var/base_temperature = 310.15								//Should remain the same as body temp except in fringe cases (cold blooded, etc)
+																//Called in life.dm one level above
 
 	var/heat_discomfort_level = 315                   			// Aesthetic messages about feeling warm.
 	var/cold_discomfort_level = 285                   			// Aesthetic messages about feeling chilly.

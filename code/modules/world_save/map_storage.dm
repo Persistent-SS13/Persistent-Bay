@@ -349,7 +349,6 @@ var/global/list/debug_data = list()
 		for(var/x in 1 to world.maxx step 20)
 			for(var/y in 1 to world.maxy step 20)
 				Save_Chunk(x,y,z, f)
-				CHECK_TICK
 		f = null
 	fcopy("map_saves/extras.sav", "backups/[dir]/extras.sav")
 	fdel("map_saves/extras.sav")
@@ -372,7 +371,6 @@ var/global/list/debug_data = list()
 	to_file(f["areas"],formatted_areas)
 	Save_Records(dir)
 
-//	to_file(f["records"],GLOB.all_crew_records)
 	to_file(f["next_account_number"],next_account_number)
 	if(reallow) config.enter_allowed = 1
 	to_world("Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!")

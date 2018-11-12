@@ -146,3 +146,58 @@
 	containername = "heavy-duty atmospherics voidsuit crate"
 	containertype = /obj/structure/closet/crate/secure/large
 	access = core_access_engineering_programs
+
+// Bluespace canisters
+
+/decl/hierarchy/supply_pack/atmospherics/bluespace_canister_air
+	name = "Gas Bluespace - Air Canister"
+	contains = list(/obj/machinery/portable_atmospherics/bluespace/air)
+	cost = 200
+	containername = "Bluespace Air Canister Crate"
+	containertype = /obj/structure/largecrate
+
+/decl/hierarchy/supply_pack/atmospherics/bluespace_canister_oxygen
+	name = "Gas Bluespace - Oxygen Canister"
+	contains = list(/obj/machinery/portable_atmospherics/bluespace/oxygen)
+	cost = 300
+	containername = "Bluespace Oxygen Canister Crate"
+	containertype = /obj/structure/largecrate
+
+/decl/hierarchy/supply_pack/atmospherics/bluespace_canister_nitrogen
+	name = "Gas Bluespace - Nitrogen Canister"
+	contains = list(/obj/machinery/portable_atmospherics/bluespace/nitrogen)
+	cost = 200
+	containername = "Bluespace Nitrogen Canister Crate"
+	containertype = /obj/structure/largecrate
+
+/decl/hierarchy/supply_pack/atmospherics/bluespace_canister_sleeping_agent
+	name = "Gas Bluespace - Nitrous Oxide Canister"
+	contains = list(/obj/machinery/portable_atmospherics/bluespace/sleeping_agent)
+	cost = 800
+	containername = "Bluespace Nitrous Oxide Canister Crate"
+	containertype = /obj/structure/largecrate
+	access = core_access_engineering_programs
+
+/decl/hierarchy/supply_pack/atmospherics/bluespace_canister_carbon_dioxide
+	name = "Gas Bluespace - Carbon Dioxide Canister"
+	contains = list(/obj/machinery/portable_atmospherics/bluespace/carbon_dioxide)
+	cost = 800
+	containername = "Bluespace Carbon Dioxide Canister Crate"
+	containertype = /obj/structure/largecrate
+	access = core_access_engineering_programs
+
+/decl/hierarchy/supply_pack/atmospherics/bluespace_canister_hydrogen
+	name = "Gas Bluespace - Hydrogen Canister"
+	contains = list(/obj/machinery/portable_atmospherics/bluespace/hydrogen)
+	cost = 200
+	containername = "Bluespace Hydrogen Canister Crate"
+	containertype = /obj/structure/largecrate
+	access = core_access_engineering_programs
+
+/decl/hierarchy/supply_pack/atmospherics/bluespace_canister_phoron
+	name = "Gas Bluespace - Phoron Canister"
+	contains = list(/obj/machinery/portable_atmospherics/bluespace/phoron)
+	cost = 1200
+	containername = "Bluespace Phoron Canister Crate"
+	containertype = /obj/structure/largecrate
+	access = core_access_engineering_programs

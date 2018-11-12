@@ -598,6 +598,7 @@
 #include "code\game\machinery\washing_machine.dm"
 #include "code\game\machinery\wishgranter.dm"
 #include "code\game\machinery\atmoalter\area_atmos_computer.dm"
+#include "code\game\machinery\atmoalter\bluespacecanister.dm"
 #include "code\game\machinery\atmoalter\canister.dm"
 #include "code\game\machinery\atmoalter\clamp.dm"
 #include "code\game\machinery\atmoalter\gas_generator.dm"

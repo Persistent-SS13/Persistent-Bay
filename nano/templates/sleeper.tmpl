@@ -16,12 +16,6 @@
 				{{:data.occupant}}
 			</div>
 			<div class="itemContent">
-			{{:helper.link(data.filtering ? "Dialysis active" : "Dialysis inactive", null, {'filter' : !data.filtering})}}
-			</div>
-			<div class="itemContent">
-			{{:helper.link(data.pump ? "Stomach pump active" : "Stomach pump inactive", null, {'pump' : !data.pump})}}
-			</div>
-			<div class="itemContent">
 				{{:helper.link("Eject occupant", null, {'eject' : 0})}}
 			</div>
 		</div>
@@ -30,42 +24,72 @@
 			No occupant.
 		</div>
 	{{/if}}
+
+	<h4>Filtering:</h4>
 	<div class="item">
-		<div class="itemLabel">
-			Stasis setting:
-		</div>
+		<div class="itemLabel">Dialysis :</div>
 		<div class="itemContent">
-			{{:helper.link("Off", null,  {'stasis' : 1}, null, data.stasis == 1 ? 'yellowButton' : null)}}
-			{{:helper.link("2x", null,  {'stasis' : 2}, null, data.stasis == 2 ? 'yellowButton' : null)}}
-			{{:helper.link("5x", null,  {'stasis' : 5}, null, data.stasis == 5 ? 'yellowButton' : null)}}
+			{{:helper.link("On", null, {'filter' : 1}, null, data.occupant ? (data.filtering?'yellowButton':null) : 'disabled')}} {{:helper.link("Off", null, {'filter' : 0}, null, data.occupant ? (data.filtering?null:'yellowButton') : 'disabled')}}
+		</div>
+
+		<div class="itemLabel">Stomach pump:</div>
+		<div class="itemContent">
+			{{:helper.link("On", null, {'pump' : 1}, null, data.occupant ? (data.pump?'yellowButton':null) : 'disabled' )}} {{:helper.link("Off", null, {'pump' : 0}, null, data.occupant ? (data.pump?null:'yellowButton') : 'disabled')}}
+		</div>
+
+		<div class="itemLabel">Beaker:</div>
+		<div class="itemContent">
+			{{:helper.link("Eject", null, {'beaker' : 0}, null, (data.beaker != -1)? null : 'disabled')}}
+		</div>
+		{{if data.beaker != -1}}
+			 <span class="highlight">{{:data.beaker}} units of free space remaining.</span>
+		{{else}}
+			 <span class="bad">No beaker inserted.</span>
+		{{/if}}
+	</div>
+
+<h4>Stasis setting:</h4>
+	<div class="item">
+		<div class="itemLabel">Stasis Power:</div>
+		<div class="itemContent">
+			{{for data.stasis_modes}}
+				{{:helper.link(value, null,  {'stasis_index' : index}, null, data.stasis == value ? 'yellowButton' : null)}}
+			{{/for}}
 		</div>
 	</div>
+
+<h4>Injections:</h4>
 	<div class="item">
-	{{for data.reagents}}
-		<div class="itemLabel">
-		{{:value.name}}
-		</div>
+		<div class="itemLabel">Quantity Injected:</div>
 		<div class="itemContent">
-			{{if data.occupant}}Occupant: {{:value.amount}} units{{/if}}
-			{{:helper.link('Inject 5', null, {'chemical' : value.name, 'amount' : 5}, data.occupant ? null : 'disabled')}}{{:helper.link('Inject 10', null, {'chemical' : value.name, 'amount' : 10}, data.occupant ? null : 'disabled')}}
+			{{for data.amount_injectable}}
+				{{:helper.link( value + 'u', null, {'quantity_index' : index}, data.amount_injected == value ? 'yellowButton' : null)}}
+			{{/for}}
 		</div>
-	{{/for}}
 	</div>
-	{{if data.beaker != -1}}
-		<div class="item">
-			<div class="itemLabel">
-				Beaker:
-			</div>
-			<div class="itemContent">
-				{{:data.beaker}} units of free space remaining.
-				{{:helper.link("Eject", null, {'beaker' : 0})}}
-			</div>
-		</div>
-	{{else}}
-		<div class="item">
-			<div class="itemLabel">
-				No beaker inserted.
-			</div>
-		</div>
-	{{/if}}
+
+	<div class="itemContentWide" style="width: 100%;">
+		<div class="itemLabelWide">Available chemicals:</div>
+		<br>
+		{{if data.chemicals.length}}
+			{{for data.chemicals}}
+				<div class="item">
+					<div class="itemLabel">
+						{{:helper.link(value.name + " ("+value.amount+")", 'syringe', {"inject":value.name}, data.occupant && value.amount ? null : 'disabled')}}
+					</div>
+					<span class="highlight">
+						{{if data.occupant}}
+							In bloodstream: {{:value.contained}} units
+						{{else}}
+							N/A
+						{{/if}}
+					</span>
+				</div>
+			{{/for}}
+		{{else}}
+			<span class='bad'>No cartridges installed!</span>
+		{{/if}}
+	</div>
+
+
 {{/if}}

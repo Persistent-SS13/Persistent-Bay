@@ -272,6 +272,83 @@
 				</div>
 			</div>
 		{{/if}}	
+		{{if data.menu == 6}}
+			<h2>{{:data.business_name}} News Feed</h2><hr>
+			<br><br>
+			<h4>Current Holders</h4>
+			{{for data.stock_holders}}
+				{{:value.holder_name}} : {{:value.holding}}<br>
+			{{/for}}<hr>
+			<h4>Current Proposals</h4>
+			<hr>
+			{{for data.proposals}}
+				{{:value.proposal}}<br>
+				{{:helper.link('Support', '', {'action' : 'toggleSupport', 'target' : value.proposal_ref}, null, value.supported ? 'selected' : null)}}{{:helper.link('Deny', '', {'action' : 'toggleDeny', 'target' : value.proposal_ref}, null, value.denied ? 'selected' : null)}}
+				{{if value.cancel}}
+					{{:helper.link('Cancel', '', {'action' : 'proposal_cancel', 'target' : value.proposal_ref}, null, null)}}
+				{{/if}}
+				<br><hr>
+			{{/for}}<hr>
+			<h4>Recent Proposals</h4>
+			<hr>
+			<div class="statusDisplay" style="overflow: auto;">
+				{{for data.recent_proposals}}
+					{{:value.recent_proposal}}<br><hr>
+				{{/for}}
+			</div>
+			<h4>CEO Control</h4>
+			<hr>
+			<div class='item'>
+				<div class='itemLabel'>
+					Current CEO:
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.ceo_name, '', {'action' : 'ceo_change'}, null)}}{{:helper.link('Propose Firing', '', {'action' : 'ceo_fire'}, null)}}
+				</div>
+			</div>
+			<div class='item'>
+				<div class='itemLabel'>
+					Title:
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.ceo_title, '', {'action' : 'ceo_title'}, null)}}
+				</div>
+			</div>
+			<div class='item'>
+				<div class='itemLabel'>
+					Hourly Payrate:
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.ceo_payrate, '', {'action' : 'ceo_payrate'}, null)}}
+				</div>
+			</div>
+			<div class='item'>
+				<div class='itemLabel'>
+					Dividend (% of hourly profit):
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.ceo_dividend, '', {'action' : 'ceo_dividend'}, null)}}
+				</div>
+			</div>
+			<hr>
+			<h4>Shareholders</h4>
+			<div class='item'>
+				<div class='itemLabel'>
+					Dividend per 10 stocks(% of hourly profit):
+				</div>
+				<div class='itemContent'>
+					{{:helper.link(data.holders_dividend, '', {'action' : 'holders_dividend'}, null)}}
+				</div>
+			</div>
+			<div class='item'>
+				<div class='itemLabel'>
+					Your Holdings: 
+				</div>
+				<div class='itemContent'>
+					{{:data.personal_holding}} {{:helper.link('Sell Stocks', '', {'action' : 'holders_sale'}, null)}}
+				</div>
+			</div>
+		{{/if}}	
 	{{else}}
 		<h2>You do not have access to this business.</h2><br><br>
 		{{:helper.link('Log Out', '', {'action' : 'switchm', 'target' : 'logout'}, null)}}

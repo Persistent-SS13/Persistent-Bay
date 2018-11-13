@@ -314,7 +314,7 @@
 			cart.reagents.trans_to_mob(occupant, amount,CHEM_BLOOD)
 			to_chat(user, "<span class='notice'>Occupant now has [occupant.reagents.get_reagent_amount(chemical_type)] unit\s of [chemical_name] in their bloodstream.</span>")
 		else
-			to_chat(user, "<span class='warning'>The subject has too much of that chemical in his bloodstream.</span>")
+			to_chat(user, "<span class='warning'>The subject has too much of that chemical in their bloodstream.</span>")
 	else
 		to_chat(user, "<span class='warning'>There's no suitable occupant in \the [src].</span>")
 

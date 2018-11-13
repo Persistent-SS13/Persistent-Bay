@@ -351,7 +351,7 @@ update_flag
 		if (label && CanUseTopic(user, state))
 			canister_color = colors[label]
 			icon_state = colors[label]
-			name = "\improper Canister: [label]"
+			name = "\improper Bluespace Canister: [label]"
 		update_icon()
 		. = TOPIC_REFRESH
 
@@ -364,7 +364,7 @@ update_flag
 // N2O Canister
 //--------------------------------------------------------
 /obj/machinery/portable_atmospherics/bluespace/sleeping_agent
-	name = "\improper Canister: \[N2O\]"
+	name = "\improper Bluespace Canister: \[N2O\]"
 	icon_state = "redws"
 	canister_color = "redws"
 	can_label = 0
@@ -378,7 +378,7 @@ update_flag
 // N2 Canister
 //--------------------------------------------------------
 /obj/machinery/portable_atmospherics/bluespace/nitrogen
-	name = "\improper Canister: \[N2\]"
+	name = "\improper Bluespace Canister: \[N2\]"
 	icon_state = "red"
 	canister_color = "red"
 	can_label = 0
@@ -403,7 +403,7 @@ update_flag
 // O2 Canister
 //--------------------------------------------------------
 /obj/machinery/portable_atmospherics/bluespace/oxygen
-	name = "\improper Canister: \[O2\]"
+	name = "\improper Bluespace Canister: \[O2\]"
 	icon_state = "blue"
 	canister_color = "blue"
 	can_label = 0
@@ -429,7 +429,7 @@ update_flag
 // H2 Canister
 //--------------------------------------------------------
 /obj/machinery/portable_atmospherics/bluespace/hydrogen
-	name = "\improper Canister: \[Hydrogen\]"
+	name = "\improper Bluespace Canister: \[Hydrogen\]"
 	icon_state = "purple"
 	canister_color = "purple"
 	can_label = 0
@@ -443,7 +443,7 @@ update_flag
 // Phoron Canister
 //--------------------------------------------------------
 /obj/machinery/portable_atmospherics/bluespace/phoron
-	name = "\improper Canister \[Phoron\]"
+	name = "\improper Bluespace Canister \[Phoron\]"
 	icon_state = "orange"
 	canister_color = "orange"
 	can_label = 0
@@ -457,7 +457,7 @@ update_flag
 // CO2 Canister
 //--------------------------------------------------------
 /obj/machinery/portable_atmospherics/bluespace/carbon_dioxide
-	name = "\improper Canister \[CO2\]"
+	name = "\improper Bluespace Canister \[CO2\]"
 	icon_state = "black"
 	canister_color = "black"
 	can_label = 0
@@ -471,7 +471,7 @@ update_flag
 // Air Canister
 //--------------------------------------------------------
 /obj/machinery/portable_atmospherics/bluespace/air
-	name = "\improper Canister \[Air\]"
+	name = "\improper Bluespace Canister \[Air\]"
 	icon_state = "grey"
 	canister_color = "grey"
 	can_label = 0

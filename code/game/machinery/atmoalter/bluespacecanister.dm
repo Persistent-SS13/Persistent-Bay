@@ -3,7 +3,7 @@
 	icon = 'icons/obj/bluespace.dmi'
 	icon_state = "yellow"
 	density = 1
-	var/health = 300.0
+	var/health = 600.0
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	w_class = ITEM_SIZE_GARGANTUAN
 
@@ -26,6 +26,7 @@
 	var/upgraded = 1
 	var/upgrade_stack_type = /obj/item/stack/material/plasteel
 	var/upgrade_stack_amount = 20
+	req_access = list(core_access_engineering_programs)
 
 /obj/machinery/portable_atmospherics/bluespace/after_load()
 	..()
@@ -290,19 +291,23 @@ update_flag
 
 /obj/machinery/portable_atmospherics/bluespace/OnTopic(var/mob/user, href_list, state)
 	if(href_list["toggle"])
-		if (valve_open)
-			if (holding)
-				release_log += "Valve was <b>closed</b> by [user] ([user.ckey]), stopping the transfer into the [holding]<br>"
+		if(allowed(user))
+			if (valve_open)
+				if (holding)
+					release_log += "Valve was <b>closed</b> by [user] ([user.ckey]), stopping the transfer into the [holding]<br>"
+				else
+					release_log += "Valve was <b>closed</b> by [user] ([user.ckey]), stopping the transfer into the <font color='red'><b>air</b></font><br>"
 			else
-				release_log += "Valve was <b>closed</b> by [user] ([user.ckey]), stopping the transfer into the <font color='red'><b>air</b></font><br>"
+				if (holding)
+					release_log += "Valve was <b>opened</b> by [user] ([user.ckey]), starting the transfer into the [holding]<br>"
+				else
+					release_log += "Valve was <b>opened</b> by [user] ([user.ckey]), starting the transfer into the <font color='red'><b>air</b></font><br>"
+					log_open()
+			valve_open = !valve_open
+			. = TOPIC_REFRESH
 		else
-			if (holding)
-				release_log += "Valve was <b>opened</b> by [user] ([user.ckey]), starting the transfer into the [holding]<br>"
-			else
-				release_log += "Valve was <b>opened</b> by [user] ([user.ckey]), starting the transfer into the <font color='red'><b>air</b></font><br>"
-				log_open()
-		valve_open = !valve_open
-		. = TOPIC_REFRESH
+			to_chat(user,"<span class='warning'>Access denied.</span>")
+
 
 	else if (href_list["remove_tank"])
 		if(!holding)
@@ -318,12 +323,15 @@ update_flag
 		. = TOPIC_REFRESH
 
 	else if (href_list["pressure_adj"])
-		var/diff = text2num(href_list["pressure_adj"])
-		if(diff > 0)
-			release_pressure = min(10*ONE_ATMOSPHERE, release_pressure+diff)
+		if(allowed(user))
+			var/diff = text2num(href_list["pressure_adj"])
+			if(diff > 0)
+				release_pressure = min(10*ONE_ATMOSPHERE, release_pressure+diff)
+			else
+				release_pressure = max(ONE_ATMOSPHERE/10, release_pressure+diff)
+			. = TOPIC_REFRESH
 		else
-			release_pressure = max(ONE_ATMOSPHERE/10, release_pressure+diff)
-		. = TOPIC_REFRESH
+			to_chat(user,"<span class='warning'>Access denied.</span>")
 
 	else if (href_list["relabel"])
 		if (!can_label)

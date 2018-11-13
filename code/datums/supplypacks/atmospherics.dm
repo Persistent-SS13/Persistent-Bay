@@ -155,6 +155,7 @@
 	cost = 200
 	containername = "Bluespace Air Canister Crate"
 	containertype = /obj/structure/largecrate
+	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/atmospherics/bluespace_canister_oxygen
 	name = "Gas Bluespace - Oxygen Canister"
@@ -162,6 +163,7 @@
 	cost = 300
 	containername = "Bluespace Oxygen Canister Crate"
 	containertype = /obj/structure/largecrate
+	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/atmospherics/bluespace_canister_nitrogen
 	name = "Gas Bluespace - Nitrogen Canister"
@@ -169,6 +171,7 @@
 	cost = 200
 	containername = "Bluespace Nitrogen Canister Crate"
 	containertype = /obj/structure/largecrate
+	access = core_access_engineering_programs
 
 /decl/hierarchy/supply_pack/atmospherics/bluespace_canister_sleeping_agent
 	name = "Gas Bluespace - Nitrous Oxide Canister"

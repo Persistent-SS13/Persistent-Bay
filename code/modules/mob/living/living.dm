@@ -480,6 +480,9 @@ default behaviour is:
 	return
 
 /mob/living/Move(a, b, flag)
+	if(SSautosave.saving)
+		return
+
 	if (buckled)
 		return
 

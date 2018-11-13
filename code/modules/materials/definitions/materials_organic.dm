@@ -3,7 +3,7 @@
 	stack_type = /obj/item/stack/material/plastic
 	flags = MATERIAL_BRITTLE
 	icon_colour = "#cccccc"
-	icon_base = "curvy"
+	icon_base = "solid"
 	icon_reinf = "jaggy"
 	hardness = 10
 	weight = 5
@@ -25,7 +25,7 @@
 	adjective_name = "wooden"
 	stack_type = /obj/item/stack/material/wood
 	icon_colour = "#824b28"
-	icon_base = "jaggy"
+	icon_base = "solid"
 	icon_reinf = "jaggy"
 	icon_door = "wood"
 	integrity = 50
@@ -61,7 +61,7 @@
 	flags = MATERIAL_BRITTLE
 	integrity = 10
 	icon_colour = "#aaaaaa"
-	icon_base = "jaggy"
+	icon_base = "solid"
 	icon_reinf = "jaggy"
 	icon_door = "wood"
 	hardness = 1
@@ -82,7 +82,7 @@
 	flags = MATERIAL_PADDING
 	brute_armor = 1
 	conductive = 0
-	stack_type = null
+	stack_type = /obj/item/stack/material/cloth
 	hardness = 1
 	weight = 1
 
@@ -95,7 +95,7 @@
 	ignition_point = T0C+300
 	melting_point = T0C+300
 	conductive = 0
-	stack_type = null
+	stack_type = /obj/item/stack/material/leather
 	hardness = 1
 	weight = 1
 

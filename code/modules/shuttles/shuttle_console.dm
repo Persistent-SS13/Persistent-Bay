@@ -302,7 +302,7 @@
 
 
 /obj/machinery/computer/shuttle_control/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
-	var/datum/shuttle/autodock/shuttle = shuttle_controller.shuttles[shuttle_tag]
+	var/datum/shuttle/autodock/shuttle = SSshuttle.shuttles[shuttle_tag]
 	if (!istype(shuttle))
 		to_chat(usr,"<span class='warning'>Unable to establish link with the shuttle.</span>")
 		return
@@ -320,7 +320,7 @@
 	if(..())
 		return 1
 
-	handle_topic_href(shuttle_controller.shuttles[shuttle_tag], href_list)
+	handle_topic_href(SSshuttle.shuttles[shuttle_tag], href_list)
 
 /obj/machinery/computer/shuttle_control/emag_act(var/remaining_charges, var/mob/user)
 	if (!hacked)

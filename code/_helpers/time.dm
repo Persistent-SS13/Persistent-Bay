@@ -12,6 +12,7 @@
 
 #define TimeOfGame (get_game_time())
 #define TimeOfTick (world.tick_usage*0.01*world.tick_lag)
+
 /proc/get_game_time()
 	var/global/time_offset = 0
 	var/global/last_time = 0
@@ -38,21 +39,15 @@ var/next_station_date_change = 1 DAY
 #define station_time_in_ticks (roundstart_timeofday + round_duration_in_ticks)
 
 /proc/stationtime2text()
-	return time2text(station_time_in_ticks, "hh:mm")
+	return time2text(world.timeofday, "hh:mm")
 
 /proc/stationdate2text()
-	var/update_time = FALSE
-	if(station_time_in_ticks > next_station_date_change)
-		next_station_date_change += 1 DAY
-		update_time = TRUE
-	if(!station_date || update_time)
-		var/extra_days = round(station_time_in_ticks / (1 DAY)) DAYS
-		var/timeofday = world.timeofday + extra_days
-		station_date = num2text((text2num(time2text(timeofday, "YYYY"))+config.year_skip)) + "-" + time2text(timeofday, "MM-DD")
+	var/timeofday = world.realtime
+	station_date = num2text((text2num(time2text(timeofday, "YYYY"))+config.year_skip)) + "-" + time2text(timeofday, "MM-DD")
 	return station_date
 
 /proc/time_stamp()
-	return time2text(station_time_in_ticks, "hh:mm:ss")
+	return time2text(world.timeofday, "hh:mm:ss")
 
 /* Returns 1 if it is the selected month and day */
 proc/isDay(var/month, var/day)

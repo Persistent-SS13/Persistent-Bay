@@ -45,7 +45,7 @@
 
 /datum/design/circuit/circuitfab
 	name = "voidsuit fabricator"
-	id = "voidfab"
+	id = "circuitfab"
 	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/fabricator/circuitfab
 	sort_string = "FABAC"

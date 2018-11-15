@@ -29,7 +29,7 @@
 					/obj/item/weapon/circuitboard/destructive_analyzer,
 					/obj/item/weapon/circuitboard/autolathe,
 					/obj/item/weapon/circuitboard/protolathe,
-					/obj/item/weapon/circuitboard/circuit_imprinter,
+					/obj/item/weapon/circuitboard/fabricator/circuitfab,
 					/obj/item/weapon/circuitboard/rdservercontrol,
 					/obj/item/weapon/circuitboard/rdconsole)
 	cost = 300

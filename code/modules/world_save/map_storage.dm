@@ -325,7 +325,8 @@ var/global/list/debug_data = list()
 			to_file(f, L)
 
 /proc/Save_World()
-	to_world("<font size=4 color='green'>The world is saving! You won't be able to join at this time.</font>")
+	to_world("<font size=4 color='green'>The world is saving! Characters are frozen and you won't be able to join at this time.</font>")
+	sleep(20)
 	var/reallow = 0
 	if(config.enter_allowed) reallow = 1
 	config.enter_allowed = 0
@@ -459,18 +460,8 @@ var/global/list/debug_data = list()
 	for(var/z in 1 to 52)
 		f = new("map_saves/z[z].sav")
 		var/starttime2 = REALTIMEOFDAY
-		var/breakout = 0
-		while(!f.eof && !breakout)
-			sleep(-1)
-			if(((REALTIMEOFDAY - starttime2)/10) > 300)
-				breakout = 1
-			f >> ve
-		if(breakout)
-			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
-			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
-			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
-
-
+		sleep(-1)
+		f >> ve
 		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
 		f = null
 	f = new("map_saves/extras.sav")

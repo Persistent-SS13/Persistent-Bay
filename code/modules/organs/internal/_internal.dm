@@ -188,3 +188,11 @@
 	..()
 //	if(severity > 1 && scarred <3) // A strong enough EMP can mess up your robotic organs permanantly
 //		scarred++
+
+/obj/item/organ/internal/examine(mob/user)
+	if(!..(user, 1))
+		return 0
+
+	to_chat(user, "<span class='neutral'>You examine the [get_visible_state()].</span>")
+	return 1
+// Shows the damage of the organ when examined.

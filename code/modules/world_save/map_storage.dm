@@ -342,14 +342,13 @@ var/global/list/debug_data = list()
 		else
 			backup = 1
 	found_vars = list()
-	for(var/z in 1 to 50)
+	for(var/z in 1 to 52)
 		fcopy("map_saves/z[z].sav", "backups/[dir]/z[z].sav")
 		fdel("map_saves/z[z].sav")
 		var/savefile/f = new("map_saves/z[z].sav")
 		for(var/x in 1 to world.maxx step 20)
 			for(var/y in 1 to world.maxy step 20)
 				Save_Chunk(x,y,z, f)
-				CHECK_TICK
 		f = null
 	fcopy("map_saves/extras.sav", "backups/[dir]/extras.sav")
 	fdel("map_saves/extras.sav")
@@ -372,7 +371,6 @@ var/global/list/debug_data = list()
 	to_file(f["areas"],formatted_areas)
 	Save_Records(dir)
 
-//	to_file(f["records"],GLOB.all_crew_records)
 	to_file(f["next_account_number"],next_account_number)
 	if(reallow) config.enter_allowed = 1
 	to_world("Saving Completed in [(REALTIMEOFDAY - starttime)/10] seconds!")
@@ -458,7 +456,7 @@ var/global/list/debug_data = list()
 			turfs |= T
 		A.contents.Add(turfs)
 	f = null
-	for(var/z in 1 to 50)
+	for(var/z in 1 to 52)
 		f = new("map_saves/z[z].sav")
 		var/starttime2 = REALTIMEOFDAY
 		var/breakout = 0

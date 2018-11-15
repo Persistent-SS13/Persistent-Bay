@@ -56,6 +56,9 @@ datum/preferences
 		if (!isnull(raw_name) && CanUseTopic(user))
 			var/new_name = sanitize_name(raw_name, pref.species)
 			if(new_name)
+				if(Retrieve_Record(new_name))
+					to_chat(user, "<span class='warning'>Invalid name. This character already exists.</span>")
+					return TOPIC_NOACTION
 				pref.real_name = new_name
 				return TOPIC_REFRESH
 			else

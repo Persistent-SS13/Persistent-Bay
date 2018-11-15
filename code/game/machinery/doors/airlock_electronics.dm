@@ -1,7 +1,6 @@
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:31
 #define ACCESS_BUSINESS_ELETRONICS "Electronics Control"
-#define ACCESS_BUSINESS_DEFAULT_ALL list(ACCESS_BUSINESS_ELETRONICS,"Sales", "Budget View", "Employee Control", "Upper Management", "Door Access 1", "Door Access 2", "Door Access 3")
-
+#define ACCESS_BUSINESS_DEFAULT_ALL list(ACCESS_BUSINESS_ELETRONICS,"Sales", "Newsfeed", "Budget View", "Employee Control",  "Upper Management", "Door Access 1", "Door Access 2", "Door Access 3")
 
 /obj/item/weapon/airlock_electronics/business
 	name = "business airlock electronics"
@@ -122,7 +121,7 @@
 /obj/item/weapon/airlock_electronics/tg_ui_interact(mob/user, ui_key = "main", datum/tgui/ui = null, force_open = 0, \
 	datum/tgui/master_ui = null, datum/ui_state/state = tg_hands_state)
 
-	tgui_process.try_update_ui(user, src, ui_key, ui, force_open)
+	SStgui.try_update_ui(user, src, ui_key, ui, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "airlock_electronics", src.name, 1000, 500, master_ui, state)
 		ui.open()
@@ -216,7 +215,7 @@
 	lockable = 0
 
 /obj/item/weapon/airlock_electronics/brace/tg_ui_interact(mob/user, ui_key = "main", datum/tgui/ui = null, force_open = 0, datum/tgui/master_ui = null, datum/ui_state/state = tg_deep_inventory_state)
-	tgui_process.try_update_ui(user, src, ui_key, ui, force_open)
+	SStgui.try_update_ui(user, src, ui_key, ui, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "airlock_electronics", src.name, 1000, 500, master_ui, state)
 		ui.open()

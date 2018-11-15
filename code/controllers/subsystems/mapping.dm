@@ -9,6 +9,8 @@ SUBSYSTEM_DEF(mapping)
 	var/list/exoplanet_ruins_templates = list()
 
 /datum/controller/subsystem/mapping/Initialize(timeofday)
+	GLOB.visibility_pref = 1
+	world.update_hub_visibility()
 	preloadTemplates()
 	..()
 	Load_World()

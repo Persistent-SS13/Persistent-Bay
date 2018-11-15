@@ -65,12 +65,14 @@
 
 	RefreshParts()
 
+/obj/machinery/mining/drill/proc/drop_ores(var/location)
+	for(var/obj/item/stack/ore/O in contents)
+		O.drop_to_stacks(location)
 
 /obj/machinery/mining/drill/attack_generic(var/mob/user, var/damage)
 	health = max(0, health-damage)
 	if(!health)
-		for(var/obj/item/weapon/ore/O in contents)
-			O.loc = loc
+		drop_ores(loc)
 		src.visible_message("<span class='notice'>\The [src] is smashed open and spills any ore inside.</span>")
 		statu = 2
 		active = 0
@@ -178,7 +180,7 @@
 					if(metal == "bluespace crystal")
 						new /obj/item/bluespace_crystal(get_turf(src))
 					else
-						new /obj/item/weapon/ore(src, metal)
+						new /obj/item/stack/ore(src, metal)
 
 		if(!found_resource)
 			harvesting.has_resources = 0
@@ -384,8 +386,7 @@
 
 	var/obj/structure/ore_box/B = locate() in orange(1)
 	if(B)
-		for(var/obj/item/weapon/ore/O in contents)
-			O.loc = B
+		drop_ores(B)
 		to_chat(usr, "<span class='notice'>You unload the drill's storage cache into the ore box.</span>")
 	else
 		to_chat(usr, "<span class='notice'>You must move an ore box up to the drill before you can unload it.</span>")

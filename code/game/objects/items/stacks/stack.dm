@@ -307,6 +307,19 @@
 		if(!amount)
 			break
 
+/obj/item/stack/proc/drop_to_stacks(var/location)
+	var/list/stacks = list()
+	if(!location)
+		location = src.loc
+	for (var/obj/item/stack/item in location)
+		stacks += item
+	for (var/obj/item/stack/item in stacks)
+		if (item==src)
+			continue
+		src.transfer_to(item)
+		if(!amount)
+			break
+
 /obj/item/stack/get_storage_cost()	//Scales storage cost to stack size
 	. = ..()
 	if (amount < max_amount)

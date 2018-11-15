@@ -30,11 +30,11 @@ Small, little HP, poisonous.
 	min_gas = null // Immune to space
 	max_gas = null
 	minbodytemp = 0
-	
+
 	faction = "asteroid"
 
 	should_save = 0
-	
+
 /mob/living/simple_animal/hostile/voxslug/New()
 	..()
 
@@ -43,7 +43,7 @@ Small, little HP, poisonous.
 	if(.)
 		pixel_x = rand(-10,10)
 		pixel_y = rand(-10,10)
-			
+
 /mob/living/simple_animal/hostile/voxslug/Found(var/atom/A)
 	if(istype(A, /obj/machinery/mining/drill))
 		var/obj/machinery/mining/drill/drill = A
@@ -53,7 +53,7 @@ Small, little HP, poisonous.
 	if(istype(A, /obj/structure/ore_box))
 		stance = HOSTILE_STANCE_ATTACK
 		return A
-	if(istype(A, /obj/item/weapon/ore))	
+	if(istype(A, /obj/item/stack/ore))
 		stance = HOSTILE_STANCE_ATTACK
 		return A
 

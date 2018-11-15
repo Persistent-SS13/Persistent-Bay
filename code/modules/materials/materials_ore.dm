@@ -1,18 +1,38 @@
-/obj/item/weapon/ore
+
+///obj/item/weapon/ore
+//	name = "ore"
+//	icon_state = "lump"
+//	icon = 'icons/obj/materials/ore.dmi'
+//	randpixel = 8
+//	w_class = 2
+//	var/material/material
+//	var/datum/geosample/geologic_data
+
+/obj/item/weapon/ore/after_load() //Remove me after first save reload!
+	var/obj/item/stack/ore/newore = new()
+	newore.drop_to_stacks(loc)
+	qdel(src)
+
+/obj/item/stack/ore
 	name = "ore"
 	icon_state = "lump"
 	icon = 'icons/obj/materials/ore.dmi'
 	randpixel = 8
 	w_class = 2
+
+	//stack
+	amount = 1
+	max_amount = 250
+
 	var/material/material
 	var/datum/geosample/geologic_data
 
-/obj/item/weapon/ore/attack_generic()	
+/obj/item/stack/ore/attack_generic()
 	qdel(src) // eaten
-/obj/item/weapon/ore/get_material()
+/obj/item/stack/ore/get_material()
 	return material
-	
-/obj/item/weapon/ore/after_load()
+
+/obj/item/stack/ore/after_load()
 	for(var/stuff in matter)
 		var/material/M = SSmaterials.get_material_by_name(stuff)
 		if(M)
@@ -28,24 +48,24 @@
 			break
 	. = ..()
 
-	
-/obj/item/weapon/ore/attackby(obj/item/weapon/W as obj, mob/user as mob)
+
+/obj/item/stack/ore/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/device/core_sampler))
 		var/obj/item/device/core_sampler/C = W
 		C.sample_item(src, user)
 	else
 		return ..()
 
-/obj/item/weapon/ore/New(var/newloc, var/_mat)
+/obj/item/stack/ore/New(var/newloc, var/_mat)
 	if(_mat)
 		matter = list()
 		matter[_mat] = SHEET_MATERIAL_AMOUNT
 	..(newloc)
 
-/obj/item/weapon/ore/Initialize()
-	
+/obj/item/stack/ore/Initialize()
+
 // POCKET SAND!
-/obj/item/weapon/ore/throw_impact(atom/hit_atom)
+/obj/item/stack/ore/throw_impact(atom/hit_atom)
 	..()
 	if(icon_state == "dust")
 		var/mob/living/carbon/human/H = hit_atom
@@ -57,31 +77,31 @@
 				if(istype(loc, /turf/)) qdel(src)
 
 // Map definitions.
-/obj/item/weapon/ore/uranium/New(var/newloc)
+/obj/item/stack/ore/uranium/New(var/newloc)
 	..(newloc, "pitchblende")
-/obj/item/weapon/ore/iron/New(var/newloc)
+/obj/item/stack/ore/iron/New(var/newloc)
 	..(newloc, "hematite")
-/obj/item/weapon/ore/coal/New(var/newloc)
+/obj/item/stack/ore/coal/New(var/newloc)
 	..(newloc, "graphene")
-/obj/item/weapon/ore/glass/New(var/newloc)
+/obj/item/stack/ore/glass/New(var/newloc)
 	..(newloc, "sand")
-/obj/item/weapon/ore/silver/New(var/newloc)
+/obj/item/stack/ore/silver/New(var/newloc)
 	..(newloc, "silver")
-/obj/item/weapon/ore/gold/New(var/newloc)
+/obj/item/stack/ore/gold/New(var/newloc)
 	..(newloc, "gold")
-/obj/item/weapon/ore/diamond/New(var/newloc)
+/obj/item/stack/ore/diamond/New(var/newloc)
 	..(newloc, "diamond")
-/obj/item/weapon/ore/osmium/New(var/newloc)
+/obj/item/stack/ore/osmium/New(var/newloc)
 	..(newloc, "platinum")
-/obj/item/weapon/ore/hydrogen/New(var/newloc)
+/obj/item/stack/ore/hydrogen/New(var/newloc)
 	..(newloc, "mhydrogen")
-/obj/item/weapon/ore/slag/New(var/newloc)
+/obj/item/stack/ore/slag/New(var/newloc)
 	..(newloc, "waste")
-/obj/item/weapon/ore/phoron/New(var/newloc)
+/obj/item/stack/ore/phoron/New(var/newloc)
 	..(newloc, "phoron")
 
 // Phoron ore is just as engaging!
-/obj/item/weapon/ore/phoron/pickup(mob/user)
+/obj/item/stack/ore/phoron/pickup(mob/user)
 	var/mob/living/carbon/human/H = user
 	var/prot = 0
 	if(istype(H))

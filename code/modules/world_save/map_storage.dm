@@ -224,7 +224,7 @@ var/global/list/debug_data = list()
 		debug_data["[src.type]"] = list(1,(REALTIMEOFDAY - starttime)/10)
 
 /turf/StandardRead(var/savefile/f)
-	if(z == 2 && x == 21 && y == 2)
+	if(z == 2 && x == 21 && y == 87)
 		return
 	var/starttime = REALTIMEOFDAY
 	map_storage_loaded = 1

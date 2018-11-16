@@ -474,8 +474,6 @@ var/global/list/debug_data = list()
 			if(((REALTIMEOFDAY - starttime2)/10) > 300)
 				breakout = 1
 			f >> ve
-
-
 		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
 		f = null
 	f = new("map_saves/extras.sav")

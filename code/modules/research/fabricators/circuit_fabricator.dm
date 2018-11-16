@@ -1,7 +1,7 @@
 /obj/machinery/fabricator/circuit_fabricator
 	// Things that must be adjusted for each fabricator
 	name = "Circuit Imprinter"
-	desc = "A machine used for the production of circuits"
+	desc = "A machine used for the production of circuits."
 	circuit = /obj/item/weapon/circuitboard/fabricator/circuitfab
 	build_type = CIRCUITFAB
 	materials = list("glass" = 0)
@@ -39,6 +39,17 @@
 /datum/design/circuit/AssembleDesignDesc()
 	if(!desc)
 		desc = "Allows for the construction of \a [item_name] circuit board."
+
+/datum/design/circuit/circuitfab
+	name = "circuit imprinter circuit"
+	id = "circuitfabcircuit"
+	build_path = /obj/item/weapon/circuitboard/fabricator/circuitfab
+
+/datum/design/circuit/ammofab
+	name = "ammo fabricator circuit"
+	id = "ammofabcircuit"
+	req_tech = list(TECH_MATERIAL = 1, TECH_COMBAT = 1)
+	build_path = /obj/item/weapon/circuitboard/fabricator/ammofab
 
 /datum/design/circuit/arcademachine
 	name = "battle arcade machine"

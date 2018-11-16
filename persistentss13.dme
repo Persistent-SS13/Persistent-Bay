@@ -2257,6 +2257,7 @@
 #include "code\modules\research\research.dm"
 #include "code\modules\research\server.dm"
 #include "code\modules\research\stock_parts.dm"
+#include "code\modules\research\fabricators\ammo_fabricator.dm"
 #include "code\modules\research\fabricators\circuit_fabricator.dm"
 #include "code\modules\research\fabricators\fabricator_circuits.dm"
 #include "code\modules\research\fabricators\mech_fabricator.dm"

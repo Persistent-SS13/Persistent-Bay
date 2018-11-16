@@ -224,6 +224,8 @@ var/global/list/debug_data = list()
 		debug_data["[src.type]"] = list(1,(REALTIMEOFDAY - starttime)/10)
 
 /turf/StandardRead(var/savefile/f)
+	if(z == 2 && x == 21 && y == 2)
+		return
 	var/starttime = REALTIMEOFDAY
 	map_storage_loaded = 1
 	before_load()
@@ -460,8 +462,14 @@ var/global/list/debug_data = list()
 	for(var/z in 1 to 52)
 		f = new("map_saves/z[z].sav")
 		var/starttime2 = REALTIMEOFDAY
-		sleep(-1)
-		f >> ve
+		var/breakout = 0
+		while(!f.eof && !breakout)
+			sleep(-1)
+			if(((REALTIMEOFDAY - starttime2)/10) > 300)
+				breakout = 1
+			f >> ve
+
+
 		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
 		f = null
 	f = new("map_saves/extras.sav")

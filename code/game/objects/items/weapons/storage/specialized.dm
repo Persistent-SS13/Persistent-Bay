@@ -141,6 +141,7 @@
 	allow_quick_empty = 1
 	matter = list(DEFAULT_WALL_MATERIAL = 30000)
 
+
 // -----------------------------
 //        Sheet Snatcher
 // -----------------------------

@@ -226,6 +226,12 @@ var/global/list/debug_data = list()
 /turf/StandardRead(var/savefile/f)
 	if(z == 2 && x == 21 && y == 87)
 		return
+	if(z == 2 && x == 22 && y == 87)
+		return
+	if(z == 2 && x == 23 && y == 87)
+		return
+	if(z == 2 && x == 24 && y == 87)
+		return
 	var/starttime = REALTIMEOFDAY
 	map_storage_loaded = 1
 	before_load()

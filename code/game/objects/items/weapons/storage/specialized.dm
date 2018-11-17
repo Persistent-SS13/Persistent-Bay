@@ -72,7 +72,7 @@
 			handle_item_insertion(G, TRUE, FALSE)
 
 		if(failed)
-			to_chat(user, "Nothing in the [O] is usable.")
+			to_chat(user, "Nothing in \the [O] is usable.")
 			return 1
 
 		if(!O.contents.len)
@@ -103,13 +103,13 @@
 				playsound(src.loc, 'sound/weapons/empty.ogg', 2, 1)
 				mag.update_icon()
 				if(mag.stored_ammo.len >= mag.max_ammo)
-					to_chat(user, "You filled [O].")
+					to_chat(user, "You filled \the [O].")
 					break
 			else
 				failed = 0
 				return
 		if(failed)
-			to_chat(user, "There was nothing suitable to load into [O] in [src].")
+			to_chat(user, "There was nothing suitable to load into \the [O] in \the [src].")
 
 			src.updateUsrDialog()
 			return 0

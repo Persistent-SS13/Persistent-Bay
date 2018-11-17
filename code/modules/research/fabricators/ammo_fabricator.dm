@@ -1,26 +1,17 @@
 /obj/machinery/fabricator/ammo_fabricator
-	// Things that must be adjusted for each fabricator
-	name = "Ammunition Fabricator" // Self-explanatory
-	desc = "A machine used for the production of ammunitions of many calibers." // Self-explanatory
-	circuit = /obj/item/weapon/circuitboard/fabricator/ammofab // Circuit for the machine. These, as well as their designs, should be defined in fabricator_circuits.dm
-	build_type = AMMOFAB // The identifer for what gets built in what fabricator. A new one *MUST* be defined in _defines/research.dm for each fabricator.
-						 // More than one can be assigned per design, however, if you want something to be able to be built in more than one fabricator eg. Power Cells
-
- 	// The materials used in the fabrication of various goods. Generally you'll need to adapt this for each fabricator. To add a material, use its name var
+	name = "Ammunition Fabricator"
+	desc = "A machine used for the production of ammunitions of many calibers."
+	circuit = /obj/item/weapon/circuitboard/fabricator/ammofab
+	build_type = AMMOFAB
 	materials = list(DEFAULT_WALL_MATERIAL = 0, "glass" = 0, "plastic" = 0)
 
-	// Things that CAN be adjusted, but are okay to leave as default
-	// Icon states - if you want your fabricator to use a special icon, place it in fabricators.dmi following these naming conventions.
 	icon_state = 	 "circuitfab-idle"
 	icon_idle = 	 "circuitfab-idle"
 	icon_open = 	 "circuitfab-o"
 	overlay_active = "circuitfab-active"
 
-	metal_load_anim = TRUE				// Determines if a sheet loading animation will be applied when loading metals. If you're using a non-standard icon and don't
-										// want to sprite a new loading animation as well, set this to FALSE.
-
-	has_reagents = TRUE				// Defaults to FALSE, but added here for explanation. If this is set to true, than you require designs to use reagents
-										// in addition to any material costs.
+	metal_load_anim = TRUE
+	has_reagents = TRUE
 
 ////////////////////////////////////////////////////
 //////////////////////DESIGNS///////////////////////
@@ -28,12 +19,10 @@
 
 //Ammunition
 /datum/design/item/ammofab
-	build_type = AMMOFAB 			   // This must match the build_type of the fabricator(s)
-	category = "Ammunition"	  		   // The design will appear under this in the UI. Each design must have a category, or it will not display properly.
-	req_tech = list(TECH_MATERIAL = 1, TECH_COMBAT = 1) // The tech required for the design. Note that anything above 1 for *ANY* tech will require a RnD console for the item to be
-									   // fabricated.
-
-	time = 2						   // Time in seconds for the item to be produced - This changes based off the components used in the fabricator
+	build_type = AMMOFAB
+	category = "Ammunition"
+	req_tech = list(TECH_MATERIAL = 1, TECH_COMBAT = 1)
+	time = 2
 
 /datum/design/item/ammofab/ammo
 	category = "Ammunition"

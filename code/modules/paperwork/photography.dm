@@ -309,14 +309,15 @@ var/global/photo_count = 0
 	p.name = name
 	p.icon = icon(icon, icon_state)
 	p.tiny = icon(tiny)
-	p.img = icon(img)
 	p.desc = desc
 	p.pixel_x = pixel_x
 	p.pixel_y = pixel_y
 	p.photo_size = photo_size
 	p.scribble = scribble
-
 	if(copy_id)
 		p.id = id
-
+	if(img)
+		p.img = icon(img)
+	else
+		p.update_icon()
 	return p

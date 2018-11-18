@@ -224,6 +224,14 @@ var/global/list/debug_data = list()
 		debug_data["[src.type]"] = list(1,(REALTIMEOFDAY - starttime)/10)
 
 /turf/StandardRead(var/savefile/f)
+	if(z == 2 && x == 21 && y == 87)
+		return
+	if(z == 2 && x == 22 && y == 87)
+		return
+	if(z == 2 && x == 23 && y == 87)
+		return
+	if(z == 2 && x == 24 && y == 87)
+		return
 	var/starttime = REALTIMEOFDAY
 	map_storage_loaded = 1
 	before_load()
@@ -325,7 +333,8 @@ var/global/list/debug_data = list()
 			to_file(f, L)
 
 /proc/Save_World()
-	to_world("<font size=4 color='green'>The world is saving! You won't be able to join at this time.</font>")
+	to_world("<font size=4 color='green'>The world is saving! Characters are frozen and you won't be able to join at this time.</font>")
+	sleep(20)
 	var/reallow = 0
 	if(config.enter_allowed) reallow = 1
 	config.enter_allowed = 0
@@ -465,12 +474,6 @@ var/global/list/debug_data = list()
 			if(((REALTIMEOFDAY - starttime2)/10) > 300)
 				breakout = 1
 			f >> ve
-		if(breakout)
-			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
-			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
-			message_admins("ATTENTION! ZLEVEL [z] HAD TO BREAKOUT AFTER 300 SECONDS!!")
-
-
 		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
 		f = null
 	f = new("map_saves/extras.sav")

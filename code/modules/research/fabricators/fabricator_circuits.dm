@@ -44,8 +44,19 @@
 							)
 
 /datum/design/circuit/circuitfab
-	name = "voidsuit fabricator"
+	name = "circuit imprinter"
 	id = "circuitfab"
 	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/fabricator/circuitfab
 	sort_string = "FABAC"
+
+/obj/item/weapon/circuitboard/fabricator/ammofab
+	name = "Circuit board (Ammunition Fabricator)"
+	build_path = /obj/machinery/fabricator/ammo_fabricator
+
+/datum/design/circuit/ammofab
+	name = "ammunition fabricator"
+	id = "ammofab"
+	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1, TECH_COMBAT = 1)
+	build_path = /obj/item/weapon/circuitboard/fabricator/ammofab
+	sort_string = "FABAD"

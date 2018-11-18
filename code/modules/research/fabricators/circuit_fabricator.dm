@@ -4,7 +4,7 @@
 	desc = "A machine used for the production of circuits"
 	circuit = /obj/item/weapon/circuitboard/fabricator/circuitfab
 	build_type = CIRCUITFAB
-	materials = list("glass" = 0)
+	materials = list(DEFAULT_WALL_MATERIAL = 0, "glass" = 0)
 
 	icon_state = 	 "circuitfab-idle"
 	icon_idle = 	 "circuitfab-idle"

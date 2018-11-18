@@ -4,46 +4,35 @@
 	var/name = ""
 	var/warmup_time = 10
 	var/moving_status = SHUTTLE_IDLE
-
-	var/area/shuttle_area //can be both single area type or a list of areas
+	var/area/shuttle_area
 	var/obj/effect/shuttle_landmark/current_location
-
+	var/initial_location
 	var/arrive_time = 0	//the time at which the shuttle arrives when long jumping
 	var/flags = 0
 	var/process_state = IDLE_STATE //Used with SHUTTLE_FLAGS_PROCESS, as well as to store current state.
 	var/category = /datum/shuttle
-
-	var/ceiling_type = /turf/unsimulated/floor/shuttle_ceiling
-
+	var/ceiling_type = /turf/simulated/floor/plating // Turf to use as ceiling
 	var/sound_takeoff = 'sound/effects/shuttle_takeoff.ogg'
 	var/sound_landing = 'sound/effects/shuttle_landing.ogg'
-
 	var/knockdown = 1 //whether shuttle downs non-buckled people when it moves
-
 	var/defer_initialisation = FALSE //this shuttle will/won't be initialised by something after roundstart
-
 	var/finalized = 0
-	var/owner
+	var/owner // Owner, person or faction
 	var/ownertype = 1 // 1 = personal, 2 = factional
 	var/obj/machinery/computer/bridge_computer/bridge
-	var/size = 1
-/datum/shuttle/New(_name, var/obj/effect/shuttle_landmark/initial_location)
-	..()
-	if(_name)
-		src.name = _name
+	var/size = 1 // size of shuttle
 
-	var/list/areas = list()
+
+/datum/shuttle/New()
+	..()
+
+
+/datum/shuttle/proc/setup()
 	if(!islist(shuttle_area))
 		if(shuttle_area)
 			shuttle_area = list(shuttle_area)
 		else
 			shuttle_area = list()
-	for(var/T in shuttle_area)
-		var/area/A = locate(T)
-		if(!istype(A))
-			CRASH("Shuttle \"[name]\" couldn't locate area [T].")
-		areas += A
-	shuttle_area = areas
 
 	if(initial_location)
 		current_location = initial_location
@@ -53,7 +42,7 @@
 	SSshuttle.shuttles[src.name] = src
 	if(flags & SHUTTLE_FLAGS_PROCESS)
 		SSshuttle.process_shuttles += src
-	
+
 	if(flags & SHUTTLE_FLAGS_SUPPLY)
 		if(supply_controller.shuttle)
 			CRASH("A supply shuttle is already defined.")
@@ -61,17 +50,16 @@
 	if(!istype(current_location))
 		CRASH("Shuttle \"[name]\" could not find its starting location.")
 
-//	if(src.name in SSshuttle.shuttles)
-//		CRASH("A shuttle with the name '[name]' is already defined.")
+
 /datum/shuttle/Destroy()
 	current_location = null
-
 	SSshuttle.shuttles -= src.name
 	SSshuttle.process_shuttles -= src
 	if(supply_controller.shuttle == src)
 		supply_controller.shuttle = null
 
 	. = ..()
+
 
 /datum/shuttle/proc/short_jump(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/location)
 	if(moving_status != SHUTTLE_IDLE) return
@@ -91,6 +79,7 @@
 	moving_status = SHUTTLE_INTRANSIT //shouldn't matter but just to be safe
 	attempt_move(destination, location)
 	moving_status = SHUTTLE_IDLE
+
 
 /datum/shuttle/proc/long_jump(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/interim, var/travel_time)
 	if(moving_status != SHUTTLE_IDLE) return
@@ -124,6 +113,7 @@
 
 		moving_status = SHUTTLE_IDLE
 
+
 /datum/shuttle/proc/fuel_check()
 	return 1 //fuel check should always pass in non-overmap shuttles (they have magic engines)
 
@@ -131,6 +121,12 @@
 	if(location) current_location = location
 	if(current_location == destination)
 		return FALSE
+
+	// Remove bad areas, todo: find where they are coming from.
+	for (var/area/A in shuttle_area)
+		if (A.name == "Unknown")
+			shuttle_area -= A
+			qdel(A)
 
 	if(istype(destination) && !destination.is_valid(src))
 		return FALSE
@@ -153,19 +149,18 @@
 	for(var/area/A in shuttle_area)
 		for(var/turf/T in A.contents)
 			turfs |= T
-	var/turf/corner		
+	var/turf/corner
 	for(var/turf/T in turfs)
 		if(!corner || (T.x <= corner.x && T.y <= corner.y))
 			corner = T
 	return corner
+
+
 //just moves the shuttle from A to B, if it can be moved
 //A note to anyone overriding move in a subtype. shuttle_moved() must absolutely not, under any circumstances, fail to move the shuttle.
 //If you want to conditionally cancel shuttle launches, that logic must go in short_jump(), long_jump() or attempt_move()
 /datum/shuttle/proc/shuttle_moved(var/obj/effect/shuttle_landmark/destination, var/list/turf_translation)
 
-//	log_debug("move_shuttle() called for [shuttle_tag] leaving [origin] en route to [destination].")
-//	log_degug("area_coming_from: [origin]")
-//	log_debug("destination: [destination]")
 	for(var/turf/src_turf in turf_translation)
 		var/turf/dst_turf = turf_translation[src_turf]
 		if(src_turf.is_solid_structure()) //in case someone put a hole in the shuttle and you were lucky enough to be under it
@@ -178,13 +173,24 @@
 				else
 					qdel(AM) //it just gets atomized I guess? TODO throw it into space somewhere, prevents people from using shuttles as an atom-smasher
 	var/list/powernets = list()
+
 	for(var/area/A in shuttle_area)
 		// if there was a zlevel above our origin, erase our ceiling now we're leaving
 		if(HasAbove(current_location.z))
 			for(var/turf/TO in A.contents)
 				var/turf/TA = GetAbove(TO)
-				if(istype(TA, ceiling_type))
-					TA.ChangeTurf(get_base_turf_by_area(TA), 1, 1)
+				if(bridge.dock.dock_interior == 1)
+					if(get_base_turf_by_area(A) != null)
+						TA.ChangeTurf(get_base_turf_by_area(A), 1, 1)
+				else
+					if(get_base_turf_by_area(A) != null)
+						TA.ChangeTurf(get_base_turf_by_area(A), 1, 1)
+					else
+						TA.ChangeTurf("/turf/space", 1, 1)
+					for(var/atom/AT in TA.contents)
+						if (istype(AT, /atom/movable/lighting_overlay))
+							TA.contents -= AT
+							qdel(AT)
 		if(knockdown)
 			for(var/mob/M in A)
 				if(M.client)
@@ -202,7 +208,18 @@
 		for(var/obj/structure/cable/C in A)
 			powernets |= C.powernet
 
-	translate_turfs(turf_translation, get_area(current_location), /turf/space)
+	if(bridge.dock.dock_interior == 1)
+		translate_turfs(turf_translation, get_area(current_location), /turf/simulated/floor/plating)
+		var/area/A = get_area(current_location)
+		spawn(10) // This could use improvement maybe ?
+			A.set_lightswitch(0)
+			A.power_change()
+			sleep(10)
+			A.set_lightswitch(1)
+			A.power_change()
+	else
+		translate_turfs(turf_translation, locate(world.area), /turf/space)
+
 	current_location = destination
 
 	// if there's a zlevel above our destination, paint in a ceiling on it so we retain our air

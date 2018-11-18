@@ -1,3 +1,5 @@
+// AMMO BOXES are in specialized.dm
+
 /obj/item/ammo_magazine/a357
 	//name = "ammo box (.357)"
 	//desc = "A box of .357 ammo"
@@ -11,6 +13,9 @@
 	max_ammo = 6
 	multiple_sprites = 1
 
+/obj/item/ammo_magazine/a357/empty
+	initial_ammo = 0
+
 /obj/item/ammo_magazine/c50
 	name = "speed loader (.50)"
 	desc = "A speed loader for revolvers."
@@ -20,6 +25,9 @@
 	matter = list(DEFAULT_WALL_MATERIAL = 1260)
 	max_ammo = 6
 	multiple_sprites = 1
+
+/obj/item/ammo_magazine/c50/empty
+	initial_ammo = 0
 
 /obj/item/ammo_magazine/c38
 	name = "speed loader (.38)"
@@ -31,10 +39,16 @@
 	max_ammo = 6
 	multiple_sprites = 1
 
+/obj/item/ammo_magazine/c38/empty
+	initial_ammo = 0
+
 /obj/item/ammo_magazine/c38/rubber
 	name = "speed loader (.38, rubber)"
 	icon_state = "R38"
 	ammo_type = /obj/item/ammo_casing/c38/rubber
+
+/obj/item/ammo_magazine/c38/rubber/empty
+	initial_ammo = 0
 
 /obj/item/ammo_magazine/c44
 	name = "speed loader (.44 magnum)"
@@ -46,10 +60,16 @@
 	max_ammo = 6
 	multiple_sprites = 1
 
+/obj/item/ammo_magazine/c44/empty
+	initial_ammo = 0
+
 /obj/item/ammo_magazine/c44/rubber
 	name = "speed loader (.44 magnum, rubber)"
 	icon_state = "R38"
 	ammo_type = /obj/item/ammo_casing/c44/rubber
+
+/obj/item/ammo_magazine/c44/rubber/empty
+	initial_ammo = 0
 
 /obj/item/ammo_magazine/c45m
 	name = "magazine (.45)"
@@ -97,6 +117,7 @@
 	matter = list(DEFAULT_WALL_MATERIAL = 600)
 	caliber = "9mm"
 	ammo_type = /obj/item/ammo_casing/c9mm
+
 	max_ammo = 10
 	multiple_sprites = 1
 
@@ -251,6 +272,9 @@
 	ammo_type = /obj/item/ammo_casing/a556
 	max_ammo = 20
 	multiple_sprites = 1
+
+/obj/item/ammo_magazine/c556/empty
+	initial_ammo = 0
 
 /obj/item/ammo_magazine/caps
 	name = "speed loader (caps)"

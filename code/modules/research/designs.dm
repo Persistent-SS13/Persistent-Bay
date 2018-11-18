@@ -600,14 +600,6 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/ammo_magazine/box/c9mm
 	sort_string = "TAACA"
 
-/datum/design/item/weapon/stunshell
-	desc = "A stunning shell for a shotgun."
-	id = "stunshell"
-	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 3)
-	materials = list(DEFAULT_WALL_MATERIAL = 4000)
-	build_path = /obj/item/ammo_casing/shotgun/stunshell
-	sort_string = "TAACB"
-
 /datum/design/item/weapon/ammo_emp_38
 	id = "ammo_emp_38"
 	desc = "A .38 round with an integrated EMP charge."

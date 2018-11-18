@@ -174,7 +174,6 @@
 			shuttle.name = desired_name
 			shuttle.ownertype = shuttle_type
 			shuttle.owner = locked_to
-			dock.status = 4
 			loc.loc.name = desired_name
 
 			if(shuttle_type == 1)
@@ -195,11 +194,11 @@
 		if(beacon.dimensions < shuttle.size)
 			to_chat(usr, "Dock is not big enough.")
 			return 1
+		beacon.status = 4
 		shuttle.short_jump(beacon.get_top_turf(), dock.get_top_turf())
-		dock.status = 2 // Set source dock open
-		dock.shuttle = null
+		dock.status = 2
 		dock = beacon
-		dock.status = 4 // Set destination dock occupied
+		dock.status = 4
 		dock.bridge = src
 		dock.shuttle = shuttle
 		shuttle.current_location = dock
@@ -303,7 +302,7 @@
 
 
 /obj/machinery/computer/shuttle_control/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
-	var/datum/shuttle/autodock/shuttle = shuttle_controller.shuttles[shuttle_tag]
+	var/datum/shuttle/autodock/shuttle = SSshuttle.shuttles[shuttle_tag]
 	if (!istype(shuttle))
 		to_chat(usr,"<span class='warning'>Unable to establish link with the shuttle.</span>")
 		return
@@ -321,7 +320,7 @@
 	if(..())
 		return 1
 
-	handle_topic_href(shuttle_controller.shuttles[shuttle_tag], href_list)
+	handle_topic_href(SSshuttle.shuttles[shuttle_tag], href_list)
 
 /obj/machinery/computer/shuttle_control/emag_act(var/remaining_charges, var/mob/user)
 	if (!hacked)

@@ -41,7 +41,8 @@
 
 	set_opacity(p_material.opacity >= 0.5)
 
-	radiation_repository.resistance_cache.Remove(src)
+	SSradiation.resistance_cache.Remove(src)
+
 
 /turf/simulated/wall/update_icon()
 	if(!material || !p_material)

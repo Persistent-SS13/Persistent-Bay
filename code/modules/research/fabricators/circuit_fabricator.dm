@@ -1,7 +1,7 @@
 /obj/machinery/fabricator/circuit_fabricator
 	// Things that must be adjusted for each fabricator
 	name = "Circuit Imprinter"
-	desc = "A machine used for the production of circuits"
+	desc = "A machine used for the production of circuits."
 	circuit = /obj/item/weapon/circuitboard/fabricator/circuitfab
 	build_type = CIRCUITFAB
 	materials = list("glass" = 0)

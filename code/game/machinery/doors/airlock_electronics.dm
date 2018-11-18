@@ -1,7 +1,6 @@
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:31
 #define ACCESS_BUSINESS_ELETRONICS "Electronics Control"
-#define ACCESS_BUSINESS_DEFAULT_ALL list(ACCESS_BUSINESS_ELETRONICS,"Sales", "Budget View", "Employee Control", "Upper Management", "Door Access 1", "Door Access 2", "Door Access 3")
-
+#define ACCESS_BUSINESS_DEFAULT_ALL list(ACCESS_BUSINESS_ELETRONICS,"Sales", "Newsfeed", "Budget View", "Employee Control",  "Upper Management", "Door Access 1", "Door Access 2", "Door Access 3")
 
 /obj/item/weapon/airlock_electronics/business
 	name = "business airlock electronics"

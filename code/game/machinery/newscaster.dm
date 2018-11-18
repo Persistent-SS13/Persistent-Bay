@@ -126,7 +126,7 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 
 /obj/machinery/newscaster
 	name = "newscaster"
-	desc = "A standard newsfeed handler. All the news you absolutely have no use for, in one place!"
+	desc = "A redesigned newscaster, with news from all over the quadrant."
 	icon = 'icons/obj/terminals.dmi'
 	icon_state = "newscaster_normal"
 	//var/list/datum/feed_channel/channel_list = list() //This list will contain the names of the feed channels. Each name will refer to a data region where the messages of the feed channels are stored.

@@ -57,6 +57,7 @@
 		sleep(5)
 		icon_state = initial(icon_state)
 		updateUsrDialog()
+		return
 	if(isWelder(P))
 		var/obj/item/weapon/weldingtool/WT = P
 		if(WT.remove_fuel(0,user))

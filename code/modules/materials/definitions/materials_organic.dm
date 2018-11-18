@@ -82,7 +82,7 @@
 	flags = MATERIAL_PADDING
 	brute_armor = 1
 	conductive = 0
-	stack_type = null
+	stack_type = /obj/item/stack/material/cloth
 	hardness = 1
 	weight = 1
 
@@ -95,7 +95,7 @@
 	ignition_point = T0C+300
 	melting_point = T0C+300
 	conductive = 0
-	stack_type = null
+	stack_type = /obj/item/stack/material/leather
 	hardness = 1
 	weight = 1
 

@@ -405,7 +405,7 @@
 	set name = "Observe"
 	set category = "OOC"
 
-	if(!(initialization_stage&INITIALIZATION_COMPLETE))
+	if(GAME_STATE <= RUNLEVEL_INIT)
 		to_chat(src, "<span class='warning'>Please wait for server initialization to complete...</span>")
 		return
 
@@ -630,7 +630,7 @@
 		return
 
 	if(statpanel("Status"))
-		if(ticker && ticker.current_state != GAME_STATE_PREGAME)
+		if(GAME_STATE != RUNLEVEL_INIT)
 			stat("Local Time", stationtime2text())
 			stat("Local Date", stationdate2text())
 			stat("Server Uptime", roundduration2text())
@@ -638,8 +638,6 @@
 			stat("Location:", "([x], [y], [z]) [loc]")
 
 	if(client.holder)
-		if(statpanel("Processes") && processScheduler)
-			processScheduler.statProcesses()
 		if(statpanel("MC"))
 			stat("CPU:","[world.cpu]")
 			stat("Instances:","[world.contents.len]")
@@ -1082,22 +1080,6 @@ mob/proc/yank_out_object()
 	if(src.throw_icon)
 		src.throw_icon.icon_state = "act_throw_on"
 
-/mob/proc/toggle_antag_pool()
-	set name = "Toggle Add-Antag Candidacy"
-	set desc = "Toggles whether or not you will be considered a candidate by an add-antag vote."
-	set category = "OOC"
-	if(isghostmind(src.mind) || isnewplayer(src))
-		if(ticker && ticker.looking_for_antags)
-			if(src.mind in ticker.antag_pool)
-				ticker.antag_pool -= src.mind
-				to_chat(usr, "You have left the antag pool.")
-			else
-				ticker.antag_pool += src.mind
-				to_chat(usr, "You have joined the antag pool. Make sure you have the needed role set to high!")
-		else
-			to_chat(usr, "The game is not currently looking for antags.")
-	else
-		to_chat(usr, "You must be observing or in the lobby to join the antag pool.")
 /mob/proc/is_invisible_to(var/mob/viewer)
 	return (!alpha || !mouse_opacity || viewer.see_invisible < invisibility)
 

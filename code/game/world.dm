@@ -103,14 +103,6 @@
 		GLOB.using_map.perform_map_generation()
 	GLOB.using_map.build_exoplanets()
 
-	// Create robolimbs for chargen.
-	populate_robolimb_list()
-
-	processScheduler = new
-	master_controller = new /datum/controller/game_controller()
-
-	processScheduler.deferSetupFor(/datum/controller/process/ticker)
-	processScheduler.setup()
 	Master.Initialize(10, FALSE)
 
 #ifdef UNIT_TEST
@@ -143,7 +135,7 @@ var/world_topic_spam_protect_time = world.timeofday
 		var/input[] = params2list(T)
 		var/list/s = list()
 		s["version"] = game_version
-		s["mode"] = PUBLIC_GAME_MODE
+		s["mode"] = "Persistence"
 		s["respawn"] = config.abandon_allowed
 		s["enter"] = config.enter_allowed
 		s["vote"] = config.allow_vote_mode
@@ -466,12 +458,6 @@ var/world_topic_spam_protect_time = world.timeofday
 
 
 /world/Reboot(var/reason)
-	/*spawn(0)
-		sound_to(world, sound(pick('sound/AI/newroundsexy.ogg','sound/misc/apcdestroyed.ogg','sound/misc/bangindonk.ogg')))// random end sounds!! - LastyBatsy
-
-		*/
-
-	processScheduler.stop()
 
 	if(config.server)	//if you set a server location in config.txt, it sends you there instead of trying to reconnect to the same world address. -- NeoFite
 		for(var/client/C in GLOB.clients)

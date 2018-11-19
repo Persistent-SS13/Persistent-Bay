@@ -14,10 +14,7 @@ var/can_call_ert
 	if(!holder)
 		to_chat(usr, "<span class='danger'>Only administrators may use this command.</span>")
 		return
-	if(!ticker)
-		to_chat(usr, "<span class='danger'>The game hasn't started yet!</span>")
-		return
-	if(ticker.current_state == 1)
+	if(GAME_STATE < RUNLEVEL_GAME)
 		to_chat(usr, "<span class='danger'>The round hasn't started yet!</span>")
 		return
 	if(send_emergency_team)

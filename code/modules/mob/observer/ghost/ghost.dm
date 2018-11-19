@@ -34,7 +34,6 @@ var/global/list/image/ghost_sightless_images = list() //this is a list of images
 
 /mob/observer/ghost/New(mob/body)
 	see_in_dark = 100
-	verbs += /mob/proc/toggle_antag_pool
 
 	var/turf/T
 	if(ismob(body))
@@ -556,12 +555,6 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 	if (!(config.abandon_allowed))
 		to_chat(usr, "<span class='notice'>Respawn is disabled.</span>")
-		return
-	if (!(ticker && ticker.mode))
-		to_chat(usr, "<span class='notice'><B>You may not attempt to respawn yet.</B></span>")
-		return
-	if (ticker.mode && ticker.mode.deny_respawn)
-		to_chat(usr, "<span class='notice'>Respawn is disabled for this roundtype.</span>")
 		return
 	else if(!MayRespawn(1, config.respawn_delay))
 		return

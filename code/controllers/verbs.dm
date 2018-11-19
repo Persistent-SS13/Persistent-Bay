@@ -14,7 +14,7 @@
 		usr.client.debug_variables(antag)
 		message_admins("Admin [key_name_admin(usr)] is debugging the [antag.role_text] template.")
 
-/client/proc/debug_controller(controller as null|anything in list("Master","Ticker","Ticker Process","Air","Jobs","Sun","Radio","Supply","Evacuation","Configuration","pAI", "Cameras", "Transfer Controller", "Gas Data","Plants","Alarm","Nano","Wireless","Observation","Alt Appearance Manager","Datacore","Military Branches"))
+/client/proc/debug_controller(controller as null|anything in list("Air","Jobs","Sun","Radio","Supply","Evacuation","Configuration","pAI", "Cameras", "Gas Data","Plants","Alarm","Nano","Wireless","Observation","Alt Appearance Manager","Datacore","Military Branches"))
 	set category = "Debug"
 	set name = "Debug Controller"
 	set desc = "Debug the various periodic loop controllers for the game (be careful!)"
@@ -23,12 +23,6 @@
 		return
 
 	switch(controller)
-		if("Master")
-			debug_variables(master_controller)
-			feedback_add_details("admin_verb","DMC")
-		if("Ticker")
-			debug_variables(ticker)
-			feedback_add_details("admin_verb","DTicker")
 		if("Jobs")
 			debug_variables(job_master)
 			feedback_add_details("admin_verb","DJobs")
@@ -53,9 +47,6 @@
 		if("Cameras")
 			debug_variables(cameranet)
 			feedback_add_details("admin_verb","DCameras")
-		if("Transfer Controller")
-			debug_variables(transfer_controller)
-			feedback_add_details("admin_verb","DAutovoter")
 		if("Gas Data")
 			debug_variables(gas_data)
 			feedback_add_details("admin_verb","DGasdata")

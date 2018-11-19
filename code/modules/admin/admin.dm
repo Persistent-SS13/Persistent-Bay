@@ -1048,23 +1048,6 @@ var/global/floorIsLava = 0
 	message_admins("[key_name_admin(usr)] toggled Traitor Scaling [config.traitor_scaling ? "on" : "off"].", 1)
 	feedback_add_details("admin_verb","TTS") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-/datum/admins/proc/startnow()
-	set category = "Server"
-	set desc="Start the round RIGHT NOW"
-	set name="Start Now"
-	if(!ticker)
-		alert("Unable to start the game as it is not set up.")
-		return
-	if(ticker.current_state == GAME_STATE_PREGAME && !(initialization_stage & INITIALIZATION_NOW))
-		log_admin("[usr.key] has started the game.")
-		message_admins("<font color='blue'>[usr.key] has started the game.</font>")
-		feedback_add_details("admin_verb","SN") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-		initialization_stage |= INITIALIZATION_NOW
-		return 1
-	else
-		to_chat(usr, "<span class='warning'>Error: Start Now: Game has already started.</span>")
-		return 0
-
 /datum/admins/proc/toggleenter()
 	set category = "Server"
 	set desc="People can't enter"
@@ -1140,25 +1123,6 @@ var/global/floorIsLava = 0
 	log_and_message_admins("toggled Space Ninjas [config.ninjas_allowed ? "on" : "off"].")
 	feedback_add_details("admin_verb","TSN") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-/datum/admins/proc/delay()
-	set category = "Server"
-	set desc="Delay the game start/end"
-	set name="Delay"
-
-	if(!check_rights(R_SERVER))	return
-	if (!ticker || ticker.current_state != GAME_STATE_PREGAME)
-		ticker.delay_end = !ticker.delay_end
-		log_and_message_admins("[ticker.delay_end ? "delayed the round end" : "has made the round end normally"].")
-		return //alert("Round end delayed", null, null, null, null, null)
-	round_progressing = !round_progressing
-	if (!round_progressing)
-		to_world("<b>The game start has been delayed.</b>")
-		log_admin("[key_name(usr)] delayed the game.")
-	else
-		to_world("<b>The game will start soon.</b>")
-		log_admin("[key_name(usr)] removed the delay.")
-	feedback_add_details("admin_verb","DELAY") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-
 /datum/admins/proc/adjump()
 	set category = "Server"
 	set desc="Toggle admin jumping"
@@ -1218,29 +1182,7 @@ var/global/floorIsLava = 0
 ////////////////////////////////////////////////////////////////////////////////////////////////ADMIN HELPER PROCS
 
 /proc/is_special_character(var/character) // returns 1 for special characters and 2 for heroes of gamemode
-	if(!ticker || !ticker.mode)
-		return 0
-	var/datum/mind/M
-	if (ismob(character))
-		var/mob/C = character
-		M = C.mind
-	else if(istype(character, /datum/mind))
-		M = character
-
-	if(M)
-		if(ticker.mode.antag_templates && ticker.mode.antag_templates.len)
-			for(var/datum/antagonist/antag in ticker.mode.antag_templates)
-				if(antag.is_antagonist(M))
-					return 2
-		if(M.special_role)
-			return 1
-
-	if(isrobot(character))
-		var/mob/living/silicon/robot/R = character
-		if(R.emagged)
-			return 1
-
-	return 0
+	return 0	// They lied, no one is special (No antags)
 
 /datum/admins/proc/spawn_fruit(seedtype in SSplants.seeds)
 	set category = "Debug"
@@ -1356,80 +1298,6 @@ var/global/floorIsLava = 0
 
 	M.mind.edit_memory()
 	feedback_add_details("admin_verb","STP") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-
-/datum/admins/proc/show_game_mode()
-	set category = "Admin"
-	set desc = "Show the current round configuration."
-	set name = "Show Game Mode"
-
-	if(!ticker || !ticker.mode)
-		alert("Not before roundstart!", "Alert")
-		return
-
-	var/out = "<font size=3><b>Current mode: [ticker.mode.name] (<a href='?src=\ref[ticker.mode];debug_antag=self'>[ticker.mode.config_tag]</a>)</b></font><br/>"
-	out += "<hr>"
-
-	if(ticker.mode.ert_disabled)
-		out += "<b>Emergency Response Teams:</b> <a href='?src=\ref[ticker.mode];toggle=ert'>disabled</a>"
-	else
-		out += "<b>Emergency Response Teams:</b> <a href='?src=\ref[ticker.mode];toggle=ert'>enabled</a>"
-	out += "<br/>"
-
-	if(ticker.mode.deny_respawn)
-		out += "<b>Respawning:</b> <a href='?src=\ref[ticker.mode];toggle=respawn'>disallowed</a>"
-	else
-		out += "<b>Respawning:</b> <a href='?src=\ref[ticker.mode];toggle=respawn'>allowed</a>"
-	out += "<br/>"
-
-	out += "<b>Shuttle delay multiplier:</b> <a href='?src=\ref[ticker.mode];set=shuttle_delay'>[ticker.mode.shuttle_delay]</a><br/>"
-
-	if(ticker.mode.auto_recall_shuttle)
-		out += "<b>Shuttle auto-recall:</b> <a href='?src=\ref[ticker.mode];toggle=shuttle_recall'>enabled</a>"
-	else
-		out += "<b>Shuttle auto-recall:</b> <a href='?src=\ref[ticker.mode];toggle=shuttle_recall'>disabled</a>"
-	out += "<br/><br/>"
-
-	if(ticker.mode.event_delay_mod_moderate)
-		out += "<b>Moderate event time modifier:</b> <a href='?src=\ref[ticker.mode];set=event_modifier_moderate'>[ticker.mode.event_delay_mod_moderate]</a><br/>"
-	else
-		out += "<b>Moderate event time modifier:</b> <a href='?src=\ref[ticker.mode];set=event_modifier_moderate'>unset</a><br/>"
-
-	if(ticker.mode.event_delay_mod_major)
-		out += "<b>Major event time modifier:</b> <a href='?src=\ref[ticker.mode];set=event_modifier_severe'>[ticker.mode.event_delay_mod_major]</a><br/>"
-	else
-		out += "<b>Major event time modifier:</b> <a href='?src=\ref[ticker.mode];set=event_modifier_severe'>unset</a><br/>"
-
-	out += "<hr>"
-
-	if(ticker.mode.antag_tags && ticker.mode.antag_tags.len)
-		out += "<b>Core antag templates:</b></br>"
-		for(var/antag_tag in ticker.mode.antag_tags)
-			out += "<a href='?src=\ref[ticker.mode];debug_antag=[antag_tag]'>[antag_tag]</a>.</br>"
-
-	if(ticker.mode.round_autoantag)
-		out += "<b>Autotraitor <a href='?src=\ref[ticker.mode];toggle=autotraitor'>enabled</a></b>."
-		if(ticker.mode.antag_scaling_coeff > 0)
-			out += " (scaling with <a href='?src=\ref[ticker.mode];set=antag_scaling'>[ticker.mode.antag_scaling_coeff]</a>)"
-		else
-			out += " (not currently scaling, <a href='?src=\ref[ticker.mode];set=antag_scaling'>set a coefficient</a>)"
-		out += "<br/>"
-	else
-		out += "<b>Autotraitor <a href='?src=\ref[ticker.mode];toggle=autotraitor'>disabled</a></b>.<br/>"
-
-	out += "<b>All antag ids:</b>"
-	if(ticker.mode.antag_templates && ticker.mode.antag_templates.len).
-		for(var/datum/antagonist/antag in ticker.mode.antag_templates)
-			antag.update_current_antag_max()
-			out += " <a href='?src=\ref[ticker.mode];debug_antag=[antag.id]'>[antag.id]</a>"
-			out += " ([antag.get_antag_count()]/[antag.cur_max]) "
-			out += " <a href='?src=\ref[ticker.mode];remove_antag_type=[antag.id]'>\[-\]</a><br/>"
-	else
-		out += " None."
-	out += " <a href='?src=\ref[ticker.mode];add_antag_type=1'>\[+\]</a><br/>"
-
-	usr << browse(out, "window=edit_mode[src]")
-	feedback_add_details("admin_verb","SGM")
-
 
 /datum/admins/proc/toggletintedweldhelmets()
 	set category = "Debug"
@@ -1609,49 +1477,6 @@ var/global/floorIsLava = 0
 	qdel(frommob)
 	return 1
 
-/datum/admins/proc/force_antag_latespawn()
-	set category = "Admin"
-	set name = "Force Template Spawn"
-	set desc = "Force an antagonist template to spawn."
-
-	if (!istype(src,/datum/admins))
-		src = usr.client.holder
-	if (!istype(src,/datum/admins))
-		to_chat(usr, "Error: you are not an admin!")
-		return
-
-	if(!ticker || !ticker.mode)
-		to_chat(usr, "Mode has not started.")
-		return
-
-	var/list/all_antag_types = all_antag_types()
-	var/antag_type = input("Choose a template.","Force Latespawn") as null|anything in all_antag_types
-	if(!antag_type || !all_antag_types[antag_type])
-		to_chat(usr, "Aborting.")
-		return
-
-	var/datum/antagonist/antag = all_antag_types[antag_type]
-	message_admins("[key_name(usr)] attempting to force latespawn with template [antag.id].")
-	antag.attempt_auto_spawn()
-
-/datum/admins/proc/force_mode_latespawn()
-	set category = "Admin"
-	set name = "Force Mode Spawn"
-	set desc = "Force autotraitor to proc."
-
-	if (!istype(src,/datum/admins))
-		src = usr.client.holder
-	if (!istype(src,/datum/admins) || !check_rights(R_ADMIN))
-		to_chat(usr, "Error: you are not an admin!")
-		return
-
-	if(!ticker || !ticker.mode)
-		to_chat(usr, "Mode has not started.")
-		return
-
-	log_and_message_admins("attempting to force mode autospawn.")
-	ticker.mode.process_autoantag()
-
 /datum/admins/proc/paralyze_mob(mob/H as mob in GLOB.player_list)
 	set category = "Admin"
 	set name = "Toggle Paralyze"
@@ -1670,7 +1495,6 @@ var/global/floorIsLava = 0
 			H.paralysis = 0
 			msg = "has unparalyzed [key_name(H)]."
 		log_and_message_admins(msg)
-
 
 /datum/admins/proc/sendFax()
 	set category = "Special Verbs"

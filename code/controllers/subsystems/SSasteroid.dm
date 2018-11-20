@@ -56,13 +56,15 @@ SUBSYSTEM_DEF(asteroid)
 			dead_monsters |= M
 			M.forceMove(null)
 
-	for(var/mob/living/M in mob_targets)
-		if(M.stat || !istype(get_turf(M), /turf/simulated/asteroid))
-			mob_targets -= M
+	for(var/Z in mob_targets)
+		for(var/mob/living/M in mob_targets["[Z]"])
+			if(M.stat || !istype(get_turf(M), /turf/simulated/asteroid))
+				mob_targets -= M
 
-	for(var/obj/machinery/D in drill_targets)
-		if(D.stat || !istype(get_turf(D), /turf/simulated/asteroid))
-			drill_targets -= D
+	for(var/Z in drill_targets)
+		for(var/obj/machinery/D in drill_targets["[Z]"])
+			if(D.stat || !istype(get_turf(D), /turf/simulated/asteroid))
+				drill_targets -= D
 
 	mob_targets["[current]"] = shuffle(mob_targets["[current]"])
 	asteroid_aggression["[current]"] = max(0, asteroid_aggression["[current]"] - 5)
@@ -265,7 +267,7 @@ SUBSYSTEM_DEF(asteroid)
 			sleep(1 SECOND)
 			P.loc = null
 			qdel(P)
-			
+
 	M.stat = 0
 	dead_monsters -= M
 	monsters |= M

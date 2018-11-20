@@ -53,6 +53,8 @@
 			return global.SSchemistry;
 		if("SScircuit")
 			return global.SScircuit;
+		if("SSearly")
+			return global.SSearly;
 		if("SSevent")
 			return global.SSevent;
 		if("SSfastprocess")
@@ -63,8 +65,8 @@
 			return global.SSicon_update;
 		if("SSinactivity")
 			return global.SSinactivity;
-		if("SSlegacy")
-			return global.SSlegacy;
+		if("SSlate")
+			return global.SSlate;
 		if("SSlighting")
 			return global.SSlighting;
 		if("SSmachines")
@@ -93,12 +95,16 @@
 			return global.SSskybox;
 		if("SSsun")
 			return global.SSsun;
+		if("SSsupply")
+			return global.SSsupply;
 		if("SStgui")
 			return global.SStgui;
 		if("SStimer")
 			return global.SStimer;
 		if("SStrade")
 			return global.SStrade;
+		if("SSturbolift")
+			return global.SSturbolift;
 		if("SSturf")
 			return global.SSturf;
 		if("SSvines")
@@ -183,8 +189,6 @@
 			return global.air_alarm_topic;
 		if("air_blocked")
 			return global.air_blocked;
-		if("air_processing_killed")
-			return global.air_processing_killed;
 		if("alien_whitelist")
 			return global.alien_whitelist;
 		if("allCasters")
@@ -329,8 +333,6 @@
 			return global.config;
 		if("contamination_overlay")
 			return global.contamination_overlay;
-		if("controller_iteration")
-			return global.controller_iteration;
 		if("create_mob_html")
 			return global.create_mob_html;
 		if("create_object_html")
@@ -539,8 +541,6 @@
 			return global.inactive_keys;
 		if("init")
 			return global.init;
-		if("initialization_stage")
-			return global.initialization_stage;
 		if("intents")
 			return global.intents;
 		if("intercom_range_display_status")
@@ -569,8 +569,6 @@
 			return global.last_message_id;
 		if("last_round_duration")
 			return global.last_round_duration;
-		if("last_tick_duration")
-			return global.last_tick_duration;
 		if("license_to_url")
 			return global.license_to_url;
 		if("light_overlay_cache")
@@ -615,8 +613,6 @@
 			return global.maploader;
 		if("mark")
 			return global.mark;
-		if("master_controller")
-			return global.master_controller;
 		if("master_mode")
 			return global.master_mode;
 		if("matchmaker")
@@ -733,8 +729,6 @@
 			return global.photo_count;
 		if("pipe_colors")
 			return global.pipe_colors;
-		if("pipe_processing_killed")
-			return global.pipe_processing_killed;
 		if("plant_seed_sprites")
 			return global.plant_seed_sprites;
 		if("playable_species")
@@ -775,8 +769,6 @@
 			return global.priv_station_access;
 		if("priv_syndicate_access")
 			return global.priv_syndicate_access;
-		if("processScheduler")
-			return global.processScheduler;
 		if("prometheans")
 			return global.prometheans;
 		if("protected_objects")
@@ -989,10 +981,6 @@
 			return global.tg_self_state;
 		if("tg_z_state")
 			return global.tg_z_state;
-		if("ticker")
-			return global.ticker;
-		if("tickerProcess")
-			return global.tickerProcess;
 		if("ticket_panels")
 			return global.ticket_panels;
 		if("tickets")
@@ -1007,10 +995,6 @@
 			return global.total_unit_tests;
 		if("traitors")
 			return global.traitors;
-		if("transfer_controller")
-			return global.transfer_controller;
-		if("turbolift_controller")
-			return global.turbolift_controller;
 		if("turret_icons")
 			return global.turret_icons;
 		if("uniqueness_repository")
@@ -1130,6 +1114,8 @@
 			global.SSchemistry=newval;
 		if("SScircuit")
 			global.SScircuit=newval;
+		if("SSearly")
+			global.SSearly=newval;
 		if("SSevent")
 			global.SSevent=newval;
 		if("SSfastprocess")
@@ -1140,8 +1126,8 @@
 			global.SSicon_update=newval;
 		if("SSinactivity")
 			global.SSinactivity=newval;
-		if("SSlegacy")
-			global.SSlegacy=newval;
+		if("SSlate")
+			global.SSlate=newval;
 		if("SSlighting")
 			global.SSlighting=newval;
 		if("SSmachines")
@@ -1170,12 +1156,16 @@
 			global.SSskybox=newval;
 		if("SSsun")
 			global.SSsun=newval;
+		if("SSsupply")
+			global.SSsupply=newval;
 		if("SStgui")
 			global.SStgui=newval;
 		if("SStimer")
 			global.SStimer=newval;
 		if("SStrade")
 			global.SStrade=newval;
+		if("SSturbolift")
+			global.SSturbolift=newval;
 		if("SSturf")
 			global.SSturf=newval;
 		if("SSvines")
@@ -1260,8 +1250,6 @@
 			global.air_alarm_topic=newval;
 		if("air_blocked")
 			global.air_blocked=newval;
-		if("air_processing_killed")
-			global.air_processing_killed=newval;
 		if("alien_whitelist")
 			global.alien_whitelist=newval;
 		if("allCasters")
@@ -1406,8 +1394,6 @@
 			global.config=newval;
 		if("contamination_overlay")
 			global.contamination_overlay=newval;
-		if("controller_iteration")
-			global.controller_iteration=newval;
 		if("create_mob_html")
 			global.create_mob_html=newval;
 		if("create_object_html")
@@ -1616,8 +1602,6 @@
 			global.inactive_keys=newval;
 		if("init")
 			global.init=newval;
-		if("initialization_stage")
-			global.initialization_stage=newval;
 		if("intents")
 			global.intents=newval;
 		if("intercom_range_display_status")
@@ -1646,8 +1630,6 @@
 			global.last_message_id=newval;
 		if("last_round_duration")
 			global.last_round_duration=newval;
-		if("last_tick_duration")
-			global.last_tick_duration=newval;
 		if("license_to_url")
 			global.license_to_url=newval;
 		if("light_overlay_cache")
@@ -1692,8 +1674,6 @@
 			global.maploader=newval;
 		if("mark")
 			global.mark=newval;
-		if("master_controller")
-			global.master_controller=newval;
 		if("master_mode")
 			global.master_mode=newval;
 		if("matchmaker")
@@ -1810,8 +1790,6 @@
 			global.photo_count=newval;
 		if("pipe_colors")
 			global.pipe_colors=newval;
-		if("pipe_processing_killed")
-			global.pipe_processing_killed=newval;
 		if("plant_seed_sprites")
 			global.plant_seed_sprites=newval;
 		if("playable_species")
@@ -1852,8 +1830,6 @@
 			global.priv_station_access=newval;
 		if("priv_syndicate_access")
 			global.priv_syndicate_access=newval;
-		if("processScheduler")
-			global.processScheduler=newval;
 		if("prometheans")
 			global.prometheans=newval;
 		if("protected_objects")
@@ -2066,10 +2042,6 @@
 			global.tg_self_state=newval;
 		if("tg_z_state")
 			global.tg_z_state=newval;
-		if("ticker")
-			global.ticker=newval;
-		if("tickerProcess")
-			global.tickerProcess=newval;
 		if("ticket_panels")
 			global.ticket_panels=newval;
 		if("tickets")
@@ -2084,10 +2056,6 @@
 			global.total_unit_tests=newval;
 		if("traitors")
 			global.traitors=newval;
-		if("transfer_controller")
-			global.transfer_controller=newval;
-		if("turbolift_controller")
-			global.turbolift_controller=newval;
 		if("turret_icons")
 			global.turret_icons=newval;
 		if("uniqueness_repository")
@@ -2180,12 +2148,13 @@
 	"SSautosave",
 	"SSchemistry",
 	"SScircuit",
+	"SSearly",
 	"SSevent",
 	"SSfastprocess",
 	"SSgarbage",
 	"SSicon_update",
 	"SSinactivity",
-	"SSlegacy",
+	"SSlate",
 	"SSlighting",
 	"SSmachines",
 	"SSmapping",
@@ -2200,9 +2169,11 @@
 	"SSshuttle",
 	"SSskybox",
 	"SSsun",
+	"SSsupply",
 	"SStgui",
 	"SStimer",
 	"SStrade",
+	"SSturbolift",
 	"SSturf",
 	"SSvines",
 	"SSwireless",
@@ -2245,7 +2216,6 @@
 	"ai_verbs_default",
 	"air_alarm_topic",
 	"air_blocked",
-	"air_processing_killed",
 	"alien_whitelist",
 	"allCasters",
 	"allConsoles",
@@ -2318,7 +2288,6 @@
 	"common_tools",
 	"config",
 	"contamination_overlay",
-	"controller_iteration",
 	"create_mob_html",
 	"create_object_html",
 	"create_turf_html",
@@ -2423,7 +2392,6 @@
 	"image_repository",
 	"inactive_keys",
 	"init",
-	"initialization_stage",
 	"intents",
 	"intercom_range_display_status",
 	"invalid_zone",
@@ -2438,7 +2406,6 @@
 	"last_chew",
 	"last_message_id",
 	"last_round_duration",
-	"last_tick_duration",
 	"license_to_url",
 	"light_overlay_cache",
 	"lighting_overlays_initialised",
@@ -2461,7 +2428,6 @@
 	"map_sectors",
 	"maploader",
 	"mark",
-	"master_controller",
 	"master_mode",
 	"matchmaker",
 	"maze_cell_count",
@@ -2520,7 +2486,6 @@
 	"paramslist_cache",
 	"photo_count",
 	"pipe_colors",
-	"pipe_processing_killed",
 	"plant_seed_sprites",
 	"playable_species",
 	"point_source_descriptions",
@@ -2541,7 +2506,6 @@
 	"priv_region_access",
 	"priv_station_access",
 	"priv_syndicate_access",
-	"processScheduler",
 	"prometheans",
 	"protected_objects",
 	"protolathe_categories",
@@ -2648,8 +2612,6 @@
 	"tg_physical_state",
 	"tg_self_state",
 	"tg_z_state",
-	"ticker",
-	"tickerProcess",
 	"ticket_panels",
 	"tickets",
 	"total_lighting_corners",
@@ -2657,8 +2619,6 @@
 	"total_lighting_sources",
 	"total_unit_tests",
 	"traitors",
-	"transfer_controller",
-	"turbolift_controller",
 	"turret_icons",
 	"uniqueness_repository",
 	"universe_has_ended",

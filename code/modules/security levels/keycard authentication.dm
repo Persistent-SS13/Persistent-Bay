@@ -174,8 +174,7 @@
 			feedback_inc("alert_keycard_auth_nukecode",1)
 
 /obj/machinery/keycard_auth/proc/is_ert_blocked()
-	if(config.ert_admin_call_only) return 1
-	return ticker.mode && ticker.mode.ert_disabled
+	return 1
 
 var/global/maint_all_access = 0
 

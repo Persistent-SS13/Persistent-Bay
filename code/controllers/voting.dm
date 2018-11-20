@@ -23,11 +23,11 @@ datum/controller/vote
 				qdel(vote)
 			vote = src
 
-	proc/process()	//called by master_controller
+	proc/process()	//called by Master(?)
 		if(mode)
 			// No more change mode votes after the game has started.
 			// 3 is GAME_STATE_PLAYING, but that #define is undefined for some reason
-			if(mode == "gamemode" && ticker.current_state >= GAME_STATE_SETTING_UP)
+			if(mode == "gamemode" && GAME_STATE >= RUNLEVEL_SETUP)
 				to_world("<b>Voting aborted due to game start.</b>")
 
 				src.reset()
@@ -132,7 +132,7 @@ datum/controller/vote
 		var/thirdChoice
 		if(length(winners[1]) > 0)
 			if(length(winners[1]) > 1)
-				if(mode != "gamemode" || ticker.hide_mode == 0) // Here we are making sure we don't announce potential game modes
+				if(mode != "gamemode") // Here we are making sure we don't announce potential game modes
 					text = "<b>Vote Tied Between:</b>\n"
 					for(var/option in winners[1])
 						text += "\t[option]\n"
@@ -157,7 +157,7 @@ datum/controller/vote
 				else
 					i++
 
-			if(mode != "gamemode" || (firstChoice == "Extended" || ticker.hide_mode == 0)) // Announce unhidden gamemodes or other results, but not other gamemodes
+			if(mode != "gamemode" || firstChoice == "Extended") // Announce unhidden gamemodes or other results, but not other gamemodes
 				text += "<b>Vote Result: [firstChoice]</b>"
 				if(secondChoice)
 					text += "\nSecond place: [secondChoice]"
@@ -178,20 +178,6 @@ datum/controller/vote
 	proc/result()
 		. = announce_result()
 		var/restart = 0
-		if(.)
-			switch(mode)
-				if("restart")
-					if(.[1] == "Restart Round")
-						restart = 1
-				if("gamemode")
-					if(master_mode != .[1])
-						world.save_mode(.[1])
-						if(ticker && ticker.mode)
-							restart = 1
-						else
-							master_mode = .[1]
-					secondary_mode = .[2]
-					tertiary_mode = .[3]
 				
 
 		if(mode == "gamemode") //fire this even if the vote fails.
@@ -251,7 +237,7 @@ datum/controller/vote
 				if("restart")
 					choices.Add("Restart Round","Continue Playing")
 				if("gamemode")
-					if(ticker.current_state >= GAME_STATE_SETTING_UP)
+					if(GAME_STATE >= RUNLEVEL_SETUP)
 						return 0
 					choices.Add(config.votable_modes)
 					for (var/F in choices)
@@ -272,7 +258,7 @@ datum/controller/vote
 						if (security_state.current_security_level_is_same_or_higher_than(security_state.high_security_level))
 							to_chat(initiator_key, "The current alert status is too high to call for a crew transfer!")
 							return 0
-						if(ticker.current_state <= GAME_STATE_SETTING_UP)
+						if(GAME_STATE <= RUNLEVEL_SETUP)
 							return 0
 							to_chat(initiator_key, "The crew transfer button has been disabled!")
 						question = "End the shift?"
@@ -483,16 +469,7 @@ datum/controller/vote
 
 // Helper proc for determining whether addantag vote can be called.
 datum/controller/vote/proc/is_addantag_allowed(var/automatic)
-	// Gamemode has to be determined before we can add antagonists, so we can respect gamemode's add antag vote settings.
-	if(!ticker || (ticker.current_state <= 2) || !ticker.mode)
-		return 0
-	if(automatic)
-		return (ticker.mode.addantag_allowed & ADDANTAG_AUTO) && !antag_add_finished
-	if(check_rights(R_ADMIN, 0))
-		return ticker.mode.addantag_allowed & (ADDANTAG_ADMIN|ADDANTAG_PLAYER)
-	else
-		return (ticker.mode.addantag_allowed & ADDANTAG_PLAYER) && !antag_add_finished
-
+	return 0	// No antags, gosh
 
 
 /mob/verb/vote()

@@ -87,7 +87,5 @@
 
 	update_icon()
 
-	if(ticker && ticker.mode)
-		ticker.mode.check_win()
 	to_chat(src,"<span class='deadsay'>[show_dead_message]</span>")
 	return 1

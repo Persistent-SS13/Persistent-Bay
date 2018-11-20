@@ -17,4 +17,4 @@
 #define CIRCUITFAB	0x2
 #define MECHFAB		0x4
 #define VOIDFAB		0x8
-
+#define AMMOFAB     0x16

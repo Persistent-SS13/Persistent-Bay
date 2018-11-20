@@ -360,6 +360,8 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 					return_turfs = block(locate(x-3,y-1,z), locate(x+3,y-8,z))
 				if(3)
 					return_turfs = block(locate(x-4,y-1,z), locate(x+4,y-10,z))
+				if(5)
+					return_turfs = block(locate(x-9,y-1,z), locate(x+9,y-20,z))
 				else
 					return_turfs = block(locate(x-2,y-1,z), locate(x+2,y-8,z))
 		if(NORTH)

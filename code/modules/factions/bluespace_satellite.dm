@@ -107,6 +107,16 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			user.visible_message("[user.name] unsecures [src.name] from the floor.", \
 				"You unsecure the [src.name] from the floor.", \
 				"You hear a ratchet")
+			// Reset when unsecured
+			shuttle = null
+			faction = 0
+			status = 0
+			dock_interior = 0
+			dimensions = 1
+			bridge = null
+			id = "docking port"
+			visible_mode = 0
+			faction = null
 		return
 
 	return ..()
@@ -348,6 +358,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	shuttle.bridge = bridge
 	bridge.dock = src
 	shuttle.setup()
+	status = 4
 	to_chat(user, "Construction complete, finalize with bridge computer.")
 
 

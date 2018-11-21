@@ -462,14 +462,12 @@ var/list/mining_floors = list()
 	mining_floors["[src.z]"] += src
 	if(prob(70))
 		overlay_detail = "asteroid[rand(0,9)]"
-	message_admins("MSL: [map_storage_loaded], len [resources.len]")
 	if(map_storage_loaded != 1)
 		if(resources.len == 0) // just in case resources are already present
 			spawn(10)
 				generate_resources()
 
 /turf/simulated/asteroid/proc/generate_resources()
-	message_admins("Generating resources.")
 	var/minerals = list("sand","graphene","hematite","tetrahedrite","rock salt","pyrite","gold","silver","diamond","platinum","tungsten","pitchblende","phoron","hydrogen")
 	var/min = minerals[rand(1,14)]
 	resources += min

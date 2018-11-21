@@ -451,9 +451,9 @@
 /obj/item/clothing/under/dress/draculass
 	name = "sexy black coat"
 	desc = "A sexy black coat with a red blouse and lace."
-	icon_state = "geisha"
+	icon_state = "draculass"
 	item_state = "kilt"
-	worn_state = "geisha"
+	worn_state = "draculass"
 
 /obj/item/clothing/under/dress/ysing
 	name = "eastern dress"
@@ -787,35 +787,61 @@
 	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 30, rad = 0)
 
 /obj/item/clothing/under/shinypurple
-	name = "Shiny purple suit"
+	name = "shiny purple suit"
 	desc = "A shiny purple suit made of synthread. It has a flower pinned to it."
 	icon_state = "purpletux"
 	worn_state = "purpletux"
 
 /obj/item/clothing/under/blacktux
-	name = "Black Tuxedo"
+	name = "black tuxedo"
 	desc = "A shiny black suit made of synthread. It has a flower pinned to it."
 	icon_state = "blacktux"
 	worn_state = "blacktux"	
 	
 /obj/item/clothing/under/bouqet
-	name = "Bouqet"
+	name = "bouqet"
 	desc = "A shiny black suit made of synthread. It has a flower pinned to it."
 	icon_state = "bouqet"
 	item_state = "bouqet"
 	worn_state = "bouqet"		
 	
 /obj/item/clothing/under/maydress
-	name = "Special Wedding Dress"
+	name = "colorful wedding dress"
 	desc = "A beautiful gown specially ordered and tailored. Embroidered along the inside of the dress, in cursive, May Crystalia."
 	icon_state = "maydress"
 	worn_state = "maydress"
 
-/obj/item/clothing/under/tulledress
+/obj/item/clothing/under/koudress
+	name = "beautiful wedding dress"
+	desc = "A beautiful weddubg gown specially tailored with purple highlights."
+	icon_state = "koudress"
+	worn_state = "koudress"
+	
+/obj/item/clothing/under/purpfrill
+	name = "purple fancy dress"
+	desc = "A fancy deep-purple dress."
+	icon_state = "purpfrill"
+	worn_state = "purpfrill"
+	
+/obj/item/clothing/under/purpleweddingtux
+	name = "purple wedding tuxedo"
+	desc = "A tuxedo tailored for a wedding with purple detailing."
+	icon_state = "weddingtux"
+	worn_state = "weddingtux"
+
+	
+/obj/item/clothing/under/weddingfrill
+	name = "green wedding dress"
+	desc = "A frilly green wedding dress."
+	icon_state = "weddingfrill"
+	worn_state = "weddingfrill"
+		
+	
+/obj/item/clothing/under/tulleddress
 	name = "Silk Dress"
 	desc = "A silk dress padded with tulle fabric. Sleek, modest, and beauty all in one article."
-	icon_state = "tulledress"
-	worn_state = "tulledress"
+	icon_state = "tulled_dress"
+	worn_state = "tulled_dress"
 
 /obj/item/clothing/under/bridesmaid
 	name = "Purple bridesmaid dress"

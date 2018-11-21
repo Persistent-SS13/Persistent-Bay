@@ -278,10 +278,6 @@ var/list/point_source_descriptions = list(
 			for(var/decl/hierarchy/supply_pack/spc in sp.children)
 				master_supply_list += spc
 
-
-	// Supply shuttle ticker - handles supply point regeneration
-	// This is called by the process scheduler every thirty seconds
-
 /datum/controller/supply/proc/generate_initial()
 	generate_export("manufacturing-basic")
 	generate_export("manufacturing-advanced")

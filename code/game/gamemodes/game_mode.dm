@@ -27,7 +27,7 @@ var/global/list/additional_antag_types = list()
 	var/round_autoantag = 0                  // Will this round attempt to periodically spawn more antagonists?
 	var/antag_scaling_coeff = 5              // Coefficient for scaling max antagonists to player count.
 	var/require_all_templates = 0            // Will only start if all templates are checked and can spawn.
-	var/addantag_allowed = ADDANTAG_ADMIN | ADDANTAG_AUTO
+	var/addantag_allowed = 0
 
 	var/station_was_nuked = 0                // See nuclearbomb.dm and malfunction.dm.
 	var/explosion_in_progress = 0            // Sit back and relax
@@ -108,23 +108,7 @@ var/global/list/additional_antag_types = list()
 			antag_templates -= antag
 			additional_antag_types -= antag.id
 			message_admins("Admin [key_name_admin(usr)] removed [antag.role_text] template from game mode.")
-	else if(href_list["add_antag_type"])
-		var/choice = input("Which type do you wish to add?") as null|anything in all_antag_types()
-		if(!choice)
-			return
-		var/datum/antagonist/antag = all_antag_types()[choice]
-		if(antag)
-			if(!islist(ticker.mode.antag_templates))
-				ticker.mode.antag_templates = list()
-			ticker.mode.antag_templates |= antag
-			message_admins("Admin [key_name_admin(usr)] added [antag.role_text] template to game mode.")
 
-	// I am very sure there's a better way to do this, but I'm not sure what it might be. ~Z
-	spawn(1)
-		for(var/datum/admins/admin in world)
-			if(usr.client == admin.owner)
-				admin.show_game_mode(usr)
-				return
 
 /datum/game_mode/proc/announce() //to be called when round starts
 	to_world("<B>The current game mode is [capitalize(name)]!</B>")
@@ -186,12 +170,12 @@ var/global/list/additional_antag_types = list()
 
 /datum/game_mode/proc/refresh_event_modifiers()
 	if(event_delay_mod_moderate || event_delay_mod_major)
-		GLOB.event_manager.report_at_round_end = 1
+		SSevent.report_at_round_end = 1
 		if(event_delay_mod_moderate)
-			var/datum/event_container/EModerate = GLOB.event_manager.event_containers[EVENT_LEVEL_MODERATE]
+			var/datum/event_container/EModerate = SSevent.event_containers[EVENT_LEVEL_MODERATE]
 			EModerate.delay_modifier = event_delay_mod_moderate
 		if(event_delay_mod_moderate)
-			var/datum/event_container/EMajor = GLOB.event_manager.event_containers[EVENT_LEVEL_MAJOR]
+			var/datum/event_container/EMajor = SSevent.event_containers[EVENT_LEVEL_MAJOR]
 			EMajor.delay_modifier = event_delay_mod_major
 
 /datum/game_mode/proc/pre_setup()
@@ -232,8 +216,6 @@ var/global/list/additional_antag_types = list()
 		evacuation_controller.recall = 1
 
 	feedback_set_details("round_start","[time2text(world.realtime)]")
-	if(ticker && ticker.mode)
-		feedback_set_details("game_mode","[ticker.mode]")
 	feedback_set_details("server_ip","[world.internet_address]:[world.port]")
 	return 1
 
@@ -279,17 +261,6 @@ var/global/list/additional_antag_types = list()
 	command_announcement.Announce("The presence of [pick(reasons)] in the region is tying up all available local emergency resources; emergency response teams cannot be called at this time, and post-evacuation recovery efforts will be substantially delayed.","Emergency Transmission")
 
 /datum/game_mode/proc/check_finished()
-	if(evacuation_controller.round_over() || station_was_nuked)
-		return 1
-	if(end_on_antag_death && antag_templates && antag_templates.len)
-		var/has_antags = 0
-		for(var/datum/antagonist/antag in antag_templates)
-			if(!antag.antags_are_dead())
-				has_antags = 1
-				break
-		if(!has_antags)
-			evacuation_controller.recall = 0
-			return 1
 	return 0
 
 /datum/game_mode/proc/cleanup()	//This is called when the round has ended but not the game, if any cleanup would be necessary in that case.
@@ -376,7 +347,7 @@ var/global/list/additional_antag_types = list()
 		return candidates
 
 	// If this is being called post-roundstart then it doesn't care about ready status.
-	if(ticker && ticker.current_state == GAME_STATE_PLAYING)
+	if(GAME_STATE == RUNLEVEL_GAME)
 		for(var/mob/player in GLOB.player_list)
 			if(!player.client)
 				continue
@@ -518,21 +489,3 @@ proc/get_nt_opposed()
 	for(var/datum/objective/objective in player.objectives)
 		to_chat(player.current, "<B>Objective #[obj_count]</B>: [objective.explanation_text]")
 		obj_count++
-
-/mob/verb/check_round_info()
-	set name = "Check Round Info"
-	set category = "OOC"
-
-	if(!ticker || !ticker.mode)
-		to_chat(usr, "Something is terribly wrong; there is no gametype.")
-		return
-
-	if(!ticker.hide_mode)
-		to_chat(usr, "<b>The roundtype is [capitalize(ticker.mode.name)]</b>")
-		if(ticker.mode.round_description)
-			to_chat(usr, "<i>[ticker.mode.round_description]</i>")
-		if(ticker.mode.extended_round_description)
-			to_chat(usr, "[ticker.mode.extended_round_description]")
-	else
-		to_chat(usr, "<i>Shhhh</i>. It's a secret.")
-	return

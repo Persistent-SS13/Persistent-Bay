@@ -205,7 +205,7 @@
 	icon_state = "folded"
 	item_state = "rbed"
 	slot_flags = SLOT_BACK
-	w_class = ITEM_SIZE_HUGE // Can't be put in backpacks. Oh well. For now.
+	w_class = ITEM_SIZE_LARGE
 
 /obj/item/roller/attack_self(mob/user)
 		var/obj/structure/bed/roller/R = new /obj/structure/bed/roller(user.loc)

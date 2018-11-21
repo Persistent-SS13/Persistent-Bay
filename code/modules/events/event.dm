@@ -43,7 +43,7 @@
 	var/penalty = 100 // A simple penalty gives admins the ability to increase the weight to again be part of the random event selection
 
 /datum/event_meta/extended_penalty/get_weight()
-	return ..() - (ticker && istype(ticker.mode, /datum/game_mode/extended) ? penalty : 0)
+	return ..()
 
 
 /datum/event	//NOTE: Times are measured in master controller ticks!
@@ -130,12 +130,11 @@
 		end()
 
 	endedAt = world.time
-	GLOB.event_manager.active_events -= src
-	GLOB.event_manager.event_complete(src)
+	SSevent.event_complete(src)
 
 /datum/event/New(var/datum/event_meta/EM)
 	// event needs to be responsible for this, as stuff like APLUs currently make their own events for curious reasons
-	GLOB.event_manager.active_events += src
+	SSevent.active_events += src
 
 	event_meta = EM
 	severity = event_meta.severity

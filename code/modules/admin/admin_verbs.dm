@@ -16,9 +16,6 @@ var/list/admin_verbs_admin = list(
 	/client/proc/player_panel_new,		//shows an interface for all players, with links to various panels,
 	/client/proc/invisimin,				//allows our mob to go invisible/visible,
 //	/datum/admins/proc/show_traitor_panel,	//interface which shows a mob's mind, -Removed due to rare practical use. Moved to debug verbs ~Errorage,
-	/datum/admins/proc/show_game_mode,  //Configuration window for the current game mode.,
-	/datum/admins/proc/force_mode_latespawn, //Force the mode to try a latespawn proc,
-	/datum/admins/proc/force_antag_latespawn, //Force a specific template to try a latespawn proc,
 	/datum/admins/proc/toggleenter,		//toggles whether people can join the current game,
 	/datum/admins/proc/toggleguests,	//toggles whether guests can join the current game,
 	/datum/admins/proc/announce,		//priority announce something to all clients.,
@@ -51,7 +48,6 @@ var/list/admin_verbs_admin = list(
 	/client/proc/check_ai_laws,			//shows AI and borg laws,
 	/client/proc/rename_silicon,		//properly renames silicons,
 	/client/proc/manage_silicon_laws,	// Allows viewing and editing silicon laws. ,
-	/client/proc/check_antagonists,
 	/client/proc/admin_memo,			//admin memo system. show/delete/write. +SERVER needed to delete admin memos of others,
 	/client/proc/dsay,					//talk in deadchat using our ckey,
 //	/client/proc/toggle_hear_deadcast,	//toggles whether we hear deadchat,
@@ -124,8 +120,6 @@ var/list/admin_verbs_fun = list(
 	/datum/admins/proc/cmd_admin_dress,
 	/client/proc/cmd_admin_gib_self,
 	/client/proc/drop_bomb,
-	/client/proc/everyone_random,
-	/client/proc/cinematic,
 	/datum/admins/proc/toggle_aliens,
 	/datum/admins/proc/toggle_alien_eggs,
 	/datum/admins/proc/toggle_space_ninja,
@@ -154,13 +148,10 @@ var/list/admin_verbs_spawn = list(
 var/list/admin_verbs_server = list(
 	/datum/admins/proc/capture_map_part,
 	/client/proc/Set_Holiday,
-	/datum/admins/proc/startnow,
 	/datum/admins/proc/restart,
-	/datum/admins/proc/delay,
 	/datum/admins/proc/toggleaban,
 	/client/proc/toggle_log_hrefs,
 	/datum/admins/proc/immreboot,
-	/client/proc/everyone_random,
 	/datum/admins/proc/toggleAI,
 	/client/proc/cmd_admin_delete,		// delete an instance/object/mob/etc,
 	/client/proc/cmd_debug_del_all,
@@ -178,7 +169,6 @@ var/list/admin_verbs_debug = list(
 	/client/proc/getruntimelog,                     // allows us to access runtime logs to somebody,
 	/client/proc/cmd_admin_list_open_jobs,
 	/client/proc/Debug2,
-	/client/proc/kill_air,
 	/client/proc/ZASSettings,
 	/client/proc/cmd_debug_make_powernets,
 	/client/proc/kill_airgroup,
@@ -265,7 +255,6 @@ var/list/admin_verbs_hideable = list(
 	/datum/admins/proc/cmd_admin_dress,
 	/client/proc/cmd_admin_gib_self,
 	/client/proc/drop_bomb,
-	/client/proc/cinematic,
 	/datum/admins/proc/toggle_aliens,
 	/datum/admins/proc/toggle_alien_eggs,
 	/datum/admins/proc/toggle_space_ninja,
@@ -276,13 +265,10 @@ var/list/admin_verbs_hideable = list(
 	/client/proc/toggle_random_events,
 	/client/proc/cmd_admin_add_random_ai_law,
 	/client/proc/Set_Holiday,
-	/datum/admins/proc/startnow,
 	/datum/admins/proc/restart,
-	/datum/admins/proc/delay,
 	/datum/admins/proc/toggleaban,
 	/client/proc/toggle_log_hrefs,
 	/datum/admins/proc/immreboot,
-	/client/proc/everyone_random,
 	/datum/admins/proc/toggleAI,
 	/datum/admins/proc/adrev,
 	/datum/admins/proc/adspawn,
@@ -293,7 +279,6 @@ var/list/admin_verbs_hideable = list(
 	/client/proc/callproc_target,
 	/client/proc/Debug2,
 	/client/proc/reload_admins,
-	/client/proc/kill_air,
 	/client/proc/cmd_debug_make_powernets,
 	/client/proc/kill_airgroup,
 	/client/proc/debug_controller,
@@ -320,7 +305,6 @@ var/list/admin_verbs_mod = list(
 	/client/proc/dsay,
 	/datum/admins/proc/show_skills,
 	/datum/admins/proc/show_player_panel,
-	/client/proc/check_antagonists,
 	/client/proc/cmd_admin_subtle_message, // send an message to somebody as a 'voice in their head',
 	/client/proc/aooc,
 	/datum/admins/proc/sendFax
@@ -473,15 +457,6 @@ var/list/admin_verbs_mentor = list(
 	if(holder)
 		holder.player_panel_new()
 	feedback_add_details("admin_verb","PPN") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-	return
-
-/client/proc/check_antagonists()
-	set name = "Check Antagonists"
-	set category = "Admin"
-	if(holder)
-		holder.check_antagonists()
-		log_admin("[key_name(usr)] checked antagonists.")	//for tsar~
-	feedback_add_details("admin_verb","CHA") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	return
 
 /client/proc/jobbans()
@@ -684,19 +659,6 @@ var/list/admin_verbs_mentor = list(
 		for (var/mob/V in hearers(mob.control_object))
 			V.show_message("<b>[mob.control_object.name]</b> says: \"" + msg + "\"", 2)
 	feedback_add_details("admin_verb","OT") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-
-/client/proc/kill_air() // -- TLE
-	set category = "Debug"
-	set name = "Kill Air"
-	set desc = "Toggle Air Processing"
-	if(air_processing_killed)
-		air_processing_killed = 0
-		to_chat(usr, "<b>Enabled air processing.</b>")
-	else
-		air_processing_killed = 1
-		to_chat(usr, "<b>Disabled air processing.</b>")
-	feedback_add_details("admin_verb","KA") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-	log_and_message_admins("used 'kill air'.")
 
 /client/proc/readmin_self()
 	set name = "Re-Admin self"

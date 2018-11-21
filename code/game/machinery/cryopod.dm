@@ -77,9 +77,6 @@
 	user.set_machine(src)
 	src.add_fingerprint(user)
 
-	if(!ticker)
-		return
-
 	var/datum/world_faction/faction = get_faction(req_access_faction)
 
 	var/data[]

@@ -14,7 +14,14 @@
 /obj/item/weapon/hand_labeler/afterattack(atom/A, mob/user as mob, proximity)
 	if(!proximity)
 		return
-	if(!mode)	//if it's off, give up.
+	if(!mode && findtext(A.name, "("))  // if its off and target is labeled, unlabel it anyway
+		A.name = copytext(A.name, 1, findtext(A.name, "(")-1) //Remove any labels
+		
+		user.visible_message("<span class='notice'>[user] removes the label from [A].</span>", \
+							 "<span class='notice'>You remove the label from [A].</span>")
+		
+		return
+	if(!mode)	//if it's off and the target isn't labeled, give up.
 		return
 	if(A == loc)	// if placing the labeller into something (e.g. backpack)
 		return		// don't set a label

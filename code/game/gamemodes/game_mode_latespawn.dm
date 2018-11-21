@@ -3,22 +3,14 @@
 /datum/game_mode/var/max_autotraitor_delay = 12000 // Approx 20 minutes.
 /datum/game_mode/var/process_count = 0
 
-///process()
-///Called by the gameticker
+//process()
+//Called by the nothing now
 /datum/game_mode/proc/process()
 	if(shall_process_autoantag())
 		process_autoantag()
 
 /datum/game_mode/proc/shall_process_autoantag()
-	if(!round_autoantag || world.time < next_spawn)
-		return FALSE
-	if(evacuation_controller.is_evacuating() || evacuation_controller.has_evacuated())
-		return FALSE
-	// Don't create auto-antags in the last twenty minutes of the round, but only if the vote interval is longer than 20 minutes
-	if((config.vote_autotransfer_interval > 20 MINUTES) && (transfer_controller.time_till_transfer_vote() < 20 MINUTES))
-		return FALSE
-
-	return TRUE
+	return FALSE // No antags
 
 //This can be overriden in case a game mode needs to do stuff when a player latejoins
 /datum/game_mode/proc/handle_latejoin(var/mob/living/carbon/human/character)

@@ -85,7 +85,7 @@ SUBSYSTEM_DEF(shuttle)
 			given_sector.add_landmark(landmark, shuttle_name)
 			. = 1
 
-//This is called by gameticker after all the machines and radio frequencies have been properly initialized
+//This is called after all the machines and radio frequencies have been properly initialized
 /datum/controller/subsystem/shuttle/proc/initialize_shuttles()
 	for(var/shuttle_type in subtypesof(/datum/shuttle))
 		var/datum/shuttle/shuttle = shuttle_type

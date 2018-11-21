@@ -4,12 +4,6 @@
 /datum/admin_secret_item/random_event/gravity
 	name = "Toggle Artificial Gravity"
 
-/datum/admin_secret_item/random_event/gravity/can_execute(var/mob/user)
-	if(!(ticker && ticker.mode))
-		return 0
-
-	return ..()
-
 /datum/admin_secret_item/random_event/gravity/execute(var/mob/user)
 	. = ..()
 	if(!.)

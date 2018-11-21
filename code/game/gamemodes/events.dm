@@ -1,27 +1,3 @@
-//this file left in for legacy support
-/*
-/proc/start_events()
-	//changed to a while(1) loop since they are more efficient.
-	//Moved the spawn in here to allow it to be called with advance proc call if it crashes.
-	//and also to stop spawn copying variables from the game ticker
-	spawn(3000)
-		while(1)
-			if(prob(50))//Every 120 seconds and prob 50 2-4 weak spacedusts will hit the station
-				spawn(1)
-					dust_swarm("weak")
-			if(!event)
-				//CARN: checks to see if random events are enabled.
-				if(config.allow_random_events)
-					if(prob(eventchance))
-						event()
-						hadevent = 1
-					else
-						Holiday_Random_Event()
-			else
-				event = 0
-			sleep(1200)
-
-*/
 var/eventchance = 10 // Percent chance per 5 minutes.
 var/hadevent    = 0
 

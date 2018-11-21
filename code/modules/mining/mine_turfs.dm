@@ -426,12 +426,12 @@ var/list/mining_floors = list()
 	name = "sand"
 	icon = 'icons/turf/flooring/asteroid.dmi'
 	icon_state = "asteroid"
-
 	initial_gas = null
 	temperature = TCMB
 	var/dug = 0       //0 = has not yet been dug, 1 = has already been dug
 	var/overlay_detail
 	has_resources = 1
+	resources = list()
 /turf/simulated/floor/asteroid
 	name = "sand"
 
@@ -454,12 +454,36 @@ var/list/mining_floors = list()
 		var/turf/simulated/asteroid = locate(xi,yi,zi)
 		asteroid.resources = resource
 	..()
+
 /turf/simulated/asteroid/New()
+	..()
 	if (!mining_floors["[src.z]"])
 		mining_floors["[src.z]"] = list()
 	mining_floors["[src.z]"] += src
 	if(prob(70))
 		overlay_detail = "asteroid[rand(0,9)]"
+	message_admins("MSL: [map_storage_loaded], len [resources.len]")
+	if(map_storage_loaded != 1)
+		if(resources.len == 0) // just in case resources are already present
+			spawn(10)
+				generate_resources()
+
+/turf/simulated/asteroid/proc/generate_resources()
+	message_admins("Generating resources.")
+	var/minerals = list("sand","graphene","hematite","tetrahedrite","rock salt","pyrite","gold","silver","diamond","platinum","tungsten","pitchblende","phoron","hydrogen")
+	var/min = minerals[rand(1,14)]
+	resources += min
+	for(var/m in resources)
+		var/chance = rand(1,100)
+		if(chance >=1 && chance <= 73)
+			resources[m] = rand(1,20)
+		if(chance >= 74 && chance <= 94)
+			resources[m] = rand(20,30)
+		if(chance >= 95 && chance <= 100)
+			resources[m] = rand(30,50)
+	return 0
+
+
 
 /turf/simulated/asteroid/Destroy()
 	if (mining_floors["[src.z]"])

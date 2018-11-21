@@ -9,7 +9,7 @@
 	var/wax = 2000
 
 /obj/item/weapon/flame/candle/New()
-	wax = rand(800, 1000) // Enough for 27-33 minutes. 30 minutes on average.
+	wax = rand(21000, 22000)	//lasts between 5.8 - 6.1 hours
 	..()
 
 /obj/item/weapon/flame/candle/update_icon()
@@ -66,6 +66,7 @@
 
 /obj/item/weapon/flame/candle/attack_self(mob/user as mob)
 	if(lit)
+		usr.visible_message("[usr] blows on the [name], extinguishing the flame.", "You blow out the [name]'s flame.")
 		lit = 0
 		update_icon()
 		set_light(0)

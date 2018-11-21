@@ -623,7 +623,7 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/cell_device
 	name = "device cell"
-	path = /obj/item/weapon/cell/device/standard
+	path = /obj/item/weapon/cell/device/standard/empty
 	category = "Devices and Components"
 
 /datum/autolathe/recipe/ecigcartridge

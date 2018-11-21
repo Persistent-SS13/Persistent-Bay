@@ -142,6 +142,10 @@
 	name = "standard device power cell"
 	maxcharge = 25
 
+/obj/item/weapon/cell/device/standard/empty/New()
+	..()
+	charge = 0
+
 /obj/item/weapon/cell/device/high
 	name = "advanced device power cell"
 	desc = "A small power cell designed to power more energy-demanding devices."

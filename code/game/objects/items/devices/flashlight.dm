@@ -12,9 +12,11 @@
 
 	action_button_name = "Toggle Flashlight"
 	var/on = 0
-	var/brightness_on = 4 //range of light when on
+	var/brightness_on = 6	//range of light when on
 	var/activation_sound = 'sound/effects/flashlight.ogg'
-	var/flashlight_power //luminosity of light when on, can be negative
+	var/flashlight_power	//luminosity of light when on, can be negative
+	var/obj/item/weapon/cell/device/flashlight_cell = null	//device cell slot, empty by default
+	var/power_usage = 22.5	//450 = 1% per second on 25Wh device cells
 
 /obj/item/device/flashlight/Initialize()
 	. = ..()
@@ -31,18 +33,76 @@
 		icon_state = "[initial(icon_state)]"
 		set_light(0)
 
+/obj/item/device/flashlight/examine(mob/user)
+	if(..(user, 0))
+		if (!power_usage)
+			return
+		if(flashlight_cell)
+			to_chat(user,"<span class='notice'>There is about [round(src.flashlight_cell.percent(), 1)]% charge remaining.</span>")
+		else
+			to_chat(user,"<span class='warning'>\The [src] is missing a battery!</span>")
+
+/obj/item/device/flashlight/proc/Deactivate()
+	playsound(src.loc, activation_sound, 75, 1)
+	on = 0
+	STOP_PROCESSING(SSobj, src)
+	update_icon()
+
+/obj/item/device/flashlight/Process(mob/user)
+	if(!flashlight_cell)
+		Deactivate()
+		return
+	if(!flashlight_cell.checked_use(power_usage * CELLRATE))	//if this passes, there's not enough power in the battery
+		Deactivate()
+		to_chat(user,"<span class='warning'>\The [src] flickers briefly as the last of its charge is depleted.</span>")
+		return
+
+/obj/item/device/flashlight/attackby(var/obj/item/I, var/mob/user as mob)
+	if(istype(I, /obj/item/weapon/screwdriver))
+		if(power_usage && flashlight_cell)	//if contains powercell & uses power
+			flashlight_cell.update_icon()
+			flashlight_cell.dropInto(loc)
+			flashlight_cell = null
+			to_chat(user, "<span class='notice'>You remove \the [flashlight_cell] from \the [src].</span>")
+		else if (power_usage && !flashlight_cell)	//does not contains cell, but still uses power
+			to_chat(user, "<span class='notice'>There's no battery in \the [src].</span>")
+		else	//no chat message for lights that don't use power
+			return
+	if(power_usage && !flashlight_cell && istype(I, /obj/item/weapon/cell/device) && user.unEquip(I, target = src))
+		if (flashlight_cell)
+			to_chat(user, "<span class='notice'>\The [src] already has a battery installed.</span>")
+		if(power_usage && !flashlight_cell && user.unEquip(I))
+			I.forceMove(src)
+			flashlight_cell = I
+			to_chat(user, "<span class='notice'>You install [I] into \the [src].</span>")
+			update_icon()
+		else	//no message for trying to put batteries in glowsticks
+			return
+
 /obj/item/device/flashlight/attack_self(mob/user)
 	if(!isturf(user.loc))
-		to_chat(user, "You cannot turn the light on while in this [user.loc].")//To prevent some lighting anomalities.
-
+		to_chat(user, "You cannot turn the light on while in this [user.loc].")	//To prevent some lighting anomalities.
 		return 0
-	on = !on
-	if(on && activation_sound)
-		playsound(src.loc, activation_sound, 75, 1)
-	update_icon()
-	user.update_action_buttons()
-	return 1
+	if(on)
+		Deactivate()
+	else
+		if(flashlight_cell)
+			if(!flashlight_cell.check_charge(power_usage * CELLRATE))
+				to_chat(user, "<span class='warning'>\The [src] refuses to operate.</span> ")
+				return
+			playsound(src.loc, activation_sound, 75, 1)
+			on=1
+			START_PROCESSING(SSobj, src)
+			update_icon()
+			user.update_action_buttons()
+		else
+			to_chat(user, "<span class='warning'>\The [src] does not have a battery installed.</span>")
 
+/obj/item/device/flashlight/emp_act(severity)
+	if(flashlight_cell != null)	//only flashlights with cells installed are affected
+		Deactivate()
+		flashlight_cell.emp_act(severity)
+	..()
 
 /obj/item/device/flashlight/attack(mob/living/M as mob, mob/living/user as mob)
 	add_fingerprint(user)
@@ -127,6 +187,7 @@
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_EARS
 	brightness_on = 2
+	power_usage = 5
 	w_class = ITEM_SIZE_TINY
 	matter = list(DEFAULT_WALL_MATERIAL = 30,"glass" = 10)
 
@@ -147,6 +208,7 @@
 	item_state = ""
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	brightness_on = 2
+	power_usage = 0
 	w_class = ITEM_SIZE_TINY
 
 
@@ -156,11 +218,10 @@
 	desc = "A desk lamp with an adjustable mount."
 	icon_state = "lamp"
 	item_state = "lamp"
-	brightness_on = 5
+	brightness_on = 2		//smaller lit area than flashlights
+	flashlight_power = 6	//but the small area is lit very well
 	w_class = ITEM_SIZE_LARGE
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
-
-	on = 1
 
 
 // green-shaded desk lamp
@@ -168,7 +229,6 @@
 	desc = "A classic green-shaded desk lamp."
 	icon_state = "lampgreen"
 	item_state = "lampgreen"
-	brightness_on = 4
 	light_color = "#ffc58f"
 
 /obj/item/device/flashlight/lamp/verb/toggle_light()
@@ -185,19 +245,20 @@
 	name = "flare"
 	desc = "A red standard-issue flare. There are instructions on the side reading 'pull cord, make light'."
 	w_class = ITEM_SIZE_TINY
-	brightness_on = 8 // Pretty bright.
+	brightness_on = 8
 	light_power = 3
 	light_color = "#e58775"
 	icon_state = "flare"
 	item_state = "flare"
-	action_button_name = null //just pull it manually, neckbeard.
+	action_button_name = null
 	var/fuel = 0
 	var/on_damage = 7
 	var/produce_heat = 1500
+	power_usage = 0
 	activation_sound = 'sound/effects/flare.ogg'
 
 /obj/item/device/flashlight/flare/New()
-	fuel = rand(800, 1000) // Sorry for changing this so much but I keep under-estimating how long X number of ticks last in seconds.
+	fuel = rand(900, 1800)	//lasts 15-30 minutes
 	..()
 
 /obj/item/device/flashlight/flare/Process()
@@ -226,11 +287,12 @@
 		return FALSE
 	if(!fuel)
 		if(user)
-			to_chat(user, "<span class='notice'>It's out of fuel.</span>")
+			to_chat(user, "<span class='notice'>It's burnt out.</span>")
 		return FALSE
 	on = TRUE
 	force = on_damage
 	damtype = "fire"
+	hitsound = "sound/effects/woodhit.ogg"
 	START_PROCESSING(SSobj, src)
 	update_icon()
 	return 1
@@ -240,17 +302,19 @@
 	name = "green glowstick"
 	desc = "A military-grade glowstick."
 	w_class = 2.0
-	brightness_on = 4
+	brightness_on = 5
 	light_power = 2
 	color = "#49f37c"
 	icon_state = "glowstick"
 	item_state = "glowstick"
+	action_button_name = null
 	randpixel = 12
 	var/fuel = 0
+	power_usage = 0
 	activation_sound = null
 
 /obj/item/device/flashlight/glowstick/New()
-	fuel = rand(1600, 2000)
+	fuel = rand(86000, 90000) //lasts between 24 - 25 hours, seems fair for persistence
 	light_color = color
 	..()
 
@@ -298,11 +362,10 @@
 	if(on)
 		to_chat(user,"<span class='notice'>\The [src] is already lit.</span>")
 		return
-
-	. = ..()
-	if(.)
-		user.visible_message("<span class='notice'>[user] cracks and shakes the glowstick.</span>", "<span class='notice'>You crack and shake the glowstick, turning it on!</span>")
-		START_PROCESSING(SSobj, src)
+	user.visible_message("<span class='notice'>[user] cracks and shakes the glowstick.</span>", "<span class='notice'>You crack and shake the glowstick, turning it on!</span>")
+	on = TRUE
+	START_PROCESSING(SSobj, src)
+	update_icon()
 
 /obj/item/device/flashlight/glowstick/red
 	name = "red glowstick"
@@ -334,11 +397,16 @@
 	name = "glowing slime extract"
 	desc = "A glowing ball of what appears to be amber."
 	icon = 'icons/obj/lighting.dmi'
-	icon_state = "floor1" //not a slime extract sprite but... something close enough!
+	icon_state = "floor1"	//not a slime extract sprite but... something close enough!
 	item_state = "slime"
+	action_button_name = null
 	w_class = ITEM_SIZE_TINY
-	brightness_on = 6
-	on = 1 //Bio-luminesence has one setting, on.
+	flashlight_cell = null
+	power_usage = 0
+	brightness_on = 4
+	color = "#ffc200"	//amber
+	light_color = "#ffc200"
+	on = 1	//Bio-luminesence has one setting, on.
 
 /obj/item/device/flashlight/slime/New()
 	..()
@@ -348,4 +416,4 @@
 	return
 
 /obj/item/device/flashlight/slime/attack_self(mob/user)
-	return //Bio-luminescence does not toggle.
+	return	//Bio-luminescence does not toggle.

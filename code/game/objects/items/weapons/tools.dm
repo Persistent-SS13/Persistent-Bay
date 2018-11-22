@@ -196,7 +196,7 @@
 /obj/item/weapon/weldingtool/examine(mob/user)
 	if(..(user, 0))
 		if(tank)
-			to_chat(user, "<span class='notice'>\icon[tank] \The [tank] contains [get_fuel()]/[tank.max_fuel] units of fuel!")
+			to_chat(user, "<span class='notice'>\icon[tank] \The [tank] contains [get_fuel()]/[tank.max_fuel] units of fuel!</span>")
 		else
 			to_chat(user, "There is no tank attached.")
 
@@ -486,7 +486,7 @@
 
 /obj/item/weapon/welder_tank/examine(mob/user)
 	if(..(user, 0))
-		to_chat(user, "<span class='notice'>There is [reagents.total_volume]/[max_fuel] units of fuel remaining.")
+		to_chat(user, "<span class='notice'>There is [reagents.total_volume]/[max_fuel] units of fuel remaining.</span>")
 
 /obj/item/weapon/welder_tank/afterattack(obj/O as obj, mob/user as mob, proximity)
 	if(!proximity) return

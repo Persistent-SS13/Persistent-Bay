@@ -9,6 +9,7 @@
 	atom_flags = ATOM_FLAG_NO_BLOOD
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	layer = ABOVE_WINDOW_LAYER
+	power_usage = 0
 	var/number = 0
 	var/last_tick //used to delay the powercheck
 	var/buildstage = 0

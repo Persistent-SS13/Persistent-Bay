@@ -34,7 +34,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/visible_mode = 0 // 0 = invisible, 1 = visible, docking auth required, 2 = visible, anyone can dock
 	var/datum/shuttle/shuttle
 	var/obj/machinery/computer/bridge_computer/bridge
-	var/dock_interior = 0
+	var/dock_interior = 0 // 0 = exterior, 1 = interior
 
 /obj/machinery/docking_beacon/New()
 	..()
@@ -285,7 +285,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/list/turfs = get_turfs()
 	for(var/turf/T in turfs)
 		if(dock_interior)
-			message_admins("Dock check [T.type]")
 			if(istype(T, /turf/simulated/wall))
 				return 1
 		else

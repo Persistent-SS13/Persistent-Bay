@@ -34,7 +34,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/visible_mode = 0 // 0 = invisible, 1 = visible, docking auth required, 2 = visible, anyone can dock
 	var/datum/shuttle/shuttle
 	var/obj/machinery/computer/bridge_computer/bridge
-	var/dock_interior = 0
+	var/dock_interior = 0 // 0 = exterior, 1 = interior
 
 /obj/machinery/docking_beacon/New()
 	..()
@@ -107,6 +107,16 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			user.visible_message("[user.name] unsecures [src.name] from the floor.", \
 				"You unsecure the [src.name] from the floor.", \
 				"You hear a ratchet")
+			// Reset when unsecured
+			shuttle = null
+			faction = 0
+			status = 0
+			dock_interior = 0
+			dimensions = 1
+			bridge = null
+			id = "docking port"
+			visible_mode = 0
+			faction = null
 		return
 
 	return ..()
@@ -275,7 +285,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/list/turfs = get_turfs()
 	for(var/turf/T in turfs)
 		if(dock_interior)
-			message_admins("Dock check [T.type]")
 			if(istype(T, /turf/simulated/wall))
 				return 1
 		else
@@ -348,6 +357,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	shuttle.bridge = bridge
 	bridge.dock = src
 	shuttle.setup()
+	status = 4
 	to_chat(user, "Construction complete, finalize with bridge computer.")
 
 

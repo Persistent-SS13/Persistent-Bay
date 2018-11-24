@@ -24,7 +24,7 @@
 		"pitchblende",
 		"platinum",
 		"hematite",
-		"graphene",
+		"graphite",
 		"diamond",
 		"gold",
 		"silver",
@@ -40,7 +40,8 @@
 		"tungsten",
 		"sand",
 		"copper",
-		"bluespace crystal"
+		"bluespace crystal",
+		"titanium"
 		)
 
 	//Upgrades

@@ -298,7 +298,7 @@ var/list/mining_floors = list()
 	overlays -= ore_overlay
 	ore_overlay = null
 
-/turf/simulated/mineral/proc/DropMineral()
+/turf/simulated/mineral/proc/DropMineral(var/howmany)
 	if(!mineral)
 		return
 
@@ -307,6 +307,8 @@ var/list/mining_floors = list()
 	if(geologic_data && istype(O))
 		geologic_data.UpdateNearbyArtifactInfo(src)
 		O.geologic_data = geologic_data
+	if(howmany >= 0)
+		O.add(howmany-1)
 	return O
 
 /turf/simulated/mineral/proc/GetDrilled(var/artifact_fail = 0)
@@ -314,8 +316,8 @@ var/list/mining_floors = list()
 	if (mineral && mineral.ore_result_amount)
 
 		//if the turf has already been excavated, some of it's ore has been removed
-		for (var/i = 1 to mineral.ore_result_amount - mined_ore)
-			DropMineral()
+		//for (var/i = 1 to mineral.ore_result_amount - mined_ore)
+		DropMineral(mineral.ore_result_amount - mined_ore)
 
 	//destroyed artifacts have weird, unpleasant effects
 	//make sure to destroy them before changing the turf though

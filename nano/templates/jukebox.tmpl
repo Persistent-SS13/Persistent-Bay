@@ -7,6 +7,7 @@ Used In File(s): \code\game\machinery\jukebox.dm
 <div>
     {{:helper.link('Play' , 'play', {'play' : 1}, data.playing == 1 ? 'disabled' : null, null)}}
     {{:helper.link('Stop' , 'stop', {'stop' : 1}, data.playing == 0 ? 'disabled' : null, null)}}
+	
 </div>
 
 <h2>Genre</h2>
@@ -16,8 +17,10 @@ Used In File(s): \code\game\machinery\jukebox.dm
 {{:helper.link("Country", '', {'change_genre' : 'Classical'}, data.genre == 'Classical' ? 'disabled' : null, null)}}
 {{:helper.link("Jazz", '', {'change_genre' : 'Jazz'}, data.genre == 'Jazz' ? 'disabled' : null, null)}}
 {{:helper.link("Classical", '', {'change_genre' : 'Classical'}, data.genre == 'Classical' ? 'disabled' : null, null)}}
+{{:helper.link("Faeren", '', {'change_genre' : 'Faeren'}, data.genre == 'Faeren' ? 'disabled' : null, null)}}
 {{:helper.link("Agarthan", '', {'change_genre' : 'Agarthan'}, data.genre == 'Agarthan' ? 'disabled' : null, null)}}
 {{:helper.link("Rockin", '', {'change_genre' : 'Rockin'}, data.genre == 'Rockin' ? 'disabled' : null, null)}}
+{{:helper.link("Spacer/Mercenary", '', {'change_genre' : 'Spacer'}, data.genre == 'Spacer' ? 'disabled' : null, null)}}
 {{:helper.link("SS13", '', {'change_genre' : 'SS13'}, data.genre == 'SS13' ? 'disabled' : null, null)}}
 {{:helper.link("ALL", '', {'change_genre' : 'ALL'}, data.genre == 'ALL' ? 'disabled' : null, null)}}
 
@@ -125,6 +128,35 @@ Used In File(s): \code\game\machinery\jukebox.dm
 
 {{/if}}
 
+{{if data.genre == 'Spacer'}}
+
+<H3><span class="white">Spacer/Mercenary:</span></H3>
+<div class="itemContent">
+    {{for data.tracks_spacer}}
+        <div class="item">
+            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
+        </div>
+    {{/for}}
+</div>
+
+
+{{/if}}
+
+{{if data.genre == 'Faeren'}}
+
+<H3><span class="white">Spacer/Mercenary:</span></H3>
+<div class="itemContent">
+    {{for data.tracks_faeren}}
+        <div class="item">
+            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
+        </div>
+    {{/for}}
+</div>
+
+
+{{/if}}
+
+
 
 {{if data.genre == 'SS13'}}
 <H3><span class="white">SS13:</span></H3>
@@ -193,6 +225,15 @@ Used In File(s): \code\game\machinery\jukebox.dm
     {{/for}}
 </div>
 
+<H3><span class="white">Faeren:</span></H3>
+<div class="itemContent">
+    {{for data.tracks_faeren}}
+        <div class="item">
+            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
+        </div>
+    {{/for}}
+</div>
+
 
 <H3><span class="white">Agarthan:</span></H3>
 <div class="itemContent">
@@ -223,5 +264,15 @@ Used In File(s): \code\game\machinery\jukebox.dm
         </div>
     {{/for}}
 </div>
+
+<H3><span class="white">Spacer/Mercenary:</span></H3>
+<div class="itemContent">
+    {{for data.tracks_spacer}}
+        <div class="item">
+            {{:helper.link( value.track, 'gear', {'change_track' : 1, 'title' : value.track}, value.track == data.current_track ? 'disabled' : null, null)}}    
+        </div>
+    {{/for}}
+</div>
+
 {{/if}}
 

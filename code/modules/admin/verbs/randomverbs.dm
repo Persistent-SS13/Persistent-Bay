@@ -677,16 +677,12 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	set category = "Admin"
 	set name = "Call Evacuation"
 
-	if(!ticker || !evacuation_controller)
+	if(!evacuation_controller)
 		return
 
 	if(!check_rights(R_ADMIN))	return
 
 	if(alert(src, "Are you sure?", "Confirm", "Yes", "No") != "Yes") return
-
-	if(ticker.mode.auto_recall_shuttle)
-		if(input("The evacuation will just be cancelled if you call it. Call anyway?") in list("Confirm", "Cancel") != "Confirm")
-			return
 
 	var/choice = input("Is this an emergency evacuation or a crew transfer?") in list("Emergency", "Crew Transfer")
 	evacuation_controller.call_evacuation(usr, (choice == "Emergency"))
@@ -703,7 +699,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 
 	if(alert(src, "You sure?", "Confirm", "Yes", "No") != "Yes") return
 
-	if(!ticker || !evacuation_controller)
+	if(!evacuation_controller)
 		return
 
 	evacuation_controller.cancel_evacuation()
@@ -717,7 +713,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	set category = "Admin"
 	set name = "Toggle Deny Evac"
 
-	if (!ticker || !evacuation_controller)
+	if (!evacuation_controller)
 		return
 
 	if(!check_rights(R_ADMIN))	return
@@ -735,40 +731,6 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	for(var/t in M.attack_logs_)
 		to_chat(usr, t)
 	feedback_add_details("admin_verb","ATTL") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-
-
-/client/proc/everyone_random()
-	set category = "Fun"
-	set name = "Make Everyone Random"
-	set desc = "Make everyone have a random appearance. You can only use this before rounds!"
-
-	if(!check_rights(R_FUN))	return
-
-	if (ticker && ticker.mode)
-		to_chat(usr, "Nope you can't do this, the game's already started. This only works before rounds!")
-		return
-
-	if(ticker.random_players)
-		ticker.random_players = 0
-		message_admins("Admin [key_name_admin(usr)] has disabled \"Everyone is Special\" mode.", 1)
-		to_chat(usr, "Disabled.")
-		return
-
-
-	var/notifyplayers = alert(src, "Do you want to notify the players?", "Options", "Yes", "No", "Cancel")
-	if(notifyplayers == "Cancel")
-		return
-
-	log_admin("Admin [key_name(src)] has forced the players to have random appearances.")
-	message_admins("Admin [key_name_admin(usr)] has forced the players to have random appearances.", 1)
-
-	if(notifyplayers == "Yes")
-		to_world("<span class='notice'><b>Admin [usr.key] has forced the players to have completely random identities!</b></span>")
-
-	to_chat(usr, "<i>Remember: you can always disable the randomness by using the verb again, assuming the round hasn't started yet</i>.")
-	ticker.random_players = 1
-	feedback_add_details("admin_verb","MER") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-
 
 /client/proc/toggle_random_events()
 	set category = "Server"

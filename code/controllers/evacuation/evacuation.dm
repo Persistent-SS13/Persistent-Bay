@@ -56,46 +56,7 @@ var/datum/evacuation_controller/evacuation_controller
 	evacuation_predicates += esp
 
 /datum/evacuation_controller/proc/call_evacuation(var/mob/user, var/_emergency_evac, var/forced, var/skip_announce, var/autotransfer)
-
-	if(!can_evacuate(user, forced))
-		return 0
-
-	emergency_evacuation = _emergency_evac
-
-	var/evac_prep_delay_multiplier = 1
-	if(ticker && ticker.mode)
-		evac_prep_delay_multiplier = ticker.mode.shuttle_delay
-
-	var/additional_delay
-	if(_emergency_evac)
-		additional_delay = emergency_prep_additional_delay
-	else if(autotransfer)
-		additional_delay = autotransfer_prep_additional_delay
-	else
-		additional_delay = transfer_prep_additional_delay
-
-	evac_called_at =    world.time
-	evac_no_return =    evac_called_at +    round(evac_prep_delay/2) + additional_delay
-	evac_ready_time =   evac_called_at +    (evac_prep_delay*evac_prep_delay_multiplier) + additional_delay
-	evac_launch_time =  evac_ready_time +   evac_launch_delay
-	evac_arrival_time = evac_launch_time +  evac_transit_delay
-
-	var/evac_range = round((evac_launch_time - evac_called_at)/3)
-	auto_recall_time =  rand(evac_called_at + evac_range, evac_launch_time - evac_range)
-
-	state = EVAC_PREPPING
-
-	if(emergency_evacuation)
-		for(var/area/A in world)
-			if(istype(A, /area/hallway))
-				A.readyalert()
-		if(!skip_announce)
-			GLOB.using_map.emergency_shuttle_called_announcement()
-	else
-		if(!skip_announce)
-			priority_announcement.Announce(replacetext(replacetext(GLOB.using_map.shuttle_called_message, "%dock_name%", "[GLOB.using_map.dock_name]"),  "%ETA%", "[round(get_eta()/60)] minute\s"))
-
-	return 1
+	return 0
 
 /datum/evacuation_controller/proc/cancel_evacuation()
 

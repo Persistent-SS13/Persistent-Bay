@@ -25,8 +25,8 @@
 	. = ..()
 	if(!win_path)
 		return
-	var/auto_activate = mapload || (ticker && ticker.current_state < GAME_STATE_PLAYING)
-	if(auto_activate)
+		
+	if(mapload || GAME_STATE < RUNLEVEL_GAME)
 		activate()
 		return INITIALIZE_HINT_QDEL
 

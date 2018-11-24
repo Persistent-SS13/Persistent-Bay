@@ -147,12 +147,17 @@
 	matter = list(DEFAULT_WALL_MATERIAL = 70, "glass" = 5)
 
 /obj/item/weapon/cell/device/variable/New(newloc, charge_amount)
-	maxcharge = charge_amount
+	if(charge_amount)
+		maxcharge = charge_amount
 	..(newloc)
 
 /obj/item/weapon/cell/device/standard
 	name = "standard device power cell"
 	maxcharge = 25
+
+/obj/item/weapon/cell/device/standard/empty/New()
+	..()
+	charge = 0
 
 /obj/item/weapon/cell/device/high
 	name = "advanced device power cell"

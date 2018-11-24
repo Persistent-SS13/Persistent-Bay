@@ -20,6 +20,12 @@
 	temperature = _temperature
 	group_multiplier = _group_multiplier
 
+/datum/gas_mixture/after_load()
+	for(var/x in gas)
+		var/val = gas[x]
+		if(val < 0.01)
+			gas -= x
+	..()
 /datum/gas_mixture/proc/get_gas(gasid)
 	if(!gas.len)
 		return 0 //if the list is empty BYOND treats it as a non-associative list, which runtimes

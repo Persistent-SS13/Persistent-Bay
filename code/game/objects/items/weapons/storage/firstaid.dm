@@ -34,6 +34,9 @@
 		/obj/item/weapon/storage/pill_bottle/paracetamol
 		)
 
+/obj/item/weapon/storage/firstaid/fire/empty
+	startswith = null
+
 /obj/item/weapon/storage/firstaid/fire/New()
 	..()
 	icon_state = pick("ointment","firefirstaid")
@@ -62,6 +65,9 @@
 		/obj/item/device/healthanalyzer,
 		)
 
+/obj/item/weapon/storage/firstaid/toxin/empty
+	startswith = null
+
 /obj/item/weapon/storage/firstaid/toxin/New()
 	..()
 	icon_state = pick("antitoxin","antitoxfirstaid","antitoxfirstaid2","antitoxfirstaid3")
@@ -79,6 +85,9 @@
 		/obj/item/device/healthanalyzer,
 		)
 
+/obj/item/weapon/storage/firstaid/o2/empty
+	startswith = null
+
 /obj/item/weapon/storage/firstaid/adv
 	name = "advanced first-aid kit"
 	desc = "Contains advanced medical treatments."
@@ -91,6 +100,9 @@
 		/obj/item/stack/medical/advanced/ointment = 2,
 		/obj/item/stack/medical/splint
 		)
+
+/obj/item/weapon/storage/firstaid/adv/empty
+	startswith = null
 
 /obj/item/weapon/storage/firstaid/combat
 	name = "combat medical kit"
@@ -107,6 +119,9 @@
 		/obj/item/weapon/storage/pill_bottle/spaceacillin,
 		/obj/item/stack/medical/splint,
 		)
+
+/obj/item/weapon/storage/firstaid/combat/empty
+	startswith = null
 
 /obj/item/weapon/storage/firstaid/surgery
 	name = "surgery kit"
@@ -144,6 +159,9 @@
 		/obj/item/weapon/FixOVein,
 		/obj/item/stack/medical/advanced/bruise_pack,
 		)
+
+/obj/item/weapon/storage/firstaid/surgery/empty
+	startswith = null
 
 /*
  * Pill Bottles

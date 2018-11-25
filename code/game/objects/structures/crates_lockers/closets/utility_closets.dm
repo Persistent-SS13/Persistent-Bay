@@ -20,7 +20,7 @@
 	icon_closed = "emergency"
 	icon_opened = "emergencyopen"
 
-/obj/structure/closet/emcloset/New()
+/obj/structure/closet/emcloset/filled/New()
 	..()
 
 	switch (pickweight(list("small" = 50, "aid" = 25, "tank" = 10, "large" = 5, "both" = 10)))
@@ -75,31 +75,13 @@
 	icon_closed = "firecloset"
 	icon_opened = "fireclosetopen"
 
-/obj/structure/closet/firecloset/New()
+/obj/structure/closet/firecloset/filled/New()
 	..()
-
 	new /obj/item/clothing/suit/fire/firefighter(src)
 	new /obj/item/clothing/mask/gas(src)
 	new /obj/item/weapon/tank/oxygen/red(src)
 	new /obj/item/weapon/extinguisher(src)
 	new /obj/item/clothing/head/hardhat/red(src)
-
-/obj/structure/closet/firecloset/full/New()
-	..()
-
-	new /obj/item/clothing/suit/fire/firefighter(src)
-	new /obj/item/clothing/mask/gas(src)
-	new /obj/item/device/flashlight(src)
-	new /obj/item/weapon/tank/oxygen/red(src)
-	new /obj/item/weapon/extinguisher(src)
-	new /obj/item/clothing/head/hardhat/red(src)
-
-/obj/structure/closet/firecloset/update_icon()
-	if(!opened)
-		icon_state = icon_closed
-	else
-		icon_state = icon_opened
-
 
 /*
  * Tool Closet
@@ -111,7 +93,7 @@
 	icon_closed = "toolcloset"
 	icon_opened = "toolclosetopen"
 
-/obj/structure/closet/toolcloset/New()
+/obj/structure/closet/toolcloset/filled/New()
 	..()
 	if(prob(40))
 		new /obj/item/clothing/suit/storage/hazardvest(src)
@@ -155,7 +137,7 @@
 	icon_opened = "toolclosetopen"
 	icon_closed = "radsuitcloset"
 
-/obj/structure/closet/radiation/New()
+/obj/structure/closet/radiation/filled/New()
 	..()
 	new /obj/item/clothing/suit/radiation(src)
 	new /obj/item/clothing/head/radiation(src)
@@ -174,7 +156,7 @@
 	icon_closed = "bombsuit"
 	icon_opened = "bombsuitopen"
 
-/obj/structure/closet/bombcloset/New()
+/obj/structure/closet/bombcloset/filled/New()
 	..()
 	new /obj/item/clothing/suit/bomb_suit( src )
 	new /obj/item/clothing/under/color/black( src )
@@ -189,7 +171,7 @@
 	icon_closed = "bombsuitsec"
 	icon_opened = "bombsuitsecopen"
 
-/obj/structure/closet/bombclosetsecurity/New()
+/obj/structure/closet/bombclosetsecurity/filled/New()
 	..()
 	new /obj/item/clothing/suit/bomb_suit/security( src )
 	new /obj/item/clothing/under/rank/security( src )
@@ -224,6 +206,20 @@
 	new /obj/item/clothing/head/hardhat/red(src)
 
 /*
+ * General purpose
+ */
+/obj/structure/closet/general_wall
+	name = "wall closet"
+	desc = "It's a wall-mounted storage unit."
+	icon_state = "wall_general"
+	icon_closed = "wall_general"
+	icon_opened = "wall_general_open"
+	anchored = 1
+	density = 0
+	wall_mounted = 1
+	storage_types = CLOSET_STORAGE_ITEMS
+
+/*
  * First Aid
  */
 /obj/structure/closet/medical_wall //wall mounted medical closet
@@ -250,6 +246,9 @@
 		/obj/random/firstaid,
 		/obj/random/medical/lite = 12)
 
+/*
+ * Shipping
+ */
 /obj/structure/closet/shipping_wall
 	name = "shipping supplies closet"
 	desc = "It's a wall-mounted storage unit containing supplies for preparing shipments."

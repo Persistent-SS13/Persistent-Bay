@@ -6,15 +6,16 @@
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	var/build_machine_type
 	var/refund_amt = 2
-	var/refund_type = /obj/item/stack/material/steel
+	var/refund_material_type = /obj/item/stack/material/steel
 	var/reverse = 0 //if resulting object faces opposite its dir (like light fixtures)
+	matter = list(DEFAULT_WALL_MATERIAL = 2000)
 
 /obj/item/frame/plastic
-var/refund_type = /obj/item/stack/material/plastic
+	refund_material_type = /obj/item/stack/material/plastic
 
 /obj/item/frame/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(isWrench(W))
-		new refund_type( get_turf(src.loc), refund_amt)
+		new refund_material_type( get_turf(src.loc), refund_amt)
 		qdel(src)
 		return
 	..()
@@ -113,7 +114,7 @@ var/refund_type = /obj/item/stack/material/plastic
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "nboard00"
 	refund_amt = 2
-	refund_type = /obj/item/stack/material/cardboard
+	refund_material_type = /obj/item/stack/material/cardboard
 	build_machine_type = /obj/structure/noticeboard
 
 /obj/item/frame/noticeboard/try_build(turf/on_wall)
@@ -133,7 +134,7 @@ var/refund_type = /obj/item/stack/material/plastic
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "mirror"
 	refund_amt = 2
-	refund_type = /obj/item/stack/material/silver
+	refund_material_type = /obj/item/stack/material/silver
 	build_machine_type = /obj/structure/mirror
 
 /obj/item/frame/plastic/shower
@@ -153,6 +154,21 @@ var/refund_type = /obj/item/stack/material/plastic
 	refund_amt = 2
 	build_machine_type = /obj/machinery/flasher
 
+/obj/item/frame/oxypump
+	name = "Emergency Oxygen Pump Frame"
+	desc = "Used for building wall-mounted oxygen pumps"
+	icon = 'icons/obj/walllocker.dmi'
+	icon_state = "emerg_open"
+	refund_amt = 5
+	build_machine_type = /obj/machinery/oxygen_pump
+
+/obj/item/frame/anestheticpump
+	name = "Anesthetic Pump Frame"
+	desc = "Used for building wall-mounted oxygen pumps"
+	icon = 'icons/obj/walllocker.dmi'
+	icon_state = "anesthetic_tank_open"
+	refund_amt = 5
+	build_machine_type = /obj/machinery/oxygen_pump/anesthetic
 
 /obj/item/frame/barsign
 	name = "Bar Sign Frame"
@@ -170,6 +186,14 @@ var/refund_type = /obj/item/stack/material/plastic
 	refund_amt = 2
 	build_machine_type = /obj/structure/sink
 
+/obj/item/frame/plastic/urinal
+	name = "Urinal Frame"
+	desc = "Used for building urinals"
+	icon = 'icons/obj/watercloset.dmi'
+	icon_state = "urinal"
+	refund_amt = 2
+	build_machine_type = /obj/structure/urinal
+
 /obj/item/frame/plastic/kitchensink
 	name = "Kitchen Sink Frame"
 	desc = "Used for building Kitchen Sinks"
@@ -181,12 +205,10 @@ var/refund_type = /obj/item/stack/material/plastic
 /obj/item/frame/newscaster
 	name = "News Caster Frame"
 	desc = "Used for building News Casters"
-	icon = 'icons/obj/watercloset.dmi'
-	icon_state = "sink_alt"
+	icon = 'icons/obj/terminals.dmi'
+	icon_state = "newscaster_off"
 	refund_amt = 2
 	build_machine_type = /obj/machinery/newscaster
-
-// /obj/machinery/newscaster/security_unit
 
 /obj/item/frame/atm
 	name = "atm"
@@ -195,6 +217,62 @@ var/refund_type = /obj/item/stack/material/plastic
 	icon_state = "atm_frame"
 	build_machine_type = /obj/machinery/atm
 
+/obj/item/frame/status_display
+	name = "status display frame"
+	desc = "A status display screen frame."
+	icon = 'icons/obj/status_display.dmi'
+	icon_state = "frame"
+	build_machine_type = /obj/machinery/status_display
+
+/obj/item/frame/request_console
+	name = "request console frame"
+	desc = "A frame for a wall mounted request console."
+	icon = 'icons/obj/terminals.dmi'
+	icon_state = "req_comp_off"
+	build_machine_type = /obj/machinery/requests_console
 
 
+//---------------------------------
+// Wall mounted closets
+//---------------------------------
+/obj/item/frame/hydrant_closet
+	name = "fire-safety closet frame"
+	desc = "Used for building wall-mounted fire safety closets"
+	icon = 'icons/obj/closet.dmi'
+	icon_state = "hydrant_open"
+	build_machine_type = /obj/structure/closet/hydrant
 
+/obj/item/frame/medical_closet
+	name = "first-aid closet frame"
+	desc = "Used for building wall-mounted first aid closets"
+	icon = 'icons/obj/closet.dmi'
+	icon_state = "medical_wall_first_aid_open"
+	build_machine_type = /obj/structure/closet/medical_wall
+
+/obj/item/frame/general_closet
+	name = "genera closet frame"
+	desc = "Used for building wall-mounted closets"
+	icon = 'icons/obj/closet.dmi'
+	icon_state = "wall_general_open"
+	build_machine_type = /obj/structure/closet/general_wall
+
+/obj/item/frame/shipping_closet
+	name = "shipping closet frame"
+	desc = "Used for building wall-mounted shipping supplies closets"
+	icon = 'icons/obj/closet.dmi'
+	icon_state = "shipping_wall_open"
+	build_machine_type = /obj/structure/closet/shipping_wall
+
+/obj/item/frame/extinguisher_cabinet
+	name = "extinguisher cabinet frame"
+	desc = "Used for building wall-mounted extinguisher cabinets"
+	icon = 'icons/obj/closet.dmi'
+	icon_state = "extinguisher_empty"
+	build_machine_type = /obj/structure/extinguisher_cabinet
+
+/obj/item/frame/wall_safe
+	name = "wall safe frame"
+	desc = "Used for building wall-mounted secure safe"
+	icon = 'icons/obj/closet.dmi'
+	icon_state = "extinguisher_empty"
+	build_machine_type = /obj/item/weapon/storage/secure/safe

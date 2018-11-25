@@ -179,17 +179,21 @@ var/list/flooring_types
 	name = "processing strata"
 	icon = 'icons/turf/flooring/circuit.dmi'
 	icon_base = "bcircuit"
-	build_type = null
+	build_type = /obj/item/stack/tile/floor_bcircuit
+	build_cost = 1
+	build_time = 30
 	flags = TURF_ACID_IMMUNE | TURF_CAN_BREAK | TURF_REMOVE_WRENCH
 	can_paint = 1
 
 /decl/flooring/reinforced/circuit/green
 	icon_base = "gcircuit"
+	build_type = /obj/item/stack/tile/floor_gcircuit
 
 /decl/flooring/reinforced/circuit/red
 	icon_base = "rcircuit"
 	flags = TURF_ACID_IMMUNE
 	can_paint = 0
+	build_type = /obj/item/stack/tile/floor_rcircuit
 
 /decl/flooring/reinforced/cult
 	name = "engraved floor"

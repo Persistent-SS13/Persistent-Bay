@@ -57,9 +57,14 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 	if(stat & NOPOWER)
 		if(icon_state != "req_comp_off")
 			icon_state = "req_comp_off"
-	else
-		if(icon_state == "req_comp_off")
-			icon_state = "req_comp[newmessagepriority]"
+		return
+
+	if(panel_open)
+		icon_state = "req_comp_off"
+		return
+
+	if(icon_state == "req_comp_off")
+		icon_state = "req_comp[newmessagepriority]"
 
 /obj/machinery/requests_console/New()
 	..()
@@ -195,28 +200,12 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 
 					//err... hacking code, which has no reason for existing... but anyway... it was once supposed to unlock priority 3 messanging on that console (EXTREME priority...), but the code for that was removed.
 /obj/machinery/requests_console/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)
-	/*
-	if (istype(O, /obj/item/weapon/crowbar))
-		if(open)
-			open = 0
-			icon_state="req_comp0"
-		else
-			open = 1
-			if(hackState == 0)
-				icon_state="req_comp_open"
-			else if(hackState == 1)
-				icon_state="req_comp_rewired"
-	if (istype(O, /obj/item/weapon/screwdriver))
-		if(open)
-			if(hackState == 0)
-				hackState = 1
-				icon_state="req_comp_rewired"
-			else if(hackState == 1)
-				hackState = 0
-				icon_state="req_comp_open"
-		else
-			to_chat(user, "You can't do much with that.") */
-	if (istype(O, /obj/item/weapon/card/id))
+	if(default_deconstruction_screwdriver(user, O))
+		updateUsrDialog()
+		return
+	else if(default_deconstruction_crowbar(user, O))
+		return
+	else if (istype(O, /obj/item/weapon/card/id))
 		if(inoperable(MAINT)) return
 		if(screen == RCS_MESSAUTH)
 			var/obj/item/weapon/card/id/T = O
@@ -231,13 +220,15 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 				reset_message()
 				to_chat(user, "<span class='warning'>You are not authorized to send announcements.</span>")
 			updateUsrDialog()
-	if (istype(O, /obj/item/weapon/stamp))
+		return
+	else if (istype(O, /obj/item/weapon/stamp))
 		if(inoperable(MAINT)) return
 		if(screen == RCS_MESSAUTH)
 			var/obj/item/weapon/stamp/T = O
 			msgStamped = text("<font color='blue'><b>Stamped with the [T.name]</b></font>")
 			updateUsrDialog()
-	return
+		return
+	return ..()
 
 /obj/machinery/requests_console/proc/reset_message(var/mainmenu = 0)
 	message = ""

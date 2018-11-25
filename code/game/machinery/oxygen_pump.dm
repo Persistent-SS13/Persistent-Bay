@@ -22,9 +22,13 @@
 	idle_power_usage = 10
 	active_power_usage = 120 // No idea what the realistic amount would be.
 
-/obj/machinery/oxygen_pump/New()
+/obj/machinery/oxygen_pump/filled/New()
 	..()
 	tank = new spawn_type (src)
+	contained = new mask_type (src)
+
+/obj/machinery/oxygen_pump/New()
+	..()
 	contained = new mask_type (src)
 
 /obj/machinery/oxygen_pump/Destroy()
@@ -133,13 +137,13 @@
 /obj/machinery/oxygen_pump/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(isScrewdriver(W))
 		stat ^= MAINT
+		panel_open = !panel_open
 		user.visible_message("<span class='notice'>\The [user] [stat & MAINT ? "opens" : "closes"] \the [src].</span>", "<span class='notice'>You [stat & MAINT ? "open" : "close"] \the [src].</span>")
-		if(stat & MAINT)
-			icon_state = icon_state_open
-		if(!stat)
-			icon_state = icon_state_closed
-		//TO-DO: Open icon
-	if(istype(W, /obj/item/weapon/tank) && (stat & MAINT))
+		update_icon()
+		return
+	else if(default_deconstruction_crowbar(user,W))
+		return
+	else if(istype(W, /obj/item/weapon/tank) && (stat & MAINT))
 		if(tank)
 			to_chat(user, "<span class='warning'>\The [src] already has a tank installed!</span>")
 		else
@@ -148,8 +152,18 @@
 			tank = W
 			user.visible_message("<span class='notice'>\The [user] installs \the [tank] into \the [src].</span>", "<span class='notice'>You install \the [tank] into \the [src].</span>")
 			src.add_fingerprint(user)
-	if(istype(W, /obj/item/weapon/tank) && !stat)
+		return
+	else if(istype(W, /obj/item/weapon/tank) && !stat)
 		to_chat(user, "<span class='warning'>Please open the maintenance hatch first.</span>")
+		return
+	return ..()
+
+/obj/machinery/oxygen_pump/update_icon()
+	..()
+	if(stat & MAINT)
+		icon_state = icon_state_open
+	else
+		icon_state = icon_state_closed
 
 /obj/machinery/oxygen_pump/examine(var/mob/user)
 	. = ..()
@@ -157,7 +171,6 @@
 		to_chat(user, "The meter shows [round(tank.air_contents.return_pressure())]")
 	else
 		to_chat(user, "<span class='warning'>It is missing a tank!</span>")
-
 
 /obj/machinery/oxygen_pump/Process()
 	if(breather)

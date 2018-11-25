@@ -94,7 +94,14 @@
 	else return ..()
 
 /obj/structure/morgue/attackby(P as obj, mob/user as mob)
-	if (istype(P, /obj/item/weapon/pen))
+	if(isWrench(P))
+		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
+		to_chat(user, "You begin dismantling \the [src]..")
+		if(do_after(user, 5 SECONDS, src))
+			to_chat(user, "You dismantled \the [src]!")
+			qdel(src)
+		return
+	else if (istype(P, /obj/item/weapon/pen))
 		var/t = input(user, "What would you like the label to be?", text("[]", src.name), null)  as text
 		if (user.get_active_hand() != P)
 			return
@@ -105,8 +112,10 @@
 			src.name = text("Morgue- '[]'", t)
 		else
 			src.name = "Morgue"
-	src.add_fingerprint(user)
-	return
+		src.add_fingerprint(user)
+		return
+
+	return ..()
 
 /obj/structure/morgue/relaymove(mob/user as mob)
 	if (user.stat)
@@ -278,7 +287,14 @@
 	update()
 
 /obj/structure/crematorium/attackby(P as obj, mob/user as mob)
-	if (istype(P, /obj/item/weapon/pen))
+	if(isWrench(P))
+		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
+		to_chat(user, "You begin dismantling \the [src]..")
+		if(do_after(user, 5 SECONDS, src))
+			to_chat(user, "You dismantled \the [src]!")
+			qdel(src)
+		return
+	else if (istype(P, /obj/item/weapon/pen))
 		var/t = input(user, "What would you like the label to be?", text("[]", src.name), null)  as text
 		if (user.get_active_hand() != P)
 			return
@@ -289,8 +305,9 @@
 			src.name = text("Crematorium- '[]'", t)
 		else
 			src.name = "Crematorium"
-	src.add_fingerprint(user)
-	return
+		src.add_fingerprint(user)
+		return
+	return ..()
 
 /obj/structure/crematorium/relaymove(mob/user as mob)
 	if (user.stat || locked)
@@ -311,9 +328,6 @@
 	return
 
 /obj/structure/crematorium/proc/cremate(atom/A, mob/user as mob)
-//	for(var/obj/machinery/crema_switch/O in src) //trying to figure a way to call the switch, too drunk to sort it out atm
-//		if(var/on == 1)
-//		return
 	if(cremating)
 		return //don't let you cremate something twice or w/e
 
@@ -321,7 +335,6 @@
 		for (var/mob/M in viewers(src))
 			M.show_message("<span class='warning'>You hear a hollow crackle.</span>", 1)
 			return
-
 	else
 		if(!isemptylist(src.search_contents_for(/obj/item/weapon/disk/nuclear)))
 			to_chat(usr, "You get the feeling that you shouldn't cremate one of the items in the cremator.")

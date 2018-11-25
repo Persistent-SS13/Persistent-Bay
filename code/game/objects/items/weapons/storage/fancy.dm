@@ -83,6 +83,9 @@
 	key_type = /obj/item/weapon/flame/candle
 	startswith = list(/obj/item/weapon/flame/candle = 5)
 
+/obj/item/weapon/storage/fancy/candle_box/empty
+	startswith = null
+
 /*
  * Crayon Box
  */
@@ -279,6 +282,9 @@
 /obj/item/weapon/storage/fancy/vials/update_icon()
 	var/key_count = count_by_type(contents, key_type)
 	src.icon_state = "[initial(icon_state)][Floor(key_count/2)]"
+
+/obj/item/weapon/storage/fancy/vials/empty
+	startswith = null
 
 /*
  * Not actually a "fancy" storage...

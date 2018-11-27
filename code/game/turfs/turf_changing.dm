@@ -16,7 +16,7 @@
 		T.update_icon()
 
 //Creates a new turf
-/turf/proc/ChangeTurf(var/turf/N, var/tell_universe=1, var/force_lighting_update = 0)
+/turf/proc/ChangeTurf(var/turf/N, var/tell_universe=1, var/force_lighting_update = 0, var/space_override = 0)
 	var/old_type = src.type
 	var/old_resources = null
 	if(istype(src, /turf/simulated))
@@ -26,7 +26,7 @@
 		return
 
 	// This makes sure that turfs are not changed to space when one side is part of a zone
-	if(N == /turf/space)
+	if(N == /turf/space && !space_override)
 		for(var/atom/movable/lighting_overlay/overlay in contents)
 			overlay.loc = null
 			qdel(overlay)
@@ -113,14 +113,14 @@
 		src.decals = other.decals.Copy()
 		src.update_icon()
 	return 1
-	
+
 /turf/simulated/wall/transport_properties_from(turf/simulated/wall/other)
 	if(!..())
 		return 0
 	material = other.material
 	p_material = other.p_material
-	
-	
+
+
 //I would name this copy_from() but we remove the other turf from their air zone for some reason
 /turf/simulated/floor/transport_properties_from(turf/simulated/other)
 	if(!..())

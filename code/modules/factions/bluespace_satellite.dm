@@ -34,6 +34,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/visible_mode = 0 // 0 = invisible, 1 = visible, docking auth required, 2 = visible, anyone can dock
 	var/datum/shuttle/shuttle
 	var/obj/machinery/computer/bridge_computer/bridge
+	var/dock_interior = 0 // 0 = exterior, 1 = interior
 
 /obj/machinery/docking_beacon/New()
 	..()
@@ -106,6 +107,16 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			user.visible_message("[user.name] unsecures [src.name] from the floor.", \
 				"You unsecure the [src.name] from the floor.", \
 				"You hear a ratchet")
+			// Reset when unsecured
+			shuttle = null
+			faction = 0
+			status = 0
+			dock_interior = 0
+			dimensions = 1
+			bridge = null
+			id = "docking port"
+			visible_mode = 0
+			faction = null
 		return
 
 	return ..()
@@ -143,6 +154,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			if(5)
 				data["status"] = "Obstructed"
 		data["dimension"] = dimensions
+		data["interior"] = dock_interior
 	// update the ui if it exists, returns null if no ui is passed/found
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
@@ -230,6 +242,8 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 				req_access_faction = faction.uid
 	if(href_list["set_visible"])
 		visible_mode = text2num(href_list["set_visible"])
+	if(href_list["set_interior"])
+		dock_interior = text2num(href_list["set_interior"])
 	if(href_list["change_id"])
 		var/select_name = sanitizeName(input(usr,"Enter a new dock ID","DOCK ID") as null|text, MAX_NAME_LEN)
 		if(select_name)
@@ -258,16 +272,24 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	for(var/turf/T in turfs)
 		if(x < 7 || y < 7 || x > 193 || y > 193)
 			return 1
-		if(!istype(T, /turf/space) && !istype(T, /turf/simulated/open))
-			return 1
+		if(dock_interior)
+			if(istype(T, /turf/simulated/wall))
+				return 1
+		else
+			if(!istype(T, /turf/space) && !istype(T, /turf/simulated/open))
+				return 1
 	return 0
 
 
 /obj/machinery/docking_beacon/proc/check_occupied()
 	var/list/turfs = get_turfs()
 	for(var/turf/T in turfs)
-		if(!istype(T.loc, /area/space))
-			return 1
+		if(dock_interior)
+			if(istype(T, /turf/simulated/wall))
+				return 1
+		else
+			if(!istype(T.loc, /area/space))
+				return 1
 	return 0
 
 
@@ -292,7 +314,6 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	var/valid_bridge_computer_found = 0
 	var/bcomps = 0
 	var/list/engines = list()
-	var/name
 	var/obj/machinery/computer/bridge_computer/bridge
 	for(var/turf/T in turfs)
 		if(!istype(T.loc, /area/space))
@@ -321,21 +342,23 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 		engine.permaanchor = 1
 	var/area/shuttle/A = new
 	A.name = "shuttle"
-	//var/ma
-	//ma = A.master ? "[A.master]" : "(null)"
 	A.power_equip = 0
 	A.power_light = 0
 	A.power_environ = 0
 	A.always_unpowered = 0
 	A.contents.Add(turfs)
 
-
-	shuttle = new(name, src)
+	shuttle = new()
+	shuttle.initial_location = src
+	shuttle.name = "Shuttle"
 	shuttle.size = dimensions
 	bridge.shuttle = shuttle
 	shuttle.shuttle_area = list(A)
 	shuttle.bridge = bridge
 	bridge.dock = src
+	shuttle.setup()
+	status = 4
+	to_chat(user, "Construction complete, finalize with bridge computer.")
 
 
 /obj/machinery/docking_beacon/proc/get_turfs()

@@ -54,22 +54,16 @@
 	return 1
 
 /turf/attack_hand(mob/user)
+	user.setClickCooldown(DEFAULT_QUICK_COOLDOWN)
+
 	if(user.restrained())
 		return 0
-	if(user.pulling.anchored || !isturf(user.pulling.loc))
+	if(isnull(user.pulling) || user.pulling.anchored || !isturf(user.pulling.loc))
 		return 0
 	if(user.pulling.loc != user.loc && get_dist(user, user.pulling) > 1)
 		return 0
-
-	user.setClickCooldown(DEFAULT_QUICK_COOLDOWN)
-	if(ismob(user.pulling))
-		var/mob/M = user.pulling
-		var/atom/movable/t = M.pulling
-		M.stop_pulling()
-		step(user.pulling, get_dir(user.pulling.loc, src))
-		M.start_pulling(t)
-	else
-		step(user.pulling, get_dir(user.pulling.loc, src))
+	if(user.pulling)
+		do_pull_click(user, src)
 	return 1
 
 turf/attackby(obj/item/weapon/W as obj, mob/user as mob)

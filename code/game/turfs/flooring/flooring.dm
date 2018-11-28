@@ -6,9 +6,10 @@ var/list/flooring_types
 		var/list/possible = subtypesof(/decl/flooring)
 		for(var/decl in possible)
 			flooring_types["[decl]"] = new decl
-	if(!flooring_types["[flooring_path]"])
-		flooring_types["[flooring_path]"] = new flooring_path
-	return flooring_types["[flooring_path]"]
+	if(flooring_path)
+		if(!flooring_types["[flooring_path]"])
+			flooring_types["[flooring_path]"] = new flooring_path
+		return flooring_types["[flooring_path]"]
 
 // State values:
 // [icon_base]: initial base icon_state without edges or corners.

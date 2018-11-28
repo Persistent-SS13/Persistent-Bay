@@ -825,22 +825,19 @@ var/global/floorIsLava = 0
 
 	if(!check_rights(R_ADMIN))
 		return
-	var/choice = input("Choose the zlevel to change ambience on. The lower zlevel is included.", "Zlevel") as anything in ambient_controller.zlevel_data|null
+	var/choice = input("Choose the zlevel to change ambience on.", "Zlevel") as anything in SSmusic.zLevelAmbience|null
 	if(choice)
-		var/datum/music_controller/controller = ambient_controller.zlevel_data[choice]
-		if(!controller)
-			message_admins("zlevel with no music controller [choice]")
-			return
-		var/choice2 = input("Choose the type of ambient music to play.", "Tone") as anything in list("action", "neutral", "fun", "dark", "none")|null
-		if(choice2)
-			if(choice2 == "none") controller.tone = null
-			else
-				if(choice2 != controller.tone)
-					controller.timetostop = 0
-					controller.tone = choice2
+		var/datum/music_controller/controller = SSmusic.zLevelAmbience[choice]
+		var/choice2 = input("Choose the type of ambient music to play.", "Tone") as anything in SSmusic.genres|null|"None"
 
-					
-/datum/admins/proc/fixemail()					
+		if(choice2)
+			if(choice2 == "None")
+				controller.genre = list()
+			else
+				controller.genre = choice2
+
+
+/datum/admins/proc/fixemail()
 	set category = "Server"
 	set desc="Refactor Email accounts"
 	set name="Refactor Email accounts"
@@ -851,7 +848,7 @@ var/global/floorIsLava = 0
 		for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
 			if(replacetext(record.get_name(), " ", "_") == account.login)
 				record.email = account
-	
+
 /datum/admins/proc/buildemail()
 	set category = "Server"
 	set desc="Build Email accounts"
@@ -884,9 +881,9 @@ var/global/floorIsLava = 0
 				record2.linked_account = record.linked_account
 				record2.linked_account.after_load()
 		if(!found)
-			recovering |= record	
+			recovering |= record
 	GLOB.all_crew_records |= recovering
-	
+
 /datum/admins/proc/autocryo()
 	set category = "Server"
 	set desc="Autocryo"
@@ -899,7 +896,7 @@ var/global/floorIsLava = 0
 		if(!H.loc) continue
 		cryo.occupant = H
 		cryo.despawnOccupant(1)
-					
+
 /datum/admins/proc/spacejunk()
 	set category = "Server"
 	set desc="Delete Space Junk"
@@ -919,8 +916,8 @@ var/global/floorIsLava = 0
 		if(found_lattice) continue
 		for(var/obj/ob in T.contents)
 			ob.loc = null
-			qdel(ob)					
-	
+			qdel(ob)
+
 /datum/admins/proc/retrieve_email()
 	set category = "Server"
 	set desc = "Retrieve Email"
@@ -937,7 +934,7 @@ var/global/floorIsLava = 0
 					return
 				to_chat(usr, "Account details: login:[record.email.login] password: [record.email.password]")
 				break
-			
+
 /datum/admins/proc/retrieve_account()
 	set category = "Server"
 	set desc ="Retrieve Money Account"
@@ -962,7 +959,7 @@ var/global/floorIsLava = 0
 					var/money = round(input("Enter money amount", "New amount") as num|null)
 					if(money)
 						record.linked_account.money = money
-					
+
 				else
 					message_admins("BROKEN ACCOUNT FOR [real_name] GENERATING")
 					record.linked_account = create_account(record.get_name(), 0, null)
@@ -970,8 +967,8 @@ var/global/floorIsLava = 0
 					record.linked_account = record.linked_account.after_load()
 					record.linked_account.money = 1000
 					to_chat(usr, "Account details: account number # [record.linked_account.account_number] pin # [record.linked_account.remote_access_pin]")
-					
-					
+
+
 /datum/admins/proc/buildaccounts()
 	set category = "Server"
 	set desc="Build Money accounts"

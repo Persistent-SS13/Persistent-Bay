@@ -21,10 +21,19 @@
 
 	var/prior_floortype = /turf/space
 	var/prior_resources = list()
-	
+
 	thermal_conductivity = 0.040
 	heat_capacity = 10000
 	var/lava = 0
+
+/turf/simulated/floor/Initialize()
+	if(!map_storage_loaded)
+		set_flooring(get_flooring_data(initial_flooring))
+	else if(flooring)
+		set_flooring(flooring)
+	else
+		make_plating()
+
 /turf/simulated/floor/ReplaceWithLattice()
 	var/resources = prior_resources
 	var/floortype = prior_floortype
@@ -34,19 +43,12 @@
 		if(ispath(floortype, /turf/simulated))
 			T.resources = resources
 		new /obj/structure/lattice(T)
-		
+
 /turf/simulated/floor/is_plating()
 	return !flooring
-	
+
 /turf/simulated/floor/protects_atom(var/atom/A)
 	return (A.level <= 1 && !is_plating()) || ..()
-
-/turf/simulated/floor/New(var/newloc, var/floortype)
-	..(newloc)
-	if(!floortype && initial_flooring)
-		floortype = initial_flooring
-	if(floortype)
-		set_flooring(get_flooring_data(floortype))
 
 /turf/simulated/floor/proc/set_flooring(var/decl/flooring/newflooring)
 	make_plating(defer_icon_update = 1)
@@ -65,6 +67,7 @@
 	icon = base_icon
 	icon_state = base_icon_state
 	plane = PLATING_PLANE
+	color = initial(color)
 
 	if(flooring)
 		flooring.on_remove()

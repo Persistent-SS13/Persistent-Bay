@@ -77,6 +77,8 @@
 			return global.SSmaterials;
 		if("SSmobs")
 			return global.SSmobs;
+		if("SSmusic")
+			return global.SSmusic;
 		if("SSnano")
 			return global.SSnano;
 		if("SSobj")
@@ -221,8 +223,6 @@
 			return global.all_unit_tests_passed;
 		if("all_virtual_listeners")
 			return global.all_virtual_listeners;
-		if("ambient_controller")
-			return global.ambient_controller;
 		if("announced_news_types")
 			return global.announced_news_types;
 		if("antag_add_finished")
@@ -459,14 +459,12 @@
 			return global.floor_light_cache;
 		if("flooring_cache")
 			return global.flooring_cache;
-		if("flooring_types")
-			return global.flooring_types;
 		if("fluidtrack_cache")
 			return global.fluidtrack_cache;
 		if("follow_repository")
 			return global.follow_repository;
-		if("forced_ambiance_list")
-			return global.forced_ambiance_list;
+		if("forced_ambience_list")
+			return global.forced_ambience_list;
 		if("found_vars")
 			return global.found_vars;
 		if("fruit_icon_cache")
@@ -1138,6 +1136,8 @@
 			global.SSmaterials=newval;
 		if("SSmobs")
 			global.SSmobs=newval;
+		if("SSmusic")
+			global.SSmusic=newval;
 		if("SSnano")
 			global.SSnano=newval;
 		if("SSobj")
@@ -1282,8 +1282,6 @@
 			global.all_unit_tests_passed=newval;
 		if("all_virtual_listeners")
 			global.all_virtual_listeners=newval;
-		if("ambient_controller")
-			global.ambient_controller=newval;
 		if("announced_news_types")
 			global.announced_news_types=newval;
 		if("antag_add_finished")
@@ -1520,14 +1518,12 @@
 			global.floor_light_cache=newval;
 		if("flooring_cache")
 			global.flooring_cache=newval;
-		if("flooring_types")
-			global.flooring_types=newval;
 		if("fluidtrack_cache")
 			global.fluidtrack_cache=newval;
 		if("follow_repository")
 			global.follow_repository=newval;
-		if("forced_ambiance_list")
-			global.forced_ambiance_list=newval;
+		if("forced_ambience_list")
+			global.forced_ambience_list=newval;
 		if("found_vars")
 			global.found_vars=newval;
 		if("fruit_icon_cache")
@@ -2160,6 +2156,7 @@
 	"SSmapping",
 	"SSmaterials",
 	"SSmobs",
+	"SSmusic",
 	"SSnano",
 	"SSobj",
 	"SSopen_space",
@@ -2232,7 +2229,6 @@
 	"all_ui_styles",
 	"all_unit_tests_passed",
 	"all_virtual_listeners",
-	"ambient_controller",
 	"announced_news_types",
 	"antag_add_finished",
 	"antag_names_to_ids_",
@@ -2351,10 +2347,9 @@
 	"floor_decals",
 	"floor_light_cache",
 	"flooring_cache",
-	"flooring_types",
 	"fluidtrack_cache",
 	"follow_repository",
-	"forced_ambiance_list",
+	"forced_ambience_list",
 	"found_vars",
 	"fruit_icon_cache",
 	"fuel_injectors",

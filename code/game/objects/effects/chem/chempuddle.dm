@@ -96,7 +96,8 @@
 	Cross(var/mob/living/O)
 		if (!istype(O))
 			return
-		if(O.buckled || (O.m_intent == "walk" && prob(95) || prob(20) ) ) //95% chance of not slipping if walking, 20% chance of chance to not slip while running
+		var/stability = MOVING_DELIBERATELY(O) ? 95 : 20  //95% chance of not slipping if walking, 20% chance of chance to not slip while running
+		if(O.buckled || prob(stability))
 			return
 		O.slip("the [src.name]",4)
 

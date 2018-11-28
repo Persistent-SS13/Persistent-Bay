@@ -440,7 +440,7 @@
 /obj/item/weapon/cartridge/Topic(href, href_list)
 	..()
 
-	if (!usr.canmove || usr.stat || usr.restrained() || !in_range(loc, usr))
+	if (!usr.MayMove() || usr.stat || usr.restrained() || !in_range(loc, usr))
 		usr.unset_machine()
 		usr << browse(null, "window=pda")
 		return

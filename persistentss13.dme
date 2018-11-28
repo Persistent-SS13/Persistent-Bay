@@ -1226,6 +1226,7 @@
 #include "code\modules\blob\blob.dm"
 #include "code\modules\client\asset_cache.dm"
 #include "code\modules\client\client_defines.dm"
+#include "code\modules\client\client_fps.dm"
 #include "code\modules\client\client_helpers.dm"
 #include "code\modules\client\client_procs.dm"
 #include "code\modules\client\movement.dm"

@@ -57,14 +57,14 @@ SUBSYSTEM_DEF(asteroid)
 			M.forceMove(null)
 
 	for(var/Z in mob_targets)
-		for(var/mob/living/M in mob_targets["[Z]"])
+		for(var/mob/living/M in mob_targets[Z])
 			if(M.stat || !istype(get_turf(M), /turf/simulated/asteroid))
-				mob_targets -= M
+				mob_targets[Z] -= M
 
 	for(var/Z in drill_targets)
-		for(var/obj/machinery/D in drill_targets["[Z]"])
+		for(var/obj/machinery/D in drill_targets[Z])
 			if(D.stat || !istype(get_turf(D), /turf/simulated/asteroid))
-				drill_targets -= D
+				drill_targets[Z] -= D
 
 	mob_targets["[current]"] = shuffle(mob_targets["[current]"])
 	asteroid_aggression["[current]"] = max(0, asteroid_aggression["[current]"] - 5)
@@ -77,9 +77,8 @@ SUBSYSTEM_DEF(asteroid)
 		var/list/events = list()
 
 		var/intensity = 1
-		var/override = 0
+		var/genre = 0
 		var/aggression = asteroid_aggression["[current]"]
-		var/datum/music_controller/music_player = ambient_controller.zlevel_data["[current * WORLD_HEIGHT]"]
 
 		if(length(mobs))
 			switch(aggression)
@@ -87,7 +86,7 @@ SUBSYSTEM_DEF(asteroid)
 					// We look pretty, gosh. Mostly
 				if(1 to 50)
 					mobs.len = ceil(mobs.len / 3)
-					override = 1
+					genre = list(MUSIC_GENRE_ASTEROID_4)
 
 					// Event A
 					LAZYDISTINCTADD(messages[EVENT_A], "The ground trembles lightly beneath your feet...")
@@ -104,7 +103,7 @@ SUBSYSTEM_DEF(asteroid)
 				if(51 to 100)
 					mobs.len = ceil(mobs.len / 3)
 					intensity = 2
-					override = 1
+					genre = list(MUSIC_GENRE_ASTEROID_4)
 
 					// Event A
 					LAZYDISTINCTADD(messages[EVENT_A], SPAN_DANGER("The ground trembles beneath your feet..."))
@@ -123,7 +122,7 @@ SUBSYSTEM_DEF(asteroid)
 				if(101 to 150)
 					mobs.len = ceil(mobs.len / 3)
 					intensity = 4
-					override = 2
+					genre = list(MUSIC_GENRE_ASTEROID_3)
 
 					// Event A
 					LAZYDISTINCTADD(messages[EVENT_A], SPAN_DANGER("The ground trembles heavily beneath your feet...!"))
@@ -142,7 +141,7 @@ SUBSYSTEM_DEF(asteroid)
 				if(151 to 200)
 					mobs.len = ceil(mobs.len / 2)
 					intensity = 6
-					override = 3
+					genre = list(MUSIC_GENRE_ASTEROID_2)
 
 					// Event A
 					LAZYDISTINCTADD(messages[EVENT_A], SPAN_DANGER("You struggle to maintain balance as the asteroid rattles under you!"))
@@ -162,7 +161,7 @@ SUBSYSTEM_DEF(asteroid)
 
 				else
 					intensity = 8
-					override = 4
+					genre = list(MUSIC_GENRE_ASTEROID_1)
 
 					// Event A
 					LAZYDISTINCTADD(messages[EVENT_A], SPAN_DANGER("You struggle to maintain balance as the asteroid rattles under you!"))
@@ -181,9 +180,13 @@ SUBSYSTEM_DEF(asteroid)
 					LAZYDISTINCTADD(sounds[DRILL], list('sound/effects/asteroid/earthquake_short.ogg', 'sound/effects/asteroid/earthquake_short2.ogg'))
 
 		// Music
-		if(music_player.override != override)
-			music_player.override = override
-			music_player.timetostop = 0
+		for(var/Z = 0; Z < WORLD_HEIGHT; Z++)
+			var/datum/music_controller/music_player = SSmusic.zLevelAmbience["[current + Z]"]
+			if(!genre)
+				genre = list(MUSIC_GENRE_NEUTRAL, MUSIC_GENRE_AMBIENT)
+			if(music_player.genre ~= genre)
+				music_player.genre = genre
+				music_player.stopTime = 0
 
 		// Generic affects
 		for(var/mob/M in mobs)

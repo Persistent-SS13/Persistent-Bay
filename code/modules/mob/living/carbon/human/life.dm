@@ -45,7 +45,8 @@
 	set background = BACKGROUND_ENABLED
 	if(!loc)
 		return
-	if (transforming)
+
+	if (HAS_TRANSFORMATION_MOVEMENT_HANDLER(src))
 		return
 	if(last_hud_update < world.time)
 		last_hud_update = world.time + 15 SECONDS

@@ -98,6 +98,15 @@
 	containername = "ballistic armor crate"
 	access = core_access_security_programs
 
+/decl/hierarchy/supply_pack/security/explosivearmor
+	name = "Armor - Security explosive resistant suit (x2)"
+	contains = list(/obj/item/clothing/head/bomb_hood/security = 2,
+					/obj/item/clothing/suit/bomb_suit/security = 2,
+					/obj/item/clothing/shoes/eod = 2)
+	cost = 60
+	containertype = /obj/structure/closet/bombclosetsecurity
+	containername = "EOD closet"
+
 //eva
 /decl/hierarchy/supply_pack/security/softsuit
 	name = "EVA - Security softsuit"

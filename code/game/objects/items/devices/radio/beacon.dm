@@ -19,7 +19,7 @@
 	set category = "Object"
 	set src in usr
 
-	if ((usr.canmove && !( usr.restrained() )))
+	if ((usr.MayMove() && !( usr.restrained() )))
 		src.code = t
 	if (!( src.code ))
 		src.code = "beacon"

@@ -96,11 +96,11 @@ var/list/_client_preferences_by_type
 	else
 		sound_to(preference_mob, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1))
 
-/datum/client_preference/play_ambiance
+/datum/client_preference/play_ambience
 	description ="Play ambience"
 	key = "SOUND_AMBIENCE"
 
-/datum/client_preference/play_ambiance/changed(var/mob/preference_mob, var/new_value)
+/datum/client_preference/play_ambience/changed(var/mob/preference_mob, var/new_value)
 	if(new_value == GLOB.PREF_NO)
 		sound_to(preference_mob, sound(null, repeat = 0, wait = 0, volume = 0, channel = 1))
 		sound_to(preference_mob, sound(null, repeat = 0, wait = 0, volume = 0, channel = 2))

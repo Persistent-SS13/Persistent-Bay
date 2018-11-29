@@ -34,6 +34,7 @@
 	var/const/deffont = "Verdana"
 	var/const/signfont = "Times New Roman"
 	var/const/crayonfont = "Comic Sans MS"
+
 /obj/item/weapon/paper/Write(savefile/f)
 	info_links = replacetext(info_links,"\ref[src]","***MY_REF***")
 
@@ -346,6 +347,9 @@
 				to_chat(user, "<span class='notice'>Take off the carbon copy first.</span>")
 				add_fingerprint(user)
 				return
+		var/obj/item/weapon/paper/other = P
+		if(!other.can_bundle())
+			return
 		var/obj/item/weapon/paper_bundle/B = new(src.loc)
 		if (name != "paper")
 			B.name = name
@@ -417,6 +421,11 @@
 
 	add_fingerprint(user)
 	return
+
+//Whether the paper can be added to a paper bundle
+/obj/item/weapon/paper/proc/can_bundle()
+	return TRUE
+
 /*
  * Paper packages (not to be confused with bundled paper)
  */

@@ -8,6 +8,15 @@
 	containertype = /obj/structure/largecrate
 	containername = "reagent dispenser crate"
 
+/decl/hierarchy/supply_pack/science/bombsuit_pack
+	name = "Equipment - Scientist explosion resistant suit"
+	contains = list(/obj/item/clothing/suit/bomb_suit,
+					/obj/item/clothing/head/bomb_hood,
+					/obj/item/clothing/shoes/eod)
+	cost = 50
+	containertype = /obj/structure/closet/bombcloset
+	containername = "EOD closet"
+
 /decl/hierarchy/supply_pack/science/virus
 	name = "Samples - Virus dishes"
 	contains = list(/obj/item/weapon/virusdish/random = 4)
@@ -56,3 +65,4 @@
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "scientist voidsuit crate"
 	access = core_access_science_programs
+

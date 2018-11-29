@@ -500,8 +500,8 @@
 
 	else if ( istype(O, /obj/item/weapon/reagent_containers) )
 		if( O.reagents.total_volume > 0 )
-			spawn(0)
-				sleep(5)
+			spawn()
+				reagents.update_total()
 				process_reagents() // Force reagents to be processed
 
 	else if(mechanical && isWrench(O))

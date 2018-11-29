@@ -8,9 +8,10 @@
 	available_on_ntnet = 1
 	nanomodule_path = /datum/nano_module/program/id_management
 	usage_flags = PROGRAM_CONSOLE
+	
 /datum/nano_module/program/id_management
 	name = "Id Printing & Management"
-	
+
 /datum/nano_module/program/id_management/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
 	var/list/data = host.initial_data()
 	var/datum/world_faction/connected_faction

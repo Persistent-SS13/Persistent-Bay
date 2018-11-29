@@ -762,6 +762,7 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/organ/internal/posibrain
 	category = "Misc"
 	sort_string = "VACAB"
+
 /**
 /datum/design/item/mmi
 	name = "Man-machine interface"
@@ -781,12 +782,14 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/device/mmi/radio_enabled
 	category = "Misc"
 	sort_string = "VACBB"
+**/
 
 /datum/design/item/defib
 	name = "auto-resuscitator"
 	id = "defibrillator"
 	req_tech = list(TECH_BIO = 5, TECH_ENGINEERING = 3, TECH_POWER = 4)
-	materials = list(DEFAULT_WALL_MATERIAL = 50000, "glass" = 30000, "gold" = 20000, "silver" = 10000, "phoron" = 1000)
+	materials = list(DEFAULT_WALL_MATERIAL = 50000, "glass" = 30000, "gold" = 20000, "silver" = 10000, "phoron" = 6000)
+	chemicals = list(/datum/reagent/acid = 20)
 	build_path = /obj/item/weapon/defibrillator
 	sort_string = "VACBC"
 
@@ -794,11 +797,11 @@ other types of metals and chemistry for reagents).
 	name = "compact auto-resuscitator"
 	id = "compact_defibrillator"
 	req_tech = list(TECH_BIO = 5, TECH_ENGINEERING = 5, TECH_POWER = 6)
-	materials = list(DEFAULT_WALL_MATERIAL = 30000, "glass" = 20000, "gold" = 15000, "silver" = 10000, "phoron" = 8000)
+	materials = list(DEFAULT_WALL_MATERIAL = 30000, "glass" = 20000, "gold" = 15000, "silver" = 10000, "phoron" = 20000)
+	chemicals = list(/datum/reagent/acid = 80)
 	build_path = /obj/item/weapon/defibrillator/compact
 	sort_string = "VACBD"
 
-**/
 /datum/design/item/lmi
 	name = "Lace-machine interface"
 	id = "lmi"
@@ -1375,3 +1378,12 @@ other types of metals and chemistry for reagents).
 	materials = list(DEFAULT_WALL_MATERIAL = 10000, "glass" = 10000)
 	build_path = /obj/item/disk/integrated_circuit/upgrade/clone
 	sort_string = "WCLAE"
+
+/datum/design/item/stethoscope
+	name = "Stethoscope"
+	desc = "An outdated medical apparatus for listening to the sounds of the human body. It also makes you look like you know what you're doing."
+	id = "stethoscope"
+	req_tech = list(TECH_BIO = 1)
+	materials = list(DEFAULT_WALL_MATERIAL = 1000)
+	build_path = /obj/item/clothing/accessory/stethoscope
+	sort_string = "WCLAF"

@@ -424,9 +424,6 @@
 	starting_accessories = list(/obj/item/clothing/accessory/armorplate/merc, /obj/item/clothing/accessory/armguards/merc, /obj/item/clothing/accessory/legguards/merc, /obj/item/clothing/accessory/storage/pouches/large)
 
 
-//All of the armor below is mostly unused
-
-
 /obj/item/clothing/suit/armor/centcomm
 	name = "\improper Cent. Com. armor"
 	desc = "A suit that protects against some damage."

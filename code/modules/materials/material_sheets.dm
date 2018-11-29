@@ -345,6 +345,9 @@
 	icon_state = "sheet-cloth"
 	default_type = "cloth"
 
+/obj/item/stack/material/cloth/ten
+	amount = 10
+
 /obj/item/stack/material/cardboard
 	name = "cardboard"
 	icon_state = "sheet-card"
@@ -361,6 +364,9 @@
 	desc = "The by-product of mob grinding."
 	icon_state = "sheet-leather"
 	default_type = "leather"
+
+/obj/item/stack/material/leather/ten
+	amount = 10
 
 /obj/item/stack/material/glass
 	name = "glass"

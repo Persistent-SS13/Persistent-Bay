@@ -60,3 +60,74 @@
 	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1, TECH_COMBAT = 1)
 	build_path = /obj/item/weapon/circuitboard/fabricator/ammofab
 	sort_string = "FABAD"
+
+/obj/item/weapon/circuitboard/fabricator/autotailor
+	name = "circuit board (auto-tailor - standard wear)"
+	build_path = /obj/machinery/fabricator/autotailor
+	origin_tech = list(TECH_DATA = 1)
+
+	var/list/names_paths = list(/obj/machinery/fabricator/autotailor = "auto-tailor  (standard wear)",
+							/obj/machinery/fabricator/autotailor/nonstandard = "circuit board (auto-tailor - non-standard wear)",
+							/obj/machinery/fabricator/autotailor/accessories = "circuit board (auto-tailor - accessories)",
+							/obj/machinery/fabricator/autotailor/combat = "circuit board (auto-tailor - tactical wear)",
+							/obj/machinery/fabricator/autotailor/storage = "circuit board (auto-tailor - storage containers)")
+
+/obj/item/weapon/circuitboard/fabricator/autotailor/attackby(obj/item/I, mob/user, params)
+	if(isScrewdriver(I))
+		set_type(pick(names_paths), user)
+
+/obj/item/weapon/circuitboard/fabricator/autotailor/proc/set_type(typepath, mob/user)
+		build_path = typepath
+		name = ("[names_paths[build_path]]")
+		to_chat(user, "<span class='notice'>You set the board to [names_paths[build_path]].</span>")
+
+/obj/item/weapon/circuitboard/fabricator/autotailor/nonstandard
+	name = "circuit board (auto-tailor - non-standard wear)"
+	build_path = /obj/machinery/fabricator/autotailor/nonstandard
+
+/obj/item/weapon/circuitboard/fabricator/autotailor/accessories
+	name = "circuit board (auto-tailor - accessories)"
+	build_path = /obj/machinery/fabricator/autotailor/accessories
+
+/obj/item/weapon/circuitboard/fabricator/autotailor/combat
+	name = "circuit board (auto-tailor - tactical wear)"
+	build_path = /obj/machinery/fabricator/autotailor/combat
+
+/obj/item/weapon/circuitboard/fabricator/autotailor/storage
+	name = "circuit board (auto-tailor - storage containers)"
+	build_path = /obj/machinery/fabricator/autotailor/storage
+
+/datum/design/circuit/autotailor_standard
+	name = "auto-tailor - standard wear"
+	id = "autotailor_standard"
+	req_tech = list(TECH_DATA = 1)
+	build_path = /obj/item/weapon/circuitboard/fabricator/autotailor
+	sort_string = "FABAE"
+
+/datum/design/circuit/autotailor_nonstandard
+	name = "auto-tailor - non-standard wear"
+	id = "autotailor_nonstandard"
+	req_tech = list(TECH_DATA = 1)
+	build_path = /obj/item/weapon/circuitboard/fabricator/autotailor
+	sort_string = "FABAF"
+
+/datum/design/circuit/autotailor_accessories
+	name = "auto-tailor - accessories"
+	id = "autotailor_accessories"
+	req_tech = list(TECH_DATA = 1)
+	build_path = /obj/item/weapon/circuitboard/fabricator/autotailor
+	sort_string = "FABAG"
+
+/datum/design/circuit/autotailor_combat
+	name = "auto-tailor - tactical wear"
+	id = "autotailor_combat"
+	req_tech = list(TECH_DATA = 1)
+	build_path = /obj/item/weapon/circuitboard/fabricator/autotailor
+	sort_string = "FABAH"
+
+/datum/design/circuit/autotailor_storage
+	name = "auto-tailor - storage containers"
+	id = "autotailor_storage"
+	req_tech = list(TECH_DATA = 1)
+	build_path = /obj/item/weapon/circuitboard/fabricator/autotailor
+	sort_string = "FABAI"

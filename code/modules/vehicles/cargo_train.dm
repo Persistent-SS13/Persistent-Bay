@@ -59,11 +59,12 @@
 	update_engine_verbs()
 
 /obj/vehicle/train/cargo/engine/Move(var/turf/destination)
-	if(on && cell.charge < (charge_use * CELLRATE))
-		turn_off()
-		update_stats()
-		if(load && is_train_head())
-			to_chat(load, "The drive motor briefly whines, then drones to a stop.")
+	if(on && cell)
+		if(cell.charge < (charge_use * CELLRATE))
+			turn_off()
+			update_stats()
+			if(load && is_train_head())
+				to_chat(load, "The drive motor briefly whines, then drones to a stop.")
 
 	if(is_train_head() && !on)
 		return 0
@@ -88,7 +89,29 @@
 			W.forceMove(src)
 			key = W
 			verbs += /obj/vehicle/train/cargo/engine/verb/remove_key
+	else if(open && isCrowbar(W))
+		to_chat(user, "You pry out the power cell.")
+		if(on)
+			to_chat(user, "The drive motor briefly whines, then drones to a stop.")
+			turn_off()
+			update_stats()
+		cell.loc = src.loc
+		cell = null
 		return
+	else if(istype(W, /obj/item/weapon/cell))
+		if(!open)
+			to_chat(user, "The maintenance hatch is closed!")
+			return
+		else
+			if(cell)
+				to_chat(user, "There is already a power cell in there!")
+				return
+			else
+				user.drop_item()
+				cell = W
+				cell.loc = src
+				to_chat(user, "You insert [W] in to [src]")
+				return
 	..()
 
 //cargo trains are open topped, so there is a chance the projectile will hit the mob ridding the train instead
@@ -210,7 +233,10 @@
 		return
 
 	to_chat(user, "The power light is [on ? "on" : "off"].\nThere are[key ? "" : " no"] keys in the ignition.")
-	to_chat(user, "The charge meter reads [cell? round(cell.percent(), 0.01) : 0]%")
+	if(cell)
+		to_chat(user, "The charge meter reads [cell? round(cell.percent(), 0.01) : 0]%")
+	else
+		to_chat(user, "There is no power cell.")
 
 /obj/vehicle/train/cargo/engine/verb/start_engine()
 	set name = "Start engine"
@@ -228,10 +254,13 @@
 	if (on)
 		to_chat(usr, "You start [src]'s engine.")
 	else
-		if(cell.charge < charge_use)
-			to_chat(usr, "[src] is out of power.")
+		if(cell)
+			if(cell.charge < charge_use)
+				to_chat(usr, "[src] is out of power.")
+			else
+				to_chat(usr, "[src]'s engine won't start.")
 		else
-			to_chat(usr, "[src]'s engine won't start.")
+			to_chat(usr, "[src] cannot start with no power cell.")
 
 /obj/vehicle/train/cargo/engine/verb/stop_engine()
 	set name = "Stop engine"

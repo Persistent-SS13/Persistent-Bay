@@ -27,12 +27,15 @@
 	var/lava = 0
 
 /turf/simulated/floor/Initialize()
+	levelupdate()
 	if(!map_storage_loaded)
 		set_flooring(get_flooring_data(initial_flooring))
 	else if(flooring)
 		set_flooring(flooring)
 	else
 		make_plating()
+
+	. = ..()
 
 /turf/simulated/floor/ReplaceWithLattice()
 	var/resources = prior_resources

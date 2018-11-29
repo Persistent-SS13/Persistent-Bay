@@ -1,8 +1,8 @@
 /datum/music_file
-    var/name
-    var/genres = list()
-    var/length = 0
-    var/path
+	var/name
+	var/genres = list()
+	var/length = 0
+	var/path
 
 /datum/music_controller
 	var/stopTime = 0

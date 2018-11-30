@@ -29,12 +29,12 @@
 			/obj/item/weapon/reagent_containers/glass/bottle/left4zed = 120,
 			/obj/item/weapon/reagent_containers/glass/bottle/robustharvest = 120),
 		"Materials" = list(
+			/obj/item/stack/material/cardboard/ten = 250,
 			/obj/item/stack/material/cloth/ten = 500,
 			/obj/item/stack/material/leather/ten = 800,
-			/obj/item/stack/material/cardboard/ten = 250,
+			/obj/item/stack/material/wood/ten = 1500,
 			/obj/item/weapon/paper = 5,
-			/obj/item/weapon/paper_package = 250,
-			/obj/item/stack/material/wood = 150,)
+			/obj/item/weapon/paper_package = 250,)
 			)
 
 /obj/machinery/biogenerator/New()

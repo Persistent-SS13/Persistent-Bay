@@ -150,16 +150,16 @@
 // This is old and terrible
 
 /obj/item/weapon/storage/sheetsnatcher
-	name = "sheet snatcher"
+	name = "material coverbag"
 	icon = 'icons/obj/mining.dmi'
 	icon_state = "sheetsnatcher"
-	desc = "A patented storage system designed for any kind of mineral sheet."
+	desc = "A small bag designed to safely transport exotic materials."
 
 	storage_ui = /datum/storage_ui/default/sheetsnatcher
 
-	var/capacity = 300; //the number of sheets it can carry.
-	w_class = ITEM_SIZE_NORMAL
-	storage_slots = 7
+	var/capacity = 60; //the number of sheets it can carry.
+	w_class = ITEM_SIZE_LARGE
+	storage_slots = 1
 
 	allow_quick_empty = 1 // this function is superceded
 	use_to_pickup = 1
@@ -252,7 +252,6 @@
 //    Sheet Snatcher (Cyborg)
 // -----------------------------
 
-/obj/item/weapon/storage/sheetsnatcher/borg
-	name = "sheet snatcher 9000"
+/obj/item/weapon/storage/sheetsnatcher/borg	//Borgs probably shouldn't have this
+	name = "material carrybag"
 	desc = ""
-	capacity = 500//Borgs get more because >specialization

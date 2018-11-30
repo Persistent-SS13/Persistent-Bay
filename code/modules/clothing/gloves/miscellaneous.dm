@@ -23,12 +23,7 @@
 /obj/item/clothing/gloves/insulated/cheap                             //Cheap Chinese Crap
 	desc = "These gloves are cheap copies of the coveted gloves, no way this can end badly."
 	name = "budget insulated gloves"
-	siemens_coefficient = 1			//Set to a default of 1, gets overridden in New()
-
-/obj/item/clothing/gloves/insulated/cheap/New()
-	..()
-	//average of 0.4, better than regular gloves' 0.75
-	siemens_coefficient = pick(0, 0.1, 0.2, 0.3, 0.4, 0.6, 1.3)
+	siemens_coefficient = 0.2	//i'm hoping this makes the gloves strong enough to keep you alive, but still too weak to casually work on live wiring
 
 /obj/item/clothing/gloves/forensic
 	desc = "Specially made gloves for forensic technicians. The luminescent threads woven into the material stand out under scrutiny."

@@ -793,7 +793,7 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/weapon/defibrillator
 	sort_string = "VACBC"
 
-/datum/design/item/defib
+/datum/design/item/defib_compact
 	name = "compact auto-resuscitator"
 	id = "compact_defibrillator"
 	req_tech = list(TECH_BIO = 5, TECH_ENGINEERING = 5, TECH_POWER = 6)

@@ -5,6 +5,8 @@
 	icon = 'icons/obj/forensics.dmi'
 	icon_state = "case"
 	item_state = "case"
+
+/obj/item/weapon/storage/briefcase/crimekit/full
 	startswith = list(
 		/obj/item/weapon/storage/box/swabs,
 		/obj/item/weapon/storage/box/fingerprints,

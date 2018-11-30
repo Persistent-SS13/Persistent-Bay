@@ -42,7 +42,7 @@
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS
 	siemens_coefficient = 0.9
 
-/obj/item/clothing/under/rank/security2
+/obj/item/clothing/under/rank/securitytwo
 	name = "security officer's uniform"
 	desc = "It's made of a slightly sturdier material, to allow for robust protection."
 	icon_state = "redshirt2"
@@ -101,8 +101,6 @@
 		slot_l_hand_str = "det_hat",
 		slot_r_hand_str = "det_hat",
 		)
-	armor = list(melee = 50, bullet = 5, laser = 25,energy = 10, bomb = 0, bio = 0, rad = 0)
-	siemens_coefficient = 0.9
 	flags_inv = BLOCKHEADHAIR
 
 /obj/item/clothing/head/det/attack_self(mob/user)

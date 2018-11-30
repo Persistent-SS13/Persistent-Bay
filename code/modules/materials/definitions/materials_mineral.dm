@@ -22,24 +22,30 @@
 		)
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
+	ore_matter = list("uranium" = 2000)
 
-/material/graphene
-	name = "graphene"
-	ore_compresses_to = "graphene"
+/material/graphite
+	name = "graphite" //Aka carbon
+	ore_compresses_to = "graphite"
 	icon_colour = "#444444"
 	icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	ore_smelts_to = "plastic"
-	ore_name = "graphene"
-	ore_smelts_to = "plastic"
+	ore_name = "graphite"
+	ore_smelts_to = "plastic" //Polyethylene(aka common plastic) is C2H4 not just carbon..
 	ore_result_amount = 5
 	ore_spread_chance = 25
 	ore_scan_icon = "mineral_common"
 	ore_icon_overlay = "lump"
 	chem_products = list(
-		/datum/reagent/carbon = 20,
-		/datum/reagent/acetone = 10
+		/datum/reagent/carbon = 40
 		)
+	ore_matter = list("graphite" = 2000)
+
+//DELETEME: Once transition is done
+/material/graphite/graphene //So old graphene ore is still usable
+	name = "graphene"
+	ore_compresses_to = "graphene"
+	ore_name = "graphene"
 
 /material/quartz
 	name = "quartz"
@@ -59,6 +65,7 @@
 		)
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
+	ore_matter = list("quartz" = 2000)
 
 
 /material/pyrite
@@ -79,6 +86,7 @@
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
 	ore_compresses_to = "pyrite"
+	ore_matter = list("pyrite" = 2000)
 
 /material/spodumene
 	name = "spodumene"
@@ -97,7 +105,8 @@
 		)
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
-	
+	ore_matter = list("spodumene" = 2000)
+
 
 /material/cinnabar
 	name = "cinnabar"
@@ -116,7 +125,8 @@
 	)
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
-	
+	ore_matter = list("cinnabar" = 2000)
+
 /material/phosphorite
 	name = "phosphorite"
 	ore_compresses_to = "phosphorite"
@@ -134,6 +144,7 @@
 	)
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
+	ore_matter = list("phosphorite" = 2000)
 
 /material/rocksalt
 	name = "rock salt"
@@ -152,7 +163,8 @@
 	)
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
-	
+	ore_matter = list("rocksalt" = 2000)
+
 
 /material/potash
 	name = "potash"
@@ -171,7 +183,8 @@
 		)
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
-	
+	ore_matter = list("potash" = 2000)
+
 
 /material/bauxite
 	name = "bauxite"
@@ -190,6 +203,8 @@
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
 	ore_compresses_to = "bauxite"
+	ore_smelts_to = "aluminum"
+	ore_matter = list("bauxite" = 2000)
 
 /material/sand
 	name = "sand"
@@ -204,6 +219,7 @@
 	chem_products = list(
 		/datum/reagent/silicon = 20
 		)
+	ore_matter = list("sand" = 2000)
 
 /material/phoron
 	name = "phoron"
@@ -235,6 +251,7 @@
 		)
 	xarch_source_mineral = "phoron"
 	ore_icon_overlay = "gems"
+	ore_matter = list("phoron" = 2000)
 
 /material/phoron/supermatter
 	name = "supermatter"

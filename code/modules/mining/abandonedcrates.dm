@@ -37,7 +37,7 @@
 			new/obj/item/weapon/reagent_containers/glass/beaker/bluespace(src)
 		if(16 to 20)
 			for(var/i = 0, i < 10, i++)
-				new/obj/item/weapon/ore/diamond(src)
+				new/obj/item/stack/ore/diamond(src)
 		if(21 to 25)
 			for(var/i = 0, i < 3, i++)
 				new/obj/machinery/portable_atmospherics/hydroponics(src)

@@ -421,3 +421,15 @@
 /obj/item/stack/material/generic/Initialize()
 	. = ..()
 	if(material) color = material.icon_colour
+
+/obj/item/stack/material/aluminum
+	name = "aluminum"
+	icon_state = "sheet-silver"
+	default_type = "aluminum"
+	apply_colour = 1
+
+/obj/item/stack/material/aluminum/ten
+	amount = 10
+
+/obj/item/stack/material/aluminum/fifty
+	amount = 50

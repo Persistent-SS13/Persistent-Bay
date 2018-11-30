@@ -63,7 +63,7 @@
 	name = "Bobo"
 	origin = "Floating Rock"
 
-	possible_wanted_items  = list(/obj/item/weapon/ore                        = TRADER_ALL)
+	possible_wanted_items  = list(/obj/item/stack/ore                        = TRADER_ALL)
 	possible_trading_items = list(/obj/machinery/power/supermatter            = TRADER_ALL,
 								/obj/item/weapon/aiModule                     = TRADER_SUBTYPES_ONLY)
 	want_multiplier = 5000

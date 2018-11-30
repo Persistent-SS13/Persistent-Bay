@@ -37,7 +37,7 @@
 			var/data_value = 1
 
 			switch(metal)
-				if("sand", "graphene", "hematite", "tetrahedrite", "rock salt", "pyrite")
+				if("sand", "graphite", "hematite", "tetrahedrite", "rock salt", "pyrite")
 					ore_type = "surface minerals"
 				if("gold", "silver", "diamond", "platinum", "tungsten")
 					ore_type = "precious metals"

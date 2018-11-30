@@ -42,6 +42,7 @@
 		"billion_lower" = 3
 		)
 	ore_icon_overlay = "nugget"
+	ore_matter = list("gold" = 2000)
 
 /material/gold/bronze //placeholder for ashtrays
 	name = "bronze"
@@ -57,16 +58,19 @@
 	stack_origin_tech = list(TECH_MATERIAL = 2)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
-	chem_products = list(
-		/datum/reagent/copper = 12,
-		/datum/reagent/silver = 8
-		)
 	ore_smelts_to = "copper"
 	ore_result_amount = 5
 	ore_spread_chance = 10
-	ore_name = "tetrahedrite"
+	ore_name = "freibergite" //(Ag,Cu,Fe)12(Sb,As)4S13
 	ore_scan_icon = "mineral_common"
 	ore_icon_overlay = "shiny"
+	chem_products = list(
+		/datum/reagent/copper = 12,
+		/datum/reagent/iron = 12,
+		/datum/reagent/silver = 12,
+		/datum/reagent/sulfur = 14,
+		)
+	ore_matter = list("copper" = 1200, "silver" = 1200, "iron" = 1200)
 
 /material/silver
 	name = "silver"
@@ -90,6 +94,7 @@
 	ore_name = "native silver"
 	ore_scan_icon = "mineral_uncommon"
 	ore_icon_overlay = "shiny"
+	ore_matter = list("silver" = 1200)
 
 /material/steel
 	name = DEFAULT_WALL_MATERIAL
@@ -105,7 +110,7 @@
 				/datum/reagent/iron = 15,
 				/datum/reagent/carbon = 5
 				)
-	alloy_materials = list("hematite" = 1875, "graphene" = 1875)
+	alloy_materials = list("iron" = 1875, "graphite" = 1875) //graphite is carbon
 	alloy_product = TRUE
 	ore_smelts_to = "steel"
 
@@ -139,9 +144,10 @@
 	name = "titanium"
 	brute_armor = 10
 	burn_armor = 8
-	integrity = 200
+	integrity = 250
 	melting_point = 3000
-	weight = 18
+	weight = 15
+	hardness = 75
 	stack_type = null
 	icon_colour = "#d1e6e3"
 	icon_base = "metal"
@@ -150,6 +156,16 @@
 	icon_table = "metal"
 	alloy_materials = null
 	alloy_product = FALSE
+	stack_origin_tech = list(TECH_MATERIAL = 3)
+	sheet_singular_name = "ingot"
+	sheet_plural_name = "ingots"
+	ore_smelts_to = "titanium"
+	ore_result_amount = 5
+	ore_spread_chance = 10
+	ore_name = "ilmenite" //iron titanium oxide, FeTiO3
+	ore_scan_icon = "mineral_uncommon"
+	ore_icon_overlay = "shiny"
+	ore_matter = list("iron" = 1000, "titanium" = 1000)
 
 /material/plasteel/ocp
 	name = "osmium-carbide plasteel"
@@ -222,6 +238,7 @@
 	ore_name = "raw platinum"
 	ore_scan_icon = "mineral_rare"
 	ore_icon_overlay = "shiny"
+	ore_matter = list("platinum" = 1000)
 
 /material/iron
 	name = "iron"
@@ -267,8 +284,13 @@
 	ore_result_amount = 5
 	ore_spread_chance = 25
 	ore_scan_icon = "mineral_common"
-	ore_name = "hematite"
+	ore_name = "hematite" //Fe2O3
 	ore_icon_overlay = "lump"
+	chem_products = list(
+				/datum/reagent/iron = 40,
+				/datum/reagent/oxygen = 60
+				)
+	ore_matter = list("iron" = 2000)
 
 /material/tungsten
 	name = "tungsten"
@@ -280,13 +302,25 @@
 	stack_origin_tech = list(TECH_MATERIAL = 4)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
-	chem_products = list(
-				/datum/reagent/tungsten = 20
-				)
-
 	ore_smelts_to = "tungsten"
 	ore_result_amount = 5
 	ore_spread_chance = 10
 	ore_name = "tungsten"
 	ore_scan_icon = "mineral_uncommon"
 	ore_icon_overlay = "shiny"
+	chem_products = list(
+				/datum/reagent/tungsten = 20
+				)
+	ore_matter = list("tungsten" = 2000)
+
+/material/aluminum
+	name = "aluminum"
+	stack_type = /obj/item/stack/material/aluminum
+	integrity = 125
+	melting_point = 1000
+	icon_colour = "#848789"
+	weight = 10
+	hardness = 15
+	chem_products = list(
+				/datum/reagent/aluminum = 20
+				)

@@ -707,7 +707,7 @@ var/list/turret_icons
 				return
 
 		if(1)
-			if(istype(I, /obj/item/stack/material) && I.get_material_name() == "plasteel")
+			if(istype(I, /obj/item/stack/material) && I.get_material_name() == MATERIAL_PLASTEEL)
 				var/obj/item/stack/M = I
 				if(M.use(2))
 					to_chat(user, "<span class='notice'>You add some plasteel armor to the interior frame.</span>")
@@ -795,7 +795,7 @@ var/list/turret_icons
 			//attack_hand() removes the prox sensor
 
 		if(6)
-			if(istype(I, /obj/item/stack/material) && I.get_material_name() == "plasteel")
+			if(istype(I, /obj/item/stack/material) && I.get_material_name() == MATERIAL_PLASTEEL)
 				var/obj/item/stack/M = I
 				if(M.use(2))
 					to_chat(user, "<span class='notice'>You add some plasteel armor to the exterior frame.</span>")

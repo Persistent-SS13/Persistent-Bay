@@ -1,5 +1,5 @@
 /material/plastic
-	name = "plastic"
+	name = MATERIAL_PLASTIC
 	stack_type = /obj/item/stack/material/plastic
 	flags = MATERIAL_BRITTLE
 	icon_colour = "#cccccc"
@@ -16,12 +16,12 @@
 
 /material/plastic/holographic
 	name = "holoplastic"
-	display_name = "plastic"
+	display_name = MATERIAL_PLASTIC
 	stack_type = null
 	shard_type = SHARD_NONE
 
 /material/wood
-	name = "wood"
+	name = MATERIAL_WOOD
 	adjective_name = "wooden"
 	stack_type = /obj/item/stack/material/wood
 	icon_colour = "#824b28"
@@ -51,12 +51,12 @@
 
 /material/wood/holographic
 	name = "holowood"
-	display_name = "wood"
+	display_name = MATERIAL_WOOD
 	stack_type = null
 	shard_type = SHARD_NONE
 
 /material/cardboard
-	name = "cardboard"
+	name = MATERIAL_CARDBOARD
 	stack_type = /obj/item/stack/material/cardboard
 	flags = MATERIAL_BRITTLE
 	integrity = 10
@@ -74,7 +74,7 @@
 	conductive = 0
 
 /material/cloth //todo
-	name = "cloth"
+	name = MATERIAL_CLOTH
 	stack_origin_tech = list(TECH_MATERIAL = 2)
 	icon_door = "wood"
 	ignition_point = T0C+232
@@ -88,7 +88,7 @@
 
 //TODO PLACEHOLDERS:
 /material/leather
-	name = "leather"
+	name = MATERIAL_LEATHER
 	icon_colour = "#5c4831"
 	stack_origin_tech = list(TECH_MATERIAL = 2)
 	flags = MATERIAL_PADDING
@@ -100,7 +100,7 @@
 	weight = 1
 
 /material/carpet
-	name = "carpet"
+	name = MATERIAL_CARPET
 	display_name = "red"
 	use_name = "red upholstery"
 	icon_colour = "#9d2300"
@@ -115,7 +115,7 @@
 	weight = 1
 
 /material/cotton
-	name = "cotton"
+	name = MATERIAL_COTTON
 	display_name ="grey"
 	icon_colour = "#ffffff"
 	flags = MATERIAL_PADDING

@@ -130,35 +130,35 @@
 // Subtypes
 //-----------------------------------------
 /obj/item/stack/ore/uranium/New(var/newloc)
-	..(newloc, "pitchblende")
+	..(newloc, MATERIAL_PITCHBLENDE)
 /obj/item/stack/ore/iron/New(var/newloc)
-	..(newloc, "hematite")
+	..(newloc, MATERIAL_HEMATITE)
 /obj/item/stack/ore/graphite/New(var/newloc)
-	..(newloc, "graphite")
+	..(newloc, MATERIAL_GRAPHITE)
 /obj/item/stack/ore/coal/New(var/newloc)
-	..(newloc, "graphene")
+	..(newloc, MATERIAL_GRAPHENE)
 /obj/item/stack/ore/glass/New(var/newloc)
-	..(newloc, "sand")
+	..(newloc, MATERIAL_SAND)
 /obj/item/stack/ore/silver/New(var/newloc)
-	..(newloc, "silver")
+	..(newloc, MATERIAL_SILVER)
 /obj/item/stack/ore/gold/New(var/newloc)
-	..(newloc, "gold")
+	..(newloc, MATERIAL_GOLD)
 /obj/item/stack/ore/diamond/New(var/newloc)
-	..(newloc, "diamond")
+	..(newloc, MATERIAL_DIAMOND)
 /obj/item/stack/ore/osmium/New(var/newloc)
-	..(newloc, "platinum")
+	..(newloc, MATERIAL_PLATINUM)
 /obj/item/stack/ore/hydrogen/New(var/newloc)
-	..(newloc, "mhydrogen")
+	..(newloc, MATERIAL_HYDROGEN)
 /obj/item/stack/ore/slag/New(var/newloc)
-	..(newloc, "slag")
+	..(newloc, MATERIAL_SLAG)
 /obj/item/stack/ore/copper/New(var/newloc)
-	..(newloc, "tetrahedrite")
+	..(newloc, MATERIAL_TETRAHEDRITE)
 
 //-----------------------------------------
 // Phoron-specific
 //-----------------------------------------
 /obj/item/stack/ore/phoron/New(var/newloc)
-	..(newloc, "phoron")
+	..(newloc, MATERIAL_PHORON)
 
 // Phoron ore is just as engaging!
 /obj/item/stack/ore/phoron/pickup(mob/user)

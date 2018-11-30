@@ -5,7 +5,7 @@
 	icon_state = "airlock_control_off"
 	refund_amt = 2
 	build_machine_type = /obj/machinery/airlock_controller_norad
-	matter = list(DEFAULT_WALL_MATERIAL = 150,"glass" = 150)
+	matter = list(MATERIAL_STEEL = 150,MATERIAL_GLASS = 150)
 
 /obj/item/frame/airlock_sensor_norad // The frame (sensor)
 	icon = 'icons/obj/airlock_machines.dmi'
@@ -13,4 +13,4 @@
 	name = "airlock sensor"
 	refund_amt = 2
 	build_machine_type = /obj/machinery/airlock_sensor_norad
-	matter = list(DEFAULT_WALL_MATERIAL = 50,"glass" = 50)
+	matter = list(MATERIAL_STEEL = 50,MATERIAL_GLASS = 50)

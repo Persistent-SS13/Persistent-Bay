@@ -10,7 +10,7 @@
 	possible_transfer_amounts = "1;2;3;4;5"
 	w_class = ITEM_SIZE_TINY
 	slot_flags = SLOT_EARS
-	matter = list("glass" = 60)
+	matter = list(MATERIAL_GLASS = 60)
 	volume = 5
 
 	afterattack(var/obj/target, var/mob/user, var/proximity)

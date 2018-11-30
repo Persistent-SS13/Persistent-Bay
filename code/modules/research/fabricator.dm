@@ -12,7 +12,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm can be used as an
 	desc = "A machine used for the production of various items"
 	var/obj/item/weapon/circuitboard/circuit = /obj/item/weapon/circuitboard/fabricator
 	var/build_type = PROTOLATHE
-	var/list/materials = list(DEFAULT_WALL_MATERIAL = 0, "glass" = 0, "gold" = 0, "plasteel" = 0, "osmium-carbide plasteel" = 0, "platinum" = 0, "tungsten" = 0)
+	var/list/materials = list(MATERIAL_STEEL = 0, MATERIAL_GLASS = 0, MATERIAL_GOLD = 0, MATERIAL_PLASTEEL = 0, MATERIAL_OSMIUM_CARBIDE_PLASTEEL = 0, MATERIAL_PLATINUM = 0, MATERIAL_TUNGSTEN = 0)
 	req_access = list(core_access_science_programs)
 
 	// Things that CAN be adjusted, but are okay to leave as default

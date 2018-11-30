@@ -57,7 +57,7 @@
 	icon_state = "ammobox"
 	slot_flags = SLOT_BACK
 	allow_quick_empty = 1
-	matter = list(DEFAULT_WALL_MATERIAL = 10000)
+	matter = list(MATERIAL_STEEL = 10000)
 
 /obj/item/weapon/storage/ammobox/attackby(var/obj/item/O as obj, var/mob/user as mob)
 
@@ -126,7 +126,7 @@
 	allow_quick_gather = 1
 	allow_quick_empty = 1
 	use_to_pickup = 1
-	matter = list(DEFAULT_WALL_MATERIAL = 5000)
+	matter = list(MATERIAL_STEEL = 5000)
 
 /obj/item/weapon/storage/ammobox/big
 	name = "big ammo box"
@@ -139,7 +139,7 @@
 	icon_state = "bigammobox"
 	slot_flags = SLOT_BACK
 	allow_quick_empty = 1
-	matter = list(DEFAULT_WALL_MATERIAL = 30000)
+	matter = list(MATERIAL_STEEL = 30000)
 
 
 // -----------------------------

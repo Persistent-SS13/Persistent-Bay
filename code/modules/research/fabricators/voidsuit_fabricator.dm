@@ -7,7 +7,7 @@
 						 // More than one can be assigned per design, however, if you want something to be able to be built in more than one fabricator eg. Power Cells
 
  	// The materials used in the fabrication of various goods. Generally you'll need to adapt this for each fabricator. To add a material, use its name var
-	materials = list(DEFAULT_WALL_MATERIAL = 0, "glass" = 0, "cloth" = 0, "plasteel" = 0, "osmium-carbide plasteel" = 0, "platinum" = 0, "tungsten" = 0)
+	materials = list(MATERIAL_STEEL = 0, MATERIAL_GLASS = 0, MATERIAL_CLOTH = 0, MATERIAL_PLASTEEL = 0, MATERIAL_OSMIUM_CARBIDE_PLASTEEL = 0, MATERIAL_PLATINUM = 0, MATERIAL_TUNGSTEN = 0)
 
 	// Things that CAN be adjusted, but are okay to leave as default
 	// Icon states - if you want your fabricator to use a special icon, place it in fabricators.dmi following these naming conventions.
@@ -43,25 +43,25 @@
 	name = "Engineering voidsuit"
 	id = "engi_voidsuit"
 	build_path = /obj/item/clothing/suit/space/void/engineering // The path to the item produced
-	materials = list("plasteel" = 120000, "tungsten" = 40000)	// The amount of material required for the item. 2000 = 1 sheet
+	materials = list(MATERIAL_PLASTEEL = 120000, MATERIAL_TUNGSTEN = 40000)	// The amount of material required for the item. 2000 = 1 sheet
 
 /datum/design/item/voidfab/engineering/engineeringhelmet
 	name = "Engineering voidsuit helmet"
 	id = "engi_helment"
 	build_path = /obj/item/clothing/head/helmet/space/void/engineering
-	materials = list("plasteel" = 60000, "glass" = 20000, "tungsten" = 40000)
+	materials = list(MATERIAL_PLASTEEL = 60000, MATERIAL_GLASS = 20000, MATERIAL_TUNGSTEN = 40000)
 
 /datum/design/item/voidfab/engineering/atmossuit
 	name = "Atmospherics voidsuit"
 	id = "atmos_voidsuit"
 	build_path = /obj/item/clothing/suit/space/void/atmos
-	materials = list("osmium-carbide plasteel" = 100000, "gold" = 20000)
+	materials = list(MATERIAL_OSMIUM_CARBIDE_PLASTEEL = 100000, MATERIAL_GOLD = 20000)
 
 /datum/design/item/voidfab/engineering/atmoshelmet
 	name = "Atmospherics voidsuit helmet"
 	id = "atmos_helmet"
 	build_path = /obj/item/clothing/head/helmet/space/void/atmos
-	materials = list("osmium-carbide plasteel" = 40000, "gold" = 10000, "glass" = 20000)
+	materials = list(MATERIAL_OSMIUM_CARBIDE_PLASTEEL = 40000, MATERIAL_GOLD = 10000, MATERIAL_GLASS = 20000)
 
 /datum/design/item/voidfab/security
 	category = "Security"
@@ -71,13 +71,13 @@
 	name = "Security voidsuit"
 	id = "sec_voidsuit"
 	build_path = /obj/item/clothing/suit/space/void/security
-	materials = list("plasteel" = 140000, "platinum" = 40000)
+	materials = list(MATERIAL_PLASTEEL = 140000, MATERIAL_PLATINUM = 40000)
 
 /datum/design/item/voidfab/security/securityhelmet
 	name = "Security voidsuit helmet"
 	id = "sec_helmet"
 	build_path = /obj/item/clothing/head/helmet/space/void/security
-	materials = list("plasteel" = 80000, "glass" = 20000, "platinum" = 40000)
+	materials = list(MATERIAL_PLASTEEL = 80000, MATERIAL_GLASS = 20000, MATERIAL_PLATINUM = 40000)
 
 /datum/design/item/voidfab/medical
 	category = "Medical"
@@ -87,13 +87,13 @@
 	name = "Medical voidsuit"
 	id = "med_voidsuit"
 	build_path = /obj/item/clothing/suit/space/void/medical/alt
-	materials = list("plasteel" = 100000, "platinum" = 40000)
+	materials = list(MATERIAL_PLASTEEL = 100000, MATERIAL_PLATINUM = 40000)
 
 /datum/design/item/voidfab/medical/medicalhelmet
 	name = "Medical voidsuit helmet"
 	id = "med_helmet"
 	build_path = /obj/item/clothing/head/helmet/space/void/medical/alt
-	materials = list("plasteel" = 40000, "glass" = 20000)
+	materials = list(MATERIAL_PLASTEEL = 40000, MATERIAL_GLASS = 20000)
 
 //Softsuits
 
@@ -102,9 +102,9 @@
 	time = 25
 
 /datum/design/item/voidfab/softsuit/suit
-	materials = list("cloth" = 30000, "steel" = 1000)
+	materials = list(MATERIAL_CLOTH = 30000, MATERIAL_STEEL = 1000)
 /datum/design/item/voidfab/softsuit/helmet
-	materials = list("cloth" = 20000, "glass" = 20000)
+	materials = list(MATERIAL_CLOTH = 20000, MATERIAL_GLASS = 20000)
 
 /datum/design/item/voidfab/softsuit/suit/engineeringsuit
 	name = "Engineering softsuit"

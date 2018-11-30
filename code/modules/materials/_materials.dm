@@ -122,7 +122,7 @@
 
  	// Xenoarch behavior.
 	var/list/xarch_ages = list("thousand" = 999, "million" = 999)
-	var/xarch_source_mineral = "iron"
+	var/xarch_source_mineral = MATERIAL_IRON
 
 // Placeholders for light tiles and rglass.
 /material/proc/build_rod_product(var/mob/user, var/obj/item/stack/used_stack, var/obj/item/stack/target_stack)

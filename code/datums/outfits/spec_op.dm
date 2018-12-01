@@ -1,6 +1,6 @@
 /decl/hierarchy/outfit/spec_op_officer
 	name = "Special ops - Officer"
-	uniform = /obj/item/clothing/under/syndicate/combat
+	uniform = /obj/item/clothing/under/syndicate
 	suit = /obj/item/clothing/suit/armor/swat/officer
 	l_ear = /obj/item/device/radio/headset/ert
 	glasses = /obj/item/clothing/glasses/thermal/plain/eyepatch

@@ -28,27 +28,13 @@
 			/obj/item/weapon/reagent_containers/glass/bottle/eznutrient = 60,
 			/obj/item/weapon/reagent_containers/glass/bottle/left4zed = 120,
 			/obj/item/weapon/reagent_containers/glass/bottle/robustharvest = 120),
-		"Leather" = list(
-			/obj/item/stack/material/leather = 80,
-			/obj/item/weapon/storage/wallet/leather = 100,
-			/obj/item/clothing/gloves/thick/botany = 250,
-			/obj/item/weapon/storage/belt/utility = 300,
-			/obj/item/weapon/storage/belt/security = 300,
-			/obj/item/weapon/storage/backpack/satchel = 400,
-			/obj/item/weapon/storage/bag/cash = 400,
-			/obj/item/clothing/shoes/workboots = 400,
-			/obj/item/clothing/shoes/leather = 400,
-			/obj/item/clothing/shoes/dress = 400,
-			/obj/item/clothing/suit/leathercoat = 500,
-			/obj/item/clothing/suit/storage/toggle/brown_jacket = 500,
-			/obj/item/clothing/suit/storage/toggle/bomber = 500,
-			/obj/item/clothing/suit/storage/hooded/wintercoat = 500),
-		"Other" = list(
-			/obj/item/stack/material/cloth = 50,
-			/obj/item/stack/material/cardboard = 25,
+		"Materials" = list(
+			/obj/item/stack/material/cardboard/ten = 250,
+			/obj/item/stack/material/cloth/ten = 500,
+			/obj/item/stack/material/leather/ten = 800,
+			/obj/item/stack/material/wood/ten = 1500,
 			/obj/item/weapon/paper = 5,
-			/obj/item/weapon/paper_package = 250,
-			/obj/item/stack/material/wood = 150,)
+			/obj/item/weapon/paper_package = 250,)
 			)
 
 /obj/machinery/biogenerator/New()

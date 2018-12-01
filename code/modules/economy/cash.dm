@@ -16,9 +16,11 @@
 	access = access_crate_cash
 	var/worth = 0
 	var/global/denominations = list(1000,500,200,100,50,20,10,1)
+
 /obj/item/weapon/spacecash/after_load()
 	..()
 	update_icon()
+
 /obj/item/weapon/spacecash/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/weapon/spacecash))
 		if(istype(W, /obj/item/weapon/spacecash/ewallet)) return 0

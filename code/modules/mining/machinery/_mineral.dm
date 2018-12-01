@@ -11,8 +11,7 @@
 	input_turf = null
 	output_turf = null
 	if(console && !ispath(console))
-		if(src in console.connected)
-			console.connected -= src
+		console.disconnect_machine(src)
 		console = null
 	. = ..()
 
@@ -30,11 +29,35 @@
 	if(default_deconstruction_screwdriver(user, O))
 		updateUsrDialog()
 		return
-	if(default_deconstruction_crowbar(user, O))
+	else if(default_deconstruction_crowbar(user, O))
 		return
-	if(default_part_replacement(user, O))
+	else if(default_part_replacement(user, O))
+		return
+	else if(isMultitool(O))
+		var/obj/item/device/multitool/mt = O
+		var/obj/machinery/mach = mt.get_buffer(/obj/machinery)
+		if(mach)
+			mt.set_buffer(null)
+			if(connect_machine(mach))
+				to_chat(user, "<span class='notice'>You connect \the [src] to \the [console]!</span>")
+			else
+				to_chat(user, "<span class='warning'>Nothing happens..</span>")
+		else
+			mt.set_buffer(src)
+			to_chat(user, "<span class='notice'>You set \the [mt]'s buffer to \the [src]!</span>")
 		return
 	. = ..()
+
+/obj/machinery/mineral/proc/connect_machine(var/obj/machinery/mach)
+	if(mach == src)
+		return FALSE
+
+	if(istype(mach, /obj/machinery/computer/mining))
+		console = mach
+		console.connect_machine(src)
+		return TRUE
+
+	return FALSE
 
 /obj/machinery/mineral/proc/set_input(var/_dir)
 	input_turf = _dir ? get_step(loc, _dir) : null

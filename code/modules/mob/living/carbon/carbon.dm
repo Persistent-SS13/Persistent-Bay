@@ -27,17 +27,19 @@
 
 /mob/living/carbon/Move(NewLoc, direct)
 	. = ..()
-	if(.)
-		if(src.nutrition && src.stat != 2)
-			src.nutrition -= DEFAULT_HUNGER_FACTOR/10
-			if(src.m_intent == "run")
-				src.nutrition -= DEFAULT_HUNGER_FACTOR/10
-		if((FAT in src.mutations) && src.m_intent == "run" && src.bodytemperature <= 360)
-			src.bodytemperature += 2
+	if(!.)
+		return
 
-		// Moving around increases germ_level faster
-		if(germ_level < GERM_LEVEL_MOVE_CAP && prob(8))
-			germ_level++
+	if (src.nutrition && src.stat != 2)
+		src.nutrition -= DEFAULT_HUNGER_FACTOR/10
+		if (move_intent.flags & MOVE_INTENT_EXERTIVE)
+			src.nutrition -= DEFAULT_HUNGER_FACTOR/10
+	if((FAT in src.mutations) && (move_intent.flags & MOVE_INTENT_EXERTIVE) && src.bodytemperature <= 360)
+		src.bodytemperature += 2
+
+	// Moving around increases germ_level faster
+	if(germ_level < GERM_LEVEL_MOVE_CAP && prob(8))
+		germ_level++
 
 /mob/living/carbon/relaymove(var/mob/living/user, direction)
 	if((user in src.stomach_contents) && istype(user))
@@ -302,7 +304,6 @@
 	src.drop_from_inventory(item)
 	if(!item || !isturf(item.loc))
 		return
-
 	//actually throw it!
 	src.visible_message("<span class='warning'>[src] has thrown [item].</span>", range = min(itemsize*2,world.view))
 

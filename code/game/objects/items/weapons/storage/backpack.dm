@@ -66,14 +66,14 @@
 			return 1
 		return ..()
 
-/obj/item/weapon/storage/backpack/santabag
-	name = "\improper Santa's gift bag"
-	desc = "Space Santa uses this to deliver toys to all the nice children in space for Christmas! Wow, it's pretty big!"
+/obj/item/weapon/storage/backpack/leathersack
+	name = "leather bag"
+	desc = "A large leather bag capable of storing alot of gear!"
 	icon_state = "giftbag0"
 	item_state = "giftbag"
 	w_class = ITEM_SIZE_HUGE
-	max_w_class = ITEM_SIZE_NORMAL
-	max_storage_space = 400 // can store a ton of shit!
+	slot_flags = null
+	max_storage_space = DEFAULT_BACKPACK_STORAGE + 10	//dufflebag storage
 	item_state_slots = null
 
 /obj/item/weapon/storage/backpack/cultpack

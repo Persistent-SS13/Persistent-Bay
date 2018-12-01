@@ -22,7 +22,7 @@
 		return ..()
 	return material.value * amount
 
-/obj/item/weapon/ore/Value()
+/obj/item/stack/ore/Value()
 	return material ? material.value : 0
 
 /obj/item/weapon/material/Value()

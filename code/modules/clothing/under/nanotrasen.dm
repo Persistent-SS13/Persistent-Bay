@@ -19,14 +19,12 @@
 	permeability_coefficient = 0.50
 	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 10, bio = 0, rad = 0)
 	item_icons = list(slot_w_uniform_str = 'icons/mob/nanotrasen.dmi')
-	starting_accessories = list(/obj/item/clothing/accessory/nt_tunic)
 
 /obj/item/clothing/under/rank/scientist/executive
 	name = "\improper Nanotrasen executive polo and pants"
 	desc = "A fashionable polo and pair of trousers made from expensive biohazard-resistant fabrics. The colors denote the wearer as a member of Nanotrasen's higher-ups."
 	icon_state = "ntsmockexec"
 	worn_state = "ntsmockexec"
-	starting_accessories = list(/obj/item/clothing/accessory/nt_tunic/exec)
 
 /obj/item/clothing/under/rank/ntwork
 	name = "\improper Nanotrasen coveralls"
@@ -52,4 +50,3 @@
 	item_state = "bl_suit"
 	worn_state = "ntsuit"
 	item_icons = list(slot_w_uniform_str = 'icons/mob/nanotrasen.dmi')
-	starting_accessories = list(/obj/item/clothing/accessory/toggleable/nanotrasen_jacket, /obj/item/clothing/accessory/nt)

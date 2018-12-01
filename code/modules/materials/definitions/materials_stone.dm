@@ -21,6 +21,7 @@
 	ore_scan_icon = "mineral_rare"
 	xarch_source_mineral = "nitrogen"
 	ore_icon_overlay = "gems"
+	ore_matter = list("diamond" = 2000)
 
 /material/diamond/crystal
 	name = "crystal"
@@ -46,6 +47,7 @@
 	chem_products = list(
 		/datum/reagent/silicon = 20
 		)
+	ore_matter = list("sandstone" = 2000)
 
 /material/stone/marble
 	name = "marble"

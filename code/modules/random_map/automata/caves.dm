@@ -3,7 +3,7 @@ GLOBAL_LIST_INIT(weighted_minerals_sparse, \
 		"pitchblende" =  8, \
 		"platinum" =     8, \
 		"hematite" =    35, \
-		"graphene" =    35, \
+		"graphite" =    35, \
 		"diamond" =      5, \
 		"gold" =         8, \
 		"silver" =       8, \
@@ -25,7 +25,7 @@ GLOBAL_LIST_INIT(weighted_minerals_rich, \
 		"pitchblende" = 10, \
 		"platinum" =    10, \
 		"hematite" =    20, \
-		"graphene" =    20, \
+		"graphite" =    20, \
 		"diamond" =      5, \
 		"gold" =        10, \
 		"silver" =      10, \

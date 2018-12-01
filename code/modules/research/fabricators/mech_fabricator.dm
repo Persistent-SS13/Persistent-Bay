@@ -1,10 +1,9 @@
 /obj/machinery/fabricator/mecha_part_fabricator
-	// Things that must be adjusted for each fabricator
 	name = "Exosuit Fabricator"
 	desc = "A machine used for construction of robotics and mechas."
+	req_access = list(core_access_science_programs)
 	circuit = /obj/item/weapon/circuitboard/fabricator/mechfab
 	build_type = MECHFAB
-	materials = list(DEFAULT_WALL_MATERIAL = 0, "glass" = 0, "gold" = 0, "silver" = 0, "diamond" = 0, "phoron" = 0, "uranium" = 0)
 
 ////////////////////////////////////////////////////
 //////////////////////DESIGNS///////////////////////

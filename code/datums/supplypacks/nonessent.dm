@@ -236,7 +236,7 @@
 					/obj/item/clothing/ring/material/gold,
 					/obj/item/clothing/ring/material/silver,
 					/obj/item/clothing/accessory/locket,
-					/obj/item/clothing/accessory/black/expensive,
+					/obj/item/clothing/accessory/black,
 					/obj/item/clothing/accessory/scarf,
 					/obj/item/clothing/head/crown,
 					/obj/item/clothing/mask/smokable/pipe

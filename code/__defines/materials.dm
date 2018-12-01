@@ -85,3 +85,5 @@
 #define MATERIAL_PADDING    0x4
 
 #define TABLE_BRITTLE_MATERIAL_MULTIPLIER 4 // Amount table damage is multiplied by if it is made of a brittle material (e.g. glass)
+
+#define DUST_MATERIAL_AMOUNT 100 //Each pile of dust is 100 units of matter

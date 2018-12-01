@@ -45,10 +45,6 @@
 
 	update_strings()
 
-/obj/item/stack/material/proc/set_amount(var/_amount)
-	amount = max(1, min(_amount, max_amount))
-	update_strings()
-
 /obj/item/stack/material/get_material()
 	return material
 

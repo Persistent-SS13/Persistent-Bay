@@ -25,9 +25,10 @@
 			attacker.target_mob = null
 		qdel(src)
 /obj/structure/ore_box/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if (istype(W, /obj/item/stack/ore))
+	if (istype(W, /obj/item/stack/ore) || istype(W, /obj/item/stack/material_dust))
+		var/obj/item/stack/orestack = W
 		user.remove_from_mob(W)
-		src.contents += W
+		orestack.drop_to_stacks(src)
 	if (istype(W, /obj/item/weapon/storage))
 		var/obj/item/weapon/storage/S = W
 		S.hide_from(usr)

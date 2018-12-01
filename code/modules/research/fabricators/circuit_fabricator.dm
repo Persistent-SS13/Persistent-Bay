@@ -1,18 +1,17 @@
 /obj/machinery/fabricator/circuit_fabricator
-	// Things that must be adjusted for each fabricator
 	name = "Circuit Imprinter"
 	desc = "A machine used for the production of circuits."
+	req_access = list(core_access_science_programs)
 	circuit = /obj/item/weapon/circuitboard/fabricator/circuitfab
 	build_type = CIRCUITFAB
-	materials = list(DEFAULT_WALL_MATERIAL = 0, "glass" = 0)
 
 	icon_state = 	 "circuitfab-idle"
 	icon_idle = 	 "circuitfab-idle"
 	icon_open = 	 "circuitfab-o"
 	overlay_active = "circuitfab-active"
-	metal_load_anim = 0
+	metal_load_anim = FALSE
 
-	has_reagents = 1
+	has_reagents = TRUE
 
 ////////////////////////////////////////////////////
 //////////////////////DESIGNS///////////////////////

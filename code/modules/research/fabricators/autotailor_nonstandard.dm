@@ -3,15 +3,6 @@
 	desc = "An advanced machine capable of printing many types of clothing, this one is loaded with non-standard clothing designs."
 	circuit = /obj/item/weapon/circuitboard/fabricator/autotailor/nonstandard
 	build_type = AUTOTAILOR_NONSTANDARD
-	materials = list("cloth" = 0, "leather" = 0, "cardboard" = 0,"wood" = 0, DEFAULT_WALL_MATERIAL = 0, "plasteel" = 0, "osmium-carbide plasteel" = 0, "glass" = 0, "phoron" = 0)
-	req_access = list()
-
-	icon_state = 	 "tailor-idle-top"
-	icon_idle = 	 "tailor-idle-top"
-	icon_open = 	 "tailor-idle-top"	//needs an opened icon
-	overlay_active = "tailor-active-top"
-	metal_load_anim = FALSE
-	has_reagents = FALSE
 
 ////////////////////////////////////////////////////
 //////////////////////DESIGNS///////////////////////
@@ -214,6 +205,18 @@
 	build_path = /obj/item/clothing/under/wetsuit
 	materials = list("leather" = 500)
 
+/datum/design/item/autotailor/nonstandard/costume/snorkel
+	name = "Snorkel"
+	id = "snorkel"
+	build_path = /obj/item/clothing/mask/snorkel
+	materials = list("plastic" = 2000)
+
+/datum/design/item/autotailor/nonstandard/costume/fins
+	name = "Swimming fins"
+	id = "fins"
+	build_path = /obj/item/clothing/shoes/swimmingfins
+	materials = list("plastic" = 2000)
+
 /datum/design/item/autotailor/nonstandard/costume/savage_hunter
 	name = "savage hunter's hides"
 	id = "savage_hunter"
@@ -345,6 +348,12 @@
 	build_path = /obj/item/clothing/mask/gas/sexyclown
 	materials = list("plastic" = 5000)
 
+/datum/design/item/autotailor/nonstandard/costume/clown_shoe
+	name = "Clown shoes"
+	id = "clown_shoe"
+	build_path = /obj/item/clothing/shoes/clown_shoes
+	materials = list("leather" = 2000, "plastic" = 1000)
+
 /datum/design/item/autotailor/nonstandard/costume/pirate_coat
 	name = "Pirate coat"
 	id = "pirate_coat"
@@ -352,7 +361,7 @@
 
 /datum/design/item/autotailor/nonstandard/costume/pirate_coat_admiral
 	name = "Pirate admiral coat"
-	id = "pirate_coat"
+	id = "pirate_coat_admiral"
 	build_path = /obj/item/clothing/suit/hgpirate
 
 /datum/design/item/autotailor/nonstandard/costume/pirate_hat_admiral
@@ -814,12 +823,6 @@
 	id = "tribal"
 	build_path = /obj/item/clothing/mask/spirit
 	materials = list("wood" = 5000)
-
-/datum/design/item/autotailor/nonstandard/costume/snorkel
-	name = "Snorkel"
-	id = "snorkel"
-	build_path = /obj/item/clothing/mask/snorkel
-	materials = list("plastic" = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/slime_green
 	name = "Slime hat - green"

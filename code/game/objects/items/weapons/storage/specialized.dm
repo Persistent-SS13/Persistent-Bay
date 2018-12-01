@@ -159,7 +159,7 @@
 
 	var/capacity = 60; //the number of sheets it can carry.
 	w_class = ITEM_SIZE_LARGE
-	storage_slots = 1
+	storage_slots = 7
 
 	allow_quick_empty = 1 // this function is superceded
 	use_to_pickup = 1

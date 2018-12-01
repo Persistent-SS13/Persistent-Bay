@@ -3,7 +3,6 @@
 	desc = "An advanced machine capable of printing many types of clothing, this one is loaded with standard clothing designs."
 	circuit = /obj/item/weapon/circuitboard/fabricator/autotailor
 	build_type = AUTOTAILOR
-	materials = list("cloth" = 0, "leather" = 0, "plastic" = 0, "wood" = 0, DEFAULT_WALL_MATERIAL = 0, "glass" = 0, "phoron" = 0)
 	req_access = list()
 
 	icon_state = 	 "tailor-idle-top"

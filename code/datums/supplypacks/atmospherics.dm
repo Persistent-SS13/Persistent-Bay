@@ -20,7 +20,7 @@
 //equipment
 /decl/hierarchy/supply_pack/atmospherics/inflatable
 	name = "Equipment - Inflatable barriers"
-	contains = list(/obj/item/weapon/storage/briefcase/inflatable = 3)
+	contains = list(/obj/item/weapon/storage/briefcase/inflatable/full = 3)
 	cost = 20
 	containername = "inflatable barrier crate"
 

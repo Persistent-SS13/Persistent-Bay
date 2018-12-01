@@ -3,15 +3,6 @@
 	desc = "An advanced machine capable of printing many types of clothing, this one is loaded with storage clothing designs."
 	circuit = /obj/item/weapon/circuitboard/fabricator/autotailor/storage
 	build_type = AUTOTAILOR_STORAGE
-	materials = list("cloth" = 0, "leather" = 0, "cardboard" = 0, "plastic" = 0, "wood" = 0, DEFAULT_WALL_MATERIAL = 0, "phoron" = 0)
-	req_access = list()
-
-	icon_state = 	 "tailor-idle-top"
-	icon_idle = 	 "tailor-idle-top"
-	icon_open = 	 "tailor-idle-top"	//needs an opened icon
-	overlay_active = "tailor-active-top"
-	metal_load_anim = FALSE
-	has_reagents = FALSE
 
 ////////////////////////////////////////////////////
 //////////////////////DESIGNS///////////////////////
@@ -278,6 +269,10 @@
 	build_path = /obj/item/weapon/storage/backpack/dufflebag/syndie/ammo
 	materials = list("cloth" = 15000, "phoron" = 4000)
 
+//
+//belt slot
+//
+
 /datum/design/item/autotailor/storage/waist
 	category = "Belt bags"
 	materials = list("leather" = 5000, DEFAULT_WALL_MATERIAL = 1000)
@@ -503,7 +498,13 @@
 	name = "Vial storage box"
 	id = "vials"
 	build_path = /obj/item/weapon/storage/fancy/vials
-	materials = list("cardboard" = 10000)
+	materials = list("plastic" = 10000)
+
+/datum/design/item/autotailor/storage/work/vials_locked
+	name = "Vial storage lockbox"
+	id = "vials_locked"
+	build_path = /obj/item/weapon/storage/lockbox/vials
+	materials = list("plastic" = 10000, "phoron" = 5000)
 
 /datum/design/item/autotailor/storage/work/briefcase_grey
 	name = "Grey briefcase"

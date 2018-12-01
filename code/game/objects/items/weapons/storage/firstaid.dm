@@ -70,13 +70,6 @@
 	icon_state = "o2"
 	item_state = "firstaid-o2"
 
-	startswith = list(
-		/obj/item/weapon/storage/pill_bottle/dexalin,
-		/obj/item/weapon/reagent_containers/hypospray/autoinjector,
-		/obj/item/weapon/reagent_containers/syringe/inaprovaline,
-		/obj/item/device/healthanalyzer,
-		)
-
 /obj/item/weapon/storage/firstaid/o2/full
 	startswith = list(
 		/obj/item/weapon/storage/pill_bottle/dexalin,

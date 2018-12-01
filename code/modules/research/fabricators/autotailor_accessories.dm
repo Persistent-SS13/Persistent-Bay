@@ -4,13 +4,6 @@
 	circuit = /obj/item/weapon/circuitboard/fabricator/autotailor/accessories
 	build_type = AUTOTAILOR_ACCESSORIES
 
-	icon_state = 	 "tailor-idle-top"
-	icon_idle = 	 "tailor-idle-top"
-	icon_open = 	 "tailor-idle-top"	//needs an opened icon
-	overlay_active = "tailor-active-top"
-	metal_load_anim = FALSE
-	has_reagents = FALSE
-
 ////////////////////////////////////////////////////
 //////////////////////DESIGNS///////////////////////
 ////////////////////////////////////////////////////
@@ -549,7 +542,7 @@
 	name = "Dangle earrings - white"
 	id = "Dangle earrings - white"
 	build_path = /obj/item/clothing/ears/earring/dangle
-	materials = list(DEFAULT_WALL_MATERIAL = 500)
+	materials = list("plastic" = 500)
 
 /datum/design/item/autotailor/accessories/ears/dangle_wood
 	name = "Dangle earrings - wood"
@@ -603,53 +596,53 @@
 	name = "Stud earrings - pearl"
 	id = "stud_pearl"
 	build_path = /obj/item/clothing/ears/earring/stud
-	materials = list(DEFAULT_WALL_MATERIAL = 500)
+	materials = list("plastic" = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_wood
 	name = "Stud earrings - wood"
-	id = "dangle_wood"
+	id = "stud_wood"
 	build_path = /obj/item/clothing/ears/earring/stud/wood
 	materials = list("wood" = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_glass
 	name = "Stud earrings - glass"
-	id = "dangle_glass"
+	id = "stud_glass"
 	build_path = /obj/item/clothing/ears/earring/stud/glass
 	materials = list("glass" = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_iron
 	name = "Stud earrings - iron"
-	id = "dangle_iron"
+	id = "stud_iron"
 	build_path = /obj/item/clothing/ears/earring/stud/iron
 	materials = list("iron" = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_steel
 	name = "Stud earrings - steel"
-	id = "dangle_steel"
+	id = "stud_steel"
 	build_path = /obj/item/clothing/ears/earring/stud/steel
 	materials = list(DEFAULT_WALL_MATERIAL = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_silver
 	name = "Stud earrings - silver"
-	id = "dangle_silver"
+	id = "stud_silver"
 	build_path = /obj/item/clothing/ears/earring/stud/silver
 	materials = list("silver" = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_platinum
 	name = "Stud earrings - platinum"
-	id = "dangle_platinum"
+	id = "stud_platinum"
 	build_path = /obj/item/clothing/ears/earring/stud/platinum
 	materials = list("platinum" = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_gold
 	name = "Stud earrings - gold"
-	id = "dangle_gold"
+	id = "stud_gold"
 	build_path = /obj/item/clothing/ears/earring/stud/gold
 	materials = list("gold" = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_diamond
 	name = "Stud earrings - diamond"
-	id = "dangle_diamond"
+	id = "stud_diamond"
 	build_path = /obj/item/clothing/ears/earring/stud/diamond
 	materials = list("diamond" = 500)
 

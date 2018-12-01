@@ -290,7 +290,7 @@
 
 /obj/item/weapon/storage/fancy/vials
 	icon = 'icons/obj/vialbox.dmi'
-	icon_state = "vialbox"
+	icon_state = "vialbox0"
 	name = "vial storage box"
 	w_class = ITEM_SIZE_NORMAL
 	max_w_class = ITEM_SIZE_TINY
@@ -302,9 +302,6 @@
 	var/key_count = count_by_type(contents, key_type)
 	src.icon_state = "[initial(icon_state)][Floor(key_count/2)]"
 
-/*
- * Not actually a "fancy" storage...
- */
 /obj/item/weapon/storage/lockbox/vials
 	name = "secure vial storage box"
 	desc = "A locked box for keeping things away from children."
@@ -315,7 +312,7 @@
 	max_w_class = ITEM_SIZE_TINY
 	max_storage_space = null
 	storage_slots = 12
-	req_access = list(access_virology)
+	req_access = list(core_access_medical_programs)
 
 /obj/item/weapon/storage/lockbox/vials/New()
 	..()

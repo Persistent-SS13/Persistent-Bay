@@ -3,7 +3,6 @@
 	desc = "An advanced machine capable of printing many types of clothing, this one is loaded with tactical clothing & armor designs."
 	circuit = /obj/item/weapon/circuitboard/fabricator/autotailor/combat
 	build_type = AUTOTAILOR_TACTICAL
-	materials = list("cloth" = 0, "leather" = 0, DEFAULT_WALL_MATERIAL = 0, "plasteel" = 0, "osmium-carbide plasteel" = 0, "plastic" = 0, "phoron" = 0)
 	req_access = list(core_access_security_programs)
 
 ////////////////////////////////////////////////////

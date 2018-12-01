@@ -77,9 +77,9 @@
 		set_type(pick(names_paths), user)
 
 /obj/item/weapon/circuitboard/fabricator/autotailor/proc/set_type(typepath, mob/user)
-		build_path = typepath
-		name = ("[names_paths[build_path]]")
-		to_chat(user, "<span class='notice'>You set the board to [names_paths[build_path]].</span>")
+	build_path = typepath
+	name = ("[names_paths[build_path]]")
+	to_chat(user, "<span class='notice'>You set the board to [names_paths[build_path]].</span>")
 
 /obj/item/weapon/circuitboard/fabricator/autotailor/nonstandard
 	name = "circuit board (auto-tailor - non-standard wear)"

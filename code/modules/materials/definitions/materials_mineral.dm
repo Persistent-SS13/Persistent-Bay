@@ -26,6 +26,8 @@
 
 /material/graphite
 	name = MATERIAL_GRAPHITE //Aka carbon
+	ignition_point= T0C + 700
+	melting_point = T0C + 3500
 	ore_compresses_to = MATERIAL_GRAPHITE
 	stack_type = /obj/item/stack/material/carbon
 	icon_colour = "#444444"
@@ -90,17 +92,24 @@
 
 /material/sulfur
 	name = MATERIAL_SULFUR
+	icon_colour = "#edff21"
+	flags = MATERIAL_BRITTLE
+	conductive = 0
+	hardness = 1
+	weight = 10
+	integrity = 5
+	ignition_point= T0C + 232
+	melting_point = T0C + 115
+	sheet_singular_name = "brick"
+	sheet_plural_name = "bricks"
 	ore_name = "native " + MATERIAL_SULFUR
 	ore_result_amount = 10
 	ore_spread_chance = 10
 	ore_scan_icon = "mineral_common"
 	ore_icon_overlay = "lump"
-	icon_colour = "#edff21"
 	chem_products = list(
 		/datum/reagent/sulfur = 20,
 		)
-	sheet_singular_name = "brick"
-	sheet_plural_name = "bricks"
 	ore_compresses_to = MATERIAL_SULFUR
 	ore_matter = list(MATERIAL_SULFUR = 2000)
 

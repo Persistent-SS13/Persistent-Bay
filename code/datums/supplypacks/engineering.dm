@@ -39,7 +39,7 @@
 					/obj/item/weapon/stock_parts/manipulator,
 					/obj/item/weapon/stock_parts/subspace/filter,
 					/obj/item/weapon/stock_parts/subspace/crystal,
-					/obj/item/weapon/storage/toolbox/electrical)
+					/obj/item/weapon/storage/toolbox/electrical/full)
 	cost = 75
 	containername = "emergency bluespace relay assembly kit"
 	containertype = /obj/structure/closet/crate/secure
@@ -49,7 +49,7 @@
 /decl/hierarchy/supply_pack/engineering/engineering_electrical
 	name = "Gear - Electrical maintenance"
 	contains = list(/obj/item/clothing/gloves/insulated/cheap = 2,
-					/obj/item/weapon/storage/toolbox/electrical = 3,
+					/obj/item/weapon/storage/toolbox/electrical/full = 3,
 					/obj/item/weapon/module/power_control = 3,
 					/obj/item/weapon/cell = 4,
 					/obj/item/device/flashlight = 3,

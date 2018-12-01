@@ -180,7 +180,6 @@
 /material/wood/generate_recipes()
 	..()
 	recipes += new/datum/stack_recipe("Ore Box", /obj/structure/ore_box, 5, time = 30, one_per_turf = 1)
-	recipes += new/datum/stack_recipe("wooden sandals", /obj/item/clothing/shoes/sandal, 1)
 	recipes += new/datum/stack_recipe("wood floor tile", /obj/item/stack/tile/wood, 1, 4, 20)
 	recipes += new/datum/stack_recipe("wooden chair", /obj/structure/bed/chair/wood, 3, time = 10, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("fancy wooden chair", /obj/structure/bed/chair/wood/wings, 3, time = 10, one_per_turf = 1, on_floor = 1)
@@ -198,8 +197,6 @@
 	recipes += new/datum/stack_recipe("gavel hammer", /obj/item/gavelhammer, 2, time = 5)
 	recipes += new/datum/stack_recipe("gavel block", /obj/item/gavelblock, 2, time = 3)
 	recipes += new/datum/stack_recipe("rolling pin", /obj/item/weapon/material/kitchen/rollingpin, 2, time = 5)
-  recipes += new/datum/stack_recipe("Walking Cane", /obj/item/weapon/cane, 5, time = 8)
-	recipes += new/datum/stack_recipe("corn cob pipe", /obj/item/clothing/mask/smokable/pipe/cobpipe)
 
 
 /material/cardboard/generate_recipes()
@@ -218,8 +215,6 @@
 		))
 	recipes += new/datum/stack_recipe("hand-rolled cigarette", /obj/item/clothing/mask/smokable/cigarette/custom)
 	recipes += new/datum/stack_recipe("empty cigarette pack", /obj/item/weapon/storage/fancy/cigarettes/blank)
-	recipes += new/datum/stack_recipe("cardborg suit", /obj/item/clothing/suit/cardborg, 3)
-	recipes += new/datum/stack_recipe("cardborg helmet", /obj/item/clothing/head/cardborg)
 	recipes += new/datum/stack_recipe_list("folders",list( \
 		new/datum/stack_recipe("blue folder", /obj/item/weapon/folder/blue), \
 		new/datum/stack_recipe("grey folder", /obj/item/weapon/folder), \

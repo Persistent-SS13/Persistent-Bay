@@ -153,25 +153,6 @@
 		/obj/item/weapon/magnetic_ammo
 		)
 
-/obj/item/weapon/storage/belt/soulstone
-	name = "soul stone belt"
-	desc = "Designed for ease of access to the shards during a fight, as to not let a single enemy spirit slip away."
-	icon_state = "soulstonebelt"
-	item_state = "soulstonebelt"
-	storage_slots = 6
-	can_hold = list(
-		/obj/item/device/soulstone
-		)
-
-/obj/item/weapon/storage/belt/soulstone/full/New()
-	..()
-	new /obj/item/device/soulstone(src)
-	new /obj/item/device/soulstone(src)
-	new /obj/item/device/soulstone(src)
-	new /obj/item/device/soulstone(src)
-	new /obj/item/device/soulstone(src)
-	new /obj/item/device/soulstone(src)
-
 /obj/item/weapon/storage/belt/champion
 	name = "championship belt"
 	desc = "Proves to the world that you are the strongest!"
@@ -285,6 +266,10 @@
 		/obj/item/taperoll,
 		)
 
+/obj/item/weapon/storage/belt/janitor/large
+	icon_state = "soulstonebelt"
+	item_state = "soulstonebelt"
+
 /obj/item/weapon/storage/belt/bandolier
 	name = "bandolier"
 	desc = "A bandolier for holding ammunition."
@@ -300,7 +285,9 @@
 	desc = "A dorky fannypack for keeping small items in."
 	icon_state = "fannypack_leather"
 	item_state = "fannypack_leather"
-	storage_slots = 3
+	storage_slots = null
+	max_w_class = ITEM_SIZE_SMALL
+	max_storage_space = ITEM_SIZE_SMALL * 4
 
 /obj/item/weapon/storage/belt/fannypack/black
 	name = "black fannypack"

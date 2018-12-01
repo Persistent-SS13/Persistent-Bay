@@ -42,4 +42,3 @@
 /obj/structure/closet/wizard/souls/New()
 	..()
 	new /obj/item/weapon/contract/boon/wizard/artificer(src)
-	new /obj/item/weapon/storage/belt/soulstone/full(src)

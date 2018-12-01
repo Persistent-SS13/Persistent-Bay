@@ -113,6 +113,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	if(..())
 		return
 	if(!allowed(user))
+		to_chat(user, "<span class='warning'>Access denied.</span>")
 		return
 	ui_interact(user)
 

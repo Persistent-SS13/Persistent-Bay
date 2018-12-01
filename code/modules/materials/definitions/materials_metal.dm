@@ -8,6 +8,7 @@
 	icon_door = "stone"
 	icon_table = "stone"
 	weight = 22
+	melting_point = 1405
 	stack_origin_tech = list(TECH_MATERIAL = 5)
 	chem_products = list(
 				/datum/reagent/uranium = 20
@@ -24,6 +25,7 @@
 	weight = 25
 	hardness = 25
 	integrity = 100
+	melting_point = 1337
 	stack_origin_tech = list(TECH_MATERIAL = 4)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
@@ -50,6 +52,7 @@
 	icon_colour = "#b87333"
 	weight = 15
 	hardness = 30
+	melting_point = 1357
 	stack_origin_tech = list(TECH_MATERIAL = 2)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
@@ -67,6 +70,7 @@
 	icon_table = "metal"
 	weight = 22
 	hardness = 50
+	melting_point = 1234
 	stack_origin_tech = list(TECH_MATERIAL = 3)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
@@ -95,7 +99,7 @@
 	brute_armor = 10
 	burn_armor = 8
 	integrity = 250
-	melting_point = 3000
+	melting_point = 1941
 	weight = 15
 	hardness = 75
 	stack_type = /obj/item/stack/material/titanium
@@ -112,6 +116,7 @@
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
 	ore_smelts_to = MATERIAL_OSMIUM
+	melting_point = 3306
 
 /material/tritium
 	name = MATERIAL_TRITIUM
@@ -121,6 +126,7 @@
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
 	is_fusion_fuel = 1
+	melting_point = 14
 
 /material/deuterium
 	name = MATERIAL_DEUTERIUM
@@ -130,6 +136,7 @@
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
 	is_fusion_fuel = 1
+	melting_point = 14
 
 /material/mhydrogen
 	name = MATERIAL_HYDROGEN
@@ -146,6 +153,7 @@
 	ore_name = "raw hydrogen"
 	ore_scan_icon = "mineral_rare"
 	ore_icon_overlay = "gems"
+	melting_point = 14
 
 /material/platinum
 	name = MATERIAL_PLATINUM
@@ -163,6 +171,7 @@
 	ore_scan_icon = "mineral_rare"
 	ore_icon_overlay = "shiny"
 	ore_matter = list(MATERIAL_PLATINUM = 1000)
+	melting_point = 2041
 
 /material/iron
 	name = MATERIAL_IRON
@@ -170,6 +179,9 @@
 	icon_reinf = "jaggy"
 	icon_colour = "#5c5454"
 	weight = 22
+	hardness = 15
+	melting_point = 1811
+	integrity = 110
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
 	hitsound = 'sound/weapons/smash.ogg'
@@ -181,7 +193,7 @@
 	name = MATERIAL_TUNGSTEN
 	stack_type = /obj/item/stack/material/tungsten
 	integrity = 250 // Tungsten ain't no bitch
-	melting_point = 16000
+	melting_point = 16000 //It should actually be 3,695K, not 16,000K.. but whatever
 	icon_colour = "#8888aa"
 	weight = 32 // Tungsten B-Ball bats OP AF
 	stack_origin_tech = list(TECH_MATERIAL = 4)
@@ -202,7 +214,7 @@
 	name = MATERIAL_ALUMINUM
 	stack_type = /obj/item/stack/material/aluminum
 	integrity = 125
-	melting_point = 1000
+	melting_point = 933
 	icon_colour = "#848789"
 	weight = 10
 	hardness = 15
@@ -223,7 +235,7 @@
 /material/tin
 	name = MATERIAL_TIN
 	stack_type = /obj/item/stack/material/tin
-	integrity = 80
+	integrity = 60
 	melting_point = 505
 	icon_colour = "#d3d4d5"
 	weight = 22
@@ -300,6 +312,7 @@
 	stack_type = /obj/item/stack/material/steel
 	integrity = 150
 	brute_armor = 5
+	melting_point = 1643
 	icon_colour = "#666666"
 	icon_reinf = "metal"
 	icon_door = "metal"
@@ -319,6 +332,7 @@
 	weight = 20
 	hardness = 40
 	integrity = 120
+	melting_point = 950
 	icon_colour = "#cd7f32"
 	ore_smelts_to = null
 	ore_compresses_to = null
@@ -331,6 +345,7 @@
 	weight = 18
 	hardness = 20
 	integrity = 80
+	melting_point = 900
 	icon_colour = "#b5a642"
 	ore_smelts_to = null
 	ore_compresses_to = null

@@ -403,7 +403,6 @@
 	chem_products = list(
 		/datum/reagent/copper = 12,
 		/datum/reagent/iron = 12,
-		//antimony 4
 		/datum/reagent/sulfur = 13,
 		)
 	ore_matter = list(MATERIAL_COPPER = 1800, MATERIAL_IRON = 1800)
@@ -434,7 +433,6 @@
 	ore_icon_overlay = "shiny"
 	chem_products = list(
 		/datum/reagent/sulfur = 10,
-		//lead
 		)
 	ore_matter = list(MATERIAL_LEAD = 2000)
 
@@ -454,7 +452,7 @@
 
 /material/sphalerite
 	name = MATERIAL_SPHALERITE
-	icon_colour = "#B9A85E"
+	icon_colour = "#b9a85e"
 	ore_smelts_to = MATERIAL_ZINC
 	ore_result_amount = 8
 	ore_spread_chance = 10

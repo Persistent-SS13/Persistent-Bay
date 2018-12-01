@@ -114,7 +114,7 @@
 	ore_matter = list(MATERIAL_SULFUR = 2000)
 
 /material/spodumene
-	name = MATERIAL_SPODUMENE
+	name = MATERIAL_SPODUMENE //LiAl(SiO3)2
 	ore_compresses_to = MATERIAL_SPODUMENE
 	ore_name = MATERIAL_SPODUMENE
 	ore_result_amount = 10
@@ -125,7 +125,7 @@
 	icon_base = "stone"
 	icon_reinf = "reinf_stone"
 	icon_door = "stone"
-	chem_products = list(			//LiAl(SiO3)2
+	chem_products = list(
 		/datum/reagent/lithium = 20,
 		/datum/reagent/silicon = 40,
 		/datum/reagent/aluminum = 20,

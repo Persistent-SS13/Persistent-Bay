@@ -174,11 +174,9 @@
 /obj/item/clothing/head/pumpkinhead
 	name = "carved pumpkin"
 	desc = "A jack o' lantern! Believed to ward off evil spirits."
-	icon_state = "hardhat0_pumpkin"//Could stand to be renamed
+	icon_state = "hardhat0_pumpkin"
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE|BLOCKHAIR
 	body_parts_covered = HEAD|FACE|EYES
-	brightness_on = 2
-	light_overlay = "helmet_light"
 	w_class = ITEM_SIZE_NORMAL
 
 /*

@@ -1,9 +1,8 @@
 /*
 Fabricators
-
-A reworked and modular system intended to differentiate the production of items from RnD through specialized machines, as well as simply giving them a nicer
+A reworked and modular system intended to differentiate the production of items from RnD through specialized machines, in addition to giving them a nicer
 interface. It is designed for subtypes to be easily created with minimal changes. New fabricators should be placed under the fabricators sub-folder, as well
-as their designs, in a single .dm file. voidsuit_fabricator.dm can be used as an example, and is entirely commented
+as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely commented example.
 */
 
 /obj/machinery/fabricator
@@ -12,8 +11,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm can be used as an
 	desc = "A machine used for the production of various items"
 	var/obj/item/weapon/circuitboard/circuit = /obj/item/weapon/circuitboard/fabricator
 	var/build_type = PROTOLATHE
-	var/list/materials = list(MATERIAL_STEEL = 0, MATERIAL_GLASS = 0, MATERIAL_GOLD = 0, MATERIAL_PLASTEEL = 0, MATERIAL_OSMIUM_CARBIDE_PLASTEEL = 0, MATERIAL_PLATINUM = 0, MATERIAL_TUNGSTEN = 0)
-	req_access = list(core_access_science_programs)
+	req_access = list()
 
 	// Things that CAN be adjusted, but are okay to leave as default
 	icon_state = 			"fab-idle"
@@ -35,6 +33,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm can be used as an
 	var/speed = 1
 	var/mat_efficiency = 1
 
+	var/list/materials = list()
 	var/res_max_amount = 200000
 	var/datum/research/files
 	var/list/datum/design/queue = list()
@@ -114,6 +113,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm can be used as an
 	if(..())
 		return
 	if(!allowed(user))
+		to_chat(user, "<span class='warning'>Access denied.</span>")
 		return
 	ui_interact(user)
 
@@ -210,7 +210,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm can be used as an
 				materials[material] += amnt
 				stack.use(1)
 				count++
-			to_chat(user, "You insert [count] [count==1 ? stack_singular : stack_plural] into the fabricator.")// 0 steel sheets, 1 steel sheet, 2 steel sheets, etc
+			to_chat(user, "You insert [count] [count == 1 ? stack_singular : stack_plural] into the fabricator.")// 0 steel sheets, 1 steel sheet, 2 steel sheets, etc
 	else
 		to_chat(user, "The fabricator cannot hold more [stack_plural].")// use the plural form even if the given sheet is singular
 
@@ -299,13 +299,13 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm can be used as an
 		var/datum/design/D = files.known_designs[i]
 		if(!D.build_path || !(D.build_type && D.build_type == build_type))
 			continue
-		. += list(list("name" = D.name, "id" = i, "category" = D.category, "resourses" = get_design_resourses(D), "time" = get_design_time(D)))
+		. += list(list("name" = D.name, "id" = i, "category" = D.category, "resources" = get_design_resources(D), "time" = get_design_time(D)))
 
 /obj/machinery/fabricator/proc/CallReagentName(var/reagent_type)
 	var/datum/reagent/R = reagent_type
 	return ispath(reagent_type, /datum/reagent) ? initial(R.name) : "Unknown"
 
-/obj/machinery/fabricator/proc/get_design_resourses(var/datum/design/D)
+/obj/machinery/fabricator/proc/get_design_resources(var/datum/design/D)
 	var/list/F = list()
 	for(var/T in D.materials)
 		F += "[capitalize(T)]: [D.materials[T] * mat_efficiency]"
@@ -319,10 +319,23 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm can be used as an
 /obj/machinery/fabricator/proc/update_categories()
 	categories = list()
 	if(files)
+		var/list/design_materials = list()
 		for(var/datum/design/D in files.known_designs)
 			if(!D.build_path || !(D.build_type && D.build_type == build_type))
 				continue
 			categories |= D.category
+
+			for(var/material in D.materials) // Iterating over the Designs' materials so that we know what should be able to be inserted
+				design_materials |= material
+				design_materials[material] = 0 // Prevents material count from appearing as null instead of 0
+
+		for(var/material in materials)
+			if(!(material in design_materials))
+				eject_materials(material, -1) // Dump all the materials not used in designs so that players don't use materials on code changes.
+
+		materials |= design_materials
+		materials &= design_materials
+
 		if(!category || !(category in categories) && LAZYLEN(categories))
 			category = categories[1]
 

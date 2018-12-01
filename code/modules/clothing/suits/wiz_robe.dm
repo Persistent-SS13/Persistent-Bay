@@ -6,8 +6,7 @@
 		slot_l_hand_str = "wizhat",
 		slot_r_hand_str = "wizhat",
 		)
-	//Not given any special protective value since the magic robes are full-body protection --NEO
-	siemens_coefficient = 0.8
+	siemens_coefficient = 1.0
 	body_parts_covered = 0
 	wizard_garb = 1
 
@@ -15,7 +14,6 @@
 	name = "red wizard hat"
 	desc = "Strange-looking, red, hat-wear that most certainly belongs to a real magic user."
 	icon_state = "redwizard"
-	siemens_coefficient = 0.8
 
 /obj/item/clothing/head/wizard/fake
 	name = "wizard hat"
@@ -27,7 +25,6 @@
 	name = "Witch Hat"
 	desc = "Strange-looking hat-wear, makes you want to cast fireballs."
 	icon_state = "marisa"
-	siemens_coefficient = 0.8
 
 /obj/item/clothing/head/wizard/magus
 	name = "Magus Helm"
@@ -38,7 +35,6 @@
 		slot_l_hand_str = "helmet",
 		slot_r_hand_str = "helmet",
 		)
-	siemens_coefficient = 0.8
 	body_parts_covered = HEAD|FACE|EYES
 
 /obj/item/clothing/head/wizard/amp
@@ -49,7 +45,6 @@
 		slot_l_hand_str = "helmet",
 		slot_r_hand_str = "helmet",
 		)
-	siemens_coefficient = 0.8
 
 /obj/item/clothing/head/wizard/cap
 	name = "Gentlemans Cap"
@@ -59,18 +54,13 @@
 		slot_l_hand_str = "det_hat",
 		slot_r_hand_str = "det_hat",
 		)
-	siemens_coefficient = 0.8
 
 /obj/item/clothing/suit/wizrobe
 	name = "wizard robe"
 	desc = "A magnificant, gem-lined robe that seems to radiate power."
 	icon_state = "wizard"
 	item_state = "wizrobe"
-	gas_transfer_coefficient = 0.01 // IT'S MAGICAL OKAY JEEZ +1 TO NOT DIE
-	permeability_coefficient = 0.01
-	armor = list(melee = 30, bullet = 20, laser = 20,energy = 20, bomb = 20, bio = 20, rad = 20)
 	allowed = list(/obj/item/weapon/teleportation_scroll)
-	siemens_coefficient = 0.8
 	wizard_garb = 1
 
 /obj/item/clothing/suit/wizrobe/red
@@ -118,15 +108,11 @@
 	desc = "A rather dull, blue robe meant to mimick real wizard robes."
 	icon_state = "wizard-fake"
 	item_state = "wizrobe"
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
-	siemens_coefficient = 1.0
 
 /obj/item/clothing/head/wizard/marisa/fake
 	name = "Witch Hat"
 	desc = "Strange-looking hat-wear, makes you want to cast fireballs."
 	icon_state = "marisa"
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
-	siemens_coefficient = 1.0
 
 /obj/item/clothing/suit/wizrobe/marisa/fake
 	name = "Witch Robe"
@@ -134,6 +120,4 @@
 	icon_state = "marisa"
 	item_state = "marisarobe"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS|LEGS
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
-	siemens_coefficient = 1.0
 

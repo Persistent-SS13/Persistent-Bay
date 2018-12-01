@@ -4,10 +4,7 @@
 	desc = "A machine used for the production of voidsuits and other spacesuits" // Self-explanatory
 	circuit = /obj/item/weapon/circuitboard/fabricator/voidfab // Circuit for the machine. These, as well as their designs, should be defined in fabricator_circuits.dm
 	build_type = VOIDFAB // The identifer for what gets built in what fabricator. A new one *MUST* be defined in _defines/research.dm for each fabricator.
-						 // More than one can be assigned per design, however, if you want something to be able to be built in more than one fabricator eg. Power Cells
-
- 	// The materials used in the fabrication of various goods. Generally you'll need to adapt this for each fabricator. To add a material, use its name var
-	materials = list(MATERIAL_STEEL = 0, MATERIAL_GLASS = 0, MATERIAL_CLOTH = 0, MATERIAL_PLASTEEL = 0, MATERIAL_OSMIUM_CARBIDE_PLASTEEL = 0, MATERIAL_PLATINUM = 0, MATERIAL_TUNGSTEN = 0)
+						 					 // More than one can be assigned per design, however, if you want something to be able to be built in more than one fabricator eg. Power Cells
 
 	// Things that CAN be adjusted, but are okay to leave as default
 	// Icon states - if you want your fabricator to use a special icon, place it in fabricators.dmi following these naming conventions.

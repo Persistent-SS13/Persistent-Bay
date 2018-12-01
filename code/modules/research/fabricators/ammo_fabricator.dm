@@ -3,14 +3,13 @@
 	desc = "A machine used for the production of ammunitions of many calibers."
 	circuit = /obj/item/weapon/circuitboard/fabricator/ammofab
 	build_type = AMMOFAB
-	materials = list(MATERIAL_STEEL = 0, MATERIAL_GLASS = 0, MATERIAL_PLASTIC = 0)
 
 	icon_state = 	 "circuitfab-idle"
 	icon_idle = 	 "circuitfab-idle"
 	icon_open = 	 "circuitfab-o"
 	overlay_active = "circuitfab-active"
+	metal_load_anim = FALSE
 
-	metal_load_anim = TRUE
 	has_reagents = TRUE
 
 ////////////////////////////////////////////////////

@@ -83,6 +83,9 @@
 	key_type = /obj/item/weapon/flame/candle
 	startswith = list(/obj/item/weapon/flame/candle = 5)
 
+/obj/item/weapon/storage/fancy/candle_box/blank
+	startswith = list()
+
 /*
  * Crayon Box
  */
@@ -111,6 +114,9 @@
 	overlays += image('icons/obj/crayons.dmi',"crayonbox")
 	for(var/obj/item/weapon/pen/crayon/crayon in contents)
 		overlays += image('icons/obj/crayons.dmi',crayon.colourName)
+
+/obj/item/weapon/storage/fancy/crayons/blank
+	startswith = list()
 
 ////////////
 //CIG PACK//
@@ -185,24 +191,27 @@
 	icon_state = "Dpacket"
 	startswith = list(/obj/item/clothing/mask/smokable/cigarette/dromedaryco = 6)
 
+/obj/item/weapon/storage/fancy/cigarettes/dromedaryco/blank
+	startswith = list()
+
 /obj/item/weapon/storage/fancy/cigarettes/killthroat
 	name = "pack of Acme Co. cigarettes"
 	desc = "A packet of six Acme Company cigarettes. For those who somehow want to obtain the record for the most amount of cancerous tumors."
 	icon_state = "Bpacket"
 	startswith = list(/obj/item/clothing/mask/smokable/cigarette/killthroat = 6)
 
-/obj/item/weapon/storage/fancy/cigarettes/killthroat/New()
-	..()
-	fill_cigarre_package(src,list(/datum/reagent/fuel = 4))
-
-// New exciting ways to kill your lungs! - Earthcrusher //
+/obj/item/weapon/storage/fancy/cigarettes/killthroat/blank
+	startswith = list()
 
 /obj/item/weapon/storage/fancy/cigarettes/luckystars
 	name = "pack of Lucky Stars"
 	desc = "A mellow blend made from synthetic, pod-grown tobacco. The commercial jingle is guaranteed to get stuck in your head."
 	icon_state = "LSpacket"
-	item_state = "Dpacket" //I actually don't mind cig packs not showing up in the hand. whotf doesn't just keep them in their pockets/coats //
+	item_state = "Dpacket"
 	startswith = list(/obj/item/clothing/mask/smokable/cigarette/luckystars = 6)
+
+/obj/item/weapon/storage/fancy/cigarettes/luckystars/blank
+	startswith = list()
 
 /obj/item/weapon/storage/fancy/cigarettes/jerichos
 	name = "pack of Jerichos"
@@ -211,14 +220,18 @@
 	item_state = "Dpacket"
 	startswith = list(/obj/item/clothing/mask/smokable/cigarette/jerichos = 6)
 
+/obj/item/weapon/storage/fancy/cigarettes/jerichos/blank
+	startswith = list()
+
 /obj/item/weapon/storage/fancy/cigarettes/menthols
 	name = "pack of Temperamento Menthols"
 	desc = "With a sharp and natural organic menthol flavor, these Temperamentos are a favorite of NDV crews. Hardly anyone knows they make 'em in non-menthol!"
 	icon_state = "TMpacket"
 	item_state = "Dpacket"
-
-	key_type = /obj/item/clothing/mask/smokable/cigarette/menthol
 	startswith = list(/obj/item/clothing/mask/smokable/cigarette/menthol = 6)
+
+/obj/item/weapon/storage/fancy/cigarettes/menthols/blank
+	startswith = list()
 
 /obj/item/weapon/storage/fancy/cigarettes/carcinomas
 	name = "pack of Carcinoma Angels"
@@ -227,12 +240,18 @@
 	item_state = "Dpacket"
 	startswith = list(/obj/item/clothing/mask/smokable/cigarette/carcinomas = 6)
 
+/obj/item/weapon/storage/fancy/cigarettes/carcinomas/blank
+	startswith = list()
+
 /obj/item/weapon/storage/fancy/cigarettes/professionals
 	name = "pack of Professional 120s"
 	desc = "Let's face it - if you're smoking these, you're either trying to look upper-class or you're 80 years old. That's the only excuse. They taste disgusting, too."
 	icon_state = "P100packet"
 	item_state = "Dpacket"
 	startswith = list(/obj/item/clothing/mask/smokable/cigarette/professionals = 6)
+
+/obj/item/weapon/storage/fancy/cigarettes/professionals/blank
+	startswith = list()
 
 /obj/item/weapon/storage/fancy/cigar
 	name = "cigar case"
@@ -261,28 +280,28 @@
 	reagents.trans_to_obj(C, (reagents.total_volume/contents.len))
 	..()
 
+/obj/item/weapon/storage/fancy/cigar/blank
+	startswith = list()
+
+
 /*
  * Vial Box
  */
 
 /obj/item/weapon/storage/fancy/vials
 	icon = 'icons/obj/vialbox.dmi'
-	icon_state = "vialbox"
+	icon_state = "vialbox0"
 	name = "vial storage box"
 	w_class = ITEM_SIZE_NORMAL
 	max_w_class = ITEM_SIZE_TINY
 	storage_slots = 12
 
 	key_type = /obj/item/weapon/reagent_containers/glass/beaker/vial
-	startswith = list(/obj/item/weapon/reagent_containers/glass/beaker/vial = 12)
 
 /obj/item/weapon/storage/fancy/vials/update_icon()
 	var/key_count = count_by_type(contents, key_type)
 	src.icon_state = "[initial(icon_state)][Floor(key_count/2)]"
 
-/*
- * Not actually a "fancy" storage...
- */
 /obj/item/weapon/storage/lockbox/vials
 	name = "secure vial storage box"
 	desc = "A locked box for keeping things away from children."
@@ -293,7 +312,7 @@
 	max_w_class = ITEM_SIZE_TINY
 	max_storage_space = null
 	storage_slots = 12
-	req_access = list(access_virology)
+	req_access = list(core_access_medical_programs)
 
 /obj/item/weapon/storage/lockbox/vials/New()
 	..()

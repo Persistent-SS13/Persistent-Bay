@@ -449,7 +449,7 @@
 	build_path = /obj/item/clothing/shoes/sandal/xeno
 	materials = list("wood" = 1000)
 
-/datum/design/item/autotailor/accessories/shoes/dress_white	//custom colors?
+/datum/design/item/autotailor/accessories/shoes/dressshoes_white	//custom colors?
 	name = "Dress shoes - white"
 	id = "dress_white"
 	build_path = /obj/item/clothing/shoes/dress/white
@@ -762,7 +762,7 @@
 	build_path = /obj/item/clothing/gloves/latex/nitrile
 	materials = list("plastic" = 10000)
 
-/datum/design/item/autotailor/accessories/gloves/dress_white	//custom colors
+/datum/design/item/autotailor/accessories/gloves/dressgloves_white	//custom colors
 	name = "Evening gloves - white"
 	id = "dress_white"
 	build_path = /obj/item/clothing/gloves/color/evening
@@ -993,7 +993,7 @@
 
 /datum/design/item/autotailor/accessories/hats/beret_bl_redlogo
 	name = "Beret - black w. red logo"
-	id = "beret_wh_redlogo"
+	id = "beret_bl_redlogo"
 	build_path = /obj/item/clothing/head/beret/sec/corporate/officer
 
 /datum/design/item/autotailor/accessories/hats/beret_bl_whlogo

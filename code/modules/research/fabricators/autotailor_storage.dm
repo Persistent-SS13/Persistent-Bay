@@ -227,25 +227,25 @@
 	build_path = /obj/item/weapon/storage/backpack/dufflebag/captain
 	materials = list("cloth" = 15000)
 
-/datum/design/item/autotailor/storage/backpacks/ert_blue
+/datum/design/item/autotailor/storage/backpacks/ert_blueback
 	name = "Blue ERT backpack"
 	id = "ert_blue"
 	build_path = /obj/item/weapon/storage/backpack/ert
 	materials = list("cloth" = 5000, "phoron" = 2000)
 
-/datum/design/item/autotailor/storage/backpacks/ert_eng
+/datum/design/item/autotailor/storage/backpacks/ert_engback
 	name = "Yellow ERT backpack"
-	id = "ert_eng"
+	id = "ert_engback"
 	build_path = /obj/item/weapon/storage/backpack/ert/engineer
 	materials = list("cloth" = 5000, "phoron" = 2000)
 
-/datum/design/item/autotailor/storage/backpacks/ert_white
+/datum/design/item/autotailor/storage/backpacks/ert_whiteback
 	name = "White ERT backpack"
 	id = "ert_white"
 	build_path = /obj/item/weapon/storage/backpack/ert/medical
 	materials = list("cloth" = 5000, "phoron" = 2000)
 
-/datum/design/item/autotailor/storage/backpacks/ert_red
+/datum/design/item/autotailor/storage/backpacks/ert_redback
 	name = "Red ERT backpack"
 	id = "ert_red"
 	build_path = /obj/item/weapon/storage/backpack/ert/security
@@ -324,14 +324,14 @@
 	build_path = /obj/item/weapon/storage/belt/janitor
 
 //combat belts might belong in security-tailor
-/datum/design/item/autotailor/storage/waist/bandolier
+/datum/design/item/autotailor/storage/waist/bandolier_belt
 	name = "Ammunation bandolier"
-	id = "bandolier"
+	id = "bandolier_belt"
 	build_path = /obj/item/weapon/storage/belt/bandolier
 
-/datum/design/item/autotailor/storage/waist/sec_black
+/datum/design/item/autotailor/storage/waist/sec_blackbelt
 	name = "Security belt - black"
-	id = "sec_black"
+	id = "sec_blackbelt"
 	build_path = /obj/item/weapon/storage/belt/security
 
 /datum/design/item/autotailor/storage/waist/sec_tan

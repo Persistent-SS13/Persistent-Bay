@@ -103,7 +103,7 @@
 
 /datum/design/item/autotailor/under/jumpsuit/brown_generic
 	name = "Generic jumpsuit - brown"
-	id = "black_generic"
+	id = "brown_generic"
 	build_path = /obj/item/clothing/under/color/brown
 
 /datum/design/item/autotailor/under/jumpsuit/lpurple_generic
@@ -508,9 +508,9 @@
 	id = "det_suit_black"
 	build_path = /obj/item/clothing/under/det/black
 
-/datum/design/item/autotailor/under/dressclothes/blue_suit
+/datum/design/item/autotailor/under/dressclothes/wh_blue_suit
 	name = "White and blue suit"
-	id = "blue_suit"
+	id = "wh_blue_suit"
 	build_path = /obj/item/clothing/under/lawyer/bluesuit
 
 /datum/design/item/autotailor/under/dressclothes/det_suit_tan
@@ -533,9 +533,9 @@
 	id = "oldman"
 	build_path = /obj/item/clothing/under/lawyer/oldman
 
-/datum/design/item/autotailor/under/dressclothes/purple
+/datum/design/item/autotailor/under/dressclothes/purp_suit
 	name = "Purple suit"
-	id = "purple_suit"
+	id = "purp_suit"
 	build_path = /obj/item/clothing/under/lawyer/purpsuit
 
 /datum/design/item/autotailor/under/dressclothes/bluesuit
@@ -543,9 +543,9 @@
 	id = "blue_suit"
 	build_path = /obj/item/clothing/under/lawyer/blue
 
-/datum/design/item/autotailor/under/dressclothes/redsuit
+/datum/design/item/autotailor/under/dressclothes/redsuit_lawyer
 	name = "Red lawyer's suit"
-	id = "red_suit"
+	id = "red_suit_lawyer"
 	build_path = /obj/item/clothing/under/lawyer/red
 
 /datum/design/item/autotailor/under/dressclothes/lawyerblack
@@ -1034,7 +1034,7 @@
 
 /datum/design/item/autotailor/under/shorts/jeans_shorts_lightdenim
 	name = "jeans shorts - light denim"
-	id = "jeans_lightdenim"
+	id = "jeans_shorts_lightdenim"
 	build_path = /obj/item/clothing/under/shorts/jeans/mustang
 
 /datum/design/item/autotailor/under/shorts/jeans_s_shorts_lightdenim
@@ -1076,9 +1076,9 @@
 	build_path = /obj/item/clothing/under/casual_pants/baggy/camo
 	materials = list("cloth" = 3000)
 
-/datum/design/item/autotailor/under/shorts/white_suit	//can use custom colors
+/datum/design/item/autotailor/under/shorts/white_suitpants	//can use custom colors
 	name = "Suit pants - white"
-	id = "white_suit"
+	id = "white_suitpants"
 	build_path = /obj/item/clothing/under/formal_pants
 	materials = list("cloth" = 5000)
 
@@ -1088,9 +1088,9 @@
 	build_path = /obj/item/clothing/under/formal_pants/baggy
 	materials = list("cloth" = 7000)
 
-/datum/design/item/autotailor/under/shorts/black_suit
+/datum/design/item/autotailor/under/shorts/black_suitpants
 	name = "Suit pants - black"
-	id = "black_suit"
+	id = "black_suitpants"
 	build_path = /obj/item/clothing/under/formal_pants/black
 	materials = list("cloth" = 5000)
 
@@ -1263,14 +1263,14 @@
 	id = "blue_casual"
 	build_path = /obj/item/clothing/suit/storage/forensics/blue
 
-/datum/design/item/autotailor/suit/overcoats/white_suit	//can use custom colors
+/datum/design/item/autotailor/suit/overcoats/white_suitjacket	//can use custom colors
 	name = "Suit jacket - white"
-	id = "white_suit"
+	id = "white_suitjacket"
 	build_path = /obj/item/clothing/suit/storage/toggle/suit
 
-/datum/design/item/autotailor/suit/overcoats/black_suit
+/datum/design/item/autotailor/suit/overcoats/black_suitjacket
 	name = "Suit jacket - black"
-	id = "black_suit"
+	id = "black_suitjacket"
 	build_path = /obj/item/clothing/suit/storage/toggle/suit/black
 
 /datum/design/item/autotailor/suit/overcoats/blue_suit
@@ -1370,7 +1370,7 @@
 
 /datum/design/item/autotailor/suit/overcoats/track_j_blue
 	name = "Track jacket - blue"
-	id = "track_j_black"
+	id = "track_j_blue"
 	build_path = /obj/item/clothing/suit/storage/toggle/track/blue
 
 /datum/design/item/autotailor/suit/overcoats/track_j_red

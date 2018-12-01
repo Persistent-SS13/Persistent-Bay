@@ -213,7 +213,7 @@
 
 /datum/design/item/autotailor/combat/under/dress_h_black
 	name = "Dress jacket hat - black"
-	id = "dress_j_black"
+	id = "dress_h_black"
 	build_path = /obj/item/clothing/head/dress/mirania/intelligence
 	materials = list("leather" = 5000)
 
@@ -432,9 +432,9 @@
 	build_path = /obj/item/clothing/suit/armor/vest/warden
 	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 10000, "osmium-carbide plasteel" = 7000)
 
-/datum/design/item/autotailor/combat/barmour/ert_com
+/datum/design/item/autotailor/combat/barmour/ert_comarmor
 	name = "ERT body armor - commander"
-	id = "ert_com"
+	id = "ert_comarmor"
 	build_path = /obj/item/clothing/suit/armor/vest/ert
 	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 20000, "osmium-carbide plasteel" = 7500)
 
@@ -444,9 +444,9 @@
 	build_path = /obj/item/clothing/head/helmet/ert
 	materials = list(DEFAULT_WALL_MATERIAL = 5000, "plasteel" = 2000, "osmium-carbide plasteel" = 2000)
 
-/datum/design/item/autotailor/combat/barmour/ert_eng
+/datum/design/item/autotailor/combat/barmour/ert_engarmor
 	name = "ERT body armor - engineer"
-	id = "ert_eng"
+	id = "ert_engarmor"
 	build_path = /obj/item/clothing/suit/armor/vest/ert/engineer
 	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 20000, "osmium-carbide plasteel" = 7500)
 
@@ -456,9 +456,9 @@
 	build_path = /obj/item/clothing/head/helmet/ert/engineer
 	materials = list(DEFAULT_WALL_MATERIAL = 5000, "plasteel" = 2000, "osmium-carbide plasteel" = 2000)
 
-/datum/design/item/autotailor/combat/barmour/ert_sec
+/datum/design/item/autotailor/combat/barmour/ert_secarmor
 	name = "ERT body armor - security"
-	id = "ert_sec"
+	id = "ert_secarmor"
 	build_path = /obj/item/clothing/suit/armor/vest/ert/security
 	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 20000, "osmium-carbide plasteel" = 7500)
 
@@ -468,9 +468,9 @@
 	build_path = /obj/item/clothing/head/helmet/ert/security
 	materials = list(DEFAULT_WALL_MATERIAL = 5000, "plasteel" = 2000, "osmium-carbide plasteel" = 2000)
 
-/datum/design/item/autotailor/combat/barmour/ert_doc
+/datum/design/item/autotailor/combat/barmour/ert_docarmor
 	name = "ERT body armor - medical"
-	id = "ert_doc"
+	id = "ert_docarmor"
 	build_path = /obj/item/clothing/suit/armor/vest/ert/medical
 	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 20000, "osmium-carbide plasteel" = 7500)
 
@@ -623,7 +623,7 @@
 /datum/design/item/autotailor/combat/modular_armor/chest_heavy
 	name = "Chestplate - heavy"
 	id = "chest_heavy"
-	build_path = /obj/item/clothing/accessory/armorplate/tactical
+	build_path = /obj/item/clothing/accessory/armorplate/merc
 	materials = list(DEFAULT_WALL_MATERIAL = 10000, "plasteel" = 10000, "osmium-carbide plasteel" = 10000)
 
 /datum/design/item/autotailor/combat/modular_armor/arm_black
@@ -836,9 +836,9 @@
 /datum/design/item/autotailor/combat/accessory
 	category = "Tactical accessories"
 
-/datum/design/item/autotailor/combat/accessory/bandolier
+/datum/design/item/autotailor/combat/accessory/bandolier_access
 	name = "Accessory - bandolier"
-	id = "bandolier"
+	id = "bandolier_access"
 	build_path = /obj/item/clothing/accessory/storage/bandolier
 	materials = list("leather" = 30000)
 

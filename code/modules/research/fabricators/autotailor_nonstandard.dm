@@ -89,7 +89,7 @@
 
 /datum/design/item/autotailor/nonstandard/under/scrubhood_green
 	name = "Scrubs hat - green"
-	id = "scrubs_green"
+	id = "scrubhood_green"
 	build_path = /obj/item/clothing/head/surgery/green
 
 /datum/design/item/autotailor/nonstandard/under/scrubs_teal
@@ -446,7 +446,7 @@
 
 /datum/design/item/autotailor/nonstandard/costume/armor_suit_head
 	name = "Armored suit helmet"
-	id = "green_suit_armor"
+	id = "green_suit_head"
 	build_path = /obj/item/clothing/head/helmet/thunderdome
 	materials = list(DEFAULT_WALL_MATERIAL = 2000)
 

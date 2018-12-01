@@ -52,7 +52,7 @@
 #define MATERIAL_BRASS						"brass"
 #define MATERIAL_LEAD						"lead"
 #define MATERIAL_SULFUR						"sulfur"
-#define MATERIAL_BSPACE_CRYSTAL	"bluespace crystal"
+#define MATERIAL_BSPACE_CRYSTAL				"bluespace crystal"
 
 #define MATERIAL_TETRAHEDRITE				"tetrahedrite"
 #define MATERIAL_FREIBERGITE				"freibergite"

@@ -100,22 +100,9 @@
 	hardness = 75
 	stack_type = /obj/item/stack/material/titanium
 	icon_colour = "#d1e6e3"
-	icon_base = "metal"
-	icon_reinf = "metal"
-	icon_door = "metal"
-	icon_table = "metal"
-	alloy_materials = null
-	alloy_product = FALSE
 	stack_origin_tech = list(TECH_MATERIAL = 3)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
-	ore_smelts_to = MATERIAL_TITANIUM
-	ore_result_amount = 5
-	ore_spread_chance = 10
-	ore_name = "ilmenite" //iron titanium oxide, FeTiO3
-	ore_scan_icon = "mineral_uncommon"
-	ore_icon_overlay = "shiny"
-	ore_matter = list(MATERIAL_IRON = 1000, MATERIAL_TITANIUM = 1000)
 
 /material/osmium
 	name = MATERIAL_OSMIUM

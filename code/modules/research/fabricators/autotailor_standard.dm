@@ -538,7 +538,7 @@
 	id = "purp_suit"
 	build_path = /obj/item/clothing/under/lawyer/purpsuit
 
-/datum/design/item/autotailor/under/dressclothes/bluesuit
+/datum/design/item/autotailor/under/dressclothes/blue_suit
 	name = "Blue lawyer's suit"
 	id = "blue_suit"
 	build_path = /obj/item/clothing/under/lawyer/blue
@@ -1039,7 +1039,7 @@
 
 /datum/design/item/autotailor/under/shorts/jeans_s_shorts_lightdenim
 	name = "jeans short shorts - light denim"
-	id = "jeans_shorts_lightdenim"
+	id = "jeans_s_shorts_lightdenim"
 	build_path = /obj/item/clothing/under/shorts/jeans/mustang/female
 
 /datum/design/item/autotailor/under/shorts/jeans_young	//might be a duplicate of classic jeans
@@ -1273,9 +1273,9 @@
 	id = "black_suitjacket"
 	build_path = /obj/item/clothing/suit/storage/toggle/suit/black
 
-/datum/design/item/autotailor/suit/overcoats/blue_suit
+/datum/design/item/autotailor/suit/overcoats/blue_suitjacket
 	name = "Suit jacket - blue"
-	id = "blue_suit"
+	id = "blue_suitjacket"
 	build_path = /obj/item/clothing/suit/storage/toggle/suit/blue
 
 /datum/design/item/autotailor/suit/overcoats/purple_suit

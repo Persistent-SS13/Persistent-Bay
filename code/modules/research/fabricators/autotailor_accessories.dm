@@ -451,7 +451,7 @@
 
 /datum/design/item/autotailor/accessories/shoes/dressshoes_white	//custom colors?
 	name = "Dress shoes - white"
-	id = "dress_white"
+	id = "dressshoes_white"
 	build_path = /obj/item/clothing/shoes/dress/white
 	materials = list("leather" = 500, "gold" = 500)
 
@@ -764,7 +764,7 @@
 
 /datum/design/item/autotailor/accessories/gloves/dressgloves_white	//custom colors
 	name = "Evening gloves - white"
-	id = "dress_white"
+	id = "dressgloves_white"
 	build_path = /obj/item/clothing/gloves/color/evening
 	materials = list("leather" = 2000, "phoron" = 10000)
 

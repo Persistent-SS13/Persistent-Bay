@@ -148,7 +148,7 @@
 	temp_chem_holder = new()
 	temp_chem_holder.create_reagents(100)
 	temp_chem_holder.atom_flags |= ATOM_FLAG_OPEN_CONTAINER
-	create_reagents(200)
+	if (!reagents) create_reagents(200)
 	if(mechanical)
 		connect()
 	update_icon()
@@ -503,6 +503,7 @@
 			spawn()
 				reagents.update_total()
 				process_reagents() // Force reagents to be processed
+				return 0
 
 	else if(mechanical && isWrench(O))
 

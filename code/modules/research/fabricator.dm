@@ -96,7 +96,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	var/R = 0
 	for(var/obj/item/weapon/reagent_containers/glass/G in component_parts) // In case wants to get creative with beaker amounts
 		R += G.reagents.maximum_volume
-	create_reagents(R)
+	if(!reagents) create_reagents(R)
 
 	res_max_amount = 0
 	for(var/obj/item/weapon/stock_parts/matter_bin/M in component_parts)

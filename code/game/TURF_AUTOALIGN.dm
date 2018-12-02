@@ -79,7 +79,7 @@
 				if (src.material)
 					A.setMaterial(src.material)
 				else
-					A.setMaterial(getCachedMaterial("steel"))
+					A.setMaterial(getCachedMaterial(MATERIAL_SANDSTONE))
 				src.update_icon()
 
 		else if (istype(W, /obj/item/weapon/screwdriver))
@@ -122,7 +122,7 @@
 					if (src.material)
 						A.setMaterial(src.material)
 					else
-						A.setMaterial(getCachedMaterial("steel"))
+						A.setMaterial(getCachedMaterial(MATERIAL_SANDSTONE))
 					to_chat(user, "<span style=\"color:blue\">You removed the support rods.</span>")
 				else if ((istype(user, /mob/living/silicon/robot) && (user.loc == T)))
 					src.d_state = 6
@@ -130,7 +130,7 @@
 					if (src.material)
 						A.setMaterial(src.material)
 					else
-						A.setMaterial(getCachedMaterial("steel"))
+						A.setMaterial(getCachedMaterial(MATERIAL_SANDSTONE))
 					to_chat(user, "<span style=\"color:blue\">You removed the support rods.</span>")
 
 		else if (istype(W, /obj/item/weapon/crowbar))
@@ -202,7 +202,7 @@
 				if (S.material)
 					src.setMaterial(S.material)
 				else
-					var/datum/material/M = getCachedMaterial("steel")
+					var/datum/material/M = getCachedMaterial(MATERIAL_SANDSTONE)
 					src.setMaterial(M)
 				to_chat(user, "<span style=\"color:blue\">You repaired the wall.</span>")
 				if (S.amount > 1)

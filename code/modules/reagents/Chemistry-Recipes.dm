@@ -1442,7 +1442,7 @@
 /datum/chemical_reaction/patron
 	name = "Patron"
 	result = /datum/reagent/ethanol/patron
-	required_reagents = list(/datum/reagent/ethanol/tequilla = 10, "silver" = 1)
+	required_reagents = list(/datum/reagent/ethanol/tequilla = 10, MATERIAL_SILVER = 1)
 	result_amount = 10
 
 /datum/chemical_reaction/bilk

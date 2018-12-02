@@ -46,8 +46,8 @@
 			data["total_credits"] = supply_controller.point_sources["total"] ? supply_controller.point_sources["total"] : 0
 			data["credits_passive"] = supply_controller.point_sources["time"] ? supply_controller.point_sources["time"] : 0
 			data["credits_crates"] = supply_controller.point_sources["crate"] ? supply_controller.point_sources["crate"] : 0
-			data["credits_phoron"] = supply_controller.point_sources["phoron"] ? supply_controller.point_sources["phoron"] : 0
-			data["credits_platinum"] = supply_controller.point_sources["platinum"] ? supply_controller.point_sources["platinum"] : 0
+			data["credits_phoron"] = supply_controller.point_sources[MATERIAL_PHORON] ? supply_controller.point_sources[MATERIAL_PHORON] : 0
+			data["credits_platinum"] = supply_controller.point_sources[MATERIAL_PLATINUM] ? supply_controller.point_sources[MATERIAL_PLATINUM] : 0
 			data["credits_paperwork"] = supply_controller.point_sources["manifest"] ? supply_controller.point_sources["manifest"] : 0
 			data["credits_virology"] = supply_controller.point_sources["virology"] ? supply_controller.point_sources["virology"] : 0
 			data["can_print"] = can_print()

@@ -135,7 +135,7 @@
 	desc = "A magnetic clamp which can halt the flow of gas in a pipe, via a localised stasis field."
 	icon = 'icons/atmos/clamp.dmi'
 	icon_state = "pclamp0"
-	matter = list(DEFAULT_WALL_MATERIAL = 300, "glass" = 500)
+	matter = list(MATERIAL_STEEL = 300, MATERIAL_GLASS = 500)
 
 /obj/item/clamp/afterattack(var/atom/A, mob/user as mob, proximity)
 	if(!proximity)

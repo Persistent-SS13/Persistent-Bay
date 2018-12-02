@@ -181,9 +181,9 @@
 	if(istype(W,/obj/item/stack/material))
 		var/repair_power = 0
 		switch(W.get_material_name())
-			if(DEFAULT_WALL_MATERIAL)
+			if(MATERIAL_STEEL)
 				repair_power = 2
-			if("plastic")
+			if(MATERIAL_PLASTIC)
 				repair_power = 1
 
 		if(!repair_power)

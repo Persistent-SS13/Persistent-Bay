@@ -62,7 +62,7 @@
 	icon_state = "brutepack"
 	origin_tech = list(TECH_BIO = 1)
 	animal_heal = 5
-	materials_per_unit = list("cloth" = 2000)
+	materials_per_unit = list(MATERIAL_CLOTH = 2000)
 
 /obj/item/stack/medical/bruise_pack/attack(mob/living/carbon/M as mob, mob/user as mob)
 	if(..())

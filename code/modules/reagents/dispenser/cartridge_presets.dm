@@ -1,11 +1,11 @@
 /obj/item/weapon/reagent_containers/chem_disp_cartridge
 	small
 		volume = CARTRIDGE_VOLUME_SMALL
-		matter = list(DEFAULT_WALL_MATERIAL = 25)
+		matter = list(MATERIAL_STEEL = 25)
 
 	medium
 		volume = CARTRIDGE_VOLUME_MEDIUM
-		matter = list(DEFAULT_WALL_MATERIAL = 50)
+		matter = list(MATERIAL_STEEL = 50)
 
 	// Multiple
 	water		spawn_reagent = /datum/reagent/water

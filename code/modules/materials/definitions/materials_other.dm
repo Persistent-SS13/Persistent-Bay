@@ -1,13 +1,13 @@
 /material/waste
-	name = "waste"
+	name = MATERIAL_SLAG
 	stack_type = null
 	icon_colour = "#2e3a07"
-	ore_name = "slag"
+	ore_name = MATERIAL_SLAG
 	ore_desc = "Someone messed up..."
 	ore_icon_overlay = "lump"
 
 /material/cult
-	name = "cult"
+	name = MATERIAL_CULT
 	display_name = "disturbing stone"
 	icon_base = "cult"
 	icon_colour = "#402821"
@@ -18,11 +18,11 @@
 	conductive = 0
 
 /material/cult/reinf
-	name = "cult2"
+	name = MATERIAL_REINFORCED_CULT
 	display_name = "runic inscriptions"
 
 /material/resin
-	name = "resin"
+	name = MATERIAL_RESIN
 	icon_colour = "#e85dd8"
 	dooropen_noise = 'sound/effects/attackblob.ogg'
 	icon_door = "resin"

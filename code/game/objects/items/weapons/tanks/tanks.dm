@@ -14,7 +14,7 @@ var/list/global/tank_gauge_cache = list()
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BACK
 	w_class = ITEM_SIZE_LARGE
-	matter = list(DEFAULT_WALL_MATERIAL = 1000)
+	matter = list(MATERIAL_STEEL = 1000)
 
 	force = 5.0
 	throwforce = 10.0

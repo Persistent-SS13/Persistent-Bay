@@ -39,6 +39,12 @@
 		usr << browse(null, "window=stack")
 	return ..()
 
+/obj/item/stack/proc/set_amount(var/newamount)
+	amount = max(1, min(newamount, max_amount))
+	update_material_value()
+	update_strings()
+	update_icon()
+
 //Called whenever stacked amount changes
 /obj/item/stack/proc/update_material_value()
 	if(matter)

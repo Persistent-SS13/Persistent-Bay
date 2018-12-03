@@ -11,7 +11,7 @@
 /obj/item/girderpart/New(var/newloc, var/mat)
 	material = mat
 	if(!material)
-		material = SSmaterials.get_material_by_name("steel")
+		material = SSmaterials.get_material_by_name(MATERIAL_STEEL)
 	name = "[material.display_name] " + initial(name)
 	color = material.icon_colour
 

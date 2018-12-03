@@ -10,37 +10,37 @@
 	name = T_BOARD("guestpass console")
 	build_path = /obj/machinery/computer/guestpass
 	board_type = "guestpass"
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 
 /obj/item/weapon/circuitboard/status_display
 	name = T_BOARD("status display")
 	build_path = /obj/machinery/status_display
 	board_type = "display"
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 
 /obj/item/weapon/circuitboard/ai_status_display
 	name = T_BOARD("ai status display")
 	build_path = /obj/machinery/ai_status_display
 	board_type = "display"
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 
 /obj/item/weapon/circuitboard/newscaster
 	name = T_BOARD("newscaster")
 	build_path = /obj/machinery/newscaster
 	board_type = "newscaster"
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 
 /obj/item/weapon/circuitboard/atm
 	name = T_BOARD("atm")
 	build_path = /obj/machinery/atm
 	board_type = "atm"
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 
 /obj/item/weapon/circuitboard/request
 	name = T_BOARD("reques console")
 	build_path = /obj/machinery/requests_console
 	board_type = "request"
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 
 //Alarm
 
@@ -48,25 +48,25 @@
 	name = T_BOARD("fire alarm")
 	build_path = /obj/machinery/firealarm
 	board_type = "firealarm"
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 
 /obj/item/weapon/circuitboard/airalarm
 	name = T_BOARD("air alarm")
 	build_path = /obj/machinery/alarm
 	board_type = "airalarm"
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 
 /obj/item/weapon/circuitboard/intercom
 	name = T_BOARD("intercom")
 	build_path = /obj/item/device/radio/intercom
 	board_type = "intercom"
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 
 /obj/item/weapon/circuitboard/keycard_auth
 	name = T_BOARD("keycard authenticator")
 	build_path = /obj/machinery/keycard_auth
 	board_type = "keycard"
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 
 //Computer
 
@@ -74,7 +74,7 @@
 	name = T_BOARD("holopad")
 	build_path = /obj/machinery/hologram/holopad
 	board_type = "holopad"
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 
 /obj/item/weapon/circuitboard/scanner_console
 	name = T_BOARD("body scanner console")
@@ -89,7 +89,7 @@
 	name = T_BOARD("photocopier")
 	build_path = /obj/machinery/photocopier
 	board_type = "photocopier"
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 	req_components = list(
 							/obj/item/weapon/stock_parts/scanning_module = 1,
 							/obj/item/weapon/stock_parts/motor = 1,
@@ -100,7 +100,7 @@
 	name = T_BOARD("fax")
 	build_path = /obj/machinery/photocopier/faxmachine
 	board_type = "fax"
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 	req_components = list(
 							/obj/item/weapon/stock_parts/scanning_module = 1,
 							/obj/item/weapon/stock_parts/motor = 1,
@@ -120,7 +120,7 @@
 	name = T_BOARD("microwave")
 	build_path = /obj/machinery/microwave
 	board_type = "microwave"
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 	req_components = list(
 							/obj/item/weapon/stock_parts/console_screen = 1,
 							/obj/item/weapon/stock_parts/motor = 1,
@@ -143,7 +143,7 @@
 	name = T_BOARD("washing machine")
 	build_path = /obj/machinery/washing_machine
 	board_type = "washing"
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 50)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 	req_components = list(
 							/obj/item/weapon/stock_parts/motor = 1,
 							/obj/item/weapon/stock_parts/gear = 2)

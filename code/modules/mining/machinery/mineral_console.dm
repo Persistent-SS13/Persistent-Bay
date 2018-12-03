@@ -29,6 +29,8 @@
 	. = ..()
 
 /obj/machinery/computer/mining/proc/connect_machine(var/obj/machinery/mineral/mach)
+	if(!connected)
+		connected = list()
 	if(mach && istype(mach))
 		mach.console = src
 		connected |= mach

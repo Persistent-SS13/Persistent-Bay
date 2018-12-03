@@ -17,7 +17,7 @@
 	var/flooring_override
 	var/initial_flooring
 	var/decl/flooring/flooring
-	var/mineral = DEFAULT_WALL_MATERIAL
+	var/mineral = MATERIAL_STEEL
 
 	var/prior_floortype = /turf/space
 	var/prior_resources = list()

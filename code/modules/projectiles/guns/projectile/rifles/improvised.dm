@@ -118,7 +118,7 @@
 			buildstate++
 			playsound(src.loc, 'sound/items/Screwdriver.ogg', 100, 1)
 			return
-	else if(istype(W,/obj/item/stack/material) && W.get_material_name() == "plasteel")
+	else if(istype(W,/obj/item/stack/material) && W.get_material_name() == MATERIAL_PLASTEEL)
 		if(buildstate == 3)
 			var/obj/item/stack/material/P = W
 			if(P.use(5))
@@ -134,7 +134,7 @@
 			buildstate++
 			playsound(src.loc, 'sound/items/Ratchet.ogg', 100, 1)
 			return
-	else if(istype(W,/obj/item/stack/material) && W.get_material_name() == DEFAULT_WALL_MATERIAL)
+	else if(istype(W,/obj/item/stack/material) && W.get_material_name() == MATERIAL_STEEL)
 		if(buildstate == 5)
 			var/obj/item/stack/material/P = W
 			if(P.use(10))

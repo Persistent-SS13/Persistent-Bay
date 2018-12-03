@@ -181,7 +181,7 @@
 		else
 			r_material = null
 	if(!material)
-		material = SSmaterials.get_material_by_name("steel")
+		material = SSmaterials.get_material_by_name(MATERIAL_STEEL)
 		update_Integrity = 1
 
 	if(update_Integrity)

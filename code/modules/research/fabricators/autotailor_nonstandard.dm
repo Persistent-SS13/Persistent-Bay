@@ -243,7 +243,7 @@
 /datum/design/item/autotailor/nonstandard/costume/gladiator_head
 	name = "Gladiator's helmet"
 	id = "gladiator_head"
-	build_path = /obj/item/clothing/head/helmet/gladiator
+	build_path = /obj/item/clothing/head/helmet/gladiator/costume
 	materials = list(DEFAULT_WALL_MATERIAL = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/schoolgirl
@@ -396,40 +396,40 @@
 /datum/design/item/autotailor/nonstandard/costume/armored_cult
 	name = "cultist robes - armored"
 	id = "armored_cult"
-	build_path = /obj/item/clothing/suit/cultrobes
+	build_path = /obj/item/clothing/suit/cultrobes/costume
 	materials = list("leather" = 5000, DEFAULT_WALL_MATERIAL = 500)
 
 /datum/design/item/autotailor/nonstandard/costume/sorcery_cult_r
-	name = "cultist roves - red sorcerer"
+	name = "cultist robes - red sorcerer"
 	id = "sorcery_cult_r"
-	build_path = /obj/item/clothing/suit/cultrobes/magusred
+	build_path = /obj/item/clothing/suit/cultrobes/magusred/costume
 
 /datum/design/item/autotailor/nonstandard/costume/sorcery_cult_b
-	name = "cultist roves - blue sorcerer"
+	name = "cultist robes - blue sorcerer"
 	id = "sorcery_cult_b"
-	build_path = /obj/item/clothing/suit/wizrobe/magusblue
+	build_path = /obj/item/clothing/suit/wizrobe/magusblue/fake
 
 /datum/design/item/autotailor/nonstandard/costume/cult
 	name = "cultist robes - standard"
 	id = "cult"
-	build_path = /obj/item/clothing/suit/cultrobes/alt
+	build_path = /obj/item/clothing/suit/cultrobes/alt/costume
 
 /datum/design/item/autotailor/nonstandard/costume/cult_head_grey
 	name = "cultist hood - grey"
 	id = "cult_head_grey"
-	build_path = /obj/item/clothing/head/culthood/alt
+	build_path = /obj/item/clothing/head/culthood/alt/costume
 	materials = list("cloth" = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/cult_head_red
 	name = "cultist hood - red"
 	id = "cult_head_red"
-	build_path = /obj/item/clothing/head/culthood
+	build_path = /obj/item/clothing/head/culthood/costume
 	materials = list("cloth" = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/cult_head_warrior
 	name = "cultist helmet - warrior"
 	id = "cult_head_warrior"
-	build_path = /obj/item/clothing/head/culthood/magus
+	build_path = /obj/item/clothing/head/culthood/magus/costume
 	materials = list("cloth" = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/red_suit_armor
@@ -447,7 +447,7 @@
 /datum/design/item/autotailor/nonstandard/costume/armor_suit_head
 	name = "Armored suit helmet"
 	id = "green_suit_head"
-	build_path = /obj/item/clothing/head/helmet/thunderdome
+	build_path = /obj/item/clothing/head/helmet/thunderdome/costume
 	materials = list(DEFAULT_WALL_MATERIAL = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/cardboard
@@ -465,24 +465,24 @@
 /datum/design/item/autotailor/nonstandard/costume/purple_robe
 	name = "Robes - embelished purple"
 	id = "purple_robe"
-	build_path = /obj/item/clothing/suit/wizrobe/psypurple
+	build_path = /obj/item/clothing/suit/wizrobe/psypurple/fake
 	materials = list("cloth" = 10000, "phoron" = 4000)
 
 /datum/design/item/autotailor/nonstandard/costume/purple_robe_head
 	name = "Robes - embelished purple head"
 	id = "purple_robe_head"
-	build_path = /obj/item/clothing/head/wizard/amp
+	build_path = /obj/item/clothing/head/wizard/amp/fake
 	materials = list("cloth" = 2000, "phoron" = 1000)
 
 /datum/design/item/autotailor/nonstandard/costume/red_robe
 	name = "Robes - red"
 	id = "red_robe"
-	build_path = /obj/item/clothing/suit/wizrobe/red
+	build_path = /obj/item/clothing/suit/wizrobe/red/fake
 
 /datum/design/item/autotailor/nonstandard/costume/red_robe_head
 	name = "Robes - red hat"
 	id = "red_robe_hat"
-	build_path = /obj/item/clothing/head/wizard/red
+	build_path = /obj/item/clothing/head/wizard/red/fake
 	materials = list("cloth" = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/blue_basic_robe
@@ -493,7 +493,7 @@
 /datum/design/item/autotailor/nonstandard/costume/blue_robe
 	name = "Robes - blue"
 	id = "blue_robe"
-	build_path = /obj/item/clothing/suit/wizrobe
+	build_path = /obj/item/clothing/suit/wizrobe/fake
 
 /datum/design/item/autotailor/nonstandard/costume/blue_robe_head
 	name = "Robes - blue hat"
@@ -663,7 +663,7 @@
 /datum/design/item/autotailor/nonstandard/costume/plague_doc
 	name = "Plague doctor suit"
 	id = "plague_doc"
-	build_path = /obj/item/clothing/suit/bio_suit/plaguedoctorsuit
+	build_path = /obj/item/clothing/suit/bio_suit/plaguedoctorsuit/costume
 	materials = list("leather" = 20000)
 
 /datum/design/item/autotailor/nonstandard/costume/plague_doc_hat

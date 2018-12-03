@@ -101,6 +101,8 @@
 		slot_l_hand_str = "det_hat",
 		slot_r_hand_str = "det_hat",
 		)
+	armor = list(melee = 50, bullet = 5, laser = 25, energy = 10, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 0.9
 	flags_inv = BLOCKHEADHAIR
 
 /obj/item/clothing/head/det/attack_self(mob/user)
@@ -112,6 +114,13 @@
 	icon_state = "detective2"
 	desc = "A grey fedora - either the cornerstone of a detective's style or a poor attempt at looking cool, depending on the person wearing it."
 
+/obj/item/clothing/head/det/noarmor
+	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 1.0
+
+/obj/item/clothing/head/det/grey/noarmor
+	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 1.0
 
 /*
  * Head of Security

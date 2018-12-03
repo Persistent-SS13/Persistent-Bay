@@ -36,6 +36,7 @@
 	name = "tactical turtleneck"
 	id = "turtleneck_def"
 	build_path = /obj/item/clothing/under/syndicate
+	materials = list("leather" = 5000, "plasteel" = 5000, "osmium-carbide plasteel" = 5000)
 
 /datum/design/item/autotailor/combat/under/hos_red
 	name = "Head of Security jumpsuit - red"
@@ -118,6 +119,7 @@
 	name = "ERT uniform"
 	id = "tactical_ert"
 	build_path = /obj/item/clothing/under/ert
+	materials = list("leather" = 5000, "plasteel" = 1000, "osmium-carbide plasteel" = 1000)
 
 /datum/design/item/autotailor/combat/under/pt_uniform
 	name = "TF PT uniform"
@@ -298,31 +300,31 @@
 	name = "armor vest - tactical"
 	id = "tact_vest"
 	build_path = /obj/item/clothing/suit/armor/vest
-	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 10000, "osmium-carbide plasteel" = 7500)
+	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 10000, "osmium-carbide plasteel" = 3000)
 
 /datum/design/item/autotailor/combat/barmour/tact_vest_nt	//NT item
 	name = "armor vest - tactical NT"
 	id = "tact_vest_nt"
 	build_path = /obj/item/clothing/suit/armor/vest/nt
-	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 10000, "osmium-carbide plasteel" = 7500)
+	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 10000, "osmium-carbide plasteel" = 3000)
 
 /datum/design/item/autotailor/combat/barmour/tact_vest_pcrc
 	name = "armor vest - tactical PCRC"
 	id = "tact_vest_pcrc"
 	build_path = /obj/item/clothing/suit/armor/vest/pcrc
-	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 10000, "osmium-carbide plasteel" = 7500)
+	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 10000, "osmium-carbide plasteel" = 3000)
 
 /datum/design/item/autotailor/combat/barmour/tact_vest_press
 	name = "armor vest - tactical press"
 	id = "tact_vest_press"
 	build_path = /obj/item/clothing/suit/armor/vest/press
-	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 10000, "osmium-carbide plasteel" = 7500)
+	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 10000, "osmium-carbide plasteel" = 3000)
 
 /datum/design/item/autotailor/combat/barmour/tact_brown
 	name = "armor vest - tactical brown"
 	id = "tact_brown"
 	build_path = /obj/item/clothing/suit/armor/vest/detective
-	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 10000, "osmium-carbide plasteel" = 7500)
+	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 10000, "osmium-carbide plasteel" = 3000)
 
 /datum/design/item/autotailor/combat/barmour/stab_vest
 	name = "armor vest - stab protection"
@@ -523,10 +525,10 @@
 	materials = list(DEFAULT_WALL_MATERIAL = 5000, "plasteel" = 5000)
 
 /datum/design/item/autotailor/combat/barmour/helmet_tan
-	name = "Helmet - tan"
+	name = "Helmet - tactical"
 	id = "helmet_tan"
 	build_path = /obj/item/clothing/head/helmet/tactical
-	materials = list(DEFAULT_WALL_MATERIAL = 5000, "plasteel" = 5000)
+	materials = list(DEFAULT_WALL_MATERIAL = 5000, "plasteel" = 7000)
 
 /datum/design/item/autotailor/combat/barmour/helmet_navy
 	name = "Helmet - navy"
@@ -544,7 +546,7 @@
 	name = "Helmet - black w. red stripes"
 	id = "helmet_bl_redstripe"
 	build_path = /obj/item/clothing/head/helmet/merc
-	materials = list(DEFAULT_WALL_MATERIAL = 5000, "plasteel" = 5000)
+	materials = list(DEFAULT_WALL_MATERIAL = 5000, "plasteel" = 9000,  "osmium-carbide plasteel" = 5000)
 
 /datum/design/item/autotailor/combat/barmour/helmet_bl_redmark
 	name = "Helmet - black w. red markings"
@@ -618,7 +620,7 @@
 	name = "Chestplate - medium tan"
 	id = "chest_medtan"
 	build_path = /obj/item/clothing/accessory/armorplate/tactical
-	materials = list(DEFAULT_WALL_MATERIAL = 10000, "plasteel" = 7000, "osmium-carbide plasteel" = 7000)
+	materials = list(DEFAULT_WALL_MATERIAL = 10000, "plasteel" = 8000, "osmium-carbide plasteel" = 8000)
 
 /datum/design/item/autotailor/combat/modular_armor/chest_heavy
 	name = "Chestplate - heavy"

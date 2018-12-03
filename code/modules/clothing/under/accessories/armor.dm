@@ -68,7 +68,7 @@
 	name = "tactical armor plate"
 	desc = "A medium armor plate with additional ablative coating. Attaches to a plate carrier."
 	icon_state = "armor_tactical"
-	armor = list(melee = 40, bullet = 40, laser = 40, energy = 25, bomb = 30, bio = 0, rad = 0)
+	armor = list(melee = 40, bullet = 40, laser = 60, energy = 35, bomb = 30, bio = 0, rad = 0)
 
 /obj/item/clothing/accessory/armorplate/merc
 	name = "heavy armor plate"

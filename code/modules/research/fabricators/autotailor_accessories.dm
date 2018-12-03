@@ -780,12 +780,6 @@
 	build_path = /obj/item/clothing/gloves/insulated
 	materials = list("leather" = 2000, "titanium" = 5000)	//not sure if this generates on roid, change if not
 
-/datum/design/item/autotailor/accessories/gloves/eng_cheap
-	name = "Insulated gloves - cheap"
-	id = "eng_cheap"
-	build_path = /obj/item/clothing/gloves/insulated/cheap
-	materials = list("leather" = 2000, DEFAULT_WALL_MATERIAL = 10000)
-
 /datum/design/item/autotailor/accessories/gloves/forensic
 	name = "Forensic gloves"
 	id = "forensic"
@@ -1040,7 +1034,7 @@
 /datum/design/item/autotailor/accessories/hats/beret_grey
 	name = "Flat cap - grey"
 	id = "flat_grey"
-	build_path = /obj/item/clothing/head/wizard/cap
+	build_path = /obj/item/clothing/head/wizard/cap/fake
 	materials = list("leather" = 500)
 
 /datum/design/item/autotailor/accessories/hats/trilby_blue
@@ -1058,13 +1052,13 @@
 /datum/design/item/autotailor/accessories/hats/fedora_grey
 	name = "Fedora - grey"
 	id = "fedora_grey"
-	build_path = /obj/item/clothing/head/det/grey
+	build_path = /obj/item/clothing/head/det/grey/noarmor
 	materials = list("leather" = 500)
 
 /datum/design/item/autotailor/accessories/hats/fedora_brown
 	name = "Fedora - brown"
 	id = "fedora_brown"
-	build_path = /obj/item/clothing/head/det
+	build_path = /obj/item/clothing/head/det/noarmor
 	materials = list("leather" = 500)
 
 /datum/design/item/autotailor/accessories/hats/bowler_black

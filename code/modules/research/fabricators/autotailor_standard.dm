@@ -1246,22 +1246,22 @@
 /datum/design/item/autotailor/suit/overcoats/brown_trench
 	name = "Trenchcoat - brown"
 	id = "brown_trench"
-	build_path = /obj/item/clothing/suit/storage/det_trench
+	build_path = /obj/item/clothing/suit/storage/det_trench/noarmor
 
 /datum/design/item/autotailor/suit/overcoats/grey_trench
 	name = "Trenchcoat - grey"
 	id = "grey_trench"
-	build_path = /obj/item/clothing/suit/storage/det_trench/grey
+	build_path = /obj/item/clothing/suit/storage/det_trench/grey/noarmor
 
 /datum/design/item/autotailor/suit/overcoats/red_casual
 	name = "Casual jacket - red"
 	id = "red_casual"
-	build_path = /obj/item/clothing/suit/storage/forensics/red
+	build_path = /obj/item/clothing/suit/storage/forensics/red/noarmor
 
 /datum/design/item/autotailor/suit/overcoats/blue_casual
 	name = "Casual jacket - blue"
 	id = "blue_casual"
-	build_path = /obj/item/clothing/suit/storage/forensics/blue
+	build_path = /obj/item/clothing/suit/storage/forensics/blue/noarmor
 
 /datum/design/item/autotailor/suit/overcoats/white_suitjacket	//can use custom colors
 	name = "Suit jacket - white"
@@ -1396,7 +1396,7 @@
 /datum/design/item/autotailor/suit/overcoats/gentle_coat
 	name = "Gentleman's coat"
 	id = "gentle_coat"
-	build_path = /obj/item/clothing/suit/wizrobe/gentlecoat
+	build_path = /obj/item/clothing/suit/wizrobe/gentlecoat/fake
 
 /datum/design/item/autotailor/suit/overcoats/priest_robes
 	name = "Holiday Priest robes"

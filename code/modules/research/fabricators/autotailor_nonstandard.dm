@@ -488,7 +488,7 @@
 /datum/design/item/autotailor/nonstandard/costume/blue_basic_robe
 	name = "Robes - basic blue"
 	id = "blue_basic_robe"
-	build_path = /obj/item/clothing/suit/wizrobe/fake
+	build_path = /obj/item/clothing/suit/wizrobe/old/fake
 
 /datum/design/item/autotailor/nonstandard/costume/blue_robe
 	name = "Robes - blue"

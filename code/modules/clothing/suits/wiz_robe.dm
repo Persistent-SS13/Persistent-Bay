@@ -112,6 +112,16 @@
 /obj/item/clothing/head/wizard/fake
 	siemens_coefficient = 1.0
 
+/obj/item/clothing/suit/wizrobe/old/fake
+	name = "wizard robe"
+	desc = "A rather dull, blue robe meant to mimick real wizard robes."
+	icon_state = "wizard"
+	item_state = "wizrobe"
+	gas_transfer_coefficient = 1
+	permeability_coefficient = 1
+	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 1.0
+
 /obj/item/clothing/suit/wizrobe/fake
 	name = "wizard robe"
 	desc = "A rather dull, blue robe meant to mimick real wizard robes."

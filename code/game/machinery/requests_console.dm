@@ -83,6 +83,9 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 
 	set_light(1)
 
+	pixel_x = (dir & 3)? 0 : (dir == 4 ? -24 : 24)
+	pixel_y = (dir & 3)? (dir ==1 ? -24 : 24) : 0
+
 /obj/machinery/requests_console/Destroy()
 	allConsoles -= src
 	var/lastDeptRC = 1

@@ -1,8 +1,8 @@
 /obj/machinery/photocopier
 	name = "photocopier"
-	icon = 'icons/obj/library.dmi'
-	icon_state = "bigscanner"
-	var/insert_anim = "bigscanner1"
+	icon = 'icons/obj/bureaucracy.dmi'
+	icon_state = "photocopier"
+	var/insert_anim = "photocopier_animation"
 	anchored = 1
 	density = 1
 	use_power = 1

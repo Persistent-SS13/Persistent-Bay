@@ -8,7 +8,7 @@
 	var/refund_amt = 2
 	var/refund_material_type = /obj/item/stack/material/steel
 	var/reverse = 0 //if resulting object faces opposite its dir (like light fixtures)
-	matter = list(DEFAULT_WALL_MATERIAL = 2000)
+	matter = list(MATERIAL_STEEL = 2000)
 
 /obj/item/frame/plastic
 	refund_material_type = /obj/item/stack/material/plastic
@@ -169,6 +169,7 @@
 	icon_state = "anesthetic_tank_open"
 	refund_amt = 5
 	build_machine_type = /obj/machinery/oxygen_pump/anesthetic
+	reverse = 1
 
 /obj/item/frame/barsign
 	name = "Bar Sign Frame"
@@ -240,28 +241,28 @@
 	desc = "Used for building wall-mounted fire safety closets"
 	icon = 'icons/obj/closet.dmi'
 	icon_state = "hydrant_open"
-	build_machine_type = /obj/structure/closet/hydrant
+	build_machine_type = /obj/structure/closet/wall/hydrant
 
 /obj/item/frame/medical_closet
 	name = "first-aid closet frame"
 	desc = "Used for building wall-mounted first aid closets"
 	icon = 'icons/obj/closet.dmi'
 	icon_state = "medical_wall_first_aid_open"
-	build_machine_type = /obj/structure/closet/medical_wall
+	build_machine_type = /obj/structure/closet/wall/medical
 
 /obj/item/frame/general_closet
 	name = "genera closet frame"
 	desc = "Used for building wall-mounted closets"
 	icon = 'icons/obj/closet.dmi'
 	icon_state = "wall_general_open"
-	build_machine_type = /obj/structure/closet/general_wall
+	build_machine_type = /obj/structure/closet/wall
 
 /obj/item/frame/shipping_closet
 	name = "shipping closet frame"
 	desc = "Used for building wall-mounted shipping supplies closets"
 	icon = 'icons/obj/closet.dmi'
 	icon_state = "shipping_wall_open"
-	build_machine_type = /obj/structure/closet/shipping_wall
+	build_machine_type = /obj/structure/closet/wall/shipping
 
 /obj/item/frame/extinguisher_cabinet
 	name = "extinguisher cabinet frame"

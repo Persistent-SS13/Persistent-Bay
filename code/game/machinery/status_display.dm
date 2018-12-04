@@ -18,11 +18,11 @@
 	density = 0
 	use_power = 1
 	idle_power_usage = 10
-	var/mode = 1	// 0 = Blank
-					// 1 = Shuttle timer
-					// 2 = Arbitrary message(s)
-					// 3 = alert picture
-					// 4 = Supply shuttle timer
+	var/mode = STATUS_DISPLAY_BLANK	// 0 = Blank
+									// 1 = Shuttle timer
+									// 2 = Arbitrary message(s)
+									// 3 = alert picture
+									// 4 = Supply shuttle timer
 
 	var/picture_state = "greenalert" // icon_state of alert picture
 	var/message1 = ""                // message line 1
@@ -47,6 +47,11 @@
 	var/const/STATUS_DISPLAY_TIME = 4
 	var/const/STATUS_DISPLAY_IMAGE = 5
 	var/const/STATUS_DISPLAY_CUSTOM = 99
+
+/obj/machinery/status_display/New()
+	..()
+	pixel_x = (dir & 3)? 0 : (dir == 4 ? -30 : 30)
+	pixel_y = (dir & 3)? (dir ==1 ? -30 : 30) : 0
 
 /obj/machinery/status_display/Destroy()
 	if(radio_controller)
@@ -78,12 +83,14 @@
 	remove_display()
 	if(friendc && !ignore_friendc)
 		set_picture("ai_friend")
-		return 1
+		return TRUE
 
 	switch(mode)
 		if(STATUS_DISPLAY_BLANK)	//blank
-			return 1
+			return TRUE
 		if(STATUS_DISPLAY_TRANSFER_SHUTTLE_TIME)				//emergency shuttle timer
+			if(!evacuation_controller)
+				return FALSE
 			if(evacuation_controller.is_prepared())
 				message1 = "-ETD-"
 				if (evacuation_controller.waiting_to_leave())
@@ -99,7 +106,7 @@
 				if(length(message2) > CHARS_PER_LINE)
 					message2 = "Error"
 				update_display(message1, message2)
-			return 1
+			return TRUE
 		if(STATUS_DISPLAY_MESSAGE)	//custom messages
 			var/line1
 			var/line2
@@ -122,19 +129,19 @@
 				if(index2 > message2_len)
 					index2 -= message2_len
 			update_display(line1, line2)
-			return 1
+			return TRUE
 		if(STATUS_DISPLAY_ALERT)
 			display_alert()
-			return 1
+			return TRUE
 		if(STATUS_DISPLAY_TIME)
 			message1 = "TIME"
 			message2 = stationtime2text()
 			update_display(message1, message2)
-			return 1
+			return TRUE
 		if(STATUS_DISPLAY_IMAGE)
 			set_picture(picture_state)
-			return 1
-	return 0
+			return TRUE
+	return FALSE
 
 /obj/machinery/status_display/examine(mob/user)
 	. = ..(user)
@@ -230,6 +237,27 @@
 			mode = STATUS_DISPLAY_IMAGE
 			set_picture(signal.data["picture_state"])
 	update()
+
+/obj/machinery/status_display/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	if(isScrewdriver(W))
+		stat ^= MAINT
+		panel_open = !panel_open
+		user.visible_message("<span class='notice'>\The [user] [stat & MAINT ? "opens" : "closes"] \the [src].</span>", "<span class='notice'>You [stat & MAINT ? "open" : "close"] \the [src].</span>")
+		update_icon()
+		return
+	else if(default_deconstruction_crowbar(user,W))
+		return
+	return ..()
+
+/obj/machinery/status_display/dismantle()
+	playsound(loc, 'sound/items/Crowbar.ogg', 50, 1)
+	var/obj/item/frame/status_display/F = new /obj/item/frame/status_display(get_turf(src))
+	F.set_dir(src.dir)
+	for(var/obj/I in component_parts)
+		I.forceMove(get_turf(src))
+
+	qdel(src)
+	return TRUE
 
 #undef CHARS_PER_LINE
 #undef FOND_SIZE

@@ -179,22 +179,37 @@
 	new /obj/item/clothing/head/bomb_hood/security( src )
 
 /*
- * Hydrant
+ * General purpose
  */
-/obj/structure/closet/hydrant //wall mounted fire closet
-	name = "fire-safety closet"
-	desc = "It's a storage unit for fire-fighting supplies."
-	icon_state = "hydrant"
-	icon_closed = "hydrant"
-	icon_opened = "hydrant_open"
+/obj/structure/closet/wall
+	name = "wall closet"
+	desc = "It's a wall-mounted storage unit."
+	icon_state = "wall_general"
+	icon_closed = "wall_general"
+	icon_opened = "wall_general_open"
 	anchored = 1
 	density = 0
 	wall_mounted = 1
 	storage_types = CLOSET_STORAGE_ITEMS
 
-/obj/structure/closet/hydrant/filled
+/obj/structure/closet/wall/New()
+	..()
+	pixel_x = (dir & 3)? 0 : (dir == 4 ? -30 : 30)
+	pixel_y = (dir & 3)? (dir ==1 ? -30 : 30) : 0
 
-/obj/structure/closet/hydrant/filled/New()
+/*
+ * Hydrant
+ */
+/obj/structure/closet/wall/hydrant //wall mounted fire closet
+	name = "fire-safety closet"
+	desc = "It's a storage unit for fire-fighting supplies."
+	icon_state = "hydrant"
+	icon_closed = "hydrant"
+	icon_opened = "hydrant_open"
+
+/obj/structure/closet/wall/hydrant/filled
+
+/obj/structure/closet/wall/hydrant/filled/New()
 	..()
 	new /obj/item/inflatable/door(src)
 	new /obj/item/inflatable/door(src)
@@ -204,6 +219,8 @@
 	new /obj/item/weapon/tank/oxygen/red(src)
 	new /obj/item/weapon/extinguisher(src)
 	new /obj/item/clothing/head/hardhat/red(src)
+
+
 
 /*
  * General purpose
@@ -222,26 +239,22 @@
 /*
  * First Aid
  */
-/obj/structure/closet/medical_wall //wall mounted medical closet
+/obj/structure/closet/wall/medical //wall mounted medical closet
 	name = "first-aid closet"
 	desc = "It's a wall-mounted storage unit for first aid supplies."
 	icon_state = "medical_wall_first_aid"
 	icon_closed = "medical_wall_first_aid"
 	icon_opened = "medical_wall_first_aid_open"
-	anchored = 1
-	density = 0
-	wall_mounted = 1
-	storage_types = CLOSET_STORAGE_ITEMS
 
-/obj/structure/closet/medical_wall/update_icon()
+/obj/structure/closet/wall/medical/update_icon()
 	if(!opened)
 		icon_state = icon_closed
 	else
 		icon_state = icon_opened
 
-/obj/structure/closet/medical_wall/filled
+/obj/structure/closet/wall/medical/filled
 
-/obj/structure/closet/medical_wall/filled/WillContain()
+/obj/structure/closet/wall/medical/filled/WillContain()
 	return list(
 		/obj/random/firstaid,
 		/obj/random/medical/lite = 12)
@@ -249,26 +262,21 @@
 /*
  * Shipping
  */
-/obj/structure/closet/shipping_wall
-	name = "shipping supplies closet"
+/obj/structure/closet/wall/shipping	name = "shipping supplies closet"
 	desc = "It's a wall-mounted storage unit containing supplies for preparing shipments."
 	icon_state = "shipping_wall"
 	icon_closed = "shipping_wall"
 	icon_opened = "shipping_wall_open"
-	anchored = 1
-	density = 0
-	wall_mounted = 1
-	storage_types = CLOSET_STORAGE_ITEMS
 
-/obj/structure/closet/shipping_wall/update_icon()
+/obj/structure/closet/wall/shipping/update_icon()
 	if(!opened)
 		icon_state = icon_closed
 	else
 		icon_state = icon_opened
 
-/obj/structure/closet/shipping_wall/filled
+/obj/structure/closet/wall/shipping/filled
 
-/obj/structure/closet/shipping_wall/filled/WillContain()
+/obj/structure/closet/wall/shipping/filled/WillContain()
 	return list(
 		/obj/item/stack/material/cardboard/ten,
 		/obj/item/device/destTagger,

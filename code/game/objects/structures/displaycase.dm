@@ -35,7 +35,7 @@
 					playsound(get_turf(src), 'sound/items/Screwdriver.ogg', 50, 1)
 					del(src)
 					return
-				
+
 				else
 					if(circuit.one_access)
 						C.req_access = null
@@ -66,7 +66,7 @@
 /obj/structure/displaycase
 	name = "display case"
 	icon = 'icons/obj/stationobjs.dmi'
-	icon_state = "glassbox20"
+	icon_state = "glassbox"
 	desc = "A display case for prized possessions. It taunts you to kick it."
 	density = 1
 	anchored = 1
@@ -122,9 +122,9 @@
 
 /obj/structure/displaycase/update_icon()
 	if(src.destroyed)
-		src.icon_state = "glassbox2b"
+		src.icon_state = "glassboxb"
 	else
-		src.icon_state = "glassbox2[locked]"
+		src.icon_state = "glassbox[locked]"
 	overlays = 0
 	if(occupant)
 		var/icon/occupant_icon=getFlatIcon(occupant)

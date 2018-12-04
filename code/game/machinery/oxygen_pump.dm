@@ -24,8 +24,13 @@
 
 /obj/machinery/oxygen_pump/filled/New()
 	..()
-	tank = new spawn_type (src)
 	contained = new mask_type (src)
+	pixel_x = (dir & 3)? 0 : (dir == 4 ? -30 : 30)
+	pixel_y = (dir & 3)? (dir ==1 ? -30 : 30) : 0
+
+/obj/machinery/oxygen_pump/filled/New()
+	..()
+	tank = new spawn_type (src)
 
 /obj/machinery/oxygen_pump/New()
 	..()

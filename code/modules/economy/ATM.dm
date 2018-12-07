@@ -34,11 +34,11 @@
 	if(wiresexposed)
 		switch(buildstage)
 			if(2)
-				icon_state="atm_b2"
+				icon_state="atm_off"
 			if(1)
-				icon_state="atm_b1"
+				icon_state="atm_off"
 			if(0)
-				icon_state="atm_b0"
+				icon_state="atm_off"
 		set_light(0)
 		return
 	else

@@ -385,3 +385,9 @@ Class Procs:
 
 /obj/machinery/after_load()
 	RefreshParts()
+
+/obj/machinery/proc/has_transmitter()
+	return src.HasExtension(RADIO_TRANSMITTER_TYPE)
+
+/obj/machinery/proc/get_transmitter()
+	return src.GetExtension(RADIO_TRANSMITTER_TYPE)

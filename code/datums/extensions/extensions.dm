@@ -26,6 +26,12 @@
 		extensions = null
 	return ..()
 
+/datum/proc/GetExtension(var/base_type)
+	return get_extension(src, base_type)
+
+/datum/proc/HasExtension(var/base_type)
+	return has_extension(src, base_type)
+
 //Variadic - Additional positional arguments can be given. Named arguments might not work so well
 /proc/set_extension(var/datum/source, var/datum/extension/base_type, var/extension_type)
 	if(!source.extensions)

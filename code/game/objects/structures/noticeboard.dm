@@ -1,3 +1,4 @@
+var/const/NBOARD_MAX_NOTICES = 5
 /obj/structure/noticeboard
 	name = "notice board"
 	desc = "A board for pinning important notices upon."
@@ -21,30 +22,30 @@
 			if(istype(I, /obj/item/weapon/paper))
 				I.forceMove(src)
 				notices++
-
 	. = ..()
-/obj/structure/noticeboard/after_load()
+
+/obj/structure/noticeboard/update_icon()
+	notices = max(min(NBOARD_MAX_NOTICES,contents.len), 0)
 	icon_state = "nboard0[notices]"
-	notices = contents.len
-	..()
+
 //attaching papers!!
 /obj/structure/noticeboard/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)
 	if(istype(O, /obj/item/weapon/paper) || istype(O, /obj/item/weapon/photo))
-		if(notices < 5)
+		if(notices < NBOARD_MAX_NOTICES)
 			O.add_fingerprint(user)
 			add_fingerprint(user)
 			user.drop_from_inventory(O,src)
-			notices++
-			icon_state = "nboard0[notices]"	//update sprite
+			update_icon()
 			to_chat(user, "<span class='notice'>You pin the paper to the noticeboard.</span>")
 		else
 			to_chat(user, "<span class='notice'>You reach to pin your paper to the board but hesitate. You are certain your paper will not be seen among the many others already attached.</span>")
-	if(isWrench(O))
+	else if(isWrench(O))
 		to_chat(user, "You remove the [src] from the wall!")
 		new /obj/item/frame/noticeboard(get_turf(user))
 		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 		qdel(src)
 		return
+
 /obj/structure/noticeboard/attack_hand(var/mob/user)
 	examine(user)
 
@@ -75,8 +76,7 @@
 			P.loc = get_turf(src)	//dump paper on the floor because you're a clumsy fuck
 			P.add_fingerprint(usr)
 			add_fingerprint(usr)
-			notices--
-			icon_state = "nboard0[notices]"
+			update_icon()
 	if(href_list["write"])
 		if((usr.stat || usr.restrained())) //For when a player is handcuffed while they have the notice window open
 			return

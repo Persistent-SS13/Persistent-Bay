@@ -262,7 +262,8 @@
 /*
  * Shipping
  */
-/obj/structure/closet/wall/shipping	name = "shipping supplies closet"
+/obj/structure/closet/wall/shipping
+	name = "shipping supplies closet"
 	desc = "It's a wall-mounted storage unit containing supplies for preparing shipments."
 	icon_state = "shipping_wall"
 	icon_closed = "shipping_wall"

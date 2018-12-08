@@ -791,8 +791,6 @@
 			return global.random_useful_;
 		if("recentmessages")
 			return global.recentmessages;
-		if("refund_type")
-			return global.refund_type;
 		if("registered_macros_by_ckey_")
 			return global.registered_macros_by_ckey_;
 		if("religion_name")
@@ -1057,7 +1055,7 @@
 			return global.zone_blocked;
 		if("zones_to_save")
 			return global.zones_to_save;
-		
+
 /proc/writeglobal(which, newval)
 	switch(which)
 		if("ALL_ANTIGENS")
@@ -1850,8 +1848,6 @@
 			global.random_useful_=newval;
 		if("recentmessages")
 			global.recentmessages=newval;
-		if("refund_type")
-			global.refund_type=newval;
 		if("registered_macros_by_ckey_")
 			global.registered_macros_by_ckey_=newval;
 		if("religion_name")
@@ -2116,7 +2112,7 @@
 			global.zone_blocked=newval;
 		if("zones_to_save")
 			global.zones_to_save=newval;
-		
+
 /var/list/_all_globals=list(
 	"ALL_ANTIGENS",
 	"ANTAG_FREQS",

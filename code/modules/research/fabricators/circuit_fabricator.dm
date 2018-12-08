@@ -554,6 +554,20 @@
 	id = "metal_detector"
 	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 3)
 	build_path = /obj/item/weapon/circuitboard/metal_detector
+
+/datum/design/circuit/incinerator
+	name= "Trash incinerator"
+	id = "trash_incinerator"
+	req_tech = list(TECH_ENGINEERING = 1, TECH_BIO = 1)
+	build_path = /obj/item/weapon/circuitboard/incinerator
+
+/datum/design/circuit/crematorium
+	name= "Crematorium"
+	id = "corpse_incinerator"
+	req_tech = list(TECH_ENGINEERING = 1, TECH_BIO = 1)
+	build_path = /obj/item/weapon/circuitboard/crematorium
+
+
 /*
 /datum/design/circuit/
 	name = ""

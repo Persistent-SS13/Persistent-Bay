@@ -210,7 +210,6 @@
 		new/datum/stack_recipe("wall safe frame", 				/obj/item/frame/wall_safe,							15, time = 75),\
 		new/datum/stack_recipe("item safe", 					/obj/structure/safe, 								10, time = 50, one_per_turf = 1, on_floor = 1),\
 		new/datum/stack_recipe("morgue body container", 		/obj/structure/morgue, 								20, time = 50, one_per_turf = 1, on_floor = 1),\
-		new/datum/stack_recipe("morgue crematorium", 			/obj/structure/crematorium, 						30, time = 75, one_per_turf = 1, on_floor = 1),\
 		))
 
 /material/stone/generate_recipes()
@@ -240,7 +239,7 @@
 		new/datum/stack_recipe("lunchbox (CTI)", 						/obj/item/weapon/storage/lunchbox/cti,        					5, time = 15, 	on_floor=0),\
 		new/datum/stack_recipe("lunchbox (nymph)", 						/obj/item/weapon/storage/lunchbox/nymph,        				5, time = 15, 	on_floor=0),\
 		new/datum/stack_recipe("lunchbox (Syndi)", 						/obj/item/weapon/storage/lunchbox/syndicate,        			5, time = 15, 	on_floor=0),\
-		new/datum/stack_recipe("lunchbox (TCC)", 						/obj/item/weapon/storage/lunchbox/TCC,        					5, time = 15, 	on_floor=0),\
+		new/datum/stack_recipe("lunchbox (TCC)", 						/obj/item/weapon/storage/lunchbox/tf,        					5, time = 15, 	on_floor=0),\
 		new/datum/stack_recipe("first aid kit", 						/obj/item/weapon/storage/firstaid/empty,        				5, time = 15, 	on_floor=0),\
 		new/datum/stack_recipe("burns first aid kit",					/obj/item/weapon/storage/firstaid/fire/empty,        			5, time = 15, 	on_floor=0),\
 		new/datum/stack_recipe("toxins first aid kit",					/obj/item/weapon/storage/firstaid/toxin/empty,        			5, time = 15, 	on_floor=0),\

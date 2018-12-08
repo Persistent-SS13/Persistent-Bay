@@ -6,9 +6,9 @@ SUBSYSTEM_DEF(early)
 /datum/controller/subsystem/early/Initialize()
 
 	employment_controller = new
-	ambient_controller = new
 
 	populate_robolimb_list()
+	setupFlooring()
 	setupgenetics()
 
 	job_master = new /datum/controller/occupations()

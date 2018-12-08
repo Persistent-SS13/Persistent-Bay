@@ -30,9 +30,9 @@
 			r_material = null
 
 	if(!material)
-		material = SSmaterials.get_material_by_name("steel")
+		material = SSmaterials.get_material_by_name(MATERIAL_STEEL)
 	if(!p_material)
-		p_material = SSmaterials.get_material_by_name("steel")
+		p_material = SSmaterials.get_material_by_name(MATERIAL_STEEL)
 
 	explosion_resistance = ExplosionArmor()
 

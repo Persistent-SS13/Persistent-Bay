@@ -49,7 +49,7 @@
 	desc = ""
 	icon = 'icons/obj/decals.dmi'
 	w_class = ITEM_SIZE_NORMAL		//big
-	matter = list("plastic" = 2000)
+	matter = list(MATERIAL_PLASTIC = 2000)
 	var/sign_state = ""
 
 /obj/item/sign/New()

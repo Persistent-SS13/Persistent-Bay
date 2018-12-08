@@ -1,5 +1,5 @@
 /material/glass
-	name = "glass"
+	name = MATERIAL_GLASS
 	stack_type = /obj/item/stack/material/glass
 	flags = MATERIAL_BRITTLE
 	icon_colour = "#00e1ff"
@@ -95,7 +95,7 @@
 	return ..() && !is_reinforced()
 
 /material/glass/reinforced
-	name = "rglass"
+	name = MATERIAL_REINFORCED_GLASS
 	display_name = "reinforced glass"
 	stack_type = /obj/item/stack/material/glass/reinforced
 	flags = MATERIAL_BRITTLE
@@ -109,14 +109,14 @@
 	brute_armor = 2
 	burn_armor = 3
 	stack_origin_tech = list(TECH_MATERIAL = 2)
-	alloy_materials = list("steel" = 1875,"glass" = 3750)
+	alloy_materials = list(MATERIAL_STEEL = 1875,MATERIAL_GLASS = 3750)
 	window_options = list("One Direction" = 1, "Full Window" = 4, "Windoor" = 5)
 	created_window = /obj/structure/window/reinforced
 	wire_product = null
 	rod_product = null
 
 /material/glass/phoron
-	name = "phglass"
+	name = MATERIAL_PHORON_GLASS
 	display_name = "borosilicate glass"
 	stack_type = /obj/item/stack/material/glass/phoronglass
 	flags = MATERIAL_BRITTLE
@@ -130,10 +130,10 @@
 	wire_product = null
 	rod_product = /obj/item/stack/material/glass/phoronrglass
 	alloy_product = TRUE
-	alloy_materials = list("sand" = 2500, "platinum" = 1250)
+	alloy_materials = list(MATERIAL_SAND = 2500, MATERIAL_PLATINUM = 1250)
 
 /material/glass/phoron/reinforced
-	name = "rphglass"
+	name = MATERIAL_REINFORCED_PHORON_GLASS
 	brute_armor = 3
 	burn_armor = 10
 	melting_point = T0C + 4000
@@ -142,7 +142,7 @@
 	stack_origin_tech = list(TECH_MATERIAL = 5)
 	created_window = /obj/structure/window/phoronreinforced
 	stack_origin_tech = list(TECH_MATERIAL = 2)
-	alloy_materials = list("plasteel" = 1875, "phglass" = 3750)
+	alloy_materials = list(MATERIAL_PLASTEEL = 1875, MATERIAL_PHORON_GLASS = 3750)
 	rod_product = null
 	integrity = 100
 

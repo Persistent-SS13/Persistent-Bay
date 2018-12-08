@@ -4,7 +4,7 @@
 	icon_state = "signaller"
 	item_state = "signaler"
 	origin_tech = list(TECH_MAGNET = 1)
-	matter = list(DEFAULT_WALL_MATERIAL = 1000, "glass" = 200)
+	matter = list(MATERIAL_STEEL = 1000, MATERIAL_GLASS = 200)
 	wires = WIRE_RECEIVE | WIRE_PULSE | WIRE_RADIO_PULSE | WIRE_RADIO_RECEIVE
 
 	secured = 1
@@ -70,9 +70,7 @@
 
 
 /obj/item/device/assembly/signaler/Topic(href, href_list, state = GLOB.physical_state)
-	if(..()) return 1
-
-	if(!usr.canmove || usr.stat || usr.restrained() || !in_range(loc, usr))
+	if((. = ..()))
 		usr << browse(null, "window=radio")
 		onclose(usr, "radio")
 		return

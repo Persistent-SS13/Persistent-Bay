@@ -24,7 +24,7 @@
 
 	while (carbon_stored >= MOLES_CELLSTANDARD)
 		carbon_stored -= MOLES_CELLSTANDARD
-		var/atom/movable/product = new/obj/item/weapon/ore/coal
+		var/atom/movable/product = new/obj/item/stack/ore(loc,"graphite")
 		product.dropInto(loc)
 
 	air1.adjust_gas("carbon_dioxide", -co2_intake, 1)

@@ -1,5 +1,5 @@
 /obj/item/weapon/storage/toolbox
-	name = "toolbox"
+	name = "red toolbox"
 	desc = "Bright red toolboxes like these are one of the most common sights in maintenance corridors on virtually every ship in the galaxy."
 	description_info = "The toolbox is a general-purpose storage item with lots of space. With an item in your hand, click on it to store it inside."
 	description_fluff = "No one remembers which company designed this particular toolbox. It's been mass-produced, retired, brought out of retirement, and counterfeited for decades."
@@ -12,7 +12,7 @@
 	throwforce = 10
 	throw_speed = 1
 	throw_range = 7
-	matter = list(DEFAULT_WALL_MATERIAL = 200)
+	matter = list(MATERIAL_STEEL = 200)
 	w_class = ITEM_SIZE_LARGE
 	max_w_class = ITEM_SIZE_NORMAL
 	max_storage_space = DEFAULT_LARGEBOX_STORAGE //enough to hold all starting contents
@@ -38,7 +38,7 @@
 	icon_state = "blue"
 	item_state = "toolbox_blue"
 
-/obj/item/weapon/storage/toolbox/mechanical/New()
+/obj/item/weapon/storage/toolbox/mechanical/full/New()
 	..()
 	new /obj/item/weapon/screwdriver(src)
 	new /obj/item/weapon/wrench(src)
@@ -53,7 +53,7 @@
 	icon_state = "yellow"
 	item_state = "toolbox_yellow"
 
-/obj/item/weapon/storage/toolbox/electrical/New()
+/obj/item/weapon/storage/toolbox/electrical/full/New()
 	..()
 	new /obj/item/weapon/screwdriver(src)
 	new /obj/item/weapon/wirecutters(src)
@@ -74,7 +74,7 @@
 	origin_tech = list(TECH_COMBAT = 1, TECH_ILLEGAL = 1)
 	force = 7.0
 
-/obj/item/weapon/storage/toolbox/syndicate/New()
+/obj/item/weapon/storage/toolbox/syndicate/full/New()
 	..()
 	new /obj/item/clothing/gloves/insulated(src)
 	new /obj/item/weapon/screwdriver(src)

@@ -10,11 +10,11 @@
 	var/last_update = 0
 	var/list/stored_ore = list()
 	var/health = 40
-	
+
 /obj/structure/ore_box/attack_generic(var/mob/user, var/damage)
 	health = max(0, health-damage)
 	if(!health)
-		for (var/obj/item/weapon/ore/O in contents)
+		for (var/obj/item/stack/ore/O in contents)
 			contents -= O
 			O.loc = src.loc
 		user.visible_message("<span class='notice'>[user] smashes \the [src].</span>", \
@@ -25,13 +25,14 @@
 			attacker.target_mob = null
 		qdel(src)
 /obj/structure/ore_box/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if (istype(W, /obj/item/weapon/ore))
+	if (istype(W, /obj/item/stack/ore) || istype(W, /obj/item/stack/material_dust))
+		var/obj/item/stack/orestack = W
 		user.remove_from_mob(W)
-		src.contents += W
+		orestack.drop_to_stacks(src)
 	if (istype(W, /obj/item/weapon/storage))
 		var/obj/item/weapon/storage/S = W
 		S.hide_from(usr)
-		for(var/obj/item/weapon/ore/O in S.contents)
+		for(var/obj/item/stack/ore/O in S.contents)
 			S.remove_from_storage(O, src) //This will move the item to this item's contents
 		to_chat(user, "<span class='notice'>You empty the satchel into the box.</span>")
 
@@ -41,7 +42,7 @@
 
 	if(isCrowbar(W))
 		new /obj/item/stack/material/wood(src)
-		for (var/obj/item/weapon/ore/O in contents)
+		for (var/obj/item/stack/ore/O in contents)
 			contents -= O
 			O.loc = src.loc
 		user.visible_message("<span class='notice'>[user] tears down \the [src].</span>", \
@@ -55,7 +56,7 @@
 
 	stored_ore = list()
 
-	for(var/obj/item/weapon/ore/O in contents)
+	for(var/obj/item/stack/ore/O in contents)
 
 		if(stored_ore[O.name])
 			stored_ore[O.name]++
@@ -110,7 +111,7 @@
 		to_chat(usr, "<span class='warning'>The ore box is empty</span>")
 		return
 
-	for (var/obj/item/weapon/ore/O in contents)
+	for (var/obj/item/stack/ore/O in contents)
 		contents -= O
 		O.loc = src.loc
 	to_chat(usr, "<span class='notice'>You empty the ore box</span>")
@@ -119,7 +120,7 @@
 
 /obj/structure/ore_box/ex_act(severity)
 	if(severity == 1.0 || (severity < 3.0 && prob(50)))
-		for (var/obj/item/weapon/ore/O in contents)
+		for (var/obj/item/stack/ore/O in contents)
 			O.loc = src.loc
 			O.ex_act(severity++)
 		qdel(src)

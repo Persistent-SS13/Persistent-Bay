@@ -58,7 +58,7 @@
 /turf/simulated/floor/tiled
 	name = "steel floor"
 	icon = 'icons/turf/flooring/tiles.dmi'
-	icon_state = "steel"
+	icon_state = MATERIAL_STEEL
 	initial_flooring = /decl/flooring/tiling
 
 /turf/simulated/floor/carpet

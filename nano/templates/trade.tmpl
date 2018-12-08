@@ -1,0 +1,40 @@
+<div class="item">
+  {{:helper.link('Buy', 'cart', {'set_screen' : 1}, data.screen == 1 ? 'selected' : null)}}
+  {{:helper.link('Sell', 'cart', {'set_screen' : 2}, data.screen == 2 ? 'selected' : null)}}
+</div>
+
+<hr>
+
+{{if data.account}}
+  <span> Current Account: {{:data.account}} </span>
+{{else}}
+  <span> An account is not linked. </span>
+{{/if}}
+
+<hr>
+
+{{if data.screen == 1}}
+  <table style="width:100%">
+  {{for data.products}}
+    <tr>
+    <td>{{:value.owner}}
+    <td>{{:value.name}}
+    <td>{{:value.cost}}
+    <td>{{:helper.link('View Contents', null, {'contents' : value.id})}}
+    <td>{{:helper.link('Order', null, {'order' : value.id})}}
+    </tr>
+    {{if value.view}}
+      <tr>
+      <table style="width:100%">
+      {{for value.contents}}
+        <tr>
+        <td>{{:value.name}}
+        <td>{{:value.type}}
+        </tr>
+      {{/for}}
+      </table>
+      </tr>
+    {{/if}}
+  {{/for}}
+  </table>
+{{/if}}

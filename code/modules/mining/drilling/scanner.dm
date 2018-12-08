@@ -7,7 +7,7 @@
 	icon_state = "mining1" //GET A BETTER SPRITE. //Done
 	item_state = "electronic"	//I don't know what this does, so I will just leave it
 	origin_tech = list(TECH_MAGNET = 1, TECH_ENGINEERING = 1)
-	matter = list(DEFAULT_WALL_MATERIAL = 150)
+	matter = list(MATERIAL_STEEL = 150)
 	var/survey_data = 0
 
 /obj/item/weapon/mining_scanner/examine(mob/user)
@@ -37,15 +37,15 @@
 			var/data_value = 1
 
 			switch(metal)
-				if("sand", "graphene", "hematite", "tetrahedrite", "rock salt", "pyrite")
+				if(MATERIAL_SAND, MATERIAL_GRAPHITE, MATERIAL_HEMATITE, MATERIAL_TETRAHEDRITE, MATERIAL_ROCK_SALT, MATERIAL_PYRITE, MATERIAL_GALENA, MATERIAL_QUARTZ)
 					ore_type = "surface minerals"
-				if("gold", "silver", "diamond", "platinum", "tungsten")
+				if(MATERIAL_GOLD, MATERIAL_SILVER, MATERIAL_DIAMOND, MATERIAL_PLATINUM, MATERIAL_TUNGSTEN)
 					ore_type = "precious metals"
 					data_value = 2
-				if("pitchblende")
+				if(MATERIAL_PITCHBLENDE)
 					ore_type = "nuclear fuel"
 					data_value = 3
-				if("phoron", "hydrogen")
+				if(MATERIAL_PHORON, MATERIAL_HYDROGEN)
 					ore_type = "exotic matter"
 					data_value = 4
 
@@ -78,7 +78,7 @@
 	set category = "Object"
 	set name = "Get Survey Data"
 	set src in usr
-	
+
 	var/mob/M = usr
 	if(!istype(M))
 		return

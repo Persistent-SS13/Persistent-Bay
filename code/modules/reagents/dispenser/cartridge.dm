@@ -10,7 +10,7 @@
 	// Large, but inaccurate. Use a chem dispenser or beaker for accuracy.
 	possible_transfer_amounts = "50;100"
 	unacidable = 1
-	matter = list(DEFAULT_WALL_MATERIAL = 100) //Not made from steel buuut we need a way to recycle them
+	matter = list(MATERIAL_STEEL = 100) //Not made from steel buuut we need a way to recycle them
 	var/spawn_reagent = null
 	var/label = ""
 

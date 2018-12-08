@@ -2,7 +2,7 @@
 	name = "electronic cigarette"
 	desc = "Device with modern approach to smoking."
 	icon = 'icons/obj/ecig.dmi'
-	matter = list(DEFAULT_WALL_MATERIAL = 200, "glass" = 50)
+	matter = list(MATERIAL_STEEL = 200, MATERIAL_GLASS = 50)
 	var/active = 0
 	var/obj/item/weapon/cell/device/cigcell = null	//cell slot empty by default
 	var/cartridge_type = null	//empty by default
@@ -186,7 +186,7 @@
 	w_class = ITEM_SIZE_TINY
 	icon = 'icons/obj/ecig.dmi'
 	icon_state = "ecartridge"
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 10)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 10)
 	volume = 20
 	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 

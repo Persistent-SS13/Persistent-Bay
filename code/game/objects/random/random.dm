@@ -184,7 +184,7 @@
 				/obj/item/weapon/storage/firstaid/o2 = 3,
 				/obj/item/weapon/storage/firstaid/adv = 2,
 				/obj/item/weapon/storage/firstaid/combat = 1,
-				/obj/item/weapon/storage/firstaid/empty = 2,
+				/obj/item/weapon/storage/firstaid = 2,
 				/obj/item/weapon/storage/firstaid/fire = 3)
 
 /obj/random/contraband
@@ -817,7 +817,7 @@ obj/random/obstruction/spawn_choices()
 
 /obj/random/clothing/spawn_choices()
 	return list(/obj/item/clothing/under/syndicate/tacticool = 2,
-				/obj/item/clothing/under/syndicate/combat = 1,
+				/obj/item/clothing/under/syndicate = 1,
 				/obj/item/clothing/under/hazard = 4,
 				/obj/item/clothing/under/sterile = 4,
 				/obj/item/clothing/under/casual_pants/camo = 2,

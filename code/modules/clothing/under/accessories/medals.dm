@@ -27,8 +27,8 @@
 /obj/item/clothing/accessory/medal/gold
 	name = "gold medal"
 	desc = "A simple gold medal."
-	icon_state = "gold"
-	item_state = "gold"
+	icon_state = MATERIAL_GOLD
+	item_state = MATERIAL_GOLD
 
 //NT medals
 

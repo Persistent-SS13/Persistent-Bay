@@ -380,7 +380,7 @@
 				new /obj/item/stack/cable_coil( src.loc, 5 )
 				return
 
-	if(istype(P, /obj/item/stack/material) && P.get_material_name() == "glass")
+	if(istype(P, /obj/item/stack/material) && P.get_material_name() == MATERIAL_GLASS)
 		if(state == 3)
 			if(frame_type in computers)
 				var/obj/item/stack/G = P

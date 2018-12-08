@@ -58,7 +58,7 @@
 	var/T = 0
 	for(var/obj/item/weapon/reagent_containers/glass/G in component_parts)
 		T += G.reagents.maximum_volume
-	create_reagents(T)
+	if (!reagents) create_reagents(T)
 	max_material_storage = 0
 	for(var/obj/item/weapon/stock_parts/matter_bin/M in component_parts)
 		max_material_storage += M.rating * 75000

@@ -11,7 +11,7 @@
 	throw_range = 5
 	w_class = ITEM_SIZE_LARGE
 	origin_tech = list(TECH_COMBAT = 1, TECH_PHORON = 1)
-	matter = list(DEFAULT_WALL_MATERIAL = 500)
+	matter = list(MATERIAL_STEEL = 500)
 	var/status = 0
 	var/throw_amount = 100
 	var/lit = 0	//on or off
@@ -21,6 +21,9 @@
 	var/obj/item/device/assembly/igniter/igniter = null
 	var/obj/item/weapon/tank/phoron/ptank = null
 
+/obj/item/weapon/flamethrower/after_load()
+	..()
+	update_icon()
 
 /obj/item/weapon/flamethrower/Destroy()
 	QDEL_NULL(weldtool)

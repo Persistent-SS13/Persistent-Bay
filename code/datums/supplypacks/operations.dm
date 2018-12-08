@@ -59,7 +59,9 @@
 					/obj/item/weapon/folder/yellow,
 					/obj/item/weapon/hand_labeler,
 					/obj/item/weapon/tape_roll,
-					/obj/item/weapon/paper_bin)
+					/obj/item/weapon/paper_bin,
+					/obj/item/sticky_pad/random = 4
+					)
 	cost = 10
 	containertype = /obj/structure/closet/crate/large
 	containername = "office supplies crate"

@@ -2,6 +2,17 @@
 #define DIRECT_OUTPUT(A, B) A << B
 #define WRITE_FILE(file, text) DIRECT_OUTPUT(file, text)
 
+#define LOGS_PATH_FOLDER(YEAR,MONTH,DAY) "data/logs/##YEAR/##MONTH/##DAY"
+#define LOGS_PATH_FOLDER_NOW "data/logs/[time2text(world.realtime,"YYYY/MM/DD")]" //Folder structure for log folder for the day
+#define MAKE_LOGS_PATH_NOW(LOGFILENAME) "data/logs/[time2text(world.realtime,"YYYY/MM/DD")]/[LOGFILENAME]" //Macro for the path to a log file in today's log folder
+
+#define PATH_ATTACK_LOG_NOW  MAKE_LOGS_PATH_NOW("attack.log")
+#define PATH_GAME_LOG_NOW    MAKE_LOGS_PATH_NOW("game.log")
+#define PATH_RUNTIME_LOG_NOW MAKE_LOGS_PATH_NOW("runtime.log")
+#define PATH_QDEL_LOG_NOW    MAKE_LOGS_PATH_NOW("qdel.log")
+#define PATH_HREF_LOG_NOW    MAKE_LOGS_PATH_NOW("hrefs.htm")
+#define PATH_WORLD_LOG_NOW   MAKE_LOGS_PATH_NOW("world.log")
+
 
 // On Linux/Unix systems the line endings are LF, on windows it's CRLF, admins that don't use notepad++
 // will get logs that are one big line if the system is Linux and they are using notepad.  This solves it by adding CR to every line ending
@@ -35,6 +46,9 @@
 
 /proc/game_log(category, text)
 	diary << "\[[time_stamp()]] [game_id] [category]: [text][log_end]"
+
+/proc/attack_log(text)
+	to_file(GLOB.world_attack_log, "\[[time_stamp()]] [game_id] ATTACK: [text][log_end]")
 
 /proc/log_admin(text)
 	GLOB.admin_log.Add(text)
@@ -90,6 +104,7 @@
 /proc/log_attack(text)
 	if (config.log_attack)
 		game_log("ATTACK", text)
+		attack_log(text)
 
 /proc/log_adminsay(text)
 	if (config.log_adminchat)

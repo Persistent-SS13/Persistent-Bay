@@ -70,10 +70,6 @@
 	name = "[server_name] - [GLOB.using_map.full_name]"
 	//logs
 	SetupLogs()
-	var/date_string = time2text(world.realtime, "YYYY/MM-Month/DD-Day")
-	href_logfile = file("data/logs/[date_string] hrefs.htm")
-	diary = file("data/logs/[date_string].log")
-	diary << "[log_end]\n[log_end]\nStarting up. (ID: [game_id]) [time2text(world.timeofday, "hh:mm.ss")][log_end]\n---------------------[log_end]"
 	changelog_hash = md5('html/changelog.html')					//used for telling if the changelog has changed recently
 
 	if(byond_version < RECOMMENDED_VERSION)
@@ -84,9 +80,7 @@
 		config.server_name += " #[(world.port % 1000) / 100]"
 
 	if(config && config.log_runtime)
-		var/runtime_log = file("data/logs/runtime/[date_string]_[time2text(world.timeofday, "hh:mm")]_[game_id].log")
-		runtime_log << "Game [game_id] starting up at [time2text(world.timeofday, "hh:mm.ss")]"
-		log = runtime_log
+		log << "Game [game_id] starting up at [time2text(world.timeofday, "hh:mm.ss")]"
 
 	callHook("startup")
 	//Emergency Fix
@@ -585,14 +579,15 @@ var/world_topic_spam_protect_time = world.timeofday
 #define WORLD_LOG_START(X) WRITE_FILE(GLOB.world_##X##_log, "\n\nStarting up round ID [game_id]. [time_stamp()]\n---------------------")
 #define WORLD_SETUP_LOG(X) GLOB.world_##X##_log = file("[GLOB.log_directory]/[#X].log") ; WORLD_LOG_START(X)
 /world/proc/SetupLogs()
-	GLOB.log_directory = "data/logs/[time2text(world.realtime, "YYYY/MM/DD")]/round-"
-	if(game_id)
-		GLOB.log_directory += "[game_id]"
-	else
-		GLOB.log_directory += "[replacetext(time_stamp(), ":", ".")]"
-
+	GLOB.log_directory = LOGS_PATH_FOLDER_NOW
+	if(config && config.log_runtime)
+		src.log = file(PATH_RUNTIME_LOG_NOW)
 	WORLD_SETUP_LOG(runtime)
 	WORLD_SETUP_LOG(qdel)
+	WORLD_SETUP_LOG(attack)
+	href_logfile = file(PATH_HREF_LOG_NOW)
+	diary = file(PATH_GAME_LOG_NOW)
+	diary << "[log_end]\n[log_end]\nStarting up. (ID: [game_id]) [time2text(world.timeofday, "hh:mm.ss")][log_end]\n---------------------[log_end]"
 
 #undef WORLD_SETUP_LOG
 #undef WORLD_LOG_START

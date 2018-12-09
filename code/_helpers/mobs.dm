@@ -103,6 +103,9 @@ proc/random_skin_tone()
 		else				. = rand(-185,34)
 	return min(max( .+rand(-25, 25), -185),34)
 
+proc/vatgrown_skin_tone()
+	return rand(0, 30)
+
 proc/skintone2racedescription(tone)
 	switch (tone)
 		if(30 to INFINITY)		return "albino"

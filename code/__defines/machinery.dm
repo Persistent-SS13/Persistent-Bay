@@ -111,6 +111,6 @@ var/list/restricted_camera_networks = list(NETWORK_ERT,NETWORK_MERCENARY,"Secret
 #define SUPERMATTER_DELAMINATING 6	// Pretty obvious.
 
 //Use power modes
-#define USE_POWER_OFF    0	//no auto power use
-#define USE_POWER_IDLE   1	//machine is using power at its idle power level
-#define USE_POWER_ACTIVE 2	//machine is using power at its active power level
+#define POWER_USE_OFF    0	//no auto power use
+#define POWER_USE_IDLE   1	//machine is using power at its idle power level
+#define POWER_USE_ACTIVE 2	//machine is using power at its active power level

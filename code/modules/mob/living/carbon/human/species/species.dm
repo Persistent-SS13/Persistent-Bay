@@ -539,4 +539,6 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 		return 100
 	if(appearance_flags & HAS_SKIN_TONE_SPCR)
 		return 165
+	if(appearance_flags & IS_VATGROWN)
+		return 40
 	return 220

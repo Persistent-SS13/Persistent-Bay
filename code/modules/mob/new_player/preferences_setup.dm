@@ -22,6 +22,10 @@ datum/preferences
 			if(current_species.appearance_flags & HAS_HAIR_COLOR)
 				randomize_hair_color("hair")
 				randomize_hair_color("facial")
+			if(current_species.appearance_flags & IS_VATGROWN)
+				s_tone = vatgrown_skin_tone()
+				vatgrown_hair_color("hair")
+				vatgrown_hair_color("facial")
 		if(current_species.appearance_flags & HAS_UNDERWEAR)
 			all_underwear.Cut()
 			for(var/datum/category_group/underwear/WRC in GLOB.underwear.categories)
@@ -96,6 +100,21 @@ datum/preferences
 		red = max(min(red + rand (-25, 25), 255), 0)
 		green = max(min(green + rand (-25, 25), 255), 0)
 		blue = max(min(blue + rand (-25, 25), 255), 0)
+
+		switch(target)
+			if("hair")
+				r_hair = red
+				g_hair = green
+				b_hair = blue
+			if("facial")
+				r_facial = red
+				g_facial = green
+				b_facial = blue
+	
+	proc/vatgrown_hair_color(var/target = "hair")
+		var/red = 248
+		var/green = 240
+		var/blue = 208
 
 		switch(target)
 			if("hair")

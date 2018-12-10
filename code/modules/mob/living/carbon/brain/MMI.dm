@@ -56,6 +56,9 @@
 		if(!B.lacemob)
 			to_chat(user, "<span class='notice'>This lace is completely useless to you.</span>")
 			return
+		if(istype(O, /obj/item/organ/internal/stack/vat))
+			to_chat(user, "<span class='warning'>[O] does not fit into [src], and you get the horrifying feeling that it was not meant to.</span>")
+			return
 
 		user.visible_message("<span class='notice'>\The [user] sticks \a [O] into \the [src].</span>")
 

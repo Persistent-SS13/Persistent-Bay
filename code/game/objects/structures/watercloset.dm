@@ -85,27 +85,6 @@
 	density = 0
 	anchored = 1
 
-/obj/machinery/shower
-	name = "shower"
-	desc = "The best in class HS-451 shower unit has three temperature settings, one more than the HS-450 which preceded it."
-	icon = 'icons/obj/watercloset.dmi'
-	icon_state = "shower"
-	density = 0
-	anchored = 1
-	use_power = 0
-	var/on = 0
-	var/obj/effect/mist/mymist = null
-	var/ismist = 0				//needs a var so we can make it linger~
-	var/watertemp = "normal"	//freezing, normal, or boiling
-	var/is_washing = 0
-	var/list/temperature_settings = list("normal" = 310, "boiling" = T0C+100, "freezing" = T0C)
-
-/obj/machinery/shower/New()
-	..()
-	create_reagents(50)
-
-//add heat controls? when emagged, you can freeze to death in it?
-
 /obj/effect/mist
 	name = "mist"
 	icon = 'icons/obj/watercloset.dmi'
@@ -114,16 +93,36 @@
 	layer = ABOVE_HUMAN_LAYER
 	anchored = 1
 	mouse_opacity = 0
+	should_save = 0
+
+/obj/machinery/shower
+	name = "shower"
+	desc = "The best in class HS-451 shower unit has three temperature settings, one more than the HS-450 which preceded it."
+	icon = 'icons/obj/watercloset.dmi'
+	icon_state = "shower"
+	density = 0
+	anchored = 1
+	use_power = 0
+	interact_offline = 1
+	var/on = 0
+	var/obj/effect/mist/mymist = null
+	var/watertemp = "normal"	//freezing, normal, or boiling
+	var/list/temperature_settings = list("normal" = 310, "boiling" = T0C+100, "freezing" = T0C)
+	var/time_to_remove_mist = 0 //world time when to delete the mist
+
+/obj/machinery/shower/New()
+	..()
+	create_reagents(50)
+
+/obj/machinery/shower/Destroy()
+	if(mymist)
+		QDEL_NULL(mymist)
+	..()
 
 /obj/machinery/shower/attack_hand(mob/M as mob)
 	on = !on
+	update_mist()
 	update_icon()
-	if(on)
-		if (M.loc == loc)
-			wash(M)
-			process_heat(M)
-		for (var/atom/movable/G in src.loc)
-			G.clean_blood()
 
 /obj/machinery/shower/attackby(obj/item/I as obj, mob/user as mob)
 	if(I.type == /obj/item/device/analyzer)
@@ -150,32 +149,59 @@
 			qdel(src)
 			return
 
+//Only call once when toggling the shower on and off
+/obj/machinery/shower/proc/update_mist()
+	if(on)
+		if(!mymist && temperature_settings[watertemp] > T20C)
+			mymist = new /obj/effect/mist(loc)
+	else
+		time_to_remove_mist = world.time + 25 SECONDS
+
 /obj/machinery/shower/update_icon()	//this is terribly unreadable, but basically it makes the shower mist up
 	overlays.Cut()					//once it's been on for a while, in addition to handling the water overlay.
-	if(mymist)
-		qdel(mymist)
-		mymist = null
-
 	if(on)
 		overlays += image('icons/obj/watercloset.dmi', src, "water", MOB_LAYER + 1, dir)
-		if(temperature_settings[watertemp] < T20C)
-			return //no mist for cold water
-		if(!ismist)
-			spawn(50)
-				if(src && on)
-					ismist = 1
-					mymist = new /obj/effect/mist(loc)
-		else
-			ismist = 1
-			mymist = new /obj/effect/mist(loc)
-	else if(ismist)
-		ismist = 1
-		mymist = new /obj/effect/mist(loc)
-		spawn(250)
-			if(src && !on)
-				qdel(mymist)
-				mymist = null
-				ismist = 0
+
+/obj/machinery/shower/Process()
+	if(!on && !mymist)
+		return
+	if(mymist && !on && world.time > time_to_remove_mist)
+		QDEL_NULL(mymist)
+		return
+
+	for(var/thing in loc)
+		var/atom/movable/AM = thing
+		var/mob/living/L = thing
+		if(istype(AM) && AM.simulated)
+			wash(AM)
+			if(istype(L))
+				process_heat(L)
+	wash_floor()
+	reagents.add_reagent(/datum/reagent/water, reagents.get_free_space())
+
+/obj/machinery/shower/proc/process_heat(mob/living/M)
+	if(!on || !istype(M)) return
+
+	var/temperature = temperature_settings[watertemp]
+	var/temp_adj = between(BODYTEMP_COOLING_MAX, temperature - M.bodytemperature, BODYTEMP_HEATING_MAX)
+	M.bodytemperature += temp_adj
+
+	if(ishuman(M))
+		var/mob/living/carbon/human/H = M
+		if(temperature >= H.species.heat_level_1)
+			to_chat(H, "<span class='danger'>The water is searing hot!</span>")
+		else if(temperature <= H.species.cold_level_1)
+			to_chat(H, "<span class='warning'>The water is freezing cold!</span>")
+
+/obj/machinery/shower/proc/wash_floor()
+	if(isturf(loc))
+		var/turf/tile = loc
+		tile.clean(src)
+		for(var/obj/effect/E in tile)
+			if (istype(E,/obj/effect/decal/cleanable/puddle_chem))
+				continue
+			if(istype(E,/obj/effect/rune) || istype(E,/obj/effect/decal/cleanable) || istype(E,/obj/effect/overlay))
+				qdel(E)
 
 //Yes, showers are super powerful as far as washing goes.
 /obj/machinery/shower/proc/wash(atom/movable/O as obj|mob)
@@ -262,53 +288,8 @@
 			M.clean_blood()
 	else
 		O.clean_blood()
-
-	if(isturf(loc))
-		var/turf/tile = loc
-		for(var/obj/effect/E in tile)
-			if (istype(E,/obj/effect/decal/cleanable/puddle_chem))
-				continue
-			if(istype(E,/obj/effect/rune) || istype(E,/obj/effect/decal/cleanable) || istype(E,/obj/effect/overlay))
-				qdel(E)
-
 	reagents.splash(O, 10)
 
-/obj/machinery/shower/Process()
-	if(!on) return
-
-	for(var/thing in loc)
-		var/atom/movable/AM = thing
-		var/mob/living/L = thing
-		if(istype(AM) && AM.simulated)
-			wash(AM)
-			if(istype(L))
-				process_heat(L)
-	wash_floor()
-	reagents.add_reagent(/datum/reagent/water, reagents.get_free_space())
-
-/obj/machinery/shower/proc/wash_floor()
-	if(!ismist && is_washing)
-		return
-	is_washing = 1
-	var/turf/T = loc
-	reagents.splash(T, reagents.total_volume)
-	T.clean(src)
-	spawn(100)
-		is_washing = 0
-
-/obj/machinery/shower/proc/process_heat(mob/living/M)
-	if(!on || !istype(M)) return
-
-	var/temperature = temperature_settings[watertemp]
-	var/temp_adj = between(BODYTEMP_COOLING_MAX, temperature - M.bodytemperature, BODYTEMP_HEATING_MAX)
-	M.bodytemperature += temp_adj
-
-	if(ishuman(M))
-		var/mob/living/carbon/human/H = M
-		if(temperature >= H.species.heat_level_1)
-			to_chat(H, "<span class='danger'>The water is searing hot!</span>")
-		else if(temperature <= H.species.cold_level_1)
-			to_chat(H, "<span class='warning'>The water is freezing cold!</span>")
 
 /obj/item/weapon/bikehorn/rubberducky
 	name = "rubber ducky"

@@ -78,7 +78,10 @@
 	mannequin.dna.ready_dna(mannequin)
 	mannequin.dna.b_type = client.prefs.b_type
 	mannequin.sync_organ_dna()
-	mannequin.internal_organs_by_name[BP_STACK] = new /obj/item/organ/internal/stack(mannequin,1)
+	if (client.prefs.has_vatgrown_chip)
+		mannequin.internal_organs_by_name[BP_STACK] = new /obj/item/organ/internal/stack/vat(mannequin,1)
+	else
+		mannequin.internal_organs_by_name[BP_STACK] = new /obj/item/organ/internal/stack(mannequin,1)
 	var/datum/computer_file/data/email_account/email = new()
 	email.login = "[replacetext(mannequin.real_name, " ", "_")]@freemail.nt"
 	email.password = chosen_password

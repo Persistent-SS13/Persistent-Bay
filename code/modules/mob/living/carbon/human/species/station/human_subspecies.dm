@@ -39,9 +39,10 @@
 /datum/species/human/vatgrown
 	name = "Vat-Grown Human"
 	name_plural = "Vat-Grown Humans"
-	blurb = "With cloning on the forefront of human scientific advancement, cheap mass production \
-	of bodies is a very real and rather ethically grey industry. Vat-grown humans tend to be paler than \
-	baseline, with no appendix and fewer inherited genetic disabilities, but a weakened metabolism."
+	blurb = "Months after the colonists began to arrive in the frontier, a series of numbered humans \
+	followed in their footsteps, thrown as an afterthought through the portal. There is something not \
+	quite right about them; a hauntedness in their eyes - like something in their very soul is missing. \
+	It is well-known that Vatgrown humans cannot be cloned, as they do not possess laces."
 	icobase =     'icons/mob/human_races/species/human/subspecies/vatgrown_body.dmi'
 	preview_icon= 'icons/mob/human_races/species/human/subspecies/vatgrown_preview.dmi'
 
@@ -54,7 +55,10 @@
 		BP_BRAIN =    /obj/item/organ/internal/brain,
 		BP_EYES =     /obj/item/organ/internal/eyes
 		)
-	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED
+	appearance_flags = IS_VATGROWN | HAS_LIPS | HAS_UNDERWEAR | HAS_EYE_COLOR
+	spawn_flags = SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED | SPECIES_HAS_VATCHIP
+	backgrounds = list("Vatgrown" = "You were manufactured in a lacing lab under the oversight of the Vox-Nanotrasen Partnership. While you never saw the lacing process, you've come to understand that you were a byproduct of it. Unlike most colonists, you don't possess a lace - and you are keenly aware of your own mortality.")
+
 /datum/species/human/vatgrown/sanitize_name(name)
 	return sanitizeName(name, allow_numbers=TRUE)
 
@@ -62,12 +66,10 @@
 	// #defines so it's easier to read what's actually being generated
 	#define LTR ascii2text(rand(65,90)) // A-Z
 	#define NUM ascii2text(rand(48,57)) // 0-9
-	#define NAME capitalize(pick(gender == FEMALE ? GLOB.first_names_female : GLOB.first_names_male))
-	switch(rand(1,4))
-		if(1) return NAME
-		if(2) return "[LTR][LTR]-[NAME]"
-		if(3) return "[NAME]-[NUM][NUM][NUM]"
-		if(4) return "[LTR][LTR]-[NUM][NUM][NUM]"
+	#define NAME capitalize(pick(GLOB.vatgrown_names))
+	switch(rand(1,2))
+		if(1) return "[NAME]-[NUM][NUM]"
+		if(2) return "[NAME]-[LTR][NUM][NUM]"
 	. = 1 // Never executed, works around http://www.byond.com/forum/?post=2072419
 	#undef LTR
 	#undef NUM

@@ -73,14 +73,14 @@
 	changelog_hash = md5('html/changelog.html')					//used for telling if the changelog has changed recently
 
 	if(byond_version < RECOMMENDED_VERSION)
-		world.log << "Your server's byond version does not meet the recommended requirements for this server. Please update BYOND"
+		to_world_log("Your server's byond version does not meet the recommended requirements for this server. Please update BYOND")
 
 	if(config && config.server_name != null && config.server_suffix && world.port > 0)
 		// dumb and hardcoded but I don't care~
 		config.server_name += " #[(world.port % 1000) / 100]"
 
 	if(config && config.log_runtime)
-		log << "Game [game_id] starting up at [time2text(world.timeofday, "hh:mm.ss")]"
+		to_world_log("Game [game_id] starting up at [time2text(world.timeofday, "hh:mm.ss")]")
 
 	callHook("startup")
 	//Emergency Fix
@@ -587,7 +587,7 @@ var/world_topic_spam_protect_time = world.timeofday
 	WORLD_SETUP_LOG(attack)
 	href_logfile = file(PATH_HREF_LOG_NOW)
 	diary = file(PATH_GAME_LOG_NOW)
-	diary << "[log_end]\n[log_end]\nStarting up. (ID: [game_id]) [time2text(world.timeofday, "hh:mm.ss")][log_end]\n---------------------[log_end]"
+	WRITE_FILE(diary, "[log_end]\n[log_end]\nStarting up. (ID: [game_id]) [time2text(world.timeofday, "hh:mm.ss")][log_end]\n---------------------[log_end]")
 
 #undef WORLD_SETUP_LOG
 #undef WORLD_LOG_START

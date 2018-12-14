@@ -316,6 +316,10 @@
 		to_chat(user, "<span class='warning'>\The [target] already has [o_a][O.name].</span>")
 		return SURGERY_FAILURE
 
+	if(istype(O, /obj/item/organ/internal/stack/vat))
+		to_chat(user, "<span class='warning'>You feel a sense of dread when you realize [O.name] was not designed to be transplanted more than once.</span>")
+		return SURGERY_FAILURE
+
 	return ..()
 
 /datum/surgery_step/internal/replace_organ/begin_step(mob/user, mob/living/carbon/human/target, target_zone, obj/item/tool)

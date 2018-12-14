@@ -51,6 +51,9 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 /obj/item/organ/internal/stack/examine(mob/user) // -- TLE
 	. = ..(user)
+	if(istype(src, /obj/item/organ/internal/stack/vat))
+		to_chat(user, "These are the remnants of a small implant used to quickly train vatgrown and connect them to bluespace networks. Vatgrown can never be cloned.")
+		return 0
 	if(lacemob?.key)	// Ff thar be a brain inside... the brain.
 		to_chat(user, "This one looks occupied and ready for cloning, the conciousness clearly present and active.")
 
@@ -334,3 +337,11 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	owner.save_slot = save_slot
 	to_chat(owner, "<span class='notice'>Consciousness slowly creeps over you as your new body awakens.</span>")
 	return 1
+
+/obj/item/organ/internal/stack/vat
+	action_button_name = "Access Vatchip UI"
+	name = "vatgrown chip"
+	parent_organ = BP_HEAD
+	icon = 'icons/obj/device.dmi'
+	icon_state = "implant"
+	w_class = ITEM_SIZE_TINY

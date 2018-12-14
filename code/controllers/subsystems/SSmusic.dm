@@ -12,7 +12,7 @@ SUBSYSTEM_DEF(music)
 
 	for(var/Z in 1 to world.maxz)
 		var/datum/music_controller/musicPlayer = new()
-		musicPlayer.genre = list(MUSIC_GENRE_NEUTRAL, MUSIC_GENRE_AMBIENT)
+		musicPlayer.genre = list()
 		zLevelAmbience["[Z]"] = musicPlayer
 
 	. = ..()

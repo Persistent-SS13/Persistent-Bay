@@ -11,6 +11,7 @@ SUBSYSTEM_DEF(mapping)
 /datum/controller/subsystem/mapping/Initialize(timeofday)
 	GLOB.visibility_pref = 1
 	world.update_hub_visibility()
+	all_feeds = new/PriorityQueue(/proc/cmp_newsfeed)
 	preloadTemplates()
 	..()
 	Load_World()

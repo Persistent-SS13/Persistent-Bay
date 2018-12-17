@@ -135,17 +135,6 @@ proc/load_unit_test_changes()
 	//Start the Round.
 	//
 
-	if(!ticker)
-		crash_with("No Ticker")
-		del(world)
-
-	var/said_msg = 0
-	while(ticker.pregame_timeleft && ticker.pregame_timeleft > 160) 	// Make sure the initial startup is complete.
-		if(ticker.pregame_timeleft < 175 && !said_msg)
-			said_msg = 1
-			log_unit_test("Pregame Count down has started, giving it 20 seconds to finish.")
-		sleep(world.tick_lag)
-
 	log_unit_test("Awaiting the master process...")
 	while(Master.current_runlevel < RUNLEVEL_LOBBY)
 		sleep(world.tick_lag)
@@ -155,7 +144,6 @@ proc/load_unit_test_changes()
 
 	sleep(1)
 
-	ticker.current_state = GAME_STATE_SETTING_UP
 	Master.SetRunLevel(RUNLEVEL_SETUP)
 
 	log_unit_test("Round has been started.  Waiting 10 seconds to start tests.")

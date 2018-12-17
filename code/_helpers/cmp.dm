@@ -9,6 +9,10 @@
 
 /proc/cmp_crew_sensor_modifier(var/crew_sensor_modifier/a, var/crew_sensor_modifier/b)
 	return b.priority - a.priority
+	
+/proc/cmp_newsfeed(var/datum/NewsFeed/a, var/datum/NewsFeed/b)
+	return b.last_published - a.last_published
+	
 
 /proc/cmp_follow_holder(var/datum/follow_holder/a, var/datum/follow_holder/b)
 	if(a.sort_order == b.sort_order)

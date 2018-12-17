@@ -11,11 +11,12 @@
 	throwforce = 15.0
 	throw_speed = 5
 	throw_range = 20
-	matter = list(DEFAULT_WALL_MATERIAL = 1875)
+	matter = list(MATERIAL_STEEL = 1875)
 	max_amount = 100
 	center_of_mass = null
 	attack_verb = list("hit", "bludgeoned", "whacked")
 	lock_picking_level = 3
+	materials_per_unit = list(DEFAULT_WALL_MATERIAL = 1875)
 
 /obj/item/stack/rods/ten
 	amount = 10
@@ -31,10 +32,6 @@
 	uses_charge = 1
 	charge_costs = list(500)
 	stacktype = /obj/item/stack/rods
-
-/obj/item/stack/rods/New()
-	..()
-	update_icon()
 
 /obj/item/stack/rods/attackby(obj/item/W as obj, mob/user as mob)
 	if(isWelder(W))
@@ -115,11 +112,3 @@
 	else
 		icon = initial(icon)
 		icon_state = initial(icon_state)
-
-/obj/item/stack/rods/use()
-	. = ..()
-	update_icon()
-
-/obj/item/stack/rods/add()
-	. = ..()
-	update_icon()

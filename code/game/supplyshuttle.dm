@@ -123,8 +123,8 @@ var/list/point_source_descriptions = list(
 	"time" = "Base station supply",
 	"manifest" = "From exported manifests",
 	"crate" = "From exported crates",
-	"phoron" = "From exported phoron",
-	"platinum" = "From exported platinum",
+	MATERIAL_PHORON = "From exported phoron",
+	MATERIAL_PLATINUM = "From exported platinum",
 	"virology" = "From uploaded antibody data",
 	"total" = "Total" // If you're adding additional point sources, add it here in a new line. Don't forget to put a comma after the old last line.
 	)
@@ -278,17 +278,13 @@ var/list/point_source_descriptions = list(
 			for(var/decl/hierarchy/supply_pack/spc in sp.children)
 				master_supply_list += spc
 
-
-	// Supply shuttle ticker - handles supply point regeneration
-	// This is called by the process scheduler every thirty seconds
-
 /datum/controller/supply/proc/generate_initial()
 	generate_export("manufacturing-basic")
 	generate_export("manufacturing-advanced")
 	generate_export("manufacturing-phoron")
 	generate_export("manufacturing-phoron")
-	generate_export("phoron")
-	generate_export("bluespace crystal")
+	generate_export(MATERIAL_PHORON)
+	generate_export(MATERIAL_BSPACE_CRYSTAL)
 	generate_export("xenobiology")
 	generate_export("cooking")
 /datum/controller/supply/proc/close_order(var/datum/export_order/export)
@@ -430,7 +426,7 @@ var/list/point_source_descriptions = list(
 			all_exports |= export
 			return export
 
-		if("phoron")
+		if(MATERIAL_PHORON)
 			export = new /datum/export_order/stack()
 			export.typepath = /obj/item/stack/material/phoron
 			export.rate = rand(60,100)
@@ -443,7 +439,7 @@ var/list/point_source_descriptions = list(
 			all_exports |= export
 			return export
 
-		if("bluespace crystal")
+		if(MATERIAL_BSPACE_CRYSTAL)
 			export = new /datum/export_order/static()
 			export.typepath = /obj/item/bluespace_crystal
 			export.name = "Order for bluespace crystals. $$500 per crystal."
@@ -535,17 +531,17 @@ var/list/point_source_descriptions = list(
 					if(istype(A, /obj/item/stack))
 						var/obj/item/stack/P = A
 						switch(P.get_material_name())
-							if("phoron") phoron_count += P.get_amount()
-							if("platinum") plat_count += P.get_amount()
+							if(MATERIAL_PHORON) phoron_count += P.get_amount()
+							if(MATERIAL_PLATINUM) plat_count += P.get_amount()
 			qdel(MA)
 
 	if(phoron_count)
 		var/temp = phoron_count * points_per_phoron
-		add_points_from_source(temp, "phoron")
+		add_points_from_source(temp, MATERIAL_PHORON)
 
 	if(plat_count)
 		var/temp = plat_count * points_per_platinum
-		add_points_from_source(temp, "platinum")
+		add_points_from_source(temp, MATERIAL_PLATINUM)
 
 	//Buyin
 /datum/controller/supply/proc/buy()

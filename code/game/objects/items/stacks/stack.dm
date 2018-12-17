@@ -21,6 +21,7 @@
 	var/uses_charge = 0
 	var/list/charge_costs = null
 	var/list/datum/matter_synth/synths = null
+	var/list/materials_per_unit = list() //The materials a single unit of the stack contains. Used to calculate total material value
 
 /obj/item/stack/New(var/loc, var/amount=null)
 	..()
@@ -28,6 +29,8 @@
 		stacktype = type
 	if (amount)
 		src.amount = amount
+	update_material_value()
+	update_icon()
 
 /obj/item/stack/Destroy()
 	if(uses_charge)
@@ -35,6 +38,21 @@
 	if (src && usr && usr.machine == src)
 		usr << browse(null, "window=stack")
 	return ..()
+
+/obj/item/stack/proc/set_amount(var/newamount)
+	amount = max(1, min(newamount, max_amount))
+	update_material_value()
+	update_strings()
+	update_icon()
+
+//Called whenever stacked amount changes
+/obj/item/stack/proc/update_material_value()
+	if(matter)
+		matter.Cut()
+	else
+		matter = list()
+	for(var/key in materials_per_unit)
+		matter[key] = materials_per_unit[key] * amount
 
 /obj/item/stack/examine(mob/user)
 	if(..(user, 1))
@@ -187,6 +205,8 @@
 			if(usr)
 				usr.remove_from_mob(src)
 			qdel(src) //should be safe to qdel immediately since if someone is still using this stack it will persist for a little while longer
+		src.update_icon()
+		src.update_material_value()
 		return 1
 	else
 		if(get_amount() < used)
@@ -194,6 +214,8 @@
 		for(var/i = 1 to charge_costs.len)
 			var/datum/matter_synth/S = synths[i]
 			S.use_charge(charge_costs[i] * used) // Doesn't need to be deleted
+		src.update_icon()
+		src.update_material_value()
 		return 1
 
 	src.update_strings()
@@ -206,7 +228,6 @@
 			return 0
 		else
 			amount += extra
-		return 1
 	else if(!synths || synths.len < uses_charge)
 		return 0
 	else
@@ -215,6 +236,9 @@
 			S.add_charge(charge_costs[i] * extra)
 
 	src.update_strings()
+	src.update_icon()
+	src.update_material_value()
+	return 1
 
 /*
 	The transfer and split procs work differently than use() and add().
@@ -224,6 +248,8 @@
 
 //attempts to transfer amount to S, and returns the amount actually transferred
 /obj/item/stack/proc/transfer_to(obj/item/stack/S, var/tamount=null, var/type_verified)
+	if(!stacks_can_merge(S))
+		return 0
 	if (!get_amount())
 		return 0
 	if ((stacktype != S.stacktype) && !type_verified)
@@ -240,8 +266,19 @@
 			transfer_fingerprints_to(S)
 			if(blood_DNA)
 				S.blood_DNA |= blood_DNA
+		src.update_icon()
+		src.update_material_value()
 		return transfer
 	return 0
+
+
+//Override this so that any extra steps needed in the creation of a new similar stack are handled in a simple polymorphic way, so
+// you don't have to reimplement anything that constructs a new similar stack just to change the constructor call..
+/obj/item/stack/proc/create_new(var/location, var/newamount)
+	var/obj/item/stack/newstack = new src.type(location, newamount)
+	newstack.color = color
+	src.update_icon()
+	return newstack
 
 //creates a new stack with the specified amount
 /obj/item/stack/proc/split(var/tamount, var/force=FALSE)
@@ -254,12 +291,14 @@
 
 	var/orig_amount = src.amount
 	if (transfer && src.use(transfer))
-		var/obj/item/stack/newstack = new src.type(loc, transfer)
-		newstack.color = color
+		var/obj/item/stack/newstack = create_new(src.loc, transfer)
 		if (prob(transfer/orig_amount * 100))
 			transfer_fingerprints_to(newstack)
 			if(blood_DNA)
 				newstack.blood_DNA |= blood_DNA
+		src.update_icon()
+		src.update_strings()
+		src.update_material_value()
 		return newstack
 	return null
 
@@ -297,7 +336,8 @@
 		if(isstack(user.r_hand))
 			stacks += user.r_hand
 	for (var/obj/item/stack/item in user.loc)
-		stacks += item
+		if(stacks_can_merge(item))
+			stacks += item
 	for (var/obj/item/stack/item in stacks)
 		if (item==src)
 			continue
@@ -306,6 +346,24 @@
 			to_chat(user, "<span class='notice'>You add a new [item.singular_name] to the stack. It now contains [item.amount] [item.singular_name]\s.</span>")
 		if(!amount)
 			break
+	src.update_icon()
+	src.update_material_value()
+
+/obj/item/stack/proc/drop_to_stacks(var/location)
+	var/list/stacks = list()
+	if(!location)
+		location = src.loc
+	for (var/obj/item/stack/item in location)
+		if(stacks_can_merge(item))
+			stacks += item
+	for (var/obj/item/stack/item in stacks)
+		if (item==src)
+			continue
+		src.transfer_to(item)
+		if(!amount)
+			break
+	src.update_icon()
+	src.update_material_value()
 
 /obj/item/stack/get_storage_cost()	//Scales storage cost to stack size
 	. = ..()
@@ -316,7 +374,7 @@
 	if (user.get_inactive_hand() == src)
 		var/N = input("How many stacks of [src] would you like to split off?", "Split stacks", 1) as num|null
 		if(N)
-			var/obj/item/stack/F = src.split(N)
+			var/obj/item/stack/F = split(N)
 			if(F)
 				user.put_in_hands(F)
 				src.add_fingerprint(user)
@@ -324,7 +382,10 @@
 
 				F.update_strings()
 				src.update_strings()
-
+				F.update_icon()
+				src.update_icon()
+				src.update_material_value()
+				F.update_material_value()
 				spawn(0)
 					if (src && usr.machine==src)
 						src.interact(usr)
@@ -333,7 +394,7 @@
 	return
 
 /obj/item/stack/attackby(obj/item/W as obj, mob/user as mob)
-	if (istype(W, /obj/item/stack))
+	if (istype(W, /obj/item/stack) && stacks_can_merge(W))
 		var/obj/item/stack/S = W
 		src.transfer_to(S)
 
@@ -344,6 +405,10 @@
 				src.interact(usr)
 	else
 		return ..()
+
+//Override this to check if another stack can merge with this one depending on specific criteras
+/obj/item/stack/proc/stacks_can_merge(var/obj/item/stack/other)
+	return TRUE
 
 /obj/item/stack/proc/update_strings() //Hacky way to update material stacks matter values
 /*

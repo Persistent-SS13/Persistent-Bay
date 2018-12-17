@@ -7,7 +7,7 @@
 	gauge_icon = null
 	w_class = ITEM_SIZE_HUGE
 	item_state = "jetpack"
-	matter = list(DEFAULT_WALL_MATERIAL = 6000)
+	matter = list(MATERIAL_STEEL = 6000)
 	distribute_pressure = ONE_ATMOSPHERE*O2STANDARD
 	var/datum/effect/effect/system/trail/ion/ion_trail
 	var/on = 0.0

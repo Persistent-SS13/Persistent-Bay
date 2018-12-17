@@ -8,7 +8,7 @@
 	icon_state = "door_electronics"
 	w_class = ITEM_SIZE_SMALL //It should be tiny! -Agouri
 	desc = "airlock electronics that connect to business networks"
-	matter = list(DEFAULT_WALL_MATERIAL = 50,"glass" = 50)
+	matter = list(MATERIAL_STEEL = 50,MATERIAL_GLASS = 50)
 
 	req_access = list()
 
@@ -95,7 +95,7 @@
 	icon_state = "door_electronics"
 	w_class = ITEM_SIZE_SMALL //It should be tiny! -Agouri
 
-	matter = list(DEFAULT_WALL_MATERIAL = 50,"glass" = 50)
+	matter = list(MATERIAL_STEEL = 50,MATERIAL_GLASS = 50)
 
 	req_access = list(core_access_door_configuration)
 
@@ -226,4 +226,4 @@
  	icon_state = "door_electronics_keypad"
  	w_class = 2 //It should be tiny! -Agouri
  	desc = "An upgraded version airlock electronics board, with a keypad to lock the door."
- 	matter = list(DEFAULT_WALL_MATERIAL = 50,"glass" = 50)
+ 	matter = list(MATERIAL_STEEL = 50,MATERIAL_GLASS = 50)

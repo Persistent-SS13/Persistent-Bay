@@ -104,6 +104,12 @@
 	name = "grey trenchcoat"
 	icon_state = "detective2"
 
+/obj/item/clothing/suit/storage/det_trench/noarmor
+	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 0, rad = 0)
+
+/obj/item/clothing/suit/storage/det_trench/grey/noarmor
+	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 0, rad = 0)
+
 //Forensics
 /obj/item/clothing/suit/storage/forensics
 	name = "jacket"
@@ -122,6 +128,12 @@
 	name = "blue jacket"
 	desc = "A blue forensics technician jacket."
 	icon_state = "forensics_blue"
+
+/obj/item/clothing/suit/storage/forensics/red/noarmor
+	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 0, rad = 0)
+
+/obj/item/clothing/suit/storage/forensics/blue/noarmor
+	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 0, rad = 0)
 
 //Engineering
 /obj/item/clothing/suit/storage/hazardvest

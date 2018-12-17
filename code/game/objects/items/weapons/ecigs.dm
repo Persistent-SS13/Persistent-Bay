@@ -2,24 +2,26 @@
 	name = "electronic cigarette"
 	desc = "Device with modern approach to smoking."
 	icon = 'icons/obj/ecig.dmi'
+	matter = list(MATERIAL_STEEL = 200, MATERIAL_GLASS = 50)
 	var/active = 0
-	//var/obj/item/weapon/cell/ec_cell = /obj/item/weapon/cell/device
-	var/cartridge_type = /obj/item/weapon/reagent_containers/ecig_cartridge/med_nicotine
+	var/obj/item/weapon/cell/device/cigcell = null	//cell slot empty by default
+	var/cartridge_type = null	//empty by default
 	var/obj/item/weapon/reagent_containers/ecig_cartridge/ec_cartridge
 	w_class = ITEM_SIZE_TINY
 	slot_flags = SLOT_EARS | SLOT_MASK
 	attack_verb = list("attacked", "poked", "battered")
 	body_parts_covered = 0
-	var/brightness_on = 1
 	chem_volume = 0 //ecig has no storage on its own but has reagent container created by parent obj
-	item_state = "ecigoff"
+	item_state = "ccigoff"
 	var/icon_off
 	var/icon_empty
+	var/power_usage = 112	//450 = 1% per second on 25Wh device cells, which would be exactly enough to process a 20 unit cartridge
 	var/ecig_colors = list(null, COLOR_DARK_GRAY, COLOR_RED_GRAY, COLOR_BLUE_GRAY, COLOR_GREEN_GRAY, COLOR_PURPLE_GRAY)
+	var/idle = 0
 
 /obj/item/clothing/mask/smokable/ecig/New()
 	..()
-	ec_cartridge = new cartridge_type(src)
+	update_icon()
 
 /obj/item/clothing/mask/smokable/ecig/lathed
 	name = "electronic cigarette"
@@ -56,22 +58,51 @@
 	icon_empty = "pcigoff2"
 	icon_on = "pcigon"
 
+/obj/item/clothing/mask/smokable/ecig/examine(mob/user)
+	if(..(user, 0))
+		if(ec_cartridge)
+			to_chat(user,"<span class='notice'>There are [round(src.ec_cartridge.reagents.total_volume, 1)] units of liquid remaining.</span>")
+		else
+			to_chat(user,"<span class='notice'>There's no cartridge connected.</span>")
+		if(cigcell)
+			to_chat(user,"<span class='notice'>The power meter shows that there's about [round(cigcell.percent(), 1)]% power remaining.</span>")
+		else
+			to_chat(user,"<span class='notice'>\The [src] is missing a battery!</span>")
+
+/obj/item/clothing/mask/smokable/ecig/proc/Deactivate()
+	active = 0
+	STOP_PROCESSING(SSobj, src)
+	update_icon()
+
 /obj/item/clothing/mask/smokable/ecig/Process()
+	if(!cigcell)
+		Deactivate()
+		return
+	if(!ec_cartridge)
+		Deactivate()
+		return
+
 	if(ishuman(loc))
 		var/mob/living/carbon/human/C = loc
-		if (src == C.wear_mask && C.check_has_mouth()) // if it's in the human/monkey mouth, transfer reagents to the mob
-			if (!active || !ec_cartridge || !ec_cartridge.reagents.total_volume)//no cartridge
-				active=0//autodisable the cigarette
-				STOP_PROCESSING(SSobj, src)
-				update_icon()
+		if (!active || !ec_cartridge || !ec_cartridge.reagents.total_volume)	//no cartridge
+			if(!ec_cartridge.reagents.total_volume)
+				to_chat(C, "<span class='notice'>There's no liquid left in \the [src], so you shut it down.</span>")
+			Deactivate()
+			return
+		if (src == C.wear_mask && C.check_has_mouth())	//transfer, but only when not disabled
+			idle = 0
+			//here we'll reduce battery by usage, and check powerlevel - you only use batery while smoking
+			if(!cigcell.checked_use(power_usage * CELLRATE))	//if this passes, there's not enough power in the battery
+				Deactivate()
+				to_chat(C,"<span class='notice'>\The [src]'s power meter flashes a low battery warning and shuts down.</span>")
 				return
-			ec_cartridge.reagents.trans_to_mob(C, REM, CHEM_INGEST, 0.4) // Most of it is not inhaled... balance reasons.
+			ec_cartridge.reagents.trans_to_mob(C, REM, CHEM_INGEST, 0.4)	//Most of it is not inhaled... balance reasons.
 
 /obj/item/clothing/mask/smokable/ecig/update_icon()
 	if (active)
 		item_state = icon_on
 		icon_state = icon_on
-		set_light(brightness_on)
+		set_light(2, 0.5, "#e38f46")
 	else if (ec_cartridge)
 		set_light(0)
 		item_state = icon_off
@@ -96,29 +127,54 @@
 			I.forceMove(src)//I.loc=src
 			ec_cartridge = I
 			update_icon()
-			to_chat(user, "<span class='notice'>You insert [I] into [src].</span> ")
+			to_chat(user, "<span class='notice'>You insert \the [I] into \the [src].</span> ")
+	if(istype(I, /obj/item/weapon/screwdriver))
+		if(cigcell)	//if contains powercell
+			cigcell.update_icon()
+			cigcell.dropInto(loc)
+			cigcell = null
+			to_chat(user, "<span class='notice'>You remove \the [cigcell] from \the [src].</span>")
+		else	//does not contains cell
+			to_chat(user, "<span class='notice'>There's no battery in \the [src].</span>")
+
+	if(istype(I, /obj/item/weapon/cell/device))
+		if(!cigcell && user.unEquip(I))
+			I.forceMove(src)
+			cigcell = I
+			to_chat(user, "<span class='notice'>You install \the [cigcell] into \the [src].</span>")
+			update_icon()
+		else
+			to_chat(user, "<span class='notice'>\The [src] already has a battery installed.</span>")
 
 /obj/item/clothing/mask/smokable/ecig/attack_self(mob/user as mob)
 	if (active)
-		active=0
-		STOP_PROCESSING(SSobj, src)
-		to_chat(user, "<span class='notice'>You turn off \the [src]. </span> ")
-		update_icon()
+		Deactivate()
+		to_chat(user, "<span class='notice'>You turn off \the [src].</span> ")
 	else
-		if (!ec_cartridge)
-			to_chat(user, "<span class='notice'>You can't use \the [src] with no cartridge installed!</span> ")
-			return
-		active=1
-		START_PROCESSING(SSobj, src)
-		to_chat(user, "<span class='notice'>You turn on \the [src]. </span> ")
-		update_icon()
+		if(cigcell)
+			if (!ec_cartridge)
+				to_chat(user, "<span class='notice'>You can't use \the [src] with no cartridge installed!</span> ")
+				return
+			else if(!ec_cartridge.reagents.total_volume)
+				to_chat(user, "<span class='notice'>You can't use \the [src] with no liquid left!</span> ")
+				return
+			else if(!cigcell.check_charge(power_usage * CELLRATE))
+				to_chat(user, "<span class='notice'>\The [src]'s power meter flashes a low battery warning and refuses to operate.</span> ")
+				return
+			active=1
+			START_PROCESSING(SSobj, src)
+			to_chat(user, "<span class='notice'>You turn on \the [src].</span> ")
+			update_icon()
+
+		else
+			to_chat(user, "<span class='warning'>\The [src] does not have a battery installed.</span>")
 
 /obj/item/clothing/mask/smokable/ecig/attack_hand(mob/user as mob)//eject cartridge
 	if(user.get_inactive_hand() == src)//if being hold
 		if (ec_cartridge)
 			active=0
 			user.put_in_hands(ec_cartridge)
-			to_chat(user, "<span class='notice'>You eject \the [ec_cartridge] from \the [src].</span> ")
+			to_chat(user, "<span class='notice'>You remove \the [ec_cartridge] from \the [src].</span> ")
 			ec_cartridge = null
 			update_icon()
 	else
@@ -130,7 +186,7 @@
 	w_class = ITEM_SIZE_TINY
 	icon = 'icons/obj/ecig.dmi'
 	icon_state = "ecartridge"
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 10)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 10)
 	volume = 20
 	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 
@@ -138,8 +194,8 @@
 	create_reagents(volume)
 
 /obj/item/weapon/reagent_containers/ecig_cartridge/examine(mob/user as mob)//to see how much left
-	..()
-	to_chat(user, "The cartridge has [reagents.total_volume] units of liquid remaining.")
+	if(..(user, 0))
+		to_chat(user, "The cartridge has [reagents.total_volume] units of liquid remaining.")
 
 //flavours
 /obj/item/weapon/reagent_containers/ecig_cartridge/blank

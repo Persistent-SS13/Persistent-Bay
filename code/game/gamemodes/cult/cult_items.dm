@@ -56,6 +56,10 @@
 	min_cold_protection_temperature = SPACE_HELMET_MIN_COLD_PROTECTION_TEMPERATURE
 	siemens_coefficient = 0.8 //That's a pretty cool opening in the hood. Also: Cloth making physical contact to the skull.
 
+/obj/item/clothing/head/culthood/costume
+	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 1.0
+
 /obj/item/clothing/head/culthood/magus
 	name = "magus helm"
 	icon_state = "magus"
@@ -64,8 +68,16 @@
 	body_parts_covered = HEAD|FACE|EYES
 	armor = list(melee = 50, bullet = 40, laser = 30, energy = 20, bomb = 15, bio = 0, rad = 0)
 
+/obj/item/clothing/head/culthood/magus/costume
+	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 1.0
+
 /obj/item/clothing/head/culthood/alt
 	icon_state = "cult_hoodalt"
+
+/obj/item/clothing/head/culthood/alt/costume
+	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 1.0
 
 /obj/item/clothing/suit/cultrobes
 	name = "cult robes"
@@ -77,8 +89,16 @@
 	flags_inv = HIDEJUMPSUIT
 	siemens_coefficient = 0.6
 
+/obj/item/clothing/suit/cultrobes/costume
+	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 1.0
+
 /obj/item/clothing/suit/cultrobes/alt
 	icon_state = "cultrobesalt"
+
+/obj/item/clothing/suit/cultrobes/alt/costume
+	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 1.0
 
 /obj/item/clothing/suit/cultrobes/magusred
 	name = "magus robes"
@@ -87,6 +107,9 @@
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT
 	armor = list(melee = 75, bullet = 50, laser = 55, energy = 40, bomb = 50, bio = 10, rad = 0)
+
+/obj/item/clothing/suit/cultrobes/magusred/costume
+	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
 
 /obj/item/clothing/suit/cultrobes/magusred/New()
 	..()

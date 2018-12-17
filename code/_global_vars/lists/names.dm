@@ -8,6 +8,7 @@ GLOBAL_LIST_INIT(first_names_male, world.file2list("config/names/first_male.txt"
 GLOBAL_LIST_INIT(first_names_female, world.file2list("config/names/first_female.txt"))
 GLOBAL_LIST_INIT(last_names, world.file2list("config/names/last.txt"))
 GLOBAL_LIST_INIT(clown_names, world.file2list("config/names/clown.txt"))
+GLOBAL_LIST_INIT(vatgrown_names, world.file2list("config/names/vatgrown.txt"))
 
 
 GLOBAL_LIST_INIT(verbs, world.file2list("config/names/verbs.txt"))

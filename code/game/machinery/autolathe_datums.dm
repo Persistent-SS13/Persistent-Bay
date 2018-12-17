@@ -182,21 +182,21 @@ var/const/EXTRA_COST_FACTOR = 1
 	path = /obj/item/stack/material/steel
 	category = "General"
 	is_stack = 1
-	resources = list("steel" = SHEET_MATERIAL_AMOUNT * EXTRA_COST_FACTOR)
+	resources = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT * EXTRA_COST_FACTOR)
 
 /datum/autolathe/recipe/glass
 	name = "glass sheets"
 	path = /obj/item/stack/material/glass
 	category = "General"
 	is_stack = 1
-	resources = list("glass" = SHEET_MATERIAL_AMOUNT * EXTRA_COST_FACTOR)
+	resources = list(MATERIAL_GLASS = SHEET_MATERIAL_AMOUNT * EXTRA_COST_FACTOR)
 
 /datum/autolathe/recipe/rglass
 	name = "reinforced glass sheets"
 	path = /obj/item/stack/material/glass/reinforced
 	category = "General"
 	is_stack = 1
-	resources = list("glass" = (SHEET_MATERIAL_AMOUNT * EXTRA_COST_FACTOR / 2), "steel" = (SHEET_MATERIAL_AMOUNT * EXTRA_COST_FACTOR / 2))
+	resources = list(MATERIAL_GLASS = (SHEET_MATERIAL_AMOUNT * EXTRA_COST_FACTOR / 2), MATERIAL_STEEL = (SHEET_MATERIAL_AMOUNT * EXTRA_COST_FACTOR / 2))
 
 /datum/autolathe/recipe/rods
 	name = "metal rods"
@@ -480,7 +480,7 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/cell_device
 	name = "device cell"
-	path = /obj/item/weapon/cell/device/standard
+	path = /obj/item/weapon/cell/device/standard/empty
 	category = "Devices and Components"
 
 /datum/autolathe/recipe/ecigcartridge

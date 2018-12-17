@@ -17,42 +17,42 @@
 
 /decl/hierarchy/supply_pack/medical/firstaid
 	name = "Triage - Regular first-aid kits"
-	contains = list(/obj/item/weapon/storage/firstaid/regular = 5)
+	contains = list(/obj/item/weapon/storage/firstaid/regular/full = 5)
 	cost = 15
 	containername = "first-aid crate"
 
 /decl/hierarchy/supply_pack/medical/firstaidfire
 	name = "Triage - Fire first-aid kits"
-	contains = list(/obj/item/weapon/storage/firstaid/fire = 5)
+	contains = list(/obj/item/weapon/storage/firstaid/fire/full = 5)
 	cost = 20
 	containername = "fire first-aid crate"
 
 /decl/hierarchy/supply_pack/medical/firstaidtoxin
 	name = "Triage - Toxin first-aid kits"
-	contains = list(/obj/item/weapon/storage/firstaid/toxin = 5)
+	contains = list(/obj/item/weapon/storage/firstaid/toxin/full = 5)
 	cost = 20
 	containername = "toxin first-aid crate"
 
 /decl/hierarchy/supply_pack/medical/firstaido2
 	name = "Triage - O2 first-aid kits"
-	contains = list(/obj/item/weapon/storage/firstaid/o2 = 5)
+	contains = list(/obj/item/weapon/storage/firstaid/o2/full = 5)
 	cost = 18
 	containername = "\improper O2 first-aid crate"
 
 /decl/hierarchy/supply_pack/medical/firstaidadv
 	name = "Triage - Advanced first-aid kits"
-	contains = list(/obj/item/weapon/storage/firstaid/adv = 5)
+	contains = list(/obj/item/weapon/storage/firstaid/adv/full = 5)
 	cost = 25
 	containername = "advanced first-aid crate"
 
 //refills
 /decl/hierarchy/supply_pack/medical/medical
 	name = "Refills - Medical supplies"
-	contains = list(/obj/item/weapon/storage/firstaid/regular,
-					/obj/item/weapon/storage/firstaid/fire,
-					/obj/item/weapon/storage/firstaid/toxin,
-					/obj/item/weapon/storage/firstaid/o2,
-					/obj/item/weapon/storage/firstaid/adv,
+	contains = list(/obj/item/weapon/storage/firstaid/regular/full,
+					/obj/item/weapon/storage/firstaid/fire/full,
+					/obj/item/weapon/storage/firstaid/toxin/full,
+					/obj/item/weapon/storage/firstaid/o2/full,
+					/obj/item/weapon/storage/firstaid/adv/full,
 					/obj/item/weapon/reagent_containers/glass/bottle/antitoxin,
 					/obj/item/weapon/reagent_containers/glass/bottle/inaprovaline,
 					/obj/item/weapon/reagent_containers/glass/bottle/stoxin,

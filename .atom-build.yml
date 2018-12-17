@@ -1,0 +1,13 @@
+cmd: C:/"Program Files (x86)"/BYOND/bin/dm.exe persistentss13
+name: Compile
+keymap: alt-k
+errorMatch: "(?<file>[\\\\\/0-9a-zA-Z\\._]+):(?<line>\\d+):(?<message>.+)"
+targets:
+    Full Build:
+        cmd: echo off & python -u tools\GenerateGlobalVarAccess\gen_globals.py persistentss13.dme code/_helpers/global_access.dm && C:/PROGRA~2/BYOND/bin/dm.exe persistentss13
+        name: Check and Compile
+        keymap: ctrl-alt-k
+    Run Build:
+        cmd: C:/PROGRA~2/BYOND/bin/dm.exe persistentss13 && C:/PROGRA~2/BYOND/bin/dreamdaemon {PROJECT_PATH}/persistentss13.dmb 0
+        name: Compile and Run
+        keymap: alt-r

@@ -98,3 +98,7 @@
 	icon_state = "plaguedoctor"
 	//item_state = "bio_suit"
 	flags_inv = HIDEGLOVES|HIDEJUMPSUIT|HIDETAIL
+
+/obj/item/clothing/suit/bio_suit/plaguedoctorsuit/costume
+	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 1.0

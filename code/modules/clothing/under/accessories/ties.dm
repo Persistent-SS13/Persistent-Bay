@@ -18,12 +18,11 @@
 	icon_state = "longtie"
 	color = "#a02929"
 
+/obj/item/clothing/accessory/white
+	name = "white tie"
+
 /obj/item/clothing/accessory/black
 	name = "black tie"
-	color = "#ffffff"
-
-/obj/item/clothing/accessory/black/expensive
-	name = "expensive black tie"
 	color = "#1c1c1c"
 	desc = "A tie made from real silk, or so the label leads you to believe."
 

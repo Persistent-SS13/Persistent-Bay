@@ -14,7 +14,7 @@
 	var/obj/screen/overlay = null
 	var/obj/item/clothing/glasses/hud/hud = null	// Hud glasses, if any
 	var/electric = 0 //if the glasses should be disrupted by EMP
-	matter = list(DEFAULT_WALL_MATERIAL = 50, "glass" = 200)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 200)
 
 /obj/item/clothing/glasses/New()
 	..()
@@ -224,7 +224,7 @@
 	icon_state = "welding-g"
 	item_state = "welding-g"
 	action_button_name = "Flip Welding Goggles"
-	matter = list(DEFAULT_WALL_MATERIAL = 1500, "glass" = 1000)
+	matter = list(MATERIAL_STEEL = 1500, MATERIAL_GLASS = 1000)
 	var/up = 0
 	flash_protection = FLASH_PROTECTION_MAJOR
 	tint = TINT_HEAVY
@@ -238,7 +238,7 @@
 	set name = "Adjust welding goggles"
 	set src in usr
 
-	if(usr.canmove && !usr.incapacitated())
+	if(!usr.incapacitated())
 		if(src.up)
 			src.up = !src.up
 			flags_inv |= HIDEEYES

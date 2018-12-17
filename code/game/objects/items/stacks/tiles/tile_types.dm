@@ -56,7 +56,7 @@
 	desc = "Those could work as a pretty decent throwing weapon." //why?
 	icon_state = "tile"
 	force = 6
-	matter = list(DEFAULT_WALL_MATERIAL = 937.5)
+	matter = list(MATERIAL_STEEL = 937.5)
 	throwforce = 15
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 
@@ -64,7 +64,7 @@
 	name = "white floor tile"
 	singular_name = "white floor tile"
 	icon_state = "tile_white"
-	matter = list("plastic" = 937.5)
+	matter = list(MATERIAL_PLASTIC = 937.5)
 
 /obj/item/stack/tile/floor_white/fifty
 	amount = 50
@@ -73,7 +73,7 @@
 	name = "dark floor tile"
 	singular_name = "dark floor tile"
 	icon_state = "fr_tile"
-	matter = list("plasteel" = 937.5)
+	matter = list(MATERIAL_PLASTEEL = 937.5)
 
 /obj/item/stack/tile/floor_dark/fifty
 	amount = 50
@@ -82,7 +82,7 @@
 	name = "freezer floor tile"
 	singular_name = "freezer floor tile"
 	icon_state = "tile_freezer"
-	matter = list("plastic" = 937.5)
+	matter = list(MATERIAL_PLASTIC = 937.5)
 
 /obj/item/stack/tile/floor_freezer/fifty
 	amount = 50
@@ -102,6 +102,7 @@
 	singular_name = "linoleum"
 	desc = "A piece of linoleum. It is the same size as a normal floor tile!"
 	icon_state = "tile-linoleum"
+	matter = list(MATERIAL_PLASTIC = 900)
 
 /obj/item/stack/tile/linoleum/fifty
 	amount = 50

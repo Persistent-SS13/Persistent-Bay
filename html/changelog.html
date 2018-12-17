@@ -55,6 +55,43 @@
 		
 		-->
 		<div class="commit sansserif">
+			<h2 class="date">28 November 2018</h2>
+			<h3 class="author">Andrew updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Added SSearly (initialization)</li>
+				<li class="rscadd">Added SSlate (initialization)</li>
+				<li class="rscadd">Added SSsupply</li>
+				<li class="tweak">Reworked gameticker into Master</li>
+				<li class="tweak">Various small changes</li>
+				<li class="rscdel">Removed master_controller</li>
+				<li class="rscdel">Removed ProcessScheduler</li>
+				<li class="rscdel">Removed various unneeded verbs and gamemodes</li>
+				<li class="rscadd">SSmusic with a music genre system and auto-ambience.</li>
+				<li class="bugfix">Fixed SSasteroid retaining mobs and drills.</li>
+				<li class="bugfix">Fixed flooring not saving and loading correctly.</li>
+				<li class="tweak">Renamed ambiance to ambience to be more consistent.</li>
+			</ul>
+			<h3 class="author">NataKilar updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Ported crawling from Baystation. You can now move very slowly if you are lying on the ground.</li>
+			</ul>
+			<h3 class="author">Unknown updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Added draw-able canvases.</li>
+				<li class="rscadd">Added supply crate for canvases on Non Essentials (10x for 150e)</li>
+			</ul>
+			<h3 class="author">ourpar updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">Fixed/re-added clothing sprites for the following items: 'red evening gown', 'maid uniform', 'maid apron', 'fine maid uniform', 'purple skirt', 'striped dress', 'blue skirt', 'red skirt', 'sailor dress', 'geisha dress', 'sexy black coat', 'eastern dress', 'security skirt'</li>
+				<li class="rscadd">Shortwave Radios, Ecigs, and Flashlights now require Device cells to operate, standard device cells can be obtained from the autolathe, or device upgraded cells from RnD, to remove/replace cells you screwdriver the item.</li>
+				<li class="tweak">Flares, candles, and glowsticks have adjusted lifespans before becoming useless, 15-30min, ~6 hours, ~24 hours respectively</li>
+				<li class="tweak">slightly strengthened lighting given from glowsticks and flaslights, cigarettes now give a faint glow when lit aswell</li>
+			</ul>
+			<h3 class="author">psycommando updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Ported baystation 12 sticky notes.</li>
+			</ul>
+
 			<h2 class="date">07 November 2018</h2>
 			<h3 class="author">AnAngrySlugReceptionist updated:</h3>
 			<ul class="changes bgimages16">
@@ -204,46 +241,6 @@
 			<h3 class="author">PsyCommando updated:</h3>
 			<ul class="changes bgimages16">
 				<li class="bugfix">Fixed pressure regulators being unusable in space, or in an unpowered area, after reloading.</li>
-			</ul>
-
-			<h2 class="date">26 September 2018</h2>
-			<h3 class="author">Kurgis updated:</h3>
-			<ul class="changes bgimages16">
-				<li class="rscadd">Added Bridge Secretary to the job orders in Operations, allowing access to a command headset.</li>
-				<li class="bugfix">Certain crates & lockers ordered from supply will no longer be nameless.</li>
-				<li class="bugfix">Access requirements on supply packs have been correctly set on all orders with secure crates or lockers. Orders which includes a secure locker or crate should no longer spawn with 'null' access, preventing anyone from opening it.</li>
-				<li class="rscdel">Removed entertainment headsets from the Clown, Mime, and Journalist supply orders. Removed guns from all operations supply orders.</li>
-				<li class="rscdel">Removed musician supply order from Operations, as it lacked proper content. Moved music devices to a seperate supply order.</li>
-				<li class="tweak">Adjusted the cost & contents of various supply pack orders.</li>
-				<li class="tweak">The Head of Security crate now requires leader access, all other head of staff job orders including warden now require command access to open.</li>
-			</ul>
-			<h3 class="author">Nappist updated:</h3>
-			<ul class="changes bgimages16">
-				<li class="rscdel">Removed the grid_check aka power outage event from procing.</li>
-			</ul>
-			<h3 class="author">ingles98 updated:</h3>
-			<ul class="changes bgimages16">
-				<li class="wip">State Of Matter Pt.2 - Unifies reagents and gases, condensing/evaporation system.</li>
-				<li class="rscadd">Area Reagent Outlet - APC concept - Pumps reagents to whatever object requests it. Can be connected to a pipe network.</li>
-				<li class="tweak">Big changes to puddles, including fixes and real evaporation mechanism. Puddles should be comprehended as general liquid mechanism. (Gas counter-part)</li>
-				<li class="tweak">Big changes to the drains. Deprecated drains will automatically destroy on load, refunding 2 steel sheets. New drains drain nearby liquids (puddles) into a pipe network.</li>
-				<li class="tweak">Changes Showers and Sinks in order to request water from the ARO. No longer pumps infinite water.</li>
-				<li class="tweak">Pipe-dispenser now has ARO and Drain available to be dispensed.</li>
-				<li class="tweak">Removes drains (deprecated) from recipe list on Steel.</li>
-				<li class="wip">Reagents and Gases now have a base boiling point (At one atmosphere) (TODO: Set boiling points to the rest of the gases and reagents)</li>
-				<li class="tweak">Canisters, uvents and dp vents will check for gas's boiling point before outputting them as a gas.</li>
-				<li class="tweak">Lowers spilling amount and rate of reagents when transferring from a container to another.</li>
-			</ul>
-			<h3 class="author">rhicora updated:</h3>
-			<ul class="changes bgimages16">
-				<li class="tweak">Made turrets treat cyborgs with same threat criteria as humans</li>
-			</ul>
-
-			<h2 class="date">24 September 2018</h2>
-			<h3 class="author">Kurgis updated:</h3>
-			<ul class="changes bgimages16">
-				<li class="tweak">Changed all references to Tajaran to alien or xeno.</li>
-				<li class="rscdel">Killed innocent Tajarans hiding in the code.</li>
 			</ul>
 		</div>
 

@@ -1,18 +1,17 @@
 /obj/machinery/fabricator/circuit_fabricator
-	// Things that must be adjusted for each fabricator
 	name = "Circuit Imprinter"
 	desc = "A machine used for the production of circuits."
+	req_access = list(core_access_science_programs)
 	circuit = /obj/item/weapon/circuitboard/fabricator/circuitfab
 	build_type = CIRCUITFAB
-	materials = list(DEFAULT_WALL_MATERIAL = 0, "glass" = 0)
 
 	icon_state = 	 "circuitfab-idle"
 	icon_idle = 	 "circuitfab-idle"
 	icon_open = 	 "circuitfab-o"
 	overlay_active = "circuitfab-active"
-	metal_load_anim = 0
+	metal_load_anim = FALSE
 
-	has_reagents = 1
+	has_reagents = TRUE
 
 ////////////////////////////////////////////////////
 //////////////////////DESIGNS///////////////////////
@@ -21,7 +20,7 @@
 /datum/design/circuit
 	build_type = CIRCUITFAB
 	req_tech = list(TECH_DATA = 2)
-	materials = list("glass" = 2000)
+	materials = list(MATERIAL_GLASS = 2000)
 	chemicals = list(/datum/reagent/acid = 20)
 	category = "Circuits"
 	time = 5
@@ -785,7 +784,7 @@
 /datum/design/aimodule
 	category = "AI Modules"
 	build_type = CIRCUITFAB
-	materials = list("glass" = 2000, "gold" = 100)
+	materials = list(MATERIAL_GLASS = 2000, MATERIAL_GOLD = 100)
 
 /datum/design/aimodule/AssembleDesignName()
 	name = "AI module design ([name])"
@@ -884,7 +883,7 @@
 	id = "netcard_basic"
 	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 1)
 	build_type = CIRCUITFAB
-	materials = list(DEFAULT_WALL_MATERIAL = 250, "glass" = 100)
+	materials = list(MATERIAL_STEEL = 250, MATERIAL_GLASS = 100)
 	chemicals = list(/datum/reagent/acid = 20)
 	build_path = /obj/item/weapon/computer_hardware/network_card
 
@@ -893,7 +892,7 @@
 	id = "netcard_advanced"
 	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 2)
 	build_type = CIRCUITFAB
-	materials = list(DEFAULT_WALL_MATERIAL = 500, "glass" = 200)
+	materials = list(MATERIAL_STEEL = 500, MATERIAL_GLASS = 200)
 	chemicals = list(/datum/reagent/acid = 20)
 	build_path = /obj/item/weapon/computer_hardware/network_card/advanced
 
@@ -902,7 +901,7 @@
 	id = "netcard_wired"
 	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 3)
 	build_type = CIRCUITFAB
-	materials = list(DEFAULT_WALL_MATERIAL = 2500, "glass" = 400)
+	materials = list(MATERIAL_STEEL = 2500, MATERIAL_GLASS = 400)
 	chemicals = list(/datum/reagent/acid = 20)
 	build_path = /obj/item/weapon/computer_hardware/network_card/wired
 
@@ -912,7 +911,7 @@
 	id = "portadrive_basic"
 	req_tech = list(TECH_DATA = 1)
 	build_type = CIRCUITFAB
-	materials = list("glass" = 800)
+	materials = list(MATERIAL_GLASS = 800)
 	chemicals = list(/datum/reagent/acid = 20)
 	build_path = /obj/item/weapon/computer_hardware/hard_drive/portable
 
@@ -921,7 +920,7 @@
 	id = "portadrive_advanced"
 	req_tech = list(TECH_DATA = 2)
 	build_type = CIRCUITFAB
-	materials = list("glass" = 1600)
+	materials = list(MATERIAL_GLASS = 1600)
 	chemicals = list(/datum/reagent/acid = 20)
 	build_path = /obj/item/weapon/computer_hardware/hard_drive/portable/advanced
 
@@ -930,7 +929,7 @@
 	id = "portadrive_super"
 	req_tech = list(TECH_DATA = 4)
 	build_type = CIRCUITFAB
-	materials = list("glass" = 3200)
+	materials = list(MATERIAL_GLASS = 3200)
 	chemicals = list(/datum/reagent/acid = 20)
 	build_path = /obj/item/weapon/computer_hardware/hard_drive/portable/super
 
@@ -940,7 +939,7 @@
 	id = "cpu_normal"
 	req_tech = list(TECH_DATA = 3, TECH_ENGINEERING = 2)
 	build_type = CIRCUITFAB
-	materials = list(DEFAULT_WALL_MATERIAL = 1600)
+	materials = list(MATERIAL_STEEL = 1600)
 	chemicals = list(/datum/reagent/acid = 20)
 	build_path = /obj/item/weapon/computer_hardware/processor_unit
 
@@ -949,7 +948,7 @@
 	id = "cpu_small"
 	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
 	build_type = CIRCUITFAB
-	materials = list(DEFAULT_WALL_MATERIAL = 800)
+	materials = list(MATERIAL_STEEL = 800)
 	chemicals = list(/datum/reagent/acid = 20)
 	build_path = /obj/item/weapon/computer_hardware/processor_unit/small
 
@@ -958,7 +957,7 @@
 	id = "pcpu_normal"
 	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 4)
 	build_type = CIRCUITFAB
-	materials = list(DEFAULT_WALL_MATERIAL = 6400, glass = 2000)
+	materials = list(MATERIAL_STEEL = 6400, glass = 2000)
 	chemicals = list(/datum/reagent/acid = 40)
 	build_path = /obj/item/weapon/computer_hardware/processor_unit/photonic
 
@@ -967,7 +966,7 @@
 	id = "pcpu_small"
 	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 3)
 	build_type = CIRCUITFAB
-	materials = list(DEFAULT_WALL_MATERIAL = 3200, glass = 1000)
+	materials = list(MATERIAL_STEEL = 3200, glass = 1000)
 	chemicals = list(/datum/reagent/acid = 20)
 	build_path = /obj/item/weapon/computer_hardware/processor_unit/photonic/small
 
@@ -977,6 +976,6 @@
 	id = "aislot"
 	req_tech = list(TECH_POWER = 2, TECH_DATA = 3)
 	build_type = CIRCUITFAB
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 	chemicals = list(/datum/reagent/acid = 20)
 	build_path = /obj/item/weapon/computer_hardware/ai_slot

@@ -16,16 +16,13 @@
 	max_w_class = ITEM_SIZE_SMALL
 	max_storage_space = DEFAULT_BOX_STORAGE
 
-/obj/item/weapon/storage/firstaid/empty
-	icon_state = "firstaid"
-	name = "First-Aid (empty)"
-
 /obj/item/weapon/storage/firstaid/fire
 	name = "fire first-aid kit"
 	desc = "It's an emergency medical kit for when the toxins lab <i>-spontaneously-</i> burns down."
 	icon_state = "ointment"
 	item_state = "firstaid-ointment"
 
+/obj/item/weapon/storage/firstaid/fire/full
 	startswith = list(
 		/obj/item/device/healthanalyzer,
 		/obj/item/weapon/reagent_containers/hypospray/autoinjector,
@@ -38,7 +35,7 @@
 	..()
 	icon_state = pick("ointment","firefirstaid")
 
-/obj/item/weapon/storage/firstaid/regular
+/obj/item/weapon/storage/firstaid/regular/full
 	icon_state = "firstaid"
 
 	startswith = list(
@@ -56,6 +53,7 @@
 	icon_state = "antitoxin"
 	item_state = "firstaid-toxin"
 
+/obj/item/weapon/storage/firstaid/toxin/full
 	startswith = list(
 		/obj/item/weapon/reagent_containers/syringe/antitoxin = 3,
 		/obj/item/weapon/storage/pill_bottle/antitox,
@@ -72,6 +70,7 @@
 	icon_state = "o2"
 	item_state = "firstaid-o2"
 
+/obj/item/weapon/storage/firstaid/o2/full
 	startswith = list(
 		/obj/item/weapon/storage/pill_bottle/dexalin,
 		/obj/item/weapon/reagent_containers/hypospray/autoinjector,
@@ -85,6 +84,7 @@
 	icon_state = "advfirstaid"
 	item_state = "firstaid-advanced"
 
+/obj/item/weapon/storage/firstaid/adv/full
 	startswith = list(
 		/obj/item/weapon/reagent_containers/hypospray/autoinjector,
 		/obj/item/stack/medical/advanced/bruise_pack = 3,
@@ -98,6 +98,7 @@
 	icon_state = "bezerk"
 	item_state = "firstaid-advanced"
 
+/obj/item/weapon/storage/firstaid/combat/full
 	startswith = list(
 		/obj/item/weapon/storage/pill_bottle/bicaridine,
 		/obj/item/weapon/storage/pill_bottle/dermaline,
@@ -132,6 +133,7 @@
 		/obj/item/stack/nanopaste
 		)
 
+/obj/item/weapon/storage/firstaid/surgery/full
 	startswith = list(
 		/obj/item/weapon/bonesetter,
 		/obj/item/weapon/cautery,
@@ -156,7 +158,7 @@
 	item_state = "contsolid"
 	w_class = ITEM_SIZE_SMALL
 	max_w_class = ITEM_SIZE_TINY
-	matter = list("glass" = 100)
+	matter = list(MATERIAL_GLASS = 100)
 	max_storage_space = 21
 	can_hold = list(/obj/item/weapon/reagent_containers/pill,/obj/item/weapon/dice,/obj/item/weapon/paper)
 	allow_quick_gather = 1

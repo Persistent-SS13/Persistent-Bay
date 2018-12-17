@@ -18,11 +18,38 @@
 	max_storage_space = 200
 	max_w_class = ITEM_SIZE_NORMAL
 	w_class = ITEM_SIZE_LARGE
-	can_hold = list(/obj/item/weapon/ore)
+	can_hold = list(/obj/item/stack/ore, /obj/item/stack/material_dust)
 	allow_quick_gather = 1
 	allow_quick_empty = 1
 	use_to_pickup = 1
 
+/obj/item/weapon/storage/ore/handle_item_insertion(var/obj/item/W, var/prevent_warning = 0, var/NoUpdate = 0)
+	if(!istype(W))
+		return 0
+	if(istype(W.loc, /mob))
+		var/mob/M = W.loc
+		M.remove_from_mob(W)
+	W.forceMove(src)
+	if(istype(W,/obj/item/stack))
+		var/obj/item/stack/st = W
+		st.drop_to_stacks(src)
+	W.on_enter_storage(src)
+	if(usr)
+		add_fingerprint(usr)
+
+		if(!prevent_warning)
+			for(var/mob/M in viewers(usr, null))
+				if (M == usr)
+					to_chat(usr, "<span class='notice'>You put \the [W] into [src].</span>")
+				else if (M in range(1)) //If someone is standing close enough, they can tell what it is... TODO replace with distance check
+					M.show_message("<span class='notice'>\The [usr] puts [W] into [src].</span>")
+				else if (W && W.w_class >= ITEM_SIZE_NORMAL) //Otherwise they can only see large or normal items from a distance...
+					M.show_message("<span class='notice'>\The [usr] puts [W] into [src].</span>")
+
+		if(!NoUpdate)
+			update_ui_after_item_insertion()
+	update_icon()
+	return 1
 
 // -----------------------------
 //          Plant bag
@@ -57,7 +84,7 @@
 	icon_state = "ammobox"
 	slot_flags = SLOT_BACK
 	allow_quick_empty = 1
-	matter = list(DEFAULT_WALL_MATERIAL = 10000)
+	matter = list(MATERIAL_STEEL = 10000)
 
 /obj/item/weapon/storage/ammobox/attackby(var/obj/item/O as obj, var/mob/user as mob)
 
@@ -126,7 +153,7 @@
 	allow_quick_gather = 1
 	allow_quick_empty = 1
 	use_to_pickup = 1
-	matter = list(DEFAULT_WALL_MATERIAL = 5000)
+	matter = list(MATERIAL_STEEL = 5000)
 
 /obj/item/weapon/storage/ammobox/big
 	name = "big ammo box"
@@ -139,7 +166,7 @@
 	icon_state = "bigammobox"
 	slot_flags = SLOT_BACK
 	allow_quick_empty = 1
-	matter = list(DEFAULT_WALL_MATERIAL = 30000)
+	matter = list(MATERIAL_STEEL = 30000)
 
 
 // -----------------------------
@@ -150,15 +177,15 @@
 // This is old and terrible
 
 /obj/item/weapon/storage/sheetsnatcher
-	name = "sheet snatcher"
+	name = "material coverbag"
 	icon = 'icons/obj/mining.dmi'
 	icon_state = "sheetsnatcher"
-	desc = "A patented storage system designed for any kind of mineral sheet."
+	desc = "A small bag designed to safely transport exotic materials."
 
 	storage_ui = /datum/storage_ui/default/sheetsnatcher
 
-	var/capacity = 300; //the number of sheets it can carry.
-	w_class = ITEM_SIZE_NORMAL
+	var/capacity = 60; //the number of sheets it can carry.
+	w_class = ITEM_SIZE_LARGE
 	storage_slots = 7
 
 	allow_quick_empty = 1 // this function is superceded
@@ -252,7 +279,6 @@
 //    Sheet Snatcher (Cyborg)
 // -----------------------------
 
-/obj/item/weapon/storage/sheetsnatcher/borg
-	name = "sheet snatcher 9000"
+/obj/item/weapon/storage/sheetsnatcher/borg	//Borgs probably shouldn't have this
+	name = "material carrybag"
 	desc = ""
-	capacity = 500//Borgs get more because >specialization

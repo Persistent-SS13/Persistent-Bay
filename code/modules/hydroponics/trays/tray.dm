@@ -146,9 +146,9 @@
 /obj/machinery/portable_atmospherics/hydroponics/Initialize()
 	. = ..()
 	temp_chem_holder = new()
-	temp_chem_holder.create_reagents(10)
+	temp_chem_holder.create_reagents(100)
 	temp_chem_holder.atom_flags |= ATOM_FLAG_OPEN_CONTAINER
-	create_reagents(200)
+	if (!reagents) create_reagents(200)
 	if(mechanical)
 		connect()
 	update_icon()
@@ -210,18 +210,17 @@
 
 //Process reagents being input into the tray.
 /obj/machinery/portable_atmospherics/hydroponics/proc/process_reagents()
-
 	if(!reagents) return
 
 	if(reagents.total_volume <= 0)
 		return
 
-	reagents.trans_to_obj(temp_chem_holder, min(reagents.total_volume,rand(1,3)))
+	//reagents.trans_to_obj(temp_chem_holder, min(reagents.total_volume,rand(1,3)))
+	reagents.trans_to_obj(temp_chem_holder, reagents.total_volume)
 
 	for(var/datum/reagent/R in temp_chem_holder.reagents.reagent_list)
 
 		var/reagent_total = temp_chem_holder.reagents.get_reagent_amount(R.type)
-
 		if(seed && !dead)
 			//Handle some general level adjustments.
 			if(toxic_reagents[R.type])
@@ -419,9 +418,6 @@
 
 /obj/machinery/portable_atmospherics/hydroponics/attackby(var/obj/item/O as obj, var/mob/user as mob)
 
-	if (O.is_open_container())
-		return 0
-
 	if(isWirecutter(O) || istype(O, /obj/item/weapon/scalpel))
 
 		if(!seed)
@@ -501,6 +497,13 @@
 		playsound(loc, 'sound/effects/spray3.ogg', 50, 1, -6)
 		qdel(O)
 		check_health()
+
+	else if ( istype(O, /obj/item/weapon/reagent_containers) )
+		if( O.reagents.total_volume > 0 )
+			spawn()
+				reagents.update_total()
+				process_reagents() // Force reagents to be processed
+				return 0
 
 	else if(mechanical && isWrench(O))
 

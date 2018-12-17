@@ -15,7 +15,6 @@
 	name = "red wizard hat"
 	desc = "Strange-looking, red, hat-wear that most certainly belongs to a real magic user."
 	icon_state = "redwizard"
-	siemens_coefficient = 0.8
 
 /obj/item/clothing/head/wizard/fake
 	name = "wizard hat"
@@ -27,7 +26,6 @@
 	name = "Witch Hat"
 	desc = "Strange-looking hat-wear, makes you want to cast fireballs."
 	icon_state = "marisa"
-	siemens_coefficient = 0.8
 
 /obj/item/clothing/head/wizard/magus
 	name = "Magus Helm"
@@ -38,7 +36,6 @@
 		slot_l_hand_str = "helmet",
 		slot_r_hand_str = "helmet",
 		)
-	siemens_coefficient = 0.8
 	body_parts_covered = HEAD|FACE|EYES
 
 /obj/item/clothing/head/wizard/amp
@@ -49,7 +46,6 @@
 		slot_l_hand_str = "helmet",
 		slot_r_hand_str = "helmet",
 		)
-	siemens_coefficient = 0.8
 
 /obj/item/clothing/head/wizard/cap
 	name = "Gentlemans Cap"
@@ -59,7 +55,6 @@
 		slot_l_hand_str = "det_hat",
 		slot_r_hand_str = "det_hat",
 		)
-	siemens_coefficient = 0.8
 
 /obj/item/clothing/suit/wizrobe
 	name = "wizard robe"
@@ -113,11 +108,36 @@
 	item_state = "gentlecoat"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
 
+//Cosmetic wizard wear below
+/obj/item/clothing/head/wizard/fake
+	siemens_coefficient = 1.0
+
+/obj/item/clothing/suit/wizrobe/old/fake
+	name = "wizard robe"
+	desc = "A rather dull, blue robe meant to mimick real wizard robes."
+	icon_state = "wizard"
+	item_state = "wizrobe"
+	gas_transfer_coefficient = 1
+	permeability_coefficient = 1
+	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 1.0
+
 /obj/item/clothing/suit/wizrobe/fake
 	name = "wizard robe"
 	desc = "A rather dull, blue robe meant to mimick real wizard robes."
 	icon_state = "wizard-fake"
 	item_state = "wizrobe"
+	gas_transfer_coefficient = 1
+	permeability_coefficient = 1
+	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 1.0
+
+/obj/item/clothing/head/wizard/red/fake
+	siemens_coefficient = 1.0
+
+/obj/item/clothing/suit/wizrobe/red/fake
+	gas_transfer_coefficient = 1
+	permeability_coefficient = 1
 	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
 	siemens_coefficient = 1.0
 
@@ -125,7 +145,6 @@
 	name = "Witch Hat"
 	desc = "Strange-looking hat-wear, makes you want to cast fireballs."
 	icon_state = "marisa"
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
 	siemens_coefficient = 1.0
 
 /obj/item/clothing/suit/wizrobe/marisa/fake
@@ -133,7 +152,41 @@
 	desc = "Magic is all about the spell power, ZE!"
 	icon_state = "marisa"
 	item_state = "marisarobe"
+	gas_transfer_coefficient = 1
+	permeability_coefficient = 1
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS|LEGS
 	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
 	siemens_coefficient = 1.0
 
+/obj/item/clothing/head/wizard/magus/fake
+	siemens_coefficient = 1.0
+
+/obj/item/clothing/suit/wizrobe/magusblue/fake
+	gas_transfer_coefficient = 1
+	permeability_coefficient = 1
+	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 1.0
+
+/obj/item/clothing/suit/wizrobe/magusred/fake
+	gas_transfer_coefficient = 1
+	permeability_coefficient = 1
+	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 1.0
+
+/obj/item/clothing/head/wizard/amp/fake
+	siemens_coefficient = 1.0
+
+/obj/item/clothing/suit/wizrobe/psypurple/fake
+	gas_transfer_coefficient = 1
+	permeability_coefficient = 1
+	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 1.0
+
+/obj/item/clothing/head/wizard/cap/fake
+	siemens_coefficient = 1.0
+
+/obj/item/clothing/suit/wizrobe/gentlecoat/fake
+	gas_transfer_coefficient = 1
+	permeability_coefficient = 1
+	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 1.0

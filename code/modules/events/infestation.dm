@@ -32,6 +32,7 @@
 	if(!vermin_turfs)
 		log_debug("Vermin infestation failed to find a viable spawn after 3 attempts. Aborting.")
 		kill()
+		return //This is needed here. Otherwise it'll runtime
 
 	var/list/spawn_types = list()
 	var/max_number

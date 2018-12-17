@@ -29,7 +29,7 @@
 		else if(istype(object,/turf/simulated/wall))
 			var/turf/simulated/wall/T = object
 			Log("Upgraded - [log_info_line(object)]")
-			T.r_material = SSmaterials.get_material_by_name("steel")
+			T.r_material = SSmaterials.get_material_by_name(MATERIAL_STEEL)
 			T.update_full(1, 1)
 			return
 	else if(pa["right"])

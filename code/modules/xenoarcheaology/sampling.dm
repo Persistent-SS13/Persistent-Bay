@@ -69,15 +69,14 @@
 		artifact_distance = rand()
 		artifact_id = container.artifact_find.artifact_id
 	else
-		if(master_controller) //Sanity check due to runtimes ~Z
-			for(var/turf/simulated/mineral/T in SSxenoarch.artifact_spawning_turfs)
-				if(T.artifact_find)
-					var/cur_dist = get_dist(container, T) * 2
-					if( (artifact_distance < 0 || cur_dist < artifact_distance))
-						artifact_distance = cur_dist + rand() * 2 - 1
-						artifact_id = T.artifact_find.artifact_id
-				else
-					SSxenoarch.artifact_spawning_turfs.Remove(T)
+		for(var/turf/simulated/mineral/T in SSxenoarch.artifact_spawning_turfs)
+			if(T.artifact_find)
+				var/cur_dist = get_dist(container, T) * 2
+				if( (artifact_distance < 0 || cur_dist < artifact_distance))
+					artifact_distance = cur_dist + rand() * 2 - 1
+					artifact_id = T.artifact_find.artifact_id
+			else
+				SSxenoarch.artifact_spawning_turfs.Remove(T)
 
 /obj/item/device/core_sampler
 	name = "core sampler"
@@ -116,8 +115,8 @@
 		var/turf/simulated/mineral/T = item_to_sample
 		T.geologic_data.UpdateNearbyArtifactInfo(T)
 		geo_data = T.geologic_data
-	else if(istype(item_to_sample, /obj/item/weapon/ore))
-		var/obj/item/weapon/ore/O = item_to_sample
+	else if(istype(item_to_sample, /obj/item/stack/ore))
+		var/obj/item/stack/ore/O = item_to_sample
 		geo_data = O.geologic_data
 
 	if(geo_data)

@@ -186,7 +186,6 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	report_progress(msg)
 	log_world(msg)
 
-	ticker.current_state = GAME_STATE_SETTING_UP
 	SetRunLevel(RUNLEVEL_SETUP)
 
 	// Sort subsystems by display setting for easy access.
@@ -203,6 +202,22 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	initializations_finished_with_no_players_logged_in = initialized_tod < REALTIMEOFDAY - 10
 	// Loop.
 	Master.StartProcessing(0)
+
+	job_master.ResetOccupations()
+	job_master.DivideOccupations() // Apparently important for new antagonist system to register specific job antags properly.
+
+	GLOB.using_map.setup_economy()
+	Master.SetRunLevel(RUNLEVEL_GAME)
+	
+	for(var/mob/new_player/player in GLOB.player_list)
+		player.panel.close()
+		player.newPlayerPanel()
+		if(player && player.ready && player.mind)
+			player.loadCharacter()
+		else
+			message_admins("skipping player [player], [player.ready], [player.mind]")
+
+	callHook("roundstart")
 
 /datum/controller/master/proc/SetRunLevel(new_runlevel)
 	var/old_runlevel = current_runlevel

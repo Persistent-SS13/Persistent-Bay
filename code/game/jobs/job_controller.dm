@@ -341,8 +341,8 @@ var/global/datum/controller/occupations/job_master
 				if("AI")
 					return H
 				if("Captain")
-					var/sound/announce_sound = (ticker.current_state <= GAME_STATE_SETTING_UP)? null : sound('sound/misc/boatswain.ogg', volume=20)
-					captain_announcement.Announce("All hands, Captain [H.real_name] on deck!", new_sound=announce_sound)
+					if(GAME_STATE == RUNLEVEL_GAME)
+						captain_announcement.Announce("All hands, Captain [H.real_name] on deck!", new_sound = sound('sound/misc/boatswain.ogg', volume=20))
 
 		// put any loadout items that couldn't spawn into storage or on the ground
 		for(var/datum/gear/G in spawn_in_storage)
@@ -354,7 +354,7 @@ var/global/datum/controller/occupations/job_master
 			if(!l_foot || !r_foot)
 				var/obj/structure/bed/chair/wheelchair/W = new /obj/structure/bed/chair/wheelchair(H.loc)
 				H.buckled = W
-				H.update_canmove()
+				H.UpdateLyingBuckledAndVerbStatus()
 				W.set_dir(H.dir)
 				W.buckled_mob = H
 				W.add_fingerprint(H)

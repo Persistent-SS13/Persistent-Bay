@@ -393,9 +393,9 @@ Sells devices, odds and ends, and medical stuff
 				"insult_bad"        = "This is not acceptable, please cease.",
 				)
 
-	possible_wanted_items = list(/obj/item/weapon/ore/ = TRADER_SUBTYPES_ONLY,
+	possible_wanted_items = list(/obj/item/stack/ore/ = TRADER_SUBTYPES_ONLY,
 								/obj/item/weapon/disk/survey = TRADER_THIS_TYPE,
-								/obj/item/weapon/ore/slag = TRADER_BLACKLIST)
+								/obj/item/stack/ore/slag = TRADER_BLACKLIST)
 
 	possible_trading_items = list(/obj/machinery/mining/drill = TRADER_THIS_TYPE,
 								  /obj/machinery/mining/brace = TRADER_THIS_TYPE,

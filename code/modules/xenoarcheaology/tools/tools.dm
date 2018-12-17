@@ -5,7 +5,7 @@
 	icon_state = "locator"
 	item_state = "locator"
 	origin_tech = list(TECH_MATERIAL = 2, TECH_DATA = 2, TECH_BLUESPACE = 2)
-	matter = list(DEFAULT_WALL_MATERIAL = 500)
+	matter = list(MATERIAL_STEEL = 500)
 	w_class = ITEM_SIZE_SMALL
 
 /obj/item/device/gps/attack_self(var/mob/user as mob)
@@ -18,7 +18,7 @@
 	icon = 'icons/obj/xenoarchaeology.dmi'
 	icon_state = "measuring"
 	origin_tech = list(TECH_MATERIAL = 1)
-	matter = list(DEFAULT_WALL_MATERIAL = 100)
+	matter = list(MATERIAL_STEEL = 100)
 	w_class = ITEM_SIZE_SMALL
 
 /obj/item/weapon/storage/bag/fossils
@@ -51,7 +51,7 @@
 	icon_state = "flashgun"
 	item_state = "lampgreen"
 	origin_tech = list(TECH_BLUESPACE = 3, TECH_MAGNET = 3)
-	matter = list(DEFAULT_WALL_MATERIAL = 10000,"glass" = 5000)
+	matter = list(MATERIAL_STEEL = 10000,MATERIAL_GLASS = 5000)
 	w_class = ITEM_SIZE_SMALL
 	slot_flags = SLOT_BELT
 
@@ -71,27 +71,26 @@
 		var/nearestSimpleTargetDist = -1
 		var/turf/cur_turf = get_turf(src)
 
-		if(master_controller) //Sanity check due to runtimes ~Z
-			for(var/A in SSxenoarch.artifact_spawning_turfs)
-				var/turf/simulated/mineral/T = A
-				if(T.density && T.artifact_find)
-					if(T.z == cur_turf.z)
-						var/cur_dist = get_dist(cur_turf, T) * 2
-						if(nearestTargetDist < 0 || cur_dist < nearestTargetDist)
-							nearestTargetDist = cur_dist + rand() * 2 - 1
-							nearestTargetId = T.artifact_find.artifact_id
-				else
-					SSxenoarch.artifact_spawning_turfs.Remove(T)
+		for(var/A in SSxenoarch.artifact_spawning_turfs)
+			var/turf/simulated/mineral/T = A
+			if(T.density && T.artifact_find)
+				if(T.z == cur_turf.z)
+					var/cur_dist = get_dist(cur_turf, T) * 2
+					if(nearestTargetDist < 0 || cur_dist < nearestTargetDist)
+						nearestTargetDist = cur_dist + rand() * 2 - 1
+						nearestTargetId = T.artifact_find.artifact_id
+			else
+				SSxenoarch.artifact_spawning_turfs.Remove(T)
 
-			for(var/A in SSxenoarch.digsite_spawning_turfs)
-				var/turf/simulated/mineral/T = A
-				if(T.density && T.finds && T.finds.len)
-					if(T.z == cur_turf.z)
-						var/cur_dist = get_dist(cur_turf, T) * 2
-						if(nearestSimpleTargetDist < 0 || cur_dist < nearestSimpleTargetDist)
-							nearestSimpleTargetDist = cur_dist + rand() * 2 - 1
-				else
-					SSxenoarch.digsite_spawning_turfs.Remove(T)
+		for(var/A in SSxenoarch.digsite_spawning_turfs)
+			var/turf/simulated/mineral/T = A
+			if(T.density && T.finds && T.finds.len)
+				if(T.z == cur_turf.z)
+					var/cur_dist = get_dist(cur_turf, T) * 2
+					if(nearestSimpleTargetDist < 0 || cur_dist < nearestSimpleTargetDist)
+						nearestSimpleTargetDist = cur_dist + rand() * 2 - 1
+			else
+				SSxenoarch.digsite_spawning_turfs.Remove(T)
 
 		if(nearestTargetDist >= 0)
 			to_chat(user, "Exotic energy detected on wavelength '[nearestTargetId]' in a radius of [nearestTargetDist]m[nearestSimpleTargetDist > 0 ? "; small anomaly detected in a radius of [nearestSimpleTargetDist]m" : ""]")
@@ -109,7 +108,7 @@
 	icon_state = "crap"
 	item_state = "analyzer"
 	origin_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2, TECH_BLUESPACE = 2)
-	matter = list(DEFAULT_WALL_MATERIAL = 1000,"glass" = 1000)
+	matter = list(MATERIAL_STEEL = 1000,MATERIAL_GLASS = 1000)
 	w_class = ITEM_SIZE_SMALL
 	slot_flags = SLOT_BELT
 	var/list/positive_locations = list()
@@ -237,7 +236,7 @@
 	icon_state = "pinoff"	//pinonfar, pinonmedium, pinonclose, pinondirect, pinonnull
 	item_state = "electronic"
 	origin_tech = list(TECH_MAGNET = 3, TECH_ENGINEERING = 2, TECH_BLUESPACE = 3)
-	matter = list(DEFAULT_WALL_MATERIAL = 1000,"glass" = 500)
+	matter = list(MATERIAL_STEEL = 1000,MATERIAL_GLASS = 500)
 	var/frequency = PUB_FREQ
 	var/scan_ticks = 0
 	var/obj/item/device/radio/target_radio

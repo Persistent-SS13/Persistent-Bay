@@ -2,11 +2,10 @@
 //added different sort of gibs and animations. N
 /mob/proc/gib(anim="gibbed-m",do_gibs)
 	death(1)
-	transforming = 1
-	canmove = 0
+	ADD_TRANSFORMATION_MOVEMENT_HANDLER(src)
 	icon = null
 	set_invisibility(101)
-	update_canmove()
+	UpdateLyingBuckledAndVerbStatus()
 	remove_from_dead_mob_list()
 
 	var/atom/movable/overlay/animation = null
@@ -28,8 +27,7 @@
 /mob/proc/dust(anim="dust-m",remains=/obj/effect/decal/cleanable/ash)
 	death(1)
 	var/atom/movable/overlay/animation = null
-	transforming = 1
-	canmove = 0
+	ADD_TRANSFORMATION_MOVEMENT_HANDLER(src)
 	icon = null
 	set_invisibility(101)
 
@@ -59,7 +57,7 @@
 
 	set_stat(DEAD)
 	reset_plane_and_layer()
-	update_canmove()
+	UpdateLyingBuckledAndVerbStatus()
 
 	dizziness = 0
 	jitteriness = 0
@@ -87,7 +85,5 @@
 
 	update_icon()
 
-	if(ticker && ticker.mode)
-		ticker.mode.check_win()
 	to_chat(src,"<span class='deadsay'>[show_dead_message]</span>")
 	return 1

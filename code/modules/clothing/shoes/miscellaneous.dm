@@ -39,6 +39,18 @@
 	heat_protection = FEET
 	max_heat_protection_temperature = SHOE_MAX_HEAT_PROTECTION_TEMPERATURE
 
+/obj/item/clothing/shoes/eod
+	name = "bomb boots"
+	desc = "A pair of boot reinforced to provide some explosion protection."
+	icon_state = "swat"
+	force = 2
+	armor = list(melee = 70, bullet = 15, laser = 30, energy = 50, bomb = 90, bio = 0, rad = 0)
+	item_flags = ITEM_FLAG_NOSLIP
+	siemens_coefficient = 0.6
+	can_hold_knife = 1
+	heat_protection = FEET
+	max_heat_protection_temperature = SHOE_MAX_HEAT_PROTECTION_TEMPERATURE
+
 /obj/item/clothing/shoes/jungleboots
 	name = "jungle boots"
 	desc = "A pair of durable brown boots. Waterproofed for use planetside."
@@ -124,21 +136,13 @@
 
 /obj/item/clothing/shoes/cult
 	name = "boots"
-	desc = "A pair of boots worn by the followers of Nar-Sie."
+	desc = "A pair of oddly designed boots that stare into your soul."
 	icon_state = "cult"
 	item_state = "cult"
-	force = 2
-	siemens_coefficient = 0.7
-
-	cold_protection = FEET
-	min_cold_protection_temperature = SHOE_MIN_COLD_PROTECTION_TEMPERATURE
-	heat_protection = FEET
-	max_heat_protection_temperature = SHOE_MAX_HEAT_PROTECTION_TEMPERATURE
-	species_restricted = null
 
 /obj/item/clothing/shoes/cyborg
-	name = "cyborg boots"
-	desc = "Shoes for a cyborg costume."
+	name = "black shoes"
+	desc = "Some plain, black shoes."
 	icon_state = "boots"
 
 /obj/item/clothing/shoes/slippers

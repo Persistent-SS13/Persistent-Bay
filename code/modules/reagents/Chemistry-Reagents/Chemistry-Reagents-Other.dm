@@ -303,7 +303,7 @@
 /datum/reagent/silicate
 	name = "Silicate"
 	description = "A compound that can be used to reinforce glass."
-	taste_description = "plastic"
+	taste_description = MATERIAL_PLASTIC
 	reagent_state = LIQUID
 	color = "#c7ffff"
 

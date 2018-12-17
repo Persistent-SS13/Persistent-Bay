@@ -1,0 +1,16 @@
+{{if data.invalid}}
+	<h3>This newspaper is broken!</h3>
+{{else}}
+	<h3>{{:data.name}}</h3>
+	{{if !data.last_page}}
+		{{:helper.link('Next Page', '', {'action' : 'next'}, null)}}
+	{{/if}}
+	{{if !data.last_page}}
+		{{:helper.link('Previous Page', '', {'action' : 'previous'}, null)}}
+	{{/if}}
+	<h2>{{:data.headline}}</h2>
+	By: {{:data.author}}<br>
+	<div class='block'>
+		{{:data.filedata}}
+	</div>
+{{/if}}

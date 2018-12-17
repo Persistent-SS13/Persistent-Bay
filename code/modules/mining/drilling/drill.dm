@@ -21,26 +21,32 @@
 	var/stacks_needed = 0
 
 	var/ore_types = list(
-		"pitchblende",
-		"platinum",
-		"hematite",
-		"graphene",
-		"diamond",
-		"gold",
-		"silver",
-		"phoron",
-		"quartz",
-		"pyrite",
-		"spodumene",
-		"cinnabar",
-		"phosphorite",
-		"rock salt",
-		"potash",
-		"bauxite",
-		"tungsten",
-		"sand",
-		"copper",
-		"bluespace crystal"
+		MATERIAL_PITCHBLENDE,
+		MATERIAL_PLATINUM,
+		MATERIAL_HEMATITE,
+		MATERIAL_GRAPHITE,
+		MATERIAL_DIAMOND,
+		MATERIAL_GOLD,
+		MATERIAL_SILVER,
+		MATERIAL_PHORON,
+		MATERIAL_QUARTZ,
+		MATERIAL_PYRITE,
+		MATERIAL_SPODUMENE,
+		MATERIAL_CINNABAR,
+		MATERIAL_PHOSPHORITE,
+		MATERIAL_ROCK_SALT,
+		MATERIAL_POTASH,
+		MATERIAL_BAUXITE,
+		MATERIAL_TUNGSTEN,
+		MATERIAL_SAND,
+		MATERIAL_TETRAHEDRITE,
+		MATERIAL_FREIBERGITE,
+		MATERIAL_BSPACE_CRYSTAL,
+		MATERIAL_ILMENITE,
+		MATERIAL_GALENA,
+		MATERIAL_CASSITERITE,
+		MATERIAL_SPHALERITE,
+		MATERIAL_HYDROGEN,
 		)
 
 	//Upgrades
@@ -65,12 +71,14 @@
 
 	RefreshParts()
 
+/obj/machinery/mining/drill/proc/drop_ores(var/location)
+	for(var/obj/item/stack/ore/O in contents)
+		O.drop_to_stacks(location)
 
 /obj/machinery/mining/drill/attack_generic(var/mob/user, var/damage)
 	health = max(0, health-damage)
 	if(!health)
-		for(var/obj/item/weapon/ore/O in contents)
-			O.loc = loc
+		drop_ores(loc)
 		src.visible_message("<span class='notice'>\The [src] is smashed open and spills any ore inside.</span>")
 		statu = 2
 		active = 0
@@ -162,23 +170,23 @@
 
 				for(var/i=1, i <= create_ore, i++)
 					switch(metal)
-						if("phoron")
+						if(MATERIAL_PHORON)
 							SSasteroid.agitate(src, 5)
-						if("bluespace crystal")
+						if(MATERIAL_BSPACE_CRYSTAL)
 							SSasteroid.agitate(src, 25)
-						if("platinum")
+						if(MATERIAL_PLATINUM)
 							SSasteroid.agitate(src, 0.25)
-						if("diamond")
+						if(MATERIAL_DIAMOND)
 							SSasteroid.agitate(src, 0.25)
-						if("pitchblende")
+						if(MATERIAL_PITCHBLENDE)
 							SSasteroid.agitate(src, 0.25)
-						if("gold")
+						if(MATERIAL_GOLD)
 							SSasteroid.agitate(src, 0.25)
 
-					if(metal == "bluespace crystal")
+					if(metal == MATERIAL_BSPACE_CRYSTAL)
 						new /obj/item/bluespace_crystal(get_turf(src))
 					else
-						new /obj/item/weapon/ore(src, metal)
+						new /obj/item/stack/ore(src, metal)
 
 		if(!found_resource)
 			harvesting.has_resources = 0
@@ -194,7 +202,7 @@
 
 /obj/machinery/mining/drill/attackby(obj/item/O as obj, mob/user as mob)
 	if(statu == 2)
-		if(stacks_needed && istype(O, /obj/item/stack/material) && O.get_material_name() == "steel")
+		if(stacks_needed && istype(O, /obj/item/stack/material) && O.get_material_name() == MATERIAL_STEEL)
 			var/obj/item/stack/material/sheets = O
 			if(sheets.amount >= stacks_needed)
 				sheets.use(stacks_needed)
@@ -384,8 +392,7 @@
 
 	var/obj/structure/ore_box/B = locate() in orange(1)
 	if(B)
-		for(var/obj/item/weapon/ore/O in contents)
-			O.loc = B
+		drop_ores(B)
 		to_chat(usr, "<span class='notice'>You unload the drill's storage cache into the ore box.</span>")
 	else
 		to_chat(usr, "<span class='notice'>You must move an ore box up to the drill before you can unload it.</span>")

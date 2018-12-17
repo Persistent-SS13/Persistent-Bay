@@ -9,15 +9,17 @@
 
 /obj/machinery/mineral/stacking_machine/New()
 	..()
-	component_parts = list(
-		new /obj/item/weapon/stock_parts/matter_bin(src),
-		new /obj/item/weapon/stock_parts/manipulator(src),
-		new /obj/item/weapon/circuitboard/mining_stacker(src)
-		)
 
 /obj/machinery/mineral/stacking_machine/Initialize()
-	stacks = list()
 	. = ..()
+	if(!stacks)
+		stacks = list()
+	if(!map_storage_loaded)
+		component_parts = list(
+			new /obj/item/weapon/stock_parts/matter_bin(src),
+			new /obj/item/weapon/stock_parts/manipulator(src),
+			new /obj/item/weapon/circuitboard/mining_stacker(src)
+			)
 
 /obj/machinery/mineral/stacking_machine/Process()
 	if(input_turf)
@@ -54,14 +56,22 @@
 	if((. = ..()))
 		return
 	if(href_list["change_stack"])
-		var/choice = input("What would you like to set the stack amount to?") as null|anything in list(1,5,10,20,50)
-		if(!choice) return
-		stack_amt = choice
-		. = TRUE
+		. = set_stack_amount(input("What would you like to set the stack amount to?") as null|anything in list(1,5,10,20,50))
 	else if(href_list["release_stack"] && stacks[href_list["release_stack"]] > 0)
-		var/material/stackmat = SSmaterials.get_material_by_name(href_list["release_stack"])
-		stackmat.place_sheet(output_turf, stacks[href_list["release_stack"]])
-		stacks[href_list["release_stack"]] = 0
-		. = TRUE
+		. = release_stack(href_list["release_stack"])
 	if(. && console)
 		console.updateUsrDialog()
+
+/obj/machinery/mineral/stacking_machine/proc/set_stack_amount(var/samount)
+	if(!samount)
+		return FALSE
+	stack_amt = samount
+	return TRUE
+
+/obj/machinery/mineral/stacking_machine/proc/release_stack(var/stackmatname)
+	if(stackmatname && stacks[stackmatname] > 0)
+		var/material/stackmat = SSmaterials.get_material_by_name(stackmatname)
+		stackmat.place_sheet(output_turf, stacks[stackmatname])
+		stacks[stackmatname] = 0
+		return TRUE
+	return FALSE

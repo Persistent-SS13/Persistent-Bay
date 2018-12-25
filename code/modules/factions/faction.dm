@@ -644,6 +644,16 @@ var/PriorityQueue/all_feeds
 	var/hiring_policy = 0 // if hiring_policy, anyone with reassignment can add people to the network, else only people in command a command category with reassignment can add people
 	var/last_expense_print = 0
 
+	
+	
+	
+/datum/world_faction/democratic
+	
+/datum/world_faction/business
+
+
+
+	
 
 /datum/world_faction/after_load()
 	if(!debts)
@@ -905,3 +915,133 @@ var/PriorityQueue/all_feeds
 	password = "Hope97"
 	network_name = "freenet"
 	network_uid = "freenet"
+
+	
+/datum/beacon_objective
+	var/name = "Objective name"
+	var/payout = 0 // how much to pay upon completion
+	var/req_level = 0 // required level of the beacon
+
+	var/required = 10 // How much of whatever is required to fill the objective
+	
+	
+	
+/datum/beacon_objective/profit
+	name = "Have X$$ in your corperate account, an increase of Y$$."
+	
+/datum/beacon_objective/sales_total
+	name = "Do X$$ in sales to other residents."
+	
+/datum/beacon_objective/sales_unique
+	name = "Do sales with X unique people."
+
+/datum/beacon_objective/export
+	name = "Deliver X units of Y via telepad."
+	
+/datum/beacon_objective/survey_beacon
+	name = "Survey the sensor beacon X located in zone Y."
+
+/datum/beacon_objective/publish_articles
+	name = "Publish X amount of quality articles."
+
+/datum/beacon_objective/article_sales
+	name = "Have your articles purchased X amount of time."
+	
+/datum/beacon_objective/listeners
+	name = "Have X amount of patrons in the vicinity of one of your music emitters."
+	
+/datum/beacon_objective/reaction
+	name = "Produce X units of Y in a chemmaster."
+
+/datum/beacon_objective/drugs
+	name = "Produce X 10 unit Ys (patches, pills) in a chemmaster."
+	
+/datum/beacon_objective/production
+	name = "Produce X amount of objects in a Z (fabricator type)."
+	
+/datum/beacon_objective/recycling
+	name = "Break down X objects in a recycling machine."
+
+/datum/beacon_objective/cleaning
+	name = "Have a clocked in employee clean X amount of tiles."
+
+/datum/beacon_objective/unlock_designs
+	name = "Unlock X amount of designs."
+	
+/datum/beacon_objective/produce_designs
+	name = "Produce X amount of design disks."
+
+/datum/beacon_objective/farm
+	name = "Grow X amount of Y."
+	
+/datum/beacon_objective/farm/food
+	name = "Grow X amount of Y (food)."
+
+/datum/beacon_objective/farm/drugs
+	name = "Grow X amount of Y (drugs)."
+
+/datum/beacon_objective/add_books
+	name = "Add X unique and quality books to your library network."
+
+/datum/beacon_objective/bind_books
+	name = "Have X amount of books printed off your library network."
+	
+/datum/beacon_objective/body_scans
+	name = "Have scan X unique indivduals in a body scanner."
+	
+	
+
+	
+	
+
+/datum/business_module/minor/journalism
+	
+/datum/business_module/minor/art
+
+/datum/business_module/minor/medical_simple
+
+/datum/business_module/minor/mining_simple
+
+/datum/business_module/minor/exploration
+
+/datum/business_module/minor/catering
+
+/datum/business_module/minor/retail
+
+/datum/business_module/minor/manufacturing_simple
+
+/datum/business_module/minor/engineering_simple
+
+/datum/business_module/minor/chemistry
+
+/datum/business_module/minor/research_simple
+
+/datum/business_module/minor/security_simple
+
+/datum/business_module/minor/janitorial
+
+
+/datum/business_module/major/medical
+
+/datum/business_module/major/mining
+
+/datum/business_module/major/manufacturing
+
+/datum/business_module/major/research
+
+/datum/business_module/major/security
+
+
+	
+/obj/machinery/economic_beacon
+	name = "Economic Beacon"
+	anchored = 1
+	var/datum/world_faction/holder
+	var/holder_uid
+	
+	var/list/connected_orgs = list()
+	var/list/connected_orgs_uids = list()
+	var/completed_objectives = 0
+	
+	
+	

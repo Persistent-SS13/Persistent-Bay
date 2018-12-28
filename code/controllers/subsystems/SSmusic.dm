@@ -23,7 +23,7 @@ SUBSYSTEM_DEF(music)
 	for(var/Z in 1 to world.maxz)
 		var/datum/music_controller/musicPlayer = zLevelAmbience["[Z]"]
 		if(musicPlayer.genre && musicPlayer.stopTime <= world.time)
-			var/datum/music_file/musicFile = pick(GetMusicByGenre(musicPlayer.genre) - musicPlayer.lastPlayed)
+			var/datum/music_file/musicFile = DEFAULTPICK(GetMusicByGenre(musicPlayer.genre) - musicPlayer.lastPlayed, null)
 			if(musicFile)
 				musicPlayer.lastPlayed = musicFile
 				musicPlayer.stopTime = world.time + musicFile.length
@@ -44,7 +44,7 @@ SUBSYSTEM_DEF(music)
 		search = genres[G]
 		return search
 
-	if(islist(G))
+	if(islist(G) && length(G))
 		search = genres[pick(G)]
 		for(var/genre in G)
 			search &= genres[genre]

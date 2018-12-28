@@ -201,6 +201,8 @@
 			return global.all_antag_spawnpoints_;
 		if("all_antag_types_")
 			return global.all_antag_types_;
+		if("all_feeds")
+			return global.all_feeds;
 		if("all_grabobjects")
 			return global.all_grabobjects;
 		if("all_grabstates")
@@ -1260,6 +1262,8 @@
 			global.all_antag_spawnpoints_=newval;
 		if("all_antag_types_")
 			global.all_antag_types_=newval;
+		if("all_feeds")
+			global.all_feeds=newval;
 		if("all_grabobjects")
 			global.all_grabobjects=newval;
 		if("all_grabstates")
@@ -2218,6 +2222,7 @@
 	"allConsoles",
 	"all_antag_spawnpoints_",
 	"all_antag_types_",
+	"all_feeds",
 	"all_grabobjects",
 	"all_grabstates",
 	"all_languages",

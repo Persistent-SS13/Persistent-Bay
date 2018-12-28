@@ -241,6 +241,8 @@ var/list/admin_verbs_hideable = list(
 	/client/proc/toggle_view_range,
 	/datum/admins/proc/view_txt_log,
 	/datum/admins/proc/view_atk_log,
+	/datum/admins/proc/view_runtime_log,
+	/datum/admins/proc/view_qdel_log,
 	/client/proc/cmd_admin_subtle_message,
 	/client/proc/cmd_admin_check_contents,
 	/datum/admins/proc/access_news_network,

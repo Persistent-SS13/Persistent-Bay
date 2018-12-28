@@ -1,0 +1,56 @@
+<div class="item">
+	<div class="itemLabelWidest">
+	{{if data.field}}
+		<h3>{{:data.name}}</h3>
+	{{else}}
+		<h3>{{:helper.link('Blank', null, {'field' : 1}, null)}} Theorem</h3>
+	{{/if}}
+	</div>
+</div>
+
+{{if data.field}}
+	{{:data.progress}}
+	<div class="itemGroup">
+	{{for data.experiments}}
+		<div class="item">
+			<div class="itemLabel">
+				{{:value.title}}
+			</div>
+			<div class="itemContent">
+				{{:value.content}}
+				<br>
+				{{:helper.link('Select', 'pencil', {'experiment' : value.id}, null)}}
+			</div>
+			<div class="itemLabelWidest white">
+				{{:value.requirements}}
+			</div>
+		</div>
+	{{/for}}
+
+	{{if data.experiment}}
+		<div class="item">
+			<div class="itemLabel">
+				{{:data.experiment.title}}
+			</div>
+			<div class="itemContent">
+				{{:data.experiment.content}}
+			</div>
+			<div class="itemLabelWidest white">
+				{{:data.experiment.requirements}}
+		</div>
+	{{/if}}
+
+	{{if data.complete}}
+		{{for data.complete}}
+			<div class="item">
+				<div class="itemLabel">
+					{{:value.field}}
+				</div>
+				<div class="itemContent">
+					{{:value.amount}}
+				</div>
+			</div>
+		{{/for}}
+	{{/if}}
+	</div>
+{{/if}}

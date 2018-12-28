@@ -54,3 +54,6 @@
 	var/obj/item/weapon/computer_hardware/tesla_link/tesla_link						// Tesla Link, Allows remote charging from nearest APC.
 	var/obj/item/weapon/computer_hardware/dna_scanner/dna_scanner					// DNA scanner, for Cloning Control
 	var/obj/item/weapon/computer_hardware/logistic_processor/logistic_processor				// DNA scanner, for Cloning Control
+
+/obj/item/modular_computer/proc/ConnectedFaction()
+	return network_card.connected_network

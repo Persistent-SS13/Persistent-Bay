@@ -22,7 +22,7 @@
 	var/update_flag = 0
 	var/heat_capacity = 31250
 	var/heat = 9160937.5//T20C * heat_capacity
-	var/temperature = T20C
+	temperature = T20C
 	var/upgraded = 1
 	var/upgrade_stack_type = /obj/item/stack/material/plasteel
 	var/upgrade_stack_amount = 20

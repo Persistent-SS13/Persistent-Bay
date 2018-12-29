@@ -8,6 +8,24 @@
 	desc = "A punching bag."
 	icon_state = "punchingbag"
 	density = 1
+	mass = 20
+	max_health = 60
+	armor = list(
+		DAM_BLUNT  	= MaxArmorValue,
+		DAM_PIERCE 	= MaxArmorValue,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 0,
+		DAM_ENERGY 	= 0,
+		DAM_BURN 	= 0,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+	damthreshold_brute 	= 10
+	damthreshold_burn   = 0
 	var/list/hit_message = list("hit", "punch", "kick", "robust")
 
 /obj/structure/fitness/punchingbag/attackby(obj/item/weapon/W as obj, mob/user as mob)
@@ -16,6 +34,7 @@
 		new/obj/item/stack/material/plastic(get_turf(src))
 		qdel(src)
 		return 1
+	return ..()
 
 /obj/structure/fitness/punchingbag/attack_hand(var/mob/living/carbon/human/user)
 	if(!istype(user))
@@ -36,6 +55,24 @@
 	name = "weightlifting machine"
 	desc = "A machine used to lift weights."
 	icon_state = "weightlifter"
+	armor = list(
+		DAM_BLUNT  	= 20,
+		DAM_PIERCE 	= 20,
+		DAM_CUT 	= 30,
+		DAM_BULLET 	= 40,
+		DAM_ENERGY 	= 30,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 10,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+	damthreshold_brute 	= 10
+	damthreshold_burn   = 5
+	max_health = 200
+	mass = 250
 	var/weight = 1
 	var/list/qualifiers = list("with ease", "without any trouble", "with great effort")
 

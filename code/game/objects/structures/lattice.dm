@@ -9,6 +9,8 @@
 	plane = -18
 	layer = LATTICE_LAYER
 	//	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	mass = 5
+	max_health = 40
 
 /obj/structure/lattice/Initialize()
 	. = ..()

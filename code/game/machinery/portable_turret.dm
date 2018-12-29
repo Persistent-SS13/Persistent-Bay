@@ -14,15 +14,14 @@
 	anchored = 1
 
 	density = 0
-	use_power = 1				//this turret uses and requires power
+	use_power = POWER_USE_IDLE				//this turret uses and requires power
 	idle_power_usage = 50		//when inactive, this turret takes up constant 50 Equipment power
 	active_power_usage = 300	//when active, this turret takes up constant 300 Equipment power
 	power_channel = EQUIP	//drains power from the EQUIPMENT channel
 
 	var/raised = 0			//if the turret cover is "open" and the turret is raised
 	var/raising= 0			//if the turret is currently opening or closing its cover
-	var/health = 120		//the turret's health
-	var/maxhealth = 120		//turrets maximal health.
+	max_health = 120		//turrets maximal health.
 	var/auto_repair = 0		//if 1 the turret slowly repairs itself.
 	var/locked = 0			//if the turret's behaviour control access is locked
 	var/controllock = 0		//if the turret responds to control panels
@@ -277,7 +276,7 @@ var/list/turret_icons
 				qdel(src) // qdel
 
 	else if(isWrench(I))
-		if(enabled || raised)
+		if((enabled || raised) && operable())
 			to_chat(user, "<span class='warning'>You cannot unsecure an active turret!</span>")
 			return
 		if(wrenching)
@@ -326,7 +325,6 @@ var/list/turret_icons
 	else
 		//if the turret was attacked with the intention of harming it:
 		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-		take_damage(I.force * 0.5)
 		if(I.force * 0.5 > 1) //if the force of impact dealt at least 1 damage, the turret gets pissed off
 			if(!attacked && !emagged)
 				attacked = 1
@@ -349,34 +347,27 @@ var/list/turret_icons
 		enabled = 1 //turns it back on. The cover popUp() popDown() are automatically called in process(), no need to define it here
 		return 1
 
-/obj/machinery/porta_turret/proc/take_damage(var/force)
+/obj/machinery/porta_turret/take_damage(damage, damtype, armordamagetype, armorbypass, list/damlist, damflags, damsrc)
 	if(!raised && !raising)
-		force = force / 8
-		if(force < 5)
+		damage = damage / 8
+		if(damage < 5)
 			return
-
-	health -= force
-	if (force > 5 && prob(45))
+	if (damage > 5 && prob(45))
 		spark_system.start()
-	if(health <= 0)
-		die()	//the death process :(
+	..()
+
 
 /obj/machinery/porta_turret/bullet_act(obj/item/projectile/Proj)
 	var/damage = Proj.get_structure_damage()
-
 	if(!damage)
 		return
-
 	if(enabled)
 		if(!attacked && !emagged)
 			attacked = 1
 			spawn()
 				sleep(60)
 				attacked = 0
-
 	..()
-
-	take_damage(damage)
 
 /obj/machinery/porta_turret/emp_act(severity)
 	if(enabled)
@@ -392,19 +383,7 @@ var/list/turret_icons
 
 	..()
 
-/obj/machinery/porta_turret/ex_act(severity)
-	switch (severity)
-		if (1)
-			qdel(src)
-		if (2)
-			if (prob(25))
-				qdel(src)
-			else
-				take_damage(initial(health) * 8) //should instakill most turrets
-		if (3)
-			take_damage(initial(health) * 8 / 3)
-
-/obj/machinery/porta_turret/proc/die()	//called when the turret dies, ie, health <= 0
+/obj/machinery/porta_turret/destroyed()	//called when the turret dies, ie, health <= 0
 	health = 0
 	stat |= BROKEN	//enables the BROKEN bit
 	spark_system.start()	//creates some sparks because they look cool
@@ -413,7 +392,7 @@ var/list/turret_icons
 /obj/machinery/porta_turret/Process()
 	//the main machinery process
 
-	if(stat & (NOPOWER|BROKEN))
+	if(inoperable())
 		//if the turret has no power or is broken, make the turret pop down if it hasn't already
 		popDown()
 		return
@@ -434,9 +413,9 @@ var/list/turret_icons
 			spawn()
 				popDown() // no valid targets, close the cover
 
-	if(auto_repair && (health < maxhealth))
+	if(auto_repair && (health < max_health))
 		use_power(20000)
-		health = min(health+1, maxhealth) // 1HP for 20kJ
+		health = min(health+1, max_health) // 1HP for 20kJ
 
 /obj/machinery/porta_turret/proc/assess_and_assign(var/mob/living/L, var/list/targets, var/list/secondarytargets)
 	switch(assess_living(L))
@@ -813,16 +792,10 @@ var/list/turret_icons
 		if(7)
 			if(isWelder(I))
 				var/obj/item/weapon/weldingtool/WT = I
-				if(!WT.isOn()) return
-				if(WT.get_fuel() < 5)
-					to_chat(user, "<span class='notice'>You need more fuel to complete this task.</span>")
-
-				playsound(loc, pick('sound/items/Welder.ogg', 'sound/items/Welder2.ogg'), 50, 1)
-				if(do_after(user, 30, src))
-					if(!src || !WT.remove_fuel(5, user))
+				if(WT.do_weld(user, src, 30, 5, "You weld the turret's armor down."))
+					if(!src)
 						return
 					build_step = 8
-					to_chat(user, "<span class='notice'>You weld the turret's armor down.</span>")
 
 					//The final step: create a full turret
 					var/obj/machinery/porta_turret/Turret = new target_type(loc)

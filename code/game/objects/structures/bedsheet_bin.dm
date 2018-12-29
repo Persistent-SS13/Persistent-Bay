@@ -18,6 +18,7 @@ LINEN BINS
 	throw_speed = 1
 	throw_range = 2
 	w_class = ITEM_SIZE_SMALL
+	max_health = 10
 
 /obj/item/weapon/bedsheet/attackby(obj/item/I, mob/user)
 	if(is_sharp(I))
@@ -101,7 +102,9 @@ LINEN BINS
 	icon = 'icons/obj/structures.dmi'
 	icon_state = "linenbin-full"
 	anchored = 1
-	var/amount = 20
+	max_health = 50
+	matter = list(MATERIAL_PLASTIC = 4 * SHEET_MATERIAL_AMOUNT)
+	var/amount = 0
 	var/list/sheets = list()
 	var/obj/item/hidden = null
 

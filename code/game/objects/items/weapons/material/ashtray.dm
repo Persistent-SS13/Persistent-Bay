@@ -7,6 +7,8 @@ var/global/list/ashtray_cache = list()
 	force_divisor = 0.1
 	thrown_force_divisor = 0.1
 	randpixel = 5
+	damtype = DAM_BLUNT
+	mass = 1
 	var/image/base_image
 	var/max_butts = 10
 

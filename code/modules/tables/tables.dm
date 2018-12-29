@@ -9,8 +9,9 @@
 	layer = TABLE_LAYER
 	throwpass = 1
 	var/flipped = 0
-	var/maxhealth = 10
-	var/health = 10
+	mass = 10
+	max_health = 60
+	damthreshold_brute 	= 2
 
 	// For racks.
 	var/can_reinforce = 1
@@ -32,31 +33,6 @@
 	if(istext(reinforced))
 		reinforced = SSmaterials.get_material_by_name(reinforced)
 	..()
-
-/obj/structure/table/proc/update_material()
-	var/old_maxhealth = maxhealth
-	if(!material)
-		maxhealth = 10
-	else
-		maxhealth = material.integrity / 2
-
-		if(reinforced)
-			maxhealth += reinforced.integrity / 2
-
-	health += maxhealth - old_maxhealth
-
-/obj/structure/table/proc/take_damage(amount)
-	// If the table is made of a brittle material, and is *not* reinforced with a non-brittle material, damage is multiplied by TABLE_BRITTLE_MATERIAL_MULTIPLIER
-	if(material && material.is_brittle())
-		if(reinforced)
-			if(reinforced.is_brittle())
-				amount *= TABLE_BRITTLE_MATERIAL_MULTIPLIER
-		else
-			amount *= TABLE_BRITTLE_MATERIAL_MULTIPLIER
-	health -= amount
-	if(health <= 0)
-		visible_message("<span class='warning'>\The [src] breaks down!</span>")
-		return break_to_parts() // if we break and form shards, return them to the caller to do !FUN! things with
 
 /obj/structure/table/Initialize()
 	. = ..()
@@ -85,18 +61,44 @@
 		T.update_icon()
 	. = ..()
 
+/obj/structure/table/proc/update_material()
+	var/old_max_health = max_health
+	if(!material)
+		max_health = 10
+	else
+		max_health = material.integrity / 2
+
+		if(reinforced)
+			max_health += reinforced.integrity / 2
+
+	health += max_health - old_max_health
+
+/obj/structure/table/take_damage(damage, damtype, armordamagetype, armorbypass, list/damlist, damflags, damsrc)
+	// If the table is made of a brittle material, and is *not* reinforced with a non-brittle material, damage is multiplied by TABLE_BRITTLE_MATERIAL_MULTIPLIER
+	if(material && material.is_brittle())
+		if(reinforced)
+			if(reinforced.is_brittle())
+				damage *= TABLE_BRITTLE_MATERIAL_MULTIPLIER
+		else
+			damage *= TABLE_BRITTLE_MATERIAL_MULTIPLIER
+	..(damage, damtype, armordamagetype, armorbypass, damlist, damflags, damsrc)
+
+/obj/structure/table/destroyed()
+	visible_message("<span class='warning'>\The [src] breaks down!</span>")
+	break_to_parts() // if we break and form shards, return them to the caller to do !FUN! things with
+
 /obj/structure/table/examine(mob/user)
 	. = ..()
-	if(health < maxhealth)
-		switch(health / maxhealth)
+	if(health < max_health)
+		switch(health / max_health)
 			if(0.0 to 0.5)
 				to_chat(user, "<span class='warning'>It looks severely damaged!</span>")
 			if(0.25 to 0.5)
 				to_chat(user, "<span class='warning'>It looks damaged!</span>")
 			if(0.5 to 1.0)
 				to_chat(user, "<span class='notice'>It has a few scrapes and dents.</span>")
-/obj/structure/table/attackby(obj/item/weapon/W, mob/user)
 
+/obj/structure/table/attackby(obj/item/weapon/W, mob/user)
 	if(reinforced && istype(W, /obj/item/weapon/screwdriver))
 		remove_reinforced(W, user)
 		if(!reinforced)
@@ -138,7 +140,7 @@
 		dismantle(W, user)
 		return 1
 
-	if(health < maxhealth && isWelder(W))
+	if(health < max_health && isWelder(W))
 		var/obj/item/weapon/weldingtool/F = W
 		if(F.welding)
 			to_chat(user, "<span class='notice'>You begin reparing damage to \the [src].</span>")
@@ -147,7 +149,7 @@
 				return
 			user.visible_message("<span class='notice'>\The [user] repairs some damage to \the [src].</span>",
 			                              "<span class='notice'>You repair some damage to \the [src].</span>")
-			health = max(health+(maxhealth/5), maxhealth) // 20% repair per application
+			health = max(health+(max_health/5), max_health) // 20% repair per application
 			return 1
 
 	if(!material && can_plate && istype(W, /obj/item/stack/material))
@@ -246,13 +248,13 @@
 /obj/structure/table/proc/remove_material(obj/item/weapon/wrench/W, mob/user)
 	material = common_material_remove(user, material, 20, "plating", "bolts", 'sound/items/Ratchet.ogg')
 
-/obj/structure/table/proc/dismantle(obj/item/weapon/wrench/W, mob/user)
+/obj/structure/table/dismantle(obj/item/weapon/wrench/W, mob/user)
 	if(manipulating) return
 	manipulating = 1
 	user.visible_message("<span class='notice'>\The [user] begins dismantling \the [src].</span>",
 	                              "<span class='notice'>You begin dismantling \the [src].</span>")
 	playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
-	if(!do_after(user, 20, src))
+	if(!do_after(user, 2 SECONDS, src))
 		manipulating = 0
 		return
 	user.visible_message("<span class='notice'>\The [user] dismantles \the [src].</span>",

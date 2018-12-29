@@ -7,10 +7,11 @@
 	w_class = ITEM_SIZE_LARGE
 	force_divisor = 0.5 // 30 when wielded with hardnes 60 (steel)
 	thrown_force_divisor = 0.5 // 10 when thrown with weight 20 (steel)
-	sharp = 1
-	edge = 1
+	sharpness = 1
 	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
-	hitsound = 'sound/weapons/bladeslice.ogg'
+	sound_attack = 'sound/weapons/bladeslice.ogg'
+	damtype = DAM_CUT
+	mass = 3.6 
 
 /obj/item/weapon/material/sword/handle_shield(mob/user, var/damage, atom/damage_source = null, mob/attacker = null, var/def_zone = null, var/attack_text = "the attack")
 
@@ -21,10 +22,11 @@
 	return 0
 
 /obj/item/weapon/material/sword/replica
-	edge = 0
-	sharp = 0
+	sharpness = 0
 	force_divisor = 0.2
 	thrown_force_divisor = 0.2
+	damtype = DAM_BLUNT
+	mass = 1
 
 /obj/item/weapon/material/sword/katana
 	name = "katana"
@@ -32,9 +34,11 @@
 	icon_state = "katana"
 	item_state = "katana"
 	slot_flags = SLOT_BELT | SLOT_BACK
+	mass = 1.5
 
 /obj/item/weapon/material/sword/katana/replica
-	edge = 0
-	sharp = 0
+	sharpness = 0
 	force_divisor = 0.2
 	thrown_force_divisor = 0.2
+	damtype = DAM_BLUNT
+	mass = 1

@@ -43,6 +43,7 @@ GLOBAL_LIST_INIT(rustle_sound,list('sound/effects/rustle1.ogg','sound/effects/ru
 GLOBAL_LIST_INIT(punch_sound,list('sound/weapons/punch1.ogg','sound/weapons/punch2.ogg','sound/weapons/punch3.ogg','sound/weapons/punch4.ogg'))
 GLOBAL_LIST_INIT(clown_sound,list('sound/effects/clownstep1.ogg','sound/effects/clownstep2.ogg'))
 GLOBAL_LIST_INIT(swing_hit_sound,list('sound/weapons/genhit1.ogg', 'sound/weapons/genhit2.ogg', 'sound/weapons/genhit3.ogg'))
+GLOBAL_LIST_INIT(swing_miss_sound,list('sound/weapons/swing_miss1.ogg', 'sound/weapons/swing_miss2.ogg', 'sound/weapons/swing_miss3.ogg'))
 GLOBAL_LIST_INIT(hiss_sound,list('sound/voice/hiss1.ogg','sound/voice/hiss2.ogg','sound/voice/hiss3.ogg','sound/voice/hiss4.ogg'))
 GLOBAL_LIST_INIT(page_sound,list('sound/effects/pageturn1.ogg', 'sound/effects/pageturn2.ogg','sound/effects/pageturn3.ogg'))
 GLOBAL_LIST_INIT(fracture_sound,list('sound/effects/bonebreak1.ogg','sound/effects/bonebreak2.ogg','sound/effects/bonebreak3.ogg','sound/effects/bonebreak4.ogg'))
@@ -173,8 +174,10 @@ var/const/FALLOFF_SOUNDS = 0.5
 			if ("sparks") soundin = pick(GLOB.spark_sound)
 			if ("rustle") soundin = pick(GLOB.rustle_sound)
 			if ("punch") soundin = pick(GLOB.punch_sound)
+			if ("punch_miss") soundin = 'sound/weapons/punchmiss.ogg'
 			if ("clownstep") soundin = pick(GLOB.clown_sound)
 			if ("swing_hit") soundin = pick(GLOB.swing_hit_sound)
+			if ("swing_miss") soundin = pick(GLOB.swing_miss_sound)
 			if ("hiss") soundin = pick(GLOB.hiss_sound)
 			if ("pageturn") soundin = pick(GLOB.page_sound)
 			if ("fracture") soundin = pick(GLOB.fracture_sound)

@@ -55,7 +55,7 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='warning'>[user]'s hand slips, smearing [tool] in the incision in [target]'s [affected.name]!</span>" , \
 	"<span class='warning'>Your hand slips, smearing [tool] in the incision in [target]'s [affected.name]!</span>")
-	affected.take_damage(5, used_weapon = tool)
+	affected.take_damage(5, damsrc = tool)
 
 //////////////////////////////////////////////////////////////////
 //	 IB fix surgery step
@@ -108,7 +108,7 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='warning'>[user]'s hand slips, smearing [tool] in the incision in [target]'s [affected.name]!</span>" , \
 	"<span class='warning'>Your hand slips, smearing [tool] in the incision in [target]'s [affected.name]!</span>")
-	affected.take_damage(5, used_weapon = tool)
+	affected.take_damage(5, damsrc = tool)
 
 
 //////////////////////////////////////////////////////////////////

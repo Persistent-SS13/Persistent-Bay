@@ -3,17 +3,12 @@
 	icon = 'icons/obj/items.dmi'
 	w_class = ITEM_SIZE_NORMAL
 	mouse_drag_pointer = MOUSE_ACTIVE_POINTER
+	pass_flags = PASS_FLAG_TABLE
 
 	var/image/blood_overlay = null //this saves our blood splatter overlay, which will be processed not to go over the edges of the sprite
 	var/randpixel = 9
-	var/r_speed = 1.0
-	var/health = null
-	var/burn_point = null
-	var/burning = null
-	var/hitsound = null
 	var/slot_flags = 0		//This is used to determine on which slots an item can fit.
 	var/no_attack_log = 0			//If it's an item we don't want to log attack_logs with, set this to 1
-	pass_flags = PASS_FLAG_TABLE
 //	causeerrorheresoifixthis
 	var/obj/item/master = null
 	var/list/origin_tech = null	//Used by R&D to determine what research bonuses it grants.
@@ -44,7 +39,6 @@
 	var/slowdown_general = 0 // How much clothing is slowing you down. Negative values speeds you up. This is a genera##l slowdown, no matter equipment slot.
 	var/slowdown_per_slot[slot_last] // How much clothing is slowing you down. This is an associative list: item slot - slowdown
 	var/canremove = 1 //Mostly for Ninja code at this point but basically will not allow the item to be removed if set to 0. /N
-	var/list/armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
 	var/list/allowed = null //suit storage stuff.
 	var/obj/item/device/uplink/hidden_uplink = null // All items can have an uplink hidden inside, just remember to add the triggers.
 	var/zoomdevicename = null //name used for message when binoculars/scope is used
@@ -231,13 +225,15 @@
 
 // apparently called whenever an item is removed from a slot, container, or anything else.
 /obj/item/proc/dropped(mob/user as mob)
-
 	update_twohanding()
 	if(user)
 		if(user.l_hand)
 			user.l_hand.update_twohanding()
 		if(user.r_hand)
 			user.r_hand.update_twohanding()
+	//observation stuff
+	GLOB.mob_unequipped_event.raise_event(user, src)
+	GLOB.item_unequipped_event.raise_event(src, user)
 
 // called just as an item is picked up (loc is not yet changed)
 /obj/item/proc/pickup(mob/user)
@@ -273,6 +269,10 @@
 		M.l_hand.update_twohanding()
 	if(M.r_hand)
 		M.r_hand.update_twohanding()
+
+	//Observation stuff
+	GLOB.mob_equipped_event.raise_event(user, src, slot)
+	GLOB.item_equipped_event.raise_event(src, user, slot)
 
 //Defines which slots correspond to which slot flags
 var/list/global/slot_flags_enumeration = list(
@@ -493,8 +493,8 @@ var/list/global/slot_flags_enumeration = list(
 				"<span class='danger'>You stab yourself in the eyes with [src]!</span>" \
 			)
 
-		eyes.damage += rand(3,4)
-		if(eyes.damage >= eyes.min_bruised_damage)
+		eyes.rem_health(rand(3,4))
+		if(eyes.get_damages() >= eyes.min_bruised_damage)
 			if(M.stat != 2)
 				if(eyes.robotic < ORGAN_ROBOT) //robot eyes bleeding might be a bit silly
 					to_chat(M, "<span class='danger'>Your eyes start to bleed profusely!</span>")
@@ -505,7 +505,7 @@ var/list/global/slot_flags_enumeration = list(
 				M.eye_blurry += 10
 				M.Paralyse(1)
 				M.Weaken(4)
-			if (eyes.damage >= eyes.min_broken_damage)
+			if (eyes.get_damages() >= eyes.min_broken_damage)
 				if(M.stat != 2)
 					to_chat(M, "<span class='warning'>You go blind!</span>")
 
@@ -748,3 +748,8 @@ modules/mob/living/carbon/human/life.dm if you die, you will be zoomed out.
 		. = "<span class='warning'>\icon[src] [gender==PLURAL?"some":"a"] [(blood_color != SYNTH_BLOOD_COLOUR) ? "blood" : "oil"]-stained [src]</span>"
 	else
 		. = "\icon[src] \a [src]"
+
+//For items that can puncture e.g. thick plastic but aren't necessarily sharp
+//Returns 1 if the given item is capable of popping things like balloons, inflatable barriers, or cutting police tape.
+/obj/item/proc/can_puncture()
+	return src.sharpness || cmpdamtype(src.damtype, DAM_PIERCE) || cmpdamtype(src.damtype, DAM_CUT)

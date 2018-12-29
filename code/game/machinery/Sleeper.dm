@@ -25,7 +25,7 @@
 
 	var/efficiency
 	var/initial_bin_rating = 1
-	var/min_health = 25
+	var/min_treatable_health = 25
 
 	use_power = 1
 	idle_power_usage = 15
@@ -62,7 +62,7 @@
 		I += M.rating
 
 	efficiency = E
-	min_health = -E * 25
+	min_treatable_health = -E * 25
 
 /obj/machinery/sleeper/Initialize()
 	. = ..()

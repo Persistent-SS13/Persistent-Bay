@@ -14,7 +14,7 @@ var/list/solars_list = list()
 	idle_power_usage = 0
 	active_power_usage = 0
 	var/id = 0
-	var/health = 10
+	max_health = 10
 	var/obscured = 0
 	var/sunfrac = 0
 	var/adir = SOUTH // actual dir
@@ -68,24 +68,17 @@ var/list/solars_list = list()
 			user.visible_message("<span class='notice'>[user] takes the glass off the solar panel.</span>")
 			qdel(src)
 		return
-	else if (W)
-		src.add_fingerprint(user)
-		src.health -= W.force
-		src.healthcheck()
 	..()
 
-
-/obj/machinery/power/solar/proc/healthcheck()
+/obj/machinery/power/solar/update_health(var/damtype)
 	if (src.health <= 0)
-		if(!(stat & BROKEN))
-			broken()
-
-
+		if(!isbroken())
+			set_broken(TRUE)
 
 /obj/machinery/power/solar/update_icon()
 	..()
 	overlays.Cut()
-	if(stat & BROKEN)
+	if(isbroken())
 		overlays += image('icons/obj/power.dmi', icon_state = "solar_panel-b", layer = FLY_LAYER)
 	else
 		overlays += image('icons/obj/power.dmi', icon_state = "solar_panel", layer = FLY_LAYER)
@@ -111,7 +104,7 @@ var/list/solars_list = list()
 	//isn't the power recieved from the incoming light proportionnal to cos(p_angle) (Lambert's cosine law) rather than cos(p_angle)^2 ?
 
 /obj/machinery/power/solar/Process()//TODO: remove/add this from machines to save on processing as needed ~Carn PRIORITY
-	if(stat & BROKEN)
+	if(isbroken())
 		return
 	if(!GLOB.sun || !control) //if there's no sun or the panel is not linked to a solar control computer, no need to proceed
 		return
@@ -126,38 +119,16 @@ var/list/solars_list = list()
 		else //if we're no longer on the same powernet, remove from control computer
 			unset_control()
 
-/obj/machinery/power/solar/proc/broken()
-	stat |= BROKEN
-	health = 0
-	new /obj/item/weapon/material/shard(src.loc)
-	new /obj/item/weapon/material/shard(src.loc)
-	var/obj/item/solar_assembly/S = locate() in src
-	S.glass_type = null
-	unset_control()
+/obj/machinery/power/solar/set_broken(var/state)
+	..(state)
+	if(state)
+		health = 0
+		new /obj/item/weapon/material/shard(src.loc)
+		new /obj/item/weapon/material/shard(src.loc)
+		var/obj/item/solar_assembly/S = locate() in src
+		S.glass_type = null
+		unset_control()
 	update_icon()
-
-
-/obj/machinery/power/solar/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			if(prob(15))
-				new /obj/item/weapon/material/shard( src.loc )
-			qdel(src)
-			return
-
-		if(2.0)
-			if (prob(25))
-				new /obj/item/weapon/material/shard( src.loc )
-				qdel(src)
-				return
-
-			if (prob(50))
-				broken()
-
-		if(3.0)
-			if (prob(25))
-				broken()
-	return
 
 
 /obj/machinery/power/solar/fake/New(var/turf/loc, var/obj/item/solar_assembly/S)
@@ -275,6 +246,8 @@ var/list/solars_list = list()
 	density = 1
 	use_power = 1
 	idle_power_usage = 250
+	max_health=50
+	break_threshold = 0.25
 	var/id = 0
 	var/cdir = 0
 	var/targetdir = 0		// target angle in manual tracking (since it updates every game minute)
@@ -362,11 +335,11 @@ var/list/solars_list = list()
 	updateDialog()
 
 /obj/machinery/power/solar_control/update_icon()
-	if(stat & BROKEN)
+	if(isbroken())
 		icon_state = "broken"
 		overlays.Cut()
 		return
-	if(stat & NOPOWER)
+	if(!ispowered())
 		icon_state = "c_unpowered"
 		overlays.Cut()
 		return
@@ -506,25 +479,9 @@ var/list/solars_list = list()
 
 	update_icon()
 
-
-/obj/machinery/power/solar_control/proc/broken()
+/obj/machinery/power/solar_control/broken()
 	stat |= BROKEN
 	update_icon()
-
-
-/obj/machinery/power/solar_control/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			//SN src = null
-			qdel(src)
-			return
-		if(2.0)
-			if (prob(50))
-				broken()
-		if(3.0)
-			if (prob(25))
-				broken()
-	return
 
 // Used for mapping in solar array which automatically starts itself (telecomms, for example)
 /obj/machinery/power/solar_control/autostart

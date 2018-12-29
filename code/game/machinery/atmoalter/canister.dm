@@ -3,7 +3,7 @@
 	icon = 'icons/obj/atmos.dmi'
 	icon_state = "yellow"
 	density = 1
-	var/health = 100.0
+	max_health = 100
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	w_class = ITEM_SIZE_GARGANTUAN
 
@@ -131,13 +131,17 @@ update_flag
 	..()
 	if(loc)
 		handle_heat_exchange()
-	if(valve_open)
+
+	if(valve_open && air_contents.return_pressure() != 0)
 		var/datum/gas_mixture/environment
 		if(holding && holding.air_contents)
 			environment = holding.air_contents
 		else
-			environment = loc.return_air()
+			environment = loc? loc.return_air() : null
 
+		//If in space you don't care
+		if(!environment)
+			return
 		var/env_pressure = environment.return_pressure()
 		var/pressure_delta = release_pressure - env_pressure
 
@@ -157,6 +161,8 @@ update_flag
 	air_contents.react() //cooking up air cans - add phoron and oxygen, then heat above PHORON_MINIMUM_BURN_TEMPERATURE
 
 /obj/machinery/portable_atmospherics/canister/proc/handle_heat_exchange()
+	if(!loc)
+		return
 	if(istype(src.loc, /turf/space))
 		heat -= COSMIC_RADIATION_TEMPERATURE * CANISTER_HEAT_TRANSFER_COEFFICIENT
 		return
@@ -169,6 +175,8 @@ update_flag
 
 
 /obj/machinery/portable_atmospherics/canister/proc/exchange_heat(var/datum/gas_mixture/environment)
+	if(!environment) //Most likely in space
+		return
 	var/relative_density = (environment.total_moles/environment.volume) / (MOLES_CELLSTANDARD/CELL_VOLUME)
 	if(relative_density > 0.02) //don't bother if we are in vacuum or near-vacuum
 		var/loc_temp = environment.temperature
@@ -199,7 +207,7 @@ update_flag
 	return 0
 
 /obj/machinery/portable_atmospherics/canister/bullet_act(var/obj/item/projectile/Proj)
-	if(!(Proj.damage_type == BRUTE || Proj.damage_type == BURN))
+	if(!IsDamageTypePhysical(Proj.damage_type))
 		return
 
 	if(Proj.damage)
@@ -244,7 +252,7 @@ update_flag
 /obj/machinery/portable_atmospherics/canister/attackby(obj/item/W as obj, mob/user as mob)
 	if(isWelder(W) && src.destroyed)
 		var/obj/item/weapon/weldingtool/WT = W
-		if(WT.remove_fuel(0,user))
+		if(WT.do_weld(user, src))
 			var/obj/item/stack/material/steel/new_item = new(usr.loc)
 			new_item.add_to_stacks(usr)
 			//!initial allows me to implement this payback on destroy without giving everyone free plasteel.

@@ -5,7 +5,19 @@
 	icon_state = "ninja_rig"
 	suit_type = "light suit"
 	allowed = list(/obj/item/weapon/gun,/obj/item/ammo_magazine,/obj/item/ammo_casing,/obj/item/weapon/melee/baton,/obj/item/weapon/handcuffs,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit,/obj/item/weapon/cell)
-	armor = list(melee = 50, bullet = 15, laser = 50, energy = 10, bomb = 25, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 50,
+		DAM_PIERCE 	= 40,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 15,
+		DAM_LASER 	= 50,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 25,
+		DAM_EMP 	= 10,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 	siemens_coefficient = 0.4
 	emp_protection = 10
 	online_slowdown = 0
@@ -76,7 +88,19 @@
 	desc = "A unique, vaccum-proof suit of nano-enhanced armor designed specifically for assassins."
 	suit_type = "ominous"
 	icon_state = "ninja_rig"
-	armor = list(melee = 50, bullet = 15, laser = 30, energy = 10, bomb = 25, bio = 100, rad = 30)
+	armor  = list(
+		DAM_BLUNT 	= 50,
+		DAM_PIERCE 	= 40,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 15,
+		DAM_LASER 	= 30,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 25,
+		DAM_EMP 	= 40,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 30,
+		DAM_STUN 	= 0)
 	siemens_coefficient = 0.2 //heavy hardsuit level shock protection
 	emp_protection = 40 //change this to 30 if too high.
 	online_slowdown = 0

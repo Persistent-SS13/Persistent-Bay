@@ -5,6 +5,7 @@
 	icon_state = "extinguisher_closed"
 	anchored = 1
 	density = 0
+	max_health = 150
 	var/obj/item/weapon/extinguisher/has_extinguisher
 	var/opened = 0
 

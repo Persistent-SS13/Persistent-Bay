@@ -7,7 +7,7 @@
 	icon = 'icons/mob/alien.dmi'
 	icon_state = "nest"
 	buckle_pixel_shift = "x=0;y=6"
-	var/health = 100
+	max_health = 100
 
 /obj/structure/bed/nest/update_icon()
 	return

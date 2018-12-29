@@ -22,9 +22,9 @@
 /obj/item/projectile/blood_shard
 	name = "bloodshard"
 	damage = 15
-	check_armour = "melee"
+	check_armour = DAM_PIERCE
 	icon_state = "blood"
-	damage_type = BRUTE
+	damage_type = DAM_PIERCE
 
 /obj/item/projectile/blood_shard/on_hit(var/atom/movable/target, var/blocked = 0)
 	if(..())

@@ -6,3 +6,5 @@
 	density = 1
 	anchored = 1
 	unacidable = 1//temporary until I decide whether the borg can be removed. -veyveyr
+	mass = 10
+	max_health = 40

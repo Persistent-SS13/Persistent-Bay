@@ -5,7 +5,7 @@
 
 	var/material/material
 	var/icon_base
-	hitsound = 'sound/weapons/genhit.ogg'
+	sound_hit = 'sound/weapons/genhit.ogg'
 	var/datum/lock/lock
 	var/initial_lock_value //for mapping purposes. Basically if this value is set, it sets the lock to this value.
 
@@ -24,11 +24,11 @@
 	if(!material)
 		qdel(src)
 		return
-	maxhealth = max(100, material.integrity*10)
-	health = maxhealth
+	max_health = max(100, material.integrity*10)
+	health = max_health
 	if(!icon_base)
 		icon_base = material.icon_door
-	hitsound = material.hitsound
+	sound_hit = material.hitsound
 	name = "[material.display_name] door"
 	color = material.icon_colour
 	if(initial_lock_value)
@@ -151,7 +151,7 @@
 		if(stat & BROKEN)
 			to_chat(user, "<span class='notice'>It looks like \the [src] is pretty busted. It's going to need more than just patching up now.</span>")
 			return
-		if(health >= maxhealth)
+		if(health >= max_health)
 			to_chat(user, "<span class='notice'>Nothing to fix!</span>")
 			return
 		if(!density)
@@ -160,12 +160,12 @@
 
 		//figure out how much metal we need
 		var/obj/item/stack/stack = I
-		var/amount_needed = ceil((maxhealth - health)/DOOR_REPAIR_AMOUNT)
+		var/amount_needed = ceil((max_health - health)/DOOR_REPAIR_AMOUNT)
 		var/used = min(amount_needed,stack.amount)
 		if (used)
 			to_chat(user, "<span class='notice'>You fit [used] [stack.singular_name]\s to damaged and broken parts on \the [src].</span>")
 			stack.use(used)
-			health = between(health, health + used*DOOR_REPAIR_AMOUNT, maxhealth)
+			health = between(health, health + used*DOOR_REPAIR_AMOUNT, max_health)
 		return
 
 	//psa to whoever coded this, there are plenty of objects that need to call attack() on doors without bludgeoning them.
@@ -178,7 +178,7 @@
 				user.visible_message("<span class='danger'>\The [user] hits \the [src] with \the [W] with no visible effect.</span>")
 			else
 				user.visible_message("<span class='danger'>\The [user] forcefully strikes \the [src] with \the [W]!</span>")
-				playsound(src.loc, hitsound, 100, 1)
+				playsound(src.loc, sound_hit, 100, 1)
 				take_damage(W.force)
 		return
 

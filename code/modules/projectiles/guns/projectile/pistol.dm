@@ -89,6 +89,7 @@
 	magazine_type = /obj/item/ammo_magazine/a75
 	auto_eject = 1
 	auto_eject_sound = 'sound/weapons/smg_empty_alarm.ogg'
+	mass = 0.625
 
 /obj/item/weapon/gun/projectile/gyropistol/update_icon()
 	..()

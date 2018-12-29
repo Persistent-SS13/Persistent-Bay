@@ -342,7 +342,7 @@
 		if(!brain || H.stat == DEAD || (H.status_flags & FAKEDEATH))
 			brain_result = "<span class='danger'>none, patient is braindead</span>"
 		else if(H.stat != DEAD)
-			brain_result = "[round(max(0,(1 - brain.damage/brain.max_damage)*100))]%"
+			brain_result = "[round(max(0,(1 - brain.get_damages()/brain.max_health)*100))]%"
 	else
 		brain_result = "<span class='danger'>ERROR - Nonstandard biology</span>"
 	dat += "<b>Brain activity:</b> [brain_result]"
@@ -403,9 +403,9 @@
 		else
 			table += "<td>"
 			if(E.brute_dam)
-				table += "[capitalize(get_wound_severity(E.brute_ratio, E.can_heal_overkill))] physical trauma"
+				table += "[capitalize(get_wound_severity(E.brute_ratio, E.can_heal_overkill()))] physical trauma"
 			if(E.burn_dam)
-				table += " [capitalize(get_wound_severity(E.burn_ratio, E.can_heal_overkill))] burns"
+				table += " [capitalize(get_wound_severity(E.burn_ratio, E.can_heal_overkill()))] burns"
 			if(E.brute_dam + E.burn_dam == 0)
 				table += "None"
 			table += "</td><td>[english_list(E.get_scan_results(), nothing_text = "", and_text = ", ")]</td></tr>"
@@ -418,7 +418,7 @@
 			table += "Severe"
 		else if(I.is_bruised())
 			table += "Moderate"
-		else if(I.is_damaged())
+		else if(I.isdamaged())
 			table += "Minor"
 		else
 			table += "None"

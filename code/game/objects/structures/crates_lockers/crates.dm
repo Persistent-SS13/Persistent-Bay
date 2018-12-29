@@ -7,8 +7,24 @@ obj/structure/closet/crate
 	icon_closed = "crate"
 	atom_flags = ATOM_FLAG_CLIMBABLE
 	setup = 0
-
 	storage_types = CLOSET_STORAGE_ITEMS
+	mass = 12
+	max_health = 200
+	damthreshold_brute 	= 10
+	armor = list(
+		DAM_BLUNT  	= 80,
+		DAM_PIERCE 	= 90,
+		DAM_CUT 	= 90,
+		DAM_BULLET 	= 50,
+		DAM_ENERGY 	= 50,
+		DAM_BURN 	= 30,
+		DAM_BOMB 	= 15,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 	var/points_per_crate = 5
 	var/rigged = 0
@@ -128,6 +144,23 @@ obj/structure/closet/crate
 	icon_state = "securecrate"
 	icon_opened = "securecrateopen"
 	icon_closed = "securecrate"
+	mass = 17
+	max_health = 400
+	damthreshold_brute 	= 10
+	armor = list(
+		DAM_BLUNT  	= MaxArmorValue,
+		DAM_PIERCE 	= MaxArmorValue,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 90,
+		DAM_ENERGY 	= 90,
+		DAM_BURN 	= 90,
+		DAM_BOMB 	= 80,
+		DAM_EMP 	= 80,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 	var/redlight = "securecrater"
 	var/greenlight = "securecrateg"
 	var/sparks = "securecratesparks"
@@ -156,6 +189,23 @@ obj/structure/closet/crate
 	icon_opened = "plasticcrateopen"
 	icon_closed = "plasticcrate"
 	points_per_crate = 1
+	mass = 8
+	max_health = 120
+	damthreshold_brute 	= 5
+	armor = list(
+		DAM_BLUNT  	= 20,
+		DAM_PIERCE 	= 10,
+		DAM_CUT 	= 20,
+		DAM_BULLET 	= 0,
+		DAM_ENERGY 	= 0,
+		DAM_BURN 	= 0,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/structure/closet/crate/internals
 	name = "internals crate"
@@ -170,6 +220,23 @@ obj/structure/closet/crate
 	icon_state = "trashcart"
 	icon_opened = "trashcartopen"
 	icon_closed = "trashcart"
+	mass = 25
+	max_health = 450
+	damthreshold_brute 	= 5
+	armor = list(
+		DAM_BLUNT  	= 30,
+		DAM_PIERCE 	= 20,
+		DAM_CUT 	= 30,
+		DAM_BULLET 	= 0,
+		DAM_ENERGY 	= 0,
+		DAM_BURN 	= 0,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/structure/closet/crate/medical
 	name = "medical crate"
@@ -244,6 +311,23 @@ obj/structure/closet/crate
 	icon_state = "largebin"
 	icon_opened = "largebinopen"
 	icon_closed = "largebin"
+	mass = 8
+	max_health = 120
+	damthreshold_brute 	= 5
+	armor = list(
+		DAM_BLUNT  	= 20,
+		DAM_PIERCE 	= 10,
+		DAM_CUT 	= 20,
+		DAM_BULLET 	= 0,
+		DAM_ENERGY 	= 0,
+		DAM_BURN 	= 0,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/structure/closet/crate/radiation
 	name = "radioactive crate"
@@ -251,6 +335,23 @@ obj/structure/closet/crate
 	icon_state = "radiation"
 	icon_opened = "radiationopen"
 	icon_closed = "radiation"
+	mass = 25
+	max_health = 250
+	damthreshold_brute 	= 10
+	armor = list(
+		DAM_BLUNT  	= 50,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 30,
+		DAM_ENERGY 	= 30,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/structure/closet/crate/radiation_gear
 	name = "radioactive gear crate"
@@ -300,6 +401,23 @@ obj/structure/closet/crate
 	greenlight = "largebing"
 	sparks = "largebinsparks"
 	emag = "largebinemag"
+	mass = 10
+	max_health = 200
+	damthreshold_brute 	= 10
+	armor = list(
+		DAM_BLUNT  	= 50,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 30,
+		DAM_ENERGY 	= 30,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/structure/closet/crate/large
 	name = "large crate"
@@ -311,6 +429,23 @@ obj/structure/closet/crate
 
 	storage_capacity = 2 * MOB_LARGE
 	storage_types = CLOSET_STORAGE_ITEMS|CLOSET_STORAGE_STRUCTURES
+	mass = 20
+	max_health = 300
+	damthreshold_brute 	= 5
+	armor = list(
+		DAM_BLUNT  	= 20,
+		DAM_PIERCE 	= 20,
+		DAM_CUT 	= 30,
+		DAM_BULLET 	= 5,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/structure/closet/crate/large/hydroponics
 	icon_state = "hydro_crate_large"
@@ -329,6 +464,23 @@ obj/structure/closet/crate
 
 	storage_capacity = 2 * MOB_LARGE
 	storage_types = CLOSET_STORAGE_ITEMS|CLOSET_STORAGE_STRUCTURES
+	mass = 30
+	max_health = 500
+	damthreshold_brute 	= 10
+	armor = list(
+		DAM_BLUNT  	= 60,
+		DAM_PIERCE 	= 60,
+		DAM_CUT 	= 70,
+		DAM_BULLET 	= 50,
+		DAM_ENERGY 	= 40,
+		DAM_BURN 	= 30,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/structure/closet/crate/secure/large/phoron
 	icon_state = "phoron_crate_large"
@@ -341,6 +493,23 @@ obj/structure/closet/crate
 	icon_state = "largermetal"
 	icon_opened = "largermetalopen"
 	icon_closed = "largermetal"
+	mass = 40
+	max_health = 700
+	damthreshold_brute 	= 15
+	armor = list(
+		DAM_BLUNT  	= MaxArmorValue,
+		DAM_PIERCE 	= MaxArmorValue,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= MaxArmorValue,
+		DAM_ENERGY 	= 90,
+		DAM_BURN 	= 90,
+		DAM_BOMB 	= 80,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/structure/closet/crate/secure/large/reinforced/slice_into_parts(obj/item/weapon/weldingtool/WT, mob/user)
 	if(!WT.remove_fuel(0,user))

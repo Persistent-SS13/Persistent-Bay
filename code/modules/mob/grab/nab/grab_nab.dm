@@ -95,16 +95,16 @@
 	var/obj/item/organ/external/damaging = G.get_targeted_organ()
 	var/hit_zone = G.assailant.zone_sel.selecting
 
-	var/armor = affecting.run_armor_check(hit_zone, "melee")
+	var/armor = affecting.run_armor_check(hit_zone, DAM_BLUNT)
 
 	affecting.visible_message("<span class='danger'>[assailant] crushes [affecting]'s [damaging.name]!</span>")
 
 	if(prob(30))
-		affecting.apply_damage(max(attack_damage + 10, 15), BRUTE, hit_zone, armor, DAM_SHARP, "organic punctures")
+		affecting.apply_damage(max(attack_damage + 10, 15), DAM_PIERCE, hit_zone, armor, 0, "organic punctures")
 		affecting.apply_effect(attack_damage, PAIN, armor)
 		affecting.visible_message("<span class='danger'>[assailant]'s spikes dig in painfully!</span>")
 	else
-		affecting.apply_damage(attack_damage, BRUTE, hit_zone, armor,, "crushing")
+		affecting.apply_damage(attack_damage, DAM_BLUNT, hit_zone, armor, 0, "crushing")
 	playsound(assailant.loc, 'sound/weapons/bite.ogg', 25, 1, -1)
 
 	admin_attack_log(assailant, affecting, "Crushed their victim.", "Was crushed.", "crushed")
@@ -116,9 +116,9 @@
 	var/obj/item/organ/external/damaging = G.get_targeted_organ()
 	var/hit_zone = G.assailant.zone_sel.selecting
 
-	var/armor = affecting.run_armor_check(hit_zone, "melee")
+	var/armor = affecting.run_armor_check(hit_zone, DAM_PIERCE)
 
-	affecting.apply_damage(attack_damage, BRUTE, hit_zone, armor, DAM_SHARP|DAM_EDGE, "mandibles")
+	affecting.apply_damage(attack_damage, DAM_PIERCE, hit_zone, armor, 0, "mandibles")
 	affecting.visible_message("<span class='danger'>[assailant] chews on [affecting]'s [damaging.name]!</span>")
 	playsound(assailant.loc, 'sound/weapons/bite.ogg', 25, 1, -1)
 

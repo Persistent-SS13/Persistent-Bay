@@ -9,36 +9,39 @@
 	density = 1
 	var/last_update = 0
 	var/list/stored_ore = list()
-	var/health = 40
+	max_health = 40
+	mass = 20
+	damthreshold_brute 	= 5
 
-/obj/structure/ore_box/attack_generic(var/mob/user, var/damage)
-	health = max(0, health-damage)
-	if(!health)
-		for (var/obj/item/stack/ore/O in contents)
-			contents -= O
-			O.loc = src.loc
-		user.visible_message("<span class='notice'>[user] smashes \the [src].</span>", \
-							 "<span class='notice'>You take apart \the [src].</span>", \
-							 "<span class='notice'>You hear splitting wood.</span>")
-		if(istype(user, /mob/living/simple_animal/hostile))
-			var/mob/living/simple_animal/hostile/attacker = user
-			attacker.target_mob = null
-		qdel(src)
+/obj/structure/ore_box/after_load()
+	..()
+	update_ore_count()
+
+/obj/structure/ore_box/destroyed(damtype, user)
+	for (var/obj/item/stack/ore/O in contents)
+		contents -= O
+		O.loc = src.loc
+	if(istype(user, /mob/living/simple_animal/hostile))
+		var/mob/living/simple_animal/hostile/attacker = user
+		attacker.target_mob = null
+	..()
+
 /obj/structure/ore_box/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if (istype(W, /obj/item/stack/ore) || istype(W, /obj/item/stack/material_dust))
 		var/obj/item/stack/orestack = W
-		user.remove_from_mob(W)
+		user.remove_from_mob(orestack)
 		orestack.drop_to_stacks(src)
+		update_ore_count()
+		return 1
+
 	if (istype(W, /obj/item/weapon/storage))
 		var/obj/item/weapon/storage/S = W
 		S.hide_from(usr)
 		for(var/obj/item/stack/ore/O in S.contents)
 			S.remove_from_storage(O, src) //This will move the item to this item's contents
 		to_chat(user, "<span class='notice'>You empty the satchel into the box.</span>")
-
-	update_ore_count()
-
-	return
+		update_ore_count()
+		return 1
 
 	if(isCrowbar(W))
 		new /obj/item/stack/material/wood(src)
@@ -49,19 +52,16 @@
 							 "<span class='notice'>You take apart \the [src].</span>", \
 							 "<span class='notice'>You hear splitting wood.</span>")
 		qdel(src)
-	else
-		return attack_hand(user)
+		return 1
+
+	return ..()
 
 /obj/structure/ore_box/proc/update_ore_count()
-
 	stored_ore = list()
-
 	for(var/obj/item/stack/ore/O in contents)
-
-		if(stored_ore[O.name])
-			stored_ore[O.name]++
-		else
-			stored_ore[O.name] = 1
+		if(!stored_ore[O.name])
+			stored_ore[O.name] = 0
+		stored_ore[O.name] += O.amount
 
 /obj/structure/ore_box/examine(mob/user)
 	. = ..(user)
@@ -79,15 +79,10 @@
 		to_chat(user, "It is empty.")
 		return
 
-	if(world.time > last_update + 10)
-		update_ore_count()
-		last_update = world.time
-
 	to_chat(user, "It holds:")
 	for(var/ore in stored_ore)
 		to_chat(user, "- [stored_ore[ore]] [ore]")
 	return
-
 
 /obj/structure/ore_box/verb/empty_box()
 	set name = "Empty Ore Box"
@@ -123,5 +118,4 @@
 		for (var/obj/item/stack/ore/O in contents)
 			O.loc = src.loc
 			O.ex_act(severity++)
-		qdel(src)
-		return
+	..()

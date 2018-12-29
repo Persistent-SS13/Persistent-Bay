@@ -19,8 +19,8 @@
 	var/shuttletarget = null
 	var/enroute = 0
 
-	var/damtype = BRUTE
-	var/defense = "melee" //what armor protects against its attacks
+	var/damtype = DAM_BLUNT
+	var/defense = DAM_BLUNT //what armor protects against its attacks
 	var/clean_up_time = 0
 	var/last_found = 0
 

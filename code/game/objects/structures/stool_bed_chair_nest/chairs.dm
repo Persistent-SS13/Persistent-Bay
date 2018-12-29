@@ -6,6 +6,9 @@
 	base_icon = "chair"
 	buckle_dir = 0
 	buckle_lying = 0 //force people to sit up in chairs when buckled
+	mass = 8
+	max_health = 80
+	damthreshold_brute 	= 5
 	var/propelled = 0 // Check for fire-extinguisher-driven chairs
 
 /obj/structure/bed/chair/attackby(obj/item/weapon/W as obj, mob/user as mob)
@@ -171,21 +174,21 @@
 		var/mob/living/occupant = unbuckle_mob()
 
 		var/def_zone = ran_zone()
-		var/blocked = occupant.run_armor_check(def_zone, "melee")
+		var/blocked = occupant.run_armor_check(def_zone, DAM_BLUNT)
 		occupant.throw_at(A, 3, propelled)
 		occupant.apply_effect(6, STUN, blocked)
 		occupant.apply_effect(6, WEAKEN, blocked)
 		occupant.apply_effect(6, STUTTER, blocked)
-		occupant.apply_damage(10, BRUTE, def_zone, blocked)
+		occupant.apply_damage(10, DAM_BLUNT, def_zone, blocked)
 		playsound(src.loc, 'sound/weapons/punch1.ogg', 50, 1, -1)
 		if(istype(A, /mob/living))
 			var/mob/living/victim = A
 			def_zone = ran_zone()
-			blocked = victim.run_armor_check(def_zone, "melee")
+			blocked = victim.run_armor_check(def_zone, DAM_BLUNT)
 			victim.apply_effect(6, STUN, blocked)
 			victim.apply_effect(6, WEAKEN, blocked)
 			victim.apply_effect(6, STUTTER, blocked)
-			victim.apply_damage(10, BRUTE, def_zone, blocked)
+			victim.apply_damage(10, DAM_BLUNT, def_zone, blocked)
 		occupant.visible_message("<span class='danger'>[occupant] crashed into \the [A]!</span>")
 
 /obj/structure/bed/chair/office/light

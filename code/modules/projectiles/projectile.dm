@@ -76,7 +76,7 @@
 
 	L.apply_effects(stun, weaken, paralyze, 0, stutter, eyeblur, drowsy, agony, blocked)
 	//radiation protection is handled separately from other armour types.
-	L.apply_effect(irradiate, IRRADIATE, L.getarmor(null, "rad"))
+	L.apply_effect(irradiate, IRRADIATE, L.getarmor(null, DAM_RADS))
 
 	return 1
 

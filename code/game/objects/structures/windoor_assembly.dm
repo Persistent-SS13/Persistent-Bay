@@ -17,6 +17,9 @@ obj/structure/windoor_assembly
 	density = 0
 	dir = NORTH
 	w_class = ITEM_SIZE_NORMAL
+	mass = 2
+	max_health = 30
+	damthreshold_brute 	= 1
 
 	var/obj/item/weapon/airlock_electronics/electronics = null
 
@@ -281,7 +284,7 @@ obj/structure/windoor_assembly/Destroy()
 
 	if(!usr || !Adjacent(usr))
 		return
-	
+
 	if(usr.incapacitated())
 		return
 

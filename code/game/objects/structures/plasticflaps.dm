@@ -8,7 +8,8 @@
 	plane = ABOVE_HUMAN_PLANE
 	layer = ABOVE_HUMAN_LAYER
 	explosion_resistance = 5
-	var/health = 10
+	mass = 5
+	max_health = 60
 	var/list/mobs_can_pass = list(
 		/mob/living/bot,
 		/mob/living/carbon/slime,

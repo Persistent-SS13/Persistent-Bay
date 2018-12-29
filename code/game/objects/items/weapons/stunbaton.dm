@@ -6,12 +6,13 @@
 	item_state = "baton"
 	slot_flags = SLOT_BELT
 	force = 15
-	sharp = 0
-	edge = 0
+	sharpness = 0
 	throwforce = 7
 	w_class = ITEM_SIZE_NORMAL
 	origin_tech = list(TECH_COMBAT = 2)
 	attack_verb = list("beaten")
+	mass = 0.5
+	damtype = DAM_BLUNT
 	var/stunforce = 0
 	var/agonyforce = 60
 	var/status = 0		//whether the thing is on or not
@@ -26,6 +27,10 @@
 		bcell = new bcell(src)
 		update_icon()
 	..()
+	ADD_SAVED_VAR(damtype)
+	ADD_SAVED_VAR(status)
+	ADD_SAVED_VAR(bcell)
+	ADD_SKIP_EMPTY(bcell)
 
 /obj/item/weapon/melee/baton/Destroy()
 	if(bcell && !ispath(bcell))
@@ -99,8 +104,10 @@
 			change_status(newstatus)
 			to_chat(user, "<span class='notice'>[src] is now [status ? "on" : "off"].</span>")
 			playsound(loc, "sparks", 75, 1, -1)
+			damtype = DAM_STUN
 	else
 		change_status(0)
+		damtype = DAM_BLUNT
 		if(!bcell)
 			to_chat(user, "<span class='warning'>[src] does not have a power source!</span>")
 		else

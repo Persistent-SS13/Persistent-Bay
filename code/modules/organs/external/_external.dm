@@ -5,10 +5,11 @@
 /obj/item/organ/external
 	name = "external"
 	min_broken_damage = 30
-	max_damage = 0
+	max_health = 0
 	dir = SOUTH
 	organ_tag = "limb"
 	appearance_flags = PIXEL_SCALE
+	obj_flags = OBJ_FLAG_DAMAGEABLE
 
 	// Strings
 	var/broken_description             // fracture string if any.
@@ -21,10 +22,12 @@
 	var/brute_ratio = 0                // Ratio of current brute damage to max damage.
 	var/burn_dam = 0                   // Actual current burn damage.
 	var/burn_ratio = 0                 // Ratio of current burn damage to max damage.
-	var/can_heal_overkill = 0
 	var/last_dam = -1                  // used in healing/processing calculations.
 	var/pain = 0                       // How much the limb hurts.
 	var/pain_disability_threshold      // Point at which a limb becomes unusable due to pain.
+
+	// A bitfield for a collection of limb behavior flags.
+	var/limb_flags = ORGAN_FLAG_CAN_AMPUTATE | ORGAN_FLAG_CAN_BREAK
 
 	// Appearance vars.
 	var/nonsolid                       // Snowflake warning, reee. Used for slime limbs.
@@ -34,7 +37,6 @@
 	var/model                          // Used when caching robolimb icons.
 	var/force_icon                     // Used to force override of species-specific limb icons (for prosthetics).
 	var/icon/mob_icon                  // Cached icon for use in mob overlays.
-	var/gendered_icon = 0              // Whether or not the icon state appends a gender.
 	var/s_tone                         // Skin tone.
 	var/list/s_col                     // skin colour
 	var/s_col_blend = ICON_ADD         // How the skin colour is applied.
@@ -58,16 +60,12 @@
 	var/list/autopsy_data = list()    // Trauma data for forensics.
 
 	// Joint/state stuff.
-	var/can_grasp                      // It would be more appropriate if these two were named "affects_grasp" and "affects_stand" at this point
-	var/can_stand                      // Modifies stance tally/ability to stand.
 	var/disfigured = 0                 // Scarred/burned beyond recognition.
-	var/cannot_amputate                // Impossible to amputate.
-	var/cannot_break                   // Impossible to fracture.
 	var/joint = "joint"                // Descriptive string used in dislocation.
 	var/amputation_point               // Descriptive string used in amputation.
 	var/dislocated = 0                 // If you target a joint, you can dislocate the limb, causing temporary damage to the organ.
 	var/encased                        // Needs to be opened with a saw to access the organs.
-	var/has_tendon = FALSE             // Can this limb be hamstrung?
+	//var/has_tendon = FALSE             // Can this limb be hamstrung?
 	var/artery_name = "artery"         // Flavour text for cartoid artery, aorta, etc.
 	var/arterial_bleed_severity = 1    // Multiplier for bleeding in a limb.
 	var/tendon_name = "tendon"         // Flavour text for Achilles tendon, etc.
@@ -87,19 +85,21 @@
 /obj/item/organ/external/New(var/mob/living/carbon/holder)
 	..()
 	if(isnull(pain_disability_threshold))
-		pain_disability_threshold = (max_damage * 0.75)
+		pain_disability_threshold = (max_health * 0.75)
 	if(owner)
 		replaced(owner)
 		sync_colour_to_human(owner)
 	get_icon()
+
 /obj/item/organ/external/after_load()
 	..()
 	if(isnull(pain_disability_threshold))
-		pain_disability_threshold = (max_damage * 0.75)
+		pain_disability_threshold = (max_health * 0.75)
 	if(owner)
 		replaced(owner)
 		sync_colour_to_human(owner)
 	get_icon()
+
 /obj/item/organ/external/Destroy()
 
 	if(wounds)
@@ -141,6 +141,21 @@
 	..()
 	s_col_blend = species.limb_blend
 
+/obj/item/organ/external/proc/get_fingerprint()
+
+	if(has_fingerprint() && dna && !is_stump() && !BP_IS_ROBOTIC(src))
+		return md5(dna.uni_identity)
+
+	for(var/obj/item/organ/external/E in children)
+		var/print = E.get_fingerprint()
+		if(print)
+			return print
+
+/obj/item/organ/external/afterattack(atom/A, mob/user, proximity)
+	..()
+	if(proximity && get_fingerprint())
+		A.add_partial_print(get_fingerprint())
+
 /obj/item/organ/external/emp_act(severity)
 	var/burn_damage = 0
 	switch (severity)
@@ -159,7 +174,7 @@
 
 	if(burn_damage)
 		owner.custom_pain("Something inside your [src] burns a [severity < 2 ? "bit" : "lot"]!", power * 15) //robotic organs won't feel it anyway
-		take_damage(0, burn_damage, 0, used_weapon = "Hot metal")
+		take_damage(damage = burn_damage, damagetype = DAM_BURN, used_weapon = "Hot metal")
 
 /obj/item/organ/external/attack_self(var/mob/user)
 	if(!contents.len)
@@ -199,7 +214,7 @@
 /obj/item/organ/external/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	switch(stage)
 		if(0)
-			if(W.sharp)
+			if(W.sharpness)
 				user.visible_message("<span class='danger'><b>[user]</b> cuts [src] open with [W]!</span>")
 				stage++
 				return
@@ -209,7 +224,7 @@
 				stage++
 				return
 		if(2)
-			if(W.sharp || istype(W,/obj/item/weapon/hemostat) || isWirecutter(W))
+			if(W.sharpness || istype(W,/obj/item/weapon/hemostat) || isWirecutter(W))
 				var/list/organs = get_contents_recursive()
 				if(organs.len)
 					var/obj/item/removing = pick(organs)
@@ -287,7 +302,7 @@
 		owner.verbs -= /mob/living/carbon/human/proc/undislocate
 
 /obj/item/organ/external/update_health()
-	damage = min(max_damage, (brute_dam + burn_dam))
+	health = between(0, max_health - (brute_dam + burn_dam), max_health)
 	return
 
 
@@ -430,7 +445,7 @@ This function completely restores a damaged organ to perfect condition.
 
 /obj/item/organ/external/proc/createwound(var/type = CUT, var/damage, var/surgical)
 
-	if(damage == 0)
+	if(health == 0)
 		return
 
 	//moved these before the open_wound check so that having many small wounds for example doesn't somehow protect you from taking internal damage (because of the return)
@@ -707,11 +722,11 @@ Note that amputating the affected organ does in fact remove the infection from t
 		clamped |= W.clamped
 		number_wounds += W.amount
 
-	damage = brute_dam + burn_dam
+	health = max_health - (brute_dam + burn_dam)
 	update_damage_ratios()
 
 /obj/item/organ/external/proc/update_damage_ratios()
-	var/limb_loss_threshold = max_damage
+	var/limb_loss_threshold = max_health
 	brute_ratio = brute_dam / (limb_loss_threshold * 2)
 	burn_ratio = burn_dam / (limb_loss_threshold * 2)
 
@@ -732,18 +747,18 @@ Note that amputating the affected organ does in fact remove the infection from t
 
 	if(burn_dam ==0)
 		tburn =0
-	else if (burn_dam < (max_damage * 0.25 / 2))
+	else if (burn_dam < (max_health * 0.25 / 2))
 		tburn = 1
-	else if (burn_dam < (max_damage * 0.75 / 2))
+	else if (burn_dam < (max_health * 0.75 / 2))
 		tburn = 2
 	else
 		tburn = 3
 
 	if (brute_dam == 0)
 		tbrute = 0
-	else if (brute_dam < (max_damage * 0.25 / 2))
+	else if (brute_dam < (max_health * 0.25 / 2))
 		tbrute = 1
-	else if (brute_dam < (max_damage * 0.75 / 2))
+	else if (brute_dam < (max_health * 0.75 / 2))
 		tbrute = 2
 	else
 		tbrute = 3
@@ -756,7 +771,7 @@ Note that amputating the affected organ does in fact remove the infection from t
 //Handles dismemberment
 /obj/item/organ/external/proc/droplimb(var/clean, var/disintegrate = DROPLIMB_EDGE, var/ignore_children, var/silent)
 
-	if(cannot_amputate || !owner)
+	if(!can_amputate() || !owner)
 		return
 
 	if(disintegrate == DROPLIMB_EDGE && nonsolid)
@@ -806,7 +821,7 @@ Note that amputating the affected organ does in fact remove the infection from t
 			stump.name = "stump of \a [name]"
 			stump.artery_name = "mangled [artery_name]"
 			stump.arterial_bleed_severity = arterial_bleed_severity
-			stump.add_pain(max_damage)
+			stump.add_pain(max_health)
 			if(robotic >= ORGAN_ROBOT)
 				stump.robotize()
 			W.parent_organ = stump
@@ -964,7 +979,7 @@ obj/item/organ/external/proc/remove_clamps()
 		return
 	if(robotic >= ORGAN_ROBOT)
 		return	//ORGAN_BROKEN doesn't have the same meaning for robot limbs
-	if((status & ORGAN_BROKEN) || cannot_break)
+	if((status & ORGAN_BROKEN) || !can_break())
 		return
 
 	if(owner)
@@ -1236,7 +1251,7 @@ obj/item/organ/external/proc/remove_clamps()
 	if(internal_organs.len && prob(brute_dam + force))
 		owner.custom_pain("A piece of bone in your [encased ? encased : name] moves painfully!", 50, affecting = src)
 		var/obj/item/organ/I = pick(internal_organs)
-		I.take_damage(rand(3,5))
+		I.take_damage(usr, rand(3,5))
 
 /obj/item/organ/external/proc/get_wounds_desc()
 	if(robotic >= ORGAN_ROBOT)
@@ -1409,7 +1424,7 @@ obj/item/organ/external/proc/remove_clamps()
 	if(!can_feel_pain())
 		return
 
-	var/armor = owner.run_armor_check(owner, "melee")
+	var/armor = owner.run_armor_check(owner, DAM_BLUNT)
 	if(armor < 100)
 		to_chat(owner, "<span class='danger'>You feel extreme pain!</span>")
 
@@ -1425,5 +1440,30 @@ obj/item/organ/external/proc/remove_clamps()
 		autopsy_data[used_weapon] = W
 
 	W.hits += 1
-	W.damage += damage
+	W.damage += (max_health - health)
 	W.time_inflicted = world.time
+
+
+/obj/item/organ/external/proc/can_grasp()
+	return limb_flags & ORGAN_FLAG_CAN_GRASP
+
+/obj/item/organ/external/proc/can_stand()
+	return limb_flags & ORGAN_FLAG_CAN_STAND
+
+/obj/item/organ/external/proc/can_amputate()
+	return limb_flags & ORGAN_FLAG_CAN_AMPUTATE
+
+/obj/item/organ/external/proc/can_break()
+	return limb_flags & ORGAN_FLAG_CAN_BREAK
+
+/obj/item/organ/external/proc/has_gendered_icon()
+	return limb_flags & ORGAN_FLAG_GENDERED_ICON
+
+/obj/item/organ/external/proc/can_heal_overkill()
+	return limb_flags & ORGAN_FLAG_HEALS_OVERKILL
+
+/obj/item/organ/external/proc/has_tendon()
+	return limb_flags & ORGAN_FLAG_HAS_TENDON
+
+/obj/item/organ/external/proc/has_fingerprint()
+	return limb_flags & ORGAN_FLAG_FINGERPRINT

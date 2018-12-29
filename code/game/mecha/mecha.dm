@@ -28,7 +28,7 @@
 	var/step_in = 10 //make a step in step_in/10 sec.
 	var/dir_in = 2//What direction will the mech face when entered/powered on? Defaults to South.
 	var/step_energy_drain = 200		// Energy usage per step in joules.
-	var/health = 300 //health is health
+	max_health = 300 //health is health
 	var/deflect_chance = 10 //chance to deflect incoming projectiles, hits, or lesser the effect of ex_act.
 	var/r_deflect_coeff = 1
 	var/m_deflect_coeff = 1
@@ -490,12 +490,12 @@
 ////////  Health related procs  ////////
 ////////////////////////////////////////
 
-/obj/mecha/proc/take_damage(amount, type="brute")
-	if(amount)
-		var/damage = absorb_damage(amount,type)
-		health -= damage
+/obj/mecha/take_damage(damage, damtype, armordamagetype, armorbypass, list/damlist, damflags, damsrc)
+	if(damage)
+		var/amount = absorb_damage(damage,damtype)
+		health -= amount
 		update_health()
-		log_append_to_last("Took [damage] points of damage. Damage type: \"[type]\".",1)
+		log_append_to_last("Took [amount] points of damage. Damage type: \"[type]\".",1)
 	return
 
 /obj/mecha/proc/absorb_damage(damage,damage_type)
@@ -563,7 +563,7 @@
 	check_for_internal_damage(list(MECHA_INT_TEMP_CONTROL,MECHA_INT_TANK_BREACH,MECHA_INT_CONTROL_LOST))
 	return 1
 
-/obj/mecha/proc/update_health()
+/obj/mecha/update_health()
 	if(src.health > 0)
 		src.spark_system.start()
 	else

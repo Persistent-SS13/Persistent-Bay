@@ -1195,16 +1195,19 @@ obj/machinery/power/apc/proc/autoset(var/cur_state, var/on)
 		terminal.master = null
 		terminal = null
 
-/obj/machinery/power/apc/proc/set_broken()
-	// Aesthetically much better!
-	src.visible_message("<span class='notice'>[src]'s screen flickers with warnings briefly!</span>")
-	power_alarm.triggerAlarm(loc, src)
-	spawn(rand(2,5))
-		src.visible_message("<span class='notice'>[src]'s screen suddenly explodes in rain of sparks and small debris!</span>")
-		stat |= BROKEN
-		operating = 0
-		update_icon()
-		update()
+/obj/machinery/power/apc/set_broken(var/state)
+	if(state)
+		// Aesthetically much better!
+		src.visible_message("<span class='notice'>[src]'s screen flickers with warnings briefly!</span>")
+		power_alarm.triggerAlarm(loc, src)
+		spawn(rand(2,5))
+			src.visible_message("<span class='notice'>[src]'s screen suddenly explodes in rain of sparks and small debris!</span>")
+			..(state)
+			operating = 0
+			update_icon()
+			update()
+	else
+		..(state)
 
 /obj/machinery/power/apc/proc/reboot()
 	//reset various counters so that process() will start fresh

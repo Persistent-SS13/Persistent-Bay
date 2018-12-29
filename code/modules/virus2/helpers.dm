@@ -7,7 +7,7 @@ proc/infection_chance(var/mob/living/carbon/M, var/vector = "Airborne")
 	if(istype(H) && H.species.get_virus_immune(H))
 		return 0
 
-	var/protection = M.getarmor(null, "bio")	//gets the full body bio armour value, weighted by body part coverage.
+	var/protection = M.getarmor(null, DAM_BIO)	//gets the full body bio armour value, weighted by body part coverage.
 	var/score = round(0.06*protection) 			//scales 100% protection to 6.
 
 	switch(vector)
@@ -17,7 +17,7 @@ proc/infection_chance(var/mob/living/carbon/M, var/vector = "Airborne")
 			var/obj/item/I = M.wear_mask
 			//masks provide a small bonus and can replace overall bio protection
 			if(I)
-				score = max(score, round(0.06*I.armor["bio"]))
+				score = max(score, round(0.06*I.armor[DAM_BIO]))
 				if (istype(I, /obj/item/clothing/mask))
 					score += 1 //this should be added after
 
@@ -48,12 +48,12 @@ proc/infection_chance(var/mob/living/carbon/M, var/vector = "Airborne")
 	if (!istype(M))
 		return 0
 
-	var/protection = M.getarmor(null, "bio")	//gets the full body bio armour value, weighted by body part coverage.
+	var/protection = M.getarmor(null, DAM_BIO)	//gets the full body bio armour value, weighted by body part coverage.
 
 	if (vector == "Airborne")	//for airborne infections face-covering items give non-weighted protection value.
 		if(M.internal)
 			return 1
-		protection = max(protection, M.getarmor(FACE, "bio"))
+		protection = max(protection, M.getarmor(FACE, DAM_BIO))
 
 	return prob(protection + 15*M.chem_effects[CE_ANTIVIRAL])
 

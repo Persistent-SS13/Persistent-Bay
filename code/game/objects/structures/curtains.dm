@@ -6,19 +6,13 @@
 	layer = ABOVE_WINDOW_LAYER
 	opacity = 1
 	density = 0
+	max_health = 20
 
 /obj/structure/curtain/open
 	icon_state = "open"
 	plane = ABOVE_HUMAN_PLANE
 	layer = ABOVE_HUMAN_LAYER
 	opacity = 0
-
-/obj/structure/curtain/bullet_act(obj/item/projectile/P, def_zone)
-	if(!P.nodamage)
-		visible_message("<span class='warning'>[P] tears [src] down!</span>")
-		qdel(src)
-	else
-		..(P, def_zone)
 
 /obj/structure/curtain/attack_hand(mob/user)
 	playsound(get_turf(loc), "rustle", 15, 1, -5)
@@ -84,3 +78,4 @@
 				M.show_message("<span class='notice'>Now slicing apart the [src]...</span>", 3, "<span class='notice'>You hear welding.</span>", 2)
 		qdel(src)
 		return
+	return ..()

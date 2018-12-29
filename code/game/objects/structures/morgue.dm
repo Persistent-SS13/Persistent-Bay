@@ -19,6 +19,8 @@
 	density = 1
 	var/obj/structure/m_tray/connected = null
 	anchored = 1.0
+	mass = 20
+	max_health = 140
 
 /obj/structure/morgue/Destroy()
 	if(connected)
@@ -149,6 +151,7 @@
 	var/obj/structure/morgue/connected = null
 	anchored = 1
 	throwpass = 1
+	obj_flags = 0
 
 /obj/structure/m_tray/Destroy()
 	if(connected && connected.connected == src)

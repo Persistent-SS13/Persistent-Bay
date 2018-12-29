@@ -13,10 +13,10 @@
 	throwpass = 1
 	layer = TABLE_LAYER
 	color = COLOR_GUNMETAL
-
-	var/damage = 0
-	var/maxhealth = 10
-	var/health = 10
+	mass = 20
+	max_health = 50
+	damthreshold_brute 	= 5
+	damthreshold_burn	= 5
 	var/stripe_color
 
 	blend_objects = list(/obj/machinery/door, /turf/simulated/wall) // Objects which to blend with
@@ -153,35 +153,9 @@
 			color = adjust_brightness(color, bleach_factor)
 	update_icon()
 
-/obj/structure/wall_frame/bullet_act(var/obj/item/projectile/Proj)
-	var/proj_damage = Proj.get_structure_damage()
-	var/damage = min(proj_damage, 100)
-	take_damage(damage)
-	return
-
-/obj/structure/wall_frame/hitby(AM as mob|obj, var/speed=THROWFORCE_SPEED_DIVISOR)
-	..()
-	if(ismob(AM))
-		return
-	var/obj/O = AM
-	var/tforce = O.throwforce * (speed/THROWFORCE_SPEED_DIVISOR)
-	if (tforce < 15)
-		return
-
-	take_damage(tforce)
-
 /obj/structure/wall_frame/dismantle()
 	refund_matter()
 	qdel(src)
 
-/obj/structure/wall_frame/proc/take_damage(dam)
-	if(dam)
-		damage = max(0, damage + dam)
-		update_damage()
-	return
-
-/obj/structure/wall_frame/proc/update_damage()
-	if(damage >= 150)
-		dismantle()
-	return/obj/structure/wall_frame/destroyed()
+/obj/structure/wall_frame/destroyed()
 	dismantle()

@@ -10,7 +10,7 @@
 	Returns
 	a blocked amount between 0 - 100, representing the success of the armor check.
 */
-/mob/living/proc/run_armor_check(var/def_zone = null, var/attack_flag = "melee", var/armour_pen = 0, var/absorb_text = null, var/soften_text = null)
+/mob/living/proc/run_armor_check(var/def_zone = null, var/attack_flag = DAM_BLUNT, var/armour_pen = 0, var/absorb_text = null, var/soften_text = null)
 	if(armour_pen >= 100)
 		return 0 //might as well just skip the processing
 
@@ -59,7 +59,6 @@
 /mob/living/proc/getarmor(var/def_zone, var/type)
 	return 0
 
-
 /mob/living/bullet_act(var/obj/item/projectile/P, var/def_zone)
 
 	//Being hit while using a deadman switch
@@ -76,17 +75,15 @@
 
 	//Armor
 	var/damage = P.damage
-	var/flags = P.damage_flags()
-	var/absorb = run_armor_check(def_zone, P.check_armour, P.armor_penetration)
-	if (prob(absorb))
-		if(flags & DAM_LASER)
-			//the armour causes the heat energy to spread out, which reduces the damage (and the blood loss)
-			//this is mostly so that armour doesn't cause people to lose MORE fluid from lasers than they would otherwise
-			damage *= FLUIDLOSS_CONC_BURN/FLUIDLOSS_WIDE_BURN
-		flags &= ~(DAM_SHARP|DAM_EDGE|DAM_LASER)
+	var/absorb = run_armor_check(def_zone, P.damage_type, P.armor_penetration)
+	var/damtype = HandleArmorDamTypeConversion(P.damage_type, absorb)
+	if (prob(absorb) && cmpdamtype(damtype, DAM_LASER))
+		//the armour causes the heat energy to spread out, which reduces the damage (and the blood loss)
+		//this is mostly so that armour doesn't cause people to lose MORE fluid from lasers than they would otherwise
+		damage *= FLUIDLOSS_CONC_BURN/FLUIDLOSS_WIDE_BURN
 
 	if(!P.nodamage)
-		apply_damage(damage, P.damage_type, def_zone, absorb, flags, P)
+		apply_damage(damage, damtype, def_zone, absorb, 0, P)
 	P.on_hit(src, absorb, def_zone)
 
 	return absorb
@@ -102,7 +99,7 @@
 		apply_effect(EYE_BLUR, stun_amount)
 
 	if (agony_amount)
-		apply_damage(agony_amount, PAIN, def_zone, 0, used_weapon)
+		apply_damage(agony_amount, DAM_PAIN, def_zone, 0, used_weapon)
 		apply_effect(STUTTER, agony_amount/10)
 		apply_effect(EYE_BLUR, agony_amount/10)
 
@@ -119,13 +116,12 @@
 	return target_zone
 
 //Called when the mob is hit with an item in combat. Returns the blocked result
-/mob/living/proc/hit_with_weapon(obj/item/I, mob/living/user, var/effective_force, var/hit_zone)
-	visible_message("<span class='danger'>[src] has been [I.attack_verb.len? pick(I.attack_verb) : "attacked"] with [I.name] by [user]!</span>")
-
-	var/blocked = run_armor_check(hit_zone, "melee")
+/mob/living/hit_with_weapon(obj/item/I, mob/living/user, var/effective_force, var/hit_zone)
+	..()
+	var/blocked = run_armor_check(hit_zone, I.damtype, istype(I)? I.armor_penetration : 0)
 	standard_weapon_hit_effects(I, user, effective_force, blocked, hit_zone)
 
-	if(I.damtype == BRUTE && prob(33)) // Added blood for whacking non-humans too
+	if(IsDamageTypeBrute(I.damtype) && prob(33)) // Added blood for whacking non-humans too
 		var/turf/simulated/location = get_turf(src)
 		if(istype(location)) location.add_blood_floor(src)
 
@@ -141,11 +137,8 @@
 		effective_force *= 2
 
 	//Apply weapon damage
-	var/damage_flags = I.damage_flags()
-	if(prob(blocked)) //armour provides a chance to turn sharp/edge weapon attacks into blunt ones
-		damage_flags &= ~(DAM_SHARP|DAM_EDGE)
-
-	apply_damage(effective_force, I.damtype, hit_zone, blocked, damage_flags, used_weapon=I)
+	var/damtype = HandleArmorDamTypeConversion(I.damtype, blocked) //armour provides a chance to turn sharp/edge weapon attacks into blunt ones
+	apply_damage(effective_force, damtype, hit_zone, blocked, used_weapon=I)
 
 	return 1
 
@@ -166,12 +159,10 @@
 			return
 
 		src.visible_message("<span class='warning'>\The [src] has been hit by \the [O]</span>.")
-		var/armor = run_armor_check(null, "melee")
+		var/armor = run_armor_check(null, dtype)
 		if(armor < 100)
-			var/damage_flags = O.damage_flags()
-			if(prob(armor))
-				damage_flags &= ~(DAM_SHARP|DAM_EDGE)
-			apply_damage(throw_damage, dtype, null, armor, damage_flags, O)
+			dtype = HandleArmorDamTypeConversion(dtype, armor)
+			apply_damage(throw_damage, dtype, null, armor, 0, O)
 
 		O.throwing = 0		//it hit, so stop moving
 
@@ -196,7 +187,7 @@
 
 			if(!O || !src) return
 
-			if(O.sharp) //Projectile is suitable for pinning.
+			if(O.sharpness || cmpdamtype(O.damtype, DAM_PIERCE) ) //Projectile is suitable for pinning.
 				//Handles embedding for non-humans and simple_animals.
 				embed(O)
 

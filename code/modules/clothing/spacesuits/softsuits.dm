@@ -7,7 +7,19 @@
 		slot_l_hand_str = "eng_helm",
 		slot_r_hand_str = "eng_helm",
 		)
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 50, rad = 30)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 10,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 5,
+		DAM_ENERGY 	= 20,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 10,
+		DAM_BIO 	= 50,
+		DAM_RADS 	= 30,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/suit/space/engineering
 	name = "engineering softsuit"
@@ -17,8 +29,20 @@
 		slot_l_hand_str = "eng_voidsuit",
 		slot_r_hand_str = "eng_voidsuit",
 	)
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 50, rad = 30)
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank/emergency,/obj/item/device/suit_cooling_unit,/obj/item/weapon/storage/toolbox,/obj/item/weapon/storage/briefcase/inflatable,/obj/item/device/t_scanner)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 10,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 5,
+		DAM_ENERGY 	= 20,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 10,
+		DAM_BIO 	= 50,
+		DAM_RADS 	= 30,
+		DAM_STUN 	= 0)
 
 //Security softsuit
 /obj/item/clothing/head/helmet/space/security
@@ -29,8 +53,20 @@
 		slot_l_hand_str = "sec_helm",
 		slot_r_hand_str = "sec_helm",
 		)
-	armor = list(melee = 5, bullet = 0, laser = 10, energy = 0, bomb = 0, bio = 50, rad = 0) //soft fabric will not stop bullets
 	siemens_coefficient = 0.8 //barely stronger than average softsuits, slightly weaker than sec voidsuits
+	armor  = list(
+		DAM_BLUNT 	= 15,
+		DAM_PIERCE 	= 10,
+		DAM_CUT 	= 15,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 10,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 50,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/suit/space/security
 	name = "security softsuit"
@@ -40,9 +76,21 @@
 		slot_l_hand_str = "sec_voidsuit",
 		slot_r_hand_str = "sec_voidsuit",
 	)
-	armor = list(melee = 5, bullet = 0, laser = 10, energy = 0, bomb = 0, bio = 50, rad = 0) //soft fabric will not stop bullets
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank/emergency,/obj/item/device/suit_cooling_unit,/obj/item/weapon/melee/baton) //maybe allow small weapons to fit in the suit slot
 	siemens_coefficient = 0.8 //barely stronger than average softsuits, slightly weaker than sec voidsuits
+	armor  = list(
+		DAM_BLUNT 	= 15,
+		DAM_PIERCE 	= 10,
+		DAM_CUT 	= 15,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 10,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 50,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 //Medical softsuit
 /obj/item/clothing/head/helmet/space/medical
@@ -53,7 +101,19 @@
 		slot_l_hand_str = "medical_helm",
 		slot_r_hand_str = "medical_helm",
 		)
-	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 100, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 10,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 5,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/suit/space/medical
 	name = "medical softsuit"
@@ -64,7 +124,19 @@
 		slot_r_hand_str = "medical_voidsuit",
 	)
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank/emergency,/obj/item/device/suit_cooling_unit,/obj/item/weapon/storage/firstaid,/obj/item/device/healthanalyzer,/obj/item/stack/medical)
-	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 100, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 10,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 5,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/suit/space/void/medical/New()
 	..()
@@ -79,7 +151,19 @@
 		slot_l_hand_str = "mining_helm",
 		slot_r_hand_str = "mining_helm",
 		)
-	armor = list(melee = 15, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 50, rad = 0) //might need a buff if too many miners are dying from single hits from slugs/locusectums
+	armor  = list(
+		DAM_BLUNT 	= 20,
+		DAM_PIERCE 	= 10,
+		DAM_CUT 	= 20,
+		DAM_BULLET 	= 10,
+		DAM_LASER 	= 10,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 10,
+		DAM_STUN 	= 2)
 
 /obj/item/clothing/suit/space/mining
 	name = "mining softsuit"
@@ -89,21 +173,57 @@
 		slot_l_hand_str = "mining_voidsuit",
 		slot_r_hand_str = "mining_voidsuit",
 	)
-	armor = list(melee = 15, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 50, rad = 0) //might need a buff if too many miners are dying from single hits from slugs/locusectums
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank/emergency,/obj/item/stack/flag,/obj/item/device/suit_cooling_unit,/obj/item/weapon/storage/ore,/obj/item/weapon/pickaxe)
+	armor  = list(
+		DAM_BLUNT 	= 20,
+		DAM_PIERCE 	= 10,
+		DAM_CUT 	= 20,
+		DAM_BULLET 	= 10,
+		DAM_LASER 	= 10,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 10,
+		DAM_STUN 	= 2)
 
 //Science softsuit, we don't have xenoarch but that's the only thing i can base its stats off of
 /obj/item/clothing/head/helmet/space/science
 	name = "scientist softsuit helmet"
 	icon_state = "sci_softhelm"
 	desc = "A flimsy helmet that provides basic protection from radiation."
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 10, bomb = 0, bio = 100, rad = 20)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 10,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 5,
+		DAM_ENERGY 	= 20,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 20,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 20,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/suit/space/science
 	name = "scientist softsuit"
 	icon_state = "sci_softsuit"
 	desc = "A general use softsuit retrofitted with basic radiation shielding."
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 10, bomb = 0, bio = 100, rad = 20)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 10,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 5,
+		DAM_ENERGY 	= 20,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 20,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 20,
+		DAM_STUN 	= 0)
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank/emergency,/obj/item/device/suit_cooling_unit,/obj/item/stack/flag,/obj/item/weapon/storage/excavation,/obj/item/weapon/pickaxe,/obj/item/device/healthanalyzer,/obj/item/device/measuring_tape,/obj/item/device/ano_scanner,/obj/item/device/depth_scanner,/obj/item/device/core_sampler,/obj/item/device/gps,/obj/item/device/beacon_locator,/obj/item/device/radio/beacon,/obj/item/weapon/pickaxe/hand,/obj/item/weapon/storage/bag/fossils)
 
 //Emergency softsuit 
@@ -117,7 +237,19 @@
 	name = "emergency softsuit"
 	icon_state = "crisis_softsuit"
 	desc = "A thin, ungainly softsuit colored in blaze orange for rescuers to easily locate, looks pretty fragile."
-	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 50, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 5,
+		DAM_PIERCE 	= 1,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 2,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 50,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 	allowed = list(/obj/item/weapon/tank/emergency)
 
 /obj/item/clothing/suit/space/emergency/New()

@@ -16,6 +16,9 @@
 	can_buckle = 1
 	buckle_dir = SOUTH
 	buckle_lying = 1
+	mass = 50
+	max_health = 200
+	damthreshold_brute 	= 5
 	var/material/material
 	var/material/padding_material
 	var/base_icon = "bed"
@@ -148,8 +151,8 @@
 	padding_material = SSmaterials.get_material_by_name(padding_type)
 	update_icon()
 
-/obj/structure/bed/proc/dismantle()
-	material.place_sheet(get_turf(src))
+/obj/structure/bed/dismantle()
+	refund_matter()
 	if(padding_material)
 		padding_material.place_sheet(get_turf(src))
 

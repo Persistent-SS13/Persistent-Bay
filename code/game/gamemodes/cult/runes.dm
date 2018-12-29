@@ -266,8 +266,7 @@
 	density = 1
 	unacidable = 1
 	var/obj/effect/rune/wall/rune
-	var/health
-	var/max_health = 200
+	max_health = 200
 
 /obj/effect/cultwall/New(var/loc, var/bcolor)
 	..()
@@ -302,23 +301,12 @@
 	if(istype(I, /obj/item/weapon/nullrod))
 		user.visible_message("<span class='notice'>\The [user] touches \the [src] with \the [I], and it disappears.</span>", "<span class='notice'>You disrupt the vile magic with the deadening field of \the [I].</span>")
 		qdel(src)
-	else if(I.force)
-		user.visible_message("<span class='notice'>\The [user] hits \the [src] with \the [I].</span>", "<span class='notice'>You hit \the [src] with \the [I].</span>")
-		take_damage(I.force)
-		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-		user.do_attack_animation(src)
-
-/obj/effect/cultwall/bullet_act(var/obj/item/projectile/Proj)
-	if(!(Proj.damage_type == BRUTE || Proj.damage_type == BURN))
 		return
-	take_damage(Proj.damage)
 	..()
 
-/obj/effect/cultwall/proc/take_damage(var/amount)
-	health -= amount
-	if(health <= 0)
-		visible_message("<span class='warning'>\The [src] dissipates.</span>")
-		qdel(src)
+/obj/effect/cultwall/destroyed()
+	visible_message(SPAN_WARNING("\The [src] dissipates."))
+	qdel(src)
 
 /obj/effect/rune/ajorney
 	cultname = "astral journey"
@@ -546,15 +534,15 @@
 		return statuses
 	var/list/obj/item/organ/damaged = list()
 	for(var/obj/item/organ/I in user.internal_organs)
-		if(I.damage)
+		if(I.isdamaged())
 			damaged += I
 	if(damaged.len)
 		statuses += "you feel pain inside for a moment that passes quickly"
 		while(charges && damaged.len)
 			var/obj/item/organ/fix = pick(damaged)
-			fix.damage = max(0, fix.damage - min(charges, 1))
+			fix.add_health(1)
 			charges = max(charges - 1, 0)
-			if(fix.damage == 0)
+			if(!fix.isdamaged())
 				damaged -= fix
 	/* this is going to need rebalancing
 	if(charges)

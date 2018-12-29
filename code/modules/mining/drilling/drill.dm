@@ -17,7 +17,7 @@
 	var/actual_power_usage = 10 KILOWATTS // Actual power usage, with upgrades in mind.
 	var/active = 0
 	var/list/resource_field = list()
-	var/health = 100
+	max_health = 100
 	var/stacks_needed = 0
 
 	var/ore_types = list(

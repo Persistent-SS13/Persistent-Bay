@@ -268,7 +268,7 @@ proc/blood_splatter(var/target,var/datum/reagent/blood/source,var/large,var/spra
 				pulse_mod *= 1.1
 			if(PULSE_2FAST, PULSE_THREADY)
 				pulse_mod *= 1.25
-		blood_volume *= max(0.3, (1-(heart.damage / heart.max_damage))) * pulse_mod
+		blood_volume *= max(0.3, (1-(heart.get_damages() / heart.max_health))) * pulse_mod
 	return min(blood_volume, 100)
 
 //Whether the species needs blood to carry oxygen. Used in get_blood_oxygenation and may be expanded based on blood rather than species in the future.

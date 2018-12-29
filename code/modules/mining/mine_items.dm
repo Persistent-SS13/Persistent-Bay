@@ -54,7 +54,7 @@
 	attack_verb = list("hit", "pierced", "sliced", "attacked")
 	var/drill_sound = 'sound/weapons/Genhit.ogg'
 	var/drill_verb = "drilling"
-	sharp = 1
+	damtype = DAM_PIERCE
 
 	var/excavation_amount = 200
 
@@ -62,6 +62,7 @@
 	name = "sledgehammer"
 	//icon_state = "sledgehammer" Waiting on sprite
 	desc = "A mining hammer made of reinforced metal. You feel like smashing your boss in the face with this."
+	damtype = DAM_BLUNT
 
 /obj/item/weapon/pickaxe/silver
 	name = "silver pickaxe"
@@ -141,8 +142,7 @@
 	origin_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1)
 	matter = list(MATERIAL_STEEL = 50)
 	attack_verb = list("bashed", "bludgeoned", "thrashed", "whacked")
-	sharp = 0
-	edge = 1
+	damtype = DAM_BLUNT
 
 /obj/item/weapon/shovel/spade
 	name = "spade"
@@ -152,6 +152,7 @@
 	force = 5.0
 	throwforce = 7.0
 	w_class = ITEM_SIZE_SMALL
+	damtype = DAM_BLUNT
 
 
 /**********************Mining car (Crate like thing, not the rail car)**************************/

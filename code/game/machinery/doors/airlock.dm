@@ -20,6 +20,21 @@
 	power_channel = ENVIRON
 
 	explosion_resistance = 10
+	armor = list(
+		DAM_BLUNT  	= 90,
+		DAM_PIERCE 	= 80,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 70,
+		DAM_ENERGY 	= 70,
+		DAM_BURN 	= 90,
+		DAM_BOMB 	= 60,
+		DAM_EMP 	= 50,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+
 	var/aiControlDisabled = 0 //If 1, AI control is disabled until the AI hacks back in and disables the lock. If 2, the AI has bypassed the lock. If -1, the control is enabled but the AI had bypassed it earlier, so if it is disabled again the AI would have no trouble getting back in.
 	var/hackProof = 0 // if 1, this door can't be hacked by the AI
 	var/electrified_until = 0			//World time when the door is no longer electrified. -1 if it is permanently electrified until someone fixes it.
@@ -180,6 +195,20 @@
 	name = "Maintenance Hatch"
 	explosion_resistance = 20
 	opacity = 1
+	armor = list(
+		DAM_BLUNT  	= 90,
+		DAM_PIERCE 	= 80,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 90,
+		DAM_ENERGY 	= 80,
+		DAM_BURN 	= 90,
+		DAM_BOMB 	= 80,
+		DAM_EMP 	= 50,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/airlock/maintenance_hatch/bolted
 	locked = 1
@@ -187,14 +216,28 @@
 
 /obj/machinery/door/airlock/glass_command
 	name = "Maintenance Hatch"
-	hitsound = 'sound/effects/Glasshit.ogg'
-	maxhealth = 300
+	sound_hit = 'sound/effects/Glasshit.ogg'
+	max_health = 300
 	explosion_resistance = 5
 	opacity = 0
 	glass = 1
 	door_color = COLOR_COMMAND_BLUE
 	stripe_color = COLOR_SKY_BLUE
-	
+	armor = list(
+		DAM_BLUNT  	= 80,
+		DAM_PIERCE 	= 80,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 80,
+		DAM_ENERGY 	= 80,
+		DAM_BURN 	= 90,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= 50,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+
 /obj/machinery/door/airlock/glass_external
 	airlock_type = "External"
 	name = "External Airlock"
@@ -210,11 +253,25 @@
 	assembly_type = /obj/structure/door_assembly/door_assembly_ext
 	door_color = COLOR_NT_RED
 	paintable = AIRLOCK_PAINTABLE
-	hitsound = 'sound/effects/Glasshit.ogg'
-	maxhealth = 300
+	sound_hit = 'sound/effects/Glasshit.ogg'
+	max_health = 300
 	explosion_resistance = 5
 	opacity = 0
 	glass = 1
+	armor = list(
+		DAM_BLUNT  	= 80,
+		DAM_PIERCE 	= 80,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 80,
+		DAM_ENERGY 	= 80,
+		DAM_BURN 	= 90,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= 50,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/airlock/glass_external/bolted
 	icon_state = "door_locked"
@@ -231,60 +288,147 @@
 
 /obj/machinery/door/airlock/glass_engineering
 	name = "Maintenance Hatch"
-	hitsound = 'sound/effects/Glasshit.ogg'
-	maxhealth = 300
+	sound_hit = 'sound/effects/Glasshit.ogg'
+	max_health = 300
 	explosion_resistance = 5
 	opacity = 0
 	glass = 1
 	door_color = COLOR_AMBER
 	stripe_color = COLOR_RED
+	armor = list(
+		DAM_BLUNT  	= 80,
+		DAM_PIERCE 	= 80,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 80,
+		DAM_ENERGY 	= 80,
+		DAM_BURN 	= 90,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= 50,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+
 /obj/machinery/door/airlock/glass_security
 	name = "Maintenance Hatch"
-	hitsound = 'sound/effects/Glasshit.ogg'
-	maxhealth = 300
+	sound_hit = 'sound/effects/Glasshit.ogg'
+	max_health = 300
 	explosion_resistance = 5
 	opacity = 0
 	glass = 1
 	door_color = COLOR_NT_RED
 	stripe_color = COLOR_ORANGE
+	armor = list(
+		DAM_BLUNT  	= 80,
+		DAM_PIERCE 	= 80,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 80,
+		DAM_ENERGY 	= 80,
+		DAM_BURN 	= 90,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= 50,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+
 /obj/machinery/door/airlock/glass_medical
 	name = "Maintenance Hatch"
-	hitsound = 'sound/effects/Glasshit.ogg'
-	maxhealth = 300
+	sound_hit = 'sound/effects/Glasshit.ogg'
+	max_health = 300
 	explosion_resistance = 5
 	opacity = 0
 	glass = 1
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_DEEP_SKY_BLUE
+	armor = list(
+		DAM_BLUNT  	= 80,
+		DAM_PIERCE 	= 80,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 80,
+		DAM_ENERGY 	= 80,
+		DAM_BURN 	= 90,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= 50,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+
 /obj/machinery/door/airlock/glass_virology
 	name = "Maintenance Hatch"
-	hitsound = 'sound/effects/Glasshit.ogg'
-	maxhealth = 300
+	sound_hit = 'sound/effects/Glasshit.ogg'
+	max_health = 300
 	explosion_resistance = 5
 	opacity = 0
 	glass = 1
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_GREEN
+	armor = list(
+		DAM_BLUNT  	= 80,
+		DAM_PIERCE 	= 80,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 80,
+		DAM_ENERGY 	= 80,
+		DAM_BURN 	= 90,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= 50,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/airlock/glass_sol
 	name = "Maintenance Hatch"
-	hitsound = 'sound/effects/Glasshit.ogg'
-	maxhealth = 300
+	sound_hit = 'sound/effects/Glasshit.ogg'
+	max_health = 300
 	explosion_resistance = 5
 	opacity = 0
 	glass = 1
 	door_color = COLOR_BLUE_GRAY
 	stripe_color = COLOR_AMBER
+	armor = list(
+		DAM_BLUNT  	= 80,
+		DAM_PIERCE 	= 80,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 80,
+		DAM_ENERGY 	= 80,
+		DAM_BURN 	= 90,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= 50,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 
 
 /obj/machinery/door/airlock/glass
 	name = "Glass Airlock"
-	hitsound = 'sound/effects/Glasshit.ogg'
-	maxhealth = 300
+	sound_hit = 'sound/effects/Glasshit.ogg'
+	max_health = 300
 	explosion_resistance = 5
 	opacity = 0
 	glass = 1
+	armor = list(
+		DAM_BLUNT  	= 80,
+		DAM_PIERCE 	= 80,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 80,
+		DAM_ENERGY 	= 80,
+		DAM_BURN 	= 90,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= 50,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/airlock/glass/command
 	door_color = COLOR_COMMAND_BLUE
@@ -351,6 +495,20 @@
 	assembly_type = /obj/structure/door_assembly/door_assembly_ext
 	door_color = COLOR_NT_RED
 	paintable = AIRLOCK_PAINTABLE
+	armor = list(
+		DAM_BLUNT  	= 90,
+		DAM_PIERCE 	= 80,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 90,
+		DAM_ENERGY 	= 90,
+		DAM_BURN 	= 90,
+		DAM_BOMB 	= 80,
+		DAM_EMP 	= 70,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/airlock/external/bolted
 	locked = 1
@@ -365,10 +523,24 @@
 	opacity = 0
 
 /obj/machinery/door/airlock/external/glass
-	maxhealth = 300
+	max_health = 300
 	explosion_resistance = 5
 	opacity = 0
 	glass = 1
+	armor = list(
+		DAM_BLUNT  	= 90,
+		DAM_PIERCE 	= 80,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 90,
+		DAM_ENERGY 	= 90,
+		DAM_BURN 	= 90,
+		DAM_BOMB 	= 80,
+		DAM_EMP 	= 70,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/airlock/external/glass/bolted
 	locked = 1
@@ -386,16 +558,58 @@
 	name = "Gold Airlock"
 	door_color = COLOR_SUN
 	mineral = MATERIAL_GOLD
+	armor = list(
+		DAM_BLUNT  	= 60,
+		DAM_PIERCE 	= 20,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 20,
+		DAM_ENERGY 	= 20,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 10,
+		DAM_EMP 	= 40,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/airlock/silver
 	name = "Silver Airlock"
 	door_color = COLOR_SILVER
 	mineral = MATERIAL_SILVER
+	armor = list(
+		DAM_BLUNT  	= 60,
+		DAM_PIERCE 	= 20,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 20,
+		DAM_ENERGY 	= 20,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 10,
+		DAM_EMP 	= 40,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/airlock/diamond
 	name = "Diamond Airlock"
 	door_color = COLOR_CYAN_BLUE
 	mineral = MATERIAL_DIAMOND
+	armor = list(
+		DAM_BLUNT  	= MaxArmorValue,
+		DAM_PIERCE 	= MaxArmorValue,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= MaxArmorValue,
+		DAM_ENERGY 	= 80,
+		DAM_BURN 	= 80,
+		DAM_BOMB 	= 60,
+		DAM_EMP 	= 20,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/airlock/uranium
 	name = "Uranium Airlock"
@@ -404,11 +618,39 @@
 	mineral = MATERIAL_URANIUM
 	var/last_event = 0
 	var/rad_power = 7.5
+	armor = list(
+		DAM_BLUNT  	= 60,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 50,
+		DAM_ENERGY 	= 50,
+		DAM_BURN 	= 50,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 40,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/airlock/sandstone
 	name = "\improper Sandstone Airlock"
 	door_color = COLOR_BEIGE
 	mineral = MATERIAL_SANDSTONE
+	armor = list(
+		DAM_BLUNT  	= 60,
+		DAM_PIERCE 	= 60,
+		DAM_CUT 	= 80,
+		DAM_BULLET 	= 50,
+		DAM_ENERGY 	= 80,
+		DAM_BURN 	= 90,
+		DAM_BOMB 	= 10,
+		DAM_EMP 	= 80,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/airlock/phoron
 	name = "\improper Phoron Airlock"
@@ -432,6 +674,20 @@
 	secured_wires = 1
 	assembly_type = /obj/structure/door_assembly/door_assembly_highsecurity
 	paintable = 0
+	armor = list(
+		DAM_BLUNT  	= MaxArmorValue,
+		DAM_PIERCE 	= MaxArmorValue,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 95,
+		DAM_ENERGY 	= 95,
+		DAM_BURN 	= MaxArmorValue,
+		DAM_BOMB 	= 95,
+		DAM_EMP 	= 95,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/airlock/highsecurity/bolted
 	locked = 1
@@ -453,6 +709,20 @@
 	opacity = 1
 	assembly_type = /obj/structure/door_assembly/door_assembly_hatch
 	paintable = AIRLOCK_STRIPABLE
+	armor = list(
+		DAM_BLUNT  	= 90,
+		DAM_PIERCE 	= 90,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 90,
+		DAM_ENERGY 	= 80,
+		DAM_BURN 	= MaxArmorValue,
+		DAM_BOMB 	= 60,
+		DAM_EMP 	= 60,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/airlock/hatch/maintenance
 	name = "Maintenance Hatch"
@@ -471,6 +741,20 @@
 	secured_wires = 1
 	assembly_type = /obj/structure/door_assembly/door_assembly_highsecurity //Until somebody makes better sprites.
 	paintable = AIRLOCK_PAINTABLE|AIRLOCK_STRIPABLE
+	armor = list(
+		DAM_BLUNT  	= MaxArmorValue,
+		DAM_PIERCE 	= MaxArmorValue,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 95,
+		DAM_ENERGY 	= 95,
+		DAM_BURN 	= MaxArmorValue,
+		DAM_BOMB 	= 95,
+		DAM_EMP 	= 95,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/airlock/vault/bolted
 	locked = 1
@@ -498,7 +782,7 @@
 	if(exposed_temperature > 300)
 		PhoronBurn(exposed_temperature)
 
-/obj/machinery/door/airlock/phoron/proc/ignite(exposed_temperature)
+/obj/machinery/door/airlock/phoron/ignite(exposed_temperature)
 	if(exposed_temperature > 300)
 		PhoronBurn(exposed_temperature)
 
@@ -519,6 +803,20 @@
 	desc = "A door with a keypad lock."
 	assembly_type = /obj/structure/door_assembly/door_assembly_keyp
 	haskeypad = 1
+	armor = list(
+		DAM_BLUNT  	= MaxArmorValue,
+		DAM_PIERCE 	= MaxArmorValue,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 95,
+		DAM_ENERGY 	= 80,
+		DAM_BURN 	= MaxArmorValue,
+		DAM_BOMB 	= 60,
+		DAM_EMP 	= 95,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 	var/code = ""
 	var/l_code = null
 	var/l_set = 0
@@ -874,7 +1172,7 @@ About the new airlock wires panel:
 				weld_overlay = welded_file
 			if(stat & BROKEN)
 				damage_overlay = sparks_broken_file
-			else if(health < maxhealth * 3/4)
+			else if(health < max_health * 3/4)
 				damage_overlay = sparks_damaged_file
 			if(lights && src.arePowerSystemsOn())
 				if(locked)
@@ -888,7 +1186,7 @@ About the new airlock wires panel:
 				panel_overlay = panel_file
 			if(stat & BROKEN)
 				damage_overlay = sparks_broken_file
-			else if(health < maxhealth * 3/4)
+			else if(health < max_health * 3/4)
 				damage_overlay = sparks_damaged_file
 			if(welded)
 				weld_overlay = welded_file
@@ -902,7 +1200,7 @@ About the new airlock wires panel:
 				panel_overlay = panel_file
 			if(stat & BROKEN)
 				damage_overlay = sparks_broken_file
-			else if(health < maxhealth * 3/4)
+			else if(health < max_health * 3/4)
 				damage_overlay = sparks_damaged_file
 			if(welded)
 				weld_overlay = welded_file
@@ -917,7 +1215,7 @@ About the new airlock wires panel:
 		if(AIRLOCK_OPEN)
 			if(stat & BROKEN)
 				damage_overlay = sparks_broken_file
-			else if(health < maxhealth * 3/4)
+			else if(health < max_health * 3/4)
 				damage_overlay = sparks_damaged_file
 
 		if(AIRLOCK_OPENING)
@@ -1266,16 +1564,10 @@ About the new airlock wires panel:
 
 	if(!repairing && isWelder(C) && !( src.operating > 0 ) && src.density)
 		var/obj/item/weapon/weldingtool/W = C
-		if(W.remove_fuel(0,user))
-			if(!src.welded)
-				src.welded = 1
-			else
-				src.welded = null
-			playsound(src, 'sound/items/Welder.ogg', 100, 1)
+		if(W.do_weld(user, src, 1))
+			src.welded = !src.welded
 			src.update_icon()
-			return
-		else
-			return
+		return
 	else if(isScrewdriver(C))
 		if (src.p_open)
 			if (stat & BROKEN)
@@ -1361,7 +1653,7 @@ About the new airlock wires panel:
 				spawn(0)	close(1)
 
 			//if door is unbroken, but at half health or less, hit with fire axe using harm intent
-	else if (istype(C, /obj/item/weapon/material/twohanded/fireaxe) && !(stat & BROKEN) && (src.health <= src.maxhealth / 2) && user.a_intent == I_HURT)
+	else if (istype(C, /obj/item/weapon/material/twohanded/fireaxe) && !(stat & BROKEN) && (src.health <= src.max_health / 2) && user.a_intent == I_HURT)
 		var/obj/item/weapon/material/twohanded/fireaxe/F = C
 		if (F.wielded)
 			playsound(src, 'sound/weapons/smash.ogg', 100, 1)
@@ -1668,11 +1960,11 @@ About the new airlock wires panel:
 	return
 
 // Braces can act as an extra layer of armor - they will take damage first.
-/obj/machinery/door/airlock/take_damage(var/amount)
+/obj/machinery/door/airlock/take_damage(damage, damagetype, armordamagetype, armorbypass, list/damlist, damflags, damsrc)
 	if(brace)
-		brace.take_damage(amount)
+		brace.take_damage(damage, damagetype, armordamagetype, armorbypass, damlist, damflags, damsrc)
 	else
-		..(amount)
+		..()
 	update_icon()
 
 /obj/machinery/door/airlock/examine()

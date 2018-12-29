@@ -170,8 +170,8 @@
 
 	take_damage(tforce)
 
-/obj/structure/wall_frame/proc/dismantle()
-	new /obj/item/stack/material/steel(get_turf(src))
+/obj/structure/wall_frame/dismantle()
+	refund_matter()
 	qdel(src)
 
 /obj/structure/wall_frame/proc/take_damage(dam)
@@ -183,4 +183,5 @@
 /obj/structure/wall_frame/proc/update_damage()
 	if(damage >= 150)
 		dismantle()
-	return
+	return/obj/structure/wall_frame/destroyed()
+	dismantle()

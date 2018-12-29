@@ -8,6 +8,7 @@
 	unacidable = 1
 	anchored = 1
 	var/boom_time = 1
+	should_save = 1
 
 /obj/effect/force_portal/Initialize()
 	. = ..()

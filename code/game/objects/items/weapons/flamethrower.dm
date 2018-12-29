@@ -170,8 +170,9 @@
 /obj/item/weapon/flamethrower/proc/flame_turf(turflist)
 	if(!lit || operating)	return
 	operating = 1
+	playsound(src.loc, 'sound/weapons/flamethrower.ogg', 50, 0)
 	for(var/turf/T in turflist)
-		if(T.density || istype(T, /turf/space))
+		if(T.density)
 			break
 		if(!previousturf && length(turflist)>1)
 			previousturf = get_turf(src)

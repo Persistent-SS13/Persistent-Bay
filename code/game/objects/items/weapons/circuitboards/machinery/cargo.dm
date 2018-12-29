@@ -31,3 +31,11 @@
 		/obj/item/weapon/stock_parts/manipulator = 1,
 		/obj/item/weapon/stock_parts/scanning_module = 1,
 		/obj/item/weapon/stock_parts/capacitor = 1)
+
+/obj/item/weapon/circuitboard/mass_driver
+	name = T_BOARD("Mass driver")
+	build_path = /obj/machinery/mass_driver
+	board_type = "machine"
+	req_components = list(
+		/obj/item/weapon/stock_parts/hydrolics = 2,
+		/obj/item/stack/cable_coil = 5)

@@ -567,6 +567,11 @@
 	req_tech = list(TECH_ENGINEERING = 1, TECH_BIO = 1)
 	build_path = /obj/item/weapon/circuitboard/crematorium
 
+/datum/design/circuit/diseasesplicer
+	name= "Disease splicer"
+	id = "disease_splicer"
+	req_tech = list(TECH_DATA = 3, TECH_BIO = 2)
+	build_path = /obj/item/weapon/circuitboard/diseasesplicer
 
 /*
 /datum/design/circuit/

@@ -53,7 +53,7 @@
 #define MATERIAL_LEAD						"lead"
 #define MATERIAL_SULFUR						"sulfur"
 #define MATERIAL_BSPACE_CRYSTAL				"bluespace crystal"
-
+//ORES
 #define MATERIAL_TETRAHEDRITE				"tetrahedrite"
 #define MATERIAL_FREIBERGITE				"freibergite"
 #define MATERIAL_ILMENITE					"ilmenite"
@@ -67,6 +67,7 @@
 
 #define DEFAULT_TABLE_MATERIAL MATERIAL_PLASTIC
 #define DEFAULT_WALL_MATERIAL  MATERIAL_STEEL
+#define SHEET_MATERIAL_AMOUNT 2000
 
 #define MATERIAL_ALTERATION_NONE 0
 #define MATERIAL_ALTERATION_NAME 1
@@ -74,11 +75,11 @@
 #define MATERIAL_ALTERATION_COLOR 4
 #define MATERIAL_ALTERATION_ALL (~MATERIAL_ALTERATION_NONE)
 
-#define SHARD_SHARD "shard"
-#define SHARD_SHRAPNEL "shrapnel"
-#define SHARD_STONE_PIECE "piece"
-#define SHARD_SPLINTER "splinters"
-#define SHARD_NONE ""
+#define SHARD_SHARD 		"shard"
+#define SHARD_SHRAPNEL 		"shrapnel"
+#define SHARD_STONE_PIECE 	"piece"
+#define SHARD_SPLINTER 		"splinters"
+#define SHARD_NONE 			""
 
 #define MATERIAL_UNMELTABLE 0x1
 #define MATERIAL_BRITTLE    0x2

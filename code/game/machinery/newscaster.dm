@@ -168,6 +168,7 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 	light_range = 0
 	anchored = 1
 	layer = ABOVE_WINDOW_LAYER
+	frame_type = /obj/item/frame/newscaster
 
 /obj/machinery/newscaster/security_unit                   //Security unit
 	name = "Security Newscaster"
@@ -179,11 +180,6 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 	if(istype(frame))
 		frame.transfer_fingerprints_to(src)
 	..()
-
-	if(ndir)
-		set_dir(ndir)
-		pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 30 : -30)
-		pixel_y = (src.dir & 3)? (src.dir ==1 ? 30 : -30) : 0
 	allCasters += src
 	src.paper_remaining = 15            // Will probably change this to something better
 	for(var/obj/machinery/newscaster/NEWSCASTER in allCasters) // Let's give it an appropriate unit number
@@ -196,6 +192,20 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 	..()
 
 /obj/machinery/newscaster/update_icon()
+	switch(dir)
+		if(NORTH)
+			pixel_x = 0
+			pixel_y = 32
+		if(SOUTH)
+			pixel_x = 0
+			pixel_y = 40
+		if(EAST)
+			pixel_x = -30
+			pixel_y = 0
+		if(WEST)
+			pixel_x = 30
+			pixel_y = 0
+			
 	if(inoperable())
 		icon_state = "newscaster_off"
 		if(stat & BROKEN) //If the thing is smashed, add crack overlay on top of the unpowered sprite.
@@ -239,7 +249,6 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 		switch(screen)
 			if(0)
 				dat += "Welcome to Newscasting Unit #[src.unit_no].<BR> Interface & News networks Operational."
-				dat += "<BR><FONT SIZE=1>Property of Nanotransen Inc</FONT>"
 				if(news_network.wanted_issue)
 					dat+= "<HR><A href='?src=\ref[src];view_wanted=1'>Read Wanted Issue</A>"
 				dat+= "<HR><BR><A href='?src=\ref[src];create_channel=1'>Create Feed Channel</A>"
@@ -292,11 +301,11 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 			if(6)
 				dat+="<B><FONT COLOR='maroon'>ERROR: Could not submit Feed story to Network.</B></FONT><HR><BR>"
 				if(src.channel_name=="")
-					dat+="<FONT COLOR='maroon'>•Invalid receiving channel name.</FONT><BR>"
+					dat+="<FONT COLOR='maroon'>ï¿½Invalid receiving channel name.</FONT><BR>"
 				if(src.scanned_user=="Unknown")
-					dat+="<FONT COLOR='maroon'>•Channel author unverified.</FONT><BR>"
+					dat+="<FONT COLOR='maroon'>ï¿½Channel author unverified.</FONT><BR>"
 				if(src.msg == "" || src.msg == "\[REDACTED\]")
-					dat+="<FONT COLOR='maroon'>•Invalid message body.</FONT><BR>"
+					dat+="<FONT COLOR='maroon'>ï¿½Invalid message body.</FONT><BR>"
 
 				dat+="<BR><A href='?src=\ref[src];setScreen=[3]'>Return</A><BR>"
 			if(7)
@@ -308,18 +317,18 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 					else
 						existing_authors += FC.author
 				if(src.scanned_user in existing_authors)
-					dat+="<FONT COLOR='maroon'>•There already exists a Feed channel under your name.</FONT><BR>"
+					dat+="<FONT COLOR='maroon'>ï¿½There already exists a Feed channel under your name.</FONT><BR>"
 				if(src.channel_name=="" || src.channel_name == "\[REDACTED\]")
-					dat+="<FONT COLOR='maroon'>•Invalid channel name.</FONT><BR>"
+					dat+="<FONT COLOR='maroon'>ï¿½Invalid channel name.</FONT><BR>"
 				var/check = 0
 				for(var/datum/feed_channel/FC in news_network.network_channels)
 					if(FC.channel_name == src.channel_name)
 						check = 1
 						break
 				if(check)
-					dat+="<FONT COLOR='maroon'>•Channel name already in use.</FONT><BR>"
+					dat+="<FONT COLOR='maroon'>ï¿½Channel name already in use.</FONT><BR>"
 				if(src.scanned_user=="Unknown")
-					dat+="<FONT COLOR='maroon'>•Channel author unverified.</FONT><BR>"
+					dat+="<FONT COLOR='maroon'>ï¿½Channel author unverified.</FONT><BR>"
 				dat+="<BR><A href='?src=\ref[src];setScreen=[2]'>Return</A><BR>"
 			if(8)
 				var/total_num=length(news_network.network_channels)
@@ -434,11 +443,11 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 			if(16)
 				dat+="<B><FONT COLOR='maroon'>ERROR: Wanted Issue rejected by Network.</B></FONT><HR><BR>"
 				if(src.channel_name=="" || src.channel_name == "\[REDACTED\]")
-					dat+="<FONT COLOR='maroon'>•Invalid name for person wanted.</FONT><BR>"
+					dat+="<FONT COLOR='maroon'>ï¿½Invalid name for person wanted.</FONT><BR>"
 				if(src.scanned_user=="Unknown")
-					dat+="<FONT COLOR='maroon'>•Issue author unverified.</FONT><BR>"
+					dat+="<FONT COLOR='maroon'>ï¿½Issue author unverified.</FONT><BR>"
 				if(src.msg == "" || src.msg == "\[REDACTED\]")
-					dat+="<FONT COLOR='maroon'>•Invalid description.</FONT><BR>"
+					dat+="<FONT COLOR='maroon'>ï¿½Invalid description.</FONT><BR>"
 				dat+="<BR><A href='?src=\ref[src];setScreen=[0]'>Return</A><BR>"
 			if(17)
 				dat+="<B>Wanted Issue successfully deleted from Circulation</B><BR>"
@@ -718,8 +727,6 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 		else if(href_list["refresh"])
 			src.updateUsrDialog()
 
-
-
 /obj/machinery/newscaster/attackby(obj/item/I as obj, mob/user as mob)
 	if(default_deconstruction_screwdriver(user, I))
 		updateUsrDialog()
@@ -780,159 +787,7 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 
 		photo_data = new(selection, 1)
 
-
-//########################################################################################################################
-//###################################### NEWSPAPER! ######################################################################
-//########################################################################################################################
-
-/obj/item/weapon/newspaper
-	name = "newspaper"
-	desc = "An issue of The Griffon, the space newspaper."
-	icon = 'icons/obj/bureaucracy.dmi'
-	icon_state = "newspaper"
-	w_class = ITEM_SIZE_SMALL	//Let's make it fit in trashbags!
-	attack_verb = list("bapped")
-	var/screen = 0
-	var/pages = 0
-	var/curr_page = 0
-	var/list/datum/feed_channel/news_content = list()
-	var/datum/feed_message/important_message = null
-	var/scribble=""
-	var/scribble_page = null
-
-obj/item/weapon/newspaper/attack_self(mob/user as mob)
-	if(ishuman(user))
-		var/mob/living/carbon/human/human_user = user
-		var/dat
-		src.pages = 0
-		switch(screen)
-			if(0) //Cover
-				dat+="<DIV ALIGN='center'><B><FONT SIZE=6>The Griffon</FONT></B></div>"
-				dat+="<DIV ALIGN='center'><FONT SIZE=2>[GLOB.using_map.company_name]-standard newspaper, for use on [GLOB.using_map.company_name]© Space Facilities</FONT></div><HR>"
-				if(isemptylist(src.news_content))
-					if(src.important_message)
-						dat+="Contents:<BR><ul><B><FONT COLOR='red'>**</FONT>Important Security Announcement<FONT COLOR='red'>**</FONT></B> <FONT SIZE=2>\[page [src.pages+2]\]</FONT><BR></ul>"
-					else
-						dat+="<I>Other than the title, the rest of the newspaper is unprinted...</I>"
-				else
-					dat+="Contents:<BR><ul>"
-					for(var/datum/feed_channel/NP in src.news_content)
-						src.pages++
-					if(src.important_message)
-						dat+="<B><FONT COLOR='red'>**</FONT>Important Security Announcement<FONT COLOR='red'>**</FONT></B> <FONT SIZE=2>\[page [src.pages+2]\]</FONT><BR>"
-					var/temp_page=0
-					for(var/datum/feed_channel/NP in src.news_content)
-						temp_page++
-						dat+="<B>[NP.channel_name]</B> <FONT SIZE=2>\[page [temp_page+1]\]</FONT><BR>"
-					dat+="</ul>"
-				if(scribble_page==curr_page)
-					dat+="<BR><I>There is a small scribble near the end of this page... It reads: \"[src.scribble]\"</I>"
-				dat+= "<HR><DIV STYLE='float:right;'><A href='?src=\ref[src];next_page=1'>Next Page</A></DIV> <div style='float:left;'><A href='?src=\ref[human_user];mach_close=newspaper_main'>Done reading</A></DIV>"
-			if(1) // X channel pages inbetween.
-				for(var/datum/feed_channel/NP in src.news_content)
-					src.pages++ //Let's get it right again.
-				var/datum/feed_channel/C = src.news_content[src.curr_page]
-				dat+="<FONT SIZE=4><B>[C.channel_name]</B></FONT><FONT SIZE=1> \[created by: <FONT COLOR='maroon'>[C.author]</FONT>\]</FONT><BR><BR>"
-				if(C.censored)
-					dat+="This channel was deemed dangerous to the general welfare of the [station_name()] and therefore marked with a <B><FONT COLOR='red'>D-Notice</B></FONT>. Its contents were not transferred to the newspaper at the time of printing."
-				else
-					if(isemptylist(C.messages))
-						dat+="No Feed stories stem from this channel..."
-					else
-						dat+="<ul>"
-						var/i = 0
-						for(var/datum/feed_message/MESSAGE in C.messages)
-							++i
-							dat+="-[MESSAGE.body] <BR>"
-							if(MESSAGE.img)
-								var/resourc_name = "newscaster_photo_[sanitize(C.channel_name)]_[i].png"
-								send_asset(user.client, resourc_name)
-								dat+="<img src='[resourc_name]' width = '180'><BR>"
-							dat+="<FONT SIZE=1>\[[MESSAGE.message_type] by <FONT COLOR='maroon'>[MESSAGE.author]</FONT>\]</FONT><BR><BR>"
-						dat+="</ul>"
-				if(scribble_page==curr_page)
-					dat+="<BR><I>There is a small scribble near the end of this page... It reads: \"[src.scribble]\"</I>"
-				dat+= "<BR><HR><DIV STYLE='float:left;'><A href='?src=\ref[src];prev_page=1'>Previous Page</A></DIV> <DIV STYLE='float:right;'><A href='?src=\ref[src];next_page=1'>Next Page</A></DIV>"
-			if(2) //Last page
-				for(var/datum/feed_channel/NP in src.news_content)
-					src.pages++
-				if(src.important_message!=null)
-					dat+="<DIV STYLE='float:center;'><FONT SIZE=4><B>Wanted Issue:</B></FONT SIZE></DIV><BR><BR>"
-					dat+="<B>Criminal name</B>: <FONT COLOR='maroon'>[important_message.author]</FONT><BR>"
-					dat+="<B>Description</B>: [important_message.body]<BR>"
-					dat+="<B>Photo:</B>: "
-					if(important_message.img)
-						user << browse_rsc(important_message.img, "tmp_photow.png")
-						dat+="<BR><img src='tmp_photow.png' width = '180'>"
-					else
-						dat+="None"
-				else
-					dat+="<I>Apart from some uninteresting Classified ads, there's nothing on this page...</I>"
-				if(scribble_page==curr_page)
-					dat+="<BR><I>There is a small scribble near the end of this page... It reads: \"[src.scribble]\"</I>"
-				dat+= "<HR><DIV STYLE='float:left;'><A href='?src=\ref[src];prev_page=1'>Previous Page</A></DIV>"
-			else
-				dat+="I'm sorry to break your immersion. This shit's bugged. Report this bug to Agouri, polyxenitopalidou@gmail.com"
-
-		dat+="<BR><HR><div align='center'>[src.curr_page+1]</div>"
-		human_user << browse(dat, "window=newspaper_main;size=300x400")
-		onclose(human_user, "newspaper_main")
-	else
-		to_chat(user, "The paper is full of intelligible symbols!")
-
-
-obj/item/weapon/newspaper/Topic(href, href_list)
-	var/mob/living/U = usr
-	..()
-	if ((src in U.contents) || ( istype(loc, /turf) && in_range(src, U) ))
-		U.set_machine(src)
-		if(href_list["next_page"])
-			if(curr_page==src.pages+1)
-				return //Don't need that at all, but anyway.
-			if(src.curr_page == src.pages) //We're at the middle, get to the end
-				src.screen = 2
-			else
-				if(curr_page == 0) //We're at the start, get to the middle
-					src.screen=1
-			src.curr_page++
-			playsound(src.loc, "pageturn", 50, 1)
-
-		else if(href_list["prev_page"])
-			if(curr_page == 0)
-				return
-			if(curr_page == 1)
-				src.screen = 0
-
-			else
-				if(curr_page == src.pages+1) //we're at the end, let's go back to the middle.
-					src.screen = 1
-			src.curr_page--
-			playsound(src.loc, "pageturn", 50, 1)
-
-		if (istype(src.loc, /mob))
-			src.attack_self(src.loc)
-
-
-obj/item/weapon/newspaper/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(istype(W, /obj/item/weapon/pen))
-		if(src.scribble_page == src.curr_page)
-			to_chat(user, "<FONT COLOR='blue'>There's already a scribble in this page... You wouldn't want to make things too cluttered, would you?</FONT>")
-		else
-			var/s = sanitize(input(user, "Write something", "Newspaper", ""))
-			s = sanitize(s)
-			if (!s)
-				return
-			if (!in_range(src, usr) && src.loc != usr)
-				return
-			src.scribble_page = src.curr_page
-			src.scribble = s
-			src.attack_self(user)
-		return
-
-
 ////////////////////////////////////helper procs
-
-
 /obj/machinery/newscaster/proc/scan_user(mob/living/user as mob)
 	if(istype(user,/mob/living/carbon/human))                       //User is a human
 		var/mob/living/carbon/human/human_user = user
@@ -987,13 +842,3 @@ obj/item/weapon/newspaper/attackby(obj/item/weapon/W as obj, mob/user as mob)
 		playsound(src.loc, 'sound/machines/warning-buzzer.ogg', 75, 1)
 	return
 
-/obj/item/frame/newscaster/try_build(turf/on_wall)
-	if (get_dist(on_wall,usr)>1)
-		return
-	var/ndir = get_dir(usr,on_wall)
-	if (!(ndir in GLOB.cardinal))
-		return
-	var/turf/loc = get_turf(usr)
-
-	new /obj/machinery/newscaster(loc, 1, src, ndir)
-	qdel(src)

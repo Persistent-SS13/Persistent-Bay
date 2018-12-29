@@ -114,3 +114,8 @@ var/list/restricted_camera_networks = list(NETWORK_ERT,NETWORK_MERCENARY,"Secret
 #define POWER_USE_OFF    0	//no auto power use
 #define POWER_USE_IDLE   1	//machine is using power at its idle power level
 #define POWER_USE_ACTIVE 2	//machine is using power at its active power level
+
+//Build state for the machine frame.
+#define MACHINE_FRAME_EMPTY  1 //Default state, no components installed
+#define MACHINE_FRAME_CABLED 2 //Cables installed
+#define MACHINE_FRAME_BOARD  3 //Cables, and circuit board installed

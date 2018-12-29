@@ -14,6 +14,7 @@
 	density = 0
 	opacity = 0
 	anchored = 1
+	should_save = 1
 
 	var/atom/target
 	var/acid_strength = ACID_WEAK

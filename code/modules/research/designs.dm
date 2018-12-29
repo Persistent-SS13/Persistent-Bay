@@ -1384,6 +1384,6 @@ other types of metals and chemistry for reagents).
 	desc = "An outdated medical apparatus for listening to the sounds of the human body. It also makes you look like you know what you're doing."
 	id = "stethoscope"
 	req_tech = list(TECH_BIO = 1)
-	materials = list(DEFAULT_WALL_MATERIAL = 1000)
+	materials = list(MATERIAL_STEEL = 1000)
 	build_path = /obj/item/clothing/accessory/stethoscope
 	sort_string = "WCLAF"

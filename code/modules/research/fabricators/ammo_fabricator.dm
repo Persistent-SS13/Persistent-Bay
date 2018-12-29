@@ -31,63 +31,63 @@
 	name = ".357 Bullet"
 	id = "a357"
 	build_path = /obj/item/ammo_casing/a357
-	materials = list(MATERIAL_STEEL = 210)
+	materials = list(MATERIAL_BRASS = 80, MATERIAL_STEEL = 80)
 	chemicals = list(/datum/reagent/aluminum = 5)
 
 /datum/design/item/ammofab/a50
 	name = ".50 Bullet"
 	id = "a50"
 	build_path = /obj/item/ammo_casing/a50
-	materials = list(MATERIAL_STEEL = 260)
+	materials = list(MATERIAL_BRASS = 150, MATERIAL_STEEL = 150)
 	chemicals = list(/datum/reagent/aluminum = 15)
 
 /datum/design/item/ammofab/a75
 	name = "20mm Bullet"
 	id = "75"
 	build_path = /obj/item/ammo_casing/a75
-	materials = list(MATERIAL_STEEL = 320)
+	materials = list(MATERIAL_BRASS = 200, MATERIAL_STEEL = 200)
 	chemicals = list(/datum/reagent/aluminum = 30)
 
 /datum/design/item/ammofab/c38
 	name = ".38 Bullet"
 	id = "c38"
 	build_path = /obj/item/ammo_casing/c38
-	materials = list(MATERIAL_STEEL = 60)
+	materials = list(MATERIAL_BRASS = 25, MATERIAL_STEEL = 25)
 	chemicals = list(/datum/reagent/aluminum = 4)
 
 /datum/design/item/ammofab/c38/rubber
 	name = "Rubber .38 Bullet"
 	id = "c38r"
 	build_path = /obj/item/ammo_casing/c38/rubber
-	materials = list(MATERIAL_PLASTIC = 60)
+	materials = list(MATERIAL_BRASS = 25, MATERIAL_STEEL = 10, MATERIAL_PLASTIC = 25) //Rubber rounds still have a steel core
 	chemicals = list(/datum/reagent/aluminum = 4)
 
 /datum/design/item/ammofab/c9mm
 	name = "9mm Bullet"
 	id = "c9mm"
 	build_path = /obj/item/ammo_casing/c9mm
-	materials = list(MATERIAL_STEEL = 60)
+	materials = list(MATERIAL_BRASS = 25, MATERIAL_STEEL = 25)
 	chemicals = list(/datum/reagent/aluminum = 2)
 
 /datum/design/item/ammofab/c9mm/flash
 	name = "Flash 9mm Bullet"
 	id = "c9mmf"
 	build_path = /obj/item/ammo_casing/c9mm/flash
-	materials = list(MATERIAL_STEEL = 50)
+	materials = list(MATERIAL_BRASS = 25, MATERIAL_STEEL = 25)
 	chemicals = list(/datum/reagent/aluminum = 1)
 
 /datum/design/item/ammofab/c9mm/rubber
 	name = "Rubber 9mm Bullet"
 	id = "c9mmr"
 	build_path = /obj/item/ammo_casing/c9mm/rubber
-	materials = list(MATERIAL_STEEL = 60)
+	materials = list(MATERIAL_BRASS = 25, MATERIAL_STEEL = 25, MATERIAL_PLASTIC = 25)
 	chemicals = list(/datum/reagent/aluminum = 2)
 
 /datum/design/item/ammofab/c9mm/practice
 	name = "Practice 9mm Bullet"
 	id = "c9mmp"
 	build_path = /obj/item/ammo_casing/c9mm/practice
-	materials = list(MATERIAL_STEEL = 50)
+	materials = list(MATERIAL_BRASS = 25, MATERIAL_STEEL = 25)
 	chemicals = list(/datum/reagent/aluminum = 2)
 
 /datum/design/item/ammofab/c44

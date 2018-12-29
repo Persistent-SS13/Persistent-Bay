@@ -19,7 +19,7 @@
 //
 /datum/design/item/autotailor/storage/backpacks
 	category = "Backpacks"
-	materials = list("cloth" = 10000)
+	materials = list(MATERIAL_CLOTH = 10000)
 
 /datum/design/item/autotailor/storage/backpacks/grey_back
 	name = "Grey backpack"
@@ -65,7 +65,7 @@
 	name = "Black small pocketbook"
 	id = "black_pocketbook"
 	build_path = /obj/item/weapon/storage/backpack/satchel/pocketbook
-	materials = list("cloth" = 5000)
+	materials = list(MATERIAL_CLOTH = 5000)
 
 /datum/design/item/autotailor/storage/backpacks/mess_grey
 	name = "Grey messenger bag"
@@ -81,7 +81,7 @@
 	name = "Grey dufflebag"
 	id = "grey_duffle"
 	build_path = /obj/item/weapon/storage/backpack/dufflebag
-	materials = list("cloth" = 15000)
+	materials = list(MATERIAL_CLOTH = 15000)
 
 /datum/design/item/autotailor/storage/backpacks/t_rack
 	name = "Backpack - trophy rack"
@@ -107,7 +107,7 @@
 	name = "Industrial dufflebag"
 	id = "indu_duffle"
 	build_path = /obj/item/weapon/storage/backpack/dufflebag/eng
-	materials = list("cloth" = 15000)
+	materials = list(MATERIAL_CLOTH = 15000)
 
 /datum/design/item/autotailor/storage/backpacks/sci_back
 	name = "Scientist backpack"
@@ -183,7 +183,7 @@
 	name = "Medical dufflebag"
 	id = "med_duffle"
 	build_path = /obj/item/weapon/storage/backpack/dufflebag/med
-	materials = list("cloth" = 15000)
+	materials = list(MATERIAL_CLOTH = 15000)
 
 /datum/design/item/autotailor/storage/backpacks/sec_back
 	name = "Security backpack"
@@ -204,7 +204,7 @@
 	name = "Security dufflebag"
 	id = "sec_duffle"
 	build_path = /obj/item/weapon/storage/backpack/dufflebag/sec
-	materials = list("cloth" = 15000)
+	materials = list(MATERIAL_CLOTH = 15000)
 
 /datum/design/item/autotailor/storage/backpacks/cap_back
 	name = "Captain backpack"
@@ -225,49 +225,49 @@
 	name = "Captain dufflebag"
 	id = "cap_duffle"
 	build_path = /obj/item/weapon/storage/backpack/dufflebag/captain
-	materials = list("cloth" = 15000)
+	materials = list(MATERIAL_CLOTH = 15000)
 
 /datum/design/item/autotailor/storage/backpacks/ert_blueback
 	name = "Blue ERT backpack"
 	id = "ert_blue"
 	build_path = /obj/item/weapon/storage/backpack/ert
-	materials = list("cloth" = 5000, "phoron" = 2000)
+	materials = list(MATERIAL_CLOTH = 5000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/storage/backpacks/ert_engback
 	name = "Yellow ERT backpack"
 	id = "ert_engback"
 	build_path = /obj/item/weapon/storage/backpack/ert/engineer
-	materials = list("cloth" = 5000, "phoron" = 2000)
+	materials = list(MATERIAL_CLOTH = 5000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/storage/backpacks/ert_whiteback
 	name = "White ERT backpack"
 	id = "ert_white"
 	build_path = /obj/item/weapon/storage/backpack/ert/medical
-	materials = list("cloth" = 5000, "phoron" = 2000)
+	materials = list(MATERIAL_CLOTH = 5000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/storage/backpacks/ert_redback
 	name = "Red ERT backpack"
 	id = "ert_red"
 	build_path = /obj/item/weapon/storage/backpack/ert/security
-	materials = list("cloth" = 5000, "phoron" = 2000)
+	materials = list(MATERIAL_CLOTH = 5000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/storage/backpacks/tact_d_black
 	name = "Tactical dufflebag - black"
 	id = "tact_d_black"
 	build_path = /obj/item/weapon/storage/backpack/dufflebag/syndie
-	materials = list("cloth" = 15000, "phoron" = 4000)
+	materials = list(MATERIAL_CLOTH = 15000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/storage/backpacks/tact_d_med
 	name = "Tactical dufflebag - medical"
 	id = "tact_d_med"
 	build_path = /obj/item/weapon/storage/backpack/dufflebag/syndie/med
-	materials = list("cloth" = 15000, "phoron" = 4000)
+	materials = list(MATERIAL_CLOTH = 15000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/storage/backpacks/tact_d_ammo
 	name = "Tactical dufflebag - ammo"
 	id = "tact_d_ammo"
 	build_path = /obj/item/weapon/storage/backpack/dufflebag/syndie/ammo
-	materials = list("cloth" = 15000, "phoron" = 4000)
+	materials = list(MATERIAL_CLOTH = 15000, MATERIAL_PHORON = 4000)
 
 //
 //belt slot
@@ -275,7 +275,7 @@
 
 /datum/design/item/autotailor/storage/waist
 	category = "Belt bags"
-	materials = list("leather" = 5000, DEFAULT_WALL_MATERIAL = 1000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_STEEL = 1000)
 
 //alot (all) of the new paradise ported belts have no mob sprites, i see no reason to exclude such a small sprite though, so they remain
 /datum/design/item/autotailor/storage/waist/utility_brown
@@ -363,7 +363,7 @@
 	name = "White large waistpack"
 	id = "waistpack_l_white"
 	build_path = /obj/item/weapon/storage/belt/waistpack/big
-	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/storage/waist/waistpack_alt_white	//can use custom colors
 	name = "White fannypack"
@@ -425,7 +425,7 @@
 //
 /datum/design/item/autotailor/storage/work/
 	category = "Work storage boxes"
-	materials = list(DEFAULT_WALL_MATERIAL = 10000)
+	materials = list(MATERIAL_STEEL = 10000)
 
 /datum/design/item/autotailor/storage/work/toolbox_red
 	name = "Red toolbox"
@@ -456,134 +456,134 @@
 	name = "White medical kit"
 	id = "medkit_white"
 	build_path = /obj/item/weapon/storage/firstaid
-	materials = list("plastic" = 10000)
+	materials = list(MATERIAL_PLASTIC = 10000)
 
 /datum/design/item/autotailor/storage/work/medkit_brown
 	name = "Brown medical kit"
 	id = "medkit_brown"
 	build_path = /obj/item/weapon/storage/firstaid/combat
-	materials = list("plastic" = 10000)
+	materials = list(MATERIAL_PLASTIC = 10000)
 
 /datum/design/item/autotailor/storage/work/medkit_red
 	name = "Red medical kit"
 	id = "medkit_red"
 	build_path = /obj/item/weapon/storage/firstaid/adv
-	materials = list("plastic" = 10000)
+	materials = list(MATERIAL_PLASTIC = 10000)
 
 /datum/design/item/autotailor/storage/work/medkit_blue
 	name = "Blue medical kit"
 	id = "medkit_blue"
 	build_path = /obj/item/weapon/storage/firstaid/o2
-	materials = list("plastic" = 10000)
+	materials = list(MATERIAL_PLASTIC = 10000)
 
 /datum/design/item/autotailor/storage/work/medkit_yellow
 	name = "Yellow medical kit"
 	id = "medkit_yellow"
 	build_path = /obj/item/weapon/storage/firstaid/fire
-	materials = list("plastic" = 10000)
+	materials = list(MATERIAL_PLASTIC = 10000)
 
 /datum/design/item/autotailor/storage/work/medkit_green
 	name = "Green medical kit"
 	id = "medkit_green"
 	build_path = /obj/item/weapon/storage/firstaid/toxin
-	materials = list("plastic" = 10000)
+	materials = list(MATERIAL_PLASTIC = 10000)
 
 /datum/design/item/autotailor/storage/work/pills
 	name = "Pill bottle"
 	id = "pills"
 	build_path = /obj/item/weapon/storage/pill_bottle
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/storage/work/vials
 	name = "Vial storage box"
 	id = "vials"
 	build_path = /obj/item/weapon/storage/fancy/vials
-	materials = list("plastic" = 10000)
+	materials = list(MATERIAL_PLASTIC = 10000)
 
 /datum/design/item/autotailor/storage/work/vials_locked
 	name = "Vial storage lockbox"
 	id = "vials_locked"
 	build_path = /obj/item/weapon/storage/lockbox/vials
-	materials = list("plastic" = 10000, "phoron" = 5000)
+	materials = list(MATERIAL_PLASTIC = 10000, MATERIAL_PHORON = 5000)
 
 /datum/design/item/autotailor/storage/work/briefcase_grey
 	name = "Grey briefcase"
 	id = "briefcase_grey"
 	build_path = /obj/item/weapon/storage/briefcase/crimekit
-	materials = list(DEFAULT_WALL_MATERIAL = 15000)
+	materials = list(MATERIAL_STEEL = 15000)
 
 /datum/design/item/autotailor/storage/work/briefcase_brown
 	name = "Brown briefcase"
 	id = "briefcase_brown"
 	build_path = /obj/item/weapon/storage/briefcase
-	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 5000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_STEEL = 5000)
 
 /datum/design/item/autotailor/storage/work/briefcase_inflate
 	name = "Inflatables briefcase"
 	id = "briefcase_inflate"
 	build_path = /obj/item/weapon/storage/briefcase/inflatable
-	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 5000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_STEEL = 5000)
 
 /datum/design/item/autotailor/storage/work/securecase_black
 	name = "Black secure briefcase"
 	id = "securecase_black"
 	build_path = /obj/item/weapon/storage/secure/briefcase
-	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 5000, "phoron" = 5000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_STEEL = 5000, MATERIAL_PHORON = 5000)
 
 /datum/design/item/autotailor/storage/work/plantbag
 	name = "Plant carrybag"
 	id = "plantbag"
 	build_path = /obj/item/weapon/storage/plants
-	materials = list("leather" = 10000)
+	materials = list(MATERIAL_LEATHER = 10000)
 
 /datum/design/item/autotailor/storage/work/orebag
 	name = "Ore carrybag"
 	id = "orebag"
 	build_path = /obj/item/weapon/storage/ore
-	materials = list("leather" = 10000)
+	materials = list(MATERIAL_LEATHER = 10000)
 
 /datum/design/item/autotailor/storage/work/artebag
 	name = "Fossile carrybag"
 	id = "artebag"
 	build_path = /obj/item/weapon/storage/bag/fossils
-	materials = list("leather" = 10000)
+	materials = list(MATERIAL_LEATHER = 10000)
 
 /datum/design/item/autotailor/storage/work/fossilpickbag
 	name = "Excavation pick carrybag"
 	id = "fossilpickbag"
 	build_path = /obj/item/weapon/storage/excavation
-	materials = list("leather" = 10000)
+	materials = list(MATERIAL_LEATHER = 10000)
 
 /datum/design/item/autotailor/storage/work/mineral_coverabag
 	name = "Material coverbag"
 	id = "mineral_coverbag"
 	build_path = /obj/item/weapon/storage/sheetsnatcher
-	materials = list("leather" = 10000)
+	materials = list(MATERIAL_LEATHER = 10000)
 
 //
 //Misc storage
 //
 /datum/design/item/autotailor/storage/gen
 	category = "General storage containers"
-	materials = list("cardboard" = 1000)
+	materials = list(MATERIAL_CARDBOARD = 1000)
 
 /datum/design/item/autotailor/storage/gen/wallet_white	//can use custom colors
 	name = "White wallet"
 	id = "wallet_white"
 	build_path = /obj/item/weapon/storage/wallet
-	materials = list("cloth" = 1000)
+	materials = list(MATERIAL_CLOTH = 1000)
 
 /datum/design/item/autotailor/storage/gen/wallet_leather
 	name = "Leather wallet"
 	id = "wallet_leather"
 	build_path = /obj/item/weapon/storage/wallet/leather
-	materials = list("leather" = 1000)
+	materials = list(MATERIAL_LEATHER = 1000)
 
 /datum/design/item/autotailor/storage/gen/cardb_box
 	name = "Cardboard box"
 	id = "cardb_box"
 	build_path = /obj/item/weapon/storage/box
-	materials = list("cardboard" = 2000)	//if we remove handcrafting deconstruction we can make this cheaper
+	materials = list(MATERIAL_CARDBOARD = 2000)	//if we remove handcrafting deconstruction we can make this cheaper
 
 /datum/design/item/autotailor/storage/gen/eggs
 	name = "Egg carton"
@@ -594,79 +594,79 @@
 	name = "Small plastic bag"
 	id = "plast_bag"
 	build_path = /obj/item/weapon/storage/bag/plasticbag
-	materials = list("plastic" = 1000)
+	materials = list(MATERIAL_PLASTIC = 1000)
 
 /datum/design/item/autotailor/storage/gen/trash_bag
 	name = "Trash bag"
 	id = "trash_bag"
 	build_path = /obj/item/weapon/storage/bag/trash
-	materials = list("plastic" = 10000)
+	materials = list(MATERIAL_PLASTIC = 10000)
 
 /datum/design/item/autotailor/storage/gen/brown_bag
 	name = "Leather bag"
 	id = "brown_bag"
 	build_path = /obj/item/weapon/storage/backpack/leathersack
-	materials = list("leather" = 20000)
+	materials = list(MATERIAL_LEATHER = 20000)
 
 /datum/design/item/autotailor/storage/gen/cash
 	name = "Money bag"
 	id = "cash"
 	build_path = /obj/item/weapon/storage/bag/cash
-	materials = list("leather" = 10000)
+	materials = list(MATERIAL_LEATHER = 10000)
 
 /datum/design/item/autotailor/storage/gen/lunchbox_bl_red
 	name = "Black & red lunchbox"
 	id = "lunchbox_bl_red"
 	build_path = /obj/item/weapon/storage/lunchbox/syndicate
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/storage/gen/lunchbox_hearts
 	name = "Pink hearts lunchbox"
 	id = "lunchbox_hearts"
 	build_path = /obj/item/weapon/storage/lunchbox/heart
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/storage/gen/lunchbox_cats
 	name = "Green cat lunchbox"
 	id = "lunchbox_cats"
 	build_path = /obj/item/weapon/storage/lunchbox/cat
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/storage/gen/lunchbox_cricket
 	name = "Diona nymph lunchbox"
 	id = "lunchbox_cricket"
 	build_path = /obj/item/weapon/storage/lunchbox/nymph
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/storage/gen/lunchbox_rainbow
 	name = "Rainbow lunchbox"
 	id = "lunchbox_rainbow"
 	build_path = /obj/item/weapon/storage/lunchbox
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/storage/gen/lunchbox_tf
 	name = "TF lunchbox"
 	id = "lunchbox_tcc"
 	build_path = /obj/item/weapon/storage/lunchbox/tf
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/storage/gen/lunchbox_cti
 	name = "CTI lunchbox"
 	id = "lunchbox_cti"
 	build_path = /obj/item/weapon/storage/lunchbox/cti
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/storage/gen/lunchbox_mu
 	name = "MU lunchbox"
 	id = "lunchbox_mu"
 	build_path = /obj/item/weapon/storage/lunchbox/mars
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/storage/gen/lunchbox_nt
 	name = "Nt lunchbox"
 	id = "lunchbox_nt"
 	build_path = /obj/item/weapon/storage/lunchbox/nt
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/storage/gen/cig_generic
 	name = "Generic cigarette cart"
@@ -712,13 +712,13 @@
 	name = "Fancy cigar case"
 	id = "cig_gar"
 	build_path = /obj/item/weapon/storage/fancy/cigar/blank
-	materials = list("leather" = 10000)
+	materials = list(MATERIAL_LEATHER = 10000)
 
 /datum/design/item/autotailor/storage/gen/photo
 	name = "Photo album"
 	id = "photo"
 	build_path = /obj/item/weapon/storage/photo_album
-	materials = list("leather" = 5000)
+	materials = list(MATERIAL_LEATHER = 5000)
 
 /datum/design/item/autotailor/storage/gen/candle
 	name = "Candle box"

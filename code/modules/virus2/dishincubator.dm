@@ -4,63 +4,71 @@
 	anchored = 1
 	icon = 'icons/obj/virology.dmi'
 	icon_state = "incubator"
+	use_power = POWER_USE_IDLE
+	active_power_usage = 800
+	idle_power_usage = 100
 	var/obj/item/weapon/virusdish/dish
 	var/obj/item/weapon/reagent_containers/glass/beaker = null
-	var/radiation = 0
-
-	var/on = 0
-	var/power = 0
-
-	var/foodsupply = 0
-	var/toxins = 0
+	var/radiation	= 0
+	var/foodsupply 	= 0
+	var/toxins 		= 0
 
 /obj/machinery/disease2/incubator/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/incubator(src)
-	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+	ADD_SAVED_VAR(dish)
+	ADD_SAVED_VAR(beaker)
+	ADD_SAVED_VAR(radiation)
+	ADD_SAVED_VAR(foodsupply)
+	ADD_SAVED_VAR(toxins)
+
+	ADD_SKIP_EMPTY(dish)
+	ADD_SKIP_EMPTY(beaker)
+
+
+/obj/machinery/disease2/incubator/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		component_parts = list()
+		component_parts += new /obj/item/weapon/circuitboard/incubator(src)
+		component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+		component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+		component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
 	RefreshParts()
 
 /obj/machinery/disease2/incubator/attackby(var/obj/O as obj, var/mob/user as mob)
-	if(istype(O, /obj/item/weapon/reagent_containers/glass) || istype(O,/obj/item/weapon/reagent_containers/syringe))
-
+	if(default_deconstruction_screwdriver(user, O))
+		return 1
+	else if(default_deconstruction_crowbar(user, O))
+		return 1
+	else if(istype(O, /obj/item/weapon/reagent_containers/glass) || istype(O,/obj/item/weapon/reagent_containers/syringe))
 		if(beaker)
 			to_chat(user, "\The [src] is already loaded.")
 			return
-		if(!user.unEquip(O, src))
-			return
+		user.drop_from_inventory(O)
 		beaker = O
+		O.forceMove(src)
 
 		user.visible_message("[user] adds \a [O] to \the [src]!", "You add \a [O] to \the [src]!")
 		SSnano.update_uis(src)
-
 		src.attack_hand(user)
-		return
-
-	if(istype(O, /obj/item/weapon/virusdish))
-
+		return 1
+	else if(istype(O, /obj/item/weapon/virusdish))
 		if(dish)
 			to_chat(user, "The dish tray is aleady full!")
 			return
-		if(!user.unEquip(O, src))
-			return
+		user.drop_from_inventory(O)
 		dish = O
-
+		O.forceMove(src)
 		user.visible_message("[user] adds \a [O] to \the [src]!", "You add \a [O] to \the [src]!")
 		SSnano.update_uis(src)
-
 		src.attack_hand(user)
-
-	if(default_deconstruction_screwdriver(user, O))
-		return
-	if(default_deconstruction_crowbar(user, O))
-		return
-	..()
+		return 1
+	else 
+		return ..()
 
 /obj/machinery/disease2/incubator/attack_hand(mob/user as mob)
-	if(stat & (NOPOWER|BROKEN)) return
+	if(inoperable()) 
+		return
 	ui_interact(user)
 
 /obj/machinery/disease2/incubator/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
@@ -72,7 +80,7 @@
 	data["food_supply"] = foodsupply
 	data["radiation"] = radiation
 	data["toxins"] = min(toxins, 100)
-	data["on"] = on
+	data["on"] = ison()
 	data["system_in_use"] = foodsupply > 0 || radiation > 0 || toxins > 0
 	data["chemical_volume"] = beaker ? beaker.reagents.total_volume : 0
 	data["max_chemical_volume"] = beaker ? beaker.volume : 1
@@ -101,13 +109,17 @@
 		ui.set_initial_data(data)
 		ui.open()
 
-/obj/machinery/disease2/incubator/Process()
-	if(dish && on && dish.virus2)
-		use_power(50,EQUIP)
-		if(!powered(EQUIP))
-			on = 0
-			icon_state = "incubator"
+/obj/machinery/disease2/incubator/update_icon()
+	if(ison())
+		icon_state = "incubator_on"
+	else
+		icon_state = "incubator"
 
+/obj/machinery/disease2/incubator/Process()
+	if(inoperable())
+		return
+	
+	if(ison() && dish && dish.virus2)
 		if(foodsupply)
 			if(dish.growth + 3 >= 100 && dish.growth < 100)
 				ping("\The [src] pings, \"Sufficient viral growth density achieved.\"")
@@ -135,11 +147,11 @@
 			dish.growth = 0
 			dish.virus2 = null
 			SSnano.update_uis(src)
-	else if(!dish)
-		on = 0
-		icon_state = "incubator"
+	else if(ison() && !dish)
+		turn_idle()
 		SSnano.update_uis(src)
 
+	CHECK_TICK
 	if(beaker)
 		if (foodsupply < 100 && beaker.reagents.has_reagent(/datum/reagent/nutriment/virus_food))
 			var/food_needed = min(10, 100 - foodsupply) / 2
@@ -165,19 +177,21 @@
 
 	if (href_list["ejectchem"])
 		if(beaker)
-			beaker.dropInto(loc)
+			user.put_in_hands(beaker)
 			beaker = null
 		return TOPIC_REFRESH
 
 	if (href_list["power"])
 		if (dish)
-			on = !on
-			icon_state = on ? "incubator_on" : "incubator"
+			if(ison())
+				turn_idle()
+			else
+				turn_on()
 		return TOPIC_REFRESH
 
 	if (href_list["ejectdish"])
 		if(dish)
-			dish.dropInto(loc)
+			user.put_in_hands(dish)
 			dish = null
 		return TOPIC_REFRESH
 

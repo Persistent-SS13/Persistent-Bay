@@ -16,7 +16,7 @@
 	center_of_mass = null
 	attack_verb = list("hit", "bludgeoned", "whacked")
 	lock_picking_level = 3
-	materials_per_unit = list(DEFAULT_WALL_MATERIAL = 1875)
+	materials_per_unit = list(MATERIAL_STEEL = 1875)
 
 /obj/item/stack/rods/ten
 	amount = 10

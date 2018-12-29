@@ -19,13 +19,13 @@
 //
 /datum/design/item/autotailor/nonstandard/under
 	category = "Undersuits - Nonstandard"
-	materials = list("cloth" = 5000)
+	materials = list(MATERIAL_CLOTH = 5000)
 
 /datum/design/item/autotailor/nonstandard/under/vox_casual
 	name = "Vox clothing - casual"
 	id = "vox_casual"
 	build_path = /obj/item/clothing/under/vox/vox_casual
-	materials = list("cloth" = 10000, "leather" = 5000)
+	materials = list(MATERIAL_CLOTH = 10000, MATERIAL_LEATHER = 5000)
 
 /datum/design/item/autotailor/nonstandard/under/vox_robes
 	name = "Vox clothing - robes"
@@ -167,13 +167,13 @@
 //
 /datum/design/item/autotailor/nonstandard/suit
 	category = "Nonstandard Oversuits"
-	materials = list("cloth" = 10000)
+	materials = list(MATERIAL_CLOTH = 10000)
 
 /datum/design/item/autotailor/nonstandard/suit/vox_armor
 	name = "Vox makeshift armor"
 	id = "vox_armor"
 	build_path = /obj/item/clothing/suit/armor/vox_scrap
-	materials = list("cloth" = 3000, "leather" = 5000, DEFAULT_WALL_MATERIAL = 10000)
+	materials = list(MATERIAL_CLOTH = 3000, MATERIAL_LEATHER = 5000, MATERIAL_STEEL = 10000)
 
 /datum/design/item/autotailor/nonstandard/suit/fur	//maybe remove, or put as costume
 	name = "alien fur coat"
@@ -184,50 +184,50 @@
 	name = "Corgi PJs"
 	id = "pjs_ian"
 	build_path = /obj/item/clothing/suit/ianshirt
-	materials = list("cloth" = 5000)
+	materials = list(MATERIAL_CLOTH = 5000)
 
 //
 //costumes
 //i might be too harsh on considering some of these to be costumes
 /datum/design/item/autotailor/nonstandard/costume
 	category = "Costumes"
-	materials = list("cloth" = 10000)
+	materials = list(MATERIAL_CLOTH = 10000)
 
 /datum/design/item/autotailor/nonstandard/costume/harness
 	name = "gear harness"
 	id = "gear harness"
 	build_path = /obj/item/clothing/under/harness
-	materials = list("leather" = 500)
+	materials = list(MATERIAL_LEATHER = 500)
 
 /datum/design/item/autotailor/nonstandard/costume/wetsuit
 	name = "tactical wetsuit"
 	id = "wetsuit"
 	build_path = /obj/item/clothing/under/wetsuit
-	materials = list("leather" = 500)
+	materials = list(MATERIAL_LEATHER = 500)
 
 /datum/design/item/autotailor/nonstandard/costume/snorkel
 	name = "Snorkel"
 	id = "snorkel"
 	build_path = /obj/item/clothing/mask/snorkel
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/fins
 	name = "Swimming fins"
 	id = "fins"
 	build_path = /obj/item/clothing/shoes/swimmingfins
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/savage_hunter
 	name = "savage hunter's hides"
 	id = "savage_hunter"
 	build_path = /obj/item/clothing/under/savage_hunter
-	materials = list("leather" = 5000)
+	materials = list(MATERIAL_LEATHER = 5000)
 
 /datum/design/item/autotailor/nonstandard/costume/savage_huntress
 	name = "savage huntress's hides"
 	id = "savage_huntress"
 	build_path = /obj/item/clothing/under/savage_hunter/female
-	materials = list("leather" = 5000)
+	materials = list(MATERIAL_LEATHER = 5000)
 
 /datum/design/item/autotailor/nonstandard/costume/eastern
 	name = "Eastern dress"
@@ -238,13 +238,13 @@
 	name = "Gladiator's robes"
 	id = "gladiator"
 	build_path = /obj/item/clothing/under/gladiator
-	materials = list("leather" = 5000)
+	materials = list(MATERIAL_LEATHER = 5000)
 
 /datum/design/item/autotailor/nonstandard/costume/gladiator_head
 	name = "Gladiator's helmet"
 	id = "gladiator_head"
 	build_path = /obj/item/clothing/head/helmet/gladiator/costume
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/schoolgirl
 	name = "schoolgirl uniform"
@@ -265,7 +265,7 @@
 	name = "soviet ushanka"
 	id = "soviet_ushanka"
 	build_path = /obj/item/clothing/head/ushanka
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/johnny	//this can be moved over to standard jumpsuits if renamed
 	name = "johnny jumpsuit"
@@ -281,13 +281,13 @@
 	name = "Redcoat uniform"
 	id = "redcoat"
 	build_path = /obj/item/clothing/under/redcoat
-	materials = list("leather" = 5000)
+	materials = list(MATERIAL_LEATHER = 5000)
 
 /datum/design/item/autotailor/nonstandard/costume/redcoat_hat
 	name = "Redcoat hat"
 	id = "redcoat_hat"
 	build_path = /obj/item/clothing/head/redcoat
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/rogue
 	name = "rogue uniform"
@@ -308,7 +308,7 @@
 	name = "Mime mask"
 	id = "mime_mask"
 	build_path = /obj/item/clothing/mask/gas/mime
-	materials = list("plastic" = 5000)
+	materials = list(MATERIAL_PLASTIC = 5000)
 
 /datum/design/item/autotailor/nonstandard/costume/mime_sexy
 	name = "Sexy mime uniform"
@@ -319,7 +319,7 @@
 	name = "Female mime mask"
 	id = "mime_maskf"
 	build_path = /obj/item/clothing/mask/gas/sexymime
-	materials = list("plastic" = 5000)
+	materials = list(MATERIAL_PLASTIC = 5000)
 
 /datum/design/item/autotailor/nonstandard/costume/mime_susp
 	name = "Mime Suspendors"
@@ -335,7 +335,7 @@
 	name = "Clown mask"
 	id = "clown_mask"
 	build_path = /obj/item/clothing/mask/gas/clown_hat
-	materials = list("plastic" = 5000)
+	materials = list(MATERIAL_PLASTIC = 5000)
 
 /datum/design/item/autotailor/nonstandard/costume/clown_sexy
 	name = "Sexy clown uniform"
@@ -346,13 +346,13 @@
 	name = "Female clown mask"
 	id = "clwon_maskf"
 	build_path = /obj/item/clothing/mask/gas/sexyclown
-	materials = list("plastic" = 5000)
+	materials = list(MATERIAL_PLASTIC = 5000)
 
 /datum/design/item/autotailor/nonstandard/costume/clown_shoe
 	name = "Clown shoes"
 	id = "clown_shoe"
 	build_path = /obj/item/clothing/shoes/clown_shoes
-	materials = list("leather" = 2000, "plastic" = 1000)
+	materials = list(MATERIAL_LEATHER = 2000, MATERIAL_PLASTIC = 1000)
 
 /datum/design/item/autotailor/nonstandard/costume/pirate_coat
 	name = "Pirate coat"
@@ -368,19 +368,19 @@
 	name = "Pirate admiral hat"
 	id = "pirate_hat_admiral"
 	build_path = /obj/item/clothing/head/hgpiratecap
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/pirate_bandana
 	name = "Pirate bandana"
 	id = "pirate_bandana"
 	build_path = /obj/item/clothing/head/bandana
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/pirate_hat
 	name = "Pirate hat"
 	id = "pirate_hat"
 	build_path = /obj/item/clothing/head/pirate
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/old_robes
 	name = "Ancient robes"
@@ -391,13 +391,13 @@
 	name = "War-torn cloak"
 	id = "torn_cloak"
 	build_path = /obj/item/clothing/suit/unathi/mantle
-	materials = list("leather" = 4000)
+	materials = list(MATERIAL_LEATHER = 4000)
 
 /datum/design/item/autotailor/nonstandard/costume/armored_cult
 	name = "cultist robes - armored"
 	id = "armored_cult"
 	build_path = /obj/item/clothing/suit/cultrobes/costume
-	materials = list("leather" = 5000, DEFAULT_WALL_MATERIAL = 500)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_STEEL = 500)
 
 /datum/design/item/autotailor/nonstandard/costume/sorcery_cult_r
 	name = "cultist robes - red sorcerer"
@@ -418,37 +418,37 @@
 	name = "cultist hood - grey"
 	id = "cult_head_grey"
 	build_path = /obj/item/clothing/head/culthood/alt/costume
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/cult_head_red
 	name = "cultist hood - red"
 	id = "cult_head_red"
 	build_path = /obj/item/clothing/head/culthood/costume
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/cult_head_warrior
 	name = "cultist helmet - warrior"
 	id = "cult_head_warrior"
 	build_path = /obj/item/clothing/head/culthood/magus/costume
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/red_suit_armor
 	name = "Armored suit - red team"
 	id = "red_suit_armor"
 	build_path = /obj/item/clothing/suit/armor/tdome/red
-	materials = list(DEFAULT_WALL_MATERIAL = 10000)
+	materials = list(MATERIAL_STEEL = 10000)
 
 /datum/design/item/autotailor/nonstandard/costume/green_suit_armor
 	name = "Armored suit - green team"
 	id = "green_suit_armor"
 	build_path = /obj/item/clothing/suit/armor/tdome/green
-	materials = list(DEFAULT_WALL_MATERIAL = 10000)
+	materials = list(MATERIAL_STEEL = 10000)
 
 /datum/design/item/autotailor/nonstandard/costume/armor_suit_head
 	name = "Armored suit helmet"
 	id = "green_suit_head"
 	build_path = /obj/item/clothing/head/helmet/thunderdome/costume
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/cardboard
 	name = "Cardboard suit"
@@ -466,13 +466,13 @@
 	name = "Robes - embelished purple"
 	id = "purple_robe"
 	build_path = /obj/item/clothing/suit/wizrobe/psypurple/fake
-	materials = list("cloth" = 10000, "phoron" = 4000)
+	materials = list(MATERIAL_CLOTH = 10000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/nonstandard/costume/purple_robe_head
 	name = "Robes - embelished purple head"
 	id = "purple_robe_head"
 	build_path = /obj/item/clothing/head/wizard/amp/fake
-	materials = list("cloth" = 2000, "phoron" = 1000)
+	materials = list(MATERIAL_CLOTH = 2000, MATERIAL_PHORON = 1000)
 
 /datum/design/item/autotailor/nonstandard/costume/red_robe
 	name = "Robes - red"
@@ -483,7 +483,7 @@
 	name = "Robes - red hat"
 	id = "red_robe_hat"
 	build_path = /obj/item/clothing/head/wizard/red/fake
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/blue_basic_robe
 	name = "Robes - basic blue"
@@ -499,13 +499,13 @@
 	name = "Robes - blue hat"
 	id = "blue_robe_head"
 	build_path = /obj/item/clothing/head/wizard
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/blue_robe_headbeard
 	name = "Robes - blue hat w. beard"
 	id = "blue_robe_headbeard"
 	build_path = /obj/item/clothing/head/wizard/fake
-	materials = list("cloth" = 3000)
+	materials = list(MATERIAL_CLOTH = 3000)
 
 /datum/design/item/autotailor/nonstandard/costume/witch_robe
 	name = "Robes - witch"
@@ -516,91 +516,91 @@
 	name = "Robes - witch hat"
 	id = "witch_robe_head"
 	build_path = /obj/item/clothing/head/wizard/marisa/fake
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/witch_robe_redhead
 	name = "Robes - redhead witch hat"
 	id = "witch_robe_redhead"
 	build_path = /obj/item/clothing/head/witchwig
-	materials = list("cloth" = 3000)
+	materials = list(MATERIAL_CLOTH = 3000)
 
 /datum/design/item/autotailor/nonstandard/costume/rubber_human
 	name = "Rubber suit - human"
 	id = "rubber_human"
 	build_path = /obj/item/clothing/suit/rubber
-	materials = list("plastic" = 20000)
+	materials = list(MATERIAL_PLASTIC = 20000)
 
 /datum/design/item/autotailor/nonstandard/costume/human_mask_generic
 	name = "Rubber suit mask - generic human"
 	id = "human_mask_generic"
 	build_path = /obj/item/clothing/mask/rubber/species
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/human_mask_gotee
 	name = "Rubber suit mask - gotee human"
 	id = "human_mask_gotee"
 	build_path = /obj/item/clothing/mask/rubber/trasen
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/human_mask_shaved
 	name = "Rubber suit mask - shaved human"
 	id = "human_mask_shaved"
 	build_path = /obj/item/clothing/mask/rubber/turner
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/human_mask_moustache
 	name = "Rubber suit mask - moustache human"
 	id = "human_mask_moustache"
 	build_path = /obj/item/clothing/mask/rubber/admiral
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/human_mask_female
 	name = "Rubber suit mask - female human"
 	id = "human_mask_female"
 	build_path = /obj/item/clothing/mask/rubber/barros
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/rubber_skrell
 	name = "Rubber suit - skrell"
 	id = "rubber_skrell"
 	build_path = /obj/item/clothing/suit/rubber/skrell
-	materials = list("plastic" = 20000)
+	materials = list(MATERIAL_PLASTIC = 20000)
 
 /datum/design/item/autotailor/nonstandard/costume/skrell_mask
 	name = "Rubber suit mask - skrell"
 	id = "skrell_mask"
 	build_path = /obj/item/clothing/mask/rubber/species/skrell
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/rubber_lizard
 	name = "Rubber suit - lizard"
 	id = "rubber_lizard"
 	build_path = /obj/item/clothing/suit/rubber/unathi
-	materials = list("plastic" = 20000)
+	materials = list(MATERIAL_PLASTIC = 20000)
 
 /datum/design/item/autotailor/nonstandard/costume/lizard_mask
 	name = "Rubber suit mask - lizard"
 	id = "lizard_mask"
 	build_path = /obj/item/clothing/mask/rubber/species/unathi
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/rubber_cat
 	name = "Rubber suit - cat"
 	id = "rubber_cat"
 	build_path = /obj/item/clothing/suit/rubber/cat
-	materials = list("plastic" = 20000)
+	materials = list(MATERIAL_PLASTIC = 20000)
 
 /datum/design/item/autotailor/nonstandard/costume/cat_mask
 	name = "Rubber suit mask - cat"
 	id = "cat_mask"
 	build_path = /obj/item/clothing/mask/rubber/species/cat
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/rubber_sumo
 	name = "Rubber suit - sumo wrestler"
 	id = "rubber_sumo"
 	build_path = /obj/item/clothing/suit/sumo
-	materials = list("plastic" = 20000)
+	materials = list(MATERIAL_PLASTIC = 20000)
 
 /datum/design/item/autotailor/nonstandard/costume/body_monkey
 	name = "Body suit - monkey"
@@ -611,66 +611,66 @@
 	name = "Body suit mask - monkey"
 	id = "monkey_mask"
 	build_path = /obj/item/clothing/mask/gas/monkeymask
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/body_chicken
 	name = "Body suit - chicken"
 	id = "body_chicken"
 	build_path = /obj/item/clothing/suit/chickensuit
-	materials = list("plastic" = 20000)
+	materials = list(MATERIAL_PLASTIC = 20000)
 
 /datum/design/item/autotailor/nonstandard/costume/head_chicken
 	name = "Body suit hat - chicken"
 	id = "head_chicken"
 	build_path = /obj/item/clothing/head/chicken
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/ltag_blue
 	name = "Laser tag armor - blue team"
 	id = "ltag_blue"
 	build_path = /obj/item/clothing/suit/bluetag
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/ltag_red
 	name = "Laster tag armor - red team"
 	id = "ltag_red"
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/labcoat_madlad
 	name = "Labcoat - mad scientist"
 	id = "labcoat_madlad"
 	build_path = /obj/item/clothing/suit/storage/toggle/labcoat/mad
-	materials = list("leather" = 5000)
+	materials = list(MATERIAL_LEATHER = 5000)
 
 /datum/design/item/autotailor/nonstandard/costume/techno_monk
 	name = "Robes - imperium monk"
 	id = "techno_monk"
 	build_path = /obj/item/clothing/suit/imperium_monk
-	materials = list("cloth" = 10000, "phoron" = 4000)
+	materials = list(MATERIAL_CLOTH = 10000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/nonstandard/costume/hastur
 	name = "Hastur robes"
 	id = "hastur"
 	build_path = /obj/item/clothing/suit/hastur
-	materials = list("cloth" = 10000, "phoron" = 4000)
+	materials = list(MATERIAL_CLOTH = 10000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/nonstandard/costume/hastur_hood
 	name = "Hastur hood"
 	id = "hastur_hood"
 	build_path = /obj/item/clothing/head/hasturhood
-	materials = list("cloth" = 2000, "phoron" = 1000)
+	materials = list(MATERIAL_CLOTH = 2000, MATERIAL_PHORON = 1000)
 
 /datum/design/item/autotailor/nonstandard/costume/plague_doc
 	name = "Plague doctor suit"
 	id = "plague_doc"
 	build_path = /obj/item/clothing/suit/bio_suit/plaguedoctorsuit/costume
-	materials = list("leather" = 20000)
+	materials = list(MATERIAL_LEATHER = 20000)
 
 /datum/design/item/autotailor/nonstandard/costume/plague_doc_hat
 	name = "Plague doctor hat"
 	id = "plague_doc_hat"
 	build_path = /obj/item/clothing/head/plaguedoctorhat
-	materials = list("leather" = 2000)
+	materials = list(MATERIAL_LEATHER = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/hero_justice
 	name = "Justice suit"
@@ -717,25 +717,25 @@
 	name = "Rooster face mask"
 	id = "rooster_hat"
 	build_path = /obj/item/clothing/head/richard
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/pumpkin
 	name = "Carved pumpkin mask"
 	id = "pumpkin"
 	build_path = /obj/item/clothing/head/pumpkinhead
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/bday_hat
 	name = "Birthday cake hat"
 	id = "bday_hat"
 	build_path = /obj/item/clothing/head/cakehat
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/crown
 	name = "Royal crown"
 	id = "crown"
 	build_path = /obj/item/clothing/head/crown
-	materials = list(DEFAULT_WALL_MATERIAL = 2000, "phoron" = 5000)
+	materials = list(MATERIAL_STEEL = 2000, MATERIAL_PHORON = 5000)
 
 /datum/design/item/autotailor/nonstandard/costume/paper_crown
 	name = "Paper crown - rainbow"
@@ -763,7 +763,7 @@
 	name = "Powdered wig"
 	id = "wig"
 	build_path = /obj/item/clothing/head/powdered_wig
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/big_wig
 	name = "Philospher's wig"
@@ -774,61 +774,61 @@
 	name = "Cueball - white"
 	id = "white_ball"
 	build_path = /obj/item/clothing/head/cueball
-	materials = list("plastic" = 10000)
+	materials = list(MATERIAL_PLASTIC = 10000)
 
 /datum/design/item/autotailor/nonstandard/costume/wresling_luchador
 	name = "Wreslting mask - luchador"
 	id = "wresling_luchador"
 	build_path = /obj/item/clothing/mask/luchador
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/wresling_rudos
 	name = "Wresling mask - rudos"
 	id = "wresling_rudos"
 	build_path = /obj/item/clothing/mask/luchador/rudos
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/wresling_tecnicos
 	name = "Wresling mask - tecnicos"
 	id = "wresling_technicos"
 	build_path = /obj/item/clothing/mask/luchador/tecnicos
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/wresling_belt
 	name = "Championship belt"
 	id = "wresling_belt"
 	build_path = /obj/item/weapon/storage/belt/champion
-	materials = list("leather" = 2000, "phoron" = 20000)
+	materials = list(MATERIAL_LEATHER = 2000, MATERIAL_PHORON = 20000)
 
 /datum/design/item/autotailor/nonstandard/costume/pig_mask
 	name = "Entertainment - pig"
 	id = "pig_mask"
 	build_path = /obj/item/clothing/mask/pig
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/horse_mask
 	name = "Entertainment - silly horse"
 	id = "horse_mask"
 	build_path = /obj/item/clothing/mask/horsehead
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/fake_moustache
 	name = "Entertainment - moustache"
 	id = "fake_moustache"
 	build_path = /obj/item/clothing/mask/fakemoustache
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/tribal
 	name = "Tribal mask"
 	id = "tribal"
 	build_path = /obj/item/clothing/mask/spirit
-	materials = list("wood" = 5000)
+	materials = list(MATERIAL_WOOD = 5000)
 
 /datum/design/item/autotailor/nonstandard/costume/slime_green
 	name = "Slime hat - green"
 	id = "slime_green"
 	build_path = /obj/item/clothing/head/collectable/slime
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 //
 //hazard suits
@@ -840,100 +840,100 @@
 	name = "Biosuit - orange stripe"
 	id = "bio_orange"
 	build_path = /obj/item/clothing/suit/bio_suit/general
-	materials = list("leather" = 20000, "plasteel" = 30000)
+	materials = list(MATERIAL_LEATHER = 20000, MATERIAL_PLASTEEL = 30000)
 
 /datum/design/item/autotailor/nonstandard/hazard/biohood_orange
 	name = "Biosuit hood - orange stripe"
 	id = "biohood_orange"
 	build_path = /obj/item/clothing/head/bio_hood/general
-	materials = list("leather" = 5000, "plasteel" = 10000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_PLASTEEL = 10000)
 
 /datum/design/item/autotailor/nonstandard/hazard/bio_blue
 	name = "Biosuit - blue stripe"
 	id = "bio_blue"
 	build_path = /obj/item/clothing/suit/bio_suit/cmo
-	materials = list("leather" = 20000, "plasteel" = 30000)
+	materials = list(MATERIAL_LEATHER = 20000, MATERIAL_PLASTEEL = 30000)
 
 /datum/design/item/autotailor/nonstandard/hazard/biohood_blue
 	name = "Biosuit hood - blue stripe"
 	id = "biohood_blue"
 	build_path = /obj/item/clothing/head/bio_hood/cmo
-	materials = list("leather" = 5000, "plasteel" = 10000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_PLASTEEL = 10000)
 
 /datum/design/item/autotailor/nonstandard/hazard/bio_green
 	name = "Biosuit - green stripe"
 	id = "bio_green"
 	build_path = /obj/item/clothing/suit/bio_suit/virology
-	materials = list("leather" = 20000, "plasteel" = 30000)
+	materials = list(MATERIAL_LEATHER = 20000, MATERIAL_PLASTEEL = 30000)
 
 /datum/design/item/autotailor/nonstandard/hazard/biohood_green
 	name = "Biosuit hood - green stripe"
 	id = "biohood_green"
 	build_path = /obj/item/clothing/head/bio_hood/virology
-	materials = list("leather" = 5000, "plasteel" = 10000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_PLASTEEL = 10000)
 
 /datum/design/item/autotailor/nonstandard/hazard/bio_purp
 	name = "Biosuit - purple"
 	id = "bio_purp"
 	build_path = /obj/item/clothing/suit/bio_suit/scientist
-	materials = list("leather" = 20000, "plasteel" = 30000)
+	materials = list(MATERIAL_LEATHER = 20000, MATERIAL_PLASTEEL = 30000)
 
 /datum/design/item/autotailor/nonstandard/hazard/biohood_purple
 	name = "Biosuit hood - purple"
 	id = "biohood_purple"
 	build_path = /obj/item/clothing/head/bio_hood/scientist
-	materials = list("leather" = 5000, "plasteel" = 10000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_PLASTEEL = 10000)
 
 /datum/design/item/autotailor/nonstandard/hazard/bio_purpgrey
 	name = "Biosuit - grey w. purple stripe"
 	id = "bio_purpgrey"
 	build_path = /obj/item/clothing/suit/bio_suit/janitor
-	materials = list("leather" = 20000, "plasteel" = 30000)
+	materials = list(MATERIAL_LEATHER = 20000, MATERIAL_PLASTEEL = 30000)
 
 /datum/design/item/autotailor/nonstandard/hazard/biohood_purpgrey
 	name = "Biosuit hood - grey w. purple stripe"
 	id = "biohood_purpgrey"
 	build_path = /obj/item/clothing/head/bio_hood/janitor
-	materials = list("leather" = 5000, "plasteel" = 10000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_PLASTEEL = 10000)
 
 /datum/design/item/autotailor/nonstandard/hazard/bio_red
 	name = "Biosuit - red stripe"
 	id = "bio_red"
 	build_path = /obj/item/clothing/suit/bio_suit/security
-	materials = list("leather" = 20000, "plasteel" = 30000)
+	materials = list(MATERIAL_LEATHER = 20000, MATERIAL_PLASTEEL = 30000)
 
 /datum/design/item/autotailor/nonstandard/hazard/biohood_red
 	name = "Biosuit hood - red stripe"
 	id = "biohood_red"
 	build_path = /obj/item/clothing/head/bio_hood/security
-	materials = list("leather" = 5000, "plasteel" = 10000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_PLASTEEL = 10000)
 
 /datum/design/item/autotailor/nonstandard/hazard/bio_adv
 	name = "Biosuit - advanced"
 	id = "bio_adv"
 	build_path = /obj/item/clothing/suit/bio_suit/anomaly
-	materials = list("leather" = 20000, "plasteel" = 30000)
+	materials = list(MATERIAL_LEATHER = 20000, MATERIAL_PLASTEEL = 30000)
 
 /datum/design/item/autotailor/nonstandard/hazard/biohood_adv
 	name = "Biosuit hood - advanced"
 	id = "biohood_adv"
 	build_path = /obj/item/clothing/head/bio_hood/anomaly
-	materials = list("leather" = 5000, "plasteel" = 10000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_PLASTEEL = 10000)
 
 /datum/design/item/autotailor/nonstandard/hazard/rad_yellow
 	name = "Radiation suit - yellow"
 	id = "rad_yellow"
 	build_path = /obj/item/clothing/suit/radiation
-	materials = list("leather" = 20000, "osmium-carbide plasteel" = 30000)
+	materials = list(MATERIAL_LEATHER = 20000, MATERIAL_OSMIUM_CARBIDE_PLASTEEL = 30000)
 
 /datum/design/item/autotailor/nonstandard/hazard/radhood_yellow
 	name = "Radiation hood - yellow"
 	id = "radhood_yellow"
 	build_path = /obj/item/clothing/head/radiation
-	materials = list("leather" = 5000, "osmium-carbide plasteel" = 10000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_OSMIUM_CARBIDE_PLASTEEL = 10000)
 
 /datum/design/item/autotailor/nonstandard/hazard/firesuit
 	name = "Firesuit"
 	id = "firesuit"
 	build_path = /obj/item/clothing/suit/fire/firefighter
-	materials = list("leather" = 20000, "osmium-carbide plasteel" = 30000)
+	materials = list(MATERIAL_LEATHER = 20000, MATERIAL_OSMIUM_CARBIDE_PLASTEEL = 30000)

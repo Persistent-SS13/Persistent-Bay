@@ -19,7 +19,6 @@ var/list/solars_list = list()
 	var/sunfrac = 0
 	var/adir = SOUTH // actual dir
 	var/ndir = SOUTH // target dir
-	var/turn_angle = 0
 	var/obj/machinery/power/solar_control/control = null
 
 /obj/machinery/power/solar/drain_power()
@@ -36,8 +35,6 @@ var/list/solars_list = list()
 
 //set the control of the panel to a given computer if closer than SOLAR_MAX_DIST
 /obj/machinery/power/solar/proc/set_control(var/obj/machinery/power/solar_control/SC)
-	if(SC && (get_dist(src, SC) > SOLAR_MAX_DIST))
-		return 0
 	control = SC
 	return 1
 
@@ -56,8 +53,6 @@ var/list/solars_list = list()
 	if(S.glass_type == /obj/item/stack/material/glass/reinforced) //if the panel is in reinforced glass
 		health *= 2 								 //this need to be placed here, because panels already on the map don't have an assembly linked to
 	update_icon()
-
-
 
 /obj/machinery/power/solar/attackby(obj/item/weapon/W, mob/user)
 
@@ -195,11 +190,9 @@ var/list/solars_list = list()
 	obscured = 0		// if hit the edge or stepped 20 times, not obscured
 	update_solar_exposure()
 
-
 //
 // Solar Assembly - For construction of solar arrays.
 //
-
 /obj/item/solar_assembly
 	name = "solar panel assembly"
 	desc = "A solar panel assembly kit, allows constructions of a solar panel, or with a tracking circuit board, a solar tracker."
@@ -221,7 +214,6 @@ var/list/solars_list = list()
 		var/obj/item/stack/material/S = new glass_type(src.loc)
 		S.amount = 2
 		glass_type = null
-
 
 /obj/item/solar_assembly/attackby(var/obj/item/weapon/W, var/mob/user)
 
@@ -274,7 +266,6 @@ var/list/solars_list = list()
 //
 // Solar Control Computer
 //
-
 /obj/machinery/power/solar_control
 	name = "solar panel control"
 	desc = "A controller for solar panel arrays."
@@ -294,14 +285,35 @@ var/list/solars_list = list()
 	var/nexttime = 0		// time for a panel to rotate of 1° in manual tracking
 	var/obj/machinery/power/tracker/connected_tracker = null
 	var/list/connected_panels = list()
+
+/obj/machinery/power/solar_control/Initialize()
+	. = ..()
+	if(map_storage_loaded)
+		. = INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/power/solar_control/LateInitialize()
+	..()
+	spawn(5)
+		connect_to_network()
+		if(!connect_to_network())
+			return
+		search_for_connected()
+		if(connected_tracker && track == 2)
+			connected_tracker.set_angle(GLOB.sun.angle)
+		src.set_panels(cdir)
+
+
 /obj/machinery/power/solar_control/after_load()
 	..()
-	src.search_for_connected()
-	if(connected_tracker && track == 2)
-		connected_tracker.set_angle(GLOB.sun.angle)
-	src.set_panels(cdir)
+
+
 /obj/machinery/power/solar_control/drain_power()
 	return -1
+
+/obj/machinery/power/solar_control/proc/connect_panel(var/obj/machinery/power/solar/S)
+	if(!S.control) //i.e unconnected
+		S.set_control(src)
+		connected_panels |= S
 
 /obj/machinery/power/solar_control/Destroy()
 	for(var/obj/machinery/power/solar/M in connected_panels)
@@ -325,10 +337,7 @@ var/list/solars_list = list()
 	if(powernet)
 		for(var/obj/machinery/power/M in powernet.nodes)
 			if(istype(M, /obj/machinery/power/solar))
-				var/obj/machinery/power/solar/S = M
-				if(!S.control) //i.e unconnected
-					S.set_control(src)
-					connected_panels |= S
+				connect_panel(M)
 			else if(istype(M, /obj/machinery/power/tracker))
 				if(!connected_tracker) //if there's already a tracker connected to the computer don't add another
 					var/obj/machinery/power/tracker/T = M
@@ -338,7 +347,7 @@ var/list/solars_list = list()
 
 //called by the sun controller, update the facing angle (either manually or via tracking) and rotates the panels accordingly
 /obj/machinery/power/solar_control/proc/update()
-	if(stat & (NOPOWER | BROKEN))
+	if(inoperable())
 		return
 
 	switch(track)
@@ -351,12 +360,6 @@ var/list/solars_list = list()
 
 	set_panels(cdir)
 	updateDialog()
-
-
-/obj/machinery/power/solar_control/Initialize()
-	. = ..()
-	if(!connect_to_network()) return
-	set_panels(cdir)
 
 /obj/machinery/power/solar_control/update_icon()
 	if(stat & BROKEN)
@@ -372,10 +375,6 @@ var/list/solars_list = list()
 	if(cdir > -1)
 		overlays += image('icons/obj/computer.dmi', "solcon-o", FLY_LAYER, angle2dir(cdir))
 	return
-
-/obj/machinery/power/solar_control/attack_hand(mob/user)
-	if(!..())
-		interact(user)
 
 /obj/machinery/power/solar_control/interact(mob/user)
 
@@ -404,7 +403,6 @@ var/list/solars_list = list()
 	var/datum/browser/popup = new(user, "solar", name)
 	popup.set_content(t)
 	popup.open()
-
 	return
 
 /obj/machinery/power/solar_control/attackby(I as obj, user as mob)
@@ -442,7 +440,7 @@ var/list/solars_list = list()
 	lastgen = gen
 	gen = 0
 
-	if(stat & (NOPOWER | BROKEN))
+	if(inoperable())
 		return
 
 	if(connected_tracker) //NOTE : handled here so that we don't add trackers to the processing list
@@ -542,7 +540,6 @@ var/list/solars_list = list()
 //
 // MISC
 //
-
 /obj/item/weapon/paper/solar
 	name = "paper- 'Going green! Setup your own solar array instructions.'"
 	info = "<h1>Welcome</h1><p>At greencorps we love the environment, and space. With this package you are able to help mother nature and produce energy without any usage of fossil fuel or phoron! Singularity energy is dangerous while solar energy is safe, which is why it's better. Now here is how you setup your own solar array.</p><p>You can make a solar panel by wrenching the solar assembly onto a cable node. Adding a glass panel, reinforced or regular glass will do, will finish the construction of your solar panel. It is that easy!</p><p>Now after setting up 19 more of these solar panels you will want to create a solar tracker to keep track of our mother nature's gift, the GLOB.sun. These are the same steps as before except you insert the tracker equipment circuit into the assembly before performing the final step of adding the glass. You now have a tracker! Now the last step is to add a computer to calculate the sun's movements and to send commands to the solar panels to change direction with the GLOB.sun. Setting up the solar computer is the same as setting up any computer, so you should have no trouble in doing that. You do need to put a wire node under the computer, and the wire needs to be connected to the tracker.</p><p>Congratulations, you should have a working solar array. If you are having trouble, here are some tips. Make sure all solar equipment are on a cable node, even the computer. You can always deconstruct your creations if you make a mistake.</p><p>That's all to it, be safe, be green!</p>"

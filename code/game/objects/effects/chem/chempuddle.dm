@@ -5,6 +5,7 @@
 	density = 0
 	anchored = 1
 	light_range = 1
+	should_save = 1
 
 	icon = 'icons/effects/puddle_chem.dmi'
 	icon_state = "def1"

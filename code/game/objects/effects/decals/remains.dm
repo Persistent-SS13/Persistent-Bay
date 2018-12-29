@@ -4,6 +4,7 @@
 	icon = 'icons/effects/blood.dmi'
 	icon_state = "remains"
 	anchored = 0
+	should_save = 1
 
 /obj/item/remains/human
 	desc = "They look like human remains. They have a strange aura about them."

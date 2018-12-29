@@ -10,13 +10,16 @@
 	var/list/blend_objects = newlist() // Objects which to blend with
 	var/list/noblend_objects = newlist() //Objects to avoid blending with (such as children of listed blend objects.
 
+/obj/structure/New()
+	..()
+	ADD_SAVED_VAR(anchored)
+	ADD_SAVED_VAR(parts)
+
 /obj/structure/after_load()
 	update_connections(1)
 	..()
 
 /obj/structure/Destroy()
-	if(parts)
-		new parts(loc)
 	. = ..()
 
 /obj/structure/attack_hand(mob/user)
@@ -113,3 +116,32 @@
 
 	connections = dirs_to_corner_states(dirs)
 	other_connections = dirs_to_corner_states(other_dirs)
+
+/obj/structure/proc/dismantle()
+	if(parts)
+		new parts(loc)
+
+/obj/structure/proc/default_deconstruction_screwdriver(var/obj/item/weapon/screwdriver/S, var/mob/living/user, var/deconstruct_time = null)
+	if(!istype(S))
+		return FALSE
+	src.add_fingerprint(user)
+	user.visible_message(SPAN_NOTICE("You begin to unscrew \the [src]."), SPAN_NOTICE("[user] begins to unscrew \the [src]."))
+	playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
+	if(do_after(usr, deconstruct_time? deconstruct_time : 6 SECONDS, src) && src)
+		user.visible_message(SPAN_NOTICE("You finish unscrewing \the [src]."), SPAN_NOTICE("[user] finishes unscrewing \the [src]."))
+		dismantle()
+		return TRUE
+	return FALSE
+
+/obj/structure/proc/default_deconstruction_wrench(var/obj/item/weapon/wrench/W, var/mob/living/user, var/deconstruct_time = null)
+	if(!istype(W))
+		return FALSE
+	src.add_fingerprint(user)
+	to_chat(usr, SPAN_NOTICE("You begin to dismantle \the [src]."))
+	playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
+	if(do_after(usr, deconstruct_time? deconstruct_time : 4 SECONDS, src) && src)
+		to_chat(usr, SPAN_NOTICE("You finish dismantling \the [src]."))
+		dismantle()
+		return TRUE
+	return FALSE
+

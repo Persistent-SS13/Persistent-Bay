@@ -1,5 +1,3 @@
-#define CREMATORIUM_BURN_TIME_PER_CORPSE 30 SECONDS
-#define CREMATORIUM_BURN_TIME_PER_MISC 	 10 SECONDS
 #define INCINERATOR_BURN_TIME 	 		 30 SECONDS
 #define INCINERATOR_CHECK_INTERVAL		 5 SECONDS
 var/const/RADIO_INCINERATORS = "radio_incinerators"
@@ -14,7 +12,7 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 	icon_state = "crema1"
 	density = 1
 	anchored = TRUE
-	use_power = USE_POWER_IDLE
+	use_power = POWER_USE_IDLE
 	idle_power_usage = 10 //10 Watts for idle
 	active_power_usage = 4 KILOWATTS //4,000w when active
 	var/incinerating = FALSE
@@ -146,7 +144,7 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 /obj/machinery/incinerator/proc/incinerate_start()
 	if(incinerating)
 		return
-	update_use_power(USE_POWER_ACTIVE)
+	update_use_power(POWER_USE_ACTIVE)
 	incinerating = TRUE
 	playsound(src.loc, 'sound/machines/flameon.ogg', 50, 0, 8, 3)
 	update_icon()
@@ -156,7 +154,7 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 		M.show_message(SPAN_WARNING("You hear a roar as the [src] activates."), 1)
 
 /obj/machinery/incinerator/proc/incinerate_end()
-	update_use_power(USE_POWER_IDLE)
+	update_use_power(POWER_USE_IDLE)
 	burnend = 0
 	incinerating = FALSE
 	playsound(src.loc, 'sound/machines/flamehiss.ogg', 50, 0, 8, 3)
@@ -393,7 +391,5 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 			if ((B.client && !( B.blinded )))
 				to_chat(B, text("<span class='warning'>[] stuffs [] into []!</span>", user, O, src))
 
-#undef CREMATORIUM_BURN_TIME_PER_CORPSE
-#undef CREMATORIUM_BURN_TIME_PER_MISC
 #undef INCINERATOR_BURN_TIME
 #undef INCINERATOR_CHECK_INTERVAL

@@ -115,7 +115,7 @@
 	singular_name = "brown carpet"
 	desc = "A piece of brown carpet."
 	icon_state = "tile_carpetbrown"
-	matter = list("cloth" = 900)
+	matter = list(MATERIAL_CLOTH = 900)
 
 /obj/item/stack/tile/carpet/fifty
 	amount = 50

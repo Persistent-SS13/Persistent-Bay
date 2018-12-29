@@ -5,23 +5,28 @@
 	icon_state = "fire_bitem"
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	var/build_machine_type
-	var/refund_amt = 2
-	var/refund_material_type = /obj/item/stack/material/steel
 	var/reverse = 0 //if resulting object faces opposite its dir (like light fixtures)
-	matter = list(MATERIAL_STEEL = 2000)
+	matter = list(MATERIAL_STEEL = 2 * SHEET_MATERIAL_AMOUNT)
 
 /obj/item/frame/plastic
-	refund_material_type = /obj/item/stack/material/plastic
+	obj_flags = 0
+	matter = list(MATERIAL_PLASTIC = 2 * SHEET_MATERIAL_AMOUNT)
 
 /obj/item/frame/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(isWrench(W))
-		new refund_material_type( get_turf(src.loc), refund_amt)
+		for(var/material/key in matter)
+			var/material/M = SSmaterials.get_material_by_name(key)
+			if(M && M.units_per_sheet)
+				M.place_sheet(get_turf(src.loc), matter[key] / M.units_per_sheet)
+			else
+				log_debug("[type] couldn't output material [key]! Possibly undefined material.")
 		qdel(src)
 		return
 	..()
 
 /obj/item/frame/proc/try_build(turf/on_wall)
 	if(!build_machine_type)
+		log_debug("[name]([type]) was placed but has no resulting machine type set..")
 		return
 
 	if (get_dist(on_wall,usr)>1)
@@ -57,7 +62,6 @@
 	desc = "Used for building fire alarms."
 	icon = 'icons/obj/monitors.dmi'
 	icon_state = "firex"
-	refund_amt = 2
 	build_machine_type = /obj/machinery/firealarm
 
 /obj/item/frame/air_alarm
@@ -65,7 +69,6 @@
 	desc = "Used for building air alarms."
 	icon = 'icons/obj/monitors.dmi'
 	icon_state = "alarmx"
-	refund_amt = 2
 	build_machine_type = /obj/machinery/alarm
 
 /obj/item/frame/light
@@ -73,31 +76,29 @@
 	desc = "Used for building lights."
 	icon = 'icons/obj/lighting.dmi'
 	icon_state = "tube-construct-item"
-	refund_amt = 2
 	build_machine_type = /obj/machinery/light_construct
 	reverse = 1
 
 /obj/item/frame/light/small
 	name = "small light fixture frame"
 	icon_state = "bulb-construct-item"
-	refund_amt = 1
+	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
 	build_machine_type = /obj/machinery/light_construct/small
-/*
-/obj/item/frame/driver_button
-	name = "mass driver button frame"
-	desc = "Used for repairing or building mass driver buttons"
+
+/obj/item/frame/button
+	name = "button frame"
+	desc = "Used for building buttons"
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "launcherbtt_frame"
-	refund_amt = 1
-//	build_machine_type =
-*/
+	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
+	build_machine_type = /obj/machinery/button
 
 /obj/item/frame/light_switch
 	name = "light switch frame"
 	desc = "Used for repairing or building light switches"
 	icon = 'icons/obj/power.dmi'
 	icon_state = "light-p"
-	refund_amt = 1
+	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
 	build_machine_type = /obj/machinery/light_switch
 
 /obj/item/frame/intercom
@@ -105,7 +106,6 @@
 	desc = "Used for building intercoms"
 	icon = 'icons/obj/radio.dmi'
 	icon_state = "intercom-p"
-	refund_amt = 2
 	build_machine_type = /obj/item/device/radio/intercom
 
 /obj/item/frame/noticeboard
@@ -113,8 +113,7 @@
 	desc = "Used for building NoticeBoards"
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "nboard00"
-	refund_amt = 2
-	refund_material_type = /obj/item/stack/material/cardboard
+	matter = list(MATERIAL_WOOD = 2 * SHEET_MATERIAL_AMOUNT)
 	build_machine_type = /obj/structure/noticeboard
 
 /obj/item/frame/noticeboard/try_build(turf/on_wall)
@@ -133,8 +132,7 @@
 	desc = "Used for building Mirrors"
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "mirror"
-	refund_amt = 2
-	refund_material_type = /obj/item/stack/material/silver
+	matter = list(MATERIAL_SILVER = 2 * SHEET_MATERIAL_AMOUNT)
 	build_machine_type = /obj/structure/mirror
 
 /obj/item/frame/plastic/shower
@@ -142,16 +140,13 @@
 	desc = "Used for building Showers"
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "shower"
-	refund_amt = 2
 	build_machine_type = /obj/machinery/shower
-
 
 /obj/item/frame/wallflash
 	name = "Wall Flash Frame"
 	desc = "Used for building Wall Mounted Flashes"
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "mflash1"
-	refund_amt = 2
 	build_machine_type = /obj/machinery/flasher
 
 /obj/item/frame/oxypump
@@ -159,7 +154,7 @@
 	desc = "Used for building wall-mounted oxygen pumps"
 	icon = 'icons/obj/walllocker.dmi'
 	icon_state = "emerg_open"
-	refund_amt = 5
+	matter = list(MATERIAL_STEEL = 5 * SHEET_MATERIAL_AMOUNT)
 	build_machine_type = /obj/machinery/oxygen_pump
 
 /obj/item/frame/anestheticpump
@@ -167,7 +162,7 @@
 	desc = "Used for building wall-mounted oxygen pumps"
 	icon = 'icons/obj/walllocker.dmi'
 	icon_state = "anesthetic_tank_open"
-	refund_amt = 5
+	matter = list(MATERIAL_STEEL = 5 * SHEET_MATERIAL_AMOUNT)
 	build_machine_type = /obj/machinery/oxygen_pump/anesthetic
 	reverse = 1
 
@@ -176,7 +171,6 @@
 	desc = "Used for building Bar Signs"
 	icon = 'icons/obj/barsigns.dmi'
 	icon_state = "empty"
-	refund_amt = 2
 	build_machine_type = /obj/structure/sign/double/barsign
 
 /obj/item/frame/plastic/sink
@@ -184,7 +178,6 @@
 	desc = "Used for building Sinks"
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "sink"
-	refund_amt = 2
 	build_machine_type = /obj/structure/sink
 
 /obj/item/frame/plastic/urinal
@@ -192,7 +185,6 @@
 	desc = "Used for building urinals"
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "urinal"
-	refund_amt = 2
 	build_machine_type = /obj/structure/urinal
 
 /obj/item/frame/plastic/kitchensink
@@ -200,16 +192,33 @@
 	desc = "Used for building Kitchen Sinks"
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "sink_alt"
-	refund_amt = 2
 	build_machine_type = /obj/structure/sink/kitchen
+
+/obj/item/frame/plastic/virusfoodtank
+	name = "Virus Food Tank Frame"
+	desc = "Used for building wall-mounted virus food tanks."
+	icon = 'icons/obj/objects.dmi'
+	icon_state = "virusfoodtank"
+	matter = list(MATERIAL_PLASTIC = 5 * SHEET_MATERIAL_AMOUNT)
+	build_machine_type = /obj/structure/reagent_dispensers/virusfood/empty
 
 /obj/item/frame/newscaster
 	name = "News Caster Frame"
 	desc = "Used for building News Casters"
 	icon = 'icons/obj/terminals.dmi'
 	icon_state = "newscaster_off"
-	refund_amt = 2
 	build_machine_type = /obj/machinery/newscaster
+
+/obj/item/frame/newscaster/try_build(turf/on_wall)
+	if (get_dist(on_wall,usr)>1)
+		return
+	var/ndir = get_dir(usr,on_wall)
+	if (!(ndir in GLOB.cardinal))
+		return
+	var/turf/loc = get_turf(usr)
+
+	new /obj/machinery/newscaster(loc, 1, src, ndir)
+	qdel(src)
 
 /obj/item/frame/atm
 	name = "atm"
@@ -217,6 +226,7 @@
 	icon = 'icons/obj/terminals.dmi'
 	icon_state = "atm_frame"
 	build_machine_type = /obj/machinery/atm
+	reverse = 1
 
 /obj/item/frame/status_display
 	name = "status display frame"
@@ -231,6 +241,15 @@
 	icon = 'icons/obj/terminals.dmi'
 	icon_state = "req_comp_off"
 	build_machine_type = /obj/machinery/requests_console
+	reverse = 1
+
+/obj/item/frame/sparker
+	name = "mounted igniter"
+	desc = "A frame for a wall mounted igniter."
+	icon = 'icons/obj/stationobjs.dmi'
+	icon_state = "migniter"
+	build_machine_type = /obj/machinery/sparker
+	reverse = 1
 
 
 //---------------------------------

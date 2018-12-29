@@ -21,6 +21,7 @@
 	power_channel = ENVIRON
 	idle_power_usage = 10
 	active_power_usage = 120 // No idea what the realistic amount would be.
+	frame_type = /obj/item/frame/oxypump
 
 /obj/machinery/oxygen_pump/filled/New()
 	..()
@@ -261,3 +262,4 @@
 	icon_state_closed = "anesthetic_tank"
 	icon_state_open = "anesthetic_tank_open"
 	mask_type = /obj/item/clothing/mask/breath/anesthetic
+	frame_type = /obj/item/frame/anestheticpump

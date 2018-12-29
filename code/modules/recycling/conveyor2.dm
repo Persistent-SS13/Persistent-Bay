@@ -8,6 +8,7 @@
 	desc = "A conveyor belt."
 	layer = BELOW_OBJ_LAYER	// so they appear under stuff
 	anchored = 1
+	active_power_usage = 20 //Watts
 	var/operating = 0	// 1 if running forward, -1 if backwards, 0 if off
 	var/operable = 1	// true if can operate (no broken segments in this belt run)
 	var/forwards		// this is the default (forward) direction, set by the map dir
@@ -16,11 +17,10 @@
 
 	var/list/affecting	// the list of all items that will be moved this ptick
 	var/id = ""			// the control ID	- must match controller ID
+	var/time_next_move = 1 //The time when to next move our load
 
-/obj/machinery/conveyor/centcom_auto
-	id = "round_end_belt"
 
-	// create a conveyor
+// create a conveyor
 /obj/machinery/conveyor/New(loc, newdir, on = 0)
 	..(loc)
 	if(newdir)
@@ -36,8 +36,6 @@
 	if(on)
 		operating = 1
 		setmove()
-
-
 
 /obj/machinery/conveyor/proc/setmove()
 	if(operating == 1)
@@ -61,7 +59,7 @@
 	// machine process
 	// move items to the target location
 /obj/machinery/conveyor/Process()
-	if(stat & (BROKEN | NOPOWER))
+	if(inoperable())
 		return
 	if(!operating)
 		return
@@ -70,10 +68,9 @@
 		operating = 0
 		stat = 1
 		return
-		
-	use_power(100)
+
 	affecting = loc.contents - src		// moved items will be all in loc
-	spawn(1)	// slight delay to prevent infinite propagation due to map order	//TODO: please no spawn() in process(). It's a very bad idea
+	if(world.time > time_next_move)// slight delay to prevent infinite propagation due to map order	//TODO: please no spawn() in process(). It's a very bad idea
 		var/items_moved = 0
 		for(var/atom/movable/A in affecting)
 			if(!A.anchored)
@@ -82,9 +79,25 @@
 					items_moved++
 			if(items_moved >= 10)
 				break
+		time_next_move = world.time + 1
 
 // attack with item, place item on conveyor
 /obj/machinery/conveyor/attackby(var/obj/item/I, mob/user)
+	if(isMultitool(I))
+		var/obj/item/device/multitool/mt = I
+		var/obj/machinery/conveyor/M = mt.get_buffer(/obj/machinery/conveyor)
+		var/obj/machinery/conveyor_switch/mach = mt.get_buffer(/obj/machinery/conveyor_switch)
+		if(mach)
+			mt.set_buffer(null)
+			src.id = mach.id
+			to_chat(user, "<span class='notice'>You connect \the [src] to \the [mach]!</span>")
+		else if(M == src)
+			mt.set_buffer(null)
+			to_chat(user, SPAN_NOTICE("You clear \the [mt]'s buffer."))
+		else
+			mt.set_buffer(src)
+			to_chat(user, "<span class='notice'>You set \the [mt]'s buffer to \the [src]!</span>")
+		return
 	if(isCrowbar(I))
 		if(!(stat & BROKEN))
 			var/obj/item/conveyor_construct/C = new/obj/item/conveyor_construct(src.loc)
@@ -131,7 +144,7 @@
 	C = locate() in get_step(src, turn(dir,180))
 	if(C)
 		C.set_operable(turn(dir,180), id, 0)
-
+	..()
 
 //set the operable var if ID matches, propagating in the given direction
 
@@ -179,11 +192,12 @@
 		id = newid
 	update_icon()
 
-	spawn(5)		// allow map load
-		conveyors = list()
-		for(var/obj/machinery/conveyor/C in world)
-			if(C.id == id)
-				conveyors += C
+/obj/machinery/conveyor_switch/Initialize()
+	. = ..()
+	conveyors = list()
+	for(var/obj/machinery/conveyor/C in world)
+		if(C.id == id)
+			conveyors += C
 
 // update the icon depending on the position
 
@@ -242,6 +256,22 @@
 		transfer_fingerprints_to(C)
 		to_chat(user, "<span class='notice'>You deattach the conveyor switch.</span>")
 		qdel(src)
+	if(isMultitool(I))
+		var/obj/item/device/multitool/mt = I
+		var/obj/machinery/conveyor_switch/M = mt.get_buffer(/obj/machinery/conveyor_switch)
+		var/obj/machinery/conveyor/mach = mt.get_buffer(/obj/machinery/conveyor)
+		if(mach)
+			mach.id = src.id
+			conveyors |= mach
+			mt.set_buffer(null)
+			to_chat(user, SPAN_NOTICE("You connect \the [src] to \the [mach]!"))
+		else if(M == src)
+			mt.set_buffer(null)
+			to_chat(user, SPAN_NOTICE("You clear \the [mt]'s buffer."))
+		else
+			mt.set_buffer(src)
+			to_chat(user, SPAN_NOTICE("You set \the [mt]'s buffer to \the [src]!"))
+		return
 
 /obj/machinery/conveyor_switch/oneway
 	var/convdir = 1 //Set to 1 or -1 depending on which way you want the convayor to go. (In other words keep at 1 and set the proper dir on the belts.)

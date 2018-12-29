@@ -100,7 +100,7 @@ Class Procs:
 	var/stat = 0
 	var/emagged = 0
 	var/malf_upgraded = 0
-	var/use_power = 1
+	var/use_power = POWER_USE_IDLE
 		//0 = dont run the auto
 		//1 = run auto, use idle
 		//2 = run auto, use active

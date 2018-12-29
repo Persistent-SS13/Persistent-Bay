@@ -47,6 +47,7 @@
 	var/const/STATUS_DISPLAY_TIME = 4
 	var/const/STATUS_DISPLAY_IMAGE = 5
 	var/const/STATUS_DISPLAY_CUSTOM = 99
+	
 
 /obj/machinery/status_display/New()
 	..()

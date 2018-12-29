@@ -39,12 +39,6 @@
 		usr << browse(null, "window=stack")
 	return ..()
 
-/obj/item/stack/proc/set_amount(var/newamount)
-	amount = max(1, min(newamount, max_amount))
-	update_material_value()
-	update_strings()
-	update_icon()
-
 //Called whenever stacked amount changes
 /obj/item/stack/proc/update_material_value()
 	if(matter)
@@ -302,6 +296,13 @@
 		return newstack
 	return null
 
+
+/obj/item/stack/proc/set_amount(var/newamount)
+	amount = max(1, min(newamount, max_amount))
+	update_material_value()
+	update_strings()
+	update_icon()
+
 /obj/item/stack/proc/get_amount()
 	if(uses_charge)
 		if(!synths || synths.len < uses_charge)
@@ -353,15 +354,17 @@
 	var/list/stacks = list()
 	if(!location)
 		location = src.loc
-	for (var/obj/item/stack/item in location)
-		if(stacks_can_merge(item))
-			stacks += item
-	for (var/obj/item/stack/item in stacks)
-		if (item==src)
+	for (var/obj/item/stack/I in location)
+		if(stacks_can_merge(I))
+			stacks += I
+	for (var/obj/item/stack/I in stacks)
+		if (I==src)
 			continue
-		src.transfer_to(item)
+		src.transfer_to(I)
 		if(!amount)
 			break
+	if(!stacks.len)
+		src.forceMove(location)
 	src.update_icon()
 	src.update_material_value()
 
@@ -408,7 +411,7 @@
 
 //Override this to check if another stack can merge with this one depending on specific criteras
 /obj/item/stack/proc/stacks_can_merge(var/obj/item/stack/other)
-	return TRUE
+	return (src.get_amount() < src.get_max_amount() && other.get_amount() < other.get_max_amount() && src.stacktype == other.stacktype)
 
 /obj/item/stack/proc/update_strings() //Hacky way to update material stacks matter values
 /*

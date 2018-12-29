@@ -36,7 +36,7 @@
 	damage_type = BURN
 	nodamage = 1
 	check_armour = "energy"
-	var/temperature = 300
+	temperature = T0C - 80
 
 
 	on_hit(var/atom/target, var/blocked = 0)//These two could likely check temp protection on the mob

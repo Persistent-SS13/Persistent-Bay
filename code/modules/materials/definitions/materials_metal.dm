@@ -154,6 +154,7 @@
 	ore_scan_icon = "mineral_rare"
 	ore_icon_overlay = "gems"
 	melting_point = 14
+	energy_combustion = 141.86
 
 /material/platinum
 	name = MATERIAL_PLATINUM
@@ -188,6 +189,7 @@
 	chem_products = list(
 				/datum/reagent/iron = 20
 				)
+	energy_combustion = 5.2
 
 /material/tungsten
 	name = MATERIAL_TUNGSTEN
@@ -221,6 +223,8 @@
 	chem_products = list(
 				/datum/reagent/aluminum = 20
 				)
+	energy_combustion = 31
+
 /material/lead
 	name = MATERIAL_LEAD
 	stack_type = /obj/item/stack/material/lead
@@ -253,6 +257,7 @@
 	hardness = 5
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
+	energy_combustion = 5.3
 
 //-------------------------------------
 //	Alloys

@@ -133,41 +133,6 @@
 	M.sleeping = 0
 	M.jitteriness = 0
 
-/datum/reagent/gold
-	name = "Gold"
-	description = "Gold is a dense, soft, shiny metal and the most malleable and ductile metal known."
-	taste_description = "expensive metal"
-	reagent_state = SOLID
-	color = "#f7c430"
-
-/datum/reagent/silver
-	name = "Silver"
-	description = "A soft, white, lustrous transition metal, it has the highest electrical conductivity of any element and the highest thermal conductivity of any metal."
-	taste_description = "expensive yet reasonable metal"
-	reagent_state = SOLID
-	color = "#d0d0d0"
-
-/datum/reagent/uranium
-	name ="Uranium"
-	description = "A silvery-white metallic chemical element in the actinide series, weakly radioactive."
-	taste_description = "the inside of a reactor"
-	reagent_state = SOLID
-	color = "#b8b8c0"
-
-/datum/reagent/uranium/affect_touch(var/mob/living/carbon/M, var/alien, var/removed)
-	affect_ingest(M, alien, removed)
-
-/datum/reagent/uranium/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
-	M.apply_effect(5 * removed, IRRADIATE, blocked = 0)
-
-/datum/reagent/uranium/touch_turf(var/turf/T)
-	if(volume >= 3)
-		if(!istype(T, /turf/space))
-			var/obj/effect/decal/cleanable/greenglow/glow = locate(/obj/effect/decal/cleanable/greenglow, T)
-			if(!glow)
-				new /obj/effect/decal/cleanable/greenglow(T)
-			return
-
 /datum/reagent/water/holywater
 	name = "Holy Water"
 	description = "An ashen-obsidian-water mix, this solution will alter certain sections of the brain's rationality."
@@ -300,6 +265,16 @@
 	if(volume >= 1)
 		T.wet_floor(80)
 
+/datum/reagent/lube/oil // TODO: Robot Overhaul in general
+	name = "Oil"
+	description = "A thick greasy industrial lubricant. Commonly found in robotics."
+	taste_description = "greasy diesel"
+	color = "#000000"
+
+/datum/reagent/lube/oil/touch_turf(var/turf/simulated/T)
+	if(!istype(T, /turf/space))
+		new /obj/effect/decal/cleanable/blood/oil/streak(T)
+
 /datum/reagent/silicate
 	name = "Silicate"
 	description = "A compound that can be used to reinforce glass."
@@ -320,17 +295,6 @@
 	taste_description = "sweetness"
 	reagent_state = LIQUID
 	color = "#808080"
-
-/datum/reagent/nitroglycerin
-	name = "Nitroglycerin"
-	description = "Nitroglycerin is a heavy, colorless, oily, explosive liquid obtained by nitrating glycerol."
-	taste_description = "oil"
-	reagent_state = LIQUID
-	color = "#808080"
-
-/datum/reagent/nitroglycerin/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
-	..()
-	M.add_chemical_effect(CE_PULSE, 2)
 
 /datum/reagent/coolant
 	name = "Coolant"
@@ -424,3 +388,18 @@
 		M.co2_alert = 0
 	if(warning_message && prob(warning_prob))
 		to_chat(M, "<span class='warning'>You feel [warning_message].</span>")
+
+/datum/reagent/cellulose
+	name = "Cellulose"
+	description = "Organic polymer, and major component of plant cells. Found in wood and cotton."
+	taste_description = "like wet paper bags"
+	reagent_state = LIQUID
+	color = "#dbd3a6"
+
+/datum/reagent/toxin/salpeter
+	name = "Salpeter"
+	description = "Potassium nitrate. A useful chemical used in anything from fertilizers to food preservatives."
+	taste_description = "like wet paper bags"
+	reagent_state = SOLID
+	color = "#ffffff"
+	strength = 0.5

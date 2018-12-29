@@ -247,15 +247,6 @@
 	if(alien == IS_DIONA)
 		M.adjustToxLoss(50 * removed)
 
-/datum/reagent/acid/polyacid
-	name = "Polytrinic acid"
-	description = "Polytrinic acid is a an extremely corrosive chemical substance."
-	taste_description = "acid"
-	reagent_state = LIQUID
-	color = "#8e18a9"
-	power = 10
-	meltdose = 4
-
 /datum/reagent/lexorin
 	name = "Lexorin"
 	description = "Lexorin temporarily stops respiration. Causes tissue damage."

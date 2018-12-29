@@ -69,13 +69,14 @@
 	var/icon_reinf = "comp_solid"				// Reinforced wall icon tag. See header for valid icons.
 	var/icon_door = "metal"					// Door icon tag. See header for valid icons.
 	var/icon_table = "solid"				// Table icon tag. See header for valid icons.
-	
+
 	var/list/stack_origin_tech = list(TECH_MATERIAL = 1) // Research level for stacks.
 
 	// Attributes
 	var/cut_delay = 0            // Delay in ticks when cutting through this wall.
 	var/radioactivity            // Radiation var. Used in wall and object processing to irradiate surroundings.
 	var/ignition_point           // K, point at which the material catches on fire.
+	var/energy_combustion = 8    // MJ/kilo-unit Basically the heat energy given off for burning 1,000 units of said material(8 is given for generic trash on wikipedia)
 	var/melting_point = 1800     // K, walls will take damage if they're next to a fire hotter than this
 	var/brute_armor = 2	 		 // Brute damage to a wall is divided by this value if the wall is reinforced by this material.
 	var/burn_armor				 // Same as above, but for Burn damage type. If blank brute_armor's value is used.

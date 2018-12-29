@@ -13,6 +13,7 @@
 	chem_products = list(
 				/datum/reagent/toxin/plasticide = 20
 				)
+	energy_combustion = 46.3
 
 /material/plastic/holographic
 	name = "holoplastic"
@@ -48,6 +49,7 @@
 				/datum/reagent/carbon = 10,
 				/datum/reagent/water = 5
 				)
+	energy_combustion = 18
 
 /material/wood/holographic
 	name = "holowood"
@@ -72,6 +74,7 @@
 	stack_origin_tech = list(TECH_MATERIAL = 1)
 	destruction_desc = "crumples"
 	conductive = 0
+	energy_combustion = 8
 
 /material/cloth //todo
 	name = MATERIAL_CLOTH
@@ -85,6 +88,7 @@
 	stack_type = /obj/item/stack/material/cloth
 	hardness = 1
 	weight = 1
+	energy_combustion = 8
 
 //TODO PLACEHOLDERS:
 /material/leather
@@ -98,6 +102,7 @@
 	stack_type = /obj/item/stack/material/leather
 	hardness = 1
 	weight = 1
+	energy_combustion = 8
 
 /material/carpet
 	name = MATERIAL_CARPET
@@ -113,6 +118,7 @@
 	stack_type = null
 	hardness = 1
 	weight = 1
+	energy_combustion = 8
 
 /material/cotton
 	name = MATERIAL_COTTON
@@ -125,6 +131,7 @@
 	stack_type = null
 	hardness = 1
 	weight = 1
+	energy_combustion = 8
 
 /material/cloth_yellow
 	name = "yellow"
@@ -228,3 +235,26 @@
 	stack_type = null
 	hardness = 1
 	weight = 1
+
+/material/pink_goo
+	name = "pinkgoo"
+	stack_type = /obj/item/stack/material/edible/pink_goo_slab
+	icon_colour = "#ff6a6a"
+	icon_base = "solid"
+	integrity = 5
+	explosion_resistance = 0
+	hardness = 1
+	brute_armor = 1
+	weight = 8
+	melting_point = T0C+300
+	ignition_point = T0C+288
+	stack_origin_tech = list(TECH_BIO = 2)
+	sheet_singular_name = "slab"
+	sheet_plural_name = "slabs"
+	conductive = 0
+	//By default don't put much chem products
+	chem_products = list(
+				/datum/reagent/nutriment = 10,
+				/datum/reagent/nutriment/protein = 10,
+				/datum/reagent/blood = 10,
+				)

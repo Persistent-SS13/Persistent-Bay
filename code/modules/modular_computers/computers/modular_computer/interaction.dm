@@ -213,13 +213,13 @@
 			to_chat(user, "\The [W] is off.")
 			return
 
-		if(!damage)
+		if(!isdamaged())
 			to_chat(user, "\The [src] does not require repairs.")
 			return
 
 		to_chat(user, "You begin repairing damage to \the [src]...")
-		if(WT.remove_fuel(round(damage/75)) && do_after(usr, damage/10))
-			damage = 0
+		if(WT.remove_fuel(round(get_damages()/75)) && do_after(usr, get_damages()/10))
+			set_health(get_max_health())
 			to_chat(user, "You repair \the [src].")
 		return
 

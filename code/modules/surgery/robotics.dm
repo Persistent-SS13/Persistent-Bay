@@ -276,7 +276,7 @@
 	if(!affected) return
 
 	for(var/obj/item/organ/internal/I in affected.internal_organs)
-		if(I.isrobotic() && I.damage > 0)
+		if(I.isrobotic() && I.isdamaged())
 			if(I.surface_accessible)
 				return TRUE
 			if(affected.how_open() >= (affected.encased ? SURGERY_ENCASED : SURGERY_RETRACTED) || affected.hatch_state == HATCH_OPENED)
@@ -288,7 +288,7 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 
 	for(var/obj/item/organ/I in affected.internal_organs)
-		if(I && I.damage > 0)
+		if(I && I.isdamaged())
 			if(I.robotic >= ORGAN_ROBOT)
 				user.visible_message("[user] starts mending the damage to [target]'s [I.name]'s mechanisms.", \
 				"You start mending the damage to [target]'s [I.name]'s mechanisms." )
@@ -301,11 +301,11 @@
 
 	for(var/obj/item/organ/I in affected.internal_organs)
 
-		if(I && I.damage > 0)
+		if(I && I.isdamaged())
 			if(I.robotic >= ORGAN_ROBOT)
 				user.visible_message("<span class='notice'>[user] repairs [target]'s [I.name] with [tool].</span>", \
 				"<span class='notice'>You repair [target]'s [I.name] with [tool].</span>" )
-				I.damage = 0
+				I.set_health(I.get_max_health())
 
 /datum/surgery_step/robotics/fix_organ_robotic/fail_step(mob/living/user, mob/living/carbon/human/target, target_zone, obj/item/tool)
 	if (!hasorgans(target))
@@ -320,7 +320,7 @@
 
 	for(var/obj/item/organ/I in affected.internal_organs)
 		if(I)
-			I.take_damage(rand(3,5),0)
+			I.take_damage(rand(3,5))
 
 //////////////////////////////////////////////////////////////////
 //	robotic organ detachment surgery step

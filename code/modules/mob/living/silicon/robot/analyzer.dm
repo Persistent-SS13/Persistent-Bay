@@ -85,7 +85,7 @@
 				if(O.robotic < ORGAN_ROBOT)
 					continue
 				organ_found = 1
-				to_chat(user, "[O.name]: <font color='red'>[O.damage]</font>")
+				to_chat(user, "[O.name]: <font color='red'>[O.get_damages()]</font>")
 			if(!organ_found)
 				to_chat(user, "No prosthetics located.")
 

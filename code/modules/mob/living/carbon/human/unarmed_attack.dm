@@ -17,6 +17,7 @@ var/global/list/sparring_attack_cache = list()
 
 	var/eye_attack_text
 	var/eye_attack_text_victim
+	var/damtype = DAM_BLUNT
 
 /datum/unarmed_attack/proc/get_sparring_variant()
 	if(sparring_variant_type)
@@ -104,8 +105,8 @@ var/global/list/sparring_attack_cache = list()
 		return
 	user.visible_message("<span class='danger'>[user] attempts to press \his [eye_attack_text] into [target]'s eyes, but they don't have any!</span>")
 
-/datum/unarmed_attack/proc/damage_flags()
-	return (src.sharp? DAM_SHARP : 0)|(src.edge? DAM_EDGE : 0)
+/datum/unarmed_attack/proc/damage_type()
+	return damtype
 
 /datum/unarmed_attack/bite
 	attack_verb = list("bit")

@@ -150,9 +150,9 @@
 				E.status ^= ORGAN_BROKEN
 				break
 		for (var/obj/item/organ/internal/I in mob.internal_organs)
-			if (I.damage && prob(30))
+			if (I.isdamaged() && prob(30))
 				to_chat(mob, "<span class='notice'>Your [mob.get_organ(I.parent_organ)] feels a bit warm...</span>")
-				I.take_damage(-2*multiplier)
+				I.heal_damage(2*multiplier)
 				break
 		var/heal_amt = -5*multiplier
 		mob.apply_damages(heal_amt,heal_amt,heal_amt,heal_amt)

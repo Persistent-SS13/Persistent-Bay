@@ -2,6 +2,7 @@
 	name = "display case frame"
 	icon = 'icons/obj/stock_parts.dmi'
 	icon_state="box_glass"
+	max_health = 150
 	var/obj/item/weapon/airlock_electronics/circuit = null
 	var/state=0
 
@@ -71,7 +72,7 @@
 	density = 1
 	anchored = 1
 	unacidable = 1//Dissolving the case would also delete the contents.
-	var/health = 30
+	max_health = 200
 	var/obj/item/occupant = null
 	var/destroyed = 0
 	var/locked = 0

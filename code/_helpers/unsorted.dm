@@ -912,46 +912,6 @@ proc/is_hot(obj/item/W as obj)
 
 	return 0
 
-//Whether or not the given item counts as sharp in terms of dealing damage
-/proc/is_sharp(obj/O as obj)
-	if (!O) return 0
-	if (O.sharp) return 1
-	if (O.edge) return 1
-	return 0
-
-//Whether or not the given item counts as cutting with an edge in terms of removing limbs
-/proc/has_edge(obj/O as obj)
-	if (!O) return 0
-	if (O.edge) return 1
-	return 0
-
-
-//For items that can puncture e.g. thick plastic but aren't necessarily sharp
-//Returns 1 if the given item is capable of popping things like balloons, inflatable barriers, or cutting police tape.
-/obj/item/proc/can_puncture()
-	return src.sharp
-
-/obj/item/weapon/screwdriver/can_puncture()
-	return 1
-
-/obj/item/weapon/pen/can_puncture()
-	return 1
-
-/obj/item/weapon/weldingtool/can_puncture()
-	return 1
-
-/obj/item/weapon/screwdriver/can_puncture()
-	return 1
-
-/obj/item/weapon/shovel/can_puncture() //includes spades
-	return 1
-
-/obj/item/weapon/flame/can_puncture()
-	return src.lit
-
-/obj/item/clothing/mask/smokable/cigarette/can_puncture()
-	return src.lit
-
 //check if mob is lying down on something we can operate him on.
 /proc/can_operate(mob/living/carbon/M, mob/living/carbon/user)
 	var/turf/T = get_turf(M)
@@ -1080,10 +1040,19 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 	see_in_dark = 1e6
 
 	virtual_mob = null
+	should_save = 0
+	var/destroy_ret = QDEL_HINT_LETMELIVE
+
+/mob/dview/after_load()
+	destroy_ret = null //Let me delete pointless saved instances
+	qdel(src)
 
 /mob/dview/Destroy()
-	crash_with("Prevented attempt to delete dview mob: [log_info_line(src)]")
-	return QDEL_HINT_LETMELIVE // Prevents destruction
+	if(!destroy_ret)
+		crash_with("Prevented attempt to delete dview mob: [log_info_line(src)]")
+	else
+		return ..()
+	return destroy_ret // Prevents destruction
 
 /atom/proc/get_light_and_color(var/atom/origin)
 	if(origin)

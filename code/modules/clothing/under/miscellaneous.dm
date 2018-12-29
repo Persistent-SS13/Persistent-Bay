@@ -93,7 +93,19 @@
 	icon_state = "ert_uniform"
 	item_state = "bl_suit"
 	worn_state = "ert_uniform"
-	armor = list(melee = 10, bullet = 5, laser = 5,energy = 0, bomb = 0, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 10,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 5,
+		DAM_ENERGY 	= 2,
+		DAM_BURN 	= 2,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 	siemens_coefficient = 0.9
 
 /obj/item/clothing/under/space
@@ -118,7 +130,19 @@
 	gas_transfer_coefficient = 0.01
 	permeability_coefficient = 0.01
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
-	armor = list(melee = 100, bullet = 100, laser = 100,energy = 100, bomb = 100, bio = 100, rad = 100)
+	armor  = list(
+		DAM_BLUNT 	= 100,
+		DAM_PIERCE 	= 90,
+		DAM_CUT 	= 100,
+		DAM_BULLET 	= 100,
+		DAM_LASER 	= 100,
+		DAM_ENERGY 	= 100,
+		DAM_BURN 	= 100,
+		DAM_BOMB 	= 100,
+		DAM_EMP 	= 100,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 100,
+		DAM_STUN 	= 0)
 	cold_protection = UPPER_TORSO | LOWER_TORSO | LEGS | FEET | ARMS | HANDS
 	min_cold_protection_temperature = SPACE_SUIT_MIN_COLD_PROTECTION_TEMPERATURE
 	siemens_coefficient = 0
@@ -769,7 +793,19 @@
 	item_state = "engi_suit"
 	worn_state = "hazard"
 	siemens_coefficient = 0.8
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 20, bio = 0, rad = 20)
+	armor  = list(
+		DAM_BLUNT 	= 1,
+		DAM_PIERCE 	= 1,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 20,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 20,
+		DAM_STUN 	= 0)
 	max_heat_protection_temperature = FIRESUIT_MAX_HEAT_PROTECTION_TEMPERATURE
 
 /obj/item/clothing/under/sterile
@@ -779,7 +815,19 @@
 	item_state = "w_suit"
 	worn_state = "sterile"
 	permeability_coefficient = 0.50
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 30, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 1,
+		DAM_PIERCE 	= 1,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 2,
+		DAM_BURN 	= 2,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 30,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/under/shinypurple
 	name = "shiny purple suit"

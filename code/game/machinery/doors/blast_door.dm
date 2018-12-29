@@ -26,6 +26,20 @@
 	var/id = 1.0
 	dir = 1
 	explosion_resistance = 25
+	armor = list(
+		DAM_BLUNT  	= MaxArmorValue,
+		DAM_PIERCE 	= MaxArmorValue,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= MaxArmorValue,
+		DAM_ENERGY 	= MaxArmorValue,
+		DAM_BURN 	= MaxArmorValue,
+		DAM_BOMB 	= MaxArmorValue,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 	//Most blast doors are infrequently toggled and sometimes used with regular doors anyways,
 	//turning this off prevents awkward zone geometry in places like medbay lobby, for example.
@@ -130,7 +144,7 @@
 			to_chat(usr, "<span class='notice'>[src]'s motors resist your effort.</span>")
 		return
 	if(istype(C, /obj/item/stack/material) && C.get_material_name() == MATERIAL_PLASTEEL)
-		var/amt = Ceiling((maxhealth - health)/150)
+		var/amt = Ceiling((max_health - health)/150)
 		if(!amt)
 			to_chat(usr, "<span class='notice'>\The [src] is already fully repaired.</span>")
 			return
@@ -145,7 +159,7 @@
 				src.repair()
 			else
 				to_chat(usr, "<span class='warning'>You don't have enough sheets to repair this! You need at least [amt] sheets.</span>")
-
+	..()
 
 
 // Proc: open()
@@ -173,10 +187,8 @@
 // Parameters: None
 // Description: Fully repairs the blast door.
 /obj/machinery/door/blast/proc/repair()
-	health = maxhealth
-	if(stat & BROKEN)
-		stat &= ~BROKEN
-
+	health = max_health
+	set_broken(FALSE)
 
 /obj/machinery/door/blast/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
 	if(air_group) return 1
@@ -192,7 +204,7 @@
 	icon_state_closed = "pdoor1"
 	icon_state_closing = "pdoorc1"
 	icon_state = "pdoor1"
-	maxhealth = 600
+	max_health = 1200
 	block_air_zones = 1
 
 /obj/machinery/door/blast/regular/open
@@ -208,6 +220,20 @@
 	icon_state = "shutter1"
 	open_sound = 'sound/machines/shutters_open.ogg'
 	close_sound = 'sound/machines/shutters_close.ogg'
+	armor = list(
+		DAM_BLUNT  	= 80,
+		DAM_PIERCE 	= 80,
+		DAM_CUT 	= 90,
+		DAM_BULLET 	= 50,
+		DAM_ENERGY 	= 50,
+		DAM_BURN 	= 90,
+		DAM_BOMB 	= 60,
+		DAM_EMP 	= 50,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/blast/shutters/open
 	begins_closed = FALSE

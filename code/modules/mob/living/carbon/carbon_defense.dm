@@ -8,15 +8,15 @@
 		effective_force *= 2
 
 	//Apply weapon damage
-	var/damage_flags = I.damage_flags()
+	var/damtype = I.damtype
 	if(prob(blocked)) //armour provides a chance to turn sharp/edge weapon attacks into blunt ones
-		damage_flags &= ~(DAM_SHARP|DAM_EDGE)
+		damtype = DAM_BLUNT
 
-	var/datum/wound/created_wound = apply_damage(effective_force, I.damtype, hit_zone, blocked, damage_flags, used_weapon=I)
+	var/datum/wound/created_wound = apply_damage(effective_force, damtype, hit_zone, blocked, used_weapon=I)
 
 	//Melee weapon embedded object code.
-	if(istype(created_wound) && I && I.damtype == BRUTE && !I.anchored && !is_robot_module(I))
-		var/weapon_sharp = (damage_flags & DAM_SHARP)
+	if(istype(created_wound) && I && IsDamageTypeBrute(damtype) && !I.anchored && !is_robot_module(I))
+		var/weapon_sharp = IsDamageTypeSharp(damtype)
 		var/damage = effective_force //just the effective damage used for sorting out embedding, no further damage is applied here
 		if (blocked)
 			damage *= blocked_mult(blocked)

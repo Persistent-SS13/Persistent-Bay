@@ -17,8 +17,9 @@
 	volume = 15
 	w_class = ITEM_SIZE_TINY
 	slot_flags = SLOT_EARS
-	sharp = 1
+	sharpness = 1
 	unacidable = 1 //glass
+	damtype = DAM_PIERCE
 	var/mode = SYRINGE_DRAW
 	var/image/filling //holds a reference to the current filling overlay
 	var/visible_name = "a syringe"
@@ -265,7 +266,7 @@
 		if((user != target) && H.check_shields(7, src, user, "\the [src]"))
 			return
 
-		if (target != user && H.getarmor(target_zone, "melee") > 5 && prob(50))
+		if (target != user && H.getarmor(target_zone, DAM_PIERCE) > 5 && prob(50))
 			for(var/mob/O in viewers(world.view, user))
 				O.show_message(text("<span class='danger'>[user] tries to stab [target] in \the [hit_area] with [src.name], but the attack is deflected by armor!</span>"), 1)
 			user.remove_from_mob(src)

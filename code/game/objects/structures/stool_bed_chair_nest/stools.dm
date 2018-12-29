@@ -10,6 +10,9 @@ var/global/list/stool_cache = list() //haha stool
 	randpixel = 0
 	force = 10
 	throwforce = 10
+	mass = 4
+	max_health = 60
+	damthreshold_brute 	= 4
 	w_class = ITEM_SIZE_HUGE
 	var/base_icon = "stool"
 	var/material/material
@@ -93,9 +96,9 @@ var/global/list/stool_cache = list() //haha stool
 		dismantle()
 		qdel(src)
 
-		var/blocked = target.run_armor_check(hit_zone, "melee")
+		var/blocked = target.run_armor_check(hit_zone, DAM_BLUNT)
 		target.Weaken(10 * blocked_mult(blocked))
-		target.apply_damage(20, BRUTE, hit_zone, blocked, src)
+		target.apply_damage(20, DAM_BLUNT, hit_zone, blocked, src)
 		return
 
 	..()

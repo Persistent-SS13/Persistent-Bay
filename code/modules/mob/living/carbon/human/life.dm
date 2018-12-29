@@ -872,7 +872,7 @@
 	for(var/tag in list(BP_LIVER,BP_KIDNEYS))
 		var/obj/item/organ/internal/I = internal_organs_by_name[tag]
 		if(I)
-			vomit_score += I.damage
+			vomit_score += I.get_damages()
 		else if (should_have_organ(tag))
 			vomit_score += 45
 	if(chem_effects[CE_TOXIN] || radiation)

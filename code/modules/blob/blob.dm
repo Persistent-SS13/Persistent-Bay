@@ -10,12 +10,13 @@
 	opacity = 1
 	anchored = 1
 	mouse_opacity = 2
+	obj_flags = OBJ_FLAG_DAMAGEABLE
 
 	plane = BLOB_PLANE
 	layer = BLOB_SHIELD_LAYER
 
-	var/maxHealth = 30
-	var/health
+	max_health = 30
+	sound_destroyed = 'sound/effects/splat.ogg'
 	var/regen_rate = 5
 	var/brute_resist = 4
 	var/fire_resist = 1
@@ -24,9 +25,8 @@
 	var/secondary_core_growth_chance = 5 //% chance to grow a secondary blob core instead of whatever was suposed to grown. Secondary cores are considerably weaker, but still nasty.
 
 /obj/effect/blob/New(loc)
-	health = maxHealth
+	..(loc)
 	update_icon()
-	return ..(loc)
 
 /obj/effect/blob/CanPass(var/atom/movable/mover, vra/turf/target, var/height = 0, var/air_group = 0)
 	if(air_group || height == 0)
@@ -36,28 +36,20 @@
 /obj/effect/blob/ex_act(var/severity)
 	switch(severity)
 		if(1)
-			take_damage(rand(100, 120) / brute_resist)
+			take_damage(null, rand(100, 120) / brute_resist)
 		if(2)
-			take_damage(rand(60, 100) / brute_resist)
+			take_damage(null, rand(60, 100) / brute_resist)
 		if(3)
-			take_damage(rand(20, 60) / brute_resist)
+			take_damage(null, rand(20, 60) / brute_resist)
 
 /obj/effect/blob/update_icon()
-	if(health > maxHealth / 2)
+	if(health > max_health / 2)
 		icon_state = "blob"
 	else
 		icon_state = "blob_damaged"
 
-/obj/effect/blob/proc/take_damage(var/damage)
-	health -= damage
-	if(health < 0)
-		playsound(loc, 'sound/effects/splat.ogg', 50, 1)
-		qdel(src)
-	else
-		update_icon()
-
 /obj/effect/blob/proc/regen()
-	health = min(health + regen_rate, maxHealth)
+	health = min(health + regen_rate, max_health)
 	update_icon()
 
 /obj/effect/blob/proc/expand(var/turf/T)
@@ -65,7 +57,7 @@
 		return
 	if(istype(T, /turf/simulated/wall))
 		var/turf/simulated/wall/SW = T
-		SW.take_damage(80)
+		SW.take_damage(null, 80)
 		return
 	var/obj/structure/girder/G = locate() in T
 	if(G)
@@ -74,7 +66,7 @@
 		return
 	var/obj/structure/window/W = locate() in T
 	if(W)
-		W.shatter()
+		W.kill()
 		return
 	var/obj/structure/grille/GR = locate() in T
 	if(GR)
@@ -100,11 +92,11 @@
 	var/obj/mecha/M = locate() in T
 	if(M)
 		M.visible_message("<span class='danger'>The blob attacks \the [M]!</span>")
-		M.take_damage(40)
+		M.take_damage(null, 40)
 		return
 	var/obj/machinery/camera/CA = locate() in T
 	if(CA)
-		CA.take_damage(30)
+		CA.take_damage(null, 30)
 		return
 
 	// Above things, we destroy completely and thus can use locate. Mobs are different.
@@ -139,9 +131,9 @@
 
 	switch(Proj.damage_type)
 		if(BRUTE)
-			take_damage(Proj.damage / brute_resist)
+			take_damage(null,Proj.damage / brute_resist)
 		if(BURN)
-			take_damage((Proj.damage / laser_resist) / fire_resist)
+			take_damage(null,(Proj.damage / laser_resist) / fire_resist)
 	return 0
 
 /obj/effect/blob/attackby(var/obj/item/weapon/W, var/mob/user)
@@ -157,14 +149,14 @@
 		if("brute")
 			damage = (W.force / brute_resist)
 
-	take_damage(damage)
+	take_damage(null, damage)
 	return
 
 /obj/effect/blob/core
 	name = "blob core"
 	icon = 'icons/mob/blob.dmi'
 	icon_state = "blob_core"
-	maxHealth = 200
+	max_health = 200
 	brute_resist = 2
 	fire_resist = 2
 	laser_resist = 8
@@ -178,7 +170,7 @@
 
 // Rough icon state changes that reflect the core's health
 /obj/effect/blob/core/update_icon()
-	var/health_percent = (health / maxHealth) * 100
+	var/health_percent = (health / max_health) * 100
 	switch(health_percent)
 		if(66 to INFINITY)
 			icon_state = "blob_core"
@@ -212,7 +204,7 @@
 	name = "small blob core"
 	icon = 'icons/mob/blob.dmi'
 	icon_state = "blob_node"
-	maxHealth = 100
+	max_health = 100
 	brute_resist = 1
 	fire_resist = 1
 	laser_resist = 5
@@ -222,14 +214,14 @@
 	layer = BLOB_NODE_LAYER
 
 /obj/effect/blob/core/secondary/update_icon()
-	icon_state = (health / maxHealth >= 0.5) ? "blob_node" : "blob_factory"
+	icon_state = (health / max_health >= 0.5) ? "blob_node" : "blob_factory"
 
 /obj/effect/blob/shield
 	name = "strong blob"
 	icon = 'icons/mob/blob.dmi'
 	icon_state = "blob_idle"
 	desc = "Some blob creature thingy."
-	maxHealth = 60
+	max_health = 60
 	brute_resist = 1
 	fire_resist = 2
 	laser_resist = 6
@@ -243,9 +235,9 @@
 	..()
 
 /obj/effect/blob/shield/update_icon()
-	if(health > maxHealth * 2 / 3)
+	if(health > max_health * 2 / 3)
 		icon_state = "blob_idle"
-	else if(health > maxHealth / 3)
+	else if(health > max_health / 3)
 		icon_state = "blob"
 	else
 		icon_state = "blob_damaged"

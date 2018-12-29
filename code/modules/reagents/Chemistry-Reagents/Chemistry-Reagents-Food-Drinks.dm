@@ -83,6 +83,14 @@
 	taste_description = "egg"
 	color = "#ffffaa"
 
+//vegetamarian alternative that is safe for skrell to ingest//rewired it from its intended nutriment/protein/egg/softtofu because it would not actually work, going with plan B, more recipes.
+
+/datum/reagent/nutriment/softtofu
+	name = "plant protein"
+	description = "A gooey pale bean paste."
+	taste_description = "healthy sadness"
+	color = "#ffffff"
+
 /datum/reagent/nutriment/honey
 	name = "Honey"
 	description = "A golden yellow syrup, loaded with sugary sweetness."
@@ -123,6 +131,44 @@
 		else
 			T.wet = 0
 
+/datum/reagent/nutriment/batter
+	name = "Batter"
+	description = "A gooey mixture of eggs and flour, a base for turning wheat into food."
+	taste_description = "blandness"
+	reagent_state = LIQUID
+	nutriment_factor = 3
+	color = "#ffd592"
+
+/datum/reagent/nutriment/batter/touch_turf(var/turf/simulated/T)
+	if(!istype(T, /turf/space))
+		new /obj/effect/decal/cleanable/pie_smudge(T)
+		if(T.wet > 1)
+			T.wet = min(T.wet, 1)
+		else
+			T.wet = 0
+
+/datum/reagent/nutriment/batter/cakebatter
+	name = "Cake Batter"
+	description = "A gooey mixture of eggs, flour and sugar, a important precursor to cake!"
+	taste_description = "sweetness"
+	color = "#ffe992"
+
+/datum/reagent/nutriment/coffee
+	name = "Coffee Powder"
+	description = "A bitter powder made by grinding coffee beans."
+	taste_description = "bitterness"
+	taste_mult = 1.3
+	nutriment_factor = 1
+	color = "#482000"
+
+/datum/reagent/nutriment/tea
+	name = "Tea Powder"
+	description = "A dark, tart powder made from black tea leaves."
+	taste_description = "tartness"
+	taste_mult = 1.3
+	nutriment_factor = 1
+	color = "#101000"
+
 /datum/reagent/nutriment/coco
 	name = "Coco Powder"
 	description = "A fatty, bitter paste made from coco beans."
@@ -131,6 +177,37 @@
 	reagent_state = SOLID
 	nutriment_factor = 5
 	color = "#302000"
+
+/datum/reagent/nutriment/instantjuice
+	name = "Juice Powder"
+	description = "Dehydrated, powdered juice of some kind."
+	taste_mult = 1.3
+	nutriment_factor = 1
+
+/datum/reagent/nutriment/instantjuice/grape
+	name = "Grape Juice Powder"
+	description = "Dehydrated, powdered grape juice."
+	taste_description = "dry grapes"
+	color = "#863333"
+
+/datum/reagent/nutriment/instantjuice/orange
+	name = "Orange Juice Powder"
+	description = "Dehydrated, powdered orange juice."
+	taste_description = "dry oranges"
+	color = "#e78108"
+
+/datum/reagent/nutriment/instantjuice/watermelon
+	name = "Watermelon Juice Powder"
+	description = "Dehydrated, powdered watermelon juice."
+	taste_description = "dry sweet watermelon"
+	color = "#b83333"
+
+/datum/reagent/nutriment/instantjuice/apple
+	name = "Apple Juice Powder"
+	description = "Dehydrated, powdered apple juice."
+	taste_description = "dry sweet apples"
+	color = "#c07c40"
+
 
 /datum/reagent/nutriment/soysauce
 	name = "Soysauce"
@@ -613,6 +690,35 @@
 
 	glass_name = "watermelon juice"
 	glass_desc = "Delicious juice made from watermelon."
+
+/datum/reagent/drink/juice/turnip
+	name = "Turnip Juice"
+	description = "Delicious (?) juice made from turnips."
+	taste_description = "love of motherland and oppression"
+	color = "#b1166e"
+
+	glass_name = "turnip juice"
+	glass_desc = "Delicious (?) juice made from turnips."
+
+
+/datum/reagent/drink/juice/apple
+	name = "Apple Juice"
+	description = "Delicious sweet juice made from apples."
+	taste_description = "sweet apples"
+	color = "#c07c40"
+
+	glass_name = "apple juice"
+	glass_desc = "Delicious juice made from apples."
+
+/datum/reagent/drink/juice/pear
+	name = "Pear Juice"
+	description = "Delicious sweet juice made from pears."
+	taste_description = "sweet pears"
+	color = "#ffff66"
+
+	glass_name = "pear juice"
+	glass_desc = "Delicious juice made from pears."
+
 
 // Everything else
 
@@ -1783,7 +1889,7 @@
 
 	glass_name = "moonshine"
 	glass_desc = "You've really hit rock bottom now... your liver packed its bags and left last night."
-	
+
 /datum/reagent/ethanol/bluebird
 	name = "Blue Bird"
 	description = "A classy drink that you know only the prettiest of birds have."
@@ -1794,7 +1900,7 @@
 
 	glass_name = "Blue Bird"
 	glass_desc = "A classy drink that you know only the prettiest of birds have."
-	
+
 /datum/reagent/ethanol/bj
 	name = "BJ"
 	description = "Nothing like a good BJ to get you started."
@@ -1805,7 +1911,7 @@
 
 	glass_name = "BJ"
 	glass_desc = "Nothing like a good BJ to get you started."
-	
+
 /datum/reagent/ethanol/starrycola
 	name = "Starry Cola"
 	description = "Looking at it, you'd think you're looking at space."
@@ -1817,7 +1923,7 @@
 	glass_name = "Starry Cola"
 	glass_desc = "Looking at it, you'd think you're looking at space."
 	glass_special = list(DRINK_FIZZ)
-	
+
 /datum/reagent/ethanol/calvincraig
 	name = "Calvin Craig"
 	description = "A sweet something-or-other for that special someone."

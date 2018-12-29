@@ -7,6 +7,8 @@
 	desc = "The frame of a meat spike."
 	density = TRUE
 	anchored = FALSE
+	max_health = 100
+	mass = 8
 
 /obj/structure/kitchenspike_frame/attackby(obj/item/I, mob/user, params)
 	add_fingerprint(user)
@@ -19,7 +21,7 @@
 				"<span class='notice'>You have [anchored ? "un" : ""]secured \the [src].</span>", \
 				"You hear ratchet.")
 			src.anchored = !src.anchored
-			
+
 	else if(istype(I, /obj/item/stack/rods))
 		var/obj/item/stack/rods/R = I
 		if(R.get_amount() >= 4)

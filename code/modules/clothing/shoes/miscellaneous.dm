@@ -19,17 +19,28 @@
 	desc = "When you want to turn up the heat."
 	icon_state = "swat"
 	force = 3
-	armor = list(melee = 80, bullet = 60, laser = 60,energy = 25, bomb = 50, bio = 10, rad = 0)
 	item_flags = ITEM_FLAG_NOSLIP
 	siemens_coefficient = 0.6
 	can_hold_knife = 1
+	armor  = list(
+		DAM_BLUNT 	= 80,
+		DAM_PIERCE 	= 70,
+		DAM_CUT 	= 80,
+		DAM_BULLET 	= 60,
+		DAM_LASER 	= 60,
+		DAM_ENERGY 	= 25,
+		DAM_BURN 	= 40,
+		DAM_BOMB 	= 50,
+		DAM_EMP 	= 10,
+		DAM_BIO 	= 10,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 10)
 
 /obj/item/clothing/shoes/combat //Basically SWAT shoes combined with galoshes.
 	name = "combat boots"
 	desc = "When you REALLY want to turn up the heat."
 	icon_state = "jungle"
 	force = 5
-	armor = list(melee = 80, bullet = 60, laser = 60,energy = 25, bomb = 50, bio = 10, rad = 0)
 	item_flags = ITEM_FLAG_NOSLIP
 	siemens_coefficient = 0.6
 	can_hold_knife = 1
@@ -38,53 +49,126 @@
 	min_cold_protection_temperature = SHOE_MIN_COLD_PROTECTION_TEMPERATURE
 	heat_protection = FEET
 	max_heat_protection_temperature = SHOE_MAX_HEAT_PROTECTION_TEMPERATURE
+	armor  = list(
+		DAM_BLUNT 	= 80,
+		DAM_PIERCE 	= 70,
+		DAM_CUT 	= 80,
+		DAM_BULLET 	= 60,
+		DAM_LASER 	= 60,
+		DAM_ENERGY 	= 25,
+		DAM_BURN 	= 40,
+		DAM_BOMB 	= 50,
+		DAM_EMP 	= 10,
+		DAM_BIO 	= 10,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 5)
 
 /obj/item/clothing/shoes/eod
 	name = "bomb boots"
 	desc = "A pair of boot reinforced to provide some explosion protection."
 	icon_state = "swat"
 	force = 2
-	armor = list(melee = 70, bullet = 15, laser = 30, energy = 50, bomb = 90, bio = 0, rad = 0)
 	item_flags = ITEM_FLAG_NOSLIP
 	siemens_coefficient = 0.6
 	can_hold_knife = 1
 	heat_protection = FEET
 	max_heat_protection_temperature = SHOE_MAX_HEAT_PROTECTION_TEMPERATURE
+	armor  = list(
+		DAM_BLUNT 	= 70,
+		DAM_PIERCE 	= 60,
+		DAM_CUT 	= 70,
+		DAM_BULLET 	= 15,
+		DAM_LASER 	= 30,
+		DAM_ENERGY 	= 50,
+		DAM_BURN 	= 60,
+		DAM_BOMB 	= 90,
+		DAM_EMP 	= 10,
+		DAM_BIO 	= 5,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 5)
 
 /obj/item/clothing/shoes/jungleboots
 	name = "jungle boots"
 	desc = "A pair of durable brown boots. Waterproofed for use planetside."
 	icon_state = "jungle"
 	force = 3
-	armor = list(melee = 30, bullet = 10, laser = 10, energy = 15, bomb = 20, bio = 10, rad = 0)
 	siemens_coefficient = 0.7
 	can_hold_knife = 1
+	armor  = list(
+		DAM_BLUNT 	= 30,
+		DAM_PIERCE 	= 20,
+		DAM_CUT 	= 30,
+		DAM_BULLET 	= 10,
+		DAM_LASER 	= 10,
+		DAM_ENERGY 	= 15,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 20,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 10,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/shoes/desertboots
 	name = "desert boots"
 	desc = "A pair of durable tan boots. Designed for use in hot climates."
 	icon_state = "desert"
 	force = 3
-	armor = list(melee = 30, bullet = 10, laser = 10, energy = 15, bomb = 20, bio = 10, rad = 0)
 	siemens_coefficient = 0.7
 	can_hold_knife = 1
+	armor  = list(
+		DAM_BLUNT 	= 30,
+		DAM_PIERCE 	= 20,
+		DAM_CUT 	= 30,
+		DAM_BULLET 	= 10,
+		DAM_LASER 	= 10,
+		DAM_ENERGY 	= 15,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 20,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 10,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/shoes/dutyboots
 	name = "duty boots"
 	desc = "A pair of steel-toed synthleather boots with a mirror shine."
 	icon_state = "duty"
-	armor = list(melee = 40, bullet = 0, laser = 0, energy = 15, bomb = 20, bio = 0, rad = 20)
 	siemens_coefficient = 0.7
 	can_hold_knife = 1
+	armor  = list(
+		DAM_BLUNT 	= 40,
+		DAM_PIERCE 	= 30,
+		DAM_CUT 	= 40,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 15,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 20,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 20,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/shoes/tactical
 	name = "tactical boots"
 	desc = "Tan boots with extra padding and armor."
 	icon_state = "desert"
 	force = 3
-	armor = list(melee = 40, bullet = 30, laser = 40,energy = 25, bomb = 50, bio = 0, rad = 0)
 	siemens_coefficient = 0.7
 	can_hold_knife = 1
+	armor  = list(
+		DAM_BLUNT 	= 40,
+		DAM_PIERCE 	= 30,
+		DAM_CUT 	= 40,
+		DAM_BULLET 	= 30,
+		DAM_LASER 	= 40,
+		DAM_ENERGY 	= 25,
+		DAM_BURN 	= 25,
+		DAM_BOMB 	= 50,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 5,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 2)
 
 /obj/item/clothing/shoes/dress
 	name = "dress shoes"

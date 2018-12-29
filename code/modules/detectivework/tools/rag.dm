@@ -163,7 +163,7 @@
 	var/fuel = reagents.get_reagent_amount(/datum/reagent/fuel)
 	return (fuel >= 2 && fuel >= reagents.total_volume*0.8)
 
-/obj/item/weapon/reagent_containers/glass/rag/proc/ignite()
+/obj/item/weapon/reagent_containers/glass/rag/ignite()
 	if(on_fire)
 		return
 	if(!can_ignite())
@@ -184,7 +184,7 @@
 	update_name()
 	update_icon()
 
-/obj/item/weapon/reagent_containers/glass/rag/proc/extinguish()
+/obj/item/weapon/reagent_containers/glass/rag/extinguish()
 	STOP_PROCESSING(SSobj, src)
 	set_light(0)
 	on_fire = 0

@@ -3,7 +3,7 @@
 		last_power_usage = 0
 		return 0
 
-	if(damage > broken_damage)
+	if(get_health() <= (break_threshold * get_max_health()))
 		shutdown_computer()
 		return 0
 
@@ -105,7 +105,7 @@
 	if(tesla_link)
 		tesla_link.enabled = 1
 	var/issynth = issilicon(user) // Robots and AIs get different activation messages.
-	if(damage > broken_damage)
+	if(get_health() <= (break_threshold * get_max_health()))
 		if(issynth)
 			to_chat(user, "You send an activation signal to \the [src], but it responds with an error code. It must be damaged.")
 		else

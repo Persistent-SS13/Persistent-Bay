@@ -7,6 +7,8 @@
 	force = 1
 	throwforce = 1
 	w_class = 1
+	damtype = DAM_BLUNT
+	mass = 0.2
 	slot_flags = SLOT_EARS
 	var/string_colour
 

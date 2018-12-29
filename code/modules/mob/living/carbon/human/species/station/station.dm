@@ -66,7 +66,7 @@
 
 		for(var/obj/item/organ/I in H.internal_organs)
 			if((I.status & ORGAN_DEAD) || I.robotic >= ORGAN_ROBOT) continue
-			if(I.damage > 2) if(prob(2))
+			if(I.get_damages() > 2) if(prob(2))
 				var/obj/item/organ/external/parent = H.get_organ(I.parent_organ)
 				H.custom_emote("clutches [T.his] [parent.name]!")
 
@@ -107,7 +107,7 @@
 
 	min_age = 18
 	max_age = 260
-	
+
 	body_temperature = null
 	base_temperature = 293
 

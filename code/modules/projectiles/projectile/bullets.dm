@@ -3,11 +3,9 @@
 	icon_state = "bullet"
 	fire_sound = 'sound/weapons/gunshot/gunshot_strong.ogg'
 	damage = 50
-	damage_type = BRUTE
+	damage_type = DAM_BULLET
 	nodamage = 0
-	check_armour = "bullet"
-	embed = 1
-	sharp = 1
+	sharpness = 1
 	penetration_modifier = 1.0
 	var/mob_passthrough_check = 0
 
@@ -51,7 +49,7 @@
 		chance = round(damage/W.material.integrity*180)
 	else if(istype(A, /obj/machinery/door))
 		var/obj/machinery/door/D = A
-		chance = round(damage/D.maxhealth*180)
+		chance = round(damage/D.get_max_health()*180)
 		if(D.glass) chance *= 2
 	else if(istype(A, /obj/structure/girder))
 		chance = 100
@@ -155,11 +153,11 @@
 
 /obj/item/projectile/bullet/pistol/rubber //"rubber" bullets
 	name = "rubber bullet"
-	check_armour = "melee"
+	damage_type = DAM_BLUNT
 	damage = 5
 	agony = 30
 	embed = 0
-	sharp = 0
+	sharpness = 0
 	armor_penetration = 2.5
 
 /* shotgun projectiles */
@@ -172,11 +170,12 @@
 
 /obj/item/projectile/bullet/shotgun/beanbag		//because beanbags are not bullets
 	name = "beanbag"
-	check_armour = "melee"
+	damage_type = DAM_BLUNT
 	damage = 25
 	agony = 60
 	embed = 0
-	sharp = 0
+	sharpness = 0
+	mass = 0.008
 
 //Should do about 80 damage at 1 tile distance (adjacent), and 50 damage at 3 tiles distance.
 //Overall less damage than slugs in exchange for more damage at very close range and more embedding
@@ -187,17 +186,20 @@
 	pellets = 6
 	range_step = 1
 	spread_step = 10
+	damage_type = DAM_BULLET
+	mass = 0.004
 
 /obj/item/projectile/bullet/pellet/shotgun/rubber
 	name = "shrapnel"
-	check_armour = "melee"
+	damage_type = DAM_BLUNT
 	damage = 5
 	agony = 12
 	embed = 0
-	sharp = 0
+	sharpness = 0
 	range_step = 1
 	spread_step = 12
 	base_spread = 80
+	mass = 0.008
 
 /* "Rifle" rounds */
 
@@ -208,11 +210,13 @@
 /obj/item/projectile/bullet/rifle/a556
 	fire_sound = 'sound/weapons/gunshot/gunshot3.ogg'
 	damage = 30
+	mass = 0.004
 
 /obj/item/projectile/bullet/rifle/a762
 	fire_sound = 'sound/weapons/gunshot/gunshot2.ogg'
 	damage = 35
 	armor_penetration = 30
+	mass = 0.009
 
 /obj/item/projectile/bullet/rifle/a145
 	fire_sound = 'sound/weapons/gunshot/sniper.ogg'
@@ -223,6 +227,7 @@
 	armor_penetration = 80
 	hitscan = 1 //so the PTR isn't useless as a sniper weapon
 	penetration_modifier = 1.25
+	mass = 0.0665
 
 /obj/item/projectile/bullet/rifle/a145/apds
 	damage = 75
@@ -246,10 +251,10 @@
 	name = "exploding bullet"
 	damage = 25
 	embed = 0
-	edge = 1
 
 /obj/item/projectile/bullet/gyro
 	fire_sound = 'sound/effects/Explosion1.ogg'
+	mass = 0.012
 
 /obj/item/projectile/bullet/gyro/on_hit(var/atom/target, var/blocked = 0)
 	if(isturf(target))
@@ -277,11 +282,11 @@
 	name = "cap"
 	invisibility = 101
 	fire_sound = null
-	damage_type = PAIN
+	damage_type = DAM_PAIN
 	damage = 0
 	nodamage = 1
 	embed = 0
-	sharp = 0
+	sharpness = 0
 
 /obj/item/projectile/bullet/pistol/cap/Process()
 	loc = null
@@ -293,6 +298,7 @@
 	damage = 40
 	armor_penetration = 25
 	kill_count = 255
+	mass = 1
 
 /obj/item/projectile/bullet/rock/New()
 	icon_state = "rock[rand(1,3)]"

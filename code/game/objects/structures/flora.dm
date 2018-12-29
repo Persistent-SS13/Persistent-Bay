@@ -6,6 +6,8 @@
 	pixel_x = -16
 	plane = ABOVE_HUMAN_PLANE
 	layer = ABOVE_HUMAN_LAYER
+	max_health = 50
+	mass = 20
 
 /obj/structure/flora/tree/pine
 	name = "pine tree"
@@ -39,6 +41,8 @@
 	name = "grass"
 	icon = 'icons/obj/flora/snowflora.dmi'
 	anchored = 1
+	max_health = 10
+	mass = 2
 
 /obj/structure/flora/grass/brown
 	icon_state = "snowgrass1bb"
@@ -69,6 +73,8 @@
 	icon = 'icons/obj/flora/snowflora.dmi'
 	icon_state = "snowbush1"
 	anchored = 1
+	max_health = 25
+	mass = 5
 
 /obj/structure/flora/bush/New()
 	..()
@@ -88,6 +94,8 @@
 	icon = 'icons/obj/flora/ausflora.dmi'
 	icon_state = "firstbush_1"
 	anchored = 1
+	max_health = 25
+	mass = 5
 
 /obj/structure/flora/ausbushes/New()
 	..()
@@ -207,11 +215,15 @@
 	icon_state = "plant-01"
 	plane = ABOVE_HUMAN_PLANE
 	layer = ABOVE_HUMAN_LAYER
+	max_health = 50
+	mass = 8
 
 /obj/structure/flora/pottedplant/large
 	name = "large potted plant"
 	desc = "This is a large plant. Three branches support pairs of waxy leaves."
 	icon_state = "plant-26"
+	max_health = 80
+	mass = 12
 
 /obj/structure/flora/pottedplant/fern
 	name = "potted fern"

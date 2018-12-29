@@ -7,6 +7,24 @@
 	w_class = ITEM_SIZE_NO_CONTAINER
 	anchored = 0
 
+	mass = 15
+	max_health = 200
+	damthreshold_brute 	= 10
+	armor = list(
+		DAM_BLUNT  	= 80,
+		DAM_PIERCE 	= 90,
+		DAM_CUT 	= 90,
+		DAM_BULLET 	= 50,
+		DAM_ENERGY 	= 50,
+		DAM_BURN 	= 30,
+		DAM_BOMB 	= 15,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+
 	var/icon_closed = "closed"
 	var/icon_opened = "open"
 
@@ -18,7 +36,6 @@
 	var/large = 1
 	var/wrenchable = 1
 	var/wall_mounted = 0 //never solid (You can always pass over it)
-	var/health = 100
 	var/breakout = 0 //if someone is currently breaking out. mutex
 	var/storage_capacity = 2 * MOB_MEDIUM //This is so that someone can't pack hundreds of items in a locker/crate
 							  //then open it in a populated area to crash clients.

@@ -132,15 +132,13 @@
 		// The closer we are to impact site, the longer it takes for shield to come back up.
 		S.fail(-(-range + get_dist(src, S)) * 2)
 
-/obj/effect/shield/proc/take_damage(var/damage, var/damtype, var/hitby)
+/obj/effect/shield/take_damage(damage, damtype, armordamagetype, armorbypass, list/damlist, damflags, damsrc, var/hitby)
 	if(!gen)
 		qdel(src)
 		return
-
 	if(!damage)
 		return
-
-	damage = round(damage)
+	..(damage, damtype)
 
 	new/obj/effect/shield_impact(get_turf(src))
 

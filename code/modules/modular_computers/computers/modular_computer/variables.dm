@@ -36,9 +36,8 @@
 	var/list/idle_threads = list()							// Idle programs on background. They still receive process calls but can't be interacted with.
 
 	// Damage of the chassis. If the chassis takes too much damage it will break apart.
-	var/damage = 0				// Current damage level
-	var/broken_damage = 50		// Damage level at which the computer ceases to operate
-	var/max_damage = 100		// Damage level at which the computer breaks apart.
+	var/break_threshold = 0.5		// Damage level at which the computer ceases to operate
+	max_health = 100
 
 	// Important hardware (must be installed for computer to work)
 	var/obj/item/weapon/computer_hardware/processor_unit/processor_unit				// CPU. Without it the computer won't run. Better CPUs can run more programs at once.

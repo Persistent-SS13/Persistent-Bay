@@ -128,7 +128,7 @@
 	// You are going to knock someone out for longer if they are not wearing a helmet.
 	var/weaken_duration = 0
 	if(blocked < 100)
-		weaken_duration = smash_duration + min(0, force - target.getarmor(hit_zone, "melee") + 10)
+		weaken_duration = smash_duration + min(0, force - target.getarmor(hit_zone, DAM_BLUNT) + 10)
 
 	var/mob/living/carbon/human/H = target
 	if(istype(H) && H.headcheck(hit_zone))
@@ -163,8 +163,9 @@
 	throw_range = 5
 	item_state = "beer"
 	attack_verb = list("stabbed", "slashed", "attacked")
-	sharp = 1
-	edge = 0
+	sharpness = 1
+	damtype = DAM_CUT
+	mass = 0.6
 	var/icon/broken_outline = icon('icons/obj/drinks.dmi', "broken")
 
 /obj/item/weapon/broken_bottle/attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
@@ -450,3 +451,13 @@
 /obj/item/weapon/reagent_containers/food/drinks/bottle/small/ale/New()
 	. = ..()
 	reagents.add_reagent(/datum/reagent/ethanol/ale, 30)
+
+/obj/item/weapon/reagent_containers/food/drinks/bottle/oiljug
+	name = "oil jug"
+	desc = "A plastic jug of engine oil. Not for human consumption."
+	icon_state = "oil"
+	isGlass = 0
+
+/obj/item/weapon/reagent_containers/food/drinks/bottle/oiljug/New()
+	. = ..()
+	reagents.add_reagent(/datum/reagent/lube/oil, 100)

@@ -216,7 +216,7 @@
 		return
 	..()
 
-/obj/effect/meteor/proc/make_debris()
+/obj/effect/meteor/make_debris()
 	for(var/throws = dropamt, throws > 0, throws--)
 		var/obj/item/O = new meteordrop(get_turf(src))
 		O.throw_at(dest, 5, 10)

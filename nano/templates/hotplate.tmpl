@@ -1,0 +1,36 @@
+<div class="item">
+	<div class="itemLabel">
+		Target temperature:
+	</div>
+	<div class="itemContent">
+		{{:helper.link('-', null, {'adjust_temperature' : -data.heating_power})}} {{:data.target_temperature}}K({{:data.target_temperatureC}}C) {{:helper.link('+', null, {'adjust_temperature' : data.heating_power})}}
+	</div>
+</div>
+<div class="item">
+	<div class="itemLabel">
+		Current temperature:
+	</div>
+	<div class="itemContent">
+		{{:data.temperature}}K({{:data.temperatureC}}C)
+	</div>
+</div>
+<div class="item">
+	<div class="itemLabel">
+		Loaded container:
+	</div>
+  {{if data.container}}
+	<div class="itemContent">
+		{{:data.container.name}} ({{:data.container.temperature}}K)({{:data.container.temperatureC}}C) {{:helper.link('Remove', null, {'remove_container' : 1})}}
+	</div>
+  {{else}}
+    None
+  {{/if}}
+</div>
+<div class="item">
+	<div class="itemLabel">
+		Switched:
+	</div>
+	<div class="itemContent">
+    {{:helper.link('On', 'power', {'toggle_power' : 1}, data.on ? 'selected' : null)}}{{:helper.link('Off', 'close', {'toggle_power' : 1}, data.on ? null : 'selected')}}
+	</div>
+</div>

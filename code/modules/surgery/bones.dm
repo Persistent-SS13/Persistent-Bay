@@ -103,7 +103,7 @@
 	user.visible_message("<span class='warning'>[user]'s hand slips, damaging the [affected.encased ? affected.encased : "bones"] in [target]'s [affected.name] with \the [tool]!</span>" , \
 		"<span class='warning'>Your hand slips, damaging the [affected.encased ? affected.encased : "bones"] in [target]'s [affected.name] with \the [tool]!</span>")
 	affected.fracture()
-	affected.take_damage(5, used_weapon = tool)
+	affected.take_damage(5, damsrc = tool)
 
 
 //////////////////////////////////////////////////////////////////
@@ -142,7 +142,7 @@
 	user.visible_message("<span class='warning'>[user]'s hand slips, damaging [target]'s face with \the [tool]!</span>"  , \
 		"<span class='warning'>Your hand slips, damaging [target]'s face with \the [tool]!</span>")
 	var/obj/item/organ/external/head/h = affected
-	affected.take_damage(10, used_weapon = tool)
+	affected.take_damage(10, damsrc = tool)
 	h.disfigured = 1
 
 //////////////////////////////////////////////////////////////////

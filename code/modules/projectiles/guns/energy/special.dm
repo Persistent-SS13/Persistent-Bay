@@ -199,7 +199,7 @@ obj/item/weapon/gun/energy/staff/focus
 	icon_state = "plasmacutter"
 	item_state = "plasmacutter"
 	w_class = ITEM_SIZE_NORMAL
-	damtype = BRUTE
+	damtype = DAM_BLUNT
 	cell_type = /obj/item/weapon/cell/device/high
 	charge_meter = 0
 	attack_verb = list("attacked", "slashed", "cut", "sliced")
@@ -210,6 +210,6 @@ obj/item/weapon/gun/energy/staff/focus
 	projectile_type= /obj/item/projectile/plasma
 	charge_cost = 5 //How much energy is needed to fire.
 	max_shots = 20 //Determines the capacity of the weapon's power cell. Specifying a cell_type overrides this value.
-	sharp=1
-	edge=1
+	sharpness = 1
 	load_method = ENERGY_LOAD_HOTSWAP_CELL
+	mass = 0.8

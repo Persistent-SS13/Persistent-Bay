@@ -10,7 +10,7 @@
 	var/phoron_guard = 0
 	var/list/eye_colour = list(0,0,0)
 	var/innate_flash_protection = FLASH_PROTECTION_NONE
-	max_damage = 45
+	max_health = 45
 
 /obj/item/organ/internal/eyes/optics
 	robotic = ORGAN_ROBOT
@@ -62,11 +62,11 @@
 		owner.b_eyes ? owner.b_eyes : 0
 		)
 
-/obj/item/organ/internal/eyes/take_damage(amount, var/silent=0)
+/obj/item/organ/internal/eyes/take_damage(damage, damtype, armordamagetype, armorbypass, list/damlist, damflags, damsrc, var/silent=0)
 	var/oldbroken = is_broken()
 	. = ..()
 	if(is_broken() && !oldbroken && owner && !owner.stat)
-		to_chat(owner, "<span class='danger'>You go blind!</span>")
+		to_chat(owner, SPAN_DANGER("You go blind!"))
 
 /obj/item/organ/internal/eyes/Process() //Eye damage replaces the old eye_stat var.
 	..()

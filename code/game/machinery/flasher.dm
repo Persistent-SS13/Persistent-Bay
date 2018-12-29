@@ -87,9 +87,9 @@
 			var/obj/item/organ/internal/eyes/E = H.internal_organs_by_name[BP_EYES]
 			if(!E)
 				return
-			if(E.is_bruised() && prob(E.damage + 50))
+			if(E.is_bruised() && prob(E.get_damages() + 50))
 				H.flash_eyes()
-				E.damage += rand(1, 5)
+				E.rem_health(rand(1, 5))
 		else
 			if(!O.blinded && isliving(O))
 				var/mob/living/L = O

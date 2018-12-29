@@ -4,12 +4,12 @@
 	fire_sound='sound/weapons/Laser.ogg'
 	pass_flags = PASS_FLAG_TABLE | PASS_FLAG_GLASS | PASS_FLAG_GRILLE
 	damage = 40
-	damage_type = BURN
-	sharp = 1 //concentrated burns
-	check_armour = "laser"
+	damage_type = DAM_LASER
+	sharpness = 1 //concentrated burns
 	eyeblur = 4
 	hitscan = 1
 	invisibility = 101	//beam projectiles are invisible as they are rendered by the effect engine
+	mass = 0
 
 	muzzle_type = /obj/effect/projectile/laser/muzzle
 	tracer_type = /obj/effect/projectile/laser/tracer
@@ -21,9 +21,9 @@
 	fire_sound = 'sound/weapons/Taser.ogg'
 	pass_flags = PASS_FLAG_TABLE | PASS_FLAG_GLASS | PASS_FLAG_GRILLE
 	damage = 2
-	damage_type = BURN
-	check_armour = "laser"
+	damage_type = DAM_LASER
 	eyeblur = 2
+	mass = 0
 
 /obj/item/projectile/beam/smalllaser
 	damage = 25
@@ -50,6 +50,7 @@
 	damage = 30
 	armor_penetration = 30
 	penetration_modifier = 0.8
+	damage_type = DAM_ENERGY
 
 	muzzle_type = /obj/effect/projectile/xray/muzzle
 	tracer_type = /obj/effect/projectile/xray/tracer
@@ -64,6 +65,7 @@
 	icon_state = "u_laser"
 	fire_sound='sound/weapons/pulse.ogg'
 	damage = 15 //lower damage, but fires in bursts
+	damage_type = DAM_LASER
 
 	muzzle_type = /obj/effect/projectile/laser_pulse/muzzle
 	tracer_type = /obj/effect/projectile/laser_pulse/tracer
@@ -101,8 +103,7 @@
 	pass_flags = PASS_FLAG_TABLE | PASS_FLAG_GLASS | PASS_FLAG_GRILLE
 	damage = 0
 	no_attack_log = 1
-	damage_type = BURN
-	check_armour = "laser"
+	damage_type = DAM_LASER
 
 	muzzle_type = /obj/effect/projectile/laser_blue/muzzle
 	tracer_type = /obj/effect/projectile/laser_blue/tracer
@@ -121,8 +122,7 @@
 	pass_flags = PASS_FLAG_TABLE | PASS_FLAG_GLASS | PASS_FLAG_GRILLE
 	damage = 0
 	no_attack_log = 1
-	damage_type = BURN
-	check_armour = "laser"
+	damage_type = DAM_LASER
 
 /obj/item/projectile/beam/lastertag/red/on_hit(var/atom/target, var/blocked = 0)
 	if(istype(target, /mob/living/carbon/human))
@@ -136,8 +136,7 @@
 	icon_state = "omnilaser"
 	pass_flags = PASS_FLAG_TABLE | PASS_FLAG_GLASS | PASS_FLAG_GRILLE
 	damage = 0
-	damage_type = BURN
-	check_armour = "laser"
+	damage_type = DAM_STUN
 
 	muzzle_type = /obj/effect/projectile/laser_omni/muzzle
 	tracer_type = /obj/effect/projectile/laser_omni/tracer
@@ -159,6 +158,7 @@
 	stun = 3
 	weaken = 3
 	stutter = 3
+	damage_type = DAM_ENERGY
 
 	muzzle_type = /obj/effect/projectile/xray/muzzle
 	tracer_type = /obj/effect/projectile/xray/tracer
@@ -168,11 +168,9 @@
 	name = "stun beam"
 	icon_state = "stun"
 	fire_sound = 'sound/weapons/Taser.ogg'
-	check_armour = "energy"
-	sharp = 0 //not a laser
 	taser_effect = 1
 	agony = 40
-	damage_type = STUN
+	damage_type = DAM_STUN
 
 	muzzle_type = /obj/effect/projectile/stun/muzzle
 	tracer_type = /obj/effect/projectile/stun/tracer
@@ -184,7 +182,7 @@
 
 /obj/item/projectile/beam/stun/shock
 	name = "shock beam"
-	damage_type = ELECTROCUTE
+	damage_type = DAM_PAIN
 	damage = 10
 	agony  = 5
 	fire_sound='sound/weapons/pulse.ogg'

@@ -7,11 +7,13 @@
 	w_class = ITEM_SIZE_LARGE
 	throwforce = 7
 	attack_verb = list("smashed", "beaten", "slammed", "smacked", "struck", "battered", "bonked")
-	hitsound = 'sound/weapons/genhit3.ogg'
+	sound_hit = 'sound/weapons/genhit3.ogg'
 	default_material = MATERIAL_WOOD
 	force_divisor = 1.1           // 22 when wielded with weight 20 (steel)
 	unwielded_force_divisor = 0.7 // 15 when unwielded based on above.
 	slot_flags = SLOT_BACK
+	damtype = DAM_BLUNT
+	mass = 2
 
 //Predefined materials go here.
 /obj/item/weapon/material/twohanded/baseballbat/metal/New(var/newloc)

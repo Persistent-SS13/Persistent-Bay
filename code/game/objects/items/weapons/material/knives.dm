@@ -3,28 +3,28 @@
 	desc = "A basic metal blade concealed in a lightweight plasteel grip. Small enough when folded to fit in a pocket."
 	icon_state = "butterflyknife"
 	item_state = null
-	hitsound = null
+	sound_hit = null
 	var/active = 0
 	w_class = ITEM_SIZE_SMALL
 	attack_verb = list("patted", "tapped")
 	force_divisor = 0.1 // 6 when wieldness with hardness 60 (steel)
 	thrown_force_divisor = 0.2 // 4 when thrown with weight 20 (steel)
+	damtype = DAM_CUT
+	mass = 0.8
 
 /obj/item/weapon/material/butterfly/update_force()
 	if(active)
-		edge = 1
-		sharp = 1
+		sharpness = 1
 		..() //Updates force.
 		throwforce = max(3,force-3)
-		hitsound = 'sound/weapons/bladeslice.ogg'
+		sound_hit = 'sound/weapons/bladeslice.ogg'
 		icon_state += "_open"
 		w_class = ITEM_SIZE_NORMAL
 		attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
 	else
 		force = 3
-		edge = 0
-		sharp = 0
-		hitsound = initial(hitsound)
+		sharpness = 0
+		sound_hit = initial(sound_hit)
 		icon_state = initial(icon_state)
 		w_class = initial(w_class)
 		attack_verb = initial(attack_verb)
@@ -34,6 +34,8 @@
 	desc = "A classic switchblade with gold engraving. Just holding it makes you feel like a gangster."
 	icon_state = "switchblade"
 	unbreakable = 1
+	damtype = DAM_CUT
+	mass = 0.5
 
 /obj/item/weapon/material/butterfly/attack_self(mob/user)
 	active = !active
@@ -54,13 +56,14 @@
 	icon_state = "knife"
 	desc = "A general purpose Chef's Knife made by SpaceCook Incorporated. Guaranteed to stay sharp for years to come."
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
-	sharp = 1
-	edge = 1
+	sharpness = 1
 	force_divisor = 0.15 // 9 when wielded with hardness 60 (steel)
 	matter = list(MATERIAL_STEEL = 12000)
 	origin_tech = list(TECH_MATERIAL = 1)
 	attack_verb = list("slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
 	unbreakable = 1
+	damtype = DAM_CUT
+	mass = 0.6
 
 /obj/item/weapon/material/knife/hook
 	name = "meat hook"
@@ -84,3 +87,5 @@
 	w_class = ITEM_SIZE_LARGE
 	force_divisor = 0.25 // 15 when wielded with hardness 60 (steel)
 	attack_verb = list("cleaved", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
+	damtype = list(DAM_CUT, DAM_BLUNT)
+	mass = 1

@@ -5,7 +5,19 @@
 	icon_state = "void"
 
 	heat_protection = HEAD
-	armor = list(melee = 40, bullet = 5, laser = 20,energy = 5, bomb = 35, bio = 100, rad = 20)
+	armor  = list(
+		DAM_BLUNT 	= 40,
+		DAM_PIERCE 	= 30,
+		DAM_CUT 	= 40,
+		DAM_BULLET 	= 10,
+		DAM_LASER 	= 20,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 35,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 20,
+		DAM_STUN 	= 0)
 	max_heat_protection_temperature = SPACE_SUIT_MAX_HEAT_PROTECTION_TEMPERATURE
 	siemens_coefficient = 0.4
 
@@ -28,7 +40,19 @@
 	//item_state = "syndie_hardsuit"
 	w_class = ITEM_SIZE_HUGE//bulky item
 	desc = "A primitive dark red space suit. Its simple, yet effective design is an all time favorite for novice explorers throughout the generations."
-	armor = list(melee = 40, bullet = 5, laser = 20,energy = 5, bomb = 20, bio = 100, rad = 20)
+	armor  = list(
+		DAM_BLUNT 	= 40,
+		DAM_PIERCE 	= 30,
+		DAM_CUT 	= 40,
+		DAM_BULLET 	= 10,
+		DAM_LASER 	= 20,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 35,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 20,
+		DAM_STUN 	= 0)
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit)
 	heat_protection = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
 	max_heat_protection_temperature = SPACE_SUIT_MAX_HEAT_PROTECTION_TEMPERATURE

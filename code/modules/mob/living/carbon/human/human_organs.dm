@@ -142,7 +142,7 @@
 		return
 
 	for (var/obj/item/organ/external/E in organs)
-		if(!E || !E.can_grasp)
+		if(!E || !E.can_grasp())
 			continue
 		if(((E.is_broken() || E.is_dislocated()) && !E.splinted) || E.is_malfunctioning())
 			grasp_damage_disarm(E)

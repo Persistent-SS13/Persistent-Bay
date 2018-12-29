@@ -260,7 +260,7 @@
 		if(1.0)
 			brute = 400
 			burn = 100
-			if(!anchored && !prob(getarmor(null, "bomb")))
+			if(!anchored && !prob(getarmor(null, DAM_BOMB)))
 				gib()
 		if(2.0)
 			brute = 60
@@ -268,7 +268,7 @@
 		if(3.0)
 			brute = 30
 
-	var/protection = blocked_mult(getarmor(null, "bomb"))
+	var/protection = blocked_mult(getarmor(null, DAM_BOMB))
 	brute *= protection
 	burn *= protection
 

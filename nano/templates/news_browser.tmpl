@@ -1,77 +1,60 @@
-<link href="spacemag.css" rel="stylesheet" type="text/css">
-{{if data.message}}
-<div class='item'>
-	{{:data.message}}
-	{{:helper.link('CLEAR', null, { "PRG_clearmessage" : 1 })}}
-</div>
+{{if data.menu == 1}}
+	<h2>Recent Articles</h2><hr>
+		<div class='block'>
+			{{for data.articles}}
+				{{:helper.link(value.name, '', {'action' : 'selectArticle', 'target' : value.ref}, null)}}<br>
+			{{/for}}
+		</div>
+	<h2>Recently Published Feeds</h2><hr>
+		<div class='block'>
+			{{for data.feeds}}
+				{{:helper.link(value.name, '', {'action' : 'selectFeed', 'target' : value.ref}, null)}}<br> 
+			{{/for}}
+		</div>
 {{/if}}
-{{if data.article}}
-	Viewing: {{:data.title}}<br>
-	{{:helper.link('CLOSE', null, { "PRG_reset" : 1 })}}
-	{{:helper.link('SAVE', null, { "PRG_savearticle" : 1 })}}
-	<br><br>
-	{{if data.cover}}
-		<img src='{{:data.cover}}' class="cover" />
+{{if data.menu == 2}}
+	<h1>{{:data.name}} (News Article)</h1><br>
+	{{:helper.link('Back', '', {'action' : 'deselectArticle'}, null)}}<br><br>
+	By: {{:data.author}}<br>
+	{{if data.allowed}}
+		<div class='block'>
+			{{:data.filedata}}
+		</div>
+	{{else}}
+		You do not have access to this article. Wear your valid ID and<br>
+		{{:helper.link('Click Here', '', {'action' : 'purchaseArticle'}, null)}}
+		to purchase access for {{:data.cost}}$$.
 	{{/if}}
-	{{:data.article}}
-{{else data.download_running}}
-	Downloading file...<br><br>
-	<div class='item'>
-		<div class='itemLabel'>
-			Progress:
+	
+{{/if}}
+{{if data.menu == 3}}
+	<h1>{{:data.name}} (News Issue)</h1><br>
+	{{:helper.link('Back', '', {'action' : 'deselectIssue'}, null)}}<br><br>
+	
+	A full physical copy of this issue can be printed for {{:data.cost}}$$.<br><br>
+	{{:helper.link('Purchase Paper', '', {'action' : 'purchaseIssue'}, null)}}
+	<h2>Articles</h2><hr>
+		<div class='block'>
+			{{for data.articles}}
+				{{:helper.link(value.name, '', {'action' : 'selectArticle', 'target' : value.ref}, null)}}<br>
+			{{/for}}
 		</div>
-		<div class='itemContent'>
-			{{:helper.displayBar(data.download_progress, 0, data.download_maxprogress, 'good')}}
-			{{:data.download_progress}} / {{:data.download_maxprogress}} GQ
+		
+{{/if}}
+{{if data.menu == 4}}
+	<h1>{{:data.name}} (News Feed)</h1><br>
+	{{:helper.link('Back', '', {'action' : 'deselectFeed'}, null)}}<br><br>
+	
+	<h2>Articles/h2><hr>
+		<div class='block'>
+			{{for data.articles}}
+				{{:helper.link(value.name, '', {'action' : 'selectArticle', 'target' : value.ref}, null)}}<br>
+			{{/for}}
 		</div>
-		<div class='itemLabel'>
-			Download speed:
+	<h2>Published Issues</h2><hr>
+		<div class='block'>
+			{{for data.issues}}
+				{{:helper.link(value.name, '', {'action' : 'selectIssue', 'target' : value.ref}, null)}}<br> 
+			{{/for}}
 		</div>
-		<div class='itemContent'>
-			{{:data.download_rate}} GQ/s
-		</div>
-		<div class='itemLabel'>
-			Controls:
-		</div>
-		<div class='itemContent'>
-			{{:helper.link('ABORT', null, { "PRG_reset" : 1 })}}
-		</div>
-	</div>
-{{else}}
-	<h3>Listing available files</h3>
-	<div class='item'>
-		<div class='itemLabel'>
-			Show archived files:
-		</div>
-		<div class='itemContent'>
-			{{if data.showing_archived}}
-				{{:helper.link('YES', null, { "PRG_toggle_archived" : 1 })}}
-			{{else}}
-				{{:helper.link('NO', null, { "PRG_toggle_archived" : 1 })}}
-			{{/if}}
-		</div>
-	</div>
-	<br><hr>
-	{{for data.all_articles}}
-		<div class='item'>
-			<div class='itemLabel'>
-				Name:
-			</div>
-			<div class='itemContent'>
-				{{:value.name}}
-			</div>
-			<div class='itemLabel'>
-				Size:
-			</div>
-			<div class='itemContent'>
-				{{:value.size}} GQ
-			</div>
-			<div class='itemLabel'>
-				Actions:
-			</div>
-			<div class='itemContent'>
-				{{:helper.link('OPEN', null, { "PRG_openarticle" : value.uid })}}
-			</div>
-		</div>
-	{{/for}}
 {{/if}}

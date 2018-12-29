@@ -52,6 +52,7 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 	var/priority = -1 ; //Priority of the message being sent
 	light_range = 0
 	var/datum/announcement/announcement = new
+	frame_type = /obj/item/frame/request_console
 
 /obj/machinery/requests_console/update_icon()
 	if(stat & NOPOWER)
@@ -83,8 +84,8 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 
 	set_light(1)
 
-	pixel_x = (dir & 3)? 0 : (dir == 4 ? -24 : 24)
-	pixel_y = (dir & 3)? (dir ==1 ? -24 : 24) : 0
+	pixel_x = (dir & 3)? 0 : (dir == 4 ? -42 : 42)
+	pixel_y = (dir & 3)? (dir ==1 ? -42 : 42) : 0
 
 /obj/machinery/requests_console/Destroy()
 	allConsoles -= src

@@ -82,6 +82,12 @@
 		SSwireless.remove_device(src)
 	return ..()
 
+/datum/wifi/receiver/proc/receive_topic(var/mob/living/user, var/list/href_list)
+	if(istype(parent, /obj/machinery))
+		parent.OnTopic(user,href_list)
+	else
+		parent.Topic(user,href_list)
+
 //-------------------------------
 // Sender
 //-------------------------------
@@ -100,6 +106,9 @@
 	return
 
 /datum/wifi/sender/proc/deactivate(mob/living/user)
+	return
+
+/datum/wifi/sender/proc/send_topic(var/mob/living/user, var/list/href_list)
 	return
 
 //-------------------------------

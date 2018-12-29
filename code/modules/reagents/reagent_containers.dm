@@ -56,6 +56,10 @@
 	if(!istype(target))
 		return 0
 
+	if(target.tankcap)
+		to_chat(user, SPAN_NOTICE("\The [target]'s tank cap is opened for pouring."))
+		return standard_pour_into(user, target)
+
 	if(!target.reagents || !target.reagents.total_volume)
 		to_chat(user, "<span class='notice'>[target] is empty.</span>")
 		return 1

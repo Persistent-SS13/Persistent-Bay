@@ -27,6 +27,7 @@
 	var/account_security_level = 0
 	var/buildstage = 2	// 2 = complete, 1 = no wires,  0 = circuit gone
 	var/wiresexposed = 0
+	frame_type = /obj/item/frame/atm
 
 /obj/machinery/atm/update_icon()	//Sprites for each build stage
 	overlays.Cut()

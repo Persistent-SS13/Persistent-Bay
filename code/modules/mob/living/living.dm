@@ -659,11 +659,11 @@ default behaviour is:
 		visible_message("<span class='danger'>[src] resists!</span>")
 
 /mob/living/verb/lay_down()
-	set name = "Rest"
+	set name = "Lay down"
 	set category = "IC"
 
 	resting = !resting
-	to_chat(src, "<span class='notice'>You are now [resting ? "resting" : "getting up"]</span>")
+	to_chat(src, "<span class='notice'>You are now [resting ? "laying down" : "getting up"]</span>")
 
 //called when the mob receives a bright flash
 /mob/living/flash_eyes(intensity = FLASH_PROTECTION_MODERATE, override_blindness_check = FALSE, affect_silicon = FALSE, visual = FALSE, type = /obj/screen/fullscreen/flash)

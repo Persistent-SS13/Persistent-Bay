@@ -23,6 +23,15 @@ var/list/floor_light_cache = list()
 /obj/machinery/floor_light/prebuilt
 	anchored = 1
 
+
+/obj/machinery/floor_light/after_load()
+	..()
+	update_brightness()
+
+/obj/machinery/floor_light/Destroy()
+	turn_off()
+	. = ..()
+
 /obj/machinery/floor_light/attackby(var/obj/item/W, var/mob/user)
 	if(isScrewdriver(W))
 		anchored = !anchored

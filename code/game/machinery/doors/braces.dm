@@ -23,11 +23,23 @@
 	var/obj/machinery/door/airlock/airlock = null
 	var/obj/item/weapon/airlock_electronics/brace/electronics
 
+/obj/item/weapon/airlock_brace/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		electronics = new/obj/item/weapon/airlock_electronics/brace(src)
+	update_access()
+
+/obj/item/weapon/airlock_brace/Destroy()
+	if(airlock)
+		airlock.brace = null
+		airlock = null
+	qdel(electronics)
+	electronics = null
+	..()
 
 /obj/item/weapon/airlock_brace/examine(var/mob/user)
 	. = ..()
 	to_chat(user, examine_health())
-
 
 // This is also called from airlock's examine, so it's a different proc to prevent code copypaste.
 /obj/item/weapon/airlock_brace/proc/examine_health()
@@ -43,33 +55,15 @@
 		if(99 to INFINITY)
 			return "\The [src] is in excellent condition."
 
-
 /obj/item/weapon/airlock_brace/update_icon()
 	if(airlock)
 		icon_state = "brace_closed"
 	else
 		icon_state = "brace_open"
 
-
-/obj/item/weapon/airlock_brace/New()
-	..()
-	cur_health = max_health
-	electronics = new/obj/item/weapon/airlock_electronics/brace(src)
-	update_access()
-
-/obj/item/weapon/airlock_brace/Destroy()
-	if(airlock)
-		airlock.brace = null
-		airlock = null
-	qdel(electronics)
-	electronics = null
-	..()
-
-
 // Interact with the electronics to set access requirements.
 /obj/item/weapon/airlock_brace/attack_self(mob/user as mob)
 	electronics.attack_self(user)
-
 
 /obj/item/weapon/airlock_brace/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	..()
@@ -104,7 +98,7 @@
 		if(cur_health == max_health)
 			to_chat(user, "\The [src] does not require repairs.")
 			return
-		if(C.remove_fuel(0,user))
+		if(C.do_weld(user, src, 2))
 			playsound(src, 'sound/items/Welder.ogg', 100, 1)
 			cur_health = min(cur_health + rand(80,120), max_health)
 			if(cur_health == max_health)

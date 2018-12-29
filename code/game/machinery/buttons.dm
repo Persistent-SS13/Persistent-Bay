@@ -12,6 +12,8 @@
 	active_power_usage = 4
 	var/_wifi_id
 	var/datum/wifi/sender/wifi_sender
+	//The topic the button will trigger on the target
+	var/activate_func = "activate"
 
 /obj/machinery/button/Initialize()
 	. = ..()
@@ -28,7 +30,9 @@
 	return attack_hand(user)
 
 /obj/machinery/button/attackby(obj/item/weapon/W, mob/user as mob)
-	return attack_hand(user)
+	if(default_deconstruction_screwdriver(W))
+		return
+	return ..()
 
 /obj/machinery/button/attack_hand(mob/living/user)
 	if(..()) return 1
@@ -44,7 +48,7 @@
 	active = 1
 	use_power(5)
 	update_icon()
-	wifi_sender.activate(user)
+	wifi_sender.send_topic(user, list("[activate_func]" = 1))
 	sleep(10)
 	active = 0
 	update_icon()

@@ -63,6 +63,9 @@
 	// contained in a cage
 	var/in_stasis = 0
 
+	//Grabbing up 
+	holder_type = /obj/item/weapon/holder
+
 /mob/living/simple_animal/after_load()
 	if(stat == 2)
 		death()

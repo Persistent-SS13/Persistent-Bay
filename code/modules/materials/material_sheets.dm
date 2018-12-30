@@ -692,8 +692,8 @@
 	if(material) color = material.icon_colour
 
 //Edible materials!
- /obj/item/stack/material/edible
- 	name = "edible"
+/obj/item/stack/material/edible
+	name = "edible"
 	icon_state = "sheet-leather"
 	default_type = "pinkgoo"
 

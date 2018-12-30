@@ -210,7 +210,7 @@
 
 	if (src.active)
 		user.visible_message(SPAN_NOTICE("\icon[src] [user] deactivated the shield generator."), \
-			SPAN_NOTICE("\icon[src] You deactivate the shield generator.</span>"), \
+			SPAN_NOTICE("\icon[src] You deactivate the shield generator."), \
 			"You hear heavy droning fade out.")
 		src.shields_down()
 	else

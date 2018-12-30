@@ -28,7 +28,7 @@
 		return 0
 	if(status & ORGAN_DEAD)
 		return 0
-	return round(cell.charge*(1 - damage/max_damage))
+	return round(cell.charge*(1 - health/max_health))
 
 /obj/item/organ/internal/cell/proc/check_charge(var/amount)
 	return get_charge() >= amount

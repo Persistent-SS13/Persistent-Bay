@@ -4,6 +4,7 @@
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "echair0"
 	base_icon = "echair0"
+	max_health = 150
 	var/on = 0
 	var/obj/item/assembly/shock_kit/part = null
 	var/last_time = 1.0

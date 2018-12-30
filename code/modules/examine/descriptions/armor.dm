@@ -27,21 +27,28 @@
 	. += description_info + "\
 		<br>"
 
-	if(armor["melee"])
-		. += "[describe_armor("melee","blunt force")] \n"
-	if(armor["bullet"])
-		. += "[describe_armor("bullet","ballistics")] \n"
-	if(armor["laser"])
-		. += "[describe_armor("laser","lasers")] \n"
-	if(armor["energy"])
-		. += "[describe_armor("energy","energy")] \n"
-	if(armor["bomb"])
-		. += "[describe_armor("bomb","explosions")] \n"
-	if(armor["bio"])
-		. += "[describe_armor("bio","biohazards")] \n"
-	if(armor["rad"])
-		. += "[describe_armor("rad","radiation")] \n"
-
+	if(armor[DAM_BLUNT])
+		. += "[describe_armor(DAM_BLUNT,"blunt force")] \n"
+	if(armor[DAM_CUT])
+		. += "[describe_armor(DAM_CUT,"sharp objects")] \n"
+	if(armor[DAM_PIERCE])
+		. += "[describe_armor(DAM_PIERCE,"piercing damage")] \n"
+	if(armor[DAM_BULLET])
+		. += "[describe_armor(DAM_BULLET,"ballistics")] \n"
+	if(armor[DAM_LASER])
+		. += "[describe_armor(DAM_LASER,"lasers")] \n"
+	if(armor[DAM_ENERGY])
+		. += "[describe_armor(DAM_ENERGY,"energy")] \n"
+	if(armor[DAM_EMP])
+		. += "[describe_armor(DAM_EMP,"emps")] \n"
+	if(armor[DAM_BURN])
+		. += "[describe_armor(DAM_BURN,"burns")] \n"
+	if(armor[DAM_BOMB])
+		. += "[describe_armor(DAM_BOMB,"explosions")] \n"
+	if(armor[DAM_BIO])
+		. += "[describe_armor(DAM_BIO,"biohazards")] \n"
+	if(armor[DAM_RADS])
+		. += "[describe_armor(DAM_RADS,"radiation")] \n"
 	. += "\n"
 
 	if(item_flags & ITEM_FLAG_AIRTIGHT)

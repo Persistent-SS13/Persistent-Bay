@@ -23,7 +23,7 @@ meteor_act
 			return 100
 
 	var/obj/item/organ/external/organ = get_organ(def_zone)
-	var/armor = getarmor_organ(organ, P.check_armour)
+	var/armor = getarmor_organ(organ, P.damage_type)
 	var/penetrating_damage = ((P.damage + P.armor_penetration) * P.penetration_modifier) - armor
 
 	//Embed or sever artery
@@ -166,7 +166,7 @@ meteor_act
 
 	visible_message("<span class='danger'>[src] has been [I.attack_verb.len? pick(I.attack_verb) : "attacked"] in the [affecting.name] with [I.name] by [user]!</span>")
 
-	var/blocked = run_armor_check(hit_zone, "melee", I.armor_penetration, "Your armor has protected your [affecting.name].", "Your armor has softened the blow to your [affecting.name].")
+	var/blocked = run_armor_check(hit_zone, I.damtype, I.armor_penetration, "Your armor has protected your [affecting.name].", "Your armor has softened the blow to your [affecting.name].")
 	standard_weapon_hit_effects(I, user, effective_force, blocked, hit_zone)
 
 	return blocked
@@ -209,18 +209,18 @@ meteor_act
 	return 1
 
 /mob/living/carbon/human/proc/attack_bloody(obj/item/W, mob/living/attacker, var/effective_force, var/hit_zone)
-	if(W.damtype != BRUTE)
+	if(!cmpdamtype(W.damtype, DAM_CUT))
 		return
 
 	//make non-sharp low-force weapons less likely to be bloodied
-	if(W.sharp || prob(effective_force*4))
+	if(W.sharpness || prob(effective_force*4))
 		if(!(W.atom_flags & ATOM_FLAG_NO_BLOOD))
 			W.add_blood(src)
 	else
 		return //if the weapon itself didn't get bloodied than it makes little sense for the target to be bloodied either
 
 	//getting the weapon bloodied is easier than getting the target covered in blood, so run prob() again
-	if(prob(33 + W.sharp*10))
+	if(prob(33 + W.sharpness*10))
 		var/turf/location = loc
 		if(istype(location, /turf/simulated))
 			location.add_blood(src)
@@ -245,9 +245,9 @@ meteor_act
 				bloody_body(src)
 
 /mob/living/carbon/human/proc/projectile_hit_bloody(obj/item/projectile/P, var/effective_force, var/hit_zone)
-	if(P.damage_type != BRUTE || P.nodamage)
+	if( !cmpdamtype(P.damage_type, DAM_BULLET) || P.nodamage)
 		return
-	if(!(P.sharp || prob(effective_force*4)))
+	if(!(P.sharpness || prob(effective_force*4)))
 		return
 	if(prob(effective_force))
 		var/turf/location = loc
@@ -342,12 +342,11 @@ meteor_act
 		var/datum/wound/created_wound
 
 		src.visible_message("<span class='warning'>\The [src] has been hit in the [hit_area] by \the [O].</span>")
-		var/armor = run_armor_check(affecting, "melee", O.armor_penetration, "Your armor has protected your [hit_area].", "Your armor has softened hit to your [hit_area].") //I guess "melee" is the best fit here
+		var/armor = run_armor_check(affecting, dtype, O.armor_penetration, "Your armor has protected your [hit_area].", "Your armor has softened hit to your [hit_area].")
 		if(armor < 100)
-			var/damage_flags = O.damage_flags()
 			if(prob(armor))
-				damage_flags &= ~(DAM_SHARP|DAM_EDGE)
-			created_wound = apply_damage(throw_damage, dtype, zone, armor, damage_flags, O)
+				dtype = DAM_BLUNT //If amor absorb it, turn to blunt
+			created_wound = apply_damage(throw_damage, dtype, zone, armor, 0, O)
 
 		if(ismob(O.thrower))
 			var/mob/M = O.thrower
@@ -356,7 +355,7 @@ meteor_act
 				admin_attack_log(M, src, "Threw \an [O] at their victim.", "Had \an [O] thrown at them", "threw \an [O] at")
 
 		//thrown weapon embedded object code.
-		if(dtype == BRUTE && istype(O,/obj/item))
+		if(IsDamageTypeBrute(dtype) && istype(O,/obj/item))
 			var/obj/item/I = O
 			if (!is_robot_module(I))
 				var/sharp = is_sharp(I)
@@ -374,7 +373,7 @@ meteor_act
 					affecting.embed(I, supplied_wound = created_wound)
 
 		// Begin BS12 momentum-transfer code.
-		var/mass = 1.5
+		var/mass = AM.mass
 		if(istype(O, /obj/item))
 			var/obj/item/I = O
 			mass = I.w_class/THROWNOBJ_KNOCKBACK_DIVISOR
@@ -388,7 +387,7 @@ meteor_act
 
 			if(!O || !src) return
 
-			if(O.loc == src && O.sharp) //Projectile is embedded and suitable for pinning.
+			if(O.loc == src && O.sharpness) //Projectile is embedded and suitable for pinning.
 				var/turf/T = near_wall(dir,2)
 
 				if(T)
@@ -426,7 +425,7 @@ meteor_act
 /mob/living/carbon/human/proc/handle_suit_punctures(var/damtype, var/damage, var/def_zone)
 
 	// Tox and oxy don't matter to suits.
-	if(damtype != BURN && damtype != BRUTE) return
+	if(damtype != DAM_BURN && damtype != DAM_CUT && damtype != DAM_PIERCE && damtype != DAM_BULLET && damtype != DAM_LASER && damtype != DAM_BOMB && damtype != DAM_ENERGY ) return
 
 	// The rig might soak this hit, if we're wearing one.
 	if(back && istype(back,/obj/item/weapon/rig))

@@ -78,3 +78,14 @@
 	if(drowsy)		apply_effect(drowsy,    DROWSY, blocked)
 	if(agony)		apply_effect(agony,     PAIN, blocked)
 	return 1
+
+//Handles all armor damage type conversion effects at the same place
+/mob/living/proc/HandleArmorDamTypeConversion(var/dtype, var/armor as num)
+	. = dtype
+	if(prob(armor))
+		//Armor eats dangerous damages and turn them to blunt and burn
+		if(cmpdamtype(dtype,DAM_CUT) || cmpdamtype(dtype,DAM_PIERCE))
+			. = DAM_BLUNT
+		else if(cmpdamtype(dtype,DAM_LASER) ||  cmpdamtype(dtype,DAM_ENERGY))
+			. = DAM_BURN
+	return .

@@ -165,9 +165,9 @@
 				if(I.organ_tag == BP_BRAIN)
 					H.confused++
 					H.drowsyness++
-					if(I.damage >= I.min_bruised_damage)
+					if(I.get_damages() >= I.min_bruised_damage)
 						continue
-				I.damage = max(I.damage - (removed), 0)
+				I.add_health(removed)
 
 /datum/reagent/clonexadone
 	name = "Clonexadone"
@@ -192,9 +192,9 @@
 				if(I.organ_tag == BP_BRAIN)
 					H.confused++
 					H.drowsyness++
-					if(I.damage >= I.min_bruised_damage)
+					if(I.get_damages() >= I.min_bruised_damage)
 						continue
-				I.damage = max(I.damage - (removed), 0)
+				I.add_health(removed)
 
 /* Painkillers */
 
@@ -350,8 +350,8 @@
 		var/mob/living/carbon/human/H = M
 		var/obj/item/organ/internal/eyes/E = H.internal_organs_by_name[BP_EYES]
 		if(E && istype(E))
-			if(E.damage > 0)
-				E.damage = max(E.damage - 5 * removed, 0)
+			if(E.isdamaged())
+				E.add_health(E.get_damages() - 5 * removed)
 
 /datum/reagent/peridaxon
 	name = "Peridaxon"
@@ -372,9 +372,9 @@
 			if(I.organ_tag == BP_BRAIN)
 				H.confused++
 				H.drowsyness++
-				if(I.damage >= I.min_bruised_damage)
+				if(I.get_damages() >= I.min_bruised_damage)
 					continue
-			I.damage = max(I.damage - removed, 0)
+			I.add_health(removed)
 
 /datum/reagent/ryetalyn
 	name = "Ryetalyn"

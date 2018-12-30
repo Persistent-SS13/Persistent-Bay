@@ -3,13 +3,12 @@
 // They are also fragile based on material data and many can break/smash apart.
 /obj/item/weapon/material
 	health = 10
-	hitsound = 'sound/weapons/bladeslice.ogg'
+	sound_hit = 'sound/weapons/bladeslice.ogg'
 	gender = NEUTER
 	throw_speed = 3
 	throw_range = 7
 	w_class = ITEM_SIZE_NORMAL
-	sharp = 0
-	edge = 0
+	sharpness = 0
 
 	var/applies_material_colour = 1
 	var/unbreakable
@@ -38,7 +37,7 @@
 	return material
 
 /obj/item/weapon/material/proc/update_force()
-	if(edge || sharp)
+	if(damtype & DAM_CUT || damtype & DAM_PIERCE)
 		force = material.get_edge_damage()
 	else
 		force = material.get_blunt_damage()
@@ -54,7 +53,8 @@
 		qdel(src)
 	else
 		name = "[material.display_name] [initial(name)]"
-		health = round(material.integrity/10)
+		max_health = round(material.integrity/10)
+		health = max_health
 		if(applies_material_colour)
 			color = material.icon_colour
 		if(material.products_need_process())
@@ -63,6 +63,7 @@
 			obj_flags |= OBJ_FLAG_CONDUCTIBLE
 		else
 			obj_flags &= (~OBJ_FLAG_CONDUCTIBLE)
+		mass += material.weight
 		update_force()
 
 /obj/item/weapon/material/Destroy()
@@ -98,7 +99,7 @@ Commenting this out pending rebalancing of radiation based on small objects.
 	if(!material.radioactivity)
 		return
 	for(var/mob/living/L in range(1,src))
-		L.apply_effect(round(material.radioactivity/30),IRRADIATE, blocked = L.getarmor(null, "rad"))
+		L.apply_effect(round(material.radioactivity/30),IRRADIATE, blocked = L.getarmor(null, DAM_RADS))
 */
 
 /*

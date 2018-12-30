@@ -3,7 +3,19 @@
 	suit_type = "augmented suit"
 	desc = "Prepare for paperwork."
 	icon_state = "internalaffairs_rig"
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 	siemens_coefficient = 0.9
 	online_slowdown = 0
 	offline_slowdown = 0
@@ -41,7 +53,19 @@
 	suit_type = "industrial hardsuit"
 	desc = "A heavy, powerful rig used by construction crews and mining corporations."
 	icon_state = "engineering_rig"
-	armor = list(melee = 60, bullet = 50, laser = 50,energy = 15, bomb = 30, bio = 100, rad = 50)
+	armor  = list(
+		DAM_BLUNT 	= 60,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 50,
+		DAM_LASER 	= 50,
+		DAM_ENERGY 	= 15,
+		DAM_BURN 	= 40,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 50,
+		DAM_STUN 	= 0)
 	online_slowdown = 3
 	offline_slowdown = 10
 	vision_restriction = TINT_HEAVY
@@ -87,7 +111,19 @@
 	suit_type = "EVA hardsuit"
 	desc = "A light rig for repairs and maintenance to the outside of habitats and vessels."
 	icon_state = "eva_rig"
-	armor = list(melee = 30, bullet = 10, laser = 20,energy = 25, bomb = 20, bio = 100, rad = 100)
+	armor  = list(
+		DAM_BLUNT 	= 30,
+		DAM_PIERCE 	= 20,
+		DAM_CUT 	= 30,
+		DAM_BULLET 	= 10,
+		DAM_LASER 	= 20,
+		DAM_ENERGY 	= 25,
+		DAM_BURN 	= 15,
+		DAM_BOMB 	= 20,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 100,
+		DAM_STUN 	= 0)
 	online_slowdown = 0
 	offline_slowdown = 1
 	offline_vision_restriction = TINT_HEAVY
@@ -132,7 +168,19 @@
 	suit_type = "engineering hardsuit"
 	desc = "An advanced hardsuit that protects against hazardous, low pressure environments. Shines with a high polish. Appears compatible with the physiology of most species."
 	icon_state = "ce_rig"
-	armor = list(melee = 40, bullet = 10, laser = 30,energy = 25, bomb = 40, bio = 100, rad = 100)
+	armor  = list(
+		DAM_BLUNT 	= 40,
+		DAM_PIERCE 	= 30,
+		DAM_CUT 	= 40,
+		DAM_BULLET 	= 10,
+		DAM_LASER 	= 30,
+		DAM_ENERGY 	= 25,
+		DAM_BURN 	= 15,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 100,
+		DAM_STUN 	= 0)
 	online_slowdown = 0
 	offline_slowdown = 0
 	offline_vision_restriction = TINT_HEAVY
@@ -169,7 +217,19 @@
 	suit_type = "hazmat hardsuit"
 	desc = "An Anomalous Material Interaction hardsuit, a prototype Nanotrasen design, protects the wearer against the strangest energies the universe can throw at it."
 	icon_state = "science_rig"
-	armor = list(melee = 45, bullet = 5, laser = 45, energy = 80, bomb = 60, bio = 100, rad = 100)
+	armor  = list(
+		DAM_BLUNT 	= 45,
+		DAM_PIERCE 	= 35,
+		DAM_CUT 	= 45,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 45,
+		DAM_ENERGY 	= 80,
+		DAM_BURN 	= 60,
+		DAM_BOMB 	= 60,
+		DAM_EMP 	= 40,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 100,
+		DAM_STUN 	= 0)
 	online_slowdown = 1
 	offline_vision_restriction = TINT_HEAVY
 
@@ -213,7 +273,19 @@
 	suit_type = "rescue hardsuit"
 	desc = "A durable suit designed for medical rescue in high risk areas."
 	icon_state = "medical_rig"
-	armor = list(melee = 30, bullet = 15, laser = 25, energy = 60, bomb = 30, bio = 100, rad = 100)
+	armor  = list(
+		DAM_BLUNT 	= 30,
+		DAM_PIERCE 	= 20,
+		DAM_CUT 	= 30,
+		DAM_BULLET 	= 15,
+		DAM_LASER 	= 25,
+		DAM_ENERGY 	= 60,
+		DAM_BURN 	= 40,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 100,
+		DAM_STUN 	= 0)
 	online_slowdown = 1
 	offline_vision_restriction = TINT_HEAVY
 
@@ -256,7 +328,19 @@
 	suit_type = "hazard hardsuit"
 	desc = "A Nanotrasen security hardsuit designed for prolonged EVA in dangerous environments."
 	icon_state = "hazard_rig"
-	armor = list(melee = 60, bullet = 40, laser = 40, energy = 15, bomb = 60, bio = 100, rad = 30)
+	armor  = list(
+		DAM_BLUNT 	= 60,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 40,
+		DAM_LASER 	= 40,
+		DAM_ENERGY 	= 15,
+		DAM_BURN 	= 30,
+		DAM_BOMB 	= 60,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 30,
+		DAM_STUN 	= 5)
 	online_slowdown = 1
 	offline_slowdown = 3
 	offline_vision_restriction = TINT_BLIND

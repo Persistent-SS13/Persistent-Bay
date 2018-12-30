@@ -159,8 +159,8 @@
 
 	//next internal organs
 	for(var/obj/item/organ/I in H.internal_organs)
-		if(I.damage > 0)
-			I.damage = max(I.damage - heal_rate, 0)
+		if(I.isdamaged())
+			I.add_health(heal_rate)
 			if (prob(5))
 				to_chat(H, "<span class='alium'>You feel a soothing sensation within your [I.parent_organ]...</span>")
 			return 1

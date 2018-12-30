@@ -3,13 +3,14 @@
 	desc = "An arcane weapon wielded by the followers of Nar-Sie."
 	icon_state = "cultblade"
 	item_state = "cultblade"
-	edge = 1
-	sharp = 1
+	sharpness = 1
 	w_class = ITEM_SIZE_LARGE
 	force = 30
 	throwforce = 10
-	hitsound = 'sound/weapons/bladeslice.ogg'
+	sound_hit = 'sound/weapons/bladeslice.ogg'
 	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
+	damtype = DAM_CUT
+	mass = 1.2
 
 /obj/item/weapon/melee/cultblade/attack(mob/living/M, mob/living/user, var/target_zone)
 	if(iscultist(user) || (user.mind in godcult.current_antagonists))
@@ -28,7 +29,7 @@
 		to_chat(user, "<span class='danger'>An unexplicable force rips through you, tearing the sword from your grasp!</span>")
 
 	//random amount of damage between half of the blade's force and the full force of the blade.
-	user.apply_damage(rand(force/2, force), BRUTE, zone, 0, (DAM_SHARP|DAM_EDGE))
+	user.apply_damage(rand(force/2, force), damtype, zone, 0)
 	user.Weaken(5)
 
 	user.drop_from_inventory(src)
@@ -51,14 +52,16 @@
 	desc = "A hood worn by the followers of Nar-Sie."
 	flags_inv = HIDEFACE
 	body_parts_covered = HEAD
-	armor = list(melee = 30, bullet = 10, laser = 5,energy = 5, bomb = 0, bio = 0, rad = 0)
 	cold_protection = HEAD
 	min_cold_protection_temperature = SPACE_HELMET_MIN_COLD_PROTECTION_TEMPERATURE
 	siemens_coefficient = 0.8 //That's a pretty cool opening in the hood. Also: Cloth making physical contact to the skull.
+	armor = list(DAM_BLUNT = 30, DAM_PIERCE = 10, DAM_CUT = 20, DAM_BULLET = 10, DAM_LASER = 5, DAM_ENERGY = 5, DAM_BURN = 5,
+		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0) 
 
 /obj/item/clothing/head/culthood/costume
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
 	siemens_coefficient = 1.0
+	armor  = list(DAM_BLUNT = 0, DAM_PIERCE = 0, DAM_CUT = 0, DAM_BULLET = 0, DAM_LASER = 0, DAM_ENERGY = 0, DAM_BURN = 0,
+		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0) 
 
 /obj/item/clothing/head/culthood/magus
 	name = "magus helm"
@@ -66,18 +69,21 @@
 	desc = "A helm worn by the followers of Nar-Sie."
 	flags_inv = HIDEFACE | BLOCKHAIR
 	body_parts_covered = HEAD|FACE|EYES
-	armor = list(melee = 50, bullet = 40, laser = 30, energy = 20, bomb = 15, bio = 0, rad = 0)
+	armor  = list(DAM_BLUNT = 50, DAM_PIERCE = 40, DAM_CUT = 50, DAM_BULLET = 40, DAM_LASER = 30, DAM_ENERGY = 20, DAM_BURN = 30,
+		DAM_BOMB = 15, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0) 
 
 /obj/item/clothing/head/culthood/magus/costume
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
 	siemens_coefficient = 1.0
+	armor  = list(DAM_BLUNT = 0, DAM_PIERCE = 0, DAM_CUT = 0, DAM_BULLET = 0, DAM_LASER = 0, DAM_ENERGY = 0, DAM_BURN = 0,
+		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0) 
 
 /obj/item/clothing/head/culthood/alt
 	icon_state = "cult_hoodalt"
 
 /obj/item/clothing/head/culthood/alt/costume
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
 	siemens_coefficient = 1.0
+	armor  = list(DAM_BLUNT = 0, DAM_PIERCE = 0, DAM_CUT = 0, DAM_BULLET = 0, DAM_LASER = 0, DAM_ENERGY = 0, DAM_BURN = 0,
+		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0) 
 
 /obj/item/clothing/suit/cultrobes
 	name = "cult robes"
@@ -85,20 +91,23 @@
 	icon_state = "cultrobes"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
 	allowed = list(/obj/item/weapon/book/tome,/obj/item/weapon/melee/cultblade)
-	armor = list(melee = 35, bullet = 30, laser = 25,energy = 20, bomb = 25, bio = 10, rad = 0)
 	flags_inv = HIDEJUMPSUIT
 	siemens_coefficient = 0.6
+	armor  = list(DAM_BLUNT = 35, DAM_PIERCE = 25, DAM_CUT = 25, DAM_BULLET = 30, DAM_LASER = 25, DAM_ENERGY = 20, DAM_BURN = 25,
+		DAM_BOMB = 25, DAM_EMP = 0, DAM_BIO = 10, DAM_RADS = 0, DAM_STUN = 0) 
 
 /obj/item/clothing/suit/cultrobes/costume
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
 	siemens_coefficient = 1.0
+	armor  = list(DAM_BLUNT = 0, DAM_PIERCE = 0, DAM_CUT = 0, DAM_BULLET = 0, DAM_LASER = 0, DAM_ENERGY = 0, DAM_BURN = 0,
+		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0) 
 
 /obj/item/clothing/suit/cultrobes/alt
 	icon_state = "cultrobesalt"
 
 /obj/item/clothing/suit/cultrobes/alt/costume
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
 	siemens_coefficient = 1.0
+	armor  = list(DAM_BLUNT = 0, DAM_PIERCE = 0, DAM_CUT = 0, DAM_BULLET = 0, DAM_LASER = 0, DAM_ENERGY = 0, DAM_BURN = 0,
+		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0) 
 
 /obj/item/clothing/suit/cultrobes/magusred
 	name = "magus robes"
@@ -106,10 +115,12 @@
 	icon_state = "magusred"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT
-	armor = list(melee = 75, bullet = 50, laser = 55, energy = 40, bomb = 50, bio = 10, rad = 0)
+	armor  = list(DAM_BLUNT = 75, DAM_PIERCE = 65, DAM_CUT = 75, DAM_BULLET = 50, DAM_LASER = 55, DAM_ENERGY = 40, DAM_BURN = 55,
+		DAM_BOMB = 50, DAM_EMP = 0, DAM_BIO = 10, DAM_RADS = 0, DAM_STUN = 0) 
 
 /obj/item/clothing/suit/cultrobes/magusred/costume
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	armor  = list(DAM_BLUNT = 0, DAM_PIERCE = 0, DAM_CUT = 0, DAM_BULLET = 0, DAM_LASER = 0, DAM_ENERGY = 0, DAM_BURN = 0,
+		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0) 
 
 /obj/item/clothing/suit/cultrobes/magusred/New()
 	..()
@@ -119,17 +130,19 @@
 	name = "cult helmet"
 	desc = "A space worthy helmet used by the followers of Nar-Sie."
 	icon_state = "cult_helmet"
-	armor = list(melee = 60, bullet = 60, laser = 60,energy = 15, bomb = 30, bio = 100, rad = 30) //Real tanky shit.
 	siemens_coefficient = 0.3 //Bone is not very conducive to electricity.
+	armor  = list(DAM_BLUNT = 60, DAM_PIERCE = 50, DAM_CUT = 60, DAM_BULLET = 60, DAM_LASER = 60, DAM_ENERGY = 15, DAM_BURN = 60,
+		DAM_BOMB = 30, DAM_EMP = 0, DAM_BIO = 100, DAM_RADS = 30, DAM_STUN = 0) 
 
 /obj/item/clothing/suit/space/cult
 	name = "cult armour"
 	icon_state = "cult_armour"
 	desc = "A bulky suit of armour, bristling with spikes. It looks space proof."
 	allowed = list(/obj/item/weapon/book/tome,/obj/item/weapon/melee/cultblade,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit)
-	armor = list(melee = 60, bullet = 50, laser = 60,energy = 15, bomb = 30, bio = 100, rad = 30)
 	siemens_coefficient = 0.2
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS|HANDS
+	armor  = list(DAM_BLUNT = 60, DAM_PIERCE = 50, DAM_CUT = 60, DAM_BULLET = 50, DAM_LASER = 60, DAM_ENERGY = 15, DAM_BURN = 60,
+		DAM_BOMB = 30, DAM_EMP = 0, DAM_BIO = 100, DAM_RADS = 30, DAM_STUN = 0) 
 
 /obj/item/clothing/suit/space/cult/New()
 	..()

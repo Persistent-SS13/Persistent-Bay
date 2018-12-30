@@ -63,10 +63,13 @@
 	// contained in a cage
 	var/in_stasis = 0
 
+	//Grabbing up 
+	holder_type = /obj/item/weapon/holder
+
 /mob/living/simple_animal/after_load()
 	if(stat == 2)
 		death()
-	
+
 /mob/living/simple_animal/Life()
 	..()
 
@@ -274,7 +277,7 @@
 	switch (severity)
 		if (1.0)
 			damage = 500
-			if(!prob(getarmor(null, "bomb")))
+			if(!prob(getarmor(null, DAM_BOMB)))
 				gib()
 
 		if (2.0)
@@ -283,7 +286,7 @@
 		if(3.0)
 			damage = 30
 
-	adjustBruteLoss(damage * blocked_mult(getarmor(null, "bomb")))
+	adjustBruteLoss(damage * blocked_mult(getarmor(null, DAM_BOMB)))
 
 /mob/living/simple_animal/adjustBruteLoss(damage)
 	..()
@@ -345,12 +348,10 @@
 			user.visible_message("<span class='danger'>[user] butchers \the [src] messily!</span>")
 			gib()
 
-/mob/living/simple_animal/handle_fire()
-	return
-
-/mob/living/simple_animal/update_fire()
-	return
-/mob/living/simple_animal/IgniteMob()
-	return
-/mob/living/simple_animal/ExtinguishMob()
-	return
+///mob/living/simple_animal/handle_fire()
+//	return
+//
+///mob/living/simple_animal/IgniteMob()
+//	return
+///mob/living/simple_animal/ExtinguishMob()
+//	return

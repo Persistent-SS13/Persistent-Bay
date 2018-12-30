@@ -128,9 +128,21 @@
 	action_button_name = "Toggle Goggles"
 	toggleable = 1
 	see_invisible = SEE_INVISIBLE_NOLIGHTING
-	armor = list(melee = 20, bullet = 20, laser = 20, energy = 15, bomb = 20, bio = 0, rad = 0)
 	siemens_coefficient = 0.6
 	electric = 1
+	armor  = list(
+		DAM_BLUNT 	= 20,
+		DAM_PIERCE 	= 10,
+		DAM_CUT 	= 20,
+		DAM_BULLET 	= 20,
+		DAM_LASER 	= 20,
+		DAM_ENERGY 	= 15,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 20,
+		DAM_EMP 	= 10,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/glasses/eyepatch
 	name = "eyepatch"

@@ -8,6 +8,7 @@
 	desc = "A conveyor belt."
 	layer = BELOW_OBJ_LAYER	// so they appear under stuff
 	anchored = 1
+	max_health = 25
 	active_power_usage = 20 //Watts
 	var/operating = 0	// 1 if running forward, -1 if backwards, 0 if off
 	var/operable = 1	// true if can operate (no broken segments in this belt run)
@@ -46,7 +47,7 @@
 	update_icon()
 
 /obj/machinery/conveyor/update_icon()
-	if(stat & BROKEN)
+	if(isbroken())
 		icon_state = "conveyor-broken"
 		operating = 0
 		return
@@ -99,7 +100,7 @@
 			to_chat(user, "<span class='notice'>You set \the [mt]'s buffer to \the [src]!</span>")
 		return
 	if(isCrowbar(I))
-		if(!(stat & BROKEN))
+		if(!(isbroken()))
 			var/obj/item/conveyor_construct/C = new/obj/item/conveyor_construct(src.loc)
 			C.id = id
 			transfer_fingerprints_to(C)
@@ -133,10 +134,7 @@
 
 // make the conveyor broken
 // also propagate inoperability to any connected conveyor with the same ID
-/obj/machinery/conveyor/proc/broken()
-	stat |= BROKEN
-	update_icon()
-
+/obj/machinery/conveyor/broken()
 	var/obj/machinery/conveyor/C = locate() in get_step(src, dir)
 	if(C)
 		C.set_operable(dir, id, 0)

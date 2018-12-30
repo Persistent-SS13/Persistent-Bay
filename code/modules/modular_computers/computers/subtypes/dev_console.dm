@@ -14,8 +14,7 @@
 	max_hardware_size = 3
 	steel_sheet_cost = 20
 	light_strength = 4
-	max_damage = 300
-	broken_damage = 150
+	max_health = 300
 	atom_flags = ATOM_FLAG_CLIMBABLE
 
 /obj/item/modular_computer/console/CouldUseTopic(var/mob/user)

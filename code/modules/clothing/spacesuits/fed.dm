@@ -8,7 +8,6 @@
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|BLOCKHAIR
 	cold_protection = HEAD
 	min_cold_protection_temperature = SPACE_HELMET_MIN_COLD_PROTECTION_TEMPERATURE
-	armor = list(melee = 60, bullet = 35, laser = 25,energy = 25, bomb = 25, bio = 0, rad = 5)
 	item_icons = list(
 		slot_l_hand_str = null,
 		slot_r_hand_str = null,
@@ -18,13 +17,25 @@
 	light_overlay = "helmet_light"
 	brightness_on = 4
 	on = 0
+	armor  = list(
+		DAM_BLUNT 	= 60,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 35,
+		DAM_LASER 	= 25,
+		DAM_ENERGY 	= 25,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 25,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 5,
+		DAM_STUN 	= 2)
 
 /obj/item/clothing/suit/space/fed
 	name = "\improper Federation armor"
 	desc = "Lightweight, durable armor issued to Federation soldiers for increased survivability in the field."
 	icon_state = "federation_armor"
 	blood_overlay_type = "armor"
-	armor = list(melee = 55, bullet = 45, laser = 55, energy = 55, bomb = 45, bio = 30, rad = 25)
 	item_flags = ITEM_FLAG_STOPPRESSUREDAMAGE|ITEM_FLAG_THICKMATERIAL
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT|HIDETAIL
@@ -38,6 +49,19 @@
 		slot_l_hand_str = null,
 		slot_r_hand_str = null,
 		)
+	armor  = list(
+		DAM_BLUNT 	= 55,
+		DAM_PIERCE 	= 45,
+		DAM_CUT 	= 55,
+		DAM_BULLET 	= 45,
+		DAM_LASER 	= 55,
+		DAM_ENERGY 	= 55,
+		DAM_BURN 	= 35,
+		DAM_BOMB 	= 45,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 30,
+		DAM_RADS 	= 25,
+		DAM_STUN 	= 2)
 
 //Defines for armour subtypes//
 /obj/item/clothing/suit/space/fed/sharpshooter

@@ -82,16 +82,15 @@
 	if(restrained())	return 0
 
 	//Do we have a working jetpack?
-	var/obj/item/weapon/tank/jetpack/thrust
-	if(back)
-		if(istype(back,/obj/item/weapon/tank/jetpack))
-			thrust = back
-		else if(istype(back,/obj/item/weapon/rig))
-			var/obj/item/weapon/rig/rig = back
+	var/obj/item/weapon/tank/jetpack/thrust = has_item_equipped(/obj/item/weapon/tank/jetpack)
+	//If no regular jetpack, check for a rigsuit
+	if(!thrust)
+		var/obj/item/weapon/rig/rig = has_item_equipped(/obj/item/weapon/rig)
+		if(rig)
 			for(var/obj/item/rig_module/maneuvering_jets/module in rig.installed_modules)
 				thrust = module.jets
 				break
-
+	//If we got a form of jetpack handle it here
 	if(thrust)
 		if(((!check_drift) || (check_drift && thrust.stabilization_on)) && (!lying) && (thrust.allow_thrust(0.01, src)))
 			inertia_dir = 0

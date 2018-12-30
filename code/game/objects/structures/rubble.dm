@@ -11,7 +11,8 @@
 	var/list/loot = list(/obj/item/weapon/cell,/obj/item/stack/material/iron,/obj/item/stack/rods)
 	var/lootleft = 2
 	var/emptyprob = 30
-	var/health = 40
+	mass = 10
+	max_health = 40
 
 /obj/structure/rubble/New()
 	..()
@@ -56,6 +57,10 @@
 		update_icon()
 		to_chat(user, "<span class='notice'>You find \a [booty] and pull it carefully out of \the [src].</span>")
 
+/obj/structure/rubble/destroyed()
+	visible_message("\The [src] is cleared away.")
+	..()
+
 /obj/structure/rubble/attackby(var/obj/item/I, var/mob/user)
 	if (istype(I, /obj/item/weapon/pickaxe))
 		var/obj/item/weapon/pickaxe/P = I
@@ -68,10 +73,6 @@
 			qdel(src)
 	else
 		..()
-		health -= I.force
-		if(health < 1)
-			visible_message("[user] clears away \the [src].")
-			qdel(src)
 
 /obj/structure/rubble/house
 	loot = list(/obj/item/weapon/archaeological_find/bowl,

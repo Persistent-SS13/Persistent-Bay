@@ -5,6 +5,9 @@
 	desc = "A wooden box designed specifically to house our buzzling buddies. Far more efficient than traditional hives. Just insert a frame and a queen, close it up, and you're good to go!"
 	density = 1
 	anchored = 1
+	mass = 5
+	max_health = 100
+	damthreshold_brute 	= 2
 
 	var/closed = 0
 	var/bee_count = 0 // Percent

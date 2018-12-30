@@ -18,7 +18,19 @@
 	center_of_mass = null
 
 	// These values are passed on to all component pieces.
-	armor = list(melee = 40, bullet = 5, laser = 20,energy = 5, bomb = 35, bio = 100, rad = 20)
+	armor  = list(
+		DAM_BLUNT 	= 40,
+		DAM_PIERCE 	= 30,
+		DAM_CUT 	= 40,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 20,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 35,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 20,
+		DAM_STUN 	= 0)
 	min_cold_protection_temperature = SPACE_SUIT_MIN_COLD_PROTECTION_TEMPERATURE
 	max_heat_protection_temperature = SPACE_SUIT_MAX_HEAT_PROTECTION_TEMPERATURE
 	siemens_coefficient = 0.2
@@ -117,6 +129,28 @@
 
 	START_PROCESSING(SSobj, src)
 
+	if(!map_storage_loaded)
+		create_initial_parts()
+
+	for(var/obj/item/piece in list(gloves,helmet,boots,chest))
+		if(!istype(piece))
+			continue
+		piece.canremove = 0
+		piece.name = "[suit_type] [initial(piece.name)]"
+		piece.desc = "It seems to be part of a [src.name]."
+		piece.icon_state = "[initial(icon_state)]"
+		piece.min_cold_protection_temperature = min_cold_protection_temperature
+		piece.max_heat_protection_temperature = max_heat_protection_temperature
+		if(piece.siemens_coefficient > siemens_coefficient) //So that insulated gloves keep their insulation.
+			piece.siemens_coefficient = siemens_coefficient
+		piece.permeability_coefficient = permeability_coefficient
+		piece.unacidable = unacidable
+		if(islist(armor)) piece.armor = armor.Copy()
+
+	set_slowdown_and_vision(!offline)
+	update_icon(1)
+
+/obj/item/weapon/rig/proc/create_initial_parts()
 	if(initial_modules && initial_modules.len)
 		for(var/path in initial_modules)
 			var/obj/item/rig_module/module = new path(src)
@@ -142,24 +176,6 @@
 		if(allowed)
 			chest.allowed = allowed
 		verbs |= /obj/item/weapon/rig/proc/toggle_chest
-
-	for(var/obj/item/piece in list(gloves,helmet,boots,chest))
-		if(!istype(piece))
-			continue
-		piece.canremove = 0
-		piece.name = "[suit_type] [initial(piece.name)]"
-		piece.desc = "It seems to be part of a [src.name]."
-		piece.icon_state = "[initial(icon_state)]"
-		piece.min_cold_protection_temperature = min_cold_protection_temperature
-		piece.max_heat_protection_temperature = max_heat_protection_temperature
-		if(piece.siemens_coefficient > siemens_coefficient) //So that insulated gloves keep their insulation.
-			piece.siemens_coefficient = siemens_coefficient
-		piece.permeability_coefficient = permeability_coefficient
-		piece.unacidable = unacidable
-		if(islist(armor)) piece.armor = armor.Copy()
-
-	set_slowdown_and_vision(!offline)
-	update_icon(1)
 
 /obj/item/weapon/rig/Destroy()
 	for(var/obj/item/piece in list(gloves,boots,helmet,chest))

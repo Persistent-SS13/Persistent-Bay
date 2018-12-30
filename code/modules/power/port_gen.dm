@@ -113,7 +113,7 @@
 
 	var/sheets = 0			//How many sheets of material are loaded in the generator
 	var/sheet_left = 0		//How much is left of the current sheet
-	var/temperature = 0		//The current temperature
+	//var/temperature = 0		//The current temperature
 	var/overheating = 0		//if this gets high enough the generator explodes
 	var/max_overheat = 150
 

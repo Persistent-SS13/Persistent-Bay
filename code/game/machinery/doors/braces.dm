@@ -8,9 +8,6 @@
 	force = 8 //It has a hammer head, should probably do some more damage. - Cirra
 	throwforce = 10
 
-
-
-
 // BRACE - Can be installed on airlock to reinforce it and keep it closed.
 /obj/item/weapon/airlock_brace
 	name = "airlock brace"
@@ -18,8 +15,7 @@
 	w_class = ITEM_SIZE_LARGE
 	icon = 'icons/obj/airlock_machines.dmi'
 	icon_state = "brace_open"
-	var/cur_health
-	var/max_health = 450
+	max_health = 450
 	var/obj/machinery/door/airlock/airlock = null
 	var/obj/item/weapon/airlock_electronics/brace/electronics
 
@@ -45,9 +41,9 @@
 /obj/item/weapon/airlock_brace/proc/examine_health()
 	switch(health_percentage())
 		if(-100 to 25)
-			return "<span class='danger'>\The [src] looks seriously damaged, and probably won't last much more.</span>"
+			return SPAN_DANGER("\The [src] looks seriously damaged, and probably won't last much more.")
 		if(25 to 50)
-			return "<span class='notice'>\The [src] looks damaged.</span>"
+			return SPAN_NOTICE("\The [src] looks damaged.")
 		if(50 to 75)
 			return "\The [src] looks slightly damaged."
 		if(75 to 99)
@@ -95,26 +91,23 @@
 
 	if(isWelder(W))
 		var/obj/item/weapon/weldingtool/C = W
-		if(cur_health == max_health)
+		if(health == max_health)
 			to_chat(user, "\The [src] does not require repairs.")
 			return
 		if(C.do_weld(user, src, 2))
 			playsound(src, 'sound/items/Welder.ogg', 100, 1)
-			cur_health = min(cur_health + rand(80,120), max_health)
+			add_health(rand(80,120))
 			if(cur_health == max_health)
 				to_chat(user, "You repair some dents on \the [src]. It is in perfect condition now.")
 			else
 				to_chat(user, "You repair some dents on \the [src].")
 
 
-/obj/item/weapon/airlock_brace/proc/take_damage(var/amount)
-	cur_health = between(0, cur_health - amount, max_health)
-	if(!cur_health)
-		if(airlock)
-			airlock.visible_message("<span class='danger'>\The [src] breaks off of \the [airlock]!</span>")
-		unlock_brace(null)
-		qdel(src)
-
+/obj/item/weapon/airlock_brace/destroyed(var/damtype)
+	if(airlock)
+		airlock.visible_message(SPAN_DANGER("\The [src] breaks off of \the [airlock]!"))
+	unlock_brace(null)
+	..()
 
 /obj/item/weapon/airlock_brace/proc/unlock_brace(var/mob/user)
 	if(!airlock)
@@ -129,11 +122,10 @@
 	airlock = null
 	update_icon()
 
-
 /obj/item/weapon/airlock_brace/proc/health_percentage()
 	if(!max_health)
 		return 0
-	return (cur_health / max_health) * 100
+	return (health / max_health) * 100
 
 /obj/item/weapon/airlock_brace/proc/update_access()
 	if(!electronics)

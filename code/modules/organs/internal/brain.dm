@@ -47,14 +47,14 @@
 	icon_state = "brain-prosthetic"
 
 /obj/item/organ/internal/brain/New(var/mob/living/carbon/holder)
-	..()
-	max_damage = 200
+	max_health = 200
 	if(species)
-		max_damage = species.total_health
-	min_bruised_damage = max_damage*0.25
-	min_broken_damage = max_damage*0.75
+		max_health = species.total_health
+	..()
+	min_bruised_damage = max_health*0.25
+	min_broken_damage = max_health*0.75
 
-	damage_threshold_value = round(max_damage / damage_threshold_count)
+	damage_threshold_value = round(max_health / damage_threshold_count)
 	spawn(5)
 		if(brainmob && brainmob.client)
 			brainmob.client.screen.len = null //clear the hud
@@ -131,7 +131,7 @@
 
 
 /obj/item/organ/internal/brain/proc/get_current_damage_threshold()
-	return round(damage / damage_threshold_value)
+	return round(get_damages() / damage_threshold_value)
 
 /obj/item/organ/internal/brain/proc/past_damage_threshold(var/threshold)
 	return (get_current_damage_threshold() > threshold)
@@ -139,12 +139,12 @@
 /obj/item/organ/internal/brain/Process()
 
 	if(owner)
-		if(damage > max_damage / 2 && healed_threshold)
+		if(health <= (max_health / 2) && healed_threshold)
 			spawn()
 				alert(owner, "You have taken massive brain damage! You will not be able to remember the events leading up to your injury.", "Brain Damaged")
 			healed_threshold = 0
 
-		if(damage < (max_damage / 4))
+		if(health <= (max_health / 4))
 			healed_threshold = 1
 
 		handle_disabilities()
@@ -158,14 +158,14 @@
 
 			if(owner.is_asystole()) // Heart is missing or isn't beating and we're not breathing (hardcrit)
 				owner.Paralyse(3)
-			var/can_heal = damage && damage < max_damage && (damage % damage_threshold_value || owner.chem_effects[CE_BRAIN_REGEN] || (!past_damage_threshold(3) && owner.chem_effects[CE_STABLE]))
+			var/can_heal = isdamaged() && health > 0 && (get_damages() % damage_threshold_value || owner.chem_effects[CE_BRAIN_REGEN] || (!past_damage_threshold(3) && owner.chem_effects[CE_STABLE]))
 			var/damprob
 			//Effects of bloodloss
 			switch(blood_volume)
 
 				if(BLOOD_VOLUME_SAFE to INFINITY)
 					if(can_heal)
-						damage = max(damage-1, 0)
+						add_health(1)
 				if(BLOOD_VOLUME_OKAY to BLOOD_VOLUME_SAFE)
 					if(prob(1))
 						to_chat(owner, "<span class='warning'>You feel [pick("dizzy","woozy","faint")]...</span>")
@@ -229,15 +229,15 @@
 /obj/item/organ/internal/brain/proc/handle_damage_effects()
 	if(owner.stat)
 		return
-	if(damage > 0 && prob(1))
+	if(isdamaged() && prob(1))
 		owner.custom_pain("Your head feels numb and painful.",10)
 	if(is_bruised() && prob(1) && owner.eye_blurry <= 0)
 		to_chat(owner, "<span class='warning'>It becomes hard to see for some reason.</span>")
 		owner.eye_blurry = 10
-	if(damage >= 0.5*max_damage && prob(1) && owner.get_active_hand())
+	if(health <= (0.5*max_health) && prob(1) && owner.get_active_hand())
 		to_chat(owner, "<span class='danger'>Your hand won't respond properly, and you drop what you are holding!</span>")
 		owner.drop_item()
-	if(damage >= 0.6*max_damage)
+	if(health <= (0.6*max_health))
 		owner.slurring = max(owner.slurring, 2)
 	if(is_broken())
 		if(!owner.lying)

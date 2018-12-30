@@ -504,7 +504,7 @@ The slots that you can use are found in items_clothing.dm and are the inventory 
 
 	var/randn = rand(1, 100)
 	if(!(species_flags & SPECIES_FLAG_NO_SLIP) && randn <= 25)
-		var/armor_check = target.run_armor_check(affecting, "melee")
+		var/armor_check = target.run_armor_check(affecting, DAM_BLUNT)
 		target.apply_effect(3, WEAKEN, armor_check)
 		playsound(target.loc, 'sound/weapons/thudswoosh.ogg', 50, 1, -1)
 		if(armor_check < 100)

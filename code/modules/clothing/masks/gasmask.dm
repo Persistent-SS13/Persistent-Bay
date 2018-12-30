@@ -12,7 +12,19 @@
 	siemens_coefficient = 0.9
 	var/gas_filter_strength = 1			//For gas mask filters
 	var/list/filtered_gases = list("phoron", "sleeping_agent", "carbon_dioxide", "chlorine")
-	armor = list(melee = 5, bullet = 5, laser = 5, energy = 0, bomb = 0, bio = 75, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 5,
+		DAM_PIERCE 	= 1,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 5,
+		DAM_ENERGY 	= 0,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 75,
+		DAM_RADS 	= 5,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/mask/gas/filter_air(datum/gas_mixture/air)
 	var/datum/gas_mixture/filtered = new
@@ -35,7 +47,19 @@
 	siemens_coefficient = 0.7
 	body_parts_covered = FACE
 	w_class = ITEM_SIZE_SMALL
-	armor = list(melee = 10, bullet = 10, laser = 10, energy = 0, bomb = 0, bio = 55, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 10,
+		DAM_BULLET 	= 10,
+		DAM_LASER 	= 10,
+		DAM_ENERGY 	= 0,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 55,
+		DAM_RADS 	= 5,
+		DAM_STUN 	= 0)
 
 //Plague Dr suit can be found in clothing/suits/bio.dm
 /obj/item/clothing/mask/gas/plaguedoctor
@@ -43,8 +67,20 @@
 	desc = "A modernised version of the classic design, this mask will not only filter out phoron but it can also be connected to an air supply."
 	icon_state = "plaguedoctor"
 	item_state = "gas_mask"
-	armor = list(melee = 0, bullet = 0, laser = 2,energy = 2, bomb = 0, bio = 90, rad = 0)
 	body_parts_covered = HEAD|FACE|EYES
+	armor  = list(
+		DAM_BLUNT 	= 5,
+		DAM_PIERCE 	= 2,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 0,
+		DAM_BURN 	= 0,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 90,
+		DAM_RADS 	= 5,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/mask/gas/swat
 	name = "\improper SWAT mask"
@@ -52,7 +88,19 @@
 	icon_state = "swat"
 	siemens_coefficient = 0.7
 	body_parts_covered = FACE|EYES
-	armor = list(melee = 15, bullet = 15, laser = 15, energy = 0, bomb = 0, bio = 75, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 20,
+		DAM_PIERCE 	= 15,
+		DAM_CUT 	= 20,
+		DAM_BULLET 	= 15,
+		DAM_LASER 	= 15,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 75,
+		DAM_RADS 	= 5,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/mask/gas/swat/vox
 	name = "alien mask"
@@ -65,7 +113,19 @@
 	desc = "A close-fitting tactical mask that can be connected to an air supply."
 	icon_state = "swat"
 	siemens_coefficient = 0.7
-	armor = list(melee = 15, bullet = 15, laser = 15, energy = 0, bomb = 0, bio = 75, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 15,
+		DAM_PIERCE 	= 10,
+		DAM_CUT 	= 15,
+		DAM_BULLET 	= 15,
+		DAM_LASER 	= 15,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 75,
+		DAM_RADS 	= 5,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/mask/gas/clown_hat
 	name = "clown wig and mask"

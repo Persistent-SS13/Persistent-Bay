@@ -147,7 +147,7 @@
 	if(AM == user)
 		incapacitation_flags &= ~INCAPACITATION_RESTRAINED
 
-	if(stat & BROKEN || !CanMouseDrop(AM, user, incapacitation_flags) || AM.anchored || !isturf(user.loc))
+	if(stat & BROKEN || !CanMouseDrop(AM, user, incapacitation_flags) || (!isturf(user.loc) && AM.anchored) ) //Turfs don't have the anchored var..
 		return
 
 	// Animals can only put themself in
@@ -659,7 +659,7 @@
 	level = 1			// underfloor only
 	var/dpdir = 0		// bitmask of pipe directions
 	dir = 0				// dir will contain dominant direction for junction pipes
-	var/health = 10 	// health points 0-10
+	max_health = 10 	// health points 0-10
 	alpha = 192 // Plane and alpha modified for mapping, reset to normal on spawn.
 	plane = ABOVE_TURF_PLANE
 	layer = DISPOSALS_PIPE_LAYER
@@ -881,16 +881,13 @@
 
 			if(W.remove_fuel(0,user))
 				playsound(src.loc, 'sound/items/Welder2.ogg', 100, 1)
-				// check if anything changed over 2 seconds
-				var/turf/uloc = user.loc
-				var/atom/wloc = W.loc
 				to_chat(user, "Slicing the disposal pipe.")
-				sleep(30)
-				if(!W.isOn()) return
-				if(user.loc == uloc && wloc == W.loc)
+				if (do_after(user, 3 SECONDS, src) && W.isOn())
 					welded()
-				else
+				else if(W.isOn())
 					to_chat(user, "You must stay still while welding the pipe.")
+				else if(!W.isOn())
+					to_chat(user, "The welder has turned off.")
 			else
 				to_chat(user, "You need more welding fuel to cut the pipe.")
 				return

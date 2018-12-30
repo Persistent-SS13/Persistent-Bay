@@ -8,9 +8,10 @@
 	item_state = "bolt"
 	throwforce = 8
 	w_class = ITEM_SIZE_NORMAL
-	sharp = 1
-	edge = 0
+	sharpness = 1
 	lock_picking_level = 3
+	mass = 0.150
+	damtype = DAM_PIERCE
 
 /obj/item/weapon/arrow/proc/removed() //Helper for metal rods falling apart.
 	return
@@ -18,10 +19,11 @@
 /obj/item/weapon/spike
 	name = "alloy spike"
 	desc = "It's about a foot of weird silver metal with a wicked point."
-	sharp = 1
-	edge = 0
+	sharpness = 1
 	throwforce = 5
 	w_class = ITEM_SIZE_SMALL
+	mass = 0.750
+	damtype = DAM_PIERCE
 	icon = 'icons/obj/weapons.dmi'
 	icon_state = "metal-rod"
 	item_state = "bolt"
@@ -33,11 +35,13 @@
 	icon_state = "quill"
 	item_state = "quill"
 	throwforce = 5
+	mass = 0.050
 
 /obj/item/weapon/arrow/rod
 	name = "metal rod"
 	desc = "Don't cry for me, Orithena."
 	icon_state = "metal-rod"
+	mass = 0.200
 
 /obj/item/weapon/arrow/rod/removed(mob/user)
 	if(throwforce == 15) // The rod has been superheated - we don't want it to be useable when removed from the bow.
@@ -56,6 +60,7 @@
 	fire_sound_text = "a solid thunk"
 	fire_delay = 25
 	slot_flags = SLOT_BACK
+	mass = 2.26
 
 	var/obj/item/bolt
 	var/tension = 0                         // Current draw on the bow.
@@ -201,6 +206,7 @@
 	desc = "A half-finished crossbow."
 	icon_state = "crossbowframe0"
 	item_state = "crossbow-solid"
+	mass = 2
 
 	var/buildstate = 0
 

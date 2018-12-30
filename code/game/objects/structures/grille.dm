@@ -8,7 +8,21 @@
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	layer = BELOW_OBJ_LAYER
 	explosion_resistance = 1
-	var/health = 10
+	max_health = 50
+	armor = list(
+		DAM_BLUNT  	= 5,
+		DAM_PIERCE 	= 10,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 10,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 2,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 	var/destroyed = 0
 	var/on_frame = FALSE
 
@@ -264,7 +278,7 @@
 	name = "cult grille"
 	desc = "A matrice built out of an unknown material, with some sort of force field blocking air around it."
 	icon = 'icons/obj/grille_cult.dmi'
-	health = 40 //Make it strong enough to avoid people breaking in too easily
+	health = 60 //Make it strong enough to avoid people breaking in too easily
 
 /obj/structure/grille/cult/CanPass(atom/movable/mover, turf/target, height = 1.5, air_group = 0)
 	if(air_group)

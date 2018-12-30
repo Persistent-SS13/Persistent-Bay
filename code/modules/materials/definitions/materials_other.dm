@@ -5,6 +5,7 @@
 	ore_name = MATERIAL_SLAG
 	ore_desc = "Someone messed up..."
 	ore_icon_overlay = "lump"
+	energy_combustion = 8
 
 /material/cult
 	name = MATERIAL_CULT

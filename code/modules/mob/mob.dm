@@ -105,13 +105,6 @@
 	if(shadow)
 		shadow.visible_message(message, self_message, blind_message)
 
-// Returns an amount of power drawn from the object (-1 if it's not viable).
-// If drain_check is set it will not actually drain power, just return a value.
-// If surge is set, it will destroy/damage the recipient and not return any power.
-// Not sure where to define this, so it can sit here for the rest of time.
-/atom/proc/drain_power(var/drain_check,var/surge, var/amount = 0)
-	return -1
-
 // Show a message to all mobs and objects in earshot of this one
 // This would be for audible actions by the src mob
 // message is the message output to anyone who can hear.
@@ -920,7 +913,7 @@ mob/proc/yank_out_object()
 			wound.embedded_objects -= selection
 
 		H.shock_stage+=20
-		affected.take_damage((selection.w_class * 3), 0, DAM_EDGE, "Embedded object extraction")
+		affected.take_damage((selection.w_class * 3), DAM_PIERCE, damsrc = "Embedded object extraction")
 
 		if(prob(selection.w_class * 5) && affected.sever_artery()) //I'M SO ANEMIC I COULD JUST -DIE-.
 			H.custom_pain("Something tears wetly in your [affected] as [selection] is pulled free!", 50, affecting = affected)

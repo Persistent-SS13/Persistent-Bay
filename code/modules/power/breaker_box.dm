@@ -19,18 +19,18 @@
 	var/RCon_tag = "NO_TAG"
 	var/update_locked = 0
 
-/obj/machinery/power/breakerbox/Destroy()
+/obj/machinery/power/breakerbox/New()
 	..()
-	for(var/datum/nano_module/rcon/R in world)
-		R.FindDevices()
 
 /obj/machinery/power/breakerbox/activated
 	icon_state = "bbox_on"
 
 	// Enabled on server startup. Used in substations to keep them in bypass mode.
 /obj/machinery/power/breakerbox/activated/Initialize()
-	set_state(1)
 	. = ..()
+	for(var/datum/nano_module/rcon/R in world)
+		R.FindDevices()
+	set_state(1)
 
 /obj/machinery/power/breakerbox/examine(mob/user)
 	. = ..()

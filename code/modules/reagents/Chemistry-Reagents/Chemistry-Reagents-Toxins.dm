@@ -20,7 +20,7 @@
 			var/mob/living/carbon/human/H = M
 			var/obj/item/organ/internal/I = H.internal_organs_by_name[target_organ]
 			if(I)
-				var/can_damage = I.max_damage - I.damage
+				var/can_damage = I.get_max_health() - I.get_damages()
 				if(can_damage > 0)
 					if(dam > can_damage)
 						I.take_damage(can_damage, silent=TRUE)
@@ -246,15 +246,6 @@
 	..()
 	if(alien == IS_DIONA)
 		M.adjustToxLoss(50 * removed)
-
-/datum/reagent/acid/polyacid
-	name = "Polytrinic acid"
-	description = "Polytrinic acid is a an extremely corrosive chemical substance."
-	taste_description = "acid"
-	reagent_state = LIQUID
-	color = "#8e18a9"
-	power = 10
-	meltdose = 4
 
 /datum/reagent/lexorin
 	name = "Lexorin"
@@ -578,12 +569,12 @@
 		E.s_col_blend = ICON_ADD
 		E.status &= ~ORGAN_BROKEN
 		E.status |= ORGAN_MUTATED
-		E.cannot_break = 1
+		E.limb_flags = 0
 		E.dislocated = -1
 		E.nonsolid = 1
-		E.max_damage = 10
+		E.max_health = 10
 		E.update_icon(1)
-	O.max_damage = 20 // A little more durable than before, but not really.
+	O.max_health = 20 // A little more durable than before, but not really.
 	if(prob(10))
 		to_chat(H, "<span class='danger'>Your slimy [O.name]'s plops off!</span>")
 		O.droplimb()

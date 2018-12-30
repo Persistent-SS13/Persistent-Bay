@@ -5,6 +5,7 @@
 	anchored = 0
 	density = 1
 	w_class = ITEM_SIZE_NO_CONTAINER
+	max_health = 100
 	var/state = 0
 	var/base_icon_state = ""
 	var/base_name = "Airlock"

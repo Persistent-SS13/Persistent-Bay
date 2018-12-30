@@ -6,6 +6,9 @@
 	on = 0
 	powered = 1
 	locked = 0
+	mass = 300
+	max_health = 200
+	damthreshold_brute 	= 5
 
 	load_item_visible = 1
 	load_offset_x = 0
@@ -35,6 +38,9 @@
 	load_offset_x = 0
 	load_offset_y = 4
 	buckle_pixel_shift = "x=0;y=8"
+	mass = 100
+	max_health = 150
+	damthreshold_brute 	= 5
 
 //-------------------------------------------
 // Standard procs
@@ -167,7 +173,7 @@
 	H.apply_effects(5, 5)
 	for(var/i = 0, i < rand(1,5), i++)
 		var/def_zone = pick(parts)
-		H.apply_damage(rand(5,10), BRUTE, def_zone, H.run_armor_check(def_zone, "melee"))
+		H.apply_damage(rand(5,10), BRUTE, def_zone, H.run_armor_check(def_zone, DAM_BLUNT))
 
 /obj/vehicle/train/cargo/trolley/RunOver(var/mob/living/carbon/human/H)
 	..()

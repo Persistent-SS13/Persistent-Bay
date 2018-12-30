@@ -468,7 +468,7 @@
 	else return ..()
 
 // break the light and make sparks if was on
-/obj/machinery/light/proc/broken(var/skip_sound_and_sparks = 0)
+/obj/machinery/light/broken(var/damtype, var/skip_sound_and_sparks = 0)
 	if(!lightbulb)
 		return
 
@@ -515,7 +515,7 @@
 
 /obj/machinery/light/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	if(prob(max(0, exposed_temperature - 673)))   //0% at <400C, 100% at >500C
-		broken()
+		broken(BURN)
 
 /obj/machinery/light/small/readylight
 	light_type = /obj/item/weapon/light/bulb/red/readylight
@@ -537,10 +537,11 @@
 	force = 2
 	throwforce = 5
 	w_class = ITEM_SIZE_TINY
+	mass = 0.050
+	damtype = DAM_BLUNT
 	var/status = 0		// LIGHT_OK, LIGHT_BURNED or LIGHT_BROKEN
 	var/base_state
 	var/switchcount = 0	// number of times switched
-	matter = list(MATERIAL_STEEL = 60)
 	matter = list(MATERIAL_GLASS = 60)
 	var/rigged = 0		// true if rigged to explode
 	var/broken_chance = 2
@@ -738,7 +739,8 @@
 		src.visible_message("<span class='warning'>[name] shatters.</span>","<span class='warning'>You hear a small glass object shatter.</span>")
 		status = LIGHT_BROKEN
 		force = 5
-		sharp = 1
+		sharpness = 1
+		damtype = DAM_CUT
 		playsound(src.loc, 'sound/effects/Glasshit.ogg', 75, 1)
 		update_icon()
 

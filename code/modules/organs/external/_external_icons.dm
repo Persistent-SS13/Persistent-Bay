@@ -61,7 +61,7 @@ var/list/limb_icon_cache = list()
 /obj/item/organ/external/var/icon_cache_key
 /obj/item/organ/external/update_icon(var/regenerate = 0)
 	var/gender = "_m"
-	if(!gendered_icon)
+	if(!has_gendered_icon())
 		gender = null
 	else if (dna && dna.GetUIState(DNA_UI_GENDER))
 		gender = "_f"
@@ -141,8 +141,8 @@ var/list/robot_hud_colours = list("#ffffff","#cccccc","#aaaaaa","#888888","#6666
 
 
 	// Calculate the required color index.
-	var/dam_state = min(1,((brute_dam+burn_dam)/max(1,max_damage)))
-	var/min_dam_state = min(1,(get_pain()/max(1,max_damage)))
+	var/dam_state = min(1,((brute_dam+burn_dam)/max(1,max_health)))
+	var/min_dam_state = min(1,(get_pain()/max(1,max_health)))
 	if(min_dam_state && dam_state < min_dam_state)
 		dam_state = min_dam_state
 	// Apply colour and return product.

@@ -238,7 +238,7 @@
 		if(!(S.z in affected_z))
 			continue
 		if(prob(DETONATION_SOLAR_BREAK_CHANCE))
-			S.broken()
+			S.set_broken(TRUE)
 
 
 
@@ -463,7 +463,7 @@
 		"<span class=\"danger\">You touch \the [W] to \the [src] when everything suddenly goes silent.\"</span>\n<span class=\"notice\">\The [W] flashes into dust as you flinch away from \the [src].</span>",\
 		"<span class=\"warning\">Everything suddenly goes silent.</span>")
 
-	user.apply_effect(150, IRRADIATE, blocked = user.getarmor(null, "rad"))
+	user.apply_effect(150, IRRADIATE, blocked = user.getarmor(null, DAM_RADS))
 
 
 /obj/machinery/power/supermatter/Bumped(atom/AM as mob|obj)

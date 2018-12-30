@@ -7,6 +7,8 @@
 	anchored = 1
 	atom_flags = ATOM_FLAG_CLIMBABLE
 	obj_flags = OBJ_FLAG_ANCHORABLE
+	mass = 5
+	max_health = 30
 	var/max_paper = 10
 	var/paperamount = 0
 	var/list/shred_amounts = list(

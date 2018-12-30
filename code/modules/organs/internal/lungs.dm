@@ -7,7 +7,7 @@
 	w_class = ITEM_SIZE_NORMAL
 	min_bruised_damage = 25
 	min_broken_damage = 45
-	max_damage = 70
+	max_health = 70
 	relative_size = 60
 	scarring_effect = 4
 
@@ -62,7 +62,7 @@
 /obj/item/organ/internal/lungs/after_load()
 	..()
 	sync_breath_types()
-	
+
 /**
  *  Set these lungs' breath types based on the lungs' species
  */
@@ -106,7 +106,7 @@
 			else
 				to_chat(owner, "<span class='danger'>You're having trouble getting enough [breath_type]!</span>")
 
-			owner.losebreath += round(damage/2)
+			owner.losebreath += round(get_damages()/2)
 
 	if(scarred && active_breathing && !owner.is_asystole())
 		if(prob(1) && scarred > 2) // Very bad scarring
@@ -169,7 +169,7 @@
 
 	var/safe_pressure_min = min_breath_pressure // Minimum safe partial pressure of breathable gas in kPa
 	// Lung damage increases the minimum safe pressure.
-	safe_pressure_min *= 1 + rand(1,4) * damage/max_damage
+	safe_pressure_min *= 1 + rand(1,4) * (1.0 - health/max_health)
 
 	if(!forced && owner.chem_effects[CE_BREATHLOSS] && !owner.chem_effects[CE_STABLE]) //opiates are bad mmkay
 		safe_pressure_min *= 1 + rand(1,4) * owner.chem_effects[CE_BREATHLOSS]
@@ -261,7 +261,7 @@
 		else
 			owner.emote(pick("shiver","twitch"))
 
-	if(damage || owner.chem_effects[CE_BREATHLOSS] || world.time > last_failed_breath + 2 MINUTES)
+	if(isdamaged() || owner.chem_effects[CE_BREATHLOSS] || world.time > last_failed_breath + 2 MINUTES)
 		owner.adjustOxyLoss(HUMAN_MAX_OXYLOSS*breath_fail_ratio)
 
 	owner.oxygen_alert = max(owner.oxygen_alert, 2)
@@ -285,7 +285,7 @@
 			if(prob(20))
 				owner.apply_damage(damage, BURN, BP_HEAD, used_weapon = "Excessive Cold")
 			else
-				src.damage += damage
+				src.rem_health(damage)
 			owner.fire_alert = 1
 		else if(breath.temperature >= species.heat_level_1)
 			if(prob(20))
@@ -302,7 +302,7 @@
 			if(prob(20))
 				owner.apply_damage(damage, BURN, BP_HEAD, used_weapon = "Excessive Heat")
 			else
-				src.damage += damage
+				src.rem_health(damage)
 			owner.fire_alert = 2
 
 		//breathing in hot/cold air also heats/cools you a bit

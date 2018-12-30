@@ -10,7 +10,6 @@
 	restricted_accessory_slots = list(ACCESSORY_SLOT_HELM_C)
 	item_flags = ITEM_FLAG_THICKMATERIAL
 	body_parts_covered = HEAD
-	armor = list(melee = 50, bullet = 50, laser = 50,energy = 25, bomb = 30, bio = 0, rad = 0)
 	flags_inv = HIDEEARS|BLOCKHEADHAIR
 	cold_protection = HEAD
 	min_cold_protection_temperature = HELMET_MIN_COLD_PROTECTION_TEMPERATURE
@@ -18,6 +17,19 @@
 	max_heat_protection_temperature = HELMET_MAX_HEAT_PROTECTION_TEMPERATURE
 	siemens_coefficient = 0.7
 	w_class = ITEM_SIZE_NORMAL
+	armor  = list(
+		DAM_BLUNT 	= 50,
+		DAM_PIERCE 	= 40,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 50,
+		DAM_LASER 	= 50,
+		DAM_ENERGY 	= 25,
+		DAM_BURN 	= 25,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/head/helmet/nt
 	name = "\improper corporate security helmet"
@@ -33,15 +45,39 @@
 	name = "tactical helmet"
 	desc = "A tan helmet made from advanced ceramic. Comfortable and robust."
 	icon_state = "helmet_tac"
-	armor = list(melee = 50, bullet = 60, laser = 60, energy = 45, bomb = 30, bio = 0, rad = 0)
 	siemens_coefficient = 0.6
+	armor  = list(
+		DAM_BLUNT 	= 50,
+		DAM_PIERCE 	= 40,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 60,
+		DAM_LASER 	= 60,
+		DAM_ENERGY 	= 45,
+		DAM_BURN 	= 30,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/head/helmet/merc
 	name = "combat helmet"
 	desc = "A heavily reinforced helmet painted with red markings. Feels like it could take a lot of punishment."
 	icon_state = "helmet_merc"
-	armor = list(melee = 70, bullet = 70, laser = 70, energy = 35, bomb = 30, bio = 0, rad = 0)
 	siemens_coefficient = 0.5
+	armor  = list(
+		DAM_BLUNT 	= 70,
+		DAM_PIERCE 	= 60,
+		DAM_CUT 	= 70,
+		DAM_BULLET 	= 70,
+		DAM_LASER 	= 70,
+		DAM_ENERGY 	= 35,
+		DAM_BURN 	= 35,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/head/helmet/riot
 	name = "riot helmet"
@@ -49,9 +85,21 @@
 	icon_state = "helmet_riot"
 	valid_accessory_slots = null
 	body_parts_covered = HEAD|FACE|EYES //face shield
-	armor = list(melee = 82, bullet = 15, laser = 5, energy = 5, bomb = 5, bio = 2, rad = 0)
 	siemens_coefficient = 0.7
 	action_button_name = "Toggle Visor"
+	armor  = list(
+		DAM_BLUNT 	= 82,
+		DAM_PIERCE 	= 72,
+		DAM_CUT 	= 82,
+		DAM_BULLET 	= 30,
+		DAM_LASER 	= 20,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 20,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 10,
+		DAM_RADS 	= 10,
+		DAM_STUN 	= 30)
 
 /obj/item/clothing/head/helmet/riot/attack_self(mob/user as mob)
 	if(src.icon_state == initial(icon_state))
@@ -67,38 +115,98 @@
 	desc = "A helmet made from advanced materials which protects against concentrated energy weapons."
 	icon_state = "helmet_reflect"
 	valid_accessory_slots = null
-	armor = list(melee = 15, bullet = 5, laser = 82, energy = 50, bomb = 5, bio = 2, rad = 0)
 	siemens_coefficient = 0
+	armor  = list(
+		DAM_BLUNT 	= 15,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 15,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 82,
+		DAM_ENERGY 	= 50,
+		DAM_BURN 	= 82,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 5,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 10)
 
 /obj/item/clothing/head/helmet/ballistic
 	name = "ballistic helmet"
 	desc = "A helmet with reinforced plating to protect against ballistic projectiles."
 	icon_state = "helmet_bulletproof"
 	valid_accessory_slots = null
-	armor = list(melee = 5, bullet = 82, laser = 30, energy = 5, bomb = 30, bio = 2, rad = 0)
 	siemens_coefficient = 0.7
+	armor  = list(
+		DAM_BLUNT 	= 60,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 82,
+		DAM_LASER 	= 30,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 15,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 2,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 10)
 
 /obj/item/clothing/head/helmet/swat
 	name = "\improper SWAT helmet"
 	desc = "They're often used by highly trained Swat Members."
 	icon_state = "helmet_merc"
-	armor = list(melee = 80, bullet = 60, laser = 50,energy = 25, bomb = 50, bio = 10, rad = 0)
 	cold_protection = HEAD
 	min_cold_protection_temperature = SPACE_HELMET_MIN_COLD_PROTECTION_TEMPERATURE
 	siemens_coefficient = 0.5
+	armor  = list(
+		DAM_BLUNT 	= 80,
+		DAM_PIERCE 	= 70,
+		DAM_CUT 	= 80,
+		DAM_BULLET 	= 60,
+		DAM_LASER 	= 50,
+		DAM_ENERGY 	= 25,
+		DAM_BURN 	= 25,
+		DAM_BOMB 	= 50,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 10,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 10)
 
 /obj/item/clothing/head/helmet/thunderdome
 	name = "\improper Thunderdome helmet"
 	desc = "<i>'Let the battle commence!'</i>"
 	icon_state = "thunderdome"
 	valid_accessory_slots = null
-	armor = list(melee = 80, bullet = 60, laser = 50,energy = 10, bomb = 25, bio = 10, rad = 0)
 	cold_protection = HEAD
 	min_cold_protection_temperature = SPACE_HELMET_MIN_COLD_PROTECTION_TEMPERATURE
 	siemens_coefficient = 1
+	armor  = list(
+		DAM_BLUNT 	= 80,
+		DAM_PIERCE 	= 70,
+		DAM_CUT 	= 80,
+		DAM_BULLET 	= 60,
+		DAM_LASER 	= 50,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 25,
+		DAM_BOMB 	= 25,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 10,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/head/helmet/thunderdome/costume
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 8,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 0,
+		DAM_BURN 	= 0,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 5,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/head/helmet/gladiator
 	name = "gladiator helmet"
@@ -110,7 +218,19 @@
 	siemens_coefficient = 1
 
 /obj/item/clothing/head/helmet/gladiator/costume
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 1,
+		DAM_ENERGY 	= 0,
+		DAM_BURN 	= 0,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 5,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /*
 /obj/item/clothing/head/helmet/tactical
@@ -123,9 +243,21 @@
 		SPECIES_UNATHI = 'icons/mob/species/unathi/helmet.dmi'
 		)
 
-	armor = list(melee = 62, bullet = 50, laser = 50,energy = 35, bomb = 10, bio = 2, rad = 0)
 	flags_inv = HIDEEARS
 	siemens_coefficient = 0.7
+	armor  = list(
+		DAM_BLUNT 	= 62,
+		DAM_PIERCE 	= 52,
+		DAM_CUT 	= 62,
+		DAM_BULLET 	= 50,
+		DAM_LASER 	= 50,
+		DAM_ENERGY 	= 35,
+		DAM_BURN 	= 25,
+		DAM_BOMB 	= 10,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 10,
+		DAM_RADS 	= 5,
+		DAM_STUN 	= 10)
 */
 
 /obj/item/clothing/head/helmet/augment
@@ -133,12 +265,24 @@
 	desc = "A helmet with optical and cranial augments coupled to it."
 	icon_state = "v62"
 	valid_accessory_slots = null
-	armor = list(melee = 80, bullet = 60, laser = 50,energy = 25, bomb = 50, bio = 10, rad = 0)
 	flags_inv = HIDEEARS|HIDEEYES
 	body_parts_covered = HEAD|EYES|BLOCKHEADHAIR
 	cold_protection = HEAD
 	min_cold_protection_temperature = SPACE_HELMET_MIN_COLD_PROTECTION_TEMPERATURE
 	siemens_coefficient = 0.5
+	armor  = list(
+		DAM_BLUNT 	= 80,
+		DAM_PIERCE 	= 70,
+		DAM_CUT 	= 80,
+		DAM_BULLET 	= 60,
+		DAM_LASER 	= 50,
+		DAM_ENERGY 	= 25,
+		DAM_BURN 	= 25,
+		DAM_BOMB 	= 50,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 10,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 5)
 
 //Non-hardsuit ERT helmets.
 //Commander
@@ -151,7 +295,19 @@
 		slot_l_hand_str = "syndicate-helm-green",
 		slot_r_hand_str = "syndicate-helm-green",
 		)
-	armor = list(melee = 62, bullet = 50, laser = 50,energy = 35, bomb = 10, bio = 2, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 62,
+		DAM_PIERCE 	= 52,
+		DAM_CUT 	= 62,
+		DAM_BULLET 	= 50,
+		DAM_LASER 	= 50,
+		DAM_ENERGY 	= 35,
+		DAM_BURN 	= 40,
+		DAM_BOMB 	= 10,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 5,
+		DAM_RADS 	= 10,
+		DAM_STUN 	= 5)
 
 //Security
 /obj/item/clothing/head/helmet/ert/security

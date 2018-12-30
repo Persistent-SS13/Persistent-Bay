@@ -120,6 +120,9 @@ var/list/holder_mob_icon_cache = list()
 /obj/item/weapon/holder/mouse
 	w_class = ITEM_SIZE_TINY
 
+/obj/item/weapon/holder/lizard
+	w_class = ITEM_SIZE_TINY
+
 /obj/item/weapon/holder/borer
 	origin_tech = list(TECH_BIO = 6)
 

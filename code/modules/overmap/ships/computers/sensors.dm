@@ -121,8 +121,7 @@
 	desc = "Long range gravity scanner with various other sensors, used to detect irregularities in surrounding space. Can only run in vacuum to protect delicate quantum BS elements."
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "sensors"
-	var/max_health = 200
-	var/health = 200
+	max_health = 200
 	var/critical_heat = 50 // sparks and takes damage when active & above this heat
 	var/heat_reduction = 1.5 // mitigates this much heat per tick
 	var/heat = 0
@@ -175,10 +174,6 @@
 	else if(health < max_health * 0.75)
 		to_chat(user, "\The [src] shows signs of damage!")
 
-/obj/machinery/shipsensors/bullet_act(var/obj/item/projectile/Proj)
-	take_damage(Proj.get_structure_damage())
-	..()
-
 /obj/machinery/shipsensors/proc/toggle()
 	if(!use_power && health == 0)
 		return
@@ -214,12 +209,11 @@
 	idle_power_usage = 1500 * (range**2) // Exponential increase, also affects speed of overheating
 
 /obj/machinery/shipsensors/emp_act(severity)
-	if(!use_power)
-		return
-	take_damage(20/severity)
-	toggle()
-
-/obj/machinery/shipsensors/proc/take_damage(value)
-	health = min(max(health - value, 0),max_health)
-	if(use_power && health == 0)
+	if(use_power)
 		toggle()
+	..()
+
+/obj/machinery/shipsensors/destroyed()
+	if(use_power)
+		toggle()
+	..()

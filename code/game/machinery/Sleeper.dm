@@ -25,7 +25,7 @@
 
 	var/efficiency
 	var/initial_bin_rating = 1
-	var/min_health = 25
+	var/min_treatable_health = 25
 
 	use_power = 1
 	idle_power_usage = 15
@@ -62,7 +62,7 @@
 		I += M.rating
 
 	efficiency = E
-	min_health = -E * 25
+	min_treatable_health = -E * 25
 
 /obj/machinery/sleeper/Initialize()
 	. = ..()
@@ -384,12 +384,12 @@
 			to_chat(user, "<span class='warning'>\The [src] does not have any slots open for \the [C] to fit into!</span>")
 		return
 
-	if(!C.label)
+	if(!C.label_text)
 		if(user)
 			to_chat(user, "<span class='warning'>\The [C] does not have a label!</span>")
 		return
 
-	if(cartridges[C.label])
+	if(cartridges[C.label_text])
 		if(user)
 			to_chat(user, "<span class='warning'>\The [src] already contains a cartridge with that label!</span>")
 		return
@@ -399,7 +399,7 @@
 		to_chat(user, "<span class='notice'>You add \the [C] to \the [src].</span>")
 
 	C.loc = src
-	cartridges[C.label] = C
+	cartridges[C.label_text] = C
 	cartridges = sortAssoc(cartridges)
 	SSnano.update_uis(src)
 

@@ -81,10 +81,6 @@
 	if(icon_keyboard)
 		overlays += image(icon, icon_keyboard, overlay_layer)
 
-/obj/machinery/computer/proc/set_broken()
-	stat |= BROKEN
-	update_icon()
-
 /obj/machinery/computer/proc/decode(text)
 	// Adds line breaks
 	text = replacetext(text, "\n", "<BR>")

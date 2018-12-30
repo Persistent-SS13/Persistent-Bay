@@ -347,11 +347,11 @@
 					qdel(term)
 		building_terminal = 0
 		return 0
-	return 1
+	return ..()
 
 /obj/machinery/power/smes/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 
-	if(stat & BROKEN)
+	if(isbroken())
 		return
 
 	// this is the data which will be sent to the ui
@@ -442,20 +442,17 @@
 	if(!output_attempt)
 		outputting = 0
 
-/obj/machinery/power/smes/proc/take_damage(var/amount)
-	amount = max(0, round(amount))
-	damage += amount
-	if(damage > maxdamage)
-		visible_message("<span class='danger'>\The [src] explodes in large rain of sparks and smoke!</span>")
-		// Depending on stored charge percentage cause damage.
-		switch(Percentage())
-			if(75 to INFINITY)
-				explosion(get_turf(src), 1, 2, 4)
-			if(40 to 74)
-				explosion(get_turf(src), 0, 2, 3)
-			if(5 to 39)
-				explosion(get_turf(src), 0, 1, 2)
-		qdel(src) // Either way we want to ensure the SMES is deleted.
+/obj/machinery/power/smes/destroyed()
+	visible_message(SPAN_DANGER("\The [src] explodes in large rain of sparks and smoke!"))
+	// Depending on stored charge percentage cause damage.
+	switch(Percentage())
+		if(75 to INFINITY)
+			explosion(get_turf(src), 1, 2, 4)
+		if(40 to 74)
+			explosion(get_turf(src), 0, 2, 3)
+		if(5 to 39)
+			explosion(get_turf(src), 0, 1, 2)
+	qdel(src) // Either way we want to ensure the SMES is deleted.
 
 /obj/machinery/power/smes/emp_act(severity)
 	if(prob(50))
@@ -473,21 +470,12 @@
 	update_icon()
 	..()
 
-/obj/machinery/power/smes/bullet_act(var/obj/item/projectile/Proj)
-	if(Proj.damage_type == BRUTE || Proj.damage_type == BURN)
-		take_damage(Proj.damage)
-
-/obj/machinery/power/smes/ex_act(var/severity)
-	// Two strong explosions will destroy a SMES.
-	// Given the SMES creates another explosion on it's destruction it sounds fairly reasonable.
-	take_damage(250 / severity)
-
 /obj/machinery/power/smes/examine(var/mob/user)
 	. = ..()
 	to_chat(user, "The service hatch is [panel_open ? "open" : "closed"].")
 	if(!damage)
 		return
-	var/damage_percentage = round((damage / maxdamage) * 100)
+	var/damage_percentage = round((get_damages() / get_max_health()) * 100)
 	switch(damage_percentage)
 		if(75 to INFINITY)
 			to_chat(user, "<span class='danger'>It's casing is severely damaged, and sparking circuitry may be seen through the holes!</span>")

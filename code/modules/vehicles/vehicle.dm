@@ -20,8 +20,7 @@
 
 	var/attack_log = null
 	var/on = 0
-	var/health = 0	//do not forget to set health for your vehicle!
-	var/maxhealth = 0
+	max_health = 0	//do not forget to set health for your vehicle!
 	var/fire_dam_coeff = 1.0
 	var/brute_dam_coeff = 1.0
 	var/open = 0	//Maint panel
@@ -90,9 +89,9 @@
 	else if(isWelder(W))
 		var/obj/item/weapon/weldingtool/T = W
 		if(T.welding)
-			if(health < maxhealth)
+			if(health < max_health)
 				if(open)
-					health = min(maxhealth, health+10)
+					health = min(max_health, health+10)
 					user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
 					user.visible_message("<span class='warning'>\The [user] repairs \the [src]!</span>","<span class='notice'>You repair \the [src]!</span>")
 				else

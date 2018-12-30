@@ -3,20 +3,56 @@
 	desc = "A suit that protects against exotic alien energies and biological contamination."
 	icon_state = "bio_anom"
 	item_state = "bio_anom"
-	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 100, rad = 100)
+	armor  = list(
+		DAM_BLUNT 	= 5,
+		DAM_PIERCE 	= 1,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 60,
+		DAM_BURN 	= 50,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 50,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 100,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/head/bio_hood/anomaly
 	name = "Anomaly hood"
 	desc = "A hood that protects the head and face from exotic alien energies and biological contamination."
 	icon_state = "bio_anom"
 	item_state = "bio_anom"
-	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 100, rad = 100)
+	armor  = list(
+		DAM_BLUNT 	= 5,
+		DAM_PIERCE 	= 1,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 60,
+		DAM_BURN 	= 50,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 50,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 100,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/suit/space/void/excavation
 	name = "Scientist voidsuit"
 	desc = "A voidsuit specially designed to insulate radioactive energy."
 	icon_state = "rig-excavation"
-	armor = list(melee = 20, bullet = 5, laser = 5,energy = 40, bomb = 20, bio = 100, rad = 100)
+	armor  = list(
+		DAM_BLUNT 	= 20,
+		DAM_PIERCE 	= 15,
+		DAM_CUT 	= 20,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 5,
+		DAM_ENERGY 	= 40,
+		DAM_BURN 	= 30,
+		DAM_BOMB 	= 20,
+		DAM_EMP 	= 50,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 100,
+		DAM_STUN 	= 0)
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit,/obj/item/stack/flag,/obj/item/weapon/storage/excavation,/obj/item/weapon/pickaxe,/obj/item/device/healthanalyzer,/obj/item/device/measuring_tape,/obj/item/device/ano_scanner,/obj/item/device/depth_scanner,/obj/item/device/core_sampler,/obj/item/device/gps,/obj/item/device/beacon_locator,/obj/item/device/radio/beacon,/obj/item/weapon/pickaxe/hand,/obj/item/weapon/storage/bag/fossils)
 
 /obj/item/clothing/head/helmet/space/void/excavation
@@ -24,7 +60,19 @@
 	desc = "A sophisticated voidsuit helmet, capable of protecting the wearer from radioactive energy."
 	icon_state = "rig0-excavation"
 	item_state = "excavation-helm"
-	armor = list(melee = 20, bullet = 5, laser = 5,energy = 40, bomb = 20, bio = 100, rad = 100)
+	armor  = list(
+		DAM_BLUNT 	= 20,
+		DAM_PIERCE 	= 15,
+		DAM_CUT 	= 20,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 5,
+		DAM_ENERGY 	= 40,
+		DAM_BURN 	= 30,
+		DAM_BOMB 	= 20,
+		DAM_EMP 	= 50,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 100,
+		DAM_STUN 	= 0)
 	light_overlay = "hardhat_light"
 
 /obj/item/clothing/suit/space/void/excavation/prepared

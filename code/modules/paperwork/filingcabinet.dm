@@ -18,6 +18,24 @@
 	anchored = 1
 	atom_flags = ATOM_FLAG_CLIMBABLE
 	obj_flags = OBJ_FLAG_ANCHORABLE
+	mass = 50
+	max_health = 250
+	damthreshold_brute 	= 5
+	damthreshold_brute 	= 5
+	armor = list(
+		DAM_BLUNT  	= 60,
+		DAM_PIERCE 	= 70,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 10,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 60,
+		DAM_BOMB 	= 20,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 	var/list/can_hold = list(
 		/obj/item/weapon/paper,
 		/obj/item/weapon/folder,

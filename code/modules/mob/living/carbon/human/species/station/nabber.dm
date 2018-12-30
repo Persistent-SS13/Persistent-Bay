@@ -201,8 +201,8 @@
 /obj/item/grab/nab/special/init()
 	..()
 
-	var/armor = affecting.run_armor_check(BP_CHEST, "melee")
-	affecting.apply_damage(15, BRUTE, BP_CHEST, armor, DAM_SHARP, "organic punctures")
+	var/armor = affecting.run_armor_check(BP_CHEST, DAM_PIERCE)
+	affecting.apply_damage(15, DAM_PIERCE, BP_CHEST, armor, 0, "organic punctures")
 	affecting.visible_message("<span class='danger'>[assailant]'s spikes dig in painfully!</span>")
 	affecting.Stun(10)
 

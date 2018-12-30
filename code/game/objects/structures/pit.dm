@@ -6,6 +6,8 @@
 	blend_mode = BLEND_MULTIPLY
 	density = 0
 	anchored = 1
+	mass = 5
+	max_health = 60
 	var/open = 1
 
 /obj/structure/pit/attackby(obj/item/W, mob/user)

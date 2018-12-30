@@ -2,12 +2,12 @@
 	name = "dart"
 	icon_state = "dart"
 	damage = 5
-	sharp = 1
+	sharpness = 1
 	embed = 1 //the dart is shot fast enough to pierce space suits, so I guess splintering inside the target can be a thing. Should be rare due to low damage.
 	var/reagent_amount = 15
 	kill_count = 15 //shorter range
 	unacidable = 1
-
+	mass = 0.110
 	muzzle_type = null
 
 /obj/item/projectile/bullet/chemdart/New()
@@ -59,6 +59,7 @@
 	allowed_magazines = /obj/item/ammo_magazine/chemdart
 	auto_eject = 0
 	handle_casings = CLEAR_CASINGS //delete casings instead of dropping them
+	mass = 2.4
 
 	var/list/beakers = list() //All containers inside the gun.
 	var/list/mixing = list() //Containers being used for mixing.

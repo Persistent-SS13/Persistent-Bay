@@ -97,7 +97,7 @@
 		if(C.do_weld(user, src, 2))
 			playsound(src, 'sound/items/Welder.ogg', 100, 1)
 			add_health(rand(80,120))
-			if(cur_health == max_health)
+			if(health == max_health)
 				to_chat(user, "You repair some dents on \the [src]. It is in perfect condition now.")
 			else
 				to_chat(user, "You repair some dents on \the [src].")

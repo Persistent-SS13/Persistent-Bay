@@ -95,9 +95,5 @@
 
 		return null
 
-	proc/make_loc_string_id(var/prefix)
-		return "[prefix]([x]:[y]:[z])"
-
 obj/machinery/atmospherics/unary/atmos_scan()
 	return air_contents
-

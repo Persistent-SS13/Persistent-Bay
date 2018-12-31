@@ -37,7 +37,7 @@
 	return material
 
 /obj/item/weapon/material/proc/update_force()
-	if(damtype & DAM_CUT || damtype & DAM_PIERCE)
+	if(IsDamageTypeEdged(damtype))
 		force = material.get_edge_damage()
 	else
 		force = material.get_blunt_damage()

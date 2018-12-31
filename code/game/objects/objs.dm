@@ -15,27 +15,27 @@
 	var/unacidable 			= FALSE		//universal "unacidabliness" var, here so you can use it in any obj.
 
 	//Damage handling
-	var/health 				= 0		//Current health
+	var/health 				= null	//Current health
 	var/max_health 			= 0		//Maximum health
 	var/min_health 			= 0 	//Minimum health. If you want negative health numbers, change this to a negative number! Used to determine at what health something "dies"
 	var/const/MaxArmorValue = 100	//Maximum armor resistance possible for objects (Was hardcoded to 100 for mobs..)
-	var/list/armor = list(
-		DAM_BLUNT  	= RESIST_NONE,
-		DAM_PIERCE 	= RESIST_NONE,
-		DAM_CUT 	= RESIST_NONE,
-		DAM_BULLET 	= RESIST_NONE,
-		DAM_LASER 	= RESIST_NONE,
-		DAM_ENERGY 	= RESIST_NONE,
-		DAM_BURN 	= RESIST_NONE,
-		DAM_BOMB 	= RESIST_NONE,
-		DAM_EMP 	= RESIST_INVULNERABLE,
-		DAM_BIO 	= RESIST_INVULNERABLE,
-		DAM_RADS 	= RESIST_INVULNERABLE,
-		DAM_STUN 	= RESIST_INVULNERABLE,
-		DAM_PAIN	= RESIST_INVULNERABLE,
-		DAM_CLONE   = RESIST_INVULNERABLE) 	//Resistance for various types of damages
-	var/damthreshold_brute 		= 0		//Minimum amount of brute damages required before it damage the object. Damages of that type below this value have no effect.
-	var/damthreshold_burn		= 0		//Minimum amount of burn damages required before it damage the object. Damages of that type below this value have no effect.
+	var/list/armor// = list()
+		// DAM_BLUNT   = 0,
+		// DAM_PIERCE  = 0,
+		// DAM_CUT     = 0,
+		// DAM_BULLET  = 0,
+		// DAM_LASER   = 0,
+		// DAM_ENERGY  = 0,
+		// DAM_BURN    = 0,
+		// DAM_BOMB    = 0,
+		// DAM_EMP     = MaxArmorValue,
+		// DAM_BIO     = MaxArmorValue,
+		// DAM_RADS    = MaxArmorValue,
+		// DAM_STUN    = MaxArmorValue,
+		// DAM_PAIN    = MaxArmorValue,
+		// DAM_CLONE   = MaxArmorValue) //Resistance for various types of damages
+	var/damthreshold_brute 		= 0		//Minimum amount of brute damages required to damage the object. Damages of that type below this value have no effect.
+	var/damthreshold_burn		= 0		//Minimum amount of burn damages required to damage the object. Damages of that type below this value have no effect.
 	var/explosion_base_damage 	= 5 	//The base of the severity exponent used. See ex_act for details
 	var/emp_base_damage 		= 5 	//The base of the severity exponent used. See emp_act for details
 	var/const/ThrowMissChance	= 15	//in percent, chances for things thrown at this object to miss it
@@ -51,7 +51,7 @@
 	var/burning 	= FALSE			//Whether the object is on fire
 
 	//Interaction State
-	var/in_use		= 0 // If we have a user using us, this will be set on. We will check if the user has stopped using us, and thus stop updating and LAGGING EVERYTHING!
+	var/in_use		= FALSE // If we have a user using us, this will be set on. We will check if the user has stopped using us, and thus stop updating and LAGGING EVERYTHING!
 	var/anchor_fall = FALSE
 
 /obj/New()
@@ -66,6 +66,7 @@
 	return ..()
 
 /obj/item/proc/is_used_on(obj/O, mob/user)
+	return
 
 /obj/assume_air(datum/gas_mixture/giver)
 	if(loc)
@@ -122,6 +123,33 @@
 
 		if(!ai_in_use && !is_in_use)
 			in_use = 0
+
+/obj/examine(var/mob/user)
+	. = ..()
+	if(isdamageable())
+		to_chat(user, damage_description(user))
+
+/obj/proc/damage_description(var/mob/user)
+	if(!isdamaged())
+		return SPAN_NOTICE("It looks fully intact.")
+	else
+		var/perc = health_percentage()
+		if(perc > 75)
+			return SPAN_NOTICE("It has a few scratches.")
+		else if(perc > 50)
+			return SPAN_WARNING("It looks slightly damaged.")
+		else if(perc > 25)
+			return SPAN_NOTICE("It looks moderately damaged.")
+		else
+			return SPAN_DANGER("It looks heavily damaged.")
+
+/obj/proc/health_percentage()
+	if(!isdamageable())
+		return 100
+	if((max_health - min_health) != 0)
+		return health * 100 / (max_health - min_health)
+	else
+		return 0
 
 /obj/attack_ghost(mob/user)
 	ui_interact(user)
@@ -185,8 +213,8 @@
 
 //Returns true if the damage is over the brute or burn damage threshold
 /obj/proc/pass_damage_threshold(var/damage, var/damtype)
-	return (IsDamageTypeBrute(damtype) 	 && damage > damthreshold_brute) || \
-		   (IsDamageTypeHeat(damtype)    && damage > damthreshold_burn)
+	return (IsDamageTypeBrute(damtype)   && damage > damthreshold_brute) || \
+		   (IsDamageTypeBurn(damtype)    && damage > damthreshold_burn)
 
 /obj/proc/pass_damage_threshold_list(var/list/damlist)
 	for(var/key in damlist)
@@ -194,28 +222,41 @@
 			return TRUE
 	return FALSE
 
+/obj/proc/get_armor_value(var/damagetype)
+	if(!armor)
+		return 0
+	ASSERT(damagetype)
+	. = armor[damagetype]
+	if(!.)
+		. = 0 //Don't return null!
+
 //Used to calculate armor damage reduction. Returns the amount of damages absorbed
 /obj/proc/armor_absorb(var/damage, var/ap, var/damagetype)
 	if(!damagetype)
 		log_warning("Null damage type was passed to armor_absorb for \the [src] object! With damage = [damage], and ap = [ap]!")
 		return 0
-	if(ap >= MaxArmorValue)
+	if(ap >= MaxArmorValue || !armor)
 		return 0 //bypass armor
 
 	//If the damage is below our minimum thresholds, reject it all
 	if( !pass_damage_threshold(damage, damagetype) )
-		return damage
+		log_debug("[damagetype] damage of [damage](ap [ap]) blocked by damage threshold!")
+		return MaxArmorValue
 
 	for(var/dmgkey in src.armor)
-		if(damagetype == dmgkey && src.armor[dmgkey])
+		if(ISDAMTYPE(damagetype, dmgkey) && src.armor[dmgkey])
 			var/resist = src.armor[dmgkey]
 			if(ap >= resist)
 				return 0 //bypass armor
 			var/effective_armor = (resist - ap)/MaxArmorValue
 			var/fullblock = (effective_armor*effective_armor) * ARMOR_BLOCK_CHANCE_MULT
-			if(fullblock >= 1 || prob(fullblock*MaxArmorValue))
-				return MaxArmorValue
-			return round(((effective_armor - fullblock)/(1 - fullblock)*100), 1)
+			
+			if(fullblock >= 1 || prob(fullblock * MaxArmorValue))
+				. = MaxArmorValue
+			else
+				. = round(((effective_armor - fullblock)/(1 - fullblock) * MaxArmorValue), 1)
+			log_debug("[dmgkey] armor ([resist]/[effective_armor]), blocked [.]% out of [damage]([ap] ap) damages! Fullblock [fullblock], with probability [fullblock*MaxArmorValue]%")
+			return .
 
 	return 0 //no resistance found
 
@@ -229,17 +270,19 @@
 		return 0
 
 	if(!damlist)
-		var/resultingdmg = max(0, damage - armor_absorb(damage, armorbypass, damtype))
+		var/resultingdmg = max(0, damage * blocked_mult(armor_absorb(damage, armorbypass, damtype)))
 		set_health(get_health() - resultingdmg)
 		update_health(damtype)
 		. = resultingdmg
+		log_debug("[src] took [resultingdmg] [damtype] damages from [damsrc]! Before armor: [damage] damages.")
 	else
 		for(var/key in damlist)
 			damage = damlist[key]
-			var/resultingdmg = max(0, damlist[key] - armor_absorb(damlist[key], armorbypass, key))
+			var/resultingdmg = max(0, damlist[key] * blocked_mult(armor_absorb(damlist[key], armorbypass, key)))
 			set_health(get_health() - resultingdmg)
 			update_health(key)
 			. += resultingdmg
+			log_debug("[src] took [resultingdmg] [damtype] damages from [damsrc]! Before armor: [damage] damages.")
 	return .
 
 //Like take damage, but meant to instantly destroy the object from an external source
@@ -322,7 +365,7 @@
 	if(isdamageable() && user.a_intent == I_HURT && O.force > 0 && !(O.item_flags & ITEM_FLAG_NO_BLUDGEON))
 		attack_melee(user, O)
 		return 1
-	return ..()
+	return 0 //The code in atom/movable/attackby is causing more trouble than it solves..
 
 //Handle generic hits
 /obj/attack_generic(var/mob/user, var/damage, var/attack_verb, var/wallbreaker, var/damtype = DAM_BLUNT)
@@ -359,62 +402,39 @@
 /obj/proc/attack_melee(var/mob/user, var/obj/item/W)
 	if(!isdamageable() || !istype(W))
 		return
-
-	var/cooldown = DEFAULT_ATTACK_COOLDOWN
+ 
 	if(!istype(W, /obj/item/weapon)) // Some objects don't have click cooldowns/attack anims
-		user.setClickCooldown(cooldown)
+		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
 		if(W.sound_hit)
 			playsound(loc, W.sound_hit, vol=60, vary=1, extrarange=8, falloff=6)
 		attack_animation(user)
 	else
 		W.attack(src, user)
 
-//	if(islist(W.damtype))
-//		var/list/dlist = W.damtype
-//		for(var/key in W.damtype)
-//			dlist[key] = W.force
-//		//When damages don't go through the damage threshold, give player feedback
-//		if(!pass_damage_threshold_list(dlist))
-//			visible_message(SPAN_WARNING("\The [src] was hit with \the [W] with no visible effect."))
-//			playsound(loc, W.sound_hit, vol=30, vary=1, extrarange=2, falloff=1)
-//			return 0
-//		take_damage(damlist = W.damtype, armorbypass = W.armor_penetration)
-//	else
-//		//When damages don't go through the damage threshold, give player feedback
-//		if(!pass_damage_threshold(W.force, W.damtype))
-//			visible_message(SPAN_WARNING("\The [src] was hit with \the [W] with no visible effect."))
-//			playsound(loc, W.sound_hit, vol=30, vary=1, extrarange=2, falloff=1)
-//			return 0
-//		take_damage(W.force, W.damtype, armorbypass = W.armor_penetration)
-//
-//	if(W.attack_verb && W.attack_verb.len)
-//		visible_message(SPAN_WARNING("\The [src] have been [pick(W.attack_verb)] with \the [W][(user ? " by [user]." : ".")]"))
-//	else
-//		visible_message(SPAN_WARNING("\The [src] have been attacked with \the [W][(user ? " by [user]." : ".")]"))
-
 //Called by a weapon's "afterattack" proc when an attack has succeeded. Returns blocked damage
 /obj/hit_with_weapon(obj/item/W, mob/living/user, var/effective_force)
-	..()
 	if(islist(W.damtype))
 		var/list/dlist = W.damtype
-		for(var/key in W.damtype)
-			dlist[key] = W.force
+		//for(var/key in W.damtype)
+		//	dlist[key] = W.force
 		//When damages don't go through the damage threshold, give player feedback
 		if(!pass_damage_threshold_list(dlist))
 			hit_deflected_by_armor(W, user)
 			return 0
-		take_damage(damlist = W.damtype, armorbypass = W.armor_penetration)
+		take_damage(damlist = dlist, armorbypass = W.armor_penetration)
 	else
 		//When damages don't go through the damage threshold, give player feedback
-		if(!pass_damage_threshold(W.force, W.damtype))
+		if(!pass_damage_threshold(effective_force, W.damtype))
 			hit_deflected_by_armor(W, user)
 			return 0
 		take_damage(effective_force, W.damtype, armorbypass = W.armor_penetration)
 	playsound(loc, sound_hit, vol=40, vary=1, extrarange=4, falloff=1)
+	..()
 
 /obj/proc/hit_deflected_by_armor(obj/item/W, mob/living/user)
+	log_debug("damage deflected by damage threshold of [src]")
 	visible_message(SPAN_WARNING("[user]'s hit wasn't enough to pierce [src]'s armor!"))
-	playsound(loc, W.sound_hit, vol=30, vary=1, extrarange=2, falloff=1) //ricochet sound I guess
+	playsound(loc, sound_hit, vol=30, vary=1, extrarange=2, falloff=1) //ricochet sound I guess
 
 //Placed a "force" argument, so whenever we fix explosions so they do damages, it'll be ready
 /obj/ex_act(var/severity, var/force = 0)
@@ -439,11 +459,11 @@
 		return
 	var/bdam = P.get_structure_damage()
 	//When damages don't go through the damage threshold, give player feedback
-	if(!pass_damage_threshold(bdam, P.damage_type))
+	if(!pass_damage_threshold(bdam, P.damtype))
 		visible_message(SPAN_WARNING("\The [src] was hit by \the [P] with no visible effect."))
 		playsound(loc, sound_hit, vol=40, vary=1, extrarange=4, falloff=2)
 		return 0
-	take_damage(bdam, P.damage_type, P.penetration_modifier)
+	take_damage(bdam, P.damtype, P.penetration_modifier)
 
 //Handles being hit by a thrown atom_movable
 //	- damageoverride : if subclasses have a different damage calculation, pass the damage in this var
@@ -460,7 +480,7 @@
 		return 0
 
 	//Handle damages
-	var/damage_type = O? O.damtype : DAM_BLUNT
+	var/damtype = O? O.damtype : DAM_BLUNT
 	var/ap = O? O.armor_penetration : 0
 	var/throw_damage = 0
 	if(damageoverride)
@@ -469,11 +489,11 @@
 		throw_damage = O? O.throwforce*(speed/THROWFORCE_SPEED_DIVISOR) : (AM.throw_speed/THROWFORCE_SPEED_DIVISOR * AM.mass)
 
 	//When damages don't go through the damage threshold, give player feedback
-	if(!pass_damage_threshold(throw_damage, damage_type))
+	if(!pass_damage_threshold(throw_damage, damtype))
 		visible_message(SPAN_WARNING("\The [src] was hit by \the [AM] with no visible effect."))
 		playsound(loc, sound_hit, vol=40, vary=1, extrarange=4, falloff=2)
 		return 0
-	take_damage(throw_damage, damage_type, armorbypass = ap)
+	take_damage(throw_damage, damtype, armorbypass = ap)
 
 	src.visible_message(SPAN_WARNING("\The [src] has been hit by \the [O]."))
 	playsound(loc, sound_hit, vol=50, vary=1, extrarange=8, falloff=6)

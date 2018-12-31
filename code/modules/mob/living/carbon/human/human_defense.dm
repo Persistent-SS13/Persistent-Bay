@@ -14,7 +14,7 @@ meteor_act
 		return PROJECTILE_FORCE_MISS //if they don't have the organ in question then the projectile just passes by.
 
 	//Shields
-	var/shield_check = check_shields(P.damage, P, null, def_zone, "the [P.name]")
+	var/shield_check = check_shields(P.force, P, null, def_zone, "the [P.name]")
 	if(shield_check)
 		if(shield_check < 0)
 			return shield_check
@@ -23,8 +23,8 @@ meteor_act
 			return 100
 
 	var/obj/item/organ/external/organ = get_organ(def_zone)
-	var/armor = getarmor_organ(organ, P.damage_type)
-	var/penetrating_damage = ((P.damage + P.armor_penetration) * P.penetration_modifier) - armor
+	var/armor = getarmor_organ(organ, P.damtype)
+	var/penetrating_damage = ((P.force + P.armor_penetration) * P.penetration_modifier) - armor
 
 	//Embed or sever artery
 	if(P.can_embed() && !(species.species_flags & SPECIES_FLAG_NO_EMBED) && prob(22.5 + max(penetrating_damage, -10)) && !(prob(50) && (organ.sever_artery())))
@@ -36,7 +36,7 @@ meteor_act
 
 	var/blocked = ..(P, def_zone)
 
-	projectile_hit_bloody(P, P.damage*blocked_mult(blocked), def_zone)
+	projectile_hit_bloody(P, P.force*blocked_mult(blocked), def_zone)
 
 	return blocked
 
@@ -91,7 +91,7 @@ meteor_act
 	return siemens_coefficient
 
 //this proc returns the armour value for a particular external organ.
-/mob/living/carbon/human/proc/getarmor_organ(var/obj/item/organ/external/def_zone, var/type)
+/mob/living/carbon/human/proc/getarmor_organ(var/obj/item/organ/external/def_zone, var/amtype)
 	if(!type || !def_zone) return 0
 	if(!istype(def_zone))
 		def_zone = get_organ(check_zone(def_zone))
@@ -101,11 +101,11 @@ meteor_act
 	var/list/protective_gear = list(head, wear_mask, wear_suit, w_uniform, gloves, shoes)
 	for(var/obj/item/clothing/gear in protective_gear)
 		if(gear.body_parts_covered & def_zone.body_part)
-			protection = add_armor(protection, gear.armor[type])
+			protection = add_armor(protection, gear.get_armor_value(amtype))
 		if(gear.accessories.len)
 			for(var/obj/item/clothing/accessory/bling in gear.accessories)
 				if(bling.body_parts_covered & def_zone.body_part)
-					protection = add_armor(protection, bling.armor[type])
+					protection = add_armor(protection, bling.get_armor_value(amtype))
 	return protection
 
 /mob/living/carbon/human/proc/check_head_coverage()
@@ -209,7 +209,7 @@ meteor_act
 	return 1
 
 /mob/living/carbon/human/proc/attack_bloody(obj/item/W, mob/living/attacker, var/effective_force, var/hit_zone)
-	if(!cmpdamtype(W.damtype, DAM_CUT))
+	if(!ISDAMTYPE(W.damtype, DAM_CUT))
 		return
 
 	//make non-sharp low-force weapons less likely to be bloodied
@@ -245,7 +245,7 @@ meteor_act
 				bloody_body(src)
 
 /mob/living/carbon/human/proc/projectile_hit_bloody(obj/item/projectile/P, var/effective_force, var/hit_zone)
-	if( !cmpdamtype(P.damage_type, DAM_BULLET) || P.nodamage)
+	if( !ISDAMTYPE(P.damtype, DAM_BULLET) || P.nodamage)
 		return
 	if(!(P.sharpness || prob(effective_force*4)))
 		return

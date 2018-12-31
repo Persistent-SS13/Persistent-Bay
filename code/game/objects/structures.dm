@@ -15,7 +15,6 @@
 /obj/structure/New()
 	..()
 	ADD_SAVED_VAR(anchored)
-	ADD_SAVED_VAR(parts)
 
 /obj/structure/after_load()
 	update_connections(1)

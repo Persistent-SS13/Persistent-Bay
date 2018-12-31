@@ -1,5 +1,3 @@
-#define CAT_HIDDEN 2   // Also in code/game/machinery/vending.dm
-
 /datum/wires/vending
 	holder_type = /obj/machinery/vending
 	wire_count = 4
@@ -24,7 +22,7 @@ var/const/VENDING_WIRE_IDSCAN = 8
 	. += ..()
 	. += "<BR>The orange light is [V.seconds_electrified ? "off" : "on"].<BR>"
 	. += "The red light is [V.shoot_inventory ? "off" : "blinking"].<BR>"
-	. += "The green light is [(V.categories & CAT_HIDDEN) ? "on" : "off"].<BR>"
+	. += "The green light is [(V.categories & VENDINGM_CAT_HIDDEN) ? "on" : "off"].<BR>"
 	. += "The [V.scan_id ? "purple" : "yellow"] light is on.<BR>"
 
 /datum/wires/vending/UpdatePulsed(var/index)
@@ -33,7 +31,7 @@ var/const/VENDING_WIRE_IDSCAN = 8
 		if(VENDING_WIRE_THROW)
 			V.shoot_inventory = !V.shoot_inventory
 		if(VENDING_WIRE_CONTRABAND)
-			V.categories ^= CAT_HIDDEN
+			V.categories ^= VENDINGM_CAT_HIDDEN
 		if(VENDING_WIRE_ELECTRIFY)
 			V.seconds_electrified = 30
 		if(VENDING_WIRE_IDSCAN)
@@ -45,7 +43,7 @@ var/const/VENDING_WIRE_IDSCAN = 8
 		if(VENDING_WIRE_THROW)
 			V.shoot_inventory = !mended
 		if(VENDING_WIRE_CONTRABAND)
-			V.categories &= ~CAT_HIDDEN  
+			V.categories &= ~VENDINGM_CAT_HIDDEN  
 		if(VENDING_WIRE_ELECTRIFY)
 			if(mended)
 				V.seconds_electrified = 0

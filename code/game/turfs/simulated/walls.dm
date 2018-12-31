@@ -80,7 +80,7 @@
 /turf/simulated/wall/bullet_act(var/obj/item/projectile/Proj)
 	var/damage = Proj.get_structure_damage()
 	var/damType
-	switch(Proj.check_armour)
+	switch(Proj.damtype)
 		if("bullet")
 			damType = "brute"
 			return

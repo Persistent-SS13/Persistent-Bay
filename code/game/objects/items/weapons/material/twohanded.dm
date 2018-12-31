@@ -40,7 +40,7 @@
 
 /obj/item/weapon/material/twohanded/update_force()
 	base_name = name
-	if(cmpdamtype(damtype, DAM_CUT))
+	if(ISDAMTYPE(damtype, DAM_CUT))
 		force_wielded = material.get_edge_damage()
 	else
 		force_wielded = material.get_blunt_damage()

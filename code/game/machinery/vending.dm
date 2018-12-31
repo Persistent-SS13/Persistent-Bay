@@ -27,7 +27,7 @@
 	var/active = 1 //No sales pitches if off!
 	var/vend_ready = 1 //Are we ready to vend?? Is it time??
 	var/vend_delay = 10 //How long does it take to vend?
-	var/categories = CAT_NORMAL // Bitmask of cats we're currently showing
+	var/categories = VENDINGM_CAT_NORMAL // Bitmask of cats we're currently showing
 	var/datum/stored_items/vending_products/currently_vending = null // What we're requesting payment for right now
 	var/status_message = "" // Status screen messages like "insufficient funds", displayed in NanoUI
 	var/status_error = 0 // Set to 1 if status_message is an error
@@ -100,9 +100,9 @@
  */
 /obj/machinery/vending/proc/build_inventory()
 	var/list/all_products = list(
-		list(src.products, CAT_NORMAL),
-		list(src.contraband, CAT_HIDDEN),
-		list(src.premium, CAT_COIN))
+		list(src.products, VENDINGM_CAT_NORMAL),
+		list(src.contraband, VENDINGM_CAT_HIDDEN),
+		list(src.premium, VENDINGM_CAT_COIN))
 
 	for(var/current_list in all_products)
 		var/category = current_list[2]
@@ -201,7 +201,7 @@
 		user.drop_item()
 		W.forceMove(src)
 		coin = W
-		categories |= CAT_COIN
+		categories |= VENDINGM_CAT_COIN
 		to_chat(user, "<span class='notice'>You insert \the [W] into \the [src].</span>")
 		SSnano.update_uis(src)
 		return
@@ -401,7 +401,7 @@
 			usr.put_in_hands(coin)
 		to_chat(usr, "<span class='notice'>You remove \the [coin] from \the [src]</span>")
 		coin = null
-		categories &= ~CAT_COIN
+		categories &= ~VENDINGM_CAT_COIN
 
 	if ((usr.contents.Find(src) || (in_range(src, usr) && istype(src.loc, /turf))))
 		if ((href_list["vend"]) && (src.vend_ready) && (!currently_vending))
@@ -449,7 +449,7 @@
 	src.status_error = 0
 	SSnano.update_uis(src)
 
-	if (R.category & CAT_COIN)
+	if (R.category & VENDINGM_CAT_COIN)
 		if(!coin)
 			to_chat(user, "<span class='notice'>You need to insert a coin to get this item.</span>")
 			return
@@ -460,11 +460,11 @@
 				to_chat(user, "<span class='notice'>You weren't able to pull the coin out fast enough, the machine ate it, string and all.</span>")
 				qdel(coin)
 				coin = null
-				categories &= ~CAT_COIN
+				categories &= ~VENDINGM_CAT_COIN
 		else
 			qdel(coin)
 			coin = null
-			categories &= ~CAT_COIN
+			categories &= ~VENDINGM_CAT_COIN
 
 	if(((src.last_reply + (src.vend_delay + 200)) <= world.time) && src.vend_reply)
 		spawn(0)
@@ -931,9 +931,9 @@
  */
 /obj/machinery/vending/hydroseeds/build_inventory()
 	var/list/all_products = list(
-		list(src.products, CAT_NORMAL),
-		list(src.contraband, CAT_HIDDEN),
-		list(src.premium, CAT_COIN))
+		list(src.products, VENDINGM_CAT_NORMAL),
+		list(src.contraband, VENDINGM_CAT_HIDDEN),
+		list(src.premium, VENDINGM_CAT_COIN))
 
 	for(var/current_list in all_products)
 		var/category = current_list[2]

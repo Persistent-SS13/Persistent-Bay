@@ -951,7 +951,7 @@
 	var/obj/item/organ/external/groin = src.get_organ(BP_GROIN)
 	if(groin && stomach_contents && stomach_contents.len)
 		for(var/obj/item/O in stomach_contents)
-			if(O.sharpness || cmpdamtype(O.damtype, DAM_PIERCE) || cmpdamtype(O.damtype, DAM_CUT))
+			if(O.sharpness || ISDAMTYPE(O.damtype, DAM_PIERCE) || ISDAMTYPE(O.damtype, DAM_CUT))
 				if(prob(1))
 					stomach_contents.Remove(O)
 					if(can_feel_pain())

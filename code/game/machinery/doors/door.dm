@@ -188,7 +188,7 @@
 	if (damage > 90)
 		destroy_hits--
 		if (destroy_hits <= 0)
-			kill(Proj.damage_type)
+			kill(Proj.damtype)
 	..(Proj)
 
 /obj/machinery/door/attack_ai(mob/user as mob)

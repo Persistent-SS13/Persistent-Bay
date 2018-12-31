@@ -103,8 +103,8 @@
 
 
 /obj/structure/displaycase/bullet_act(var/obj/item/projectile/Proj)
-	if((Proj.damage_type == BRUTE || Proj.damage_type == BURN))
-		health -= Proj.damage
+	if(IsDamageTypePhysical(Proj.damtype))
+		health -= Proj.force
 	..()
 	src.healthcheck()
 	return

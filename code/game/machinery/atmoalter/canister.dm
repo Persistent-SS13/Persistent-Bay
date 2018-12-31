@@ -207,11 +207,11 @@ update_flag
 	return 0
 
 /obj/machinery/portable_atmospherics/canister/bullet_act(var/obj/item/projectile/Proj)
-	if(!IsDamageTypePhysical(Proj.damage_type))
+	if(!IsDamageTypePhysical(Proj.damtype))
 		return
 
-	if(Proj.damage)
-		src.health -= round(Proj.damage / 2)
+	if(Proj.force)
+		src.health -= round(Proj.force / 2)
 		healthcheck()
 	..()
 

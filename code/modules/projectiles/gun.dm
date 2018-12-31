@@ -289,7 +289,7 @@
 		for(var/obj/item/grab/G in H.grabbed_by)
 			if(G.point_blank_mult() > max_mult)
 				max_mult = G.point_blank_mult()
-	P.damage *= max_mult
+	P.force *= max_mult
 
 /obj/item/weapon/gun/proc/process_accuracy(obj/projectile, mob/user, atom/target, var/burst, var/held_twohanded)
 	var/obj/item/projectile/P = projectile
@@ -377,9 +377,9 @@
 			return
 
 		in_chamber.on_hit(M)
-		if (IsDamageTypePhysical(in_chamber.damage_type))
+		if (IsDamageTypePhysical(in_chamber.damtype))
 			log_and_message_admins("[key_name(user)] commited suicide using \a [src]")
-			user.apply_damage(in_chamber.damage*2.5, in_chamber.damage_type, BP_HEAD, 0, used_weapon = "Point blank shot in the mouth with \a [in_chamber]")
+			user.apply_damage(in_chamber.force*2.5, in_chamber.damtype, BP_HEAD, 0, used_weapon = "Point blank shot in the mouth with \a [in_chamber]")
 			user.death()
 		else
 			to_chat(user, "<span class = 'notice'>Ow...</span>")

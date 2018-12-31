@@ -122,11 +122,6 @@
 	airlock = null
 	update_icon()
 
-/obj/item/weapon/airlock_brace/proc/health_percentage()
-	if(!max_health)
-		return 0
-	return (health / max_health) * 100
-
 /obj/item/weapon/airlock_brace/proc/update_access()
 	if(!electronics)
 		return

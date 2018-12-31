@@ -1,6 +1,4 @@
-#define FONT_SIZE "5pt"
-#define FONT_COLOR "#09f"
-#define FONT_STYLE "Arial Black"
+#define SD_TEXT_STYLE "style='font-size:5pt;color:#09f;font:\"Arial Black\";text-align:center;' valign='top'"
 #define SCROLL_SPEED 2
 
 // Status display
@@ -186,7 +184,7 @@
 	set_light(1.5, 1, COLOR_WHITE)
 
 /obj/machinery/status_display/proc/update_display(line1, line2)
-	var/new_text = {"<div style="font-size:[FONT_SIZE];color:[FONT_COLOR];font:'[FONT_STYLE]';text-align:center;" valign="top">[line1]<br>[line2]</div>"}
+	var/new_text = {"<div [SD_TEXT_STYLE]>[line1]<br>[line2]</div>"}
 	if(maptext != new_text)
 		maptext = new_text
 	set_light(1.5, 1, COLOR_WHITE)
@@ -260,8 +258,5 @@
 	qdel(src)
 	return TRUE
 
-#undef CHARS_PER_LINE
-#undef FOND_SIZE
-#undef FONT_COLOR
-#undef FONT_STYLE
+#undef SD_TEXT_STYLE
 #undef SCROLL_SPEED

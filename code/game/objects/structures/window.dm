@@ -92,28 +92,15 @@
 	saved_dir = dir
 	..()
 
-/obj/structure/window/examine(mob/user)
-	. = ..(user)
-
-	if(!isdamaged())
-		to_chat(user, SPAN_NOTICE("It looks fully intact."))
-	else
-		var/perc = get_health() / get_max_health()
-		if(perc > 0.75)
-			to_chat(user, SPAN_NOTICE("It has a few cracks."))
-		else if(perc > 0.5)
-			to_chat(user, SPAN_WARNING("It looks slightly damaged."))
-		else if(perc > 0.25)
-			to_chat(user, SPAN_NOTICE("It looks moderately damaged."))
-		else
-			to_chat(user, SPAN_DANGER("It looks heavily damaged."))
+/obj/structure/window/damage_description(var/mob/user)
+	. = ..() + "\n"
 	if(silicate)
 		if (silicate < 30)
-			to_chat(user, SPAN_NOTICE("It has a thin layer of silicate."))
+			. += SPAN_NOTICE("It has a thin layer of silicate.")
 		else if (silicate < 70)
-			to_chat(user, SPAN_NOTICE("It is covered in silicate."))
+			. +=  SPAN_NOTICE("It is covered in silicate.")
 		else
-			to_chat(user, SPAN_NOTICE("There is a thick layer of silicate covering it."))
+			. += SPAN_NOTICE("There is a thick layer of silicate covering it.")
 
 /obj/structure/window/take_damage(damage, damtype, armordamagetype, armorbypass, list/damlist, damflags, damsrc)
 	var/initialhealth = health

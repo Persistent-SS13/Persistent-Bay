@@ -109,11 +109,10 @@
 /mob/living/silicon/bullet_act(var/obj/item/projectile/Proj)
 
 	if(!Proj.nodamage)
-		switch(Proj.damage_type)
-			if(BRUTE)
-				adjustBruteLoss(Proj.damage)
-			if(BURN)
-				adjustFireLoss(Proj.damage)
+		if(IsDamageTypeBrute(Proj.damtype))
+			adjustBruteLoss(Proj.force)
+		else if(IsDamageTypeBurn(Proj.damtype))
+			adjustFireLoss(Proj.force)
 
 	Proj.on_hit(src,100) //wow this is a terrible hack
 	updatehealth()

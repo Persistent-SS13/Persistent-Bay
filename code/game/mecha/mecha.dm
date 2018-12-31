@@ -498,8 +498,8 @@
 		log_append_to_last("Took [amount] points of damage. Damage type: \"[type]\".",1)
 	return
 
-/obj/mecha/proc/absorb_damage(damage,damage_type)
-	return damage*(listgetindex(damage_absorption,damage_type) || 1)
+/obj/mecha/proc/absorb_damage(damage,damtype)
+	return damage*(listgetindex(damage_absorption,damtype) || 1)
 
 /obj/mecha/proc/hit_damage(damage, type="brute", is_melee=0)
 
@@ -623,10 +623,10 @@
 	return
 
 /obj/mecha/bullet_act(var/obj/item/projectile/Proj)
-	if(Proj.damage_type == PAIN && !(src.r_deflect_coeff > 1))
+	if(ISDAMTYPE(Proj.damtype, DAM_PAIN) && !(src.r_deflect_coeff > 1))
 		use_power(Proj.agony * 5)
 
-	src.log_message("Hit by projectile. Type: [Proj.name]([Proj.check_armour]).",1)
+	src.log_message("Hit by projectile. Type: [Proj.name]([Proj.damtype]).",1)
 	if(deflect_hit(is_melee=0))
 		src.occupant_message("<span class='notice'>The armor deflects incoming projectile.</span>")
 		src.visible_message("The [src.name] armor deflects the projectile.")
@@ -637,7 +637,7 @@
 		var/ignore_threshold
 		if(istype(Proj, /obj/item/projectile/beam/pulse))
 			ignore_threshold = 1
-		src.hit_damage(Proj.damage, Proj.check_armour, is_melee=0)
+		src.hit_damage(Proj.force, Proj.damtype, is_melee=0)
 		if(prob(25)) spark_system.start()
 		src.check_for_internal_damage(list(MECHA_INT_FIRE,MECHA_INT_TEMP_CONTROL,MECHA_INT_TANK_BREACH,MECHA_INT_CONTROL_LOST,MECHA_INT_SHORT_CIRCUIT),ignore_threshold)
 
@@ -645,7 +645,7 @@
 		if(Proj.penetrating)
 			var/distance = get_dist(Proj.starting, get_turf(loc))
 			var/hit_occupant = 1 //only allow the occupant to be hit once
-			for(var/i in 1 to min(Proj.penetrating, round(Proj.damage/15)))
+			for(var/i in 1 to min(Proj.penetrating, round(Proj.force/15)))
 				if(src.occupant && hit_occupant && prob(20))
 					Proj.attack_mob(src.occupant, distance)
 					hit_occupant = 0

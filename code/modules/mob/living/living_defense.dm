@@ -74,10 +74,10 @@
 //		to_chat(src, "<span class='warning'>You have been hit by [P]!</span>")
 
 	//Armor
-	var/damage = P.damage
-	var/absorb = run_armor_check(def_zone, P.damage_type, P.armor_penetration)
-	var/damtype = HandleArmorDamTypeConversion(P.damage_type, absorb)
-	if (prob(absorb) && cmpdamtype(damtype, DAM_LASER))
+	var/damage = P.force
+	var/absorb = run_armor_check(def_zone, P.damtype, P.armor_penetration)
+	var/damtype = HandleArmorDamTypeConversion(P.damtype, absorb)
+	if (prob(absorb) && ISDAMTYPE(damtype, DAM_LASER))
 		//the armour causes the heat energy to spread out, which reduces the damage (and the blood loss)
 		//this is mostly so that armour doesn't cause people to lose MORE fluid from lasers than they would otherwise
 		damage *= FLUIDLOSS_CONC_BURN/FLUIDLOSS_WIDE_BURN
@@ -187,7 +187,7 @@
 
 			if(!O || !src) return
 
-			if(O.sharpness || cmpdamtype(O.damtype, DAM_PIERCE) ) //Projectile is suitable for pinning.
+			if(O.sharpness || ISDAMTYPE(O.damtype, DAM_PIERCE) ) //Projectile is suitable for pinning.
 				//Handles embedding for non-humans and simple_animals.
 				embed(O)
 

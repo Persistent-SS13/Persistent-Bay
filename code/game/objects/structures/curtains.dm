@@ -58,9 +58,6 @@
 /obj/structure/curtain/open/shower/security
 	color = "#aa0000"
 
-#undef SHOWER_OPEN_LAYER
-#undef SHOWER_CLOSED_LAYER
-
 /obj/structure/curtain/attackby(obj/item/W as obj, mob/user as mob)
 	if((isScrewdriver(W)) && (istype(loc, /turf/simulated) || anchored))
 		playsound(loc, 'sound/items/Screwdriver.ogg', 100, 1)

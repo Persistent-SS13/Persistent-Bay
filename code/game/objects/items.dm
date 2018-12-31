@@ -752,4 +752,4 @@ modules/mob/living/carbon/human/life.dm if you die, you will be zoomed out.
 //For items that can puncture e.g. thick plastic but aren't necessarily sharp
 //Returns 1 if the given item is capable of popping things like balloons, inflatable barriers, or cutting police tape.
 /obj/item/proc/can_puncture()
-	return src.sharpness || cmpdamtype(src.damtype, DAM_PIERCE) || cmpdamtype(src.damtype, DAM_CUT)
+	return src.sharpness || ISDAMTYPE(src.damtype, DAM_PIERCE) || ISDAMTYPE(src.damtype, DAM_CUT)

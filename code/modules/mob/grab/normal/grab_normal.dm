@@ -169,7 +169,7 @@
 		damage += hat.force * 3
 		damage_flags = hat.damtype
 
-	if(cmpdamtype(damage_flags, DAM_PIERCE))
+	if(ISDAMTYPE(damage_flags, DAM_PIERCE))
 		attacker.visible_message("<span class='danger'>[attacker] gores [target][istype(hat)? " with \the [hat]" : ""]!</span>")
 	else
 		attacker.visible_message("<span class='danger'>[attacker] thrusts \his head into [target]'s skull!</span>")
@@ -236,7 +236,7 @@
 	if(user.a_intent != I_HURT)
 		return 0 // Not trying to hurt them.
 
-	if(!W.sharpness || !W.force || !cmpdamtype(W.damtype, DAM_CUT))
+	if(!W.sharpness || !W.force || !ISDAMTYPE(W.damtype, DAM_CUT))
 		return 0 //unsuitable weapon
 	user.visible_message("<span class='danger'>\The [user] begins to slit [affecting]'s throat with \the [W]!</span>")
 
@@ -270,7 +270,7 @@
 	if(user.a_intent != I_HURT)
 		return 0 // Not trying to hurt them.
 
-	if(!W.sharpness || !W.force || cmpdamtype(W.damtype, BRUTE))
+	if(!W.sharpness || !W.force || ISDAMTYPE(W.damtype, BRUTE))
 		return 0 //unsuitable weapon
 
 	var/obj/item/organ/external/O = G.get_targeted_organ()

@@ -1,8 +1,8 @@
 /obj/item/projectile/animate
 	name = "bolt of animation"
 	icon_state = "ice_1"
-	damage = 0
-	damage_type = DAM_ENERGY
+	force = 0
+	damtype = DAM_ENERGY
 	nodamage = 1
 
 /obj/item/projectile/animate/Bump(var/atom/change)

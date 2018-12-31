@@ -18,11 +18,11 @@
 		return spillover
 
 /obj/item/organ/external/proc/handle_wounds(var/damage, var/damtype)
-	if(!damage || (!IsDamageTypeBrute(damtype) && !IsDamageTypeHeat(damtype)) )
+	if(!damage || (!IsDamageTypeBrute(damtype) && !IsDamageTypeBurn(damtype)) )
 		return null //no wounds from those
 
 	// If the limbs can break, make sure we don't exceed the maximum damage a limb can take before breaking
-	var/should_cut = cmpdamtype(damtype, DAM_CUT) || (cmpdamtype(damtype, DAM_BLUNT) && damage > 15 && !(species.species_flags & SPECIES_FLAG_NO_MINOR_CUT)) //Some blunt weapons can break skin
+	var/should_cut = ISDAMTYPE(damtype, DAM_CUT) || (ISDAMTYPE(damtype, DAM_BLUNT) && damage > 15 && !(species.species_flags & SPECIES_FLAG_NO_MINOR_CUT)) //Some blunt weapons can break skin
 	var/to_create = BRUISE
 
 	//Translate change to the corresponding damage types.
@@ -48,25 +48,25 @@
 		for(var/key in damlist)
 			if(IsDamageTypeBrute(key))
 				brute += round(damlist[key]* brute_mod, 0.1)
-				sharp |= cmpdamtype(key, DAM_CUT) || cmpdamtype(key, DAM_PIERCE)
+				sharp |= ISDAMTYPE(key, DAM_CUT) || ISDAMTYPE(key, DAM_PIERCE)
 				dismemeber  |= sharp && damage >= DT_EDGE_DMG_THRESHOLD
 				can_cut |= (prob(brute*2) || sharp) && (robotic < ORGAN_ROBOT)
 				if(!wound_damtype)
 					wound_damtype = key
-			else if(IsDamageTypeHeat(key))
+			else if(IsDamageTypeBurn(key))
 				burn += round(burn * burn_mod, 0.1)
-				laser |= cmpdamtype(key, DAM_LASER)
+				laser |= ISDAMTYPE(key, DAM_LASER)
 				if(!wound_damtype)
 					wound_damtype = key
 		pure_brute = brute
 
 	else if(damage && damtype)
 		brute = (IsDamageTypeBrute(damtype))? damage : 0
-		burn  = (IsDamageTypeHeat(damtype))?  damage : 0
-		sharp = cmpdamtype(damtype, DAM_CUT) || cmpdamtype(damtype, DAM_PIERCE)
+		burn  = (IsDamageTypeBurn(damtype))?  damage : 0
+		sharp = ISDAMTYPE(damtype, DAM_CUT) || ISDAMTYPE(damtype, DAM_PIERCE)
 		dismemeber  = sharp && damage >= DT_EDGE_DMG_THRESHOLD
-		laser = cmpdamtype(damtype, DAM_LASER)
-		blunt = cmpdamtype(damtype, DAM_BLUNT) || (!dismemeber && !sharp)
+		laser = ISDAMTYPE(damtype, DAM_LASER)
+		blunt = ISDAMTYPE(damtype, DAM_BLUNT) || (!dismemeber && !sharp)
 		can_cut = (prob(brute*2) || sharp) && (robotic < ORGAN_ROBOT)
 		pure_brute = brute
 		wound_damtype = damtype

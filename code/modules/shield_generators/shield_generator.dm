@@ -323,10 +323,10 @@
 		if(IsDamageTypeBrute(damtype))
 			mitigation_physical += MITIGATION_HIT_LOSS + MITIGATION_HIT_GAIN
 			energy_to_use *= 1 - (mitigation_physical / 100)
-		else if(IsDamageTypeHeat(damtype))
+		else if(IsDamageTypeBurn(damtype))
 			mitigation_heat += MITIGATION_HIT_LOSS + MITIGATION_HIT_GAIN
 			energy_to_use *= 1 - (mitigation_heat / 100)
-		else if(cmpdamtype(damtype, DAM_EMP))
+		else if(ISDAMTYPE(damtype, DAM_EMP))
 			mitigation_em += MITIGATION_HIT_LOSS + MITIGATION_HIT_GAIN
 			energy_to_use *= 1 - (mitigation_em / 100)
 

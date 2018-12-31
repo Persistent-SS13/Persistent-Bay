@@ -84,8 +84,8 @@
 	. = dtype
 	if(prob(armor))
 		//Armor eats dangerous damages and turn them to blunt and burn
-		if(cmpdamtype(dtype,DAM_CUT) || cmpdamtype(dtype,DAM_PIERCE))
+		if(ISDAMTYPE(dtype,DAM_CUT) || ISDAMTYPE(dtype,DAM_PIERCE))
 			. = DAM_BLUNT
-		else if(cmpdamtype(dtype,DAM_LASER) ||  cmpdamtype(dtype,DAM_ENERGY))
+		else if(ISDAMTYPE(dtype,DAM_LASER) ||  ISDAMTYPE(dtype,DAM_ENERGY))
 			. = DAM_BURN
 	return .

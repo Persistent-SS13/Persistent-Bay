@@ -1,8 +1,8 @@
 /obj/item/projectile/change
 	name = "bolt of change"
 	icon_state = "ice_1"
-	damage = 0
-	damage_type = DAM_ENERGY
+	force = 0
+	damtype = DAM_ENERGY
 	nodamage = 1
 
 /obj/item/projectile/change/on_hit(var/atom/change)

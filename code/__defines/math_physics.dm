@@ -23,7 +23,8 @@
 
 #define CELCIUS + T0C
 
-#define CLAMP01(x) max(0, min(1, x))
+#define Clamp(value, low, high) 	(value <= low ? low : (value >= high ? high : value))
+#define CLAMP01(x) 		(Clamp(x, 0, 1))
 #define ATMOS_PRECISION 0.0001
 #define QUANTIZE(variable) (round(variable, ATMOS_PRECISION))
 

@@ -69,7 +69,7 @@ avoid code duplication. This includes items that may sometimes act as a standard
 
 	/////////////////////////
 
-	if(!no_attack_log)
+	if(!no_attack_log && ispath(AM, /mob))
 		admin_attack_log(user, AM, "Attacked using \a [src] (DAMTYE: [uppertext(damtype)])", "Was attacked with \a [src] (DAMTYE: [uppertext(damtype)])", "used \a [src] (DAMTYE: [uppertext(damtype)]) to attack")
 	/////////////////////////
 

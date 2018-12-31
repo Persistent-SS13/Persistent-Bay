@@ -2,8 +2,8 @@
 	name = "bullet"
 	icon_state = "bullet"
 	fire_sound = 'sound/weapons/gunshot/gunshot_strong.ogg'
-	damage = 50
-	damage_type = DAM_BULLET
+	force = 50
+	damtype = DAM_BULLET
 	nodamage = 0
 	sharpness = 1
 	penetration_modifier = 1.0
@@ -17,14 +17,14 @@
 		shake_camera(L, 3, 2)
 
 /obj/item/projectile/bullet/attack_mob(var/mob/living/target_mob, var/distance, var/miss_modifier)
-	if(penetrating > 0 && damage > 20 && prob(damage))
+	if(penetrating > 0 && force > 20 && prob(force))
 		mob_passthrough_check = 1
 	else
 		mob_passthrough_check = 0
 	. = ..()
 
 	if(. == 1 && iscarbon(target_mob))
-		damage *= 0.7 //squishy mobs absorb KE
+		force *= 0.7 //squishy mobs absorb KE
 
 /obj/item/projectile/bullet/can_embed()
 	//prevent embedding if the projectile is passing through the mob
@@ -43,13 +43,13 @@
 			return 0
 		return 1
 
-	var/chance = damage
+	var/chance = force
 	if(istype(A, /turf/simulated/wall))
 		var/turf/simulated/wall/W = A
-		chance = round(damage/W.material.integrity*180)
+		chance = round(force/W.material.integrity*180)
 	else if(istype(A, /obj/machinery/door))
 		var/obj/machinery/door/D = A
-		chance = round(damage/D.get_max_health()*180)
+		chance = round(force/D.get_max_health()*180)
 		if(D.glass) chance *= 2
 	else if(istype(A, /obj/structure/girder))
 		chance = 100
@@ -65,7 +65,7 @@
 //For projectiles that actually represent clouds of projectiles
 /obj/item/projectile/bullet/pellet
 	name = "shrapnel" //'shrapnel' sounds more dangerous (i.e. cooler) than 'pellet'
-	damage = 22.5
+	force = 22.5
 	//icon_state = "bullet" //TODO: would be nice to have it's own icon state
 	var/pellets = 4			//number of pellets
 	var/range_step = 2		//projectile will lose a fragment each time it travels this distance. Can be a non-integer.
@@ -126,35 +126,35 @@
 
 /obj/item/projectile/bullet/pistol
 	fire_sound = 'sound/weapons/gunshot/gunshot_pistol.ogg'
-	damage = 25 //9mm, .38, etc
+	force = 25 //9mm, .38, etc
 	armor_penetration = 13.5
 
 /obj/item/projectile/bullet/pistol/medium
-	damage = 26.5 //.45
+	force = 26.5 //.45
 	armor_penetration = 14.5
 
 /obj/item/projectile/bullet/pistol/medium/smg
 	fire_sound = 'sound/weapons/gunshot/gunshot_smg.ogg'
-	damage = 28 //10mm
+	force = 28 //10mm
 	armor_penetration = 18
 
 /obj/item/projectile/bullet/pistol/medium/revolver
 	fire_sound = 'sound/weapons/gunshot/gunshot_strong.ogg'
-	damage = 30 //.44 magnum or something
+	force = 30 //.44 magnum or something
 
 /obj/item/projectile/bullet/pistol/strong //matebas
 	fire_sound = 'sound/weapons/gunshot/gunshot_strong.ogg'
-	damage = 60 //.50AE
+	force = 60 //.50AE
 	armor_penetration = 30
 
 /obj/item/projectile/bullet/pistol/strong/revolver //revolvers
-	damage = 50 //Revolvers get snowflake bullets, to keep them relevant
+	force = 50 //Revolvers get snowflake bullets, to keep them relevant
 	armor_penetration = 20
 
 /obj/item/projectile/bullet/pistol/rubber //"rubber" bullets
 	name = "rubber bullet"
-	damage_type = DAM_BLUNT
-	damage = 5
+	damtype = DAM_BLUNT
+	force = 5
 	agony = 30
 	embed = 0
 	sharpness = 0
@@ -165,13 +165,13 @@
 /obj/item/projectile/bullet/shotgun
 	name = "slug"
 	fire_sound = 'sound/weapons/gunshot/shotgun.ogg'
-	damage = 55
+	force = 55
 	armor_penetration = 20
 
 /obj/item/projectile/bullet/shotgun/beanbag		//because beanbags are not bullets
 	name = "beanbag"
-	damage_type = DAM_BLUNT
-	damage = 25
+	damtype = DAM_BLUNT
+	force = 25
 	agony = 60
 	embed = 0
 	sharpness = 0
@@ -182,17 +182,17 @@
 /obj/item/projectile/bullet/pellet/shotgun
 	name = "shrapnel"
 	fire_sound = 'sound/weapons/gunshot/shotgun.ogg'
-	damage = 15
+	force = 15
 	pellets = 6
 	range_step = 1
 	spread_step = 10
-	damage_type = DAM_BULLET
+	damtype = DAM_BULLET
 	mass = 0.004
 
 /obj/item/projectile/bullet/pellet/shotgun/rubber
 	name = "shrapnel"
-	damage_type = DAM_BLUNT
-	damage = 5
+	damtype = DAM_BLUNT
+	force = 5
 	agony = 12
 	embed = 0
 	sharpness = 0
@@ -209,18 +209,18 @@
 
 /obj/item/projectile/bullet/rifle/a556
 	fire_sound = 'sound/weapons/gunshot/gunshot3.ogg'
-	damage = 30
+	force = 30
 	mass = 0.004
 
 /obj/item/projectile/bullet/rifle/a762
 	fire_sound = 'sound/weapons/gunshot/gunshot2.ogg'
-	damage = 35
+	force = 35
 	armor_penetration = 30
 	mass = 0.009
 
 /obj/item/projectile/bullet/rifle/a145
 	fire_sound = 'sound/weapons/gunshot/sniper.ogg'
-	damage = 80
+	force = 80
 	stun = 3
 	weaken = 3
 	penetrating = 5
@@ -230,7 +230,7 @@
 	mass = 0.0665
 
 /obj/item/projectile/bullet/rifle/a145/apds
-	damage = 75
+	force = 75
 	penetrating = 6
 	armor_penetration = 95
 	penetration_modifier = 1.5
@@ -239,17 +239,17 @@
 
 /obj/item/projectile/bullet/suffocationbullet//How does this even work?
 	name = "co bullet"
-	damage = 25
-	damage_type = OXY
+	force = 25
+	damtype = OXY
 
 /obj/item/projectile/bullet/cyanideround
 	name = "poison bullet"
-	damage = 45
-	damage_type = TOX
+	force = 45
+	damtype = TOX
 
 /obj/item/projectile/bullet/burstbullet
 	name = "exploding bullet"
-	damage = 25
+	force = 25
 	embed = 0
 
 /obj/item/projectile/bullet/gyro
@@ -263,27 +263,27 @@
 
 /obj/item/projectile/bullet/blank
 	invisibility = 101
-	damage = 1
+	force = 1
 	embed = 0
 
 /* Practice */
 
 /obj/item/projectile/bullet/pistol/practice
-	damage = 5
+	force = 5
 
 /obj/item/projectile/bullet/rifle/a762/practice
-	damage = 5
+	force = 5
 
 /obj/item/projectile/bullet/shotgun/practice
 	name = "practice"
-	damage = 5
+	force = 5
 
 /obj/item/projectile/bullet/pistol/cap
 	name = "cap"
 	invisibility = 101
 	fire_sound = null
-	damage_type = DAM_PAIN
-	damage = 0
+	damtype = DAM_PAIN
+	force = 0
 	nodamage = 1
 	embed = 0
 	sharpness = 0
@@ -295,7 +295,7 @@
 /obj/item/projectile/bullet/rock //spess dust
 	name = "micrometeor"
 	icon_state = "rock"
-	damage = 40
+	force = 40
 	armor_penetration = 25
 	kill_count = 255
 	mass = 1

@@ -1,26 +1,15 @@
 /obj/item/weapon
 	name = "weapon"
 	icon = 'icons/obj/weapons.dmi'
-	mass = 5
+	mass = 1
 	damtype = DAM_BLUNT
 	armor_penetration = 0
 	throwforce = 1
 	force = 1
-	var/miss_chance  = 5 //Chance for the hit with this weapon to miss
+	var/miss_chance  = 2 //% Chance for the hit with this weapon to miss
 	var/sound_attack = "swing_hit"
 	var/sound_miss   = "swing_miss"
 	var/attack_cooldown = DEFAULT_ATTACK_COOLDOWN
-
-//#define DAM_CALC_SWING 1
-//#define DAM_CALC_THRUST 2
-///obj/item/weapon/proc/calculate_kinectic_damage(var/forceapplied = 100, var/held2handed = 0, var/wieldstance = DAM_CALC_SWING)
-	//var/fapplied = forceapplied / 100
-	//if(held2handed)
-	//	fapplied *= 2
-	//if(wieldstance == DAM_CALC_SWING)
-
-	//var/throw_damage = ((AM.throw_speed * fapplied)/THROWFORCE_SPEED_DIVISOR * AM.mass)
-
 
 /obj/item/weapon/attack(atom/movable/AM, mob/living/user as mob, var/target_zone)
 	if(!..())
@@ -43,9 +32,10 @@
 		visible_message(SPAN_WARNING("\The [user] misses [AM] narrowly!"), SPAN_WARNING("You miss narrowly hitting [AM]!"))
 		return 0
 
-	admin_attack_log(user, AM, "Attacked using \a [src]", "Was attacked with \a [src]", "used \a [src] to attack")
+	if(ispath(AM, /mob))
+		admin_attack_log(user, AM, "Attacked using \a [src]", "Was attacked with \a [src]", "used \a [src] to attack")
 	var/hit_zone = null
-	if(istype(AM, /mob/living))
+	if(ispath(AM, /mob/living))
 		var/mob/living/L = AM
 		hit_zone = L.resolve_item_attack(src, user, target_zone)
 	src.apply_hit_effect(AM, user, hit_zone)

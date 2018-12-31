@@ -28,9 +28,13 @@ var/list/wireColours = list("red", "blue", "green", "darkred", "orange", "brown"
 
 /datum/wires/New(var/atom/holder)
 	..()
+	ADD_SAVED_VAR(holder)
+	ADD_SAVED_VAR(holder_type)
+	ADD_SAVED_VAR(wires_status)
+	
 	src.holder = holder
-	if(!istype(holder, holder_type))
-		CRASH("Our holder is null/the wrong type!")
+	if(!istype(holder, holder_type) && !ispath(holder, holder_type) ) //Check for inheritance too
+		CRASH("Our holder is null/the wrong type [holder_type] != [holder? holder.type : "null"]!")
 		return
 
 	// Generate new wires

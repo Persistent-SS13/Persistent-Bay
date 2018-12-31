@@ -44,9 +44,13 @@
 	if(!store_admin_attack_log(attacker, victim))
 		return
 
+	//Check if one of those is not a mob
+	var/validattacker = ispath(attacker, /mob)
+	var/validvictim   = ispath(victim, /mob)
+
 	var/turf/attack_location
 	var/intent = "(INTENT: N/A)"
-	if(attacker)
+	if(attacker && validattacker)
 		intent = "(INTENT: [uppertext(attacker.a_intent)])"
 		if(victim)
 			attacker.attack_logs_ += text("\[[time_stamp()]\] <font color='red'>[key_name(victim)] - [attacker_message] [intent]</font>")
@@ -54,7 +58,7 @@
 			attacker.attack_logs_ += text("\[[time_stamp()]\] <font color='red'>[attacker_message] [intent]</font>")
 		attacker.last_attacked_ = mob_repository.get_lite_mob(victim)
 		attack_location = get_turf(attacker)
-	if(victim)
+	if(victim && validvictim)
 		if(attacker)
 			victim.attack_logs_ += text("\[[time_stamp()]\] <font color='orange'>[key_name(attacker)] - [victim_message] [intent]</font>")
 		else
@@ -63,15 +67,18 @@
 		if(!attack_location)
 			attack_location = get_turf(victim)
 
-	attack_log_repository.store_attack_log(attacker, victim, admin_message)
+	attack_log_repository.store_attack_log(validattacker? attacker : null, validvictim? victim : null, admin_message)
+
+	if(!validattacker || !validvictim)
+		return
 
 	if(!notify_about_admin_attack_log(attacker, victim))
 		return
 
 	var/full_admin_message
-	if(attacker && victim)
+	if(attacker && victim && ispath(attacker, /mob) && ispath(attacker, /mob))
 		full_admin_message = "[key_name(attacker)] [admin_message] [key_name(victim)] (INTENT: [attacker? uppertext(attacker.a_intent) : "N/A"])"
-	else if(attacker)
+	else if(attacker && ispath(attacker, /mob))
 		full_admin_message = "[key_name(attacker)] [admin_message] (INTENT: [attacker? uppertext(attacker.a_intent) : "N/A"])"
 	else
 		full_admin_message = "[key_name(victim)] [admin_message]"
@@ -87,12 +94,12 @@
 	return FALSE
 
 // Only notify admins if all involved subjects have (had) a client
-/proc/notify_about_admin_attack_log(var/mob/attacker, var/mob/victim)
-	if(attacker && victim)
+/proc/notify_about_admin_attack_log(var/mob/attacker as mob|null, var/mob/victim as mob|null)
+	if(attacker && victim && ispath(attacker, /mob) && ispath(victim, /mob))
 		return attacker.ckey && victim.ckey
-	if(attacker)
+	if(attacker && ispath(attacker, /mob))
 		return attacker.ckey
-	if(victim)
+	if(victim && ispath(victim, /mob))
 		return victim.ckey
 	return FALSE
 

@@ -99,8 +99,7 @@
 			to_chat(user, "<span class='notice'>You dissasembled the low wall!</span>")
 			dismantle()
 
-	..()
-	return
+	return ..()
 
 /obj/structure/wall_frame/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
 	if(air_group || (height==0)) return 1

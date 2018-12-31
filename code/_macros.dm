@@ -1,6 +1,3 @@
-#define Clamp(value, low, high) 	(value <= low ? low : (value >= high ? high : value))
-#define CLAMP01(x) 		(Clamp(x, 0, 1))
-
 #define get_turf(A) get_step(A,0)
 
 #define isAI(A) istype(A, /mob/living/silicon/ai)
@@ -70,8 +67,6 @@
 #define isweakref(A) istype(A, /weakref)
 
 #define attack_animation(A) if(istype(A)) A.do_attack_animation(src)
-
-#define isairlock(A) istype(A, /obj/machinery/door/airlock)
 
 #define isopenspace(A) istype(A, /turf/simulated/open)
 

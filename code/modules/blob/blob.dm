@@ -129,11 +129,10 @@
 	if(!Proj)
 		return
 
-	switch(Proj.damage_type)
-		if(BRUTE)
-			take_damage(null,Proj.damage / brute_resist)
-		if(BURN)
-			take_damage(null,(Proj.damage / laser_resist) / fire_resist)
+	if(IsDamageTypeBrute(Proj.damtype))
+		take_damage(null,Proj.force / brute_resist)
+	else if(IsDamageTypeBurn(Proj.damtype))
+		take_damage(null,(Proj.force / laser_resist) / fire_resist)
 	return 0
 
 /obj/effect/blob/attackby(var/obj/item/weapon/W, var/mob/user)
@@ -141,14 +140,12 @@
 	user.do_attack_animation(src)
 	playsound(loc, 'sound/effects/attackblob.ogg', 50, 1)
 	var/damage = 0
-	switch(W.damtype)
-		if("fire")
-			damage = (W.force / fire_resist)
-			if(isWelder(W))
-				playsound(loc, 'sound/items/Welder.ogg', 100, 1)
-		if("brute")
-			damage = (W.force / brute_resist)
-
+	if(IsDamageTypeBrute(W.damtype))
+		damage = (W.force / fire_resist)
+		if(isWelder(W))
+			playsound(loc, 'sound/items/Welder.ogg', 100, 1)
+	else if(IsDamageTypeBurn(W.damtype))
+		damage = (W.force / brute_resist)
 	take_damage(null, damage)
 	return
 

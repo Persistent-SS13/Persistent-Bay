@@ -395,8 +395,6 @@
 			return global.dna_activity_bounds;
 		if("dna_genes")
 			return global.dna_genes;
-		if("doppler_arrays")
-			return global.GLOB.doppler_arrays;
 		if("dreams")
 			return global.dreams;
 		if("dummy_lighting_corner")
@@ -1454,8 +1452,6 @@
 			global.dna_activity_bounds=newval;
 		if("dna_genes")
 			global.dna_genes=newval;
-		if("doppler_arrays")
-			global.GLOB.doppler_arrays=newval;
 		if("dreams")
 			global.dreams=newval;
 		if("dummy_lighting_corner")
@@ -2315,7 +2311,6 @@
 	"diary",
 	"dna_activity_bounds",
 	"dna_genes",
-	"doppler_arrays",
 	"dreams",
 	"dummy_lighting_corner",
 	"economic_species_modifier",

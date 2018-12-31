@@ -33,7 +33,7 @@
 		name = "collector [mysize] OFF"
 
 /obj/effect/fusion_particle_catcher/bullet_act(var/obj/item/projectile/Proj)
-	parent.AddEnergy(Proj.damage)
+	parent.AddEnergy(Proj.force)
 	update_icon()
 	return 0
 

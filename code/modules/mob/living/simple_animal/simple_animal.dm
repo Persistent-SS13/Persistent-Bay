@@ -175,7 +175,7 @@
 	if(!Proj || Proj.nodamage)
 		return
 
-	adjustBruteLoss(Proj.damage)
+	adjustBruteLoss(Proj.force)
 	return 0
 
 /mob/living/simple_animal/attack_hand(mob/living/carbon/human/M as mob)

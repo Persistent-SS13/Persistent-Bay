@@ -3,54 +3,6 @@ CONTAINS:
 
 Deployable items
 Barricades
-
-for reference:
-
-	access_security = 1
-	access_brig = 2
-	access_armory = 3
-	access_forensics_lockers= 4
-	access_medical = 5
-	access_morgue = 6
-	access_tox = 7
-	access_tox_storage = 8
-	access_genetics = 9
-	access_engine = 10
-	core_access_engineering_programs= 11
-	access_maint_tunnels = 12
-	access_external_airlocks = 13
-	access_emergency_storage = 14
-	access_change_ids = 15
-	access_ai_upload = 16
-	access_teleporter = 17
-	access_eva = 18
-	access_heads = 19
-	access_captain = 20
-	access_all_personal_lockers = 21
-	access_chapel_office = 22
-	access_tech_storage = 23
-	core_access_engineering_programs = 24
-	access_bar = 25
-	access_janitor = 26
-	access_crematorium = 27
-	access_kitchen = 28
-	access_robotics = 29
-	access_rd = 30
-	access_cargo = 31
-	access_construction = 32
-	access_chemistry = 33
-	access_cargo_bot = 34
-	access_hydroponics = 35
-	access_manufacturing = 36
-	access_library = 37
-	access_lawyer = 38
-	access_virology = 39
-	access_cmo = 40
-	access_qm = 41
-	access_court = 42
-	access_clown = 43
-	access_mime = 44
-
 */
 
 //Barricades!
@@ -61,8 +13,8 @@ for reference:
 	icon_state = "barricade"
 	anchored = 1
 	density = 1
+	mass = 20
 	max_health = 100
-	var/material/material
 	atom_flags = ATOM_FLAG_CLIMBABLE
 	armor  = list(
 		DAM_BLUNT 	= 50,
@@ -79,17 +31,19 @@ for reference:
 		DAM_STUN 	= RESIST_INVULNERABLE,
 		DAM_PAIN 	= RESIST_INVULNERABLE,
 		DAM_CLONE 	= RESIST_INVULNERABLE)
+	var/material/material
 
 /obj/structure/barricade/New(var/newloc, var/material_name)
-	max_health = material.integrity
 	..(newloc)
-
 	if(!material_name)
 		material_name = MATERIAL_WOOD
 	material = SSmaterials.get_material_by_name("[material_name]")
 	if(!material)
 		qdel(src)
 		return
+	max_health = material.integrity
+	mass = material.weight
+	matter = list(material.name = 5 * SHEET_MATERIAL_AMOUNT)
 	name = "[material.display_name] barricade"
 	desc = "This space is blocked off by a barricade made of [material.display_name]."
 	color = material.icon_colour
@@ -124,11 +78,10 @@ for reference:
 	return ..() //handle attacks
 
 /obj/structure/barricade/destroyed(var/damtype)
-	switch(damtype)
-		if(DAM_BOMB)
-			visible_message(SPAN_DANGER("\The [src] is blown apart!"))
-		else
-			visible_message(SPAN_DANGER("\The [src] is smashed apart!"))
+	if(ISDAMTYPE(damtype, DAM_BOMB))
+		visible_message(SPAN_DANGER("\The [src] is blown apart!"))
+	else
+		visible_message(SPAN_DANGER("\The [src] is smashed apart!"))
 	dismantle()
 
 /obj/structure/barricade/dismantle()

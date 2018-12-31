@@ -2,9 +2,9 @@
 	name = "ion bolt"
 	icon_state = "ion"
 	fire_sound = 'sound/weapons/Laser.ogg'
-	damage = 0
-	damage_type = DAM_EMP
-	nodamage = 1
+	force = 0
+	damtype = DAM_EMP
+	nodamage = TRUE
 	var/pulse_range = 1
 
 	on_hit(var/atom/target, var/blocked = 0)
@@ -18,8 +18,7 @@
 /obj/item/projectile/bullet/gyro
 	name ="explosive bolt"
 	icon_state= "bolter"
-	damage = 50
-	check_armour = DAM_BULLET
+	force = 50
 	sharpness = 1
 	mass = 0.012
 
@@ -31,9 +30,9 @@
 	name = "freeze beam"
 	icon_state = "ice_2"
 	fire_sound = 'sound/weapons/pulse3.ogg'
-	damage = 0
-	damage_type = DAM_BURN
-	nodamage = 1
+	force = 0
+	damtype = DAM_BURN
+	nodamage = TRUE
 	temperature = T0C - 80
 
 
@@ -47,9 +46,9 @@
 	name = "meteor"
 	icon = 'icons/obj/meteor.dmi'
 	icon_state = "smallf"
-	damage = 0
-	damage_type = DAM_BULLET
-	nodamage = 1
+	force = 0
+	damtype = DAM_BULLET
+	nodamage = TRUE
 
 	Bump(atom/A as mob|obj|turf|area)
 		if(A == firer)
@@ -76,9 +75,9 @@
 	name = "alpha somatoray"
 	icon_state = "energy"
 	fire_sound = 'sound/effects/stealthoff.ogg'
-	damage = 0
-	damage_type = DAM_RADS
-	nodamage = 1
+	force = 0
+	damtype = DAM_RADS
+	nodamage = TRUE
 
 	on_hit(var/atom/target, var/blocked = 0)
 		var/mob/living/M = target
@@ -109,18 +108,18 @@
 	name = "gamma somatoray"
 	icon_state = "energy2"
 	fire_sound = 'sound/effects/stealthoff.ogg'
-	damage = 0
-	damage_type = DAM_RADS
-	nodamage = 1
+	force = 0
+	damtype = DAM_RADS
+	nodamage = TRUE
 	var/decl/plantgene/gene = null
 
 /obj/item/projectile/energy/florayield
 	name = "beta somatoray"
 	icon_state = "energy2"
 	fire_sound = 'sound/effects/stealthoff.ogg'
-	damage = 0
-	damage_type = DAM_RADS
-	nodamage = 1
+	force = 0
+	damtype = DAM_RADS
+	nodamage = TRUE
 
 	on_hit(var/atom/target, var/blocked = 0)
 		var/mob/M = target
@@ -145,18 +144,18 @@
 /obj/item/projectile/chameleon
 	name = "bullet"
 	icon_state = "bullet"
-	damage = 1 // stop trying to murderbone with a fake gun dumbass!!!
-	embed = 0 // nope
-	nodamage = 1
-	damage_type = DAM_PAIN
+	force = 1 // stop trying to murderbone with a fake gun dumbass!!!
+	embed = FALSE // nope
+	nodamage = TRUE
+	damtype = DAM_PAIN
 	muzzle_type = /obj/effect/projectile/bullet/muzzle
 
 /obj/item/projectile/plasma
 	name = "plasma blast"
 	icon_state = "purplelaser"
-	damage_type = DAM_ENERGY
+	damtype = DAM_ENERGY
 	sharpness = 1
-	damage = 30
+	force = 30
 	var/pressure_decrease_active = FALSE
 	var/pressure_decrease = 0.25
 	kill_count=15
@@ -165,5 +164,5 @@
 		. = ..()
 		if(!is_below_sound_pressure(get_turf(src)))
 			name = "weakened [name]"
-			damage = damage * pressure_decrease
+			force = force * pressure_decrease
 			pressure_decrease_active = TRUE

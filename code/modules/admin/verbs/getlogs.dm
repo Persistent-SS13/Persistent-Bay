@@ -44,7 +44,7 @@
 	set desc = "Retrieve any session logfiles saved by dreamdeamon."
 	set category = null
 
-	var/path = browse_files("data/logs/runtime/")
+	var/path = PATH_RUNTIME_LOG_NOW
 	if(!path)
 		return
 
@@ -85,7 +85,7 @@
 	set name = "Show Server Log"
 	set desc = "Shows today's server log."
 
-	var/path = "data/logs/[time2text(world.realtime,"YYYY/MM-Month/DD-Day")].log"
+	var/path = PATH_GAME_LOG_NOW
 	if( fexists(path) )
 		src << run(file(path))
 	else
@@ -94,13 +94,27 @@
 	feedback_add_details("admin_verb","VTL") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	return
 
+/datum/admins/proc/view_runtime_log()
+	set category = "Admin"
+	set name = "Show Runtime Log"
+	set desc = "Shows today's runtime log."
+
+	var/path = PATH_RUNTIME_LOG_NOW
+	if( fexists(path) )
+		src << run(file(path))
+	else
+		to_chat(src, "<font color='red'>Error: view_txt_log(): File not found/Invalid path([path]).</font>")
+		return
+	feedback_add_details("admin_verb","VTRL") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	return
+
 //Shows today's attack log
 /datum/admins/proc/view_atk_log()
 	set category = "Admin"
 	set name = "Show Server Attack Log"
 	set desc = "Shows today's server attack log."
 
-	var/path = "data/logs/[time2text(world.realtime,"YYYY/MM-Month/DD-Day")] Attack.log"
+	var/path = PATH_ATTACK_LOG_NOW
 	if( fexists(path) )
 		src << run(file(path))
 	else
@@ -108,4 +122,18 @@
 		return
 	usr << run(file(path))
 	feedback_add_details("admin_verb","SSAL") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	return
+
+/datum/admins/proc/view_qdel_log()
+	set category = "Admin"
+	set name = "Show QDel Log"
+	set desc = "Shows today's qdel log."
+
+	var/path = PATH_QDEL_LOG_NOW
+	if( fexists(path) )
+		src << run(file(path))
+	else
+		to_chat(src, "<font color='red'>Error: view_txt_log(): File not found/Invalid path([path]).</font>")
+		return
+	feedback_add_details("admin_verb","VTQL") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	return

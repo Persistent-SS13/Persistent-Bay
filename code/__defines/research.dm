@@ -11,13 +11,20 @@
 #define TECH_ARCANE "arcane"
 
 // Fabricator defines
-#define PROTOLATHE	0x1
-#define CIRCUITFAB	0x2
-#define MECHFAB		0x4
-#define VOIDFAB		0x8
-#define AMMOFAB     0x16
-#define AUTOTAILOR  0x32
-#define AUTOTAILOR_NONSTANDARD  0x64
-#define AUTOTAILOR_ACCESSORIES  0x128
-#define AUTOTAILOR_TACTICAL 0x256
-#define AUTOTAILOR_STORAGE  0x512
+#define PROTOLATHE	1
+#define CIRCUITFAB	2
+#define MECHFAB		3
+#define VOIDFAB		4
+#define AMMOFAB     5
+#define AUTOTAILOR  6
+#define AUTOTAILOR_NONSTANDARD  7
+#define AUTOTAILOR_ACCESSORIES  8
+#define AUTOTAILOR_TACTICAL 9
+#define AUTOTAILOR_STORAGE  10
+
+#define ENGIFAB  11
+#define PARTFAB  12
+#define MEDIFAB  13
+#define WEAPONFAB  14
+#define CONSUMERFAB 15
+#define GENERALFAB 16

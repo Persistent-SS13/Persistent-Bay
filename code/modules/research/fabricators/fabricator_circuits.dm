@@ -103,3 +103,27 @@
 	req_tech = list(TECH_DATA = 1)
 	build_path = /obj/item/weapon/circuitboard/fabricator/autotailor
 	sort_string = "FABAE"
+	
+
+/obj/item/weapon/circuitboard/fabricator/engfab
+	name = "Circuit board (Engineering Fabricator)"
+	build_path = /obj/machinery/fabricator/engineering_fabricator
+
+/datum/design/circuit/engfab
+	name = "engineering fabricator"
+	id = "engfab"
+	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/fabricator/engfab
+	sort_string = "FABAF"
+
+/obj/item/weapon/circuitboard/fabricator/genfab
+	name = "Circuit board (General Fabricator)"
+	build_path = /obj/machinery/fabricator/general_fabricator
+
+/datum/design/circuit/genfab
+	name = "general fabricator"
+	id = "genfab"
+	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/fabricator/genfab
+	sort_string = "FABAG"
+

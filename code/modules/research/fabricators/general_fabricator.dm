@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////
 
 /datum/design/item/genfab
-	build_type = GENFAB 			   // This must match the build_type of the fabricator(s)
+	build_type = GENERALFAB 			   // This must match the build_type of the fabricator(s)
 	category = "Misc"	 			   // The design will appear under this in the UI. Each design must have a category, or it will not display properly.
 
 	time = 50						   // Time in seconds for the item to be produced - This changes based off the components used in the fabricator
@@ -37,126 +37,125 @@
 	
 /datum/design/item/genfab/container/bucket
 	name = "bucket"
-	path = /obj/item/weapon/reagent_containers/glass/bucket
+	build_path = /obj/item/weapon/reagent_containers/glass/bucket
 	
 /datum/design/item/genfab/container/jar
 	name = "jar"
-	path = /obj/item/glass_jar
+	build_path = /obj/item/glass_jar
 
 /datum/design/item/genfab/container/beaker
 	name = "glass beaker"
-	path = /obj/item/weapon/reagent_containers/glass/beaker
+	build_path = /obj/item/weapon/reagent_containers/glass/beaker
 	category = "Medical"
 
 /datum/design/item/genfab/container/beaker_large
 	name = "large glass beaker"
-	path = /obj/item/weapon/reagent_containers/glass/beaker/large
+	build_path = /obj/item/weapon/reagent_containers/glass/beaker/large
 	category = "Medical"
 
 /datum/design/item/genfab/container/vial
 	name = "glass vial"
-	path = /obj/item/weapon/reagent_containers/glass/beaker/vial
+	build_path = /obj/item/weapon/reagent_containers/glass/beaker/vial
 	category = "Medical"
 
 /datum/design/item/genfab/container/pillbottle
 	name = "pill bottle"
-	path = /obj/item/weapon/storage/pill_bottle
+	build_path = /obj/item/weapon/storage/pill_bottle
 	category = "Medical"
 	
 /datum/design/item/genfab/container/syringe
 	name = "syringe"
-	path = /obj/item/weapon/reagent_containers/syringe
+	build_path = /obj/item/weapon/reagent_containers/syringe
 	category = "Medical"
 
 /datum/design/item/genfab/container/beerkeg
 	name = "beer keg"
-	path = /obj/structure/reagent_dispensers/beerkeg/empty
+	build_path = /obj/structure/reagent_dispensers/beerkeg/empty
 	category = "General"
 
 
 /datum/design/item/genfab/container/glasses
 	name = "prescription glasses"
-	path = /obj/item/clothing/glasses/regular
+	build_path = /obj/item/clothing/glasses/regular
 	category = "Medical"
 
 /datum/design/item/genfab/container/dropper
 	name = "dropper"
-	path = /obj/item/weapon/reagent_containers/dropper
+	build_path = /obj/item/weapon/reagent_containers/dropper
 	category = "Medical"
 
 /datum/design/item/genfab/container/pitcher
 	name = "pitcher"
-	path = /obj/item/weapon/reagent_containers/food/drinks/pitcher
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/pitcher
 	category = "General"
 
 /datum/design/item/genfab/container/carafe
 	name = "carafe"
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/carafe
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/carafe
 	category = "General"
 
 /datum/design/item/genfab/container/coffeecup
 	name = "coffee cup"
-	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup
 	category = "General"
 	New()
 		..()
-		var/obj/O = path
+		var/obj/O = build_path
 		name = initial(O.name) // generic recipes yay
 
 /datum/design/item/genfab/container/coffeecup/black
-	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/black
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/black
 
 /datum/design/item/genfab/container/coffeecup/green
-	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/green
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/green
 
 /datum/design/item/genfab/container/coffeecup/heart
-	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/heart
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/heart
 
 /datum/design/item/genfab/container/coffeecup/metal
-	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/metal
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/metal
 
 /datum/design/item/genfab/container/coffeecup/rainbow
-	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/rainbow
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/rainbow
 
 /datum/design/item/genfab/container/coffeecup/NT
-	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/NT
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/NT
 
 /datum/design/item/genfab/container/coffeecup/STC
-	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/STC
-	hidden = 1 // We get our autolathes from a SolGov-friendly firm.
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/STC
 
 /datum/design/item/genfab/container/coffeecup/SCG
-	path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/SCG
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/SCG
 
 /datum/design/item/genfab/container/drinkingglass
 	name = "drinking glass"
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/square
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/square
 	category = "General"
 	New()
 		..()
-		var/obj/O = path
+		var/obj/O = build_path
 		name = initial(O.name) // generic recipes yay
 
 /datum/design/item/genfab/container/drinkingglass/rocks
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/rocks
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/rocks
 
 /datum/design/item/genfab/container/drinkingglass/shake
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/shake
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/shake
 
 /datum/design/item/genfab/container/drinkingglass/cocktail
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/cocktail
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/cocktail
 
 /datum/design/item/genfab/container/drinkingglass/shot
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/shot
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/shot
 
 /datum/design/item/genfab/container/drinkingglass/pint
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/pint
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/pint
 
 /datum/design/item/genfab/container/drinkingglass/mug
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/mug
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/mug
 
 /datum/design/item/genfab/container/drinkingglass/wine
-	path = /obj/item/weapon/reagent_containers/food/drinks/glass2/wine
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/wine
 
 /datum/design/item/genfab/container/sci/beaker/noreact
 	name = "cryostasis beaker"
@@ -194,32 +193,32 @@
 
 /datum/design/item/genfab/electronics/norad_airlock_controller
 	name = "airlock controller (no radio)"
-	path = /obj/item/frame/airlock_controller_norad
+	build_path = /obj/item/frame/airlock_controller_norad
 
 /datum/design/item/genfab/electronics/norad_airlock_sensor
 	name = "airlock sensor (no radio)"
-	path = /obj/item/frame/airlock_sensor_norad
+	build_path = /obj/item/frame/airlock_sensor_norad
 
 /datum/design/item/genfab/electronics/airlockmodule
 	name = "airlock electronics"
-	path = /obj/item/weapon/airlock_electronics
+	build_path = /obj/item/weapon/airlock_electronics
 
 /datum/design/item/genfab/electronics/airalarm
 	name = "air alarm electronics"
-	path = /obj/item/weapon/airalarm_electronics
+	build_path = /obj/item/weapon/airalarm_electronics
 
 /datum/design/item/genfab/electronics/firealarm
 	name = "fire alarm electronics"
-	path = /obj/item/weapon/firealarm_electronics
+	build_path = /obj/item/weapon/firealarm_electronics
 
 /datum/design/item/genfab/electronics/powermodule
 	name = "power control module"
-	path = /obj/item/weapon/module/power_control
+	build_path = /obj/item/weapon/module/power_control
 
 
 /datum/design/item/genfab/electronics/keypad
 	name = "airlock keypad electronics"
-	path = /obj/item/weapon/airlock_electronics/keypad_electronics
+	build_path = /obj/item/weapon/airlock_electronics/keypad_electronics
 	category = "Engineering"
 
 
@@ -240,101 +239,101 @@
 
 /datum/design/item/genfab/engitools/adv/analyzer
 	name = "gas analyzer"
-	path = /obj/item/device/analyzer
+	build_path = /obj/item/device/analyzer
 	category = "Tools"
 
 
 /datum/design/item/genfab/engitools/flashlight
 	name = "flashlight"
-	path = /obj/item/device/flashlight
+	build_path = /obj/item/device/flashlight
 
 /datum/design/item/genfab/engitools/maglight
 	name = "maglight"
-	path = /obj/item/device/flashlight/maglight
+	build_path = /obj/item/device/flashlight/maglight
 
 /datum/design/item/genfab/engitools/crowbar
 	name = "crowbar"
-	path = /obj/item/weapon/crowbar
+	build_path = /obj/item/weapon/crowbar
 
 /datum/design/item/genfab/engitools/prybar
 	name = "pry bar"
-	path = /obj/item/weapon/crowbar/prybar
+	build_path = /obj/item/weapon/crowbar/prybar
 
 /datum/design/item/genfab/engitools/multitool
 	name = "multitool"
-	path = /obj/item/device/multitool
+	build_path = /obj/item/device/multitool
 	
 /datum/design/item/genfab/engitools/t_scanner
 	name = "T-ray scanner"
-	path = /obj/item/device/t_scanner
+	build_path = /obj/item/device/t_scanner
 
 /datum/design/item/genfab/engitools/welder_mini
 	name = "miniature welding tool"
-	path = /obj/item/weapon/weldingtool/mini/empty
+	build_path = /obj/item/weapon/weldingtool/mini/empty
 
 /datum/design/item/genfab/engitools/weldertool
 	name = "welding tool"
-	path = /obj/item/weapon/weldingtool/empty
+	build_path = /obj/item/weapon/weldingtool/empty
 
 /datum/design/item/genfab/engitools/screwdriver
 	name = "screwdriver"
-	path = /obj/item/weapon/screwdriver
+	build_path = /obj/item/weapon/screwdriver
 
 /datum/design/item/genfab/engitools/wirecutters
 	name = "wirecutters"
-	path = /obj/item/weapon/wirecutters
+	build_path = /obj/item/weapon/wirecutters
 
 /datum/design/item/genfab/engitools/wrench
 	name = "wrench"
-	path = /obj/item/weapon/wrench
+	build_path = /obj/item/weapon/wrench
 	category = "Tools"
 
 /datum/design/item/genfab/engitools/suit_cooler
 	name = "suit cooling unit"
-	path = /obj/item/device/suit_cooling_unit
+	build_path = /obj/item/device/suit_cooling_unit
 	category = "General"
 
 /datum/design/item/genfab/engitools/weldermask
 	name = "welding mask"
-	path = /obj/item/clothing/head/welding
+	build_path = /obj/item/clothing/head/welding
 	category = "General"
 
 
 /datum/design/item/genfab/engitools/rcd_ammo
 	name = "matter cartridge"
-	path = /obj/item/weapon/rcd_ammo
+	build_path = /obj/item/weapon/rcd_ammo
 	category = "Engineering"
 
 /datum/design/item/genfab/engitools/rcd_ammo_large
 	name = "high-capacity matter cartridge"
-	path = /obj/item/weapon/rcd_ammo/large
+	build_path = /obj/item/weapon/rcd_ammo/large
 	category = "Engineering"
 
 /datum/design/item/genfab/engitools/cable_coil
 	name = "cable coil"
-	path = /obj/item/stack/cable_coil/single		//must be /single path, else printing 1x will instead print a whole stack
+	build_path = /obj/item/stack/cable_coil/single		//must be /single path, else printing 1x will instead print a whole stack
 //	is_stack = 1
 
 
 /datum/design/item/genfab/engitools/weldinggoggles
 	name = "welding goggles"
-	path = /obj/item/clothing/glasses/welding
+	build_path = /obj/item/clothing/glasses/welding
 	category = "General"
 
 	
 /datum/design/item/genfab/engitools/stasisclamp
 	name = "stasis clamp"
-	path = /obj/item/clamp
+	build_path = /obj/item/clamp
 	category = "Engineering"
 	
 /datum/design/item/genfab/engitools/welder_industrial
 	name = "industrial welding tool"
-	path = /obj/item/weapon/weldingtool/largetank/empty
+	build_path = /obj/item/weapon/weldingtool/largetank/empty
 	category = "Tools"
 
 /datum/design/item/genfab/engitools/welder_huge
 	name = "high capacity welding tool"
-	path = /obj/item/weapon/weldingtool/hugetank/empty
+	build_path = /obj/item/weapon/weldingtool/hugetank/empty
 	category = "Tools"
 	
 
@@ -392,11 +391,11 @@
 	
 /datum/design/item/genfab/engitools/extinguisher_mini
 	name = "compact extinguisher"
-	path = /obj/item/weapon/extinguisher/mini/empty
+	build_path = /obj/item/weapon/extinguisher/mini/empty
 
 /datum/design/item/genfab/engitools/adv/extinguisher
 	name = "extinguisher"
-	path = /obj/item/weapon/extinguisher/empty
+	build_path = /obj/item/weapon/extinguisher/empty
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -412,36 +411,36 @@
 
 /datum/design/item/genfab/meditools/penlight
 	name = "penlight"
-	path = /obj/item/device/flashlight/pen
+	build_path = /obj/item/device/flashlight/pen
 
 /datum/design/item/genfab/meditools/scalpel
 	name = "scalpel"
-	path = /obj/item/weapon/scalpel
+	build_path = /obj/item/weapon/scalpel
 	category = "Medical"
 
 /datum/design/item/genfab/meditools/circularsaw
 	name = "circular saw"
-	path = /obj/item/weapon/circular_saw
+	build_path = /obj/item/weapon/circular_saw
 	category = "Medical"
 
 /datum/design/item/genfab/meditools/surgicaldrill
 	name = "surgical drill"
-	path = /obj/item/weapon/surgicaldrill
+	build_path = /obj/item/weapon/surgicaldrill
 	category = "Medical"
 
 /datum/design/item/genfab/meditools/retractor
 	name = "retractor"
-	path = /obj/item/weapon/retractor
+	build_path = /obj/item/weapon/retractor
 	category = "Medical"
 
 /datum/design/item/genfab/meditools/cautery
 	name = "cautery"
-	path = /obj/item/weapon/cautery
+	build_path = /obj/item/weapon/cautery
 	category = "Medical"
 
 /datum/design/item/genfab/meditools/hemostat
 	name = "hemostat"
-	path = /obj/item/weapon/hemostat
+	build_path = /obj/item/weapon/hemostat
 	category = "Medical"
 
 
@@ -463,7 +462,7 @@
 
 /datum/design/item/genfab/meditools/healthscanner
 	name = "health scanner"
-	path = /obj/item/device/healthanalyzer
+	build_path = /obj/item/device/healthanalyzer
 	category = "Medical"
 
 /datum/design/item/genfab/meditools/adv/robot_scanner
@@ -627,58 +626,58 @@
 
 /datum/design/item/genfab/parts/camera_assembly
 	name = "camera assembly"
-	path = /obj/item/weapon/camera_assembly
+	build_path = /obj/item/weapon/camera_assembly
 	category = "Engineering"
 
 /datum/design/item/genfab/parts/consolescreen
 	name = "console screen"
-	path = /obj/item/weapon/stock_parts/console_screen
+	build_path = /obj/item/weapon/stock_parts/console_screen
 	category = "Devices and Components"
 
 /datum/design/item/genfab/parts/igniter
 	name = "igniter"
-	path = /obj/item/device/assembly/igniter
+	build_path = /obj/item/device/assembly/igniter
 	category = "Devices and Components"
 
 /datum/design/item/genfab/parts/signaler
 	name = "signaler"
-	path = /obj/item/device/assembly/signaler
+	build_path = /obj/item/device/assembly/signaler
 	category = "Devices and Components"
 
 /datum/design/item/genfab/parts/sensor_infra
 	name = "infrared sensor"
-	path = /obj/item/device/assembly/infra
+	build_path = /obj/item/device/assembly/infra
 	category = "Devices and Components"
 
 /datum/design/item/genfab/parts/timer
 	name = "timer"
-	path = /obj/item/device/assembly/timer
+	build_path = /obj/item/device/assembly/timer
 	category = "Devices and Components"
 
 /datum/design/item/genfab/parts/sensor_prox
 	name = "proximity sensor"
-	path = /obj/item/device/assembly/prox_sensor
+	build_path = /obj/item/device/assembly/prox_sensor
 	category = "Devices and Components"
 
 
 /datum/design/item/genfab/parts/tube/large
 	name = "spotlight tube"
-	path = /obj/item/weapon/light/tube/large
+	build_path = /obj/item/weapon/light/tube/large
 	category = "General"
 
 /datum/design/item/genfab/parts/recipe/tube
 	name = "light tube"
-	path = /obj/item/weapon/light/tube
+	build_path = /obj/item/weapon/light/tube
 	category = "General"
 
 /datum/design/item/genfab/parts/bulb
 	name = "light bulb"
-	path = /obj/item/weapon/light/bulb
+	build_path = /obj/item/weapon/light/bulb
 	category = "General"
 
 /datum/design/item/genfab/parts/cell_device
 	name = "device cell"
-	path = /obj/item/weapon/cell/device/standard/empty
+	build_path = /obj/item/weapon/cell/device/standard/empty
 	category = "Devices and Components"
 
 /datum/design/item/genfab/parts/basic_capacitor
@@ -892,7 +891,7 @@
 
 /datum/design/item/genfab/weapons/syringegun_ammo
 	name = "syringe gun cartridge"
-	path = /obj/item/weapon/syringe_cartridge
+	build_path = /obj/item/weapon/syringe_cartridge
 	
 
 /datum/design/item/genfab/weapons/guns/stunrevolver
@@ -1223,35 +1222,35 @@
 
 /datum/design/item/genfab/communication/radio_headset
 	name = "radio headset"
-	path = /obj/item/device/radio/headset
+	build_path = /obj/item/device/radio/headset
 
 /datum/design/item/genfab/communication/radio_bounced
 	name = "shortwave radio"
-	path = /obj/item/device/radio/off
+	build_path = /obj/item/device/radio/off
 
 /datum/design/item/genfab/communication/taperecorder
 	name = "tape recorder"
-	path = /obj/item/device/taperecorder/empty
+	build_path = /obj/item/device/taperecorder/empty
 	category = "General"
 
 /datum/design/item/genfab/communication/tape
 	name = "tape recorder tape"
-	path = /obj/item/device/tape
+	build_path = /obj/item/device/tape
 	category = "General"
 
 /datum/design/item/genfab/communication/blackpen
 	name = "black ink pen"
-	path = /obj/item/weapon/pen
+	build_path = /obj/item/weapon/pen
 	category = "General"
 
 /datum/design/item/genfab/communication/bluepen
 	name = "blue ink pen"
-	path = /obj/item/weapon/pen/blue
+	build_path = /obj/item/weapon/pen/blue
 	category = "General"
 
 /datum/design/item/genfab/communication/redpen
 	name = "red ink pen"
-	path = /obj/item/weapon/pen/red
+	build_path = /obj/item/weapon/pen/red
 	category = "General"
 
 
@@ -1270,11 +1269,11 @@
 
 /datum/design/item/genfab/eva/tank
 	name = "air tank"
-	path = /obj/item/weapon/tank/oxygen/empty
+	build_path = /obj/item/weapon/tank/oxygen/empty
 
 /datum/design/item/genfab/eva/adv/tank_double
 	name = "emergency air tank"
-	path = /obj/item/weapon/tank/emergency/oxygen/engi/empty
+	build_path = /obj/item/weapon/tank/emergency/oxygen/engi/empty
 
 /datum/design/item/genfab/eva/adv/jetpack
 	name = "Air Supply and Propulsion System"	//Just a fancy name for a jetpack, heh
@@ -1326,16 +1325,16 @@
 
 /datum/design/item/genfab/furniture/ashtray_glass
 	name = "glass ashtray"
-	path = /obj/item/weapon/material/ashtray/glass
+	build_path = /obj/item/weapon/material/ashtray/glass
 	category = "General"
 
 /datum/design/item/genfab/furniture/desklamp
 	name = "desk lamp"
-	path = /obj/item/device/flashlight/lamp
+	build_path = /obj/item/device/flashlight/lamp
 
 /datum/design/item/genfab/furniture/floor_light
 	name = "floor light"
-	path = /obj/machinery/floor_light
+	build_path = /obj/machinery/floor_light
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1356,11 +1355,11 @@
 
 /datum/design/item/genfab/botanytools/hatchet
 	name = "hatchet"
-	path = /obj/item/weapon/material/hatchet
+	build_path = /obj/item/weapon/material/hatchet
 
 /datum/design/item/genfab/botanytools/minihoe
 	name = "mini hoe"
-	path = /obj/item/weapon/material/minihoe
+	build_path = /obj/item/weapon/material/minihoe
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1379,12 +1378,12 @@
 
 /datum/design/item/genfab/culinarytools/knife
 	name = "kitchen knife"
-	path = /obj/item/weapon/material/knife
+	build_path = /obj/item/weapon/material/knife
 	category = "General"
 
 /datum/design/item/genfab/culinarytools/butch
 	name = "butcher knife"
-	path = /obj/item/weapon/material/knife/butch
+	build_path = /obj/item/weapon/material/knife/butch
 	category = "General"
 
 
@@ -1405,94 +1404,94 @@
 
 /datum/design/item/genfab/consumer/lighter
 	name = "cheap lighter"
-	path = /obj/item/weapon/flame/lighter
+	build_path = /obj/item/weapon/flame/lighter
 	category = "General"
 
 /datum/design/item/genfab/consumer/clipboard
 	name = "clipboard"
-	path = /obj/item/weapon/clipboard
+	build_path = /obj/item/weapon/clipboard
 	category = "General"
 	
 /datum/design/item/genfab/consumer/labeler
 	name = "hand labeler"
-	path = /obj/item/weapon/hand_labeler
+	build_path = /obj/item/weapon/hand_labeler
 	category = "General"
 
 /datum/design/item/genfab/consumer/ecigcartridge
 	name = "ecigarette cartridge"
-	path = /obj/item/weapon/reagent_containers/ecig_cartridge/blank
+	build_path = /obj/item/weapon/reagent_containers/ecig_cartridge/blank
 	category = "Devices and Components"
 
 /datum/design/item/genfab/consumer/ecig
 	// We get it, you vape
 	name = "ecigarette"
-	path = /obj/item/clothing/mask/smokable/ecig/lathed
+	build_path = /obj/item/clothing/mask/smokable/ecig/lathed
 	category = "Devices and Components"
 
 
 /datum/design/item/genfab/consumer/mop
 	name = "mop"
-	path = /obj/item/weapon/mop
+	build_path = /obj/item/weapon/mop
 	category = "General"
 
 /datum/design/item/genfab/consumer/spraybottle
 	name = "spray bottle"
-	path = /obj/item/weapon/reagent_containers/spray
+	build_path = /obj/item/weapon/reagent_containers/spray
 	category = "General"
 
 /datum/design/item/genfab/consumer/lipstick
 	name = "lipstick"
-	path = /obj/item/weapon/lipstick
+	build_path = /obj/item/weapon/lipstick
 	category = "General"
 
 /datum/design/item/genfab/consumer/lipstick_purple
 	name = "purple lipstick"
-	path = /obj/item/weapon/lipstick/purple
+	build_path = /obj/item/weapon/lipstick/purple
 	category = "General"
 
 /datum/design/item/genfab/consumer/lipstick_jade
 	name = "jade lipstick"
-	path = /obj/item/weapon/lipstick/jade
+	build_path = /obj/item/weapon/lipstick/jade
 	category = "General"
 
 /datum/design/item/genfab/consumer/lipstick_black
 	name = "black lipstick"
-	path = /obj/item/weapon/lipstick/black
+	build_path = /obj/item/weapon/lipstick/black
 	category = "General"
 
 /datum/design/item/genfab/consumer/comb
 	name = "comb"
-	path = /obj/item/weapon/haircomb
+	build_path = /obj/item/weapon/haircomb
 	category = "General"
 
 /datum/design/item/genfab/consumer/red_doll
 	name = "red doll"
-	path = /obj/item/toy/therapy_red
+	build_path = /obj/item/toy/therapy_red
 	category = "General"
 
 /datum/design/item/genfab/consumer/purple_doll
 	name = "purple doll"
-	path = /obj/item/toy/therapy_purple
+	build_path = /obj/item/toy/therapy_purple
 	category = "General"
 
 /datum/design/item/genfab/consumer/blue_doll
 	name = "blue doll"
-	path = /obj/item/toy/therapy_blue
+	build_path = /obj/item/toy/therapy_blue
 	category = "General"
 
 /datum/design/item/genfab/consumer/yellow_doll
 	name = "yellow doll"
-	path = /obj/item/toy/therapy_yellow
+	build_path = /obj/item/toy/therapy_yellow
 	category = "General"
 
 /datum/design/item/genfab/consumer/green_doll
 	name = "green doll"
-	path = /obj/item/toy/therapy_green
+	build_path = /obj/item/toy/therapy_green
 	category = "General"
 
 /datum/design/item/genfab/consumer/water_balloon
 	name = "water balloon"
-	path = /obj/item/toy/water_balloon
+	build_path = /obj/item/toy/water_balloon
 	category = "General"
 
 
@@ -1512,7 +1511,7 @@
 
 /datum/design/item/genfab/sectools/handcuffs
 	name = "handcuffs"
-	path = /obj/item/weapon/handcuffs
+	build_path = /obj/item/weapon/handcuffs
 	category = "General"
 
 /datum/design/item/genfab/sectools/adv/hud

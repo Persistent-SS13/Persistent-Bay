@@ -69,7 +69,7 @@ avoid code duplication. This includes items that may sometimes act as a standard
 
 	/////////////////////////
 
-	if(!no_attack_log && ispath(AM, /mob))
+	if(!no_attack_log && ismob(AM))
 		admin_attack_log(user, AM, "Attacked using \a [src] (DAMTYE: [uppertext(damtype)])", "Was attacked with \a [src] (DAMTYE: [uppertext(damtype)])", "used \a [src] (DAMTYE: [uppertext(damtype)]) to attack")
 	/////////////////////////
 
@@ -78,7 +78,7 @@ avoid code duplication. This includes items that may sometimes act as a standard
 
 	var/hit_zone = null
 	//Mob only
-	if(istype(AM, /mob/living))
+	if(isliving(AM))
 		var/mob/living/L = AM
 		hit_zone = L.resolve_item_attack(src, user, target_zone)
 	apply_hit_effect(AM, user, hit_zone)

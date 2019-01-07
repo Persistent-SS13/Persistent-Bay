@@ -102,6 +102,9 @@ var/const/PUBLIC_LOW_FREQ	= 1441
 var/const/PUBLIC_HIGH_FREQ	= 1489
 var/const/RADIO_HIGH_FREQ	= 1600
 
+var/const/AIRALARM_FREQ	= 1439
+var/const/STATUS_FREQ = 1435
+
 var/const/BOT_FREQ	= 1447
 var/const/COMM_FREQ = 1353
 var/const/ERT_FREQ	= 1345
@@ -221,10 +224,6 @@ var/global/datum/controller/radio/radio_controller
 /hook/startup/proc/createRadioController()
 	radio_controller = new /datum/controller/radio()
 	return 1
-
-//callback used by objects to react to incoming radio signals
-/obj/proc/receive_signal(datum/signal/signal, receive_method, receive_param)
-	return null
 
 //The global radio controller
 /datum/controller/radio

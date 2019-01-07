@@ -87,6 +87,21 @@ var/const/EXTRA_COST_FACTOR = 1
 	path = /obj/item/glass_jar
 	category = "General"
 
+/datum/autolathe/recipe/scissors
+	name = "scissors"
+	path = /obj/item/weapon/scissors
+	category = "Tools"
+
+/datum/autolathe/recipe/barber_scissors
+	name = "barber scissors"
+	path = /obj/item/weapon/scissors/barber
+	category = "Tools"
+
+/datum/autolathe/recipe/plastic_scissors
+	name = "plastic scissors"
+	path = /obj/item/weapon/scissors/craft 
+	category = "Tools"
+
 /datum/autolathe/recipe/crowbar
 	name = "crowbar"
 	path = /obj/item/weapon/crowbar

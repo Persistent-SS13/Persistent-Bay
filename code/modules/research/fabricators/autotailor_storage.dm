@@ -221,6 +221,32 @@
 	id = "cap_mess"
 	build_path = /obj/item/weapon/storage/backpack/messenger/com
 
+//Rucksacks
+/datum/design/item/autotailor/storage/backpacks/rucksack
+	name = "Rucksack"
+	id = "rucksack_back"
+	build_path = /obj/item/weapon/storage/backpack/rucksack
+
+/datum/design/item/autotailor/storage/backpacks/rucksack_blue
+	name = "Blue rucksack"
+	id = "rucksack_blue_back"
+	build_path = /obj/item/weapon/storage/backpack/rucksack/blue
+
+/datum/design/item/autotailor/storage/backpacks/rucksack_green
+	name = "Green rucksack"
+	id = "rucksack_green_back"
+	build_path = /obj/item/weapon/storage/backpack/rucksack/green
+
+/datum/design/item/autotailor/storage/backpacks/rucksack_navy
+	name = "Navy rucksack"
+	id = "rucksack_navy_back"
+	build_path = /obj/item/weapon/storage/backpack/rucksack/navy
+
+/datum/design/item/autotailor/storage/backpacks/rucksack_tan
+	name = "Tan rucksack"
+	id = "rucksack_tan_back"
+	build_path = /obj/item/weapon/storage/backpack/rucksack/tan
+
 /datum/design/item/autotailor/storage/backpacks/cap_duffle
 	name = "Captain dufflebag"
 	id = "cap_duffle"

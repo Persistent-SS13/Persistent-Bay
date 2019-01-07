@@ -41,7 +41,7 @@
 		DAM_BURN 	= 90,
 		DAM_BOMB 	= 90,
 		DAM_EMP 	= 50,
-		DAM_BIO 	= RESIST_INVULNERABLE,
+		DAM_BIO 	= MaxArmorValue,
 		DAM_RADS 	= 80,
 		DAM_STUN 	= 70,
 		DAM_PAIN	= 70,

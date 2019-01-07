@@ -49,6 +49,7 @@
 	var/aiDisabledIdScanner = 0
 	var/aiHacking = 0
 	var/obj/machinery/door/airlock/closeOther = null
+	var/closeOtherDir = 0
 	var/closeOtherId = null
 	var/lockdownbyai = 0
 	autoclose = 1
@@ -106,6 +107,117 @@
 	var/sparks_broken_file = 'icons/obj/doors/station/sparks_broken.dmi'
 	var/welded_file = 'icons/obj/doors/station/welded.dmi'
 	var/emag_file = 'icons/obj/doors/station/emag.dmi'
+
+/obj/machinery/door/airlock/New(var/newloc, var/obj/structure/door_assembly/assembly=null)
+	..()
+	ADD_SAVED_VAR(aiControlDisabled)
+	ADD_SAVED_VAR(haskeypad)
+	ADD_SAVED_VAR(hackProof)
+	ADD_SAVED_VAR(door_color)
+	ADD_SAVED_VAR(stripe_color)
+	ADD_SAVED_VAR(symbol_color)
+	ADD_SAVED_VAR(_wifi_id)
+	ADD_SAVED_VAR(secured_wires)
+	ADD_SAVED_VAR(brace)
+	ADD_SAVED_VAR(safe)
+	ADD_SAVED_VAR(justzap)
+	ADD_SAVED_VAR(electronics)
+	ADD_SAVED_VAR(mineral)
+	ADD_SAVED_VAR(lockdownbyai)
+	ADD_SAVED_VAR(closeOtherId)
+	ADD_SAVED_VAR(closeOtherDir)
+	ADD_SAVED_VAR(aiControlDisabled)
+	ADD_SAVED_VAR(hackProof)
+	ADD_SAVED_VAR(electrified_until)
+	ADD_SAVED_VAR(welded)
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(lock_cut_state)
+	ADD_SAVED_VAR(lights)
+	ADD_SAVED_VAR(aiDisabledIdScanner)
+	ADD_SAVED_VAR(aiHacking)
+
+	ADD_SKIP_EMPTY(brace)
+	ADD_SKIP_EMPTY(closeOtherId)
+	ADD_SKIP_EMPTY(closeOtherDir)
+	ADD_SKIP_EMPTY(_wifi_id)
+	ADD_SKIP_EMPTY(welded)
+
+	//if assembly is given, create the new door from the assembly
+	if (assembly && istype(assembly))
+		assembly_type = assembly.type
+
+		electronics = assembly.electronics
+		electronics.forceMove(src)
+
+		//update the door's access to match the electronics'
+		secured_wires = electronics.secure
+		if(electronics.business_name)
+			if(electronics.one_access)
+				req_one_access_business_list = src.electronics.business_access	//for some reason we were inverting them
+
+			else
+				req_access_business_list = src.electronics.business_access
+			req_access_business = electronics.business_name
+
+		else
+			if(electronics.one_access)
+				req_access.Cut()
+				req_one_access = src.electronics.conf_access
+
+			else
+				req_one_access.Cut()
+				req_access = src.electronics.conf_access
+			req_access_faction = electronics.req_access_faction
+		//get the name from the assembly
+		if(assembly.created_name)
+			name = assembly.created_name
+		else
+			name = "[istext(assembly.glass) ? "[assembly.glass] airlock" : assembly.base_name]"
+
+		//get the dir from the assembly
+		set_dir(assembly.dir)
+
+	//wires
+	var/turf/T = get_turf(newloc)
+	if(T && (T.z in GLOB.using_map.admin_levels))
+		secured_wires = 1
+	if (secured_wires)
+		wires = new/datum/wires/airlock/secure(src)
+	else
+		wires = new/datum/wires/airlock(src)
+
+/obj/machinery/door/airlock/Initialize()
+	if(src.closeOtherId != null)
+		for (var/obj/machinery/door/airlock/A in world)
+			if(A.closeOtherId == src.closeOtherId && A != src)
+				src.closeOther = A
+				break
+	var/turf/T = loc
+	var/obj/item/weapon/airlock_brace/A = locate(/obj/item/weapon/airlock_brace) in T
+	if(!brace && A)
+		brace = A
+		brace.airlock = src
+		brace.forceMove(src)
+		update_icon()
+
+	update_connections()
+	. = ..()
+	return INITIALIZE_HINT_LATELOAD
+
+//Later on during init check for a nearby door
+/obj/machinery/door/airlock/LateInitialize()
+	. = ..()
+	if (src.closeOtherDir)
+		cyclelinkairlock()
+
+/obj/machinery/door/airlock/Destroy()
+	qdel(wires)
+	wires = null
+	qdel(wifi_receiver)
+	wifi_receiver = null
+	if(brace)
+		qdel(brace)
+	return ..()
 
 /obj/machinery/door/airlock/get_material()
 	if(mineral)
@@ -1840,78 +1952,31 @@ About the new airlock wires panel:
 		return 0
 	return ..(M)
 
-/obj/machinery/door/airlock/New(var/newloc, var/obj/structure/door_assembly/assembly=null)
-	..()
 
-	//if assembly is given, create the new door from the assembly
-	if (assembly && istype(assembly))
-		assembly_type = assembly.type
 
-		electronics = assembly.electronics
-		electronics.forceMove(src)
+/obj/machinery/door/airlock/proc/cyclelinkairlock()
+	if (closeOther)
+		closeOther.closeOther = null
+		closeOther = null
+	if (!closeOtherDir)
+		return
+	var/limit = world.view
+	var/turf/T = get_turf(src)
+	var/obj/machinery/door/airlock/FoundDoor
+	do
+		T = get_step(T, closeOtherDir)
+		FoundDoor = locate() in T
+		if (FoundDoor && FoundDoor.closeOtherDir != get_dir(FoundDoor, src))
+			FoundDoor = null
+		limit--
+	while(!FoundDoor && limit)
+	if (!FoundDoor)
+		log_world("### MAP WARNING, [src] at [src.x],[src.y],[src.z] failed to find a valid airlock to cyclelink with!")
+		return
+	FoundDoor.closeOtherDir = src
+	closeOther = FoundDoor
 
-		//update the door's access to match the electronics'
-		secured_wires = electronics.secure
-		if(electronics.business_name)
-			if(electronics.one_access)
-				req_one_access_business_list = src.electronics.business_access	//for some reason we were inverting them
 
-			else
-				req_access_business_list = src.electronics.business_access
-			req_access_business = electronics.business_name
-
-		else
-			if(electronics.one_access)
-				req_access.Cut()
-				req_one_access = src.electronics.conf_access
-
-			else
-				req_one_access.Cut()
-				req_access = src.electronics.conf_access
-			req_access_faction = electronics.req_access_faction
-		//get the name from the assembly
-		if(assembly.created_name)
-			name = assembly.created_name
-		else
-			name = "[istext(assembly.glass) ? "[assembly.glass] airlock" : assembly.base_name]"
-
-		//get the dir from the assembly
-		set_dir(assembly.dir)
-
-	//wires
-	var/turf/T = get_turf(newloc)
-	if(T && (T.z in GLOB.using_map.admin_levels))
-		secured_wires = 1
-	if (secured_wires)
-		wires = new/datum/wires/airlock/secure(src)
-	else
-		wires = new/datum/wires/airlock(src)
-
-/obj/machinery/door/airlock/Initialize()
-	if(src.closeOtherId != null)
-		for (var/obj/machinery/door/airlock/A in world)
-			if(A.closeOtherId == src.closeOtherId && A != src)
-				src.closeOther = A
-				break
-	var/turf/T = loc
-	var/obj/item/weapon/airlock_brace/A = locate(/obj/item/weapon/airlock_brace) in T
-	if(!brace && A)
-		brace = A
-		brace.airlock = src
-		brace.forceMove(src)
-		update_icon()
-
-	update_connections()
-	. = ..()
-
-/obj/machinery/door/airlock/Destroy()
-	qdel(wires)
-	wires = null
-	qdel(wifi_receiver)
-	wifi_receiver = null
-	if(brace)
-		qdel(brace)
-	return ..()
 
 // Most doors will never be deconstructed over the course of a round,
 // so as an optimization defer the creation of electronics until

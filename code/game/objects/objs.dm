@@ -15,25 +15,11 @@
 	var/unacidable 			= FALSE		//universal "unacidabliness" var, here so you can use it in any obj.
 
 	//Damage handling
-	var/health 				= null	//Current health
-	var/max_health 			= 0		//Maximum health
-	var/min_health 			= 0 	//Minimum health. If you want negative health numbers, change this to a negative number! Used to determine at what health something "dies"
-	var/const/MaxArmorValue = 100	//Maximum armor resistance possible for objects (Was hardcoded to 100 for mobs..)
-	var/list/armor// = list()
-		// DAM_BLUNT   = 0,
-		// DAM_PIERCE  = 0,
-		// DAM_CUT     = 0,
-		// DAM_BULLET  = 0,
-		// DAM_LASER   = 0,
-		// DAM_ENERGY  = 0,
-		// DAM_BURN    = 0,
-		// DAM_BOMB    = 0,
-		// DAM_EMP     = MaxArmorValue,
-		// DAM_BIO     = MaxArmorValue,
-		// DAM_RADS    = MaxArmorValue,
-		// DAM_STUN    = MaxArmorValue,
-		// DAM_PAIN    = MaxArmorValue,
-		// DAM_CLONE   = MaxArmorValue) //Resistance for various types of damages
+	var/health 					= null	//Current health
+	var/max_health 				= 0		//Maximum health
+	var/min_health 				= 0 	//Minimum health. If you want negative health numbers, change this to a negative number! Used to determine at what health something "dies"
+	var/const/MaxArmorValue 	= 100	//Maximum armor resistance possible for objects (Was hardcoded to 100 for mobs..)
+	var/list/armor						//Resistance to damage types
 	var/damthreshold_brute 		= 0		//Minimum amount of brute damages required to damage the object. Damages of that type below this value have no effect.
 	var/damthreshold_burn		= 0		//Minimum amount of burn damages required to damage the object. Damages of that type below this value have no effect.
 	var/explosion_base_damage 	= 5 	//The base of the severity exponent used. See ex_act for details
@@ -146,8 +132,8 @@
 /obj/proc/health_percentage()
 	if(!isdamageable())
 		return 100
-	if((max_health - min_health) != 0)
-		return health * 100 / (max_health - min_health)
+	if(max_health != 0)
+		return health * 100 / max_health
 	else
 		return 0
 
@@ -222,6 +208,11 @@
 			return TRUE
 	return FALSE
 
+//Return whether the entity is vulenrable to the specified damage type
+// override to change what damage will be rejected on take_damage
+/obj/proc/vulnerable_to_damtype(var/damtype)
+	return DAMAGE_AFFECT_OBJ(damtype)
+
 /obj/proc/get_armor_value(var/damagetype)
 	if(!armor)
 		return 0
@@ -230,7 +221,7 @@
 	if(!.)
 		. = 0 //Don't return null!
 
-//Used to calculate armor damage reduction. Returns the amount of damages absorbed
+//Used to calculate armor damage reduction. Returns the integer percentage of the damage absorbed
 /obj/proc/armor_absorb(var/damage, var/ap, var/damagetype)
 	if(!damagetype)
 		log_warning("Null damage type was passed to armor_absorb for \the [src] object! With damage = [damage], and ap = [ap]!")
@@ -250,7 +241,7 @@
 				return 0 //bypass armor
 			var/effective_armor = (resist - ap)/MaxArmorValue
 			var/fullblock = (effective_armor*effective_armor) * ARMOR_BLOCK_CHANCE_MULT
-			
+
 			if(fullblock >= 1 || prob(fullblock * MaxArmorValue))
 				. = MaxArmorValue
 			else
@@ -262,28 +253,33 @@
 
 //Called whenever the object is receiving damages
 // returns the amount of damages that was applied to the object
-// - damlist: used when a hit inflicts more than one type of damage. Just make an entry for each damage type and give them the damage amount as value ex: list(DAM_BLUNT = 50)
 // - damsrc: mostly for organs, contains the cause of the damage, aka weapon name and etc..
-// - damflags : Used mainly by organs for DAM_EDGE and DAM_SHARP flags.. Will probably be removed in the future
-/obj/proc/take_damage(var/damage =0, var/damtype = DAM_BLUNT, var/armorbypass = 0, var/list/damlist = null, var/damflags = 0, var/damsrc = null)
-	if(!isdamageable())
+/obj/proc/take_damage(var/damage = 0, var/damtype = DAM_BLUNT, var/armorbypass = 0, var/damsrc = null)
+	if(!isdamageable() || !vulnerable_to_damtype(damtype))
 		return 0
-
-	if(!damlist)
-		var/resultingdmg = max(0, damage * blocked_mult(armor_absorb(damage, armorbypass, damtype)))
-		set_health(get_health() - resultingdmg)
-		update_health(damtype)
-		. = resultingdmg
-		log_debug("[src] took [resultingdmg] [damtype] damages from [damsrc]! Before armor: [damage] damages.")
-	else
-		for(var/key in damlist)
-			damage = damlist[key]
-			var/resultingdmg = max(0, damlist[key] * blocked_mult(armor_absorb(damlist[key], armorbypass, key)))
-			set_health(get_health() - resultingdmg)
-			update_health(key)
-			. += resultingdmg
-			log_debug("[src] took [resultingdmg] [damtype] damages from [damsrc]! Before armor: [damage] damages.")
+	var/resultingdmg = max(0, damage * blocked_mult(armor_absorb(damage, armorbypass, damtype)))
+	set_health(get_health() - resultingdmg)
+	update_health(damtype)
+	. = resultingdmg
+	log_debug("[src] took [resultingdmg] [damtype] damages from [damsrc]! Before armor: [damage] damages.")
 	return .
+
+// - damlist: used when a hit inflicts more than one type of damage. Just make an entry for each damage type and give them the damage amount as value ex: list(DAM_BLUNT = 50)
+///obj/take_damage(var/list/damlist, var/armorbypass = 0, var/damsrc = null)
+//	if(!isdamageable())
+//		return 0
+//	if(!islist(damlist))
+//		return ..() //Default take_damage proc call if first param isn't list
+//	. = 0
+//	for(var/key in damlist)
+//		if(!vulnerable_to_damtype(key))
+//			continue
+//		var/resultingdmg = max(0, damlist[key] * blocked_mult(armor_absorb(damlist[key], armorbypass, key)))
+//		set_health(get_health() - resultingdmg)
+//		update_health(key)
+//		. += resultingdmg
+//		log_debug("[src] took [resultingdmg] [damtype] damages from [damsrc]! Before armor: [damage] damages.")
+//	return .
 
 //Like take damage, but meant to instantly destroy the object from an external source
 /obj/proc/kill(var/damagetype = DAM_BLUNT)
@@ -297,7 +293,7 @@
 	if(!isdamageable())
 		return //Assume we don't care about damages
 	if(health <= min_health)
-		if(damagetype == DAM_BURN)
+		if(ISDAMTYPE(damagetype, DAM_BURN))
 			melt(user)
 		else
 			destroyed(damagetype,user)
@@ -365,7 +361,7 @@
 	if(isdamageable() && user.a_intent == I_HURT && O.force > 0 && !(O.item_flags & ITEM_FLAG_NO_BLUDGEON))
 		attack_melee(user, O)
 		return 1
-	return 0 //The code in atom/movable/attackby is causing more trouble than it solves..
+	return 0 //The code in atom/movable/attackby is causing more trouble than it solves.. AKA, prints messages to chat, when there's no actual damage being done
 
 //Handle generic hits
 /obj/attack_generic(var/mob/user, var/damage, var/attack_verb, var/wallbreaker, var/damtype = DAM_BLUNT)
@@ -374,6 +370,7 @@
 	add_hiddenprint(user)
 	add_fingerprint(user)
 
+	//Ideally unarmed attacks should be handled by the mobs.. But for now I guess We'll make do.
 	var/hitsoundoverride = sound_hit //So we can override the sound for special cases
 	var/damoverride = damtype
 	var/mob/living/carbon/human/H = user
@@ -402,34 +399,24 @@
 /obj/proc/attack_melee(var/mob/user, var/obj/item/W)
 	if(!isdamageable() || !istype(W))
 		return
- 
+
 	if(!istype(W, /obj/item/weapon)) // Some objects don't have click cooldowns/attack anims
 		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
 		if(W.sound_hit)
 			playsound(loc, W.sound_hit, vol=60, vary=1, extrarange=8, falloff=6)
 		attack_animation(user)
+		take_damage(W.force, W.damtype, W.armor_penetration, W)
 	else
 		W.attack(src, user)
 
 //Called by a weapon's "afterattack" proc when an attack has succeeded. Returns blocked damage
 /obj/hit_with_weapon(obj/item/W, mob/living/user, var/effective_force)
-	if(islist(W.damtype))
-		var/list/dlist = W.damtype
-		//for(var/key in W.damtype)
-		//	dlist[key] = W.force
-		//When damages don't go through the damage threshold, give player feedback
-		if(!pass_damage_threshold_list(dlist))
-			hit_deflected_by_armor(W, user)
-			return 0
-		take_damage(damlist = dlist, armorbypass = W.armor_penetration)
-	else
-		//When damages don't go through the damage threshold, give player feedback
-		if(!pass_damage_threshold(effective_force, W.damtype))
-			hit_deflected_by_armor(W, user)
-			return 0
-		take_damage(effective_force, W.damtype, armorbypass = W.armor_penetration)
+	if(!pass_damage_threshold(W.force, W.damtype))
+		hit_deflected_by_armor(W, user)
+		return 0
+	take_damage(W.force, W.damtype, armorbypass = W.armor_penetration, damsrc = W)
 	playsound(loc, sound_hit, vol=40, vary=1, extrarange=4, falloff=1)
-	..()
+	return ..()
 
 /obj/proc/hit_deflected_by_armor(obj/item/W, mob/living/user)
 	log_debug("damage deflected by damage threshold of [src]")
@@ -443,7 +430,7 @@
 		return
 	if(!force)
 		force = (explosion_base_damage ** (4 - severity)) //Severity is a value from 1 to 3, with 1 being the strongest. So each severity level is
-	take_damage(damage = force, damtype = DAM_BOMB)
+	take_damage(force, DAM_BOMB)
 
 /obj/emp_act(var/severity, var/force = 0)
 	. = ..()
@@ -451,19 +438,19 @@
 		return
 	if(!force)
 		force = (emp_base_damage ** (4 - severity))
-	take_damage(damage = force, damtype = DAM_EMP)
+	take_damage(force, DAM_EMP)
 
 /obj/bullet_act(obj/item/projectile/P, def_zone)
 	. = ..()
 	if(!isdamageable())
 		return
-	var/bdam = P.get_structure_damage()
+	//var/list/bdam = P.get_structure_damage()
 	//When damages don't go through the damage threshold, give player feedback
-	if(!pass_damage_threshold(bdam, P.damtype))
-		visible_message(SPAN_WARNING("\The [src] was hit by \the [P] with no visible effect."))
+	if(!pass_damage_threshold(P.force, P.damtype))
+		visible_message(SPAN_WARNING("\The [src] was hit by \the [P]'s [P.damtype] with no visible effect."))
 		playsound(loc, sound_hit, vol=40, vary=1, extrarange=4, falloff=2)
 		return 0
-	take_damage(bdam, P.damtype, P.penetration_modifier)
+	take_damage(P.force, P.damtype, P.penetration_modifier, P)
 
 //Handles being hit by a thrown atom_movable
 //	- damageoverride : if subclasses have a different damage calculation, pass the damage in this var
@@ -560,3 +547,7 @@
 		var/material/M = SSmaterials.get_material_by_name(key)
 		if(M)
 			M.place_shard(get_turf(loc))
+
+//callback used by objects to react to incoming radio signals
+/obj/proc/receive_signal(var/datum/signal/signal, var/receive_method = TRANSMISSION_RADIO, var/receive_param = null)
+	return null

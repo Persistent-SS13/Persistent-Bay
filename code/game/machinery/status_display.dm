@@ -16,6 +16,7 @@
 	density = 0
 	use_power = 1
 	idle_power_usage = 10
+	frame_type = /obj/item/frame/status_display
 	var/mode = STATUS_DISPLAY_BLANK	// 0 = Blank
 									// 1 = Shuttle timer
 									// 2 = Arbitrary message(s)
@@ -29,7 +30,7 @@
 	var/index2
 	var/picture = null
 
-	var/frequency = 1435		// radio frequency
+	var/frequency = STATUS_FREQ		// radio frequency
 
 	var/friendc = 0      // track if Friend Computer mode
 	var/ignore_friendc = 0
@@ -65,13 +66,13 @@
 
 // timed process
 /obj/machinery/status_display/Process()
-	if(stat & NOPOWER)
+	if(!ispowered())
 		remove_display()
 		return
 	update()
 
 /obj/machinery/status_display/emp_act(severity)
-	if(stat & (BROKEN|NOPOWER))
+	if(inoperable())
 		..(severity)
 		return
 	set_picture("ai_bsod")
@@ -238,25 +239,13 @@
 	update()
 
 /obj/machinery/status_display/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(isScrewdriver(W))
-		stat ^= MAINT
-		panel_open = !panel_open
-		user.visible_message("<span class='notice'>\The [user] [stat & MAINT ? "opens" : "closes"] \the [src].</span>", "<span class='notice'>You [stat & MAINT ? "open" : "close"] \the [src].</span>")
-		update_icon()
-		return
+	if(default_deconstruction_screwdriver(user,W))
+		return 1
 	else if(default_deconstruction_crowbar(user,W))
-		return
+		return 1
 	return ..()
 
-/obj/machinery/status_display/dismantle()
-	playsound(loc, 'sound/items/Crowbar.ogg', 50, 1)
-	var/obj/item/frame/status_display/F = new /obj/item/frame/status_display(get_turf(src))
-	F.set_dir(src.dir)
-	for(var/obj/I in component_parts)
-		I.forceMove(get_turf(src))
 
-	qdel(src)
-	return TRUE
 
 #undef SD_TEXT_STYLE
 #undef SCROLL_SPEED

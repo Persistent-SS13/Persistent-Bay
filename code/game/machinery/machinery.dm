@@ -245,6 +245,13 @@ Class Procs:
 /obj/machinery/proc/isemped()
 	return (stat & EMPED)
 
+/obj/machinery/InsertedContents()
+	return (contents - component_parts)
+
+//Defined at machinery level so that it can be used everywhere with little effort.
+/obj/machinery/proc/HasMultiplier()
+	return initial(multiplier) > 0
+
 //----------------------------------------
 // Interactions
 //----------------------------------------
@@ -334,9 +341,6 @@ Class Procs:
 	qdel(src)
 	return 1
 
-/obj/machinery/InsertedContents()
-	return (contents - component_parts)
-
 /datum/proc/apply_visual(mob/M)
 	return
 
@@ -350,10 +354,6 @@ Class Procs:
 	..()
 	if(clicksound && istype(user, /mob/living/carbon))
 		playsound(src, clicksound, clickvol)
-
-//Defined at machinery level so that it can be used everywhere with little effort.
-/obj/machinery/proc/HasMultiplier()
-	return initial(multiplier) > 0
 
 /obj/machinery/proc/GetMultiplierForm(var/obj/machinery/M)
 	var/dat = ""

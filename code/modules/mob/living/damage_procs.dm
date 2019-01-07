@@ -9,23 +9,27 @@
 	standard 0 if fail
 */
 /mob/living/proc/apply_damage(var/damage = 0,var/damagetype = BRUTE, var/def_zone = null, var/blocked = 0, var/damage_flags = 0, var/used_weapon = null)
-	if(!damage || (blocked >= 100))	return 0
-	switch(damagetype)
-		if(BRUTE)
-			adjustBruteLoss(damage * blocked_mult(blocked))
-		if(BURN)
-			if(COLD_RESISTANCE in mutations)	damage = 0
-			adjustFireLoss(damage * blocked_mult(blocked))
-		if(TOX)
-			adjustToxLoss(damage * blocked_mult(blocked))
-		if(OXY)
-			adjustOxyLoss(damage * blocked_mult(blocked))
-		if(CLONE)
-			adjustCloneLoss(damage * blocked_mult(blocked))
-		if(PAIN)
-			adjustHalLoss(damage * blocked_mult(blocked))
-		if(ELECTROCUTE)
-			electrocute_act(damage, used_weapon, 1.0, def_zone)
+	if(!damage || (blocked >= 100))
+		return 0
+
+	log_debug("[src] took [damage] [damagetype] damage from the [used_weapon]. [blocked] was blocked")
+
+	if(IsDamageTypeBrute(damagetype))
+		adjustBruteLoss(damage * blocked_mult(blocked))
+	else if(IsDamageTypeBurn(damagetype))
+		if(COLD_RESISTANCE in mutations)
+			damage = 0
+		adjustFireLoss(damage * blocked_mult(blocked))
+	else if(ISDAMTYPE(damagetype, DAM_BIO))
+		adjustToxLoss(damage * blocked_mult(blocked))
+	else if(ISDAMTYPE(damagetype, DAM_OXY))
+		adjustOxyLoss(damage * blocked_mult(blocked))
+	else if(ISDAMTYPE(damagetype, DAM_CLONE))
+		adjustCloneLoss(damage * blocked_mult(blocked))
+	else if(ISDAMTYPE(damagetype, DAM_PAIN))
+		adjustHalLoss(damage * blocked_mult(blocked))
+	else if(ISDAMTYPE(damagetype, DAM_ELECTRIC))
+		electrocute_act(damage, used_weapon, 1.0, def_zone)
 
 	updatehealth()
 	return 1

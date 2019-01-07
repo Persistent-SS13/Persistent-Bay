@@ -16,7 +16,7 @@
 		return 0
 
 	user.setClickCooldown(attack_cooldown)
-	if (!istype(user, /mob/living/carbon/human))
+	if (!ishuman(user))
 		to_chat(user, SPAN_DANGER("You don't have the dexterity to do this!"))
 		return 0
 
@@ -32,10 +32,10 @@
 		visible_message(SPAN_WARNING("\The [user] misses [AM] narrowly!"), SPAN_WARNING("You miss narrowly hitting [AM]!"))
 		return 0
 
-	if(ispath(AM, /mob))
+	if(ismob(AM))
 		admin_attack_log(user, AM, "Attacked using \a [src]", "Was attacked with \a [src]", "used \a [src] to attack")
 	var/hit_zone = null
-	if(ispath(AM, /mob/living))
+	if(isliving(AM))
 		var/mob/living/L = AM
 		hit_zone = L.resolve_item_attack(src, user, target_zone)
 	src.apply_hit_effect(AM, user, hit_zone)

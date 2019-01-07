@@ -231,12 +231,14 @@
 	if(!damage || !istype(user))
 		return
 
-	adjustBruteLoss(damage)
+	//adjustBruteLoss(damage)
 	admin_attack_log(user, src, "Attacked", "Was attacked", "attacked")
 
 	src.visible_message("<span class='danger'>[user] has [attack_message] [src]!</span>")
 	user.do_attack_animation(src)
-	spawn(1) updatehealth()
+	//spawn(1)
+	//	updatehealth()
+	apply_damage(damage, DAM_BLUNT)
 	return 1
 
 /mob/living/proc/IgniteMob()

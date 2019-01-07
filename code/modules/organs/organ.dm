@@ -7,6 +7,8 @@ var/list/organ_cache = list()
 	obj_flags = OBJ_FLAG_DAMAGEABLE
 	w_class = ITEM_SIZE_TINY
 	matter = list("pinkgoo" = 100)
+	damthreshold_brute = 0
+	damthreshold_burn  = 0
 
 	// Strings.
 	var/organ_tag 	 = "organ"        // Unique identifier.
@@ -114,7 +116,7 @@ var/list/organ_cache = list()
 		species = all_species[new_dna.species]
 
 /obj/item/organ/proc/die()
-	health = 0
+	health = min_health
 	status |= ORGAN_DEAD
 	STOP_PROCESSING(SSobj, src)
 	death_time = world.time

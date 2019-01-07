@@ -142,6 +142,9 @@
 	desc = "It's an orange backpack which was designed to hold beakers, pill bottles and bottles."
 	icon_state = "chempack"
 
+/*
+ * Rucksacks
+ */
 /obj/item/weapon/storage/backpack/rucksack
 	name = "black rucksack"
 	desc = "A sturdy military-grade backpack with low-profile straps. Designed to work well with armor."

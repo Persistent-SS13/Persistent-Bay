@@ -25,12 +25,12 @@ Barricades
 		DAM_ENERGY 	= 0,
 		DAM_BURN 	= 50,
 		DAM_BOMB 	= 50,
-		DAM_EMP 	= RESIST_INVULNERABLE,
-		DAM_BIO 	= RESIST_INVULNERABLE,
-		DAM_RADS 	= RESIST_INVULNERABLE,
-		DAM_STUN 	= RESIST_INVULNERABLE,
-		DAM_PAIN 	= RESIST_INVULNERABLE,
-		DAM_CLONE 	= RESIST_INVULNERABLE)
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN 	= MaxArmorValue,
+		DAM_CLONE 	= MaxArmorValue)
 	var/material/material
 
 /obj/structure/barricade/New(var/newloc, var/material_name)

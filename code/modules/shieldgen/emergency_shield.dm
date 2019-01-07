@@ -112,11 +112,7 @@
 		DAM_BURN 	= 40,
 		DAM_BOMB 	= 40,
 		DAM_EMP 	= 20,
-		DAM_BIO 	= RESIST_INVULNERABLE,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= RESIST_INVULNERABLE,
-		DAM_PAIN	= RESIST_INVULNERABLE,
-		DAM_CLONE   = RESIST_INVULNERABLE) 	//Resistance for various types of damages
+		DAM_RADS 	= MaxArmorValue) 	//Resistance for various types of damages
 
 
 /obj/machinery/shieldgen/after_load()

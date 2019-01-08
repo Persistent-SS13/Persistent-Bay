@@ -29,3 +29,8 @@
 
 	if (ckey)
 		designer_creator_ckey = ckey
+
+/obj/item/canvas/after_load()
+	if(icon_custom)
+		overlays += icon_custom.icon
+	..()

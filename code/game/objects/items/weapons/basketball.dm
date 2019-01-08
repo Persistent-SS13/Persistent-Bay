@@ -21,10 +21,10 @@
 	if(isWelder(W))
 		var/obj/item/weapon/weldingtool/WT = W
 		if(WT.remove_fuel(1,user))
-			playsound(src.loc, 'sound/items/Welder.ogg', 50, 1)
+			playsound(loc, 'sound/items/Welder.ogg', 50, 1)
 			to_chat(user, "<span class='notice'>You begin to melt \the [src]...</span>")
 			if (do_after(user, 10, src))
-				playsound(src.loc, 'sound/items/Welder2.ogg', 50, 1)
+				playsound(loc, 'sound/items/Welder2.ogg', 50, 1)
 				user.visible_message( \
 					"<span class='notice'>\The [user] melts \the [src].</span>", \
 					"<span class='notice'>You have melted \the [src].</span>")
@@ -32,7 +32,7 @@
 				qdel(src)
 				return
 	else
-		return
+		..()
 
 
 /obj/structure/basketballhoop
@@ -47,37 +47,35 @@
 /obj/structure/basketballhoop/attackby(obj/item/W as obj, mob/user as mob)
 	if(!anchored)
 		if(isWrench(W))
-			for(var/obj/structure/basketballhoop/H in oview(2, src)) // Prevents deploying hoops too closely togather.
-				if(istype(H, /obj/structure/basketballhoop/deployed))
+			for(var/obj/structure/basketballhoop/deployed/H in orange(2, src)) // Prevents deploying hoops too closely togather.
+				if(istype(H))
 					to_chat(user, "<span class='notice'>There's already a basketball goal nearby, spread them further apart.</span>")
-					return
-			if(src) // else by another name, smells..
-				playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
-				if(do_after(user, 20, src))
-					to_chat(user, "<span class='notice'>[user] sets up the basketball hoop.</span>")
-					new /obj/structure/basketballhoop/deployed(src.loc)
-					qdel(src)
-					return
+					return // else by another name, smells..
+			
+			playsound(loc, 'sound/items/Ratchet.ogg', 50, 1)
+			if(do_after(user, 20, src))
+				to_chat(user, "<span class='notice'>[user] sets up the basketball hoop.</span>")
+				new /obj/structure/basketballhoop/deployed(loc)
+				qdel(src)
+				return
 
 		if(isWelder(W))
 			var/obj/item/weapon/weldingtool/WT = W
 
 			if(WT.remove_fuel(5,user))
-				playsound(src.loc, 'sound/items/Welder.ogg', 50, 1)
+				playsound(loc, 'sound/items/Welder.ogg', 50, 1)
 				to_chat(user, "<span class='notice'>You begin to unweld \the [src]...</span>")
 				if (do_after(user, 40, src))
-					playsound(src.loc, 'sound/items/Welder2.ogg', 50, 1)
+					playsound(loc, 'sound/items/Welder2.ogg', 50, 1)
 					user.visible_message( \
 						"<span class='notice'>\The [user] unwelds \the [src].</span>", \
 						"<span class='notice'>You have unwelded \the [src].</span>", \
 						"You hear a ratchet.")
-					new /obj/item/stack/material/steel( src.loc, 10 )
+					new /obj/item/stack/material/steel(loc, 10)
 					qdel(src)
 					return
 		else
-			return
-	else
-		return
+			..()
 
 
 /obj/structure/basketballhoop/deployed
@@ -89,50 +87,48 @@
 	density = 1
 	throwpass = 1
 
-	proc/roller(Q) //Could be edited to make the ball move further or roll realistically, but this is fine for now.
-		if(istype(Q, /obj/item/weapon/basketball))
+	proc/obj/structure/basketballhoop/deployed/roller(var/obj/item/weapon/basketball/Q) //Could be edited to make the ball move further or roll realistically, but this is fine for now.
+		if(istype(Q))
 			sleep(5)
 			step_away(Q,src,2)
-			return
-		else
 			return
 
 
 /obj/structure/basketballhoop/deployed/attackby(obj/item/W as obj, mob/user as mob)
 
 	if(isWrench(W))
-		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
+		playsound(loc, 'sound/items/Ratchet.ogg', 50, 1)
 		if(do_after(user, 20, src))
 			to_chat(user, "<span class='notice'>[user] uses [W] to carefully fold up [src].</span>")
-			new /obj/structure/basketballhoop(src.loc)
+			new /obj/structure/basketballhoop(loc)
 			qdel(src)
 			return
 
-	if(isCrowbar(W))
-		playsound(src.loc, 'sound/items/Crowbar.ogg', 50, 1)
+	else if(isCrowbar(W))
+		playsound(loc, 'sound/items/Crowbar.ogg', 50, 1)
 		to_chat(user, "<span class='notice'>[user] uses [W] to rotate [src].</span>")
 		src.set_dir(turn(src.dir,90))
 		return
 
 	else
-		if (istype(W, /obj/item/) && (get_dist(src,user)<2) && (user.a_intent == I_HURT)) // If the user is nearby and on harm intent they'll attempt to dunk.
+		if (istype(W) && (get_dist(src,user)<2) && (user.a_intent == I_HURT)) // If the user is nearby and on harm intent they'll attempt to dunk.
 
 			if(prob(20))
 				user.do_attack_animation(src)
 				user.drop_item()
-				playsound(src, 'sound/weapons/towelwhip.ogg', 90, 1)
+				playsound(loc, 'sound/weapons/towelwhip.ogg', 90, 1)
 				visible_message("<span class='notice'>[user] attempts to dunk the [W] into [src] but loses their grip!</span>")
 				roller(W)
 				return
 
-			if(prob(5))
+			else if(prob(5))
 				var/mob/living/carbon/human/H = user
 				user.do_attack_animation(src)
 				user.drop_item()
 				user.Weaken(3)
 				H.apply_damage(rand(10,20),BRUTE)
 				new /obj/effect/decal/cleanable/blood/drip(user.loc)
-				playsound(src, 'sound/weapons/punch4.ogg', 30, 1)
+				playsound(loc, 'sound/weapons/punch4.ogg', 30, 1)
 				visible_message("<span class='bad'>[user] attempts to dunk [W] into [src], but flounders mid-air!</span>")
 				visible_message("<span class='bad'>[user] hits the ground hard!</span>")
 				roller(W)
@@ -142,32 +138,30 @@
 				user.do_attack_animation(src)
 				user.drop_item()
 				W.loc = src.loc
-				playsound(src, 'sound/weapons/thudswoosh.ogg', 100, 1)
+				playsound(loc, 'sound/weapons/thudswoosh.ogg', 100, 1)
 				visible_message("<span class='good'>[user] dunks [W] into [src]!</span>")
 				sleep(3)
 				roller(W)
 				return
-		else
-			return
 
 
 /obj/structure/basketballhoop/deployed/CanPass(atom/movable/mover, turf/target, mob/user as mob, height=0, air_group=0)
 	var/obj/item/I = mover
-	if (istype(mover,/obj/item) && (get_dist(src,user)>=2))
+	if (istype(I) && (get_dist(src,user)>=2))
 
 		if(istype(I, /obj/item/projectile))
 			return
 
-		if(prob(60))
+		else if(prob(60))
 			I.loc = src.loc
-			playsound(src, 'sound/weapons/thudswoosh.ogg', 100, 1)
+			playsound(loc, 'sound/weapons/thudswoosh.ogg', 100, 1)
 			visible_message("<span class='good'>Swish! \The [I] lands in \the [src]!</span>", 3)
 			sleep(3)
 			roller(I)
 			return
 
 		else
-			playsound(src, 'sound/effects/bang.ogg', 50, 1)
+			playsound(loc, 'sound/effects/bang.ogg', 50, 1)
 			visible_message("<span class='notice'>\The [I] bounces off \the [src]'s rim!</span>", 3)
 			roller(I)
 			return 0

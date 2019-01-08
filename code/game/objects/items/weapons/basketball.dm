@@ -48,9 +48,8 @@
 	if(!anchored)
 		if(isWrench(W))
 			for(var/obj/structure/basketballhoop/deployed/H in orange(2, src)) // Prevents deploying hoops too closely togather.
-				if(istype(H))
-					to_chat(user, "<span class='notice'>There's already a basketball goal nearby, spread them further apart.</span>")
-					return // else by another name, smells..
+				to_chat(user, "<span class='notice'>There's already a basketball goal nearby, spread them further apart.</span>")
+				return
 			
 			playsound(loc, 'sound/items/Ratchet.ogg', 50, 1)
 			if(do_after(user, 20, src))

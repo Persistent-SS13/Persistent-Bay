@@ -200,7 +200,7 @@
 	build_path = /obj/item/clothing/under/rank/engineer
 
 /datum/design/item/autotailor/under/worksuits/eng_two
-	name = "Engineering altnerate jumpsuit"
+	name = "Engineering alternate jumpsuit"
 	id = "eng_two"
 	build_path = /obj/item/clothing/under/focal
 

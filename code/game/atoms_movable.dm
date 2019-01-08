@@ -272,6 +272,56 @@
 	if(new_z)
 		if(x <= TRANSITIONEDGE) 						// West
 			new_x = world.maxx - TRANSITIONEDGE - 1
+			var/datum/zlevel_data/data = SSmazemap.map_data["[z]"]
+			if(data && data.W_connect)
+				new_z = data.W_connect
+		else if (x >= (world.maxx - TRANSITIONEDGE))	// East
+			new_x = TRANSITIONEDGE + 1
+			var/datum/zlevel_data/data = SSmazemap.map_data["[z]"]
+			if(data && data.E_connect)
+				new_z = data.E_connect
+
+		else if (y <= TRANSITIONEDGE) 					// South
+			new_y = world.maxy - TRANSITIONEDGE - 1
+			var/datum/zlevel_data/data = SSmazemap.map_data["[z]"]
+			if(data && data.S_connect)
+				new_z = data.S_connect
+		else if (y >= (world.maxy - TRANSITIONEDGE))	// North
+			new_y = TRANSITIONEDGE + 1
+			var/datum/zlevel_data/data = SSmazemap.map_data["[z]"]
+			if(data && data.N_connect)
+				new_z = data.N_connect
+				
+		var/turf/T = locate(new_x, new_y, new_z)
+		if(T)
+			forceMove(T)
+
+
+/**
+/atom/movable/proc/touch_map_edge()
+	if(!simulated)
+		return
+
+	if(!z || (z in GLOB.using_map.sealed_levels))
+		return
+
+	if(!GLOB.universe.OnTouchMapEdge(src))
+		return
+
+	if(GLOB.using_map.use_overmap)
+		overmap_spacetravel(get_turf(src), src)
+		return
+
+	#define worldWidth 5
+	#define worldLength 5
+	#define worldHeight 2
+
+	var/new_x = x
+	var/new_y = y
+	var/new_z = z
+	if(new_z)
+		if(x <= TRANSITIONEDGE) 						// West
+			new_x = world.maxx - TRANSITIONEDGE - 1
 			new_z -= worldHeight
 			if(new_z % (worldHeight * worldWidth) <= 0 || new_z % (worldHeight * worldWidth) > (worldWidth - 1) * worldHeight)
 				new_z += worldWidth * worldHeight
@@ -297,7 +347,7 @@
 		var/turf/T = locate(new_x, new_y, new_z)
 		if(T)
 			forceMove(T)
-
+**/
 #undef worldWidth
 #undef worldLength
 #undef worldHeight

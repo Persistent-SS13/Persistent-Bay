@@ -491,6 +491,12 @@
 	id = "finemaid"
 	build_path = /obj/item/clothing/under/finemaid
 
+/datum/design/item/autotailor/under/worksuits/referee
+	name = "Referee Uniform"
+	id = "referee"
+	build_path = /obj/item/clothing/under/referee
+	materials = list("cloth" = 5000)
+
 //
 //Formalwear
 //

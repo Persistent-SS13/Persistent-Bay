@@ -812,6 +812,7 @@
 #include "code\game\objects\items\stacks\tiles\tile_types.dm"
 #include "code\game\objects\items\weapons\AI_modules.dm"
 #include "code\game\objects\items\weapons\autopsy.dm"
+#include "code\game\objects\items\weapons\basketball.dm"
 #include "code\game\objects\items\weapons\beachball.dm"
 #include "code\game\objects\items\weapons\candle.dm"
 #include "code\game\objects\items\weapons\cane.dm"

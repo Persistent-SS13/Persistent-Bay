@@ -95,7 +95,6 @@
 		new/datum/stack_recipe("conveyor belt assembly", /obj/item/conveyor_construct, 3, time = 15, one_per_turf = 1, on_floor =1), \
 		new/datum/stack_recipe("conveyor belt switch", /obj/item/conveyor_switch_construct, 1, time = 5, one_per_turf = 1, on_floor =1), \
 		))
-
 	recipes += new/datum/stack_recipe_list("Training Equipment",list( \
 		new/datum/stack_recipe("weight lifter", /obj/structure/fitness/weightlifter, 4, time = 50, one_per_turf = 1, on_floor = 1),\
 		))
@@ -377,6 +376,7 @@
 		new/datum/stack_recipe("hazard cone", 	/obj/item/weapon/caution/cone, 	2, time = 5, on_floor = 1),\
 		new/datum/stack_recipe("wetfloor sign",	/obj/item/weapon/caution, 		2, time = 5, on_floor = 1),\
 		))
+	recipes += new/datum/stack_recipe("basketball", /obj/item/weapon/basketball, 2, one_per_turf = 0, on_floor = 1)
 
 /material/wood/generate_recipes()
 	..()

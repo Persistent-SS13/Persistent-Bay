@@ -396,6 +396,7 @@ proc/TextPreview(var/string,var/len=40)
 	t = replacetext(t, "\[solcrest\]", "<img src = sollogo.png>")
 	t = replacetext(t, "\[terraseal\]", "<img src = terralogo.png>")
 	t = replacetext(t, "\[editorbr\]", "")
+	t = replacetext(t, "\[tab\]", "&nbsp;&nbsp;&nbsp;&nbsp;")
 	return t
 /proc/imgcode2html(t, var/image/img1, var/image/img2, var/mob/user)
 	if(img1)

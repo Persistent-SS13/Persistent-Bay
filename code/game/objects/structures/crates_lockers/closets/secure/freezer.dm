@@ -13,12 +13,7 @@
 
 /obj/structure/closet/secure_closet/freezer/meat
 	name = "meat fridge"
-	icon_state = "fridge1"
-	icon_closed = "fridge"
-	icon_locked = "fridge1"
-	icon_opened = "fridgeopen"
-	icon_broken = "fridgebroken"
-	icon_off = "fridgebroken"
+	closet_appearance = null
 /*
 /obj/structure/closet/secure_closet/freezer/meat/WillContain()
 	return list(
@@ -27,12 +22,8 @@
 */
 /obj/structure/closet/secure_closet/freezer/fridge
 	name = "refrigerator"
-	icon_state = "fridge1"
-	icon_closed = "fridge"
-	icon_locked = "fridge1"
-	icon_opened = "fridgeopen"
-	icon_broken = "fridgebroken"
-	icon_off = "fridgebroken"
+	icon = 'icons/obj/closets/fridge.dmi'
+	closet_appearance = null
 /*
 /obj/structure/closet/secure_closet/freezer/fridge/WillContain()
 	return list(
@@ -43,13 +34,9 @@
 */
 /obj/structure/closet/secure_closet/freezer/money
 	name = "secure locker"
-	icon_state = "fridge1"
-	icon_closed = "fridge"
-	icon_locked = "fridge1"
-	icon_opened = "fridgeopen"
-	icon_broken = "fridgebroken"
-	icon_off = "fridgebroken"
 	req_access = list()
+	icon = 'icons/obj/closets/fridge.dmi'
+	closet_appearance = null
 
 /obj/structure/closet/secure_closet/freezer/money/Initialize()
 	. = ..()

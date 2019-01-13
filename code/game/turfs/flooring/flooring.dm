@@ -228,6 +228,9 @@ GLOBAL_LIST_EMPTY(flooring_types)
 
 /decl/flooring/reinforced/shuttle/black
 	icon_base = "floor7"
+
+/decl/flooring/reinforced/shuttle/plates
+	icon_base = "vfloor"
 /*
 /decl/flooring/diona
 	name = "biomass"

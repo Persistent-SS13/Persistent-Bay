@@ -34,6 +34,7 @@
 	var/aiDisabledIdScanner = 0
 	var/aiHacking = 0
 	var/obj/machinery/door/airlock/closeOther = null
+	var/closeOtherDir = null
 	var/closeOtherId = null
 	var/lockdownbyai = 0
 	autoclose = 1
@@ -1611,6 +1612,34 @@ About the new airlock wires panel:
 
 	update_connections()
 	. = ..()
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/door/airlock/LateInitialize()
+	. = ..()
+	if (src.closeOtherDir)
+		cyclelinkairlock()
+
+/obj/machinery/door/airlock/proc/cyclelinkairlock()
+	if (closeOther)
+		closeOther.closeOther = null
+		closeOther = null
+	if (!closeOtherDir)
+		return
+	var/limit = world.view
+	var/turf/T = get_turf(src)
+	var/obj/machinery/door/airlock/FoundDoor
+	do
+		T = get_step(T, closeOtherDir)
+		FoundDoor = locate() in T
+		if (FoundDoor && FoundDoor.closeOtherDir != get_dir(FoundDoor, src))
+			FoundDoor = null
+		limit--
+	while(!FoundDoor && limit)
+	if (!FoundDoor)
+		log_world("### MAP WARNING, [src] at [src.x],[src.y],[src.z] failed to find a valid airlock to cyclelink with!")
+		return
+	FoundDoor.closeOtherDir = src
+	closeOther = FoundDoor
 
 /obj/machinery/door/airlock/Destroy()
 	qdel(wires)

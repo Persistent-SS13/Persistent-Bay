@@ -164,19 +164,22 @@
 	desc = "Stairs leading to another deck.  Not too useful if the gravity goes out."
 	icon = 'icons/obj/stairs.dmi'
 	density = 0
-	opacity = 0
+	opacity = 1
 	anchored = 1
 	plane = ABOVE_TURF_PLANE
 	layer = RUNE_LAYER
 
 	Initialize()
+		var/foundabove = FALSE
 		for(var/turf/turf in locs)
 			var/turf/simulated/open/above = GetAbove(turf)
-			if(!above)
-				warning("Stair created without level above: ([loc.x], [loc.y], [loc.z])")
-				return INITIALIZE_HINT_QDEL
-			if(!istype(above))
-				above.ChangeTurf(/turf/simulated/open)
+			if(above)
+				foundabove = TRUE
+				if(!istype(above))
+					above.ChangeTurf(/turf/simulated/open)
+		//if(!foundabove)
+		//	warning("Stair created without level above: ([loc.x], [loc.y], [loc.z])")
+		//	return INITIALIZE_HINT_QDEL
 		. = ..()
 
 	Uncross(atom/movable/A)

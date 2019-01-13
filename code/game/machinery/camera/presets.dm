@@ -31,6 +31,12 @@
 /obj/machinery/camera/network/refugee
 	network = list(NETWORK_REFUGEE)
 
+/obj/machinery/camera/network/nexus
+	network = list(NETWORK_NEXUS)
+
+/obj/machinery/camera/network/nexus_security
+	network = list(NETWORK_NEXUS_SECURITY)
+
 // EMP
 
 /obj/machinery/camera/emp_proof/Initialize()

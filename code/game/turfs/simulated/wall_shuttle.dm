@@ -6,7 +6,7 @@
 
 /turf/simulated/shuttle/wall
 	name = "wall"
-	icon_state = "wall1"
+	icon_state = "wall"
 	opacity = 1
 	density = 1
 	blocks_air = 1
@@ -36,6 +36,22 @@
 		corner_overlay.plane = plane
 		corner_overlay.layer = layer
 	overlays += corner_overlay
+
+/turf/simulated/shuttle/wall/dark
+	icon_state = "wall3"
+/turf/simulated/shuttle/wall/orange
+	icon_state = "pwall"
+/turf/simulated/shuttle/wall/vwall
+	icon_state = "vwall"
+/turf/simulated/shuttle/wall/roundedvwall
+	icon_state = "vwall_r"
+
+/turf/simulated/shuttle/wall/corner/orange
+	corner_overlay_state = "diagonalWall2"
+/turf/simulated/shuttle/wall/corner/dark
+	corner_overlay_state = "diagonalWall3"
+/turf/simulated/shuttle/wall/corner/vwall
+	corner_overlay_state = "diagonalVWall"
 
 //Predefined Shuttle Corners
 /turf/simulated/shuttle/wall/corner/smoothwhite
@@ -72,4 +88,40 @@
 /turf/simulated/shuttle/wall/corner/dark/se
 	dir = SOUTH|EAST
 /turf/simulated/shuttle/wall/corner/dark/sw
+	dir = SOUTH|WEST
+
+/turf/simulated/shuttle/wall/corner/blockorange
+	icon_state = "diagonalWall2"
+	corner_overlay_state = "diagonalWall2"
+/turf/simulated/shuttle/wall/corner/blockorange/ne
+	dir = NORTH|EAST
+/turf/simulated/shuttle/wall/corner/blockorange/nw
+	dir = NORTH|WEST
+/turf/simulated/shuttle/wall/corner/blockorange/se
+	dir = SOUTH|EAST
+/turf/simulated/shuttle/wall/corner/blockorange/sw
+	dir = SOUTH|WEST
+
+/turf/simulated/shuttle/wall/corner/vwall
+	icon_state = "corner_vwall"
+	corner_overlay_state = "corner_vwall"
+/turf/simulated/shuttle/wall/corner/vwall/ne
+	dir = NORTH|EAST
+/turf/simulated/shuttle/wall/corner/vwall/nw
+	dir = NORTH|WEST
+/turf/simulated/shuttle/wall/corner/vwall/se
+	dir = SOUTH|EAST
+/turf/simulated/shuttle/wall/corner/vwall/sw
+	dir = SOUTH|WEST
+
+/turf/simulated/shuttle/wall/corner/vwallrounded
+	icon_state = "corner_vwall_r"
+	corner_overlay_state = "corner_vwall_r"
+/turf/simulated/shuttle/wall/corner/vwallrounded/ne
+	dir = NORTH|EAST
+/turf/simulated/shuttle/wall/corner/vwallrounded/nw
+	dir = NORTH|WEST
+/turf/simulated/shuttle/wall/corner/vwallrounded/se
+	dir = SOUTH|EAST
+/turf/simulated/shuttle/wall/corner/vwallrounded/sw
 	dir = SOUTH|WEST

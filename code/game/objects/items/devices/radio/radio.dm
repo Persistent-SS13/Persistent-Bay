@@ -28,9 +28,6 @@
 	var/const/FREQ_LISTENING = 1
 	var/list/internal_channels
 
-	var/obj/item/weapon/cell/device/cell = null	//device cell slot, empty by default
-	var/power_usage = 875	//depletes after 50 messages with a standard cell
-
 	var/faction_uid = ""
 	var/public_mode = 1 // if this is on, the radio will send and recieve signals with no faction association
 
@@ -86,12 +83,6 @@
 	data["speaker"] = listening
 	data["freq"] = format_frequency(frequency)
 	data["rawfreq"] = num2text(frequency)
-	if(power_usage)
-		if(cell)
-			var/charge = round(cell.percent())
-			data["charge"] = charge ? "[charge]%" : "NONE"
-		else
-			data["charge"] = "No cell installed"
 	data["mic_cut"] = (wires.IsIndexCut(WIRE_TRANSMIT) || wires.IsIndexCut(WIRE_SIGNAL))
 	data["spk_cut"] = (wires.IsIndexCut(WIRE_RECEIVE) || wires.IsIndexCut(WIRE_SIGNAL))
 	var/datum/world_faction/connected_faction
@@ -225,14 +216,6 @@
 	if(href_list["nowindow"]) // here for pAIs, maybe others will want it, idk
 		return 1
 
-	if(href_list["remove_cell"])
-		if(cell)
-			var/mob/user = usr
-			user.put_in_hands(cell)
-			to_chat(user, "<span class='notice'>You remove [cell] from \the [src].</span>")
-			cell = null
-		return 1
-
 	if(.)
 		SSnano.update_uis(src)
 
@@ -285,12 +268,6 @@
 
 	if(!radio_connection)
 		set_frequency(frequency)
-
-	if(power_usage)
-		if(!cell)
-			return 0
-		if(!cell.checked_use(power_usage * CELLRATE))
-			return 0
 
 	/* Quick introduction:
 		This new radio system uses a very robust FTL signaling technology unoriginally
@@ -459,8 +436,6 @@
 		"verb" = verb
 	)
 	signal.frequency = connection.frequency // Quick frequency set
-	if(cell && cell.percent() < 20)	//messages will be less decipherable with a low battery charge
-		signal.data["compression"] = (80 - cell.percent()*3)
 	for(var/obj/machinery/telecomms/receiver/R in telecomms_list)
 		if(!R.loc)
 			telecomms_list -= R
@@ -568,19 +543,12 @@
 			else
 				user.show_message("<span class='notice'>\The [src] can no longer be modified or attached!</span>")
 			updateDialog()
-			return
-	if(!cell && power_usage && istype(W, /obj/item/weapon/cell/device) && user.unEquip(W, target = src))
-		to_chat(user, "<span class='notice'>You put [W] in \the [src].</span>")
-		cell = W
-		return
 
 /obj/item/device/radio/emp_act(severity)
 	broadcasting = 0
 	listening = 0
 	for (var/ch_name in channels)
 		channels[ch_name] = 0
-	if(cell)
-		cell.emp_act(severity)
 	..()
 
 /obj/item/device/radio/proc/recalculateChannels()
@@ -599,7 +567,6 @@
 	icon_state = "radio"
 	canhear_range = 0
 	subspace_transmission = 1
-	power_usage = 0
 
 /obj/item/device/radio/borg/after_load()
 	..()

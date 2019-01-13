@@ -4,7 +4,7 @@
 	gender = NEUTER
 	icon = 'icons/obj/bureaucracy.dmi'
 	icon_state = "canvas"
-	var/icon/icon_custom
+	var/image/icon_custom
 	var/list/pixel_list
 	var/datum/designer/design
 
@@ -23,9 +23,14 @@
 	var/offset_y = 1
 	ico.Shift(EAST, offset_x)
 	ico.Shift(SOUTH, offset_y)
-	icon_custom = ico
+	icon_custom = image(ico)
 	overlays.Cut()
-	overlays += icon_custom
+	overlays += icon_custom.icon
 
 	if (ckey)
 		designer_creator_ckey = ckey
+
+/obj/item/canvas/after_load()
+	if(icon_custom)
+		overlays += icon_custom.icon
+	..()

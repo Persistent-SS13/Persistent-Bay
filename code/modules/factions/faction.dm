@@ -1,8 +1,10 @@
 GLOBAL_LIST_EMPTY(all_world_factions)
 GLOBAL_LIST_EMPTY(all_business)
 
-// CONTRACTS
+GLOBAL_LIST_EMPTY(recent_articles)
 
+
+var/PriorityQueue/all_feeds
 
 /datum/proc/contract_signed(var/obj/item/weapon/paper/contract/contract)
 	return 0
@@ -23,7 +25,7 @@ GLOBAL_LIST_EMPTY(all_business)
 	var/created_by = ""
 	var/func = 1
 	icon_state = "contract"
-	
+
 /obj/item/weapon/paper/contract/proc/is_solvent()
 	if(signed_account)
 		if(signed_account.money < required_cash)
@@ -72,7 +74,7 @@ GLOBAL_LIST_EMPTY(all_business)
 		if(signed || !linked || approved || cancelled) return 1
 		var/obj/item/weapon/card/id/id = P
 		if(!id.valid) return 0
-		
+
 		if(required_cash)
 			var/datum/money_account/account = get_account(id.associated_account_number)
 			if(!account) return
@@ -126,7 +128,7 @@ GLOBAL_LIST_EMPTY(all_business)
 			signed_by = ""
 			signed_account = null
 		update_icon()
-	..()	
+	..()
 /obj/item/weapon/paper/contract/proc/cancel()
 	if(linked)
 		linked.contract_cancelled(src)
@@ -168,7 +170,7 @@ GLOBAL_LIST_EMPTY(all_business)
 	var/func = 1
 	var/change = ""
 
-/datum/proposal/proc/calculate_support()	
+/datum/proposal/proc/calculate_support()
 	var/new_support = 0
 	for(var/x in supporters)
 		new_support += text2num(supporters[x])
@@ -183,7 +185,7 @@ GLOBAL_LIST_EMPTY(all_business)
 	if(deny >= denyrequired)
 		denied()
 		return deny
-	
+
 /datum/proposal/proc/get_support()
 	var/new_support = 0
 	for(var/x in supporters)
@@ -210,11 +212,11 @@ GLOBAL_LIST_EMPTY(all_business)
 	deniers[name] = support
 	supporters -= name
 	calculate_support()
-	
+
 /datum/proposal/proc/remove_denial(var/name)
 	deniers -= name
-	calculate_support()	
-	
+	calculate_support()
+
 /datum/proposal/proc/approved()
 	if(connected_type == 1)
 		var/datum/world_faction/connected_faction = get_faction(connected_uid)
@@ -230,46 +232,121 @@ GLOBAL_LIST_EMPTY(all_business)
 	else
 		var/datum/small_business/connected_business = get_business(connected_uid)
 		connected_business.proposal_denied(src)
-	
-		
+
+
 // business
+
+
+/datum/NewsStory/proc/allowed(var/real_name)
+	if(real_name in purchased)
+		return 1
+	if(parent.parent.parent.has_access(real_name, "Newsfeed"))
+		return 1
+	return 0
+
+
+/datum/NewsStory
+	var/name = "None" // headline
+	var/image/image1
+	var/image/image2
+	var/body = ""
+	var/author = ""
+	var/true_author = ""
+	var/publish_date = 0
+	
+	var/list/purchased = list()
+
+	var/datum/NewsIssue/parent
+	
+	var/uid
+
+/datum/NewsIssue
+	var/name = "None"
+	var/list/stories = list()
+	var/publish_date
+	var/publisher = ""
+
+	var/datum/NewsFeed/parent
+	
+	var/uid
+	
+/datum/NewsFeed
+	var/name = "None"
+	var/visible = 0
+	var/datum/NewsIssue/current_issue
+	var/list/all_issues = list()
+	var/per_article = 20
+	var/per_issue = 60
+	var/announcement = "Breaking News!"
+	var/last_published = 0
+	
+	
+	var/datum/small_business/parent
+
+/datum/NewsFeed/New()
+	current_issue = new()
+	current_issue.parent = src
+	current_issue.name = "[name] News Issue"
+	all_feeds.Enqueue(src)
+/datum/NewsFeed/proc/publish_issue()
+	for(var/obj/machinery/newscaster/caster in allCasters)
+		caster.newsAlert("[name] just published a full issue! [current_issue.name]")
+	all_issues |= current_issue
+	all_feeds.Enqueue(current_issue)
+	current_issue = new()
+	current_issue.parent = src
+	current_issue.name = "[name] News Issue"
+	last_published = current_issue.publish_date
+	all_feeds.ReSort(src)
+	
+/datum/NewsFeed/proc/publish_story(var/datum/NewsStory/story)
+	current_issue.stories |= story
+	story.parent = current_issue
+	for(var/obj/machinery/newscaster/caster in allCasters)
+		caster.newsAlert("(From [name]) [announcement] ([story.name])")
+	GLOB.recent_articles |= story
+	
 
 /datum/small_business
 	var/name = "" // can should never be changed and must be unique
 	var/list/stock_holders = list() // Format list("real_name" = numofstocks) adding up to 100
 	var/list/employees = list() // format list("real_name" = employee_data)
-	
+
+	var/datum/NewsFeed/feed
+
 	var/datum/money_account/central_account
-	
+
 	var/ceo_name = ""
 	var/ceo_payrate = 100
 	var/ceo_title
 	var/ceo_dividend = 0
-	
+
 	var/stock_holders_dividend = 0
-	
-	
+
+
 	var/list/debts = list() // format list("Ro Laren" = "550") real_name = debt amount
 	var/list/unpaid = list() // format list("Ro Laren" = numofshifts)
-		
+
 	var/list/connected_laces = list()
-	
+
 	var/tasks = ""
 	var/sales_short = 0
-	
+
 	var/list/sales_long = list() // sales over the last 6 active hours
 	var/list/proposals = list()
 	var/list/proposals_old = list()
-	
+
 	var/tax_network = ""
 	var/last_id_print = 0
 	var/last_expense_print = 0
 	var/last_balance = 0
 	var/status = 1 // 1 = opened, 0 = closed
-		
+
 /datum/small_business/New()
 	central_account = create_account(name, 0)
-
+	feed = new()
+	feed.name = name
+	feed.parent = src
 /datum/small_business/proc/get_debt()
 	var/debt = 0
 	for(var/x in debts)
@@ -281,7 +358,7 @@ GLOBAL_LIST_EMPTY(all_business)
 		if(!money_transfer(central_account,x,"Postpaid Payroll",debt))
 			return 0
 		debts -= x
-	
+
 /datum/small_business/contract_signed(var/obj/item/weapon/paper/contract/contract)
 	if(get_stocks(contract.created_by) < contract.ownership)
 		contract.cancel()
@@ -296,7 +373,7 @@ GLOBAL_LIST_EMPTY(all_business)
 		return 1
 
 /datum/small_business/proc/transfer_stock(var/owner, var/new_owner, var/amount)
-	var/holding = get_stocks(owner) 
+	var/holding = get_stocks(owner)
 	if(holding < amount)
 		return 0
 	if(holding == amount)
@@ -313,20 +390,20 @@ GLOBAL_LIST_EMPTY(all_business)
 			stock_holders[new_owner] = (old_holding + amount)
 		else
 			stock_holders[new_owner] = amount
-			
+
 /datum/small_business/proc/has_proposal(var/real_name)
 	for(var/datum/proposal/proposal in proposals)
 		if(proposal.started_by == real_name)
 			return 1
 	return 0
-		
 
-	
+
+
 /datum/small_business/proc/close()
 	for(var/obj/item/organ/internal/stack/stack in connected_laces)
 		clock_out(stack)
 	status = 0
-	
+
 /datum/small_business/proc/open()
 	status = 1
 /datum/small_business/proc/is_allowed(var/real_name)
@@ -336,11 +413,11 @@ GLOBAL_LIST_EMPTY(all_business)
 		return 1
 	if(real_name == ceo_name)
 		return 1
-		
+
 /datum/small_business/proc/is_stock_holder(var/real_name)
 	if(real_name in stock_holders)
-		return 1 
-		
+		return 1
+
 /datum/small_business/proc/get_stocks(var/real_name)
 	if(real_name in stock_holders)
 		return text2num(stock_holders[real_name])
@@ -349,7 +426,7 @@ GLOBAL_LIST_EMPTY(all_business)
 	for(var/obj/item/organ/internal/stack/stack in connected_laces)
 		if(stack.get_owner_name() == real_name) return 1
 	return 0
-	
+
 /datum/small_business/proc/clock_in(var/obj/item/organ/internal/stack/stack)
 	if(!stack) return
 	connected_laces |= stack
@@ -375,7 +452,7 @@ GLOBAL_LIST_EMPTY(all_business)
 				var/old_name = ceo_name
 				ceo_name = ""
 				update_ids(old_name)
-				
+
 		if(3)
 			ceo_title = proposal.change
 			if(ceo_name && ceo_name != "")
@@ -386,36 +463,36 @@ GLOBAL_LIST_EMPTY(all_business)
 			ceo_dividend = proposal.change
 		if(6)
 			stock_holders_dividend = proposal.change
-			
+
 	if(proposals_old.len > 10)
 		central_account.transaction_log.Cut(1,2)
 	proposals -= proposal
 	proposals_old += "*APPROVED* [proposal.name](Started by [proposal.started_by])"
-	
+
 /datum/small_business/proc/proposal_denied(var/datum/proposal/proposal)
 	proposals -= proposal
 	proposals_old += "*DENIED* [proposal.name] (Started by [proposal.started_by])"
-	
+
 /datum/small_business/proc/proposal_cancelled(var/datum/proposal/proposal)
 	proposals -= proposal
 	proposals_old += "*CANCELLED* [proposal.name] (Started by [proposal.started_by])"
 
-	
+
 /datum/employee_data
 	var/name = "" // real_name of the employee
 	var/job_title = "New Hire"
 	var/pay_rate = 25 // hourly rate of pay
-	var/list/accesses = list() 
+	var/list/accesses = list()
 	var/expense_limit = 0
 	var/expenses = 0
-	
+
 /datum/small_business/proc/get_expense_limit(var/real_name)
 	if(real_name == ceo_name) return 100000
 	if(real_name in employees)
 		var/datum/employee_data/employee = employees[real_name]
 		return employee.expense_limit
 	return 0
-	
+
 /datum/small_business/proc/get_expenses(var/real_name)
 	if(real_name == ceo_name) return 0
 	if(real_name in employees)
@@ -428,8 +505,8 @@ GLOBAL_LIST_EMPTY(all_business)
 		var/datum/employee_data/employee = employees[real_name]
 		employee.expenses += amount
 		return 1
-	return 0	
-	
+	return 0
+
 /datum/small_business/proc/get_employee_data(var/real_name)
 	if(real_name in employees)
 		var/datum/employee_data/employee = employees[real_name]
@@ -438,8 +515,8 @@ GLOBAL_LIST_EMPTY(all_business)
 /datum/small_business/proc/is_employee(var/real_name)
 	if(real_name in employees)
 		return 1
-	return 0	
-	
+	return 0
+
 /datum/small_business/proc/add_employee(var/real_name)
 	if(real_name in employees)
 		return 0
@@ -447,18 +524,18 @@ GLOBAL_LIST_EMPTY(all_business)
 	employee.name = real_name
 	employees[real_name] = employee
 	return 1
-	
+
 /datum/small_business/proc/get_title(var/real_name)
 	if(real_name in employees)
 		var/datum/employee_data/employee = employees[real_name]
 		return employee.job_title
-	return 0	
-	
+	return 0
+
 /datum/small_business/proc/get_access(var/real_name)
 	if(real_name in employees)
 		var/datum/employee_data/employee = employees[real_name]
 		return employee.accesses
-	return 0	
+	return 0
 
 /datum/small_business/proc/has_access(var/real_name, access)
 	if(real_name == ceo_name) return 1
@@ -466,9 +543,9 @@ GLOBAL_LIST_EMPTY(all_business)
 		var/datum/employee_data/employee = employees[real_name]
 		if(access in employee.accesses)
 			return 1
-	return 0	
-	
-	
+	return 0
+
+
 /datum/small_business/proc/pay_tax(var/amount)
 	if(!tax_network || tax_network == "") return 0
 	var/datum/world_faction/connected_faction = get_faction(tax_network)
@@ -477,29 +554,29 @@ GLOBAL_LIST_EMPTY(all_business)
 	connected_faction.central_account.do_transaction(Te)
 	Te = new("Sales Tax to [connected_faction.name]", "Tax", round(-amount/100*connected_faction.tax_rate), "Tax Network")
 	central_account.do_transaction(Te)
-	
+
 /datum/small_business/proc/pay_export_tax(var/amount, var/datum/world_faction/connected_faction)
 	var/datum/transaction/Te = new("Export from [name]", "Tax", round(amount/100*connected_faction.export_profit), "Tax Network")
 	connected_faction.central_account.do_transaction(Te)
 	Te = new("Export Tax to [connected_faction.name]", "Tax", round(-amount/100*connected_faction.export_profit), "Tax Network")
 	central_account.do_transaction(Te)
 	return (amount/100*connected_faction.export_profit)
-	
+
 /proc/get_business(var/name)
 	var/datum/small_business/found_faction
 	for(var/datum/small_business/fac in GLOB.all_business)
-		if(fac.name == name) 
-			found_faction = fac 
+		if(fac.name == name)
+			found_faction = fac
 			break
 	return found_faction
 
-/proc/get_businesses(var/real_name)	
+/proc/get_businesses(var/real_name)
 	var/list/lis = list()
 	for(var/datum/small_business/fac in GLOB.all_business)
-		if(fac.is_allowed(real_name)) lis |= fac		
+		if(fac.is_allowed(real_name)) lis |= fac
 	return lis
-	
-	
+
+
 // FACTIONs
 /proc/get_faction(var/name, var/password)
 	if(password)
@@ -557,18 +634,28 @@ GLOBAL_LIST_EMPTY(all_business)
 	var/list/pending_orders = list()
 
 	var/list/cryo_networks = list() // "default" is always a cryo_network
-  
+
 	var/list/unpaid = list()
-	
+
 	var/tax_rate = 10
 	var/import_profit = 10
 	var/export_profit = 20
-	
+
 	var/hiring_policy = 0 // if hiring_policy, anyone with reassignment can add people to the network, else only people in command a command category with reassignment can add people
 	var/last_expense_print = 0
+
+	
+	
+	
+/datum/world_faction/democratic
+	
+/datum/world_faction/business
+
+
+
 	
 
-/datum/world_faction/after_load()	
+/datum/world_faction/after_load()
 	if(!debts)
 		debts = list()
 	..()
@@ -625,7 +712,7 @@ GLOBAL_LIST_EMPTY(all_business)
 	all_access |= "18"
 	all_access |= "19"
 	all_access |= "20"
-	
+
 /datum/world_faction/proc/rebuild_all_assignments()
 	all_assignments = list()
 	for(var/datum/assignment_category/assignment_category in assignment_categories)
@@ -710,18 +797,18 @@ GLOBAL_LIST_EMPTY(all_business)
 		if(user_rank >= target_rank) return 1
 		else return 0
 	return 0
-	
-	
-	
+
+
+
 /datum/world_faction/proc/create_faction_account()
 	central_account = create_account(name, 0)
-	
+
 /datum/world_faction/proc/proposal_approved(var/datum/proposal/proposal)
 	return 0
 
 /datum/world_faction/proc/proposal_denied(var/datum/proposal/proposal)
 	return 0
-	
+
 /datum/assignment_category
 	var/name = ""
 	var/list/assignments = list()
@@ -745,7 +832,7 @@ GLOBAL_LIST_EMPTY(all_business)
 	var/duty_able = 1
 	var/cryo_net = "default"
 	var/any_assign = 0 // this makes it so that the assignment can be assigned by anyone with the reassignment access,
-	
+
 /datum/accesses
 	var/list/accesses = list()
 	var/expense_limit = 0
@@ -760,22 +847,22 @@ GLOBAL_LIST_EMPTY(all_business)
 	name = "Core Access"
 
 /datum/access_category/core/New()
-	accesses["1"] = "Logistics Control, Leadership"
-	accesses["2"] = "Command Machinery"
-	accesses["3"] = "Promotion/Demotion Vote"
-	accesses["4"] = "Reassignment"
-	accesses["5"] = "Edit Employment Records"
-	accesses["6"] = "Reset Expenses"
-	accesses["7"] = "Suspension/Termination"
-	accesses["8"] = "Engineering Programs"
-	accesses["9"] = "Medical Programs"
-	accesses["10"] = "Security Programs"
-	accesses["11"] = "Networking Programs"
-	accesses["12"] = "Lock Electronics"
-	accesses["13"] = "Import Approval"
-	accesses["14"] = "Invoicing & Exports"
-	accesses["15"] = "Science Machinery & Programs"
-	accesses["16"] = "Shuttle Control & Access"
+	accesses["100"] = "Logistics Control, Leadership"
+	accesses["101"] = "Command Machinery"
+	accesses["102"] = "Promotion/Demotion Vote"
+	accesses["103"] = "Reassignment"
+	accesses["104"] = "Edit Employment Records"
+	accesses["105"] = "Reset Expenses"
+	accesses["106"] = "Suspension/Termination"
+	accesses["107"] = "Engineering Programs"
+	accesses["108"] = "Medical Programs"
+	accesses["109"] = "Security Programs"
+	accesses["110"] = "Networking Programs"
+	accesses["111"] = "Lock Electronics"
+	accesses["112"] = "Import Approval"
+	accesses["113"] = "Invoicing & Exports"
+	accesses["114"] = "Science Machinery & Programs"
+	accesses["115"] = "Shuttle Control & Access"
 
 /obj/faction_spawner
 	name = "Name to start faction with"
@@ -828,3 +915,133 @@ GLOBAL_LIST_EMPTY(all_business)
 	password = "Hope97"
 	network_name = "freenet"
 	network_uid = "freenet"
+
+	
+/datum/beacon_objective
+	var/name = "Objective name"
+	var/payout = 0 // how much to pay upon completion
+	var/req_level = 0 // required level of the beacon
+
+	var/required = 10 // How much of whatever is required to fill the objective
+	
+	
+	
+/datum/beacon_objective/profit
+	name = "Have X$$ in your corperate account, an increase of Y$$."
+	
+/datum/beacon_objective/sales_total
+	name = "Do X$$ in sales to other residents."
+	
+/datum/beacon_objective/sales_unique
+	name = "Do sales with X unique people."
+
+/datum/beacon_objective/export
+	name = "Deliver X units of Y via telepad."
+	
+/datum/beacon_objective/survey_beacon
+	name = "Survey the sensor beacon X located in zone Y."
+
+/datum/beacon_objective/publish_articles
+	name = "Publish X amount of quality articles."
+
+/datum/beacon_objective/article_sales
+	name = "Have your articles purchased X amount of time."
+	
+/datum/beacon_objective/listeners
+	name = "Have X amount of patrons in the vicinity of one of your music emitters."
+	
+/datum/beacon_objective/reaction
+	name = "Produce X units of Y in a chemmaster."
+
+/datum/beacon_objective/drugs
+	name = "Produce X 10 unit Ys (patches, pills) in a chemmaster."
+	
+/datum/beacon_objective/production
+	name = "Produce X amount of objects in a Z (fabricator type)."
+	
+/datum/beacon_objective/recycling
+	name = "Break down X objects in a recycling machine."
+
+/datum/beacon_objective/cleaning
+	name = "Have a clocked in employee clean X amount of tiles."
+
+/datum/beacon_objective/unlock_designs
+	name = "Unlock X amount of designs."
+	
+/datum/beacon_objective/produce_designs
+	name = "Produce X amount of design disks."
+
+/datum/beacon_objective/farm
+	name = "Grow X amount of Y."
+	
+/datum/beacon_objective/farm/food
+	name = "Grow X amount of Y (food)."
+
+/datum/beacon_objective/farm/drugs
+	name = "Grow X amount of Y (drugs)."
+
+/datum/beacon_objective/add_books
+	name = "Add X unique and quality books to your library network."
+
+/datum/beacon_objective/bind_books
+	name = "Have X amount of books printed off your library network."
+	
+/datum/beacon_objective/body_scans
+	name = "Have scan X unique indivduals in a body scanner."
+	
+	
+
+	
+	
+
+/datum/business_module/minor/journalism
+	
+/datum/business_module/minor/art
+
+/datum/business_module/minor/medical_simple
+
+/datum/business_module/minor/mining_simple
+
+/datum/business_module/minor/exploration
+
+/datum/business_module/minor/catering
+
+/datum/business_module/minor/retail
+
+/datum/business_module/minor/manufacturing_simple
+
+/datum/business_module/minor/engineering_simple
+
+/datum/business_module/minor/chemistry
+
+/datum/business_module/minor/research_simple
+
+/datum/business_module/minor/security_simple
+
+/datum/business_module/minor/janitorial
+
+
+/datum/business_module/major/medical
+
+/datum/business_module/major/mining
+
+/datum/business_module/major/manufacturing
+
+/datum/business_module/major/research
+
+/datum/business_module/major/security
+
+
+	
+/obj/machinery/economic_beacon
+	name = "Economic Beacon"
+	anchored = 1
+	var/datum/world_faction/holder
+	var/holder_uid
+	
+	var/list/connected_orgs = list()
+	var/list/connected_orgs_uids = list()
+	var/completed_objectives = 0
+	
+	
+	

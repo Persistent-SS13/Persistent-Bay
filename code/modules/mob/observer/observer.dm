@@ -62,7 +62,7 @@ mob/observer/check_airflow_movable()
 /proc/updateallghostimages()
 	for (var/mob/observer/ghost/O in GLOB.player_list)
 		O.updateghostimages()
-
+/**
 /mob/observer/touch_map_edge()
 	if(z in GLOB.using_map.sealed_levels)
 		return
@@ -86,3 +86,4 @@ mob/observer/check_airflow_movable()
 		throwing = 0
 		to_chat(src, "<span class='notice'>You cannot move further in this direction.</span>")
 
+**/

@@ -107,6 +107,7 @@
 	recipes += new/datum/stack_recipe("canister", /obj/machinery/portable_atmospherics/canister, 10, time = 15, one_per_turf = 1, on_floor = 1)
 	recipes += new/datum/stack_recipe("cannon frame", /obj/item/weapon/cannonframe, 10, time = 15, one_per_turf = 0, on_floor = 0)
 	recipes += new/datum/stack_recipe("meat spike frame", /obj/structure/kitchenspike_frame, 4, time = 40, one_per_turf = 1, on_floor = 1)
+	recipes += new/datum/stack_recipe("basketball hoop", /obj/structure/basketballhoop, 10, time = 40, one_per_turf = 1, on_floor = 1)
 
 /material/plasteel/generate_recipes()
 	..()
@@ -177,6 +178,8 @@
 		recipes += new/datum/stack_recipe("Alien target", /obj/item/target/alien, 6, on_floor = 1, time = 2), \
 		recipes += new/datum/stack_recipe("Agent Target", /obj/item/target/syndicate, 8, on_floor = 1, time = 2), \
 		))
+	recipes += new/datum/stack_recipe("basketball", /obj/item/weapon/basketball, 2, one_per_turf = 0, on_floor = 1)
+
 /material/wood/generate_recipes()
 	..()
 	recipes += new/datum/stack_recipe("Ore Box", /obj/structure/ore_box, 5, time = 30, one_per_turf = 1)

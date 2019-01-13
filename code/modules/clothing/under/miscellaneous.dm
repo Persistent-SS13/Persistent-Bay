@@ -791,15 +791,15 @@
 	name = "black tuxedo"
 	desc = "A shiny black suit made of synthread. It has a flower pinned to it."
 	icon_state = "blacktux"
-	worn_state = "blacktux"	
-	
+	worn_state = "blacktux"
+
 /obj/item/clothing/under/bouqet
 	name = "bouqet"
 	desc = "A shiny black suit made of synthread. It has a flower pinned to it."
 	icon_state = "bouqet"
 	item_state = "bouqet"
-	worn_state = "bouqet"		
-	
+	worn_state = "bouqet"
+
 /obj/item/clothing/under/maydress
 	name = "colorful wedding dress"
 	desc = "A beautiful gown specially ordered and tailored. Embroidered along the inside of the dress, in cursive, May Crystalia."
@@ -811,27 +811,27 @@
 	desc = "A beautiful weddubg gown specially tailored with purple highlights."
 	icon_state = "koudress"
 	worn_state = "koudress"
-	
+
 /obj/item/clothing/under/purpfrill
 	name = "purple fancy dress"
 	desc = "A fancy deep-purple dress."
 	icon_state = "purpfrill"
 	worn_state = "purpfrill"
-	
+
 /obj/item/clothing/under/purpleweddingtux
 	name = "purple wedding tuxedo"
 	desc = "A tuxedo tailored for a wedding with purple detailing."
 	icon_state = "weddingtux"
 	worn_state = "weddingtux"
 
-	
+
 /obj/item/clothing/under/weddingfrill
 	name = "green wedding dress"
 	desc = "A frilly green wedding dress."
 	icon_state = "weddingfrill"
 	worn_state = "weddingfrill"
-		
-	
+
+
 /obj/item/clothing/under/tulleddress
 	name = "Silk Dress"
 	desc = "A silk dress padded with tulle fabric. Sleek, modest, and beauty all in one article."
@@ -843,14 +843,16 @@
 	desc = "A form fitted bridesmaid dress made of purple silk. Really shows those curves."
 	icon_state = "purplemaid"
 	worn_state = "purplemaid"
-	
+
 /obj/item/clothing/under/greendress
 	name = "Green dress"
 	desc = "A green dress."
 	icon_state = "greendress"
 	worn_state = "greendress"
-		
-	
-	
-	
-	
+
+/obj/item/clothing/under/referee
+	name = "Referee Uniform"
+	desc = "A uniform for officiating sporting events."
+	item_state = "bl_suit"
+	icon_state = "referee"
+	worn_state = "referee"

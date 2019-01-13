@@ -200,7 +200,7 @@
 	build_path = /obj/item/clothing/under/rank/engineer
 
 /datum/design/item/autotailor/under/worksuits/eng_two
-	name = "Engineering altnerate jumpsuit"
+	name = "Engineering alternate jumpsuit"
 	id = "eng_two"
 	build_path = /obj/item/clothing/under/focal
 
@@ -490,6 +490,12 @@
 	name = "Maid uniform - fine"
 	id = "finemaid"
 	build_path = /obj/item/clothing/under/finemaid
+
+/datum/design/item/autotailor/under/worksuits/referee
+	name = "Referee Uniform"
+	id = "referee"
+	build_path = /obj/item/clothing/under/referee
+	materials = list("cloth" = 5000)
 
 //
 //Formalwear

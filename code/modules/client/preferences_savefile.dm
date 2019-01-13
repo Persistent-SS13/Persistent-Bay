@@ -6,6 +6,17 @@
 	var/path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 	return path
 
+/proc/beta_path(ckey,filename="preferences.sav")
+	if(!ckey) return
+	var/path = "exports/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
+	return path
+
+/proc/exit_path(ckey,filename="preferences.sav")
+	if(!ckey)	return
+	var/path = "exits/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
+	return path
+
+
 /datum/preferences/proc/load_preferences()
 	path = load_path(client.ckey)
 	if(!fexists(path))		return 0

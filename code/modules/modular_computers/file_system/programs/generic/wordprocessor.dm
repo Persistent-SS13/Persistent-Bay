@@ -74,6 +74,7 @@
 	if(href_list["PRG_taghelp"])
 		to_chat(usr, "<span class='notice'>The hologram of a googly-eyed paper clip helpfully tells you:</span>")
 		var/help = {"
+		\[tab\] : Indents the text.
 		\[br\] : Creates a linebreak.
 		\[center\] - \[/center\] : Centers the text.
 		\[h1\] - \[/h1\] : First level heading.

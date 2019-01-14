@@ -60,7 +60,7 @@ var/list/ventcrawl_machinery = list(
 	return ..()
 
 /mob/living/simple_animal/spiderbot/is_allowed_vent_crawl_item(var/obj/item/carried_item)
-	if(carried_item in list(held_item, radio, connected_ai, cell, camera, mmi))
+	if(carried_item in list(held_item, radio, connected_ai, cell, camera, lmi))
 		return 1
 	return ..()
 

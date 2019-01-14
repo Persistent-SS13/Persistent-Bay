@@ -439,11 +439,93 @@ Class Procs:
 /obj/machinery/proc/get_transmitter()
 	return src.GetExtension(RADIO_TRANSMITTER_TYPE)
 
-/obj/machinery/proc/create_transmitter(var/id, var/filter = RADIO_DEFAULT, var/range = null)
+/obj/machinery/proc/transmitter_ready()
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	return T && T.is_connected()
+
+/obj/machinery/proc/create_transmitter(var/id, var/filter = RADIO_DEFAULT, var/range = null, var/filterout = null)
 	if(has_transmitter())
 		var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
 		qdel(T)
-	set_extension(src, /datum/extension/interactive/radio_transmitter, /datum/extension/interactive/radio_transmitter, id = id, range = range, filter = filter)
+	set_extension(src, /datum/extension/interactive/radio_transmitter, /datum/extension/interactive/radio_transmitter, id = id, range = range, filter = filter, filterout = filterout)
+	log_debug("Created radio transmitter for [src]. id: [id], filter: [filter], range: [range], filterout: [filterout]")
+
+/obj/machinery/proc/delete_transmitter()
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		qdel(T)
+
+/obj/machinery/proc/set_radio_frequency(var/freq as num)
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.set_frequency(freq)
+
+/obj/machinery/proc/get_radio_frequency()
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.get_frequency()
+	return null
+
+/obj/machinery/proc/set_radio_id(var/id as text)
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.set_id(id)
+
+/obj/machinery/proc/get_radio_id()
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.get_id()
+	return null
+
+/obj/machinery/proc/set_radio_filter(var/filter as text)
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.set_filter(filter)
+
+/obj/machinery/proc/set_radio_filter_out(var/filter as text)
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.set_filter_out(filter)
+
+/obj/machinery/proc/get_radio_filter()
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.get_filter()
+	return null
+
+/obj/machinery/proc/get_radio_filter_out()
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.get_filter_out()
+	return null
+
+/obj/machinery/proc/set_radio_range(var/range as num)
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.set_range(range)
+
+/obj/machinery/proc/get_radio_range()
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.get_range()
+	return null
+
+/obj/machinery/proc/post_signal(var/list/data, var/outfilter = null)
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(!T)
+		return null
+	var/datum/signal/signal = new
+	signal.transmission_method = TRANSMISSION_RADIO //radio signal
+	signal.source = src
+	signal.data = data.Copy()
+	T.post_signal(signal, outfilter)
+	return TRUE
+
+//Signals received go straight to the machine's topic handling, so handling radio signal is seamless.
+/obj/machinery/receive_signal(var/datum/signal/signal, var/receive_method, var/receive_param)
+	if(!signal || !has_transmitter())
+		return
+	return OnTopic(usr, signal.data)
 
 /obj/machinery/proc/make_loc_string_id(var/prefix)
 	return "[prefix]([x]:[y]:[z])"

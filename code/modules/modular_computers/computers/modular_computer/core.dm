@@ -57,16 +57,59 @@
 
 /obj/item/modular_computer/New()
 	START_PROCESSING(SSobj, src)
-	install_default_hardware()
-	if(hard_drive)
-		install_default_programs()
+	..()
+	ADD_SAVED_VAR(enabled)
+	ADD_SAVED_VAR(screen_on)
+	ADD_SAVED_VAR(active_program)
+	ADD_SAVED_VAR(bsod)
+	ADD_SAVED_VAR(idle_threads)
+	ADD_SAVED_VAR(processor_unit)
+	ADD_SAVED_VAR(network_card)
+	ADD_SAVED_VAR(hard_drive)
+	ADD_SAVED_VAR(battery_module)
+	ADD_SAVED_VAR(card_slot)
+	ADD_SAVED_VAR(nano_printer)
+	ADD_SAVED_VAR(portable_drive)
+	ADD_SAVED_VAR(ai_slot)
+	ADD_SAVED_VAR(tesla_link)
+	ADD_SAVED_VAR(scanner)
+	ADD_SAVED_VAR(logistic_processor)
+	ADD_SAVED_VAR(stored_pen)
+
+	ADD_SKIP_EMPTY(active_program)
+	ADD_SKIP_EMPTY(idle_threads)
+	ADD_SKIP_EMPTY(processor_unit)
+	ADD_SKIP_EMPTY(network_card)
+	ADD_SKIP_EMPTY(hard_drive)
+	ADD_SKIP_EMPTY(battery_module)
+	ADD_SKIP_EMPTY(card_slot)
+	ADD_SKIP_EMPTY(nano_printer)
+	ADD_SKIP_EMPTY(portable_drive)
+	ADD_SKIP_EMPTY(ai_slot)
+	ADD_SKIP_EMPTY(tesla_link)
+	ADD_SKIP_EMPTY(scanner)
+	ADD_SKIP_EMPTY(logistic_processor)
+	ADD_SKIP_EMPTY(stored_pen)
+
+/obj/item/modular_computer/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		install_default_hardware()
+		if(hard_drive)
+			install_default_programs()
+		if(scanner)
+			scanner.do_after_install(null, src)
+		if(stores_pen && ispath(stored_pen))
+			stored_pen = new stored_pen(src)
 	update_icon()
 	update_verbs()
-	..()
+	update_name()
 
 /obj/item/modular_computer/Destroy()
 	kill_program(1)
 	STOP_PROCESSING(SSobj, src)
+	if(istype(stored_pen))
+		QDEL_NULL(stored_pen)
 	for(var/obj/item/weapon/computer_hardware/CH in src.get_all_components())
 		uninstall_component(null, CH)
 		qdel(CH)
@@ -93,7 +136,7 @@
 			overlays.Add(icon_state_screensaver)
 		set_light(0)
 		return
-	set_light(light_strength)
+	set_light(0.2, 0.1, light_strength)
 	if(active_program)
 		overlays.Add(active_program.program_icon_state ? active_program.program_icon_state : icon_state_menu)
 	else
@@ -279,3 +322,36 @@
 		autorun.stored_data = null
 	else
 		autorun.stored_data = program
+
+/obj/item/modular_computer/GetIdCard()
+	if(card_slot && card_slot.can_broadcast && istype(card_slot.stored_card))
+		return card_slot.stored_card
+
+/obj/item/modular_computer/proc/update_name()
+	return
+
+/obj/item/modular_computer/proc/get_cell()
+	if(battery_module)
+		return battery_module.get_cell()
+
+/obj/item/modular_computer/proc/has_terminal(mob/user)
+	for(var/datum/terminal/terminal in terminals)
+		if(terminal.get_user() == user)
+			return terminal
+
+/obj/item/modular_computer/proc/open_terminal(mob/user)
+	if(!enabled)
+		return
+	if(has_terminal(user))
+		return
+	LAZYADD(terminals, new /datum/terminal/(user, src))
+
+/obj/item/modular_computer/proc/handle_updates(shutdown_after)
+	updating = TRUE
+	update_progress = 0
+	update_postshutdown = shutdown_after
+
+/obj/item/modular_computer/proc/process_updates()
+	if(update_progress < updates)
+		update_progress += rand(0, 2500)
+		return

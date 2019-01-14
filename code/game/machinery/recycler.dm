@@ -60,7 +60,7 @@ var/const/OUTPUT_DELAY = 5 SECONDS //intervals between material being outputed b
 /obj/machinery/recycler/proc/update_sound()
 	if(operable() && !safety_mode)
 		if(!sound_looping)
-			sound_looping = sound_player.PlayLoopingSound(src, soundid, sound_idle, 25, 5, 2)
+			sound_looping = GLOB.sound_player.PlayLoopingSound(src, soundid, sound_idle, 25, 5, 2)
 		else
 			sound_looping.Unpause()
 	else if(sound_looping)

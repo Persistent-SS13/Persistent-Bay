@@ -22,28 +22,39 @@
 	throw_range = 15
 	matter = list(MATERIAL_STEEL = 10)
 	var/colour = "black"	//what colour the ink is!
+	var/color_description = "black ink"
 
 
 /obj/item/weapon/pen/blue
 	desc = "It's a normal blue ink pen."
 	icon_state = "pen_blue"
 	colour = "blue"
+	color_description = "blue ink"
 
 /obj/item/weapon/pen/red
 	desc = "It's a normal red ink pen."
 	icon_state = "pen_red"
 	colour = "red"
+	color_description = "red ink"
+
+/obj/item/weapon/pen/green
+	desc = "It's a normal green ink pen."
+	icon_state = "pen_green"
+	colour = "green"
+	color_description = "green ink"
 
 /obj/item/weapon/pen/multi
 	desc = "It's a pen with multiple colors of ink!"
 	var/selectedColor = 1
-	var/colors = list("black","blue","red")
+	var/colors = list("black","blue","red","green")
+	var/color_descriptions = list("black ink", "blue ink", "red ink", "green ink")
 
 /obj/item/weapon/pen/multi/attack_self(mob/user)
-	if(++selectedColor > 3)
+	if(++selectedColor > length(colors))
 		selectedColor = 1
 
 	colour = colors[selectedColor]
+	color_description = color_descriptions[selectedColor]
 
 	if(colour == "black")
 		icon_state = "pen"
@@ -56,6 +67,7 @@
 	desc = "It's an invisble pen marker."
 	icon_state = "pen"
 	colour = "white"
+	color_description = "transluscent ink"
 
 
 /obj/item/weapon/pen/attack(mob/M as mob, mob/user as mob)
@@ -180,3 +192,11 @@
 	New()
 		name = "[colourName] crayon"
 		..()
+
+/obj/item/weapon/pen/fancy
+	name = "fancy pen"
+	desc = "A high quality traditional fountain pen with an internal reservoir and an extra fine gold-platinum nib. Guaranteed never to leak."
+	icon_state = "fancy"
+	throwforce = 1 //pointy
+	colour = "#1c1713" //dark ashy brownish
+	matter = list(MATERIAL_STEEL = 15)

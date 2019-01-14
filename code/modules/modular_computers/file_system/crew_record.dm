@@ -52,6 +52,7 @@ FIELD_SHORT_SECURE("Home System", homeSystem, core_access_employee_records)
 FIELD_SHORT_SECURE("Citizenship", citizenship, core_access_employee_records)
 FIELD_SHORT_SECURE("Faction", faction, core_access_employee_records)
 FIELD_SHORT_SECURE("Religion", religion, core_access_employee_records)
+FIELD_LONG_SECURE("Qualifications", skillset, core_access_employee_records)
 
 // ANTAG RECORDS
 FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
@@ -327,6 +328,15 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	set_citizenship(H ? H.citizenship : "Unset")
 	set_faction(H ? H.personal_faction : "Unset")
 	set_religion(H ? H.religion : "Unset")
+
+	if(H)
+		var/skills = list()
+		for(var/decl/hierarchy/skill/S in GLOB.skills)
+			var/level = H.get_skill_value(S.type)
+			if(level > SKILL_NONE)
+				skills += "[S.name], [S.levels[level]]"
+
+		set_skillset(jointext(skills,"\n"))
 
 	// Antag record
 	set_antagRecord((H && H.exploit_record && !jobban_isbanned(H, "Records") ? html_decode(H.exploit_record) : ""))

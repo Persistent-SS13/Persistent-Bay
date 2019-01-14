@@ -14,7 +14,7 @@ obj/machinery/embedded_controller/radio/Destroy()
 		radio_controller.remove_object(src,frequency)
 	..()
 
-/obj/machinery/embedded_controller/proc/post_signal(datum/signal/signal, comm_line)
+/obj/machinery/embedded_controller/post_signal(datum/signal/signal, comm_line)
 	return 0
 
 /obj/machinery/embedded_controller/receive_signal(datum/signal/signal, receive_method, receive_param)

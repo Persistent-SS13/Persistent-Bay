@@ -16,7 +16,7 @@
 	throwforce = active_throwforce
 	sharpness = 1
 	slot_flags |= SLOT_DENYPOCKET
-	damtype = DAM_ENERGY & DAM_CUT
+	damtype = DAM_ENERGY
 	playsound(user, 'sound/weapons/saberon.ogg', 50, 1)
 
 /obj/item/weapon/melee/energy/proc/deactivate(mob/living/user)
@@ -80,7 +80,7 @@
 	..()
 	icon_state = "axe1"
 	to_chat(user, "<span class='notice'>\The [src] is now energised.</span>")
-	damtype = DAM_ENERGY & DAM_CUT
+	damtype = list(DAM_ENERGY = force/2, DAM_CUT = force)
 
 /obj/item/weapon/melee/energy/axe/deactivate(mob/living/user)
 	..()

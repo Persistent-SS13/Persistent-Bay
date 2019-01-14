@@ -250,7 +250,7 @@
 				shuttle.launch(user)
 		else
 			shuttle.launch(user)
-			var/datum/radio_frequency/frequency = radio_controller.return_frequency(1435)
+			var/datum/radio_frequency/frequency = radio_controller.return_frequency(STATUS_FREQ)
 			if(!frequency)
 				return
 

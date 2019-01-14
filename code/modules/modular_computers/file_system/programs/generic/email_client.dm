@@ -3,12 +3,14 @@
 	filedesc = "Email Client"
 	extended_desc = "This program may be used to log in into your email account."
 	program_icon_state = "generic"
+	program_key_state = "generic_key"
 	program_menu_icon = "mail-closed"
 	size = 7
 	requires_ntnet = 1
 	available_on_ntnet = 1
 	var/stored_login = ""
 	var/stored_password = ""
+	usage_flags = PROGRAM_ALL
 
 	nanomodule_path = /datum/nano_module/email_client
 
@@ -19,6 +21,7 @@
 		if(NME.current_account)
 			stored_login = NME.stored_login
 			stored_password = NME.stored_password
+			NME.log_out()
 		else
 			stored_login = ""
 			stored_password = ""
@@ -36,6 +39,7 @@
 
 /datum/computer_file/program/email_client/proc/new_mail_notify()
 	computer.visible_message("\The [computer] beeps softly, indicating a new email has been received.", 1)
+	playsound(computer, 'sound/machines/twobeep.ogg', 50, 1)
 
 /datum/computer_file/program/email_client/process_tick()
 	..()
@@ -76,22 +80,67 @@
 	var/datum/computer_file/data/email_account/current_account = null
 	var/datum/computer_file/data/email_message/current_message = null
 
+/datum/nano_module/email_client/proc/mail_received(var/datum/computer_file/data/email_message/received_message)
+	var/mob/living/L = get_holder_of_type(host, /mob/living)
+	if(L)
+		var/list/msg = list()
+		msg += "*--*\n"
+		msg += "<span class='notice'>New mail received from [received_message.source]:</span>\n"
+		msg += "<b>Subject:</b> [received_message.title]\n<b>Message:</b>\n[pencode2html(received_message.stored_data)]\n"
+		if(received_message.attachment)
+			msg += "<b>Attachment:</b> [received_message.attachment.filename].[received_message.attachment.filetype] ([received_message.attachment.size]GQ)\n"
+		msg += "<a href='?src=\ref[src];open;reply=[received_message.uid]'>Reply</a>\n"
+		msg += "*--*"
+		to_chat(L, jointext(msg, null))
+
+/datum/nano_module/email_client/Destroy()
+	log_out()
+	. = ..()
+
 /datum/nano_module/email_client/proc/log_in()
+	var/list/id_login
+
+	if(istype(host, /obj/item/modular_computer))
+		var/obj/item/modular_computer/computer = host
+		var/obj/item/weapon/card/id/id = computer.GetIdCard()
+		if(!id && ismob(computer.loc))
+			var/mob/M = computer.loc
+			id = M.GetIdCard()
+		if(id)
+			id_login = id.associated_email_login.Copy()
+
+	var/datum/computer_file/data/email_account/target
 	for(var/datum/computer_file/data/email_account/account in ntnet_global.email_accounts)
-		if(!account.can_login)
+		if(!account || !account.can_login)
 			continue
-		if(account.login == stored_login)
-			if(account.password == stored_password)
-				if(account.suspended)
-					error = "This account has been suspended. Please contact the system administrator for assistance."
-					return 0
-				current_account = account
-				return 1
-			else
-				error = "Invalid Password"
-				return 0
-	error = "Invalid Login"
-	return 0
+		if(id_login && id_login["login"] == account.login)
+			target = account
+			break
+		if(stored_login && stored_login == account.login)
+			target = account
+			break
+
+	if(!target)
+		error = "Invalid Login"
+		return 0
+
+	if(target.suspended)
+		error = "This account has been suspended. Please contact the system administrator for assistance."
+		return 0
+
+	var/use_pass
+	if(stored_password)
+		use_pass = stored_password
+	else if(id_login)
+		use_pass = id_login["password"]
+
+	if(use_pass == target.password)
+		current_account = target
+		current_account.connected_clients |= src
+		return 1
+	else
+		error = "Invalid Password"
+		return 0
 
 // Returns 0 if no new messages were received, 1 if there is an unread message but notification has already been sent.
 // and 2 if there is a new message that appeared in this tick (and therefore notification should be sent by the program).
@@ -114,6 +163,8 @@
 
 
 /datum/nano_module/email_client/proc/log_out()
+	if(current_account)
+		current_account.connected_clients -= src
 	current_account = null
 	downloading = null
 	download_progress = 0
@@ -175,11 +226,14 @@
 				data["cur_attachment_size"] = current_message.attachment.size
 		else
 			data["label_inbox"] = "Inbox ([current_account.inbox.len])"
+			data["label_outbox"] = "Sent ([current_account.outbox.len])"
 			data["label_spam"] = "Spam ([current_account.spam.len])"
 			data["label_deleted"] = "Deleted ([current_account.deleted.len])"
 			var/list/message_source
 			if(folder == "Inbox")
 				message_source = current_account.inbox
+			else if(folder == "Sent")
+				message_source = current_account.outbox
 			else if(folder == "Spam")
 				message_source = current_account.spam
 			else if(folder == "Deleted")
@@ -347,6 +401,8 @@
 		if((msg_title == "") || (msg_body == "") || (msg_recipient == ""))
 			error = "Error sending mail: Title or message body is empty!"
 			return 1
+		if(!length(msg_title))
+			msg_title = "No subject"
 
 		var/datum/computer_file/data/email_message/message = new()
 		message.title = msg_title
@@ -369,12 +425,16 @@
 		var/datum/computer_file/data/email_message/M = find_message_by_fuid(href_list["reply"])
 		if(!istype(M))
 			return 1
-
+		error = null
 		new_message = TRUE
 		msg_recipient = M.source
 		msg_title = "Re: [M.title]"
 		msg_body = "\[editorbr\]\[editorbr\]\[editorbr\]\[br\]==============================\[br\]\[editorbr\]"
 		msg_body += "Received by [current_account.login] at [M.timestamp]\[br\]\[editorbr\][M.stored_data]"
+		var/atom/movable/AM = host
+		if(istype(AM))		
+			if(ismob(AM.loc))
+				ui_interact(AM.loc)
 		return 1
 
 	if(href_list["view"])

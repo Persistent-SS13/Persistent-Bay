@@ -277,7 +277,7 @@ var/global/list/valid_bloodtypes = list("A+", "A-", "B+", "B-", "AB+", "AB-", "O
 			pref.randomize_appearance_and_body_for()	//to get rid of any previous species traits
 			pref.real_name = null	//to make sure vatgrown don't get any disallowed names
 
-			prune_occupation_prefs()
+			//prune_occupation_prefs()
 			return TOPIC_REFRESH_UPDATE_PREVIEW
 
 	else if(href_list["hair_color"])

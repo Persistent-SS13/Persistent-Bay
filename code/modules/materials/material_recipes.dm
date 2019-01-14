@@ -46,6 +46,7 @@
 		new/datum/stack_recipe("modular telescreen frame", 	/obj/item/modular_computer/telescreen, 				10, time = 25, one_per_turf = 1, on_floor = 1),\
 		new/datum/stack_recipe("modular laptop frame", 		/obj/item/modular_computer/laptop, 					10, time = 25, one_per_turf = 1, on_floor = 1),\
 		new/datum/stack_recipe("modular tablet frame", 		/obj/item/modular_computer/tablet, 					5, time = 25, one_per_turf = 1, on_floor = 1),\
+		new/datum/stack_recipe("modular pda frame", 		/obj/item/modular_computer/pda, 					5, time = 25, one_per_turf = 1, on_floor = 1),\
 	))
 
 	recipes += new/datum/stack_recipe_list("Wall-Mounted Frames", list( \

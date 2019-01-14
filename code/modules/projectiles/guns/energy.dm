@@ -91,8 +91,11 @@
 
 /obj/item/weapon/gun/energy/examine(mob/user)
 	. = ..(user)
-	var/shots_remaining = round(power_supply.charge / charge_cost)
-	to_chat(user, "Has [shots_remaining] shot\s remaining.")
+	if(power_supply)
+		var/shots_remaining = round(power_supply.charge / charge_cost)
+		to_chat(user, "Has [shots_remaining] shot\s remaining.")
+	else
+		to_chat(usr, "Has no power source inserted.")
 	return
 
 /obj/item/weapon/gun/energy/update_icon()

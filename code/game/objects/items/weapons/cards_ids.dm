@@ -102,7 +102,7 @@ var/const/NO_EMAG_ACT = -50
 				M.show_message("<span class='notice'>[src] is melted by [user.name] with the welding tool.</span>", 3, "<span class='notice'>You hear welding.</span>", 2)
 			qdel(src)
 		return
-	if(isWirecutter(W))
+	if(isWirecutter(W) || isScissors(W))
 		for (var/mob/M in viewers(src))
 			M.show_message("<span class='notice'>[src] is sliced up by [user.name] with the wirecutters.</span>", 3, "<span class='notice'>You hear a snipping sound.</span>", 2)
 		qdel(src)

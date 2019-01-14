@@ -27,6 +27,9 @@
 		return
 
 	var/list/modifiers = params2list(params)
+	if(modifiers["ctrl"] && modifiers["alt"])
+		CtrlAltClickOn(A)
+		return
 	if(modifiers["shift"] && modifiers["ctrl"])
 		CtrlShiftClickOn(A)
 		return
@@ -87,7 +90,10 @@
 	Since the AI handles shift, ctrl, and alt-click differently
 	than anything else in the game, atoms have separate procs
 	for AI shift, ctrl, and alt clicking.
-*/
+*//mob/living/silicon/ai/CtrlAltClickOn(var/atom/A)
+	if(!control_disabled && A.AICtrlAltClick(src))
+		return
+	..()
 
 /mob/living/silicon/ai/ShiftClickOn(var/atom/A)
 	if(!control_disabled && A.AIShiftClick(src))

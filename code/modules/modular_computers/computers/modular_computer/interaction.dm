@@ -6,6 +6,8 @@
 		verbs |= /obj/item/modular_computer/verb/eject_usb
 	if(card_slot)
 		verbs |= /obj/item/modular_computer/verb/eject_id
+	if(stores_pen && istype(stored_pen))
+		verbs |= /obj/item/modular_computer/verb/remove_pen
 	verbs |= /obj/item/modular_computer/verb/emergency_shutdown
 
 // Forcibly shut down the device. To be used when something bugs out and the UI is nonfunctional.
@@ -78,6 +80,25 @@
 		return
 
 	proc_eject_ai(usr)
+
+/obj/item/modular_computer/verb/remove_pen()
+	set name = "Remove Pen"
+	set category = "Object"
+	set src in view(1)
+
+	if(usr.incapacitated() || !istype(usr, /mob/living))
+		to_chat(usr, "<span class='warning'>You can't do that.</span>")
+		return
+
+	if(!Adjacent(usr))
+		to_chat(usr, "<span class='warning'>You can't reach it.</span>")
+		return
+
+	if(istype(stored_pen))
+		to_chat(usr, "<span class='notice'>You remove [stored_pen] from [src].</span>")
+		usr.put_in_hands(stored_pen) // Silicons will drop it anyway.
+		stored_pen = null
+		update_verbs()
 
 /obj/item/modular_computer/proc/proc_eject_id(mob/user)
 	if(!user)
@@ -172,15 +193,26 @@
 		update_uis()
 		to_chat(user, "You insert \the [I] into \the [src].")
 		return
+	if(istype(W, /obj/item/weapon/pen) && stores_pen)
+		if(istype(stored_pen))
+			to_chat(user, "<span class='notice'>There is already a pen in [src].</span>")
+			return
+		if(!user.unEquip(W, src))
+			return
+		stored_pen = W
+		update_verbs()
+		to_chat(user, "<span class='notice'>You insert [W] into [src].</span>")
+		return
 	if(istype(W, /obj/item/organ))
-		if(!dna_scanner)
-			to_chat(user, "You try to scan \the [W] into \the [src], but it does not have an DNA scanner installed.")
+		if(!scanner || (scanner && !istype(scanner, /obj/item/weapon/computer_hardware/scanner/medical)))
+			to_chat(user, "You try to scan \the [W] into \the [src], but it does not have a medical scanner installed.")
 			return
 		var/obj/item/organ/I = W
 		if(!I.dna)
 			to_chat(user, "\The [src] reports that it cannot get a readng from \the [W].")
 			return
-		dna_scanner.stored_dna = I.dna.Clone()
+		var/obj/item/weapon/computer_hardware/scanner/medical/mdscan = scanner
+		mdscan.stored_dna = I.dna.Clone()
 		to_chat(user, "\The [src] reports that it successfully stored a readng from \the [W].")
 		update_uis()
 		return
@@ -250,3 +282,27 @@
 		return
 
 	..()
+
+/obj/item/modular_computer/examine(var/mob/user)
+	. = ..()
+
+	if(enabled && .)
+		to_chat(user, "The time [stationtime2text()] is displayed in the corner of the screen.")
+
+	if(card_slot && card_slot.stored_card)
+		to_chat(user, "The [card_slot.stored_card] is inserted into it.")
+
+/obj/item/modular_computer/MouseDrop(var/atom/over_object)
+	var/mob/M = usr
+	if(!istype(over_object, /obj/screen) && CanMouseDrop(M))
+		return attack_self(M)
+
+/obj/item/modular_computer/afterattack(atom/target, mob/user, proximity)
+	. = ..()
+	if(scanner)
+		scanner.do_on_afterattack(user, target, proximity)
+
+obj/item/modular_computer/CtrlAltClick(mob/user)
+	if(!CanPhysicallyInteract(user))
+		return
+	open_terminal(user)

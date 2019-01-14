@@ -78,6 +78,8 @@
 
 #define isWirecutter(A) istype(A, /obj/item/weapon/wirecutters)
 
+#define isScissors(A) istype(A, /obj/item/weapon/scissors)
+
 #define isScrewdriver(A) istype(A, /obj/item/weapon/screwdriver)
 
 #define isMultitool(A) istype(A, /obj/item/device/multitool)

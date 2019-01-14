@@ -1343,9 +1343,9 @@ var/global/floorIsLava = 0
 		to_chat(usr, "<b>No AIs located</b>")//Just so you know the thing is actually working and not just ignoring you.
 
 
-/datum/admins/proc/show_skills()
+/datum/admins/proc/show_skills(mob/M)
 	set category = "Admin"
-	set name = "Show Skills"
+	set name = "Skill Panel"
 
 	if (!istype(src,/datum/admins))
 		src = usr.client.holder
@@ -1353,12 +1353,15 @@ var/global/floorIsLava = 0
 		to_chat(usr, "Error: you are not an admin!")
 		return
 
-	var/mob/living/carbon/human/M = input("Select mob.", "Select mob.") as null|anything in GLOB.human_mob_list
-	if(!M) return
-
-	show_skill_window(usr, M)
-
-	return
+	if(!M)
+		M = input("Select mob.", "Select mob.") as null|anything in GLOB.player_list
+	if(!istype(M))
+		return
+	var/datum/nano_module/skill_ui/NM = /datum/nano_module/skill_ui
+	if(is_admin(usr))
+		NM = /datum/nano_module/skill_ui/admin //They get the fancy version that lets you change skills and debug stuff.
+	NM = new NM(usr, override = M.skillset)
+	NM.ui_interact(usr)
 
 /client/proc/update_mob_sprite(mob/living/carbon/human/H as mob)
 	set category = "Admin"

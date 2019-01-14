@@ -95,7 +95,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 /obj/item/organ/internal/stack/proc/get_owner()
 	if(lacemob)
 		return lacemob
-	if(istype(loc.loc, /mob/living/silicon/robot))
+	if(istype(loc, /obj/item/device/lmi) && istype(loc.loc, /mob/living/silicon/robot))
 		return loc.loc
 	if(owner)
 		return owner

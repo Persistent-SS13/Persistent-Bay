@@ -169,8 +169,7 @@
 	if(W.force >= 20)
 		stability -= W.force/2
 		check_stability()
-	..()
-	return
+	return ..()
 
 
 /obj/machinery/power/am_control_unit/attack_hand(mob/user as mob)

@@ -73,6 +73,7 @@
 
 /obj/machinery/mining/drill/proc/drop_ores(var/location)
 	for(var/obj/item/stack/ore/O in contents)
+		O.forceMove(location) //Drop to stack fails for some reasons
 		O.drop_to_stacks(location)
 
 /obj/machinery/mining/drill/attack_generic(var/mob/user, var/damage)
@@ -186,7 +187,8 @@
 					if(metal == MATERIAL_BSPACE_CRYSTAL)
 						new /obj/item/bluespace_crystal(get_turf(src))
 					else
-						new /obj/item/stack/ore(src, metal)
+						var/obj/item/stack/ore/st = new(src, metal)
+						st.drop_to_stacks(src)
 
 		if(!found_resource)
 			harvesting.has_resources = 0

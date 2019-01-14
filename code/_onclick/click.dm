@@ -289,6 +289,16 @@
 	return
 
 /*
+	Control+Alt click
+*/
+/mob/proc/CtrlAltClickOn(var/atom/A)
+	A.CtrlAltClick(src)
+	return
+
+/atom/proc/CtrlAltClick(var/mob/user)
+	return
+
+/*
 	Misc helpers
 
 	Laser Eyes: as the name implies, handles this since nothing else does currently

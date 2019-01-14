@@ -224,7 +224,7 @@
 				stage++
 				return
 		if(2)
-			if(W.sharpness || istype(W,/obj/item/weapon/hemostat) || isWirecutter(W))
+			if(W.sharpness || istype(W,/obj/item/weapon/hemostat) || isWirecutter(W) || isScissors(W))
 				var/list/organs = get_contents_recursive()
 				if(organs.len)
 					var/obj/item/removing = pick(organs)

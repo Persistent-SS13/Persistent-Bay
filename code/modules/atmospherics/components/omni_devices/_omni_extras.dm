@@ -16,7 +16,7 @@
 //--------------------------------------------
 // Omni port datum
 //
-// Used by omni devices to manage connections 
+// Used by omni devices to manage connections
 //  to other atmospheric objects.
 //--------------------------------------------
 /datum/omni_port
@@ -31,6 +31,8 @@
 	var/obj/machinery/atmospherics/node
 	var/datum/pipe_network/network
 
+	var/saved_netid
+
 /datum/omni_port/New(var/obj/machinery/atmospherics/omni/M, var/direction = NORTH)
 	..()
 	dir = direction
@@ -38,6 +40,12 @@
 		master = M
 	air = new
 	air.volume = 200
+
+/datum/omni_port/before_save()
+	..()
+
+/datum/omni_port/after_load()
+	..()
 
 /datum/omni_port/proc/connect()
 	if(node)
@@ -72,10 +80,10 @@
 			string = "East"
 		if(WEST)
 			string = "West"
-	
+
 	if(!capitalize && string)
 		string = lowertext(string)
-	
+
 	return string
 
 //returns a direction flag based on the string passed to it

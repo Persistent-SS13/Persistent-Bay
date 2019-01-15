@@ -305,11 +305,11 @@ var/list/mob/living/forced_ambience_list = new
 			return
 
 		if(!MOVING_DELIBERATELY(H))
-			H.AdjustStunned(6)
-			H.AdjustWeakened(6)
+			H.AdjustStunned(2)
+			H.AdjustWeakened(2)
 		else
-			H.AdjustStunned(3)
-			H.AdjustWeakened(3)
+			H.AdjustStunned(1)
+			H.AdjustWeakened(1)
 		to_chat(mob, "<span class='notice'>The sudden appearance of gravity makes you fall to the floor!</span>")
 
 /area/proc/prison_break()

@@ -58,7 +58,7 @@
 	if(!given_client)
 		return
 
-	var/allocation = given_client.prefs.skills_allocated[job] || list()
+	var/allocation = given_client.prefs.skills || list()
 	skill_list = list()
 
 	for(var/decl/hierarchy/skill/S in GLOB.skills)

@@ -25,6 +25,7 @@ GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
 
 // GENERIC RECORDS
 FIELD_SHORT("Name",name)
+FIELD_SHORT("Formal Name", formal_name)
 FIELD_SHORT("Job",job)
 FIELD_LIST("Sex", sex, record_genders())
 FIELD_NUM("Age", age)
@@ -92,11 +93,13 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 /datum/computer_file/crew_record/Destroy()
 	. = ..()
 	GLOB.all_crew_records.Remove(src)
+
 /datum/computer_file/crew_record/proc/try_duty()
 	if(suspended > world.realtime || terminated)
 		return 0
 	else
 		return assignment_uid
+
 /datum/computer_file/crew_record/proc/check_rank_change(var/datum/world_faction/faction)
 	var/list/all_promotes = list()
 	var/list/three_promotes = list()
@@ -230,6 +233,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		demote_votes.Cut()
 		update_ids(get_name())
 		return
+
 /datum/computer_file/crew_record/proc/load_from_id(var/obj/item/weapon/card/id/card)
 	if(!istype(card))
 		return 0
@@ -255,6 +259,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	// Employment record
 	set_emplRecord("No record supplied")
 	return 1
+
 /datum/computer_file/crew_record/proc/load_from_global(var/real_name)
 	var/datum/computer_file/crew_record/record
 	for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
@@ -495,3 +500,30 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	for(var/B in mil_branches.branches)
 		var/datum/mil_branch/BR = mil_branches.branches[B]
 		. |= BR.name
+
+//Options builderes
+/datum/report_field/options/crew_record/rank/proc/record_ranks()
+	var/datum/computer_file/report/crew_record/record = owner
+	var/datum/mil_branch/branch = mil_branches.get_branch(record.get_branch())
+	if(!branch)
+		return
+	. = list()
+	. |= "Unset"
+	for(var/rank in branch.ranks)
+		var/datum/mil_rank/RA = branch.ranks[rank]
+		. |= RA.name
+
+/datum/report_field/options/crew_record/sex/proc/record_genders()
+	. = list()
+	. |= "Unset"
+	for(var/thing in gender_datums)
+		var/datum/gender/G = gender_datums[thing]
+		. |= gender2text(G.formal_term)
+
+/datum/report_field/options/crew_record/branch/proc/record_branches()
+	. = list()
+	. |= "Unset"
+	for(var/B in mil_branches.branches)
+		var/datum/mil_branch/BR = mil_branches.branches[B]
+		. |= BR.name
+

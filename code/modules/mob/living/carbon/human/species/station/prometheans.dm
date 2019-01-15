@@ -5,7 +5,7 @@ var/datum/species/shapeshifter/promethean/prometheans
 
 	name =             SPECIES_PROMETHEAN
 	name_plural =      "Prometheans"
-	blurb =            "What has Science done?"
+	description =            "What has Science done?"
 	show_ssd =         "totally quiescent"
 	death_message =    "rapidly loses cohesion, splattering across the ground..."
 	knockout_message = "collapses inwards, forming a disordered puddle of goo."

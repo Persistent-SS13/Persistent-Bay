@@ -276,3 +276,8 @@
 		"civ" = filtered_nano_crew_manifest(GLOB.civilian_positions),\
 		"misc" = filtered_nano_crew_manifest(GLOB.unsorted_positions)\
 		)
+
+/proc/flat_nano_crew_manifest()
+	. = list()
+	. += filtered_nano_crew_manifest(null, TRUE)
+	. += silicon_nano_crew_manifest(GLOB.nonhuman_positions)

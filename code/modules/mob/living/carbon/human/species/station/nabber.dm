@@ -1,7 +1,7 @@
 /datum/species/nabber
 	name = SPECIES_NABBER
 	name_plural = "Giant Armoured Serpentids"
-	blurb = "A species of large invertebrates who, after being discovered by a \
+	description = "A species of large invertebrates who, after being discovered by a \
 	research company, were taught how to live and work with humans. Standing \
 	upwards of nine feet tall, these people have a tendency to terrify \
 	those who have not met them before and are rarely trusted by the \

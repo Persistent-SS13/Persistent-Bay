@@ -7,7 +7,7 @@
 	preview_icon = 'icons/mob/human_races/species/phorosian/preview.dmi'
 	rarity_value = 5
 	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick, /datum/unarmed_attack/punch, /datum/unarmed_attack/bite)
-	blurb = "Victims of Phoron Restructurant Syndrome, Phorosians are forced \
+	description = "Victims of Phoron Restructurant Syndrome, Phorosians are forced \
 	to use containment suits on oxygen-based stations as they burn when exposed.\
 	Problems with short term and long term memory alongside other mental \
 	impairments are rampant among them,and they often have to go through many \

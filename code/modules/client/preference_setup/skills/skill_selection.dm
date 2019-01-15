@@ -55,7 +55,7 @@
 /datum/preferences/proc/purge_skills_missing_prerequisites()
 	if(!skills)
 		return
-	for(var/decl/hierarchy/skill/S in skils)
+	for(var/decl/hierarchy/skill/S in skills)
 		if(!check_skill_prerequisites(S))
 			clear_skill(S)
 			.() // restart checking from the beginning, as after doing this we don't know whether what we've already checked is still fine.

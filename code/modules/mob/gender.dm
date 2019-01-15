@@ -5,10 +5,13 @@
 	for(var/type in typesof(/datum/gender))
 		var/datum/gender/G = new type
 		gender_datums[G.key] = G
+		if(!G.formal_term)
+			G.formal_term = G.key
 	return 1
 
 /datum/gender
 	var/key  = "plural"
+	var/formal_term
 
 	var/He   = "They"
 	var/he   = "they"
@@ -18,9 +21,14 @@
 	var/has  = "have"
 	var/is   = "are"
 	var/does = "do"
+	var/self = "themselves"
+
+/datum/gender/plural
+	key  = PLURAL
+	formal_term = "other"
 
 /datum/gender/male
-	key  = "male"
+	key  = MALE
 
 	He   = "He"
 	he   = "he"
@@ -30,9 +38,10 @@
 	has  = "has"
 	is   = "is"
 	does = "does"
+	self = "himself"
 
 /datum/gender/female
-	key  = "female"
+	key  = FEMALE
 
 	He   = "She"
 	he   = "she"
@@ -42,9 +51,11 @@
 	has  = "has"
 	is   = "is"
 	does = "does"
+	self = "herself"
 
 /datum/gender/neuter
-	key = "neuter"
+	key = NEUTER
+	formal_term = "other"
 
 	He   = "It"
 	he   = "it"
@@ -54,3 +65,4 @@
 	has  = "has"
 	is   = "is"
 	does = "does"
+	self = "itself"

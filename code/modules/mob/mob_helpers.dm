@@ -639,6 +639,14 @@ proc/is_blind(A)
 			admin_victim_log(src, "has taken <i>minor heart damage</i> at jitteriness level [src.jitteriness].")
 	return 1
 
+//Tries to find the mob's email.
+/proc/find_email(real_name)
+	for(var/mob/mob in GLOB.living_mob_list_)
+		if(mob.real_name == real_name)
+			if(!mob.mind)
+				return
+			return mob.mind.initial_email_login["login"]
+
 //This gets an input while also checking a mob for whether it is incapacitated or not.
 /mob/proc/get_input(var/message, var/title, var/default, var/choice_type, var/obj/required_item)
 	if(src.incapacitated() || !(required_item && required_item.CanUseTopic(src)))
@@ -657,3 +665,9 @@ proc/is_blind(A)
 	if(isnull(choice) || src.incapacitated() || (required_item && !GLOB.hands_state.can_use_topic(required_item, src)))
 		return null
 	return choice
+
+/mob/proc/set_sdisability(sdisability)
+	sdisabilities |= sdisability
+
+/mob/proc/unset_sdisability(sdisability)
+	sdisabilities &= ~sdisability

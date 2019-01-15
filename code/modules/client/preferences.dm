@@ -363,7 +363,7 @@ datum/preferences
 	character.religion = religion
 
 	character.skills = skills
-	character.used_skillpoints = used_skillpoints
+	character.skillpoints = skillpoints
 
 	if(!character.isSynthetic())
 		character.nutrition = rand(140,360)

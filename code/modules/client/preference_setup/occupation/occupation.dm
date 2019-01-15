@@ -1,14 +1,14 @@
-// /datum/preferences
-// 	//Since there can only be 1 high job.
-// 	var/job_high = null
-// 	var/list/job_medium        //List of all things selected for medium weight
-// 	var/list/job_low           //List of all the things selected for low weight
-// 	var/list/player_alt_titles // the default name of a job like "Medical Doctor"
-// 	var/char_branch	= "None"   // military branch
-// 	var/char_rank = "None"     // military rank
+/datum/preferences
+	//Since there can only be 1 high job.
+	var/job_high = null
+	var/list/job_medium        //List of all things selected for medium weight
+	var/list/job_low           //List of all the things selected for low weight
+	var/list/player_alt_titles // the default name of a job like "Medical Doctor"
+	var/char_branch	= "None"   // military branch
+	var/char_rank = "None"     // military rank
 
-// 	//Keeps track of preferrence for not getting any wanted jobs
-// 	var/alternate_option = 2
+	//Keeps track of preferrence for not getting any wanted jobs
+	var/alternate_option = 2
 
 // /datum/category_item/player_setup_item/occupation
 // 	name = "Occupation"
@@ -324,16 +324,16 @@
 // 			pref.job_low |= job.title
 // 	return 1
 
-// /datum/preferences/proc/CorrectLevel(var/datum/job/job, var/level)
-// 	if(!job || !level)	return 0
-// 	switch(level)
-// 		if(1)
-// 			return job_high == job.title
-// 		if(2)
-// 			return !!(job.title in job_medium)
-// 		if(3)
-// 			return !!(job.title in job_low)
-// 	return 0
+/datum/preferences/proc/CorrectLevel(var/datum/job/job, var/level)
+	if(!job || !level)	return 0
+	switch(level)
+		if(1)
+			return job_high == job.title
+		if(2)
+			return !!(job.title in job_medium)
+		if(3)
+			return !!(job.title in job_low)
+	return 0
 
 // /**
 //  *  Prune a player's job preferences based on current branch, rank and species
@@ -389,5 +389,5 @@
 
 // 	pref.player_alt_titles.Cut()
 
-// /datum/preferences/proc/GetPlayerAltTitle(datum/job/job)
-// 	return (job.title in player_alt_titles) ? player_alt_titles[job.title] : job.title
+/datum/preferences/proc/GetPlayerAltTitle(datum/job/job)
+	return (job.title in player_alt_titles) ? player_alt_titles[job.title] : job.title

@@ -21,8 +21,6 @@ GLOBAL_LIST_EMPTY(all_expense_cards)
 	icon = 'icons/obj/card.dmi'
 	w_class = ITEM_SIZE_TINY
 	slot_flags = SLOT_EARS
-	var/associated_account_number = 0
-
 	var/list/files = list(  )
 
 /obj/item/weapon/card/data
@@ -247,10 +245,12 @@ var/const/NO_EMAG_ACT = -50
 	desc = "A card used to provide ID and determine access."
 	icon_state = "id"
 	item_state = "card-id"
+	slot_flags = SLOT_ID
 
 	var/access = list()
 	var/registered_name = "Unknown" // The name registered_name on the card
-	slot_flags = SLOT_ID
+	var/list/associated_email_login = list("login" = "", "password" = "")
+	var/associated_account_number = 0
 
 	var/age = "\[UNSET\]"
 	var/blood_type = "\[UNSET\]"
@@ -271,13 +271,13 @@ var/const/NO_EMAG_ACT = -50
 	var/datum/mil_branch/military_branch = null //Vars for tracking branches and ranks on multi-crewtype maps
 	var/datum/mil_rank/military_rank = null
 
-	var/selected_faction // faction this ID syncs to.. where should this be set?
-	
+	var/selected_faction // faction this ID syncs to.. where should this be set?	
 	var/selected_business 
 	
 	var/list/approved_factions = list() // factions that have approved this card for use on their machines. format-- list("[faction.uid]")
 	var/validate_time = 0 // this should be set at the time of creation to check if the card is valid
 	var/valid = 1
+
 /obj/item/weapon/card/id/New()
 	..()
 	GLOB.all_id_cards |= src

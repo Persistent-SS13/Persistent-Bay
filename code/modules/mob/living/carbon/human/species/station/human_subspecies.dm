@@ -1,7 +1,7 @@
 /datum/species/human/gravworlder
 	name = "Grav-Adapted Human"
 	name_plural = "Grav-Adapted Humans"
-	blurb = "Heavier and stronger than a baseline human, gravity-adapted people have \
+	description = "Heavier and stronger than a baseline human, gravity-adapted people have \
 	thick radiation-resistant skin with a high lead content, denser bones, and recessed \
 	eyes beneath a prominent brow in order to shield them from the glare of a dangerously \
 	bright, alien sun. This comes at the cost of mobility, flexibility, and increased \
@@ -21,7 +21,7 @@
 /datum/species/human/spacer
 	name = "Space-Adapted Human"
 	name_plural = "Space-Adapted Humans"
-	blurb = "Lithe and frail, these sickly folk were engineered for work in environments that \
+	description = "Lithe and frail, these sickly folk were engineered for work in environments that \
 	lack both light and atmosphere. As such, they're quite resistant to asphyxiation as well as \
 	toxins, but they suffer from weakened bone structure and a marked vulnerability to bright lights."
 	icobase =     'icons/mob/human_races/species/human/subspecies/spacer_body.dmi'
@@ -39,7 +39,7 @@
 /datum/species/human/vatgrown
 	name = "Vat-Grown Human"
 	name_plural = "Vat-Grown Humans"
-	blurb = "Months after the colonists began to arrive in the frontier, a series of numbered humans \
+	description = "Months after the colonists began to arrive in the frontier, a series of numbered humans \
 	followed in their footsteps, thrown as an afterthought through the portal. There is something not \
 	quite right about them; a hauntedness in their eyes - like something in their very soul is missing. \
 	It is well-known that Vatgrown humans cannot be cloned, as they do not possess laces."
@@ -80,6 +80,6 @@
 /datum/species/human/chimpanzee
 	name = "uplifted Chimpanzee"
 	name_plural = "uplifted Chimpanzees"
-	blurb = "Ook ook."
+	description = "Ook ook."
 	icobase = 'icons/mob/human_races/subspecies/r_upliftedchimp.dmi'
 */

@@ -206,3 +206,8 @@
 
 #define SUPPLY_SECURITY_ELEVATED 1
 #define SUPPLY_SECURITY_HIGH 2
+
+//Built-in email accounts
+#define EMAIL_DOCUMENTS "document.server@internal-services.net"
+#define EMAIL_SYSADMIN  "admin@internal-services.net"
+#define EMAIL_BROADCAST "broadcast@internal-services.net"

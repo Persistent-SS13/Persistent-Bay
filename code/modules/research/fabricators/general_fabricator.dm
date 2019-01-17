@@ -1499,7 +1499,7 @@
 	id = "picket_sign"
 	build_path = /obj/item/weapon/picket_sign
 	category = "Consumer Goods"
-	materials = list(MATERIAL_STEEL = 2, MATERIAL_CARDBOARD = 4)
+	materials = list(MATERIAL_STEEL = 1, MATERIAL_CARDBOARD = 4)
 
 
 

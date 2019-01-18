@@ -312,6 +312,12 @@
 	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/miningdrill
 
+/datum/design/circuit/gasdrill
+	name = "gas drill head"
+	id = "gas drill head"
+	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/gasdrill
+
 /datum/design/circuit/miningdrillbrace
 	name = "mining drill brace"
 	id = "mining drill brace"

@@ -20,25 +20,25 @@
 	category = "Misc"	 			   // The design will appear under this in the UI. Each design must have a category, or it will not display properly.
 
 	time = 50						   // Time in seconds for the item to be produced - This changes based off the components used in the fabricator
-	
-	
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // CONTAINERS
 /datum/design/item/genfab/container
 	category = "Containers"
-	
+
 /datum/design/item/genfab/container/sci
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
-	
-		
-	
+
+
+
 /datum/design/item/genfab/container/bucket
 	name = "bucket"
 	build_path = /obj/item/weapon/reagent_containers/glass/bucket
-	
+
 /datum/design/item/genfab/container/jar
 	name = "jar"
 	build_path = /obj/item/glass_jar
@@ -62,7 +62,7 @@
 	name = "pill bottle"
 	build_path = /obj/item/weapon/storage/pill_bottle
 	category = "Medical"
-	
+
 /datum/design/item/genfab/container/syringe
 	name = "syringe"
 	build_path = /obj/item/weapon/reagent_containers/syringe
@@ -177,234 +177,12 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-// ELECTRONICS
-
-/datum/design/item/genfab/electronics
-	category = "Electronics"	
-	
-/datum/design/item/genfab/electronics/adv
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/datum/design/item/genfab/electronics/norad_airlock_controller
-	name = "airlock controller (no radio)"
-	build_path = /obj/item/frame/airlock_controller_norad
-
-/datum/design/item/genfab/electronics/norad_airlock_sensor
-	name = "airlock sensor (no radio)"
-	build_path = /obj/item/frame/airlock_sensor_norad
-
-/datum/design/item/genfab/electronics/airlockmodule
-	name = "airlock electronics"
-	build_path = /obj/item/weapon/airlock_electronics
-
-/datum/design/item/genfab/electronics/airalarm
-	name = "air alarm electronics"
-	build_path = /obj/item/weapon/airalarm_electronics
-
-/datum/design/item/genfab/electronics/firealarm
-	name = "fire alarm electronics"
-	build_path = /obj/item/weapon/firealarm_electronics
-
-/datum/design/item/genfab/electronics/powermodule
-	name = "power control module"
-	build_path = /obj/item/weapon/module/power_control
-
-
-/datum/design/item/genfab/electronics/keypad
-	name = "airlock keypad electronics"
-	build_path = /obj/item/weapon/airlock_electronics/keypad_electronics
-	category = "Engineering"
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-// ENGINEERING EQUIPMENT
-
-/datum/design/item/genfab/engitools
-	category = "Engineering Equipment"
-
-/datum/design/item/genfab/engitools/adv
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-/datum/design/item/genfab/engitools/adv/analyzer
-	name = "gas analyzer"
-	build_path = /obj/item/device/analyzer
-	category = "Tools"
-
-
-/datum/design/item/genfab/engitools/flashlight
-	name = "flashlight"
-	build_path = /obj/item/device/flashlight
-
-/datum/design/item/genfab/engitools/maglight
-	name = "maglight"
-	build_path = /obj/item/device/flashlight/maglight
-
-/datum/design/item/genfab/engitools/crowbar
-	name = "crowbar"
-	build_path = /obj/item/weapon/crowbar
-
-/datum/design/item/genfab/engitools/prybar
-	name = "pry bar"
-	build_path = /obj/item/weapon/crowbar/prybar
-
-/datum/design/item/genfab/engitools/multitool
-	name = "multitool"
-	build_path = /obj/item/device/multitool
-	
-/datum/design/item/genfab/engitools/t_scanner
-	name = "T-ray scanner"
-	build_path = /obj/item/device/t_scanner
-
-/datum/design/item/genfab/engitools/welder_mini
-	name = "miniature welding tool"
-	build_path = /obj/item/weapon/weldingtool/mini/empty
-
-/datum/design/item/genfab/engitools/weldertool
-	name = "welding tool"
-	build_path = /obj/item/weapon/weldingtool/empty
-
-/datum/design/item/genfab/engitools/screwdriver
-	name = "screwdriver"
-	build_path = /obj/item/weapon/screwdriver
-
-/datum/design/item/genfab/engitools/wirecutters
-	name = "wirecutters"
-	build_path = /obj/item/weapon/wirecutters
-
-/datum/design/item/genfab/engitools/wrench
-	name = "wrench"
-	build_path = /obj/item/weapon/wrench
-	category = "Tools"
-
-/datum/design/item/genfab/engitools/suit_cooler
-	name = "suit cooling unit"
-	build_path = /obj/item/device/suit_cooling_unit
-	category = "General"
-
-/datum/design/item/genfab/engitools/weldermask
-	name = "welding mask"
-	build_path = /obj/item/clothing/head/welding
-	category = "General"
-
-
-/datum/design/item/genfab/engitools/rcd_ammo
-	name = "matter cartridge"
-	build_path = /obj/item/weapon/rcd_ammo
-	category = "Engineering"
-
-/datum/design/item/genfab/engitools/rcd_ammo_large
-	name = "high-capacity matter cartridge"
-	build_path = /obj/item/weapon/rcd_ammo/large
-	category = "Engineering"
-
-/datum/design/item/genfab/engitools/cable_coil
-	name = "cable coil"
-	build_path = /obj/item/stack/cable_coil/single		//must be /single path, else printing 1x will instead print a whole stack
-//	is_stack = 1
-
-
-/datum/design/item/genfab/engitools/weldinggoggles
-	name = "welding goggles"
-	build_path = /obj/item/clothing/glasses/welding
-	category = "General"
-
-	
-/datum/design/item/genfab/engitools/stasisclamp
-	name = "stasis clamp"
-	build_path = /obj/item/clamp
-	category = "Engineering"
-	
-/datum/design/item/genfab/engitools/welder_industrial
-	name = "industrial welding tool"
-	build_path = /obj/item/weapon/weldingtool/largetank/empty
-	category = "Tools"
-
-/datum/design/item/genfab/engitools/welder_huge
-	name = "high capacity welding tool"
-	build_path = /obj/item/weapon/weldingtool/hugetank/empty
-	category = "Tools"
-	
-
-/datum/design/item/genfab/engitools/adv/airlock_brace
-	name = "airlock brace design"
-	desc = "Special door attachment that can be used to provide extra security."
-	id = "brace"
-	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 2)
-	materials = list(MATERIAL_STEEL = 2000, MATERIAL_GLASS = 50)
-	build_path = /obj/item/weapon/airlock_brace
-	sort_string = "VBAAP"
-
-/datum/design/item/genfab/engitools/adv/light_replacer
-	name = "Light replacer"
-	desc = "A device to automatically replace lights. Refill with working lightbulbs."
-	id = "light_replacer"
-	req_tech = list(TECH_MAGNET = 3, TECH_MATERIAL = 4)
-	materials = list(MATERIAL_STEEL = 1500, MATERIAL_SILVER = 150, MATERIAL_GLASS = 3000)
-	build_path = /obj/item/device/lightreplacer
-	sort_string = "VAAAH"
-	
-/datum/design/item/genfab/engitools/adv/mesons
-	name = "Optical meson scanners design"
-	desc = "Using the meson-scanning technology those glasses allow you to see through walls, floor or anything else."
-	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2)
-	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50, MATERIAL_PHORON = 1000)
-	build_path = /obj/item/clothing/glasses/meson
-	
-/datum/design/item/genfab/engitools/adv/RPED
-	name = "Rapid Part Exchange Device"
-	desc = "Special mechanical module made to store, sort, and apply standard machine parts."
-	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 3)
-	materials = list(MATERIAL_STEEL = 15000, MATERIAL_GLASS = 6000, , MATERIAL_GLASS = 6000, MATERIAL_GOLD = 6000, MATERIAL_PHORON = 8000)
-	build_path = /obj/item/weapon/storage/part_replacer
-	sort_string = "CBAAA"
-
-/datum/design/item/genfab/engitools/adv/brace_jack
-	name = "maintenance jack design"
-	desc = "A special maintenance tool that can be used to remove airlock braces."
-	id = "bracejack"
-	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 2)
-	materials = list(MATERIAL_STEEL = 120)
-	build_path = /obj/item/weapon/crowbar/brace_jack
-	sort_string = "VBAAS"
-
-/datum/design/item/genfab/engitools/adv/experimental_welder
-	name = "experimental welding tool"
-	desc = "A heavily modified welding tool that uses a nonstandard fuel mix. The internal fuel tank feels uncomfortably warm."
-	id = "experimental_welder"
-	req_tech = list(TECH_ENGINEERING = 5, TECH_PHORON = 4)
-	materials = list(MATERIAL_STEEL = 6000, MATERIAL_GLASS = 500, MATERIAL_PLASTEEL = 2000)
-	chemicals = list(/datum/reagent/toxin/phoron/oxygen = 80)	//hopefully this makes a good detterant for obtaining OP welding tool
-	build_path = /obj/item/weapon/weldingtool/experimental
-	sort_string = "VBAAT"
-	
-/datum/design/item/genfab/engitools/extinguisher_mini
-	name = "compact extinguisher"
-	build_path = /obj/item/weapon/extinguisher/mini/empty
-
-/datum/design/item/genfab/engitools/adv/extinguisher
-	name = "extinguisher"
-	build_path = /obj/item/weapon/extinguisher/empty
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 // MEDICAL EQUIPMENT
 
 /datum/design/item/genfab/meditools
 	category = "Medical Equipment"
-	
+
 /datum/design/item/genfab/meditools/adv
 
 //////////////////////////////////////////////////////////////////////////
@@ -453,7 +231,7 @@
 
 /datum/design/item/genfab/meditools/adv/hud/AssembleDesignDesc()
 	desc = "Allows for the construction of \a [item_name] HUD glasses."
-	
+
 /datum/design/item/genfab/meditools/adv/hud/health
 	name = "health scanner"
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 3)
@@ -508,7 +286,6 @@
 	build_path = /obj/item/device/slime_scanner
 	sort_string = "MACBC"
 
-
 /datum/design/item/genfab/meditools/adv/nanopaste
 	desc = "A tube of paste containing swarms of repair nanites. Very effective in repairing robotic machinery."
 	id = "nanopaste"
@@ -552,7 +329,7 @@
 	materials = list (MATERIAL_STEEL = 12500, MATERIAL_GLASS = 7500, MATERIAL_SILVER = 3000, MATERIAL_GOLD = 3000, MATERIAL_DIAMOND = 1000, MATERIAL_PHORON = 6000)
 	build_path = /obj/item/weapon/scalpel/manager
 	sort_string = "MBBAD"
-	
+
 /datum/design/item/genfab/meditools/adv/implant
 	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 
@@ -608,277 +385,7 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-// PARTS
-
-
-/datum/design/item/genfab/parts
-	category = "Parts"
-	
-/datum/design/item/genfab/parts/adv
-
-
-//////////////////////////////////////////////////////////////////////////
-
-
-/datum/design/item/genfab/parts/camera_assembly
-	name = "camera assembly"
-	build_path = /obj/item/weapon/camera_assembly
-	category = "Engineering"
-
-/datum/design/item/genfab/parts/consolescreen
-	name = "console screen"
-	build_path = /obj/item/weapon/stock_parts/console_screen
-	category = "Devices and Components"
-
-/datum/design/item/genfab/parts/igniter
-	name = "igniter"
-	build_path = /obj/item/device/assembly/igniter
-	category = "Devices and Components"
-
-/datum/design/item/genfab/parts/signaler
-	name = "signaler"
-	build_path = /obj/item/device/assembly/signaler
-	category = "Devices and Components"
-
-/datum/design/item/genfab/parts/sensor_infra
-	name = "infrared sensor"
-	build_path = /obj/item/device/assembly/infra
-	category = "Devices and Components"
-
-/datum/design/item/genfab/parts/timer
-	name = "timer"
-	build_path = /obj/item/device/assembly/timer
-	category = "Devices and Components"
-
-/datum/design/item/genfab/parts/sensor_prox
-	name = "proximity sensor"
-	build_path = /obj/item/device/assembly/prox_sensor
-	category = "Devices and Components"
-
-
-/datum/design/item/genfab/parts/tube/large
-	name = "spotlight tube"
-	build_path = /obj/item/weapon/light/tube/large
-	category = "General"
-
-/datum/design/item/genfab/parts/recipe/tube
-	name = "light tube"
-	build_path = /obj/item/weapon/light/tube
-	category = "General"
-
-/datum/design/item/genfab/parts/bulb
-	name = "light bulb"
-	build_path = /obj/item/weapon/light/bulb
-	category = "General"
-
-/datum/design/item/genfab/parts/cell_device
-	name = "device cell"
-	build_path = /obj/item/weapon/cell/device/standard/empty
-	category = "Devices and Components"
-
-/datum/design/item/genfab/parts/basic_capacitor
-	id = "basic capacitor"
-	req_tech = list(TECH_POWER = 1)
-	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
-	build_path = /obj/item/weapon/stock_parts/capacitor
-
-/datum/design/item/genfab/parts/adv/adv_capacitor
-	name = "advanced capacitor"
-	req_tech = list(TECH_POWER = 3)
-	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50, MATERIAL_GOLD = 500, MATERIAL_PHORON = 500)
-	build_path = /obj/item/weapon/stock_parts/capacitor/adv
-
-/datum/design/item/genfab/parts/adv/super_capacitor
-	id = "super capacitor"
-	req_tech = list(TECH_POWER = 5, TECH_MATERIAL = 4)
-	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 500, MATERIAL_GOLD = 2000, MATERIAL_PHORON = 1000)
-	build_path = /obj/item/weapon/stock_parts/capacitor/super
-
-/datum/design/item/genfab/parts/micro_mani
-	id = "micro manipulator"
-	req_tech = list(TECH_MATERIAL = 1, TECH_DATA = 1)
-	materials = list(MATERIAL_STEEL = 30)
-	build_path = /obj/item/weapon/stock_parts/manipulator
-
-/datum/design/item/genfab/parts/adv/nano_mani
-	id = "nano manipulator"
-	req_tech = list(TECH_MATERIAL = 3, TECH_DATA = 2)
-	materials = list(MATERIAL_STEEL = 30, MATERIAL_PHORON = 250)
-	build_path = /obj/item/weapon/stock_parts/manipulator/nano
-
-/datum/design/item/genfab/parts/adv/pico_mani
-	id = "pico manipulator"
-	req_tech = list(TECH_MATERIAL = 5, TECH_DATA = 2)
-	materials = list(MATERIAL_STEEL = 30, MATERIAL_PHORON = 1000)
-	build_path = /obj/item/weapon/stock_parts/manipulator/pico
-
-/datum/design/item/genfab/parts/basic_matter_bin
-	id = "basic matter bin"
-	req_tech = list(TECH_MATERIAL = 1)
-	materials = list(MATERIAL_STEEL = 80)
-	build_path = /obj/item/weapon/stock_parts/matter_bin
-
-/datum/design/item/genfab/parts/adv/adv_matter_bin
-	id = "advanced matter bin"
-	req_tech = list(TECH_MATERIAL = 3)
-	materials = list(MATERIAL_STEEL = 80, MATERIAL_PHORON = 250)
-	build_path = /obj/item/weapon/stock_parts/matter_bin/adv
-
-/datum/design/item/genfab/parts/adv/super_matter_bin
-	id = "super matter bin"
-	req_tech = list(TECH_MATERIAL = 5)
-	materials = list(MATERIAL_STEEL = 80, MATERIAL_PHORON = 500)
-	build_path = /obj/item/weapon/stock_parts/matter_bin/super
-	
-/datum/design/item/genfab/parts/basic_micro_laser
-	id = "basic micro laser"
-	req_tech = list(TECH_MAGNET = 1)
-	materials = list(MATERIAL_STEEL = 10, MATERIAL_GLASS = 20)
-	build_path = /obj/item/weapon/stock_parts/micro_laser
-
-
-/datum/design/item/genfab/parts/adv/high_micro_laser
-	id = "high intensity micro laser"
-	req_tech = list(TECH_MAGNET = 3)
-	materials = list(MATERIAL_STEEL = 10, MATERIAL_GLASS = 20, MATERIAL_URANIUM = 500, MATERIAL_PHORON = 500)
-	build_path = /obj/item/weapon/stock_parts/micro_laser/high
-
-/datum/design/item/genfab/parts/adv/ultra_micro_laser
-	id = "ultra micro laser"
-	req_tech = list(TECH_MAGNET = 5, TECH_MATERIAL = 5)
-	materials = list(MATERIAL_STEEL = 10, MATERIAL_GLASS = 20, MATERIAL_URANIUM = 1000, MATERIAL_PHORON = 1000)
-	build_path = /obj/item/weapon/stock_parts/micro_laser/ultra
-
-/datum/design/item/genfab/parts/basic_sensor
-	id = "basic_sensor"
-	req_tech = list(TECH_MAGNET = 1)
-	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 20)
-	build_path = /obj/item/weapon/stock_parts/scanning_module
-	sort_string = "CAAEA"
-
-/datum/design/item/genfab/parts/adv/adv_sensor
-	id = "adv_sensor"
-	req_tech = list(TECH_MAGNET = 3)
-	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 20, MATERIAL_SILVER = 1000, MATERIAL_PHORON = 500)
-	build_path = /obj/item/weapon/stock_parts/scanning_module/adv
-	sort_string = "CAAEB"
-
-/datum/design/item/genfab/parts/adv/phasic_sensor
-	id = "phasic_sensor"
-	req_tech = list(TECH_MAGNET = 5, TECH_MATERIAL = 3)
-	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 20, MATERIAL_SILVER = 2000, MATERIAL_PHORON = 1000)
-	build_path = /obj/item/weapon/stock_parts/scanning_module/phasic
-	sort_string = "CAAEC"
-
-
-/datum/design/item/genfab/parts/adv/powercell/basic
-	name = "basic power cell"
-	id = "basic_cell"
-	req_tech = list(TECH_POWER = 1)
-	materials = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 50)
-	build_path = /obj/item/weapon/cell
-	sort_string = "DAAAA"
-
-/datum/design/item/genfab/parts/adv/powercell/high
-	name = "high-capacity power cell"
-	id = "high_cell"
-	req_tech = list(TECH_POWER = 2)
-	materials = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 60, MATERIAL_GOLD = 200, MATERIAL_SILVER = 200)
-	build_path = /obj/item/weapon/cell/high
-	sort_string = "DAAAB"
-
-/datum/design/item/genfab/parts/adv/powercell/super
-	name = "super-capacity power cell"
-	id = "super_cell"
-	req_tech = list(TECH_POWER = 3, TECH_MATERIAL = 2)
-	materials = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 70, MATERIAL_GOLD = 500, MATERIAL_SILVER = 500, MATERIAL_PHORON = 500)
-	build_path = /obj/item/weapon/cell/super
-	sort_string = "DAAAC"
-
-/datum/design/item/genfab/parts/adv/powercell/hyper
-	name = "hyper-capacity power cell"
-	id = "hyper_cell"
-	req_tech = list(TECH_POWER = 5, TECH_MATERIAL = 4)
-	materials = list(MATERIAL_STEEL = 400, MATERIAL_DIAMOND = 1000, MATERIAL_GOLD = 1000, MATERIAL_SILVER = 1000, MATERIAL_GLASS = 70, MATERIAL_PHORON = 1000)
-	build_path = /obj/item/weapon/cell/hyper
-	sort_string = "DAAAD"
-
-/datum/design/item/genfab/parts/adv/powercell/device/standard
-	name = "basic"
-	id = "device_cell_standard"
-	req_tech = list(TECH_POWER = 1)
-	materials = list(MATERIAL_STEEL = 70, MATERIAL_GLASS = 5)
-	build_path = /obj/item/weapon/cell/device/standard
-	sort_string = "DAAAE"
-
-/datum/design/item/genfab/parts/adv/powercell/device/high
-	name = "high-capacity"
-	build_type = PROTOLATHE | MECHFAB
-	id = "device_cell_high"
-	req_tech = list(TECH_POWER = 2)
-	materials = list(MATERIAL_STEEL = 70, MATERIAL_GLASS = 6,MATERIAL_PHORON = 100)
-	build_path = /obj/item/weapon/cell/device/high
-	sort_string = "DAAAF"
-
-/datum/design/item/genfab/parts/adv/subspace_ansible
-	id = "s-ansible"
-	req_tech = list(TECH_DATA = 3, TECH_MAGNET = 4, TECH_MATERIAL = 4, TECH_BLUESPACE = 2)
-	materials = list(MATERIAL_STEEL = 80, MATERIAL_SILVER = 20)
-	build_path = /obj/item/weapon/stock_parts/subspace/ansible
-	sort_string = "UAAAA"
-
-/datum/design/item/genfab/parts/adv/hyperwave_filter
-	id = "s-filter"
-	req_tech = list(TECH_DATA = 3, TECH_MAGNET = 3)
-	materials = list(MATERIAL_STEEL = 40, MATERIAL_SILVER = 10)
-	build_path = /obj/item/weapon/stock_parts/subspace/filter
-	sort_string = "UAAAB"
-
-/datum/design/item/genfab/parts/adv/subspace_amplifier
-	id = "s-amplifier"
-	req_tech = list(TECH_DATA = 3, TECH_MAGNET = 4, TECH_MATERIAL = 4, TECH_BLUESPACE = 2)
-	materials = list(MATERIAL_STEEL = 10, MATERIAL_GOLD = 30, MATERIAL_URANIUM = 15)
-	build_path = /obj/item/weapon/stock_parts/subspace/amplifier
-	sort_string = "UAAAC"
-
-/datum/design/item/genfab/parts/adv/subspace_treatment
-	id = "s-treatment"
-	req_tech = list(TECH_DATA = 3, TECH_MAGNET = 2, TECH_MATERIAL = 4, TECH_BLUESPACE = 2)
-	materials = list(MATERIAL_STEEL = 10, MATERIAL_SILVER = 20)
-	build_path = /obj/item/weapon/stock_parts/subspace/treatment
-	sort_string = "UAAAD"
-
-/datum/design/item/genfab/parts/adv/subspace_analyzer
-	id = "s-analyzer"
-	req_tech = list(TECH_DATA = 3, TECH_MAGNET = 4, TECH_MATERIAL = 4, TECH_BLUESPACE = 2)
-	materials = list(MATERIAL_STEEL = 10, MATERIAL_GOLD = 15)
-	build_path = /obj/item/weapon/stock_parts/subspace/analyzer
-	sort_string = "UAAAE"
-
-/datum/design/item/genfab/parts/adv/subspace_crystal
-	id = "s-crystal"
-	req_tech = list(TECH_MAGNET = 4, TECH_MATERIAL = 4, TECH_BLUESPACE = 2)
-	materials = list(MATERIAL_GLASS = 1000, MATERIAL_SILVER = 20, MATERIAL_GOLD = 20)
-	build_path = /obj/item/weapon/stock_parts/subspace/crystal
-	sort_string = "UAAAF"
-
-/datum/design/item/genfab/parts/adv/subspace_transmitter
-	id = "s-transmitter"
-	req_tech = list(TECH_MAGNET = 5, TECH_MATERIAL = 5, TECH_BLUESPACE = 3)
-	materials = list(MATERIAL_GLASS = 100, MATERIAL_SILVER = 10, MATERIAL_URANIUM = 15)
-	build_path = /obj/item/weapon/stock_parts/subspace/transmitter
-	sort_string = "UAAAG"
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 // WEAPONS
 
 /datum/design/item/genfab/weapons
@@ -892,7 +399,7 @@
 /datum/design/item/genfab/weapons/syringegun_ammo
 	name = "syringe gun cartridge"
 	build_path = /obj/item/weapon/syringe_cartridge
-	
+
 
 /datum/design/item/genfab/weapons/guns/stunrevolver
 	id = "stunrevolver"
@@ -992,10 +499,10 @@
 	sort_string = "TBAAA"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // COMPUTER EQUIPMENT
 
 /datum/design/item/genfab/computer
@@ -1106,7 +613,7 @@
 	req_tech = list(TECH_DATA = 2)
 	materials = list(MATERIAL_STEEL = 600)
 	build_path = /obj/item/weapon/computer_hardware/dna_scanner
-	
+
 /datum/design/item/genfab/computer/adv/logistic_processor
 	name = "Advanced Logistic Processor"
 	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 4)
@@ -1155,7 +662,7 @@
 	id = "cart_chemistry"
 	build_path = /obj/item/weapon/cartridge/chemistry
 	sort_string = "VBAAE"
-	
+
 /datum/design/item/genfab/computer/adv/security
 	id = "cart_security"
 	build_path = /obj/item/weapon/cartridge/security
@@ -1208,14 +715,14 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Communication Equipment
 
 /datum/design/item/genfab/communication
-	category = "Communication Equipment"	
+	category = "Communication Equipment"
 
 
 ////////////////////////////////////////////////////////////////////
@@ -1255,14 +762,14 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // EVA Equipment
 /datum/design/item/genfab/eva
-	category = "EVA Equipment"			
-	
+	category = "EVA Equipment"
+
 /datum/design/item/genfab/eva/adv
 
 ///////////////////////////////////////////////////////////////
@@ -1313,10 +820,10 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Furniture
 /datum/design/item/genfab/furniture
 	category = "Furniture"
@@ -1338,13 +845,13 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
-	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Botany Tools
 
 /datum/design/item/genfab/botanytools
@@ -1368,11 +875,11 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Culinary Tools
-	
+
 /datum/design/item/genfab/culinarytools
-	category = "Culinary Tools"	
+	category = "Culinary Tools"
 
 /////////////////////////////////////////////////////////////////////////////////////
 
@@ -1411,7 +918,7 @@
 	name = "clipboard"
 	build_path = /obj/item/weapon/clipboard
 	category = "General"
-	
+
 /datum/design/item/genfab/consumer/labeler
 	name = "hand labeler"
 	build_path = /obj/item/weapon/hand_labeler
@@ -1427,7 +934,6 @@
 	name = "ecigarette"
 	build_path = /obj/item/clothing/mask/smokable/ecig/lathed
 	category = "Devices and Components"
-
 
 /datum/design/item/genfab/consumer/mop
 	name = "mop"
@@ -1494,6 +1000,14 @@
 	build_path = /obj/item/toy/water_balloon
 	category = "General"
 
+/datum/design/item/genfab/consumer/picket_sign
+	name = "Picket sign"
+	id = "picket_sign"
+	build_path = /obj/item/weapon/picket_sign
+	category = "Consumer Goods"
+	materials = list(MATERIAL_STEEL = 1, MATERIAL_CARDBOARD = 4)
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1523,8 +1037,8 @@
 
 /datum/design/item/genfab/sectools/adv/hud/AssembleDesignDesc()
 	desc = "Allows for the construction of \a [item_name] HUD glasses."
-	
-	
+
+
 
 
 /datum/design/item/genfab/sectools/adv/hud/security
@@ -1535,13 +1049,13 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //MINING EQUIPMENT
 /datum/design/item/genfab/miningtools
 	category = "Mining Equipment"
-	
+
 /datum/design/item/genfab/miningtools/adv
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1600,7 +1114,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SCIENCE EQUIPMENT
@@ -1609,7 +1123,7 @@
 	category = "Science Equipment"
 
 /datum/design/item/genfab/science/adv
-	
+
 
 /////////////////////////////////////////////
 

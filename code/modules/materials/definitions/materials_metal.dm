@@ -107,6 +107,10 @@
 	stack_origin_tech = list(TECH_MATERIAL = 3)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
+	ore_smelts_to = MATERIAL_TITANIUM
+	ore_name = "raw titanium"
+	ore_scan_icon = "mineral_rare"
+	ore_icon_overlay = "shiny"
 
 /material/osmium
 	name = MATERIAL_OSMIUM
@@ -126,6 +130,10 @@
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
 	is_fusion_fuel = 1
+	ore_smelts_to = MATERIAL_TRITIUM
+	ore_name = "raw tritium"
+	ore_scan_icon = "mineral_rare"
+	ore_icon_overlay = "gems"
 	melting_point = 14
 
 /material/deuterium
@@ -136,6 +144,11 @@
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
 	is_fusion_fuel = 1
+	ore_smelts_to = MATERIAL_DEUTERIUM
+	ore_name = "raw deuterium"
+	ore_scan_icon = "mineral_rare"
+	ore_icon_overlay = "gems"
+	melting_point = 14
 	melting_point = 14
 
 /material/mhydrogen
@@ -148,8 +161,7 @@
 	chem_products = list(
 				/datum/reagent/hydrazine = 20
 				)
-	ore_smelts_to = MATERIAL_TRITIUM
-	ore_compresses_to = MATERIAL_HYDROGEN
+	ore_smelts_to = MATERIAL_HYDROGEN
 	ore_name = "raw hydrogen"
 	ore_scan_icon = "mineral_rare"
 	ore_icon_overlay = "gems"
@@ -374,8 +386,7 @@
 	ore_name = MATERIAL_HEMATITE //Fe2O3
 	ore_icon_overlay = "lump"
 	chem_products = list(
-				/datum/reagent/iron = 40,
-				/datum/reagent/oxygen = 60
+				/datum/reagent/iron = 60
 				)
 	ore_matter = list("iron" = 2000)
 
@@ -396,6 +407,21 @@
 		)
 	ore_matter = list(MATERIAL_COPPER = 1200, MATERIAL_SILVER = 1200, MATERIAL_IRON = 1200)
 
+/material/bohmeite
+	name = MATERIAL_BOHMEITE
+	icon_colour = "#443832"
+	ore_smelts_to = MATERIAL_COPPER
+	ore_result_amount = 5
+	ore_spread_chance = 10
+	ore_name = MATERIAL_BOHMEITE
+	ore_scan_icon = "mineral_common"
+	ore_icon_overlay = "shiny"
+	chem_products = list(
+		/datum/reagent/copper = 12,
+		/datum/reagent/aluminum = 12,
+		)
+	ore_matter = list(MATERIAL_COPPER = 1200, MATERIAL_GOLD = 1200, MATERIAL_ALUMINUM = 1200)
+
 /material/tetrahedrite
 	name = MATERIAL_TETRAHEDRITE
 	icon_colour = "#b87333"
@@ -410,7 +436,7 @@
 		/datum/reagent/iron = 12,
 		/datum/reagent/sulfur = 13,
 		)
-	ore_matter = list(MATERIAL_COPPER = 1800, MATERIAL_IRON = 1800)
+	ore_matter = list(MATERIAL_COPPER = 1800)
 
 /material/ilmenite
 	name = MATERIAL_ILMENITE
@@ -422,7 +448,6 @@
 	ore_scan_icon = "mineral_uncommon"
 	ore_icon_overlay = "shiny"
 	chem_products = list(
-		/datum/reagent/oxygen = 30,
 		/datum/reagent/iron = 10,
 		)
 	ore_matter = list(MATERIAL_IRON = 1000, MATERIAL_TITANIUM = 1000)
@@ -450,9 +475,6 @@
 	ore_name = MATERIAL_CASSITERITE //Tin oxide, SnO2
 	ore_scan_icon = "mineral_common"
 	ore_icon_overlay = "shiny"
-	chem_products = list(
-		/datum/reagent/oxygen = 20,
-		)
 	ore_matter = list(MATERIAL_TIN = 2000)
 
 /material/sphalerite
@@ -461,7 +483,7 @@
 	ore_smelts_to = MATERIAL_ZINC
 	ore_result_amount = 8
 	ore_spread_chance = 10
-	ore_name = MATERIAL_SPHALERITE //Tin oxide, (Zn,Fe)S
+	ore_name = MATERIAL_SPHALERITE //Zinc oxide, (Zn,Fe)S
 	ore_scan_icon = "mineral_common"
 	ore_icon_overlay = "shiny"
 	chem_products = list(

@@ -55,6 +55,7 @@
 #define MATERIAL_BSPACE_CRYSTAL				"bluespace crystal"
 //ORES
 #define MATERIAL_TETRAHEDRITE				"tetrahedrite"
+#define MATERIAL_BOHMEITE					"bohmeite"
 #define MATERIAL_FREIBERGITE				"freibergite"
 #define MATERIAL_ILMENITE					"ilmenite"
 #define MATERIAL_GALENA						"galena"

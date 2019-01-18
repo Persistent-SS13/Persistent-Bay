@@ -179,10 +179,14 @@
 	alpha = 255
 
 	switch(dir)
-		if(SOUTH || NORTH)
+		if(SOUTH)
 			initialize_directions = SOUTH|NORTH
-		if(EAST || WEST)
+		if(NORTH)
+			initialize_directions = NORTH|SOUTH
+		if(EAST)
 			initialize_directions = EAST|WEST
+		if(WEST)
+			initialize_directions = WEST|EAST
 		if(NORTHEAST)
 			initialize_directions = NORTH|EAST
 		if(NORTHWEST)
@@ -236,10 +240,10 @@
 	qdel(src)
 
 /obj/machinery/atmospherics/pipe/simple/proc/normalize_dir()
-	if(dir==3)
-		set_dir(1)
-	else if(dir==12)
-		set_dir(4)
+	if(dir == (NORTH | SOUTH))
+		set_dir(NORTH)
+	else if(dir == (EAST | WEST))
+		set_dir(EAST)
 
 /obj/machinery/atmospherics/pipe/simple/Destroy()
 	if(node1)
@@ -301,7 +305,7 @@
 	var/node2_dir
 
 	for(var/direction in GLOB.cardinal)
-		if(direction&initialize_directions)
+		if(direction & initialize_directions)
 			if (!node1_dir)
 				node1_dir = direction
 			else if (!node2_dir)
@@ -319,7 +323,7 @@
 				break
 
 	if(!node1 && !node2)
-		log_debug("[src]([x],[y],[z]) was deleted in atmos_init() because both its nodes are null!")
+		log_debug("[src]([x],[y],[z]) was deleted in atmos_init() because both its nodes are null! initialize_directions: [initialize_directions], dir: [dir], level: [level], node1_dir: [node1_dir], node2_dir: [node2_dir]")
 		qdel(src)
 		return
 

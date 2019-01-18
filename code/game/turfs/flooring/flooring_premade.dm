@@ -49,6 +49,12 @@
 	icon = 'icons/turf/flooring/grass.dmi'
 	icon_state = "grass0"
 	initial_flooring = /decl/flooring/grass
+
+/turf/simulated/floor/concrete
+	name = "concrete tile"
+	icon = 'icons/turf/flooring/misc.dmi'
+	icon_state = "concrete"
+	initial_flooring = /decl/flooring/concrete
 /*
 /turf/simulated/floor/diona
 	name = "biomass"
@@ -152,10 +158,22 @@
 /turf/simulated/floor/tiled/dark/airless
 	initial_gas = null
 
+/turf/simulated/floor/tiled/dark/mono
+	name = "dark mono-tiled floor"
+	icon_state = "monotile"
+	color = COLOR_DARK_GRAY
+	initial_flooring = /decl/flooring/tiling/dark/mono
+
 /turf/simulated/floor/tiled/white
 	name = "white floor"
 	icon_state = "white"
 	initial_flooring = /decl/flooring/tiling/white
+
+/turf/simulated/floor/tiled/white/mono
+	name = "white mono-tiled floor"
+	icon_state = "monotile"
+	color = COLOR_WHITE
+	initial_flooring = /decl/flooring/tiling/white/mono
 
 /turf/simulated/floor/tiled/freezer
 	name = "tiles"
@@ -259,3 +277,15 @@
 /turf/simulated/floor/beach/water/New()
 	..()
 	overlays += image("icon"='icons/misc/beach.dmi',"icon_state"="water5","layer"=MOB_LAYER+0.1)
+
+/turf/simulated/floor/reinforced/rockvault
+	name = "vault floor"
+	icon = 'icons/turf/flooring/misc.dmi'
+	icon_state = "rockvault"
+	initial_flooring = /decl/flooring/rockvault
+
+/turf/simulated/floor/reinforced/sandstonevault
+	name = "sandstone vault floor"
+	icon = 'icons/turf/flooring/misc.dmi'
+	icon_state = "sandstonevault"
+	initial_flooring = /decl/flooring/sandstonevault

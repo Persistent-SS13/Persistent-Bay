@@ -55,7 +55,13 @@
 	recalc_coils()
 
 
-
+//Used as battery bank
+/obj/machinery/power/smes/buildable/batterybank/New()
+	..(0)
+	component_parts += new /obj/item/weapon/smes_coil/super_capacity(src)
+	component_parts += new /obj/item/weapon/smes_coil/super_capacity(src)
+	component_parts += new /obj/item/weapon/smes_coil/super_capacity(src)
+	recalc_coils()
 
 
 

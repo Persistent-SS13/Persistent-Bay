@@ -37,6 +37,10 @@
 	. = ..()
 	SetBounds()
 
+/obj/machinery/door/airlock/multi_tile/after_load()
+	SetBounds()
+	..()
+
 /obj/machinery/door/airlock/multi_tile/proc/SetBounds()
 	if(dir in list(NORTH, SOUTH))
 		bound_width = width * world.icon_size
@@ -47,14 +51,22 @@
 
 
 /obj/machinery/door/airlock/multi_tile/update_icon(state=0, override=0)
+	//Since some of the icons are off-center, we have to align them for now
+	// Would tweak the icons themselves, but dm is currently crashing when trying to edit icons at all!
+	switch(dir)
+		if(NORTH)
+			pixel_y = -32
+			pixel_x = 0
+		if(SOUTH)
+			pixel_y = 0
+			pixel_x = 0
+		if(EAST)
+			pixel_y = 0
+			pixel_x = -32
+		if(WEST)
+			pixel_y = 0
+			pixel_x = 0
 	..()
-	if(connections in list(NORTH, SOUTH, NORTH|SOUTH))
-		if(connections in list(WEST, EAST, EAST|WEST))
-			set_dir(SOUTH)
-		else
-			set_dir(WEST)
-	else
-		set_dir(SOUTH)
 
 /obj/machinery/door/airlock/multi_tile/update_connections(var/propagate = 0)
 	var/dirs = 0
@@ -87,7 +99,7 @@
 
 		if(success)
 			dirs |= direction
-	connections = dirs
+	connections = dirs_to_corner_states(dirs)
 
 /obj/machinery/door/airlock/multi_tile/command
 	door_color = COLOR_COMMAND_BLUE

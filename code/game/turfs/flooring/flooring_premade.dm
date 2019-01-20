@@ -289,3 +289,10 @@
 	icon = 'icons/turf/flooring/misc.dmi'
 	icon_state = "sandstonevault"
 	initial_flooring = /decl/flooring/sandstonevault
+
+
+/turf/simulated/floor/reinforced/elevatorshaft
+	name = "elevator shaft floor"
+	icon = 'icons/turf/flooring/misc.dmi'
+	icon_state = "elevatorshaft"
+	initial_flooring = /decl/flooring/elevatorshaft

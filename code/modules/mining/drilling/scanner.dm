@@ -15,7 +15,7 @@
 	to_chat(user,"Tiny indicator shows it holds [survey_data] Good Explorer Points worth of data.")
 
 /obj/item/weapon/mining_scanner/attack_self(mob/user as mob)
-	to_chat(user, "You begin sweeping \the [src] about, scanning for metal deposits.")
+	to_chat(user, "You begin sweeping \the [src] about, scanning for metal and gas deposits.")
 
 	if(!do_after(user, 50,src))
 		return
@@ -26,10 +26,16 @@
 		"nuclear fuel" = 0,
 		"exotic matter" = 0
 		)
+	var/list/gases = list(
+		"breathable gases" = 0,
+		"exotic gases" = 0,
+		"gaseous fuel" = 0
+		)
+
 	var/new_data = 0
 	for(var/turf/simulated/T in range(2, get_turf(user)))
 
-		if(!T.has_resources)
+		if(!T.has_resources && !T.has_gas_resources)
 			continue
 
 		for(var/metal in T.resources)
@@ -54,6 +60,25 @@
 			if(!T.surveyed)
 				new_data += data_value * T.resources[metal]
 
+		for(var/gas in T.gas_resources)
+			var/gas_type
+			var/data_value = 1
+
+			switch(gas)
+				if("oxygen", "nitrogen", "sleeping_agent", "carbon_dioxide")
+					gas_type = "breathable gases"
+				if("hydrogen", "deuterium", "tritium", "helium")
+					gas_type = "gaseous fuels"
+					data_value = 2
+				if("phoron")
+					gas_type = "exotic gases"
+					data_value = 4
+
+			if(gas_type) gases[gas_type] += T.gas_resources[gas]
+
+			if(!T.surveyed)
+				new_data += data_value * T.gas_resources[gas]
+
 		T.surveyed = 1
 
 	to_chat(user, "\icon[src] <span class='notice'>The scanner beeps and displays a readout.</span>")
@@ -68,6 +93,16 @@
 
 
 		to_chat(user, "- [result] of [ore_type].")
+
+	for(var/gas_type in gases)
+		var/result = "no sign"
+
+		switch(gases[gas_type])
+			if(1 to 25) result = "trace amounts"
+			if(26 to 75) result = "significant amounts"
+			if(76 to INFINITY) result = "huge quantities"
+
+		to_chat(user, "- [result] of [gas_type].")
 
 	if(new_data)
 		survey_data += new_data

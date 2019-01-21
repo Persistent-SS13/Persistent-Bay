@@ -77,6 +77,8 @@ Radio:
 1347 - Cargo techs
 1349 - Service people
 
+1700
+
 Devices:
 1451 - tracking implant
 1457 - RSD default
@@ -101,6 +103,7 @@ var/const/RADIO_LOW_FREQ	= 1200
 var/const/PUBLIC_LOW_FREQ	= 1441
 var/const/PUBLIC_HIGH_FREQ	= 1489
 var/const/RADIO_HIGH_FREQ	= 1600
+var/const/RADIO_CUSTOM_FREQ = 1700
 
 var/const/BOT_FREQ	= 1447
 var/const/COMM_FREQ = 1353
@@ -149,6 +152,20 @@ var/list/radiochannels = list(
 	"Security(I)"	= SEC_I_FREQ
 )
 
+var/list/channel_color_presets = list(
+	"Global Green" = "#008000",
+	"Phenomenal Purple" = "#993399",
+	"Bitchin' Blue" = "#395A9A",
+	"Menacing Maroon" = "#6D3F40",
+	"Pretty Periwinkle" = "#5C5C8A",
+	"Painful Pink" = "#FF00FF",
+	"Raging Red" = "#A30000",
+	"Operational Orange" = "#A66300",
+	"Tantalizing Turquoise" = "#008160",
+	"Bemoaning Brown" = "#7F6539",
+	"Gastric Green" = "#6EAA2C"
+)
+
 // central command channels, i.e deathsquid & response teams
 var/list/CENT_FREQS = list(ERT_FREQ, DTH_FREQ)
 
@@ -195,6 +212,8 @@ var/list/DEPT_FREQS = list(AI_FREQ, COMM_FREQ, ENG_FREQ, MED_FREQ, SEC_FREQ, SCI
 		return "ttradio"
 	if(frequency in DEPT_FREQS)
 		return "deptradio"
+	if(frequency >= RADIO_CUSTOM_FREQ)
+		return "custradio"
 
 	return "radio"
 

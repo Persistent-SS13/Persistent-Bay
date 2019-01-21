@@ -1,5 +1,5 @@
 #ifndef T_BOARD
-#error T_BOARD macro is not defined but we need it! 
+#error T_BOARD macro is not defined but we need it!
 #endif
 
 /obj/item/weapon/circuitboard/telecomms
@@ -26,7 +26,7 @@
 							/obj/item/weapon/stock_parts/micro_laser = 1,
 							/obj/item/weapon/stock_parts/subspace/amplifier = 1,
 							/obj/item/bluespace_crystal = 1)
-							
+
 /obj/item/weapon/circuitboard/telecomms/hub
 	name = T_BOARD("hub mainframe")
 	build_path = /obj/machinery/telecomms/hub
@@ -85,3 +85,13 @@
 							/obj/item/weapon/stock_parts/subspace/filter = 1,
 							/obj/item/weapon/stock_parts/subspace/crystal = 1,
 							/obj/item/weapon/stock_parts/micro_laser/high = 2)
+
+/obj/item/weapon/circuitboard/keyprinter
+	board_type = "machine"
+	name = T_BOARD("encryption key printer")
+	build_path = /obj/machinery/keyprinter
+	origin_tech = list(TECH_DATA = 3, TECH_ENGINEERING = 2)
+	req_components = list(
+							/obj/item/weapon/stock_parts/scanning_module = 2,
+							/obj/item/weapon/stock_parts/manipulator = 1,
+							/obj/item/weapon/stock_parts/console_screen = 1)

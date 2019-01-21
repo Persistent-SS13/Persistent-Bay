@@ -4,7 +4,7 @@ var/datum/controller/employment_controller/employment_controller
 	var/timerbuffer = 0 //buffer for time check
 	var/checkbuffer = 0
 /datum/controller/employment_controller/New()
-	timerbuffer = 1 HOUR
+	timerbuffer = 30 MINUTES
 	checkbuffer = 5 MINUTES
 	START_PROCESSING(SSprocessing, src)
 
@@ -61,7 +61,7 @@ var/datum/controller/employment_controller/employment_controller
 						payment = job != null ? (record.rank > 1 ? text2num(job.ranks[job.ranks[record.rank - 1]]) : job.payscale) * faction.payrate * faction.unpaid["[employee.real_name]"] / 12 : 0
 					else
 						message_admins("INSANE PAY!! for [employee.real_name], DEFAULTING TO BASIC PAY")
-						payment = job.payscale * faction.payrate * faction.unpaid["[employee.real_name]"] / 12
+						payment = job.payscale * faction.payrate * faction.unpaid["[employee.real_name]"] / 6
 					if(payment && !money_transfer(faction.central_account, employee.real_name, "Payroll", 
 					payment))
 						faction.debts["[employee.real_name]"] += payment

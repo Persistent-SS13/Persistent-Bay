@@ -7,6 +7,7 @@
 	var/timestamp = ""
 	var/datum/computer_file/attachment = null
 
+	var/unread = 1
 /datum/computer_file/data/email_message/clone()
 	var/datum/computer_file/data/email_message/temp = ..()
 	temp.title = title

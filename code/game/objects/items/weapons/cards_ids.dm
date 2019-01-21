@@ -424,25 +424,24 @@ var/const/NO_EMAG_ACT = -50
 			for(var/x in faction.all_access)
 				final_access |= text2num(x)
 			return final_access
-		if(faction.allow_unapproved_ids || approved_factions.Find(faction.uid))
-			var/datum/computer_file/crew_record/record = faction.get_record(registered_name)
-			if(record)
-				for(var/x in record.access)
-					final_access |= text2num(x)
-				if(faction.allow_id_access) final_access |= access
-				var/datum/assignment/assignment = faction.get_assignment(record.try_duty())
-				if(assignment)
-					for(var/i=1; i<=record.rank; i++)
-						var/datum/accesses/copy = assignment.accesses["[i]"]
-						if(copy)
-							for(var/x in copy.accesses)
-								final_access |= text2num(x)
-				return final_access
+		var/datum/computer_file/crew_record/record = faction.get_record(registered_name)
+		if(record)
+			for(var/x in record.access)
+				final_access |= text2num(x)
+			if(faction.allow_id_access) final_access |= access
+			var/datum/assignment/assignment = faction.get_assignment(record.try_duty())
+			if(assignment)
+				for(var/i=1; i<=record.rank; i++)
+					var/datum/accesses/copy = assignment.accesses["[i]"]
+					if(copy)
+						for(var/x in copy.accesses)
+							final_access |= text2num(x)
+			return final_access
+		else
+			if(faction.allow_id_access)
+				return access
 			else
-				if(faction.allow_id_access)
-					return access
-				else
-					return list()
+				return list()
 	else
 		return access
 

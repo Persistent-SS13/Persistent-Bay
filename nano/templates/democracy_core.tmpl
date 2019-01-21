@@ -1,106 +1,27 @@
 {{if data.menu == 1}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
-	<h2>Business Control</h2>
+	<h2>Executive Government Control</h2>
 	<br><hr>
-	<br><br>{{:helper.link("Central Options", 'wrench', {'action' : 'change_menu', 'menu_target' : '2'})}}<br>
-	Change the name, abbreviation and mission statement for the business. These changes will be logged for shareholders.
 	<br><br>{{:helper.link("Access Config", 'locked', {'action' : 'change_menu', 'menu_target' : '3'})}}<br>
 	Setup accesses that can be given out to assignments which control doors and machines linked to your network.
 	<br><br>{{:helper.link("Assignments Config", 'pencil', {'action' : 'change_menu', 'menu_target' : '4'})}}<br>
-	Setup assignments, ranks and departments that control the structure of your employees, including access, wages and expense limits.
+	Setup assignments, ranks and departments that control the structure of your government employees, including access, wages and expense limits.
 	<br><br>{{:helper.link("Economy Menu", 'calculator', {'action' : 'change_menu', 'menu_target' : '9'})}}<br>
-	View the account balance and debt of the business, and control expense cards.
+	View the account balance and debt of the government, the current tax policy and print expense cards.
 	<br><br>{{:helper.link("Promotion Control", 'flag', {'action' : 'change_menu', 'menu_target' : '10'})}}<br>
-	Set how many promotion votes it takes for non-CEO employees to authorize a promotion within the company. 
+	Set how many promotion votes it takes for management to authorize a promotion within the government.
 	<br><br>{{:helper.link("Cryo-networks", '', {'action' : 'change_menu', 'menu_target' : '11'})}}<br>
 	Control the different cryo networks that your business can maintain.
 {{/if}}
-{{if data.menu == 12}}
-	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
-	<h2>Status and Modules</h2>
-	<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'menu_back'})}}
-	<br><hr>
-	<div class='item'>
-		<div class='itemLabel'>
-			Business Status:
-		</div>
-		<div class='itemContent'>
-			{{:data.business_size}}
-		</div>
-	</div>
-	<div class='item'>
-		<div class='itemLabel'>
-			Minor Module:
-		</div>
-		<div class='itemContent'>
-			{{:data.module_1}}<br>
-			{{:helper.link("Change", '', {'action' : 'module_1_change'})}}
-		</div>
-	</div>
-	<div class='item'>
-		<div class='itemLabel'>
-			Major Module:
-		</div>
-		<div class='itemContent'>
-			{{:data.module_2}}<br>
-			{{if data.has_major}}
-				{{:helper.link("Change", '', {'action' : 'module_2_change'})}}
-			{{else}}
-				{{:helper.link("Purchase", '', {'action' : 'module_2_purchase'})}}
-			{{/if}}
-		</div>
-	</div>
-	<div class='item'>
-		<div class='itemLabel'>
-			Extra Modules:
-		</div>
-		<div class='itemContent'>
-			{{:data.module_extra}}
-		</div>
-	</div>
-	<br><hr>
-	<h3>Research and Machine Limits</h3>
 
-	
-{{/if}}
-{{if data.menu == 13}}
-	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
-	<h2>Change Minor Module</h2>
-	<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'menu_back'})}}
-	<br><hr>
-	Warning! Changing your minor module will change your research and machine limits. Any research exceeding your new limit will be inaccessible and any machines exceeding the limits will be automatically disconnected.
-	<br><br>
-	
-	
-{{/if}}
-{{if data.menu == 14}}
-
-{{/if}}
-{{if data.menu == 2}}
-	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
-	<h2>Central Options</h2>
-	<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'menu_back'})}}
-	<br><hr>
-	<br><br>{{:helper.link("Change Business Name", 'pencil', {'action' : 'change_name'})}} Full Name: <b>{{:data.faction_name}}</b>
-	<br><br>{{:helper.link("Change Abbreviation", 'pencil', {'action' : 'change_abbreviation'})}} Abbreviation: <b>{{:data.faction_abbreviation}}</b><br>
-	The abbreviation is used where a shortened business name is needed.
-	<br><br>{{:helper.link("Change Tag", 'pencil', {'action' : 'change_tag'})}} Tag: <b>{{:data.faction_tag}}</b><br>
-	The tag is applied to nametags printed out of our network, identifying one of our employees. It can also be used if the stock is listed on a public market. It must be unique.
-	<br><br>{{:helper.link("Change Description/Mission Statement", 'pencil', {'action' : 'change_purpose'})}}<br>
-	This is shown from the business information screen on any computer connected to the network.
-	<div class='block'>
-		{{:data.faction_purpose}}
-	</div
-{{/if}}
 {{if data.menu == 3}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>Access Configuration</h2>
 	<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
 	<br><br>{{:helper.link("Create New Access Category", 'pencil', {'action' : 'create_accesscategory'})}}
 	<br><hr>
-	Core Access - Core access cannot be deleted or used outside their named purpose. More core access will be added as your business adds modules.<br>
+	Core access cannot be deleted or used outside their named purpose.<br>
 	<br>
-	
 	{{for data.access_categories}}
 		{{:helper.link(value.name, '', {'action' : 'select_accesscategory', 'selected_ref' : value.ref})}}{{:helper.link("Create new access", '', {'action' : 'create_access_two', 'selected_ref' : value.ref})}}:<br><br>
 		{{for value.accesses :accessValue:accessIndex}}

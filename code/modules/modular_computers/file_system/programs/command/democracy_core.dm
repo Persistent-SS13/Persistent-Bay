@@ -1,18 +1,19 @@
 
-/datum/computer_file/program/business_core
-	filename = "business_core"
-	filedesc = "Business Control Program"
+/datum/computer_file/program/democracy_core
+	filename = "democracy_core"
+	filedesc = "Executive Government Control"
 	program_icon_state = "comm"
 	program_menu_icon = "flag"
 	nanomodule_path = /datum/nano_module/program/business_core
-	extended_desc = "Used by the CEO and shareholders to control aspects of the business."
+	extended_desc = "Used by the Executive Branch to manage the government."
 	required_access = core_access_leader
 	requires_ntnet = 1
 	size = 65
 	usage_flags = PROGRAM_CONSOLE
-
-/datum/nano_module/program/business_core
-	name = "Business Control Program"
+	democratic = 1
+	
+/datum/nano_module/program/democracy_core
+	name = "Executive Government Control"
 	available_to_ai = TRUE
 	var/connected = 0
 	var/attempted_password = ""
@@ -39,11 +40,6 @@
 	if(connected_faction)
 		data["faction_name"] = connected_faction.name
 		data["faction_uid"] = connected_faction.uid
-		if(menu == 2)
-			data["faction_abbreviation"] = connected_faction.abbreviation
-			data["faction_tag"] = connected_faction.short_tag
-			var/regex/allregex = regex(".")
-			data["faction_purpose"] = connected_faction.purpose
 		if(menu == 3)
 			var/list/access_categories[0]
 			var/datum/access_category/core/core
@@ -218,56 +214,8 @@
 			menu = select_menu
 			selected_rank = 1
 			prior_menu = 1
-		if("change_name")
-			var/curr_name = connected_faction.name
-			var/select_name = sanitizeName(input(usr,"Enter the name of your organization","Business Display Name", connected_faction.name) as null|text, MAX_NAME_LEN, 1, 0)
-			if(select_name)
-				if(curr_name != connected_faction.name)
-					to_chat(usr, "Your inputs expired because someone used the terminal first.")
-				else
-					for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
-						if(existing_faction.name == select_name)
-							to_chat(usr, "Error! A Business with that display name already exists!")
-							return 1
-					connected_faction.name = select_name
-					to_chat(usr, "Business display name successfully changed.")
-		if("change_abbreviation")
-			var/curr_name = connected_faction.abbreviation
-			var/select_name = sanitizeName(input(usr,"Enter the abbreviation of your organization","Business Abbreviation", connected_faction.abbreviation) as null|text, 20, 1, 0)
-			if(select_name)
-				if(curr_name != connected_faction.abbreviation)
-					to_chat(usr, "Your inputs expired because someone used the terminal first.")
-				else
-					for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
-						if(existing_faction.abbreviation == select_name)
-							to_chat(usr, "Error! A Business with that abbreviation already exists!")
-							return 1
-					connected_faction.abbreviation = select_name
-					to_chat(usr, "Business abbreviation successfully changed.")
-		if("change_tag")
-			var/curr_name = connected_faction.short_tag
-			var/select_name = sanitizeName(input(usr,"Enter the tag of your organization","Business Tag", connected_faction.short_tag) as null|text, 4, 1, 0)
-			if(select_name)
-				if(curr_name != connected_faction.short_tag)
-					to_chat(usr, "Your inputs expired because someone used the terminal first.")
-				else
-					for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
-						if(existing_faction.short_tag == select_name)
-							to_chat(usr, "Error! A Business with that tag already exists!")
-							return 1
-					connected_faction.short_tag = select_name
-					to_chat(usr, "Business tag successfully changed.")
-		if("change_purpose")
-			var/curr_name = connected_faction.purpose
-			var/select_name = sanitize(input(usr,"Enter a description or purpose for your organization.","Business Desc.", connected_faction.purpose) as null|text, 126)
-			if(select_name)
-				if(curr_name != connected_faction.purpose)
-					to_chat(usr, "Your inputs expired because someone used the terminal first.")
-				else
-					connected_faction.purpose = select_name
-					to_chat(usr, "Business description successfully changed.")
 		if("menu_back")
-			menu = 3
+			menu = 1
 		if("create_accesscategory")
 			var/select_name = sanitizeName(input(usr,"Enter new access category name.","Create Access Category", "") as null|text, MAX_NAME_LEN, 1, 0)
 			if(select_name)

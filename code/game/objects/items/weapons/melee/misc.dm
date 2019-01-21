@@ -32,6 +32,21 @@
 	icon_state = "chain"
 	item_state = "whip"
 
+/obj/item/weapon/material/sword/DuelingSword
+    name = "Dueling Sword"
+    desc = "A polished sword commonly seen on the hip of old nobility."
+    icon_state = "marineofficersword"
+    item_state = "marineofficersword"
+    slot_flags = SLOT_BELT
+    applies_material_colour = FALSE
+        force_divisor = 0.2 // 12 with hardness 60 (steel)
+    thrown_force_divisor = 0.75 // 15 with weight 20 (steel)
+    w_class = ITEM_SIZE_NORMAL
+    sharp = 1
+    edge = 1
+    origin_tech = list(TECH_MATERIAL = 2, TECH_COMBAT = 1)
+    attack_verb = list("sliced", "stabbed", "cut")
+	
 /obj/item/weapon/material/sword/replica/officersword
 	name = "fleet officer's sword"
 	desc = "A polished sword issued to officers of the fleet."

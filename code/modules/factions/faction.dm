@@ -253,11 +253,11 @@ var/PriorityQueue/all_feeds
 	var/author = ""
 	var/true_author = ""
 	var/publish_date = 0
-	
+
 	var/list/purchased = list()
 
 	var/datum/NewsIssue/parent
-	
+
 	var/uid
 
 /datum/NewsIssue
@@ -267,9 +267,9 @@ var/PriorityQueue/all_feeds
 	var/publisher = ""
 
 	var/datum/NewsFeed/parent
-	
+
 	var/uid
-	
+
 /datum/NewsFeed
 	var/name = "None"
 	var/visible = 0
@@ -279,8 +279,8 @@ var/PriorityQueue/all_feeds
 	var/per_issue = 60
 	var/announcement = "Breaking News!"
 	var/last_published = 0
-	
-	
+
+
 	var/datum/small_business/parent
 
 /datum/NewsFeed/New()
@@ -298,14 +298,14 @@ var/PriorityQueue/all_feeds
 	current_issue.name = "[name] News Issue"
 	last_published = current_issue.publish_date
 	all_feeds.ReSort(src)
-	
+
 /datum/NewsFeed/proc/publish_story(var/datum/NewsStory/story)
 	current_issue.stories |= story
 	story.parent = current_issue
 	for(var/obj/machinery/newscaster/caster in allCasters)
 		caster.newsAlert("(From [name]) [announcement] ([story.name])")
 	GLOB.recent_articles |= story
-	
+
 
 /datum/small_business
 	var/name = "" // can should never be changed and must be unique
@@ -617,7 +617,7 @@ var/PriorityQueue/all_feeds
 	var/datum/ntnet/network
 	var/datum/money_account/central_account
 	var/allow_id_access = 0 // allows access off the ID (the IDs access var instead of directly from faction records, assuming its a faction-approved ID
-	var/allow_unapproved_ids = 0 // allows ids that are not faction-approved or faction-created to still be used to access doors IF THE registered_name OF THE CARD HAS VALID RECORDS ON FILE or allow_id_access is set to 1
+	var/allow_unapproved_ids = 0 // **THIS VAR NO LONGER MATTERS IDS ARE ALWAYS CONSIDERED APPROVED** allows ids that are not faction-approved or faction-created to still be used to access doors IF THE registered_name OF THE CARD HAS VALID RECORDS ON FILE or allow_id_access is set to 1
 	var/list/connected_laces = list()
 
 	var/all_promote_req = 3
@@ -646,14 +646,113 @@ var/PriorityQueue/all_feeds
 
 	var/list/reserved_frequencies() = list() // Reserved frequencies that the faction can create encryption keys from.
 
-
 /datum/world_faction/democratic
 
+	var/datum/democracy/governor/gov
+	var/list/city_council = list()
+	var/list/judges = list()
+
+	var/council_amount = 5
+
+	var/list/policy = list()
+
+	var/list/criminal_laws = list()
+	var/list/civil_laws = list()
+
+	var/list/votes = list()
+	var/list/vote_history = list()
+
+	var/datum/election/current_election
+	var/list/waiting_elections = list()
+	var/active_elections = 1
+
+	var/election_toggle = 0
+/datum/world_faction/democratic/proc/start_election(var/datum/election/election)
+	current_election = election
+	if(election.typed)
+		election_toggle = !election_toggle
+	to_world("<font size=3>The [election.name] has started.</font>")
+
+/datum/world_faction/democratic/proc/stop_election()
+	for(var/datum/democracy/ballot in current_election.ballots)
+		if(!ballot.candidates.len)
+			continue
+		var/list/leaders = list()
+		var/datum/candidate/leader
+		for(var/datum/candidate/candidate in ballot.candidates)
+			if(!leader || candidate.votes.len > leader.votes.len)
+				leaders.Cut()
+				leader = candidate
+				leaders |= candidate
+			else if(candidate.votes.len == leader.votes.len)
+				leaders |= candidate
+				leader = candidate
+		if(!leaders.len)
+			to_world("<font size=3>In the election for [ballot.title], no one was elected!</font>")
+		else if(leaders.len > 1)
+			var/leaders_names = ""
+			var/first = 1
+			for(var/datum/candidate/candidate in leaders)
+				if(first)
+					leaders_names += candidate.real_name
+					first = 0
+				else
+					leaders_names += ", [candidate.real_name]"
+			leader = pick(leaders)
+			to_world("<font size=3>In the election for [ballot.title], the election was tied between [leaders_names]. [leader.real_name] was randomly selected as the winner.</font>")
+			ballot.real_name = leader.real_name
+		else
+			to_world("<font size=3>In the election for [ballot.title], the election was won by [leader.real_name].</font>")
+			ballot.real_name = leader.real_name
+	current_election = null
+
+
+/datum/election
+	var/name = "Station Council Election"
+	var/list/ballots = list() // populate this with the /datum/democracy for every participant of the election
+
+	var/start_hour = 10 // time of day (in 24 hour) when the election should start by
+	var/end_hour = 22
+	var/cut_off = 14
+	var/start_day = "Saturday"
+	var/end_day = "Saturday"
+
+	var/typed = 1
+	var/num_type = 0
+
+/datum/election/gov
+	name = "Governor Election"
+	typed = 1
+	num_type = 1
+
+
+
+/datum/democracy
+	var/real_name // real_name of elected
+	var/term_start // real time
+	var/title = "Councillor"
+	var/consecutive_terms = 0
+
+	var/list/candidates = list()
+	var/list/voted_ckeys = list() // to prevent double voting
+
+/datum/democracy/governor
+	title = "Governor"
+
+/datum/democracy/councillor
+
+/datum/democracy/judge
+	title = "Judge"
+
+/datum/candidate
+	var/real_name = "" // real name of candidate
+	var/ckey = "" // ckey of candidate to prevent self voting
+	var/list/votes = list() // list of unqiue names voting for the candidate
+
+	var/desc = ""
+
+
 /datum/world_faction/business
-
-
-
-
 
 /datum/world_faction/after_load()
 	if(!debts)
@@ -916,28 +1015,28 @@ var/PriorityQueue/all_feeds
 	network_name = "freenet"
 	network_uid = "freenet"
 
-	
+
 /datum/beacon_objective
 	var/name = "Objective name"
 	var/payout = 0 // how much to pay upon completion
 	var/req_level = 0 // required level of the beacon
 
 	var/required = 10 // How much of whatever is required to fill the objective
-	
-	
-	
+
+
+
 /datum/beacon_objective/profit
-	name = "Have X$$ in your corperate account, an increase of Y$$."
-	
+	name = "Have X$$ in your business account, an increase of Y$$."
+
 /datum/beacon_objective/sales_total
 	name = "Do X$$ in sales to other residents."
-	
+
 /datum/beacon_objective/sales_unique
 	name = "Do sales with X unique people."
 
 /datum/beacon_objective/export
 	name = "Deliver X units of Y via telepad."
-	
+
 /datum/beacon_objective/survey_beacon
 	name = "Survey the sensor beacon X located in zone Y."
 
@@ -946,19 +1045,19 @@ var/PriorityQueue/all_feeds
 
 /datum/beacon_objective/article_sales
 	name = "Have your articles purchased X amount of time."
-	
+
 /datum/beacon_objective/listeners
 	name = "Have X amount of patrons in the vicinity of one of your music emitters."
-	
+
 /datum/beacon_objective/reaction
 	name = "Produce X units of Y in a chemmaster."
 
 /datum/beacon_objective/drugs
 	name = "Produce X 10 unit Ys (patches, pills) in a chemmaster."
-	
+
 /datum/beacon_objective/production
 	name = "Produce X amount of objects in a Z (fabricator type)."
-	
+
 /datum/beacon_objective/recycling
 	name = "Break down X objects in a recycling machine."
 
@@ -967,13 +1066,13 @@ var/PriorityQueue/all_feeds
 
 /datum/beacon_objective/unlock_designs
 	name = "Unlock X amount of designs."
-	
+
 /datum/beacon_objective/produce_designs
 	name = "Produce X amount of design disks."
 
 /datum/beacon_objective/farm
 	name = "Grow X amount of Y."
-	
+
 /datum/beacon_objective/farm/food
 	name = "Grow X amount of Y (food)."
 
@@ -985,17 +1084,17 @@ var/PriorityQueue/all_feeds
 
 /datum/beacon_objective/bind_books
 	name = "Have X amount of books printed off your library network."
-	
+
 /datum/beacon_objective/body_scans
 	name = "Have scan X unique indivduals in a body scanner."
-	
-	
 
-	
-	
+
+
+
+
 
 /datum/business_module/minor/journalism
-	
+
 /datum/business_module/minor/art
 
 /datum/business_module/minor/medical_simple
@@ -1032,16 +1131,15 @@ var/PriorityQueue/all_feeds
 /datum/business_module/major/security
 
 
-	
+
 /obj/machinery/economic_beacon
 	name = "Economic Beacon"
 	anchored = 1
 	var/datum/world_faction/holder
 	var/holder_uid
-	
+
 	var/list/connected_orgs = list()
 	var/list/connected_orgs_uids = list()
 	var/completed_objectives = 0
-	
-	
-	
+
+

@@ -5,7 +5,10 @@
 
 	//Mining resources (for the large drills).
 	var/has_resources
+	var/has_gas_resources
+
 	var/list/resources
+	var/list/gas_resources
 
 	var/thermite = 0
 	initial_gas = list("oxygen" = MOLES_O2STANDARD, "nitrogen" = MOLES_N2STANDARD)

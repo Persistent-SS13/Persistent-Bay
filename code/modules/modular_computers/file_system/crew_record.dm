@@ -49,7 +49,6 @@ FIELD_SHORT_SECURE("Fingerprint", fingerprint, core_access_security_programs)
 // EMPLOYMENT RECORDS
 FIELD_LONG_SECURE("Employment Record", emplRecord, core_access_employee_records)
 FIELD_SHORT_SECURE("Home System", homeSystem, core_access_employee_records)
-FIELD_SHORT_SECURE("Citizenship", citizenship, core_access_employee_records)
 FIELD_SHORT_SECURE("Faction", faction, core_access_employee_records)
 FIELD_SHORT_SECURE("Religion", religion, core_access_employee_records)
 
@@ -81,7 +80,9 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/worked = 0
 	var/expenses = 0
 	var/datum/computer_file/data/email_account/email
-	
+
+	var/citizenship = 0 // 0 = resident, 1 = citizen
+
 /datum/computer_file/crew_record/New()
 	..()
 	for(var/T in subtypesof(/record_field/))
@@ -120,7 +121,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 					var/promoter_command = (assignment.parent.command_faction)
 					var/promoter_head = (assignment.parent.head_position && assignment.parent.head_position.uid == assignment.uid)
 					var/curr_command = curr_assignment.parent.command_faction
-					var/curr_head = (curr_assignment.parent.head_position && curr_assignment.parent.head_position.uid == curr_assignment.uid) 
+					var/curr_head = (curr_assignment.parent.head_position && curr_assignment.parent.head_position.uid == curr_assignment.uid)
 					var/same_dept = (assignment.parent.name == curr_assignment.parent.name)
 					if(promoter_command)
 						if(curr_command)
@@ -141,14 +142,14 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 						else
 							if(record.rank <= rank)
 								continue
-		
+
 		if(record.rank <= 5)
 			five_promotes |= record.get_name()
 		if(record.rank <= 3)
 			three_promotes |= record.get_name()
 		all_promotes |= record.get_name()
-		
-		
+
+
 	if(five_promotes.len >= faction.five_promote_req)
 		rank++
 		promote_votes.Cut()
@@ -168,7 +169,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		update_ids(get_name())
 		return
 	for(var/name in demote_votes)
-		
+
 		if(name == faction.leader_name)
 			five_promotes |= name
 			three_promotes |= name
@@ -183,7 +184,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 					var/promoter_command = (assignment.parent.command_faction)
 					var/promoter_head = (assignment.parent.head_position && assignment.parent.head_position.uid == assignment.uid)
 					var/curr_command = curr_assignment.parent.command_faction
-					var/curr_head = (curr_assignment.parent.head_position && curr_assignment.parent.head_position.uid == curr_assignment.uid) 
+					var/curr_head = (curr_assignment.parent.head_position && curr_assignment.parent.head_position.uid == curr_assignment.uid)
 					var/same_dept = (assignment.parent.name == curr_assignment.parent.name)
 					if(promoter_command)
 						if(curr_command)
@@ -204,13 +205,13 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 						else
 							if(record.rank <= rank)
 								continue
-		
+
 		if(record.rank <= 5)
 			five_demotes |= record.get_name()
 		if(record.rank <= 3)
 			three_demotes |= record.get_name()
 		all_demotes |= record.get_name()
-		
+
 	if(five_demotes.len >= faction.five_promote_req)
 		rank--
 		promote_votes.Cut()
@@ -301,6 +302,10 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		photo_side = getFlatIcon(dummy, WEST, always_use_defdir = 1)
 		qdel(dummy)
 
+	if(!email && H)
+		email = new()
+		email.login = H.real_name
+
 	// Generic record
 	set_name(H ? H.real_name : "Unset")
 	set_job(H ? GetAssignment(H) : "Unset")
@@ -324,7 +329,6 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	// Employment record
 	set_emplRecord((H && H.gen_record && !jobban_isbanned(H, "Records") ? html_decode(H.gen_record) : "No record supplied"))
 	set_homeSystem(H ? H.home_system : "Unset")
-	set_citizenship(H ? H.citizenship : "Unset")
 	set_faction(H ? H.personal_faction : "Unset")
 	set_religion(H ? H.religion : "Unset")
 

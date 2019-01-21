@@ -264,23 +264,6 @@
 	log_debug("[src] took [resultingdmg] [damtype] damages from [damsrc]! Before armor: [damage] damages.")
 	return .
 
-// - damlist: used when a hit inflicts more than one type of damage. Just make an entry for each damage type and give them the damage amount as value ex: list(DAM_BLUNT = 50)
-///obj/take_damage(var/list/damlist, var/armorbypass = 0, var/damsrc = null)
-//	if(!isdamageable())
-//		return 0
-//	if(!islist(damlist))
-//		return ..() //Default take_damage proc call if first param isn't list
-//	. = 0
-//	for(var/key in damlist)
-//		if(!vulnerable_to_damtype(key))
-//			continue
-//		var/resultingdmg = max(0, damlist[key] * blocked_mult(armor_absorb(damlist[key], armorbypass, key)))
-//		set_health(get_health() - resultingdmg)
-//		update_health(key)
-//		. += resultingdmg
-//		log_debug("[src] took [resultingdmg] [damtype] damages from [damsrc]! Before armor: [damage] damages.")
-//	return .
-
 //Like take damage, but meant to instantly destroy the object from an external source
 /obj/proc/kill(var/damagetype = DAM_BLUNT)
 	if(!isdamageable())
@@ -391,7 +374,7 @@
 		playsound(loc, hitsoundoverride, vol=30, vary=1, extrarange=2, falloff=1)
 		return 0
 
-	take_damage(damage, damoverride)
+	take_damage(damage, damoverride, 0, user)
 	playsound(loc, hitsoundoverride, vol=60, vary=1, extrarange=8, falloff=6)
 	return 1
 
@@ -480,7 +463,7 @@
 		visible_message(SPAN_WARNING("\The [src] was hit by \the [AM] with no visible effect."))
 		playsound(loc, sound_hit, vol=40, vary=1, extrarange=4, falloff=2)
 		return 0
-	take_damage(throw_damage, damtype, armorbypass = ap)
+	take_damage(throw_damage, damtype, ap, AM)
 
 	src.visible_message(SPAN_WARNING("\The [src] has been hit by \the [O]."))
 	playsound(loc, sound_hit, vol=50, vary=1, extrarange=8, falloff=6)
@@ -516,7 +499,7 @@
 	if(expvol <= 0)
 		expvol = 1
 	var/fire_damage = (exposed_temperature/burn_point) * (air.volume/expvol)
-	take_damage(damage = fire_damage, damtype = DAM_BURN) //might make more sense to use laser here...
+	take_damage(fire_damage, DAM_BURN) //might make more sense to use laser here...
 
 /obj/proc/ignite()
 	burning = TRUE

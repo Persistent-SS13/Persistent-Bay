@@ -415,7 +415,7 @@
 		if(M.status_flags & GODMODE)
 			continue
 		toxdamage = (toxdamage - (toxdamage*M.getarmor(null, DAM_RADS)))
-		M.apply_effect(toxdamage, TOX)
+		M.apply_effect(toxdamage, DAM_BIO)
 	return
 
 

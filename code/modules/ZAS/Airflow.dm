@@ -131,13 +131,13 @@ mob/living/carbon/human/airflow_hit(atom/A)
 	var/b_loss = min(airflow_speed, (airborne_acceleration*2)) * vsc.airflow_damage
 
 	var/blocked = run_armor_check(BP_HEAD,DAM_BLUNT)
-	apply_damage(b_loss/3, BRUTE, BP_HEAD, blocked, 0, "Airflow")
+	apply_damage(b_loss/3, DAM_BLUNT, BP_HEAD, blocked, 0, "Airflow")
 
 	blocked = run_armor_check(BP_CHEST,DAM_BLUNT)
-	apply_damage(b_loss/3, BRUTE, BP_CHEST, blocked, 0, "Airflow")
+	apply_damage(b_loss/3, DAM_BLUNT, BP_CHEST, blocked, 0, "Airflow")
 
 	blocked = run_armor_check(BP_GROIN,DAM_BLUNT)
-	apply_damage(b_loss/3, BRUTE, BP_GROIN, blocked, 0, "Airflow")
+	apply_damage(b_loss/3, DAM_BLUNT, BP_GROIN, blocked, 0, "Airflow")
 
 	if(airflow_speed > 10)
 		Paralyse(round(airflow_speed * vsc.airflow_stun))

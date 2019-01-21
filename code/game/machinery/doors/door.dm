@@ -296,7 +296,7 @@
 	if(src.density && istype(I, /obj/item/weapon) && user.a_intent == I_HURT && !istype(I, /obj/item/weapon/card))
 		var/obj/item/weapon/W = I
 		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-		if(W.damtype == BRUTE || W.damtype == BURN)
+		if(IsDamageTypeBrute(W.damtype) || IsDamageTypeBurn(W.damtype))
 			user.do_attack_animation(src)
 			if(W.force < min_force)
 				user.visible_message("<span class='danger'>\The [user] hits \the [src] with \the [W] with no visible effect.</span>")
@@ -305,15 +305,12 @@
 				playsound(src.loc, sound_hit, 100, 1)
 				take_damage(W.force, W.damtype, armorbypass = W)
 
-/obj/machinery/door/take_damage(damage, damtype, armordamagetype, armorbypass, list/damlist, damflags, damsrc)
+/obj/machinery/door/take_damage(damage, damtype, armorbypass, damsrc)
 	var/initialhealth = src.health
 	//cap projectile damage so that there's still a minimum number of hits required to break the door
 	if(damage)
 		damage = min(damage, 100)
-	if(damlist)
-		for(var/key in damlist)
-			damlist[key] = min(100, damlist[key])
-	..(damage, damtype, armordamagetype, armorbypass, damlist, damflags, damsrc)
+	..(damage, damtype, armorbypass, damsrc)
 	if(src.health <= 0 && initialhealth > 0)
 		src.set_broken()
 	else if(src.health < src.max_health / 4 && initialhealth >= src.max_health / 4)

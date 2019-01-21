@@ -232,9 +232,9 @@
 /mob/living/carbon/human/proc/can_autoheal(var/dam_type)
 	if(!species || !dam_type) return FALSE
 
-	if(dam_type == BRUTE)
+	if(IsDamageTypeBrute(dam_type))
 		return(getBruteLoss() < species.total_health / 2)
-	else if(dam_type == BURN)
+	else if(IsDamageTypeBurn(dam_type))
 		return(getFireLoss() < species.total_health / 2)
 	return FALSE
 
@@ -375,7 +375,6 @@ This function restores all organs.
 	return internal_organs_by_name[BP_STACK]
 
 /mob/living/carbon/human/apply_damage(var/damage = 0, var/damagetype = DAM_BLUNT, var/def_zone = null, var/blocked = 0, var/damage_flags = 0, var/obj/used_weapon = null, var/obj/item/organ/external/given_organ = null)
-
 	var/obj/item/organ/external/organ = given_organ
 	if(!organ)
 		if(isorgan(def_zone))
@@ -383,9 +382,11 @@ This function restores all organs.
 		else
 			if(!def_zone)	def_zone = ran_zone(def_zone)
 			organ = get_organ(check_zone(def_zone))
+	log_debug("[src], apply_damage([damage], [damagetype], [def_zone], [blocked], [damage_flags], [used_weapon]), organ is [organ]")
 
 	//Handle other types of damage
-	if(!(damagetype in list(DAM_BLUNT, DAM_BURN, DAM_PAIN, DAM_CLONE)))
+	if(!(damagetype in list(DAM_BLUNT, DAM_BULLET, DAM_CUT, DAM_PIERCE, DAM_LASER, DAM_ENERGY, DAM_ELECTRIC, DAM_BOMB, DAM_BURN, DAM_PAIN, DAM_CLONE)))
+		log_debug("[src], apply damage, run parent proc")
 		..(damage, damagetype, def_zone, blocked)
 		return 1
 
@@ -405,10 +406,10 @@ This function restores all organs.
 	switch(damagetype)
 		if(DAM_BLUNT, DAM_CUT, DAM_PIERCE, DAM_BULLET)
 			damage = damage*species.brute_mod
-			created_wound = organ.take_damage(damage = damage, damtype = damagetype, damflags = damage_flags, damsrc = used_weapon)
+			created_wound = organ.take_damage(damage = damage, damtype = damagetype, damsrc = used_weapon)
 		if(DAM_BURN, DAM_LASER, DAM_ENERGY)
 			damage = damage*species.burn_mod
-			created_wound = organ.take_damage(damage = damage, damtype = damagetype, damflags = damage_flags, damsrc = used_weapon)
+			created_wound = organ.take_damage(damage = damage, damtype = damagetype, damsrc = used_weapon)
 		if(DAM_PAIN)
 			organ.add_pain(damage)
 		if(DAM_CLONE)

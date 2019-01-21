@@ -70,9 +70,9 @@
 	for(var/entry in value)
 		var/milrank = entry["milrank"]
 		if(in_line && (GLOB.using_map.flags & MAP_HAS_RANK))
-			var/datum/computer_file/report/crew_record/CR = get_crewmember_record(entry["name"])
-			if(CR)
-				var/datum/mil_rank/rank_obj = mil_branches.get_rank(CR.get_branch(), CR.get_rank())
+			var/datum/computer_file/report/crew_record/rec = get_crewmember_record(entry["name"])
+			if(rec)
+				var/datum/mil_rank/rank_obj = mil_branches.get_rank(rec.get_branch(), rec.get_rank())
 				milrank = (rank_obj ? rank_obj.name_short : "")
 		dat += format_output(entry["name"], in_line ? null : entry["rank"], milrank)
 	return jointext(dat, in_line ? ", " : "<br>")
@@ -88,7 +88,7 @@
 		if(in_as_list(entry, new_value))
 			continue //ignore repeats
 		new_value += list(entry)
-	value = new_value	
+	value = new_value
 
 /datum/report_field/people/list_from_manifest/ask_value(mob/user)
 	var/alert = alert(user, "Would you like to add or remove a name?", "Form Input", "Add", "Remove")

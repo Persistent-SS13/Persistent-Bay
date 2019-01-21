@@ -211,12 +211,12 @@
 		playsound(loc, 'sound/effects/splat.ogg', 50, 1)
 
 		var/damage = rand(5, 7)
-		H.apply_damage(2 * damage, BRUTE, BP_HEAD)
-		H.apply_damage(2 * damage, BRUTE, BP_CHEST)
-		H.apply_damage(0.5 * damage, BRUTE, BP_L_LEG)
-		H.apply_damage(0.5 * damage, BRUTE, BP_R_LEG)
-		H.apply_damage(0.5 * damage, BRUTE, BP_L_ARM)
-		H.apply_damage(0.5 * damage, BRUTE, BP_R_ARM)
+		H.apply_damage(2 * damage, DAM_BLUNT, BP_HEAD)
+		H.apply_damage(2 * damage, DAM_BLUNT, BP_CHEST)
+		H.apply_damage(0.5 * damage, DAM_BLUNT, BP_L_LEG)
+		H.apply_damage(0.5 * damage, DAM_BLUNT, BP_R_LEG)
+		H.apply_damage(0.5 * damage, DAM_BLUNT, BP_L_ARM)
+		H.apply_damage(0.5 * damage, DAM_BLUNT, BP_R_ARM)
 
 		blood_splatter(src, H, 1)
 	..()

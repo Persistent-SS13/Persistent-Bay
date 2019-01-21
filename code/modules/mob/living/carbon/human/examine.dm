@@ -266,9 +266,9 @@
 		if(perpname)
 			var/datum/world_faction/faction = get_faction(user.GetFaction())
 			if(faction)
-				var/datum/computer_file/crew_record/record
+				var/datum/computer_file/report/crew_record/record
 				if(!faction.get_record(perpname))
-					var/datum/computer_file/crew_record/rec = new() //If there's no record created for them in the faction, make a new one.
+					var/datum/computer_file/report/crew_record/rec = new() //If there's no record created for them in the faction, make a new one.
 					if(!rec.load_from_global(perpname))
 						msg += "<span class = 'deptradio'>ERROR:No public records found! Record creation aborted!\n</span>"
 					else
@@ -296,7 +296,7 @@
 
 		var/datum/world_faction/faction = get_faction(user.GetFaction())
 		if(faction)
-			var/datum/computer_file/crew_record/R = faction.get_record(perpname)
+			var/datum/computer_file/report/crew_record/R = faction.get_record(perpname)
 			if(R)
 				medical = R.get_status()
 

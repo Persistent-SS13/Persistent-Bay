@@ -199,7 +199,7 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='warning'>[user]'s [tool.name] slips, damaging the internal structure of [target]'s [affected.name].</span>",
 	"<span class='warning'>Your [tool.name] slips, damaging the internal structure of [target]'s [affected.name].</span>")
-	target.apply_damage(rand(5,10), BURN, affected)
+	target.apply_damage(rand(5,10), DAM_BURN, affected)
 
 //////////////////////////////////////////////////////////////////
 //	robotic limb burn damage repair surgery step
@@ -254,7 +254,7 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='warning'>[user] causes a short circuit in [target]'s [affected.name]!</span>",
 	"<span class='warning'>You cause a short circuit in [target]'s [affected.name]!</span>")
-	target.apply_damage(rand(5,10), BURN, affected)
+	target.apply_damage(rand(5,10), DAM_BURN, affected)
 
 //////////////////////////////////////////////////////////////////
 //	 artificial organ repair surgery step

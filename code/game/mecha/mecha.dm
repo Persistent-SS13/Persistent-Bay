@@ -39,7 +39,7 @@
 	var/mhit_power_use = 0
 
 	//the values in this list show how much damage will pass through, not how much will be absorbed.
-	var/list/damage_absorption = list("brute"=0.8,"fire"=1.2,"bullet"=0.9,"laser"=1,"energy"=1,"bomb"=1)
+	var/list/damage_absorption = list(DAM_BLUNT = 0.8, DAM_CUT = 0.8, DAM_PIERCE = 0.75, DAM_BURN = 1.2, DAM_BULLET = 0.9, DAM_LASER = 1, DAM_ENERGY = 1, DAM_BOMB = 1)
 	var/obj/item/weapon/cell/cell
 	var/state = 0
 	var/list/log = new
@@ -490,7 +490,7 @@
 ////////  Health related procs  ////////
 ////////////////////////////////////////
 
-/obj/mecha/take_damage(damage, damtype, armordamagetype, armorbypass, list/damlist, damflags, damsrc)
+/obj/mecha/take_damage(damage, damtype, armorbypass, damsrc)
 	if(damage)
 		var/amount = absorb_damage(damage,damtype)
 		health -= amount
@@ -501,7 +501,7 @@
 /obj/mecha/proc/absorb_damage(damage,damtype)
 	return damage*(listgetindex(damage_absorption,damtype) || 1)
 
-/obj/mecha/proc/hit_damage(damage, type="brute", is_melee=0)
+/obj/mecha/proc/hit_damage(damage, type=DAM_BLUNT, is_melee=0)
 
 	var/power_to_use
 	var/damage_coeff_to_use
@@ -707,7 +707,7 @@
 
 /obj/mecha/emp_act(severity)
 	if(use_power((cell.charge/2)/severity))
-		take_damage(50 / severity,"energy")
+		take_damage(50 / severity, DAM_EMP)
 	src.log_message("EMP detected",1)
 	check_for_internal_damage(list(MECHA_INT_FIRE,MECHA_INT_TEMP_CONTROL,MECHA_INT_CONTROL_LOST,MECHA_INT_SHORT_CIRCUIT),1)
 	return
@@ -715,7 +715,7 @@
 /obj/mecha/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	if(exposed_temperature>src.max_temperature)
 		src.log_message("Exposed to dangerous temperature.",1)
-		src.take_damage(5,"fire")
+		src.take_damage(5,DAM_BURN)
 		src.check_for_internal_damage(list(MECHA_INT_FIRE, MECHA_INT_TEMP_CONTROL))
 	return
 
@@ -1849,7 +1849,7 @@
 			if(mecha.cabin_air && mecha.cabin_air.volume>0)
 				mecha.cabin_air.temperature = min(6000+T0C, mecha.cabin_air.temperature+rand(10,15))
 				if(mecha.cabin_air.temperature>mecha.max_temperature/2)
-					mecha.take_damage(4/round(mecha.max_temperature/mecha.cabin_air.temperature,0.1),"fire")
+					mecha.take_damage(4/round(mecha.max_temperature/mecha.cabin_air.temperature,0.1),DAM_BURN)
 		if(mecha.hasInternalDamage(MECHA_INT_TEMP_CONTROL)) //stop the mecha_preserve_temp loop datum
 			mecha.pr_int_temp_processor.stop()
 		if(mecha.hasInternalDamage(MECHA_INT_TANK_BREACH)) //remove some air from internal tank

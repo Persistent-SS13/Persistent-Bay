@@ -133,7 +133,7 @@ default behaviour is:
 					Weaken(2)
 					playsound(loc, "punch", 25, 1, -1)
 					visible_message("<span class='warning'>[src] [pick("ran", "slammed")] into \the [AM]!</span>")
-					src.apply_damage(5, BRUTE)
+					src.apply_damage(5, DAM_BLUNT)
 				return
 			if (!now_pushing)
 				now_pushing = 1

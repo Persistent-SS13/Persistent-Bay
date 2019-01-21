@@ -77,22 +77,6 @@
 		return PROCESS_KILL
 
 
-/turf/simulated/wall/bullet_act(var/obj/item/projectile/Proj)
-	var/damage = Proj.get_structure_damage()
-	var/damType
-	switch(Proj.damtype)
-		if("bullet")
-			damType = "brute"
-			return
-		if("laser")
-			damType = "burn"
-			return
-		if("bomb")
-			damType = "explosion"
-			return
-	take_damage(damage, damType)
-	..()
-
 /turf/simulated/wall/hitby(AM as mob|obj, var/speed=THROWFORCE_SPEED_DIVISOR)
 	..()
 	if(ismob(AM))
@@ -101,7 +85,7 @@
 	var/obj/O = AM
 	var/tforce = O.throwforce * (speed/THROWFORCE_SPEED_DIVISOR)
 
-	take_damage(tforce, "brute")
+	take_damage(tforce, DAM_BLUNT)
 
 /turf/simulated/wall/proc/clear_plants()
 	for(var/obj/effect/overlay/wallrot/WR in src)
@@ -141,13 +125,12 @@
 	playsound(src, hitsound, 80, 1)
 	if(locate(/obj/effect/overlay/wallrot) in src)
 		damage *= 3
-	switch(damageType)
-		if("brute")
-			damage -= BruteArmor()
-		if("burn")
-			damage -= BurnArmor()
-		if("explosion")
-			damage -= ExplosionArmor()
+	if(IsDamageTypeBrute(damageType))
+		damage -= BruteArmor()
+	else if(IsDamageTypeBurn(damageType))
+		damage -= BurnArmor()
+	else if(ISDAMTYPE(damageType, DAM_BOMB))
+		damage -= ExplosionArmor()
 	integrity -= max(0, damage)
 	if(integrity <= 0)
 		spawn(1) // So it returns that it broke
@@ -210,9 +193,9 @@
 			if(prob(25))
 				dismantle_wall(1)
 			else
-				take_damage(rand(150, 250), "explosion")
+				take_damage(rand(150, 250), DAM_BOMB)
 		if(3.0)
-			take_damage(rand(0, 250), "explosion")
+			take_damage(rand(0, 250), DAM_BOMB)
 		else
 	return
 

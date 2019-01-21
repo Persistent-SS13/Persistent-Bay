@@ -240,12 +240,12 @@
 /obj/item/projectile/bullet/suffocationbullet//How does this even work?
 	name = "co bullet"
 	force = 25
-	damtype = OXY
+	damtype = DAM_OXY
 
 /obj/item/projectile/bullet/cyanideround
 	name = "poison bullet"
 	force = 45
-	damtype = TOX
+	damtype = DAM_BIO
 
 /obj/item/projectile/bullet/burstbullet
 	name = "exploding bullet"

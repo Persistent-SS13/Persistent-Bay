@@ -33,7 +33,7 @@
 	var/list/offduty = list()
 	if(setting == 1)
 		for(var/obj/item/organ/internal/stack/stack in connected_faction.connected_laces)
-			var/datum/computer_file/crew_record/record = connected_faction.get_record(stack.get_owner_name())
+			var/datum/computer_file/report/crew_record/record = connected_faction.get_record(stack.get_owner_name())
 			if(!record)
 				continue
 			if(stack.duty_status)
@@ -41,10 +41,10 @@
 			else
 				offduty |= record
 	else
-		for(var/datum/computer_file/crew_record/R in connected_faction.records.faction_records)
+		for(var/datum/computer_file/report/crew_record/R in connected_faction.records.faction_records)
 			records |= R
-	
-	for(var/datum/computer_file/crew_record/CR in records)
+
+	for(var/datum/computer_file/report/crew_record/CR in records)
 		var/name = CR.get_name()
 		var/datum/assignment/assignment = connected_faction.get_assignment(CR.assignment_uid)
 		var/rank
@@ -87,7 +87,7 @@
 				active = 1
 				break
 		isactive[name] = active ? "Active" : "Inactive"
-	for(var/datum/computer_file/crew_record/CR in offduty)
+	for(var/datum/computer_file/report/crew_record/CR in offduty)
 		var/name = CR.get_name()
 		var/datum/assignment/assignment = connected_faction.get_assignment(CR.assignment_uid)
 		var/rank
@@ -172,7 +172,7 @@
 	<tr class='head'><th>Name</th><th>Position</th><th>Activity</th></tr>
 	"}
 	// sort mobs
-	for(var/datum/computer_file/crew_record/CR in GLOB.all_crew_records)
+	for(var/datum/computer_file/report/crew_record/CR in GLOB.all_crew_records)
 		var/name = CR.get_name()
 		var/rank = CR.get_job()
 		mil_ranks[name] = ""
@@ -251,7 +251,7 @@
 
 /proc/filtered_nano_crew_manifest(var/list/filter, var/blacklist = FALSE)
 	var/list/filtered_entries = list()
-	for(var/datum/computer_file/crew_record/CR in department_crew_manifest(filter, blacklist))
+	for(var/datum/computer_file/report/crew_record/CR in department_crew_manifest(filter, blacklist))
 		filtered_entries.Add(list(list(
 			"name" = CR.get_name(),
 			"rank" = CR.get_job(),

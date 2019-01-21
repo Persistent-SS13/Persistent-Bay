@@ -301,7 +301,7 @@ var/global/list/debug_data = list()
 	to_file(f,lis)
 
 /proc/Save_Records(var/backup_dir)
-	for(var/datum/computer_file/crew_record/L in GLOB.all_crew_records)
+	for(var/datum/computer_file/report/crew_record/L in GLOB.all_crew_records)
 		var/key = L.get_name()
 		fcopy("record_saves/[key].sav", "backups/[backup_dir]/records/[key].sav")
 		fdel("record_saves/[key].sav")
@@ -325,7 +325,7 @@ var/global/list/debug_data = list()
 
 	for(var/datum/world_faction/faction in GLOB.all_world_factions)
 		var/list/records = faction.get_records()
-		for(var/datum/computer_file/crew_record/L in records)
+		for(var/datum/computer_file/report/crew_record/L in records)
 			var/key = L.get_name()
 			fcopy("record_saves/[faction.uid]/[key].sav", "backups/[backup_dir]/records/[faction.uid]/[key].sav")
 			fdel("record_saves/[faction.uid]/[key].sav")
@@ -389,13 +389,13 @@ var/global/list/debug_data = list()
 
 
 /proc/Retrieve_Record(var/key, var/func = 1) // 2 = ATM account
-	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+	for(var/datum/computer_file/report/crew_record/record2 in GLOB.all_crew_records)
 		if(record2.get_name() == key)
 			message_admins("retrieve_record ran for existing record [key]")
 			return record2
 	if(!fexists("record_saves/[key].sav")) return
 	var/savefile/f = new("record_saves/[key].sav")
-	var/datum/computer_file/crew_record/v
+	var/datum/computer_file/report/crew_record/v
 	from_file(f, v)
 	var/datum/money_account/account
 	from_file(f, account)
@@ -416,7 +416,7 @@ var/global/list/debug_data = list()
 		v.linked_account = account
 	if(v.linked_account)
 		v.linked_account = v.linked_account.after_load()
-	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+	for(var/datum/computer_file/report/crew_record/record2 in GLOB.all_crew_records)
 		if(record2.get_name() == v.get_name())
 			if(v.linked_account && !record2.linked_account || (record2.linked_account && v.linked_account && record2.linked_account.money < v.linked_account))
 				message_admins("recovered account found for [key] [v.get_name()]")

@@ -86,7 +86,7 @@
 		remove_self(meltdose) // 10 units of acid will not melt EVERYTHING on the tile
 
 /datum/reagent/acid/touch_target(var/mob/living/M, var/amount, var/bodypart, var/blocked)
-	M.apply_damage(power*amount*0.05, BURN, bodypart, blocked) //for reference, a puddle of 120(using 30% on touch) pure acid (power 5) volume using normal shoes (perm 0.5) will deal 4,5 BURN damage every half a second. the last multiplier is for balancing purposes
+	M.apply_damage(power*amount*0.05, DAM_BURN, bodypart, blocked) //for reference, a puddle of 120(using 30% on touch) pure acid (power 5) volume using normal shoes (perm 0.5) will deal 4,5 DAM_BURN damage every half a second. the last multiplier is for balancing purposes
 
 //--------------------------------
 //	Hydrochloric Acid

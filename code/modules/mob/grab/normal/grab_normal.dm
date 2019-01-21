@@ -164,19 +164,19 @@
 
 	var/damage = 20
 	var/obj/item/clothing/hat = attacker.head
-	var/damage_flags = 0
+	var/hatdamtype = 0
 	if(istype(hat))
 		damage += hat.force * 3
-		damage_flags = hat.damtype
+		hatdamtype = hat.damtype
 
-	if(ISDAMTYPE(damage_flags, DAM_PIERCE))
+	if(ISDAMTYPE(hatdamtype, DAM_PIERCE))
 		attacker.visible_message("<span class='danger'>[attacker] gores [target][istype(hat)? " with \the [hat]" : ""]!</span>")
 	else
 		attacker.visible_message("<span class='danger'>[attacker] thrusts \his head into [target]'s skull!</span>")
 
-	var/armor = target.run_armor_check(BP_HEAD, DAM_BLUNT)
-	target.apply_damage(damage, BRUTE, BP_HEAD, armor, damage_flags)
-	attacker.apply_damage(10, BRUTE, BP_HEAD, attacker.run_armor_check(BP_HEAD, DAM_BLUNT))
+	var/armor = target.run_armor_check(BP_HEAD, hatdamtype)
+	target.apply_damage(damage, hatdamtype, BP_HEAD, armor)
+	attacker.apply_damage(10, DAM_BLUNT, BP_HEAD, attacker.run_armor_check(BP_HEAD, DAM_BLUNT))
 
 	if(armor < 50 && target.headcheck(BP_HEAD) && prob(damage))
 		target.apply_effect(20, PARALYZE)
@@ -270,7 +270,7 @@
 	if(user.a_intent != I_HURT)
 		return 0 // Not trying to hurt them.
 
-	if(!W.sharpness || !W.force || ISDAMTYPE(W.damtype, BRUTE))
+	if(!W.sharpness || !W.force || ISDAMTYPE(W.damtype, DAM_BLUNT))
 		return 0 //unsuitable weapon
 
 	var/obj/item/organ/external/O = G.get_targeted_organ()

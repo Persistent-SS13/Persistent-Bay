@@ -23,51 +23,51 @@
 
 	// If the limbs can break, make sure we don't exceed the maximum damage a limb can take before breaking
 	var/should_cut = ISDAMTYPE(damtype, DAM_CUT) || (ISDAMTYPE(damtype, DAM_BLUNT) && damage > 15 && !(species.species_flags & SPECIES_FLAG_NO_MINOR_CUT)) //Some blunt weapons can break skin
-	var/to_create = BRUISE
+	var/to_create = DAM_BLUNT
 
 	//Translate change to the corresponding damage types.
-	to_create = should_cut? CUT : DamageTypeToOrganEffect(damtype)
+	to_create = should_cut? DAM_CUT : damtype
 
-	if(to_create == LASER && prob(40))
+	if(to_create == DAM_LASER && prob(40))
 		owner.IgniteMob()
 	. = createwound(to_create, damage)
 	return .
 
-/obj/item/organ/external/take_damage(damage = 0 as num, damtype = DAM_BLUNT, armorbypass = 0 as num, list/damlist = null, damflags = 0 as num, damsrc = null)
+/obj/item/organ/external/take_damage(damage = 0 as num, damtype = DAM_BLUNT, armorbypass = 0 as num, damsrc = null)
 	var/brute = 0
 	var/burn = 0
 	var/sharp = FALSE
 	var/laser = FALSE
 	var/dismemeber = 0
 	var/blunt = 0
-	var/can_cut = 0
+	//var/can_cut = 0
 	var/pure_brute = 0
 	var/wound_damtype = null //Wounds don't seem to handle both burn and brute at the same time for some reasons..So we gotta override it.
 
-	if(damlist)
-		for(var/key in damlist)
-			if(IsDamageTypeBrute(key))
-				brute += round(damlist[key]* brute_mod, 0.1)
-				sharp |= ISDAMTYPE(key, DAM_CUT) || ISDAMTYPE(key, DAM_PIERCE)
-				dismemeber  |= sharp && damage >= DT_EDGE_DMG_THRESHOLD
-				can_cut |= (prob(brute*2) || sharp) && (robotic < ORGAN_ROBOT)
-				if(!wound_damtype)
-					wound_damtype = key
-			else if(IsDamageTypeBurn(key))
-				burn += round(burn * burn_mod, 0.1)
-				laser |= ISDAMTYPE(key, DAM_LASER)
-				if(!wound_damtype)
-					wound_damtype = key
-		pure_brute = brute
-
-	else if(damage && damtype)
+	// if(damlist)
+	// 	for(var/key in damlist)
+	// 		if(IsDamageTypeBrute(key))
+	// 			brute += round(damlist[key]* brute_mod, 0.1)
+	// 			sharp |= ISDAMTYPE(key, DAM_CUT) || ISDAMTYPE(key, DAM_PIERCE)
+	// 			dismemeber  |= sharp && damage >= DT_EDGE_DMG_THRESHOLD
+	// 			can_cut |= (prob(brute*2) || sharp) && (robotic < ORGAN_ROBOT)
+	// 			if(!wound_damtype)
+	// 				wound_damtype = key
+	// 		else if(IsDamageTypeBurn(key))
+	// 			burn += round(burn * burn_mod, 0.1)
+	// 			laser |= ISDAMTYPE(key, DAM_LASER)
+	// 			if(!wound_damtype)
+	// 				wound_damtype = key
+	// 	pure_brute = brute
+	log_debug("[src] take_damage([damage], [damtype], [armorbypass], [damsrc])")
+	if(damage && damtype)
 		brute = (IsDamageTypeBrute(damtype))? damage : 0
 		burn  = (IsDamageTypeBurn(damtype))?  damage : 0
 		sharp = ISDAMTYPE(damtype, DAM_CUT) || ISDAMTYPE(damtype, DAM_PIERCE)
 		dismemeber  = sharp && damage >= DT_EDGE_DMG_THRESHOLD
 		laser = ISDAMTYPE(damtype, DAM_LASER)
 		blunt = ISDAMTYPE(damtype, DAM_BLUNT) || (!dismemeber && !sharp)
-		can_cut = (prob(brute*2) || sharp) && (robotic < ORGAN_ROBOT)
+		//can_cut = (prob(brute*2) || sharp) && (robotic < ORGAN_ROBOT)
 		pure_brute = brute
 		wound_damtype = damtype
 	else
@@ -143,6 +143,7 @@
 	if(owner && update_damstate())
 		owner.UpdateDamageIcon()
 
+	log_debug("[src] take_damage wound [created_wound]")
 	return created_wound
 
 /obj/item/organ/external/heal_damage(brute, burn, internal = 0, robo_repair = 0)
@@ -155,7 +156,7 @@
 			break
 
 		// heal brute damage
-		if(W.damage_type == BURN)
+		if(W.damage_type == DAM_BURN)
 			burn = W.heal_damage(burn)
 		else
 			brute = W.heal_damage(brute)
@@ -274,6 +275,7 @@
 //3. If the organ has already reached or would be put over it's max damage amount (currently redundant),
 //   and the brute damage dealt exceeds the tearoff threshold, the organ is torn off.
 /obj/item/organ/external/proc/attempt_dismemberment(brute, burn, edge, used_weapon, spillover, force_droplimb)
+	log_debug("[src] attempt_dismemberment([brute], [burn], [edge], [used_weapon], [spillover], [force_droplimb])")
 	//Check edge eligibility
 	var/edge_eligible = 0
 	if(edge)

@@ -67,23 +67,23 @@ avoid code duplication. This includes items that may sometimes act as a standard
 		return 0
 	return 1
 
-	/////////////////////////
+	// /////////////////////////
 
-	if(!no_attack_log && ismob(AM))
-		admin_attack_log(user, AM, "Attacked using \a [src] (DAMTYE: [uppertext(damtype)])", "Was attacked with \a [src] (DAMTYE: [uppertext(damtype)])", "used \a [src] (DAMTYE: [uppertext(damtype)]) to attack")
-	/////////////////////////
+	// if(!no_attack_log && ismob(AM))
+	// 	admin_attack_log(user, AM, "Attacked using \a [src] (DAMTYE: [uppertext(damtype)])", "Was attacked with \a [src] (DAMTYE: [uppertext(damtype)])", "used \a [src] (DAMTYE: [uppertext(damtype)]) to attack")
+	// /////////////////////////
 
-	user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-	user.do_attack_animation(AM)
+	// user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
+	// user.do_attack_animation(AM)
 
-	var/hit_zone = null
-	//Mob only
-	if(isliving(AM))
-		var/mob/living/L = AM
-		hit_zone = L.resolve_item_attack(src, user, target_zone)
-	apply_hit_effect(AM, user, hit_zone)
+	// var/hit_zone = null
+	// //Mob only
+	// if(isliving(AM))
+	// 	var/mob/living/L = AM
+	// 	hit_zone = L.resolve_item_attack(src, user, target_zone)
+	// apply_hit_effect(AM, user, hit_zone)
 
-	return 1
+	// return 1
 
 //Called when a weapon is used to make a successful melee attack on a mob. Returns the blocked result
 /obj/item/proc/apply_hit_effect(atom/movable/target, mob/living/user, var/hit_zone)

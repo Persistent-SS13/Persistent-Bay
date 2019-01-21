@@ -538,7 +538,7 @@ proc/is_blind(A)
 			if(id)
 				perpname = id.registered_name
 
-			var/datum/computer_file/crew_record/CR = faction.get_record(perpname)
+			var/datum/computer_file/report/crew_record/CR = faction.get_record(perpname)
 			/* Since security records are now properly factionalized, the chance of someone not having a record is pretty high.
 			if(check_records && !CR && !isMonkey())
 				threatcount += 4

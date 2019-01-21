@@ -291,7 +291,7 @@
 		return FALSE
 	on = TRUE
 	force = on_damage
-	damtype = "fire"
+	damtype = DAM_BURN
 	sound_hit = "sound/effects/woodhit.ogg"
 	START_PROCESSING(SSobj, src)
 	update_icon()

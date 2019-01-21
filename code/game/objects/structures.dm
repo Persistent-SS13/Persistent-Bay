@@ -6,7 +6,6 @@
 	damthreshold_brute 	= 5
 	damthreshold_burn = 5
 	var/parts
-
 	var/list/connections = list("0", "0", "0", "0")
 	var/list/other_connections = list("0", "0", "0", "0")
 	var/list/blend_objects = newlist() // Objects which to blend with

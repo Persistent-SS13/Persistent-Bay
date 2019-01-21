@@ -26,7 +26,7 @@
 	var/creator // circuit creator if any
 	var/static/next_assembly_id = 0
 	pass_flags = 0
-	armor = list("melee" = 50, "bullet" = 70, "laser" = 70, "energy" = 100, "bomb" = 10, "bio" = 100, "rad" = 100, "fire" = 0, "acid" = 0)
+	armor = list(DAM_BLUNT = 50, DAM_BULLET = 70, DAM_LASER = 70, DAM_ENERGY = 100, DAM_BOMB = 10, DAM_BIO = 100, DAM_RADS = 100, DAM_BURN = 0)
 	anchored = FALSE
 	var/detail_color = COLOR_ASSEMBLY_BLACK
 	var/list/color_whitelist = list( //This is just for checking that hacked colors aren't in the save data.

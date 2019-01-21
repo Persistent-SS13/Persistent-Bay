@@ -115,7 +115,7 @@
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		mob.bodytemperature = max(mob.bodytemperature, 350)
 		scramble(0,mob,10)
-		mob.apply_damage(10, CLONE)
+		mob.apply_damage(10, DAM_CLONE)
 
 /datum/disease2/effect/organs
 	name = "Shutdown Syndrome"
@@ -227,7 +227,7 @@
 	stage = 3
 	badness = VIRUS_COMMON
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
-		mob.apply_damage(2, CLONE)
+		mob.apply_damage(2, DAM_CLONE)
 **/
 /datum/disease2/effect/chem_synthesis
 	name = "Chemical Synthesis"

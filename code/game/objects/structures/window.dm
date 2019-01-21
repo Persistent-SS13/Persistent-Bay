@@ -102,11 +102,11 @@
 		else
 			. += SPAN_NOTICE("There is a thick layer of silicate covering it.")
 
-/obj/structure/window/take_damage(damage, damtype, armordamagetype, armorbypass, list/damlist, damflags, damsrc)
+/obj/structure/window/take_damage(damage, damtype, armorbypass, damsrc)
 	var/initialhealth = health
 	if(silicate)
 		damage = damage * (1 - silicate / max_silicate)
-	..(damage, damtype, armordamagetype, armorbypass, damlist, damflags, damsrc)
+	..(damage, damtype, armorbypass, damsrc)
 	if(health < get_max_health() / 4 && initialhealth >= get_max_health() / 4)
 		visible_message(SPAN_WARNING("[src] looks like it's about to shatter!"))
 	else if(health < get_max_health() / 2 && initialhealth >= get_max_health() / 2)

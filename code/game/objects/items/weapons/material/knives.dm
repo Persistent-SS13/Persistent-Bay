@@ -87,5 +87,5 @@
 	w_class = ITEM_SIZE_LARGE
 	force_divisor = 0.25 // 15 when wielded with hardness 60 (steel)
 	attack_verb = list("cleaved", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
-	damtype = list(DAM_CUT, DAM_BLUNT)
+	damtype = DAM_CUT
 	mass = 1

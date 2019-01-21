@@ -369,7 +369,7 @@
 			to_chat(usr, "Access Denied.")
 			return 1
 		if(!user_id_card) return 0
-		var/datum/computer_file/crew_record/R = connected_faction.get_record(user_id_card.registered_name)
+		var/datum/computer_file/report/crew_record/R = connected_faction.get_record(user_id_card.registered_name)
 		if(!R) return 0
 		var/expense_limit = 0
 		var/datum/assignment/assignment = connected_faction.get_assignment(R.assignment_uid)

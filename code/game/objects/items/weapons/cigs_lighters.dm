@@ -72,7 +72,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 /obj/item/weapon/flame/match/proc/burn_out()
 	lit = 0
 	burnt = 1
-	damtype = "brute"
+	damtype = DAM_BLUNT
 	icon_state = "match_burnt"
 	item_state = "cigoff"
 	name = "burnt match"
@@ -143,7 +143,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 /obj/item/clothing/mask/smokable/proc/light(var/flavor_text = "[usr] lights the [name].")
 	if(!src.lit)
 		src.lit = 1
-		damtype = "fire"
+		damtype = DAM_BURN
 		if(reagents.get_reagent_amount(/datum/reagent/toxin/phoron)) // the phoron explodes when exposed to fire
 			var/datum/effect/effect/system/reagents_explosion/e = new()
 			e.set_up(round(reagents.get_reagent_amount(/datum/reagent/toxin/phoron) / 2.5, 1), get_turf(src), 0, 0)
@@ -485,7 +485,7 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 /obj/item/clothing/mask/smokable/pipe/light(var/flavor_text = "[usr] lights the [name].")
 	if(!src.lit && src.smoketime)
 		src.lit = 1
-		damtype = "fire"
+		damtype = DAM_BURN
 		icon_state = icon_on
 		item_state = icon_on
 		var/turf/T = get_turf(src)
@@ -600,9 +600,9 @@ CIGARETTE PACKETS ARE IN FANCY.DM
 	else
 		to_chat(user, "<span class='warning'>You burn yourself while lighting the lighter.</span>")
 		if (user.l_hand == src)
-			user.apply_damage(2,BURN,BP_L_HAND)
+			user.apply_damage(2,DAM_BURN,BP_L_HAND)
 		else
-			user.apply_damage(2,BURN,BP_R_HAND)
+			user.apply_damage(2,DAM_BURN,BP_R_HAND)
 		user.visible_message("<span class='notice'>After a few attempts, [user] manages to light the [src], they however burn their finger in the process.</span>")
 	playsound(src.loc, "light_bic", 100, 1, -4)
 

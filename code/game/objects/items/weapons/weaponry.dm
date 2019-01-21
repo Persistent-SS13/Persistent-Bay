@@ -162,7 +162,7 @@
 	..()
 
 /obj/effect/energy_net/ex_act()
-	destroyed(BURN)
+	destroyed(DAM_BURN)
 
 /obj/effect/energy_net/attack_hand(var/mob/user)
 

@@ -265,7 +265,7 @@
 			else if(T)
 				T.visible_message("<span class='danger'>\The [src] turns on.</span>")
 			src.force = 15
-			src.damtype = "fire"
+			src.damtype = DAM_BURN
 			welding = 1
 			update_icon()
 			START_PROCESSING(SSobj, src)
@@ -281,7 +281,7 @@
 		else if(T)
 			T.visible_message("<span class='warning'>\The [src] turns off.</span>")
 		src.force = 3
-		src.damtype = "brute"
+		src.damtype = DAM_BLUNT
 		src.welding = 0
 		update_icon()
 
@@ -339,7 +339,7 @@
 			to_chat(user, "<span class='warning'>You'll need to turn [src] on to patch the damage on [M]'s [S.name]!</span>")
 			return 1
 
-		if(S.robo_repair(15, BRUTE, "some dents", src, user))
+		if(S.robo_repair(15, DAM_BLUNT, "some dents", src, user))
 			remove_fuel(1, user)
 	else
 		return ..()

@@ -16,19 +16,19 @@
 		ISDAMTYPE(damtype, DAM_PAIN) || ISDAMTYPE(damtype, DAM_CLONE)
 
 //Convert damage type to organ effects. Should be removed once organs are made to use the new damage type properly
-/proc/DamageTypeToOrganEffect(var/damtype)
-	switch(damtype)
-		if(DAM_BLUNT)
-			. = BRUISE
-		if(DAM_BULLET)
-			. = PIERCE
-		if(DAM_BOMB, DAM_ENERGY)
-			. = BURN
-		if(DAM_CUT, DAM_PIERCE, DAM_LASER, DAM_BURN)
-			. = damtype //Those are already known organ effects
-		else
-			. = null //The rest are ignored, or handled differently
-	return .
+// /proc/DamageTypeToOrganEffect(var/damtype)
+// 	switch(damtype)
+// 		if(DAM_BLUNT)
+// 			. = BRUISE
+// 		if(DAM_BULLET)
+// 			. = PIERCE
+// 		if(DAM_BOMB, DAM_ENERGY)
+// 			. = BURN
+// 		if(DAM_CUT, DAM_PIERCE, DAM_LASER, DAM_BURN)
+// 			. = damtype //Those are already known organ effects
+// 		else
+// 			. = null //The rest are ignored, or handled differently
+// 	return .
 
 //Used to abstract comparison between damage types.. So changing what the constants contains isn't such a pain in the ass..
 // /proc/ISDAMTYPE(var/dtype1, var/dtype2)
@@ -51,8 +51,9 @@
 /proc/has_edge(obj/O as obj)
 	return O? O.mass >= DT_EDGE_MASS_THRESHOLD && ISDAMTYPE(O.damtype, DAM_CUT) : 0
 
-
-
+//
+// Puncture stuff
+//
 /obj/item/weapon/screwdriver/can_puncture()
 	return 1
 

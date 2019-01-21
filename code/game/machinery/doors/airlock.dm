@@ -1952,8 +1952,6 @@ About the new airlock wires panel:
 		return 0
 	return ..(M)
 
-
-
 /obj/machinery/door/airlock/proc/cyclelinkairlock()
 	if (closeOther)
 		closeOther.closeOther = null
@@ -1973,7 +1971,7 @@ About the new airlock wires panel:
 	if (!FoundDoor)
 		log_world("### MAP WARNING, [src] at [src.x],[src.y],[src.z] failed to find a valid airlock to cyclelink with!")
 		return
-	FoundDoor.closeOtherDir = src
+	FoundDoor.closeOther = src
 	closeOther = FoundDoor
 
 
@@ -2025,9 +2023,9 @@ About the new airlock wires panel:
 	return
 
 // Braces can act as an extra layer of armor - they will take damage first.
-/obj/machinery/door/airlock/take_damage(damage, damagetype, armordamagetype, armorbypass, list/damlist, damflags, damsrc)
+/obj/machinery/door/airlock/take_damage(damage, damagetype, armorbypass, damsrc)
 	if(brace)
-		brace.take_damage(damage, damagetype, armordamagetype, armorbypass, damlist, damflags, damsrc)
+		brace.take_damage(damage, damagetype, armorbypass, damsrc)
 	else
 		..()
 	update_icon()

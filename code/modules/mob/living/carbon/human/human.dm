@@ -443,7 +443,7 @@
 					else
 						perpname = name
 
-					var/datum/computer_file/crew_record/R = faction.get_record(perpname)
+					var/datum/computer_file/report/crew_record/R = faction.get_record(perpname)
 					if(R)
 						var/setcriminal = input(usr, "Specify a new criminal status for this person.", "Security HUD", R.get_criminalStatus()) in GLOB.security_statuses as null|text
 						if(hasHUD(usr, "security") && setcriminal)
@@ -480,7 +480,7 @@
 							perpname = tempPda.owner
 					else
 						perpname = src.name
-					var/datum/computer_file/crew_record/E = faction.get_record(perpname)
+					var/datum/computer_file/report/crew_record/E = faction.get_record(perpname)
 					if(E)
 						if(hasHUD(usr,"security"))
 							to_chat(usr, "<b>Name:</b> [E.get_name()]")
@@ -510,7 +510,7 @@
 					else
 						perpname = src.name
 
-					var/datum/computer_file/crew_record/E = faction.get_record(perpname)
+					var/datum/computer_file/report/crew_record/E = faction.get_record(perpname)
 					if(E)
 						var/setmedical = input(usr, "Specify a new medical status for this person.", "Medical HUD", E.get_status()) in GLOB.physical_statuses as null|text
 						if(hasHUD(usr,"medical") && setmedical)
@@ -543,7 +543,7 @@
 							perpname = tempPda.owner
 					else
 						perpname = src.name
-					var/datum/computer_file/crew_record/E = get_crewmember_record(perpname)
+					var/datum/computer_file/report/crew_record/E = get_crewmember_record(perpname)
 					if(E)
 						if(hasHUD(usr,"medical"))
 							to_chat(usr, "<b>Name:</b> [E.get_name()]")

@@ -21,7 +21,8 @@ GLOBAL_LIST_EMPTY(all_expense_cards)
 	icon = 'icons/obj/card.dmi'
 	w_class = ITEM_SIZE_TINY
 	slot_flags = SLOT_EARS
-	var/list/files = list(  )
+	var/list/files = list()
+	var/associated_account_number = 0
 
 /obj/item/weapon/card/data
 	name = "data disk"
@@ -143,7 +144,7 @@ var/const/NO_EMAG_ACT = -50
 		if(!faction)
 			message_admins("expense card without valid faction at [loc]")
 			return 0
-		var/datum/computer_file/crew_record/record = faction.get_record(username)
+		var/datum/computer_file/report/crew_record/record = faction.get_record(username)
 		if(!record)
 			return 0
 		var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
@@ -193,8 +194,8 @@ var/const/NO_EMAG_ACT = -50
 			expense.valid = 0
 			
 /proc/update_ids(var/name)
-	var/datum/computer_file/crew_record/record
-	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+	var/datum/computer_file/report/crew_record/record
+	for(var/datum/computer_file/report/crew_record/record2 in GLOB.all_crew_records)
 		if(record2.get_name() == name)
 			record = record2
 			break
@@ -212,7 +213,7 @@ var/const/NO_EMAG_ACT = -50
 			if(id.selected_faction)
 				var/datum/world_faction/faction = get_faction(id.selected_faction)
 				if(faction)
-					var/datum/computer_file/crew_record/record2 = faction.get_record(id.registered_name)
+					var/datum/computer_file/report/crew_record/record2 = faction.get_record(id.registered_name)
 					if(record2)
 						id.sync_from_record(record2)
 					else
@@ -250,7 +251,6 @@ var/const/NO_EMAG_ACT = -50
 	var/access = list()
 	var/registered_name = "Unknown" // The name registered_name on the card
 	var/list/associated_email_login = list("login" = "", "password" = "")
-	var/associated_account_number = 0
 
 	var/age = "\[UNSET\]"
 	var/blood_type = "\[UNSET\]"
@@ -296,7 +296,7 @@ var/const/NO_EMAG_ACT = -50
 	else
 		to_chat(usr, "<span class='warning'>It is too far away.</span>")
 
-/obj/item/weapon/card/id/proc/sync_from_record(var/datum/computer_file/crew_record/record)
+/obj/item/weapon/card/id/proc/sync_from_record(var/datum/computer_file/report/crew_record/record)
 	age = record.get_age()
 	blood_type = record.get_bloodtype()
 	dna_hash = record.get_dna()
@@ -425,7 +425,7 @@ var/const/NO_EMAG_ACT = -50
 				final_access |= text2num(x)
 			return final_access
 		if(faction.allow_unapproved_ids || approved_factions.Find(faction.uid))
-			var/datum/computer_file/crew_record/record = faction.get_record(registered_name)
+			var/datum/computer_file/report/crew_record/record = faction.get_record(registered_name)
 			if(record)
 				for(var/x in record.access)
 					final_access |= text2num(x)
@@ -517,7 +517,7 @@ var/const/NO_EMAG_ACT = -50
 			for(var/x in faction.all_access)
 				final_access |= text2num(x)
 			return final_access
-		var/datum/computer_file/crew_record/record = faction.get_record(registered_name)
+		var/datum/computer_file/report/crew_record/record = faction.get_record(registered_name)
 		if(record)
 			for(var/x in record.access)
 				final_access |= text2num(x)

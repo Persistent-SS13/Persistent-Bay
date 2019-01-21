@@ -8,7 +8,7 @@
 	throw_speed = 3
 	throw_range = 7
 	throwforce = 10
-	damtype = BURN
+	damtype = DAM_BURN
 	force = 10
 	sound_hit = 'sound/items/welder2.ogg'
 

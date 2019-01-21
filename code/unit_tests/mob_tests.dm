@@ -35,7 +35,7 @@ datum/unit_test/human_breath/start_test()
 			H.apply_effect(20, STUN, 0)
 			L = H.internal_organs_by_name[species_organ]
 			L.last_failed_breath = -INFINITY
-			test_subjects[S.name] = list(H, damage_check(H, OXY))
+			test_subjects[S.name] = list(H, damage_check(H, DAM_OXY))
 	return 1
 
 datum/unit_test/human_breath/check_result()
@@ -47,7 +47,7 @@ datum/unit_test/human_breath/check_result()
 	var/failcount = 0
 	for(var/i in test_subjects)
 		var/mob/living/carbon/human/H = test_subjects[i][1]
-		var/ending_oxyloss = damage_check(H, OXY)
+		var/ending_oxyloss = damage_check(H, DAM_OXY)
 		var/starting_oxyloss = test_subjects[i][2]
 		if(starting_oxyloss >= ending_oxyloss)
 			failcount++
@@ -96,24 +96,25 @@ proc/create_test_mob_with_mind(var/turf/mobloc = null, var/mobtype = /mob/living
 proc/damage_check(var/mob/living/M, var/damage_type)
 	var/loss = null
 
-	switch(damage_type)
-		if(BRUTE)
-			loss = M.getBruteLoss()
-		if(BURN)
-			loss = M.getFireLoss()
-		if(TOX)
-			loss = M.getToxLoss()
-		if(OXY)
-			loss = M.getOxyLoss()
-			if(istype(M,/mob/living/carbon/human))
-				var/mob/living/carbon/human/H = M
-				var/obj/item/organ/internal/lungs/L = H.internal_organs_by_name["lungs"]
-				if(L)
-					loss = L.oxygen_deprivation
-		if(CLONE)
-			loss = M.getCloneLoss()
-		if(PAIN)
-			loss = M.getHalLoss()
+	if(IsDamageTypeBrute(damage_type))
+		loss = M.getBruteLoss()
+	else if(IsDamageTypeBurn(damage_type))
+		loss = M.getFireLoss()
+	else 
+		switch(damage_type)
+			if(DAM_BIO)
+				loss = M.getToxLoss()
+			if(DAM_OXY)
+				loss = M.getOxyLoss()
+				if(istype(M,/mob/living/carbon/human))
+					var/mob/living/carbon/human/H = M
+					var/obj/item/organ/internal/lungs/L = H.internal_organs_by_name["lungs"]
+					if(L)
+						loss = L.oxygen_deprivation
+			if(DAM_CLONE)
+				loss = M.getCloneLoss()
+			if(DAM_PAIN)
+				loss = M.getHalLoss()
 
 	if(!loss && istype(M, /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = M            // Synthetics have robot limbs which don't report damage to getXXXLoss()
@@ -138,7 +139,7 @@ proc/damage_check(var/mob/living/M, var/damage_type)
 datum/unit_test/mob_damage
 	name = "MOB: Template for mob damage"
 	var/mob/living/carbon/human/testmob = null
-	var/damagetype = BRUTE
+	var/damagetype = DAM_BLUNT
 	var/mob_type = /mob/living/carbon/human
 	var/expected_vulnerability = STANDARD
 	var/check_health = 0
@@ -175,7 +176,7 @@ datum/unit_test/mob_damage/start_test()
 
 	var/initial_health = H.health
 
-	if(damagetype == OXY && H.need_breathe())
+	if(damagetype == DAM_OXY && H.need_breathe())
 		var/species_organ = H.species.breathing_organ
 		var/obj/item/organ/internal/lungs/L
 		if(species_organ)
@@ -237,27 +238,43 @@ datum/unit_test/mob_damage/start_test()
 
 datum/unit_test/mob_damage/brute
 	name = "MOB: Human Brute damage check"
-	damagetype = BRUTE
+	damagetype = DAM_BLUNT
+
+datum/unit_test/mob_damage/cut
+	name = "MOB: Human Cut damage check"
+	damagetype = DAM_CUT
+
+datum/unit_test/mob_damage/pierce
+	name = "MOB: Human Pierce damage check"
+	damagetype = DAM_PIERCE
 
 datum/unit_test/mob_damage/fire
 	name = "MOB: Human Fire damage check"
-	damagetype = BURN
+	damagetype = DAM_BURN
+
+datum/unit_test/mob_damage/laser
+	name = "MOB: Human Laser damage check"
+	damagetype = DAM_LASER
+
+datum/unit_test/mob_damage/energy
+	name = "MOB: Human Energy damage check"
+	damagetype = DAM_ENERGY
 
 datum/unit_test/mob_damage/tox
 	name = "MOB: Human Toxin damage check"
-	damagetype = TOX
+	damagetype = DAM_BIO
 
 datum/unit_test/mob_damage/oxy
 	name = "MOB: Human Oxygen damage check"
-	damagetype = OXY
+	damagetype = DAM_OXY
 
 datum/unit_test/mob_damage/clone
 	name = "MOB: Human Clone damage check"
-	damagetype = CLONE
+	damagetype = DAM_CLONE
 
 datum/unit_test/mob_damage/halloss
 	name = "MOB: Human Halloss damage check"
-	damagetype = PAIN
+	damagetype = DAM_PAIN
 
 // =================================================================
 // Unathi
@@ -269,28 +286,44 @@ datum/unit_test/mob_damage/unathi
 
 datum/unit_test/mob_damage/unathi/brute
 	name = "MOB: Unathi Brute Damage Check"
-	damagetype = BRUTE
+	damagetype = DAM_BLUNT
 	expected_vulnerability = ARMORED
+
+datum/unit_test/mob_damage/unathi/cut
+	name = "MOB: Unathi Cut damage check"
+	damagetype = DAM_CUT
+
+datum/unit_test/mob_damage/unathi/pierce
+	name = "MOB: Unathi Pierce damage check"
+	damagetype = DAM_PIERCE
 
 datum/unit_test/mob_damage/unathi/fire
 	name = "MOB: Unathi Fire Damage Check"
-	damagetype = BURN
+	damagetype = DAM_BURN
+
+datum/unit_test/mob_damage/unathi/laser
+	name = "MOB: Unathi Laser damage check"
+	damagetype = DAM_LASER
+
+datum/unit_test/mob_damage/unathi/energy
+	name = "MOB: Unathi Energy damage check"
+	damagetype = DAM_ENERGY
 
 datum/unit_test/mob_damage/unathi/tox
 	name = "MOB: Unathi Toxins Damage Check"
-	damagetype = TOX
+	damagetype = DAM_BIO
 
 datum/unit_test/mob_damage/unathi/oxy
 	name = "MOB: Unathi Oxygen Damage Check"
-	damagetype = OXY
+	damagetype = DAM_OXY
 
 datum/unit_test/mob_damage/unathi/clone
 	name = "MOB: Unathi Clone Damage Check"
-	damagetype = CLONE
+	damagetype = DAM_CLONE
 
 datum/unit_test/mob_damage/unathi/halloss
 	name = "MOB: Unathi Halloss Damage Check"
-	damagetype = PAIN
+	damagetype = DAM_PAIN
 
 // =================================================================
 // Skrell
@@ -302,27 +335,43 @@ datum/unit_test/mob_damage/skrell
 
 datum/unit_test/mob_damage/skrell/brute
 	name = "MOB: Skrell Brute Damage Check"
-	damagetype = BRUTE
+	damagetype = DAM_BLUNT
+
+datum/unit_test/mob_damage/skrell/cut
+	name = "MOB: Skrell Cut damage check"
+	damagetype = DAM_CUT
+
+datum/unit_test/mob_damage/skrell/pierce
+	name = "MOB: Skrell Pierce damage check"
+	damagetype = DAM_PIERCE
 
 datum/unit_test/mob_damage/skrell/fire
 	name = "MOB: Skrell Fire Damage Check"
-	damagetype = BURN
+	damagetype = DAM_BURN
+
+datum/unit_test/mob_damage/skrell/laser
+	name = "MOB: Skrell Laser damage check"
+	damagetype = DAM_LASER
+
+datum/unit_test/mob_damage/skrell/energy
+	name = "MOB: Skrell Energy damage check"
+	damagetype = DAM_ENERGY
 
 datum/unit_test/mob_damage/skrell/tox
 	name = "MOB: Skrell Toxins Damage Check"
-	damagetype = TOX
+	damagetype = DAM_BIO
 
 datum/unit_test/mob_damage/skrell/oxy
 	name = "MOB: Skrell Oxygen Damage Check"
-	damagetype = OXY
+	damagetype = DAM_OXY
 
 datum/unit_test/mob_damage/skrell/clone
 	name = "MOB: Skrell Clone Damage Check"
-	damagetype = CLONE
+	damagetype = DAM_CLONE
 
 datum/unit_test/mob_damage/skrell/halloss
 	name = "MOB: Skrell Halloss Damage Check"
-	damagetype = PAIN
+	damagetype = DAM_PAIN
 
 // =================================================================
 // Vox
@@ -334,29 +383,44 @@ datum/unit_test/mob_damage/vox
 
 datum/unit_test/mob_damage/vox/brute
 	name = "MOB: Vox Brute Damage Check"
-	damagetype = BRUTE
+	damagetype = DAM_BLUNT
+
+datum/unit_test/mob_damage/vox/cut
+	name = "MOB: Vox Cut damage check"
+	damagetype = DAM_CUT
+
+datum/unit_test/mob_damage/vox/pierce
+	name = "MOB: Vox Pierce damage check"
+	damagetype = DAM_PIERCE
 
 datum/unit_test/mob_damage/vox/fire
 	name = "MOB: Vox Fire Damage Check"
-	damagetype = BURN
+	damagetype = DAM_BURN
+
+datum/unit_test/mob_damage/vox/laser
+	name = "MOB: Vox Laser damage check"
+	damagetype = DAM_LASER
+
+datum/unit_test/mob_damage/vox/energy
+	name = "MOB: Vox Energy damage check"
+	damagetype = DAM_ENERGY
 
 datum/unit_test/mob_damage/vox/tox
 	name = "MOB: Vox Toxins Damage Check"
-	damagetype = TOX
+	damagetype = DAM_BIO
 
 datum/unit_test/mob_damage/vox/oxy
 	name = "MOB: Vox Oxygen Damage Check"
-	damagetype = OXY
+	damagetype = DAM_OXY
 
 datum/unit_test/mob_damage/vox/clone
 	name = "MOB: Vox Clone Damage Check"
-	damagetype = CLONE
+	damagetype = DAM_CLONE
 	expected_vulnerability = IMMUNE
-
 
 datum/unit_test/mob_damage/vox/halloss
 	name = "MOB: Vox Halloss Damage Check"
-	damagetype = PAIN
+	damagetype = DAM_PAIN
 
 // =================================================================
 // Diona
@@ -368,29 +432,29 @@ datum/unit_test/mob_damage/diona
 
 datum/unit_test/mob_damage/diona/brute
 	name = "MOB: Diona Brute Damage Check"
-	damagetype = BRUTE
+	damagetype = DAM_BLUNT
 
 datum/unit_test/mob_damage/diona/fire
 	name = "MOB: Diona Fire Damage Check"
-	damagetype = BURN
+	damagetype = DAM_BURN
 
 datum/unit_test/mob_damage/diona/tox
 	name = "MOB: Diona Toxins Damage Check"
-	damagetype = TOX
+	damagetype = DAM_BIO
 
 datum/unit_test/mob_damage/diona/oxy
 	name = "MOB: Diona Oxygen Damage Check"
-	damagetype = OXY
+	damagetype = DAM_OXY
 	expected_vulnerability = IMMUNE
 
 datum/unit_test/mob_damage/diona/clone
 	name = "MOB: Diona Clone Damage Check"
-	damagetype = CLONE
+	damagetype = DAM_CLONE
 	expected_vulnerability = IMMUNE
 
 datum/unit_test/mob_damage/diona/halloss
 	name = "MOB: Diona Halloss Damage Check"
-	damagetype = PAIN
+	damagetype = DAM_PAIN
 	expected_vulnerability = IMMUNE
 */
 // =================================================================
@@ -403,30 +467,46 @@ datum/unit_test/mob_damage/machine
 
 datum/unit_test/mob_damage/machine/brute
 	name = "MOB: IPC Brute Damage Check"
-	damagetype = BRUTE
+	damagetype = DAM_BLUNT
+
+datum/unit_test/mob_damage/machine/cut
+	name = "MOB: IPC Cut damage check"
+	damagetype = DAM_CUT
+
+datum/unit_test/mob_damage/machine/pierce
+	name = "MOB: IPC Pierce damage check"
+	damagetype = DAM_PIERCE
 
 datum/unit_test/mob_damage/machine/fire
 	name = "MOB: IPC Fire Damage Check"
-	damagetype = BURN
+	damagetype = DAM_BURN
+
+datum/unit_test/mob_damage/machine/laser
+	name = "MOB: IPC Laser damage check"
+	damagetype = DAM_LASER
+
+datum/unit_test/mob_damage/machine/energy
+	name = "MOB: IPC Energy damage check"
+	damagetype = DAM_ENERGY
 
 datum/unit_test/mob_damage/machine/tox
 	name = "MOB: IPC Toxins Damage Check"
-	damagetype = TOX
+	damagetype = DAM_BIO
 	expected_vulnerability = IMMUNE
 
 datum/unit_test/mob_damage/machine/oxy
 	name = "MOB: IPC Oxygen Damage Check"
-	damagetype = OXY
+	damagetype = DAM_OXY
 	expected_vulnerability = IMMUNE
 
 datum/unit_test/mob_damage/machine/clone
 	name = "MOB: IPC Clone Damage Check"
-	damagetype = CLONE
+	damagetype = DAM_CLONE
 	expected_vulnerability = IMMUNE
 
 datum/unit_test/mob_damage/machine/halloss
 	name = "MOB: IPC Halloss Damage Check"
-	damagetype = PAIN
+	damagetype = DAM_PAIN
 	expected_vulnerability = IMMUNE
 
 // =================================================================
@@ -439,30 +519,46 @@ datum/unit_test/mob_damage/phorosian
 
 datum/unit_test/mob_damage/phorosian/brute
 	name = "MOB: Phorosian Brute Damage Check"
-	damagetype = BRUTE
+	damagetype = DAM_BLUNT
+
+datum/unit_test/mob_damage/phorosian/cut
+	name = "MOB: Phorosian Cut damage check"
+	damagetype = DAM_CUT
+
+datum/unit_test/mob_damage/phorosian/pierce
+	name = "MOB: Phorosian Pierce damage check"
+	damagetype = DAM_PIERCE
 
 datum/unit_test/mob_damage/phorosian/fire
 	name = "MOB: Phorosian Fire Damage Check"
-	damagetype = BURN
+	damagetype = DAM_BURN
+
+datum/unit_test/mob_damage/phorosian/laser
+	name = "MOB: Phorosian Laser damage check"
+	damagetype = DAM_LASER
+
+datum/unit_test/mob_damage/phorosian/energy
+	name = "MOB: Phorosian Energy damage check"
+	damagetype = DAM_ENERGY
 
 datum/unit_test/mob_damage/phorosian/tox
 	name = "MOB: Phorosian Toxins Damage Check"
-	damagetype = TOX
+	damagetype = DAM_BIO
 	expected_vulnerability = IMMUNE
 
 datum/unit_test/mob_damage/phorosian/oxy
 	name = "MOB: Phorosian Oxygen Damage Check"
-	damagetype = OXY
+	damagetype = DAM_OXY
 	expected_vulnerability = IMMUNE
 
 datum/unit_test/mob_damage/phorosian/clone
 	name = "MOB: Phorosian Clone Damage Check"
-	damagetype = CLONE
+	damagetype = DAM_CLONE
 	expected_vulnerability = IMMUNE
 
 datum/unit_test/mob_damage/phorosian/halloss
 	name = "MOB: Phorosian Halloss Damage Check"
-	damagetype = PAIN
+	damagetype = DAM_PAIN
 	expected_vulnerability = IMMUNE
 
 

@@ -10,7 +10,7 @@
 #define DAM_RADS        "rad"			//Ionizing radiation exposure damage
 
 //Damage affecting biological entities
-#define DAM_BIO         TOX				//Acid and pathogen exposure damage
+#define DAM_BIO         TOX				//Acid and toxin exposure damage
 #define DAM_STUN        STUN			//Stun damage, generic stun inducing damage
 #define DAM_PAIN        PAIN			//Pain damage
 #define DAM_CLONE       CLONE			//Genetic damage

@@ -25,7 +25,7 @@
 		playsound(src, hitsound, 25, 1)
 		return
 
-	take_damage(damage, "brute")
+	take_damage(damage, DAM_BLUNT)
 
 	if(wallreturner == 2)
 		return success_smash(user)

@@ -379,6 +379,7 @@
 
 	if(href_list["view"])
 		var/datum/computer_file/data/email_message/M = find_message_by_fuid(href_list["view"])
+		M.unread = 0
 		if(istype(M))
 			current_message = M
 		return 1

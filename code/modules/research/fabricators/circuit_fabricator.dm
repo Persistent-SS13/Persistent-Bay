@@ -129,12 +129,6 @@
 	req_tech = list(TECH_DATA = 3)
 	build_path = /obj/item/weapon/circuitboard/comm_server
 
-/datum/design/circuit/comm_traffic
-	name = "telecommunications traffic control console"
-	id = "comm_traffic"
-	req_tech = list(TECH_DATA = 6)
-	build_path = /obj/item/weapon/circuitboard/comm_traffic
-
 /datum/design/circuit/message_monitor
 	name = "messaging monitor console"
 	id = "message_monitor"
@@ -317,6 +311,12 @@
 	id = "mining drill head"
 	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/miningdrill
+
+/datum/design/circuit/gasdrill
+	name = "gas drill head"
+	id = "gas drill head"
+	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/gasdrill
 
 /datum/design/circuit/miningdrillbrace
 	name = "mining drill brace"

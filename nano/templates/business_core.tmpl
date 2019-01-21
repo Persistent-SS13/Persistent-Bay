@@ -2,11 +2,79 @@
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>Business Control</h2>
 	<br><hr>
-	<br><br>{{:helper.link("Central Options", 'wrench', {'action' : 'change_menu', 'menu_target' : '1'})}}
-	<br><br>{{:helper.link("Access Config", 'locked', {'action' : 'change_menu', 'menu_target' : '2'})}}
-	<br><br>{{:helper.link("Assignments Config", 'pencil', {'action' : 'change_menu', 'menu_target' : '3'})}}
-	<br><br>{{:helper.link("Economy Menu", 'calculator', {'action' : 'change_menu', 'menu_target' : '4'})}}
-	<br><br>{{:helper.link("Promotion Control", 'flag', {'action' : 'change_menu', 'menu_target' : '5'})}}
+	<br><br>{{:helper.link("Central Options", 'wrench', {'action' : 'change_menu', 'menu_target' : '2'})}}<br>
+	Change the name, abbreviation and mission statement for the business. These changes will be logged for shareholders.
+	<br><br>{{:helper.link("Access Config", 'locked', {'action' : 'change_menu', 'menu_target' : '3'})}}<br>
+	Setup accesses that can be given out to assignments which control doors and machines linked to your network.
+	<br><br>{{:helper.link("Assignments Config", 'pencil', {'action' : 'change_menu', 'menu_target' : '4'})}}<br>
+	Setup assignments, ranks and departments that control the structure of your employees, including access, wages and expense limits.
+	<br><br>{{:helper.link("Economy Menu", 'calculator', {'action' : 'change_menu', 'menu_target' : '9'})}}<br>
+	View the account balance and debt of the business, and control expense cards.
+	<br><br>{{:helper.link("Promotion Control", 'flag', {'action' : 'change_menu', 'menu_target' : '10'})}}<br>
+	Set how many promotion votes it takes for non-CEO employees to authorize a promotion within the company. 
+	<br><br>{{:helper.link("Cryo-networks", '', {'action' : 'change_menu', 'menu_target' : '11'})}}<br>
+	Control the different cryo networks that your business can maintain.
+{{/if}}
+{{if data.menu == 12}}
+	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
+	<h2>Status and Modules</h2>
+	<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'menu_back'})}}
+	<br><hr>
+	<div class='item'>
+		<div class='itemLabel'>
+			Business Status:
+		</div>
+		<div class='itemContent'>
+			{{:data.business_size}}
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			Minor Module:
+		</div>
+		<div class='itemContent'>
+			{{:data.module_1}}<br>
+			{{:helper.link("Change", '', {'action' : 'module_1_change'})}}
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			Major Module:
+		</div>
+		<div class='itemContent'>
+			{{:data.module_2}}<br>
+			{{if data.has_major}}
+				{{:helper.link("Change", '', {'action' : 'module_2_change'})}}
+			{{else}}
+				{{:helper.link("Purchase", '', {'action' : 'module_2_purchase'})}}
+			{{/if}}
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			Extra Modules:
+		</div>
+		<div class='itemContent'>
+			{{:data.module_extra}}
+		</div>
+	</div>
+	<br><hr>
+	<h3>Research and Machine Limits</h3>
+
+	
+{{/if}}
+{{if data.menu == 13}}
+	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
+	<h2>Change Minor Module</h2>
+	<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'menu_back'})}}
+	<br><hr>
+	Warning! Changing your minor module will change your research and machine limits. Any research exceeding your new limit will be inaccessible and any machines exceeding the limits will be automatically disconnected.
+	<br><br>
+	
+	
+{{/if}}
+{{if data.menu == 14}}
+
 {{/if}}
 {{if data.menu == 2}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
@@ -14,11 +82,12 @@
 	<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'menu_back'})}}
 	<br><hr>
 	<br><br>{{:helper.link("Change Business Name", 'pencil', {'action' : 'change_name'})}} Full Name: <b>{{:data.faction_name}}</b>
-	<br><br>{{:helper.link("Change Abbreviation", 'pencil', {'action' : 'change_abbreviation'})}} Abbreviation: <b>{{:data.faction_abbreviation}}</b>
-	
+	<br><br>{{:helper.link("Change Abbreviation", 'pencil', {'action' : 'change_abbreviation'})}} Abbreviation: <b>{{:data.faction_abbreviation}}</b><br>
+	The abbreviation is used where a shortened business name is needed.
 	<br><br>{{:helper.link("Change Tag", 'pencil', {'action' : 'change_tag'})}} Tag: <b>{{:data.faction_tag}}</b><br>
 	The tag is applied to nametags printed out of our network, identifying one of our employees. It can also be used if the stock is listed on a public market. It must be unique.
 	<br><br>{{:helper.link("Change Description/Mission Statement", 'pencil', {'action' : 'change_purpose'})}}<br>
+	This is shown from the business information screen on any computer connected to the network.
 	<div class='block'>
 		{{:data.faction_purpose}}
 	</div
@@ -162,44 +231,7 @@
 		</div>
 	</div>
 	<br> The current debt represents missed payments due to insufficent funds to pay employees. The debt is already paid as much as it can be during auto-payout, after the current employees are paid.
-	<div class='item'>
-		<div class='itemLabel'>
-			Hourly Pay Rate:
-		</div>
-		<div class='itemContent'>
-			{{:helper.link("Change", 'pencil', {'action' : 'money_change'})}}{{:data.money_rate}}
-		</div>
-	</div>
-	<br> The pay for each employee is determined by taking the hourly pay rate, divided by the time they didn't work (it's possible for an employee to be paid for working half a shift), multiplied by their payscale. This is automatically hourly.
-	<div class='item'>
-		<div class='itemLabel'>
-			Sales Tax %:
-		</div>
-		<div class='itemContent'>
-			{{:helper.link("Change", 'pencil', {'action' : 'tax_change'})}}{{:data.tax_rate}}
-		</div>
-	</div>
-	<br> Small businesses can be made to connect to your tax network if they want to use your services (like your wireless network, accesses, imports or exports). 
-	When one of their invoices is paid, this percentage of the sale will be paid to the network account..
-	<div class='item'>
-		<div class='itemLabel'>
-			Import Profit %:
-		</div>
-		<div class='itemContent'>
-			{{:helper.link("Change", 'pencil', {'action' : 'import_change'})}}{{:data.import_rate}}
-		</div>
-	</div>
-	<br> When people make import requests, anyone with the invoicing or order approval access can print an invoice that when paid causes the order to become approved (at no cost to the network). 
-	The invoice will increase the cost of the import by this percentage and pay it the network when the invoice is paid.
-	<div class='item'>
-		<div class='itemLabel'>
-			Export Tax %:
-		</div>
-		<div class='itemContent'>
-			{{:helper.link("Change", 'pencil', {'action' : 'export_change'})}}{{:data.export_rate}}
-		</div>
-	</div>
-	<br> Export orders can be printed which small businesses can connect to can fill with their own exports. When the export order is sent, the business will collect the profit and then pay this percentage as tax to the network. 
+	<br> The wage for each employee is paid every half hour based on their assignment and rank. It's possible for an employee to be paid a partial wage for working a partial shift.	
 	<div class='item'>
 		<div class='itemLabel'>
 			Expense Card Control:
@@ -242,7 +274,7 @@
 			{{:helper.link("Change", 'pencil', {'action' : 'req5_change'})}}{{:data.rank5_req}}
 		</div>
 	</div>
-	<br>A promotion vote coming from someone with an assignment that is the leader of the command faction, and they are the highest rank available to that assignment ALWAYS cound as a rank 5 vote.
+	<br>A promotion vote coming from someone with an assignment that is the leader of a command faction, and they are the highest rank available to that assignment ALWAYS counts as a rank 5 vote.
 {{/if}}
 {{if data.menu == 11}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>

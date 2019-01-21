@@ -75,6 +75,8 @@
 			return global.SSmapping;
 		if("SSmaterials")
 			return global.SSmaterials;
+		if("SSmazemap")
+			return global.SSmazemap;
 		if("SSmobs")
 			return global.SSmobs;
 		if("SSmusic")
@@ -1132,6 +1134,8 @@
 			global.SSmapping=newval;
 		if("SSmaterials")
 			global.SSmaterials=newval;
+		if("SSmazemap")
+			global.SSmazemap=newval;
 		if("SSmobs")
 			global.SSmobs=newval;
 		if("SSmusic")
@@ -2151,6 +2155,7 @@
 	"SSmachines",
 	"SSmapping",
 	"SSmaterials",
+	"SSmazemap",
 	"SSmobs",
 	"SSmusic",
 	"SSnano",

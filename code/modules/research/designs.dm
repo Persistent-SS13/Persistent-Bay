@@ -1351,7 +1351,7 @@ other types of metals and chemistry for reagents).
 	materials = list(MATERIAL_STEEL = 6000, MATERIAL_GLASS = 3000, MATERIAL_DIAMOND = 2000, MATERIAL_SILVER = 2000, MATERIAL_URANIUM = 2000, MATERIAL_GOLD = 2000, MATERIAL_PLASTIC = 2000)
 	build_path = /obj/item/rig_module/stealth_field
 	sort_string = "VCAAQ"
-
+/**
 /datum/design/item/integrated_printer
 	name = "Integrated Circuit Printer"
 	desc = "This machine provides all the necessary things for circuitry."
@@ -1378,7 +1378,7 @@ other types of metals and chemistry for reagents).
 	materials = list(MATERIAL_STEEL = 10000, MATERIAL_GLASS = 10000)
 	build_path = /obj/item/disk/integrated_circuit/upgrade/clone
 	sort_string = "WCLAE"
-
+**/
 /datum/design/item/stethoscope
 	name = "Stethoscope"
 	desc = "An outdated medical apparatus for listening to the sounds of the human body. It also makes you look like you know what you're doing."

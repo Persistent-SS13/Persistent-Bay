@@ -122,6 +122,10 @@
 //Appearance
 /turf/simulated/wall/examine(mob/user)
 	. = ..(user)
+
+	if(!.)
+		return
+
 	var/health = integrity / MaxIntegrity()
 	if(health >= 0.9)
 		to_chat(user, "<span class='notice'>It looks fully intact.</span>")

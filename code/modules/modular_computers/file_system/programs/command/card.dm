@@ -4,7 +4,7 @@
 	nanomodule_path = /datum/nano_module/program/card_mod
 	program_icon_state = "id"
 	program_menu_icon = "key"
-	extended_desc = "Program for programming crew ."
+	extended_desc = "Program for programming employee assignments and rank, and syncing ID cards."
 	required_access = core_access_reassignment
 	requires_ntnet = 1
 	size = 8

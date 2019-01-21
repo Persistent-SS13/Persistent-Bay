@@ -35,6 +35,8 @@ var/list/mining_floors = list()
 	var/image/ore_overlay
 
 	has_resources = 1
+	has_gas_resources = 1
+
 	skip_icon_state = 1
 /turf/simulated/mineral/New()
 	if (!mining_walls["[src.z]"])
@@ -434,6 +436,8 @@ var/list/mining_floors = list()
 	var/dug = 0       //0 = has not yet been dug, 1 = has already been dug
 	var/overlay_detail
 	has_resources = 1
+	has_gas_resources = 1
+
 /turf/simulated/floor/asteroid
 	name = "sand"
 

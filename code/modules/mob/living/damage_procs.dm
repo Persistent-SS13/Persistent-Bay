@@ -8,7 +8,7 @@
 	Returns
 	standard 0 if fail
 */
-/mob/living/proc/apply_damage(var/damage = 0,var/damagetype = BRUTE, var/def_zone = null, var/blocked = 0, var/damage_flags = 0, var/used_weapon = null)
+/mob/living/proc/apply_damage(var/damage = 0,var/damagetype = DAM_BLUNT, var/def_zone = null, var/blocked = 0, var/damage_flags = 0, var/used_weapon = null)
 	if(!damage || (blocked >= 100))
 		return 0
 
@@ -37,12 +37,12 @@
 
 /mob/living/proc/apply_damages(var/brute = 0, var/burn = 0, var/tox = 0, var/oxy = 0, var/clone = 0, var/halloss = 0, var/def_zone = null, var/blocked = 0, var/damage_flags = 0)
 	if(blocked >= 100)	return 0
-	if(brute)	apply_damage(brute, BRUTE, def_zone, blocked)
-	if(burn)	apply_damage(burn, BURN, def_zone, blocked)
-	if(tox)		apply_damage(tox, TOX, def_zone, blocked)
-	if(oxy)		apply_damage(oxy, OXY, def_zone, blocked)
-	if(clone)	apply_damage(clone, CLONE, def_zone, blocked)
-	if(halloss) apply_damage(halloss, PAIN, def_zone, blocked)
+	if(brute)	apply_damage(brute, DAM_BLUNT, def_zone, blocked)
+	if(burn)	apply_damage(burn, DAM_BURN, def_zone, blocked)
+	if(tox)		apply_damage(tox, DAM_BIO, def_zone, blocked)
+	if(oxy)		apply_damage(oxy, DAM_OXY, def_zone, blocked)
+	if(clone)	apply_damage(clone, DAM_CLONE, def_zone, blocked)
+	if(halloss) apply_damage(halloss, DAM_PAIN, def_zone, blocked)
 	return 1
 
 

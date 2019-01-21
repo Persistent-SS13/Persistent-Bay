@@ -16,6 +16,7 @@ var/datum/antagonist/rogue_ai/malf
 	initial_spawn_target = 1
 	antaghud_indicator = "hudmalai"
 	min_player_age = 18
+	skill_setter = /datum/antag_skill_setter/ai
 
 /datum/antagonist/rogue_ai/New()
 	..()

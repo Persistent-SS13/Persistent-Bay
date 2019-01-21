@@ -21,7 +21,7 @@
 	origin_tech = list(TECH_MATERIAL = 2, TECH_COMBAT = 1)
 	attack_verb = list("chopped", "torn", "cut")
 	applies_material_colour = 0
-	damtype = list(DAM_BLUNT, DAM_CUT)
+	damtype = DAM_CUT
 	mass = 1.1
 
 /obj/item/weapon/material/hatchet/unathiknife
@@ -30,7 +30,7 @@
 	icon = 'icons/obj/weapons.dmi'
 	icon_state = "unathiknife"
 	attack_verb = list("ripped", "torn", "cut")
-	damtype = list(DAM_BLUNT, DAM_CUT)
+	damtype = DAM_CUT
 	mass = 1.2
 
 /obj/item/weapon/material/hatchet/tacknife
@@ -50,7 +50,7 @@
 	icon_state = "machete"
 	w_class = ITEM_SIZE_NORMAL
 	slot_flags = SLOT_BELT
-	damtype = list(DAM_CUT, DAM_BLUNT)
+	damtype = DAM_CUT
 	mass = 1.3
 
 /obj/item/weapon/material/hatchet/machete/deluxe
@@ -58,7 +58,7 @@
 	desc = "A fine example of a machete, with a polished blade, wooden handle and a leather cord loop."
 	icon_state = "machetedx"
 	item_state = "machete"
-	damtype = list(DAM_CUT, DAM_BLUNT)
+	damtype = DAM_CUT
 	mass = 1.4
 
 /obj/item/weapon/material/minihoe // -- Numbers
@@ -71,7 +71,7 @@
 	thrown_force_divisor = 0.25 // as above
 	w_class = ITEM_SIZE_SMALL
 	attack_verb = list("slashed", "sliced", "cut", "clawed")
-	damtype = list(DAM_PIERCE, DAM_BLUNT)
+	damtype = DAM_PIERCE
 	mass = 0.5
 
 /obj/item/weapon/material/scythe
@@ -87,7 +87,7 @@
 	slot_flags = SLOT_BACK
 	origin_tech = list(TECH_MATERIAL = 2, TECH_COMBAT = 2)
 	attack_verb = list("chopped", "sliced", "cut", "reaped")
-	damtype = list(DAM_CUT, DAM_BLUNT)
+	damtype = DAM_CUT
 	mass = 2.70
 
 

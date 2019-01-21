@@ -368,7 +368,7 @@
 	attackby(obj/item/weapon/flame/match/W as obj, mob/user as mob)
 		if(istype(W) && !W.lit && !W.burnt)
 			W.lit = 1
-			W.damtype = "burn"
+			W.damtype = DAM_BURN
 			W.icon_state = "match_lit"
 			START_PROCESSING(SSobj, W)
 		W.update_icon()

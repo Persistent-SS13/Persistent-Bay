@@ -176,7 +176,7 @@
 	return
 
 /obj/item/weapon/holo
-	damtype = PAIN
+	damtype = DAM_PAIN
 	no_attack_log = 1
 
 /obj/item/weapon/holo/esword

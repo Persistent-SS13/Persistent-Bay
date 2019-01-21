@@ -20,6 +20,7 @@
 	sharpness = 1
 	unacidable = 1 //glass
 	damtype = DAM_PIERCE
+	force = 0
 	var/mode = SYRINGE_DRAW
 	var/image/filling //holds a reference to the current filling overlay
 	var/visible_name = "a syringe"
@@ -59,6 +60,16 @@
 	if(user.a_intent != I_HELP) //in case it is ever used as a surgery tool
 		return ..()
 	afterattack(M, user, 1)
+	return 1
+
+/obj/item/weapon/reagent_containers/syringe/attack(atom/movable/AM, mob/living/user as mob, var/target_zone)
+	if(ismob(AM))
+		admin_attack_log(user, AM, "Attacked using \a [src]", "Was attacked with \a [src]", "used \a [src] to attack")
+	var/hit_zone = null
+	if(isliving(AM))
+		var/mob/living/L = AM
+		hit_zone = L.resolve_item_attack(src, user, target_zone)
+	src.apply_hit_effect(AM, user, hit_zone)
 	return 1
 
 /obj/item/weapon/reagent_containers/syringe/afterattack(obj/target, mob/user, proximity)

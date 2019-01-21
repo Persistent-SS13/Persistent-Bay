@@ -73,7 +73,7 @@
 
 	health += max_health - old_max_health
 
-/obj/structure/table/take_damage(damage, damtype, armordamagetype, armorbypass, list/damlist, damflags, damsrc)
+/obj/structure/table/take_damage(damage, damtype, armorbypass, damsrc)
 	// If the table is made of a brittle material, and is *not* reinforced with a non-brittle material, damage is multiplied by TABLE_BRITTLE_MATERIAL_MULTIPLIER
 	if(material && material.is_brittle())
 		if(reinforced)
@@ -81,7 +81,7 @@
 				damage *= TABLE_BRITTLE_MATERIAL_MULTIPLIER
 		else
 			damage *= TABLE_BRITTLE_MATERIAL_MULTIPLIER
-	..(damage, damtype, armordamagetype, armorbypass, damlist, damflags, damsrc)
+	..(damage, damtype, armorbypass, damsrc)
 
 /obj/structure/table/destroyed()
 	visible_message("<span class='warning'>\The [src] breaks down!</span>")

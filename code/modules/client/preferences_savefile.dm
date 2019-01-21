@@ -119,12 +119,12 @@
 	if(backpack)
 		mannequin.equip_to_slot_or_del(backpack,slot_back)
 	mannequin.mind.initial_account = M
-	var/datum/computer_file/crew_record/record = CreateModularRecord(mannequin)
+	var/datum/computer_file/report/crew_record/record = CreateModularRecord(mannequin)
 	var/faction_uid = "refugee"
 	faction_uid = "nanotrasen"
 	var/datum/world_faction/factions = get_faction(faction)
 	if(factions)
-		var/datum/computer_file/crew_record/record2 = new()
+		var/datum/computer_file/report/crew_record/record2 = new()
 		if(!record2.load_from_global(real_name))
 			message_admins("record for [real_name] failed to load in character creation..")
 		else

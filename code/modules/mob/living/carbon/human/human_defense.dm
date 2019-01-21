@@ -190,7 +190,7 @@ meteor_act
 
 	if(effective_force > 10 || effective_force >= 5 && prob(33))
 		forcesay(GLOB.hit_appends)	//forcesay checks stat already
-	if((I.damtype == BRUTE || I.damtype == PAIN) && prob(25 + (effective_force * 2)))
+	if((IsDamageTypeBrute(I.damtype) || ISDAMTYPE(I.damtype, DAM_PAIN)) && prob(25 + (effective_force * 2)))
 		if(!stat)
 			if(headcheck(hit_zone))
 				//Harder to score a stun but if you do it lasts a bit longer
@@ -271,7 +271,7 @@ meteor_act
 /mob/living/carbon/human/proc/attack_joint(var/obj/item/organ/external/organ, var/obj/item/W, var/effective_force, var/dislocate_mult, var/blocked)
 	if(!organ || (organ.dislocated == 2) || (organ.dislocated == -1) || blocked >= 100)
 		return 0
-	if(W.damtype != BRUTE)
+	if(!IsDamageTypeBrute(W.damtype))
 		return 0
 
 	//want the dislocation chance to be such that the limb is expected to dislocate after dealing a fraction of the damage needed to break the limb

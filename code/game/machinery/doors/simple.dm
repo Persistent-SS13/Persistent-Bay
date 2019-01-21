@@ -172,7 +172,7 @@
 	if(src.density && istype(I, /obj/item/weapon) && user.a_intent == I_HURT && !istype(I, /obj/item/weapon/card))
 		var/obj/item/weapon/W = I
 		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-		if(W.damtype == BRUTE || W.damtype == BURN)
+		if(IsDamageTypeBrute(W.damtype) || IsDamageTypeBurn(W.damtype))
 			user.do_attack_animation(src)
 			if(W.force < min_force)
 				user.visible_message("<span class='danger'>\The [user] hits \the [src] with \the [W] with no visible effect.</span>")

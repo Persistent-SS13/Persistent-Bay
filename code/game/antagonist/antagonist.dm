@@ -51,6 +51,7 @@
 	var/suspicion_chance = 50               // Prob of being on the initial Command report
 	var/flags = 0                           // Various runtime options.
 	var/show_objectives_on_creation = 1     // Whether or not objectives are shown when a player is added to this antag datum
+	var/datum/antag_skill_setter/skill_setter = /datum/antag_skill_setter/generic // Used to set up skills.
 
 	// Used for setting appearance.
 	var/list/valid_species =       list(SPECIES_UNATHI,SPECIES_SKRELL,SPECIES_HUMAN,SPECIES_VOX)
@@ -80,6 +81,7 @@
 		rules aside from those without explicit exceptions apply to antagonists.</b>"
 
 /datum/antagonist/New()
+	skill_setter = new skill_setter
 	..()
 	if(!role_type)
 		role_type = id

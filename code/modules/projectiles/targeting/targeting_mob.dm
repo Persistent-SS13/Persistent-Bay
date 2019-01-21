@@ -23,7 +23,7 @@
 	if(isliving(src)) //Needs to be a mob verb to prevent error messages when using hotkeys
 		var/mob/living/M = src
 		
-		for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
+		for(var/datum/computer_file/report/crew_record/record in GLOB.all_crew_records)
 			if(record.get_name() == M.real_name)
 				if(record.linked_account && istype(record.linked_account, /datum/money_account))
 					if(record.linked_account.account_number == 0)

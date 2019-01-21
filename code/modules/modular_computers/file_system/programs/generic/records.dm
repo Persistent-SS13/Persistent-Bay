@@ -10,7 +10,7 @@
 
 /datum/nano_module/program/records
 	name = "Crew Records"
-	var/datum/computer_file/crew_record/active_record
+	var/datum/computer_file/report/crew_record/active_record
 	var/message = null
 
 /datum/nano_module/program/records/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
@@ -77,7 +77,7 @@
 	else
 		var/list/all_records = list()
 		if(faction_records)
-			for(var/datum/computer_file/crew_record/R in faction_records)
+			for(var/datum/computer_file/report/crew_record/R in faction_records)
 				var/assignment = "Unassigned"
 				var/rank = 0
 				if(R.terminated)
@@ -125,7 +125,7 @@
 	return user_access
 
 /datum/nano_module/program/records/proc/edit_field(var/mob/user, var/field)
-	var/datum/computer_file/crew_record/R = active_record
+	var/datum/computer_file/report/crew_record/R = active_record
 	if(!R)
 		return
 	var/record_field/F = locate(field) in R.fields
@@ -177,7 +177,7 @@
 		return 1
 	if(href_list["set_active"])
 		var/ID = text2num(href_list["set_active"])
-		for(var/datum/computer_file/crew_record/R in faction_records)
+		for(var/datum/computer_file/report/crew_record/R in faction_records)
 			if(R.uid == ID)
 				active_record = R
 				break
@@ -186,7 +186,7 @@
 		if(!check_access(usr, core_access_command_programs))
 			to_chat(usr, "Access Denied.")
 			return
-		active_record = new/datum/computer_file/crew_record()
+		active_record = new/datum/computer_file/report/crew_record()
 		faction_records.Add(active_record)
 		return 1
 	if(href_list["print_active"])
@@ -199,14 +199,14 @@
 		var/search = sanitize(input("Enter the value for search for.") as null|text)
 		if(!search)
 			return
-		for(var/datum/computer_file/crew_record/R in faction_records)
+		for(var/datum/computer_file/report/crew_record/R in faction_records)
 			if(lowertext(R.get_field(field)) == lowertext(search))
 				active_record = R
 				return 1
 		message = "Unable to find record containing '[search]'"
 		return 1
 
-	var/datum/computer_file/crew_record/R = active_record
+	var/datum/computer_file/report/crew_record/R = active_record
 	if(!istype(R))
 		return 1
 	if(href_list["edit_photo_front"])

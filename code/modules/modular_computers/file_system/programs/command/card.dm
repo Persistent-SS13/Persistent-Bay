@@ -53,7 +53,7 @@
 	var/is_centcom = 0
 	var/show_assignments = 0
 	var/show_record = 0
-	var/datum/computer_file/crew_record/record
+	var/datum/computer_file/report/crew_record/record
 	var/manifest_setting = 1
 	var/submode = 0
 /datum/nano_module/program/card_mod/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
@@ -250,7 +250,7 @@
 	if(!user_id_card || !user_id_card.valid)
 		return 0
 	var/obj/item/weapon/card/id/id_card
-	var/datum/computer_file/crew_record/user_record
+	var/datum/computer_file/report/crew_record/user_record
 	var/list/user_accesses = list()
 	if (computer.card_slot)
 		id_card = computer.card_slot.stored_card
@@ -272,7 +272,7 @@
 			if(!id_card)
 				return
 			module.record = null
-			var/datum/computer_file/crew_record/record = connected_faction.get_record(id_card.registered_name)
+			var/datum/computer_file/report/crew_record/record = connected_faction.get_record(id_card.registered_name)
 			if(!record && id_card.registered_name)
 				if(!user_id_card) return
 				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_reassignment in user_accesses))
@@ -297,7 +297,7 @@
 			module.record = null
 			var/select_name = input(usr,"Enter the name of the record to search for.","Record Search", "") as null|text
 			if(select_name)
-				var/datum/computer_file/crew_record/record = connected_faction.get_record(select_name)
+				var/datum/computer_file/report/crew_record/record = connected_faction.get_record(select_name)
 				if(!record)
 					if(!user_id_card) return
 					if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_reassignment in user_accesses))
@@ -427,7 +427,7 @@
 						to_chat(usr, "Only command staff can grant custom titles.")
 						return 0
 				else
-					var/datum/computer_file/crew_record/record = connected_faction.get_record(user_id_card.registered_name)
+					var/datum/computer_file/report/crew_record/record = connected_faction.get_record(user_id_card.registered_name)
 					var/datum/assignment/user_assignment = null
 					if(!isghost(user))
 						user_assignment = connected_faction.get_assignment(record.assignment_uid)

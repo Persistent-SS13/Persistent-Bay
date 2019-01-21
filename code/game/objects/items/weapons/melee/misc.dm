@@ -10,7 +10,7 @@
 	w_class = ITEM_SIZE_NORMAL
 	origin_tech = list(TECH_COMBAT = 4)
 	attack_verb = list("flicked", "whipped", "lashed")
-	damtype = list(DAM_BLUNT, DAM_PIERCE)
+	damtype = DAM_BLUNT
 	mass = 3
 
 
@@ -43,14 +43,14 @@
 	item_state = "officersword"
 	slot_flags = SLOT_BELT
 	applies_material_colour = FALSE
-	damtype = list(DAM_CUT, DAM_PIERCE)
+	damtype = DAM_CUT
 	mass = 2
 
 /obj/item/weapon/material/sword/replica/officersword/marine
 	name = "marine NCO's sword"
 	desc = "A polished sword issued to SCG Marine NCOs."
 	icon_state = "marinesword"
-	damtype = list(DAM_CUT, DAM_PIERCE)
+	damtype = DAM_CUT
 	mass = 2
 
 /obj/item/weapon/material/sword/replica/officersword/marineofficer
@@ -58,7 +58,7 @@
 	desc = "A curved sword issued to SCG Marine officers."
 	icon_state = "marineofficersword"
 	item_state = "marineofficersword"
-	damtype = list(DAM_CUT, DAM_PIERCE)
+	damtype = DAM_CUT
 	mass = 2
 
 /obj/item/weapon/material/sword/replica/officersword/pettyofficer
@@ -66,5 +66,5 @@
 	desc = "A polished cutlass issued to chief petty officers of the fleet."
 	icon_state = "pettyofficersword"
 	item_state = "pettyofficersword"
-	damtype = list(DAM_CUT, DAM_PIERCE)
+	damtype = DAM_CUT
 	mass = 2

@@ -1,7 +1,7 @@
 /datum/species/monkey
 	name = "Monkey"
 	name_plural = "Monkeys"
-	blurb = "Ook."
+	description = "Ook."
 
 	icobase =         'icons/mob/human_races/species/monkey/monkey_body.dmi'
 	deform =          'icons/mob/human_races/species/monkey/monkey_body.dmi'

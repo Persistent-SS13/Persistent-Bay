@@ -277,7 +277,7 @@ var/global/list/valid_bloodtypes = list("A+", "A-", "B+", "B-", "AB+", "AB-", "O
 			pref.randomize_appearance_and_body_for()	//to get rid of any previous species traits
 			pref.real_name = null	//to make sure vatgrown don't get any disallowed names
 
-			prune_occupation_prefs()
+			//prune_occupation_prefs()
 			return TOPIC_REFRESH_UPDATE_PREVIEW
 
 	else if(href_list["hair_color"])
@@ -571,7 +571,7 @@ var/global/list/valid_bloodtypes = list("A+", "A-", "B+", "B-", "AB+", "AB-", "O
 	dat += "<center><h2>[current_species.name] \[<a href='?src=\ref[src];show_species=1'>change</a>\]</h2></center><hr/>"
 	dat += "<table padding='8px'>"
 	dat += "<tr>"
-	dat += "<td width = 400>[current_species.blurb]</td>"
+	dat += "<td width = 400>[current_species.get_description()]</td>"
 	dat += "<td width = 200 align='center'>"
 	if(current_species.preview_icon)
 		usr << browse_rsc(icon(icon = current_species.preview_icon, icon_state = ""), "species_preview_[current_species.name].png")

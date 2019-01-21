@@ -37,6 +37,12 @@
 
 	var/hud_icon						  //icon used for Sec HUD overlay
 
+	var/min_skill = list()				  //Minimum skills allowed for the job. List should contain skill (as in /decl/hierarchy/skill path), with values which are numbers.
+	var/max_skill = list()				  //Maximum skills allowed for the job.
+	var/skill_points = 16				  //The number of unassigned skill points the job comes with (on top of the minimum skills).
+	var/no_skill_buffs = FALSE			  //Whether skills can be buffed by age/species modifiers.
+
+
 /datum/job/New()
 	..()
 	if(prob(100-availablity_chance))	//Close positions, blah blah.

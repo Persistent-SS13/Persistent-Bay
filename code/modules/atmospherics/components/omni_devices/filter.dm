@@ -21,6 +21,16 @@
 
 /obj/machinery/atmospherics/omni/filter/New()
 	..()
+	do_init()
+
+/obj/machinery/atmospherics/omni/filter/after_load()
+	rebuild_filtering_list()
+	for(var/datum/omni_port/P in ports)
+		handle_port_change(P)
+	..()
+
+
+/obj/machinery/atmospherics/omni/filter/proc/do_init()
 	rebuild_filtering_list()
 	for(var/datum/omni_port/P in ports)
 		P.air.volume = ATMOS_DEFAULT_VOLUME_FILTER

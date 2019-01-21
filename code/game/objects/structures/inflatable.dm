@@ -85,7 +85,7 @@
 /obj/structure/inflatable/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(!istype(W) || istype(W, /obj/item/weapon/inflatable_dispenser)) return
 
-	if((W.damtype == BRUTE || W.damtype == BURN) && W.can_puncture())
+	if((IsDamageTypeBrute(W.damtype) || IsDamageTypeBurn(W.damtype)) && W.can_puncture())
 		..()
 		if(hit(W.force))
 			visible_message("<span class='danger'>[user] pierces [src] with [W]!</span>")

@@ -236,7 +236,7 @@
 		return 2
 
 	var/damage = O.force
-	if (O.damtype == PAIN)
+	if (O.damtype == DAM_PAIN)
 		damage = 0
 	if(supernatural && istype(O,/obj/item/weapon/nullrod))
 		damage *= 2

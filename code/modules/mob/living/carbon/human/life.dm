@@ -1065,7 +1065,7 @@
 
 		var/datum/world_faction/faction = get_faction(src.GetFaction())
 		if(faction)
-			var/datum/computer_file/crew_record/E = faction.get_record(perpname)
+			var/datum/computer_file/report/crew_record/E = faction.get_record(perpname)
 			if(E)
 				switch(E.get_criminalStatus())
 					if("Arrest")

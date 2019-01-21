@@ -361,7 +361,7 @@
 		playsound(get_turf(src), 'sound/machines/defib_failed.ogg', 50, 0)
 		return
 
-	H.apply_damage(burn_damage_amt, BURN, BP_CHEST)
+	H.apply_damage(burn_damage_amt, DAM_BURN, BP_CHEST)
 
 	//set oxyloss so that the patient is just barely in crit, if possible
 	make_announcement("pings, \"Resuscitation successful.\"", "notice")

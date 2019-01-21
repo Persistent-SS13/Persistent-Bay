@@ -52,7 +52,7 @@
 
 	//Check all the alarms before lowering atmosalm. Raising is perfectly fine.
 	for (var/obj/machinery/alarm/AA in src)
-		if (!(AA.stat & (NOPOWER|BROKEN)) && !AA.shorted && AA.report_danger_level)
+		if (AA.operable() && !AA.shorted && AA.report_danger_level)
 			danger_level = max(danger_level, AA.danger_level)
 
 	if(danger_level != atmosalm)
@@ -305,11 +305,11 @@ var/list/mob/living/forced_ambience_list = new
 			return
 
 		if(!MOVING_DELIBERATELY(H))
-			H.AdjustStunned(6)
-			H.AdjustWeakened(6)
+			H.AdjustStunned(2)
+			H.AdjustWeakened(2)
 		else
-			H.AdjustStunned(3)
-			H.AdjustWeakened(3)
+			H.AdjustStunned(1)
+			H.AdjustWeakened(1)
 		to_chat(mob, "<span class='notice'>The sudden appearance of gravity makes you fall to the floor!</span>")
 
 /area/proc/prison_break()

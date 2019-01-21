@@ -45,7 +45,7 @@
 /obj/item/weapon/flame/candle/proc/light(var/flavor_text = "<span class='notice'>\The [usr] lights the [name].</span>")
 	if(!src.lit)
 		src.lit = 1
-		//src.damtype = "fire"
+		//src.damtype = DAM_BURN
 		for(var/mob/O in viewers(usr, null))
 			O.show_message(flavor_text, 1)
 		set_light(CANDLE_LUM)

@@ -157,11 +157,11 @@ var/list/gear_datums = list()
 	. += "<tr><td colspan=3><b><center>[LC.category]</center></b></td></tr>"
 	. += "<tr><td colspan=3><hr></td></tr>"
 	var/jobs = list()
-	if(job_master)
-		for(var/job_title in (pref.job_medium|pref.job_low|pref.job_high))
-			var/datum/job/J = job_master.occupations_by_title[job_title]
-			if(J)
-				dd_insertObjectList(jobs, J)
+	// if(job_master)
+	// 	for(var/job_title in (pref.job_medium|pref.job_low|pref.job_high))
+	// 		var/datum/job/J = job_master.occupations_by_title[job_title]
+	// 		if(J)
+	// 			dd_insertObjectList(jobs, J)
 	for(var/gear_name in LC.gear)
 		if(!(gear_name in valid_gear_choices()))
 			continue

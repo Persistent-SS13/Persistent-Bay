@@ -11,6 +11,7 @@
 	var/malfunction_threshold = 0.8		// "Malfunction" threshold. When damage exceeds this value the hardware piece will semi-randomly fail and do !!FUN!! things
 	var/break_threshold = 0.5			// "Failure" threshold. When damage exceeds this value the hardware piece will not work at all.
 	var/malfunction_probability = 10// Chance of malfunction when the component is damaged
+	var/usage_flags = PROGRAM_ALL
 
 /obj/item/weapon/computer_hardware/attackby(var/obj/item/W as obj, var/mob/living/user as mob)
 	// Multitool. Runs diagnostics

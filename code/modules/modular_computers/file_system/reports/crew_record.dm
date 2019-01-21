@@ -5,8 +5,8 @@ GLOBAL_VAR_INIT(default_physical_status, "Active")
 GLOBAL_LIST_INIT(security_statuses, list("None", "Released", "Parolled", "Incarcerated", "Arrest"))
 GLOBAL_VAR_INIT(default_security_status, "None")
 GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
-#define GETTER_SETTER(KEY) /datum/computer_file/crew_record/proc/get_##KEY(){var/record_field/F = locate(/record_field/##KEY) in fields; if(F) return F.get_value()} \
-/datum/computer_file/crew_record/proc/set_##KEY(value){var/record_field/F = locate(/record_field/##KEY) in fields; if(F) return F.set_value(value)}
+#define GETTER_SETTER(KEY) /datum/computer_file/report/crew_record/proc/get_##KEY(){var/record_field/F = locate(/record_field/##KEY) in fields; if(F) return F.get_value()} \
+/datum/computer_file/report/crew_record/proc/set_##KEY(value){var/record_field/F = locate(/record_field/##KEY) in fields; if(F) return F.set_value(value)}
 
 // Fear not the preprocessor, for it is a friend. To add a field, use one of these, depending on value type and if you need special access to see it.
 // It will also create getter/setter procs for record datum, named like /get_[key here]() /set_[key_here](value) e.g. get_name() set_name(value)
@@ -25,6 +25,7 @@ GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
 
 // GENERIC RECORDS
 FIELD_SHORT("Name",name)
+FIELD_SHORT("Formal Name", formal_name)
 FIELD_SHORT("Job",job)
 FIELD_LIST("Sex", sex, record_genders())
 FIELD_NUM("Age", age)
@@ -52,13 +53,14 @@ FIELD_SHORT_SECURE("Home System", homeSystem, core_access_employee_records)
 FIELD_SHORT_SECURE("Citizenship", citizenship, core_access_employee_records)
 FIELD_SHORT_SECURE("Faction", faction, core_access_employee_records)
 FIELD_SHORT_SECURE("Religion", religion, core_access_employee_records)
+FIELD_LONG_SECURE("Qualifications", skillset, core_access_employee_records)
 
 // ANTAG RECORDS
 FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 
 
 // Kept as a computer file for possible future expansion into servers.
-/datum/computer_file/crew_record
+/datum/computer_file/report/crew_record
 	filetype = "CDB"
 	size = 2
 
@@ -66,9 +68,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	// Try to avoid manipulating the fields_ variables directly - use getters/setters below instead.
 	var/icon/photo_front = null
 	var/icon/photo_side = null
-	var/list/fields = list()	// Fields of this record
 	var/datum/money_account/linked_account
-	var/list/access = list() // used for factional access
 	var/suspended = 0
 	var/terminated = 0
 	var/assignment_uid
@@ -82,21 +82,23 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/expenses = 0
 	var/datum/computer_file/data/email_account/email
 	
-/datum/computer_file/crew_record/New()
+/datum/computer_file/report/crew_record/New()
 	..()
 	for(var/T in subtypesof(/record_field/))
 		new T(src)
 	load_from_mob(null)
 
-/datum/computer_file/crew_record/Destroy()
+/datum/computer_file/report/crew_record/Destroy()
 	. = ..()
 	GLOB.all_crew_records.Remove(src)
-/datum/computer_file/crew_record/proc/try_duty()
+
+/datum/computer_file/report/crew_record/proc/try_duty()
 	if(suspended > world.realtime || terminated)
 		return 0
 	else
 		return assignment_uid
-/datum/computer_file/crew_record/proc/check_rank_change(var/datum/world_faction/faction)
+
+/datum/computer_file/report/crew_record/proc/check_rank_change(var/datum/world_faction/faction)
 	var/list/all_promotes = list()
 	var/list/three_promotes = list()
 	var/list/five_promotes = list()
@@ -112,7 +114,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 			all_promotes |= name
 			continue
 		if(name == get_name()) continue
-		var/datum/computer_file/crew_record/record = faction.get_record(name)
+		var/datum/computer_file/report/crew_record/record = faction.get_record(name)
 		if(record)
 			var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
 			if(assignment)
@@ -175,7 +177,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 			all_promotes |= name
 			continue
 		if(name == get_name()) continue
-		var/datum/computer_file/crew_record/record = faction.get_record(name)
+		var/datum/computer_file/report/crew_record/record = faction.get_record(name)
 		if(record)
 			var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
 			if(assignment)
@@ -229,7 +231,8 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		demote_votes.Cut()
 		update_ids(get_name())
 		return
-/datum/computer_file/crew_record/proc/load_from_id(var/obj/item/weapon/card/id/card)
+
+/datum/computer_file/report/crew_record/proc/load_from_id(var/obj/item/weapon/card/id/card)
 	if(!istype(card))
 		return 0
 	photo_front = card.front
@@ -254,9 +257,10 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	// Employment record
 	set_emplRecord("No record supplied")
 	return 1
-/datum/computer_file/crew_record/proc/load_from_global(var/real_name)
-	var/datum/computer_file/crew_record/record
-	for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+
+/datum/computer_file/report/crew_record/proc/load_from_global(var/real_name)
+	var/datum/computer_file/report/crew_record/record
+	for(var/datum/computer_file/report/crew_record/R in GLOB.all_crew_records)
 		if(R.get_name() == real_name)
 			record = R
 			break
@@ -289,7 +293,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	set_religion(record.get_religion())
 	return 1
 
-/datum/computer_file/crew_record/proc/load_from_mob(var/mob/living/carbon/human/H)
+/datum/computer_file/report/crew_record/proc/load_from_mob(var/mob/living/carbon/human/H)
 	if(istype(H))
 		if(H.mind && H.mind.initial_account)
 			linked_account = H.mind.initial_account
@@ -328,20 +332,29 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	set_faction(H ? H.personal_faction : "Unset")
 	set_religion(H ? H.religion : "Unset")
 
+	if(H)
+		var/skills = list()
+		for(var/decl/hierarchy/skill/S in GLOB.skills)
+			var/level = H.get_skill_value(S.type)
+			if(level > SKILL_NONE)
+				skills += "[S.name], [S.levels[level]]"
+
+		set_skillset(jointext(skills,"\n"))
+
 	// Antag record
 	set_antagRecord((H && H.exploit_record && !jobban_isbanned(H, "Records") ? html_decode(H.exploit_record) : ""))
 
 // Returns independent copy of this file.
-/datum/computer_file/crew_record/clone(var/rename = 0)
-	var/datum/computer_file/crew_record/temp = ..()
+/datum/computer_file/report/crew_record/clone(var/rename = 0)
+	var/datum/computer_file/report/crew_record/temp = ..()
 	return temp
 
-/datum/computer_file/crew_record/proc/get_field(var/field_type)
+/datum/computer_file/report/crew_record/proc/get_field(var/field_type)
 	var/record_field/F = locate(field_type) in fields
 	if(F)
 		return F.get_value()
 
-/datum/computer_file/crew_record/proc/set_field(var/field_type, var/value)
+/datum/computer_file/report/crew_record/proc/set_field(var/field_type, var/value)
 	var/record_field/F = locate(field_type) in fields
 	if(F)
 		return F.set_value(value)
@@ -349,13 +362,13 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 // Global methods
 // Used by character creation to create a record for new arrivals.
 /proc/CreateModularRecord(var/mob/living/carbon/human/H)
-	for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+	for(var/datum/computer_file/report/crew_record/R in GLOB.all_crew_records)
 		if(R.get_name() == H.real_name)
 			message_admins("record already found heh")
 			return R
-	var/datum/computer_file/crew_record/R = Retrieve_Record(H.real_name)
+	var/datum/computer_file/report/crew_record/R = Retrieve_Record(H.real_name)
 	if(R) return R
-	var/datum/computer_file/crew_record/CR = new/datum/computer_file/crew_record()
+	var/datum/computer_file/report/crew_record/CR = new/datum/computer_file/report/crew_record()
 	GLOB.all_crew_records.Add(CR)
 	CR.load_from_mob(H)
 	return CR
@@ -363,7 +376,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 // Gets crew records filtered by set of positions
 /proc/department_crew_manifest(var/list/filter_positions, var/blacklist = FALSE)
 	var/list/matches = list()
-	for(var/datum/computer_file/crew_record/CR in GLOB.all_crew_records)
+	for(var/datum/computer_file/report/crew_record/CR in GLOB.all_crew_records)
 		var/rank = CR.get_job()
 		if(blacklist)
 			if(!(rank in filter_positions))
@@ -375,7 +388,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 
 // Simple record to HTML (for paper purposes) conversion.
 // Not visually that nice, but it gets the work done, feel free to tweak it visually
-/proc/record_to_html(var/datum/computer_file/crew_record/CR, var/access)
+/proc/record_to_html(var/datum/computer_file/report/crew_record/CR, var/access)
 	var/dat = "<tt><H2>RECORD DATABASE DATA DUMP</H2><i>Generated on: [stationdate2text()] [stationtime2text()]</i><br>******************************<br>"
 	dat += "<table>"
 	for(var/record_field/F in CR.fields)
@@ -388,10 +401,10 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	return dat
 
 /proc/get_crewmember_record(var/name)
-	for(var/datum/computer_file/crew_record/CR in GLOB.all_crew_records)
+	for(var/datum/computer_file/report/crew_record/CR in GLOB.all_crew_records)
 		if(CR.get_name() == name)
 			return CR
-	var/datum/computer_file/crew_record/R = Retrieve_Record(name)
+	var/datum/computer_file/report/crew_record/R = Retrieve_Record(name)
 	if(R) return R
 	return null
 
@@ -412,7 +425,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/acccess_edit
 	var/record_id
 
-/record_field/New(var/datum/computer_file/crew_record/record)
+/record_field/New(var/datum/computer_file/report/crew_record/record)
 	if(!acccess_edit)
 		acccess_edit = acccess ? acccess : access_heads
 	if(record)
@@ -462,7 +475,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 
 //Options builderes
 /record_field/rank/proc/record_ranks()
-	for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+	for(var/datum/computer_file/report/crew_record/R in GLOB.all_crew_records)
 		if(R.uid == record_id)
 			var/datum/mil_branch/branch = mil_branches.get_branch(R.get_branch())
 			if(!branch)
@@ -485,3 +498,30 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	for(var/B in mil_branches.branches)
 		var/datum/mil_branch/BR = mil_branches.branches[B]
 		. |= BR.name
+
+//Options builderes
+/datum/report_field/options/crew_record/rank/proc/record_ranks()
+	var/datum/computer_file/report/crew_record/record = owner
+	var/datum/mil_branch/branch = mil_branches.get_branch(record.get_branch())
+	if(!branch)
+		return
+	. = list()
+	. |= "Unset"
+	for(var/rank in branch.ranks)
+		var/datum/mil_rank/RA = branch.ranks[rank]
+		. |= RA.name
+
+/datum/report_field/options/crew_record/sex/proc/record_genders()
+	. = list()
+	. |= "Unset"
+	for(var/thing in gender_datums)
+		var/datum/gender/G = gender_datums[thing]
+		. |= gender2text(G.formal_term)
+
+/datum/report_field/options/crew_record/branch/proc/record_branches()
+	. = list()
+	. |= "Unset"
+	for(var/B in mil_branches.branches)
+		var/datum/mil_branch/BR = mil_branches.branches[B]
+		. |= BR.name
+

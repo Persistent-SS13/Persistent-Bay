@@ -1028,14 +1028,6 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/weapon/computer_hardware/battery_module/micro
 	sort_string = "VBAAU"
 
-/datum/design/item/modularcomponent/dna_scanner
-	name = "DNA scanner port"
-	id = "dnaslot"
-	req_tech = list(TECH_DATA = 2)
-	build_type = PROTOLATHE
-	materials = list(MATERIAL_STEEL = 600)
-	build_path = /obj/item/weapon/computer_hardware/dna_scanner
-	sort_string = "VBABA"
 /datum/design/item/modularcomponent/logistic_processor
 	name = "Advanced Logistic Processor"
 	id = "logproc"
@@ -1387,3 +1379,12 @@ other types of metals and chemistry for reagents).
 	materials = list(MATERIAL_STEEL = 1000)
 	build_path = /obj/item/clothing/accessory/stethoscope
 	sort_string = "WCLAF"
+
+/datum/design/item/modularcomponent/accessory/paper_scanner
+	name = "paper scanner module"
+	id = "scan_paper"
+	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
+	materials = list(MATERIAL_STEEL = 600, MATERIAL_GLASS = 200)
+	build_path = /obj/item/weapon/computer_hardware/scanner/paper
+	sort_string = "VBADG"
+

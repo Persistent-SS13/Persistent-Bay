@@ -732,14 +732,14 @@ var/PriorityQueue/all_feeds
 	return records.faction_records
 
 /datum/world_faction/proc/get_record(var/real_name)
-	for(var/datum/computer_file/crew_record/R in records.faction_records)
+	for(var/datum/computer_file/report/crew_record/R in records.faction_records)
 		if(R.get_name() == real_name)
 			return R
-	var/datum/computer_file/crew_record/L = Retrieve_Record_Faction(real_name, src)
+	var/datum/computer_file/report/crew_record/L = Retrieve_Record_Faction(real_name, src)
 	return L
 
 /datum/world_faction/proc/in_command(var/real_name)
-	var/datum/computer_file/crew_record/R = get_record(real_name)
+	var/datum/computer_file/report/crew_record/R = get_record(real_name)
 	if(R)
 		var/datum/assignment/assignment = get_assignment(R.assignment_uid)
 		if(assignment)
@@ -750,9 +750,9 @@ var/PriorityQueue/all_feeds
 /datum/world_faction/proc/outranks(var/real_name, var/target)
 	if(real_name == leader_name)
 		return 1
-	var/datum/computer_file/crew_record/R = get_record(real_name)
+	var/datum/computer_file/report/crew_record/R = get_record(real_name)
 	if(!R) return 0
-	var/datum/computer_file/crew_record/target_record = get_record(target)
+	var/datum/computer_file/report/crew_record/target_record = get_record(target)
 	if(!target_record) return 1
 	var/user_command = 0
 	var/target_command = 0

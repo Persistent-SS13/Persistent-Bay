@@ -245,7 +245,15 @@
 		return 1
 	return ..()
 
+// /obj/machinery/status_display/dismantle()
+// 	playsound(loc, 'sound/items/Crowbar.ogg', 50, 1)
+// 	var/obj/item/frame/status_display/F = new /obj/item/frame/status_display(get_turf(src))
+// 	F.set_dir(src.dir)
+// 	for(var/obj/I in component_parts)
+// 		I.forceMove(get_turf(src))
 
+// 	qdel(src)
+// 	return TRUE
 
 #undef SD_TEXT_STYLE
 #undef SCROLL_SPEED

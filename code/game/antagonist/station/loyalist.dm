@@ -27,6 +27,7 @@ var/datum/antagonist/loyalists/loyalists
 	blacklisted_jobs = list(/datum/job/ai, /datum/job/cyborg)
 
 	faction = "loyalist"
+	skill_setter = /datum/antag_skill_setter/station
 
 /datum/antagonist/loyalists/New()
 	..()

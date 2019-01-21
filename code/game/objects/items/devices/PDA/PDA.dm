@@ -895,7 +895,7 @@ var/global/list/obj/item/device/pda/PDAs = list()
 	if(i>=10 && i<= 20) //The PDA burns a hole in the holder.
 		j=1
 		if(M && isliving(M))
-			M.apply_damage( rand(30,60) , BURN)
+			M.apply_damage( rand(30,60) , DAM_BURN)
 		message += "You feel a searing heat! Your [P] is burning!"
 	if(i>=20 && i<=25) //EMP
 		empulse(P.loc, 3, 6, 1)

@@ -418,7 +418,7 @@
 
 /obj/machinery/portable_atmospherics/hydroponics/attackby(var/obj/item/O as obj, var/mob/user as mob)
 
-	if(isWirecutter(O) || istype(O, /obj/item/weapon/scalpel))
+	if(isWirecutter(O) || istype(O, /obj/item/weapon/scalpel) || isScissors(O))
 
 		if(!seed)
 			to_chat(user, "There is nothing to take a sample from in \the [src].")

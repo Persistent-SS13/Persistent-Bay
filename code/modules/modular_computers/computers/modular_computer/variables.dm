@@ -51,5 +51,15 @@
 	var/obj/item/weapon/computer_hardware/hard_drive/portable/portable_drive		// Portable data storage
 	var/obj/item/weapon/computer_hardware/ai_slot/ai_slot							// AI slot, an intellicard housing that allows modifications of AIs.
 	var/obj/item/weapon/computer_hardware/tesla_link/tesla_link						// Tesla Link, Allows remote charging from nearest APC.
-	var/obj/item/weapon/computer_hardware/dna_scanner/dna_scanner					// DNA scanner, for Cloning Control
-	var/obj/item/weapon/computer_hardware/logistic_processor/logistic_processor				// DNA scanner, for Cloning Control
+	var/obj/item/weapon/computer_hardware/logistic_processor/logistic_processor		// For command programs
+	var/obj/item/weapon/computer_hardware/scanner/scanner							// One of several optional scanner attachments.
+
+	var/stores_pen = FALSE
+	var/obj/item/weapon/pen/stored_pen
+	//Pain and suffering
+	var/receives_updates = TRUE
+	var/updating = FALSE
+	var/updates = 0
+	var/update_progress = 0
+	var/update_postshutdown
+	var/list/terminals          // List of open terminal datums.

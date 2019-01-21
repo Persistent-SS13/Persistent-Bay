@@ -3,7 +3,7 @@
 	desc = "Swipe your ID card to make purchases electronically."
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "register_idle"
-	flags = ITEM_FLAG_NO_BLUDGEON
+	obj_flags = ITEM_FLAG_NO_BLUDGEON
 	req_access = list(core_access_command_programs)
 	anchored = 1
 
@@ -28,7 +28,6 @@
 /obj/machinery/cash_register/New()
 	machine_id = "[station_name()] RETAIL #[num_financial_terminals++]"
 	cash_stored = rand(10, 70)*10
-	transaction_devices += src // Global reference list to be properly set up by /proc/setup_economy()
 
 
 /obj/machinery/cash_register/examine(mob/user as mob)
@@ -42,7 +41,8 @@
 
 /obj/machinery/cash_register/attack_hand(mob/user as mob)
 	// Don't be accessible from the wrong side of the machine
-	if(get_dir(src, user) & reverse_dir[src.dir]) return
+	var/turf/use_turf = get_step(src, turn(src.dir, 180))
+	if(user.loc != use_turf) return
 
 	if(cash_open)
 		if(cash_stored)
@@ -168,7 +168,10 @@
 
 /obj/machinery/cash_register/attackby(obj/O as obj, user as mob)
 	// Check for a method of paying (ID, PDA, e-wallet, cash, ect.)
-	var/obj/item/weapon/card/id/I = O.GetID()
+	if(!istype(O, /obj/item/weapon/card/id))
+		return
+
+	var/obj/item/weapon/card/id/I = O
 	if(I)
 		scan_card(I, O)
 	else if (istype(O, /obj/item/weapon/spacecash/ewallet))
@@ -255,8 +258,8 @@
 					T.purpose = transaction_purpose
 					T.amount = "([transaction_amount])"
 					T.source_terminal = machine_id
-					T.date = current_date_string
-					T.time = worldtime2text()
+					T.date = stationdate2text()
+					T.time = stationtime2text()
 					if(D.transaction_log.len > 50)
 						D.transaction_log.Cut(1,2)
 					D.transaction_log.Add(T)
@@ -267,9 +270,9 @@
 					T.purpose = transaction_purpose
 					T.amount = "[transaction_amount]"
 					T.source_terminal = machine_id
-					T.date = current_date_string
-					T.time = worldtime2text()
-					
+					T.date = stationdate2text()
+					T.time = stationtime2text()
+
 					if(linked_account.transaction_log.len > 50)
 						linked_account.transaction_log.Cut(1,2)
 					linked_account.transaction_log.Add(T)
@@ -308,8 +311,8 @@
 			T.purpose = transaction_purpose
 			T.amount = "[transaction_amount]"
 			T.source_terminal = machine_id
-			T.date = current_date_string
-			T.time = worldtime2text()
+			T.date = stationdate2text()
+			T.time = stationtime2text()
 			linked_account.transaction_log.Add(T)
 
 			// Save log
@@ -362,7 +365,7 @@
 		return
 
 	// First check if item has a valid price
-	var/price = O.get_item_cost()
+	var/price = get_value(O)
 	if(isnull(price))
 		src.visible_message("\icon[src]<span class='warning'>Unable to find item in database.</span>")
 		return
@@ -419,7 +422,7 @@
 	<tr></tr>
 	<tr><td class="tx-name">Customer</td><td class="tx-data">[c_name]</td></tr>
 	<tr><td class="tx-name">Pay Method</td><td class="tx-data">[p_method]</td></tr>
-	<tr><td class="tx-name">Station Time</td><td class="tx-data">[worldtime2text()]</td></tr>
+	<tr><td class="tx-name">Station Time</td><td class="tx-data">[stationtime2text()]</td></tr>
 	</table>
 	<table width=300>
 	"}

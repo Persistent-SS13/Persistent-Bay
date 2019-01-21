@@ -76,7 +76,7 @@
 /obj/vehicle/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/weapon/hand_labeler))
 		return
-	if(isScrewdriver(W))
+	else if(isScrewdriver(W))
 		if(!locked)
 			open = !open
 			update_icon()
@@ -100,40 +100,8 @@
 				to_chat(user, "<span class='notice'>[src] does not need a repair.</span>")
 		else
 			to_chat(user, "<span class='notice'>Unable to repair while [src] is off.</span>")
-	else if(hasvar(W,"force") && hasvar(W,"damtype"))
-		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-		switch(W.damtype)
-			if("fire")
-				health -= W.force * fire_dam_coeff
-			if("brute")
-				health -= W.force * brute_dam_coeff
-		..()
-		healthcheck()
 	else
-		..()
-
-/obj/vehicle/bullet_act(var/obj/item/projectile/Proj)
-	health -= Proj.get_structure_damage()
-	..()
-	healthcheck()
-
-/obj/vehicle/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			explode()
-			return
-		if(2.0)
-			health -= rand(5,10)*fire_dam_coeff
-			health -= rand(10,20)*brute_dam_coeff
-			healthcheck()
-			return
-		if(3.0)
-			if (prob(50))
-				health -= rand(1,5)*fire_dam_coeff
-				health -= rand(1,5)*brute_dam_coeff
-				healthcheck()
-				return
-	return
+		. = ..()
 
 /obj/vehicle/emp_act(severity)
 	var/was_on = on
@@ -188,34 +156,25 @@
 			to_chat(user, "<span class='warning'>You bypass [src]'s controls.</span>")
 		return 1
 
-/obj/vehicle/proc/explode()
-	src.visible_message("<span class='danger'>\The [src] blows apart!</span>")
+/obj/vehicle/make_debris()
 	var/turf/Tsec = get_turf(src)
-
 	new /obj/item/stack/rods(Tsec)
 	new /obj/item/stack/rods(Tsec)
 	new /obj/item/stack/cable_coil/cut(Tsec)
-
 	if(cell)
 		cell.forceMove(Tsec)
 		cell.update_icon()
 		cell = null
+	new /obj/effect/gibspawner/robot(Tsec)
+	new /obj/effect/decal/cleanable/blood/oil(src.loc)
 
+/obj/vehicle/destroyed(damagetype, user)
 	//stuns people who are thrown off a train that has been blown up
 	if(istype(load, /mob/living))
 		var/mob/living/M = load
 		M.apply_effects(5, 5)
-
 	unload()
-
-	new /obj/effect/gibspawner/robot(Tsec)
-	new /obj/effect/decal/cleanable/blood/oil(src.loc)
-
-	qdel(src)
-
-/obj/vehicle/proc/healthcheck()
-	if(health <= 0)
-		explode()
+	return ..()
 
 /obj/vehicle/proc/powercheck()
 	if(!cell && !powered)
@@ -343,7 +302,6 @@
 		unbuckle_mob(load)
 
 	load = null
-
 	return 1
 
 
@@ -352,16 +310,3 @@
 //-------------------------------------------------------
 /obj/vehicle/proc/update_stats()
 	return
-
-/obj/vehicle/attack_generic(var/mob/user, var/damage, var/attack_message)
-	if(!damage)
-		return
-	visible_message("<span class='danger'>\The [user] [attack_message] the \the [src]!</span>")
-	if(istype(user))
-		admin_attacker_log(user, "attacked \the [src]")
-		user.do_attack_animation(src)
-	src.health -= damage
-	if(prob(10))
-		new /obj/effect/decal/cleanable/blood/oil(src.loc)
-	spawn(1) healthcheck()
-	return 1

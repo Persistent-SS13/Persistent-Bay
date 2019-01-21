@@ -35,8 +35,6 @@
 			return global.OOClog;
 		if("PDAs")
 			return global.PDAs;
-		if("SKILLS")
-			return global.SKILLS;
 		if("SSair")
 			return global.SSair;
 		if("SSairflow")
@@ -521,8 +519,6 @@
 			return global.hair_styles_male_list;
 		if("hazard_overlays")
 			return global.hazard_overlays;
-		if("hidden_skill_types")
-			return global.hidden_skill_types;
 		if("hivemind_bank")
 			return global.hivemind_bank;
 		if("holder_mob_icon_cache")
@@ -865,8 +861,6 @@
 			return global.solars_list;
 		if("sortInstance")
 			return global.sortInstance;
-		if("sound_player")
-			return global.sound_player;
 		if("sounds_cache")
 			return global.sounds_cache;
 		if("spacevines_spawned")
@@ -1094,8 +1088,6 @@
 			global.OOClog=newval;
 		if("PDAs")
 			global.PDAs=newval;
-		if("SKILLS")
-			global.SKILLS=newval;
 		if("SSair")
 			global.SSair=newval;
 		if("SSairflow")
@@ -1580,8 +1572,6 @@
 			global.hair_styles_male_list=newval;
 		if("hazard_overlays")
 			global.hazard_overlays=newval;
-		if("hidden_skill_types")
-			global.hidden_skill_types=newval;
 		if("hivemind_bank")
 			global.hivemind_bank=newval;
 		if("holder_mob_icon_cache")
@@ -1924,8 +1914,6 @@
 			global.solars_list=newval;
 		if("sortInstance")
 			global.sortInstance=newval;
-		if("sound_player")
-			global.sound_player=newval;
 		if("sounds_cache")
 			global.sounds_cache=newval;
 		if("spacevines_spawned")

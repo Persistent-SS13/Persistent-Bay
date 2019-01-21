@@ -634,12 +634,12 @@
 					to_chat(usr, "[select_name] is the CEO.")
 					return
 				var/found = 0
-				for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+				for(var/datum/computer_file/report/crew_record/R in GLOB.all_crew_records)
 					if(R.get_name() == select_name)
 						found = 1
 						break
 				if(!found)
-					var/datum/computer_file/crew_record/L = Retrieve_Record(select_name)
+					var/datum/computer_file/report/crew_record/L = Retrieve_Record(select_name)
 					if(L) found = 1
 				if(!found)
 					to_chat(usr, "No record found for [select_name]. Verify Employee Identity.")
@@ -690,8 +690,8 @@
 				return
 
 			if(user_id_card.registered_name == connected_business.ceo_name)
-				var/datum/computer_file/crew_record/record
-				for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+				var/datum/computer_file/report/crew_record/record
+				for(var/datum/computer_file/report/crew_record/R in GLOB.all_crew_records)
 					if(R.get_name() == user_id_card.registered_name)
 						record = R
 						break
@@ -724,8 +724,8 @@
 				var/datum/employee_data/employee = connected_business.get_employee_data(user_id_card.registered_name)
 				if(!employee)
 					return
-				var/datum/computer_file/crew_record/record
-				for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+				var/datum/computer_file/report/crew_record/record
+				for(var/datum/computer_file/report/crew_record/R in GLOB.all_crew_records)
 					if(R.get_name() == user_id_card.registered_name)
 						record = R
 						break
@@ -995,12 +995,12 @@
 						to_chat(usr, "[select_name] is the current CEO.")
 						return
 					var/found = 0
-					for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+					for(var/datum/computer_file/report/crew_record/R in GLOB.all_crew_records)
 						if(R.get_name() == select_name)
 							found = 1
 							break
 					if(!found)
-						var/datum/computer_file/crew_record/L = Retrieve_Record(select_name)
+						var/datum/computer_file/report/crew_record/L = Retrieve_Record(select_name)
 						if(L) found = 1
 					if(!found)
 						to_chat(usr, "No record found for [select_name]. Verify Identity.")

@@ -53,14 +53,14 @@
 			owner.update_hair()
 	..()
 
-/obj/item/organ/external/head/take_damage(damage, damtype, armordamagetype, armorbypass, list/damlist, damflags, damsrc)
+/obj/item/organ/external/head/take_damage(damage, damtype, armorbypass, damsrc)
 	. = ..()
 	if (!disfigured)
 		if (brute_dam > 40)
 			if (prob(50))
-				disfigure(BRUTE)
+				disfigure(DAM_BLUNT)
 		if (burn_dam > 40)
-			disfigure(BURN)
+			disfigure(DAM_BURN)
 
 /obj/item/organ/external/head/no_eyes
 	eye_icon = "blank_eyes"

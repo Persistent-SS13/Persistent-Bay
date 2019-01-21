@@ -246,6 +246,9 @@ var/global/datum/controller/occupations/job_master
 
 		if(job)
 
+			// Transfers the skill settings for the job to the mob
+			H.skillset.obtain_from_client(job, H.client)
+
 			//Equip job items.
 			job.setup_account(H)
 			job.equip(H, H.mind ? H.mind.role_alt_title : "", H.char_branch)

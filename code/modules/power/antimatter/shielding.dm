@@ -126,8 +126,7 @@ proc/cardinalrange(var/center)
 	if(W.force > 10)
 		stability -= W.force/2
 		check_stability()
-	..()
-	return
+	return ..()
 
 
 

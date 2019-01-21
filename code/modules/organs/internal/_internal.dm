@@ -129,7 +129,7 @@
 /obj/item/organ/internal/proc/isinplace()
 	return (owner && parent_organ && owner.get_organ(parent_organ))
 
-/obj/item/organ/internal/take_damage(damage, damagetype, armordamagetype, armorbypass, list/damlist, damflags, damsrc, var/silent=0)
+/obj/item/organ/internal/take_damage(damage, damagetype, armorbypass, damsrc, var/silent=0)
 	if(isrobotic())
 		damage = (damage * 0.8)
 	else if(!silent && isinplace() && can_feel_pain() && (damage > min_bruised_damage/2 || prob(10)) )
@@ -140,7 +140,7 @@
 		else if((max_health - health) < min_bruised_damage/2)
 			degree = " a bit"
 		owner.custom_pain("Something inside your [parent.name] hurts[degree].", damage, affecting = parent)
-	return ..(damage, damagetype, armordamagetype, armorbypass, damlist, damflags, damsrc)
+	return ..(damage, damagetype, armorbypass, damsrc)
 
 /obj/item/organ/internal/proc/get_visible_state()
 	if(health <= 0)

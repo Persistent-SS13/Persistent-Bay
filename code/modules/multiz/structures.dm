@@ -23,7 +23,9 @@
 	// the upper will connect to the lower
 	if(allowed_directions & DOWN) //we only want to do the top one, as it will initialize the ones before it.
 		for(var/obj/structure/ladder/L in GetBelow(src))
+			log_debug("Tring to link [src]([x][y][z]) down with [L]([L.x],[L.y],[L.z])")
 			if(L.allowed_directions & UP)
+				log_debug("Linked!")
 				target_down = L
 				L.target_up = src
 				return
@@ -169,52 +171,58 @@
 	plane = ABOVE_TURF_PLANE
 	layer = RUNE_LAYER
 
-	Initialize()
-		var/foundabove = FALSE
-		for(var/turf/turf in locs)
-			var/turf/simulated/open/above = GetAbove(turf)
-			if(above)
-				foundabove = TRUE
-				if(!istype(above))
-					above.ChangeTurf(/turf/simulated/open)
-		//if(!foundabove)
-		//	warning("Stair created without level above: ([loc.x], [loc.y], [loc.z])")
-		//	return INITIALIZE_HINT_QDEL
-		. = ..()
+/obj/structure/stairs/Initialize()
+	//var/foundabove = FALSE
+	for(var/turf/turf in locs)
+		var/turf/simulated/open/above = GetAbove(turf)
+		if(above)
+			//foundabove = TRUE
+			if(!istype(above))
+				above.ChangeTurf(/turf/simulated/open)
+	//if(!foundabove)
+	//	warning("Stair created without level above: ([loc.x], [loc.y], [loc.z])")
+	//	return INITIALIZE_HINT_QDEL
+	. = ..()
 
-	Uncross(atom/movable/A)
-		if(A.dir == dir)
-			// This is hackish but whatever.
-			var/turf/target = get_step(GetAbove(A), dir)
-			var/turf/source = A.loc
-			var/turf/above = GetAbove(A)
-			if(above.CanZPass(source, UP) && target.Enter(A, source))
-				A.forceMove(target)
-			else
-				to_chat(A, "<span class='warning'>Something blocks the path.</span>")
-			return 0
-		return 1
+/obj/structure/stairs/Uncross(atom/movable/A)
+	if(A.dir == dir)
+		// This is hackish but whatever.
+		var/turf/target = get_step(GetAbove(A), dir)
+		var/turf/source = A.loc
+		var/turf/above = GetAbove(A)
+		if(above.CanZPass(source, UP) && target.Enter(A, source))
+			log_debug("Moving upstairs to [target]([target.x],[target.y],[target.z])")
+			A.forceMove(target)
+		else
+			to_chat(A, "<span class='warning'>Something blocks the path.</span>")
+		return 0
+	log_debug("Crossing stairs the wrong way")
+	return 1
 
-	CanPass(obj/mover, turf/source, height, airflow)
-		return airflow || !density
+/obj/structure/stairs/CanPass(obj/mover, turf/source, height, airflow)
+	return airflow || !density
 
 	// type paths to make mapping easier.
-	north
-		dir = NORTH
-		bound_height = 64
-		bound_y = -32
-		pixel_y = -32
+/obj/structure/stairs/north
+	dir = NORTH
+	bound_height = 64
+	bound_width = 32
+	bound_y = -32
+	pixel_y = -32
 
-	south
-		dir = SOUTH
-		bound_height = 64
+/obj/structure/stairs/south
+	dir = SOUTH
+	bound_height = 64
+	bound_width = 32
 
-	east
-		dir = EAST
-		bound_width = 64
-		bound_x = -32
-		pixel_x = -32
+/obj/structure/stairs/east
+	dir = EAST
+	bound_width = 64
+	bound_height = 32
+	bound_x = -32
+	pixel_x = -32
 
-	west
-		dir = WEST
-		bound_width = 64
+/obj/structure/stairs/west
+	dir = WEST
+	bound_width = 64
+	bound_height = 32

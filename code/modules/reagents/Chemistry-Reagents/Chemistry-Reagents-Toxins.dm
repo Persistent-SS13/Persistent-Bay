@@ -99,7 +99,7 @@
 /datum/reagent/toxin/phoron/touch_turf(var/turf/simulated/T)
 	if(!istype(T))
 		return
-	T.assume_gas("phoron", volume, T20C)
+	T.assume_gas(GAS_PHORON, volume, T20C)
 	remove_self(volume)
 
 // Produced during deuterium synthesis. Super poisonous, SUPER flammable (doesn't need oxygen to burn).
@@ -112,8 +112,8 @@
 /datum/reagent/toxin/phoron/oxygen/touch_turf(var/turf/simulated/T)
 	if(!istype(T))
 		return
-	T.assume_gas("oxygen", ceil(volume/2), T20C)
-	T.assume_gas("phoron", ceil(volume/2), T20C)
+	T.assume_gas(GAS_OXYGEN, ceil(volume/2), T20C)
+	T.assume_gas(GAS_PHORON, ceil(volume/2), T20C)
 	remove_self(volume)
 
 /datum/reagent/toxin/cyanide //Fast and Lethal

@@ -23,7 +23,7 @@
 						)
 
 /decl/xgm_gas/carbon_dioxide
-	id = "carbon_dioxide"
+	id = GAS_CO2
 	name = "Carbon Dioxide"
 	specific_heat = 30	// J/(mol*K)
 	molar_mass = 0.044	// kg/mol
@@ -35,7 +35,7 @@
 						)
 
 /decl/xgm_gas/phoron
-	id = "phoron"
+	id = GAS_PHORON
 	name = "Phoron"
 
 	//Note that this has a significant impact on TTV yield.
@@ -58,7 +58,7 @@
 	flags = XGM_GAS_FUEL | XGM_GAS_CONTAMINANT | XGM_GAS_FUSION_FUEL
 
 /decl/xgm_gas/sleeping_agent
-	id = "sleeping_agent"
+	id = GAS_N2O
 	name = "Nitrous Oxide"
 	specific_heat = 40	// J/(mol*K)
 	molar_mass = 0.044	// kg/mol. N2O
@@ -77,7 +77,7 @@
 
 
 /decl/xgm_gas/methane
-	id = "methane"
+	id = GAS_METHANE
 	name = "Methane"
 
 	specific_heat = 30	// J/(mol*K)
@@ -86,7 +86,7 @@
 	flags = XGM_GAS_FUEL
 
 /decl/xgm_gas/alium
-	id = "aliether"
+	id = GAS_ALIETHER
 	name = "Aliether"
 
 /decl/xgm_gas/alium/New()
@@ -103,7 +103,7 @@
 		flags |= XGM_GAS_FUSION_FUEL
 
 /decl/xgm_gas/hydrogen
-	id = "hydrogen"
+	id = GAS_HYDROGEN
 	name = "Hydrogen"
 
 	specific_heat = 100	// J/(mol*K)
@@ -111,22 +111,22 @@
 
 	flags = XGM_GAS_FUEL|XGM_GAS_FUSION_FUEL
 
-	burn_product = "watervapor"
+	burn_product = GAS_WATER_VAPOR
 
 	component_reagents = list(
 						/datum/reagent/hydrogen = 1
 						)
 
 /decl/xgm_gas/hydrogen/deuterium
-	id = "deuterium"
+	id = GAS_DEUTERIUM
 	name = "Deuterium"
 
 /decl/xgm_gas/hydrogen/tritium
-	id = "tritium"
+	id = GAS_TRITIUM
 	name = "Tritium"
 
 /decl/xgm_gas/helium
-	id = "helium"
+	id = GAS_HELIUM
 	name = "Helium"
 
 	specific_heat = 80	// J/(mol*K)
@@ -135,28 +135,28 @@
 	flags = XGM_GAS_FUSION_FUEL
 
 /decl/xgm_gas/argon
-	id = "argon"
+	id = GAS_ARGON
 	name = "Argon"
 
 	specific_heat = 10	// J/(mol*K)
 	molar_mass = 0.018	// kg/mol
 
 /decl/xgm_gas/krypton
-	id = "krypton"
+	id = GAS_KRYPTON
 	name = "Krypton"
 
 	specific_heat = 5	// J/(mol*K)
 	molar_mass = 0.036	// kg/mol
 
 /decl/xgm_gas/neon
-	id = "neon"
+	id = GAS_NEON
 	name = "Neon"
 
 	specific_heat = 20	// J/(mol*K)
 	molar_mass = 0.01	// kg/mol
 
 /decl/xgm_gas/xenon
-	id = "xenon"
+	id = GAS_XENON
 	name = "Xenon"
 
 	specific_heat = 3	// J/(mol*K)
@@ -164,7 +164,7 @@
 	breathed_product = /datum/reagent/nitrous_oxide/xenon
 
 /decl/xgm_gas/nitrodioxide
-	id = "nitrodioxide"
+	id = GAS_NO2
 	name = "Nitrogen Dioxide"
 
 	specific_heat = 37	// J/(mol*K)
@@ -178,7 +178,7 @@
 						)
 
 /decl/xgm_gas/nitricoxide
-	id = "nitricoxide"
+	id = GAS_NITRIC_OXIDE
 	name = "Nitric Oxide"
 
 	specific_heat = 10	// J/(mol*K)
@@ -191,7 +191,7 @@
 	flags = XGM_GAS_OXIDIZER
 
 /decl/xgm_gas/chlorine
-	id = "chlorine"
+	id = GAS_CHLORINE
 	name = "Chlorine"
 
 	tile_overlay = "chlorine"
@@ -207,7 +207,7 @@
 	flags = XGM_GAS_CONTAMINANT
 
 /decl/xgm_gas/vapor
-	id = "watervapor"
+	id = GAS_WATER_VAPOR
 	name = "Water Vapor"
 
 	specific_heat = 30	// J/(mol*K)

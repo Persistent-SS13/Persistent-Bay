@@ -32,7 +32,7 @@
 	var/overlay_limit = null
 
 	var/flags = 0
-	var/burn_product = "carbon_dioxide"
+	var/burn_product = GAS_CO2
 	var/breathed_product
 	var/component_reagents
 

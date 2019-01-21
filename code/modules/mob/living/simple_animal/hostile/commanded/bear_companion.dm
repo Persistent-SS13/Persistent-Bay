@@ -16,7 +16,7 @@
 	melee_damage_lower = 10
 	melee_damage_upper = 10
 
-	max_gas = list("phoron" = 2, "carbon_dioxide" = 5)
+	max_gas = list(GAS_PHORON = 2, GAS_CO2 = 5)
 
 	response_help = "pets"
 	response_harm = "hits"

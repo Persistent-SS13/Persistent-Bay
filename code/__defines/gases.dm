@@ -18,3 +18,10 @@
 #define GAS_NITRIC_OXIDE "nitricoxide"
 #define GAS_CHLORINE     "chlorine"
 #define GAS_WATER_VAPOR  "watervapor"
+
+//Used in some fusion reactions
+#define GAS_LITHIUM      "lithium"
+#define GAS_BORON        "boron"
+
+//Special type for gasified reagents
+#define GAS_REAGENTS     "reagents"

@@ -333,6 +333,7 @@
 // This is only really used to poison vox.
 /datum/reagent/oxygen
 	name = "Oxygen"
+	gas_id = GAS_OXYGEN
 	description = "An ubiquitous oxidizing agent."
 	taste_description = "nothing"
 	reagent_state = LIQUID
@@ -344,7 +345,7 @@
 
 /datum/reagent/carbon_dioxide
 	name = "Carbon Dioxide"
-	gas_id = "carbon_dioxide"
+	gas_id = GAS_CO2
 	description = "A byproduct of human respiration."
 	taste_description = "stale air"
 	reagent_state = LIQUID
@@ -353,6 +354,7 @@
 
 /datum/reagent/nitrogen
 	name = "Nitrogen"
+	gas_id = GAS_NITROGEN
 	description = "A ubiquitous and largely inert chemical."
 	taste_description = "nothing"
 	reagent_state = LIQUID
@@ -360,6 +362,7 @@
 
 /datum/reagent/hydrogen
 	name = "Hydrogen"
+	gas_id = GAS_HYDROGEN
 	description = "The most common element in the universe."
 	taste_description = "nothing"
 	reagent_state = LIQUID

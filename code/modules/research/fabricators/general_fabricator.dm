@@ -608,12 +608,6 @@
 	materials = list(MATERIAL_STEEL = 400)
 	build_path = /obj/item/weapon/computer_hardware/battery_module/micro
 
-/datum/design/item/genfab/computer/adv/dna_scanner
-	name = "DNA scanner port"
-	req_tech = list(TECH_DATA = 2)
-	materials = list(MATERIAL_STEEL = 600)
-	build_path = /obj/item/weapon/computer_hardware/dna_scanner
-
 /datum/design/item/genfab/computer/adv/logistic_processor
 	name = "Advanced Logistic Processor"
 	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 4)

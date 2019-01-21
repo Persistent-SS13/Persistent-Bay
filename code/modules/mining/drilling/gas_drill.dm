@@ -11,16 +11,16 @@
 	base_capacity = 2000 //moles
 
 	var/gas_types = list(
-		"oxygen",
-		"hydrogen",
-		"phoron",
-		"nitrogen",
-		"carbon_dioxide",
-		"sleeping_agent",
+		GAS_OXYGEN,
+		GAS_HYDROGEN,
+		GAS_PHORON,
+		GAS_NITROGEN,
+		GAS_CO2,
+		GAS_N2O,
 		// Fusion Fuel
-		"deuterium",
-		"tritium",
-		"helium",
+		GAS_DEUTERIUM,
+		GAS_TRITIUM,
+		GAS_HELIUM,
 		)
 
 /obj/machinery/mining/gas_drill/New()
@@ -129,15 +129,15 @@
 				air_contents.adjust_gas(gas, create_gas, update = 1)
 
 				switch(gas) // Numbers should be adjusted; for now this will ensure gas mining doesn't immediately flood the asteroid with monsters
-					if("phoron")
+					if(GAS_PHORON)
 						SSasteroid.agitate(src, 5)
-					if("tritium")
+					if(GAS_TRITIUM)
 						SSasteroid.agitate(src, 1)
-					if("hydrogen")
+					if(GAS_HYDROGEN)
 						SSasteroid.agitate(src, 1)
-					if("deuterium")
+					if(GAS_DEUTERIUM)
 						SSasteroid.agitate(src, 1)
-					if("oxygen")
+					if(GAS_OXYGEN)
 						SSasteroid.agitate(src, 1)
 
 		if(!found_resource)

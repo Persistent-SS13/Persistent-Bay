@@ -65,12 +65,12 @@
 			var/data_value = 1
 
 			switch(gas)
-				if("oxygen", "nitrogen", "sleeping_agent", "carbon_dioxide")
+				if(GAS_OXYGEN, GAS_NITROGEN, GAS_N2O, GAS_CO2)
 					gas_type = "breathable gases"
-				if("hydrogen", "deuterium", "tritium", "helium")
+				if(GAS_HYDROGEN, GAS_DEUTERIUM, GAS_TRITIUM, GAS_HELIUM)
 					gas_type = "gaseous fuels"
 					data_value = 2
-				if("phoron")
+				if(GAS_PHORON)
 					gas_type = "exotic gases"
 					data_value = 4
 

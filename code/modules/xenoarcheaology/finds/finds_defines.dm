@@ -2,10 +2,10 @@ var/global/list/responsive_carriers = list(
 	/datum/reagent/carbon,
 	/datum/reagent/potassium,
 	/datum/reagent/hydrazine,
-	"nitrogen",
+	GAS_NITROGEN,
 	/datum/reagent/mercury,
 	/datum/reagent/iron,
-	"chlorine",
+	GAS_CHLORINE,
 	/datum/reagent/phosphorus,
 	/datum/reagent/toxin/phoron)
 
@@ -27,7 +27,7 @@ var/global/list/finds_as_strings = list(
 		if(ARCHAEO_COIN, ARCHAEO_KNIFE, ARCHAEO_TOOL, ARCHAEO_METAL, ARCHAEO_CLAYMORE, ARCHAEO_KATANA, ARCHAEO_LASER, ARCHAEO_GUN)
 			return /datum/reagent/iron
 		if(ARCHAEO_CRYSTAL, ARCHAEO_SOULSTONE)
-			return "nitrogen"
+			return GAS_NITROGEN
 		if(ARCHAEO_CULTBLADE, ARCHAEO_TELEBEACON, ARCHAEO_CULTROBES, ARCHAEO_STOCKPARTS)
 			return /datum/reagent/potassium
 		if(ARCHAEO_FOSSIL, ARCHAEO_SHELL, ARCHAEO_PLANT, ARCHAEO_REMAINS_HUMANOID, ARCHAEO_REMAINS_ROBOT, ARCHAEO_REMAINS_XENO, ARCHAEO_GASMASK)

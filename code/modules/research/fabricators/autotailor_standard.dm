@@ -1691,18 +1691,6 @@
 	id = "hardhat_red"
 	build_path = /obj/item/clothing/head/hardhat/red
 
-/datum/design/item/autotailor/hats/industrial/welding_goggles
-	name = "Welding goggles"
-	id = "welding_goggles"
-	build_path = /obj/item/clothing/glasses/welding
-	materials = list(DEFAULT_WALL_MATERIAL = 3000, "glass" = 1000)
-
-/datum/design/item/autotailor/hats/industrial/welding_grey
-	name = "Welding hat - grey"
-	id = "welding_grey"
-	build_path = /obj/item/clothing/head/welding
-	materials = list(DEFAULT_WALL_MATERIAL = 5000, "glass" = 1000)
-
 /datum/design/item/autotailor/hats/industrial/welding_yellow
 	name = "Welding hat - yellow"
 	id = "welding_yellow"

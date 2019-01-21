@@ -11,6 +11,8 @@
 	icon_state = "cortical-stack"
 	default_language = LANGUAGE_GALCOM
 
+	var/teleport_time = 0 // time when you can teleport back to nexus
+
 /mob/living/carbon/lace/New()
 	container = loc
 	var/datum/action/lace/laceaction = new(container)

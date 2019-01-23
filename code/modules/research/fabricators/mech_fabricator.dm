@@ -706,11 +706,6 @@
 	id = "mech_drill"
 	build_path = /obj/item/mecha_parts/mecha_equipment/tool/drill
 
-/datum/design/item/mecha/extinguisher
-	name = "Extinguisher"
-	id = "extinguisher"
-	build_path = /obj/item/mecha_parts/mecha_equipment/tool/extinguisher
-
 /datum/design/item/mecha/cable_layer
 	name = "Cable layer"
 	id = "mech_cable_layer"

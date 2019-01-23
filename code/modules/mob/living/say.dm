@@ -116,7 +116,7 @@ proc/get_radio_key_from_channel(var/channel)
 	message_data[1] = message
 	message_data[2] = verb
 
-/mob/living/proc/handle_message_mode(message_mode, message, verb, speaking, used_radios, alt_name)
+/mob/living/proc/handle_message_mode(message_mode, message, verb, speaking, used_radios, alt_name, original_key)
 	if(message_mode == "intercom")
 		for(var/obj/item/device/radio/intercom/I in view(1, null))
 			I.talk_into(src, message, verb, speaking)
@@ -152,14 +152,13 @@ proc/get_radio_key_from_channel(var/channel)
 		if("^") return custom_emote(1, copytext(message,2))
 
 	//parse the radio code and consume it
-	var/message_mode = parse_message_mode(message, "headset")
-	if (message_mode)
-		if (message_mode == "headset")
-			message = copytext(message,2)	//it would be really nice if the parse procs could do this for us.
-		else
-			message = copytext(message,3)
+	var/list/parsed = parse_message_mode(message, "headset")
+	var/message_mode
+	if(parsed && parsed.len)
+		message_mode = parsed[1]
+		message = parsed[2]
 
-	message = trim_left(message)
+		message = trim_left(message)
 
 	//parse the language code and consume it
 	if(!speaking)

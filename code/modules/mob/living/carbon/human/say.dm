@@ -160,6 +160,42 @@
 	else
 		. = ..(message_data)
 
+/mob/living/carbon/human/parse_message_mode(var/message, var/standard_mode="headset") // Overridden to handle custom codes
+	var/list/returned_message = list() // Returns formatted message and the message mode
+
+	if(length(message) >= 1 && copytext(message,1,2) == ";")
+		returned_message += standard_mode
+		message = copytext(message,2)
+		returned_message += message
+		return returned_message
+
+	if(length(message) >= 2)
+		// Custom keys are longer, and need to be checked first
+		var/channel_prefix = copytext(message, 1 ,4)
+		var/list/checked_radios = list()
+		if(l_ear && istype(l_ear,/obj/item/device/radio/headset)) // Only headsets can hold custom keys
+			var/obj/item/device/radio/headset/lhs = l_ear
+			checked_radios += lhs
+		if(r_ear && istype(r_ear,/obj/item/device/radio/headset))
+			var/obj/item/device/radio/headset/rhs = r_ear
+			checked_radios += rhs
+		if(checked_radios.len)
+			for(var/obj/item/device/radio/headset/rad in checked_radios)
+				if(rad.custom_radio_keys[channel_prefix])
+					returned_message += rad.custom_radio_keys[channel_prefix]
+					message = copytext(message,4)
+					returned_message += message
+					return returned_message
+
+		channel_prefix = copytext(message, 1, 3) // If there's no custom keys, we'll start looking at the defaults
+		if(department_radio_keys[channel_prefix])
+			returned_message += department_radio_keys[channel_prefix]
+			message = copytext(message,3)
+			returned_message += message
+			return returned_message
+
+	return returned_message
+
 /mob/living/carbon/human/handle_message_mode(message_mode, message, verb, speaking, used_radios, alt_name)
 	switch(message_mode)
 		if("intercom")

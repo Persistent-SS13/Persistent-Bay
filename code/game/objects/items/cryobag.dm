@@ -108,4 +108,4 @@
 	name = "used stasis bag"
 	desc = "Pretty useless now.."
 	icon_state = "bodybag_used"
-	icon = 'icons/closets/cryobag.dmi'
+	icon = 'icons/obj/closets/cryobag.dmi'

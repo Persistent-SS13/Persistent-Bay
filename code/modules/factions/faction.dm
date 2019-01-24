@@ -644,10 +644,7 @@ var/PriorityQueue/all_feeds
 	var/hiring_policy = 0 // if hiring_policy, anyone with reassignment can add people to the network, else only people in command a command category with reassignment can add people
 	var/last_expense_print = 0
 
-
-
-
-
+	var/list/reserved_frequencies() = list() // Reserved frequencies that the faction can create encryption keys from.
 
 /datum/world_faction/democratic
 
@@ -882,7 +879,6 @@ var/PriorityQueue/all_feeds
 
 
 /datum/world_faction/business
-
 
 /datum/world_faction/after_load()
 	if(!debts)

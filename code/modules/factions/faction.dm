@@ -760,11 +760,20 @@ var/PriorityQueue/all_feeds
 	vote.yes_votes |= user.real_name
 	if(vote.yes_votes.len >= 5)
 		pass_vote(vote)
+	else if(vote.yes_votes.len >= 3 && vote.signer != "")
+		pass_vote(vote)
+		
 /datum/world_faction/democratic/proc/vote_no(var/datum/council_vote/vote, var/mob/user)
 	vote.no_votes |= user.real_name
 	if(vote.no_votes.len >= 3)
 		defeat_vote(vote)
 		
+/datum/world_faction/democratic/proc/repeal_policy(var/datum/council_vote/vote)
+	policy -= vote
+		
+		
+/datum/world_faction/democratic/proc/pass_policy(var/datum/council_vote/vote)
+	policy |= vote	
 		
 /datum/world_faction/democratic/proc/pass_vote(var/datum/council_vote/vote)
 	votes -= vote
@@ -797,6 +806,13 @@ var/PriorityQueue/all_feeds
 			else
 				tax_pflat_rate = vote.flatrate
 				tax_type_p = 1
+	else if(vote.bill_type == 4)
+		for(var/datum/democracy/judge in judges)
+			if(judge.real_name == vote.impeaching)
+				judges -= judge
+				return 1
+				
+				
 	else
 		if(vote.bill_type == 1)
 			criminal_laws |= vote
@@ -805,11 +821,12 @@ var/PriorityQueue/all_feeds
 		
 /datum/council_vote
 	var/name = "" // title of votes
-	var/bill_type = 1 //  1 = criminal law, 2 = civil law, 3 = tax policy
+	var/bill_type = 1 //  1 = criminal law, 2 = civil law, 3 = tax policy, 4 = impeachment (judge)
 	
 	var/sponsor = "" // real_name of the vote starter
 	var/time_started // realtime of when the vote started.
 	
+	var/signer = ""
 	
 	var/list/yes_votes = list()
 	var/list/no_votes = list()
@@ -831,7 +848,7 @@ var/PriorityQueue/all_feeds
 	var/progamount3 = 0
 	var/progamount4 = 0
 	
-	
+	var/impeaching = "" // real_name of impaechment target
 
 /datum/election
 	var/name = "Station Council Election"

@@ -81,6 +81,8 @@
 					billtype = "(Criminal Law) "
 				else if(selected_vote.bill_type == 3)
 					billtype = "(Tax Policy) "
+				else if(selected_vote.bill_type == 4)
+					billtype = "(Judge Nomination) "
 				data["selected_vote"] = "[billtype][selected_vote.name] ([selected_vote.yes_votes.len] Yea / [selected_vote.no_votes.len] Nay)"
 				data["propose_time"] = selected_vote.time_started
 				data["sponsor"] = selected_vote.sponsor
@@ -104,6 +106,8 @@
 							billtype = "(Criminal Law) "
 						else if(vote.bill_type == 3)
 							billtype = "(Tax Policy) "
+						else if(selected_vote.bill_type == 4)
+							billtype = "(Judge Nomination) "
 						formatted_votes[++formatted_votes.len] = list("name" = "[billtype][vote.name] ([vote.yes_votes.len] Yea / [vote.no_votes.len] Nay)", "ref" = "\ref[vote]")
 					data["votes"] = formatted_votes
 		if(menu == 2)
@@ -132,7 +136,10 @@
 			else
 				data["tax_flat_rate"] = tax_flat_rate
 			
-
+		if(menu == 4)
+			var/list/formatted_judges[0]
+			for(var/datum/democracy/judge in connected_faction.judges)
+				formatted_judges[++formatted_judges.len] = list("name" = "Impeach [judge.real_name]", "ref" = "\ref[judge]")
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "communication.tmpl", name, 550, 420, state = state)
@@ -306,6 +313,7 @@
 				vote.progamount3 = tax_prog3_amount
 				vote.progamount4 = tax_prog4_amount
 				
+				vote.bill_type = 3
 				
 				connected_faction.start_vote(vote)
 				to_chat(usr, "Vote Started.")
@@ -324,6 +332,23 @@
 				vote.sponsor = usr.real_name
 				vote.time_started = world.realtime
 				vote.flatrate = tax_flat_rate
+				vote.bill_type = 3
 				connected_faction.start_vote(vote)
 				to_chat(usr, "Vote Started.")
 				menu = 1
+		if("impeach_judge")
+			if(connected_faction.has_vote(usr.real_name))
+				to_chat(usr, "You already have a bill being voted on.")
+				return
+			var/datum/democracy/judge = locate(href_list["ref"])
+			if(!judge)
+				return
+			var/datum/council_vote/vote = new()
+			vote.name = "Impeach [judge.real_name]"
+			vote.body = "Impeach [judge.real_name] and remove them from office"
+			vote.sponsor = usr.real_name
+			vote.time_started = world.realtime
+			vote.bill_type = 4
+			connected_faction.start_vote(vote)
+			to_chat(usr, "Vote Started.")
+			menu = 1

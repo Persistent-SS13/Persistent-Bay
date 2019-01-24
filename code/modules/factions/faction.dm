@@ -775,6 +775,12 @@ var/PriorityQueue/all_feeds
 /datum/world_faction/democratic/proc/pass_policy(var/datum/council_vote/vote)
 	policy |= vote	
 		
+/datum/world_faction/democratic/proc/pass_nomination_judge(var/datum/democracy/judge)
+	judges |= judge
+
+/datum/world_faction/democratic/proc/pass_impeachment_judge(var/datum/democracy/judge)
+	judges -= judge
+		
 /datum/world_faction/democratic/proc/pass_vote(var/datum/council_vote/vote)
 	votes -= vote
 	if(vote.bill_type == 3)
@@ -809,19 +815,24 @@ var/PriorityQueue/all_feeds
 	else if(vote.bill_type == 4)
 		for(var/datum/democracy/judge in judges)
 			if(judge.real_name == vote.impeaching)
-				judges -= judge
+				pass_impeachment_judge(judge)
 				return 1
 				
-				
-	else
-		if(vote.bill_type == 1)
-			criminal_laws |= vote
-		else
-			civil_laws |= vote
+	else if(vote.bill_type == 5)
+		if(is_governor(vote.nominated) || is_councillor(vote.nominated) || is_judge(vote.nominated))
+			return 0
+		var/datum/democracy/judge/judge = new()
+		judge.real_name = vote.nominated
+		pass_nomination_judge(judge)
+		
+	else if(vote.bill_type == 1)
+		criminal_laws |= vote
+	else if(vote.bill_type == 2)
+		civil_laws |= vote
 		
 /datum/council_vote
 	var/name = "" // title of votes
-	var/bill_type = 1 //  1 = criminal law, 2 = civil law, 3 = tax policy, 4 = impeachment (judge)
+	var/bill_type = 1 //  1 = criminal law, 2 = civil law, 3 = tax policy, 4 = impeachment (judge) 5 = nomination (judge)
 	
 	var/sponsor = "" // real_name of the vote starter
 	var/time_started // realtime of when the vote started.
@@ -850,6 +861,7 @@ var/PriorityQueue/all_feeds
 	
 	var/impeaching = "" // real_name of impaechment target
 
+	var/nominated = ""
 /datum/election
 	var/name = "Station Council Election"
 	var/list/ballots = list() // populate this with the /datum/democracy for every participant of the election

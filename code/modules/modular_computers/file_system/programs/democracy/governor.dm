@@ -39,7 +39,7 @@
 				else if(selected_vote.bill_type == 3)
 					billtype = "(Tax Policy) "
 				else if(selected_vote.bill_type == 4)
-					billtype = "(Judge Nomination) "
+					billtype = "(Judge Removal) "
 				data["selected_vote"] = "[billtype][selected_vote.name] ([selected_vote.yes_votes.len] Yea / [selected_vote.no_votes.len] Nay)"
 				data["propose_time"] = selected_vote.time_started
 				data["sponsor"] = selected_vote.sponsor
@@ -63,7 +63,7 @@
 						else if(vote.bill_type == 3)
 							billtype = "(Tax Policy) "
 						else if(selected_vote.bill_type == 4)
-							billtype = "(Judge Nomination) "
+							billtype = "(Judge Removal) "
 
 						formatted_votes[++formatted_votes.len] = list("name" = "[billtype][vote.name] ([vote.yes_votes.len] Yea / [vote.no_votes.len] Nay)", "ref" = "\ref[vote]")
 					data["votes"] = formatted_votes
@@ -173,7 +173,8 @@
 				vote.time_started = world.realtime
 				vote.name = "Nomination of [attempt] to become a Judge"
 				vote.body = "Nomination of [attempt] to become a Judge"
-				vote.bill_type = 4
+				vote.bill_type = 5
+				vote.nominated = attempt
 				connected_faction.start_vote(vote)
 				to_chat(usr, "Nomination Started.")
 				menu = 1

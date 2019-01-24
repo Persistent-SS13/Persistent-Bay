@@ -82,6 +82,8 @@
 				else if(selected_vote.bill_type == 3)
 					billtype = "(Tax Policy) "
 				else if(selected_vote.bill_type == 4)
+					billtype = "(Judge Removal) "
+				else if(selected_vote.bill_type == 5)
 					billtype = "(Judge Nomination) "
 				data["selected_vote"] = "[billtype][selected_vote.name] ([selected_vote.yes_votes.len] Yea / [selected_vote.no_votes.len] Nay)"
 				data["propose_time"] = selected_vote.time_started
@@ -107,6 +109,8 @@
 						else if(vote.bill_type == 3)
 							billtype = "(Tax Policy) "
 						else if(selected_vote.bill_type == 4)
+							billtype = "(Judge Removal) "
+						else if(selected_vote.bill_type == 5)
 							billtype = "(Judge Nomination) "
 						formatted_votes[++formatted_votes.len] = list("name" = "[billtype][vote.name] ([vote.yes_votes.len] Yea / [vote.no_votes.len] Nay)", "ref" = "\ref[vote]")
 					data["votes"] = formatted_votes

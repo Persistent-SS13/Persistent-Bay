@@ -24,6 +24,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	var/network = "NULL" // the network of the machinery
 
 	var/list/freq_listening = list() // list of frequencies to tune into: if none, will listen to all
+	var/list/channel_tags = list() // a list specifying what to tag packets on different frequencies
 
 	var/machinetype = 0 // just a hacky way of preventing alike machines from pairing
 	var/toggled = 1 	// Is it toggled on
@@ -59,7 +60,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 			if(T)
 				for(var/obj/machinery/telecomms/tele in T.contents)
 					links |= tele
-					
+
 /obj/machinery/telecomms/proc/relay_information(datum/signal/signal, filter, copysig, amount = 20)
 	// relay signal to all linked machinery that are of type [filter]. If signal has been sent [amount] times, stop sending
 
@@ -166,7 +167,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 					continue
 				add_link(T)
 	update_power()
-	
+
 
 /obj/machinery/telecomms/Destroy()
 	telecomms_list -= src
@@ -565,6 +566,11 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 			if(traffic > 0)
 				totaltraffic += traffic // add current traffic to total traffic
 
+			// channel tag the signal
+			var/list/data = get_channel_info(signal.frequency)
+			signal.data["channel_tag"] = data[1]
+			signal.data["channel_color"] = data[2]
+
 			//Is this a test signal? Bypass logging
 			if(signal.data["type"] != 4)
 
@@ -650,8 +656,11 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 	log_entries.Add(log)
 	update_logs()
 
-
-
+/obj/machinery/telecomms/server/proc/get_channel_info(var/freq)
+	for(var/list/rule in channel_tags)
+		if(rule[1] == freq)
+			return list(rule[2], rule[3])
+	return list(format_frequency(freq), channel_color_presets["Global Green"])
 
 // Simple log entry datum
 

@@ -644,10 +644,7 @@ var/PriorityQueue/all_feeds
 	var/hiring_policy = 0 // if hiring_policy, anyone with reassignment can add people to the network, else only people in command a command category with reassignment can add people
 	var/last_expense_print = 0
 
-
-
-
-
+	var/list/reserved_frequencies() = list() // Reserved frequencies that the faction can create encryption keys from.
 
 /datum/world_faction/democratic
 
@@ -670,6 +667,42 @@ var/PriorityQueue/all_feeds
 	var/active_elections = 1
 
 	var/election_toggle = 0
+	
+	var/tax_type_b = 1 // business 1 = flat, 2 = progressie
+	var/tax_bprog1_rate = 0
+	var/tax_bprog2_rate = 0
+	var/tax_bprog3_rate = 0
+	var/tax_bprog4_rate = 0
+	var/tax_bprog2_amount = 0
+	var/tax_bprog3_amount = 0
+	var/tax_bprog4_amount = 0
+	var/tax_bflat_rate = 0
+	
+	var/tax_type_p = 1 // personal 1 = flat, 2 = progressie
+	var/tax_pprog1_rate = 0
+	var/tax_pprog2_rate = 0
+	var/tax_pprog3_rate = 0
+	var/tax_pprog4_rate = 0
+	var/tax_pprog2_amount = 0
+	var/tax_pprog3_amount = 0
+	var/tax_pprog4_amount = 0
+	var/tax_pflat_rate = 0
+
+
+/datum/world_faction/democratic/proc/is_councillor(var/real_name)
+	for(var/datum/democracy/ballot in city_council)
+		if(ballot.real_name == real_name)
+			return 1
+	
+/datum/world_faction/democratic/proc/is_governor(var/real_name)
+	return gov.real_name == real_name
+	
+/datum/world_faction/democratic/proc/is_judge(var/real_name)
+	for(var/datum/democracy/ballot in judges)
+		if(ballot.real_name == real_name)
+			return 1
+	
+	
 /datum/world_faction/democratic/proc/start_election(var/datum/election/election)
 	current_election = election
 	if(election.typed)
@@ -709,6 +742,96 @@ var/PriorityQueue/all_feeds
 			ballot.real_name = leader.real_name
 	current_election = null
 
+/datum/world_faction/democratic/proc/withdraw_vote(var/datum/council_vote/vote)
+	votes -= vote
+	
+/datum/world_faction/democratic/proc/defeat_vote(var/datum/council_vote/vote)
+	votes -= vote
+	
+/datum/world_faction/democratic/proc/start_vote(var/datum/council_vote/vote)
+	votes |= vote
+	
+/datum/world_faction/democratic/proc/has_vote(var/real_name)
+	for(var/datum/council_vote/vote in votes)
+		if(vote.sponsor == real_name)
+			return 1
+
+/datum/world_faction/democratic/proc/vote_yes(var/datum/council_vote/vote, var/mob/user)
+	vote.yes_votes |= user.real_name
+	if(vote.yes_votes.len >= 5)
+		pass_vote(vote)
+/datum/world_faction/democratic/proc/vote_no(var/datum/council_vote/vote, var/mob/user)
+	vote.no_votes |= user.real_name
+	if(vote.no_votes.len >= 3)
+		defeat_vote(vote)
+		
+		
+/datum/world_faction/democratic/proc/pass_vote(var/datum/council_vote/vote)
+	votes -= vote
+	if(vote.bill_type == 3)
+		if(vote.tax == 2)
+			if(vote.taxtype == 2)
+				tax_bprog1_rate = vote.prograte1
+				tax_bprog2_rate = vote.prograte2
+				tax_bprog3_rate = vote.prograte3
+				tax_bprog4_rate = vote.prograte4
+				
+				tax_bprog2_amount = vote.progamount2
+				tax_bprog3_amount = vote.progamount3
+				tax_bprog4_amount = vote.progamount4
+				tax_type_b = 2
+			else
+				tax_bflat_rate = vote.flatrate
+				tax_type_b = 1	
+		else
+			if(vote.taxtype == 2)
+				tax_pprog1_rate = vote.prograte1
+				tax_pprog2_rate = vote.prograte2
+				tax_pprog3_rate = vote.prograte3
+				tax_pprog4_rate = vote.prograte4
+				
+				tax_pprog2_amount = vote.progamount2
+				tax_pprog3_amount = vote.progamount3
+				tax_pprog4_amount = vote.progamount4
+				tax_type_p = 2
+			else
+				tax_pflat_rate = vote.flatrate
+				tax_type_p = 1
+	else
+		if(vote.bill_type == 1)
+			criminal_laws |= vote
+		else
+			civil_laws |= vote
+		
+/datum/council_vote
+	var/name = "" // title of votes
+	var/bill_type = 1 //  1 = criminal law, 2 = civil law, 3 = tax policy
+	
+	var/sponsor = "" // real_name of the vote starter
+	var/time_started // realtime of when the vote started.
+	
+	
+	var/list/yes_votes = list()
+	var/list/no_votes = list()
+	
+	var/body = "" // used by civil and criminal laws
+	
+	var/tax = 0 // 1 = personal 2 = business
+	
+	var/taxtype = 1 // 1 = flat, 2 = progressive
+	
+	var/flatrate = 0
+	
+	var/prograte1 = 0
+	var/prograte2 = 0
+	var/prograte3 = 0
+	var/prograte4 = 0
+	
+	var/progamount2 = 0
+	var/progamount3 = 0
+	var/progamount4 = 0
+	
+	
 
 /datum/election
 	var/name = "Station Council Election"
@@ -756,7 +879,6 @@ var/PriorityQueue/all_feeds
 
 
 /datum/world_faction/business
-
 
 /datum/world_faction/after_load()
 	if(!debts)

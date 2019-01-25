@@ -81,7 +81,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/expenses = 0
 	var/datum/computer_file/data/email_account/email
 
-	var/citizenship = 0 // 0 = resident, 1 = citizen
+	var/citizenship = 1 // 1 = resident, 2 = citizen, 3 = prisoner (todo convert all magic numbers in ss13 to defines)
 
 /datum/computer_file/crew_record/New()
 	..()

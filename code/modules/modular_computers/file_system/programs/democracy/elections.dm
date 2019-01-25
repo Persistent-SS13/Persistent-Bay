@@ -46,7 +46,7 @@
 			all_ballots |= connected_faction.gov
 			all_ballots |= connected_faction.city_council
 			for(var/datum/democracy/ballot in all_ballots)
-				formatted_ballots[++formatted_ballots.len] = list("name" = "[ballot.title] Candidates: [ballot.candidates.len]", "ref" = "\ref[ballot]")
+				formatted_ballots[++formatted_ballots.len] = list("name" = "[ballot.title] ([ballot.candidates.len])", "ref" = "\ref[ballot]")
 			if(formatted_ballots.len)
 				data["ballots"] = formatted_ballots
 	if(menu == 2)
@@ -69,11 +69,12 @@
 					data["candidate"] = 1
 					data["candidate_position"] = ballot.title
 					data["candidate_desc"] = candidate.desc
-		
+			else
+				data["eligible"] = 1
 		
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
-		ui = new(user, src, ui_key, "elections.tmpl", name, 550, 420, state = state)
+		ui = new(user, src, ui_key, "elections.tmpl", name, 600, 500, state = state)
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
 		ui.open()
@@ -81,7 +82,7 @@
 /datum/nano_module/program/election/Topic(href, href_list)
 	if(..())
 		return 1
-
+	. = SSnano.update_uis(src)
 	var/mob/user = usr
 	var/datum/world_faction/democratic/connected_faction = program.computer.network_card.connected_network.holder
 

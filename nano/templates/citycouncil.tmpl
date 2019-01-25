@@ -50,7 +50,7 @@
 						Withdraw Bill
 					</div>
 					<div class='itemContent'>
-							{{:helper.link('Withdraw', '', {'action' : 'withdraw'})}}
+						{{:helper.link('Withdraw', '', {'action' : 'withdraw'})}}
 					</div>
 				</div>
 			{{/if}}
@@ -194,7 +194,6 @@
 			This tax will be charged every time money comes into the account.
 		{{/if}}
 
-		{{/if}}
 		<div class='item'>
 			<div class='itemLabel'>
 				Finalize
@@ -205,6 +204,8 @@
 		</div>
 		When you have made all desired changes, finalize them here to create a vote for the council to consider adopting the tax policy.
 	{{/if}}
+	
+	
 	{{if data.menu == 4}}
 		<h3>Impeachment</h3><br><hr>
 		Initiate a vote to remove an official from office. 

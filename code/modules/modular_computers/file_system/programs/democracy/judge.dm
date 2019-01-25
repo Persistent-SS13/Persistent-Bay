@@ -74,7 +74,7 @@
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
-		ui = new(user, src, ui_key, "judge.tmpl", name, 550, 420, state = state)
+		ui = new(user, src, ui_key, "judge.tmpl", name, 600, 500, state = state)
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
 		ui.open()
@@ -82,7 +82,7 @@
 /datum/nano_module/program/judge/Topic(href, href_list)
 	if(..())
 		return 1
-
+	. = SSnano.update_uis(src)
 	var/mob/user = usr
 	var/datum/world_faction/democratic/connected_faction = program.computer.network_card.connected_network.holder
 	if(!istype(connected_faction) || !(connected_faction.is_judge(user.real_name)))

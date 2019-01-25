@@ -1,5 +1,5 @@
 /datum/computer_file/program/governor
-	filename = "citycouncil"
+	filename = "governor"
 	filedesc = "Nexus City Governor Control"
 	program_icon_state = "comm"
 	program_menu_icon = "flag"
@@ -86,7 +86,7 @@
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
-		ui = new(user, src, ui_key, "governor.tmpl", name, 550, 420, state = state)
+		ui = new(user, src, ui_key, "governor.tmpl", name, 600, 500, state = state)
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
 		ui.open()
@@ -94,12 +94,12 @@
 /datum/nano_module/program/governor/Topic(href, href_list)
 	if(..())
 		return 1
-
+	. = SSnano.update_uis(src)
 	var/mob/user = usr
 	var/datum/world_faction/democratic/connected_faction = program.computer.network_card.connected_network.holder
 	if(!istype(connected_faction) || !(connected_faction.is_governor(user.real_name)))
-		return 1
-
+		return .
+	
 	switch(href_list["action"])
 		if("change_menu")
 			menu = text2num(href_list["menu_target"])
@@ -108,7 +108,7 @@
 			selected_vote = null
 		if("sign_bill")
 			if(selected_vote.yes_votes.len < 3)
-				return 0
+				return .
 			selected_vote.signer = usr.real_name
 			connected_faction.pass_vote(selected_vote)
 			to_chat(usr, "You sign the bill and it passes.")
@@ -166,7 +166,7 @@
 			if(record)
 				if(connected_faction.is_governor(attempt) || connected_faction.is_councillor(attempt) || connected_faction.is_judge(attempt))
 					to_chat(usr, "You cannot nominate someone who is either a govenor, a councillor or already a judge.")
-					return 0
+					return .
 				var/datum/council_vote/vote = new()
 				vote.sponsor = usr.real_name
 				vote.signer = usr.real_name
@@ -181,6 +181,6 @@
 
 			else
 				to_chat(usr, "No record found for [attempt]")
-				return 0
+				return .
 
 

@@ -1607,12 +1607,12 @@ datum/admins/var/obj/item/weapon/paper/admin/faxreply // var to hold fax replies
 
 /datum/admins/proc/generate_beacon()
 	set category = "Debug"
-	set desc = "Spawn the Nanotrasen frontier beacon at (100,100,1)"
+	set desc = "Spawn the Nexus Gov + a beacon at (100,100,1)"
 	set name = "Generate Faction Beacon"
-
-	new /obj/faction_spawner/Nanotrasen(locate(100,100,1))
+	if(!GLOB.all_world_factions) GLOB.all_world_factions = list()
+	spawn_nexus_gov()
 	var/obj/structure/frontier_beacon/beacon
 	beacon = new /obj/structure/frontier_beacon(locate(100,100,1)) //
-	beacon.req_access_faction = "nanotrasen"
-	to_chat(usr, "<b>Frontier Beacon and faction_spawner (Nanotrasen) generated.)</b>")
+	beacon.req_access_faction = "nexus"
+	to_chat(usr, "<b>Frontier Beacon and Nexus.)</b>")
 	return

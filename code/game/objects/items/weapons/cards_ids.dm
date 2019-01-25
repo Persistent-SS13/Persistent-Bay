@@ -419,7 +419,7 @@ var/const/NO_EMAG_ACT = -50
 	var/list/final_access[0]
 	var/datum/world_faction/faction = get_faction(faction_uid)
 	if(faction)
-		if(faction.leader_name == registered_name)
+		if(faction.get_leadername() == registered_name)
 			faction.rebuild_all_access()
 			for(var/x in faction.all_access)
 				final_access |= text2num(x)
@@ -511,7 +511,7 @@ var/const/NO_EMAG_ACT = -50
 	var/list/final_access[0]
 	var/datum/world_faction/faction = get_faction(faction_uid)
 	if(faction)
-		if(faction.leader_name == registered_name)
+		if(faction.get_leadername() == registered_name)
 			faction.rebuild_all_access()
 			for(var/x in faction.all_access)
 				final_access |= text2num(x)

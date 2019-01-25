@@ -50,7 +50,7 @@
 						Withdraw Bill
 					</div>
 					<div class='itemContent'>
-							{{:helper.link('Withdraw', '', {'action' : 'withdraw'})}}
+						{{:helper.link('Withdraw', '', {'action' : 'withdraw'})}}
 					</div>
 				</div>
 			{{/if}}
@@ -84,12 +84,11 @@
 				Title
 			</div>
 			<div class='itemContent'>
-				{{:data.bill_title}}
-				{{:helper.link('Change', '', {'action' : 'change_title'})}}
+				{{:helper.link(data.bill_title, '', {'action' : 'change_title'})}}
 			</div>
 		</div>
 		<br>
-		Have a full copy of the bill printed scan it now to insert the contents of the bill.<br>
+		Have a full copy of the bill printed and scan it now to insert the contents of the bill.<br>
 		{{:helper.link('Scan Document', '', {'action' : 'scan'})}}
 		<br><hr><br>
 		{{:data.bill_body}}
@@ -195,7 +194,6 @@
 			This tax will be charged every time money comes into the account.
 		{{/if}}
 
-		{{/if}}
 		<div class='item'>
 			<div class='itemLabel'>
 				Finalize
@@ -206,6 +204,19 @@
 		</div>
 		When you have made all desired changes, finalize them here to create a vote for the council to consider adopting the tax policy.
 	{{/if}}
+	
+	
+	{{if data.menu == 4}}
+		<h3>Impeachment</h3><br><hr>
+		Initiate a vote to remove an official from office. 
+		<h4>Judges</h4><br>
+		Judges require either five votes, or three and a governor's signature to remove from office. <br> 
+		{{for data.judges}}
+			{{:helper.link(value.name, '', {'action' : 'impeach_judge', 'ref' : value.ref})}}
+		{{/for}}
+		
+	{{/if}}
+	
 {{else}}
 	<br>
 	This program is only for city councillors.

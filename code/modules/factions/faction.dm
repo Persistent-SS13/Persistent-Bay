@@ -726,22 +726,36 @@ var/PriorityQueue/all_feeds
 /datum/world_faction/democratic/proc/is_councillor(var/real_name)
 	for(var/datum/democracy/ballot in city_council)
 		if(ballot.real_name == real_name)
-			return 1
+			return ballot
 
 /datum/world_faction/democratic/proc/is_governor(var/real_name)
-	return gov.real_name == real_name
+	if(gov.real_name == real_name)
+		return gov
 
 /datum/world_faction/democratic/proc/is_judge(var/real_name)
 	for(var/datum/democracy/ballot in judges)
 		if(ballot.real_name == real_name)
-			return 1
+			return ballot
 
-
+/datum/world_faction/democratic/proc/is_candidate(var/real_name)
+	var/list/all_ballots = list()
+	all_ballots |= gov
+	all_ballots |= city_council
+	for(var/datum/democracy/ballot in all_ballots)
+		for(var/datum/candidate/candidate in ballot.candidates)
+			if(candidate.real_name == real_name)
+				return list(candidate, ballot)
+				
 /datum/world_faction/democratic/proc/start_election(var/datum/election/election)
 	current_election = election
 	if(election.typed)
 		election_toggle = !election_toggle
 	to_world("<font size=3>The [election.name] has started.</font>")
+
+/datum/world_faction/democratic/proc/start_trial(var/datum/judge_trial/trial)
+	to_world("<font size=3>The Trial [trial.name] should be starting now.</font>")
+	scheduled_trials -= trial
+	
 
 /datum/world_faction/democratic/proc/stop_election()
 	for(var/datum/democracy/ballot in current_election.ballots)
@@ -920,13 +934,18 @@ var/PriorityQueue/all_feeds
 	var/real_name // real_name of elected
 	var/term_start // real time
 	var/title = "Councillor"
+	var/description = "Vote on laws civil and criminal, the tax code and confirming judges nominated by the governor."
 	var/consecutive_terms = 0
 
+	var/election_desc = ""
+	var/seeking_reelection = 1
+	
 	var/list/candidates = list()
 	var/list/voted_ckeys = list() // to prevent double voting
 
 /datum/democracy/governor
 	title = "Governor"
+	description = "Manage the executive government by creating assignments, ranks and accesses while publishing executive policy documents. Nominate Judges."
 
 /datum/democracy/councillor
 

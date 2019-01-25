@@ -1930,6 +1930,7 @@
 #include "code\modules\modular_computers\file_system\programs\command\comm.dm"
 #include "code\modules\modular_computers\file_system\programs\command\faction_core.dm"
 #include "code\modules\modular_computers\file_system\programs\democracy\citycouncil.dm"
+#include "code\modules\modular_computers\file_system\programs\democracy\elections.dm"
 #include "code\modules\modular_computers\file_system\programs\democracy\governor.dm"
 #include "code\modules\modular_computers\file_system\programs\democracy\judge.dm"
 #include "code\modules\modular_computers\file_system\programs\engineering\alarm_monitor.dm"

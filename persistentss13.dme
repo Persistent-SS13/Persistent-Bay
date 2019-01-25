@@ -161,6 +161,7 @@
 #include "code\controllers\subsystems\SSatoms.dm"
 #include "code\controllers\subsystems\SSautosave.dm"
 #include "code\controllers\subsystems\SSchemistry.dm"
+#include "code\controllers\subsystems\SSelections.dm"
 #include "code\controllers\subsystems\SSevent.dm"
 #include "code\controllers\subsystems\SSgarbage.dm"
 #include "code\controllers\subsystems\SSinactivity.dm"

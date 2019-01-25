@@ -107,7 +107,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/datum/assignment/curr_assignment = faction.get_assignment(assignment_uid)
 	if(!curr_assignment) return 0
 	for(var/name in promote_votes)
-		if(name == faction.leader_name)
+		if(name == faction.get_leadername())
 			five_promotes |= name
 			three_promotes |= name
 			all_promotes |= name
@@ -170,7 +170,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		return
 	for(var/name in demote_votes)
 
-		if(name == faction.leader_name)
+		if(name == faction.get_leadername())
 			five_promotes |= name
 			three_promotes |= name
 			all_promotes |= name

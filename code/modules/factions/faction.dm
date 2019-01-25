@@ -602,6 +602,16 @@ var/PriorityQueue/all_feeds
 	else
 		return "BROKE"
 
+/datum/world_faction/proc/get_leadername()
+	return leader_name
+	
+/datum/world_faction/democratic/get_leadername()
+	if(gov && gov.real_name != "")
+		return gov.real_name
+	else
+		return leader_name
+		
+		
 /datum/world_faction
 	var/name = "" // can be safely changed
 	var/abbreviation = "" // can be safely changed
@@ -647,7 +657,55 @@ var/PriorityQueue/all_feeds
 	var/list/reserved_frequencies() = list() // Reserved frequencies that the faction can create encryption keys from.
 
 
-
+/proc/spawn_nexus_gov()
+	var/datum/world_faction/democratic/nexus = new()
+	nexus.name = "Nexus City Government"
+	nexus.abbreviation = "NEXUS"
+	nexus.short_tag = "NEX"
+	nexus.purpose = "To represent the citizenship of Nexus and keep the station operating."
+	nexus.uid = "nexus"
+	nexus.gov = new()
+	var/datum/election/gov/gov_elect = new()
+	gov_elect.ballots |= nexus.gov
+	
+	nexus.waiting_elections |= gov_elect
+	
+	var/datum/election/council_elect = new()
+	var/datum/democracy/councillor/councillor1 = new()
+	councillor1.title = "Councillor for Policing and Justice"
+	nexus.city_council |= councillor1
+	council_elect.ballots |= councillor1
+	
+	var/datum/democracy/councillor/councillor2 = new()
+	councillor2.title = "Councillor for the Budget"
+	nexus.city_council |= councillor2
+	council_elect.ballots |= councillor2
+	
+	var/datum/democracy/councillor/councillor3 = new()
+	councillor3.title = "Councillor for the Culture"
+	nexus.city_council |= councillor3
+	council_elect.ballots |= councillor3
+	
+	var/datum/democracy/councillor/councillor4 = new()
+	councillor4.title = "Councillor for the Station Integrity"
+	nexus.city_council |= councillor4
+	council_elect.ballots |= councillor4
+	
+	var/datum/democracy/councillor/councillor5 = new()
+	councillor4.title = "Councillor for the Commerce and Business"
+	nexus.city_council |= councillor5
+	council_elect.ballots |= councillor5
+	
+	nexus.waiting_elections |= council_elect
+	
+	nexus.network.name = "NEXUSGOV-NET"
+	nexus.network.net_uid = "nexus"
+	nexus.network.password = ""
+	nexus.network.invisible = 0
+	
+	GLOB.all_world_factions |= nexus
+	
+	
 /datum/world_faction/democratic
 
 	var/datum/democracy/governor/gov
@@ -746,6 +804,8 @@ var/PriorityQueue/all_feeds
 			if(candidate.real_name == real_name)
 				return list(candidate, ballot)
 				
+				
+				
 /datum/world_faction/democratic/proc/start_election(var/datum/election/election)
 	current_election = election
 	if(election.typed)
@@ -757,7 +817,7 @@ var/PriorityQueue/all_feeds
 	scheduled_trials -= trial
 	
 
-/datum/world_faction/democratic/proc/stop_election()
+/datum/world_faction/democratic/proc/end_election()
 	for(var/datum/democracy/ballot in current_election.ballots)
 		if(!ballot.candidates.len)
 			continue
@@ -1055,7 +1115,7 @@ var/PriorityQueue/all_feeds
 	return 0
 
 /datum/world_faction/proc/outranks(var/real_name, var/target)
-	if(real_name == leader_name)
+	if(real_name == get_leadername())
 		return 1
 	var/datum/computer_file/crew_record/R = get_record(real_name)
 	if(!R) return 0

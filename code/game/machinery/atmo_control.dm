@@ -45,15 +45,15 @@
 			var/total_moles = air_sample.total_moles
 			if(total_moles > 0)
 				if(output&4)
-					signal.data["oxygen"] = round(100*air_sample.gas["oxygen"]/total_moles,0.1)
+					signal.data[GAS_OXYGEN] = round(100*air_sample.gas[GAS_OXYGEN]/total_moles,0.1)
 				if(output&8)
-					signal.data["phoron"] = round(100*air_sample.gas["phoron"]/total_moles,0.1)
+					signal.data[GAS_PHORON] = round(100*air_sample.gas[GAS_PHORON]/total_moles,0.1)
 				if(output&16)
-					signal.data["nitrogen"] = round(100*air_sample.gas["nitrogen"]/total_moles,0.1)
+					signal.data[GAS_NITROGEN] = round(100*air_sample.gas[GAS_NITROGEN]/total_moles,0.1)
 				if(output&32)
-					signal.data["carbon_dioxide"] = round(100*air_sample.gas["carbon_dioxide"]/total_moles,0.1)
+					signal.data[GAS_CO2] = round(100*air_sample.gas[GAS_CO2]/total_moles,0.1)
 				if(output&64)
-					signal.data["hydrogen"] = round(100*air_sample.gas["hydrogen"]/total_moles,0.1)
+					signal.data[GAS_HYDROGEN] = round(100*air_sample.gas[GAS_HYDROGEN]/total_moles,0.1)
 				if(output&128)
 					var/total_reagent_moles
 					for(var/g in air_sample.gas)
@@ -61,11 +61,11 @@
 							total_reagent_moles += round(100*air_sample.gas[g]/total_moles,0.1)
 					signal.data["reagent"] = total_reagent_moles
 			else
-				signal.data["oxygen"] = 0
-				signal.data["phoron"] = 0
-				signal.data["nitrogen"] = 0
-				signal.data["carbon_dioxide"] = 0
-				signal.data["hydrogen"] = 0
+				signal.data[GAS_OXYGEN] = 0
+				signal.data[GAS_PHORON] = 0
+				signal.data[GAS_NITROGEN] = 0
+				signal.data[GAS_CO2] = 0
+				signal.data[GAS_HYDROGEN] = 0
 				signal.data["reagent"] = 0
 		signal.data["sigtype"]="status"
 		radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
@@ -136,18 +136,18 @@ obj/machinery/computer/general_air_control/Destroy()
 					sensor_part += "   <B>Pressure:</B> [data["pressure"]] kPa<BR>"
 				if(data["temperature"])
 					sensor_part += "   <B>Temperature:</B> [data["temperature"]] K<BR>"
-				if(data["oxygen"]||data["phoron"]||data["nitrogen"]||data["carbon_dioxide"]||data["hydrogen"])
+				if(data[GAS_OXYGEN]||data[GAS_PHORON]||data[GAS_NITROGEN]||data[GAS_CO2]||data[GAS_HYDROGEN])
 					sensor_part += "   <B>Gas Composition :</B>"
-					if(data["oxygen"])
-						sensor_part += "[data["oxygen"]]% O2; "
-					if(data["nitrogen"])
-						sensor_part += "[data["nitrogen"]]% N; "
-					if(data["carbon_dioxide"])
-						sensor_part += "[data["carbon_dioxide"]]% CO2; "
-					if(data["phoron"])
-						sensor_part += "[data["phoron"]]% TX; "
+					if(data[GAS_OXYGEN])
+						sensor_part += "[data[GAS_OXYGEN]]% O2; "
+					if(data[GAS_NITROGEN])
+						sensor_part += "[data[GAS_NITROGEN]]% N; "
+					if(data[GAS_CO2])
+						sensor_part += "[data[GAS_CO2]]% CO2; "
+					if(data[GAS_PHORON])
+						sensor_part += "[data[GAS_PHORON]]% TX; "
 					if(data["hydogen"])
-						sensor_part += "[data["hydrogen"]]% H2; "
+						sensor_part += "[data[GAS_HYDROGEN]]% H2; "
 					if(data["reagent"])
 						sensor_part += "[data["reagent"]]% REAG; "
 				sensor_part += "<HR>"

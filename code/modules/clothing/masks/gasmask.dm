@@ -11,7 +11,7 @@
 	permeability_coefficient = 0.01
 	siemens_coefficient = 0.9
 	var/gas_filter_strength = 1			//For gas mask filters
-	var/list/filtered_gases = list("phoron", "sleeping_agent", "carbon_dioxide", "chlorine")
+	var/list/filtered_gases = list(GAS_PHORON, GAS_N2O, GAS_CO2, GAS_CHLORINE)
 	armor  = list(
 		DAM_BLUNT 	= 5,
 		DAM_PIERCE 	= 1,
@@ -185,4 +185,4 @@
 	flags_inv = 0
 	body_parts_covered = 0
 	species_restricted = list(SPECIES_VOX)
-	filtered_gases = list("phoron", "sleeping_agent", "oxygen")
+	filtered_gases = list(GAS_PHORON, GAS_N2O, GAS_OXYGEN)

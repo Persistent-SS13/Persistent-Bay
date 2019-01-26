@@ -42,17 +42,17 @@
 	..()
 	switch(filter_type)
 		if(0) //removing hydrocarbons
-			filtered_out = list("phoron")
+			filtered_out = list(GAS_PHORON)
 		if(1) //removing O2
-			filtered_out = list("oxygen")
+			filtered_out = list(GAS_OXYGEN)
 		if(2) //removing N2
-			filtered_out = list("nitrogen")
+			filtered_out = list(GAS_NITROGEN)
 		if(3) //removing CO2
-			filtered_out = list("carbon_dioxide")
+			filtered_out = list(GAS_CO2)
 		if(4)//removing N2O
-			filtered_out = list("sleeping_agent")
+			filtered_out = list(GAS_N2O)
 		if(5)//removing H2
-			filtered_out = list("hydrogen")
+			filtered_out = list(GAS_HYDROGEN)
 		if(6)//removing reagent gases
 			for(var/g in gas_data.gases)
 				if(gas_data.flags[g] & XGM_GAS_REAGENT_GAS)
@@ -217,17 +217,17 @@
 		filtered_out.Cut()	//no need to create new lists unnecessarily
 		switch(filter_type)
 			if(0) //removing hydrocarbons
-				filtered_out += "phoron"
+				filtered_out += GAS_PHORON
 			if(1) //removing O2
-				filtered_out += "oxygen"
+				filtered_out += GAS_OXYGEN
 			if(2) //removing N2
-				filtered_out += "nitrogen"
+				filtered_out += GAS_NITROGEN
 			if(3) //removing CO2
-				filtered_out += "carbon_dioxide"
+				filtered_out += GAS_CO2
 			if(4)//removing N2O
-				filtered_out += "sleeping_agent"
+				filtered_out += GAS_N2O
 			if(5)//removing H2
-				filtered_out += "hydrogen"
+				filtered_out += GAS_HYDROGEN
 			if(6)//removing reagent gases
 				for(var/g in gas_data.gases) //This only fires when initially selecting the filter type, so impact on performance is minimal
 					if(gas_data.flags[g] & XGM_GAS_REAGENT_GAS)

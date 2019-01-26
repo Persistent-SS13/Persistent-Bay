@@ -63,7 +63,7 @@
 
 	var/datum/gas_mixture/G = src.air_contents.remove(num)
 
-	var/allgases = G.gas["carbon_dioxide"] + G.gas["nitrogen"] + G.gas["oxygen"] + G.gas["phoron"]
+	var/allgases = G.gas[GAS_CO2] + G.gas[GAS_NITROGEN] + G.gas[GAS_OXYGEN] + G.gas[GAS_PHORON]
 	if(allgases >= 0.005)
 		return 1
 
@@ -79,14 +79,14 @@
 	desc = "It works well in a void."
 	icon_state = "jetpack-void"
 	item_state =  "jetpack-void"
-	starting_pressure = list("oxygen" = 6*ONE_ATMOSPHERE)
+	starting_pressure = list(GAS_OXYGEN = 6*ONE_ATMOSPHERE)
 
 /obj/item/weapon/tank/jetpack/oxygen
 	name = "jetpack (oxygen)"
 	desc = "A tank of compressed oxygen for use as propulsion in zero-gravity areas. Use with caution."
 	icon_state = "jetpack"
 	item_state = "jetpack"
-	starting_pressure = list("oxygen" = 6*ONE_ATMOSPHERE)
+	starting_pressure = list(GAS_OXYGEN = 6*ONE_ATMOSPHERE)
 
 /obj/item/weapon/tank/jetpack/carbondioxide
 	name = "jetpack (carbon dioxide)"
@@ -94,7 +94,7 @@
 	distribute_pressure = 0
 	icon_state = "jetpack-black"
 	item_state =  "jetpack-black"
-	starting_pressure = list("carbon_dioxide" = 6*ONE_ATMOSPHERE)
+	starting_pressure = list(GAS_CO2 = 6*ONE_ATMOSPHERE)
 
 /obj/item/weapon/tank/jetpack/rig
 	name = "jetpack"

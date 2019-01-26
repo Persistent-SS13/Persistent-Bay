@@ -3,9 +3,9 @@
 	name = "phoronized lungs"
 	icon_state = "lungs-plasma"
 	desc = "A set of lungs seemingly made out of fleshy phoron."
-	breath_type = "phoron"
-	poison_types = list("oxygen" = TRUE) //It burns to breathe!
-	exhale_type = "hydrogen"
+	breath_type = GAS_PHORON
+	poison_types = list(GAS_OXYGEN = TRUE) //It burns to breathe!
+	exhale_type = GAS_HYDROGEN
 
 /obj/item/organ/internal/liver/phorosian
 	name = "phoron processor"
@@ -105,7 +105,7 @@
 	// humans processing thousands of units of oxygen over the course of a round for the sole purpose of poisoning vox.
 	var/ratio = (robotic >= ORGAN_ROBOT) ? 0.66 : 1
 	for(var/gasname in breath.gas - breath_type)
-		if(gasname == "oxygen")
+		if(gasname == GAS_OXYGEN)
 			take_damage(0.5)
 			if(prob(20))
 				to_chat(owner, "<span class='warning'>Your lungs feel like they are burning!</span>")

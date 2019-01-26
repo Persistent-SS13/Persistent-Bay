@@ -18,7 +18,7 @@
 	last_power_draw = 0
 	last_flow_rate = 0
 
-	var/co2_intake = between(0, air1["carbon_dioxide"], MOLES_CELLSTANDARD*power_setting*delay/10)//takes as much CO2 as acessible within limit of power usage, 1 level per 0.1 mole per second
+	var/co2_intake = between(0, air1[GAS_CO2], MOLES_CELLSTANDARD*power_setting*delay/10)//takes as much CO2 as acessible within limit of power usage, 1 level per 0.1 mole per second
 
 	carbon_stored += co2_intake
 
@@ -27,8 +27,8 @@
 		var/atom/movable/product = new/obj/item/stack/ore(loc,"graphite")
 		product.dropInto(loc)
 
-	air1.adjust_gas("carbon_dioxide", -co2_intake, 1)
-	air2.adjust_gas("oxygen", co2_intake, 1)
+	air1.adjust_gas(GAS_CO2, -co2_intake, 1)
+	air2.adjust_gas(GAS_OXYGEN, co2_intake, 1)
 
 	power_draw = power_rating * power_setting
 	last_flow_rate = (co2_intake/air1.total_moles)*air1.volume

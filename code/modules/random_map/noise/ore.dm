@@ -835,9 +835,9 @@ Titanium-Fusion Asteroids
 				T.resources[MATERIAL_DIAMOND] =				0
 				T.resources[MATERIAL_BSPACE_CRYSTAL] = 		0
 
-				T.gas_resources["deuterium"] =		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_MID_MAX)
-				T.gas_resources["helium"] = 		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
-				T.gas_resources["tritium"] =		rand(GAS_RESOURCE_LOWEST_MIN,	GAS_RESOURCE_LOWEST_MAX)
+				T.gas_resources[GAS_DEUTERIUM] =		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_HELIUM] = 		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
+				T.gas_resources[GAS_TRITIUM] =		rand(GAS_RESOURCE_LOWEST_MIN,	GAS_RESOURCE_LOWEST_MAX)
 			else if(tmp_cell < deep_val) // Rare metals.
 				T.resources[MATERIAL_TITANIUM] =			rand(RESOURCE_HIGH_MIN,	RESOURCE_HIGH_MAX)
 				T.resources[MATERIAL_DEUTERIUM] =			rand(RESOURCE_MID_MIN,	RESOURCE_MID_MAX)
@@ -872,9 +872,9 @@ Titanium-Fusion Asteroids
 				T.resources[MATERIAL_HYDROGEN] = 			0
 				T.resources[MATERIAL_BSPACE_CRYSTAL] = 		0
 
-				T.gas_resources["deuterium"] =		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_MID_MAX)
-				T.gas_resources["helium"] = 		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
-				T.gas_resources["tritium"] =		rand(GAS_RESOURCE_LOWEST_MIN,	GAS_RESOURCE_LOWEST_MAX)
+				T.gas_resources[GAS_DEUTERIUM] =		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_HELIUM] = 		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
+				T.gas_resources[GAS_TRITIUM] =		rand(GAS_RESOURCE_LOWEST_MIN,	GAS_RESOURCE_LOWEST_MAX)
 			else                             // Deep metals.
 				T.resources[MATERIAL_TITANIUM] =			rand(RESOURCE_MID_MIN,	RESOURCE_MID_MAX)
 				T.resources[MATERIAL_DEUTERIUM] =			rand(RESOURCE_HIGH_MIN,	RESOURCE_HIGH_MAX)
@@ -911,9 +911,9 @@ Titanium-Fusion Asteroids
 				T.resources[MATERIAL_BAUXITE] =   			0
 				T.resources[MATERIAL_DIAMOND] =				0
 
-				T.gas_resources["deuterium"] =		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
-				T.gas_resources["helium"] = 		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
-				T.gas_resources["tritium"] =		rand(GAS_RESOURCE_MID_MIN,	GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_DEUTERIUM] =		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_HELIUM] = 		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_TRITIUM] =		rand(GAS_RESOURCE_MID_MIN,	GAS_RESOURCE_MID_MAX)
 
 	..() // For normal gas resources
 /datum/random_map/noise/ore/rich/apply_to_turf(var/x,var/y)
@@ -1032,35 +1032,35 @@ Titanium-Fusion Asteroids
 			T.gas_resources = list()
 
 			if(tmp_cell < rare_val)      // Surface gases
-				T.gas_resources["nitrogen"] = 		rand(GAS_RESOURCE_HIGH_MIN,	GAS_RESOURCE_HIGH_MAX)
-				T.gas_resources["hydrogen"] = 		rand(GAS_RESOURCE_MID_MIN,  GAS_RESOURCE_MID_MAX)
-				T.gas_resources["deuterium"] =		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
-				T.gas_resources["helium"] = 		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
-				T.gas_resources["oxygen"]	= 		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
-				T.gas_resources["carbon_dioxide"] = rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
-				T.gas_resources["sleeping_agent"] = rand(GAS_RESOURCE_LOWEST_MIN,	GAS_RESOURCE_LOWEST_MAX) // Sleeping agent is largely useless, so an abundance isn't needed
-				T.gas_resources["tritium"] =		0
-				T.gas_resources["phoron"] =			0
+				T.gas_resources[GAS_NITROGEN] = 		rand(GAS_RESOURCE_HIGH_MIN,	GAS_RESOURCE_HIGH_MAX)
+				T.gas_resources[GAS_HYDROGEN] = 		rand(GAS_RESOURCE_MID_MIN,  GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_DEUTERIUM] =		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
+				T.gas_resources[GAS_HELIUM] = 		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
+				T.gas_resources[GAS_OXYGEN]	= 		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
+				T.gas_resources[GAS_CO2] = rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
+				T.gas_resources[GAS_N2O] = rand(GAS_RESOURCE_LOWEST_MIN,	GAS_RESOURCE_LOWEST_MAX) // Sleeping agent is largely useless, so an abundance isn't needed
+				T.gas_resources[GAS_TRITIUM] =		0
+				T.gas_resources[GAS_PHORON] =			0
 			else if(tmp_cell < deep_val) // Rare gases
-				T.gas_resources["oxygen"]	= 		rand(GAS_RESOURCE_HIGH_MIN, 	GAS_RESOURCE_HIGH_MAX)
-				T.gas_resources["hydrogen"] = 		rand(GAS_RESOURCE_MID_MIN,  GAS_RESOURCE_MID_MAX)
-				T.gas_resources["deuterium"] =		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
-				T.gas_resources["helium"] = 		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
-				T.gas_resources["tritium"] =		rand(GAS_RESOURCE_LOW_MIN,	GAS_RESOURCE_LOW_MAX)
-				T.gas_resources["carbon_dioxide"] = rand(GAS_RESOURCE_LOWEST_MIN, GAS_RESOURCE_LOWEST_MAX)
-				T.gas_resources["phoron"] =			rand(GAS_RESOURCE_LOWEST_MIN,	GAS_RESOURCE_LOWEST_MAX)
-				T.gas_resources["nitrogen"] = 		0
-				T.gas_resources["sleeping_agent"] = 0
+				T.gas_resources[GAS_OXYGEN]	= 		rand(GAS_RESOURCE_HIGH_MIN, 	GAS_RESOURCE_HIGH_MAX)
+				T.gas_resources[GAS_HYDROGEN] = 		rand(GAS_RESOURCE_MID_MIN,  GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_DEUTERIUM] =		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_HELIUM] = 		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
+				T.gas_resources[GAS_TRITIUM] =		rand(GAS_RESOURCE_LOW_MIN,	GAS_RESOURCE_LOW_MAX)
+				T.gas_resources[GAS_CO2] = rand(GAS_RESOURCE_LOWEST_MIN, GAS_RESOURCE_LOWEST_MAX)
+				T.gas_resources[GAS_PHORON] =			rand(GAS_RESOURCE_LOWEST_MIN,	GAS_RESOURCE_LOWEST_MAX)
+				T.gas_resources[GAS_NITROGEN] = 		0
+				T.gas_resources[GAS_N2O] = 0
 			else						 // Deep gases
-				T.gas_resources["deuterium"] =		rand(GAS_RESOURCE_HIGH_MIN, GAS_RESOURCE_HIGH_MAX)
-				T.gas_resources["helium"] = 		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
-				T.gas_resources["tritium"] =		rand(GAS_RESOURCE_MID_MIN,	GAS_RESOURCE_MID_MAX)
-				T.gas_resources["oxygen"]	= 		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
-				T.gas_resources["phoron"] =			rand(GAS_RESOURCE_LOW_MIN,	GAS_RESOURCE_LOW_MAX)
-				T.gas_resources["hydrogen"] = 		rand(GAS_RESOURCE_LOW_MIN,  GAS_RESOURCE_LOW_MAX)
-				T.gas_resources["nitrogen"] = 		0
-				T.gas_resources["sleeping_agent"] = 0
-				T.gas_resources["carbon_dioxide"] = 0
+				T.gas_resources[GAS_DEUTERIUM] =		rand(GAS_RESOURCE_HIGH_MIN, GAS_RESOURCE_HIGH_MAX)
+				T.gas_resources[GAS_HELIUM] = 		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_TRITIUM] =		rand(GAS_RESOURCE_MID_MIN,	GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_OXYGEN]	= 		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_PHORON] =			rand(GAS_RESOURCE_LOW_MIN,	GAS_RESOURCE_LOW_MAX)
+				T.gas_resources[GAS_HYDROGEN] = 		rand(GAS_RESOURCE_LOW_MIN,  GAS_RESOURCE_LOW_MAX)
+				T.gas_resources[GAS_NITROGEN] = 		0
+				T.gas_resources[GAS_N2O] = 0
+				T.gas_resources[GAS_CO2] = 0
 
 /datum/random_map/noise/ore/apply_to_turf(var/x,var/y)
 
@@ -1085,26 +1085,26 @@ Titanium-Fusion Asteroids
 			T.gas_resources = list()
 
 			if(tmp_cell < rare_val)      // Surface gases
-				T.gas_resources["nitrogen"] = 		rand(GAS_RESOURCE_MID_MIN,	GAS_RESOURCE_MID_MAX)
-				T.gas_resources["hydrogen"] = 		rand(GAS_RESOURCE_LOW_MIN,  GAS_RESOURCE_MID_MAX)
-				T.gas_resources["carbon_dioxide"] = rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
-				T.gas_resources["oxygen"]	= 		rand(GAS_RESOURCE_LOWEST_MIN, 	GAS_RESOURCE_LOWEST_MAX)
-				T.gas_resources["sleeping_agent"] = rand(GAS_RESOURCE_LOWEST_MIN,	GAS_RESOURCE_LOWEST_MAX) // Sleeping agent is largely useless, so an abundance isn't needed
-				T.gas_resources["phoron"] =			0
+				T.gas_resources[GAS_NITROGEN] = 		rand(GAS_RESOURCE_MID_MIN,	GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_HYDROGEN] = 		rand(GAS_RESOURCE_LOW_MIN,  GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_CO2] = rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
+				T.gas_resources[GAS_OXYGEN]	= 		rand(GAS_RESOURCE_LOWEST_MIN, 	GAS_RESOURCE_LOWEST_MAX)
+				T.gas_resources[GAS_N2O] = rand(GAS_RESOURCE_LOWEST_MIN,	GAS_RESOURCE_LOWEST_MAX) // Sleeping agent is largely useless, so an abundance isn't needed
+				T.gas_resources[GAS_PHORON] =			0
 			else if(tmp_cell < deep_val) // Rare gases
-				T.gas_resources["oxygen"]	= 		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
-				T.gas_resources["hydrogen"] = 		rand(GAS_RESOURCE_MID_MIN,  GAS_RESOURCE_MID_MAX)
-				T.gas_resources["carbon_dioxide"] = 0
-				T.gas_resources["phoron"] =			0
-				T.gas_resources["nitrogen"] = 		0
-				T.gas_resources["sleeping_agent"] = 0
+				T.gas_resources[GAS_OXYGEN]	= 		rand(GAS_RESOURCE_MID_MIN, 	GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_HYDROGEN] = 		rand(GAS_RESOURCE_MID_MIN,  GAS_RESOURCE_MID_MAX)
+				T.gas_resources[GAS_CO2] = 0
+				T.gas_resources[GAS_PHORON] =			0
+				T.gas_resources[GAS_NITROGEN] = 		0
+				T.gas_resources[GAS_N2O] = 0
 			else						 // Deep gases
-				T.gas_resources["oxygen"]	= 		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
-				T.gas_resources["phoron"] =			rand(GAS_RESOURCE_LOW_MIN,	GAS_RESOURCE_LOW_MAX)
-				T.gas_resources["hydrogen"] = 		rand(GAS_RESOURCE_LOW_MIN,  GAS_RESOURCE_LOW_MAX)
-				T.gas_resources["nitrogen"] = 		0
-				T.gas_resources["sleeping_agent"] = 0
-				T.gas_resources["carbon_dioxide"] = 0
+				T.gas_resources[GAS_OXYGEN]	= 		rand(GAS_RESOURCE_LOW_MIN, 	GAS_RESOURCE_LOW_MAX)
+				T.gas_resources[GAS_PHORON] =			rand(GAS_RESOURCE_LOW_MIN,	GAS_RESOURCE_LOW_MAX)
+				T.gas_resources[GAS_HYDROGEN] = 		rand(GAS_RESOURCE_LOW_MIN,  GAS_RESOURCE_LOW_MAX)
+				T.gas_resources[GAS_NITROGEN] = 		0
+				T.gas_resources[GAS_N2O] = 0
+				T.gas_resources[GAS_CO2] = 0
 
 
 /datum/random_map/noise/ore/get_map_char(var/value)

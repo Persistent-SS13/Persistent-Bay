@@ -224,7 +224,7 @@
 	new_record.set_species(user.get_species())
 
 	if(random_record)
-		var/list/to_copy = list(REC_FIELD(citizenship),REC_FIELD(faction),REC_FIELD(religion),REC_FIELD(homeSystem),REC_FIELD(fingerprint),REC_FIELD(dna),REC_FIELD(bloodtype))
+		var/list/to_copy = list(REC_FIELD(faction),REC_FIELD(religion),REC_FIELD(homeSystem),REC_FIELD(fingerprint),REC_FIELD(dna),REC_FIELD(bloodtype))
 		for(var/field in to_copy)
 			new_record.set_field(field, random_record.get_field(field))
 

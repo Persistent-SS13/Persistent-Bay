@@ -108,7 +108,7 @@ other types of metals and chemistry for reagents).
 /datum/design/item/stock_part/AssembleDesignDesc()
 	if(!desc)
 		desc = "A stock part used in the construction of various devices."
-
+/*
 /datum/design/item/stock_part/basic_capacitor
 	id = "basic_capacitor"
 	req_tech = list(TECH_POWER = 1)
@@ -1387,4 +1387,3 @@ other types of metals and chemistry for reagents).
 	materials = list(MATERIAL_STEEL = 600, MATERIAL_GLASS = 200)
 	build_path = /obj/item/weapon/computer_hardware/scanner/paper
 	sort_string = "VBADG"
-

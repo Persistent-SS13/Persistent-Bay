@@ -1181,6 +1181,28 @@ var/global/floorIsLava = 0
 /proc/is_special_character(var/character) // returns 1 for special characters and 2 for heroes of gamemode
 	return 0	// They lied, no one is special (No antags)
 
+/datum/admins/proc/mass_debug_closet_icons()
+
+	set name = "Mass Debug Closet Icons"
+	set desc = "Spawn every possible custom closet. Do not do this on live."
+	set category = "Debug"
+
+	if(!check_rights(R_SPAWN))	
+		return
+
+	if((input(usr, "Are you sure you want to spawn all these closets?", "So Many Closets") as null|anything in list("No", "Yes")) == "Yes")
+		log_admin("[key_name(usr)] mass-spawned closets (icon debug), if this is a live server you should yell at them.")
+		var/x = 0
+		var/y = 0
+		for(var/check_appearance in typesof(/decl/closet_appearance))
+			x++
+			if(x > 10)
+				x = 0
+				y++
+			var/turf/T = locate(usr.x+x, usr.y+y, usr.z)
+			if(T)
+				new /obj/structure/closet/debug(T, check_appearance)
+
 /datum/admins/proc/spawn_fruit(seedtype in SSplants.seeds)
 	set category = "Debug"
 	set desc = "Spawn the product of a seed."
@@ -1588,12 +1610,12 @@ datum/admins/var/obj/item/weapon/paper/admin/faxreply // var to hold fax replies
 
 /datum/admins/proc/generate_beacon()
 	set category = "Debug"
-	set desc = "Spawn the Nanotrasen frontier beacon at (100,100,1)"
+	set desc = "Spawn the Nexus Gov + a beacon at (100,100,1)"
 	set name = "Generate Faction Beacon"
-
-	new /obj/faction_spawner/Nanotrasen(locate(100,100,1))
+	if(!GLOB.all_world_factions) GLOB.all_world_factions = list()
+	spawn_nexus_gov()
 	var/obj/structure/frontier_beacon/beacon
 	beacon = new /obj/structure/frontier_beacon(locate(100,100,1)) //
-	beacon.req_access_faction = "nanotrasen"
-	to_chat(usr, "<b>Frontier Beacon and faction_spawner (Nanotrasen) generated.)</b>")
+	beacon.req_access_faction = "nexus"
+	to_chat(usr, "<b>Frontier Beacon and Nexus.)</b>")
 	return

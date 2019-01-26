@@ -253,11 +253,11 @@ var/PriorityQueue/all_feeds
 	var/author = ""
 	var/true_author = ""
 	var/publish_date = 0
-	
+
 	var/list/purchased = list()
 
 	var/datum/NewsIssue/parent
-	
+
 	var/uid
 
 /datum/NewsIssue
@@ -267,9 +267,9 @@ var/PriorityQueue/all_feeds
 	var/publisher = ""
 
 	var/datum/NewsFeed/parent
-	
+
 	var/uid
-	
+
 /datum/NewsFeed
 	var/name = "None"
 	var/visible = 0
@@ -279,8 +279,8 @@ var/PriorityQueue/all_feeds
 	var/per_issue = 60
 	var/announcement = "Breaking News!"
 	var/last_published = 0
-	
-	
+
+
 	var/datum/small_business/parent
 
 /datum/NewsFeed/New()
@@ -298,14 +298,14 @@ var/PriorityQueue/all_feeds
 	current_issue.name = "[name] News Issue"
 	last_published = current_issue.publish_date
 	all_feeds.ReSort(src)
-	
+
 /datum/NewsFeed/proc/publish_story(var/datum/NewsStory/story)
 	current_issue.stories |= story
 	story.parent = current_issue
 	for(var/obj/machinery/newscaster/caster in allCasters)
 		caster.newsAlert("(From [name]) [announcement] ([story.name])")
 	GLOB.recent_articles |= story
-	
+
 
 /datum/small_business
 	var/name = "" // can should never be changed and must be unique
@@ -602,6 +602,16 @@ var/PriorityQueue/all_feeds
 	else
 		return "BROKE"
 
+/datum/world_faction/proc/get_leadername()
+	return leader_name
+	
+/datum/world_faction/democratic/get_leadername()
+	if(gov && gov.real_name != "")
+		return gov.real_name
+	else
+		return leader_name
+		
+		
 /datum/world_faction
 	var/name = "" // can be safely changed
 	var/abbreviation = "" // can be safely changed
@@ -617,7 +627,7 @@ var/PriorityQueue/all_feeds
 	var/datum/ntnet/network
 	var/datum/money_account/central_account
 	var/allow_id_access = 0 // allows access off the ID (the IDs access var instead of directly from faction records, assuming its a faction-approved ID
-	var/allow_unapproved_ids = 0 // allows ids that are not faction-approved or faction-created to still be used to access doors IF THE registered_name OF THE CARD HAS VALID RECORDS ON FILE or allow_id_access is set to 1
+	var/allow_unapproved_ids = 0 // **THIS VAR NO LONGER MATTERS IDS ARE ALWAYS CONSIDERED APPROVED** allows ids that are not faction-approved or faction-created to still be used to access doors IF THE registered_name OF THE CARD HAS VALID RECORDS ON FILE or allow_id_access is set to 1
 	var/list/connected_laces = list()
 
 	var/all_promote_req = 3
@@ -644,16 +654,375 @@ var/PriorityQueue/all_feeds
 	var/hiring_policy = 0 // if hiring_policy, anyone with reassignment can add people to the network, else only people in command a command category with reassignment can add people
 	var/last_expense_print = 0
 
+	var/list/reserved_frequencies() = list() // Reserved frequencies that the faction can create encryption keys from.
+
+
+/proc/spawn_nexus_gov()
+	var/datum/world_faction/democratic/nexus = new()
+	nexus.name = "Nexus City Government"
+	nexus.abbreviation = "NEXUS"
+	nexus.short_tag = "NEX"
+	nexus.purpose = "To represent the citizenship of Nexus and keep the station operating."
+	nexus.uid = "nexus"
+	nexus.gov = new()
+	var/datum/election/gov/gov_elect = new()
+	gov_elect.ballots |= nexus.gov
 	
+	nexus.waiting_elections |= gov_elect
+	
+	var/datum/election/council_elect = new()
+	var/datum/democracy/councillor/councillor1 = new()
+	councillor1.title = "Councillor for Policing and Justice"
+	nexus.city_council |= councillor1
+	council_elect.ballots |= councillor1
+	
+	var/datum/democracy/councillor/councillor2 = new()
+	councillor2.title = "Councillor for the Budget"
+	nexus.city_council |= councillor2
+	council_elect.ballots |= councillor2
+	
+	var/datum/democracy/councillor/councillor3 = new()
+	councillor3.title = "Councillor for the Culture"
+	nexus.city_council |= councillor3
+	council_elect.ballots |= councillor3
+	
+	var/datum/democracy/councillor/councillor4 = new()
+	councillor4.title = "Councillor for the Station Integrity"
+	nexus.city_council |= councillor4
+	council_elect.ballots |= councillor4
+	
+	var/datum/democracy/councillor/councillor5 = new()
+	councillor4.title = "Councillor for the Commerce and Business"
+	nexus.city_council |= councillor5
+	council_elect.ballots |= councillor5
+	
+	nexus.waiting_elections |= council_elect
+	
+	nexus.network.name = "NEXUSGOV-NET"
+	nexus.network.net_uid = "nexus"
+	nexus.network.password = ""
+	nexus.network.invisible = 0
+	
+	GLOB.all_world_factions |= nexus
 	
 	
 /datum/world_faction/democratic
+
+	var/datum/democracy/governor/gov
+	var/list/city_council = list()
+	var/list/judges = list()
+
+	var/council_amount = 5
+
+	var/list/policy = list()
+
+	var/list/criminal_laws = list()
+	var/list/civil_laws = list()
+
+	var/list/votes = list()
+	var/list/vote_history = list()
+
+	var/datum/election/current_election
+	var/list/waiting_elections = list()
+	var/active_elections = 1
+
+	var/election_toggle = 0
+
+
+	var/list/scheduled_trials = list()
+	var/list/verdicts = list()
+
+
+	var/tax_type_b = 1 // business 1 = flat, 2 = progressie
+	var/tax_bprog1_rate = 0
+	var/tax_bprog2_rate = 0
+	var/tax_bprog3_rate = 0
+	var/tax_bprog4_rate = 0
+	var/tax_bprog2_amount = 0
+	var/tax_bprog3_amount = 0
+	var/tax_bprog4_amount = 0
+	var/tax_bflat_rate = 0
+
+	var/tax_type_p = 1 // personal 1 = flat, 2 = progressie
+	var/tax_pprog1_rate = 0
+	var/tax_pprog2_rate = 0
+	var/tax_pprog3_rate = 0
+	var/tax_pprog4_rate = 0
+	var/tax_pprog2_amount = 0
+	var/tax_pprog3_amount = 0
+	var/tax_pprog4_amount = 0
+	var/tax_pflat_rate = 0
+
+/datum/verdict
+	var/name = "" //title
+	var/judge = ""
+	var/defendant = ""
+	var/body = ""
+	var/time_rendered = 0
+	var/citizenship_change = 0
+
+/datum/judge_trial
+	var/name = "" //title
+	var/judge = ""
+	var/defendant = ""
+	var/plaintiff = ""
+	var/body = ""
+	var/month = ""
+	var/day = 0
+	var/hour = 0
+
+/datum/world_faction/democratic/proc/render_verdict(var/datum/verdict/verdict)
+	verdicts |= verdict
+
+/datum/world_faction/democratic/proc/schedule_trial(var/datum/judge_trial/trial)
+	scheduled_trials |= trial
+
+/datum/world_faction/democratic/proc/cancel_trial(var/datum/judge_trial/trial)
+	scheduled_trials -= trial
+
+
+/datum/world_faction/democratic/proc/is_councillor(var/real_name)
+	for(var/datum/democracy/ballot in city_council)
+		if(ballot.real_name == real_name)
+			return ballot
+
+/datum/world_faction/democratic/proc/is_governor(var/real_name)
+	if(gov.real_name == real_name)
+		return gov
+
+/datum/world_faction/democratic/proc/is_judge(var/real_name)
+	for(var/datum/democracy/ballot in judges)
+		if(ballot.real_name == real_name)
+			return ballot
+
+/datum/world_faction/democratic/proc/is_candidate(var/real_name)
+	var/list/all_ballots = list()
+	all_ballots |= gov
+	all_ballots |= city_council
+	for(var/datum/democracy/ballot in all_ballots)
+		for(var/datum/candidate/candidate in ballot.candidates)
+			if(candidate.real_name == real_name)
+				return list(candidate, ballot)
+				
+				
+				
+/datum/world_faction/democratic/proc/start_election(var/datum/election/election)
+	current_election = election
+	if(election.typed)
+		election_toggle = !election_toggle
+	to_world("<font size=3>The [election.name] has started.</font>")
+
+/datum/world_faction/democratic/proc/start_trial(var/datum/judge_trial/trial)
+	to_world("<font size=3>The Trial [trial.name] should be starting now.</font>")
+	scheduled_trials -= trial
 	
+
+/datum/world_faction/democratic/proc/end_election()
+	for(var/datum/democracy/ballot in current_election.ballots)
+		if(!ballot.candidates.len)
+			continue
+		var/list/leaders = list()
+		var/datum/candidate/leader
+		for(var/datum/candidate/candidate in ballot.candidates)
+			if(!leader || candidate.votes.len > leader.votes.len)
+				leaders.Cut()
+				leader = candidate
+				leaders |= candidate
+			else if(candidate.votes.len == leader.votes.len)
+				leaders |= candidate
+				leader = candidate
+		if(!leaders.len)
+			to_world("<font size=3>In the election for [ballot.title], no one was elected!</font>")
+		else if(leaders.len > 1)
+			var/leaders_names = ""
+			var/first = 1
+			for(var/datum/candidate/candidate in leaders)
+				if(first)
+					leaders_names += candidate.real_name
+					first = 0
+				else
+					leaders_names += ", [candidate.real_name]"
+			leader = pick(leaders)
+			to_world("<font size=3>In the election for [ballot.title], the election was tied between [leaders_names]. [leader.real_name] was randomly selected as the winner.</font>")
+			ballot.real_name = leader.real_name
+		else
+			to_world("<font size=3>In the election for [ballot.title], the election was won by [leader.real_name].</font>")
+			ballot.real_name = leader.real_name
+	current_election = null
+
+/datum/world_faction/democratic/proc/withdraw_vote(var/datum/council_vote/vote)
+	votes -= vote
+
+/datum/world_faction/democratic/proc/defeat_vote(var/datum/council_vote/vote)
+	votes -= vote
+
+/datum/world_faction/democratic/proc/start_vote(var/datum/council_vote/vote)
+	votes |= vote
+
+/datum/world_faction/democratic/proc/has_vote(var/real_name)
+	for(var/datum/council_vote/vote in votes)
+		if(vote.sponsor == real_name)
+			return 1
+
+/datum/world_faction/democratic/proc/vote_yes(var/datum/council_vote/vote, var/mob/user)
+	vote.yes_votes |= user.real_name
+	if(vote.yes_votes.len >= 5)
+		pass_vote(vote)
+	else if(vote.yes_votes.len >= 3 && vote.signer != "")
+		pass_vote(vote)
+
+/datum/world_faction/democratic/proc/vote_no(var/datum/council_vote/vote, var/mob/user)
+	vote.no_votes |= user.real_name
+	if(vote.no_votes.len >= 3)
+		defeat_vote(vote)
+
+/datum/world_faction/democratic/proc/repeal_policy(var/datum/council_vote/vote)
+	policy -= vote
+
+
+/datum/world_faction/democratic/proc/pass_policy(var/datum/council_vote/vote)
+	policy |= vote
+
+/datum/world_faction/democratic/proc/pass_nomination_judge(var/datum/democracy/judge)
+	judges |= judge
+
+/datum/world_faction/democratic/proc/pass_impeachment_judge(var/datum/democracy/judge)
+	judges -= judge
+
+/datum/world_faction/democratic/proc/pass_vote(var/datum/council_vote/vote)
+	votes -= vote
+	vote.time_signed = world.realtime
+	if(vote.bill_type == 3)
+		if(vote.tax == 2)
+			if(vote.taxtype == 2)
+				tax_bprog1_rate = vote.prograte1
+				tax_bprog2_rate = vote.prograte2
+				tax_bprog3_rate = vote.prograte3
+				tax_bprog4_rate = vote.prograte4
+
+				tax_bprog2_amount = vote.progamount2
+				tax_bprog3_amount = vote.progamount3
+				tax_bprog4_amount = vote.progamount4
+				tax_type_b = 2
+			else
+				tax_bflat_rate = vote.flatrate
+				tax_type_b = 1
+		else
+			if(vote.taxtype == 2)
+				tax_pprog1_rate = vote.prograte1
+				tax_pprog2_rate = vote.prograte2
+				tax_pprog3_rate = vote.prograte3
+				tax_pprog4_rate = vote.prograte4
+
+				tax_pprog2_amount = vote.progamount2
+				tax_pprog3_amount = vote.progamount3
+				tax_pprog4_amount = vote.progamount4
+				tax_type_p = 2
+			else
+				tax_pflat_rate = vote.flatrate
+				tax_type_p = 1
+	else if(vote.bill_type == 4)
+		for(var/datum/democracy/judge in judges)
+			if(judge.real_name == vote.impeaching)
+				pass_impeachment_judge(judge)
+				return 1
+
+	else if(vote.bill_type == 5)
+		if(is_governor(vote.nominated) || is_councillor(vote.nominated) || is_judge(vote.nominated))
+			return 0
+		var/datum/democracy/judge/judge = new()
+		judge.real_name = vote.nominated
+		pass_nomination_judge(judge)
+
+	else if(vote.bill_type == 1)
+		criminal_laws |= vote
+	else if(vote.bill_type == 2)
+		civil_laws |= vote
+
+/datum/council_vote
+	var/name = "" // title of votes
+	var/bill_type = 1 //  1 = criminal law, 2 = civil law, 3 = tax policy, 4 = impeachment (judge) 5 = nomination (judge)
+
+	var/sponsor = "" // real_name of the vote starter
+	var/time_started // realtime of when the vote started.
+	var/time_signed // realtime when passed
+
+	var/signer = ""
+
+	var/list/yes_votes = list()
+	var/list/no_votes = list()
+
+	var/body = "" // used by civil and criminal laws
+
+	var/tax = 0 // 1 = personal 2 = business
+
+	var/taxtype = 1 // 1 = flat, 2 = progressive
+
+	var/flatrate = 0
+
+	var/prograte1 = 0
+	var/prograte2 = 0
+	var/prograte3 = 0
+	var/prograte4 = 0
+
+	var/progamount2 = 0
+	var/progamount3 = 0
+	var/progamount4 = 0
+
+	var/impeaching = "" // real_name of impaechment target
+
+	var/nominated = ""
+/datum/election
+	var/name = "Station Council Election"
+	var/list/ballots = list() // populate this with the /datum/democracy for every participant of the election
+
+	var/start_hour = 10 // time of day (in 24 hour) when the election should start by
+	var/end_hour = 22
+	var/cut_off = 14
+	var/start_day = "Saturday"
+	var/end_day = "Saturday"
+
+	var/typed = 1
+	var/num_type = 0
+
+/datum/election/gov
+	name = "Governor Election"
+	typed = 1
+	num_type = 1
+
+
+
+/datum/democracy
+	var/real_name // real_name of elected
+	var/term_start // real time
+	var/title = "Councillor"
+	var/description = "Vote on laws civil and criminal, the tax code and confirming judges nominated by the governor."
+	var/consecutive_terms = 0
+
+	var/election_desc = ""
+	var/seeking_reelection = 1
+	
+	var/list/candidates = list()
+	var/list/voted_ckeys = list() // to prevent double voting
+
+/datum/democracy/governor
+	title = "Governor"
+	description = "Manage the executive government by creating assignments, ranks and accesses while publishing executive policy documents. Nominate Judges."
+
+/datum/democracy/councillor
+
+/datum/democracy/judge
+	title = "Judge"
+
+/datum/candidate
+	var/real_name = "" // real name of candidate
+	var/ckey = "" // ckey of candidate to prevent self voting
+	var/list/votes = list() // list of unqiue names voting for the candidate
+
+	var/desc = ""
+
+
 /datum/world_faction/business
-
-
-
-	
 
 /datum/world_faction/after_load()
 	if(!debts)
@@ -748,7 +1117,7 @@ var/PriorityQueue/all_feeds
 	return 0
 
 /datum/world_faction/proc/outranks(var/real_name, var/target)
-	if(real_name == leader_name)
+	if(real_name == get_leadername())
 		return 1
 	var/datum/computer_file/report/crew_record/R = get_record(real_name)
 	if(!R) return 0
@@ -916,28 +1285,28 @@ var/PriorityQueue/all_feeds
 	network_name = "freenet"
 	network_uid = "freenet"
 
-	
+
 /datum/beacon_objective
 	var/name = "Objective name"
 	var/payout = 0 // how much to pay upon completion
 	var/req_level = 0 // required level of the beacon
 
 	var/required = 10 // How much of whatever is required to fill the objective
-	
-	
-	
+
+
+
 /datum/beacon_objective/profit
-	name = "Have X$$ in your corperate account, an increase of Y$$."
-	
+	name = "Have X$$ in your business account, an increase of Y$$."
+
 /datum/beacon_objective/sales_total
 	name = "Do X$$ in sales to other residents."
-	
+
 /datum/beacon_objective/sales_unique
 	name = "Do sales with X unique people."
 
 /datum/beacon_objective/export
 	name = "Deliver X units of Y via telepad."
-	
+
 /datum/beacon_objective/survey_beacon
 	name = "Survey the sensor beacon X located in zone Y."
 
@@ -946,19 +1315,19 @@ var/PriorityQueue/all_feeds
 
 /datum/beacon_objective/article_sales
 	name = "Have your articles purchased X amount of time."
-	
+
 /datum/beacon_objective/listeners
 	name = "Have X amount of patrons in the vicinity of one of your music emitters."
-	
+
 /datum/beacon_objective/reaction
 	name = "Produce X units of Y in a chemmaster."
 
 /datum/beacon_objective/drugs
 	name = "Produce X 10 unit Ys (patches, pills) in a chemmaster."
-	
+
 /datum/beacon_objective/production
 	name = "Produce X amount of objects in a Z (fabricator type)."
-	
+
 /datum/beacon_objective/recycling
 	name = "Break down X objects in a recycling machine."
 
@@ -967,13 +1336,13 @@ var/PriorityQueue/all_feeds
 
 /datum/beacon_objective/unlock_designs
 	name = "Unlock X amount of designs."
-	
+
 /datum/beacon_objective/produce_designs
 	name = "Produce X amount of design disks."
 
 /datum/beacon_objective/farm
 	name = "Grow X amount of Y."
-	
+
 /datum/beacon_objective/farm/food
 	name = "Grow X amount of Y (food)."
 
@@ -985,17 +1354,17 @@ var/PriorityQueue/all_feeds
 
 /datum/beacon_objective/bind_books
 	name = "Have X amount of books printed off your library network."
-	
+
 /datum/beacon_objective/body_scans
 	name = "Have scan X unique indivduals in a body scanner."
-	
-	
 
-	
-	
+
+
+
+
 
 /datum/business_module/minor/journalism
-	
+
 /datum/business_module/minor/art
 
 /datum/business_module/minor/medical_simple
@@ -1032,16 +1401,15 @@ var/PriorityQueue/all_feeds
 /datum/business_module/major/security
 
 
-	
+
 /obj/machinery/economic_beacon
 	name = "Economic Beacon"
 	anchored = 1
 	var/datum/world_faction/holder
 	var/holder_uid
-	
+
 	var/list/connected_orgs = list()
 	var/list/connected_orgs_uids = list()
 	var/completed_objectives = 0
-	
-	
-	
+
+

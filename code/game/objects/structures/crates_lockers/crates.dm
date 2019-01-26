@@ -1,11 +1,8 @@
-obj/structure/closet/crate
+/obj/structure/closet/crate
 	name = "crate"
 	desc = "A rectangular steel crate."
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "crate"
-	icon_opened = "crateopen"
-	icon_closed = "crate"
 	atom_flags = ATOM_FLAG_CLIMBABLE
+	closet_appearance = /decl/closet_appearance/crate
 	setup = 0
 	storage_types = CLOSET_STORAGE_ITEMS
 	mass = 12
@@ -52,64 +49,6 @@ obj/structure/closet/crate
 		to_chat(user,"There are some wires attached to the lid, connected to [english_list(devices)].")
 
 /obj/structure/closet/crate/attackby(obj/item/weapon/W as obj, mob/user as mob)
-/*
-	if(istype(W, /obj/item/weapon/rcs) && !src.opened)
-		var/obj/item/weapon/rcs/E = W
-		if(E.rcell && (E.rcell.charge >= E.chargecost))
-			if(!is_level_reachable(src.z)) // This is inconsistent with the closet sending code
-				to_chat(user, "<span class='warning'>The rapid-crate-sender can't locate any telepads!</span>")
-				return
-			if(E.mode == 0)
-				if(!E.teleporting)
-					var/list/L = list()
-					var/list/areaindex = list()
-					for(var/obj/machinery/telepad/R in world)
-						if(R.stage == 0)
-							var/turf/T = get_turf(R)
-							var/tmpname = T.loc.name
-							if(areaindex[tmpname])
-								tmpname = "[tmpname] ([++areaindex[tmpname]])"
-							else
-								areaindex[tmpname] = 1
-							L[tmpname] = R
-					var/desc = input("Please select a telepad.", "RCS") in L
-					E.pad = L[desc]
-					playsound(E.loc, 'sound/machines/click.ogg', 50, 1)
-					to_chat(user, "\blue Teleporting [src.name]...")
-					E.teleporting = 1
-					if(!do_after(user, 50, target = src))
-						E.teleporting = 0
-						return
-					E.teleporting = 0
-					var/datum/effect/system/spark_spread/s = new /datum/effect/system/spark_spread
-					s.set_up(5, 1, src)
-					s.start()
-					do_teleport(src, E.pad, 0)
-					E.rcell.use(E.chargecost)
-					to_chat(user, "<span class='notice'>Teleport successful. [round(E.rcell.charge/E.chargecost)] charge\s left.</span>")
-					return
-			else
-				E.rand_x = rand(50,200)
-				E.rand_y = rand(50,200)
-				var/L = locate(E.rand_x, E.rand_y, 6)
-				playsound(E.loc, 'sound/machines/click.ogg', 50, 1)
-				to_chat(user, "\blue Teleporting [src.name]...")
-				E.teleporting = 1
-				if(!do_after(user, 50, target = src))
-					E.teleporting = 0
-					return
-				E.teleporting = 0
-				var/datum/effect/system/spark_spread/s = new /datum/effect/system/spark_spread
-				s.set_up(5, 1, src)
-				s.start()
-				do_teleport(src, L)
-				E.rcell.use(E.chargecost)
-				to_chat(user, "<span class='notice'>Teleport successful. [round(E.rcell.charge/E.chargecost)] charge\s left.</span>")
-				return
-		else
-			to_chat(user, "<span class='warning'>Out of charges.</span>")
-			return
-*/
 	if(opened)
 		return ..()
 	else if(istype(W, /obj/item/weapon/packageWrap))
@@ -141,9 +80,7 @@ obj/structure/closet/crate
 /obj/structure/closet/crate/secure
 	desc = "A secure crate."
 	name = "Secure crate"
-	icon_state = "securecrate"
-	icon_opened = "securecrateopen"
-	icon_closed = "securecrate"
+	closet_appearance = /decl/closet_appearance/crate/secure
 	mass = 17
 	max_health = 400
 	damthreshold_brute 	= 10
@@ -161,10 +98,6 @@ obj/structure/closet/crate
 		DAM_STUN 	= MaxArmorValue,
 		DAM_PAIN	= MaxArmorValue,
 		DAM_CLONE   = MaxArmorValue)
-	var/redlight = "securecrater"
-	var/greenlight = "securecrateg"
-	var/sparks = "securecratesparks"
-	var/emag = "securecrateemag"
 
 	setup = CLOSET_HAS_LOCK
 	locked = TRUE
@@ -173,22 +106,11 @@ obj/structure/closet/crate
 	. = ..()
 	update_icon()
 
-/obj/structure/closet/crate/secure/update_icon()
-	..()
-	if(broken)
-		overlays += emag
-	else if(locked)
-		overlays += redlight
-	else
-		overlays += greenlight
-
 /obj/structure/closet/crate/plastic
 	name = "plastic crate"
 	desc = "A rectangular plastic crate."
-	icon_state = "plasticcrate"
-	icon_opened = "plasticcrateopen"
-	icon_closed = "plasticcrate"
 	points_per_crate = 1
+	closet_appearance = /decl/closet_appearance/crate/plastic
 	mass = 8
 	max_health = 120
 	damthreshold_brute 	= 5
@@ -210,16 +132,11 @@ obj/structure/closet/crate
 /obj/structure/closet/crate/internals
 	name = "internals crate"
 	desc = "A internals crate."
-	icon_state = "o2crate"
-	icon_opened = "o2crateopen"
-	icon_closed = "o2crate"
 
 /obj/structure/closet/crate/trashcart
 	name = "trash cart"
 	desc = "A heavy, metal trashcart with wheels."
-	icon_state = "trashcart"
-	icon_opened = "trashcartopen"
-	icon_closed = "trashcart"
+	closet_appearance = /decl/closet_appearance/cart/trash
 	mass = 25
 	max_health = 450
 	damthreshold_brute 	= 5
@@ -241,16 +158,11 @@ obj/structure/closet/crate
 /obj/structure/closet/crate/medical
 	name = "medical crate"
 	desc = "A medical crate."
-	icon_state = "medicalcrate"
-	icon_opened = "medicalcrateopen"
-	icon_closed = "medicalcrate"
+	closet_appearance = /decl/closet_appearance/crate/medical
 
 /obj/structure/closet/crate/rcd
 	name = "\improper RCD crate"
 	desc = "A crate with rapid construction device."
-	icon_state = "crate"
-	icon_opened = "crateopen"
-	icon_closed = "crate"
 
 /obj/structure/closet/crate/rcd/WillContain()
 	return list(
@@ -278,29 +190,11 @@ obj/structure/closet/crate
 /obj/structure/closet/crate/freezer
 	name = "freezer"
 	desc = "A freezer."
-	icon_state = "freezer"
-	icon_opened = "freezeropen"
-	icon_closed = "freezer"
-	var/target_temp = T0C - 40
-	var/cooling_power = 40
-
-	return_air()
-		var/datum/gas_mixture/gas = (..())
-		if(!gas)	return null
-		var/datum/gas_mixture/newgas = new/datum/gas_mixture()
-		newgas.copy_from(gas)
-		if(newgas.temperature <= target_temp)	return
-
-		if((newgas.temperature - cooling_power) > target_temp)
-			newgas.temperature -= cooling_power
-		else
-			newgas.temperature = target_temp
-		return newgas
+	closet_appearance = /decl/closet_appearance/crate/freezer
 
 /obj/structure/closet/crate/freezer/rations //Fpr use in the escape shuttle
 	name = "emergency rations"
 	desc = "A crate of emergency rations."
-
 
 /obj/structure/closet/crate/freezer/rations/WillContain()
 	return list(/obj/item/weapon/reagent_containers/food/snacks/liquidfood = 4)
@@ -332,9 +226,7 @@ obj/structure/closet/crate
 /obj/structure/closet/crate/radiation
 	name = "radioactive crate"
 	desc = "A leadlined crate with a radiation sign on it."
-	icon_state = "radiation"
-	icon_opened = "radiationopen"
-	icon_closed = "radiation"
+	closet_appearance = /decl/closet_appearance/crate/radiation
 	mass = 25
 	max_health = 250
 	damthreshold_brute 	= 10
@@ -356,9 +248,7 @@ obj/structure/closet/crate
 /obj/structure/closet/crate/radiation_gear
 	name = "radioactive gear crate"
 	desc = "A crate with a radiation sign on it."
-	icon_state = "radiation"
-	icon_opened = "radiationopen"
-	icon_closed = "radiation"
+	closet_appearance = /decl/closet_appearance/crate/radiation
 
 /obj/structure/closet/crate/radiation_gear/WillContain()
 	return list(/obj/item/clothing/suit/radiation = 8)
@@ -366,30 +256,22 @@ obj/structure/closet/crate
 /obj/structure/closet/crate/secure/weapon
 	name = "weapons crate"
 	desc = "A secure weapons crate."
-	icon_state = "weaponcrate"
-	icon_opened = "weaponcrateopen"
-	icon_closed = "weaponcrate"
+	closet_appearance = /decl/closet_appearance/crate/secure/weapon
 
 /obj/structure/closet/crate/secure/phoron
 	name = "phoron crate"
 	desc = "A secure phoron crate."
-	icon_state = "phoroncrate"
-	icon_opened = "phoroncrateopen"
-	icon_closed = "phoroncrate"
+	closet_appearance = /decl/closet_appearance/crate/secure/hazard
 
 /obj/structure/closet/crate/secure/gear
 	name = "gear crate"
 	desc = "A secure gear crate."
-	icon_state = "secgearcrate"
-	icon_opened = "secgearcrateopen"
-	icon_closed = "secgearcrate"
+	closet_appearance = /decl/closet_appearance/crate/secure/weapon
 
 /obj/structure/closet/crate/secure/hydrosec
 	name = "secure hydroponics crate"
 	desc = "A crate with a lock on it, painted in the scheme of botany and botanists."
-	icon_state = "hydrosecurecrate"
-	icon_opened = "hydrosecurecrateopen"
-	icon_closed = "hydrosecurecrate"
+	closet_appearance = /decl/closet_appearance/crate/secure/hydroponics
 
 /obj/structure/closet/crate/secure/bin
 	name = "secure bin"
@@ -422,13 +304,9 @@ obj/structure/closet/crate
 /obj/structure/closet/crate/large
 	name = "large crate"
 	desc = "A hefty metal crate."
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "largemetal"
-	icon_opened = "largemetalopen"
-	icon_closed = "largemetal"
-
 	storage_capacity = 2 * MOB_LARGE
 	storage_types = CLOSET_STORAGE_ITEMS|CLOSET_STORAGE_STRUCTURES
+	closet_appearance = /decl/closet_appearance/large_crate
 	mass = 20
 	max_health = 300
 	damthreshold_brute 	= 5
@@ -448,19 +326,12 @@ obj/structure/closet/crate
 		DAM_CLONE   = MaxArmorValue)
 
 /obj/structure/closet/crate/large/hydroponics
-	icon_state = "hydro_crate_large"
-	icon_opened = "hydro_crate_large_open"
-	icon_closed = "hydro_crate_large"
+	closet_appearance = /decl/closet_appearance/large_crate/hydroponics
 
 /obj/structure/closet/crate/secure/large
 	name = "large crate"
 	desc = "A hefty metal crate with an electronic locking system."
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "largemetal"
-	icon_opened = "largemetalopen"
-	icon_closed = "largemetal"
-	redlight = "largemetalr"
-	greenlight = "largemetalg"
+	closet_appearance = /decl/closet_appearance/large_crate/secure
 
 	storage_capacity = 2 * MOB_LARGE
 	storage_types = CLOSET_STORAGE_ITEMS|CLOSET_STORAGE_STRUCTURES
@@ -483,9 +354,7 @@ obj/structure/closet/crate
 		DAM_CLONE   = MaxArmorValue)
 
 /obj/structure/closet/crate/secure/large/phoron
-	icon_state = "phoron_crate_large"
-	icon_opened = "phoron_crate_large_open"
-	icon_closed = "phoron_crate_large"
+	closet_appearance = /decl/closet_appearance/large_crate/secure/hazard
 
 //fluff variant
 /obj/structure/closet/crate/secure/large/reinforced
@@ -524,9 +393,7 @@ obj/structure/closet/crate
 /obj/structure/closet/crate/hydroponics
 	name = "hydroponics crate"
 	desc = "All you need to destroy those pesky weeds and pests."
-	icon_state = "hydrocrate"
-	icon_opened = "hydrocrateopen"
-	icon_closed = "hydrocrate"
+	closet_appearance = /decl/closet_appearance/crate/hydroponics
 
 /obj/structure/closet/crate/hydroponics/prespawned/WillContain()
 	return list(
@@ -541,13 +408,12 @@ obj/structure/closet/crate
 /obj/structure/closet/crate/secure/biohazard
 	name = "biohazard cart"
 	desc = "A heavy cart with extensive sealing. You shouldn't eat things you find in it."
-	icon_state = "biohazard"
-	icon_opened = "biohazardopen"
-	icon_closed = "biohazard"
 	open_sound = 'sound/items/Deconstruct.ogg'
 	close_sound = 'sound/items/Deconstruct.ogg'
 	req_access = list(core_access_science_programs)
-	storage_types = CLOSET_STORAGE_ITEMS|CLOSET_STORAGE_MOBS
+	closet_appearance = /decl/closet_appearance/cart/biohazard
+	storage_capacity = 2 * MOB_LARGE
+	storage_types = CLOSET_STORAGE_ITEMS|CLOSET_STORAGE_MOBS|CLOSET_STORAGE_STRUCTURES
 
 /obj/structure/closet/crate/secure/biohazard/blanks/WillContain()
 	return list(/mob/living/carbon/human/blank, /obj/item/usedcryobag)
@@ -555,9 +421,6 @@ obj/structure/closet/crate
 /obj/structure/closet/crate/paper_refill
 	name = "paper refill crate"
 	desc = "A rectangular plastic crate, filled up with blank papers for refilling bins and printers. A bureaucrat's favorite."
-	icon_state = "plasticcrate"
-	icon_opened = "plasticcrateopen"
-	icon_closed = "plasticcrate"
 
 /obj/structure/closet/crate/paper_refill/WillContain()
 	return list(/obj/item/weapon/paper = 30)
@@ -565,9 +428,7 @@ obj/structure/closet/crate
 /obj/structure/closet/crate/uranium
 	name = "fissibles crate"
 	desc = "A crate with a radiation sign on it."
-	icon_state = "radiation"
-	icon_opened = "radiationopen"
-	icon_closed = "radiation"
+	closet_appearance = /decl/closet_appearance/crate/radiation
 
 /obj/structure/closet/crate/uranium/WillContain()
 	return list(/obj/item/stack/material/uranium/ten = 5)

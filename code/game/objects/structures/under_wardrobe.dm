@@ -3,12 +3,12 @@
 /obj/structure/undies_wardrobe
 	name = "underwear wardrobe"
 	desc = "Holds item of clothing you shouldn't be showing off in the hallways."
-	icon = 'icons/obj/closet.dmi'
-	icon_state = "cabinet_closed"
-	density = 1
+	icon = 'icons/obj/undies_wardrobe.dmi'
+	icon_state = "closed"
+	density = TRUE
 	mass = 20
 	max_health = 125
-	damthreshold_brute 	= 5
+	damthreshold_brute 	= 15
 	damthreshold_burn	= 0
 	var/static/list/amount_of_underwear_by_id_card
 
@@ -22,7 +22,7 @@
 		var/id = user.GetIdCard()
 		var/message
 		if(id)
-			message = "ID card detected. Your underwear quota for this shift as been increased, if applicable."
+			message = "ID card detected. Your underwear quota for this shift has been increased, if applicable."
 		else
 			message = "No ID card detected. Thank you for your contribution."
 

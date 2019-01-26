@@ -4,11 +4,15 @@
 	var/list/spam = list()
 	var/list/deleted = list()
 
+
 	var/login = ""
 	var/password = ""
 	var/can_login = TRUE	// Whether you can log in with this account. Set to false for system accounts
 	var/suspended = FALSE	// Whether the account is banned by the SA.
 	var/connected_clients = list()
+
+	var/list/blocked = list()
+
 
 /datum/computer_file/data/email_account/calculate_size()
 	size = 1
@@ -26,6 +30,13 @@
 
 /datum/computer_file/data/email_account/proc/all_emails()
 	return (inbox | spam | deleted | outbox)
+
+/datum/computer_file/data/email_account/proc/unread()
+	var/count = 0
+	for(var/datum/computer_file/data/email_message/stored_message in inbox)
+		if(stored_message.unread)
+			count++
+	return count
 
 /datum/computer_file/data/email_account/proc/send_mail(var/recipient_address, var/datum/computer_file/data/email_message/message, var/relayed = 0)
 	var/datum/computer_file/data/email_account/recipient

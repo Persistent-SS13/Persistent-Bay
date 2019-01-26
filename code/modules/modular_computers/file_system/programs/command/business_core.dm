@@ -42,7 +42,6 @@
 		if(menu == 2)
 			data["faction_abbreviation"] = connected_faction.abbreviation
 			data["faction_tag"] = connected_faction.short_tag
-			var/regex/allregex = regex(".")
 			data["faction_purpose"] = connected_faction.purpose
 		if(menu == 3)
 			var/list/access_categories[0]
@@ -122,13 +121,13 @@
 			else
 				var/datum/accesses/copy = new()
 				selected_assignment.accesses["1"] = copy
-				
+
 			var/list/all_access = list()
 			var/expense_limit = 0
 			for(var/i=1;i<=selected_rank;i++)
 				if(i > selected_assignment.accesses.len)
 					var/datum/accesses/copy = new /datum/accesses()
-					var/datum/accesses/copy2 = selected_assignment.accesses["[i-1]"] 
+					var/datum/accesses/copy2 = selected_assignment.accesses["[i-1]"]
 					if(copy2)
 						copy.expense_limit = copy2.expense_limit
 					selected_assignment.accesses["[i]"] = copy
@@ -183,7 +182,7 @@
 			for(var/cryoname in connected_faction.cryo_networks)
 				cryos[++cryos.len] = list("name" = cryoname)
 			data["cryos"] = cryos
-			
+
 	if(selected_accesscategory)
 		data["selected_accesscategory"] = selected_accesscategory.name
 	if(selected_access && selected_accesscategory)
@@ -212,12 +211,12 @@
 		connected_faction = program.computer.network_card
 	if(!program.can_run(usr)) return 1
 	switch (href_list["action"])
-	
+
 		if("change_menu")
 			var/select_menu = text2num(href_list["menu_target"])
 			menu = select_menu
 			selected_rank = 1
-			prior_menu = 3
+			prior_menu = 1
 		if("change_name")
 			var/curr_name = connected_faction.name
 			var/select_name = sanitizeName(input(usr,"Enter the name of your organization","Business Display Name", connected_faction.name) as null|text, MAX_NAME_LEN, 1, 0)
@@ -583,17 +582,17 @@
 						all_access |= x
 				else
 					selected_assignment.accesses["[i]"] = new /datum/accesses()
-					
-					
+
+
 		if("change_expense_limit")
 			var/datum/accesses/copy = selected_assignment.accesses["[selected_rank]"]
 			if(istype(copy))
 				var/new_pay = input("Enter new expense limit. Expenses are used when approving orders and paying invoices with an expense card.","Change expense limit") as null|num
 				if(!new_pay && new_pay != 0) return 1
-				copy.expense_limit = new_pay				
+				copy.expense_limit = new_pay
 			else
 				selected_assignment.accesses["[selected_rank]"] = new /datum/accesses()
-								
+
 		if("money_settle")
 			connected_faction.pay_debt()
 		if("req1_change")

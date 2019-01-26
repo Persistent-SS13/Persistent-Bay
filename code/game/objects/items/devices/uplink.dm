@@ -203,7 +203,6 @@
 					REC_FIELD(species),
 					REC_FIELD(rank),
 					REC_FIELD(homeSystem),
-					REC_FIELD(citizenship),
 					REC_FIELD(faction),
 					REC_FIELD(religion),
 					REC_FIELD(fingerprint),
@@ -214,7 +213,7 @@
 					if(!F)
 						continue
 					rec_fields.Add(list(list(
-						"name" = html_encode(F.name), 
+						"name" = html_encode(F.name),
 						"val" = F.get_display_value()
 					)))
 				nanoui_data["exploit"]["fields"] =  rec_fields

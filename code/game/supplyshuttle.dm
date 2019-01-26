@@ -22,27 +22,7 @@ var/list/mechtoys = list(
 )
 
 
-var/list/valid_phoron_designs = list(
-	/datum/design/item/stock_part/super_capacitor,
-	/datum/design/item/stock_part/adv_capacitor,
-	/datum/design/item/stock_part/super_capacitor,
-	/datum/design/item/stock_part/nano_mani,
-	/datum/design/item/stock_part/pico_mani,
-	/datum/design/item/stock_part/adv_matter_bin,
-	/datum/design/item/stock_part/super_matter_bin,
-	/datum/design/item/stock_part/high_micro_laser,
-	/datum/design/item/stock_part/ultra_micro_laser,
-	/datum/design/item/stock_part/adv_sensor,
-	/datum/design/item/stock_part/phasic_sensor,
-	/datum/design/item/stock_part/RPED,
-	/datum/design/item/powercell/super,
-	/datum/design/item/powercell/hyper,
-	/datum/design/item/beaker/noreact,
-	/datum/design/item/beaker/bluespace,
-	/datum/design/item/scalpel_manager,
-	/datum/design/item/modularcomponent/logistic_processor,
-	/datum/design/item/jetpack
-)
+var/list/valid_phoron_designs = list()	// Todo, fix this
 
 /*
 /obj/effect/marker/supplymarker
@@ -231,6 +211,7 @@ var/list/point_source_descriptions = list(
 	generate_export(MATERIAL_BSPACE_CRYSTAL)
 	generate_export("xenobiology")
 	generate_export("cooking")
+
 /datum/controller/supply/proc/close_order(var/datum/export_order/export)
 	var/order_type = export.order_type
 	old_exports |= export

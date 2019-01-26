@@ -156,13 +156,9 @@
 	<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
 	<br><hr>
 	<br><br>Command Category: {{:helper.link("Yes", '', {'action' : 'assignmentcategory_leadership_yes'}, data.leader_faction ? 'selected' : null)}}{{:helper.link("No", '', {'action' : 'assignmentcategory_leadership_no'}, data.leader_faction ? null : 'selected')}}
-	<br><br>If this is turned on, this category will use the central account for its purchases, it will have universal promotion requests and it may be based on voting depending on the governance structure.
-	<br><br>Membership Status: {{:helper.link("Yes", '', {'action' : 'assignmentcategory_membership_yes'}, data.membership_faction ? 'selected' : null)}}{{:helper.link("No", '', {'action' : 'assignmentcategory_membership_no'}, data.membership_faction ? null : 'selected')}}
-	<br><br>Whether the people with assignments under this category are considered members of the network. Members get a variety of rights depending on the governance structure, including voting rights.
-	<br><br>Account Status: {{:helper.link("On", '', {'action' : 'assignmentcategory_account_on'}, data.account_status ? 'selected' : null)}}{{:helper.link("off", '', {'action' : 'assignmentcategory_account_off'}, data.account_status ? null : 'selected')}}
-	<br><br>Whether this category uses its own account for imports and exports. If not enabled, costs will be paid out of the central account.
+	<br><br>If this is turned on, assignments in this category will have universal access to modify other departments, including reassignment and promotion/demotion votes.
 	<br><br>Leader Assignment: {{:helper.link(data.faction_leader, 'flag', {'action' : 'assignmentcategory_changeleader'})}}
-	<br><br>Anyone with the Leader Assignment will have access to the sub-command program, where they can manage their section including recommending promotion for their subordinates, account management and other functions.
+	<br><br>Anyone at the highest rank of a leader assignment will have universal promotion and demotion authority within their department.
 	<br><br>{{:helper.link("Change Name", 'pencil', {'action' : 'edit_assignmentcategory'})}}
 	<br><br>{{:helper.link("Delete Assignment Category", 'cross', {'action' : 'delete_assignmentcategory'})}}
 	<br><br>{{:helper.link("Create New Assignment", 'pencil', {'action' : 'create_assignment'})}}

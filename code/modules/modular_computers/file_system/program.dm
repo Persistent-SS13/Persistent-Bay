@@ -27,6 +27,9 @@
 	var/operator_skill = SKILL_MIN                  // Holder for skill value of current/recent operator for programs that tick.
 
 
+	var/democratic = 0
+	var/business = 0
+	var/required_module = 0
 /datum/computer_file/program/New(var/obj/item/modular_computer/comp = null)
 	..()
 	if(comp && istype(comp))
@@ -130,7 +133,14 @@
 
 	if(!istype(user))
 		return 0
-
+	if(democratic)
+		if(!(computer && computer.network_card && computer.network_card.connected_network && istype(computer.network_card.connected_network, /datum/world_faction/democratic)))
+			to_chat(user, "<span class='notice'>\The [computer] must be connected to the government network for this program to run.</span>")
+			return 0
+	if(business)
+		if(!(computer && computer.network_card && computer.network_card.connected_network && istype(computer.network_card.connected_network, /datum/world_faction/business)))
+			to_chat(user, "<span class='notice'>\The [computer] must be connected to a business network for this program to run.</span>")
+			return 0
 	var/obj/item/weapon/card/id/I = user.GetIdCard()
 	if(!I)
 		if(loud)

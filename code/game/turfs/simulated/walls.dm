@@ -69,7 +69,7 @@
 
 /turf/simulated/wall/Process(wait, times_fired)
 	var/how_often = max(round(2 SECONDS / wait), 1)
-	
+
 	if(times_fired % how_often)
 		return //We only work about every 2 seconds
 
@@ -105,6 +105,10 @@
 //Appearance
 /turf/simulated/wall/examine(mob/user)
 	. = ..(user)
+
+	if(!.)
+		return
+
 	var/health = integrity / MaxIntegrity()
 	if(health >= 0.9)
 		to_chat(user, "<span class='notice'>It looks fully intact.</span>")

@@ -25,7 +25,7 @@
 	name = MATERIAL_WOOD
 	adjective_name = "wooden"
 	stack_type = /obj/item/stack/material/wood
-	icon_colour = "#824b28"
+	icon_colour = COLOR_WOOD
 	icon_base = "solid"
 	icon_reinf = "jaggy"
 	icon_door = "wood"

@@ -26,13 +26,22 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	action_button_name = "Access Neural Lace UI"
 	action_button_is_hands_free = 1
 	var/connected_faction = ""
-	var/duty_status = 0
+	var/duty_status = 1
 	var/datum/world_faction/faction
 	var/mob/living/carbon/lace/lacemob
 	var/sensor = 0
 
 	var/business_mode = 0
 	var/connected_business = ""
+
+	var/menu = 1
+	var/curr_page = 1
+
+	var/datum/computer_file/crew_record/record
+
+	var/datum/democracy/selected_ballot
+
+	var/time
 
 /obj/item/organ/internal/stack/New()
 	..()
@@ -75,6 +84,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	lacemob.real_name = H.real_name
 	lacemob.dna = H.dna.Clone()
 	lacemob.timeofhostdeath = H.timeofdeath
+	lacemob.teleport_time = H.timeofdeath + 30 MINUTES
 	lacemob.container = src
 	if(owner && isnull(owner.gc_destroyed))
 		lacemob.container2 = owner
@@ -113,37 +123,25 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 /obj/item/organ/internal/stack/Topic(href, href_list)
 	switch (href_list["action"])
+		if("change_menu")
+			menu = text2num(href_list["menu_target"])
+
 		if("clock_out")
-		if("off_duty")
-			duty_status = 0
-		if("on_duty")
-			if(try_duty())
-				duty_status = 1
-			else
-				to_chat(usr, "Your duty signal was rejected.")
-		if("disconnect")
 			if(faction)
 				faction.connected_laces -= src
 				faction = null
 				connected_faction = ""
+
 		if("connect")
 			faction = locate(href_list["selected_ref"])
 			if(!faction) return 0
 			connected_faction = faction.uid
 			try_connect()
-		if("sensor_off")
-			sensor = 0
-		if("sensor_on")
-			sensor = 1
-		if("logoff")
-			var/mob/new_player/M = new /mob/new_player()
-			M.loc = null
-			lacemob.stored_ckey = lacemob.ckey
-			M.key = lacemob.key
+
 		if("die")
 			var/choice = input(usr,"THIS WILL PERMANENTLY KILL YOUR CHARACTER! YOU WILL NOT BE ALLOWED TO REMAKE THE SAME CHARACTER.") in list("Kill my character, return to character creation", "Cancel")
 			if(choice == "Kill my character, return to character creation")
-				if(input("Are you SURE you want to delete [CharacterName(save_slot, lacemob.ckey)]? THIS IS PERMANENT. enter the character\'s full name to conform.", "DELETE A CHARACTER", "") == CharacterName(save_slot, lacemob.ckey))
+				if(input("Are you SURE you want to delete [CharacterName(save_slot, lacemob.ckey)]? THIS IS PERMANENT. enter the character\'s full name to confirm.", "DELETE A CHARACTER", "") == CharacterName(save_slot, lacemob.ckey))
 					fdel(load_path(lacemob.ckey, "[save_slot].sav"))
 
 				var/mob/new_player/M = new /mob/new_player()
@@ -159,30 +157,110 @@ GLOBAL_LIST_EMPTY(neural_laces)
 				owner?.ckey = null
 				owner?.stored_ckey = null
 				owner?.save_slot = 0
+		if("deselect_ballot")
+			selected_ballot = null
+		if("vote")
+			var/datum/candidate/candidate = locate(href_list["ref"])
+			if(owner && candidate && selected_ballot && !(owner.ckey in selected_ballot.voted_ckeys))
+				selected_ballot.voted_ckeys |= owner.ckey
+				candidate.votes |= owner.real_name
+		if("select_ballot")
+			selected_ballot = locate(href_list["ref"])
 
+		if("teleport") // NEEDS TO BE DONE
+			return 1
+
+	if(href_list["page_up"])
+		curr_page++
+		return 1
+	if(href_list["page_down"])
+		curr_page--
+		return 1
 	SSnano.update_uis(src)
 
 /obj/item/organ/internal/stack/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.interactive_state)
 	var/list/data = list()
 	try_connect()
-	if(lacemob)
-		data["lacemob"] = 1
-		data["sensor"] = sensor
-	if(business_mode)
-		var/datum/small_business/business = get_business(connected_business)
-		data["business_name"] = business.name
-	else if(faction)
-		data["faction_name"] = faction.name
-		if(duty_status == 1)
-			try_duty()
-		data["duty_status"] = duty_status ? "On Duty" : "Off Duty"
-		data["duty_status_num"] = duty_status
-	else
-		var/list/potential = get_potential()
-		var/list/formatted[0]
-		for(var/datum/world_faction/fact in potential)
-			formatted[++formatted.len] = list("name" = fact.name, "ref" = "\ref[fact]")
-		data["potential"] = formatted
+	if(!lacemob && owner)
+		data["living"] = 1
+		if(menu == 1)
+			if(!record)
+				record = Retrieve_Record(owner.real_name)
+			if(record)
+				data["citizenship_status"] = record.citizenship ? "Full Citizen" : "Resident"
+			else
+				data["citizenship_status"] = "Cannot read citizenship. Contact Administrator."
+
+			if(record && record.email)
+				data["email_status"] = "You have [record.email.unread()] unread emails."
+			else
+				data["email_status"] = "Cannot read email account. Contact Administrator."
+			if(faction)
+				data["faction_name"] = faction.name
+				if(duty_status == 1)
+					data["work_status"] = try_duty()
+			else
+				data["work_status"] = "Not currently clocked in."
+			var/list/potential = get_potential()
+			var/list/formatted[0]
+			for(var/datum/world_faction/fact in potential)
+				var/selected = 0
+				if(fact == faction)
+					selected = 1
+				formatted[++formatted.len] = list("name" = fact.name, "ref" = "\ref[fact]", "selected" = selected)
+			data["potential"] = formatted
+
+		if(menu == 2)
+			if(!record)
+				record = Retrieve_Record(owner.real_name)
+			if(!record || !record.linked_account)
+				to_chat(owner, "Cannot retrieve account info! Contact Administrator.")
+			data["account_balance"] = record.linked_account.money
+			var/list/transactions = record.linked_account.transaction_log
+			var/pages = transactions.len/10
+			if(pages < 1)
+				pages = 1
+			var/list/formatted_transactions[0]
+			if(transactions.len)
+				for(var/i=0; i<10; i++)
+					var/minus = i+(10*(curr_page-1))
+					if(minus >= transactions.len) break
+					var/datum/transaction/T = transactions[transactions.len-minus]
+					formatted_transactions[++formatted_transactions.len] = list("date" = T.date, "time" = T.time, "target_name" = T.target_name, "purpose" = T.purpose, "amount" = T.amount ? T.amount : 0)
+			data["transactions"] = formatted_transactions
+			data["page"] = curr_page
+			data["page_up"] = curr_page < pages
+			data["page_down"] = curr_page > 1
+		if(menu == 3)
+			var/datum/world_faction/democratic/nexus = get_faction("nexus")
+
+			if(nexus.current_election)
+				data["current_election"] = 1
+				data["election_name"] = nexus.current_election.name
+				if(selected_ballot)
+					if(owner.ckey in selected_ballot.voted_ckeys)
+						data["voted"] = 1
+					data["ballot_name"] = selected_ballot.title
+					var/list/formatted_candidates
+					for(var/datum/candidate/candidate in selected_ballot.candidates)
+						formatted_candidates[++formatted_candidates.len] = list("name" = candidate.real_name,"pitch" = candidate.desc, "ref" = "\ref[candidate]")
+
+				else
+					var/list/formatted_ballots[0]
+					for(var/datum/democracy/ballot in nexus.current_election.ballots)
+						formatted_ballots[++formatted_ballots.len] = list("name" = ballot.title, "ref" = "\ref[ballot]")
+					data["ballots"] = formatted_ballots
+		data["menu"] = menu
+		data["clock_outable"] = 1
+	else // death code
+		if(lacemob)
+			if(lacemob.teleport_time < world.time)
+				data["can_teleport"] = 1
+			else
+				data["time_teleport"] = round((lacemob.teleport_time - world.time)/(1 MINUTE))
+		else
+			message_admins("lace UI without owner or lacemob [src] [src.loc]")
+
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "lace.tmpl", "[name] UI", 550, 450, state = state)
@@ -217,27 +295,30 @@ GLOBAL_LIST_EMPTY(neural_laces)
 			robot = loc.loc
 	if((!owner || !faction) && !robot)
 		duty_status = 0
-		return
+		return "Not clocked in anywhere."
 	var/datum/computer_file/report/crew_record/record
 	if(!robot)
-		record = faction.get_record(owner.real_name)
+		records = faction.get_record(owner.real_name)
 	else
-		record = faction.get_record(robot.real_name)
-	if(!record)
+		records = faction.get_record(robot.real_name)
+	if(!records)
 		faction = null
-		duty_status = 0
-		return
-	var/assignment_uid = record.try_duty()
+		return "Not clocked in anywhere."
+	var/assignment_uid = records.try_duty()
 	if(assignment_uid)
 		var/datum/assignment/assignment = faction.get_assignment(assignment_uid)
 		if(assignment && assignment.duty_able)
-			return 1
+			var/title = assignment.name
+			if(records.rank > 1 && assignment.ranks.len >= records.rank-1)
+				title = assignment.ranks[records.rank-1]
+			return "Working as [title] for [faction.name]. Making [assignment.payscale]$ for every thirty minutes clocked in."
 		else
-			duty_status = 0
-			return
+			return "Not clocked in anywhere."
 	else
-		duty_status = 0
-		return
+		return "Not clocked in anywhere."
+
+
+
 
 /obj/item/organ/internal/stack/proc/try_connect()
 	if(!owner) return 0

@@ -62,7 +62,7 @@
 			data["trial_body"] = trial_body
 			data["month"] = trial_month
 			data["day"] = trial_day
-			data["hour"] = trial_hour
+			data["hour"] = "[trial_hour]:00"
 			data["plaintiff"] = trial_plaintiff
 			data["defendant"] = trial_defendant
 

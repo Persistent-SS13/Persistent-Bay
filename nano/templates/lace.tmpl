@@ -57,28 +57,28 @@
 		{{:helper.link('Newer Page', 'bullet', {'page_down' : 1}, data.page_down ? null : 'disabled')}}{{:helper.link('Older Page', 'bullet', {'page_up' : 1}, data.page_up ? null : 'disabled')}}<br><br>
 		<div class="statusDisplay" style="overflow: auto;">
 			{{if data.transactions}}
-			<table style='width: 100%'>
-			  <thead>
-				<tr>
-				  <th><b>Timestamp</b></th>
-				  <th><b>Target</b></th>
-				  <th><b>Reason</b></th>
-				  <th><b>Ethericoin</b></th>
-				</th>
-			  </thead>
-			  <tbody>
-				  {{for data.transactions}}
+				<table style='width: 100%'>
+				  <thead>
 					<tr>
-						<td>{{:value.date}} {{:value.time}}</td>
-						<td>{{:value.target_name}}</td>
-						<td>{{:value.purpose}}</td>
-						<td>$${{:value.amount}}</td>
-					</tr>
-				  {{/for}}
-			  </tbody>
-			</table>
+					  <th><b>Timestamp</b></th>
+					  <th><b>Target</b></th>
+					  <th><b>Reason</b></th>
+					  <th><b>Ethericoin</b></th>
+					</th>
+				  </thead>
+				  <tbody>
+					  {{for data.transactions}}
+						<tr>
+							<td>{{:value.date}} {{:value.time}}</td>
+							<td>{{:value.target_name}}</td>
+							<td>{{:value.purpose}}</td>
+							<td>$${{:value.amount}}</td>
+						</tr>
+					  {{/for}}
+				  </tbody>
+				</table>
 			{{else}}
-			  <span class='alert'>This account has no financial transactions on record.</span>
+				<span class='alert'>This account has no financial transactions on record.</span>
 			{{/if}}
 		</div>
 	{{/if}}

@@ -41,7 +41,7 @@
 				else if(selected_vote.bill_type == 4)
 					billtype = "(Judge Removal) "
 				data["selected_vote"] = "[billtype][selected_vote.name] ([selected_vote.yes_votes.len] Yea / [selected_vote.no_votes.len] Nay)"
-				data["propose_time"] = selected_vote.time_started
+				data["propose_time"] = time2text(selected_vote.time_started)
 				data["sponsor"] = selected_vote.sponsor
 				data["vote_body"] = selected_vote.body
 				data["vote_status"] = "[selected_vote.yes_votes.len] Yea / [selected_vote.no_votes.len] Nay"
@@ -73,7 +73,7 @@
 		if(menu == 3)
 			if(selected_policy)
 				data["selected_policy"] = selected_policy.name
-				data["publish_time"] = selected_policy.time_started
+				data["publish_time"] = selected_policy.time_signed
 				data["signer"] = selected_policy.signer
 				data["policy_body"] = selected_policy.body
 			else
@@ -142,7 +142,7 @@
 				var/datum/council_vote/vote = new()
 				vote.sponsor = usr.real_name
 				vote.signer = usr.real_name
-				vote.time_started = world.realtime
+				vote.time_signed = world.realtime
 				vote.name = bill_title
 				vote.body = bill_body
 				connected_faction.pass_policy(vote)

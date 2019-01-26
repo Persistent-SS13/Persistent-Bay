@@ -891,6 +891,7 @@ var/PriorityQueue/all_feeds
 
 /datum/world_faction/democratic/proc/pass_vote(var/datum/council_vote/vote)
 	votes -= vote
+	vote.time_signed = world.realtime
 	if(vote.bill_type == 3)
 		if(vote.tax == 2)
 			if(vote.taxtype == 2)
@@ -944,6 +945,7 @@ var/PriorityQueue/all_feeds
 
 	var/sponsor = "" // real_name of the vote starter
 	var/time_started // realtime of when the vote started.
+	var/time_signed // realtime when passed
 
 	var/signer = ""
 

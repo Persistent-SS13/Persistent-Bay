@@ -1,9 +1,9 @@
 <h2>Neural Lace Control Panel</h2>
 <br><hr>
 {{if data.living}}
-	<br><br>{{:helper.link("General Info", 'wrench', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
-	<br><br>{{:helper.link("Money Account", 'locked', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
-	<br><br>{{:helper.link("Nexus Elections System", 'locked', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
+	{{:helper.link("General Info", 'wrench', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
+	{{:helper.link("Money Account", 'locked', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
+	{{:helper.link("Nexus Elections System", 'locked', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
 	{{if data.menu == 1}}
 		<h3>General Info</h3><br>
 		<div class='item'>
@@ -57,28 +57,28 @@
 		{{:helper.link('Newer Page', 'bullet', {'page_down' : 1}, data.page_down ? null : 'disabled')}}{{:helper.link('Older Page', 'bullet', {'page_up' : 1}, data.page_up ? null : 'disabled')}}<br><br>
 		<div class="statusDisplay" style="overflow: auto;">
 			{{if data.transactions}}
-			<table style='width: 100%'>
-			  <thead>
-				<tr>
-				  <th><b>Timestamp</b></th>
-				  <th><b>Target</b></th>
-				  <th><b>Reason</b></th>
-				  <th><b>Ethericoin</b></th>
-				</th>
-			  </thead>
-			  <tbody>
-				  {{for data.transactions}}
+				<table style='width: 100%'>
+				  <thead>
 					<tr>
-						<td>{{:value.date}} {{:value.time}}</td>
-						<td>{{:value.target_name}}</td>
-						<td>{{:value.purpose}}</td>
-						<td>$${{:value.amount}}</td>
-					</tr>
-				  {{/for}}
-			  </tbody>
-			</table>
+					  <th><b>Timestamp</b></th>
+					  <th><b>Target</b></th>
+					  <th><b>Reason</b></th>
+					  <th><b>Ethericoin</b></th>
+					</th>
+				  </thead>
+				  <tbody>
+					  {{for data.transactions}}
+						<tr>
+							<td>{{:value.date}} {{:value.time}}</td>
+							<td>{{:value.target_name}}</td>
+							<td>{{:value.purpose}}</td>
+							<td>$${{:value.amount}}</td>
+						</tr>
+					  {{/for}}
+				  </tbody>
+				</table>
 			{{else}}
-			  <span class='alert'>This account has no financial transactions on record.</span>
+				<span class='alert'>This account has no financial transactions on record.</span>
 			{{/if}}
 		</div>
 	{{/if}}
@@ -86,7 +86,7 @@
 		<h3>Nexus Elections System</h3><br><hr>
 		{{if data.current_election}}
 			{{if data.selected_ballot}}
-				<h4>{{:data.election_name}} ({:ballot_name}})</h4><br>
+				<h4>{{:data.election_name}} ({:data.ballot_name}})</h4><br>
 				{{:helper.link('Back', '', {'action' : 'deselect_ballot'})}}<br><br><hr>
 				{{for data.candidates}}
 					<b>{{:value.name}}</b><br>

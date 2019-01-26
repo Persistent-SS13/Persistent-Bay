@@ -262,7 +262,7 @@
 		user_record = connected_faction.get_record(user_id_card.registered_name)
 		if(user_record)
 			user_accesses = user_id_card.GetAccess(connected_faction.uid)
-		if(connected_faction.leader_name == user_id_card.registered_name)
+		if(connected_faction.get_leadername() == user_id_card.registered_name)
 			isleader = 1
 	else
 		return 0

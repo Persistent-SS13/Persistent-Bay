@@ -86,7 +86,7 @@
 				else if(selected_vote.bill_type == 5)
 					billtype = "(Judge Nomination) "
 				data["selected_vote"] = "[billtype][selected_vote.name] ([selected_vote.yes_votes.len] Yea / [selected_vote.no_votes.len] Nay)"
-				data["propose_time"] = selected_vote.time_started
+				data["propose_time"] = time2text(selected_vote.time_started)
 				data["sponsor"] = selected_vote.sponsor
 				data["vote_body"] = selected_vote.body
 				if(user.real_name == selected_vote.sponsor)
@@ -211,6 +211,7 @@
 				vote.name = bill_title
 				vote.body = bill_body
 				vote.bill_type = law_type
+				vote.yes_votes |= usr.real_name
 				connected_faction.start_vote(vote)
 				to_chat(usr, "Vote Started.")
 				menu = 1

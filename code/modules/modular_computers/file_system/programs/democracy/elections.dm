@@ -128,7 +128,7 @@
 				if(candidate && ballot)
 					ballot.candidates -= candidate
 		
-		if("select_reeelect")
+		if("select_reelect")
 			var/datum/democracy/ballot = connected_faction.is_governor(user.real_name)
 			if(!ballot)
 				ballot = connected_faction.is_councillor(user.real_name)

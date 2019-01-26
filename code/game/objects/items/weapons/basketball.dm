@@ -86,11 +86,11 @@
 	density = 1
 	throwpass = 1
 
-	/obj/structure/basketballhoop/deployed/proc/roller(var/obj/item/weapon/basketball/Q) //Could be edited to make the ball move further or roll realistically, but this is fine for now.
-		if(istype(Q))
-			sleep(5)
-			step_away(Q,src,2)
-			return
+/obj/structure/basketballhoop/deployed/proc/roller(var/obj/item/weapon/basketball/Q) //Could be edited to make the ball move further or roll realistically, but this is fine for now.
+	if(istype(Q))
+		sleep(5)
+		step_away(Q,src,2)
+		return
 
 
 /obj/structure/basketballhoop/deployed/attackby(obj/item/W as obj, mob/user as mob)

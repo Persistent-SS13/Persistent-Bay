@@ -12,7 +12,7 @@ env:
   matrix:
     - TEST=CODE
     - TEST=WEB
-    - TEST=MAP MAP_PATH=vignette
+    - TEST=MAP MAP_PATH=nexus
 
 cache:
   directories:

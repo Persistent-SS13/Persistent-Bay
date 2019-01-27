@@ -71,13 +71,13 @@
 //	Lead
 //------------------------------------
 /datum/reagent/lead
-	name = "Lead"
-	description = "A chemical element."
-	taste_mult = 0 //mercury apparently is tasteless. IDK
+	name = "lead"
+	description = "Lead is a dense, soft, dull metal that is known to be toxic while easy to work with."
+	taste_description = "sweet" // Lead used to be used as a sweatener by the Romans(?) as they didn't know how toxic it was
 	reagent_state = LIQUID
 	color = "#6d6a65"
 
-/datum/reagent/mercury/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+/datum/reagent/lead/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien != IS_DIONA)
 		if(istype(M.loc, /turf/space))
 			M.SelfMove(pick(GLOB.cardinal))

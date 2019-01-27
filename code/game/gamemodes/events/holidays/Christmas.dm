@@ -40,7 +40,7 @@
 			"What do you get from eating tree decorations?\n\n<i>Tinsilitis!</i>",
 			"What do snowmen wear on their heads?\n\n<i>Ice caps!</i>",
 			"Why is Christmas just like life on ss13?\n\n<i>You do all the work and the fat guy gets all the credit.</i>",
-			"Why doesn�t Santa have any children?\n\n<i>Because he only comes down the chimney.</i>")
+			"Why doesn't Santa have any children?\n\n<i>Because he only comes down the chimney.</i>")
 		new /obj/item/clothing/head/festive(target.loc)
 		user.update_icons()
 		cracked = 1
@@ -59,5 +59,17 @@
 	desc = "A crappy paper hat that you are REQUIRED to wear."
 	flags_inv = 0
 	body_parts_covered = 0
-	armor = list(DAM_BLUNT = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 0,
+		DAM_PIERCE 	= 0,
+		DAM_CUT 	= 0,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 0,
+		DAM_BURN 	= 0,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 

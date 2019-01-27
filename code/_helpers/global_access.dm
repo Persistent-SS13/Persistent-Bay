@@ -33,6 +33,10 @@
 			return global.Master;
 		if("OOClog")
 			return global.OOClog;
+		if("ORGAN_ENERGY_DAMAGES")
+			return global.ORGAN_ENERGY_DAMAGES;
+		if("ORGAN_PHYS_DAMAGES")
+			return global.ORGAN_PHYS_DAMAGES;
 		if("PDAs")
 			return global.PDAs;
 		if("SSair")
@@ -53,6 +57,8 @@
 			return global.SScircuit;
 		if("SSearly")
 			return global.SSearly;
+		if("SSelections")
+			return global.SSelections;
 		if("SSevent")
 			return global.SSevent;
 		if("SSfastprocess")
@@ -99,6 +105,8 @@
 			return global.SSsun;
 		if("SSsupply")
 			return global.SSsupply;
+		if("SStemperature")
+			return global.SStemperature;
 		if("SStgui")
 			return global.SStgui;
 		if("SStimer")
@@ -1053,7 +1061,7 @@
 			return global.zone_blocked;
 		if("zones_to_save")
 			return global.zones_to_save;
-
+		
 /proc/writeglobal(which, newval)
 	switch(which)
 		if("ALL_ANTIGENS")
@@ -1088,6 +1096,10 @@
 			global.Master=newval;
 		if("OOClog")
 			global.OOClog=newval;
+		if("ORGAN_ENERGY_DAMAGES")
+			global.ORGAN_ENERGY_DAMAGES=newval;
+		if("ORGAN_PHYS_DAMAGES")
+			global.ORGAN_PHYS_DAMAGES=newval;
 		if("PDAs")
 			global.PDAs=newval;
 		if("SSair")
@@ -1108,6 +1120,8 @@
 			global.SScircuit=newval;
 		if("SSearly")
 			global.SSearly=newval;
+		if("SSelections")
+			global.SSelections=newval;
 		if("SSevent")
 			global.SSevent=newval;
 		if("SSfastprocess")
@@ -1154,6 +1168,8 @@
 			global.SSsun=newval;
 		if("SSsupply")
 			global.SSsupply=newval;
+		if("SStemperature")
+			global.SStemperature=newval;
 		if("SStgui")
 			global.SStgui=newval;
 		if("SStimer")
@@ -2108,7 +2124,7 @@
 			global.zone_blocked=newval;
 		if("zones_to_save")
 			global.zones_to_save=newval;
-
+		
 /var/list/_all_globals=list(
 	"ALL_ANTIGENS",
 	"ANTAG_FREQS",
@@ -2126,8 +2142,9 @@
 	"LIGHTING_CORNER_DIAGONAL",
 	"Master",
 	"OOClog",
+	"ORGAN_ENERGY_DAMAGES",
+	"ORGAN_PHYS_DAMAGES",
 	"PDAs",
-	"SKILLS",
 	"SSair",
 	"SSairflow",
 	"SSalarm",
@@ -2137,6 +2154,7 @@
 	"SSchemistry",
 	"SScircuit",
 	"SSearly",
+	"SSelections",
 	"SSevent",
 	"SSfastprocess",
 	"SSgarbage",
@@ -2160,6 +2178,7 @@
 	"SSskybox",
 	"SSsun",
 	"SSsupply",
+	"SStemperature",
 	"SStgui",
 	"SStimer",
 	"SStrade",
@@ -2371,7 +2390,6 @@
 	"hair_styles_list",
 	"hair_styles_male_list",
 	"hazard_overlays",
-	"hidden_skill_types",
 	"hivemind_bank",
 	"holder_mob_icon_cache",
 	"host",
@@ -2507,7 +2525,6 @@
 	"random_maps",
 	"random_useful_",
 	"recentmessages",
-	"refund_type",
 	"registered_macros_by_ckey_",
 	"religion_name",
 	"renegades",
@@ -2544,7 +2561,6 @@
 	"solar_gen_rate",
 	"solars_list",
 	"sortInstance",
-	"sound_player",
 	"sounds_cache",
 	"spacevines_spawned",
 	"sparring_attack_cache",

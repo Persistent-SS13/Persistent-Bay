@@ -186,8 +186,21 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		if(menu == 1)
 			if(!record)
 				record = Retrieve_Record(owner.real_name)
+				
+			
 			if(record)
-				data["citizenship_status"] = record.citizenship ? "Full Citizen" : "Resident"
+				var/citizenshipp
+				switch(record.citizenship)
+					if(1)
+						citizenshipp = "Resident"
+					if(2)
+						citizenshipp = "Citizen"
+					if("3)
+						citizenshipp = "Prisoner"
+
+				data["citizenship_status"] = citizenshipp
+
+
 			else
 				data["citizenship_status"] = "Cannot read citizenship. Contact Administrator."
 
@@ -199,6 +212,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 				data["faction_name"] = faction.name
 				if(duty_status == 1)
 					data["work_status"] = try_duty()
+				data["clock_outable"] = 1
 			else
 				data["work_status"] = "Not currently clocked in."
 			var/list/potential = get_potential()
@@ -251,7 +265,9 @@ GLOBAL_LIST_EMPTY(neural_laces)
 						formatted_ballots[++formatted_ballots.len] = list("name" = ballot.title, "ref" = "\ref[ballot]")
 					data["ballots"] = formatted_ballots
 		data["menu"] = menu
-		data["clock_outable"] = 1
+		
+		
+		
 	else // death code
 		if(lacemob)
 			if(lacemob.teleport_time < world.time)
@@ -303,18 +319,15 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	if(!records)
 		faction = null
 		return "No record found."
-	var/assignment_uid = records.try_duty()
-	if(assignment_uid)
-		var/datum/assignment/assignment = faction.get_assignment(assignment_uid, records.get_name())
-		if(assignment && assignment.duty_able)
-			var/title = assignment.name
-			if(records.rank > 1 && assignment.ranks.len >= records.rank-1)
-				title = assignment.ranks[records.rank-1]
-			return "Working as [title] for [faction.name]. Making [assignment.payscale]$ for every thirty minutes clocked in."
-		else
-			return "No valid assignment."
+		
+	var/datum/assignment/assignment = faction.get_assignment(records.try_duty(), records.get_name())
+	if(assignment && assignment.duty_able)
+		var/title = assignment.name
+		if(records.rank > 1 && assignment.ranks.len >= records.rank-1)
+			title = assignment.ranks[records.rank-1]
+		return "Working as [title] for [faction.name]. Making [assignment.payscale]$ for every thirty minutes clocked in."
 	else
-		return "No vaid assignment."
+		return "No paying assignment."
 
 
 

@@ -1202,7 +1202,7 @@ var/PriorityQueue/all_feeds
 	var/user_leader = 0
 	var/target_leader = 0
 	var/same_department = 0
-	var/datum/assignment/assignment = get_assignment(R.assignment_uid)
+	var/datum/assignment/assignment = get_assignment(R.assignment_uid, R.get_name())
 	if(assignment)
 		if(assignment.parent)
 			user_command = assignment.parent.command_faction

@@ -12,11 +12,18 @@
 			</div>
 			<div class='itemContent'>
 				{{:data.work_status}}
-				{{if data.clock_outable}}
-					{{:helper.link("Clock out", '', {'action' : 'clock_out'},  null)}}
-				{{/if}}
 			</div>
 		</div>
+		{{if data.clock_outable}}
+			<div class='item'>
+				<div class='itemLabel'>
+					Clock Out:
+				</div>
+				<div class='itemContent'>
+					{{:helper.link("Clock out", '', {'action' : 'clock_out'},  null)}}
+				</div>
+			</div>
+		{{/if}}
 		<h3>Available Employers</h3><br>
 		<div class='block'>
 			{{for data.potential}}
@@ -38,18 +45,18 @@
 				Citizenship Level:
 			</div>
 			<div class='itemContent'>
-				{{:data.citizenship}}
+				{{:data.citizenship_status}}
 			</div>
 		</div>
 	{{/if}}
 	{{if data.menu == 2}}
-		<h3>Money Account</h3><br><hr>
+		<h3>Money Account</h3><br>
 		<div class='item'>
 			<div class='itemLabel'>
 				Account Balance:
 			</div>
 			<div class='itemContent'>
-				{{:data.account_balance}}
+				{{:data.account_balance}}$$
 			</div>
 		</div>
 		<br><br>

@@ -41,7 +41,7 @@
 			rank = active_record.rank
 		else
 			if(connected_faction)
-				var/datum/assignment/job = connected_faction.get_assignment(active_record.assignment_uid, , active_record.get_name())
+				var/datum/assignment/job = connected_faction.get_assignment(active_record.assignment_uid, active_record.get_name())
 				if(!job)
 					assignment = "Unassigned"
 					rank = 0
@@ -88,7 +88,7 @@
 					rank = R.rank
 				else
 					if(connected_faction)
-						var/datum/assignment/job = connected_faction.get_assignment(R.assignment_uid, , R.get_name())
+						var/datum/assignment/job = connected_faction.get_assignment(R.assignment_uid, R.get_name())
 						if(!job)
 							assignment = "Unassigned"
 							rank = 0

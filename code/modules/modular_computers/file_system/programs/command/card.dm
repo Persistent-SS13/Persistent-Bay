@@ -112,7 +112,7 @@
 					data["duty_status"] = "On network, Off duty"
 				if(2)
 					data["duty_status"] = "On duty"
-		var/datum/assignment/assignment = connected_faction.get_assignment(record.assignment_uid)
+		var/datum/assignment/assignment = connected_faction.get_assignment(record.assignment_uid, record.get_name())
 		if(assignment)
 			data["assignment_uid"] = assignment.uid
 			data["current_rank"] = record.rank
@@ -147,7 +147,7 @@
 				expense_limit = expenses.expense_limit
 			data["expense_limit"] = expense_limit
 			data["expenses"] = record.expenses
-			if(record.rank == 1)
+			if(!record.rank || record.rank == 1 || !assignment.ranks.len)
 				data["title"] = assignment.name
 			else
 				var/use_rank = record.rank

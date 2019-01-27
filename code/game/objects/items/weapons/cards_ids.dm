@@ -429,7 +429,7 @@ var/const/NO_EMAG_ACT = -50
 			for(var/x in record.access)
 				final_access |= text2num(x)
 			if(faction.allow_id_access) final_access |= access
-			var/datum/assignment/assignment = faction.get_assignment(record.try_duty(), record.get_name())
+			var/datum/assignment/assignment = faction.get_assignment(record.try_duty(), registered_name)
 			if(assignment)
 				for(var/i=1; i<=record.rank; i++)
 					var/datum/accesses/copy = assignment.accesses["[i]"]

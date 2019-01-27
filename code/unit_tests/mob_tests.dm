@@ -292,10 +292,12 @@ datum/unit_test/mob_damage/unathi/brute
 datum/unit_test/mob_damage/unathi/cut
 	name = "MOB: Unathi Cut damage check"
 	damagetype = DAM_CUT
+	expected_vulnerability = ARMORED
 
 datum/unit_test/mob_damage/unathi/pierce
 	name = "MOB: Unathi Pierce damage check"
 	damagetype = DAM_PIERCE
+	expected_vulnerability = ARMORED
 
 datum/unit_test/mob_damage/unathi/fire
 	name = "MOB: Unathi Fire Damage Check"

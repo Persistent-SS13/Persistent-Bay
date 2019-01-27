@@ -672,27 +672,27 @@ var/PriorityQueue/all_feeds
 	
 	var/datum/election/council_elect = new()
 	var/datum/democracy/councillor/councillor1 = new()
-	councillor1.title = "Councillor for Policing and Justice"
+	councillor1.title = "Councillor of Justice and Criminal Matters"
 	nexus.city_council |= councillor1
 	council_elect.ballots |= councillor1
 	
 	var/datum/democracy/councillor/councillor2 = new()
-	councillor2.title = "Councillor for the Budget"
+	councillor2.title = "Councillor of Budget and Tax Measures"
 	nexus.city_council |= councillor2
 	council_elect.ballots |= councillor2
 	
 	var/datum/democracy/councillor/councillor3 = new()
-	councillor3.title = "Councillor for the Culture"
+	councillor3.title = "Councillor of Commerce and Business Relations"
 	nexus.city_council |= councillor3
 	council_elect.ballots |= councillor3
 	
 	var/datum/democracy/councillor/councillor4 = new()
-	councillor4.title = "Councillor for the Station Integrity"
+	councillor4.title = "Councillor for Culture and Ethical Oversight"
 	nexus.city_council |= councillor4
 	council_elect.ballots |= councillor4
 	
 	var/datum/democracy/councillor/councillor5 = new()
-	councillor5.title = "Councillor for the Commerce and Business"
+	councillor5.title = "Councillor for the Domestic Affairs"
 	nexus.city_council |= councillor5
 	council_elect.ballots |= councillor5
 	
@@ -1182,7 +1182,7 @@ var/PriorityQueue/all_feeds
 /datum/world_faction/proc/in_command(var/real_name)
 	var/datum/computer_file/crew_record/R = get_record(real_name)
 	if(R)
-		var/datum/assignment/assignment = get_assignment(R.assignment_uid)
+		var/datum/assignment/assignment = get_assignment(R.assignment_uid, R.get_name())
 		if(assignment)
 			if(assignment.parent)
 				return assignment.parent.command_faction
@@ -1210,7 +1210,7 @@ var/PriorityQueue/all_feeds
 				user_leader = 1
 	else
 		return 0
-	var/datum/assignment/target_assignment = get_assignment(target_record.assignment_uid)
+	var/datum/assignment/target_assignment = get_assignment(target_record.assignment_uid, target_record.get_name())
 	if(target_assignment)
 		if(target_assignment.any_assign)
 			same_department = 1

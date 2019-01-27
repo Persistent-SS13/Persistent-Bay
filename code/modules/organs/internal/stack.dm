@@ -305,7 +305,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		return "No record found."
 	var/assignment_uid = records.try_duty()
 	if(assignment_uid)
-		var/datum/assignment/assignment = faction.get_assignment(assignment_uid)
+		var/datum/assignment/assignment = faction.get_assignment(assignment_uid, records.get_name())
 		if(assignment && assignment.duty_able)
 			var/title = assignment.name
 			if(records.rank > 1 && assignment.ranks.len >= records.rank-1)

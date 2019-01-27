@@ -25,13 +25,13 @@
 		..()
 
 // PDA box
-/obj/item/weapon/storage/box/PDAs
+/obj/item/weapon/storage/box/large/PDAs
 	name = "box of spare PDAs"
 	desc = "A box of spare PDA microcomputers."
 	icon = 'icons/obj/pda.dmi'
 	icon_state = "pdabox"
 
-/obj/item/weapon/storage/box/PDAs/Initialize()
+/obj/item/weapon/storage/box/large/PDAs/Initialize()
 	. = ..()
 
 	new /obj/item/modular_computer/pda(src)

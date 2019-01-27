@@ -39,6 +39,9 @@
 	computer = null
 	. = ..()
 
+/datum/computer_file/program/proc/ConnectedFaction()
+	return computer.ConnectedFaction()
+
 /datum/computer_file/program/nano_host()
 	return computer.nano_host()
 
@@ -216,6 +219,10 @@
 		return NM.check_eye(user)
 	else
 		return -1
+
+// Called by attackby, relays object and user. Return 1 to prevent further attackby interactions
+/datum/computer_file/program/proc/handleInteraction(var/obj/item/weapon/W, var/mob/user)
+	return 0
 
 /obj/item/modular_computer/initial_data()
 	return get_header_data()

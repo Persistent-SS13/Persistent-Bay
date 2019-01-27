@@ -406,3 +406,4 @@
 	reagent_state = SOLID
 	color = "#ffffff"
 	strength = 0.5
+

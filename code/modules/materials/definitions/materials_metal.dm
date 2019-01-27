@@ -339,7 +339,7 @@
 				/datum/reagent/iron = 15,
 				/datum/reagent/carbon = 5
 				)
-	alloy_materials = list("iron" = 1875, MATERIAL_GRAPHITE = 1875) //graphite is carbon
+	alloy_materials = list(MATERIAL_IRON = 1875, MATERIAL_GRAPHITE = 1875) //graphite is carbon
 	alloy_product = TRUE
 	ore_smelts_to = MATERIAL_STEEL
 
@@ -388,7 +388,7 @@
 	chem_products = list(
 				/datum/reagent/iron = 60
 				)
-	ore_matter = list("iron" = 2000)
+	ore_matter = list(MATERIAL_IRON = 2000)
 
 /material/freibergite
 	name = MATERIAL_FREIBERGITE

@@ -6,7 +6,7 @@
 	program_menu_icon = "key"
 	extended_desc = "Program for programming crew ID cards."
 	required_access = core_access_command_programs
-	requires_ntnet = 0
+	requires_ntnet = FALSE
 	size = 8
 
 /datum/nano_module/program/card_mod

@@ -2,7 +2,6 @@
 	name = "crate"
 	desc = "A rectangular steel crate."
 	atom_flags = ATOM_FLAG_CLIMBABLE
-	closet_appearance = /decl/closet_appearance/crate
 	setup = 0
 	storage_types = CLOSET_STORAGE_ITEMS
 	mass = 12
@@ -16,13 +15,9 @@
 		DAM_ENERGY 	= 50,
 		DAM_BURN 	= 30,
 		DAM_BOMB 	= 15,
-		DAM_EMP 	= 0,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-
+		DAM_EMP 	= 0)
+	matter = list(MATERIAL_STEEL = 2*SHEET_MATERIAL_AMOUNT)
+	closet_appearance = /decl/closet_appearance/crate
 	var/points_per_crate = 5
 	var/rigged = 0
 
@@ -80,7 +75,6 @@
 /obj/structure/closet/crate/secure
 	desc = "A secure crate."
 	name = "Secure crate"
-	closet_appearance = /decl/closet_appearance/crate/secure
 	mass = 17
 	max_health = 400
 	damthreshold_brute 	= 10
@@ -92,15 +86,10 @@
 		DAM_ENERGY 	= 90,
 		DAM_BURN 	= 90,
 		DAM_BOMB 	= 80,
-		DAM_EMP 	= 80,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-
+		DAM_EMP 	= 80)
 	setup = CLOSET_HAS_LOCK
 	locked = TRUE
+	closet_appearance = /decl/closet_appearance/crate/secure
 
 /obj/structure/closet/crate/secure/Initialize()
 	. = ..()
@@ -110,7 +99,6 @@
 	name = "plastic crate"
 	desc = "A rectangular plastic crate."
 	points_per_crate = 1
-	closet_appearance = /decl/closet_appearance/crate/plastic
 	mass = 8
 	max_health = 120
 	damthreshold_brute 	= 5
@@ -121,22 +109,17 @@
 		DAM_BULLET 	= 0,
 		DAM_ENERGY 	= 0,
 		DAM_BURN 	= 0,
-		DAM_BOMB 	= 0,
-		DAM_EMP 	= MaxArmorValue,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
+		DAM_BOMB 	= 0)
+	closet_appearance = /decl/closet_appearance/crate/plastic
 
 /obj/structure/closet/crate/internals
 	name = "internals crate"
 	desc = "A internals crate."
+	closet_appearance = /decl/closet_appearance/crate/oxygen
 
 /obj/structure/closet/crate/trashcart
 	name = "trash cart"
 	desc = "A heavy, metal trashcart with wheels."
-	closet_appearance = /decl/closet_appearance/cart/trash
 	mass = 25
 	max_health = 450
 	damthreshold_brute 	= 5
@@ -147,13 +130,8 @@
 		DAM_BULLET 	= 0,
 		DAM_ENERGY 	= 0,
 		DAM_BURN 	= 0,
-		DAM_BOMB 	= 0,
-		DAM_EMP 	= MaxArmorValue,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
+		DAM_BOMB 	= 0)
+	closet_appearance = /decl/closet_appearance/cart/trash
 
 /obj/structure/closet/crate/medical
 	name = "medical crate"
@@ -202,9 +180,6 @@
 /obj/structure/closet/crate/bin
 	name = "large bin"
 	desc = "A large bin."
-	icon_state = "largebin"
-	icon_opened = "largebinopen"
-	icon_closed = "largebin"
 	mass = 8
 	max_health = 120
 	damthreshold_brute 	= 5
@@ -215,18 +190,12 @@
 		DAM_BULLET 	= 0,
 		DAM_ENERGY 	= 0,
 		DAM_BURN 	= 0,
-		DAM_BOMB 	= 0,
-		DAM_EMP 	= MaxArmorValue,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
+		DAM_BOMB 	= 0)
+	closet_appearance = /decl/closet_appearance/crate/bin
 
 /obj/structure/closet/crate/radiation
 	name = "radioactive crate"
 	desc = "A leadlined crate with a radiation sign on it."
-	closet_appearance = /decl/closet_appearance/crate/radiation
 	mass = 25
 	max_health = 250
 	damthreshold_brute 	= 10
@@ -237,13 +206,8 @@
 		DAM_BULLET 	= 30,
 		DAM_ENERGY 	= 30,
 		DAM_BURN 	= 20,
-		DAM_BOMB 	= 30,
-		DAM_EMP 	= MaxArmorValue,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
+		DAM_BOMB 	= 30)
+	closet_appearance = /decl/closet_appearance/crate/radiation
 
 /obj/structure/closet/crate/radiation_gear
 	name = "radioactive gear crate"
@@ -276,13 +240,6 @@
 /obj/structure/closet/crate/secure/bin
 	name = "secure bin"
 	desc = "A secure bin."
-	icon_state = "largebins"
-	icon_opened = "largebinsopen"
-	icon_closed = "largebins"
-	redlight = "largebinr"
-	greenlight = "largebing"
-	sparks = "largebinsparks"
-	emag = "largebinemag"
 	mass = 10
 	max_health = 200
 	damthreshold_brute 	= 10
@@ -293,20 +250,14 @@
 		DAM_BULLET 	= 30,
 		DAM_ENERGY 	= 30,
 		DAM_BURN 	= 20,
-		DAM_BOMB 	= 30,
-		DAM_EMP 	= MaxArmorValue,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
+		DAM_BOMB 	= 30)
+	closet_appearance = /decl/closet_appearance/crate/secure/bin
 
 /obj/structure/closet/crate/large
 	name = "large crate"
 	desc = "A hefty metal crate."
 	storage_capacity = 2 * MOB_LARGE
 	storage_types = CLOSET_STORAGE_ITEMS|CLOSET_STORAGE_STRUCTURES
-	closet_appearance = /decl/closet_appearance/large_crate
 	mass = 20
 	max_health = 300
 	damthreshold_brute 	= 5
@@ -317,13 +268,9 @@
 		DAM_BULLET 	= 5,
 		DAM_ENERGY 	= 5,
 		DAM_BURN 	= 5,
-		DAM_BOMB 	= 0,
-		DAM_EMP 	= MaxArmorValue,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
+		DAM_BOMB 	= 0)
+	closet_appearance = /decl/closet_appearance/large_crate
+	matter = list(MATERIAL_STEEL = 3*SHEET_MATERIAL_AMOUNT)
 
 /obj/structure/closet/crate/large/hydroponics
 	closet_appearance = /decl/closet_appearance/large_crate/hydroponics
@@ -331,8 +278,6 @@
 /obj/structure/closet/crate/secure/large
 	name = "large crate"
 	desc = "A hefty metal crate with an electronic locking system."
-	closet_appearance = /decl/closet_appearance/large_crate/secure
-
 	storage_capacity = 2 * MOB_LARGE
 	storage_types = CLOSET_STORAGE_ITEMS|CLOSET_STORAGE_STRUCTURES
 	mass = 30
@@ -345,13 +290,8 @@
 		DAM_BULLET 	= 50,
 		DAM_ENERGY 	= 40,
 		DAM_BURN 	= 30,
-		DAM_BOMB 	= 40,
-		DAM_EMP 	= MaxArmorValue,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
+		DAM_BOMB 	= 40)
+	closet_appearance = /decl/closet_appearance/large_crate/secure
 
 /obj/structure/closet/crate/secure/large/phoron
 	closet_appearance = /decl/closet_appearance/large_crate/secure/hazard
@@ -359,9 +299,6 @@
 //fluff variant
 /obj/structure/closet/crate/secure/large/reinforced
 	desc = "A hefty, reinforced metal crate with an electronic locking system."
-	icon_state = "largermetal"
-	icon_opened = "largermetalopen"
-	icon_closed = "largermetal"
 	mass = 40
 	max_health = 700
 	damthreshold_brute 	= 15
@@ -372,30 +309,16 @@
 		DAM_BULLET 	= MaxArmorValue,
 		DAM_ENERGY 	= 90,
 		DAM_BURN 	= 90,
-		DAM_BOMB 	= 80,
-		DAM_EMP 	= MaxArmorValue,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-
-/obj/structure/closet/crate/secure/large/reinforced/slice_into_parts(obj/item/weapon/weldingtool/WT, mob/user)
-	if(!WT.remove_fuel(0,user))
-		to_chat(user, "<span class='notice'>You need more welding fuel to complete this task.</span>")
-		return
-	new /obj/item/stack/material/plasteel(src.loc)	//Made of plasteel, will return only 1 sheet
-	user.visible_message("<span class='notice'>\The [src] has been cut apart by [user] with \the [WT].</span>", \
-						 "<span class='notice'>You have cut \the [src] apart with \the [WT].</span>", \
-						 "You hear welding.")
-	qdel(src)
+		DAM_BOMB 	= 80)
+	matter = list(MATERIAL_PLASTEEL = SHEET_MATERIAL_AMOUNT)
+	closet_appearance = /decl/closet_appearance/large_crate/secure
 
 /obj/structure/closet/crate/hydroponics
 	name = "hydroponics crate"
 	desc = "All you need to destroy those pesky weeds and pests."
 	closet_appearance = /decl/closet_appearance/crate/hydroponics
 
-/obj/structure/closet/crate/hydroponics/prespawned/WillContain()
+/obj/structure/closet/crate/hydroponics/filled/WillContain()
 	return list(
 		/obj/item/weapon/reagent_containers/spray/plantbgone = 2,
 		/obj/item/weapon/material/minihoe = 2,
@@ -411,9 +334,9 @@
 	open_sound = 'sound/items/Deconstruct.ogg'
 	close_sound = 'sound/items/Deconstruct.ogg'
 	req_access = list(core_access_science_programs)
-	closet_appearance = /decl/closet_appearance/cart/biohazard
 	storage_capacity = 2 * MOB_LARGE
 	storage_types = CLOSET_STORAGE_ITEMS|CLOSET_STORAGE_MOBS|CLOSET_STORAGE_STRUCTURES
+	closet_appearance = /decl/closet_appearance/cart/biohazard
 
 /obj/structure/closet/crate/secure/biohazard/blanks/WillContain()
 	return list(/mob/living/carbon/human/blank, /obj/item/usedcryobag)

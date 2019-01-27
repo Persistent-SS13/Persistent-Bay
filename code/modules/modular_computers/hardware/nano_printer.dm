@@ -9,6 +9,17 @@
 	var/stored_paper = 5
 	var/max_paper = 10
 
+/obj/item/weapon/computer_hardware/nano_printer/New()
+	..()
+	ADD_SAVED_VAR(stored_paper)
+	ADD_SKIP_EMPTY(stored_paper)
+
+/obj/item/weapon/computer_hardware/nano_printer/Destroy()
+	if(holder2 && (holder2.nano_printer == src))
+		holder2.nano_printer = null
+	holder2 = null
+	return ..()
+
 /obj/item/weapon/computer_hardware/nano_printer/diagnostics(var/mob/user)
 	..()
 	to_chat(user, "Paper buffer level: [stored_paper]/[max_paper]")
@@ -78,9 +89,3 @@
 			B.update_icon()
 		to_chat(user, "You add [num_of_pages_added] papers from \the [W] into \the [src].")
 	return
-
-/obj/item/weapon/computer_hardware/nano_printer/Destroy()
-	if(holder2 && (holder2.nano_printer == src))
-		holder2.nano_printer = null
-	holder2 = null
-	return ..()

@@ -4,7 +4,7 @@
 	name = "standard battery"
 	desc = "A standard power cell, commonly seen in high-end portable microcomputers or low-end laptops. It's rating is 75 Wh."
 	icon_state = "battery_normal"
-	critical = 1
+	critical = TRUE
 	malfunction_probability = 1
 	origin_tech = list(TECH_POWER = 1, TECH_ENGINEERING = 1)
 	var/battery_rating = 75
@@ -66,10 +66,15 @@
 	to_chat(user, "Internal battery charge: [battery.charge]/[battery.maxcharge] CU")
 
 /obj/item/weapon/computer_hardware/battery_module/New()
-	battery = new/obj/item/weapon/cell(src)
-	battery.maxcharge = battery_rating
-	battery.charge = 0
 	..()
+	ADD_SAVED_VAR(battery)
+
+/obj/item/weapon/computer_hardware/battery_module/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		battery = new/obj/item/weapon/cell(src)
+		battery.maxcharge = battery_rating
+		battery.charge = 0
 
 /obj/item/weapon/computer_hardware/battery_module/Destroy()
 	QDEL_NULL(battery)

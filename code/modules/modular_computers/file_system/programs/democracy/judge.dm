@@ -196,7 +196,7 @@
 			else
 				var/citizenship_stat = 0
 				if(verdict_citizenship != "None")
-					var/datum/computer_file/crew_record/record = Retrieve_Record(verdict_defendant)
+					var/datum/computer_file/report/crew_record/record = Retrieve_Record(verdict_defendant)
 					if(!record)
 						to_chat(usr, "No record found to change citizenship. You must use the full and real name of a defendant if you want to change citizenship status.")
 					switch(verdict_citizenship)

@@ -18,6 +18,28 @@
 	var/dos_capacity = 500		// Amount of DoS "packets" in buffer required to crash the relay
 	var/dos_dissipate = 1		// Amount of DoS "packets" dissipated over time.
 
+/obj/machinery/ntnet_relay/New()
+	uid = gl_uid
+	gl_uid++
+	component_parts = list()
+	component_parts += new /obj/item/stack/cable_coil(src,15)
+	component_parts += new /obj/item/weapon/circuitboard/ntnet_relay(src)
+
+	if(ntnet_global)
+		ntnet_global.relays.Add(src)
+		NTNet = ntnet_global
+		ntnet_global.add_log("New quantum relay activated. Current amount of linked relays: [NTNet.relays.len]")
+	..()
+
+/obj/machinery/ntnet_relay/Destroy()
+	if(ntnet_global)
+		ntnet_global.relays.Remove(src)
+		ntnet_global.add_log("Quantum relay connection severed. Current amount of linked relays: [NTNet.relays.len]")
+		NTNet = null
+	for(var/datum/computer_file/program/ntnet_dos/D in dos_sources)
+		D.target = null
+		D.error = "Connection to quantum relay severed"
+	..()
 
 // TODO: Implement more logic here. For now it's only a placeholder.
 /obj/machinery/ntnet_relay/operable()
@@ -91,29 +113,6 @@
 		ntnet_global.banned_nids.Cut()
 		ntnet_global.add_log("Manual override: Network blacklist cleared.")
 		return 1
-
-/obj/machinery/ntnet_relay/New()
-	uid = gl_uid
-	gl_uid++
-	component_parts = list()
-	component_parts += new /obj/item/stack/cable_coil(src,15)
-	component_parts += new /obj/item/weapon/circuitboard/ntnet_relay(src)
-
-	if(ntnet_global)
-		ntnet_global.relays.Add(src)
-		NTNet = ntnet_global
-		ntnet_global.add_log("New quantum relay activated. Current amount of linked relays: [NTNet.relays.len]")
-	..()
-
-/obj/machinery/ntnet_relay/Destroy()
-	if(ntnet_global)
-		ntnet_global.relays.Remove(src)
-		ntnet_global.add_log("Quantum relay connection severed. Current amount of linked relays: [NTNet.relays.len]")
-		NTNet = null
-	for(var/datum/computer_file/program/ntnet_dos/D in dos_sources)
-		D.target = null
-		D.error = "Connection to quantum relay severed"
-	..()
 
 /obj/machinery/ntnet_relay/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
 	if(isScrewdriver(W))

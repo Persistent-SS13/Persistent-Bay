@@ -5,8 +5,8 @@
 	size = 4
 	program_icon_state = "security"
 	program_menu_icon = "locked"
-	requires_ntnet = 1
-	available_on_ntnet = 1
+	requires_ntnet = TRUE
+	available_on_ntnet = TRUE
 	required_access = access_armory
 	nanomodule_path = /datum/nano_module/forceauthorization/
 

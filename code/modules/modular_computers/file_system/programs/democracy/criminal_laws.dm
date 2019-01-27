@@ -5,17 +5,14 @@
 	program_menu_icon = "note"
 	nanomodule_path = /datum/nano_module/program/criminal_laws
 	extended_desc = "Used to view all criminal laws passed by the council."
-	requires_ntnet = 1
+	requires_ntnet = TRUE
 	size = 12
 	democratic = 1
-
 
 /datum/nano_module/program/criminal_laws
 	name = "Nexus City Criminal Laws"
 	available_to_ai = TRUE
-
 	var/datum/council_vote/selected_vote
-	
 	
 /datum/nano_module/program/criminal_laws/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/datum/world_faction/democratic/connected_faction

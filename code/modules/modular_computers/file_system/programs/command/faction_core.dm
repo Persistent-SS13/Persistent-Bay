@@ -7,7 +7,7 @@
 	nanomodule_path = /datum/nano_module/program/faction_core
 	extended_desc = "Uses a Logistic Processor to connect to and modify bluespace networks over satalite."
 	required_access = core_access_leader
-	requires_ntnet = 0
+	requires_ntnet = FALSE
 	size = 65
 	usage_flags = PROGRAM_CONSOLE
 

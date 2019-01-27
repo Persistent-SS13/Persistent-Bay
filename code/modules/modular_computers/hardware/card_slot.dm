@@ -2,7 +2,7 @@
 	name = "RFID card slot"
 	desc = "Slot that allows this computer to write data on RFID cards. Necessary for some programs to run properly."
 	power_usage = 10 //W
-	critical = 0
+	critical = FALSE
 	icon_state = "cardreader"
 	hardware_size = 1
 	origin_tech = list(TECH_DATA = 2)
@@ -17,6 +17,11 @@
 	can_write = FALSE
 	can_broadcast = TRUE
 	usage_flags = PROGRAM_PDA
+
+/obj/item/weapon/computer_hardware/card_slot/New()
+	..()
+	ADD_SAVED_VAR(stored_card)
+	ADD_SKIP_EMPTY(stored_card)
 
 /obj/item/weapon/computer_hardware/card_slot/Destroy()
 	if(holder2 && (holder2.card_slot == src))

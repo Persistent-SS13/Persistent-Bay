@@ -37,7 +37,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	var/menu = 1
 	var/curr_page = 1
 
-	var/datum/computer_file/crew_record/record
+	var/datum/computer_file/report/crew_record/record
 
 	var/datum/democracy/selected_ballot
 
@@ -296,7 +296,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	if((!owner || !faction) && !robot)
 		duty_status = 0
 		return "Not clocked in anywhere."
-	var/datum/computer_file/report/crew_record/record
+	var/datum/computer_file/report/crew_record/records
 	if(!robot)
 		records = faction.get_record(owner.real_name)
 	else

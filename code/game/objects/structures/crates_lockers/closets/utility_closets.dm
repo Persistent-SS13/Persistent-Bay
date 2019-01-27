@@ -172,13 +172,11 @@
 /obj/structure/closet/wall
 	name = "wall closet"
 	desc = "It's a wall-mounted storage unit."
-	icon_state = "wall_general"
-	icon_closed = "wall_general"
-	icon_opened = "wall_general_open"
-	anchored = 1
-	density = 0
-	wall_mounted = 1
+	anchored = TRUE
+	density = FALSE
+	wall_mounted = TRUE
 	storage_types = CLOSET_STORAGE_ITEMS
+	closet_appearance = /decl/closet_appearance/wall
 
 /obj/structure/closet/wall/New()
 	..()
@@ -193,8 +191,6 @@
 	desc = "It's a storage unit for fire-fighting supplies."
 	closet_appearance = /decl/closet_appearance/wall/hydrant
 
-/obj/structure/closet/wall/hydrant/filled
-
 /obj/structure/closet/wall/hydrant/filled/New()
 	..()
 	new /obj/item/inflatable/door(src)
@@ -205,22 +201,6 @@
 	new /obj/item/weapon/tank/oxygen/red(src)
 	new /obj/item/weapon/extinguisher(src)
 	new /obj/item/clothing/head/hardhat/red(src)
-
-
-
-/*
- * General purpose
- */
-/obj/structure/closet/general_wall
-	name = "wall closet"
-	desc = "It's a wall-mounted storage unit."
-	icon_state = "wall_general"
-	icon_closed = "wall_general"
-	icon_opened = "wall_general_open"
-	anchored = 1
-	density = 0
-	wall_mounted = 1
-	storage_types = CLOSET_STORAGE_ITEMS
 
 /*
  * First Aid

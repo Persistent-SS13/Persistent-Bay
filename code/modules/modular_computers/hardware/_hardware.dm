@@ -13,6 +13,13 @@
 	var/malfunction_probability = 10// Chance of malfunction when the component is damaged
 	var/usage_flags = PROGRAM_ALL
 
+/obj/item/weapon/computer_hardware/New()
+	..()
+	ADD_SAVED_VAR(holder2)
+	ADD_SAVED_VAR(enabled)
+
+	ADD_SKIP_EMPTY(holder2)
+
 /obj/item/weapon/computer_hardware/attackby(var/obj/item/W as obj, var/mob/living/user as mob)
 	// Multitool. Runs diagnostics
 	if(isMultitool(W))
@@ -47,6 +54,7 @@
 	to_chat(user, "Hardware Integrity Test... (Integrity: [health]/[max_health]) [isfailing() ? "FAIL" : ismalfunctioning() ? "WARN" : "PASS"]")
 
 /obj/item/weapon/computer_hardware/New(var/obj/L)
+	..()
 	w_class = hardware_size
 	if(istype(L, /obj/item/modular_computer))
 		holder2 = L
@@ -66,16 +74,16 @@
 /obj/item/weapon/computer_hardware/proc/check_functionality()
 	// Turned off
 	if(!enabled)
-		return 0
+		return FALSE
 	// Too damaged to work at all.
 	if(isfailing())
-		return 0
+		return FALSE
 	// Still working. Well, sometimes...
 	if(ismalfunctioning())
 		if(prob(malfunction_probability))
-			return 0
+			return FALSE
 	// Good to go.
-	return 1
+	return TRUE
 
 /obj/item/weapon/computer_hardware/examine(var/mob/user)
 	. = ..()

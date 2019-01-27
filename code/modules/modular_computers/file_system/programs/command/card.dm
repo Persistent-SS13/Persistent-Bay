@@ -6,7 +6,7 @@
 	program_menu_icon = "key"
 	extended_desc = "Program for programming employee assignments and rank, and syncing ID cards."
 	required_access = core_access_reassignment
-	requires_ntnet = 1
+	requires_ntnet = TRUE
 	size = 8
 
 /datum/computer_file/program/card_mod/can_run(var/mob/living/user, var/loud = 0, var/access_to_check)

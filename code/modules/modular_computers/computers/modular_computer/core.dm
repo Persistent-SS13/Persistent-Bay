@@ -104,6 +104,12 @@
 	update_icon()
 	update_verbs()
 	update_name()
+	update_uis()
+
+/obj/item/modular_computer/after_load()
+	. = ..()
+	if(active_program)
+		run_program(active_program.filename)
 
 /obj/item/modular_computer/Destroy()
 	kill_program(1)

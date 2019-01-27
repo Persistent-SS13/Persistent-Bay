@@ -6,7 +6,7 @@
 	program_menu_icon = "heart"
 	extended_desc = "This program connects to nearby cloning pods, and uses dna scanning hardware to collect DNA and transmit it to the pods."
 	required_access = core_access_medical_programs
-	requires_ntnet = 0
+	requires_ntnet = FALSE
 	network_destination = "cloner management"
 	size = 20
 	var/obj/machinery/clonepod/pod

@@ -11,9 +11,9 @@
 	slot_flags = SLOT_EARS
 	var/translate_binary = 0
 	var/translate_hive = 0
-	var/list/encryption_keys() = list()
-	var/list/custom_radio_keys() = list() // Associative list of key : ch_name e.g. :en : engineering
-	var/list/starter_keys() = list()
+	var/list/encryption_keys = list()
+	var/list/custom_radio_keys = list() // Associative list of key : ch_name e.g. :en : engineering
+	var/list/starter_keys = list()
 
 /obj/item/device/radio/headset/Initialize()
 	. = ..()

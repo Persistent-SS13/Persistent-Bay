@@ -250,7 +250,7 @@
 			if(prob(5))
 				for(var/atom/movable/A in src)
 					A.forceMove(src.loc)
-		..()
+	return ..()
 
 /obj/structure/closet/bullet_act(var/obj/item/projectile/Proj)
 	if(Proj.penetrating)
@@ -259,6 +259,10 @@
 			Proj.attack_mob(L, distance)
 			if(!(--Proj.penetrating))
 				break
+	return ..()
+
+/obj/structure/closet/dismantle()
+	dump_contents()
 	return ..()
 
 /obj/structure/closet/destroyed()
@@ -346,11 +350,10 @@
 	if(!WT.remove_fuel(0,user))
 		to_chat(user, "<span class='notice'>You need more welding fuel to complete this task.</span>")
 		return
-	new /obj/item/stack/material/steel(src.loc)
 	user.visible_message("<span class='notice'>\The [src] has been cut apart by [user] with \the [WT].</span>", \
 						 "<span class='notice'>You have cut \the [src] apart with \the [WT].</span>", \
 						 "You hear welding.")
-	qdel(src)
+	dismantle()
 
 /obj/structure/closet/MouseDrop_T(atom/movable/O as mob|obj, mob/user as mob)
 	if(istype(O, /obj/screen))	//fix for HUD elements making their way into the world	-Pete

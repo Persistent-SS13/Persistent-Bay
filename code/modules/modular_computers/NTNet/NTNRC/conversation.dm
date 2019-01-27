@@ -4,6 +4,7 @@ var/global/ntnrc_uid = 0
 	var/id = null
 	var/title = "Untitled Conversation"
 	var/datum/computer_file/program/chatclient/operator // "Administrator" of this channel. Creator starts as channel's operator,
+	var/saved_operatorid = null
 	var/list/messages = list()
 	var/list/clients = list()
 	var/password
@@ -11,9 +12,21 @@ var/global/ntnrc_uid = 0
 /datum/ntnet_conversation/New()
 	id = ntnrc_uid
 	ntnrc_uid++
+	title = "[title][id]"
 	if(ntnet_global)
 		ntnet_global.chat_channels.Add(src)
 	..()
+	ADD_SAVED_VAR(title)
+	ADD_SAVED_VAR(messages)
+	ADD_SAVED_VAR(password)
+	ADD_SAVED_VAR(saved_operatorid)
+
+/datum/ntnet_conversation/before_save()
+	. = ..()
+	saved_operatorid = operator.username
+
+/datum/ntnet_conversation/after_load()
+	. = ..()
 
 /datum/ntnet_conversation/proc/add_message(var/message, var/username)
 	message = "[stationtime2text()] [username]: [message]"

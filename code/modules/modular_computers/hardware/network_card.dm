@@ -19,10 +19,29 @@ var/global/ntnet_card_uid = 1
 	var/datum/ntnet/connected_network
 	var/locked = 0
 	malfunction_probability = 1
+
+/obj/item/weapon/computer_hardware/network_card/New(var/l)
+	..(l)
+	ADD_SAVED_VAR(identification_id)
+	ADD_SAVED_VAR(identification_string)
+	ADD_SAVED_VAR(connected_to)
+	ADD_SAVED_VAR(password)
+	ADD_SAVED_VAR(locked)
+
+	ADD_SKIP_EMPTY(identification_id)
+	ADD_SKIP_EMPTY(identification_string)
+	ADD_SKIP_EMPTY(connected_to)
+	ADD_SKIP_EMPTY(password)
+
+	identification_id = ntnet_card_uid
+	ntnet_card_uid++
+
+
 /obj/item/weapon/computer_hardware/network_card/proc/get_faction()
 	get_network()
 	if(connected && connected_network)
 		return connected_network.holder
+
 /obj/item/weapon/computer_hardware/network_card/proc/get_network()
 	if(connected_network && connected_network.net_uid == connected_to)
 		connected = 1
@@ -37,14 +56,17 @@ var/global/ntnet_card_uid = 1
 						connected = 1
 						return connected_network
 	connected = 0
+
 /obj/item/weapon/computer_hardware/network_card/after_load()
 	..()
 	get_network()
+
 /obj/item/weapon/computer_hardware/network_card/proc/disconnect()
 	connected = 0
 	connected_to = ""
 	password = ""
 	connected_network = null
+
 /obj/item/weapon/computer_hardware/network_card/diagnostics(var/mob/user)
 	..()
 	to_chat(user, "NIX Unique ID: [identification_id]")
@@ -55,11 +77,6 @@ var/global/ntnet_card_uid = 1
 		to_chat(user, "511.n WFS/HB (Subspace) - Wide Frequency Spread/High Bandiwdth")
 	if(ethernet)
 		to_chat(user, "OpenEth (Physical Connection) - Physical network connection port")
-
-/obj/item/weapon/computer_hardware/network_card/New(var/l)
-	..(l)
-	identification_id = ntnet_card_uid
-	ntnet_card_uid++
 
 /obj/item/weapon/computer_hardware/network_card/advanced
 	name = "advanced NTNet network card"

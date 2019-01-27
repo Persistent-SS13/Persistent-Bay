@@ -8,12 +8,13 @@
 	extended_desc = "This program allows configuration of computer's hardware"
 	program_icon_state = "generic"
 	program_menu_icon = "gear"
-	unsendable = 1
-	undeletable = 1
+	unsendable = TRUE
+	undeletable = TRUE
 	size = 4
-	available_on_ntnet = 0
-	requires_ntnet = 0
+	available_on_ntnet = FALSE
+	requires_ntnet = FALSE
 	nanomodule_path = /datum/nano_module/program/computer_configurator/
+	usage_flags = PROGRAM_ALL
 
 /datum/nano_module/program/computer_configurator
 	name = "NTOS Computer Configuration Tool"

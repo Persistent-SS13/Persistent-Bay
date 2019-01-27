@@ -16,8 +16,8 @@
 	program_menu_icon = "search"
 	extended_desc = "This program allows security personnel remote access to the camera system of the connected network."
 	size = 12
-	available_on_ntnet = 1
-	requires_ntnet = 1
+	available_on_ntnet = TRUE
+	requires_ntnet = TRUE
 
 /datum/nano_module/program/camera_monitor
 	name = "Camera Monitoring program"

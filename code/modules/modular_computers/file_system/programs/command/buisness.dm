@@ -5,7 +5,7 @@
 	program_icon_state = "id"
 	program_menu_icon = "key"
 	extended_desc = "Used to manage everything business related."
-	requires_ntnet = 1
+	requires_ntnet = TRUE
 	size = 8
 
 /datum/nano_module/program/business

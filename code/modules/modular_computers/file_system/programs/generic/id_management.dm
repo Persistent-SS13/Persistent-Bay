@@ -4,8 +4,8 @@
 	extended_desc = "This program allows individuals to print IDs and send out a devalidation signal."
 	program_icon_state = "generic"
 	size = 14
-	requires_ntnet = 0
-	available_on_ntnet = 1
+	requires_ntnet = FALSE
+	available_on_ntnet = TRUE
 	nanomodule_path = /datum/nano_module/program/id_management
 	usage_flags = PROGRAM_CONSOLE
 	

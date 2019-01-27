@@ -25,15 +25,21 @@
 	var/ui_header = null					// Example: "something.gif" - a header image that will be rendered in computer's UI when this program is running at background. Images are taken from /nano/images/status_icons. Be careful not to use too large images!
 	var/ntnet_speed = 0						// GQ/s - current network connectivity transfer rate
 	var/operator_skill = SKILL_MIN                  // Holder for skill value of current/recent operator for programs that tick.
-
-
 	var/democratic = 0
 	var/business = 0
 	var/required_module = 0
+
+
 /datum/computer_file/program/New(var/obj/item/modular_computer/comp = null)
 	..()
 	if(comp && istype(comp))
 		computer = comp
+	ADD_SAVED_VAR(program_state)
+	ADD_SAVED_VAR(computer)
+
+/datum/computer_file/program/after_load()
+	. = ..()
+	update_computer_icon()
 
 /datum/computer_file/program/Destroy()
 	computer = null

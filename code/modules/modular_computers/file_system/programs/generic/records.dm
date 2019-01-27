@@ -4,9 +4,10 @@
 	extended_desc = "This program allows access to the crew's various records."
 	program_icon_state = "generic"
 	size = 14
-	requires_ntnet = 1
-	available_on_ntnet = 1
+	requires_ntnet = TRUE
+	available_on_ntnet = TRUE
 	nanomodule_path = /datum/nano_module/program/records
+	usage_flags = PROGRAM_ALL
 
 /datum/nano_module/program/records
 	name = "Crew Records"

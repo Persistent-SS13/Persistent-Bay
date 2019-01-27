@@ -7,7 +7,7 @@
 	nanomodule_path = /datum/nano_module/program/business_core
 	extended_desc = "Used by the Executive Branch to manage the government."
 	required_access = core_access_leader
-	requires_ntnet = 1
+	requires_ntnet = TRUE
 	size = 65
 	usage_flags = PROGRAM_CONSOLE
 	democratic = 1

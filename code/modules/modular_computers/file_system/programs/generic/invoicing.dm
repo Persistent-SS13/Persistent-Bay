@@ -9,6 +9,8 @@
 	available_on_ntnet = 1
 	requires_ntnet = 1
 	required_access = core_access_invoicing
+	usage_flags = PROGRAM_ALL
+
 /datum/nano_module/program/invoicing
 	name = "Invoicing program"
 	var/screen = 1		// 0: Ordering menu, 1: Statistics 2: Shuttle control, 3: Orders menu

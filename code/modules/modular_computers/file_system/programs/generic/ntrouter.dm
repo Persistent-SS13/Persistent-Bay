@@ -5,9 +5,9 @@
 	program_menu_icon = "wrench"
 	extended_desc = "This program allows switching between bluespace networks."
 	size = 12
-	requires_ntnet = 0
-//	required_access = core_access_wireless_programs
-	available_on_ntnet = 0
+	requires_ntnet = FALSE
+	available_on_ntnet = FALSE
+	usage_flags = PROGRAM_ALL
 	nanomodule_path = /datum/nano_module/program/computer_ntrouter/
 
 /datum/nano_module/program/computer_ntrouter

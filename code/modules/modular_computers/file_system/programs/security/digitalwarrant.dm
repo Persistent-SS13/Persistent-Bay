@@ -9,8 +9,8 @@ LEGACY_RECORD_STRUCTURE(all_warrants, warrant)
 	size = 8
 	program_icon_state = "warrant"
 	program_menu_icon = "star"
-	requires_ntnet = 1
-	available_on_ntnet = 1
+	requires_ntnet = TRUE
+	available_on_ntnet = TRUE
 	required_access = core_access_security_programs
 	usage_flags = PROGRAM_ALL
 	nanomodule_path = /datum/nano_module/digitalwarrant/

@@ -495,6 +495,14 @@
 
 /obj/item/stack/material/sulfur/fifty
 	amount = 50
+/obj/item/stack/material/lead
+	name = "lead"
+	icon_state = "sheet-silver"
+	default_type = "lead"
+	apply_colour = 1
+
+/obj/item/stack/material/lead/ten
+	amount = 10
 
 //--------------------------------
 //	Metallic Hydrogen

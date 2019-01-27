@@ -63,3 +63,7 @@
 	var/update_progress = 0
 	var/update_postshutdown
 	var/list/terminals          // List of open terminal datums.
+
+/obj/item/modular_computer/proc/ConnectedFaction()
+	return network_card.connected_network
+

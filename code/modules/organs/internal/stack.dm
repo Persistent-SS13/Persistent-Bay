@@ -143,20 +143,20 @@ GLOBAL_LIST_EMPTY(neural_laces)
 			if(choice == "Kill my character, return to character creation")
 				if(input("Are you SURE you want to delete [CharacterName(save_slot, lacemob.ckey)]? THIS IS PERMANENT. enter the character\'s full name to confirm.", "DELETE A CHARACTER", "") == CharacterName(save_slot, lacemob.ckey))
 					fdel(load_path(lacemob.ckey, "[save_slot].sav"))
+					var/mob/new_player/M = new /mob/new_player()
+					M.loc = null
+					M.key = lacemob.key
 
-				var/mob/new_player/M = new /mob/new_player()
-				M.loc = null
-				M.key = lacemob.key
+					lacemob.perma_dead = 1
+					lacemob.ckey = null
+					lacemob.stored_ckey = null
+					lacemob.save_slot = 0
 
-				lacemob.perma_dead = 1
-				lacemob.ckey = null
-				lacemob.stored_ckey = null
-				lacemob.save_slot = 0
-
-				owner?.perma_dead = 1
-				owner?.ckey = null
-				owner?.stored_ckey = null
-				owner?.save_slot = 0
+					owner?.perma_dead = 1
+					owner?.ckey = null
+					owner?.stored_ckey = null
+					owner?.save_slot = 0
+					
 		if("deselect_ballot")
 			selected_ballot = null
 		if("vote")
@@ -294,7 +294,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		if(istype(loc.loc, /mob/living/silicon/robot))
 			robot = loc.loc
 	if((!owner || !faction) && !robot)
-		return "Not clocked in anywhere."
+		return "No owner found.."
 	var/datum/computer_file/crew_record/records
 	if(!robot)
 		records = faction.get_record(owner.real_name)
@@ -302,7 +302,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		records = faction.get_record(robot.real_name)
 	if(!records)
 		faction = null
-		return "Not clocked in anywhere."
+		return "No record found."
 	var/assignment_uid = records.try_duty()
 	if(assignment_uid)
 		var/datum/assignment/assignment = faction.get_assignment(assignment_uid)
@@ -312,9 +312,9 @@ GLOBAL_LIST_EMPTY(neural_laces)
 				title = assignment.ranks[records.rank-1]
 			return "Working as [title] for [faction.name]. Making [assignment.payscale]$ for every thirty minutes clocked in."
 		else
-			return "Not clocked in anywhere."
+			return "No valid assignment."
 	else
-		return "Not clocked in anywhere."
+		return "No vaid assignment."
 
 
 

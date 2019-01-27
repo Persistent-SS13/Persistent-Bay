@@ -2,16 +2,54 @@
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>Executive Government Control</h2>
 	<br><hr>
-	<br><br>{{:helper.link("Access Config", 'locked', {'action' : 'change_menu', 'menu_target' : '3'})}}<br>
+	<br><br>{{:helper.link("Access Config", 'locked', {'action' : 'change_menu', 'menu_target' : '3'})}}<br><br>
 	Setup accesses that can be given out to assignments which control doors and machines linked to your network.
-	<br><br>{{:helper.link("Assignments Config", 'pencil', {'action' : 'change_menu', 'menu_target' : '4'})}}<br>
+	<br><br>{{:helper.link("Assignments Config", 'pencil', {'action' : 'change_menu', 'menu_target' : '4'})}}<br><br>
 	Setup assignments, ranks and departments that control the structure of your government employees, including access, wages and expense limits.
-	<br><br>{{:helper.link("Economy Menu", 'calculator', {'action' : 'change_menu', 'menu_target' : '9'})}}<br>
+	<br><br>{{:helper.link("Economy Menu", 'calculator', {'action' : 'change_menu', 'menu_target' : '9'})}}<br><br>
 	View the account balance and debt of the government, the current tax policy and print expense cards.
-	<br><br>{{:helper.link("Promotion Control", 'flag', {'action' : 'change_menu', 'menu_target' : '10'})}}<br>
+	<br><br>{{:helper.link("Promotion Control", 'flag', {'action' : 'change_menu', 'menu_target' : '10'})}}<br><br>
 	Set how many promotion votes it takes for management to authorize a promotion within the government.
-	<br><br>{{:helper.link("Cryo-networks", '', {'action' : 'change_menu', 'menu_target' : '11'})}}<br>
-	Control the different cryo networks that your business can maintain.
+	<br><br>{{:helper.link("Cryo-networks", '', {'action' : 'change_menu', 'menu_target' : '11'})}}<br><br>
+	Control the different cryo networks that your government can maintain.
+{{/if}}
+
+{{if data.menu == 2}}
+	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
+	<h2>{{:data.selected_assignment}} (Special Assignment)</h2>
+	<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
+	<br><hr>
+	<div class='item'>
+		<div class='itemLabel'>
+			Expense Limit:
+		</div>
+		<div class='itemContent'>
+			{{:helper.link(data.expense_limit, '', {'action' : 'change_expense_limit'})}}
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			Cryo-network:
+		</div>
+		<div class='itemContent'>
+			{{:helper.link(data.cryonetwork, 'pencil', {'action' : 'edit_assignment_cryonet'})}}
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			Pay:
+		</div>
+		<div class='itemContent'>
+			{{:data.pay}}
+		</div>
+	</div>
+	{{for data.access_categories}}
+		{{:value.name}} :<br><br>
+		{{for value.accesses :accessValue:accessIndex}}
+			{{:helper.link(accessValue.name, '', {'action' : 'pick_access', 'selected_ref' : value.ref, 'selected_ind' : accessValue.ind}, null, accessValue.existing ? 'selected' : null)}}
+		{{/for}}
+		<br><br><br><br><br><br><br><hr><br>
+	{{/for}}
 {{/if}}
 
 {{if data.menu == 3}}
@@ -27,9 +65,11 @@
 		{{for value.accesses :accessValue:accessIndex}}
 			{{:helper.link(accessValue.name, '', {'action' : 'select_access', 'selected_ref' : value.ref, 'selected_ind' : accessValue.ind})}}
 		{{/for}}
-		<br><br><br><br><hr><br>
+		<br><br><br><br><br><br><br><hr><br>
 	{{/for}}
 {{/if}}
+
+
 {{if data.menu == 4}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>Assignment/Category Configuration</h2>
@@ -37,6 +77,7 @@
 	<br><hr>
 	<br><br>{{:helper.link("Create New Employee Category", 'pencil', {'action' : 'create_assignmentcategory'})}}
 	<br><hr>
+	{{:helper.link('City Councillor', '', {'action' : 'select_councillor'})}}{{:helper.link('Judge', '', {'action' : 'select_judge'})}}<br><br>
 	{{for data.assignment_categories}}
 		{{:helper.link(value.name, '', {'action' : 'select_assignmentcategory', 'selected_ref' : value.ref})}}{{:helper.link("Create New Assignment", '', {'action' : 'create_assignment_two', 'selected_ref' : value.ref})}}:<br><br>
 		{{for value.assignments :assignmentValue:assignmentIndex}}
@@ -45,6 +86,9 @@
 		<br><br><hr><br>
 	{{/for}}
 {{/if}}
+
+
+
 {{if data.menu == 5}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>{{:data.selected_accesscategory}} (Access Category)</h2>
@@ -59,6 +103,9 @@
 		{{:helper.link(value.name, '', {'action' : 'select_access_noref', 'selected_ind' : value.ind})}}
 	{{/for}}
 {{/if}}
+
+
+
 {{if data.menu == 6}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>({{:data.accessnum}}) {{:data.selected_access}} (Access)</h2>
@@ -71,6 +118,8 @@
 	Name: <b>{{:data.selected_access}}</b><br>
 	Access Category: <b>{{:data.selected_accesscategory}}</b><br>
 {{/if}}
+
+
 {{if data.menu == 7}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>{{:data.selected_assignmentcategory}} (Assignment Category)</h2>
@@ -89,6 +138,8 @@
 		{{:helper.link(value.name, '', {'action' : 'select_assignment_two', 'selected_ref' : value.ref})}}
 	{{/for}}
 {{/if}}
+
+
 {{if data.menu == 8}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>{{:data.selected_assignment}} (Assignment)</h2>
@@ -122,10 +173,12 @@
 			{{for value.accesses :accessValue:accessIndex}}
 				{{:helper.link(accessValue.name, '', {'action' : 'pick_access', 'selected_ref' : value.ref, 'selected_ind' : accessValue.ind}, null, accessValue.existing ? 'selected' : null)}}
 			{{/for}}
-			<br><br><br><br><br><hr><br>
+			<br><br><br><br><br><br><br><hr><br>
 		{{/for}}	
 	{{/if}}
 {{/if}}
+
+
 {{if data.menu == 9}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>Economy Menu</h2>
@@ -160,6 +213,8 @@
 	<br> Expense cards can be swiped on any invoice to pay it directly out of the network account. The expense card looks for the users ID and only works if the user has enough expenses left. It is still important to control the networks expense cards, if some get lost you can devalidate all of the existing cards.
 
 {{/if}}
+
+
 {{if data.menu == 10}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>Promotion Control</h2>
@@ -206,3 +261,6 @@
 	<br><br><hr><br>
 	{{:helper.link("Add", '', {'action' : 'add_cryo'})}}  {{:helper.link("Remove", '', {'action' : 'remove_cryo'})}}
 {{/if}}
+
+
+

@@ -10,6 +10,7 @@ SUBSYSTEM_DEF(early)
 	populate_robolimb_list()
 	setupFlooring()
 	setupgenetics()
+	PopulateExperiments()
 
 	job_master = new /datum/controller/occupations()
 	job_master.SetupOccupations(setup_titles=1)

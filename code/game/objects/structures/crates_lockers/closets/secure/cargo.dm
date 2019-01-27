@@ -1,14 +1,9 @@
 /obj/structure/closet/secure_closet/cargotech
 	name = "cargo technician's locker"
-	req_access = list()
-	icon_state = "securecargo1"
-	icon_closed = "securecargo"
-	icon_locked = "securecargo1"
-	icon_opened = "securecargoopen"
-	icon_broken = "securecargobroken"
-	icon_off = "securecargooff"
+	req_access = list(access_cargo)
+	closet_appearance = /decl/closet_appearance/secure_closet/cargo
 /*
-/obj/structure/closet/secure_closet/cargotech/WillContain() //Add the contents to Supply Crate.
+/obj/structure/closet/secure_closet/cargotech/WillContain()
 	return list(
 		new/datum/atom_creator/weighted(list(/obj/item/weapon/storage/backpack = 75,  /obj/item/weapon/storage/backpack/satchel/grey = 25)),
 		new/datum/atom_creator/simple(/obj/item/weapon/storage/backpack/dufflebag, 25),
@@ -22,12 +17,8 @@
 /obj/structure/closet/secure_closet/quartermaster
 	name = "quartermaster's locker"
 	req_access = list(core_access_order_approval)
-	icon_state = "secureqm1"
-	icon_closed = "secureqm"
-	icon_locked = "secureqm1"
-	icon_opened = "secureqmopen"
-	icon_broken = "secureqmbroken"
-	icon_off = "secureqmoff"
+	closet_appearance = /decl/closet_appearance/secure_closet/cargo/qm
+
 /*
 /obj/structure/closet/secure_closet/quartermaster/WillContain()
 	return list(

@@ -81,7 +81,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/expenses = 0
 	var/datum/computer_file/data/email_account/email
 
-	var/citizenship = 0 // 0 = resident, 1 = citizen
+	var/citizenship = 1 // 1 = resident, 2 = citizen, 3 = prisoner (todo convert all magic numbers in ss13 to defines)
 
 /datum/computer_file/crew_record/New()
 	..()
@@ -107,7 +107,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/datum/assignment/curr_assignment = faction.get_assignment(assignment_uid)
 	if(!curr_assignment) return 0
 	for(var/name in promote_votes)
-		if(name == faction.leader_name)
+		if(name == faction.get_leadername())
 			five_promotes |= name
 			three_promotes |= name
 			all_promotes |= name
@@ -170,7 +170,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		return
 	for(var/name in demote_votes)
 
-		if(name == faction.leader_name)
+		if(name == faction.get_leadername())
 			five_promotes |= name
 			three_promotes |= name
 			all_promotes |= name
@@ -323,7 +323,8 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	// Security record
 	set_criminalStatus(GLOB.default_security_status)
 	set_dna(H ? H.dna.unique_enzymes : "")
-	set_fingerprint(H ? md5(H.dna.uni_identity) : "")
+	set_fingerprint(H ? md5("[H.real_name]+fingerprint") : "")
+	
 	set_secRecord((H && H.sec_record && !jobban_isbanned(H, "Records") ? html_decode(H.sec_record) : "No record supplied"))
 
 	// Employment record

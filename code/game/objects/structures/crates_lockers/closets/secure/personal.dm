@@ -19,12 +19,7 @@
 	return
 
 /obj/structure/closet/secure_closet/personal/cabinet
-	icon_state = "cabinetdetective"
-	icon_closed = "cabinetdetective"
-	icon_locked = "cabinetdetective_locked"
-	icon_opened = "cabinetdetective_open"
-	icon_broken = "cabinetdetective_broken"
-	icon_off = "cabinetdetective_broken"
+	closet_appearance = /decl/closet_appearance/cabinet/secure
 
 /obj/structure/closet/secure_closet/personal/cabinet/WillContain()
 	return list(/obj/item/weapon/storage/backpack/satchel/grey/withwallet, /obj/item/device/radio/headset)
@@ -71,9 +66,10 @@
 			if (src.opened)
 				if(!src.close())
 					return
-			src.locked = 1
-			src.icon_state = src.icon_locked
+			locked = TRUE
+			queue_icon_update()
 			src.registered_name = null
 			src.name = initial(name)
 			src.desc = initial(desc)
 			req_access_faction = ""
+

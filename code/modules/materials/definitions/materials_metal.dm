@@ -1,14 +1,3 @@
-/material/lead
-	name = "lead"
-	stack_type = /obj/item/stack/material/lead
-	icon_colour = "#6d6a65"
-	weight = 15
-	hardness = 15
-	sheet_singular_name = "ingot"
-	sheet_plural_name = "ingots"
-	chem_products = list(/datum/reagent/toxin/lead = 20)
-
-
 /material/uranium
 	name = MATERIAL_URANIUM
 	stack_type = /obj/item/stack/material/uranium
@@ -258,6 +247,7 @@
 	hardness = 3
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
+	chem_products = list(/datum/reagent/lead = 20)
 
 /material/tin
 	name = MATERIAL_TIN

@@ -68,6 +68,24 @@
 		M.adjustBrainLoss(0.1)
 
 //------------------------------------
+//	Lead
+//------------------------------------
+/datum/reagent/lead
+	name = "Lead"
+	description = "A chemical element."
+	taste_mult = 0 //mercury apparently is tasteless. IDK
+	reagent_state = LIQUID
+	color = "#6d6a65"
+
+/datum/reagent/mercury/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
+	if(alien != IS_DIONA)
+		if(istype(M.loc, /turf/space))
+			M.SelfMove(pick(GLOB.cardinal))
+		if(prob(5))
+			M.emote(pick("twitch", "drool", "moan"))
+		M.adjustBrainLoss(0.1)
+
+//------------------------------------
 //	Potassium
 //------------------------------------
 /datum/reagent/potassium

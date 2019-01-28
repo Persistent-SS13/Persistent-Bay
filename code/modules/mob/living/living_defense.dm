@@ -326,6 +326,10 @@
 					I.action = new/datum/action/item_action
 				I.action.name = I.action_button_name
 				I.action.target = I
+				if(I.action_button_icon)
+					I.action.icon_override = I.action_button_icon
+					I.action.override_state = I.action_button_state
+
 			I.action.Grant(src)
 	return
 

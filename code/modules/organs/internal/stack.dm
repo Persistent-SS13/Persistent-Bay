@@ -25,6 +25,8 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	var/datum/mind/backup
 	action_button_name = "Access Neural Lace UI"
 	action_button_is_hands_free = 1
+	action_button_icon = 'icons/misc/lace.dmi'
+	action_button_state = "lace"
 	var/connected_faction = ""
 	var/duty_status = 1
 	var/datum/world_faction/faction
@@ -156,7 +158,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 					owner?.ckey = null
 					owner?.stored_ckey = null
 					owner?.save_slot = 0
-					
+
 		if("deselect_ballot")
 			selected_ballot = null
 		if("vote")
@@ -186,8 +188,8 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		if(menu == 1)
 			if(!record)
 				record = Retrieve_Record(owner.real_name)
-				
-			
+
+
 			if(record)
 				var/citizenshipp
 				switch(record.citizenship)
@@ -195,7 +197,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 						citizenshipp = "Resident"
 					if(2)
 						citizenshipp = "Citizen"
-					if("3)
+					if(3)
 						citizenshipp = "Prisoner"
 
 				data["citizenship_status"] = citizenshipp
@@ -265,9 +267,9 @@ GLOBAL_LIST_EMPTY(neural_laces)
 						formatted_ballots[++formatted_ballots.len] = list("name" = ballot.title, "ref" = "\ref[ballot]")
 					data["ballots"] = formatted_ballots
 		data["menu"] = menu
-		
-		
-		
+
+
+
 	else // death code
 		if(lacemob)
 			if(lacemob.teleport_time < world.time)
@@ -319,7 +321,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	if(!records)
 		faction = null
 		return "No record found."
-		
+
 	var/datum/assignment/assignment = faction.get_assignment(records.try_duty(), records.get_name())
 	if(assignment && assignment.duty_able)
 		var/title = assignment.name

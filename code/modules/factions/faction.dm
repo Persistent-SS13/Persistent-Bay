@@ -790,6 +790,42 @@ var/PriorityQueue/all_feeds
 	var/tax_pprog4_amount = 0
 	var/tax_pflat_rate = 0
 
+/datum/world_faction/democratic/proc/pay_tax(var/datum/money_account/account, var/amount)
+	var/tax_amount
+	if(account.account_type == 2)
+		if(tax_type_b == 2)
+			if(account.money >= tax_bprog4_amount)
+				tax_amount = amount * (tax_bprog4_rate/100)
+			else if(account.money >= tax_bprog3_amount)
+				tax_amount = amount * (tax_bprog3_rate/100)
+			else if(account.money >= tax_bprog2_amount)
+				tax_amount = amount * (tax_bprog2_rate/100)
+			else
+				tax_amount = amount * (tax_bprog1_rate/100)
+		else
+			tax_amount = amount * (tax_bflat_rate/100)
+	else
+		if(tax_type_p == 2)
+			if(account.money >= tax_pprog4_amount)
+				tax_amount = amount * (tax_pprog4_rate/100)
+			else if(account.money >= tax_pprog3_amount)
+				tax_amount = amount * (tax_pprog3_rate/100)
+			else if(account.money >= tax_pprog2_amount)
+				tax_amount = amount * (tax_pprog2_rate/100)
+			else
+				tax_amount = amount * (tax_pprog1_rate/100)
+		else
+			tax_amount = amount * (tax_pflat_rate/100)
+	tax_amount = floor(tax_amount)
+	if(tax_amount)
+		var/datum/transaction/T = new("[src.name]", "Tax", -tax_amount, "Nexus Economy Network")
+		account.do_transaction(T)
+		var/datum/transaction/Te = new("[account.owner_name]", "Tax", tax_amount, "Nexus Economy Network")
+		central_account.do_transaction(Te)
+		
+
+
+
 /datum/verdict
 	var/name = "" //title
 	var/judge = ""

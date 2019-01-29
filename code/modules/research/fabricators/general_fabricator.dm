@@ -35,69 +35,54 @@
 
 
 
-/datum/design/item/genfab/container/bucket
+/datum/design/item/genfab/container/sci/bucket
 	name = "bucket"
 	build_path = /obj/item/weapon/reagent_containers/glass/bucket
 
-/datum/design/item/genfab/container/jar
+/datum/design/item/genfab/container/sci/jar
 	name = "jar"
 	build_path = /obj/item/glass_jar
 
-/datum/design/item/genfab/container/beaker
+/datum/design/item/genfab/container/sci/beaker
 	name = "glass beaker"
 	build_path = /obj/item/weapon/reagent_containers/glass/beaker
-	category = "Medical"
 
-/datum/design/item/genfab/container/beaker_large
+/datum/design/item/genfab/container/sci/beaker_large
 	name = "large glass beaker"
 	build_path = /obj/item/weapon/reagent_containers/glass/beaker/large
-	category = "Medical"
 
-/datum/design/item/genfab/container/vial
+/datum/design/item/genfab/container/sci/vial
 	name = "glass vial"
 	build_path = /obj/item/weapon/reagent_containers/glass/beaker/vial
-	category = "Medical"
 
-/datum/design/item/genfab/container/pillbottle
+/datum/design/item/genfab/container/sci/pillbottle
 	name = "pill bottle"
 	build_path = /obj/item/weapon/storage/pill_bottle
-	category = "Medical"
 
-/datum/design/item/genfab/container/syringe
+/datum/design/item/genfab/container/sci/syringe
 	name = "syringe"
 	build_path = /obj/item/weapon/reagent_containers/syringe
-	category = "Medical"
 
 /datum/design/item/genfab/container/beerkeg
 	name = "beer keg"
 	build_path = /obj/structure/reagent_dispensers/beerkeg/empty
-	category = "General"
 
 
-/datum/design/item/genfab/container/glasses
-	name = "prescription glasses"
-	build_path = /obj/item/clothing/glasses/regular
-	category = "Medical"
-
-/datum/design/item/genfab/container/dropper
+/datum/design/item/genfab/container/sci/dropper
 	name = "dropper"
 	build_path = /obj/item/weapon/reagent_containers/dropper
-	category = "Medical"
 
 /datum/design/item/genfab/container/pitcher
 	name = "pitcher"
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/pitcher
-	category = "General"
 
 /datum/design/item/genfab/container/carafe
 	name = "carafe"
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/carafe
-	category = "General"
 
 /datum/design/item/genfab/container/coffeecup
 	name = "coffee cup"
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup
-	category = "General"
 	New()
 		..()
 		var/obj/O = build_path
@@ -130,7 +115,6 @@
 /datum/design/item/genfab/container/drinkingglass
 	name = "drinking glass"
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/square
-	category = "General"
 	New()
 		..()
 		var/obj/O = build_path
@@ -194,33 +178,30 @@
 /datum/design/item/genfab/meditools/scalpel
 	name = "scalpel"
 	build_path = /obj/item/weapon/scalpel
-	category = "Medical"
 
 /datum/design/item/genfab/meditools/circularsaw
 	name = "circular saw"
 	build_path = /obj/item/weapon/circular_saw
-	category = "Medical"
 
 /datum/design/item/genfab/meditools/surgicaldrill
 	name = "surgical drill"
 	build_path = /obj/item/weapon/surgicaldrill
-	category = "Medical"
 
 /datum/design/item/genfab/meditools/retractor
 	name = "retractor"
 	build_path = /obj/item/weapon/retractor
-	category = "Medical"
 
 /datum/design/item/genfab/meditools/cautery
 	name = "cautery"
 	build_path = /obj/item/weapon/cautery
-	category = "Medical"
 
 /datum/design/item/genfab/meditools/hemostat
 	name = "hemostat"
 	build_path = /obj/item/weapon/hemostat
-	category = "Medical"
 
+/datum/design/item/genfab/meditools/glasses
+	name = "prescription glasses"
+	build_path = /obj/item/clothing/glasses/regular
 
 /datum/design/item/genfab/meditools/adv/hud
 	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
@@ -784,38 +765,28 @@
 
 /datum/design/item/genfab/eva/adv/jetpack
 	name = "Air Supply and Propulsion System"	//Just a fancy name for a jetpack, heh
-	id = "jetpack"
 	req_tech = list(TECH_ENGINEERING = 4)
 	build_type = PROTOLATHE
 	materials = list(MATERIAL_STEEL = 6000, MATERIAL_GOLD = 2000, MATERIAL_PHORON = 4000)
 	build_path = /obj/item/weapon/tank/jetpack
-	sort_string = "VBABC"
 
 /datum/design/item/genfab/eva/adv/beacon
 	name = "Bluespace tracking beacon design"
-	id = "beacon"
 	req_tech = list(TECH_BLUESPACE = 1)
 	materials = list (MATERIAL_STEEL = 20, MATERIAL_GLASS = 10)
 	build_path = /obj/item/device/radio/beacon
-	sort_string = "VADAA"
 
 /datum/design/item/genfab/eva/gps
 	name = "Triangulating device design"
-	desc = "Triangulates approximate co-ordinates using a nearby satellite network."
-	id = "gps"
 	req_tech = list(TECH_MATERIAL = 2, TECH_DATA = 2, TECH_BLUESPACE = 2)
 	materials = list(MATERIAL_STEEL = 500)
 	build_path = /obj/item/device/gps
-	sort_string = "VADAB"
 
 /datum/design/item/genfab/eva/adv/beacon_locator
 	name = "Beacon tracking pinpointer"
-	desc = "Used to scan and locate signals on a particular frequency."
-	id = "beacon_locator"
 	req_tech = list(TECH_MAGNET = 3, TECH_ENGINEERING = 2, TECH_BLUESPACE = 3)
 	materials = list(MATERIAL_STEEL = 1000,MATERIAL_GLASS = 500)
 	build_path = /obj/item/device/beacon_locator
-	sort_string = "VADAC"
 
 
 
@@ -906,109 +877,204 @@
 /datum/design/item/genfab/consumer
 	category = "Consumer Goods"
 
+/datum/design/item/genfab/consumer/toys
+	category = "Toys"
+
+/datum/design/item/genfab/consumer/games
+	category = "Games"
+	
+	
 
 ////////////////////////////////////////////////////////////////////
 
 /datum/design/item/genfab/consumer/lighter
 	name = "cheap lighter"
 	build_path = /obj/item/weapon/flame/lighter
-	category = "General"
 
 /datum/design/item/genfab/consumer/clipboard
 	name = "clipboard"
 	build_path = /obj/item/weapon/clipboard
-	category = "General"
 
 /datum/design/item/genfab/consumer/labeler
 	name = "hand labeler"
 	build_path = /obj/item/weapon/hand_labeler
-	category = "General"
 
 /datum/design/item/genfab/consumer/ecigcartridge
 	name = "ecigarette cartridge"
 	build_path = /obj/item/weapon/reagent_containers/ecig_cartridge/blank
-	category = "Devices and Components"
 
 /datum/design/item/genfab/consumer/ecig
 	// We get it, you vape
 	name = "ecigarette"
 	build_path = /obj/item/clothing/mask/smokable/ecig/lathed
-	category = "Devices and Components"
 
 /datum/design/item/genfab/consumer/mop
 	name = "mop"
 	build_path = /obj/item/weapon/mop
-	category = "General"
 
 /datum/design/item/genfab/consumer/spraybottle
 	name = "spray bottle"
 	build_path = /obj/item/weapon/reagent_containers/spray
-	category = "General"
 
 /datum/design/item/genfab/consumer/lipstick
 	name = "lipstick"
 	build_path = /obj/item/weapon/lipstick
-	category = "General"
 
 /datum/design/item/genfab/consumer/lipstick_purple
 	name = "purple lipstick"
 	build_path = /obj/item/weapon/lipstick/purple
-	category = "General"
 
 /datum/design/item/genfab/consumer/lipstick_jade
 	name = "jade lipstick"
 	build_path = /obj/item/weapon/lipstick/jade
-	category = "General"
 
 /datum/design/item/genfab/consumer/lipstick_black
 	name = "black lipstick"
 	build_path = /obj/item/weapon/lipstick/black
-	category = "General"
 
 /datum/design/item/genfab/consumer/comb
 	name = "comb"
 	build_path = /obj/item/weapon/haircomb
-	category = "General"
-
-/datum/design/item/genfab/consumer/red_doll
-	name = "red doll"
-	build_path = /obj/item/toy/therapy_red
-	category = "General"
-
-/datum/design/item/genfab/consumer/purple_doll
-	name = "purple doll"
-	build_path = /obj/item/toy/therapy_purple
-	category = "General"
-
-/datum/design/item/genfab/consumer/blue_doll
-	name = "blue doll"
-	build_path = /obj/item/toy/therapy_blue
-	category = "General"
-
-/datum/design/item/genfab/consumer/yellow_doll
-	name = "yellow doll"
-	build_path = /obj/item/toy/therapy_yellow
-	category = "General"
-
-/datum/design/item/genfab/consumer/green_doll
-	name = "green doll"
-	build_path = /obj/item/toy/therapy_green
-	category = "General"
-
-/datum/design/item/genfab/consumer/water_balloon
-	name = "water balloon"
-	build_path = /obj/item/toy/water_balloon
-	category = "General"
 
 /datum/design/item/genfab/consumer/picket_sign
 	name = "Picket sign"
 	id = "picket_sign"
 	build_path = /obj/item/weapon/picket_sign
-	category = "Consumer Goods"
 	materials = list(MATERIAL_STEEL = 1, MATERIAL_CARDBOARD = 4)
 
 
+//toys
 
+
+/datum/design/item/genfab/consumer/red_doll
+	name = "red doll"
+	build_path = /obj/item/toy/therapy_red
+
+/datum/design/item/genfab/consumer/purple_doll
+	name = "purple doll"
+	build_path = /obj/item/toy/therapy_purple
+
+/datum/design/item/genfab/consumer/blue_doll
+	name = "blue doll"
+	build_path = /obj/item/toy/therapy_blue
+
+/datum/design/item/genfab/consumer/yellow_doll
+	name = "yellow doll"
+	build_path = /obj/item/toy/therapy_yellow
+
+/datum/design/item/genfab/consumer/green_doll
+	name = "green doll"
+	build_path = /obj/item/toy/therapy_green
+
+/datum/design/item/genfab/consumer/toys/water_balloon
+	name = "water balloon"
+	build_path = /obj/item/toy/water_balloon
+
+/datum/design/item/genfab/consumer/toys/ntballoon
+	name = "nanotrasen balloon"
+	build_path = /obj/item/toy/balloon/nanotrasen
+	
+/datum/design/item/genfab/consumer/toys/blink
+	name = "electronic blink toy game"
+	build_path = /obj/item/toy/blink
+
+/datum/design/item/genfab/consumer/toys/spinningtoy
+	name = "gravitational singularity toy"
+	build_path = /obj/item/toy/spinningtoy
+
+/datum/design/item/genfab/consumer/toys/crossbow
+	name = "foam dart crossbow"
+	build_path = /obj/item/toy/crossbow
+
+/datum/design/item/genfab/consumer/toys/ammo/crossbow
+	name = "foam dart"
+	build_path = /obj/item/toy/ammo/crossbow
+
+/datum/design/item/genfab/consumer/toys/snappop
+	name = "snap pop"
+	build_path = /obj/item/toy/snappop
+	
+/datum/design/item/genfab/consumer/toys/snappop
+	name = "snap pop"
+	build_path = /obj/item/toy/snappop
+	
+/datum/design/item/genfab/consumer/games/cards
+	name = "playing cards"
+	build_path = /obj/item/weapon/deck/cards
+
+/datum/design/item/genfab/consumer/games/tarot
+	name = "playing cards"
+	build_path = /obj/item/weapon/deck/cards/tarot
+	
+/datum/design/item/genfab/consumer/games/board
+	name = "checkerboard"
+	build_path = /obj/item/weapon/board
+	
+/datum/design/item/genfab/consumer/games/checker
+	name = "black checker"
+	build_path = /obj/item/weapon/checker
+
+/datum/design/item/genfab/consumer/games/redchecker
+	name = "red checker"
+	build_path = /obj/item/weapon/checker/red
+
+/datum/design/item/genfab/consumer/games/pawn
+	name = "black pawn"
+	build_path = /obj/item/weapon/checker/pawn
+
+/datum/design/item/genfab/consumer/games/redpawn
+	name = "red pawn"
+	build_path = /obj/item/weapon/checker/pawn/red
+
+/datum/design/item/genfab/consumer/games/knight
+	name = "black knight"
+	build_path = /obj/item/weapon/checker/knight
+
+/datum/design/item/genfab/consumer/games/redknight
+	name = "red knight"
+	build_path = /obj/item/weapon/checker/knight/red
+
+/datum/design/item/genfab/consumer/games/bishop
+	name = "black bishop"
+	build_path = /obj/item/weapon/checker/bishop
+	
+/datum/design/item/genfab/consumer/games/redbishop
+	name = "red bishop"
+	build_path = /obj/item/weapon/checker/bishop/red
+
+/datum/design/item/genfab/consumer/games/rook
+	name = "black rook"
+	build_path = /obj/item/weapon/checker/rook
+
+/datum/design/item/genfab/consumer/games/redrook
+	name = "red rook"
+	build_path = /obj/item/weapon/checker/rook/red
+	
+/datum/design/item/genfab/consumer/games/queen
+	name = "black queen"
+	build_path = /obj/item/weapon/checker/queen
+
+/datum/design/item/genfab/consumer/games/redqueen
+	name = "red queen"
+	build_path = /obj/item/weapon/checker/queen/red
+	
+/datum/design/item/genfab/consumer/games/king
+	name = "black king"
+	build_path = /obj/item/weapon/checker/king
+
+/datum/design/item/genfab/consumer/games/redking
+	name = "red king"
+	build_path = /obj/item/weapon/checker/king/red
+
+/datum/design/item/genfab/consumer/games/cardemon
+	name = "cardemon booster pack"
+	build_path = /obj/item/weapon/pack/cardemon
+	
+/datum/design/item/genfab/consumer/games/spaceball
+	name = "spaceball booster pack"
+	build_path = /obj/item/weapon/pack/spaceball
+	
+	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

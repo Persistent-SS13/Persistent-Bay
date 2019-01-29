@@ -64,7 +64,7 @@
 		ui.set_initial_data(data)
 		ui.open()
 
-/datum/nano_module/program/executive_policy/Topic(href, href_list)
+/datum/nano_module/program/verdicts/Topic(href, href_list)
 	if(..())
 		return 1
 	. = SSnano.update_uis(src)
@@ -73,7 +73,7 @@
 		if("deselect_verdict")
 			selected_verdict = null
 		if("select_verdict")
-			selected_verdict = locate(href_list["ref"])
+			selected_verdict = locate(href_list["ref"])their
 		if("deselect_trial")
 			selected_trial = null
 		if("select_trial")

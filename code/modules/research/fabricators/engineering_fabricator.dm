@@ -27,6 +27,9 @@
 	category = "Engineering Equipment"
 	time = 20
 
+/datum/design/item/engifab/engitools/simple
+	build_type = ENGIFAB|GENFAB
+
 /datum/design/item/engifab/engitools/adv
 
 
@@ -46,7 +49,7 @@
 	category = "Tools"
 	materials = list(MATERIAL_STEEL = 150)
 
-/datum/design/item/engifab/engitools/flashlight
+/datum/design/item/engifab/engitools/simple/flashlight
 	name = "Flashlight"
 	id = "flashlight"
 	build_path = /obj/item/device/flashlight
@@ -60,7 +63,7 @@
 	category = "Tools"
 	materials = list(MATERIAL_STEEL = 200, MATERIAL_GLASS = 50)
 
-/datum/design/item/engifab/engitools/crowbar
+/datum/design/item/engifab/engitools/simple/crowbar
 	name = "Crowbar"
 	id = "crowbar"
 	build_path = /obj/item/weapon/crowbar
@@ -74,7 +77,7 @@
 	category = "Tools"
 	materials = list(MATERIAL_STEEL = 80)
 
-/datum/design/item/engifab/engitools/multitool
+/datum/design/item/engifab/engitools/simple/multitool
 	name = "Multitool"
 	id = "multitool"
 	build_path = /obj/item/device/multitool
@@ -82,7 +85,7 @@
 	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 20)
 
 
-/datum/design/item/engifab/engitools/welder_mini
+/datum/design/item/engifab/engitools/simple/welder_mini
 	name = "Miniture welding tool"
 	id = "miniature_welding_tool"
 	build_path = /obj/item/weapon/weldingtool/mini/empty
@@ -96,21 +99,21 @@
 	category = "Tools"
 	materials = list(MATERIAL_STEEL = 210, MATERIAL_GLASS = 90)
 
-/datum/design/item/engifab/engitools/screwdriver
+/datum/design/item/engifab/engitools/simple/screwdriver
 	name = "Screwdriver"
 	id = "screwdriver"
 	build_path = /obj/item/weapon/screwdriver
 	category = "Tools"
 	materials = list(MATERIAL_STEEL = 75)
 
-/datum/design/item/engifab/engitools/wirecutters
+/datum/design/item/engifab/engitools/simple/wirecutters
 	name = "Wirecutters"
 	id = "wirecutters"
 	build_path = /obj/item/weapon/wirecutters
 	category = "Tools"
 	materials = list(MATERIAL_STEEL = 80)
 
-/datum/design/item/engifab/engitools/wrench
+/datum/design/item/engifab/engitools/simple/wrench
 	name = "Wrench"
 	id = "wrench"
 	build_path = /obj/item/weapon/wrench
@@ -124,7 +127,7 @@
 	category = "General"
 	materials = list(MATERIAL_STEEL = 15000, MATERIAL_GLASS = 3500)
 
-/datum/design/item/engifab/engitools/weldermask
+/datum/design/item/engifab/engitools/simple/weldermask
 	name = "Welding mask"
 	id = "welding_mask"
 	build_path = /obj/item/clothing/head/welding
@@ -145,7 +148,7 @@
 	category = "General"
 	materials = list(MATERIAL_STEEL = 45000, MATERIAL_GLASS = 22500)
 
-/datum/design/item/engifab/engitools/cable_coil
+/datum/design/item/engifab/engitools/simple/cable_coil
 	name = "Cable coil"
 	id = "cable_coil"
 	build_path = /obj/item/stack/cable_coil/single		//must be /single path, else printing 1x will instead print a whole stack
@@ -239,7 +242,7 @@
 	sort_string = "VBAAT"
 	category = "Tools"
 
-/datum/design/item/engifab/engitools/extinguisher_mini
+/datum/design/item/engifab/engitools/simple/extinguisher_mini
 	name = "Compact extinguisher"
 	id = "compact_extinguisher"
 	build_path = /obj/item/weapon/extinguisher/mini/empty

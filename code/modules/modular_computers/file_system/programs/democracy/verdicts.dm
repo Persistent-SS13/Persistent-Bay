@@ -73,7 +73,7 @@
 		if("deselect_verdict")
 			selected_verdict = null
 		if("select_verdict")
-			selected_verdict = locate(href_list["ref"])their
+			selected_verdict = locate(href_list["ref"])
 		if("deselect_trial")
 			selected_trial = null
 		if("select_trial")

@@ -19,7 +19,7 @@
 	build_type = GENERALFAB 			   // This must match the build_type of the fabricator(s)
 	category = "Misc"	 			   // The design will appear under this in the UI. Each design must have a category, or it will not display properly.
 
-	time = 50						   // Time in seconds for the item to be produced - This changes based off the components used in the fabricator
+	time = 10						   // Time in seconds for the item to be produced - This changes based off the components used in the fabricator
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,60 +33,49 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
+/datum/design/item/genfab/container/sci/spraybottle
+	build_path = /obj/item/weapon/reagent_containers/spray
+
+/datum/design/item/genfab/container/sci/chem_disp_cartridge
+	build_path = /obj/item/weapon/reagent_containers/chem_disp_cartridge
 
 
 /datum/design/item/genfab/container/sci/bucket
-	name = "bucket"
 	build_path = /obj/item/weapon/reagent_containers/glass/bucket
 
 /datum/design/item/genfab/container/sci/jar
-	name = "jar"
 	build_path = /obj/item/glass_jar
 
 /datum/design/item/genfab/container/sci/beaker
-	name = "glass beaker"
 	build_path = /obj/item/weapon/reagent_containers/glass/beaker
 
 /datum/design/item/genfab/container/sci/beaker_large
-	name = "large glass beaker"
 	build_path = /obj/item/weapon/reagent_containers/glass/beaker/large
 
 /datum/design/item/genfab/container/sci/vial
-	name = "glass vial"
 	build_path = /obj/item/weapon/reagent_containers/glass/beaker/vial
 
 /datum/design/item/genfab/container/sci/pillbottle
-	name = "pill bottle"
 	build_path = /obj/item/weapon/storage/pill_bottle
 
 /datum/design/item/genfab/container/sci/syringe
-	name = "syringe"
 	build_path = /obj/item/weapon/reagent_containers/syringe
 
 /datum/design/item/genfab/container/beerkeg
-	name = "beer keg"
 	build_path = /obj/structure/reagent_dispensers/beerkeg/empty
 
 
 /datum/design/item/genfab/container/sci/dropper
-	name = "dropper"
 	build_path = /obj/item/weapon/reagent_containers/dropper
 
 /datum/design/item/genfab/container/pitcher
-	name = "pitcher"
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/pitcher
 
 /datum/design/item/genfab/container/carafe
-	name = "carafe"
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/carafe
 
 /datum/design/item/genfab/container/coffeecup
-	name = "coffee cup"
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup
-	New()
-		..()
-		var/obj/O = build_path
-		name = initial(O.name) // generic recipes yay
 
 /datum/design/item/genfab/container/coffeecup/black
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/black
@@ -112,13 +101,24 @@
 /datum/design/item/genfab/container/coffeecup/SCG
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/SCG
 
+/datum/design/item/genfab/container/coffeecup/one
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/one
+
+/datum/design/item/genfab/container/coffeecup/pawn
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/pawn
+
+/datum/design/item/genfab/container/coffeecup/britcup
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/britcup
+
+/datum/design/item/genfab/container/coffeecup/tall
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/tall
+
+/datum/design/item/genfab/container/coffeecup/diona
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/coffeecup/diona
+
+
 /datum/design/item/genfab/container/drinkingglass
-	name = "drinking glass"
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/square
-	New()
-		..()
-		var/obj/O = build_path
-		name = initial(O.name) // generic recipes yay
 
 /datum/design/item/genfab/container/drinkingglass/rocks
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/rocks
@@ -141,23 +141,47 @@
 /datum/design/item/genfab/container/drinkingglass/wine
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/wine
 
+/datum/design/item/genfab/container/drinkingglass/shaker
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/shaker
+
+/datum/design/item/genfab/container/drinkingglass/teapot
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/teapot
+
+/datum/design/item/genfab/container/drinkingglass/pitcher
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/pitcher
+
+/datum/design/item/genfab/container/drinkingglass/flask
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/flask
+
+/datum/design/item/genfab/container/drinkingglass/flask/shiny
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/flask/shiny
+
+
+/datum/design/item/genfab/container/drinkingglass/flask/lithium
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/flask/lithium
+
+
+/datum/design/item/genfab/container/drinkingglass/flask/detflask
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/flask/detflask
+
+/datum/design/item/genfab/container/drinkingglass/flask/barflask
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/flask/barflask
+
+/datum/design/item/genfab/container/drinkingglass/flask/vacuumflask
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/flask/vacuumflask
+
+/datum/design/item/genfab/container/drinkingglass/flask/fitnessflask
+	build_path = /obj/item/weapon/reagent_containers/food/drinks/glass2/fitnessflask
+
 /datum/design/item/genfab/container/sci/beaker/noreact
-	name = "cryostasis beaker"
-	desc = "A cryostasis beaker that allows for chemical storage without reactions. Can hold up to 50 units."
-	id = "splitbeaker"
 	req_tech = list(TECH_MATERIAL = 2)
 	materials = list(MATERIAL_STEEL = 3000, MATERIAL_PHORON = 2000)
 	build_path = /obj/item/weapon/reagent_containers/glass/beaker/noreact
-	sort_string = "MADAA"
 
 /datum/design/item/genfab/container/sci/beaker/bluespace
-	name = "bluespace beaker"
-	desc = "A bluespace beaker, powered by experimental bluespace technology and Element Cuban combined with the Compound Pete. Can hold up to 300 units."
-	id = "bluespacebeaker"
 	req_tech = list(TECH_BLUESPACE = 2, TECH_MATERIAL = 6)
 	materials = list(MATERIAL_STEEL = 3000, MATERIAL_PHORON = 4000, MATERIAL_DIAMOND = 2000)
 	build_path = /obj/item/weapon/reagent_containers/glass/beaker/bluespace
-	sort_string = "MADAB"
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -172,117 +196,115 @@
 //////////////////////////////////////////////////////////////////////////
 
 /datum/design/item/genfab/meditools/penlight
-	name = "penlight"
 	build_path = /obj/item/device/flashlight/pen
 
 /datum/design/item/genfab/meditools/scalpel
-	name = "scalpel"
 	build_path = /obj/item/weapon/scalpel
 
 /datum/design/item/genfab/meditools/circularsaw
-	name = "circular saw"
 	build_path = /obj/item/weapon/circular_saw
 
+/datum/design/item/genfab/meditools/bonesetter
+	build_path = /obj/item/weapon/bonesetter
+
+
 /datum/design/item/genfab/meditools/surgicaldrill
-	name = "surgical drill"
 	build_path = /obj/item/weapon/surgicaldrill
 
 /datum/design/item/genfab/meditools/retractor
-	name = "retractor"
 	build_path = /obj/item/weapon/retractor
 
 /datum/design/item/genfab/meditools/cautery
-	name = "cautery"
 	build_path = /obj/item/weapon/cautery
 
 /datum/design/item/genfab/meditools/hemostat
-	name = "hemostat"
 	build_path = /obj/item/weapon/hemostat
 
-/datum/design/item/genfab/meditools/glasses
-	name = "prescription glasses"
-	build_path = /obj/item/clothing/glasses/regular
+/datum/design/item/genfab/meditools/adv/syringe_cartridge
+	build_path = /obj/item/weapon/syringe_cartridge
+
+/datum/design/item/genfab/meditools/adv/syringe_gun
+	build_path = /obj/item/weapon/gun/launcher/syringe
+
+/datum/design/item/genfab/meditools/adv/syringe_gun/rapid
+	build_path = /obj/item/weapon/gun/launcher/syringe/rapid
+
+/datum/design/item/genfab/meditools/adv/syringe_gun/rapid
+	build_path = /obj/item/weapon/gun/launcher/syringe/rapid
+
+
+/**
+/datum/design/item/genfab/meditools/adv/syringe_gun/disguised
+	name = "disguised syringe gun"
+	build_path = /obj/item/weapon/gun/launcher/syringe/disguised
+**/
+
+
+
+/datum/design/item/genfab/meditools/adv/FixOVein
+	build_path = /obj/item/weapon/FixOVein
+
+/datum/design/item/genfab/meditools/adv/bonegel
+	build_path = /obj/item/weapon/bonegel
+
+
+/datum/design/item/genfab/meditools/adv/FixOVein
+	build_path = /obj/item/weapon/FixOVein
 
 /datum/design/item/genfab/meditools/adv/hud
 	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 
 /datum/design/item/genfab/meditools/adv/hud/AssembleDesignName()
 	..()
-	name = "HUD glasses prototype ([item_name])"
 
 /datum/design/item/genfab/meditools/adv/hud/AssembleDesignDesc()
 	desc = "Allows for the construction of \a [item_name] HUD glasses."
 
 /datum/design/item/genfab/meditools/adv/hud/health
-	name = "health scanner"
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 3)
 	build_path = /obj/item/clothing/glasses/hud/health
 
 
 /datum/design/item/genfab/meditools/healthscanner
-	name = "health scanner"
 	build_path = /obj/item/device/healthanalyzer
 	category = "Medical"
 
 /datum/design/item/genfab/meditools/adv/robot_scanner
-	desc = "A hand-held scanner able to diagnose robotic injuries."
-	id = "robot_scanner"
 	req_tech = list(TECH_MAGNET = 3, TECH_BIO = 2, TECH_ENGINEERING = 3)
 	materials = list(MATERIAL_STEEL = 500, MATERIAL_GLASS = 200)
 	build_path = /obj/item/device/robotanalyzer
-	sort_string = "MACFA"
 
 /datum/design/item/genfab/meditools/adv/mass_spectrometer
-	desc = "A device for analyzing chemicals in blood."
-	id = "mass_spectrometer"
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 2)
 	build_path = /obj/item/device/mass_spectrometer
-	sort_string = "MACAA"
 
 /datum/design/item/genfab/meditools/adv/adv_mass_spectrometer
-	desc = "A device for analyzing chemicals in blood and their quantities."
-	id = "adv_mass_spectrometer"
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 4)
 	build_path = /obj/item/device/mass_spectrometer/adv
-	sort_string = "MACAB"
 
 /datum/design/item/genfab/meditools/adv/reagent_scanner
-	desc = "A device for identifying chemicals."
-	id = "reagent_scanner"
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 2)
 	build_path = /obj/item/device/reagent_scanner
-	sort_string = "MACBA"
 
 //datum/design/item/genfab/meditools/adv/adv_reagent_scanner
-	desc = "A device for identifying chemicals and their proportions."
-	id = "adv_reagent_scanner"
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 4)
 	build_path = /obj/item/device/reagent_scanner/adv
-	sort_string = "MACBB"
 
 /datum/design/item/genfab/meditools/adv/slime_scanner
-	desc = "A device for scanning identified and unidentified lifeforms."
-	id = "slime_scanner"
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 2)
 	build_path = /obj/item/device/slime_scanner
-	sort_string = "MACBC"
 
 /datum/design/item/genfab/meditools/adv/nanopaste
-	desc = "A tube of paste containing swarms of repair nanites. Very effective in repairing robotic machinery."
-	id = "nanopaste"
 	req_tech = list(TECH_MATERIAL = 4, TECH_ENGINEERING = 3)
 	materials = list(MATERIAL_STEEL = 7000, MATERIAL_GLASS = 7000)
 	build_path = /obj/item/stack/nanopaste
-	sort_string = "MBAAA"
 
 /datum/design/item/genfab/meditools/adv/scalpel_laser1
 	name = "Basic Laser Scalpel"
 	desc = "A scalpel augmented with a directed laser, for more precise cutting without blood entering the field. This one looks basic and could be improved."
-	id = "scalpel_laser1"
 	req_tech = list(TECH_BIO = 2, TECH_MATERIAL = 2, TECH_MAGNET = 2)
 	materials = list(MATERIAL_STEEL = 12500, MATERIAL_GLASS = 7500)
 	build_path = /obj/item/weapon/scalpel/laser1
-	sort_string = "MBBAA"
 
 /datum/design/item/genfab/meditools/adv/scalpel_laser2
 	name = "Improved Laser Scalpel"
@@ -359,7 +381,6 @@
 /datum/design/item/genfab/meditools/stethoscope
 	name = "Stethoscope"
 	desc = "An outdated medical apparatus for listening to the sounds of the human body. It also makes you look like you know what you're doing."
-	id = "stethoscope"
 	req_tech = list(TECH_BIO = 1)
 	materials = list(DEFAULT_WALL_MATERIAL = 1000)
 	build_path = /obj/item/clothing/accessory/stethoscope
@@ -375,6 +396,7 @@
 /datum/design/item/genfab/weapons/guns
 	category = "Guns"
 
+
 ////////////////////////////////////////////////////////////////////
 
 /datum/design/item/genfab/weapons/syringegun_ammo
@@ -383,101 +405,94 @@
 
 
 /datum/design/item/genfab/weapons/guns/stunrevolver
-	id = "stunrevolver"
-	desc = "A non-lethal stun. Warning: Can cause cardiac arrest."
 	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 3, TECH_POWER = 2)
 	materials = list(MATERIAL_STEEL = 4000, MATERIAL_SILVER = 2000, MATERIAL_GOLD = 1000)
 	build_path = /obj/item/weapon/gun/energy/stunrevolver
-	sort_string = "TAAAA"
 
 /datum/design/item/genfab/weapons/guns/laser_carbine
-	id = "laser_carbine"
-	desc = "A laser weapon designed to kill."
 	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 5, TECH_POWER = 5)
 	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 3000, MATERIAL_SILVER = 4000, MATERIAL_GOLD = 4000, MATERIAL_DIAMOND = 12000, MATERIAL_PHORON = 8000)
 	build_path = /obj/item/weapon/gun/energy/laser
-	sort_string = "TAAAB"
 /*
 /datum/design/item/weapon/nuclear_gun
-	id = "nuclear_gun"
-	desc = "Self-recharging energy weapon powered by a nuclear core."
 	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 5, TECH_POWER = 5)
 	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 1000, MATERIAL_SILVER = 1000, MATERIAL_GOLD = 2000, MATERIAL_URANIUM = 10000, MATERIAL_PHORON = 6000)
 	build_path = /obj/item/weapon/gun/energy/gun/nuclear
-	sort_string = "TAAAB"
 /datum/design/item/weapon/lasercannon
-	desc = "The lasing medium of this prototype is enclosed in a tube lined with uranium-235 and subjected to high neutron flux in a nuclear reactor core."
-	id = "lasercannon"
 	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3, TECH_POWER = 3)
 	materials = list(MATERIAL_STEEL = 10000, MATERIAL_GLASS = 1000, MATERIAL_SILVER = 2000, MATERIAL_DIAMOND = 6000, MATERIAL_PHORON = 6000)
 	build_path = /obj/item/weapon/gun/energy/lasercannon
-	sort_string = "TAAAC"
 /datum/design/item/weapon/phoronpistol
-	id = "ppistol"
 	req_tech = list(TECH_COMBAT = 5, TECH_PHORON = 4)
 	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 1000, MATERIAL_URANIUM = 1000, MATERIAL_PHORON = 6000)
 	build_path = /obj/item/weapon/gun/energy/toxgun
-	sort_string = "TAAAD"
 */
 /datum/design/item/genfab/weapons/guns/decloner
-	id = "decloner"
 	req_tech = list(TECH_COMBAT = 8, TECH_MATERIAL = 7, TECH_BIO = 5, TECH_POWER = 6)
 	materials = list(MATERIAL_GOLD = 5000,MATERIAL_URANIUM = 10000)
 	chemicals = list(/datum/reagent/mutagen = 40)
 	build_path = /obj/item/weapon/gun/energy/decloner
-	sort_string = "TAAAE"
 
 /datum/design/item/genfab/weapons/guns/wt550
-	id = "wt-550"
 	req_tech = list(TECH_COMBAT = 5, TECH_MATERIAL = 3)
 	materials = list(MATERIAL_STEEL = 8000, MATERIAL_SILVER = 2000, MATERIAL_DIAMOND = 1000, MATERIAL_PHORON = 4000)
 	build_path = /obj/item/weapon/gun/projectile/automatic/wt550
-	sort_string = "TAABA"
 /*
 /datum/design/item/weapon/smg
-	id = "smg"
 	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
 	materials = list(MATERIAL_STEEL = 8000, MATERIAL_SILVER = 2000, MATERIAL_DIAMOND = 1000)
 	build_path = /obj/item/weapon/gun/projectile/automatic
-	sort_string = "TAABA"
 */
 
 /datum/design/item/genfab/weapons/chemsprayer
-	desc = "An advanced chem spraying device."
-	id = "chemsprayer"
 	req_tech = list(TECH_MATERIAL = 3, TECH_ENGINEERING = 3, TECH_BIO = 2)
 	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 1000)
 	build_path = /obj/item/weapon/reagent_containers/spray/chemsprayer
-	sort_string = "TABAA"
 
 /datum/design/item/genfab/weapons/guns/rapidsyringe
-	id = "rapidsyringe"
 	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 3, TECH_ENGINEERING = 3, TECH_BIO = 2)
 	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 1000)
 	build_path = /obj/item/weapon/gun/launcher/syringe/rapid
-	sort_string = "TABAB"
 
 /datum/design/item/genfab/weapons/guns/temp_gun
-	desc = "A gun that shoots high-powered glass-encased energy temperature bullets."
-	id = "temp_gun"
 	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 4, TECH_POWER = 3, TECH_MAGNET = 2)
 	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 500, MATERIAL_SILVER = 3000)
 	build_path = /obj/item/weapon/gun/energy/temperature
-	sort_string = "TABAC"
 
 /datum/design/item/genfab/weapon/large_grenade
-	id = "large_Grenade"
 	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 2)
 	materials = list(MATERIAL_STEEL = 3000)
 	build_path = /obj/item/weapon/grenade/chem_grenade/large
-	sort_string = "TACAA"
 
 /datum/design/item/genfab/weapon/flora_gun
-	id = "flora_gun"
 	req_tech = list(TECH_MATERIAL = 2, TECH_BIO = 3, TECH_POWER = 3)
 	materials = list(MATERIAL_STEEL = 2000, MATERIAL_GLASS = 500, MATERIAL_URANIUM = 500)
 	build_path = /obj/item/weapon/gun/energy/floragun
-	sort_string = "TBAAA"
+
+/datum/design/item/genfab/weapon/launcher/grenade
+	build_path = /obj/item/weapon/gun/launcher/grenade
+	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GLASS = 3000, MATERIAL_SILVER = 4000, MATERIAL_GOLD = 4000, MATERIAL_DIAMOND = 12000, MATERIAL_PHORON = 8000)
+
+/datum/design/item/genfab/weapons/buckler
+	build_path = /obj/item/weapon/shield/buckler
+
+/datum/design/item/genfab/weapons/energyshield
+	build_path = /obj/item/weapon/shield/energy
+
+/datum/design/item/genfab/weapons/woodstaff
+	build_path = /obj/item/weapon/material/stick
+	materials = list(MATERIAL_WOOD = 1 SHEETS)
+
+/datum/design/item/genfab/weapons/shuriken
+	build_path = /obj/item/weapon/material/star
+	materials = list(MATERIAL_STEEL = 1 SHEETS)
+
+/datum/design/item/genfab/weapons/hook
+	build_path = /obj/item/weapon/material/knife/hook
+
+/datum/design/item/genfab/weapons/ritualdagger
+	build_path = /obj/item/weapon/material/knife/ritual
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -719,27 +734,61 @@
 /datum/design/item/genfab/communication/taperecorder
 	name = "tape recorder"
 	build_path = /obj/item/device/taperecorder/empty
-	category = "General"
 
 /datum/design/item/genfab/communication/tape
 	name = "tape recorder tape"
 	build_path = /obj/item/device/tape
-	category = "General"
 
 /datum/design/item/genfab/communication/blackpen
 	name = "black ink pen"
 	build_path = /obj/item/weapon/pen
-	category = "General"
 
 /datum/design/item/genfab/communication/bluepen
 	name = "blue ink pen"
 	build_path = /obj/item/weapon/pen/blue
-	category = "General"
 
 /datum/design/item/genfab/communication/redpen
 	name = "red ink pen"
 	build_path = /obj/item/weapon/pen/red
-	category = "General"
+
+/datum/design/item/genfab/communication/multipen
+	name = "multi-color ink pen"
+	build_path = /obj/item/weapon/pen/multi
+
+
+/datum/design/item/genfab/communication/clipboard
+	name = "clipboard"
+	build_path = /obj/item/weapon/clipboard
+
+/datum/design/item/genfab/communication/folder
+	name = "grey folder"
+	build_path = /obj/item/weapon/folder
+
+/datum/design/item/genfab/communication/folder/blue
+	name = "blue folder"
+	build_path = /obj/item/weapon/folder/blue
+
+/datum/design/item/genfab/communication/folder/red
+	name = "red folder"
+	build_path = /obj/item/weapon/folder/red
+
+/datum/design/item/genfab/communication/folder/yellow
+	name = "yellow folder"
+	build_path = /obj/item/weapon/folder/yellow
+
+/datum/design/item/genfab/communication/hand_labeler
+	name = "hand labeler"
+	build_path = /obj/item/weapon/hand_labeler
+
+/datum/design/item/genfab/communication/paper_bin
+	name = "paper bin"
+	build_path = /obj/item/weapon/paper_bin
+
+
+
+
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -764,11 +813,17 @@
 	build_path = /obj/item/weapon/tank/emergency/oxygen/engi/empty
 
 /datum/design/item/genfab/eva/adv/jetpack
-	name = "Air Supply and Propulsion System"	//Just a fancy name for a jetpack, heh
+	name = "Blue Jetpack"	//Just a fancy name for a jetpack, heh
 	req_tech = list(TECH_ENGINEERING = 4)
-	build_type = PROTOLATHE
-	materials = list(MATERIAL_STEEL = 6000, MATERIAL_GOLD = 2000, MATERIAL_PHORON = 4000)
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_SILVER = 2 SHEETS)
 	build_path = /obj/item/weapon/tank/jetpack
+
+/datum/design/item/genfab/eva/adv/jetpack/black
+	name = "Blue Jetpack"	//Just a fancy name for a jetpack, heh
+	req_tech = list(TECH_ENGINEERING = 4)
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_SILVER = 2 SHEETS)
+	build_path = /obj/item/weapon/tank/jetpack/carbondioxide
+
 
 /datum/design/item/genfab/eva/adv/beacon
 	name = "Bluespace tracking beacon design"
@@ -804,7 +859,15 @@
 /datum/design/item/genfab/furniture/ashtray_glass
 	name = "glass ashtray"
 	build_path = /obj/item/weapon/material/ashtray/glass
-	category = "General"
+
+/datum/design/item/genfab/furniture/ashtray_bronze
+	name = "metal ashtray"
+	build_path = /obj/item/weapon/material/ashtray/bronze
+
+/datum/design/item/genfab/furniture/ashtray_plastic
+	name = "plastic ashtray"
+	build_path = /obj/item/weapon/material/ashtray/plastic
+
 
 /datum/design/item/genfab/furniture/desklamp
 	name = "desk lamp"
@@ -839,6 +902,10 @@
 	name = "mini hoe"
 	build_path = /obj/item/weapon/material/minihoe
 
+/datum/design/item/genfab/botanytools/plantbgone
+	name = "Plant-B-Gone (empty)"
+	build_path = /obj/item/weapon/reagent_containers/spray/plantbgone
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -857,12 +924,44 @@
 /datum/design/item/genfab/culinarytools/knife
 	name = "kitchen knife"
 	build_path = /obj/item/weapon/material/knife
-	category = "General"
 
 /datum/design/item/genfab/culinarytools/butch
 	name = "butcher knife"
 	build_path = /obj/item/weapon/material/knife/butch
-	category = "General"
+
+/datum/design/item/genfab/culinarytools/utensil_knife
+	name = "dining knife"
+	build_path = /obj/item/weapon/material/kitchen/utensil/knife
+
+/datum/design/item/genfab/culinarytools/utensil_fork
+	name = "dining fork"
+	build_path = /obj/item/weapon/material/kitchen/utensil/fork
+
+/datum/design/item/genfab/culinarytools/utensil_spoon
+	name = "dining spoon"
+	build_path = /obj/item/weapon/material/kitchen/utensil/spoon
+
+
+/datum/design/item/genfab/culinarytools/utensil_fork_plastic
+	name = "plastic dining fork"
+	build_path = /obj/item/weapon/material/kitchen/utensil/fork/plastic
+
+/datum/design/item/genfab/culinarytools/utensil_knife_plastic
+	name = "plastic dining knife"
+	build_path = /obj/item/weapon/material/kitchen/utensil/knife/plastic
+
+/datum/design/item/genfab/culinarytools/utensil_spoon_plastic
+	name = "plastic dining spoon"
+	build_path = /obj/item/weapon/material/kitchen/utensil/spoon/plastic
+
+
+/datum/design/item/genfab/culinarytools/tray
+	name = "tray"
+	build_path = /obj/item/weapon/tray
+
+/datum/design/item/genfab/culinarytools/rollingpin
+	name = "rolling pin"
+	build_path = /obj/item/weapon/material/kitchen/rollingpin
 
 
 
@@ -891,10 +990,6 @@
 	name = "cheap lighter"
 	build_path = /obj/item/weapon/flame/lighter
 
-/datum/design/item/genfab/consumer/clipboard
-	name = "clipboard"
-	build_path = /obj/item/weapon/clipboard
-
 /datum/design/item/genfab/consumer/labeler
 	name = "hand labeler"
 	build_path = /obj/item/weapon/hand_labeler
@@ -911,10 +1006,6 @@
 /datum/design/item/genfab/consumer/mop
 	name = "mop"
 	build_path = /obj/item/weapon/mop
-
-/datum/design/item/genfab/consumer/spraybottle
-	name = "spray bottle"
-	build_path = /obj/item/weapon/reagent_containers/spray
 
 /datum/design/item/genfab/consumer/lipstick
 	name = "lipstick"
@@ -938,9 +1029,12 @@
 
 /datum/design/item/genfab/consumer/picket_sign
 	name = "Picket sign"
-	id = "picket_sign"
 	build_path = /obj/item/weapon/picket_sign
 	materials = list(MATERIAL_STEEL = 1, MATERIAL_CARDBOARD = 4)
+
+/datum/design/item/genfab/consumer/water_flower
+	name = "water flower"
+	build_path = /obj/item/weapon/reagent_containers/spray/waterflower
 
 
 //toys
@@ -1092,7 +1186,6 @@
 /datum/design/item/genfab/sectools/handcuffs
 	name = "handcuffs"
 	build_path = /obj/item/weapon/handcuffs
-	category = "General"
 
 /datum/design/item/genfab/sectools/adv/hud
 	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
@@ -1112,6 +1205,15 @@
 	req_tech = list(TECH_MAGNET = 3, TECH_COMBAT = 2)
 	build_path = /obj/item/clothing/glasses/hud/security
 
+/datum/design/item/genfab/sectools/adv/pepperspray
+	name = "pepperspray (empty)"
+	build_path = /obj/item/weapon/reagent_containers/spray/pepper
+
+/datum/design/item/genfab/sectools/adv/riotshield
+	name = "riot shield"
+	build_path = /obj/item/weapon/shield/riot
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1127,54 +1229,71 @@
 //////////////////////////////////////////////////////////////////////////////
 
 /datum/design/item/genfab/miningtools/adv/jackhammer
-	id = "jackhammer"
 	req_tech = list(TECH_MATERIAL = 3, TECH_POWER = 2, TECH_ENGINEERING = 2)
-	materials = list(MATERIAL_STEEL = 2000, MATERIAL_GLASS = 500, MATERIAL_SILVER = 500)
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 0.5 SHEETS, MATERIAL_SILVER = 0.5 SHEETS)
 	build_path = /obj/item/weapon/pickaxe/jackhammer
 
-/datum/design/item/genfab/miningtools/adv/drill
-	id = "drill"
-	req_tech = list(TECH_MATERIAL = 2, TECH_POWER = 3, TECH_ENGINEERING = 2)
-	materials = list(MATERIAL_STEEL = 6000, MATERIAL_GLASS = 1000) //expensive, but no need for miners.
-	build_path = /obj/item/weapon/pickaxe/drill
-	sort_string = "KAAAB"
+/datum/design/item/genfab/miningtools/pickaxe
+	materials = list(MATERIAL_STEEL = 2 SHEETS)
+	build_path = /obj/item/weapon/pickaxe
+
+/datum/design/item/genfab/miningtools/hammer
+	materials = list(MATERIAL_STEEL = 2 SHEETS)
+	build_path = /obj/item/weapon/pickaxe/hammer
+
+/datum/design/item/genfab/miningtools/flag/red
+	materials = list(MATERIAL_CLOTH = 1 SHEETS)
+	build_path = /obj/item/stack/flag/red
+
+/datum/design/item/genfab/miningtools/flag/yellow
+	materials = list(MATERIAL_CLOTH = 1 SHEETS)
+	build_path = /obj/item/stack/flag/yellow
+
+/datum/design/item/genfab/miningtools/flag/green
+	materials = list(MATERIAL_CLOTH = 1 SHEETS)
+	build_path = /obj/item/stack/flag/green
+
+/datum/design/item/genfab/miningtools/flag/solgov
+	materials = list(MATERIAL_CLOTH = 1 SHEETS)
+	build_path = /obj/item/stack/flag/solgov
+
+
+
 
 /datum/design/item/genfab/miningtools/adv/plasmacutter
-	id = "plasmacutter"
 	req_tech = list(TECH_MATERIAL = 4, TECH_PHORON = 3, TECH_ENGINEERING = 3)
-	materials = list(MATERIAL_STEEL = 1500, MATERIAL_GLASS = 500, MATERIAL_GOLD = 500, MATERIAL_PHORON = 4000)
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 1 SHEETS, MATERIAL_GOLD = 1 SHEETS, MATERIAL_PHORON = 2 SHEETS)
 	build_path = /obj/item/weapon/gun/energy/plasmacutter
-	sort_string = "KAAAC"
+
+/datum/design/item/genfab/miningtools/adv/drill
+	req_tech = list(TECH_MATERIAL = 6, TECH_POWER = 4, TECH_ENGINEERING = 4)
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_DIAMOND = 3 SHEETS)
+	build_path = /obj/item/weapon/pickaxe/drill
+
+/datum/design/item/genfab/miningtools/adv/jackhammer
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GLASS = 1 SHEET)
+	build_path = /obj/item/weapon/pickaxe/jackhammer
+
 
 /datum/design/item/genfab/miningtools/adv/pick_diamond
-	id = "pick_diamond"
 	req_tech = list(TECH_MATERIAL = 6)
-	materials = list(MATERIAL_DIAMOND = 4000)
+	materials = list(MATERIAL_DIAMOND = 2 SHEETS, MATERIAL_STEEL = 1 SHEET)
 	build_path = /obj/item/weapon/pickaxe/diamond
-	sort_string = "KAAAD"
 
 /datum/design/item/genfab/miningtools/adv/drill_diamond
-	id = "drill_diamond"
 	req_tech = list(TECH_MATERIAL = 6, TECH_POWER = 4, TECH_ENGINEERING = 4)
-	materials = list(MATERIAL_STEEL = 4000, MATERIAL_GLASS = 2000, MATERIAL_DIAMOND = 6000)
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_DIAMOND = 3 SHEETS)
 	build_path = /obj/item/weapon/pickaxe/diamonddrill
-	sort_string = "KAAAE"
 
 /datum/design/item/genfab/miningtools/adv/mining_scanner
-	desc = "Scans for ore deposits."
-	id = "mining_scanner"
 	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2)
-	materials = list(MATERIAL_STEEL = 1000,MATERIAL_GLASS = 1000)
+	materials = list(MATERIAL_STEEL = 0.5 SHEETS,MATERIAL_GLASS = 0.5 SHEETS)
 	build_path = /obj/item/weapon/mining_scanner
-	sort_string = "KAAAF"
 
 /datum/design/item/genfab/miningtools/adv/depth_scanner
-	desc = "Used to check spatial depth and density of rock outcroppings."
-	id = "depth_scanner"
 	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2, TECH_BLUESPACE = 2)
-	materials = list(MATERIAL_STEEL = 1000,MATERIAL_GLASS = 1000)
+	materials = list(MATERIAL_STEEL = 0.5 SHEETS,MATERIAL_GLASS = 0.5 SHEETS)
 	build_path = /obj/item/device/depth_scanner
-	sort_string = "KAAAG"
 
 
 

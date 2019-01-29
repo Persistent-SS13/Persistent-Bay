@@ -666,9 +666,9 @@
  */
 
 
-/*/obj/item/weapon/combitool
+/obj/item/weapon/combitool
 	name = "combi-tool"
-	desc = "It even has one of those nubbins for doing the thingy."
+	desc = "The second best tool for every handyman."
 	icon = 'icons/obj/items.dmi'
 	icon_state = "combitool"
 	w_class = ITEM_SIZE_SMALL
@@ -722,4 +722,4 @@
 	if(!resolved && tool && target)
 		tool.afterattack(target,user,1)
 	if(tool)
-		tool.loc = src*/
+		tool.loc = src

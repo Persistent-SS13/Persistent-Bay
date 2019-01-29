@@ -37,24 +37,29 @@
 
 /datum/design/item/engifab/engitools/adv/analyzer
 	name = "Gas analyzer"
-	id = "gas_analyzer"
 	build_path = /obj/item/device/analyzer
 	category = "Tools"
 	materials = list(MATERIAL_STEEL = 30, MATERIAL_GLASS = 20)
 
 /datum/design/item/engifab/engitools/t_scanner
 	name = "T-ray Scanner"
-	id = "t-ray_scanner"
 	build_path = /obj/item/device/t_scanner
 	category = "Tools"
 	materials = list(MATERIAL_STEEL = 150)
 
 /datum/design/item/engifab/engitools/simple/flashlight
 	name = "Flashlight"
-	id = "flashlight"
 	build_path = /obj/item/device/flashlight
 	category = "Tools"
 	materials = list(MATERIAL_STEEL = 20, MATERIAL_GLASS = 20)
+	
+	
+/datum/design/item/engifab/engitools/simple/tape_roll
+	name = "Tape Roll"
+	build_path = /obj/item/weapon/tape_roll
+	category = "Tools"
+	materials = list(MATERIAL_STEEL = 20, MATERIAL_GLASS = 20) // ADJUST MATERIALS
+	
 
 /datum/design/item/engifab/engitools/maglight
 	name = "Maglight"
@@ -122,17 +127,29 @@
 
 /datum/design/item/engifab/engitools/suit_cooler
 	name = "Suit cooling unit"
-	id = "suit_cooling_unit"
 	build_path = /obj/item/device/suit_cooling_unit
 	category = "General"
 	materials = list(MATERIAL_STEEL = 15000, MATERIAL_GLASS = 3500)
 
 /datum/design/item/engifab/engitools/simple/weldermask
 	name = "Welding mask"
-	id = "welding_mask"
 	build_path = /obj/item/clothing/head/welding
 	category = "General"
 	materials = list(MATERIAL_STEEL = 3000, MATERIAL_GLASS = 1000)
+
+
+/datum/design/item/engifab/engitools/rcd
+	name = "Rapid Construction Device"
+	build_path = /obj/item/weapon/rcd
+	category = "Tools"
+	materials = list(MATERIAL_STEEL = 10 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_GOLD = 5 SHEETS, MATERIAL_SILVER = 5 SHEETS, MATERIAL_PHORON = 5 SHEETS)
+
+/datum/design/item/engifab/engitools/combitool
+	name = "Combitool"
+	build_path = /obj/item/weapon/combitool
+	category = "Tools"
+	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_GOLD = 1 SHEETS, MATERIAL_SILVER = 1 SHEETS)
+
 
 /datum/design/item/engifab/engitools/rcd_ammo
 	name = "Matter Cartridge"
@@ -381,26 +398,49 @@
 	category = "Parts"
 	materials = list(MATERIAL_STEEL = 800, MATERIAL_GLASS = 200)
 
-/datum/design/item/engifab/parts/tube/large
+
+
+
+
+
+/datum/design/item/engifab/lights
+	category = "Lights"
+	
+/datum/design/item/engifab/lights/tube/large
 	name = "Spotlight tube"
-	id = "spotlight_tube"
 	build_path = /obj/item/weapon/light/tube/large
 	category = "Parts"
 	materials = list(MATERIAL_GLASS = 150)
 
-/datum/design/item/engifab/parts/recipe/tube
+/datum/design/item/engifab/lights/tube
 	name = "Light tube"
 	id = "light_tube"
 	build_path = /obj/item/weapon/light/tube
 	category = "Parts"
 	materials = list(MATERIAL_GLASS = 100)
 
-/datum/design/item/engifab/parts/bulb
+/datum/design/item/engifab/lights/bulb
 	name = "Light bulb"
 	id = "light_bulb"
 	build_path = /obj/item/weapon/light/bulb
 	category = "Parts"
 	materials = list(MATERIAL_GLASS = 100)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /datum/design/item/engifab/parts/cell_device
 	name = "Device cell"

@@ -26,6 +26,8 @@
 	var/background_icon_state = "bg_default"
 	var/mob/living/owner
 
+	var/icon_override = null
+	var/override_state = ""
 /datum/action/New(var/Target)
 	target = Target
 
@@ -137,8 +139,11 @@
 	overlays.Cut()
 	var/image/img
 	if(owner.action_type == AB_ITEM && owner.target)
-		var/obj/item/I = owner.target
-		img = image(I.icon, src , I.icon_state)
+		if(owner.icon_override)
+			img = image(owner.icon_override, src, owner.override_state)
+		else
+			var/obj/item/I = owner.target
+			img = image(I.icon, src , I.icon_state)
 	else if(owner.button_icon && owner.button_icon_state)
 		img = image(owner.button_icon,src,owner.button_icon_state)
 	img.pixel_x = 0
@@ -222,7 +227,7 @@
 
 /datum/action/item_action/lace_action
 	check_flags = AB_CHECK_INSIDE
-	
+
 #undef AB_WEST_OFFSET
 #undef AB_NORTH_OFFSET
 #undef AB_MAX_COLUMNS

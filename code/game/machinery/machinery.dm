@@ -116,13 +116,14 @@ Class Procs:
 	var/clickvol = 40		// sound played on succesful interface use
 	var/multiplier = 0
 
-	
+
 	var/datum/world_faction/faction
 	var/faction_uid
-	
+
+	layer = 2.9
 /obj/machinery/proc/can_connect(var/datum/world_faction/trying)
 	return 1
-	
+
 /obj/machinery/Initialize(mapload, d=0)
 	. = ..()
 	if(d)

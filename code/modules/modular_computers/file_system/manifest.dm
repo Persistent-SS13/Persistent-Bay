@@ -6,7 +6,7 @@
 		dept_data += "0"
 		dept_data[dept_data.len] = list("names" = list(), "header" = category.name, "flag" = category.name)
 	dept_data += "0"
-	dept_data[dept_data.len] = list("names" = list(), "header" = "Miscellaneous", "flag" = MSC)
+	dept_data[dept_data.len] = list("names" = list(), "header" = "Elected/Appointed", "flag" = "Special Assignments")
 	dept_data += "0"
 	dept_data[dept_data.len] = list("names" = list(), "header" = "Off duty", "flag" = "Off duty")
 	var/list/misc //Special departments for easier access
@@ -46,7 +46,7 @@
 	
 	for(var/datum/computer_file/crew_record/CR in records)
 		var/name = CR.get_name()
-		var/datum/assignment/assignment = connected_faction.get_assignment(CR.assignment_uid)
+		var/datum/assignment/assignment = connected_faction.get_assignment(CR.assignment_uid, name)
 		var/rank
 		if(CR.custom_title)
 			rank = CR.custom_title
@@ -89,7 +89,7 @@
 		isactive[name] = active ? "Active" : "Inactive"
 	for(var/datum/computer_file/crew_record/CR in offduty)
 		var/name = CR.get_name()
-		var/datum/assignment/assignment = connected_faction.get_assignment(CR.assignment_uid)
+		var/datum/assignment/assignment = connected_faction.get_assignment(CR.assignment_uid,name)
 		var/rank
 		if(CR.custom_title)
 			rank = CR.custom_title

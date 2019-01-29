@@ -25,6 +25,8 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	var/datum/mind/backup
 	action_button_name = "Access Neural Lace UI"
 	action_button_is_hands_free = 1
+	action_button_icon = 'icons/misc/lace.dmi'
+	action_button_state = "lace"
 	var/connected_faction = ""
 	var/duty_status = 1
 	var/datum/world_faction/faction
@@ -143,20 +145,20 @@ GLOBAL_LIST_EMPTY(neural_laces)
 			if(choice == "Kill my character, return to character creation")
 				if(input("Are you SURE you want to delete [CharacterName(save_slot, lacemob.ckey)]? THIS IS PERMANENT. enter the character\'s full name to confirm.", "DELETE A CHARACTER", "") == CharacterName(save_slot, lacemob.ckey))
 					fdel(load_path(lacemob.ckey, "[save_slot].sav"))
+					var/mob/new_player/M = new /mob/new_player()
+					M.loc = null
+					M.key = lacemob.key
 
-				var/mob/new_player/M = new /mob/new_player()
-				M.loc = null
-				M.key = lacemob.key
+					lacemob.perma_dead = 1
+					lacemob.ckey = null
+					lacemob.stored_ckey = null
+					lacemob.save_slot = 0
 
-				lacemob.perma_dead = 1
-				lacemob.ckey = null
-				lacemob.stored_ckey = null
-				lacemob.save_slot = 0
+					owner?.perma_dead = 1
+					owner?.ckey = null
+					owner?.stored_ckey = null
+					owner?.save_slot = 0
 
-				owner?.perma_dead = 1
-				owner?.ckey = null
-				owner?.stored_ckey = null
-				owner?.save_slot = 0
 		if("deselect_ballot")
 			selected_ballot = null
 		if("vote")
@@ -186,8 +188,21 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		if(menu == 1)
 			if(!record)
 				record = Retrieve_Record(owner.real_name)
+
+
 			if(record)
-				data["citizenship_status"] = record.citizenship ? "Full Citizen" : "Resident"
+				var/citizenshipp
+				switch(record.citizenship)
+					if(1)
+						citizenshipp = "Resident"
+					if(2)
+						citizenshipp = "Citizen"
+					if(3)
+						citizenshipp = "Prisoner"
+
+				data["citizenship_status"] = citizenshipp
+
+
 			else
 				data["citizenship_status"] = "Cannot read citizenship. Contact Administrator."
 
@@ -199,6 +214,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 				data["faction_name"] = faction.name
 				if(duty_status == 1)
 					data["work_status"] = try_duty()
+				data["clock_outable"] = 1
 			else
 				data["work_status"] = "Not currently clocked in."
 			var/list/potential = get_potential()
@@ -251,7 +267,9 @@ GLOBAL_LIST_EMPTY(neural_laces)
 						formatted_ballots[++formatted_ballots.len] = list("name" = ballot.title, "ref" = "\ref[ballot]")
 					data["ballots"] = formatted_ballots
 		data["menu"] = menu
-		data["clock_outable"] = 1
+
+
+
 	else // death code
 		if(lacemob)
 			if(lacemob.teleport_time < world.time)
@@ -294,7 +312,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		if(istype(loc.loc, /mob/living/silicon/robot))
 			robot = loc.loc
 	if((!owner || !faction) && !robot)
-		return "Not clocked in anywhere."
+		return "No owner found.."
 	var/datum/computer_file/crew_record/records
 	if(!robot)
 		records = faction.get_record(owner.real_name)
@@ -302,19 +320,16 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		records = faction.get_record(robot.real_name)
 	if(!records)
 		faction = null
-		return "Not clocked in anywhere."
-	var/assignment_uid = records.try_duty()
-	if(assignment_uid)
-		var/datum/assignment/assignment = faction.get_assignment(assignment_uid)
-		if(assignment && assignment.duty_able)
-			var/title = assignment.name
-			if(records.rank > 1 && assignment.ranks.len >= records.rank-1)
-				title = assignment.ranks[records.rank-1]
-			return "Working as [title] for [faction.name]. Making [assignment.payscale]$ for every thirty minutes clocked in."
-		else
-			return "Not clocked in anywhere."
+		return "No record found."
+
+	var/datum/assignment/assignment = faction.get_assignment(records.try_duty(), records.get_name())
+	if(assignment && assignment.duty_able)
+		var/title = assignment.name
+		if(records.rank > 1 && assignment.ranks.len >= records.rank-1)
+			title = assignment.ranks[records.rank-1]
+		return "Working as [title] for [faction.name].<br>Making [assignment.payscale]$ for every thirty minutes clocked in."
 	else
-		return "Not clocked in anywhere."
+		return "No paying assignment."
 
 
 

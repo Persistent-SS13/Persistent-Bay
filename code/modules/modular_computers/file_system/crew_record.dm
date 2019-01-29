@@ -104,7 +104,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/list/all_demotes = list()
 	var/list/three_demotes = list()
 	var/list/five_demotes = list()
-	var/datum/assignment/curr_assignment = faction.get_assignment(assignment_uid)
+	var/datum/assignment/curr_assignment = faction.get_assignment(assignment_uid, get_name())
 	if(!curr_assignment) return 0
 	for(var/name in promote_votes)
 		if(name == faction.get_leadername())
@@ -115,7 +115,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		if(name == get_name()) continue
 		var/datum/computer_file/crew_record/record = faction.get_record(name)
 		if(record)
-			var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
+			var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid, record.get_name())
 			if(assignment)
 				if(assignment.parent)
 					var/promoter_command = (assignment.parent.command_faction)
@@ -178,7 +178,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		if(name == get_name()) continue
 		var/datum/computer_file/crew_record/record = faction.get_record(name)
 		if(record)
-			var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
+			var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid, record.get_name())
 			if(assignment)
 				if(assignment.parent)
 					var/promoter_command = (assignment.parent.command_faction)
@@ -324,7 +324,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	set_criminalStatus(GLOB.default_security_status)
 	set_dna(H ? H.dna.unique_enzymes : "")
 	set_fingerprint(H ? md5("[H.real_name]+fingerprint") : "")
-	
+
 	set_secRecord((H && H.sec_record && !jobban_isbanned(H, "Records") ? html_decode(H.sec_record) : "No record supplied"))
 
 	// Employment record

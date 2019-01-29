@@ -882,8 +882,8 @@
 
 /datum/design/item/genfab/consumer/games
 	category = "Games"
-	
-	
+
+
 
 ////////////////////////////////////////////////////////////////////
 
@@ -973,7 +973,7 @@
 /datum/design/item/genfab/consumer/toys/ntballoon
 	name = "nanotrasen balloon"
 	build_path = /obj/item/toy/balloon/nanotrasen
-	
+
 /datum/design/item/genfab/consumer/toys/blink
 	name = "electronic blink toy game"
 	build_path = /obj/item/toy/blink
@@ -993,23 +993,23 @@
 /datum/design/item/genfab/consumer/toys/snappop
 	name = "snap pop"
 	build_path = /obj/item/toy/snappop
-	
+
 /datum/design/item/genfab/consumer/toys/snappop
 	name = "snap pop"
 	build_path = /obj/item/toy/snappop
-	
+
 /datum/design/item/genfab/consumer/games/cards
 	name = "playing cards"
 	build_path = /obj/item/weapon/deck/cards
 
 /datum/design/item/genfab/consumer/games/tarot
 	name = "playing cards"
-	build_path = /obj/item/weapon/deck/cards/tarot
-	
+	build_path = /obj/item/weapon/deck/tarot
+
 /datum/design/item/genfab/consumer/games/board
 	name = "checkerboard"
 	build_path = /obj/item/weapon/board
-	
+
 /datum/design/item/genfab/consumer/games/checker
 	name = "black checker"
 	build_path = /obj/item/weapon/checker
@@ -1037,7 +1037,7 @@
 /datum/design/item/genfab/consumer/games/bishop
 	name = "black bishop"
 	build_path = /obj/item/weapon/checker/bishop
-	
+
 /datum/design/item/genfab/consumer/games/redbishop
 	name = "red bishop"
 	build_path = /obj/item/weapon/checker/bishop/red
@@ -1049,7 +1049,7 @@
 /datum/design/item/genfab/consumer/games/redrook
 	name = "red rook"
 	build_path = /obj/item/weapon/checker/rook/red
-	
+
 /datum/design/item/genfab/consumer/games/queen
 	name = "black queen"
 	build_path = /obj/item/weapon/checker/queen
@@ -1057,7 +1057,7 @@
 /datum/design/item/genfab/consumer/games/redqueen
 	name = "red queen"
 	build_path = /obj/item/weapon/checker/queen/red
-	
+
 /datum/design/item/genfab/consumer/games/king
 	name = "black king"
 	build_path = /obj/item/weapon/checker/king
@@ -1069,12 +1069,12 @@
 /datum/design/item/genfab/consumer/games/cardemon
 	name = "cardemon booster pack"
 	build_path = /obj/item/weapon/pack/cardemon
-	
+
 /datum/design/item/genfab/consumer/games/spaceball
 	name = "spaceball booster pack"
 	build_path = /obj/item/weapon/pack/spaceball
-	
-	
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

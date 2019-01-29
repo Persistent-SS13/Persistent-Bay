@@ -28,7 +28,7 @@
 	time = 20
 
 /datum/design/item/engifab/engitools/simple
-	build_type = ENGIFAB|GENFAB
+	build_type = ENGIFAB|GENERALFAB
 
 /datum/design/item/engifab/engitools/adv
 

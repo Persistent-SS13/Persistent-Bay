@@ -31,7 +31,7 @@
 
 /datum/money_account/proc/do_transaction(var/datum/transaction/T)
 	var/datum/money_account/nexus_account
-	var/datum/world_faction/nexus = get_faction("nexus")
+	var/datum/world_faction/democratic/nexus = get_faction("nexus")
 	if(nexus)
 		nexus_account = nexus.central_account
 	money = money + T.amount
@@ -147,9 +147,9 @@
 	D.transaction_log.Add(T)
 
 	return 1
-	
-	
-	
+
+
+
 /proc/money_transfer(var/datum/money_account/payer, var/attempt_real_name, var/purpose, var/amount)
 	if(!payer || amount > payer.money)
 		return 0
@@ -177,7 +177,7 @@
 	if(D && D.security_level <= security_level_passed && (!D.security_level || D.remote_access_pin == attempt_pin_number) )
 		return D
 
-/proc/get_account_loadless(var/account_number)		
+/proc/get_account_loadless(var/account_number)
 	for(var/datum/money_account/D in all_money_accounts)
 		if(D.account_number == account_number)
 			return D

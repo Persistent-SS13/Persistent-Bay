@@ -604,14 +604,14 @@ var/PriorityQueue/all_feeds
 
 /datum/world_faction/proc/get_leadername()
 	return leader_name
-	
+
 /datum/world_faction/democratic/get_leadername()
 	if(gov && gov.real_name != "")
 		return gov.real_name
 	else
 		return leader_name
-		
-		
+
+
 /datum/world_faction
 	var/name = "" // can be safely changed
 	var/abbreviation = "" // can be safely changed
@@ -667,48 +667,48 @@ var/PriorityQueue/all_feeds
 	nexus.gov = new()
 	var/datum/election/gov/gov_elect = new()
 	gov_elect.ballots |= nexus.gov
-	
+
 	nexus.waiting_elections |= gov_elect
-	
+
 	var/datum/election/council_elect = new()
 	var/datum/democracy/councillor/councillor1 = new()
 	councillor1.title = "Councillor of Justice and Criminal Matters"
 	nexus.city_council |= councillor1
 	council_elect.ballots |= councillor1
-	
+
 	var/datum/democracy/councillor/councillor2 = new()
 	councillor2.title = "Councillor of Budget and Tax Measures"
 	nexus.city_council |= councillor2
 	council_elect.ballots |= councillor2
-	
+
 	var/datum/democracy/councillor/councillor3 = new()
 	councillor3.title = "Councillor of Commerce and Business Relations"
 	nexus.city_council |= councillor3
 	council_elect.ballots |= councillor3
-	
+
 	var/datum/democracy/councillor/councillor4 = new()
 	councillor4.title = "Councillor for Culture and Ethical Oversight"
 	nexus.city_council |= councillor4
 	council_elect.ballots |= councillor4
-	
+
 	var/datum/democracy/councillor/councillor5 = new()
 	councillor5.title = "Councillor for the Domestic Affairs"
 	nexus.city_council |= councillor5
 	council_elect.ballots |= councillor5
-	
+
 	nexus.waiting_elections |= council_elect
-	
+
 	nexus.network.name = "NEXUSGOV-NET"
 	nexus.network.net_uid = "nexus"
 	nexus.network.password = ""
 	nexus.network.invisible = 0
-	
+
 	GLOB.all_world_factions |= nexus
-	
-	
+
+
 /datum/world_faction/democratic/New()
 	..()
-	
+
 	councillor_assignment = new()
 	judge_assignment = new()
 	governor_assignment = new()
@@ -726,7 +726,7 @@ var/PriorityQueue/all_feeds
 	councillor_assignment.parent = special_category
 	judge_assignment.parent = special_category
 	governor_assignment.parent = special_category
-	
+
 	special_category.assignments |= councillor_assignment
 	special_category.assignments |= judge_assignment
 	special_category.assignments |= governor_assignment
@@ -734,18 +734,18 @@ var/PriorityQueue/all_feeds
 	special_category.head_position = governor_assignment
 	special_category.parent = src
 	special_category.command_faction = 1
-		
-	
+
+
 /datum/world_faction/democratic
 
 	var/datum/democracy/governor/gov
-	
+
 	var/datum/assignment/councillor_assignment
 	var/datum/assignment/judge_assignment
 	var/datum/assignment/governor_assignment
-	
+
 	var/datum/assignment_category/special_category
-	
+
 	var/list/city_council = list()
 	var/list/judges = list()
 
@@ -816,13 +816,13 @@ var/PriorityQueue/all_feeds
 				tax_amount = amount * (tax_pprog1_rate/100)
 		else
 			tax_amount = amount * (tax_pflat_rate/100)
-	tax_amount = floor(tax_amount)
+	tax_amount = round(tax_amount)
 	if(tax_amount)
 		var/datum/transaction/T = new("[src.name]", "Tax", -tax_amount, "Nexus Economy Network")
 		account.do_transaction(T)
 		var/datum/transaction/Te = new("[account.owner_name]", "Tax", tax_amount, "Nexus Economy Network")
 		central_account.do_transaction(Te)
-		
+
 
 
 
@@ -847,7 +847,7 @@ var/PriorityQueue/all_feeds
 /datum/world_faction/democratic/proc/render_verdict(var/datum/verdict/verdict)
 	verdicts |= verdict
 	command_announcement.Announce("Judge [verdict.judge] has rendered a verdict! [verdict.name].","Judicial Decision")
-		
+
 /datum/world_faction/democratic/proc/schedule_trial(var/datum/judge_trial/trial)
 	scheduled_trials |= trial
 
@@ -877,9 +877,9 @@ var/PriorityQueue/all_feeds
 		for(var/datum/candidate/candidate in ballot.candidates)
 			if(candidate.real_name == real_name)
 				return list(candidate, ballot)
-				
-				
-				
+
+
+
 /datum/world_faction/democratic/proc/start_election(var/datum/election/election)
 	current_election = election
 	if(election.typed)
@@ -889,14 +889,14 @@ var/PriorityQueue/all_feeds
 /datum/world_faction/democratic/proc/start_trial(var/datum/judge_trial/trial)
 	command_announcement.Announce("A trial should be starting soon! [trial.name] with Judge [trial.judge] presiding.","Trial Start")
 	scheduled_trials -= trial
-	
+
 
 /datum/world_faction/democratic/proc/end_election()
 	for(var/datum/democracy/ballot in current_election.ballots)
 		if(!ballot.candidates.len)
 			continue
 		var/list/leaders = list()
-		var/datum/candidate/leader			
+		var/datum/candidate/leader
 		for(var/datum/candidate/candidate in ballot.candidates)
 			if(!leader || candidate.votes.len > leader.votes.len)
 				leaders.Cut()
@@ -969,7 +969,7 @@ var/PriorityQueue/all_feeds
 /datum/world_faction/democratic/proc/pass_policy(var/datum/council_vote/vote)
 	policy |= vote
 	command_announcement.Announce("Governor [vote.signer] has passed an executive policy! [vote.name].","Governor Action")
-	
+
 /datum/world_faction/democratic/proc/pass_nomination_judge(var/datum/democracy/judge)
 	judges |= judge
 	command_announcement.Announce("The government has approved the nomination of [judge.real_name] for judge. They are now Judge [judge.real_name].","Nomination Pass")
@@ -977,7 +977,7 @@ var/PriorityQueue/all_feeds
 /datum/world_faction/democratic/proc/pass_impeachment_judge(var/datum/democracy/judge)
 	judges -= judge
 	command_announcement.Announce("The government has voted to remove [judge.real_name] from their position of  judge.","Impeachment")
-	
+
 /datum/world_faction/democratic/proc/pass_vote(var/datum/council_vote/vote)
 	votes -= vote
 	vote.time_signed = world.realtime
@@ -1030,12 +1030,12 @@ var/PriorityQueue/all_feeds
 	else if(vote.bill_type == 1)
 		criminal_laws |= vote
 		command_announcement.Announce("The government has just passed a new criminal law.","New Criminal Law")
-		
+
 	else if(vote.bill_type == 2)
 		civil_laws |= vote
 		command_announcement.Announce("The government has just passed a new civil law.","New Civil Law")
-		
-		
+
+
 /datum/council_vote
 	var/name = "" // title of votes
 	var/bill_type = 1 //  1 = criminal law, 2 = civil law, 3 = tax policy, 4 = impeachment (judge) 5 = nomination (judge)
@@ -1098,7 +1098,7 @@ var/PriorityQueue/all_feeds
 
 	var/election_desc = ""
 	var/seeking_reelection = 1
-	
+
 	var/list/candidates = list()
 	var/list/voted_ckeys = list() // to prevent double voting
 
@@ -1184,7 +1184,7 @@ var/PriorityQueue/all_feeds
 	for(var/datum/assignment_category/assignment_category in assignment_categories)
 		for(var/x in assignment_category.assignments)
 			all_assignments |= x
-			
+
 /datum/world_faction/proc/get_assignment(var/assignment, var/real_name)
 	if(!assignment) return null
 	rebuild_all_assignments()
@@ -1199,7 +1199,7 @@ var/PriorityQueue/all_feeds
 	if(is_governor(real_name))
 		return governor_assignment
 	return ..()
-	
+
 /datum/records_holder
 	var/use_standard = 1
 	var/list/custom_records = list() // format-- list("")

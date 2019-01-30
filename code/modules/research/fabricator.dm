@@ -297,8 +297,12 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	. = list()
 	for(var/i = 1 to files.known_designs.len)
 		var/datum/design/D = files.known_designs[i]
-		if(!D.build_path || !(D.build_type && D.build_type == build_type))
-			continue
+		if(islist(D.build_type))
+			if(!D.build_path || !(build_type in D.build_type))
+				continue
+		else
+			if(!D.build_path || !(D.build_type && D.build_type == build_type))
+				continue
 		. += list(list("name" = D.name, "id" = i, "category" = D.category, "resources" = get_design_resources(D), "time" = get_design_time(D)))
 
 /obj/machinery/fabricator/proc/CallReagentName(var/reagent_type)
@@ -321,8 +325,12 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	if(files)
 		var/list/design_materials = list()
 		for(var/datum/design/D in files.known_designs)
-			if(!D.build_path || !(D.build_type && D.build_type == build_type))
-				continue
+			if(islist(D.build_type))
+				if(!D.build_path || !(build_type in D.build_type))
+					continue
+			else
+				if(!D.build_path || !(D.build_type && D.build_type == build_type))
+					continue
 			categories |= D.category
 
 			for(var/material in D.materials) // Iterating over the Designs' materials so that we know what should be able to be inserted

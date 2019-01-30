@@ -213,9 +213,11 @@ obj/machinery/computer/general_air_control/Destroy()
 	if(output_info)
 		var/power = (output_info["power"])
 		var/output_pressure = output_info["internal"]
+		var/pump_dir = output_info["direction"]
 		output += {"<B>Output</B>: [power?("Open"):("On Hold")] <A href='?src=\ref[src];out_refresh_status=1'>Refresh</A><BR>
-Max Output Pressure: [output_pressure] kPa<BR>"}
-		output += "Command: <A href='?src=\ref[src];out_toggle_power=1'>Toggle Power</A> <A href='?src=\ref[src];out_set_pressure=1'>Set Pressure</A><BR>"
+<B>Direction</B>: [pump_dir]<BR>
+<B>Max Output Pressure</B>: [output_pressure] kPa<BR>"}
+		output += "Command: <A href='?src=\ref[src];out_toggle_power=1'>Toggle Power</A> <A href='?src=\ref[src];out_toggle_dir=1'>Toggle Dir</A> <A href='?src=\ref[src];out_set_pressure=1'>Set Pressure</A><BR>"
 
 	else
 		output += "<FONT color='red'>ERROR: Can not find output port</FONT> <A href='?src=\ref[src];out_refresh_status=1'>Search</A><BR>"
@@ -282,6 +284,11 @@ Max Output Pressure: [output_pressure] kPa<BR>"}
 	if(href_list["out_toggle_power"])
 		output_info = null
 		signal.data = list ("tag" = output_tag, "power_toggle" = 1)
+		. = 1
+
+	if(href_list["out_toggle_dir"])
+		output_info = null
+		signal.data = list ("tag" = output_tag, "direction_toggle" = 1)
 		. = 1
 
 	if(href_list["out_set_pressure"])

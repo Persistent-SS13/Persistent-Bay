@@ -21,6 +21,7 @@
 	infra_luminosity = 15 //byond implementation is bugged.
 	anchor_fall = TRUE
 	w_class = ITEM_SIZE_NO_CONTAINER
+	should_save = 0
 	var/initial_icon = null //Mech type for resetting icon. Only used for reskinning kits (see custom items)
 	var/can_move = 1
 	var/mob/living/carbon/occupant = null
@@ -72,17 +73,11 @@
 	var/datum/global_iterator/pr_inertial_movement //controls intertial movement in spesss
 	var/datum/global_iterator/pr_give_air //moves air from tank to cabin
 	var/datum/global_iterator/pr_internal_damage //processes internal damage
-
-
 	var/wreckage
-
 	var/list/equipment = new
 	var/obj/item/mecha_parts/mecha_equipment/selected
 	var/max_equip = 3
 	var/datum/events/events
-
-
-	should_save = 0
 
 
 /obj/mecha/after_load()
@@ -614,7 +609,7 @@
 		src.log_append_to_last("Armor saved.")
 		if(istype(A, /mob/living))
 			var/mob/living/M = A
-			M.take_organ_damage(10)
+			M.apply_damage(10)
 	else if(istype(A, /obj))
 		var/obj/O = A
 		if(O.throwforce)

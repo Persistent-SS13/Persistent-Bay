@@ -56,7 +56,7 @@
 						organ.take_damage(d, 0)
 					H.updatehealth()
 				else
-					src.take_organ_damage(d)
+					src.apply_damage(d)
 				user.visible_message("<span class='danger'>[user] attacks [src]'s stomach wall with the [I.name]!</span>")
 				playsound(user.loc, 'sound/effects/attackblob.ogg', 50, 1)
 

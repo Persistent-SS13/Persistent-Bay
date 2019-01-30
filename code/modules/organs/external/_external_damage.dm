@@ -44,21 +44,6 @@
 	var/pure_brute = 0
 	var/wound_damtype = null //Wounds don't seem to handle both burn and brute at the same time for some reasons..So we gotta override it.
 
-	// if(damlist)
-	// 	for(var/key in damlist)
-	// 		if(IsDamageTypeBrute(key))
-	// 			brute += round(damlist[key]* brute_mod, 0.1)
-	// 			sharp |= ISDAMTYPE(key, DAM_CUT) || ISDAMTYPE(key, DAM_PIERCE)
-	// 			dismemeber  |= sharp && damage >= DT_EDGE_DMG_THRESHOLD
-	// 			can_cut |= (prob(brute*2) || sharp) && (robotic < ORGAN_ROBOT)
-	// 			if(!wound_damtype)
-	// 				wound_damtype = key
-	// 		else if(IsDamageTypeBurn(key))
-	// 			burn += round(burn * burn_mod, 0.1)
-	// 			laser |= ISDAMTYPE(key, DAM_LASER)
-	// 			if(!wound_damtype)
-	// 				wound_damtype = key
-	// 	pure_brute = brute
 	log_debug("[src] take_damage([damage], [damtype], [armorbypass], [damsrc])")
 	if(damage && damtype)
 		brute = (IsDamageTypeBrute(damtype))? damage : 0
@@ -156,7 +141,7 @@
 			break
 
 		// heal brute damage
-		if(W.damage_type == DAM_BURN)
+		if(IsDamageTypeBurn(W.damage_type))
 			burn = W.heal_damage(burn)
 		else
 			brute = W.heal_damage(brute)

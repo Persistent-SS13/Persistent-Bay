@@ -352,7 +352,7 @@
 	if(H.InStasis() || H.stat == DEAD)
 		return
 	if(H.nutrition < 10)
-		H.take_overall_damage(2,0)
+		H.take_overall_damage(2, DAM_BLUNT)
 	else if (H.innate_heal)
 		// Heals normal damage.
 		if(H.getBruteLoss())

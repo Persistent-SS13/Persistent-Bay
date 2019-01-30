@@ -35,7 +35,7 @@
 	if(component_probability)
 		for(var/obj/item/weapon/computer_hardware/H in get_all_components())
 			if(prob(component_probability))
-				H.take_damage(round(damage / 2))
+				H.take_damage(round(damage / 2), damtype)
 	update_health()
 
 // Stronger explosions cause serious damage to internal components

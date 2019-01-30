@@ -27,9 +27,9 @@
 
 	for(var/organ in targets)
 		var/obj/item/organ/external/E = H.get_organ(organ)
-		E.take_damage(damage=10, damtype=DAM_BURN, damsrc = "hot iron")
+		E.take_damage(10, DAM_BURN, damsrc = "hot iron")
 		if(E.can_feel_pain())
 			H.grasp_damage_disarm(E)
 		else
-			E.take_damage(damage=6, damtype=DAM_BURN, damsrc = "hot iron")
+			E.take_damage(6, DAM_BURN, damsrc = "hot iron")
 			to_chat(H, "<span class='warning'>You look down to notice that your [E] is burned.</span>")

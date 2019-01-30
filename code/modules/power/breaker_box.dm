@@ -28,8 +28,6 @@
 	// Enabled on server startup. Used in substations to keep them in bypass mode.
 /obj/machinery/power/breakerbox/activated/Initialize()
 	. = ..()
-	for(var/datum/nano_module/rcon/R in world)
-		R.FindDevices()
 	set_state(1)
 
 /obj/machinery/power/breakerbox/examine(mob/user)

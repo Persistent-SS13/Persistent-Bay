@@ -13,7 +13,7 @@
 	var/meltdose = 10 // How much is needed to melt
 
 /datum/reagent/acid/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
-	M.take_organ_damage(0, removed * power * 2)
+	M.apply_damage(removed * power * 2, DAM_BURN)
 
 /datum/reagent/acid/affect_touch(var/mob/living/carbon/M, var/alien, var/removed) // This is the most interesting
 	if(ishuman(M))
@@ -62,9 +62,9 @@
 		return
 
 	if(volume < meltdose) // Not enough to melt anything
-		M.take_organ_damage(0, removed * power * 0.1) //burn damage, since it causes chemical burns. Acid doesn't make bones shatter, like brute trauma would.
+		M.apply_damage(removed * power * 0.1, DAM_BURN) //burn damage, since it causes chemical burns. Acid doesn't make bones shatter, like brute trauma would.
 	else
-		M.take_organ_damage(0, removed * power * 0.2)
+		M.apply_damage(removed * power * 0.2, DAM_BURN)
 		if(removed && ishuman(M) && prob(100 * removed / meltdose)) // Applies disfigurement
 			var/mob/living/carbon/human/H = M
 			var/screamed

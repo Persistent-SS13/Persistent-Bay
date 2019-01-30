@@ -460,7 +460,7 @@
 	M.radiation = max(M.radiation - 70 * removed, 0)
 	M.adjustToxLoss(-10 * removed)
 	if(prob(60))
-		M.take_organ_damage(4 * removed, 0)
+		M.apply_damage(4 * removed)
 
 /datum/reagent/spaceacillin
 	name = "Spaceacillin"

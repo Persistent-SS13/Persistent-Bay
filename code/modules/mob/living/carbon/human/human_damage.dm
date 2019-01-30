@@ -87,7 +87,7 @@
 /mob/living/carbon/human/adjustBruteLoss(var/amount)
 	amount = amount*species.brute_mod
 	if(amount > 0)
-		take_overall_damage(amount, 0)
+		take_overall_damage(amount, DAM_BLUNT)
 	else
 		heal_overall_damage(-amount, 0)
 	BITSET(hud_updateflag, HEALTH_HUD)
@@ -95,7 +95,7 @@
 /mob/living/carbon/human/adjustFireLoss(var/amount)
 	amount = amount*species.burn_mod
 	if(amount > 0)
-		take_overall_damage(0, amount)
+		take_overall_damage(amount, DAM_BURN)
 	else
 		heal_overall_damage(0, -amount)
 	BITSET(hud_updateflag, HEALTH_HUD)
@@ -270,30 +270,6 @@
 
 //TODO reorganize damage procs so that there is a clean API for damaging living mobs
 
-/*
-In most cases it makes more sense to use apply_damage() instead! And make sure to check armour if applicable.
-*/
-//Damages ONE external organ, organ gets randomly selected from damagable ones.
-//It automatically updates damage overlays if necesary
-//It automatically updates health status
-/mob/living/carbon/human/take_organ_damage(var/brute, var/burn, var/sharp = 0, var/edge = 0)
-	var/list/obj/item/organ/external/parts = get_damageable_organs()
-	if(!parts.len)
-		return
-
-	var/obj/item/organ/external/picked = pick(parts)
-	var/list/damlist = list()
-	if(edge)
-		damlist[DAM_CUT] = brute
-	else if(sharp && !edge)
-		damlist[DAM_PIERCE] = burn
-
-	if(picked.take_damage(damlist = damlist))
-		BITSET(hud_updateflag, HEALTH_HUD)
-
-	updatehealth()
-
-
 //Heal MANY external organs, in random order
 /mob/living/carbon/human/heal_overall_damage(var/brute, var/burn)
 	var/list/obj/item/organ/external/parts = get_damaged_organs(brute,burn)
@@ -314,26 +290,16 @@ In most cases it makes more sense to use apply_damage() instead! And make sure t
 	BITSET(hud_updateflag, HEALTH_HUD)
 
 // damage MANY external organs, in random order
-/mob/living/carbon/human/take_overall_damage(var/brute, var/burn, var/sharp = 0, var/edge = 0, var/used_weapon = null)
-	if(status_flags & GODMODE)	return	//godmode
+/mob/living/carbon/human/take_overall_damage(var/damage, var/damtype = DAM_BLUNT, var/used_weapon = null)
+	if(status_flags & GODMODE)
+		return 0	//godmode
 	var/list/obj/item/organ/external/parts = get_damageable_organs()
-	if(!parts.len) return
-
-	var/dam_type = DAM_BLUNT
-	var/brute_avg = brute / parts.len
-	var/burn_avg = burn / parts.len
-	if(edge)
-		dam_type = DAM_CUT
-	else if(sharp && !edge)
-		dam_type = DAM_PIERCE
+	if(!parts.len) 
+		return
 
 	for(var/obj/item/organ/external/E in parts)
-		if(brute_avg)
-			apply_damage(damage = brute_avg, damagetype = dam_type, blocked = getarmor_organ(E, dam_type), used_weapon = used_weapon, given_organ = E)
-		if(burn_avg)
-			apply_damage(damage = burn_avg, damagetype = DAM_BURN, used_weapon = used_weapon, given_organ = E)
-
-	updatehealth()
+		apply_damage(damage, damtype, blocked = getarmor_organ(E, damtype), used_weapon = used_weapon, given_organ = E)
+	src.updatehealth()
 	BITSET(hud_updateflag, HEALTH_HUD)
 
 
@@ -380,7 +346,8 @@ This function restores all organs.
 		if(isorgan(def_zone))
 			organ = def_zone
 		else
-			if(!def_zone)	def_zone = ran_zone(def_zone)
+			if(!def_zone)
+				def_zone = ran_zone(def_zone)
 			organ = get_organ(check_zone(def_zone))
 	log_debug("[src], apply_damage([damage], [damagetype], [def_zone], [blocked], [damage_flags], [used_weapon]), organ is [organ]")
 
@@ -406,10 +373,10 @@ This function restores all organs.
 	switch(damagetype)
 		if(DAM_BLUNT, DAM_CUT, DAM_PIERCE, DAM_BULLET)
 			damage = damage*species.brute_mod
-			created_wound = organ.take_damage(damage = damage, damtype = damagetype, damsrc = used_weapon)
+			created_wound = organ.take_damage(damage, damagetype, damsrc = used_weapon)
 		if(DAM_BURN, DAM_LASER, DAM_ENERGY)
 			damage = damage*species.burn_mod
-			created_wound = organ.take_damage(damage = damage, damtype = damagetype, damsrc = used_weapon)
+			created_wound = organ.take_damage(damage, damagetype, damsrc = used_weapon)
 		if(DAM_PAIN)
 			organ.add_pain(damage)
 		if(DAM_CLONE)

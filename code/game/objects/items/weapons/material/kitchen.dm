@@ -108,7 +108,7 @@
 /obj/item/weapon/material/kitchen/utensil/knife/attack(target as mob, mob/living/user as mob)
 	if ((CLUMSY in user.mutations) && prob(50))
 		to_chat(user, "<span class='warning'>You accidentally cut yourself with \the [src].</span>")
-		user.take_organ_damage(20)
+		user.apply_damage(20, DAM_CUT)
 		return
 	return ..()
 
@@ -134,7 +134,7 @@
 	if ((CLUMSY in user.mutations) && prob(50))
 		to_chat(user, "<span class='warning'>\The [src] slips out of your hand and hits your head.</span>")
 		user.drop_from_inventory(src)
-		user.take_organ_damage(10)
+		user.apply_damage(10)
 		user.Paralyse(2)
 		return
 	return ..()

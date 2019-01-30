@@ -66,7 +66,7 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='warning'>[user]'s hand slips as the blade sputters, searing a long gash in [target]'s [affected.name] with \the [tool]!</span>", \
 	"<span class='warning'>Your hand slips as the blade sputters, searing a long gash in [target]'s [affected.name] with \the [tool]!</span>")
-	affected.take_damage(damlist = list(DAM_CUT = 15, DAM_BURN = 5), damsrc = tool)
+	affected.take_multi_damage(list(DAM_CUT = 15, DAM_BURN = 5), damsrc = tool)
 
 //////////////////////////////////////////////////////////////////
 //	laser scalpel surgery step
@@ -105,7 +105,7 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='warning'>[user]'s hand jolts as the system sparks, ripping a gruesome hole in [target]'s [affected.name] with \the [tool]!</span>", \
 	"<span class='warning'>Your hand jolts as the system sparks, ripping a gruesome hole in [target]'s [affected.name] with \the [tool]!</span>")
-	affected.take_damage(damlist = list(DAM_CUT = 20, DAM_BURN = 15), damsrc = tool)
+	affected.take_multi_damage(list(DAM_CUT = 20, DAM_BURN = 15), damsrc = tool)
 
 //////////////////////////////////////////////////////////////////
 //	 scalpel surgery step

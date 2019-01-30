@@ -254,15 +254,25 @@
 //Called whenever the object is receiving damages
 // returns the amount of damages that was applied to the object
 // - damsrc: mostly for organs, contains the cause of the damage, aka weapon name and etc..
-/obj/proc/take_damage(var/damage = 0, var/damtype = DAM_BLUNT, var/armorbypass = 0, var/damsrc = null)
+/obj/proc/take_damage(var/damage = 0 as num, var/damtype = DAM_BLUNT, var/armorbypass = 0, var/damsrc = null)
 	if(!isdamageable() || !vulnerable_to_damtype(damtype))
 		return 0
 	var/resultingdmg = max(0, damage * blocked_mult(armor_absorb(damage, armorbypass, damtype)))
-	set_health(get_health() - resultingdmg)
+	rem_health(resultingdmg)
 	update_health(damtype)
 	. = resultingdmg
 	log_debug("[src] took [resultingdmg] [damtype] damages from [damsrc]! Before armor: [damage] damages.")
 	return .
+
+//Handles several damage types as a list
+/obj/proc/take_multi_damage(var/list/damage, var/armorbypass = 0 as num, var/damsrc = null)
+	if(!isdamageable())
+		return 0
+	log_debug("Multi-damage: [src]")
+	for(var/dam in damage)
+		. += take_damage(damage[dam], dam, armorbypass, damsrc)
+	return .
+	
 
 //Like take damage, but meant to instantly destroy the object from an external source
 /obj/proc/kill(var/damagetype = DAM_BLUNT)

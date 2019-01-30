@@ -1,3 +1,13 @@
+//Container for inflicted damage data
+/datum/damage
+	var/amount 	= 0
+	var/dtype 	= DAM_BLUNT
+
+/datum/damage/New(amt, ty = DAM_BLUNT)
+	..()
+	amount = amt 
+	dtype = ty
+
 //This proc returns whether a damage type is considered "Brute" damage. Mainly for organ handling.
 /proc/IsDamageTypeBrute(var/damtype)
 	return ISDAMTYPE(damtype, DAM_BLUNT) || ISDAMTYPE(damtype, DAM_CUT) || ISDAMTYPE(damtype, DAM_PIERCE) || ISDAMTYPE(damtype, DAM_BULLET)

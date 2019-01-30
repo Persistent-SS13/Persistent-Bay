@@ -23,7 +23,7 @@
 	user.do_attack_animation(AM)
 	if ((CLUMSY in user.mutations) && prob(50))
 		to_chat(user, SPAN_DANGER("\The [src] slips out of your hand and hits your head."))
-		user.take_organ_damage(10)
+		user.apply_damage(10, DAM_BLUNT)
 		user.Paralyse(20)
 		return 0
 

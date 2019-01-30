@@ -207,7 +207,7 @@ default behaviour is:
 
 //sort of a legacy burn method for /electrocute, /shock, and the e_chair
 /mob/living/proc/burn_skin(burn_amount)
-	take_overall_damage(0, burn_amount)
+	take_overall_damage(burn_amount, DAM_BURN)
 
 /mob/living/proc/adjustBodyTemp(actual, desired, incrementboost)
 	var/temperature = actual
@@ -372,13 +372,6 @@ default behaviour is:
 	adjustFireLoss(-burn)
 	src.updatehealth()
 
-// damage ONE external organ, organ gets randomly selected from damaged ones.
-/mob/living/proc/take_organ_damage(var/brute, var/burn, var/emp=0)
-	if(status_flags & GODMODE)	return 0	//godmode
-	adjustBruteLoss(brute)
-	adjustFireLoss(burn)
-	src.updatehealth()
-
 // heal MANY external organs, in random order
 /mob/living/proc/heal_overall_damage(var/brute, var/burn)
 	adjustBruteLoss(-brute)
@@ -386,10 +379,13 @@ default behaviour is:
 	src.updatehealth()
 
 // damage MANY external organs, in random order
-/mob/living/proc/take_overall_damage(var/brute, var/burn, var/used_weapon = null)
-	if(status_flags & GODMODE)	return 0	//godmode
-	adjustBruteLoss(brute)
-	adjustFireLoss(burn)
+/mob/living/proc/take_overall_damage(var/damage, var/damtype = DAM_BLUNT, var/used_weapon = null)
+	if(status_flags & GODMODE)
+		return 0	//godmode
+	if(IsDamageTypeBrute(damtype))
+		adjustBruteLoss(damage)
+	else if(IsDamageTypeBurn(damtype))	
+		adjustFireLoss(damage)
 	src.updatehealth()
 
 /mob/living/proc/restore_all_organs()

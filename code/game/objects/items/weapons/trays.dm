@@ -34,7 +34,7 @@
 	if((CLUMSY in user.mutations) && prob(50))              //What if he's a clown?
 		to_chat(M, "<span class='warning'>You accidentally slam yourself with the [src]!</span>")
 		M.Weaken(1)
-		user.take_organ_damage(2)
+		user.apply_damage(2)
 		if(prob(50))
 			playsound(M, 'sound/items/trayhit1.ogg', 50, 1)
 			return
@@ -56,9 +56,9 @@
 
 		if(prob(15))
 			M.Weaken(3)
-			M.take_organ_damage(3)
+			M.apply_damage(3)
 		else
-			M.take_organ_damage(5)
+			M.apply_damage(5)
 		if(prob(50))
 			playsound(M, 'sound/items/trayhit1.ogg', 50, 1)
 			for(var/mob/O in viewers(M, null))
@@ -102,10 +102,10 @@
 				O.show_message(text("<span class='danger'>[] slams [] with the tray!</span>", user, M), 1)
 		if(prob(10))
 			M.Stun(rand(1,3))
-			M.take_organ_damage(3)
+			M.apply_damage(3)
 			return
 		else
-			M.take_organ_damage(5)
+			M.apply_damage(5)
 			return
 
 	else //No eye or head protection, tough luck!
@@ -126,10 +126,10 @@
 				O.show_message(text("<span class='danger'>[] slams [] in the face with the tray!</span>", user, M), 1)
 		if(prob(30))
 			M.Stun(rand(2,4))
-			M.take_organ_damage(4)
+			M.apply_damage(4)
 			return
 		else
-			M.take_organ_damage(8)
+			M.apply_damage(8)
 			if(prob(30))
 				M.Weaken(2)
 				return

@@ -177,7 +177,7 @@ var/global/list/ORGAN_ENERGY_DAMAGES = list(DAM_BURN, DAM_LASER)
 
 	if(burn_damage)
 		owner.custom_pain("Something inside your [src] burns a [severity < 2 ? "bit" : "lot"]!", power * 15) //robotic organs won't feel it anyway
-		take_damage(damage = burn_damage, damagetype = DAM_BURN, used_weapon = "Hot metal")
+		take_damage(burn_damage, DAM_BURN, damsrc = "Hot metal")
 
 /obj/item/organ/external/attack_self(var/mob/user)
 	if(!contents.len)
@@ -1257,7 +1257,7 @@ obj/item/organ/external/proc/remove_clamps()
 	if(internal_organs.len && prob(brute_dam + force))
 		owner.custom_pain("A piece of bone in your [encased ? encased : name] moves painfully!", 50, affecting = src)
 		var/obj/item/organ/I = pick(internal_organs)
-		I.take_damage(usr, rand(3,5))
+		I.take_damage(rand(3,5))
 
 /obj/item/organ/external/proc/get_wounds_desc()
 	if(robotic >= ORGAN_ROBOT)

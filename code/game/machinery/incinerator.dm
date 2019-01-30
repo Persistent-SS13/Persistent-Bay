@@ -134,7 +134,7 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 		return
 
 	//Give the mob a chance to do something first
-	L.apply_damages(burn=100)
+	L.apply_damages(100, DAM_BURN)
 	L.IgniteMob()
 
 	//If its dead, just dust it

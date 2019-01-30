@@ -91,7 +91,7 @@
 
 /datum/reagent/toxin/phoron/affect_touch(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien != IS_PHOROSIAN)
-		M.take_organ_damage(0, removed * 0.1) //being splashed directly with phoron causes minor chemical burns
+		M.apply_damage(removed * 0.1, DAM_BURN) //being splashed directly with phoron causes minor chemical burns
 		M.phoronation += removed * 0.1
 		if(prob(10 * fire_mult))
 			M.pl_effects()
@@ -259,11 +259,11 @@
 	if(alien == IS_DIONA)
 		return
 	if(alien == IS_SKRELL)
-		M.take_organ_damage(2.4 * removed, 0)
+		M.apply_damage(2.4 * removed, DAM_BLUNT)
 		if(M.losebreath < 22.5)
 			M.losebreath++
 	else
-		M.take_organ_damage(3 * removed, 0)
+		M.apply_damage(3 * removed, DAM_BLUNT)
 		if(M.losebreath < 15)
 			M.losebreath++
 

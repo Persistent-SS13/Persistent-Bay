@@ -124,19 +124,19 @@
 		spamcheck = 0
 		if(!iscultist(target) && target.loc == get_turf(src)) // They hesitated, resisted, or can't join, and they are still on the rune - burn them
 			if(target.stat == CONSCIOUS)
-				target.take_overall_damage(0, 10)
+				target.take_overall_damage(10, DAM_BURN)
 				switch(target.getFireLoss())
 					if(0 to 25)
 						to_chat(target, "<span class='danger'>Your blood boils as you force yourself to resist the corruption invading every corner of your mind.</span>")
 					if(25 to 45)
 						to_chat(target, "<span class='danger'>Your blood boils and your body burns as the corruption further forces itself into your body and mind.</span>")
-						target.take_overall_damage(0, 3)
+						target.take_overall_damage(3, DAM_BURN)
 					if(45 to 75)
 						to_chat(target, "<span class='danger'>You begin to hallucinate images of a dark and incomprehensible being and your entire body feels like its engulfed in flame as your mental defenses crumble.</span>")
-						target.take_overall_damage(0, 5)
+						target.take_overall_damage(5, DAM_BURN)
 					if(75 to 100)
 						to_chat(target, "<span class='cult'>Your mind turns to ash as the burning flames engulf your very soul and images of an unspeakable horror begin to bombard the last remnants of mental resistance.</span>")
-						target.take_overall_damage(0, 10)
+						target.take_overall_damage(10, DAM_BURN)
 
 /obj/effect/rune/convert/Topic(href, href_list)
 	if(href_list["join"])
@@ -176,7 +176,7 @@
 			showOptions(user)
 			var/warning = 0
 			while(user.loc == src)
-				user.take_organ_damage(0, 2)
+				user.apply_damage(2, DAM_BURN)
 				if(user.getFireLoss() > 50)
 					to_chat(user, "<span class='danger'>Your body can't handle the heat anymore!</span>")
 					leaveRune(user)
@@ -331,7 +331,7 @@
 		else if(user.loc != get_turf(src) && soul)
 			soul.reenter_corpse()
 		else
-			user.take_organ_damage(0, 1)
+			user.apply_damage(1, DAM_BURN)
 		sleep(20)
 	fizzle(user)
 
@@ -420,7 +420,8 @@
 		//T.turf_animation('icons/effects/effects.dmi', "rune_sac")
 		victim.fire_stacks = max(2, victim.fire_stacks)
 		victim.IgniteMob()
-		victim.take_organ_damage(2 + casters.len, 2 + casters.len) // This is to speed up the process and also damage mobs that don't take damage from being on fire, e.g. borgs
+		victim.apply_damage(2 + casters.len, DAM_BURN)
+		victim.apply_damage(2 + casters.len, DAM_BLUNT) // This is to speed up the process and also damage mobs that don't take damage from being on fire, e.g. borgs
 		if(ishuman(victim))
 			var/mob/living/carbon/human/H = victim
 			if(H.is_asystole())
@@ -718,7 +719,8 @@
 			var/obj/item/weapon/nullrod/N = locate() in M
 			if(N)
 				continue
-			M.take_overall_damage(5, 5)
+			M.take_overall_damage(5, DAM_BLUNT)
+			M.take_overall_damage(5, DAM_BURN)
 			if(!(M in previous))
 				if(M.should_have_organ(BP_HEART))
 					to_chat(M, "<span class='danger'>Your blood boils!</span>")

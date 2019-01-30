@@ -144,7 +144,7 @@
 		return amount // heal nothing
 
 	if(parent_organ)
-		if(damage_type == DAM_BURN && !(parent_organ.burn_ratio < 1 || parent_organ.can_heal_overkill()))
+		if(IsDamageTypeBurn(damage_type) && !(parent_organ.burn_ratio < 1 || parent_organ.can_heal_overkill()))
 			return amount	//We don't want to heal wounds on irreparable organs.
 		else if(!(parent_organ.brute_ratio < 1 || parent_organ.can_heal_overkill()))
 			return amount

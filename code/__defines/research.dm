@@ -13,6 +13,9 @@
 #define TECH_ARCANE "arcane"
 
 // Fabricator defines
+#define SHEETS *4000
+#define SHEET *4000
+
 #define PROTOLATHE	1
 #define CIRCUITFAB	2
 #define MECHFAB		3
@@ -30,3 +33,14 @@
 #define WEAPONFAB  14
 #define CONSUMERFAB 15
 #define GENERALFAB 16
+#define RESEARCH_FIELDS list(TECH_MATERIALS, TECH_ELECTRICAL, TECH_MINI, TECH_NUCLEAR, TECH_BLUESPACE, TECH_BIOLOGICAL)
+
+#define TECH_MATERIALS "material"
+#define TECH_ELECTRICAL "electrical"
+#define TECH_MINI "miniturization"
+#define TECH_NUCLEAR "nuclear"
+#define TECH_BIOLOGICAL "biological"
+
+#define DIFFICULTY_EASY "EASY"
+#define DIFFICULTY_MEDIUM "MEDIUM"
+#define DIFFICULTY_HARD "HARD"

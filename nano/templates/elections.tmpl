@@ -83,7 +83,7 @@
 				Description
 			</div>
 			<div class='itemContent'>
-				{{:data.candidate_desc}}
+				{{:data.candidate_desc}}{{:helper.link('Change', '', {'action' : 'candidate_changedesc'})}}
 			</div>
 		</div>
 	{{/if}}
@@ -102,7 +102,7 @@
 				Description
 			</div>
 			<div class='itemContent'>
-				{{:data.candidate_desc}}
+				{{:data.candidate_desc}}{{:helper.link('Change', '', {'action' : 'elected_changedesc'})}}
 			</div>
 		</div>
 	{{/if}}	

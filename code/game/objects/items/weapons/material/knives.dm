@@ -70,7 +70,7 @@
 
 /obj/item/weapon/material/knife/ritual
 	name = "ritual knife"
-	desc = "The unearthly energies that once powered this blade are now dormant."
+	desc = "A decorated ritual dagger."
 	icon = 'icons/obj/wizard.dmi'
 	icon_state = "render"
 	applies_material_colour = 0

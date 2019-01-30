@@ -23,6 +23,7 @@
 	// 128 for reagent gas concentration
 
 	var/datum/radio_frequency/radio_connection
+	var/radio_filter = RADIO_ATMOSIA
 
 /obj/machinery/air_sensor/update_icon()
 	icon_state = "gsensor[on]"
@@ -68,13 +69,13 @@
 				signal.data["hydrogen"] = 0
 				signal.data["reagent"] = 0
 		signal.data["sigtype"]="status"
-		radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
+		radio_connection.post_signal(src, signal, filter = radio_filter)
 
 
 /obj/machinery/air_sensor/proc/set_frequency(new_frequency)
 	radio_controller.remove_object(src, frequency)
 	frequency = new_frequency
-	radio_connection = radio_controller.add_object(src, frequency, RADIO_ATMOSIA)
+	radio_connection = radio_controller.add_object(src, frequency, radio_filter)
 
 /obj/machinery/air_sensor/Initialize()
 	set_frequency(frequency)
@@ -97,6 +98,7 @@ obj/machinery/air_sensor/Destroy()
 
 	var/list/sensor_information = list()
 	var/datum/radio_frequency/radio_connection
+	var/radio_filter = RADIO_ATMOSIA
 	circuit = /obj/item/weapon/circuitboard/air_management
 
 obj/machinery/computer/general_air_control/Destroy()
@@ -168,7 +170,7 @@ obj/machinery/computer/general_air_control/Destroy()
 /obj/machinery/computer/general_air_control/proc/set_frequency(new_frequency)
 	radio_controller.remove_object(src, frequency)
 	frequency = new_frequency
-	radio_connection = radio_controller.add_object(src, frequency, RADIO_ATMOSIA)
+	radio_connection = radio_controller.add_object(src, frequency, radio_filter)
 
 /obj/machinery/computer/general_air_control/Initialize()
 	set_frequency(frequency)
@@ -288,7 +290,7 @@ Max Output Pressure: [output_pressure] kPa<BR>"}
 		. = 1
 
 	signal.data["sigtype"]="command"
-	radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
+	radio_connection.post_signal(src, signal, filter = radio_filter)
 
 	spawn(5)
 		src.updateUsrDialog()
@@ -407,7 +409,7 @@ Min Core Pressure: [pressure_limit] kPa<BR>"}
 		. = 1
 
 	signal.data["sigtype"]="command"
-	radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
+	radio_connection.post_signal(src, signal, filter = radio_filter)
 
 	spawn(5)
 		src.updateUsrDialog()
@@ -450,7 +452,7 @@ Min Core Pressure: [pressure_limit] kPa<BR>"}
 			"sigtype"="command"
 		)
 
-		radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
+		radio_connection.post_signal(src, signal, filter = radio_filter)
 
 	..()
 
@@ -503,7 +505,7 @@ Rate: [volume_rate] L/sec<BR>"}
 			"status" = 1,
 			"sigtype"="command"
 		)
-		radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
+		radio_connection.post_signal(src, signal, filter = radio_filter)
 
 	if(href_list["toggle_automation"])
 		automation = !automation
@@ -522,7 +524,7 @@ Rate: [volume_rate] L/sec<BR>"}
 			"sigtype"="command"
 		)
 
-		radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
+		radio_connection.post_signal(src, signal, filter = radio_filter)
 
 	if(href_list["injection"])
 		if(!radio_connection)
@@ -537,7 +539,7 @@ Rate: [volume_rate] L/sec<BR>"}
 			"sigtype"="command"
 		)
 
-		radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
+		radio_connection.post_signal(src, signal, filter = radio_filter)
 
 
 

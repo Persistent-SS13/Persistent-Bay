@@ -604,14 +604,14 @@ var/PriorityQueue/all_feeds
 
 /datum/world_faction/proc/get_leadername()
 	return leader_name
-	
+
 /datum/world_faction/democratic/get_leadername()
 	if(gov && gov.real_name != "")
 		return gov.real_name
 	else
 		return leader_name
-		
-		
+
+
 /datum/world_faction
 	var/name = "" // can be safely changed
 	var/abbreviation = "" // can be safely changed
@@ -667,48 +667,85 @@ var/PriorityQueue/all_feeds
 	nexus.gov = new()
 	var/datum/election/gov/gov_elect = new()
 	gov_elect.ballots |= nexus.gov
-	
+
 	nexus.waiting_elections |= gov_elect
-	
+
 	var/datum/election/council_elect = new()
 	var/datum/democracy/councillor/councillor1 = new()
-	councillor1.title = "Councillor for Policing and Justice"
+	councillor1.title = "Councillor of Justice and Criminal Matters"
 	nexus.city_council |= councillor1
 	council_elect.ballots |= councillor1
-	
+
 	var/datum/democracy/councillor/councillor2 = new()
-	councillor2.title = "Councillor for the Budget"
+	councillor2.title = "Councillor of Budget and Tax Measures"
 	nexus.city_council |= councillor2
 	council_elect.ballots |= councillor2
-	
+
 	var/datum/democracy/councillor/councillor3 = new()
-	councillor3.title = "Councillor for the Culture"
+	councillor3.title = "Councillor of Commerce and Business Relations"
 	nexus.city_council |= councillor3
 	council_elect.ballots |= councillor3
-	
+
 	var/datum/democracy/councillor/councillor4 = new()
-	councillor4.title = "Councillor for the Station Integrity"
+	councillor4.title = "Councillor for Culture and Ethical Oversight"
 	nexus.city_council |= councillor4
 	council_elect.ballots |= councillor4
-	
+
 	var/datum/democracy/councillor/councillor5 = new()
-	councillor4.title = "Councillor for the Commerce and Business"
+	councillor5.title = "Councillor for the Domestic Affairs"
 	nexus.city_council |= councillor5
 	council_elect.ballots |= councillor5
-	
+
 	nexus.waiting_elections |= council_elect
-	
+
 	nexus.network.name = "NEXUSGOV-NET"
 	nexus.network.net_uid = "nexus"
 	nexus.network.password = ""
 	nexus.network.invisible = 0
-	
+
 	GLOB.all_world_factions |= nexus
-	
-	
+
+
+/datum/world_faction/democratic/New()
+	..()
+
+	councillor_assignment = new()
+	judge_assignment = new()
+	governor_assignment = new()
+	councillor_assignment.payscale = 30
+	judge_assignment.payscale = 30
+	governor_assignment.payscale = 45
+	councillor_assignment.name = "Councillor"
+	judge_assignment.name = "Judge"
+	governor_assignment.name = "Governor"
+	governor_assignment.uid = "governor"
+	judge_assignment.uid = "judge"
+	councillor_assignment.uid = "councillor"
+	special_category = new()
+
+	councillor_assignment.parent = special_category
+	judge_assignment.parent = special_category
+	governor_assignment.parent = special_category
+
+	special_category.assignments |= councillor_assignment
+	special_category.assignments |= judge_assignment
+	special_category.assignments |= governor_assignment
+	special_category.name = "Special Assignments"
+	special_category.head_position = governor_assignment
+	special_category.parent = src
+	special_category.command_faction = 1
+
+
 /datum/world_faction/democratic
 
 	var/datum/democracy/governor/gov
+
+	var/datum/assignment/councillor_assignment
+	var/datum/assignment/judge_assignment
+	var/datum/assignment/governor_assignment
+
+	var/datum/assignment_category/special_category
+
 	var/list/city_council = list()
 	var/list/judges = list()
 
@@ -753,6 +790,42 @@ var/PriorityQueue/all_feeds
 	var/tax_pprog4_amount = 0
 	var/tax_pflat_rate = 0
 
+/datum/world_faction/democratic/proc/pay_tax(var/datum/money_account/account, var/amount)
+	var/tax_amount
+	if(account.account_type == 2)
+		if(tax_type_b == 2)
+			if(account.money >= tax_bprog4_amount)
+				tax_amount = amount * (tax_bprog4_rate/100)
+			else if(account.money >= tax_bprog3_amount)
+				tax_amount = amount * (tax_bprog3_rate/100)
+			else if(account.money >= tax_bprog2_amount)
+				tax_amount = amount * (tax_bprog2_rate/100)
+			else
+				tax_amount = amount * (tax_bprog1_rate/100)
+		else
+			tax_amount = amount * (tax_bflat_rate/100)
+	else
+		if(tax_type_p == 2)
+			if(account.money >= tax_pprog4_amount)
+				tax_amount = amount * (tax_pprog4_rate/100)
+			else if(account.money >= tax_pprog3_amount)
+				tax_amount = amount * (tax_pprog3_rate/100)
+			else if(account.money >= tax_pprog2_amount)
+				tax_amount = amount * (tax_pprog2_rate/100)
+			else
+				tax_amount = amount * (tax_pprog1_rate/100)
+		else
+			tax_amount = amount * (tax_pflat_rate/100)
+	tax_amount = round(tax_amount)
+	if(tax_amount)
+		var/datum/transaction/T = new("[src.name]", "Tax", -tax_amount, "Nexus Economy Network")
+		account.do_transaction(T)
+		var/datum/transaction/Te = new("[account.owner_name]", "Tax", tax_amount, "Nexus Economy Network")
+		central_account.do_transaction(Te)
+
+
+
+
 /datum/verdict
 	var/name = "" //title
 	var/judge = ""
@@ -773,6 +846,7 @@ var/PriorityQueue/all_feeds
 
 /datum/world_faction/democratic/proc/render_verdict(var/datum/verdict/verdict)
 	verdicts |= verdict
+	command_announcement.Announce("Judge [verdict.judge] has rendered a verdict! [verdict.name].","Judicial Decision")
 
 /datum/world_faction/democratic/proc/schedule_trial(var/datum/judge_trial/trial)
 	scheduled_trials |= trial
@@ -803,19 +877,19 @@ var/PriorityQueue/all_feeds
 		for(var/datum/candidate/candidate in ballot.candidates)
 			if(candidate.real_name == real_name)
 				return list(candidate, ballot)
-				
-				
-				
+
+
+
 /datum/world_faction/democratic/proc/start_election(var/datum/election/election)
 	current_election = election
 	if(election.typed)
 		election_toggle = !election_toggle
-	to_world("<font size=3>The [election.name] has started.</font>")
+	command_announcement.Announce("An Election has started! [election.name]. Citizens will have twelve hours to cast their votes.","Election Start")
 
 /datum/world_faction/democratic/proc/start_trial(var/datum/judge_trial/trial)
-	to_world("<font size=3>The Trial [trial.name] should be starting now.</font>")
+	command_announcement.Announce("A trial should be starting soon! [trial.name] with Judge [trial.judge] presiding.","Trial Start")
 	scheduled_trials -= trial
-	
+
 
 /datum/world_faction/democratic/proc/end_election()
 	for(var/datum/democracy/ballot in current_election.ballots)
@@ -832,7 +906,7 @@ var/PriorityQueue/all_feeds
 				leaders |= candidate
 				leader = candidate
 		if(!leaders.len)
-			to_world("<font size=3>In the election for [ballot.title], no one was elected!</font>")
+			command_announcement.Announce("In the election for [ballot.title], no one was elected!","Election Result")
 		else if(leaders.len > 1)
 			var/leaders_names = ""
 			var/first = 1
@@ -843,11 +917,23 @@ var/PriorityQueue/all_feeds
 				else
 					leaders_names += ", [candidate.real_name]"
 			leader = pick(leaders)
-			to_world("<font size=3>In the election for [ballot.title], the election was tied between [leaders_names]. [leader.real_name] was randomly selected as the winner.</font>")
-			ballot.real_name = leader.real_name
+			command_announcement.Announce("In the election for [ballot.title], the election was tied between [leaders_names]. [leader.real_name] was randomly selected as the winner.","Election Result")
+			if(ballot.real_name != leader.real_name)
+				ballot.real_name = leader.real_name
+				ballot.seeking_reelection = 1
+			else
+				ballot.consecutive_terms++
 		else
-			to_world("<font size=3>In the election for [ballot.title], the election was won by [leader.real_name].</font>")
-			ballot.real_name = leader.real_name
+			command_announcement.Announce("In the election for [ballot.title], the election was won by [leader.real_name].","Election Result")
+			if(ballot.real_name != leader.real_name)
+				ballot.real_name = leader.real_name
+			else
+				ballot.consecutive_terms++
+		ballot.candidates.Cut()
+		ballot.voted_ckeys.Cut()
+		if(leader)
+			ballot.candidates |= leader
+			ballot.seeking_reelection = 1
 	current_election = null
 
 /datum/world_faction/democratic/proc/withdraw_vote(var/datum/council_vote/vote)
@@ -878,16 +964,19 @@ var/PriorityQueue/all_feeds
 
 /datum/world_faction/democratic/proc/repeal_policy(var/datum/council_vote/vote)
 	policy -= vote
-
+	command_announcement.Announce("Governor [vote.signer] has repealed an executive policy! [vote.name].","Governor Action")
 
 /datum/world_faction/democratic/proc/pass_policy(var/datum/council_vote/vote)
 	policy |= vote
+	command_announcement.Announce("Governor [vote.signer] has passed an executive policy! [vote.name].","Governor Action")
 
 /datum/world_faction/democratic/proc/pass_nomination_judge(var/datum/democracy/judge)
 	judges |= judge
+	command_announcement.Announce("The government has approved the nomination of [judge.real_name] for judge. They are now Judge [judge.real_name].","Nomination Pass")
 
 /datum/world_faction/democratic/proc/pass_impeachment_judge(var/datum/democracy/judge)
 	judges -= judge
+	command_announcement.Announce("The government has voted to remove [judge.real_name] from their position of  judge.","Impeachment")
 
 /datum/world_faction/democratic/proc/pass_vote(var/datum/council_vote/vote)
 	votes -= vote
@@ -904,9 +993,11 @@ var/PriorityQueue/all_feeds
 				tax_bprog3_amount = vote.progamount3
 				tax_bprog4_amount = vote.progamount4
 				tax_type_b = 2
+				command_announcement.Announce("The government has just passed a new progressive tax policy for business income.","Business Tax")
 			else
 				tax_bflat_rate = vote.flatrate
 				tax_type_b = 1
+				command_announcement.Announce("The government has just passed a new flat tax policy for business income.","Business Tax")
 		else
 			if(vote.taxtype == 2)
 				tax_pprog1_rate = vote.prograte1
@@ -918,9 +1009,11 @@ var/PriorityQueue/all_feeds
 				tax_pprog3_amount = vote.progamount3
 				tax_pprog4_amount = vote.progamount4
 				tax_type_p = 2
+				command_announcement.Announce("The government has just passed a new progressive tax policy for personal income.","Personal Income Tax")
 			else
 				tax_pflat_rate = vote.flatrate
 				tax_type_p = 1
+				command_announcement.Announce("The government has just passed a new flat tax policy for personal income.","Personal Income Tax")
 	else if(vote.bill_type == 4)
 		for(var/datum/democracy/judge in judges)
 			if(judge.real_name == vote.impeaching)
@@ -936,8 +1029,12 @@ var/PriorityQueue/all_feeds
 
 	else if(vote.bill_type == 1)
 		criminal_laws |= vote
+		command_announcement.Announce("The government has just passed a new criminal law.","New Criminal Law")
+
 	else if(vote.bill_type == 2)
 		civil_laws |= vote
+		command_announcement.Announce("The government has just passed a new civil law.","New Civil Law")
+
 
 /datum/council_vote
 	var/name = "" // title of votes
@@ -1001,7 +1098,7 @@ var/PriorityQueue/all_feeds
 
 	var/election_desc = ""
 	var/seeking_reelection = 1
-	
+
 	var/list/candidates = list()
 	var/list/voted_ckeys = list() // to prevent double voting
 
@@ -1087,11 +1184,22 @@ var/PriorityQueue/all_feeds
 	for(var/datum/assignment_category/assignment_category in assignment_categories)
 		for(var/x in assignment_category.assignments)
 			all_assignments |= x
-/datum/world_faction/proc/get_assignment(var/assignment)
+
+/datum/world_faction/proc/get_assignment(var/assignment, var/real_name)
 	if(!assignment) return null
 	rebuild_all_assignments()
 	for(var/datum/assignment/assignmentt in all_assignments)
 		if(assignmentt.uid == assignment) return assignmentt
+
+/datum/world_faction/democratic/get_assignment(var/assignment, var/real_name)
+	if(is_judge(real_name))
+		return judge_assignment
+	if(is_councillor(real_name))
+		return councillor_assignment
+	if(is_governor(real_name))
+		return governor_assignment
+	return ..()
+
 /datum/records_holder
 	var/use_standard = 1
 	var/list/custom_records = list() // format-- list("")
@@ -1110,7 +1218,7 @@ var/PriorityQueue/all_feeds
 /datum/world_faction/proc/in_command(var/real_name)
 	var/datum/computer_file/crew_record/R = get_record(real_name)
 	if(R)
-		var/datum/assignment/assignment = get_assignment(R.assignment_uid)
+		var/datum/assignment/assignment = get_assignment(R.assignment_uid, R.get_name())
 		if(assignment)
 			if(assignment.parent)
 				return assignment.parent.command_faction
@@ -1130,7 +1238,7 @@ var/PriorityQueue/all_feeds
 	var/user_leader = 0
 	var/target_leader = 0
 	var/same_department = 0
-	var/datum/assignment/assignment = get_assignment(R.assignment_uid)
+	var/datum/assignment/assignment = get_assignment(R.assignment_uid, R.get_name())
 	if(assignment)
 		if(assignment.parent)
 			user_command = assignment.parent.command_faction
@@ -1138,7 +1246,7 @@ var/PriorityQueue/all_feeds
 				user_leader = 1
 	else
 		return 0
-	var/datum/assignment/target_assignment = get_assignment(target_record.assignment_uid)
+	var/datum/assignment/target_assignment = get_assignment(target_record.assignment_uid, target_record.get_name())
 	if(target_assignment)
 		if(target_assignment.any_assign)
 			same_department = 1

@@ -372,7 +372,7 @@
 		var/datum/computer_file/crew_record/R = connected_faction.get_record(user_id_card.registered_name)
 		if(!R) return 0
 		var/expense_limit = 0
-		var/datum/assignment/assignment = connected_faction.get_assignment(R.assignment_uid)
+		var/datum/assignment/assignment = connected_faction.get_assignment(R.assignment_uid, R.get_name())
 		if(assignment)
 			var/datum/accesses/expenses = assignment.accesses["[R.rank]"]
 			if(expenses)

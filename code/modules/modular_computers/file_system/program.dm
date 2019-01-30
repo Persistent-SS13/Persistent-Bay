@@ -36,6 +36,9 @@
 	computer = null
 	. = ..()
 
+/datum/computer_file/program/proc/ConnectedFaction()
+	return computer.ConnectedFaction()
+
 /datum/computer_file/program/nano_host()
 	return computer.nano_host()
 
@@ -95,8 +98,6 @@
 	// Defaults to required_access
 	if(!access_to_check)
 		access_to_check = required_access
-	if(!access_to_check) // No required_access, allow it.
-		return 1
 
 	// Admin override - allows operation of any computer as aghosted admin, as if you had any required access.
 	if(isghost(user) && check_rights(R_ADMIN, 0, user))
@@ -105,13 +106,16 @@
 	if(!istype(user))
 		return 0
 	if(democratic)
-		if(!(computer && computer.network_card && computer.network_card.connected_network && istype(computer.network_card.connected_network, /datum/world_faction/democratic)))
+		if(!(computer && computer.network_card && computer.network_card.connected_network && istype(computer.network_card.connected_network.holder, /datum/world_faction/democratic)))
 			to_chat(user, "<span class='notice'>\The [computer] must be connected to the government network for this program to run.</span>")
 			return 0
 	if(business)
-		if(!(computer && computer.network_card && computer.network_card.connected_network && istype(computer.network_card.connected_network, /datum/world_faction/business)))
+		if(!(computer && computer.network_card && computer.network_card.connected_network && istype(computer.network_card.connected_network.holder, /datum/world_faction/business)))
 			to_chat(user, "<span class='notice'>\The [computer] must be connected to a business network for this program to run.</span>")
-			return 0
+			return 0		
+	if(!access_to_check) // No required_access, allow it.
+		return 1
+		
 	var/obj/item/weapon/card/id/I = user.GetIdCard()
 	if(!I)
 		if(loud)
@@ -187,6 +191,10 @@
 		return NM.check_eye(user)
 	else
 		return -1
+
+// Called by attackby, relays object and user. Return 1 to prevent further attackby interactions
+/datum/computer_file/program/proc/handleInteraction(var/obj/item/weapon/W, var/mob/user)
+	return 0
 
 /obj/item/modular_computer/initial_data()
 	return get_header_data()

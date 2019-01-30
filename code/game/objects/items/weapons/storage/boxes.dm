@@ -450,31 +450,31 @@
 	icon_state = "checkers"
 	max_storage_space = 24
 	foldable = null
-	can_hold = list(/obj/item/weapon/reagent_containers/food/snacks/checker)
-	startswith = list(/obj/item/weapon/reagent_containers/food/snacks/checker = 12,
-					/obj/item/weapon/reagent_containers/food/snacks/checker/red = 12)
+	can_hold = list(/obj/item/weapon/checker)
+	startswith = list(/obj/item/weapon/checker = 12,
+					/obj/item/weapon/checker/red = 12)
 
 /obj/item/weapon/storage/box/checkers/chess
 	name = "black chess box"
 	desc = "This box holds all the pieces needed for the black side of the chess board."
 	icon_state = "chess_b"
-	startswith = list(/obj/item/weapon/reagent_containers/food/snacks/checker/pawn = 8,
-				/obj/item/weapon/reagent_containers/food/snacks/checker/knight = 2,
-				/obj/item/weapon/reagent_containers/food/snacks/checker/bishop = 2,
-				/obj/item/weapon/reagent_containers/food/snacks/checker/rook = 2,
-				/obj/item/weapon/reagent_containers/food/snacks/checker/queen = 1,
-				/obj/item/weapon/reagent_containers/food/snacks/checker/king = 1)
+	startswith = list(/obj/item/weapon/checker/pawn = 8,
+				/obj/item/weapon/checker/knight = 2,
+				/obj/item/weapon/checker/bishop = 2,
+				/obj/item/weapon/checker/rook = 2,
+				/obj/item/weapon/checker/queen = 1,
+				/obj/item/weapon/checker/king = 1)
 
 /obj/item/weapon/storage/box/checkers/chess/red
 	name = "red chess box"
 	desc = "This box holds all the pieces needed for the red side of the chess board."
 	icon_state = "chess_r"
-	startswith = list(/obj/item/weapon/reagent_containers/food/snacks/checker/pawn/red = 8,
-				/obj/item/weapon/reagent_containers/food/snacks/checker/knight/red = 2,
-				/obj/item/weapon/reagent_containers/food/snacks/checker/bishop/red = 2,
-				/obj/item/weapon/reagent_containers/food/snacks/checker/rook/red = 2,
-				/obj/item/weapon/reagent_containers/food/snacks/checker/queen/red = 1,
-				/obj/item/weapon/reagent_containers/food/snacks/checker/king/red = 1)
+	startswith = list(/obj/item/weapon/checker/pawn/red = 8,
+				/obj/item/weapon/checker/knight/red = 2,
+				/obj/item/weapon/checker/bishop/red = 2,
+				/obj/item/weapon/checker/rook/red = 2,
+				/obj/item/weapon/checker/queen/red = 1,
+				/obj/item/weapon/checker/king/red = 1)
 
 
 /obj/item/weapon/storage/box/headset

@@ -1,0 +1,76 @@
+<h2>Trials & Verdicts</h2>
+<br><hr>
+<br>
+{{if data.menu == 1}}
+	<h3>Scheduled Trials</h3><br><hr>
+	{{if data.selected_trial}}
+		<h4>{{:data.selected_trial}}</h4><br>
+		{{:helper.link('Back', '', {'action' : 'deselect_trial'})}}{{:helper.link('Print Copy', 'print', {'action' : 'print'})}}<br><br>
+		<div class='item'>
+			<div class='itemLabel'>
+				Date Scheduled
+			</div>
+			<div class='itemContent'>
+				{{:data.trial_time}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Judge
+			</div>
+			<div class='itemContent'>
+				{{:data.judge}}
+			</div>
+		</div>
+		<br><hr><br>
+		{{:data.trial_body}}
+		<br><hr>
+		<br>
+	{{else}}
+		<div class="statusDisplay" style="overflow: auto;">
+			{{if data.trials}}
+				{{for data.trials}}
+					{{:helper.link(value.name, '', {'action' : 'select_trial', 'ref' : value.ref})}}
+				{{/for}}
+			{{else}}
+				<span class='alert'>No trials scheduled.</span>
+			{{/if}}
+		</div>
+	{{/if}}
+{{/if}}
+
+{{if data.menu == 2}}
+	{{if data.selected_verdict}}
+		<h4>{{:data.selected_verdict}}</h4><br>
+		{{:helper.link('Back', '', {'action' : 'deselect_verdict'})}}{{:helper.link('Print Copy', 'print', {'action' : 'print_verdict'})}}<br><br>
+		<div class='item'>
+			<div class='itemLabel'>
+				Defendant
+			</div>
+			<div class='itemContent'>
+				{{:data.defendant_verdict}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Citizenship Change
+			</div>
+			<div class='itemContent'>
+				{{:data.citizenship_change}}
+			</div>
+		</div>
+		<br><hr><br>
+		{{:data.verdict_body}}
+		<br><hr><br>
+	{{else}}
+		<div class="statusDisplay" style="overflow: auto;">
+			{{if data.verdicts}}
+				{{for data.verdicts}}
+					{{:helper.link(value.name, '', {'action' : 'select_verdict', 'ref' : value.ref})}}
+				{{/for}}
+			{{else}}
+				<span class='alert'>No trials scheduled.</span>
+			{{/if}}
+		</div>
+	{{/if}}
+{{/if}}

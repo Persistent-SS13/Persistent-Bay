@@ -103,7 +103,7 @@
 /turf/simulated/wall/shuttle/corner/blockorange/sw
 	dir = SOUTH|WEST
 
-/turf/simulated/shuttle/wall/corner/vwall
+/turf/simulated/wall/shuttle/corner/vwall
 	icon_state = "corner_vwall"
 	corner_overlay_state = "corner_vwall"
 /turf/simulated/wall/shuttle/corner/vwall/ne

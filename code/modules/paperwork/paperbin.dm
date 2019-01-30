@@ -79,6 +79,7 @@
 
 /obj/item/weapon/paper_bin/attackby(obj/item/weapon/i as obj, mob/user as mob)
 	if(istype(i, /obj/item/weapon/paper))
+		var/obj/item/weapon/paper/paper = i
 		if(paper.info && paper.info != "")
 			user.drop_item()
 			i.forceMove(src)
@@ -87,8 +88,8 @@
 		else
 			user.drop_item()
 			i.loc = null
-			qdel(i)
 			to_chat(user, "<span class='notice'>You put [i] in [src].</span>")
+			qdel(i)
 		update_icon()
 		amount++
 	else if(istype(i, /obj/item/weapon/paper_bundle))

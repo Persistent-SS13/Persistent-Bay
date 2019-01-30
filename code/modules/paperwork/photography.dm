@@ -162,6 +162,9 @@ var/global/photo_count = 0
 /*********
 * camera *
 *********/
+/obj/item/device/camera/empty
+	pictures_left = 0
+
 /obj/item/device/camera
 	name = "camera"
 	icon = 'icons/obj/items.dmi'

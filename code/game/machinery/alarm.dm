@@ -170,7 +170,7 @@
 	update_icon()
 
 /obj/machinery/alarm/Process()
-	if((stat & (NOPOWER|BROKEN)) || shorted || buildstage != 2)
+	if(inoperable() || shorted || buildstage != 2)
 		return
 
 	var/turf/simulated/location = loc
@@ -311,7 +311,7 @@
 
 /obj/machinery/alarm/proc/elect_master()
 	for (var/obj/machinery/alarm/AA in alarm_area)
-		if (!(AA.stat & (NOPOWER|BROKEN)))
+		if (AA.operable())
 			alarm_area.master_air_alarm = AA
 			return 1
 	return 0
@@ -328,7 +328,7 @@
 		icon_state = "alarmx"
 		set_light(0)
 		return
-	if((stat & (NOPOWER|BROKEN)) || shorted)
+	if(inoperable() || shorted)
 		icon_state = "alarmp"
 		set_light(0)
 		return
@@ -365,7 +365,7 @@
 	set_light(l_range = 2, l_power = 0.6, l_color = new_color)
 
 /obj/machinery/alarm/receive_signal(datum/signal/signal)
-	if(stat & (NOPOWER|BROKEN))
+	if(inoperable())
 		return
 	if (alarm_area.master_air_alarm != src)
 		if (master_is_operating())
@@ -844,7 +844,7 @@
 				return
 
 			if (istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/device/pda))// trying to unlock the interface with an ID card
-				if(stat & (NOPOWER|BROKEN))
+				if(inoperable())
 					to_chat(user, "It does nothing")
 					return
 				else

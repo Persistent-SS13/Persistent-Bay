@@ -93,8 +93,12 @@
 			to_chat(user, "You [locked ? "unlock" : "lock"] \the [src]'s controls.")
 			locked = !locked
 			return
+		else if(open)
+			registered_names += ID.registered_name
+			to_chat(user, "You add your name to \the [src]'s database, allowing you to control it.")
+			return
 		else
-			to_chat(user, "<span class='warning'>There is already a name registered to \the [src].</span>")
+			to_chat(user, "<span class='warning'>Open the panel of \the [src] to register an additional name.</span>")
 			return
 
 	if(open)

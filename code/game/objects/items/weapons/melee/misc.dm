@@ -51,7 +51,7 @@
 	icon_state = "marineofficersword"
 	item_state = "marineofficersword"
 
-/obj/item/weapon/material/sword/replica/officersword/pettyofficer
+/obj/item/weapon/material/sword/officersword/pettyofficer
 	name = "chief petty officer's cutlass"
 	desc = "A polished cutlass issued to chief petty officers of the fleet."
 	icon_state = "pettyofficersword"

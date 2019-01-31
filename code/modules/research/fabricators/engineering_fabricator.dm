@@ -58,7 +58,7 @@
 
 /datum/design/item/engifab/engitools/simple/cone
 	name = "warning cone"
-	build_path = /obj/item/weapon/cauton/cone
+	build_path = /obj/item/weapon/caution/cone
 	materials = list(MATERIAL_PLASTIC = 1 SHEET) // ADJUST MATERIALS
 
 

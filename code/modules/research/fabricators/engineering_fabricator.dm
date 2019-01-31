@@ -36,9 +36,25 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 /datum/design/item/engifab/engitools/adv/analyzer
-	name = "Gas analyzer"
+	name = "Gas Analyzer"
 	build_path = /obj/item/device/analyzer
-	materials = list(MATERIAL_STEEL = 0.25 SHEETS, MATERIAL_GLASS = 0.25 SHEETS)
+	materials = list(MATERIAL_STEEL = 0.25 SHEETS, MATERIAL_GLASS = 0.25 SHEETS, MATERIAL_COPPER = 0.25 SHEETS)
+
+/datum/design/item/engifab/engitools/adv/geiger
+	name = "Geiger Counter"
+	build_path = /obj/item/device/geiger
+	materials = list(MATERIAL_STEEL = 0.25 SHEETS, MATERIAL_GLASS = 0.25 SHEETS, MATERIAL_COPPER = 0.25 SHEETS)
+
+/datum/design/item/engifab/engitools/adv/floor_painter
+	name = "Floor Painter"
+	build_path = /obj/item/device/floor_painter
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 1 SHEETS)
+
+/datum/design/item/engifab/engitools/pipe_painter
+	name = "Pipe Painter"
+	build_path = /obj/item/device/pipe_painter
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 1 SHEET)
+
 
 /datum/design/item/engifab/engitools/t_scanner
 	name = "T-ray Scanner"
@@ -48,7 +64,7 @@
 /datum/design/item/engifab/engitools/simple/flashlight
 	name = "Flashlight"
 	build_path = /obj/item/device/flashlight
-	materials = list(MATERIAL_STEEL = 0.25 SHEETS, MATERIAL_GLASS = 0.25 SHEETS)
+	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_GLASS = 0.25 SHEETS)
 
 
 /datum/design/item/engifab/engitools/simple/tape_roll
@@ -71,12 +87,12 @@
 /datum/design/item/engifab/engitools/simple/crowbar
 	name = "Crowbar"
 	build_path = /obj/item/weapon/crowbar
-	materials = list(MATERIAL_STEEL = 0.25 SHEETS)
+	materials = list(MATERIAL_STEEL = 0.5 SHEETS)
 
 /datum/design/item/engifab/engitools/prybar
 	name = "Pry bar"
 	build_path = /obj/item/weapon/crowbar/prybar
-	materials = list(MATERIAL_STEEL = 0.25 SHEETS)
+	materials = list(MATERIAL_STEEL = 0.5 SHEETS)
 
 /datum/design/item/engifab/engitools/simple/multitool
 	name = "Multitool"
@@ -203,7 +219,7 @@
 /datum/design/item/engifab/engitools/adv/light_replacer
 	name = "Light replacer"
 	req_tech = list(TECH_MAGNET = 3, TECH_MATERIAL = 4)
-	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_SILVER = 0.25 SHEETS, MATERIAL_GLASS = 1 SHEETS)
+	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPPER = 0.5 SHEETS, MATERIAL_GLASS = 1 SHEETS)
 	build_path = /obj/item/device/lightreplacer
 
 /datum/design/item/engifab/engitools/adv/mesons
@@ -337,36 +353,37 @@
 	name = "Camera assembly"
 	id = "camera_assembly"
 	build_path = /obj/item/weapon/camera_assembly
-	category = "Parts"
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 1 SHEET)
 
 /datum/design/item/engifab/parts/consolescreen
 	name = "Console screen"
 	id = "console_screen"
 	build_path = /obj/item/weapon/stock_parts/console_screen
-	category = "Parts"
 	materials = list(MATERIAL_GLASS = 1 SHEET)
 
 /datum/design/item/engifab/parts/igniter
 	name = "Igniter"
 	id = "igniter"
 	build_path = /obj/item/device/assembly/igniter
-	category = "Parts"
-	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 0.5 SHEET)
+	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPER = 1 SHEET)
 
 /datum/design/item/engifab/parts/signaler
 	name = "Signaler"
 	id = "signaler"
 	build_path = /obj/item/device/assembly/signaler
-	category = "Parts"
-	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 0.5 SHEET)
+	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPER = 0.5 SHEET)
 
 /datum/design/item/engifab/parts/sensor_infra
 	name = "Infrared sensor"
 	id = "infrared_sensor"
 	build_path = /obj/item/device/assembly/infra
-	category = "Parts"
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 0.5 SHEET)
+
+/datum/design/item/engifab/parts/voice
+	build_path = /obj/item/device/assembly/voice
+	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 0.5 SHEET)
+	
+	
 
 /datum/design/item/engifab/parts/timer
 	name = "Timer"

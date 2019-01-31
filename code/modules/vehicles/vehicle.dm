@@ -25,11 +25,12 @@
 	var/fire_dam_coeff = 1.0
 	var/brute_dam_coeff = 1.0
 	var/open = 0	//Maint panel
-	var/locked = 1
+	var/locked = TRUE
 	var/stat = 0
 	var/emagged = 0
 	var/powered = 0		//set if vehicle is powered and should use fuel when moving
 	var/move_delay = 1	//set this to limit the speed of the vehicle
+	var/has_cell = TRUE
 
 	var/obj/item/weapon/cell/cell
 	var/charge_use = 200 //W
@@ -47,6 +48,17 @@
 	//spawn the cell you want in each vehicle
 
 /obj/vehicle/Move()
+	if(istype(src, /obj/vehicle/bike/))
+		var/init_anc = anchored
+		anchored = 0
+		if(!..())
+			anchored = init_anc
+			return 0
+		anchored = init_anc
+		if(load && !istype(load, /datum/vehicle_dummy_load))
+			load.forceMove(loc)
+		return 1
+
 	if(world.time > l_move_time + move_delay)
 		var/old_loc = get_turf(src)
 		if(on && powered && cell.charge < (charge_use * CELLRATE))
@@ -235,6 +247,8 @@
 		return
 
 /obj/vehicle/proc/insert_cell(var/obj/item/weapon/cell/C, var/mob/living/carbon/human/H)
+	if(!has_cell)
+		return
 	if(cell)
 		return
 	if(!istype(C))
@@ -291,6 +305,8 @@
 
 	if(ismob(C))
 		buckle_mob(C)
+		var/mob/M = C
+		M.riding = 1
 	else if(load_item_visible)
 		C.pixel_x += load_offset_x
 		C.pixel_y += load_offset_y
@@ -335,6 +351,8 @@
 		var/mob/M = load
 		M.pixel_x = M.default_pixel_x
 		M.pixel_y = M.default_pixel_y
+
+		M.riding = 0
 	else
 		load.pixel_x = initial(load.pixel_x)
 		load.pixel_y = initial(load.pixel_y)

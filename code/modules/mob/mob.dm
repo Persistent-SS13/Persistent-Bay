@@ -726,11 +726,14 @@
 	if(lying)
 		plane = LYING_MOB_PLANE
 		layer = LYING_MOB_LAYER
+	if(riding)
+		plane = ABOVE_HUMAN_PLANE
+		layer = VEHICLE_LOAD_LAYER
 	else
 		reset_plane_and_layer()
 
 /mob/proc/facedir(var/ndir)
-	if(!canface() || moving)
+	if(!canface() || moving || riding)
 		return 0
 	set_dir(ndir)
 	if(buckled && buckled.buckle_movable)

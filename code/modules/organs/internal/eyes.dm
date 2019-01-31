@@ -38,9 +38,9 @@
 /obj/item/organ/internal/eyes/removed(var/mob/living/user)
 	..()
 	// Your eyes can't be disabled if you don't have eyes ;)
-	if(user.disabilities & NEARSIGHTED)
-		user.disabilities &= ~NEARSIGHTED
-		user.sdisabilities &= ~BLIND
+	if(owner && owner.disabilities & NEARSIGHTED)
+		owner.disabilities &= ~NEARSIGHTED
+		owner.sdisabilities &= ~BLIND
 
 
 /obj/item/organ/internal/eyes/replaced(var/mob/living/carbon/human/target)

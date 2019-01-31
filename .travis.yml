@@ -13,6 +13,7 @@ env:
     - TEST=CODE
     - TEST=WEB
     - TEST=MAP MAP_PATH=nexus
+    - TEST=MAP MAP_PATH=vignette
 
 cache:
   directories:

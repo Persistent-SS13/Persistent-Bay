@@ -149,8 +149,10 @@ What is the naming convention for planes or layers?
 #define ABOVE_HUMAN_PLANE              -6 // For things that should appear above humans.
 
 	#define ABOVE_HUMAN_LAYER  0
-	#define VEHICLE_LOAD_LAYER 1
-	#define CAMERA_LAYER       2
+	#define VEHICLE_BASE_LAYER 1
+	#define VEHICLE_LOAD_LAYER 2
+	#define VEHICLE_TOP_LAYER  3
+	#define CAMERA_LAYER       4
 
 #define BLOB_PLANE                     -5 // For Blobs, which are above humans.
 

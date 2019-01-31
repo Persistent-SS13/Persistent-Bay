@@ -1,7 +1,7 @@
 /obj/item/weapon/implant/imprinting
 	name = "imprinting implant"
 	desc = "Latest word in training your peons."
-	var/list/instructions = list("Do your job.", "Respect your superiours.", "Wash you hands after using the toilet.")
+	var/list/instructions = list()
 	var/brainwashing = 0
 	var/last_reminder
 

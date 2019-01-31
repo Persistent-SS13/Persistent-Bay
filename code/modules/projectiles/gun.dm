@@ -315,6 +315,10 @@
 		//As opposed to no-delay pew pew
 		P.accuracy += 2
 
+	//riding a bike or other vehicle reduces your accuracy greatly
+	if(usr.riding)
+		P.accuracy -= 3
+
 //does the actual launching of the projectile
 /obj/item/weapon/gun/proc/process_projectile(obj/projectile, mob/user, atom/target, var/target_zone, var/params=null)
 	var/obj/item/projectile/P = projectile

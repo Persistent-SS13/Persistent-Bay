@@ -126,18 +126,44 @@
 					return 0
 				if(candidate && ballot)
 					ballot.candidates -= candidate
-		
+		if("candidate_changedesc")
+			var/desc = sanitize(input(usr, "Enter Candidacy Description. Maximum 300 Characters", "Candidacy Description", "") as message|null, 300)
+			if(!desc)
+				desc = ""
+			var/list/pairing = connected_faction.is_candidate(usr.real_name)
+			if(pairing && pairing.len == 2)
+				var/datum/candidate/candidate = pairing[1]
+				if(candidate)
+					candidate.desc = desc
+		if("elected_changedesc")			
+			var/desc = sanitize(input(usr, "Enter Candidacy Description. Maximum 300 Characters", "Candidacy Description", "") as message|null, 300)
+			if(!desc)
+				desc = ""
+			var/list/pairing = connected_faction.is_candidate(usr.real_name)
+			if(pairing && pairing.len == 2)
+				var/datum/candidate/candidate = pairing[1]
+				if(candidate)
+					candidate.desc = desc		
+					
 		if("select_reelect")
 			var/datum/democracy/ballot = connected_faction.is_governor(user.real_name)
 			if(!ballot)
 				ballot = connected_faction.is_councillor(user.real_name)
-			if(ballot)
+			if(ballot && !ballot.seeking_reelection)
 				ballot.seeking_reelection = 1
+				var/datum/candidate/candidate = new()
+				candidate.real_name = ballot.real_name
+				candidate.desc = ballot.election_desc
+				ballot.candidates |= candidate
 		if("select_noreelect")
 			var/datum/democracy/ballot = connected_faction.is_governor(user.real_name)
 			if(!ballot)
 				ballot = connected_faction.is_councillor(user.real_name)
 			if(ballot)
 				ballot.seeking_reelection = 0
-				
+				for(var/datum/candidate/candidate in ballot.candidates)
+					if(candidate.real_name == ballot.real_name)
+						ballot.candidates -= candidate
+						break
+
 	

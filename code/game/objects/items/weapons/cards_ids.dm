@@ -147,7 +147,7 @@ var/const/NO_EMAG_ACT = -50
 		var/datum/computer_file/report/crew_record/record = faction.get_record(username)
 		if(!record)
 			return 0
-		var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid)
+		var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid, record.get_name())
 		if(!assignment)
 			return 0
 		var/datum/accesses/copy = assignment.accesses["[record.rank]"]
@@ -313,7 +313,7 @@ var/const/NO_EMAG_ACT = -50
 	else
 		var/datum/world_faction/faction = get_faction(selected_faction)
 		if(!faction) return
-		var/datum/assignment/job = faction.get_assignment(record.assignment_uid)
+		var/datum/assignment/job = faction.get_assignment(record.assignment_uid, record.get_name())
 		if(!job)
 			assignment = "Unassigned"
 			rank = 0
@@ -429,7 +429,7 @@ var/const/NO_EMAG_ACT = -50
 			for(var/x in record.access)
 				final_access |= text2num(x)
 			if(faction.allow_id_access) final_access |= access
-			var/datum/assignment/assignment = faction.get_assignment(record.try_duty())
+			var/datum/assignment/assignment = faction.get_assignment(record.try_duty(), registered_name)
 			if(assignment)
 				for(var/i=1; i<=record.rank; i++)
 					var/datum/accesses/copy = assignment.accesses["[i]"]
@@ -521,7 +521,7 @@ var/const/NO_EMAG_ACT = -50
 			for(var/x in record.access)
 				final_access |= text2num(x)
 			if(faction.allow_id_access) final_access |= access
-			var/datum/assignment/assignment = faction.get_assignment(record.try_duty())
+			var/datum/assignment/assignment = faction.get_assignment(record.try_duty(), record.get_name())
 			if(assignment)
 				for(var/i=1; i<=record.rank; i++)
 					var/datum/accesses/copy = assignment.accesses["[i]"]

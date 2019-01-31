@@ -60,7 +60,7 @@
 			tax_prog4_amount = connected_faction.tax_pprog4_amount
 			
 			tax_flat_rate = connected_faction.tax_pflat_rate
-			
+	synced = 1
 			
 /datum/nano_module/program/citycouncil/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/datum/world_faction/democratic/connected_faction
@@ -225,21 +225,25 @@
 			var/attempt = input("Enter new minimum tax rate.", "Tax rate") as num|null
 			if(attempt < 0 || attempt > 99)
 				to_chat(usr, "Invalid Entry.")
+				return
 			tax_prog1_rate = attempt
 		if("change_prog2_rate")
 			var/attempt = input("Enter new tax bracket 2 rate.", "Tax rate") as num|null
 			if(attempt < 0 || attempt > 99)
 				to_chat(usr, "Invalid Entry.")
+				return
 			tax_prog2_rate = attempt
 		if("change_prog3_rate")
 			var/attempt = input("Enter new tax bracket 3 rate.", "Tax rate") as num|null
 			if(attempt < 0 || attempt > 99)
 				to_chat(usr, "Invalid Entry.")
+				return
 			tax_prog3_rate = attempt
 		if("change_prog4_rate")
 			var/attempt = input("Enter new tax bracket 4 rate.", "Tax rate") as num|null
 			if(attempt < 0 || attempt > 99)
 				to_chat(usr, "Invalid Entry.")
+				return
 			tax_prog4_rate = attempt
 			
 			
@@ -247,24 +251,28 @@
 			var/attempt = input("Enter new tax bracket 2 qualifying amount.", "Qualifying Account Balance") as num|null
 			if(attempt < 0)
 				to_chat(usr, "Invalid Entry.")
+				return
 			tax_prog2_amount = attempt	
 		
 		if("change_prog3_amount")
 			var/attempt = input("Enter new tax bracket 3 qualifying amount.", "Qualifying Account Balance") as num|null
 			if(attempt < 0)
 				to_chat(usr, "Invalid Entry.")
+				return
 			tax_prog3_amount = attempt	
 			
 		if("change_prog4_amount")
 			var/attempt = input("Enter new tax bracket 4 qualifying amount.", "Qualifying Account Balance") as num|null
 			if(attempt < 0)
 				to_chat(usr, "Invalid Entry.")
+				return
 			tax_prog4_amount = attempt
 			
 		if("change_flat_rate")
 			var/attempt = input("Enter new flat tax rate.", "Tax rate") as num|null
 			if(attempt < 0 || attempt > 99)
 				to_chat(usr, "Invalid Entry.")
+				return
 			tax_flat_rate = attempt
 	
 		if("propose_tax")

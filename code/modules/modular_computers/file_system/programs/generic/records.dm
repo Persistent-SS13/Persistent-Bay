@@ -29,7 +29,7 @@
 	if(active_record)
 		user << browse_rsc(active_record.photo_front, "front_[active_record.uid].png")
 		user << browse_rsc(active_record.photo_side, "side_[active_record.uid].png")
-		data["pic_edit"] = check_access(user, core_access_command_programs) 
+		data["pic_edit"] = check_access(user, core_access_command_programs)
 		data["uid"] = active_record.uid
 		var/list/fields = list()
 		var/assignment = "Unassigned"
@@ -41,25 +41,25 @@
 			assignment = active_record.custom_title	//can be alt title or the actual job
 			rank = active_record.rank
 		else
-			if(connected_faction) 
-				var/datum/assignment/job = connected_faction.get_assignment(active_record.assignment_uid)
+			if(connected_faction)
+				var/datum/assignment/job = connected_faction.get_assignment(active_record.assignment_uid, active_record.get_name())
 				if(!job)
 					assignment = "Unassigned"
 					rank = 0
-				if(active_record.rank > 1  && (active_record.rank-1) <= job.ranks.len) 
+				if(active_record.rank > 1  && (active_record.rank-1) <= job.ranks.len)
 					assignment = job.ranks[active_record.rank-1]
 					rank = active_record.rank
 		fields.Add(list(list(
-			"key" = "assignment", 
-			"name" = "Assignment", 
-			"val" = assignment, 
+			"key" = "assignment",
+			"name" = "Assignment",
+			"val" = assignment,
 			"editable" = 0,
 			"large" = 0
 		)))
 		fields.Add(list(list(
-			"key" = "rank", 
-			"name" = "Rank", 
-			"val" = rank, 
+			"key" = "rank",
+			"name" = "Rank",
+			"val" = rank,
 			"editable" = 0,
 			"large" = 0
 		)))
@@ -68,9 +68,9 @@
 				continue
 			if(F.can_see(user_access))
 				fields.Add(list(list(
-					"key" = F.type, 
-					"name" = F.name, 
-					"val" = F.get_display_value(), 
+					"key" = F.type,
+					"name" = F.name,
+					"val" = F.get_display_value(),
 					"editable" = F.can_edit(user_access),
 					"large" = (F.valtype == EDIT_LONGTEXT)
 				)))
@@ -88,8 +88,8 @@
 					assignment = R.custom_title	//can be alt title or the actual job
 					rank = R.rank
 				else
-					if(connected_faction) 
-						var/datum/assignment/job = connected_faction.get_assignment(R.assignment_uid)
+					if(connected_faction)
+						var/datum/assignment/job = connected_faction.get_assignment(R.assignment_uid, R.get_name())
 						if(!job)
 							assignment = "Unassigned"
 							rank = 0
@@ -122,7 +122,7 @@
 	if(istype(PC) && PC.computer_emagged)
 		user_access = user_access.Copy()
 		user_access |= access_syndicate
-	
+
 	return user_access
 
 /datum/nano_module/program/records/proc/edit_field(var/mob/user, var/field)

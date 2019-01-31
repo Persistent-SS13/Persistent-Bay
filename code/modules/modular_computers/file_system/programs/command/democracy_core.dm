@@ -1,10 +1,24 @@
+#define DCORE_MAIN 1
+#define DCORE_SPECIALASSIGNMENT 2
+#define DCORE_ACCESSMENU 3
+#define DCORE_ASSIGNMENTMENU 4
+#define DCORE_ACCESSCATEGORY 5
+#define DCORE_ACCESS 6
+#define DCORE_ASSIGNMENTCATEGORY 7
+#define DCORE_ASSIGNMENT 8
+#define DCORE_ECONOMY 9
+#define DCORE_PROMOTION 10
+#define DCORE_CRYO 11
+
+
+
 
 /datum/computer_file/program/democracy_core
 	filename = "democracy_core"
 	filedesc = "Executive Government Control"
 	program_icon_state = "comm"
 	program_menu_icon = "flag"
-	nanomodule_path = /datum/nano_module/program/business_core
+	nanomodule_path = /datum/nano_module/program/democracy_core
 	extended_desc = "Used by the Executive Branch to manage the government."
 	required_access = core_access_leader
 	requires_ntnet = TRUE
@@ -32,15 +46,15 @@
 
 
 
-/datum/nano_module/program/business_core/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
+/datum/nano_module/program/democracy_core/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data = host.initial_data()
-	var/datum/world_faction/connected_faction
+	var/datum/world_faction/democratic/connected_faction
 	if(program.computer.network_card && program.computer.network_card.connected_network)
-		connected_faction = program.computer.network_card
+		connected_faction = program.computer.network_card.connected_network.holder
 	if(connected_faction)
 		data["faction_name"] = connected_faction.name
 		data["faction_uid"] = connected_faction.uid
-		if(menu == 3)
+		if(menu == DCORE_ACCESSMENU)
 			var/list/access_categories[0]
 			var/datum/access_category/core/core
 			if(!core_access)
@@ -60,7 +74,7 @@
 					"name" = sanitize("([x]) [name]"),
 					"ind" = ind))
 			data["access_categories"] = access_categories
-		if(menu == 4)
+		if(menu == DCORE_ASSIGNMENTMENU)
 			var/list/assignment_categories[0]
 			for(var/datum/assignment_category/category in connected_faction.assignment_categories)
 				assignment_categories[++assignment_categories.len] = list("name" = category.name, "assignments" = list(), "ref" = "\ref[category]")
@@ -70,9 +84,9 @@
 					"ref2" = "\ref[assignment]"
 					))
 			data["assignment_categories"] = assignment_categories
-		if(menu == 5)
+		if(menu == DCORE_ACCESSCATEGORY)
 			if(!selected_accesscategory)
-				menu = 3
+				menu = DCORE_ACCESSMENU
 				return ui_interact(user, ui_key, ui, force_open, state)
 			var/list/accesses[0]
 			var/ind = 0
@@ -81,13 +95,13 @@
 				var/name = selected_accesscategory.accesses[x]
 				accesses[++accesses.len] = list("name" = "([x]) [name]", "ind" = ind)
 			data["accesses"] = accesses
-		if(menu == 6)
+		if(menu == DCORE_ACCESS)
 			if(!selected_access)
-				menu = 3
+				menu = DCORE_ACCESSMENU
 				return ui_interact(user, ui_key, ui, force_open, state)
-		if(menu == 7) // assignment category view
+		if(menu == DCORE_ASSIGNMENTCATEGORY) // assignment category view
 			if(!selected_assignmentcategory)
-				menu = 4
+				menu = DCORE_ASSIGNMENTMENU
 				return ui_interact(user, ui_key, ui, force_open, state)
 			data["leader_faction"] = selected_assignmentcategory.command_faction
 			data["membership_faction"] = selected_assignmentcategory.member_faction
@@ -98,9 +112,9 @@
 			for(var/datum/assignment/assignment in selected_assignmentcategory.assignments)
 				assignments[++assignments.len] = list("name" = "([assignment.uid]) [assignment.name]", "ref" = "\ref[assignment]")
 			data["assignments"] = assignments
-		if(menu == 8)
+		if(menu == DCORE_ASSIGNMENT)
 			if(!selected_assignment)
-				menu = 4
+				menu = DCORE_ASSIGNMENTMENU
 				return ui_interact(user, ui_key, ui, force_open, state)
 			data["pay"] = selected_assignment.payscale
 			data["title"] = selected_assignment.name
@@ -162,23 +176,75 @@
 				ranks[++ranks.len] = list("name" = "[title]:[selected_assignment.ranks[title]]")
 			data["ranks"] = ranks
 			data["view_ranks"] = viewing_ranks
-		if(menu == 9)
+		if(menu == DCORE_ECONOMY)
 			data["money_rate"] = connected_faction.payrate
 			data["money_debt"] = connected_faction.get_debt()
 			data["money_balance"] = connected_faction.central_account.money
 			data["tax_rate"] = connected_faction.tax_rate
 			data["import_rate"] = connected_faction.import_profit
 			data["export_rate"] = connected_faction.export_profit
-		if(menu == 10)
+		if(menu == DCORE_PROMOTION)
 			data["rank1_req"] = connected_faction.all_promote_req
 			data["rank3_req"] = connected_faction.three_promote_req
 			data["rank5_req"] = connected_faction.five_promote_req
-		if(menu == 11) // cryo menu
+		if(menu == DCORE_CRYO) // cryo menu
 			var/list/cryos[0]
 			cryos[++cryos.len] = list("name" = "default")
 			for(var/cryoname in connected_faction.cryo_networks)
 				cryos[++cryos.len] = list("name" = cryoname)
 			data["cryos"] = cryos
+		if(menu == DCORE_SPECIALASSIGNMENT)
+			if(!selected_assignment)
+				menu = DCORE_ASSIGNMENTMENU
+				return ui_interact(user, ui_key, ui, force_open, state)
+			data["pay"] = selected_assignment.payscale
+			data["cryonetwork"] = selected_assignment.cryo_net
+			if(selected_assignment.accesses.len)
+				if(selected_assignment.accesses["1"] && !istype(selected_assignment.accesses["1"], /datum/accesses))
+					var/datum/accesses/copy = new()
+					copy.accesses = selected_assignment.accesses.Copy()
+					selected_assignment.accesses["1"] = copy
+			else
+				var/datum/accesses/copy = new()
+				selected_assignment.accesses["1"] = copy
+			var/list/all_access = list()
+			var/expense_limit = 0
+			for(var/i=1;i<=selected_rank;i++)
+				if(i > selected_assignment.accesses.len)
+					var/datum/accesses/copy = new /datum/accesses()
+					var/datum/accesses/copy2 = selected_assignment.accesses["[i-1]"] 
+					if(copy2)
+						copy.expense_limit = copy2.expense_limit
+					selected_assignment.accesses["[i]"] = copy
+					continue
+				var/datum/accesses/copy = selected_assignment.accesses["[i]"]
+				if(istype(copy))
+					expense_limit = copy.expense_limit
+					all_access |= copy.accesses
+			data["expense_limit"] = expense_limit
+			var/list/access_categories[0]
+			var/datum/access_category/core/core
+			if(!core_access)
+				core = new()
+				core_access = core
+			var/list/all_categories = list()
+			all_categories |= core_access
+			all_categories |= connected_faction.access_categories
+			for(var/datum/access_category/category in all_categories)
+				access_categories[++access_categories.len] = list("name" = category.name, "accesses" = list(), "ref" = "\ref[category]")
+				var/ind = 0
+				for(var/x in category.accesses)
+					var/existing = 0
+					if(all_access.Find(x))
+						existing = 1
+					ind++
+					var/name = category.accesses[x]
+					if(!name) continue
+					access_categories[access_categories.len]["accesses"] += list(list(
+					"name" = sanitize("([x]) [name]"),
+					"ind" = ind,
+					"existing" = existing))
+			data["access_categories"] = access_categories
 			
 	if(selected_accesscategory)
 		data["selected_accesscategory"] = selected_accesscategory.name
@@ -193,19 +259,21 @@
 		data["selected_assignment"] = "([selected_assignment.uid]) [selected_assignment.name]"
 	data["prior_menu"] = prior_menu
 	data["menu"] = menu
+	
+	
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
-		ui = new(user, src, ui_key, "faction_core.tmpl", name, 550, 650, state = state)
+		ui = new(user, src, ui_key, "democracy_core.tmpl", name, 550, 650, state = state)
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
 		ui.open()
 
-/datum/nano_module/program/faction_core/Topic(href, href_list)
+/datum/nano_module/program/democracy_core/Topic(href, href_list)
 	if(..())
 		return 1
-	var/datum/world_faction/connected_faction
+	var/datum/world_faction/democratic/connected_faction
 	if(program.computer.network_card && program.computer.network_card.connected_network)
-		connected_faction = program.computer.network_card
+		connected_faction = program.computer.network_card.connected_network.holder
 	if(!program.can_run(usr)) return 1
 	switch (href_list["action"])
 	
@@ -213,9 +281,9 @@
 			var/select_menu = text2num(href_list["menu_target"])
 			menu = select_menu
 			selected_rank = 1
-			prior_menu = 1
+			prior_menu = DCORE_MAIN
 		if("menu_back")
-			menu = 1
+			menu = DCORE_MAIN
 		if("create_accesscategory")
 			var/select_name = sanitizeName(input(usr,"Enter new access category name.","Create Access Category", "") as null|text, MAX_NAME_LEN, 1, 0)
 			if(select_name)
@@ -230,8 +298,8 @@
 		if("select_accesscategory")
 			selected_accesscategory = locate(href_list["selected_ref"])
 			if(!selected_accesscategory) return 1
-			menu = 8
-			prior_menu = 6
+			menu = DCORE_ACCESSCATEGORY
+			prior_menu = DCORE_ASSIGNMENTMENU
 		if("edit_accesscategory")
 			var/curr_name = selected_accesscategory.name
 			var/select_name = sanitizeName(input(usr,"Enter new name.","Change Access Category Name", curr_name) as null|text, MAX_NAME_LEN, 1, 0)
@@ -250,13 +318,13 @@
 			connected_faction.access_categories -= selected_accesscategory
 			qdel(selected_accesscategory)
 			selected_accesscategory = null
-			menu = 6
+			menu = DCORE_ACCESSMENU
 		if("select_access")
 			selected_accesscategory = locate(href_list["selected_ref"])
 			if(!selected_accesscategory) return 1
 			selected_access = text2num(href_list["selected_ind"])
-			menu = 9
-			prior_menu = 6
+			menu = DCORE_ACCESS
+			prior_menu = DCORE_ACCESSMENU
 		if("create_access")
 			var/selected_uid = input(usr,"Enter unique access number (1 - 99)", "Enter Access Number") as null|num
 			if(!selected_uid || selected_uid < 1 || selected_uid > 99)
@@ -299,12 +367,12 @@
 			selected_accesscategory.accesses -= x
 			connected_faction.rebuild_all_access()
 			to_chat(usr, "Access successfully deleted.")
-			menu = 8
+			menu = DCORE_ACCESSMENU
 		if("select_access_noref")
 			if(!selected_accesscategory) return 1
 			selected_access = text2num(href_list["selected_ind"])
-			menu = 9
-			prior_menu = 8
+			menu = DCORE_ACCESS
+			prior_menu = DCORE_ACCESSCATEGORY
 		if("create_assignmentcategory")
 			var/select_name = sanitizeName(input(usr,"Enter new assignment category name.","Create Assignment Category", "") as null|text, MAX_NAME_LEN, 1, 0)
 			if(select_name)
@@ -320,20 +388,32 @@
 		if("select_assignmentcategory")
 			selected_assignmentcategory = locate(href_list["selected_ref"])
 			if(!selected_assignmentcategory) return 1
-			menu = 10
-			prior_menu = 7
+			menu = DCORE_ASSIGNMENTCATEGORY
+			prior_menu = DCORE_ASSIGNMENTMENU
 		if("select_assignment")
 			selected_assignmentcategory = locate(href_list["category_ref"])
 			if(!selected_assignmentcategory) return 1
 			selected_assignment = locate(href_list["selected_ref"])
 			if(!selected_assignment) return 1
-			menu = 11
-			prior_menu = 7
+			menu = DCORE_ASSIGNMENT
+			prior_menu = DCORE_ASSIGNMENTMENU
+		if("select_judge")
+			selected_assignment = connected_faction.judge_assignment
+			if(!selected_assignment) return 1
+			menu = DCORE_SPECIALASSIGNMENT
+			prior_menu = DCORE_ASSIGNMENTMENU
+		
+		if("select_councillor")
+			selected_assignment = connected_faction.councillor_assignment
+			if(!selected_assignment) return 1
+			menu = DCORE_SPECIALASSIGNMENT
+			prior_menu = DCORE_ASSIGNMENTMENU
+		
 		if("select_assignment_two")
 			selected_assignment = locate(href_list["selected_ref"])
 			if(!selected_assignment) return 1
-			menu = 11
-			prior_menu = 10
+			menu = DCORE_ASSIGNMENT
+			prior_menu = DCORE_ASSIGNMENTCATEGORY
 		if("assignmentcategory_leadership_yes")
 			selected_assignmentcategory.command_faction = 1
 		if("assignmentcategory_leadership_no")
@@ -440,7 +520,7 @@
 				connected_faction.assignment_categories -= selected_assignmentcategory
 				qdel(selected_assignmentcategory)
 				to_chat(usr, "Assignment Category successfully deleted.")
-			menu = 8
+			menu = DCORE_ASSIGNMENTMENU
 		if("delete_assignment")
 			var/choice = input(usr,"Are you sure you want to delete this assignment? All ranking data will be lost.") in list("Confirm", "Cancel")
 			if(choice == "Confirm")
@@ -448,7 +528,7 @@
 				qdel(selected_assignment)
 				connected_faction.rebuild_all_assignments()
 				to_chat(usr, "Assignment successfully deleted.")
-			menu = 8
+			menu = prior_menu
 		if("view_access")
 			viewing_ranks = 0
 		if("view_ranks")

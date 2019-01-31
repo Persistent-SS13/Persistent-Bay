@@ -288,7 +288,7 @@
 				win.shatter()
 				if(istype(load, /mob/living/carbon/human))
 					var/mob/living/carbon/human/H = load
-					H.apply_damage(rand(1, 3), BRUTE, null)
+					H.apply_damage(rand(1, 3), BRUTE)
 				return
 
 		playsound(src.loc, 'sound/effects/grillehit.ogg', 80, 0, 10)

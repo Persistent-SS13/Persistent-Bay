@@ -115,7 +115,22 @@
 	name = "Walking cane"
 	id = "cane"
 	build_path = /obj/item/weapon/cane
-	materials = list("wood" = 5000)
+	materials = list("wood" = 1.5 SHEETS)
+	
+/datum/design/item/autotailor/accessories/attach/canefancy
+	build_path = /obj/item/weapon/staff/gentcane
+	materials = list("wood" = 1.5 SHEETS, MATERIAL_GOLD = 1 SHEET)
+
+/datum/design/item/autotailor/accessories/attach/staff
+	build_path = /obj/item/weapon/staff
+	materials = list("wood" = 1.5 SHEETS)
+	
+	
+/datum/design/item/autotailor/accessories/attach/canefancy
+	build_path = /obj/item/weapon/staff/gentcane
+	materials = list("wood" = 1.5 SHEETS, MATERIAL_GOLD = 1 SHEET)
+	
+	
 
 /datum/design/item/autotailor/accessories/attach/tie_white	//custom colors
 	name = "Tie - white"

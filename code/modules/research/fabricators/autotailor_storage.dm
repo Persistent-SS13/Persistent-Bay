@@ -563,11 +563,11 @@
 	category = "General storage containers"
 	materials = list("cardboard" = 1000)
 
-/datum/design/item/autotailor/storage/gen/wallet_white	//can use custom colors
-	name = "White wallet"
+/datum/design/item/autotailor/storage/gen/wallet_multi	//can use custom colors
+	name = "Polychromatic wallet"
 	id = "wallet_white"
-	build_path = /obj/item/weapon/storage/wallet
-	materials = list("cloth" = 1 SHEET)
+	build_path = /obj/item/weapon/storage/wallet/poly
+	materials = list("leather" = 1.5 SHEET, MATERIAL_PHORON = 0.25 SHEETS)
 
 /datum/design/item/autotailor/storage/gen/wallet_leather
 	name = "Leather wallet"

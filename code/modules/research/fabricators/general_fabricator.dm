@@ -206,12 +206,23 @@
 	build_path = /obj/item/device/flashlight/pen
 	materials = list(MATERIAL_STEEL = 0.1 SHEETS)
 
+/datum/design/item/genfab/meditools/autopsy_scanner
+	build_path = /obj/item/weapon/autopsy_scanner
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 1 SHEETS)
+
+/datum/design/item/genfab/meditools/bodybag
+	build_path = /obj/item/bodybag
+	materials = list(MATERIAL_PLASTIC = 4 SHEETS)
+
+
 /datum/design/item/genfab/meditools/scalpel
 	build_path = /obj/item/weapon/scalpel
 	materials = list(MATERIAL_STEEL = 1 SHEETS)
+	
 /datum/design/item/genfab/meditools/circularsaw
 	build_path = /obj/item/weapon/circular_saw
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
+	
 /datum/design/item/genfab/meditools/bonesetter
 	build_path = /obj/item/weapon/bonesetter
 	materials = list(MATERIAL_STEEL = 1 SHEETS)
@@ -219,15 +230,27 @@
 /datum/design/item/genfab/meditools/surgicaldrill
 	build_path = /obj/item/weapon/surgicaldrill
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
+	
 /datum/design/item/genfab/meditools/retractor
 	build_path = /obj/item/weapon/retractor
 	materials = list(MATERIAL_STEEL = 1 SHEETS)
+	
 /datum/design/item/genfab/meditools/cautery
 	build_path = /obj/item/weapon/cautery
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
+	
 /datum/design/item/genfab/meditools/hemostat
 	build_path = /obj/item/weapon/hemostat
 	materials = list(MATERIAL_STEEL = 1 SHEETS)
+	
+/datum/design/item/genfab/meditools/virusdish
+	build_path = /obj/item/weapon/virusdish
+	materials = list(MATERIAL_GLASS = 0.25 SHEETS)
+
+/datum/design/item/genfab/meditools/adv/bloodpack
+	build_path = /obj/item/weapon/reagent_containers/blood/empty
+	materials = list(MATERIAL_PLASTIC = 0.25 SHEETS)
+	
 /datum/design/item/genfab/meditools/adv/syringe_cartridge
 	build_path = /obj/item/weapon/syringe_cartridge
 	materials = list(MATERIAL_STEEL = 0.1 SHEETS)
@@ -271,33 +294,32 @@
 
 /datum/design/item/genfab/meditools/healthscanner
 	build_path = /obj/item/device/healthanalyzer
-	category = "Medical"
-	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 0.5 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
+	materials = list(MATERIAL_STEEL = 3 SHEET, MATERIAL_GLASS = 0.5 SHEETS, MATERIAL_COPPER = 1 SHEETS)
 
 /datum/design/item/genfab/meditools/adv/robot_scanner
 	req_tech = list(TECH_MAGNET = 3, TECH_BIO = 2, TECH_ENGINEERING = 3)
-	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 0.5 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
+	materials = list(MATERIAL_STEEL = 3 SHEET, MATERIAL_GLASS = 0.5 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
 	build_path = /obj/item/device/robotanalyzer
 
 /datum/design/item/genfab/meditools/adv/mass_spectrometer
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 2)
 	build_path = /obj/item/device/mass_spectrometer
-	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 0.5 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
+	materials = list(MATERIAL_STEEL = 3 SHEET, MATERIAL_GLASS = 1 SHEETS, MATERIAL_COPPER = 2 SHEETS)
 
 /datum/design/item/genfab/meditools/adv/adv_mass_spectrometer
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 4)
 	build_path = /obj/item/device/mass_spectrometer/adv
-	materials = list(MATERIAL_STEEL = 2 SHEET, MATERIAL_GLASS = 1 SHEETS, MATERIAL_SILVER = 1 SHEETS)
+	materials = list(MATERIAL_STEEL = 5 SHEET, MATERIAL_GLASS = 3 SHEETS, MATERIAL_SILVER = 5 SHEETS)
 
 /datum/design/item/genfab/meditools/adv/reagent_scanner
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 2)
 	build_path = /obj/item/device/reagent_scanner
-	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 0.5 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
+	materials = list(MATERIAL_STEEL = 3 SHEET, MATERIAL_GLASS = 1 SHEETS, MATERIAL_COPPER = 2 SHEETS)
 
 //datum/design/item/genfab/meditools/adv/adv_reagent_scanner
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 4)
 	build_path = /obj/item/device/reagent_scanner/adv
-	materials = list(MATERIAL_STEEL = 2 SHEET, MATERIAL_GLASS = 1 SHEETS, MATERIAL_SILVER = 1 SHEETS)
+	materials = list(MATERIAL_STEEL = 5 SHEET, MATERIAL_GLASS = 3 SHEETS, MATERIAL_SILVER = 5 SHEETS)
 
 /datum/design/item/genfab/meditools/adv/slime_scanner
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 2)
@@ -379,12 +401,49 @@
 
 /datum/design/item/genfab/meditools/stethoscope
 	name = "Stethoscope"
-	desc = "An outdated medical apparatus for listening to the sounds of the human body. It also makes you look like you know what you're doing."
-	req_tech = list(TECH_BIO = 1)
 	materials = list(MATERIAL_STEEL = 0.5 SHEET)
 	build_path = /obj/item/clothing/accessory/stethoscope
 
+/datum/design/item/genfab/meditools/implants/imprinting
+	materials = list(MATERIAL_STEEL = 2 SHEET, MATERIAL_SILVER = 3 SHEETS, MATERIAL_COPPER = 2 SHEETS, MATERIAL_PHORON = 0.5 SHEET)
+	build_path = /obj/item/weapon/implant/imprinting
 
+/datum/design/item/genfab/meditools/implants/tracking
+	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_SILVER = 2 SHEETS, MATERIAL_COPPER = 1 SHEETS, MATERIAL_PHORON = 0.5 SHEET)
+	build_path = /obj/item/weapon/implant/tracking
+
+/datum/design/item/genfab/meditools/implants/freedom
+	materials = list(MATERIAL_STEEL = 2 SHEET, MATERIAL_SILVER = 3 SHEETS, MATERIAL_COPPER = 2 SHEETS, MATERIAL_PHORON = 0.5 SHEET)
+	build_path = /obj/item/weapon/implant/freedom
+
+/datum/design/item/genfab/meditools/implants/compressed
+	materials = list(MATERIAL_STEEL = 4 SHEET, MATERIAL_SILVER = 8 SHEETS, MATERIAL_COPPER = 4 SHEETS, MATERIAL_PHORON = 5 SHEET, MATERIAL_URANIUM = 5 SHEET)
+	build_path = /obj/item/weapon/implant/compressed
+	
+/datum/design/item/genfab/meditools/implants/biomonitor
+	materials = list(MATERIAL_STEEL = 2 SHEET, MATERIAL_SILVER = 4 SHEETS, MATERIAL_COPPER = 2 SHEETS, MATERIAL_PHORON = 0.5 SHEET)
+	build_path = /obj/item/weapon/implant/deathalarm/trauma
+	
+/datum/design/item/genfab/meditools/implants/adrenalin
+	materials = list(MATERIAL_STEEL = 2 SHEET, MATERIAL_SILVER = 3 SHEETS, MATERIAL_COPPER = 2 SHEETS, MATERIAL_PHORON = 0.5 SHEET)
+	build_path = /obj/item/weapon/implant/adrenalin
+	
+/datum/design/item/genfab/meditools/implants/chem
+	materials = list(MATERIAL_STEEL = 2 SHEET, MATERIAL_SILVER = 3 SHEETS, MATERIAL_COPPER = 2 SHEETS, MATERIAL_PHORON = 0.5 SHEET)
+	build_path = /obj/item/weapon/implant/chem
+
+/datum/design/item/genfab/meditools/implants/implantpad
+	materials = list(MATERIAL_STEEL = 4 SHEET, MATERIAL_GLASS = 2 SHEET, MATERIAL_COPPER = 1 SHEETS)
+	build_path = /obj/item/weapon/implantpad
+	
+/datum/design/item/genfab/meditools/implants/implanter
+	materials = list(MATERIAL_STEEL = 3 SHEET, MATERIAL_COPPER = 2 SHEETS)
+	build_path = /obj/item/weapon/implanter
+
+/datum/design/item/genfab/meditools/implants/implantcase
+	materials = list(MATERIAL_GLASS = 1 SHEET)
+	build_path = /obj/item/weapon/implantcase
+	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // WEAPONS
@@ -395,8 +454,41 @@
 /datum/design/item/genfab/weapons/guns
 	category = "Guns"
 
+/datum/design/item/genfab/weapons/grenades
+	category = "Grenades"
+
 
 ////////////////////////////////////////////////////////////////////
+
+
+/datum/design/item/genfab/weapons/grenades/smoke
+	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GOLD = 2 SHEETS)
+	build_path = /obj/item/weapon/grenade/smokebomb
+
+/datum/design/item/genfab/weapons/grenades/empgrenade
+	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GOLD = 4 SHEETS, MATERIAL_COPPER = 4 SHEETS)
+	build_path = /obj/item/weapon/grenade/empgrenade
+
+/datum/design/item/genfab/weapons/grenades/frag
+	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GOLD = 5 SHEETS, MATERIAL_PHORON = 2 SHEETS)
+	build_path = /obj/item/weapon/grenade/frag
+
+/datum/design/item/genfab/weapons/grenades/flashbang
+	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GOLD = 2 SHEETS, MATERIAL_COPPER = 2 SHEETS)
+	build_path = /obj/item/weapon/grenade/flashbang
+
+/datum/design/item/genfab/weapons/grenades/chem_grenade
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GOLD = 0.5 SHEETS)
+	build_path = /obj/item/weapon/grenade/chem_grenade
+
+/datum/design/item/genfab/weapons/grenades/anti_photon
+	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GOLD = 5 SHEETS, MATERIAL_PHORON = 2 SHEETS, MATERIAL_URANIUM = 0.5 SHEETS)
+	build_path = /obj/item/weapon/grenade/anti_photon
+
+
+/datum/design/item/genfab/weapons/guns/dartgun
+	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_SILVER = 3 SHEETS, MATERIAL_GOLD = 2 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/dartgun
 
 
 /datum/design/item/genfab/weapons/guns/stunrevolver
@@ -420,10 +512,15 @@
 	build_path = /obj/item/weapon/gun/energy/lasercannon
 
 /datum/design/item/genfab/weapons/guns/energy
+	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GLASS = 3 SHEETS, MATERIAL_GOLD = 3 SHEETS,  MATERIAL_PHORON = 2 SHEETS)
+	build_path = /obj/item/weapon/gun/energy
+
+
+/datum/design/item/genfab/weapons/guns/energy/adv
 	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_GOLD = 4 SHEETS, MATERIAL_DIAMOND = 1 SHEETS)
 	build_path = /obj/item/weapon/gun/energy/gun
 
-/datum/design/item/genfab/weapons/guns/energy/small
+/datum/design/item/genfab/weapons/guns/energy/adv/small
 	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_GOLD = 5 SHEETS, MATERIAL_DIAMOND = 1 SHEETS)
 	build_path = /obj/item/weapon/gun/energy/gun/small
 
@@ -434,6 +531,47 @@
 /datum/design/item/genfab/weapons/guns/energy/ionrifle/pistol
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 3 SHEETS, MATERIAL_GOLD = 5 SHEETS, MATERIAL_PHORON = 1 SHEETS)
 	build_path = /obj/item/weapon/gun/energy/ionrifle/small
+
+
+/datum/design/item/genfab/weapons/guns/automatic/wt550
+	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GOLD = 5 SHEETS, MATERIAL_DIAMOND = 2 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/automatic/wt550
+
+/datum/design/item/genfab/weapons/guns/automatic/uzi
+	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GOLD = 5 SHEETS, MATERIAL_DIAMOND = 2 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/automatic/machine_pistol
+	
+/datum/design/item/genfab/weapons/guns/automatic/c20r
+	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GOLD = 8 SHEETS, MATERIAL_DIAMOND = 5 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/automatic/c20r
+	
+/datum/design/item/genfab/weapons/guns/automatic/sts35
+	materials = list(MATERIAL_STEEL = 10 SHEETS, MATERIAL_GOLD = 10 SHEETS, MATERIAL_DIAMOND = 5 SHEETS, MATERIAL_URANIUM = 5 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/automatic/sts35
+	
+/datum/design/item/genfab/weapons/guns/automatic/z8
+	materials = list(MATERIAL_STEEL = 15 SHEETS, MATERIAL_GOLD = 12 SHEETS, MATERIAL_DIAMOND = 8 SHEETS, MATERIAL_URANIUM = 5 SHEETS, MATERIAL_PHORON = 5 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/automatic/z8
+
+/datum/design/item/genfab/weapons/guns/automatic/16_saw
+	materials = list(MATERIAL_STEEL = 20 SHEETS, MATERIAL_GOLD = 18 SHEETS, MATERIAL_DIAMOND = 15 SHEETS, MATERIAL_URANIUM = 10 SHEETS, MATERIAL_PHORON = 10 SHEETS, MATERIAL_WOOD = 5 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/automatic/l6_saw
+
+/datum/design/item/genfab/weapons/guns/automatic/heavysniper
+	materials = list(MATERIAL_STEEL = 15 SHEETS, MATERIAL_GOLD = 18 SHEETS, MATERIAL_DIAMOND = 20 SHEETS, MATERIAL_URANIUM = 20 SHEETS, MATERIAL_PHORON = 20 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/heavysniper
+
+/datum/design/item/genfab/weapons/guns/automatic/revolver
+	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GOLD = 6 SHEETS, MATERIAL_DIAMOND = 4 SHEETS, MATERIAL_URANIUM = 4 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/revolver
+
+/datum/design/item/genfab/weapons/guns/automatic/revolver/mateba
+	materials = list(MATERIAL_STEEL = 10 SHEETS, MATERIAL_GOLD = 12 SHEETS, MATERIAL_DIAMOND = 8 SHEETS, MATERIAL_URANIUM = 8 SHEETS, MATERIAL_PHORON = 4 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/revolver/mateba
+
+/datum/design/item/genfab/weapons/guns/automatic/revolver/deckard
+	materials = list(MATERIAL_STEEL = 10 SHEETS, MATERIAL_GOLD = 12 SHEETS, MATERIAL_DIAMOND = 8 SHEETS, MATERIAL_URANIUM = 8 SHEETS, MATERIAL_PHORON = 4 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/revolver/deckard
 
 
 
@@ -513,11 +651,29 @@
 
 /datum/design/item/genfab/weapons/energyshield
 	build_path = /obj/item/weapon/shield/energy
-	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 3 SHEETS, MATERIAL_GOLD = 4 SHEETS, MATERIAL_DIAMOND = 2 SHEETS, MATERIAL_PHORON = 0.5 SHEET)
+	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GLASS = 3 SHEETS, MATERIAL_GOLD = 6 SHEETS, MATERIAL_DIAMOND = 2 SHEETS, MATERIAL_PHORON = 1 SHEET)
 
-/datum/design/item/genfab/weapons/woodstaff
-	build_path = /obj/item/weapon/material/stick
-	materials = list(MATERIAL_WOOD = 1 SHEETS)
+/datum/design/item/genfab/weapons/energyaxe
+	build_path = /obj/item/weapon/melee/energy/axe
+	materials = list(MATERIAL_STEEL = 12 SHEETS, MATERIAL_GOLD = 10 SHEETS, MATERIAL_DIAMOND = 10 SHEETS, MATERIAL_PHORON = 8 SHEET, MATERIAL_URANIUM = 8)
+	
+/datum/design/item/genfab/weapons/energysword
+	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GOLD = 10 SHEETS, MATERIAL_DIAMOND = 8 SHEETS, MATERIAL_PHORON = 5 SHEET, MATERIAL_URANIUM = 5)
+	
+/datum/design/item/genfab/weapons/energysword/red
+	name = "red energy sword"
+	build_path = /obj/item/weapon/melee/energy/sword/red
+	
+/datum/design/item/genfab/weapons/energysword/blue
+	name = "blue energy sword"
+	build_path = /obj/item/weapon/melee/energy/sword/blue
+
+/datum/design/item/genfab/weapons/energysword/green
+	name = "green energy sword"
+	build_path = /obj/item/weapon/melee/energy/sword/green
+
+/datum/design/item/genfab/weapons/energysword/cutlass
+	build_path = /obj/item/weapon/melee/energy/sword/pirate
 
 /datum/design/item/genfab/weapons/shuriken
 	build_path = /obj/item/weapon/material/star
@@ -525,19 +681,54 @@
 
 /datum/design/item/genfab/weapons/hook
 	build_path = /obj/item/weapon/material/knife/hook
-	materials = list(MATERIAL_STEEL = 1 SHEETS)
+	materials = list(MATERIAL_STEEL = 3 SHEETS)
 
 /datum/design/item/genfab/weapons/ritualdagger
 	build_path = /obj/item/weapon/material/knife/ritual
-	materials = list(MATERIAL_STEEL = 1 SHEETS)
+	materials = list(MATERIAL_STEEL = 3 SHEETS)
+
+/datum/design/item/genfab/weapons/unathiknife
+	build_path = /obj/item/weapon/material/knife/unathiknife
+	materials = list(MATERIAL_STEEL = 3 SHEETS)
+
+/datum/design/item/genfab/weapons/tacknife
+	build_path = /obj/item/weapon/material/hatchet/tacknife
+	materials = list(MATERIAL_STEEL = 3 SHEETS)
+
+/datum/design/item/genfab/weapons/machete
+	build_path = /obj/item/weapon/material/hatchet/machete
+	materials = list(MATERIAL_STEEL = 3 SHEETS)
+
+/datum/design/item/genfab/weapons/machete/deluxe
+	build_path = /obj/item/weapon/material/hatchet/machete/deluxe
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_WOOD = 1 SHEET, MATERIAL_LEATHER = 1 SHEET)
+
 
 /datum/design/item/genfab/weapons/melee/whip
 	build_path = /obj/item/weapon/melee/whip
 	materials = list(MATERIAL_LEATHER = 2 SHEETS, MATERIAL_CLOTH = 1 SHEET)
 
+/datum/design/item/genfab/weapons/melee/whip/fancy
+	build_path = /obj/item/weapon/melee/whip/chainofcommand
+	materials = list(MATERIAL_LEATHER = 2 SHEETS, MATERIAL_CLOTH = 1 SHEET, MATERIAL_GOLD = 0.25 SHEETS, MATERIAL_SILVER = 0.25 SHEETS)
+
 /datum/design/item/genfab/weapons/melee/sword
 	build_path = /obj/item/weapon/material/sword
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_LEATHER = 1 SHEET)
+
+/datum/design/item/genfab/weapons/melee/sword/officersword
+	build_path = /obj/item/weapon/material/sword/officersword
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_LEATHER = 1 SHEET, MATERIAL_GOLD = 0.25 SHEET)
+
+/datum/design/item/genfab/weapons/melee/sword/marinesword
+	build_path = /obj/item/weapon/material/sword/officersword/marine
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_LEATHER = 1 SHEET, MATERIAL_GOLD = 0.25 SHEET)
+
+/datum/design/item/genfab/weapons/melee/sword/pettyofficersword
+	build_path = /obj/item/weapon/material/sword/officersword/pettyofficer
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_LEATHER = 1 SHEET, MATERIAL_GOLD = 0.25 SHEET)
+
+
 
 /datum/design/item/genfab/weapons/melee/sword/katana
 	build_path = /obj/item/weapon/material/sword/katana
@@ -802,21 +993,62 @@
 	build_path = /obj/item/device/camera/empty
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 0.25 SHEETS, MATERIAL_SILVER = 0.25 SHEETS)
 
-/datum/design/item/genfab/communication/blackpen
+
+/datum/design/item/genfab/communication/pen
+	materials = list(MATERIAL_PLASTIC = 0.2 SHEETS)
+/datum/design/item/genfab/communication/pen/blackpen
 	name = "black ink pen"
 	build_path = /obj/item/weapon/pen
 
-/datum/design/item/genfab/communication/bluepen
+/datum/design/item/genfab/communication/pen/bluepen
 	name = "blue ink pen"
 	build_path = /obj/item/weapon/pen/blue
 
-/datum/design/item/genfab/communication/redpen
+/datum/design/item/genfab/communication/pen/redpen
 	name = "red ink pen"
 	build_path = /obj/item/weapon/pen/red
 
-/datum/design/item/genfab/communication/multipen
+/datum/design/item/genfab/communication/pen/multipen
 	name = "multi-color ink pen"
 	build_path = /obj/item/weapon/pen/multi
+	materials = list(MATERIAL_PLASTIC = 0.2 SHEETS, MATERIAL_PHORON = 0.1 SHEETS)
+
+/datum/design/item/genfab/communication/pen/crayon/red
+	name = "red crayon"
+	build_path = /obj/item/weapon/pen/crayon/red
+
+/datum/design/item/genfab/communication/pen/crayon/orange
+	name = "orange crayon"
+	build_path = /obj/item/weapon/pen/crayon/orange
+
+/datum/design/item/genfab/communication/pen/crayon/yellow
+	name = "yellow crayon"
+	build_path = /obj/item/weapon/pen/crayon/yellow
+
+/datum/design/item/genfab/communication/pen/crayon/green
+	name = "green crayon"
+	build_path = /obj/item/weapon/pen/crayon/green
+
+/datum/design/item/genfab/communication/pen/crayon/blue
+	name = "blue crayon"
+	build_path = /obj/item/weapon/pen/crayon/blue
+	
+/datum/design/item/genfab/communication/pen/crayon/purple
+	name = "purple crayon"
+	build_path = /obj/item/weapon/pen/crayon/purple
+	
+/datum/design/item/genfab/communication/pen/crayon/mime
+	name = "mime crayon"
+	build_path = /obj/item/weapon/pen/crayon/mime
+	materials = list(MATERIAL_PLASTIC = 0.2 SHEETS, MATERIAL_DIAMOND = 0.1 SHEETS)
+	
+/datum/design/item/genfab/communication/pen/crayon/rainbow
+	name = "rainbow crayon"
+	build_path = /obj/item/weapon/pen/crayon/rainbow
+	materials = list(MATERIAL_PLASTIC = 0.2 SHEETS, MATERIAL_PHORON = 0.1 SHEETS)
+	
+	
+	
 
 
 /datum/design/item/genfab/communication/clipboard
@@ -926,6 +1158,13 @@
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPER = 0.5 SHEETS)
 	build_path = /obj/item/weapon/marshalling_wand
 
+/datum/design/item/genfab/eva/adv/net_launcher
+	materials = list(MATERIAL_STEEL = 6 SHEET, MATERIAL_COPPER = 3 SHEETS)
+	build_path = /obj/item/weapon/gun/launcher/net
+
+/datum/design/item/genfab/eva/adv/net_shell
+	materials = list(MATERIAL_STEEL = 2 SHEET, MATERIAL_CLOTH = 3 SHEETS)
+	build_path = /obj/item/weapon/net_shell
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -962,6 +1201,79 @@
 	build_path = /obj/machinery/floor_light
 	materials = list(MATERIAL_GLASS = 1 SHEET)
 
+
+/datum/design/item/genfab/furniture/bedsheet
+	build_path = /obj/item/weapon/bedsheet
+	materials = list(MATERIAL_CLOTH = 1 SHEETS)	
+
+/datum/design/item/genfab/furniture/bedsheet/typed
+	materials = list(MATERIAL_CLOTH = 1.25 SHEETS)	
+
+/datum/design/item/genfab/furniture/bedsheet/typed/blue
+	name = "blue bedsheet"
+	build_path = /obj/item/weapon/bedsheet/blue
+	
+/datum/design/item/genfab/furniture/bedsheet/typed/green
+	name = "green bedsheet"
+	build_path = /obj/item/weapon/bedsheet/green
+	
+/datum/design/item/genfab/furniture/bedsheet/typed/orange
+	name = "orange bedsheet"
+	build_path = /obj/item/weapon/bedsheet/orange
+
+/datum/design/item/genfab/furniture/bedsheet/typed/purple
+	name = "purple bedsheet"
+	build_path = /obj/item/weapon/bedsheet/purple
+
+/datum/design/item/genfab/furniture/bedsheet/typed/rainbow
+	name = "rainbow bedsheet"
+	build_path = /obj/item/weapon/bedsheet/rainbow
+
+/datum/design/item/genfab/furniture/bedsheet/typed/red
+	name = "red bedsheet"
+	build_path = /obj/item/weapon/bedsheet/red
+
+/datum/design/item/genfab/furniture/bedsheet/typed/yellow
+	name = "yellow bedsheet"
+	build_path = /obj/item/weapon/bedsheet/yellow
+
+/datum/design/item/genfab/furniture/bedsheet/typed/mime
+	name = "mime bedsheet"
+	build_path = /obj/item/weapon/bedsheet/mime
+
+/datum/design/item/genfab/furniture/bedsheet/typed/clown
+	name = "clown bedsheet"
+	build_path = /obj/item/weapon/bedsheet/clown
+
+/datum/design/item/genfab/furniture/bedsheet/typed/captain
+	name = "captain bedsheet"
+	build_path = /obj/item/weapon/bedsheet/captain
+
+/datum/design/item/genfab/furniture/bedsheet/typed/research
+	name = "research bedsheet"
+	build_path = /obj/item/weapon/bedsheet/rd
+
+/datum/design/item/genfab/furniture/bedsheet/typed/medical
+	name = "medical bedsheet"
+	build_path = /obj/item/weapon/bedsheet/medical
+
+/datum/design/item/genfab/furniture/bedsheet/typed/security
+	name = "security bedsheet"
+	build_path = /obj/item/weapon/bedsheet/security
+
+/datum/design/item/genfab/furniture/bedsheet/typed/hop
+	name = "command bedsheet"
+	build_path = /obj/item/weapon/bedsheet/command
+
+/datum/design/item/genfab/furniture/bedsheet/typed/ce
+	name = "engineering bedsheet"
+	build_path = /obj/item/weapon/bedsheet/ce
+	
+/datum/design/item/genfab/furniture/bedsheet/typed/brown
+	name = "brown bedsheet"
+	build_path = /obj/item/weapon/bedsheet/brown
+	
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -981,7 +1293,7 @@
 /datum/design/item/genfab/botanytools/hatchet
 	name = "hatchet"
 	build_path = /obj/item/weapon/material/hatchet
-	materials = list(MATERIAL_STEEL = 1 SHEET)
+	materials = list(MATERIAL_STEEL = 3 SHEET)
 
 /datum/design/item/genfab/botanytools/minihoe
 	name = "mini hoe"
@@ -995,14 +1307,24 @@
 
 /datum/design/item/genfab/botanytools/scythe
 	build_path = /obj/item/weapon/material/scythe
-	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_WOOD = 1 SHEET)
+	materials = list(MATERIAL_STEEL = 3 SHEET, MATERIAL_WOOD = 2 SHEET)
 
 
-/datum/design/item/genfab/botanytoolsflora_gun
+/datum/design/item/genfab/botanytools/flora_gun
 	req_tech = list(TECH_MATERIAL = 2, TECH_BIO = 3, TECH_POWER = 3)
-	materials = list(MATERIAL_STEEL = 5 SHEET, MATERIAL_GLASS = 5 SHEETS, MATERIAL_URANIUM = 4 SHEETS)
+	materials = list(MATERIAL_STEEL = 8 SHEET, MATERIAL_GLASS = 5 SHEETS, MATERIAL_URANIUM = 4 SHEETS)
 	build_path = /obj/item/weapon/gun/energy/floragun
 
+/datum/design/item/genfab/botanytools/weedspray
+	build_path = /obj/item/weapon/plantspray/weeds
+	materials = list(MATERIAL_PLASTIC = 1 SHEET, MATERIAL_SILVER = 0.25 SHEETS)
+/datum/design/item/genfab/botanytools/pestspray
+	build_path = /obj/item/weapon/plantspray/pests
+	materials = list(MATERIAL_PLASTIC = 1 SHEET, MATERIAL_SILVER = 0.25 SHEETS)
+
+/datum/design/item/genfab/botanytools/clippers
+	build_path = /obj/item/weapon/wirecutters/clippers
+	materials = list(MATERIAL_STEEL = 1 SHEET)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1048,6 +1370,17 @@
 	build_path = /obj/item/weapon/material/kitchen/utensil/knife/plastic
 	materials = list(MATERIAL_PLASTIC = 0.1 SHEET)
 
+/datum/design/item/genfab/culinarytools/mixsstick
+	name = "mixing stick"
+	build_path = /obj/item/weapon/glass_extra/stick
+	materials = list(MATERIAL_PLASTIC = 0.1 SHEET)
+
+/datum/design/item/genfab/culinarytools/straw
+	name = "drink straw"
+	build_path = /obj/item/weapon/glass_extra/straw
+	materials = list(MATERIAL_PLASTIC = 0.1 SHEET)
+
+
 /datum/design/item/genfab/culinarytools/utensil_spoon_plastic
 	name = "plastic dining spoon"
 	build_path = /obj/item/weapon/material/kitchen/utensil/spoon/plastic
@@ -1085,6 +1418,47 @@
 
 ////////////////////////////////////////////////////////////////////
 
+/datum/design/item/genfab/consumer/plastic_bag
+	build_path = /obj/item/weapon/storage/bag/plasticbag
+	materials = list(MATERIAL_PLASTIC = 0.5 SHEETS)
+
+/datum/design/item/genfab/consumer/wrapping_paper
+	build_path = /obj/item/weapon/wrapping_paper
+	materials = list(MATERIAL_WOOD = 0.5 SHEETS)
+
+/datum/design/item/genfab/consumer/bikehorn
+	build_path = /obj/item/weapon/bikehorn
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_PLASTIC = 2 SHEETS)
+
+/datum/design/item/genfab/consumer/poster
+	build_path = /obj/item/weapon/contraband/poster
+	materials = list(MATERIAL_PLASTIC = 1 SHEETS)
+
+/datum/design/item/genfab/consumer/basketball
+	build_path = /obj/item/weapon/basketball
+	materials = list(MATERIAL_PLASTIC = 1 SHEETS)
+
+/datum/design/item/genfab/consumer/beach_ball
+	build_path = /obj/item/weapon/beach_ball
+	materials = list(MATERIAL_PLASTIC = 1 SHEETS)
+
+/datum/design/item/genfab/consumer/rsf
+	build_path = /obj/item/weapon/rsf
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_COPPER = 4 SHEETS, MATERIAL_GLASS = 4 SHEETS, MATERIAL_DIAMOND = 4 SHEETS, MATERIAL_PHORON = 2 SHEETS)
+
+/datum/design/item/genfab/consumer/TVAssembly
+	build_path = /obj/item/weapon/TVAssembly
+	materials = list(MATERIAL_STEEL = 2 SHEETS)	
+
+/datum/design/item/genfab/consumer/towel
+	build_path = /obj/item/weapon/towel
+	materials = list(MATERIAL_CLOTH = 0.25 SHEETS)
+
+/datum/design/item/genfab/consumer/mirror
+	name = "hand mirror"
+	build_path = /obj/item/weapon/mirror
+	materials = list(MATERIAL_GLASS = 0.25 SHEETS, MATERIAL_STEEL = 0.25 SHEETS)
+
 /datum/design/item/genfab/consumer/lighter
 	name = "cheap lighter"
 	build_path = /obj/item/weapon/flame/lighter/random
@@ -1111,10 +1485,31 @@
 	name = "ecigarette"
 	build_path = /obj/item/clothing/mask/smokable/ecig/lathed
 
-/datum/design/item/genfab/consumer/mop
+/datum/design/item/genfab/consumer/cleaning
+	category = "Cleaning Supplies"
+
+/datum/design/item/genfab/consumer/cleaning/mop
 	name = "mop"
 	build_path = /obj/item/weapon/mop
-	materials = list(MATERIAL_STEEL = 1 SHEETS)
+	materials = list(MATERIAL_STEEL = 1.5 SHEETS, MATERIAL_CLOTH = 0.25 SHEETS)
+
+/datum/design/item/genfab/consumer/cleaning/rag
+	build_path = /obj/item/weapon/reagent_containers/glass/rag
+	materials = list(MATERIAL_CLOTH = 0.5 SHEETS)
+	
+/datum/design/item/genfab/consumer/cleaning/laundry_basket
+	build_path = /obj/item/weapon/storage/laundry_basket
+	materials = list(MATERIAL_PLASTIC = 0.5 SHEETS)
+	
+/datum/design/item/genfab/consumer/cleaning/trash_bag
+	build_path = /obj/item/weapon/storage/bag/trash
+	materials = list(MATERIAL_PLASTIC = 1 SHEETS)
+	
+/datum/design/item/genfab/consumer/cleaning/wet_floor
+	build_path = /obj/item/weapon/caution
+	materials = list(MATERIAL_PLASTIC = 1 SHEETS)
+	
+	
 /datum/design/item/genfab/consumer/lipstick
 	name = "red lipstick"
 	build_path = /obj/item/weapon/lipstick
@@ -1211,15 +1606,24 @@
 	build_path = /obj/item/toy/snappop
 	materials = list(MATERIAL_METAL = 0.01 SHEETS)
 
+/datum/design/item/genfab/consumer/games/dice/normal
+	name = "bag of 7 dice (d6)"
+	build_path = /obj/item/weapon/storage/pill_bottle/dice
+	materials = list(MATERIAL_PLASTIC = 0.8 SHEETS)
+
+/datum/design/item/genfab/consumer/games/dice/nerd
+	name = "bag of 7 dice (tabletop set)"
+	build_path = /obj/item/weapon/storage/pill_bottle/dice_nerd
+	materials = list(MATERIAL_PLASTIC = 0.8 SHEETS)
+
 
 /datum/design/item/genfab/consumer/games/cards
 	name = "playing cards"
 	build_path = /obj/item/weapon/deck/cards
 	materials = list(MATERIAL_PLASTIC = 0.5 SHEETS)
 
-
 /datum/design/item/genfab/consumer/games/tarot
-	name = "playing cards"
+	name = "tarot cards"
 	build_path = /obj/item/weapon/deck/tarot
 	materials = list(MATERIAL_PLASTIC = 0.25 SHEETS)
 
@@ -1346,12 +1750,18 @@
 
 /datum/design/item/genfab/sectools/adv/fingerprints
 	name = "box of fingerprint cards."
-	build_path = /obj/item/weapon/storage/briefcase/crimekit
+	build_path = /obj/item/weapon/storage/box/fingerprints
 	materials = list(MATERIAL_CARDBOARD = 1 SHEET)
+
+/datum/design/item/genfab/sectools/adv/evidence
+	name = "box of fingerprint cards."
+	build_path = /obj/item/weapon/storage/box/evidence
+	materials = list(MATERIAL_PLASTIC = 1.5 SHEET)
+
 
 /datum/design/item/genfab/sectools/adv/swabs
 	name = "box of swab sets."
-	build_path = /obj/item/weapon/storage/briefcase/crimekit
+	build_path = /obj/item/weapon/storage/box/swabs
 	materials = list(MATERIAL_CARDBOARD = 0.5 SHEET, MATERIAL_GLASS = 0.5 SHEET)
 
 /datum/design/item/genfab/sectools/adv/uvlight
@@ -1376,6 +1786,7 @@
 /datum/design/item/genfab/sectools/adv/telebaton
 	build_path = /obj/item/weapon/melee/telebaton
 	materials = list(MATERIAL_STEEL = 1.5 SHEETS, MATERIAL_GOLD = 1 SHEET)
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

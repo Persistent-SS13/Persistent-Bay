@@ -106,6 +106,7 @@
 	var/list/ui_users = list()
 
 /obj/item/weapon/mirror/attack_self(mob/user as mob)
+	/**
 	if(ishuman(user))
 		var/datum/nano_module/appearance_changer/AC = ui_users[user]
 		if(!AC)
@@ -114,7 +115,7 @@
 			AC.flags = APPEARANCE_HAIR
 			ui_users[user] = AC
 		AC.ui_interact(user)
-
+	**/
 /obj/item/weapon/mirror/Destroy()
 	for(var/user in ui_users)
 		var/datum/nano_module/appearance_changer/AC = ui_users[user]

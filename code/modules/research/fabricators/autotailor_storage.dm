@@ -452,113 +452,109 @@
 	id = "toolbox_surgery"
 	build_path = /obj/item/weapon/storage/firstaid/surgery
 
-/datum/design/item/autotailor/storage/work/medkit_white
+/datum/design/item/autotailor/storage/work/medkit
+	materials = list("plastic" = 2 SHEETS)
+/datum/design/item/autotailor/storage/work/medkit/medkit_white
 	name = "White medical kit"
 	id = "medkit_white"
 	build_path = /obj/item/weapon/storage/firstaid
-	materials = list("plastic" = 10000)
 
-/datum/design/item/autotailor/storage/work/medkit_brown
+/datum/design/item/autotailor/storage/work/medkit/medkit_brown
 	name = "Brown medical kit"
 	id = "medkit_brown"
 	build_path = /obj/item/weapon/storage/firstaid/combat
-	materials = list("plastic" = 10000)
 
-/datum/design/item/autotailor/storage/work/medkit_red
+/datum/design/item/autotailor/storage/work/medkit/medkit_red
 	name = "Red medical kit"
 	id = "medkit_red"
 	build_path = /obj/item/weapon/storage/firstaid/adv
-	materials = list("plastic" = 10000)
 
-/datum/design/item/autotailor/storage/work/medkit_blue
+/datum/design/item/autotailor/storage/work/medkit/medkit_blue
 	name = "Blue medical kit"
 	id = "medkit_blue"
 	build_path = /obj/item/weapon/storage/firstaid/o2
-	materials = list("plastic" = 10000)
 
-/datum/design/item/autotailor/storage/work/medkit_yellow
+/datum/design/item/autotailor/storage/work/medkit/medkit_yellow
 	name = "Yellow medical kit"
 	id = "medkit_yellow"
 	build_path = /obj/item/weapon/storage/firstaid/fire
-	materials = list("plastic" = 10000)
 
-/datum/design/item/autotailor/storage/work/medkit_green
+/datum/design/item/autotailor/storage/work/medkit/medkit_green
 	name = "Green medical kit"
 	id = "medkit_green"
 	build_path = /obj/item/weapon/storage/firstaid/toxin
-	materials = list("plastic" = 10000)
 
 /datum/design/item/autotailor/storage/work/pills
 	name = "Pill bottle"
 	id = "pills"
 	build_path = /obj/item/weapon/storage/pill_bottle
-	materials = list("plastic" = 2000)
+	materials = list("plastic" = 0.1 SHEETS)
 
 /datum/design/item/autotailor/storage/work/vials
 	name = "Vial storage box"
 	id = "vials"
 	build_path = /obj/item/weapon/storage/fancy/vials
-	materials = list("plastic" = 10000)
-
+	materials = list("plastic" = 2 SHEETS)
+	
 /datum/design/item/autotailor/storage/work/vials_locked
 	name = "Vial storage lockbox"
 	id = "vials_locked"
 	build_path = /obj/item/weapon/storage/lockbox/vials
-	materials = list("plastic" = 10000, "phoron" = 5000)
+	materials = list("plastic" = 2 SHEETS, MATERIAL_SILVER = 2 SHEET)
 
 /datum/design/item/autotailor/storage/work/briefcase_grey
 	name = "Grey briefcase"
 	id = "briefcase_grey"
 	build_path = /obj/item/weapon/storage/briefcase/crimekit
-	materials = list(DEFAULT_WALL_MATERIAL = 15000)
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_LEATHER = 1 SHEET)
 
 /datum/design/item/autotailor/storage/work/briefcase_brown
 	name = "Brown briefcase"
 	id = "briefcase_brown"
 	build_path = /obj/item/weapon/storage/briefcase
-	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 5000)
+	materials = list("leather" = 2 SHEETS, DEFAULT_WALL_MATERIAL = 1 SHEET)
 
 /datum/design/item/autotailor/storage/work/briefcase_inflate
 	name = "Inflatables briefcase"
 	id = "briefcase_inflate"
 	build_path = /obj/item/weapon/storage/briefcase/inflatable
-	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 5000)
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_LEATHER = 1 SHEET)
 
 /datum/design/item/autotailor/storage/work/securecase_black
 	name = "Black secure briefcase"
 	id = "securecase_black"
 	build_path = /obj/item/weapon/storage/secure/briefcase
-	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 5000, "phoron" = 5000)
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_LEATHER = 2 SHEETS, MATERIAL_SILVER = 2 SHEETS)
 
 /datum/design/item/autotailor/storage/work/plantbag
 	name = "Plant carrybag"
 	id = "plantbag"
 	build_path = /obj/item/weapon/storage/plants
-	materials = list("leather" = 10000)
+	materials = list("leather" = 2.5 SHEETS)
 
 /datum/design/item/autotailor/storage/work/orebag
 	name = "Ore carrybag"
 	id = "orebag"
 	build_path = /obj/item/weapon/storage/ore
-	materials = list("leather" = 10000)
+	materials = list("leather" = 2.5 SHEETS)
 
 /datum/design/item/autotailor/storage/work/artebag
 	name = "Fossile carrybag"
 	id = "artebag"
 	build_path = /obj/item/weapon/storage/bag/fossils
-	materials = list("leather" = 10000)
+	materials = list("leather" = 2.5 SHEETS)
 
 /datum/design/item/autotailor/storage/work/fossilpickbag
 	name = "Excavation pick carrybag"
 	id = "fossilpickbag"
 	build_path = /obj/item/weapon/storage/excavation
-	materials = list("leather" = 10000)
+	materials = list("leather" = 2.5 SHEETS)
 
 /datum/design/item/autotailor/storage/work/mineral_coverabag
 	name = "Material coverbag"
 	id = "mineral_coverbag"
 	build_path = /obj/item/weapon/storage/sheetsnatcher
-	materials = list("leather" = 10000)
+	materials = list("leather" = 2.5 SHEETS)
 
 //
 //Misc storage
@@ -571,13 +567,13 @@
 	name = "White wallet"
 	id = "wallet_white"
 	build_path = /obj/item/weapon/storage/wallet
-	materials = list("cloth" = 1000)
+	materials = list("cloth" = 1 SHEET)
 
 /datum/design/item/autotailor/storage/gen/wallet_leather
 	name = "Leather wallet"
 	id = "wallet_leather"
 	build_path = /obj/item/weapon/storage/wallet/leather
-	materials = list("leather" = 1000)
+	materials = list("leather" = 1 SHEET)
 
 /datum/design/item/autotailor/storage/gen/cardb_box
 	name = "Cardboard box"
@@ -594,37 +590,37 @@
 	name = "Small plastic bag"
 	id = "plast_bag"
 	build_path = /obj/item/weapon/storage/bag/plasticbag
-	materials = list("plastic" = 1000)
+	materials = list("plastic" = 1 SHEET)
 
 /datum/design/item/autotailor/storage/gen/trash_bag
 	name = "Trash bag"
 	id = "trash_bag"
 	build_path = /obj/item/weapon/storage/bag/trash
-	materials = list("plastic" = 10000)
+	materials = list("plastic" = 2.5 SHEETS)
 
 /datum/design/item/autotailor/storage/gen/brown_bag
 	name = "Leather bag"
 	id = "brown_bag"
 	build_path = /obj/item/weapon/storage/backpack/leathersack
-	materials = list("leather" = 20000)
+	materials = list("leather" = 5 SHEETS)
 
 /datum/design/item/autotailor/storage/gen/cash
 	name = "Money bag"
 	id = "cash"
 	build_path = /obj/item/weapon/storage/bag/cash
-	materials = list("leather" = 10000)
+	materials = list("leather" = 2.5 SHEETS)
 
 /datum/design/item/autotailor/storage/gen/lunchbox_bl_red
 	name = "Black & red lunchbox"
 	id = "lunchbox_bl_red"
 	build_path = /obj/item/weapon/storage/lunchbox/syndicate
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(DEFAULT_WALL_MATERIAL = 0.5 SHEETS)
 
 /datum/design/item/autotailor/storage/gen/lunchbox_hearts
 	name = "Pink hearts lunchbox"
 	id = "lunchbox_hearts"
 	build_path = /obj/item/weapon/storage/lunchbox/heart
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(DEFAULT_WALL_MATERIAL = 0.5 SHEETS)
 
 /datum/design/item/autotailor/storage/gen/lunchbox_cats
 	name = "Green cat lunchbox"
@@ -636,7 +632,7 @@
 	name = "Diona nymph lunchbox"
 	id = "lunchbox_cricket"
 	build_path = /obj/item/weapon/storage/lunchbox/nymph
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(DEFAULT_WALL_MATERIAL = 0.5 SHEETS)
 
 /datum/design/item/autotailor/storage/gen/lunchbox_rainbow
 	name = "Rainbow lunchbox"

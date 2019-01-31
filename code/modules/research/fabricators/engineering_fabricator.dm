@@ -38,7 +38,7 @@
 /datum/design/item/engifab/engitools/adv/analyzer
 	name = "Gas analyzer"
 	build_path = /obj/item/device/analyzer
-	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_GLASS = 0.25 SHEETS)
+	materials = list(MATERIAL_STEEL = 0.25 SHEETS, MATERIAL_GLASS = 0.25 SHEETS)
 
 /datum/design/item/engifab/engitools/t_scanner
 	name = "T-ray Scanner"
@@ -48,7 +48,7 @@
 /datum/design/item/engifab/engitools/simple/flashlight
 	name = "Flashlight"
 	build_path = /obj/item/device/flashlight
-	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_GLASS = 0.25 SHEETS)
+	materials = list(MATERIAL_STEEL = 0.25 SHEETS, MATERIAL_GLASS = 0.25 SHEETS)
 
 
 /datum/design/item/engifab/engitools/simple/tape_roll
@@ -65,18 +65,18 @@
 /datum/design/item/engifab/engitools/simple/crowbar
 	name = "Crowbar"
 	build_path = /obj/item/weapon/crowbar
-	materials = list(MATERIAL_STEEL = 1 SHEETS)
+	materials = list(MATERIAL_STEEL = 0.25 SHEETS)
 
 /datum/design/item/engifab/engitools/prybar
 	name = "Pry bar"
 	build_path = /obj/item/weapon/crowbar/prybar
-	materials = list(MATERIAL_STEEL = 1 SHEETS)
+	materials = list(MATERIAL_STEEL = 0.25 SHEETS)
 
 /datum/design/item/engifab/engitools/simple/multitool
 	name = "Multitool"
 	id = "multitool"
 	build_path = /obj/item/device/multitool
-	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 1 SHEETS)
+	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_GLASS = 1 SHEETS)
 
 /datum/design/item/engifab/engitools/simple/screwdriver
 	name = "Screwdriver"
@@ -106,6 +106,26 @@
 	name = "Welding mask"
 	build_path = /obj/item/clothing/head/welding
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 1 SHEET)
+
+/datum/design/item/engifab/engitools/fireaxe
+	build_path = /obj/item/weapon/material/twohanded/fireaxe
+	materials = list(MATERIAL_STEEL = 3 SHEET, MATERIAL_WOOD = 1 SHEET)	
+
+/datum/design/item/engifab/engitools/fireaxe
+	build_path = /obj/item/weapon/material/twohanded/fireaxe
+	materials = list(MATERIAL_STEEL = 3 SHEET, MATERIAL_WOOD = 1 SHEET)	
+
+/datum/design/item/engifab/engitools/fireaxe
+	build_path = /obj/item/weapon/material/twohanded/fireaxe
+	materials = list(MATERIAL_STEEL = 3 SHEET, MATERIAL_WOOD = 1 SHEET)	
+
+/datum/design/item/engifab/engitools/inflatabledoor
+	build_path = /obj/item/inflatable/door
+	materials = list(MATERIAL_PLASTIC = 3 SHEET)	
+
+/datum/design/item/engifab/engitools/inflatablewall
+	build_path = /obj/item/inflatable/wall
+	materials = list(MATERIAL_PLASTIC = 2 SHEET)	
 
 
 /datum/design/item/engifab/engitools/rcd

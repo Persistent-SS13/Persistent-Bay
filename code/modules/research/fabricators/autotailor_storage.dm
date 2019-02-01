@@ -544,6 +544,12 @@
 	build_path = /obj/item/weapon/storage/briefcase
 	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_STEEL = 5000)
 
+/datum/design/item/autotailor/storage/work/briefcase_medical
+	name = "Medical briefcase"
+	id = "briefcase_medical"
+	build_path = /obj/item/weapon/storage/briefcase/medical
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_STEEL = 5000)
+
 /datum/design/item/autotailor/storage/work/briefcase_inflate
 	name = "Inflatables briefcase"
 	id = "briefcase_inflate"

@@ -1,7 +1,7 @@
 //===================================
 //	Industrial welder tool
 //===================================
-/obj/item/weapon/weldingtool/largetank
+/obj/item/weapon/tool/weldingtool/largetank
 	name = "industrial welding tool"
 	icon_state = "welder_l"
 	item_state = "welder"
@@ -11,10 +11,10 @@
 	w_class = ITEM_SIZE_NORMAL
 	tank = /obj/item/weapon/welder_tank/large
 	fuel_rate = 0.04 //The idle fuel burn rate while the welder is on
-	fuel_cost_use = 0.9 //The initial fuel cost for various actions
+	fuel_cost_use = 0.9 //Multiplier for initial fuel costs when starting a task
 	welding_efficiency = 0.8
 
-/obj/item/weapon/weldingtool/largetank/empty
+/obj/item/weapon/tool/weldingtool/largetank/empty
 	tank = /obj/item/weapon/welder_tank/large/empty
 
 //===================================

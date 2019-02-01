@@ -1,6 +1,6 @@
 /obj/machinery/pipedispenser
 	name = "Pipe Dispenser"
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/pipedispenser.dmi'
 	icon_state = "pipe_d"
 	density = 1
 	anchored = 1
@@ -92,12 +92,14 @@
 			var/obj/item/pipe/P = new (/*usr.loc*/ src.loc, pipe_type=p_type, dir=p_dir)
 			P.update()
 			wait = 1
+			flick("pipe_d_l", src)
 			spawn(10)
 				wait = 0
 	if(href_list["makemeter"])
 		if(!wait)
 			new /obj/item/pipe_meter(/*usr.loc*/ src.loc)
 			wait = 1
+			flick("pipe_d_l", src) 
 			spawn(15)
 				wait = 0
 
@@ -140,8 +142,8 @@
 
 /obj/machinery/pipedispenser/disposal
 	name = "Disposal Pipe Dispenser"
-	icon = 'icons/obj/stationobjs.dmi'
-	icon_state = "pipe_d"
+	icon = 'icons/obj/machines/pipedispenser.dmi'
+	icon_state = "old_pipe_d"
 	density = 1
 	anchored = 1.0
 
@@ -254,6 +256,7 @@ Nah
 ///// Z-Level stuff
 				C.update()
 			wait = 1
+			flick("old_pipe_d_l", src) 
 			spawn(15)
 				wait = 0
 	return

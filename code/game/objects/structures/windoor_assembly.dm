@@ -72,7 +72,7 @@ obj/structure/windoor_assembly/Destroy()
 	switch(state)
 		if("01")
 			if(isWelder(W) && !anchored )
-				var/obj/item/weapon/weldingtool/WT = W
+				var/obj/item/weapon/tool/weldingtool/WT = W
 				if (WT.remove_fuel(0,user))
 					user.visible_message("[user] dissassembles the windoor assembly.", "You start to dissassemble the windoor assembly.")
 					playsound(src.loc, 'sound/items/Welder2.ogg', 50, 1)

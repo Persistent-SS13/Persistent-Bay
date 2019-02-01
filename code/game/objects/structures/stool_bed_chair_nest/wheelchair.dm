@@ -1,6 +1,7 @@
 /obj/structure/bed/chair/wheelchair
 	name = "wheelchair"
 	desc = "You sit in this. Either by will or force."
+	icon = 'icons/obj/structures/wheelchair.dmi'
 	icon_state = "wheelchair"
 	anchored = 0
 	buckle_movable = 1
@@ -19,7 +20,7 @@
 /obj/structure/bed/chair/wheelchair/set_dir()
 	..()
 	overlays = null
-	var/image/O = image(icon = 'icons/obj/furniture.dmi', icon_state = "w_overlay", dir = src.dir)
+	var/image/O = image(src.icon, icon_state = "w_overlay", dir = src.dir)
 	O.plane = ABOVE_HUMAN_PLANE
 	O.layer = ABOVE_HUMAN_LAYER
 	overlays += O

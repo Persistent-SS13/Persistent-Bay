@@ -1,7 +1,7 @@
 //===================================
 //	Experimental welder tool
 //===================================
-/obj/item/weapon/weldingtool/experimental
+/obj/item/weapon/tool/weldingtool/experimental
 	name = "experimental welding tool"
 	icon_state = "welder_l"
 	item_state = "welder"
@@ -11,7 +11,7 @@
 	matter = list(MATERIAL_STEEL = 800, MATERIAL_GLASS = 360, "silver" = 200, MATERIAL_PHORON = 50 )
 	tank = /obj/item/weapon/welder_tank/experimental
 	fuel_rate = 0.001 //The fuel burn rate while the welder is on
-	fuel_cost_use = 0.001
+	fuel_cost_use = 0.001 //Multiplier for static fuel costs when starting a task
 	welding_efficiency = 0.5 //Welds faster, for less fuel
 
 //===================================

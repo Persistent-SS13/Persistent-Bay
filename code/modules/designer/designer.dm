@@ -7,7 +7,7 @@
 	name = "designs"
 	desc = "Test it out. ~Stigma"
 	gender = NEUTER
-	icon = 'icons/obj/bureaucracy.dmi'
+	icon = 'icons/obj/items/paper.dmi'
 	icon_state = "paper"
 	var/icon/icon_custom
 	var/list/pixel_list

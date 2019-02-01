@@ -303,7 +303,7 @@
 		return 0
 
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(!WT.isOn())
 			to_chat(user, "Turn on \the [WT] first!")
 			return 0

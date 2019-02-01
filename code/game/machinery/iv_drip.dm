@@ -71,7 +71,7 @@
 		src.update_icon()
 		return
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(WT.remove_fuel(0,user))
 			var/obj/item/stack/material/steel/new_item = new(usr.loc)
 			new_item.add_to_stacks(usr)

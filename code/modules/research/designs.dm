@@ -987,7 +987,7 @@ other types of metals and chemistry for reagents).
 	id = "bracejack"
 	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 2)
 	materials = list(MATERIAL_STEEL = 120)
-	build_path = /obj/item/weapon/crowbar/brace_jack
+	build_path = /obj/item/weapon/tool/crowbar/brace_jack
 	sort_string = "VBAAS"
 
 /datum/design/item/experimental_welder
@@ -997,7 +997,7 @@ other types of metals and chemistry for reagents).
 	req_tech = list(TECH_ENGINEERING = 5, TECH_PHORON = 4)
 	materials = list(MATERIAL_STEEL = 6000, MATERIAL_GLASS = 500, MATERIAL_PLASTEEL = 2000)
 	chemicals = list(/datum/reagent/toxin/phoron/oxygen = 80)	//hopefully this makes a good detterant for obtaining OP welding tool
-	build_path = /obj/item/weapon/weldingtool/experimental
+	build_path = /obj/item/weapon/tool/weldingtool/experimental
 	sort_string = "VBAAT"
 
 //RIG Modules

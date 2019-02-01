@@ -384,3 +384,9 @@ var/list/organ_cache = list()
 //used by stethoscope
 /obj/item/organ/proc/listen()
 	return
+
+/obj/item/organ/vulnerable_to_damtype(var/damtype)
+	if(isrobotic())
+		return DAMAGE_AFFECT_OBJ(damtype)
+	else
+		return DAMAGE_AFFECT_MOB(damtype)

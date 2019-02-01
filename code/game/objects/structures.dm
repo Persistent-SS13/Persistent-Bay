@@ -100,7 +100,7 @@
 	if(parts)
 		new parts(loc)
 
-/obj/structure/proc/default_deconstruction_screwdriver(var/obj/item/weapon/screwdriver/S, var/mob/living/user, var/deconstruct_time = null)
+/obj/structure/proc/default_deconstruction_screwdriver(var/obj/item/weapon/tool/screwdriver/S, var/mob/living/user, var/deconstruct_time = null)
 	if(!istype(S))
 		return FALSE
 	src.add_fingerprint(user)
@@ -112,7 +112,7 @@
 		return TRUE
 	return FALSE
 
-/obj/structure/proc/default_deconstruction_wrench(var/obj/item/weapon/wrench/W, var/mob/living/user, var/deconstruct_time = null)
+/obj/structure/proc/default_deconstruction_wrench(var/obj/item/weapon/tool/wrench/W, var/mob/living/user, var/deconstruct_time = null)
 	if(!istype(W))
 		return FALSE
 	src.add_fingerprint(user)

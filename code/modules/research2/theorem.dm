@@ -2,7 +2,7 @@
 	name = "Blank Theorem"
 	desc = "A blank research theorem"
 	gender = NEUTER
-	icon = 'icons/obj/bureaucracy.dmi'
+	icon = 'icons/obj/items/paper.dmi'
 	icon_state = "paper_words"
 	item_state = "paper_words"
 	throwforce = 0

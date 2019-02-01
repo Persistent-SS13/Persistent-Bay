@@ -8,7 +8,7 @@
 /obj/machinery/atm
 	name = "Automatic Teller Machine"
 	desc = "For all your monetary needs!"
-	icon = 'icons/obj/terminals.dmi'
+	icon = 'icons/obj/machines/terminals/atm.dmi'
 	icon_state = "atm"
 	anchored = 1
 	use_power = 1
@@ -448,7 +448,7 @@
 					R.info += "<i>Service terminal ID:</i> [machine_id]<br>"
 
 					//stamp the paper
-					var/image/stampoverlay = image('icons/obj/bureaucracy.dmi')
+					var/image/stampoverlay = image('icons/obj/items/paper.dmi')
 					stampoverlay.icon_state = "paper_stamp-cent"
 					if(!R.stamped)
 						R.stamped = new
@@ -490,7 +490,7 @@
 					R.info += "</table>"
 
 					//stamp the paper
-					var/image/stampoverlay = image('icons/obj/bureaucracy.dmi')
+					var/image/stampoverlay = image('icons/obj/items/paper.dmi')
 					stampoverlay.icon_state = "paper_stamp-cent"
 					if(!R.stamped)
 						R.stamped = new

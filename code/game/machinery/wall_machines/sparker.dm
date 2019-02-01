@@ -4,7 +4,7 @@
 /obj/machinery/sparker
 	name = "mounted igniter"
 	desc = "A wall-mounted ignition device."
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/igniters.dmi'
 	icon_state = "migniter"
 	var/id = null
 	var/disable = 0

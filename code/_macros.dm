@@ -70,9 +70,9 @@
 
 #define isopenspace(A) istype(A, /turf/simulated/open)
 
-#define isWrench(A) istype(A, /obj/item/weapon/wrench)
+#define isWrench(A) istype(A, /obj/item/weapon/tool/wrench)
 
-#define isWelder(A) istype(A, /obj/item/weapon/weldingtool)
+#define isWelder(A) istype(A, /obj/item/weapon/tool/weldingtool)
 
 #define isCoil(A) istype(A, /obj/item/stack/cable_coil)
 
@@ -80,11 +80,11 @@
 
 #define isScissors(A) istype(A, /obj/item/weapon/scissors)
 
-#define isScrewdriver(A) istype(A, /obj/item/weapon/screwdriver)
+#define isScrewdriver(A) istype(A, /obj/item/weapon/tool/screwdriver)
 
 #define isMultitool(A) istype(A, /obj/item/device/multitool)
 
-#define isCrowbar(A) istype(A, /obj/item/weapon/crowbar)
+#define isCrowbar(A) istype(A, /obj/item/weapon/tool/crowbar)
 
 #define sequential_id(key) uniqueness_repository.Generate(/datum/uniqueness_generator/id_sequential, key)
 

@@ -1,7 +1,7 @@
 /*
  * Crowbar
  */
-/obj/item/weapon/crowbar
+/obj/item/weapon/tool/crowbar
 	name = "crowbar"
 	desc = "A heavy crowbar of solid steel, good and solid in your hand."
 	description_info = "Crowbars have countless uses: click on floor tiles to pry them loose. Use alongside a screwdriver to install or remove windows. Force open emergency shutters, or depowered airlocks. Open the panel of an unlocked APC. Pry a computer's circuit board free. And much more!"
@@ -21,6 +21,9 @@
 	center_of_mass = "x=16;y=20"
 	attack_verb = list("attacked", "bashed", "battered", "bludgeoned", "whacked")
 
-/obj/item/weapon/crowbar/red
+/obj/item/weapon/tool/crowbar/red
 	icon_state = "red_crowbar"
 	item_state = "crowbar_red"
+
+/obj/item/weapon/tool/crowbar/play_tool_sound()
+	playsound(loc, 'sound/items/Crowbar.ogg', 50, 1)

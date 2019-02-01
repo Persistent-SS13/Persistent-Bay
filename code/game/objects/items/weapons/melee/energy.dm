@@ -6,6 +6,7 @@
 	damtype = DAM_BLUNT
 	atom_flags = ATOM_FLAG_NO_BLOOD
 	mass = 0.5
+	icon = 'icons/obj/weapons/melee/energy.dmi'
 
 /obj/item/weapon/melee/energy/proc/activate(mob/living/user)
 	anchored = 1

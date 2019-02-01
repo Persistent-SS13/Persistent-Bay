@@ -86,7 +86,7 @@
 		return
 
 
-	if(istype(W, /obj/item/weapon/wrench))
+	if(istype(W, /obj/item/weapon/tool/wrench))
 		to_chat(user, "<span class='notice'>You detach \the [src] from the wall.</span>")
 		new/obj/item/frame/light_switch(get_turf(src))
 		qdel(src)

@@ -12,7 +12,7 @@
 /obj/structure/filingcabinet
 	name = "filing cabinet"
 	desc = "A large cabinet with drawers."
-	icon = 'icons/obj/bureaucracy.dmi'
+	icon = 'icons/obj/structures/fillingcabinets.dmi'
 	icon_state = "filingcabinet"
 	density = 1
 	anchored = 1
@@ -77,7 +77,7 @@
 		updateUsrDialog()
 		return
 	if(isWelder(P))
-		var/obj/item/weapon/weldingtool/WT = P
+		var/obj/item/weapon/tool/weldingtool/WT = P
 		if(WT.remove_fuel(0,user))
 			var/obj/item/stack/material/steel/new_item = new(usr.loc)
 			new_item.add_to_stacks(usr)

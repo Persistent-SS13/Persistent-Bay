@@ -311,9 +311,9 @@
 			qdel(src)
 		return 1
 
-	if(istype(W, /obj/item/weapon/weldingtool))
+	if(istype(W, /obj/item/weapon/tool/weldingtool))
 
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 
 		if(!WT.isOn())
 			to_chat(user, "<span class='notice'>The welding tool needs to be on to start this task.</span>")

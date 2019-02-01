@@ -256,7 +256,7 @@
 /obj/item/toy/sword
 	name = "toy sword"
 	desc = "A cheap, plastic replica of an energy sword. Realistic sounds! Ages 8 and up."
-	icon = 'icons/obj/weapons.dmi'
+	icon = 'icons/obj/weapons/melee/energy.dmi'
 	icon_state = "sword0"
 	item_state = "sword0"
 	var/active = 0.0

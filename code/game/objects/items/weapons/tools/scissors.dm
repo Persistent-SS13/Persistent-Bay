@@ -21,7 +21,7 @@
 	var/childpart = /obj/item/weapon/improvised/scissorknife //This is so any thing made is specified. It's helpful for things
 
 /obj/item/weapon/scissors/attackby(var/obj/item/I, mob/user as mob) //Seperation of the scissors
-	if(istype(I, /obj/item/weapon/screwdriver))
+	if(istype(I, /obj/item/weapon/tool/screwdriver))
 		var/obj/item/weapon/improvised/scissorknife/left_part = new childpart
 		var/obj/item/weapon/improvised/scissorknife/right_part = new childpart
 
@@ -129,7 +129,7 @@
 	parentscissor = /obj/item/weapon/scissors/craft
 
 /obj/item/weapon/improvised/scissorsassembly/attackby(var/obj/item/I, mob/user as mob) //Putting it together
-	if(istype(I, /obj/item/weapon/screwdriver))
+	if(istype(I, /obj/item/weapon/tool/screwdriver))
 		var/obj/item/weapon/scissors/N = new parentscissor
 		user.remove_from_mob(src)
 		user.put_in_hands(N)

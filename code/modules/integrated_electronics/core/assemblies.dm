@@ -393,7 +393,7 @@
 
 
 /obj/item/device/electronic_assembly/attackby(obj/item/I, mob/living/user)
-	if(istype(I, /obj/item/weapon/wrench))
+	if(istype(I, /obj/item/weapon/tool/wrench))
 		if(istype(loc, /turf) && (IC_FLAG_ANCHORABLE & circuit_flags))
 			user.visible_message("\The [user] wrenches \the [src]'s anchoring bolts [anchored ? "back" : "into position"].")
 			playsound(get_turf(user), 'sound/items/Ratchet.ogg',50)
@@ -440,7 +440,7 @@
 		var/obj/item/device/integrated_electronics/detailer/D = I
 		detail_color = D.detail_color
 		update_icon()
-	else if(istype(I, /obj/item/weapon/screwdriver))
+	else if(istype(I, /obj/item/weapon/tool/screwdriver))
 		playsound(src, 'sound/items/Screwdriver.ogg', 25)
 		opened = !opened
 		to_chat(user, "<span class='notice'>You [opened ? "open" : "close"] the maintenance hatch of [src].</span>")

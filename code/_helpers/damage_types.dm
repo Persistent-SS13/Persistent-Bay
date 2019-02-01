@@ -1,13 +1,3 @@
-//Container for inflicted damage data
-/datum/damage
-	var/amount 	= 0
-	var/dtype 	= DAM_BLUNT
-
-/datum/damage/New(amt, ty = DAM_BLUNT)
-	..()
-	amount = amt 
-	dtype = ty
-
 //This proc returns whether a damage type is considered "Brute" damage. Mainly for organ handling.
 /proc/IsDamageTypeBrute(var/damtype)
 	return ISDAMTYPE(damtype, DAM_BLUNT) || ISDAMTYPE(damtype, DAM_CUT) || ISDAMTYPE(damtype, DAM_PIERCE) || ISDAMTYPE(damtype, DAM_BULLET)
@@ -24,26 +14,6 @@
 /proc/IsDamageTypeNonPhysical(var/damtype)
 	return ISDAMTYPE(damtype, DAM_EMP) || ISDAMTYPE(damtype, DAM_BIO) || ISDAMTYPE(damtype, DAM_RADS) || ISDAMTYPE(damtype, DAM_STUN) ||\
 		ISDAMTYPE(damtype, DAM_PAIN) || ISDAMTYPE(damtype, DAM_CLONE)
-
-//Convert damage type to organ effects. Should be removed once organs are made to use the new damage type properly
-// /proc/DamageTypeToOrganEffect(var/damtype)
-// 	switch(damtype)
-// 		if(DAM_BLUNT)
-// 			. = BRUISE
-// 		if(DAM_BULLET)
-// 			. = PIERCE
-// 		if(DAM_BOMB, DAM_ENERGY)
-// 			. = BURN
-// 		if(DAM_CUT, DAM_PIERCE, DAM_LASER, DAM_BURN)
-// 			. = damtype //Those are already known organ effects
-// 		else
-// 			. = null //The rest are ignored, or handled differently
-// 	return .
-
-//Used to abstract comparison between damage types.. So changing what the constants contains isn't such a pain in the ass..
-// /proc/ISDAMTYPE(var/dtype1, var/dtype2)
-// 	return dtype1 & dtype2
-	//return dtype1 == dtype2
 
 //Whether the damage type flag can be considered a potential edged weapon (AKA, if it could be used to de-limb)
 /proc/IsDamageTypeEdged(var/damtype)
@@ -64,16 +34,16 @@
 //
 // Puncture stuff
 //
-/obj/item/weapon/screwdriver/can_puncture()
+/obj/item/weapon/tool/screwdriver/can_puncture()
 	return 1
 
 /obj/item/weapon/pen/can_puncture()
 	return 1
 
-/obj/item/weapon/weldingtool/can_puncture()
+/obj/item/weapon/tool/weldingtool/can_puncture()
 	return 1
 
-/obj/item/weapon/screwdriver/can_puncture()
+/obj/item/weapon/tool/screwdriver/can_puncture()
 	return 1
 
 /obj/item/weapon/shovel/can_puncture() //includes spades

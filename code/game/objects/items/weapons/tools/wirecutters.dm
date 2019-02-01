@@ -41,3 +41,5 @@
 		return
 	else
 		..()
+/obj/item/weapon/tool/wirecutters/play_tool_sound()
+	playsound(loc, 'sound/items/Wirecutter.ogg', 50, 1)

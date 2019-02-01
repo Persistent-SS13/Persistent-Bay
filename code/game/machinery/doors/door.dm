@@ -243,7 +243,7 @@
 			to_chat(user, "<span class='warning'>\The [src] must be closed before you can repair it.</span>")
 			return
 
-		var/obj/item/weapon/weldingtool/welder = I
+		var/obj/item/weapon/tool/weldingtool/welder = I
 		if(welder.remove_fuel(0,user))
 			to_chat(user, "<span class='notice'>You start to fix dents and weld \the [repairing] into place.</span>")
 			playsound(src, 'sound/items/Welder.ogg', 100, 1)

@@ -17,7 +17,7 @@
 				circuit.loc = src
 				state++
 				playsound(get_turf(src), 'sound/items/Screwdriver.ogg', 50, 1)
-			if(istype(W, /obj/item/weapon/crowbar))
+			if(istype(W, /obj/item/weapon/tool/crowbar))
 				new /obj/machinery/constructable_frame/machine_frame(T)
 				new /obj/item/stack/material/glass(T)
 				del(src)
@@ -48,7 +48,7 @@
 					playsound(get_turf(src), 'sound/items/Screwdriver.ogg', 50, 1)
 					del(src)
 					return
-			if(istype(W, /obj/item/weapon/crowbar))
+			if(istype(W, /obj/item/weapon/tool/crowbar))
 				circuit.loc=T
 				circuit=null
 				state--
@@ -153,7 +153,7 @@
 			user << "\icon[src] \blue You close \the [src] and swipe your card, locking it."
 		update_icon()
 		return
-	if(istype(W,/obj/item/weapon/crowbar) && (!locked || destroyed))
+	if(istype(W,/obj/item/weapon/tool/crowbar) && (!locked || destroyed))
 		user.visible_message("[user.name] pries \the [src] apart.", \
 			"You pry \the [src] apart.", \
 			"You hear something pop.")

@@ -1,7 +1,7 @@
 //===================================
 //	Upgraded welder tool
 //===================================
-/obj/item/weapon/weldingtool/hugetank
+/obj/item/weapon/tool/weldingtool/hugetank
 	name = "upgraded welding tool"
 	icon_state = "welder_h"
 	item_state = "welder"
@@ -15,7 +15,7 @@
 	fuel_cost_use = 0.9 //The initial fuel cost for various actions
 	welding_efficiency = 0.6
 
-/obj/item/weapon/weldingtool/hugetank/empty
+/obj/item/weapon/tool/weldingtool/hugetank/empty
 	tank = /obj/item/weapon/welder_tank/huge/empty
 
 //===================================

@@ -22,7 +22,7 @@
 		/obj/item/device/multitool,
 		/obj/item/device/flash,
 		/obj/item/taperoll/engineering,
-		/obj/item/weapon/crowbar/brace_jack
+		/obj/item/weapon/tool/crowbar/brace_jack
 	)
 
 /obj/structure/closet/secure_closet/engineering_electrical
@@ -47,7 +47,7 @@
 /obj/structure/closet/secure_closet/engineering_welding/filled/WillContain()
 	return list(
 		/obj/item/clothing/head/welding = 3,
-		/obj/item/weapon/weldingtool/largetank = 3,
+		/obj/item/weapon/tool/weldingtool/largetank = 3,
 		/obj/item/weapon/weldpack = 3,
 		/obj/item/clothing/glasses/welding = 3,
 		/obj/item/weapon/welder_tank = 6

@@ -20,7 +20,7 @@
 	if(isrobot(user))
 		return
 
-	if(istype(B, /obj/item/weapon/wrench))
+	if(istype(B, /obj/item/weapon/tool/wrench))
 		switch (anchored)
 			if (0)
 				user.visible_message("[user] starts tightening the bolts on \the [src].", "You start tightening the bolts on \the [src].")

@@ -13,7 +13,7 @@
 /obj/structure/morgue
 	name = "morgue"
 	desc = "Used to keep bodies in until someone fetches them."
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/structures/morgue.dmi'
 	icon_state = "morgue1"
 	dir = EAST
 	density = 1
@@ -144,7 +144,7 @@
 /obj/structure/m_tray
 	name = "morgue tray"
 	desc = "Apply corpse before closing."
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/structures/morgue.dmi'
 	icon_state = "morguet"
 	density = 1
 	layer = BELOW_OBJ_LAYER

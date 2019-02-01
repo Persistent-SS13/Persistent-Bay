@@ -10,6 +10,7 @@
 		slot_l_hand_str = 'icons/mob/items/lefthand_backpacks.dmi',
 		slot_r_hand_str = 'icons/mob/items/righthand_backpacks.dmi',
 		)
+	icon = 'icons/obj/items/storage/backpacks.dmi'
 	icon_state = "backpack"
 	item_state = null
 	//most backpacks use the default backpack state for inhand overlays
@@ -69,6 +70,7 @@
 /obj/item/weapon/storage/backpack/leathersack
 	name = "leather bag"
 	desc = "A large leather bag capable of storing alot of gear!"
+	icon = 'icons/obj/items/storage/bags.dmi'
 	icon_state = "giftbag0"
 	item_state = "giftbag"
 	w_class = ITEM_SIZE_HUGE
@@ -148,6 +150,7 @@
 /obj/item/weapon/storage/backpack/rucksack
 	name = "black rucksack"
 	desc = "A sturdy military-grade backpack with low-profile straps. Designed to work well with armor."
+	icon = 'icons/obj/items/storage/rucksacks.dmi'
 	icon_state = "rucksack"
 	item_state_slots = list(slot_l_hand_str = "rucksack", slot_r_hand_str = "rucksack",)
 
@@ -209,6 +212,7 @@
 /obj/item/weapon/storage/backpack/dufflebag
 	name = "dufflebag"
 	desc = "A large dufflebag for holding extra things."
+	icon = 'icons/obj/items/storage/dufflebags.dmi'
 	icon_state = "duffle"
 	item_state_slots = null
 	w_class = ITEM_SIZE_HUGE
@@ -266,6 +270,7 @@
 /obj/item/weapon/storage/backpack/satchel
 	name = "satchel"
 	desc = "A trendy looking satchel."
+	icon = 'icons/obj/items/storage/satchels.dmi'
 	icon_state = "satchel-norm"
 
 /obj/item/weapon/storage/backpack/satchel/grey
@@ -395,6 +400,7 @@
 	name = "messenger bag"
 	desc = "A sturdy backpack worn over one shoulder."
 	icon_state = "courierbag"
+	icon = 'icons/obj/items/storage/messengerbags.dmi'
 
 /obj/item/weapon/storage/backpack/messenger/chem
 	name = "chemistry messenger bag"

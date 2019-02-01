@@ -383,7 +383,7 @@
 
 /obj/item/weapon/storage/box/lights
 	name = "box of replacement bulbs"
-	icon = 'icons/obj/storage.dmi'
+	icon = 'icons/obj/items/storage/boxes.dmi'
 	icon_state = "light"
 	desc = "This box is shaped on the inside so that only light tubes and bulbs fit."
 	item_state = "syringe_kit"
@@ -434,7 +434,7 @@
 /obj/item/weapon/storage/box/freezer
 	name = "portable freezer"
 	desc = "This nifty shock-resistant device will keep your 'groceries' nice and non-spoiled."
-	icon = 'icons/obj/storage.dmi'
+	icon = 'icons/obj/items/storage/freezer.dmi'
 	icon_state = "portafreezer"
 	item_state = "medicalpack"
 	foldable = null

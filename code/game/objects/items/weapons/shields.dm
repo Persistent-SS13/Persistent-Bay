@@ -118,7 +118,7 @@
 /obj/item/weapon/shield/energy
 	name = "energy combat shield"
 	desc = "A shield capable of stopping most projectile and melee attacks. It can be retracted, expanded, and stored anywhere."
-	icon = 'icons/obj/weapons.dmi'
+	icon = 'icons/obj/weapons/melee/energy.dmi'
 	icon_state = "eshield0" // eshield1 for expanded
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	force = 3.0

@@ -242,7 +242,7 @@
 		qdel(src)
 		return
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(!WT.isOn())
 			to_chat(user, "\The [W] is off.")
 			return

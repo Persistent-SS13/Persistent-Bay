@@ -31,8 +31,8 @@
 					anchored = 1
 					state = 1
 			if(isWelder(P))
-				var/obj/item/weapon/weldingtool/WT = P
-				if(WT.do_weld(user, src, 20))
+				var/obj/item/weapon/tool/weldingtool/WT = P
+				if(WT.use_tool(user, src, 20))
 					if(!src) return
 					to_chat(user, "<span class='notice'>You deconstruct the frame.</span>")
 					new /obj/item/stack/material/plasteel( loc, 4)
@@ -237,7 +237,7 @@
 		else
 			to_chat(user, "<span class='danger'>ERROR:</span> Unable to locate artificial intelligence.")
 		return
-	else if(istype(W, /obj/item/weapon/wrench))
+	else if(istype(W, /obj/item/weapon/tool/wrench))
 		if(anchored)
 			user.visible_message("<span class='notice'>\The [user] starts to unbolt \the [src] from the plating...</span>")
 			if(!do_after(user,40,src))

@@ -40,7 +40,7 @@
 		return
 
 	if(isWelder(I))
-		var/obj/item/weapon/weldingtool/W = I
+		var/obj/item/weapon/tool/weldingtool/W = I
 		if(W.isOn())
 			if(W.get_fuel() >= 2)
 				var/obj/item/inside = locate() in src

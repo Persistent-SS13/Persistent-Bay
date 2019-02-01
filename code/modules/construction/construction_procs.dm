@@ -29,7 +29,7 @@
 	qdel(progress)
 */
 
-/atom/proc/Weld(var/obj/item/weapon/weldingtool/W, var/mob/user, var/time = 25, var/outputMessage, var/skill = 5, var/minSkill = 0)
+/atom/proc/Weld(var/obj/item/weapon/tool/weldingtool/W, var/mob/user, var/time = 25, var/outputMessage, var/skill = 5, var/minSkill = 0)
 	if(!isWelder(W))
 		return 0
 	if(!W.isOn())

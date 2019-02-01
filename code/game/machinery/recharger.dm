@@ -4,7 +4,7 @@
 /obj/machinery/recharger
 	name = "recharger"
 	desc = "An all-purpose recharger for a variety of devices."
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/rechargers.dmi'
 	icon_state = "recharger0"
 	anchored = TRUE
 	use_power = POWER_USE_IDLE
@@ -176,7 +176,6 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 /obj/machinery/recharger/wallcharger
 	name = "wall recharger"
 	desc = "A heavy duty wall recharger specialized for energy weaponry."
-	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "wrecharger0"
 	active_power_usage = 50 KILOWATTS	//It's more specialized than the standalone recharger (guns and batons only) so make it more powerful
 	icon_state_charged = "wrecharger2"

@@ -280,7 +280,7 @@ var/const/OUTPUT_DELAY = 5 SECONDS //intervals between material being outputed b
 
 /obj/machinery/recycler/attackby(var/obj/item/O as obj, var/mob/user as mob)
 	add_fingerprint(user)
-	if(istype(O, /obj/item/weapon/wrench))
+	if(istype(O, /obj/item/weapon/tool/wrench))
 		if(!anchored)
 			usr.visible_message("<span class='notice'>[user] secures the bolts of the [src]</span>", "<span class='notice'>You secure the bolts of the [src]</span>", "Someone's securing some bolts")
 			src.anchored = 1

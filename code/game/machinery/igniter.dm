@@ -1,7 +1,7 @@
 /obj/machinery/igniter
 	name = "igniter"
 	desc = "It's useful for igniting flammable items."
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/igniters.dmi'
 	icon_state = "igniter1"
 	var/id = null
 	max_health = 150

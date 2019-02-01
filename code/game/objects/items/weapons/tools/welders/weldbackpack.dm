@@ -11,7 +11,7 @@
 	var/tank_volume = 350
 	var/starting_fuel = 350
 	var/fuel_type = /datum/reagent/fuel
-	var/obj/item/weapon/weldingtool/welder
+	var/obj/item/weapon/tool/weldingtool/welder
 
 /obj/item/weapon/weldpack/empty
 	starting_fuel = 0
@@ -34,7 +34,7 @@
 
 /obj/item/weapon/weldpack/attackby(obj/item/W as obj, mob/user as mob)
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/T = W
+		var/obj/item/weapon/tool/weldingtool/T = W
 		if(T.welding & prob(50))
 			message_admins("[key_name_admin(user)] triggered a fueltank explosion.")
 			log_game("[key_name(user)] triggered a fueltank explosion.")

@@ -84,7 +84,7 @@ var/bomb_set
 		switch(removal_stage)
 			if(0)
 				if(isWelder(O))
-					var/obj/item/weapon/weldingtool/WT = O
+					var/obj/item/weapon/tool/weldingtool/WT = O
 					if(!WT.isOn()) return
 					if(WT.get_fuel() < 5) // uses up 5 fuel.
 						to_chat(user, "<span class='warning'>You need more fuel to complete this task.</span>")
@@ -110,7 +110,7 @@ var/bomb_set
 
 			if(2)
 				if(isWelder(O))
-					var/obj/item/weapon/weldingtool/WT = O
+					var/obj/item/weapon/tool/weldingtool/WT = O
 					if(!WT.isOn()) return
 					if (WT.get_fuel() < 5) // uses up 5 fuel.
 						to_chat(user, "<span class='warning'>You need more fuel to complete this task.</span>")
@@ -436,7 +436,7 @@ var/bomb_set
 	This concludes the instructions.", "vessel self-destruct instructions")
 
 	//stamp the paper
-	var/image/stampoverlay = image('icons/obj/bureaucracy.dmi')
+	var/image/stampoverlay = image('icons/obj/items/paper.dmi')
 	stampoverlay.icon_state = "paper_stamp-hos"
 	R.stamped += /obj/item/weapon/stamp
 	R.overlays += stampoverlay

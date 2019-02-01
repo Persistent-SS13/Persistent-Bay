@@ -240,7 +240,7 @@
 				to_chat(user, SPAN_NOTICE("You repair the [src]!"))
 				update_icon()
 
-	else if(istype(W, /obj/item/weapon/wrench))
+	else if(istype(W, /obj/item/weapon/tool/wrench))
 		if(locked)
 			to_chat(user, SPAN_WARNING("The bolts are covered, unlocking this would retract the covers."))
 			return

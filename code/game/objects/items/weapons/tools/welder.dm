@@ -1,7 +1,7 @@
 /*
  * Welding Tool
  */
-/obj/item/weapon/weldingtool
+/obj/item/weapon/tool/weldingtool
 	name = "welding tool"
 	icon = 'icons/obj/tools.dmi'
 	icon_state = "welder_m"
@@ -36,20 +36,19 @@
 	var/fuel_cost_use = 1 //The initial fuel cost for various actions
 	var/welding_efficiency = 1.0 //Base welding multiplier for fuel use
 
-/obj/item/weapon/weldingtool/empty
+/obj/item/weapon/tool/weldingtool/empty
 	tank = /obj/item/weapon/welder_tank/empty
 
-/obj/item/weapon/weldingtool/Initialize()
+/obj/item/weapon/tool/weldingtool/Initialize()
 	if(!map_storage_loaded)
 		if(ispath(tank))
 			tank = new tank
 
 	set_extension(src, /datum/extension/base_icon_state, /datum/extension/base_icon_state, icon_state)
 	update_icon()
-
 	. = ..()
 
-/obj/item/weapon/weldingtool/Destroy()
+/obj/item/weapon/tool/weldingtool/Destroy()
 	if(welding)
 		STOP_PROCESSING(SSobj, src)
 
@@ -57,14 +56,14 @@
 
 	return ..()
 
-/obj/item/weapon/weldingtool/examine(mob/user)
+/obj/item/weapon/tool/weldingtool/examine(mob/user)
 	if(..(user, 0))
 		if(tank)
 			to_chat(user, "<span class='notice'>\icon[tank] \The [tank] contains [get_fuel()]/[tank.tank_volume] units of fuel!</span>")
 		else
 			to_chat(user, "There is no tank attached.")
 
-/obj/item/weapon/weldingtool/MouseDrop(atom/over)
+/obj/item/weapon/tool/weldingtool/MouseDrop(atom/over)
 	if(!CanMouseDrop(over, usr))
 		return
 
@@ -81,10 +80,10 @@
 
 	..()
 
-/obj/item/weapon/weldingtool/attackby(obj/item/W as obj, mob/user as mob)
+/obj/item/weapon/tool/weldingtool/attackby(obj/item/W as obj, mob/user as mob)
 	if(welding)
 		to_chat(user, "<span class='danger'>Stop welding first!</span>")
-		return
+		return 0
 
 	if(isScrewdriver(W))
 		status = !status
@@ -93,7 +92,7 @@
 		else
 			to_chat(user, "<span class='notice'>The welder can now be attached and modified.</span>")
 		src.add_fingerprint(user)
-		return
+		return 1
 
 	if((!status) && (istype(W,/obj/item/stack/rods)))
 		var/obj/item/stack/rods/R = W
@@ -114,27 +113,26 @@
 			user.client.screen -= src
 		src.loc = F
 		src.add_fingerprint(user)
-		return
+		return 1
 
 	if(istype(W, /obj/item/weapon/welder_tank))
 		if(tank)
 			to_chat(user, "Remove the current tank first.")
-			return
+			return 0
 
 		if(W.w_class >= w_class)
 			to_chat(user, "\The [W] is too large to fit in \the [src].")
-			return
+			return 0
 
 		user.drop_from_inventory(W, src)
 		tank = W
 		user.visible_message("[user] slots \a [W] into \the [src].", "You slot \a [W] into \the [src].")
 		update_icon()
-		return
+		return 1
 
-	..()
+	return ..()
 
-
-/obj/item/weapon/weldingtool/attack_hand(mob/user as mob)
+/obj/item/weapon/tool/weldingtool/attack_hand(mob/user as mob)
 	if(tank && user.get_inactive_hand() == src)
 		if(!welding)
 			if(tank.can_remove)
@@ -148,15 +146,14 @@
 			to_chat(user, "<span class='danger'>Stop welding first!</span>")
 
 	else
-		..()
+		return ..()
 
-
-/obj/item/weapon/weldingtool/Process()
+/obj/item/weapon/tool/weldingtool/Process()
 	if(welding)
 		if(!remove_fuel(fuel_rate))
 			setWelding(0)
 
-/obj/item/weapon/weldingtool/afterattack(obj/O as obj, mob/user as mob, proximity)
+/obj/item/weapon/tool/weldingtool/afterattack(obj/O as obj, mob/user as mob, proximity)
 	if(!proximity) return
 	if (istype(O, /obj/structure/reagent_dispensers/fueltank) && get_dist(src,O) <= 1 && !src.welding)
 		if(!tank)
@@ -177,17 +174,17 @@
 	return
 
 
-/obj/item/weapon/weldingtool/attack_self(mob/user as mob)
+/obj/item/weapon/tool/weldingtool/attack_self(mob/user as mob)
 	setWelding(!welding, usr)
 	return
 
 //Returns the amount of fuel in the welder
-/obj/item/weapon/weldingtool/proc/get_fuel()
+/obj/item/weapon/tool/weldingtool/proc/get_fuel()
 	return tank ? tank.reagents.get_reagent_amount(tank.fuel_type) : 0
 
 
 //Removes fuel from the welding tool. If a mob is passed, it will perform an eyecheck on the mob. This should probably be renamed to use()
-/obj/item/weapon/weldingtool/proc/remove_fuel(var/amount = 1, var/mob/M = null)
+/obj/item/weapon/tool/weldingtool/proc/remove_fuel(var/amount = 1, var/mob/M = null)
 	if(!welding)
 		return 0
 	if(get_fuel() >= amount)
@@ -200,7 +197,7 @@
 			to_chat(M, "<span class='notice'>You need more welding fuel to complete this task.</span>")
 		return 0
 
-/obj/item/weapon/weldingtool/proc/burn_fuel(var/amount)
+/obj/item/weapon/tool/weldingtool/proc/burn_fuel(var/amount)
 	if(!tank)
 		return
 
@@ -224,15 +221,15 @@
 			location.hotspot_expose(700, 5)
 
 //Returns whether or not the welding tool is currently on.
-/obj/item/weapon/weldingtool/proc/isOn()
+/obj/item/weapon/tool/weldingtool/proc/isOn()
 	return src.welding
 
-/obj/item/weapon/weldingtool/get_storage_cost()
+/obj/item/weapon/tool/weldingtool/get_storage_cost()
 	if(isOn())
 		return ITEM_SIZE_NO_CONTAINER
 	return ..()
 
-/obj/item/weapon/weldingtool/update_icon()
+/obj/item/weapon/tool/weldingtool/update_icon()
 	..()
 
 	var/datum/extension/base_icon_state/bis = get_extension(src, /datum/extension/base_icon_state)
@@ -253,7 +250,7 @@
 
 //Sets the welding state of the welding tool. If you see W.welding = 1 anywhere, please change it to W.setWelding(1)
 //so that the welding tool updates accordingly
-/obj/item/weapon/weldingtool/proc/setWelding(var/set_welding, var/mob/M)
+/obj/item/weapon/tool/weldingtool/proc/setWelding(var/set_welding, var/mob/M)
 	if(!status)	return
 
 	var/turf/T = get_turf(src)
@@ -287,7 +284,7 @@
 
 //Decides whether or not to damage a player's eyes based on what they're wearing as protection
 //Note: This should probably be moved to mob
-/obj/item/weapon/weldingtool/proc/eyecheck(mob/user as mob)
+/obj/item/weapon/tool/weldingtool/proc/eyecheck(mob/user as mob)
 	if(!iscarbon(user))	return 1
 	if(istype(user, /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = user
@@ -327,7 +324,7 @@
 					spawn(100)
 						H.disabilities &= ~NEARSIGHTED
 
-/obj/item/weapon/weldingtool/attack(mob/living/M, mob/living/user, target_zone)
+/obj/item/weapon/tool/weldingtool/attack(mob/living/M, mob/living/user, target_zone)
 	if(ishuman(M))
 		var/mob/living/carbon/human/H = M
 		var/obj/item/organ/external/S = H.organs_by_name[target_zone]
@@ -345,16 +342,16 @@
 		return ..()
 
 //Returns the ammount of fuel needed to do a job based on the efficiency factor
-/obj/item/weapon/weldingtool/proc/apply_fuel_efficiency(var/fuel_needed)
+/obj/item/weapon/tool/weldingtool/proc/apply_fuel_efficiency(var/fuel_needed)
 	return fuel_needed * welding_efficiency
 
-/obj/item/weapon/weldingtool/proc/do_weld(var/mob/living/user, var/obj/target, var/time = 0, var/required_fuel = 0, var/outputMessage = null)
+/obj/item/weapon/tool/weldingtool/use_tool(var/mob/living/user, var/obj/target, var/time = 0, var/required_fuel = 0, var/outputMessage = null)
 	if(!isOn())
 		to_chat(user, "<span class='notice'>The welding tool must be on to complete this task.</span>")
-		return 0
+		return FALSE
 	if(required_fuel && (apply_fuel_efficiency(required_fuel) < get_fuel()))
 		to_chat(user, "<span class='notice'>You need more fuel to complete this task.</span>")
-		return 0
+		return FALSE
 	user.setClickCooldown(DEFAULT_QUICK_COOLDOWN)
 	playsound(get_turf(target), 'sound/items/Welder.ogg', 50, 1)
 	if(outputMessage)
@@ -362,7 +359,7 @@
 	if(do_after(user, max(1, time * welding_efficiency), target))
 		if(isOn())
 			remove_fuel(apply_fuel_efficiency(required_fuel), user)
-			return 1
+			return TRUE
 
 //===================================
 //	Small welder tool tank

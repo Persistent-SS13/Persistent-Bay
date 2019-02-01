@@ -511,7 +511,7 @@
 	var/used = 0
 	name = "Phorosian suit adapter kit"
 	desc = "A device used to recolor and adapt a Phorosian containment suit to be more suited for the job they are assigned to."
-	icon='icons/obj/storage.dmi'
+	icon='icons/obj/items/storage/toolboxes.dmi'
 	icon_state = "inf_deployer"
 	w_class = 2
 	force = 0

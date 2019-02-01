@@ -278,10 +278,8 @@
 		if(istype(W,/obj/item/tk_grab))
 			return 0
 		if(isWelder(W))
-			var/obj/item/weapon/weldingtool/WT = W
-			if(WT.isOn())
-				slice_into_parts(WT, user)
-				return
+			slice_into_parts(W, user)
+			return
 		if(istype(W, /obj/item/weapon/storage/laundry_basket) && W.contents.len)
 			var/obj/item/weapon/storage/laundry_basket/LB = W
 			var/turf/T = get_turf(src)
@@ -308,22 +306,21 @@
 			playsound(src.loc, "sparks", 50, 1)
 			open()
 	else if(isWrench(W))
+		var/obj/item/weapon/tool/T = W
 		if (src.wrenchable==0)
 			// Do not allow wrench interactions with things that aren't wrenchable.
 			return
 		if (src.anchored==1)
-			playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 			to_chat(user, "<span class='notice'>You begin to unsecure \the [src] from the floor...</span>")
-			if (do_after(user, 40, src))
+			if (T.use_tool(user, src, 40))
 				user.visible_message( \
 					"<span class='notice'>\The [user] unsecures \the [src].</span>", \
 					"<span class='notice'>You have unsecured \the [src]. Now it can be pulled somewhere else.</span>", \
 					"You hear ratchet.")
 				src.anchored = 0
 		else /*if (src.anchored==0)*/
-			playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 			to_chat(user, "<span class='notice'>You begin to secure \the [src] to the floor...</span>")
-			if (do_after(user, 20, src))
+			if (T.use_tool(user, src, 20))
 				user.visible_message( \
 					"<span class='notice'>\The [user] secures \the [src].</span>", \
 					"<span class='notice'>You have secured \the [src].</span>", \
@@ -333,27 +330,20 @@
 	else if(istype(W, /obj/item/weapon/packageWrap))
 		return
 	else if(isWelder(W) && (setup & CLOSET_CAN_BE_WELDED))
-		var/obj/item/weapon/weldingtool/WT = W
-		if(!WT.remove_fuel(0,user))
-			if(!WT.isOn())
-				return
-			else
-				to_chat(user, "<span class='notice'>You need more welding fuel to complete this task.</span>")
-				return
-		src.welded = !src.welded
-		src.update_icon()
-		user.visible_message("<span class='warning'>\The [src] has been [welded?"welded shut":"unwelded"] by \the [user].</span>", blind_message = "You hear welding.", range = 3)
+		var/obj/item/weapon/tool/T = W
+		if(T.use_tool(user, src, 3 SECONDS))
+			src.welded = !src.welded
+			src.update_icon()
+			user.visible_message("<span class='warning'>\The [src] has been [welded?"welded shut":"unwelded"] by \the [user].</span>", blind_message = "You hear welding.", range = 3)
 		return
 	return ..()
 
-/obj/structure/closet/proc/slice_into_parts(obj/item/weapon/weldingtool/WT, mob/user)
-	if(!WT.remove_fuel(0,user))
-		to_chat(user, "<span class='notice'>You need more welding fuel to complete this task.</span>")
-		return
-	user.visible_message("<span class='notice'>\The [src] has been cut apart by [user] with \the [WT].</span>", \
-						 "<span class='notice'>You have cut \the [src] apart with \the [WT].</span>", \
-						 "You hear welding.")
-	dismantle()
+/obj/structure/closet/proc/slice_into_parts(var/obj/item/weapon/tool/weldingtool/WT, mob/user)
+	if(WT.use_tool(user, src, 5 SECONDS))
+		user.visible_message("<span class='notice'>\The [src] has been cut apart by [user] with \the [WT].</span>", \
+			"<span class='notice'>You have cut \the [src] apart with \the [WT].</span>", \
+			"You hear welding.")
+		dismantle()
 
 /obj/structure/closet/MouseDrop_T(atom/movable/O as mob|obj, mob/user as mob)
 	if(istype(O, /obj/screen))	//fix for HUD elements making their way into the world	-Pete

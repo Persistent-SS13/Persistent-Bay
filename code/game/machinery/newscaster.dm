@@ -127,7 +127,7 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 /obj/machinery/newscaster
 	name = "newscaster"
 	desc = "A standard newsfeed handler. All the news you absolutely have no use for, in one place!"
-	icon = 'icons/obj/terminals.dmi'
+	icon = 'icons/obj/machines/terminals/newscaster.dmi'
 	icon_state = "newscaster_normal"
 	var/hitstaken = 0      //Death at 3 hits from an item with force>=15
 	light_range = 0

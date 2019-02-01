@@ -55,7 +55,7 @@
 		T.attackby(C, user) //BubbleWrap - hand this off to the underlying turf instead
 		return
 	if(isWelder(C))
-		var/obj/item/weapon/weldingtool/WT = C
+		var/obj/item/weapon/tool/weldingtool/WT = C
 		if(WT.remove_fuel(0, user))
 			to_chat(user, "<span class='notice'>Slicing lattice joints ...</span>")
 		new /obj/item/stack/rods(loc)

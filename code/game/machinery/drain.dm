@@ -10,7 +10,7 @@
 
 /obj/machinery/drain/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(WT.remove_fuel(1,user))
 			playsound(src.loc, 'sound/items/Welder.ogg', 50, 1)
 			to_chat(user, "<span class='notice'>You begin to unweld \the [src]...</span>")

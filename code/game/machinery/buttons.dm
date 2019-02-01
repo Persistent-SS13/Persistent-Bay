@@ -1,6 +1,6 @@
 /obj/machinery/button
 	name = "button"
-	icon = 'icons/obj/objects.dmi'
+	icon = 'icons/obj/machines/buttons.dmi'
 	icon_state = "launcherbtt"
 	desc = "A remote control switch for something."
 	var/id = null
@@ -70,7 +70,6 @@
 
 //alternate button with the same functionality, except has a door control sprite instead
 /obj/machinery/button/alternate
-	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "doorctrl"
 
 /obj/machinery/button/alternate/update_icon()
@@ -96,7 +95,6 @@
 
 //alternate button with the same toggle functionality, except has a lightswitch sprite instead
 /obj/machinery/button/toggle/switch
-	icon = 'icons/obj/power.dmi'
 	icon_state = "light0"
 
 /obj/machinery/button/toggle/switch/update_icon()
@@ -106,7 +104,6 @@
 
 //alternate button with the same toggle functionality, except has a door control sprite instead
 /obj/machinery/button/toggle/alternate
-	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "doorctrl"
 
 /obj/machinery/button/toggle/alternate/update_icon()
@@ -151,7 +148,6 @@
 #define SAFE   0x10
 
 /obj/machinery/button/toggle/door
-	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "doorctrl"
 
 	var/_door_functions = 1

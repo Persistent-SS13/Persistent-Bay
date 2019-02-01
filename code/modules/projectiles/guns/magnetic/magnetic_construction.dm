@@ -40,7 +40,7 @@
 		return
 
 	if(isWelder(thing) && construction_stage == 4)
-		var/obj/item/weapon/weldingtool/welder = thing
+		var/obj/item/weapon/tool/weldingtool/welder = thing
 
 		if(!welder.isOn())
 			to_chat(user, "<span class='warning'>Turn it on first!</span>")

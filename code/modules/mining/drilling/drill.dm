@@ -57,7 +57,7 @@
 			if(stacks_needed)
 				to_chat(user, "\The [src] still requires [stacks_needed] steel sheets to start the patch.")
 				return
-			var/obj/item/weapon/weldingtool/WT = O
+			var/obj/item/weapon/tool/weldingtool/WT = O
 			if (WT.get_fuel() < 3)
 				to_chat(user, "<span class='warning'>You need more welding fuel to complete this task.</span>")
 				return

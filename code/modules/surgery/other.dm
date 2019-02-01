@@ -116,7 +116,7 @@
 //////////////////////////////////////////////////////////////////
 /datum/surgery_step/hardsuit
 	allowed_tools = list(
-		/obj/item/weapon/weldingtool = 80,
+		/obj/item/weapon/tool/weldingtool = 80,
 		/obj/item/weapon/circular_saw = 60,
 		/obj/item/weapon/gun/energy/plasmacutter = 100
 		)
@@ -132,7 +132,7 @@
 	if(!istype(target))
 		return 0
 	if(isWelder(tool))
-		var/obj/item/weapon/weldingtool/welder = tool
+		var/obj/item/weapon/tool/weldingtool/welder = tool
 		if(!welder.isOn() || !welder.remove_fuel(1,user))
 			return 0
 	return (target_zone == BP_CHEST) && istype(target.back, /obj/item/weapon/rig) && !(target.back.canremove)

@@ -31,7 +31,7 @@
 			transfer_fingerprints_to(F)
 			qdel(src)
 	else if(isWelder(I))
-		var/obj/item/weapon/weldingtool/WT = I
+		var/obj/item/weapon/tool/weldingtool/WT = I
 		if(!WT.remove_fuel(0, user))
 			to_chat(user, "<span class='notice'>You need more welding fuel to complete this task.</span>")
 			return

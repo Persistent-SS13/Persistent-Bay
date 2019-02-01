@@ -58,7 +58,7 @@
 		return
 
 /obj/item/device/flashlight/attackby(var/obj/item/I, var/mob/user as mob)
-	if(istype(I, /obj/item/weapon/screwdriver))
+	if(istype(I, /obj/item/weapon/tool/screwdriver))
 		if(power_usage && flashlight_cell)	//if contains powercell & uses power
 			flashlight_cell.update_icon()
 			flashlight_cell.dropInto(loc)

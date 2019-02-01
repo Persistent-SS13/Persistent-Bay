@@ -88,7 +88,7 @@
 /obj/item/frame/button
 	name = "button frame"
 	desc = "Used for building buttons"
-	icon = 'icons/obj/objects.dmi'
+	icon = 'icons/obj/machines/buttons.dmi'
 	icon_state = "launcherbtt_frame"
 	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
 	build_machine_type = /obj/machinery/button
@@ -96,7 +96,7 @@
 /obj/item/frame/light_switch
 	name = "light switch frame"
 	desc = "Used for repairing or building light switches"
-	icon = 'icons/obj/power.dmi'
+	icon = 'icons/obj/machines/buttons.dmi'
 	icon_state = "light-p"
 	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
 	build_machine_type = /obj/machinery/light_switch
@@ -111,7 +111,7 @@
 /obj/item/frame/noticeboard
 	name = "noticeboard"
 	desc = "Used for building NoticeBoards"
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/structures/noticeboard.dmi'
 	icon_state = "nboard00"
 	matter = list(MATERIAL_WOOD = 2 * SHEET_MATERIAL_AMOUNT)
 	build_machine_type = /obj/structure/noticeboard

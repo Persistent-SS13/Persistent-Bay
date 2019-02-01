@@ -8,7 +8,7 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 /obj/machinery/incinerator
 	name = "incinerator"
 	desc = "An incinerator, for burning unwanted trash."
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/cremator.dmi'
 	icon_state = "crema1"
 	density = 1
 	anchored = TRUE
@@ -208,7 +208,7 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 /obj/machinery/incinerator/crematorium
 	name = "crematorium"
 	desc = "A human incinerator. Works well on barbeque nights."
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/cremator.dmi'
 	icon_state = "crema1"
 	autoincinerate = FALSE
 	var/obj/structure/c_tray/connected = null
@@ -341,7 +341,7 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 /obj/structure/c_tray
 	name = "crematorium tray"
 	desc = "Apply body before burning."
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/cremator.dmi'
 	icon_state = "cremat"
 	density = 1
 	layer = BELOW_OBJ_LAYER

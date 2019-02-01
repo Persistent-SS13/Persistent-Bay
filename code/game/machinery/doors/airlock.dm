@@ -1567,7 +1567,7 @@ About the new airlock wires panel:
 	var/cut_sound
 
 	if(isWelder(item))
-		var/obj/item/weapon/weldingtool/WT = item
+		var/obj/item/weapon/tool/weldingtool/WT = item
 		if(!WT.isOn())
 			return 0
 		if(!WT.remove_fuel(0,user))
@@ -1639,7 +1639,7 @@ About the new airlock wires panel:
 
 /obj/machinery/door/airlock/attackby(var/obj/item/C, var/mob/user)
 	// Brace is considered installed on the airlock, so interacting with it is protected from electrification.
-	if(brace && (istype(C.GetIdCard(), /obj/item/weapon/card/id/) || istype(C, /obj/item/weapon/crowbar/brace_jack)))
+	if(brace && (istype(C.GetIdCard(), /obj/item/weapon/card/id/) || istype(C, /obj/item/weapon/tool/crowbar/brace_jack)))
 		return brace.attackby(C, user)
 
 	if(!brace && istype(C, /obj/item/weapon/airlock_brace))
@@ -1675,8 +1675,8 @@ About the new airlock wires panel:
 		return
 
 	if(!repairing && isWelder(C) && !( src.operating > 0 ) && src.density)
-		var/obj/item/weapon/weldingtool/W = C
-		if(W.do_weld(user, src, 1))
+		var/obj/item/weapon/tool/weldingtool/W = C
+		if(W.use_tool(user, src, 1))
 			src.welded = !src.welded
 			src.update_icon()
 		return

@@ -95,7 +95,7 @@ var/const/NO_EMAG_ACT = -50
 
 /obj/item/weapon/card/attackby(var/obj/item/W, var/mob/user)
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(WT.remove_fuel(0,user))
 			for (var/mob/M in viewers(src))
 				M.show_message("<span class='notice'>[src] is melted by [user.name] with the welding tool.</span>", 3, "<span class='notice'>You hear welding.</span>", 2)

@@ -104,7 +104,7 @@
 			anchored = 1
 		return
 	if(isWelder(I) && !anchored)
-		var/obj/item/weapon/weldingtool/WT = I
+		var/obj/item/weapon/tool/weldingtool/WT = I
 		if(WT.remove_fuel(0,user))
 			var/obj/item/stack/material/steel/new_item = new(usr.loc)
 			new_item.add_to_stacks(usr)

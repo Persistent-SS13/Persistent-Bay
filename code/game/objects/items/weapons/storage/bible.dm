@@ -1,6 +1,7 @@
 /obj/item/weapon/storage/bible
 	name = "bible"
 	desc = "Apply to head repeatedly."
+	icon = 'icons/obj/items/storage/bibles.dmi'
 	icon_state ="bible"
 	throw_speed = 1
 	throw_range = 5

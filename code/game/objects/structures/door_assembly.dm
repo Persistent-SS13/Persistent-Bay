@@ -88,7 +88,7 @@ obj/structure/door_assembly/door_assembly_keyp
 		return
 
 	if(isWelder(W) && ( (istext(glass)) || (glass == 1) || (!anchored) ))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if (WT.remove_fuel(0, user))
 			playsound(src.loc, 'sound/items/Welder2.ogg', 50, 1)
 			if(istext(glass))

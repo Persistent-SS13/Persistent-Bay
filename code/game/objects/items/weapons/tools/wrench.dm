@@ -1,7 +1,7 @@
 /*
  * Wrench
  */
-/obj/item/weapon/wrench
+/obj/item/weapon/tool/wrench
 	name = "wrench"
 	desc = "A good, durable combination wrench, with self-adjusting, universal open- and ring-end mechanisms to match a wide variety of nuts and bolts."
 	description_info = "This versatile tool is used for dismantling machine frames, anchoring or unanchoring heavy objects like vending machines and emitters, and much more. In general, if you want something to move or stop moving entirely, you ought to use a wrench on it."
@@ -20,6 +20,9 @@
 	center_of_mass = "x=17;y=16"
 	attack_verb = list("bashed", "battered", "bludgeoned", "whacked")
 
-/obj/item/weapon/wrench/Initialize()
+/obj/item/weapon/tool/wrench/Initialize()
 	icon_state = "wrench[pick("","_red","_black")]"
 	. = ..()
+
+/obj/item/weapon/tool/wrench/play_tool_sound()
+	playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)

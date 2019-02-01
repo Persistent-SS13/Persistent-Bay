@@ -1,7 +1,7 @@
 //===================================
 //	Mini welder tool
 //===================================
-/obj/item/weapon/weldingtool/mini
+/obj/item/weapon/tool/weldingtool/mini
 	name = "miniature welding tool"
 	icon_state = "welder_s"
 	item_state = "welder"
@@ -11,7 +11,7 @@
 	tank = /obj/item/weapon/welder_tank/mini
 	welding_efficiency = 0.9
 
-/obj/item/weapon/weldingtool/mini/empty
+/obj/item/weapon/tool/weldingtool/mini/empty
 	tank = /obj/item/weapon/welder_tank/mini/empty
 
 //===================================

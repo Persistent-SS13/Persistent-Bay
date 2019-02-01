@@ -21,8 +21,8 @@
 					src.anchored = 1
 					src.state = 1
 			if(isWelder(P))
-				var/obj/item/weapon/weldingtool/WT = P
-				if(WT.do_weld(user, src, 20))
+				var/obj/item/weapon/tool/weldingtool/WT = P
+				if(WT.use_tool(user, src, 20))
 					if(!src) return
 					to_chat(user, "<span class='notice'>You deconstruct the frame.</span>")
 					new /obj/item/stack/material/steel( src.loc, 5 )

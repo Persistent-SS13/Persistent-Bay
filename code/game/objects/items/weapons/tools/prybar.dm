@@ -1,4 +1,4 @@
-/obj/item/weapon/crowbar/prybar
+/obj/item/weapon/tool/crowbar/prybar
 	name = "pry bar"
 	desc = "A steel bar with a wedge. It comes in a variety of configurations - collect them all."
 	icon_state = "prybar"
@@ -9,6 +9,6 @@
 	w_class = ITEM_SIZE_SMALL
 	matter = list(MATERIAL_STEEL = 80)
 
-/obj/item/weapon/crowbar/prybar/Initialize()
+/obj/item/weapon/tool/crowbar/prybar/Initialize()
 	icon_state = "prybar[pick("","_red","_green","_aubergine","_blue")]"
 	. = ..()

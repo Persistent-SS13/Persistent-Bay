@@ -63,14 +63,14 @@
 /datum/design/item/engifab/engitools/crowbar
 	name = "Crowbar"
 	id = "crowbar"
-	build_path = /obj/item/weapon/crowbar
+	build_path = /obj/item/weapon/tool/crowbar
 	category = "Tools"
 	materials = list(MATERIAL_STEEL = 140)
 
 /datum/design/item/engifab/engitools/prybar
 	name = "Pry bar"
 	id = "pry_bar"
-	build_path = /obj/item/weapon/crowbar/prybar
+	build_path = /obj/item/weapon/tool/crowbar/prybar
 	category = "Tools"
 	materials = list(MATERIAL_STEEL = 80)
 
@@ -85,21 +85,21 @@
 /datum/design/item/engifab/engitools/welder_mini
 	name = "Miniture welding tool"
 	id = "miniature_welding_tool"
-	build_path = /obj/item/weapon/weldingtool/mini/empty
+	build_path = /obj/item/weapon/tool/weldingtool/mini/empty
 	category = "Tools"
 	materials = list(MATERIAL_STEEL = 70, MATERIAL_GLASS = 30)
 
 /datum/design/item/engifab/engitools/weldertool
 	name = "Welding tool"
 	id = "welding_tool"
-	build_path = /obj/item/weapon/weldingtool/empty
+	build_path = /obj/item/weapon/tool/weldingtool/empty
 	category = "Tools"
 	materials = list(MATERIAL_STEEL = 210, MATERIAL_GLASS = 90)
 
 /datum/design/item/engifab/engitools/screwdriver
 	name = "Screwdriver"
 	id = "screwdriver"
-	build_path = /obj/item/weapon/screwdriver
+	build_path = /obj/item/weapon/tool/screwdriver
 	category = "Tools"
 	materials = list(MATERIAL_STEEL = 75)
 
@@ -113,7 +113,7 @@
 /datum/design/item/engifab/engitools/wrench
 	name = "Wrench"
 	id = "wrench"
-	build_path = /obj/item/weapon/wrench
+	build_path = /obj/item/weapon/tool/wrench
 	category = "Tools"
 	materials = list(MATERIAL_STEEL = 150)
 
@@ -170,7 +170,7 @@
 /datum/design/item/engifab/engitools/welder_industrial
 	name = "Industrial welding tool"
 	id = "ind_welding_tool"
-	build_path = /obj/item/weapon/weldingtool/largetank/empty
+	build_path = /obj/item/weapon/tool/weldingtool/largetank/empty
 	category = "Tools"
 	req_tech = list(TECH_ENGINEERING = 2)
 	materials = list(MATERIAL_STEEL = 420, MATERIAL_GLASS = 180)
@@ -178,7 +178,7 @@
 /datum/design/item/engifab/engitools/welder_huge
 	name = "High-capacity welding tool"
 	id = "hi-cap_welding_tool"
-	build_path = /obj/item/weapon/weldingtool/hugetank/empty
+	build_path = /obj/item/weapon/tool/weldingtool/hugetank/empty
 	category = "Tools"
 	req_tech = list(TECH_ENGINEERING = 3)
 	materials = list(MATERIAL_STEEL = 840, MATERIAL_GLASS = 360)
@@ -225,7 +225,7 @@
 	id = "brace_jack"
 	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 2)
 	materials = list(MATERIAL_STEEL = 120)
-	build_path = /obj/item/weapon/crowbar/brace_jack
+	build_path = /obj/item/weapon/tool/crowbar/brace_jack
 	sort_string = "VBAAS"
 	category = "Tools"
 
@@ -235,7 +235,7 @@
 	req_tech = list(TECH_ENGINEERING = 5, TECH_PHORON = 4)
 	materials = list(MATERIAL_STEEL = 6000, MATERIAL_GLASS = 500, MATERIAL_PLASTEEL = 2000)
 	chemicals = list(/datum/reagent/toxin/phoron/oxygen = 80)	//hopefully this makes a good detterant for obtaining OP welding tool
-	build_path = /obj/item/weapon/weldingtool/experimental
+	build_path = /obj/item/weapon/tool/weldingtool/experimental
 	sort_string = "VBAAT"
 	category = "Tools"
 

@@ -174,7 +174,7 @@ var/list/global/tank_gauge_cache = list()
 			to_chat(user, "<span class='notice'>You need to wire the device up first.</span>")
 
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(WT.remove_fuel(1,user))
 			if(!valve_welded)
 				to_chat(user, "<span class='notice'>You begin welding the \the [src] emergency pressure relief valve.</span>")

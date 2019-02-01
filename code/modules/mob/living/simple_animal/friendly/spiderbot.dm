@@ -103,7 +103,7 @@
 		return 1
 
 	if(isWelder(O))
-		var/obj/item/weapon/weldingtool/WT = O
+		var/obj/item/weapon/tool/weldingtool/WT = O
 		if (WT.remove_fuel(0))
 			if(health < maxHealth)
 				health += pick(1,1,1,2,2,3)

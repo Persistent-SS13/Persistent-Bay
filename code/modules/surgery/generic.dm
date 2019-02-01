@@ -198,7 +198,7 @@
 /datum/surgery_step/generic/retract_skin
 	allowed_tools = list(
 	/obj/item/weapon/retractor = 100, 	\
-	/obj/item/weapon/crowbar = 75,
+	/obj/item/weapon/tool/crowbar = 75,
 	/obj/item/weapon/material/knife = 50,	\
 	/obj/item/weapon/material/kitchen/utensil/fork = 50
 	)
@@ -239,7 +239,7 @@
 	/obj/item/weapon/cautery = 100,			\
 	/obj/item/clothing/mask/smokable/cigarette = 75,	\
 	/obj/item/weapon/flame/lighter = 50,			\
-	/obj/item/weapon/weldingtool = 25
+	/obj/item/weapon/tool/weldingtool = 25
 	)
 
 	min_duration = 70

@@ -27,3 +27,4 @@
 //Check if the damage can affect only mobs
 #define IS_MOBONLY_DAMAGE(X) (X == DAM_BIO || X == DAM_STUN || X == DAM_PAIN || X == DAM_CLONE || X == DAM_OXY || X == DAM_ELECTRIC)
 #define DAMAGE_AFFECT_OBJ(X) !IS_MOBONLY_DAMAGE(X)
+#define DAMAGE_AFFECT_MOB(X) X != DAM_EMP

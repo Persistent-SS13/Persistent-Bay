@@ -103,7 +103,7 @@
 				return
 			return
 		else if(isWelder(C))
-			var/obj/item/weapon/weldingtool/welder = C
+			var/obj/item/weapon/tool/weldingtool/welder = C
 			if(welder.isOn() && (is_plating()))
 				if(broken || burnt)
 					if(welder.isOn())

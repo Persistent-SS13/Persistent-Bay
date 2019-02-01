@@ -186,7 +186,7 @@
 	if(operating)
 		return//Already doing something.
 	if(isWelder(C) && !repairing)
-		var/obj/item/weapon/weldingtool/W = C
+		var/obj/item/weapon/tool/weldingtool/W = C
 		if(W.remove_fuel(0, user))
 			blocked = !blocked
 			user.visible_message("<span class='danger'>\The [user] [blocked ? "welds" : "unwelds"] \the [src] with \a [W].</span>",\

@@ -9,8 +9,8 @@
 	w_class = ITEM_SIZE_SMALL
 
 	var/list/spawn_tools = list(
-		/obj/item/weapon/screwdriver,
-		/obj/item/weapon/wrench,
+		/obj/item/weapon/tool/screwdriver,
+		/obj/item/weapon/tool/wrench,
 		/obj/item/weapon/wirecutters,
 		/obj/item/weapon/material/kitchen/utensil/knife,
 		/obj/item/weapon/material/kitchen/utensil/fork,

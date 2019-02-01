@@ -107,7 +107,7 @@
 			else
 				to_chat(user, "<span class='notice'>You need at least [IMPROVRIFLE_TAPE_NEEDED] segments of [tape] to complete this task.</span>")
 			return
-	else if(istype(W,/obj/item/weapon/screwdriver))
+	else if(istype(W,/obj/item/weapon/tool/screwdriver))
 		if(buildstate == 2)
 			user.visible_message("[user] screws \the [src]'s barrel to its stock.", "<span class='notice'>You further secure the barrel to the wooden furniture.</span>")
 			buildstate++
@@ -128,7 +128,7 @@
 			else
 				to_chat(user, "<span class='notice'>You need at least five plasteel sheets to complete this task.</span>")
 			return
-	else if(istype(W,/obj/item/weapon/wrench))
+	else if(istype(W,/obj/item/weapon/tool/wrench))
 		if(buildstate == 4)
 			user.visible_message("[user] wrenches \the [src]'s barrel firmly.", "<span class='notice'>You secure the reinforced barrel.</span>")
 			buildstate++
@@ -155,9 +155,9 @@
 			else
 				to_chat(user, "<span class='notice'>You need at least 3 rods to complete this task.</span>")
 			return
-	else if(istype(W,/obj/item/weapon/weldingtool))
+	else if(istype(W,/obj/item/weapon/tool/weldingtool))
 		if(buildstate == 9)
-			var/obj/item/weapon/weldingtool/T = W
+			var/obj/item/weapon/tool/weldingtool/T = W
 			if(T.remove_fuel(5,user))
 				if(!src || !T.isOn()) return
 				playsound(src.loc, 'sound/items/Welder2.ogg', 100, 1)
@@ -176,9 +176,9 @@
 
 
 /obj/item/weapon/imprifleframe/imprifleframesawn/attackby(obj/item/W as obj, mob/user as mob)
-	if(istype(W,/obj/item/weapon/weldingtool))
+	if(istype(W,/obj/item/weapon/tool/weldingtool))
 		if(buildstate == 0)
-			var/obj/item/weapon/weldingtool/T = W
+			var/obj/item/weapon/tool/weldingtool/T = W
 			if(T.remove_fuel(5,user))
 				if(!src || !T.isOn()) return
 				playsound(src.loc, 'sound/items/Welder2.ogg', 100, 1)

@@ -6,7 +6,7 @@
 /obj/item/weapon/paper
 	name = "sheet of paper"
 	gender = NEUTER
-	icon = 'icons/obj/bureaucracy.dmi'
+	icon = 'icons/obj/items/paper.dmi'
 	icon_state = "paper"
 	item_state = "paper"
 	randpixel = 8
@@ -422,7 +422,7 @@
 
 		stamps += (stamps=="" ? "<HR>" : "<BR>") + "<i>This paper has been stamped with the [P.name].</i>"
 
-		var/image/stampoverlay = image('icons/obj/bureaucracy.dmi')
+		var/image/stampoverlay = image('icons/obj/items/paper.dmi')
 		var/{x; y;}
 		if(istype(P, /obj/item/weapon/stamp/captain) || istype(P, /obj/item/weapon/stamp/centcomm))
 			x = rand(-2, 0)
@@ -479,7 +479,7 @@
 /obj/item/weapon/paper_package
 	name = "package of paper"
 	gender = NEUTER
-	icon = 'icons/obj/bureaucracy.dmi'
+	icon = 'icons/obj/items/paper.dmi'
 	icon_state = "paperpackage"
 	item_state = "paperpackage"
 	randpixel = 8

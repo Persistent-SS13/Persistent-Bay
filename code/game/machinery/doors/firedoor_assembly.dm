@@ -47,7 +47,7 @@ obj/structure/firedoor_assembly/attackby(C as obj, mob/user as mob)
 							  "You have [anchored ? "" : "un" ]secured \the [src]!")
 		update_icon()
 	else if(!anchored && isWelder(C))
-		var/obj/item/weapon/weldingtool/WT = C
+		var/obj/item/weapon/tool/weldingtool/WT = C
 		if(WT.remove_fuel(0, user))
 			user.visible_message("<span class='warning'>[user] dissassembles \the [src].</span>",
 			"You start to dissassemble \the [src].")

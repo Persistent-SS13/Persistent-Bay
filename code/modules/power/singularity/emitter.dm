@@ -177,7 +177,7 @@
 		return
 
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(active)
 			to_chat(user, "Turn off [src] first.")
 			return

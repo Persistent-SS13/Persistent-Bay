@@ -90,7 +90,7 @@
 	else
 		return ..()
 
-/obj/structure/reagent_dispensers/default_deconstruction_screwdriver(var/obj/item/weapon/screwdriver/S, var/mob/living/user, var/deconstruct_time = null)
+/obj/structure/reagent_dispensers/default_deconstruction_screwdriver(var/obj/item/weapon/tool/screwdriver/S, var/mob/living/user, var/deconstruct_time = null)
 	if(!istype(S))
 		return 0
 	if(reagents.total_volume > 1)
@@ -98,7 +98,7 @@
 	else
 		return ..()
 
-/obj/structure/reagent_dispensers/default_deconstruction_wrench(var/obj/item/weapon/wrench/W, var/mob/living/user, var/deconstruct_time = null)
+/obj/structure/reagent_dispensers/default_deconstruction_wrench(var/obj/item/weapon/tool/wrench/W, var/mob/living/user, var/deconstruct_time = null)
 	if(!istype(W))
 		return 0
 	if(reagents.total_volume != 0)

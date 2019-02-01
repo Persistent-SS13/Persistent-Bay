@@ -45,7 +45,7 @@
 
 	if(locate(/obj/effect/overlay/wallrot) in src)
 		if(isWelder(W))
-			var/obj/item/weapon/weldingtool/WT = W
+			var/obj/item/weapon/tool/weldingtool/WT = W
 			if( WT.remove_fuel(0,user) )
 				to_chat(user, "<span class='notice'>You burn away the fungi with \the [WT].</span>")
 				playsound(src, 'sound/items/Welder.ogg', 10, 1)
@@ -60,7 +60,7 @@
 	//THERMITE related stuff. Calls src.thermitemelt() which handles melting simulated walls and the relevant effects
 	if(thermite)
 		if(isWelder(W))
-			var/obj/item/weapon/weldingtool/WT = W
+			var/obj/item/weapon/tool/weldingtool/WT = W
 			if( WT.remove_fuel(0,user) )
 				thermitemelt(user)
 				return

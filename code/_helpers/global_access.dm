@@ -55,6 +55,8 @@
 			return global.SScircuit;
 		if("SSearly")
 			return global.SSearly;
+		if("SSelections")
+			return global.SSelections;
 		if("SSevent")
 			return global.SSevent;
 		if("SSfastprocess")
@@ -1063,7 +1065,7 @@
 			return global.zone_blocked;
 		if("zones_to_save")
 			return global.zones_to_save;
-
+		
 /proc/writeglobal(which, newval)
 	switch(which)
 		if("ALL_ANTIGENS")
@@ -1120,6 +1122,8 @@
 			global.SScircuit=newval;
 		if("SSearly")
 			global.SSearly=newval;
+		if("SSelections")
+			global.SSelections=newval;
 		if("SSevent")
 			global.SSevent=newval;
 		if("SSfastprocess")
@@ -2128,7 +2132,7 @@
 			global.zone_blocked=newval;
 		if("zones_to_save")
 			global.zones_to_save=newval;
-
+		
 /var/list/_all_globals=list(
 	"ALL_ANTIGENS",
 	"ANTAG_FREQS",
@@ -2157,6 +2161,7 @@
 	"SSchemistry",
 	"SScircuit",
 	"SSearly",
+	"SSelections",
 	"SSevent",
 	"SSfastprocess",
 	"SSgarbage",

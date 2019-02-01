@@ -5,7 +5,7 @@
 	item_state = "chain"
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
-	force = 10
+	force = 8
 	throwforce = 7
 	w_class = ITEM_SIZE_NORMAL
 	origin_tech = list(TECH_COMBAT = 4)
@@ -21,7 +21,7 @@
 	item_state = "whip"
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
-	force = 16 //max hit with 60 strength and no equipment. Duel Arena no No forfeit - Snapshot
+	force = 12 //max hit with 60 strength and no equipment. Duel Arena no No forfeit - Snapshot
 	throwforce = 7
 	w_class = ITEM_SIZE_NORMAL
 	origin_tech = list(TECH_COMBAT = 4)
@@ -36,7 +36,7 @@
 	item_state = "whip"
 	mass = 4
 
-/obj/item/weapon/material/sword/replica/officersword
+/obj/item/weapon/material/sword/officersword
 	name = "fleet officer's sword"
 	desc = "A polished sword issued to officers of the fleet."
 	icon_state = "officersword"
@@ -46,14 +46,14 @@
 	damtype = DAM_CUT
 	mass = 2
 
-/obj/item/weapon/material/sword/replica/officersword/marine
+/obj/item/weapon/material/sword/officersword/marine
 	name = "marine NCO's sword"
 	desc = "A polished sword issued to SCG Marine NCOs."
 	icon_state = "marinesword"
 	damtype = DAM_CUT
 	mass = 2
 
-/obj/item/weapon/material/sword/replica/officersword/marineofficer
+/obj/item/weapon/material/sword/officersword/marineofficer
 	name = "marine officer's sword"
 	desc = "A curved sword issued to SCG Marine officers."
 	icon_state = "marineofficersword"
@@ -61,7 +61,7 @@
 	damtype = DAM_CUT
 	mass = 2
 
-/obj/item/weapon/material/sword/replica/officersword/pettyofficer
+/obj/item/weapon/material/sword/officersword/pettyofficer
 	name = "chief petty officer's cutlass"
 	desc = "A polished cutlass issued to chief petty officers of the fleet."
 	icon_state = "pettyofficersword"

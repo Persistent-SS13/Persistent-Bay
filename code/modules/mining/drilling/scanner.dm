@@ -104,29 +104,6 @@
 
 		to_chat(user, "- [result] of [gas_type].")
 
-	if(new_data)
-		survey_data += new_data
-		playsound(loc, 'sound/machines/ping.ogg', 40, 1)
-		to_chat(user,"<span class='notice'>New survey data stored - [new_data] GEP.</span>")
-
-/obj/item/weapon/mining_scanner/verb/get_data()
-	set category = "Object"
-	set name = "Get Survey Data"
-	set src in usr
-
-	var/mob/M = usr
-	if(!istype(M))
-		return
-	if(M.incapacitated())
-		return
-	if(!survey_data)
-		to_chat(M,"<span class='warning'>There is no survey data stored on [src].</span>")
-		return
-	visible_message("<span class='notice'>[src] records [survey_data] GEP worth of the data on the disk and spits it out.</span>")
-	var/obj/item/weapon/disk/survey/D = new(get_turf(src))
-	D.data = survey_data
-	survey_data = 0
-	M.put_in_hands(D)
 
 /obj/item/weapon/disk/survey
 	name = "survey data disk"

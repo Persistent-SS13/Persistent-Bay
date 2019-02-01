@@ -300,7 +300,7 @@
 //Glowsticks
 /obj/item/device/flashlight/glowstick
 	name = "green glowstick"
-	desc = "A military-grade glowstick."
+	desc = "A glowstick."
 	w_class = 2.0
 	brightness_on = 5
 	light_power = 2

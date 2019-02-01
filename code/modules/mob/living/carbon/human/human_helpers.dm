@@ -214,6 +214,9 @@
 	else if(lying)
 		plane = LYING_HUMAN_PLANE
 		layer = LYING_HUMAN_LAYER
+	else if(riding)
+		plane = ABOVE_HUMAN_PLANE
+		layer = VEHICLE_LOAD_LAYER
 	else
 		..()
 

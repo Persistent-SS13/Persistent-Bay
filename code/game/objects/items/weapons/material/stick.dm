@@ -1,5 +1,5 @@
 /obj/item/weapon/material/stick
-	name = "stick"
+	name = "staff"
 	desc = "You feel the urge to poke someone with this."
 	icon_state = "stick"
 	item_state = "stickmat"

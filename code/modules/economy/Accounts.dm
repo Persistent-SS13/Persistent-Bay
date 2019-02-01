@@ -10,9 +10,10 @@
 	var/security_level = 1	//0 - auto-identify from worn ID, require only account number
 							//1 - require manual login / account number and pin
 							//2 - require card and manual login
-	var/account_type = 0	//0 - personal account
-							//1 - assignment category account
-							//3 - central faction account
+
+
+	var/account_type = 1	//1 - personal account
+							//2 - business account
 	var/list/recently_paid = list()
 /datum/money_account/after_load()
 	var/datum/money_account/M = get_account_loadless(account_number)
@@ -29,11 +30,16 @@
 	return src
 
 /datum/money_account/proc/do_transaction(var/datum/transaction/T)
-	money = max(0, money + T.amount)
+	var/datum/money_account/nexus_account
+	var/datum/world_faction/democratic/nexus = get_faction("nexus")
+	if(nexus)
+		nexus_account = nexus.central_account
+	money = money + T.amount
 	if(transaction_log.len > 50)
 		transaction_log.Cut(1,2)
 	transaction_log += T
-
+	if(T.amount > 0 && nexus_account && nexus_account != src)
+		nexus.pay_tax(src, T.amount)
 /datum/money_account/proc/get_balance()
 	. = 0
 	for(var/datum/transaction/T in transaction_log)
@@ -141,9 +147,9 @@
 	D.transaction_log.Add(T)
 
 	return 1
-	
-	
-	
+
+
+
 /proc/money_transfer(var/datum/money_account/payer, var/attempt_real_name, var/purpose, var/amount)
 	if(!payer || amount > payer.money)
 		return 0
@@ -153,14 +159,15 @@
 		return 0
 	payer.recently_paid |= D
 	var/datum/transaction/Te = new("[attempt_real_name]", purpose, -amount, 0)
+	if(payer.transaction_log.len > 50)
+		payer.transaction_log.Cut(1,2)
 	payer.do_transaction(Te)
-	D.money = D.money + amount
 
 	//create a transaction log entry
 	var/datum/transaction/T = new(payer.owner_name, purpose, amount, 0)
 	if(D.transaction_log.len > 50)
 		D.transaction_log.Cut(1,2)
-	D.transaction_log.Add(T)
+	D.do_transaction(T)
 
 	return 1
 
@@ -170,7 +177,7 @@
 	if(D && D.security_level <= security_level_passed && (!D.security_level || D.remote_access_pin == attempt_pin_number) )
 		return D
 
-/proc/get_account_loadless(var/account_number)		
+/proc/get_account_loadless(var/account_number)
 	for(var/datum/money_account/D in all_money_accounts)
 		if(D.account_number == account_number)
 			return D

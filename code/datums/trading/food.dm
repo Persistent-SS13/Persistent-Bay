@@ -98,7 +98,7 @@
 							/obj/item/weapon/reagent_containers/food/drinks/bottle                     = TRADER_SUBTYPES_ONLY,
 							/obj/item/weapon/reagent_containers/food/drinks/bottle/small               = TRADER_BLACKLIST,
 							/obj/item/weapon/reagent_containers/food/snacks/boiledslimecore            = TRADER_BLACKLIST,
-							/obj/item/weapon/reagent_containers/food/snacks/checker                    = TRADER_BLACKLIST_ALL,
+							/obj/item/weapon/checker                    = TRADER_BLACKLIST_ALL,
 							/obj/item/weapon/reagent_containers/food/snacks/fruit_slice                = TRADER_BLACKLIST,
 							/obj/item/weapon/reagent_containers/food/snacks/slice                      = TRADER_BLACKLIST_ALL,
 							/obj/item/weapon/reagent_containers/food/snacks/grown                      = TRADER_BLACKLIST_ALL,

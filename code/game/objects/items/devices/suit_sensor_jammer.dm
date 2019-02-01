@@ -2,7 +2,7 @@
 #define JAMMER_POWER_CONSUMPTION(tick_delay) ((max(0.75, range)**2 * jammer_method.energy_cost * tick_delay) / 20)
 
 /obj/item/device/suit_sensor_jammer
-	name = "small device"
+	name = "suit sensor jammer"
 	desc = "This object menaces with tiny, dull spikes of plastic."
 	icon_state = "jammer"
 	w_class = ITEM_SIZE_SMALL

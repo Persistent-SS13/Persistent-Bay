@@ -109,19 +109,34 @@
 //
 /datum/design/item/autotailor/accessories/attach
 	category = "Clothing attachments"
-	materials = list(MATERIAL_CLOTH = 1000, "gold" = 500)
+	materials = list(MATERIAL_CLOTH = 1000, MATERIAL_GOLD = 500)
 
 /datum/design/item/autotailor/accessories/attach/cane
 	name = "Walking cane"
 	id = "cane"
 	build_path = /obj/item/weapon/cane
-	materials = list(MATERIAL_WOOD = 5000)
+	materials = list(MATERIAL_WOOD = 1.5 SHEETS)
+
+/datum/design/item/autotailor/accessories/attach/canefancy
+	build_path = /obj/item/weapon/staff/gentcane
+	materials = list(MATERIAL_WOOD = 1.5 SHEETS, MATERIAL_GOLD = 1 SHEET)
+
+/datum/design/item/autotailor/accessories/attach/staff
+	build_path = /obj/item/weapon/staff
+	materials = list(MATERIAL_WOOD = 1.5 SHEETS)
+
+
+/datum/design/item/autotailor/accessories/attach/canefancy
+	build_path = /obj/item/weapon/staff/gentcane
+	materials = list(MATERIAL_WOOD = 1.5 SHEETS, MATERIAL_GOLD = 1 SHEET)
+
+
 
 /datum/design/item/autotailor/accessories/attach/tie_white	//custom colors
 	name = "Tie - white"
 	id = "tie_white"
 	build_path = /obj/item/clothing/accessory/white
-	materials = list(MATERIAL_CLOTH = 1000, "gold" = 500)
+	materials = list(MATERIAL_CLOTH = 1000, MATERIAL_GOLD = 500)
 
 /datum/design/item/autotailor/accessories/attach/tie_black
 	name = "Tie - black"
@@ -258,7 +273,7 @@
 	name = "Lockette - silver"
 	id = "lockette_silver"
 	build_path = /obj/item/clothing/accessory/locket
-	materials = list("silver" = 500)
+	materials = list(MATERIAL_SILVER = 500)
 
 /datum/design/item/autotailor/accessories/attach/kneepads
 	name = "Kneepads"
@@ -270,25 +285,25 @@
 	name = "Iron medal"
 	id = "medal_iron"
 	build_path = /obj/item/clothing/accessory/medal/iron
-	materials = list("iron" = 500)
+	materials = list(MATERIAL_IRON = 500)
 
 /datum/design/item/autotailor/accessories/attach/medal_bronze
 	name = "Bronze medal"
 	id = "medal_bronze"
 	build_path = /obj/item/clothing/accessory/medal/bronze
-	materials = list("copper" = 500)	//i don't think bronze is obtainable
+	materials = list(MATERIAL_COPPER = 500)	//i don't think bronze is obtainable
 
 /datum/design/item/autotailor/accessories/attach/medal_silver
 	name = "Silver medal"
 	id = "medal_silver"
 	build_path = /obj/item/clothing/accessory/medal/silver
-	materials = list("silver" = 500)
+	materials = list(MATERIAL_SILVER = 500)
 
 /datum/design/item/autotailor/accessories/attach/medal_gold
 	name = "Gold medal"
 	id = "medal_gold"
 	build_path = /obj/item/clothing/accessory/medal/gold
-	materials = list("gold" = 500)
+	materials = list(MATERIAL_GOLD = 500)
 
 //
 //Shoes
@@ -453,13 +468,13 @@
 	name = "Dress shoes - white"
 	id = "dressshoes_white"
 	build_path = /obj/item/clothing/shoes/dress/white
-	materials = list(MATERIAL_LEATHER = 500, "gold" = 500)
+	materials = list(MATERIAL_LEATHER = 500, MATERIAL_GOLD = 500)
 
 /datum/design/item/autotailor/accessories/shoes/dress_black
 	name = "Dress shoes - black"
 	id = "dress_black"
 	build_path = /obj/item/clothing/shoes/dress
-	materials = list(MATERIAL_LEATHER = 500, "gold" = 500)
+	materials = list(MATERIAL_LEATHER = 500, MATERIAL_GOLD = 500)
 
 /datum/design/item/autotailor/accessories/shoes/jackb_black
 	name = "Jackboots - black"
@@ -560,7 +575,7 @@
 	name = "Dangle earrings - iron"
 	id = "dangle_iron"
 	build_path = /obj/item/clothing/ears/earring/dangle/iron
-	materials = list("iron" = 500)
+	materials = list(MATERIAL_IRON = 500)
 
 /datum/design/item/autotailor/accessories/ears/dangle_steel
 	name = "Dangle earrings - steel"
@@ -572,25 +587,25 @@
 	name = "Dangle earrings - silver"
 	id = "dangle_silver"
 	build_path = /obj/item/clothing/ears/earring/dangle/silver
-	materials = list("silver" = 500)
+	materials = list(MATERIAL_SILVER = 500)
 
 /datum/design/item/autotailor/accessories/ears/dangle_platinum
 	name = "Dangle earrings - platinum"
 	id = "dangle_platinum"
 	build_path = /obj/item/clothing/ears/earring/dangle/platinum
-	materials = list("platinum" = 500)
+	materials = list(MATERIAL_PLATINUM = 500)
 
 /datum/design/item/autotailor/accessories/ears/dangle_gold
 	name = "Dangle earrings - gold"
 	id = "dangle_gold"
 	build_path = /obj/item/clothing/ears/earring/dangle/gold
-	materials = list("gold" = 500)
+	materials = list(MATERIAL_GOLD = 500)
 
 /datum/design/item/autotailor/accessories/ears/dangle_diamond
 	name = "Dangle earrings - diamond"
 	id = "dangle_diamond"
 	build_path = /obj/item/clothing/ears/earring/dangle/diamond
-	materials = list("diamond" = 500)
+	materials = list(MATERIAL_DIAMOND = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_pearl	//custom colors
 	name = "Stud earrings - pearl"
@@ -614,7 +629,7 @@
 	name = "Stud earrings - iron"
 	id = "stud_iron"
 	build_path = /obj/item/clothing/ears/earring/stud/iron
-	materials = list("iron" = 500)
+	materials = list(MATERIAL_IRON = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_steel
 	name = "Stud earrings - steel"
@@ -626,25 +641,25 @@
 	name = "Stud earrings - silver"
 	id = "stud_silver"
 	build_path = /obj/item/clothing/ears/earring/stud/silver
-	materials = list("silver" = 500)
+	materials = list(MATERIAL_SILVER = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_platinum
 	name = "Stud earrings - platinum"
 	id = "stud_platinum"
 	build_path = /obj/item/clothing/ears/earring/stud/platinum
-	materials = list("platinum" = 500)
+	materials = list(MATERIAL_PLATINUM = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_gold
 	name = "Stud earrings - gold"
 	id = "stud_gold"
 	build_path = /obj/item/clothing/ears/earring/stud/gold
-	materials = list("gold" = 500)
+	materials = list(MATERIAL_GOLD = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_diamond
 	name = "Stud earrings - diamond"
 	id = "stud_diamond"
 	build_path = /obj/item/clothing/ears/earring/stud/diamond
-	materials = list("diamond" = 500)
+	materials = list(MATERIAL_DIAMOND = 500)
 
 //
 //eye slots, does not include high tech items like mesons
@@ -668,19 +683,19 @@
 	name = "Prescription glasses - sunglasses"
 	id = "prescription_sun"
 	build_path = /obj/item/clothing/glasses/sunglasses/prescription
-	materials = list(MATERIAL_STEEL = 100, MATERIAL_GLASS = 1000, "fiberglass" = 7000)
+	materials = list(MATERIAL_STEEL = 100, MATERIAL_GLASS = 1000, MATERIAL_FIBERGLASS = 7000)
 
 /datum/design/item/autotailor/accessories/eyes/sunglasses
 	name = "Sunglasses"
 	id = "sunglasses"
 	build_path = /obj/item/clothing/glasses/sunglasses
-	materials = list(MATERIAL_STEEL = 100, "fiberglass" = 5000)
+	materials = list(MATERIAL_STEEL = 100, MATERIAL_FIBERGLASS = 5000)
 
 /datum/design/item/autotailor/accessories/eyes/sunglasses_large
 	name = "Sunglasses - large"
 	id = "sunglasses_large"
 	build_path = /obj/item/clothing/glasses/sunglasses/big
-	materials = list(MATERIAL_STEEL = 1000, "fiberglass" = 10000)
+	materials = list(MATERIAL_STEEL = 1000, MATERIAL_FIBERGLASS = 10000)
 
 /datum/design/item/autotailor/accessories/eyes/gglasses
 	name = "Glasses - green"
@@ -772,13 +787,13 @@
 	name = "Insulated gloves - vox"
 	id = "work_vox"
 	build_path = /obj/item/clothing/gloves/vox
-	materials = list(MATERIAL_LEATHER = 2000, "titanium" = 5000)
+	materials = list(MATERIAL_LEATHER = 2000, MATERIAL_TITANIUM = 5000)
 
 /datum/design/item/autotailor/accessories/gloves/eng
 	name = "Insulated gloves"
 	id = "eng"
 	build_path = /obj/item/clothing/gloves/insulated
-	materials = list(MATERIAL_LEATHER = 2000, "titanium" = 5000)	//not sure if this generates on roid, change if not
+	materials = list(MATERIAL_LEATHER = 2000, MATERIAL_TITANIUM = 5000)	//not sure if this generates on roid, change if not
 
 /datum/design/item/autotailor/accessories/gloves/forensic
 	name = "Forensic gloves"
@@ -1089,7 +1104,7 @@
 	name = "Fancy golden hat"
 	id = "gold_hat"
 	build_path = /obj/item/clothing/head/collectable/petehat
-	materials = list(MATERIAL_LEATHER = 500, "gold" = 5000)
+	materials = list(MATERIAL_LEATHER = 500, MATERIAL_GOLD = 5000)
 
 /datum/design/item/autotailor/accessories/hats/cowboy_brown
 	name = "Cowboy hat - brown"

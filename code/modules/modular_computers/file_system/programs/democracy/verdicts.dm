@@ -64,7 +64,7 @@
 		ui.set_initial_data(data)
 		ui.open()
 
-/datum/nano_module/program/executive_policy/Topic(href, href_list)
+/datum/nano_module/program/verdicts/Topic(href, href_list)
 	if(..())
 		return 1
 	. = SSnano.update_uis(src)

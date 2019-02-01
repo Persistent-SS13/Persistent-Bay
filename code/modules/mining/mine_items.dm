@@ -56,7 +56,7 @@
 /obj/item/weapon/pickaxe/hammer
 	name = "sledgehammer"
 	//icon_state = "sledgehammer" Waiting on sprite
-	desc = "A mining hammer made of reinforced metal. You feel like smashing your boss in the face with this."
+	desc = "A mining hammer made of reinforced metal."
 	damtype = DAM_BLUNT
 
 /obj/item/weapon/pickaxe/silver
@@ -154,7 +154,7 @@
 	name = "flags"
 	desc = "Some colourful flags."
 	singular_name = "flag"
-	amount = 10
+	amount = 1
 	max_amount = 10
 	icon = 'icons/obj/mining.dmi'
 

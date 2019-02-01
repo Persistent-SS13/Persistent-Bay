@@ -328,7 +328,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		var/title = assignment.name
 		if(records.rank > 1 && assignment.ranks.len >= records.rank-1)
 			title = assignment.ranks[records.rank-1]
-		return "Working as [title] for [faction.name]. Making [assignment.payscale]$ for every thirty minutes clocked in."
+		return "Working as [title] for [faction.name].<br>Making [assignment.payscale]$ for every thirty minutes clocked in."
 	else
 		return "No paying assignment."
 

@@ -53,7 +53,8 @@ other types of metals and chemistry for reagents).
 	..()
 	item_name = name
 	AssembleDesignInfo()
-
+	if((!id || id == "id") && name)
+		id = lowertext(name)
 //These procs are used in subtypes for assigning names and descriptions dynamically
 /datum/design/proc/AssembleDesignInfo()
 	AssembleDesignName()
@@ -61,10 +62,17 @@ other types of metals and chemistry for reagents).
 	return
 
 /datum/design/proc/AssembleDesignName()
-	if(!name && build_path)					//Get name from build path if posible
-		var/atom/movable/A = build_path
-		name = initial(A.name)
-		item_name = name
+	if((!name || !materials.len) && build_path)					//Get name from build path if posible
+		var/atom/movable/A = new build_path()
+		if(!name)
+			name = initial(A.name)
+			item_name = name
+			
+		if(istype(A, /obj/item))
+			var/obj/item/I = A
+			if(!materials || !materials.len)
+				if(I.matter && I.matter.len)
+					materials = I.matter.Copy()
 	return
 
 /datum/design/proc/AssembleDesignDesc()

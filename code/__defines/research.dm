@@ -11,6 +11,9 @@
 #define TECH_ARCANE "arcane"
 
 // Fabricator defines
+#define SHEETS *4000
+#define SHEET *4000
+
 #define PROTOLATHE	1
 #define CIRCUITFAB	2
 #define MECHFAB		3

@@ -1,5 +1,5 @@
 /obj/item/weapon/gun/projectile/revolver
-	name = "revolver"
+	name = ".357 revolver"
 	desc = "The Lumoco Arms HE Colt is a choice revolver for when you absolutely, positively need to put a hole in the other guy. Uses .357 ammo."
 	icon_state = "revolver"
 	item_state = "revolver"
@@ -38,7 +38,7 @@
 	return ..()
 
 /obj/item/weapon/gun/projectile/revolver/mateba
-	name = "mateba"
+	name = "mateba .50 revolver"
 	icon_state = "mateba"
 	caliber = ".50"
 	origin_tech = list(TECH_COMBAT = 2, TECH_MATERIAL = 2)
@@ -111,7 +111,7 @@
 	return 1
 
 /obj/item/weapon/gun/projectile/revolver/webley
-	name = "service revolver"
+	name = ".44 service revolver"
 	desc = "A rugged top break revolver based on the Webley Mk. VI model, with modern improvements. Uses .44 magnum rounds."
 	icon_state = "webley"
 	item_state = "webley"

@@ -2,6 +2,16 @@
 #define MODKIT_SUIT 2
 #define MODKIT_FULL 3
 
+/obj/item/device/modkit/unathi
+	name = "hardsuit modification kit (unathi)"
+	target_species = SPECIES_UNATHI
+
+/obj/item/device/modkit/vox
+	name = "hardsuit modification kit (vox)"
+	target_species = SPECIES_VOX
+
+
+
 /obj/item/device/modkit
 	name = "hardsuit modification kit"
 	desc = "A kit containing all the needed tools and parts to modify a hardsuit for another user."

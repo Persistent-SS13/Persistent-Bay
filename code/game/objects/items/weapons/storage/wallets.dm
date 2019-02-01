@@ -42,7 +42,6 @@
 	slot_flags = SLOT_ID
 
 	var/obj/item/weapon/card/id/front_id = null
-
 /obj/item/weapon/storage/wallet/leather
 	color = COLOR_SEDONA
 	matter = list(MATERIAL_LEATHER = 1000)

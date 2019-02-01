@@ -196,13 +196,13 @@
 /datum/design/item/engifab/engitools/simple/welder_mini
 	name = "Miniture welding tool"
 	id = "miniature_welding_tool"
-	build_path = /obj/item/weapon/weldingtool/mini/empty
+	build_path = /obj/item/weapon/tool/weldingtool/mini/empty
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_GLASS = 0.5 SHEET)
 
 /datum/design/item/engifab/engitools/weldertool
 	name = "Welding tool"
 	id = "welding_tool"
-	build_path = /obj/item/weapon/weldingtool/empty
+	build_path = /obj/item/weapon/tool/weldingtool/empty
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 1 SHEETS)
 
 /datum/design/item/engifab/engitools/weldingpack
@@ -253,7 +253,7 @@
 	name = "Brace jack"
 	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 2)
 	materials = list(MATERIAL_STEEL = 2 SHEETS)
-	build_path = /obj/item/weapon/crowbar/brace_jack
+	build_path = /obj/item/weapon/tool/crowbar/brace_jack
 
 /datum/design/item/engifab/engitools/adv/airlock_brace
 	name = "Airlock Brace"

@@ -284,7 +284,7 @@
 		if(istype(Obstacle, /obj/structure/window))
 			var/obj/structure/window/win = Obstacle
 			if(!win.reinf)
-				win.shatter()
+				win.kill()
 				if(istype(load, /mob/living/carbon/human))
 					var/mob/living/carbon/human/H = load
 					H.apply_damage(rand(1, 3), BRUTE)

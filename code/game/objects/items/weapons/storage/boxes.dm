@@ -22,6 +22,7 @@
 /obj/item/weapon/storage/box
 	name = "box"
 	desc = "It's just an ordinary box."
+	icon = 'icons/obj/items/storage/boxes.dmi'
 	icon_state = "box"
 	item_state = "syringe_kit"
 	max_storage_space = DEFAULT_BOX_STORAGE

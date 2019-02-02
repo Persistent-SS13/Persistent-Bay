@@ -280,6 +280,10 @@
 	return ..()
 
 /obj/vehicle/bike/Bump(atom/Obstacle)
+	if(istype(Obstacle, /obj/machinery/door/))
+		Obstacle.Bumped(load)
+		return
+   
 	if(move_delay <= starting_delay/2)
 
 		if(istype(Obstacle, /obj/structure/window))
@@ -401,7 +405,7 @@
 	if(usr.incapacitated()) return
 
 	if(!(usr.name in registered_names))
-		to_chat(usr, "<span class='warning'> \The [src] doesn't respond to your ID.</span>")
+		to_chat(usr, "<span class='warning'>\The [src] doesn't respond to your ID.</span>")
 		return
 
 	usr.visible_message("\The [usr] puts [kickstand ? "up" : "down"] \the [src]'s kickstand.")

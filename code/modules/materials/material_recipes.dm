@@ -55,7 +55,8 @@
 		new/datum/stack_recipe("high security airlock assembly", /obj/structure/door_assembly/door_assembly_highsecurity, 4, time = 50, one_per_turf = 1, on_floor = 1), \
 		new/datum/stack_recipe("emergency shutter", /obj/structure/firedoor_assembly, 4, time = 50, one_per_turf = 1, on_floor = 1), \
 		new/datum/stack_recipe("multi-tile airlock assembly", /obj/structure/door_assembly/multi_tile, 4, time = 50, one_per_turf = 1, on_floor = 1), \
-		new/datum/stack_recipe("keypad airlock assembly", /obj/structure/door_assembly/door_assembly_keyp, 4, time = 50, one_per_turf = 1, on_floor = 1),
+		new/datum/stack_recipe("keypad airlock assembly", /obj/structure/door_assembly/door_assembly_keyp, 4, time = 50, one_per_turf = 1, on_floor = 1), \
+		new/datum/stack_recipe("personal airlock assembly", /obj/structure/door_assembly/door_assembly_personal, 4, time = 50, one_per_turf = 1, on_floor = 1)
 
 		))
 	/*

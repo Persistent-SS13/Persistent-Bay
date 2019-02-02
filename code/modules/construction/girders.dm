@@ -81,13 +81,8 @@
 				return
 			if(UseMaterial(W, user, null, "You start applying the material.", null, null, 4))
 				to_chat(user, "<span class='notice'>You finish applying the material.</span>")
-				var/turf/simulated/wall/T = get_turf(src)
-				T.ChangeTurf(/turf/simulated/wall)
-				T.material = material
-				T.p_material = W:material
-				T.state = 0
-				T.update_material(1)
-				T.update_icon()
+				var/obj/item/stack/material/st = W
+				make_wall(st.material, FALSE)
 				qdel(src)
 				return
 			if(Screwdriver(W, user, 0))
@@ -151,14 +146,8 @@
 		if(7)
 			if(UseMaterial(W, user, 20, "You start applying the material to \the [src]", null, null, 4))
 				to_chat(user, "<span class='notice'>You apply the material to \the [src].</span>")
-				var/turf/simulated/wall/T = get_turf(src)
-				T.ChangeTurf(/turf/simulated/wall)
-				T.material = material
-				T.r_material = r_material
-				T.p_material = W:material
-				T.state = 0
-				T.update_material(1)
-				T.update_icon()
+				var/obj/item/stack/material/st = W
+				make_wall(st.material, TRUE)
 				qdel(src)
 				return
 			if(Weld(W, user))
@@ -166,6 +155,16 @@
 				state = 6
 				update_icon()
 				return
+
+/obj/structure/girder/proc/make_wall(var/material/mat, var/isrwall = FALSE)
+	var/turf/simulated/wall/T = get_turf(src)
+	T.ChangeTurf(/turf/simulated/wall)
+	T.material = material
+	T.r_material = isrwall? r_material : null
+	T.p_material = mat
+	T.state = 0
+	T.update_material(1)
+	T.update_icon()
 
 /obj/structure/girder/proc/update_material(var/update_Integrity)
 	if(!istype(material, /material))

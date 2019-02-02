@@ -2,7 +2,7 @@
 	plane = SPACE_PLANE
 	icon = 'icons/turf/space.dmi'
 	name = "\proper space"
-	icon_state = "white"
+	icon_state = "black"
 	dynamic_lighting = 0
 
 	temperature = T20C

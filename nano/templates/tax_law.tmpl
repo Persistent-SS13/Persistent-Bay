@@ -1,0 +1,100 @@
+<h2>Tax Policy</h2>
+<br><hr>
+<br>
+<h3>Tax Policy</h3><br><hr>
+If you make changes here make sure to finalize them in order to call a vote on the changes. You can only change either business or personal tax with one vote.
+{{:helper.link("Personal Income Tax", '', {'action' : 'change_tax', 'menu_target' : '1'}, data.taxee == 2 ? null : 'selected')}}	
+{{:helper.link("Business Income Tax", '', {'action' : 'change_tax', 'menu_target' : '2'}, data.taxee == 2 ? 'selected' : null)}}
+<h4>{{:data.tax}}</h4><br>
+<hr>
+<div class='item'>
+	<div class='itemLabel'>
+		Tax Type
+	</div>
+	<div class='itemContent'>
+		{{:data.tax_type}}
+	</div>
+</div>
+A flat tax is charged every time an account recieves funds. A progressive tax includes four brackets where tax is charged at different rates according to the amount of money in their account.
+{{if data.tax_type == 2}}
+	<hr>
+	<div class='item'>
+		<div class='itemLabel'>
+			Minimum Tax Rate
+		</div>
+		<div class='itemContent'>
+			{{:data.tax_prog1_rate}}
+		</div>
+	</div>
+	This tax will be charged if the account has less money than any other bracket requires.
+	<hr>
+	<div class='item'>
+		<div class='itemLabel'>
+			Second Bracket Amount
+		</div>
+		<div class='itemContent'>
+			{{:data.tax_prog2_amount}}
+		</div>
+	</div>
+	This is the amount of money in the account to qualify for this bracket.
+	<div class='item'>
+		<div class='itemLabel'>
+			Second Bracket Rate
+		</div>
+		<div class='itemContent'>
+			{{:data.tax_prog2_rate}}
+		</div>
+	</div>
+	This is the percent taken from recieved money when at this tax bracket.
+	<hr>
+	<div class='item'>
+		<div class='itemLabel'>
+			Third Bracket Amount
+		</div>
+		<div class='itemContent'>
+			{{:data.tax_prog3_amount}}
+		</div>
+	</div>
+	This is the amount of money in the account to qualify for this bracket.
+	<div class='item'>
+		<div class='itemLabel'>
+			Third Bracket Rate
+		</div>
+		<div class='itemContent'>
+			{{:data.tax_prog3_rate}}
+		</div>
+	</div>
+	This is the percent taken from recieved money when at this tax bracket.
+	<hr>
+	<div class='item'>
+		<div class='itemLabel'>
+			Fourth Bracket Amount
+		</div>
+		<div class='itemContent'>
+			{{:data.tax_prog4_amount}}
+		</div>
+	</div>
+	This is the amount of money in the account to qualify for this bracket.
+	<div class='item'>
+		<div class='itemLabel'>
+			Fourth Bracket Rate
+		</div>
+		<div class='itemContent'>
+			{{:data.tax_prog4_rate}}
+		</div>
+	</div>
+	This is the percent taken from recieved money when at this tax bracket.
+	<hr>
+	
+{{else}}
+	<div class='item'>
+		<div class='itemLabel'>
+			Flat Tax Rate
+		</div>
+		<div class='itemContent'>
+			{{:data.tax_flat_rate}}
+		</div>
+	</div>
+	This tax will be charged every time money comes into the account.
+{{/if}}
+

@@ -151,7 +151,7 @@ atom/proc/add_fibers(mob/living/carbon/human/M)
 /mob/living/carbon/get_full_print()
 	if (!dna || (mFingerprints in mutations))
 		return FALSE
-	return md5(dna.uni_identity)
+	return md5(dna.real_name+"+fingerprint")
 
 /mob/living/carbon/human/get_full_print(ignoregloves)
 	if(!..())
@@ -170,7 +170,7 @@ atom/proc/add_fibers(mob/living/carbon/human/M)
 
 /obj/item/organ/external/hand/get_fingerprint()
 	if(dna && !is_stump())
-		return md5(dna.uni_identity)
+		return md5(dna.real_name+"+fingerprint")
 
 /obj/item/organ/external/afterattack(atom/A, mob/user, proximity)
 	..()

@@ -14,7 +14,7 @@
 	. = ..()
 	for(var/obj/structure/lattice/LAT in loc)
 		if(LAT != src)
-			crash_with("Found multiple lattices at '[log_info_line(loc)]'")
+			log_debug("Found multiple lattices at '[log_info_line(loc)]'. Deleting extra lattices!")
 			qdel(LAT)
 	icon = 'icons/obj/smoothlattice.dmi'
 	icon_state = "latticeblank"

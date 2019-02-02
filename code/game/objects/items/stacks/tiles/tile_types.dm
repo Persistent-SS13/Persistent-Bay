@@ -69,6 +69,12 @@
 /obj/item/stack/tile/floor_white/fifty
 	amount = 50
 
+/obj/item/stack/tile/floor_white/mono
+	name = "white floor mono tile"
+	singular_name = "white floor mono tile"
+	icon_state = "monotile"
+	color = COLOR_WHITE
+
 /obj/item/stack/tile/floor_dark
 	name = "dark floor tile"
 	singular_name = "dark floor tile"
@@ -76,6 +82,14 @@
 	matter = list(MATERIAL_PLASTEEL = 937.5)
 
 /obj/item/stack/tile/floor_dark/fifty
+	amount = 50
+
+/obj/item/stack/tile/floor_dark/mono
+	name = "dark floor mono tile"
+	singular_name = "dark floor mono tile"
+	icon_state = "monotile"
+	color = COLOR_DARK_GRAY
+/obj/item/stack/tile/floor_dark/mono/fifty
 	amount = 50
 
 /obj/item/stack/tile/floor_freezer
@@ -172,3 +186,96 @@
 
 /obj/item/stack/tile/carpetred/fifty
 	amount = 50
+
+//
+//shuttle flooring
+//
+/obj/item/stack/tile/shuttle/blue
+	name = "blue shuttle floor"
+	desc = "Blue shuttle flooring."
+	singular_name = "blue shuttle tile"
+	icon_state = "tile_blue_shuttle"
+/obj/item/stack/tile/shuttle/blue/fifty
+	amount = 50
+
+/obj/item/stack/tile/shuttle/yellow
+	name = "yellow shuttle floor"
+	desc = "Yellow shuttle flooring."
+	singular_name = "yellow shuttle tile"
+	icon_state = "tile_yellow_shuttle"
+/obj/item/stack/tile/shuttle/yellow/fifty
+	amount = 50
+
+/obj/item/stack/tile/shuttle/white
+	name = "white shuttle floor"
+	desc = "White shuttle flooring."
+	singular_name = "white shuttle tile"
+	icon_state = "tile_white_shuttle"
+/obj/item/stack/tile/shuttle/white/fifty
+	amount = 50
+
+/obj/item/stack/tile/shuttle/red
+	name = "red shuttle floor"
+	desc = "Red shuttle flooring."
+	singular_name = "red shuttle tile"
+	icon_state = "tile_red_shuttle"
+/obj/item/stack/tile/shuttle/red/fifty
+	amount = 50
+
+/obj/item/stack/tile/shuttle/purple
+	name = "purple shuttle floor"
+	desc = "Purple shuttle flooring."
+	singular_name = "purple shuttle tile"
+	icon_state = "tile_purple_shuttle"
+/obj/item/stack/tile/shuttle/purple/fifty
+	amount = 50
+
+/obj/item/stack/tile/shuttle/darkred
+	name = "dark red shuttle floor"
+	desc = "Dark red shuttle flooring."
+	singular_name = "dark red shuttle tile"
+	icon_state = "tile_darkred_shuttle"
+/obj/item/stack/tile/shuttle/darkred/fifty
+	amount = 50
+
+/obj/item/stack/tile/shuttle/black
+	name = "black shuttle floor"
+	desc = "Black shuttle flooring."
+	singular_name = "black shuttle tile"
+	icon_state = "tile_black_shuttle"
+/obj/item/stack/tile/shuttle/black/fifty
+	amount = 50
+
+/obj/item/stack/tile/shuttle/plates
+	name = "plated shuttle floor"
+	desc = "Plated flooring."
+	singular_name = "plated shuttle tile"
+	icon_state = "tile_plated_shuttle"
+/obj/item/stack/tile/shuttle/plates/fifty
+	amount = 50
+
+//
+// Misc
+//
+/obj/item/stack/tile/concrete
+	name = "concrete"
+	singular_name = "concrete"
+	desc = "A piece of concrete flooring. It is the same size as a normal floor tile!"
+	icon_state = "tile-concrete"
+	matter = list(MATERIAL_SAND = 900)
+/obj/item/stack/tile/concrete/fifty
+	amount = 50
+
+/obj/item/stack/tile/rockvault
+	name = "vault tiles"
+	singular_name = "vault tile"
+	icon_state = "tile_rockvault"
+	matter = list(MATERIAL_PLASTEEL = 900)
+/obj/item/stack/tile/rockvault
+	amount = 50
+
+/obj/item/stack/tile/sandstonevault
+	name = "sandstone vault tiles"
+	singular_name = "sandstone vault tile"
+	icon_state = "tile-sandstonevault"
+	matter = list(MATERIAL_SANDSTONE = 900)

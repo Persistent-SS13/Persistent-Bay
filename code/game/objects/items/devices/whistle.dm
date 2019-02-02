@@ -6,7 +6,7 @@
 	w_class = ITEM_SIZE_TINY
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 
-	var/use_message = "Halt! Security!"
+	var/use_message = "Halt!"
 	var/spamcheck = 0
 	var/insults
 
@@ -21,7 +21,7 @@
 
 	var/new_message = input(usr, "Please enter new message (leave blank to reset).") as text
 	if(!new_message || new_message == "")
-		use_message = "Halt! Security!"
+		use_message = "Halt!"
 	else
 		use_message = capitalize(copytext(sanitize(new_message), 1, MAX_MESSAGE_LEN))
 

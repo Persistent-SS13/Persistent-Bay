@@ -2,12 +2,7 @@
 
 /obj/structure/closet/secure_closet/miner
 	name = "miner's equipment"
-	icon_state = "miningsec1"
-	icon_closed = "miningsec"
-	icon_locked = "miningsec1"
-	icon_opened = "miningsecopen"
-	icon_broken = "miningsecbroken"
-	icon_off = "miningsecoff"
+	closet_appearance = /decl/closet_appearance/secure_closet/mining
 	req_access = list(access_mining)
 /*
 /obj/structure/closet/secure_closet/miner/New()
@@ -61,7 +56,7 @@
 /obj/item/weapon/pickaxe/hammer
 	name = "sledgehammer"
 	//icon_state = "sledgehammer" Waiting on sprite
-	desc = "A mining hammer made of reinforced metal. You feel like smashing your boss in the face with this."
+	desc = "A mining hammer made of reinforced metal."
 
 /obj/item/weapon/pickaxe/silver
 	name = "silver pickaxe"
@@ -153,25 +148,12 @@
 	throwforce = 7.0
 	w_class = ITEM_SIZE_SMALL
 
-
-/**********************Mining car (Crate like thing, not the rail car)**************************/
-
-/obj/structure/closet/crate/miningcar
-	desc = "A mining car. This one doesn't work on rails, but has to be dragged."
-	name = "Mining car (not for rails)"
-	icon = 'icons/obj/storage.dmi'
-	icon_state = "miningcar"
-	density = 1
-	icon_opened = "miningcaropen"
-	icon_closed = "miningcar"
-
 // Flags.
-
 /obj/item/stack/flag
 	name = "flags"
 	desc = "Some colourful flags."
 	singular_name = "flag"
-	amount = 10
+	amount = 1
 	max_amount = 10
 	icon = 'icons/obj/mining.dmi'
 

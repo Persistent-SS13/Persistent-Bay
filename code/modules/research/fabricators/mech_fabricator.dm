@@ -706,11 +706,6 @@
 	id = "mech_drill"
 	build_path = /obj/item/mecha_parts/mecha_equipment/tool/drill
 
-/datum/design/item/mecha/extinguisher
-	name = "Extinguisher"
-	id = "extinguisher"
-	build_path = /obj/item/mecha_parts/mecha_equipment/tool/extinguisher
-
 /datum/design/item/mecha/cable_layer
 	name = "Cable layer"
 	id = "mech_cable_layer"
@@ -903,3 +898,16 @@
 	materials = list(MATERIAL_STEEL = 750, MATERIAL_GLASS = 750)
 	build_path = /obj/item/device/flash/synthetic
 	category = "Misc"
+
+////////////////////////////////////////////////////
+//////////////////////VEHICLES//////////////////////
+////////////////////////////////////////////////////
+
+/datum/design/item/mechfab/bike
+	name = "Motor bike"
+	id = "m_bike"
+	req_tech = list(TECH_POWER = 1, TECH_ENGINEERING = 1, TECH_MATERIAL = 1)
+	materials = list(MATERIAL_STEEL = 40000, MATERIAL_TUNGSTEN = 20000, MATERIAL_GLASS = 20000, MATERIAL_GOLD = 20000)
+	build_path = /obj/vehicle/bike
+	category = "Vehicles"
+	time = 50

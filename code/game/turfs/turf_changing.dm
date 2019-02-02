@@ -137,6 +137,6 @@
 
 
 //No idea why resetting the base appearence from New() isn't enough, but without this it doesn't work
-/turf/simulated/shuttle/wall/corner/transport_properties_from(turf/simulated/other)
+/turf/simulated/wall/shuttle/corner/transport_properties_from(turf/simulated/other)
 	. = ..()
 	reset_base_appearance()

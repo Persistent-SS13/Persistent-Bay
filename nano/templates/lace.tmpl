@@ -1,30 +1,140 @@
-{{if data.lacemob}}
-	<h2>Your conciousness is being held in this device.</h2>
-	<br><br>
-	You may turn on the emergency broadcast sensor, which will make this device and its coordinates appear on every crew sensor.<br><br>
-	You may also release your conciousness from the lace. This will allow you leave this existence and finally die. ((You will be returned to the character selection screen but your character will be unselectable.)))
-	<br><br>
-	{{:helper.link("Sensor off", '', {'action' : 'sensor_off'}, !data.sensor ? 'selected' : null)}}{{:helper.link("Sensor on", '', {'action' : 'sensor_on'}, data.sensor ? 'selected' : null)}}<br><br>
-	{{:helper.link("Accept Death, Release Conciousness.", 'cross', {'action' : 'die'})}}
-{{/if}}
-{{if data.faction_name}}
-	<h2>Connected to {{:data.faction_name}}</h2>
-	<br><br>
-	<h4>Duty Status: {{:data.duty_status}}</h4><br>
-	{{:helper.link("Off Duty", '', {'action' : 'off_duty'}, !data.duty_status_num ? 'selected' : null)}}{{:helper.link("On Duty", '', {'action' : 'on_duty'}, data.duty_status_num ? 'selected' : null)}}
-	<br><br>{{:helper.link("Disconnect from employment network", 'cross', {'action' : 'disconnect'})}}
-{{else}}
-	{{if data.business_name}}
-		<h2>Connected to {{:data.business_name}} (business Network)</h2>
-		<br><br>
-		{{:helper.link("Clock out", '', {'action' : 'clock_out'},  null)}}
-	{{else}}
-		<h2>Connect to Employment Network</h2>
-		<br><br>
-		<h4>Available networks: </h4><br><br>
-		{{for data.potential}}
-			{{:helper.link(value.name, 'cross', {'action' : 'connect', 'selected_ref' : value.ref})}}
-			<br><br>
-		{{/for}}
+<h2>Neural Lace Control Panel</h2>
+<br><hr>
+{{if data.living}}
+	{{:helper.link("General Info", 'wrench', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
+	{{:helper.link("Money Account", 'locked', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
+	{{:helper.link("Nexus Elections System", 'locked', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
+	{{if data.menu == 1}}
+		<h3>General Info</h3><br>
+		<div class='item'>
+			<div class='itemLabel'>
+				Work Status:
+			</div>
+			<div class='itemContent'>
+				{{:data.work_status}}
+			</div>
+		</div>
+		{{if data.clock_outable}}
+			<div class='item'>
+				<div class='itemLabel'>
+					Clock Out:
+				</div>
+				<div class='itemContent'>
+					{{:helper.link("Clock out", '', {'action' : 'clock_out'},  null)}}
+				</div>
+			</div>
+		{{/if}}
+		<h3>Available Employers</h3><br>
+		<div class='block'>
+			{{for data.potential}}
+				 {{:helper.link(value.name, '', {'action' : 'connect', 'selected_ref' : value.ref}, value.selected ? 'selected' : null)}}
+				<br><br>
+			{{/for}}
+		</div>
+		<br><hr>
+		<div class='item'>
+			<div class='itemLabel'>
+				Email:
+			</div>
+			<div class='itemContent'>
+				{{:data.email_status}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Citizenship Level:
+			</div>
+			<div class='itemContent'>
+				{{:data.citizenship_status}}
+			</div>
+		</div>
 	{{/if}}
+	{{if data.menu == 2}}
+		<h3>Money Account</h3><br>
+		<div class='item'>
+			<div class='itemLabel'>
+				Account Balance:
+			</div>
+			<div class='itemContent'>
+				{{:data.account_balance}}$$
+			</div>
+		</div>
+		<br><br>
+		<h4>Recent Transactions</h4><hr><br>
+		{{:helper.link('Newer Page', 'bullet', {'page_down' : 1}, data.page_down ? null : 'disabled')}}{{:helper.link('Older Page', 'bullet', {'page_up' : 1}, data.page_up ? null : 'disabled')}}<br><br>
+		<div class="statusDisplay" style="overflow: auto;">
+			{{if data.transactions}}
+				<table style='width: 100%'>
+				  <thead>
+					<tr>
+					  <th><b>Timestamp</b></th>
+					  <th><b>Target</b></th>
+					  <th><b>Reason</b></th>
+					  <th><b>Ethericoin</b></th>
+					</th>
+				  </thead>
+				  <tbody>
+					  {{for data.transactions}}
+						<tr>
+							<td>{{:value.date}} {{:value.time}}</td>
+							<td>{{:value.target_name}}</td>
+							<td>{{:value.purpose}}</td>
+							<td>$${{:value.amount}}</td>
+						</tr>
+					  {{/for}}
+				  </tbody>
+				</table>
+			{{else}}
+				<span class='alert'>This account has no financial transactions on record.</span>
+			{{/if}}
+		</div>
+	{{/if}}
+	{{if data.menu == 3}}
+		<h3>Nexus Elections System</h3><br><hr>
+		{{if data.current_election}}
+			{{if data.selected_ballot}}
+				<h4>{{:data.election_name}} ({:data.ballot_name}})</h4><br>
+				{{:helper.link('Back', '', {'action' : 'deselect_ballot'})}}<br><br><hr>
+				{{for data.candidates}}
+					<b>{{:value.name}}</b><br>
+					<i>{{:value.pitch}}</i><br><br>
+					Vote for {{:helper.link(value.name, '', {'action' : 'vote', 'ref' : value.ref}, data.voted ? 'disabled' : null)}}<br><br><hr>
+				{{/for}}
+			{{else}}
+				<h4>{{:data.election_name}}</h4><br>
+				{{for data.ballots}}
+					{{:helper.link(value.name, '', {'action' : 'select_ballot', 'ref' : value.ref})}}
+				{{/for}}
+			{{/if}}
+		{{else}}
+			Next election is saturday.
+		{{/if}}
+	{{/if}}
+	
+
+{{else}}
+	<h3>Death Controls</h3><br>
+	Your conciousness burns inside this mechanical prison. You review your options.<br>
+	<div class='item'>
+		<div class='itemLabel'>
+			{{:helper.link("Accept Death, Move on", '', {'action' : 'die'},  null)}}
+		</div>
+		<div class='itemContent'>
+			This allows your conciousness to depart from the lace. You will permanently depart from this universe.
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			{{:helper.link("Teleport back to Nexus Lace Storage", '', {'action' : 'teleport'}, data.can_teleport ? null : 'disabled')}}
+		</div>
+		<div class='itemContent'>
+			After enough time, your lace will be able to signal back to Nexus to be teleported to the lace storage where you can request cloning or safely rest. Being inside an LMI delays this process.
+			{{if data.can_teleport}}
+				Teleport ready!
+			{{else}}
+				{{:data.time_teleport}} minutes to teleport.
+			{{/if}}
+		</div>
+	</div>
+	
 {{/if}}

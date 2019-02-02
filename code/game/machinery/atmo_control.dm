@@ -23,6 +23,7 @@
 	// 128 for reagent gas concentration
 
 	var/datum/radio_frequency/radio_connection
+	var/radio_filter = RADIO_ATMOSIA
 
 /obj/machinery/air_sensor/update_icon()
 	icon_state = "gsensor[on]"
@@ -68,13 +69,13 @@
 				signal.data["hydrogen"] = 0
 				signal.data["reagent"] = 0
 		signal.data["sigtype"]="status"
-		radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
+		radio_connection.post_signal(src, signal, filter = radio_filter)
 
 
 /obj/machinery/air_sensor/proc/set_frequency(new_frequency)
 	radio_controller.remove_object(src, frequency)
 	frequency = new_frequency
-	radio_connection = radio_controller.add_object(src, frequency, RADIO_ATMOSIA)
+	radio_connection = radio_controller.add_object(src, frequency, radio_filter)
 
 /obj/machinery/air_sensor/Initialize()
 	set_frequency(frequency)
@@ -97,6 +98,7 @@ obj/machinery/air_sensor/Destroy()
 
 	var/list/sensor_information = list()
 	var/datum/radio_frequency/radio_connection
+	var/radio_filter = RADIO_ATMOSIA
 	circuit = /obj/item/weapon/circuitboard/air_management
 
 obj/machinery/computer/general_air_control/Destroy()
@@ -168,7 +170,7 @@ obj/machinery/computer/general_air_control/Destroy()
 /obj/machinery/computer/general_air_control/proc/set_frequency(new_frequency)
 	radio_controller.remove_object(src, frequency)
 	frequency = new_frequency
-	radio_connection = radio_controller.add_object(src, frequency, RADIO_ATMOSIA)
+	radio_connection = radio_controller.add_object(src, frequency, radio_filter)
 
 /obj/machinery/computer/general_air_control/Initialize()
 	set_frequency(frequency)
@@ -211,9 +213,11 @@ obj/machinery/computer/general_air_control/Destroy()
 	if(output_info)
 		var/power = (output_info["power"])
 		var/output_pressure = output_info["internal"]
+		var/pump_dir = output_info["direction"]
 		output += {"<B>Output</B>: [power?("Open"):("On Hold")] <A href='?src=\ref[src];out_refresh_status=1'>Refresh</A><BR>
-Max Output Pressure: [output_pressure] kPa<BR>"}
-		output += "Command: <A href='?src=\ref[src];out_toggle_power=1'>Toggle Power</A> <A href='?src=\ref[src];out_set_pressure=1'>Set Pressure</A><BR>"
+<B>Direction</B>: [pump_dir]<BR>
+<B>Max Output Pressure</B>: [output_pressure] kPa<BR>"}
+		output += "Command: <A href='?src=\ref[src];out_toggle_power=1'>Toggle Power</A> <A href='?src=\ref[src];out_toggle_dir=1'>Toggle Dir</A> <A href='?src=\ref[src];out_set_pressure=1'>Set Pressure</A><BR>"
 
 	else
 		output += "<FONT color='red'>ERROR: Can not find output port</FONT> <A href='?src=\ref[src];out_refresh_status=1'>Search</A><BR>"
@@ -279,16 +283,21 @@ Max Output Pressure: [output_pressure] kPa<BR>"}
 
 	if(href_list["out_toggle_power"])
 		output_info = null
-		signal.data = list ("tag" = output_tag, "power_toggle" = 1)
+		signal.data = list ("tag" = output_tag, "power_toggle" = 1, "checks" = 3)
+		. = 1
+
+	if(href_list["out_toggle_dir"])
+		output_info = null
+		signal.data = list ("tag" = output_tag, "direction_toggle" = 1, "checks" = 3)
 		. = 1
 
 	if(href_list["out_set_pressure"])
 		output_info = null
-		signal.data = list ("tag" = output_tag, "set_internal_pressure" = "[pressure_setting]")
+		signal.data = list ("tag" = output_tag, "set_internal_pressure" = "[pressure_setting]", "checks" = 3)
 		. = 1
 
 	signal.data["sigtype"]="command"
-	radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
+	radio_connection.post_signal(src, signal, filter = radio_filter)
 
 	spawn(5)
 		src.updateUsrDialog()
@@ -407,7 +416,7 @@ Min Core Pressure: [pressure_limit] kPa<BR>"}
 		. = 1
 
 	signal.data["sigtype"]="command"
-	radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
+	radio_connection.post_signal(src, signal, filter = radio_filter)
 
 	spawn(5)
 		src.updateUsrDialog()
@@ -450,7 +459,7 @@ Min Core Pressure: [pressure_limit] kPa<BR>"}
 			"sigtype"="command"
 		)
 
-		radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
+		radio_connection.post_signal(src, signal, filter = radio_filter)
 
 	..()
 
@@ -503,7 +512,7 @@ Rate: [volume_rate] L/sec<BR>"}
 			"status" = 1,
 			"sigtype"="command"
 		)
-		radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
+		radio_connection.post_signal(src, signal, filter = radio_filter)
 
 	if(href_list["toggle_automation"])
 		automation = !automation
@@ -522,7 +531,7 @@ Rate: [volume_rate] L/sec<BR>"}
 			"sigtype"="command"
 		)
 
-		radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
+		radio_connection.post_signal(src, signal, filter = radio_filter)
 
 	if(href_list["injection"])
 		if(!radio_connection)
@@ -537,7 +546,7 @@ Rate: [volume_rate] L/sec<BR>"}
 			"sigtype"="command"
 		)
 
-		radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
+		radio_connection.post_signal(src, signal, filter = radio_filter)
 
 
 

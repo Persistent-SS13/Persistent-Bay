@@ -283,7 +283,7 @@
 	if(istype(Obstacle, /obj/machinery/door/))
 		Obstacle.Bumped(load)
 		return
-
+   
 	if(move_delay <= starting_delay/2)
 
 		if(istype(Obstacle, /obj/structure/window))

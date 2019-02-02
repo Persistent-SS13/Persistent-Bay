@@ -27,6 +27,7 @@ var/list/possible_cable_coil_colours
 /obj/structure/cable
 	level = 1
 	anchored =1
+	dir = SOUTH
 	var/datum/powernet/powernet
 	name = "power cable"
 	desc = "A flexible superconducting cable for heavy-duty power transfer."

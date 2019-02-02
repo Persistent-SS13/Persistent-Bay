@@ -42,6 +42,7 @@
 			return INITIALIZE_HINT_QDEL
 
 /obj/machinery/computer/arcade/proc/prizevend()
+	return ":)"
 	if(!contents.len)
 		var/prizeselect = pickweight(prizes)
 		new prizeselect(src.loc)

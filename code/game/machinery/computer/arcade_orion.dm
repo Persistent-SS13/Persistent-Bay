@@ -484,6 +484,7 @@
 	icon_state = "ship"
 	w_class = ITEM_SIZE_SMALL
 	var/active = 0 //if the ship is on
+/**
 /obj/item/weapon/orion_ship/examine(mob/user)
 	. = ..()
 	if(!(in_range(user, src)))
@@ -510,7 +511,7 @@
 	src.visible_message("<span class='danger'>[src] explodes!</span>")
 	explosion(src.loc, 1,2,4)
 	qdel(src)
-
+**/
 #undef ORION_TRAIL_RAIDERS
 #undef ORION_TRAIL_FLUX
 #undef ORION_TRAIL_ILLNESS

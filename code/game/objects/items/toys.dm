@@ -108,7 +108,7 @@
 
 /obj/item/toy/balloon/nanotrasen
 	name = "\improper 'motivational' balloon"
-	desc = "Man, I love Nanotrasen soooo much. I use only NT products. You have NO idea."
+	desc = "A balloon imprinted with the nanotrasen logo."
 	icon_state = "ntballoon"
 	item_state = "ntballoon"
 

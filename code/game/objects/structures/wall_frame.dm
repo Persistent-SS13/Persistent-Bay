@@ -12,24 +12,44 @@
 	density = 1
 	throwpass = 1
 	layer = TABLE_LAYER
-	color = COLOR_GUNMETAL
 
-	var/damage = 0
-	var/maxhealth = 10
-	var/health = 10
+	var/health = 100
+	var/paint_color
 	var/stripe_color
 
 	blend_objects = list(/obj/machinery/door, /turf/simulated/wall) // Objects which to blend with
 	noblend_objects = list(/obj/machinery/door/window)
+	var/material/material = MATERIAL_STEEL
 
-/obj/structure/wall_frame/New(var/new_loc)
+/obj/structure/wall_frame/New(var/new_loc, var/materialtype)
 	..(new_loc)
+
+	if(!materialtype)
+		materialtype = MATERIAL_STEEL
+	material = SSmaterials.get_material_by_name(materialtype)
+	health = material.integrity
 
 	update_connections(1)
 	update_icon()
 
-/obj/structure/wall_frame/Initialize()
-	. = ..()
+/obj/structure/wall_frame/examine(mob/user)
+	. = ..(user)
+
+	if(!.)
+		return
+
+	if(health == material.integrity)
+		to_chat(user, "<span class='notice'>It seems to be in fine condition.</span>")
+	else
+		var/dam = health / material.integrity
+		if(dam <= 0.3)
+			to_chat(user, "<span class='notice'>It's got a few dents and scratches.</span>")
+		else if(dam <= 0.7)
+			to_chat(user, "<span class='warning'>A few pieces of panelling have fallen off.</span>")
+		else
+			to_chat(user, "<span class='danger'>It's nearly falling to pieces.</span>")
+	if(paint_color)
+		to_chat(user, "<span class='notice'>It has a smooth coat of paint applied.</span>")
 
 /obj/structure/wall_frame/attackby(var/obj/item/weapon/W, var/mob/user)
 	src.add_fingerprint(user)
@@ -115,6 +135,8 @@
 	overlays.Cut()
 	var/image/I
 
+	var/new_color = (paint_color ? paint_color : material.icon_colour)
+	color = new_color
 
 	for(var/i = 1 to 4)
 		if(other_connections[i] != "0")
@@ -132,11 +154,7 @@
 			I.color = stripe_color
 			overlays += I
 
-/obj/structure/wall_frame/titanium
-	color = COLOR_TITANIUM
-
-/obj/structure/wall_frame/hull
-	color = COLOR_HULL
+	..()
 
 /obj/structure/wall_frame/hull/Initialize()
 	. = ..()
@@ -150,8 +168,8 @@
 				break
 		if(spacefacing)
 			var/bleach_factor = rand(10,50)
-			color = adjust_brightness(color, bleach_factor)
-	update_icon()
+			paint_color = adjust_brightness(paint_color, bleach_factor)
+		update_icon()
 
 /obj/structure/wall_frame/bullet_act(var/obj/item/projectile/Proj)
 	var/proj_damage = Proj.get_structure_damage()
@@ -167,20 +185,24 @@
 	var/tforce = O.throwforce * (speed/THROWFORCE_SPEED_DIVISOR)
 	if (tforce < 15)
 		return
-
 	take_damage(tforce)
 
+/obj/structure/wall_frame/proc/take_damage(damage)
+	health -= damage
+	if(health <= 0)
+		dismantle()
+
 /obj/structure/wall_frame/proc/dismantle()
-	new /obj/item/stack/material/steel(get_turf(src))
+	if(material)
+		material.place_sheet(get_turf(src), 2)
 	qdel(src)
 
-/obj/structure/wall_frame/proc/take_damage(dam)
-	if(dam)
-		damage = max(0, damage + dam)
-		update_damage()
-	return
+//Subtypes
+/obj/structure/wall_frame/standard
+	paint_color = COLOR_GUNMETAL
 
-/obj/structure/wall_frame/proc/update_damage()
-	if(damage >= 150)
-		dismantle()
-	return
+/obj/structure/wall_frame/titanium
+	material = MATERIAL_TITANIUM
+
+/obj/structure/wall_frame/hull
+	paint_color = COLOR_HULL

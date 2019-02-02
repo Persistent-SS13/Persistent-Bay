@@ -513,7 +513,6 @@
 				for(var/b_type in BLEND_OBJECTS)
 					if( istype(O, b_type))
 						success = 1
-
 					if(success)
 						break
 				if(success)
@@ -521,4 +520,4 @@
 
 		if(success)
 			dirs |= direction
-	connections = dirs
+	connections = dirs_to_corner_states(dirs)

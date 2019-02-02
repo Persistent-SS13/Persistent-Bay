@@ -1,7 +1,7 @@
 /obj/item/weapon/paper_bin
 	name = "paper bin"
 	icon = 'icons/obj/bureaucracy.dmi'
-	icon_state = "paper_bin1"
+	icon_state = "paper_bin0"
 	item_state = "sheet-metal"
 	randpixel = 0
 	throwforce = 1
@@ -9,7 +9,8 @@
 	throw_speed = 3
 	throw_range = 7
 	layer = BELOW_OBJ_LAYER
-	var/amount = 30					//How much paper is in the bin.
+	var/amount = 0				//How much paper is in the bin.
+	var/carbon_amount
 	var/list/papers = new/list()	//List of papers put in the bin for reference.
 
 
@@ -78,10 +79,17 @@
 
 /obj/item/weapon/paper_bin/attackby(obj/item/weapon/i as obj, mob/user as mob)
 	if(istype(i, /obj/item/weapon/paper))
-		user.drop_item()
-		i.forceMove(src)
-		to_chat(user, "<span class='notice'>You put [i] in [src].</span>")
-		papers.Add(i)
+		var/obj/item/weapon/paper/paper = i
+		if(paper.info && paper.info != "")
+			user.drop_item()
+			i.forceMove(src)
+			to_chat(user, "<span class='notice'>You put [i] in [src].</span>")
+			papers.Add(i)
+		else
+			user.drop_item()
+			i.loc = null
+			to_chat(user, "<span class='notice'>You put [i] in [src].</span>")
+			qdel(i)
 		update_icon()
 		amount++
 	else if(istype(i, /obj/item/weapon/paper_bundle))

@@ -285,21 +285,21 @@ Class Procs:
 
 /obj/machinery/attack_hand(mob/user as mob)
 	if(inoperable(MAINT))
-		return 1
+		return TRUE
 	if(user.lying || user.stat)
-		return 1
+		return TRUE
 	if (!(istype(usr, /mob/living/carbon/human) || istype(usr, /mob/living/silicon)))
 		to_chat(usr, SPAN_WARNING("You don't have the dexterity to do this!"))
-		return 1
+		return TRUE
 
 	if (ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if(H.getBrainLoss() >= 55)
 			visible_message(SPAN_WARNING("[H] stares cluelessly at \the [src]."))
-			return 1
+			return TRUE
 		else if(prob(H.getBrainLoss()))
 			to_chat(user, SPAN_WARNING("You momentarily forget how to use \the [src]."))
-			return 1
+			return TRUE
 
 	return ..()
 
@@ -527,6 +527,7 @@ Class Procs:
 		return
 	return OnTopic(usr, signal.data)
 
+//Used to generate a id_tag that would be unique to the machine at that specific coordinate
 /obj/machinery/proc/make_loc_string_id(var/prefix)
 	return "[prefix]([x]:[y]:[z])"
 

@@ -193,6 +193,9 @@
 	anchored = new_anchored
 	update_icon()
 
+/obj/proc/isanchored()
+	return anchored
+
 //Whether object can be damaged/destroyed
 /obj/proc/isdamageable()
 	return obj_flags & OBJ_FLAG_DAMAGEABLE

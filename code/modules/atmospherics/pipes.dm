@@ -33,11 +33,11 @@
 	//Return null if parent should stop checking other pipes. Recall: qdel(src) will by default return null
 
 	return 1
-	
+
 /obj/machinery/atmospherics/pipe/after_load()
 	..()
 	build_network()
-	
+
 /obj/machinery/atmospherics/pipe/return_air()
 	if(!parent)
 		parent = new /datum/pipeline()
@@ -179,10 +179,14 @@
 	alpha = 255
 
 	switch(dir)
-		if(SOUTH || NORTH)
+		if(SOUTH)
 			initialize_directions = SOUTH|NORTH
-		if(EAST || WEST)
+		if(NORTH)
+			initialize_directions = NORTH|SOUTH
+		if(EAST)
 			initialize_directions = EAST|WEST
+		if(WEST)
+			initialize_directions = WEST|EAST
 		if(NORTHEAST)
 			initialize_directions = NORTH|EAST
 		if(NORTHWEST)
@@ -220,6 +224,7 @@
 	else if(pressure_difference > fatigue_pressure)
 		//TODO: leak to turf, doing pfshhhhh
 		if(prob(5))
+			log_debug("[src] at [x],[y],[z] bursted open from pressure difference of [pressure_difference] kpa!")
 			burst()
 
 	else return 1
@@ -235,10 +240,10 @@
 	qdel(src)
 
 /obj/machinery/atmospherics/pipe/simple/proc/normalize_dir()
-	if(dir==3)
-		set_dir(1)
-	else if(dir==12)
-		set_dir(4)
+	if(dir == (NORTH | SOUTH))
+		set_dir(NORTH)
+	else if(dir == (EAST | WEST))
+		set_dir(EAST)
 
 /obj/machinery/atmospherics/pipe/simple/Destroy()
 	if(node1)
@@ -278,6 +283,7 @@
 			if (meter.target == src)
 				new /obj/item/pipe_meter(T)
 				qdel(meter)
+		log_debug("[src]([x],[y],[z]) was deleted in update_icon() because both its nodes are null!")
 		qdel(src)
 	else if(node1 && node2)
 		overlays += icon_manager.get_atmos_icon("pipe", , pipe_color, "[pipe_icon]intact[icon_connect_type]")
@@ -299,7 +305,7 @@
 	var/node2_dir
 
 	for(var/direction in GLOB.cardinal)
-		if(direction&initialize_directions)
+		if(direction & initialize_directions)
 			if (!node1_dir)
 				node1_dir = direction
 			else if (!node2_dir)
@@ -317,6 +323,7 @@
 				break
 
 	if(!node1 && !node2)
+		log_debug("[src]([x],[y],[z]) was deleted in atmos_init() because both its nodes are null! initialize_directions: [initialize_directions], dir: [dir], level: [level], node1_dir: [node1_dir], node2_dir: [node2_dir]")
 		qdel(src)
 		return
 
@@ -609,6 +616,7 @@
 
 	if(!node1 && !node2 && !node3)
 		qdel(src)
+		log_debug("[src]([x],[y],[z]) was deleted in atmos_init() because all 3 of its nodes are null!")
 		return
 
 	var/turf/T = get_turf(src)
@@ -873,6 +881,7 @@
 				break
 
 	if(!node1 && !node2 && !node3 && !node4)
+		log_debug("[src]([x],[y],[z]) was deleted in atmos_init() because all 4 of its nodes are null!")
 		qdel(src)
 		return
 

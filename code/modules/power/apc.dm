@@ -65,6 +65,12 @@
 /obj/machinery/power/apc/hyper
 	cell_type = /obj/item/weapon/cell/hyper
 
+/obj/machinery/power/apc/ai
+	is_critical = 1
+	cell_type = /obj/item/weapon/cell/hyper
+	malf_upgraded = 1
+	emp_hardened = 1
+
 // Main APC code
 /obj/machinery/power/apc
 	name = "area power controller"

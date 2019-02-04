@@ -72,6 +72,7 @@
 	new /obj/item/weapon/tool/weldingtool(src)
 	new /obj/item/weapon/tool/crowbar(src)
 	new /obj/item/weapon/wirecutters(src)
+	new /obj/item/device/multitool(src)
 	new /obj/item/stack/cable_coil(src,30,pick("red","yellow","orange"))
 
 

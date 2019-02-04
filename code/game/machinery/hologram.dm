@@ -111,7 +111,8 @@ var/const/HOLOPAD_MODE = RANGE_BASED
 				var/list/holopadlist = list()
 				for(var/obj/machinery/hologram/holopad/H in SSmachines.machinery)
 					if(H.operable())
-						holopadlist["[H.loc.loc.name]"] = H	//Define a list and fill it with the area of every holopad in the world
+						var/area/area = get_area(H)
+						holopadlist["[area.name]"] = H	//Define a list and fill it with the area of every holopad in the world
 				holopadlist = sortAssoc(holopadlist)
 				var/temppad = input(user, "Which holopad would you like to contact?", "holopad list") as null|anything in holopadlist
 				targetpad = holopadlist["[temppad]"]

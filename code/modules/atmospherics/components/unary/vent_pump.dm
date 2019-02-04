@@ -92,7 +92,8 @@
 
 /obj/machinery/atmospherics/unary/vent_pump/Initialize()
 	.=..()
-	id_tag = make_loc_string_id("AVP")
+	if(!id_tag)
+		id_tag = make_loc_string_id("AVP")
 
 
 /obj/machinery/atmospherics/unary/vent_pump/Destroy()
@@ -273,8 +274,9 @@
 	. = ..()
 
 	//some vents work his own special way
-	radio_filter_in = frequency==1439?(RADIO_FROM_AIRALARM):null
-	radio_filter_out = frequency==1439?(RADIO_TO_AIRALARM):null
+	if(frequency==1439)
+		radio_filter_in  = RADIO_FROM_AIRALARM
+		radio_filter_out = RADIO_TO_AIRALARM
 	if(frequency)
 		radio_connection = register_radio(src, frequency, frequency, radio_filter_in)
 		src.broadcast_status()
@@ -302,6 +304,9 @@
 
 	if(signal.data["power_toggle"] != null)
 		use_power = !use_power
+
+	if(signal.data["direction_toggle"] != null)
+		pump_direction = !pump_direction
 
 	if(signal.data["checks"] != null)
 		if (signal.data["checks"] == "default")

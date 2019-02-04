@@ -47,6 +47,8 @@ var/global/defer_powernet_rebuild = 0      // True if net rebuild will be called
 #define NETWORK_PUBLIC "Public"
 #define NETWORK_NT "nt_net"
 #define NETWORK_REFUGEE "freenet"
+#define NETWORK_NEXUS_SECURITY "nx_sec"
+#define NETWORK_NEXUS "nx"
 
 #define NETWORK_ALARM_ATMOS "Atmosphere Alarms"
 #define NETWORK_ALARM_CAMERA "Camera Alarms"

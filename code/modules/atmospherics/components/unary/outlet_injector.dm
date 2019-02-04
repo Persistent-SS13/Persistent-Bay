@@ -15,8 +15,9 @@
 	connect_types = CONNECT_TYPE_REGULAR|CONNECT_TYPE_SUPPLY|CONNECT_TYPE_SCRUBBER
 	var/injecting = 0
 	var/volume_rate = 50	//flow rate limit
-	var/frequency = 0
+	var/frequency = 1441
 	var/id = null
+	var/radio_filter = RADIO_ATMOSIA
 	var/datum/radio_frequency/radio_connection
 	level = 1
 
@@ -86,7 +87,7 @@
 	radio_controller.remove_object(src, frequency)
 	frequency = new_frequency
 	if(frequency)
-		radio_connection = radio_controller.add_object(src, frequency)
+		radio_connection = radio_controller.add_object(src, frequency, filter = radio_filter)
 
 /obj/machinery/atmospherics/unary/outlet_injector/proc/broadcast_status()
 	if(!radio_connection)

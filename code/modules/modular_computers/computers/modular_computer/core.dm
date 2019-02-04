@@ -111,6 +111,17 @@
 	if(active_program)
 		run_program(active_program.filename)
 
+/obj/item/modular_computer/after_load()
+	..()
+	update_verbs()
+
+/obj/item/modular_computer/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		install_default_hardware()
+		if(hard_drive)
+			install_default_programs()
+
 /obj/item/modular_computer/Destroy()
 	kill_program(1)
 	STOP_PROCESSING(SSobj, src)

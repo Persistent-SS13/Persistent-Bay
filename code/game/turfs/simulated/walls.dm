@@ -37,6 +37,7 @@
 	r_material = r_mat
 	p_material = p_mat
 
+
 /turf/simulated/wall/New(var/newloc, var/material/mat, var/material/r_mat, var/material/p_mat)
 	..(newloc)
 	material = mat
@@ -311,3 +312,10 @@
 
 /turf/simulated/wall/get_color()
 	return paint_color
+
+//Tungsten rwalls!
+/turf/simulated/wall/r_wall/tungsten
+	reinf_material 	= new /material/tungsten
+	material 		= new /material/tungsten
+	r_material 		= new /material/tungsten
+	p_material 		= new /material/tungsten

@@ -361,6 +361,8 @@ Total Unsimulated Turfs: [world.maxx*world.maxy*world.maxz - simulated_turf_coun
 	#ifdef ZASDBG
 	ASSERT(isturf(T))
 	#endif
+	if(QDELETED(T)) //Don't update qdeleted turfs please..
+		return 
 	if(T.needs_air_update)
 		return
 	tiles_to_update += T

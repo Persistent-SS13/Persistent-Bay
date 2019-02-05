@@ -23,11 +23,9 @@
 /obj/machinery/door/airlock/multi_tile/should_save(var/datum/caller)
 	if(istype(caller, /turf))
 		var/turf/T = caller
-		if(src in T.contents)
-			..()
-		else
-			return 0
-	..()
+		if(T.x != src.x || T.y != src.y) //Multitile doors exists in the content of 2 turfs, but have the x,y,z of the turf they were built on.
+			return FALSE
+	return ..()
 
 /obj/machinery/door/airlock/multi_tile/New()
 	..()

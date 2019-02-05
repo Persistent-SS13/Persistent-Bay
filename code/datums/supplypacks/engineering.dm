@@ -209,7 +209,7 @@
 
 /decl/hierarchy/supply_pack/engineering/air_dispenser
 	name = "Equipment - Pipe dispenser"
-	contains = list(/obj/machinery/pipedispenser/orderable)
+	contains = list(/obj/machinery/pipedispenser)
 	cost = 35
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "pipe dispenser crate"
@@ -217,7 +217,7 @@
 
 /decl/hierarchy/supply_pack/engineering/disposals_dispenser
 	name = "Equipment - Disposals pipe dispenser"
-	contains = list(/obj/machinery/pipedispenser/disposal/orderable)
+	contains = list(/obj/machinery/pipedispenser/disposal)
 	cost = 35
 	containertype = /obj/structure/closet/crate/secure/large
 	containername = "disposal dispenser crate"

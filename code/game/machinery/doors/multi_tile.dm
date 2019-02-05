@@ -23,7 +23,7 @@
 /obj/machinery/door/airlock/multi_tile/should_save(var/datum/caller)
 	if(istype(caller, /turf))
 		var/turf/T = caller
-		if(src in T.contents)
+		if(T == loc)
 			..()
 		else
 			return 0
@@ -31,10 +31,6 @@
 
 /obj/machinery/door/airlock/multi_tile/New()
 	..()
-	SetBounds()
-
-/obj/machinery/door/airlock/multi_tile/Move()
-	. = ..()
 	SetBounds()
 
 /obj/machinery/door/airlock/multi_tile/after_load()

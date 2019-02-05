@@ -520,4 +520,4 @@
 
 		if(success)
 			dirs |= direction
-	connections = dirs
+	connections = dirs_to_corner_states(dirs)

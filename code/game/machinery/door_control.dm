@@ -2,7 +2,7 @@
 	name = "remote object control"
 	desc = "It controls objects, remotely."
 	icon = 'icons/obj/stationobjs.dmi'
-	icon_state = "doorctrl0"
+	icon_state = "doorctrl"
 	power_channel = ENVIRON
 	var/desiredstate = 0
 	var/exposedwires = 0
@@ -60,7 +60,7 @@
 	if(stat & NOPOWER)
 		icon_state = "doorctrl-p"
 	else
-		icon_state = "doorctrl0"
+		icon_state = "doorctrl"
 
 /*
 	Airlock remote control

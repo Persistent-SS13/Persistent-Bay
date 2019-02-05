@@ -44,6 +44,8 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	var/category = null
 	var/sync_message = ""
 
+	var/menu = 1
+	
 /obj/machinery/fabricator/New()
 	..()
 

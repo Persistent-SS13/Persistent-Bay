@@ -57,12 +57,20 @@
 
 /obj/item/modular_computer/New()
 	START_PROCESSING(SSobj, src)
-	install_default_hardware()
-	if(hard_drive)
-		install_default_programs()
 	update_icon()
 	update_verbs()
 	..()
+
+/obj/item/modular_computer/after_load()
+	..()
+	update_verbs()
+
+/obj/item/modular_computer/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		install_default_hardware()
+		if(hard_drive)
+			install_default_programs()
 
 /obj/item/modular_computer/Destroy()
 	kill_program(1)

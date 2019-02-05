@@ -4,7 +4,6 @@ var/global/list/saved = list()
 var/global/list/areas_to_save = list()
 var/global/list/zones_to_save = list()
 var/global/list/debug_data = list()
-
 /proc/Prepare_Atmos_For_Saving()
 	for(var/datum/pipe_network/net in SSmachines.pipenets)
 		for(var/datum/pipeline/line in net.line_members)
@@ -85,6 +84,19 @@ var/global/list/debug_data = list()
 
 /datum/proc/before_load()
 	return
+
+
+/datum/chunk_holder/StandardRead(var/savefile/f)
+	..()
+	var/ve
+	while(!f.eof)
+		from_file(f, ve)
+
+/datum/chunk_holder/StandardWrite(var/savefile/f)
+	..()
+	for(var/x in turfs)
+		to_file(f, x)
+
 
 /turf/after_load()
 	..()
@@ -287,18 +299,21 @@ var/global/list/debug_data = list()
 /area/Read(savefile/f)
 	return 0
 
+/datum/chunk_holder
+	var/list/turfs = list()
+
 /proc/Save_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
 	var/z = zi
-	xi = (xi - (xi % 20) + 1)
-	yi = (yi - (yi % 20) + 1)
-	var/list/lis = list()
-	for(var/y in yi to yi + 20)
-		for(var/x in xi to xi + 20)
+	xi = (xi - (xi % 16) + 1)
+	yi = (yi - (yi % 16) + 1)
+	var/datum/chunk_holder/holder = new()
+	for(var/y in yi to yi + 16)
+		for(var/x in xi to xi + 16)
 			var/turf/T = locate(x,y,z)
 			if(!T || ((T.type == /turf/space || T.type == /turf/simulated/open) && (!T.contents || !T.contents.len)))
 				continue
-			lis |= T
-	to_file(f,lis)
+			holder.turfs |= T
+	to_file(f,holder)
 
 /proc/Save_Records(var/backup_dir)
 	for(var/datum/computer_file/report/crew_record/L in GLOB.all_crew_records)
@@ -325,9 +340,9 @@ var/global/list/debug_data = list()
 		fdel("record_saves/[key3].sav")
 		var/savefile/fe = new("record_saves/[key3].sav")
 		to_file(fe, L)
-		to_file(fe, L.linked_account)	
-		
-		
+		to_file(fe, L.linked_account)
+
+
 	for(var/datum/world_faction/faction in GLOB.all_world_factions)
 		var/list/records = faction.get_records()
 		for(var/datum/computer_file/report/crew_record/L in records)
@@ -356,13 +371,13 @@ var/global/list/debug_data = list()
 		else
 			backup = 1
 	found_vars = list()
-	for(var/z in 1 to 52)
+	for(var/z in 1 to 20)
 		fcopy("map_saves/z[z].sav", "backups/[dir]/z[z].sav")
 		fdel("map_saves/z[z].sav")
 		var/savefile/f = new("map_saves/z[z].sav")
-		for(var/x in 1 to world.maxx step 20)
-			for(var/y in 1 to world.maxy step 20)
-				Save_Chunk(x,y,z, f)
+		for(var/x in 1 to world.maxx step 16)
+			for(var/y in 1 to world.maxy step 16)
+				Save_Chunk(x,y,z,f)
 		f = null
 	fcopy("map_saves/extras.sav", "backups/[dir]/extras.sav")
 	fdel("map_saves/extras.sav")
@@ -470,17 +485,13 @@ var/global/list/debug_data = list()
 			turfs |= T
 		A.contents.Add(turfs)
 	f = null
-	for(var/z in 1 to 52)
+	for(var/z in 1 to 20)
 		f = new("map_saves/z[z].sav")
-		var/starttime2 = REALTIMEOFDAY
-		var/breakout = 0
-		while(!f.eof && !breakout)
-			sleep(-1)
-			if(((REALTIMEOFDAY - starttime2)/10) > 300)
-				breakout = 1
-			f >> ve
-		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
-		f = null
+		while(!f.eof)
+			from_file(f,ve)
+	var/starttime2 = REALTIMEOFDAY
+	message_admins("Loading World Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
+	f = null
 	f = new("map_saves/extras.sav")
 	var/list/zones
 

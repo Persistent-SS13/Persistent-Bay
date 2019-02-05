@@ -94,11 +94,11 @@
 	build_path = /obj/item/weapon/tool/crowbar/prybar
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS)
 
-/datum/design/item/engifab/engitools/simple/multitool
+/datum/design/item/engifab/engitools/multitool
 	name = "Multitool"
 	id = "multitool"
 	build_path = /obj/item/device/multitool
-	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_GLASS = 1 SHEETS)
+	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_GLASS = 1 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
 
 /datum/design/item/engifab/engitools/welder_mini
 	name = "Miniture welding tool"
@@ -118,7 +118,6 @@
 	name = "Screwdriver"
 	id = "screwdriver"
 	build_path = /obj/item/weapon/tool/screwdriver
-	category = "Tools"
 	materials = list(MATERIAL_STEEL = 0.25 SHEETS)
 
 /datum/design/item/engifab/engitools/simple/wirecutters

@@ -31,10 +31,6 @@
 	..()
 	SetBounds()
 
-/obj/machinery/door/airlock/multi_tile/Move()
-	. = ..()
-	SetBounds()
-
 /obj/machinery/door/airlock/multi_tile/after_load()
 	SetBounds()
 	..()

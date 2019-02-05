@@ -961,7 +961,7 @@
 // Communication Equipment
 
 /datum/design/item/genfab/communication
-	category = "Comms & Paperwork"
+	category = "Paperwork"
 
 
 ////////////////////////////////////////////////////////////////////
@@ -1049,9 +1049,6 @@
 	name = "rainbow crayon"
 	build_path = /obj/item/weapon/pen/crayon/rainbow
 	materials = list(MATERIAL_PLASTIC = 0.2 SHEETS, MATERIAL_PHORON = 0.1 SHEETS)
-
-
-
 
 
 /datum/design/item/genfab/communication/clipboard
@@ -1174,7 +1171,7 @@
 	build_path = /obj/item/device/flashlight/flare
 
 /datum/design/item/genfab/eva/binoculars
-	materials = list(MATERIAL_STEEL = 1.5 SHEET, MATERIAL_COPPER = 0.5 SHEETS)
+	materials = list(MATERIAL_STEEL = 1.5 SHEET, MATERIAL_COPPER = 0.5 SHEETS, MATERIAL_GLASS = 1.5 SHEETS)
 	build_path = /obj/item/device/binoculars
 
 /datum/design/item/genfab/eva/modkit
@@ -1467,6 +1464,10 @@
 	build_path = /obj/item/device/violin
 	materials = list(MATERIAL_WOOD = 2.5 SHEETS, MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPER = 1 SHEET)
 
+/datum/design/item/genfab/consumer/guitar
+	build_path = /obj/item/instrument/guitar
+	materials = list(MATERIAL_WOOD = 1.5 SHEETS, MATERIAL_STEEL = 1 SHEET)
+
 
 /datum/design/item/genfab/consumer/basketball
 	build_path = /obj/item/weapon/basketball
@@ -1648,27 +1649,27 @@
 /datum/design/item/genfab/consumer/toys/blink
 	name = "electronic blink toy game"
 	build_path = /obj/item/toy/blink
-	materials = list(MATERIAL_METAL = 0.25 SHEETS)
+	materials = list(MATERIAL_STEEL = 0.25 SHEETS)
 
 /datum/design/item/genfab/consumer/toys/spinningtoy
 	name = "gravitational singularity toy"
 	build_path = /obj/item/toy/spinningtoy
-	materials = list(MATERIAL_METAL = 0.25 SHEETS, MATERIAL_CLOTH = 0.25 SHEETS)
+	materials = list(MATERIAL_STEEL = 0.25 SHEETS, MATERIAL_CLOTH = 0.25 SHEETS)
 
 /datum/design/item/genfab/consumer/toys/crossbow
 	name = "foam dart crossbow"
 	build_path = /obj/item/toy/crossbow
-	materials = list(MATERIAL_METAL = 1 SHEETS)
+	materials = list(MATERIAL_STEEL = 1 SHEETS)
 
 /datum/design/item/genfab/consumer/toys/ammo/crossbow
 	name = "foam dart"
 	build_path = /obj/item/toy/ammo/crossbow
-	materials = list(MATERIAL_METAL = 0.01 SHEETS)
+	materials = list(MATERIAL_STEEL = 0.01 SHEETS)
 
 /datum/design/item/genfab/consumer/toys/snappop
 	name = "snap pop"
 	build_path = /obj/item/toy/snappop
-	materials = list(MATERIAL_METAL = 0.01 SHEETS)
+	materials = list(MATERIAL_STEEL = 0.01 SHEETS)
 
 /datum/design/item/genfab/consumer/games/dice/normal
 	name = "bag of 7 dice (d6)"

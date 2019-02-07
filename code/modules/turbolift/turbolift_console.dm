@@ -7,6 +7,15 @@
 	plane = OBJ_PLANE
 	layer = ABOVE_OBJ_LAYER
 
+	req_access = list()
+	req_one_access = list()
+	req_access_faction = ""
+	req_access_personal = null
+	req_access_personal_list = list()
+	req_access_business = null
+	req_access_business_list = list()
+	req_one_access_business_list = list()
+
 	var/datum/turbolift/lift
 
 /obj/structure/lift/set_dir(var/newdir)
@@ -25,9 +34,9 @@
 /obj/structure/lift/proc/pressed(var/mob/user)
 	if(!istype(user, /mob/living/silicon))
 		if(user.a_intent == I_HURT)
-			user.visible_message("<span class='danger'>\The [user] hammers on the lift button!</span>")
+			user.visible_message(SPAN_DANGER("\The [user] hammers on the lift button!"))
 		else
-			user.visible_message("<span class='notice'>\The [user] presses the lift button.</span>")
+			user.visible_message(SPAN_NOTICE("\The [user] presses the lift button."))
 
 
 /obj/structure/lift/New(var/newloc, var/datum/turbolift/_lift)
@@ -68,6 +77,10 @@
 	update_icon()
 
 /obj/structure/lift/button/interact(var/mob/user)
+	if(!src.allowed(user))
+		playsound(src.loc, 'sound/machines/buzz-two.ogg', 50, 0)
+		to_chat(user, SPAN_WARNING("Access denied!"))
+		return
 	if(!..())
 		return
 	light_up()
@@ -101,6 +114,10 @@
 	return interact(user)
 
 /obj/structure/lift/panel/interact(var/mob/user)
+	if(!src.allowed(user))
+		playsound(src.loc, 'sound/machines/buzz-two.ogg', 50, 0)
+		to_chat(user, SPAN_WARNING("Access denied!"))
+		return
 	if(!..())
 		return
 

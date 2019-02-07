@@ -15,8 +15,20 @@
 	var/other_area = null
 	var/image/overlay
 
+/obj/machinery/light_switch/after_load()
+	if(other_area)
+		src.connected_area = locate(other_area)
+	else
+		src.connected_area = get_area(src)
+
+	if(name == initial(name))
+		name = "light switch ([connected_area.name])"
+
+	connected_area.set_lightswitch(on)
+	update_icon()
 /obj/machinery/light_switch/Initialize()
 	. = ..()
+	if(map_storage_loaded) return
 	if(other_area)
 		src.connected_area = locate(other_area)
 	else

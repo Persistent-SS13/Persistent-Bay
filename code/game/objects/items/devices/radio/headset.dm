@@ -1,3 +1,4 @@
+#define MAX_KEYS 10
 /obj/item/device/radio/headset
 	name = "radio headset"
 	desc = "An updated, modular intercom that fits over the head. Takes encryption keys."
@@ -11,9 +12,9 @@
 	slot_flags = SLOT_EARS
 	var/translate_binary = 0
 	var/translate_hive = 0
-	var/list/encryption_keys() = list()
-	var/list/custom_radio_keys() = list() // Associative list of key : ch_name e.g. :en : engineering
-	var/list/starter_keys() = list()
+	var/list/encryption_keys = list()
+	var/list/custom_radio_keys = list() // Associative list of key : ch_name e.g. :en : engineering
+	var/list/starter_keys = list()
 
 /obj/item/device/radio/headset/Initialize()
 	. = ..()
@@ -268,7 +269,7 @@
 			to_chat(user, "This headset doesn't have any encryption keys!  How useless...")
 
 	if(istype(W, /obj/item/device/encryptionkey/))
-		if(encryption_keys.len >= 10)
+		if(encryption_keys.len >= MAX_KEYS)
 			to_chat(user, "The headset can't hold another key!")
 			return
 
@@ -367,3 +368,5 @@
 				radio_text += ", "
 
 	radio_desc = radio_text
+
+#undef MAX_KEYS

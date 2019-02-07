@@ -116,7 +116,7 @@
 	id = "cane"
 	build_path = /obj/item/weapon/cane
 	materials = list("wood" = 1.5 SHEETS)
-	
+
 /datum/design/item/autotailor/accessories/attach/canefancy
 	build_path = /obj/item/weapon/staff/gentcane
 	materials = list("wood" = 1.5 SHEETS, MATERIAL_GOLD = 1 SHEET)
@@ -124,13 +124,13 @@
 /datum/design/item/autotailor/accessories/attach/staff
 	build_path = /obj/item/weapon/staff
 	materials = list("wood" = 1.5 SHEETS)
-	
-	
+
+
 /datum/design/item/autotailor/accessories/attach/canefancy
 	build_path = /obj/item/weapon/staff/gentcane
 	materials = list("wood" = 1.5 SHEETS, MATERIAL_GOLD = 1 SHEET)
-	
-	
+
+
 
 /datum/design/item/autotailor/accessories/attach/tie_white	//custom colors
 	name = "Tie - white"
@@ -872,6 +872,18 @@
 	name = "Balaclava - black"
 	id = "balac_black"
 	build_path = /obj/item/clothing/mask/balaclava
+	materials = list("cloth" = 2000)
+
+/datum/design/item/autotailor/accessories/masks/balac_green
+	name = "Balaclava - green"
+	id = "balac_green"
+	build_path = /obj/item/clothing/mask/balaclava/tactical
+	materials = list("cloth" = 2000)
+
+/datum/design/item/autotailor/accessories/masks/balac_blue
+	name = "Balaclava - blue"
+	id = "balac_blue"
+	build_path = /obj/item/clothing/mask/balaclava/blue
 	materials = list("cloth" = 2000)
 
 /datum/design/item/autotailor/accessories/masks/sterile_mask

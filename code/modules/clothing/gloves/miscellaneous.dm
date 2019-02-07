@@ -80,6 +80,14 @@
 	heat_protection = HANDS
 	max_heat_protection_temperature = GLOVES_MAX_HEAT_PROTECTION_TEMPERATURE
 
+/obj/item/clothing/gloves/thick/blueguard
+	desc = "A pair of synthweave-ablative gloves. Durable and resistant."
+	name = "\improper guard gloves"
+	icon_state = "bggloves"
+	item_state = "blueguard"
+	force = 5
+	armor = list(melee = 80, bullet = 30, laser = 50,energy = 30, bomb = 0, bio = 10, rad = 0)
+
 /obj/item/clothing/gloves/thick/botany
 	desc = "These leather work gloves protect against thorns, barbs, prickles, spikes and other harmful objects of floral origin."
 	name = "thick leather gloves"

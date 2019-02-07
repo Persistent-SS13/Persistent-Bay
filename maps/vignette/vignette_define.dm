@@ -1,3 +1,6 @@
+proc/GetNbSavedZLevels()
+	return 52
+
 /datum/map/vignette
 	name = "NTSS Vignette"
 	full_name = ""

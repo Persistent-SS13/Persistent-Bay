@@ -18,6 +18,15 @@
 	..()
 	program = new/datum/computer/file/embedded_program/airlock(src)
 
+
+/obj/machinery/embedded_controller/radio/airlock/Initialize()
+	. = ..()
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/embedded_controller/radio/airlock/LateInitialize(mapload, ...)
+	. = ..()
+	program.receive_user_command(list("cycle_int")) //Cycle them doors
+
 /obj/machinery/embedded_controller/radio/airlock/Destroy()
 	for(var/thing in dummy_terminals)
 		var/obj/machinery/dummy_airlock_controller/dummy = thing

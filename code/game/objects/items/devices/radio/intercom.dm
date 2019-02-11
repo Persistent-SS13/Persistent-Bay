@@ -26,7 +26,7 @@
 
 /obj/item/device/radio/intercom/interrogation
 	name = "intercom (Interrogation)"
-	frequency  = 1449
+	frequency  = SEC_INTERCOM_FREQ
 
 /obj/item/device/radio/intercom/private
 	name = "intercom (Private)"
@@ -170,7 +170,7 @@
 
 /obj/item/device/radio/intercom/locked/confessional
 	name = "confessional intercom"
-	locked_frequency = 1480
+	locked_frequency = CONFESSIONALS_FREQ
 
 /obj/item/device/radio/intercom/locked/prison
 	name = "\improper prison intercom"
@@ -202,12 +202,26 @@
 	if(istype(frame))
 		buildstage = 0
 		wiresexposed = 1
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -24 : 24)
-		pixel_y = (dir & 3)? (dir ==1 ? -24 : 24) : 0
 		frame.transfer_fingerprints_to(src)
 
+/obj/item/device/radio/intercom/Initialize()
+	. = ..()
+	update_icon()
 
 /obj/item/device/radio/intercom/update_icon()
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = -24
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = 24
+		if(EAST)
+			src.pixel_x = -24
+			src.pixel_y = 0
+		if(WEST)
+			src.pixel_x = 24
+			src.pixel_y = 0
 	if(!circuitry_installed)
 		icon_state="intercom-frame"
 		return

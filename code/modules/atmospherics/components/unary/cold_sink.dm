@@ -6,9 +6,9 @@
 	desc = "Cools gas when connected to a pipe network."
 	icon = 'icons/obj/Cryogenic2.dmi'
 	icon_state = "freezer_0"
-	density = 1
-	anchored = 1
-	use_power = 0
+	density = TRUE
+	anchored = TRUE
+	use_power = POWER_USE_OFF
 	idle_power_usage = 5			// 5 Watts for thermostat related circuitry
 
 	var/heatsink_temperature = T20C	// The constant temperature reservoir into which the freezer pumps heat. Probably the hull of the station or something.
@@ -18,19 +18,24 @@
 	var/power_setting = 100
 
 	var/set_temperature = T20C		// Thermostat
-	var/cooling = 0
+	var/cooling = FALSE
 
 /obj/machinery/atmospherics/unary/freezer/New()
 	..()
-	initialize_directions = dir
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/unary_atmos/cooler(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 2)
+
+/obj/machinery/atmospherics/unary/freezer/Initialize(mapload, d)
+	. = ..()
+	if(!map_storage_loaded)
+		initialize_directions = dir
+		component_parts = list()
+		component_parts += new /obj/item/weapon/circuitboard/unary_atmos/cooler(src)
+		component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
+		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+		component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
+		component_parts += new /obj/item/stack/cable_coil(src, 2)
 	RefreshParts()
+
 /obj/machinery/atmospherics/unary/freezer/atmos_init()
 	..()
 	if(node)
@@ -71,7 +76,7 @@
 /obj/machinery/atmospherics/unary/freezer/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 	// this is the data which will be sent to the ui
 	var/data[0]
-	data["on"] = use_power ? 1 : 0
+	data["on"] = ison()
 	data["gasPressure"] = round(air_contents.return_pressure())
 	data["gasTemperature"] = round(air_contents.temperature)
 	data["minGasTemperature"] = 0
@@ -97,7 +102,7 @@
 		// open the new ui window
 		ui.open()
 		// auto update every Master Controller tick
-		ui.set_auto_update(1)
+		ui.set_auto_update(TRUE)
 
 /obj/machinery/atmospherics/unary/freezer/Topic(href, href_list)
 	if(..())
@@ -120,13 +125,13 @@
 /obj/machinery/atmospherics/unary/freezer/Process()
 	..()
 
-	if(stat & (NOPOWER|BROKEN) || !use_power)
+	if(inoperable() || isoff())
 		cooling = 0
 		update_icon()
 		return
 
 	if(network && air_contents.temperature > set_temperature)
-		cooling = 1
+		cooling = TRUE
 
 		var/heat_transfer = max( -air_contents.get_thermal_energy_change(set_temperature - 5), 0 )
 
@@ -143,7 +148,7 @@
 
 		network.update = 1
 	else
-		cooling = 0
+		cooling = FALSE
 
 	update_icon()
 

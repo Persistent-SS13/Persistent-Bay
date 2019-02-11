@@ -30,34 +30,32 @@ FIRE ALARM
 	if(istype(frame))
 		buildstage = 0
 		wiresexposed = 1
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -21 : 21)
-		pixel_y = (dir & 3)? (dir ==1 ? -21 : 21) : 0
-		update_icon()
 		frame.transfer_fingerprints_to(src)
+
+/obj/machinery/firealarm/Initialize()
+	. = ..()
+	update_icon()
 
 /obj/machinery/firealarm/examine(mob/user)
 	. = ..(user)
 	var/decl/security_state/security_state = decls_repository.get_decl(GLOB.using_map.security_state)
 	to_chat(user, "The current alert level is [security_state.current_security_level.name].")
 
-/obj/machinery/firealarm/Initialize()
-	. = ..()
-	update_icon()
-
 /obj/machinery/firealarm/update_icon()
 	overlays.Cut()
-
-	var/walldir = (dir & (NORTH|SOUTH)) ? GLOB.reverse_dir[dir] : dir
-	var/turf/T = get_step(get_turf(src), walldir)
-	if(istype(T) && T.density)
-		if(dir == SOUTH)
-			pixel_y = 21
-		else if(dir == NORTH)
-			pixel_y = -21
-		else if(dir == EAST)
-			pixel_x = 21
-		else if(dir == WEST)
-			pixel_x = -21
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = -21
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = 21
+		if(EAST)
+			src.pixel_x = -21
+			src.pixel_y = 0
+		if(WEST)
+			src.pixel_x = 21
+			src.pixel_y = 0
 
 	if(wiresexposed)
 		switch(buildstage)
@@ -165,7 +163,7 @@ FIRE ALARM
 	return
 
 /obj/machinery/firealarm/Process()//Note: this processing was mostly phased out due to other code, and only runs when needed
-	if(stat & (NOPOWER|BROKEN))
+	if(inoperable())
 		return
 
 	if(src.timing)
@@ -183,7 +181,7 @@ FIRE ALARM
 		alarm()
 
 /obj/machinery/firealarm/attack_hand(mob/user as mob)
-	if(user.stat || stat & (NOPOWER|BROKEN))
+	if(user.stat || inoperable())
 		return
 
 	if (buildstage != 2)
@@ -271,24 +269,6 @@ FIRE ALARM
 		fire_alarm.triggerAlarm(loc, FA, duration)
 	update_icon()
 	return
-
-/obj/machinery/firealarm/New(loc, dir, atom/frame)
-	..(loc)
-
-	if(dir)
-		src.set_dir(dir)
-
-	if(istype(frame))
-		buildstage = 0
-		wiresexposed = 1
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -21 : 21)
-		pixel_y = (dir & 3)? (dir ==1 ? -21 : 21) : 0
-		frame.transfer_fingerprints_to(src)
-
-/obj/machinery/firealarm/Initialize()
-	. = ..()
-	if(z in GLOB.using_map.contact_levels)
-		update_icon()
 
 /*
 FIRE ALARM CIRCUIT

@@ -17,8 +17,8 @@
 	icon_state = "frame"
 	desc = "A remote control for a door."
 	req_access = list(core_access_security_programs)
-	anchored = 1.0    		// can't pick it up
-	density = 0       		// can walk through it.
+	anchored = TRUE    		// can't pick it up
+	density = FALSE    		// can walk through it.
 	var/id = null     		// id of door it controls.
 	var/releasetime = 0		// when world.timeofday reaches it - release the prisoner
 	var/timing = 1    		// boolean, true/1 timer is on, false/0 means it's not timing
@@ -54,45 +54,31 @@
 // if it's less than 0, open door, reset timer
 // update the door_timer window and the icon
 /obj/machinery/door_timer/Process()
-
-	if(stat & (NOPOWER|BROKEN))	return
+	if(inoperable())
+		return
 	if(src.timing)
-
-		// poorly done midnight rollover
-		// (no seriously there's gotta be a better way to do this)
-		var/timeleft = timeleft()
-		if(timeleft > 1e5)
-			src.releasetime = 0
-
-
-		if(world.timeofday > src.releasetime)
+		if(REALTIMEOFDAY > src.releasetime)
 			src.timer_end() // open doors, reset timer, clear status screen
 			src.timing = 0
-
 		src.update_icon()
-
 	else
 		timer_end()
-
-	return
-
 
 // open/closedoor checks if door_timer has power, if so it checks if the
 // linked door is open/closed (by density) then opens it/closes it.
 
 // Closes and locks doors, power check
 /obj/machinery/door_timer/proc/timer_start()
-	if(stat & (NOPOWER|BROKEN))	return 0
-
+	if(inoperable())	
+		return FALSE
 	// Set releasetime
-	releasetime = world.timeofday + timetoset
-
-
+	releasetime = REALTIMEOFDAY + timetoset
 	//set timing
 	timing = 1
 
 	for(var/obj/machinery/door/window/brigdoor/door in targets)
-		if(door.density)	continue
+		if(door.density)
+			continue
 		spawn(0)
 			door.close()
 
@@ -101,46 +87,41 @@
 		if(C.opened && !C.close())	continue
 		C.locked = TRUE
 		C.queue_icon_update()
-	return 1
+	return TRUE
 
 
 // Opens and unlocks doors, power check
 /obj/machinery/door_timer/proc/timer_end()
-	if(stat & (NOPOWER|BROKEN))	return 0
-
+	if(inoperable())	
+		return FALSE
 	// Reset releasetime
 	releasetime = 0
-
 	//reset timing
 	timing = 0
-
 	for(var/obj/machinery/door/window/brigdoor/door in targets)
-		if(!door.density)	continue
+		if(!door.density)
+			continue
 		spawn(0)
 			door.open()
-
 	for(var/obj/structure/closet/secure_closet/brig/C in targets)
-		if(C.broken)	continue
-		if(C.opened)	continue
-		C.locked = 0
+		if(C.broken || C.opened)
+			continue
+		C.locked = FALSE
 		C.queue_icon_update()
-
-	return 1
+	return TRUE
 
 
 // Check for releasetime timeleft
 /obj/machinery/door_timer/proc/timeleft()
-	. = (releasetime - world.timeofday)/10
+	. = (releasetime - REALTIMEOFDAY)/10
 	if(. < 0)
 		. = 0
 
 // Set timetoset
 /obj/machinery/door_timer/proc/timeset(var/seconds)
 	timetoset = seconds * 10
-
 	if(timetoset <= 0)
 		timetoset = 0
-
 	return
 
 //Allows AIs to use door_timer, see human attack_hand function below
@@ -152,14 +133,12 @@
 
 /obj/machinery/door_timer/ui_data(mob/user)
 	var/list/data = list()
-
 	data["timing"] = timing
 	data["releasetime"] = releasetime
 	data["timetoset"] = timetoset
 	data["timeleft"] = timeleft()
 
 	var/list/flashes = list()
-
 	for(var/obj/machinery/flasher/flash  in targets)
 		var/list/flashdata = list()
 		if(flash.last_flash && (flash.last_flash + 150) > world.time)
@@ -208,10 +187,24 @@
 // if BROKEN, display blue screen of death icon AI uses
 // if timing=true, run update display function
 /obj/machinery/door_timer/update_icon()
-	if(stat & (NOPOWER))
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = -32
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = 32
+		if(EAST)
+			src.pixel_x = -32
+			src.pixel_y = 0
+		if(WEST)
+			src.pixel_x = 32
+			src.pixel_y = 0
+
+	if(!ispowered())
 		icon_state = "frame"
 		return
-	if(stat & (BROKEN))
+	if(isbroken())
 		set_picture("ai_bsod")
 		return
 	if(src.timing)
@@ -225,7 +218,7 @@
 		if(maptext)
 			maptext = ""
 		update_display("Set","Time") // would be nice to have some default printed text
-	return
+
 
 
 // Adds an icon in case the screen is broken/off, stolen from status_display.dm

@@ -3,24 +3,61 @@
 	icon = 'icons/obj/machines/buttons.dmi'
 	icon_state = "doorbell"
 	desc = "A button used to request the presence of anyone in the department."
-	anchored = 1
-	use_power = 1
+	anchored = TRUE
+	use_power = POWER_USE_IDLE
 	idle_power_usage = 2
-	var/acknowledged = 0
+	frame_type = /obj/item/frame/pager
+	var/acknowledged = FALSE
 	var/last_paged
 	var/department = COM
 	var/location
+
+/obj/machinery/pager/sec
+	department = SEC
+
+/obj/machinery/pager/medical
+	department = MED
+
+/obj/machinery/pager/cargo //supply
+	department = SUP
 
 /obj/machinery/pager/Initialize()
 	. = ..()
 	if(!location)
 		var/area/A = get_area(src)
 		location = A.name
+	update_icon()
+
+/obj/machinery/pager/update_icon()
+	..()
+	var/turf/T = get_step(get_turf(src), GLOB.reverse_dir[dir])
+	if(istype(T) && T.density)
+		switch(dir)
+			if(NORTH)
+				src.pixel_x = 0
+				src.pixel_y = -26
+			if(SOUTH)
+				src.pixel_x = 0
+				src.pixel_y = 26
+			if(EAST)
+				src.pixel_x = -22
+				src.pixel_y = 0
+			if(WEST)
+				src.pixel_x = 22
+				src.pixel_y = 0
+	else
+		//Since we can be placed on the floor, or tables or whatever
+		src.pixel_x = 0
+		src.pixel_y = 0
 
 /obj/machinery/pager/attack_ai(mob/user as mob)
 	return attack_hand(user)
 
 /obj/machinery/pager/attackby(obj/item/weapon/W, mob/user as mob)
+	if(default_deconstruction_screwdriver(user,W))
+		return TRUE
+	else if(default_deconstruction_crowbar(user,W))
+		return TRUE
 	return attack_hand(user)
 
 /obj/machinery/pager/attack_hand(mob/living/user)
@@ -43,9 +80,9 @@
 	acknowledged = 0
 	if(paged)
 		playsound(src, 'sound/machines/ping.ogg', 60)
-		to_chat(user,"<span class='notice'>Page received by [paged] devices.</span>")
+		to_chat(user, SPAN_NOTICE("Page received by [paged] devices."))
 	else
-		to_chat(user,"<span class='warning'>No valid destinations were found for the page.</span>")
+		to_chat(user, SPAN_WARNING("No valid destinations were found for the page."))
 
 /obj/machinery/pager/Topic(href, href_list)
 	if(..())
@@ -54,15 +91,9 @@
 		return
 	if(!acknowledged && href_list["ack"])
 		playsound(src, 'sound/machines/ping.ogg', 60)
-		visible_message("<span class='notice'>Page acknowledged.</span>")
+		visible_message(SPAN_NOTICE("Page acknowledged."))
 		acknowledged = 1
 		var/obj/machinery/message_server/MS = get_message_server(z)
 		if(!MS)
 			return
 		MS.send_to_department(department,"Page to <b>[location]</b> was acknowledged.", "*ack*")
-
-/obj/machinery/pager/medical
-	department = MED
-
-/obj/machinery/pager/cargo //supply
-	department = SUP

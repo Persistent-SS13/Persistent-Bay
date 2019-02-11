@@ -5,8 +5,8 @@
 	desc = "Shoots things into space."
 	icon = 'icons/obj/machines/massdriver.dmi'
 	icon_state = "mass_driver"
-	anchored = 1.0
-	use_power = 1
+	anchored = TRUE
+	use_power = POWER_USE_IDLE
 	idle_power_usage = 2
 	active_power_usage = 50
 
@@ -19,6 +19,8 @@
 
 /obj/machinery/mass_driver/Initialize()
 	. = ..()
+	if(!map_storage_loaded)
+		create_transmitter(id, DOOR_FREQ, RADIO_MASSDRIVER)
 	if(_wifi_id)
 		wifi_receiver = new(_wifi_id, src)
 
@@ -27,8 +29,14 @@
 	wifi_receiver = null
 	return ..()
 
+/obj/machinery/mass_driver/OnTopic(mob/user, href_list, datum/topic_state/state)
+	. = ..()
+	var/command = href_list["command"]
+	if(command == "activate")
+		drive()
+
 /obj/machinery/mass_driver/proc/drive(amount)
-	if(stat & (BROKEN|NOPOWER))
+	if(inoperable())
 		return
 	use_power(500)
 	var/O_limit
@@ -47,7 +55,7 @@
 	return
 
 /obj/machinery/mass_driver/emp_act(severity)
-	if(stat & (BROKEN|NOPOWER))
+	if(inoperable())
 		return
 	drive()
 	..(severity)

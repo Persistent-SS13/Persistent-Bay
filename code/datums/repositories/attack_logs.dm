@@ -38,3 +38,5 @@ var/repository/attack_logs/attack_log_repository = new()
 		location = get_turf(mob_attacker)
 	if(!location && mob_victim)
 		location = get_turf(mob_victim)
+	
+	log_attack("[station_time] - [location] - Intent:[intent] - [message]\n")

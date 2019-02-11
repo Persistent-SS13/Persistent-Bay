@@ -3,17 +3,29 @@
 	icon = 'icons/obj/machines/buttons.dmi'
 	icon_state = "launcherbtt"
 	desc = "A remote control switch for something."
-	var/id = null
-	var/active = 0
-	var/operating = 0
-	anchored = 1.0
-	use_power = 1
+	anchored = TRUE
+	use_power = POWER_USE_IDLE
 	idle_power_usage = 2
 	active_power_usage = 4
+	//Mapper stuff
+	var/id = null
+	var/frequency = 0
+	var/radio_filter = RADIO_DEFAULT
 	var/_wifi_id
 	var/datum/wifi/sender/wifi_sender
 	//The topic the button will trigger on the target
-	var/activate_func = "activate"
+	var/activate_func 	= "activate"
+	//Icons states
+	var/icon_active 	= "launcheract"
+	var/icon_idle 		= "launcherbtt"
+	var/icon_unpowered 	= "launcherbtt"
+	var/icon_anim_act   = null
+	var/icon_anim_deny  = null
+	var/sound_toggle 	= "button"
+
+	var/active = 0
+	var/operating = 0
+	
 
 /obj/machinery/button/Initialize()
 	. = ..()
@@ -35,82 +47,128 @@
 	return ..()
 
 /obj/machinery/button/attack_hand(mob/living/user)
-	if(..()) return 1
+	if(..())
+		return TRUE
 	if(istype(user, /mob/living/carbon))
-		playsound(src, "button", 60)
-	activate(user)
+		playsound(src, sound_toggle, 60)
+	if(!allowed(user))
+		to_chat(user, SPAN_WARNING("Access Denied"))
+		if(icon_anim_deny)
+			flick(icon_anim_deny, src)
+			sleep(10)
+		return FALSE
+	return activate(user)
 
 /obj/machinery/button/proc/activate(mob/living/user)
-	if(operating || !istype(wifi_sender))
-		return
-
+	if(operating)
+		return FALSE
 	operating = 1
 	active = 1
-	use_power(5)
+	use_power(active_power_usage)
+	send_signal()
 	update_icon()
-	wifi_sender.send_topic(user, list("[activate_func]" = 1))
+	if(icon_anim_act)
+		flick(icon_anim_act, src)
 	sleep(10)
 	active = 0
 	update_icon()
 	operating = 0
+	return TRUE
+
+/obj/machinery/button/proc/send_signal()
+	if(!istype(wifi_sender))
+		return
+	wifi_sender.send_topic(usr, list("[activate_func]" = 1))
 
 /obj/machinery/button/update_icon()
-	if(active)
-		icon_state = "launcheract"
+	if(!ispowered() && icon_unpowered)
+		icon_state = icon_unpowered
+	else 
+		if(active)
+			icon_state = icon_active
+		else
+			icon_state = icon_idle
+		
+	//Some switches don't want to change their icons when unpowered!
+	
+	//First check for a wall
+	//If there's no wall, just assume we're fine with pixels 0,0
+	var/turf/T = get_step(get_turf(src), GLOB.reverse_dir[dir])
+	if(istype(T) && T.density)
+		switch(dir)
+			if(NORTH)
+				src.pixel_x = 0
+				src.pixel_y = -26
+			if(SOUTH)
+				src.pixel_x = 0
+				src.pixel_y = 26
+			if(EAST)
+				src.pixel_x = -22
+				src.pixel_y = 0
+			if(WEST)
+				src.pixel_x = 22
+				src.pixel_y = 0
 	else
-		icon_state = "launcherbtt"
+		//Since we can be placed on the floor, or tables or whatever
+		src.pixel_x = 0
+		src.pixel_y = 0
+	
 
 //alternate button with the same functionality, except has a lightswitch sprite instead
 /obj/machinery/button/switch
-	icon = 'icons/obj/power.dmi'
-	icon_state = "light0"
-
-/obj/machinery/button/switch/update_icon()
-	icon_state = "light[active]"
+	icon 			= 'icons/obj/machines/buttons.dmi'
+	icon_state 		= "light0"
+	icon_active 	= "light1"
+	icon_idle 		= "light0"
+	icon_unpowered 	= "light-p"
 
 //alternate button with the same functionality, except has a door control sprite instead
 /obj/machinery/button/alternate
-	icon_state = "doorctrl"
-
-/obj/machinery/button/alternate/update_icon()
-	if(active)
-		icon_state = "doorctrl"
-	else
-		icon_state = "doorctrl2"
+	icon_state 		= "doorctrl2"
+	icon_active 	= "doorctrl"
+	icon_idle 		= "doorctrl2"
+	icon_unpowered 	= "doorctrl-p"
+	icon_anim_act   = "doorctrl1"
+	icon_anim_deny  = "doorctrl-denied"
 
 //Toggle button with two states (on and off) and calls seperate procs for each state
-/obj/machinery/button/toggle/activate(mob/living/user)
-	if(operating || !istype(wifi_sender))
-		return
+/obj/machinery/button/toggle/
+	var/deactivate_func = "deactivate"
 
-	operating = 1
-	active = !active
-	use_power(5)
+/obj/machinery/button/toggle/send_signal()
+	if(!istype(wifi_sender))
+		return
 	if(active)
-		wifi_sender.activate(user)
+		wifi_sender.send_topic(usr, list("[activate_func]" = 1))
 	else
-		wifi_sender.deactivate(user)
-	update_icon()
-	operating = 0
+		wifi_sender.send_topic(usr, list("[deactivate_func]" = 1))
 
 //alternate button with the same toggle functionality, except has a lightswitch sprite instead
 /obj/machinery/button/toggle/switch
-	icon_state = "light0"
-
-/obj/machinery/button/toggle/switch/update_icon()
-	icon_state = "light[active]"
-
-
+	icon_state 		= "light0"
+	icon_active 	= "light1"
+	icon_idle 		= "light0"
+	icon_unpowered 	= "light0"
 
 //alternate button with the same toggle functionality, except has a door control sprite instead
 /obj/machinery/button/toggle/alternate
-	icon_state = "doorctrl"
+	icon_state 		= "doorctrl2"
+	icon_active 	= "doorctrl"
+	icon_idle 		= "doorctrl2"
+	icon_unpowered 	= "doorctrl-p"
+	icon_anim_act   = "doorctrl1"
+	icon_anim_deny  = "doorctrl-denied"
 
-/obj/machinery/button/toggle/alternate/update_icon()
-	if(active)
-		icon_state = "doorctrl"
-	else
-		icon_state = "doorctrl2"
+/obj/machinery/button/toggle/lever
+	icon_state 		= "switch-up"
+	icon_active 	= "switch-down"
+	icon_idle 		= "switch-up"
+	icon_unpowered 	= null //levers don't have unpowered state
+
+/obj/machinery/button/toggle/lever/dbl
+	icon_state 		= "switch-dbl-up"
+	icon_active 	= "switch-dbl-down"
+	icon_idle 		= "switch-dbl-up"
 
 //-------------------------------
 // Mass Driver Button
@@ -124,17 +182,20 @@
 		wifi_sender = new/datum/wifi/sender/mass_driver(_wifi_id, src)
 	. = ..()
 
-/obj/machinery/button/mass_driver/activate(mob/living/user)
-	if(active || !istype(wifi_sender))
-		return
+//-------------------------------
+// Flasher Button
+//  
+//-------------------------------
+/obj/machinery/button/flasher
+	name = "flasher button"
+	desc = "A remote control switch for a mounted flasher."
 
-	active = 1
-	use_power(5)
-	update_icon()
-	wifi_sender.activate()
-	active = 0
-	update_icon()
+/obj/machinery/button/flasher/Initialize()
+	. = ..()
+	create_transmitter(id, SEC_FREQ, RADIO_FLASHERS)
 
+/obj/machinery/button/flasher/send_signal(mob/user as mob)
+	post_signal(list("tag" = id, "activate" = 1))
 
 //-------------------------------
 // Door Button
@@ -148,8 +209,12 @@
 #define SAFE   0x10
 
 /obj/machinery/button/toggle/door
-	icon_state = "doorctrl"
-
+	icon_state 		= "doorctrl2"
+	icon_active 	= "doorctrl"
+	icon_idle 		= "doorctrl2"
+	icon_unpowered 	= "doorctrl-p"
+	icon_anim_act   = "doorctrl1"
+	icon_anim_deny  = "doorctrl-denied"
 	var/_door_functions = 1
 /*	Bitflag, 	1 = open
 				2 = idscan
@@ -157,25 +222,12 @@
 				8 = shock
 				16 = door safties  */
 
-/obj/machinery/button/toggle/door/update_icon()
-	if(active)
-		icon_state = "doorctrl"
-	else
-		icon_state = "doorctrl2"
-
 /obj/machinery/button/toggle/door/Initialize()
 	if(_wifi_id)
 		wifi_sender = new/datum/wifi/sender/door(_wifi_id, src)
 	. = ..()
 
-/obj/machinery/button/toggle/door/activate(mob/living/user)
-	if(operating || !istype(wifi_sender))
-		return
-
-	operating = 1
-	active = !active
-	use_power(5)
-	update_icon()
+/obj/machinery/button/toggle/door/send_signal()
 	if(active)
 		if(_door_functions & IDSCAN)
 			wifi_sender.activate("enable_idscan")
@@ -198,7 +250,6 @@
 			wifi_sender.activate("close")
 		if(_door_functions & BOLTS)
 			wifi_sender.activate("lock")
-	operating = 0
 
 #undef OPEN
 #undef IDSCAN
@@ -206,29 +257,48 @@
 #undef SHOCK
 #undef SAFE
 
+//-------------------------------
+// Valve Button
+//-------------------------------
 /obj/machinery/button/toggle/valve
-	name = "remote valve control"
-	var/frequency = 0
-	var/datum/radio_frequency/radio_connection
+	name 			= "remote valve control"
+	icon_active 	= "launcheract"
+	icon_idle 		= "launcherbtt"
+	icon_unpowered 	= "launcherbtt"
+	frequency 		= ATMOS_CONTROL_FREQ
+	radio_filter 	= RADIO_ATMOSIA
 
 /obj/machinery/button/toggle/valve/Initialize()
 	. = ..()
-	radio_connection = radio_controller.add_object(src, frequency, RADIO_ATMOSIA)
+	create_transmitter(id, frequency, radio_filter)
 
-/obj/machinery/button/toggle/valve/update_icon()
-	if(!active)
-		icon_state = "launcherbtt"
-	else
-		icon_state = "launcheract"
+/obj/machinery/button/toggle/valve/send_signal()
+	var/data[0]
+	data["tag"] = id
+	data["command"] = "valve_toggle"
+	post_signal(data)
 
+//-------------------------------
+// Window Tint Button
+//-------------------------------
+/obj/machinery/button/windowtint
+	name 			= "window tint control"
+	desc 			= "A remote control switch for electrochromic windows."
+	icon_state 		= "light0"
+	icon_active 	= "light1"
+	icon_idle 		= "light0"
+	icon_unpowered 	= "light0"
+	var/range = 7
 
-/obj/machinery/button/toggle/valve/activate(mob/living/user)
-	var/datum/signal/signal = new
-	signal.transmission_method = 1 // radio transmission
-	signal.source = src
-	signal.frequency = frequency
-	signal.data["tag"] = id
-	signal.data["command"] = "valve_toggle"
-	radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
-	active = !active
-	update_icon()
+/obj/machinery/button/windowtint/attackby(obj/item/device/W as obj, mob/user as mob)
+	if(isMultitool(W))
+		to_chat(user, SPAN_NOTICE("The ID of the button: [id]"))
+		return
+
+/obj/machinery/button/windowtint/send_signal()
+	for(var/obj/structure/window/reinforced/polarized/W in range(src,range))
+		if (W.id == src.id || !W.id)
+			spawn(0)
+				W.toggle()
+				return
+

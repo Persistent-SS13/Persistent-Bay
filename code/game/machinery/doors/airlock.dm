@@ -244,25 +244,31 @@
 */
 /obj/machinery/door/airlock/command
 	door_color = COLOR_COMMAND_BLUE
+	req_one_access = list(core_access_command_programs) 
 
 /obj/machinery/door/airlock/security
 	door_color = COLOR_NT_RED
+	req_one_access = list(core_access_security_programs) 
 
 /obj/machinery/door/airlock/security/research
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_NT_RED
+	req_one_access = list(core_access_science_programs)
 
 /obj/machinery/door/airlock/engineering
 	name = "Maintenance Hatch"
 	door_color = COLOR_AMBER
+	req_one_access = list(core_access_engineering_programs) 
 
 /obj/machinery/door/airlock/medical
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_DEEP_SKY_BLUE
+	req_one_access = list(core_access_medical_programs)
 
 /obj/machinery/door/airlock/virology
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_GREEN
+	req_one_access = list(core_access_medical_programs)
 
 /obj/machinery/door/airlock/mining
 	name = "Mining Airlock"
@@ -272,17 +278,21 @@
 /obj/machinery/door/airlock/atmos
 	door_color = COLOR_AMBER
 	stripe_color = COLOR_CYAN
+	req_one_access = list(core_access_engineering_programs) 
 
 /obj/machinery/door/airlock/research
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_BOTTLE_GREEN
+	req_one_access = list(core_access_science_programs)
 
 /obj/machinery/door/airlock/science
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_VIOLET
+	req_one_access = list(core_access_science_programs)
 
 /obj/machinery/door/airlock/sol
 	door_color = COLOR_BLUE_GRAY
+	req_one_access = list(core_access_command_programs) 
 
 /obj/machinery/door/airlock/civilian
 	stripe_color = COLOR_CIVIE_GREEN
@@ -294,6 +304,7 @@
 /obj/machinery/door/airlock/maintenance
 	name = "Maintenance Access"
 	stripe_color = COLOR_AMBER
+	req_one_access = list(core_access_engineering_programs) 
 
 //Glass airlock presets
 
@@ -321,9 +332,10 @@
 		DAM_STUN 	= MaxArmorValue,
 		DAM_PAIN	= MaxArmorValue,
 		DAM_CLONE   = MaxArmorValue)
+	req_one_access = list(core_access_engineering_programs) 
 
 /obj/machinery/door/airlock/maintenance_hatch/bolted
-	locked = 1
+	locked = TRUE
 	icon_state = "door_locked"
 
 /obj/machinery/door/airlock/glass_command
@@ -331,8 +343,8 @@
 	sound_hit = 'sound/effects/Glasshit.ogg'
 	max_health = 300
 	explosion_resistance = 5
-	opacity = 0
-	glass = 1
+	opacity = FALSE
+	glass = TRUE
 	door_color = COLOR_COMMAND_BLUE
 	stripe_color = COLOR_SKY_BLUE
 	armor = list(
@@ -349,6 +361,7 @@
 		DAM_STUN 	= MaxArmorValue,
 		DAM_PAIN	= MaxArmorValue,
 		DAM_CLONE   = MaxArmorValue)
+	req_one_access = list(core_access_command_programs) 
 
 /obj/machinery/door/airlock/glass_external
 	airlock_type = "External"
@@ -387,15 +400,15 @@
 
 /obj/machinery/door/airlock/glass_external/bolted
 	icon_state = "door_locked"
-	locked = 1
+	locked = TRUE
 
 /obj/machinery/door/airlock/glass_external/bolted/cycling
-	frequency = 1379
+	frequency = DOOR_FREQ
 
 /obj/machinery/door/airlock/glass_external/bolted_open
 	icon_state = "door_open"
-	density = 0
-	locked = 1
+	density = FALSE
+	locked = TRUE
 	opacity = 0
 
 /obj/machinery/door/airlock/glass_engineering
@@ -404,7 +417,7 @@
 	max_health = 300
 	explosion_resistance = 5
 	opacity = 0
-	glass = 1
+	glass = TRUE
 	door_color = COLOR_AMBER
 	stripe_color = COLOR_RED
 	armor = list(
@@ -421,6 +434,7 @@
 		DAM_STUN 	= MaxArmorValue,
 		DAM_PAIN	= MaxArmorValue,
 		DAM_CLONE   = MaxArmorValue)
+	req_one_access = list(core_access_engineering_programs) 
 
 /obj/machinery/door/airlock/glass_security
 	name = "Maintenance Hatch"
@@ -428,7 +442,7 @@
 	max_health = 300
 	explosion_resistance = 5
 	opacity = 0
-	glass = 1
+	glass = TRUE
 	door_color = COLOR_NT_RED
 	stripe_color = COLOR_ORANGE
 	armor = list(
@@ -445,6 +459,7 @@
 		DAM_STUN 	= MaxArmorValue,
 		DAM_PAIN	= MaxArmorValue,
 		DAM_CLONE   = MaxArmorValue)
+	req_one_access = list(core_access_security_programs) 
 
 /obj/machinery/door/airlock/glass_medical
 	name = "Maintenance Hatch"
@@ -452,7 +467,7 @@
 	max_health = 300
 	explosion_resistance = 5
 	opacity = 0
-	glass = 1
+	glass = TRUE
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_DEEP_SKY_BLUE
 	armor = list(
@@ -469,6 +484,7 @@
 		DAM_STUN 	= MaxArmorValue,
 		DAM_PAIN	= MaxArmorValue,
 		DAM_CLONE   = MaxArmorValue)
+	req_one_access = list(core_access_medical_programs)
 
 /obj/machinery/door/airlock/glass_virology
 	name = "Maintenance Hatch"
@@ -476,7 +492,7 @@
 	max_health = 300
 	explosion_resistance = 5
 	opacity = 0
-	glass = 1
+	glass = TRUE
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_GREEN
 	armor = list(
@@ -493,6 +509,7 @@
 		DAM_STUN 	= MaxArmorValue,
 		DAM_PAIN	= MaxArmorValue,
 		DAM_CLONE   = MaxArmorValue)
+	req_one_access = list(core_access_medical_programs)
 
 /obj/machinery/door/airlock/glass_sol
 	name = "Maintenance Hatch"
@@ -500,7 +517,7 @@
 	max_health = 300
 	explosion_resistance = 5
 	opacity = 0
-	glass = 1
+	glass = TRUE
 	door_color = COLOR_BLUE_GRAY
 	stripe_color = COLOR_AMBER
 	armor = list(
@@ -517,7 +534,7 @@
 		DAM_STUN 	= MaxArmorValue,
 		DAM_PAIN	= MaxArmorValue,
 		DAM_CLONE   = MaxArmorValue)
-
+	req_one_access = list(core_access_command_programs) 
 
 
 /obj/machinery/door/airlock/glass
@@ -526,7 +543,7 @@
 	max_health = 300
 	explosion_resistance = 5
 	opacity = 0
-	glass = 1
+	glass = TRUE
 	armor = list(
 		DAM_BLUNT  	= 80,
 		DAM_PIERCE 	= 80,
@@ -545,22 +562,27 @@
 /obj/machinery/door/airlock/glass/command
 	door_color = COLOR_COMMAND_BLUE
 	stripe_color = COLOR_SKY_BLUE
+	req_one_access = list(core_access_command_programs) 
 
 /obj/machinery/door/airlock/glass/security
 	door_color = COLOR_NT_RED
 	stripe_color = COLOR_ORANGE
+	req_one_access = list(core_access_security_programs) 
 
 /obj/machinery/door/airlock/glass/engineering
 	door_color = COLOR_AMBER
 	stripe_color = COLOR_RED
+	req_one_access = list(core_access_engineering_programs) 
 
 /obj/machinery/door/airlock/glass/medical
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_DEEP_SKY_BLUE
+	req_one_access = list(core_access_medical_programs) 
 
 /obj/machinery/door/airlock/glass/virology
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_GREEN
+	req_one_access = list(core_access_medical_programs) 
 
 /obj/machinery/door/airlock/glass/mining
 	door_color = COLOR_PALE_ORANGE
@@ -569,18 +591,22 @@
 /obj/machinery/door/airlock/glass/atmos
 	door_color = COLOR_AMBER
 	stripe_color = COLOR_CYAN
+	req_one_access = list(core_access_engineering_programs) 
 
 /obj/machinery/door/airlock/glass/research
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_BOTTLE_GREEN
+	req_one_access = list(core_access_science_programs) 
 
 /obj/machinery/door/airlock/glass/science
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_VIOLET
+	req_one_access = list(core_access_science_programs) 
 
 /obj/machinery/door/airlock/glass/sol
 	door_color = COLOR_BLUE_GRAY
 	stripe_color = COLOR_AMBER
+	req_one_access = list(core_access_command_programs) 
 
 /obj/machinery/door/airlock/glass/freezer
 	door_color = COLOR_WHITE
@@ -588,6 +614,7 @@
 /obj/machinery/door/airlock/glass/maintenance
 	name = "Maintenance Access"
 	stripe_color = COLOR_AMBER
+	req_one_access = list(core_access_engineering_programs) 
 
 /obj/machinery/door/airlock/glass/civilian
 	stripe_color = COLOR_CIVIE_GREEN
@@ -623,22 +650,22 @@
 		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/airlock/external/bolted
-	locked = 1
+	locked = TRUE
 
 /obj/machinery/door/airlock/external/bolted/cycling
-	frequency = 1379
+	frequency = DOOR_FREQ
 
 /obj/machinery/door/airlock/external/bolted_open
 	icon_state = "open"
-	density = 0
-	locked = 1
+	density = FALSE
+	locked = TRUE
 	opacity = 0
 
 /obj/machinery/door/airlock/external/glass
 	max_health = 300
 	explosion_resistance = 5
 	opacity = 0
-	glass = 1
+	glass = TRUE
 	armor = list(
 		DAM_BLUNT  	= 90,
 		DAM_PIERCE 	= 80,
@@ -655,15 +682,15 @@
 		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/airlock/external/glass/bolted
-	locked = 1
+	locked = TRUE
 
 /obj/machinery/door/airlock/external/glass/bolted/cycling
-	frequency = 1379
+	frequency = DOOR_FREQ
 
 /obj/machinery/door/airlock/external/glass/bolted_open
 	icon_state = "open"
-	density = 0
-	locked = 1
+	density = FALSE
+	locked = TRUE
 	opacity = 0
 
 /obj/machinery/door/airlock/gold
@@ -783,9 +810,9 @@
 	icon = 'icons/obj/doors/secure/door.dmi'
 	fill_file = 'icons/obj/doors/secure/fill_steel.dmi'
 	explosion_resistance = 20
-	secured_wires = 1
+	secured_wires = TRUE
 	assembly_type = /obj/structure/door_assembly/door_assembly_highsecurity
-	paintable = 0
+	paintable = FALSE
 	armor = list(
 		DAM_BLUNT  	= MaxArmorValue,
 		DAM_PIERCE 	= MaxArmorValue,
@@ -802,7 +829,7 @@
 		DAM_CLONE   = MaxArmorValue)
 
 /obj/machinery/door/airlock/highsecurity/bolted
-	locked = 1
+	locked = TRUE
 
 /obj/machinery/door/airlock/hatch
 	airlock_type = "hatch"
@@ -839,9 +866,10 @@
 /obj/machinery/door/airlock/hatch/maintenance
 	name = "Maintenance Hatch"
 	stripe_color = COLOR_AMBER
+	req_one_access = list(core_access_engineering_programs) 
 
 /obj/machinery/door/airlock/hatch/maintenance/bolted
-	locked = 1
+	locked = TRUE
 
 /obj/machinery/door/airlock/vault
 	airlock_type = "vault"
@@ -850,7 +878,7 @@
 	fill_file = 'icons/obj/doors/vault/fill_steel.dmi'
 	explosion_resistance = 20
 	opacity = 1
-	secured_wires = 1
+	secured_wires = TRUE
 	assembly_type = /obj/structure/door_assembly/door_assembly_highsecurity //Until somebody makes better sprites.
 	paintable = AIRLOCK_PAINTABLE|AIRLOCK_STRIPABLE
 	armor = list(
@@ -914,7 +942,7 @@
 	name = "Keypad Entry Airlock"
 	desc = "A door with a keypad lock."
 	assembly_type = /obj/structure/door_assembly/door_assembly_keyp
-	haskeypad = 1
+	haskeypad = TRUE
 	armor = list(
 		DAM_BLUNT  	= MaxArmorValue,
 		DAM_PIERCE 	= MaxArmorValue,
@@ -1072,19 +1100,19 @@ About the new airlock wires panel:
 	return ((src.aiControlDisabled==1) && (!hackProof) && (!src.isAllPowerLoss()));
 
 /obj/machinery/door/airlock/proc/arePowerSystemsOn()
-	if (stat & (NOPOWER|BROKEN))
-		return 0
+	if (inoperable())
+		return FALSE
 	return (src.main_power_lost_until==0 || src.backup_power_lost_until==0)
 
 /obj/machinery/door/airlock/requiresID()
 	return !(src.isWireCut(AIRLOCK_WIRE_IDSCAN) || aiDisabledIdScanner)
 
 /obj/machinery/door/airlock/proc/isAllPowerLoss()
-	if(stat & (NOPOWER|BROKEN))
-		return 1
+	if(inoperable())
+		return TRUE
 	if(mainPowerCablesCut() && backupPowerCablesCut())
-		return 1
-	return 0
+		return TRUE
+	return FALSE
 
 /obj/machinery/door/airlock/proc/mainPowerCablesCut()
 	return src.isWireCut(AIRLOCK_WIRE_MAIN_POWER1) || src.isWireCut(AIRLOCK_WIRE_MAIN_POWER2)
@@ -1202,8 +1230,6 @@ About the new airlock wires panel:
 
 /obj/machinery/door/airlock/update_icon(state=0, override=0)
 	update_connections()
-
-
 	switch(state)
 		if(0)
 			if(density)
@@ -1520,7 +1546,7 @@ About the new airlock wires panel:
 			electrify(30 * activate, 1)
 		if("electrify_permanently")
 			electrify(-1 * activate, 1)
-		if("open")
+		if("open", "close")
 			if(src.welded)
 				to_chat(usr, text("The airlock has been welded shut!"))
 			else if(src.locked)

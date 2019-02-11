@@ -1,9 +1,22 @@
 /obj/machinery/button/remote
-	name = "remote object control"
-	desc = "It controls objects, remotely."
-	icon_state = "doorctrl"
-	power_channel = ENVIRON
-	var/desiredstate = 0
+	name 			= "remote object control"
+	desc 			= "It controls objects, remotely."
+	icon_state 		= "doorctrl2"
+	icon_active 	= "doorctrl"
+	icon_idle 		= "doorctrl2"
+	icon_unpowered 	= "doorctrl-p"
+	icon_anim_act   = "doorctrl1"
+	icon_anim_deny  = "doorctrl-denied"
+	power_channel 	= ENVIRON
+	anchored 		= TRUE
+	use_power 		= POWER_USE_IDLE
+	idle_power_usage = 2
+	active_power_usage = 5
+	activate_func = "toggle"
+
+	frequency 		= DOOR_FREQ
+	radio_filter 	= RADIO_AIRLOCK
+	var/desired_state = 0
 	var/exposedwires = 0
 	var/wires = 3
 	/*
@@ -11,10 +24,9 @@
 				2=Network Access
 	*/
 
-	anchored = 1.0
-	use_power = 1
-	idle_power_usage = 2
-	active_power_usage = 4
+/obj/machinery/button/remote/Initialize()
+	. = ..()
+	create_transmitter(id, frequency, radio_filter)
 
 /obj/machinery/button/remote/attack_ai(mob/user as mob)
 	if(wires & 2)
@@ -34,32 +46,45 @@
 
 /obj/machinery/button/remote/attack_hand(mob/user as mob)
 	if(..())
-		return
-
-	src.add_fingerprint(user)
-	if(stat & (NOPOWER|BROKEN))
-		return
-
+		return 1
 	if(!allowed(user) && (wires & 1))
-		to_chat(user, "<span class='warning'>Access Denied</span>")
-		flick("doorctrl-denied",src)
+		to_chat(user, SPAN_WARNING("Access Denied"))
+		flick(icon_anim_deny,src)
 		return
+	return activate(user)
 
-	use_power(5)
-	icon_state = "doorctrl1"
-	desiredstate = !desiredstate
-	trigger(user)
-	spawn(15)
-		update_icon()
+/obj/machinery/button/remote/send_signal(mob/user as mob)
+	desired_state = !desired_state
+	var/data[0]
+	data["tag"] = id
+	data[activate_func] = 1
+	post_signal(data)
 
-/obj/machinery/button/remote/proc/trigger()
-	return
+/*
+	Blast door remote control
+*/
+/obj/machinery/button/remote/blast_door
+	name = "remote blast door-control"
+	desc = "It controls blast doors, remotely."
+	icon_state 		= "blastctrl2"
+	icon_active 	= "blastctrl"
+	icon_idle 		= "blastctrl2"
+	icon_unpowered 	= "blastctrl-p"
+	icon_anim_act   = "blastctrl1"
+	icon_anim_deny  = "blastctrl-denied"
+	activate_func 	= "toggle"
+	frequency 		= DOOR_FREQ
+	radio_filter 	= RADIO_BLAST_DOORS
 
-/obj/machinery/button/remote/update_icon()
-	if(stat & NOPOWER)
-		icon_state = "doorctrl-p"
-	else
-		icon_state = "doorctrl"
+/*
+	Emitter remote control
+*/
+/obj/machinery/button/remote/emitter
+	name = "remote emitter control"
+	desc = "It controls emitters, remotely."
+	activate_func 	= "activate"
+	frequency 		= ENG_FREQ
+	radio_filter	= RADIO_EMITTERS
 
 /*
 	Airlock remote control
@@ -75,7 +100,8 @@
 /obj/machinery/button/remote/airlock
 	name = "remote door-control"
 	desc = "It controls doors, remotely."
-
+	frequency = DOOR_FREQ
+	radio_filter = RADIO_AIRLOCK
 	var/specialfunctions = 1
 	/*
 	Bitflag, 	1= open
@@ -85,36 +111,22 @@
 				16= door safties
 	*/
 
-/obj/machinery/button/remote/airlock/trigger()
-	for(var/obj/machinery/door/airlock/D in world)
-		if(D.id_tag == src.id)
-			if(specialfunctions & OPEN)
-				if (D.density)
-					spawn(0)
-						D.open()
-						return
-				else
-					spawn(0)
-						D.close()
-						return
-			if(desiredstate == 1)
-				if(specialfunctions & IDSCAN)
-					D.set_idscan(0)
-				if(specialfunctions & BOLTS)
-					D.lock()
-				if(specialfunctions & SHOCK)
-					D.electrify(-1)
-				if(specialfunctions & SAFE)
-					D.set_safeties(0)
-			else
-				if(specialfunctions & IDSCAN)
-					D.set_idscan(1)
-				if(specialfunctions & BOLTS)
-					D.unlock()
-				if(specialfunctions & SHOCK)
-					D.electrify(0)
-				if(specialfunctions & SAFE)
-					D.set_safeties(1)
+/obj/machinery/button/remote/airlock/send_signal()
+	desired_state = !desired_state
+	var/data[0]
+	data["tag"] = id
+	if(specialfunctions & OPEN)
+		data["command"] = "open"
+	data["activate"] = desired_state
+	if(specialfunctions & IDSCAN)
+		data["command"] = "idscan"
+	if(specialfunctions & BOLTS)
+		data["command"] = "bolts"
+	if(specialfunctions & SHOCK)
+		data["command"] = "electrify_permanently"
+	if(specialfunctions & SAFE)
+		data["command"] ="safeties"
+	post_signal(data)
 
 #undef OPEN
 #undef IDSCAN
@@ -123,78 +135,29 @@
 #undef SAFE
 
 /*
-	Blast door remote control
-*/
-/obj/machinery/button/remote/blast_door
-	name = "remote blast door-control"
-	desc = "It controls blast doors, remotely."
-
-/obj/machinery/button/remote/blast_door/trigger()
-	for(var/obj/machinery/door/blast/M in world)
-		if(M.id == src.id)
-			if(M.density)
-				spawn(0)
-					M.open()
-					return
-			else
-				spawn(0)
-					M.close()
-					return
-
-/*
-	Emitter remote control
-*/
-/obj/machinery/button/remote/emitter
-	name = "remote emitter control"
-	desc = "It controls emitters, remotely."
-
-/obj/machinery/button/remote/emitter/trigger(mob/user as mob)
-	for(var/obj/machinery/power/emitter/E in world)
-		if(E.id == src.id)
-			spawn(0)
-				E.activate(user)
-				return
-
-/*
 	Mass driver remote control
 */
 /obj/machinery/button/remote/driver
 	name = "mass driver button"
 	desc = "A remote control switch for a mass driver."
-	icon_state = "launcherbtt"
+	icon_state 		= "launcherbtt"
+	icon_active 	= "launcheract"
+	icon_idle 		= "launcherbtt"
+	icon_unpowered 	= "launcherbtt"
+	frequency = DOOR_FREQ
+	radio_filter = RADIO_MASSDRIVER
 
-/obj/machinery/button/remote/driver/trigger(mob/user as mob)
+/obj/machinery/button/remote/driver/send_signal(mob/user as mob)
 	set waitfor = 0
-	active = 1
-	update_icon()
-
-	for(var/obj/machinery/door/blast/M in SSmachines.machinery)
-		if (M.id == src.id)
-			spawn( 0 )
-				M.open()
-				return
-
+	desired_state = !desired_state
+	
+	var/data = list("tag" = id, "command" = "open")
+	post_signal(data, RADIO_BLAST_DOORS)
 	sleep(20)
 
-	for(var/obj/machinery/mass_driver/M in SSmachines.machinery)
-		if(M.id == src.id)
-			M.drive()
-
+	data = list("tag" = id, "command" = "activate")
+	post_signal(data, RADIO_MASSDRIVER)
 	sleep(50)
 
-	for(var/obj/machinery/door/blast/M in SSmachines.machinery)
-		if (M.id == src.id)
-			spawn(0)
-				M.close()
-				return
-
-	icon_state = "launcherbtt"
-	update_icon()
-
-	return
-
-/obj/machinery/button/remote/driver/update_icon()
-	if(!active || (stat & NOPOWER))
-		icon_state = "launcherbtt"
-	else
-		icon_state = "launcheract"
+	data = list("tag" = id, "command" = "close")
+	post_signal(data, RADIO_BLAST_DOORS)

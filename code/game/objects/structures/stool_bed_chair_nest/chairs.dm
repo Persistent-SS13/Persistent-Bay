@@ -44,7 +44,7 @@
 
 	var/cache_key = "[base_icon]-[material.name]-over"
 	if(isnull(stool_cache[cache_key]))
-		var/image/I = image('icons/obj/furniture.dmi', "[base_icon]_over")
+		var/image/I = image(src.icon, "[base_icon]_over")
 		if(material_alteration & MATERIAL_ALTERATION_COLOR)
 			I.color = material.icon_colour
 		I.plane = ABOVE_HUMAN_PLANE
@@ -55,7 +55,7 @@
 	if(padding_material)
 		var/padding_cache_key = "[base_icon]-padding-[padding_material.name]-over"
 		if(isnull(stool_cache[padding_cache_key]))
-			var/image/I =  image(icon, "[base_icon]_padding_over")
+			var/image/I =  image(src.icon, "[base_icon]_padding_over")
 			if(material_alteration & MATERIAL_ALTERATION_COLOR)
 				I.color = padding_material.icon_colour
 			I.plane = ABOVE_HUMAN_PLANE
@@ -66,7 +66,7 @@
 	if(buckled_mob && padding_material)
 		cache_key = "[base_icon]-armrest-[padding_material.name]"
 		if(isnull(stool_cache[cache_key]))
-			var/image/I = image(icon, "[base_icon]_armrest")
+			var/image/I = image(src.icon, "[base_icon]_armrest")
 			I.plane = ABOVE_HUMAN_PLANE
 			I.layer = ABOVE_HUMAN_LAYER
 			if(material_alteration & MATERIAL_ALTERATION_COLOR)
@@ -90,7 +90,7 @@
 	if(!usr || !Adjacent(usr))
 		return
 
-	if(usr.stat == DEAD)
+	if(usr.is_dead())
 		if(!round_is_spooky())
 			to_chat(src, "<span class='warning'>The veil is not thin enough for you to do that.</span>")
 			return

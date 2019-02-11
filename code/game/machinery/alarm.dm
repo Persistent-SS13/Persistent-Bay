@@ -122,22 +122,22 @@
 		update_icon()
 		frame.transfer_fingerprints_to(src)
 
-/obj/machinery/alarm/after_load()
-	. = ..()
-	alarm_area = get_area(src)
-	if(!alarm_area)
-		return
-	area_uid = alarm_area.uid
-	if (name == "alarm")
-		name = "[alarm_area.name] Air Alarm"
+// /obj/machinery/alarm/after_load()
+// 	. = ..()
+// 	alarm_area = get_area(src)
+// 	if(!alarm_area)
+// 		return
+// 	area_uid = alarm_area.uid
+// 	if (name == "alarm")
+// 		name = "[alarm_area.name] Air Alarm"
 
-	if(!wires)
-		wires = new(src)
+// 	if(!wires)
+// 		wires = new(src)
 
-	set_frequency(frequency)
-	if (!master_is_operating())
-		elect_master()
-	update_icon()
+// 	set_frequency(frequency)
+// 	if (!master_is_operating())
+// 		elect_master()
+// 	update_icon()
 
 /obj/machinery/alarm/Initialize()
 	. = ..()

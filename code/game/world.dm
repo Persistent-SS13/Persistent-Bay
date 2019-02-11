@@ -577,14 +577,14 @@ var/world_topic_spam_protect_time = world.timeofday
 	src.status = s
 
 #define WORLD_LOG_START(X) WRITE_FILE(GLOB.world_##X##_log, "\n\nStarting up round ID [game_id]. [time_stamp()]\n---------------------")
-#define WORLD_SETUP_LOG(X) GLOB.world_##X##_log = file("[GLOB.log_directory]/[#X].log") ; WORLD_LOG_START(X)
+#define WORLD_SETUP_LOG(X) GLOB.world_##X##_log = file("[GLOB.log_directory]/[#X]-[game_id].log") ; WORLD_LOG_START(X)
 /world/proc/SetupLogs()
 	GLOB.log_directory = LOGS_PATH_FOLDER_NOW
-	if(config && config.log_runtime)
-		src.log = file(PATH_RUNTIME_LOG_NOW)
-	WORLD_SETUP_LOG(runtime)
+	//WORLD_SETUP_LOG(runtime)
 	WORLD_SETUP_LOG(qdel)
 	WORLD_SETUP_LOG(attack)
+	if(config && config.log_runtime)
+		src.log = file(PATH_RUNTIME_LOG_NOW)
 	href_logfile = file(PATH_HREF_LOG_NOW)
 	diary = file(PATH_GAME_LOG_NOW)
 	WRITE_FILE(diary, "[log_end]\n[log_end]\nStarting up. (ID: [game_id]) [time2text(world.timeofday, "hh:mm.ss")][log_end]\n---------------------[log_end]")

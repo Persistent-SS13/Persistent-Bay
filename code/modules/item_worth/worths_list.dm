@@ -39,7 +39,6 @@ var/list/worths = list(
 					/obj/item/weapon/gun/energy/plasmacutter = 1000,
 //LAUNCHERS,
 					/obj/item/weapon/gun/launcher/crossbow = 120,
-					/obj/item/weapon/gun/launcher/pneumatic/small = 100,
 					/obj/item/weapon/gun/launcher/pneumatic = 200,
 					/obj/item/weapon/gun/launcher/syringe = 150,
 					/obj/item/weapon/gun/launcher/alien = 3500,

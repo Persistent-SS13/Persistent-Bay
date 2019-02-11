@@ -105,8 +105,15 @@ var/const/PUBLIC_HIGH_FREQ	= 1489
 var/const/RADIO_HIGH_FREQ	= 1600
 var/const/RADIO_CUSTOM_FREQ = 1700
 
-var/const/AIRALARM_FREQ	= 1439
-var/const/STATUS_FREQ = 1435
+var/const/MAGNET_FREQ			= 1311
+var/const/INCINERATOR_FREQ		= 1378
+var/const/DOOR_FREQ				= 1379
+var/const/MISC_MACHINE_FREQ		= 1202
+var/const/ENGINE_FREQ			= 1438
+var/const/AIRALARM_FREQ			= 1439
+var/const/STATUS_FREQ 			= 1435
+var/const/ATMOS_CONTROL_FREQ 	= 1441
+var/const/AIRLOCK_FREQ			= 1449
 
 var/const/BOT_FREQ	= 1447
 var/const/COMM_FREQ = 1353
@@ -133,6 +140,10 @@ var/const/TT_FREQ = 1489
 // internal department channels
 var/const/MED_I_FREQ = 1485
 var/const/SEC_I_FREQ = 1475
+
+// special intercoms
+var/const/SEC_INTERCOM_FREQ = 1476
+var/const/CONFESSIONALS_FREQ = 1480
 
 var/list/radiochannels = list(
 	"Common"		= PUB_FREQ,
@@ -227,17 +238,23 @@ var/list/DEPT_FREQS = list(AI_FREQ, COMM_FREQ, ENG_FREQ, MED_FREQ, SEC_FREQ, SCI
 //This is done for performance, so we don't send signals to lots of machines unnecessarily.
 
 //This filter is special because devices belonging to default also recieve signals sent to any other filter.
-var/const/RADIO_DEFAULT = "radio_default"
-
-var/const/RADIO_TO_AIRALARM = "radio_airalarm" //air alarms
-var/const/RADIO_FROM_AIRALARM = "radio_airalarm_rcvr" //devices interested in recieving signals from air alarms
-var/const/RADIO_CHAT = "radio_telecoms"
-var/const/RADIO_ATMOSIA = "radio_atmos"
-var/const/RADIO_NAVBEACONS = "radio_navbeacon"
-var/const/RADIO_AIRLOCK = "radio_airlock"
-var/const/RADIO_SECBOT = "radio_secbot"
-var/const/RADIO_MULEBOT = "radio_mulebot"
-var/const/RADIO_MAGNETS = "radio_magnet"
+var/const/RADIO_DEFAULT 		= "radio_default"
+var/const/RADIO_TO_AIRALARM 	= "radio_airalarm" 		//air alarms
+var/const/RADIO_FROM_AIRALARM 	= "radio_airalarm_rcvr" //devices interested in recieving signals from air alarms
+var/const/RADIO_CHAT 			= "radio_telecoms"
+var/const/RADIO_ATMOSIA 		= "radio_atmos"
+var/const/RADIO_ENGI			= "radio_engi"
+var/const/RADIO_NAVBEACONS 		= "radio_navbeacon"
+var/const/RADIO_AIRLOCK 		= "radio_airlock"
+var/const/RADIO_BLAST_DOORS		= "radio_blastdoor"
+var/const/RADIO_SECBOT 			= "radio_secbot"
+var/const/RADIO_MULEBOT 		= "radio_mulebot"
+var/const/RADIO_MAGNETS 		= "radio_magnet"
+var/const/RADIO_EMITTERS 		= "radio_emitter"
+var/const/RADIO_MASSDRIVER		= "radio_massdriver"
+var/const/RADIO_FLASHERS		= "radio_flasher"
+var/const/RADIO_STATUS_DISPLAY  = "radio_status_display"
+var/const/RADIO_INCINERATOR  	= "radio_incinerator"
 
 var/global/datum/controller/radio/radio_controller
 

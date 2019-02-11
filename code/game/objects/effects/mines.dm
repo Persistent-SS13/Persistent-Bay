@@ -5,7 +5,7 @@
 	anchored = 1
 	plane = OBJ_PLANE
 	layer = OBJ_LAYER
-	icon = 'icons/obj/weapons.dmi'
+	icon = 'icons/obj/weapons/mines.dmi'
 	icon_state = "uglymine"
 	var/triggerproc = "explode" //name of the proc thats called when the mine is triggered
 	var/triggered = 0

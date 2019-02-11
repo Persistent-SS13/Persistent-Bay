@@ -29,8 +29,42 @@
 	var/wiresexposed = 0
 	frame_type = /obj/item/frame/atm
 
+/obj/machinery/atm/New(loc, dir, atom/frame, var/ndir)	//ATM is created from frame
+	..(loc)
+	if(istype(frame))
+		buildstage = 0
+		wiresexposed = 1
+		frame.transfer_fingerprints_to(src)
+
+	machine_id = "[station_name()] ATM #[num_financial_terminals++]"
+	spark_system = new /datum/effect/effect/system/spark_spread
+	spark_system.set_up(5, 0, src)
+	spark_system.attach(src)
+
+	if(ndir)
+		set_dir(ndir)
+		update_icon()
+
+/obj/machinery/atm/Initialize(mapload, d)
+	. = ..()
+	update_icon()
+
 /obj/machinery/atm/update_icon()	//Sprites for each build stage
 	overlays.Cut()
+	//ATMs can only exist on walls. So its better to just do it like this.
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = -32
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = 40
+		if(EAST)
+			src.pixel_x = -36
+			src.pixel_y = 0
+		if(WEST)
+			src.pixel_x = 36
+			src.pixel_y = 0
 
 	if(wiresexposed)
 		switch(buildstage)
@@ -97,26 +131,8 @@
 
 	return
 
-/obj/machinery/atm/New(loc, dir, atom/frame, var/ndir)	//ATM is created from frame
-	..(loc)
-
-	if(istype(frame))
-		buildstage = 0
-		wiresexposed = 1
-		frame.transfer_fingerprints_to(src)
-	..()
-	machine_id = "[station_name()] ATM #[num_financial_terminals++]"
-	spark_system = new /datum/effect/effect/system/spark_spread
-	spark_system.set_up(5, 0, src)
-	spark_system.attach(src)
-
-	if(ndir)
-		set_dir(ndir)
-		pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 30 : -30)
-		pixel_y = (src.dir & 3)? (src.dir ==1 ? 30 : -30) : 0
-
 /obj/machinery/atm/Process()
-	if(stat & NOPOWER)
+	if(inoperable())
 		return
 
 	if(ticks_left_timeout > 0)

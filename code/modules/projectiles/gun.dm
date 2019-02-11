@@ -115,7 +115,7 @@
 
 	var/mob/living/M = user
 	if(HULK in M.mutations)
-		to_chat(M, "<span class='danger'>Your fingers are much too large for the trigger guard!</span>")
+		to_chat(M, SPAN_DANGER("Your fingers are much too large for the trigger guard!"))
 		return 0
 	if((CLUMSY in M.mutations) && prob(40)) //Clumsy handling
 		var/obj/P = consume_next_projectile()
@@ -123,8 +123,8 @@
 			if(process_projectile(P, user, user, pick(BP_L_FOOT, BP_R_FOOT)))
 				handle_post_fire(user, user)
 				user.visible_message(
-					"<span class='danger'>\The [user] shoots \himself in the foot with \the [src]!</span>",
-					"<span class='danger'>You shoot yourself in the foot with \the [src]!</span>"
+					SPAN_DANGER("\The [user] shoots \himself in the foot with \the [src]!"),
+					SPAN_DANGER("You shoot yourself in the foot with \the [src]!")
 					)
 				M.drop_item()
 		else
@@ -147,7 +147,7 @@
 		return
 
 	if(user && user.a_intent == I_HELP) //regardless of what happens, refuse to shoot if help intent is on
-		to_chat(user, "<span class='warning'>You refrain from firing \the [src] as your intent is set to help.</span>")
+		to_chat(user, SPAN_WARNING("You refrain from firing \the [src] as your intent is set to help."))
 	else
 		Fire(A,user,params) //Otherwise, fire normally.
 
@@ -170,7 +170,7 @@
 
 	if(world.time < next_fire_time)
 		if (world.time % 3) //to prevent spam
-			to_chat(user, "<span class='warning'>[src] is not ready to fire again!</span>")
+			to_chat(user, SPAN_WARNING("[src] is not ready to fire again!"))
 		return
 
 	var/shoot_time = (burst - 1)* burst_delay
@@ -224,7 +224,7 @@
 //called if there was no projectile to shoot
 /obj/item/weapon/gun/proc/handle_click_empty(mob/user)
 	if (user)
-		user.visible_message("*click click*", "<span class='danger'>*click*</span>")
+		user.visible_message("*click click*", SPAN_DANGER("*click*"))
 	else
 		src.visible_message("*click click*")
 	playsound(src.loc, 'sound/weapons/empty.ogg', 100, 1)
@@ -240,8 +240,8 @@
 			)
 		else
 			user.visible_message(
-				"<span class='danger'>\The [user] fires \the [src][pointblank ? " point blank at \the [target]":""]!</span>",
-				"<span class='warning'>You fire \the [src]!</span>",
+				SPAN_DANGER("\The [user] fires \the [src][pointblank ? " point blank at \the [target]":""]!"),
+				SPAN_WARNING("You fire \the [src]!"),
 				"You hear a [fire_sound_text]!"
 				)
 
@@ -250,24 +250,24 @@
 			switch(one_hand_penalty)
 				if(1)
 					if(prob(50)) //don't need to tell them every single time
-						to_chat(user, "<span class='warning'>Your aim wavers slightly.</span>")
+						to_chat(user, SPAN_WARNING("Your aim wavers slightly."))
 				if(2)
-					to_chat(user, "<span class='warning'>Your aim wavers as you fire \the [src] with just one hand.</span>")
+					to_chat(user, SPAN_WARNING("Your aim wavers as you fire \the [src] with just one hand."))
 				if(3)
-					to_chat(user, "<span class='warning'>You have trouble keeping \the [src] on target with just one hand.</span>")
+					to_chat(user, SPAN_WARNING("You have trouble keeping \the [src] on target with just one hand."))
 				if(4 to INFINITY)
-					to_chat(user, "<span class='warning'>You struggle to keep \the [src] on target with just one hand!</span>")
+					to_chat(user, SPAN_WARNING("You struggle to keep \the [src] on target with just one hand!"))
 		else if(!user.can_wield_item(src))
 			switch(one_hand_penalty)
 				if(1)
 					if(prob(50)) //don't need to tell them every single time
-						to_chat(user, "<span class='warning'>Your aim wavers slightly.</span>")
+						to_chat(user, SPAN_WARNING("Your aim wavers slightly."))
 				if(2)
-					to_chat(user, "<span class='warning'>Your aim wavers as you try to hold \the [src] steady.</span>")
+					to_chat(user, SPAN_WARNING("Your aim wavers as you try to hold \the [src] steady."))
 				if(3)
-					to_chat(user, "<span class='warning'>You have trouble holding \the [src] steady.</span>")
+					to_chat(user, SPAN_WARNING("You have trouble holding \the [src] steady."))
 				if(4 to INFINITY)
-					to_chat(user, "<span class='warning'>You struggle to hold \the [src] steady!</span>")
+					to_chat(user, SPAN_WARNING("You struggle to hold \the [src] steady!"))
 
 	if(screen_shake)
 		spawn()
@@ -362,21 +362,21 @@
 	var/mob/living/carbon/human/M = user
 
 	mouthshoot = 1
-	M.visible_message("<span class='danger'>[user] sticks their gun in their mouth, ready to pull the trigger...</span>")
+	M.visible_message(SPAN_DANGER("[user] sticks their gun in their mouth, ready to pull the trigger..."))
 	if(!do_after(user, 40, progress=0))
-		M.visible_message("<span class='notice'>[user] decided life was worth living</span>")
+		M.visible_message(SPAN_DANGER("[user] decided life was worth living"))
 		mouthshoot = 0
 		return
 	var/obj/item/projectile/in_chamber = consume_next_projectile()
 	if (istype(in_chamber))
-		user.visible_message("<span class = 'warning'>[user] pulls the trigger.</span>")
+		user.visible_message(SPAN_WARNING("[user] pulls the trigger."))
 		var/shot_sound = in_chamber.fire_sound? in_chamber.fire_sound : fire_sound
 		if(silenced)
 			playsound(user, shot_sound, 10, 1)
 		else
 			playsound(user, shot_sound, 50, 1)
 		if(istype(in_chamber, /obj/item/projectile/beam/lastertag))
-			user.show_message("<span class = 'warning'>You feel rather silly, trying to commit suicide with a toy.</span>")
+			user.show_message(SPAN_WARNING("You feel rather silly, trying to commit suicide with a toy."))
 			mouthshoot = 0
 			return
 
@@ -386,7 +386,7 @@
 			user.apply_damage(in_chamber.force*2.5, in_chamber.damtype, BP_HEAD, 0, used_weapon = "Point blank shot in the mouth with \a [in_chamber]")
 			user.death()
 		else
-			to_chat(user, "<span class = 'notice'>Ow...</span>")
+			to_chat(user, SPAN_NOTICE("Ow..."))
 			user.apply_effect(110, PAIN, 0)
 		qdel(in_chamber)
 		mouthshoot = 0
@@ -441,5 +441,5 @@
 /obj/item/weapon/gun/attack_self(mob/user)
 	var/datum/firemode/new_mode = switch_firemodes(user)
 	if(new_mode)
-		to_chat(user, "<span class='notice'>\The [src] is now set to [new_mode.name].</span>")
+		to_chat(user, SPAN_NOTICE("\The [src] is now set to [new_mode.name]."))
 

@@ -101,6 +101,14 @@
 	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
 	build_machine_type = /obj/machinery/light_switch
 
+/obj/item/frame/turret_control
+	name = "turret control panel frame"
+	desc = "Used for building turret control panels"
+	icon = 'icons/obj/machines/turret_control.dmi'
+	icon_state = "control_off"
+	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
+	build_machine_type = /obj/machinery/turretid
+
 /obj/item/frame/intercom
 	name = "Intercom Frame"
 	desc = "Used for building intercoms"
@@ -195,12 +203,28 @@
 	build_machine_type = /obj/structure/sink/kitchen
 
 /obj/item/frame/plastic/virusfoodtank
-	name = "Virus Food Tank Frame"
-	desc = "Used for building wall-mounted virus food tanks."
+	name = "Virus Food Dispenser Frame"
+	desc = "Used for building wall-mounted virus food dispensers."
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "virusfoodtank"
 	matter = list(MATERIAL_PLASTIC = 5 * SHEET_MATERIAL_AMOUNT)
-	build_machine_type = /obj/structure/reagent_dispensers/virusfood/empty
+	build_machine_type = /obj/structure/reagent_dispensers/wall/virusfood/empty
+
+/obj/item/frame/plastic/acidtank
+	name = "Sulphuric Acid Dispenser Frame"
+	desc = "Used for building wall-mounted acid dispensers."
+	icon = 'icons/obj/objects.dmi'
+	icon_state = "acidtank"
+	matter = list(MATERIAL_PLASTIC = 5 * SHEET_MATERIAL_AMOUNT)
+	build_machine_type = /obj/structure/reagent_dispensers/wall/acid/empty
+
+/obj/item/frame/plastic/peppertank
+	name = "Pepper Spray Refiller Frame"
+	desc = "Used for building wall-mounted pepper spray refillers."
+	icon = 'icons/obj/objects.dmi'
+	icon_state = "peppertank"
+	matter = list(MATERIAL_PLASTIC = 5 * SHEET_MATERIAL_AMOUNT)
+	build_machine_type = /obj/structure/reagent_dispensers/wall/peppertank/empty
 
 /obj/item/frame/newscaster
 	name = "News Caster Frame"
@@ -234,6 +258,13 @@
 	icon = 'icons/obj/status_display.dmi'
 	icon_state = "frame"
 	build_machine_type = /obj/machinery/status_display
+
+/obj/item/frame/pager
+	name = "pager frame"
+	desc = "A department pager frame."
+	icon = 'icons/obj/machines/buttons.dmi'
+	icon_state = "doorbell"
+	build_machine_type = /obj/machinery/pager
 
 /obj/item/frame/request_console
 	name = "request console frame"

@@ -3,7 +3,7 @@
 // This code allows for airlocks to be controlled externally by setting an id_tag and comm frequency (disables ID access)
 obj/machinery/door/airlock
 	var/id_tag
-	var/frequency
+	var/frequency = AIRLOCK_FREQ
 	var/shockedby = list()
 	var/datum/radio_frequency/radio_connection
 	var/cur_command = null	//the command the door is currently attempting to complete
@@ -165,7 +165,7 @@ obj/machinery/airlock_sensor
 
 	var/id_tag
 	var/master_tag
-	var/frequency = 1379
+	var/frequency = AIRLOCK_FREQ
 	var/command = "cycle"
 
 	var/datum/radio_frequency/radio_connection
@@ -249,7 +249,7 @@ obj/machinery/access_button
 	power_channel = ENVIRON
 
 	var/master_tag
-	var/frequency = 1449
+	var/frequency = AIRLOCK_FREQ
 	var/command = "cycle"
 
 	var/datum/radio_frequency/radio_connection
@@ -308,9 +308,9 @@ obj/machinery/access_button/Destroy()
 	return ..()
 
 obj/machinery/access_button/airlock_interior
-	frequency = 1379
+	frequency = AIRLOCK_FREQ
 	command = "cycle_interior"
 
 obj/machinery/access_button/airlock_exterior
-	frequency = 1379
+	frequency = AIRLOCK_FREQ
 	command = "cycle_exterior"

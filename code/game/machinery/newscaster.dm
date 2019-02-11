@@ -153,10 +153,13 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 	src.update_icon() //for any custom ones on the map...
 	..()                                //I just realised the newscasters weren't in the global machines list. The superconstructor call will tend to that
 
+/obj/machinery/newscaster/Initialize(mapload, d)
+	. = ..()
+	update_icon()
+
 /obj/machinery/newscaster/Destroy()
 	allCasters -= src
 	..()
-
 
 /obj/machinery/newscaster/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data = list()
@@ -224,7 +227,7 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 	switch(dir)
 		if(NORTH)
 			pixel_x = 0
-			pixel_y = 32
+			pixel_y = -32
 		if(SOUTH)
 			pixel_x = 0
 			pixel_y = 40
@@ -237,7 +240,7 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 
 	if(inoperable())
 		icon_state = "newscaster_off"
-		if(stat & BROKEN) //If the thing is smashed, add crack overlay on top of the unpowered sprite.
+		if(isbroken()) //If the thing is smashed, add crack overlay on top of the unpowered sprite.
 			overlays.Cut()
 			overlays += image(src.icon, "crack3")
 		return

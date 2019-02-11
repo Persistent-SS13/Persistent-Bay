@@ -123,10 +123,11 @@ Class Procs:
 	var/time_emped = 0		  //Time left being emped
 	var/emped_disabled_max_time = 5 MINUTES //Maximum time this machine can be disabled by EMP(Aka for severity 1)
 	var/frame_type = /obj/machinery/constructable_frame/machine_frame //The type of frame that will be left behind after deconstruction
-
+	var/radio_check_id = TRUE //Whether the machine checks it own id against the target id of a radio command before executing the command.
 
 /obj/machinery/New()
 	..()
+	ADD_SAVED_VAR(extensions)
 	ADD_SAVED_VAR(time_emped)
 	ADD_SAVED_VAR(panel_open)
 	ADD_SAVED_VAR(component_parts)
@@ -135,6 +136,7 @@ Class Procs:
 	ADD_SAVED_VAR(emagged)
 	ADD_SAVED_VAR(stat)
 
+	ADD_SKIP_EMPTY(extensions)
 	ADD_SKIP_EMPTY(component_parts)
 
 /obj/machinery/after_load()
@@ -156,6 +158,8 @@ Class Procs:
 				qdel(A)
 			else // Otherwise we assume they were dropped to the ground during deconstruction, and were not removed from the component_parts list by deconstruction code.
 				component_parts -= A
+	if(has_transmitter())
+		delete_transmitter()
 	. = ..()
 
 /obj/machinery/proc/RefreshParts() //Placeholder proc for machines that are built using frames.
@@ -443,12 +447,11 @@ Class Procs:
 	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
 	return T && T.is_connected()
 
-/obj/machinery/proc/create_transmitter(var/id, var/filter = RADIO_DEFAULT, var/range = null, var/filterout = null)
+/obj/machinery/proc/create_transmitter(var/id, var/frequency = 0, var/filter = RADIO_DEFAULT, var/range = null, var/filterout = null)
 	if(has_transmitter())
-		var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
-		qdel(T)
-	set_extension(src, /datum/extension/interactive/radio_transmitter, /datum/extension/interactive/radio_transmitter, id = id, range = range, filter = filter, filterout = filterout)
-	log_debug("Created radio transmitter for [src]. id: [id], filter: [filter], range: [range], filterout: [filterout]")
+		delete_transmitter()
+	set_extension(src, RADIO_TRANSMITTER_TYPE, RADIO_TRANSMITTER_TYPE, frequency, id, range, filter, filterout)
+	log_debug("Created radio transmitter for [src] \ref[src]. id: [id? id : "null"], frequency: [frequency], filter: [filter], range: [range? range : "null"], filterout: [filterout? filterout : filter]")
 
 /obj/machinery/proc/delete_transmitter()
 	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
@@ -475,6 +478,19 @@ Class Procs:
 	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
 	if(T)
 		return T.get_id()
+	return null
+
+/obj/machinery/proc/check_radio_match_id(var/datum/signal/signal)
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.signal_match_id(signal)
+	return FALSE
+
+//Returns the target id_tag of the specified signal
+/obj/machinery/proc/signal_target_id(var/datum/signal/signal)
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(T)
+		return T.signal_target_id(signal)
 	return null
 
 /obj/machinery/proc/set_radio_filter(var/filter as text)
@@ -510,7 +526,7 @@ Class Procs:
 		return T.get_range()
 	return null
 
-/obj/machinery/proc/post_signal(var/list/data, var/outfilter = null)
+/obj/machinery/proc/post_signal(var/list/data, var/outfilter = null, var/targettag = null)
 	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
 	if(!T)
 		return null
@@ -518,14 +534,19 @@ Class Procs:
 	signal.transmission_method = TRANSMISSION_RADIO //radio signal
 	signal.source = src
 	signal.data = data.Copy()
-	T.post_signal(signal, outfilter)
+	T.post_signal(signal, outfilter, targettag)
 	return TRUE
 
 //Signals received go straight to the machine's topic handling, so handling radio signal is seamless.
 /obj/machinery/receive_signal(var/datum/signal/signal, var/receive_method, var/receive_param)
 	if(!signal || !has_transmitter())
 		return
-	return OnTopic(usr, signal.data)
+	if( (radio_check_id && check_radio_match_id(signal)) || !radio_check_id)
+		return OnTopic(usr, signal.data)
+
+//Used to emit status updates to any machines listening to this one
+// /obj/machinery/proc/broadcast_status()
+// 	return
 
 //Used to generate a id_tag that would be unique to the machine at that specific coordinate
 /obj/machinery/proc/make_loc_string_id(var/prefix)

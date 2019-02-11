@@ -4,8 +4,8 @@
 	desc = "..."
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "watertank"
-	density = 1
-	anchored = 0
+	density = TRUE
+	anchored = FALSE
 
 	var/initial_capacity = 1000
 	var/initial_reagent_types  // A list of reagents and their ratio relative the initial capacity. list(/datum/reagent/water = 0.5) would fill the dispenser halfway to capacity.
@@ -103,5 +103,39 @@
 		return 0
 	if(reagents.total_volume != 0)
 		to_chat(user, SPAN_WARNING("Empty it first!"))
+	else
+		return ..()
+	
+
+//
+//	Wall-mounted reagent dispensers base class
+//
+/obj/structure/reagent_dispensers/wall
+	density = FALSE
+	anchored = TRUE
+
+/obj/structure/reagent_dispensers/wall/Initialize()
+	. = ..()
+	update_icon()
+
+/obj/structure/reagent_dispensers/wall/update_icon()
+	. = ..()
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = 30
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = -30
+		if(EAST)
+			src.pixel_x = 30
+			src.pixel_y = 0
+		if(WEST)
+			src.pixel_x = -30
+			src.pixel_y = 0
+
+/obj/structure/reagent_dispensers/wall/attackby(var/obj/item/weapon/W as obj, mob/user as mob)
+	if(default_deconstruction_wrench(user,W))
+		return TRUE
 	else
 		return ..()

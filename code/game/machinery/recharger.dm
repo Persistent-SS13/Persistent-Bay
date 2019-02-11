@@ -32,6 +32,7 @@
 		component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
 		component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
 	RefreshParts()
+	update_icon()
 
 /obj/machinery/recharger/Destroy()
 	if(charging)
@@ -182,6 +183,22 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 	icon_state_charging = "wrecharger1"
 	icon_state_idle = "wrecharger0"
 	portable = 0
+
+/obj/machinery/recharger/wallcharger/update_icon()
+	..()
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = -24
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = 28
+		if(EAST)
+			src.pixel_x = -32
+			src.pixel_y = 0
+		if(WEST)
+			src.pixel_x = 32
+			src.pixel_y = 0
 
 #undef allowed_devices
 #undef disallowed_devices

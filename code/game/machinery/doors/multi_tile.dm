@@ -17,13 +17,15 @@
 	emag_file = 'icons/obj/doors/double/emag.dmi'
 	width = 2
 	appearance_flags = 0
-	opacity = 1
+	opacity = TRUE
+	max_health = 800
 	assembly_type = /obj/structure/door_assembly/multi_tile
 
-/obj/machinery/door/airlock/multi_tile/should_save(var/datum/caller)
-	if(istype(caller, /turf))
-		var/turf/T = caller
-		if(T.x != src.x || T.y != src.y) //Multitile doors exists in the content of 2 turfs, but have the x,y,z of the turf they were built on.
+/obj/machinery/door/airlock/multi_tile/should_save(var/turf/caller as turf)
+	if(caller)
+		var/turf/here = get_turf(src)
+		if(caller != here) //Multitile doors exists in the content of 2 turfs, but have the x,y,z of the turf they were built on.
+			log_debug("Skipped saving [src](\ref[src]), ([x],[y],[z]), while saving turf: [caller]([caller.x],[caller.y],[caller.z])!")
 			return FALSE
 	return ..()
 
@@ -97,21 +99,26 @@
 
 /obj/machinery/door/airlock/multi_tile/command
 	door_color = COLOR_COMMAND_BLUE
+	req_one_access = list(core_access_command_programs) 
 
 /obj/machinery/door/airlock/multi_tile/security
 	door_color = COLOR_NT_RED
+	req_one_access = list(core_access_security_programs) 
 
 /obj/machinery/door/airlock/multi_tile/engineering
 	name = "Maintenance Hatch"
 	door_color = COLOR_AMBER
+	req_one_access = list(core_access_engineering_programs) 
 
 /obj/machinery/door/airlock/multi_tile/medical
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_DEEP_SKY_BLUE
+	req_one_access = list(core_access_medical_programs) 
 
 /obj/machinery/door/airlock/multi_tile/virology
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_GREEN
+	req_one_access = list(core_access_medical_programs) 
 
 /obj/machinery/door/airlock/multi_tile/mining
 	name = "Mining Airlock"
@@ -121,21 +128,26 @@
 /obj/machinery/door/airlock/multi_tile/atmos
 	door_color = COLOR_AMBER
 	stripe_color = COLOR_CYAN
+	req_one_access = list(core_access_engineering_programs) 
 
 /obj/machinery/door/airlock/multi_tile/research
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_NT_RED
+	req_one_access = list(core_access_science_programs) 
 
 /obj/machinery/door/airlock/multi_tile/science
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_VIOLET
+	req_one_access = list(core_access_science_programs) 
 
 /obj/machinery/door/airlock/multi_tile/sol
 	door_color = COLOR_BLUE_GRAY
+	req_one_access = list(core_access_command_programs) 
 
 /obj/machinery/door/airlock/multi_tile/maintenance
 	name = "Maintenance Access"
 	stripe_color = COLOR_AMBER
+	req_one_access = list(core_access_engineering_programs) 
 
 /obj/machinery/door/airlock/multi_tile/civilian
 	stripe_color = COLOR_CIVIE_GREEN
@@ -146,27 +158,34 @@
 
 /obj/machinery/door/airlock/multi_tile/glass
 	name = "Glass Airlock"
-	glass = 1
+	glass = TRUE
+	opacity = FALSE
+	max_health = 600
 
 /obj/machinery/door/airlock/multi_tile/glass/command
 	door_color = COLOR_COMMAND_BLUE
 	stripe_color = COLOR_SKY_BLUE
+	req_one_access = list(core_access_command_programs) 
 
 /obj/machinery/door/airlock/multi_tile/glass/security
 	door_color = COLOR_NT_RED
 	stripe_color = COLOR_ORANGE
+	req_one_access = list(core_access_security_programs) 
 
 /obj/machinery/door/airlock/multi_tile/glass/engineering
 	door_color = COLOR_AMBER
 	stripe_color = COLOR_RED
+	req_one_access = list(core_access_engineering_programs) 
 
 /obj/machinery/door/airlock/multi_tile/glass/medical
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_DEEP_SKY_BLUE
+	req_one_access = list(core_access_medical_programs) 
 
 /obj/machinery/door/airlock/multi_tile/glass/virology
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_GREEN
+	req_one_access = list(core_access_medical_programs) 
 
 /obj/machinery/door/airlock/multi_tile/glass/mining
 	door_color = COLOR_PALE_ORANGE
@@ -175,18 +194,22 @@
 /obj/machinery/door/airlock/multi_tile/glass/atmos
 	door_color = COLOR_AMBER
 	stripe_color = COLOR_CYAN
+	req_one_access = list(core_access_engineering_programs) 
 
 /obj/machinery/door/airlock/multi_tile/glass/research
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_NT_RED
+	req_one_access = list(core_access_science_programs) 
 
 /obj/machinery/door/airlock/multi_tile/glass/science
 	door_color = COLOR_WHITE
 	stripe_color = COLOR_VIOLET
+	req_one_access = list(core_access_science_programs) 
 
 /obj/machinery/door/airlock/multi_tile/glass/sol
 	door_color = COLOR_BLUE_GRAY
 	stripe_color = COLOR_AMBER
+	req_one_access = list(core_access_command_programs) 
 
 /obj/machinery/door/airlock/multi_tile/glass/freezer
 	door_color = COLOR_WHITE
@@ -194,6 +217,7 @@
 /obj/machinery/door/airlock/multi_tile/glass/maintenance
 	name = "Maintenance Access"
 	stripe_color = COLOR_AMBER
+	req_one_access = list(core_access_engineering_programs) 
 
 /obj/machinery/door/airlock/multi_tile/glass/civilian
 	stripe_color = COLOR_CIVIE_GREEN

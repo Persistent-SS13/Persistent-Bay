@@ -1,185 +1,83 @@
-/obj/machinery/air_sensor
-	icon = 'icons/obj/machines/gassensor.dmi'
-	icon_state = "gsensor1"
-	name = "Gas Sensor"
 
-	anchored = 1
-	var/state = 0
-
-	var/id_tag
-	var/frequency = 1439
-
-	var/on = 1
-	var/output = 3
-	//Flags:
-	// 1 for pressure
-	// 2 for temperature
-	// Output >= 4 includes gas composition
-	// 4 for oxygen concentration
-	// 8 for phoron concentration
-	// 16 for nitrogen concentration
-	// 32 for carbon dioxide concentration
-	// 64 for hydrogen concentration
-	// 128 for reagent gas concentration
-
-	var/datum/radio_frequency/radio_connection
-	var/radio_filter = RADIO_ATMOSIA
-
-/obj/machinery/air_sensor/update_icon()
-	icon_state = "gsensor[on]"
-
-/obj/machinery/air_sensor/Process()
-	if(on)
-		var/datum/signal/signal = new
-		signal.transmission_method = 1 //radio signal
-		signal.data["tag"] = id_tag
-		signal.data["timestamp"] = world.time
-
-		var/datum/gas_mixture/air_sample = return_air()
-
-		if(output&1)
-			signal.data["pressure"] = num2text(round(air_sample.return_pressure(),0.1),)
-		if(output&2)
-			signal.data["temperature"] = round(air_sample.temperature,0.1)
-
-		if(output>4)
-			var/total_moles = air_sample.total_moles
-			if(total_moles > 0)
-				if(output&4)
-					signal.data[GAS_OXYGEN] = round(100*air_sample.gas[GAS_OXYGEN]/total_moles,0.1)
-				if(output&8)
-					signal.data[GAS_PHORON] = round(100*air_sample.gas[GAS_PHORON]/total_moles,0.1)
-				if(output&16)
-					signal.data[GAS_NITROGEN] = round(100*air_sample.gas[GAS_NITROGEN]/total_moles,0.1)
-				if(output&32)
-					signal.data[GAS_CO2] = round(100*air_sample.gas[GAS_CO2]/total_moles,0.1)
-				if(output&64)
-					signal.data[GAS_HYDROGEN] = round(100*air_sample.gas[GAS_HYDROGEN]/total_moles,0.1)
-				if(output&128)
-					var/total_reagent_moles
-					for(var/g in air_sample.gas)
-						if(gas_data.flags[g] & XGM_GAS_REAGENT_GAS)
-							total_reagent_moles += round(100*air_sample.gas[g]/total_moles,0.1)
-					signal.data["reagent"] = total_reagent_moles
-			else
-				signal.data[GAS_OXYGEN] = 0
-				signal.data[GAS_PHORON] = 0
-				signal.data[GAS_NITROGEN] = 0
-				signal.data[GAS_CO2] = 0
-				signal.data[GAS_HYDROGEN] = 0
-				signal.data["reagent"] = 0
-		signal.data["sigtype"]="status"
-		radio_connection.post_signal(src, signal, filter = radio_filter)
-
-
-/obj/machinery/air_sensor/proc/set_frequency(new_frequency)
-	radio_controller.remove_object(src, frequency)
-	frequency = new_frequency
-	radio_connection = radio_controller.add_object(src, frequency, radio_filter)
-
-/obj/machinery/air_sensor/Initialize()
-	set_frequency(frequency)
-	. = ..()
-
-obj/machinery/air_sensor/Destroy()
-	if(radio_controller)
-		radio_controller.remove_object(src,frequency)
-	..()
-
+//
+//	General Air Control
+//
 /obj/machinery/computer/general_air_control
+	name = "Sensor Console"
 	icon = 'icons/obj/computer.dmi'
 	icon_keyboard = "atmos_key"
 	icon_screen = "tank"
-
-	name = "Computer"
-
-	var/frequency = 1439
+	var/id_tag
 	var/list/sensors = list()
-
 	var/list/sensor_information = list()
-	var/datum/radio_frequency/radio_connection
-	var/radio_filter = RADIO_ATMOSIA
 	circuit = /obj/item/weapon/circuitboard/air_management
 
-obj/machinery/computer/general_air_control/Destroy()
-	if(radio_controller)
-		radio_controller.remove_object(src, frequency)
+/obj/machinery/computer/general_air_control/New()
 	..()
-
-/obj/machinery/computer/general_air_control/attack_hand(mob/user)
-	if(..(user))
-		return
-	user << browse(return_text(),"window=computer")
-	user.set_machine(src)
-	onclose(user, "computer")
-
-/obj/machinery/computer/general_air_control/Process()
-	..()
-	src.updateUsrDialog()
-
-/obj/machinery/computer/general_air_control/receive_signal(datum/signal/signal)
-	if(!signal || signal.encryption) return
-
-	var/id_tag = signal.data["tag"]
-	if(!id_tag || !sensors.Find(id_tag)) return
-
-	sensor_information[id_tag] = signal.data
-
-/obj/machinery/computer/general_air_control/proc/return_text()
-	var/sensor_data
-	if(sensors.len)
-		for(var/id_tag in sensors)
-			var/long_name = sensors[id_tag]
-			var/list/data = sensor_information[id_tag]
-			var/sensor_part = "<B>[long_name]</B>:<BR>"
-
-			if(data)
-				if(data["pressure"])
-					sensor_part += "   <B>Pressure:</B> [data["pressure"]] kPa<BR>"
-				if(data["temperature"])
-					sensor_part += "   <B>Temperature:</B> [data["temperature"]] K<BR>"
-				if(data[GAS_OXYGEN]||data[GAS_PHORON]||data[GAS_NITROGEN]||data[GAS_CO2]||data[GAS_HYDROGEN])
-					sensor_part += "   <B>Gas Composition :</B>"
-					if(data[GAS_OXYGEN])
-						sensor_part += "[data[GAS_OXYGEN]]% O2; "
-					if(data[GAS_NITROGEN])
-						sensor_part += "[data[GAS_NITROGEN]]% N; "
-					if(data[GAS_CO2])
-						sensor_part += "[data[GAS_CO2]]% CO2; "
-					if(data[GAS_PHORON])
-						sensor_part += "[data[GAS_PHORON]]% TX; "
-					if(data["hydogen"])
-						sensor_part += "[data[GAS_HYDROGEN]]% H2; "
-					if(data["reagent"])
-						sensor_part += "[data["reagent"]]% REAG; "
-				sensor_part += "<HR>"
-
-			else
-				sensor_part = "<FONT color='red'>[long_name] can not be found!</FONT><BR>"
-
-			sensor_data += sensor_part
-
-	else
-		sensor_data = "No sensors connected."
-
-	var/output = {"<B>[name]</B><HR>
-<B>Sensor Data:</B><HR><HR>[sensor_data]"}
-
-	return output
-
-/obj/machinery/computer/general_air_control/proc/set_frequency(new_frequency)
-	radio_controller.remove_object(src, frequency)
-	frequency = new_frequency
-	radio_connection = radio_controller.add_object(src, frequency, radio_filter)
+	ADD_SAVED_VAR(id_tag)
 
 /obj/machinery/computer/general_air_control/Initialize()
-	set_frequency(frequency)
 	. = ..()
+	init_radio()
 
+/obj/machinery/computer/general_air_control/proc/init_radio()
+	if(!map_storage_loaded)
+		create_transmitter(src.id_tag, ATMOS_CONTROL_FREQ, RADIO_ATMOSIA)
+
+/obj/machinery/computer/general_air_control/attack_ai(mob/user)
+	. = ..()
+	return attack_hand(user)
+
+/obj/machinery/computer/general_air_control/attack_ghost(mob/ghost)
+	. = ..()
+	return attack_hand(ghost)
+
+/obj/machinery/computer/general_air_control/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/master_ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
+	var/list/data[0]
+	data = write_sensor_data()
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
+	if(!ui)
+		ui = new(user, src, ui_key, "general_air_control.tmpl", src.name, 512, 512, master_ui = master_ui, state = state)
+		ui.set_initial_data(data)
+		ui.open()
+		ui.set_auto_update(TRUE)
+
+/obj/machinery/computer/general_air_control/proc/write_sensor_data(var/list/data = list())
+	var/list/info = list()
+	for(var/S in sensors)
+		var/list/curinfo =  sensor_information[S]
+		var/outputtext
+		if(curinfo.len < 1)
+			continue
+		if(curinfo["pressure"])
+			outputtext += "<DIV class='itemLabel'>Pressure: </DIV><DIV class='itemContent'>[curinfo["pressure"]] Kpa</DIV>"
+		if(curinfo["temperature"])
+			outputtext += "<DIV class='itemLabel'>Temperature: </DIV><DIV class='itemContent'>[curinfo["temperature"]] K</DIV>"
+
+		//Copy gases
+		for(var/G in curinfo)
+			if(G == "pressure" || G == "temperature" || G == "sigtype")
+				continue
+			outputtext += "<DIV class='itemLabel'>[G]: </DIV><DIV class='itemContent'>[curinfo[G]]%</DIV>"
+		testing("[src]\ref[src]: [outputtext]")
+		info[S] = outputtext
+	data["info"] = info
+	return data
+
+/obj/machinery/computer/general_air_control/receive_signal(datum/signal/signal)
+	if(!signal || !has_transmitter())
+		return
+	var/sensortag = signal_target_id(signal)
+	if(!sensors.Find(sensortag))
+		return
+	sensor_information[sensortag] = signal.data
+
+//
+//	Large Tank Control
+//
 /obj/machinery/computer/general_air_control/large_tank_control
+	name = "Tank Control Computer"
 	icon = 'icons/obj/computer.dmi'
-
-	frequency = 1441
 	var/input_tag
 	var/output_tag
 
@@ -190,363 +88,228 @@ obj/machinery/computer/general_air_control/Destroy()
 	var/pressure_setting = ONE_ATMOSPHERE * 45
 	circuit = /obj/item/weapon/circuitboard/air_management/tank_control
 
+/obj/machinery/computer/general_air_control/large_tank_control/proc/refreshio()
+	post_signal(list("status" = 1), null, input_tag)
+	post_signal(list("status" = 1), null, output_tag)
 
-/obj/machinery/computer/general_air_control/large_tank_control/return_text()
-	var/output = ..()
-	//if(signal.data)
-	//	input_info = signal.data // Attempting to fix intake control -- TLE
-
-	output += "<B>Tank Control System</B><BR><BR>"
+/obj/machinery/computer/general_air_control/large_tank_control/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/master_ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
+	var/list/data[0]
+	refreshio()
+	data = write_sensor_data(data)
+	data["inputConnected"] = input_info? TRUE : FALSE
 	if(input_info)
-		var/power = (input_info["power"])
-		var/volume_rate = round(input_info["volume_rate"], 0.1)
-		output += "<B>Input</B>: [power?("Injecting"):("On Hold")] <A href='?src=\ref[src];in_refresh_status=1'>Refresh</A><BR>Flow Rate Limit: [volume_rate] L/s<BR>"
-		output += "Command: <A href='?src=\ref[src];in_toggle_injector=1'>Toggle Power</A> <A href='?src=\ref[src];in_set_flowrate=1'>Set Flow Rate</A><BR>"
+		data["inputState"] = input_info["power"]
+		data["inputFlowRate"] = round(input_info["volume_rate"], 0.1)
 
-	else
-		output += "<FONT color='red'>ERROR: Can not find input port</FONT> <A href='?src=\ref[src];in_refresh_status=1'>Search</A><BR>"
-
-	output += "Flow Rate Limit: <A href='?src=\ref[src];adj_input_flow_rate=-100'>-</A> <A href='?src=\ref[src];adj_input_flow_rate=-10'>-</A> <A href='?src=\ref[src];adj_input_flow_rate=-1'>-</A> <A href='?src=\ref[src];adj_input_flow_rate=-0.1'>-</A> [round(input_flow_setting, 0.1)] L/s <A href='?src=\ref[src];adj_input_flow_rate=0.1'>+</A> <A href='?src=\ref[src];adj_input_flow_rate=1'>+</A> <A href='?src=\ref[src];adj_input_flow_rate=10'>+</A> <A href='?src=\ref[src];adj_input_flow_rate=100'>+</A><BR>"
-
-	output += "<BR>"
-
+	data["outputConnected"] = output_info? TRUE : FALSE
 	if(output_info)
-		var/power = (output_info["power"])
-		var/output_pressure = output_info["internal"]
-		var/pump_dir = output_info["direction"]
-		output += {"<B>Output</B>: [power?("Open"):("On Hold")] <A href='?src=\ref[src];out_refresh_status=1'>Refresh</A><BR>
-<B>Direction</B>: [pump_dir]<BR>
-<B>Max Output Pressure</B>: [output_pressure] kPa<BR>"}
-		output += "Command: <A href='?src=\ref[src];out_toggle_power=1'>Toggle Power</A> <A href='?src=\ref[src];out_toggle_dir=1'>Toggle Dir</A> <A href='?src=\ref[src];out_set_pressure=1'>Set Pressure</A><BR>"
+		data["outputState"] = output_info["power"]
+		data["outputPumpDir"] = output_info["direction"]
+		data["outputPressure"] = output_info["internal"]
 
-	else
-		output += "<FONT color='red'>ERROR: Can not find output port</FONT> <A href='?src=\ref[src];out_refresh_status=1'>Search</A><BR>"
-
-	output += "Max Output Pressure Set: <A href='?src=\ref[src];adj_pressure=-1000'>-</A> <A href='?src=\ref[src];adj_pressure=-100'>-</A> <A href='?src=\ref[src];adj_pressure=-10'>-</A> <A href='?src=\ref[src];adj_pressure=-1'>-</A> [pressure_setting] kPa <A href='?src=\ref[src];adj_pressure=1'>+</A> <A href='?src=\ref[src];adj_pressure=10'>+</A> <A href='?src=\ref[src];adj_pressure=100'>+</A> <A href='?src=\ref[src];adj_pressure=1000'>+</A><BR>"
-
-	return output
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
+	if(!ui)
+		ui = new(user, src, ui_key, "large_tank_control.tmpl", src.name, 512, 512, master_ui = master_ui, state = state)
+		ui.set_initial_data(data)
+		ui.open()
+		ui.set_auto_update(TRUE)
 
 /obj/machinery/computer/general_air_control/large_tank_control/receive_signal(datum/signal/signal)
-	if(!signal || signal.encryption) return
-
-	var/id_tag = signal.data["tag"]
-
+	..()
+	var/id_tag = signal_target_id(signal)
 	if(input_tag == id_tag)
-		input_info = signal.data
+		testing("[src]\ref[src] got input message size:[signal.data.len]")
+		signal.debug_print()
+		input_info = signal.data.Copy()
 	else if(output_tag == id_tag)
-		output_info = signal.data
-	else
-		..(signal)
+		testing("[src]\ref[src] got output message size:[signal.data.len]")
+		signal.debug_print()
+		output_info = signal.data.Copy()
 
-/obj/machinery/computer/general_air_control/large_tank_control/Topic(href, href_list)
+/obj/machinery/computer/general_air_control/large_tank_control/OnTopic(mob/user, href_list, datum/topic_state/state)
 	if(..())
 		return 1
 
 	if(href_list["adj_pressure"])
-		var/change = text2num(href_list["adj_pressure"])
-		pressure_setting = between(0, pressure_setting + change, MAX_PUMP_PRESSURE)
-		spawn(1)
-			src.updateUsrDialog()
+		var/new_pressure = input(usr,"Enter new output pressure (0-[MAX_PUMP_PRESSURE]kPa)","Pressure control",src.pressure_setting) as num
+		pressure_setting = between(0, new_pressure, MAX_PUMP_PRESSURE)
+		src.updateUsrDialog()
 		return 1
 
 	if(href_list["adj_input_flow_rate"])
 		var/change = text2num(href_list["adj_input_flow_rate"])
 		input_flow_setting = between(0, input_flow_setting + change, ATMOS_DEFAULT_VOLUME_PUMP + 500) //default flow rate limit for air injectors
-		spawn(1)
-			src.updateUsrDialog()
+		src.updateUsrDialog()
 		return 1
 
-	if(!radio_connection)
+	if(!has_transmitter())
 		return 0
-	var/datum/signal/signal = new
-	signal.transmission_method = 1 //radio signal
-	signal.source = src
+	var/list/data[0]
+	var/target = ""
 	if(href_list["in_refresh_status"])
 		input_info = null
-		signal.data = list ("tag" = input_tag, "status" = 1)
-		. = 1
+		data = list ("status" = 1)
+		target = input_tag
+		testing("LTC input refresh \ref[src], target:[target]")
+		. = TOPIC_REFRESH
 
 	if(href_list["in_toggle_injector"])
 		input_info = null
-		signal.data = list ("tag" = input_tag, "power_toggle" = 1)
-		. = 1
+		data = list ("power_toggle" = 1)
+		target = input_tag
+		. = TOPIC_REFRESH
 
 	if(href_list["in_set_flowrate"])
 		input_info = null
-		signal.data = list ("tag" = input_tag, "set_volume_rate" = "[input_flow_setting]")
-		. = 1
+		data = list ("set_volume_rate" = "[input_flow_setting]")
+		target = input_tag
+		. = TOPIC_REFRESH
 
 	if(href_list["out_refresh_status"])
 		output_info = null
-		signal.data = list ("tag" = output_tag, "status" = 1)
-		. = 1
+		data = list ("status" = 1)
+		target = output_tag
+		testing("LTC output refresh \ref[src], target:[target]")
+		. = TOPIC_REFRESH
 
 	if(href_list["out_toggle_power"])
 		output_info = null
-		signal.data = list ("tag" = output_tag, "power_toggle" = 1, "checks" = 3)
-		. = 1
+		data = list ("power_toggle" = 1, "checks" = 3)
+		target = output_tag
+		. = TOPIC_REFRESH
 
 	if(href_list["out_toggle_dir"])
 		output_info = null
-		signal.data = list ("tag" = output_tag, "direction_toggle" = 1, "checks" = 3)
-		. = 1
+		data = list ("direction_toggle" = 1, "checks" = 3)
+		target = output_tag
+		. = TOPIC_REFRESH
 
 	if(href_list["out_set_pressure"])
 		output_info = null
-		signal.data = list ("tag" = output_tag, "set_internal_pressure" = "[pressure_setting]", "checks" = 3)
-		. = 1
+		data = list ("set_internal_pressure" = "[pressure_setting]", "checks" = 3)
+		target = output_tag
+		. = TOPIC_REFRESH
 
-	signal.data["sigtype"]="command"
-	radio_connection.post_signal(src, signal, filter = radio_filter)
+	data["sigtype"]="command"
+	post_signal(data, null, target)
+	return .
 
-	spawn(5)
-		src.updateUsrDialog()
-
-/obj/machinery/computer/general_air_control/supermatter_core
+//
+//	Supermatter Core Control
+//
+/obj/machinery/computer/general_air_control/large_tank_control/supermatter_core
+	name = "Supermatter Core Control Console"
 	icon = 'icons/obj/computer.dmi'
-
-	frequency = 1438
-	var/input_tag
-	var/output_tag
-
-	var/list/input_info
-	var/list/output_info
-
-	var/input_flow_setting = 700
-	var/pressure_setting = 100
+	input_flow_setting = 700
+	pressure_setting = 100
 	circuit = /obj/item/weapon/circuitboard/air_management/supermatter_core
 
+/obj/machinery/computer/general_air_control/large_tank_control/supermatter_core/init_radio()
+	if(!map_storage_loaded)
+		create_transmitter(src.id_tag, ENGINE_FREQ, RADIO_ENGI)
 
-/obj/machinery/computer/general_air_control/supermatter_core/return_text()
-	var/output = ..()
-	//if(signal.data)
-	//	input_info = signal.data // Attempting to fix intake control -- TLE
-
-	output += "<B>Core Cooling Control System</B><BR><BR>"
-	if(input_info)
-		var/power = (input_info["power"])
-		var/volume_rate = round(input_info["volume_rate"], 0.1)
-		output += "<B>Coolant Input</B>: [power?("Injecting"):("On Hold")] <A href='?src=\ref[src];in_refresh_status=1'>Refresh</A><BR>Flow Rate Limit: [volume_rate] L/s<BR>"
-		output += "Command: <A href='?src=\ref[src];in_toggle_injector=1'>Toggle Power</A> <A href='?src=\ref[src];in_set_flowrate=1'>Set Flow Rate</A><BR>"
-
-	else
-		output += "<FONT color='red'>ERROR: Can not find input port</FONT> <A href='?src=\ref[src];in_refresh_status=1'>Search</A><BR>"
-
-	output += "Flow Rate Limit: <A href='?src=\ref[src];adj_input_flow_rate=-100'>-</A> <A href='?src=\ref[src];adj_input_flow_rate=-10'>-</A> <A href='?src=\ref[src];adj_input_flow_rate=-1'>-</A> <A href='?src=\ref[src];adj_input_flow_rate=-0.1'>-</A> [round(input_flow_setting, 0.1)] L/s <A href='?src=\ref[src];adj_input_flow_rate=0.1'>+</A> <A href='?src=\ref[src];adj_input_flow_rate=1'>+</A> <A href='?src=\ref[src];adj_input_flow_rate=10'>+</A> <A href='?src=\ref[src];adj_input_flow_rate=100'>+</A><BR>"
-
-	output += "<BR>"
-
-	if(output_info)
-		var/power = (output_info["power"])
-		var/pressure_limit = output_info["external"]
-		output += {"<B>Core Outpump</B>: [power?("Open"):("On Hold")] <A href='?src=\ref[src];out_refresh_status=1'>Refresh</A><BR>
-Min Core Pressure: [pressure_limit] kPa<BR>"}
-		output += "Command: <A href='?src=\ref[src];out_toggle_power=1'>Toggle Power</A> <A href='?src=\ref[src];out_set_pressure=1'>Set Pressure</A><BR>"
-
-	else
-		output += "<FONT color='red'>ERROR: Can not find output port</FONT> <A href='?src=\ref[src];out_refresh_status=1'>Search</A><BR>"
-
-	output += "Min Core Pressure Set: <A href='?src=\ref[src];adj_pressure=-100'>-</A> <A href='?src=\ref[src];adj_pressure=-50'>-</A> <A href='?src=\ref[src];adj_pressure=-10'>-</A> <A href='?src=\ref[src];adj_pressure=-1'>-</A> [pressure_setting] kPa <A href='?src=\ref[src];adj_pressure=1'>+</A> <A href='?src=\ref[src];adj_pressure=10'>+</A> <A href='?src=\ref[src];adj_pressure=50'>+</A> <A href='?src=\ref[src];adj_pressure=100'>+</A><BR>"
-
-	return output
-
-/obj/machinery/computer/general_air_control/supermatter_core/receive_signal(datum/signal/signal)
-	if(!signal || signal.encryption) return
-
-	var/id_tag = signal.data["tag"]
-
-	if(input_tag == id_tag)
-		input_info = signal.data
-	else if(output_tag == id_tag)
-		output_info = signal.data
-	else
-		..(signal)
-
-/obj/machinery/computer/general_air_control/supermatter_core/Topic(href, href_list)
-	if(..())
-		return 1
-
-	if(href_list["adj_pressure"])
-		var/change = text2num(href_list["adj_pressure"])
-		pressure_setting = between(0, pressure_setting + change, MAX_PUMP_PRESSURE)
-		spawn(1)
-			src.updateUsrDialog()
-		return 1
-
-	if(href_list["adj_input_flow_rate"])
-		var/change = text2num(href_list["adj_input_flow_rate"])
-		input_flow_setting = between(0, input_flow_setting + change, ATMOS_DEFAULT_VOLUME_PUMP + 500) //default flow rate limit for air injectors
-		spawn(1)
-			src.updateUsrDialog()
-		return 1
-
-	if(!radio_connection)
-		return 0
-	var/datum/signal/signal = new
-	signal.transmission_method = 1 //radio signal
-	signal.source = src
-	if(href_list["in_refresh_status"])
-		input_info = null
-		signal.data = list ("tag" = input_tag, "status" = 1)
-		. = 1
-
-	if(href_list["in_toggle_injector"])
-		input_info = null
-		signal.data = list ("tag" = input_tag, "power_toggle" = 1)
-		. = 1
-
-	if(href_list["in_set_flowrate"])
-		input_info = null
-		signal.data = list ("tag" = input_tag, "set_volume_rate" = "[input_flow_setting]")
-		. = 1
-
-	if(href_list["out_refresh_status"])
-		output_info = null
-		signal.data = list ("tag" = output_tag, "status" = 1)
-		. = 1
-
-	if(href_list["out_toggle_power"])
-		output_info = null
-		signal.data = list ("tag" = output_tag, "power_toggle" = 1)
-		. = 1
-
-	if(href_list["out_set_pressure"])
-		output_info = null
-		signal.data = list ("tag" = output_tag, "set_external_pressure" = "[pressure_setting]", "checks" = 1)
-		. = 1
-
-	signal.data["sigtype"]="command"
-	radio_connection.post_signal(src, signal, filter = radio_filter)
-
-	spawn(5)
-		src.updateUsrDialog()
-
+//
+//	Fuel Injection Control
+//
 /obj/machinery/computer/general_air_control/fuel_injection
+	name = "Fuel Injection Control Console"
 	icon = 'icons/obj/computer.dmi'
 	icon_screen = "alert:0"
 
 	var/device_tag
 	var/list/device_info
 
-	var/automation = 0
+	var/automation = FALSE
 
 	var/cutoff_temperature = 2000
 	var/on_temperature = 1200
 	circuit = /obj/item/weapon/circuitboard/air_management/injector_control
 
-/obj/machinery/computer/general_air_control/fuel_injection/Process()
-	if(automation)
-		if(!radio_connection)
-			return 0
+/obj/machinery/computer/general_air_control/fuel_injection/init_radio()
+	if(!map_storage_loaded)
+		create_transmitter(src.id_tag, ENGINE_FREQ, RADIO_ENGI)
 
-		var/injecting = 0
+/obj/machinery/computer/general_air_control/fuel_injection/Process()
+	..()
+	if(inoperable() || !has_transmitter() || !transmitter_ready())
+		return
+	if(automation)
+		var/injecting = FALSE
 		for(var/id_tag in sensor_information)
 			var/list/data = sensor_information[id_tag]
 			if(data["temperature"])
 				if(data["temperature"] >= cutoff_temperature)
-					injecting = 0
+					injecting = FALSE
 					break
 				if(data["temperature"] <= on_temperature)
-					injecting = 1
-
-		var/datum/signal/signal = new
-		signal.transmission_method = 1 //radio signal
-		signal.source = src
-
-		signal.data = list(
+					injecting = TRUE
+		post_signal(list(
 			"tag" = device_tag,
 			"power" = injecting,
 			"sigtype"="command"
-		)
+		))
 
-		radio_connection.post_signal(src, signal, filter = radio_filter)
-
-	..()
-
-/obj/machinery/computer/general_air_control/fuel_injection/return_text()
-	var/output = ..()
-
-	output += "<B>Fuel Injection System</B><BR>"
+/obj/machinery/computer/general_air_control/fuel_injection/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
+	var/list/data[0]
+	data = write_sensor_data(data)
+	data["deviceConnected"] = device_info? TRUE : FALSE
+	data["automation"] = automation? TRUE : FALSE
 	if(device_info)
-		var/power = device_info["power"]
-		var/volume_rate = device_info["volume_rate"]
-		output += {"Status: [power?("Injecting"):("On Hold")] <A href='?src=\ref[src];refresh_status=1'>Refresh</A><BR>
-Rate: [volume_rate] L/sec<BR>"}
+		data["inputState"] = device_info["power"]
+		data["inputFlowRate"] = round(device_info["volume_rate"], 0.1)
 
-		if(automation)
-			output += "Automated Fuel Injection: <A href='?src=\ref[src];toggle_automation=1'>Engaged</A><BR>"
-			output += "Injector Controls Locked Out<BR>"
-		else
-			output += "Automated Fuel Injection: <A href='?src=\ref[src];toggle_automation=1'>Disengaged</A><BR>"
-			output += "Injector: <A href='?src=\ref[src];toggle_injector=1'>Toggle Power</A> <A href='?src=\ref[src];injection=1'>Inject (1 Cycle)</A><BR>"
+	data["cutoff_temperature"] = cutoff_temperature
+	data["on_temperature"] = on_temperature
 
-	else
-		output += "<FONT color='red'>ERROR: Can not find device</FONT> <A href='?src=\ref[src];refresh_status=1'>Search</A><BR>"
-
-	return output
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
+	if(!ui)
+		ui = new(user, src, ui_key, "fuel_injection_control.tmpl", src.name, 512, 512, state = state)
+		ui.set_initial_data(data)
+		ui.open()
+		ui.set_auto_update(TRUE)
 
 /obj/machinery/computer/general_air_control/fuel_injection/receive_signal(datum/signal/signal)
-	if(!signal || signal.encryption) return
-
-	var/id_tag = signal.data["tag"]
-
+	..()
+	var/id_tag = signal_target_id(signal)
 	if(device_tag == id_tag)
 		device_info = signal.data
-	else
-		..(signal)
 
-/obj/machinery/computer/general_air_control/fuel_injection/Topic(href, href_list)
+/obj/machinery/computer/general_air_control/fuel_injection/OnTopic(mob/user, href_list, datum/topic_state/state)
 	if((. = ..()))
-		return
+		return .
 
 	if(href_list["refresh_status"])
 		device_info = null
-		if(!radio_connection)
-			return 0
-
-		var/datum/signal/signal = new
-		signal.transmission_method = 1 //radio signal
-		signal.source = src
-		signal.data = list(
+		if(!has_transmitter())
+			return TOPIC_NOACTION
+		post_signal(list(
 			"tag" = device_tag,
 			"status" = 1,
 			"sigtype"="command"
-		)
-		radio_connection.post_signal(src, signal, filter = radio_filter)
+		))
 
 	if(href_list["toggle_automation"])
 		automation = !automation
 
 	if(href_list["toggle_injector"])
 		device_info = null
-		if(!radio_connection)
-			return 0
-
-		var/datum/signal/signal = new
-		signal.transmission_method = 1 //radio signal
-		signal.source = src
-		signal.data = list(
+		if(!has_transmitter())
+			return TOPIC_NOACTION
+		post_signal(list(
 			"tag" = device_tag,
 			"power_toggle" = 1,
 			"sigtype"="command"
-		)
-
-		radio_connection.post_signal(src, signal, filter = radio_filter)
+		))
 
 	if(href_list["injection"])
-		if(!radio_connection)
-			return 0
-
-		var/datum/signal/signal = new
-		signal.transmission_method = 1 //radio signal
-		signal.source = src
-		signal.data = list(
+		if(!has_transmitter())
+			return TOPIC_NOACTION
+		post_signal(list(
 			"tag" = device_tag,
 			"inject" = 1,
 			"sigtype"="command"
-		)
-
-		radio_connection.post_signal(src, signal, filter = radio_filter)
+		))
+	return TOPIC_REFRESH
 
 
 

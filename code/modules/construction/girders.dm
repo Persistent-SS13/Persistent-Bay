@@ -9,6 +9,7 @@
 	layer = BELOW_OBJ_LAYER
 	w_class = ITEM_SIZE_NO_CONTAINER
 	max_health = 150
+	armor = list()
 	var/state = 0
 	var/material/material
 	var/material/r_material

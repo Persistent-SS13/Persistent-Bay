@@ -10,7 +10,7 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 	desc = "An incinerator, for burning unwanted trash."
 	icon = 'icons/obj/machines/cremator.dmi'
 	icon_state = "crema1"
-	density = 1
+	density = TRUE
 	anchored = TRUE
 	use_power = POWER_USE_IDLE
 	idle_power_usage = 10 //10 Watts for idle
@@ -30,9 +30,10 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 	var/max_power_rating = 4 KILOWATTS //4,000w when active
 	var/set_temperature = T20C	//thermostat
 
+	var/id_tag
+
 
 /obj/machinery/incinerator/New()
-	set_extension(src, RADIO_TRANSMITTER_TYPE, RADIO_TRANSMITTER_TYPE)
 	..()
 	map_storage_saved_vars += ";radio_connection"
 	burn_chamber_air = new()
@@ -43,6 +44,8 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 /obj/machinery/incinerator/Initialize()
 	setup_parts()
 	. = ..()
+	if(id_tag)
+		create_transmitter(id_tag, INCINERATOR_FREQ, RADIO_INCINERATOR)
 
 /obj/machinery/incinerator/Destroy()
 	if(loc && loc.return_air())
@@ -57,12 +60,6 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 		component_parts += new/obj/item/weapon/stock_parts/micro_laser()
 		component_parts += new/obj/item/weapon/stock_parts/micro_laser()
 	RefreshParts()
-
-/obj/machinery/incinerator/proc/set_frequency(var/new_frequency)
-	if(has_transmitter())
-		get_transmitter().set_frequency(new_frequency)
-		return TRUE
-	return FALSE
 
 /obj/machinery/incinerator/ex_act(severity)
 	switch(severity)
@@ -201,6 +198,13 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 		src.icon_state = icon_state_filled
 	else
 		src.icon_state = icon_state_empty
+
+/obj/machinery/incinerator/OnTopic(mob/user, href_list, datum/topic_state/state)
+	. = ..()
+	if(href_list["activate"] || href_list["incinerate"])
+		incinerate_start()
+		return
+
 
 //--------------------------------
 //	People incinerator

@@ -30,8 +30,6 @@
 	var/index2
 	var/picture = null
 
-	var/frequency = STATUS_FREQ		// radio frequency
-
 	var/friendc = 0      // track if Friend Computer mode
 	var/ignore_friendc = 0
 
@@ -50,19 +48,32 @@
 
 /obj/machinery/status_display/New()
 	..()
-	pixel_x = (dir & 3)? 0 : (dir == 4 ? -30 : 30)
-	pixel_y = (dir & 3)? (dir ==1 ? -30 : 30) : 0
 
 /obj/machinery/status_display/Destroy()
-	if(radio_controller)
-		radio_controller.remove_object(src,frequency)
 	return ..()
 
 // register for radio system
 /obj/machinery/status_display/Initialize()
 	. = ..()
-	if(radio_controller)
-		radio_controller.add_object(src, frequency)
+	if(!map_storage_loaded)
+		create_transmitter(null, STATUS_FREQ, RADIO_STATUS_DISPLAY)
+	update_icon()
+
+/obj/machinery/status_display/update_icon()
+	..()
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = -30
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = 30
+		if(EAST)
+			src.pixel_x = -30
+			src.pixel_y = 0
+		if(WEST)
+			src.pixel_x = 30
+			src.pixel_y = 0
 
 // timed process
 /obj/machinery/status_display/Process()
@@ -180,7 +191,7 @@
 	remove_display()
 	if(!picture || picture_state != state)
 		picture_state = state
-		picture = image('icons/obj/status_display.dmi', icon_state=picture_state)
+		picture = image(icon, icon_state=picture_state)
 	overlays |= picture
 	set_light(1.5, 1, COLOR_WHITE)
 
@@ -215,8 +226,9 @@
 		maptext = ""
 	set_light(0)
 
-/obj/machinery/status_display/receive_signal(datum/signal/signal)
-	switch(signal.data["command"])
+/obj/machinery/status_display/OnTopic(mob/user, href_list, datum/topic_state/state)
+	. = ..()
+	switch(href_list["command"])
 		if("blank")
 			mode = STATUS_DISPLAY_BLANK
 
@@ -225,7 +237,7 @@
 
 		if("message")
 			mode = STATUS_DISPLAY_MESSAGE
-			set_message(signal.data["msg1"], signal.data["msg2"])
+			set_message(href_list["msg1"], href_list["msg2"])
 
 		if("alert")
 			mode = STATUS_DISPLAY_ALERT
@@ -235,7 +247,7 @@
 
 		if("image")
 			mode = STATUS_DISPLAY_IMAGE
-			set_picture(signal.data["picture_state"])
+			set_picture(href_list["picture_state"])
 	update()
 
 /obj/machinery/status_display/attackby(obj/item/weapon/W as obj, mob/user as mob)
@@ -244,16 +256,6 @@
 	else if(default_deconstruction_crowbar(user,W))
 		return 1
 	return ..()
-
-// /obj/machinery/status_display/dismantle()
-// 	playsound(loc, 'sound/items/Crowbar.ogg', 50, 1)
-// 	var/obj/item/frame/status_display/F = new /obj/item/frame/status_display(get_turf(src))
-// 	F.set_dir(src.dir)
-// 	for(var/obj/I in component_parts)
-// 		I.forceMove(get_turf(src))
-
-// 	qdel(src)
-// 	return TRUE
 
 #undef SD_TEXT_STYLE
 #undef SCROLL_SPEED

@@ -13,11 +13,11 @@
 	level = 1		// underfloor
 	plane = ABOVE_PLATING_PLANE
 	layer = ABOVE_WIRE_LAYER
-	anchored = 1
-	use_power = 1
+	anchored = TRUE
+	use_power = POWER_USE_IDLE
 	idle_power_usage = 50
 
-	var/freq = 1449		// radio frequency
+	var/freq = MAGNET_FREQ		// radio frequency
 	var/electricity_level = 1 // intensity of the magnetic pull
 	var/magnetic_field = 1 // the range of magnetic attraction
 	var/code = 0 // frequency code, they should be different unless you have a group of magnets working together or something
@@ -214,11 +214,11 @@
 	name = "Magnetic Control Console"
 	icon = 'icons/obj/airlock_machines.dmi' // uses an airlock machine icon, THINK GREEN HELP THE ENVIRONMENT - RECYCLING!
 	icon_state = "airlock_control_standby"
-	density = 1
-	anchored = 1.0
-	use_power = 1
+	density = TRUE
+	anchored = TRUE
+	use_power = POWER_USE_ACTIVE
 	idle_power_usage = 45
-	var/frequency = 1449
+	var/frequency = MAGNET_FREQ
 	var/code = 0
 	var/list/magnets = list()
 	var/title = "Magnetic Control Console"

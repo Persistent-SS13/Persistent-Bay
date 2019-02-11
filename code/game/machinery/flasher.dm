@@ -5,16 +5,16 @@
 	desc = "A wall-mounted flashbulb device."
 	icon = 'icons/obj/machines/flashers.dmi'
 	icon_state = "mflash1"
+	anchored = TRUE
+	use_power = POWER_USE_IDLE
+	idle_power_usage = 2
+	movable_flags = MOVABLE_FLAG_PROXMOVE
 	var/id = null
 	var/range = 2 //this is roughly the size of brig cell
 	var/disable = 0
 	var/last_flash = 0 //Don't want it getting spammed like regular flashes
 	var/strength = 10 //How weakened targets are when flashed.
 	var/base_state = "mflash"
-	anchored = 1
-	use_power = 1
-	idle_power_usage = 2
-	movable_flags = MOVABLE_FLAG_PROXMOVE
 	var/_wifi_id
 	var/datum/wifi/receiver/button/flasher/wifi_receiver
 
@@ -23,27 +23,53 @@
 	desc = "A portable flashing device. Wrench to activate and deactivate. Cannot detect slow movements."
 	icon_state = "pflash1"
 	strength = 8
-	anchored = 0
+	anchored = FALSE
 	base_state = "pflash"
-	density = 1
+	density = TRUE
+
+/obj/machinery/flasher/portable/update_icon()
+	if (operable())
+		icon_state = "[base_state]1"
+	else
+		icon_state = "[base_state]1-p"
 
 /obj/machinery/flasher/Initialize()
 	. = ..()
 	if(_wifi_id)
 		wifi_receiver = new(_wifi_id, src)
+	create_transmitter(id, SEC_FREQ, RADIO_FLASHERS)
+	update_icon()
 
 /obj/machinery/flasher/Destroy()
 	qdel(wifi_receiver)
 	wifi_receiver = null
 	return ..()
 
+/obj/machinery/flasher/OnTopic(mob/user, href_list, datum/topic_state/state)
+	. = ..()
+	if(href_list["activate"] || href_list["flash"])
+		flash()
+
 /obj/machinery/flasher/update_icon()
-	if ( !(stat & (BROKEN|NOPOWER)) )
+	//Those are wall mounted so align them to walls
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = -26
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = 26
+		if(EAST)
+			src.pixel_x = -22
+			src.pixel_y = 0
+		if(WEST)
+			src.pixel_x = 22
+			src.pixel_y = 0
+	
+	if (operable())
 		icon_state = "[base_state]1"
-//		src.sd_SetLuminosity(2)
 	else
 		icon_state = "[base_state]1-p"
-//		src.sd_SetLuminosity(0)
 
 //Don't want to render prison breaks impossible
 /obj/machinery/flasher/attackby(obj/item/weapon/W as obj, mob/user as mob)
@@ -51,9 +77,9 @@
 		add_fingerprint(user)
 		src.disable = !src.disable
 		if (src.disable)
-			user.visible_message("<span class='warning'>[user] has disconnected the [src]'s flashbulb!</span>", "<span class='warning'>You disconnect the [src]'s flashbulb!</span>")
+			user.visible_message(SPAN_WARNING("[user] has disconnected the [src]'s flashbulb!"), SPAN_WARNING("You disconnect the [src]'s flashbulb!"))
 		if (!src.disable)
-			user.visible_message("<span class='warning'>[user] has connected the [src]'s flashbulb!</span>", "<span class='warning'>You connect the [src]'s flashbulb!</span>")
+			user.visible_message(SPAN_WARNING("[user] has connected the [src]'s flashbulb!"), SPAN_WARNING("You connect the [src]'s flashbulb!"))
 
 //Let the AI trigger them directly.
 /obj/machinery/flasher/attack_ai()
@@ -97,7 +123,7 @@
 		O.Weaken(flash_time)
 
 /obj/machinery/flasher/emp_act(severity)
-	if(stat & (BROKEN|NOPOWER))
+	if(inoperable())
 		..(severity)
 		return
 	if(prob(75/severity))
@@ -119,35 +145,9 @@
 		src.anchored = !src.anchored
 
 		if (!src.anchored)
-			user.show_message(text("<span class='warning'>[src] can now be moved.</span>"))
+			user.show_message(text(SPAN_WARNING("[src] can now be moved.")))
 			src.overlays.Cut()
 
 		else if (src.anchored)
-			user.show_message(text("<span class='warning'>[src] is now secured.</span>"))
+			user.show_message(text(SPAN_WARNING("[src] is now secured.")))
 			src.overlays += "[base_state]-s"
-
-/obj/machinery/button/flasher
-	name = "flasher button"
-	desc = "A remote control switch for a mounted flasher."
-
-/obj/machinery/button/flasher/attack_hand(mob/user as mob)
-
-	if(..())
-		return
-
-	use_power(5)
-
-	active = 1
-	icon_state = "launcheract"
-
-	for(var/obj/machinery/flasher/M in SSmachines.machinery)
-		if(M.id == src.id)
-			spawn()
-				M.flash()
-
-	sleep(50)
-
-	icon_state = "launcherbtt"
-	active = 0
-
-	return

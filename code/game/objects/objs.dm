@@ -256,7 +256,8 @@
 
 //Called whenever the object is receiving damages
 // returns the amount of damages that was applied to the object
-// - damsrc: mostly for organs, contains the cause of the damage, aka weapon name and etc..
+// - armorbypass: how much armor is bypassed for the damage specified. Usually a number from 0 to 100
+// - damsrc: A string or object reference to what caused the damage.
 /obj/proc/take_damage(var/damage = 0 as num, var/damtype = DAM_BLUNT, var/armorbypass = 0, var/damsrc = null)
 	if(!isdamageable() || !vulnerable_to_damtype(damtype))
 		return 0
@@ -268,6 +269,10 @@
 	return .
 
 //Handles several damage types as a list
+//It simply does multiple calls to take_damage for each damage specified in the list.
+// - damage : list in the format {DAM_TYPE = n, DAM_TYPE2 = i} where DAM_TYPE are the damage types inflicted, and n and i the damage values.
+// - armorbypass: how much armor is bypassed for all the damage specified. Usually a number from 0 to 100
+// - damsrc: A string or object reference to what caused the damage.
 /obj/proc/take_multi_damage(var/list/damage, var/armorbypass = 0 as num, var/damsrc = null)
 	if(!isdamageable())
 		return 0
@@ -277,7 +282,8 @@
 	return .
 	
 
-//Like take damage, but meant to instantly destroy the object from an external source
+//Like take damage, but meant to instantly destroy the object from an external source.
+// Call this if you want to instantly destroy something and have its damage effects, debris and etc to trigger as it would from take_damage.
 /obj/proc/kill(var/damagetype = DAM_BLUNT)
 	if(!isdamageable())
 		return
@@ -285,6 +291,8 @@
 	update_health(damagetype)
 
 //Handles checking if the object is destroyed and etc..
+// - damagetype : is the damage type that triggered the health update.
+// - user : is the attacker
 /obj/proc/update_health(var/damagetype, var/user = null)
 	if(!isdamageable())
 		return //Assume we don't care about damages
@@ -296,6 +304,10 @@
 	update_icon()
 
 //Called when the object's health reaches 0, with the last damage type that hit it
+//Differs from Destroy in that Destroy has been mostly used as a destructor more than a damage effect proc. 
+//And since we don't always want to create debris and stuff when destroying an object, its better to separate them.
+// - damagetype : is the damage type that dealt the killing blow.
+// - user : is the attacker
 /obj/proc/destroyed(var/damagetype, var/user = null)
 	health = min_health
 	playsound(loc, sound_destroyed, vol=70, vary=1, extrarange=10, falloff=5)
@@ -414,6 +426,7 @@
 	playsound(loc, sound_hit, vol=40, vary=1, extrarange=4, falloff=1)
 	return ..()
 
+//Called when the damage of an attack is resisted completely by the damage threshold
 /obj/proc/hit_deflected_by_armor(obj/item/W, mob/living/user)
 	log_debug("damage deflected by damage threshold of [src]")
 	visible_message(SPAN_WARNING("[user]'s hit wasn't enough to pierce [src]'s armor!"))
@@ -428,6 +441,7 @@
 		force = (explosion_base_damage ** (4 - severity)) //Severity is a value from 1 to 3, with 1 being the strongest. So each severity level is
 	take_damage(force, DAM_BOMB)
 
+//Called when under effect of a emp weapon
 /obj/emp_act(var/severity, var/force = 0)
 	. = ..()
 	if(!isdamageable())
@@ -436,6 +450,7 @@
 		force = (emp_base_damage ** (4 - severity))
 	take_damage(force, DAM_EMP)
 
+//Called when shot with a projectile
 /obj/bullet_act(obj/item/projectile/P, def_zone)
 	. = ..()
 	if(!isdamageable())
@@ -490,9 +505,11 @@
 			src.throw_at(get_edge_target_turf(src,dir), 1, momentum)
 	return 1
 
+//Called when an emag is used on it
 /obj/emag_act(var/remaining_charges, var/mob/user, var/emag_source)
 	return NO_EMAG_ACT
 
+//Called when the entity is touched by fire or burning
 /obj/fire_act(var/datum/gas_mixture/air, var/exposed_temperature, var/exposed_volume)
 	. = ..()
 	if(!isdamageable() || !exposed_temperature || !air)
@@ -505,6 +522,7 @@
 	else
 		fire_consume(air, exposed_temperature, exposed_volume)
 
+//Implementation of the object burning from being in contact with fire
 /obj/proc/fire_consume(var/datum/gas_mixture/air, var/exposed_temperature, var/exposed_volume)
 	var/expvol = exposed_volume
 	if(!burn_point || !air)
@@ -514,9 +532,11 @@
 	var/fire_damage = (exposed_temperature/burn_point) * (air.volume/expvol)
 	take_damage(fire_damage, DAM_BURN) //might make more sense to use laser here...
 
+//Called when set on fire
 /obj/proc/ignite()
 	burning = TRUE
 
+//Called when fire is put out
 /obj/proc/extinguish()
 	burning = FALSE
 
@@ -538,6 +558,7 @@
 			var/sheetamt = matter[key] / M.units_per_sheet
 			M.place_sheet(get_turf(loc), sheetamt)
 
+//Called when the object is destroyed in-game and should release debris
 /obj/proc/make_debris()
 	for(var/key in matter)
 		var/material/M = SSmaterials.get_material_by_name(key)

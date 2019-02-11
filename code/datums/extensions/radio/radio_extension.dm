@@ -17,59 +17,68 @@
 #define RADIO_TRANSMITTER_TYPE /datum/extension/interactive/radio_transmitter
 
 /datum/extension/interactive/radio_transmitter
-	var/datum/radio_frequency/radio_connection = null
+	var/datum/radio_frequency/radio_connection
 	var/filter_in  = RADIO_DEFAULT
 	var/filter_out = RADIO_DEFAULT
 	var/id = null
-	var/range = null
+	var/range = 0
+	var/frequency = 0
 	should_save = TRUE
+	flags = EXTENSION_FLAG_IMMEDIATE
 
-/datum/extension/interactive/radio_transmitter/New(var/idtag = null, var/range = null, var/filter = RADIO_DEFAULT, var/filterout = null)
-	..()
-	ADD_SAVED_VAR(radio_connection)
+// - idtag: Id tag that each signals sent will be tagged with, and optionally checked against. If set to null, id checks will always return true.
+/datum/extension/interactive/radio_transmitter/New(var/holder, var/frequency, var/idtag = null, var/range = 0, var/filter = RADIO_DEFAULT, var/filterout = null)
+	..(holder)
 	ADD_SAVED_VAR(filter_in)
 	ADD_SAVED_VAR(filter_out)
 	ADD_SAVED_VAR(id)
 	ADD_SAVED_VAR(range)
+	ADD_SAVED_VAR(frequency)
+	ADD_SAVED_VAR(holder)
 
-	ADD_SKIP_EMPTY(radio_connection)
 	if(!map_storage_loaded)
 		src.id         = idtag
+		src.frequency  = frequency
 		src.range      = range
 		src.filter_in  = filter
 		src.filter_out = (filterout)? filterout : filter
+		set_frequency(frequency)
 
 /datum/extension/interactive/radio_transmitter/after_load()
 	..()
 	//Reset connection, since the datum will be in a limbo state on load, and we really just need the frequency to reset it
-	if(src.radio_connection)
-		set_frequency(src.radio_connection.frequency)
+	setup_connection()
 
 /datum/extension/interactive/radio_transmitter/Destroy()
 	if(src.radio_connection)
-		radio_controller.remove_object(src.holder, src.radio_connection.frequency)
-		QDEL_NULL(src.radio_connection)
+		radio_controller.remove_object(src.holder, src.frequency)
+		src.radio_connection = null  //Don't delete radio channels we don't owe them
 	return ..()
+
+//Called to refresh our subscription to radio channels
+/datum/extension/interactive/radio_transmitter/proc/setup_connection()
+	if(src.radio_connection)
+		radio_controller.remove_object(src.holder, src.frequency)
+		src.radio_connection = null
+	src.radio_connection = radio_controller.add_object(src.holder, src.frequency, src.filter_in)
+	log_debug("radio_transmitter \ref[src] got channel [src.radio_connection? src.radio_connection : "null"] [src.radio_connection? src.radio_connection.frequency : "null"]")
 
 /datum/extension/interactive/radio_transmitter/proc/is_connected()
 	return src.radio_connection? TRUE : FALSE
 
 /datum/extension/interactive/radio_transmitter/proc/set_frequency(var/newfreq)
-	if(src.radio_connection)
-		radio_controller.remove_object(src.holder, src.radio_connection.frequency)
-		QDEL_NULL(src.radio_connection)
-	src.radio_connection = radio_controller.add_object(holder, newfreq, filter_in)
+	src.frequency = newfreq
+	setup_connection()
 
 /datum/extension/interactive/radio_transmitter/proc/get_frequency()
-	return src.radio_connection? src.radio_connection.frequency : null
+	return src.frequency
 
 /datum/extension/interactive/radio_transmitter/proc/set_filter(var/filter, var/filterout = null)
 	if(!filter)
 		return
 	src.filter_in = filter
 	src.filter_out = (filterout)? filterout : filter
-	if(radio_connection)
-		set_frequency(radio_connection.frequency) //reset connection
+	setup_connection()
 
 /datum/extension/interactive/radio_transmitter/proc/set_filter_out(var/filter)
 	if(!filter)
@@ -88,29 +97,39 @@
 
 //Compare two ids and return true if identical
 /datum/extension/interactive/radio_transmitter/proc/signal_match_id(var/datum/signal/signal)
-	return signal && islist(signal.data) && signal.data[RADIO_TRANSMITTER_ID_FIELD] == src.id
+	if(src.id)
+		return signal_target_id(signal) == src.id
+	else
+		return TRUE
+
+//Returns the target id_tag of the specified signal
+/datum/extension/interactive/radio_transmitter/proc/signal_target_id(var/datum/signal/signal)
+	if(signal && islist(signal.data)) 
+		return signal.data[RADIO_TRANSMITTER_ID_FIELD]
+	return null
 
 /datum/extension/interactive/radio_transmitter/proc/set_range(var/newrange)
 	src.range = newrange
 /datum/extension/interactive/radio_transmitter/proc/get_range()
 	return src.range
 
-/datum/extension/interactive/radio_transmitter/proc/post_signal(datum/signal/signal, var/overridefilter = null)
+/datum/extension/interactive/radio_transmitter/proc/post_signal(datum/signal/signal, var/overridefilter = null, var/targetid = null)
 	if(!src.radio_connection)
-		log_debug("[src.holder] tried to send a signal with no radio connection!")
+		log_debug("[src.holder] \ref[src.holder] tried to send a signal with no radio connection!")
 		return
 	signal.data[RADIO_TRANSMITTER_SOURCE_ID_FIELD] = src.id
+	signal.data[RADIO_TRANSMITTER_ID_FIELD] = targetid? targetid : src.id
 	src.radio_connection.post_signal(src.holder, signal, (overridefilter)? overridefilter : src.filter_out, src.range)
 
 /datum/extension/interactive/radio_transmitter/proc/add_listener(obj/device as obj)
 	if(!src.radio_connection)
-		log_debug("[src.holder] tried to add a listener with no radio connections!")
+		log_debug("[src.holder] \ref[src.holder] tried to add a listener with no radio connections!")
 		return
 	src.radio_connection.add_listener(device, src.filter_in)
 
 /datum/extension/interactive/radio_transmitter/proc/remove_listener(obj/device)
 	if(!src.radio_connection)
-		log_debug("[src.holder] tried to remove a listener with no radio connections!")
+		log_debug("[src.holder] \ref[src.holder] tried to remove a listener with no radio connections!")
 		return
 	src.radio_connection.remove_listener(device)
 

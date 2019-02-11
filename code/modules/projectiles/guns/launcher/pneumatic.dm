@@ -1,6 +1,7 @@
 /obj/item/weapon/gun/launcher/pneumatic
 	name = "pneumatic cannon"
 	desc = "A large gas-powered cannon."
+	icon = 'icons/obj/weapons/pneumatic_canon.dmi'
 	icon_state = "pneumatic"
 	item_state = "pneumatic"
 	slot_flags = SLOT_BELT
@@ -138,6 +139,7 @@
 /obj/item/weapon/cannonframe
 	name = "pneumatic cannon frame"
 	desc = "A half-finished pneumatic cannon."
+	icon = 'icons/obj/weapons/pneumatic_canon.dmi'
 	icon_state = "pneumatic0"
 	item_state = "pneumatic"
 
@@ -210,9 +212,3 @@
 		return
 	else
 		..()
-
-/obj/item/weapon/gun/launcher/pneumatic/small
-	name = "small pneumatic cannon"
-	desc = "It looks smaller than your garden variety cannon"
-	max_w_class = ITEM_SIZE_TINY
-	w_class = ITEM_SIZE_NORMAL

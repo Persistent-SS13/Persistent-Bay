@@ -121,8 +121,12 @@ Class Procs:
 	var/faction_uid
 
 	layer = 2.9
-/obj/machinery/proc/can_connect(var/datum/world_faction/trying)
+/obj/machinery/proc/can_connect(var/datum/world_faction/trying, var/mob/M)
 	return 1
+
+/obj/machinery/proc/can_disconnect(var/datum/world_faction/trying, var/mob/M)
+	return 1
+
 
 /obj/machinery/Initialize(mapload, d=0)
 	. = ..()

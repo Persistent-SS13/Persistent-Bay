@@ -49,12 +49,110 @@ research holder datum.
 	var/list/possible_designs = list()		//List of all designs.
 	var/list/known_designs = list()			//List of available designs.
 
+	var/list/gen_fab = list()
+	var/list/eng_fab = list()
+	var/list/med_fab = list()
+	var/list/mech_fab = list()
+	var/list/void_fab = list()
+	var/list/ammo_fab = list()
+	var/list/accessory_at = list()
+	var/list/standard_at = list()
+	var/list/nonstandard_at = list()
+	var/list/tactical_at = list()
+	var/list/storage_at = list()
+	var/list/circuit_fab = list()
+
+
+
 /datum/research/New()		//Insert techs into possible_tech here. Known_tech automatically updated.
 	for(var/T in typesof(/datum/tech) - /datum/tech)
 		known_tech += new T(src)
-	for(var/D in typesof(/datum/design) - /datum/design)
-		possible_designs += new D(src)
+	for(var/x in typesof(/datum/design) - /datum/design)
+		var/datum/design/D = new x(src)
+		possible_designs |= D
+		if(islist(D.build_type))
+			for(var/y in D.build_type)
+				switch(y)
+					if(GENERALFAB)
+						gen_fab |= D
+					if(ENGIFAB)
+						eng_fab |= D
+					if(MEDIFAB)
+						med_fab |= D
+					if(MECHFAB)
+						mech_fab |= D
+					if(VOIDFAB)
+						void_fab |= D
+					if(AMMOFAB)
+						ammo_fab |= D
+					if(AUTOTAILOR_ACCESSORIES)
+						accessory_at |= D
+					if(AUTOTAILOR_NONSTANDARD)
+						nonstandard_at |= D
+					if(AUTOTAILOR)
+						standard_at |= D
+					if(AUTOTAILOR_STORAGE)
+						storage_at |= D
+					if(AUTOTAILOR_TACTICAL)
+						tactical_at |= D
+					if(CIRCUITFAB)
+						circuit_fab |= D
+
+		else
+			switch(D.build_type)
+				if(GENERALFAB)
+					gen_fab |= D
+				if(ENGIFAB)
+					eng_fab |= D
+				if(MEDIFAB)
+					med_fab |= D
+				if(MECHFAB)
+					mech_fab |= D
+				if(VOIDFAB)
+					void_fab |= D
+				if(AMMOFAB)
+					ammo_fab |= D
+				if(AUTOTAILOR_ACCESSORIES)
+					accessory_at |= D
+				if(AUTOTAILOR_NONSTANDARD)
+					nonstandard_at |= D
+				if(AUTOTAILOR)
+					standard_at |= D
+				if(AUTOTAILOR_STORAGE)
+					storage_at |= D
+				if(AUTOTAILOR_TACTICAL)
+					tactical_at |= D
+				if(CIRCUITFAB)
+					circuit_fab |= D
+
 	RefreshResearch()
+
+/datum/research/proc/get_research_options(var/build_type)
+	switch(build_type)
+		if(GENERALFAB)
+			return gen_fab
+		if(ENGIFAB)
+			return eng_fab
+		if(MEDIFAB)
+			return med_fab
+		if(MECHFAB)
+			return mech_fab
+		if(VOIDFAB)
+			return void_fab
+		if(AMMOFAB)
+			return ammo_fab
+		if(AUTOTAILOR_ACCESSORIES)
+			return accessory_at
+		if(AUTOTAILOR_NONSTANDARD)
+			return nonstandard_at
+		if(AUTOTAILOR)
+			return standard_at
+		if(AUTOTAILOR_STORAGE)
+			return storage_at
+		if(AUTOTAILOR_TACTICAL)
+			return tactical_at
+		if(CIRCUITFAB)
+			return circuit_fab
 
 /datum/research/techonly
 
@@ -125,12 +223,123 @@ research holder datum.
 	return
 
 // A simple helper proc to find the name of a tech with a given ID.
-/proc/CallTechName(var/ID) 
+/proc/CallTechName(var/ID)
 	for(var/T in subtypesof(/datum/tech))
 		var/datum/tech/check_tech = T
 		if(initial(check_tech.id) == ID)
 			return  initial(check_tech.name)
-	
+
+
+
+
+
+/***************************************************************
+**						brawlTechnology Datums				  **
+** 							aaa								  **/
+//***************************************************************
+
+#define TECH_ENGI 1
+#define TECH_MEDI 2
+#define TECH_COMBAT 3
+#define TECH_CONSUMER 4
+#define TECH_GENERAL 5
+/datum/tech_entry
+	var/name = ""
+	var/desc = ""
+	var/uid = ""
+	var/tier = 1
+	var/category = TECH_ENGI
+	var/points = 150
+	var/list/prereqs = list()
+
+/datum/tech_entry/engi
+	category = TECH_ENGI
+/datum/tech_entry/medi
+	category = TECH_MEDI
+/datum/tech_entry/combat
+	category = TECH_COMBAT
+/datum/tech_entry/consumer
+	category = TECH_CONSUMER
+/datum/tech_entry/general
+	category = TECH_GENERAL
+
+/datum/tech_entry/general/capacitor/adv_capacitor
+	name = "Advanced capacitors"
+	desc = "Capacitors can be rearranged and redesigned to hold more current with less capacity for failure. Unlocks advanced capacitor designs for the appropriate fabricators."
+	tier = 1
+	points = 150
+	uid = "adv_capacitor"
+
+/datum/tech_entry/general/capacitor/super_capacitor
+	name = "Super capacitance"
+	desc = "Uranium alloys can be used to develop devices with super capacitance, which can be changed by running eletric charges at a cross-variance through the alloy. Unlocks super capacitor designs for the appropriate fabricators."
+	tier = 2
+	points = 400
+	uid = "super_capacitor"
+	prereqs = list("adv_capacitor")
+
+
+/datum/tech_entry/general/manipulator/nano_mani
+	name = "Nano-manipulators"
+	desc = "Smaller manipulators can perform more operations before its machine or device needs to stop and readjust it. Unlocks nano manipulator designs for the appropriate fabricators."
+	tier = 1
+	points = 150
+	uid = "nano_mani"
+
+/datum/tech_entry/general/manipulator/pico_mani
+	name = "Pico-miniturazied manipulators"
+	desc = "Application of phoron allows for an even smaller set of manipulator designs. Unlocks pico manipulator designs for the appropriate fabricators."
+	tier = 2
+	points = 400
+	uid = "pico_mani"
+	prereqs = list("nano_mani")
+
+/datum/tech_entry/general/bin/adv_matter_bin
+	name = "Advanced matter bins"
+	desc = "The matter bins need to store a variety of distinct materials as efficently as possible while still having them equally accessible by its machine. Unlocks advanced matter bin designs for the appropriate fabricators."
+	tier = 1
+	points = 150
+	uid = "adv_matter_bin"
+
+/datum/tech_entry/general/bin/super_matter_bin
+	name = "Super dense matter storage"
+	desc = "A device enriched with phoron could store materials in a super dense state. Unlocks super matter bin designs for the appropriate fabricators."
+	tier = 2
+	points = 400
+	uid = "super_matter_bin"
+	prereqs = list("adv_matter_bin")
+
+/datum/tech_entry/general/micro_laser/high_micro_laser
+	name = "High intensity micro lasers"
+	desc = "Micro lasers project beams capable of slicing materials and a higher intensity model could work faster. Unlocks high intensity micro laser designs for the appropriate fabricators."
+	tier = 1
+	points = 150
+	uid = "high_micro_laser"
+
+/datum/tech_entry/general/micro_laser/ultra_micro_laser
+	name = "Ultra intensity micro lasers"
+	desc = "A diamond focusing lense goes into a new model of micro laser that works at an even higher intensity. Unlocks ultra intensity micro laser designs for the appropriate fabricators."
+	tier = 2
+	points = 400
+	uid = "ultra_micro_laser"
+	prereqs = list("high_micro_laser")
+
+/datum/tech_entry/general/sensor/adv_sensor
+	name = "Advanced sensors"
+	desc = "An advanced sensor could transmit more accurate input data to whatever machine or device uses it. Unlocks advanced sensor designs for the appropriate fabricators."
+	tier = 1
+	points = 150
+	uid = "adv_sensor"
+
+/datum/tech_entry/general/sensor/phasic_sensor
+	name = "Multi-Phasic Sensor Technique"
+	desc = "A technique for sensors that uses phoron to analyze matter in mulitple spectral phases. Unlocks phasic sensor designs for the appropriate fabricators."
+	tier = 2
+	points = 400
+	uid = "phasic_sensor"
+	prereqs = list("adv_sensor")
+
+
 /***************************************************************
 **						Technology Datums					  **
 **	Includes all the various technoliges and what they make.  **

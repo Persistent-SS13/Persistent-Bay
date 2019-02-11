@@ -16,7 +16,7 @@
 
 	var/universal_translate = 0 // set to 1 if it can translate nonhuman speech
 
-	req_access = list(core_access_wireless_programs)
+	req_access = list(core_access_machine_linking)
 
 	attack_hand(mob/user as mob)
 		if(stat & (BROKEN|NOPOWER))

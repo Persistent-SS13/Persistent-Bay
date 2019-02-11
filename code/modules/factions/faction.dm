@@ -656,6 +656,8 @@ var/PriorityQueue/all_feeds
 
 	var/list/reserved_frequencies() = list() // Reserved frequencies that the faction can create encryption keys from.
 
+	var/datum/machine_limits/limits
+	
 
 /proc/spawn_nexus_gov()
 	var/datum/world_faction/democratic/nexus = new()
@@ -1147,6 +1149,7 @@ var/PriorityQueue/all_feeds
 	network.holder = src
 	records = new()
 	create_faction_account()
+	limits = new()
 /datum/world_faction/proc/rebuild_cargo_telepads()
 	cargo_telepads.Cut()
 	for(var/obj/machinery/telepad_cargo/telepad in GLOB.cargotelepads)
@@ -1158,26 +1161,6 @@ var/PriorityQueue/all_feeds
 	for(var/datum/access_category/access_category in access_categories)
 		for(var/x in access_category.accesses)
 			all_access |= x
-	all_access |= "1"
-	all_access |= "2"
-	all_access |= "3"
-	all_access |= "4"
-	all_access |= "5"
-	all_access |= "6"
-	all_access |= "7"
-	all_access |= "8"
-	all_access |= "9"
-	all_access |= "10"
-	all_access |= "11"
-	all_access |= "12"
-	all_access |= "13"
-	all_access |= "14"
-	all_access |= "15"
-	all_access |= "16"
-	all_access |= "17"
-	all_access |= "18"
-	all_access |= "19"
-	all_access |= "20"
 
 /datum/world_faction/proc/rebuild_all_assignments()
 	all_assignments = list()
@@ -1286,6 +1269,11 @@ var/PriorityQueue/all_feeds
 /datum/world_faction/proc/proposal_denied(var/datum/proposal/proposal)
 	return 0
 
+/datum/world_faction/proc/get_access_name(var/access)
+	for(var/datum/access_category/access_category in access_categories)
+		if(access in access_category.accesses) return access_category.accesses[access]
+	return 0
+	
 /datum/assignment_category
 	var/name = ""
 	var/list/assignments = list()
@@ -1467,9 +1455,30 @@ var/PriorityQueue/all_feeds
 	name = "Have scan X unique indivduals in a body scanner."
 
 
-
-
-
+/datum/machine_limits
+	var/limit_genfab = 0
+	var/list/genfabs = list()
+	var/limit_engfab = 0
+	var/list/engfabs = list()
+	var/limit_medfab = 0
+	var/list/medfabs = list()
+	var/limit_mechfab = 0
+	var/list/mechfabs = list()
+	var/limit_voidfab = 0
+	var/list/voidfabs = list()
+	var/limit_ammofab = 0
+	var/list/ammofabs = list()
+	var/limit_ataccessories = 0
+	var/list/ataccessories = list()
+	var/limit_atnonstandard = 0
+	var/list/atnonstandards = list()
+	var/limit_atstandard = 0
+	var/list/atstandards = list()
+	var/limit_atstorage = 0
+	var/list/atstorages = list()
+	var/limit_attactical = 0
+	var/list/attacticals = list()
+	
 
 /datum/business_module/minor/journalism
 

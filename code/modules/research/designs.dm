@@ -51,6 +51,7 @@ other types of metals and chemistry for reagents).
 
 	var/research // text uid of the required technology
 
+	var/atom/movable/builds
 /datum/design/New()
 	..()
 	item_name = name
@@ -64,17 +65,17 @@ other types of metals and chemistry for reagents).
 	return
 
 /datum/design/proc/AssembleDesignName()
-	if((!name || !materials.len) && build_path)					//Get name from build path if posible
-		var/atom/movable/A = new build_path()
-		if(!name)
-			name = initial(A.name)
-			item_name = name
-			
-		if(istype(A, /obj/item))
-			var/obj/item/I = A
-			if(!materials || !materials.len)
-				if(I.matter && I.matter.len)
-					materials = I.matter.Copy()
+	var/atom/movable/A = new build_path()
+	builds = A
+	if(!name)
+		name = initial(A.name)
+		item_name = name
+		
+	if(!materials.len && istype(A, /obj/item))
+		var/obj/item/I = A
+		if(!materials || !materials.len)
+			if(I.matter && I.matter.len)
+				materials = I.matter.Copy()
 	return
 
 /datum/design/proc/AssembleDesignDesc()

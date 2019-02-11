@@ -3,7 +3,28 @@
 	desc = "An advanced machine capable of printing many types of clothing, this one is loaded with tactical clothing & armor designs."
 	circuit = /obj/item/weapon/circuitboard/fabricator/autotailor/combat
 	build_type = AUTOTAILOR_TACTICAL
-	req_access = list(core_access_security_programs)
+
+/obj/machinery/fabricator/autotailor/combat/can_connect(var/datum/world_faction/trying, var/mob/M)
+	if(!trying.limits) return 0
+	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(req_access_faction)))
+		to_chat(M, "You do not have access to link machines to [trying.name].")
+		return 0
+	if(trying.limits.limit_attactical <= trying.limits.attacticals.len)
+		if(M)
+			to_chat(M, "[trying.name] cannot connect any more machines of this type.")
+		return 0
+	trying.limits.attacticals |= src
+	req_access_faction = trying.uid
+	connected_faction = src
+
+/obj/machinery/fabricator/autotailor/combat/can_disconnect(var/datum/world_faction/trying, var/mob/M)
+	if(!trying.limits) return 0
+	trying.limits.attacticals -= src
+	req_access_faction = ""
+	connected_faction = null
+	if(M) to_chat(M, "The machine has been disconnected.")
+
+
 
 ////////////////////////////////////////////////////
 //////////////////////DESIGNS///////////////////////

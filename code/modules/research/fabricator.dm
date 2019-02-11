@@ -45,7 +45,14 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	var/sync_message = ""
 
 	var/menu = 1
-	
+
+	var/datum/world_faction/connected_faction
+	var/datum/design/selected_design
+
+
+
+
+
 /obj/machinery/fabricator/New()
 	..()
 
@@ -62,8 +69,6 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 		component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
 		atom_flags += ATOM_FLAG_OPEN_CONTAINER
 	RefreshParts()
-
-	files = new /datum/research(src) //Setup the research data holder.
 
 	update_categories()
 	return
@@ -125,16 +130,41 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	var/datum/design/current = queue.len ? queue[1] : null
 	if(current)
 		data["current"] = current.name
-	data["name"] = name
-	data["queue"] = get_queue_names()
-	data["buildable"] = get_build_options()
-	data["category"] = category
-	data["categories"] = categories
-	data["materials"] = get_materials()
-	data["has_reagents"] = has_reagents
-	data["reagents"] = get_reagents()
-	data["maxres"] = res_max_amount
+
 	data["sync"] = sync_message
+	data["menu"] = menu
+	if(!connected_faction && req_access_faction && req_access_faction != "")
+		connected_faction = get_faction(req_access_faction)
+	if(!connected_faction)
+		req_access = list()
+	if(menu == 4 && !selected_design) menu = 1
+	if(menu == 1)
+		data["buildable"] = get_build_options()
+		data["category"] = category
+		data["categories"] = categories
+	if(menu == 2)
+		data["queue"] = get_queue_names()
+		data["materials"] = get_materials()
+		data["has_reagents"] = has_reagents
+		data["reagents"] = get_reagents()
+		data["maxres"] = res_max_amount
+
+	if(menu == 3)
+		if(connected_faction)
+			data["org"] = connected_faction.name
+		else
+			data["org"] = "**NOT CONNECTED**"
+		if(req_access.len)
+			var/access = req_access[1]
+			data["access"] = connected_faction.get_access_name(access)
+		else
+			data["access"] = "**NO ACCESS REQUIREMENT**"
+	if(menu == 4)
+		data["design_name"] = selected_design.name
+		data["design_description"] = selected_design.desc
+		data["design_materials"] = get_design_resources(selected_design)
+		data["design_buildtime"] = get_design_time(selected_design)
+
 	if(current)
 		data["builtperc"] = round((progress / current.time) * 100)
 
@@ -161,11 +191,6 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 
 	if(href_list["eject"])
 		eject_materials(href_list["eject"], text2num(href_list["amount"]))
-
-	if(href_list["sync"])
-		sync()
-	else
-		sync_message = ""
 
 	return 1
 
@@ -297,14 +322,10 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 
 /obj/machinery/fabricator/proc/get_build_options()
 	. = list()
-	for(var/i = 1 to files.known_designs.len)
-		var/datum/design/D = files.known_designs[i]
-		if(islist(D.build_type))
-			if(!D.build_path || !(build_type in D.build_type))
-				continue
-		else
-			if(!D.build_path || !(D.build_type && D.build_type == build_type))
-				continue
+	var/list/design_options = SSresearch.files.get_research_options(build_type)
+	if(!design_options) return
+	for(var/i = 1 to design_options.len)
+		var/datum/design/D = design_options[i]
 		. += list(list("name" = D.name, "id" = i, "category" = D.category, "resources" = get_design_resources(D), "time" = get_design_time(D)))
 
 /obj/machinery/fabricator/proc/CallReagentName(var/reagent_type)

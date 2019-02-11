@@ -9,6 +9,28 @@
 										// want to sprite a new loading animation as well, set this to FALSE.
 
 	has_reagents = TRUE				// Defaults to FALSE, but added here for explanation. If this is set to true, than you require designs to use reagents
+
+
+/obj/machinery/fabricator/engineering_fabricator/can_connect(var/datum/world_faction/trying, var/mob/M)
+	if(!trying.limits) return 0
+	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(req_access_faction)))
+		to_chat(M, "You do not have access to link machines to [trying.name].")
+		return 0
+	if(trying.limits.limit_engfab <= trying.limits.engfabs.len)
+		if(M)
+			to_chat(M, "[trying.name] cannot connect any more machines of this type.")
+		return 0
+	trying.limits.engfabs |= src
+	req_access_faction = trying.uid
+	connected_faction = src
+	
+/obj/machinery/fabricator/engineering_fabricator/can_disconnect(var/datum/world_faction/trying, var/mob/M)
+	if(!trying.limits) return 0
+	trying.limits.engfabs -= src
+	req_access_faction = ""
+	connected_faction = null
+	if(M) to_chat(M, "The machine has been disconnected.")
+
 										// in addition to any material costs.
 ////////////////////////////////////////////////////
 //////////////////////DESIGNS///////////////////////
@@ -297,6 +319,7 @@
 	time = 10
 	category = "Electronics"
 	materials = list(MATERIAL_STEEL = 0.25 SHEETS, MATERIAL_COPPER = 0.25 SHEETS)
+	
 /datum/design/item/engifab/electronics/adv
 
 /datum/design/item/engifab/electronics/simple
@@ -577,7 +600,7 @@
 /datum/design/item/engifab/parts/adv/powercell/high
 	name = "High-capacity power cell"
 	req_tech = list(TECH_POWER = 2)
-	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 2 SHEETS, MATERIAL_GOLD = 0.5 SHEETS, MATERIAL_SILVER = 0.5 SHEETS)
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_COPPER = 2 SHEETS, MATERIAL_URANIUM = 0.5 SHEETS)
 	build_path = /obj/item/weapon/cell/high
 
 /datum/design/item/engifab/parts/adv/powercell/super
@@ -589,7 +612,7 @@
 /datum/design/item/engifab/parts/adv/powercell/hyper
 	name = "Hyper-capacity power cell"
 	req_tech = list(TECH_POWER = 5, TECH_MATERIAL = 4)
-	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_DIAMOND = 3 SHEETS, MATERIAL_URANIUM = 5 SHEETS)
+	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_PHORON = 2 SHEETS, MATERIAL_URANIUM = 5 SHEETS)
 	build_path = /obj/item/weapon/cell/hyper
 
 /datum/design/item/engifab/parts/adv/powercell/device/standard

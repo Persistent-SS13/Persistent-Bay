@@ -1,4 +1,7 @@
 {{:helper.link('Designs', null, {'menu' : 1}, data.menu == 1 ? 'selected' : null)}}{{:helper.link('Queue & Materials', null, {'menu' : 1}, data.menu == 1 ? 'selected' : null)}}{{:helper.link('Access & Linking', null, {'menu' : 3}, data.menu == 3 ? 'selected' : null)}}
+<br>
+<b>Currently Building: {{:data.current}}</b> ({{:data.builtperc}}% ready)
+<br>
 {{if data.menu == 1}}
 	<h2>Designs</h2><br><hr>
 	<div class="item">
@@ -15,7 +18,7 @@
 					{{:helper.link(value.name, null, {'build' : value.id})}}
 				</div>
 				<div class="itemContentMedium">
-					{{:value.resources}}, {{:value.time}}
+					{{:value.resources}}
 				</div>
 			</div>
 		{{/if}}
@@ -87,7 +90,7 @@
 			Linked Organization
 		</div>
 		<div class='itemContent'>
-			{{:data.propose_time}}
+			{{:helper.link(data.org, null, {'link_org' : 1})}}
 		</div>
 	</div>
 	<div class='item'>
@@ -95,12 +98,8 @@
 			Production Access
 		</div>
 		<div class='itemContent'>
-			{{:data.sponsor}}
+			{{:helper.link(data.access, null, {'change_access' : 1})}}
 		</div>
-	</div>
-	<h4>Production Log</h4>
-	<div class="statusDisplay" style="overflow: auto;">
-		
 	</div>
 {{/if}}
 {{if data.menu == 4}}
@@ -125,7 +124,7 @@
 	{{if data.design_research}}
 		<div class='item'>
 			<div class='itemLabel'>
-				Research Cost
+				Design Requirement
 			</div>
 			<div class='itemContent'>
 				{{:data.design_research}}

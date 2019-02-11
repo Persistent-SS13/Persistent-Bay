@@ -29,7 +29,8 @@ SUBSYSTEM_DEF(mazemap)
 	map_data["12"] = new /datum/zlevel_data/twelve()
 	map_data["13"] = new /datum/zlevel_data/thirteen()
 
-	for(var/datum/zlevel_data/data in map_data)
+	for(var/x in map_data)
+		var/datum/zlevel_data/data = map_data[x]
 		var/op_z = data.z
 		var/obj/structure/transition_barrier/barrier
 		barrier = new(locate(TRANSITIONEDGE, TRANSITIONEDGE,op_z))

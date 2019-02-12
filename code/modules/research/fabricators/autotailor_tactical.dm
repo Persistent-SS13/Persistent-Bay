@@ -455,6 +455,18 @@
 	build_path = /obj/item/clothing/suit/armor/vest/warden
 	materials = list("leather" = 10000, DEFAULT_WALL_MATERIAL = 10000, "osmium-carbide plasteel" = 7000)
 
+/datum/design/item/autotailor/combat/barmour/guard_robes
+	name = "body armor - guard robes"
+	id = "guard_robes"
+	build_path =/obj/item/clothing/suit/armor/robes
+	materials = list(DEFAULT_WALL_MATERIAL = 30000, "plasteel" = 20000, "osmium-carbide plasteel" = 10000)
+
+/datum/design/item/autotailor/ccombat/barmour/guard_helmet
+	name = "Helmet - guard mantle"
+	id = "guard_helmet"
+	build_path = /obj/item/clothing/head/helmet/guard
+	materials = list(DEFAULT_WALL_MATERIAL = 5000, "plasteel" = 2000, "osmium-carbide plasteel" = 2000)
+
 /datum/design/item/autotailor/combat/barmour/ert_comarmor
 	name = "ERT body armor - commander"
 	id = "ert_comarmor"
@@ -592,6 +604,12 @@
 	id = "arm_guards"
 	build_path = /obj/item/clothing/gloves/guards
 	materials = list("leather" = 2000, "plasteel" = 4000, "osmium-carbide plasteel" = 4000)
+
+/datum/design/item/autotailor/combat/barmour/guard_gloves
+	name = "Gloves - guard gloves"
+	id = "guard_gloves"
+	build_path = /obj/item/clothing/gloves/thick/blueguard
+	materials = list("leather" = 2000, "plasteel" = 2000)
 
 //
 //modular body armor

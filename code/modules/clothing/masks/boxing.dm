@@ -17,7 +17,14 @@
 /obj/item/clothing/mask/balaclava/tactical
 	name = "green balaclava"
 	icon_state = "swatclava"
+	item_state = "swatclava"
 	down_icon_state = "swatclava_r"
+
+/obj/item/clothing/mask/balaclava/blue
+	name = "blue balaclava"
+	icon_state = "blueclava"
+	item_state = "blueclava"
+	down_icon_state = "blueclava_r"
 
 /obj/item/clothing/mask/luchador
 	name = "Luchador Mask"

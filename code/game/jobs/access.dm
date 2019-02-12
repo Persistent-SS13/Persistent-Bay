@@ -13,11 +13,12 @@
 	//check if it doesn't require any access at all
 	if(!istype(M))
 		return 0
-	
-	if(req_access_personal_list && req_access_personal_list)
+
+	if(req_access_personal_list && req_access_personal_list.len)
 		for(var/nam in req_access_personal_list)
 			if(M.get_id_name() == nam)
 				return 1
+		return 0
 	if(req_access_personal)
 		if(M.get_id_name() == req_access_personal)
 			return 1

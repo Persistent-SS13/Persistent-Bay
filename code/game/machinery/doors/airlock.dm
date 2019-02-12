@@ -526,41 +526,42 @@
 	var/l_setshort = 0
 	var/l_hacking = 0
 	var/open = 0
-	Topic(href, href_list)
-		..()
-		if((usr.stat || usr.restrained()) || (get_dist(src, usr) > 1))
-			return
-		if(href_list["type"])
-			if(href_list["type"] == "E")
-				if((src.l_set == 0) && (length(src.code) == 5) && (!src.l_setshort) && (src.code != "ERROR"))
-					src.l_code = src.code
-					src.l_set = 1
-				else if((src.code == src.l_code) && (src.emagged == 0) && (src.l_set == 1))
-					src.locked = 0
-					playsound(src,bolts_rising, 30, 0, 3)
-					update_icon()
-					src.overlays = null
-					src.code = null
-				else
-					src.code = "ERROR"
-			else
-				if((href_list["type"] == "R") && (src.emagged == 0) && (!src.l_setshort))
-					src.locked = 1
-					playsound(src,bolts_dropping, 30, 0, 3)
-					src.overlays = null
-					update_icon()
-					src.code = null
-					src.close(usr)
-				else
-					src.code += text("[]", href_list["type"])
-					if(length(src.code) > 5)
-						src.code = "ERROR"
-			src.add_fingerprint(usr)
-			for(var/mob/M in viewers(1, src.loc))
-				if((M.client && M.machine == src))
-					src.attack_hand(M)
-				return
+
+/obj/machinery/door/airlock/keypad/Topic(href, href_list)
+	..()
+	if((usr.stat || usr.restrained()) || (get_dist(src, usr) > 1))
 		return
+	if(href_list["type"])
+		if(href_list["type"] == "E")
+			if((src.l_set == 0) && (length(src.code) == 5) && (!src.l_setshort) && (src.code != "ERROR"))
+				src.l_code = src.code
+				src.l_set = 1
+			else if((src.code == src.l_code) && (src.emagged == 0) && (src.l_set == 1))
+				src.locked = 0
+				playsound(src,bolts_rising, 30, 0, 3)
+				update_icon()
+				src.overlays = null
+				src.code = null
+			else
+				src.code = "ERROR"
+		else
+			if((href_list["type"] == "R") && (src.emagged == 0) && (!src.l_setshort))
+				src.locked = 1
+				playsound(src,bolts_dropping, 30, 0, 3)
+				src.overlays = null
+				update_icon()
+				src.code = null
+				src.close(usr)
+			else
+				src.code += text("[]", href_list["type"])
+				if(length(src.code) > 5)
+					src.code = "ERROR"
+		src.add_fingerprint(usr)
+		for(var/mob/M in viewers(1, src.loc))
+			if((M.client && M.machine == src))
+				src.attack_hand(M)
+			return
+	return
 
 /obj/machinery/door/airlock/keypad/attack_hand(mob/user as mob)
 	if(!istype(user, /mob/living/silicon))
@@ -590,6 +591,22 @@
 		..(user)
 	return
 
+/obj/machinery/door/airlock/personal
+	door_color = COLOR_WHITE
+	name = "Personal Airlock"
+	desc = "A door with a personal access lock for an individual(s)."
+	assembly_type = /obj/structure/door_assembly/door_assembly_personal
+
+/obj/machinery/door/airlock/personal/attackby(var/obj/item/C, var/mob/user)
+	if(istype(C, /obj/item/weapon/card/id/))
+		var/obj/item/weapon/card/id/ID = C
+		if(req_access_personal_list.len && ID.registered_name == req_access_personal_list[1])
+			if(locked)
+				unlock()
+			else
+				lock()
+			to_chat(user, "<span class='notice> You [locked ? "lock" : "unlock"]  \the [src].")
+	..()
 /obj/machinery/door/airlock/attack_generic(var/mob/user, var/damage)
 	if(stat & (BROKEN|NOPOWER))
 		if(damage >= 10)
@@ -603,7 +620,6 @@
 			visible_message("<span class='notice'>\The [user] strains fruitlessly to force \the [src] [density ? "open" : "closed"].</span>")
 		return
 	..()
-
 
 /*
 About the new airlock wires panel:
@@ -1562,6 +1578,10 @@ About the new airlock wires panel:
 				req_access_business_list = src.electronics.business_access
 			req_access_business = electronics.business_name
 
+		else if(istype(electronics, /obj/item/weapon/airlock_electronics/personal_electronics))
+			var/obj/item/weapon/airlock_electronics/personal_electronics/pe = electronics
+			req_access_personal_list = pe.registered_names
+
 		else
 			if(electronics.one_access)
 				req_access.Cut()
@@ -1666,6 +1686,7 @@ About the new airlock wires panel:
 		electronics.conf_access = src.req_one_access
 		electronics.one_access = 1
 	electronics.req_access_faction = req_access_faction
+
 /obj/machinery/door/airlock/emp_act(var/severity)
 	if(prob(20/severity))
 		spawn(0)

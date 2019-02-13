@@ -4,7 +4,8 @@
 	path = "nexus"
 	flags = MAP_HAS_RANK
 
-	lobby_icon = 'maps/vignette/icons/lobby.dmi'
+	lobby_icon = 'maps/nexus/icons/lobby.dmi'
+	intro_icon = 'maps/nexus/icons/intro.dmi'
 
 	station_levels = list(1,2,3)
 	contact_levels = list(1,2,3)

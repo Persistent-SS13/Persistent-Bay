@@ -146,7 +146,7 @@ datum/preferences
 
 	if(href_list["preference"] == "open_whitelist_forum")
 		if(config.forumurl)
-			user << link(config.forumurl)
+			send_link(user, config.forumurl)
 		else
 			to_chat(user, "<span class='danger'>The forum URL is not set in the server configuration.</span>")
 			return
@@ -172,7 +172,7 @@ datum/preferences
 			return
 		save_preferences()
 		save_character()
-		usr << browse(null, "window=saves")
+		close_browser(usr, "window=saves")
 		char_panel.close()
 		return 0
 	else if(href_list["reload"])
@@ -375,8 +375,8 @@ datum/preferences
 	var/mob/M
 	F >> M
 	fdel(F)
-	F["name"] << M.real_name
-	F["mob"] << M
+	to_file(F["name"], M.real_name)
+	to_file(F["mob"], M)
 	qdel(M)
 	
 /proc/Character(var/ind, var/ckey)
@@ -503,7 +503,7 @@ datum/preferences
 
 
 /datum/preferences/proc/close_load_dialog(mob/user)
-	user << browse(null, "window=saves")
+	close_browser(user, "window=saves")
 	panel.close()
 
 

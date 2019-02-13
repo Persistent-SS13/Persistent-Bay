@@ -66,7 +66,7 @@
 	//
 	dat += "<HR>"
 	dat += "<A href='?src=\ref[src];refresh=1'>Refresh</A> <A href='?src=\ref[src];close=1'>Close<BR>"
-	user << browse(dat, "window=artharvester;size=450x500")
+	show_browser(user, dat, "window=artharvester;size=450x500")
 	onclose(user, "artharvester")
 
 /obj/machinery/artifact_harvester/Process()
@@ -249,7 +249,7 @@
 			src.visible_message(message)
 
 	if(href_list["close"])
-		usr << browse(null, "window=artharvester")
+		close_browser(usr, "window=artharvester")
 		usr.unset_machine(src)
 
 	updateDialog()

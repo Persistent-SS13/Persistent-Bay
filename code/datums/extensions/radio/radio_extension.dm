@@ -1,8 +1,21 @@
 //--------------------------------
 //	Radio Transmitter
 //--------------------------------
-#define RADIO_TRANSMITTER_ID_FIELD "id"
-#define RADIO_TRANSMITTER_SOURCE_ID_FIELD "src_id"
+#define RADIO_TRANSMITTER_ID_FIELD "tag"
+#define RADIO_TRANSMITTER_SOURCE_ID_FIELD "src_tag"
+
+//Returns the target tag of the specified signal
+proc/signal_target_id(var/datum/signal/signal)
+	if(signal && islist(signal.data)) 
+		return signal.data[RADIO_TRANSMITTER_ID_FIELD]
+	return null
+
+//Returns the target tag of the specified signal
+proc/signal_source_id(var/datum/signal/signal)
+	if(signal && islist(signal.data)) 
+		return signal.data[RADIO_TRANSMITTER_SOURCE_ID_FIELD]
+	return null
+
 /*
 	Unified wrapper for transmissions via radio.
 	Since literally all objects implement this differently and made universally
@@ -102,24 +115,27 @@
 	else
 		return TRUE
 
-//Returns the target id_tag of the specified signal
-/datum/extension/interactive/radio_transmitter/proc/signal_target_id(var/datum/signal/signal)
-	if(signal && islist(signal.data)) 
-		return signal.data[RADIO_TRANSMITTER_ID_FIELD]
-	return null
-
 /datum/extension/interactive/radio_transmitter/proc/set_range(var/newrange)
 	src.range = newrange
 /datum/extension/interactive/radio_transmitter/proc/get_range()
 	return src.range
 
-/datum/extension/interactive/radio_transmitter/proc/post_signal(datum/signal/signal, var/overridefilter = null, var/targetid = null)
+/datum/extension/interactive/radio_transmitter/proc/post_signal(datum/signal/signal, var/overridefilter = null, var/targetid = null, var/targetfreq = null)
 	if(!src.radio_connection)
 		log_debug("[src.holder] \ref[src.holder] tried to send a signal with no radio connection!")
 		return
 	signal.data[RADIO_TRANSMITTER_SOURCE_ID_FIELD] = src.id
 	signal.data[RADIO_TRANSMITTER_ID_FIELD] = targetid? targetid : src.id
-	src.radio_connection.post_signal(src.holder, signal, (overridefilter)? overridefilter : src.filter_out, src.range)
+
+	//Send the message to the right frquency
+	if(targetfreq && targetfreq != src.frequency)
+		var/datum/radio_frequency/otherfrequency = radio_controller.return_frequency(targetfreq)
+		if(!otherfrequency)
+			log_warning("[src]/ref[src] tried to send radio signal to empty radio frequency: [targetfreq]!!")
+			return
+		otherfrequency.post_signal(src.holder, signal, (overridefilter)? overridefilter : src.filter_out, src.range)
+	else //Same frequency as the one we're listening on
+		src.radio_connection.post_signal(src.holder, signal, (overridefilter)? overridefilter : src.filter_out, src.range)
 
 /datum/extension/interactive/radio_transmitter/proc/add_listener(obj/device as obj)
 	if(!src.radio_connection)

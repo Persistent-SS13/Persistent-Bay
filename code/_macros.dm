@@ -100,6 +100,10 @@
 #define close_browser(target, browser_info)                 target << browse(null, browser_info)
 #define show_image(target, image)                           target << image
 #define send_rsc(target, rsc_content, rsc_name)             target << browse_rsc(rsc_content, rsc_name)
+#define send_file(target, file)                             target << file
+//Currently used in SDQL2 stuff
+#define send_output(target, msg, control)                   target << output(msg, control)
+#define send_link(target, url)                              target << link(url)
 
 #define MAP_IMAGE_PATH "nano/images/[GLOB.using_map.path]/"
 
@@ -156,16 +160,12 @@
 // Insert an object A into a sorted list using cmp_proc (/code/_helpers/cmp.dm) for comparison.
 #define ADD_SORTED(list, A, cmp_proc) if(!list.len) {list.Add(A)} else {list.Insert(FindElementIndex(A, list, cmp_proc), A)}
 
-//Currently used in SDQL2 stuff
-#define send_output(target, msg, control) target << output(msg, control)
-#define send_link(target, url) target << link(url)
-
 #define JOINTEXT(X) jointext(X, null)
 
 #define SPAN_NOTICE(X) "<span class='notice'>[X]</span>"
-
 #define SPAN_WARNING(X) "<span class='warning'>[X]</span>"
-
 #define SPAN_DANGER(X) "<span class='danger'>[X]</span>"
+#define SPAN_GOOD(X) "<span class='good'>[X]</span>"
+#define SPAN_BAD(X) "<span class='bad'>[X]</span>"
 
 #define cast_new(type, num, args...) if((num) == 1) { new type(args) } else { for(var/i=0;i<(num),i++) { new type(args) } }

@@ -27,8 +27,8 @@
 
 	data["message"] = message
 	if(active_record)
-		user << browse_rsc(active_record.photo_front, "front_[active_record.uid].png")
-		user << browse_rsc(active_record.photo_side, "side_[active_record.uid].png")
+		send_rsc(user, active_record.photo_front, "front_[active_record.uid].png")
+		send_rsc(user, active_record.photo_side, "side_[active_record.uid].png")
 		data["pic_edit"] = check_access(user, core_access_command_programs)
 		data["uid"] = active_record.uid
 		var/list/fields = list()

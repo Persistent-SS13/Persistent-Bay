@@ -33,7 +33,7 @@
 /obj/item/weapon/circuitboard/vendor/proc/set_type(typepath, mob/user)
 		build_path = typepath
 		name = T_BOARD("[names_paths[build_path]] Vendor")
-		user << "<span class='notice'>You set the board to [names_paths[build_path]].</span>"
+		to_chat(user, "<span class='notice'>You set the board to [names_paths[build_path]].</span>")
 		req_components = list(text2path("/obj/item/weapon/vending_refill/[copytext("[build_path]", 24)]") = 3)
 
 /obj/item/weapon/circuitboard/holopad
@@ -143,7 +143,7 @@
 /obj/item/weapon/circuitboard/smartfridge/proc/set_type(typepath, mob/user)
 		build_path = typepath
 		name = T_BOARD("[names_paths[build_path]]")
-		user << "<span class='notice'>You set the board to [names_paths[build_path]].</span>"
+		to_chat(user, "<span class='notice'>You set the board to [names_paths[build_path]].</span>")
 
 /obj/item/weapon/circuitboard/libraryscanner
 	name = T_BOARD("book scanner")

@@ -53,9 +53,8 @@
 		narsimage.loc = src.loc
 		narglow.loc = src.loc
 		//Display the new narsimage to the player
-		src << narsimage
-		src << narglow
-
+		show_image(src, narsimage)
+		show_image(src, narglow)
 	else
 		if(narsimage)
 			QDEL_NULL(narsimage)

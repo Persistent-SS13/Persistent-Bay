@@ -36,8 +36,8 @@
 	name = "alarm"
 	icon = 'icons/obj/monitors.dmi'
 	icon_state = "alarm0"
-	anchored = 1
-	use_power = 1
+	anchored = TRUE
+	use_power = POWER_USE_IDLE
 	idle_power_usage = 80
 	active_power_usage = 1000 //For heating/cooling rooms. 1000 joules equates to about 1 degree every 2 seconds for a single tile of air.
 	power_channel = ENVIRON
@@ -47,18 +47,15 @@
 
 	layer = ABOVE_WINDOW_LAYER
 
-	var/alarm_id = null
-	var/breach_detection = 1 // Whether to use automatic breach detection or not
-	var/frequency = 1439
-	//var/skipprocess = 0 //Experimenting
-	var/alarm_frequency = 1437
+	var/breach_detection = TRUE // Whether to use automatic breach detection or not
+	var/frequency = AIRALARM_FREQ
 	var/remote_control = 0
 	var/rcon_setting = 2
 	var/rcon_time = 0
-	var/locked = 1
-	var/wiresexposed = 0 // If it's been screwdrivered open.
-	var/aidisabled = 0
-	var/shorted = 0
+	var/locked = TRUE
+	var/wiresexposed = FALSE // If it's been screwdrivered open.
+	var/aidisabled = FALSE
+	var/shorted = FALSE
 
 	var/datum/wires/alarm/wires
 
@@ -69,7 +66,7 @@
 	var/buildstage = 2 //2 is built, 1 is building, 0 is frame.
 
 	var/target_temperature = T0C+20
-	var/regulating_temperature = 0
+	var/regulating_temperature = FALSE
 
 	var/datum/radio_frequency/radio_connection
 
@@ -84,17 +81,17 @@
 	var/temperature_dangerlevel = 0
 	var/other_dangerlevel = 0
 
-	var/report_danger_level = 1
+	var/report_danger_level = TRUE
 
 /obj/machinery/alarm/cold
 	target_temperature = T0C+4
 
 /obj/machinery/alarm/nobreach
-	breach_detection = 0
+	breach_detection = FALSE
 
 /obj/machinery/alarm/monitor
-	report_danger_level = 0
-	breach_detection = 0
+	report_danger_level = FALSE
+	breach_detection = FALSE
 
 /obj/machinery/alarm/server/New()
 	..()
@@ -145,16 +142,16 @@
 	if(!alarm_area)
 		return
 	area_uid = alarm_area.uid
-	if (name == "alarm")
+	if (name == init(alarm))
 		name = "[alarm_area.name] Air Alarm"
 
 	if(!wires)
 		wires = new(src)
 
 	if(!map_storage_loaded)
-		TLV[GAS_OXYGEN] =			list(16, 19, 135, 140) // Partial pressure, kpa
-		TLV[GAS_CO2] = list(-1.0, -1.0, 5, 10) // Partial pressure, kpa
-		TLV[GAS_PHORON] =			list(-1.0, -1.0, 0.2, 0.5) // Partial pressure, kpa
+		TLV[GAS_OXYGEN] =		list(16, 19, 135, 140) // Partial pressure, kpa
+		TLV[GAS_CO2] = 			list(-1.0, -1.0, 5, 10) // Partial pressure, kpa
+		TLV[GAS_PHORON] =		list(-1.0, -1.0, 0.2, 0.5) // Partial pressure, kpa
 		TLV["other"] =			list(-1.0, -1.0, 0.5, 1.0) // Partial pressure, kpa
 		TLV["pressure"] =		list(ONE_ATMOSPHERE*0.80,ONE_ATMOSPHERE*0.90,ONE_ATMOSPHERE*1.10,ONE_ATMOSPHERE*1.20) /* kpa */
 		TLV["temperature"] =	list(T0C-26, T0C, T0C+40, T0C+66) // K
@@ -163,7 +160,7 @@
 		if(!(g in list(GAS_OXYGEN,GAS_NITROGEN,GAS_CO2)))
 			trace_gas += g
 
-	set_frequency(frequency)
+	create_transmitter(null, frequency, RADIO_TO_AIRALARM, 0, RADIO_FROM_AIRALARM)
 	if (!master_is_operating())
 		elect_master()
 
@@ -200,14 +197,14 @@
 	//atmos computer remote controll stuff
 	switch(rcon_setting)
 		if(RCON_NO)
-			remote_control = 0
+			remote_control = FALSE
 		if(RCON_AUTO)
 			if(danger_level == 2)
-				remote_control = 1
+				remote_control = TRUE
 			else
-				remote_control = 0
+				remote_control = FALSE
 		if(RCON_YES)
-			remote_control = 1
+			remote_control = TRUE
 
 	return
 
@@ -286,13 +283,8 @@
 // Returns whether this air alarm thinks there is a breach, given the sensors that are available to it.
 /obj/machinery/alarm/proc/breach_detected()
 	var/turf/simulated/location = loc
-
-	if(!istype(location))
-		return 0
-
-	if(breach_detection	== 0)
-		return 0
-
+	if(!istype(location) || !breach_detection)
+		return FALSE
 	var/datum/gas_mixture/environment = location.return_air()
 	var/environment_pressure = environment.return_pressure()
 	var/pressure_levels = TLV["pressure"]
@@ -300,14 +292,11 @@
 	if (environment_pressure <= pressure_levels[1])		//low pressures
 		if (!(mode == AALARM_MODE_PANIC || mode == AALARM_MODE_CYCLE))
 			playsound(src.loc, 'sound/machines/airalarm.ogg', 25, 0, 4)
-			return 1
-
-	return 0
-
+			return TRUE
+	return FALSE
 
 /obj/machinery/alarm/proc/master_is_operating()
-	return alarm_area.master_air_alarm && !(alarm_area.master_air_alarm.stat & (NOPOWER|BROKEN))
-
+	return alarm_area.master_air_alarm && alarm_area.master_air_alarm.operable()
 
 /obj/machinery/alarm/proc/elect_master()
 	for (var/obj/machinery/alarm/AA in alarm_area)
@@ -375,7 +364,7 @@
 			return
 	if(!signal || signal.encryption)
 		return
-	var/id_tag = signal.data["tag"]
+	var/id_tag = signal_target_id(signal) // signal.data["tag"]
 	if (!id_tag)
 		return
 	if (signal.data["area"] != area_uid)
@@ -416,27 +405,17 @@
 			continue
 		send_signal(id_tag, list("status") )
 
-/obj/machinery/alarm/proc/set_frequency(new_frequency)
-	radio_controller.remove_object(src, frequency)
-	frequency = new_frequency
-	radio_connection = radio_controller.add_object(src, frequency, RADIO_TO_AIRALARM)
+/obj/machinery/alarm/set_radio_frequency(freq)
+	src.frequency = freq
+	. = ..()
 
 /obj/machinery/alarm/proc/send_signal(var/target, var/list/command)//sends signal 'command' to 'target'. Returns 0 if no radio connection, 1 otherwise
-	if(!radio_connection)
-		return 0
-
-	var/datum/signal/signal = new
-	signal.transmission_method = 1 //radio signal
-	signal.source = src
-
-	signal.data = command
-	signal.data["tag"] = target
-	signal.data["sigtype"] = "command"
-
-	radio_connection.post_signal(src, signal, RADIO_FROM_AIRALARM)
-//			log_debug(text("Signal [] Broadcasted to []", command, target))
-
-	return 1
+	if(!has_transmitter())
+		return FALSE
+	command["tag"] = target
+	command["sigtype"] = "command"
+	post_signal(data, RADIO_FROM_AIRALARM, target)
+	return TRUE
 
 /obj/machinery/alarm/proc/apply_mode()
 	//propagate mode to other air alarms in the area
@@ -478,28 +457,16 @@
 /obj/machinery/alarm/proc/apply_danger_level(var/new_danger_level)
 	if (report_danger_level && alarm_area.atmosalert(new_danger_level, src))
 		post_alert(new_danger_level)
-
 	update_icon()
 
 /obj/machinery/alarm/proc/post_alert(alert_level)
-	var/datum/radio_frequency/frequency = radio_controller.return_frequency(alarm_frequency)
-	if(!frequency)
-		return
-
-	var/datum/signal/alert_signal = new
-	alert_signal.source = src
-	alert_signal.transmission_method = 1
-	alert_signal.data["zone"] = alarm_area.name
-	alert_signal.data["type"] = "Atmospheric"
-
-	if(alert_level==2)
-		alert_signal.data["alert"] = "severe"
-	else if (alert_level==1)
-		alert_signal.data["alert"] = "minor"
-	else if (alert_level==0)
-		alert_signal.data["alert"] = "clear"
-
-	frequency.post_signal(src, alert_signal)
+	if(!has_transmitter())
+		return FALSE
+	var/list/data[0]
+	data["zone"] = alarm_area.name
+	data["type"] = "Atmospheric"
+	data["alert"] = alert_level == 0? "clear" : (alert_level == 1? "minor" : "severe" )
+	post_signal(data, RADIO_FROM_AIRALARM, null, alarm_frequency)
 
 /obj/machinery/alarm/attack_ai(mob/user)
 	ui_interact(user)
@@ -625,10 +592,10 @@
 			var/thresholds[0]
 
 			var/list/gas_names = list(
-				GAS_OXYGEN         = "O<sub>2</sub>",
-				GAS_CO2 = "CO<sub>2</sub>",
-				GAS_PHORON         = "Toxin",
-				"other"          = "Other")
+				GAS_OXYGEN		= "O<sub>2</sub>",
+				GAS_CO2			= "CO<sub>2</sub>",
+				GAS_PHORON		= "Toxin",
+				"other"			= "Other")
 			for (var/g in gas_names)
 				thresholds[++thresholds.len] = list("name" = gas_names[g], "settings" = list())
 				selected = TLV[g]
@@ -645,9 +612,9 @@
 			for(var/i = 1, i <= 4, i++)
 				thresholds[thresholds.len]["settings"] += list(list("env" = "temperature", "val" = i, "selected" = selected[i]))
 
-			data["thresholds"] = thresholds
+			data["thresholds"] 			= thresholds
 			data["report_danger_level"] = report_danger_level
-			data["breach_detection"] = breach_detection
+			data["breach_detection"] 	= breach_detection
 
 /obj/machinery/alarm/CanUseTopic(var/mob/user, var/datum/topic_state/state, var/href_list = list())
 	if(buildstage != 2)

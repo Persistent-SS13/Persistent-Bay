@@ -96,7 +96,7 @@
 	else
 		dat = "Please insert a container."
 
-	user << browse(dat, "window=computer;size=400x500")
+	show_browser(user, dat, "window=computer;size=400x500")
 	onclose(user, "computer")
 	return
 

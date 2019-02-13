@@ -159,7 +159,7 @@
 			to_chat(user, "<span class='notice'>The pages of [title] have been cut out!</span>")
 			return
 	if(src.dat)
-		user << browse(dat, "window=book;size=1000x550")
+		show_browser(user, dat, "window=book;size=1000x550")
 		user.visible_message("[user] opens a book titled \"[src.title]\" and begins reading intently.")
 		onclose(user, "book")
 	else
@@ -227,7 +227,7 @@
 			return
 		user.visible_message("<span class='notice'>You open up the book and show it to [M]. </span>", \
 			"<span class='notice'> [user] opens up a book and shows it to [M]. </span>")
-		M << browse("<i>Author: [author].</i><br><br>" + "[dat]", "window=book;size=1000x550")
+		show_browser(M, "<i>Author: [author].</i><br><br>" + "[dat]", "window=book;size=1000x550")
 		user.setClickCooldown(DEFAULT_QUICK_COOLDOWN) //to prevent spam
 
 		
@@ -307,21 +307,21 @@
 		if(istype(pages[current_page], /obj/item/weapon/paper))
 			var/obj/item/weapon/paper/P = pages[current_page]
 			dat+= "<HTML><HEAD><TITLE>[title]</TITLE></HEAD><BODY>[P.info][P.stamps]</BODY></HTML>"
-			M << browse(dat, "window=[title]")
+			show_browser(M, dat, "window=[title]")
 		else if(istype(pages[current_page], /obj/item/weapon/photo))
 			var/obj/item/weapon/photo/P = pages[current_page]
 			if(P.img)
-				M << browse_rsc(P.img, "tmp_photo.png")
+				send_rsc(M, P.img, "tmp_photo.png")
 			else if(P.render)
-				M << browse_rsc(P.render.icon, "tmp_photo.png")
-			M << browse(dat + "<html><head><title>[title]</title></head>" \
+				send_rsc(M, P.render.icon, "tmp_photo.png")
+			var/result = dat + "<html><head><title>[title]</title></head>" \
 			+ "<body style='overflow:hidden'>" \
 			+ "<div> <center><img src='tmp_photo.png' width = '180'" \
 			+ "[P.scribble ? "<div><i>[P.scribble]</i>" : ]"\
-			+ "</center></body></html>", "window=[title]")
-								
+			+ "</center></body></html>"
+			show_browser(M, result, "window=[title]")
 	else
-		M << browse("<center><h1>[title]</h1></center><br><br><i>Authored: [author].</i><br><br>" + "<br><br><a href='?src=\ref[src];choice=next_page'>Open Book</a>", "window=[title]")
+		show_browser(M, "<center><h1>[title]</h1></center><br><br><i>Authored: [author].</i><br><br>" + "<br><br><a href='?src=\ref[src];choice=next_page'>Open Book</a>", "window=[title]")
 		
 /obj/item/weapon/book/multipage/Topic(href, href_list)
 	if(..())

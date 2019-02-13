@@ -22,7 +22,7 @@ var/list/whitelist = list()
 	if(config.usealienwhitelist)
 		if(config.usealienwhitelistSQL)
 			if(!load_alienwhitelistSQL())
-				world.log << "Could not load alienwhitelist via SQL"
+				log_world("Could not load alienwhitelist via SQL")
 		else
 			load_alienwhitelist()
 	return 1
@@ -37,7 +37,7 @@ var/list/whitelist = list()
 /proc/load_alienwhitelistSQL()
 	var/DBQuery/query = dbcon_old.NewQuery("SELECT * FROM whitelist")
 	if(!query.Execute())
-		world.log << dbcon_old.ErrorMsg()
+		log_world(dbcon_old.ErrorMsg())
 		return 0
 	else
 		while(query.NextRow())

@@ -416,7 +416,7 @@ var/list/ai_verbs_default = list(
 			viewalerts = 0
 		var/t1 = text("window=[]", href_list["mach_close"])
 		unset_machine()
-		src << browse(null, t1)
+		close_browser(src, t1)
 	if (href_list["switchcamera"])
 		switchCamera(locate(href_list["switchcamera"])) in cameranet.cameras
 	if (href_list["showalerts"])

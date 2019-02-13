@@ -107,7 +107,7 @@ AngleToHue(hue)
 	Converts an angle to a hue in the valid range.
 RotateHue(hsv, angle)
 	Takes an HSV or HSVA value and rotates the hue forward through red, green, and blue by an angle from 0 to 360.
-	(Rotating red by 60° produces yellow.) The result is another HSV or HSVA color with the same saturation and value
+	(Rotating red by 60ï¿½ produces yellow.) The result is another HSV or HSVA color with the same saturation and value
 	as the original, but a different hue.
 GrayScale(rgb)
 	Takes an RGB or RGBA color and converts it to grayscale. Returns an RGB or RGBA string.
@@ -161,9 +161,9 @@ mob
 			// Give it a name for the cache
 			var/iconName = "[ckey(src.name)]_flattened.dmi"
 			// Send the icon to src's local cache
-			src<<browse_rsc(getFlatIcon(src), iconName)
+			send_rsc(src,getFlatIcon(src), iconName)
 			// Display the icon in their browser
-			src<<browse("<body bgcolor='#000000'><p><img src='[iconName]'></p></body>")
+			show_browser(src,"<body bgcolor='#000000'><p><img src='[iconName]'></p></body>")
 
 		Output_Icon()
 			set name = "2. Output Icon"
@@ -176,7 +176,7 @@ mob
 			// Copy the file to the rsc manually
 			var/icon/I = fcopy_rsc(getFlatIcon(src))
 			// Send the icon to src's local cache
-			src<<browse_rsc(I, iconName)
+			send_rsc(src, I, iconName)
 			// Update the label to show it
 			winset(src,"imageLabel","image='\ref[I]'");
 

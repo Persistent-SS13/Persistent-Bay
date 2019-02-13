@@ -164,11 +164,11 @@
 			user.drop_item()
 			B.loc = src
 			shard = B
-			user << "You put [B] into the machine."
+			to_chat(user, "You put [B] into the machine.")
 		else
-			user << "There is already a shard in the machine."
+			to_chat(user, "There is already a shard in the machine.")
 	else
-		user << "<span class='notice'>This machine only accepts supermatter shards</span>"
+		to_chat(user, "<span class='notice'>This machine only accepts supermatter shards</span>")
 
 	update_icon()
 	return

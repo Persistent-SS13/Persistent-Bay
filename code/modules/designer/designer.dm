@@ -52,8 +52,9 @@
 
 
 /datum/designer/proc/Design()
-	usr << browse(file("html/designer.html"), "window=designer;size=600x400;can_close=1" )
-	spawn(10)usr << output("href='?src=\ref[src];[pixel_width];[pixel_height]","designer.browser:getData")
+	show_browser(usr, file("html/designer.html"), "window=designer;size=600x400;can_close=1" )
+	spawn(10)
+		send_output(usr, "href='?src=\ref[src];[pixel_width];[pixel_height]","designer.browser:getData")
 
 /datum/designer/Topic(href,href_list[])
 	switch(href_list["action"])

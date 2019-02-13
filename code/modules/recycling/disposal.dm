@@ -276,7 +276,7 @@
 
 
 	user.set_machine(src)
-	user << browse(dat, "window=disposal;size=360x170")
+	show_browser(user, dat, "window=disposal;size=360x170")
 	onclose(user, "disposal")
 
 // handle machine interaction

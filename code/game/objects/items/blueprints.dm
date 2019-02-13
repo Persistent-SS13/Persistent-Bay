@@ -49,7 +49,7 @@
 	text += "<br>" + (isspace(A) ? "Merge Areas - You can't combine space!" : A.apc ? "Merge Areas - The APC must be removed first" : getAdjacentAreas() ? "<a href='?src=\ref[src];action=merge_area'>Merge Areas</a>" : "Merge Areas - There are no valid areas to merge with")
 	text += "<br>" + (isspace(A) ? "Add to Area - You can't add to space!" : A.apc ? "Add to Area - The APC must be removed first" : getAdjacentAreas(1) ? "<a href='?src=\ref[src];action=add_to_area'>Add to Area</a>" : "Add to Area - There are no valid areas to add tiles from")
 	text += "<br>" + (isspace(A) ? "Remove Area - You can't remove space!" : A.apc ? "Remove Area - The APC must be removed first" : "<a href='?src=\ref[src];action=remove_area'>Remove Area</a>")
-	usr << browse(text, "window=blueprints")
+	show_browser(usr, text, "window=blueprints")
 	onclose(usr, "blueprints")
 
 /obj/item/blueprints/interact()
@@ -65,7 +65,7 @@
 	else
 		text += "You may not touch turbolifts"
 		text += "</BODY></HTML>"
-	usr << browse(text, "window=blueprints")
+	show_browser(usr, text, "window=blueprints")
 	onclose(usr, "blueprints")
 
 /obj/item/blueprints/proc/getArea(var/o)

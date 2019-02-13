@@ -102,21 +102,17 @@
 	if(!istype(user.loc, /turf) || !istype(O.loc, /turf)) // are you in a container/closet/pod/etc?
 		return
 	if(occupant)
-		user << "\blue <B>The cryo cell is already occupied!</B>"
+		to_chat(user, "\blue <B>The cryo cell is already occupied!</B>")
 		return
-/*	if(isrobot(user))
-		if(!istype(user:module, /obj/item/weapon/robot_module/medical))
-			user << "<span class='warning'>You do not have the means to do this!</span>"
-			return*/
 	var/mob/living/L = O
 	if(!istype(L) || L.buckled)
 		return
 	if(L.abiotic())
-		user << "\red <B>Subject cannot have abiotic items on.</B>"
+		to_chat(user, "\red <B>Subject cannot have abiotic items on.</B>")
 		return
 	for(var/mob/living/carbon/slime/M in range(1,L))
 		if(M.Victim == L)
-			usr << "[L.name] will not fit into the cryo cell because they have a slime latched onto their head."
+			to_chat(usr, "[L.name] will not fit into the cryo cell because they have a slime latched onto their head.")
 			return
 	if(put_mob(L))
 		if(L == user)
@@ -278,13 +274,13 @@
 
 	if(istype(G, /obj/item/grab))
 		if(panel_open)
-			user << "\blue <b>Close the maintenance panel first.</b>"
+			to_chat(user, "\blue <b>Close the maintenance panel first.</b>")
 			return
 		if(!ismob(G:affecting))
 			return
 		for(var/mob/living/carbon/slime/M in range(1,G:affecting))
 			if(M.Victim == G:affecting)
-				usr << "[G:affecting:name] will not fit into the cryo because they have a slime latched onto their head."
+				to_chat(user, "[G:affecting:name] will not fit into the cryo because they have a slime latched onto their head.")
 				return
 		var/mob/M = G:affecting
 		if(put_mob(M))

@@ -91,24 +91,26 @@ var/global/photo_count = 0
 		to_chat(user, "<span class='notice'>It is too far away.</span>")
 
 /obj/item/weapon/photo/proc/show(mob/user as mob)
+	var/result = ""
 	if(img)
-		user << browse_rsc(img.icon, "tmp_photo_[id].png")
-		user << browse("<html><head><title>[name]</title></head>" \
+		send_rsc(user, img.icon, "tmp_photo_[id].png")
+		result = "<html><head><title>[name]</title></head>" \
 			+ "<body style='overflow:hidden;margin:0;text-align:center'>" \
 			+ "<img src='tmp_photo_[id].png' width='[64*photo_size]' style='-ms-interpolation-mode:nearest-neighbor' />" \
 			+ "[scribble ? "<br>Written on the back:<br><i>[scribble]</i>" : ""]"\
-			+ "</body></html>", "window=book;size=[64*photo_size]x[scribble ? 400 : 64*photo_size]")
-		onclose(user, "[name]")
-		return
+			+ "</body></html>"
 	else if(render)
-		user << browse_rsc(render.icon, "tmp_photo_[id].png")
-		user << browse("<html><head><title>[name]</title></head>" \
+		send_rsc(user, render.icon, "tmp_photo_[id].png")
+		result = "<html><head><title>[name]</title></head>" \
 			+ "<body style='overflow:hidden;margin:0;text-align:center'>" \
 			+ "<img src='tmp_photo_[id].png' width='[64*photo_size]' style='-ms-interpolation-mode:nearest-neighbor' />" \
 			+ "[scribble ? "<br>Written on the back:<br><i>[scribble]</i>" : ""]"\
-			+ "</body></html>", "window=book;size=[64*photo_size]x[scribble ? 400 : 64*photo_size]")
-		onclose(user, "[name]")
+			+ "</body></html>"
+	else 
 		return
+	show_browser(user, result, "window=book;size=[64*photo_size]x[scribble ? 400 : 64*photo_size]")
+	onclose(user, "[name]")
+	return
 
 /obj/item/weapon/photo/verb/rename()
 	set name = "Rename photo"

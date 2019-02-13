@@ -4,7 +4,7 @@
 
 	name = "Air Scrubber"
 	desc = "Has a valve and pump attached to it."
-	use_power = 0
+	use_power = POWER_USE_IDLE
 	idle_power_usage = 150		//internal circuitry, friction losses and stuff
 	power_rating = 7500			//7500 W ~ 10 HP
 
@@ -13,63 +13,55 @@
 	level = 1
 
 	var/area/initial_loc
-	var/id_tag = null
-	var/frequency = 1439
-	var/datum/radio_frequency/radio_connection
+	id_tag = null
+	frequency = AIRALARM_FREQ
+	radio_filter_out = RADIO_TO_AIRALARM
+	radio_filter_in = RADIO_FROM_AIRALARM
+	//var/datum/radio_frequency/radio_connection
 
-	var/hibernate = 0 //Do we even process?
-	var/scrubbing = 1 //0 = siphoning, 1 = scrubbing
+	var/hibernate = FALSE //Do we even process?
+	var/scrubbing = TRUE //0 = siphoning, 1 = scrubbing
 	var/list/scrubbing_gas
 
-	var/panic = 0 //is this scrubber panicked?
+	var/panic = FALSE //is this scrubber panicked?
 
 	var/area_uid
-	var/radio_filter_out
-	var/radio_filter_in
 
 	var/obj/machinery/airlock_controller_norad/norad_controller // For the no radio controller (code/modules/norad_controller)
 	var/norad_UID
 
-	var/welded = 0
+	var/welded = FALSE
 
 /obj/machinery/atmospherics/unary/vent_scrubber/on
-	use_power = 1
+	use_power = POWER_USE_IDLE
 	icon_state = "map_scrubber_on"
 
 /obj/machinery/atmospherics/unary/vent_scrubber/New()
 	..()
 	air_contents.volume = ATMOS_DEFAULT_VOLUME_FILTER
-
 	icon = null
-	if(loc)
-		initial_loc = get_area(loc)
-		area_uid = initial_loc.uid
 
 /obj/machinery/atmospherics/unary/vent_scrubber/after_load()
 	..()
-	if(loc)
-		initial_loc = get_area(loc)
-		area_uid = initial_loc.uid
 
 /obj/machinery/atmospherics/unary/vent_scrubber/Initialize()
 	.=..()
-	id_tag = make_loc_string_id("ASV")
+	if(loc)
+		initial_loc = get_area(loc)
+		area_uid = initial_loc.uid
+	if(!id_tag)
+		id_tag = make_loc_string_id("ASV")
 
 /obj/machinery/atmospherics/unary/vent_scrubber/Destroy()
-	unregister_radio(src, frequency)
 	if(initial_loc)
 		initial_loc.air_scrub_info -= id_tag
 		initial_loc.air_scrub_names -= id_tag
 	return ..()
 
-
 /obj/machinery/atmospherics/unary/vent_scrubber/update_icon(var/safety = 0)
 	if(!check_icon_cache())
 		return
-
 	overlays.Cut()
-
-
 	var/turf/T = get_turf(src)
 	if(!istype(T))
 		return
@@ -99,19 +91,11 @@
 			else
 				add_underlay(T,, dir)
 
-/obj/machinery/atmospherics/unary/vent_scrubber/proc/set_frequency(new_frequency)
-	radio_controller.remove_object(src, frequency)
-	frequency = new_frequency
-	radio_connection = radio_controller.add_object(src, frequency, radio_filter_in)
-
 /obj/machinery/atmospherics/unary/vent_scrubber/proc/broadcast_status()
-	if(!radio_connection)
-		return 0
+	if(!has_transmitter())
+		return FALSE
 
-	var/datum/signal/signal = new
-	signal.transmission_method = 1 //radio signal
-	signal.source = src
-	signal.data = list(
+	var/list/data = list(
 		"area" = area_uid,
 		"tag" = id_tag,
 		"device" = "AScr",
@@ -132,16 +116,15 @@
 		initial_loc.air_scrub_names[id_tag] = new_name
 		src.name = new_name
 	initial_loc.air_scrub_info[id_tag] = signal.data
-	radio_connection.post_signal(src, signal, radio_filter_out)
-
-	return 1
+	post_signal(data, radio_filter_out)
+	return TRUE
 
 /obj/machinery/atmospherics/unary/vent_scrubber/Initialize()
 	. = ..()
 	radio_filter_in = frequency==initial(frequency)?(RADIO_FROM_AIRALARM):null
 	radio_filter_out = frequency==initial(frequency)?(RADIO_TO_AIRALARM):null
-	if (frequency)
-		set_frequency(frequency)
+	if (has_transmitter())
+		set_radio_frequency(frequency)
 		src.broadcast_status()
 	if(!scrubbing_gas)
 		scrubbing_gas = list()

@@ -75,7 +75,7 @@
 	dat += "<hr>"
 	dat += "<a href='?src=\ref[src];refresh=1'>Refresh</a> <a href='?src=\ref[src];close=1'>Close</a>"
 
-	user << browse(dat, "window=anodevice;size=400x500")
+	show_browser(user, dat, "window=anodevice;size=400x500")
 	onclose(user, "anodevice")
 
 /obj/item/weapon/anodevice/Process()
@@ -175,7 +175,7 @@
 		inserted_battery = null
 		UpdateSprite()
 	if(href_list["close"])
-		usr << browse(null, "window=anodevice")
+		close_browser(usr, "window=anodevice")
 	else if(ismob(src.loc))
 		var/mob/M = src.loc
 		src.interact(M)

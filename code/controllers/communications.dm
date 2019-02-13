@@ -109,6 +109,7 @@ var/const/MAGNET_FREQ			= 1311
 var/const/INCINERATOR_FREQ		= 1378
 var/const/DOOR_FREQ				= 1379
 var/const/MISC_MACHINE_FREQ		= 1202
+var/const/ALARMLOCKS_FREQ		= 1437
 var/const/ENGINE_FREQ			= 1438
 var/const/AIRALARM_FREQ			= 1439
 var/const/STATUS_FREQ 			= 1435

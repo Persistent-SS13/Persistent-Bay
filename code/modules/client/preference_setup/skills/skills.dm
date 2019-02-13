@@ -223,7 +223,7 @@ var/const/DEFAULT_AMOUNT_SKILL_POINTS = 10
 // 		// 	HTML += "<b>Amateur</b>: [S.desc_amateur]<br>"
 // 		// HTML += "<b>Trained</b>: [S.desc_trained]<br><b>Professional</b>: [S.desc_professional]"
 
-// 		//user << browse(HTML, "window=\ref[user]skillinfo")
+// 		//show_browser(user, HTML, "window=\ref[user]skillinfo")
 // 		return TOPIC_HANDLED
 
 // 	else if(href_list["setskill"])

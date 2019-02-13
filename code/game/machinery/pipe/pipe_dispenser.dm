@@ -76,13 +76,13 @@
 ///// Z-Level stuff
 //What number the make points to is in the define # at the top of construction.dm in same folder
 
-	user << browse("<HEAD><TITLE>[src]</TITLE></HEAD><TT>[dat]</TT>", "window=pipedispenser")
+	show_browser(user, "<HEAD><TITLE>[src]</TITLE></HEAD><TT>[dat]</TT>", "window=pipedispenser")
 	onclose(user, "pipedispenser")
 	return
 
 /obj/machinery/pipedispenser/Topic(href, href_list, state = GLOB.physical_state)
 	if((. = ..()) || unwrenched)
-		usr << browse(null, "window=pipedispenser")
+		close_browser(usr, "window=pipedispenser")
 		return
 
 	if(href_list["make"])
@@ -124,7 +124,7 @@
 				src.stat |= MAINT
 				src.unwrenched = 1
 				if (usr.machine==src)
-					usr << browse(null, "window=pipedispenser")
+					close_browser(usr, "window=pipedispenser")
 		else /*if (unwrenched==1)*/
 			playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 			to_chat(user, "<span class='notice'>You begin to fasten \the [src] to the floor...</span>")

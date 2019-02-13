@@ -6,7 +6,7 @@
 	if( config.wikiurl )
 		if(alert("This will open the wiki in your browser. Are you sure?",,"Yes","No")=="No")
 			return
-		src << link(config.wikiurl)
+		send_link(src, config.wikiurl)
 	else
 		to_chat(src, "<span class='warning'>The wiki URL is not set in the server configuration.</span>")
 	return
@@ -18,7 +18,7 @@
 	if( config.forumurl )
 		if(alert("This will open the forum in your browser. Are you sure?",,"Yes","No")=="No")
 			return
-		src << link(config.forumurl)
+		send_link(src, config.forumurl)
 	else
 		to_chat(src, "<span class='warning'>The forum URL is not set in the server configuration.</span>")
 	return
@@ -28,7 +28,7 @@
 	set name = "Rules"
 	set desc = "Show Server Rules."
 	set hidden = 1
-	src << browse(file(RULES_FILE), "window=rules;size=480x320")
+	show_browser(src, file(RULES_FILE), "window=rules;size=480x320")
 #undef RULES_FILE
 
 #define LORE_FILE "config/lore.html"
@@ -46,7 +46,7 @@
 	if(config.discordurl)
 		if(alert("This will open the discord. Are you sure?",,"Yes","No")=="No")
 			return
-		src << link(config.discordurl)
+		send_link(src, config.discordurl)
 	else
 		to_chat(src, "<span class='danger'>The rules URL is not set in the server configuration.</span>")
 	return
@@ -58,7 +58,7 @@
 	if(config.donationsurl)
 		if(alert("This will open the donation page in your browser. Are you sure?",,"Yes","No")=="No")
 			return
-		src << link(config.donationsurl)
+		send_link(src, config.donationsurl)
 	else
 		to_chat(src, "<span class='danger'>The rules URL is not set in the server configuration.</span>")
 	return

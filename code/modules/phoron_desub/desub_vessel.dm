@@ -33,19 +33,19 @@
 			user.drop_item()
 			B.loc = src
 			loaded_shard = B
-			user << "You put [B] into the machine."
+			to_chat(user, "You put [B] into the machine.")
 		else
-			user << "There is already a shard in the machine."
+			to_chat(user, "There is already a shard in the machine.")
 	else if( istype( B, /obj/item/weapon/tank ))
 		if( !loaded_tank )
 			user.drop_item()
 			B.loc = src
 			loaded_tank = B
-			user << "You put [B] into the machine."
+			to_chat(user, "You put [B] into the machine.")
 		else
-			user << "There is already a tank in the machine."
+			to_chat(user, "There is already a tank in the machine.")
 	else
-		user << "/red That's not a valid item!"
+		to_chat(user, "/red That's not a valid item!")
 
 	update_icon()
 	return

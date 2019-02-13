@@ -52,31 +52,43 @@ other types of metals and chemistry for reagents).
 	var/research // text uid of the required technology
 
 	var/atom/movable/builds
+	
 /datum/design/New()
 	..()
 	item_name = name
 	AssembleDesignInfo()
 	if((!id || id == "id") && name)
 		id = lowertext(name)
+		
+/datum/design/proc/get_tech_name()
+	if(research && research != "")
+		var/datum/tech_entry/entry
+		entry = SSresearch.files.get_tech_entry(research)
+		if(entry)
+			return entry.name
+	
+	
 //These procs are used in subtypes for assigning names and descriptions dynamically
 /datum/design/proc/AssembleDesignInfo()
 	AssembleDesignName()
 	AssembleDesignDesc()
 	return
 
-/datum/design/proc/AssembleDesignName()
-	var/atom/movable/A = new build_path()
-	builds = A
-	if(!name)
-		name = initial(A.name)
-		item_name = name
-		
-	if(!materials.len && istype(A, /obj/item))
-		var/obj/item/I = A
-		if(!materials || !materials.len)
-			if(I.matter && I.matter.len)
-				materials = I.matter.Copy()
-	return
+/datum/design/proc/AssembleDesignName() 
+	if(build_path)
+		var/atom/movable/A = new build_path()
+		builds = A
+		if(!name)
+			name = initial(A.name)
+			item_name = name
+		if(!desc)
+			desc = A.desc
+		if(!materials.len && istype(A, /obj/item))
+			var/obj/item/I = A
+			if(!materials || !materials.len)
+				if(I.matter && I.matter.len)
+					materials = I.matter.Copy()
+		return
 
 /datum/design/proc/AssembleDesignDesc()
 	if(!desc)								//Try to make up a nice description if we don't have one

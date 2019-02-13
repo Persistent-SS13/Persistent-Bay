@@ -49,6 +49,8 @@ research holder datum.
 	var/list/possible_designs = list()		//List of all designs.
 	var/list/known_designs = list()			//List of available designs.
 
+	var/list/tech_entries = list()
+
 	var/list/gen_fab = list()
 	var/list/eng_fab = list()
 	var/list/med_fab = list()
@@ -67,8 +69,11 @@ research holder datum.
 /datum/research/New()		//Insert techs into possible_tech here. Known_tech automatically updated.
 	for(var/T in typesof(/datum/tech) - /datum/tech)
 		known_tech += new T(src)
+	for(var/T in typesof(/datum/tech_entry) - /datum/tech_entry)
+		tech_entries += new T(src)
 	for(var/x in typesof(/datum/design) - /datum/design)
 		var/datum/design/D = new x(src)
+		if(!D.build_path) continue
 		possible_designs |= D
 		if(islist(D.build_type))
 			for(var/y in D.build_type)
@@ -126,6 +131,11 @@ research holder datum.
 					circuit_fab |= D
 
 	RefreshResearch()
+
+/datum/research/proc/get_tech_entry(var/uid)
+	for(var/datum/tech_entry/tech in tech_entries)
+		if(tech.uid == uid) return tech
+	return 0
 
 /datum/research/proc/get_research_options(var/build_type)
 	switch(build_type)
@@ -240,13 +250,13 @@ research holder datum.
 
 #define TECH_ENGI 1
 #define TECH_MEDI 2
-#define TECH_COMBAT 3
+#define TECH_WAR 3
 #define TECH_CONSUMER 4
 #define TECH_GENERAL 5
 /datum/tech_entry
-	var/name = ""
-	var/desc = ""
-	var/uid = ""
+	var/name
+	var/desc
+	var/uid
 	var/tier = 1
 	var/category = TECH_ENGI
 	var/points = 150
@@ -257,7 +267,7 @@ research holder datum.
 /datum/tech_entry/medi
 	category = TECH_MEDI
 /datum/tech_entry/combat
-	category = TECH_COMBAT
+	category = TECH_WAR
 /datum/tech_entry/consumer
 	category = TECH_CONSUMER
 /datum/tech_entry/general
@@ -333,11 +343,35 @@ research holder datum.
 
 /datum/tech_entry/general/sensor/phasic_sensor
 	name = "Multi-Phasic Sensor Technique"
-	desc = "A technique for sensors that uses phoron to analyze matter in mulitple spectral phases. Unlocks phasic sensor designs for the appropriate fabricators."
+	desc = "A technique for sensors that uses phoron to analyze matter in mulitple electro-spectrum phases. Unlocks phasic sensor designs for the appropriate fabricators."
 	tier = 2
 	points = 400
 	uid = "phasic_sensor"
 	prereqs = list("adv_sensor")
+
+/datum/tech_entry/general/powercell/high
+	name = "High-capacity power cells"
+	desc = "Reconfiguring and improving the materials in powercells can improve their capacity. Unlocks high-capacity power cell & high-capacity device cell designs for the appropriate fabricators."
+	tier = 1
+	points = 100
+	uid = "cell_high"
+
+/datum/tech_entry/general/powercell/super
+	name = "Super-capacity power cells"
+	desc = "Uranium can be used throughout the design of a cell to greatly improve its potential capacity. Unlocks super-capacity power cell designs for the appropriate fabricators."
+	tier = 2
+	points = 400
+	uid = "cell_super"
+	prereqs = list("cell_high")
+
+/datum/tech_entry/general/powercell/hyper
+	name = "Hyper-capacity power cells"
+	desc = "Phoron and uranium can be applied together to create a cell of maximum possible capacity. Unlocks hyper-capacity power cell designs for the appropriate fabricators."
+	tier = 3
+	points = 1000
+	uid = "cell_hyper"
+	prereqs = list("cell_high", "cell_super")
+
 
 
 /***************************************************************

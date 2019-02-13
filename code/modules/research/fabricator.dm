@@ -9,7 +9,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	// Things that must be adjusted for each fabricator
 	name = "Fabricator"
 	desc = "A machine used for the production of various items"
-	var/obj/item/weapon/circuitboard/circuit = /obj/item/weapon/circuitboard/fabricator
+	var/obj/item/weapon/circuitboard/fabricator/circuit = /obj/item/weapon/circuitboard/fabricator
 	var/build_type = PROTOLATHE
 	req_access = list()
 
@@ -49,7 +49,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	var/datum/world_faction/connected_faction
 	var/datum/design/selected_design
 
-
+/obj/item/weapon/circuitboard/fabricator/var/list/tech_uids = list()
 
 
 
@@ -63,7 +63,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
 	component_parts += new /obj/item/weapon/stock_parts/micro_laser(src)
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-
+	circuit = new circuit()
 	if(has_reagents)
 		component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
 		component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
@@ -130,18 +130,34 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	var/datum/design/current = queue.len ? queue[1] : null
 	if(current)
 		data["current"] = current.name
-
+		data["builtperc"] = round((progress / current.time) * 100)
+	else
+		data["current"] = "**None**"
+		data["builtperc"] = 0
 	data["sync"] = sync_message
 	data["menu"] = menu
 	if(!connected_faction && req_access_faction && req_access_faction != "")
 		connected_faction = get_faction(req_access_faction)
 	if(!connected_faction)
 		req_access = list()
-	if(menu == 4 && !selected_design) menu = 1
 	if(menu == 1)
-		data["buildable"] = get_build_options()
-		data["category"] = category
-		data["categories"] = categories
+		if(!selected_design)
+			data["buildable"] = get_build_options()
+			data["category"] = category
+			data["categories"] = categories
+		else
+			data["design_name"] = selected_design.name
+			data["design_description"] = selected_design.desc
+			data["design_materials"] = get_design_resources(selected_design)
+			data["design_buildtime"] = get_design_time(selected_design)
+			data["design_icon"] = user.browse_rsc_icon(selected_design.builds.icon, selected_design.builds.icon_state)
+			if(selected_design.research && selected_design.research != "")
+				var/datum/tech_entry/entry = SSresearch.files.get_tech_entry(selected_design.research)
+				if(!has_research(selected_design))
+					data["design_research"] = "<font color='red'>" + entry.name + "</font>"
+				else
+					data["design_research"] = "<font color='green'>" + entry.name + "</font>"
+
 	if(menu == 2)
 		data["queue"] = get_queue_names()
 		data["materials"] = get_materials()
@@ -152,35 +168,27 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	if(menu == 3)
 		if(connected_faction)
 			data["org"] = connected_faction.name
-		else
-			data["org"] = "**NOT CONNECTED**"
+		
 		if(req_access.len)
 			var/access = req_access[1]
 			data["access"] = connected_faction.get_access_name(access)
 		else
 			data["access"] = "**NO ACCESS REQUIREMENT**"
-	if(menu == 4)
-		data["design_name"] = selected_design.name
-		data["design_description"] = selected_design.desc
-		data["design_materials"] = get_design_resources(selected_design)
-		data["design_buildtime"] = get_design_time(selected_design)
-
-	if(current)
-		data["builtperc"] = round((progress / current.time) * 100)
+		
+		
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
-		ui = new(user, src, ui_key, "fabricator.tmpl", "[name] UI", 800, 600)
+		ui = new(user, src, ui_key, "fabricator.tmpl", "[name] UI", 1000, 600)
 		ui.set_initial_data(data)
 		ui.open()
-		ui.set_auto_update(1)
 
 /obj/machinery/fabricator/Topic(href, href_list)
 	if(..())
 		return
 
-	if(href_list["build"])
-		add_to_queue(text2num(href_list["build"]))
+	if(href_list["select"])
+		selected_design = locate(href_list["select"])
 
 	if(href_list["remove"])
 		remove_from_queue(text2num(href_list["remove"]))
@@ -192,6 +200,14 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	if(href_list["eject"])
 		eject_materials(href_list["eject"], text2num(href_list["amount"]))
 
+	if(href_list["menu"])
+		menu = text2num(href_list["menu"])
+		
+	if(href_list["back"])
+		selected_design = null
+		
+	if(href_list["build"])
+		add_to_queue(selected_design)
 	return 1
 
 /obj/machinery/fabricator/attackby(var/obj/item/I as obj, var/mob/user as mob)
@@ -271,8 +287,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	else
 		busy = 0
 
-/obj/machinery/fabricator/proc/add_to_queue(var/index)
-	var/datum/design/D = files.known_designs[index]
+/obj/machinery/fabricator/proc/add_to_queue(var/datum/design/D)
 	queue += D
 	update_busy()
 
@@ -289,7 +304,41 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	for(var/C in D.chemicals)
 		if(!reagents.has_reagent(C, D.chemicals[C] * mat_efficiency))
 			return 0
+	if(D.research && D.research != "" && !(D.research in circuit.tech_uids)) return 0
 	return 1
+
+
+/obj/machinery/fabricator/proc/has_mats(var/datum/design/D)
+	for(var/M in D.materials)
+		if(materials[M] <= D.materials[M] * mat_efficiency)
+			return 0
+	return 1
+
+/obj/machinery/fabricator/proc/has_mat(var/datum/design/D, var/M)
+	if(materials[M] <= D.materials[M] * mat_efficiency)
+		return 0
+	return 1
+
+
+
+/obj/machinery/fabricator/proc/has_regs(var/datum/design/D)
+	for(var/C in D.chemicals)
+		if(!reagents.has_reagent(C, D.chemicals[C] * mat_efficiency))
+			return 0
+	return 1
+
+/obj/machinery/fabricator/proc/has_reg(var/datum/design/D, var/C)
+	if(!reagents.has_reagent(C, D.chemicals[C] * mat_efficiency))
+		return 0
+	return 1
+
+
+/obj/machinery/fabricator/proc/has_research(var/datum/design/D)
+	if(D.research && D.research != "" && !(D.research in circuit.tech_uids)) return 0
+	return 1
+
+
+
 
 /obj/machinery/fabricator/proc/check_build()
 	if(!queue.len)
@@ -323,52 +372,77 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 /obj/machinery/fabricator/proc/get_build_options()
 	. = list()
 	var/list/design_options = SSresearch.files.get_research_options(build_type)
-	if(!design_options) return
+	var/list/techless = list()
 	for(var/i = 1 to design_options.len)
 		var/datum/design/D = design_options[i]
-		. += list(list("name" = D.name, "id" = i, "category" = D.category, "resources" = get_design_resources(D), "time" = get_design_time(D)))
+		var/design_research
+		if(D.research && D.research != "")
+			if(!has_research(D))
+				techless |= D
+				continue
+			else
+				design_research = "<font color='green'>[D.get_tech_name()]</font>"
+		. += list(list("name" = D.name, "id" = i, "category" = D.category, "resources" = get_design_resources(D), "research" = design_research, "ref" = "\ref[D]"))
+
+	for(var/i = 1 to techless.len)
+		var/datum/design/D = techless[i]
+		var/design_research
+		if(D.research && D.research != "")
+			if(!has_research(D))
+				design_research = "<font color='red'>[D.get_tech_name()]</font>"
+			else
+				design_research = "<font color='green'>[D.get_tech_name()]</font>"
+		. += list(list("name" = D.name, "id" = i, "category" = D.category, "resources" = get_design_resources(D), "research" = design_research, "ref" = "\ref[D]"))
 
 /obj/machinery/fabricator/proc/CallReagentName(var/reagent_type)
 	var/datum/reagent/R = reagent_type
 	return ispath(reagent_type, /datum/reagent) ? initial(R.name) : "Unknown"
 
 /obj/machinery/fabricator/proc/get_design_resources(var/datum/design/D)
+	return get_design_mats(D) + " " + get_design_regs(D)
+
+/obj/machinery/fabricator/proc/get_design_mats(var/datum/design/D)
 	var/list/F = list()
 	for(var/T in D.materials)
-		F += "[capitalize(T)]: [D.materials[T] * mat_efficiency]"
-	for(var/R in D.chemicals)
-		F += "[CallReagentName(R)]: [D.chemicals[R] * mat_efficiency]"
+		if(has_mat(D, T))
+			F += "<font color='green'>[capitalize(T)]: [D.materials[T] * mat_efficiency]</font>"
+		else
+			F += "<font color='red'>[capitalize(T)]: [D.materials[T] * mat_efficiency]</font>"
 	return english_list(F, and_text = ", ")
+
+/obj/machinery/fabricator/proc/get_design_regs(var/datum/design/D)
+	var/list/F = list()
+	for(var/R in D.chemicals)
+		if(has_reg(D, R))
+			F += "<font color='green'>[CallReagentName(R)]: [D.chemicals[R] * mat_efficiency]</font>"
+		else
+			F += "<font color='red'>[CallReagentName(R)]: [D.chemicals[R] * mat_efficiency]</font>"
+	return english_list(F, "", and_text = ", ")
+
 
 /obj/machinery/fabricator/proc/get_design_time(var/datum/design/D)
 	return time2text(round(10 * D.time / speed), "mm:ss")
 
 /obj/machinery/fabricator/proc/update_categories()
-	categories = list()
-	if(files)
-		var/list/design_materials = list()
-		for(var/datum/design/D in files.known_designs)
-			if(islist(D.build_type))
-				if(!D.build_path || !(build_type in D.build_type))
-					continue
-			else
-				if(!D.build_path || !(D.build_type && D.build_type == build_type))
-					continue
-			categories |= D.category
+	categories = list()	
+	var/list/design_options = SSresearch.files.get_research_options(build_type)
+	var/list/design_materials = list()
+	for(var/i = 1 to design_options.len)
+		var/datum/design/D = design_options[i]
+		categories |= D.category
+		for(var/material in D.materials) // Iterating over the Designs' materials so that we know what should be able to be inserted
+			design_materials |= material
+			design_materials[material] = 0 // Prevents material count from appearing as null instead of 0
 
-			for(var/material in D.materials) // Iterating over the Designs' materials so that we know what should be able to be inserted
-				design_materials |= material
-				design_materials[material] = 0 // Prevents material count from appearing as null instead of 0
+	for(var/material in materials)
+		if(!(material in design_materials))
+			eject_materials(material, -1) // Dump all the materials not used in designs so that players don't use materials on code changes.
 
-		for(var/material in materials)
-			if(!(material in design_materials))
-				eject_materials(material, -1) // Dump all the materials not used in designs so that players don't use materials on code changes.
+	materials |= design_materials
+	materials &= design_materials
 
-		materials |= design_materials
-		materials &= design_materials
-
-		if(!category || !(category in categories) && LAZYLEN(categories))
-			category = categories[1]
+	if(!category || !(category in categories) && LAZYLEN(categories))
+		category = categories[1]
 
 /obj/machinery/fabricator/proc/get_materials()
 	. = list()

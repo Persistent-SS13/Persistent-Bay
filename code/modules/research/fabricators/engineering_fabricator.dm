@@ -299,16 +299,12 @@
 
 /datum/design/item/engifab/engitools/simple/extinguisher_mini
 	name = "Compact extinguisher"
-	id = "compact_extinguisher"
 	build_path = /obj/item/weapon/extinguisher/mini/empty
-	category = "Tools"
 	materials = list(MATERIAL_STEEL = 1 SHEET)
 
 /datum/design/item/engifab/engitools/adv/extinguisher
 	name = "Extinguisher"
-	id = "extinguisher"
 	build_path = /obj/item/weapon/extinguisher/empty
-	category = "Tools"
 	materials = list(MATERIAL_STEEL = 2 SHEETS)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -365,8 +361,10 @@
 /datum/design/item/engifab/parts
 	category = "Parts"
 	time = 10
+	build_type = list(ENGIFAB, GENERALFAB)
+	
 /datum/design/item/engifab/parts/adv
-
+	build_type = ENGIFAB
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -501,175 +499,142 @@
 
 /datum/design/item/engifab/parts/basic_capacitor
 	name = "Basic capacitor"
-	req_tech = list(TECH_POWER = 1)
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 1 SHEET)
 	build_path = /obj/item/weapon/stock_parts/capacitor
 
-/datum/design/item/engifab/parts/adv/adv_capacitor
+/datum/design/item/engifab/parts/adv_capacitor
 	name = "Advanced capacitor"
-	req_tech = list(TECH_POWER = 3)
 	materials = list(MATERIAL_STEEL = 5 SHEET, MATERIAL_GLASS = 3 SHEET, MATERIAL_GOLD = 2 SHEET, MATERIAL_COPPER = 2 SHEET)
 	build_path = /obj/item/weapon/stock_parts/capacitor/adv
-
-/datum/design/item/engifab/parts/adv/super_capacitor
+	research = "adv_capacitor"
+/datum/design/item/engifab/parts/super_capacitor
 	name = "Super capacitor"
-	req_tech = list(TECH_POWER = 5, TECH_MATERIAL = 4)
 	materials = list(MATERIAL_STEEL = 10 SHEET, MATERIAL_GLASS = 5 SHEET, MATERIAL_URANIUM = 5 SHEETS, MATERIAL_COPPER = 5 SHEETS)
 	build_path = /obj/item/weapon/stock_parts/capacitor/super
-
+	research = "super_capacitor"
 /datum/design/item/engifab/parts/micro_mani
 	name = "Micro manipulator"
-	req_tech = list(TECH_MATERIAL = 1, TECH_DATA = 1)
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 1 SHEET)
 	build_path = /obj/item/weapon/stock_parts/manipulator
-
-/datum/design/item/engifab/parts/adv/nano_mani
+	
+/datum/design/item/engifab/parts/nano_mani
 	name = "Nano manipulator"
-	req_tech = list(TECH_MATERIAL = 3, TECH_DATA = 2)
 	materials = list(MATERIAL_STEEL = 0.75 SHEET, MATERIAL_GLASS = 0.75 SHEET, MATERIAL_SILVER = 3 SHEET, MATERIAL_COPPER = 5 SHEET)
 	build_path = /obj/item/weapon/stock_parts/manipulator/nano
-
-/datum/design/item/engifab/parts/adv/pico_mani
+	research = "nano_mani"
+/datum/design/item/engifab/parts/pico_mani
 	name = "Pico manipulator"
-	req_tech = list(TECH_MATERIAL = 5, TECH_DATA = 2)
 	materials = list(MATERIAL_STEEL = 0.5 SHEET, MATERIAL_GLASS = 0.5 SHEET, MATERIAL_SILVER = 5 SHEET, MATERIAL_PHORON = 5 SHEET)
 	build_path = /obj/item/weapon/stock_parts/manipulator/pico
-
+	research = "pico_mani"
 /datum/design/item/engifab/parts/basic_matter_bin
 	name = "Basic matter bin"
-	req_tech = list(TECH_MATERIAL = 1)
 	materials = list(MATERIAL_STEEL = 2 SHEETS)
 	build_path = /obj/item/weapon/stock_parts/matter_bin
 
-/datum/design/item/engifab/parts/adv/adv_matter_bin
+/datum/design/item/engifab/parts/adv_matter_bin
 	name = "Advanced matter bin"
-	req_tech = list(TECH_MATERIAL = 3)
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 2 SHEET, MATERIAL_COPPER = 3 SHEETS)
 	build_path = /obj/item/weapon/stock_parts/matter_bin/adv
-
-/datum/design/item/engifab/parts/adv/super_matter_bin
+	research = "adv_matter_bin"
+/datum/design/item/engifab/parts/super_matter_bin
 	name = "Super matter bin"
-	req_tech = list(TECH_MATERIAL = 5)
 	materials = list(MATERIAL_STEEL = 10 SHEETS, MATERIAL_GLASS = 2 SHEET, MATERIAL_PHORON = 5 SHEETS)
 	build_path = /obj/item/weapon/stock_parts/matter_bin/super
-
+	research = "super_matter_bin"
 /datum/design/item/engifab/parts/basic_micro_laser
 	name = "Basic micro laser"
 	req_tech = list(TECH_MAGNET = 1)
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 1.5 SHEET)
 	build_path = /obj/item/weapon/stock_parts/micro_laser
 
-/datum/design/item/engifab/parts/adv/high_micro_laser
+/datum/design/item/engifab/parts/high_micro_laser
 	name = "High intensity micro laser"
-	id = "high_micro_laser"
-	req_tech = list(TECH_MAGNET = 3)
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_URANIUM = 1 SHEET)
 	build_path = /obj/item/weapon/stock_parts/micro_laser/high
-	category = "Parts"
-
-/datum/design/item/engifab/parts/adv/ultra_micro_laser
+	research = "high_micro_laser"
+	
+/datum/design/item/engifab/parts/ultra_micro_laser
 	name = "Ultra intensity micro laser"
-	req_tech = list(TECH_MAGNET = 5, TECH_MATERIAL = 5)
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 10 SHEETS, MATERIAL_URANIUM = 2 SHEETS, MATERIAL_DIAMOND = 2 SHEETS)
 	build_path = /obj/item/weapon/stock_parts/micro_laser/ultra
-
+	research = "ultra_micro_laser"
 /datum/design/item/engifab/parts/basic_sensor
 	name = "Basic sensor"
-	req_tech = list(TECH_MAGNET = 1)
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_GLASS = 0.75 SHEETS)
 	build_path = /obj/item/weapon/stock_parts/scanning_module
 
-/datum/design/item/engifab/parts/adv/adv_sensor
+/datum/design/item/engifab/parts/adv_sensor
 	name = "Advanced sensor"
 	req_tech = list(TECH_MAGNET = 3)
-	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_SILVER = 3 SHEETS)
 	build_path = /obj/item/weapon/stock_parts/scanning_module/adv
-
-/datum/design/item/engifab/parts/adv/phasic_sensor
+	research = "adv_sensor"
+/datum/design/item/engifab/parts/phasic_sensor
 	name = "Phasic sensor"
-	req_tech = list(TECH_MAGNET = 5, TECH_MATERIAL = 3)
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 10 SHEETS, MATERIAL_SILVER = 4 SHEETS, MATERIAL_PHORON = 5 SHEETS)
 	build_path = /obj/item/weapon/stock_parts/scanning_module/phasic
-
-/datum/design/item/engifab/parts/adv/powercell/basic
+	research = "phasic_sensor"
+/datum/design/item/engifab/parts/powercell/basic
 	name = "Basic power cell"
-	req_tech = list(TECH_POWER = 1)
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPER = 1 SHEET)
 	build_path = /obj/item/weapon/cell
 
-/datum/design/item/engifab/parts/adv/powercell/high
+/datum/design/item/engifab/parts/powercell/high
 	name = "High-capacity power cell"
-	req_tech = list(TECH_POWER = 2)
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_COPPER = 2 SHEETS, MATERIAL_URANIUM = 0.5 SHEETS)
 	build_path = /obj/item/weapon/cell/high
-
-/datum/design/item/engifab/parts/adv/powercell/super
+	research = "cell_high"
+/datum/design/item/engifab/parts/powercell/super
 	name = "Super-capacity power cell"
-	req_tech = list(TECH_POWER = 3, TECH_MATERIAL = 2)
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_COPPER = 5 SHEETS, MATERIAL_URANIUM = 2 SHEETS)
 	build_path = /obj/item/weapon/cell/super
-
-/datum/design/item/engifab/parts/adv/powercell/hyper
+	research = "cell_super"
+/datum/design/item/engifab/parts/powercell/hyper
 	name = "Hyper-capacity power cell"
-	req_tech = list(TECH_POWER = 5, TECH_MATERIAL = 4)
 	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_PHORON = 2 SHEETS, MATERIAL_URANIUM = 5 SHEETS)
 	build_path = /obj/item/weapon/cell/hyper
-
-/datum/design/item/engifab/parts/adv/powercell/device/standard
+	research = "cell_super"
+/datum/design/item/engifab/parts/powercell/device/standard
 	name = "Standard capacity device power cell"
-	req_tech = list(TECH_POWER = 1)
 	materials = list(MATERIAL_STEEL = 70, MATERIAL_GLASS = 5)
 	build_path = /obj/item/weapon/cell/device/standard
 
-/datum/design/item/engifab/parts/adv/powercell/device/high
+/datum/design/item/engifab/parts/powercell/device/high
 	name = "High capacity device power cell"
-	req_tech = list(TECH_POWER = 2)
 	materials = list(MATERIAL_STEEL = 70, MATERIAL_GLASS = 6,MATERIAL_PHORON = 100)
 	build_path = /obj/item/weapon/cell/device/high
-
+	research = "cell_high"
 /datum/design/item/engifab/parts/adv/subspace_ansible
 	name = "Subspace ansible"
-	req_tech = list(TECH_DATA = 3, TECH_MAGNET = 4, TECH_MATERIAL = 4, TECH_BLUESPACE = 2)
 	materials = list(MATERIAL_STEEL = 80, MATERIAL_SILVER = 20)
 	build_path = /obj/item/weapon/stock_parts/subspace/ansible
 
 /datum/design/item/engifab/parts/adv/hyperwave_filter
 	name = "Hyperwave Filter"
-	id = "s-filter"
-	req_tech = list(TECH_DATA = 3, TECH_MAGNET = 3)
 	materials = list(MATERIAL_STEEL = 40, MATERIAL_SILVER = 10)
 	build_path = /obj/item/weapon/stock_parts/subspace/filter
 /datum/design/item/engifab/parts/adv/subspace_amplifier
-	name = "Subspace amplifier"
 	id = "s-amplifier"
-	req_tech = list(TECH_DATA = 3, TECH_MAGNET = 4, TECH_MATERIAL = 4, TECH_BLUESPACE = 2)
 	materials = list(MATERIAL_STEEL = 10, MATERIAL_GOLD = 30, MATERIAL_URANIUM = 15)
 	build_path = /obj/item/weapon/stock_parts/subspace/amplifier
 
 /datum/design/item/engifab/parts/adv/subspace_treatment
 	name = "Subspace treatment:"
-	id = "s-treatment"
-	req_tech = list(TECH_DATA = 3, TECH_MAGNET = 2, TECH_MATERIAL = 4, TECH_BLUESPACE = 2)
 	materials = list(MATERIAL_STEEL = 10, MATERIAL_SILVER = 20)
 	build_path = /obj/item/weapon/stock_parts/subspace/treatment
 
 /datum/design/item/engifab/parts/adv/subspace_analyzer
 	name = "Subspace analyzer"
-	id = "s-analyzer"
-	req_tech = list(TECH_DATA = 3, TECH_MAGNET = 4, TECH_MATERIAL = 4, TECH_BLUESPACE = 2)
 	materials = list(MATERIAL_STEEL = 10, MATERIAL_GOLD = 15)
 	build_path = /obj/item/weapon/stock_parts/subspace/analyzer
 
 /datum/design/item/engifab/parts/adv/subspace_crystal
 	name = "Subspace crystal"
-	id = "s-crystal"
-	req_tech = list(TECH_MAGNET = 4, TECH_MATERIAL = 4, TECH_BLUESPACE = 2)
 	materials = list(MATERIAL_GLASS = 1000, MATERIAL_SILVER = 20, MATERIAL_GOLD = 20)
 	build_path = /obj/item/weapon/stock_parts/subspace/crystal
 
 /datum/design/item/engifab/parts/adv/subspace_transmitter
 	name = "Subspace transmitter"
-	req_tech = list(TECH_MAGNET = 5, TECH_MATERIAL = 5, TECH_BLUESPACE = 3)
 	materials = list(MATERIAL_GLASS = 100, MATERIAL_SILVER = 10, MATERIAL_URANIUM = 15)
 	build_path = /obj/item/weapon/stock_parts/subspace/transmitter
 

@@ -486,11 +486,12 @@ var/global/list/debug_data = list()
 		A.contents.Add(turfs)
 	f = null
 	for(var/z in 1 to 20)
+		var/starttime2 = REALTIMEOFDAY
 		f = new("map_saves/z[z].sav")
 		while(!f.eof)
 			from_file(f,ve)
-	var/starttime2 = REALTIMEOFDAY
-	message_admins("Loading World Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
+		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
+	
 	f = null
 	f = new("map_saves/extras.sav")
 	var/list/zones

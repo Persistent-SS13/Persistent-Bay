@@ -302,22 +302,23 @@
 
 /mob/proc/finishLoadCharacter()
 	if(spawn_type == 2)
-		var/obj/screen/cinematic
+		if(GLOB.using_map.intro_icon)
+			var/obj/screen/cinematic
 
-		cinematic = new
-		cinematic.icon = 'icons/effects/gateway_intro.dmi'
-		cinematic.icon_state = "blank"
-		cinematic.plane = HUD_PLANE
-		cinematic.layer = HUD_ABOVE_ITEM_LAYER
-		cinematic.mouse_opacity = 2
-		cinematic.screen_loc = "WEST,SOUTH"
+			cinematic = new
+			cinematic.icon = GLOB.using_map.intro_icon
+			cinematic.icon_state = "blank"
+			cinematic.plane = HUD_PLANE
+			cinematic.layer = HUD_ABOVE_ITEM_LAYER
+			cinematic.mouse_opacity = 2
+			cinematic.screen_loc = "WEST,SOUTH"
 
-		if(client)
-			client.screen += cinematic
+			if(client)
+				client.screen += cinematic
 
-			flick("neurallaceboot",cinematic)
-			sleep(106)
-			client.screen -= cinematic
+				flick("cinematic",cinematic)
+				sleep(106)
+				client.screen -= cinematic
 
 		spawn_type = 1
 		sound_to(src, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = 1))

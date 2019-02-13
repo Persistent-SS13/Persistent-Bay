@@ -86,6 +86,7 @@ var/const/MAP_HAS_RANK = 2		//Rank system, also togglable
 	var/overmap_event_areas = 0 //How many event "clouds" will be generated
 
 	var/lobby_icon									// The icon which contains the lobby image(s)
+	var/intro_icon									// The icon which contains the intro animation
 	var/list/lobby_screens = list()                 // The list of lobby screen to pick() from. If left unset the first icon state is always selected.
 	var/lobby_music/lobby_music                     // The track that will play in the lobby screen. Handed in the /setup_map() proc.
 	var/welcome_sound = 'sound/AI/welcome.ogg'		// Sound played on roundstart

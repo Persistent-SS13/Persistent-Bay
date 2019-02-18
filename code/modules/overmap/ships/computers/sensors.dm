@@ -33,7 +33,7 @@
 	data["viewing"] = viewing
 	if(sensors)
 		data["on"] = sensors.use_power
-		data["range"] = sensors.range
+		data["range"] = sensors.sensor_range
 		data["health"] = sensors.health
 		data["max_health"] = sensors.max_health
 		data["heat"] = sensors.heat
@@ -97,7 +97,7 @@
 
 	if(sensors)
 		if (href_list["range"])
-			var/nrange = input("Set new sensors range", "Sensor range", sensors.range) as num|null
+			var/nrange = input("Set new sensors range", "Sensor range", sensors.sensor_range) as num|null
 			if(!CanInteract(usr,state))
 				return
 			if (nrange)
@@ -112,7 +112,7 @@
 	if(!linked)
 		return
 	if(sensors && sensors.use_power && sensors.powered())
-		linked.set_light(sensors.range+1, 5)
+		linked.set_light(sensors.sensor_range+1, 5)
 	else
 		linked.set_light(0)
 
@@ -125,7 +125,7 @@
 	var/critical_heat = 50 // sparks and takes damage when active & above this heat
 	var/heat_reduction = 1.5 // mitigates this much heat per tick
 	var/heat = 0
-	var/range = 1
+	var/sensor_range = 1
 	idle_power_usage = 5000
 
 /obj/machinery/shipsensors/attackby(obj/item/weapon/W, mob/user)
@@ -205,8 +205,8 @@
 		toggle()
 
 /obj/machinery/shipsensors/proc/set_range(nrange)
-	range = nrange
-	idle_power_usage = 1500 * (range**2) // Exponential increase, also affects speed of overheating
+	sensor_range = nrange
+	idle_power_usage = 1500 * (sensor_range**2) // Exponential increase, also affects speed of overheating
 
 /obj/machinery/shipsensors/emp_act(severity)
 	if(use_power)

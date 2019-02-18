@@ -31,13 +31,13 @@ proc/signal_source_id(var/datum/signal/signal)
 
 /datum/extension/interactive/radio_transmitter
 	var/datum/radio_frequency/radio_connection
-	var/filter_in  = RADIO_DEFAULT
-	var/filter_out = RADIO_DEFAULT
-	var/id = null
-	var/range = 0
-	var/frequency = 0
-	should_save = TRUE
-	flags = EXTENSION_FLAG_IMMEDIATE
+	var/filter_in  	= null
+	var/filter_out 	= null
+	var/id 			= null
+	var/range 		= 0
+	var/frequency 	= 0
+	should_save		= TRUE
+	flags 			= EXTENSION_FLAG_IMMEDIATE //Do not Lazy init this, or we won't receive messages..
 
 // - idtag: Id tag that each signals sent will be tagged with, and optionally checked against. If set to null, id checks will always return true.
 /datum/extension/interactive/radio_transmitter/New(var/holder, var/frequency, var/idtag = null, var/range = 0, var/filter = RADIO_DEFAULT, var/filterout = null)
@@ -108,8 +108,8 @@ proc/signal_source_id(var/datum/signal/signal)
 /datum/extension/interactive/radio_transmitter/proc/get_id()
 	return src.id
 
-//Compare two ids and return true if identical
-/datum/extension/interactive/radio_transmitter/proc/signal_match_id(var/datum/signal/signal)
+//Compare a signal's ids and return true if identical to our
+/datum/extension/interactive/radio_transmitter/proc/match_id(var/datum/signal/signal)
 	if(src.id)
 		return signal_target_id(signal) == src.id
 	else
@@ -120,13 +120,17 @@ proc/signal_source_id(var/datum/signal/signal)
 /datum/extension/interactive/radio_transmitter/proc/get_range()
 	return src.range
 
-/datum/extension/interactive/radio_transmitter/proc/post_signal(datum/signal/signal, var/overridefilter = null, var/targetid = null, var/targetfreq = null)
+//Send a signal to a target id_tag
+/datum/extension/interactive/radio_transmitter/proc/post_signal(datum/signal/signal, var/overridefilter = null, var/overridetargetid = null, var/overridefreq = null)
+	signal.data[RADIO_TRANSMITTER_ID_FIELD] = overridetargetid? overridetargetid : src.id
+	return broadcast_signal(signal, overridefilter, overridefreq)
+
+//Broadcast a signal without a target
+/datum/extension/interactive/radio_transmitter/proc/broadcast_signal(datum/signal/signal, var/overridefilter = null, var/targetfreq = null)
 	if(!src.radio_connection)
 		log_debug("[src.holder] \ref[src.holder] tried to send a signal with no radio connection!")
 		return
 	signal.data[RADIO_TRANSMITTER_SOURCE_ID_FIELD] = src.id
-	signal.data[RADIO_TRANSMITTER_ID_FIELD] = targetid? targetid : src.id
-
 	//Send the message to the right frquency
 	if(targetfreq && targetfreq != src.frequency)
 		var/datum/radio_frequency/otherfrequency = radio_controller.return_frequency(targetfreq)

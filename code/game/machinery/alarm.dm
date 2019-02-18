@@ -44,11 +44,14 @@
 	req_one_access = list(core_access_engineering_programs, core_access_engineering_programs)
 	clicksound = "button"
 	clickvol = 30
-
 	layer = ABOVE_WINDOW_LAYER
+	
+	id_tag = null
+	frequency = AIRALARM_FREQ
+	radio_filter_in = RADIO_TO_AIRALARM
+	radio_filter_out = RADIO_FROM_AIRALARM
 
 	var/breach_detection = TRUE // Whether to use automatic breach detection or not
-	var/frequency = AIRALARM_FREQ
 	var/remote_control = 0
 	var/rcon_setting = 2
 	var/rcon_time = 0
@@ -67,8 +70,6 @@
 
 	var/target_temperature = T0C+20
 	var/regulating_temperature = FALSE
-
-	var/datum/radio_frequency/radio_connection
 
 	var/list/TLV = list()
 	var/list/trace_gas = list() //list of other gases that this air alarm is able to detect
@@ -98,12 +99,6 @@
 	req_access = list(core_access_science_programs, core_access_engineering_programs, core_access_engineering_programs)
 	TLV["temperature"] =	list(T0C-26, T0C, T0C+30, T0C+40) // K
 	target_temperature = T0C+10
-
-/obj/machinery/alarm/Destroy()
-	unregister_radio(src, frequency)
-	qdel(wires)
-	wires = null
-	return ..()
 
 /obj/machinery/alarm/New(var/loc, var/dir, atom/frame)
 	..(loc)
@@ -142,7 +137,7 @@
 	if(!alarm_area)
 		return
 	area_uid = alarm_area.uid
-	if (name == init(alarm))
+	if (name == initial(name))
 		name = "[alarm_area.name] Air Alarm"
 
 	if(!wires)
@@ -160,11 +155,15 @@
 		if(!(g in list(GAS_OXYGEN,GAS_NITROGEN,GAS_CO2)))
 			trace_gas += g
 
-	create_transmitter(null, frequency, RADIO_TO_AIRALARM, 0, RADIO_FROM_AIRALARM)
 	if (!master_is_operating())
 		elect_master()
 
 	update_icon()
+
+/obj/machinery/alarm/Destroy()
+	unregister_radio(src, frequency)
+	QDEL_NULL(wires)
+	return ..()
 
 /obj/machinery/alarm/Process()
 	if(inoperable() || shorted || buildstage != 2)
@@ -353,25 +352,22 @@
 
 	set_light(l_range = 2, l_power = 0.6, l_color = new_color)
 
-/obj/machinery/alarm/receive_signal(datum/signal/signal)
-	if(inoperable())
-		return
+/obj/machinery/alarm/OnSignal(datum/signal/signal)
+	. = ..()
 	if (alarm_area.master_air_alarm != src)
 		if (master_is_operating())
 			return
 		elect_master()
 		if (alarm_area.master_air_alarm != src)
 			return
-	if(!signal || signal.encryption)
-		return
-	var/id_tag = signal_target_id(signal) // signal.data["tag"]
-	if (!id_tag)
-		return
 	if (signal.data["area"] != area_uid)
 		return
 	if (signal.data["sigtype"] != "status")
 		return
 
+	var/id_tag = signal_target_id(signal)
+	if (!id_tag)
+		return
 	var/dev_type = signal.data["device"]
 	if(!(id_tag in alarm_area.air_scrub_names) && !(id_tag in alarm_area.air_vent_names))
 		register_env_machine(id_tag, dev_type)
@@ -379,6 +375,7 @@
 		alarm_area.air_scrub_info[id_tag] = signal.data
 	else if(dev_type == "AVP")
 		alarm_area.air_vent_info[id_tag] = signal.data
+
 
 /obj/machinery/alarm/proc/register_env_machine(var/m_id, var/device_type)
 	var/new_name
@@ -405,16 +402,11 @@
 			continue
 		send_signal(id_tag, list("status") )
 
-/obj/machinery/alarm/set_radio_frequency(freq)
-	src.frequency = freq
-	. = ..()
-
 /obj/machinery/alarm/proc/send_signal(var/target, var/list/command)//sends signal 'command' to 'target'. Returns 0 if no radio connection, 1 otherwise
 	if(!has_transmitter())
 		return FALSE
-	command["tag"] = target
 	command["sigtype"] = "command"
-	post_signal(data, RADIO_FROM_AIRALARM, target)
+	post_signal(command, RADIO_FROM_AIRALARM, target)
 	return TRUE
 
 /obj/machinery/alarm/proc/apply_mode()
@@ -466,7 +458,7 @@
 	data["zone"] = alarm_area.name
 	data["type"] = "Atmospheric"
 	data["alert"] = alert_level == 0? "clear" : (alert_level == 1? "minor" : "severe" )
-	post_signal(data, RADIO_FROM_AIRALARM, null, alarm_frequency)
+	broadcast_signal(data, radio_filter_out, frequency)
 
 /obj/machinery/alarm/attack_ai(mob/user)
 	ui_interact(user)

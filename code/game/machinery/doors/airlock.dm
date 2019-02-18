@@ -18,7 +18,8 @@
 	icon = 'icons/obj/doors/station/door.dmi'
 	icon_state = "closed"
 	power_channel = ENVIRON
-
+	autoclose = TRUE
+	normalspeed = 1
 	explosion_resistance = 10
 	armor = list(
 		DAM_BLUNT  	= 90,
@@ -35,53 +36,63 @@
 		DAM_PAIN	= MaxArmorValue,
 		DAM_CLONE   = MaxArmorValue)
 
-	var/aiControlDisabled = 0 //If 1, AI control is disabled until the AI hacks back in and disables the lock. If 2, the AI has bypassed the lock. If -1, the control is enabled but the AI had bypassed it earlier, so if it is disabled again the AI would have no trouble getting back in.
-	var/hackProof = 0 // if 1, this door can't be hacked by the AI
-	var/electrified_until = 0			//World time when the door is no longer electrified. -1 if it is permanently electrified until someone fixes it.
-	var/main_power_lost_until = 0	 	//World time when main power is restored.
-	var/backup_power_lost_until = -1	//World time when backup power is restored.
-	var/next_beep_at = 0				//World time when we may next beep due to doors being blocked by mobs
-	var/spawnPowerRestoreRunning = 0
-	var/welded = null
-	var/locked = 0
-	var/lock_cut_state = BOLTS_FINE
-	var/lights = 1 // bolt lights show by default
-	var/aiDisabledIdScanner = 0
-	var/aiHacking = 0
-	var/obj/machinery/door/airlock/closeOther = null
-	var/closeOtherDir = 0
-	var/closeOtherId = null
-	var/lockdownbyai = 0
-	autoclose = 1
-	var/assembly_type = /obj/structure/door_assembly
-	var/mineral = null
-	var/justzap = 0
-	var/safe = 1
-	normalspeed = 1
-	var/obj/item/weapon/airlock_electronics/electronics = null
-	var/hasShocked = 0 //Prevents multiple shocks from happening
-	var/secured_wires = 0
+	//Radio stuff
+	id_tag 				= null
+	frequency 			= AIRLOCK_FREQ
+	range 				= AIRLOCK_CONTROL_RANGE
+	radio_filter_in 	= RADIO_AIRLOCK
+	radio_filter_out 	= RADIO_AIRLOCK
+	radio_check_id 		= TRUE 
 
-	var/datum/wires/airlock/wires = null
+	//Airlock controller
+	var/shockedby 		= list()
+	var/cur_command 	= null	//the command the door is currently attempting to complete
 
-	var/open_sound_powered = 'sound/machines/airlock_open.ogg'
-	var/open_sound_unpowered = 'sound/machines/airlock_open_force.ogg'
-	var/open_failure_access_denied = 'sound/machines/buzz-two.ogg'
+	//Wires/hacking stuff
+	var/aiControlDisabled 			= FALSE 	//If 1, AI control is disabled until the AI hacks back in and disables the lock. If 2, the AI has bypassed the lock. If -1, the control is enabled but the AI had bypassed it earlier, so if it is disabled again the AI would have no trouble getting back in.
+	var/hackProof 					= FALSE 	// if 1, this door can't be hacked by the AI
+	var/electrified_until 			= 0			//World time when the door is no longer electrified. -1 if it is permanently electrified until someone fixes it.
+	var/main_power_lost_until 		= 0	 		//World time when main power is restored.
+	var/backup_power_lost_until 	= -1		//World time when backup power is restored.
+	var/next_beep_at 				= 0			//World time when we may next beep due to doors being blocked by mobs
+	var/spawnPowerRestoreRunning 	= 0
+	var/lights 						= 1 		// bolt lights show by default
+	var/aiDisabledIdScanner 		= FALSE
+	var/aiHacking 					= FALSE
+	var/lockdownbyai 				= FALSE
+	var/justzap 					= FALSE
+	var/safe 						= TRUE
+	var/hasShocked 					= FALSE 	//Prevents multiple shocks from happening
+	var/secured_wires 				= FALSE
+	var/datum/wires/airlock/wires 	= null
 
-	var/close_sound_powered = 'sound/machines/airlock_close.ogg'
-	var/close_sound_unpowered = 'sound/machines/airlock_close_force.ogg'
-	var/close_failure_blocked = 'sound/machines/triple_beep.ogg'
+	//Door state
+	var/welded 			= null
+	var/locked 			= FALSE
+	var/lock_cut_state 	= BOLTS_FINE
+	var/haskeypad 		= FALSE
+	var/obj/item/weapon/airlock_brace/brace = null		//Airlock brace on this airlock
 
-	var/bolts_dropping = 'sound/machines/Custom_bolts.ogg'
-	var/bolts_rising = 'sound/machines/Custom_boltsup.ogg'
+	//Cycle linking
+	var/obj/machinery/door/airlock/closeOther = null	//Ref to other door entity to close/open when this one opens/closes
+	var/closeOtherDir = 0								//Direction to look in for another door to close/open when this one opens/closes
+	var/closeOtherId = null								//id of door(s) to open/close when this one closes/opens
+
+	//Sounds
+	var/open_sound_powered 			= 'sound/machines/airlock_open.ogg'
+	var/open_sound_unpowered 		= 'sound/machines/airlock_open_force.ogg'
+	var/open_failure_access_denied 	= 'sound/machines/buzz-two.ogg'
+	var/close_sound_powered 		= 'sound/machines/airlock_close.ogg'
+	var/close_sound_unpowered 		= 'sound/machines/airlock_close_force.ogg'
+	var/close_failure_blocked 		= 'sound/machines/triple_beep.ogg'
+	var/bolts_dropping 				= 'sound/machines/Custom_bolts.ogg'
+	var/bolts_rising 				= 'sound/machines/Custom_boltsup.ogg'
 
 	var/door_crush_damage = DOOR_CRUSH_DAMAGE
 
+	//WIFI
 	var/_wifi_id
 	var/datum/wifi/receiver/button/door/wifi_receiver
-	var/obj/item/weapon/airlock_brace/brace = null
-	var/haskeypad = 0
-
 	var/obj/machinery/airlock_controller_norad/norad_controller // For the no radio controller (code/modules/norad_controller)
 	var/norad_UID
 
@@ -93,20 +104,23 @@
 	var/stripe_color = null
 	var/symbol_color = null
 
-	var/fill_file = 'icons/obj/doors/station/fill_steel.dmi'
-	var/color_file = 'icons/obj/doors/station/color.dmi'
-	var/color_fill_file = 'icons/obj/doors/station/fill_color.dmi'
-	var/stripe_file = 'icons/obj/doors/station/stripe.dmi'
-	var/stripe_fill_file = 'icons/obj/doors/station/fill_stripe.dmi'
-	var/glass_file = 'icons/obj/doors/station/fill_glass.dmi'
-	var/bolts_file = 'icons/obj/doors/station/lights_bolts.dmi'
-	var/deny_file = 'icons/obj/doors/station/lights_deny.dmi'
-	var/lights_file = 'icons/obj/doors/station/lights_green.dmi'
-	var/panel_file = 'icons/obj/doors/station/panel.dmi'
-	var/sparks_damaged_file = 'icons/obj/doors/station/sparks_damaged.dmi'
-	var/sparks_broken_file = 'icons/obj/doors/station/sparks_broken.dmi'
-	var/welded_file = 'icons/obj/doors/station/welded.dmi'
-	var/emag_file = 'icons/obj/doors/station/emag.dmi'
+	var/fill_file 				= 'icons/obj/doors/station/fill_steel.dmi'
+	var/color_file 				= 'icons/obj/doors/station/color.dmi'
+	var/color_fill_file 		= 'icons/obj/doors/station/fill_color.dmi'
+	var/stripe_file 			= 'icons/obj/doors/station/stripe.dmi'
+	var/stripe_fill_file 		= 'icons/obj/doors/station/fill_stripe.dmi'
+	var/glass_file 				= 'icons/obj/doors/station/fill_glass.dmi'
+	var/bolts_file 				= 'icons/obj/doors/station/lights_bolts.dmi'
+	var/deny_file 				= 'icons/obj/doors/station/lights_deny.dmi'
+	var/lights_file 			= 'icons/obj/doors/station/lights_green.dmi'
+	var/panel_file 				= 'icons/obj/doors/station/panel.dmi'
+	var/sparks_damaged_file 	= 'icons/obj/doors/station/sparks_damaged.dmi'
+	var/sparks_broken_file 		= 'icons/obj/doors/station/sparks_broken.dmi'
+	var/welded_file 			= 'icons/obj/doors/station/welded.dmi'
+	var/emag_file 				= 'icons/obj/doors/station/emag.dmi'
+	var/obj/item/weapon/airlock_electronics/electronics = null
+	var/assembly_type = /obj/structure/door_assembly
+	var/mineral = null
 
 /obj/machinery/door/airlock/New(var/newloc, var/obj/structure/door_assembly/assembly=null)
 	..()
@@ -135,6 +149,7 @@
 	ADD_SAVED_VAR(lights)
 	ADD_SAVED_VAR(aiDisabledIdScanner)
 	ADD_SAVED_VAR(aiHacking)
+	ADD_SAVED_VAR(autoclose)
 
 	ADD_SKIP_EMPTY(brace)
 	ADD_SKIP_EMPTY(closeOtherId)
@@ -180,855 +195,54 @@
 	//wires
 	var/turf/T = get_turf(newloc)
 	if(T && (T.z in GLOB.using_map.admin_levels))
-		secured_wires = 1
+		secured_wires = TRUE
 	if (secured_wires)
 		wires = new/datum/wires/airlock/secure(src)
 	else
 		wires = new/datum/wires/airlock(src)
 
 /obj/machinery/door/airlock/Initialize()
-	if(src.closeOtherId != null)
-		for (var/obj/machinery/door/airlock/A in world)
-			if(A.closeOtherId == src.closeOtherId && A != src)
-				src.closeOther = A
-				break
+	//wireless connection
+	if(_wifi_id)
+		wifi_receiver = new(_wifi_id, src)
+
 	var/turf/T = loc
 	var/obj/item/weapon/airlock_brace/A = locate(/obj/item/weapon/airlock_brace) in T
 	if(!brace && A)
 		brace = A
 		brace.airlock = src
 		brace.forceMove(src)
-		update_icon()
-
 	update_connections()
 	. = ..()
+	update_icon()
 	return INITIALIZE_HINT_LATELOAD
 
 //Later on during init check for a nearby door
 /obj/machinery/door/airlock/LateInitialize()
 	. = ..()
+	if(src.closeOtherId != null)
+		for (var/obj/machinery/door/airlock/A in world)
+			if(A.closeOtherId == src.closeOtherId && A != src)
+				src.closeOther = A
+				break
 	if (src.closeOtherDir)
 		cyclelinkairlock()
 
 /obj/machinery/door/airlock/Destroy()
-	qdel(wires)
-	wires = null
-	qdel(wifi_receiver)
-	wifi_receiver = null
+	QDEL_NULL(wires)
+	QDEL_NULL(wifi_receiver)
 	if(brace)
-		qdel(brace)
+		QDEL_NULL(brace)
 	return ..()
 
 /obj/machinery/door/airlock/get_material()
 	if(mineral)
 		return SSmaterials.get_material_by_name(mineral)
 	return SSmaterials.get_material_by_name(MATERIAL_STEEL)
-/*
-/obj/machinery/door/airlock/fake
-	name = "wall"
-	icon = 'icons/obj/doors/fake/default.dmi'
-	desc = "A huge chunk of metal used to seperate rooms."
-	assembly_type = /obj/structure/door_assembly/door_assembly_fake
 
-/obj/machinery/door/airlock/fake/L
-	icon = 'icons/obj/doors/fake/L.dmi'
-	assembly_type = /obj/structure/door_assembly/door_assembly_fake/L
-
-/obj/machinery/door/airlock/fake/LR
-	icon = 'icons/obj/doors/fake/LR.dmi'
-	assembly_type = /obj/structure/door_assembly/door_assembly_fake/LR
-
-/obj/machinery/door/airlock/fake/R
-	icon = 'icons/obj/doors/fake/R.dmi'
-	assembly_type = /obj/structure/door_assembly/door_assembly_fake/R
-*/
-/obj/machinery/door/airlock/command
-	door_color = COLOR_COMMAND_BLUE
-	req_one_access = list(core_access_command_programs) 
-
-/obj/machinery/door/airlock/security
-	door_color = COLOR_NT_RED
-	req_one_access = list(core_access_security_programs) 
-
-/obj/machinery/door/airlock/security/research
-	door_color = COLOR_WHITE
-	stripe_color = COLOR_NT_RED
-	req_one_access = list(core_access_science_programs)
-
-/obj/machinery/door/airlock/engineering
-	name = "Maintenance Hatch"
-	door_color = COLOR_AMBER
-	req_one_access = list(core_access_engineering_programs) 
-
-/obj/machinery/door/airlock/medical
-	door_color = COLOR_WHITE
-	stripe_color = COLOR_DEEP_SKY_BLUE
-	req_one_access = list(core_access_medical_programs)
-
-/obj/machinery/door/airlock/virology
-	door_color = COLOR_WHITE
-	stripe_color = COLOR_GREEN
-	req_one_access = list(core_access_medical_programs)
-
-/obj/machinery/door/airlock/mining
-	name = "Mining Airlock"
-	door_color = COLOR_PALE_ORANGE
-	stripe_color = COLOR_BEASTY_BROWN
-
-/obj/machinery/door/airlock/atmos
-	door_color = COLOR_AMBER
-	stripe_color = COLOR_CYAN
-	req_one_access = list(core_access_engineering_programs) 
-
-/obj/machinery/door/airlock/research
-	door_color = COLOR_WHITE
-	stripe_color = COLOR_BOTTLE_GREEN
-	req_one_access = list(core_access_science_programs)
-
-/obj/machinery/door/airlock/science
-	door_color = COLOR_WHITE
-	stripe_color = COLOR_VIOLET
-	req_one_access = list(core_access_science_programs)
-
-/obj/machinery/door/airlock/sol
-	door_color = COLOR_BLUE_GRAY
-	req_one_access = list(core_access_command_programs) 
-
-/obj/machinery/door/airlock/civilian
-	stripe_color = COLOR_CIVIE_GREEN
-
-/obj/machinery/door/airlock/freezer
-	name = "Freezer Airlock"
-	door_color = COLOR_WHITE
-
-/obj/machinery/door/airlock/maintenance
-	name = "Maintenance Access"
-	stripe_color = COLOR_AMBER
-	req_one_access = list(core_access_engineering_programs) 
-
-//Glass airlock presets
-
-
-
-
-
-
-
-/obj/machinery/door/airlock/maintenance_hatch
-	name = "Maintenance Hatch"
-	explosion_resistance = 20
-	opacity = 1
-	armor = list(
-		DAM_BLUNT  	= 90,
-		DAM_PIERCE 	= 80,
-		DAM_CUT 	= MaxArmorValue,
-		DAM_BULLET 	= 90,
-		DAM_ENERGY 	= 80,
-		DAM_BURN 	= 90,
-		DAM_BOMB 	= 80,
-		DAM_EMP 	= 50,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-	req_one_access = list(core_access_engineering_programs) 
-
-/obj/machinery/door/airlock/maintenance_hatch/bolted
-	locked = TRUE
-	icon_state = "door_locked"
-
-/obj/machinery/door/airlock/glass_command
-	name = "Maintenance Hatch"
-	sound_hit = 'sound/effects/Glasshit.ogg'
-	max_health = 300
-	explosion_resistance = 5
-	opacity = FALSE
-	glass = TRUE
-	door_color = COLOR_COMMAND_BLUE
-	stripe_color = COLOR_SKY_BLUE
-	armor = list(
-		DAM_BLUNT  	= 80,
-		DAM_PIERCE 	= 80,
-		DAM_CUT 	= MaxArmorValue,
-		DAM_BULLET 	= 80,
-		DAM_ENERGY 	= 80,
-		DAM_BURN 	= 90,
-		DAM_BOMB 	= 40,
-		DAM_EMP 	= 50,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-	req_one_access = list(core_access_command_programs) 
-
-/obj/machinery/door/airlock/glass_external
-	airlock_type = "External"
-	name = "External Airlock"
-	icon = 'icons/obj/doors/external/door.dmi'
-	fill_file = 'icons/obj/doors/external/fill_steel.dmi'
-	color_file = 'icons/obj/doors/external/color.dmi'
-	color_fill_file = 'icons/obj/doors/external/fill_color.dmi'
-	glass_file = 'icons/obj/doors/external/fill_glass.dmi'
-	bolts_file = 'icons/obj/doors/external/lights_bolts.dmi'
-	deny_file = 'icons/obj/doors/external/lights_deny.dmi'
-	lights_file = 'icons/obj/doors/external/lights_green.dmi'
-	emag_file = 'icons/obj/doors/external/emag.dmi'
-	assembly_type = /obj/structure/door_assembly/door_assembly_ext
-	door_color = COLOR_NT_RED
-	paintable = AIRLOCK_PAINTABLE
-	sound_hit = 'sound/effects/Glasshit.ogg'
-	max_health = 300
-	explosion_resistance = 5
-	opacity = 0
-	glass = 1
-	armor = list(
-		DAM_BLUNT  	= 80,
-		DAM_PIERCE 	= 80,
-		DAM_CUT 	= MaxArmorValue,
-		DAM_BULLET 	= 80,
-		DAM_ENERGY 	= 80,
-		DAM_BURN 	= 90,
-		DAM_BOMB 	= 40,
-		DAM_EMP 	= 50,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-
-/obj/machinery/door/airlock/glass_external/bolted
-	icon_state = "door_locked"
-	locked = TRUE
-
-/obj/machinery/door/airlock/glass_external/bolted/cycling
-	frequency = DOOR_FREQ
-
-/obj/machinery/door/airlock/glass_external/bolted_open
-	icon_state = "door_open"
-	density = FALSE
-	locked = TRUE
-	opacity = 0
-
-/obj/machinery/door/airlock/glass_engineering
-	name = "Maintenance Hatch"
-	sound_hit = 'sound/effects/Glasshit.ogg'
-	max_health = 300
-	explosion_resistance = 5
-	opacity = 0
-	glass = TRUE
-	door_color = COLOR_AMBER
-	stripe_color = COLOR_RED
-	armor = list(
-		DAM_BLUNT  	= 80,
-		DAM_PIERCE 	= 80,
-		DAM_CUT 	= MaxArmorValue,
-		DAM_BULLET 	= 80,
-		DAM_ENERGY 	= 80,
-		DAM_BURN 	= 90,
-		DAM_BOMB 	= 40,
-		DAM_EMP 	= 50,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-	req_one_access = list(core_access_engineering_programs) 
-
-/obj/machinery/door/airlock/glass_security
-	name = "Maintenance Hatch"
-	sound_hit = 'sound/effects/Glasshit.ogg'
-	max_health = 300
-	explosion_resistance = 5
-	opacity = 0
-	glass = TRUE
-	door_color = COLOR_NT_RED
-	stripe_color = COLOR_ORANGE
-	armor = list(
-		DAM_BLUNT  	= 80,
-		DAM_PIERCE 	= 80,
-		DAM_CUT 	= MaxArmorValue,
-		DAM_BULLET 	= 80,
-		DAM_ENERGY 	= 80,
-		DAM_BURN 	= 90,
-		DAM_BOMB 	= 40,
-		DAM_EMP 	= 50,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-	req_one_access = list(core_access_security_programs) 
-
-/obj/machinery/door/airlock/glass_medical
-	name = "Maintenance Hatch"
-	sound_hit = 'sound/effects/Glasshit.ogg'
-	max_health = 300
-	explosion_resistance = 5
-	opacity = 0
-	glass = TRUE
-	door_color = COLOR_WHITE
-	stripe_color = COLOR_DEEP_SKY_BLUE
-	armor = list(
-		DAM_BLUNT  	= 80,
-		DAM_PIERCE 	= 80,
-		DAM_CUT 	= MaxArmorValue,
-		DAM_BULLET 	= 80,
-		DAM_ENERGY 	= 80,
-		DAM_BURN 	= 90,
-		DAM_BOMB 	= 40,
-		DAM_EMP 	= 50,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-	req_one_access = list(core_access_medical_programs)
-
-/obj/machinery/door/airlock/glass_virology
-	name = "Maintenance Hatch"
-	sound_hit = 'sound/effects/Glasshit.ogg'
-	max_health = 300
-	explosion_resistance = 5
-	opacity = 0
-	glass = TRUE
-	door_color = COLOR_WHITE
-	stripe_color = COLOR_GREEN
-	armor = list(
-		DAM_BLUNT  	= 80,
-		DAM_PIERCE 	= 80,
-		DAM_CUT 	= MaxArmorValue,
-		DAM_BULLET 	= 80,
-		DAM_ENERGY 	= 80,
-		DAM_BURN 	= 90,
-		DAM_BOMB 	= 40,
-		DAM_EMP 	= 50,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-	req_one_access = list(core_access_medical_programs)
-
-/obj/machinery/door/airlock/glass_sol
-	name = "Maintenance Hatch"
-	sound_hit = 'sound/effects/Glasshit.ogg'
-	max_health = 300
-	explosion_resistance = 5
-	opacity = 0
-	glass = TRUE
-	door_color = COLOR_BLUE_GRAY
-	stripe_color = COLOR_AMBER
-	armor = list(
-		DAM_BLUNT  	= 80,
-		DAM_PIERCE 	= 80,
-		DAM_CUT 	= MaxArmorValue,
-		DAM_BULLET 	= 80,
-		DAM_ENERGY 	= 80,
-		DAM_BURN 	= 90,
-		DAM_BOMB 	= 40,
-		DAM_EMP 	= 50,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-	req_one_access = list(core_access_command_programs) 
-
-
-/obj/machinery/door/airlock/glass
-	name = "Glass Airlock"
-	sound_hit = 'sound/effects/Glasshit.ogg'
-	max_health = 300
-	explosion_resistance = 5
-	opacity = 0
-	glass = TRUE
-	armor = list(
-		DAM_BLUNT  	= 80,
-		DAM_PIERCE 	= 80,
-		DAM_CUT 	= MaxArmorValue,
-		DAM_BULLET 	= 80,
-		DAM_ENERGY 	= 80,
-		DAM_BURN 	= 90,
-		DAM_BOMB 	= 40,
-		DAM_EMP 	= 50,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-
-/obj/machinery/door/airlock/glass/command
-	door_color = COLOR_COMMAND_BLUE
-	stripe_color = COLOR_SKY_BLUE
-	req_one_access = list(core_access_command_programs) 
-
-/obj/machinery/door/airlock/glass/security
-	door_color = COLOR_NT_RED
-	stripe_color = COLOR_ORANGE
-	req_one_access = list(core_access_security_programs) 
-
-/obj/machinery/door/airlock/glass/engineering
-	door_color = COLOR_AMBER
-	stripe_color = COLOR_RED
-	req_one_access = list(core_access_engineering_programs) 
-
-/obj/machinery/door/airlock/glass/medical
-	door_color = COLOR_WHITE
-	stripe_color = COLOR_DEEP_SKY_BLUE
-	req_one_access = list(core_access_medical_programs) 
-
-/obj/machinery/door/airlock/glass/virology
-	door_color = COLOR_WHITE
-	stripe_color = COLOR_GREEN
-	req_one_access = list(core_access_medical_programs) 
-
-/obj/machinery/door/airlock/glass/mining
-	door_color = COLOR_PALE_ORANGE
-	stripe_color = COLOR_BEASTY_BROWN
-
-/obj/machinery/door/airlock/glass/atmos
-	door_color = COLOR_AMBER
-	stripe_color = COLOR_CYAN
-	req_one_access = list(core_access_engineering_programs) 
-
-/obj/machinery/door/airlock/glass/research
-	door_color = COLOR_WHITE
-	stripe_color = COLOR_BOTTLE_GREEN
-	req_one_access = list(core_access_science_programs) 
-
-/obj/machinery/door/airlock/glass/science
-	door_color = COLOR_WHITE
-	stripe_color = COLOR_VIOLET
-	req_one_access = list(core_access_science_programs) 
-
-/obj/machinery/door/airlock/glass/sol
-	door_color = COLOR_BLUE_GRAY
-	stripe_color = COLOR_AMBER
-	req_one_access = list(core_access_command_programs) 
-
-/obj/machinery/door/airlock/glass/freezer
-	door_color = COLOR_WHITE
-
-/obj/machinery/door/airlock/glass/maintenance
-	name = "Maintenance Access"
-	stripe_color = COLOR_AMBER
-	req_one_access = list(core_access_engineering_programs) 
-
-/obj/machinery/door/airlock/glass/civilian
-	stripe_color = COLOR_CIVIE_GREEN
-
-/obj/machinery/door/airlock/external
-	airlock_type = "External"
-	name = "External Airlock"
-	icon = 'icons/obj/doors/external/door.dmi'
-	fill_file = 'icons/obj/doors/external/fill_steel.dmi'
-	color_file = 'icons/obj/doors/external/color.dmi'
-	color_fill_file = 'icons/obj/doors/external/fill_color.dmi'
-	glass_file = 'icons/obj/doors/external/fill_glass.dmi'
-	bolts_file = 'icons/obj/doors/external/lights_bolts.dmi'
-	deny_file = 'icons/obj/doors/external/lights_deny.dmi'
-	lights_file = 'icons/obj/doors/external/lights_green.dmi'
-	emag_file = 'icons/obj/doors/external/emag.dmi'
-	assembly_type = /obj/structure/door_assembly/door_assembly_ext
-	door_color = COLOR_NT_RED
-	paintable = AIRLOCK_PAINTABLE
-	armor = list(
-		DAM_BLUNT  	= 90,
-		DAM_PIERCE 	= 80,
-		DAM_CUT 	= MaxArmorValue,
-		DAM_BULLET 	= 90,
-		DAM_ENERGY 	= 90,
-		DAM_BURN 	= 90,
-		DAM_BOMB 	= 80,
-		DAM_EMP 	= 70,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-
-/obj/machinery/door/airlock/external/bolted
-	locked = TRUE
-
-/obj/machinery/door/airlock/external/bolted/cycling
-	frequency = DOOR_FREQ
-
-/obj/machinery/door/airlock/external/bolted_open
-	icon_state = "open"
-	density = FALSE
-	locked = TRUE
-	opacity = 0
-
-/obj/machinery/door/airlock/external/glass
-	max_health = 300
-	explosion_resistance = 5
-	opacity = 0
-	glass = TRUE
-	armor = list(
-		DAM_BLUNT  	= 90,
-		DAM_PIERCE 	= 80,
-		DAM_CUT 	= MaxArmorValue,
-		DAM_BULLET 	= 90,
-		DAM_ENERGY 	= 90,
-		DAM_BURN 	= 90,
-		DAM_BOMB 	= 80,
-		DAM_EMP 	= 70,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-
-/obj/machinery/door/airlock/external/glass/bolted
-	locked = TRUE
-
-/obj/machinery/door/airlock/external/glass/bolted/cycling
-	frequency = DOOR_FREQ
-
-/obj/machinery/door/airlock/external/glass/bolted_open
-	icon_state = "open"
-	density = FALSE
-	locked = TRUE
-	opacity = 0
-
-/obj/machinery/door/airlock/gold
-	name = "Gold Airlock"
-	door_color = COLOR_SUN
-	mineral = MATERIAL_GOLD
-	armor = list(
-		DAM_BLUNT  	= 60,
-		DAM_PIERCE 	= 20,
-		DAM_CUT 	= 60,
-		DAM_BULLET 	= 20,
-		DAM_ENERGY 	= 20,
-		DAM_BURN 	= 20,
-		DAM_BOMB 	= 10,
-		DAM_EMP 	= 40,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-
-/obj/machinery/door/airlock/silver
-	name = "Silver Airlock"
-	door_color = COLOR_SILVER
-	mineral = MATERIAL_SILVER
-	armor = list(
-		DAM_BLUNT  	= 60,
-		DAM_PIERCE 	= 20,
-		DAM_CUT 	= 60,
-		DAM_BULLET 	= 20,
-		DAM_ENERGY 	= 20,
-		DAM_BURN 	= 20,
-		DAM_BOMB 	= 10,
-		DAM_EMP 	= 40,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-
-/obj/machinery/door/airlock/diamond
-	name = "Diamond Airlock"
-	door_color = COLOR_CYAN_BLUE
-	mineral = MATERIAL_DIAMOND
-	armor = list(
-		DAM_BLUNT  	= MaxArmorValue,
-		DAM_PIERCE 	= MaxArmorValue,
-		DAM_CUT 	= MaxArmorValue,
-		DAM_BULLET 	= MaxArmorValue,
-		DAM_ENERGY 	= 80,
-		DAM_BURN 	= 80,
-		DAM_BOMB 	= 60,
-		DAM_EMP 	= 20,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-
-/obj/machinery/door/airlock/uranium
-	name = "Uranium Airlock"
-	desc = "And they said I was crazy."
-	door_color = COLOR_PAKISTAN_GREEN
-	mineral = MATERIAL_URANIUM
-	var/last_event = 0
-	var/rad_power = 7.5
-	armor = list(
-		DAM_BLUNT  	= 60,
-		DAM_PIERCE 	= 50,
-		DAM_CUT 	= 60,
-		DAM_BULLET 	= 50,
-		DAM_ENERGY 	= 50,
-		DAM_BURN 	= 50,
-		DAM_BOMB 	= 30,
-		DAM_EMP 	= 40,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-
-/obj/machinery/door/airlock/sandstone
-	name = "\improper Sandstone Airlock"
-	door_color = COLOR_BEIGE
-	mineral = MATERIAL_SANDSTONE
-	armor = list(
-		DAM_BLUNT  	= 60,
-		DAM_PIERCE 	= 60,
-		DAM_CUT 	= 80,
-		DAM_BULLET 	= 50,
-		DAM_ENERGY 	= 80,
-		DAM_BURN 	= 90,
-		DAM_BOMB 	= 10,
-		DAM_EMP 	= 80,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-
-/obj/machinery/door/airlock/phoron
-	name = "\improper Phoron Airlock"
-	desc = "No way this can end badly."
-	door_color = COLOR_PURPLE
-	mineral = MATERIAL_PHORON
-
-/obj/machinery/door/airlock/centcom
-	airlock_type = "centcomm"
-	name = "\improper Airlock"
-	icon = 'icons/obj/doors/centcomm/door.dmi'
-	fill_file = 'icons/obj/doors/centcomm/fill_steel.dmi'
-	paintable = AIRLOCK_PAINTABLE|AIRLOCK_STRIPABLE
-
-/obj/machinery/door/airlock/highsecurity
-	airlock_type = "secure"
-	name = "Secure Airlock"
-	icon = 'icons/obj/doors/secure/door.dmi'
-	fill_file = 'icons/obj/doors/secure/fill_steel.dmi'
-	explosion_resistance = 20
-	secured_wires = TRUE
-	assembly_type = /obj/structure/door_assembly/door_assembly_highsecurity
-	paintable = FALSE
-	armor = list(
-		DAM_BLUNT  	= MaxArmorValue,
-		DAM_PIERCE 	= MaxArmorValue,
-		DAM_CUT 	= MaxArmorValue,
-		DAM_BULLET 	= 95,
-		DAM_ENERGY 	= 95,
-		DAM_BURN 	= MaxArmorValue,
-		DAM_BOMB 	= 95,
-		DAM_EMP 	= 95,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-
-/obj/machinery/door/airlock/highsecurity/bolted
-	locked = TRUE
-
-/obj/machinery/door/airlock/hatch
-	airlock_type = "hatch"
-	name = "\improper Airtight Hatch"
-	icon = 'icons/obj/doors/hatch/door.dmi'
-	fill_file = 'icons/obj/doors/hatch/fill_steel.dmi'
-	stripe_file = 'icons/obj/doors/hatch/stripe.dmi'
-	stripe_fill_file = 'icons/obj/doors/hatch/fill_stripe.dmi'
-	bolts_file = 'icons/obj/doors/hatch/lights_bolts.dmi'
-	deny_file = 'icons/obj/doors/hatch/lights_deny.dmi'
-	lights_file = 'icons/obj/doors/hatch/lights_green.dmi'
-	panel_file = 'icons/obj/doors/hatch/panel.dmi'
-	welded_file = 'icons/obj/doors/hatch/welded.dmi'
-	emag_file = 'icons/obj/doors/hatch/emag.dmi'
-	explosion_resistance = 20
-	opacity = 1
-	assembly_type = /obj/structure/door_assembly/door_assembly_hatch
-	paintable = AIRLOCK_STRIPABLE
-	armor = list(
-		DAM_BLUNT  	= 90,
-		DAM_PIERCE 	= 90,
-		DAM_CUT 	= MaxArmorValue,
-		DAM_BULLET 	= 90,
-		DAM_ENERGY 	= 80,
-		DAM_BURN 	= MaxArmorValue,
-		DAM_BOMB 	= 60,
-		DAM_EMP 	= 60,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-
-/obj/machinery/door/airlock/hatch/maintenance
-	name = "Maintenance Hatch"
-	stripe_color = COLOR_AMBER
-	req_one_access = list(core_access_engineering_programs) 
-
-/obj/machinery/door/airlock/hatch/maintenance/bolted
-	locked = TRUE
-
-/obj/machinery/door/airlock/vault
-	airlock_type = "vault"
-	name = "Vault"
-	icon = 'icons/obj/doors/vault/door.dmi'
-	fill_file = 'icons/obj/doors/vault/fill_steel.dmi'
-	explosion_resistance = 20
-	opacity = 1
-	secured_wires = TRUE
-	assembly_type = /obj/structure/door_assembly/door_assembly_highsecurity //Until somebody makes better sprites.
-	paintable = AIRLOCK_PAINTABLE|AIRLOCK_STRIPABLE
-	armor = list(
-		DAM_BLUNT  	= MaxArmorValue,
-		DAM_PIERCE 	= MaxArmorValue,
-		DAM_CUT 	= MaxArmorValue,
-		DAM_BULLET 	= 95,
-		DAM_ENERGY 	= 95,
-		DAM_BURN 	= MaxArmorValue,
-		DAM_BOMB 	= 95,
-		DAM_EMP 	= 95,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-
-/obj/machinery/door/airlock/vault/bolted
-	locked = 1
-
-/obj/machinery/door/airlock/Process()
-	if(main_power_lost_until > 0 && world.time >= main_power_lost_until)
-		regainMainPower()
-
-	if(backup_power_lost_until > 0 && world.time >= backup_power_lost_until)
-		regainBackupPower()
-
-	else if(electrified_until > 0 && world.time >= electrified_until)
-		electrify(0)
-
-	..()
-
-/obj/machinery/door/airlock/uranium/Process()
-	if(world.time > last_event+20)
-		if(prob(50))
-			SSradiation.radiate(src, rad_power)
-		last_event = world.time
-	..()
-
-/obj/machinery/door/airlock/phoron/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
-	if(exposed_temperature > 300)
-		PhoronBurn(exposed_temperature)
-
-/obj/machinery/door/airlock/phoron/ignite(exposed_temperature)
-	if(exposed_temperature > 300)
-		PhoronBurn(exposed_temperature)
-
-/obj/machinery/door/airlock/phoron/proc/PhoronBurn(temperature)
-	for(var/turf/simulated/floor/target_tile in range(2,loc))
-		target_tile.assume_gas(GAS_PHORON, 35, 400+T0C)
-		spawn (0) target_tile.hotspot_expose(temperature, 400)
-	for(var/turf/simulated/wall/W in range(3,src))
-		W.burn((temperature/4))//Added so that you can't set off a massive chain reaction with a small flame
-	for(var/obj/machinery/door/airlock/phoron/D in range(3,src))
-		D.ignite(temperature/4)
-	new/obj/structure/door_assembly( src.loc )
-	qdel(src)
-
-/obj/machinery/door/airlock/keypad // HERE
-	door_color = COLOR_WHITE
-	name = "Keypad Entry Airlock"
-	desc = "A door with a keypad lock."
-	assembly_type = /obj/structure/door_assembly/door_assembly_keyp
-	haskeypad = TRUE
-	armor = list(
-		DAM_BLUNT  	= MaxArmorValue,
-		DAM_PIERCE 	= MaxArmorValue,
-		DAM_CUT 	= MaxArmorValue,
-		DAM_BULLET 	= 95,
-		DAM_ENERGY 	= 80,
-		DAM_BURN 	= MaxArmorValue,
-		DAM_BOMB 	= 60,
-		DAM_EMP 	= 95,
-		DAM_BIO 	= MaxArmorValue,
-		DAM_RADS 	= MaxArmorValue,
-		DAM_STUN 	= MaxArmorValue,
-		DAM_PAIN	= MaxArmorValue,
-		DAM_CLONE   = MaxArmorValue)
-	var/code = ""
-	var/l_code = null
-	var/l_set = 0
-	var/l_setshort = 0
-	var/l_hacking = 0
-	var/open = 0
-	Topic(href, href_list)
-		..()
-		if((usr.stat || usr.restrained()) || (get_dist(src, usr) > 1))
-			return
-		if(href_list["type"])
-			if(href_list["type"] == "E")
-				if((src.l_set == 0) && (length(src.code) == 5) && (!src.l_setshort) && (src.code != "ERROR"))
-					src.l_code = src.code
-					src.l_set = 1
-				else if((src.code == src.l_code) && (src.emagged == 0) && (src.l_set == 1))
-					src.locked = 0
-					playsound(src,bolts_rising, 30, 0, 3)
-					update_icon()
-					src.overlays = null
-					src.code = null
-				else
-					src.code = "ERROR"
-			else
-				if((href_list["type"] == "R") && (src.emagged == 0) && (!src.l_setshort))
-					src.locked = 1
-					playsound(src,bolts_dropping, 30, 0, 3)
-					src.overlays = null
-					update_icon()
-					src.code = null
-					src.close(usr)
-				else
-					src.code += text("[]", href_list["type"])
-					if(length(src.code) > 5)
-						src.code = "ERROR"
-			src.add_fingerprint(usr)
-			for(var/mob/M in viewers(1, src.loc))
-				if((M.client && M.machine == src))
-					src.attack_hand(M)
-				return
-		return
-
-/obj/machinery/door/airlock/keypad/attack_hand(mob/user as mob)
-	if(!istype(user, /mob/living/silicon))
-		if(src.isElectrified())
-			if(src.shock(user, 100))
-				return
-
-	if(!istype(user, /mob/living/silicon))
-		user.set_machine(src)
-		var/dat = text("<TT><B>[]</B><BR>\n\nLock Status: []",src, (src.locked ? "LOCKED" : "UNLOCKED"))
-		var/message = "Code"
-		if((src.l_set == 0) && (!src.emagged) && (!src.l_setshort))
-			dat += text("<p>\n<b>5-DIGIT PASSCODE NOT SET.<br>ENTER NEW DOOR PASSCODE.</b>")
-		if(src.emagged)
-			dat += text("<p>\n<font color=red><b>LOCKING SYSTE	M ERROR - 1701</b></font>")
-		if(src.l_setshort)
-			dat += text("<p>\n<font color=red><b>ALERT: MEMORY SYSTEM ERROR - 6040 201</b></font>")
-		message = text("[]", src.code)
-		if(!src.locked)
-			message = "*****"
-		dat += text("<HR>\n>[]<BR>\n<A href='?src=\ref[];type=1'>1</A>-<A href='?src=\ref[];type=2'>2</A>-<A href='?src=\ref[];type=3'>3</A><BR>\n<A href='?src=\ref[];type=4'>4</A>-<A href='?src=\ref[];type=5'>5</A>-<A href='?src=\ref[];type=6'>6</A><BR>\n<A href='?src=\ref[];type=7'>7</A>-<A href='?src=\ref[];type=8'>8</A>-<A href='?src=\ref[];type=9'>9</A><BR>\n<A href='?src=\ref[];type=R'>R</A>-<A href='?src=\ref[];type=0'>0</A>-<A href='?src=\ref[];type=E'>E</A><BR>\n</TT>", message, src, src, src, src, src, src, src, src, src, src, src, src)
-		show_browser(user, dat, "window=caselock;size=300x280")
-
-	if(src.p_open)
-		wires.Interact(user)
-	else
-		..(user)
-	return
 
 /obj/machinery/door/airlock/attack_generic(var/mob/user, var/damage)
-	if(stat & (BROKEN|NOPOWER))
+	if(inoperable())
 		if(damage >= 10)
 			if(src.density)
 				visible_message("<span class='danger'>\The [user] forces \the [src] open!</span>")
@@ -1041,6 +255,20 @@
 		return
 	..()
 
+
+/obj/machinery/door/airlock/Process()
+	if (arePowerSystemsOn())
+		execute_current_command()
+
+	if(main_power_lost_until > 0 && world.time >= main_power_lost_until)
+		regainMainPower()
+
+	if(backup_power_lost_until > 0 && world.time >= backup_power_lost_until)
+		regainBackupPower()
+
+	else if(electrified_until > 0 && world.time >= electrified_until)
+		electrify(0)
+	..()
 
 /*
 About the new airlock wires panel:
@@ -1078,6 +306,14 @@ About the new airlock wires panel:
 
 /obj/machinery/door/airlock/bumpopen(mob/living/simple_animal/user as mob)
 	..(user)
+
+/obj/machinery/door/airlock/Bumped(atom/AM)
+	..(AM)
+	if(istype(AM, /obj/mecha))
+		var/obj/mecha/mecha = AM
+		if(density && has_transmitter() && mecha.occupant && (src.allowed(mecha.occupant) || src.check_access_list(mecha.operation_req_access)))
+			send_status(1)
+	return
 
 /obj/machinery/door/airlock/proc/isElectrified()
 	if(src.electrified_until != 0)
@@ -1876,7 +1112,6 @@ About the new airlock wires panel:
 	if(!can_open(forced))
 		return 0
 	use_power(360)	//360 W seems much more appropriate for an actuator moving an industrial door capable of crushing people
-
 	//if the door is unpowered then it doesn't make sense to hear the woosh of a pneumatic actuator
 	if(arePowerSystemsOn())
 		playsound(src.loc, open_sound_powered, 100, 1)
@@ -1885,6 +1120,8 @@ About the new airlock wires panel:
 
 	if(src.closeOther != null && istype(src.closeOther, /obj/machinery/door/airlock/) && !src.closeOther.density)
 		src.closeOther.close()
+	if(!forced) 
+		send_status()
 	return ..()
 
 /obj/machinery/door/airlock/can_open(var/forced=0)
@@ -1935,7 +1172,8 @@ About the new airlock wires panel:
 		playsound(src.loc, close_sound_powered, 100, 1)
 	else
 		playsound(src.loc, close_sound_unpowered, 100, 1)
-
+	if(!forced)
+		send_status()
 	..()
 
 /obj/machinery/door/airlock/proc/lock(var/forced=0)
@@ -2071,3 +1309,86 @@ About the new airlock wires panel:
 /obj/machinery/door/airlock/proc/stripe_airlock(var/paint_color)
 	stripe_color = paint_color
 	update_icon()
+
+/obj/machinery/door/airlock/proc/command(var/new_command)
+	cur_command = new_command
+
+	//if there's no power, recieve the signal but just don't do anything. This allows airlocks to continue to work normally once power is restored
+	if(arePowerSystemsOn())
+		spawn()
+			execute_current_command()
+
+/obj/machinery/door/airlock/proc/execute_current_command()
+	if(operating)
+		return //emagged or busy doing something else
+
+	if (!cur_command)
+		return
+
+	do_command(cur_command)
+	if (command_completed(cur_command))
+		cur_command = null
+
+/obj/machinery/door/airlock/proc/do_command(var/command)
+	switch(command)
+		if("open")
+			open()
+
+		if("close")
+			close()
+
+		if("unlock")
+			unlock()
+
+		if("lock")
+			lock()
+
+		if("secure_open")
+			unlock()
+
+			sleep(2)
+			open()
+
+			lock()
+
+		if("secure_close")
+			unlock()
+			close()
+
+			lock()
+			sleep(2)
+
+	send_status()
+
+/obj/machinery/door/airlock/proc/command_completed(var/command)
+	switch(command)
+		if("open")
+			return (!density)
+
+		if("close")
+			return density
+
+		if("unlock")
+			return !locked
+
+		if("lock")
+			return locked
+
+		if("secure_open")
+			return (locked && !density)
+
+		if("secure_close")
+			return (locked && density)
+
+	return 1	//Unknown command. Just assume it's completed.
+
+/obj/machinery/door/airlock/proc/send_status(var/bumped = 0)
+	if(!has_transmitter())
+		return FALSE
+	var/list/data[0]
+	data["timestamp"] = world.time
+	data["door_status"] = density?("closed"):("open")
+	data["lock_status"] = locked?("locked"):("unlocked")
+	if (bumped)
+		data["bumped_with_access"] = 1
+	post_signal(data)

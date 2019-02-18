@@ -99,12 +99,14 @@ On the map:
 1455 for AI access
 */
 
+//Ranges
 var/const/RADIO_LOW_FREQ	= 1200
 var/const/PUBLIC_LOW_FREQ	= 1441
 var/const/PUBLIC_HIGH_FREQ	= 1489
 var/const/RADIO_HIGH_FREQ	= 1600
 var/const/RADIO_CUSTOM_FREQ = 1700
 
+//Machines
 var/const/MAGNET_FREQ			= 1311
 var/const/INCINERATOR_FREQ		= 1378
 var/const/DOOR_FREQ				= 1379
@@ -116,6 +118,7 @@ var/const/STATUS_FREQ 			= 1435
 var/const/ATMOS_CONTROL_FREQ 	= 1441
 var/const/AIRLOCK_FREQ			= 1449
 
+//Other Comms
 var/const/BOT_FREQ	= 1447
 var/const/COMM_FREQ = 1353
 var/const/ERT_FREQ	= 1345
@@ -232,6 +235,11 @@ var/list/DEPT_FREQS = list(AI_FREQ, COMM_FREQ, ENG_FREQ, MED_FREQ, SEC_FREQ, SCI
 		return "custradio"
 
 	return "radio"
+
+
+/* range */
+var/const/RADIO_DEFAULT_RANGE	= 0
+var/const/AIRLOCK_CONTROL_RANGE = 22
 
 /* filters */
 //When devices register with the radio controller, they might register under a certain filter.

@@ -15,9 +15,10 @@
 	connect_types = CONNECT_TYPE_REGULAR|CONNECT_TYPE_SUPPLY|CONNECT_TYPE_SCRUBBER
 	var/injecting = FALSE
 	var/volume_rate = 50	//flow rate limit
-	var/frequency = 1441
-	var/id = null
-	var/radio_filter = RADIO_ATMOSIA
+	id_tag = null
+	frequency = ATMOS_CONTROL_FREQ
+	radio_filter_in = RADIO_ATMOSIA
+	radio_filter_out = RADIO_ATMOSIA
 	//var/datum/radio_frequency/radio_connection
 	level = 1
 
@@ -27,8 +28,6 @@
 
 /obj/machinery/atmospherics/unary/outlet_injector/Initialize()
 	. = ..()
-	if(!map_storage_loaded && id)
-		create_transmitter(id, frequency, radio_filter)
 
 /obj/machinery/atmospherics/unary/outlet_injector/update_icon()
 	if(!powered())
@@ -95,8 +94,7 @@
 /obj/machinery/atmospherics/unary/outlet_injector/proc/broadcast_status()
 	if(!has_transmitter())
 		return FALSE
-	post_signal(list(
-		"tag" = id,
+	broadcast_signal(list(
 		"device" = "AO",
 		"power" = use_power,
 		"volume_rate" = volume_rate,

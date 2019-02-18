@@ -3,7 +3,7 @@
 	desc = "Talk through this."
 	icon_state = "intercom"
 	randpixel = 0
-	anchored = 1
+	anchored = TRUE
 	w_class = ITEM_SIZE_HUGE
 	canhear_range = 2
 	atom_flags = ATOM_FLAG_NO_BLOOD
@@ -12,8 +12,8 @@
 	var/number = 0
 	var/last_tick //used to delay the powercheck
 	var/buildstage = 0
-	var/wiresexposed = 0
-	var/circuitry_installed = 1
+	var/wiresexposed = FALSE
+	var/circuitry_installed = TRUE
 
 
 /obj/item/device/radio/intercom/get_storage_cost()
@@ -21,8 +21,8 @@
 
 /obj/item/device/radio/intercom/custom
 	name = "intercom (Custom)"
-	broadcasting = 0
-	listening = 0
+	broadcasting = FALSE
+	listening = FALSE
 
 /obj/item/device/radio/intercom/interrogation
 	name = "intercom (Interrogation)"
@@ -38,8 +38,8 @@
 
 /obj/item/device/radio/intercom/department
 	canhear_range = 5
-	broadcasting = 0
-	listening = 1
+	broadcasting = FALSE
+	listening = TRUE
 
 /obj/item/device/radio/intercom/department/medbay
 	name = "intercom (Medbay)"
@@ -80,8 +80,8 @@
 	name = "illicit intercom"
 	desc = "Talk through this. Evilly."
 	frequency = SYND_FREQ
-	subspace_transmission = 1
-	syndie = 1
+	subspace_transmission = TRUE
+	syndie = TRUE
 
 /obj/item/device/radio/intercom/syndicate/Initialize()
 	. = ..()
@@ -91,8 +91,8 @@
 	name = "illicit intercom"
 	desc = "Pirate radio, but not in the usual sense of the word."
 	frequency = RAID_FREQ
-	subspace_transmission = 1
-	syndie = 1
+	subspace_transmission = TRUE
+	syndie = TRUE
 
 /obj/item/device/radio/intercom/raider/Initialize()
 	. = ..()
@@ -137,11 +137,11 @@
 		last_tick = world.timeofday
 
 		if(!src.loc)
-			on = 0
+			on = FALSE
 		else
 			var/area/A = get_area(src)
 			if(!A)
-				on = 0
+				on = FALSE
 			else
 				on = A.powered(EQUIP) // set "on" to the power status
 
@@ -151,7 +151,7 @@
 			icon_state = "intercom"
 
 /obj/item/device/radio/intercom/broadcasting
-	broadcasting = 1
+	broadcasting = TRUE
 
 /obj/item/device/radio/intercom/locked
 	var/locked_frequency
@@ -165,8 +165,8 @@
 /obj/item/device/radio/intercom/locked/ai_private
 	name = "\improper AI intercom"
 	locked_frequency = AI_FREQ
-	broadcasting = 1
-	listening = 1
+	broadcasting = TRUE
+	listening = TRUE
 
 /obj/item/device/radio/intercom/locked/confessional
 	name = "confessional intercom"
@@ -183,25 +183,20 @@
 /obj/item/device/radio/intercom/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
 	if(istype(W, /obj/item/device/reagent_scanner))
 		return
-
-
 	if(istype(W, /obj/item/weapon/tool/wrench))
 		to_chat(user, "<span class='notice'>You detach \the [src] from the wall.</span>")
 		new /obj/item/frame/intercom(get_turf(src))
 		qdel(src)
 		return 1
-
 	return src.attack_hand(user)
 
 /obj/item/device/radio/intercom/New(loc, dir, atom/frame)
 	..(loc)
-
 	if(dir)
 		src.set_dir(dir)
-
 	if(istype(frame))
 		buildstage = 0
-		wiresexposed = 1
+		wiresexposed = TRUE
 		frame.transfer_fingerprints_to(src)
 
 /obj/item/device/radio/intercom/Initialize()

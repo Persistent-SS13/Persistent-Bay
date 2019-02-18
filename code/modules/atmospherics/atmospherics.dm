@@ -59,7 +59,7 @@ Pipelines + Other Objects -> Pipe network
 		return
 	if(istype(A, /obj/item/device/analyzer))
 		return
-	..()
+	return ..()
 
 /obj/machinery/atmospherics/proc/add_underlay(var/turf/T, var/obj/machinery/atmospherics/node, var/direction, var/icon_connect_type)
 	if(node)

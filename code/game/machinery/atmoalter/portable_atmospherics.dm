@@ -158,7 +158,6 @@
 /obj/machinery/portable_atmospherics/powered/proc/make_cell()
 	return null
 
-
 /obj/machinery/portable_atmospherics/powered/powered()
 	if(use_power) //using area power
 		return ..()

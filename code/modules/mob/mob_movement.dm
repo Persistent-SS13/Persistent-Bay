@@ -109,6 +109,11 @@
 		return mob.drop_item()
 	return
 
+// check if mob has client, if so restore client view on eject
+/mob/pipe_eject(var/direction)
+	if (src.client)
+		src.client.perspective = MOB_PERSPECTIVE
+		src.client.eye = src
 
 //This proc should never be overridden elsewhere at /atom/movable to keep directions sane.
 /atom/movable/Move(newloc, direct)

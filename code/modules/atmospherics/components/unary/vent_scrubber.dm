@@ -50,7 +50,18 @@
 		initial_loc = get_area(loc)
 		area_uid = initial_loc.uid
 	if(!id_tag)
-		id_tag = make_loc_string_id("ASV")
+		set_radio_id(make_loc_string_id("ASV"))
+	if(!scrubbing_gas)
+		scrubbing_gas = list()
+		for(var/g in gas_data.gases)
+			if(g != GAS_OXYGEN && g != GAS_NITROGEN && !(gas_data.flags[g] & XGM_GAS_REAGENT_GAS))
+				scrubbing_gas += g
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/atmospherics/unary/vent_scrubber/LateInitialize()
+	. = ..()
+	if (has_transmitter())
+		src.broadcast_status()
 
 /obj/machinery/atmospherics/unary/vent_scrubber/Destroy()
 	if(initial_loc)
@@ -97,7 +108,7 @@
 
 	var/list/data = list(
 		"area" = area_uid,
-		"tag" = id_tag,
+		// "tag" = id_tag,
 		"device" = "AScr",
 		"timestamp" = world.time,
 		"power" = use_power,
@@ -115,22 +126,9 @@
 		var/new_name = "[initial_loc.name] Air Scrubber #[initial_loc.air_scrub_names.len+1]"
 		initial_loc.air_scrub_names[id_tag] = new_name
 		src.name = new_name
-	initial_loc.air_scrub_info[id_tag] = signal.data
-	post_signal(data, radio_filter_out)
+	initial_loc.air_scrub_info[id_tag] = data
+	broadcast_signal(data, radio_filter_out)
 	return TRUE
-
-/obj/machinery/atmospherics/unary/vent_scrubber/Initialize()
-	. = ..()
-	radio_filter_in = frequency==initial(frequency)?(RADIO_FROM_AIRALARM):null
-	radio_filter_out = frequency==initial(frequency)?(RADIO_TO_AIRALARM):null
-	if (has_transmitter())
-		set_radio_frequency(frequency)
-		src.broadcast_status()
-	if(!scrubbing_gas)
-		scrubbing_gas = list()
-		for(var/g in gas_data.gases)
-			if(g != GAS_OXYGEN && g != GAS_NITROGEN && !(gas_data.flags[g] & XGM_GAS_REAGENT_GAS))
-				scrubbing_gas += g
 
 /obj/machinery/atmospherics/unary/vent_scrubber/Process()
 	..()
@@ -141,7 +139,7 @@
 	if (!node)
 		use_power = 0
 	//broadcast_status()
-	if(!use_power || (stat & (NOPOWER|BROKEN)))
+	if(!use_power || inoperable())
 		return 0
 	if(welded)
 		return 0
@@ -184,11 +182,9 @@
 	update_icon()
 	update_underlays()
 
-/obj/machinery/atmospherics/unary/vent_scrubber/receive_signal(datum/signal/signal)
-	if(stat & (NOPOWER|BROKEN))
+/obj/machinery/atmospherics/unary/vent_scrubber/OnSignal(datum/signal/signal)
+	if(!..() || signal.data["sigtype"]!="command")
 		return
-	if(!signal.data["tag"] || (signal.data["tag"] != id_tag) || (signal.data["sigtype"]!="command"))
-		return 0
 
 	if(signal.data["power"] != null)
 		use_power = text2num(signal.data["power"])
@@ -198,26 +194,26 @@
 	if(signal.data["panic_siphon"]) //must be before if("scrubbing" thing
 		panic = text2num(signal.data["panic_siphon"])
 		if(panic)
-			use_power = 1
-			scrubbing = 0
+			use_power = POWER_USE_IDLE
+			scrubbing = FALSE
 		else
-			scrubbing = 1
+			scrubbing = TRUE
 	if(signal.data["toggle_panic_siphon"] != null)
 		panic = !panic
 		if(panic)
-			use_power = 1
-			scrubbing = 0
+			use_power = POWER_USE_IDLE
+			scrubbing = FALSE
 		else
-			scrubbing = 1
+			scrubbing = TRUE
 
 	if(signal.data["scrubbing"] != null)
 		scrubbing = text2num(signal.data["scrubbing"])
 		if(scrubbing)
-			panic = 0
+			panic = FALSE
 	if(signal.data["toggle_scrubbing"])
 		scrubbing = !scrubbing
 		if(scrubbing)
-			panic = 0
+			panic = FALSE
 
 	var/list/toggle = list()
 

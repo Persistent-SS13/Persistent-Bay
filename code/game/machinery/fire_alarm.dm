@@ -6,20 +6,20 @@ FIRE ALARM
 	desc = "<i>\"Pull this in case of emergency\"</i>. Thus, keep pulling it forever."
 	icon = 'icons/obj/monitors.dmi'
 	icon_state = "fire0"
-	var/detecting = 1.0
-	var/working = 1.0
-	var/time = 10.0
-	var/timing = 0.0
-	var/lockdownbyai = 0
 	anchored = TRUE
 	use_power = POWER_USE_IDLE
 	idle_power_usage = 2
 	active_power_usage = 6
 	power_channel = ENVIRON
 	var/last_process = 0
-	var/wiresexposed = 0
+	var/wiresexposed = FALSE
 	var/buildstage = 2 // 2 = complete, 1 = no wires,  0 = circuit gone
 	var/seclevel
+	var/detecting = TRUE
+	var/working = TRUE
+	var/time = 10.0
+	var/timing = 0.0
+	var/lockdownbyai = FALSE
 
 /obj/machinery/firealarm/New(var/loc, var/dir, atom/frame)
 	..(loc)
@@ -29,7 +29,7 @@ FIRE ALARM
 
 	if(istype(frame))
 		buildstage = 0
-		wiresexposed = 1
+		wiresexposed = TRUE
 		frame.transfer_fingerprints_to(src)
 
 /obj/machinery/firealarm/Initialize()

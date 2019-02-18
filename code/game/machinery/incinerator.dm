@@ -15,6 +15,14 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 	use_power = POWER_USE_IDLE
 	idle_power_usage = 10 //10 Watts for idle
 	active_power_usage = 4 KILOWATTS //4,000w when active
+
+	//Radio
+	id_tag = null
+	frequency = null
+	radio_filter_in = RADIO_INCINERATOR
+	radio_filter_out = RADIO_INCINERATOR
+	radio_check_id = TRUE
+
 	var/incinerating = FALSE
 	var/locked = FALSE
 	var/burnend = 0 //world time at which the machine is done burning
@@ -30,9 +38,6 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 	var/max_power_rating = 4 KILOWATTS //4,000w when active
 	var/set_temperature = T20C	//thermostat
 
-	var/id_tag
-
-
 /obj/machinery/incinerator/New()
 	..()
 	map_storage_saved_vars += ";radio_connection"
@@ -40,12 +45,12 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 	burn_chamber_air.volume = 100
 	if(loc)
 		burn_chamber_air.merge(loc.return_air().remove_volume(burn_chamber_air.volume))
+	if(id_tag && !frequency)
+		frequency = INCINERATOR_FREQ
 
 /obj/machinery/incinerator/Initialize()
 	setup_parts()
 	. = ..()
-	if(id_tag)
-		create_transmitter(id_tag, INCINERATOR_FREQ, RADIO_INCINERATOR)
 
 /obj/machinery/incinerator/Destroy()
 	if(loc && loc.return_air())
@@ -320,7 +325,7 @@ var/const/RADIO_INCINERATORS = "radio_incinerators"
 	if(!signal || signal.encryption)
 		return
 	var/datum/extension/interactive/radio_transmitter/RT = get_transmitter()
-	if(!RT || !RT.signal_match_id(signal))
+	if(!RT || !RT.match_id(signal))
 		return
 	if(signal.data["activate"])
 		incinerate_start()

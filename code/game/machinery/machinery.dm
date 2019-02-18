@@ -117,6 +117,7 @@ Class Procs:
 	var/multiplier = 0
 	var/datum/world_faction/faction
 	var/faction_uid
+	
 	//Damage handling
 	max_health = 100
 	var/break_threshold = 0.5 //Percentage of health remaining at which the machine goes into broken state
@@ -127,6 +128,7 @@ Class Procs:
 	//Radio stuff
 	var/id_tag 			 	= null	//Mappervar: Sets the initial id_tag.
 	var/frequency 		 	= null	//Mappervar: Sets the initial radio listening frequency.
+	var/range 				= null	//Mappervar: Sets the initial radio range.
 	var/radio_filter_out 	= null	//Mappervar: Sets the initial output radio filter.
 	var/radio_filter_in 	= null	//Mappervar: Sets the initial listening radio filter.
 	var/radio_check_id 		= TRUE //Whether the machine checks it own id against the target id of a radio command before executing the command.
@@ -448,7 +450,7 @@ Class Procs:
 //Default code to initialize the transmitter
 /obj/machinery/proc/init_transmitter()
 	if(!has_transmitter() && frequency)
-		create_transmitter(id_tag, frequency, radio_filter_in, 0, radio_filter_out)
+		create_transmitter(id_tag, frequency, radio_filter_in, range, radio_filter_out)
 
 /obj/machinery/proc/has_transmitter()
 	return src.HasExtension(RADIO_TRANSMITTER_TYPE)
@@ -498,15 +500,15 @@ Class Procs:
 /obj/machinery/proc/check_radio_match_id(var/datum/signal/signal)
 	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
 	if(T)
-		return T.signal_match_id(signal)
+		return T.match_id(signal)
 	return FALSE
 
 //Returns the target id_tag of the specified signal
-/obj/machinery/proc/signal_target_id(var/datum/signal/signal)
-	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
-	if(T)
-		return T.match_target(signal)
-	return null
+// /obj/machinery/proc/signal_target_id(var/datum/signal/signal)
+// 	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+// 	if(T)
+// 		return T.match_target(signal)
+// 	return null
 
 /obj/machinery/proc/set_radio_filter(var/filter as text)
 	src.radio_filter_in = filter
@@ -543,7 +545,8 @@ Class Procs:
 		return T.get_range()
 	return null
 
-/obj/machinery/proc/post_signal(var/list/data, var/outfilter = null, var/targettag = null, var/targetfreq = null)
+//Send a signal using the radio transmitter to the target id tag, or to the same id_tag as the src machine
+/obj/machinery/proc/post_signal(var/list/data, var/overridefilter = null, var/overridetag = null, var/overridefreq = null)
 	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
 	if(!T)
 		return null
@@ -552,19 +555,32 @@ Class Procs:
 	signal.transmission_method = TRANSMISSION_RADIO //radio signal
 	signal.source = src
 	signal.data = data.Copy()
-	T.post_signal(signal, outfilter, targettag, targetfreq)
+	T.post_signal(signal, overridefilter, overridetag, overridefreq)
+	return TRUE
+
+//Sends a signal without a target id over a frequency and filter
+/obj/machinery/proc/broadcast_signal(var/list/data, var/overridefilter = null, var/overridefreq = null)
+	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
+	if(!T)
+		return null
+
+	var/datum/signal/signal = new
+	signal.transmission_method = TRANSMISSION_RADIO //radio signal
+	signal.source = src
+	signal.data = data.Copy()
+	T.broadcast_signal(signal, overridefilter, overridefreq)
 	return TRUE
 
 //Receive signal checks if we can receive and if we can, pass the signal to the handler OnSignal
 /obj/machinery/receive_signal(var/datum/signal/signal, var/receive_method, var/receive_param)
-	if(!signal || !has_transmitter())
+	if(!signal || !has_transmitter() || inoperable())
 		return
 	if( (radio_check_id && check_radio_match_id(signal)) || !radio_check_id)
-		return OnSignal(signal.data)
+		return OnSignal(signal)
 
 //Signals received by default go straight to the machine's topic handling, so handling radio signal is seamless.
-/obj/machinery/OnSignal(var/datum/signal/signal)
-	return OnTopic(usr, signal.data)
+/obj/machinery/proc/OnSignal(var/datum/signal/signal)
+	return OnTopic(usr, signal.data, GLOB.default_state)
 
 //Used to emit status updates to any machines listening to this one
 // /obj/machinery/proc/broadcast_status()

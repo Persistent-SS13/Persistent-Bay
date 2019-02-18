@@ -1,20 +1,26 @@
 /obj/machinery/button
-	name = "button"
-	icon = 'icons/obj/machines/buttons.dmi'
-	icon_state = "launcherbtt"
-	desc = "A remote control switch for something."
-	anchored = TRUE
-	use_power = POWER_USE_IDLE
-	idle_power_usage = 2
-	active_power_usage = 4
-	//Mapper stuff
-	var/id = null
-	var/frequency = 0
-	var/radio_filter = RADIO_DEFAULT
+	name 				= "button"
+	icon 				= 'icons/obj/machines/buttons.dmi'
+	icon_state 			= "launcherbtt"
+	desc 				= "A remote control switch for something."
+	anchored 			= TRUE
+	density 			= FALSE
+	use_power 			= POWER_USE_IDLE
+	idle_power_usage 	= 2
+	active_power_usage 	= 4
+
+	//Radio
+	id_tag 				= null
+	frequency 			= null
+	radio_filter_in 	= null
+	radio_filter_out 	= null
+
+	//WIFI
 	var/_wifi_id
 	var/datum/wifi/sender/wifi_sender
 	//The topic the button will trigger on the target
 	var/activate_func 	= "activate"
+
 	//Icons states
 	var/icon_active 	= "launcheract"
 	var/icon_idle 		= "launcherbtt"
@@ -23,8 +29,8 @@
 	var/icon_anim_deny  = null
 	var/sound_toggle 	= "button"
 
-	var/active = 0
-	var/operating = 0
+	var/active = FALSE
+	var/operating = FALSE
 	
 
 /obj/machinery/button/Initialize()
@@ -34,15 +40,14 @@
 		wifi_sender = new/datum/wifi/sender/button(_wifi_id, src)
 
 /obj/machinery/button/Destroy()
-	qdel(wifi_sender)
-	wifi_sender = null
+	QDEL_NULL(wifi_sender)
 	return..()
 
 /obj/machinery/button/attack_ai(mob/user as mob)
 	return attack_hand(user)
 
 /obj/machinery/button/attackby(obj/item/weapon/W, mob/user as mob)
-	if(default_deconstruction_screwdriver(W))
+	if(default_deconstruction_screwdriver(user, W))
 		return
 	return ..()
 
@@ -62,17 +67,17 @@
 /obj/machinery/button/proc/activate(mob/living/user)
 	if(operating)
 		return FALSE
-	operating = 1
-	active = 1
+	operating = TRUE
+	active = TRUE
 	use_power(active_power_usage)
 	send_signal()
 	update_icon()
 	if(icon_anim_act)
 		flick(icon_anim_act, src)
 	sleep(10)
-	active = 0
+	active = FALSE
 	update_icon()
-	operating = 0
+	operating = FALSE
 	return TRUE
 
 /obj/machinery/button/proc/send_signal()
@@ -187,15 +192,13 @@
 //  
 //-------------------------------
 /obj/machinery/button/flasher
-	name = "flasher button"
-	desc = "A remote control switch for a mounted flasher."
-
-/obj/machinery/button/flasher/Initialize()
-	. = ..()
-	create_transmitter(id, SEC_FREQ, RADIO_FLASHERS)
+	name 			= "flasher button"
+	desc 			= "A remote control switch for a mounted flasher."
+	frequency 		= SEC_FREQ
+	radio_filter_out= RADIO_FLASHERS
 
 /obj/machinery/button/flasher/send_signal(mob/user as mob)
-	post_signal(list("tag" = id, "activate" = 1))
+	post_signal(list("activate" = 1), null, id_tag)
 
 //-------------------------------
 // Door Button
@@ -261,22 +264,15 @@
 // Valve Button
 //-------------------------------
 /obj/machinery/button/toggle/valve
-	name 			= "remote valve control"
-	icon_active 	= "launcheract"
-	icon_idle 		= "launcherbtt"
-	icon_unpowered 	= "launcherbtt"
-	frequency 		= ATMOS_CONTROL_FREQ
-	radio_filter 	= RADIO_ATMOSIA
-
-/obj/machinery/button/toggle/valve/Initialize()
-	. = ..()
-	create_transmitter(id, frequency, radio_filter)
+	name 				= "remote valve control"
+	icon_active 		= "launcheract"
+	icon_idle 			= "launcherbtt"
+	icon_unpowered 		= "launcherbtt"
+	frequency 			= ATMOS_CONTROL_FREQ
+	radio_filter_out	= RADIO_ATMOSIA
 
 /obj/machinery/button/toggle/valve/send_signal()
-	var/data[0]
-	data["tag"] = id
-	data["command"] = "valve_toggle"
-	post_signal(data)
+	post_signal(list("command" = "valve_toggle"), null, id_tag)
 
 //-------------------------------
 // Window Tint Button
@@ -288,16 +284,17 @@
 	icon_active 	= "light1"
 	icon_idle 		= "light0"
 	icon_unpowered 	= "light0"
-	var/range = 7
+	var/tintrange = 7
 
 /obj/machinery/button/windowtint/attackby(obj/item/device/W as obj, mob/user as mob)
 	if(isMultitool(W))
-		to_chat(user, SPAN_NOTICE("The ID of the button: [id]"))
-		return
+		to_chat(user, SPAN_NOTICE("The ID of the button: [id_tag]"))
+		return 1
+	return ..()
 
 /obj/machinery/button/windowtint/send_signal()
-	for(var/obj/structure/window/reinforced/polarized/W in range(src,range))
-		if (W.id == src.id || !W.id)
+	for(var/obj/structure/window/reinforced/polarized/W in range(src,tintrange))
+		if (W.id == src.id_tag || !W.id)
 			spawn(0)
 				W.toggle()
 				return

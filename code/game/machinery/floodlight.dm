@@ -126,11 +126,8 @@
 					to_chat(user, "You remove the battery panel.")
 			update_icon()
 			return
-
-	if(isWrench(W))
-		wrench_floor_bolts(user)
+	if(default_wrench_floor_bolts(user,W))
 		return
-
 	if (istype(W, /obj/item/weapon/cell))
 		if(open)
 			if(cell)

@@ -479,8 +479,6 @@
 			return global.found_vars;
 		if("fruit_icon_cache")
 			return global.fruit_icon_cache;
-		if("fuel_injectors")
-			return global.fuel_injectors;
 		if("fusion_cores")
 			return global.fusion_cores;
 		if("fusion_reactions")
@@ -1542,8 +1540,6 @@
 			global.found_vars=newval;
 		if("fruit_icon_cache")
 			global.fruit_icon_cache=newval;
-		if("fuel_injectors")
-			global.fuel_injectors=newval;
 		if("fusion_cores")
 			global.fusion_cores=newval;
 		if("fusion_reactions")

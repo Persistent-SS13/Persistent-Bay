@@ -177,7 +177,9 @@
 /obj/proc/show_message(msg, type, alt, alt_type)//Message, type of message (1 or 2), alternative message, alt message type (1 or 2)
 	return
 
-/obj/proc/wrench_floor_bolts(mob/user, delay=20)
+/obj/proc/default_wrench_floor_bolts(mob/user, obj/item/weapon/tool/W, delay=20)
+	if(!isWrench(W))
+		return FALSE
 	playsound(loc, 'sound/items/Ratchet.ogg', vol=50, vary=1, extrarange=4, falloff=2)
 	if(anchored)
 		user.visible_message("\The [user] begins unsecuring \the [src] from the floor.", "You start unsecuring \the [src] from the floor.")
@@ -187,7 +189,7 @@
 		if(!src) return
 		to_chat(user, SPAN_NOTICE("You [anchored? "un" : ""]secured \the [src]!"))
 		set_anchored(!anchored)
-	return 1
+	return TRUE
 
 /obj/proc/set_anchored(var/new_anchored)
 	anchored = new_anchored
@@ -361,11 +363,9 @@
 	tg_ui_interact(user)
 
 /obj/attackby(obj/item/O as obj, mob/user as mob)
-	if(obj_flags & OBJ_FLAG_ANCHORABLE)
-		if(isWrench(O))
-			wrench_floor_bolts(user)
-			update_icon()
-			return 1
+	if((obj_flags & OBJ_FLAG_ANCHORABLE) && default_wrench_floor_bolts(user, O))
+		update_icon()
+		return 1
 	if(isdamageable() && user.a_intent == I_HURT && O.force > 0 && !(O.item_flags & ITEM_FLAG_NO_BLUDGEON))
 		attack_melee(user, O)
 		return 1

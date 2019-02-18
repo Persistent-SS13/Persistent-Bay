@@ -360,3 +360,8 @@
 /atom/movable/proc/hit_with_weapon(obj/item/I, mob/living/user, var/effective_force)
 	visible_message(SPAN_DANGER("[src] has been [I.attack_verb.len? pick(I.attack_verb) : "attacked"] with [I.name] by [user]!"))
 	return 0
+
+// called when movable is expelled from a disposal pipe or outlet
+// by default does nothing, override for special behaviour
+/atom/movable/proc/pipe_eject(var/direction)
+	return

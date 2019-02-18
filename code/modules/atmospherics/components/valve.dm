@@ -227,9 +227,10 @@
 	desc = "A digitally controlled valve."
 	icon = 'icons/atmos/digital_valve.dmi'
 
-	var/frequency = 0
-	var/id = null
-	var/datum/radio_frequency/radio_connection
+	id_tag 				= null
+	frequency 			= 0
+	radio_filter_in 	= RADIO_ATMOSIA
+	radio_filter_out 	= RADIO_ATMOSIA
 
 /obj/machinery/atmospherics/valve/digital/attack_ai(mob/user as mob)
 	return src.attack_hand(user)
@@ -238,7 +239,7 @@
 	if(!powered())
 		return
 	if(!src.allowed(user))
-		to_chat(user, "<span class='warning'>Access denied.</span>")
+		to_chat(user, SPAN_WARNING("Access denied."))
 		return
 	..()
 
@@ -251,20 +252,12 @@
 	if(!powered())
 		icon_state = "valve[open]nopower"
 
-/obj/machinery/atmospherics/valve/digital/proc/set_frequency(new_frequency)
-	radio_controller.remove_object(src, frequency)
-	frequency = new_frequency
-	if(frequency)
-		radio_connection = radio_controller.add_object(src, frequency, RADIO_ATMOSIA)
-
 /obj/machinery/atmospherics/valve/digital/Initialize()
 	. = ..()
-	if(frequency)
-		set_frequency(frequency)
 
-/obj/machinery/atmospherics/valve/digital/receive_signal(datum/signal/signal)
-	if(!signal.data["tag"] || (signal.data["tag"] != id))
-		return 0
+/obj/machinery/atmospherics/valve/digital/OnSignal(datum/signal/signal)
+	if(!..())
+		return
 
 	switch(signal.data["command"])
 		if("valve_open")

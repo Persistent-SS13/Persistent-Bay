@@ -5,7 +5,7 @@
 	light_color = COLOR_ORANGE
 	idle_power_usage = 250
 	active_power_usage = 500
-	var/id_tag
+	id_tag = null
 	var/scan_range = 25
 
 /obj/machinery/computer/fusion_fuel_control/attack_ai(mob/user)
@@ -17,7 +17,7 @@
 
 /obj/machinery/computer/fusion_fuel_control/interact(var/mob/user)
 
-	if(stat & (BROKEN|NOPOWER))
+	if(inoperable())
 		user.unset_machine()
 		close_browser(user, "window=fuel_control")
 		return
@@ -41,13 +41,13 @@
 		<td><b>Remaining</b></td>
 		</tr>"}
 
-	for(var/obj/machinery/fusion_fuel_injector/I in fuel_injectors)
+	for(var/obj/machinery/fusion_fuel_injector/I in GLOB.fuel_injectors)
 		if(!id_tag || !I.id_tag || I.id_tag != id_tag || get_dist(src, I) > scan_range)
 			continue
 
 		dat += "<tr>"
 
-		if(I.stat & (BROKEN|NOPOWER))
+		if(I.inoperable())
 			dat += "<td><span class='danger'>ERROR</span></td>"
 			dat += "<td><span class='danger'>ERROR</span></td>"
 			dat += "<td><span class='danger'>ERROR</span></td>"

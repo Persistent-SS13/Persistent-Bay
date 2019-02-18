@@ -7,7 +7,10 @@
 	icon = 'icons/obj/computer.dmi'
 	icon_keyboard = "atmos_key"
 	icon_screen = "tank"
-	var/id_tag
+	id_tag = null
+	frequency = ATMOS_CONTROL_FREQ
+	radio_filter_in = RADIO_ATMOSIA
+	radio_filter_out = RADIO_ATMOSIA
 	var/list/sensors = list()
 	var/list/sensor_information = list()
 	circuit = /obj/item/weapon/circuitboard/air_management
@@ -15,14 +18,6 @@
 /obj/machinery/computer/general_air_control/New()
 	..()
 	ADD_SAVED_VAR(id_tag)
-
-/obj/machinery/computer/general_air_control/Initialize()
-	. = ..()
-	init_radio()
-
-/obj/machinery/computer/general_air_control/proc/init_radio()
-	if(!map_storage_loaded)
-		create_transmitter(src.id_tag, ATMOS_CONTROL_FREQ, RADIO_ATMOSIA)
 
 /obj/machinery/computer/general_air_control/attack_ai(mob/user)
 	. = ..()
@@ -42,7 +37,8 @@
 		ui.open()
 		ui.set_auto_update(TRUE)
 
-/obj/machinery/computer/general_air_control/proc/write_sensor_data(var/list/data = list())
+/obj/machinery/computer/general_air_control/proc/write_sensor_data()
+	var/list/data[0]
 	var/list/info = list()
 	for(var/S in sensors)
 		var/list/curinfo =  sensor_information[S]
@@ -64,9 +60,8 @@
 	data["info"] = info
 	return data
 
-/obj/machinery/computer/general_air_control/receive_signal(datum/signal/signal)
-	if(!signal || !has_transmitter())
-		return
+/obj/machinery/computer/general_air_control/OnSignal(datum/signal/signal)
+	. = ..()
 	var/sensortag = signal_target_id(signal)
 	if(!sensors.Find(sensortag))
 		return
@@ -95,7 +90,7 @@
 /obj/machinery/computer/general_air_control/large_tank_control/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/master_ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data[0]
 	refreshio()
-	data = write_sensor_data(data)
+	data = write_sensor_data()
 	data["inputConnected"] = input_info? TRUE : FALSE
 	if(input_info)
 		data["inputState"] = input_info["power"]
@@ -114,8 +109,8 @@
 		ui.open()
 		ui.set_auto_update(TRUE)
 
-/obj/machinery/computer/general_air_control/large_tank_control/receive_signal(datum/signal/signal)
-	..()
+/obj/machinery/computer/general_air_control/large_tank_control/OnSignal(datum/signal/signal)
+	. = ..()
 	var/id_tag = signal_target_id(signal)
 	if(input_tag == id_tag)
 		testing("[src]\ref[src] got input message size:[signal.data.len]")
@@ -202,11 +197,10 @@
 	icon = 'icons/obj/computer.dmi'
 	input_flow_setting = 700
 	pressure_setting = 100
+	frequency = ENGINE_FREQ
+	radio_filter_in = RADIO_ENGI
+	radio_filter_out = RADIO_ENGI
 	circuit = /obj/item/weapon/circuitboard/air_management/supermatter_core
-
-/obj/machinery/computer/general_air_control/large_tank_control/supermatter_core/init_radio()
-	if(!map_storage_loaded)
-		create_transmitter(src.id_tag, ENGINE_FREQ, RADIO_ENGI)
 
 //
 //	Fuel Injection Control
@@ -216,6 +210,10 @@
 	icon = 'icons/obj/computer.dmi'
 	icon_screen = "alert:0"
 
+	id_tag = null
+	frequency = ENGINE_FREQ
+	radio_filter_in = RADIO_ENGI
+	radio_filter_out = RADIO_ENGI
 	var/device_tag
 	var/list/device_info
 
@@ -224,10 +222,6 @@
 	var/cutoff_temperature = 2000
 	var/on_temperature = 1200
 	circuit = /obj/item/weapon/circuitboard/air_management/injector_control
-
-/obj/machinery/computer/general_air_control/fuel_injection/init_radio()
-	if(!map_storage_loaded)
-		create_transmitter(src.id_tag, ENGINE_FREQ, RADIO_ENGI)
 
 /obj/machinery/computer/general_air_control/fuel_injection/Process()
 	..()
@@ -243,15 +237,11 @@
 					break
 				if(data["temperature"] <= on_temperature)
 					injecting = TRUE
-		post_signal(list(
-			"tag" = device_tag,
-			"power" = injecting,
-			"sigtype"="command"
-		))
+		post_signal(list("power" = injecting, "sigtype"="command"), null, device_tag)
 
 /obj/machinery/computer/general_air_control/fuel_injection/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data[0]
-	data = write_sensor_data(data)
+	data = write_sensor_data()
 	data["deviceConnected"] = device_info? TRUE : FALSE
 	data["automation"] = automation? TRUE : FALSE
 	if(device_info)
@@ -268,8 +258,8 @@
 		ui.open()
 		ui.set_auto_update(TRUE)
 
-/obj/machinery/computer/general_air_control/fuel_injection/receive_signal(datum/signal/signal)
-	..()
+/obj/machinery/computer/general_air_control/fuel_injection/OnSignal(datum/signal/signal)
+	. = ..()
 	var/id_tag = signal_target_id(signal)
 	if(device_tag == id_tag)
 		device_info = signal.data
@@ -282,11 +272,7 @@
 		device_info = null
 		if(!has_transmitter())
 			return TOPIC_NOACTION
-		post_signal(list(
-			"tag" = device_tag,
-			"status" = 1,
-			"sigtype"="command"
-		))
+		post_signal(list("status" = 1, "sigtype"="command"), null, device_tag)
 
 	if(href_list["toggle_automation"])
 		automation = !automation
@@ -295,20 +281,12 @@
 		device_info = null
 		if(!has_transmitter())
 			return TOPIC_NOACTION
-		post_signal(list(
-			"tag" = device_tag,
-			"power_toggle" = 1,
-			"sigtype"="command"
-		))
+		post_signal(list("power_toggle" = 1, "sigtype"="command"), null, device_tag)
 
 	if(href_list["injection"])
 		if(!has_transmitter())
 			return TOPIC_NOACTION
-		post_signal(list(
-			"tag" = device_tag,
-			"inject" = 1,
-			"sigtype"="command"
-		))
+		post_signal(list("inject" = 1, "sigtype"="command"), null, device_tag)
 	return TOPIC_REFRESH
 
 

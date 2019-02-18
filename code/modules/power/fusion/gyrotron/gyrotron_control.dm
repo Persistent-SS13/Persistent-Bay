@@ -5,7 +5,7 @@
 	light_color = COLOR_BLUE
 	idle_power_usage = 250
 	active_power_usage = 500
-	var/id_tag
+	id_tag = null
 	var/scan_range = 25
 
 /obj/machinery/computer/gyrotron_control/attack_ai(var/mob/user)

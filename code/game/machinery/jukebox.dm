@@ -286,9 +286,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 
 /obj/machinery/media/jukebox/attackby(obj/item/W as obj, mob/user as mob)
 	src.add_fingerprint(user)
-
-	if(isWrench(W))
-		wrench_floor_bolts(user, 0)
+	if(default_wrench_floor_bolts(user, W))
 		power_change()
 		return
 	return ..()

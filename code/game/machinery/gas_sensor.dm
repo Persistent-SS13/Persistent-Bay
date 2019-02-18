@@ -1,13 +1,21 @@
 /*
 */
 /obj/machinery/air_sensor
-	icon = 'icons/obj/machines/gassensor.dmi'
-	icon_state = "gsensor1"
-	name = "Gas Sensor"
-	anchored = TRUE
+	name 			= "Gas Sensor"
+	desc 			= "A machine that constantly broadcast information on the ambient gases. Works via radio signals."
+	icon 			= 'icons/obj/machines/gassensor.dmi'
+	icon_state 		= "gsensor1"
+	anchored 		= TRUE
+	density 		= FALSE
+
+	//Radio
+	id_tag 			= null
+	frequency 		= ATMOS_CONTROL_FREQ
+	radio_filter_in = RADIO_ATMOSIA
+	radio_filter_out= RADIO_ATMOSIA
+
 	var/time_next_broadcast = 0
 	var/state = 0
-	var/id_tag
 	var/on = TRUE
 	var/output = 255
 	//Flags:
@@ -23,11 +31,6 @@
 
 	//Buffer list to transmit data on each process call
 	var/tmp/list/transmitted_data = list() 
-
-/obj/machinery/air_sensor/Initialize()
-	. = ..()
-	if(!map_storage_loaded && id_tag)
-		create_transmitter(id_tag, ATMOS_CONTROL_FREQ, RADIO_ATMOSIA)
 
 /obj/machinery/air_sensor/update_icon()
 	icon_state = "gsensor[on]"

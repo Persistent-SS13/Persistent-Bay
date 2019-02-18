@@ -121,3 +121,4 @@ var/list/restricted_camera_networks = list(NETWORK_ERT,NETWORK_MERCENARY,"Secret
 #define MACHINE_FRAME_EMPTY  1 //Default state, no components installed
 #define MACHINE_FRAME_CABLED 2 //Cables installed
 #define MACHINE_FRAME_BOARD  3 //Cables, and circuit board installed
+

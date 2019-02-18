@@ -8,16 +8,15 @@ var/list/gyrotrons = list()
 	desc = "It is a heavy duty industrial gyrotron suited for powering fusion reactors."
 	icon_state = "emitter-off"
 	req_access = list(core_access_engineering_programs)
-	use_power = 1
+	use_power = POWER_USE_IDLE
 	active_power_usage = GYRO_POWER
-
-	var/id_tag
+	id_tag = null
 	var/rate = 3
 	var/mega_energy = 1
 
 
 /obj/machinery/power/emitter/gyrotron/anchored
-	anchored = 1
+	anchored = TRUE
 	state = 2
 
 /obj/machinery/power/emitter/gyrotron/Initialize()

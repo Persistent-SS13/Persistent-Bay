@@ -1,7 +1,8 @@
 //base type for controllers of two-door systems
 /obj/machinery/embedded_controller/radio/airlock
 	// Setup parameters only
-	radio_filter = RADIO_AIRLOCK
+	radio_filter_in = RADIO_AIRLOCK
+	radio_filter_out = RADIO_AIRLOCK
 	var/tag_exterior_door
 	var/tag_interior_door
 	var/tag_airpump
@@ -48,14 +49,10 @@
 	)
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-
 	if (!ui)
 		ui = new(user, src, ui_key, "advanced_airlock_console.tmpl", name, 470, 290, state = state)
-
 		ui.set_initial_data(data)
-
 		ui.open()
-
 		ui.set_auto_update(1)
 
 /obj/machinery/embedded_controller/radio/airlock/advanced_airlock_controller/Topic(href, href_list)
@@ -102,16 +99,12 @@
 		"interior_status" = program.memory["interior_status"],
 		"processing" = program.memory["processing"],
 	)
-
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 
 	if (!ui)
 		ui = new(user, src, ui_key, "simple_airlock_console.tmpl", name, 470, 290, state = state)
-
 		ui.set_initial_data(data)
-
 		ui.open()
-
 		ui.set_auto_update(1)
 
 /obj/machinery/embedded_controller/radio/airlock/airlock_controller/Topic(href, href_list)
@@ -159,23 +152,17 @@
 		icon_state = "access_control_off"
 
 /obj/machinery/embedded_controller/radio/airlock/access_controller/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/nano_ui/master_ui = null, var/datum/topic_state/state = GLOB.default_state)
-	var/data[0]
-
-	data = list(
+	var/list/data = list(
 		"exterior_status" = program.memory["exterior_status"],
 		"interior_status" = program.memory["interior_status"],
 		"processing" = program.memory["processing"]
 	)
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-
 	if (!ui)
 		ui = new(user, src, ui_key, "door_access_console.tmpl", name, 330, 220, state = state)
-
 		ui.set_initial_data(data)
-
 		ui.open()
-
 		ui.set_auto_update(1)
 
 /obj/machinery/embedded_controller/radio/airlock/access_controller/Topic(href, href_list)

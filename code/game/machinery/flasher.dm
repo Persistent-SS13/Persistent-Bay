@@ -9,9 +9,15 @@
 	use_power = POWER_USE_IDLE
 	idle_power_usage = 2
 	movable_flags = MOVABLE_FLAG_PROXMOVE
-	var/id = null
-	var/range = 2 //this is roughly the size of brig cell
-	var/disable = 0
+	
+	id_tag = null
+	frequency = SEC_FREQ
+	radio_filter_in = RADIO_FLASHERS
+	radio_filter_out = RADIO_FLASHERS
+	radio_check_id = TRUE
+
+	var/flash_range = 2 //this is roughly the size of brig cell
+	var/disable = FALSE
 	var/last_flash = 0 //Don't want it getting spammed like regular flashes
 	var/strength = 10 //How weakened targets are when flashed.
 	var/base_state = "mflash"
@@ -37,7 +43,6 @@
 	. = ..()
 	if(_wifi_id)
 		wifi_receiver = new(_wifi_id, src)
-	create_transmitter(id, SEC_FREQ, RADIO_FLASHERS)
 	update_icon()
 
 /obj/machinery/flasher/Destroy()
@@ -45,7 +50,7 @@
 	wifi_receiver = null
 	return ..()
 
-/obj/machinery/flasher/OnTopic(mob/user, href_list, datum/topic_state/state)
+/obj/machinery/flasher/OnSignal(mob/user, href_list, datum/topic_state/state)
 	. = ..()
 	if(href_list["activate"] || href_list["flash"])
 		flash()
@@ -101,7 +106,7 @@
 	use_power(1500)
 
 	for (var/mob/O in viewers(src, null))
-		if (get_dist(src, O) > src.range)
+		if (get_dist(src, O) > src.flash_range)
 			continue
 
 		var/flash_time = strength

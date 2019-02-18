@@ -193,8 +193,7 @@
 		if(src.panel_open)
 			attack_hand(user)
 		return
-	else if((obj_flags & OBJ_FLAG_ANCHORABLE) && isWrench(W))
-		wrench_floor_bolts(user)
+	else if((obj_flags & OBJ_FLAG_ANCHORABLE) && default_wrench_floor_bolts(user, W))
 		power_change()
 		return
 	else if(istype(W, /obj/item/weapon/material/coin) && premium.len > 0)

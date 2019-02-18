@@ -9,33 +9,28 @@
 #define PRESSURE_CHECK_OUTPUT 4
 
 /obj/machinery/atmospherics/binary/dp_vent_pump
+	name = "Dual Port Air Vent"
+	desc = "Has a valve and pump attached to it. There are two ports."
 	icon = 'icons/atmos/vent_pump.dmi'
 	icon_state = "map_dp_vent"
+	level = 1
+	use_power = POWER_USE_OFF
+	idle_power_usage = 150		//internal circuitry, friction losses and stuff
+	power_rating = 7500			//7500 W ~ 10 HP
+	connect_types = CONNECT_TYPE_REGULAR|CONNECT_TYPE_SUPPLY|CONNECT_TYPE_SCRUBBER //connects to regular, supply and scrubbers pipes
+
+	//Radio
+	id_tag 			= null
+	frequency 		= AIRALARM_FREQ
+	radio_filter_in = RADIO_FROM_AIRALARM
+	radio_filter_out= RADIO_TO_AIRALARM
 
 	//node2 is output port
 	//node1 is input port
-
-	name = "Dual Port Air Vent"
-	desc = "Has a valve and pump attached to it. There are two ports."
-
-	level = 1
-
-	use_power = 0
-	idle_power_usage = 150		//internal circuitry, friction losses and stuff
-	power_rating = 7500			//7500 W ~ 10 HP
-
-	connect_types = CONNECT_TYPE_REGULAR|CONNECT_TYPE_SUPPLY|CONNECT_TYPE_SCRUBBER //connects to regular, supply and scrubbers pipes
-
 	var/pump_direction = 1 //0 = siphoning, 1 = releasing
-
 	var/external_pressure_bound = EXTERNAL_PRESSURE_BOUND
 	var/input_pressure_min = INTERNAL_PRESSURE_BOUND
 	var/output_pressure_max = DEFAULT_PRESSURE_DELTA
-
-	var/frequency = 0
-	var/id = null
-	var/datum/radio_frequency/radio_connection
-
 	var/pressure_checks = PRESSURE_CHECK_EXTERNAL
 	//1: Do not pass external_pressure_bound
 	//2: Do not pass input_pressure_min
@@ -55,26 +50,31 @@
 	air1.volume = ATMOS_DEFAULT_VOLUME_PUMP + 800
 	air2.volume = ATMOS_DEFAULT_VOLUME_PUMP + 800
 
+/obj/machinery/atmospherics/binary/dp_vent_pump/Initialize()
+	. = ..()
+	if(!id_tag)
+		id_tag = make_loc_string_id("AVP")
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/atmospherics/binary/dp_vent_pump/LateInitialize()
+	. = ..()
+	src.broadcast_status()
+
 /obj/machinery/atmospherics/binary/dp_vent_pump/update_icon(var/safety = 0)
 	if(!check_icon_cache())
 		return
-
 	overlays.Cut()
 
 	var/vent_icon = "vent"
-
 	var/turf/T = get_turf(src)
 	if(!istype(T))
 		return
-
 	if(!T.is_plating() && node1 && node2 && node1.level == 1 && node2.level == 1 && istype(node1, /obj/machinery/atmospherics/pipe) && istype(node2, /obj/machinery/atmospherics/pipe))
 		vent_icon += "h"
-
 	if(!powered())
 		vent_icon += "off"
 	else
 		vent_icon += "[use_power ? "[pump_direction ? "out" : "in"]" : "off"]"
-
 	overlays += icon_manager.get_atmos_icon("device", , , vent_icon)
 
 /obj/machinery/atmospherics/binary/dp_vent_pump/update_underlays()
@@ -101,17 +101,13 @@
 
 /obj/machinery/atmospherics/binary/dp_vent_pump/Process()
 	..()
-
 	last_power_draw = 0
 	last_flow_rate = 0
-
-	if(stat & (NOPOWER|BROKEN) || !use_power)
+	if(inoperable()|| !powered())
 		return 0
 
 	var/datum/gas_mixture/environment = loc.return_air()
-
 	var/power_draw = -1
-
 	//Figure out the target pressure difference
 	var/pressure_delta = get_pressure_delta(environment)
 
@@ -157,25 +153,12 @@
 
 	return pressure_delta
 
-
-//Radio remote control
-
-/obj/machinery/atmospherics/binary/dp_vent_pump/proc/set_frequency(new_frequency)
-	radio_controller.remove_object(src, frequency)
-	frequency = new_frequency
-	if(frequency)
-		radio_connection = radio_controller.add_object(src, frequency, filter = RADIO_ATMOSIA)
-
 /obj/machinery/atmospherics/binary/dp_vent_pump/proc/broadcast_status()
-	if(!radio_connection)
+	if(!has_transmitter())
 		return 0
 
-	var/datum/signal/signal = new
-	signal.transmission_method = 1 //radio signal
-	signal.source = src
-
-	signal.data = list(
-		"tag" = id,
+	var/list/data = list(
+		// "tag" = id,
 		"device" = "ADVP",
 		"power" = use_power,
 		"direction" = pump_direction?("release"):("siphon"),
@@ -185,22 +168,17 @@
 		"external" = external_pressure_bound,
 		"sigtype" = "status"
 	)
-	radio_connection.post_signal(src, signal, filter = RADIO_ATMOSIA)
-
+	broadcast_signal(data)
 	return 1
-
-/obj/machinery/atmospherics/binary/dp_vent_pump/Initialize()
-	. = ..()
-	if(frequency)
-		set_frequency(frequency)
 
 /obj/machinery/atmospherics/binary/dp_vent_pump/examine(mob/user)
 	if(..(user, 1))
 		to_chat(user, "A small gauge in the corner reads [round(last_flow_rate, 0.1)] L/s; [round(last_power_draw)] W")
 
-/obj/machinery/atmospherics/binary/dp_vent_pump/receive_signal(datum/signal/signal)
-	if(!signal.data["tag"] || (signal.data["tag"] != id) || (signal.data["sigtype"]!="command"))
-		return 0
+/obj/machinery/atmospherics/binary/dp_vent_pump/OnSignal(datum/signal/signal)
+	if(!..() || signal.data["sigtype"]!="command")
+		return
+
 	if(signal.data["power"])
 		use_power = text2num(signal.data["power"])
 

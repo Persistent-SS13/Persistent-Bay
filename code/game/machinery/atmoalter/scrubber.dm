@@ -144,39 +144,42 @@
 	if(.)
 		update_icon()
 
-
+//
 //Huge scrubber
+//
 /obj/machinery/portable_atmospherics/powered/scrubber/huge
 	name = "Huge Air Scrubber"
 	desc = "A larger variant of the smaller portable scrubber. Work on APC power, controlled via Area Air Control Console."
 	icon_state = "scrubber:0"
-	anchored = 1
+	anchored = TRUE
 	volume = 50000
 	volume_rate = 5000
 
-	use_power = 1
+	use_power = POWER_USE_IDLE
 	idle_power_usage = 500		//internal circuitry, friction losses and stuff
 	active_power_usage = 100000	//100 kW ~ 135 HP
 
-	var/global/gid = 1
-	var/id = 0
+	id_tag = null
+	frequency = ATMOS_CONTROL_FREQ
+	radio_filter_in = RADIO_ATMOSIA
+	radio_filter_out = RADIO_ATMOSIA
+	cell = null
 
 /obj/machinery/portable_atmospherics/powered/scrubber/huge/New()
 	..()
-	cell = null
+	id_tag = make_loc_string_id("HAScr")
+	if(name == initial(name))
+		name = "[name]([id_tag])"
 
-	id = gid
-	gid++
-
-	name = "[name] (ID [id])"
+/obj/machinery/portable_atmospherics/powered/scrubber/huge/make_cell()
+	return null
 
 /obj/machinery/portable_atmospherics/powered/scrubber/huge/attack_hand(var/mob/user as mob)
 		to_chat(usr, "<span class='notice'>You can't directly interact with this machine. Use the scrubber control console.</span>")
 
 /obj/machinery/portable_atmospherics/powered/scrubber/huge/update_icon()
-	src.overlays = 0
-
-	if(on && !(stat & (NOPOWER|BROKEN)))
+	src.overlays.Cut()
+	if(ison() && operable())
 		icon_state = "scrubber:1"
 	else
 		icon_state = "scrubber:0"
@@ -188,16 +191,14 @@
 		update_icon()
 
 /obj/machinery/portable_atmospherics/powered/scrubber/huge/Process()
-	if(!on || inoperable())
+	if(!ison() || inoperable())
 		update_use_power(0)
 		last_flow_rate = 0
 		last_power_draw = 0
 		return 0
 
 	var/power_draw = -1
-
 	var/datum/gas_mixture/environment = loc.return_air()
-
 	var/transfer_moles = min(1, volume_rate/environment.volume)*environment.total_moles
 
 	power_draw = scrub_gas(src, scrubbing_gas, environment, air_contents, transfer_moles, active_power_usage)
@@ -209,37 +210,33 @@
 		use_power(power_draw)
 		update_connected_network()
 
+/obj/machinery/portable_atmospherics/powered/scrubber/huge/default_wrench_floor_bolts(mob/user, obj/item/weapon/tool/W, delay)
+	if(ison())
+		to_chat(user, SPAN_WARNING("Turn \the [src] off first!"))
+		return FALSE
+	. = ..()
+	
 /obj/machinery/portable_atmospherics/powered/scrubber/huge/attackby(var/obj/item/I as obj, var/mob/user as mob)
-	if(isWrench(I))
-		if(on)
-			to_chat(user, "<span class='warning'>Turn \the [src] off first!</span>")
-			return
-
-		anchored = !anchored
-		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
-		to_chat(user, "<span class='notice'>You [anchored ? "wrench" : "unwrench"] \the [src].</span>")
-
+	if(default_wrench_floor_bolts(user, I))
 		return
-
 	//doesn't use power cells
 	if(istype(I, /obj/item/weapon/cell))
 		return
 	if(isScrewdriver(I))
 		return
-
 	//doesn't hold tanks
 	if(istype(I, /obj/item/weapon/tank))
 		return
+	return ..()
 
-	..()
-
-
+//
+//	Stationary
+//
 /obj/machinery/portable_atmospherics/powered/scrubber/huge/stationary
 	name = "Stationary Air Scrubber"
 
 /obj/machinery/portable_atmospherics/powered/scrubber/huge/stationary/attackby(var/obj/item/I as obj, var/mob/user as mob)
 	if(isWrench(I))
-		to_chat(user, "<span class='warning'>The bolts are too tight for you to unscrew!</span>")
+		to_chat(user, SPAN_WARNING("The bolts are too tight for you to unscrew!"))
 		return
-
 	..()

@@ -11,20 +11,33 @@
 	name = "turret"
 	icon = 'icons/obj/turrets.dmi'
 	icon_state = "turretCover"
-	anchored = 1
+	anchored = TRUE
 
-	density = 0
+	density = FALSE
 	use_power = POWER_USE_IDLE				//this turret uses and requires power
 	idle_power_usage = 50		//when inactive, this turret takes up constant 50 Equipment power
 	active_power_usage = 300	//when active, this turret takes up constant 300 Equipment power
 	power_channel = EQUIP	//drains power from the EQUIPMENT channel
 
-	var/raised = 0			//if the turret cover is "open" and the turret is raised
-	var/raising= 0			//if the turret is currently opening or closing its cover
 	max_health = 120		//turrets maximal health.
-	var/auto_repair = 0		//if 1 the turret slowly repairs itself.
-	var/locked = 0			//if the turret's behaviour control access is locked
-	var/controllock = 0		//if the turret responds to control panels
+	armor = list(
+		DAM_BLUNT  	= 20,
+		DAM_PIERCE 	= 25,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 60,
+		DAM_LASER   = 40,
+		DAM_ENERGY 	= 40,
+		DAM_BURN 	= 80,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= 50,
+		)
+
+	var/raised = FALSE			//if the turret cover is "open" and the turret is raised
+	var/raising= FALSE		//if the turret is currently opening or closing its cover
+	
+	var/auto_repair = FALSE		//if 1 the turret slowly repairs itself.
+	var/locked = FALSE			//if the turret's behaviour control access is locked
+	var/controllock = FALSE		//if the turret responds to control panels
 
 	var/installation = /obj/item/weapon/gun/energy/gun		//the type of weapon installed
 	var/gun_charge = 0		//the charge of the gun inserted
@@ -37,11 +50,11 @@
 	var/last_fired = 0		//1: if the turret is cooling down from a shot, 0: turret is ready to fire
 	var/shot_delay = 15		//1.5 seconds between each shot
 
-	var/attacked = 0		//if set to 1, the turret gets pissed off and shoots at people nearby (unless they have sec access!)
-	var/enabled = 0			//determines if the turret is on
-	var/lethal = 0			//whether in lethal or stun mode
-	var/range = 7			//engagement range of the turret, forming a square from the tile of the turret(Default 2*7+1=15)
-	var/disabled = 0
+	var/attacked = FALSE		//if set to 1, the turret gets pissed off and shoots at people nearby (unless they have sec access!)
+	var/enabled = FALSE			//determines if the turret is on
+	var/lethal = FALSE			//whether in lethal or stun mode
+	var/detect_range = 7	//engagement range of the turret, forming a square from the tile of the turret(Default 2*7+1=15)
+	var/disabled = FALSE
 
 	var/check_faction = 0	//should the turret shoot if the target isn't of the parent faction
 	var/check_access = 0	//should the turret shoot if the target does not have the right access
@@ -51,7 +64,7 @@
 
 	var/datum/effect/effect/system/spark_spread/spark_system	//the spark system, used for generating... sparks?
 
-	var/wrenching = 0
+	var/wrenching = FALSE
 	var/last_target			//last target fired at, prevents turrets from erratically firing at all valid targets in range
 	var/ui_mode = 0
 
@@ -178,7 +191,7 @@ var/list/turret_icons
 	data["lethal"] = lethal
 	data["check_faction"] = check_faction
 	data["check_access"] = check_access
-	data["range"] = range
+	data["range"] = detect_range
 	data["minrange"] = 1
 	data["maxrange"] = 7
 	data["connected_faction"] = connected_faction
@@ -238,7 +251,7 @@ var/list/turret_icons
 		else if(href_list["command"] == "ui_mode")
 			ui_mode = value
 		else if(href_list["command"] == "range")
-			range += value
+			detect_range += value
 		else if(href_list["command"] == "access")
 			req_access["[value]"] = req_access["[value]"] > 2 ? 0 : req_access["[value]"] + 1
 
@@ -405,7 +418,7 @@ var/list/turret_icons
 	var/list/targets = list()			//list of primary targets
 	var/list/secondarytargets = list()	//targets that are least important
 
-	for(var/mob/M in mobs_in_view(range, src))
+	for(var/mob/M in mobs_in_view(detect_range, src))
 		assess_and_assign(M, targets, secondarytargets)
 
 	if(!tryToShootAt(targets))

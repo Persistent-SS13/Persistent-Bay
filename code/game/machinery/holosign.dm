@@ -62,7 +62,7 @@
 	update_icon()
 
 	for(var/obj/machinery/holosign/M in SSmachines.machinery)
-		if (M.id == src.id)
+		if (M.id == src.id_tag)
 			spawn( 0 )
 				M.toggle()
 				return

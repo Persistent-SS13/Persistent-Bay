@@ -19,7 +19,7 @@
 /obj/item/projectile/bullet/gyro
 	name ="explosive bolt"
 	icon_state= "bolter"
-	damage = 50
+	damage = 25
 	check_armour = "bullet"
 	sharp = 1
 	edge = 1
@@ -163,7 +163,7 @@
 	check_armour = "energy"
 	sharp = 1
 	edge = 1
-	damage = 30
+	damage = 15
 	var/pressure_decrease_active = FALSE
 	var/pressure_decrease = 0.25
 	kill_count=15

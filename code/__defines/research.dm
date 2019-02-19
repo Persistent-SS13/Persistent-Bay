@@ -12,6 +12,12 @@
 #define TECH_ILLEGAL "syndicate"
 #define TECH_ARCANE "arcane"
 
+#define TECH_ENGI 1
+#define TECH_MEDI 2
+#define TECH_WAR 3
+#define TECH_CONSUMER 4
+#define TECH_GENERAL 5
+
 // Fabricator defines
 #define SHEETS *4000
 #define SHEET *4000

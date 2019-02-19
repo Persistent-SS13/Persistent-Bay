@@ -23,7 +23,7 @@
 	trying.limits.engfabs |= src
 	req_access_faction = trying.uid
 	connected_faction = src
-	
+
 /obj/machinery/fabricator/engineering_fabricator/can_disconnect(var/datum/world_faction/trying, var/mob/M)
 	if(!trying.limits) return 0
 	trying.limits.engfabs -= src
@@ -38,8 +38,8 @@
 
 /datum/design/item/engifab
 	build_type = ENGIFAB 			   // This must match the build_type of the fabricator(s)
-	category = "Misc"	 			   // The design will appear under this in the UI. Each design must have a category, or it will not display properly.
-	time = 10	// Time in seconds for the item to be produced - This changes based off the components used in the fabricator
+	category = "Engineering Equipment"	 			   // The design will appear under this in the UI. Each design must have a category, or it will not display properly.
+	time = 5	// Time in seconds for the item to be produced - This changes based off the components used in the fabricator
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,7 +47,7 @@
 
 /datum/design/item/engifab/engitools
 	category = "Engineering Equipment"
-	time = 10
+	time = 5
 
 /datum/design/item/engifab/engitools/simple
 	build_type = list(ENGIFAB, GENERALFAB)
@@ -92,12 +92,12 @@
 /datum/design/item/engifab/engitools/simple/tape_roll
 	name = "Tape Roll"
 	build_path = /obj/item/weapon/tape_roll
-	materials = list(MATERIAL_PLASTIC = 8 SHEET) // ADJUST MATERIALS
+	materials = list(MATERIAL_PLASTIC = 8 SHEET)
 
 /datum/design/item/engifab/engitools/simple/cone
 	name = "warning cone"
 	build_path = /obj/item/weapon/caution/cone
-	materials = list(MATERIAL_PLASTIC = 1 SHEET) // ADJUST MATERIALS
+	materials = list(MATERIAL_PLASTIC = 1 SHEET)
 
 
 
@@ -105,7 +105,7 @@
 	name = "Maglight"
 	build_path = /obj/item/device/flashlight/maglight
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 0.5 SHEETS)
-
+	time = 10
 /datum/design/item/engifab/engitools/simple/crowbar
 	name = "Crowbar"
 	build_path = /obj/item/weapon/crowbar
@@ -121,7 +121,7 @@
 	id = "multitool"
 	build_path = /obj/item/device/multitool
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_GLASS = 1 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
-
+	time = 15
 /datum/design/item/engifab/engitools/simple/screwdriver
 	name = "Screwdriver"
 	id = "screwdriver"
@@ -140,10 +140,12 @@
 	build_path = /obj/item/weapon/wrench
 	materials = list(MATERIAL_STEEL = 0.25 SHEETS)
 
+/**
 /datum/design/item/engifab/engitools/suit_cooler
 	name = "Suit cooling unit"
 	build_path = /obj/item/device/suit_cooling_unit
 	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GLASS = 3 SHEETS)
+**/
 
 /datum/design/item/engifab/engitools/simple/weldermask
 	name = "Welding mask"
@@ -152,42 +154,55 @@
 
 /datum/design/item/engifab/engitools/fireaxe
 	build_path = /obj/item/weapon/material/twohanded/fireaxe
-	materials = list(MATERIAL_STEEL = 5 SHEET, MATERIAL_WOOD = 2 SHEET)	
-
+	materials = list(MATERIAL_STEEL = 5 SHEET, MATERIAL_WOOD = 2 SHEET)
+	research = "fireaxe"
 /datum/design/item/engifab/engitools/inflatabledoor
 	build_path = /obj/item/inflatable/door
-	materials = list(MATERIAL_PLASTIC = 3 SHEET)	
-
+	materials = list(MATERIAL_PLASTIC = 3 SHEET)
+	research = "inflatables"
 /datum/design/item/engifab/engitools/inflatablewall
 	build_path = /obj/item/inflatable/wall
-	materials = list(MATERIAL_PLASTIC = 2 SHEET)	
+	materials = list(MATERIAL_PLASTIC = 2 SHEET)
+	research = "inflatables"
 
-
-/datum/design/item/engifab/engitools/rcd
-	name = "Rapid Construction Device"
-	build_path = /obj/item/weapon/rcd
-	materials = list(MATERIAL_STEEL = 15 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_GOLD = 5 SHEETS, MATERIAL_SILVER = 5 SHEETS, MATERIAL_PHORON = 5 SHEETS, MATERIAL_DIAMOND = 5 SHEETS)
 
 /datum/design/item/engifab/engitools/combitool
 	name = "Combitool"
 	build_path = /obj/item/weapon/combitool
-	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_GOLD = 1 SHEETS, MATERIAL_SILVER = 1 SHEETS)
+	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_COPPER = 2 SHEETS, MATERIAL_PHORON = 2 SHEET)
+	research = "combitool"
+	time = 60
 
-
+/datum/design/item/engifab/engitools/rcd
+	name = "Rapid Construction Device"
+	build_path = /obj/item/weapon/rcd
+	materials = list(MATERIAL_STEEL = 15 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_GOLD = 10 SHEETS, MATERIAL_SILVER = 10 SHEETS, MATERIAL_PHORON = 5 SHEETS, MATERIAL_DIAMOND = 5 SHEETS, MATERIAL_URANIUM = 5 SHEETS)
+	time = 120
+	research = "rcd"
 /datum/design/item/engifab/engitools/rcd_ammo
 	name = "Matter Cartridge"
 	build_path = /obj/item/weapon/rcd_ammo
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 2 SHEETS)
-
+	time = 10
+	research = "rcd"
 /datum/design/item/engifab/engitools/rcd_ammo_large
 	name = "High-capacity matter cartridge"
 	build_path = /obj/item/weapon/rcd_ammo/large
 	materials = list(MATERIAL_STEEL = 15 SHEETS, MATERIAL_GLASS = 10 SHEETS)
+	time = 20
+	research = "rcd"
 
-/datum/design/item/engifab/engitools/simple/cable_coil
-	name = "Cable coil"
-	build_path = /obj/item/stack/cable_coil/single		//must be /single path, else printing 1x will instead print a whole stack
-	materials = list(MATERIAL_COPPER = 0.04 SHEETS)
+
+/datum/design/item/engifab/engitools/simple/cable_coil/five
+	name = "Cable coil (x5)"
+	build_path = /obj/item/stack/cable_coil/five		//must be /single path, else printing 1x will instead print a whole stack
+	materials = list(MATERIAL_COPPER = 0.1 SHEETS)
+	time = 1
+/datum/design/item/engifab/engitools/simple/cable_coil/thirty
+	name = "Cable coil (x30)"
+	build_path = /obj/item/stack/cable_coil/thirty		//must be /single path, else printing 1x will instead print a whole stack
+	materials = list(MATERIAL_COPPER = 0.6 SHEETS)
+	time = 4
 
 /datum/design/item/engifab/engitools/weldinggoggles
 	name = "Welding goggles"
@@ -223,79 +238,74 @@
 	build_path = /obj/item/weapon/weldingtool/largetank/empty
 	req_tech = list(TECH_ENGINEERING = 2)
 	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GLASS = 2 SHEETS)
-
+	research = "welding_industrial"
 /datum/design/item/engifab/engitools/welder_huge
 	name = "High-capacity welding tool"
 	build_path = /obj/item/weapon/weldingtool/hugetank/empty
 	req_tech = list(TECH_ENGINEERING = 3)
 	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GLASS = 3 SHEETS)
+	research = "welding_huge"
+
+/datum/design/item/engifab/engitools/adv/experimental_welder
+	name = "Experimental welding tool"
+	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_PLASTEEL = 5 SHEETS, MATERIAL_PHORON = 5 SHEETS)
+	build_path = /obj/item/weapon/weldingtool/experimental
 
 
 /datum/design/item/engifab/engitools/adv/airlock_brace
 	name = "Airlock brace"
-	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 2)
-	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 0.5 SHEETS)
+	materials = list(MATERIAL_STEEL = 5 SHEET, MATERIAL_PLASTEEL = 5 SHEETS)
 	build_path = /obj/item/weapon/airlock_brace
+	research = "bracejack"
+
+/datum/design/item/engifab/engitools/adv/brace_jack
+	name = "Brace jack"
+	materials = list(MATERIAL_STEEL = 3 SHEETS)
+	build_path = /obj/item/weapon/crowbar/brace_jack
+	research = "bracejack"
 
 /datum/design/item/engifab/engitools/adv/light_replacer
 	name = "Light replacer"
-	req_tech = list(TECH_MAGNET = 3, TECH_MATERIAL = 4)
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPPER = 0.5 SHEETS, MATERIAL_GLASS = 1 SHEETS)
 	build_path = /obj/item/device/lightreplacer
+	research = "lightreplacer"
 
 /datum/design/item/engifab/engitools/adv/mesons
 	name = "Optical meson scanners"
-	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2)
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_PHORON = 2 SHEETS)
 	build_path = /obj/item/clothing/glasses/meson
+	research = "mesons"
+
 
 /datum/design/item/engifab/engitools/adv/RPED
 	name = "Rapid Part Exchange Device"
 	desc = "Special mechanical module made to store, sort, and apply standard machine parts."
-	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 3)
 	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GLASS = 1.5 SHEETS, MATERIAL_GOLD = 1 SHEET, MATERIAL_PHORON = 1 SHEET)
 	build_path = /obj/item/weapon/storage/part_replacer
-
-/datum/design/item/engifab/engitools/adv/brace_jack
-	name = "Brace jack"
-	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 2)
-	materials = list(MATERIAL_STEEL = 2 SHEETS)
-	build_path = /obj/item/weapon/crowbar/brace_jack
-	
-/datum/design/item/engifab/engitools/adv/airlock_brace
-	name = "Airlock Brace"
-	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 2 SHEETS)
-	build_path = /obj/item/weapon/airlock_brace
-	
-
-/datum/design/item/engifab/engitools/adv/experimental_welder
-	name = "Experimental welding tool"
-	req_tech = list(TECH_ENGINEERING = 5, TECH_PHORON = 4)
-	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_PLASTEEL = 5 SHEETS)
-	chemicals = list(/datum/reagent/toxin/phoron/oxygen = 80)	//hopefully this makes a good detterant for obtaining OP welding tool
-	build_path = /obj/item/weapon/weldingtool/experimental
+	research = "rped"
 
 /datum/design/item/engifab/engitools/adv/nanopaste
-	req_tech = list(TECH_MATERIAL = 4, TECH_ENGINEERING = 3)
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 5 SHEETS)
 	build_path = /obj/item/stack/nanopaste
+	research = "nanopaste"
 
 /datum/design/item/engifab/engitools/smes_coil/standard
 	build_path = /obj/item/weapon/smes_coil
 	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GLASS = 3 SHEETS, MATERIAL_COPPER = 5 SHEET, MATERIAL_URANIUM = 2 SHEET)
-	
+	research = "smes_standard"
+
 /datum/design/item/engifab/engitools/smes_coil/weak
 	build_path = /obj/item/weapon/smes_coil/weak
-	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_COPPER = 3 SHEET, MATERIAL_URANIUM = 1 SHEET)
-	
+	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_COPPER = 1 SHEET, MATERIAL_URANIUM = 0.5 SHEET)
+
 /datum/design/item/engifab/engitools/smes_coil/super_capacity
 	build_path = /obj/item/weapon/smes_coil/super_capacity
-	materials = list(MATERIAL_STEEL = 12 SHEETS, MATERIAL_GLASS = 4 SHEETS, MATERIAL_COPPER = 6 SHEET, MATERIAL_URANIUM = 5 SHEET, MATERIAL_PHORON = 2 SHEET)
-
+	materials = list(MATERIAL_STEEL = 12 SHEETS, MATERIAL_GLASS = 4 SHEETS, MATERIAL_COPPER = 6 SHEET, MATERIAL_URANIUM = 3 SHEET, MATERIAL_PHORON = 2 SHEET)
+	research = "smes_master"
 /datum/design/item/engifab/engitools/smes_coil/super_io
 	build_path = /obj/item/weapon/smes_coil/super_io
-	materials = list(MATERIAL_STEEL = 12 SHEETS, MATERIAL_GLASS = 4 SHEETS, MATERIAL_COPPER = 6 SHEET, MATERIAL_URANIUM = 2 SHEET, MATERIAL_PHORON = 5 SHEET)
-
+	materials = list(MATERIAL_STEEL = 12 SHEETS, MATERIAL_GLASS = 4 SHEETS, MATERIAL_COPPER = 6 SHEET, MATERIAL_URANIUM = 2 SHEET, MATERIAL_PHORON = 3 SHEET)
+	research = "smes_master"
 
 /datum/design/item/engifab/engitools/simple/extinguisher_mini
 	name = "Compact extinguisher"
@@ -315,7 +325,7 @@
 	time = 10
 	category = "Electronics"
 	materials = list(MATERIAL_STEEL = 0.25 SHEETS, MATERIAL_COPPER = 0.25 SHEETS)
-	
+
 /datum/design/item/engifab/electronics/adv
 
 /datum/design/item/engifab/electronics/simple
@@ -362,7 +372,7 @@
 	category = "Parts"
 	time = 10
 	build_type = list(ENGIFAB, GENERALFAB)
-	
+
 /datum/design/item/engifab/parts/adv
 	build_type = ENGIFAB
 
@@ -402,8 +412,8 @@
 /datum/design/item/engifab/parts/voice
 	build_path = /obj/item/device/assembly/voice
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 0.5 SHEET)
-	
-	
+
+
 
 /datum/design/item/engifab/parts/timer
 	name = "Timer"
@@ -427,6 +437,7 @@
 /datum/design/item/engifab/lights
 	category = "Lights"
 	materials = list(MATERIAL_GLASS = 0.25 SHEETS)
+	research = "color_lights"
 
 /datum/design/item/engifab/lights/tube/large
 	build_path = /obj/item/weapon/light/tube/large
@@ -438,12 +449,13 @@
 /datum/design/item/engifab/lights/tube/simple
 	build_path = /obj/item/weapon/light/tube
 	build_type = list(ENGIFAB, GENERALFAB)
+	research = null
 /datum/design/item/engifab/lights/bulb
 
 /datum/design/item/engifab/lights/bulb/simple
 	build_path = /obj/item/weapon/light/bulb
 	build_type = list(ENGIFAB, GENERALFAB)
-
+	research = null
 /datum/design/item/engifab/lights/tube/red
 	build_path = /obj/item/weapon/light/tube/red
 
@@ -516,7 +528,7 @@
 	name = "Micro manipulator"
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 1 SHEET)
 	build_path = /obj/item/weapon/stock_parts/manipulator
-	
+
 /datum/design/item/engifab/parts/nano_mani
 	name = "Nano manipulator"
 	materials = list(MATERIAL_STEEL = 0.75 SHEET, MATERIAL_GLASS = 0.75 SHEET, MATERIAL_SILVER = 3 SHEET, MATERIAL_COPPER = 5 SHEET)
@@ -553,7 +565,7 @@
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_URANIUM = 1 SHEET)
 	build_path = /obj/item/weapon/stock_parts/micro_laser/high
 	research = "high_micro_laser"
-	
+
 /datum/design/item/engifab/parts/ultra_micro_laser
 	name = "Ultra intensity micro laser"
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 10 SHEETS, MATERIAL_URANIUM = 2 SHEETS, MATERIAL_DIAMOND = 2 SHEETS)
@@ -652,7 +664,7 @@
 
 /datum/design/item/engifab/floortiles/carpet
 	materials = list(MATERIAL_CLOTH = 0.04 SHEETS)
-
+	research = "carpets"
 /datum/design/item/engifab/floortiles/carpet/brown
 	name = "Brown carpet"
 	build_path = /obj/item/stack/tile/carpet

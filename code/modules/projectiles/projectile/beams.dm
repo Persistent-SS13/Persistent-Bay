@@ -3,11 +3,11 @@
 	icon_state = "laser"
 	fire_sound='sound/weapons/Laser.ogg'
 	pass_flags = PASS_FLAG_TABLE | PASS_FLAG_GLASS | PASS_FLAG_GRILLE
-	damage = 40
+	damage = 20
 	damage_type = BURN
 	sharp = 1 //concentrated burns
 	check_armour = "laser"
-	eyeblur = 4
+	eyeblur = 3
 	hitscan = 1
 	invisibility = 101	//beam projectiles are invisible as they are rendered by the effect engine
 
@@ -20,23 +20,23 @@
 	icon_state = "laser"
 	fire_sound = 'sound/weapons/Taser.ogg'
 	pass_flags = PASS_FLAG_TABLE | PASS_FLAG_GLASS | PASS_FLAG_GRILLE
-	damage = 2
+	damage = 5
 	damage_type = BURN
 	check_armour = "laser"
 	eyeblur = 2
 
 /obj/item/projectile/beam/smalllaser
-	damage = 25
+	damage = 10
 
 /obj/item/projectile/beam/midlaser
-	damage = 50
+	damage = 25
 	armor_penetration = 10
 
 /obj/item/projectile/beam/heavylaser
 	name = "heavy laser"
 	icon_state = "heavylaser"
 	fire_sound = 'sound/weapons/lasercannonfire.ogg'
-	damage = 60
+	damage = 35
 	armor_penetration = 30
 
 	muzzle_type = /obj/effect/projectile/laser_heavy/muzzle
@@ -47,7 +47,7 @@
 	name = "x-ray beam"
 	icon_state = "xray"
 	fire_sound = 'sound/weapons/laser3.ogg'
-	damage = 30
+	damage = 15
 	armor_penetration = 30
 	penetration_modifier = 0.8
 
@@ -56,14 +56,14 @@
 	impact_type = /obj/effect/projectile/xray/impact
 
 /obj/item/projectile/beam/xray/midlaser
-	damage = 30
+	damage = 20
 	armor_penetration = 50
 
 /obj/item/projectile/beam/pulse
 	name = "pulse"
 	icon_state = "u_laser"
 	fire_sound='sound/weapons/pulse.ogg'
-	damage = 15 //lower damage, but fires in bursts
+	damage = 10 //lower damage, but fires in bursts
 
 	muzzle_type = /obj/effect/projectile/laser_pulse/muzzle
 	tracer_type = /obj/effect/projectile/laser_pulse/tracer
@@ -77,8 +77,8 @@
 
 /obj/item/projectile/beam/pulse/destroy
 	name = "destroyer pulse"
-	damage = 100 //badmins be badmins I don't give a fuck
-	armor_penetration = 100
+	damage = 50 //badmins be badmins I don't give a fuck
+	armor_penetration = 50
 
 /obj/item/projectile/beam/pulse/destroy/on_hit(var/atom/target, var/blocked = 0)
 	if(isturf(target))
@@ -154,7 +154,7 @@
 	name = "sniper beam"
 	icon_state = "xray"
 	fire_sound = 'sound/weapons/marauder.ogg'
-	damage = 50
+	damage = 30
 	armor_penetration = 10
 	stun = 3
 	weaken = 3
@@ -171,7 +171,7 @@
 	check_armour = "energy"
 	sharp = 0 //not a laser
 	taser_effect = 1
-	agony = 40
+	agony = 25
 	damage_type = STUN
 
 	muzzle_type = /obj/effect/projectile/stun/muzzle
@@ -180,7 +180,7 @@
 
 /obj/item/projectile/beam/stun/heavy
 	name = "heavy stun beam"
-	agony = 60
+	agony = 35
 
 /obj/item/projectile/beam/stun/shock
 	name = "shock beam"

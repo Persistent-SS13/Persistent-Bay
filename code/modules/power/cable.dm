@@ -495,6 +495,14 @@ obj/structure/cable/proc/cableColor(var/colorC)
 
 /obj/item/stack/cable_coil/single
 	amount = 1
+	
+/obj/item/stack/cable_coil/five
+	amount = 5
+	
+/obj/item/stack/cable_coil/thirty
+	amount = 30
+	
+	
 
 /obj/item/stack/cable_coil/single/New(var/loc, var/length = 1, var/param_color = null)
 	..(loc, length, param_color)

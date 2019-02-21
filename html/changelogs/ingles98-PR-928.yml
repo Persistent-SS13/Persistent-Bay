@@ -1,0 +1,8 @@
+author: ingles98
+
+delete-after: True
+changes:
+  - rscadd: "You are now able to add a title to canvases and sign it if you so wish."
+  - rscadd: "You are now able to edit the canvas as it will load the current picture state into the editor."
+  - bugfix: "Canvas pixel width and height should have been 30, and not 31 as it was."
+  - wip: "Currently working on a data bridge between the browser and DM which will substantially boost perfomance while saving the icon, enabling bigger icon sizes in the future."

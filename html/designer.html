@@ -246,12 +246,15 @@ var isProcessing = false;
 var max_x = 32
 var max_y = 32
 
+var pixel_list = []
+
 function main(){
 	canvas.style.width = pixelScale*max_x +"px" ;
 	canvas.style.height = pixelScale*max_y +"px";
 	bg.style.width = canvas.style.width;
 	bg.style.height = canvas.style.height;
 	for (var i = 0; i<max_x; i++){
+		pixel_list[i] = []
 		for (var j = 0; j<max_y; j++){
 			var pixel = document.createElement("DIV");
 			pixel.id = i + "_" + j;
@@ -269,6 +272,7 @@ function main(){
 			canvas.appendChild(pixel);
 			pixel.px = i+1;
 			pixel.py = j+1;
+			pixel_list[i][j] = pixel;
 		}
 	}
 }
@@ -288,6 +292,53 @@ function setColorOnClick(){
 	}
 	this.style.backgroundColor = selectedColor;
 	this.style.opacity = selectedAlpha;
+}
+
+	/*
+		WIP. This function below should never be called while it is work in progress
+		Currently the problem is "location.href" won't let us send the JSON string (this method of passing
+		data has a name, i know, but i cant recall it)
+
+		Passing the JSON string and not sending href data to DM every iteration of each pixel is way cheaper.
+		As it currently doesn't function (Permission Denied error ...smh...), we have to stick with the
+		mentioned method, as it is the only two ways i know of sending data (at least this two dimensional array)
+		back to DM.
+	*/
+function new_saveIcon() {
+	if (isProcessing == true) {
+		alert("The client is currently processing an icon save.")
+		return
+	}
+	isProcessing = true;
+	var pixels = document.getElementsByClassName("pixel");
+	var icon_array = []
+	for (w = 1; w <= max_x; w++) {
+		icon_array[w] = []
+		for (h = 1; h <= max_x; h++){
+			icon_array[w][h] = [null,null,null,null]
+		}
+	}
+	for (i = 0; i < pixels.length; i++) {
+		var elem = pixels[i];
+		var color = elem.style.backgroundColor;
+		var args = [];
+
+		args[1] = color.match(/\d+/);
+		color = color.replace(args[1],"");
+
+		args[2] = color.match(/\d+/);
+		color = color.replace(args[2],"");
+
+		args[3] = color.match(/\d+/);
+		color = color.replace(args[3],"");
+
+		args[4] = elem.style.opacity * 255;
+		icon_array[elem.px][elem.py] = args;
+	}
+	var icon_array_string = JSON.stringify(icon_array);
+	location.href = source + encodeURIComponent( ";action=getIcon;json_string=" + JSON.stringify(icon_array[1]));
+	isProcessing = false;
+	//location.href = source + ";action=start";
 }
 
 function saveIcon(){
@@ -344,6 +395,28 @@ function getData(ref,p_width,p_height){
 	max_x = p_width
 	max_y = p_height
 	main()
+}
+
+function getIconAsJSON(str) {
+	var obj = JSON.parse(str);
+	for (var i = 0; i <= obj.length -1; i++) {
+		var array = obj[i].reverse()
+		for (var j = 0; j <= array.length -1; j++) {
+			var color = array[j];
+			if (color == null || !pixel_list[i][j]) {
+				continue;
+			}
+			pixel_list[i][j].style.backgroundColor = "rgb("+color[0]+","+color[1]+","+color[2]+")";
+			pixel_list[i][j].style.opacity = "1";
+			if (color[3]){
+				pixel_list[i][j].style.opacity = "" + color[3]/255 + "";
+			}
+		}
+	}
+}
+
+function setTitle(str) {
+	document.title = str;
 }
 
 function pickColor(){

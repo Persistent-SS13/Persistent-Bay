@@ -303,6 +303,17 @@
 			update_inv_r_hand()
 	return
 
+/*
+/mob/verb/dump_source()
+
+	var/master = "<PRE>"
+	for(var/t in typesof(/area))
+		master += text("[]\n", t)
+		//Foreach goto(26)
+	src << browse(master)
+	return
+*/
+
 /mob/verb/memory()
 	set name = "Notes"
 	set category = "IC"
@@ -356,6 +367,13 @@
 		else
 			return "<span class='notice'>[copytext_preserve_html(msg, 1, 37)]... <a href='byond://?src=\ref[src];flavor_more=1'>More...</a></span>"
 
+/*
+/mob/verb/help()
+	set name = "Help"
+	src << browse('html/help.html', "window=help")
+	return
+*/
+
 /client/verb/changes()
 	set name = "Changelog"
 	set category = "OOC"
@@ -379,7 +397,7 @@
 		'html/changelog.js',
 		'html/changelog.html'
 		)
-	show_browser(src, 'html/changelog.html', "window=changes;size=675x650")
+	src << browse('html/changelog.html', "window=changes;size=675x650")
 	if(prefs.lastchangelog != changelog_hash)
 		prefs.lastchangelog = changelog_hash
 		prefs.save_preferences()
@@ -469,10 +487,10 @@
 	if(href_list["mach_close"])
 		var/t1 = text("window=[href_list["mach_close"]]")
 		unset_machine()
-		close_browser(src, t1)
+		src << browse(null, t1)
 
 	if(href_list["flavor_more"])
-		show_browser(usr, text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", name, replacetext(flavor_text, "\n", "<BR>")), text("window=[];size=500x200", name))
+		usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", name, replacetext(flavor_text, "\n", "<BR>")), text("window=[];size=500x200", name))
 		onclose(usr, "[name]")
 	if(href_list["flavor_change"])
 		update_flavor_text()

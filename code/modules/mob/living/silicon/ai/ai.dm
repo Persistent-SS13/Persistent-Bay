@@ -61,8 +61,8 @@ var/list/ai_verbs_default = list(
 	var/obj/item/device/pda/ai/aiPDA = null
 	var/obj/item/device/multitool/aiMulti = null
 
-	silicon_camera = /obj/item/device/camera/siliconcam/ai_camera
-	silicon_radio = /obj/item/device/radio/headset/heads/ai_integrated
+	silicon_camera = new /obj/item/device/camera/siliconcam/ai_camera
+	silicon_radio = new /obj/item/device/radio/headset/heads/ai_integrated
 	var/obj/item/device/radio/headset/heads/ai_integrated/ai_radio
 
 	var/camera_light_on = 0	//Defines if the AI toggled the light on the camera it's looking through.
@@ -416,7 +416,7 @@ var/list/ai_verbs_default = list(
 			viewalerts = 0
 		var/t1 = text("window=[]", href_list["mach_close"])
 		unset_machine()
-		close_browser(src, t1)
+		src << browse(null, t1)
 	if (href_list["switchcamera"])
 		switchCamera(locate(href_list["switchcamera"])) in cameranet.cameras
 	if (href_list["showalerts"])

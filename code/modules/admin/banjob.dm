@@ -94,7 +94,7 @@ DEBUG
 
 /proc/jobban_savebanfile()
 	var/savefile/S=new("data/job_full.ban")
-	to_file(S["keys[0]"], jobban_keylist)
+	S["keys[0]"] << jobban_keylist
 
 /proc/jobban_unban(mob/M, rank)
 	jobban_remove("[M.ckey] - [rank]")

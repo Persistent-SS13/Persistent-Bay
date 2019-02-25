@@ -7,12 +7,12 @@
 	sort_order = 2
 
 /datum/category_item/player_setup_item/antagonism/basic/load_character(var/savefile/S)
-	from_file(S["uplinklocation"], pref.uplinklocation)
-	from_file(S["exploit_record"], pref.exploit_record)
+	S["uplinklocation"] >> pref.uplinklocation
+	S["exploit_record"] >> pref.exploit_record
 
 /datum/category_item/player_setup_item/antagonism/basic/save_character(var/savefile/S)
-	to_file(S["uplinklocation"], pref.uplinklocation)
-	to_file(S["exploit_record"], pref.exploit_record)
+	S["uplinklocation"] << pref.uplinklocation
+	S["exploit_record"] << pref.exploit_record
 
 /datum/category_item/player_setup_item/antagonism/basic/sanitize_character()
 	pref.uplinklocation	= sanitize_inlist(pref.uplinklocation, GLOB.uplink_locations, initial(pref.uplinklocation))

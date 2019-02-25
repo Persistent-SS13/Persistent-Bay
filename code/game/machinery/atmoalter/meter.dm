@@ -52,7 +52,6 @@
 
 /obj/machinery/meter/Process()
 	. = ..()
-	update_icon()
 	var/datum/gas_mixture/pipe_air = target.return_air()
 	if(!pipe_air)
 		src.last_pressure = -1
@@ -67,6 +66,7 @@
 			"sigtype" = "status"
 		)
 		post_signal(data)
+	update_icon()
 
 /obj/machinery/meter/attack_hand(mob/user)
 	examine(user)

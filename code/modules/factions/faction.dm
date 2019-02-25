@@ -64,7 +64,7 @@ var/PriorityQueue/all_feeds
 		info2 += "<br><A href='?src=\ref[src];pay=1'>Or enter account info here.</A>"
 	else
 		info2 += "<br>Or enter account info here."
-	show_browser(user, "<HTML><HEAD><TITLE>[name]</TITLE></HEAD><BODY bgcolor='[color]'>[can_read ? info2 : stars(info)][stamps]</BODY></HTML>", "window=[name]")
+	user << browse("<HTML><HEAD><TITLE>[name]</TITLE></HEAD><BODY bgcolor='[color]'>[can_read ? info2 : stars(info)][stamps]</BODY></HTML>", "window=[name]")
 	onclose(user, "[name]")
 
 /obj/item/weapon/paper/contract/attackby(obj/item/weapon/P as obj, mob/user as mob)

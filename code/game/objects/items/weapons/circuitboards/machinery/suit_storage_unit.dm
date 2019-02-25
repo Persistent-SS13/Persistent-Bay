@@ -38,4 +38,4 @@
 /obj/item/weapon/circuitboard/suit_cycler/proc/set_type(typepath, mob/user)
 		build_path = typepath
 		name = T_BOARD("[names_paths[build_path]]")
-		to_chat(user, SPAN_NOTICE("You set the board to [names_paths[build_path]]."))
+		user << "<span class='notice'>You set the board to [names_paths[build_path]].</span>"

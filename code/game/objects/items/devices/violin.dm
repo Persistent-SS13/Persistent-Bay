@@ -289,12 +289,12 @@
 		else
 			dat += "<A href='?src=\ref[src];help=2'>Show Help</A><BR>"
 	dat += "</BODY></HTML>"
-	show_browser(user, dat, "window=violin;size=700x300")
+	user << browse(dat, "window=violin;size=700x300")
 	onclose(user, "violin")
 
 /obj/item/device/violin/Topic(href, href_list, state = GLOB.physical_state)
 	if((. = ..()))
-		close_browser(usr, "window=violin;size=700x300")
+		usr << browse(null, "window=violin;size=700x300")
 		onclose(usr, "violin")
 		return
 

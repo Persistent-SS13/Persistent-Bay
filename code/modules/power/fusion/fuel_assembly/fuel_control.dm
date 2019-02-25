@@ -19,12 +19,12 @@
 
 	if(inoperable())
 		user.unset_machine()
-		close_browser(user, "window=fuel_control")
+		user << browse(null, "window=fuel_control")
 		return
 
 	if (!istype(user, /mob/living/silicon) && get_dist(src, user) > 1)
 		user.unset_machine()
-		close_browser(user, "window=fuel_control")
+		user << browse(null, "window=fuel_control")
 		return
 
 	if(!id_tag)
@@ -89,7 +89,7 @@
 				I.BeginInjecting()
 
 	if( href_list["close"] )
-		close_browser(usr, "window=fuel_control")
+		usr << browse(null, "window=fuel_control")
 		usr.unset_machine()
 
 	updateDialog()

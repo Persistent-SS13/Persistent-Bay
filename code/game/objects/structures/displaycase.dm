@@ -89,11 +89,11 @@
 
 /obj/structure/displaycase/examine()
 	..()
-	to_chat(usr, "\blue Peering through the glass, you see that it contains:")
+	usr << "\blue Peering through the glass, you see that it contains:"
 	if(occupant)
-		to_chat(usr, "\icon[occupant] \blue \A [occupant]")
+		usr << "\icon[occupant] \blue \A [occupant]"
 	else:
-		to_chat(usr, "Nothing.")
+		usr << "Nothing."
 
 /obj/structure/displaycase/proc/dump()
 	if(occupant)
@@ -144,13 +144,13 @@
 	if(istype(W, /obj/item/weapon/card))
 		var/obj/item/weapon/card/id/I=W
 		if(!check_access(I))
-			to_chat(user, SPAN_WARNING("Access denied."))
+			user << "\red Access denied."
 			return
 		locked = !locked
 		if(!locked)
-			to_chat(user, "\icon[src] \blue \The [src] clicks as locks release, and it slowly opens for you.")
+			user << "\icon[src] \blue \The [src] clicks as locks release, and it slowly opens for you."
 		else
-			to_chat(user, "\icon[src] \blue You close \the [src] and swipe your card, locking it.")
+			user << "\icon[src] \blue You close \the [src] and swipe your card, locking it."
 		update_icon()
 		return
 	if(istype(W,/obj/item/weapon/tool/crowbar) && (!locked || destroyed))
@@ -186,10 +186,10 @@
 		..()
 	else
 		if(locked)
-			to_chat(user, SPAN_WARNING("It's locked, you can't put anything into it."))
+			user << "\red It's locked, you can't put anything into it."
 			return
 		if(!occupant)
-			to_chat(user, "\blue You insert \the [W] into \the [src], and it floats as the hoverfield activates.")
+			user << "\blue You insert \the [W] into \the [src], and it floats as the hoverfield activates."
 			user.drop_item()
 			W.loc=src
 			occupant=W
@@ -200,7 +200,7 @@
 	if (destroyed)
 		if(occupant)
 			dump()
-			to_chat(user, SPAN_WARNING("You smash your fist into the delicate electronics at the bottom of the case, and deactivate the hover field permanently."))
+			user << "\red You smash your fist into the delicate electronics at the bottom of the case, and deactivate the hover field permanently."
 			src.add_fingerprint(user)
 			update_icon()
 	else
@@ -214,19 +214,19 @@
 		else if(!locked)
 			if(ishuman(user))
 				if(!ue)
-					to_chat(user, "\blue Your press your thumb against the fingerprint scanner, registering your identity with the case.")
+					user << "\blue Your press your thumb against the fingerprint scanner, registering your identity with the case."
 					ue = getPrint(user)
 					return
 				if(ue!=getPrint(user))
-					to_chat(user, SPAN_WARNING("Access denied."))
+					user << "\red Access denied."
 					return
 
 				if(occupant)
-					to_chat(user, "\blue Your press your thumb against the fingerprint scanner, and deactivate the hover field built into the case.")
+					user << "\blue Your press your thumb against the fingerprint scanner, and deactivate the hover field built into the case."
 					dump()
 					update_icon()
 				else
-					to_chat(src, SPAN_WARNING("\icon[src] \The [src] is empty!"))
+					src << "\icon[src] \red \The [src] is empty!"
 		else
 			user.visible_message("[user.name] gently runs his hands over \the [src] in appreciation of its contents.", \
 				"You gently run your hands over \the [src] in appreciation of its contents.", \

@@ -324,7 +324,7 @@
 		/obj/item/weapon/material/minihoe = 2,
 		/obj/item/weapon/storage/plants = 2,
 		/obj/item/weapon/material/hatchet = 2,
-		/obj/item/weapon/wirecutters/clippers = 2,
+		/obj/item/weapon/tool/wirecutters/clippers = 2,
 		/obj/item/device/analyzer/plant_analyzer = 2
 	)
 

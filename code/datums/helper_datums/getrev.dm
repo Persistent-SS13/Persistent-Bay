@@ -24,7 +24,10 @@ var/global/datum/getrev/revdata = new()
 					date = unix2date(unix_time)
 			break
 
-	log_world("Running revision: [branch][date][revision]")
+	world.log << "Running revision:"
+	world.log << branch
+	world.log << date
+	world.log << revision
 
 /client/verb/showrevinfo()
 	set category = "OOC"

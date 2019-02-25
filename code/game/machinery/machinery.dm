@@ -117,16 +117,16 @@ Class Procs:
 	var/multiplier = 0
 	var/datum/world_faction/faction
 	var/faction_uid
-	
+
 	//Damage handling
 	max_health = 100
 	var/break_threshold = 0.5 //Percentage of health remaining at which the machine goes into broken state
 	var/time_emped = 0		  //Time left being emped
 	var/emped_disabled_max_time = 5 MINUTES //Maximum time this machine can be disabled by EMP(Aka for severity 1)
 	var/frame_type = /obj/machinery/constructable_frame/machine_frame //The type of frame that will be left behind after deconstruction
-	
+
 	//Radio stuff
-	var/id_tag 			 	= null	//Mappervar: Sets the initial id_tag.
+	var/id_tag						//Mappervar: Sets the initial id_tag.
 	var/frequency 		 	= null	//Mappervar: Sets the initial radio listening frequency.
 	var/range 				= null	//Mappervar: Sets the initial radio range.
 	var/radio_filter_out 	= null	//Mappervar: Sets the initial output radio filter.
@@ -154,10 +154,10 @@ Class Procs:
 
 /obj/machinery/Initialize(mapload, d=0)
 	. = ..()
+	init_transmitter()
 	if(d)
 		set_dir(d)
 	START_PROCESSING(SSmachines, src)
-	init_transmitter() //Tansmitter is initialized if there's a frequency set
 
 /obj/machinery/Destroy()
 	STOP_PROCESSING(SSmachines, src)
@@ -173,6 +173,9 @@ Class Procs:
 
 /obj/machinery/proc/RefreshParts() //Placeholder proc for machines that are built using frames.
 	return
+
+/obj/machinery/InsertedContents()
+	return (contents - component_parts)
 
 /obj/machinery/proc/assign_uid()
 	uid = gl_uid
@@ -190,19 +193,6 @@ Class Procs:
 //-----------------------------------------
 // Machine State
 //-----------------------------------------
-//sets the use_power var and then forces an area power update
-/obj/machinery/proc/update_use_power(var/new_use_power)
-	use_power = new_use_power
-
-/obj/machinery/proc/auto_use_power()
-	if(!powered(power_channel))
-		return 0
-	if(src.use_power == POWER_USE_IDLE)
-		use_power(idle_power_usage,power_channel, 1)
-	else if(src.use_power >= POWER_USE_ACTIVE)
-		use_power(active_power_usage,power_channel, 1)
-	return 1
-
 /proc/is_operable(var/obj/machinery/M, var/mob/user)
 	return istype(M) && M.operable()
 
@@ -258,12 +248,61 @@ Class Procs:
 /obj/machinery/proc/isemped()
 	return (stat & EMPED)
 
-/obj/machinery/InsertedContents()
-	return (contents - component_parts)
-
 //Defined at machinery level so that it can be used everywhere with little effort.
 /obj/machinery/proc/HasMultiplier()
 	return initial(multiplier) > 0
+
+//-----------------------------------------
+// Power System
+//-----------------------------------------
+//sets the use_power var 
+/obj/machinery/proc/update_use_power(var/new_use_power)
+	use_power = new_use_power
+
+/obj/machinery/proc/auto_use_power()
+	if(!powered(power_channel))
+		return 0
+	if(src.use_power == POWER_USE_IDLE)
+		use_power(idle_power_usage,power_channel, 1)
+	else if(src.use_power >= POWER_USE_ACTIVE)
+		use_power(active_power_usage,power_channel, 1)
+	return 1
+
+// returns true if the area has power on given channel (or doesn't require power), defaults to power_channel.
+// May also optionally specify an area, otherwise defaults to src.loc.loc
+/obj/machinery/proc/powered(var/chan = -1, var/area/check_area = null)
+	if(!src.loc)
+		return FALSE
+	if(!check_area)
+		check_area = src.loc.loc		// make sure it's in an area
+	if(!check_area || !isarea(check_area))
+		return FALSE				// if not, then not powered
+	if(chan == -1)
+		chan = power_channel
+	return check_area.powered(chan)			// return power status of the area
+
+// increment the power usage stats for an area
+/obj/machinery/proc/use_power(var/amount, var/chan = -1) // defaults to power_channel
+	var/area/A = get_area(src)		// make sure it's in an area
+	if(!A || !isarea(A))
+		return
+	if(chan == -1)
+		chan = power_channel
+	A.use_power(amount, chan)
+
+// called whenever the power settings of the containing area change
+// by default, check equipment channel & set flag can override if needed
+/obj/machinery/proc/power_change()
+	var/oldstat = stat
+
+	if(powered(power_channel))
+		stat &= ~NOPOWER
+	else
+		stat |= NOPOWER
+
+	. = (stat != oldstat)
+	if(.)
+		update_icon()
 
 //----------------------------------------
 // Interactions
@@ -449,7 +488,7 @@ Class Procs:
 
 //Default code to initialize the transmitter
 /obj/machinery/proc/init_transmitter()
-	if(!has_transmitter() && frequency)
+	if(!has_transmitter() && frequency && (radio_filter_in || radio_filter_out))
 		create_transmitter(id_tag, frequency, radio_filter_in, range, radio_filter_out)
 
 /obj/machinery/proc/has_transmitter()
@@ -466,7 +505,7 @@ Class Procs:
 	if(has_transmitter())
 		delete_transmitter()
 	set_extension(src, RADIO_TRANSMITTER_TYPE, RADIO_TRANSMITTER_TYPE, frequency, id, range, filter, filterout)
-	log_debug("Created radio transmitter for [src] \ref[src]. id: [id? id : "null"], frequency: [frequency], filter: [filter], range: [range? range : "null"], filterout: [filterout? filterout : filter]")
+	//log_debug("Created radio transmitter for [src] \ref[src]. id: '[id]', frequency: [frequency], filter: [filter], range: [range? range : "null"], filterout: [filterout? filterout : filter]")
 
 /obj/machinery/proc/delete_transmitter()
 	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
@@ -535,6 +574,7 @@ Class Procs:
 	return null
 
 /obj/machinery/proc/set_radio_range(var/range as num)
+	src.range = range
 	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
 	if(T)
 		return T.set_range(range)
@@ -549,6 +589,7 @@ Class Procs:
 /obj/machinery/proc/post_signal(var/list/data, var/overridefilter = null, var/overridetag = null, var/overridefreq = null)
 	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
 	if(!T)
+		log_debug("[src]\ref[src] tried to send a signal and there is no radio transmitter instantiated!")
 		return null
 
 	var/datum/signal/signal = new
@@ -562,8 +603,8 @@ Class Procs:
 /obj/machinery/proc/broadcast_signal(var/list/data, var/overridefilter = null, var/overridefreq = null)
 	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
 	if(!T)
+		log_debug("[src]\ref[src] tried to send a signal and there is no radio transmitter instantiated!")
 		return null
-
 	var/datum/signal/signal = new
 	signal.transmission_method = TRANSMISSION_RADIO //radio signal
 	signal.source = src
@@ -571,16 +612,18 @@ Class Procs:
 	T.broadcast_signal(signal, overridefilter, overridefreq)
 	return TRUE
 
-//Receive signal checks if we can receive and if we can, pass the signal to the handler OnSignal
+//Signals received go straight to the machine's topic handling, so handling radio signal is seamless.
 /obj/machinery/receive_signal(var/datum/signal/signal, var/receive_method, var/receive_param)
-	if(!signal || !has_transmitter() || inoperable())
+	if(!signal || !has_transmitter() || inoperable() || (signal && signal.source == src))
 		return
 	if( (radio_check_id && check_radio_match_id(signal)) || !radio_check_id)
+		//log_debug("[src]\ref[src] received signal from [signal.source]\ref[signal.source]. Signal tag is '[signal_target_id(signal)]', and our tag is '[get_radio_id()]'")
 		return OnSignal(signal)
 
 //Signals received by default go straight to the machine's topic handling, so handling radio signal is seamless.
 /obj/machinery/proc/OnSignal(var/datum/signal/signal)
-	return OnTopic(usr, signal.data, GLOB.default_state)
+	return
+//	return OnTopic(usr, signal.data, GLOB.default_state)
 
 //Used to emit status updates to any machines listening to this one
 // /obj/machinery/proc/broadcast_status()

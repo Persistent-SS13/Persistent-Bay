@@ -49,7 +49,7 @@
 
 /obj/random/tool/spawn_choices()
 	return list(/obj/item/weapon/tool/screwdriver,
-				/obj/item/weapon/wirecutters,
+				/obj/item/weapon/tool/wirecutters,
 				/obj/item/weapon/tool/weldingtool,
 				/obj/item/weapon/tool/weldingtool/largetank,
 				/obj/item/weapon/tool/crowbar,

@@ -114,7 +114,7 @@ client/proc/display_admin_reports()
 	else
 		output += "Whoops, no reports!"
 
-	show_browser(usr, output, "window=news;size=600x400")
+	usr << browse(output, "window=news;size=600x400")
 
 
 client/proc/Report(mob/M as mob in mob_list)

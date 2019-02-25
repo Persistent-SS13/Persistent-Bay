@@ -148,7 +148,7 @@ var/list/artefact_feedback = list(/obj/structure/closet/wizard/armor = 		"HS",
 		if(!(spellbook.book_flags & NOREVERT))
 			dat += "<center><A href='byond://?src=\ref[src];book=1'>Choose different spellbook.</a></center>"
 		dat += "<center><A href='byond://?src=\ref[src];lock=1'>[spellbook.book_flags & LOCKED ? "Unlock" : "Lock"] the spellbook.</a></center>"
-	show_browser(user, dat,"window=spellbook")
+	user << browse(dat,"window=spellbook")
 
 /obj/item/weapon/spellbook/Topic(href,href_list)
 	..()
@@ -165,7 +165,7 @@ var/list/artefact_feedback = list(/obj/structure/closet/wizard/armor = 		"HS",
 		return
 
 	if(!H.contents.Find(src))
-		close_browser(H, "window=spellbook")
+		H << browse(null,"window=spellbook")
 		return
 
 	if(href_list["lock"])

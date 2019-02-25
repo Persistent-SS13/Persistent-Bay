@@ -11,7 +11,7 @@
 	var/list/spawn_tools = list(
 		/obj/item/weapon/tool/screwdriver,
 		/obj/item/weapon/tool/wrench,
-		/obj/item/weapon/wirecutters,
+		/obj/item/weapon/tool/wirecutters,
 		/obj/item/weapon/material/kitchen/utensil/knife,
 		/obj/item/weapon/material/kitchen/utensil/fork,
 		///obj/item/weapon/material/hatchet

@@ -1,7 +1,7 @@
 /*
  * Wirecutters
  */
-/obj/item/weapon/wirecutters
+/obj/item/weapon/tool/wirecutters
 	name = "wirecutters"
 	desc = "A special pair of pliers with cutting edges. Various brackets and manipulators built into the handle allow it to repair severed wiring."
 	description_info = "This tool will cut wiring anywhere you see it - make sure to wear insulated gloves! When used on more complicated machines or airlocks, it can not only cut cables, but repair them, as well."
@@ -23,13 +23,13 @@
 	damtype = DAM_CUT
 	mass = 0.100
 
-/obj/item/weapon/wirecutters/Initialize()
+/obj/item/weapon/tool/wirecutters/Initialize()
 	if(prob(50))
 		icon_state = "cutters-y"
 		item_state = "cutters_yellow"
 	. = ..()
 
-/obj/item/weapon/wirecutters/attack(mob/living/carbon/C as mob, mob/user as mob)
+/obj/item/weapon/tool/wirecutters/attack(mob/living/carbon/C as mob, mob/user as mob)
 	if(user.a_intent == I_HELP && (C.handcuffed) && (istype(C.handcuffed, /obj/item/weapon/handcuffs/cable)))
 		usr.visible_message("\The [usr] cuts \the [C]'s restraints with \the [src]!",\
 		"You cut \the [C]'s restraints with \the [src]!",\

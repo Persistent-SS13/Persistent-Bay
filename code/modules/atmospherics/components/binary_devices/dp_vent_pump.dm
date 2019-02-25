@@ -53,7 +53,7 @@
 /obj/machinery/atmospherics/binary/dp_vent_pump/Initialize()
 	. = ..()
 	if(!id_tag)
-		id_tag = make_loc_string_id("AVP")
+		set_radio_id(make_loc_string_id("AVP"))
 	return INITIALIZE_HINT_LATELOAD
 
 /obj/machinery/atmospherics/binary/dp_vent_pump/LateInitialize()

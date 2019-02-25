@@ -123,7 +123,7 @@
 /datum/design/item/engifab/engitools/simple/wirecutters
 	name = "Wirecutters"
 	id = "wirecutters"
-	build_path = /obj/item/weapon/wirecutters
+	build_path = /obj/item/weapon/tool/wirecutters
 	materials = list(MATERIAL_STEEL = 0.25 SHEETS)
 
 /datum/design/item/engifab/engitools/simple/wrench

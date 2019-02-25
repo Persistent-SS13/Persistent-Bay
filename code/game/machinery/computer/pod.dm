@@ -1,23 +1,68 @@
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:31
 
 /obj/machinery/computer/pod
-	name = "pod launch control console"
-	desc = "A control console for launching pods. Some people prefer firing Mechas."
-	icon_screen = "mass_driver"
-	light_color = "#00b000"
-	circuit = /obj/item/weapon/circuitboard/pod
-	var/id = 1.0
+	name 				= "pod launch control console"
+	desc 				= "A control console for launching pods. Some people prefer firing Mechas."
+	icon_screen 		= "mass_driver"
+	light_color 		= "#00b000"
+	circuit 			= /obj/item/weapon/circuitboard/pod
+	//Radio
+	id_tag 				= null
+	frequency 			= POD_LAUNCHER_FREQ
+	radio_filter_in 	= RADIO_POD_LAUNCHER
+	radio_filter_out 	= RADIO_POD_LAUNCHER
+	radio_check_id 		= TRUE
+
 	var/obj/machinery/mass_driver/connected = null
-	var/timing = 0.0
-	var/time = 30.0
-	var/title = "Mass Driver Controls"
+	var/timing 	= 0.0
+	var/time 	= 30.0
+	var/title 	= "Mass Driver Controls"
 
+//
+//
+//
+/obj/machinery/computer/pod/old
+	name = "DoorMex Control Computer"
+	icon_state = "oldcomp"
+	icon_keyboard = null
+	icon_screen = "library"
+	title = "Door Controls"
 
-/obj/machinery/computer/pod/New()
+//
+//
+//
+/obj/machinery/computer/pod/old/swf
+	name = "Magix System IV"
+	desc = "An arcane artifact that holds much magic. Running E-Knock 2.2: Sorceror's Edition."
+
+//
+//
+//
+/obj/machinery/computer/pod/old/syndicate
+	name = "ProComp Executive IIc"
+	desc = "Criminals often operate on a tight budget. Operates external airlocks."
+	title = "External Airlock Controls"
+	req_access = list(access_syndicate)
+
+/obj/machinery/computer/pod/old/syndicate/attack_hand(var/mob/user as mob)
+	if(!allowed(user))
+		to_chat(user, SPAN_WARNING("Access Denied"))
+		return
+	else
+		..()
+
+//
+//
+//
+/obj/machinery/computer/pod/Initialize()
+	. = ..()
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/computer/pod/LateInitialize()
 	..()
 	spawn( 5 )
 		for(var/obj/machinery/mass_driver/M in world)
-			if(M.id == id)
+			if(M.id_tag == src.id_tag)
 				connected = M
 			else
 		return
@@ -25,27 +70,27 @@
 
 
 /obj/machinery/computer/pod/proc/alarm()
-	if(stat & (NOPOWER|BROKEN))
+	if(inoperable())
 		return
 
 	if(!( connected ))
-		to_chat(viewers(null, null), "Cannot locate mass driver connector. Cancelling firing sequence!")
+		visible_message(SPAN_WARNING("Cannot locate mass driver connector. Cancelling firing sequence!"))
 		return
 
 	for(var/obj/machinery/door/blast/M in world)
-		if(M.id == id)
+		if(M.id_tag == id_tag)
 			M.open()
 
 	sleep(20)
 
 	for(var/obj/machinery/mass_driver/M in world)
-		if(M.id == id)
+		if(M.id_tag == id_tag)
 			M.power = connected.power
 			M.drive()
 
 	sleep(50)
 	for(var/obj/machinery/door/blast/M in world)
-		if(M.id == id)
+		if(M.id_tag == id_tag)
 			M.close()
 			return
 	return
@@ -137,7 +182,7 @@
 	else
 		dat += "<BR>\n<A href = '?src=\ref[src];door=1'>Toggle Outer Door</A><BR>"
 	dat += "<BR><BR><A href='?src=\ref[user];mach_close=computer'>Close</A></TT></BODY></HTML>"
-	show_browser(user, dat, "window=computer;size=400x500")
+	user << browse(dat, "window=computer;size=400x500")
 	add_fingerprint(usr)
 	onclose(user, "computer")
 	return
@@ -170,7 +215,7 @@
 		alarm()
 	if(href_list["drive"])
 		for(var/obj/machinery/mass_driver/M in SSmachines.machinery)
-			if(M.id == id)
+			if(M.id_tag == id_tag)
 				M.power = connected.power
 				M.drive()
 
@@ -182,35 +227,9 @@
 		time = min(max(round(time), 0), 120)
 	if(href_list["door"])
 		for(var/obj/machinery/door/blast/M in world)
-			if(M.id == id)
+			if(M.id_tag == id_tag)
 				if(M.density)
 					M.open()
 				else
 					M.close()
 	updateUsrDialog()
-
-/obj/machinery/computer/pod/old
-	icon_state = "oldcomp"
-	icon_keyboard = null
-	icon_screen = "library"
-	name = "DoorMex Control Computer"
-	title = "Door Controls"
-
-
-
-/obj/machinery/computer/pod/old/syndicate
-	name = "ProComp Executive IIc"
-	desc = "Criminals often operate on a tight budget. Operates external airlocks."
-	title = "External Airlock Controls"
-	req_access = list(access_syndicate)
-
-/obj/machinery/computer/pod/old/syndicate/attack_hand(var/mob/user as mob)
-	if(!allowed(user))
-		to_chat(user, "<span class='warning'>Access Denied</span>")
-		return
-	else
-		..()
-
-/obj/machinery/computer/pod/old/swf
-	name = "Magix System IV"
-	desc = "An arcane artifact that holds much magic. Running E-Knock 2.2: Sorceror's Edition."

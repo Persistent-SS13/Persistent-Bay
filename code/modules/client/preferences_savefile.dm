@@ -35,7 +35,7 @@
 	if(!S)					return 0
 	S.cd = "/"
 
-	to_file(S["version"], SAVEFILE_VERSION_MAX)
+	S["version"] << SAVEFILE_VERSION_MAX
 	player_setup.save_preferences(S)
 	loaded_preferences = S
 	return 1
@@ -59,9 +59,9 @@
 		slot = sanitize_integer(slot, 1, config.character_slots, initial(default_slot))
 		if(slot != default_slot)
 			default_slot = slot
-			to_file(S["default_slot"], slot)
+			S["default_slot"] << slot
 	else
-		to_file(S["default_slot"], default_slot)
+		S["default_slot"] << default_slot
 
 	if(slot != SAVE_RESET)
 		S.cd = GLOB.using_map.character_load_path(S, slot)
@@ -152,12 +152,12 @@
 			var/is_species_lang = (chosen_language.name in mannequin.species.secondary_langs)
 			if(is_species_lang || ((!(chosen_language.flags & RESTRICTED) || check_rights(R_ADMIN, 0, client))))
 				mannequin.add_language(lang)
-	to_file(S["name"], mannequin.real_name)
-	to_file(S["mob"], mannequin)
+	S["name"] << mannequin.real_name
+	S["mob"] << mannequin
 	character_list = list()
 	qdel(mannequin)
 
-//	to_file(S["version"], SAVEFILE_VERSION_MAX)
+//	S["version"] << SAVEFILE_VERSION_MAX
 //	player_setup.save_character(S)
 //	loaded_character = S
 //	return S

@@ -44,11 +44,11 @@
 			user.drop_item()
 			B.loc = src
 			sm_pieces += B
-			to_chat(user, "You put [B] into the machine.")
+			user << "You put [B] into the machine."
 		else
-			to_chat(user, "<span class='notice'>The machine is full!</span>")
+			user << "<span class='notice'>The machine is full!</span>"
 	else
-		to_chat(user, "<span class='notice'>This machine only accepts supermatter.</span>")
+		user << "<span class='notice'>This machine only accepts supermatter.</span>"
 
 	return
 
@@ -81,7 +81,7 @@
 			if( !active )
 				combine()
 			else
-				to_chat(user, "<span class='notice'>This machine is already active!</span>")
+				user << "<span class='notice'>This machine is already active!</span>"
 			return
 		if( "Eject" )
 			eject( user )

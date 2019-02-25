@@ -40,7 +40,7 @@ proc/signal_source_id(var/datum/signal/signal)
 	flags 			= EXTENSION_FLAG_IMMEDIATE //Do not Lazy init this, or we won't receive messages..
 
 // - idtag: Id tag that each signals sent will be tagged with, and optionally checked against. If set to null, id checks will always return true.
-/datum/extension/interactive/radio_transmitter/New(var/holder, var/frequency, var/idtag = null, var/range = 0, var/filter = RADIO_DEFAULT, var/filterout = null)
+/datum/extension/interactive/radio_transmitter/New(var/holder, var/frequency, var/idtag, var/range, var/filter, var/filterout = null)
 	..(holder)
 	ADD_SAVED_VAR(filter_in)
 	ADD_SAVED_VAR(filter_out)
@@ -74,7 +74,7 @@ proc/signal_source_id(var/datum/signal/signal)
 		radio_controller.remove_object(src.holder, src.frequency)
 		src.radio_connection = null
 	src.radio_connection = radio_controller.add_object(src.holder, src.frequency, src.filter_in)
-	log_debug("radio_transmitter \ref[src] got channel [src.radio_connection? src.radio_connection : "null"] [src.radio_connection? src.radio_connection.frequency : "null"]")
+	//log_debug("radio_transmitter \ref[src] got channel [src.radio_connection? src.radio_connection : "null"] [src.radio_connection? src.radio_connection.frequency : "null"]")
 
 /datum/extension/interactive/radio_transmitter/proc/is_connected()
 	return src.radio_connection? TRUE : FALSE
@@ -126,16 +126,16 @@ proc/signal_source_id(var/datum/signal/signal)
 	return broadcast_signal(signal, overridefilter, overridefreq)
 
 //Broadcast a signal without a target
-/datum/extension/interactive/radio_transmitter/proc/broadcast_signal(datum/signal/signal, var/overridefilter = null, var/targetfreq = null)
+/datum/extension/interactive/radio_transmitter/proc/broadcast_signal(datum/signal/signal, var/overridefilter = null, var/overridefreq = null)
 	if(!src.radio_connection)
 		log_debug("[src.holder] \ref[src.holder] tried to send a signal with no radio connection!")
 		return
 	signal.data[RADIO_TRANSMITTER_SOURCE_ID_FIELD] = src.id
 	//Send the message to the right frquency
-	if(targetfreq && targetfreq != src.frequency)
-		var/datum/radio_frequency/otherfrequency = radio_controller.return_frequency(targetfreq)
+	if(overridefreq && overridefreq != src.frequency)
+		var/datum/radio_frequency/otherfrequency = radio_controller.return_frequency(overridefreq)
 		if(!otherfrequency)
-			log_warning("[src]/ref[src] tried to send radio signal to empty radio frequency: [targetfreq]!!")
+			log_warning("[src]/ref[src] tried to send radio signal to empty radio frequency: [overridefreq]!!")
 			return
 		otherfrequency.post_signal(src.holder, signal, (overridefilter)? overridefilter : src.filter_out, src.range)
 	else //Same frequency as the one we're listening on

@@ -102,7 +102,7 @@
 	if(prob(70))
 		new /obj/item/weapon/tool/crowbar(src)
 	if(prob(70))
-		new /obj/item/weapon/wirecutters(src)
+		new /obj/item/weapon/tool/wirecutters(src)
 	if(prob(70))
 		new /obj/item/device/t_scanner(src)
 	if(prob(20))

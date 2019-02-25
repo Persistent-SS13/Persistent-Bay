@@ -80,7 +80,7 @@ GLOBAL_LIST_EMPTY(adminfaxes)	//cache for faxes that have been sent to admins
 		if(copyitem)
 			dat += "<a href ='byond://?src=\ref[src];remove=1'>Remove Item</a><br>"
 
-	show_browser(user, dat, "window=copier")
+	user << browse(dat, "window=copier")
 	onclose(user, "copier")
 	return
 

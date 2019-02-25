@@ -8,15 +8,18 @@
 // Alert status
 // And arbitrary messages set by comms computer
 /obj/machinery/status_display
-	icon = 'icons/obj/status_display.dmi'
-	icon_state = "frame"
-	name = "status display"
-	layer = ABOVE_WINDOW_LAYER
-	anchored = 1
-	density = 0
-	use_power = 1
-	idle_power_usage = 10
-	frame_type = /obj/item/frame/status_display
+	name 				= "status display"
+	icon 				= 'icons/obj/status_display.dmi'
+	icon_state 			= "frame"
+	layer 				= ABOVE_WINDOW_LAYER
+	anchored 			= TRUE
+	density 			= FALSE
+	use_power 			= POWER_USE_IDLE
+	idle_power_usage	= 10
+	frame_type 			= /obj/item/frame/status_display
+	maptext_height 		= 26
+	maptext_width 		= 32
+
 	var/mode = STATUS_DISPLAY_BLANK	// 0 = Blank
 									// 1 = Shuttle timer
 									// 2 = Arbitrary message(s)
@@ -33,9 +36,6 @@
 	var/friendc = 0      // track if Friend Computer mode
 	var/ignore_friendc = 0
 
-	maptext_height = 26
-	maptext_width = 32
-
 	var/const/CHARS_PER_LINE = 5
 	var/const/STATUS_DISPLAY_BLANK = 0
 	var/const/STATUS_DISPLAY_TRANSFER_SHUTTLE_TIME = 1
@@ -45,18 +45,9 @@
 	var/const/STATUS_DISPLAY_IMAGE = 5
 	var/const/STATUS_DISPLAY_CUSTOM = 99
 	
-
-/obj/machinery/status_display/New()
-	..()
-
-/obj/machinery/status_display/Destroy()
-	return ..()
-
 // register for radio system
 /obj/machinery/status_display/Initialize()
 	. = ..()
-	if(!map_storage_loaded)
-		create_transmitter(null, STATUS_FREQ, RADIO_STATUS_DISPLAY)
 	update_icon()
 
 /obj/machinery/status_display/update_icon()
@@ -225,6 +216,10 @@
 	if(maptext)
 		maptext = ""
 	set_light(0)
+
+/obj/machinery/status_display/OnSignal(datum/signal/signal)
+	..()
+	return OnTopic(usr, signal.data, GLOB.default_state)
 
 /obj/machinery/status_display/OnTopic(mob/user, href_list, datum/topic_state/state)
 	. = ..()

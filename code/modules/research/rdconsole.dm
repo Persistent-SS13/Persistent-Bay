@@ -656,7 +656,7 @@ won't update every console in existence) but it's more of a hassle to do. Also, 
 			dat += "List of Researched Technologies and Designs:"
 			dat += GetResearchListInfo()
 
-	show_browser(user, "<TITLE>Research and Development Console</TITLE><HR>[dat]", "window=rdconsole;size=850x600")
+	user << browse("<TITLE>Research and Development Console</TITLE><HR>[dat]", "window=rdconsole;size=850x600")
 	onclose(user, "rdconsole")
 
 /obj/machinery/computer/rdconsole/robotics

@@ -294,10 +294,10 @@
 		ban_unban_log_save("[key_name(usr)] edited [banned_key]'s ban. Reason: [reason] Duration: [duration]")
 		log_and_message_admins("edited [banned_key]'s ban. Reason: [reason] Duration: [duration]")
 		Banlist.cd = "/base/[banfolder]"
-		to_file(Banlist["reason"], reason)
-		to_file(Banlist["temp"], temp)
-		to_file(Banlist["minutes"], minutes)
-		to_file(Banlist["bannedby"], usr.ckey)
+		Banlist["reason"] << reason
+		Banlist["temp"] << temp
+		Banlist["minutes"] << minutes
+		Banlist["bannedby"] << usr.ckey
 		Banlist.cd = "/base"
 		feedback_inc("ban_edit",1)
 		unbanpanel()
@@ -603,7 +603,7 @@
 		jobs += "</tr></table>"
 		body = "<body>[jobs]</body>"
 		dat = "<tt>[header][body]</tt>"
-		show_browser(usr, dat, "window=jobban2;size=800x490")
+		usr << browse(dat, "window=jobban2;size=800x490")
 		return
 
 	//JOBBAN'S INNARDS
@@ -1424,7 +1424,7 @@
 				var/obj/pageobj = B.pages[page]
 				data += "<A href='?src=\ref[src];AdminFaxViewPage=[page];paper_bundle=\ref[B]'>Page [page] - [pageobj.name]</A><BR>"
 
-			show_browser(usr, data, "window=[B.name]")
+			usr << browse(data, "window=[B.name]")
 		else
 			to_chat(usr, "<span class='warning'>The faxed item is not viewable. This is probably a bug, and should be reported on the tracker: [fax.type]</span>")
 	else if (href_list["AdminFaxViewPage"])

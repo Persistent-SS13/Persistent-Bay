@@ -319,7 +319,7 @@
 	</body></html>
 	"}
 
-	show_browser(usr, dat, "window=players;size=600x480")
+	usr << browse(dat, "window=players;size=600x480")
 
 //The old one
 /datum/admins/proc/player_panel_old()
@@ -390,4 +390,4 @@
 
 	dat += "</table></body></html>"
 
-	show_browser(usr, dat, "window=players;size=640x480")
+	usr << browse(dat, "window=players;size=640x480")

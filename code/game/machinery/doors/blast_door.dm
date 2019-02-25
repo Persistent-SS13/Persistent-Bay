@@ -12,20 +12,10 @@
 	desc = "That looks like it doesn't open easily."
 	icon = 'icons/obj/doors/rapid_pdoor.dmi'
 	icon_state = null
-
-	// Icon states for different shutter types. Simply change this instead of rewriting the update_icon proc.
-	var/icon_state_open = null
-	var/icon_state_opening = null
-	var/icon_state_closed = null
-	var/icon_state_closing = null
-
-	var/open_sound = 'sound/machines/airlock_heavy.ogg'
-	var/close_sound = 'sound/machines/AirlockClose_heavy.ogg'
-
 	closed_layer = ABOVE_WINDOW_LAYER
-	var/id = 1.0
-	dir = 1
+	dir = NORTH
 	explosion_resistance = 25
+	max_health = 2000
 	armor = list(
 		DAM_BLUNT  	= MaxArmorValue,
 		DAM_PIERCE 	= MaxArmorValue,
@@ -44,6 +34,22 @@
 	//Most blast doors are infrequently toggled and sometimes used with regular doors anyways,
 	//turning this off prevents awkward zone geometry in places like medbay lobby, for example.
 	block_air_zones = 0
+
+	//Radio stuff
+	id_tag 				= null
+	frequency 			= DOOR_FREQ
+	radio_filter_in 	= RADIO_BLAST_DOORS
+	radio_filter_out 	= RADIO_BLAST_DOORS
+	radio_check_id 		= TRUE
+
+	// Icon states for different shutter types. Simply change this instead of rewriting the update_icon proc.
+	var/icon_state_open = null
+	var/icon_state_opening = null
+	var/icon_state_closed = null
+	var/icon_state_closing = null
+
+	var/open_sound = 'sound/machines/airlock_heavy.ogg'
+	var/close_sound = 'sound/machines/AirlockClose_heavy.ogg'
 
 	var/begins_closed = TRUE
 	var/_wifi_id
@@ -65,8 +71,7 @@
 		implicit_material = SSmaterials.get_material_by_name(MATERIAL_PLASTEEL)
 
 /obj/machinery/door/airlock/Destroy()
-	qdel(wifi_receiver)
-	wifi_receiver = null
+	QDEL_NULL(wifi_receiver)
 	return ..()
 
 // Proc: Bumped()
@@ -138,27 +143,27 @@
 /obj/machinery/door/blast/attackby(obj/item/weapon/C as obj, mob/user as mob)
 	src.add_fingerprint(user)
 	if(isCrowbar(C) || (istype(C, /obj/item/weapon/material/twohanded/fireaxe) && C:wielded == 1))
-		if(((stat & NOPOWER) || (stat & BROKEN)) && !( src.operating ))
+		if(inoperable() && !( src.operating ))
 			force_toggle()
 		else
-			to_chat(usr, "<span class='notice'>[src]'s motors resist your effort.</span>")
+			to_chat(usr, SPAN_NOTICE("[src]'s motors resist your effort."))
 		return
 	if(istype(C, /obj/item/stack/material) && C.get_material_name() == MATERIAL_PLASTEEL)
 		var/amt = Ceiling((max_health - health)/150)
 		if(!amt)
-			to_chat(usr, "<span class='notice'>\The [src] is already fully repaired.</span>")
+			to_chat(usr, SPAN_NOTICE("\The [src] is already fully repaired."))
 			return
 		var/obj/item/stack/P = C
 		if(P.amount < amt)
-			to_chat(usr, "<span class='warning'>You don't have enough sheets to repair this! You need at least [amt] sheets.</span>")
+			to_chat(usr, SPAN_WARNING("You don't have enough sheets to repair this! You need at least [amt] sheets."))
 			return
-		to_chat(usr, "<span class='notice'>You begin repairing [src]...</span>")
+		to_chat(usr, SPAN_NOTICE("You begin repairing [src]..."))
 		if(do_after(usr, 30, src))
 			if(P.use(amt))
-				to_chat(usr, "<span class='notice'>You have repaired \the [src]</span>")
+				to_chat(usr, SPAN_NOTICE("You have repaired \the [src]"))
 				src.repair()
 			else
-				to_chat(usr, "<span class='warning'>You don't have enough sheets to repair this! You need at least [amt] sheets.</span>")
+				to_chat(usr, SPAN_WARNING("You don't have enough sheets to repair this! You need at least [amt] sheets."))
 	..()
 
 
@@ -166,7 +171,7 @@
 // Parameters: None
 // Description: Opens the door. Does necessary checks. Automatically closes if autoclose is true
 /obj/machinery/door/blast/open()
-	if (src.operating || (stat & BROKEN || stat & NOPOWER))
+	if (src.operating || inoperable())
 		return
 	force_open()
 	if(autoclose)
@@ -178,7 +183,7 @@
 // Parameters: None
 // Description: Closes the door. Does necessary checks.
 /obj/machinery/door/blast/close()
-	if (src.operating || (stat & BROKEN || stat & NOPOWER))
+	if (src.operating || inoperable())
 		return
 	force_close()
 
@@ -204,7 +209,7 @@
 	icon_state_closed = "pdoor1"
 	icon_state_closing = "pdoorc1"
 	icon_state = "pdoor1"
-	max_health = 1200
+	max_health = 2000
 	block_air_zones = 1
 
 /obj/machinery/door/blast/regular/open
@@ -221,6 +226,7 @@
 	icon_state = "shutter1"
 	open_sound = 'sound/machines/shutters_open.ogg'
 	close_sound = 'sound/machines/shutters_close.ogg'
+	max_health = 1200
 	armor = list(
 		DAM_BLUNT  	= 80,
 		DAM_PIERCE 	= 80,

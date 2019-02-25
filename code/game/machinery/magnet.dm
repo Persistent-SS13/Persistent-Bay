@@ -218,7 +218,7 @@
 	anchored = TRUE
 	use_power = POWER_USE_ACTIVE
 	idle_power_usage = 45
-	
+
 	id_tag = null
 	frequency = MAGNET_FREQ
 	radio_filter_in = RADIO_MAGNETS
@@ -339,8 +339,8 @@
 				log_debug("Magnet moving code disabled until fixed!")
 			// 	moving = !moving
 			// 	if(moving)
-			// 		spawn() 
-			// 			MagnetMove() 
+			// 		spawn()
+			// 			MagnetMove()
 
 
 	updateUsrDialog()
@@ -403,4 +403,3 @@
 			rpath += copytext(path, i, i+1) // else, add to list
 
 		// there doesn't HAVE to be separators but it makes paths syntatically visible
-

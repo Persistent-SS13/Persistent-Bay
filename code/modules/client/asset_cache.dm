@@ -41,7 +41,7 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 	if(check_cache && (client.cache.Find(asset_name) || client.sending.Find(asset_name)))
 		return 0
 
-	send_rsc(client, asset_cache.cache[asset_name], asset_name)
+	client << browse_rsc(asset_cache.cache[asset_name], asset_name)
 	if(!verify || !winexists(client, "asset_cache_browser")) // Can't access the asset cache browser, rip.
 		if (client)
 			client.cache += asset_name
@@ -52,7 +52,11 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 	client.sending |= asset_name
 	var/job = ++client.last_asset_job
 
-	show_browser(client, "<script>window.location.href='?asset_cache_confirm_arrival=[job]'</script>", "window=asset_cache_browser")
+	client << browse({"
+	<script>
+		window.location.href="?asset_cache_confirm_arrival=[job]"
+	</script>
+	"}, "window=asset_cache_browser")
 
 	var/t = 0
 	var/timeout_time = (ASSET_CACHE_SEND_TIMEOUT * client.sending.len) + ASSET_CACHE_SEND_TIMEOUT
@@ -88,7 +92,7 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 		to_chat(client, "Sending Resources...")
 	for(var/asset in unreceived)
 		if (asset in asset_cache.cache)
-			send_rsc(client, asset_cache.cache[asset], asset)
+			client << browse_rsc(asset_cache.cache[asset], asset)
 
 	if(!verify || !winexists(client, "asset_cache_browser")) // Can't access the asset cache browser, rip.
 		if (client)
@@ -99,7 +103,11 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 	client.sending |= unreceived
 	var/job = ++client.last_asset_job
 
-	show_browser(client, "<script>window.location.href='?asset_cache_confirm_arrival=[job]'</script>", "window=asset_cache_browser")
+	client << browse({"
+	<script>
+		window.location.href="?asset_cache_confirm_arrival=[job]"
+	</script>
+	"}, "window=asset_cache_browser")
 
 	var/t = 0
 	var/timeout_time = ASSET_CACHE_SEND_TIMEOUT * client.sending.len

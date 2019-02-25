@@ -17,12 +17,12 @@
 	var/savefile/F = new /savefile(src.savefile_path(user))
 
 
-	to_file(F["name"], src.name)
-	to_file(F["description"], src.description)
-	to_file(F["role"], src.role)
-	to_file(F["comments"], src.comments)
+	F["name"] << src.name
+	F["description"] << src.description
+	F["role"] << src.role
+	F["comments"] << src.comments
 
-	to_file(F["version"], 1)
+	F["version"] << 1
 
 	return 1
 

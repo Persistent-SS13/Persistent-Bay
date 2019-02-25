@@ -3,31 +3,28 @@
 //When it receives the "inject" signal, it will try to pump it's entire contents into the environment regardless of pressure, using power.
 
 /obj/machinery/atmospherics/unary/outlet_injector
-	icon = 'icons/atmos/injector.dmi'
-	icon_state = "map_injector"
+	name 				= "air injector"
+	desc 				= "Injects air into its surroundings. Has a valve attached to it that can control flow rate."
+	icon 				= 'icons/atmos/injector.dmi'
+	icon_state 			= "map_injector"
+	use_power 			= POWER_USE_OFF
+	idle_power_usage 	= 150		//internal circuitry, friction losses and stuff
+	power_rating 		= 15000		//15000 W ~ 20 HP
+	connect_types 		= CONNECT_TYPE_REGULAR|CONNECT_TYPE_SUPPLY|CONNECT_TYPE_SCRUBBER
+	level 				= 1
+	//Radio stuff
+	id_tag 				= null
+	frequency 			= null
+	radio_filter_in 	= RADIO_ATMOSIA
+	radio_filter_out 	= RADIO_ATMOSIA
+	radio_check_id 		= TRUE
 
-	name = "air injector"
-	desc = "Injects air into its surroundings. Has a valve attached to it that can control flow rate."
-
-	use_power = POWER_USE_OFF
-	idle_power_usage = 150		//internal circuitry, friction losses and stuff
-	power_rating = 15000	//15000 W ~ 20 HP
-	connect_types = CONNECT_TYPE_REGULAR|CONNECT_TYPE_SUPPLY|CONNECT_TYPE_SCRUBBER
-	var/injecting = FALSE
-	var/volume_rate = 50	//flow rate limit
-	id_tag = null
-	frequency = ATMOS_CONTROL_FREQ
-	radio_filter_in = RADIO_ATMOSIA
-	radio_filter_out = RADIO_ATMOSIA
-	//var/datum/radio_frequency/radio_connection
-	level = 1
+	var/injecting 		= FALSE
+	var/volume_rate 	= 250	//flow rate limit
 
 /obj/machinery/atmospherics/unary/outlet_injector/New()
 	..()
 	air_contents.volume = ATMOS_DEFAULT_VOLUME_PUMP + 500	//Give it a small reservoir for injecting. Also allows it to have a higher flow rate limit than vent pumps, to differentiate injectors a bit more.
-
-/obj/machinery/atmospherics/unary/outlet_injector/Initialize()
-	. = ..()
 
 /obj/machinery/atmospherics/unary/outlet_injector/update_icon()
 	if(!powered())
@@ -45,7 +42,6 @@
 
 /obj/machinery/atmospherics/unary/outlet_injector/Process()
 	..()
-
 	last_power_draw = 0
 	last_flow_rate = 0
 
@@ -62,10 +58,8 @@
 	if (power_draw >= 0)
 		last_power_draw = power_draw
 		use_power(power_draw)
-
 		if(network)
 			network.update = TRUE
-
 	return 1
 
 /obj/machinery/atmospherics/unary/outlet_injector/proc/inject()
@@ -87,10 +81,6 @@
 
 	flick("inject", src)
 
-/obj/machinery/atmospherics/unary/outlet_injector/set_radio_frequency(var/freq as num)
-	src.frequency = freq
-	..()
-
 /obj/machinery/atmospherics/unary/outlet_injector/proc/broadcast_status()
 	if(!has_transmitter())
 		return FALSE
@@ -101,6 +91,10 @@
 		"sigtype" = "status"
 	 ))
 	return TRUE
+
+/obj/machinery/atmospherics/unary/outlet_injector/OnSignal(datum/signal/signal)
+	. = ..()
+	return OnTopic(usr, signal.data, GLOB.default_state)
 
 /obj/machinery/atmospherics/unary/outlet_injector/OnTopic(mob/user, href_list, datum/topic_state/state)
 	. = ..()
@@ -122,32 +116,30 @@
 		volume_rate = between(0, number, air_contents.volume)
 
 	if(href_list["status"])
-		spawn(2)
-			broadcast_status()
+		broadcast_status()
 		return //do not update_icon
 
-	spawn(2)
-		broadcast_status()
+	broadcast_status()
 	update_icon()
 	return TOPIC_REFRESH
 
 /obj/machinery/atmospherics/unary/outlet_injector/hide(var/i)
 	update_underlays()
 
-/obj/machinery/atmospherics/unary/outlet_injector/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
-	if(!isWrench(W))
-		return ..()
-	if(ison())
-		to_chat(user, SPAN_NOTICE("You have to turn \the [src] off before detaching it."))
-	playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
-	to_chat(user, SPAN_NOTICE("You begin to unfasten \the [src]..."))
-	if (do_after(user, 40, src))
-		user.visible_message( \
-			SPAN_NOTICE("\The [user] unfastens \the [src]."), \
-			SPAN_NOTICE("You have unfastened \the [src]."), \
-			"You hear a ratchet.")
-		new /obj/item/pipe(loc, make_from=src)
-		qdel(src)
+/obj/machinery/atmospherics/unary/outlet_injector/attackby(var/obj/item/weapon/tool/W as obj, var/mob/user as mob)
+	if(isWrench(W))
+		to_chat(user, SPAN_NOTICE("You begin to unfasten \the [src]..."))
+		if (W.use_tool(user, src, 4 SECONDS))
+			user.visible_message( \
+				SPAN_NOTICE("\The [user] unfastens \the [src]."), \
+				SPAN_NOTICE("You have unfastened \the [src]."), \
+				"You hear a ratchet.")
+			dismantle()
+	return ..()
+
+/obj/machinery/atmospherics/unary/outlet_injector/dismantle()
+	new /obj/item/pipe(loc, make_from=src)
+	qdel(src)
 
 /obj/machinery/atmospherics/unary/outlet_injector/attack_hand(mob/user)
 	use_power = !use_power

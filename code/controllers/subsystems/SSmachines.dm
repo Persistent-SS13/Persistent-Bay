@@ -53,6 +53,7 @@ SUBSYSTEM_DEF(machines)
 
 	var/list/processing
 	var/list/current_run = list()
+	var/current_machine = null
 
 /datum/controller/subsystem/machines/PreInit()
 	 processing = machinery
@@ -146,6 +147,7 @@ datum/controller/subsystem/machines/proc/setup_atmos_machinery(list/machines)
 		var/datum/pipe_network/PN = current_run[current_run.len]
 		current_run.len--
 		if(istype(PN) && !QDELETED(PN))
+			current_machine = "PipeNet[PN]\ref[PN]"
 			PN.Process(wait)
 		else
 			pipenets.Remove(PN)
@@ -161,6 +163,8 @@ datum/controller/subsystem/machines/proc/setup_atmos_machinery(list/machines)
 	while(current_run.len)
 		var/obj/machinery/M = current_run[current_run.len]
 		current_run.len--
+		if(M)
+			current_machine = "Machinery[M]\ref[M]"
 		if(istype(M) && !QDELETED(M) && !(M.Process(wait) == PROCESS_KILL))
 			if(M.use_power)
 				M.auto_use_power()
@@ -180,6 +184,7 @@ datum/controller/subsystem/machines/proc/setup_atmos_machinery(list/machines)
 		var/datum/powernet/PN = current_run[current_run.len]
 		current_run.len--
 		if(istype(PN) && !QDELETED(PN))
+			current_machine = "PowerNet[PN]\ref[PN]"
 			PN.reset(wait)
 		else
 			powernets.Remove(PN)
@@ -196,6 +201,7 @@ datum/controller/subsystem/machines/proc/setup_atmos_machinery(list/machines)
 		var/obj/item/I = current_run[current_run.len]
 		current_run.len--
 		if(!I.pwr_drain(wait)) // 0 = Process Kill, remove from processing list.
+			current_machine = "PowerObject[I]\ref[I]"
 			power_objects.Remove(I)
 			I.is_processing = null
 		if(MC_TICK_CHECK)

@@ -109,7 +109,7 @@
 		window_size = "size=[width]x[height];"
 
 	var/debugable = check_rights(R_DEBUG, 0, user)
-	show_browser(user, get_html(debugable), "window=[window_id];[window_size][list2params(window_options)]") // Open the window.
+	user << browse(get_html(debugable), "window=[window_id];[window_size][list2params(window_options)]") // Open the window.
 	if (!custom_browser_id)
 		spawn(2)
 			winset(user, window_id, "on-close=\"uiclose \ref[src]\"") // Instruct the client to signal UI when the window is closed.
@@ -137,7 +137,7 @@
   * Close the UI, and all its children.
  **/
 /datum/tgui/proc/close()
-	close_browser(user, "window=[window_id]") // Close the window.
+	user << browse(null, "window=[window_id]") // Close the window.
 	SStgui.on_close(src)
 	for(var/datum/tgui/child in children) // Loop through and close all children.
 		child.close()
@@ -286,14 +286,14 @@
 
 	switch(action)
 		if("tgui:initialize")
-			send_output(user, url_encode(get_json(initial_data)), "[custom_browser_id ? window_id : "[window_id].browser"]:initialize")
+			user << output(url_encode(get_json(initial_data)), "[custom_browser_id ? window_id : "[window_id].browser"]:initialize")
 			initialized = TRUE
 		if("tgui:view")
 			if(params["screen"])
 				src_object.ui_screen = params["screen"]
 			SStgui.update_uis(src_object)
 		if("tgui:link")
-			send_link(user, params["url"])
+			user << link(params["url"])
 		if("tgui:fancy")
 			user.set_preference(/datum/client_preference/tgui_style, TRUE)
 		if("tgui:nofrills")
@@ -338,7 +338,7 @@
 		return // Cannot update UI, we have no visibility.
 
 	// Send the new JSON to the update() Javascript function.
-	send_output(user, url_encode(get_json(data)), "[custom_browser_id ? window_id : "[window_id].browser"]:update")
+	user << output(url_encode(get_json(data)), "[custom_browser_id ? window_id : "[window_id].browser"]:update")
 
  /**
   * private

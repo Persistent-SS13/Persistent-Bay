@@ -273,9 +273,9 @@
 
 	if(src.allowed(user) && operable())
 		if(src.density)
-			INVOKE_ASYNC(open())
+			INVOKE_ASYNC(src, .proc/open)
 		else
-			INVOKE_ASYNC(close())
+			INVOKE_ASYNC(src, .proc/close)
 		return
 
 	if(src.density)

@@ -240,7 +240,7 @@ var/list/worths = list(
 					/obj/item/weapon/locator = 100,
 					/obj/item/weapon/tool/wrench = 30,
 					/obj/item/weapon/tool/screwdriver = 15,
-					/obj/item/weapon/wirecutters = 25,
+					/obj/item/weapon/tool/wirecutters = 25,
 //WELDINGTOOLS,
 					/obj/item/weapon/tool/weldingtool/largetank = 150,
 					/obj/item/weapon/tool/weldingtool/hugetank = 300,

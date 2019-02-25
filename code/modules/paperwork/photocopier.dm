@@ -46,7 +46,7 @@
 	dat += "Current toner level: [toner]"
 	if(!toner)
 		dat +="<BR>Please insert a new toner cartridge!"
-	show_browser(user, dat, "window=copier")
+	user << browse(dat, "window=copier")
 	onclose(user, "copier")
 	return
 

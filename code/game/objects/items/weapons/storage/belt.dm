@@ -47,7 +47,7 @@
 		/obj/item/weapon/tool/crowbar,
 		/obj/item/weapon/tool/screwdriver,
 		/obj/item/weapon/tool/weldingtool,
-		/obj/item/weapon/wirecutters,
+		/obj/item/weapon/tool/wirecutters,
 		/obj/item/weapon/tool/wrench,
 		/obj/item/device/multitool,
 		/obj/item/device/flashlight,
@@ -71,7 +71,7 @@
 	new /obj/item/weapon/tool/wrench(src)
 	new /obj/item/weapon/tool/weldingtool(src)
 	new /obj/item/weapon/tool/crowbar(src)
-	new /obj/item/weapon/wirecutters(src)
+	new /obj/item/weapon/tool/wirecutters(src)
 	new /obj/item/device/multitool(src)
 	new /obj/item/stack/cable_coil(src,30,pick("red","yellow","orange"))
 
@@ -82,7 +82,7 @@
 	new /obj/item/weapon/tool/wrench(src)
 	new /obj/item/weapon/tool/weldingtool(src)
 	new /obj/item/weapon/tool/crowbar(src)
-	new /obj/item/weapon/wirecutters(src)
+	new /obj/item/weapon/tool/wirecutters(src)
 	new /obj/item/device/t_scanner(src)
 
 
@@ -231,7 +231,7 @@
 		/obj/item/weapon/reagent_containers/spray,
 		/obj/item/weapon/flame/lighter/zippo,
 		/obj/item/weapon/storage/fancy/cigarettes,
-		/obj/item/weapon/wirecutters/clippers,
+		/obj/item/weapon/tool/wirecutters/clippers,
 		/obj/item/weapon/tool/crowbar,
 		/obj/item/device/flashlight,
 		/obj/item/device/flashlight/pen,

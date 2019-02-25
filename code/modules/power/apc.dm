@@ -1244,7 +1244,7 @@ obj/machinery/power/apc/proc/autoset(var/cur_state, var/on)
 		spawn(0)
 			for(var/obj/machinery/light/L in area)
 				if(prob(chance))
-					L.on = 1
+					L.turn_on()
 					L.broken()
 				sleep(1)
 

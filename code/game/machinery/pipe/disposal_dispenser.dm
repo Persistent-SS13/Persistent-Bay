@@ -43,7 +43,7 @@
 "}
 ///// Z-Level stuff
 
-	show_browser(user, "<HEAD><TITLE>[src]</TITLE></HEAD><TT>[dat]</TT>", "window=pipedispenser")
+	user << browse("<HEAD><TITLE>[src]</TITLE></HEAD><TT>[dat]</TT>", "window=pipedispenser")
 	return
 
 // 0=straight, 1=bent, 2=junction-j1, 3=junction-j2, 4=junction-y, 5=trunk
@@ -51,7 +51,7 @@
 
 /obj/machinery/pipedispenser/disposal/Topic(href, href_list, state = GLOB.physical_state)
 	if((. = ..()) || unwrenched)
-		close_browser(usr, "window=pipedispenser")
+		usr << browse(null, "window=pipedispenser")
 		return
 
 	if(href_list["dmake"])

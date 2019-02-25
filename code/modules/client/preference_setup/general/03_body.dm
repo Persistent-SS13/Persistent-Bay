@@ -134,7 +134,7 @@ var/global/list/valid_bloodtypes = list("A+", "A-", "B+", "B-", "AB+", "AB-", "O
 	. = list()
 	if(!pref.preview_icon)
 		pref.update_preview_icon()
-	send_rsc(user, pref.preview_icon, "previewicon.png")
+	user << browse_rsc(pref.preview_icon, "previewicon.png")
 
 	var/datum/species/mob_species = all_species[pref.species]
 	. += "<table><tr style='vertical-align:top'><td><b>Body</b> "
@@ -217,7 +217,7 @@ var/global/list/valid_bloodtypes = list("A+", "A-", "B+", "B-", "AB+", "AB-", "O
 		return TOPIC_HANDLED
 
 	else if(href_list["set_species"])
-		close_browser(user, "window=species")
+		user << browse(null, "window=species")
 		if(!pref.species_preview || !(pref.species_preview in all_species))
 			return TOPIC_NOACTION
 
@@ -574,7 +574,7 @@ var/global/list/valid_bloodtypes = list("A+", "A-", "B+", "B-", "AB+", "AB-", "O
 	dat += "<td width = 400>[current_species.get_description()]</td>"
 	dat += "<td width = 200 align='center'>"
 	if(current_species.preview_icon)
-		send_rsc(usr, icon(icon = current_species.preview_icon, icon_state = ""), "species_preview_[current_species.name].png")
+		usr << browse_rsc(icon(icon = current_species.preview_icon, icon_state = ""), "species_preview_[current_species.name].png")
 		dat += "<img src='species_preview_[current_species.name].png' width='64px' height='64px'><br/><br/>"
 	dat += "<b>Language:</b> [current_species.language]<br/>"
 	dat += "<small>"
@@ -622,4 +622,4 @@ var/global/list/valid_bloodtypes = list("A+", "A-", "B+", "B-", "AB+", "AB-", "O
 		dat += "\[<a href='?src=\ref[src];set_species=[pref.species_preview]'>select</a>\]"
 	dat += "</center></body>"
 
-	show_browser(user, dat, "window=species;size=700x400")
+	user << browse(dat, "window=species;size=700x400")

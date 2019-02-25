@@ -871,7 +871,7 @@ var/global/list/common_tools = list(
 /obj/item/weapon/tool/wrench,
 /obj/item/weapon/tool/weldingtool,
 /obj/item/weapon/tool/screwdriver,
-/obj/item/weapon/wirecutters,
+/obj/item/weapon/tool/wirecutters,
 /obj/item/device/multitool,
 /obj/item/weapon/tool/crowbar)
 

@@ -1349,7 +1349,7 @@
 	materials = list(MATERIAL_PLASTIC = 1 SHEET, MATERIAL_SILVER = 0.25 SHEETS)
 
 /datum/design/item/genfab/botanytools/clippers
-	build_path = /obj/item/weapon/wirecutters/clippers
+	build_path = /obj/item/weapon/tool/wirecutters/clippers
 	materials = list(MATERIAL_STEEL = 1 SHEET)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

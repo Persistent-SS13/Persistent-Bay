@@ -9,11 +9,11 @@
 	max_shells = 7
 	ammo_type = /obj/item/ammo_casing/cap
 
-/obj/item/weapon/gun/projectile/revolver/capgun/attackby(obj/item/weapon/wirecutters/W, mob/user)
-	if(!istype(W) || icon_state == "revolver")
-		return ..()
-	to_chat(user, "<span class='notice'>You snip off the toy markings off the [src].</span>")
-	name = "revolver"
-	icon_state = "revolver"
-	desc += " Someone snipped off the barrel's toy mark. How dastardly."
-	return 1
+/obj/item/weapon/gun/projectile/revolver/capgun/attackby(obj/item/weapon/tool/wirecutters/W, mob/user)
+	if(isWirecutter(W) || icon_state != "revolver")
+		to_chat(user, "<span class='notice'>You snip off the toy markings off the [src].</span>")
+		name = "revolver"
+		icon_state = "revolver"
+		desc += " Someone snipped off the barrel's toy mark. How dastardly."
+		return TRUE
+	return ..()

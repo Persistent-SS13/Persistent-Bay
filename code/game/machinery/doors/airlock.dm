@@ -38,11 +38,11 @@
 
 	//Radio stuff
 	id_tag 				= null
-	frequency 			= AIRLOCK_FREQ
+	frequency 			= null
 	range 				= AIRLOCK_CONTROL_RANGE
 	radio_filter_in 	= RADIO_AIRLOCK
 	radio_filter_out 	= RADIO_AIRLOCK
-	radio_check_id 		= TRUE 
+	radio_check_id 		= TRUE
 
 	//Airlock controller
 	var/shockedby 		= list()
@@ -1120,7 +1120,7 @@ About the new airlock wires panel:
 
 	if(src.closeOther != null && istype(src.closeOther, /obj/machinery/door/airlock/) && !src.closeOther.density)
 		src.closeOther.close()
-	if(!forced) 
+	if(!forced)
 		send_status()
 	return ..()
 

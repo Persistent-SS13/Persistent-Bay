@@ -8,15 +8,15 @@
 #define PRESSURE_CHECK_INTERNAL 2
 
 /obj/machinery/atmospherics/unary/vent_pump
-	name = "Air Vent"
-	desc = "Has a valve and pump attached to it."
-	icon = 'icons/atmos/vent_pump.dmi'
-	icon_state = "map_vent"
-	use_power = POWER_USE_OFF
-	idle_power_usage = 150		//internal circuitry, friction losses and stuff
-	power_rating = 7500			//7500 W ~ 10 HP
-	level = 1
-	connect_types = CONNECT_TYPE_REGULAR|CONNECT_TYPE_SUPPLY //connects to regular and supply pipes
+	name 				= "Air Vent"
+	desc 				= "Has a valve and pump attached to it."
+	icon 				= 'icons/atmos/vent_pump.dmi'
+	icon_state 			= "map_vent"
+	use_power 			= POWER_USE_IDLE
+	idle_power_usage 	= 150		//internal circuitry, friction losses and stuff
+	power_rating 		= 7500			//7500 W ~ 10 HP
+	level 				= 1
+	connect_types 		= CONNECT_TYPE_REGULAR|CONNECT_TYPE_SUPPLY //connects to regular and supply pipes
 
 	//Radio stuff
 	id_tag 				= null
@@ -27,8 +27,8 @@
 
 	var/area/initial_loc
 	var/area_uid
-	var/hibernate = 0 //Do we even process?
-	var/pump_direction = 1 //0 = siphoning, 1 = releasing
+	var/hibernate 		= 0 //Do we even process?
+	var/pump_direction 	= 1 //0 = siphoning, 1 = releasing
 
 	var/external_pressure_bound = EXTERNAL_PRESSURE_BOUND
 	var/internal_pressure_bound = INTERNAL_PRESSURE_BOUND
@@ -79,13 +79,18 @@
 /obj/machinery/atmospherics/unary/vent_pump/Initialize()
 	.=..()
 	if(!id_tag)
-		id_tag = make_loc_string_id("AVP")
+		set_radio_id(make_loc_string_id("AVP"))
 	return INITIALIZE_HINT_LATELOAD
 
 /obj/machinery/atmospherics/unary/vent_pump/LateInitialize()
 	. = ..()
 	if (has_transmitter())
 		src.broadcast_status()
+
+/obj/machinery/atmospherics/unary/vent_pump/atmos_init()
+	. = ..()
+	if(!node)
+		use_power = POWER_USE_OFF //Turn off if disconnected
 
 /obj/machinery/atmospherics/unary/vent_pump/Destroy()
 	if(initial_loc)
@@ -111,12 +116,13 @@
 	..()
 	air_contents.volume = ATMOS_DEFAULT_VOLUME_PUMP + 500 //meant to match air injector
 
+/obj/machinery/atmospherics/unary/vent_pump/disconnect(obj/machinery/atmospherics/reference)
+	. = ..()
+	update_use_power(POWER_USE_OFF)
+
 /obj/machinery/atmospherics/unary/vent_pump/update_icon(var/safety = 0)
 	if(!check_icon_cache())
 		return
-	if (!node)
-		use_power = POWER_USE_OFF
-
 	overlays.Cut()
 
 	var/vent_icon = "vent"
@@ -171,7 +177,7 @@
 		return 1
 
 	if (!node)
-		update_use_power(POWER_USE_OFF)
+		update_use_power(POWER_USE_OFF) //Turn off if disconnected
 	if(!can_pump())
 		return 0
 
@@ -228,14 +234,11 @@
 	return pressure_delta
 
 /obj/machinery/atmospherics/unary/vent_pump/proc/broadcast_status()
-	if(!has_transmitter())
-		return FALSE
-
 	var/list/data = list(
 		"area" 		= src.area_uid,
 		//"tag" 	= src.id_tag,
 		"device" 	= "AVP",
-		"power" 	= use_power,
+		"power" 	= !isoff(),
 		"direction" = pump_direction?("release"):("siphon"),
 		"checks" 	= pressure_checks,
 		"internal" 	= internal_pressure_bound,
@@ -251,13 +254,11 @@
 		initial_loc.air_vent_names[id_tag] = new_name
 		src.name = new_name
 	initial_loc.air_vent_info[id_tag] = data
-	broadcast_signal(data, radio_filter_out)
+	broadcast_signal(data)
 	return TRUE
 
 /obj/machinery/atmospherics/unary/vent_pump/OnSignal(datum/signal/signal)
-	if(!..())
-		return
-
+	. = ..()
 	hibernate = 0
 
 	if(signal.data["purge"] != null)
@@ -341,21 +342,13 @@
 /obj/machinery/atmospherics/unary/vent_pump/attackby(obj/item/W, mob/user)
 	if(isWelder(W))
 		var/obj/item/weapon/tool/weldingtool/WT = W
-		if(!WT.isOn())
-			to_chat(user, "<span class='notice'>The welding tool needs to be on to start this task.</span>")
-			return 1
-		if(!WT.remove_fuel(0,user))
-			to_chat(user, "<span class='warning'>You need more welding fuel to complete this task.</span>")
-			return 1
-		to_chat(user, "<span class='notice'>Now welding \the [src].</span>")
-		playsound(src.loc, 'sound/items/Welder2.ogg', 50, 1)
-
-		if(!do_after(user, 20, src))
+		to_chat(user, SPAN_NOTICE("Now welding \the [src]."))
+		if(!WT.use_tool(user, src, 2 SECONDS))
 			to_chat(user, SPAN_NOTICE("You must remain close to finish this task."))
 			return 1
 
-		if(!src)
-			return 1
+		// if(!src)
+		// 	return 1
 
 		if(!WT.isOn())
 			to_chat(user, SPAN_NOTICE("The welding tool needs to be on to finish this task."))

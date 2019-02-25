@@ -161,7 +161,6 @@
 	update_icon()
 
 /obj/machinery/alarm/Destroy()
-	unregister_radio(src, frequency)
 	QDEL_NULL(wires)
 	return ..()
 
@@ -297,6 +296,7 @@
 /obj/machinery/alarm/proc/master_is_operating()
 	return alarm_area.master_air_alarm && alarm_area.master_air_alarm.operable()
 
+
 /obj/machinery/alarm/proc/elect_master()
 	for (var/obj/machinery/alarm/AA in alarm_area)
 		if (AA.operable())
@@ -357,7 +357,7 @@
 	if (alarm_area.master_air_alarm != src)
 		if (master_is_operating())
 			return
-		elect_master()
+		//elect_master()
 		if (alarm_area.master_air_alarm != src)
 			return
 	if (signal.data["area"] != area_uid)
@@ -365,16 +365,16 @@
 	if (signal.data["sigtype"] != "status")
 		return
 
-	var/id_tag = signal_target_id(signal)
-	if (!id_tag)
+	var/sourceid = signal_source_id(signal)
+	if (!sourceid)
 		return
 	var/dev_type = signal.data["device"]
-	if(!(id_tag in alarm_area.air_scrub_names) && !(id_tag in alarm_area.air_vent_names))
-		register_env_machine(id_tag, dev_type)
+	if(!(sourceid in alarm_area.air_scrub_names) && !(sourceid in alarm_area.air_vent_names))
+		register_env_machine(sourceid, dev_type)
 	if(dev_type == "AScr")
-		alarm_area.air_scrub_info[id_tag] = signal.data
+		alarm_area.air_scrub_info[sourceid] = signal.data
 	else if(dev_type == "AVP")
-		alarm_area.air_vent_info[id_tag] = signal.data
+		alarm_area.air_vent_info[sourceid] = signal.data
 
 
 /obj/machinery/alarm/proc/register_env_machine(var/m_id, var/device_type)
@@ -404,6 +404,7 @@
 
 /obj/machinery/alarm/proc/send_signal(var/target, var/list/command)//sends signal 'command' to 'target'. Returns 0 if no radio connection, 1 otherwise
 	if(!has_transmitter())
+		log_warning("[src]\ref[src] Has no transmitter instanciated and tried to send a signal!")
 		return FALSE
 	command["sigtype"] = "command"
 	post_signal(command, RADIO_FROM_AIRALARM, target)
@@ -650,7 +651,7 @@
 				to_chat(user, "Temperature must be between [min_temperature]C and [max_temperature]C")
 			else
 				target_temperature = input_temperature + T0C
-		return TOPIC_REFRESH
+		return TOPIC_HANDLED
 
 	// hrefs that need the AA unlocked -walter0o
 	var/extra_href = state.href_list(user)
@@ -662,21 +663,21 @@
 					var/input_pressure = input(user, "What pressure you like the system to mantain?", "Pressure Controls") as num|null
 					if(isnum(input_pressure) && CanUseTopic(user, state))
 						send_signal(device_id, list(href_list["command"] = input_pressure))
-					return TOPIC_REFRESH
+					return TOPIC_HANDLED
 
 				if("reset_external_pressure")
 					send_signal(device_id, list(href_list["command"] = ONE_ATMOSPHERE))
-					return TOPIC_REFRESH
+					return TOPIC_HANDLED
 
 				if("set_internal_pressure")
 					var/input_pressure = input(user, "What pressure you like the system to mantain?", "Pressure Controls") as num|null
 					if(isnum(input_pressure) && CanUseTopic(user, state))
 						send_signal(device_id, list(href_list["command"] = input_pressure))
-					return TOPIC_REFRESH
+					return TOPIC_HANDLED
 
 				if("reset_internal_pressure")
 					send_signal(device_id, list(href_list["command"] = 0))
-					return TOPIC_REFRESH
+					return TOPIC_HANDLED
 
 				if( "power",
 					"direction",
@@ -692,7 +693,7 @@
 					"scrubbing")
 
 					send_signal(device_id, list(href_list["command"] = text2num(href_list["val"]) ) )
-					return TOPIC_REFRESH
+					return TOPIC_HANDLED
 
 				if("set_threshold")
 					var/env = href_list["env"]
@@ -743,7 +744,7 @@
 							selected[3] = selected[4]
 
 					apply_mode()
-					return TOPIC_REFRESH
+					return TOPIC_HANDLED
 
 		if(href_list["screen"])
 			screen = text2num(href_list["screen"])
@@ -772,15 +773,15 @@
 		if(href_list["mode"])
 			mode = text2num(href_list["mode"])
 			apply_mode()
-			return TOPIC_REFRESH
+			return TOPIC_HANDLED
 
 		if(href_list["toggle_breach_detection"])
 			breach_detection = !breach_detection
-			return TOPIC_REFRESH
+			return TOPIC_HANDLED
 
 		if(href_list["toggle_report_danger_level"])
 			report_danger_level = !report_danger_level
-			return TOPIC_REFRESH
+			return TOPIC_HANDLED
 
 /obj/machinery/alarm/attackby(obj/item/W as obj, mob/user as mob)
 	src.add_fingerprint(user)

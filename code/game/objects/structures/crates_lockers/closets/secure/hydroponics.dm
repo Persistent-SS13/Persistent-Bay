@@ -13,6 +13,6 @@
 		/obj/item/clothing/head/greenbandana,
 		/obj/item/weapon/material/minihoe,
 		/obj/item/weapon/material/hatchet,
-		/obj/item/weapon/wirecutters/clippers,
+		/obj/item/weapon/tool/wirecutters/clippers,
 		/obj/item/weapon/reagent_containers/spray/plantbgone,
 	)

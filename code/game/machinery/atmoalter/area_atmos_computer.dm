@@ -107,7 +107,7 @@
 	connectedscrubbers = new()
 	var/found = FALSE
 	var/area/A = get_area(src)
-	if(!A) 
+	if(!A)
 		return
 	for(var/obj/machinery/portable_atmospherics/powered/scrubber/huge/scrubber in world )
 		var/area/A2 = get_area(scrubber)

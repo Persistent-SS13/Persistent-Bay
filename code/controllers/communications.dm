@@ -117,6 +117,7 @@ var/const/AIRALARM_FREQ			= 1439
 var/const/STATUS_FREQ 			= 1435
 var/const/ATMOS_CONTROL_FREQ 	= 1441
 var/const/AIRLOCK_FREQ			= 1449
+var/const/POD_LAUNCHER_FREQ 	= 1452
 
 //Other Comms
 var/const/BOT_FREQ	= 1447
@@ -264,6 +265,7 @@ var/const/RADIO_MASSDRIVER		= "radio_massdriver"
 var/const/RADIO_FLASHERS		= "radio_flasher"
 var/const/RADIO_STATUS_DISPLAY  = "radio_status_display"
 var/const/RADIO_INCINERATOR  	= "radio_incinerator"
+var/const/RADIO_POD_LAUNCHER	= "radio_podlauncher"
 
 var/global/datum/controller/radio/radio_controller
 
@@ -314,6 +316,7 @@ var/global/datum/controller/radio/radio_controller
 /datum/radio_frequency
 	var/frequency as num
 	var/list/list/obj/devices = list()
+	var/signalcount = 0
 
 /datum/radio_frequency/proc/post_signal(obj/source as obj|null, datum/signal/signal, var/filter = null as text|null, var/range = null as num|null)
 	var/turf/start_point
@@ -334,7 +337,9 @@ var/global/datum/controller/radio/radio_controller
 /datum/radio_frequency/proc/send_to_filter(obj/source, datum/signal/signal, var/filter, var/turf/start_point = null, var/range = null)
 	if (range && !start_point)
 		return
-
+	signalcount++
+	if((signalcount % 100) == 0)
+		testing("Signals sent on [frequency] : [signalcount]")
 	for(var/obj/device in devices[filter])
 		if(device == source)
 			continue
@@ -344,8 +349,11 @@ var/global/datum/controller/radio/radio_controller
 				continue
 			if(start_point.z!=end_point.z || get_dist(start_point, end_point) > range)
 				continue
-
-		device.receive_signal(signal, TRANSMISSION_RADIO, frequency)
+		
+		INVOKE_ASYNC(device, /obj/.proc/receive_signal, signal, TRANSMISSION_RADIO, frequency)
+		// spawn(0)
+		// 	device.receive_signal(signal, TRANSMISSION_RADIO, frequency)
+		CHECK_TICK
 
 /datum/radio_frequency/proc/add_listener(obj/device as obj, var/filter as text|null)
 	if (!filter)

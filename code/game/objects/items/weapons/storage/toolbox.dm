@@ -45,7 +45,7 @@
 	new /obj/item/weapon/tool/weldingtool(src)
 	new /obj/item/weapon/tool/crowbar(src)
 	new /obj/item/device/analyzer(src)
-	new /obj/item/weapon/wirecutters(src)
+	new /obj/item/weapon/tool/wirecutters(src)
 
 /obj/item/weapon/storage/toolbox/electrical
 	name = "electrical toolbox"
@@ -56,7 +56,7 @@
 /obj/item/weapon/storage/toolbox/electrical/full/New()
 	..()
 	new /obj/item/weapon/tool/screwdriver(src)
-	new /obj/item/weapon/wirecutters(src)
+	new /obj/item/weapon/tool/wirecutters(src)
 	new /obj/item/device/t_scanner(src)
 	new /obj/item/weapon/tool/crowbar(src)
 	new /obj/item/stack/cable_coil/random(src,30)
@@ -81,5 +81,5 @@
 	new /obj/item/weapon/tool/wrench(src)
 	new /obj/item/weapon/tool/weldingtool(src)
 	new /obj/item/weapon/tool/crowbar(src)
-	new /obj/item/weapon/wirecutters(src)
+	new /obj/item/weapon/tool/wirecutters(src)
 	new /obj/item/device/multitool(src)

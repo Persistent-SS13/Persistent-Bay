@@ -134,7 +134,7 @@
 		dir = "default"
 
 	var/filename = "[ckey("[icon]_[icon_state]_[dir]")].png"
-	send_rsc(src, I, filename)
+	src << browse_rsc(I, filename)
 	return filename
 	*/
 
@@ -146,7 +146,7 @@
 // e.g. canisters, timers, etc.
 //
 // windowid should be the specified window name
-// e.g. code is	: show_browser(user, text, "window=fred")
+// e.g. code is	: user << browse(text, "window=fred")
 // then use 	: onclose(user, "fred")
 //
 // Optionally, specify the "ref" parameter as the controlled atom (usually src)

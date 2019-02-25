@@ -76,7 +76,7 @@
 
 #define isCoil(A) istype(A, /obj/item/stack/cable_coil)
 
-#define isWirecutter(A) istype(A, /obj/item/weapon/wirecutters)
+#define isWirecutter(A) istype(A, /obj/item/weapon/tool/wirecutters)
 
 #define isScissors(A) istype(A, /obj/item/weapon/scissors)
 
@@ -100,10 +100,9 @@
 #define close_browser(target, browser_info)                 target << browse(null, browser_info)
 #define show_image(target, image)                           target << image
 #define send_rsc(target, rsc_content, rsc_name)             target << browse_rsc(rsc_content, rsc_name)
-#define send_file(target, file)                             target << file
 //Currently used in SDQL2 stuff
-#define send_output(target, msg, control)                   target << output(msg, control)
-#define send_link(target, url)                              target << link(url)
+#define send_output(target, msg, control) target << output(msg, control)
+#define send_link(target, url) target << link(url)
 
 #define MAP_IMAGE_PATH "nano/images/[GLOB.using_map.path]/"
 

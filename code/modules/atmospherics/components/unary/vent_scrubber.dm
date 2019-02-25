@@ -1,36 +1,30 @@
 /obj/machinery/atmospherics/unary/vent_scrubber
-	icon = 'icons/atmos/vent_scrubber.dmi'
-	icon_state = "map_scrubber_off"
+	name 				= "Air Scrubber"
+	desc 				= "Has a valve and pump attached to it."
+	icon 				= 'icons/atmos/vent_scrubber.dmi'
+	icon_state 			= "map_scrubber_off"
+	use_power 			= POWER_USE_IDLE
+	idle_power_usage 	= 150		//internal circuitry, friction losses and stuff
+	power_rating 		= 7500			//7500 W ~ 10 HP
+	connect_types 		= CONNECT_TYPE_REGULAR|CONNECT_TYPE_SCRUBBER //connects to regular and scrubber pipes
+	level 				= 1
+	//Radio
+	id_tag 				= null
+	frequency 			= AIRALARM_FREQ
+	radio_filter_out 	= RADIO_TO_AIRALARM
+	radio_filter_in 	= RADIO_FROM_AIRALARM
+	radio_check_id 		= TRUE
 
-	name = "Air Scrubber"
-	desc = "Has a valve and pump attached to it."
-	use_power = POWER_USE_IDLE
-	idle_power_usage = 150		//internal circuitry, friction losses and stuff
-	power_rating = 7500			//7500 W ~ 10 HP
-
-	connect_types = CONNECT_TYPE_REGULAR|CONNECT_TYPE_SCRUBBER //connects to regular and scrubber pipes
-
-	level = 1
-
-	var/area/initial_loc
-	id_tag = null
-	frequency = AIRALARM_FREQ
-	radio_filter_out = RADIO_TO_AIRALARM
-	radio_filter_in = RADIO_FROM_AIRALARM
-	//var/datum/radio_frequency/radio_connection
-
-	var/hibernate = FALSE //Do we even process?
-	var/scrubbing = TRUE //0 = siphoning, 1 = scrubbing
-	var/list/scrubbing_gas
-
-	var/panic = FALSE //is this scrubber panicked?
-
+	var/hibernate 		= FALSE 	//Do we even process?
+	var/scrubbing 		= TRUE 		//0 = siphoning, 1 = scrubbing
+	var/panic 			= FALSE 	//is this scrubber panicked?
+	var/welded 			= FALSE
 	var/area_uid
+	var/area/initial_loc
+	var/list/scrubbing_gas
 
 	var/obj/machinery/airlock_controller_norad/norad_controller // For the no radio controller (code/modules/norad_controller)
 	var/norad_UID
-
-	var/welded = FALSE
 
 /obj/machinery/atmospherics/unary/vent_scrubber/on
 	use_power = POWER_USE_IDLE
@@ -45,10 +39,10 @@
 	..()
 
 /obj/machinery/atmospherics/unary/vent_scrubber/Initialize()
-	.=..()
 	if(loc)
 		initial_loc = get_area(loc)
 		area_uid = initial_loc.uid
+	.=..()
 	if(!id_tag)
 		set_radio_id(make_loc_string_id("ASV"))
 	if(!scrubbing_gas)
@@ -183,7 +177,8 @@
 	update_underlays()
 
 /obj/machinery/atmospherics/unary/vent_scrubber/OnSignal(datum/signal/signal)
-	if(!..() || signal.data["sigtype"]!="command")
+	. = ..()
+	if(signal.data["sigtype"]!="command")
 		return
 
 	if(signal.data["power"] != null)
@@ -194,14 +189,14 @@
 	if(signal.data["panic_siphon"]) //must be before if("scrubbing" thing
 		panic = text2num(signal.data["panic_siphon"])
 		if(panic)
-			use_power = POWER_USE_IDLE
+			update_use_power(POWER_USE_IDLE)
 			scrubbing = FALSE
 		else
 			scrubbing = TRUE
 	if(signal.data["toggle_panic_siphon"] != null)
 		panic = !panic
 		if(panic)
-			use_power = POWER_USE_IDLE
+			update_use_power(POWER_USE_IDLE)
 			scrubbing = FALSE
 		else
 			scrubbing = TRUE
@@ -266,21 +261,21 @@
 
 /obj/machinery/atmospherics/unary/vent_scrubber/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
 	if(isWrench(W))
-		if (!(stat & NOPOWER) && use_power)
-			to_chat(user, "<span class='warning'>You cannot unwrench \the [src], turn it off first.</span>")
+		if (ispowered() && !isoff())
+			to_chat(user, SPAN_WARNING("You cannot unwrench \the [src], turn it off first."))
 			return 1
 		var/turf/T = src.loc
 		if (node && node.level==1 && isturf(T) && !T.is_plating())
-			to_chat(user, "<span class='warning'>You must remove the plating first.</span>")
+			to_chat(user, SPAN_WARNING("You must remove the plating first."))
 			return 1
 		var/datum/gas_mixture/int_air = return_air()
 		var/datum/gas_mixture/env_air = loc.return_air()
 		if ((int_air.return_pressure()-env_air.return_pressure()) > 2*ONE_ATMOSPHERE)
-			to_chat(user, "<span class='warning'>You cannot unwrench \the [src], it is too exerted due to internal pressure.</span>")
+			to_chat(user, SPAN_WARNING("You cannot unwrench \the [src], it is too exerted due to internal pressure."))
 			add_fingerprint(user)
 			return 1
 		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
-		to_chat(user, "<span class='notice'>You begin to unfasten \the [src]...</span>")
+		to_chat(user, SPAN_NOTICE("You begin to unfasten \the [src]..."))
 		if (do_after(user, 40, src))
 			user.visible_message( \
 				"<span class='notice'>\The [user] unfastens \the [src].</span>", \

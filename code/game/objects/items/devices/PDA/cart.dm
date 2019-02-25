@@ -442,8 +442,11 @@
 
 	if (!usr.MayMove() || usr.stat || usr.restrained() || !in_range(loc, usr))
 		usr.unset_machine()
-		close_browser(usr, "window=pda")
+		usr << browse(null, "window=pda")
 		return
+
+
+
 
 	switch(href_list["choice"])
 		if("Send Signal")

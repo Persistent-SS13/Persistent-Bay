@@ -12,7 +12,7 @@
 					/obj/item/weapon/reagent_containers/glass/bottle/ammonia = 2,
 					/obj/item/weapon/material/hatchet,
 					/obj/item/weapon/material/minihoe = 2,
-					/obj/item/weapon/wirecutters/clippers,
+					/obj/item/weapon/tool/wirecutters/clippers,
 					/obj/item/device/analyzer/plant_analyzer = 2)
 	cost = 15
 	containername = "hydroponics crate"

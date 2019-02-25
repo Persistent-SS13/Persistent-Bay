@@ -71,7 +71,7 @@
 
 /*
 	/* ----- Deconstruction ----- */
-		if (istype(W, /obj/item/weapon/wirecutters))
+		if (istype(W, /obj/item/weapon/tool/wirecutters))
 			if (src.d_state == 0)
 				playsound(src.loc, "sound/items/Wirecutter.ogg", 100, 1)
 				src.d_state = 1

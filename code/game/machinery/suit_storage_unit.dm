@@ -227,9 +227,15 @@
 		dat+= text("<font color ='black'>A small dial with a small lambda symbol on it. It's pointing towards a gauge that reads []</font>.<BR> <font color='blue'><A href='?src=\ref[];toggleUV=1'> Turn towards []</A></font><BR>",(src.issuperUV ? "15nm" : "185nm"),src,(src.issuperUV ? "185nm" : "15nm") )
 		dat+= text("<font color ='black'>A thick old-style button, with 2 grimy LED lights next to it. The [] LED is on.</font><BR><font color ='blue'><A href='?src=\ref[];togglesafeties=1'>Press button</a></font>",(src.safetieson? "<font color='green'><B>GREEN</B></font>" : "<font color='red'><B>RED</B></font>"),src)
 		dat+= text("<HR><BR><A href='?src=\ref[];mach_close=suit_storage_unit'>Close panel</A>", user)
+		//user << browse(dat, "window=ssu_m_panel;size=400x500")
+		//onclose(user, "ssu_m_panel")
 	else if(src.isUV) //The thing is running its cauterisation cycle. You have to wait.
 		dat += "<HEAD><TITLE>Suit storage unit</TITLE></HEAD>"
 		dat+= "<font color ='red'><B>Unit is cauterising contents with selected UV ray intensity. Please wait.</font></B><BR>"
+		//dat+= "<font colr='black'><B>Cycle end in: [src.cycletimeleft()] seconds. </font></B>"
+		//user << browse(dat, "window=ssu_cycling_panel;size=400x500")
+		//onclose(user, "ssu_cycling_panel")
+
 	else
 		if(!src.isbroken)
 			dat+= "<HEAD><TITLE>Suit storage unit</TITLE></HEAD>"
@@ -261,16 +267,21 @@
 			dat+= text("Unit status: []",(src.islocked? "<font color ='red'><B>**LOCKED**</B></font><BR>" : "<font color ='green'><B>**UNLOCKED**</B></font><BR>") )
 			dat+= text("<A href='?src=\ref[];start_UV=1'>Start Disinfection cycle</A><BR>",src)
 			dat += text("<BR><BR><A href='?src=\ref[];mach_close=suit_storage_unit'>Close control panel</A>", user)
+			//user << browse(dat, "window=Suit Storage Unit;size=400x500")
+			//onclose(user, "Suit Storage Unit")
 		else //Ohhhh shit it's dirty or broken! Let's inform the guy.
 			dat+= "<HEAD><TITLE>Suit storage unit</TITLE></HEAD>"
 			dat+= "<font color='maroon'><B>Unit chamber is too contaminated to continue usage. Please call for a qualified individual to perform maintenance.</font></B><BR><BR>"
 			dat+= text("<HR><A href='?src=\ref[];mach_close=suit_storage_unit'>Close control panel</A>", user)
-	show_browser(user, dat, "window=suit_storage_unit;size=400x500")
+			//user << browse(dat, "window=suit_storage_unit;size=400x500")
+			//onclose(user, "suit_storage_unit")
+
+	user << browse(dat, "window=suit_storage_unit;size=400x500")
 	onclose(user, "suit_storage_unit")
 	return
 
 
-/obj/machinery/suit_storage_unit/Topic(href, href_list)
+/obj/machinery/suit_storage_unit/Topic(href, href_list) //I fucking HATE this proc
 	if(..())
 		return
 	if ((usr.contents.Find(src) || ((get_dist(src, usr) <= 1) && istype(src.loc, /turf))) || (istype(usr, /mob/living/silicon/ai)))
@@ -1016,7 +1027,7 @@
 	if(panel_open)
 		wires.Interact(user)
 
-	show_browser(user, dat, "window=suit_cycler")
+	user << browse(dat, "window=suit_cycler")
 	onclose(user, "suit_cycler")
 	return
 

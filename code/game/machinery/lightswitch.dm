@@ -2,19 +2,20 @@
 // can have multiple per area
 // can also operate on non-loc area through "otherarea" var
 /obj/machinery/light_switch
-	name = "light switch"
-	desc = "It turns lights on and off. What are you, simple?"
-	icon = 'icons/obj/machines/buttons.dmi'
-	icon_state = "light0"
-	anchored = TRUE
-	use_power = POWER_USE_IDLE
-	idle_power_usage = 5
-	active_power_usage = 20
-	power_channel = LIGHT
-	frame_type = /obj/item/frame/light_switch
-	var/on = FALSE
+	name 				= "light switch"
+	desc 				= "It turns lights on and off. What are you, simple?"
+	icon 				= 'icons/obj/machines/buttons.dmi'
+	icon_state 			= "light0"
+	density 			= FALSE
+	anchored 			= TRUE
+	use_power 			= POWER_USE_IDLE
+	idle_power_usage 	= 5
+	active_power_usage 	= 20
+	power_channel 		= LIGHT
+	frame_type 			= /obj/item/frame/light_switch
+	var/on 				= FALSE
 	var/area/connected_area = null
-	var/other_area = null
+	var/other_area 		= null
 	var/image/overlay
 
 /obj/machinery/light_switch/New(loc, dir, atom/frame)
@@ -24,6 +25,13 @@
 	if(istype(frame))
 		on = FALSE
 		frame.transfer_fingerprints_to(src)
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(other_area)
+
+/obj/machinery/light_switch/before_save()
+	. = ..()
+	if(connected_area && !other_area)
+		other_area = connected_area.name
 
 /obj/machinery/light_switch/Initialize()
 	. = ..()

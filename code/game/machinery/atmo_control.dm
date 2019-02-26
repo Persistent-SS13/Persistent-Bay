@@ -142,7 +142,7 @@
 		input_info = null
 		data["power_toggle"] = 1
 		target = input_tag
-		. = TOPIC_REFRESH
+		. = TOPIC_HANDLED
 
 	if(href_list["in_set_flowrate"])
 		input_info = null
@@ -177,7 +177,7 @@
 		data["direction_toggle"] = 1
 		data["checks"] = 3
 		target = output_tag
-		. = TOPIC_REFRESH
+		. = TOPIC_HANDLED
 
 	if(href_list["out_set_pressure"])
 		var/new_pressure = input(usr,"Enter new output pressure (0-[MAX_PUMP_PRESSURE]kPa)","Pressure control",src.pressure_setting) as num

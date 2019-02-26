@@ -21,6 +21,9 @@
 /obj/machinery/pager/cargo //supply
 	department = SUP
 
+/obj/machinery/pager/command
+	department = COM
+
 /obj/machinery/pager/Initialize()
 	. = ..()
 	if(!location)

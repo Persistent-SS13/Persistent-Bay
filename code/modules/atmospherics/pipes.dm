@@ -1,17 +1,15 @@
 /obj/machinery/atmospherics/pipe
+	use_power = POWER_USE_OFF
+	can_buckle = TRUE
+	buckle_require_restraints = TRUE
+	buckle_lying = -1
 	var/datum/gas_mixture/air_temporary // used when reconstructing a pipeline that broke
 	var/datum/pipeline/parent
 	var/volume = 0
-	var/leaking = 0
-	use_power = 0
-
+	var/leaking = FALSE
 	var/alert_pressure = 170*ONE_ATMOSPHERE
-	var/in_stasis = 0
+	var/in_stasis = FALSE
 		//minimum pressure before check_pressure(...) should be called
-
-	can_buckle = 1
-	buckle_require_restraints = 1
-	buckle_lying = -1
 
 /obj/machinery/atmospherics/pipe/drain_power()
 	return -1

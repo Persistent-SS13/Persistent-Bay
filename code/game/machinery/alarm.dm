@@ -114,12 +114,12 @@
 		update_icon()
 		frame.transfer_fingerprints_to(src)
 
-// /obj/machinery/alarm/after_load()
-// 	. = ..()
-// 	alarm_area = get_area(src)
-// 	if(!alarm_area)
-// 		return
-// 	area_uid = alarm_area.uid
+/obj/machinery/alarm/after_load()
+	. = ..()
+	alarm_area = get_area(src)
+	if(!alarm_area)
+		return
+	area_uid = alarm_area.uid
 // 	if (name == "alarm")
 // 		name = "[alarm_area.name] Air Alarm"
 

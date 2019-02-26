@@ -24,6 +24,7 @@
 	frequency 		= AIRALARM_FREQ
 	radio_filter_in = RADIO_FROM_AIRALARM
 	radio_filter_out= RADIO_TO_AIRALARM
+	radio_check_id 	= TRUE
 
 	//node2 is output port
 	//node1 is input port
@@ -176,7 +177,8 @@
 		to_chat(user, "A small gauge in the corner reads [round(last_flow_rate, 0.1)] L/s; [round(last_power_draw)] W")
 
 /obj/machinery/atmospherics/binary/dp_vent_pump/OnSignal(datum/signal/signal)
-	if(!..() || signal.data["sigtype"]!="command")
+	. = ..()
+	if(signal.data["sigtype"]!="command")
 		return
 
 	if(signal.data["power"])

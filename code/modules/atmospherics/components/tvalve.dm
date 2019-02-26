@@ -10,6 +10,7 @@
 	initialize_directions = SOUTH|NORTH|WEST
 
 	var/state = 0 // 0 = go straight, 1 = go to side
+	var/mirrored = FALSE
 
 	// like a trinary component, node1 is input, node2 is side output, node3 is straight output
 	var/obj/machinery/atmospherics/node3
@@ -23,8 +24,12 @@
 	state = 1
 
 /obj/machinery/atmospherics/tvalve/New()
-	initialize_directions()
 	..()
+	initialize_directions()
+
+/obj/machinery/atmospherics/tvalve/after_load()
+	. = ..()
+	initialize_directions()
 
 /obj/machinery/atmospherics/tvalve/Destroy()
 	loc = null
@@ -47,12 +52,13 @@
 
 /obj/machinery/atmospherics/tvalve/atmos_init()
 	..()
+	initialize_directions()
 	var/node1_dir
 	var/node2_dir
 	var/node3_dir
 
 	node1_dir = turn(dir, 180)
-	node2_dir = turn(dir, -90)
+	node2_dir = turn(dir, mirrored? 90 : -90)
 	node3_dir = dir
 
 	for(var/obj/machinery/atmospherics/target in get_step(src,node1_dir))
@@ -279,8 +285,9 @@
 	name 				= "digital switching valve"
 	desc 				= "A digitally controlled valve."
 	icon 				= 'icons/atmos/digital_tvalve.dmi'
-	frequency 			= null
+	//Radio
 	id_tag 				= null
+	frequency 			= null
 	radio_filter_in 	= RADIO_ATMOSIA
 	radio_filter_out 	= RADIO_ATMOSIA
 	radio_check_id 		= TRUE
@@ -348,9 +355,11 @@
 
 /obj/machinery/atmospherics/tvalve/mirrored
 	icon_state = "map_tvalvem0"
+	mirrored = TRUE
 
 /obj/machinery/atmospherics/tvalve/mirrored/bypass
 	icon_state = "map_tvalvem1"
+	mirrored = TRUE
 	state = 1
 
 /obj/machinery/atmospherics/tvalve/mirrored/initialize_directions()
@@ -364,31 +373,31 @@
 		if(WEST)
 			initialize_directions = EAST|WEST|SOUTH
 
-/obj/machinery/atmospherics/tvalve/mirrored/atmos_init()
-	..()
-	var/node1_dir
-	var/node2_dir
-	var/node3_dir
+// /obj/machinery/atmospherics/tvalve/mirrored/atmos_init()
+// 	..()
+// 	var/node1_dir
+// 	var/node2_dir
+// 	var/node3_dir
 
-	node1_dir = turn(dir, 180)
-	node2_dir = turn(dir, 90)
-	node3_dir = dir
+// 	node1_dir = turn(dir, 180)
+// 	node2_dir = turn(dir, 90)
+// 	node3_dir = dir
 
-	for(var/obj/machinery/atmospherics/target in get_step(src,node1_dir))
-		if(target.initialize_directions & get_dir(target,src))
-			node1 = target
-			break
-	for(var/obj/machinery/atmospherics/target in get_step(src,node2_dir))
-		if(target.initialize_directions & get_dir(target,src))
-			node2 = target
-			break
-	for(var/obj/machinery/atmospherics/target in get_step(src,node3_dir))
-		if(target.initialize_directions & get_dir(target,src))
-			node3 = target
-			break
+// 	for(var/obj/machinery/atmospherics/target in get_step(src,node1_dir))
+// 		if(target.initialize_directions & get_dir(target,src))
+// 			node1 = target
+// 			break
+// 	for(var/obj/machinery/atmospherics/target in get_step(src,node2_dir))
+// 		if(target.initialize_directions & get_dir(target,src))
+// 			node2 = target
+// 			break
+// 	for(var/obj/machinery/atmospherics/target in get_step(src,node3_dir))
+// 		if(target.initialize_directions & get_dir(target,src))
+// 			node3 = target
+// 			break
 
-	update_icon()
-	update_underlays()
+// 	update_icon()
+// 	update_underlays()
 
 /obj/machinery/atmospherics/tvalve/mirrored/update_icon(animation)
 	if(animation)
@@ -400,16 +409,18 @@
 	name = "digital switching valve"
 	desc = "A digitally controlled valve."
 	icon = 'icons/atmos/digital_tvalve.dmi'
-
-	frequency = null
-	id_tag = null
-	radio_filter_in = RADIO_ATMOSIA
-	radio_filter_out = RADIO_ATMOSIA
-	radio_check_id = TRUE
+	//Radio
+	id_tag 				= null
+	frequency 			= null
+	radio_filter_in 	= RADIO_ATMOSIA
+	radio_filter_out 	= RADIO_ATMOSIA
+	radio_check_id 		= TRUE
+	mirrored = TRUE
 
 /obj/machinery/atmospherics/tvalve/mirrored/digital/bypass
 	icon_state = "map_tvalvem1"
 	state = 1
+	mirrored = TRUE
 
 /obj/machinery/atmospherics/tvalve/mirrored/digital/update_icon()
 	..()

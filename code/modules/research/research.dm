@@ -417,6 +417,12 @@ research holder datum.
 	points = 75
 	uid = "flasks"
 
+/datum/tech_entry/consumer/flora_gun
+	name = "Rapid Flora Mutation"
+	desc = "Develop a device that can prompt rapid mutations in plants. Unlocks the gl for the appropriate fabricators."
+	tier = 1
+	points = 75
+	uid = "flasks"
 
 
 //////////////////////////////////////////////////
@@ -477,14 +483,14 @@ research holder datum.
 	name = "Improved Tasers"
 	desc = "By improving capacitors in stun weapons concentrated energy bolts can be developed. Unlocks taser carbine designs for the appropriate fabricators."
 	tier = 1
-	point = 200
+	points = 200
 	uid = "stun_1"
 	
 /datum/tech_entry/combat/taser/revolver
 	name = "Advanced stun weapons"
 	desc = "The schematics for powerful stun revolver and stun rifle designs could be developed. Unlocks stun revolver & stun rifle designs for the appropriate fabricators."
 	tier = 2
-	point = 400
+	points = 400
 	uid = "stun_2"
 	prereqs = list("stun_1")
 
@@ -492,7 +498,7 @@ research holder datum.
 	name = "Concussive Plasma Bolts"
 	desc = "The final word in non-lethal weaponry. Unlocks plasma pulse projector designs for the appropriate fabricators."
 	tier = 3
-	point = 700
+	points = 700
 	uid = "stun_3"
 	prereqs = list("stun_2")
 	
@@ -504,21 +510,21 @@ research holder datum.
 	name = "Improved Pistols"
 	desc = "A variety of pistol designs could be put together quite easily. Unlocks a variety of simple pistol designs for the appropriate fabricators."
 	tier = 1
-	point = 175
+	points = 175
 	uid = "pistol_1"
 	
 /datum/tech_entry/combat/proj/shotgun
 	name = "Double Barrel Rifling"
 	desc = "A shotgun with two barrels can fire both at the same time to take down a larger target. Unlocks double barrel shotgun designs for the appropriate fabricators."
 	tier = 1
-	point = 175
+	points = 175
 	uid = "shotgun_1"
 
 /datum/tech_entry/combat/proj/automatic/uzi
 	name = "Small Automatic Weapons"
 	desc = "Automatic weapons can put bullets into bad-guys faster than any alternative. Unlocks 9mm machine pistol &  9mm sub-machine gun designs for the appropriate fabricators."
 	tier = 2
-	point = 500
+	points = 500
 	uid = "autos_1"
 	prereqs = list("pistol_1", "shotgun_2")
 
@@ -526,7 +532,7 @@ research holder datum.
 	name = "Pump Shotgun Implementation"
 	desc = "The pump shotgun is an effective weapon for personal security at home or abroad. Unlocks double barrel shotgun designs for the appropriate fabricators."
 	tier = 2
-	point = 350
+	points = 350
 	uid = "shotgun_2"
 	prereqs = list("shotgun_1")
 	
@@ -534,7 +540,7 @@ research holder datum.
 	name = "Combat Shotgun Implementation"
 	desc = "The combat shotgun is a powerful weapon that can take down high value targets. Unlocks combat shotgun designs for the appropriate fabricators."
 	tier = 3
-	point = 700
+	points = 700
 	uid = "shotgun_3"
 	prereqs = list("shotgun_2")
 
@@ -542,7 +548,7 @@ research holder datum.
 	name = "Improved Automatics"
 	desc = "Larger automatic weapons require both hands free in order to be effective. Unlocks 10mm sub-machine gun designs for the appropriate fabricators."
 	tier = 3
-	point = 800
+	points = 800
 	uid = "autos_2"
 	prereqs = list("autos_1")
 
@@ -550,14 +556,14 @@ research holder datum.
 	name = "Deadly Revolvers"
 	desc = "Building on prior shotgun designs, revolvers could be absolutely deadly. Unlocks mateba .50 revolver designs for the appropriate fabricators."
 	tier = 3
-	point = 750
+	points = 750
 	uid = "pistol_2"
 
 /datum/tech_entry/combat/proj/automatic/rifle
 	name = "The Assault Rifle"
 	desc = "It's an incredibly effective and supremely cool assault rifle. This is what you've been waiting for. Unlocks assault rifle designs for the appropriate fabricators."
 	tier = 4
-	point = 1600
+	points = 1600
 	uid = "autos_3"
 	prereqs = list("autos_2")
 
@@ -565,7 +571,7 @@ research holder datum.
 	name = "Anti-Material Rifles"
 	desc = "The application of phoron heavily throughout the design of a rifle gives it a powerful structural penetration capability. Unlocks anti-material sniper designs for the appropriate fabricators."
 	tier = 4
-	point = 1400
+	points = 1400
 	uid = "antimaterial"
 	prereqs = list("pistol_2", "shotgun_3")
 
@@ -579,7 +585,7 @@ research holder datum.
 	name = "Basic Energy Weapons"
 	desc = "Energy weapons inflict different wounds than conventional projectiles and they can have additional functions built into them. Unlocks energy pistol & energy gun designs for the appropriate fabricators."
 	tier = 2
-	point = 400
+	points = 400
 	uid = "energy_1"
 	prereqs = list("shotgun_1", "adv_capacitor")
 
@@ -587,7 +593,7 @@ research holder datum.
 	name = "Xray Laser Weapons"
 	desc = "Xray based weapons can penetrate armors that are otherwise effective against energy weapons. Unlocks xray laser pistol & xray laser carbine gun designs for the appropriate fabricators."
 	tier = 3
-	point = 750
+	points = 750
 	uid = "xray_1"
 	prereqs = list("energy_1", "high_micro_laser")
 
@@ -595,7 +601,7 @@ research holder datum.
 	name = "Advanced Energy Rifle"
 	desc = "Phoron can enrich an energy weapons to be more efficent and deadly. Unlocks laser carbine designs for the appropriate fabricators."
 	tier = 3
-	point = 850
+	points = 850
 	uid = "energy_2"
 	prereqs = list("energy_1")
 
@@ -603,7 +609,7 @@ research holder datum.
 	name = "Ion Projectiles"
 	desc = "Ion projectiles cause an EMP effect on whatever electronics they hit. Unlocks ion pistol designs for the appropriate fabricators."
 	tier = 3
-	point = 800
+	points = 800
 	uid = "ion_1"
 	prereqs = list("energy_1", "phasic_sensor")
 
@@ -611,7 +617,7 @@ research holder datum.
 	name = "Ion Detonation"
 	desc = "Larger ion projectiles with additional enrichment could detonate to cause an EMP in a small area. Unlocks ion rifle designs for the appropriate fabricators."
 	tier = 4
-	point = 1700
+	points = 1700
 	uid = "ion_2"
 	prereqs = list("ion_1", "energy_2")
 
@@ -619,7 +625,7 @@ research holder datum.
 	name = "Masterful Energy Weapons"
 	desc = "Putting together all the prior applications of beam and laser weapons, a heavy sniper and assault-cannon can be developed. Unlocks ion rifle designs for the appropriate fabricators."
 	tier = 4
-	point = 1500
+	points = 1500
 	uid = "energy_3"
 	prereqs = list("xray_1", "energy_2")
 
@@ -628,7 +634,7 @@ research holder datum.
 	name = "Pulse Weapons"
 	desc = "Extremely powerful energy weapons that fire in devestating bursts. Unlocks the pulse pistol & pulse carbine designs for the appropriate fabricators."
 	tier = 4
-	point = 1800
+	points = 1800
 	uid = "pulse_1"
 	prereqs = list("energy_2", "super_capacitor")
 
@@ -641,21 +647,21 @@ research holder datum.
 	name = "Savagery"
 	desc = "Before you can learn to kill you must be prepared to inflict pain. Unlocks the machete & dueling knife designs for the appropriate fabricators."
 	tier = 1
-	point = 100
+	points = 100
 	uid = "melee_1"
 
 /datum/tech_entry/combat/melee/exotic
 	name = "Exotic Weapons"
 	desc = "A variety of cultural weapons from across history could be developed. Unlocks a variety of exotic weapon designs for the appropriate fabricators."
 	tier = 2
-	point = 200
+	points = 200
 	uid = "melee_2"
 	prereqs = list("melee_1")
 /datum/tech_entry/combat/melee/blademaster
 	name = "Blade Mastery"
 	desc = "The last and best of the conventional melee weapon designs can be completed. Unlocks fancy melee weapon designs for the appropriate fabricators."
 	tier = 3
-	point = 400
+	points = 400
 	uid = "melee_3"
 	prereqs = list("melee_2")
 	
@@ -663,7 +669,7 @@ research holder datum.
 	name = "Energy Blades"
 	desc = "By enriching the point of contact with uranium reactant with phoron a variety of melee energy wepaons can be developed. Unlocks energy melee weapon designs for the appropriate fabricators."
 	tier = 4
-	point = 800
+	points = 800
 	uid = "melee_4"
 	prereqs = list("melee_3", "energy_2")
 	
@@ -675,7 +681,7 @@ research holder datum.
 	name = "(RESTRICTED) Kidnapping Tools"
 	desc = "Tools to keep hostages in line and block suit senors could be developed, but they are both considered unethical. Unlocks suit sensor jammers & electropack designs for the appropriate fabricators."
 	tier = 3
-	point = 600
+	points = 600
 	uid = "illegal_1"
 	prereqs = list("adv_capacitor", "shotgun_2")
 
@@ -683,7 +689,7 @@ research holder datum.
 	name = "(RESTRICTED) Clandestine Monitoring Equipment"
 	desc = "A spy bug and monitor pairing could be designed, but these are instruments of sabotage. Unlocks spy bug and spy monitor designs for the appropriate fabricators."
 	tier = 4
-	point = 1300
+	points = 1300
 	uid = "illegal_2"
 	prereqs = list("illegal_1", "pico_mani")
 
@@ -973,6 +979,53 @@ research holder datum.
 	points = 1000
 	uid = "cell_hyper"
 	prereqs = list("cell_high", "cell_super")
+
+/datum/tech_entry/general/computer/adv_parts
+	name = "Advanced Computer Components"
+	desc = "Better computer components let you run more programs at once, and store more on a hard drive. Unlocks improved computer component designs for the appropriate fabricators."
+	tier = 1
+	points = 150
+	uid = "computer_1"
+	
+/datum/tech_entry/general/computer/super_parts
+	name = "Super Computer Components"
+	desc = "An even better set of core computer components can be developed. Unlocks super computer component designs for the appropriate fabricators."
+	tier = 2
+	points = 300
+	uid = "computer_2"
+	prereqs = list("computer_1")
+	
+/datum/tech_entry/general/computer/ultra_parts
+	name = "Mastered Computer Components"
+	desc = "The absolute best computer components outclass the others completely. Unlocks the final computer component designs for the appropriate fabricators."
+	tier = 3
+	points = 600
+	uid = "computer_3"
+	prereqs = list("computer_2")
+
+/datum/tech_entry/general/communication/color_communication
+	name = "Multi-Color Communication"
+	desc = "A variety of crayons and a multi-color pen can be developed. Unlocks crayons and multi-color pen designs for the appropriate fabricators."
+	tier = 1
+	points = 100
+	uid = "color_comms_1"
+
+/datum/tech_entry/general/communication/powerful_crayons
+	name = "Powerful Crayons"
+	desc = "Crayons that can change color and more! Unlocks the rainbow and mime crayon designs for the appropriate fabricators."
+	tier = 2
+	points = 200
+	uid = "color_comms_2"
+
+/datum/tech_entry/general/eva/jetpacks
+	name = "EVA Jetpacks"
+	desc = "Develop a jetpack design that can be used for space maneuvering and to supply the user with air at the same time. Unlocks jetpack designs for the appropriate fabricators."
+	tier = 1
+	points = 150
+	uid = "jetpacks"
+
+
+
 
 /***************************************************************
 **						Technology Datums					  **

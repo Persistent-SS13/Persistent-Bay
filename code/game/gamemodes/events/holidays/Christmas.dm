@@ -37,8 +37,7 @@
 			"What does Santa get when he gets stuck in a chimney?\n\n<i>Claus-trophobia.</i>",
 			"Where do you find chili beans?\n\n<i>The north pole.</i>",
 			"What do you get from eating tree decorations?\n\n<i>Tinsilitis!</i>",
-			"What do snowmen wear on their heads?\n\n<i>Ice caps!</i>"
-			)
+			"What do snowmen wear on their heads?\n\n<i>Ice caps!</i>")
 		new /obj/item/clothing/head/festive(target.loc)
 		user.update_icons()
 		cracked = 1

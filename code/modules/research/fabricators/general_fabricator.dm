@@ -576,19 +576,19 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/** 
+/**
 // REJECTED DUE TO ITEM BEING UNDERDEVELOPED
 /datum/design/item/genfab/weapons/guns/energy/simple
 	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GLASS = 3 SHEETS, MATERIAL_GOLD = 3 SHEETS,  MATERIAL_PHORON = 2 SHEETS)
 	build_path = /obj/item/weapon/gun/energy
-	
-	
+
+
 /datum/design/item/genfab/weapons/guns/temp_gun
 	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 4, TECH_POWER = 3, TECH_MAGNET = 2)
 	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GLASS = 3 SHEETS, MATERIAL_SILVER = 5 SHEETS, MATERIAL_PHORON = 1 SHEET)
 	build_path = /obj/item/weapon/gun/energy/temperature
 
-	
+
 // REJECTED DUE TO IRRADIATION MECHANICS BEING POORLY UNDERSTOOD
 /datum/design/item/genfab/weapons/guns/phoronpistol
 	req_tech = list(TECH_COMBAT = 5, TECH_PHORON = 4)
@@ -617,7 +617,7 @@
 	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_SILVER = 2 SHEETS, MATERIAL_GOLD = 2 SHEETS, MATERIAL_DIAMOND = 4 SHEETS, MATERIAL_PHORON = 0.5 SHEET)
 
 // icons are a bit ugly
-	
+
 /datum/design/item/genfab/weapons/hook
 	build_path = /obj/item/weapon/material/knife/hook
 	materials = list(MATERIAL_STEEL = 3 SHEETS)
@@ -626,8 +626,8 @@
 	build_path = /obj/item/weapon/material/knife/ritual
 	materials = list(MATERIAL_STEEL = 3 SHEETS)
 
-	
-	
+
+
 **/
 
 
@@ -838,12 +838,12 @@
 
 
 // END ENERGY WEAPONS
-	
+
 
 
 // MELEE WEAPONS
 
-/datum/design/item/genfab/weapons/tacknife // tier 0 
+/datum/design/item/genfab/weapons/tacknife // tier 0
 	build_path = /obj/item/weapon/material/hatchet/tacknife
 	materials = list(MATERIAL_STEEL = 3 SHEETS)
 	research = "melee_1"
@@ -931,7 +931,7 @@
 	build_path = /obj/item/weapon/melee/energy/axe
 	materials = list(MATERIAL_PLASTEEL = 10 SHEETS, MATERIAL_GOLD = 10 SHEETS, MATERIAL_URANIUM = 10 SHEETS, MATERIAL_PHORON = 10 SHEET)
 	research = "melee_4"
-	
+
 
 // END MELEE WEAPONS
 
@@ -956,25 +956,30 @@
 	build_path = /obj/item/device/suit_sensor_jammer
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GOLD = 10 SHEET, MATERIAL_SILVER = 5 SHEET, MATERIAL_URANIUM = 5 SHEET, MATERIAL_PHORON = 5 SHEET, MATERIAL_DIAMOND = 3 SHEET)
 	research = "illegal_1"
+
 /datum/design/item/genfab/weapons/illegal/electropack // tier 3
 	build_path = /obj/item/device/radio/electropack
 	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GOLD = 5 SHEET, MATERIAL_SILVER = 5 SHEET, MATERIAL_URANIUM = 2 SHEET, MATERIAL_PHORON = 2 SHEET, MATERIAL_DIAMOND = 2 SHEET)
 	research = "illegal_1"
+
 /**
 /datum/design/item/genfab/weapons/illegal/batterer // tier 4
 	build_path = /obj/item/device/batterer
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GOLD = 5 SHEET, MATERIAL_SILVER = 5 SHEET, MATERIAL_PHORON = 2 SHEET, MATERIAL_DIAMOND = 2 SHEET)
 **/
+
 /datum/design/item/genfab/weapons/illegal/spy_bug // tier 4
 	name = "clandestine listening device (bug)"
 	build_path = /obj/item/device/spy_bug
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_GOLD = 3 SHEET, MATERIAL_SILVER = 3 SHEET, MATERIAL_DIAMOND = 1 SHEET)
 	research = "illegal_2"
+
 /datum/design/item/genfab/weapons/illegal/spy_monitor // tier 4
 	name = "clandestine monitoring device"
 	build_path = /obj/item/device/spy_monitor
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GOLD = 5 SHEET, MATERIAL_SILVER = 5 SHEET, MATERIAL_DIAMOND = 1 SHEET)
 	research = "illegal_2"
+
 /datum/design/item/genfab/weapons/illegal/syringe_gun/disguised // medical tech
 	name = "disguised syringe gun"
 	build_path = /obj/item/weapon/gun/launcher/syringe/disguised
@@ -1022,17 +1027,17 @@
 	name = "advanced hard drive"
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 1.5 SHEET)
 	build_path = /obj/item/weapon/computer_hardware/hard_drive/advanced
-
+	research = "computer_1"
 /datum/design/item/genfab/computer/adv/disk/super // tier 2
 	name = "super hard drive"
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_COPPER = 2 SHEETS, MATERIAL_SILVER = 0.5 SHEETS)
 	build_path = /obj/item/weapon/computer_hardware/hard_drive/super
-
+	research = "computer_2"
 /datum/design/item/genfab/computer/adv/disk/cluster // tier 3
 	name = "cluster hard drive"
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_COPPER = 3 SHEETS, MATERIAL_SILVER = 2 SHEETS)
 	build_path = /obj/item/weapon/computer_hardware/hard_drive/cluster
-
+	research = "computer_3"
 /datum/design/item/genfab/computer/adv/disk/small // tier 0
 	name = "small hard drive"
 	materials = list(MATERIAL_STEEL = 0.5 SHEET, MATERIAL_COPPER = 0.75 SHEET)
@@ -1073,17 +1078,17 @@
 	name = "advanced battery module"
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_COPPER = 2 SHEETS)
 	build_path = /obj/item/weapon/computer_hardware/battery_module/advanced
-
+	research = "computer_1"
 /datum/design/item/genfab/computer/adv/battery/super // tier 2
 	name = "super battery module"
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_COPPER = 3 SHEETS)
 	build_path = /obj/item/weapon/computer_hardware/battery_module/super
-
+	research = "computer_2"
 /datum/design/item/genfab/computer/adv/battery/ultra // tier 3
 	name = "ultra battery module"
 	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_COPPER = 4 SHEETS)
 	build_path = /obj/item/weapon/computer_hardware/battery_module/ultra
-
+	research = "computer_3"
 /datum/design/item/genfab/computer/battery/nano // tier 0
 	name = "nano battery module"
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
@@ -1105,7 +1110,7 @@
 	req_tech = list(TECH_ENGINEERING = 2, TECH_POWER = 3)
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 1 SHEET, MATERIAL_COPPER = 1.5 SHEETS)
 	build_path = /obj/item/device/pda
-
+	research = "computer_1"
 // Cartridges
 /**
 /datum/design/item/genfab/computer/adv/pda_cartridge
@@ -1254,41 +1259,41 @@
 	name = "multi-color ink pen"
 	build_path = /obj/item/weapon/pen/multi
 	materials = list(MATERIAL_PLASTIC = 0.2 SHEETS, MATERIAL_PHORON = 0.1 SHEETS)
-
+	research = "comms_1"
 /datum/design/item/genfab/communication/pen/crayon/red // tier 1
 	name = "red crayon"
 	build_path = /obj/item/weapon/pen/crayon/red
-
+	research = "comms_1"
 /datum/design/item/genfab/communication/pen/crayon/orange // tier 1
 	name = "orange crayon"
 	build_path = /obj/item/weapon/pen/crayon/orange
-
+	research = "comms_1"
 /datum/design/item/genfab/communication/pen/crayon/yellow // tier 1
 	name = "yellow crayon"
 	build_path = /obj/item/weapon/pen/crayon/yellow
-
+	research = "comms_1"
 /datum/design/item/genfab/communication/pen/crayon/green // tier 1
 	name = "green crayon"
 	build_path = /obj/item/weapon/pen/crayon/green
-
+	research = "comms_1"
 /datum/design/item/genfab/communication/pen/crayon/blue // tier 1
 	name = "blue crayon"
 	build_path = /obj/item/weapon/pen/crayon/blue
-
+	research = "comms_1"
 /datum/design/item/genfab/communication/pen/crayon/purple // tier 1
 	name = "purple crayon"
 	build_path = /obj/item/weapon/pen/crayon/purple
-
+	research = "comms_1"
 /datum/design/item/genfab/communication/pen/crayon/mime // tier 2
 	name = "mime crayon"
 	build_path = /obj/item/weapon/pen/crayon/mime
 	materials = list(MATERIAL_PLASTIC = 0.2 SHEETS, MATERIAL_DIAMOND = 0.1 SHEETS)
-
+	research = "comms_2"
 /datum/design/item/genfab/communication/pen/crayon/rainbow // tier 2
 	name = "rainbow crayon"
 	build_path = /obj/item/weapon/pen/crayon/rainbow
 	materials = list(MATERIAL_PLASTIC = 0.2 SHEETS, MATERIAL_PHORON = 0.1 SHEETS)
-
+	research = "comms_2"
 
 /datum/design/item/genfab/communication/clipboard
 	name = "clipboard"
@@ -1367,12 +1372,13 @@
 	req_tech = list(TECH_ENGINEERING = 4)
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_SILVER = 2 SHEETS)
 	build_path = /obj/item/weapon/tank/jetpack
-
+	research = "jetpacks"
 /datum/design/item/genfab/eva/adv/jetpack/black // tier 1
 	name = "Black Jetpack"	//Just a fancy name for a jetpack, heh
 	req_tech = list(TECH_ENGINEERING = 4)
 	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_SILVER = 2 SHEETS)
 	build_path = /obj/item/weapon/tank/jetpack/carbondioxide
+	research = "jetpacks"
 
 /datum/design/item/genfab/eva/adv/beacon
 	name = "Bluespace tracking beacon design"
@@ -1851,7 +1857,7 @@
 
 /datum/design/item/genfab/consumer/toys/xmas_cracker
 	materials = list(MATERIAL_PLASTIC = 0.5 SHEETS)
-	build_path = /obj/item/toy/xmas_cracker
+	build_path = /obj/item/weapon/toy/xmas_cracker
 
 
 
@@ -1875,10 +1881,10 @@
 /datum/design/item/genfab/consumer/toys/prize/gygax // tier 1
 	build_path = /obj/item/toy/prize/gygax
 
-/datum/design/item/genfab/consumer/toys/prize/durand / /tier 2
+/datum/design/item/genfab/consumer/toys/prize/durand //tier 2
 	build_path = /obj/item/toy/prize/durand
 
-/datum/design/item/genfab/consumer/toys/prize/honk / tier 2
+/datum/design/item/genfab/consumer/toys/prize/honk // tier 2
 	build_path = /obj/item/toy/prize/honk
 
 /datum/design/item/genfab/consumer/toys/prize/marauder // tier 2
@@ -1899,7 +1905,7 @@
 /datum/design/item/genfab/consumer/toys/figure //  figures
 	materials = list(MATERIAL_PLASTIC = 0.15 SHEETS)
 	category = "Figurines"
-	
+
 /datum/design/item/genfab/consumer/toys/figure/assistant // tier 0
 	build_path = /obj/item/toy/figure/assistant
 
@@ -1942,7 +1948,7 @@
 /datum/design/item/genfab/consumer/toys/figure/atmos // tier 1
 	build_path = /obj/item/toy/figure/atmos
 
-/datum/design/item/genfab/consumer/toys/figure/psychologist // tier 1 
+/datum/design/item/genfab/consumer/toys/figure/psychologist // tier 1
 	build_path = /obj/item/toy/figure/psychologist
 
 /datum/design/item/genfab/consumer/toys/figure/paramedic // tier 1
@@ -1984,10 +1990,10 @@
 /datum/design/item/genfab/consumer/toys/figure/borg // tier 3
 	build_path = /obj/item/toy/figure/borg
 
-/datum/design/item/genfab/consumer/toys/figure/captain // tier 3 
+/datum/design/item/genfab/consumer/toys/figure/captain // tier 3
 	build_path = /obj/item/toy/figure/captain
 
-/datum/design/item/genfab/consumer/toys/figure/clown // tier 3 
+/datum/design/item/genfab/consumer/toys/figure/clown // tier 3
 	build_path = /obj/item/toy/figure/clown
 
 /datum/design/item/genfab/consumer/toys/figure/corgi // tier 3
@@ -2205,7 +2211,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 
-/datum/design/item/genfab/sectools/handcuffs 
+/datum/design/item/genfab/sectools/handcuffs
 	name = "handcuffs"
 	build_path = /obj/item/weapon/handcuffs
 	materials = list(MATERIAL_STEEL = 0.5 SHEET)

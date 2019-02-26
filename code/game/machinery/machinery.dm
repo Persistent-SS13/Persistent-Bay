@@ -97,6 +97,7 @@ Class Procs:
 	icon = 'icons/obj/stationobjs.dmi'
 	w_class = ITEM_SIZE_NO_CONTAINER
 	obj_flags = OBJ_FLAG_DAMAGEABLE
+	layer = 2.9
 	var/stat = 0
 	var/emagged = 0
 	var/malf_upgraded = 0
@@ -117,14 +118,12 @@ Class Procs:
 	var/multiplier = 0
 	var/datum/world_faction/faction
 	var/faction_uid
-
 	//Damage handling
 	max_health = 100
 	var/break_threshold = 0.5 //Percentage of health remaining at which the machine goes into broken state
 	var/time_emped = 0		  //Time left being emped
 	var/emped_disabled_max_time = 5 MINUTES //Maximum time this machine can be disabled by EMP(Aka for severity 1)
 	var/frame_type = /obj/machinery/constructable_frame/machine_frame //The type of frame that will be left behind after deconstruction
-
 	//Radio stuff
 	var/id_tag						//Mappervar: Sets the initial id_tag.
 	var/frequency 		 	= null	//Mappervar: Sets the initial radio listening frequency.
@@ -151,6 +150,13 @@ Class Procs:
 	..()
 	RefreshParts()
 	update_health()
+
+/obj/machinery/proc/can_connect(var/datum/world_faction/trying, var/mob/M)
+	return 1
+
+/obj/machinery/proc/can_disconnect(var/datum/world_faction/trying, var/mob/M)
+	return 1
+
 
 /obj/machinery/Initialize(mapload, d=0)
 	. = ..()
@@ -255,7 +261,7 @@ Class Procs:
 //-----------------------------------------
 // Power System
 //-----------------------------------------
-//sets the use_power var 
+//sets the use_power var
 /obj/machinery/proc/update_use_power(var/new_use_power)
 	use_power = new_use_power
 

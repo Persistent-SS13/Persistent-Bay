@@ -97,7 +97,7 @@
 			light_x1 = ux + 1
 			light_y1 = uy + 1
 			light_x2 = ux + 1
-			light_y2 = uy + lift_size_x - 1
+			light_y2 = uy + lift_size_y - 1
 
 		if(WEST)
 
@@ -170,6 +170,7 @@
 							qdel(thing)
 				if(checking.type == floor_type) // Don't build over empty space on lower levels.
 					var/obj/machinery/door/airlock/lift/newdoor = new door_type(checking)
+					newdoor.dir = udir
 					if(internal)
 						lift.doors += newdoor
 						newdoor.lift = cfloor
@@ -184,17 +185,15 @@
 		panel_ext.set_dir(udir)
 		cfloor.ext_panel = panel_ext
 
-		// Place lights
-		var/turf/placing1 = locate(light_x1, light_y1, cz)
-		var/turf/placing2 = locate(light_x2, light_y2, cz)
-		var/obj/machinery/light/light1 = new(placing1, light)
-		var/obj/machinery/light/light2 = new(placing2, light)
-		if(udir == NORTH || udir == SOUTH)
-			light1.set_dir(WEST)
-			light2.set_dir(EAST)
-		else
-			light1.set_dir(SOUTH)
-			light2.set_dir(NORTH)
+		//Transfer access
+		panel_ext.req_access 					= src.req_access
+		panel_ext.req_one_access 				= src.req_one_access
+		panel_ext.req_access_faction 			= src.req_access_faction
+		panel_ext.req_access_personal 			= src.req_access_personal
+		panel_ext.req_access_personal_list 		= src.req_access_personal_list
+		panel_ext.req_access_business 			= src.req_access_business
+		panel_ext.req_access_business_list 		= src.req_access_business_list
+		panel_ext.req_one_access_business_list 	= src.req_one_access_business_list
 
 		// Update area.
 		if(az > areas_to_use.len)
@@ -216,5 +215,26 @@
 	lift.current_floor = lift.floors[1]
 
 	lift.open_doors()
+	//Transfer access
+	lift.control_panel_interior.req_access 						= src.req_access
+	lift.control_panel_interior.req_one_access 					= src.req_one_access
+	lift.control_panel_interior.req_access_faction 				= src.req_access_faction
+	lift.control_panel_interior.req_access_personal 			= src.req_access_personal
+	lift.control_panel_interior.req_access_personal_list 		= src.req_access_personal_list
+	lift.control_panel_interior.req_access_business 			= src.req_access_business
+	lift.control_panel_interior.req_access_business_list 		= src.req_access_business_list
+	lift.control_panel_interior.req_one_access_business_list 	= src.req_one_access_business_list
+
+	// Place lights
+	var/turf/placing1 = locate(light_x1, light_y1, uz)
+	var/turf/placing2 = locate(light_x2, light_y2, uz)
+	var/obj/machinery/light/light1 = new(placing1, light)
+	var/obj/machinery/light/light2 = new(placing2, light)
+	if(udir == NORTH || udir == SOUTH)
+		light1.set_dir(WEST)
+		light2.set_dir(EAST)
+	else
+		light1.set_dir(SOUTH)
+		light2.set_dir(NORTH)
 
 	qdel(src) // We're done.

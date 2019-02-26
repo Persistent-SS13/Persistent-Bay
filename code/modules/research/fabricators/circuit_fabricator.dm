@@ -13,6 +13,20 @@
 
 	has_reagents = TRUE
 
+/obj/machinery/fabricator/circuit_fabricator/can_connect(var/datum/world_faction/trying, var/mob/M)
+	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(req_access_faction)))
+		to_chat(M, "You do not have access to link machines to [trying.name].")
+		return 0
+	req_access_faction = trying.uid
+	connected_faction = src
+	
+/obj/machinery/fabricator/circuit_fabricator/can_disconnect(var/datum/world_faction/trying, var/mob/M)
+	req_access_faction = ""
+	connected_faction = null
+	if(M) to_chat(M, "The machine has been disconnected.")
+
+
+
 ////////////////////////////////////////////////////
 //////////////////////DESIGNS///////////////////////
 ////////////////////////////////////////////////////

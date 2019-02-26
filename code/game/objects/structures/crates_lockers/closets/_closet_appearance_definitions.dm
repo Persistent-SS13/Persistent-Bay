@@ -39,6 +39,18 @@
 	open_icon = icon(base_icon, "base")
 	open_icon.Blend(icon(base_icon, "open"), ICON_OVERLAY)
 	open_icon.Blend(color, BLEND_ADD)
+	if(decal_icon)
+		for(var/thing in decals)
+			var/icon/this_decal_icon = icon(decal_icon, thing)
+			this_decal_icon.Blend(decals[thing], BLEND_ADD)
+			open_icon.Blend(this_decal_icon, ICON_OVERLAY)
+
+	// Add lock lights to open state.
+	if(can_lock)
+		var/icon/light = icon(base_icon, "light")
+		light.Blend(COLOR_LIME, BLEND_ADD)
+		open_icon.Blend(light, ICON_OVERLAY)
+
 	open_icon.Blend(icon(base_icon, "interior"), ICON_OVERLAY)
 
 	// Generate basic closed icons.
@@ -54,7 +66,7 @@
 	closed_locked_icon =   icon(closed_emagged_icon)
 	closed_unlocked_icon = icon(closed_emagged_icon)
 
-	// Add lock lights.
+	// Add lock lights to closed state.
 	if(can_lock)
 		var/icon/light = icon(base_icon, "light")
 		light.Blend(COLOR_RED, BLEND_ADD)

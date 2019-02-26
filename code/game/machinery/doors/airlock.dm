@@ -122,6 +122,7 @@
 	var/assembly_type = /obj/structure/door_assembly
 	var/mineral = null
 
+
 /obj/machinery/door/airlock/New(var/newloc, var/obj/structure/door_assembly/assembly=null)
 	..()
 	ADD_SAVED_VAR(aiControlDisabled)
@@ -174,6 +175,10 @@
 				req_access_business_list = src.electronics.business_access
 			req_access_business = electronics.business_name
 
+		else if(istype(electronics, /obj/item/weapon/airlock_electronics/personal_electronics))
+			var/obj/item/weapon/airlock_electronics/personal_electronics/pe = electronics
+			req_access_personal_list = pe.registered_names
+
 		else
 			if(electronics.one_access)
 				req_access.Cut()
@@ -195,27 +200,26 @@
 	//wires
 	var/turf/T = get_turf(newloc)
 	if(T && (T.z in GLOB.using_map.admin_levels))
-		secured_wires = TRUE
+		secured_wires = 1
 	if (secured_wires)
 		wires = new/datum/wires/airlock/secure(src)
 	else
 		wires = new/datum/wires/airlock(src)
 
-/obj/machinery/door/airlock/Initialize()
-	//wireless connection
-	if(_wifi_id)
-		wifi_receiver = new(_wifi_id, src)
-
-	var/turf/T = loc
-	var/obj/item/weapon/airlock_brace/A = locate(/obj/item/weapon/airlock_brace) in T
-	if(!brace && A)
-		brace = A
-		brace.airlock = src
-		brace.forceMove(src)
-	update_connections()
-	. = ..()
-	update_icon()
-	return INITIALIZE_HINT_LATELOAD
+	/obj/machinery/door/airlock/Initialize()
+		//wireless connection
+		if(_wifi_id)
+			wifi_receiver = new(_wifi_id, src)
+		var/turf/T = loc
+		var/obj/item/weapon/airlock_brace/A = locate(/obj/item/weapon/airlock_brace) in T
+		if(!brace && A)
+			brace = A
+			brace.airlock = src
+			brace.forceMove(src)
+		update_connections()
+		. = ..()
+		update_icon()
+		return INITIALIZE_HINT_LATELOAD
 
 //Later on during init check for a nearby door
 /obj/machinery/door/airlock/LateInitialize()
@@ -241,6 +245,22 @@
 	return SSmaterials.get_material_by_name(MATERIAL_STEEL)
 
 
+/obj/machinery/door/airlock/personal
+	door_color = COLOR_WHITE
+	name = "Personal Airlock"
+	desc = "A door with a personal access lock for an individual(s)."
+	assembly_type = /obj/structure/door_assembly/door_assembly_personal
+
+/obj/machinery/door/airlock/personal/attackby(var/obj/item/C, var/mob/user)
+	if(istype(C, /obj/item/weapon/card/id/))
+		var/obj/item/weapon/card/id/ID = C
+		if(req_access_personal_list.len && ID.registered_name == req_access_personal_list[1])
+			if(locked)
+				unlock()
+			else
+				lock()
+			to_chat(user, "<span class='notice> You [locked ? "lock" : "unlock"]  \the [src].")
+	..()
 /obj/machinery/door/airlock/attack_generic(var/mob/user, var/damage)
 	if(inoperable())
 		if(damage >= 10)
@@ -1256,6 +1276,7 @@ About the new airlock wires panel:
 		electronics.conf_access = src.req_one_access
 		electronics.one_access = 1
 	electronics.req_access_faction = req_access_faction
+
 /obj/machinery/door/airlock/emp_act(var/severity)
 	if(prob(20/severity))
 		spawn(0)

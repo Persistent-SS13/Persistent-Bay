@@ -2,7 +2,7 @@
 	name = "bullet"
 	icon_state = "bullet"
 	fire_sound = 'sound/weapons/gunshot/gunshot_strong.ogg'
-	force = 50
+	force = 25
 	damtype = DAM_BULLET
 	nodamage = 0
 	sharpness = 1
@@ -65,7 +65,7 @@
 //For projectiles that actually represent clouds of projectiles
 /obj/item/projectile/bullet/pellet
 	name = "shrapnel" //'shrapnel' sounds more dangerous (i.e. cooler) than 'pellet'
-	force = 22.5
+	force = 4
 	//icon_state = "bullet" //TODO: would be nice to have it's own icon state
 	var/pellets = 4			//number of pellets
 	var/range_step = 2		//projectile will lose a fragment each time it travels this distance. Can be a non-integer.
@@ -126,36 +126,36 @@
 
 /obj/item/projectile/bullet/pistol
 	fire_sound = 'sound/weapons/gunshot/gunshot_pistol.ogg'
-	force = 25 //9mm, .38, etc
+	force = 8 //9mm, .38, etc
 	armor_penetration = 13.5
 
 /obj/item/projectile/bullet/pistol/medium
-	force = 26.5 //.45
+	force = 12 //.45
 	armor_penetration = 14.5
 
 /obj/item/projectile/bullet/pistol/medium/smg
 	fire_sound = 'sound/weapons/gunshot/gunshot_smg.ogg'
-	force = 28 //10mm
-	armor_penetration = 18
+	force = 10 //10mm
+	armor_penetration = 15
 
 /obj/item/projectile/bullet/pistol/medium/revolver
 	fire_sound = 'sound/weapons/gunshot/gunshot_strong.ogg'
-	force = 30 //.44 magnum or something
+	force = 18 //.44 magnum or something
 
 /obj/item/projectile/bullet/pistol/strong //matebas
 	fire_sound = 'sound/weapons/gunshot/gunshot_strong.ogg'
-	force = 60 //.50AE
+	force = 25 //.50AE
 	armor_penetration = 30
 
 /obj/item/projectile/bullet/pistol/strong/revolver //revolvers
-	force = 50 //Revolvers get snowflake bullets, to keep them relevant
+	force = 22 //Revolvers get snowflake bullets, to keep them relevant
 	armor_penetration = 20
 
 /obj/item/projectile/bullet/pistol/rubber //"rubber" bullets
 	name = "rubber bullet"
 	damtype = DAM_BLUNT
-	force = 5
-	agony = 30
+	force = 2.5
+	agony = 15
 	embed = 0
 	sharpness = 0
 	armor_penetration = 2.5
@@ -165,14 +165,14 @@
 /obj/item/projectile/bullet/shotgun
 	name = "slug"
 	fire_sound = 'sound/weapons/gunshot/shotgun.ogg'
-	force = 55
+	force = 20
 	armor_penetration = 20
 
 /obj/item/projectile/bullet/shotgun/beanbag		//because beanbags are not bullets
 	name = "beanbag"
 	damtype = DAM_BLUNT
-	force = 25
-	agony = 60
+	force = 5
+	agony = 25
 	embed = 0
 	sharpness = 0
 	mass = 0.008
@@ -182,7 +182,7 @@
 /obj/item/projectile/bullet/pellet/shotgun
 	name = "shrapnel"
 	fire_sound = 'sound/weapons/gunshot/shotgun.ogg'
-	force = 15
+	force = 3
 	pellets = 6
 	range_step = 1
 	spread_step = 10
@@ -192,8 +192,8 @@
 /obj/item/projectile/bullet/pellet/shotgun/rubber
 	name = "shrapnel"
 	damtype = DAM_BLUNT
-	force = 5
-	agony = 12
+	force = 3
+	agony = 10
 	embed = 0
 	sharpness = 0
 	range_step = 1
@@ -206,32 +206,32 @@
 /obj/item/projectile/bullet/rifle
 	armor_penetration = 25
 	penetrating = 1
-
+	damage = 15
 /obj/item/projectile/bullet/rifle/a556
 	fire_sound = 'sound/weapons/gunshot/gunshot3.ogg'
-	force = 30
+	force = 18
 	mass = 0.004
 
 /obj/item/projectile/bullet/rifle/a762
 	fire_sound = 'sound/weapons/gunshot/gunshot2.ogg'
-	force = 35
+	force = 18
 	armor_penetration = 30
 	mass = 0.009
 
 /obj/item/projectile/bullet/rifle/a145
 	fire_sound = 'sound/weapons/gunshot/sniper.ogg'
-	force = 80
+	force = 30
 	stun = 3
 	weaken = 3
-	penetrating = 5
+	penetrating = 2
 	armor_penetration = 80
 	hitscan = 1 //so the PTR isn't useless as a sniper weapon
 	penetration_modifier = 1.25
 	mass = 0.0665
 
 /obj/item/projectile/bullet/rifle/a145/apds
-	force = 75
-	penetrating = 6
+	force = 35
+	penetrating = 5
 	armor_penetration = 95
 	penetration_modifier = 1.5
 
@@ -239,17 +239,17 @@
 
 /obj/item/projectile/bullet/suffocationbullet//How does this even work?
 	name = "co bullet"
-	force = 25
+	force = 5
 	damtype = DAM_OXY
 
 /obj/item/projectile/bullet/cyanideround
 	name = "poison bullet"
-	force = 45
+	force = 10
 	damtype = DAM_BIO
 
 /obj/item/projectile/bullet/burstbullet
 	name = "exploding bullet"
-	force = 25
+	force = 15
 	embed = 0
 
 /obj/item/projectile/bullet/gyro
@@ -269,14 +269,14 @@
 /* Practice */
 
 /obj/item/projectile/bullet/pistol/practice
-	force = 5
+	force = 3
 
 /obj/item/projectile/bullet/rifle/a762/practice
-	force = 5
+	force = 3
 
 /obj/item/projectile/bullet/shotgun/practice
 	name = "practice"
-	force = 5
+	force = 3
 
 /obj/item/projectile/bullet/pistol/cap
 	name = "cap"

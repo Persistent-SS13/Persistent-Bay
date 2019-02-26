@@ -18,14 +18,24 @@
 	var/fill_icon = 'icons/obj/doors/station/fill_steel.dmi'
 	var/glass_icon = 'icons/obj/doors/station/fill_glass.dmi'
 
+	var/allow_keypad = 	 FALSE // accepts keypad electronics
+	var/allow_personal = FALSE // accepts personal electronics
+
 	New()
 		update_state()
 
 
-obj/structure/door_assembly/door_assembly_keyp
+/obj/structure/door_assembly/door_assembly_keyp
  	base_name = "Keypad Airlock"
  	glass = -1
+ 	allow_keypad = TRUE
  	airlock_type = "/keypad"
+
+/obj/structure/door_assembly/door_assembly_personal
+	base_name = "Personal Airlock"
+	glass = -1
+	allow_personal = TRUE
+	airlock_type = "/personal"
 
 /obj/structure/door_assembly/door_assembly_hatch
 	icon = 'icons/obj/doors/hatch/door.dmi'
@@ -151,6 +161,10 @@ obj/structure/door_assembly/door_assembly_keyp
 			src.state = 0
 
 	else if(istype(W, /obj/item/weapon/airlock_electronics) && state == 1)
+
+		if((istype(W, /obj/item/weapon/airlock_electronics/keypad_electronics) && !allow_keypad) || (istype(W, /obj/item/weapon/airlock_electronics/personal_electronics) && !allow_personal))
+			to_chat(user, "<span class='warning'>\The [src] doesn't accept that type of airlock electronics!</span>")
+
 		playsound(src.loc, 'sound/items/Screwdriver.ogg', 100, 1)
 		user.visible_message("[user] installs the electronics into the airlock assembly.", "You start to install electronics into the airlock assembly.")
 
@@ -161,6 +175,7 @@ obj/structure/door_assembly/door_assembly_keyp
 			to_chat(user, "<span class='notice'>You installed the airlock electronics!</span>")
 			src.state = 2
 			src.name = "Near finished Airlock Assembly"
+			W.forceMove(src)
 			src.electronics = W
 
 	else if(isCrowbar(W) && state == 2 )

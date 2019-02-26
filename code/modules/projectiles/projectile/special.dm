@@ -18,7 +18,7 @@
 /obj/item/projectile/bullet/gyro
 	name ="explosive bolt"
 	icon_state= "bolter"
-	force = 50
+	force = 25
 	sharpness = 1
 	mass = 0.012
 
@@ -155,7 +155,7 @@
 	icon_state = "purplelaser"
 	damtype = DAM_ENERGY
 	sharpness = 1
-	force = 30
+	force = 20
 	var/pressure_decrease_active = FALSE
 	var/pressure_decrease = 0.25
 	kill_count=15

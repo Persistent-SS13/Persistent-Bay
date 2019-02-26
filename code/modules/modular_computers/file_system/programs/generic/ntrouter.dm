@@ -62,7 +62,7 @@
 	else
 		data["card_installed"] = 0
 		data["connected"] = 0
-	
+
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "ntnet_router.tmpl", "Select Network", 575, 700, state = state)

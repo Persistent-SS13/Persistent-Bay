@@ -24,7 +24,7 @@
 #define core_access_engineering_programs 107
 #define core_access_medical_programs 108
 #define core_access_security_programs 109
-#define core_access_wireless_programs 110
+#define core_access_machine_linking 110
 #define core_access_door_configuration 111
 #define core_access_order_approval 112
 #define core_access_invoicing 113

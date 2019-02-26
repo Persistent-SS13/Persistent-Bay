@@ -141,7 +141,6 @@ var/global/list/debug_data = list()
 			continue
 		if(vars[variable] == initial(vars[variable]))
 			continue
-		var/list/return_this = list()
 		if(istype(vars[variable], /datum))
 			var/datum/D = vars[variable]
 			if(QDELETED(D))
@@ -152,15 +151,14 @@ var/global/list/debug_data = list()
 			if(variable in params2list(skip_empty))
 				var/list/lis = vars[variable]
 				if(!lis.len) continue
-			var/list/D = vars[variable]
+			var/list/C = vars[variable]
+			var/list/D = C.Copy()
 			for(var/datum/dat in D)
 				if(!dat.should_save(src))
 					D -= dat
-					return_this += dat
-		to_file(f["[variable]"],vars[variable])
-		if(return_this.len)
-			var/list/D = vars[variable]
-			D += return_this
+			to_file(f["[variable]"],D)
+		else
+			to_file(f["[variable]"],vars[variable])
 
 /datum/Write(savefile/f)
 	StandardWrite(f)
@@ -481,11 +479,12 @@ var/global/list/debug_data = list()
 		A.contents.Add(turfs)
 	f = null
 	for(var/z in 1 to SAVED_ZLEVELS)
+		var/starttime2 = REALTIMEOFDAY
 		f = new("map_saves/z[z].sav")
 		while(!f.eof)
 			from_file(f,ve)
-	var/starttime2 = REALTIMEOFDAY
-	message_admins("Loading World Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
+		message_admins("Loading Zlevel [z] Completed in [(REALTIMEOFDAY - starttime2)/10] seconds!")
+
 	f = null
 	f = new("map_saves/extras.sav")
 	var/list/zones

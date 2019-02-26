@@ -331,3 +331,10 @@
 	name = "bundeforz tactical helmet"
 	desc = "A light grey helmet made from advanced ceramic. Comfortable and robust."
 	icon_state = "m_helmet"
+
+/obj/item/clothing/head/helmet/guard
+	name = "guard helmet"
+	desc = "A royal blue helmet designed for both ceremonial and practical use."
+	icon_state = "helmet_guard"
+	armor = list(melee = 50, bullet = 60, laser = 60, energy = 45, bomb = 30, bio = 0, rad = 0)
+	siemens_coefficient = 0.6

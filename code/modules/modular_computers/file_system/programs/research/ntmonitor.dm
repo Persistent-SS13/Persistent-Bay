@@ -6,7 +6,7 @@
 	extended_desc = "This program monitors the local NTNet network, provides access to logging systems, and allows for configuration changes"
 	size = 12
 	requires_ntnet = TRUE
-	required_access = core_access_wireless_programs
+	required_access = core_access_machine_linking
 	available_on_ntnet = TRUE
 	nanomodule_path = /datum/nano_module/computer_ntnetmonitor/
 

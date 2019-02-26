@@ -222,8 +222,33 @@
 
 /obj/item/weapon/airlock_electronics/keypad_electronics
  	name = "keypad airlock electronics"
- 	icon = 'icons/obj/doors/door_assembly.dmi'
  	icon_state = "door_electronics_keypad"
- 	w_class = 2 //It should be tiny! -Agouri
  	desc = "An upgraded version airlock electronics board, with a keypad to lock the door."
- 	matter = list(MATERIAL_STEEL = 50,MATERIAL_GLASS = 50)
+
+/obj/item/weapon/airlock_electronics/personal_electronics
+ 	name = "personal airlock electronics"
+ 	desc = "An alternative to airlock electronics that locks access to specific personnel"
+ 										// 1 in list controls door bolting
+ 	var/list/registered_names = list()	// all others can open the door as normal
+
+/obj/item/weapon/airlock_electronics/personal_electronics/attackby(var/obj/item/I, var/mob/user)
+	if(istype(I, /obj/item/weapon/card/id))
+		var/obj/item/weapon/card/id/ID = I
+
+		if(ID.registered_name in registered_names)
+			return
+
+		if(!registered_names.len)
+			to_chat(user, "You set [ID.registered_name] as \the [src]' owner.")
+		else
+			to_chat(user, "You add [ID.registered_name] to \the [src]' allowed access list.")
+
+		registered_names += ID.registered_name
+
+ 	if(isMultitool(I))
+ 		registered_names.Cut()
+
+ 		to_chat(user, "You pulse \the [src], resetting the allowed access list.")
+
+/obj/item/weapon/airlock_electronics/attack_self()
+	return

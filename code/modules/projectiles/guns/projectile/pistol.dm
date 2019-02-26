@@ -12,7 +12,7 @@
 	item_state = null
 	w_class = ITEM_SIZE_SMALL
 	caliber = "9mm"
-	silenced = 0
+	silenced = FALSE
 	fire_delay = 1
 	origin_tech = list(TECH_COMBAT = 2, TECH_MATERIAL = 2, TECH_ILLEGAL = 2)
 	load_method = MAGAZINE

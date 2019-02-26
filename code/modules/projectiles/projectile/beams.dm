@@ -3,10 +3,10 @@
 	icon_state = "laser"
 	fire_sound='sound/weapons/Laser.ogg'
 	pass_flags = PASS_FLAG_TABLE | PASS_FLAG_GLASS | PASS_FLAG_GRILLE
-	force = 40
+	force = 15
 	damtype = DAM_LASER
 	sharpness = 1 //concentrated burns
-	eyeblur = 4
+	eyeblur = 3
 	hitscan = 1
 	invisibility = 101	//beam projectiles are invisible as they are rendered by the effect engine
 	mass = 0
@@ -26,17 +26,17 @@
 	mass = 0
 
 /obj/item/projectile/beam/smalllaser
-	force = 25
+	force = 10
 
 /obj/item/projectile/beam/midlaser
-	force = 50
+	force = 25
 	armor_penetration = 10
 
 /obj/item/projectile/beam/heavylaser
 	name = "heavy laser"
 	icon_state = "heavylaser"
 	fire_sound = 'sound/weapons/lasercannonfire.ogg'
-	force = 60
+	force = 35
 	armor_penetration = 30
 
 	muzzle_type = /obj/effect/projectile/laser_heavy/muzzle
@@ -47,7 +47,7 @@
 	name = "x-ray beam"
 	icon_state = "xray"
 	fire_sound = 'sound/weapons/laser3.ogg'
-	force = 30
+	force = 13
 	armor_penetration = 30
 	penetration_modifier = 0.8
 	damtype = DAM_ENERGY
@@ -57,14 +57,14 @@
 	impact_type = /obj/effect/projectile/xray/impact
 
 /obj/item/projectile/beam/xray/midlaser
-	force = 30
+	force = 25
 	armor_penetration = 50
 
 /obj/item/projectile/beam/pulse
 	name = "pulse"
 	icon_state = "u_laser"
 	fire_sound='sound/weapons/pulse.ogg'
-	force = 15 //lower damage, but fires in bursts
+	force = 10 //lower damage, but fires in bursts
 	damtype = DAM_LASER
 
 	muzzle_type = /obj/effect/projectile/laser_pulse/muzzle
@@ -72,15 +72,15 @@
 	impact_type = /obj/effect/projectile/laser_pulse/impact
 
 /obj/item/projectile/beam/pulse/mid
-	force = 20
+	force = 15
 
 /obj/item/projectile/beam/pulse/heavy
 	force = 25
 
 /obj/item/projectile/beam/pulse/destroy
 	name = "destroyer pulse"
-	force = 100 //badmins be badmins I don't give a fuck
-	armor_penetration = 100
+	force = 30 //badmins be badmins I don't give a fuck
+	armor_penetration = 50
 
 /obj/item/projectile/beam/pulse/destroy/on_hit(var/atom/target, var/blocked = 0)
 	if(isturf(target))
@@ -153,7 +153,7 @@
 	name = "sniper beam"
 	icon_state = "xray"
 	fire_sound = 'sound/weapons/marauder.ogg'
-	force = 50
+	force = 40
 	armor_penetration = 10
 	stun = 3
 	weaken = 3
@@ -169,7 +169,7 @@
 	icon_state = "stun"
 	fire_sound = 'sound/weapons/Taser.ogg'
 	taser_effect = 1
-	agony = 40
+	agony = 20
 	damtype = DAM_STUN
 
 	muzzle_type = /obj/effect/projectile/stun/muzzle
@@ -178,16 +178,16 @@
 
 /obj/item/projectile/beam/stun/heavy
 	name = "heavy stun beam"
-	agony = 60
+	agony = 25
 
 /obj/item/projectile/beam/stun/shock
 	name = "shock beam"
 	damtype = DAM_PAIN
 	force = 10
-	agony  = 5
+	agony  = 10
 	fire_sound='sound/weapons/pulse.ogg'
 
 /obj/item/projectile/beam/stun/shock/heavy
 	name = "heavy shock beam"
 	force = 20
-	agony  = 10
+	agony  = 15

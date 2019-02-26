@@ -317,6 +317,7 @@
 #include "code\controllers\subsystems\SSopen_space.dm"
 #include "code\controllers\subsystems\SSplants.dm"
 #include "code\controllers\subsystems\SSradiation.dm"
+#include "code\controllers\subsystems\SSresearch.dm"
 #include "code\controllers\subsystems\SSshuttle.dm"
 #include "code\controllers\subsystems\SSskybox.dm"
 #include "code\controllers\subsystems\SSsun.dm"

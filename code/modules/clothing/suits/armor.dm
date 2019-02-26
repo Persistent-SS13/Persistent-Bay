@@ -657,3 +657,14 @@
 	desc = "A heavy armored vest in a light grey urban camo. It is surprisingly flexible and light, even with the extra webbing and advanced ceramic plates."
 	icon_state = "m_vest"
 	item_state = "m_vest"
+
+/obj/item/clothing/suit/armor/robes
+	name = "royal blue guard robes"
+	desc = "A set of blue robes outfitted with an interior bulletproof vest. Synthweave-ablative technology reduces the effects of energy weapons. They are surprisingly light."
+	icon_state = "guardarmor"
+	item_state = "guardarmor"
+	valid_accessory_slots = list(ACCESSORY_SLOT_INSIGNIA)
+	w_class = ITEM_SIZE_LARGE
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	armor = list(melee = 75, bullet = 10, laser = 25, energy = 25, bomb = 0, bio = 0, rad = 0)
+	siemens_coefficient = 0.5

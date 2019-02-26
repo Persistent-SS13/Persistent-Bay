@@ -84,7 +84,8 @@
 		\[logo\] - Inserts NT logo image.
 		\[bluelogo\] - Inserts blue NT logo image.
 		\[solcrest\] - Inserts SCG crest image.
-		\[terraseal\] - Inserts TCC seal"}
+		\[terraseal\] - Inserts TCC seal.
+		\[nfrseal\] - Inserts NFR seal."}
 
 		to_chat(usr, help)
 		return 1

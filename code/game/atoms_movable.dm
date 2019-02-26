@@ -248,6 +248,10 @@
 		return src.master.attack_hand(a, b, c)
 	return
 
+/mob/touch_map_edge()
+	..()
+	inertia_dir = last_move
+
 /atom/movable/proc/touch_map_edge()
 	#define worldWidth 5
 	#define worldLength 5
@@ -272,7 +276,6 @@
 
 		else if (y <= TRANSITIONEDGE-1) 					// South
 			new_y = TRANSITIONEDGE + 1
-			new_y = world.maxy - TRANSITIONEDGE - 1
 			var/datum/zlevel_data/data = SSmazemap.map_data["[z]"]
 			if(data && data.S_connect)
 				new_z = data.S_connect

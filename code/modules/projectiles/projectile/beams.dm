@@ -3,7 +3,7 @@
 	icon_state = "laser"
 	fire_sound='sound/weapons/Laser.ogg'
 	pass_flags = PASS_FLAG_TABLE | PASS_FLAG_GLASS | PASS_FLAG_GRILLE
-	damage = 20
+	damage = 15
 	damage_type = BURN
 	sharp = 1 //concentrated burns
 	check_armour = "laser"
@@ -47,7 +47,7 @@
 	name = "x-ray beam"
 	icon_state = "xray"
 	fire_sound = 'sound/weapons/laser3.ogg'
-	damage = 15
+	damage = 13
 	armor_penetration = 30
 	penetration_modifier = 0.8
 
@@ -56,7 +56,7 @@
 	impact_type = /obj/effect/projectile/xray/impact
 
 /obj/item/projectile/beam/xray/midlaser
-	damage = 20
+	damage = 25
 	armor_penetration = 50
 
 /obj/item/projectile/beam/pulse
@@ -70,14 +70,14 @@
 	impact_type = /obj/effect/projectile/laser_pulse/impact
 
 /obj/item/projectile/beam/pulse/mid
-	damage = 20
-
+	damage = 15
+	
 /obj/item/projectile/beam/pulse/heavy
 	damage = 25
 
 /obj/item/projectile/beam/pulse/destroy
 	name = "destroyer pulse"
-	damage = 50 //badmins be badmins I don't give a fuck
+	damage = 30 //badmins be badmins I don't give a fuck
 	armor_penetration = 50
 
 /obj/item/projectile/beam/pulse/destroy/on_hit(var/atom/target, var/blocked = 0)
@@ -154,7 +154,7 @@
 	name = "sniper beam"
 	icon_state = "xray"
 	fire_sound = 'sound/weapons/marauder.ogg'
-	damage = 30
+	damage = 40
 	armor_penetration = 10
 	stun = 3
 	weaken = 3
@@ -171,7 +171,7 @@
 	check_armour = "energy"
 	sharp = 0 //not a laser
 	taser_effect = 1
-	agony = 25
+	agony = 20
 	damage_type = STUN
 
 	muzzle_type = /obj/effect/projectile/stun/muzzle
@@ -180,16 +180,16 @@
 
 /obj/item/projectile/beam/stun/heavy
 	name = "heavy stun beam"
-	agony = 35
+	agony = 25
 
 /obj/item/projectile/beam/stun/shock
 	name = "shock beam"
 	damage_type = ELECTROCUTE
 	damage = 10
-	agony  = 5
+	agony  = 10
 	fire_sound='sound/weapons/pulse.ogg'
 
 /obj/item/projectile/beam/stun/shock/heavy
 	name = "heavy shock beam"
 	damage = 20
-	agony  = 10
+	agony  = 15

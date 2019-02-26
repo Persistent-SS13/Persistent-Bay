@@ -137,12 +137,12 @@
 
 /obj/item/projectile/bullet/pistol/medium/smg
 	fire_sound = 'sound/weapons/gunshot/gunshot_smg.ogg'
-	damage = 8 //10mm
-	armor_penetration = 18
+	damage = 10 //10mm
+	armor_penetration = 15
 
 /obj/item/projectile/bullet/pistol/medium/revolver
 	fire_sound = 'sound/weapons/gunshot/gunshot_strong.ogg'
-	damage = 15 //.44 magnum or something
+	damage = 18 //.44 magnum or something
 
 /obj/item/projectile/bullet/pistol/strong //matebas
 	fire_sound = 'sound/weapons/gunshot/gunshot_strong.ogg'
@@ -150,7 +150,7 @@
 	armor_penetration = 30
 
 /obj/item/projectile/bullet/pistol/strong/revolver //revolvers
-	damage = 25 //Revolvers get snowflake bullets, to keep them relevant
+	damage = 22 //Revolvers get snowflake bullets, to keep them relevant
 	armor_penetration = 20
 
 /obj/item/projectile/bullet/pistol/rubber //"rubber" bullets
@@ -183,8 +183,8 @@
 /obj/item/projectile/bullet/pellet/shotgun
 	name = "shrapnel"
 	fire_sound = 'sound/weapons/gunshot/shotgun.ogg'
-	damage = 5
-	pellets = 4
+	damage = 3
+	pellets = 6
 	range_step = 1
 	spread_step = 10
 
@@ -216,17 +216,17 @@
 
 /obj/item/projectile/bullet/rifle/a145
 	fire_sound = 'sound/weapons/gunshot/sniper.ogg'
-	damage = 25
+	damage = 30
 	stun = 3
 	weaken = 3
-	penetrating = 5
+	penetrating = 2
 	armor_penetration = 80
 	hitscan = 1 //so the PTR isn't useless as a sniper weapon
 	penetration_modifier = 1.25
 
 /obj/item/projectile/bullet/rifle/a145/apds
-	damage = 20
-	penetrating = 6
+	damage = 35
+	penetrating = 5
 	armor_penetration = 95
 	penetration_modifier = 1.5
 
@@ -290,7 +290,7 @@
 /obj/item/projectile/bullet/rock //spess dust
 	name = "micrometeor"
 	icon_state = "rock"
-	damage = 30
+	damage = 40
 	armor_penetration = 25
 	kill_count = 255
 

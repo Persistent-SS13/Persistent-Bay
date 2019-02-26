@@ -163,7 +163,7 @@
 	check_armour = "energy"
 	sharp = 1
 	edge = 1
-	damage = 15
+	damage = 20
 	var/pressure_decrease_active = FALSE
 	var/pressure_decrease = 0.25
 	kill_count=15

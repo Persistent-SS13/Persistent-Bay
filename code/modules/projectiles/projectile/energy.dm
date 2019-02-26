@@ -60,7 +60,7 @@
 	fire_sound = 'sound/weapons/Taser.ogg'
 	nodamage = 1
 	taser_effect = 1
-	agony = 25
+	agony = 30
 	damage_type = PAIN
 	//Damage will be handled on the MOB side, to prevent window shattering.
 
@@ -126,7 +126,7 @@
 	armor_penetration = 10
 	kill_count = 4
 	damage = 5
-	agony = 50
+	agony = 40
 	damage_type = BURN
 	vacuum_traversal = 0
 

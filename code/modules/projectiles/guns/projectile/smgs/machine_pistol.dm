@@ -5,12 +5,12 @@
 	item_state = "wt550"
 	w_class = ITEM_SIZE_NORMAL
 	load_method = MAGAZINE
-	caliber = ".45"
+	caliber = "9mm"
 	origin_tech = list(TECH_COMBAT = 5, TECH_MATERIAL = 2, TECH_ILLEGAL = 3)
 	slot_flags = SLOT_BELT
 	ammo_type = /obj/item/ammo_casing/c45
-	magazine_type = /obj/item/ammo_magazine/c45uzi
-	allowed_magazines = /obj/item/ammo_magazine/c45uzi //more damage compared to the wt550, smaller mag size
+	magazine_type = /obj/item/ammo_magazine/mc9mm
+	allowed_magazines = /obj/item/ammo_magazine/mc9mm
 
 	firemodes = list(
 		list(mode_name="semiauto",       burst=1, fire_delay=0,    move_delay=null, one_hand_penalty=0, burst_accuracy=null, dispersion=null),

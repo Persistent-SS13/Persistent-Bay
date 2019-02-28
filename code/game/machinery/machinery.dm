@@ -151,13 +151,6 @@ Class Procs:
 	RefreshParts()
 	update_health()
 
-/obj/machinery/proc/can_connect(var/datum/world_faction/trying, var/mob/M)
-	return 1
-
-/obj/machinery/proc/can_disconnect(var/datum/world_faction/trying, var/mob/M)
-	return 1
-
-
 /obj/machinery/Initialize(mapload, d=0)
 	. = ..()
 	init_transmitter()
@@ -314,6 +307,9 @@ Class Procs:
 // Interactions
 //----------------------------------------
 /obj/machinery/proc/can_connect(var/datum/world_faction/trying)
+	return 1
+
+/obj/machinery/proc/can_disconnect(var/datum/world_faction/trying, var/mob/M)
 	return 1
 
 /obj/machinery/CanUseTopic(var/mob/user)

@@ -206,7 +206,8 @@
 /obj/item/projectile/bullet/rifle
 	armor_penetration = 25
 	penetrating = 1
-	damage = 15
+	force = 15
+
 /obj/item/projectile/bullet/rifle/a556
 	fire_sound = 'sound/weapons/gunshot/gunshot3.ogg'
 	force = 18

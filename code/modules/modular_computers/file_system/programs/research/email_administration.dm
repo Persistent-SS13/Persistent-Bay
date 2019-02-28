@@ -8,7 +8,7 @@
 	requires_ntnet = TRUE
 	available_on_ntnet = TRUE
 	nanomodule_path = /datum/nano_module/email_administration
-	required_access = core_access_wireless_programs
+	//required_access = core_access_wireless_programs
 
 /datum/nano_module/email_administration/
 	name = "Email Client"

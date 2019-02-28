@@ -1855,19 +1855,13 @@
 
 //toys
 
-/datum/design/item/genfab/consumer/toys/xmas_cracker
-	materials = list(MATERIAL_PLASTIC = 0.5 SHEETS)
-	build_path = /obj/item/toy/xmas_cracker
-
-
-
+// /datum/design/item/genfab/consumer/toys/xmas_cracker
+// 	materials = list(MATERIAL_PLASTIC = 0.5 SHEETS)
+// 	build_path = /obj/item/toy/xmas_cracker
 
 /datum/design/item/genfab/consumer/toys/prize // mecha figures
 	category = "Figurines"
 	materials = list(MATERIAL_PLASTIC = 0.25 SHEETS)
-
-
-
 
 /datum/design/item/genfab/consumer/toys/prize/ripley // tier 0
 	build_path = /obj/item/toy/prize/ripley
@@ -1881,10 +1875,10 @@
 /datum/design/item/genfab/consumer/toys/prize/gygax // tier 1
 	build_path = /obj/item/toy/prize/gygax
 
-/datum/design/item/genfab/consumer/toys/prize/durand / /tier 2
+/datum/design/item/genfab/consumer/toys/prize/durand //tier 2
 	build_path = /obj/item/toy/prize/durand
 
-/datum/design/item/genfab/consumer/toys/prize/honk / tier 2
+/datum/design/item/genfab/consumer/toys/prize/honk // tier 2
 	build_path = /obj/item/toy/prize/honk
 
 /datum/design/item/genfab/consumer/toys/prize/marauder // tier 2

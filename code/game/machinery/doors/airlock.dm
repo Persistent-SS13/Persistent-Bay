@@ -206,20 +206,20 @@
 	else
 		wires = new/datum/wires/airlock(src)
 
-	/obj/machinery/door/airlock/Initialize()
-		//wireless connection
-		if(_wifi_id)
-			wifi_receiver = new(_wifi_id, src)
-		var/turf/T = loc
-		var/obj/item/weapon/airlock_brace/A = locate(/obj/item/weapon/airlock_brace) in T
-		if(!brace && A)
-			brace = A
-			brace.airlock = src
-			brace.forceMove(src)
-		update_connections()
-		. = ..()
-		update_icon()
-		return INITIALIZE_HINT_LATELOAD
+/obj/machinery/door/airlock/Initialize()
+	//wireless connection
+	if(_wifi_id)
+		wifi_receiver = new(_wifi_id, src)
+	var/turf/T = loc
+	var/obj/item/weapon/airlock_brace/A = locate(/obj/item/weapon/airlock_brace) in T
+	if(!brace && A)
+		brace = A
+		brace.airlock = src
+		brace.forceMove(src)
+	update_connections()
+	. = ..()
+	update_icon()
+	return INITIALIZE_HINT_LATELOAD
 
 //Later on during init check for a nearby door
 /obj/machinery/door/airlock/LateInitialize()

@@ -267,8 +267,7 @@
 /datum/design/item/engifab/engitools/adv/experimental_welder
 	name = "Experimental welding tool"
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_PLASTEEL = 5 SHEETS, MATERIAL_PHORON = 5 SHEETS)
-	build_path = /obj/item/weapon/weldingtool/experimental
-
+	build_path = /obj/item/weapon/tool/weldingtool/experimental
 
 /datum/design/item/engifab/engitools/adv/airlock_brace
 	name = "Airlock brace"
@@ -279,7 +278,7 @@
 /datum/design/item/engifab/engitools/adv/brace_jack
 	name = "Brace jack"
 	materials = list(MATERIAL_STEEL = 3 SHEETS)
-	build_path = /obj/item/weapon/crowbar/brace_jack
+	build_path = /obj/item/weapon/tool/crowbar/brace_jack
 	research = "bracejack"
 
 /datum/design/item/engifab/engitools/adv/light_replacer

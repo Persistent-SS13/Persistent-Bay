@@ -60,14 +60,14 @@
 	fire_sound = 'sound/weapons/Taser.ogg'
 	nodamage = 1
 	taser_effect = 1
-	agony = 50
+	agony = 30
 	damage_type = PAIN
 	//Damage will be handled on the MOB side, to prevent window shattering.
 
 /obj/item/projectile/energy/electrode/stunshot
 	nodamage = 0
-	damage = 15
-	agony = 70
+	damage = 10
+	agony = 35
 	damage_type = BURN
 	armor_penetration = 10
 
@@ -75,9 +75,9 @@
 	name = "decloner beam"
 	icon_state = "declone"
 	fire_sound = 'sound/weapons/pulse3.ogg'
-	damage = 30
+	damage = 10
 	damage_type = CLONE
-	irradiate = 40
+	irradiate = 10
 
 
 /obj/item/projectile/energy/dart
@@ -94,14 +94,14 @@
 	damage = 10
 	damage_type = TOX
 	nodamage = 0
-	agony = 40
+	agony = 35
 	stutter = 10
 
 
 /obj/item/projectile/energy/bolt/large
 	name = "largebolt"
-	damage = 20
-	agony = 60
+	damage = 15
+	agony = 40
 
 
 /obj/item/projectile/energy/neurotoxin
@@ -115,9 +115,9 @@
 	name = "phoron bolt"
 	icon_state = "energy"
 	fire_sound = 'sound/effects/stealthoff.ogg'
-	damage = 20
+	damage = 5
 	damage_type = TOX
-	irradiate = 20
+	irradiate = 5
 
 /obj/item/projectile/energy/plasmastun
 	name = "plasma pulse"
@@ -126,7 +126,7 @@
 	armor_penetration = 10
 	kill_count = 4
 	damage = 5
-	agony = 70
+	agony = 40
 	damage_type = BURN
 	vacuum_traversal = 0
 

@@ -4,6 +4,33 @@
 	circuit = /obj/item/weapon/circuitboard/fabricator/autotailor/nonstandard
 	build_type = AUTOTAILOR_NONSTANDARD
 
+
+/obj/machinery/fabricator/autotailor/nonstandard/can_connect(var/datum/world_faction/trying, var/mob/M)
+	if(!trying.limits) return 0
+	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(req_access_faction)))
+		to_chat(M, "You do not have access to link machines to [trying.name].")
+		return 0
+	if(trying.limits.limit_atnonstandard <= trying.limits.atnonstandards.len)
+		if(M)
+			to_chat(M, "[trying.name] cannot connect any more machines of this type.")
+		return 0
+	trying.limits.atnonstandards |= src
+	req_access_faction = trying.uid
+	connected_faction = src
+	
+/obj/machinery/fabricator/autotailor/nonstandard/can_disconnect(var/datum/world_faction/trying, var/mob/M)
+	if(!trying.limits) return 0
+	trying.limits.atnonstandards -= src
+	req_access_faction = ""
+	connected_faction = null
+	if(M) to_chat(M, "The machine has been disconnected.")
+
+
+
+
+
+
+
 ////////////////////////////////////////////////////
 //////////////////////DESIGNS///////////////////////
 ////////////////////////////////////////////////////

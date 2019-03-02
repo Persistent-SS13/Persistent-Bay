@@ -21,13 +21,11 @@
 	assembly_type = /obj/structure/door_assembly/multi_tile
 
 /obj/machinery/door/airlock/multi_tile/should_save(var/datum/caller)
-	if(istype(caller, /turf))
-		var/turf/T = caller
-		if(T == loc)
-			..()
-		else
-			return 0
-	..()
+	if(caller == loc)
+		return ..()
+	else
+		return 0
+	return ..()
 
 /obj/machinery/door/airlock/multi_tile/New()
 	..()

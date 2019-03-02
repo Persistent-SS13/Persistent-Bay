@@ -29,47 +29,48 @@ SUBSYSTEM_DEF(mazemap)
 	map_data["12"] = new /datum/zlevel_data/twelve()
 	map_data["13"] = new /datum/zlevel_data/thirteen()
 
-	for(var/datum/zlevel_data/data in map_data)
+	for(var/x in map_data)
+		var/datum/zlevel_data/data = map_data[x]
 		var/op_z = data.z
 		var/obj/structure/transition_barrier/barrier
 		barrier = new(locate(TRANSITIONEDGE, TRANSITIONEDGE,op_z))
-		barrier.dir = SOUTHEAST
+		barrier.dir = 5
 		barrier = new(locate(TRANSITIONEDGE, world.maxy-TRANSITIONEDGE,op_z))
-		barrier.dir = NORTHEAST
+		barrier.dir = 6
 		barrier = new(locate(world.maxx-TRANSITIONEDGE, TRANSITIONEDGE,op_z))
-		barrier.dir = SOUTHWEST
+		barrier.dir = 9
 		barrier = new(locate(world.maxx-TRANSITIONEDGE, world.maxy-TRANSITIONEDGE,op_z))
-		barrier.dir = NORTHWEST
+		barrier.dir = 10
 		var/transition_dir = 0
 		if(data.N_connect)
-			transition_dir = 1
-		for(var/i = TRANSITIONEDGE+1 to world.maxx-TRANSITIONEDGE-1)
-			barrier = new(locate(i, TRANSITIONEDGE, op_z))
-			barrier.dir = EAST
-			if(transition_dir)
-				barrier.alpha = 150
-		transition_dir = 0
-		if(data.S_connect)
 			transition_dir = 1
 		for(var/i = TRANSITIONEDGE+1 to world.maxx-TRANSITIONEDGE-1)
 			barrier = new(locate(i, world.maxy-TRANSITIONEDGE, op_z))
 			barrier.dir = EAST
 			if(transition_dir)
-				barrier.alpha = 150
+				barrier.alpha = 50
+		transition_dir = 0
+		if(data.S_connect)
+			transition_dir = 1
+		for(var/i = TRANSITIONEDGE+1 to world.maxx-TRANSITIONEDGE-1)
+			barrier = new(locate(i, TRANSITIONEDGE, op_z))
+			barrier.dir = EAST
+			if(transition_dir)
+				barrier.alpha = 50
 		transition_dir = 0	
 		if(data.W_connect)
 			transition_dir = 1
 		for(var/i = TRANSITIONEDGE+1 to world.maxy-TRANSITIONEDGE-1)
 			barrier = new(locate(TRANSITIONEDGE, i, op_z))
 			if(transition_dir)
-				barrier.alpha = 150
+				barrier.alpha = 50
 		transition_dir = 0		
 		if(data.E_connect)
 			transition_dir = 1
 		for(var/i = TRANSITIONEDGE+1 to world.maxy-TRANSITIONEDGE-1)
 			barrier = new(locate(world.maxx-TRANSITIONEDGE, i, op_z))
 			if(transition_dir)
-				barrier.alpha = 150
+				barrier.alpha = 50
 		transition_dir = 0			
 		data.replenish_monsters()
 		

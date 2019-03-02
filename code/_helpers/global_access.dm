@@ -95,6 +95,8 @@
 			return global.SSprocessing;
 		if("SSradiation")
 			return global.SSradiation;
+		if("SSresearch")
+			return global.SSresearch;
 		if("SSshuttle")
 			return global.SSshuttle;
 		if("SSskybox")
@@ -395,6 +397,8 @@
 			return global.department_radio_keys;
 		if("description_icons")
 			return global.description_icons;
+		if("designer_system")
+			return global.designer_system;
 		if("diary")
 			return global.diary;
 		if("dna_activity_bounds")
@@ -1162,6 +1166,8 @@
 			global.SSprocessing=newval;
 		if("SSradiation")
 			global.SSradiation=newval;
+		if("SSresearch")
+			global.SSresearch=newval;
 		if("SSshuttle")
 			global.SSshuttle=newval;
 		if("SSskybox")
@@ -1462,6 +1468,8 @@
 			global.department_radio_keys=newval;
 		if("description_icons")
 			global.description_icons=newval;
+		if("designer_system")
+			global.designer_system=newval;
 		if("diary")
 			global.diary=newval;
 		if("dna_activity_bounds")
@@ -2181,6 +2189,7 @@
 	"SSplants",
 	"SSprocessing",
 	"SSradiation",
+	"SSresearch",
 	"SSshuttle",
 	"SSskybox",
 	"SSsun",
@@ -2331,6 +2340,7 @@
 	"department_accounts",
 	"department_radio_keys",
 	"description_icons",
+	"designer_system",
 	"diary",
 	"dna_activity_bounds",
 	"dna_genes",

@@ -390,11 +390,11 @@
 /obj/vehicle/bike/update_icon()
 	overlays.Cut()
 
-	var/image/bodypaint = image('icons/obj/bike.dmi', "body_color_overlay", src.layer)
+	var/image/bodypaint = image(src.icon, "body_color_overlay", src.layer)
 	bodypaint.color = paint_color
 	overlays += bodypaint
 
-	overlays += image('icons/obj/bike.dmi', "bike_overlay", "layer" = VEHICLE_TOP_LAYER)
+	overlays += image(src.icon, "bike_overlay", "layer" = VEHICLE_TOP_LAYER)
 	..()
 
 /datum/action/vehicle/

@@ -9,6 +9,22 @@
 	if(dir)
 		src.set_dir(dir)
 
-	if(istype(frame))
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -20 : 20)
-		pixel_y = (dir & 3)? (dir ==1 ? -32 : 32) : 0
+/obj/structure/sink/kitchen/Initialize()
+	. = ..()
+	queue_icon_update()
+
+/obj/structure/sink/kitchen/update_icon()
+	. = ..()
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = -30
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = 30
+		if(EAST)
+			src.pixel_x = -30
+			src.pixel_y = 0
+		if(WEST)
+			src.pixel_x = 30
+			src.pixel_y = 0

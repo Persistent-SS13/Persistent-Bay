@@ -1,11 +1,11 @@
 /obj/machinery/pipedispenser
-	name = "Pipe Dispenser"
-	icon = 'icons/obj/machines/pipedispenser.dmi'
-	icon_state = "pipe_d"
-	density = 1
-	anchored = 1
-	var/unwrenched = 0
-	var/wait = 0
+	name 			= "Pipe Dispenser"
+	icon 			= 'icons/obj/machines/pipedispenser.dmi'
+	icon_state 		= "pipe_d"
+	density 		= TRUE
+	anchored 		= TRUE
+	var/unwrenched 	= 0
+	var/wait 		= 0
 
 /obj/machinery/pipedispenser/attack_hand(user as mob)
 	if(..())
@@ -89,18 +89,18 @@
 		if(!wait)
 			var/p_type = text2num(href_list["make"])
 			var/p_dir = text2num(href_list["dir"])
-			var/obj/item/pipe/P = new (/*usr.loc*/ src.loc, pipe_type=p_type, dir=p_dir)
-			P.update()
 			wait = 1
 			flick("pipe_d_l", src)
-			spawn(10)
+			spawn(2 SECONDS)
+				var/obj/item/pipe/P = new (get_turf(src), pipe_type=p_type, dir=p_dir)
+				P.update()
 				wait = 0
 	if(href_list["makemeter"])
 		if(!wait)
-			new /obj/item/pipe_meter(/*usr.loc*/ src.loc)
 			wait = 1
-			flick("pipe_d_l", src) 
-			spawn(15)
+			flick("pipe_d_l", src)
+			spawn(2 SECONDS)
+				new /obj/item/pipe_meter(get_turf(src))
 				wait = 0
 
 /obj/machinery/pipedispenser/attackby(var/obj/item/W as obj, var/mob/user as mob)
@@ -141,3 +141,15 @@
 		return ..()
 
 
+//Allow you to drag-drop disposal pipes into it
+/obj/machinery/pipedispenser/MouseDrop_T(var/obj/item/pipe as obj, mob/user as mob)
+	if(!CanPhysicallyInteract(user))
+		return
+
+	if ((!istype(pipe) && !istype(pipe, /obj/item/pipe_meter)) || get_dist(src,pipe) > 1 )
+		return
+
+	if (pipe.anchored)
+		return
+
+	qdel(pipe)

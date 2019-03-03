@@ -170,6 +170,7 @@
 #include "code\__defines\colors.dm"
 #include "code\__defines\damage_organs.dm"
 #include "code\__defines\damage_types.dm"
+#include "code\__defines\disposal_pipes.dm"
 #include "code\__defines\dna.dm"
 #include "code\__defines\feedback.dm"
 #include "code\__defines\flags.dm"

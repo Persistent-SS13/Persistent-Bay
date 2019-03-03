@@ -96,6 +96,8 @@
 #define FILE_DIR "icons/turf/flooring"
 #define FILE_DIR "icons/vending_icons"
 #define FILE_DIR "maps"
+#define FILE_DIR "maps/nexus"
+#define FILE_DIR "maps/nexus/icons"
 #define FILE_DIR "maps/vignette"
 #define FILE_DIR "maps/vignette/icons"
 #define FILE_DIR "nano"

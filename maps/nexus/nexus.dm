@@ -11,6 +11,7 @@
 
 	#include "nexus_areas.dm"
 	#include "nexus_elevator.dm"
+	#include "nexus_factions.dm"
 	#include "nexus_presets.dm"
 	#define using_map_DATUM /datum/map/nexus
 

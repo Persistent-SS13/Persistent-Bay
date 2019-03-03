@@ -30,12 +30,22 @@
 		{{if data.design_research}}
 			<div class='item'>
 				<div class='itemLabel'>
-					Design Requirement
+					Research Requirement
 				</div>
 				<div class='itemContent'>
 					{{:data.design_research}}
 				</div>
 			</div>
+			{{if data.has_research}}
+				<div class='item'>
+					<div class='itemLabel'>
+						Tech Disk Uses
+					</div>
+					<div class='itemContent'>
+						{{:data.disk_uses}}
+					</div>
+				</div>
+			{{/if}}
 			<br>
 		{{/if}}
 		<div class='item'>

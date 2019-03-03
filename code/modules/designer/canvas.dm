@@ -11,6 +11,24 @@
 	var/icon_width = 30
 	var/icon_height = 30
 
+
+
+/obj/item/frame/canvas/examine(mob/user)
+	show(user)
+	..()
+
+/obj/item/frame/canvas/proc/show(mob/user as mob)
+	if(designer_unit && designer_unit.icon_custom)
+		user << browse_rsc(designer_unit.icon_custom, "tmp_canvas_\ref[src].png")
+		user << browse("<html><head><title>[name]</title></head>" \
+			+ "<body style='overflow:hidden;margin:0;text-align:center'>" \
+			+ "<img src='tmp_canvas_\ref[src].png' width='128' style='-ms-interpolation-mode:nearest-neighbor' />" \
+			+ "</body></html>", "window=book;size=128x128")
+		onclose(user, "[name]")
+		return
+
+
+
 /obj/item/frame/canvas/New()
 	desc += "This canvas has a size of [icon_width] by [icon_height]."
 
@@ -51,6 +69,22 @@
 	icon_state = "canvas"
 
 	var/canvas_item = /obj/item/frame/canvas
+
+
+/obj/structure/canvas/examine(mob/user)
+	show(user)
+	..()
+
+/obj/structure/canvas/proc/show(mob/user as mob)
+	if(designer_unit && designer_unit.icon_custom)
+		user << browse_rsc(designer_unit.icon_custom, "tmp_canvas_\ref[src].png")
+		user << browse("<html><head><title>[name]</title></head>" \
+			+ "<body style='overflow:hidden;margin:0;text-align:center'>" \
+			+ "<img src='tmp_canvas_\ref[src].png' width='128' style='-ms-interpolation-mode:nearest-neighbor' />" \
+			+ "</body></html>", "window=book;size=128x128")
+		onclose(user, "[name]")
+		return
+
 
 /obj/structure/canvas/New(loc, dir, atom/frame)
 	..(loc)

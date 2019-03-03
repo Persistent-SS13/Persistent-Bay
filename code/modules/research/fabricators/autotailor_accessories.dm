@@ -98,7 +98,7 @@
 //
 /datum/design/item/autotailor/accessories/fancy
 	category = "Fancy suits"
-	materials = list("cloth" = 1000, "phoron" = 500)
+	materials = list("cloth" = 1000, MATERIAL_PHORON = 500)
 
 /datum/design/item/autotailor/accessories/fancy/access_tangzuang	//custom colors
 	name = "Accessory - tangzhuang jacket"
@@ -288,7 +288,7 @@
 	name = "Necklace - white"
 	id = "necklace_white"
 	build_path = /obj/item/clothing/accessory/necklace
-	materials = list(DEFAULT_WALL_MATERIAL = 500)
+	materials = list(MATERIAL_STEEL = 500)
 
 /datum/design/item/autotailor/accessories/attach/lockette_silver	//techincally custom colors, but no mob sprite to show
 	name = "Lockette - silver"
@@ -501,43 +501,43 @@
 	name = "Jackboots - black"
 	id = "jackb_black"
 	build_path = /obj/item/clothing/shoes/jackboots
-	materials = list("leather" = 500, DEFAULT_WALL_MATERIAL = 1000)
+	materials = list("leather" = 500, MATERIAL_STEEL = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/jackb_black_notoe
 	name = "Jackboots - black toeless"
 	id = "jackb_black_notoe"
 	build_path = /obj/item/clothing/shoes/jackboots/unathi
-	materials = list("leather" = 500, DEFAULT_WALL_MATERIAL = 1000)
+	materials = list("leather" = 500, MATERIAL_STEEL = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/jackb_grey	//item sprite looks arcane-y, but mob sprite looks normal for everyday use
 	name = "Jackboots - grey"
 	id = "jackb_grey"
 	build_path = /obj/item/clothing/shoes/cult
-	materials = list("leather" = 500, DEFAULT_WALL_MATERIAL = 1000)
+	materials = list("leather" = 500, MATERIAL_STEEL = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/jackb_tan
 	name = "Jackboots - tan"
 	id = "jackb_tan"
 	build_path = /obj/item/clothing/shoes/desertboots
-	materials = list("leather" = 500, DEFAULT_WALL_MATERIAL = 1000)
+	materials = list("leather" = 500, MATERIAL_STEEL = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/jackb_brown
 	name = "jackboots - brown"
 	id = "jackb_brown"
 	build_path = /obj/item/clothing/shoes/jungleboots
-	materials = list("leather" = 500, DEFAULT_WALL_MATERIAL = 1000)
+	materials = list("leather" = 500, MATERIAL_STEEL = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/workboot
 	name = "Industrial workboots"
 	id = "workboot"
 	build_path = /obj/item/clothing/shoes/workboots
-	materials = list("leather" = 500, DEFAULT_WALL_MATERIAL = 1000)
+	materials = list("leather" = 500, MATERIAL_STEEL = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/workboot_notoe	//hopefully unique sprite on unanthe, same sprite as above on human, also outdated object sprite
 	name = "Industrial workboots - toeless"
 	id = "workboot_notoe"
 	build_path = /obj/item/clothing/shoes/workboots/toeless
-	materials = list("leather" = 500, DEFAULT_WALL_MATERIAL = 1000)
+	materials = list("leather" = 500, MATERIAL_STEEL = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/galoshes_yellow
 	name = "Galoshes"
@@ -602,7 +602,7 @@
 	name = "Dangle earrings - steel"
 	id = "dangle_steel"
 	build_path = /obj/item/clothing/ears/earring/dangle/steel
-	materials = list(DEFAULT_WALL_MATERIAL = 500)
+	materials = list(MATERIAL_STEEL = 500)
 
 /datum/design/item/autotailor/accessories/ears/dangle_silver
 	name = "Dangle earrings - silver"
@@ -656,7 +656,7 @@
 	name = "Stud earrings - steel"
 	id = "stud_steel"
 	build_path = /obj/item/clothing/ears/earring/stud/steel
-	materials = list(DEFAULT_WALL_MATERIAL = 500)
+	materials = list(MATERIAL_STEEL = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_silver
 	name = "Stud earrings - silver"
@@ -687,7 +687,7 @@
 //
 /datum/design/item/autotailor/accessories/eyes
 	category = "Glasses"
-	materials = list(DEFAULT_WALL_MATERIAL = 100, "glass" = 500)
+	materials = list(MATERIAL_STEEL = 100, "glass" = 500)
 
 /datum/design/item/autotailor/accessories/eyes/prescription
 	name = "Prescription glasses"
@@ -698,25 +698,25 @@
 	name = "Prescription glasses - alternate"
 	id = "prescription_hipster"
 	build_path = /obj/item/clothing/glasses/regular/hipster
-	materials = list(DEFAULT_WALL_MATERIAL = 500, "glass" = 1000)
+	materials = list(MATERIAL_STEEL = 500, "glass" = 1000)
 
 /datum/design/item/autotailor/accessories/eyes/prescription_sun
 	name = "Prescription glasses - sunglasses"
 	id = "prescription_sun"
 	build_path = /obj/item/clothing/glasses/sunglasses/prescription
-	materials = list(DEFAULT_WALL_MATERIAL = 100, "glass" = 1000, "fiberglass" = 7000)
+	materials = list(MATERIAL_STEEL = 100, "glass" = 1000, "fiberglass" = 7000)
 
 /datum/design/item/autotailor/accessories/eyes/sunglasses
 	name = "Sunglasses"
 	id = "sunglasses"
 	build_path = /obj/item/clothing/glasses/sunglasses
-	materials = list(DEFAULT_WALL_MATERIAL = 100, "fiberglass" = 5000)
+	materials = list(MATERIAL_STEEL = 100, "fiberglass" = 5000)
 
 /datum/design/item/autotailor/accessories/eyes/sunglasses_large
 	name = "Sunglasses - large"
 	id = "sunglasses_large"
 	build_path = /obj/item/clothing/glasses/sunglasses/big
-	materials = list(DEFAULT_WALL_MATERIAL = 1000, "fiberglass" = 10000)
+	materials = list(MATERIAL_STEEL = 1000, "fiberglass" = 10000)
 
 /datum/design/item/autotailor/accessories/eyes/gglasses
 	name = "Glasses - green"
@@ -732,13 +732,13 @@
 	name = "Monocle"
 	id = "monocle"
 	build_path = /obj/item/clothing/glasses/monocle
-	materials = list(DEFAULT_WALL_MATERIAL = 100, "glass" = 500, "phoron" = 500)
+	materials = list(MATERIAL_STEEL = 100, "glass" = 500, MATERIAL_PHORON = 500)
 
 /datum/design/item/autotailor/accessories/eyes/default_veil
 	name = "Decorative veil"
 	id = "default_veil"
 	build_path = /obj/item/clothing/glasses/veil
-	materials = list(DEFAULT_WALL_MATERIAL = 100, "glass" = 500, "phoron" = 5000)
+	materials = list(MATERIAL_STEEL = 100, "glass" = 500, MATERIAL_PHORON = 5000)
 
 //
 //gloves
@@ -766,7 +766,7 @@
 	name = "Gloves - embroidered blue"
 	id = "emb_blue"
 	build_path = /obj/item/clothing/gloves/captain
-	materials = list("leather" = 2000, "phoron" = 4000)
+	materials = list("leather" = 2000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/accessories/gloves/black_thick
 	name = "Gloves - thick black"
@@ -802,7 +802,7 @@
 	name = "Evening gloves - white"
 	id = "dressgloves_white"
 	build_path = /obj/item/clothing/gloves/color/evening
-	materials = list("leather" = 2000, "phoron" = 10000)
+	materials = list("leather" = 2000, MATERIAL_PHORON = 10000)
 
 /datum/design/item/autotailor/accessories/gloves/eng_vox
 	name = "Insulated gloves - vox"
@@ -820,7 +820,7 @@
 	name = "Forensic gloves"
 	id = "forensic"
 	build_path = /obj/item/clothing/gloves/forensic
-	materials = list("leather" = 2000, "phoron" = 60000)	//these gloves have very unique threads, making them cheap makes it not very unique
+	materials = list("leather" = 2000, MATERIAL_PHORON = 60000)	//these gloves have very unique threads, making them cheap makes it not very unique
 
 /datum/design/item/autotailor/accessories/gloves/boxing_red
 	name = "Boxing gloves - red"
@@ -863,7 +863,7 @@
 	name = "Breath mask - tactical"
 	id = "breath_tact"
 	build_path = /obj/item/clothing/mask/gas/half
-	materials = list("plastic" = 2000, DEFAULT_WALL_MATERIAL = 2000)
+	materials = list("plastic" = 2000, MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/accessories/masks/breath_vox
 	name = "Breath mask - vox"

@@ -88,7 +88,7 @@ research holder datum.
 						mech_fab |= D
 					if(VOIDFAB)
 						void_fab |= D
-					if(AMMOFAB)
+					if(WEAPONFAB)
 						ammo_fab |= D
 					if(AUTOTAILOR_ACCESSORIES)
 						accessory_at |= D
@@ -115,7 +115,7 @@ research holder datum.
 					mech_fab |= D
 				if(VOIDFAB)
 					void_fab |= D
-				if(AMMOFAB)
+				if(WEAPONFAB)
 					ammo_fab |= D
 				if(AUTOTAILOR_ACCESSORIES)
 					accessory_at |= D
@@ -149,7 +149,7 @@ research holder datum.
 			return mech_fab
 		if(VOIDFAB)
 			return void_fab
-		if(AMMOFAB)
+		if(WEAPONFAB)
 			return ammo_fab
 		if(AUTOTAILOR_ACCESSORIES)
 			return accessory_at
@@ -257,15 +257,21 @@ research holder datum.
 	var/category = TECH_ENGI
 	var/points = 150
 	var/list/prereqs = list()
+	var/uses = -10 // some techs will have limited uses. -10 is infinite
 
 /datum/tech_entry/engi
 	category = TECH_ENGI
-/datum/tech_entry/medi
+
+/datum/tech_entry/medical
 	category = TECH_MEDI
+
 /datum/tech_entry/combat
 	category = TECH_WAR
+	uses = 3
+
 /datum/tech_entry/consumer
 	category = TECH_CONSUMER
+
 /datum/tech_entry/general
 	category = TECH_GENERAL
 
@@ -305,6 +311,7 @@ research holder datum.
 	points = 1500
 	uid = "rcd"
 	prereqs = list("super_matter_bin", "cell_super", "ultra_micro_laser")
+	uses = 2
 
 /datum/tech_entry/engi/welder_industrial
 	name = "Industrial Fuel Storage"
@@ -328,7 +335,7 @@ research holder datum.
 	points = 1400
 	uid = "welding_experimental"
 	prereqs = list("welding_industrial", "welding_huge")
-
+	uses = 3
 
 /datum/tech_entry/engi/airlock_brace
 	name = "Airlock Bracing"
@@ -419,11 +426,47 @@ research holder datum.
 
 /datum/tech_entry/consumer/flora_gun
 	name = "Rapid Flora Mutation"
-	desc = "Develop a device that can prompt rapid mutations in plants. Unlocks the gl for the appropriate fabricators."
+	desc = "Develop a device that can prompt rapid mutations in plants. Unlocks floral somatoray designs for the appropriate fabricators."
+	tier = 1
+	points = 200
+	uid = "floragun"
+
+/datum/tech_entry/consumer/toys/plushie
+	name = "Super-Cute Plushies"
+	desc = "These plushies can attract customers in droves, and they are quite inexpensive. Unlocks the uncommon action figure designs for the appropriate fabricators."
+	tier = 1
+	points = 100
+	uid = "plushie"
+
+
+/datum/tech_entry/consumer/toys/figures_1
+	name = "Uncommon Action Figures"
+	desc = "By buying into the figurine tech tree, you will have exclusive access to increasingly rare figures. Unlocks the uncommon action figure designs for the appropriate fabricators."
 	tier = 1
 	points = 75
-	uid = "flasks"
+	uid = "figures_1"
 
+/datum/tech_entry/consumer/toys/figures_2
+	name = "Scarce Action Figures"
+	desc = "These figures are much more engaging than the more common ones. Unlocks the scarce action figure designs for the appropriate fabricators."
+	tier = 2
+	points = 150
+	uid = "figures_2"
+
+/datum/tech_entry/consumer/toys/figures_3
+	name = "Rare Action Figures"
+	desc = "These action figures are high ranking and fantasy characters. Unlocks the rare action figure designs for the appropriate fabricators."
+	tier = 3
+	points = 300
+	uid = "figures_3"
+	uses = 10
+/datum/tech_entry/consumer/toys/figures_4
+	name = "Ultra-Rare Action Figures"
+	desc = "Only a select few people should ever get these special figures. Unlocks the rare action figure designs for the appropriate fabricators."
+	tier = 4
+	points = 600
+	uid = "figures_4"
+	uses = 1
 
 //////////////////////////////////////////////////
 //////////////////////////////////////////////////
@@ -469,8 +512,6 @@ research holder datum.
 	points = 200
 	uid = "grenade_chem"
 
-// STUN WEAPONS
-
 /datum/tech_entry/combat/grenades/anti_photon
 	name = "Anti-Photon Experimental Nodules"
 	desc = "Develop experimental grenades that suck in light to create dark areas. Unlocks anti-photon grenade designs for the appropriate fabricators."
@@ -478,14 +519,18 @@ research holder datum.
 	points = 900
 	uid = "grenade_photon"
 	prereqs = list("grenade_emp")
-	
+	uses = -10
+
+// STUN WEAPONS
+
+
 /datum/tech_entry/combat/taser/carbine
 	name = "Improved Tasers"
 	desc = "By improving capacitors in stun weapons concentrated energy bolts can be developed. Unlocks taser carbine designs for the appropriate fabricators."
 	tier = 1
 	points = 200
 	uid = "stun_1"
-	
+	uses = -10
 /datum/tech_entry/combat/taser/revolver
 	name = "Advanced stun weapons"
 	desc = "The schematics for powerful stun revolver and stun rifle designs could be developed. Unlocks stun revolver & stun rifle designs for the appropriate fabricators."
@@ -493,7 +538,7 @@ research holder datum.
 	points = 400
 	uid = "stun_2"
 	prereqs = list("stun_1")
-
+	uses = -10
 /datum/tech_entry/combat/taser/plasmastun
 	name = "Concussive Plasma Bolts"
 	desc = "The final word in non-lethal weaponry. Unlocks plasma pulse projector designs for the appropriate fabricators."
@@ -501,7 +546,7 @@ research holder datum.
 	points = 700
 	uid = "stun_3"
 	prereqs = list("stun_2")
-	
+	uses = -10
 // END STUN WEAPONS
 
 // BALLISTIC WEAPONS
@@ -512,14 +557,14 @@ research holder datum.
 	tier = 1
 	points = 175
 	uid = "pistol_1"
-	
+	uses = -10
 /datum/tech_entry/combat/proj/shotgun
 	name = "Double Barrel Rifling"
 	desc = "A shotgun with two barrels can fire both at the same time to take down a larger target. Unlocks double barrel shotgun designs for the appropriate fabricators."
 	tier = 1
 	points = 175
 	uid = "shotgun_1"
-
+	uses = -10
 /datum/tech_entry/combat/proj/automatic/uzi
 	name = "Small Automatic Weapons"
 	desc = "Automatic weapons can put bullets into bad-guys faster than any alternative. Unlocks 9mm machine pistol &  9mm sub-machine gun designs for the appropriate fabricators."
@@ -535,7 +580,7 @@ research holder datum.
 	points = 350
 	uid = "shotgun_2"
 	prereqs = list("shotgun_1")
-	
+
 /datum/tech_entry/combat/proj/shotgun/combat
 	name = "Combat Shotgun Implementation"
 	desc = "The combat shotgun is a powerful weapon that can take down high value targets. Unlocks combat shotgun designs for the appropriate fabricators."
@@ -566,7 +611,7 @@ research holder datum.
 	points = 1600
 	uid = "autos_3"
 	prereqs = list("autos_2")
-
+	uses = 2
 /datum/tech_entry/combat/proj/sniper
 	name = "Anti-Material Rifles"
 	desc = "The application of phoron heavily throughout the design of a rifle gives it a powerful structural penetration capability. Unlocks anti-material sniper designs for the appropriate fabricators."
@@ -574,7 +619,7 @@ research holder datum.
 	points = 1400
 	uid = "antimaterial"
 	prereqs = list("pistol_2", "shotgun_3")
-
+	uses = 2
 
 // END BALLISTIC WEAPONS
 
@@ -620,7 +665,7 @@ research holder datum.
 	points = 1700
 	uid = "ion_2"
 	prereqs = list("ion_1", "energy_2")
-
+	uses = 2
 /datum/tech_entry/combat/energy/heavy
 	name = "Masterful Energy Weapons"
 	desc = "Putting together all the prior applications of beam and laser weapons, a heavy sniper and assault-cannon can be developed. Unlocks ion rifle designs for the appropriate fabricators."
@@ -628,7 +673,7 @@ research holder datum.
 	points = 1500
 	uid = "energy_3"
 	prereqs = list("xray_1", "energy_2")
-
+	uses = 2
 
 /datum/tech_entry/combat/energy/pulse
 	name = "Pulse Weapons"
@@ -637,7 +682,7 @@ research holder datum.
 	points = 1800
 	uid = "pulse_1"
 	prereqs = list("energy_2", "super_capacitor")
-
+	uses = 2
 
 // END ENERGY WEAPONS
 
@@ -649,7 +694,7 @@ research holder datum.
 	tier = 1
 	points = 100
 	uid = "melee_1"
-
+	uses = -10
 /datum/tech_entry/combat/melee/exotic
 	name = "Exotic Weapons"
 	desc = "A variety of cultural weapons from across history could be developed. Unlocks a variety of exotic weapon designs for the appropriate fabricators."
@@ -657,6 +702,7 @@ research holder datum.
 	points = 200
 	uid = "melee_2"
 	prereqs = list("melee_1")
+	uses = -10
 /datum/tech_entry/combat/melee/blademaster
 	name = "Blade Mastery"
 	desc = "The last and best of the conventional melee weapon designs can be completed. Unlocks fancy melee weapon designs for the appropriate fabricators."
@@ -664,7 +710,7 @@ research holder datum.
 	points = 400
 	uid = "melee_3"
 	prereqs = list("melee_2")
-	
+	uses = -10
 /datum/tech_entry/combat/melee/energy
 	name = "Energy Blades"
 	desc = "By enriching the point of contact with uranium reactant with phoron a variety of melee energy wepaons can be developed. Unlocks energy melee weapon designs for the appropriate fabricators."
@@ -672,11 +718,11 @@ research holder datum.
 	points = 800
 	uid = "melee_4"
 	prereqs = list("melee_3", "energy_2")
-	
+
 // END MELEE WEAPONS
 
 // ILLEGAL DEVICES
-	
+
 /datum/tech_entry/combat/illegal/kidnapping
 	name = "(RESTRICTED) Kidnapping Tools"
 	desc = "Tools to keep hostages in line and block suit senors could be developed, but they are both considered unethical. Unlocks suit sensor jammers & electropack designs for the appropriate fabricators."
@@ -684,7 +730,7 @@ research holder datum.
 	points = 600
 	uid = "illegal_1"
 	prereqs = list("adv_capacitor", "shotgun_2")
-
+	uses = 2
 /datum/tech_entry/combat/illegal/spying
 	name = "(RESTRICTED) Clandestine Monitoring Equipment"
 	desc = "A spy bug and monitor pairing could be designed, but these are instruments of sabotage. Unlocks spy bug and spy monitor designs for the appropriate fabricators."
@@ -692,7 +738,7 @@ research holder datum.
 	points = 1300
 	uid = "illegal_2"
 	prereqs = list("illegal_1", "pico_mani")
-
+	uses = 5
 
 // END ILLEGAL DEVICES
 
@@ -813,7 +859,7 @@ research holder datum.
 	points = 1350
 	uid = "scalpel_4"
 	prereqs = list("scalpel_3", "ultra_micro_laser", "nano_mani")
-
+	uses = 5
 /datum/tech_entry/medical/defib
 	name = "Electro-Resuscitation"
 	desc = "An electro-pulse sent through the body can restart a heart. Unlocks auto-resuscitator designs for the appropriate fabricators."
@@ -986,7 +1032,7 @@ research holder datum.
 	tier = 1
 	points = 150
 	uid = "computer_1"
-	
+
 /datum/tech_entry/general/computer/super_parts
 	name = "Super Computer Components"
 	desc = "An even better set of core computer components can be developed. Unlocks super computer component designs for the appropriate fabricators."
@@ -994,7 +1040,7 @@ research holder datum.
 	points = 300
 	uid = "computer_2"
 	prereqs = list("computer_1")
-	
+
 /datum/tech_entry/general/computer/ultra_parts
 	name = "Mastered Computer Components"
 	desc = "The absolute best computer components outclass the others completely. Unlocks the final computer component designs for the appropriate fabricators."
@@ -1094,6 +1140,18 @@ research holder datum.
 	desc = "Research into the occult and arcane field for use in practical science"
 	id = TECH_ARCANE
 	level = 0
+
+
+/obj/item/weapon/disk/tech_entry_disk
+	name = "tech disk"
+	desc = "Load this into a fabricator to unlock designs that require this technology. This disk will be consumer in the process."
+	icon = 'icons/obj/cloning.dmi'
+	icon_state = "datadisk2"
+	item_state = "card-id"
+	w_class = ITEM_SIZE_SMALL
+	matter = list(MATERIAL_STEEL = 30, MATERIAL_GLASS = 10)
+	var/uid
+
 
 /obj/item/weapon/disk/tech_disk
 	name = "technology disk"

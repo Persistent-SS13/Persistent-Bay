@@ -1,0 +1,64 @@
+<h2>Research Management</h2>
+<br><hr>
+<b>Tech Points: {{:data.tech_points}}</b>
+<br>
+{{:helper.link('Back', '', {'action' : 'back'}, null)}}<br><hr>
+{{if data.selected_tech}}
+	<h3>{{:data.selected_tech}}</h3>
+	<div class='itemLabel'>
+		Prerequisite Technologies
+	</div>
+	<div class='itemContent'>
+		{{:data.prereqs}}
+	</div>
+	<br>
+	<div class='itemLabel'>
+		Description
+	</div>
+	<br>
+	{{:data.desc}}
+	<br><br>
+	<div class='itemLabel'>
+		Tech Disk Uses
+	</div>
+	<div class='itemContent'>
+		{{:data.uses}}
+	</div>
+	Some dangerous or rare technologies will print tech disks that can only produce a limited number of designs from a fabricator before wearing out.
+	<br><br>
+	{{if data.tech_unlocked}}
+		<div class='itemLabel'>
+			Print Tech Disk
+		</div>
+		<div class='itemContent'>
+			{{:helper.link(data.print_cost, '', {'action' : 'print_disk'}, data.can_print ? null : 'disabled')}}
+		</div>
+		The technology has already been unlocked. For 25% of the technology unlock cost, a tech disk can be printed that can be inserted into a fabricator so that any design requiring this technology will be available.
+	{{else}}
+		<div class='itemLabel'>
+			Unlock Tech
+		</div>
+		<div class='itemContent'>
+			{{:helper.link(data.unlock_cost, '', {'action' : 'unlock_tech'}, data.can_unlock ? null : 'disabled')}}
+		</div>
+		When the technology is unlocked, a free tech disk will be printed that can be inserted into fabricators so that any design requiring this technology will be available. Additional tech disks can be printed for 25% of the initial unlock cost.
+	{{/if}}
+{{else}}
+	{{:helper.link("General", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
+	{{:helper.link("Engineering", '', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
+	{{:helper.link("Medical", '', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
+	{{:helper.link("Consumer", '', {'action' : 'change_menu', 'menu_target' : '4'}, data.menu == 4 ? 'selected' : null)}}
+	{{:helper.link("Combat", '', {'action' : 'change_menu', 'menu_target' : '5'}, data.menu == 5 ? 'selected' : null)}}
+	<br><hr><br>
+	{{:helper.link("Tier One", '', {'action' : 'change_tier', 'menu_target' : '1'}, data.tier == 1 ? 'selected' : null)}}
+	{{:helper.link("Tier Two", '', {'action' : 'change_tier', 'menu_target' : '2'}, data.tier == 2 ? 'selected' : null)}}	
+	{{:helper.link("Tier Three", '', {'action' : 'change_tier', 'menu_target' : '3'}, data.tier == 3 ? 'selected' : null)}}	
+	{{:helper.link("Tier Four", '', {'action' : 'change_tier', 'menu_target' : '4'}, data.tier == 4 ? 'selected' : null)}}
+	<br><hr><br>
+	{{for data.tech_entries}}
+		{{:helper.link(value.name, null, {'action' : 'select_tech', 'target' : value.ref}, null, data.unlocked ?'yellowButton' : 'redButton')}}
+		<br><br>
+		<i>{{:value.desc}}</i>
+		<br><hr>
+	{{/for}}
+{{/if}}

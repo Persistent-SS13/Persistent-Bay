@@ -5,6 +5,10 @@ interface. It is designed for subtypes to be easily created with minimal changes
 as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely commented example.
 */
 
+/datum/fabricator_tech
+	var/uid
+	var/uses = -10
+
 /obj/machinery/fabricator
 	// Things that must be adjusted for each fabricator
 	name = "Fabricator"
@@ -48,8 +52,6 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 
 	var/datum/world_faction/connected_faction
 	var/datum/design/selected_design
-
-/obj/item/weapon/circuitboard/fabricator/var/list/tech_uids = list()
 
 
 
@@ -153,10 +155,11 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 			data["design_icon"] = user.browse_rsc_icon(selected_design.builds.icon, selected_design.builds.icon_state)
 			if(selected_design.research && selected_design.research != "")
 				var/datum/tech_entry/entry = SSresearch.files.get_tech_entry(selected_design.research)
-				if(!has_research(selected_design))
+				if(!has_research(selected_design.research))
 					data["design_research"] = "<font color='red'>" + entry.name + "</font>"
 				else
 					data["design_research"] = "<font color='green'>" + entry.name + "</font>"
+				data["disk_uses"] = get_uses()
 
 	if(menu == 2)
 		data["queue"] = get_queue_names()
@@ -168,14 +171,14 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	if(menu == 3)
 		if(connected_faction)
 			data["org"] = connected_faction.name
-		
+
 		if(req_access.len)
 			var/access = req_access[1]
 			data["access"] = connected_faction.get_access_name(access)
 		else
 			data["access"] = "**NO ACCESS REQUIREMENT**"
-		
-		
+
+
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
@@ -202,10 +205,10 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 
 	if(href_list["menu"])
 		menu = text2num(href_list["menu"])
-		
+
 	if(href_list["back"])
 		selected_design = null
-		
+
 	if(href_list["build"])
 		add_to_queue(selected_design)
 	return 1
@@ -229,6 +232,18 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 		update_busy()
 		return
 
+	if(istype(I, /obj/item/weapon/disk/tech_entry_disk))
+		var/obj/item/weapon/disk/tech_entry_disk/disk = I
+		if(!disk.uid || disk.uid == "")
+			to_chat(user, "This tech disk is blank. Contact a developer.")
+		if(has_research(disk.uid))
+			to_chat(user, "The fabricator already carries this tech.")
+		if(!needs_research(disk.uid))
+			to_chat(user, "The fabricator has no designs that require this tech.")
+		add_research(disk.uid)
+		user.drop_item()
+		disk.loc = null
+		qdel(disk)
 	if(!istype(I, /obj/item/stack/material))
 		return ..()
 
@@ -304,7 +319,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	for(var/C in D.chemicals)
 		if(!reagents.has_reagent(C, D.chemicals[C] * mat_efficiency))
 			return 0
-	if(D.research && D.research != "" && !(D.research in circuit.tech_uids)) return 0
+	if(D.research && D.research != "" && !(has_research(D.research))) return 0
 	return 1
 
 
@@ -332,12 +347,43 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 		return 0
 	return 1
 
+/obj/machinery/fabricator/proc/add_research(var/uid)
+	var/datum/tech_entry/entry = SSresearch.files.get_tech_entry(uid)
+	var/datum/fabricator_tech/tech = new()
+	tech.uid = entry.uid
+	tech.uses = entry.uses
+	circuit.unlocked_techs |= tech
+/obj/machinery/fabricator/proc/has_research(var/uid)
+	for(var/datum/fabricator_tech/tech in circuit.unlocked_techs)
+		if(tech.uid == uid)
+			return 1
+	return 0
 
-/obj/machinery/fabricator/proc/has_research(var/datum/design/D)
-	if(D.research && D.research != "" && !(D.research in circuit.tech_uids)) return 0
-	return 1
+/obj/machinery/fabricator/proc/needs_research(var/uid)
+	var/list/design_options = SSresearch.files.get_research_options(build_type)
+	for(var/datum/design/D in design_options)
+		if(D.research == uid) return 1
 
+/obj/machinery/fabricator/proc/get_research(var/uid)
+	for(var/datum/fabricator_tech/tech in circuit.unlocked_techs)
+		if(tech.uid == uid)
+			return tech
+	return 0
 
+/obj/machinery/fabricator/proc/handle_uses(var/uid)
+	var/datum/fabricator_tech/tech = get_research(uid)
+	if(tech && tech.uses != -10)
+		tech.uses--
+		if(tech.uses <= 0)
+			circuit.unlocked_techs -= tech
+/obj/machinery/fabricator/proc/get_uses()
+	var/datum/fabricator_tech/tech = get_research(selected_design.research)
+	if(tech)
+		if(tech.uses == -10)
+			return "unlimited"
+		else
+			return tech.uses
+	return "unlimited"
 
 
 /obj/machinery/fabricator/proc/check_build()
@@ -355,6 +401,8 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	for(var/C in D.chemicals)
 		reagents.remove_reagent(C, D.chemicals[C] * mat_efficiency)
 	if(D.build_path)
+		if(D.research && D.research != "")
+			handle_uses(D.research)
 		var/obj/new_item = D.Fabricate(loc, src)
 		visible_message("\The [src] pings, indicating that \the [D] is complete.", "You hear a ping.")
 		if(mat_efficiency != 1)
@@ -377,7 +425,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 		var/datum/design/D = design_options[i]
 		var/design_research
 		if(D.research && D.research != "")
-			if(!has_research(D))
+			if(!has_research(D.research))
 				techless |= D
 				continue
 			else
@@ -388,7 +436,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 		var/datum/design/D = techless[i]
 		var/design_research
 		if(D.research && D.research != "")
-			if(!has_research(D))
+			if(!has_research(D.research))
 				design_research = "<font color='red'>[D.get_tech_name()]</font>"
 			else
 				design_research = "<font color='green'>[D.get_tech_name()]</font>"
@@ -424,7 +472,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	return time2text(round(10 * D.time / speed), "mm:ss")
 
 /obj/machinery/fabricator/proc/update_categories()
-	categories = list()	
+	categories = list()
 	var/list/design_options = SSresearch.files.get_research_options(build_type)
 	var/list/design_materials = list()
 	for(var/i = 1 to design_options.len)

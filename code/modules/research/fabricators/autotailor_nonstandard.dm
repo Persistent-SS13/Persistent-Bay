@@ -200,7 +200,7 @@
 	name = "Vox makeshift armor"
 	id = "vox_armor"
 	build_path = /obj/item/clothing/suit/armor/vox_scrap
-	materials = list("cloth" = 3000, "leather" = 5000, DEFAULT_WALL_MATERIAL = 10000)
+	materials = list("cloth" = 3000, "leather" = 5000, MATERIAL_STEEL = 10000)
 
 /datum/design/item/autotailor/nonstandard/suit/fur	//maybe remove, or put as costume
 	name = "alien fur coat"
@@ -271,7 +271,7 @@
 	name = "Gladiator's helmet"
 	id = "gladiator_head"
 	build_path = /obj/item/clothing/head/helmet/gladiator/costume
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/schoolgirl
 	name = "schoolgirl uniform"
@@ -424,7 +424,7 @@
 	name = "cultist robes - armored"
 	id = "armored_cult"
 	build_path = /obj/item/clothing/suit/cultrobes/costume
-	materials = list("leather" = 5000, DEFAULT_WALL_MATERIAL = 500)
+	materials = list("leather" = 5000, MATERIAL_STEEL = 500)
 
 /datum/design/item/autotailor/nonstandard/costume/sorcery_cult_r
 	name = "cultist robes - red sorcerer"
@@ -463,19 +463,19 @@
 	name = "Armored suit - red team"
 	id = "red_suit_armor"
 	build_path = /obj/item/clothing/suit/armor/tdome/red
-	materials = list(DEFAULT_WALL_MATERIAL = 10000)
+	materials = list(MATERIAL_STEEL = 10000)
 
 /datum/design/item/autotailor/nonstandard/costume/green_suit_armor
 	name = "Armored suit - green team"
 	id = "green_suit_armor"
 	build_path = /obj/item/clothing/suit/armor/tdome/green
-	materials = list(DEFAULT_WALL_MATERIAL = 10000)
+	materials = list(MATERIAL_STEEL = 10000)
 
 /datum/design/item/autotailor/nonstandard/costume/armor_suit_head
 	name = "Armored suit helmet"
 	id = "green_suit_head"
 	build_path = /obj/item/clothing/head/helmet/thunderdome/costume
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/cardboard
 	name = "Cardboard suit"
@@ -493,13 +493,13 @@
 	name = "Robes - embelished purple"
 	id = "purple_robe"
 	build_path = /obj/item/clothing/suit/wizrobe/psypurple/fake
-	materials = list("cloth" = 10000, "phoron" = 4000)
+	materials = list("cloth" = 10000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/nonstandard/costume/purple_robe_head
 	name = "Robes - embelished purple head"
 	id = "purple_robe_head"
 	build_path = /obj/item/clothing/head/wizard/amp/fake
-	materials = list("cloth" = 2000, "phoron" = 1000)
+	materials = list("cloth" = 2000, MATERIAL_PHORON = 1000)
 
 /datum/design/item/autotailor/nonstandard/costume/red_robe
 	name = "Robes - red"
@@ -656,12 +656,12 @@
 	name = "Laser tag armor - blue team"
 	id = "ltag_blue"
 	build_path = /obj/item/clothing/suit/bluetag
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/ltag_red
 	name = "Laster tag armor - red team"
 	id = "ltag_red"
-	materials = list(DEFAULT_WALL_MATERIAL = 2000)
+	materials = list(MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/nonstandard/costume/labcoat_madlad
 	name = "Labcoat - mad scientist"
@@ -673,19 +673,19 @@
 	name = "Robes - imperium monk"
 	id = "techno_monk"
 	build_path = /obj/item/clothing/suit/imperium_monk
-	materials = list("cloth" = 10000, "phoron" = 4000)
+	materials = list("cloth" = 10000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/nonstandard/costume/hastur
 	name = "Hastur robes"
 	id = "hastur"
 	build_path = /obj/item/clothing/suit/hastur
-	materials = list("cloth" = 10000, "phoron" = 4000)
+	materials = list("cloth" = 10000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/nonstandard/costume/hastur_hood
 	name = "Hastur hood"
 	id = "hastur_hood"
 	build_path = /obj/item/clothing/head/hasturhood
-	materials = list("cloth" = 2000, "phoron" = 1000)
+	materials = list("cloth" = 2000, MATERIAL_PHORON = 1000)
 
 /datum/design/item/autotailor/nonstandard/costume/plague_doc
 	name = "Plague doctor suit"
@@ -762,7 +762,7 @@
 	name = "Royal crown"
 	id = "crown"
 	build_path = /obj/item/clothing/head/crown
-	materials = list(DEFAULT_WALL_MATERIAL = 2000, "phoron" = 5000)
+	materials = list(MATERIAL_STEEL = 2000, MATERIAL_PHORON = 5000)
 
 /datum/design/item/autotailor/nonstandard/costume/paper_crown
 	name = "Paper crown - rainbow"
@@ -825,7 +825,7 @@
 	name = "Championship belt"
 	id = "wresling_belt"
 	build_path = /obj/item/weapon/storage/belt/champion
-	materials = list("leather" = 2000, "phoron" = 20000)
+	materials = list("leather" = 2000, MATERIAL_PHORON = 20000)
 
 /datum/design/item/autotailor/nonstandard/costume/pig_mask
 	name = "Entertainment - pig"

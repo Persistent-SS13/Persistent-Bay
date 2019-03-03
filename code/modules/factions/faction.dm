@@ -612,6 +612,12 @@ var/PriorityQueue/all_feeds
 		return leader_name
 
 
+/datum/faction_research
+	var/points = 0
+	var/list/unlocked = list()
+	map_storage_saved_vars = "points;unlocked"
+
+
 /datum/world_faction
 	var/name = "" // can be safely changed
 	var/abbreviation = "" // can be safely changed
@@ -657,7 +663,8 @@ var/PriorityQueue/all_feeds
 	var/list/reserved_frequencies() = list() // Reserved frequencies that the faction can create encryption keys from.
 
 	var/datum/machine_limits/limits
-	
+
+	var/datum/faction_research/research
 
 /proc/spawn_nexus_gov()
 	var/datum/world_faction/democratic/nexus = new()
@@ -1143,6 +1150,25 @@ var/PriorityQueue/all_feeds
 		if(!money_transfer(central_account,x,"Postpaid Payroll",debt))
 			return 0
 		debts -= x
+/datum/world_faction/proc/get_tech_points()
+	return research.points
+
+/datum/world_faction/proc/take_tech_points(var/amount)
+	research.points -= amount
+
+
+/datum/world_faction/proc/unlock_tech(var/uid)
+	research.unlocked |= uid
+
+/datum/world_faction/proc/is_tech_unlocked(var/uid)
+	if(uid in research.unlocked)
+		return 1
+
+/datum/world_faction/proc/meets_prereqs(var/datum/tech_entry/tech)
+	for(var/x in tech.prereqs)
+		if(!(x in research.unlocked))
+			return 0
+	return 1
 
 /datum/world_faction/New()
 	network = new()
@@ -1150,6 +1176,7 @@ var/PriorityQueue/all_feeds
 	records = new()
 	create_faction_account()
 	limits = new()
+	research = new()
 /datum/world_faction/proc/rebuild_cargo_telepads()
 	cargo_telepads.Cut()
 	for(var/obj/machinery/telepad_cargo/telepad in GLOB.cargotelepads)
@@ -1273,7 +1300,7 @@ var/PriorityQueue/all_feeds
 	for(var/datum/access_category/access_category in access_categories)
 		if(access in access_category.accesses) return access_category.accesses[access]
 	return 0
-	
+
 /datum/assignment_category
 	var/name = ""
 	var/list/assignments = list()
@@ -1455,6 +1482,7 @@ var/PriorityQueue/all_feeds
 	name = "Have scan X unique indivduals in a body scanner."
 
 
+
 /datum/machine_limits
 	var/limit_genfab = 0
 	var/list/genfabs = list()
@@ -1466,8 +1494,6 @@ var/PriorityQueue/all_feeds
 	var/list/mechfabs = list()
 	var/limit_voidfab = 0
 	var/list/voidfabs = list()
-	var/limit_ammofab = 0
-	var/list/ammofabs = list()
 	var/limit_ataccessories = 0
 	var/list/ataccessories = list()
 	var/limit_atnonstandard = 0
@@ -1478,44 +1504,29 @@ var/PriorityQueue/all_feeds
 	var/list/atstorages = list()
 	var/limit_attactical = 0
 	var/list/attacticals = list()
-	
+	var/limit_ammofab = 0
+	var/list/ammofabs = list()
+	var/limit_tech_general = 0
+	var/limit_tech_engi = 0
+	var/limit_tech_medical = 0
+	var/limit_tech_consumer = 0
+	var/limit_tech_combat = 0
 
-/datum/business_module/minor/journalism
+/datum/business_module
 
-/datum/business_module/minor/art
+/datum/business_module/engineering
 
-/datum/business_module/minor/medical_simple
+/datum/business_module/medical
 
-/datum/business_module/minor/mining_simple
+/datum/business_module/retail
 
-/datum/business_module/minor/exploration
+/datum/business_module/service
 
-/datum/business_module/minor/catering
+/datum/business_module/mining
 
-/datum/business_module/minor/retail
-
-/datum/business_module/minor/manufacturing_simple
-
-/datum/business_module/minor/engineering_simple
-
-/datum/business_module/minor/chemistry
-
-/datum/business_module/minor/research_simple
-
-/datum/business_module/minor/security_simple
-
-/datum/business_module/minor/janitorial
+/datum/business_module/media
 
 
-/datum/business_module/major/medical
-
-/datum/business_module/major/mining
-
-/datum/business_module/major/manufacturing
-
-/datum/business_module/major/research
-
-/datum/business_module/major/security
 
 
 

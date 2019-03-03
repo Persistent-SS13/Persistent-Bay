@@ -846,6 +846,7 @@
 #include "code\game\machinery\telecomms\telecomunications.dm"
 #include "code\game\machinery\telecomms\telemonitor.dm"
 #include "code\game\machinery\wall_machines\sparker.dm"
+#include "code\game\machinery\wall_machines\wall_dispensers.dm"
 #include "code\game\mecha\mech_bay.dm"
 #include "code\game\mecha\mech_sensor.dm"
 #include "code\game\mecha\mecha.dm"

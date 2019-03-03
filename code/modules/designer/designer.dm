@@ -12,6 +12,12 @@
 	if (!(src in design.associated_atoms))
 		design.associated_atoms += src
 
+/atom/proc/designer_disassociate()
+	if (designer_unit)
+		designer_unit.associated_atoms -= src
+		designer_unit = null
+
+
 //The global designer_system var. Stores all designs in its list/designs.
 var/global/datum/designer_system/designer_system = new()
 //The actual designer_system datum
@@ -45,8 +51,8 @@ var/global/datum/designer_system/designer_system = new()
 /datum/designer_unit
 	var/id
 
-	var/pixel_width = 8
-	var/pixel_height = 8
+	var/icon_width = 0
+	var/icon_height = 0
 
 	var/icon_offset_x = 0
 	var/icon_offset_y = 0
@@ -64,21 +70,19 @@ var/global/datum/designer_system/designer_system = new()
 	designer_system.newDesign(src)
 
 //The general proc to use when you want to draw to this design_unit
-/datum/designer_unit/proc/Design(var/atom/source, offset_x = 0, offset_y = 0)
+/datum/designer_unit/proc/Design(var/atom/source)
 	source.designer_associate(src)
-	icon_offset_x = offset_x
-	icon_offset_y = offset_y
 
 	usr << browse(file("html/designer.html"), "window=designer;size=600x400;can_close=1" )
 	sleep(5)
-	usr << output("href='?src=\ref[src];[pixel_width];[pixel_height]","designer.browser:getData")
+	usr << output("href='?src=\ref[src];[icon_width];[icon_height]","designer.browser:getData")
 	if (length(title) >= 1)
 		usr << output("[title]","designer.browser:setTitle")
 
 	var/list/pixel_list
 	if (icon_custom)
-		icon_custom.Shift(EAST, -offset_x)
-		icon_custom.Shift(SOUTH, -offset_y)
+		icon_custom.Shift(EAST, -icon_offset_x)
+		icon_custom.Shift(SOUTH, -icon_offset_y)
 		pixel_list = new/list(icon_custom.Width(),icon_custom.Height())
 		for ( var/x = 1 to icon_custom.Width() )
 			for ( var/y = 1 to icon_custom.Height() )
@@ -177,8 +181,8 @@ var/global/datum/designer_system/designer_system = new()
 	set category = "Debug"
 	if (!designer_unit)
 		designer_unit = new()
-	designer_unit.pixel_width = text2num( input("Max Width:", "Designer DEBUG", 32) )
-	designer_unit.pixel_height = text2num( input("Max Height:", "Designer DEBUG", 32) )
+	designer_unit.icon_width = text2num( input("Max Width:", "Designer DEBUG", 32) )
+	designer_unit.icon_height = text2num( input("Max Height:", "Designer DEBUG", 32) )
 	designer_unit.Design(src)
 
 /obj/item/design_item/verb/Clone()

@@ -1384,6 +1384,7 @@
 #include "code\modules\customitems\item_spawning.dm"
 #include "code\modules\designer\canvas.dm"
 #include "code\modules\designer\designer.dm"
+#include "code\modules\designer\canvas\size_M.dm"
 #include "code\modules\detectivework\footprints.dm"
 #include "code\modules\detectivework\forensics.dm"
 #include "code\modules\detectivework\microscope\dnascanner.dm"

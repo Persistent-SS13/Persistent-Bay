@@ -1,24 +1,82 @@
 /obj/machinery/atmospherics/valve
 	icon = 'icons/atmos/valve.dmi'
 	icon_state = "map_valve0"
-
 	name = "manual valve"
 	desc = "A pipe valve."
-
 	level = 1
 	dir = SOUTH
 	initialize_directions = SOUTH|NORTH
 
 	var/open = 0
 	var/openDuringInit = 0
-
-
 	var/datum/pipe_network/network_node1
 	var/datum/pipe_network/network_node2
 
 /obj/machinery/atmospherics/valve/open
 	open = 1
 	icon_state = "map_valve1"
+
+/obj/machinery/atmospherics/valve/Destroy()
+	loc = null
+
+	if(node1)
+		node1.disconnect(src)
+		qdel(network_node1)
+	if(node2)
+		node2.disconnect(src)
+		qdel(network_node2)
+
+	node1 = null
+	node2 = null
+
+	. = ..()
+
+/obj/machinery/atmospherics/valve/setup_initialize_directions()
+	. = ..()
+	switch(dir)
+		if(NORTH, SOUTH)
+			initialize_directions = NORTH|SOUTH
+		if(EAST, WEST)
+			initialize_directions = EAST|WEST
+
+/obj/machinery/atmospherics/valve/atmos_init()
+	..()
+	normalize_dir()
+
+	var/node1_dir
+	var/node2_dir
+
+	for(var/direction in GLOB.cardinal)
+		if(direction&initialize_directions)
+			if (!node1_dir)
+				node1_dir = direction
+			else if (!node2_dir)
+				node2_dir = direction
+
+	for(var/obj/machinery/atmospherics/target in get_step(src,node1_dir))
+		if(target.initialize_directions & get_dir(target,src))
+			if (check_connect_types(target,src))
+				node1 = target
+				break
+	for(var/obj/machinery/atmospherics/target in get_step(src,node2_dir))
+		if(target.initialize_directions & get_dir(target,src))
+			if (check_connect_types(target,src))
+				node2 = target
+				break
+
+	build_network()
+
+	update_icon()
+	update_underlays()
+
+	if(openDuringInit)
+		close()
+		open()
+		openDuringInit = 0
+
+/obj/machinery/atmospherics/valve/Process()
+	..()
+	return PROCESS_KILL
 
 /obj/machinery/atmospherics/valve/update_icon(animation)
 	if(animation)
@@ -37,14 +95,6 @@
 
 /obj/machinery/atmospherics/valve/hide(var/i)
 	update_underlays()
-
-/obj/machinery/atmospherics/valve/Initialize()
-	switch(dir)
-		if(NORTH, SOUTH)
-			initialize_directions = NORTH|SOUTH
-		if(EAST, WEST)
-			initialize_directions = EAST|WEST
-	. = ..()
 
 /obj/machinery/atmospherics/valve/network_expand(datum/pipe_network/new_network, obj/machinery/atmospherics/pipe/reference)
 	if(reference == node1)
@@ -70,21 +120,6 @@
 				return node1.network_expand(new_network, src)
 
 	return null
-
-/obj/machinery/atmospherics/valve/Destroy()
-	loc = null
-
-	if(node1)
-		node1.disconnect(src)
-		qdel(network_node1)
-	if(node2)
-		node2.disconnect(src)
-		qdel(network_node2)
-
-	node1 = null
-	node2 = null
-
-	. = ..()
 
 /obj/machinery/atmospherics/valve/proc/open()
 	if(open) return 0
@@ -137,45 +172,6 @@
 	else
 		src.open()
 
-/obj/machinery/atmospherics/valve/Process()
-	..()
-	return PROCESS_KILL
-
-/obj/machinery/atmospherics/valve/atmos_init()
-	..()
-	normalize_dir()
-
-	var/node1_dir
-	var/node2_dir
-
-	for(var/direction in GLOB.cardinal)
-		if(direction&initialize_directions)
-			if (!node1_dir)
-				node1_dir = direction
-			else if (!node2_dir)
-				node2_dir = direction
-
-	for(var/obj/machinery/atmospherics/target in get_step(src,node1_dir))
-		if(target.initialize_directions & get_dir(target,src))
-			if (check_connect_types(target,src))
-				node1 = target
-				break
-	for(var/obj/machinery/atmospherics/target in get_step(src,node2_dir))
-		if(target.initialize_directions & get_dir(target,src))
-			if (check_connect_types(target,src))
-				node2 = target
-				break
-
-	build_network()
-
-	update_icon()
-	update_underlays()
-
-	if(openDuringInit)
-		close()
-		open()
-		openDuringInit = 0
-
 /obj/machinery/atmospherics/valve/build_network()
 	if(!network_node1 && node1)
 		network_node1 = new /datum/pipe_network()
@@ -222,15 +218,22 @@
 
 	return null
 
+//
+// Digital Valve
+//
 /obj/machinery/atmospherics/valve/digital		// can be controlled by AI
 	name = "digital valve"
 	desc = "A digitally controlled valve."
 	icon = 'icons/atmos/digital_valve.dmi'
 
 	id_tag 				= null
-	frequency 			= 0
+	frequency 			= null
 	radio_filter_in 	= RADIO_ATMOSIA
 	radio_filter_out 	= RADIO_ATMOSIA
+
+/obj/machinery/atmospherics/valve/digital/open
+	open = 1
+	icon_state = "map_valve1"
 
 /obj/machinery/atmospherics/valve/digital/attack_ai(mob/user as mob)
 	return src.attack_hand(user)
@@ -243,17 +246,10 @@
 		return
 	..()
 
-/obj/machinery/atmospherics/valve/digital/open
-	open = 1
-	icon_state = "map_valve1"
-
 /obj/machinery/atmospherics/valve/digital/update_icon()
 	..()
 	if(!powered())
 		icon_state = "valve[open]nopower"
-
-/obj/machinery/atmospherics/valve/digital/Initialize()
-	. = ..()
 
 /obj/machinery/atmospherics/valve/digital/OnSignal(datum/signal/signal)
 	if(!..())

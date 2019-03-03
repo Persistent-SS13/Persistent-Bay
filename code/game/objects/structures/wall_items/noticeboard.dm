@@ -4,8 +4,8 @@ var/const/NBOARD_MAX_NOTICES = 5
 	desc = "A board for pinning important notices upon."
 	icon = 'icons/obj/structures/noticeboard.dmi'
 	icon_state = "nboard00"
-	density = 0
-	anchored = 1
+	density = FALSE
+	anchored = TRUE
 	mass = 3
 	max_health = 30
 	var/notices = 0
@@ -14,8 +14,6 @@ var/const/NBOARD_MAX_NOTICES = 5
 	..(loc)
 	if(ndir)
 		set_dir(ndir)
-		pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 30 : -30)
-		pixel_y = (src.dir & 3)? (src.dir ==1 ? 30 : -30) : 0
 
 /obj/structure/noticeboard/Initialize()
 	if(!map_storage_loaded)
@@ -25,8 +23,22 @@ var/const/NBOARD_MAX_NOTICES = 5
 				I.forceMove(src)
 				notices++
 	. = ..()
+	queue_icon_update()
 
 /obj/structure/noticeboard/update_icon()
+	switch(dir)
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = -30
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = 30
+		if(WEST)
+			src.pixel_x = 30
+			src.pixel_y = 0
+		if(EAST)
+			src.pixel_x = -30
+			src.pixel_y = 0
 	notices = max(min(NBOARD_MAX_NOTICES,contents.len), 0)
 	icon_state = "nboard0[notices]"
 

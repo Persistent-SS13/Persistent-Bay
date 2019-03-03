@@ -9,7 +9,6 @@
 	initialize_directions = SOUTH|NORTH
 	alert_pressure = 170*ONE_ATMOSPHERE
 	level = 1
-
 	max_health = 30
 
 	var/minimum_temperature_difference = 300
@@ -20,12 +19,55 @@
 
 /obj/machinery/atmospherics/pipe/simple/New()
 	..()
-
 	// Pipe colors and icon states are handled by an image cache - so color and icon should
 	//  be null. For mapping purposes color is defined in the object definitions.
 	icon = null
 	alpha = 255
 
+/obj/machinery/atmospherics/pipe/simple/Destroy()
+	if(node1)
+		node1.disconnect(src)
+		node1 = null
+	if(node2)
+		node2.disconnect(src)
+		node1 = null
+	. = ..()
+
+/obj/machinery/atmospherics/pipe/simple/atmos_init()
+	..()
+	normalize_dir()
+	var/node1_dir
+	var/node2_dir
+
+	for(var/direction in GLOB.cardinal)
+		if(direction & initialize_directions)
+			if (!node1_dir)
+				node1_dir = direction
+			else if (!node2_dir)
+				node2_dir = direction
+
+	for(var/obj/machinery/atmospherics/target in get_step(src,node1_dir))
+		if(target.initialize_directions & get_dir(target,src))
+			if (check_connect_types(target,src))
+				node1 = target
+				break
+	for(var/obj/machinery/atmospherics/target in get_step(src,node2_dir))
+		if(target.initialize_directions & get_dir(target,src))
+			if (check_connect_types(target,src))
+				node2 = target
+				break
+
+	if(!node1 && !node2)
+		log_debug("[src]([x],[y],[z]) was deleted in atmos_init() because both its nodes are null! initialize_directions: [initialize_directions], dir: [dir], level: [level], node1_dir: [node1_dir], node2_dir: [node2_dir]")
+		qdel(src)
+		return
+
+	var/turf/T = loc
+	if(level == 1 && !T.is_plating()) 
+		hide(1)
+	queue_icon_update()
+
+/obj/machinery/atmospherics/pipe/simple/setup_initialize_directions()
 	switch(dir)
 		if(SOUTH)
 			initialize_directions = SOUTH|NORTH
@@ -96,16 +138,6 @@
 	else if(dir == (EAST | WEST))
 		set_dir(EAST)
 
-/obj/machinery/atmospherics/pipe/simple/Destroy()
-	if(node1)
-		node1.disconnect(src)
-		node1 = null
-	if(node2)
-		node2.disconnect(src)
-		node1 = null
-
-	. = ..()
-
 /obj/machinery/atmospherics/pipe/simple/pipeline_expansion()
 	return list(node1, node2)
 
@@ -149,39 +181,6 @@
 /obj/machinery/atmospherics/pipe/simple/update_underlays()
 	return
 
-/obj/machinery/atmospherics/pipe/simple/atmos_init()
-	..()
-	normalize_dir()
-	var/node1_dir
-	var/node2_dir
-
-	for(var/direction in GLOB.cardinal)
-		if(direction & initialize_directions)
-			if (!node1_dir)
-				node1_dir = direction
-			else if (!node2_dir)
-				node2_dir = direction
-
-	for(var/obj/machinery/atmospherics/target in get_step(src,node1_dir))
-		if(target.initialize_directions & get_dir(target,src))
-			if (check_connect_types(target,src))
-				node1 = target
-				break
-	for(var/obj/machinery/atmospherics/target in get_step(src,node2_dir))
-		if(target.initialize_directions & get_dir(target,src))
-			if (check_connect_types(target,src))
-				node2 = target
-				break
-
-	if(!node1 && !node2)
-		log_debug("[src]([x],[y],[z]) was deleted in atmos_init() because both its nodes are null! initialize_directions: [initialize_directions], dir: [dir], level: [level], node1_dir: [node1_dir], node2_dir: [node2_dir]")
-		qdel(src)
-		return
-
-	var/turf/T = loc
-	if(level == 1 && !T.is_plating()) hide(1)
-	update_icon()
-
 /obj/machinery/atmospherics/pipe/simple/disconnect(obj/machinery/atmospherics/reference)
 	if(reference == node1)
 		if(istype(node1, /obj/machinery/atmospherics/pipe))
@@ -197,6 +196,9 @@
 
 	return null
 
+//
+//	Over-floor variant
+//
 /obj/machinery/atmospherics/pipe/simple/visible
 	icon_state = "intact"
 	level = 2

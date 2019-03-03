@@ -11,15 +11,15 @@
 	level = 1
 	dir = SOUTH
 	initialize_directions = SOUTH
-	density = 1
+	density = TRUE
 
 /obj/machinery/atmospherics/pipe/tank/New()
+	..()
 	icon_state = "air"
+
+/obj/machinery/atmospherics/pipe/tank/setup_initialize_directions()
 	initialize_directions = dir
-	..()
-/obj/machinery/atmospherics/pipe/tank/after_load()
-	initialize_directions = dir
-	..()
+
 /obj/machinery/atmospherics/pipe/tank/Process()
 	if(!parent)
 		..()
@@ -29,7 +29,6 @@
 /obj/machinery/atmospherics/pipe/tank/Destroy()
 	if(node1)
 		node1.disconnect(src)
-
 	. = ..()
 
 /obj/machinery/atmospherics/pipe/tank/pipeline_expansion()

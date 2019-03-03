@@ -9,12 +9,14 @@
 
 /obj/machinery/atmospherics/unary/New()
 	..()
-	initialize_directions = dir
-	air_contents = new
+	if(!air_contents)
+		air_contents = new
+		air_contents.volume = 200
 
-	air_contents.volume = 200
-/obj/machinery/atmospherics/unary/after_load()
+/obj/machinery/atmospherics/unary/setup_initialize_directions()
+	..()
 	initialize_directions = dir
+
 // Housekeeping and pipe network stuff below
 /obj/machinery/atmospherics/unary/network_expand(datum/pipe_network/new_network, obj/machinery/atmospherics/pipe/reference)
 	if(reference == node)

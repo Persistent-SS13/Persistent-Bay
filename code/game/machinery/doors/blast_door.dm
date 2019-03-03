@@ -69,6 +69,7 @@
 			layer = open_layer
 
 		implicit_material = SSmaterials.get_material_by_name(MATERIAL_PLASTEEL)
+	queue_icon_update()
 
 /obj/machinery/door/airlock/Destroy()
 	QDEL_NULL(wifi_receiver)

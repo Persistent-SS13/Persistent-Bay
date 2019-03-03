@@ -249,24 +249,10 @@
 
 /obj/machinery/atmospherics/trinary/filter/m_filter
 	icon_state = "mmap"
-
 	dir = SOUTH
 	initialize_directions = SOUTH|NORTH|EAST
 
-obj/machinery/atmospherics/trinary/filter/m_filter/New()
-	..()
-	switch(dir)
-		if(NORTH)
-			initialize_directions = WEST|NORTH|SOUTH
-		if(SOUTH)
-			initialize_directions = SOUTH|EAST|NORTH
-		if(EAST)
-			initialize_directions = EAST|WEST|NORTH
-		if(WEST)
-			initialize_directions = WEST|SOUTH|EAST
-
-obj/machinery/atmospherics/trinary/filter/m_filter/after_load()
-	..()
+obj/machinery/atmospherics/trinary/filter/m_filter/setup_initialize_directions()
 	switch(dir)
 		if(NORTH)
 			initialize_directions = WEST|NORTH|SOUTH
@@ -299,5 +285,5 @@ obj/machinery/atmospherics/trinary/filter/m_filter/after_load()
 		if(target.initialize_directions & get_dir(target,src))
 			node3 = target
 			break
-	update_icon()
+	queue_icon_update()
 	update_underlays()

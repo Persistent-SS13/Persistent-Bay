@@ -33,6 +33,8 @@ Pipelines + Other Objects -> Pipe network
 	var/atmos_initalized = FALSE
 
 /obj/machinery/atmospherics/New()
+	setup_initialize_directions()
+
 	if(!icon_manager)
 		icon_manager = new()
 
@@ -44,8 +46,15 @@ Pipelines + Other Objects -> Pipe network
 		pipe_color = null
 	..()
 
+/obj/machinery/atmospherics/after_load()
+	. = ..()
+	setup_initialize_directions()
+
 /obj/machinery/atmospherics/proc/atmos_init()
 	atmos_initalized = TRUE
+
+/obj/machinery/atmospherics/proc/setup_initialize_directions()
+	return
 
 /obj/machinery/atmospherics/hide(var/do_hide)
 	if(do_hide && level == 1)

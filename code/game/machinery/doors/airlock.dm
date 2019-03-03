@@ -777,7 +777,12 @@ About the new airlock wires panel:
 
 	return ..()
 
-/obj/machinery/door/airlock/Topic(href, href_list)
+//Radio signal handling
+/obj/machinery/door/airlock/OnSignal(var/datum/signal/signal)
+	. = ..()
+	OnTopic(usr, signal.data, GLOB.default_state)
+
+/obj/machinery/door/airlock/OnTopic(mob/user, href_list, datum/topic_state/state)
 	if(..())
 		return 1
 

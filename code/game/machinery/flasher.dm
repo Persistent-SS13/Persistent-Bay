@@ -43,16 +43,15 @@
 	. = ..()
 	if(_wifi_id)
 		wifi_receiver = new(_wifi_id, src)
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/flasher/Destroy()
-	qdel(wifi_receiver)
-	wifi_receiver = null
+	QDEL_NULL(wifi_receiver)
 	return ..()
 
-/obj/machinery/flasher/OnSignal(mob/user, href_list, datum/topic_state/state)
+/obj/machinery/flasher/OnSignal(var/datum/signal/signal)
 	. = ..()
-	if(href_list["activate"] || href_list["flash"])
+	if(signal.data["activate"] || signal.data["flash"])
 		flash()
 
 /obj/machinery/flasher/update_icon()
@@ -156,3 +155,5 @@
 		else if (src.anchored)
 			user.show_message(text(SPAN_WARNING("[src] is now secured.")))
 			src.overlays += "[base_state]-s"
+		return TRUE
+	return ..()

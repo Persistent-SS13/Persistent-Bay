@@ -18,6 +18,7 @@
 	alpha = 255
 	icon = null
 
+/obj/machinery/atmospherics/pipe/manifold/setup_initialize_directions()
 	switch(dir)
 		if(NORTH)
 			initialize_directions = EAST|SOUTH|WEST
@@ -27,16 +28,7 @@
 			initialize_directions = SOUTH|WEST|NORTH
 		if(WEST)
 			initialize_directions = NORTH|EAST|SOUTH
-/obj/machinery/atmospherics/pipe/manifold/after_load()
-	switch(dir)
-		if(NORTH)
-			initialize_directions = EAST|SOUTH|WEST
-		if(SOUTH)
-			initialize_directions = WEST|NORTH|EAST
-		if(EAST)
-			initialize_directions = SOUTH|WEST|NORTH
-		if(WEST)
-			initialize_directions = NORTH|EAST|SOUTH
+
 /obj/machinery/atmospherics/pipe/manifold/hide(var/i)
 	if(istype(loc, /turf/simulated))
 		set_invisibility(i ? 101 : 0)

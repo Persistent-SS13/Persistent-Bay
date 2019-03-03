@@ -23,14 +23,6 @@
 	icon_state = "map_tvalve1"
 	state = 1
 
-/obj/machinery/atmospherics/tvalve/New()
-	..()
-	initialize_directions()
-
-/obj/machinery/atmospherics/tvalve/after_load()
-	. = ..()
-	initialize_directions()
-
 /obj/machinery/atmospherics/tvalve/Destroy()
 	loc = null
 
@@ -52,7 +44,7 @@
 
 /obj/machinery/atmospherics/tvalve/atmos_init()
 	..()
-	initialize_directions()
+	setup_initialize_directions()
 	var/node1_dir
 	var/node2_dir
 	var/node3_dir
@@ -80,7 +72,7 @@
 	update_icon()
 	update_underlays()
 
-/obj/machinery/atmospherics/tvalve/proc/initialize_directions()
+/obj/machinery/atmospherics/tvalve/setup_initialize_directions()
 	switch(dir)
 		if(NORTH)
 			initialize_directions = SOUTH|NORTH|EAST
@@ -362,7 +354,7 @@
 	mirrored = TRUE
 	state = 1
 
-/obj/machinery/atmospherics/tvalve/mirrored/initialize_directions()
+/obj/machinery/atmospherics/tvalve/mirrored/setup_initialize_directions()
 	switch(dir)
 		if(NORTH)
 			initialize_directions = SOUTH|NORTH|WEST

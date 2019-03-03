@@ -21,11 +21,9 @@
 
 	var/desired_state 	= 0
 	var/exposedwires 	= 0
-	var/wires 			= 3
-	/*
-	Bitflag,	1=checkID
-				2=Network Access
-	*/
+	var/wires 			= 3 //Bitflag,	1=checkID 2=Network Access
+	var/time_next_use 	= 0 //Time when the button can be used again, avoids button spam
+
 
 /obj/machinery/button/remote/attack_ai(mob/user as mob)
 	if(wires & 2)
@@ -51,7 +49,9 @@
 		to_chat(user, SPAN_WARNING("Access Denied"))
 		flick(icon_anim_deny,src)
 		return
-	return activate(user)
+	if(world.time >= time_next_use)
+		activate(user)
+		time_next_use = world.time + 1 SECOND
 
 /obj/machinery/button/remote/send_signal(mob/user as mob)
 	desired_state = !desired_state
@@ -69,10 +69,16 @@
 	icon_unpowered 		= "blastctrl-p"
 	icon_anim_act   	= "blastctrl1"
 	icon_anim_deny  	= "blastctrl-denied"
-	activate_func 		= "toggle"
+	activate_func 		= "open"
 	id_tag 				= null
 	frequency 			= DOOR_FREQ
+	radio_filter_in		= RADIO_BLAST_DOORS
 	radio_filter_out	= RADIO_BLAST_DOORS
+
+
+/obj/machinery/button/remote/blast_door/send_signal(mob/user as mob)
+	desired_state = !desired_state
+	post_signal(list("command" = activate_func, "activate" = desired_state))
 
 /*
 	Emitter remote control
@@ -83,6 +89,7 @@
 	activate_func 		= "activate"
 	id_tag 				= null
 	frequency 			= ENG_FREQ
+	radio_filter_in		= RADIO_EMITTERS
 	radio_filter_out	= RADIO_EMITTERS
 
 /*

@@ -43,7 +43,7 @@
 	icon_state = "guest"
 	icon_keyboard = null
 	icon_screen = "pass"
-	density = 0
+	density = FALSE
 
 	var/obj/item/weapon/card/id/giver
 	var/list/accesses = list()
@@ -57,6 +57,22 @@
 /obj/machinery/computer/guestpass/New()
 	..()
 	uid = "[random_id("guestpass_serial_number",100,999)]-G[rand(10,99)]"
+
+/obj/machinery/computer/guestpass/update_icon()
+	. = ..()
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = -20
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = 20
+		if(EAST)
+			src.pixel_x = -20
+			src.pixel_y = 0
+		if(WEST)
+			src.pixel_x = 20
+			src.pixel_y = 0
 
 /obj/machinery/computer/guestpass/attackby(obj/O, mob/user)
 	if(istype(O, /obj/item/weapon/card/id))

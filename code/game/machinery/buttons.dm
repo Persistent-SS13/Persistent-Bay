@@ -35,9 +35,9 @@
 
 /obj/machinery/button/Initialize()
 	. = ..()
-	update_icon()
 	if(_wifi_id && !wifi_sender)
 		wifi_sender = new/datum/wifi/sender/button(_wifi_id, src)
+	queue_icon_update()
 
 /obj/machinery/button/Destroy()
 	QDEL_NULL(wifi_sender)
@@ -198,7 +198,7 @@
 	radio_filter_out= RADIO_FLASHERS
 
 /obj/machinery/button/flasher/send_signal(mob/user as mob)
-	post_signal(list("activate" = 1), null, id_tag)
+	post_signal(list("activate" = 1), radio_filter_out, id_tag)
 
 //-------------------------------
 // Door Button

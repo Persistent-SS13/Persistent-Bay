@@ -4,20 +4,14 @@
 	icon = 'icons/atmos/pipes.dmi'
 	icon_state = ""
 	level = 2
-
 	volume = 35
-
 	dir = SOUTH
 	initialize_directions = SOUTH
-
 	var/obj/machinery/atmospherics/node
 
-/obj/machinery/atmospherics/pipe/cap/New()
-	..()
+/obj/machinery/atmospherics/pipe/cap/setup_initialize_directions()
 	initialize_directions = dir
-/obj/machinery/atmospherics/pipe/cap/after_load()
-	..()
-	initialize_directions = dir
+
 /obj/machinery/atmospherics/pipe/cap/hide(var/i)
 	if(istype(loc, /turf/simulated))
 		set_invisibility(i ? 101 : 0)

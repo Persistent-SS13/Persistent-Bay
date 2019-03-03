@@ -38,6 +38,7 @@
 
 /obj/skybox/Destroy()
 	owner = null
+	SSskybox.skyboxes -= src
 	return ..()
 
 /mob

@@ -57,7 +57,7 @@
 				continue
 			var/percent = totalmoles? "([round(100*curinfo[G]/totalmoles, 0.1)]%)" : "--"
 			outputtext += "<DIV class='itemLabel'>[G]: </DIV><DIV class='itemContent'>[curinfo[G]] Moles ([percent])</DIV>"
-		testing("[src]\ref[src]: [outputtext]")
+		//testing("[src]\ref[src]: [outputtext]")
 		//info[S] = outputtext
 		data["info"] += outputtext
 	//data["info"] = info
@@ -114,11 +114,11 @@
 	. = ..()
 	var/sourcetag = signal_source_id(signal)
 	if(input_tag == sourcetag)
-		testing("[src]\ref[src] got input message size:[signal.data.len]")
+		//testing("[src]\ref[src] got input message size:[signal.data.len]")
 		signal.debug_print()
 		input_info = signal.data.Copy()
 	else if(output_tag == sourcetag)
-		testing("[src]\ref[src] got output message size:[signal.data.len]")
+		//testing("[src]\ref[src] got output message size:[signal.data.len]")
 		signal.debug_print()
 		output_info = signal.data.Copy()
 
@@ -135,7 +135,7 @@
 		input_info = null
 		data["status"] = 1
 		target = input_tag
-		testing("LTC input refresh \ref[src], target:[target]")
+		//testing("LTC input refresh \ref[src], target:[target]")
 		. = TOPIC_REFRESH
 
 	if(href_list["in_toggle_injector"])
@@ -162,7 +162,7 @@
 		output_info = null
 		data["status"] = 1
 		target = output_tag
-		testing("LTC output refresh \ref[src], target:[target]")
+		//testing("LTC output refresh \ref[src], target:[target]")
 		. = TOPIC_REFRESH
 
 	if(href_list["out_toggle_power"])

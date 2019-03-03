@@ -237,12 +237,12 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 		sleep(delay)
 	report_progress("Master starting processing")
 	var/rtn = 0
-	try
-		rtn = Loop()
-		if (rtn > 0 || processing < 0)
-			return //this was suppose to happen.
-	catch(var/exception/e)
-		log_error("/datum/controller/master/proc/StartProcessing(): '[e]'([e.file]:[e.line])")
+	//try
+	rtn = Loop()
+	if (rtn > 0 || processing < 0)
+		return //this was suppose to happen.
+	//catch(var/exception/e)
+	//	log_error("/datum/controller/master/proc/StartProcessing(): '[e]'([e.file]:[e.line])")
 	//loop ended, restart the mc
 	log_game("MC crashed or runtimed (returned [rtn]), restarting")
 	message_admins("MC crashed or runtimed (returned [rtn]), restarting")

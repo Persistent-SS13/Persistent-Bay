@@ -338,8 +338,8 @@ var/global/datum/controller/radio/radio_controller
 	if (range && !start_point)
 		return
 	signalcount++
-	if((signalcount % 100) == 0)
-		testing("Signals sent on [frequency] : [signalcount]")
+	// if((signalcount % 100) == 0)
+	// 	testing("Signals sent on [frequency] : [signalcount]")
 	for(var/obj/device in devices[filter])
 		if(device == source)
 			continue

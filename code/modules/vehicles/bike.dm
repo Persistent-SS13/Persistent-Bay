@@ -1,6 +1,3 @@
-#define CONTROL_DELAY 0.5
-#define STARTER_TICKS 5
-
 #define MIN_ACCELERATION 0.1
 #define MAX_ACCELERATION 0.5
 
@@ -12,7 +9,7 @@
 
 #define STARTING_DELAY	 2.0
 
-#define KNOCK_OFF_PROB	 0.2
+#define KNOCK_OFF_PROB	 20
 
 #define ADJUSTABLES 	 list("Acceleration","Traction","Max Speed")
 
@@ -34,6 +31,7 @@
 	animate_movement = SYNC_STEPS
 
 	has_cell = FALSE
+	special_movement = TRUE
 
 	locked = TRUE
 	fire_dam_coeff = 0.6
@@ -42,41 +40,64 @@
 
 	var/min_delay =    		MIN_MINDELAY	//the lowest delay; fastest speed of vehicle
 	var/starting_delay = 	STARTING_DELAY	//the highest delay; slowest/starting speed of the vehicle. If the move_delay is set to this, the bike is stopped.
-	var/control_delay = 	CONTROL_DELAY	//time between accepted inputs
 	var/acceleration = 		0.2				//how quickly move_delay decreases.
 	var/traction = 	   		0.3				//how quickly move_delay increases
 
-	var/l_control_time	//last control time
+	var/l_control_time	// last control time
+	var/cruise =  FALSE // cruise control; disables friction
 	var/stopped = TRUE
 	var/starter			//time given before friction activates
-	var/relayed = FALSE	//tracks relayed movements
 
 	var/paint_color = "#ffffff"
-	var/list/registered_names = list() //tracks who can unlock and ride the bike (tracks by ID name)
+	var/kickstand = FALSE
 
 	var/fuel_points = 0
-	var/kickstand = 1
+	atom_flags = ATOM_FLAG_OPEN_CONTAINER | ATOM_FLAG_NO_REACT
 
 /obj/vehicle/bike/New()
 	..()
-	l_control_time = world.time
+	if(!reagents) create_reagents(500)
 	update_icon()
 
-/obj/vehicle/bike/Initialize()
-	. = ..()
-
 /obj/vehicle/bike/Destroy()
-	registered_names.Cut()
-	return ..()
+	STOP_PROCESSING(SSvehicleprocess, src)
+	. = ..()
 
 /obj/vehicle/bike/load(var/atom/movable/C)
 	var/mob/living/M = C
-	if(!istype(C)) return 0
+	if(!istype(M)) return 0
 	if(M.buckled || M.restrained() || !Adjacent(M) || !M.Adjacent(src) || M.incapacitated())
 		return 0
+
+	var/datum/action/vehicle/toggle_engine/te = new(src)
+	var/datum/action/vehicle/toggle_cruise/tc = new(src)
+
+	te.Grant(M)
+	tc.Grant(M)
+
 	return ..(M)
 
-/obj/vehicle/bike/attackby(obj/item/W as obj, mob/user as mob)
+/obj/vehicle/bike/unload(var/atom/movable/C)
+	var/mob/living/carbon/human/H = C
+
+	if(move_delay <= starting_delay * 0.33 && istype(H))
+		var/list/throw_dirs = list(NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST)
+
+		//Make sure we're throwing them *away* from the bike
+		throw_dirs -= dir
+
+		visible_message("<span class='danger'>\The [load] is thrown from \the [src]!</span>")
+		H.apply_effects(5, 3)
+		for(var/i = 0; i < 2; i++)
+			var/def_zone = ran_zone()
+			H.apply_damage(2 / (move_delay ? move_delay : 0.1), BRUTE, def_zone, H.run_armor_check(def_zone, "melee"))
+
+		var/turf/turf = get_step(H, pick(throw_dirs))
+		H.throw_at(turf, 3)
+
+	return ..(H)
+
+/obj/vehicle/bike/attackby(var/obj/item/W, var/mob/user)
 	if(istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/device/pda))
 
 		var/obj/item/weapon/card/id/ID = W
@@ -85,16 +106,16 @@
 			var/obj/item/device/pda/pda = W
 			ID = pda.id
 
-		if(!registered_names.len)
-			registered_names += ID.registered_name
-			to_chat(user, "You add add your name to \the [src]'s database, locking it to your control.")
+		if(!req_access_personal_list.len)
+			req_access_personal_list += ID.registered_name
+			to_chat(user, "You add your name to \the [src]'s database, locking it to your control.")
 			return
-		else if(ID.registered_name in registered_names)
-			to_chat(user, "You [locked ? "unlock" : "lock"] \the [src]'s controls.")
+		else if(ID.registered_name in req_access_personal_list)
+			to_chat(user, "You [locked ? "unlock" : "lock"] \the [src]'s maintenance panel.")
 			locked = !locked
 			return
 		else if(open)
-			registered_names += ID.registered_name
+			req_access_personal_list += ID.registered_name
 			to_chat(user, "You add your name to \the [src]'s database, allowing you to control it.")
 			return
 		else
@@ -142,34 +163,23 @@
 
 		if(istype(W, /obj/item/stack/cable_coil))
 			to_chat(user, "You short the blackbox on \the [src], clearing its ID memory.")
-			registered_names.Cut()
+			req_access_personal_list.Cut()
 			return
 
-		if(istype(W, /obj/item/weapon/reagent_containers))
-			var/obj/item/weapon/reagent_containers/rc = W
-
-			for(var/datum/reagent/R in rc.reagents.reagent_list)
-				if(istype(R, /datum/reagent/ethanol))
-					fuel_points += 10 * rc.reagents.get_reagent_amount(/datum/reagent/ethanol)
-				if(istype(R, /datum/reagent/fuel))
-					fuel_points += 30 * rc.reagents.get_reagent_amount(/datum/reagent/fuel)
-				if(istype(R, /datum/reagent/toxin/phoron))
-					fuel_points += 50 * rc.reagents.get_reagent_amount(/datum/reagent/toxin/phoron)
-
-			rc.reagents.clear_reagents()
-			to_chat(user, "You refill \the [src]'s fuel tank.")
-			return
+	if(istype(W,/obj/item/weapon/reagent_containers) && W.is_open_container())
+		to_chat(user, "You refill \the [src]'s fuel tank.")
+		return
 
 	return ..()
 
-/obj/vehicle/bike/MouseDrop_T(var/atom/movable/C, mob/user as mob)
+/obj/vehicle/bike/MouseDrop_T(var/atom/movable/C, var/mob/user)
 	if(!load(C))
 		to_chat(user, "<span class='warning'>You were unable to load \the [C] onto \the [src].</span>")
 		return
 
-/obj/vehicle/bike/attack_hand(var/mob/user as mob)
+/obj/vehicle/bike/attack_hand(var/mob/user)
 	if(user == load)
-		unload(load)
+		unbuckle_mob(user)
 		to_chat(user, "You unbuckle yourself from \the [src]")
 
 /obj/vehicle/bike/relaymove(mob/user, direction)
@@ -178,57 +188,37 @@
 
 	if(kickstand) return
 
-	if(world.time >= (l_control_time + CONTROL_DELAY)) // Putting a minor delay between inputs to keep the controls tight
-		// Turning - Going fast (> .5 of max speed) will result in a 'swerve' - a minor speed decrease and shift in tile without a change in direction.
-		//		   - Going slow (< .5 of max speed) will result in a 'turn'	  - retains your speed while shifting tile and direction
-		if(((direction == EAST || direction == WEST) && (dir == NORTH || dir == SOUTH)) || ((direction == NORTH || direction == SOUTH) && (dir == WEST || dir == EAST)))
-			// Swerving
-			if(move_delay < (starting_delay/2))
-				Move(get_step(src, direction))
-				// Swerving slows you down slightly
-				move_delay = ((move_delay += traction/2) < starting_delay) ? (move_delay += traction/2) : starting_delay
-				if(move_delay == starting_delay)
-					stopped = TRUE
-			// Turning
-			else
-				Move(get_step(src,	direction))
-				set_dir(direction)
-				if(load)
-					load.set_dir(direction)
-				// Turning slows you down more
-				move_delay = ((move_delay += traction) < starting_delay) ? (move_delay += traction) : starting_delay
-				if(move_delay == starting_delay)
-					stopped = TRUE
-
-				l_control_time = world.time + control_delay // Turning takes twice as long as swerving
-			relayed = TRUE
-			return
-
-	if(world.time < (l_move_time + move_delay))
+	// Turning - Going fast (> .5 of max speed) will result in a 'swerve' - a minor speed decrease and shift in tile without a change in direction.
+	//		   - Going slow (< .5 of max speed) will result in a 'turn'	  - retains your speed while shifting tile and direction
+	if(((direction == EAST || direction == WEST) && (dir == NORTH || dir == SOUTH)) || ((direction == NORTH || direction == SOUTH) && (dir == WEST || dir == EAST)))
+		// Swerving
+		if(move_delay < (starting_delay/2))
+			Move(get_step(src, direction))
+			// Swerving slows you down slightly
+			move_delay = ((move_delay += traction/2) < starting_delay) ? (move_delay += traction/2) : starting_delay
+			if(move_delay == starting_delay)
+				stopped = TRUE
+		// Turning
+		else
+			set_dir(direction)
+			if(load)
+				load.set_dir(direction)
 		return
 
 	if(stopped)
 		if(dir == direction)  			// Start movement
 			move_delay -= acceleration
 			stopped = FALSE
-			l_move_time = world.time
-			starter = STARTER_TICKS
 			return
 		else							// Rotate the vehicle without moving
 			set_dir(direction)
 			if(load)
 				load.set_dir(direction)
-			l_move_time = world.time
 			return
 
 	// Going forward - doing the check here to avoid doing the more expensive checks after,
 	if(direction == dir)
 		move_delay = ((move_delay -= acceleration) > min_delay) ? (move_delay -= acceleration) : min_delay
-		Move(get_step(src, dir))
-		if(load)
-			load.set_dir(direction)
-		l_move_time = world.time
-		relayed = TRUE
 		return
 
 	// Going backwards - braking
@@ -238,7 +228,6 @@
 		if(move_delay == starting_delay)
 			stopped = TRUE
 			return
-		relayed = TRUE
 		return
 
 /obj/vehicle/bike/Process()
@@ -255,22 +244,19 @@
 
 	if(stopped)
 		return
-	// Relayed actions
-	if(starter > 0) // Time is given for the bike to get moving before friction kicks in
-		starter--
-		return
 
+	playsound(src.loc, 'sound/machines/motorloop.ogg', 12, 0, 2,  is_ambience = 1)
 
-	if(!relayed) // No actions taken; continue moving in the current direction
-		move_delay = ((move_delay += traction/2) < starting_delay) ? (move_delay += traction/2) : starting_delay
-		if(move_delay == starting_delay)
-			stopped = TRUE
-			return
+	if(world.time >= (l_move_time + move_delay))
 		Move(get_step(src, dir))
-		return
+		l_move_time = world.time
 
-	relayed = FALSE
-
+		if(!cruise) // Friction kicks in if cruise control isn't on
+			move_delay = ((move_delay += traction/2) < starting_delay) ? (move_delay += traction/2) : starting_delay
+			if(move_delay == starting_delay)
+				stopped = TRUE
+	if(load)
+		load.set_dir(dir)
 
 /obj/vehicle/bike/Move(var/turf/destination)
 	if(!use_fuel())
@@ -283,8 +269,8 @@
 	if(istype(Obstacle, /obj/machinery/door/))
 		Obstacle.Bumped(load)
 		return
-   
-	if(move_delay <= starting_delay/2)
+
+	if(move_delay <= starting_delay * 0.33)
 
 		if(istype(Obstacle, /obj/structure/window))
 			var/obj/structure/window/win = Obstacle
@@ -296,36 +282,42 @@
 				return
 
 		playsound(src.loc, 'sound/effects/grillehit.ogg', 80, 0, 10)
-		health -= round(2/move_delay)
+		health -= round(2/(move_delay ? move_delay : 0.1)) // BYOND rounding can lead to a division by zero error. Ditto throughout the file.
 
-		var/list/parts = list(BP_HEAD, BP_CHEST, BP_L_LEG, BP_R_LEG, BP_L_ARM, BP_R_ARM)
+		var/list/throw_dirs = list(NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST)
+
+		//Make sure we're throwing them *away* from the bike
+		throw_dirs -= dir
+		throw_dirs -= get_dir(Obstacle, src)
 
 		if(istype(Obstacle, /mob/living/carbon/human))
 			var/mob/living/carbon/human/H = Obstacle
 			H.apply_effects(5, 3)
-			for(var/i = 0, i < rand(1,3), i++)
-				var/def_zone = pick(parts)
-				H.apply_damage(rand(2, 5), BRUTE, def_zone, H.run_armor_check(def_zone, "melee"))
+			for(var/i = 0; i < 2; i++)
+				var/def_zone = ran_zone()
+				H.apply_damage(1.5 / (move_delay ? move_delay : 0.1), BRUTE, def_zone, H.run_armor_check(def_zone, "melee"))
 
-			var/list/throw_dirs = list(NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST)
-
-			//Make sure we're throwing them *away* from the bike
-			throw_dirs -= dir
-			throw_dirs -= get_dir(H, src)
 			var/turf/turf = get_step(H, pick(throw_dirs))
+
+			visible_message("<span class='danger'>[Obstacle] is hit by \the [src]!</span>")
 
 			H.throw_at(turf, 3)
 
-		if(istype(load, /mob/living/carbon/human))
-			var/mob/living/carbon/human/H = load
-			H.apply_effects(5, 5)
-			for(var/i = 0, i < rand(1,3), i++)
-				var/def_zone = pick(parts)
-				H.apply_damage(rand(2, 5), BRUTE, def_zone, H.run_armor_check(def_zone, "melee"))
-			unload()
+		unload()
 
 	move_delay = starting_delay
 	stopped = TRUE
+
+/obj/vehicle/bike/RunOver(var/mob/living/carbon/human/H)
+	H.apply_effects(5, 3)
+	for(var/i = 0; i < 2; i++)
+		var/def_zone = ran_zone()
+		H.apply_damage(1 / (move_delay ? move_delay : 0.1), BRUTE, def_zone, H.run_armor_check(def_zone, "melee"))
+
+	visible_message("<span class='danger'>[H] is run over by \the [src]!</span>")
+
+	if(prob(KNOCK_OFF_PROB)) // Running over someone has a chance to throw you off your bike.
+		unbuckle_mob(buckled_mob)
 
 /obj/vehicle/bike/turn_on()
 	if(on)
@@ -341,7 +333,9 @@
 		pulledby.stop_pulling()
 
 	l_move_time = world.time
-	START_PROCESSING(SSfastprocess, src)
+
+	update_fuel()
+	START_PROCESSING(SSvehicleprocess, src)
 	..()
 
 /obj/vehicle/bike/turn_off()
@@ -354,41 +348,75 @@
 
 	update_icon()
 
-	STOP_PROCESSING(SSfastprocess, src)
+	move_delay = STARTING_DELAY
+	stopped = TRUE
+
+	update_fuel()
+	STOP_PROCESSING(SSvehicleprocess, src)
 	..()
 
 /obj/vehicle/bike/proc/use_fuel()
+	if(LAZYLEN(reagents.reagent_list))
+		update_fuel()
 	if(fuel_points)
 		fuel_points--
 		return TRUE
 	return FALSE
 
+/obj/vehicle/bike/proc/update_fuel()
+	for(var/datum/reagent/R in reagents.reagent_list)
+		if(istype(R, /datum/reagent/ethanol))
+			fuel_points += 10 * reagents.get_reagent_amount(/datum/reagent/ethanol)
+		if(istype(R, /datum/reagent/fuel))
+			fuel_points += 30 * reagents.get_reagent_amount(/datum/reagent/fuel)
+		if(istype(R, /datum/reagent/toxin/phoron))
+			fuel_points += 50 * reagents.get_reagent_amount(/datum/reagent/toxin/phoron)
+
+	reagents.clear_reagents()
+
+/obj/vehicle/bike/examine(mob/user)
+	. = ..()
+	update_fuel()
+	to_chat(user, "The fuel gauge shows it has [fuel_points] unit(s) of fuel left.")
+
 /obj/vehicle/bike/bullet_act(var/obj/item/projectile/Proj)
 	if(buckled_mob && prob(protection_percent))
 		buckled_mob.bullet_act(Proj)
 		if(prob(KNOCK_OFF_PROB))
-			to_chat(buckled_mob, "You're knocked off \the [src] by the force of the blow!")
-		return
+			buckled_mob.visible_message("[buckled_mob] is knocked off \the [src] by the force of the blow!", "You're knocked off \the [src] by the force of the blow!")
+			unbuckle_mob(buckled_mob)
 	..()
 
 /obj/vehicle/bike/update_icon()
 	overlays.Cut()
 
-	var/image/bodypaint = image('icons/obj/bike.dmi', "body_color_overlay", src.layer)
+	var/image/bodypaint = image(src.icon, "body_color_overlay", src.layer)
 	bodypaint.color = paint_color
 	overlays += bodypaint
 
-	overlays += image('icons/obj/bike.dmi', "bike_overlay", "layer" = VEHICLE_TOP_LAYER)
+	overlays += image(src.icon, "bike_overlay", "layer" = VEHICLE_TOP_LAYER)
 	..()
 
-/obj/vehicle/bike/verb/toggle()
-	set name = "Toggle Engine"
-	set category = "Object"
-	set src in view(0)
+/datum/action/vehicle/
+	action_type = AB_GENERIC
+	check_flags = AB_CHECK_STUNNED|AB_CHECK_LYING
 
-	if(usr.incapacitated()) return
+/datum/action/vehicle/CheckRemoval(mob/living/user)
+	return (get_dist(target, user) > 0)
 
-	if(!(usr.name in registered_names))
+/datum/action/vehicle/toggle_engine
+	name = "Toggle Engine"
+	procname = "toggle_engine"
+	button_icon_state = "toggle_engine"
+
+/datum/action/vehicle/toggle_cruise
+	name = "Toggle Cruise Control"
+	procname = "toggle_cruise"
+	button_icon_state = "toggle_cruise"
+
+/obj/vehicle/bike/proc/toggle_engine(var/mob/living/user)
+
+	if(!allowed(user))
 		to_chat(usr, "<span class='warning'>\The [src] doesn't respond to your ID.</span>")
 		return
 
@@ -397,6 +425,15 @@
 	else
 		turn_off()
 
+/obj/vehicle/bike/proc/toggle_cruise(var/mob/living/user)
+
+	if(!allowed(user))
+		to_chat(usr, "<span class='warning'>\The [src] doesn't respond to your ID.</span>")
+		return
+
+	cruise = !cruise
+	to_chat(usr, "<span class='warning'>You toggle \the [src]'s cruise control [cruise ? "on" : "off"].</span>")
+
 /obj/vehicle/bike/verb/kickstand()
 	set name = "Toggle Kickstand"
 	set category = "Object"
@@ -404,7 +441,7 @@
 
 	if(usr.incapacitated()) return
 
-	if(!(usr.name in registered_names))
+	if(!allowed(usr))
 		to_chat(usr, "<span class='warning'>\The [src] doesn't respond to your ID.</span>")
 		return
 
@@ -431,10 +468,6 @@
 /obj/vehicle/bike/prefilled
 	fuel_points = 1000
 
-
-#undef CONTROL_DELAY
-#undef STARTER_TICKS
-
 #undef MIN_ACCELERATION
 #undef MAX_ACCELERATION
 
@@ -443,8 +476,6 @@
 
 #undef MIN_MINDELAY
 #undef MAX_MINDELAY
-
-#undef STARTING_DELAY
 
 #undef KNOCK_OFF_PROB
 

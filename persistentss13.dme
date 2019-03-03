@@ -195,6 +195,7 @@
 #include "code\controllers\subsystems\processing\SSobj.dm"
 #include "code\controllers\subsystems\processing\SSprocessing.dm"
 #include "code\controllers\subsystems\processing\SSturf.dm"
+#include "code\controllers\subsystems\processing\SSvehicles.dm"
 #include "code\controllers\subsystems\processing\SSvines.dm"
 #include "code\datums\ai_law_sets.dm"
 #include "code\datums\ai_laws.dm"

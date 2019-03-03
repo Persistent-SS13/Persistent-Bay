@@ -12,7 +12,7 @@
 	density = 1
 	anchored = 1
 	animate_movement=1
-	light_range = 3
+	light_range = 4
 
 	can_buckle = 1
 	buckle_movable = 1
@@ -30,6 +30,7 @@
 	var/emagged = 0
 	var/powered = 0		//set if vehicle is powered and should use fuel when moving
 	var/move_delay = 1	//set this to limit the speed of the vehicle
+	var/special_movement = FALSE
 	var/has_cell = TRUE
 
 	var/obj/item/weapon/cell/cell
@@ -48,7 +49,7 @@
 	//spawn the cell you want in each vehicle
 
 /obj/vehicle/Move()
-	if(istype(src, /obj/vehicle/bike/))
+	if(special_movement)
 		var/init_anc = anchored
 		anchored = 0
 		if(!..())

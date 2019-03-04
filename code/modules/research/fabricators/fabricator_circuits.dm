@@ -9,6 +9,7 @@
 							/obj/item/weapon/stock_parts/manipulator = 1,
 							/obj/item/weapon/stock_parts/micro_laser = 1,
 							/obj/item/weapon/stock_parts/console_screen = 1)
+	var/list/unlocked_techs = list()
 
 /obj/item/weapon/circuitboard/fabricator/mechfab
 	name = "Circuit board (Exosuit Fabricator)"
@@ -21,15 +22,28 @@
 	build_path = /obj/item/weapon/circuitboard/fabricator/mechfab
 	sort_string = "FABAA"
 
-/obj/item/weapon/circuitboard/fabricator/voidfab
-	name = "Circuit board (Voidsuit Fabricator)"
-	build_path = /obj/machinery/fabricator/voidsuit_fabricator
 
-/datum/design/circuit/voidfab
-	name = "voidsuit fabricator"
-	id = "voidfab"
+/obj/item/weapon/circuitboard/fabricator/weaponfab
+	name = "Circuit board (Weapon Fabricator)"
+	build_path = /obj/machinery/fabricator/weapon_fabricator
+
+/datum/design/circuit/weaponfabricator
+	name = "weapon fabricator"
+	id = "weaponfab"
 	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
-	build_path = /obj/item/weapon/circuitboard/fabricator/voidfab
+	build_path = /obj/item/weapon/circuitboard/fabricator/weaponfab
+	sort_string = "FABAB"
+
+
+/obj/item/weapon/circuitboard/fabricator/evafab
+	name = "Circuit board (EVA Equipment Fabricator)"
+	build_path = /obj/machinery/fabricator/eva_fabricator
+
+/datum/design/circuit/evafab
+	name = "eva equipment fabricator"
+	id = "evafab"
+	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/fabricator/evafab
 	sort_string = "FABAB"
 
 /obj/item/weapon/circuitboard/fabricator/circuitfab
@@ -49,17 +63,6 @@
 	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/fabricator/circuitfab
 	sort_string = "FABAC"
-
-/obj/item/weapon/circuitboard/fabricator/ammofab
-	name = "Circuit board (Ammunition Fabricator)"
-	build_path = /obj/machinery/fabricator/ammo_fabricator
-
-/datum/design/circuit/ammofab
-	name = "ammunition fabricator"
-	id = "ammofab"
-	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1, TECH_COMBAT = 1)
-	build_path = /obj/item/weapon/circuitboard/fabricator/ammofab
-	sort_string = "FABAD"
 
 /obj/item/weapon/circuitboard/fabricator/autotailor
 	name = "circuit board (auto-tailor - standard wear)"
@@ -103,7 +106,7 @@
 	req_tech = list(TECH_DATA = 1)
 	build_path = /obj/item/weapon/circuitboard/fabricator/autotailor
 	sort_string = "FABAE"
-	
+
 
 /obj/item/weapon/circuitboard/fabricator/engfab
 	name = "Circuit board (Engineering Fabricator)"

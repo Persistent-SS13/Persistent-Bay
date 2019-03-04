@@ -32,7 +32,7 @@
 ////////////////////////////////////////////////////
 
 /datum/design/circuit
-	build_type = CIRCUITFAB
+	build_type = GENERALFAB
 	req_tech = list(TECH_DATA = 2)
 	materials = list(MATERIAL_GLASS = 2000)
 	chemicals = list(/datum/reagent/acid = 20)

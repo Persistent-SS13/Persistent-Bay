@@ -17,7 +17,7 @@
 	trying.limits.atnonstandards |= src
 	req_access_faction = trying.uid
 	connected_faction = src
-	
+
 /obj/machinery/fabricator/autotailor/nonstandard/can_disconnect(var/datum/world_faction/trying, var/mob/M)
 	if(!trying.limits) return 0
 	trying.limits.atnonstandards -= src

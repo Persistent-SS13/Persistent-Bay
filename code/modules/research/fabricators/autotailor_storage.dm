@@ -16,7 +16,7 @@
 	trying.limits.atstorages |= src
 	req_access_faction = trying.uid
 	connected_faction = src
-	
+
 /obj/machinery/fabricator/autotailor/storage/can_disconnect(var/datum/world_faction/trying, var/mob/M)
 	if(!trying.limits) return 0
 	trying.limits.atstorages -= src
@@ -565,13 +565,13 @@
 	name = "Brown briefcase"
 	id = "briefcase_brown"
 	build_path = /obj/item/weapon/storage/briefcase
-	materials = list(MATERIAL_LEATHER = 2 * SHEET_MATERIAL_AMOUNT, MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
+		materials = list(MATERIAL_LEATHER = 2 SHEETS, MATERIAL_STEEL = 1 SHEET)
 
 /datum/design/item/autotailor/storage/work/briefcase_medical
 	name = "Medical briefcase"
 	id = "briefcase_medical"
 	build_path = /obj/item/weapon/storage/briefcase/medical
-	materials = list(MATERIAL_LEATHER = 2 * SHEET_MATERIAL_AMOUNT, MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
+	materials = list(MATERIAL_LEATHER = 2 SHEETS, MATERIAL_STEEL = 1 SHEET)
 
 /datum/design/item/autotailor/storage/work/briefcase_inflate
 	name = "Inflatables briefcase"

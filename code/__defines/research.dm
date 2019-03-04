@@ -10,11 +10,11 @@
 #define TECH_ILLEGAL "syndicate"
 #define TECH_ARCANE "arcane"
 
-#define TECH_ENGI 1
-#define TECH_MEDI 2
-#define TECH_WAR 3
+#define TECH_GENERAL 1
+#define TECH_ENGI 2
+#define TECH_MEDI 3
 #define TECH_CONSUMER 4
-#define TECH_GENERAL 5
+#define TECH_WAR 5
 
 // Fabricator defines
 #define SHEETS *SHEET_MATERIAL_AMOUNT
@@ -24,7 +24,7 @@
 #define CIRCUITFAB	2
 #define MECHFAB		3
 #define VOIDFAB		4
-#define AMMOFAB     5
+#define WEAPONFAB     5
 #define AUTOTAILOR  6
 #define AUTOTAILOR_NONSTANDARD  7
 #define AUTOTAILOR_ACCESSORIES  8

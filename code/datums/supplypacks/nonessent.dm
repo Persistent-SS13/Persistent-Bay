@@ -477,6 +477,6 @@
 
 /decl/hierarchy/supply_pack/nonessent/canvases
 	name = "Recreation - Canvases"
-	contains = list(/obj/item/canvas = 10)
+	contains = list(/obj/item/frame/canvas = 10)
 	cost = 15
 	containername = "canvases crate"

@@ -565,7 +565,7 @@
 	name = "Brown briefcase"
 	id = "briefcase_brown"
 	build_path = /obj/item/weapon/storage/briefcase
-		materials = list(MATERIAL_LEATHER = 2 SHEETS, MATERIAL_STEEL = 1 SHEET)
+	materials = list(MATERIAL_LEATHER = 2 SHEETS, MATERIAL_STEEL = 1 SHEET)
 
 /datum/design/item/autotailor/storage/work/briefcase_medical
 	name = "Medical briefcase"

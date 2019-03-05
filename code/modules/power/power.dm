@@ -7,13 +7,13 @@
 /////////////////////////////
 
 /obj/machinery/power
-	name = null
-	icon = 'icons/obj/power.dmi'
-	anchored = 1.0
+	name 						= null
+	icon 						= 'icons/obj/power.dmi'
+	anchored 					= TRUE
+	use_power 					= POWER_USE_OFF
+	idle_power_usage 			= 0
+	active_power_usage 			= 0
 	var/datum/powernet/powernet = null
-	use_power = 0
-	idle_power_usage = 0
-	active_power_usage = 0
 
 /obj/machinery/power/Initialize()
 	. = ..()

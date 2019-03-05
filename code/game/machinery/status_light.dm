@@ -1,7 +1,7 @@
 /obj/machinery/status_light
 	name 				= "combustion chamber status indicator"
 	desc 				= "A status indicator for a combustion chamber, based on temperature. Match with a gas sensor sharing the same ID, set to report temperature."
-	icon 				= 'icons/obj/stationobjs.dmi'
+	icon 				= 'icons/obj/machines/doortimer.dmi'
 	icon_state 			= "doortimer-p"
 	frame_type 			= /obj/item/weapon/
 	//Radio

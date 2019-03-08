@@ -382,14 +382,6 @@ obj/machinery/door/firedoor/do_animate(animation)
 	set_light(0)
 	var/do_set_light = FALSE
 
-	if(connections in list(NORTH, SOUTH, NORTH|SOUTH))
-		if(connections in list(WEST, EAST, EAST|WEST))
-			set_dir(SOUTH)
-		else
-			set_dir(EAST)
-	else
-		set_dir(SOUTH)
-
 	if(density)
 		icon_state = "closed"
 		if(hatch_open)

@@ -35,6 +35,19 @@
 		name = T_BOARD("[names_paths[build_path]] Vendor")
 		user << "<span class='notice'>You set the board to [names_paths[build_path]].</span>"
 		req_components = list(text2path("/obj/item/weapon/vending_refill/[copytext("[build_path]", 24)]") = 3)
+		
+		
+		
+/obj/item/weapon/circuitboard/jukebox
+	name = T_BOARD("Jukebox")
+	build_path = /obj/machinery/media/jukebox
+	board_type = "machine"
+	origin_tech = list(TECH_DATA = 1)
+	req_components = list(
+							/obj/item/weapon/stock_parts/capacitor = 1,
+							/obj/item/weapon/stock_parts/console_screen = 1,
+							/obj/item/stack/cable_coil = 1)
+		
 
 /obj/item/weapon/circuitboard/holopad
 	name = T_BOARD("Holopad")

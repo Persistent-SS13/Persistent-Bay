@@ -324,7 +324,7 @@
 /datum/design/item/engifab/electronics
 	time = 10
 	category = "Electronics"
-	materials = list(MATERIAL_STEEL = 0.25 SHEETS, MATERIAL_COPPER = 0.25 SHEETS)
+	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_COPPER = 0.25 SHEETS)
 
 /datum/design/item/engifab/electronics/adv
 
@@ -358,6 +358,11 @@
 /datum/design/item/engifab/electronics/simple/powermodule
 	name = "Power control module"
 	build_path = /obj/item/weapon/module/power_control
+
+/datum/design/item/engifab/electronics/secure
+	name = "Secure airlock electronics"
+	build_path = /obj/item/weapon/airlock_electronics/secure
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_COPPER = 2 SHEETS)
 
 /datum/design/item/engifab/electronics/keypad
 	name = "Airlock keypad electronics"
@@ -444,7 +449,6 @@
 
 /datum/design/item/engifab/lights/tube
 	build_path = /obj/item/weapon/light/tube
-	build_type = list(ENGIFAB, GENERALFAB)
 
 /datum/design/item/engifab/lights/tube/simple
 	build_path = /obj/item/weapon/light/tube
@@ -456,6 +460,7 @@
 	build_path = /obj/item/weapon/light/bulb
 	build_type = list(ENGIFAB, GENERALFAB)
 	research = null
+
 /datum/design/item/engifab/lights/tube/red
 	build_path = /obj/item/weapon/light/tube/red
 

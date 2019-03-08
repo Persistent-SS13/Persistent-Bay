@@ -11,16 +11,44 @@
 							/obj/item/weapon/stock_parts/console_screen = 1)
 	var/list/unlocked_techs = list()
 
-/obj/item/weapon/circuitboard/fabricator/mechfab
-	name = "Circuit board (Exosuit Fabricator)"
-	build_path = /obj/machinery/fabricator/mecha_part_fabricator
 
-/datum/design/circuit/mechfab
-	name = "exosuit fabricator"
-	id = "mechfab"
+
+
+/obj/item/weapon/circuitboard/fabricator/medicalfab
+	name = "Circuit board (Medical Fabricator)"
+	build_path = /obj/machinery/fabricator/medical_fabricator
+
+/datum/design/circuit/medicalfab
+	name = "medical fabricator"
+	id = "medicalfab"
 	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
-	build_path = /obj/item/weapon/circuitboard/fabricator/mechfab
-	sort_string = "FABAA"
+	build_path = /obj/item/weapon/circuitboard/fabricator/medicalfab
+
+
+
+
+/obj/item/weapon/circuitboard/fabricator/consumerfab
+	name = "Circuit board (Consumer Goods Fabricator)"
+	build_path = /obj/machinery/fabricator/consumer_fabricator
+
+/datum/design/circuit/consumerfab
+	name = "consumer fabricator"
+	id = "consumerfab"
+	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/fabricator/consumerfab
+
+
+
+
+/obj/item/weapon/circuitboard/fabricator/servicefab
+	name = "Circuit board (Service Fabricator)"
+	build_path = /obj/machinery/fabricator/service_fabricator
+
+/datum/design/circuit/servicefabricator
+	name = "service fabricator"
+	id = "servicefab"
+	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
+	build_path = /obj/item/weapon/circuitboard/fabricator/servicefab
 
 
 /obj/item/weapon/circuitboard/fabricator/weaponfab
@@ -32,7 +60,6 @@
 	id = "weaponfab"
 	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/fabricator/weaponfab
-	sort_string = "FABAB"
 
 
 /obj/item/weapon/circuitboard/fabricator/evafab
@@ -44,7 +71,6 @@
 	id = "evafab"
 	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/fabricator/evafab
-	sort_string = "FABAB"
 
 /obj/item/weapon/circuitboard/fabricator/circuitfab
 	name = "Circuit board (Circuit Imprinter)"
@@ -56,33 +82,21 @@
 							/obj/item/weapon/stock_parts/console_screen = 1,
 							/obj/item/weapon/reagent_containers/glass/beaker = 1
 							)
-
+/**
 /datum/design/circuit/circuitfab
 	name = "circuit imprinter"
 	id = "circuitfab"
 	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/fabricator/circuitfab
-	sort_string = "FABAC"
+	sort_string =
+	"FABAC"
+**/
+
 
 /obj/item/weapon/circuitboard/fabricator/autotailor
 	name = "circuit board (auto-tailor - standard wear)"
 	build_path = /obj/machinery/fabricator/autotailor
 	origin_tech = list(TECH_DATA = 1)
-
-	var/list/names_paths = list(/obj/machinery/fabricator/autotailor = "auto-tailor  (standard wear)",
-							/obj/machinery/fabricator/autotailor/nonstandard = "circuit board (auto-tailor - non-standard wear)",
-							/obj/machinery/fabricator/autotailor/accessories = "circuit board (auto-tailor - accessories)",
-							/obj/machinery/fabricator/autotailor/combat = "circuit board (auto-tailor - tactical wear)",
-							/obj/machinery/fabricator/autotailor/storage = "circuit board (auto-tailor - storage containers)")
-
-/obj/item/weapon/circuitboard/fabricator/autotailor/attackby(obj/item/I, mob/user, params)
-	if(isScrewdriver(I))
-		set_type(pick(names_paths), user)
-
-/obj/item/weapon/circuitboard/fabricator/autotailor/proc/set_type(typepath, mob/user)
-	build_path = typepath
-	name = ("[names_paths[build_path]]")
-	to_chat(user, "<span class='notice'>You set the board to [names_paths[build_path]].</span>")
 
 /obj/item/weapon/circuitboard/fabricator/autotailor/nonstandard
 	name = "circuit board (auto-tailor - non-standard wear)"
@@ -92,21 +106,17 @@
 	name = "circuit board (auto-tailor - accessories)"
 	build_path = /obj/machinery/fabricator/autotailor/accessories
 
-/obj/item/weapon/circuitboard/fabricator/autotailor/combat
-	name = "circuit board (auto-tailor - tactical wear)"
-	build_path = /obj/machinery/fabricator/autotailor/combat
-
-/obj/item/weapon/circuitboard/fabricator/autotailor/storage
-	name = "circuit board (auto-tailor - storage containers)"
-	build_path = /obj/machinery/fabricator/autotailor/storage
-
 /datum/design/circuit/autotailor_standard
 	name = "auto-tailor - standard"
-	id = "autotailor_standard"
-	req_tech = list(TECH_DATA = 1)
 	build_path = /obj/item/weapon/circuitboard/fabricator/autotailor
-	sort_string = "FABAE"
 
+/datum/design/circuit/autotailor_nonstandard
+	name = "auto-tailor - costumes & special"
+	build_path = /obj/item/weapon/circuitboard/fabricator/autotailor/nonstandard
+
+/datum/design/circuit/autotailor_nonstandard
+	name = "auto-tailor - accessories and storage"
+	build_path = /obj/item/weapon/circuitboard/fabricator/autotailor/accessories
 
 /obj/item/weapon/circuitboard/fabricator/engfab
 	name = "Circuit board (Engineering Fabricator)"

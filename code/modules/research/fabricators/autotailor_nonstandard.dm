@@ -1,5 +1,5 @@
 /obj/machinery/fabricator/autotailor/nonstandard
-	name = "auto-tailor (non-standard wear)"
+	name = "auto-tailor (costumes & special wear)"
 	desc = "An advanced machine capable of printing many types of clothing, this one is loaded with non-standard clothing designs."
 	circuit = /obj/item/weapon/circuitboard/fabricator/autotailor/nonstandard
 	build_type = AUTOTAILOR_NONSTANDARD

@@ -231,15 +231,6 @@
 /datum/design/item/genfab/eva/adv/marshalling_wand
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPER = 0.5 SHEETS)
 	build_path = /obj/item/weapon/marshalling_wand
-/**
-/datum/design/item/genfab/eva/adv/net_launcher
-	materials = list(MATERIAL_STEEL = 6 SHEET, MATERIAL_COPPER = 3 SHEETS)
-	build_path = /obj/item/weapon/gun/launcher/net
-
-/datum/design/item/genfab/eva/adv/net_shell
-	materials = list(MATERIAL_STEEL = 2 SHEET, MATERIAL_CLOTH = 3 SHEETS)
-	build_path = /obj/item/weapon/net_shell
-**/
 /datum/design/item/genfab/eva/flare
 	materials = list(MATERIAL_STEEL = 1.5 SHEET, MATERIAL_GOLD = 0.15 SHEETS)
 	build_path = /obj/item/device/flashlight/flare
@@ -258,6 +249,15 @@
 	build_path = /obj/item/device/modkit/unathi
 
 
+/**
+/datum/design/item/genfab/eva/adv/net_launcher
+	materials = list(MATERIAL_STEEL = 6 SHEET, MATERIAL_COPPER = 3 SHEETS)
+	build_path = /obj/item/weapon/gun/launcher/net
+
+/datum/design/item/genfab/eva/adv/net_shell
+	materials = list(MATERIAL_STEEL = 2 SHEET, MATERIAL_CLOTH = 3 SHEETS)
+	build_path = /obj/item/weapon/net_shell
+**/
 
 
 
@@ -273,20 +273,6 @@
 
 /datum/design/item/genfab/miningtools/adv
 
-//////////////////////////////////////////////////////////////////////////////
-
-/datum/design/item/genfab/miningtools/adv/jackhammer
-	req_tech = list(TECH_MATERIAL = 3, TECH_POWER = 2, TECH_ENGINEERING = 2)
-	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_COPPER = 2 SHEETS, MATERIAL_SILVER = 1 SHEETS)
-	build_path = /obj/item/weapon/pickaxe/jackhammer
-
-/datum/design/item/genfab/miningtools/pickaxe
-	materials = list(MATERIAL_STEEL = 2 SHEETS)
-	build_path = /obj/item/weapon/pickaxe
-
-/datum/design/item/genfab/miningtools/hammer
-	materials = list(MATERIAL_STEEL = 2 SHEETS)
-	build_path = /obj/item/weapon/pickaxe/hammer
 
 /datum/design/item/genfab/miningtools/flag/red
 	materials = list(MATERIAL_CLOTH = 1 SHEETS)
@@ -311,25 +297,47 @@
 
 
 
+//////////////////////////////////////////////////////////////////////////////
+
+/datum/design/item/genfab/miningtools/pickaxe// 40
+	materials = list(MATERIAL_STEEL = 2 SHEETS)
+	build_path = /obj/item/weapon/pickaxe
+
+/datum/design/item/genfab/miningtools/hammer // 40
+	materials = list(MATERIAL_STEEL = 2 SHEETS)
+	build_path = /obj/item/weapon/pickaxe/hammer
+
+
+/datum/design/item/genfab/miningtools/adv/drill // 30
+	req_tech = list(TECH_MATERIAL = 6, TECH_POWER = 4, TECH_ENGINEERING = 4)
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_DIAMOND = 3 SHEETS)
+	build_path = /obj/item/weapon/pickaxe/drill
+	research = "mining_1"
+	
+/datum/design/item/genfab/miningtools/adv/jackhammer // 20
+	req_tech = list(TECH_MATERIAL = 3, TECH_POWER = 2, TECH_ENGINEERING = 2)
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_COPPER = 2 SHEETS, MATERIAL_SILVER = 1 SHEETS)
+	build_path = /obj/item/weapon/pickaxe/jackhammer
+	research = "mining_2"
+
+
+/datum/design/item/genfab/miningtools/adv/pick_diamond // 10
+	req_tech = list(TECH_MATERIAL = 6)
+	materials = list(MATERIAL_DIAMOND = 2 SHEETS, MATERIAL_STEEL = 1 SHEET)
+	build_path = /obj/item/weapon/pickaxe/diamond
+	research = "mining_3"
+/datum/design/item/genfab/miningtools/adv/drill_diamond // 5
+	req_tech = list(TECH_MATERIAL = 6, TECH_POWER = 4, TECH_ENGINEERING = 4)
+	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_DIAMOND = 3 SHEETS)
+	build_path = /obj/item/weapon/pickaxe/diamonddrill
+	research = "mining_4"
+	
+	
 /datum/design/item/genfab/miningtools/adv/plasmacutter
 	req_tech = list(TECH_MATERIAL = 4, TECH_PHORON = 3, TECH_ENGINEERING = 3)
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 1 SHEETS, MATERIAL_GOLD = 1 SHEETS, MATERIAL_PHORON = 2 SHEETS)
 	build_path = /obj/item/weapon/gun/energy/plasmacutter
-
-/datum/design/item/genfab/miningtools/adv/drill
-	req_tech = list(TECH_MATERIAL = 6, TECH_POWER = 4, TECH_ENGINEERING = 4)
-	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_DIAMOND = 3 SHEETS)
-	build_path = /obj/item/weapon/pickaxe/drill
-
-/datum/design/item/genfab/miningtools/adv/pick_diamond
-	req_tech = list(TECH_MATERIAL = 6)
-	materials = list(MATERIAL_DIAMOND = 2 SHEETS, MATERIAL_STEEL = 1 SHEET)
-	build_path = /obj/item/weapon/pickaxe/diamond
-
-/datum/design/item/genfab/miningtools/adv/drill_diamond
-	req_tech = list(TECH_MATERIAL = 6, TECH_POWER = 4, TECH_ENGINEERING = 4)
-	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_DIAMOND = 3 SHEETS)
-	build_path = /obj/item/weapon/pickaxe/diamonddrill
+	research = "plasma_cutter"
 
 /datum/design/item/genfab/miningtools/adv/mining_scanner
 	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2)

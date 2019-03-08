@@ -63,7 +63,8 @@ research holder datum.
 	var/list/tactical_at = list()
 	var/list/storage_at = list()
 	var/list/circuit_fab = list()
-
+	var/list/consumer_fab = list()
+	var/list/service_fab = list()
 
 
 /datum/research/New()		//Insert techs into possible_tech here. Known_tech automatically updated.
@@ -82,7 +83,7 @@ research holder datum.
 						gen_fab |= D
 					if(ENGIFAB)
 						eng_fab |= D
-					if(MEDIFAB)
+					if(MEDICALFAB)
 						med_fab |= D
 					if(MECHFAB)
 						mech_fab |= D
@@ -102,14 +103,17 @@ research holder datum.
 						tactical_at |= D
 					if(CIRCUITFAB)
 						circuit_fab |= D
-
+					if(CONSUMERFAB)
+						consumer_fab |= D
+					if(SERVICEFAB)
+						service_fab |= D
 		else
 			switch(D.build_type)
 				if(GENERALFAB)
 					gen_fab |= D
 				if(ENGIFAB)
 					eng_fab |= D
-				if(MEDIFAB)
+				if(MEDICALFAB)
 					med_fab |= D
 				if(MECHFAB)
 					mech_fab |= D
@@ -129,7 +133,10 @@ research holder datum.
 					tactical_at |= D
 				if(CIRCUITFAB)
 					circuit_fab |= D
-
+				if(CONSUMERFAB)
+					consumer_fab |= D
+				if(SERVICEFAB)
+					service_fab |= D
 	RefreshResearch()
 
 /datum/research/proc/get_tech_entry(var/uid)
@@ -143,7 +150,7 @@ research holder datum.
 			return gen_fab
 		if(ENGIFAB)
 			return eng_fab
-		if(MEDIFAB)
+		if(MEDICALFAB)
 			return med_fab
 		if(MECHFAB)
 			return mech_fab
@@ -163,7 +170,11 @@ research holder datum.
 			return tactical_at
 		if(CIRCUITFAB)
 			return circuit_fab
-
+		if(CONSUMERFAB)
+			return consumer_fab
+		if(SERVICEFAB)
+			return service_fab
+			
 /datum/research/techonly
 
 /datum/research/techonly/New()
@@ -521,6 +532,57 @@ research holder datum.
 	prereqs = list("grenade_emp")
 	uses = -10
 
+
+
+// MINING Equipment
+
+/datum/tech_entry/combat/mining/basic_rock
+	name = "Rock Shattering"
+	desc = "Hand-held drills can be used to drill into asteroids to get valuable ores. Unlocks hand-held drill designs for the appropriate fabricators."
+	tier = 1
+	points = 150
+	uid = "mining_1"
+	uses = -10
+
+/datum/tech_entry/combat/mining/sonic_jackhammer
+	name = "Sonic Hammering"
+	desc = "The sonic jackhammer can smash into asteroids by projecting sonic waves. Unlocks sonic jackhammer designs for the appropriate fabricators."
+	tier = 2
+	points = 300
+	uid = "mining_2"
+	uses = -10
+	prereqs = list("mining_1")
+
+/datum/tech_entry/combat/mining/diamond_edge
+	name = "Perfect Diamond Edge"
+	desc = "Diamond can be refined into a perfect tip by applying high value materials. Unlocks diamond pickaxe designs for the appropriate fabricators."
+	tier = 3
+	points = 600
+	uid = "mining_3"
+	uses = -10
+	prereqs = list("mining_2")
+
+/datum/tech_entry/combat/mining/diamond_drill
+	name = "Diamond Drilling"
+	desc = "The hand-held diamond drill is the final word in personal drilling. Unlocks diamond drill designs for the appropriate fabricators."
+	tier = 4
+	points = 1200
+	uid = "mining_4"
+	uses = -10
+	prereqs = list("mining_3")
+
+/datum/tech_entry/combat/mining/plasma_cutter
+	name = "Plasma Cutter"
+	desc = "The plasma cutter is a weapon designed for use in EVA, and a tool for mining.. Unlocks plasma cutter designs for the appropriate fabricators."
+	tier = 2
+	points = 400
+	uid = "plasma_cutter"
+	uses = 3
+	prereqs = list("mining_1")
+
+
+
+
 // STUN WEAPONS
 
 
@@ -603,7 +665,7 @@ research holder datum.
 	tier = 3
 	points = 750
 	uid = "pistol_2"
-
+	prereqs = list("pistol_1", "shotgun_2")
 /datum/tech_entry/combat/proj/automatic/rifle
 	name = "The Assault Rifle"
 	desc = "It's an incredibly effective and supremely cool assault rifle. This is what you've been waiting for. Unlocks assault rifle designs for the appropriate fabricators."

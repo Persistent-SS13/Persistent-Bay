@@ -33,9 +33,7 @@
 
 /datum/design/circuit
 	build_type = GENERALFAB
-	req_tech = list(TECH_DATA = 2)
-	materials = list(MATERIAL_GLASS = 2000)
-	chemicals = list(/datum/reagent/acid = 20)
+	materials = list(MATERIAL_GLASS = 1 SHEET, MATERIAL_COPPER = 0.25 SHEETS)
 	category = "Circuits"
 	time = 5
 
@@ -53,18 +51,37 @@
 	if(!desc)
 		desc = "Allows for the construction of \a [item_name] circuit board."
 
+
+	
+/datum/design/circuit/telepad
+	name = "Telepad"
+	id = "telepad"
+	req_tech = list(TECH_BLUESPACE = 2)
+	build_path = /obj/item/weapon/circuitboard/telepad
+
+
+/datum/design/circuit/jukebox
+	name = "jukebox"
+	id = "jukebox"
+	req_tech = list(TECH_DATA = 1)
+	build_path = /obj/item/weapon/circuitboard/jukebox
+	build_type = list(ENGIFAB, CONSUMERFAB)
+
+
 /datum/design/circuit/arcademachine
 	name = "battle arcade machine"
 	id = "arcademachine"
 	req_tech = list(TECH_DATA = 1)
 	build_path = /obj/item/weapon/circuitboard/arcade/battle
-
+	build_type = list(ENGIFAB, CONSUMERFAB)
+	
 /datum/design/circuit/oriontrail
 	name = "orion trail arcade machine"
 	id = "oriontrail"
 	req_tech = list(TECH_DATA = 1)
 	build_path = /obj/item/weapon/circuitboard/arcade/orion_trail
-
+	build_type = list(ENGIFAB, CONSUMERFAB)
+	
 /datum/design/circuit/prisonmanage
 	name = "prisoner management console"
 	id = "prisonmanage"
@@ -74,25 +91,25 @@
 	name = "patient monitoring console"
 	id = "operating"
 	build_path = /obj/item/weapon/circuitboard/operating
-
+	build_type = MEDICALFAB
 /datum/design/circuit/cryo_cell
 	name = "Cryotube"
 	id = "cryocell"
 	req_tech = list(TECH_DATA = 2, TECH_BIO = 3, TECH_ENGINEERING = 4)
 	build_path = /obj/item/weapon/circuitboard/cryo_tube
-
+	build_type = MEDICALFAB
 /datum/design/circuit/resleever
 	name = "neural lace resleever"
 	id = "resleever"
 	req_tech = list(TECH_DATA = 3, TECH_BIO = 3)
 	build_path = /obj/item/weapon/circuitboard/resleever
-
+	build_type = MEDICALFAB
 /datum/design/circuit/crewconsole
 	name = "crew monitoring console"
 	id = "crewconsole"
 	req_tech = list(TECH_DATA = 3, TECH_MAGNET = 2, TECH_BIO = 2)
 	build_path = /obj/item/weapon/circuitboard/crew
-
+	build_type = MEDICALFAB
 /*
 /datum/design/circuit/bioprinter
 	name = "bioprinter"
@@ -106,7 +123,8 @@
 	id = "roboprinter"
 	req_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 3)
 	build_path = /obj/item/weapon/circuitboard/roboprinter
-
+	build_type = MEDICALFAB
+/**
 /datum/design/circuit/teleconsole
 	name = "teleporter control console"
 	id = "teleconsole"
@@ -130,24 +148,18 @@
 	id = "rdconsole"
 	req_tech = list(TECH_DATA = 4)
 	build_path = /obj/item/weapon/circuitboard/rdconsole
+**/
 
-/datum/design/circuit/comm_monitor
-	name = "telecommunications monitoring console"
-	id = "comm_monitor"
-	req_tech = list(TECH_DATA = 3)
-	build_path = /obj/item/weapon/circuitboard/comm_monitor
-
-/datum/design/circuit/comm_server
-	name = "telecommunications server monitoring console"
-	id = "comm_server"
-	req_tech = list(TECH_DATA = 3)
-	build_path = /obj/item/weapon/circuitboard/comm_server
+/**
 
 /datum/design/circuit/message_monitor
 	name = "messaging monitor console"
 	id = "message_monitor"
 	req_tech = list(TECH_DATA = 5)
 	build_path = /obj/item/weapon/circuitboard/message_monitor
+	build_type = ENGIFAB
+	
+
 
 /datum/design/circuit/aiupload
 	name = "AI upload console"
@@ -178,31 +190,34 @@
 	id = "autolathe"
 	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/autolathe
+**/
 
-/datum/design/circuit/mining_console
+
+/datum/design/circuit/mining_console // MARK FOR LIMIT
 	name = "mining console board"
 	id = "mining_console"
 	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/mineral_processing
-
+	build_type = VOIDFAB
 /datum/design/circuit/mining_processor
 	name = "mining processor board"
 	id = "mining_processor"
 	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/mining_processor
-
+	build_type = VOIDFAB
 /datum/design/circuit/mining_unloader
 	name = "ore unloader board"
 	id = "mining_unloader"
 	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/mining_unloader
-
+	build_type = VOIDFAB
 /datum/design/circuit/mining_stacker
 	name = "sheet stacker board"
 	id = "mining_stacker"
 	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/mining_stacker
-
+	build_type = VOIDFAB
+/**
 /datum/design/circuit/rdservercontrol
 	name = "R&D server control console"
 	id = "rdservercontrol"
@@ -226,17 +241,21 @@
 	id = "recharge_station"
 	req_tech = list(TECH_DATA = 3, TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/recharge_station
+**/
 
 /datum/design/circuit/atmosalerts
 	name = "atmosphere alert console"
 	id = "atmosalerts"
 	build_path = /obj/item/weapon/circuitboard/atmos_alert
+	build_type = ENGIFAB
 
 /datum/design/circuit/air_management
 	name = "atmosphere monitoring console"
 	id = "air_management"
 	build_path = /obj/item/weapon/circuitboard/air_management
-
+	build_type = ENGIFAB
+	
+/**
 /datum/design/circuit/rcon_console
 	name = "RCON remote control console"
 	id = "rcon_console"
@@ -248,72 +267,68 @@
 	id = "dronecontrol"
 	req_tech = list(TECH_DATA = 4)
 	build_path = /obj/item/weapon/circuitboard/drone_control
+**/
+
 
 /datum/design/circuit/powermonitor
 	name = "power monitoring console"
 	id = "powermonitor"
 	build_path = /obj/item/weapon/circuitboard/powermonitor
-
+	build_type = ENGIFAB
 /datum/design/circuit/solarcontrol
 	name = "solar control console"
 	id = "solarcontrol"
 	build_path = /obj/item/weapon/circuitboard/solar_control
-
+	build_type = ENGIFAB
 /datum/design/circuit/tracker_electronics
 	name = "Solar Tracker"
 	id = "tracker_electronics"
 	build_path = /obj/item/weapon/tracker_electronics
-
+	build_type = ENGIFAB
 /datum/design/circuit/pacman
 	name = "PACMAN-type generator"
 	id = "pacman"
 	req_tech = list(TECH_DATA = 3, TECH_PHORON = 3, TECH_POWER = 3, TECH_ENGINEERING = 3)
 	build_path = /obj/item/weapon/circuitboard/pacman
-
+	build_type = ENGIFAB
 /datum/design/circuit/superpacman
 	name = "SUPERPACMAN-type generator"
 	id = "superpacman"
 	req_tech = list(TECH_DATA = 3, TECH_POWER = 4, TECH_ENGINEERING = 4)
 	build_path = /obj/item/weapon/circuitboard/pacman/super
-
+	build_type = ENGIFAB
 /datum/design/circuit/mrspacman
 	name = "MRSPACMAN-type generator"
 	id = "mrspacman"
 	req_tech = list(TECH_DATA = 3, TECH_POWER = 5, TECH_ENGINEERING = 5)
 	build_path = /obj/item/weapon/circuitboard/pacman/mrs
-
+	build_type = ENGIFAB
 /datum/design/circuit/batteryrack
 	name = "cell rack PSU"
 	id = "batteryrack"
 	req_tech = list(TECH_POWER = 3, TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/batteryrack
-
+	build_type = ENGIFAB
 /datum/design/circuit/smes_cell
 	name = "'SMES' superconductive magnetic energy storage"
 	desc = "Allows for the construction of circuit boards used to build a SMES."
 	id = "smes_cell"
 	req_tech = list(TECH_POWER = 7, TECH_ENGINEERING = 5)
 	build_path = /obj/item/weapon/circuitboard/smes
-
+	build_type = ENGIFAB
 /datum/design/circuit/gas_heater
 	name = "gas heating system"
 	id = "gasheater"
 	req_tech = list(TECH_POWER = 2, TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/unary_atmos/heater
-
+	build_type = ENGIFAB
 /datum/design/circuit/gas_cooler
 	name = "gas cooling system"
 	id = "gascooler"
 	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/unary_atmos/cooler
-
-/datum/design/circuit/secure_airlock
-	name = "secure airlock electronics"
-	desc =  "Allows for the construction of a tamper-resistant airlock electronics."
-	id = "securedoor"
-	req_tech = list(TECH_DATA = 3)
-	build_path = /obj/item/weapon/airlock_electronics/secure
-
+	build_type = ENGIFAB
+	
 /datum/design/circuit/biogenerator
 	name = "biogenerator"
 	id = "biogenerator"
@@ -325,305 +340,339 @@
 	id = "mining drill head"
 	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/miningdrill
-
+	build_type = VOIDFAB
 /datum/design/circuit/gasdrill
 	name = "gas drill head"
 	id = "gas drill head"
 	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/gasdrill
-
+	build_type = VOIDFAB
 /datum/design/circuit/miningdrillbrace
 	name = "mining drill brace"
 	id = "mining drill brace"
 	req_tech = list(TECH_DATA = 1, TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/miningdrillbrace
+	build_type = VOIDFAB
 /datum/design/circuit/clonepod
 	name = "clone pod"
 	id = "clonepod"
 	req_tech = list(TECH_DATA = 3, TECH_BIO = 3)
 	build_path = /obj/item/weapon/circuitboard/clonepod
-//This sorting system is too autistic for me, so fuck it, they're all starting at Z and working their way up
+	build_type = MEDICALFAB
 /datum/design/circuit/chem_dispenser
 	name = "Portable Chem Dispenser"
 	id = "chem_dispenser"
 	req_tech = list(TECH_DATA = 3, TECH_BIO = 2, TECH_ENGINEERING = 3)
 	build_path = /obj/item/weapon/circuitboard/chem_dispenser
+	build_type = MEDICALFAB
 /datum/design/circuit/reagentgrinder
 	name = "Reagent Grinder"
 	id = "reagent_grinder"
 	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 1, TECH_BIO = 1)
 	build_path = /obj/item/weapon/circuitboard/reagentgrinder
+	build_type = list(MEDICALFAB, SERVICEFAB)
 /datum/design/circuit/chem_master
 	name = "Chem Master"
 	id = "chem_master"
 	req_tech = list(TECH_MATERIAL = 2, TECH_DATA = 3, TECH_BIO = 2, TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/chem_master
+	build_type = MEDICALFAB
+	
+	
+	
 /datum/design/circuit/libraryscanner
 	name = "Book Scanner"
 	id = "libraryscanner"
 	req_tech = list(TECH_MATERIAL =1, TECH_DATA = 1)
 	build_path = /obj/item/weapon/circuitboard/libraryscanner
+	
 /datum/design/circuit/bookbinder
 	name = "Book Binder"
 	id = "bookbinder"
 	req_tech = list(TECH_MATERIAL =1, TECH_DATA = 1)
 	build_path = /obj/item/weapon/circuitboard/bookbinder
+	
 /datum/design/circuit/smartfridge
 	name = "Modular Smart Fridge"
 	id = "smartfridge"
 	req_tech = list(TECH_DATA = 1)
 	build_path = /obj/item/weapon/circuitboard/smartfridge
+	
+	
 /datum/design/circuit/generator
 	name = "Thermoelectric Generator"
 	id = "generator"
 	req_tech = list(TECH_ENGINEERING = 4, TECH_POWER = 4)
 	build_path = /obj/item/weapon/circuitboard/generator
+	build_type = ENGIFAB
+
 /datum/design/circuit/circulator
 	name = "Circulator"
 	id = "circulator"
 	req_tech = list(TECH_ENGINEERING = 4, TECH_POWER = 4)
 	build_path = /obj/item/weapon/circuitboard/circulator
-/datum/design/circuit/telepad
-	name = "Telepad"
-	id = "telepad"
-	req_tech = list(TECH_BLUESPACE = 2)
-	build_path = /obj/item/weapon/circuitboard/telepad
+	build_type = ENGIFAB
+	
 /datum/design/circuit/photocopier
 	name = "Photocopier"
 	id = "photocopier"
 	req_tech = list(TECH_MATERIAL = 2, TECH_DATA = 2)
 	build_path = /obj/item/weapon/circuitboard/photocopier
+	
+	
 /datum/design/circuit/gibber
 	name = "Meat Grinder"
 	id = "gibber"
 	req_tech = list(TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/gibber
+	build_type = SERVICEFAB
+	
+	
 /datum/design/circuit/microwave
 	name = "Microwave"
 	id = "microwave"
 	req_tech = list(TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/microwave
+	build_type = SERVICEFAB
+	
 /datum/design/circuit/oven
 	name = "Oven"
 	id = "oven"
 	req_tech = list(TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/oven
+	build_type = SERVICEFAB
+	
 /datum/design/circuit/grill
 	name = "Grill"
 	id = "grill"
 	req_tech = list(TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/grill
+	build_type = SERVICEFAB
+	
 /datum/design/circuit/candy_maker
 	name = "Candy Maker"
 	id = "candy_maker"
 	req_tech = list(TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/candy_maker
+	build_type = SERVICEFAB
+	
 /datum/design/circuit/deepfryer
 	name = "Deep Fryer"
 	id = "deepfryer"
 	req_tech = list(TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/deepfryer
+	build_type = SERVICEFAB
+	
 /datum/design/circuit/cereal
 	name = "Cereal Maker"
 	id = "cereal"
 	req_tech = list(TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/cereal
+	build_type = SERVICEFAB
+	
 /datum/design/circuit/bodyscanner_console
 	name = "Body Scanner Console"
 	id = "bodyscanner_console"
 	req_tech = list(TECH_MATERIAL = 3, TECH_ENGINEERING = 3, TECH_BIO = 2, TECH_DATA = 3)
 	build_path = /obj/item/weapon/circuitboard/bodyscanner_console
+	build_type = MEDICALFAB
+	
 /datum/design/circuit/bodyscanner
 	name = "Body Scanner"
 	id = "bodyscanner"
 	req_tech = list(TECH_MATERIAL = 3, TECH_ENGINEERING = 3, TECH_BIO = 2, TECH_DATA = 3)
 	build_path = /obj/item/weapon/circuitboard/bodyscanner
+	build_type = MEDICALFAB
+	
 /datum/design/circuit/sleeper
 	name = "Sleeper"
 	id = "sleeper"
 	req_tech = list(TECH_MATERIAL = 3, TECH_ENGINEERING = 3, TECH_BIO = 2, TECH_DATA = 3)
 	build_path = /obj/item/weapon/circuitboard/sleeper
+	build_type = MEDICALFAB
+	
 /datum/design/circuit/area_atmos
 	name = "Area Air Control Console"
 	id = "area_atmos"
 	req_tech = list(TECH_DATA = 2)
 	build_path = /obj/item/weapon/circuitboard/area_atmos
+	
 /datum/design/circuit/holopad
 	name = "Holopad"
 	id = "holopad"
 	req_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 3, TECH_BLUESPACE = 1)
 	build_path = /obj/item/weapon/circuitboard/holopad
+	
 /datum/design/circuit/holopad_longrange
 	name = "Long Range Holopad"
 	id = "holopad_longrange"
 	req_tech = list(TECH_ENGINEERING = 2, TECH_DATA = 3, TECH_BLUESPACE = 2)
 	build_path = /obj/item/weapon/circuitboard/holopad_longrange
+	
+	
 /datum/design/circuit/cryopod
-	name = "Cryogenic Freezer"
+	name = "Cryopod Person Storage"
 	id = "cryopod"
 	req_tech = list(TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/cryopod
+	
+/**	
 /datum/design/circuit/atm
 	name = "Automatic Teller Machine (ATM)"
 	id = "atm"
 	req_tech = list(TECH_ENGINEERING = 1,TECH_DATA = 1)
 	build_path = /obj/item/weapon/circuitboard/atm
+**/
+	
+	
 /datum/design/circuit/recycler
 	name = "Recycler"
 	id = "recycler"
 	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/recycler
+	
+	
 /datum/design/circuit/microscope
 	name = "Microscope"
 	id = "microscope"
 	req_tech = list(TECH_DATA = 2, TECH_BIO = 3, TECH_ENGINEERING = 3)
 	build_path = /obj/item/weapon/circuitboard/microscope
+	
+	
 /datum/design/circuit/dnaforensics
 	name = "DNA Analyzer"
 	id = "dnaforensics"
 	req_tech = list(TECH_DATA = 2, TECH_BIO = 3, TECH_ENGINEERING = 3)
 	build_path = /obj/item/weapon/circuitboard/dnaforensics
+	
+	
 /datum/design/circuit/turbine
 	name = "Gas Turbine"
 	id = "turbine"
 	req_tech = list(TECH_ENGINEERING = 4, TECH_POWER = 4)
 	build_path = /obj/item/weapon/circuitboard/turbine
+	build_type = ENGIFAB
+	
 /datum/design/circuit/compressor
 	name = "Compressor"
 	id = "compressor"
 	req_tech = list(TECH_ENGINEERING = 4, TECH_POWER = 4)
 	build_path = /obj/item/weapon/circuitboard/compressor
+	build_type = ENGIFAB
+	
 /datum/design/circuit/turbine_control
 	name = "Gas Turbine Control Console"
 	id = "turbine_control"
 	req_tech = list(TECH_ENGINEERING = 2, TECH_POWER = 2, TECH_DATA = 2)
 	build_path = /obj/item/weapon/circuitboard/turbine_control
+	build_type = ENGIFAB
+	
 /datum/design/circuit/pipeturbine
 	name = "Pipe Turbine"
 	id = "pipeturbine"
 	req_tech = list(TECH_ENGINEERING = 4, TECH_POWER = 4)
 	build_path = /obj/item/weapon/circuitboard/pipeturbine
+	build_type = ENGIFAB
+	
 /datum/design/circuit/turbinemotor
 	name = "Turbine Motor"
 	id = "turbinemotor"
 	req_tech = list(TECH_ENGINEERING = 4, TECH_POWER = 4)
 	build_path = /obj/item/weapon/circuitboard/turbinemotor
+	build_type = ENGIFAB
+	
 /datum/design/circuit/botany_extractor
 	name = "Lysis-Isolation Centrifuge"
 	id = "botany_extractor"
 	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 2, TECH_BIO = 3, TECH_DATA = 3)
 	build_path = /obj/item/weapon/circuitboard/botany_extractor
+	build_type = SERVICEFAB
+	
 /datum/design/circuit/botany_editor
 	name = "Bioballistic Delivery System"
 	id = "botany_editor"
 	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 2, TECH_BIO = 3, TECH_DATA = 3)
 	build_path = /obj/item/weapon/circuitboard/botany_editor
+	build_type = SERVICEFAB
+	
 /datum/design/circuit/seed_extractor
 	name = "Seed Extractor"
 	id = "seed_extractor"
 	req_tech = list(TECH_BIO = 3, TECH_DATA = 3)
 	build_path = /obj/item/weapon/circuitboard/seed_extractor
+	build_type = SERVICEFAB
+	
 /datum/design/circuit/diseaseanalyser
 	name = "Disease Analyzer"
 	id = "diseaseanalyser"
 	req_tech = list(TECH_DATA = 3, TECH_BIO = 3)
 	build_path = /obj/item/weapon/circuitboard/diseaseanalyser
+	build_type = MEDICALFAB
+	
 /datum/design/circuit/centrifuge
 	name = "Centrifuge"
 	id = "centrifuge"
 	req_tech = list(TECH_DATA = 3, TECH_BIO = 3)
 	build_path = /obj/item/weapon/circuitboard/centrifuge
+	build_type = MEDICALFAB
+	
 /datum/design/circuit/incubator
 	name = "Incubator"
 	id = "incubator"
 	req_tech = list(TECH_DATA = 3, TECH_BIO = 3)
 	build_path = /obj/item/weapon/circuitboard/incubator
+	build_type = MEDICALFAB
+	
 /datum/design/circuit/isolator
 	name = "Isolator"
 	id = "isolator"
 	req_tech = list(TECH_DATA = 3, TECH_BIO = 3)
 	build_path = /obj/item/weapon/circuitboard/isolator
+	build_type = MEDICALFAB
+	
 /datum/design/circuit/splicer
 	name = "Disease Splicer"
 	id = "splicer"
 	req_tech = list(TECH_DATA = 3, TECH_BIO = 3)
 	build_path = /obj/item/weapon/circuitboard/splicer
+	build_type = MEDICALFAB
+	
 /datum/design/circuit/shuttleengine
 	name = "Shuttle Engine"
 	id = "shuttleengine"
 	req_tech = list(TECH_ENGINEERING = 4, TECH_POWER = 4)
 	build_path = /obj/item/weapon/circuitboard/shuttleengine
+	
+	
 /datum/design/circuit/dockingbeacon
 	name = "Docking Beacon"
 	id = "dockingbeacon"
 	req_tech = list(TECH_ENGINEERING = 4, TECH_BLUESPACE = 4)
 	build_path = /obj/item/weapon/circuitboard/docking_beacon
+	
+	
 /datum/design/circuit/bridgecomputer
 	name = "Bridge Computer"
 	id = "bridgecomputer"
 	req_tech = list(TECH_ENGINEERING = 4, TECH_BLUESPACE = 4)
 	build_path = /obj/item/weapon/circuitboard/bridge_computer
+	
+	
 /datum/design/circuit/metal_detector
 	name= "Metal Detector"
 	id = "metal_detector"
 	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 3)
 	build_path = /obj/item/weapon/circuitboard/metal_detector
-/*
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
-/datum/design/circuit/
-	name = ""
-	id = ""
-	req_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1, TECH_PHORON = 1, TECH_POWER = 1, TECH_BLUESPACE = 1, TECH_BIO = 1, TECH_COMBAT = 1, TECH_MAGNET = 1, TECH_DATA = 1, TECH_ILLEGAL = 1)
-	build_path = /obj/item/weapon/circuitboard/
-*/
+	
 
-
+/**
 
 /datum/design/circuit/mecha
 	category = "Mecha Circuits"
 	req_tech = list(TECH_DATA = 3)
 
 /datum/design/circuit/mecha/AssembleDesignName()
-	name = "Exosuit module circuit design ([name])"
+	name = "Circuit ([name])"
 /datum/design/circuit/mecha/AssembleDesignDesc()
 	desc = "Allows for the construction of \a [name] module."
 
@@ -685,12 +734,15 @@
 	req_tech = list(TECH_DATA = 4, TECH_COMBAT = 2)
 	build_path = /obj/item/weapon/circuitboard/mecha/durand/targeting
 
+
+**/
+
 /datum/design/circuit/tcom
 	category = "Telecommunications Circuits"
 	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 4)
-
+	build_type = ENGIFAB
 /datum/design/circuit/tcom/AssembleDesignName()
-	name = "Telecommunications machinery circuit design ([name])"
+	name = "Circuit ([name])"
 /datum/design/circuit/tcom/AssembleDesignDesc()
 	desc = "Allows for the construction of a telecommunications [name] circuit board."
 
@@ -737,13 +789,28 @@
 	id = "ekey-printer"
 	req_tech = list(TECH_DATA = 3, TECH_ENGINEERING = 2)
 	build_path = /obj/item/weapon/circuitboard/keyprinter
-
+	build_type = ENGIFAB
+	
+/datum/design/circuit/comm_monitor
+	name = "telecommunications monitoring console"
+	id = "comm_monitor"
+	req_tech = list(TECH_DATA = 3)
+	build_path = /obj/item/weapon/circuitboard/comm_monitor
+	build_type = ENGIFAB
+/datum/design/circuit/comm_server
+	name = "telecommunications server monitoring console"
+	id = "comm_server"
+	req_tech = list(TECH_DATA = 3)
+	build_path = /obj/item/weapon/circuitboard/comm_server
+	build_type = ENGIFAB
+	
+/**
 /datum/design/circuit/bluespace_satellite
 	name = "bluespace satellite"
 	id = "bluespace-satellite"
 	req_tech = list(TECH_DATA = 4, TECH_ENGINEERING = 4, TECH_BLUESPACE = 3)
 	build_path = /obj/item/weapon/circuitboard/telecomms/bluespace_satellite
-
+**/
 
 /datum/design/circuit/shield_generator
 	name = "Shield Generator"
@@ -759,11 +826,14 @@
 	req_tech = list(TECH_MAGNET = 3, TECH_POWER = 4)
 	build_path = /obj/item/weapon/circuitboard/shield_diffuser
 
+/**
 /datum/design/circuit/ntnet_relay
 	name = "NTNet Quantum Relay"
 	id = "ntnet_relay"
 	req_tech = list(TECH_DATA = 4)
 	build_path = /obj/item/weapon/circuitboard/ntnet_relay
+**/
+
 
 /datum/design/circuit/replicator
 	name = "food replicator"
@@ -800,6 +870,9 @@
 	id = "suit_cycler"
 	req_tech = list(TECH_ENGINEERING = 1)
 	build_path = /obj/item/weapon/circuitboard/suit_cycler
+
+
+/**
 
 /datum/design/aimodule
 	category = "AI Modules"
@@ -999,3 +1072,5 @@
 	materials = list(MATERIAL_STEEL = 2000)
 	chemicals = list(/datum/reagent/acid = 20)
 	build_path = /obj/item/weapon/computer_hardware/ai_slot
+
+**/

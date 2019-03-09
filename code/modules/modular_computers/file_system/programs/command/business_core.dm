@@ -10,6 +10,7 @@
 	requires_ntnet = TRUE
 	size = 65
 	usage_flags = PROGRAM_CONSOLE
+	business = 1
 
 /datum/nano_module/program/business_core
 	name = "Business Control Program"

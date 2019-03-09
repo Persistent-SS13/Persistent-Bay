@@ -28,39 +28,7 @@
 			{{:data.business_size}}
 		</div>
 	</div>
-	<div class='item'>
-		<div class='itemLabel'>
-			Minor Module:
-		</div>
-		<div class='itemContent'>
-			{{:data.module_1}}<br>
-			{{:helper.link("Change", '', {'action' : 'module_1_change'})}}
-		</div>
-	</div>
-	<div class='item'>
-		<div class='itemLabel'>
-			Major Module:
-		</div>
-		<div class='itemContent'>
-			{{:data.module_2}}<br>
-			{{if data.has_major}}
-				{{:helper.link("Change", '', {'action' : 'module_2_change'})}}
-			{{else}}
-				{{:helper.link("Purchase", '', {'action' : 'module_2_purchase'})}}
-			{{/if}}
-		</div>
-	</div>
-	<div class='item'>
-		<div class='itemLabel'>
-			Extra Modules:
-		</div>
-		<div class='itemContent'>
-			{{:data.module_extra}}
-		</div>
-	</div>
-	<br><hr>
-	<h3>Research and Machine Limits</h3>
-
+	
 	
 {{/if}}
 {{if data.menu == 13}}

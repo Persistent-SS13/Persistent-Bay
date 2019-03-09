@@ -182,6 +182,12 @@ var/global/list/pipe_colors = list("grey" = PIPE_COLOR_GREY, "red" = PIPE_COLOR_
 			continue
 		device_icons["scrubber" + state] = image('icons/atmos/vent_scrubber.dmi', icon_state = state)
 
+	device = new('icons/atmos/vent_pipe.dmi')
+	for(var/state in device.IconStates())
+		if(!state || findtext(state, "map"))
+			continue
+		device_icons["pvent" + state] = image('icons/atmos/vent_pipe.dmi', icon_state = state)
+
 /datum/pipe_icon_manager/proc/gen_omni_icons()
 	if(!omni_icons)
 		omni_icons = new()

@@ -2,8 +2,8 @@
 
 /obj/machinery/computer/operating
 	name = "patient monitoring console"
-	density = 1
-	anchored = 1.0
+	density = TRUE
+	anchored = TRUE
 	icon_keyboard = "med_key"
 	icon_screen = "crew"
 	circuit = /obj/item/weapon/circuitboard/operating
@@ -20,23 +20,21 @@
 
 /obj/machinery/computer/operating/attack_ai(mob/user)
 	add_fingerprint(user)
-	if(stat & (BROKEN|NOPOWER))
+	if(inoperable())
 		return
 	interact(user)
-
 
 /obj/machinery/computer/operating/attack_hand(mob/user)
 	add_fingerprint(user)
-	if(stat & (BROKEN|NOPOWER))
+	if(inoperable())
 		return
 	interact(user)
 
-
 /obj/machinery/computer/operating/interact(mob/user)
-	if ( (get_dist(src, user) > 1 ) || (stat & (BROKEN|NOPOWER)) )
+	if ( (get_dist(src, user) > 1 ) || inoperable() )
 		if (!istype(user, /mob/living/silicon))
 			user.unset_machine()
-			user << browse(null, "window=op")
+			close_browser(user, "window=op")
 			return
 
 	user.set_machine(src)
@@ -56,7 +54,7 @@
 <BR>
 <B>No Patient Detected</B>
 "}
-	user << browse(dat, "window=op")
+	show_browser(user, dat, "window=op")
 	onclose(user, "op")
 
 /obj/machinery/computer/operating/Process()

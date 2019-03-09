@@ -89,7 +89,7 @@
 /obj/machinery/atmospherics/unary/vent_pump/atmos_init()
 	. = ..()
 	if(!node)
-		use_power = POWER_USE_OFF //Turn off if disconnected
+		update_use_power(POWER_USE_OFF) //Turn off if disconnected
 
 /obj/machinery/atmospherics/unary/vent_pump/Destroy()
 	if(initial_loc)
@@ -163,7 +163,7 @@
 /obj/machinery/atmospherics/unary/vent_pump/proc/can_pump()
 	if(inoperable())
 		return FALSE
-	if(!use_power)
+	if(isoff())
 		return FALSE
 	if(welded)
 		return FALSE

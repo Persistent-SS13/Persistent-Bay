@@ -9,15 +9,16 @@
 #define PRESSURE_CHECK_OUTPUT 4
 
 /obj/machinery/atmospherics/binary/dp_vent_pump
-	name = "Dual Port Air Vent"
-	desc = "Has a valve and pump attached to it. There are two ports."
-	icon = 'icons/atmos/vent_pump.dmi'
-	icon_state = "map_dp_vent"
-	level = 1
-	use_power = POWER_USE_OFF
-	idle_power_usage = 150		//internal circuitry, friction losses and stuff
-	power_rating = 7500			//7500 W ~ 10 HP
-	connect_types = CONNECT_TYPE_REGULAR|CONNECT_TYPE_SUPPLY|CONNECT_TYPE_SCRUBBER //connects to regular, supply and scrubbers pipes
+	name 				= "Dual Port Air Vent"
+	desc 				= "Has a valve and pump attached to it. There are two ports."
+	icon 				= 'icons/atmos/vent_pump.dmi'
+	icon_state 			= "map_dp_vent"
+	level 				= 1
+	use_power 			= POWER_USE_IDLE
+	idle_power_usage 	= 150			//internal circuitry, friction losses and stuff
+	power_rating 		= 7500			//7500 W ~ 10 HP
+	connect_types 		= CONNECT_TYPE_REGULAR|CONNECT_TYPE_SUPPLY|CONNECT_TYPE_SCRUBBER //connects to regular, supply and scrubbers pipes
+	mass				= 15.0 //kg
 
 	//Radio
 	id_tag 			= null
@@ -59,7 +60,8 @@
 
 /obj/machinery/atmospherics/binary/dp_vent_pump/LateInitialize()
 	. = ..()
-	src.broadcast_status()
+	if (has_transmitter())
+		src.broadcast_status()
 
 /obj/machinery/atmospherics/binary/dp_vent_pump/update_icon(var/safety = 0)
 	if(!check_icon_cache())

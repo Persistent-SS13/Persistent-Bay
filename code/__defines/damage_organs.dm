@@ -12,6 +12,7 @@
 #define BRUISE    "bruise"
 #define PIERCE    "pierce"
 #define LASER     "laser"
+#define SHATTER   "shatter"
 
 #define STUN      "stun"
 #define WEAKEN    "weaken"
@@ -31,15 +32,19 @@
 #define  AIR_DAMAGE_MODIFIER 2.025  // More means less damage from hot air scalding lungs, less = more damage. (default 2.025)
 
 // Organ defines.
-#define ORGAN_CUT_AWAY   (1<<0) // The organ is in the process of being surgically removed.
-#define ORGAN_BLEEDING   (1<<1) // The organ is currently bleeding.
-#define ORGAN_BROKEN     (1<<2) // The organ is broken.
-#define ORGAN_DEAD       (1<<3) // The organ is necrotic.
-#define ORGAN_MUTATED    (1<<4) // The organ is unusable due to genetic damage.
-#define ORGAN_ARTERY_CUT (1<<6) // The organ has had its artery cut.
-#define ORGAN_TENDON_CUT (1<<7) // The organ has had its tendon cut.
-
+#define ORGAN_CUT_AWAY   (1<<0)  // The organ is in the process of being surgically removed.
+#define ORGAN_BLEEDING   (1<<1)  // The organ is currently bleeding.
+#define ORGAN_BROKEN     (1<<2)  // The organ is broken.
+#define ORGAN_DEAD       (1<<3)  // The organ is necrotic.
+#define ORGAN_MUTATED    (1<<4)  // The organ is unusable due to genetic damage.
+#define ORGAN_ARTERY_CUT (1<<6)  // The organ has had its artery cut.
+#define ORGAN_TENDON_CUT (1<<7)  // The organ has had its tendon cut.
+#define ORGAN_DISFIGURED (1<<8)  // The organ is scarred/disfigured. Alters whether or not the face can be recognised.
+#define ORGAN_SABOTAGED  (1<<9)  // The organ will explode if exposed to EMP, if prosthetic.
+#define ORGAN_ASSISTED   (1<<10) // The organ is partially prosthetic. No mechanical effect.
 #define ORGAN_ROBOTIC    (1<<11) // The organ is robotic. Changes numerous behaviors, search BP_IS_ROBOTIC for checks.
+#define ORGAN_BRITTLE    (1<<12) // The organ takes additional blunt damage. If robotic, cannot be repaired through normal means.
+#define ORGAN_CRYSTAL    (1<<13) // The organ does not suffer laser damage, but shatters on droplimb.
 
 // Organ flag defines.
 #define ORGAN_FLAG_CAN_AMPUTATE   (1<<0) // The organ can be amputated.
@@ -51,6 +56,7 @@
 #define ORGAN_FLAG_GENDERED_ICON  (1<<6) // The icon state for this organ appends _m/_f.
 #define ORGAN_FLAG_HEALS_OVERKILL (1<<7) // The organ heals from overkill damage.
 
+// Droplimb types.
 #define DROPLIMB_EDGE 0
 #define DROPLIMB_BLUNT 1
 #define DROPLIMB_BURN 2
@@ -83,6 +89,7 @@
 
 //Blood levels. These are percentages based on the species blood_volume far.
 #define BLOOD_VOLUME_SAFE    85
-#define BLOOD_VOLUME_OKAY    75
+#define BLOOD_VOLUME_OKAY    70
 #define BLOOD_VOLUME_BAD     60
-#define BLOOD_VOLUME_SURVIVE 40
+#define BLOOD_VOLUME_SURVIVE 30
+

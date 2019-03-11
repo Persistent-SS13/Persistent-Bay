@@ -54,6 +54,7 @@
 #define COLOR_BOTTLE_GREEN     "#1f6b4f"
 #define COLOR_PALE_BTL_GREEN   "#57967f"
 #define COLOR_GUNMETAL         "#545c68"
+#define COLOR_STEEL            "#666666"
 #define COLOR_MUZZLE_FLASH     "#ffffb2"
 #define COLOR_CHESTNUT         "#996633"
 #define COLOR_BEASTY_BROWN     "#663300"
@@ -69,6 +70,13 @@
 #define COLOR_CIVIE_GREEN      "#b7f27d"
 #define COLOR_TITANIUM         "#d1e6e3"
 #define COLOR_DARK_GUNMETAL    "#4c535b"
+#define COLOR_BRONZE           "#8c7853"
+#define COLOR_BRASS            "#b99d71"
+#define COLOR_INDIGO           "#4b0082"
+#define COLOR_ALUMINIUM        "#bbbbbb"
+#define COLOR_CRYSTAL          "#00c8a5"
+#define COLOR_ASTEROID_ROCK    "#735555"
+#define COLOR_NULLGLASS        "#ff6088"
 
 #define	PIPE_COLOR_GREY        "#ffffff"	//yes white is grey
 #define	PIPE_COLOR_RED         "#ff0000"
@@ -94,7 +102,13 @@
 #define	COMMS_COLOR_CENTCOMM   "#5c5c7c"
 #define	COMMS_COLOR_SYNDICATE  "#6d3f40"
 
-#define GLASS_COLOR            "#74b1ee"
+#define WOOD_COLOR_GENERIC     "#d5a66e"
+#define WOOD_COLOR_RICH        "#994715"
+#define WOOD_COLOR_PALE        "#d2bc9d"
+#define WOOD_COLOR_BLACK       "#332521"
+#define WOOD_COLOR_CHOCOLATE   "#78523b"
+
+#define GLASS_COLOR            "#74c1ee"
 #define GLASS_COLOR_PHORON     "#7c3a9a"
 #define GLASS_COLOR_TINTED     "#222222"
 #define GLASS_COLOR_FROSTED    "#ffffff"
@@ -117,5 +131,11 @@
 #define COLOR_ASSEMBLY_LBLUE   "#5d99be"
 #define COLOR_ASSEMBLY_BLUE    "#38559e"
 #define COLOR_ASSEMBLY_PURPLE  "#6f6192"
+
+// Used by fluid system.
+#define COLOR_OCEAN "#99f5ff"
+
+// Used to easily change research colour in case of ???
+#define COLOR_RESEARCH COLOR_PURPLE_GRAY
 
 #define RANDOM_RGB rgb(rand(0,255), rand(0,255), rand(0,255))

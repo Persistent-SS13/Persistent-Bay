@@ -23,7 +23,7 @@
 /proc/get_subarea_turfs(var/area/A, var/list/predicates)
 	. = new/list()
 	A = istype(A) ? A.type : A
-	if(!A)
+	if(!ispath(A))
 		return
 	for(var/sub_area_type in typesof(A))
 		var/area/sub_area = locate(sub_area_type)

@@ -33,23 +33,24 @@
 	var/list/air_scrub_info = list()
 
 /obj/machinery/alarm
-	name = "alarm"
-	icon = 'icons/obj/monitors.dmi'
-	icon_state = "alarm0"
-	anchored = TRUE
-	use_power = POWER_USE_IDLE
-	idle_power_usage = 80
-	active_power_usage = 1000 //For heating/cooling rooms. 1000 joules equates to about 1 degree every 2 seconds for a single tile of air.
-	power_channel = ENVIRON
-	req_one_access = list(core_access_engineering_programs, core_access_engineering_programs)
-	clicksound = "button"
-	clickvol = 30
-	layer = ABOVE_WINDOW_LAYER
+	name 				= "alarm"
+	icon 				= 'icons/obj/monitors.dmi'
+	icon_state 			= "alarm0"
+	anchored 			= TRUE
+	use_power 			= POWER_USE_IDLE
+	idle_power_usage 	= 80
+	active_power_usage 	= 1000 //For heating/cooling rooms. 1000 joules equates to about 1 degree every 2 seconds for a single tile of air.
+	power_channel 		= ENVIRON
+	req_one_access 		= list(core_access_engineering_programs, core_access_engineering_programs)
+	clicksound 			= "button"
+	clickvol 			= 30
+	layer 				= ABOVE_WINDOW_LAYER
 	
-	id_tag = null
-	frequency = AIRALARM_FREQ
-	radio_filter_in = RADIO_TO_AIRALARM
-	radio_filter_out = RADIO_FROM_AIRALARM
+	id_tag 				= null
+	frequency			= AIRALARM_FREQ
+	radio_filter_in		= RADIO_TO_AIRALARM
+	radio_filter_out	= RADIO_FROM_AIRALARM
+	radio_check_id		= FALSE
 
 	var/breach_detection = TRUE // Whether to use automatic breach detection or not
 	var/remote_control = 0

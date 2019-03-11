@@ -1,125 +1,129 @@
 /obj/machinery/ai_slipper
-	name = "\improper AI Liquid Dispenser"
-	icon = 'icons/obj/device.dmi'
-	icon_state = "motion0"
-	anchored = 1.0
-	use_power = 1
-	idle_power_usage = 10
-	var/uses = 20
-	var/disabled = 1
-	var/lethal = 0
-	var/locked = 1
-	var/cooldown_time = 0
-	var/cooldown_timeleft = 0
-	var/cooldown_on = 0
-	req_access = list(access_ai_upload)
+	name 					= "Foam Dispenser"
+	icon 					= 'icons/obj/device.dmi'
+	icon_state 				= "motion0"
+	anchored 				= TRUE
+	use_power 				= POWER_USE_IDLE
+	idle_power_usage 		= 10
+	req_access 				= list(core_access_command_programs)
 
+	//Radio
+	id_tag 					= null
+	frequency 				= AI_FREQ
+	radio_filter_in 		= RADIO_FOAM_DISPENSER
+	radio_filter_out 		= RADIO_FOAM_DISPENSER
+	radio_check_id 			= TRUE
+
+	var/uses 				= 20
+	var/disabled 			= TRUE
+	var/locked 				= TRUE
+	var/duration_cooldown 	= 10 SECONDS
+	var/time_cooldown_end 	= 0
 
 /obj/machinery/ai_slipper/New()
 	..()
-	update_icon()
+	ADD_SAVED_VAR(uses)
+	ADD_SAVED_VAR(disabled)
+	ADD_SAVED_VAR(locked)
+
+/obj/machinery/ai_slipper/Initialize(mapload, d)
+	. = ..()
+	queue_icon_update()
 
 /obj/machinery/ai_slipper/update_icon()
-	if (stat & NOPOWER || stat & BROKEN)
+	if (inoperable())
 		icon_state = "motion0"
 	else
 		icon_state = disabled ? "motion0" : "motion3"
 
 /obj/machinery/ai_slipper/proc/setState(var/enabled, var/uses)
-	src.disabled = disabled
+	src.disabled = !enabled
 	src.uses = uses
 	src.power_change()
 
 /obj/machinery/ai_slipper/attackby(obj/item/weapon/W, mob/user)
-	if(stat & (NOPOWER|BROKEN))
+	if(default_wrench_floor_bolts(user, W))
+		return TRUE
+	if(default_deconstruction_screwdriver(user, W))
+		return TRUE
+	if(default_deconstruction_crowbar(user, W))
+		return TRUE
+	if(inoperable())
 		return
 	if (istype(user, /mob/living/silicon))
 		return src.attack_hand(user)
-	else // trying to unlock the interface
-		if (src.allowed(usr))
-			locked = !locked
-			to_chat(user, "You [ locked ? "lock" : "unlock"] the device.")
+	// trying to unlock the interface
+	if (src.allowed(usr))
+		locked = !locked
+		to_chat(user, SPAN_NOTICE("You [ locked ? "lock" : "unlock"] the device."))
+		if(user.machine==src)
 			if (locked)
-				if (user.machine==src)
-					user.unset_machine()
-					user << browse(null, "window=ai_slipper")
+				user.unset_machine()
+				close_browser(user, "window=ai_slipper")
 			else
-				if (user.machine==src)
-					src.attack_hand(usr)
-		else
-			to_chat(user, "<span class='warning'>Access denied.</span>")
-			return
-	return
+				src.attack_hand(usr)
+		return TRUE
+	else
+		to_chat(user, SPAN_WARNING("Access denied."))
+		return TRUE
+	return ..()
 
 /obj/machinery/ai_slipper/attack_ai(mob/user as mob)
 	return attack_hand(user)
 
 /obj/machinery/ai_slipper/attack_hand(mob/user as mob)
-	if(stat & (NOPOWER|BROKEN))
+	if(inoperable())
 		return
-	if ( (get_dist(src, user) > 1 ))
-		if (!istype(user, /mob/living/silicon))
-			to_chat(user, text("Too far away."))
-			user.unset_machine()
-			user << browse(null, "window=ai_slipper")
-			return
+	if (!Adjacent(user) && !istype(user, /mob/living/silicon))
+		to_chat(user, SPAN_WARNING("Too far away."))
+		user.unset_machine()
+		close_browser(user, "window=ai_slipper")
+		return
 
 	user.set_machine(src)
-	var/loc = src.loc
-	if (istype(loc, /turf))
-		loc = loc:loc
-	if (!istype(loc, /area))
-		to_chat(user, text("Turret badly positioned - loc.loc is [].", loc))
+	var/area/area = get_area(src)
+	if (!istype(area, /area))
+		to_chat(user, text("[src] badly positioned - area is [area]"))
 		return
-	var/area/area = loc
-	var/t = "<TT><B>AI Liquid Dispenser</B> ([area.name])<HR>"
-
+	var/page = "<TT><B>AI Liquid Dispenser</B> ([area.name])<HR>"
 	if(src.locked && (!istype(user, /mob/living/silicon)))
-		t += "<I>(Swipe ID card to unlock control panel.)</I><BR>"
+		page += "<I>(Swipe ID card to unlock control panel.)</I><BR>"
 	else
-		t += text("Dispenser [] - <A href='?src=\ref[];toggleOn=1'>[]?</a><br>\n", src.disabled?"deactivated":"activated", src, src.disabled?"Enable":"Disable")
-		t += text("Uses Left: [uses]. <A href='?src=\ref[src];toggleUse=1'>Activate the dispenser?</A><br>\n")
+		page += text("Dispenser [src.disabled?"deactivated":"activated"] - <A href='?src=\ref[src];toggleOn=1'>[src.disabled?"Enable":"Disable"]</a><br>\n")
+		page += text("Uses Left: [uses].")
+		if(time_cooldown_end > REALTIMEOFDAY)
+			var/timeleft = (time_cooldown_end - REALTIMEOFDAY) / TICKS_IN_SECOND
+			page += text("Reloading.. [timeleft]s")
+		else
+			page += text("<A href='?src=\ref[src];toggleUse=1'>Dispense</A>")
+		page += text("<br>\n")
 
-	user << browse(t, "window=computer;size=575x450")
+	show_browser(user, page, "window=computer;size=575x450")
 	onclose(user, "computer")
 	return
 
+/obj/machinery/ai_slipper/OnSignal(datum/signal/signal)
+	. = ..()
+	if (signal.data["toggle"])
+		src.disabled = !src.disabled
+	if (signal.data["dispense"])
+		dispense_foam()
+	update_icon()
+
 /obj/machinery/ai_slipper/Topic(href, href_list)
 	..()
-	if (src.locked)
-		if (!istype(usr, /mob/living/silicon))
-			to_chat(usr, "Control panel is locked!")
-			return
 	if (href_list["toggleOn"])
 		src.disabled = !src.disabled
 		update_icon()
 	if (href_list["toggleUse"])
-		if(cooldown_on || disabled)
-			return
-		else
-			new /obj/effect/effect/foam(src.loc)
-			src.uses--
-			cooldown_on = 1
-			cooldown_time = world.timeofday + 100
-			slip_process()
-			return
-
+		dispense_foam()
+		src.power_change()
 	src.attack_hand(usr)
 	return
 
-/obj/machinery/ai_slipper/proc/slip_process()
-	while(cooldown_time - world.timeofday > 0)
-		var/ticksleft = cooldown_time - world.timeofday
-
-		if(ticksleft > 1e5)
-			cooldown_time = world.timeofday + 10	// midnight rollover
-
-
-		cooldown_timeleft = (ticksleft / 10)
-		sleep(5)
-	if (uses <= 0)
+/obj/machinery/ai_slipper/proc/dispense_foam()
+	if(REALTIMEOFDAY < time_cooldown_end || disabled || uses <= 0)
 		return
-	if (uses >= 0)
-		cooldown_on = 0
-	src.power_change()
-	return
+	new /obj/effect/effect/foam(src.loc)
+	src.uses--
+	time_cooldown_end = REALTIMEOFDAY + duration_cooldown

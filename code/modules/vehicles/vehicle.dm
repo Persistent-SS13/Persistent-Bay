@@ -5,40 +5,38 @@
 	var/actual_load
 
 /obj/vehicle
-	name = "vehicle"
-	icon = 'icons/obj/vehicles.dmi'
-	plane = ABOVE_HUMAN_PLANE
-	layer = ABOVE_HUMAN_LAYER
-	density = 1
-	anchored = 1
-	animate_movement=1
-	light_range = 4
+	name 				= "vehicle"
+	icon 				= 'icons/obj/vehicles.dmi'
+	plane 				= ABOVE_HUMAN_PLANE
+	layer 				= ABOVE_HUMAN_LAYER
+	density 			= TRUE
+	anchored 			= TRUE
+	animate_movement	= TRUE
+	light_range 		= 4
+	can_buckle 			= TRUE
+	buckle_movable 		= TRUE
+	buckle_lying 		= FALSE
+	max_health 			= 0		//do not forget to set health for your vehicle!
 
-	can_buckle = 1
-	buckle_movable = 1
-	buckle_lying = 0
+	var/on 					= FALSE
+	var/open 				= FALSE	//Maint panel
+	var/locked 				= TRUE
+	var/stat 				= 0
+	var/emagged 			= FALSE
 
-	var/attack_log = null
-	var/on = 0
-	max_health = 0	//do not forget to set health for your vehicle!
-	var/fire_dam_coeff = 1.0
-	var/brute_dam_coeff = 1.0
-	var/open = 0	//Maint panel
-	var/locked = TRUE
-	var/stat = 0
-	var/emagged = 0
-	var/powered = 0		//set if vehicle is powered and should use fuel when moving
-	var/move_delay = 1	//set this to limit the speed of the vehicle
-	var/special_movement = FALSE
-	var/has_cell = TRUE
+	var/move_delay 			= 1	//set this to limit the speed of the vehicle
+	var/special_movement 	= FALSE
 
+	var/powered 			= FALSE		//set if vehicle is powered and should use fuel when moving
+	var/has_cell 			= TRUE
+	var/charge_use 			= 200 //W
 	var/obj/item/weapon/cell/cell
-	var/charge_use = 200 //W
 
 	var/atom/movable/load		//all vehicles can take a load, since they should all be a least drivable
-	var/load_item_visible = 1	//set if the loaded item should be overlayed on the vehicle sprite
-	var/load_offset_x = 0		//pixel_x offset for item overlay
-	var/load_offset_y = 0		//pixel_y offset for item overlay
+	var/load_item_visible 	= TRUE	//set if the loaded item should be overlayed on the vehicle sprite
+	var/load_offset_x 		= 0		//pixel_x offset for item overlay
+	var/load_offset_y 		= 0		//pixel_y offset for item overlay
+	var/attack_log 			= null
 
 //-------------------------------------------
 // Standard procs
@@ -50,7 +48,7 @@
 /obj/vehicle/Move()
 	if(special_movement)
 		var/init_anc = anchored
-		anchored = 0
+		anchored = FALSE
 		if(!..())
 			anchored = init_anc
 			return 0
@@ -65,7 +63,7 @@
 			turn_off()
 
 		var/init_anc = anchored
-		anchored = 0
+		anchored = FALSE
 		if(!..())
 			anchored = init_anc
 			return 0
@@ -93,7 +91,7 @@
 		if(!locked)
 			open = !open
 			update_icon()
-			to_chat(user, "<span class='notice'>Maintenance panel is now [open ? "opened" : "closed"].</span>")
+			to_chat(user, SPAN_NOTICE("Maintenance panel is now [open ? "opened" : "closed"]."))
 	else if(isCrowbar(W) && cell && open)
 		remove_cell(user)
 
@@ -106,13 +104,13 @@
 				if(open)
 					health = min(max_health, health+10)
 					user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-					user.visible_message("<span class='warning'>\The [user] repairs \the [src]!</span>","<span class='notice'>You repair \the [src]!</span>")
+					user.visible_message(SPAN_WARNING("\The [user] repairs \the [src]!"), SPAN_NOTICE("You repair \the [src]!"))
 				else
-					to_chat(user, "<span class='notice'>Unable to repair with the maintenance panel closed.</span>")
+					to_chat(user, SPAN_NOTICE("Unable to repair with the maintenance panel closed."))
 			else
-				to_chat(user, "<span class='notice'>[src] does not need a repair.</span>")
+				to_chat(user, SPAN_NOTICE("[src] does not need a repair."))
 		else
-			to_chat(user, "<span class='notice'>Unable to repair while [src] is off.</span>")
+			to_chat(user, SPAN_NOTICE("Unable to repair while [src] is off."))
 	else
 		. = ..()
 
@@ -123,7 +121,7 @@
 	pulse2.icon = 'icons/effects/effects.dmi'
 	pulse2.icon_state = "empdisable"
 	pulse2.name = "emp sparks"
-	pulse2.anchored = 1
+	pulse2.anchored = TRUE
 	pulse2.set_dir(pick(GLOB.cardinal))
 
 	spawn(10)
@@ -151,21 +149,21 @@
 		return 0
 	if(powered && cell.charge < (charge_use * CELLRATE))
 		return 0
-	on = 1
+	on = TRUE
 	set_light(initial(light_range))
 	update_icon()
 	return 1
 
 /obj/vehicle/proc/turn_off()
-	on = 0
+	on = FALSE
 	set_light(0)
 	update_icon()
 
 /obj/vehicle/emag_act(var/remaining_charges, mob/user as mob)
 	if(!emagged)
-		emagged = 1
+		emagged = TRUE
 		if(locked)
-			locked = 0
+			locked = FALSE
 			to_chat(user, "<span class='warning'>You bypass [src]'s controls.</span>")
 		return 1
 
@@ -217,13 +215,13 @@
 	C.forceMove(src)
 	cell = C
 	powercheck()
-	to_chat(usr, "<span class='notice'>You install [C] in [src].</span>")
+	to_chat(usr, SPAN_NOTICE("You install [C] in [src]."))
 
 /obj/vehicle/proc/remove_cell(var/mob/living/carbon/human/H)
 	if(!cell)
 		return
 
-	to_chat(usr, "<span class='notice'>You remove [cell] from [src].</span>")
+	to_chat(usr, SPAN_NOTICE("You remove [cell] from [src]."))
 	cell.forceMove(get_turf(H))
 	H.put_in_hands(cell)
 	cell = null
@@ -254,7 +252,7 @@
 
 	C.forceMove(loc)
 	C.set_dir(dir)
-	C.anchored = 1
+	C.anchored = TRUE
 
 	load = C
 
@@ -265,7 +263,7 @@
 	if(ismob(C))
 		buckle_mob(C)
 		var/mob/M = C
-		M.riding = 1
+		M.riding = TRUE
 	else if(load_item_visible)
 		C.pixel_x += load_offset_x
 		C.pixel_y += load_offset_y
@@ -305,13 +303,13 @@
 
 	load.forceMove(dest)
 	load.set_dir(get_dir(loc, dest))
-	load.anchored = 0		//we can only load non-anchored items, so it makes sense to set this to false
+	load.anchored = FALSE		//we can only load non-anchored items, so it makes sense to set this to false
 	if(ismob(load)) //atoms should probably have their own procs to define how their pixel shifts and layer can be manipulated, someday
 		var/mob/M = load
 		M.pixel_x = M.default_pixel_x
 		M.pixel_y = M.default_pixel_y
 
-		M.riding = 0
+		M.riding = FALSE
 	else
 		load.pixel_x = initial(load.pixel_x)
 		load.pixel_y = initial(load.pixel_y)
@@ -322,7 +320,6 @@
 
 	load = null
 	return 1
-
 
 //-------------------------------------------------------
 // Stat update procs

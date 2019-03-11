@@ -97,31 +97,30 @@
 				add_underlay(T,, dir)
 
 /obj/machinery/atmospherics/unary/vent_scrubber/proc/broadcast_status()
-	if(!has_transmitter())
-		return FALSE
-
 	var/list/data = list(
-		"area" = area_uid,
-		// "tag" = id_tag,
-		"device" = "AScr",
-		"timestamp" = world.time,
-		"power" = use_power,
-		"scrubbing" = scrubbing,
-		"panic" = panic,
-		"filter_o2" = (GAS_OXYGEN in scrubbing_gas),
-		"filter_n2" = (GAS_NITROGEN in scrubbing_gas),
-		"filter_co2" = (GAS_CO2 in scrubbing_gas),
+		"area"			= area_uid,
+		"device"		= "AScr",
+		"timestamp"		= world.time,
+		"power" 		= use_power,
+		"scrubbing" 	= scrubbing,
+		"panic" 		= panic,
+		"filter_o2" 	= (GAS_OXYGEN in scrubbing_gas),
+		"filter_n2" 	= (GAS_NITROGEN in scrubbing_gas),
+		"filter_co2" 	= (GAS_CO2 in scrubbing_gas),
 		"filter_phoron" = (GAS_PHORON in scrubbing_gas),
-		"filter_n2o" = (GAS_N2O in scrubbing_gas),
-		"filter_reag" = (GAS_REAGENTS in scrubbing_gas),
-		"sigtype" = "status"
+		"filter_n2o" 	= (GAS_N2O in scrubbing_gas),
+		"filter_reag" 	= (GAS_REAGENTS in scrubbing_gas),
+		"sigtype" 		= "status"
 	)
 	if(!initial_loc.air_scrub_names[id_tag])
 		var/new_name = "[initial_loc.name] Air Scrubber #[initial_loc.air_scrub_names.len+1]"
 		initial_loc.air_scrub_names[id_tag] = new_name
 		src.name = new_name
 	initial_loc.air_scrub_info[id_tag] = data
-	broadcast_signal(data, radio_filter_out)
+
+	if(!id_tag) //Don't broadcast when you're not initialized!
+		return
+	broadcast_signal(data)
 	return TRUE
 
 /obj/machinery/atmospherics/unary/vent_scrubber/Process()

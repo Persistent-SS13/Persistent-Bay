@@ -34,7 +34,7 @@
 #define ENGIFAB  11
 #define PARTFAB  12
 #define MEDICALFAB  13
-#define WEAPONFAB  14
+//#define WEAPONFAB  14
 #define CONSUMERFAB 15
 #define GENERALFAB 16
 #define SERVICEFAB 17

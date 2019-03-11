@@ -437,10 +437,30 @@
 */
 
 /proc/dirs_to_corner_states(list/dirs)
-	if(!istype(dirs)) return
+	if(!istype(dirs)) 
+		crash_with("\"dirs_to_corner_states\" got something else than a list as parameter! This is bad, and should never happen!!")
+		return
 
 	var/list/ret = list(NORTHWEST, SOUTHEAST, NORTHEAST, SOUTHWEST)
+	for(var/i = 1 to ret.len)
+		var/dir = ret[i]
+		. = CORNER_NONE
+		if(dir in dirs)
+			. |= CORNER_DIAGONAL
+		if(turn(dir,45) in dirs)
+			. |= CORNER_COUNTERCLOCKWISE
+		if(turn(dir,-45) in dirs)
+			. |= CORNER_CLOCKWISE
+		ret[i] = "[.]"
 
+	return ret
+
+/proc/dirs_to_wall_corner_states(list/dirs)
+	if(!istype(dirs)) 
+		crash_with("\"dirs_to_wall_corner_states\" got something else than a list as parameter! This is bad, and should never happen!!")
+		return
+
+	var/list/ret = list(NORTHWEST, SOUTHEAST, NORTHEAST, SOUTHWEST)
 	for(var/i = 1 to ret.len)
 		var/dir = ret[i]
 		. = CORNER_NONE

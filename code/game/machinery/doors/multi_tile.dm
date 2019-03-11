@@ -94,7 +94,7 @@
 
 		if(success)
 			dirs |= direction
-	connections = dirs_to_corner_states(dirs)
+	connections = dirs
 
 /obj/machinery/door/airlock/multi_tile/command
 	door_color = COLOR_COMMAND_BLUE

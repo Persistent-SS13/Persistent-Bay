@@ -69,16 +69,17 @@
 	icon_unpowered 		= "blastctrl-p"
 	icon_anim_act   	= "blastctrl1"
 	icon_anim_deny  	= "blastctrl-denied"
-	activate_func 		= "open"
+	activate_func 		= "toggle"
 	id_tag 				= null
 	frequency 			= DOOR_FREQ
 	radio_filter_in		= RADIO_BLAST_DOORS
 	radio_filter_out	= RADIO_BLAST_DOORS
-
+	radio_check_id 		= TRUE
 
 /obj/machinery/button/remote/blast_door/send_signal(mob/user as mob)
 	desired_state = !desired_state
-	post_signal(list("command" = activate_func, "activate" = desired_state), radio_filter_out, id_tag)
+	log_debug("[src]\ref[src] sent signal: command:[activate_func], activate:[desired_state]. id:[id_tag], frequency:[frequency], radio_filter_out:[radio_filter_out]")
+	post_signal(list("command" = activate_func), radio_filter_out, id_tag)
 
 /*
 	Emitter remote control

@@ -45,15 +45,18 @@
 	log_world("## TESTING: [msg][log_end]")
 
 /proc/game_log(category, text)
-	diary << "\[[time_stamp()]] [game_id] [category]: [text][log_end]"
+	//diary << "\[[time_stamp()]] [game_id] [category]: [text][log_end]"
+	spawn(0)
+		diary << "\[[time_stamp()]] [category]: [text][log_end]"
 
 /proc/attack_log(text)
 	to_file(GLOB.world_attack_log, "\[[time_stamp()]] ATTACK: [text][log_end]")
 
 /proc/log_admin(text)
-	GLOB.admin_log.Add(text)
-	if (config.log_admin)
-		game_log("ADMIN", text)
+	spawn(0)
+		GLOB.admin_log.Add(text)
+		if (config.log_admin)
+			game_log("ADMIN", text)
 
 /proc/log_debug(text)
 	if (config.log_debug)
@@ -130,15 +133,18 @@
 	log_debug(text)
 
 /proc/log_qdel(text)
-	WRITE_FILE(GLOB.world_qdel_log, "\[[time_stamp()]]QDEL: [text]")
+	spawn(0)
+		WRITE_FILE(GLOB.world_qdel_log, "\[[time_stamp()]]QDEL: [text]")
 
 //This replaces world.log so it displays both in DD and the file
 /proc/log_world(text)
-	if(config && config.log_runtime)
+	spawn(0)
+		if(config && config.log_runtime)
+			to_world_log(text)
+			//to_world_log(runtime_diary)
+			//to_world_log(text)
+		//to_world_log(text)
 		to_world_log(runtime_diary)
-		to_world_log(text)
-	to_world_log(null)
-	to_world_log(text)
 
 //pretty print a direction bitflag, can be useful for debugging.
 /proc/dir_text(var/dir)

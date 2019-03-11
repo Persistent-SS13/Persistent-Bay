@@ -266,6 +266,7 @@ var/const/RADIO_FLASHERS		= "radio_flasher"
 var/const/RADIO_STATUS_DISPLAY  = "radio_status_display"
 var/const/RADIO_INCINERATOR  	= "radio_incinerator"
 var/const/RADIO_POD_LAUNCHER	= "radio_podlauncher"
+var/const/RADIO_FOAM_DISPENSER	= "radio_foam_dispenser"
 
 var/global/datum/controller/radio/radio_controller
 
@@ -350,9 +351,9 @@ var/global/datum/controller/radio/radio_controller
 			if(start_point.z!=end_point.z || get_dist(start_point, end_point) > range)
 				continue
 		
-		INVOKE_ASYNC(device, /obj/.proc/receive_signal, signal, TRANSMISSION_RADIO, frequency)
-		// spawn(0)
-		// 	device.receive_signal(signal, TRANSMISSION_RADIO, frequency)
+		//INVOKE_ASYNC(device, /obj/.proc/receive_signal, signal, TRANSMISSION_RADIO, frequency)
+		spawn(0)
+			device.receive_signal(signal, TRANSMISSION_RADIO, frequency)
 		CHECK_TICK
 
 /datum/radio_frequency/proc/add_listener(obj/device as obj, var/filter as text|null)

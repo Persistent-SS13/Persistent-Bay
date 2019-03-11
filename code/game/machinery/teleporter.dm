@@ -1,10 +1,10 @@
 /obj/machinery/computer/teleporter
-	name = "Teleporter Control Console"
-	desc = "Used to control a linked teleportation hub and station."
-	icon_keyboard = "teleport_key"
-	icon_screen = "teleport"
-	circuit = /obj/item/weapon/circuitboard/teleporter
-	dir = 4
+	name 			= "Teleporter Control Console"
+	desc 			= "Used to control a linked teleportation hub and station."
+	icon_keyboard 	= "teleport_key"
+	icon_screen 	= "teleport"
+	circuit 		= /obj/item/weapon/circuitboard/teleporter
+	dir 			= EAST
 	var/obj/machinery/teleport/station/station = null
 	var/obj/machinery/teleport/hub/hubz = null
 	var/obj/item/locked = null
@@ -16,7 +16,7 @@
 	src.id = "[random_id(/obj/machinery/computer/teleporter, 1000, 9999)]"
 	..()
 	underlays.Cut()
-	underlays += image('icons/obj/stationobjs.dmi', icon_state = "telecomp-wires")
+	underlays += image('icons/obj/machines/telecomms.dmi', icon_state = "telecomp-wires")
 	return
 
 /obj/machinery/computer/teleporter/Initialize()
@@ -37,13 +37,13 @@
 	. = ..()
 	if(locked)
 		var/turf/T = get_turf(locked)
-		to_chat(user, "<span class='notice'>The console is locked on to \[[T.loc.name]\].</span>")
+		to_chat(user, SPAN_NOTICE("The console is locked on to \[[T.loc.name]\]."))
 
 
 /obj/machinery/computer/teleporter/attackby(I as obj, mob/living/user as mob)
 	if(istype(I, /obj/item/weapon/card/data/))
 		var/obj/item/weapon/card/data/C = I
-		if(stat & (NOPOWER|BROKEN) & (C.function != "teleporter"))
+		if(inoperable() & (C.function != "teleporter"))
 			src.attack_hand()
 
 		var/obj/L = null
@@ -139,7 +139,7 @@
 
 	src.locked = L[desc]
 	for(var/mob/O in hearers(src, null))
-		O.show_message("<span class='notice'>Locked In</span>", 2)
+		O.show_message(SPAN_NOTICE("Locked In"), 2)
 	src.add_fingerprint(usr)
 	return
 
@@ -149,7 +149,7 @@
 	set src in oview(1)
 	set desc = "ID Tag:"
 
-	if(stat & (NOPOWER|BROKEN) || !istype(usr,/mob/living))
+	if(inoperable() || !istype(usr,/mob/living))
 		return
 	if (t)
 		src.id = t
@@ -164,28 +164,29 @@
 	return T
 
 /obj/machinery/teleport
-	name = "teleport"
-	icon = 'icons/obj/stationobjs.dmi'
-	density = 1
-	anchored = 1.0
+	name 		= "teleport"
+	icon 		= 'icons/obj/machines/telecomms.dmi'
+	density 	= TRUE
+	anchored 	= TRUE
 	var/lockeddown = 0
 
 
 /obj/machinery/teleport/hub
-	name = "teleporter hub"
-	desc = "It's the hub of a teleporting machine."
-	icon_state = "tele0"
-	dir = 4
-	use_power = 1
-	idle_power_usage = 10
-	active_power_usage = 2000
+	name 				= "teleporter hub"
+	desc 				= "It's the hub of a teleporting machine."
+	icon 				= 'icons/obj/machines/telecomms.dmi'
+	icon_state 			= "tele0"
+	dir 				= EAST
+	use_power 			= POWER_USE_IDLE
+	idle_power_usage 	= 10
+	active_power_usage 	= 2000
 	var/obj/machinery/computer/teleporter/com
 
 
 /obj/machinery/teleport/hub/New()
 	..()
 	underlays.Cut()
-	underlays += image('icons/obj/stationobjs.dmi', icon_state = "tele-wires")
+	underlays += image(src.icon, icon_state = "tele-wires")
 
 /obj/machinery/teleport/hub/Bumped(M as mob|obj)
 	spawn()
@@ -199,7 +200,7 @@
 		return
 	if (!com.locked)
 		for(var/mob/O in hearers(src, null))
-			O.show_message("<span class='warning'>Failure: Cannot authenticate locked on coordinates. Please reinstate coordinate matrix.</span>")
+			O.show_message(SPAN_WARNING("Failure: Cannot authenticate locked on coordinates. Please reinstate coordinate matrix."))
 		return
 	do_teleport(M, com.locked)
 	if(com.one_time_use) //Make one-time-use cards only usable one time!
@@ -294,21 +295,22 @@
 */
 
 /obj/machinery/teleport/station
-	name = "station"
-	desc = "It's the station thingy of a teleport thingy." //seriously, wtf.
-	icon_state = "controller"
-	dir = 4
+	name 				= "station"
+	desc 				= "It's the station thingy of a teleport thingy." //seriously, wtf.
+	icon 				= 'icons/obj/machines/telecomms.dmi'
+	icon_state 			= "controller"
+	dir 				= EAST
+	use_power 			= POWER_USE_IDLE
+	idle_power_usage 	= 10
+	active_power_usage 	= 2000
+	var/obj/machinery/teleport/hub/com
 	var/active = 0
 	var/engaged = 0
-	use_power = 1
-	idle_power_usage = 10
-	active_power_usage = 2000
-	var/obj/machinery/teleport/hub/com
 
 /obj/machinery/teleport/station/New()
 	..()
 	overlays.Cut()
-	overlays += image('icons/obj/stationobjs.dmi', icon_state = "controller-wires")
+	overlays += image(src.icon, icon_state = "controller-wires")
 
 /obj/machinery/teleport/station/attackby(var/obj/item/weapon/W)
 	src.attack_hand()
@@ -323,36 +325,36 @@
 		src.engage()
 
 /obj/machinery/teleport/station/proc/engage()
-	if(stat & (BROKEN|NOPOWER))
+	if(inoperable())
 		return
 
 	if (com)
 		com.icon_state = "tele1"
 		use_power(5000)
-		update_use_power(2)
-		com.update_use_power(2)
+		update_use_power(POWER_USE_ACTIVE)
+		com.update_use_power(POWER_USE_ACTIVE)
 		for(var/mob/O in hearers(src, null))
-			O.show_message("<span class='notice'>Teleporter engaged!</span>", 2)
+			O.show_message(SPAN_NOTICE("Teleporter engaged!"), 2)
 	src.add_fingerprint(usr)
 	src.engaged = 1
 	return
 
 /obj/machinery/teleport/station/proc/disengage()
-	if(stat & (BROKEN|NOPOWER))
+	if(inoperable())
 		return
 
 	if (com)
 		com.icon_state = "tele0"
-		com.update_use_power(1)
-		update_use_power(1)
+		com.update_use_power(POWER_USE_IDLE)
+		update_use_power(POWER_USE_IDLE)
 		for(var/mob/O in hearers(src, null))
-			O.show_message("<span class='notice'>Teleporter disengaged!</span>", 2)
+			O.show_message(SPAN_NOTICE("Teleporter disengaged!"), 2)
 	src.add_fingerprint(usr)
 	src.engaged = 0
 	return
 
 /obj/machinery/teleport/station/update_icon()
-	if(stat & NOPOWER)
+	if(!ispowered())
 		icon_state = "controller-p"
 
 		if(com)

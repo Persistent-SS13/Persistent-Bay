@@ -27,7 +27,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	use_power = 0			//1 = idle, 2 = active
 	var/status = 0 // 0 = unpowered, 1 = closed 2 = open 3 = contruction mode 4 = occupied 5 = obstructed
 	req_access = list(core_access_shuttle_programs)
-	var/dimensions = 1 // 1 = 5*8, 2 = 7*8, 3 = 9*10 4 = 12*12 5 = 20*20
+	var/dimensions = 1 // 1 = 5*8, 2 = 7*8, 3 = 9*10, 4 = 12*12, 5 = 20*20
 	var/highlighted = 0
 	var/id = "docking port"
 	var/visible_mode = 0 // 0 = invisible, 1 = visible, docking auth required, 2 = visible, anyone can dock

@@ -1367,7 +1367,7 @@ var/PriorityQueue/all_feeds
 	var/network_name = "network name"
 	var/network_uid = "network_uid"
 	var/network_password
-	var/network_invisible = 0
+	var/network_invisible = FALSE
 
 /obj/faction_spawner/New()
 	if(!GLOB.all_world_factions)
@@ -1384,6 +1384,33 @@ var/PriorityQueue/all_feeds
 	fact.password = password
 	fact.network.name = network_name
 	fact.network.net_uid = network_uid
+	if(network_password)
+		fact.network.secured = 1
+		fact.network.password = network_password
+	fact.network.invisible = network_invisible
+	GLOB.all_world_factions |= fact
+	qdel(src)
+	return
+
+/obj/faction_spawner/democratic
+	var/purpose = ""
+
+/obj/faction_spawner/democratic/New()
+	if(!GLOB.all_world_factions)
+		GLOB.all_world_factions = list()
+	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
+		if(existing_faction.uid == uid)
+			qdel(src)
+			return
+	var/datum/world_faction/democratic/fact = new()
+	fact.name = name
+	fact.abbreviation = name_short
+	fact.short_tag = name_tag
+	fact.uid = uid
+	fact.password = password
+	fact.network.name = network_name
+	fact.network.net_uid = network_uid
+	fact.purpose = src.purpose
 	if(network_password)
 		fact.network.secured = 1
 		fact.network.password = network_password

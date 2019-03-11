@@ -616,10 +616,10 @@ Class Procs:
 
 //Signals received go straight to the machine's topic handling, so handling radio signal is seamless.
 /obj/machinery/receive_signal(var/datum/signal/signal, var/receive_method, var/receive_param)
-	if(!signal || !has_transmitter() || inoperable() || (signal && signal.source == src))
+	if(!signal || !has_transmitter() || inoperable() || (signal && signal.source == src) || (signal && signal.source == null))
 		return
-	if( (radio_check_id && check_radio_match_id(signal)) || !radio_check_id)
-		//log_debug("[src]\ref[src] received signal from [signal.source]\ref[signal.source]. Signal tag is '[signal_target_id(signal)]', and our tag is '[get_radio_id()]'")
+	if( !radio_check_id || (radio_check_id && check_radio_match_id(signal)) )
+		//log_debug("[src]\ref[src] received signal from [signal.source]\ref[signal.source]. Signal tag is [signal_target_id(signal)], and our tag is [get_radio_id()]")
 		return OnSignal(signal)
 
 //Signals received by default go straight to the machine's topic handling, so handling radio signal is seamless.

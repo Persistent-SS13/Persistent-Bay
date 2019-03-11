@@ -137,6 +137,10 @@
 /obj/machinery/door/blast/get_material()
 	return implicit_material
 
+/obj/machinery/door/blast/attack_hand(mob/user)
+	. = ..()
+	
+
 // Proc: attackby()
 // Parameters: 2 (C - Item this object was clicked with, user - Mob which clicked this object)
 // Description: If we are clicked with crowbar or wielded fire axe, try to manually open the door.
@@ -165,7 +169,7 @@
 				src.repair()
 			else
 				to_chat(usr, SPAN_WARNING("You don't have enough sheets to repair this! You need at least [amt] sheets."))
-	..()
+	return ..()
 
 
 // Proc: open()
@@ -197,11 +201,18 @@
 	set_broken(FALSE)
 
 /obj/machinery/door/blast/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
-	if(air_group) return 1
+	if(air_group) 
+		return 1
 	return ..()
 
-
-
+/obj/machinery/door/blast/OnSignal(datum/signal/signal)
+	. = ..()
+	switch (signal.data["command"])
+		if("toggle")
+			if(density)
+				open()
+			else
+				close()
 // SUBTYPE: Regular
 // Your classical blast door, found almost everywhere.
 /obj/machinery/door/blast/regular

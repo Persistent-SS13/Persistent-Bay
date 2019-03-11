@@ -1,26 +1,27 @@
 /obj/machinery/atmospherics/pipe/vent
-	name = "Passive Vent"
-	desc = "A large passive air vent."
-	icon = 'icons/atmos/vent_pipe.dmi'
-	icon_state = "map"
-	level = 1
-	volume = 250
-	dir = SOUTH
-	initialize_directions = SOUTH
-	interact_offline = TRUE
-	idle_power_usage = 0
-	active_power_usage = 0
-	use_power = POWER_USE_OFF
+	name 					= "Passive Vent"
+	desc 					= "A large passive air vent."
+	icon 					= 'icons/atmos/vent_pipe.dmi'
+	icon_state 				= "map"
+	level 					= 1
+	volume 					= 250
+	dir 					= SOUTH
+	initialize_directions 	= SOUTH
+	interact_offline 		= TRUE
+	idle_power_usage 		= 0
+	active_power_usage 		= 0
+	use_power 				= POWER_USE_OFF
+	interact_offline 		= TRUE
 
 	var/build_killswitch = 1
+
+/obj/machinery/atmospherics/pipe/vent/high_volume
+	name 	= "Large Passive Vent"
+	volume 	= 1000
 
 /obj/machinery/atmospherics/pipe/vent/New()
 	initialize_directions = dir
 	..()
-
-/obj/machinery/atmospherics/pipe/vent/high_volume
-	name = "Large Passive Vent"
-	volume = 1000
 
 /obj/machinery/atmospherics/pipe/vent/Process()
 	..()
@@ -29,7 +30,6 @@
 			. = PROCESS_KILL
 		else
 			build_killswitch--
-		..()
 		return
 	else
 		parent.mingle_with_turf(loc, volume)
@@ -41,7 +41,6 @@
 
 /obj/machinery/atmospherics/pipe/vent/pipeline_expansion()
 	return list(node1)
-
 
 /obj/machinery/atmospherics/pipe/vent/update_icon(var/safety = 0)
 	if(!check_icon_cache())

@@ -23,11 +23,14 @@ var/req_console_information = list()
 var/list/obj/machinery/requests_console/allConsoles = list()
 
 /obj/machinery/requests_console
-	name = "Requests Console"
-	desc = "A console intended to send requests to different departments."
-	anchored = 1
-	icon = 'icons/obj/machines/terminals/reqterm.dmi'
-	icon_state = "req_comp0"
+	name 			= "Requests Console"
+	desc 			= "A console intended to send requests to different departments."
+	anchored 		= TRUE
+	icon 			= 'icons/obj/machines/terminals/reqterm.dmi'
+	icon_state 		= "req_comp0"
+	light_range 	= 1
+	frame_type 		= /obj/item/frame/request_console
+
 	var/department = "Unknown" //The list of all departments on the station (Determined from this variable on each unit) Set this to the same thing if you want several consoles in one department
 	var/list/message_log = list() //List of all messages
 	var/departmentType = 0 		//Bitflag. Zero is reply-only. Map currently uses raw numbers instead of defines.
@@ -37,9 +40,6 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 		// 2 = high priority
 	var/screen = RCS_MAINMENU
 	var/silent = 0 // set to 1 for it not to beep all the time
-//	var/hackState = 0
-		// 0 = not hacked
-		// 1 = hacked
 	var/announcementConsole = 0
 		// 0 = This console cannot be used to send department announcements
 		// 1 = This console can send department announcementsf
@@ -50,30 +50,10 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 	var/message = "";
 	var/recipient = ""; //the department which will be receiving the message
 	var/priority = -1 ; //Priority of the message being sent
-	light_range = 0
 	var/datum/announcement/announcement = new
-	frame_type = /obj/item/frame/request_console
-
-/obj/machinery/requests_console/update_icon()
-	if(stat & NOPOWER)
-		if(icon_state != "req_comp_off")
-			icon_state = "req_comp_off"
-		return
-
-	if(panel_open)
-		icon_state = "req_comp_off"
-		return
-
-	if(icon_state == "req_comp_off")
-		icon_state = "req_comp[newmessagepriority]"
-
+	
 /obj/machinery/requests_console/New()
 	..()
-
-	announcement.title = "[department] announcement"
-	announcement.newscast = 1
-
-	name = "[department] Requests Console"
 	allConsoles += src
 	if (departmentType & RC_ASSIST)
 		req_console_assistance |= department
@@ -82,10 +62,15 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 	if (departmentType & RC_INFO)
 		req_console_information |= department
 
-	set_light(1)
+	// pixel_x = (dir & 3)? 0 : (dir == 4 ? -42 : 42)
+	// pixel_y = (dir & 3)? (dir ==1 ? -42 : 42) : 0
 
-	pixel_x = (dir & 3)? 0 : (dir == 4 ? -42 : 42)
-	pixel_y = (dir & 3)? (dir ==1 ? -42 : 42) : 0
+/obj/machinery/requests_console/Initialize(mapload, d)
+	. = ..()
+	name 					= "[department] Requests Console"
+	announcement.title 		= "[department] announcement"
+	announcement.newscast 	= TRUE
+	set_light(1)
 
 /obj/machinery/requests_console/Destroy()
 	allConsoles -= src
@@ -102,6 +87,33 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 		if (departmentType & RC_INFO)
 			req_console_information -= department
 	..()
+
+/obj/machinery/requests_console/update_icon()
+	pixel_x = 0
+	pixel_y = 0
+	var/turf/T = get_step(get_turf(src), turn(dir, 180))
+	if(istype(T) && T.density)
+		switch(dir)
+			if(NORTH)
+				pixel_y = -32
+			if(SOUTH)
+				pixel_y = 32
+			if(WEST)
+				pixel_x = 34
+			if(EAST)
+				pixel_x = -34
+
+	if(stat & NOPOWER)
+		if(icon_state != "req_comp_off")
+			icon_state = "req_comp_off"
+		return
+
+	if(panel_open)
+		icon_state = "req_comp_off"
+		return
+
+	if(icon_state == "req_comp_off")
+		icon_state = "req_comp[newmessagepriority]"
 
 /obj/machinery/requests_console/attack_hand(user as mob)
 	if(..(user))

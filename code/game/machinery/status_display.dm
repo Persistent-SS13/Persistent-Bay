@@ -175,7 +175,7 @@
 	var/decl/security_level/sl = security_state.current_security_level
 
 	var/image/alert = image(sl.icon, sl.overlay_status_display)
-	set_light(l_range = sl.light_range, l_power = sl.light_power, l_color = sl.light_color_status_display)
+	set_light(l_range = sl.light_outer_range, l_power = sl.light_max_bright, l_color = sl.light_color_status_display)
 	overlays |= alert
 
 /obj/machinery/status_display/proc/set_picture(state)

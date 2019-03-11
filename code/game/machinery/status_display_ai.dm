@@ -64,10 +64,12 @@ var/list/ai_status_emotions = list(
 	var/mode = 0	// 0 = Blank
 					// 1 = AI emoticon
 					// 2 = Blue screen of death
-
 	var/picture_state	// icon_state of ai picture
-
 	var/emotion = "Neutral"
+
+/obj/machinery/ai_status_display/Initialize(mapload, d)
+	. = ..()
+	queue_icon_update()
 
 /obj/machinery/ai_status_display/attack_ai/(mob/user as mob)
 	var/list/ai_emotions = get_ai_emotions(user.ckey)

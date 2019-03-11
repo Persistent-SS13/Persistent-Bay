@@ -157,25 +157,30 @@ Buildable meters
 		else if(istype(make_from, /obj/machinery/atmospherics/pipe/zpipe/down))
 			src.pipe_type = PIPE_DOWN
 		else if(istype(make_from, /obj/machinery/atmospherics/unary/outlet_injector))
-			src.pipe_type = INJECTOR
+			src.pipe_type = PIPE_INJECTOR
+		else if(istype(make_from, /obj/machinery/atmospherics/binary/dp_vent_pump))
+			src.pipe_type = PIPE_BINARY_VENT
+		else if(istype(make_from, /obj/machinery/atmospherics/pipe/vent))
+			src.pipe_type = PIPE_PASSIVE_VENT
 ///// Z-Level stuff
 	else
 		src.pipe_type = pipe_type
 		src.set_dir(dir)
-		if (pipe_type == 29 || pipe_type == 30 || pipe_type == 33 || pipe_type == 35 || pipe_type == 37 || pipe_type == 39 || pipe_type == 41)
-			connect_types = CONNECT_TYPE_SUPPLY
-			src.color = PIPE_COLOR_BLUE
-		else if (pipe_type == 31 || pipe_type == 32 || pipe_type == 34 || pipe_type == 36 || pipe_type == 38 || pipe_type == 40 || pipe_type == 42)
-			connect_types = CONNECT_TYPE_SCRUBBER
-			src.color = PIPE_COLOR_RED
-		else if (pipe_type == 45 || pipe_type == 46 || pipe_type == 47 || pipe_type == 48 || pipe_type == 49 || pipe_type == 50 || pipe_type == 51)
-			src.color = PIPE_COLOR_ORANGE
-		else if (pipe_type == 2 || pipe_type == 3)
-			connect_types = CONNECT_TYPE_HE
-		else if (pipe_type == 6)
-			connect_types = CONNECT_TYPE_REGULAR|CONNECT_TYPE_HE
-		else if (pipe_type == 28)
-			connect_types = CONNECT_TYPE_REGULAR|CONNECT_TYPE_SUPPLY|CONNECT_TYPE_SCRUBBER
+		switch(pipe_type)
+			if(PIPE_SUPPLY_STRAIGHT, PIPE_SUPPLY_BENT, PIPE_SUPPLY_MANIFOLD, PIPE_SUPPLY_MANIFOLD4W, PIPE_SUPPLY_UP, PIPE_SUPPLY_DOWN, PIPE_SUPPLY_CAP)
+				connect_types = CONNECT_TYPE_SUPPLY
+				src.color = PIPE_COLOR_BLUE
+			if(PIPE_SCRUBBERS_STRAIGHT, PIPE_SCRUBBERS_BENT, PIPE_SCRUBBERS_MANIFOLD, PIPE_SCRUBBERS_MANIFOLD4W, PIPE_SCRUBBERS_UP, PIPE_SCRUBBERS_DOWN, PIPE_SCRUBBERS_CAP)
+				connect_types = CONNECT_TYPE_SCRUBBER
+				src.color = PIPE_COLOR_RED
+			if(PIPE_FUEL_STRAIGHT, PIPE_FUEL_BENT, PIPE_FUEL_MANIFOLD, PIPE_FUEL_MANIFOLD4W, PIPE_FUEL_UP, PIPE_FUEL_DOWN, PIPE_FUEL_CAP)
+				src.color = PIPE_COLOR_ORANGE
+			if (PIPE_HE_STRAIGHT, PIPE_HE_BENT)
+				connect_types = CONNECT_TYPE_HE
+			if (PIPE_JUNCTION)
+				connect_types = CONNECT_TYPE_REGULAR|CONNECT_TYPE_HE
+			if (PIPE_UNIVERSAL)
+				connect_types = CONNECT_TYPE_REGULAR|CONNECT_TYPE_SUPPLY|CONNECT_TYPE_SCRUBBER
 	//src.pipe_dir = get_pipe_dir()
 	update()
 
@@ -240,6 +245,8 @@ Buildable meters
 		"fuel down",\
 		"fuel pipe cap",\
 		"gas injector",\
+		"binary vent",\
+		"passive vent",\
 	)
 	name = nlist[pipe_type+1] + " fitting"
 	var/list/islist = list( \
@@ -300,6 +307,8 @@ Buildable meters
 		"cap", \
 		"cap", \
 		"injector",\
+		"dpvent",\
+		"passivevent",\
 	)
 	icon_state = islist[pipe_type + 1]
 
@@ -380,7 +389,7 @@ Buildable meters
 			return dir|flip
 		if(PIPE_SIMPLE_BENT, PIPE_HE_BENT, PIPE_SUPPLY_BENT, PIPE_SCRUBBERS_BENT, PIPE_FUEL_BENT)
 			return dir //dir|acw
-		if(PIPE_CONNECTOR,PIPE_UVENT,PIPE_SCRUBBER,PIPE_HEAT_EXCHANGE,INJECTOR)
+		if(PIPE_CONNECTOR,PIPE_UVENT,PIPE_SCRUBBER,PIPE_HEAT_EXCHANGE,PIPE_INJECTOR)
 			return dir
 		if(PIPE_MANIFOLD4W, PIPE_SUPPLY_MANIFOLD4W, PIPE_SCRUBBERS_MANIFOLD4W, PIPE_OMNI_MIXER, PIPE_OMNI_FILTER, PIPE_FUEL_MANIFOLD4W)
 			return dir|flip|cw|acw
@@ -396,6 +405,8 @@ Buildable meters
 			return dir
 ///// Z-Level stuff
 		if(PIPE_UP,PIPE_DOWN,PIPE_SUPPLY_UP,PIPE_SUPPLY_DOWN,PIPE_SCRUBBERS_UP,PIPE_SCRUBBERS_DOWN,PIPE_FUEL_UP,PIPE_FUEL_DOWN)
+			return dir
+		else 
 			return dir
 ///// Z-Level stuff
 	return 0
@@ -443,12 +454,12 @@ Buildable meters
 	if (!isturf(src.loc))
 		return 1
 	if (pipe_type in list (PIPE_SIMPLE_STRAIGHT, PIPE_SUPPLY_STRAIGHT, PIPE_SCRUBBERS_STRAIGHT, PIPE_HE_STRAIGHT, PIPE_MVALVE, PIPE_DVALVE, PIPE_SVALVE, PIPE_FUEL_STRAIGHT))
-		if(dir==2)
-			set_dir(1)
-		else if(dir==8)
-			set_dir(4)
+		if(dir == SOUTH)
+			set_dir(NORTH)
+		else if(dir == WEST)
+			set_dir(EAST)
 	else if (pipe_type in list(PIPE_MANIFOLD4W, PIPE_SUPPLY_MANIFOLD4W, PIPE_SCRUBBERS_MANIFOLD4W, PIPE_OMNI_MIXER, PIPE_OMNI_FILTER, PIPE_FUEL_MANIFOLD4W))
-		set_dir(2)
+		set_dir(SOUTH)
 	var/pipe_dir = get_pipe_dir()
 
 	for(var/obj/machinery/atmospherics/M in src.loc)
@@ -819,6 +830,39 @@ Buildable meters
 				V.node.atmos_init()
 				V.node.build_network()
 
+		if(PIPE_BINARY_VENT)		//binary vent
+			var/obj/machinery/atmospherics/binary/dp_vent_pump/V = new( src.loc )
+			V.set_dir(dir)
+			V.initialize_directions = pipe_dir
+			if (pipename)
+				V.name = pipename
+			var/turf/T = V.loc
+			V.level = !T.is_plating() ? 2 : 1
+			V.atmos_init()
+			V.build_network()
+			V.turn_off()
+			if (V.node1)
+//				log_error("[V.node1.name] is connected to valve, forcing it to update its nodes.")
+				V.node1.atmos_init()
+				V.node1.build_network()
+			if (V.node2)
+//				log_error("[V.node2.name] is connected to valve, forcing it to update its nodes.")
+				V.node2.atmos_init()
+				V.node2.build_network()
+
+		if(PIPE_PASSIVE_VENT)		//passive vent
+			var/obj/machinery/atmospherics/pipe/vent/V = new( src.loc )
+			V.set_dir(dir)
+			V.initialize_directions = pipe_dir
+			if (pipename)
+				V.name = pipename
+			var/turf/T = V.loc
+			V.level = !T.is_plating() ? 2 : 1
+			V.atmos_init()
+			V.build_network()
+			if (V.node1)
+				V.node1.atmos_init()
+				V.node1.build_network()
 
 		if(PIPE_MVALVE)		//manual valve
 			var/obj/machinery/atmospherics/valve/V = new( src.loc)
@@ -1275,7 +1319,7 @@ Buildable meters
 			P.level = !T.is_plating() ? 2 : 1
 			P.atmos_init()
 			P.build_network()
-		if(INJECTOR)		//scrubber
+		if(PIPE_INJECTOR)		//scrubber
 			var/obj/machinery/atmospherics/unary/outlet_injector/S = new(src.loc)
 			S.set_dir(dir)
 			S.initialize_directions = pipe_dir

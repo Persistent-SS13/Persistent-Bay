@@ -377,6 +377,146 @@
 	build_path = /obj/item/clothing/under/gimmick/rank/captain/suit
 	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_PHORON = 4000)
 
+
+/datum/design/item/autotailor/under/worksuits/pcrc
+	name = "PCRC uniform"
+	id = "pcrc"
+	build_path = /obj/item/clothing/under/pcrc
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
+
+/datum/design/item/autotailor/under/worksuits/tactical_green
+	name = "tactical jumpsuit - green"
+	id = "tactical_green"
+	build_path = /obj/item/clothing/under/tactical
+
+/datum/design/item/autotailor/under/worksuits/turtleneck_def
+	name = "tactical turtleneck"
+	id = "turtleneck_def"
+	build_path = /obj/item/clothing/under/syndicate
+	materials = list(MATERIAL_LEATHER = 1 SHEET, MATERIAL_PLASTEEL = 1 SHEET, MATERIAL_SILVER = 1 SHEET)
+
+/datum/design/item/autotailor/under/worksuits/hos_red
+	name = "Head of Security jumpsuit - red"
+	id = "hos_red"
+	build_path = /obj/item/clothing/under/rank/head_of_security
+
+/datum/design/item/autotailor/under/worksuits/hos_black
+	name = "Head of Security jumpsuit - black"
+	id = "hos_black"
+	build_path = /obj/item/clothing/under/rank/head_of_security/corp
+
+/datum/design/item/autotailor/under/worksuits/hos_tacticalblack
+	name = "Head of Security jumpsuit - tactical"
+	id = "hos_tacticalblack"
+	build_path = /obj/item/clothing/under/rank/head_of_security/jensen
+
+/datum/design/item/autotailor/under/worksuits/hos_navy
+	name = "Head of security jumpsuit - navy"
+	id = "hos_navy"
+	build_path = /obj/item/clothing/under/rank/head_of_security/navyblue
+
+/datum/design/item/autotailor/under/worksuits/hos_hat
+	name = "Head of security hat"
+	id = "hos_hat"
+	build_path = /obj/item/clothing/head/HoS
+	materials = list(MATERIAL_LEATHER = 0.5 SHEETS)
+
+/datum/design/item/autotailor/under/worksuits/warden_red
+	name = "Warden jumpsuit - red"
+	id = "warden_red"
+	build_path = /obj/item/clothing/under/rank/warden
+
+/datum/design/item/autotailor/under/worksuits/warden_black
+	name = "Warden jumpsuit - black"
+	id = "warden_black"
+	build_path = /obj/item/clothing/under/rank/warden/corp
+
+/datum/design/item/autotailor/under/worksuits/warden_navy
+	name = "Warden jumpsuit - navy"
+	id = "warden_navy"
+	build_path = /obj/item/clothing/under/rank/warden/navyblue
+
+/datum/design/item/autotailor/under/worksuits/warden_hat
+	name = "Warden hat"
+	id = "warden_hat"
+	build_path = /obj/item/clothing/head/warden
+	materials = list(MATERIAL_LEATHER = 0.5 SHEETS)
+
+/datum/design/item/autotailor/under/worksuits/sec_red
+	name = "Sec officer jumpsuit - red"
+	id = "sec_red"
+	build_path = /obj/item/clothing/under/rank/security
+
+/datum/design/item/autotailor/under/worksuits/sec_black
+	name = "Sec officer jumpsuit - black"
+	id = "sec_black"
+	build_path = /obj/item/clothing/under/rank/security/corp
+
+/datum/design/item/autotailor/under/worksuits/sec_navy
+	name = "Sec officer jumpsuit - navy"
+	id = "sec_navy"
+	build_path = /obj/item/clothing/under/rank/security/navyblue
+
+/datum/design/item/autotailor/under/worksuits/sec_navyred
+	name = "Sec officer jumpsuit - navy red"
+	id = "sec_navyred"
+	build_path = /obj/item/clothing/under/rank/guard
+
+/datum/design/item/autotailor/under/worksuits/sec_navyterrac
+	name = "Sec officer jumpsuit - navy terracotta"
+	id = "sec_navyterrac"
+	build_path = /obj/item/clothing/under/rank/securitytwo
+
+/datum/design/item/autotailor/under/worksuits/dispatch
+	name = "Dispatcher uniform"
+	id = "dispatch"
+	build_path = /obj/item/clothing/under/rank/dispatch
+
+/datum/design/item/autotailor/under/worksuits/tactical_ert
+	name = "ERT uniform"
+	id = "tactical_ert"
+	build_path = /obj/item/clothing/under/ert
+	materials = list(MATERIAL_LEATHER = 1 SHEET, MATERIAL_PLASTEEL = 1000, MATERIAL_SILVER = 1000)
+
+/datum/design/item/autotailor/under/worksuits/pt_uniform
+	name = "TF PT uniform"
+	id = "pt_uniform"
+	build_path = /obj/item/clothing/under/fed/pt
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
+
+/datum/design/item/autotailor/under/worksuits/utility_tf
+	name = "TF utility uniform"
+	id = "utility_tact"
+	build_path = /obj/item/clothing/under/fed
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
+
+/datum/design/item/autotailor/under/worksuits/service_tf
+	name = "TF service uniform"
+	id = "service_tact"
+	build_path = /obj/item/clothing/under/fed/service
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
+
+
+/datum/design/item/autotailor/under/worksuits/beanie_tact
+	name = "TF beanie"
+	id = "beanie_tact"
+	build_path = /obj/item/clothing/head/soft/fed/garrison
+	materials = list(MATERIAL_LEATHER = 0.5 SHEETS)
+
+
+/datum/design/item/autotailor/under/worksuits/fleet_utility
+	name = "Fleet utility uniform"
+	id = "fleet_utility"
+	build_path = /obj/item/clothing/under/utility/mirania
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
+
+/datum/design/item/autotailor/under/worksuits/fleet_service
+	name = "Fleet service uniform"
+	id = "fleet_service"
+	build_path = /obj/item/clothing/under/service/mirania
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
+
+
 /datum/design/item/autotailor/under/worksuits/cap_jumpsuit
 	name = "Captain jumpsuit"
 	id = "cap_jumpsuit"
@@ -661,6 +801,116 @@
 	id = "silk_dress"
 	build_path = /obj/item/clothing/under/tulleddress
 	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
+
+/datum/design/item/autotailor/under/dessclothes/fleet_dress
+	name = "Fleet dress uniform"
+	id = "fleet_dress"
+	build_path = /obj/item/clothing/under/mildress/mirania
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
+
+
+/datum/design/item/autotailor/under/dessclothes/dress_tf
+	name = "TF dress uniform"
+	id = "dress_tact"
+	build_path = /obj/item/clothing/under/fed/dress
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
+
+/datum/design/item/autotailor/under/dessclothes/dress_hat
+	name = "TF dress hat"
+	id = "service_hat"
+	build_path = /obj/item/clothing/head/soft/fed/wheel
+	materials = list(MATERIAL_LEATHER = 0.5 SHEETS)
+
+/datum/design/item/autotailor/under/dessclothes/gov_tact
+	name = "Sectorial governor uniform"
+	id = "gov_tact"
+	build_path = /obj/item/clothing/under/fed/gov
+	materials = list(MATERIAL_LEATHER = 1 SHEET, MATERIAL_PHORON = 2 SHEETS)
+
+
+/datum/design/item/autotailor/under/dessclothes/high_rank_cap
+	name = "High ranking captain uniform"
+	id = "high_rank_cap"
+	build_path = /obj/item/clothing/under/rank/centcom
+	materials = list(MATERIAL_LEATHER = 1 SHEET, MATERIAL_PHORON = 2 SHEETS)
+
+/datum/design/item/autotailor/under/dessclothes/high_rank_cap_hat
+	name = "High ranking captain hat"
+	id = "high_rank_cap_hat"
+	build_path = /obj/item/clothing/head/centhat
+	materials = list(MATERIAL_LEATHER = 0.5 SHEETS, MATERIAL_PHORON = 1 SHEET)
+
+/datum/design/item/autotailor/under/dessclothes/high_rank_officer
+	name = "High ranking officer uniform"
+	id = "high_rank_officer"
+	build_path = /obj/item/clothing/under/rank/centcom_officer
+	materials = list(MATERIAL_LEATHER = 1 SHEET, MATERIAL_PHORON = 2 SHEETS)
+
+/datum/design/item/autotailor/under/dessclothes/high_rank_admiral
+	name = "High ranking admiral uniform"
+	id = "high_rank_admiral"
+	build_path = /obj/item/clothing/under/rank/centcom_captain
+	materials = list(MATERIAL_LEATHER = 1 SHEET, MATERIAL_PHORON = 2 SHEETS)
+
+//everything below is actually armor-less oversuit slots
+
+/datum/design/item/autotailor/under/dessclothes/dress_j_black
+	name = "Dress jacket - black"
+	id = "dress_j_black"
+	build_path = /obj/item/clothing/suit/dress/mirania/intelligence
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
+
+/datum/design/item/autotailor/under/dessclothes/dress_h_black
+	name = "Dress jacket hat - black"
+	id = "dress_h_black"
+	build_path = /obj/item/clothing/head/dress/mirania/intelligence
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
+
+/datum/design/item/autotailor/under/dessclothes/dress_j_bl_red
+	name = "Dress jacket - black red stripes"
+	id = "dress_j_bl_red"
+	build_path = /obj/item/clothing/suit/dress/mirania
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
+
+/datum/design/item/autotailor/under/dessclothes/dress_j_bk_red
+	name = "Dress jacket hat - black red stripes"
+	id = "dress_h_bl_red"
+	build_path = /obj/item/clothing/head/dress/mirania
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
+
+/datum/design/item/autotailor/under/dessclothes/dress_j_navy_red
+	name = "Dress jacket - navy red stripes"
+	id = "dress_j_navy_red"
+	build_path = /obj/item/clothing/suit/storage/service/mirania
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
+
+/datum/design/item/autotailor/under/dessclothes/dress_j_navy
+	name = "Dress jacket - navy"
+	id = "dress_j_navy"
+	build_path = /obj/item/clothing/suit/storage/service/mirania/intelligence
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
+
+/datum/design/item/autotailor/under/dessclothes/sec_navy_officer
+	name = "Sec officer jacket - navy"
+	id = "sec_navy_officer"
+	build_path = /obj/item/clothing/suit/security/navyofficer
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
+
+/datum/design/item/autotailor/under/dessclothes/sec_navy_warden
+	name = "Warden jacket - navy"
+	id = "sec_navy_warden"
+	build_path = /obj/item/clothing/suit/security/navywarden
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
+
+/datum/design/item/autotailor/under/dessclothes/sec_navy_hos
+	name = "HoS jacket - navy"
+	id = "sec_navy_hos"
+	build_path = /obj/item/clothing/suit/security/navyhos
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
+
+
+
+
 
 /datum/design/item/autotailor/under/dressclothes/purple_bride
 	name = "bridesmaid dress - purple"

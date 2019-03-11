@@ -8,6 +8,7 @@
 	use_power 			= POWER_USE_IDLE
 	idle_power_usage 	= 2
 	active_power_usage 	= 4
+	mass				= 0.2 //kg
 
 	//Radio
 	id_tag 				= null
@@ -196,9 +197,10 @@
 	desc 			= "A remote control switch for a mounted flasher."
 	frequency 		= SEC_FREQ
 	radio_filter_out= RADIO_FLASHERS
+	activate_func   = "activate"
 
 /obj/machinery/button/flasher/send_signal(mob/user as mob)
-	post_signal(list("activate" = 1), radio_filter_out, id_tag)
+	post_signal(list(activate_func = 1), radio_filter_out, id_tag)
 
 //-------------------------------
 // Door Button
@@ -293,8 +295,8 @@
 	return ..()
 
 /obj/machinery/button/windowtint/send_signal()
-	for(var/obj/structure/window/reinforced/polarized/W in range(src,tintrange))
-		if (W.id == src.id_tag || !W.id)
+	for(var/obj/structure/window/reinforced/polarized/W in range(src, tintrange))
+		if (!W.id || W.id == src.id_tag)
 			spawn(0)
 				W.toggle()
 				return

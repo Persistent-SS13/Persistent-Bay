@@ -11,3 +11,7 @@
 /obj/structure/frontier_beacon/New()
 	..()
 	GLOB.frontierbeacons |= src
+
+/obj/structure/frontier_beacon/Destroy()
+	. = ..()
+	GLOB.frontierbeacons -= src

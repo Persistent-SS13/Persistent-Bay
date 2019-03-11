@@ -89,7 +89,7 @@
 /obj/machinery/atmospherics/unary/vent_pump/atmos_init()
 	. = ..()
 	if(!node)
-		use_power = POWER_USE_OFF //Turn off if disconnected
+		update_use_power(POWER_USE_OFF) //Turn off if disconnected
 
 /obj/machinery/atmospherics/unary/vent_pump/Destroy()
 	if(initial_loc)
@@ -163,7 +163,7 @@
 /obj/machinery/atmospherics/unary/vent_pump/proc/can_pump()
 	if(inoperable())
 		return FALSE
-	if(!use_power)
+	if(isoff())
 		return FALSE
 	if(welded)
 		return FALSE
@@ -235,7 +235,6 @@
 /obj/machinery/atmospherics/unary/vent_pump/proc/broadcast_status()
 	var/list/data = list(
 		"area" 		= src.area_uid,
-		//"tag" 	= src.id_tag,
 		"device" 	= "AVP",
 		"power" 	= !isoff(),
 		"direction" = pump_direction?("release"):("siphon"),
@@ -253,6 +252,9 @@
 		initial_loc.air_vent_names[id_tag] = new_name
 		src.name = new_name
 	initial_loc.air_vent_info[id_tag] = data
+
+	if(!id_tag) //No points in emitting signal when no tag assigned
+		return FALSE
 	broadcast_signal(data)
 	return TRUE
 

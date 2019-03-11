@@ -3,7 +3,7 @@
  */
 /obj/item/weapon/tool/weldingtool
 	name = "welding tool"
-	icon = 'icons/obj/tools.dmi'
+	icon = 'icons/obj/items/tools.dmi'
 	icon_state = "welder_m"
 	item_state = "welder"
 	desc = "A heavy but portable welding gun with its own interchangeable fuel tank. It features a simple toggle switch and a port for attaching an external tank."
@@ -367,7 +367,7 @@
 /obj/item/weapon/welder_tank
 	name = "welding fuel tank"
 	desc = "An interchangeable fuel tank meant for a welding tool."
-	icon = 'icons/obj/tools.dmi'
+	icon = 'icons/obj/items/tools.dmi'
 	icon_state = "fuel_m"
 	w_class = ITEM_SIZE_SMALL
 	var/tank_volume = 40

@@ -3,7 +3,7 @@
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "sink"
 	desc = "A sink used for washing one's hands and face."
-	anchored = 1
+	anchored = TRUE
 	mass = 12
 	max_health = 110
 	damthreshold_brute 	= 3
@@ -16,9 +16,29 @@
 	if(dir)
 		src.set_dir(dir)
 
-	if(istype(frame))
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -20 : 20)
-		pixel_y = (dir & 3)? (dir ==1 ? -32 : 32) : 0
+	// if(istype(frame))
+	// 	pixel_x = (dir & 3)? 0 : (dir == 4 ? -20 : 20)
+	// 	pixel_y = (dir & 3)? (dir ==1 ? -32 : 32) : 0
+
+/obj/machinery/sink/Initialize(mapload, d)
+	. = ..()
+	queue_icon_update()
+
+/obj/structure/sink/kitchen/update_icon()
+	. = ..()
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = -32
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = 32
+		if(EAST)
+			src.pixel_x = -20
+			src.pixel_y = 0
+		if(WEST)
+			src.pixel_x = 20
+			src.pixel_y = 0
 
 /obj/structure/sink/MouseDrop_T(var/obj/item/thing, var/mob/user)
 	..()

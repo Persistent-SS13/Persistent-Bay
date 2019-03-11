@@ -780,6 +780,7 @@ About the new airlock wires panel:
 //Radio signal handling
 /obj/machinery/door/airlock/OnSignal(var/datum/signal/signal)
 	. = ..()
+	log_debug("[src]\ref[src] got signal [signal.data["command"]]")
 	OnTopic(usr, signal.data, GLOB.default_state)
 
 /obj/machinery/door/airlock/OnTopic(mob/user, href_list, datum/topic_state/state)

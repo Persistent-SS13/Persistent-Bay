@@ -10,15 +10,15 @@ Pipelines + Other Objects -> Pipe network
 
 */
 /obj/machinery/atmospherics
-	anchored = 1
-	idle_power_usage = 0
-	active_power_usage = 0
-	power_channel = ENVIRON
+	plane 				= ABOVE_TURF_PLANE
+	layer				= EXPOSED_PIPE_LAYER
+	anchored 			= TRUE
+	idle_power_usage 	= 0
+	active_power_usage 	= 0
+	power_channel 		= ENVIRON
+	mass				= 10.0 //kg
 	var/nodealert = 0
 	var/power_rating //the maximum amount of power the machine can use to do work, affects how powerful the machine is, in Watts
-
-	plane = ABOVE_TURF_PLANE
-	layer = EXPOSED_PIPE_LAYER
 
 	var/connect_types = CONNECT_TYPE_REGULAR
 	var/icon_connect_type = "" //"-supply" or "-scrubbers"

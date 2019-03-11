@@ -25,13 +25,14 @@
 	var/datum/wifi/receiver/button/flasher/wifi_receiver
 
 /obj/machinery/flasher/portable //Portable version of the flasher. Only flashes when anchored
-	name = "portable flasher"
-	desc = "A portable flashing device. Wrench to activate and deactivate. Cannot detect slow movements."
-	icon_state = "pflash1"
-	strength = 8
-	anchored = FALSE
-	base_state = "pflash"
-	density = TRUE
+	name 		= "portable flasher"
+	desc 		= "A portable flashing device. Wrench to activate and deactivate. Cannot detect slow movements."
+	icon_state 	= "pflash1"
+	base_state 	= "pflash"
+	strength 	= 8
+	anchored 	= FALSE
+	density 	= TRUE
+	mass		= 2.0 //kg
 
 /obj/machinery/flasher/portable/update_icon()
 	if (operable())

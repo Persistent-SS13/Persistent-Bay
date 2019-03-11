@@ -19,7 +19,7 @@
 	radio_filter_in 	= RADIO_AIRLOCK
 	radio_filter_out	= RADIO_AIRLOCK
 
-	var/desired_state 	= 0
+	var/desired_state 	= FALSE
 	var/exposedwires 	= 0
 	var/wires 			= 3 //Bitflag,	1=checkID 2=Network Access
 	var/time_next_use 	= 0 //Time when the button can be used again, avoids button spam
@@ -69,16 +69,17 @@
 	icon_unpowered 		= "blastctrl-p"
 	icon_anim_act   	= "blastctrl1"
 	icon_anim_deny  	= "blastctrl-denied"
-	activate_func 		= "open"
+	activate_func 		= "toggle"
 	id_tag 				= null
 	frequency 			= DOOR_FREQ
 	radio_filter_in		= RADIO_BLAST_DOORS
 	radio_filter_out	= RADIO_BLAST_DOORS
-
+	radio_check_id 		= TRUE
 
 /obj/machinery/button/remote/blast_door/send_signal(mob/user as mob)
 	desired_state = !desired_state
-	post_signal(list("command" = activate_func, "activate" = desired_state))
+	log_debug("[src]\ref[src] sent signal: command:[activate_func], activate:[desired_state]. id:[id_tag], frequency:[frequency], radio_filter_out:[radio_filter_out]")
+	post_signal(list("command" = activate_func), radio_filter_out, id_tag)
 
 /*
 	Emitter remote control
@@ -132,7 +133,7 @@
 		data["command"] = "electrify_permanently"
 	if(specialfunctions & SAFE)
 		data["command"] ="safeties"
-	post_signal(data)
+	post_signal(data, radio_filter_out, id_tag)
 
 #undef OPEN
 #undef IDSCAN
@@ -159,12 +160,12 @@
 	desired_state = !desired_state
 	
 	var/data = list("command" = "open")
-	post_signal(data, RADIO_BLAST_DOORS)
+	post_signal(data, RADIO_BLAST_DOORS, id_tag)
 	sleep(20)
 
 	data = list("command" = "activate")
-	post_signal(data, radio_filter_out)
+	post_signal(data, radio_filter_out, id_tag)
 	sleep(50)
 
 	data = list("command" = "close")
-	post_signal(data, RADIO_BLAST_DOORS)
+	post_signal(data, RADIO_BLAST_DOORS, id_tag)

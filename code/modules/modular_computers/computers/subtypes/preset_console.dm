@@ -6,6 +6,13 @@
 	network_card = new/obj/item/weapon/computer_hardware/network_card/wired(src)
 	scanner = new /obj/item/weapon/computer_hardware/scanner/paper(src)
 
+/obj/item/modular_computer/console/preset/install_default_programs()
+	..()
+	hard_drive.store_file(new /datum/computer_file/program/computerconfig)
+	hard_drive.store_file(new /datum/computer_file/program/filemanager)
+	hard_drive.store_file(new /datum/computer_file/program/ntnetdownload)
+	hard_drive.store_file(new /datum/computer_file/program/ntnetrouter)
+
 // Engineering
 /obj/item/modular_computer/console/preset/engineering/install_default_programs()
 	..()
@@ -15,6 +22,12 @@
 	hard_drive.store_file(new/datum/computer_file/program/atmos_control())
 	hard_drive.store_file(new/datum/computer_file/program/rcon_console())
 	hard_drive.store_file(new/datum/computer_file/program/camera_monitor())
+
+// Telecomm
+/obj/item/modular_computer/console/preset/telecomm/install_default_programs()
+	..()
+	hard_drive.store_file(new /datum/computer_file/program/ntnetmonitor())
+	set_autorun("ntmonitor")
 
 // Medical
 /obj/item/modular_computer/console/preset/medical/install_default_programs()

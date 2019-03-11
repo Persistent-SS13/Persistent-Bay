@@ -53,6 +53,8 @@
 <A href='?src=\ref[src];make=28;dir=1'>Universal pipe adapter</A><BR>
 <A href='?src=\ref[src];make=4;dir=1'>Connector</A><BR>
 <A href='?src=\ref[src];make=7;dir=1'>Unary Vent</A><BR>
+<A href='?src=\ref[src];make=53;dir=1'>Binary Vent</A><BR>
+<A href='?src=\ref[src];make=54;dir=1'>Passive Vent</A><BR>
 <A href='?src=\ref[src];make=10;dir=1'>Gas Pump</A><BR>
 <A href='?src=\ref[src];make=15;dir=1'>Pressure Regulator</A><BR>
 <A href='?src=\ref[src];make=16;dir=1'>High Power Gas Pump</A><BR>
@@ -75,14 +77,13 @@
 "}
 ///// Z-Level stuff
 //What number the make points to is in the define # at the top of construction.dm in same folder
-
-	user << browse("<HEAD><TITLE>[src]</TITLE></HEAD><TT>[dat]</TT>", "window=pipedispenser")
+	show_browser(user, "<HEAD><TITLE>[src]</TITLE></HEAD><TT>[dat]</TT>", "window=pipedispenser")
 	onclose(user, "pipedispenser")
 	return
 
 /obj/machinery/pipedispenser/Topic(href, href_list, state = GLOB.physical_state)
 	if((. = ..()) || unwrenched)
-		usr << browse(null, "window=pipedispenser")
+		close_browser(usr, "window=pipedispenser")
 		return
 
 	if(href_list["make"])
@@ -105,7 +106,7 @@
 
 /obj/machinery/pipedispenser/attackby(var/obj/item/W as obj, var/mob/user as mob)
 	if (istype(W, /obj/item/pipe) || istype(W, /obj/item/pipe_meter))
-		to_chat(usr, "<span class='notice'>You put \the [W] back into \the [src].</span>")
+		to_chat(usr, SPAN_NOTICE("You put \the [W] back into \the [src]."))
 		user.drop_item()
 		add_fingerprint(usr)
 		qdel(W)
@@ -120,11 +121,11 @@
 					"<span class='notice'>\The [user] unfastens \the [src].</span>", \
 					"<span class='notice'>You have unfastened \the [src]. Now it can be pulled somewhere else.</span>", \
 					"You hear ratchet.")
-				src.anchored = 0
-				src.stat |= MAINT
+				src.anchored = FALSE
+				src.set_maintenance(TRUE)
 				src.unwrenched = 1
 				if (usr.machine==src)
-					usr << browse(null, "window=pipedispenser")
+					close_browser(usr, "window=pipedispenser")
 		else /*if (unwrenched==1)*/
 			playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 			to_chat(user, "<span class='notice'>You begin to fasten \the [src] to the floor...</span>")
@@ -133,8 +134,8 @@
 					"<span class='notice'>\The [user] fastens \the [src].</span>", \
 					"<span class='notice'>You have fastened \the [src]. Now it can dispense pipes.</span>", \
 					"You hear ratchet.")
-				src.anchored = 1
-				src.stat &= ~MAINT
+				src.anchored = TRUE
+				src.set_maintenance(FALSE)
 				src.unwrenched = 0
 				power_change()
 	else

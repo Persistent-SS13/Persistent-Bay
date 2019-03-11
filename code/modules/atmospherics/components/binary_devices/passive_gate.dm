@@ -3,20 +3,20 @@
 #define REGULATE_OUTPUT	2	//shuts off when output side is above the target pressure
 
 /obj/machinery/atmospherics/binary/passive_gate
-	name = "pressure regulator"
-	desc = "A one-way air valve that can be used to regulate input or output pressure, and flow rate. Does not require power."
-	icon = 'icons/atmos/passive_gate.dmi'
-	icon_state = "map_off"
-	level = 1
-	use_power = POWER_USE_OFF
-	interact_offline = 1
+	name 				= "pressure regulator"
+	desc 				= "A one-way air valve that can be used to regulate input or output pressure, and flow rate. Does not require power."
+	icon 				= 'icons/atmos/passive_gate.dmi'
+	icon_state 			= "map_off"
+	level 				= 1
+	use_power 			= POWER_USE_OFF
+	interact_offline 	= TRUE
 
 	//Radio
-	frequency = null
-	id_tag = null
-	radio_filter_in = RADIO_ATMOSIA
-	radio_filter_out = RADIO_ATMOSIA
-	radio_check_id = TRUE
+	frequency 			= null
+	id_tag 				= null
+	radio_filter_in 	= RADIO_ATMOSIA
+	radio_filter_out 	= RADIO_ATMOSIA
+	radio_check_id 		= TRUE
 
 	var/unlocked = FALSE	//If 0, then the valve is locked closed, otherwise it is open(-able, it's a one-way valve so it closes if gas would flow backwards).
 	var/target_pressure = ONE_ATMOSPHERE
@@ -27,8 +27,8 @@
 
 
 /obj/machinery/atmospherics/binary/passive_gate/on
-	unlocked = TRUE
-	icon_state = "map_on"
+	unlocked 	= TRUE
+	icon_state 	= "map_on"
 
 /obj/machinery/atmospherics/binary/passive_gate/New()
 	..()
@@ -159,7 +159,7 @@
 		return
 	src.add_fingerprint(usr)
 	if(!src.allowed(user))
-		to_chat(user, "<span class='warning'>Access denied.</span>")
+		to_chat(user, SPAN_WARNING("Access denied."))
 		return
 	usr.set_machine(src)
 	ui_interact(user)

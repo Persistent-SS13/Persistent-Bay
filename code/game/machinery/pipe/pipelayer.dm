@@ -1,7 +1,7 @@
 /obj/machinery/pipelayer
 
 	name = "automatic pipe layer"
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/pipedispenser.dmi'
 	icon_state = "pipe_d"
 	density = 1
 	var/turf/old_turf

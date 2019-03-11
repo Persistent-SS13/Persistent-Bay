@@ -1,7 +1,7 @@
 //--------------------------------
 //	Radio Transmitter
 //--------------------------------
-#define RADIO_TRANSMITTER_ID_FIELD "tag"
+#define RADIO_TRANSMITTER_ID_FIELD        "tag"
 #define RADIO_TRANSMITTER_SOURCE_ID_FIELD "src_tag"
 
 //Returns the target tag of the specified signal
@@ -155,31 +155,31 @@ proc/signal_source_id(var/datum/signal/signal)
 
 //This handles "Topics" calls to the extension. So we can associate a UI to this and etc..
 /datum/extension/interactive/radio_transmitter/extension_act(var/href, var/list/href_list, var/mob/user)
-	if(href_list["set_radio_id"])
-		var/newid = sanitize(href_list["set_radio_id"]) as text|null
-		if(newid)
-			src.set_id(newid)
-		else if(user)
-			to_chat(user, SPAN_WARNING("Invalid id!"))
-	if(href_list["set_radio_filter"])
-		var/newfiler = sanitize(href_list["set_radio_filter"]) as text|null
-		if(newfiler)
-			src.set_filter(newfiler)
-		else if(user)
-			to_chat(user, SPAN_WARNING("Invalid filter!"))
-	if(href_list["set_radio_filter_out"])
-		var/newfiler = sanitize(href_list["set_radio_filter_out"]) as text|null
-		if(newfiler)
-			src.set_filter_out(newfiler)
-		else if(user)
-			to_chat(user, SPAN_WARNING("Invalid filter!"))
-	if(href_list["set_radio_frequency"])
-		var/newfreq = text2num(sanitize(href_list["set_radio_frequency"])) as num
-		if(newfreq)
-			src.set_frequency(newfreq)
-		else if(user)
-			to_chat(user, SPAN_WARNING("Invalid frequency!"))
-	if(href_list["set_radio_range"])
-		var/newrange = text2num(sanitize(href_list["set_radio_range"])) as num|null
-		src.set_range(newrange)
+	// if(href_list["set_radio_id"])
+	// 	var/newid = sanitize(href_list["set_radio_id"]) as text|null
+	// 	if(newid)
+	// 		src.set_id(newid)
+	// 	else if(user)
+	// 		to_chat(user, SPAN_WARNING("Invalid id!"))
+	// if(href_list["set_radio_filter"])
+	// 	var/newfiler = sanitize(href_list["set_radio_filter"]) as text|null
+	// 	if(newfiler)
+	// 		src.set_filter(newfiler)
+	// 	else if(user)
+	// 		to_chat(user, SPAN_WARNING("Invalid filter!"))
+	// if(href_list["set_radio_filter_out"])
+	// 	var/newfiler = sanitize(href_list["set_radio_filter_out"]) as text|null
+	// 	if(newfiler)
+	// 		src.set_filter_out(newfiler)
+	// 	else if(user)
+	// 		to_chat(user, SPAN_WARNING("Invalid filter!"))
+	// if(href_list["set_radio_frequency"])
+	// 	var/newfreq = text2num(sanitize(href_list["set_radio_frequency"])) as num
+	// 	if(newfreq)
+	// 		src.set_frequency(newfreq)
+	// 	else if(user)
+	// 		to_chat(user, SPAN_WARNING("Invalid frequency!"))
+	// if(href_list["set_radio_range"])
+	// 	var/newrange = text2num(sanitize(href_list["set_radio_range"])) as num|null
+	// 	src.set_range(newrange)
 	return ..()

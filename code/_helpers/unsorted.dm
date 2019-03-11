@@ -1031,16 +1031,13 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 	GLOB.dview_mob.loc = null
 
 /mob/dview
-	invisibility = 101
-	density = 0
-
-	anchored = 1
-	simulated = 0
-
-	see_in_dark = 1e6
-
-	virtual_mob = null
-	should_save = 0
+	invisibility 	= 101
+	see_in_dark 	= 1e6
+	density 		= FALSE
+	anchored 		= TRUE
+	simulated 		= FALSE
+	virtual_mob 	= null
+	should_save 	= FALSE
 	var/destroy_ret = QDEL_HINT_LETMELIVE
 
 /mob/dview/after_load()

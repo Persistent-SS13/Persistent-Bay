@@ -22,17 +22,24 @@
 
 	blend_objects = list(/obj/machinery/door, /turf/simulated/wall) // Objects which to blend with
 	noblend_objects = list(/obj/machinery/door/window)
-	var/material/material = MATERIAL_STEEL
+	var/material/material = new /material/steel
 
 /obj/structure/wall_frame/New(var/new_loc, var/materialtype)
 	..(new_loc)
-
 	if(!materialtype)
-		materialtype = MATERIAL_STEEL
-	material = SSmaterials.get_material_by_name(materialtype)
-	health = material.integrity
+		materialtype = new /material/steel
+	
+	//Since people keeps passing strings for some reasons lets double check
+	if(istext(materialtype))
+		material = SSmaterials.get_material_by_name(materialtype)
+	else if(istype(materialtype, /material))
+		material = materialtype
 
-	update_connections(1)
+/obj/structure/wall_frame/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		health = material.integrity
+	update_connections(TRUE)
 	update_icon()
 
 /obj/structure/wall_frame/examine(mob/user)
@@ -158,20 +165,6 @@
 
 	..()
 
-/obj/structure/wall_frame/hull/Initialize()
-	. = ..()
-	if(prob(40))
-		var/spacefacing = FALSE
-		for(var/direction in GLOB.cardinal)
-			var/turf/T = get_step(src, direction)
-			var/area/A = get_area(T)
-			if(A && (A.area_flags & AREA_FLAG_EXTERNAL))
-				spacefacing = TRUE
-				break
-		if(spacefacing)
-			var/bleach_factor = rand(10,50)
-			paint_color = adjust_brightness(paint_color, bleach_factor)
-		update_icon()
 
 /obj/structure/wall_frame/dismantle()
 	refund_matter()
@@ -185,7 +178,21 @@
 	paint_color = COLOR_GUNMETAL
 
 /obj/structure/wall_frame/titanium
-	material = MATERIAL_TITANIUM
+	material = new /material/titanium
 
 /obj/structure/wall_frame/hull
 	paint_color = COLOR_HULL
+//Hull init
+/obj/structure/wall_frame/hull/Initialize()
+	if(prob(40))
+		var/spacefacing = FALSE
+		for(var/direction in GLOB.cardinal)
+			var/turf/T = get_step(src, direction)
+			var/area/A = get_area(T)
+			if(A && (A.area_flags & AREA_FLAG_EXTERNAL))
+				spacefacing = TRUE
+				break
+		if(spacefacing)
+			var/bleach_factor = rand(10,50)
+			paint_color = adjust_brightness(paint_color, bleach_factor)
+	. = ..()

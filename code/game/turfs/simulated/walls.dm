@@ -4,14 +4,14 @@
 	icon = 'icons/turf/wall_masks.dmi'
 	icon_state = "generic"
 	opacity = 1
-	density = 1
-	blocks_air = 1
+	density = TRUE
+	blocks_air = TRUE
 	thermal_conductivity = WALL_HEAT_TRANSFER_COEFFICIENT
 	heat_capacity = 312500 //a little over 5 cm thick , 312500 for 1 m by 2.5 m by 0.25 m plasteel wall
 
 	var/integrity = 150 // Placeholder until assigned
 	var/damage_overlay = 0
-	var/can_open = 0
+	var/can_open = FALSE
 	var/reinf_material		// Material to be updated to the latest
 	var/material/material	// Material the girder is made out of
 	var/material/r_material	// Material used to reinforce the girder
@@ -37,26 +37,44 @@
 	r_material = r_mat
 	p_material = p_mat
 
-
 /turf/simulated/wall/New(var/newloc, var/material/mat, var/material/r_mat, var/material/p_mat)
 	..(newloc)
-	material = mat
-	r_material = r_mat
-	p_material = p_mat
-	update_full(1, 1)
-	START_PROCESSING(SSturf, src) //Used for radiation.
 
+	//Since people keep passing strings for some reasons lets double check
+	if(istext(mat))
+		material = SSmaterials.get_material_by_name(mat)
+	else if(istype(mat, /material))
+		material = mat
+
+	if(istext(r_mat))
+		r_material = SSmaterials.get_material_by_name(r_mat)
+	else if(istype(r_mat, /material))
+		r_material = r_mat
+
+	if(istext(p_mat))
+		p_material = SSmaterials.get_material_by_name(p_mat)
+	else if(istype(p_mat, /material))
+		p_material = p_mat
+	
 /turf/simulated/wall/after_load()
 	..()
 	if(reinf_material)
 		p_material = reinf_material
 		r_material = reinf_material
 	reinf_material = null
-	update_full(1, 1)
+
+/turf/simulated/wall/Initialize(mapload, ...)
+	. = ..()
+	return INITIALIZE_HINT_LATELOAD
+
+/turf/simulated/wall/LateInitialize()
+	. = ..()
+	update_full(TRUE, TRUE)
+	START_PROCESSING(SSturf, src) //Used for radiation.
 
 /turf/simulated/wall/Destroy()
 	STOP_PROCESSING(SSturf, src)
-	dismantle_wall(1)
+	dismantle_wall(TRUE)
 	. = ..()
 
 // Walls always hide the stuff below them.
@@ -82,10 +100,8 @@
 	..()
 	if(ismob(AM))
 		return
-
 	var/obj/O = AM
 	var/tforce = O.throwforce * (speed/THROWFORCE_SPEED_DIVISOR)
-
 	take_damage(tforce, DAM_BLUNT)
 
 /turf/simulated/wall/proc/clear_plants()
@@ -112,17 +128,17 @@
 
 	var/health = integrity / MaxIntegrity()
 	if(health >= 0.9)
-		to_chat(user, "<span class='notice'>It looks fully intact.</span>")
+		to_chat(user, SPAN_NOTICE("It looks fully intact."))
 	else if(health >= 0.6)
-		to_chat(user, "<span class='warning'>It looks slightly damaged.</span>")
+		to_chat(user, SPAN_WARNING("It looks slightly damaged."))
 	else if(health >= 0.3)
-		to_chat(user, "<span class='warning'>It looks moderately damaged.</span>")
+		to_chat(user, SPAN_WARNING("It looks moderately damaged."))
 	else
-		to_chat(user, "<span class='danger'>It looks heavily damaged.</span>")
+		to_chat(user, SPAN_DANGER("It looks heavily damaged."))
 	if(paint_color)
-		to_chat(user, "<span class='notice'>It has a coat of paint applied.</span>")
+		to_chat(user, SPAN_NOTICE("It has a coat of paint applied."))
 	if(locate(/obj/effect/overlay/wallrot) in src)
-		to_chat(user, "<span class='warning'>There is fungus growing on [src].</span>")
+		to_chat(user, SPAN_WARNING("There is fungus growing on [src]."))
 
 //Damage
 
@@ -146,17 +162,16 @@
 /turf/simulated/wall/proc/repair_damage(var/damage)
 	if(integrity != MaxIntegrity())
 		integrity = min(MaxIntegrity(), damage + integrity)
-		return 1
-	return 0
+		return TRUE
+	return FALSE
 
 /turf/simulated/wall/adjacent_fire_act(turf/simulated/floor/adj_turf, datum/gas_mixture/adj_air, adj_temp, adj_volume)
 	burn(adj_temp)
 	return ..()
 
 /turf/simulated/wall/proc/dismantle_wall(var/devastated)
-
-	playsound(src, 'sound/items/Welder.ogg', 100, 1)
 	if(!devastated)
+		playsound(src, 'sound/items/Welder.ogg', 100, 1)
 		var/obj/structure/girder/G
 		if(r_material)
 			G = new(src, material, r_material)
@@ -169,6 +184,8 @@
 		G.update_icon()
 		new p_material.stack_type(src, 2)
 		src.ChangeTurf(floor_type)
+	//else
+		//Put destroyed wall sound here
 
 	for(var/turf/simulated/wall/W in orange(src, 1))
 		W.update_connections()
@@ -185,7 +202,7 @@
 	material = null
 	r_material = null
 	p_material = null
-	update_connections(1)
+	update_connections(TRUE)
 
 	ChangeTurf(floor_type)
 
@@ -196,7 +213,7 @@
 			return
 		if(2.0)
 			if(prob(25))
-				dismantle_wall(1)
+				dismantle_wall(TRUE)
 			else
 				take_damage(rand(150, 250), DAM_BOMB)
 		if(3.0)
@@ -319,3 +336,7 @@
 	material 		= new /material/tungsten
 	r_material 		= new /material/tungsten
 	p_material 		= new /material/tungsten
+
+/turf/simulated/wall/r_wall/tungsten/New(newloc, material/mat, material/r_mat, material/p_mat)
+	. = ..(newloc, src.material, src.r_material, src.p_material) //Keeps the base ctor from being a dipshit
+	

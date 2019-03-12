@@ -65,6 +65,7 @@
 	nexus.network.invisible = FALSE
 
 	GLOB.all_world_factions |= nexus
+	qdel(src)
 
 /obj/faction_spawner/Freemen
 	name 			= "Null"

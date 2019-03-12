@@ -136,10 +136,9 @@
 
 /obj/machinery/door/blast/get_material()
 	return implicit_material
-
-/obj/machinery/door/blast/attack_hand(mob/user)
-	. = ..()
 	
+/obj/machinery/door/Bumped(atom/AM)
+	return
 
 // Proc: attackby()
 // Parameters: 2 (C - Item this object was clicked with, user - Mob which clicked this object)
@@ -169,7 +168,8 @@
 				src.repair()
 			else
 				to_chat(usr, SPAN_WARNING("You don't have enough sheets to repair this! You need at least [amt] sheets."))
-	return ..()
+	if(ismob(C))
+		return ..()
 
 
 // Proc: open()

@@ -104,7 +104,7 @@
 		switch(dir)
 			if(NORTH)
 				src.pixel_x = 0
-				src.pixel_y = -26
+				src.pixel_y = -20
 			if(SOUTH)
 				src.pixel_x = 0
 				src.pixel_y = 26

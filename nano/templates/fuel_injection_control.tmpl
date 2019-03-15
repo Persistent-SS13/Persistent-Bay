@@ -1,0 +1,67 @@
+<!--
+
+-->
+<H3>Sensor Data:</H3>
+{{for data.sensor_information}}
+	<div class='item'>
+		<div class='itemLabelWide'>
+			<B>{{:value.key1}}:</B>
+		</div>
+	</div>
+	<div class='item'>
+		{{if value.pressure}}
+			<div class="itemLabel">
+				<span class='average'>Pressure:</span>{{:value.pressure}} kPa
+			</div>
+		{{/if}}
+		{{if value.temperature}}
+			<div class="itemLabel">
+				<span class='average'>Temperature:</span>{{:value.temperature}} K
+			</div>
+		{{/if}}
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			<B>Gas Composition :</B>
+		</div>
+		<div class='itemContent'>
+			{{for value.gas}}
+				<div class="itemLabel">
+					<span class='average'>{{:value.key1}}:</span> {{:value.key2}} %
+				</div>
+			{{/for}}
+		</div>
+	</div>
+
+{{empty}}
+	<span class='bad'>ERROR: No sensor information available!</span>
+{{/for}}
+
+{{if data.deviceConnected}}
+	<div class='itemWide'>
+		<div class='itemLabelWide'>
+			Fuel Injection System:
+		</div>
+		{{if data.automation}}
+			<div class='itemLabelWide'>
+				<SPAN class='bad'>Injector Controls Locked Out</SPAN>
+			</div>
+		{{/if}}
+		<div class='itemContentMedium'>
+			<span class='average'>State:</span> {{:helper.link(data.inputState? 'Injecting' : 'On Hold', null, {'toggle_injector' : 1}, data.automation? null : 'disabled' )}}
+			<BR/>
+			<span class='average'>Flow Rate:</span> {{:data.inputFlowRate}} L/s 
+			<span class='average'>Cutoff Temperature:</span> {{:data.cutoff_temperature}} K
+			<span class='average'>Safe Temperature:</span> {{:data.on_temperature}} K
+		</div>
+		<div class='itemContent'>
+			{{:helper.link('Refresh', null, { 'refresh_status' : 1})}}
+			{{:helper.link('Inject (1 Cycle)', null, { 'injection' : 1}, data.automation? null : 'disabled' )}}
+		</div>
+		<div class='itemLabel'>
+			<span class='average'>Automated Fuel Injection:</span> {{:helper.link(data.automation?'Engaged':'Disengaged', null, { 'toggle_automation' : 1})}}
+		</div>
+	</div>
+{{else}}
+	<SPAN class='bad'>ERROR: No injector connected!</SPAN> {{:helper.link('Refresh', null, { 'refresh_status' : 1})}}
+{{/if}}

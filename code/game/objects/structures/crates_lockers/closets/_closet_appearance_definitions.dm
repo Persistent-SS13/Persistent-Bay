@@ -577,6 +577,10 @@
 /decl/closet_appearance/crate/freezer
 	color = COLOR_BABY_BLUE
 
+/decl/closet_appearance/crate/bin
+	base_icon =  'icons/obj/closets/bases/largebin.dmi'
+	decal_icon = null
+
 /decl/closet_appearance/crate/secure
 	can_lock = TRUE
 
@@ -607,6 +611,12 @@
 		"crate_stripe_left" = COLOR_GREEN_GRAY,
 		"crate_stripe_right" = COLOR_GREEN_GRAY
 	)
+
+/decl/closet_appearance/crate/secure/bin
+	base_icon =  'icons/obj/closets/bases/largebin.dmi'
+	decal_icon = null
+	decals = null
+	extra_decals = null
 
 // Large crates.
 /decl/closet_appearance/large_crate

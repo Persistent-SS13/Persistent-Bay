@@ -1,10 +1,13 @@
 /obj/structure/bed/chair/wheelchair
 	name = "wheelchair"
 	desc = "You sit in this. Either by will or force."
+	icon = 'icons/obj/structures/wheelchair.dmi'
 	icon_state = "wheelchair"
 	anchored = 0
 	buckle_movable = 1
-
+	mass = 30
+	max_health = 300
+	damthreshold_brute 	= 10
 	var/driving = 0
 	var/mob/living/pulling = null
 	var/bloodiness
@@ -17,7 +20,7 @@
 /obj/structure/bed/chair/wheelchair/set_dir()
 	..()
 	overlays = null
-	var/image/O = image(icon = 'icons/obj/furniture.dmi', icon_state = "w_overlay", dir = src.dir)
+	var/image/O = image(src.icon, icon_state = "w_overlay", dir = src.dir)
 	O.plane = ABOVE_HUMAN_PLANE
 	O.layer = ABOVE_HUMAN_LAYER
 	overlays += O
@@ -152,21 +155,21 @@
 			occupant.throw_at(A, 3, propelled)
 
 		var/def_zone = ran_zone()
-		var/blocked = occupant.run_armor_check(def_zone, "melee")
+		var/blocked = occupant.run_armor_check(def_zone, DAM_BLUNT)
 		occupant.throw_at(A, 3, propelled)
 		occupant.apply_effect(6, STUN, blocked)
 		occupant.apply_effect(6, WEAKEN, blocked)
 		occupant.apply_effect(6, STUTTER, blocked)
-		occupant.apply_damage(10, BRUTE, def_zone, blocked)
+		occupant.apply_damage(10, DAM_BLUNT, def_zone, blocked)
 		playsound(src.loc, 'sound/weapons/punch1.ogg', 50, 1, -1)
 		if(istype(A, /mob/living))
 			var/mob/living/victim = A
 			def_zone = ran_zone()
-			blocked = victim.run_armor_check(def_zone, "melee")
+			blocked = victim.run_armor_check(def_zone, DAM_BLUNT)
 			victim.apply_effect(6, STUN, blocked)
 			victim.apply_effect(6, WEAKEN, blocked)
 			victim.apply_effect(6, STUTTER, blocked)
-			victim.apply_damage(10, BRUTE, def_zone, blocked)
+			victim.apply_damage(10, DAM_BLUNT, def_zone, blocked)
 		if(pulling)
 			occupant.visible_message("<span class='danger'>[pulling] has thrusted \the [name] into \the [A], throwing \the [occupant] out of it!</span>")
 			admin_attack_log(pulling, occupant, "Crashed their victim into \an [A].", "Was crashed into \an [A].", "smashed into \the [A] using")

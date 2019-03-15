@@ -14,7 +14,7 @@
 	var/actual_power_usage = 10 KILOWATTS // Actual power usage, with upgrades in mind.
 	var/active = 0
 	var/list/resource_field = list()
-	var/health = 100
+	max_health = 100
 	var/stacks_needed = 0
 
 	//Upgrades
@@ -57,7 +57,7 @@
 			if(stacks_needed)
 				to_chat(user, "\The [src] still requires [stacks_needed] steel sheets to start the patch.")
 				return
-			var/obj/item/weapon/weldingtool/WT = O
+			var/obj/item/weapon/tool/weldingtool/WT = O
 			if (WT.get_fuel() < 3)
 				to_chat(user, "<span class='warning'>You need more welding fuel to complete this task.</span>")
 				return
@@ -246,6 +246,7 @@
 
 /obj/machinery/mining/drill/drop_contents(var/location)
 	for(var/obj/item/stack/ore/O in contents)
+		O.forceMove(location) //Drop to stack fails for some reasons
 		O.drop_to_stacks(location)
 
 /obj/machinery/mining/drill/Process()
@@ -345,7 +346,8 @@
 					if(metal == MATERIAL_BSPACE_CRYSTAL)
 						new /obj/item/bluespace_crystal(get_turf(src))
 					else
-						new /obj/item/stack/ore(src, metal)
+						var/obj/item/stack/ore/st = new(src, metal)
+						st.drop_to_stacks(src)
 
 		if(!found_resource)
 			harvesting.has_resources = 0

@@ -7,10 +7,10 @@
 	extended_desc = "This program connects to sensors to provide information about electrical systems"
 	ui_header = "power_norm.gif"
 	required_access = core_access_engineering_programs
-	requires_ntnet = 1
+	requires_ntnet = TRUE
 	network_destination = "power monitoring system"
 	size = 9
-	var/has_alert = 0
+	var/has_alert = FALSE
 
 /datum/computer_file/program/power_monitor/process_tick()
 	..()

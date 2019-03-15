@@ -10,7 +10,7 @@
 
 /datum/artifact_effect/radiate/DoEffectTouch(var/mob/living/user)
 	if(user)
-		user.apply_effect(radiation_strength * 2,IRRADIATE, blocked = user.getarmor(null, "rad"))
+		user.apply_effect(radiation_strength * 2,IRRADIATE, blocked = user.getarmor(null, DAM_RADS))
 		user.updatehealth()
 		return 1
 

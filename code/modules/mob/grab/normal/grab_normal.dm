@@ -164,19 +164,19 @@
 
 	var/damage = 20
 	var/obj/item/clothing/hat = attacker.head
-	var/damage_flags = 0
+	var/hatdamtype = 0
 	if(istype(hat))
 		damage += hat.force * 3
-		damage_flags = hat.damage_flags()
+		hatdamtype = hat.damtype
 
-	if(damage_flags & DAM_SHARP)
+	if(ISDAMTYPE(hatdamtype, DAM_PIERCE))
 		attacker.visible_message("<span class='danger'>[attacker] gores [target][istype(hat)? " with \the [hat]" : ""]!</span>")
 	else
 		attacker.visible_message("<span class='danger'>[attacker] thrusts \his head into [target]'s skull!</span>")
 
-	var/armor = target.run_armor_check(BP_HEAD, "melee")
-	target.apply_damage(damage, BRUTE, BP_HEAD, armor, damage_flags)
-	attacker.apply_damage(10, BRUTE, BP_HEAD, attacker.run_armor_check(BP_HEAD, "melee"))
+	var/armor = target.run_armor_check(BP_HEAD, hatdamtype)
+	target.apply_damage(damage, hatdamtype, BP_HEAD, armor)
+	attacker.apply_damage(10, DAM_BLUNT, BP_HEAD, attacker.run_armor_check(BP_HEAD, DAM_BLUNT))
 
 	if(armor < 50 && target.headcheck(BP_HEAD) && prob(damage))
 		target.apply_effect(20, PARALYZE)
@@ -236,7 +236,7 @@
 	if(user.a_intent != I_HURT)
 		return 0 // Not trying to hurt them.
 
-	if(!W.edge || !W.force || W.damtype != BRUTE)
+	if(!W.sharpness || !W.force || !ISDAMTYPE(W.damtype, DAM_CUT))
 		return 0 //unsuitable weapon
 	user.visible_message("<span class='danger'>\The [user] begins to slit [affecting]'s throat with \the [W]!</span>")
 
@@ -246,26 +246,18 @@
 	if(!(G && G.affecting == affecting)) //check that we still have a grab
 		return 0
 
-	var/damage_mod = 1
-	//presumably, if they are wearing a helmet that stops pressure effects, then it probably covers the throat as well
-	var/obj/item/clothing/head/helmet = affecting.get_equipped_item(slot_head)
-	if(istype(helmet) && (helmet.body_parts_covered & HEAD) && (helmet.item_flags & ITEM_FLAG_STOPPRESSUREDAMAGE))
-		//we don't do an armor_check here because this is not an impact effect like a weapon swung with momentum, that either penetrates or glances off.
-		damage_mod = 1.0 - (helmet.armor["melee"]/100)
-
 	var/total_damage = 0
-	var/damage_flags = W.damage_flags()
+	var/armor = affecting.run_armor_check(BP_HEAD, W.damtype)
 	for(var/i in 1 to 3)
-		var/damage = min(W.force*1.5, 20)*damage_mod
-		affecting.apply_damage(damage, W.damtype, BP_HEAD, 0, damage_flags, used_weapon=W)
+		var/damage = min(W.force*1.5, 20)
+		affecting.apply_damage(damage, W.damtype, BP_HEAD, armor, used_weapon=W)
 		total_damage += damage
-
 
 	if(total_damage)
 		user.visible_message("<span class='danger'>\The [user] slit [affecting]'s throat open with \the [W]!</span>")
-
-		if(W.hitsound)
-			playsound(affecting.loc, W.hitsound, 50, 1, -1)
+		var/obj/item/weapon/weap = W
+		if(weap && weap.sound_attack)
+			playsound(affecting.loc, weap.sound_attack, 50, 1, -1)
 
 	G.last_action = world.time
 
@@ -278,11 +270,11 @@
 	if(user.a_intent != I_HURT)
 		return 0 // Not trying to hurt them.
 
-	if(!W.edge || !W.force || W.damtype != BRUTE)
+	if(!W.sharpness || !W.force || ISDAMTYPE(W.damtype, DAM_BLUNT))
 		return 0 //unsuitable weapon
 
 	var/obj/item/organ/external/O = G.get_targeted_organ()
-	if(!O || O.is_stump() || !O.has_tendon || (O.status & ORGAN_TENDON_CUT))
+	if(!O || O.is_stump() || !O.has_tendon() || (O.status & ORGAN_TENDON_CUT))
 		return FALSE
 
 	user.visible_message("<span class='danger'>\The [user] begins to cut \the [affecting]'s [O.tendon_name] with \the [W]!</span>")
@@ -295,8 +287,10 @@
 	if(!O || O.is_stump() || !O.sever_tendon())
 		return 0
 
+	var/obj/item/weapon/thweweapon = W
 	user.visible_message("<span class='danger'>\The [user] cut \the [src]'s [O.tendon_name] with \the [W]!</span>")
-	if(W.hitsound) playsound(affecting.loc, W.hitsound, 50, 1, -1)
+	if(thweweapon && thweweapon.sound_attack) 
+		playsound(affecting.loc, thweweapon.sound_attack, 50, 1, -1)
 	G.last_action = world.time
 	admin_attack_log(user, affecting, "hamstrung their victim", "was hamstrung", "hamstrung")
 	return 1

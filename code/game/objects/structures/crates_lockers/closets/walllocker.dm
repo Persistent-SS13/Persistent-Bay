@@ -10,6 +10,22 @@
 	wrenchable = 0 // wall lockers cannot be unanchored with a wrench
 	storage_types = CLOSET_STORAGE_ITEMS
 
+/obj/structure/closet/walllocker/update_icon()
+	. = ..()
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = 30
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = -30
+		if(EAST)
+			src.pixel_x = 30
+			src.pixel_y = 0
+		if(WEST)
+			src.pixel_x = -30
+			src.pixel_y = 0
+
 //spawns endless (3 sets) amounts of breathmask, emergency oxy tank and crowbar
 
 /obj/structure/closet/walllocker/emerglocker
@@ -39,18 +55,3 @@
 		amount--
 	return
 
-/obj/structure/closet/walllocker/emerglocker/north
-	pixel_y = 32
-	dir = SOUTH
-
-/obj/structure/closet/walllocker/emerglocker/south
-	pixel_y = -32
-	dir = NORTH
-
-/obj/structure/closet/walllocker/emerglocker/west
-	pixel_x = -32
-	dir = WEST
-
-/obj/structure/closet/walllocker/emerglocker/east
-	pixel_x = 32
-	dir = EAST

@@ -6,7 +6,7 @@
 {{if data.hide_smes}}
 	<b>SMES readings hidden.</b><br>
 {{else}}
-	<b>Detected SMES units with RCON support:</b><br>
+	<b>Detected SMES units with RCON support for faction '{{:data.faction}}':</b><br>
 	{{for data.smes_info}}
 		<div class = "item">
 			<div class="itemLabel">				
@@ -52,7 +52,7 @@
 {{if data.hide_breakers}}
 	<b>Breaker readings hidden.</b><br>
 {{else}}
-	<b>Detected Breaker Boxes with RCON support:</b><br>
+	<b>Detected Breaker Boxes with RCON support for faction '{{:data.faction}}':</b><br>
 	{{for data.breaker_info}}
 		<div class = "item">
 			<div class="itemLabel">				

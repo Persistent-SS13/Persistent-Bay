@@ -13,7 +13,19 @@
 		slot_r_hand_str = "s_helmet",
 		)
 	permeability_coefficient = 0
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 100, rad = 10)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 2,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 10,
+		DAM_STUN 	= 0)
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE|BLOCKHAIR
 	body_parts_covered = HEAD|FACE|EYES
 	cold_protection = HEAD
@@ -80,7 +92,19 @@
 	item_flags = ITEM_FLAG_STOPPRESSUREDAMAGE | ITEM_FLAG_THICKMATERIAL
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
 	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank/emergency,/obj/item/device/suit_cooling_unit)
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 100, rad = 10)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 2,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 100,
+		DAM_RADS 	= 10,
+		DAM_STUN 	= 0)
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT|HIDETAIL
 	cold_protection = UPPER_TORSO | LOWER_TORSO | LEGS | FEET | ARMS | HANDS
 	min_cold_protection_temperature = SPACE_SUIT_MIN_COLD_PROTECTION_TEMPERATURE

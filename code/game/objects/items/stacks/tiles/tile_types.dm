@@ -129,6 +129,7 @@
 	singular_name = "brown carpet"
 	desc = "A piece of brown carpet."
 	icon_state = "tile_carpetbrown"
+	matter = list(MATERIAL_CLOTH = 900)
 
 /obj/item/stack/tile/carpet/fifty
 	amount = 50
@@ -185,6 +186,39 @@
 	icon_state = "tile_carpetred"
 
 /obj/item/stack/tile/carpetred/fifty
+	amount = 50
+
+//
+// Circuits
+//
+/obj/item/stack/tile/floor_bcircuit
+	name = "blue circuit flooring"
+	desc = "A tile of fancy circuit like lit flooring."
+	singular_name = "blue circuit tile"
+	icon_state = "bcircuit"
+	icon = 'icons/turf/flooring/circuit.dmi'
+
+/obj/item/stack/tile/floor_bcircuit/fifty
+	amount = 50
+
+/obj/item/stack/tile/floor_gcircuit
+	name = "green circuit flooring"
+	desc = "A tile of fancy circuit like lit flooring."
+	singular_name = "green circuit tile"
+	icon_state = "gcircuit"
+	icon = 'icons/turf/flooring/circuit.dmi'
+
+/obj/item/stack/tile/floor_gcircuit/fifty
+	amount = 50
+
+/obj/item/stack/tile/floor_rcircuit
+	name = "red circuit flooring"
+	desc = "A tile of fancy circuit like lit flooring."
+	singular_name = "red circuit tile"
+	icon_state = "rcircuit"
+	icon = 'icons/turf/flooring/circuit.dmi'
+
+/obj/item/stack/tile/floor_rcircuit/fifty
 	amount = 50
 
 //

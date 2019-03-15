@@ -18,20 +18,20 @@
 /obj/item/weapon/card/id/guest/examine(mob/user)
 	. = ..()
 	if (world.time < expiration_time)
-		to_chat(user, "<span class='notice'>This pass expires at [worldtime2stationtime(expiration_time)].</span>")
+		to_chat(user, SPAN_NOTICE("This pass expires at [worldtime2stationtime(expiration_time)]."))
 	else
-		to_chat(user, "<span class='warning'>It expired at [worldtime2stationtime(expiration_time)].</span>")
+		to_chat(user, SPAN_WARNING("It expired at [worldtime2stationtime(expiration_time)]."))
 
 /obj/item/weapon/card/id/guest/read()
 	if (world.time > expiration_time)
-		to_chat(usr, "<span class='notice'>This pass expired at [worldtime2stationtime(expiration_time)].</span>")
+		to_chat(usr, SPAN_NOTICE("This pass expired at [worldtime2stationtime(expiration_time)]."))
 	else
-		to_chat(usr, "<span class='notice'>This pass expires at [worldtime2stationtime(expiration_time)].</span>")
+		to_chat(usr, SPAN_NOTICE("This pass expires at [worldtime2stationtime(expiration_time)]."))
 
-	to_chat(usr, "<span class='notice'>It grants access to following areas:</span>")
+	to_chat(usr, SPAN_NOTICE("It grants access to following areas:"))
 	for (var/A in temp_access)
-		to_chat(usr, "<span class='notice'>[get_access_desc(A)].</span>")
-	to_chat(usr, "<span class='notice'>Issuing reason: [reason].</span>")
+		to_chat(usr, SPAN_NOTICE("[get_access_desc(A)]."))
+	to_chat(usr, SPAN_NOTICE("Issuing reason: [reason]."))
 	return
 
 /////////////////////////////////////////////
@@ -43,7 +43,7 @@
 	icon_state = "guest"
 	icon_keyboard = null
 	icon_screen = "pass"
-	density = 0
+	density = FALSE
 
 	var/obj/item/weapon/card/id/giver
 	var/list/accesses = list()
@@ -58,6 +58,22 @@
 	..()
 	uid = "[random_id("guestpass_serial_number",100,999)]-G[rand(10,99)]"
 
+/obj/machinery/computer/guestpass/update_icon()
+	. = ..()
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = -20
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = 20
+		if(EAST)
+			src.pixel_x = -20
+			src.pixel_y = 0
+		if(WEST)
+			src.pixel_x = 20
+			src.pixel_y = 0
+
 /obj/machinery/computer/guestpass/attackby(obj/O, mob/user)
 	if(istype(O, /obj/item/weapon/card/id))
 		if(!giver && user.unEquip(O))
@@ -65,7 +81,7 @@
 			giver = O
 			updateUsrDialog()
 		else if(giver)
-			to_chat(user, "<span class='warning'>There is already ID card inside.</span>")
+			to_chat(user, SPAN_WARNING("There is already ID card inside."))
 		return
 	..()
 
@@ -129,7 +145,7 @@
 					if (dur > 0 && dur <= 30)
 						duration = dur
 					else
-						to_chat(usr, "<span class='warning'>Invalid duration.</span>")
+						to_chat(usr, SPAN_WARNING("Invalid duration."))
 			if ("access")
 				var/A = text2num(href_list["access"])
 				if (A in accesses)
@@ -185,8 +201,8 @@
 					playsound(src.loc, 'sound/machines/ping.ogg', 25, 0)
 					. = 1
 				else if(!giver)
-					to_chat(usr, "<span class='warning'>Cannot issue pass without issuing ID.</span>")
+					to_chat(usr, SPAN_WARNING("Cannot issue pass without issuing ID."))
 				else if(!accesses.len)
-					to_chat(usr, "<span class='warning'>Cannot issue pass without at least one granted access permission.</span>")
+					to_chat(usr, SPAN_WARNING("Cannot issue pass without at least one granted access permission."))
 	if(.)
 		updateUsrDialog()

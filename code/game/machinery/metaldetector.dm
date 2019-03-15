@@ -1,7 +1,7 @@
 /obj/machinery/metal_detector
 	name = "metal detector"
 	desc = "A advanced metal detector used to detect weapons."
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/metal_detector.dmi'
 	icon_state = "metal_detector"
 	plane = ABOVE_HUMAN_PLANE
 	layer = ABOVE_HUMAN_LAYER

@@ -118,7 +118,7 @@
 
 		if(3)
 			if(isWelder(W))
-				var/obj/item/weapon/weldingtool/WT = W
+				var/obj/item/weapon/tool/weldingtool/WT = W
 				if(WT.remove_fuel(0, user))
 					build_step++
 					name = "shielded frame assembly"

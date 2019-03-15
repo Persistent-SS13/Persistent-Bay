@@ -115,7 +115,7 @@
 
 
 	if(!target_limb) target_limb = pick(BP_ALL_LIMBS)
-	var/blocked = target.run_armor_check(target_limb, "melee")
+	var/blocked = target.run_armor_check(target_limb, DAM_PIERCE)
 	var/obj/item/organ/external/affecting = target.get_organ(target_limb)
 
 	if(blocked >= 100 || (target.species && target.species.species_flags & (SPECIES_FLAG_NO_EMBED|SPECIES_FLAG_NO_MINOR_CUT)))
@@ -139,8 +139,9 @@
 		damage = max(1, round(5*get_trait(TRAIT_POTENCY)/100, 1))
 		has_edge = prob(get_trait(TRAIT_POTENCY)/5)
 
-	var/damage_flags = DAM_SHARP|(has_edge? DAM_EDGE : 0)
-	target.apply_damage(damage, BRUTE, target_limb, blocked, damage_flags, "Thorns")
+	var/dtype = has_edge? DAM_CUT : DAM_PIERCE
+	dtype = target.HandleArmorDamTypeConversion(dtype, blocked)
+	target.apply_damage(damage, dtype, target_limb, blocked, 0, "Thorns")
 
 // Adds reagents to a target.
 /datum/seed/proc/do_sting(var/mob/living/carbon/human/target, var/obj/item/fruit)
@@ -416,12 +417,12 @@
 
 	if(prob(5))
 		consume_gasses = list()
-		var/gas = pick("oxygen","nitrogen","phoron","carbon_dioxide")
+		var/gas = pick(GAS_OXYGEN,GAS_NITROGEN,GAS_PHORON,GAS_CO2,GAS_WATER_VAPOR,GAS_HYDROGEN,GAS_METHANE,GAS_NITRIC_OXIDE,GAS_CHLORINE)
 		consume_gasses[gas] = rand(3,9)
 
 	if(prob(5))
 		exude_gasses = list()
-		var/gas = pick("oxygen","nitrogen","phoron","carbon_dioxide")
+		var/gas = pick(GAS_OXYGEN,GAS_NITROGEN,GAS_PHORON,GAS_CO2,GAS_WATER_VAPOR,GAS_HYDROGEN,GAS_METHANE,GAS_NITRIC_OXIDE,GAS_CHLORINE)
 		exude_gasses[gas] = rand(3,9)
 
 	chems = list()

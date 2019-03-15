@@ -5,10 +5,9 @@
 	program_menu_icon = "flag"
 	nanomodule_path = /datum/nano_module/program/citycouncil
 	extended_desc = "Used by members of city council to propose and vote on new laws, including tax policy."
-	requires_ntnet = 1
+	requires_ntnet = TRUE
 	size = 12
 	democratic = 1
-
 
 /datum/nano_module/program/citycouncil
 	name = "Nexus City Council Control"

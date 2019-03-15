@@ -6,8 +6,8 @@
 	program_menu_icon = "cart"
 	extended_desc = "A management tool that allows for ordering of various supplies through the facility's cargo system. Some features may require additional access."
 	size = 21
-	available_on_ntnet = 1
-	requires_ntnet = 1
+	available_on_ntnet = TRUE
+	requires_ntnet = TRUE
 
 /datum/computer_file/program/supply/process_tick()
 	..()
@@ -250,7 +250,7 @@
 				shuttle.launch(user)
 		else
 			shuttle.launch(user)
-			var/datum/radio_frequency/frequency = radio_controller.return_frequency(1435)
+			var/datum/radio_frequency/frequency = radio_controller.return_frequency(STATUS_FREQ)
 			if(!frequency)
 				return
 
@@ -369,7 +369,7 @@
 			to_chat(usr, "Access Denied.")
 			return 1
 		if(!user_id_card) return 0
-		var/datum/computer_file/crew_record/R = connected_faction.get_record(user_id_card.registered_name)
+		var/datum/computer_file/report/crew_record/R = connected_faction.get_record(user_id_card.registered_name)
 		if(!R) return 0
 		var/expense_limit = 0
 		var/datum/assignment/assignment = connected_faction.get_assignment(R.assignment_uid, R.get_name())

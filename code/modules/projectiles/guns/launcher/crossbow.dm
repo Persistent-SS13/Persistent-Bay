@@ -3,14 +3,15 @@
 /obj/item/weapon/arrow
 	name = "bolt"
 	desc = "It's got a tip for you - get the point?"
-	icon = 'icons/obj/weapons.dmi'
+	icon = 'icons/obj/weapons/crossbows.dmi'
 	icon_state = "bolt"
 	item_state = "bolt"
 	throwforce = 8
 	w_class = ITEM_SIZE_NORMAL
-	sharp = 1
-	edge = 0
+	sharpness = 1
 	lock_picking_level = 3
+	mass = 0.150
+	damtype = DAM_PIERCE
 
 /obj/item/weapon/arrow/proc/removed() //Helper for metal rods falling apart.
 	return
@@ -18,10 +19,11 @@
 /obj/item/weapon/spike
 	name = "alloy spike"
 	desc = "It's about a foot of weird silver metal with a wicked point."
-	sharp = 1
-	edge = 0
+	sharpness = 1
 	throwforce = 5
 	w_class = ITEM_SIZE_SMALL
+	mass = 0.750
+	damtype = DAM_PIERCE
 	icon = 'icons/obj/weapons.dmi'
 	icon_state = "metal-rod"
 	item_state = "bolt"
@@ -29,15 +31,18 @@
 /obj/item/weapon/arrow/quill
 	name = "vox quill"
 	desc = "A wickedly barbed quill from some bizarre animal."
-	icon = 'icons/obj/weapons.dmi'
+	icon = 'icons/obj/weapons/crossbows.dmi'
 	icon_state = "quill"
 	item_state = "quill"
 	throwforce = 5
+	mass = 0.050
 
 /obj/item/weapon/arrow/rod
 	name = "metal rod"
 	desc = "Don't cry for me, Orithena."
+	icon = 'icons/obj/weapons.dmi'
 	icon_state = "metal-rod"
+	mass = 0.200
 
 /obj/item/weapon/arrow/rod/removed(mob/user)
 	if(throwforce == 15) // The rod has been superheated - we don't want it to be useable when removed from the bow.
@@ -49,13 +54,14 @@
 /obj/item/weapon/gun/launcher/crossbow
 	name = "powered crossbow"
 	desc = "A 2557AD twist on an old classic. Pick up that can."
-	icon = 'icons/obj/weapons.dmi'
+	icon = 'icons/obj/weapons/crossbows.dmi'
 	icon_state = "crossbow"
 	item_state = "crossbow-solid"
 	fire_sound = 'sound/weapons/punchmiss.ogg' // TODO: Decent THWOK noise.
 	fire_sound_text = "a solid thunk"
 	fire_delay = 25
 	slot_flags = SLOT_BACK
+	mass = 2.26
 
 	var/obj/item/bolt
 	var/tension = 0                         // Current draw on the bow.
@@ -199,8 +205,10 @@
 /obj/item/weapon/crossbowframe
 	name = "crossbow frame"
 	desc = "A half-finished crossbow."
+	icon = 'icons/obj/weapons/crossbows.dmi'
 	icon_state = "crossbowframe0"
 	item_state = "crossbow-solid"
+	mass = 2
 
 	var/buildstate = 0
 
@@ -229,7 +237,7 @@
 			return
 	else if(isWelder(W))
 		if(buildstate == 1)
-			var/obj/item/weapon/weldingtool/T = W
+			var/obj/item/weapon/tool/weldingtool/T = W
 			if(T.remove_fuel(0,user))
 				if(!src || !T.isOn()) return
 				playsound(src.loc, 'sound/items/Welder2.ogg', 100, 1)

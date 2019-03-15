@@ -189,5 +189,5 @@
 	var/spawn_loc // set to a faction_uid to have them spawn in that factions spawners
 	var/spawn_loc_2 // this is used for secondary cryobed networks
 	
-	
+	var/datum/skillset/skillset = /datum/skillset
 	

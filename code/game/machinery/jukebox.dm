@@ -286,9 +286,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 
 /obj/machinery/media/jukebox/attackby(obj/item/W as obj, mob/user as mob)
 	src.add_fingerprint(user)
-
-	if(isWrench(W))
-		wrench_floor_bolts(user, 0)
+	if(default_wrench_floor_bolts(user, W))
 		power_change()
 		return
 	return ..()
@@ -314,7 +312,7 @@ datum/track/New(var/title_name, var/audio, var/genre_name)
 		return
 
 	// Jukeboxes cheat massively and actually don't share id. This is only done because it's music rather than ambient noise.
-	sound_token = sound_player.PlayLoopingSound(src, sound_id, current_track.sound, volume = volume, range = 7, falloff = 3, prefer_mute = TRUE)
+	sound_token = GLOB.sound_player.PlayLoopingSound(src, sound_id, current_track.sound, volume = volume, range = 7, falloff = 3, prefer_mute = TRUE)
 
 	playing = 1
 	update_use_power(2)

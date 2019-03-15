@@ -15,7 +15,7 @@
 	max_amount = 100
 	attack_verb = list("hit", "bludgeoned", "whacked")
 	lock_picking_level = 3
-	materials_per_unit = list(DEFAULT_WALL_MATERIAL = 1875)
+	materials_per_unit = list(MATERIAL_STEEL = 1875)
 
 /obj/item/stack/rods/ten
 	amount = 10
@@ -34,7 +34,7 @@
 
 /obj/item/stack/rods/attackby(obj/item/W as obj, mob/user as mob)
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 
 		if(get_amount() < 2)
 			to_chat(user, "<span class='warning'>You need at least two rods to do this.</span>")

@@ -256,7 +256,7 @@
 			radiation -= 3 * RADIATION_SPEED_COEFFICIENT
 			if(!isSynthetic())
 				if(prob(5))
-					take_overall_damage(0, 5 * RADIATION_SPEED_COEFFICIENT, used_weapon = "Radiation Burns")
+					take_overall_damage(5 * RADIATION_SPEED_COEFFICIENT, DAM_BURN, used_weapon = "Radiation Burns")
 				if(prob(1))
 					to_chat(src, "<span class='warning'>You feel strange!</span>")
 					adjustCloneLoss(5 * RADIATION_SPEED_COEFFICIENT)
@@ -419,7 +419,7 @@
 			burn_dam = HEAT_DAMAGE_LEVEL_2
 		else
 			burn_dam = HEAT_DAMAGE_LEVEL_3
-		take_overall_damage(burn=burn_dam, used_weapon = "High Body Temperature")
+		take_overall_damage(burn_dam, DAM_BURN, used_weapon = "High Body Temperature")
 		fire_alert = max(fire_alert, 2)
 
 	else if(bodytemperature <= getSpeciesOrSynthTemp(COLD_LEVEL_1))
@@ -436,7 +436,7 @@
 			burn_dam = COLD_DAMAGE_LEVEL_3
 		SetStasis(getCryogenicFactor(bodytemperature), STASIS_COLD)
 		if(!chem_effects[CE_CRYO])
-			take_overall_damage(burn=burn_dam, used_weapon = "Low Body Temperature")
+			take_overall_damage(burn_dam, DAM_BURN, used_weapon = "Low Body Temperature")
 			fire_alert = max(fire_alert, 1)
 
 	// Account for massive pressure differences.  Done by Polymorph
@@ -445,7 +445,7 @@
 
 	if(adjusted_pressure >= species.hazard_high_pressure)
 		var/pressure_damage = min( ( (adjusted_pressure / species.hazard_high_pressure) -1 )*PRESSURE_DAMAGE_COEFFICIENT , MAX_HIGH_PRESSURE_DAMAGE)
-		take_overall_damage(brute=pressure_damage, used_weapon = "High Pressure")
+		take_overall_damage(pressure_damage, DAM_BLUNT, used_weapon = "High Pressure")
 		pressure_alert = 2
 	else if(adjusted_pressure >= species.warning_high_pressure)
 		pressure_alert = 1
@@ -454,7 +454,7 @@
 	else if(adjusted_pressure >= species.hazard_low_pressure)
 		pressure_alert = -1
 	else
-		take_overall_damage(brute=LOW_PRESSURE_DAMAGE, used_weapon = "Low Pressure")
+		take_overall_damage(LOW_PRESSURE_DAMAGE, DAM_BLUNT, used_weapon = "Low Pressure")
 		if(getOxyLoss() < 55) // 11 OxyLoss per 4 ticks when wearing internals;    unconsciousness in 16 ticks, roughly half a minute
 			adjustOxyLoss(4)  // 16 OxyLoss per 4 ticks when no internals present; unconsciousness in 13 ticks, roughly twenty seconds
 		pressure_alert = -2
@@ -872,7 +872,7 @@
 	for(var/tag in list(BP_LIVER,BP_KIDNEYS))
 		var/obj/item/organ/internal/I = internal_organs_by_name[tag]
 		if(I)
-			vomit_score += I.damage
+			vomit_score += I.get_damages()
 		else if (should_have_organ(tag))
 			vomit_score += 45
 	if(chem_effects[CE_TOXIN] || radiation)
@@ -1065,7 +1065,7 @@
 
 		var/datum/world_faction/faction = get_faction(src.GetFaction())
 		if(faction)
-			var/datum/computer_file/crew_record/E = faction.get_record(perpname)
+			var/datum/computer_file/report/crew_record/E = faction.get_record(perpname)
 			if(E)
 				switch(E.get_criminalStatus())
 					if("Arrest")

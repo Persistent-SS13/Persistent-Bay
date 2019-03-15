@@ -220,3 +220,11 @@
 	icon = 'icons/obj/stock_parts.dmi'
 	icon_state = "smes_coil"
 	origin_tech = list(TECH_MATERIAL = 19, TECH_ENGINEERING = 19, TECH_PHORON = 19, TECH_POWER = 19, TECH_BLUESPACE = 19, TECH_BIO = 19, TECH_COMBAT = 19, TECH_MAGNET = 19, TECH_DATA = 19, TECH_ILLEGAL = 19, TECH_ARCANE = 19)
+
+//Misc non-tiered parts
+/obj/item/weapon/stock_parts/hydrolics
+	name = "hydrolic actuator"
+	desc = "A component in some machines, used for making things move."
+	origin_tech = list(TECH_POWER = 3, TECH_MATERIAL = 2)
+	rating = 1
+	matter = list(MATERIAL_STEEL = 1000,MATERIAL_GLASS = 500)

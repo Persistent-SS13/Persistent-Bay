@@ -5,13 +5,10 @@
 	program_icon_state = "comm_monitor"
 	program_menu_icon = "mail-open"
 	size = 12
-	requires_ntnet = 1
-	available_on_ntnet = 1
+	requires_ntnet = TRUE
+	available_on_ntnet = TRUE
 	nanomodule_path = /datum/nano_module/email_administration
-	required_access = 999 // This program should be basically disabled this way
-
-
-
+	//required_access = core_access_wireless_programs
 
 /datum/nano_module/email_administration/
 	name = "Email Client"

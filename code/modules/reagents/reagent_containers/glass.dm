@@ -46,6 +46,14 @@
 	..()
 	base_name = name
 
+/obj/item/weapon/reagent_containers/glass/Initialize()
+	. = ..()
+	update_temperature_coefficient()
+
+/obj/item/weapon/reagent_containers/glass/proc/update_temperature_coefficient()
+	//area for a 50ml beaker as a cylinder is 0.010952 m2.
+	temperature_coefficient = 0.010952 * w_class //Lets try this by default I guess..
+
 /obj/item/weapon/reagent_containers/glass/examine(var/mob/user)
 	if(!..(user, 2))
 		return

@@ -65,21 +65,21 @@
 		uphill = list(
 			source = list(
 				initial_gas = list(
-					"oxygen"         = 5,
-					"nitrogen"       = 10,
-					"carbon_dioxide" = 5,
-					"phoron"         = 10,
-					"sleeping_agent" = 5,
+					GAS_OXYGEN   = 5,
+					GAS_NITROGEN = 10,
+					GAS_CO2      = 5,
+					GAS_PHORON   = 10,
+					GAS_N2O      = 5,
 				),
 				temperature = T20C - 5,
 			),
 			sink = list(
 				initial_gas = list(
-					"oxygen"         = 10,
-					"nitrogen"       = 20,
-					"carbon_dioxide" = 10,
-					"phoron"         = 20,
-					"sleeping_agent" = 10,
+					GAS_OXYGEN   = 10,
+					GAS_NITROGEN = 20,
+					GAS_CO2      = 10,
+					GAS_PHORON   = 20,
+					GAS_N2O      = 10,
 				),
 				temperature = T20C + 5,
 			)
@@ -87,21 +87,21 @@
 		downhill = list(
 			source = list(
 				initial_gas = list(
-					"oxygen"         = 10,
-					"nitrogen"       = 20,
-					"carbon_dioxide" = 10,
-					"phoron"         = 20,
-					"sleeping_agent" = 10,
+					GAS_OXYGEN   = 10,
+					GAS_NITROGEN = 20,
+					GAS_CO2      = 10,
+					GAS_PHORON   = 20,
+					GAS_N2O      = 10,
 				),
 				temperature = T20C + 5,
 			),
 			sink = list(
 				initial_gas = list(
-					"oxygen"         = 5,
-					"nitrogen"       = 10,
-					"carbon_dioxide" = 5,
-					"phoron"         = 10,
-					"sleeping_agent" = 5,
+					GAS_OXYGEN   = 5,
+					GAS_NITROGEN = 10,
+					GAS_CO2      = 5,
+					GAS_PHORON   = 10,
+					GAS_N2O      = 5,
 				),
 				temperature = T20C - 5,
 			),
@@ -109,21 +109,21 @@
 		flat = list(
 			source = list(
 				initial_gas = list(
-					"oxygen"         = 10,
-					"nitrogen"       = 20,
-					"carbon_dioxide" = 10,
-					"phoron"         = 20,
-					"sleeping_agent" = 10,
+					GAS_OXYGEN   = 10,
+					GAS_NITROGEN = 20,
+					GAS_CO2      = 10,
+					GAS_PHORON   = 20,
+					GAS_N2O      = 10,
 				),
 				temperature = T20C,
 			),
 			sink = list(
 				initial_gas = list(
-					"oxygen"         = 10,
-					"nitrogen"       = 20,
-					"carbon_dioxide" = 10,
-					"phoron"         = 20,
-					"sleeping_agent" = 10,
+					GAS_OXYGEN   = 10,
+					GAS_NITROGEN = 20,
+					GAS_CO2      = 10,
+					GAS_PHORON   = 20,
+					GAS_N2O      = 10,
 				),
 				temperature = T20C,
 			),
@@ -131,11 +131,11 @@
 		vacuum_sink = list(
 			source = list(
 				initial_gas = list(
-					"oxygen"         = 10,
-					"nitrogen"       = 20,
-					"carbon_dioxide" = 10,
-					"phoron"         = 20,
-					"sleeping_agent" = 10,
+					GAS_OXYGEN   = 10,
+					GAS_NITROGEN = 20,
+					GAS_CO2      = 10,
+					GAS_PHORON   = 20,
+					GAS_N2O      = 10,
 				),
 				temperature = T20C,
 			),
@@ -151,11 +151,11 @@
 			),
 			sink = list(
 				initial_gas = list(
-					"oxygen"         = 10,
-					"nitrogen"       = 20,
-					"carbon_dioxide" = 10,
-					"phoron"         = 20,
-					"sleeping_agent" = 10,
+					GAS_OXYGEN   = 10,
+					GAS_NITROGEN = 20,
+					GAS_CO2      = 10,
+					GAS_PHORON   = 20,
+					GAS_N2O      = 10,
 				),
 				temperature = T20C,
 			),

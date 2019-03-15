@@ -71,7 +71,7 @@
 		src.update_icon()
 		return
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(WT.remove_fuel(0,user))
 			var/obj/item/stack/material/steel/new_item = new(usr.loc)
 			new_item.add_to_stacks(usr)
@@ -88,7 +88,7 @@
 
 		if(!(get_dist(src, src.attached) <= 1 && isturf(src.attached.loc)))
 			visible_message("The needle is ripped out of [src.attached], doesn't that hurt?")
-			src.attached.apply_damage(3, BRUTE, pick(BP_R_ARM, BP_L_ARM))
+			src.attached.apply_damage(3, DAM_BLUNT, pick(BP_R_ARM, BP_L_ARM))
 			src.attached = null
 			src.update_icon()
 			return

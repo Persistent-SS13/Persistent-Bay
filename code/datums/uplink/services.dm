@@ -195,12 +195,12 @@
 
 /obj/item/device/uplink_service/fake_crew_announcement/enable(var/mob/user = usr)
 	var/obj/item/weapon/card/id/I = user.GetIdCard()
-	var/datum/computer_file/crew_record/random_record
+	var/datum/computer_file/report/crew_record/random_record
 
 	if(GLOB.all_crew_records.len)
 		random_record = pick(GLOB.all_crew_records)
 
-	var/datum/computer_file/crew_record/new_record = CreateModularRecord(user)
+	var/datum/computer_file/report/crew_record/new_record = CreateModularRecord(user)
 	if(I)
 		new_record.set_name(I.registered_name)
 		new_record.set_sex(I.sex)
@@ -229,6 +229,15 @@
 			new_record.set_field(field, random_record.get_field(field))
 
 	var/datum/job/job = job_master.GetJob(new_record.get_job())
+	if(job)
+		var/skills = list()
+		for(var/decl/hierarchy/skill/S in GLOB.skills)
+			var/level = job.min_skill[S.type]
+			if(prob(10))
+				level = min(rand(1,3), job.max_skill[S.type])
+			if(level > SKILL_NONE)
+				skills += "[S.name], [S.levels[level]]"
+		new_record.set_skillset(jointext(skills,"\n"))
 	if(istype(job) && job.announced)
 		AnnounceArrivalSimple(new_record.get_name(), new_record.get_job(), get_announcement_frequency(job))
 	. = ..()

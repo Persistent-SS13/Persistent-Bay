@@ -660,7 +660,7 @@ var/PriorityQueue/all_feeds
 	var/hiring_policy = 0 // if hiring_policy, anyone with reassignment can add people to the network, else only people in command a command category with reassignment can add people
 	var/last_expense_print = 0
 
-	var/list/reserved_frequencies() = list() // Reserved frequencies that the faction can create encryption keys from.
+	var/list/reserved_frequencies = list() // Reserved frequencies that the faction can create encryption keys from.
 
 	var/datum/machine_limits/limits
 
@@ -1219,14 +1219,14 @@ var/PriorityQueue/all_feeds
 	return records.faction_records
 
 /datum/world_faction/proc/get_record(var/real_name)
-	for(var/datum/computer_file/crew_record/R in records.faction_records)
+	for(var/datum/computer_file/report/crew_record/R in records.faction_records)
 		if(R.get_name() == real_name)
 			return R
-	var/datum/computer_file/crew_record/L = Retrieve_Record_Faction(real_name, src)
+	var/datum/computer_file/report/crew_record/L = Retrieve_Record_Faction(real_name, src)
 	return L
 
 /datum/world_faction/proc/in_command(var/real_name)
-	var/datum/computer_file/crew_record/R = get_record(real_name)
+	var/datum/computer_file/report/crew_record/R = get_record(real_name)
 	if(R)
 		var/datum/assignment/assignment = get_assignment(R.assignment_uid, R.get_name())
 		if(assignment)
@@ -1237,9 +1237,9 @@ var/PriorityQueue/all_feeds
 /datum/world_faction/proc/outranks(var/real_name, var/target)
 	if(real_name == get_leadername())
 		return 1
-	var/datum/computer_file/crew_record/R = get_record(real_name)
+	var/datum/computer_file/report/crew_record/R = get_record(real_name)
 	if(!R) return 0
-	var/datum/computer_file/crew_record/target_record = get_record(target)
+	var/datum/computer_file/report/crew_record/target_record = get_record(target)
 	if(!target_record) return 1
 	var/user_command = 0
 	var/target_command = 0
@@ -1367,7 +1367,7 @@ var/PriorityQueue/all_feeds
 	var/network_name = "network name"
 	var/network_uid = "network_uid"
 	var/network_password
-	var/network_invisible = 0
+	var/network_invisible = FALSE
 
 /obj/faction_spawner/New()
 	if(!GLOB.all_world_factions)
@@ -1384,6 +1384,33 @@ var/PriorityQueue/all_feeds
 	fact.password = password
 	fact.network.name = network_name
 	fact.network.net_uid = network_uid
+	if(network_password)
+		fact.network.secured = 1
+		fact.network.password = network_password
+	fact.network.invisible = network_invisible
+	GLOB.all_world_factions |= fact
+	qdel(src)
+	return
+
+/obj/faction_spawner/democratic
+	var/purpose = ""
+
+/obj/faction_spawner/democratic/New()
+	if(!GLOB.all_world_factions)
+		GLOB.all_world_factions = list()
+	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
+		if(existing_faction.uid == uid)
+			qdel(src)
+			return
+	var/datum/world_faction/democratic/fact = new()
+	fact.name = name
+	fact.abbreviation = name_short
+	fact.short_tag = name_tag
+	fact.uid = uid
+	fact.password = password
+	fact.network.name = network_name
+	fact.network.net_uid = network_uid
+	fact.purpose = src.purpose
 	if(network_password)
 		fact.network.secured = 1
 		fact.network.password = network_password

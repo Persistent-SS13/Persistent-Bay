@@ -7,7 +7,7 @@
 
 	default_language = SPECIES_BOGANI
 	unarmed_types = list(/datum/unarmed_attack/punch)
-	blurb = "An unknown species of Slavers and Conquerors from distant stars yet discovered by the known species, the Bogani are a force to be reckoned with."
+	description = "An unknown species of Slavers and Conquerors from distant stars yet discovered by the known species, the Bogani are a force to be reckoned with."
 	blood_color = "#fff5ee"
 
 	darksight = 7
@@ -43,8 +43,8 @@
 		"Your exoskeleton feels rigid.")
 
 	breath_pressure = 28
-	breath_type = "chlorine"
-	poison_types = list("oxygen" = TRUE)
+	breath_type = GAS_CHLORINE
+	poison_types = list(GAS_OXYGEN = TRUE)
 	siemens_coefficient = 0.1
 
 	genders = list(NEUTER)
@@ -58,7 +58,7 @@
 
 	default_language = SPECIES_BOGANI
 	unarmed_types = list(/datum/unarmed_attack/punch)
-	blurb = "An unknown species of Slavers and Conquerors from distant stars yet discovered by the known species, the Bogani are a force to be reckoned with."
+	description = "An unknown species of Slavers and Conquerors from distant stars yet discovered by the known species, the Bogani are a force to be reckoned with."
 	blood_color = "#fff5ee"
 
 	darksight = 5
@@ -92,8 +92,8 @@
 		"You feel sluggish and cold.",
 		"Your scales bristle against the cold.")
 
-	breath_type = "chlorine"
-	poison_types = list("oxygen")
+	breath_type = GAS_CHLORINE
+	poison_types = list(GAS_OXYGEN)
 	siemens_coefficient = 0.9
 
 	genders = list(NEUTER)

@@ -26,7 +26,7 @@
 	var/creator // circuit creator if any
 	var/static/next_assembly_id = 0
 	pass_flags = 0
-	armor = list("melee" = 50, "bullet" = 70, "laser" = 70, "energy" = 100, "bomb" = 10, "bio" = 100, "rad" = 100, "fire" = 0, "acid" = 0)
+	armor = list(DAM_BLUNT = 50, DAM_BULLET = 70, DAM_LASER = 70, DAM_ENERGY = 100, DAM_BOMB = 10, DAM_BIO = 100, DAM_RADS = 100, DAM_BURN = 0)
 	anchored = FALSE
 	var/detail_color = COLOR_ASSEMBLY_BLACK
 	var/list/color_whitelist = list( //This is just for checking that hacked colors aren't in the save data.
@@ -393,7 +393,7 @@
 
 
 /obj/item/device/electronic_assembly/attackby(obj/item/I, mob/living/user)
-	if(istype(I, /obj/item/weapon/wrench))
+	if(istype(I, /obj/item/weapon/tool/wrench))
 		if(istype(loc, /turf) && (IC_FLAG_ANCHORABLE & circuit_flags))
 			user.visible_message("\The [user] wrenches \the [src]'s anchoring bolts [anchored ? "back" : "into position"].")
 			playsound(get_turf(user), 'sound/items/Ratchet.ogg',50)
@@ -440,7 +440,7 @@
 		var/obj/item/device/integrated_electronics/detailer/D = I
 		detail_color = D.detail_color
 		update_icon()
-	else if(istype(I, /obj/item/weapon/screwdriver))
+	else if(istype(I, /obj/item/weapon/tool/screwdriver))
 		playsound(src, 'sound/items/Screwdriver.ogg', 25)
 		opened = !opened
 		to_chat(user, "<span class='notice'>You [opened ? "open" : "close"] the maintenance hatch of [src].</span>")

@@ -13,6 +13,10 @@ SUBSYSTEM_DEF(elections)
 	var/weekday = time2text(time, "Day")
 	var/hour = text2num(time2text(time, "hh"))
 	var/month = time2text(time, "Month")
+	if(!nexus)
+		log_warning("SSElection couldn't find the 'nexus' faction. Skipping this update..")
+		next_fire = 5 MINUTES
+		return 
 	if(nexus.current_election)
 		if(hour > nexus.current_election.end_hour && weekday == nexus.current_election.end_day)
 			nexus.end_election()	

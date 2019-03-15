@@ -10,20 +10,20 @@ I IS TYPIN'!'
 	icon = 'icons/mob/talk.dmi'
 	icon_state = "typing"
 	should_save = 0
+	layer = TOPDOWN_LAYER //Layer for overhead healthbars and such according to byond doc
+
 /atom/movable/overlay/typing_indicator/New(var/newloc, var/mob/master)
 	..(newloc)
 	if(master.typing_indicator)
 		qdel(master.typing_indicator)
-
 	master.typing_indicator = src
 	src.master = master
-	name = master.name
+	src.name = master.name
 
-	GLOB.moved_event.register(master, src, /atom/movable/proc/move_to_turf_or_null)
-
-	GLOB.stat_set_event.register(master, src, /datum/proc/qdel_self) // Making the assumption master is conscious at creation
-	GLOB.logged_out_event.register(master, src, /datum/proc/qdel_self)
-	GLOB.destroyed_event.register(master, src, /datum/proc/qdel_self)
+	GLOB.moved_event.register(src.master, src, /atom/movable/proc/move_to_turf_or_null)
+	GLOB.stat_set_event.register(src.master, src, /datum/proc/qdel_self) // Making the assumption master is conscious at creation
+	GLOB.logged_out_event.register(src.master, src, /datum/proc/qdel_self)
+	GLOB.destroyed_event.register(src.master, src, /datum/proc/qdel_self)
 
 /atom/movable/overlay/typing_indicator/Destroy()
 	var/mob/M = master

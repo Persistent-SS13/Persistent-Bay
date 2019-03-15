@@ -1,10 +1,9 @@
 /obj/item/projectile/change
 	name = "bolt of change"
 	icon_state = "ice_1"
-	damage = 0
-	damage_type = BURN
+	force = 0
+	damtype = DAM_ENERGY
 	nodamage = 1
-	check_armour = "energy"
 
 /obj/item/projectile/change/on_hit(var/atom/change)
 	wabbajack(change)

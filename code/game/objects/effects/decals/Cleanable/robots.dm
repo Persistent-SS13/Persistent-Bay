@@ -28,6 +28,14 @@
 			if (step_to(src, get_step(src, direction), 0))
 				break
 
+/obj/effect/decal/cleanable/blood/gibs/robot/pipe_eject(var/direction)
+	var/list/dirs
+	if(direction)
+		dirs = list( direction, turn(direction, -45), turn(direction, 45))
+	else
+		dirs = GLOB.alldirs.Copy()
+	src.streak(dirs)
+
 /obj/effect/decal/cleanable/blood/gibs/robot/limb
 	random_icon_states = list("gibarm", "gibleg")
 

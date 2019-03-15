@@ -201,6 +201,14 @@ var/global/list/image/splatter_cache=list()
 	overlays.Cut()
 	overlays += giblets
 
+/obj/effect/decal/cleanable/blood/gibs/pipe_eject(var/direction)
+	var/list/dirs
+	if(direction)
+		dirs = list( direction, turn(direction, -45), turn(direction, 45))
+	else
+		dirs = GLOB.alldirs.Copy()
+	src.streak(dirs)
+
 /obj/effect/decal/cleanable/blood/gibs/up
 	random_icon_states = list("gib1", "gib2", "gib3", "gib4", "gib5", "gib6","gibup1","gibup1","gibup1")
 

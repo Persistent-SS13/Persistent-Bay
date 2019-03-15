@@ -1,6 +1,13 @@
 /obj/item/weapon/computer_hardware/scanner/medical
 	name = "medical scanner module"
-	desc = "A medical scanner module. It can be used to scan patients and display medical information."
+	desc = "A medical scanner module. It can be used to scan patients and display medical information. Also scan DNA samples from organs or full-bodied samples."
+	var/datum/dna/stored_dna = null
+	var/list/connected_pods = list()
+
+/obj/item/weapon/computer_hardware/scanner/medical/New()
+	..()
+	ADD_SAVED_VAR(stored_dna)
+	ADD_SKIP_EMPTY(stored_dna)
 
 /obj/item/weapon/computer_hardware/scanner/medical/can_use_scanner(mob/user, mob/living/carbon/human/target, proximity = TRUE)
 	if(!..())

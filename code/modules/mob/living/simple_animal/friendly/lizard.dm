@@ -5,6 +5,7 @@
 	icon_state = "lizard"
 	icon_living = "lizard"
 	icon_dead = "lizard-dead"
+	icon_gib = "lizard-gib"
 	speak_emote = list("hisses")
 	health = 5
 	maxHealth = 5
@@ -17,3 +18,10 @@
 	mob_size = MOB_MINISCULE
 	possession_candidate = 1
 	meat_type = /obj/item/weapon/reagent_containers/food/snacks/meat
+	pass_flags = PASS_FLAG_TABLE
+	density = 0
+	minbodytemp = T0C - 50	//Below -50 Degrees Celcius
+	maxbodytemp = T0C + 50	//Above 50 Degrees Celcius
+	can_pull_size = ITEM_SIZE_TINY
+	can_pull_mobs = MOB_PULL_NONE
+	holder_type =/obj/item/weapon/holder/lizard

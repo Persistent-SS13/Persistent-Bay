@@ -55,7 +55,7 @@
 	category = "Containers"
 	materials = list(MATERIAL_GLASS = 0.1 SHEET)
 	build_type = list(GENERALFAB, MEDICALFAB, CONSUMERFAB)
-	
+
 /datum/design/item/genfab/container/sci
 	build_type = list(MEDICALFAB)
 /datum/design/item/genfab/container/catering
@@ -430,12 +430,18 @@
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
 	build_path = /obj/item/weapon/computer_hardware/battery_module/micro
 
-/datum/design/item/genfab/computer/adv/dna_scanner // tier 0
-	name = "DNA scanner port"
-	materials = list(MATERIAL_STEEL = 01 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
-	build_path = /obj/item/weapon/computer_hardware/dna_scanner
+/datum/design/item/genfab/computer/adv/logistic_processor
+	name = "Advanced Logistic Processor"
+	req_tech = list(TECH_DATA = 5, TECH_ENGINEERING = 4)
+	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 1000, MATERIAL_PHORON = 3000, MATERIAL_DIAMOND = 3000, MATERIAL_URANIUM = 3000)
+	build_path = /obj/item/weapon/computer_hardware/logistic_processor
 
-/datum/design/item/genfab/computer/adv/pda // tier 1
+// /datum/design/item/genfab/computer/adv/dna_scanner // tier 0
+// 	name = "DNA scanner port"
+// 	materials = list(MATERIAL_STEEL = 01 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
+// 	build_path = /obj/item/weapon/computer_hardware/dna_scanner
+
+/datum/design/item/genfab/computer/adv/pda
 	name = "PDA design"
 	desc = "Cheaper than whiny non-digital assistants."
 	req_tech = list(TECH_ENGINEERING = 2, TECH_POWER = 3)
@@ -625,7 +631,7 @@
 	build_path = /obj/item/weapon/pen/crayon/rainbow
 	materials = list(MATERIAL_PLASTIC = 0.2 SHEETS, MATERIAL_PHORON = 0.1 SHEETS)
 	research = "color_comms_2"
-	
+
 /datum/design/item/genfab/communication/clipboard
 	name = "clipboard"
 	build_path = /obj/item/weapon/clipboard

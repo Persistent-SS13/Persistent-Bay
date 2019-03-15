@@ -82,6 +82,14 @@
 		var/stat_silicon_subsystem/SSS = silicon_subsystems[subsystem_type]
 		stat(SSS)
 
+/mob/living/silicon/proc/get_subsystem_from_path(subsystem_type)
+	var/stat_silicon_subsystem/SSS = silicon_subsystems[subsystem_type]
+	if(!istype(SSS))
+		return 0
+	if(!istype(SSS.subsystem, subsystem_type))
+		return 0
+	return SSS.subsystem
+
 /stat_silicon_subsystem
 	parent_type = /atom/movable
 	simulated = 0
@@ -102,4 +110,7 @@
 	. = ..()
 
 /stat_silicon_subsystem/Click(var/mob/given = usr)
-	subsystem.ui_interact(given, state = ui_state)
+	if (istype(given))
+		subsystem.ui_interact(given, state = ui_state)
+	else
+		subsystem.ui_interact(usr, state = ui_state)

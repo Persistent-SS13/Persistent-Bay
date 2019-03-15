@@ -1,27 +1,29 @@
 /obj/structure
 	icon = 'icons/obj/structures.dmi'
 	w_class = ITEM_SIZE_NO_CONTAINER
-
-	var/breakable
+	obj_flags = OBJ_FLAG_DAMAGEABLE
+	max_health = 100
+	damthreshold_brute 	= 5
+	damthreshold_burn = 5
 	var/parts
-
 	var/list/connections = list("0", "0", "0", "0")
 	var/list/other_connections = list("0", "0", "0", "0")
 	var/list/blend_objects = newlist() // Objects which to blend with
 	var/list/noblend_objects = newlist() //Objects to avoid blending with (such as children of listed blend objects.
+
+/obj/structure/New()
+	..()
+	ADD_SAVED_VAR(anchored)
 
 /obj/structure/after_load()
 	update_connections(1)
 	..()
 
 /obj/structure/Destroy()
-	if(parts)
-		new parts(loc)
 	. = ..()
 
 /obj/structure/attack_hand(mob/user)
-	..()
-	if(breakable)
+	if(isdamageable())
 		if(HULK in user.mutations)
 			user.say(pick(";RAAAAAAAARGH!", ";HNNNNNNNNNGGGGGGH!", ";GWAAAAAAAARRRHHH!", "NNNNNNNNGGGGGGGGHH!", ";AAAAAAARRRGH!" ))
 			attack_generic(user,1,"smashes")
@@ -33,26 +35,6 @@
 
 /obj/structure/attack_tk()
 	return
-
-/obj/structure/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			qdel(src)
-			return
-		if(2.0)
-			if(prob(50))
-				qdel(src)
-				return
-		if(3.0)
-			return
-
-/obj/structure/attack_generic(var/mob/user, var/damage, var/attack_verb, var/wallbreaker)
-	if(!breakable || !damage || !wallbreaker)
-		return 0
-	visible_message("<span class='danger'>[user] [attack_verb] the [src] apart!</span>")
-	attack_animation(user)
-	spawn(1) qdel(src)
-	return 1
 
 /obj/structure/proc/can_visually_connect()
 	return anchored
@@ -113,3 +95,32 @@
 
 	connections = dirs_to_corner_states(dirs)
 	other_connections = dirs_to_corner_states(other_dirs)
+
+/obj/structure/proc/dismantle()
+	if(parts)
+		new parts(loc)
+
+/obj/structure/proc/default_deconstruction_screwdriver(var/obj/item/weapon/tool/screwdriver/S, var/mob/living/user, var/deconstruct_time = null)
+	if(!istype(S))
+		return FALSE
+	src.add_fingerprint(user)
+	user.visible_message(SPAN_NOTICE("You begin to unscrew \the [src]."), SPAN_NOTICE("[user] begins to unscrew \the [src]."))
+	playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
+	if(do_after(usr, deconstruct_time? deconstruct_time : 6 SECONDS, src) && src)
+		user.visible_message(SPAN_NOTICE("You finish unscrewing \the [src]."), SPAN_NOTICE("[user] finishes unscrewing \the [src]."))
+		dismantle()
+		return TRUE
+	return FALSE
+
+/obj/structure/proc/default_deconstruction_wrench(var/obj/item/weapon/tool/wrench/W, var/mob/living/user, var/deconstruct_time = null)
+	if(!istype(W))
+		return FALSE
+	src.add_fingerprint(user)
+	to_chat(usr, SPAN_NOTICE("You begin to dismantle \the [src]."))
+	playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
+	if(do_after(usr, deconstruct_time? deconstruct_time : 4 SECONDS, src) && src)
+		to_chat(usr, SPAN_NOTICE("You finish dismantling \the [src]."))
+		dismantle()
+		return TRUE
+	return FALSE
+

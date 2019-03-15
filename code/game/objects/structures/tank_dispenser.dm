@@ -6,6 +6,24 @@
 	density = 1
 	anchored = 1.0
 	w_class = ITEM_SIZE_NO_CONTAINER
+	mass = 50
+	max_health = 150
+	armor = list(
+		DAM_BLUNT  	= 40,
+		DAM_PIERCE 	= 40,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 10,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 30,
+		DAM_BOMB 	= 10,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+	damthreshold_brute 	= 5
+	damthreshold_burn	= 5
 	var/oxygentanks = 10
 	var/phorontanks = 10
 	var/list/oxytanks = list()	//sorry for the similar var names
@@ -86,7 +104,7 @@
 			anchored = 1
 		return
 	if(isWelder(I) && !anchored)
-		var/obj/item/weapon/weldingtool/WT = I
+		var/obj/item/weapon/tool/weldingtool/WT = I
 		if(WT.remove_fuel(0,user))
 			var/obj/item/stack/material/steel/new_item = new(usr.loc)
 			new_item.add_to_stacks(usr)

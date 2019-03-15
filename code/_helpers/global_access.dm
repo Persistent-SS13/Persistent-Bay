@@ -33,10 +33,12 @@
 			return global.Master;
 		if("OOClog")
 			return global.OOClog;
+		if("ORGAN_ENERGY_DAMAGES")
+			return global.ORGAN_ENERGY_DAMAGES;
+		if("ORGAN_PHYS_DAMAGES")
+			return global.ORGAN_PHYS_DAMAGES;
 		if("PDAs")
 			return global.PDAs;
-		if("SKILLS")
-			return global.SKILLS;
 		if("SSair")
 			return global.SSair;
 		if("SSairflow")
@@ -105,6 +107,8 @@
 			return global.SSsun;
 		if("SSsupply")
 			return global.SSsupply;
+		if("SStemperature")
+			return global.SStemperature;
 		if("SStgui")
 			return global.SStgui;
 		if("SStimer")
@@ -405,8 +409,6 @@
 			return global.dna_activity_bounds;
 		if("dna_genes")
 			return global.dna_genes;
-		if("doppler_arrays")
-			return global.doppler_arrays;
 		if("dreams")
 			return global.dreams;
 		if("dummy_lighting_corner")
@@ -481,8 +483,6 @@
 			return global.found_vars;
 		if("fruit_icon_cache")
 			return global.fruit_icon_cache;
-		if("fuel_injectors")
-			return global.fuel_injectors;
 		if("fusion_cores")
 			return global.fusion_cores;
 		if("fusion_reactions")
@@ -531,8 +531,6 @@
 			return global.hair_styles_male_list;
 		if("hazard_overlays")
 			return global.hazard_overlays;
-		if("hidden_skill_types")
-			return global.hidden_skill_types;
 		if("hivemind_bank")
 			return global.hivemind_bank;
 		if("holder_mob_icon_cache")
@@ -803,8 +801,6 @@
 			return global.random_useful_;
 		if("recentmessages")
 			return global.recentmessages;
-		if("refund_type")
-			return global.refund_type;
 		if("registered_macros_by_ckey_")
 			return global.registered_macros_by_ckey_;
 		if("religion_name")
@@ -877,8 +873,6 @@
 			return global.solars_list;
 		if("sortInstance")
 			return global.sortInstance;
-		if("sound_player")
-			return global.sound_player;
 		if("sounds_cache")
 			return global.sounds_cache;
 		if("spacevines_spawned")
@@ -1104,10 +1098,12 @@
 			global.Master=newval;
 		if("OOClog")
 			global.OOClog=newval;
+		if("ORGAN_ENERGY_DAMAGES")
+			global.ORGAN_ENERGY_DAMAGES=newval;
+		if("ORGAN_PHYS_DAMAGES")
+			global.ORGAN_PHYS_DAMAGES=newval;
 		if("PDAs")
 			global.PDAs=newval;
-		if("SKILLS")
-			global.SKILLS=newval;
 		if("SSair")
 			global.SSair=newval;
 		if("SSairflow")
@@ -1176,6 +1172,8 @@
 			global.SSsun=newval;
 		if("SSsupply")
 			global.SSsupply=newval;
+		if("SStemperature")
+			global.SStemperature=newval;
 		if("SStgui")
 			global.SStgui=newval;
 		if("SStimer")
@@ -1476,8 +1474,6 @@
 			global.dna_activity_bounds=newval;
 		if("dna_genes")
 			global.dna_genes=newval;
-		if("doppler_arrays")
-			global.doppler_arrays=newval;
 		if("dreams")
 			global.dreams=newval;
 		if("dummy_lighting_corner")
@@ -1552,8 +1548,6 @@
 			global.found_vars=newval;
 		if("fruit_icon_cache")
 			global.fruit_icon_cache=newval;
-		if("fuel_injectors")
-			global.fuel_injectors=newval;
 		if("fusion_cores")
 			global.fusion_cores=newval;
 		if("fusion_reactions")
@@ -1602,8 +1596,6 @@
 			global.hair_styles_male_list=newval;
 		if("hazard_overlays")
 			global.hazard_overlays=newval;
-		if("hidden_skill_types")
-			global.hidden_skill_types=newval;
 		if("hivemind_bank")
 			global.hivemind_bank=newval;
 		if("holder_mob_icon_cache")
@@ -1874,8 +1866,6 @@
 			global.random_useful_=newval;
 		if("recentmessages")
 			global.recentmessages=newval;
-		if("refund_type")
-			global.refund_type=newval;
 		if("registered_macros_by_ckey_")
 			global.registered_macros_by_ckey_=newval;
 		if("religion_name")
@@ -1948,8 +1938,6 @@
 			global.solars_list=newval;
 		if("sortInstance")
 			global.sortInstance=newval;
-		if("sound_player")
-			global.sound_player=newval;
 		if("sounds_cache")
 			global.sounds_cache=newval;
 		if("spacevines_spawned")
@@ -2158,8 +2146,9 @@
 	"LIGHTING_CORNER_DIAGONAL",
 	"Master",
 	"OOClog",
+	"ORGAN_ENERGY_DAMAGES",
+	"ORGAN_PHYS_DAMAGES",
 	"PDAs",
-	"SKILLS",
 	"SSair",
 	"SSairflow",
 	"SSalarm",
@@ -2194,6 +2183,7 @@
 	"SSskybox",
 	"SSsun",
 	"SSsupply",
+	"SStemperature",
 	"SStgui",
 	"SStimer",
 	"SStrade",
@@ -2344,7 +2334,6 @@
 	"diary",
 	"dna_activity_bounds",
 	"dna_genes",
-	"doppler_arrays",
 	"dreams",
 	"dummy_lighting_corner",
 	"economic_species_modifier",
@@ -2407,7 +2396,6 @@
 	"hair_styles_list",
 	"hair_styles_male_list",
 	"hazard_overlays",
-	"hidden_skill_types",
 	"hivemind_bank",
 	"holder_mob_icon_cache",
 	"host",
@@ -2543,7 +2531,6 @@
 	"random_maps",
 	"random_useful_",
 	"recentmessages",
-	"refund_type",
 	"registered_macros_by_ckey_",
 	"religion_name",
 	"renegades",
@@ -2580,7 +2567,6 @@
 	"solar_gen_rate",
 	"solars_list",
 	"sortInstance",
-	"sound_player",
 	"sounds_cache",
 	"spacevines_spawned",
 	"sparring_attack_cache",

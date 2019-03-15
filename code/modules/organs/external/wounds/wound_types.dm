@@ -5,7 +5,7 @@
 //because in it's stages list, "deep cut" = 15.
 /proc/get_wound_type(var/type, var/damage)
 	switch(type)
-		if(CUT)
+		if(DAM_CUT)
 			switch(damage)
 				if(70 to INFINITY)
 					return /datum/wound/cut/massive
@@ -19,7 +19,7 @@
 					return /datum/wound/cut/deep
 				if(0 to 15)
 					return /datum/wound/cut/small
-		if(PIERCE)
+		if(DAM_PIERCE)
 			switch(damage)
 				if(60 to INFINITY)
 					return /datum/wound/puncture/massive
@@ -31,9 +31,9 @@
 					return /datum/wound/puncture/flesh
 				if(0 to 15)
 					return /datum/wound/puncture/small
-		if(BRUISE)
+		if(DAM_BLUNT)
 			return /datum/wound/bruise
-		if(BURN, LASER)
+		if(DAM_BURN, DAM_LASER)
 			switch(damage)
 				if(50 to INFINITY)
 					return /datum/wound/burn/carbonised
@@ -50,7 +50,7 @@
 /** CUTS **/
 /datum/wound/cut
 	bleed_threshold = 5
-	damage_type = CUT
+	damage_type = DAM_CUT
 
 /datum/wound/cut/bandage()
 	..()
@@ -136,7 +136,7 @@ datum/wound/cut/massive
 /** PUNCTURES **/
 /datum/wound/puncture
 	bleed_threshold = 10
-	damage_type = PIERCE
+	damage_type = DAM_PIERCE
 
 /datum/wound/puncture/can_worsen(damage_type, damage)
 	return 0 //puncture wounds cannot be enlargened
@@ -202,11 +202,11 @@ datum/wound/puncture/massive
 	bleed_threshold = 20
 	max_bleeding_stage = 3 //only large bruise and above can bleed.
 	autoheal_cutoff = 30
-	damage_type = BRUISE
+	damage_type = DAM_BLUNT
 
 /** BURNS **/
 /datum/wound/burn
-	damage_type = BURN
+	damage_type = DAM_BURN
 	max_bleeding_stage = 0
 
 /datum/wound/burn/bleeding()
@@ -257,12 +257,12 @@ datum/wound/puncture/massive
 /datum/wound/lost_limb/New(var/obj/item/organ/external/lost_limb, var/losstype, var/clean)
 	if(!lost_limb)
 		return
-	var/damage_amt = lost_limb.max_damage
+	var/damage_amt = lost_limb.get_max_health()
 	if(clean) damage_amt /= 2
 
 	switch(losstype)
 		if(DROPLIMB_EDGE, DROPLIMB_BLUNT)
-			damage_type = CUT
+			damage_type = DAM_CUT
 			max_bleeding_stage = 3 //clotted stump and above can bleed.
 			stages = list(
 				"ripped stump" = damage_amt*1.3,
@@ -271,7 +271,7 @@ datum/wound/puncture/massive
 				"scarred stump" = 0
 				)
 		if(DROPLIMB_BURN)
-			damage_type = BURN
+			damage_type = DAM_BURN
 			stages = list(
 				"ripped charred stump" = damage_amt*1.3,
 				"charred stump" = damage_amt,

@@ -10,15 +10,15 @@ Pipelines + Other Objects -> Pipe network
 
 */
 /obj/machinery/atmospherics
-	anchored = 1
-	idle_power_usage = 0
-	active_power_usage = 0
-	power_channel = ENVIRON
+	plane 				= ABOVE_TURF_PLANE
+	layer				= EXPOSED_PIPE_LAYER
+	anchored 			= TRUE
+	idle_power_usage 	= 0
+	active_power_usage 	= 0
+	power_channel 		= ENVIRON
+	mass				= 10.0 //kg
 	var/nodealert = 0
 	var/power_rating //the maximum amount of power the machine can use to do work, affects how powerful the machine is, in Watts
-
-	plane = ABOVE_TURF_PLANE
-	layer = EXPOSED_PIPE_LAYER
 
 	var/connect_types = CONNECT_TYPE_REGULAR
 	var/icon_connect_type = "" //"-supply" or "-scrubbers"
@@ -33,6 +33,8 @@ Pipelines + Other Objects -> Pipe network
 	var/atmos_initalized = FALSE
 
 /obj/machinery/atmospherics/New()
+	setup_initialize_directions()
+
 	if(!icon_manager)
 		icon_manager = new()
 
@@ -44,8 +46,15 @@ Pipelines + Other Objects -> Pipe network
 		pipe_color = null
 	..()
 
+/obj/machinery/atmospherics/after_load()
+	. = ..()
+	setup_initialize_directions()
+
 /obj/machinery/atmospherics/proc/atmos_init()
 	atmos_initalized = TRUE
+
+/obj/machinery/atmospherics/proc/setup_initialize_directions()
+	return
 
 /obj/machinery/atmospherics/hide(var/do_hide)
 	if(do_hide && level == 1)
@@ -59,7 +68,7 @@ Pipelines + Other Objects -> Pipe network
 		return
 	if(istype(A, /obj/item/device/analyzer))
 		return
-	..()
+	return ..()
 
 /obj/machinery/atmospherics/proc/add_underlay(var/turf/T, var/obj/machinery/atmospherics/node, var/direction, var/icon_connect_type)
 	if(node)

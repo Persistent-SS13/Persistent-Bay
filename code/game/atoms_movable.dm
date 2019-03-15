@@ -20,6 +20,7 @@
 	var/moved_recently = 0
 	var/mob/pulledby = null
 	var/item_state = null // Used to specify the item state for the on-mob overlays.
+	var/mass = 1.5
 
 /atom/movable/Destroy()
 	. = ..()
@@ -225,6 +226,9 @@
 	src.throw_source = null
 	fall()
 
+/atom/movable/proc/get_mass()
+	return mass
+
 //Overlays
 /atom/movable/overlay
 	var/atom/master = null
@@ -344,3 +348,13 @@
 #undef worldWidth
 #undef worldLength
 #undef worldHeight
+
+//Called by a weapon's "afterattack" proc when an attack has succeeded. Returns blocked damage
+/atom/movable/proc/hit_with_weapon(obj/item/I, mob/living/user, var/effective_force)
+	visible_message(SPAN_DANGER("[src] has been [I.attack_verb.len? pick(I.attack_verb) : "attacked"] with [I.name] by [user]!"))
+	return 0
+
+// called when movable is expelled from a disposal pipe or outlet
+// by default does nothing, override for special behaviour
+/atom/movable/proc/pipe_eject(var/direction)
+	return

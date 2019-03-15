@@ -1,6 +1,6 @@
 /atom
 	var/level = 2
-	var/atom_flags
+	var/atom_flags = ATOM_FLAG_NO_TEMP_CHANGE
 	var/list/blood_DNA
 	var/was_bloodied
 	var/blood_color
@@ -10,14 +10,7 @@
 	var/germ_level = GERM_LEVEL_AMBIENT // The higher the germ level, the more germ on the atom.
 	var/simulated = 1 //filter for actions - used by lighting overlays
 	var/fluorescent // Shows up under a UV light.
-
-	///Chemistry.
 	var/datum/reagents/reagents = null
-
-	//var/chem_is_open_container = 0
-	// replaced by OPENCONTAINER flags and atom/proc/is_open_container()
-	///Chemistry.
-
 	var/list/climbers = list()
 
 /atom/New(loc, ...)
@@ -118,16 +111,9 @@
 /atom/proc/HasProximity(atom/movable/AM as mob|obj)
 	return
 
-/atom/proc/emp_act(var/severity)
-	return
-
 /atom/proc/set_density(var/new_density)
 	if(density != new_density)
 		density = !!new_density
-
-/atom/proc/bullet_act(obj/item/projectile/P, def_zone)
-	P.on_hit(src, 0, def_zone)
-	. = 0
 
 /atom/proc/in_contents_of(container)//can take class or object instance as argument
 	if(ispath(container))
@@ -279,6 +265,13 @@ its easier to just keep the beam vertical.
 
 /atom/proc/ex_act()
 	return
+
+/atom/proc/emp_act(var/severity)
+	return
+
+/atom/proc/bullet_act(obj/item/projectile/P, def_zone)
+	P.on_hit(src, 0, def_zone)
+	. = 0
 
 /atom/proc/emag_act(var/remaining_charges, var/mob/user, var/emag_source)
 	return NO_EMAG_ACT
@@ -524,7 +517,7 @@ its easier to just keep the beam vertical.
 
 			if(affecting)
 				to_chat(M, "<span class='danger'>You land heavily on your [affecting.name]!</span>")
-				affecting.take_damage(damage, 0)
+				affecting.take_damage(damage, DAM_BLUNT)
 				if(affecting.parent)
 					affecting.parent.add_autopsy_data("Misadventure", damage)
 			else
@@ -544,3 +537,10 @@ its easier to just keep the beam vertical.
 
 /atom/proc/get_color()
 	return color
+
+// Returns an amount of power drawn from the object (-1 if it's not viable).
+// If drain_check is set it will not actually drain power, just return a value.
+// If surge is set, it will destroy/damage the recipient and not return any power.
+// Not sure where to define this, so it can sit here for the rest of time.
+/atom/proc/drain_power(var/drain_check,var/surge, var/amount = 0)
+	return -1

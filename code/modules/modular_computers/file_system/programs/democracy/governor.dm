@@ -162,7 +162,7 @@
 
 		if("nominate_judge")
 			var/attempt = input(usr, "Enter the full name of your nominee", "Nominee Name", "")
-			var/datum/computer_file/crew_record/record = Retrieve_Record(attempt)
+			var/datum/computer_file/report/crew_record/record = Retrieve_Record(attempt)
 			if(record)
 				if(connected_faction.is_governor(attempt) || connected_faction.is_councillor(attempt) || connected_faction.is_judge(attempt))
 					to_chat(usr, "You cannot nominate someone who is either a govenor, a councillor or already a judge.")

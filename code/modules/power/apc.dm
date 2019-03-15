@@ -597,7 +597,7 @@
 		to_chat(user, "<span class='warning'>You cannot put the board inside, the frame is damaged.</span>")
 		return
 	else if(isWelder(W) && opened && has_electronics==0 && !terminal)
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if (WT.get_fuel() < 3)
 			to_chat(user, "<span class='warning'>You need more welding fuel to complete this task.</span>")
 			return
@@ -1201,16 +1201,19 @@ obj/machinery/power/apc/proc/autoset(var/cur_state, var/on)
 		terminal.master = null
 		terminal = null
 
-/obj/machinery/power/apc/proc/set_broken()
-	// Aesthetically much better!
-	src.visible_message("<span class='notice'>[src]'s screen flickers with warnings briefly!</span>")
-	power_alarm.triggerAlarm(loc, src)
-	spawn(rand(2,5))
-		src.visible_message("<span class='notice'>[src]'s screen suddenly explodes in rain of sparks and small debris!</span>")
-		stat |= BROKEN
-		operating = 0
-		update_icon()
-		update()
+/obj/machinery/power/apc/set_broken(var/state)
+	if(state)
+		// Aesthetically much better!
+		src.visible_message("<span class='notice'>[src]'s screen flickers with warnings briefly!</span>")
+		power_alarm.triggerAlarm(loc, src)
+		spawn(rand(2,5))
+			src.visible_message("<span class='notice'>[src]'s screen suddenly explodes in rain of sparks and small debris!</span>")
+			..(state)
+			operating = 0
+			update_icon()
+			update()
+	else
+		..(state)
 
 /obj/machinery/power/apc/proc/reboot()
 	//reset various counters so that process() will start fresh
@@ -1241,7 +1244,7 @@ obj/machinery/power/apc/proc/autoset(var/cur_state, var/on)
 		spawn(0)
 			for(var/obj/machinery/light/L in area)
 				if(prob(chance))
-					L.on = 1
+					L.turn_on()
 					L.broken()
 				sleep(1)
 

@@ -113,7 +113,7 @@
 
 	var/sheets = 0			//How many sheets of material are loaded in the generator
 	var/sheet_left = 0		//How much is left of the current sheet
-	var/temperature = 0		//The current temperature
+	//var/temperature = 0		//The current temperature
 	var/overheating = 0		//if this gets high enough the generator explodes
 	var/max_overheat = 150
 
@@ -248,7 +248,7 @@
 	var/phoron = (sheets+sheet_left)*20
 	var/datum/gas_mixture/environment = loc.return_air()
 	if (environment)
-		environment.adjust_gas_temp("phoron", phoron/10, temperature + T0C)
+		environment.adjust_gas_temp(GAS_PHORON, phoron/10, temperature + T0C)
 
 	sheets = 0
 	sheet_left = 0

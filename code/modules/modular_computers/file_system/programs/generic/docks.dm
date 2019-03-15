@@ -8,8 +8,8 @@
 	program_menu_icon = "triangle-2-e-w"
 	extended_desc = "A management tool that lets you see the status of the docking ports."
 	size = 10
-	available_on_ntnet = 1
-	requires_ntnet = 1
+	available_on_ntnet = TRUE
+	requires_ntnet = TRUE
 
 /datum/nano_module/docking
 	name = "Docking Control program"

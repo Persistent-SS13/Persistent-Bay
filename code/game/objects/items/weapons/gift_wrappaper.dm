@@ -35,8 +35,8 @@
 /obj/effect/spresent/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	..()
 
-	if(!isWirecutter(W))
-		to_chat(user, "<span class='warning'>I need wirecutters for that.</span>")
+	if(!isWirecutter(W) || isScissors(W))
+		to_chat(user, "<span class='warning'>I need wirecutters or scissors for that.</span>")
 		return
 
 	to_chat(user, "<span class='notice'>You cut open the present.</span>")

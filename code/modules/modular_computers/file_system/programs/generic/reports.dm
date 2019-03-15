@@ -7,8 +7,8 @@
 	nanomodule_path = /datum/nano_module/program/reports
 	extended_desc = "A general paperwork viewing and editing utility."
 	size = 6
-	available_on_ntnet = 1
-	requires_ntnet = 0
+	available_on_ntnet = TRUE
+	requires_ntnet = FALSE
 	usage_flags = PROGRAM_ALL
 
 /datum/nano_module/program/reports

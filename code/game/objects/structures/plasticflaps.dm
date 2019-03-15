@@ -8,7 +8,8 @@
 	plane = ABOVE_HUMAN_PLANE
 	layer = ABOVE_HUMAN_LAYER
 	explosion_resistance = 5
-	var/health = 10
+	mass = 5
+	max_health = 60
 	var/list/mobs_can_pass = list(
 		/mob/living/bot,
 		/mob/living/carbon/slime,
@@ -52,21 +53,7 @@
 /obj/structure/plasticflaps/mining //A specific type for mining that doesn't allow airflow because of them damn crates
 	name = "airtight plastic flaps"
 	desc = "Heavy duty, airtight, plastic flaps."
-
-	New() //set the turf below the flaps to block air
-		var/turf/T = get_turf(loc)
-		if(T)
-			T.blocks_air = 1
-		..()
-
-	Destroy() //lazy hack to set the turf to allow air to pass if it's a simulated floor
-		var/turf/T = get_turf(loc)
-		if(T)
-			if(istype(T, /turf/simulated/floor))
-				T.blocks_air = 0
-		..()
-
-
+	atmos_canpass = CANPASS_NEVER
 
 
 /obj/structure/plasticflaps/attackby(obj/item/W as obj, mob/user as mob)
@@ -79,7 +66,7 @@
 			return
 
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(WT.remove_fuel(0,user))
 			var/obj/item/stack/material/plastic/new_item = new(usr.loc)
 			new_item.add_to_stacks(usr)

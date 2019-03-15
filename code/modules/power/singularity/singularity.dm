@@ -414,8 +414,8 @@
 	for(var/mob/living/M in view(toxrange, src.loc))
 		if(M.status_flags & GODMODE)
 			continue
-		toxdamage = (toxdamage - (toxdamage*M.getarmor(null, "rad")))
-		M.apply_effect(toxdamage, TOX)
+		toxdamage = (toxdamage - (toxdamage*M.getarmor(null, DAM_RADS)))
+		M.apply_effect(toxdamage, DAM_BIO)
 	return
 
 

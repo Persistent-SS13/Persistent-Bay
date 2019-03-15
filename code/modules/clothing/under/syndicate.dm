@@ -5,7 +5,19 @@
 	item_state = "bl_suit"
 	worn_state = "syndicate"
 	has_sensor = 0
-	armor = list(melee = 10, bullet = 10, laser = 10,energy = 0, bomb = 0, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 10,
+		DAM_BULLET 	= 10,
+		DAM_LASER 	= 10,
+		DAM_ENERGY 	= 2,
+		DAM_BURN 	= 2,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 	siemens_coefficient = 0.9
 
 //only keeping because of arcade reward
@@ -15,7 +27,19 @@
 	icon_state = "tactifool"
 	item_state = "bl_suit"
 	worn_state = "tactifool"
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 1,
+		DAM_PIERCE 	= 1,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 2,
+		DAM_BURN 	= 2,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 	siemens_coefficient = 1
 	has_sensor = SUIT_HAS_SENSORS
 

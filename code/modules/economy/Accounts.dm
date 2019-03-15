@@ -120,7 +120,7 @@
 		R.info += "<i>Authorised NT officer overseeing creation:</i> [source_db.held_card.registered_name]<br>"
 
 		//stamp the paper
-		var/image/stampoverlay = image('icons/obj/bureaucracy.dmi')
+		var/image/stampoverlay = image('icons/obj/items/paper.dmi')
 		stampoverlay.icon_state = "paper_stamp-cent"
 		if(!R.stamped)
 			R.stamped = new
@@ -185,16 +185,16 @@
 	for(var/datum/money_account/D in all_money_accounts)
 		if(D.account_number == account_number)
 			return D
-	var/datum/computer_file/crew_record/L = Retrieve_Record(account_number, 2)
+	var/datum/computer_file/report/crew_record/L = Retrieve_Record(account_number, 2)
 	if(L)
 		return L.linked_account
 /proc/get_account_record(var/real_name)
-	for(var/datum/computer_file/crew_record/L in GLOB.all_crew_records)
+	for(var/datum/computer_file/report/crew_record/L in GLOB.all_crew_records)
 		if(L.get_name() == real_name)
 			if(!L.linked_account)
 				message_admins("NULL ACCOUNT FOR [real_name]")
 				return null
 			return L.linked_account
-	var/datum/computer_file/crew_record/L = Retrieve_Record(real_name)
+	var/datum/computer_file/report/crew_record/L = Retrieve_Record(real_name)
 	if(L)
 		return L.linked_account

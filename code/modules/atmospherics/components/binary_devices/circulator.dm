@@ -1,14 +1,14 @@
 //node1, air1, network1 correspond to input
 //node2, air2, network2 correspond to output
 
-#define ADIABATIC_EXPONENT 0.667 //Actually adiabatic exponent - 1.
-
 /obj/machinery/atmospherics/binary/circulator
-	name = "circulator"
-	desc = "A gas circulator turbine and heat exchanger."
-	icon = 'icons/obj/pipes.dmi'
-	icon_state = "circ-off"
-	anchored = 0
+	name 		= "circulator"
+	desc 		= "A gas circulator turbine and heat exchanger."
+	icon 		= 'icons/obj/pipes.dmi'
+	icon_state 	= "circ-off"
+	anchored 	= FALSE
+	density 	= TRUE
+	mass		= 50.0 //kg
 
 	var/kinetic_efficiency = 0.04 //combined kinetic and kinetic-to-electric efficiency
 	var/volume_ratio = 0.2
@@ -21,8 +21,6 @@
 	var/last_stored_energy_transferred = 0
 	var/volume_capacity_used = 0
 	var/stored_energy = 0
-
-	density = 1
 
 /obj/machinery/atmospherics/binary/circulator/New()
 	..()

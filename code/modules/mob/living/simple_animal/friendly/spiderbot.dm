@@ -1,5 +1,4 @@
 /mob/living/simple_animal/spiderbot
-
 	min_gas = null
 	max_gas = null
 	minbodytemp = 0
@@ -10,7 +9,7 @@
 	var/mob/living/silicon/ai/connected_ai = null
 	var/obj/item/weapon/cell/cell = null
 	var/obj/machinery/camera/camera = null
-	var/obj/item/device/mmi/mmi = null
+	var/obj/item/device/lmi/lmi = null
 	var/list/req_access = list(core_access_science_programs) //Access needed to pop out the brain.
 	var/positronic
 
@@ -23,12 +22,13 @@
 
 	wander = 0
 
-	health = 10
-	maxHealth = 10
+	health = 75
+	maxHealth = 75
+	resistance = 1
 
 	attacktext = "shocked"
-	melee_damage_lower = 1
-	melee_damage_upper = 3
+	melee_damage_lower = 5
+	melee_damage_upper = 10
 
 	response_help  = "pets"
 	response_disarm = "shoos"
@@ -39,23 +39,36 @@
 	speed = -1                    //Spiderbots gotta go fast.
 	pass_flags = PASS_FLAG_TABLE
 	speak_emote = list("beeps","clicks","chirps")
+	density = 0
+	holder_type = /obj/item/weapon/holder
 
 /mob/living/simple_animal/spiderbot/New()
+	radio = new /obj/item/device/radio/borg(src)
+	camera = new /obj/machinery/camera(src)
+	camera.c_tag = "spiderbot-[real_name]"
+	camera.replace_networks(list("SS13"))
 	..()
 	add_language(LANGUAGE_GALCOM)
 	default_language = all_languages[LANGUAGE_GALCOM]
 	verbs |= /mob/living/proc/ventcrawl
 	verbs |= /mob/living/proc/hide
 
+/mob/living/simple_animal/spiderbot/after_load()
+	..()
+
+/mob/living/simple_animal/spiderbot/Destroy()
+	eject_brain()
+	..()
+
 /mob/living/simple_animal/spiderbot/attackby(var/obj/item/O as obj, var/mob/user as mob)
 
-	if(istype(O, /obj/item/device/mmi))
-		var/obj/item/device/mmi/B = O
-		if(src.mmi)
+	if(istype(O, /obj/item/device/lmi))
+		var/obj/item/device/lmi/B = O
+		if(src.lmi)
 			to_chat(user, "<span class='warning'>There's already a brain in [src]!</span>")
 			return
 		if(!B.brainmob)
-			to_chat(user, "<span class='warning'>Sticking an empty MMI into the frame would sort of defeat the purpose.</span>")
+			to_chat(user, "<span class='warning'>Sticking an empty lmi into the frame would sort of defeat the purpose.</span>")
 			return
 		if(!B.brainmob.key)
 			var/ghost_can_reenter = 0
@@ -77,12 +90,12 @@
 			return
 
 		to_chat(user, "<span class='notice'>You install \the [O] in \the [src]!</span>")
-		if(istype(O, /obj/item/device/mmi/digital))
-			positronic = 1
-			add_language("Robot Talk")
+		//if(istype(O, /obj/item/device/lmi/digital))
+		//	positronic = 1
+		//	add_language("Robot Talk")
 
 		user.drop_item()
-		src.mmi = O
+		src.lmi = O
 		src.transfer_personality(O)
 
 		O.loc = src
@@ -90,7 +103,7 @@
 		return 1
 
 	if(isWelder(O))
-		var/obj/item/weapon/weldingtool/WT = O
+		var/obj/item/weapon/tool/weldingtool/WT = O
 		if (WT.remove_fuel(0))
 			if(health < maxHealth)
 				health += pick(1,1,1,2,2,3)
@@ -104,7 +117,7 @@
 			to_chat(user, "<span class='danger'>You need more welding fuel for this task!</span>")
 			return
 	else if(istype(O, /obj/item/weapon/card/id)||istype(O, /obj/item/device/pda))
-		if (!mmi)
+		if (!lmi)
 			to_chat(user, "<span class='danger'>There's no reason to swipe your ID - \the [src] has no brain to remove.</span>")
 			return 0
 
@@ -140,7 +153,7 @@
 		spawn(200)	to_chat(src, "<span class='danger'>Internal heat sensors are spiking! Something is badly wrong with your cell!</span>")
 		spawn(300)	src.explode()
 
-/mob/living/simple_animal/spiderbot/proc/transfer_personality(var/obj/item/device/mmi/M as obj)
+/mob/living/simple_animal/spiderbot/proc/transfer_personality(var/obj/item/device/lmi/M as obj)
 
 		src.mind = M.brainmob.mind
 		src.mind.key = M.brainmob.key
@@ -154,7 +167,7 @@
 	death()
 
 /mob/living/simple_animal/spiderbot/update_icon()
-	if(mmi)
+	if(lmi)
 		if(positronic)
 			icon_state = "spiderbot-chassis-posi"
 			icon_living = "spiderbot-chassis-posi"
@@ -166,34 +179,22 @@
 		icon_living = "spiderbot-chassis"
 
 /mob/living/simple_animal/spiderbot/proc/eject_brain()
-	if(mmi)
+	if(lmi)
 		var/turf/T = get_turf(loc)
 		if(T)
-			mmi.loc = T
-		if(mind)	mind.transfer_to(mmi.brainmob)
-		mmi = null
+			lmi.loc = T
+		if(mind)	mind.transfer_to(lmi.brainmob)
+		lmi = null
 		real_name = initial(real_name)
 		name = real_name
 		update_icon()
 	remove_language("Robot Talk")
 	positronic = null
 
-/mob/living/simple_animal/spiderbot/Destroy()
-	eject_brain()
-	..()
 
-/mob/living/simple_animal/spiderbot/New()
-
-	radio = new /obj/item/device/radio/borg(src)
-	camera = new /obj/machinery/camera(src)
-	camera.c_tag = "spiderbot-[real_name]"
-	camera.replace_networks(list("SS13"))
-
-	..()
 
 /mob/living/simple_animal/spiderbot/death()
 	switch_from_living_to_dead_mob_list()
-
 	if(camera)
 		camera.status = 0
 

@@ -55,10 +55,18 @@
 			src.name = ("body bag")
 	//..() //Doesn't need to run the parent. Since when can fucking bodybags be welded shut? -Agouri
 		return
-	else if(isWirecutter(W))
+	else if(isWirecutter(W) || isScissors(W))
 		src.name = "body bag"
 		src.overlays.Cut()
 		to_chat(user, "You cut the tag off \the [src].")
+		return
+	else if(istype(W, /obj/item/device/healthanalyzer/) && !opened)
+		if(contains_body)
+			var/obj/item/device/healthanalyzer/HA = W
+			for(var/mob/living/L in contents)
+				HA.afterattack(L, user, TRUE)
+		else
+			to_chat(user, "\The [W] reports that \the [src] is empty.")
 		return
 
 /obj/structure/closet/body_bag/store_mobs(var/stored_units)

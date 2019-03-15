@@ -16,7 +16,6 @@
 	R.add_fingerprint(user)
 	qdel(src)
 
-
 /obj/item/inflatable/wall
 	name = "inflatable wall"
 	desc = "A folded membrane which rapidly expands into a large cubical shape on activation."
@@ -37,13 +36,13 @@
 	opacity = 0
 	icon = 'icons/obj/inflatable.dmi'
 	icon_state = "wall"
-
 	var/undeploy_path = null
-	var/health = 50.0
 
 /obj/structure/inflatable/wall
 	name = "inflatable wall"
 	undeploy_path = /obj/item/inflatable/wall
+	max_health = 80
+	mass = 5
 
 /obj/structure/inflatable/New(location)
 	..()
@@ -86,7 +85,7 @@
 /obj/structure/inflatable/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(!istype(W) || istype(W, /obj/item/weapon/inflatable_dispenser)) return
 
-	if((W.damtype == BRUTE || W.damtype == BURN) && W.can_puncture())
+	if((IsDamageTypeBrute(W.damtype) || IsDamageTypeBurn(W.damtype)) && W.can_puncture())
 		..()
 		if(hit(W.force))
 			visible_message("<span class='danger'>[user] pierces [src] with [W]!</span>")
@@ -149,6 +148,8 @@
 
 	icon_state = "door_closed"
 	undeploy_path = /obj/item/inflatable/door
+	max_health = 70
+	mass = 5
 
 	var/state = 0 //closed, 1 == open
 	var/isSwitchingStates = 0

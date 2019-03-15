@@ -25,8 +25,7 @@
 
 	load_item_visible = TRUE
 	buckle_pixel_shift = "x=0;y=5"
-	health = 100
-	maxhealth = 100
+	max_health = 100
 
 	animate_movement = SYNC_STEPS
 
@@ -34,8 +33,20 @@
 	special_movement = TRUE
 
 	locked = TRUE
-	fire_dam_coeff = 0.6
-	brute_dam_coeff = 0.5
+	armor = list(
+		DAM_BLUNT  	= 50,
+		DAM_PIERCE 	= 40,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 50,
+		DAM_ENERGY 	= 60,
+		DAM_BURN 	= 60,
+		DAM_BOMB 	= 60,
+		DAM_EMP 	= 50,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue) 	//Resistance for various types of damages
 	var/protection_percent = 60
 
 	var/min_delay =    		MIN_MINDELAY	//the lowest delay; fastest speed of vehicle
@@ -108,18 +119,18 @@
 
 		if(!req_access_personal_list.len)
 			req_access_personal_list += ID.registered_name
-			to_chat(user, "You add your name to \the [src]'s database, locking it to your control.")
+			to_chat(user, SPAN_NOTICE("You add your name to \the [src]'s database, locking it to your control."))
 			return
 		else if(ID.registered_name in req_access_personal_list)
-			to_chat(user, "You [locked ? "unlock" : "lock"] \the [src]'s maintenance panel.")
+			to_chat(user, SPAN_NOTICE("You [locked ? "unlock" : "lock"] \the [src]'s maintenance panel."))
 			locked = !locked
 			return
 		else if(open)
 			req_access_personal_list += ID.registered_name
-			to_chat(user, "You add your name to \the [src]'s database, allowing you to control it.")
+			to_chat(user, SPAN_NOTICE("You add your name to \the [src]'s database, allowing you to control it."))
 			return
 		else
-			to_chat(user, "<span class='warning'>Open the panel of \the [src] to register an additional name.</span>")
+			to_chat(user, SPAN_WARNING("Open the panel of \the [src] to register an additional name."))
 			return
 
 	if(open)
@@ -134,7 +145,7 @@
 					if(val >= MIN_ACCELERATION && val <= MAX_ACCELERATION)
 						acceleration = val
 					else
-						to_chat(user, "Please enter a value between [MIN_ACCELERATION] and [MAX_ACCELERATION].")
+						to_chat(user, SPAN_NOTICE("Please enter a value between [MIN_ACCELERATION] and [MAX_ACCELERATION]."))
 						return
 
 				if("Traction")
@@ -142,7 +153,7 @@
 					if(val >= MIN_TRACTION && val <= MAX_TRACTION)
 						traction = val
 					else
-						to_chat(user, "Please enter a value between [MIN_TRACTION] and [MAX_TRACTION].")
+						to_chat(user, SPAN_NOTICE("Please enter a value between [MIN_TRACTION] and [MAX_TRACTION]."))
 						return
 
 				if("Max Speed")
@@ -150,10 +161,10 @@
 					if(val >= MIN_MINDELAY && val <= MAX_MINDELAY)
 						min_delay = val
 					else
-						to_chat(user, "Please enter a value between [MIN_MINDELAY] and [MAX_MINDELAY].")
+						to_chat(user, SPAN_NOTICE("Please enter a value between [MIN_MINDELAY] and [MAX_MINDELAY]."))
 						return
 
-			to_chat(user, "You set the [choice] to [val].")
+			to_chat(user, SPAN_NOTICE("You set the [choice] to [val]."))
 			return
 
 		if(istype(W, /obj/item/device/multitool))
@@ -162,25 +173,25 @@
 			return
 
 		if(istype(W, /obj/item/stack/cable_coil))
-			to_chat(user, "You short the blackbox on \the [src], clearing its ID memory.")
+			to_chat(user, SPAN_NOTICE("You short the blackbox on \the [src], clearing its ID memory."))
 			req_access_personal_list.Cut()
 			return
 
 	if(istype(W,/obj/item/weapon/reagent_containers) && W.is_open_container())
-		to_chat(user, "You refill \the [src]'s fuel tank.")
+		to_chat(user, SPAN_NOTICE("You refill \the [src]'s fuel tank."))
 		return
 
 	return ..()
 
 /obj/vehicle/bike/MouseDrop_T(var/atom/movable/C, var/mob/user)
 	if(!load(C))
-		to_chat(user, "<span class='warning'>You were unable to load \the [C] onto \the [src].</span>")
+		to_chat(user, SPAN_WARNING("You were unable to load \the [C] onto \the [src]."))
 		return
 
 /obj/vehicle/bike/attack_hand(var/mob/user)
 	if(user == load)
 		unbuckle_mob(user)
-		to_chat(user, "You unbuckle yourself from \the [src]")
+		to_chat(user, SPAN_NOTICE("You unbuckle yourself from \the [src]"))
 
 /obj/vehicle/bike/relaymove(mob/user, direction)
 	if(user != load || !on || user.incapacitated())
@@ -275,10 +286,10 @@
 		if(istype(Obstacle, /obj/structure/window))
 			var/obj/structure/window/win = Obstacle
 			if(!win.reinf)
-				win.shatter()
+				win.kill()
 				if(istype(load, /mob/living/carbon/human))
 					var/mob/living/carbon/human/H = load
-					H.apply_damage(rand(1, 3), BRUTE)
+					H.apply_damage(rand(1, 3))
 				return
 
 		playsound(src.loc, 'sound/effects/grillehit.ogg', 80, 0, 10)
@@ -295,11 +306,11 @@
 			H.apply_effects(5, 3)
 			for(var/i = 0; i < 2; i++)
 				var/def_zone = ran_zone()
-				H.apply_damage(1.5 / (move_delay ? move_delay : 0.1), BRUTE, def_zone, H.run_armor_check(def_zone, "melee"))
+				H.apply_damage(1.5 / (move_delay ? move_delay : 0.1), DAM_BLUNT, def_zone, H.run_armor_check(def_zone, DAM_BLUNT))
 
 			var/turf/turf = get_step(H, pick(throw_dirs))
 
-			visible_message("<span class='danger'>[Obstacle] is hit by \the [src]!</span>")
+			visible_message(SPAN_DANGER("[Obstacle] is hit by \the [src]!"))
 
 			H.throw_at(turf, 3)
 
@@ -312,9 +323,9 @@
 	H.apply_effects(5, 3)
 	for(var/i = 0; i < 2; i++)
 		var/def_zone = ran_zone()
-		H.apply_damage(1 / (move_delay ? move_delay : 0.1), BRUTE, def_zone, H.run_armor_check(def_zone, "melee"))
+		H.apply_damage(1 / (move_delay ? move_delay : 0.1), DAM_BLUNT, def_zone, H.run_armor_check(def_zone, DAM_BLUNT))
 
-	visible_message("<span class='danger'>[H] is run over by \the [src]!</span>")
+	visible_message(SPAN_DANGER("[H] is run over by \the [src]!"))
 
 	if(prob(KNOCK_OFF_PROB)) // Running over someone has a chance to throw you off your bike.
 		unbuckle_mob(buckled_mob)
@@ -377,7 +388,7 @@
 /obj/vehicle/bike/examine(mob/user)
 	. = ..()
 	update_fuel()
-	to_chat(user, "The fuel gauge shows it has [fuel_points] unit(s) of fuel left.")
+	to_chat(user, SPAN_NOTICE("The fuel gauge shows it has [fuel_points] unit(s) of fuel left."))
 
 /obj/vehicle/bike/bullet_act(var/obj/item/projectile/Proj)
 	if(buckled_mob && prob(protection_percent))
@@ -417,7 +428,7 @@
 /obj/vehicle/bike/proc/toggle_engine(var/mob/living/user)
 
 	if(!allowed(user))
-		to_chat(usr, "<span class='warning'>\The [src] doesn't respond to your ID.</span>")
+		to_chat(usr, SPAN_WARNING("\The [src] doesn't respond to your ID."))
 		return
 
 	if(!on)
@@ -428,11 +439,11 @@
 /obj/vehicle/bike/proc/toggle_cruise(var/mob/living/user)
 
 	if(!allowed(user))
-		to_chat(usr, "<span class='warning'>\The [src] doesn't respond to your ID.</span>")
+		to_chat(usr, SPAN_WARNING("\The [src] doesn't respond to your ID."))
 		return
 
 	cruise = !cruise
-	to_chat(usr, "<span class='warning'>You toggle \the [src]'s cruise control [cruise ? "on" : "off"].</span>")
+	to_chat(usr, SPAN_WARNING("You toggle \the [src]'s cruise control [cruise ? "on" : "off"]."))
 
 /obj/vehicle/bike/verb/kickstand()
 	set name = "Toggle Kickstand"
@@ -442,7 +453,7 @@
 	if(usr.incapacitated()) return
 
 	if(!allowed(usr))
-		to_chat(usr, "<span class='warning'>\The [src] doesn't respond to your ID.</span>")
+		to_chat(usr, SPAN_WARNING("\The [src] doesn't respond to your ID."))
 		return
 
 	usr.visible_message("\The [usr] puts [kickstand ? "up" : "down"] \the [src]'s kickstand.")

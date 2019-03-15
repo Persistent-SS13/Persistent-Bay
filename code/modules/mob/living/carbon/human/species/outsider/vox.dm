@@ -9,7 +9,7 @@
 	num_alternate_languages = 1
 	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick,  /datum/unarmed_attack/claws/strong, /datum/unarmed_attack/bite/strong)
 	rarity_value = 4
-	blurb = "The Vox are the broken remnants of a once-proud race, now reduced to little more than \
+	description = "The Vox are the broken remnants of a once-proud race, now reduced to little more than \
 	scavenging vermin who prey on isolated stations, ships or planets to keep their own ancient arkships \
 	alive. They are four to five feet tall, reptillian, beaked, tailed and quilled; human crews often \
 	refer to them as 'shitbirds' for their violent and offensive nature, as well as their horrible \
@@ -31,8 +31,8 @@
 	gluttonous = GLUT_TINY|GLUT_ITEM_NORMAL
 	stomach_capacity = 12
 
-	breath_type = "nitrogen"
-	poison_types = list("oxygen" = TRUE)
+	breath_type = GAS_NITROGEN
+	poison_types = list(GAS_OXYGEN = TRUE)
 	siemens_coefficient = 0.2
 
 	species_flags = SPECIES_FLAG_NO_SCAN

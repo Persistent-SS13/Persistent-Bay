@@ -127,14 +127,15 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 /obj/machinery/newscaster
 	name = "newscaster"
 	desc = "A standard newsfeed handler. All the news you absolutely have no use for, in one place!"
-	icon = 'icons/obj/terminals.dmi'
+	icon = 'icons/obj/machines/terminals/newscaster.dmi'
 	icon_state = "newscaster_normal"
 	var/hitstaken = 0      //Death at 3 hits from an item with force>=15
 	light_range = 0
 	anchored = 1
 	layer = ABOVE_WINDOW_LAYER
+	frame_type = /obj/item/frame/newscaster
 	var/alert = 0
-	
+
 	var/datum/NewsStory/loaded_article
 	var/datum/NewsFeed/loaded_feed
 	var/datum/NewsIssue/loaded_issue
@@ -146,22 +147,20 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 	if(istype(frame))
 		frame.transfer_fingerprints_to(src)
 	..()
-
-	if(ndir)
-		set_dir(ndir)
-		pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 30 : -30)
-		pixel_y = (src.dir & 3)? (src.dir ==1 ? 30 : -30) : 0
 	allCasters += src
 	for(var/obj/machinery/newscaster/NEWSCASTER in allCasters) // Let's give it an appropriate unit number
 		src.unit_no++
 	src.update_icon() //for any custom ones on the map...
 	..()                                //I just realised the newscasters weren't in the global machines list. The superconstructor call will tend to that
 
+/obj/machinery/newscaster/Initialize(mapload, d)
+	. = ..()
+	update_icon()
+
 /obj/machinery/newscaster/Destroy()
 	allCasters -= src
 	..()
-	
-	
+
 /obj/machinery/newscaster/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data = list()
 	var/obj/item/weapon/card/id/user_id_card = user.GetIdCard()
@@ -223,17 +222,25 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
 		ui.open()
-	
-	
-	
-	
-	
-	
 
 /obj/machinery/newscaster/update_icon()
+	switch(dir)
+		if(NORTH)
+			pixel_x = 0
+			pixel_y = -32
+		if(SOUTH)
+			pixel_x = 0
+			pixel_y = 40
+		if(EAST)
+			pixel_x = -30
+			pixel_y = 0
+		if(WEST)
+			pixel_x = 30
+			pixel_y = 0
+
 	if(inoperable())
 		icon_state = "newscaster_off"
-		if(stat & BROKEN) //If the thing is smashed, add crack overlay on top of the unpowered sprite.
+		if(isbroken()) //If the thing is smashed, add crack overlay on top of the unpowered sprite.
 			overlays.Cut()
 			overlays += image(src.icon, "crack3")
 		return
@@ -278,6 +285,7 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 			to_chat(user, "Unable to access account: incorrect credentials.")
 			return
 
+
 	if(transaction_amount > account.money)
 		to_chat(user, "Unable to complete transaction: insufficient funds.")
 		return
@@ -287,10 +295,10 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 		//transfer the money
 		var/datum/transaction/Te = new("[account.owner_name]", "Access to [loaded_article.name] ([loaded_article.parent.parent.name])", transaction_amount, "News Browser")
 		loaded_article.parent.parent.parent.central_account.do_transaction(Te)
-		
+
 		loaded_article.purchased |= id.registered_name
 		return 1
-		
+
 /obj/machinery/newscaster/proc/payIssue(var/obj/item/weapon/card/id/id, var/mob/user)
 	if(!loaded_issue) return 0
 	var/transaction_amount = loaded_issue.parent.per_issue
@@ -318,10 +326,10 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 		newspaper.feed_id = loaded_issue.parent.parent.name
 		newspaper.issue_id = loaded_issue.uid
 		playsound(loc, pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
-		
+
 		return 1
-		
-		
+
+
 /obj/machinery/newscaster/Topic(href, href_list)
 	if(..())
 		return 1
@@ -355,127 +363,33 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 		SSnano.update_uis(src)
 
 
-
-
 /obj/machinery/newscaster/attackby(obj/item/I as obj, mob/user as mob)
-	if (stat & BROKEN)
-		playsound(src.loc, 'sound/effects/hit_on_shattered_glass.ogg', 100, 1)
-		for (var/mob/O in hearers(5, src.loc))
-			O.show_message("<EM>[user.name]</EM> further abuses the shattered [src.name].")
-	else
-		if(istype(I, /obj/item/weapon) )
-			user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-			var/obj/item/weapon/W = I
-			if(W.force <15)
-				for (var/mob/O in hearers(5, src.loc))
-					O.show_message("[user.name] hits the [src.name] with the [W.name] with no visible effect." )
-					playsound(src.loc, 'sound/effects/Glasshit.ogg', 100, 1)
-			else
-				src.hitstaken++
-				if(hitstaken==3)
-					for (var/mob/O in hearers(5, src.loc))
-						O.show_message("[user.name] smashes the [src.name]!" )
-					stat |= BROKEN
-					playsound(src.loc, 'sound/effects/Glassbr3.ogg', 100, 1)
-				else
-					for (var/mob/O in hearers(5, src.loc))
-						O.show_message("[user.name] forcefully slams the [src.name] with the [I.name]!" )
-					playsound(src.loc, 'sound/effects/Glasshit.ogg', 100, 1)
+	if(default_deconstruction_screwdriver(user, I))
+		updateUsrDialog()
+		return
+	else if(default_deconstruction_crowbar(user, I))
+		return
+	else if(istype(I, /obj/item/weapon) )
+		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
+		var/obj/item/weapon/W = I
+		if(W.force <15)
+			for (var/mob/O in hearers(5, src.loc))
+				O.show_message("[user.name] hits the [src.name] with the [W.name] with no visible effect." )
+				playsound(src.loc, 'sound/effects/Glasshit.ogg', 100, 1)
 		else
-			to_chat(user, "<span class='notice'>This does nothing.</span>")
-	update_icon()
+			src.hitstaken++
+			if(hitstaken==3)
+				for (var/mob/O in hearers(5, src.loc))
+					O.show_message("[user.name] smashes the [src.name]!" )
+				stat |= BROKEN
+				playsound(src.loc, 'sound/effects/Glassbr3.ogg', 100, 1)
+			else
+				for (var/mob/O in hearers(5, src.loc))
+					O.show_message("[user.name] forcefully slams the [src.name] with the [I.name]!" )
+				playsound(src.loc, 'sound/effects/Glasshit.ogg', 100, 1)
+		update_icon()
+		return
+	return ..()
 
 /obj/machinery/newscaster/attack_ai(mob/user as mob)
 	return src.attack_hand(user) //or maybe it'll have some special functions? No idea.
-
-//########################################################################################################################
-//###################################### NEWSPAPER! ######################################################################
-//########################################################################################################################
-
-/obj/item/weapon/newspaper
-	name = "newspaper"
-	desc = "An newspaper issue of BLANK."
-	icon = 'icons/obj/bureaucracy.dmi'
-	icon_state = "newspaper"
-	w_class = ITEM_SIZE_SMALL	//Let's make it fit in trashbags!
-	attack_verb = list("bapped")
-	var/curr_page = 0
-	var/datum/NewsIssue/linked_issue
-	var/feed_id
-	var/issue_id
-
-/obj/item/weapon/newspaper/after_load()
-	var/datum/small_business/business = get_business(feed_id)
-	if(business)
-		for(var/datum/NewsIssue/issue in business.feed.all_issues)
-			if(issue.uid == issue_id)
-				linked_issue = issue
-				break
-	..()
-	
-/obj/item/weapon/newspaper/OnTopic(user, href_list)
-	. = 1
-	switch(href_list["action"])
-		if("next")
-			curr_page = min(linked_issue.stories.len, curr_page++)
-		if("previous")
-			curr_page = max(0, curr_page--)
-	if(.)
-		SSnano.update_uis(src)
-
-	
-/obj/item/weapon/newspaper/ui_interact(var/mob/user, var/ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
-	var/list/data = list()
-	if(linked_issue)
-		data["name"] = "[linked_issue.name] [linked_issue.publish_date]"
-		if(curr_page > linked_issue.stories.len)
-			curr_page = linked_issue.stories.len
-		if(curr_page == linked_issue.stories.len)
-			data["last_page"] = 1
-		if(curr_page == 1)
-			data["first_page"] = 1
-		var/datum/NewsStory/story = linked_issue.stories[curr_page]
-		data["headline"] = story.name
-		data["filedata"] = story.body
-		data["author"] = story.author
-	else
-		data["invalid"] = 1
-	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
-	if(!ui)
-		ui = new(user, src, ui_key, "newspaper.tmpl", "newspaper", 400, 600)
-		ui.set_initial_data(data)
-		ui.open()
-		ui.set_auto_update(1)
-
-	
-/obj/item/weapon/newspaper/attack_self(mob/user as mob)
-	ui_interact(user)
-
-
-/obj/machinery/newscaster/proc/newsAlert(var/news_call)   //This isn't Agouri's work, for it is ugly and vile.
-	var/turf/T = get_turf(src)                      //Who the fuck uses spawn(600) anyway, jesus christ
-	alert = 1
-	if(news_call)
-		for(var/mob/O in hearers(world.view-1, T))
-			O.show_message("<span class='newscaster'><EM>[src.name]</EM> beeps, \"[news_call]\"</span>",2)
-		src.update_icon()
-		playsound(src.loc, 'sound/machines/twobeep.ogg', 75, 1)
-	else
-		for(var/mob/O in hearers(world.view-1, T))
-			O.show_message("<span class='newscaster'><EM>[src.name]</EM> beeps, \"Attention! Wanted issue distributed!\"</span>",2)
-		playsound(src.loc, 'sound/machines/warning-buzzer.ogg', 75, 1)
-	spawn(300)
-		alert = 0
-		update_icon()
-	return
-
-/obj/item/frame/newscaster/try_build(turf/on_wall)
-	if (get_dist(on_wall,usr)>1)
-		return
-	var/ndir = get_dir(usr,on_wall)
-	if (!(ndir in GLOB.cardinal))
-		return
-	var/turf/loc = get_turf(usr)
-
-	new /obj/machinery/newscaster(loc, 1, src, ndir)
-	qdel(src)

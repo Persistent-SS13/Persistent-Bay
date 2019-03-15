@@ -1,21 +1,22 @@
 // TODO: remove the robot.mmi and robot.cell variables and completely rely on the robot component system
 
-/datum/robot_component/var/name
-/datum/robot_component/var/installed = 0
-/datum/robot_component/var/powered = 0
-/datum/robot_component/var/toggled = 1
-/datum/robot_component/var/brute_damage = 0
-/datum/robot_component/var/electronics_damage = 0
-/datum/robot_component/var/idle_usage = 0   // Amount of power used every MC tick. In joules.
-/datum/robot_component/var/active_usage = 0 // Amount of power used for every action. Actions are module-specific. Actuator for each tile moved, etc.
-/datum/robot_component/var/max_damage = 30  // HP of this component.
-/datum/robot_component/var/mob/living/silicon/robot/owner
+/datum/robot_component
+	var/name
+	var/installed = 0
+	var/powered = 0
+	var/toggled = 1
+	var/brute_damage = 0
+	var/electronics_damage = 0
+	var/idle_usage = 0   // Amount of power used every MC tick. In joules.
+	var/active_usage = 0 // Amount of power used for every action. Actions are module-specific. Actuator for each tile moved, etc.
+	var/max_damage = 30  // HP of this component.
+	var/mob/living/silicon/robot/owner
 
 // The actual device object that has to be installed for this.
-/datum/robot_component/var/external_type = null
+	var/external_type = null
 
 // The wrapped device(e.g. radio), only set if external_type isn't null
-/datum/robot_component/var/obj/item/wrapped = null
+	var/obj/item/wrapped = null
 
 /datum/robot_component/New(mob/living/silicon/robot/R)
 	src.owner = R
@@ -39,13 +40,17 @@
 	installed = 1
 	install()
 
-/datum/robot_component/proc/take_damage(brute, electronics, sharp, edge)
-	if(installed != 1) return
+/datum/robot_component/proc/take_damage(var/damage, var/damtype = DAM_BLUNT)
+	if(installed != 1 || damage == 0) 
+		return
 
-	brute_damage += brute
-	electronics_damage += electronics
+	if(IsDamageTypeBrute(damtype))
+		brute_damage += damage
+	else if(IsDamageTypeBurn(damtype) || ISDAMTYPE(damtype,DAM_EMP))
+		electronics_damage += damage
 
-	if(brute_damage + electronics_damage >= max_damage) destroy()
+	if(brute_damage + electronics_damage >= max_damage) 
+		destroy()
 
 /datum/robot_component/proc/heal_damage(brute, electronics)
 	if(installed != 1)

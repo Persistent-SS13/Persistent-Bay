@@ -103,7 +103,7 @@ proc/cardinalrange(var/center)
 
 
 /obj/machinery/am_shielding/bullet_act(var/obj/item/projectile/Proj)
-	if(Proj.check_armour != "bullet")
+	if(!ISDAMTYPE(Proj.damtype, DAM_BULLET))
 		stability -= Proj.force/2
 	return 0
 
@@ -126,8 +126,7 @@ proc/cardinalrange(var/center)
 	if(W.force > 10)
 		stability -= W.force/2
 		check_stability()
-	..()
-	return
+	return ..()
 
 
 

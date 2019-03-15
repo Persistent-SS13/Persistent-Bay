@@ -43,6 +43,7 @@
 		/datum/reagent/carbon = 40
 		)
 	ore_matter = list(MATERIAL_GRAPHITE = 2000)
+	energy_combustion = 32.7
 
 //DELETEME: Once transition is done
 /material/graphite/graphene //So old graphene ore is still usable
@@ -112,6 +113,7 @@
 		)
 	ore_compresses_to = MATERIAL_SULFUR
 	ore_matter = list(MATERIAL_SULFUR = 2000)
+	energy_combustion = 9.23
 
 /material/spodumene
 	name = MATERIAL_SPODUMENE //LiAl(SiO3)2
@@ -133,6 +135,7 @@
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
 	ore_matter = list(MATERIAL_SPODUMENE = 2000, MATERIAL_ALUMINUM = 500)
+	energy_combustion = 43.1
 
 /material/cinnabar
 	name = MATERIAL_CINNABAR
@@ -191,6 +194,7 @@
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
 	ore_matter = list(MATERIAL_ROCK_SALT = 2000)
+	energy_combustion = 9.23
 
 /material/potash
 	name = MATERIAL_POTASH
@@ -230,6 +234,7 @@
 	ore_compresses_to = MATERIAL_BAUXITE
 	ore_smelts_to = MATERIAL_ALUMINUM
 	ore_matter = list(MATERIAL_BAUXITE = 2000)
+	energy_combustion = 31
 
 /material/sand
 	name = MATERIAL_SAND
@@ -277,6 +282,7 @@
 	xarch_source_mineral = MATERIAL_PHORON
 	ore_icon_overlay = "gems"
 	ore_matter = list(MATERIAL_PHORON = 2000)
+	energy_combustion = 150
 
 /material/phoron/supermatter
 	name = MATERIAL_SUPERMATTER
@@ -297,7 +303,7 @@
 	for(var/turf/simulated/floor/target_tile in range(2,T))
 		var/phoronToDeduce = (temperature/30) * effect_multiplier
 		totalPhoron += phoronToDeduce
-		target_tile.assume_gas("phoron", phoronToDeduce, 200+T0C)
+		target_tile.assume_gas(GAS_PHORON, phoronToDeduce, 200+T0C)
 		spawn (0)
 			target_tile.hotspot_expose(temperature, 400)
 	return round(totalPhoron/100)

@@ -2,10 +2,10 @@
 	name = "thermoelectric generator"
 	desc = "It's a high efficiency thermoelectric generator."
 	icon_state = "teg"
-	density = 1
-	anchored = 0
+	density = TRUE
+	anchored = FALSE
 
-	use_power = 1
+	use_power = POWER_USE_IDLE
 	idle_power_usage = 100 //Watts, I hope.  Just enough to do the computer and display things.
 
 	var/max_power = 500000
@@ -25,26 +25,33 @@
 
 /obj/machinery/power/generator/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/generator(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 30)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	RefreshParts()
+	ADD_SAVED_VAR(anchored)
 
+/obj/machinery/power/generator/Initialize()
+	.=..()
+	if(!map_storage_loaded)
+		component_parts = list()
+		component_parts += new /obj/item/weapon/circuitboard/generator(src)
+		component_parts += new /obj/item/stack/cable_coil(src, 30)
+		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+		component_parts += new /obj/item/stack/material/ocp(src)
+		component_parts += new /obj/item/stack/material/ocp(src)
+		component_parts += new /obj/item/stack/material/ocp(src)
+		component_parts += new /obj/item/stack/material/ocp(src)
+		component_parts += new /obj/item/stack/material/ocp(src)
+		component_parts += new /obj/item/stack/material/ocp(src)
+		component_parts += new /obj/item/stack/material/ocp(src)
+		component_parts += new /obj/item/stack/material/ocp(src)
+		component_parts += new /obj/item/stack/material/ocp(src)
+		component_parts += new /obj/item/stack/material/ocp(src)
+	RefreshParts()
+	do_init()
+
+/obj/machinery/power/generator/proc/do_init()
 	desc = initial(desc) + " Rated for [round(max_power/1000)] kW."
-	spawn(1)
-		reconnect()
+	reconnect()
+
 
 //generators connect in dir and reverse_dir(dir) directions
 //mnemonic to determine circulator/generator directions: the cirulators orbit clockwise around the generator
@@ -73,7 +80,7 @@
 				circ2 = null
 
 /obj/machinery/power/generator/update_icon()
-	if(stat & (NOPOWER|BROKEN))
+	if(inoperable())
 		overlays.Cut()
 	else
 		overlays.Cut()
@@ -82,7 +89,7 @@
 			overlays += image('icons/obj/power.dmi', "teg-op[lastgenlev]")
 
 /obj/machinery/power/generator/Process()
-	if(!circ1 || !circ2 || !anchored || stat & (BROKEN|NOPOWER))
+	if(!circ1 || !circ2 || !anchored || inoperable())
 		stored_energy = 0
 		return
 
@@ -114,6 +121,8 @@
 				air2.temperature = air2.temperature + heat/air2_heat_capacity
 				air1.temperature = air1.temperature - energy_transfer/air1_heat_capacity
 		playsound(src.loc, 'sound/effects/beam.ogg', 25, 0, 10,  is_ambience = 1)
+
+	CHECK_TICK
 
 	//Transfer the air
 	if (air1)
@@ -172,7 +181,7 @@
 
 /obj/machinery/power/generator/attack_hand(mob/user)
 	add_fingerprint(user)
-	if(stat & (BROKEN|NOPOWER) || !anchored) return
+	if(inoperable() || !anchored) return
 	if(!circ1 || !circ2) //Just incase the middle part of the TEG was not wrenched last.
 		reconnect()
 	ui_interact(user)

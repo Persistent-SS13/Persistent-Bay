@@ -17,7 +17,7 @@
 	wet()
 
 /obj/item/weapon/soap/proc/wet()
-	reagents.add_reagent(/datum/reagent/space_cleaner, 15)
+	reagents.add_reagent(/datum/reagent/space_cleaner, reagents.maximum_volume)
 
 /obj/item/weapon/soap/afterattack(atom/target, mob/user as mob, proximity)
 	if(!proximity) return
@@ -49,7 +49,7 @@
 		user.visible_message("<span class='danger'>\The [user] washes \the [target]'s mouth out with soap!</span>")
 		user.setClickCooldown(DEFAULT_QUICK_COOLDOWN) //prevent spam
 		return
-	..()
+	return
 
 /obj/item/weapon/soap/attackby(var/obj/item/I, var/mob/user)
 	if(istype(I, /obj/item/weapon/key))

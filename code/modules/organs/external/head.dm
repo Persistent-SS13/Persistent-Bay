@@ -4,18 +4,17 @@
 	icon_name = "head"
 	name = "head"
 	slot_flags = SLOT_BELT
-	max_damage = 75
+	max_health = 75
 	min_broken_damage = 35
 	w_class = ITEM_SIZE_NORMAL
 	body_part = HEAD
-	can_heal_overkill = 1
 	parent_organ = BP_CHEST
 	joint = "jaw"
 	amputation_point = "neck"
-	gendered_icon = 1
 	encased = "skull"
 	artery_name = "cartoid artery"
 	cavity_name = "cranial"
+	limb_flags = ORGAN_FLAG_CAN_AMPUTATE | ORGAN_FLAG_GENDERED_ICON | ORGAN_FLAG_HEALS_OVERKILL | ORGAN_FLAG_CAN_BREAK
 
 	var/can_intake_reagents = 1
 	var/eye_icon = "eyes_s"
@@ -54,14 +53,14 @@
 			owner.update_hair()
 	..()
 
-/obj/item/organ/external/head/take_damage(brute, burn, damage_flags, used_weapon = null)
+/obj/item/organ/external/head/take_damage(damage, damtype, armorbypass, damsrc)
 	. = ..()
 	if (!disfigured)
 		if (brute_dam > 40)
 			if (prob(50))
-				disfigure("brute")
+				disfigure(DAM_BLUNT)
 		if (burn_dam > 40)
-			disfigure("burn")
+			disfigure(DAM_BURN)
 
 /obj/item/organ/external/head/no_eyes
 	eye_icon = "blank_eyes"

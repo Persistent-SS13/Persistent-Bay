@@ -471,15 +471,15 @@ var/global/list/obj/item/device/pda/PDAs = list()
 			var/total_moles = environment.total_moles
 
 			if (total_moles)
-				var/o2_level = environment.gas["oxygen"]/total_moles
-				var/n2_level = environment.gas["nitrogen"]/total_moles
-				var/co2_level = environment.gas["carbon_dioxide"]/total_moles
+				var/o2_level = environment.gas[GAS_OXYGEN]/total_moles
+				var/n2_level = environment.gas[GAS_NITROGEN]/total_moles
+				var/co2_level = environment.gas[GAS_CO2]/total_moles
 				var/unknown_level =  1-(o2_level+n2_level+co2_level)
 				data["aircontents"] = list(\
 					"pressure" = "[round(pressure,0.1)]",\
-					"nitrogen" = "[round(n2_level*100,0.1)]",\
-					"oxygen" = "[round(o2_level*100,0.1)]",\
-					"carbon_dioxide" = "[round(co2_level*100,0.1)]",\
+					GAS_NITROGEN = "[round(n2_level*100,0.1)]",\
+					GAS_OXYGEN = "[round(o2_level*100,0.1)]",\
+					GAS_CO2 = "[round(co2_level*100,0.1)]",\
 					"other" = "[round(unknown_level*100, 0.01)]",\
 					"temp" = "[round(environment.temperature-T0C,0.1)]",\
 					"reading" = 1\
@@ -782,7 +782,7 @@ var/global/list/obj/item/device/pda/PDAs = list()
 		if("Toggle Door")
 			if(cartridge && cartridge.access_remote_door)
 				for(var/obj/machinery/door/blast/M in world)
-					if(M.id == cartridge.remote_door_id)
+					if(M.id_tag == cartridge.remote_door_id)
 						if(M.density)
 							M.open()
 						else
@@ -895,7 +895,7 @@ var/global/list/obj/item/device/pda/PDAs = list()
 	if(i>=10 && i<= 20) //The PDA burns a hole in the holder.
 		j=1
 		if(M && isliving(M))
-			M.apply_damage( rand(30,60) , BURN)
+			M.apply_damage( rand(30,60) , DAM_BURN)
 		message += "You feel a searing heat! Your [P] is burning!"
 	if(i>=20 && i<=25) //EMP
 		empulse(P.loc, 3, 6, 1)

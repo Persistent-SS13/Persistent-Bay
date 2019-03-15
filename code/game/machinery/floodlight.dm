@@ -5,6 +5,7 @@
 	icon = 'icons/obj/machines/floodlight.dmi'
 	icon_state = "flood00"
 	density = 1
+	max_health = 100
 	var/on = 0
 	var/obj/item/weapon/cell/cell = null
 	var/use = 200 // 200W light
@@ -40,7 +41,7 @@
 
 
 // Returns 0 on failure and 1 on success
-/obj/machinery/floodlight/proc/turn_on(var/loud = 0)
+/obj/machinery/floodlight/turn_on(var/loud = 0)
 	if(!cell)
 		return 0
 	if(cell.charge < (use * CELLRATE))
@@ -53,7 +54,7 @@
 		visible_message("\The [src] turns on.")
 	return 1
 
-/obj/machinery/floodlight/proc/turn_off(var/loud = 0)
+/obj/machinery/floodlight/turn_off(var/loud = 0)
 	on = 0
 	set_light(0, 0)
 	update_icon()
@@ -125,11 +126,8 @@
 					to_chat(user, "You remove the battery panel.")
 			update_icon()
 			return
-
-	if(isWrench(W))
-		wrench_floor_bolts(user)
+	if(default_wrench_floor_bolts(user,W))
 		return
-
 	if (istype(W, /obj/item/weapon/cell))
 		if(open)
 			if(cell)

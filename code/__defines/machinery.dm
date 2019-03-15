@@ -12,7 +12,12 @@ var/global/defer_powernet_rebuild = 0      // True if net rebuild will be called
 #define DOOR_CRUSH_DAMAGE 40
 #define ALIEN_SELECT_AFK_BUFFER  1    // How many minutes that a person can be AFK before not being allowed to be an alien.
 
+#define POWER_USE_OFF    0
+#define POWER_USE_IDLE   1
+#define POWER_USE_ACTIVE 2
+
 // Channel numbers for power.
+#define POWER_CHAN -1 // Use default channel
 #define EQUIP   1
 #define LIGHT   2
 #define ENVIRON 3
@@ -93,8 +98,8 @@ var/list/restricted_camera_networks = list(NETWORK_ERT,NETWORK_MERCENARY,"Secret
 // The flow rate/effectiveness of various atmos devices is limited by their internal volume,
 // so for many atmos devices these will control maximum flow rates in L/s.
 #define ATMOS_DEFAULT_VOLUME_PUMP   200 // Liters.
-#define ATMOS_DEFAULT_VOLUME_FILTER 200 // L.
-#define ATMOS_DEFAULT_VOLUME_MIXER  200 // L.
+#define ATMOS_DEFAULT_VOLUME_FILTER 500 // L.
+#define ATMOS_DEFAULT_VOLUME_MIXER  500 // L.
 #define ATMOS_DEFAULT_VOLUME_PIPE   70  // L.
 
 #define TELECOMMS_RECEPTION_NONE 0
@@ -111,3 +116,14 @@ var/list/restricted_camera_networks = list(NETWORK_ERT,NETWORK_MERCENARY,"Secret
 #define SUPERMATTER_DANGER 4		// Integrity < 50%
 #define SUPERMATTER_EMERGENCY 5		// Integrity < 25%
 #define SUPERMATTER_DELAMINATING 6	// Pretty obvious.
+
+// Scrubber modes
+#define SCRUBBER_SIPHON   "siphon"
+#define SCRUBBER_SCRUB    "scrub"
+#define SCRUBBER_EXCHANGE "exchange"
+
+//Build state for the machine frame.
+#define MACHINE_FRAME_EMPTY  1 //Default state, no components installed
+#define MACHINE_FRAME_CABLED 2 //Cables installed
+#define MACHINE_FRAME_BOARD  3 //Cables, and circuit board installed
+

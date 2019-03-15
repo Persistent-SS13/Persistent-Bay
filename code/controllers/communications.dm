@@ -99,12 +99,27 @@ On the map:
 1455 for AI access
 */
 
+//Ranges
 var/const/RADIO_LOW_FREQ	= 1200
 var/const/PUBLIC_LOW_FREQ	= 1441
 var/const/PUBLIC_HIGH_FREQ	= 1489
 var/const/RADIO_HIGH_FREQ	= 1600
 var/const/RADIO_CUSTOM_FREQ = 1700
 
+//Machines
+var/const/MAGNET_FREQ			= 1311
+var/const/INCINERATOR_FREQ		= 1378
+var/const/DOOR_FREQ				= 1379
+var/const/MISC_MACHINE_FREQ		= 1202
+var/const/ALARMLOCKS_FREQ		= 1437
+var/const/ENGINE_FREQ			= 1438
+var/const/AIRALARM_FREQ			= 1439
+var/const/STATUS_FREQ 			= 1435
+var/const/ATMOS_CONTROL_FREQ 	= 1441
+var/const/AIRLOCK_FREQ			= 1449
+var/const/POD_LAUNCHER_FREQ 	= 1452
+
+//Other Comms
 var/const/BOT_FREQ	= 1447
 var/const/COMM_FREQ = 1353
 var/const/ERT_FREQ	= 1345
@@ -130,6 +145,10 @@ var/const/TT_FREQ = 1489
 // internal department channels
 var/const/MED_I_FREQ = 1485
 var/const/SEC_I_FREQ = 1475
+
+// special intercoms
+var/const/SEC_INTERCOM_FREQ = 1476
+var/const/CONFESSIONALS_FREQ = 1480
 
 var/list/radiochannels = list(
 	"Common"		= PUB_FREQ,
@@ -218,33 +237,42 @@ var/list/DEPT_FREQS = list(AI_FREQ, COMM_FREQ, ENG_FREQ, MED_FREQ, SEC_FREQ, SCI
 
 	return "radio"
 
+
+/* range */
+var/const/RADIO_DEFAULT_RANGE	= 0
+var/const/AIRLOCK_CONTROL_RANGE = 22
+
 /* filters */
 //When devices register with the radio controller, they might register under a certain filter.
 //Other devices can then choose to send signals to only those devices that belong to a particular filter.
 //This is done for performance, so we don't send signals to lots of machines unnecessarily.
 
 //This filter is special because devices belonging to default also recieve signals sent to any other filter.
-var/const/RADIO_DEFAULT = "radio_default"
-
-var/const/RADIO_TO_AIRALARM = "radio_airalarm" //air alarms
-var/const/RADIO_FROM_AIRALARM = "radio_airalarm_rcvr" //devices interested in recieving signals from air alarms
-var/const/RADIO_CHAT = "radio_telecoms"
-var/const/RADIO_ATMOSIA = "radio_atmos"
-var/const/RADIO_NAVBEACONS = "radio_navbeacon"
-var/const/RADIO_AIRLOCK = "radio_airlock"
-var/const/RADIO_SECBOT = "radio_secbot"
-var/const/RADIO_MULEBOT = "radio_mulebot"
-var/const/RADIO_MAGNETS = "radio_magnet"
+var/const/RADIO_DEFAULT 		= "radio_default"
+var/const/RADIO_TO_AIRALARM 	= "radio_airalarm" 		//air alarms
+var/const/RADIO_FROM_AIRALARM 	= "radio_airalarm_rcvr" //devices interested in recieving signals from air alarms
+var/const/RADIO_CHAT 			= "radio_telecoms"
+var/const/RADIO_ATMOSIA 		= "radio_atmos"
+var/const/RADIO_ENGI			= "radio_engi"
+var/const/RADIO_NAVBEACONS 		= "radio_navbeacon"
+var/const/RADIO_AIRLOCK 		= "radio_airlock"
+var/const/RADIO_BLAST_DOORS		= "radio_blastdoor"
+var/const/RADIO_SECBOT 			= "radio_secbot"
+var/const/RADIO_MULEBOT 		= "radio_mulebot"
+var/const/RADIO_MAGNETS 		= "radio_magnet"
+var/const/RADIO_EMITTERS 		= "radio_emitter"
+var/const/RADIO_MASSDRIVER		= "radio_massdriver"
+var/const/RADIO_FLASHERS		= "radio_flasher"
+var/const/RADIO_STATUS_DISPLAY  = "radio_status_display"
+var/const/RADIO_INCINERATOR  	= "radio_incinerator"
+var/const/RADIO_POD_LAUNCHER	= "radio_podlauncher"
+var/const/RADIO_FOAM_DISPENSER	= "radio_foam_dispenser"
 
 var/global/datum/controller/radio/radio_controller
 
 /hook/startup/proc/createRadioController()
 	radio_controller = new /datum/controller/radio()
 	return 1
-
-//callback used by objects to react to incoming radio signals
-/obj/proc/receive_signal(datum/signal/signal, receive_method, receive_param)
-	return null
 
 //The global radio controller
 /datum/controller/radio
@@ -289,6 +317,7 @@ var/global/datum/controller/radio/radio_controller
 /datum/radio_frequency
 	var/frequency as num
 	var/list/list/obj/devices = list()
+	var/signalcount = 0
 
 /datum/radio_frequency/proc/post_signal(obj/source as obj|null, datum/signal/signal, var/filter = null as text|null, var/range = null as num|null)
 	var/turf/start_point
@@ -309,7 +338,9 @@ var/global/datum/controller/radio/radio_controller
 /datum/radio_frequency/proc/send_to_filter(obj/source, datum/signal/signal, var/filter, var/turf/start_point = null, var/range = null)
 	if (range && !start_point)
 		return
-
+	signalcount++
+	// if((signalcount % 100) == 0)
+	// 	testing("Signals sent on [frequency] : [signalcount]")
 	for(var/obj/device in devices[filter])
 		if(device == source)
 			continue
@@ -319,8 +350,11 @@ var/global/datum/controller/radio/radio_controller
 				continue
 			if(start_point.z!=end_point.z || get_dist(start_point, end_point) > range)
 				continue
-
-		device.receive_signal(signal, TRANSMISSION_RADIO, frequency)
+		
+		//INVOKE_ASYNC(device, /obj/.proc/receive_signal, signal, TRANSMISSION_RADIO, frequency)
+		spawn(0)
+			device.receive_signal(signal, TRANSMISSION_RADIO, frequency)
+		CHECK_TICK
 
 /datum/radio_frequency/proc/add_listener(obj/device as obj, var/filter as text|null)
 	if (!filter)

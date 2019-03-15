@@ -538,7 +538,7 @@ proc/is_blind(A)
 			if(id)
 				perpname = id.registered_name
 
-			var/datum/computer_file/crew_record/CR = faction.get_record(perpname)
+			var/datum/computer_file/report/crew_record/CR = faction.get_record(perpname)
 			/* Since security records are now properly factionalized, the chance of someone not having a record is pretty high.
 			if(check_records && !CR && !isMonkey())
 				threatcount += 4
@@ -630,7 +630,7 @@ proc/is_blind(A)
 			return 0//Robotic hearts don't get jittery.
 	if(src.jitteriness >= 400 && prob(5)) //Kills people if they have high jitters.
 		if(prob(1))
-			L.take_damage(L.max_damage / 2, 0)
+			L.take_damage(L.get_max_health() / 2, 0)
 			to_chat(src, "<span class='danger'>Something explodes in your heart.</span>")
 			admin_victim_log(src, "has taken <b>lethal heart damage</b> at jitteriness level [src.jitteriness].")
 		else
@@ -638,6 +638,14 @@ proc/is_blind(A)
 			to_chat(src, "<span class='danger'>The jitters are killing you! You feel your heart beating out of your chest.</span>")
 			admin_victim_log(src, "has taken <i>minor heart damage</i> at jitteriness level [src.jitteriness].")
 	return 1
+
+//Tries to find the mob's email.
+/proc/find_email(real_name)
+	for(var/mob/mob in GLOB.living_mob_list_)
+		if(mob.real_name == real_name)
+			if(!mob.mind)
+				return
+			return mob.mind.initial_email_login["login"]
 
 //This gets an input while also checking a mob for whether it is incapacitated or not.
 /mob/proc/get_input(var/message, var/title, var/default, var/choice_type, var/obj/required_item)
@@ -657,3 +665,9 @@ proc/is_blind(A)
 	if(isnull(choice) || src.incapacitated() || (required_item && !GLOB.hands_state.can_use_topic(required_item, src)))
 		return null
 	return choice
+
+/mob/proc/set_sdisability(sdisability)
+	sdisabilities |= sdisability
+
+/mob/proc/unset_sdisability(sdisability)
+	sdisabilities &= ~sdisability

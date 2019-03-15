@@ -1,9 +1,5 @@
 var/global/datum/controller/occupations/job_master
 
-#define GET_RANDOM_JOB 0
-#define BE_ASSISTANT 1
-#define RETURN_TO_LOBBY 2
-
 /datum/controller/occupations
 		//List of all jobs
 	var/list/occupations = list()
@@ -249,6 +245,9 @@ var/global/datum/controller/occupations/job_master
 		var/list/spawn_in_storage = list()
 
 		if(job)
+
+			// Transfers the skill settings for the job to the mob
+			H.skillset.obtain_from_client(job, H.client)
 
 			//Equip job items.
 			job.setup_account(H)

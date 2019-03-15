@@ -9,8 +9,8 @@
 	nanomodule_path = /datum/nano_module/deck_management
 	extended_desc = "A tool for managing shuttles, filling out flight plans, and submitting flight-related paperwork."
 	size = 18
-	available_on_ntnet = 1
-	requires_ntnet = 1
+	available_on_ntnet = TRUE
+	requires_ntnet = TRUE
 
 /datum/nano_module/deck_management
 	name = "Deck Management Program"

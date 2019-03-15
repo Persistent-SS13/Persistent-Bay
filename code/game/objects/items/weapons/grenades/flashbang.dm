@@ -81,10 +81,10 @@
 		if(ishuman(M))
 			var/mob/living/carbon/human/H = M
 			var/obj/item/organ/internal/eyes/E = H.internal_organs_by_name[BP_EYES]
-			if (E && E.damage >= E.min_bruised_damage)
+			if (E && E.get_damages() >= E.min_bruised_damage)
 				to_chat(M, "<span class='danger'>Your eyes start to burn badly!</span>")
 				if(!banglet && !(istype(src , /obj/item/weapon/grenade/flashbang/clusterbang)))
-					if (E.damage >= E.min_broken_damage)
+					if (E.get_damages() >= E.min_broken_damage)
 						to_chat(M, "<span class='danger'>You can't see anything!</span>")
 		if (M.ear_damage >= 15)
 			to_chat(M, "<span class='danger'>Your ears start to ring badly!</span>")

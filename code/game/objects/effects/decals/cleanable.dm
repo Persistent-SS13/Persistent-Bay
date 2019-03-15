@@ -1,5 +1,6 @@
 /obj/effect/decal/cleanable
 	var/list/random_icon_states
+	should_save = 1
 
 /obj/effect/decal/cleanable/clean_blood(var/ignore = 0)
 	if(!ignore)

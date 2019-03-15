@@ -279,7 +279,7 @@
 /obj/item/weapon/secbot_assembly/attackby(var/obj/item/O, var/mob/user)
 	..()
 	if(isWelder(O) && !build_step)
-		var/obj/item/weapon/weldingtool/WT = O
+		var/obj/item/weapon/tool/weldingtool/WT = O
 		if(WT.remove_fuel(0, user))
 			build_step = 1
 			overlays += image('icons/obj/aibots.dmi', "hs_hole")

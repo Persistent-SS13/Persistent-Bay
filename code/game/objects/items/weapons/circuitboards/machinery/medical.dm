@@ -126,3 +126,14 @@
 							/obj/item/weapon/stock_parts/scanning_module = 1,
 							/obj/item/weapon/stock_parts/manipulator = 1,
 							/obj/item/weapon/stock_parts/console_screen = 1)
+
+
+/obj/item/weapon/circuitboard/crematorium
+	name = T_BOARD("crematorium")
+	build_path = /obj/machinery/incinerator/crematorium
+	board_type = "machine"
+	origin_tech = list(TECH_ENGINEERING = 1, TECH_BIO = 1)
+	req_components = list(
+							/obj/item/device/assembly/igniter = 1,
+							/obj/item/weapon/stock_parts/micro_laser = 1,
+							/obj/item/weapon/stock_parts/micro_laser = 1)

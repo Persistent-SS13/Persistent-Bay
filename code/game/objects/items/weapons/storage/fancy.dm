@@ -83,8 +83,8 @@
 	key_type = /obj/item/weapon/flame/candle
 	startswith = list(/obj/item/weapon/flame/candle = 5)
 
-/obj/item/weapon/storage/fancy/candle_box/blank
-	startswith = list()
+/obj/item/weapon/storage/fancy/candle_box/empty
+	startswith = null
 
 /*
  * Crayon Box
@@ -289,7 +289,7 @@
  */
 
 /obj/item/weapon/storage/fancy/vials
-	icon = 'icons/obj/vialbox.dmi'
+	icon = 'icons/obj/items/storage/vialbox.dmi'
 	icon_state = "vialbox0"
 	name = "vial storage box"
 	w_class = ITEM_SIZE_NORMAL
@@ -302,10 +302,16 @@
 	var/key_count = count_by_type(contents, key_type)
 	src.icon_state = "[initial(icon_state)][Floor(key_count/2)]"
 
+/obj/item/weapon/storage/fancy/vials/empty
+	startswith = null
+
+/*
+ * Not actually a "fancy" storage...
+ */
 /obj/item/weapon/storage/lockbox/vials
 	name = "secure vial storage box"
 	desc = "A locked box for keeping things away from children."
-	icon = 'icons/obj/vialbox.dmi'
+	icon = 'icons/obj/items/storage/vialbox.dmi'
 	icon_state = "vialbox0"
 	item_state = "syringe_kit"
 	w_class = ITEM_SIZE_NORMAL

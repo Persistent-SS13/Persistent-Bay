@@ -9,10 +9,8 @@
 	anchored = 1.0
 	atom_flags = ATOM_FLAG_CHECKS_BORDER
 	alpha = 180
-	var/maxhealth = 14.0
 	var/maximal_heat = T0C + 100 		// Maximal heat before this window begins taking damage from fire
 	var/damage_per_fire_tick = 2.0 		// Amount of damage per fire tick. Regular windows are not fireproof so they might as well break quickly.
-	var/health
 	var/ini_dir = null
 	var/state = 2
 	var/reinf = 0
@@ -21,68 +19,108 @@
 	var/shardtype = /obj/item/weapon/material/shard
 	var/glasstype = null // Set this in subtypes. Null is assumed strange or otherwise impossible to dismantle, such as for shuttle glass.
 	var/silicate = 0 // number of units of silicate
+	var/max_silicate = 200 //Maximum units of silicate
 	var/on_frame = FALSE
 	var/material_color
 	blend_objects = list(/obj/machinery/door, /turf/simulated/wall) // Objects which to blend with
 	noblend_objects = list(/obj/machinery/door/window)
+	sound_hit = 'sound/effects/Glasshit.ogg'
+	sound_destroyed = "shatter"
+	max_health = 30
+	armor = list(
+		DAM_BLUNT  	= 10,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 20,
+		DAM_BULLET 	= 5,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 30,
+		DAM_BOMB 	= 10,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+	damthreshold_brute 	= 5
+	damthreshold_burn = 5
 
 	atmos_canpass = CANPASS_PROC
 	var/saved_dir = 0
 
+/obj/structure/window/New(Loc, start_dir=null, constructed=0)
+	..()
+	ADD_SAVED_VAR(state)
+	ADD_SAVED_VAR(on_frame)
+	ADD_SAVED_VAR(silicate)
+
+	//player-constructed windows
+	if (constructed)
+		set_anchored(FALSE)
+
+	if (start_dir)
+		set_dir(start_dir)
+
+	if(is_fulltile())
+		max_health *= 4
+
+	health = max_health
+
+	ini_dir = dir
+
+	update_connections(1)
+	update_icon()
+
+	update_nearby_tiles(need_rebuild=1)
+	update_nearby_icons()
+
+/obj/structure/window/Destroy()
+	set_density(0)
+	update_nearby_tiles()
+	var/turf/location = loc
+	. = ..()
+	for(var/obj/structure/window/W in orange(location, 1))
+		W.update_icon()
+
+/obj/structure/window/after_load()
+	dir = saved_dir
+	ini_dir = dir
+	update_nearby_tiles(need_rebuild=1)
+	..()
+	update_icon()
+
 /obj/structure/window/Write(savefile/f)
 	saved_dir = dir
 	..()
-/obj/structure/window/examine(mob/user)
-	. = ..(user)
 
-	if(health == maxhealth)
-		to_chat(user, "<span class='notice'>It looks fully intact.</span>")
-	else
-		var/perc = health / maxhealth
-		if(perc > 0.75)
-			to_chat(user, "<span class='notice'>It has a few cracks.</span>")
-		else if(perc > 0.5)
-			to_chat(user, "<span class='warning'>It looks slightly damaged.</span>")
-		else if(perc > 0.25)
-			to_chat(user, "<span class='warning'>It looks moderately damaged.</span>")
-		else
-			to_chat(user, "<span class='danger'>It looks heavily damaged.</span>")
+/obj/structure/window/damage_description(var/mob/user)
+	. = ..() + "\n"
 	if(silicate)
 		if (silicate < 30)
-			to_chat(user, "<span class='notice'>It has a thin layer of silicate.</span>")
+			. += SPAN_NOTICE("It has a thin layer of silicate.")
 		else if (silicate < 70)
-			to_chat(user, "<span class='notice'>It is covered in silicate.</span>")
+			. +=  SPAN_NOTICE("It is covered in silicate.")
 		else
-			to_chat(user, "<span class='notice'>There is a thick layer of silicate covering it.</span>")
+			. += SPAN_NOTICE("There is a thick layer of silicate covering it.")
 
-/obj/structure/window/proc/take_damage(var/damage = 0,  var/sound_effect = 1)
+/obj/structure/window/take_damage(damage, damtype, armorbypass, damsrc)
 	var/initialhealth = health
-
 	if(silicate)
-		damage = damage * (1 - silicate / 200)
-
-	health = max(0, health - damage)
-
-	if(health <= 0)
-		shatter()
-	else
-		if(sound_effect)
-			playsound(loc, 'sound/effects/Glasshit.ogg', 100, 1)
-		if(health < maxhealth / 4 && initialhealth >= maxhealth / 4)
-			visible_message("[src] looks like it's about to shatter!" )
-		else if(health < maxhealth / 2 && initialhealth >= maxhealth / 2)
-			visible_message("[src] looks seriously damaged!" )
-		else if(health < maxhealth * 3/4 && initialhealth >= maxhealth * 3/4)
-			visible_message("Cracks begin to appear in [src]!" )
-	return
+		damage = damage * (1 - silicate / max_silicate)
+	..(damage, damtype, armorbypass, damsrc)
+	if(health < get_max_health() / 4 && initialhealth >= get_max_health() / 4)
+		visible_message(SPAN_WARNING("[src] looks like it's about to shatter!"))
+	else if(health < get_max_health() / 2 && initialhealth >= get_max_health() / 2)
+		visible_message(SPAN_WARNING("[src] looks seriously damaged!"))
+	else if(health < get_max_health() * 3/4 && initialhealth >= get_max_health() * 3/4)
+		visible_message("Cracks begin to appear in [src]!" )
 
 /obj/structure/window/proc/apply_silicate(var/amount)
-	if(health < maxhealth) // Mend the damage
-		health = min(health + amount * 3, maxhealth)
-		if(health == maxhealth)
-			visible_message("[src] looks fully repaired." )
+	if(isdamaged()) // Mend the damage
+		add_health(amount * 3)
+		if(!isdamaged())
+			visible_message(SPAN_NOTICE("[src] looks fully repaired."))
 	else // Reinforce
-		silicate = min(silicate + amount, 100)
+		silicate = min(silicate + amount, max_silicate)
 		updateSilicate()
 
 /obj/structure/window/proc/updateSilicate()
@@ -91,42 +129,15 @@
 
 	var/image/img = image(src.icon, src.icon_state)
 	img.color = "#ffffff"
-	img.alpha = silicate * 255 / 100
+	img.alpha = silicate * 255 / max_silicate
 	overlays += img
 
-/obj/structure/window/proc/shatter(var/display_message = 1)
-	playsound(src, "shatter", 70, 1)
-	if(display_message)
-		visible_message("[src] shatters!")
-
+/obj/structure/window/destroyed()
+	visible_message(SPAN_DANGER("[src] shatters!"))
 	cast_new(shardtype, is_fulltile() ? 4 : 1, loc)
-	if(reinf) cast_new(/obj/item/stack/rods, is_fulltile() ? 4 : 1, loc)
-	qdel(src)
-	return
-
-
-/obj/structure/window/bullet_act(var/obj/item/projectile/Proj)
-
-	var/proj_damage = Proj.get_structure_damage()
-	if(!proj_damage) return
-
+	if(reinf)
+		cast_new(/obj/item/stack/rods, is_fulltile() ? 4 : 1, loc)
 	..()
-	take_damage(proj_damage)
-	return
-
-
-/obj/structure/window/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			qdel(src)
-			return
-		if(2.0)
-			shatter(0)
-			return
-		if(3.0)
-			if(prob(50))
-				shatter(0)
-				return
 
 //TODO: Make full windows a separate type of window.
 //Once a full window, it will always be a full window, so there's no point
@@ -153,9 +164,7 @@
 	return 1
 
 
-/obj/structure/window/hitby(AM as mob|obj)
-	..()
-	visible_message("<span class='danger'>[src] was hit by [AM].</span>")
+/obj/structure/window/hitby(AM as mob|obj, speed = THROWFORCE_SPEED_DIVISOR)
 	var/tforce = 0
 	if(ismob(AM)) // All mobs have a multiplier and a size according to mob_defines.dm
 		var/mob/I = AM
@@ -167,61 +176,53 @@
 	if(health - tforce <= 7 && !reinf)
 		set_anchored(FALSE)
 		step(src, get_dir(AM, src))
-	take_damage(tforce)
+	..(AM,speed,tforce)
 
 /obj/structure/window/attack_tk(mob/user as mob)
-	user.visible_message("<span class='notice'>Something knocks on [src].</span>")
-	playsound(loc, 'sound/effects/Glasshit.ogg', 50, 1)
+	user.visible_message(SPAN_NOTICE("Something knocks on [src]."))
+	playsound(loc, sound_hit, vol=50, vary=1, extrarange=8, falloff=6)
 
 /obj/structure/window/attack_hand(mob/user as mob)
-	user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
 	if(HULK in user.mutations)
-		user.say(pick(";RAAAAAAAARGH!", ";HNNNNNNNNNGGGGGGH!", ";GWAAAAAAAARRRHHH!", "NNNNNNNNGGGGGGGGHH!", ";AAAAAAARRRGH!"))
-		user.visible_message("<span class='danger'>[user] smashes through [src]!</span>")
-		user.do_attack_animation(src)
-		shatter()
-
+		..(user,100)
+		return 1
 	else if (usr.a_intent == I_HURT)
-
 		if (istype(usr,/mob/living/carbon/human))
 			var/mob/living/carbon/human/H = usr
 			if(H.species.can_shred(H))
-				attack_generic(H,25)
-				return
-
-		playsound(src.loc, 'sound/effects/glassknock.ogg', 80, 1)
+				..(H,25)
+				return 1
+		
+		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
+		playsound(src.loc, 'sound/effects/glassknock.ogg', vol=100, vary=1, extrarange=12, falloff=10)
 		user.do_attack_animation(src)
 		usr.visible_message("<span class='danger'>\The [usr] bangs against \the [src]!</span>",
 							"<span class='danger'>You bang against \the [src]!</span>",
 							"You hear a banging sound.")
-	else
-		playsound(src.loc, 'sound/effects/glassknock.ogg', 80, 1)
+		return 1
+	else if (usr.a_intent == I_HELP)
+		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
+		playsound(src.loc, 'sound/effects/glassknock.ogg', vol=80, vary=1, extrarange=8, falloff=6)
 		usr.visible_message("[usr.name] knocks on the [src.name].",
 							"You knock on the [src.name].",
 							"You hear a knocking sound.")
-	return
+		return 1
+	return ..()
 
 /obj/structure/window/attack_generic(var/mob/user, var/damage, var/attack_verb, var/environment_smash)
 	if(environment_smash >= 1)
 		damage = max(damage, 10)
-
-	if(istype(user))
-		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-		user.do_attack_animation(src)
-	if(!damage)
-		return
 	if(damage >= 10)
-		visible_message("<span class='danger'>[user] [attack_verb] into [src]!</span>")
-		take_damage(damage)
+		visible_message(SPAN_DANGER("[user] [attack_verb] into [src]!"))
+		return ..(user, damage, attack_verb, environment_smash)
 	else
-		visible_message("<span class='notice'>\The [user] bonks \the [src] harmlessly.</span>")
+		visible_message(SPAN_NOTICE("\The [user] bonks \the [src] harmlessly."))
+		if(istype(user))
+			user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
+			user.do_attack_animation(src)
 	return 1
 
 /obj/structure/window/attackby(obj/item/W as obj, mob/user as mob)
-	if(!istype(W)) return//I really wish I did not need this
-
-	if(W.item_flags & ITEM_FLAG_NO_BLUDGEON) return
-
 	if(isScrewdriver(W))
 		if(reinf && state >= 1)
 			state = 3 - state
@@ -236,10 +237,12 @@
 			set_anchored(!anchored)
 			playsound(loc, 'sound/items/Screwdriver.ogg', 75, 1)
 			to_chat(user, (anchored ? "<span class='notice'>You have fastened the window to the floor.</span>" : "<span class='notice'>You have unfastened the window.</span>"))
+		return 1
 	else if(isCrowbar(W) && reinf && state <= 1)
 		state = 1 - state
 		playsound(loc, 'sound/items/Crowbar.ogg', 75, 1)
 		to_chat(user, (state ? "<span class='notice'>You have pried the window into the frame.</span>" : "<span class='notice'>You have pried the window out of the frame.</span>"))
+		return 1
 	else if(isWrench(W) && !anchored && (!state || !reinf))
 		if(!glasstype)
 			to_chat(user, "<span class='notice'>You're not sure how to dismantle \the [src] properly.</span>")
@@ -252,6 +255,7 @@
 			else
 				new glasstype(loc)
 			qdel(src)
+		return 1
 	else if(isCoil(W) && reinf && !polarized)
 		var/obj/item/stack/cable_coil/C = W
 		if (C.use(1))
@@ -264,24 +268,9 @@
 			P.basestate = basestate
 			P.update_icon()
 			qdel(src)
+		return 1
 	else
-		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-		if(W.damtype == BRUTE || W.damtype == BURN)
-			user.do_attack_animation(src)
-			hit(W.force)
-			if(health <= 7)
-				set_anchored(FALSE)
-				step(src, get_dir(user, src))
-				update_verbs()
-		else
-			playsound(loc, 'sound/effects/Glasshit.ogg', 75, 1)
-		..()
-	return
-
-/obj/structure/window/proc/hit(var/damage, var/sound_effect = 1)
-	if(reinf) damage *= 0.5
-	take_damage(damage)
-	return
+		return ..()
 
 /obj/structure/window/AltClick()
 	rotate()
@@ -323,43 +312,6 @@
 	update_nearby_tiles(need_rebuild=1)
 	return
 
-/obj/structure/window/New(Loc, start_dir=null, constructed=0)
-	..()
-
-	//player-constructed windows
-	if (constructed)
-		set_anchored(FALSE)
-
-	if (start_dir)
-		set_dir(start_dir)
-
-	if(is_fulltile())
-		maxhealth *= 4
-
-	health = maxhealth
-
-	ini_dir = dir
-
-	update_connections(1)
-	update_icon()
-
-	update_nearby_tiles(need_rebuild=1)
-	update_nearby_icons()
-
-
-/obj/structure/window/Destroy()
-	set_density(0)
-	update_nearby_tiles()
-	var/turf/location = loc
-	. = ..()
-	for(var/obj/structure/window/W in orange(location, 1))
-		W.update_icon()
-
-/obj/structure/window/after_load()
-	dir = saved_dir
-	ini_dir = dir
-	update_nearby_tiles(need_rebuild=1)
-	..()
 
 /obj/structure/window/Move()
 	var/ini_dir = dir
@@ -374,14 +326,13 @@
 		return 1
 	return 0
 
-/obj/structure/window/proc/set_anchored(var/new_anchored)
+/obj/structure/window/set_anchored(var/new_anchored)
 	if(anchored == new_anchored)
 		return
-	anchored = new_anchored
+	..()
 	update_verbs()
 	update_nearby_icons()
 	update_connections(1)
-	update_icon()
 
 //This proc is used to update the icons of nearby windows. It should not be confused with update_nearby_tiles(), which is an atmos proc!
 /obj/structure/window/proc/update_nearby_icons()
@@ -398,9 +349,6 @@
 		verbs += /obj/structure/window/proc/rotate
 		verbs += /obj/structure/window/proc/revrotate
 
-/obj/structure/window/after_load()
-	..()
-	update_icon()
 
 // Visually connect with every type of window as long as it's full-tile.
 /obj/structure/window/can_visually_connect()
@@ -438,12 +386,9 @@
 				I = image(icon, "[basestate][connections[i]]", dir = 1<<(i-1))
 			overlays += I
 
-/obj/structure/window/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
+/obj/structure/window/fire_consume(var/datum/gas_mixture/air, var/exposed_temperature, var/exposed_volume)
 	if(exposed_temperature > maximal_heat)
-		hit(damage_per_fire_tick, 0)
-	..()
-
-
+		take_damage(damage_per_fire_tick, DAM_BURN)
 
 /obj/structure/window/basic
 	desc = "It looks thin and flimsy. A few knocks with... anything, really should shatter it."
@@ -451,7 +396,7 @@
 	glasstype = /obj/item/stack/material/glass
 	maximal_heat = T0C + 100
 	damage_per_fire_tick = 2.0
-	maxhealth = 12.0
+	max_health = 60
 	material_color = GLASS_COLOR
 	color = GLASS_COLOR
 
@@ -467,9 +412,25 @@
 	glasstype = /obj/item/stack/material/glass/phoronglass
 	maximal_heat = T0C + 2000
 	damage_per_fire_tick = 1.0
-	maxhealth = 40.0
+	max_health = 80
 	material_color = GLASS_COLOR_PHORON
 	color = GLASS_COLOR_PHORON
+	armor = list(
+		DAM_BLUNT  	= 50,
+		DAM_PIERCE 	= 55,
+		DAM_CUT 	= 85,
+		DAM_BULLET 	= 50,
+		DAM_ENERGY 	= 50,
+		DAM_BURN 	= 95,
+		DAM_BOMB 	= 80,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+	damthreshold_brute 	= 10
+	damthreshold_burn = 10
 
 /obj/structure/window/phoronbasic/full
 	dir = 5
@@ -485,9 +446,25 @@
 	reinf = 1
 	maximal_heat = T0C + 4000
 	damage_per_fire_tick = 1.0 // This should last for 80 fire ticks if the window is not damaged at all. The idea is that borosilicate windows have something like ablative layer that protects them for a while.
-	maxhealth = 80.0
+	max_health = 200
 	material_color = GLASS_COLOR_PHORON
 	color = GLASS_COLOR_PHORON
+	armor = list(
+		DAM_BLUNT  	= 85,
+		DAM_PIERCE 	= 85,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 80,
+		DAM_ENERGY 	= 80,
+		DAM_BURN 	= MaxArmorValue,
+		DAM_BOMB 	= 80,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+	damthreshold_brute 	= 10
+	damthreshold_burn = 10
 
 /obj/structure/window/phoronreinforced/full
 	dir = 5
@@ -498,26 +475,58 @@
 	desc = "It looks rather strong. Might take a few good hits to shatter it."
 	icon_state = "rwindow"
 	basestate = "rwindow"
-	maxhealth = 40.0
+	max_health = 90
 	reinf = 1
 	maximal_heat = T0C + 750
 	damage_per_fire_tick = 2.0
 	glasstype = /obj/item/stack/material/glass/reinforced
 	material_color = GLASS_COLOR
 	color = GLASS_COLOR
+	armor = list(
+		DAM_BLUNT  	= 40,
+		DAM_PIERCE 	= 35,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 40,
+		DAM_ENERGY 	= 30,
+		DAM_BURN 	= 50,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+	damthreshold_brute 	= 10
+	damthreshold_burn = 5
 
 /obj/structure/window/fiberglass
 	name = "fiberglass window"
 	desc = "It looks strong and sleek. It may not even shatter."
 	icon_state = "rwindow"
 	basestate = "rwindow"
-	maxhealth = 100.0
+	max_health = 120
 	maximal_heat = T0C + 90
 	damage_per_fire_tick = 5.0 // These windows are not built for fire
 	shardtype = /obj/item/weapon/material/shard/fiberglass
 	glasstype = /obj/item/stack/material/glass/fiberglass
 	material_color = GLASS_COLOR_FROSTED
 	color = GLASS_COLOR_FROSTED
+	armor = list(
+		DAM_BLUNT  	= MaxArmorValue,
+		DAM_PIERCE 	= MaxArmorValue,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 90,
+		DAM_ENERGY 	= 30,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+	damthreshold_brute 	= 15
+	damthreshold_burn = 2
 
 /obj/structure/window/New(Loc, constructed=0)
 	..()
@@ -546,7 +555,6 @@
 	name = "frosted window"
 	desc = "It looks rather strong and frosted over. Looks like it might take a few less hits than a normal reinforced window."
 	icon_state = "window"
-	maxhealth = 30
 	color = GLASS_COLOR_FROSTED
 
 /obj/structure/window/shuttle
@@ -555,10 +563,26 @@
 	icon = 'icons/obj/podwindows.dmi'
 	icon_state = "window"
 	basestate = "window"
-	maxhealth = 40
+	max_health = 200
 	reinf = 1
 	basestate = "w"
 	dir = 5
+	armor = list(
+		DAM_BLUNT  	= 50,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 90,
+		DAM_ENERGY 	= 40,
+		DAM_BURN 	= 80,
+		DAM_BOMB 	= 50,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+	damthreshold_brute 	= 10
+	damthreshold_burn = 10
 
 /obj/structure/window/reinforced/polarized
 	name = "electrochromic window"
@@ -608,7 +632,7 @@
 /obj/structure/window/reinforced/crescent/take_damage()
 	return
 
-/obj/structure/window/reinforced/crescent/shatter()
+/obj/structure/window/reinforced/crescent/destroyed()
 	return
 
 
@@ -624,41 +648,3 @@
 		on_frame = TRUE
 	else
 		on_frame = FALSE
-
-/obj/machinery/button/windowtint
-	name = "window tint control"
-	icon = 'icons/obj/power.dmi'
-	icon_state = "light0"
-	desc = "A remote control switch for electrochromic windows."
-	var/range = 7
-
-/obj/machinery/button/windowtint/attack_hand(mob/user as mob)
-	if(..())
-		return 1
-
-	toggle_tint()
-
-/obj/machinery/button/windowtint/attackby(obj/item/device/W as obj, mob/user as mob)
-	if(isMultitool(W))
-		to_chat(user, "<span class='notice'>The ID of the button: [id]</span>")
-		return
-
-/obj/machinery/button/windowtint/proc/toggle_tint()
-	use_power(5)
-
-	active = !active
-	update_icon()
-
-	for(var/obj/structure/window/reinforced/polarized/W in range(src,range))
-		if (W.id == src.id || !W.id)
-			spawn(0)
-				W.toggle()
-				return
-
-/obj/machinery/button/windowtint/power_change()
-	. = ..()
-	if(active && !powered(power_channel))
-		toggle_tint()
-
-/obj/machinery/button/windowtint/update_icon()
-	icon_state = "light[active]"

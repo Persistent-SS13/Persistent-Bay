@@ -5,10 +5,9 @@
 	program_menu_icon = "person"
 	nanomodule_path = /datum/nano_module/program/election
 	extended_desc = "Used to nominate yourself for election and control your nomination."
-	requires_ntnet = 1
+	requires_ntnet = TRUE
 	size = 12
 	democratic = 1
-
 
 /datum/nano_module/program/election
 	name = "Nexus City Elections and Nominations"
@@ -106,7 +105,7 @@
 						desc = ""
 					if(ballot == connected_faction.current_election)
 						return 0
-					var/datum/computer_file/crew_record/record = Retrieve_Record(usr.real_name)
+					var/datum/computer_file/report/crew_record/record = Retrieve_Record(usr.real_name)
 					if(record && record.linked_account)
 						if(record.linked_account.money < 500)
 							to_chat(usr, "Insufficent Funds.")

@@ -1,39 +1,40 @@
-var/list/fuel_injectors = list()
+GLOBAL_LIST_EMPTY(fuel_injectors)
 
 /obj/machinery/fusion_fuel_injector
 	name = "fuel injector"
 	icon = 'icons/obj/machines/power/fusion.dmi'
 	icon_state = "injector0"
-	density = 1
-	anchored = 0
+	density = TRUE
+	anchored = FALSE
 	req_access = list(core_access_engineering_programs)
-	use_power = 1
+	use_power = POWER_USE_IDLE
 	idle_power_usage = 10
 	active_power_usage = 500
 
+	id_tag = null
+
 	var/fuel_usage = 0.0001
-	var/id_tag
-	var/injecting = 0
+	var/injecting = FALSE
 	var/obj/item/weapon/fuel_assembly/cur_assembly
 
 /obj/machinery/fusion_fuel_injector/New()
 	..()
-	fuel_injectors += src
+	GLOB.fuel_injectors += src
 	tag = null
 
 /obj/machinery/fusion_fuel_injector/Destroy()
 	if(cur_assembly)
 		cur_assembly.forceMove(get_turf(src))
 		cur_assembly = null
-	fuel_injectors -= src
+	GLOB.fuel_injectors -= src
 	return ..()
 
 /obj/machinery/fusion_fuel_injector/mapped
-	anchored = 1
+	anchored = TRUE
 
 /obj/machinery/fusion_fuel_injector/Process()
 	if(injecting)
-		if(stat & (BROKEN|NOPOWER))
+		if(inoperable())
 			StopInjecting()
 		else
 			Inject()
@@ -99,14 +100,14 @@ var/list/fuel_injectors = list()
 /obj/machinery/fusion_fuel_injector/proc/BeginInjecting()
 	if(!injecting && cur_assembly)
 		icon_state = "injector1"
-		injecting = 1
-		use_power = 1
+		injecting = TRUE
+		use_power = POWER_USE_IDLE
 
 /obj/machinery/fusion_fuel_injector/proc/StopInjecting()
 	if(injecting)
-		injecting = 0
+		injecting = FALSE
 		icon_state = "injector0"
-		use_power = 0
+		use_power = POWER_USE_OFF
 
 /obj/machinery/fusion_fuel_injector/proc/Inject()
 	if(!injecting)

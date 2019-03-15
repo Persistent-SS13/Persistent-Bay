@@ -1,6 +1,3 @@
-#define Clamp(value, low, high) 	(value <= low ? low : (value >= high ? high : value))
-#define CLAMP01(x) 		(Clamp(x, 0, 1))
-
 #define get_turf(A) get_step(A,0)
 
 #define isAI(A) istype(A, /mob/living/silicon/ai)
@@ -71,23 +68,23 @@
 
 #define attack_animation(A) if(istype(A)) A.do_attack_animation(src)
 
-#define isairlock(A) istype(A, /obj/machinery/door/airlock)
-
 #define isopenspace(A) istype(A, /turf/simulated/open)
 
-#define isWrench(A) istype(A, /obj/item/weapon/wrench)
+#define isWrench(A) istype(A, /obj/item/weapon/tool/wrench)
 
-#define isWelder(A) istype(A, /obj/item/weapon/weldingtool)
+#define isWelder(A) istype(A, /obj/item/weapon/tool/weldingtool)
 
 #define isCoil(A) istype(A, /obj/item/stack/cable_coil)
 
-#define isWirecutter(A) istype(A, /obj/item/weapon/wirecutters)
+#define isWirecutter(A) istype(A, /obj/item/weapon/tool/wirecutters)
 
-#define isScrewdriver(A) istype(A, /obj/item/weapon/screwdriver)
+#define isScissors(A) istype(A, /obj/item/weapon/scissors)
+
+#define isScrewdriver(A) istype(A, /obj/item/weapon/tool/screwdriver)
 
 #define isMultitool(A) istype(A, /obj/item/device/multitool)
 
-#define isCrowbar(A) istype(A, /obj/item/weapon/crowbar)
+#define isCrowbar(A) istype(A, /obj/item/weapon/tool/crowbar)
 
 #define sequential_id(key) uniqueness_repository.Generate(/datum/uniqueness_generator/id_sequential, key)
 
@@ -103,6 +100,9 @@
 #define close_browser(target, browser_info)                 target << browse(null, browser_info)
 #define show_image(target, image)                           target << image
 #define send_rsc(target, rsc_content, rsc_name)             target << browse_rsc(rsc_content, rsc_name)
+//Currently used in SDQL2 stuff
+#define send_output(target, msg, control) target << output(msg, control)
+#define send_link(target, url) target << link(url)
 
 #define MAP_IMAGE_PATH "nano/images/[GLOB.using_map.path]/"
 
@@ -159,16 +159,12 @@
 // Insert an object A into a sorted list using cmp_proc (/code/_helpers/cmp.dm) for comparison.
 #define ADD_SORTED(list, A, cmp_proc) if(!list.len) {list.Add(A)} else {list.Insert(FindElementIndex(A, list, cmp_proc), A)}
 
-//Currently used in SDQL2 stuff
-#define send_output(target, msg, control) target << output(msg, control)
-#define send_link(target, url) target << link(url)
-
 #define JOINTEXT(X) jointext(X, null)
 
 #define SPAN_NOTICE(X) "<span class='notice'>[X]</span>"
-
 #define SPAN_WARNING(X) "<span class='warning'>[X]</span>"
-
 #define SPAN_DANGER(X) "<span class='danger'>[X]</span>"
+#define SPAN_GOOD(X) "<span class='good'>[X]</span>"
+#define SPAN_BAD(X) "<span class='bad'>[X]</span>"
 
 #define cast_new(type, num, args...) if((num) == 1) { new type(args) } else { for(var/i=0;i<(num),i++) { new type(args) } }

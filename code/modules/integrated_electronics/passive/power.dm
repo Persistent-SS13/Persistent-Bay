@@ -37,7 +37,7 @@
 	var/is_charge = FALSE
 
 /obj/item/integrated_circuit/passive/power/starter/make_energy()
-	if(assembly.battery)
+	if(assembly && assembly.battery)
 		if(assembly.battery.charge)
 			if(!is_charge)
 				activate_pin(1)

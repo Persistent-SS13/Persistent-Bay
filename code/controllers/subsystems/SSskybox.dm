@@ -1,5 +1,3 @@
-
-#define RANDOM_RGB rgb(rand(0,255), rand(0,255), rand(0,255))
 #define RANDOM_RIGHT_ANGLE pick(90,180,270,0)
 
 //Exists to handle a few global variables that change enough to justify this. Technically a parallax, but it exhibits a skybox effect.
@@ -64,5 +62,4 @@ SUBSYSTEM_DEF(skybox)
 		P.DoRotate()
 
 
-#undef RANDOM_RGB
 #undef RANDOM_RIGHT_ANGLE

@@ -39,7 +39,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	var/menu = 1
 	var/curr_page = 1
 
-	var/datum/computer_file/crew_record/record
+	var/datum/computer_file/report/crew_record/record
 
 	var/datum/democracy/selected_ballot
 
@@ -107,7 +107,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 /obj/item/organ/internal/stack/proc/get_owner()
 	if(lacemob)
 		return lacemob
-	if(istype(loc.loc, /mob/living/silicon/robot))
+	if(istype(loc, /obj/item/device/lmi) && istype(loc.loc, /mob/living/silicon/robot))
 		return loc.loc
 	if(owner)
 		return owner
@@ -293,15 +293,15 @@ GLOBAL_LIST_EMPTY(neural_laces)
 			if(istype(loc.loc, /mob/living/silicon/robot))
 				var/mob/living/silicon/robot/robot = loc.loc
 				for(var/datum/world_faction/fact in GLOB.all_world_factions)
-					var/datum/computer_file/crew_record/records = fact.get_record(robot.real_name)
-					if(records)
+					var/datum/computer_file/report/crew_record/record = fact.get_record(robot.real_name)
+					if(record)
 						potential |= fact
 		return potential
 
 	var/list/potential[0]
 	for(var/datum/world_faction/fact in GLOB.all_world_factions)
-		var/datum/computer_file/crew_record/records = fact.get_record(owner.real_name)
-		if(records)
+		var/datum/computer_file/report/crew_record/record = fact.get_record(owner.real_name)
+		if(record)
 			potential |= fact
 
 	return potential
@@ -312,8 +312,9 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		if(istype(loc.loc, /mob/living/silicon/robot))
 			robot = loc.loc
 	if((!owner || !faction) && !robot)
+		duty_status = 0
 		return "No owner found.."
-	var/datum/computer_file/crew_record/records
+	var/datum/computer_file/report/crew_record/records
 	if(!robot)
 		records = faction.get_record(owner.real_name)
 	else
@@ -338,8 +339,8 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	if(!owner) return 0
 	faction = get_faction(connected_faction)
 	if(!faction) return 0
-	var/datum/computer_file/crew_record/records = faction.get_record(owner.real_name)
-	if(!records)
+	var/datum/computer_file/report/crew_record/record = faction.get_record(owner.real_name)
+	if(!record)
 		faction = null
 		return 0
 	else

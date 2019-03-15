@@ -495,4 +495,11 @@ This saves us from having to call add_fingerprint() any time something is put in
 		if(handcuffed) . += handcuffed
 		if(s_store)    . += s_store
 
+/mob/living/carbon/human/proc/has_item_equipped(var/itemtype)
+	var/list/equipped = get_equipped_items()
+	for(var/obj/item/E in equipped)
+		if(istype(E, itemtype))
+			return E
+	return null
+
 #undef REMOVE_INTERNALS

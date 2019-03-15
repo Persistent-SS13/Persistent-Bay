@@ -6,8 +6,8 @@
 	program_menu_icon = "cart"
 	extended_desc = "A management tool that allows for ordering of various supplies through the facility's cargo system. Some features may require additional access."
 	size = 21
-	available_on_ntnet = 1
-	requires_ntnet = 1
+	available_on_ntnet = TRUE
+	requires_ntnet = TRUE
 
 /datum/computer_file/program/supply/process_tick()
 	..()
@@ -161,7 +161,7 @@
 				shuttle.launch(user)
 		else
 			shuttle.launch(user)
-			var/datum/radio_frequency/frequency = radio_controller.return_frequency(1435)
+			var/datum/radio_frequency/frequency = radio_controller.return_frequency(STATUS_FREQ)
 			if(!frequency)
 				return
 

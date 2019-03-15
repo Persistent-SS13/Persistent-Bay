@@ -6,8 +6,8 @@
   program_menu_icon = "cart"
   extended_desc = "A managment tool for inter-sector trade."
   size = 10
-  available_on_ntnet = 1
-  requires_ntnet = 1
+  available_on_ntnet = TRUE
+  requires_ntnet = TRUE
 
 /datum/nano_module/program/trade
   name = "Trade Management Program"

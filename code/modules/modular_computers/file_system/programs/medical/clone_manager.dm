@@ -6,26 +6,32 @@
 	program_menu_icon = "heart"
 	extended_desc = "This program connects to nearby cloning pods, and uses dna scanning hardware to collect DNA and transmit it to the pods."
 	required_access = core_access_medical_programs
-	requires_ntnet = 0
+	requires_ntnet = FALSE
 	network_destination = "cloner management"
 	size = 20
 	var/obj/machinery/clonepod/pod
+
 /datum/computer_file/program/clone_manager/Topic(href, href_list)
 	if(..())
 		return 1
-	if(!computer.dna_scanner || !computer.dna_scanner.check_functionality()) return 0
+	if(!computer.scanner || computer.scanner && !istype(computer.scanner, /obj/item/weapon/computer_hardware/scanner/medical) || !computer.scanner.check_functionality()) 
+		return 0
 	var/datum/nano_module/program/clone_manager/cloneNM = NM
+	var/obj/item/weapon/computer_hardware/scanner/medical/mdscan = computer.scanner
 	if(href_list["connect"])
 		var/found = 0
 		for(var/obj/machinery/clonepod/pod in view(4,computer.loc))
-			if(pod.stat || !pod.anchored) continue
+			if(pod.stat || !pod.anchored) 
+				continue
 			found = 1
-			computer.dna_scanner.connected_pods |= pod
+			mdscan.connected_pods |= pod
 		if(!found)
 			to_chat(usr, "No suitable cloning pods found.")
 	if(href_list["select_pod"])
-		if(!href_list["target"]) return 0
-		if(!computer.dna_scanner.stored_dna) return 0
+		if(!href_list["target"]) 
+			return 0
+		if(!mdscan.stored_dna) 
+			return 0
 		pod = locate(href_list["target"])
 		if(!pod) return 0
 		cloneNM.menu = 2
@@ -33,7 +39,7 @@
 	if(href_list["finish"])
 		if(cloneNM.get_contributed() < 5000)
 			to_chat(usr, "Not enough funding.")
-		if(!pod || !computer.dna_scanner || !computer.dna_scanner.stored_dna)
+		if(!pod || !mdscan || !mdscan.stored_dna)
 			cloneNM.cancel_contracts()
 			cloneNM.menu = 1
 			return 1
@@ -42,12 +48,12 @@
 				contract.cancel()
 				SSnano.update_uis(src)
 				return 0
-		if(pod.growclone(computer.dna_scanner.stored_dna))
+		if(pod.growclone(mdscan.stored_dna))
 			for(var/obj/item/weapon/paper/contract/contract in cloneNM.signed_contracts)
 				contract.finalize()
 				cloneNM.signed_contracts -= contract	
 			to_chat(usr, "The cloning processing is beginning.")
-			computer.dna_scanner.stored_dna = null
+			mdscan.stored_dna = null
 			cloneNM.menu = 2
 			cloneNM.cancel_contracts()
 		else
@@ -61,9 +67,9 @@
 		if(!href_list["target"]) return 0
 		var/obj/machinery/clonepod/pod = locate(href_list["target"])
 		if(!pod) return 0
-		computer.dna_scanner.connected_pods -= pod
+		mdscan.connected_pods -= pod
 	if(href_list["contract"])
-		if(!computer.dna_scanner || !computer.dna_scanner.stored_dna)
+		if(!mdscan || !mdscan.stored_dna)
 			cloneNM.cancel_contracts()
 			cloneNM.menu = 1
 		var/cost = round(input("How much ethericoin should be the funding contract be for?", "Funding", 5000-cloneNM.get_contributed()) as null|num)
@@ -76,11 +82,11 @@
 			var/obj/item/weapon/paper/contract/contract = new()
 			contract.required_cash = cost
 			contract.linked = NM
-			contract.purpose = "Funding contract for [cost]$$ to clone [computer.dna_scanner.stored_dna.real_name]."
+			contract.purpose = "Funding contract for [cost]$$ to clone [mdscan.stored_dna.real_name]."
 			contract.name = "cloning funding contract"
 			var/t = ""
 			t += "<font face='Verdana' color=blue><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'><center></td><tr><td><H1>Investment Contract</td>"
-			t += "<tr><td><br><b>For:</b>clone [computer.dna_scanner.stored_dna.real_name]<br>"
+			t += "<tr><td><br><b>For:</b>clone [mdscan.stored_dna.real_name]<br>"
 			t += "<b>Cost:</b> [cost] $$ Ethericoins<br><br>"
 			t += "<tr><td><h3>Status</H3>*Unsigned*<br></td></tr></table><br><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>"
 			t += "<td><font size='4'><b>Swipe ID to sign contract.</b></font></center></font>"
@@ -127,11 +133,13 @@
 		
 	
 /datum/nano_module/program/clone_manager/proc/format_pods()
-	if(!program.computer.dna_scanner) return 0
+	if(!program.computer.scanner || !istype(program.computer.scanner, /obj/item/weapon/computer_hardware/scanner/medical)) 
+		return 0
 	var/list/formatted = list()
-	for(var/obj/machinery/clonepod/pod in program.computer.dna_scanner.connected_pods)
+	var/obj/item/weapon/computer_hardware/scanner/medical/mdscan = program.computer.scanner
+	for(var/obj/machinery/clonepod/pod in mdscan.connected_pods)
 		var/can_select = 1
-		if(!program.computer.dna_scanner.stored_dna || pod.panel_open || pod.attempting || pod.occupant || pod.biomass < CLONE_BIOMASS || pod.stat)
+		if(!mdscan.stored_dna || pod.panel_open || pod.attempting || pod.occupant || pod.biomass < CLONE_BIOMASS || pod.stat)
 			can_select = 0
 		formatted.Add(list(list(
 			"name" = pod.name,
@@ -146,12 +154,13 @@
 /datum/nano_module/program/clone_manager/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data = host.initial_data()
 	var/scanner_status = 1
-	if(!program.computer.dna_scanner || !program.computer.dna_scanner.check_functionality()) scanner_status = 0
+	var/obj/item/weapon/computer_hardware/scanner/medical/mdscan = program.computer.scanner
+	if(!mdscan || !mdscan.check_functionality()) scanner_status = 0
 	data["has_scanner"] = scanner_status
-	if(program.computer.dna_scanner)
-		data["has_dna"] = !!program.computer.dna_scanner.stored_dna
-		if(!!program.computer.dna_scanner.stored_dna)
-			data["dna"] = program.computer.dna_scanner.stored_dna.unique_enzymes
+	if(mdscan)
+		data["has_dna"] = !isnull(mdscan.stored_dna)
+		if(mdscan.stored_dna)
+			data["dna"] = mdscan.stored_dna.unique_enzymes
 		data["connected_pods"] = format_pods()
 		data["clone_biomass"] = CLONE_BIOMASS
 	data["menu"] = menu

@@ -5,6 +5,9 @@
 	desc = "A wooden box designed specifically to house our buzzling buddies. Far more efficient than traditional hives. Just insert a frame and a queen, close it up, and you're good to go!"
 	density = 1
 	anchored = 1
+	mass = 5
+	max_health = 100
+	damthreshold_brute 	= 2
 
 	var/closed = 0
 	var/bee_count = 0 // Percent
@@ -298,4 +301,4 @@ var/global/list/datum/stack_recipe/wax_recipes = list( \
 	new /obj/item/honey_frame(src)
 	new /obj/item/honey_frame(src)
 	new /obj/item/bee_pack(src)
-	new /obj/item/weapon/crowbar(src)
+	new /obj/item/weapon/tool/crowbar(src)

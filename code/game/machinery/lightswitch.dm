@@ -2,38 +2,43 @@
 // can have multiple per area
 // can also operate on non-loc area through "otherarea" var
 /obj/machinery/light_switch
-	name = "light switch"
-	desc = "It turns lights on and off. What are you, simple?"
-	icon = 'icons/obj/power.dmi'
-	icon_state = "light0"
-	anchored = 1.0
-	use_power = 1
-	idle_power_usage = 20
-	power_channel = LIGHT
-	var/on = 0
+	name 				= "light switch"
+	desc 				= "It turns lights on and off. What are you, simple?"
+	icon 				= 'icons/obj/machines/buttons.dmi'
+	icon_state 			= "light0"
+	density 			= FALSE
+	anchored 			= TRUE
+	use_power 			= POWER_USE_IDLE
+	idle_power_usage 	= 5
+	active_power_usage 	= 20
+	power_channel 		= LIGHT
+	frame_type 			= /obj/item/frame/light_switch
+	var/on 				= FALSE
 	var/area/connected_area = null
-	var/other_area = null
+	var/other_area 		= null
 	var/image/overlay
 
-/obj/machinery/light_switch/after_load()
-	if(other_area)
-		src.connected_area = locate(other_area)
-	else
-		src.connected_area = get_area(src)
+/obj/machinery/light_switch/New(loc, dir, atom/frame)
+	..(loc)
+	if(dir)
+		src.set_dir(dir)
+	if(istype(frame))
+		on = FALSE
+		frame.transfer_fingerprints_to(src)
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(other_area)
 
-	if(name == initial(name))
-		name = "light switch ([connected_area.name])"
+/obj/machinery/light_switch/before_save()
+	. = ..()
+	if(connected_area && !other_area)
+		other_area = connected_area.name
 
-	connected_area.set_lightswitch(on)
-	update_icon()
 /obj/machinery/light_switch/Initialize()
 	. = ..()
-	if(map_storage_loaded) return
 	if(other_area)
 		src.connected_area = locate(other_area)
 	else
 		src.connected_area = get_area(src)
-
 	if(name == initial(name))
 		name = "light switch ([connected_area.name])"
 
@@ -41,13 +46,27 @@
 	update_icon()
 
 /obj/machinery/light_switch/update_icon()
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = -22
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = 30
+		if(EAST)
+			src.pixel_x = 22
+			src.pixel_y = 0
+		if(WEST)
+			src.pixel_x = -22
+			src.pixel_y = 0
+
 	if(!overlay)
 		overlay = image(icon, "light1-overlay")
 		overlay.plane = EFFECTS_ABOVE_LIGHTING_PLANE
 		overlay.layer = ABOVE_LIGHTING_LAYER
 
 	overlays.Cut()
-	if(stat & (NOPOWER|BROKEN))
+	if(inoperable())
 		icon_state = "light-p"
 		set_light(0)
 	else
@@ -75,6 +94,7 @@
 /obj/machinery/light_switch/attack_hand(mob/user)
 	playsound(src, "switch", 30)
 	set_state(!on)
+	use_power(active_power_usage)
 
 /obj/machinery/light_switch/powered()
 	. = ..(power_channel, connected_area) //tie our powered status to the connected area
@@ -86,35 +106,17 @@
 		sync_state()
 
 /obj/machinery/light_switch/emp_act(severity)
-	if(stat & (BROKEN|NOPOWER))
+	if(inoperable())
 		..(severity)
 		return
 	power_change()
 	..(severity)
 
-
 /obj/machinery/light_switch/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
 	if(istype(W, /obj/item/device/reagent_scanner))
-		return
-
-
-	if(istype(W, /obj/item/weapon/wrench))
-		to_chat(user, "<span class='notice'>You detach \the [src] from the wall.</span>")
-		new/obj/item/frame/light_switch(get_turf(src))
-		qdel(src)
-		return 1
-
+		return FALSE
+	if(isWrench(W))
+		to_chat(user, SPAN_NOTICE("You detach \the [src] from the wall."))
+		dismantle()
+		return TRUE
 	return src.attack_hand(user)
-
-
-/obj/machinery/light_switch/New(loc, dir, atom/frame)
-	..(loc)
-
-	if(dir)
-		src.set_dir(dir)
-
-	if(istype(frame))
-		on = 0
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -24 : 24)
-		pixel_y = (dir & 3)? (dir ==1 ? -24 : 24) : 0
-		frame.transfer_fingerprints_to(src)

@@ -108,12 +108,12 @@
 	time = 10
 /datum/design/item/engifab/engitools/simple/crowbar
 	name = "Crowbar"
-	build_path = /obj/item/weapon/crowbar
+	build_path = /obj/item/weapon/tool/crowbar
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS)
 
 /datum/design/item/engifab/engitools/prybar
 	name = "Pry bar"
-	build_path = /obj/item/weapon/crowbar/prybar
+	build_path = /obj/item/weapon/tool/crowbar/prybar
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS)
 
 /datum/design/item/engifab/engitools/multitool
@@ -122,22 +122,37 @@
 	build_path = /obj/item/device/multitool
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_GLASS = 1 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
 	time = 15
+
+/datum/design/item/engifab/engitools/welder_mini
+	name = "Miniture welding tool"
+	id = "miniature_welding_tool"
+	build_path = /obj/item/weapon/tool/weldingtool/mini/empty
+	category = "Tools"
+	materials = list(MATERIAL_STEEL = 70, MATERIAL_GLASS = 30)
+
+/datum/design/item/engifab/engitools/weldertool
+	name = "Welding tool"
+	id = "welding_tool"
+	build_path = /obj/item/weapon/tool/weldingtool/empty
+	category = "Tools"
+	materials = list(MATERIAL_STEEL = 210, MATERIAL_GLASS = 90)
+
 /datum/design/item/engifab/engitools/simple/screwdriver
 	name = "Screwdriver"
 	id = "screwdriver"
-	build_path = /obj/item/weapon/screwdriver
+	build_path = /obj/item/weapon/tool/screwdriver
 	materials = list(MATERIAL_STEEL = 0.25 SHEETS)
 
 /datum/design/item/engifab/engitools/simple/wirecutters
 	name = "Wirecutters"
 	id = "wirecutters"
-	build_path = /obj/item/weapon/wirecutters
+	build_path = /obj/item/weapon/tool/wirecutters
 	materials = list(MATERIAL_STEEL = 0.25 SHEETS)
 
 /datum/design/item/engifab/engitools/simple/wrench
 	name = "Wrench"
 	id = "wrench"
-	build_path = /obj/item/weapon/wrench
+	build_path = /obj/item/weapon/tool/wrench
 	materials = list(MATERIAL_STEEL = 0.25 SHEETS)
 
 /**
@@ -156,14 +171,17 @@
 	build_path = /obj/item/weapon/material/twohanded/fireaxe
 	materials = list(MATERIAL_STEEL = 5 SHEET, MATERIAL_WOOD = 2 SHEET)
 	research = "fireaxe"
+
 /datum/design/item/engifab/engitools/inflatabledoor
 	build_path = /obj/item/inflatable/door
 	materials = list(MATERIAL_PLASTIC = 3 SHEET)
 	research = "inflatables"
+
 /datum/design/item/engifab/engitools/inflatablewall
 	build_path = /obj/item/inflatable/wall
 	materials = list(MATERIAL_PLASTIC = 2 SHEET)
 	research = "inflatables"
+
 
 
 /datum/design/item/engifab/engitools/combitool
@@ -218,13 +236,13 @@
 /datum/design/item/engifab/engitools/simple/welder_mini
 	name = "Miniture welding tool"
 	id = "miniature_welding_tool"
-	build_path = /obj/item/weapon/weldingtool/mini/empty
+	build_path = /obj/item/weapon/tool/weldingtool/mini/empty
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_GLASS = 0.5 SHEET)
 
 /datum/design/item/engifab/engitools/weldertool
 	name = "Welding tool"
 	id = "welding_tool"
-	build_path = /obj/item/weapon/weldingtool/empty
+	build_path = /obj/item/weapon/tool/weldingtool/empty
 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 1 SHEETS)
 
 /datum/design/item/engifab/engitools/weldingpack
@@ -235,13 +253,13 @@
 
 /datum/design/item/engifab/engitools/welder_industrial
 	name = "Industrial welding tool"
-	build_path = /obj/item/weapon/weldingtool/largetank/empty
+	build_path = /obj/item/weapon/tool/weldingtool/largetank/empty
 	req_tech = list(TECH_ENGINEERING = 2)
 	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GLASS = 2 SHEETS)
 	research = "welding_industrial"
 /datum/design/item/engifab/engitools/welder_huge
 	name = "High-capacity welding tool"
-	build_path = /obj/item/weapon/weldingtool/hugetank/empty
+	build_path = /obj/item/weapon/tool/weldingtool/hugetank/empty
 	req_tech = list(TECH_ENGINEERING = 3)
 	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GLASS = 3 SHEETS)
 	research = "welding_huge"
@@ -249,8 +267,7 @@
 /datum/design/item/engifab/engitools/adv/experimental_welder
 	name = "Experimental welding tool"
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_PLASTEEL = 5 SHEETS, MATERIAL_PHORON = 5 SHEETS)
-	build_path = /obj/item/weapon/weldingtool/experimental
-
+	build_path = /obj/item/weapon/tool/weldingtool/experimental
 
 /datum/design/item/engifab/engitools/adv/airlock_brace
 	name = "Airlock brace"
@@ -261,7 +278,7 @@
 /datum/design/item/engifab/engitools/adv/brace_jack
 	name = "Brace jack"
 	materials = list(MATERIAL_STEEL = 3 SHEETS)
-	build_path = /obj/item/weapon/crowbar/brace_jack
+	build_path = /obj/item/weapon/tool/crowbar/brace_jack
 	research = "bracejack"
 
 /datum/design/item/engifab/engitools/adv/light_replacer
@@ -283,6 +300,25 @@
 	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GLASS = 1.5 SHEETS, MATERIAL_GOLD = 1 SHEET, MATERIAL_PHORON = 1 SHEET)
 	build_path = /obj/item/weapon/storage/part_replacer
 	research = "rped"
+
+/datum/design/item/engifab/engitools/adv/brace_jack
+	name = "Brace jack"
+	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 2)
+	materials = list(MATERIAL_STEEL = 2 SHEETS)
+	build_path = /obj/item/weapon/tool/crowbar/brace_jack
+
+/datum/design/item/engifab/engitools/adv/airlock_brace
+	name = "Airlock Brace"
+	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 2 SHEETS)
+	build_path = /obj/item/weapon/airlock_brace
+
+
+/datum/design/item/engifab/engitools/adv/experimental_welder
+	name = "Experimental welding tool"
+	req_tech = list(TECH_ENGINEERING = 5, TECH_PHORON = 4)
+	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 5 SHEETS, MATERIAL_PLASTEEL = 5 SHEETS)
+	chemicals = list(/datum/reagent/toxin/phoron/oxygen = 80)	//hopefully this makes a good detterant for obtaining OP welding tool
+	build_path = /obj/item/weapon/tool/weldingtool/experimental
 
 /datum/design/item/engifab/engitools/adv/nanopaste
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 5 SHEETS)

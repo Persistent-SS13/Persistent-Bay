@@ -693,3 +693,26 @@
 
 /obj/item/stack/material/leather/fifty
 	amount = 50
+
+/obj/item/stack/material/generic/Initialize()
+	. = ..()
+	if(material) color = material.icon_colour
+
+//Edible materials!
+/obj/item/stack/material/edible
+	name = "edible"
+	icon_state = "sheet-leather"
+	default_type = "pinkgoo"
+
+/obj/item/stack/material/edible/pink_goo_slab
+	name = "pink goo"
+	desc = "A mix of meats, from various origins and species, grinded finely and pressed into thick meaty slabs.."
+	singular_name = "pink goo slab"
+	icon_state = "sheet-leather"
+	default_type = "pinkgoo"
+	apply_colour = 1
+
+/obj/item/stack/material/edible/pink_goo_slab/ten
+	amount = 10
+/obj/item/stack/material/edible/pink_goo_slab/fifty
+	amount = 50

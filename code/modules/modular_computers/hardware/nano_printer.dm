@@ -9,6 +9,17 @@
 	var/stored_paper = 5
 	var/max_paper = 10
 
+/obj/item/weapon/computer_hardware/nano_printer/New()
+	..()
+	ADD_SAVED_VAR(stored_paper)
+	ADD_SKIP_EMPTY(stored_paper)
+
+/obj/item/weapon/computer_hardware/nano_printer/Destroy()
+	if(holder2 && (holder2.nano_printer == src))
+		holder2.nano_printer = null
+	holder2 = null
+	return ..()
+
 /obj/item/weapon/computer_hardware/nano_printer/diagnostics(var/mob/user)
 	..()
 	to_chat(user, "Paper buffer level: [stored_paper]/[max_paper]")
@@ -22,7 +33,7 @@
 		return 0
 
 	// Damaged printer causes the resulting paper to be somewhat harder to read.
-	if(damage > damage_malfunction)
+	if(ismalfunctioning())
 		text_to_print = stars(text_to_print, 100-malfunction_probability)
 	new/obj/item/weapon/paper(get_turf(holder2),text_to_print, paper_title)
 
@@ -59,7 +70,7 @@
 		for(var/obj/item/weapon/bundleitem in B) //loop through items in bundle
 			if(istype(bundleitem, /obj/item/weapon/paper)) //if item is paper (and not photo), add into the bin
 				var/obj/item/weapon/paper/paper = bundleitem
-				if(paper.info && paper.info != "")					
+				if(paper.info && paper.info != "")
 					continue
 				B.pages.Remove(bundleitem)
 				qdel(bundleitem)
@@ -78,9 +89,3 @@
 			B.update_icon()
 		to_chat(user, "You add [num_of_pages_added] papers from \the [W] into \the [src].")
 	return
-
-/obj/item/weapon/computer_hardware/nano_printer/Destroy()
-	if(holder2 && (holder2.nano_printer == src))
-		holder2.nano_printer = null
-	holder2 = null
-	return ..()

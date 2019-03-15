@@ -6,6 +6,10 @@
 	icon = 'icons/obj/undies_wardrobe.dmi'
 	icon_state = "closed"
 	density = TRUE
+	mass = 20
+	max_health = 125
+	damthreshold_brute 	= 15
+	damthreshold_burn	= 0
 	var/static/list/amount_of_underwear_by_id_card
 
 /obj/structure/undies_wardrobe/attackby(var/obj/item/underwear/underwear, var/mob/user)

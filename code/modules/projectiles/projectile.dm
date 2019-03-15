@@ -1,10 +1,11 @@
+
 /obj/item/projectile
 	name = "projectile"
 	icon = 'icons/obj/projectiles.dmi'
 	icon_state = "bullet"
-	density = 1
-	unacidable = 1
-	anchored = 1 //There's a reason this is here, Mport. God fucking damn it -Agouri. Find&Fix by Pete. The reason this is here is to stop the curving of emitter shots.
+	density = TRUE
+	unacidable = TRUE
+	anchored = TRUE //There's a reason this is here, Mport. God fucking damn it -Agouri. Find&Fix by Pete. The reason this is here is to stop the curving of emitter shots.
 	pass_flags = PASS_FLAG_TABLE
 	mouse_opacity = 0
 	var/bumped = 0		//Prevents it from hitting more than one guy at once
@@ -25,11 +26,10 @@
 	var/accuracy = 0
 	var/dispersion = 0.0
 
-	var/damage = 10
-	var/damage_type = BRUTE //BRUTE, BURN, TOX, OXY, CLONE, PAIN are the only things that should be in here
-	var/nodamage = 0 //Determines if the projectile will skip any damage inflictions
+	force = 10
+	damtype = DAM_BULLET
+	var/nodamage = FALSE //Determines if the projectile will skip any damage inflictions
 	var/taser_effect = 0 //If set then the projectile will apply it's agony damage using stun_effect_act() to mobs it hits, and other damage will be ignored
-	var/check_armour = "bullet" //Defines what armor to use when it hits things.  Must be set to bullet, laser, energy,or bomb	//Cael - bio and rad are also valid
 	var/projectile_type = /obj/item/projectile
 	var/penetrating = 0 //If greater than zero, the projectile will pass through dense objects as specified by on_penetrate()
 	var/kill_count = 50 //This will de-increment every process(). When 0, it will delete the projectile.
@@ -45,7 +45,7 @@
 	var/embed = 0 // whether or not the projectile can embed itself in the mob
 	var/penetration_modifier = 0.2 //How much internal damage this projectile can deal, as a multiplier.
 
-	var/hitscan = 0		// whether the projectile should be hitscan
+	var/hitscan = FALSE		// whether the projectile should be hitscan
 	var/step_delay = 1	// the delay between iterations if not a hitscan projectile
 
 	// effect types to be used
@@ -55,16 +55,14 @@
 
 	var/fire_sound
 
-	var/vacuum_traversal = 1 //Determines if the projectile can exist in vacuum, if false, the projectile will be deleted if it enters vacuum.
+	var/vacuum_traversal = TRUE //Determines if the projectile can exist in vacuum, if false, the projectile will be deleted if it enters vacuum.
 
 	var/datum/plot_vector/trajectory	// used to plot the path of the projectile
 	var/datum/vector_loc/location		// current location of the projectile in pixel space
 	var/matrix/effect_transform			// matrix to rotate and scale projectile effects - putting it here so it doesn't
 										//  have to be recreated multiple times
-	should_save = 0
-/obj/item/projectile/New()
-	damtype = damage_type //TODO unify these vars properly
-	..()
+	should_save = FALSE
+
 
 //TODO: make it so this is called more reliably, instead of sometimes by bullet_act() and sometimes not
 /obj/item/projectile/proc/on_hit(var/atom/target, var/blocked = 0, var/def_zone = null)
@@ -76,7 +74,7 @@
 
 	L.apply_effects(stun, weaken, paralyze, 0, stutter, eyeblur, drowsy, agony, blocked)
 	//radiation protection is handled separately from other armour types.
-	L.apply_effect(irradiate, IRRADIATE, L.getarmor(null, "rad"))
+	L.apply_effect(irradiate, IRRADIATE, L.getarmor(null, DAM_RADS))
 
 	return 1
 
@@ -88,13 +86,13 @@
 //Checks if the projectile is eligible for embedding. Not that it necessarily will.
 /obj/item/projectile/proc/can_embed()
 	//embed must be enabled and damage type must be brute
-	if(!embed || damage_type != BRUTE)
+	if(!embed || !IsDamageTypeBrute(damtype))
 		return 0
 	return 1
 
 /obj/item/projectile/proc/get_structure_damage()
-	if(damage_type == BRUTE || damage_type == BURN)
-		return damage
+	if(IsDamageTypePhysical(damtype))
+		return force
 	return 0
 
 //return 1 if the projectile should be allowed to pass through after all, 0 if not.

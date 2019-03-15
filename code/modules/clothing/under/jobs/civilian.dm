@@ -103,7 +103,19 @@
 	icon_state = "janitor"
 	worn_state = "janitor"
 	item_state = "janitor"
-	armor = list(melee = 0, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 10, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 0,
+		DAM_PIERCE 	= 2,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 10,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 
 /obj/item/clothing/under/lawyer

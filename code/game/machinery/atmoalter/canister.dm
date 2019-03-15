@@ -3,7 +3,7 @@
 	icon = 'icons/obj/atmos.dmi'
 	icon_state = "yellow"
 	density = 1
-	var/health = 100.0
+	max_health = 100
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	w_class = ITEM_SIZE_GARGANTUAN
 
@@ -22,7 +22,7 @@
 	var/update_flag = 0
 	var/heat_capacity = 31250
 	var/heat = 9160937.5//T20C * heat_capacity
-	var/temperature = T20C
+	temperature = T20C
 	var/upgraded = 1
 	var/upgrade_stack_type = /obj/item/stack/material/plasteel
 	var/upgrade_stack_amount = 20
@@ -131,13 +131,17 @@ update_flag
 	..()
 	if(loc)
 		handle_heat_exchange()
-	if(valve_open)
+
+	if(valve_open && air_contents.return_pressure() != 0)
 		var/datum/gas_mixture/environment
 		if(holding && holding.air_contents)
 			environment = holding.air_contents
 		else
-			environment = loc.return_air()
+			environment = loc? loc.return_air() : null
 
+		//If in space you don't care
+		if(!environment)
+			return
 		var/env_pressure = environment.return_pressure()
 		var/pressure_delta = release_pressure - env_pressure
 
@@ -157,6 +161,8 @@ update_flag
 	air_contents.react() //cooking up air cans - add phoron and oxygen, then heat above PHORON_MINIMUM_BURN_TEMPERATURE
 
 /obj/machinery/portable_atmospherics/canister/proc/handle_heat_exchange()
+	if(!loc)
+		return
 	if(istype(src.loc, /turf/space))
 		heat -= COSMIC_RADIATION_TEMPERATURE * CANISTER_HEAT_TRANSFER_COEFFICIENT
 		return
@@ -169,6 +175,8 @@ update_flag
 
 
 /obj/machinery/portable_atmospherics/canister/proc/exchange_heat(var/datum/gas_mixture/environment)
+	if(!environment) //Most likely in space
+		return
 	var/relative_density = (environment.total_moles/environment.volume) / (MOLES_CELLSTANDARD/CELL_VOLUME)
 	if(relative_density > 0.02) //don't bother if we are in vacuum or near-vacuum
 		var/loc_temp = environment.temperature
@@ -199,11 +207,11 @@ update_flag
 	return 0
 
 /obj/machinery/portable_atmospherics/canister/bullet_act(var/obj/item/projectile/Proj)
-	if(!(Proj.damage_type == BRUTE || Proj.damage_type == BURN))
+	if(!IsDamageTypePhysical(Proj.damtype))
 		return
 
-	if(Proj.damage)
-		src.health -= round(Proj.damage / 2)
+	if(Proj.force)
+		src.health -= round(Proj.force / 2)
 		healthcheck()
 	..()
 
@@ -243,8 +251,8 @@ update_flag
 
 /obj/machinery/portable_atmospherics/canister/attackby(obj/item/W as obj, mob/user as mob)
 	if(isWelder(W) && src.destroyed)
-		var/obj/item/weapon/weldingtool/WT = W
-		if(WT.remove_fuel(0,user))
+		var/obj/item/weapon/tool/weldingtool/WT = W
+		if(WT.use_tool(user, src))
 			var/obj/item/stack/material/steel/new_item = new(usr.loc)
 			new_item.add_to_stacks(usr)
 			//!initial allows me to implement this payback on destroy without giving everyone free plasteel.
@@ -364,7 +372,7 @@ update_flag
 
 /obj/machinery/portable_atmospherics/canister/sleeping_agent/init_air_content()
 	..()
-	air_contents.adjust_gas("sleeping_agent", MolesForPressure())
+	air_contents.adjust_gas(GAS_N2O, MolesForPressure())
 	src.update_icon()
 
 //--------------------------------------------------------
@@ -378,7 +386,7 @@ update_flag
 
 /obj/machinery/portable_atmospherics/canister/nitrogen/init_air_content()
 	..()
-	src.air_contents.adjust_gas("nitrogen", MolesForPressure())
+	src.air_contents.adjust_gas(GAS_NITROGEN, MolesForPressure())
 	src.update_icon()
 
 //--------------------------------------------------------
@@ -403,7 +411,7 @@ update_flag
 
 /obj/machinery/portable_atmospherics/canister/oxygen/init_air_content()
 	..()
-	src.air_contents.adjust_gas("oxygen", MolesForPressure())
+	src.air_contents.adjust_gas(GAS_OXYGEN, MolesForPressure())
 	src.update_icon()
 
 //--------------------------------------------------------
@@ -429,7 +437,7 @@ update_flag
 
 /obj/machinery/portable_atmospherics/canister/hydrogen/init_air_content()
 	..()
-	src.air_contents.adjust_gas("hydrogen", MolesForPressure())
+	src.air_contents.adjust_gas(GAS_HYDROGEN, MolesForPressure())
 	src.update_icon()
 
 //--------------------------------------------------------
@@ -443,7 +451,7 @@ update_flag
 
 /obj/machinery/portable_atmospherics/canister/phoron/init_air_content()
 	..()
-	src.air_contents.adjust_gas("phoron", MolesForPressure())
+	src.air_contents.adjust_gas(GAS_PHORON, MolesForPressure())
 	src.update_icon()
 
 //--------------------------------------------------------
@@ -457,7 +465,7 @@ update_flag
 
 /obj/machinery/portable_atmospherics/canister/carbon_dioxide/init_air_content()
 	..()
-	src.air_contents.adjust_gas("carbon_dioxide", MolesForPressure())
+	src.air_contents.adjust_gas(GAS_CO2, MolesForPressure())
 	src.update_icon()
 
 //--------------------------------------------------------
@@ -472,7 +480,7 @@ update_flag
 /obj/machinery/portable_atmospherics/canister/air/init_air_content()
 	..()
 	var/list/air_mix = StandardAirMix()
-	src.air_contents.adjust_multi("oxygen", air_mix["oxygen"], "nitrogen", air_mix["nitrogen"])
+	src.air_contents.adjust_multi(GAS_OXYGEN, air_mix[GAS_OXYGEN], GAS_NITROGEN, air_mix[GAS_NITROGEN])
 	src.update_icon()
 
 //--------------------------------------------------------
@@ -488,7 +496,7 @@ update_flag
 //Dirty way to fill room with gas. However it is a bit easier to do than creating some floor/engine/n2o -rastaf0
 /obj/machinery/portable_atmospherics/canister/sleeping_agent/roomfiller/init_air_content()
 	..()
-	air_contents.gas["sleeping_agent"] = 9*4000
+	air_contents.gas[GAS_N2O] = 9*4000
 	spawn(10)
 		var/turf/simulated/location = src.loc
 		if (istype(src.loc))
@@ -503,7 +511,7 @@ update_flag
 // Special types used for engine setup admin verb, they contain double amount of that of normal canister.
 /obj/machinery/portable_atmospherics/canister/nitrogen/engine_setup/init_air_content()
 	..()
-	src.air_contents.adjust_gas("nitrogen", MolesForPressure())
+	src.air_contents.adjust_gas(GAS_NITROGEN, MolesForPressure())
 	src.update_icon()
 
 //--------------------------------------------------------
@@ -511,7 +519,7 @@ update_flag
 //--------------------------------------------------------
 /obj/machinery/portable_atmospherics/canister/carbon_dioxide/engine_setup/init_air_content()
 	..()
-	src.air_contents.adjust_gas("carbon_dioxide", MolesForPressure())
+	src.air_contents.adjust_gas(GAS_CO2, MolesForPressure())
 	src.update_icon()
 
 //--------------------------------------------------------
@@ -519,7 +527,7 @@ update_flag
 //--------------------------------------------------------
 /obj/machinery/portable_atmospherics/canister/phoron/engine_setup/init_air_content()
 	..()
-	src.air_contents.adjust_gas("phoron", MolesForPressure())
+	src.air_contents.adjust_gas(GAS_PHORON, MolesForPressure())
 	src.update_icon()
 
 //--------------------------------------------------------

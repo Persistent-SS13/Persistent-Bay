@@ -16,7 +16,7 @@
 	trying.limits.ataccessories |= src
 	req_access_faction = trying.uid
 	connected_faction = src
-	
+
 /obj/machinery/fabricator/autotailor/accessories/can_disconnect(var/datum/world_faction/trying, var/mob/M)
 	if(!trying.limits) return 0
 	trying.limits.ataccessories -= src
@@ -34,14 +34,14 @@
 	category = "Casual wear"
 	req_tech = list(TECH_MATERIAL = 1)
 	time = 30
-	materials = list("cloth" = 500)
+	materials = list(MATERIAL_CLOTH = 500)
 
 //
 //casual shirts
 //
 /datum/design/item/autotailor/accessories/casual
 	category = "Casual wear"
-	materials = list("cloth" = 1000)
+	materials = list(MATERIAL_CLOTH = 1000)
 
 /datum/design/item/autotailor/accessories/casual/access_flannel_white	//custom colors, appearntly
 	name = "Accessory - white flannel"
@@ -98,7 +98,7 @@
 //
 /datum/design/item/autotailor/accessories/fancy
 	category = "Fancy suits"
-	materials = list("cloth" = 1000, MATERIAL_PHORON = 500)
+	materials = list(MATERIAL_CLOTH = 1000, MATERIAL_PHORON = 500)
 
 /datum/design/item/autotailor/accessories/fancy/access_tangzuang	//custom colors
 	name = "Accessory - tangzhuang jacket"
@@ -130,26 +130,26 @@
 //
 /datum/design/item/autotailor/accessories/attach
 	category = "Clothing attachments"
-	materials = list("cloth" = 1000, "gold" = 500)
+	materials = list(MATERIAL_CLOTH = 1000, MATERIAL_GOLD = 500)
 
 /datum/design/item/autotailor/accessories/attach/cane
 	name = "Walking cane"
 	id = "cane"
 	build_path = /obj/item/weapon/cane
-	materials = list("wood" = 1.5 SHEETS)
+	materials = list(MATERIAL_WOOD = 1.5 SHEETS)
 
 /datum/design/item/autotailor/accessories/attach/canefancy
 	build_path = /obj/item/weapon/staff/gentcane
-	materials = list("wood" = 1.5 SHEETS, MATERIAL_GOLD = 1 SHEET)
+	materials = list(MATERIAL_WOOD = 1.5 SHEETS, MATERIAL_GOLD = 1 SHEET)
 
 /datum/design/item/autotailor/accessories/attach/staff
 	build_path = /obj/item/weapon/staff
-	materials = list("wood" = 1.5 SHEETS)
+	materials = list(MATERIAL_WOOD = 1.5 SHEETS)
 
 
 /datum/design/item/autotailor/accessories/attach/canefancy
 	build_path = /obj/item/weapon/staff/gentcane
-	materials = list("wood" = 1.5 SHEETS, MATERIAL_GOLD = 1 SHEET)
+	materials = list(MATERIAL_WOOD = 1.5 SHEETS, MATERIAL_GOLD = 1 SHEET)
 
 
 
@@ -157,7 +157,7 @@
 	name = "Tie - white"
 	id = "tie_white"
 	build_path = /obj/item/clothing/accessory/white
-	materials = list("cloth" = 1000, "gold" = 500)
+	materials = list(MATERIAL_CLOTH = 1000, MATERIAL_GOLD = 500)
 
 /datum/design/item/autotailor/accessories/attach/tie_black
 	name = "Tie - black"
@@ -228,61 +228,61 @@
 	name = "Armband - white"
 	id = "armband_white"
 	build_path = /obj/item/clothing/accessory/armband/med
-	materials = list("cloth" = 500)
+	materials = list(MATERIAL_CLOTH = 500)
 
 /datum/design/item/autotailor/accessories/attach/armband_red
 	name = "Armband - red"
 	id = "armband_red"
 	build_path = /obj/item/clothing/accessory/armband
-	materials = list("cloth" = 500)
+	materials = list(MATERIAL_CLOTH = 500)
 
 /datum/design/item/autotailor/accessories/attach/armband_cargo
 	name = "Armband - supply"
 	id = "armband_cargo"
 	build_path = /obj/item/clothing/accessory/armband/cargo
-	materials = list("cloth" = 500)
+	materials = list(MATERIAL_CLOTH = 500)
 
 /datum/design/item/autotailor/accessories/attach/armband_eng
 	name = "Armband - engineering"
 	id = "armband_eng"
 	build_path = /obj/item/clothing/accessory/armband/engine
-	materials = list("cloth" = 500)
+	materials = list(MATERIAL_CLOTH = 500)
 
 /datum/design/item/autotailor/accessories/attach/armband_med
 	name = "Armband - medical"
 	id = "armband_med"
 	build_path = /obj/item/clothing/accessory/armband/medblue
-	materials = list("cloth" = 500)
+	materials = list(MATERIAL_CLOTH = 500)
 
 /datum/design/item/autotailor/accessories/attach/armband_emt
 	name = "Armband - EMT"
 	id = "armband_emt"
 	build_path = /obj/item/clothing/accessory/armband/medgreen
-	materials = list("cloth" = 500)
+	materials = list(MATERIAL_CLOTH = 500)
 
 /datum/design/item/autotailor/accessories/attach/armband_sec
 	name = "Armband - security"
 	id = "armband_sec"
 	build_path = /obj/item/clothing/accessory/armband/whitered
-	materials = list("cloth" = 500)
+	materials = list(MATERIAL_CLOTH = 500)
 
 /datum/design/item/autotailor/accessories/attach/armband_peace
 	name = "Armband - peacekeeper"
 	id = "armband_peace"
 	build_path = /obj/item/clothing/accessory/armband/bluegold
-	materials = list("cloth" = 500)
+	materials = list(MATERIAL_CLOTH = 500)
 
 /datum/design/item/autotailor/accessories/attach/armband_botany
 	name = "Armband - botanist"
 	id = "armband_botany"
 	build_path = /obj/item/clothing/accessory/armband/hydro
-	materials = list("cloth" = 500)
+	materials = list(MATERIAL_CLOTH = 500)
 
 /datum/design/item/autotailor/accessories/attach/scarf_white	//custom colors
 	name = "Scarf - white"
 	id = "scarf_white"
 	build_path = /obj/item/clothing/accessory/scarf
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/accessories/attach/necklace_white	//custom colors
 	name = "Necklace - white"
@@ -294,44 +294,44 @@
 	name = "Lockette - silver"
 	id = "lockette_silver"
 	build_path = /obj/item/clothing/accessory/locket
-	materials = list("silver" = 500)
+	materials = list(MATERIAL_SILVER = 500)
 
 /datum/design/item/autotailor/accessories/attach/kneepads
 	name = "Kneepads"
 	id = "kneepads"
 	build_path = /obj/item/clothing/accessory/kneepads
-	materials = list("leather" = 2000)
+	materials = list(MATERIAL_LEATHER = 2000)
 
 /datum/design/item/autotailor/accessories/attach/medal_iron
 	name = "Iron medal"
 	id = "medal_iron"
 	build_path = /obj/item/clothing/accessory/medal/iron
-	materials = list("iron" = 500)
+	materials = list(MATERIAL_IRON = 500)
 
 /datum/design/item/autotailor/accessories/attach/medal_bronze
 	name = "Bronze medal"
 	id = "medal_bronze"
 	build_path = /obj/item/clothing/accessory/medal/bronze
-	materials = list("copper" = 500)	//i don't think bronze is obtainable
+	materials = list(MATERIAL_COPPER = 500)	//i don't think bronze is obtainable
 
 /datum/design/item/autotailor/accessories/attach/medal_silver
 	name = "Silver medal"
 	id = "medal_silver"
 	build_path = /obj/item/clothing/accessory/medal/silver
-	materials = list("silver" = 500)
+	materials = list(MATERIAL_SILVER = 500)
 
 /datum/design/item/autotailor/accessories/attach/medal_gold
 	name = "Gold medal"
 	id = "medal_gold"
 	build_path = /obj/item/clothing/accessory/medal/gold
-	materials = list("gold" = 500)
+	materials = list(MATERIAL_GOLD = 500)
 
 //
 //Shoes
 //
 /datum/design/item/autotailor/accessories/shoes
 	category = "Shoes"
-	materials = list("leather" = 1000)
+	materials = list(MATERIAL_LEATHER = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/sneaker_white	//custom colors?
 	name = "Sneakers - white"
@@ -453,116 +453,116 @@
 	name = "Caligae - bare"
 	id = "caligae_bare"
 	build_path = /obj/item/clothing/shoes/sandal/xeno/caligae
-	materials = list("wood" = 1000)
+	materials = list(MATERIAL_WOOD = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/caligae_white
 	name = "Caligae - white"
 	id = "caligae_white"
 	build_path = /obj/item/clothing/shoes/sandal/xeno/caligae/white
-	materials = list("wood" = 1000)
+	materials = list(MATERIAL_WOOD = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/caligae_grey
 	name = "Caligae - grey"
 	id = "caligae_grey"
 	build_path = /obj/item/clothing/shoes/sandal/xeno/caligae/grey
-	materials = list("wood" = 1000)
+	materials = list(MATERIAL_WOOD = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/caligae_black
 	name = "Caligae - black"
 	id = "Caligae - black"
 	build_path = /obj/item/clothing/shoes/sandal/xeno/caligae/black
-	materials = list("wood" = 1000)
+	materials = list(MATERIAL_WOOD = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/sandal_brown
 	name = "Sandals"
 	id = "sandal_brown"
 	build_path = /obj/item/clothing/shoes/sandal
-	materials = list("wood" = 1000)
+	materials = list(MATERIAL_WOOD = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/sandal_xeno	//these are exactly the same sprite as above on humans, remove if its the case with xenos too
 	name = "Sandals - xenos"
 	id = "sandal_xeno"
 	build_path = /obj/item/clothing/shoes/sandal/xeno
-	materials = list("wood" = 1000)
+	materials = list(MATERIAL_WOOD = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/dressshoes_white	//custom colors?
 	name = "Dress shoes - white"
 	id = "dressshoes_white"
 	build_path = /obj/item/clothing/shoes/dress/white
-	materials = list("leather" = 500, "gold" = 500)
+	materials = list(MATERIAL_LEATHER = 500, MATERIAL_GOLD = 500)
 
 /datum/design/item/autotailor/accessories/shoes/dress_black
 	name = "Dress shoes - black"
 	id = "dress_black"
 	build_path = /obj/item/clothing/shoes/dress
-	materials = list("leather" = 500, "gold" = 500)
+	materials = list(MATERIAL_LEATHER = 500, MATERIAL_GOLD = 500)
 
 /datum/design/item/autotailor/accessories/shoes/jackb_black
 	name = "Jackboots - black"
 	id = "jackb_black"
 	build_path = /obj/item/clothing/shoes/jackboots
-	materials = list("leather" = 500, MATERIAL_STEEL = 1000)
+	materials = list(MATERIAL_LEATHER = 500, MATERIAL_STEEL = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/jackb_black_notoe
 	name = "Jackboots - black toeless"
 	id = "jackb_black_notoe"
 	build_path = /obj/item/clothing/shoes/jackboots/unathi
-	materials = list("leather" = 500, MATERIAL_STEEL = 1000)
+	materials = list(MATERIAL_LEATHER = 500, MATERIAL_STEEL = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/jackb_grey	//item sprite looks arcane-y, but mob sprite looks normal for everyday use
 	name = "Jackboots - grey"
 	id = "jackb_grey"
 	build_path = /obj/item/clothing/shoes/cult
-	materials = list("leather" = 500, MATERIAL_STEEL = 1000)
+	materials = list(MATERIAL_LEATHER = 500, MATERIAL_STEEL = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/jackb_tan
 	name = "Jackboots - tan"
 	id = "jackb_tan"
 	build_path = /obj/item/clothing/shoes/desertboots
-	materials = list("leather" = 500, MATERIAL_STEEL = 1000)
+	materials = list(MATERIAL_LEATHER = 500, MATERIAL_STEEL = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/jackb_brown
 	name = "jackboots - brown"
 	id = "jackb_brown"
 	build_path = /obj/item/clothing/shoes/jungleboots
-	materials = list("leather" = 500, MATERIAL_STEEL = 1000)
+	materials = list(MATERIAL_LEATHER = 500, MATERIAL_STEEL = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/workboot
 	name = "Industrial workboots"
 	id = "workboot"
 	build_path = /obj/item/clothing/shoes/workboots
-	materials = list("leather" = 500, MATERIAL_STEEL = 1000)
+	materials = list(MATERIAL_LEATHER = 500, MATERIAL_STEEL = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/workboot_notoe	//hopefully unique sprite on unanthe, same sprite as above on human, also outdated object sprite
 	name = "Industrial workboots - toeless"
 	id = "workboot_notoe"
 	build_path = /obj/item/clothing/shoes/workboots/toeless
-	materials = list("leather" = 500, MATERIAL_STEEL = 1000)
+	materials = list(MATERIAL_LEATHER = 500, MATERIAL_STEEL = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/galoshes_yellow
 	name = "Galoshes"
 	id = "galoshes_yellow"
 	build_path = /obj/item/clothing/shoes/galoshes
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/accessories/shoes/slippers_bunny
 	name = "Bunny slippers"
 	id = "slippers_bunny"
 	build_path = /obj/item/clothing/shoes/slippers
-	materials = list("cloth" = 1000)
+	materials = list(MATERIAL_CLOTH = 1000)
 
 /datum/design/item/autotailor/accessories/shoes/slippers_bunny_worn	//if we ever add clothing states, make this the snowflake item with its own dirty icon
 	name = "Bunny slippers - worn"
 	id = "slippers_bunny_worn"
 	build_path = /obj/item/clothing/shoes/slippers_worn
-	materials = list("cloth" = 500)
+	materials = list(MATERIAL_CLOTH = 500)
 
 //
 //Ears,anemities fab will hopefully make this list more precisely named
 //
 /datum/design/item/autotailor/accessories/ears
 	category = "Ears"
-	materials = list("plastic" = 1000)
+	materials = list(MATERIAL_PLASTIC = 1000)
 
 /datum/design/item/autotailor/accessories/ears/headphones
 	name = "headphones"
@@ -578,25 +578,25 @@
 	name = "Dangle earrings - white"
 	id = "Dangle earrings - white"
 	build_path = /obj/item/clothing/ears/earring/dangle
-	materials = list("plastic" = 500)
+	materials = list(MATERIAL_PLASTIC = 500)
 
 /datum/design/item/autotailor/accessories/ears/dangle_wood
 	name = "Dangle earrings - wood"
 	id = "dangle_wood"
 	build_path = /obj/item/clothing/ears/earring/dangle/wood
-	materials = list("wood" = 500)
+	materials = list(MATERIAL_WOOD = 500)
 
 /datum/design/item/autotailor/accessories/ears/dangle_glass
 	name = "Dangle earrings - glass"
 	id = "dangle_glass"
 	build_path = /obj/item/clothing/ears/earring/dangle/glass
-	materials = list("glass" = 500)
+	materials = list(MATERIAL_GLASS = 500)
 
 /datum/design/item/autotailor/accessories/ears/dangle_iron
 	name = "Dangle earrings - iron"
 	id = "dangle_iron"
 	build_path = /obj/item/clothing/ears/earring/dangle/iron
-	materials = list("iron" = 500)
+	materials = list(MATERIAL_IRON = 500)
 
 /datum/design/item/autotailor/accessories/ears/dangle_steel
 	name = "Dangle earrings - steel"
@@ -608,49 +608,49 @@
 	name = "Dangle earrings - silver"
 	id = "dangle_silver"
 	build_path = /obj/item/clothing/ears/earring/dangle/silver
-	materials = list("silver" = 500)
+	materials = list(MATERIAL_SILVER = 500)
 
 /datum/design/item/autotailor/accessories/ears/dangle_platinum
 	name = "Dangle earrings - platinum"
 	id = "dangle_platinum"
 	build_path = /obj/item/clothing/ears/earring/dangle/platinum
-	materials = list("platinum" = 500)
+	materials = list(MATERIAL_PLATINUM = 500)
 
 /datum/design/item/autotailor/accessories/ears/dangle_gold
 	name = "Dangle earrings - gold"
 	id = "dangle_gold"
 	build_path = /obj/item/clothing/ears/earring/dangle/gold
-	materials = list("gold" = 500)
+	materials = list(MATERIAL_GOLD = 500)
 
 /datum/design/item/autotailor/accessories/ears/dangle_diamond
 	name = "Dangle earrings - diamond"
 	id = "dangle_diamond"
 	build_path = /obj/item/clothing/ears/earring/dangle/diamond
-	materials = list("diamond" = 500)
+	materials = list(MATERIAL_DIAMOND = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_pearl	//custom colors
 	name = "Stud earrings - pearl"
 	id = "stud_pearl"
 	build_path = /obj/item/clothing/ears/earring/stud
-	materials = list("plastic" = 500)
+	materials = list(MATERIAL_PLASTIC = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_wood
 	name = "Stud earrings - wood"
 	id = "stud_wood"
 	build_path = /obj/item/clothing/ears/earring/stud/wood
-	materials = list("wood" = 500)
+	materials = list(MATERIAL_WOOD = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_glass
 	name = "Stud earrings - glass"
 	id = "stud_glass"
 	build_path = /obj/item/clothing/ears/earring/stud/glass
-	materials = list("glass" = 500)
+	materials = list(MATERIAL_GLASS = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_iron
 	name = "Stud earrings - iron"
 	id = "stud_iron"
 	build_path = /obj/item/clothing/ears/earring/stud/iron
-	materials = list("iron" = 500)
+	materials = list(MATERIAL_IRON = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_steel
 	name = "Stud earrings - steel"
@@ -662,32 +662,32 @@
 	name = "Stud earrings - silver"
 	id = "stud_silver"
 	build_path = /obj/item/clothing/ears/earring/stud/silver
-	materials = list("silver" = 500)
+	materials = list(MATERIAL_SILVER = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_platinum
 	name = "Stud earrings - platinum"
 	id = "stud_platinum"
 	build_path = /obj/item/clothing/ears/earring/stud/platinum
-	materials = list("platinum" = 500)
+	materials = list(MATERIAL_PLATINUM = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_gold
 	name = "Stud earrings - gold"
 	id = "stud_gold"
 	build_path = /obj/item/clothing/ears/earring/stud/gold
-	materials = list("gold" = 500)
+	materials = list(MATERIAL_GOLD = 500)
 
 /datum/design/item/autotailor/accessories/ears/stud_diamond
 	name = "Stud earrings - diamond"
 	id = "stud_diamond"
 	build_path = /obj/item/clothing/ears/earring/stud/diamond
-	materials = list("diamond" = 500)
+	materials = list(MATERIAL_DIAMOND = 500)
 
 //
 //eye slots, does not include high tech items like mesons
 //
 /datum/design/item/autotailor/accessories/eyes
 	category = "Glasses"
-	materials = list(MATERIAL_STEEL = 100, "glass" = 500)
+	materials = list(MATERIAL_STEEL = 100, MATERIAL_GLASS = 500)
 
 /datum/design/item/autotailor/accessories/eyes/prescription
 	name = "Prescription glasses"
@@ -698,25 +698,25 @@
 	name = "Prescription glasses - alternate"
 	id = "prescription_hipster"
 	build_path = /obj/item/clothing/glasses/regular/hipster
-	materials = list(MATERIAL_STEEL = 500, "glass" = 1000)
+	materials = list(MATERIAL_STEEL = 500, MATERIAL_GLASS = 1000)
 
 /datum/design/item/autotailor/accessories/eyes/prescription_sun
 	name = "Prescription glasses - sunglasses"
 	id = "prescription_sun"
 	build_path = /obj/item/clothing/glasses/sunglasses/prescription
-	materials = list(MATERIAL_STEEL = 100, "glass" = 1000, "fiberglass" = 7000)
+	materials = list(MATERIAL_STEEL = 100, MATERIAL_GLASS = 1000, MATERIAL_FIBERGLASS = 7000)
 
 /datum/design/item/autotailor/accessories/eyes/sunglasses
 	name = "Sunglasses"
 	id = "sunglasses"
 	build_path = /obj/item/clothing/glasses/sunglasses
-	materials = list(MATERIAL_STEEL = 100, "fiberglass" = 5000)
+	materials = list(MATERIAL_STEEL = 100, MATERIAL_FIBERGLASS = 5000)
 
 /datum/design/item/autotailor/accessories/eyes/sunglasses_large
 	name = "Sunglasses - large"
 	id = "sunglasses_large"
 	build_path = /obj/item/clothing/glasses/sunglasses/big
-	materials = list(MATERIAL_STEEL = 1000, "fiberglass" = 10000)
+	materials = list(MATERIAL_STEEL = 1000, MATERIAL_FIBERGLASS = 10000)
 
 /datum/design/item/autotailor/accessories/eyes/gglasses
 	name = "Glasses - green"
@@ -732,20 +732,20 @@
 	name = "Monocle"
 	id = "monocle"
 	build_path = /obj/item/clothing/glasses/monocle
-	materials = list(MATERIAL_STEEL = 100, "glass" = 500, MATERIAL_PHORON = 500)
+	materials = list(MATERIAL_STEEL = 100, MATERIAL_GLASS = 500, MATERIAL_PHORON = 500)
 
 /datum/design/item/autotailor/accessories/eyes/default_veil
 	name = "Decorative veil"
 	id = "default_veil"
 	build_path = /obj/item/clothing/glasses/veil
-	materials = list(MATERIAL_STEEL = 100, "glass" = 500, MATERIAL_PHORON = 5000)
+	materials = list(MATERIAL_STEEL = 100, MATERIAL_GLASS = 500, MATERIAL_PHORON = 5000)
 
 //
 //gloves
 //
 /datum/design/item/autotailor/accessories/gloves
 	category = "Gloves"
-	materials = list("leather" = 2000)
+	materials = list(MATERIAL_LEATHER = 2000)
 
 /datum/design/item/autotailor/accessories/gloves/white	//custom colors
 	name = "Gloves - white"
@@ -766,61 +766,61 @@
 	name = "Gloves - embroidered blue"
 	id = "emb_blue"
 	build_path = /obj/item/clothing/gloves/captain
-	materials = list("leather" = 2000, MATERIAL_PHORON = 4000)
+	materials = list(MATERIAL_LEATHER = 2000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/accessories/gloves/black_thick
 	name = "Gloves - thick black"
 	id = "black_thick"
 	build_path = /obj/item/clothing/gloves/thick
-	materials = list("leather" = 4000)
+	materials = list(MATERIAL_LEATHER = 4000)
 
 /datum/design/item/autotailor/accessories/gloves/brown_thick
 	name = "Gloves - thick brown"
 	id = "brown_thick"
 	build_path = /obj/item/clothing/gloves/duty
-	materials = list("leather" = 4000)
+	materials = list(MATERIAL_LEATHER = 4000)
 
 /datum/design/item/autotailor/accessories/gloves/leather_thick
 	name = "Gloves - thick leather"
 	id = "leather_thick"
 	build_path = /obj/item/clothing/gloves/thick/botany
-	materials = list("leather" = 4000)
+	materials = list(MATERIAL_LEATHER = 4000)
 
 /datum/design/item/autotailor/accessories/gloves/latex
 	name = "Medical gloves - latex"
 	id = "latex"
 	build_path = /obj/item/clothing/gloves/latex
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/accessories/gloves/nitrile
 	name = "Medical gloves - nitrile"
 	id = "nitrile"
 	build_path = /obj/item/clothing/gloves/latex/nitrile
-	materials = list("plastic" = 10000)
+	materials = list(MATERIAL_PLASTIC = 10000)
 
 /datum/design/item/autotailor/accessories/gloves/dressgloves_white	//custom colors
 	name = "Evening gloves - white"
 	id = "dressgloves_white"
 	build_path = /obj/item/clothing/gloves/color/evening
-	materials = list("leather" = 2000, MATERIAL_PHORON = 10000)
+	materials = list(MATERIAL_LEATHER = 2000, MATERIAL_PHORON = 10000)
 
 /datum/design/item/autotailor/accessories/gloves/eng_vox
 	name = "Insulated gloves - vox"
 	id = "work_vox"
 	build_path = /obj/item/clothing/gloves/vox
-	materials = list("leather" = 2000, "titanium" = 5000)
+	materials = list(MATERIAL_LEATHER = 2000, MATERIAL_TITANIUM = 5000)
 
 /datum/design/item/autotailor/accessories/gloves/eng
 	name = "Insulated gloves"
 	id = "eng"
 	build_path = /obj/item/clothing/gloves/insulated
-	materials = list("leather" = 2000, "titanium" = 5000)	//not sure if this generates on roid, change if not
+	materials = list(MATERIAL_LEATHER = 2000, MATERIAL_TITANIUM = 5000)	//not sure if this generates on roid, change if not
 
 /datum/design/item/autotailor/accessories/gloves/forensic
 	name = "Forensic gloves"
 	id = "forensic"
 	build_path = /obj/item/clothing/gloves/forensic
-	materials = list("leather" = 2000, MATERIAL_PHORON = 60000)	//these gloves have very unique threads, making them cheap makes it not very unique
+	materials = list(MATERIAL_LEATHER = 2000, MATERIAL_PHORON = 60000)	//these gloves have very unique threads, making them cheap makes it not very unique
 
 /datum/design/item/autotailor/accessories/gloves/boxing_red
 	name = "Boxing gloves - red"
@@ -847,7 +847,7 @@
 //
 /datum/design/item/autotailor/accessories/masks
 	category = "Masks"
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/accessories/masks/breath
 	name = "Breath mask"
@@ -863,74 +863,74 @@
 	name = "Breath mask - tactical"
 	id = "breath_tact"
 	build_path = /obj/item/clothing/mask/gas/half
-	materials = list("plastic" = 2000, MATERIAL_STEEL = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000, MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/accessories/masks/breath_vox
 	name = "Breath mask - vox"
 	id = "breath_vox"
 	build_path = /obj/item/clothing/mask/gas/vox
-	materials = list("plastic" = 5000)
+	materials = list(MATERIAL_PLASTIC = 5000)
 
 /datum/design/item/autotailor/accessories/masks/gas_generic
 	name = "Gas mask"
 	id = "gas_generic"
 	build_path = /obj/item/clothing/mask/gas
-	materials = list("plastic" = 5000)
+	materials = list(MATERIAL_PLASTIC = 5000)
 
 /datum/design/item/autotailor/accessories/masks/gas_tactical
 	name = "Gas mask - tactical"
 	id = "gas_tactical"
 	build_path = /obj/item/clothing/mask/gas/syndicate
-	materials = list("plastic" = 5000)
+	materials = list(MATERIAL_PLASTIC = 5000)
 
 /datum/design/item/autotailor/accessories/masks/gas_tact_vox
 	name = "Gas mask - tactical vox"
 	id = "gas_tact_vox"
 	build_path = /obj/item/clothing/mask/gas/swat/vox
-	materials = list("plastic" = 5000)
+	materials = list(MATERIAL_PLASTIC = 5000)
 
 /datum/design/item/autotailor/accessories/masks/balac_black
 	name = "Balaclava - black"
 	id = "balac_black"
 	build_path = /obj/item/clothing/mask/balaclava
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/accessories/masks/balac_green
 	name = "Balaclava - green"
 	id = "balac_green"
 	build_path = /obj/item/clothing/mask/balaclava/tactical
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/accessories/masks/balac_blue
 	name = "Balaclava - blue"
 	id = "balac_blue"
 	build_path = /obj/item/clothing/mask/balaclava/blue
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/accessories/masks/sterile_mask
 	name = "Sterile face mask"
 	id = "sterile mask"
 	build_path = /obj/item/clothing/mask/surgical
-	materials = list("plastic" = 2000)
+	materials = list(MATERIAL_PLASTIC = 2000)
 
 /datum/design/item/autotailor/accessories/masks/pipe_fancy	//temporary until a more fitting fabricator is made
 	name = "Smoking pipe - fancy"
 	id = "pipe_fancy"
 	build_path = /obj/item/clothing/mask/smokable/pipe
-	materials = list("wood" = 10000)
+	materials = list(MATERIAL_WOOD = 10000)
 
 /datum/design/item/autotailor/accessories/masks/pipe_cob	//temporary until a more fitting fabricator is made
 	name = "Smoking pipe - corncob"
 	id = "pipe_cob"
 	build_path = /obj/item/clothing/mask/smokable/pipe/cobpipe
-	materials = list("wood" = 1000)
+	materials = list(MATERIAL_WOOD = 1000)
 
 //
 //softhats
 //
 /datum/design/item/autotailor/accessories/hats
 	category = "Soft hats"
-	materials = list("cloth" = 500)
+	materials = list(MATERIAL_CLOTH = 500)
 
 /datum/design/item/autotailor/accessories/hats/cap_white	//custom colors
 	name = "Cap - white"
@@ -1077,73 +1077,73 @@
 	name = "Flat cap - brown"
 	id = "flat_brown"
 	build_path = /obj/item/clothing/head/flatcap
-	materials = list("leather" = 500)
+	materials = list(MATERIAL_LEATHER = 500)
 
 /datum/design/item/autotailor/accessories/hats/beret_grey
 	name = "Flat cap - grey"
 	id = "flat_grey"
 	build_path = /obj/item/clothing/head/wizard/cap/fake
-	materials = list("leather" = 500)
+	materials = list(MATERIAL_LEATHER = 500)
 
 /datum/design/item/autotailor/accessories/hats/trilby_blue
 	name = "Trilby - blue feathered"
 	id = "trilby_blue"
 	build_path = /obj/item/clothing/head/feathertrilby
-	materials = list("leather" = 500)
+	materials = list(MATERIAL_LEATHER = 500)
 
 /datum/design/item/autotailor/accessories/hats/fedora_black
 	name = "Fedora - black"
 	id = "fedora - black"
 	build_path = /obj/item/clothing/head/fedora
-	materials = list("leather" = 500)
+	materials = list(MATERIAL_LEATHER = 500)
 
 /datum/design/item/autotailor/accessories/hats/fedora_grey
 	name = "Fedora - grey"
 	id = "fedora_grey"
 	build_path = /obj/item/clothing/head/det/grey/noarmor
-	materials = list("leather" = 500)
+	materials = list(MATERIAL_LEATHER = 500)
 
 /datum/design/item/autotailor/accessories/hats/fedora_brown
 	name = "Fedora - brown"
 	id = "fedora_brown"
 	build_path = /obj/item/clothing/head/det/noarmor
-	materials = list("leather" = 500)
+	materials = list(MATERIAL_LEATHER = 500)
 
 /datum/design/item/autotailor/accessories/hats/bowler_black
 	name = "Bowler hat - black"
 	id = "bowler_black"
 	build_path = /obj/item/clothing/head/bowlerhat
-	materials = list("leather" = 500)
+	materials = list(MATERIAL_LEATHER = 500)
 
 /datum/design/item/autotailor/accessories/hats/tophat_black
 	name = "Top-hat - black"
 	id = "tophat_black"
 	build_path = /obj/item/clothing/head/that
-	materials = list("leather" = 500)
+	materials = list(MATERIAL_LEATHER = 500)
 
 /datum/design/item/autotailor/accessories/hats/beaver_navy
 	name = "Top-hat - beaver navy"
 	id = "beaver_navy"
 	build_path = /obj/item/clothing/head/beaverhat
-	materials = list("leather" = 500)
+	materials = list(MATERIAL_LEATHER = 500)
 
 /datum/design/item/autotailor/accessories/hats/boat_vanilla
 	name = "Boater hat - vanilla"
 	id = "boat_vanilla"
 	build_path = /obj/item/clothing/head/boaterhat
-	materials = list("leather" = 500)
+	materials = list(MATERIAL_LEATHER = 500)
 
 /datum/design/item/autotailor/accessories/hats/gold_hat
 	name = "Fancy golden hat"
 	id = "gold_hat"
 	build_path = /obj/item/clothing/head/collectable/petehat
-	materials = list("leather" = 500, "gold" = 5000)
+	materials = list(MATERIAL_LEATHER = 500, MATERIAL_GOLD = 5000)
 
 /datum/design/item/autotailor/accessories/hats/cowboy_brown
 	name = "Cowboy hat - brown"
 	id = "Cowboy_brown"
 	build_path = /obj/item/clothing/head/cowboy_hat
-	materials = list("leather" = 500)
+	materials = list(MATERIAL_LEATHER = 500)
 
 /datum/design/item/autotailor/accessories/hats/kippa_large_black
 	name = "Kippa - black"
@@ -1199,7 +1199,7 @@
 	name = "Fuzzy bear pelt"
 	id = "bearpelt"
 	build_path = /obj/item/clothing/head/bearpelt
-	materials = list("cloth" = 5000, "leather" = 5000)
+	materials = list(MATERIAL_CLOTH = 5000, MATERIAL_LEATHER = 5000)
 
 /datum/design/item/autotailor/accessories/hats/hairpin_blue
 	name = "Hair flower pin - blue"
@@ -1220,17 +1220,17 @@
 	name = "Hair flower pin - red"
 	id = "hairpin_red"
 	build_path = /obj/item/clothing/head/hairflower
-	
-	
-	
-	
+
+
+
+
 
 //
 //Back storage slots
 //
 /datum/design/item/autotailor/accessories/backpacks
 	category = "Backpacks"
-	materials = list("cloth" = 10000)
+	materials = list(MATERIAL_CLOTH = 10000)
 
 /datum/design/item/autotailor/accessories/backpacks/grey_back
 	name = "Grey backpack"
@@ -1276,7 +1276,7 @@
 	name = "Black small pocketbook"
 	id = "black_pocketbook"
 	build_path = /obj/item/weapon/storage/backpack/satchel/pocketbook
-	materials = list("cloth" = 5000)
+	materials = list(MATERIAL_CLOTH = 5000)
 
 /datum/design/item/autotailor/accessories/backpacks/mess_grey
 	name = "Grey messenger bag"
@@ -1292,7 +1292,7 @@
 	name = "Grey dufflebag"
 	id = "grey_duffle"
 	build_path = /obj/item/weapon/storage/backpack/dufflebag
-	materials = list("cloth" = 15000)
+	materials = list(MATERIAL_CLOTH = 15000)
 
 /datum/design/item/autotailor/accessories/backpacks/t_rack
 	name = "Backpack - trophy rack"
@@ -1318,7 +1318,7 @@
 	name = "Industrial dufflebag"
 	id = "indu_duffle"
 	build_path = /obj/item/weapon/storage/backpack/dufflebag/eng
-	materials = list("cloth" = 15000)
+	materials = list(MATERIAL_CLOTH = 15000)
 
 /datum/design/item/autotailor/accessories/backpacks/sci_back
 	name = "Scientist backpack"
@@ -1394,7 +1394,7 @@
 	name = "Medical dufflebag"
 	id = "med_duffle"
 	build_path = /obj/item/weapon/storage/backpack/dufflebag/med
-	materials = list("cloth" = 15000)
+	materials = list(MATERIAL_CLOTH = 15000)
 
 /datum/design/item/autotailor/accessories/backpacks/sec_back
 	name = "Security backpack"
@@ -1415,7 +1415,7 @@
 	name = "Security dufflebag"
 	id = "sec_duffle"
 	build_path = /obj/item/weapon/storage/backpack/dufflebag/sec
-	materials = list("cloth" = 15000)
+	materials = list(MATERIAL_CLOTH = 15000)
 
 /datum/design/item/autotailor/accessories/backpacks/cap_back
 	name = "Captain backpack"
@@ -1436,49 +1436,49 @@
 	name = "Captain dufflebag"
 	id = "cap_duffle"
 	build_path = /obj/item/weapon/storage/backpack/dufflebag/captain
-	materials = list("cloth" = 15000)
+	materials = list(MATERIAL_CLOTH = 15000)
 
 /datum/design/item/autotailor/accessories/backpacks/ert_blueback
 	name = "Blue ERT backpack"
 	id = "ert_blue"
 	build_path = /obj/item/weapon/storage/backpack/ert
-	materials = list("cloth" = 5000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_CLOTH = 5000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/accessories/backpacks/ert_engback
 	name = "Yellow ERT backpack"
 	id = "ert_engback"
 	build_path = /obj/item/weapon/storage/backpack/ert/engineer
-	materials = list("cloth" = 5000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_CLOTH = 5000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/accessories/backpacks/ert_whiteback
 	name = "White ERT backpack"
 	id = "ert_white"
 	build_path = /obj/item/weapon/storage/backpack/ert/medical
-	materials = list("cloth" = 5000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_CLOTH = 5000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/accessories/backpacks/ert_redback
 	name = "Red ERT backpack"
 	id = "ert_red"
 	build_path = /obj/item/weapon/storage/backpack/ert/security
-	materials = list("cloth" = 5000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_CLOTH = 5000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/accessories/backpacks/tact_d_black
 	name = "Tactical dufflebag - black"
 	id = "tact_d_black"
 	build_path = /obj/item/weapon/storage/backpack/dufflebag/syndie
-	materials = list("cloth" = 15000, MATERIAL_PHORON = 4000)
+	materials = list(MATERIAL_CLOTH = 15000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/accessories/backpacks/tact_d_med
 	name = "Tactical dufflebag - medical"
 	id = "tact_d_med"
 	build_path = /obj/item/weapon/storage/backpack/dufflebag/syndie/med
-	materials = list("cloth" = 15000, MATERIAL_PHORON = 4000)
+	materials = list(MATERIAL_CLOTH = 15000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/accessories/backpacks/tact_d_ammo
 	name = "Tactical dufflebag - ammo"
 	id = "tact_d_ammo"
 	build_path = /obj/item/weapon/storage/backpack/dufflebag/syndie/ammo
-	materials = list("cloth" = 15000, MATERIAL_PHORON = 4000)
+	materials = list(MATERIAL_CLOTH = 15000, MATERIAL_PHORON = 4000)
 
 //
 //belt slot
@@ -1486,7 +1486,7 @@
 
 /datum/design/item/autotailor/accessories/waist
 	category = "Belt bags"
-	materials = list("leather" = 5000, MATERIAL_STEEL = 1000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_STEEL = 1000)
 
 //alot (all) of the new paradise ported belts have no mob sprites, i see no reason to exclude such a small sprite though, so they remain
 /datum/design/item/autotailor/accessories/waist/utility_brown
@@ -1574,7 +1574,7 @@
 	name = "White large waistpack"
 	id = "waistpack_l_white"
 	build_path = /obj/item/weapon/storage/belt/waistpack/big
-	materials = list("leather" = 10000, MATERIAL_STEEL = 2000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_STEEL = 2000)
 
 /datum/design/item/autotailor/accessories/waist/waistpack_alt_white	//can use custom colors
 	name = "White fannypack"
@@ -1664,7 +1664,7 @@
 	build_path = /obj/item/weapon/storage/firstaid/surgery
 
 /datum/design/item/autotailor/accessories/work/medkit
-	materials = list("plastic" = 2 SHEETS)
+	materials = list(MATERIAL_PLASTIC = 2 SHEETS)
 /datum/design/item/autotailor/accessories/work/medkit/medkit_white
 	name = "White medical kit"
 	id = "medkit_white"
@@ -1699,19 +1699,19 @@
 	name = "Pill bottle"
 	id = "pills"
 	build_path = /obj/item/weapon/storage/pill_bottle
-	materials = list("plastic" = 0.1 SHEETS)
+	materials = list(MATERIAL_PLASTIC = 0.1 SHEETS)
 
 /datum/design/item/autotailor/accessories/work/vials
 	name = "Vial storage box"
 	id = "vials"
 	build_path = /obj/item/weapon/storage/fancy/vials
-	materials = list("plastic" = 2 SHEETS)
-	
+	materials = list(MATERIAL_PLASTIC = 2 SHEETS)
+
 /datum/design/item/autotailor/accessories/work/vials_locked
 	name = "Vial storage lockbox"
 	id = "vials_locked"
 	build_path = /obj/item/weapon/storage/lockbox/vials
-	materials = list("plastic" = 2 SHEETS, MATERIAL_SILVER = 2 SHEET)
+	materials = list(MATERIAL_PLASTIC = 2 SHEETS, MATERIAL_SILVER = 2 SHEET)
 
 /datum/design/item/autotailor/accessories/work/briefcase_grey
 	name = "Grey briefcase"
@@ -1723,7 +1723,7 @@
 	name = "Brown briefcase"
 	id = "briefcase_brown"
 	build_path = /obj/item/weapon/storage/briefcase
-	materials = list("leather" = 2 SHEETS, MATERIAL_STEEL = 1 SHEET)
+	materials = list(MATERIAL_LEATHER = 2 SHEETS, MATERIAL_STEEL = 1 SHEET)
 
 /datum/design/item/autotailor/accessories/work/briefcase_inflate
 	name = "Inflatables briefcase"
@@ -1741,56 +1741,56 @@
 	name = "Plant carrybag"
 	id = "plantbag"
 	build_path = /obj/item/weapon/storage/plants
-	materials = list("leather" = 2.5 SHEETS)
+	materials = list(MATERIAL_LEATHER = 2.5 SHEETS)
 
 /datum/design/item/autotailor/accessories/work/orebag
 	name = "Ore carrybag"
 	id = "orebag"
 	build_path = /obj/item/weapon/storage/ore
-	materials = list("leather" = 2.5 SHEETS)
+	materials = list(MATERIAL_LEATHER = 2.5 SHEETS)
 
 /datum/design/item/autotailor/accessories/work/artebag
 	name = "Fossile carrybag"
 	id = "artebag"
 	build_path = /obj/item/weapon/storage/bag/fossils
-	materials = list("leather" = 2.5 SHEETS)
+	materials = list(MATERIAL_LEATHER = 2.5 SHEETS)
 
 /datum/design/item/autotailor/accessories/work/fossilpickbag
 	name = "Excavation pick carrybag"
 	id = "fossilpickbag"
 	build_path = /obj/item/weapon/storage/excavation
-	materials = list("leather" = 2.5 SHEETS)
+	materials = list(MATERIAL_LEATHER = 2.5 SHEETS)
 
 /datum/design/item/autotailor/accessories/work/mineral_coverabag
 	name = "Material coverbag"
 	id = "mineral_coverbag"
 	build_path = /obj/item/weapon/storage/sheetsnatcher
-	materials = list("leather" = 2.5 SHEETS)
+	materials = list(MATERIAL_LEATHER = 2.5 SHEETS)
 
 //
 //Misc storage
 //
 /datum/design/item/autotailor/accessories/gen
 	category = "General storage containers"
-	materials = list("cardboard" = 1000)
+	materials = list(MATERIAL_CARDBOARD = 1000)
 
 /datum/design/item/autotailor/accessories/gen/wallet_multi	//can use custom colors
 	name = "Polychromatic wallet"
 	id = "wallet_white"
 	build_path = /obj/item/weapon/storage/wallet/poly
-	materials = list("leather" = 1.5 SHEET, MATERIAL_PHORON = 0.25 SHEETS)
+	materials = list(MATERIAL_LEATHER = 1.5 SHEET, MATERIAL_PHORON = 0.25 SHEETS)
 
 /datum/design/item/autotailor/accessories/gen/wallet_leather
 	name = "Leather wallet"
 	id = "wallet_leather"
 	build_path = /obj/item/weapon/storage/wallet/leather
-	materials = list("leather" = 1 SHEET)
+	materials = list(MATERIAL_LEATHER = 1 SHEET)
 
 /datum/design/item/autotailor/accessories/gen/cardb_box
 	name = "Cardboard box"
 	id = "cardb_box"
 	build_path = /obj/item/weapon/storage/box
-	materials = list("cardboard" = 2000)	//if we remove handcrafting deconstruction we can make this cheaper
+	materials = list(MATERIAL_CARDBOARD = 2000)	//if we remove handcrafting deconstruction we can make this cheaper
 
 /datum/design/item/autotailor/accessories/gen/eggs
 	name = "Egg carton"
@@ -1801,25 +1801,25 @@
 	name = "Small plastic bag"
 	id = "plast_bag"
 	build_path = /obj/item/weapon/storage/bag/plasticbag
-	materials = list("plastic" = 1 SHEET)
+	materials = list(MATERIAL_PLASTIC = 1 SHEET)
 
 /datum/design/item/autotailor/accessories/gen/trash_bag
 	name = "Trash bag"
 	id = "trash_bag"
 	build_path = /obj/item/weapon/storage/bag/trash
-	materials = list("plastic" = 2.5 SHEETS)
+	materials = list(MATERIAL_PLASTIC = 2.5 SHEETS)
 
 /datum/design/item/autotailor/accessories/gen/brown_bag
 	name = "Leather bag"
 	id = "brown_bag"
 	build_path = /obj/item/weapon/storage/backpack/leathersack
-	materials = list("leather" = 5 SHEETS)
+	materials = list(MATERIAL_LEATHER = 5 SHEETS)
 
 /datum/design/item/autotailor/accessories/gen/cash
 	name = "Money bag"
 	id = "cash"
 	build_path = /obj/item/weapon/storage/bag/cash
-	materials = list("leather" = 2.5 SHEETS)
+	materials = list(MATERIAL_LEATHER = 2.5 SHEETS)
 
 /datum/design/item/autotailor/accessories/gen/lunchbox_bl_red
 	name = "Black & red lunchbox"
@@ -1919,13 +1919,13 @@
 	name = "Fancy cigar case"
 	id = "cig_gar"
 	build_path = /obj/item/weapon/storage/fancy/cigar/blank
-	materials = list("leather" = 10000)
+	materials = list(MATERIAL_LEATHER = 10000)
 
 /datum/design/item/autotailor/accessories/gen/photo
 	name = "Photo album"
 	id = "photo"
 	build_path = /obj/item/weapon/storage/photo_album
-	materials = list("leather" = 5000)
+	materials = list(MATERIAL_LEATHER = 5000)
 
 /datum/design/item/autotailor/accessories/gen/candle
 	name = "Candle box"
@@ -1935,4 +1935,4 @@
 /datum/design/item/autotailor/accessories/gen/crayons
 	name = "Crayon box"
 	id = "crayons"
-	build_path = /obj/item/weapon/storage/fancy/crayons/blank	
+	build_path = /obj/item/weapon/storage/fancy/crayons/blank

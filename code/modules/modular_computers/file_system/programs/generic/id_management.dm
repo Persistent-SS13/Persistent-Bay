@@ -4,8 +4,8 @@
 	extended_desc = "This program allows individuals to print IDs and send out a devalidation signal."
 	program_icon_state = "generic"
 	size = 14
-	requires_ntnet = 0
-	available_on_ntnet = 1
+	requires_ntnet = FALSE
+	available_on_ntnet = TRUE
 	nanomodule_path = /datum/nano_module/program/id_management
 	usage_flags = PROGRAM_CONSOLE
 	
@@ -47,9 +47,9 @@
 			if(usr.last_print > world.realtime)
 				to_chat(usr, "Your card print was rejected. You have printed an ID card in the last 5 mintues.")
 				return
-			var/datum/computer_file/crew_record/record
+			var/datum/computer_file/report/crew_record/record
 			var/obj/item/weapon/card/id/id = new()
-			for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+			for(var/datum/computer_file/report/crew_record/R in GLOB.all_crew_records)
 				if(R.get_name() == usr.real_name)
 					record = R
 					break
@@ -62,7 +62,7 @@
 			if(connected_faction)
 				id.selected_faction = connected_faction.uid
 				id.approved_factions |= connected_faction.uid
-				var/datum/computer_file/crew_record/record2 = connected_faction.get_record(usr.real_name)
+				var/datum/computer_file/report/crew_record/record2 = connected_faction.get_record(usr.real_name)
 				if(record2)
 					id.sync_from_record(record2)
 				else
@@ -81,8 +81,8 @@
 			if(usr.last_id_devalidate > world.time)
 				to_chat(usr, "Your card devalidate was rejected. You have devalidated your ID card in the last 5 mintues.")
 				return
-			var/datum/computer_file/crew_record/record
-			for(var/datum/computer_file/crew_record/R in GLOB.all_crew_records)
+			var/datum/computer_file/report/crew_record/record
+			for(var/datum/computer_file/report/crew_record/R in GLOB.all_crew_records)
 				if(R.get_name() == usr.real_name)
 					record = R
 					break

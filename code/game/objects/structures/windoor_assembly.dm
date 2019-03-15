@@ -17,6 +17,9 @@ obj/structure/windoor_assembly
 	density = 0
 	dir = NORTH
 	w_class = ITEM_SIZE_NORMAL
+	mass = 2
+	max_health = 30
+	damthreshold_brute 	= 1
 
 	var/obj/item/weapon/airlock_electronics/electronics = null
 
@@ -69,7 +72,7 @@ obj/structure/windoor_assembly/Destroy()
 	switch(state)
 		if("01")
 			if(isWelder(W) && !anchored )
-				var/obj/item/weapon/weldingtool/WT = W
+				var/obj/item/weapon/tool/weldingtool/WT = W
 				if (WT.remove_fuel(0,user))
 					user.visible_message("[user] dissassembles the windoor assembly.", "You start to dissassemble the windoor assembly.")
 					playsound(src.loc, 'sound/items/Welder2.ogg', 50, 1)
@@ -281,7 +284,7 @@ obj/structure/windoor_assembly/Destroy()
 
 	if(!usr || !Adjacent(usr))
 		return
-	
+
 	if(usr.incapacitated())
 		return
 

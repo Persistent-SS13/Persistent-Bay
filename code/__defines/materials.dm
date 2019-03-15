@@ -54,6 +54,7 @@
 #define MATERIAL_SULFUR						"sulfur"
 #define MATERIAL_BSPACE_CRYSTAL				"bluespace crystal"
 
+//ORES
 #define MATERIAL_TETRAHEDRITE				"tetrahedrite"
 #define MATERIAL_BOHMEITE					"bohmeite"
 #define MATERIAL_FREIBERGITE				"freibergite"
@@ -66,8 +67,18 @@
 #define MATERIAL_PITCHBLENDE				"pitchblende"
 #define MATERIAL_HEMATITE					"hematite"
 
+//woods
+#define MATERIAL_WOOD                    "wood"
+#define MATERIAL_MAHOGANY                "mahogany"
+#define MATERIAL_MAPLE                   "maple"
+#define MATERIAL_EBONY                   "ebony"
+#define MATERIAL_WALNUT                  "walnut"
+
+
 #define DEFAULT_TABLE_MATERIAL MATERIAL_PLASTIC
 #define DEFAULT_WALL_MATERIAL  MATERIAL_STEEL
+#define DEFAULT_FURNITURE_MATERIAL MATERIAL_ALUMINIUM
+#define SHEET_MATERIAL_AMOUNT 4000
 
 #define MATERIAL_ALTERATION_NONE 0
 #define MATERIAL_ALTERATION_NAME 1
@@ -75,11 +86,11 @@
 #define MATERIAL_ALTERATION_COLOR 4
 #define MATERIAL_ALTERATION_ALL (~MATERIAL_ALTERATION_NONE)
 
-#define SHARD_SHARD "shard"
-#define SHARD_SHRAPNEL "shrapnel"
-#define SHARD_STONE_PIECE "piece"
-#define SHARD_SPLINTER "splinters"
-#define SHARD_NONE ""
+#define SHARD_SHARD 		"shard"
+#define SHARD_SHRAPNEL 		"shrapnel"
+#define SHARD_STONE_PIECE 	"piece"
+#define SHARD_SPLINTER 		"splinters"
+#define SHARD_NONE 			""
 
 #define MATERIAL_UNMELTABLE 0x1
 #define MATERIAL_BRITTLE    0x2
@@ -87,4 +98,11 @@
 
 #define TABLE_BRITTLE_MATERIAL_MULTIPLIER 4 // Amount table damage is multiplied by if it is made of a brittle material (e.g. glass)
 
+//Stack flags
+#define USE_MATERIAL_COLOR 				0x1
+#define USE_MATERIAL_SINGULAR_NAME    	0x2
+#define USE_MATERIAL_PLURAL_NAME    	0x4
+
+//Material dust defines
 #define DUST_MATERIAL_AMOUNT 100 //Each pile of dust is 100 units of matter
+

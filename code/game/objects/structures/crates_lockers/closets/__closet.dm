@@ -3,15 +3,30 @@
 	desc = "It's a basic storage unit."
 	icon = 'icons/obj/closets/bases/closet.dmi'
 	icon_state = "base"
-	density = 1
+	density = TRUE
 	w_class = ITEM_SIZE_NO_CONTAINER
-	anchored = 0
-
-	var/welded = 0
+	anchored = FALSE
+	mass = 15 //kg
+	max_health = 200
+	damthreshold_brute 	= 10
+	armor = list(
+		DAM_BLUNT  	= 80,
+		DAM_PIERCE 	= 90,
+		DAM_CUT 	= 90,
+		DAM_BULLET 	= 50,
+		DAM_ENERGY 	= 50,
+		DAM_BURN 	= 30,
+		DAM_BOMB 	= 15,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+	var/welded = FALSE
 	var/large = 1
-	var/wrenchable = 1
-	var/wall_mounted = 0 //never solid (You can always pass over it)
-	var/health = 100
+	var/wrenchable = TRUE
+	var/wall_mounted = FALSE //never solid (You can always pass over it)
 	var/breakout = 0 //if someone is currently breaking out. mutex
 	var/storage_capacity = 2 * MOB_MEDIUM //This is so that someone can't pack hundreds of items in a locker/crate
 							  //then open it in a populated area to crash clients.
@@ -226,109 +241,35 @@
 			for(var/atom/movable/A in src)//pulls everything out of the locker and hits it with an explosion
 				A.forceMove(src.loc)
 				A.ex_act(severity + 1)
-			qdel(src)
 		if(2)
 			if(prob(50))
 				for (var/atom/movable/A in src)
 					A.forceMove(src.loc)
 					A.ex_act(severity + 1)
-				qdel(src)
 		if(3)
 			if(prob(5))
 				for(var/atom/movable/A in src)
 					A.forceMove(src.loc)
-				qdel(src)
-
-/obj/structure/closet/proc/damage(var/damage)
-	health -= damage
-	if(health <= 0)
-		for(var/atom/movable/A in src)
-			A.forceMove(src.loc)
-		qdel(src)
+	return ..()
 
 /obj/structure/closet/bullet_act(var/obj/item/projectile/Proj)
-	var/proj_damage = Proj.get_structure_damage()
-	if(proj_damage)
-		..()
-		damage(proj_damage)
-
 	if(Proj.penetrating)
 		var/distance = get_dist(Proj.starting, get_turf(loc))
 		for(var/mob/living/L in contents)
 			Proj.attack_mob(L, distance)
 			if(!(--Proj.penetrating))
 				break
+	return ..()
 
-	return
+/obj/structure/closet/dismantle()
+	dump_contents()
+	return ..()
+
+/obj/structure/closet/destroyed()
+	dump_contents()
+	return ..()
 
 /obj/structure/closet/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	/*
-	if(istype(W, /obj/item/weapon/rcs) && !src.opened)
-		if(user in contents) //to prevent self-teleporting.
-			return
-		var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
-		var/obj/item/weapon/rcs/E = W
-		if(E.bcell && (E.bcell.charge >= chrgdeductamt))
-			if(!is_level_reachable(src.z))
-				to_chat(user, "<span class='warning'>The rapid-crate-sender can't locate any telepads!</span>")
-				return
-			if(E.mode == 0)
-				if(!E.teleporting)
-					var/list/L = list()
-					var/list/areaindex = list()
-					for(var/obj/machinery/telepad/R in world)
-						if(R.stage == 0)
-							var/turf/T = get_turf(R)
-							var/tmpname = T.loc.name
-							if(areaindex[tmpname])
-								tmpname = "[tmpname] ([++areaindex[tmpname]])"
-							else
-								areaindex[tmpname] = 1
-							L[tmpname] = R
-					var/desc = input("Please select a telepad.", "RCS") in L
-					E.pad = L[desc]
-					playsound(E.loc, 'sound/machines/click.ogg', 50, 1)
-					to_chat(user, "\blue Teleporting [src.name]...")
-					E.teleporting = 1
-					if(!do_after(user, 50, target = src))
-						E.teleporting = 0
-						return
-					E.teleporting = 0
-					if(user in contents)
-						to_chat(user, "<span class='warning'>Error: User located in container--aborting for safety.</span>")
-						playsound(E.loc, 'sound/machines/buzz-sigh.ogg', 50, 1)
-						return
-					s.set_up(5, 1, src)
-					s.start()
-					do_teleport(src, E.pad, 0)
-					E.bcell.use(E.chrgdeductamt)
-					to_chat(user, "<span class='notice'>Teleport successful. [round(E.bcell.percent())]% charge left.</span>")
-					return
-			else
-				E.rand_x = rand(50,200)
-				E.rand_y = rand(50,200)
-				var/L = locate(E.rand_x, E.rand_y, 6)
-				playsound(E.loc, 'sound/machines/click.ogg', 50, 1)
-				to_chat(user, "\blue Teleporting [src.name]...")
-				E.teleporting = 1
-				if(!do_after(user, 50, target = src))
-					E.teleporting = 0
-					return
-				E.teleporting = 0
-				if(user in contents)
-					to_chat(user, "<span class='warning'>Error: User located in container--aborting for safety.</span>")
-					playsound(loc, 'sound/machines/buzz-sigh.ogg', 50, 1)
-					return
-				s.set_up(5, 1, src)
-				s.start()
-				do_teleport(src, L)
-				E.bcell.use(E.chrgdeductamt)
-				to_chat(user, "<span class='notice'>Teleport successful. [round(E.bcell.percent())]% charge left.</span>")
-				return
-		else
-			to_chat(user, "<span class='warning'>Out of charges.</span>")
-			return
-		*/
 	if(src.opened)
 		if(istype(W, /obj/item/grab))
 			var/obj/item/grab/G = W
@@ -337,10 +278,8 @@
 		if(istype(W,/obj/item/tk_grab))
 			return 0
 		if(isWelder(W))
-			var/obj/item/weapon/weldingtool/WT = W
-			if(WT.isOn())
-				slice_into_parts(WT, user)
-				return
+			slice_into_parts(W, user)
+			return
 		if(istype(W, /obj/item/weapon/storage/laundry_basket) && W.contents.len)
 			var/obj/item/weapon/storage/laundry_basket/LB = W
 			var/turf/T = get_turf(src)
@@ -367,22 +306,21 @@
 			playsound(src.loc, "sparks", 50, 1)
 			open()
 	else if(isWrench(W))
+		var/obj/item/weapon/tool/T = W
 		if (src.wrenchable==0)
 			// Do not allow wrench interactions with things that aren't wrenchable.
 			return
 		if (src.anchored==1)
-			playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 			to_chat(user, "<span class='notice'>You begin to unsecure \the [src] from the floor...</span>")
-			if (do_after(user, 40, src))
+			if (T.use_tool(user, src, 40))
 				user.visible_message( \
 					"<span class='notice'>\The [user] unsecures \the [src].</span>", \
 					"<span class='notice'>You have unsecured \the [src]. Now it can be pulled somewhere else.</span>", \
 					"You hear ratchet.")
 				src.anchored = 0
 		else /*if (src.anchored==0)*/
-			playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 			to_chat(user, "<span class='notice'>You begin to secure \the [src] to the floor...</span>")
-			if (do_after(user, 20, src))
+			if (T.use_tool(user, src, 20))
 				user.visible_message( \
 					"<span class='notice'>\The [user] secures \the [src].</span>", \
 					"<span class='notice'>You have secured \the [src].</span>", \
@@ -392,30 +330,20 @@
 	else if(istype(W, /obj/item/weapon/packageWrap))
 		return
 	else if(isWelder(W) && (setup & CLOSET_CAN_BE_WELDED))
-		var/obj/item/weapon/weldingtool/WT = W
-		if(!WT.remove_fuel(0,user))
-			if(!WT.isOn())
-				return
-			else
-				to_chat(user, "<span class='notice'>You need more welding fuel to complete this task.</span>")
-				return
-		src.welded = !src.welded
-		src.update_icon()
-		user.visible_message("<span class='warning'>\The [src] has been [welded?"welded shut":"unwelded"] by \the [user].</span>", blind_message = "You hear welding.", range = 3)
-	if(setup & CLOSET_HAS_LOCK)
-		src.togglelock(user, W)
-	else
-		src.attack_hand(user)
-
-/obj/structure/closet/proc/slice_into_parts(obj/item/weapon/weldingtool/WT, mob/user)
-	if(!WT.remove_fuel(0,user))
-		to_chat(user, "<span class='notice'>You need more welding fuel to complete this task.</span>")
+		var/obj/item/weapon/tool/T = W
+		if(T.use_tool(user, src, 3 SECONDS))
+			src.welded = !src.welded
+			src.update_icon()
+			user.visible_message("<span class='warning'>\The [src] has been [welded?"welded shut":"unwelded"] by \the [user].</span>", blind_message = "You hear welding.", range = 3)
 		return
-	new /obj/item/stack/material/steel(src.loc)
-	user.visible_message("<span class='notice'>\The [src] has been cut apart by [user] with \the [WT].</span>", \
-						 "<span class='notice'>You have cut \the [src] apart with \the [WT].</span>", \
-						 "You hear welding.")
-	qdel(src)
+	return ..()
+
+/obj/structure/closet/proc/slice_into_parts(var/obj/item/weapon/tool/weldingtool/WT, mob/user)
+	if(WT.use_tool(user, src, 5 SECONDS))
+		user.visible_message("<span class='notice'>\The [src] has been cut apart by [user] with \the [WT].</span>", \
+			"<span class='notice'>You have cut \the [src] apart with \the [WT].</span>", \
+			"You hear welding.")
+		dismantle()
 
 /obj/structure/closet/MouseDrop_T(atom/movable/O as mob|obj, mob/user as mob)
 	if(istype(O, /obj/screen))	//fix for HUD elements making their way into the world	-Pete
@@ -494,15 +422,6 @@
 			else
 				icon_state = "closed_unlocked[welded ? "_welded" : ""]"
 			overlays.Cut()
-
-/obj/structure/closet/attack_generic(var/mob/user, var/damage, var/attack_message = "destroys", var/wallbreaker)
-	if(!damage || !wallbreaker)
-		return
-	attack_animation(user)
-	visible_message("<span class='danger'>[user] [attack_message] the [src]!</span>")
-	dump_contents()
-	spawn(1) qdel(src)
-	return 1
 
 /obj/structure/closet/proc/req_breakout()
 	if(opened)

@@ -112,11 +112,12 @@
 #define NTNETSPEED_DOS_AMPLIFICATION 5	// Multiplier for Denial of Service program. Resulting load on NTNet relay is this multiplied by NTNETSPEED of the device
 
 // Program bitflags
-#define PROGRAM_ALL 15
-#define PROGRAM_CONSOLE 1
-#define PROGRAM_LAPTOP 2
-#define PROGRAM_TABLET 4
-#define PROGRAM_TELESCREEN 8
+#define PROGRAM_ALL        0x1F
+#define PROGRAM_CONSOLE    0x01
+#define PROGRAM_LAPTOP     0x02
+#define PROGRAM_TABLET     0x04
+#define PROGRAM_TELESCREEN 0x08
+#define PROGRAM_PDA        0x10
 
 #define PROGRAM_STATE_KILLED 0
 #define PROGRAM_STATE_BACKGROUND 1
@@ -172,7 +173,6 @@
 #define CELLS 8								//Amount of cells per row/column in grid
 #define CELLSIZE (world.icon_size/CELLS)	//Size of a cell in pixels
 
-#define WORLD_ICON_SIZE 32
 #define PIXEL_MULTIPLIER WORLD_ICON_SIZE/32
 
 #define DEFAULT_SPAWNPOINT_ID "Default"
@@ -206,3 +206,8 @@
 
 #define SUPPLY_SECURITY_ELEVATED 1
 #define SUPPLY_SECURITY_HIGH 2
+
+//Built-in email accounts
+#define EMAIL_DOCUMENTS "document.server@internal-services.net"
+#define EMAIL_SYSADMIN  "admin@internal-services.net"
+#define EMAIL_BROADCAST "broadcast@internal-services.net"

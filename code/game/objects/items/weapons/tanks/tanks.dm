@@ -1,7 +1,3 @@
-#define TANK_MAX_RELEASE_PRESSURE (3*ONE_ATMOSPHERE)
-#define TANK_DEFAULT_RELEASE_PRESSURE 24
-#define TANK_IDEAL_PRESSURE 1015 //Arbitrary.
-
 var/list/global/tank_gauge_cache = list()
 
 /obj/item/weapon/tank
@@ -178,7 +174,7 @@ var/list/global/tank_gauge_cache = list()
 			to_chat(user, "<span class='notice'>You need to wire the device up first.</span>")
 
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(WT.remove_fuel(1,user))
 			if(!valve_welded)
 				to_chat(user, "<span class='notice'>You begin welding the \the [src] emergency pressure relief valve.</span>")
@@ -498,8 +494,8 @@ var/list/global/tank_gauge_cache = list()
 	var/phoron_amt = 4 + rand(4)
 	var/oxygen_amt = 6 + rand(8)
 
-	air_contents.gas["phoron"] = phoron_amt
-	air_contents.gas["oxygen"] = oxygen_amt
+	air_contents.gas[GAS_PHORON] = phoron_amt
+	air_contents.gas[GAS_OXYGEN] = oxygen_amt
 	air_contents.update_values()
 	valve_welded = 1
 	air_contents.temperature = PHORON_MINIMUM_BURN_TEMPERATURE-1
@@ -532,7 +528,7 @@ var/list/global/tank_gauge_cache = list()
 	var/obj/item/device/assembly_holder/assembly = null
 
 /obj/item/device/tankassemblyproxy/receive_signal()	//This is mainly called by the sensor through sense() to the holder, and from the holder to here.
-	tank.ignite()	//boom (or not boom if you made shijwtty mix)
+	tank.triggered()	//boom (or not boom if you made shijwtty mix)
 
 /obj/item/weapon/tank/proc/assemble_bomb(W,user)	//Bomb assembly proc. This turns assembly+tank into a bomb
 	var/obj/item/device/assembly_holder/S = W
@@ -552,7 +548,7 @@ var/list/global/tank_gauge_cache = list()
 
 	update_icon()
 
-/obj/item/weapon/tank/proc/ignite()	//This happens when a bomb is told to explode
+/obj/item/weapon/tank/proc/triggered()	//This happens when a bomb is told to explode
 	var/obj/item/device/assembly_holder/assy = proxyassembly.assembly
 	var/ign = assy.a_right
 	var/obj/item/other = assy.a_left
@@ -581,7 +577,7 @@ var/list/global/tank_gauge_cache = list()
 
 /obj/item/projectile/bullet/pellet/fragment/tank
 	name = "metal fragment"
-	damage = 9  //Big chunks flying off.
+	force = 9  //Big chunks flying off.
 	range_step = 1 //controls damage falloff with distance. projectiles lose a "pellet" each time they travel this distance. Can be a non-integer.
 
 	base_spread = 0 //causes it to be treated as a shrapnel explosion instead of cone
@@ -595,9 +591,9 @@ var/list/global/tank_gauge_cache = list()
 
 /obj/item/projectile/bullet/pellet/fragment/tank/small
 	name = "small metal fragment"
-	damage = 6
+	force = 6
 
 /obj/item/projectile/bullet/pellet/fragment/tank/big
 	name = "large metal fragment"
-	damage = 17
+	force = 17
 

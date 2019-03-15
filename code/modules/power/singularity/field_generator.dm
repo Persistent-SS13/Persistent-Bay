@@ -35,6 +35,7 @@ field_generator power level display
 	//If keeping field generators powered is hard then increase the emitter active power usage.
 	var/gen_power_draw = 5500	//power needed per generator
 	var/field_power_draw = 2000	//power needed per field object
+	var/time_end_warmup = 0 //Time at which warm-up ends
 
 
 /obj/machinery/field_generator/update_icon()
@@ -61,6 +62,17 @@ field_generator power level display
 	connected_gens = list()
 
 /obj/machinery/field_generator/Process()
+	if(warming_up)
+		var/timeleft = time_end_warmup - world.time
+		//Every 5 seconds add to wamup state
+		if(timeleft <= 10 SECONDS || timeleft <= 5 SECONDS)
+			warming_up++
+			update_icon()
+		if(world.time >= time_end_warmup)
+			warming_up = 0
+			time_end_warmup = 0
+			start_fields()
+
 	if(Varedit_start == 1)
 		if(active == 0)
 			active = 1
@@ -120,7 +132,7 @@ field_generator power level display
 				to_chat(user, "<span class='warning'> The [src.name] needs to be unwelded from the floor.</span>")
 				return
 	else if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		switch(state)
 			if(0)
 				to_chat(user, "<span class='warning'>The [src.name] needs to be wrenched to the floor.</span>")
@@ -159,7 +171,7 @@ field_generator power level display
 
 /obj/machinery/field_generator/bullet_act(var/obj/item/projectile/Proj)
 	if(istype(Proj, /obj/item/projectile/beam))
-		power += Proj.damage * EMITTER_DAMAGE_POWER_TRANSFER
+		power += Proj.force * EMITTER_DAMAGE_POWER_TRANSFER
 		update_icon()
 	return 0
 
@@ -170,23 +182,16 @@ field_generator power level display
 
 
 
-/obj/machinery/field_generator/proc/turn_off()
+/obj/machinery/field_generator/turn_off()
 	active = 0
-	spawn(1)
-		src.cleanup()
-	update_icon()
+	src.cleanup()
+	..()
 
-/obj/machinery/field_generator/proc/turn_on()
+/obj/machinery/field_generator/turn_on()
 	active = 1
 	warming_up = 1
-	spawn(1)
-		while (warming_up<3 && active)
-			sleep(50)
-			warming_up++
-			update_icon()
-			if(warming_up >= 3)
-				start_fields()
-	update_icon()
+	time_end_warmup = world.time + 15 SECONDS
+	..()
 
 
 /obj/machinery/field_generator/proc/calc_power()

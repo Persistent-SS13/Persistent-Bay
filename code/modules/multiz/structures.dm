@@ -6,7 +6,7 @@
 	name = "ladder"
 	desc = "A ladder. You can climb it up and down."
 	icon_state = "ladder01"
-	icon = 'icons/obj/structures.dmi'
+	icon = 'icons/obj/structures/ladders.dmi'
 	density = 0
 	opacity = 0
 	anchored = 1
@@ -165,9 +165,9 @@
 	name = "Stairs"
 	desc = "Stairs leading to another deck.  Not too useful if the gravity goes out."
 	icon = 'icons/obj/stairs.dmi'
-	density = 0
-	opacity = 1
-	anchored = 1
+	density = FALSE
+	opacity = TRUE
+	anchored = TRUE
 	plane = ABOVE_TURF_PLANE
 	layer = RUNE_LAYER
 

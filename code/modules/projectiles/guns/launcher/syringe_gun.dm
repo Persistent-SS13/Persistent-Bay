@@ -10,6 +10,7 @@
 	throwforce = 3
 	force = 3
 	w_class = ITEM_SIZE_TINY
+	mass = 0.1
 	var/obj/item/weapon/reagent_containers/syringe/syringe
 
 /obj/item/weapon/syringe_cartridge/update_icon()
@@ -24,7 +25,7 @@
 		to_chat(user, "<span class='notice'>You carefully insert [syringe] into [src].</span>")
 		user.remove_from_mob(syringe)
 		syringe.loc = src
-		sharp = 1
+		sharpness = 1
 		name = "syringe dart"
 		update_icon()
 
@@ -33,7 +34,7 @@
 		to_chat(user, "<span class='notice'>You remove [syringe] from [src].</span>")
 		user.put_in_hands(syringe)
 		syringe = null
-		sharp = initial(sharp)
+		sharpness = initial(sharpness)
 		name = initial(name)
 		update_icon()
 
@@ -76,6 +77,7 @@
 	screen_shake = 0
 	release_force = 10
 	throw_distance = 10
+	mass = 1.8
 
 	var/list/darts = list()
 	var/max_darts = 1
@@ -136,6 +138,7 @@
 	icon_state = "rapidsyringegun"
 	item_state = "rapidsyringegun"
 	max_darts = 5
+	mass = 2.3
 
 /obj/item/weapon/gun/launcher/syringe/disguised
 	name = "deluxe electronic cigarette"

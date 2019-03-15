@@ -1,14 +1,28 @@
 /obj/structure/grille
 	name = "grille"
 	desc = "A flimsy lattice of metal rods, with screws to secure it to the floor."
-	icon = 'icons/obj/grille.dmi'
+	icon = 'icons/obj/structures/grille.dmi'
 	icon_state = "grille"
 	density = 1
 	anchored = 1
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	layer = BELOW_OBJ_LAYER
 	explosion_resistance = 1
-	var/health = 10
+	max_health = 50
+	armor = list(
+		DAM_BLUNT  	= 5,
+		DAM_PIERCE 	= 10,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 10,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 2,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 	var/destroyed = 0
 	var/on_frame = FALSE
 
@@ -98,25 +112,24 @@
 
 	//20% chance that the grille provides a bit more cover than usual. Support structure for example might take up 20% of the grille's area.
 	//If they click on the grille itself then we assume they are aiming at the grille itself and the extra cover behaviour is always used.
-	switch(Proj.damage_type)
-		if(BRUTE)
-			//bullets
-			if(Proj.original == src || prob(20))
-				Proj.damage *= between(0, Proj.damage/60, 0.5)
-				if(prob(max((damage-10)/25, 0))*100)
-					passthrough = 1
-			else
-				Proj.damage *= between(0, Proj.damage/60, 1)
+	if(IsDamageTypeBrute(Proj.damtype))
+		//bullets
+		if(Proj.original == src || prob(20))
+			Proj.force *= between(0, Proj.force/60, 0.5)
+			if(prob(max((damage-10)/25, 0))*100)
 				passthrough = 1
-		if(BURN)
-			//beams and other projectiles are either blocked completely by grilles or stop half the damage.
-			if(!(Proj.original == src || prob(20)))
-				Proj.damage *= 0.5
-				passthrough = 1
+		else
+			Proj.force *= between(0, Proj.force/60, 1)
+			passthrough = 1
+	else if(IsDamageTypeBurn(Proj.damtype))
+		//beams and other projectiles are either blocked completely by grilles or stop half the damage.
+		if(!(Proj.original == src || prob(20)))
+			Proj.force *= 0.5
+			passthrough = 1
 
 	if(passthrough)
 		. = PROJECTILE_CONTINUE
-		damage = between(0, (damage - Proj.damage)*(Proj.damage_type == BRUTE? 0.4 : 1), 10) //if the bullet passes through then the grille avoids most of the damage
+		damage = between(0, (damage - Proj.force)*(IsDamageTypeBrute(Proj.damtype)? 0.4 : 1), 10) //if the bullet passes through then the grille avoids most of the damage
 
 	src.health -= damage*0.2
 	spawn(0) healthcheck() //spawn to make sure we return properly if the grille is deleted
@@ -185,11 +198,10 @@
 		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
 		user.do_attack_animation(src)
 		playsound(loc, 'sound/effects/grillehit.ogg', 80, 1)
-		switch(W.damtype)
-			if("fire")
-				health -= W.force
-			if("brute")
-				health -= W.force * 0.1
+		if(IsDamageTypeBurn(W.damtype))
+			health -= W.force
+		else if(IsDamageTypeBrute(W.damtype))
+			health -= W.force * 0.1
 	healthcheck()
 	..()
 	return
@@ -264,7 +276,7 @@
 	name = "cult grille"
 	desc = "A matrice built out of an unknown material, with some sort of force field blocking air around it."
 	icon = 'icons/obj/grille_cult.dmi'
-	health = 40 //Make it strong enough to avoid people breaking in too easily
+	health = 60 //Make it strong enough to avoid people breaking in too easily
 
 /obj/structure/grille/cult/CanPass(atom/movable/mover, turf/target, height = 1.5, air_group = 0)
 	if(air_group)

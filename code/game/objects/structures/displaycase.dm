@@ -2,6 +2,7 @@
 	name = "display case frame"
 	icon = 'icons/obj/stock_parts.dmi'
 	icon_state="box_glass"
+	max_health = 150
 	var/obj/item/weapon/airlock_electronics/circuit = null
 	var/state=0
 
@@ -16,7 +17,7 @@
 				circuit.loc = src
 				state++
 				playsound(get_turf(src), 'sound/items/Screwdriver.ogg', 50, 1)
-			if(istype(W, /obj/item/weapon/crowbar))
+			if(istype(W, /obj/item/weapon/tool/crowbar))
 				new /obj/machinery/constructable_frame/machine_frame(T)
 				new /obj/item/stack/material/glass(T)
 				del(src)
@@ -35,7 +36,7 @@
 					playsound(get_turf(src), 'sound/items/Screwdriver.ogg', 50, 1)
 					del(src)
 					return
-				
+
 				else
 					if(circuit.one_access)
 						C.req_access = null
@@ -47,7 +48,7 @@
 					playsound(get_turf(src), 'sound/items/Screwdriver.ogg', 50, 1)
 					del(src)
 					return
-			if(istype(W, /obj/item/weapon/crowbar))
+			if(istype(W, /obj/item/weapon/tool/crowbar))
 				circuit.loc=T
 				circuit=null
 				state--
@@ -66,12 +67,12 @@
 /obj/structure/displaycase
 	name = "display case"
 	icon = 'icons/obj/stationobjs.dmi'
-	icon_state = "glassbox20"
+	icon_state = "glassbox"
 	desc = "A display case for prized possessions. It taunts you to kick it."
 	density = 1
 	anchored = 1
 	unacidable = 1//Dissolving the case would also delete the contents.
-	var/health = 30
+	max_health = 200
 	var/obj/item/occupant = null
 	var/destroyed = 0
 	var/locked = 0
@@ -102,8 +103,8 @@
 
 
 /obj/structure/displaycase/bullet_act(var/obj/item/projectile/Proj)
-	if((Proj.damage_type == BRUTE || Proj.damage_type == BURN))
-		health -= Proj.damage
+	if(IsDamageTypePhysical(Proj.damtype))
+		health -= Proj.force
 	..()
 	src.healthcheck()
 	return
@@ -122,9 +123,9 @@
 
 /obj/structure/displaycase/update_icon()
 	if(src.destroyed)
-		src.icon_state = "glassbox2b"
+		src.icon_state = "glassboxb"
 	else
-		src.icon_state = "glassbox2[locked]"
+		src.icon_state = "glassbox[locked]"
 	overlays = 0
 	if(occupant)
 		var/icon/occupant_icon=getFlatIcon(occupant)
@@ -152,7 +153,7 @@
 			user << "\icon[src] \blue You close \the [src] and swipe your card, locking it."
 		update_icon()
 		return
-	if(istype(W,/obj/item/weapon/crowbar) && (!locked || destroyed))
+	if(istype(W,/obj/item/weapon/tool/crowbar) && (!locked || destroyed))
 		user.visible_message("[user.name] pries \the [src] apart.", \
 			"You pry \the [src] apart.", \
 			"You hear something pop.")

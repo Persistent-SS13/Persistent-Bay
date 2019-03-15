@@ -12,8 +12,8 @@
 	var/scarring_effect = 3	// How much durability a scar will remove
 
 /obj/item/organ/internal/New(var/mob/living/carbon/holder)
-	if(max_damage)
-		min_bruised_damage = Floor(max_damage / 4)
+	if(max_health)
+		min_bruised_damage = Floor(max_health / 4)
 	..()
 	if(istype(holder))
 		holder.internal_organs |= src
@@ -25,6 +25,7 @@
 				CRASH("[src] spawned in [holder] without a parent organ: [parent_organ].")
 			E.internal_organs |= src
 			E.cavity_max_w_class = max(E.cavity_max_w_class, w_class)
+
 /obj/item/organ/internal/after_load()
 	var/mob/living/carbon/human/H = loc
 	if(istype(H))
@@ -115,43 +116,40 @@
 
 /obj/item/organ/internal/proc/getToxLoss()
 	if(isrobotic())
-		return damage * 0.5
-	return damage
+		return get_damages() * 0.5
+	return get_damages()
 
 /obj/item/organ/internal/proc/bruise()
-	damage = max(damage, min_bruised_damage)
-
-/obj/item/organ/internal/proc/is_damaged()
-	return damage > 0
+	if(get_damages() < min_bruised_damage)
+		rem_health(min_bruised_damage - get_damages())
 
 /obj/item/organ/internal/proc/is_bruised()
-	return damage >= min_bruised_damage
+	return get_damages() >= min_bruised_damage
 
-/obj/item/organ/internal/take_damage(amount, var/silent=0)
+/obj/item/organ/internal/proc/isinplace()
+	return (owner && parent_organ && owner.get_organ(parent_organ))
+
+/obj/item/organ/internal/take_damage(damage, damagetype, armorbypass, damsrc, var/silent=0)
 	if(isrobotic())
-		damage = between(0, src.damage + (amount * 0.8), max_damage)
-	else
-		damage = between(0, src.damage + amount, max_damage)
-
-		//only show this if the organ is not robotic
-		if(owner && can_feel_pain() && parent_organ && (amount > min_bruised_damage/2 || prob(10)))
-			var/obj/item/organ/external/parent = owner.get_organ(parent_organ)
-			if(parent && !silent)
-				var/degree = ""
-				if(is_bruised())
-					degree = " a lot"
-				if(damage < min_bruised_damage/2)
-					degree = " a bit"
-				owner.custom_pain("Something inside your [parent.name] hurts[degree].", amount, affecting = parent)
+		damage = (damage * 0.8)
+	else if(!silent && isinplace() && can_feel_pain() && (damage > min_bruised_damage/2 || prob(10)) )
+		var/obj/item/organ/external/parent = owner.get_organ(parent_organ)
+		var/degree = ""
+		if(is_bruised())
+			degree = " a lot"
+		else if((max_health - health) < min_bruised_damage/2)
+			degree = " a bit"
+		owner.custom_pain("Something inside your [parent.name] hurts[degree].", damage, affecting = parent)
+	return ..(damage, damagetype, armorbypass, damsrc)
 
 /obj/item/organ/internal/proc/get_visible_state()
-	if(damage > max_damage)
+	if(health <= 0)
 		. = "bits and pieces of a destroyed "
 	else if(is_broken())
 		. = "broken "
 	else if(is_bruised())
 		. = "badly damaged "
-	else if(damage > 5)
+	else if(get_damages() > 5)
 		. = "damaged "
 	else if(scarred == 1)
 		. = "slightly scarred "
@@ -173,9 +171,9 @@
 // Organs will heal very minor damage on their own without much work
 // As long as no toxins are present in the system
 /obj/item/organ/internal/proc/handle_regeneration()
-	if(!damage || isrobotic() || !owner || owner.chem_effects[CE_TOXIN])
+	if(!isdamaged() || isrobotic() || !owner || owner.chem_effects[CE_TOXIN])
 		return
-	if(damage < min_bruised_damage) // If it's not even bruised, it will just heal very slowly.
+	if(get_damages() < min_bruised_damage) // If it's not even bruised, it will just heal very slowly.
 		heal_damage(0.01)
 	else if(is_bruised()) // If it is bruised, it will heal a little faster, but it will scar if it's not aided by medication or surgery
 	//	if(((damage - 0.02) < (min_bruised_damage)) && (scarred < 3))

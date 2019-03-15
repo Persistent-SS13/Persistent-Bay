@@ -4,7 +4,24 @@
 	icon = 'icons/obj/storage.dmi'
 	icon_state = "critter"
 	density = 1
-
+	mass = 30
+	max_health = 150
+	armor = list(
+		DAM_BLUNT  	= 95,
+		DAM_PIERCE 	= 90,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= 95,
+		DAM_ENERGY 	= 90,
+		DAM_BURN 	= 80,
+		DAM_BOMB 	= 50,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
+	damthreshold_brute 	= 5
+	damthreshold_burn	= 5
 	var/mob/living/simple_animal/contained
 
 /obj/structure/stasis_cage/Initialize()

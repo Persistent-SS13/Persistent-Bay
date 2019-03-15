@@ -40,7 +40,7 @@
 
 /obj/item/weapon/material/twohanded/update_force()
 	base_name = name
-	if(sharp || edge)
+	if(ISDAMTYPE(damtype, DAM_CUT))
 		force_wielded = material.get_edge_damage()
 	else
 		force_wielded = material.get_blunt_damage()
@@ -80,13 +80,14 @@
 	// 15/32 with hardness 60 (steel) and 20/42 with hardness 80 (plasteel)
 	force_divisor = 0.525
 	unwielded_force_divisor = 0.25
-	sharp = 1
-	edge = 1
+	sharpness = 1
 	w_class = ITEM_SIZE_HUGE
 	slot_flags = SLOT_BACK
 	force_wielded = 30
 	attack_verb = list("attacked", "chopped", "cleaved", "torn", "cut")
 	applies_material_colour = 0
+	damtype = DAM_CUT
+	mass = 3
 
 /obj/item/weapon/material/twohanded/fireaxe/afterattack(atom/A as mob|obj|turf|area, mob/user as mob, proximity)
 	if(!proximity) return
@@ -94,7 +95,7 @@
 	if(A && wielded)
 		if(istype(A,/obj/structure/window))
 			var/obj/structure/window/W = A
-			W.shatter()
+			W.kill()
 		else if(istype(A,/obj/structure/grille))
 			qdel(A)
 		else if(istype(A,/obj/effect/vine))
@@ -116,11 +117,12 @@
 	unwielded_force_divisor = 0.20
 	thrown_force_divisor = 1.5 // 20 when thrown with weight 15 (glass)
 	throw_speed = 3
-	edge = 0
-	sharp = 1
-	hitsound = 'sound/weapons/bladeslice.ogg'
+	sharpness = 1
+	sound_hit = 'sound/weapons/bladeslice.ogg'
 	attack_verb = list("attacked", "poked", "jabbed", "torn", "gored")
 	default_material = MATERIAL_GLASS
+	damtype = DAM_PIERCE
+	mass = 2
 
 /obj/item/weapon/material/twohanded/spear/shatter(var/consumed)
 	if(!consumed)

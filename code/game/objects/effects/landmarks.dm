@@ -6,10 +6,12 @@
 	unacidable = 1
 	simulated = 0
 	invisibility = 101
+	should_save = 1
 
 /obj/effect/persistent_spawn/after_load()
 	GLOB.latejoin_cryo |= loc
 	qdel(src)
+
 /obj/effect/landmark
 	name = "landmark"
 	icon = 'icons/mob/screen1.dmi'
@@ -19,6 +21,7 @@
 	simulated = 0
 	invisibility = 101
 	var/delete_me = 0
+	should_save = 1
 
 /obj/effect/landmark/New()
 	..()

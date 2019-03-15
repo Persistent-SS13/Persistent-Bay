@@ -8,8 +8,9 @@
 	plane = OBJ_PLANE
 	layer = BELOW_OBJ_LAYER
 	w_class = ITEM_SIZE_NO_CONTAINER
+	max_health = 150
+	armor = list()
 	var/state = 0
-	var/integrity = 150	// Placeholder until assigned
 	var/material/material
 	var/material/r_material
 
@@ -21,6 +22,7 @@
 
 /obj/structure/girder/after_load()
 	update_material()
+	..()
 
 /obj/structure/girder/update_icon()
 	color = material.icon_colour
@@ -155,6 +157,7 @@
 				state = 6
 				update_icon()
 				return
+	return ..()
 
 /obj/structure/girder/proc/make_wall(var/material/mat, var/isrwall = FALSE)
 	var/turf/simulated/wall/T = get_turf(src)
@@ -184,26 +187,17 @@
 		update_Integrity = 1
 
 	if(update_Integrity)
-		integrity = maxIntegrity()
-	explosion_resistance = explosionArmor()
+		max_health = maxIntegrity()
+		health = max_health
+	armor[DAM_BOMB]  = explosionArmor()
+	armor[DAM_BURN]  = burnArmor()
+	armor[DAM_BLUNT] = bruteArmor()
 	update_icon()
 
-/obj/structure/girder/proc/take_damage(var/damage, var/type)
-	switch(type)
-		if(BRUTE)
-			damage -= bruteArmor()
-		if(BURN)
-			damage -= burnArmor()
-		else
-			if(type)
-				damage = 0
-	integrity -= max(0, damage)
-	if(integrity <= 0)
-		spawn(1) dismantle()
-		return 2
-	return damage ? 1 : 0
+/obj/structure/girder/destroyed()
+	dismantle(1)
 
-/obj/structure/girder/proc/dismantle(var/devastated)
+/obj/structure/girder/dismantle(var/devastated)
 	playsound(get_turf(src), 'sound/items/Welder.ogg', 100, 1)
 	if(!devastated)
 		new material.stack_type(get_turf(src), 2)
@@ -226,29 +220,3 @@
 
 /obj/structure/girder/proc/explosionArmor()
 	return material.hardness + (r_material ? r_material.hardness + (material.hardness * r_material.hardness / 100) : 0)
-
-
-// Animal attacks
-/obj/structure/girder/attack_generic(var/mob/user, var/damage, var/attack_message = "smashes apart", var/wallreturner)
-	if(!damage || !wallreturner)
-		return 0
-	attack_animation(user)
-	if(take_damage())
-		visible_message("<span class='danger'>[user] [attack_message] \the [src]!</span>")
-	return 1
-
-// Bullet "attacks"
-/obj/structure/girder/bullet_act(var/obj/item/projectile/Proj)
-	if(Proj.original != src && !prob(50)) // If we arn't the target, 50% pass through
-		return PROJECTILE_CONTINUE // Pass through
-
-	var/damage = Proj.get_structure_damage()
-	switch(Proj.check_armour)
-		if("bullet")
-			take_damage(damage, BRUTE)
-			return
-		if("laser")
-			take_damage(damage, BURN)
-		else
-			take_damage(damage)
-	..()

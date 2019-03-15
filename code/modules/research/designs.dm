@@ -131,120 +131,6 @@ other types of metals and chemistry for reagents).
 /datum/design/item/stock_part/AssembleDesignDesc()
 	if(!desc)
 		desc = "A stock part used in the construction of various devices."
-/*
-/datum/design/item/stock_part/basic_capacitor
-	id = "basic_capacitor"
-	req_tech = list(TECH_POWER = 1)
-	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
-	build_path = /obj/item/weapon/stock_parts/capacitor
-	sort_string = "CAAAA"
-
-/datum/design/item/stock_part/adv_capacitor
-	id = "adv_capacitor"
-	req_tech = list(TECH_POWER = 3)
-	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50, MATERIAL_GOLD = 500, MATERIAL_PHORON = 500)
-	build_path = /obj/item/weapon/stock_parts/capacitor/adv
-	sort_string = "CAAAB"
-
-/datum/design/item/stock_part/super_capacitor
-	id = "super_capacitor"
-	req_tech = list(TECH_POWER = 5, TECH_MATERIAL = 4)
-	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 500, MATERIAL_GOLD = 2000, MATERIAL_PHORON = 1000)
-	build_path = /obj/item/weapon/stock_parts/capacitor/super
-	sort_string = "CAAAC"
-
-/datum/design/item/stock_part/micro_mani
-	id = "micro_mani"
-	req_tech = list(TECH_MATERIAL = 1, TECH_DATA = 1)
-	materials = list(MATERIAL_STEEL = 30)
-	build_path = /obj/item/weapon/stock_parts/manipulator
-	sort_string = "CAABA"
-
-/datum/design/item/stock_part/nano_mani
-	id = "nano_mani"
-	req_tech = list(TECH_MATERIAL = 3, TECH_DATA = 2)
-	materials = list(MATERIAL_STEEL = 30, MATERIAL_PHORON = 250)
-	build_path = /obj/item/weapon/stock_parts/manipulator/nano
-	sort_string = "CAABB"
-
-/datum/design/item/stock_part/pico_mani
-	id = "pico_mani"
-	req_tech = list(TECH_MATERIAL = 5, TECH_DATA = 2)
-	materials = list(MATERIAL_STEEL = 30, MATERIAL_PHORON = 1000)
-	build_path = /obj/item/weapon/stock_parts/manipulator/pico
-	sort_string = "CAABC"
-
-/datum/design/item/stock_part/basic_matter_bin
-	id = "basic_matter_bin"
-	req_tech = list(TECH_MATERIAL = 1)
-	materials = list(MATERIAL_STEEL = 80)
-	build_path = /obj/item/weapon/stock_parts/matter_bin
-	sort_string = "CAACA"
-
-/datum/design/item/stock_part/adv_matter_bin
-	id = "adv_matter_bin"
-	req_tech = list(TECH_MATERIAL = 3)
-	materials = list(MATERIAL_STEEL = 80, MATERIAL_PHORON = 250)
-	build_path = /obj/item/weapon/stock_parts/matter_bin/adv
-	sort_string = "CAACB"
-
-/datum/design/item/stock_part/super_matter_bin
-	id = "super_matter_bin"
-	req_tech = list(TECH_MATERIAL = 5)
-	materials = list(MATERIAL_STEEL = 80, MATERIAL_PHORON = 500)
-	build_path = /obj/item/weapon/stock_parts/matter_bin/super
-	sort_string = "CAACC"
-
-/datum/design/item/stock_part/basic_micro_laser
-	id = "basic_micro_laser"
-	req_tech = list(TECH_MAGNET = 1)
-	materials = list(MATERIAL_STEEL = 10, MATERIAL_GLASS = 20)
-	build_path = /obj/item/weapon/stock_parts/micro_laser
-	sort_string = "CAADA"
-
-/datum/design/item/stock_part/high_micro_laser
-	id = "high_micro_laser"
-	req_tech = list(TECH_MAGNET = 3)
-	materials = list(MATERIAL_STEEL = 10, MATERIAL_GLASS = 20, MATERIAL_URANIUM = 500, MATERIAL_PHORON = 500)
-	build_path = /obj/item/weapon/stock_parts/micro_laser/high
-	sort_string = "CAADB"
-
-/datum/design/item/stock_part/ultra_micro_laser
-	id = "ultra_micro_laser"
-	req_tech = list(TECH_MAGNET = 5, TECH_MATERIAL = 5)
-	materials = list(MATERIAL_STEEL = 10, MATERIAL_GLASS = 20, MATERIAL_URANIUM = 1000, MATERIAL_PHORON = 1000)
-	build_path = /obj/item/weapon/stock_parts/micro_laser/ultra
-	sort_string = "CAADC"
-
-/datum/design/item/stock_part/basic_sensor
-	id = "basic_sensor"
-	req_tech = list(TECH_MAGNET = 1)
-	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 20)
-	build_path = /obj/item/weapon/stock_parts/scanning_module
-	sort_string = "CAAEA"
-
-/datum/design/item/stock_part/adv_sensor
-	id = "adv_sensor"
-	req_tech = list(TECH_MAGNET = 3)
-	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 20, MATERIAL_SILVER = 1000, MATERIAL_PHORON = 500)
-	build_path = /obj/item/weapon/stock_parts/scanning_module/adv
-	sort_string = "CAAEB"
-
-/datum/design/item/stock_part/phasic_sensor
-	id = "phasic_sensor"
-	req_tech = list(TECH_MAGNET = 5, TECH_MATERIAL = 3)
-	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 20, MATERIAL_SILVER = 2000, MATERIAL_PHORON = 1000)
-	build_path = /obj/item/weapon/stock_parts/scanning_module/phasic
-	sort_string = "CAAEC"
-
-/datum/design/item/stock_part/RPED
-	name = "Rapid Part Exchange Device"
-	desc = "Special mechanical module made to store, sort, and apply standard machine parts."
-	id = "rped"
-	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 3)
-	materials = list(MATERIAL_STEEL = 15000, MATERIAL_GLASS = 6000, , MATERIAL_GLASS = 6000, MATERIAL_GOLD = 6000, MATERIAL_PHORON = 8000)
-	build_path = /obj/item/weapon/storage/part_replacer
-	sort_string = "CBAAA"
 
 /datum/design/item/powercell
 	build_type = PROTOLATHE | MECHFAB
@@ -517,14 +403,7 @@ other types of metals and chemistry for reagents).
 	materials = list (MATERIAL_STEEL = 12500, MATERIAL_GLASS = 7500, MATERIAL_SILVER = 3000, MATERIAL_GOLD = 3000, MATERIAL_DIAMOND = 1000, MATERIAL_PHORON = 6000)
 	build_path = /obj/item/weapon/scalpel/manager
 	sort_string = "MBBAD"
-/**
-/datum/design/item/neural_lace
-	id = "neural lace"
-	req_tech = list(TECH_BIO = 4, TECH_MATERIAL = 4, TECH_MAGNET = 2, TECH_DATA = 3)
-	materials = list (MATERIAL_STEEL = 10000, MATERIAL_GLASS = 7500, MATERIAL_SILVER = 1000, MATERIAL_GOLD = 1000)
-	build_path = /obj/item/organ/internal/stack
-	sort_string = "MBBAE"
-**/
+
 /datum/design/item/implant
 	materials = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
 
@@ -572,28 +451,7 @@ other types of metals and chemistry for reagents).
 	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 3000, MATERIAL_SILVER = 4000, MATERIAL_GOLD = 4000, MATERIAL_DIAMOND = 12000, MATERIAL_PHORON = 8000)
 	build_path = /obj/item/weapon/gun/energy/laser
 	sort_string = "TAAAB"
-/*
-/datum/design/item/weapon/nuclear_gun
-	id = "nuclear_gun"
-	desc = "Self-recharging energy weapon powered by a nuclear core."
-	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 5, TECH_POWER = 5)
-	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 1000, MATERIAL_SILVER = 1000, MATERIAL_GOLD = 2000, MATERIAL_URANIUM = 10000, MATERIAL_PHORON = 6000)
-	build_path = /obj/item/weapon/gun/energy/gun/nuclear
-	sort_string = "TAAAB"
-/datum/design/item/weapon/lasercannon
-	desc = "The lasing medium of this prototype is enclosed in a tube lined with uranium-235 and subjected to high neutron flux in a nuclear reactor core."
-	id = "lasercannon"
-	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3, TECH_POWER = 3)
-	materials = list(MATERIAL_STEEL = 10000, MATERIAL_GLASS = 1000, MATERIAL_SILVER = 2000, MATERIAL_DIAMOND = 6000, MATERIAL_PHORON = 6000)
-	build_path = /obj/item/weapon/gun/energy/lasercannon
-	sort_string = "TAAAC"
-/datum/design/item/weapon/phoronpistol
-	id = "ppistol"
-	req_tech = list(TECH_COMBAT = 5, TECH_PHORON = 4)
-	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 1000, MATERIAL_URANIUM = 1000, MATERIAL_PHORON = 6000)
-	build_path = /obj/item/weapon/gun/energy/toxgun
-	sort_string = "TAAAD"
-*/
+
 /datum/design/item/weapon/decloner
 	id = "decloner"
 	req_tech = list(TECH_COMBAT = 8, TECH_MATERIAL = 7, TECH_BIO = 5, TECH_POWER = 6)
@@ -608,14 +466,7 @@ other types of metals and chemistry for reagents).
 	materials = list(MATERIAL_STEEL = 8000, MATERIAL_SILVER = 2000, MATERIAL_DIAMOND = 1000, MATERIAL_PHORON = 4000)
 	build_path = /obj/item/weapon/gun/projectile/automatic/wt550
 	sort_string = "TAABA"
-/*
-/datum/design/item/weapon/smg
-	id = "smg"
-	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
-	materials = list(MATERIAL_STEEL = 8000, MATERIAL_SILVER = 2000, MATERIAL_DIAMOND = 1000)
-	build_path = /obj/item/weapon/gun/projectile/automatic
-	sort_string = "TAABA"
-*/
+
 /datum/design/item/weapon/ammo_9mm
 	id = "ammo_9mm"
 	req_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
@@ -785,27 +636,6 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/organ/internal/posibrain
 	category = "Misc"
 	sort_string = "VACAB"
-
-/**
-/datum/design/item/mmi
-	name = "Man-machine interface"
-	id = "mmi"
-	req_tech = list(TECH_DATA = 2, TECH_BIO = 3)
-	build_type = PROTOLATHE | MECHFAB
-	materials = list(MATERIAL_STEEL = 1000, MATERIAL_GLASS = 500)
-	build_path = /obj/item/device/mmi
-	category = "Misc"
-	sort_string = "VACBA"
-/datum/design/item/mmi_radio
-	name = "Radio-enabled man-machine interface"
-	id = "mmi_radio"
-	req_tech = list(TECH_DATA = 2, TECH_BIO = 4)
-	build_type = PROTOLATHE | MECHFAB
-	materials = list(MATERIAL_STEEL = 1200, MATERIAL_GLASS = 500)
-	build_path = /obj/item/device/mmi/radio_enabled
-	category = "Misc"
-	sort_string = "VACBB"
-**/
 
 /datum/design/item/defib
 	name = "auto-resuscitator"
@@ -1051,14 +881,6 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/weapon/computer_hardware/battery_module/micro
 	sort_string = "VBAAU"
 
-/datum/design/item/modularcomponent/dna_scanner
-	name = "DNA scanner port"
-	id = "dnaslot"
-	req_tech = list(TECH_DATA = 2)
-	build_type = PROTOLATHE
-	materials = list(MATERIAL_STEEL = 600)
-	build_path = /obj/item/weapon/computer_hardware/dna_scanner
-	sort_string = "VBABA"
 /datum/design/item/modularcomponent/logistic_processor
 	name = "Advanced Logistic Processor"
 	id = "logproc"
@@ -1188,7 +1010,7 @@ other types of metals and chemistry for reagents).
 	id = "bracejack"
 	req_tech = list(TECH_ENGINEERING = 3, TECH_MATERIAL = 2)
 	materials = list(MATERIAL_STEEL = 120)
-	build_path = /obj/item/weapon/crowbar/brace_jack
+	build_path = /obj/item/weapon/tool/crowbar/brace_jack
 	sort_string = "VBAAS"
 
 /datum/design/item/experimental_welder
@@ -1198,7 +1020,7 @@ other types of metals and chemistry for reagents).
 	req_tech = list(TECH_ENGINEERING = 5, TECH_PHORON = 4)
 	materials = list(MATERIAL_STEEL = 6000, MATERIAL_GLASS = 500, MATERIAL_PLASTEEL = 2000)
 	chemicals = list(/datum/reagent/toxin/phoron/oxygen = 80)	//hopefully this makes a good detterant for obtaining OP welding tool
-	build_path = /obj/item/weapon/weldingtool/experimental
+	build_path = /obj/item/weapon/tool/weldingtool/experimental
 	sort_string = "VBAAT"
 
 //RIG Modules
@@ -1347,16 +1169,7 @@ other types of metals and chemistry for reagents).
 	materials = list(MATERIAL_STEEL = 4000, MATERIAL_PLASTIC = 2500, MATERIAL_GLASS = 2000, MATERIAL_GOLD = 1000)
 	build_path = /obj/item/rig_module/mounted/taser
 	sort_string = "VCAAN"
-/*
-/datum/design/item/rig_egun
-	name = "RIG module (Energy Gun)"
-	desc = "An energy gun, mountable on a RIG."
-	id = "rig_egun"
-	req_tech = list(TECH_POWER = 6, TECH_COMBAT = 6, TECH_ENGINEERING = 6)
-	materials = list(MATERIAL_STEEL = 6000, MATERIAL_GLASS = 3000, MATERIAL_PLASTIC = 2500, MATERIAL_GOLD = 2000, MATERIAL_SILVER = 1000)
-	build_path = /obj/item/rig_module/mounted/egun
-	sort_string = "VCAAO"
-*/
+
 /datum/design/item/rig_enet
 	name = "RIG module (Energy Net)"
 	desc = "An advanced energy-patterning projector used to capture targets, mountable on a RIG."
@@ -1374,40 +1187,20 @@ other types of metals and chemistry for reagents).
 	materials = list(MATERIAL_STEEL = 6000, MATERIAL_GLASS = 3000, MATERIAL_DIAMOND = 2000, MATERIAL_SILVER = 2000, MATERIAL_URANIUM = 2000, MATERIAL_GOLD = 2000, MATERIAL_PLASTIC = 2000)
 	build_path = /obj/item/rig_module/stealth_field
 	sort_string = "VCAAQ"
-/**
-/datum/design/item/integrated_printer
-	name = "Integrated Circuit Printer"
-	desc = "This machine provides all the necessary things for circuitry."
-	id = "icprinter"
-	req_tech = list(TECH_MATERIAL = 2, TECH_ENGINEERING = 1)
-	materials = list(MATERIAL_STEEL = 10000, MATERIAL_GLASS = 5000)
-	build_path = /obj/item/device/integrated_circuit_printer
-	sort_string = "WCLAC"
 
-/datum/design/item/integrated_printer_upgrade_advanced
-	name = "Integrated Circuit Printer Upgrade Disk"
-	desc = "This disk allows for integrated circuit printers to print advanced circuitry designs."
-	id = "icupgradv"
-	req_tech = list(TECH_MATERIAL = 3, TECH_ENGINEERING = 3)
-	materials = list(MATERIAL_STEEL = 10000, MATERIAL_GLASS = 10000)
-	build_path = /obj/item/disk/integrated_circuit/upgrade/advanced
-	sort_string = "WCLAD"
-
-/datum/design/item/integrated_printer_upgrade_clone
-	name = "Integrated Circuit Printer Clone Disk"
-	desc = "This disk allows for integrated circuit printers to copy and clone designs instantaneously."
-	id = "icupclo"
-	req_tech = list(TECH_DATA = 3, TECH_MATERIAL = 5)
-	materials = list(MATERIAL_STEEL = 10000, MATERIAL_GLASS = 10000)
-	build_path = /obj/item/disk/integrated_circuit/upgrade/clone
-	sort_string = "WCLAE"
-**/
 /datum/design/item/stethoscope
 	name = "Stethoscope"
 	desc = "An outdated medical apparatus for listening to the sounds of the human body. It also makes you look like you know what you're doing."
 	id = "stethoscope"
 	req_tech = list(TECH_BIO = 1)
-	materials = list(DEFAULT_WALL_MATERIAL = 1000)
+	materials = list(MATERIAL_STEEL = 1000)
 	build_path = /obj/item/clothing/accessory/stethoscope
 	sort_string = "WCLAF"
-*/
+
+/datum/design/item/modularcomponent/accessory/paper_scanner
+	name = "paper scanner module"
+	id = "scan_paper"
+	req_tech = list(TECH_DATA = 2, TECH_ENGINEERING = 2)
+	materials = list(MATERIAL_STEEL = 600, MATERIAL_GLASS = 200)
+	build_path = /obj/item/weapon/computer_hardware/scanner/paper
+	sort_string = "VBADG"

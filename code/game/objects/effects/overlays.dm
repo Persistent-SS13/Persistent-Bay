@@ -1,6 +1,7 @@
 /obj/effect/overlay
 	name = "overlay"
 	unacidable = 1
+	should_save = 1
 	var/i_attached//Added for possible image attachments to objects. For hallucinations and the like.
 
 /obj/effect/overlay/beam//Not actually a projectile, just an effect.
@@ -8,9 +9,11 @@
 	icon='icons/effects/beam.dmi'
 	icon_state= "b_beam"
 	var/tmp/atom/BeamSource
-	New()
-		..()
-		spawn(10) qdel(src)
+	should_save = 0
+
+/obj/effect/overlay/beam/New()
+	..()
+	spawn(10) qdel(src)
 
 /obj/effect/overlay/palmtree_r
 	name = "Palm tree"

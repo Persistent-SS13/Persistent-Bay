@@ -29,10 +29,10 @@
 	qdel(progress)
 */
 
-/atom/proc/Weld(var/obj/item/weapon/weldingtool/W, var/mob/user, var/time = 25, var/outputMessage, var/skill = 5, var/minSkill = 0)
+/atom/proc/Weld(var/obj/item/weapon/tool/weldingtool/W, var/mob/user, var/time = 25, var/outputMessage, var/skill = 5, var/minSkill = 0)
 	if(!isWelder(W))
 		return 0
-	if(!W.remove_fuel(0,user))
+	if(!W.isOn())
 		to_chat(user, "<span class='notice'>The welding tool must be on to complete this task.</span>")
 		return 0
 	user.setClickCooldown(DEFAULT_QUICK_COOLDOWN)

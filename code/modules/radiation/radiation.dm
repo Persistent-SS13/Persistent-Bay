@@ -54,6 +54,6 @@
 
 /mob/living/rad_act(var/severity)
 	if(severity)
-		src.apply_effect(severity, IRRADIATE, src.getarmor(null, "rad"))
+		src.apply_effect(severity, IRRADIATE, src.getarmor(null, DAM_RADS))
 		for(var/atom/I in src)
 			I.rad_act(severity)

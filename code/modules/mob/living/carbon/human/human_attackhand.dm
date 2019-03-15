@@ -35,7 +35,7 @@
 				visible_message("<span class='danger'>\The [H] has attempted to punch \the [src]!</span>")
 				return 0
 			var/obj/item/organ/external/affecting = get_organ(ran_zone(H.zone_sel.selecting))
-			var/armor_block = run_armor_check(affecting, "melee")
+			var/armor_block = run_armor_check(affecting, DAM_BLUNT)
 
 			if(HULK in H.mutations)
 				damage += 5
@@ -44,7 +44,7 @@
 
 			visible_message("<span class='danger'>[H] has punched \the [src]!</span>")
 
-			apply_damage(damage, PAIN, affecting, armor_block)
+			apply_damage(damage, DAM_PAIN, affecting, armor_block)
 			if(damage >= 9)
 				visible_message("<span class='danger'>[H] has weakened \the [src]!</span>")
 				apply_effect(4, WEAKEN, armor_block)
@@ -224,12 +224,12 @@
 				rand_damage *= 2
 			real_damage = max(1, real_damage)
 
-			var/armour = run_armor_check(hit_zone, "melee")
+			var/armour = run_armor_check(hit_zone, attack.damtype)
 			// Apply additional unarmed effects.
 			attack.apply_effects(H, src, armour, rand_damage, hit_zone)
 
 			// Finally, apply damage to target
-			apply_damage(real_damage, (attack.deal_halloss ? PAIN : BRUTE), hit_zone, armour, damage_flags=attack.damage_flags())
+			apply_damage(real_damage, (attack.deal_halloss ? DAM_PAIN : attack.damtype), hit_zone, armour)
 
 		if(I_DISARM)
 			if(H.species)
@@ -241,7 +241,7 @@
 /mob/living/carbon/human/proc/afterattack(atom/target as mob|obj|turf|area, mob/living/user as mob|obj, inrange, params)
 	return
 
-/mob/living/carbon/human/attack_generic(var/mob/user, var/damage, var/attack_message, var/damtype = BRUTE, var/armorcheck = "melee")
+/mob/living/carbon/human/attack_generic(var/mob/user, var/damage, var/attack_message, var/damtype = DAM_BLUNT)
 
 	if(!damage || !istype(user))
 		return
@@ -251,7 +251,7 @@
 
 	var/dam_zone = pick(organs_by_name)
 	var/obj/item/organ/external/affecting = get_organ(ran_zone(dam_zone))
-	var/armor_block = run_armor_check(affecting, armorcheck)
+	var/armor_block = run_armor_check(affecting, damtype)
 	apply_damage(damage, damtype, affecting, armor_block)
 	updatehealth()
 	return 1

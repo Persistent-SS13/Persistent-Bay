@@ -184,7 +184,7 @@ SUBSYSTEM_DEF(asteroid)
 			var/datum/music_controller/music_player = SSmusic.zLevelAmbience["[current + Z]"]
 			if(!genre)
 				genre = list(MUSIC_GENRE_NEUTRAL, MUSIC_GENRE_AMBIENT)
-			if(music_player.genre ~= genre)
+			if(music_player && music_player.genre ~= genre)
 				music_player.genre = genre
 				music_player.stopTime = 0
 

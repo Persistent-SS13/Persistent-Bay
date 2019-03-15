@@ -1,5 +1,3 @@
-#define SHEET_MATERIAL_AMOUNT 2000
-
 #define TECH_MATERIAL "materials"
 #define TECH_ENGINEERING "engineering"
 #define TECH_PHORON "phorontech"
@@ -19,8 +17,8 @@
 #define TECH_WAR 5
 
 // Fabricator defines
-#define SHEETS *2000
-#define SHEET *2000
+#define SHEETS *SHEET_MATERIAL_AMOUNT
+#define SHEET *SHEET_MATERIAL_AMOUNT
 
 #define PROTOLATHE	1
 #define CIRCUITFAB	2
@@ -36,7 +34,7 @@
 #define ENGIFAB  11
 #define PARTFAB  12
 #define MEDICALFAB  13
-#define WEAPONFAB  14
+//#define WEAPONFAB  14
 #define CONSUMERFAB 15
 #define GENERALFAB 16
 #define SERVICEFAB 17

@@ -25,8 +25,8 @@
 
 /obj/item/weapon/circuitboard/air_management/supermatter_core
 	name = T_BOARD("core control")
-	build_path = /obj/machinery/computer/general_air_control/supermatter_core
-	frequency = 1438
+	build_path = /obj/machinery/computer/general_air_control/large_tank_control/supermatter_core
+	frequency = ENGINE_FREQ
 	var/input_tag
 	var/output_tag
 
@@ -52,7 +52,7 @@
 	if (..(C))
 		if(console_name)
 			C.name = console_name
-		C.set_frequency(frequency)
+		C.set_radio_frequency(frequency)
 		C.sensors = sensors.Copy()
 		C.sensor_information = sensor_information.Copy()
 		return 1
@@ -69,7 +69,7 @@
 		LTC.pressure_setting = pressure_setting
 		return 1
 
-/obj/item/weapon/circuitboard/air_management/supermatter_core/construct(var/obj/machinery/computer/general_air_control/supermatter_core/SC)
+/obj/item/weapon/circuitboard/air_management/supermatter_core/construct(var/obj/machinery/computer/general_air_control/large_tank_control/supermatter_core/SC)
 	if(..(SC))
 		SC.input_tag = input_tag
 		SC.output_tag = output_tag
@@ -96,7 +96,7 @@
 /obj/item/weapon/circuitboard/air_management/deconstruct(var/obj/machinery/computer/general_air_control/C)
 	if (..(C))
 		console_name = C.name
-		frequency = C.frequency
+		frequency = C.get_radio_frequency()
 		sensors = C.sensors.Copy()
 		sensor_information = C.sensor_information.Copy()
 		return 1
@@ -113,7 +113,7 @@
 		pressure_setting = LTC.pressure_setting
 		return 1
 
-/obj/item/weapon/circuitboard/air_management/supermatter_core/deconstruct(var/obj/machinery/computer/general_air_control/supermatter_core/SC)
+/obj/item/weapon/circuitboard/air_management/supermatter_core/deconstruct(var/obj/machinery/computer/general_air_control/large_tank_control/supermatter_core/SC)
 	if(..(SC))
 		input_tag = SC.input_tag
 		output_tag = SC.output_tag

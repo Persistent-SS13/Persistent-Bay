@@ -128,7 +128,7 @@
 			ec_cartridge = I
 			update_icon()
 			to_chat(user, "<span class='notice'>You insert \the [I] into \the [src].</span> ")
-	if(istype(I, /obj/item/weapon/screwdriver))
+	if(istype(I, /obj/item/weapon/tool/screwdriver))
 		if(cigcell)	//if contains powercell
 			cigcell.update_icon()
 			cigcell.dropInto(loc)

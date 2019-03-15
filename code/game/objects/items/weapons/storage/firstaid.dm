@@ -10,11 +10,15 @@
 /obj/item/weapon/storage/firstaid
 	name = "first-aid kit"
 	desc = "It's an emergency medical kit for those serious boo-boos."
+	icon = 'icons/obj/items/storage/firstaid.dmi'
 	icon_state = "firstaid"
 	throw_speed = 2
 	throw_range = 8
 	max_w_class = ITEM_SIZE_SMALL
 	max_storage_space = DEFAULT_BOX_STORAGE
+
+/obj/item/weapon/storage/firstaid/empty
+	startswith = null
 
 /obj/item/weapon/storage/firstaid/fire
 	name = "fire first-aid kit"
@@ -30,6 +34,9 @@
 		/obj/item/weapon/storage/pill_bottle/kelotane,
 		/obj/item/weapon/storage/pill_bottle/paracetamol
 		)
+
+/obj/item/weapon/storage/firstaid/fire/empty
+	startswith = null
 
 /obj/item/weapon/storage/firstaid/fire/New()
 	..()
@@ -60,6 +67,9 @@
 		/obj/item/device/healthanalyzer,
 		)
 
+/obj/item/weapon/storage/firstaid/toxin/empty
+	startswith = null
+
 /obj/item/weapon/storage/firstaid/toxin/New()
 	..()
 	icon_state = pick("antitoxin","antitoxfirstaid","antitoxfirstaid2","antitoxfirstaid3")
@@ -78,6 +88,9 @@
 		/obj/item/device/healthanalyzer,
 		)
 
+/obj/item/weapon/storage/firstaid/o2/empty
+	startswith = null
+
 /obj/item/weapon/storage/firstaid/adv
 	name = "advanced first-aid kit"
 	desc = "Contains advanced medical treatments."
@@ -91,6 +104,9 @@
 		/obj/item/stack/medical/advanced/ointment = 2,
 		/obj/item/stack/medical/splint
 		)
+
+/obj/item/weapon/storage/firstaid/adv/empty
+	startswith = null
 
 /obj/item/weapon/storage/firstaid/combat
 	name = "combat medical kit"
@@ -109,9 +125,13 @@
 		/obj/item/stack/medical/splint,
 		)
 
+/obj/item/weapon/storage/firstaid/combat/empty
+	startswith = null
+
 /obj/item/weapon/storage/firstaid/surgery
 	name = "surgery kit"
 	desc = "Contains tools for surgery. Has precise foam fitting for safe transport and automatically sterilizes the content between uses."
+	icon = 'icons/obj/items/storage/toolboxes.dmi'
 	icon_state = "surgerykit"
 	item_state = "firstaid-surgery"
 
@@ -146,6 +166,9 @@
 		/obj/item/weapon/FixOVein,
 		/obj/item/stack/medical/advanced/bruise_pack,
 		)
+
+/obj/item/weapon/storage/firstaid/surgery/empty
+	startswith = null
 
 /*
  * Pill Bottles

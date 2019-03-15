@@ -21,7 +21,7 @@
 	var/obj/item/organ/external/chest/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='warning'>[user]'s hand slips, scraping around inside [target]'s [affected.name] with \the [tool]!</span>", \
 	"<span class='warning'>Your hand slips, scraping around inside [target]'s [affected.name] with \the [tool]!</span>")
-	affected.take_damage(20, 0, (DAM_SHARP|DAM_EDGE), used_weapon = tool)
+	affected.take_damage(20, DAM_CUT, damsrc = tool)
 
 //////////////////////////////////////////////////////////////////
 //	 create implant space surgery step
@@ -63,7 +63,7 @@
 	/obj/item/weapon/cautery = 100,			\
 	/obj/item/clothing/mask/smokable/cigarette = 75,	\
 	/obj/item/weapon/flame/lighter = 50,			\
-	/obj/item/weapon/weldingtool = 25
+	/obj/item/weapon/tool/weldingtool = 25
 	)
 
 	min_duration = 60
@@ -147,7 +147,7 @@
 /datum/surgery_step/cavity/implant_removal
 	allowed_tools = list(
 	/obj/item/weapon/hemostat = 100,	\
-	/obj/item/weapon/wirecutters = 75,	\
+	/obj/item/weapon/tool/wirecutters = 75,	\
 	/obj/item/weapon/material/kitchen/utensil/fork = 20
 	)
 

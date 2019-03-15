@@ -56,6 +56,10 @@
 	if(!istype(target))
 		return 0
 
+	if(target.tankcap)
+		to_chat(user, SPAN_NOTICE("\The [target]'s tank cap is opened for pouring."))
+		return standard_pour_into(user, target)
+
 	if(!target.reagents || !target.reagents.total_volume)
 		to_chat(user, "<span class='notice'>[target] is empty.</span>")
 		return 1
@@ -215,3 +219,23 @@
 			set_APTFT()
 	else
 		return ..()
+
+/obj/item/weapon/reagent_containers/verb/verb_set_label(L as text)
+	set name = "Set Container Label"
+	set category = "Object"
+	set src in view(usr, 1)
+
+	setLabel(L, usr)
+
+/obj/item/weapon/reagent_containers/proc/setLabel(L, mob/user = null)
+	if(L)
+		if(user)
+			to_chat(user, "<span class='notice'>You set the label on \the [src] to '[L]'.</span>")
+
+		label_text = L
+		name = "[initial(name)] - '[L]'"
+	else
+		if(user)
+			to_chat(user, "<span class='notice'>You clear the label on \the [src].</span>")
+		label_text = ""
+		name = initial(name)

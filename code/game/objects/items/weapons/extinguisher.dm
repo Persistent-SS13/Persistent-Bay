@@ -4,7 +4,7 @@
 	icon = 'icons/obj/items.dmi'
 	icon_state = "fire_extinguisher0"
 	item_state = "fire_extinguisher"
-	hitsound = 'sound/weapons/smash.ogg'
+	sound_hit = 'sound/weapons/smash.ogg'
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	throwforce = 10
 	w_class = ITEM_SIZE_NORMAL
@@ -30,7 +30,7 @@
 	desc = "A light and compact fibreglass-framed model fire extinguisher."
 	icon_state = "miniFE0"
 	item_state = "miniFE"
-	hitsound = null	//it is much lighter, after all.
+	sound_hit = null	//it is much lighter, after all.
 	throwforce = 2
 	w_class = ITEM_SIZE_SMALL
 	force = 3.0
@@ -71,10 +71,10 @@
 
 		src.last_use = world.time
 		reagents.splash(M, min(reagents.total_volume, spray_amount))
-		
+
 		user.visible_message("<span class='notice'>\The [user] sprays \the [M] with \the [src].</span>")
 		playsound(src.loc, 'sound/effects/extinguish.ogg', 75, 1, -3)
-		
+
 		return 1 // No afterattack
 	return ..()
 

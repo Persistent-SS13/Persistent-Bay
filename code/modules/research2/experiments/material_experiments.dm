@@ -14,7 +14,7 @@
 			   "}
 
 
-	requirements = list(/datum/reagent/toxin/lead = 10, /datum/reagent/acid = 10)
+	requirements = list(/datum/reagent/lead = 10, /datum/reagent/acid = 10)
 	research = list(TECH_MATERIALS = 7, TECH_POWER = 3)
 
 /datum/researchExperiment/material/leadlithium
@@ -33,7 +33,7 @@
 			   "}
 
 
-	requirements = list(/datum/reagent/toxin/lead = 10, /datum/reagent/lithium = 10)
+	requirements = list(/datum/reagent/lead = 10, /datum/reagent/lithium = 10)
 	research = list(TECH_MATERIALS = 10, TECH_POWER = 5)
 
 /datum/researchExperiment/material/leaduranium
@@ -52,5 +52,5 @@
 			   "}
 
 
-	requirements = list(/datum/reagent/toxin/lead = 10, /datum/reagent/uranium = 10)
+	requirements = list(/datum/reagent/lead = 10, /datum/reagent/uranium = 10)
 	research = list(TECH_MATERIALS = 13, TECH_NUCLEAR = 7)

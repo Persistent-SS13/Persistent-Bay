@@ -1,3 +1,6 @@
+proc/GetNbSavedZLevels()
+	return 20
+
 /datum/map/nexus
 	name = "Nexus"
 	full_name = "Nexus Station"

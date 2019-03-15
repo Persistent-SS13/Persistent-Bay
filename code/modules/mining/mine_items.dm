@@ -35,7 +35,7 @@
 /obj/item/weapon/pickaxe
 	name = "mining drill"
 	desc = "The most basic of mining drills, for short excavations and small mineral extractions."
-	icon = 'icons/obj/tools.dmi'
+	icon = 'icons/obj/items/tools.dmi'
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
 	force = 15.0
@@ -49,7 +49,7 @@
 	attack_verb = list("hit", "pierced", "sliced", "attacked")
 	var/drill_sound = 'sound/weapons/Genhit.ogg'
 	var/drill_verb = "drilling"
-	sharp = 1
+	damtype = DAM_PIERCE
 
 	var/excavation_amount = 200
 
@@ -57,6 +57,7 @@
 	name = "sledgehammer"
 	//icon_state = "sledgehammer" Waiting on sprite
 	desc = "A mining hammer made of reinforced metal."
+	damtype = DAM_BLUNT
 
 /obj/item/weapon/pickaxe/silver
 	name = "silver pickaxe"
@@ -125,7 +126,7 @@
 /obj/item/weapon/shovel
 	name = "shovel"
 	desc = "A large tool for digging and moving dirt."
-	icon = 'icons/obj/tools.dmi'
+	icon = 'icons/obj/items/tools.dmi'
 	icon_state = "shovel"
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
@@ -136,8 +137,7 @@
 	origin_tech = list(TECH_MATERIAL = 1, TECH_ENGINEERING = 1)
 	matter = list(MATERIAL_STEEL = 50)
 	attack_verb = list("bashed", "bludgeoned", "thrashed", "whacked")
-	sharp = 0
-	edge = 1
+	damtype = DAM_BLUNT
 
 /obj/item/weapon/shovel/spade
 	name = "spade"
@@ -147,6 +147,7 @@
 	force = 5.0
 	throwforce = 7.0
 	w_class = ITEM_SIZE_SMALL
+	damtype = DAM_BLUNT
 
 // Flags.
 /obj/item/stack/flag

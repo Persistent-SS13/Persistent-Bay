@@ -1,12 +1,14 @@
 /obj/machinery/papershredder
 	name = "paper shredder"
 	desc = "For those documents you don't want seen."
-	icon = 'icons/obj/bureaucracy.dmi'
+	icon = 'icons/obj/machines/paper_shredder.dmi'
 	icon_state = "papershredder0"
 	density = 1
 	anchored = 1
 	atom_flags = ATOM_FLAG_CLIMBABLE
 	obj_flags = OBJ_FLAG_ANCHORABLE
+	mass = 5
+	max_health = 30
 	var/max_paper = 10
 	var/paperamount = 0
 	var/list/shred_amounts = list(
@@ -46,7 +48,7 @@
 			update_icon()
 			return
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(WT.remove_fuel(0,user))
 			var/obj/item/stack/material/steel/new_item = new(usr.loc)
 			new_item.add_to_stacks(usr)
@@ -137,7 +139,7 @@
 
 /obj/item/weapon/shreddedp
 	name = "shredded paper"
-	icon = 'icons/obj/bureaucracy.dmi'
+	icon = 'icons/obj/items/paper.dmi'
 	icon_state = "shredp"
 	randpixel = 5
 	throwforce = 0

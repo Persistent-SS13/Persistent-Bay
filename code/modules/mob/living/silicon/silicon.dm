@@ -1,6 +1,7 @@
 /mob/living/silicon
 	gender = NEUTER
 	voice_name = "synthesized voice"
+	skillset = /datum/skillset/silicon
 	var/syndicate = 0
 	var/const/MAIN_CHANNEL = "Main Frequency"
 	var/lawchannel = MAIN_CHANNEL // Default channel on which to state laws
@@ -71,10 +72,10 @@
 /mob/living/silicon/emp_act(severity)
 	switch(severity)
 		if(1)
-			src.take_organ_damage(0,20,emp=1)
+			src.apply_damage(20, DAM_EMP)
 			Stun(rand(5,10))
 		if(2)
-			src.take_organ_damage(0,10,emp=1)
+			src.apply_damage(10, DAM_EMP)
 			confused = (min(confused + 2, 30))
 	flash_eyes(affect_silicon = 1)
 	to_chat(src, "<span class='danger'><B>*BZZZT*</B></span>")
@@ -109,11 +110,10 @@
 /mob/living/silicon/bullet_act(var/obj/item/projectile/Proj)
 
 	if(!Proj.nodamage)
-		switch(Proj.damage_type)
-			if(BRUTE)
-				adjustBruteLoss(Proj.damage)
-			if(BURN)
-				adjustFireLoss(Proj.damage)
+		if(IsDamageTypeBrute(Proj.damtype))
+			adjustBruteLoss(Proj.force)
+		else if(IsDamageTypeBurn(Proj.damtype))
+			adjustFireLoss(Proj.force)
 
 	Proj.on_hit(src,100) //wow this is a terrible hack
 	updatehealth()
@@ -260,7 +260,7 @@
 		if(1.0)
 			brute = 400
 			burn = 100
-			if(!anchored && !prob(getarmor(null, "bomb")))
+			if(!anchored && !prob(getarmor(null, DAM_BOMB)))
 				gib()
 		if(2.0)
 			brute = 60
@@ -268,7 +268,7 @@
 		if(3.0)
 			brute = 30
 
-	var/protection = blocked_mult(getarmor(null, "bomb"))
+	var/protection = blocked_mult(getarmor(null, DAM_BOMB))
 	brute *= protection
 	burn *= protection
 

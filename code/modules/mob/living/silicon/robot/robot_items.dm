@@ -259,7 +259,7 @@
 /obj/item/weapon/form_printer
 	//name = "paperwork printer"
 	name = "paper dispenser"
-	icon = 'icons/obj/bureaucracy.dmi'
+	icon = 'icons/obj/items/paper.dmi'
 	icon_state = "paper_bin1"
 	item_state = "sheet-metal"
 
@@ -308,7 +308,7 @@
 /obj/item/weapon/inflatable_dispenser
 	name = "inflatables dispenser"
 	desc = "Hand-held device which allows rapid deployment and removal of inflatables."
-	icon = 'icons/obj/storage.dmi'
+	icon = 'icons/obj/items/storage/toolboxes.dmi'
 	icon_state = "inf_deployer"
 	w_class = ITEM_SIZE_LARGE
 

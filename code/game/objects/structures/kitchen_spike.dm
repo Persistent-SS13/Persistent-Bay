@@ -7,6 +7,8 @@
 	desc = "The frame of a meat spike."
 	density = TRUE
 	anchored = FALSE
+	max_health = 100
+	mass = 8
 
 /obj/structure/kitchenspike_frame/attackby(obj/item/I, mob/user, params)
 	add_fingerprint(user)
@@ -19,7 +21,7 @@
 				"<span class='notice'>You have [anchored ? "un" : ""]secured \the [src].</span>", \
 				"You hear ratchet.")
 			src.anchored = !src.anchored
-			
+
 	else if(istype(I, /obj/item/stack/rods))
 		var/obj/item/stack/rods/R = I
 		if(R.get_amount() >= 4)
@@ -29,7 +31,7 @@
 			transfer_fingerprints_to(F)
 			qdel(src)
 	else if(isWelder(I))
-		var/obj/item/weapon/weldingtool/WT = I
+		var/obj/item/weapon/tool/weldingtool/WT = I
 		if(!WT.remove_fuel(0, user))
 			to_chat(user, "<span class='notice'>You need more welding fuel to complete this task.</span>")
 			return

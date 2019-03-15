@@ -49,8 +49,8 @@
 	pass_flags = PASS_FLAG_TABLE
 	mouse_opacity = 1
 
-	var/health = 10
-	var/max_health = 100
+	health = 10
+	max_health = 100
 	var/growth_threshold = 0
 	var/growth_type = 0
 	var/max_growth = 0
@@ -80,7 +80,7 @@
 	if(start_matured)
 		mature_time = 0
 		health = max_health
-	..()
+
 
 /obj/effect/vine/Initialize()
 	. = ..()
@@ -222,7 +222,7 @@
 	user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
 	START_PROCESSING(SSvines, src)
 
-	if(isWirecutter(W) || istype(W, /obj/item/weapon/scalpel))
+	if(isWirecutter(W) || istype(W, /obj/item/weapon/scalpel) || isScissors(W))
 		if(sampled)
 			to_chat(user, "<span class='warning'>You cannot take another sample from \the [src].</span>")
 			return

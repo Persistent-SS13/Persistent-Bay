@@ -1,3 +1,6 @@
+//Keeps a list of all the active chat clients. Meant to make things a bit easier when restoring chat sessions
+GLOBAL_LIST_EMPTY(chat_client_sessions)
+
 /datum/computer_file/program/chatclient
 	filename = "ntnrc_client"
 	filedesc = "NTNet Relay Chat Client"
@@ -5,11 +8,12 @@
 	program_menu_icon = "comment"
 	extended_desc = "This program allows communication over NTNRC network"
 	size = 8
-	requires_ntnet = 1
+	requires_ntnet = TRUE
 	requires_ntnet_feature = NTNET_COMMUNICATION
 	network_destination = "NTNRC server"
 	ui_header = "ntnrc_idle.gif"
-	available_on_ntnet = 1
+	available_on_ntnet = TRUE
+	usage_flags = PROGRAM_ALL
 	nanomodule_path = /datum/nano_module/program/computer_chatclient/
 	var/last_message = null				// Used to generate the toolbar icon
 	var/username
@@ -17,8 +21,58 @@
 	var/operator_mode = 0		// Channel operator mode
 	var/netadmin_mode = 0		// Administrator mode (invisible to other users + bypasses passwords)
 
+	//Saved stuff
+	var/saved_channelid = null
+
 /datum/computer_file/program/chatclient/New()
-	username = "DefaultUser[rand(100, 999)]"
+	..()
+	ADD_SAVED_VAR(username)
+	ADD_SAVED_VAR(last_message)
+	ADD_SAVED_VAR(operator_mode)
+	ADD_SAVED_VAR(netadmin_mode)
+	ADD_SAVED_VAR(saved_channelid)
+
+	ADD_SKIP_EMPTY(username)
+	ADD_SKIP_EMPTY(last_message)
+	ADD_SKIP_EMPTY(saved_channelid)
+
+/datum/computer_file/program/chatclient/New()
+	. = ..()
+	if(!map_storage_loaded || !username)
+		username = "DefaultUser[rand(100, 999)]"
+
+/datum/computer_file/program/chatclient/after_load()
+	. = ..()
+	if(!ntnet_global)
+		log_debug("Failed to restore chatclient session. Global NtNet is null!")
+		return 
+	if(saved_channelid)
+		for(var/datum/ntnet_conversation/ch in ntnet_global.chat_channels)
+			if(ch.title == saved_channelid)
+				channel = ch
+				saved_channelid = null
+
+/datum/computer_file/program/chatclient/before_save()
+	. = ..()
+	saved_channelid = channel.title
+
+/datum/computer_file/program/chatclient/Destroy()
+	GLOB.chat_client_sessions -= src
+	. = ..()
+
+// This is performed on program startup. May be overriden to add extra logic. Remember to include ..() call. Return 1 on success, 0 on failure.
+// When implementing new program based device, use this to run the program.
+/datum/computer_file/program/run_program(var/mob/living/user)
+	if(..())
+		GLOB.chat_client_sessions |= src
+		return TRUE
+
+// Use this proc to kill the program. Designed to be implemented by each program if it requires on-quit logic, such as the NTNRC client.
+/datum/computer_file/program/kill_program(var/forced = 0)
+	if(..())
+		GLOB.chat_client_sessions -= src
+		return TRUE
+
 
 /datum/computer_file/program/chatclient/Topic(href, href_list)
 	if(..())

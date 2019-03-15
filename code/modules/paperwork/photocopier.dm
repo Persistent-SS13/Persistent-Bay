@@ -1,8 +1,8 @@
 /obj/machinery/photocopier
 	name = "photocopier"
-	icon = 'icons/obj/library.dmi'
-	icon_state = "bigscanner"
-	var/insert_anim = "bigscanner1"
+	icon = 'icons/obj/machines/photocopier.dmi'
+	icon_state = "photocopier"
+	var/insert_anim = "photocopier_animation"
 	anchored = 1
 	density = 1
 	use_power = 1
@@ -183,11 +183,11 @@
 	var/image/img                                //and puts a matching
 	for (var/j = 1, j <= min(temp_overlays.len, copy.ico.len), j++) //gray overlay onto the copy
 		if (findtext(copy.ico[j], "cap") || findtext(copy.ico[j], "cent"))
-			img = image('icons/obj/bureaucracy.dmi', "paper_stamp-circle")
+			img = image('icons/obj/items/paper.dmi', "paper_stamp-circle")
 		else if (findtext(copy.ico[j], "deny"))
-			img = image('icons/obj/bureaucracy.dmi', "paper_stamp-x")
+			img = image('icons/obj/items/paper.dmi', "paper_stamp-x")
 		else
-			img = image('icons/obj/bureaucracy.dmi', "paper_stamp-dots")
+			img = image('icons/obj/items/paper.dmi', "paper_stamp-dots")
 		img.pixel_x = copy.offset_x[j]
 		img.pixel_y = copy.offset_y[j]
 		c.overlays += img

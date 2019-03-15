@@ -22,6 +22,7 @@
 /obj/item/weapon/storage/box
 	name = "box"
 	desc = "It's just an ordinary box."
+	icon = 'icons/obj/items/storage/boxes.dmi'
 	icon_state = "box"
 	item_state = "syringe_kit"
 	max_storage_space = DEFAULT_BOX_STORAGE
@@ -368,7 +369,7 @@
 	attackby(obj/item/weapon/flame/match/W as obj, mob/user as mob)
 		if(istype(W) && !W.lit && !W.burnt)
 			W.lit = 1
-			W.damtype = "burn"
+			W.damtype = DAM_BURN
 			W.icon_state = "match_lit"
 			START_PROCESSING(SSobj, W)
 		W.update_icon()
@@ -383,7 +384,7 @@
 
 /obj/item/weapon/storage/box/lights
 	name = "box of replacement bulbs"
-	icon = 'icons/obj/storage.dmi'
+	icon = 'icons/obj/items/storage/boxes.dmi'
 	icon_state = "light"
 	desc = "This box is shaped on the inside so that only light tubes and bulbs fit."
 	item_state = "syringe_kit"
@@ -434,7 +435,7 @@
 /obj/item/weapon/storage/box/freezer
 	name = "portable freezer"
 	desc = "This nifty shock-resistant device will keep your 'groceries' nice and non-spoiled."
-	icon = 'icons/obj/storage.dmi'
+	icon = 'icons/obj/items/storage/freezer.dmi'
 	icon_state = "portafreezer"
 	item_state = "medicalpack"
 	foldable = null

@@ -87,14 +87,29 @@ var/const/EXTRA_COST_FACTOR = 1
 	path = /obj/item/glass_jar
 	category = "General"
 
+/datum/autolathe/recipe/scissors
+	name = "scissors"
+	path = /obj/item/weapon/scissors
+	category = "Tools"
+
+/datum/autolathe/recipe/barber_scissors
+	name = "barber scissors"
+	path = /obj/item/weapon/scissors/barber
+	category = "Tools"
+
+/datum/autolathe/recipe/plastic_scissors
+	name = "plastic scissors"
+	path = /obj/item/weapon/scissors/craft 
+	category = "Tools"
+
 /datum/autolathe/recipe/crowbar
 	name = "crowbar"
-	path = /obj/item/weapon/crowbar
+	path = /obj/item/weapon/tool/crowbar
 	category = "Tools"
 
 /datum/autolathe/recipe/prybar
 	name = "pry bar"
-	path = /obj/item/weapon/crowbar/prybar
+	path = /obj/item/weapon/tool/crowbar/prybar
 	category = "Tools"
 
 /**
@@ -125,27 +140,27 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/welder_mini
 	name = "miniature welding tool"
-	path = /obj/item/weapon/weldingtool/mini/empty
+	path = /obj/item/weapon/tool/weldingtool/mini/empty
 	category = "Tools"
 
 /datum/autolathe/recipe/weldertool
 	name = "welding tool"
-	path = /obj/item/weapon/weldingtool/empty
+	path = /obj/item/weapon/tool/weldingtool/empty
 	category = "Tools"
 
 /datum/autolathe/recipe/screwdriver
 	name = "screwdriver"
-	path = /obj/item/weapon/screwdriver
+	path = /obj/item/weapon/tool/screwdriver
 	category = "Tools"
 
 /datum/autolathe/recipe/wirecutters
 	name = "wirecutters"
-	path = /obj/item/weapon/wirecutters
+	path = /obj/item/weapon/tool/wirecutters
 	category = "Tools"
 
 /datum/autolathe/recipe/wrench
 	name = "wrench"
-	path = /obj/item/weapon/wrench
+	path = /obj/item/weapon/tool/wrench
 	category = "Tools"
 
 /datum/autolathe/recipe/hatchet
@@ -463,13 +478,13 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/welder_industrial
 	name = "industrial welding tool"
-	path = /obj/item/weapon/weldingtool/largetank/empty
+	path = /obj/item/weapon/tool/weldingtool/largetank/empty
 	hidden = 1
 	category = "Tools"
 
 /datum/autolathe/recipe/welder_huge
 	name = "high capacity welding tool"
-	path = /obj/item/weapon/weldingtool/hugetank/empty
+	path = /obj/item/weapon/tool/weldingtool/hugetank/empty
 	hidden = 1
 	category = "Tools"
 

@@ -3,7 +3,7 @@
 	name_plural = "Humans"
 	primitive_form = "Monkey"
 	unarmed_types = list(/datum/unarmed_attack/stomp, /datum/unarmed_attack/kick, /datum/unarmed_attack/punch, /datum/unarmed_attack/bite)
-	blurb = "Humanity originated in the Sol system, and has rapidly spread across the galaxy \
+	description = "Humanity originated in the Sol system, and has rapidly spread across the galaxy \
 	by creating a vast network of colonies.<br/><br/> \
 	The majority of humanity is caught up in the civil war between SolGov and the Terran Federation \
 	creating generations of soldiers and refugees and slowly tearing apart the colonies that \
@@ -66,7 +66,7 @@
 
 		for(var/obj/item/organ/I in H.internal_organs)
 			if((I.status & ORGAN_DEAD) || I.robotic >= ORGAN_ROBOT) continue
-			if(I.damage > 2) if(prob(2))
+			if(I.get_damages() > 2) if(prob(2))
 				var/obj/item/organ/external/parent = H.get_organ(I.parent_organ)
 				H.custom_emote("clutches [T.his] [parent.name]!")
 
@@ -107,11 +107,11 @@
 
 	min_age = 18
 	max_age = 260
-	
+
 	body_temperature = null
 	base_temperature = 293
 
-	blurb = "A heavily reptillian species, Unathi (or 'Sinta as they call themselves) hail from the \
+	description = "A heavily reptillian species, Unathi (or 'Sinta as they call themselves) hail from the \
 	Uuosa-Eso system, which roughly translates to 'burning mother'.<br/><br/>Coming from a harsh, radioactive \
 	desert planet, they mostly hold ideals of honesty, virtue, martial combat and bravery above all \
 	else, frequently even their own lives. They prefer warmer temperatures than most species and \
@@ -166,7 +166,7 @@
 	preview_icon = 'icons/mob/human_races/species/skrell/preview.dmi'
 	primitive_form = "Neaera"
 	unarmed_types = list(/datum/unarmed_attack/punch)
-	blurb = "An amphibious species, Skrell come from the star system known as Qerr'Vallis, which translates to 'Star of \
+	description = "An amphibious species, Skrell come from the star system known as Qerr'Vallis, which translates to 'Star of \
 	the royals' or 'Light of the Crown'.<br/><br/>Skrell are a highly advanced and logical race who live under the rule \
 	of the Qerr'Katish, a caste within their society which keeps the empire of the Skrell running smoothly. Skrell are \
 	herbivores on the whole and tend to be co-operative with the other species of the galaxy, although they rarely reveal \
@@ -246,7 +246,7 @@
 	min_age = 1
 	max_age = 300
 
-	blurb = "Commonly referred to (erroneously) as 'plant people', the Dionaea are a strange space-dwelling collective \
+	description = "Commonly referred to (erroneously) as 'plant people', the Dionaea are a strange space-dwelling collective \
 	species hailing from Epsilon Ursae Minoris. Each 'diona' is a cluster of numerous cat-sized organisms called nymphs; \
 	there is no effective upper limit to the number that can fuse in gestalt, and reports exist	of the Epsilon Ursae \
 	Minoris primary being ringed with a cloud of singing space-station-sized entities.<br/><br/>The Dionaea coexist peacefully with \
@@ -352,7 +352,7 @@
 	if(H.InStasis() || H.stat == DEAD)
 		return
 	if(H.nutrition < 10)
-		H.take_overall_damage(2,0)
+		H.take_overall_damage(2, DAM_BLUNT)
 	else if (H.innate_heal)
 		// Heals normal damage.
 		if(H.getBruteLoss())

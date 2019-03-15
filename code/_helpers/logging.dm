@@ -6,12 +6,12 @@
 #define LOGS_PATH_FOLDER_NOW "data/logs/[time2text(world.realtime,"YYYY/MM/DD")]" //Folder structure for log folder for the day
 #define MAKE_LOGS_PATH_NOW(LOGFILENAME) "data/logs/[time2text(world.realtime,"YYYY/MM/DD")]/[LOGFILENAME]" //Macro for the path to a log file in today's log folder
 
-#define PATH_ATTACK_LOG_NOW  MAKE_LOGS_PATH_NOW("attack.log")
-#define PATH_GAME_LOG_NOW    MAKE_LOGS_PATH_NOW("game.log")
-#define PATH_RUNTIME_LOG_NOW MAKE_LOGS_PATH_NOW("runtime.log")
-#define PATH_QDEL_LOG_NOW    MAKE_LOGS_PATH_NOW("qdel.log")
-#define PATH_HREF_LOG_NOW    MAKE_LOGS_PATH_NOW("hrefs.htm")
-#define PATH_WORLD_LOG_NOW   MAKE_LOGS_PATH_NOW("world.log")
+#define PATH_ATTACK_LOG_NOW  MAKE_LOGS_PATH_NOW("attack-[game_id].log")
+#define PATH_GAME_LOG_NOW    MAKE_LOGS_PATH_NOW("game-[game_id].log")
+#define PATH_RUNTIME_LOG_NOW MAKE_LOGS_PATH_NOW("runtime-[game_id].log")
+#define PATH_QDEL_LOG_NOW    MAKE_LOGS_PATH_NOW("qdel-[game_id].log")
+#define PATH_HREF_LOG_NOW    MAKE_LOGS_PATH_NOW("hrefs-[game_id].htm")
+#define PATH_WORLD_LOG_NOW   MAKE_LOGS_PATH_NOW("world-[game_id].log")
 
 
 // On Linux/Unix systems the line endings are LF, on windows it's CRLF, admins that don't use notepad++
@@ -22,7 +22,7 @@
 
 
 /proc/error(msg)
-	to_world_log("## ERROR: [msg][log_end]")
+	log_world("## ERROR: [msg][log_end]")
 
 /proc/log_ss(subsystem, text, log_world = TRUE)
 	if (!subsystem)
@@ -38,22 +38,25 @@
 #define WARNING(MSG) warning("[MSG] in [__FILE__] at line [__LINE__] src: [src] usr: [usr].")
 //print a warning message to world.log
 /proc/warning(msg)
-	to_world_log("## WARNING: [msg][log_end]")
+	log_world("## WARNING: [msg][log_end]")
 
 //print a testing-mode debug message to world.log
 /proc/testing(msg)
-	to_world_log("## TESTING: [msg][log_end]")
+	log_world("## TESTING: [msg][log_end]")
 
 /proc/game_log(category, text)
-	diary << "\[[time_stamp()]] [game_id] [category]: [text][log_end]"
+	//diary << "\[[time_stamp()]] [game_id] [category]: [text][log_end]"
+	spawn(0)
+		diary << "\[[time_stamp()]] [category]: [text][log_end]"
 
 /proc/attack_log(text)
-	to_file(GLOB.world_attack_log, "\[[time_stamp()]] [game_id] ATTACK: [text][log_end]")
+	to_file(GLOB.world_attack_log, "\[[time_stamp()]] ATTACK: [text][log_end]")
 
 /proc/log_admin(text)
-	GLOB.admin_log.Add(text)
-	if (config.log_admin)
-		game_log("ADMIN", text)
+	spawn(0)
+		GLOB.admin_log.Add(text)
+		if (config.log_admin)
+			game_log("ADMIN", text)
 
 /proc/log_debug(text)
 	if (config.log_debug)
@@ -104,7 +107,6 @@
 /proc/log_attack(text)
 	if (config.log_attack)
 		game_log("ATTACK", text)
-		attack_log(text)
 
 /proc/log_adminsay(text)
 	if (config.log_adminchat)
@@ -131,15 +133,18 @@
 	log_debug(text)
 
 /proc/log_qdel(text)
-	WRITE_FILE(GLOB.world_qdel_log, "\[[time_stamp()]]QDEL: [text]")
+	spawn(0)
+		WRITE_FILE(GLOB.world_qdel_log, "\[[time_stamp()]]QDEL: [text]")
 
 //This replaces world.log so it displays both in DD and the file
 /proc/log_world(text)
-	if(config && config.log_runtime)
+	spawn(0)
+		if(config && config.log_runtime)
+			to_world_log(text)
+			//to_world_log(runtime_diary)
+			//to_world_log(text)
+		//to_world_log(text)
 		to_world_log(runtime_diary)
-		to_world_log(text)
-	to_world_log(null)
-	to_world_log(text)
 
 //pretty print a direction bitflag, can be useful for debugging.
 /proc/dir_text(var/dir)

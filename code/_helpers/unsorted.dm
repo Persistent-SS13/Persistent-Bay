@@ -868,12 +868,12 @@ proc/get_mob_with_client_list()
 //Quick type checks for some tools
 var/global/list/common_tools = list(
 /obj/item/stack/cable_coil,
-/obj/item/weapon/wrench,
-/obj/item/weapon/weldingtool,
-/obj/item/weapon/screwdriver,
-/obj/item/weapon/wirecutters,
+/obj/item/weapon/tool/wrench,
+/obj/item/weapon/tool/weldingtool,
+/obj/item/weapon/tool/screwdriver,
+/obj/item/weapon/tool/wirecutters,
 /obj/item/device/multitool,
-/obj/item/weapon/crowbar)
+/obj/item/weapon/tool/crowbar)
 
 /proc/istool(O)
 	if(O && is_type_in_list(O, common_tools))
@@ -882,8 +882,8 @@ var/global/list/common_tools = list(
 
 proc/is_hot(obj/item/W as obj)
 	switch(W.type)
-		if(/obj/item/weapon/weldingtool)
-			var/obj/item/weapon/weldingtool/WT = W
+		if(/obj/item/weapon/tool/weldingtool)
+			var/obj/item/weapon/tool/weldingtool/WT = W
 			if(WT.isOn())
 				return 3800
 			else
@@ -911,46 +911,6 @@ proc/is_hot(obj/item/W as obj)
 			return 0
 
 	return 0
-
-//Whether or not the given item counts as sharp in terms of dealing damage
-/proc/is_sharp(obj/O as obj)
-	if (!O) return 0
-	if (O.sharp) return 1
-	if (O.edge) return 1
-	return 0
-
-//Whether or not the given item counts as cutting with an edge in terms of removing limbs
-/proc/has_edge(obj/O as obj)
-	if (!O) return 0
-	if (O.edge) return 1
-	return 0
-
-
-//For items that can puncture e.g. thick plastic but aren't necessarily sharp
-//Returns 1 if the given item is capable of popping things like balloons, inflatable barriers, or cutting police tape.
-/obj/item/proc/can_puncture()
-	return src.sharp
-
-/obj/item/weapon/screwdriver/can_puncture()
-	return 1
-
-/obj/item/weapon/pen/can_puncture()
-	return 1
-
-/obj/item/weapon/weldingtool/can_puncture()
-	return 1
-
-/obj/item/weapon/screwdriver/can_puncture()
-	return 1
-
-/obj/item/weapon/shovel/can_puncture() //includes spades
-	return 1
-
-/obj/item/weapon/flame/can_puncture()
-	return src.lit
-
-/obj/item/clothing/mask/smokable/cigarette/can_puncture()
-	return src.lit
 
 //check if mob is lying down on something we can operate him on.
 /proc/can_operate(mob/living/carbon/M, mob/living/carbon/user)
@@ -1000,7 +960,7 @@ Checks if that loc and dir has a item on the wall
 */
 var/list/WALLITEMS = list(
 	/obj/machinery/power/apc, /obj/machinery/alarm, /obj/item/device/radio/intercom,
-	/obj/structure/extinguisher_cabinet, /obj/structure/reagent_dispensers/peppertank,
+	/obj/structure/extinguisher_cabinet, /obj/structure/reagent_dispensers/wall/peppertank,
 	/obj/machinery/status_display, /obj/machinery/requests_console, /obj/machinery/light_switch, /obj/structure/sign,
 	/obj/machinery/newscaster, /obj/machinery/firealarm, /obj/structure/noticeboard,
 	/obj/item/weapon/storage/secure/safe, /obj/machinery/door_timer, /obj/machinery/flasher, /obj/machinery/keycard_auth,
@@ -1071,19 +1031,25 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 	GLOB.dview_mob.loc = null
 
 /mob/dview
-	invisibility = 101
-	density = 0
+	invisibility 	= 101
+	see_in_dark 	= 1e6
+	density 		= FALSE
+	anchored 		= TRUE
+	simulated 		= FALSE
+	virtual_mob 	= null
+	should_save 	= FALSE
+	var/destroy_ret = QDEL_HINT_LETMELIVE
 
-	anchored = 1
-	simulated = 0
-
-	see_in_dark = 1e6
-
-	virtual_mob = null
+/mob/dview/after_load()
+	destroy_ret = null //Let me delete pointless saved instances
+	qdel(src)
 
 /mob/dview/Destroy()
-	crash_with("Prevented attempt to delete dview mob: [log_info_line(src)]")
-	return QDEL_HINT_LETMELIVE // Prevents destruction
+	if(!destroy_ret)
+		crash_with("Prevented attempt to delete dview mob: [log_info_line(src)]")
+	else
+		return ..()
+	return destroy_ret // Prevents destruction
 
 /atom/proc/get_light_and_color(var/atom/origin)
 	if(origin)

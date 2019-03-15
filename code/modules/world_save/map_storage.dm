@@ -1,3 +1,6 @@
+#define SAVECHUNK_SIZEX 16
+#define SAVECHUNK_SIZEY 16
+
 var/global/list/found_vars = list()
 var/global/list/all_loaded = list()
 var/global/list/saved = list()
@@ -105,8 +108,8 @@ var/global/list/debug_data = list()
 		lighting_build_overlay()
 	else
 		lighting_clear_overlay()
-	for(var/obj/effect/floor_decal/decal in saved_decals)
-		decal.init_for(src)
+	// for(var/obj/effect/floor_decal/decal in saved_decals)
+	// 	decal.init_for(src)
 
 /atom/movable/lighting_overlay/after_load()
 	loc = null
@@ -234,14 +237,6 @@ var/global/list/debug_data = list()
 		debug_data["[src.type]"] = list(1,(REALTIMEOFDAY - starttime)/10)
 
 /turf/StandardRead(var/savefile/f)
-	if(z == 2 && x == 21 && y == 87)
-		return
-	if(z == 2 && x == 22 && y == 87)
-		return
-	if(z == 2 && x == 23 && y == 87)
-		return
-	if(z == 2 && x == 24 && y == 87)
-		return
 	var/starttime = REALTIMEOFDAY
 	map_storage_loaded = 1
 	before_load()
@@ -302,11 +297,11 @@ var/global/list/debug_data = list()
 
 /proc/Save_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
 	var/z = zi
-	xi = (xi - (xi % 16) + 1)
-	yi = (yi - (yi % 16) + 1)
+	xi = (xi - (xi % SAVECHUNK_SIZEX) + 1)
+	yi = (yi - (yi % SAVECHUNK_SIZEY) + 1)
 	var/datum/chunk_holder/holder = new()
-	for(var/y in yi to yi + 16)
-		for(var/x in xi to xi + 16)
+	for(var/y in yi to yi + SAVECHUNK_SIZEY)
+		for(var/x in xi to xi + SAVECHUNK_SIZEX)
 			var/turf/T = locate(x,y,z)
 			if(!T || ((T.type == /turf/space || T.type == /turf/simulated/open) && (!T.contents || !T.contents.len)))
 				continue
@@ -314,7 +309,7 @@ var/global/list/debug_data = list()
 	to_file(f,holder)
 
 /proc/Save_Records(var/backup_dir)
-	for(var/datum/computer_file/crew_record/L in GLOB.all_crew_records)
+	for(var/datum/computer_file/report/crew_record/L in GLOB.all_crew_records)
 		var/key = L.get_name()
 		fcopy("record_saves/[key].sav", "backups/[backup_dir]/records/[key].sav")
 		fdel("record_saves/[key].sav")
@@ -343,7 +338,7 @@ var/global/list/debug_data = list()
 
 	for(var/datum/world_faction/faction in GLOB.all_world_factions)
 		var/list/records = faction.get_records()
-		for(var/datum/computer_file/crew_record/L in records)
+		for(var/datum/computer_file/report/crew_record/L in records)
 			var/key = L.get_name()
 			fcopy("record_saves/[faction.uid]/[key].sav", "backups/[backup_dir]/records/[faction.uid]/[key].sav")
 			fdel("record_saves/[faction.uid]/[key].sav")
@@ -369,12 +364,12 @@ var/global/list/debug_data = list()
 		else
 			backup = 1
 	found_vars = list()
-	for(var/z in 1 to 20)
+	for(var/z in 1 to SAVED_ZLEVELS)
 		fcopy("map_saves/z[z].sav", "backups/[dir]/z[z].sav")
 		fdel("map_saves/z[z].sav")
 		var/savefile/f = new("map_saves/z[z].sav")
-		for(var/x in 1 to world.maxx step 16)
-			for(var/y in 1 to world.maxy step 16)
+		for(var/x in 1 to world.maxx step SAVECHUNK_SIZEX)
+			for(var/y in 1 to world.maxy step SAVECHUNK_SIZEY)
 				Save_Chunk(x,y,z,f)
 		f = null
 	fcopy("map_saves/extras.sav", "backups/[dir]/extras.sav")
@@ -407,13 +402,13 @@ var/global/list/debug_data = list()
 
 
 /proc/Retrieve_Record(var/key, var/func = 1) // 2 = ATM account
-	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+	for(var/datum/computer_file/report/crew_record/record2 in GLOB.all_crew_records)
 		if(record2.get_name() == key)
 			message_admins("retrieve_record ran for existing record [key]")
 			return record2
 	if(!fexists("record_saves/[key].sav")) return
 	var/savefile/f = new("record_saves/[key].sav")
-	var/datum/computer_file/crew_record/v
+	var/datum/computer_file/report/crew_record/v
 	from_file(f, v)
 	var/datum/money_account/account
 	from_file(f, account)
@@ -434,7 +429,7 @@ var/global/list/debug_data = list()
 		v.linked_account = account
 	if(v.linked_account)
 		v.linked_account = v.linked_account.after_load()
-	for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+	for(var/datum/computer_file/report/crew_record/record2 in GLOB.all_crew_records)
 		if(record2.get_name() == v.get_name())
 			if(v.linked_account && !record2.linked_account || (record2.linked_account && v.linked_account && record2.linked_account.money < v.linked_account))
 				message_admins("recovered account found for [key] [v.get_name()]")
@@ -483,7 +478,7 @@ var/global/list/debug_data = list()
 			turfs |= T
 		A.contents.Add(turfs)
 	f = null
-	for(var/z in 1 to 20)
+	for(var/z in 1 to SAVED_ZLEVELS)
 		var/starttime2 = REALTIMEOFDAY
 		f = new("map_saves/z[z].sav")
 		while(!f.eof)
@@ -524,11 +519,11 @@ var/global/list/debug_data = list()
 
 /proc/Load_Chunk(var/xi, var/yi, var/zi, var/savefile/f)
 	var/z = zi
-	xi = (xi - (xi % 20) + 1)
-	yi = (yi - (yi % 20) + 1)
+	xi = (xi - (xi % SAVECHUNK_SIZEX) + 1)
+	yi = (yi - (yi % SAVECHUNK_SIZEY) + 1)
 	f.cd = "/[z]/Chunk|[yi]|[xi]"
-	for(var/y in yi to yi + 20)
-		for(var/x in xi to xi + 20)
+	for(var/y in yi to yi + SAVECHUNK_SIZEY)
+		for(var/x in xi to xi + SAVECHUNK_SIZEX)
 			var/turf/T = locate(x,y,z)
 			from_file(f["[x]-[y]"],T)
 
@@ -672,3 +667,6 @@ var/global/list/debug_data = list()
 	dat += "<hr><br>"
 	dat += "<a href='?_src_=vars;Varsx=\ref[src];Add_Var=1'>(Add new var)</a>"
 	show_browser(M, dat, "window=roundstats;size=500x600")
+
+#undef SAVECHUNK_SIZEX
+#undef SAVECHUNK_SIZEY

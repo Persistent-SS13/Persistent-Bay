@@ -1,20 +1,19 @@
 /obj/item/projectile/energy
 	name = "energy"
 	icon_state = "spark"
-	damage = 0
-	damage_type = BURN
-	check_armour = "energy"
-
+	force = 0
+	damtype = DAM_ENERGY
 
 //releases a burst of light on impact or after travelling a distance
 /obj/item/projectile/energy/flash
 	name = "chemical shell"
 	icon_state = "bullet"
 	fire_sound = 'sound/weapons/gunshot/gunshot_pistol.ogg'
-	damage = 5
+	force = 5
 	agony = 10
 	kill_count = 15 //if the shell hasn't hit anything after travelling this far it just explodes.
 	muzzle_type = /obj/effect/projectile/bullet/muzzle
+	damtype = DAM_BULLET
 	var/flash_range = 0
 	var/brightness = 7
 	var/light_colour = "#ffffff"
@@ -41,7 +40,7 @@
 
 //blinds people like the flash round, but in a small area and can also be used for temporary illumination
 /obj/item/projectile/energy/flash/flare
-	damage = 10
+	force = 10
 	fire_sound = 'sound/weapons/gunshot/shotgun.ogg'
 	flash_range = 2
 	brightness = 15
@@ -61,38 +60,38 @@
 	nodamage = 1
 	taser_effect = 1
 	agony = 30
-	damage_type = PAIN
+	damtype = DAM_PAIN
 	//Damage will be handled on the MOB side, to prevent window shattering.
 
 /obj/item/projectile/energy/electrode/stunshot
 	nodamage = 0
-	damage = 10
+	force = 10
 	agony = 35
-	damage_type = BURN
+	damtype = DAM_STUN
 	armor_penetration = 10
 
 /obj/item/projectile/energy/declone
 	name = "decloner beam"
 	icon_state = "declone"
 	fire_sound = 'sound/weapons/pulse3.ogg'
-	damage = 10
-	damage_type = CLONE
+	force = 10
+	damtype = DAM_CLONE
 	irradiate = 10
 
 
 /obj/item/projectile/energy/dart
 	name = "dart"
 	icon_state = "toxin"
-	damage = 5
-	damage_type = TOX
+	force = 5
+	damtype = DAM_BIO
 	weaken = 5
 
 
 /obj/item/projectile/energy/bolt
 	name = "bolt"
 	icon_state = "cbbolt"
-	damage = 10
-	damage_type = TOX
+	force = 10
+	damtype = DAM_BULLET
 	nodamage = 0
 	agony = 35
 	stutter = 10
@@ -100,23 +99,23 @@
 
 /obj/item/projectile/energy/bolt/large
 	name = "largebolt"
-	damage = 15
+	force = 15
 	agony = 40
 
 
 /obj/item/projectile/energy/neurotoxin
 	name = "neuro"
 	icon_state = "neurotoxin"
-	damage = 5
-	damage_type = TOX
+	force = 5
+	damtype = DAM_BIO
 	weaken = 5
 
 /obj/item/projectile/energy/phoron
 	name = "phoron bolt"
 	icon_state = "energy"
 	fire_sound = 'sound/effects/stealthoff.ogg'
-	damage = 5
-	damage_type = TOX
+	force = 5
+	damtype = DAM_BIO
 	irradiate = 5
 
 /obj/item/projectile/energy/plasmastun
@@ -125,9 +124,9 @@
 	fire_sound = 'sound/weapons/blaster.ogg'
 	armor_penetration = 10
 	kill_count = 4
-	damage = 5
+	force = 5
 	agony = 40
-	damage_type = BURN
+	damtype = DAM_STUN
 	vacuum_traversal = 0
 
 /obj/item/projectile/energy/plasmastun/proc/bang(var/mob/living/carbon/M)

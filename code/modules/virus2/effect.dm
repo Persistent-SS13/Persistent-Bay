@@ -115,7 +115,7 @@
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		mob.bodytemperature = max(mob.bodytemperature, 350)
 		scramble(0,mob,10)
-		mob.apply_damage(10, CLONE)
+		mob.apply_damage(10, DAM_CLONE)
 
 /datum/disease2/effect/organs
 	name = "Shutdown Syndrome"
@@ -150,9 +150,9 @@
 				E.status ^= ORGAN_BROKEN
 				break
 		for (var/obj/item/organ/internal/I in mob.internal_organs)
-			if (I.damage && prob(30))
+			if (I.isdamaged() && prob(30))
 				to_chat(mob, "<span class='notice'>Your [mob.get_organ(I.parent_organ)] feels a bit warm...</span>")
-				I.take_damage(-2*multiplier)
+				I.heal_damage(2*multiplier)
 				break
 		var/heal_amt = -5*multiplier
 		mob.apply_damages(heal_amt,heal_amt,heal_amt,heal_amt)
@@ -227,7 +227,7 @@
 	stage = 3
 	badness = VIRUS_COMMON
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
-		mob.apply_damage(2, CLONE)
+		mob.apply_damage(2, DAM_CLONE)
 **/
 /datum/disease2/effect/chem_synthesis
 	name = "Chemical Synthesis"

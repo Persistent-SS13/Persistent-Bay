@@ -26,6 +26,12 @@
 		extensions = null
 	return ..()
 
+/datum/proc/GetExtension(var/base_type)
+	return get_extension(src, base_type)
+
+/datum/proc/HasExtension(var/base_type)
+	return has_extension(src, base_type)
+
 //Variadic - Additional positional arguments can be given. Named arguments might not work so well
 /proc/set_extension(var/datum/source, var/datum/extension/base_type, var/extension_type)
 	if(!source.extensions)
@@ -42,6 +48,11 @@
 		if(args.len > 3)
 			extension_data += args.Copy(4)
 		source.extensions[base_type] = extension_data
+
+/proc/get_or_create_extension(var/datum/source, var/base_type, var/extension_type)
+	if(!has_extension(source, base_type))
+		set_extension(arglist(args))
+	return get_extension(source, base_type)
 
 /proc/get_extension(var/datum/source, var/base_type)
 	if(!source.extensions)

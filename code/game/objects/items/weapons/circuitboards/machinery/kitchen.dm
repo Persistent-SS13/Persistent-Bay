@@ -78,9 +78,3 @@
 							/obj/item/weapon/stock_parts/micro_laser = 2,
 							/obj/item/stack/cable_coil = 5,
 							/obj/item/weapon/stock_parts/console_screen = 1)
-
-
-
-
-//Undef the macro, shouldn't be needed anywhere else
-#undef T_BOARD_MECHA

@@ -49,7 +49,7 @@
 //
 /datum/design/item/autotailor/under/jumpsuit
 	category = "Undersuits - Jumpsuits"
-	materials = list("cloth" = 5000)
+	materials = list(MATERIAL_CLOTH = 5000)
 
 /datum/design/item/autotailor/under/jumpsuit/br_overalls
 	name = "Overalls - brown"
@@ -196,7 +196,7 @@
 //
 /datum/design/item/autotailor/under/worksuits
 	category = "Undersuits - Work"
-	materials = list("leather" = 5000)
+	materials = list(MATERIAL_LEATHER = 5000)
 
 /datum/design/item/autotailor/under/worksuits/atmos_one
 	name = "Atmospherics jumpsuit"
@@ -212,7 +212,7 @@
 	name = "Chief engineer jumpsuit"
 	id = "chief_eng"
 	build_path = /obj/item/clothing/under/rank/chief_engineer
-	materials = list("leather" = 5000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/under/worksuits/eng_one
 	name = "Engineering jumpsuit"
@@ -243,7 +243,7 @@
 	name = "Medical jumpsuit - CMO"
 	id = "cmo"
 	build_path = /obj/item/clothing/under/sterile
-	materials = list("leather" = 5000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/under/worksuits/doc
 	name = "Medical jumpsuit"
@@ -299,7 +299,7 @@
 	name = "Medical nurse hat"
 	id = "med_nurse_hat"
 	build_path = /obj/item/clothing/head/nursehat
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/under/worksuits/med_nurse_suit
 	name = "Medical jumpsuit - Nurse"
@@ -320,13 +320,13 @@
 	name = "Scientist jumpsuit - executive"
 	id = "sci_exec"
 	build_path = /obj/item/clothing/under/rank/scientist/executive
-	materials = list("leather" = 5000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/under/worksuits/sci_exec_jacket	//nt item
 	name = "Scientist tunic - executive"
 	id = "sci_exec_jacket"
 	build_path = /obj/item/clothing/accessory/nt_tunic/exec
-	materials = list("leather" = 2000, MATERIAL_PHORON = 1000)
+	materials = list(MATERIAL_LEATHER = 2000, MATERIAL_PHORON = 1000)
 
 /datum/design/item/autotailor/under/worksuits/sci_casual
 	name = "Scientist jumpsuit - casual"
@@ -347,19 +347,19 @@
 	name = "Scientist uniform - RD"
 	id = "rd_uniform"
 	build_path = /obj/item/clothing/under/rank/research_director
-	materials = list("leather" = 5000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/under/worksuits/rd_dress
 	name = "Scientist dress uniform - RD"
 	id = "rd_dress"
 	build_path = /obj/item/clothing/under/rank/research_director/dress_rd
-	materials = list("leather" = 5000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/under/worksuits/rd_uniform_alt
 	name = "Scientist uniform - alternate RD"
 	id = "rd_uniform_alt"
 	build_path = /obj/item/clothing/under/rank/research_director/rdalt
-	materials = list("leather" = 5000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/under/worksuits/cargo_qm
 	name = "Cargo jumpsuit - QM"
@@ -375,7 +375,7 @@
 	name = "Captain uniform"
 	id = "cap_uniform"
 	build_path = /obj/item/clothing/under/gimmick/rank/captain/suit
-	materials = list("leather" = 10000, MATERIAL_PHORON = 4000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_PHORON = 4000)
 
 
 /datum/design/item/autotailor/under/worksuits/pcrc
@@ -521,37 +521,37 @@
 	name = "Captain jumpsuit"
 	id = "cap_jumpsuit"
 	build_path = /obj/item/clothing/under/rank/captain
-	materials = list("leather" = 10000, MATERIAL_PHORON = 4000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/under/worksuits/cap_jumphat
 	name = "Captain jumpsuit hat"
 	id = "cap_jumphat"
 	build_path = /obj/item/clothing/head/caphat
-	materials = list("leather" = 2000, MATERIAL_PHORON = 1000)
+	materials = list(MATERIAL_LEATHER = 2000, MATERIAL_PHORON = 1000)
 
 /datum/design/item/autotailor/under/worksuits/hop_uniform
 	name = "HoP uniform"
 	id = "hop_uniform"
 	build_path = /obj/item/clothing/under/gimmick/rank/head_of_personnel/suit
-	materials = list("leather" = 10000, MATERIAL_PHORON = 4000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/under/worksuits/hop_uniform_alt
 	name = "HoP uniform - alternate"
 	id = "hop_uniform_alt"
 	build_path = /obj/item/clothing/under/rank/head_of_personnel_whimsy
-	materials = list("leather" = 10000, MATERIAL_PHORON = 4000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/under/worksuits/hop_jumpsuit
 	name = "HoP jumpsuit"
 	id = "hop_jumpsuit"
 	build_path = /obj/item/clothing/under/rank/head_of_personnel
-	materials = list("leather" = 10000, MATERIAL_PHORON = 4000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/under/worksuits/hop_hat
 	name = "HoP hat"
 	id = "hop_hat"
 	build_path = /obj/item/clothing/head/caphat/hop
-	materials = list("cloth" = 2000, MATERIAL_PHORON = 1000)
+	materials = list(MATERIAL_CLOTH = 2000, MATERIAL_PHORON = 1000)
 
 /datum/design/item/autotailor/under/worksuits/ia_white
 	name = "Internal affairs uniform"
@@ -617,13 +617,13 @@
 	name = "Captain dress uniform - female"
 	id = "cap_dress"
 	build_path = /obj/item/clothing/under/dress/dress_cap
-	materials = list("leather" = 10000, MATERIAL_PHORON = 4000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/under/worksuits/hop_dress
 	name = "HoP dress uniform - female"
 	id = "hop_dress"
 	build_path = /obj/item/clothing/under/dress/dress_hop
-	materials = list("leather" = 10000, MATERIAL_PHORON = 4000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/under/worksuits/hr_dress
 	name = "HR dress uniform - female"
@@ -644,7 +644,7 @@
 	name = "Maid accessory - apron"
 	id = "maidapron"
 	build_path = /obj/item/clothing/accessory/maidapron
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/under/worksuits/finemaid
 	name = "Maid uniform - fine"
@@ -662,7 +662,7 @@
 //
 /datum/design/item/autotailor/under/dressclothes
 	category = "Undersuits - Formal"
-	materials = list("leather" = 10000, MATERIAL_PHORON = 4000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_PHORON = 4000)
 
 /datum/design/item/autotailor/under/dressclothes/det_suit
 	name = "Detective's suit"
@@ -728,79 +728,79 @@
 	name = "Black and purple tuxedo"
 	id = "blackpurple_tux"
 	build_path = /obj/item/clothing/under/purpleweddingtux
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/tux_purple
 	name = "Purple tuxedo"
 	id = "purple_tux"
 	build_path = /obj/item/clothing/under/shinypurple
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/tux_black
 	name = "black tuxedo"
 	id = "black_tux"
 	build_path = /obj/item/clothing/under/blacktux
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/cap_formal
 	name = "Captain's formal suit"
 	id = "cap_formal"
 	build_path = /obj/item/clothing/under/captainformal
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/cap_formal_hat
 	name = "Captain's formal suit hat"
 	id = "cap_formal_hat"
 	build_path = /obj/item/clothing/head/caphat/cap
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/hos_formal_m
 	name = "HoS formal suit - male"
 	id = "hos_formal_m"
 	build_path = /obj/item/clothing/under/hosformalmale
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/hos_formal_f
 	name = "HoS formal suit - female"
 	id = "hos_formal_f"
 	build_path = /obj/item/clothing/under/hosformalfem
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/silk_gown	//can use custom colors
 	name = "silk gown"
 	id = "silk_gown"
 	build_path = /obj/item/clothing/under/skirt_c/dress/long/gown
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/maxi_white	//can use custom colors
 	name = "maxi dress - white"
 	id = "maxi_white"
 	build_path = /obj/item/clothing/under/skirt_c/dress/long
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/maxi_black
 	name = "maxi dress - black"
 	id = "maxi_black"
 	build_path = /obj/item/clothing/under/skirt_c/dress/long/black
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/maxi_mint
 	name = "maxi dress - mint"
 	id = "maxi_mint"
 	build_path = /obj/item/clothing/under/skirt_c/dress/long/mintcream
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/maxi_eggshell
 	name = "maxi dress - eggshell"
 	id = "maxi_eggshell"
 	build_path = /obj/item/clothing/under/skirt_c/dress/long/eggshell
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/silk_dress
 	name = "silk dress"
 	id = "silk_dress"
 	build_path = /obj/item/clothing/under/tulleddress
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dessclothes/fleet_dress
 	name = "Fleet dress uniform"
@@ -916,85 +916,85 @@
 	name = "bridesmaid dress - purple"
 	id = "purple_bride"
 	build_path = /obj/item/clothing/under/bridesmaid
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/whitepurple_wedding
 	name = "wedding dress - white and purple"
 	id = "whitepurple_wedding"
 	build_path = /obj/item/clothing/under/koudress
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/pink_wedding
 	name = "wedding dress - pink"
 	id = "pink_wedding"
 	build_path = /obj/item/clothing/under/maydress
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/green_wedding
 	name = "wedding dress - green"
 	id = "green_wedding"
 	build_path = /obj/item/clothing/under/greendress
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/frillygreen_wedding
 	name = "wedding dress - frilly green"
 	id = "frillygreen_wedding"
 	build_path = /obj/item/clothing/under/weddingfrill
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/frillypurple_wedding
 	name = "wedding dress - frilly purple"
 	id = "frillypurple_wedding"
 	build_path = /obj/item/clothing/under/purpfrill
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/orange_puffy
 	name = "Puffy wedding dress - orange"
 	id = "orange_puffy"
 	build_path = /obj/item/clothing/under/wedding/bride_orange
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/blue_puffy
 	name = "Puffy wedding dress - blue"
 	id = "blue_puffy"
 	build_path = /obj/item/clothing/under/wedding/bride_blue
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/red_puffy
 	name = "Puffy wedding dress - red"
 	id = "red_puffy"
 	build_path = /obj/item/clothing/under/wedding/bride_red
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/purple_puffy
 	name = "Puffy wedding dress - purple"
 	id = "purple_puffy"
 	build_path = /obj/item/clothing/under/wedding/bride_purple
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/wedding_silky
 	name = "Silky wedding dress"
 	id = "wedding_silky"
 	build_path = /obj/item/clothing/under/wedding/bride_white
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/orange_fancy
 	name = "Fancy dress - orange"
 	id = "orange_fancy"
 	build_path = /obj/item/clothing/under/dress/dress_orange
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/eveninggown_red
 	name = "Evening gown - red"
 	id = "eveninggown_red"
 	build_path = /obj/item/clothing/under/dress/red_evening_gown
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/blueplaid
 	name = "jumpskirt - blue plaid"
 	id = "blueplaid"
 	build_path = /obj/item/clothing/under/dress/plaid_blue
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/redplaid
 	name = "jumpskirt - red plaid"
@@ -1020,7 +1020,7 @@
 	name = "Sexy black dresscoat"
 	id = "draculass"
 	build_path = /obj/item/clothing/under/dress/draculass
-	materials = list("leather" = 15000, MATERIAL_PHORON = 8000)
+	materials = list(MATERIAL_LEATHER = 15000, MATERIAL_PHORON = 8000)
 
 /datum/design/item/autotailor/under/dressclothes/geisha
 	name = "Geisha"
@@ -1041,7 +1041,7 @@
 	name = "Earthborn uniform"
 	id = "earth_suit"
 	build_path = /obj/item/clothing/under/gentlesuit
-	materials = list("leather" = 10000)
+	materials = list(MATERIAL_LEATHER = 10000)
 
 /datum/design/item/autotailor/under/dressclothes/white_host
 	name = "Host's white suit"
@@ -1062,7 +1062,7 @@
 	name = "Suit jacket - black"
 	id = "jacket_black"
 	build_path = /obj/item/clothing/accessory/toggleable/nanotrasen_jacket
-	materials = list("leather" = 4000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_LEATHER = 4000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/under/dressclothes/bup_checkered
 	name = "button up suit - checkered"
@@ -1073,7 +1073,7 @@
 	name = "Suit jacket - checkered"
 	id = "jacket_checkered"
 	build_path = /obj/item/clothing/accessory/toggleable/checkered_jacket
-	materials = list("leather" = 4000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_LEATHER = 4000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/under/dressclothes/bup_charcoal
 	name = "button up suit - charcoal"
@@ -1084,7 +1084,7 @@
 	name = "Suit jacket - charcoal"
 	id = "jacket_charcoal"
 	build_path = /obj/item/clothing/accessory/toggleable/charcoal_jacket
-	materials = list("leather" = 4000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_LEATHER = 4000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/under/dressclothes/bup_tan
 	name = "button up suit - tan"
@@ -1095,7 +1095,7 @@
 	name = "Suit jacket - tan"
 	id = "jacket_tan"
 	build_path = /obj/item/clothing/accessory/toggleable/tan_jacket
-	materials = list("leather" = 4000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_LEATHER = 4000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/under/dressclothes/bup_navy
 	name = "button up suit - navy"
@@ -1106,7 +1106,7 @@
 	name = "Suit jacket - navy"
 	id = "jacket_navy"
 	build_path = /obj/item/clothing/accessory/toggleable/navy_jacket
-	materials = list("leather" = 4000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_LEATHER = 4000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/under/dressclothes/bup_burgundy
 	name = "button up suit - burgundy"
@@ -1117,14 +1117,14 @@
 	name = "Suit jacket - burgundy"
 	id = "jacket_burgundy"
 	build_path = /obj/item/clothing/accessory/toggleable/burgundy_jacket
-	materials = list("leather" = 4000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_LEATHER = 4000, MATERIAL_PHORON = 2000)
 
 //
 //clothes that don't have shirts, pants only
 //
 /datum/design/item/autotailor/under/shorts
 	category = "Undersuits - Pants"
-	materials = list("cloth" = 1000)
+	materials = list(MATERIAL_CLOTH = 1000)
 
 /datum/design/item/autotailor/under/shorts/ath_white	//can use custom colors
 	name = "shorts - athletic white"
@@ -1190,13 +1190,13 @@
 	name = "khaki pants"
 	id = "khaki"
 	build_path = /obj/item/clothing/under/formal_pants/khaki
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/under/shorts/khaki_baggy
 	name = "khaki baggy pants"
 	id = "khaki_baggy"
 	build_path = /obj/item/clothing/under/formal_pants/baggy/khaki
-	materials = list("cloth" = 3000)
+	materials = list(MATERIAL_CLOTH = 3000)
 
 /datum/design/item/autotailor/under/shorts/khaki_shorts
 	name = "khaki shorts"
@@ -1212,13 +1212,13 @@
 	name = "Jeans"
 	id = "jeans"
 	build_path = /obj/item/clothing/under/casual_pants
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/under/shorts/jeans_baggy
 	name = "Jeans - baggy"
 	id = "jeans_baggy"
 	build_path = /obj/item/clothing/under/casual_pants/baggy
-	materials = list("cloth" = 3000)
+	materials = list(MATERIAL_CLOTH = 3000)
 
 /datum/design/item/autotailor/under/shorts/jeans_shorts
 	name = "jeans shorts"
@@ -1234,13 +1234,13 @@
 	name = "jeans - grey"
 	id = "jeans_grey"
 	build_path = /obj/item/clothing/under/casual_pants/greyjeans
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/under/shorts/jeans_baggy_grey
 	name = "jeans - baggy grey"
 	id = "jeans_baggy_grey"
 	build_path = /obj/item/clothing/under/casual_pants/baggy/greyjeans
-	materials = list("cloth" = 3000)
+	materials = list(MATERIAL_CLOTH = 3000)
 
 /datum/design/item/autotailor/under/shorts/jeans_shorts_grey
 	name = "jeans shorts - grey"
@@ -1256,13 +1256,13 @@
 	name = "jeans - black"
 	id = "jeans_black"
 	build_path = /obj/item/clothing/under/casual_pants/blackjeans
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/under/shorts/jeans_baggy_black
 	name = "jeans - baggy black"
 	id = "jeans_baggy_black"
 	build_path = /obj/item/clothing/under/casual_pants/baggy/blackjeans
-	materials = list("cloth" = 3000)
+	materials = list(MATERIAL_CLOTH = 3000)
 
 /datum/design/item/autotailor/under/shorts/jeans_shorts_black
 	name = "jeans shorts - black"
@@ -1278,13 +1278,13 @@
 	name = "jeans - denim"
 	id = "jeans_denim"
 	build_path = /obj/item/clothing/under/casual_pants/classicjeans
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/under/shorts/jeans_baggy_denim
 	name = "jeans baggy - denim"
 	id = "jeans_baggy_denim"
 	build_path = /obj/item/clothing/under/casual_pants/baggy/classicjeans
-	materials = list("cloth" = 3000)
+	materials = list(MATERIAL_CLOTH = 3000)
 
 /datum/design/item/autotailor/under/shorts/jeans_shorts_denim
 	name = "jeans shorts - denim"
@@ -1300,13 +1300,13 @@
 	name = "jeans - light denim"
 	id = "jeans_lightdenim"
 	build_path = /obj/item/clothing/under/casual_pants/mustangjeans
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/under/shorts/jeans_baggy_lightdenim
 	name = "jeans - baggy light denim"
 	id = "jeans_baggy_lightdenim"
 	build_path = /obj/item/clothing/under/casual_pants/baggy/mustangjeans
-	materials = list("cloth" = 3000)
+	materials = list(MATERIAL_CLOTH = 3000)
 
 /datum/design/item/autotailor/under/shorts/jeans_shorts_lightdenim
 	name = "jeans shorts - light denim"
@@ -1322,13 +1322,13 @@
 	name = "jeans - youngfolk"
 	id = "jeans_young"
 	build_path = /obj/item/clothing/under/casual_pants/youngfolksjeans
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/under/shorts/jeans_baggy_young	//might be a duplicate of classic jeans
 	name = "jeans - baggy youngfolk"
 	id = "jeans_baggy_young"
 	build_path = /obj/item/clothing/under/casual_pants/baggy/youngfolksjeans
-	materials = list("cloth" = 3000)
+	materials = list(MATERIAL_CLOTH = 3000)
 
 /datum/design/item/autotailor/under/shorts/jeans_shorts_young	//might be a duplicate of classic jeans
 	name = "jeans shorts - youngfolk"
@@ -1344,61 +1344,61 @@
 	name = "camo pants"
 	id = "camo"
 	build_path = /obj/item/clothing/under/casual_pants/camo
-	materials = list("cloth" = 2000)
+	materials = list(MATERIAL_CLOTH = 2000)
 
 /datum/design/item/autotailor/under/shorts/camo_baggy
 	name = "camo pants - baggy"
 	id = "camo_baggy"
 	build_path = /obj/item/clothing/under/casual_pants/baggy/camo
-	materials = list("cloth" = 3000)
+	materials = list(MATERIAL_CLOTH = 3000)
 
 /datum/design/item/autotailor/under/shorts/white_suitpants	//can use custom colors
 	name = "Suit pants - white"
 	id = "white_suitpants"
 	build_path = /obj/item/clothing/under/formal_pants
-	materials = list("cloth" = 5000)
+	materials = list(MATERIAL_CLOTH = 5000)
 
 /datum/design/item/autotailor/under/shorts/white_suit_baggy	//can use custom colors
 	name = "Suit pants - baggy white"
 	id = "white_suit_baggy"
 	build_path = /obj/item/clothing/under/formal_pants/baggy
-	materials = list("cloth" = 7000)
+	materials = list(MATERIAL_CLOTH = 7000)
 
 /datum/design/item/autotailor/under/shorts/black_suitpants
 	name = "Suit pants - black"
 	id = "black_suitpants"
 	build_path = /obj/item/clothing/under/formal_pants/black
-	materials = list("cloth" = 5000)
+	materials = list(MATERIAL_CLOTH = 5000)
 
 /datum/design/item/autotailor/under/shorts/black_suit_baggy
 	name = "Suit pants - baggy black"
 	id = "black_suit_baggy"
 	build_path = /obj/item/clothing/under/formal_pants/baggy/black
-	materials = list("cloth" = 7000)
+	materials = list(MATERIAL_CLOTH = 7000)
 
 /datum/design/item/autotailor/under/shorts/tan_suit
 	name = "Suit pants - tan"
 	id = "tan_suit"
 	build_path = /obj/item/clothing/under/formal_pants/tan
-	materials = list("cloth" = 5000)
+	materials = list(MATERIAL_CLOTH = 5000)
 
 /datum/design/item/autotailor/under/shorts/tan_suit_baggy
 	name = "Suit pants - baggy tan"
 	id = "tan_suit_baggy"
 	build_path = /obj/item/clothing/under/formal_pants/baggy/tan
-	materials = list("cloth" = 7000)
+	materials = list(MATERIAL_CLOTH = 7000)
 
 /datum/design/item/autotailor/under/shorts/red_suit
 	name = "Suit pants - red"
 	id = "red_suit"
 	build_path = /obj/item/clothing/under/formal_pants/red
-	materials = list("cloth" = 5000)
+	materials = list(MATERIAL_CLOTH = 5000)
 
 /datum/design/item/autotailor/under/shorts/red_suit_baggy
 	name = "Suit pants - baggy red"
 	id = "red_suit_baggy"
 	build_path = /obj/item/clothing/under/formal_pants/baggy/red
-	materials = list("cloth" = 7000)
+	materials = list(MATERIAL_CLOTH = 7000)
 
 /datum/design/item/autotailor/under/shorts/skirt_wh	//can use custom colors
 	name = "short skirt - white"
@@ -1420,7 +1420,7 @@
 //
 /datum/design/item/autotailor/under/casual_dress
 	category = "Undersuits - Casual Dresses"
-	materials = list("cloth" = 5000)
+	materials = list(MATERIAL_CLOTH = 5000)
 
 /datum/design/item/autotailor/under/casual_dress/short_white	//can use custom colors
 	name = "short dress - white"
@@ -1517,7 +1517,7 @@
 //
 /datum/design/item/autotailor/suit/overcoats
 	category = "Oversuits - Coats"
-	materials = list("leather" = 5000)
+	materials = list(MATERIAL_LEATHER = 5000)
 
 /datum/design/item/autotailor/suit/overcoats/brown_trench
 	name = "Trenchcoat - brown"
@@ -1694,7 +1694,7 @@
 //
 /datum/design/item/autotailor/suit/work
 	category = "Oversuits - Work"
-	materials = list("leather" = 5000)
+	materials = list(MATERIAL_LEATHER = 5000)
 
 /datum/design/item/autotailor/suit/work/hazard_orange
 	name = "Hazard vest - orange"
@@ -1820,43 +1820,43 @@
 	name = "Labcoat - CMO white"
 	id = "lab_cmo_white"
 	build_path = /obj/item/clothing/suit/storage/toggle/labcoat/cmoalt
-	materials = list("leather" = 5000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/suit/work/lab_cmo_blue
 	name = "Labcoat - CMO blue"
 	id = "lab_cmo_blue"
 	build_path = /obj/item/clothing/suit/storage/toggle/labcoat/cmo
-	materials = list("leather" = 5000, MATERIAL_PHORON = 2000)
+	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/suit/work/coatlab_cmo
 	name = "Labcoat coat - CMO"
 	id = "coatlab_cmo"
 	build_path = /obj/item/clothing/suit/storage/toggle/labcoat/coat_cmo
-	materials = list("leather" = 10000, MATERIAL_PHORON = 5000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_PHORON = 5000)
 
 /datum/design/item/autotailor/suit/work/coatlab_rd
 	name = "Labcoat coat - RD"
 	id = "coatlab_rd"
 	build_path = /obj/item/clothing/suit/storage/toggle/labcoat/rd
-	materials = list("leather" = 10000, MATERIAL_PHORON = 5000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_PHORON = 5000)
 
 /datum/design/item/autotailor/suit/work/jacket_cap
 	name = "Casual jacket - captain"
 	id = "jacket_cap"
 	build_path = /obj/item/clothing/suit/captunic/capjacket
-	materials = list("leather" = 10000, MATERIAL_PHORON = 5000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_PHORON = 5000)
 
 /datum/design/item/autotailor/suit/work/tunic_cap
 	name = "Tunic - captain"
 	id = "tunic_cap"
 	build_path = /obj/item/clothing/suit/captunic
-	materials = list("leather" = 10000, MATERIAL_PHORON = 5000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_PHORON = 5000)
 
 /datum/design/item/autotailor/suit/work/tunic_cap_hat
 	name = "Tunic - captain hat"
 	id = "tunic_cap_hat"
 	build_path = /obj/item/clothing/head/caphat/formal
-	materials = list("leather" = 4000, MATERIAL_PHORON = 1000)
+	materials = list(MATERIAL_LEATHER = 4000, MATERIAL_PHORON = 1000)
 
 /datum/design/item/autotailor/suit/work/judge_robes
 	name = "Judge robe"
@@ -1867,7 +1867,7 @@
 	name = "Judge robe - eccentric"
 	id = "judgeeccentric"
 	build_path = /obj/item/clothing/suit/eccentricjudge
-	materials = list("leather" = 10000, MATERIAL_PHORON = 5000)
+	materials = list(MATERIAL_LEATHER = 10000, MATERIAL_PHORON = 5000)
 
 /datum/design/item/autotailor/suit/work/chef_coat
 	name = "Chef coat"
@@ -1883,7 +1883,7 @@
 	name = "Chef hat"
 	id = "chef_hat"
 	build_path = /obj/item/clothing/head/chefhat
-	materials = list("cloth" = 1000)
+	materials = list(MATERIAL_CLOTH = 1000)
 
 /datum/design/item/autotailor/suit/work/chaplain_coat
 	name = "Chaplain coat"
@@ -1894,7 +1894,7 @@
 	name = "Chaplain hat - dark"
 	id = "chaplain_hat"
 	build_path = /obj/item/clothing/head/chaplain_hood
-	materials = list("cloth" = 1000)
+	materials = list(MATERIAL_CLOTH = 1000)
 
 /datum/design/item/autotailor/suit/work/nun_robe
 	name = "Nun robe"
@@ -1905,19 +1905,19 @@
 	name = "Nun hood"
 	id = "nun_hood"
 	build_path = /obj/item/clothing/head/nun_hood
-	materials = list("cloth" = 1000)
+	materials = list(MATERIAL_CLOTH = 1000)
 
 /datum/design/item/autotailor/suit/work/patient_gown
 	name = "Medical - patient gown"
 	id = "patient_gown"
 	build_path = /obj/item/clothing/suit/patientgown
-	materials = list("cloth" = 4000)
+	materials = list(MATERIAL_CLOTH = 4000)
 
 /datum/design/item/autotailor/suit/work/surgery_apron
 	name = "Medical - surgical apron"
 	id = "surgery_apron"
 	build_path = /obj/item/clothing/suit/surgicalapron
-	materials = list("cloth" = 4000)
+	materials = list(MATERIAL_CLOTH = 4000)
 
 /datum/design/item/autotailor/suit/work/ems_jacket
 	name = "Medical - EMS jacket"
@@ -1961,80 +1961,92 @@
 	id = "hardhat_red"
 	build_path = /obj/item/clothing/head/hardhat/red
 
+/datum/design/item/autotailor/hats/industrial/welding_goggles
+	name = "Welding goggles"
+	id = "welding_goggles"
+	build_path = /obj/item/clothing/glasses/welding
+	materials = list(MATERIAL_STEEL = 3000, MATERIAL_GLASS = 1000)
+
+/datum/design/item/autotailor/hats/industrial/welding_grey
+	name = "Welding hat - grey"
+	id = "welding_grey"
+	build_path = /obj/item/clothing/head/welding
+	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 1000)
+
 /datum/design/item/autotailor/hats/industrial/welding_yellow
 	name = "Welding hat - yellow"
 	id = "welding_yellow"
 	build_path = /obj/item/clothing/head/welding/engie
-	materials = list(MATERIAL_STEEL = 5000, "glass" = 1000, MATERIAL_PHORON = 100)
+	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 1000, MATERIAL_PHORON = 100)
 
 /datum/design/item/autotailor/hats/industrial/welding_knight
 	name = "Welding hat - knight"
 	id = "welding_knight"
 	build_path = /obj/item/clothing/head/welding/knight
-	materials = list(MATERIAL_STEEL = 5000, "glass" = 1000, MATERIAL_PHORON = 100)
+	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 1000, MATERIAL_PHORON = 100)
 
 /datum/design/item/autotailor/hats/industrial/welding_fancy
 	name = "Welding hat - fancy black"
 	id = "welding_fancy"
 	build_path = /obj/item/clothing/head/welding/fancy
-	materials = list(MATERIAL_STEEL = 5000, "glass" = 1000, MATERIAL_PHORON = 100)
+	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 1000, MATERIAL_PHORON = 100)
 
 /datum/design/item/autotailor/hats/industrial/welding_demon
 	name = "Welding hat - demon"
 	id = "welding_demon"
 	build_path = /obj/item/clothing/head/welding/demon
-	materials = list(MATERIAL_STEEL = 5000, "glass" = 1000, MATERIAL_PHORON = 100)
+	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 1000, MATERIAL_PHORON = 100)
 
 /datum/design/item/autotailor/hats/industrial/welding_carp
 	name = "Welding hat - carp"
 	id = "welding_carp"
 	build_path = /obj/item/clothing/head/welding/carp
-	materials = list(MATERIAL_STEEL = 5000, "glass" = 1000, MATERIAL_PHORON = 100)
+	materials = list(MATERIAL_STEEL = 5000, MATERIAL_GLASS = 1000, MATERIAL_PHORON = 100)
 
 /datum/design/item/autotailor/hats/industrial/webbing_small
 	name = "Webbing vest - small"
 	id = "webbing_small"
 	build_path = /obj/item/clothing/accessory/storage/webbing
-	materials = list("leather" = 30000)
+	materials = list(MATERIAL_LEATHER = 30000)
 
 /datum/design/item/autotailor/hats/industrial/webbing_med
 	name = "Webbing vest - medium"
 	id = "webbing_med"
 	build_path = /obj/item/clothing/accessory/storage/webbing_large
-	materials = list("leather" = 30000)
+	materials = list(MATERIAL_LEATHER = 30000)
 
 /datum/design/item/autotailor/hats/industrial/webbing_l_brown
 	name = "Webbing vest - large brown"
 	id = "webbing_l_brown"
 	build_path = /obj/item/clothing/accessory/storage/brown_vest
-	materials = list("leather" = 30000)
+	materials = list(MATERIAL_LEATHER = 30000)
 
 /datum/design/item/autotailor/hats/industrial/webbing_l_black
 	name = "Webbing vest - large black"
 	id = "webbing_l_black"
 	build_path = /obj/item/clothing/accessory/storage/black_vest
-	materials = list("leather" = 30000)
+	materials = list(MATERIAL_LEATHER = 30000)
 
 /datum/design/item/autotailor/hats/industrial/webbing_l_white	//can use custom colors, maybe
 	name = "Webing vest - large white"
 	id = "webbing_l_white"
 	build_path = /obj/item/clothing/accessory/storage/white_vest
-	materials = list("leather" = 30000)
+	materials = list(MATERIAL_LEATHER = 30000)
 
 /datum/design/item/autotailor/hats/industrial/pouch_brown
 	name = "Drop pouches - brown"
 	id = "pouch_brown"
 	build_path = /obj/item/clothing/accessory/storage/drop_pouches/brown
-	materials = list("leather" = 30000)
+	materials = list(MATERIAL_LEATHER = 30000)
 
 /datum/design/item/autotailor/hats/industrial/pouch_black
 	name = "Drop pouches - black"
 	id = "pouch_black"
 	build_path = /obj/item/clothing/accessory/storage/drop_pouches/black
-	materials = list("leather" = 30000)
+	materials = list(MATERIAL_LEATHER = 30000)
 
 /datum/design/item/autotailor/hats/industrial/pouch_white	//can use custom colors, maybe
 	name = "Drop pouches - white"
 	id = "pouch white"
 	build_path = /obj/item/clothing/accessory/storage/drop_pouches/white
-	materials = list("leather" = 30000)
+	materials = list(MATERIAL_LEATHER = 30000)

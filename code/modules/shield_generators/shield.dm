@@ -132,15 +132,13 @@
 		// The closer we are to impact site, the longer it takes for shield to come back up.
 		S.fail(-(-range + get_dist(src, S)) * 2)
 
-/obj/effect/shield/proc/take_damage(var/damage, var/damtype, var/hitby)
+/obj/effect/shield/take_damage(damage, damtype, armorbypass, damsrc, var/hitby)
 	if(!gen)
 		qdel(src)
 		return
-
 	if(!damage)
 		return
-
-	damage = round(damage)
+	..(damage, damtype, armorbypass, damsrc)
 
 	new/obj/effect/shield_impact(get_turf(src))
 
@@ -208,9 +206,9 @@
 
 // Projectiles
 /obj/effect/shield/bullet_act(var/obj/item/projectile/proj)
-	if(proj.damage_type == BURN)
+	if(IsDamageTypeBurn(proj.damtype))
 		take_damage(proj.get_structure_damage(), SHIELD_DAMTYPE_HEAT)
-	else if (proj.damage_type == BRUTE)
+	else if (IsDamageTypeBrute(proj.damtype))
 		take_damage(proj.get_structure_damage(), SHIELD_DAMTYPE_PHYSICAL)
 	else
 		take_damage(proj.get_structure_damage(), SHIELD_DAMTYPE_EM)
@@ -223,9 +221,9 @@
 
 	if(gen.check_flag(MODEFLAG_HYPERKINETIC))
 		user.visible_message("<span class='danger'>\The [user] hits \the [src] with \the [I]!</span>")
-		if(I.damtype == BURN)
+		if(IsDamageTypeBurn(I.damtype))
 			take_damage(I.force, SHIELD_DAMTYPE_HEAT)
-		else if (I.damtype == BRUTE)
+		else if (IsDamageTypeBrute(I.damtype))
 			take_damage(I.force, SHIELD_DAMTYPE_PHYSICAL)
 		else
 			take_damage(I.force, SHIELD_DAMTYPE_EM)

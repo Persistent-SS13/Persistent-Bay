@@ -20,7 +20,19 @@
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO
 	cold_protection = UPPER_TORSO|LOWER_TORSO
 	heat_protection = UPPER_TORSO|LOWER_TORSO
-	armor = list(melee = 50, bullet = 15, laser = 50, energy = 10, bomb = 25, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 50,
+		DAM_PIERCE 	= 40,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 15,
+		DAM_LASER 	= 50,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 15,
+		DAM_BOMB 	= 25,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/suit/armor/vest/old/nt
 	name = "Nt security armor"
@@ -33,7 +45,19 @@
 	desc = "An armoured jacket with silver rank pips and livery."
 	icon_state = "warden_jacket"
 	//item_state = "armor"
-	armor = list(melee = 50, bullet = 15, laser = 50, energy = 10, bomb = 25, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 50,
+		DAM_PIERCE 	= 40,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 15,
+		DAM_LASER 	= 50,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 15,
+		DAM_BOMB 	= 25,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
 	cold_protection = UPPER_TORSO|LOWER_TORSO|ARMS
 	heat_protection = UPPER_TORSO|LOWER_TORSO|ARMS
@@ -47,7 +71,19 @@
 	//item_state = "swat_suit"
 	w_class = ITEM_SIZE_LARGE
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
-	armor = list(melee = 75, bullet = 33, laser = 50, energy = 10, bomb = 25, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 70,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 70,
+		DAM_BULLET 	= 35,
+		DAM_LASER 	= 40,
+		DAM_ENERGY 	= 20,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 25,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 5)
 	siemens_coefficient = 0.5
 
 /obj/item/clothing/suit/armor/riot/New()
@@ -75,7 +111,19 @@
 	valid_accessory_slots = list(ACCESSORY_SLOT_INSIGNIA)
 	w_class = ITEM_SIZE_LARGE
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
-	armor = list(melee = 42, bullet = 75, laser = 42, energy = 10, bomb = 25, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 45,
+		DAM_PIERCE 	= 40,
+		DAM_CUT 	= 45,
+		DAM_BULLET 	= 75,
+		DAM_LASER 	= 40,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 25,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 2)
 	siemens_coefficient = 0.7
 
 /obj/item/clothing/suit/armor/bulletproof/New()
@@ -103,7 +151,19 @@
 	valid_accessory_slots = list(ACCESSORY_SLOT_INSIGNIA)
 	w_class = ITEM_SIZE_LARGE
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
-	armor = list(melee = 35, bullet = 35, laser = 75, energy = 50, bomb = 0, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 35,
+		DAM_PIERCE 	= 15,
+		DAM_CUT 	= 35,
+		DAM_BULLET 	= 35,
+		DAM_LASER 	= 75,
+		DAM_ENERGY 	= 50,
+		DAM_BURN 	= 40,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 	siemens_coefficient = 0
 
 /obj/item/clothing/suit/armor/laserproof/New()
@@ -162,7 +222,19 @@
 	//item_state = "armor"
 	blood_overlay_type = "armor"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO
-	armor = list(melee = 50, bullet = 15, laser = 50, energy = 10, bomb = 25, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 50,
+		DAM_PIERCE 	= 40,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 15,
+		DAM_LASER 	= 50,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 25,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 1)
 
 
 //Reactive armor
@@ -174,7 +246,19 @@
 	icon_state = "reactiveoff"
 	item_state = "reactiveoff"
 	blood_overlay_type = "armor"
-	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 0,
+		DAM_PIERCE 	= 0,
+		DAM_CUT 	= 0,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 0,
+		DAM_BURN 	= 0,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 
 /obj/item/clothing/suit/armor/reactive/New()
 	..()
@@ -222,7 +306,7 @@
 	src.item_state = "reactiveoff"
 	..()
 
-/*
+
 /obj/item/clothing/suit/armor/tactical
 	name = "tactical armor"
 	desc = "A suit of armor most often used by Special Weapons and Tactics squads. Includes padded vest with pockets along with shoulder and kneeguards."
@@ -231,7 +315,19 @@
 	var/obj/item/weapon/gun/holstered = null
 	w_class = ITEM_SIZE_LARGE
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
-	armor = list(melee = 60, bullet = 60, laser = 60, energy = 40, bomb = 20, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 60,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 60,
+		DAM_LASER 	= 60,
+		DAM_ENERGY 	= 40,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 20,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 5,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 5)
 	siemens_coefficient = 0.7
 	var/obj/item/clothing/accessory/holster/holster
 
@@ -259,7 +355,7 @@
 		holster.holster(W, usr)
 	else
 		holster.unholster(usr)
-*/
+
 
 //Non-hardsuit ERT armor.
 //Commander
@@ -269,7 +365,19 @@
 	icon_state = "ertarmor_cmd"
 	item_state = "armor"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|ARMS
-	armor = list(melee = 60, bullet = 60, laser = 60, energy = 40, bomb = 20, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 60,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 60,
+		DAM_LASER 	= 60,
+		DAM_ENERGY 	= 40,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 20,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 5)
 
 //Security
 /obj/item/clothing/suit/armor/vest/ert/security
@@ -295,7 +403,19 @@
 	desc = "An armor vest made of synthetic fibers."
 	icon_state = "kvest"
 	item_state = "armor"
-	armor = list(melee = 30, bullet = 15, laser = 40, energy = 10, bomb = 25, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 40,
+		DAM_PIERCE 	= 30,
+		DAM_CUT 	= 40,
+		DAM_BULLET 	= 30,
+		DAM_LASER 	= 40,
+		DAM_ENERGY 	= 20,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 25,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 2)
 	valid_accessory_slots = list(ACCESSORY_SLOT_INSIGNIA)
 
 /obj/item/clothing/suit/armor/vest/nt
@@ -322,7 +442,19 @@
 	name = "webbed armor vest"
 	desc = "A synthetic armor vest. This one has added webbing and ballistic plates."
 	icon_state = "webvest"
-	armor = list(melee = 40, bullet = 40, laser = 40, energy = 25, bomb = 30, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 40,
+		DAM_PIERCE 	= 30,
+		DAM_CUT 	= 40,
+		DAM_BULLET 	= 40,
+		DAM_LASER 	= 40,
+		DAM_ENERGY 	= 25,
+		DAM_BURN 	= 20,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 5)
 	valid_accessory_slots = list(ACCESSORY_SLOT_INSIGNIA)
 	allowed = list(/obj/item/weapon/gun/energy,/obj/item/device/radio,/obj/item/weapon/reagent_containers/spray/pepper,/obj/item/weapon/gun/projectile,/obj/item/ammo_magazine,/obj/item/ammo_casing,/obj/item/weapon/melee/baton,/obj/item/weapon/handcuffs,/obj/item/weapon/gun/magnetic)
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO
@@ -358,14 +490,38 @@
 	desc = "A heavy armored vest in a fetching tan. It is surprisingly flexible and light, even with the extra webbing and advanced ceramic plates."
 	icon_state = "tacwebvest"
 	item_state = "tacwebvest"
-	armor = list(melee = 40, bullet = 40, laser = 60, energy = 35, bomb = 30, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 40,
+		DAM_PIERCE 	= 30,
+		DAM_CUT 	= 40,
+		DAM_BULLET 	= 40,
+		DAM_LASER 	= 60,
+		DAM_ENERGY 	= 35,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 10)
 
 /obj/item/clothing/suit/storage/vest/merc
 	name = "heavy combat armor"
 	desc = "A high-quality armored vest made from a hard synthetic material. It is surprisingly flexible and light, despite formidable armor plating."
 	icon_state = "mercwebvest"
 	item_state = "mercwebvest"
-	armor = list(melee = 60, bullet = 60, laser = 60, energy = 40, bomb = 40, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 70,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 70,
+		DAM_BULLET 	= 70,
+		DAM_LASER 	= 60,
+		DAM_ENERGY 	= 40,
+		DAM_BURN 	= 25,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 10)
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS //now covers legs with new sprite
 	cold_protection = UPPER_TORSO|LOWER_TORSO|LEGS
 	heat_protection = UPPER_TORSO|LOWER_TORSO|LEGS
@@ -429,7 +585,19 @@
 	desc = "A suit that protects against some damage."
 	icon_state = "centcom"
 	item_state = "centcom"
-	armor = list(melee = 60, bullet = 60, laser = 60, energy = 40, bomb = 40, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 60,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 60,
+		DAM_LASER 	= 60,
+		DAM_ENERGY 	= 40,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 5)
 	w_class = ITEM_SIZE_HUGE//bulky item
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
 	allowed = list(/obj/item/weapon/gun/energy,/obj/item/weapon/melee/baton,/obj/item/weapon/handcuffs,/obj/item/weapon/tank/emergency)
@@ -443,7 +611,19 @@
 	desc = "A heavily armored suit that protects against moderate damage."
 	icon_state = "heavy"
 	item_state = "swat_suit"
-	armor = list(melee = 60, bullet = 60, laser = 60, energy = 60, bomb = 60, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 60,
+		DAM_PIERCE 	= 50,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 60,
+		DAM_LASER 	= 60,
+		DAM_ENERGY 	= 60,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 60,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 5)
 	w_class = ITEM_SIZE_HUGE//bulky item
 	gas_transfer_coefficient = 0.90
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS

@@ -27,6 +27,9 @@
 		return
 
 	var/list/modifiers = params2list(params)
+	if(modifiers["ctrl"] && modifiers["alt"])
+		CtrlAltClickOn(A)
+		return
 	if(modifiers["shift"] && modifiers["ctrl"])
 		CtrlShiftClickOn(A)
 		return
@@ -87,7 +90,10 @@
 	Since the AI handles shift, ctrl, and alt-click differently
 	than anything else in the game, atoms have separate procs
 	for AI shift, ctrl, and alt clicking.
-*/
+*//mob/living/silicon/ai/CtrlAltClickOn(var/atom/A)
+	if(!control_disabled && A.AICtrlAltClick(src))
+		return
+	..()
 
 /mob/living/silicon/ai/ShiftClickOn(var/atom/A)
 	if(!control_disabled && A.AIShiftClick(src))
@@ -113,6 +119,18 @@
 	The following criminally helpful code is just the previous code cleaned up;
 	I have no idea why it was in atoms.dm instead of respective files.
 */
+/atom/proc/AICtrlAltClick()
+
+/obj/machinery/door/airlock/AICtrlAltClick() // Electrifies doors.
+	if(usr.incapacitated())
+		return
+	if(!electrified_until)
+		// permanent shock
+		Topic(src, list("command"="electrify_permanently", "activate" = "1"))
+	else
+		// disable/6 is not in Topic; disable/5 disables both temporary and permanent shock
+		Topic(src, list("command"="electrify_permanently", "activate" = "0"))
+	return 1
 
 /atom/proc/AICtrlShiftClick()
 	return

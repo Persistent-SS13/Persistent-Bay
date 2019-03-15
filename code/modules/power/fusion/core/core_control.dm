@@ -5,8 +5,10 @@
 	light_color = COLOR_ORANGE
 	idle_power_usage = 250
 	active_power_usage = 500
-
-	var/id_tag
+	id_tag = null
+	// frequency = ENGINE_FREQ
+	// radio_filter_in = RADIO_ENGI
+	// radio_filter_out = RADIO_ENGI
 	var/scan_range = 25
 	var/list/connected_devices = list()
 	var/obj/machinery/power/fusion_core/cur_viewed_device

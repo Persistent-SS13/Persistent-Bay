@@ -1,14 +1,3 @@
-/material/lead
-	name = "lead"
-	stack_type = /obj/item/stack/material/lead
-	icon_colour = "#6d6a65"
-	weight = 15
-	hardness = 15
-	sheet_singular_name = "ingot"
-	sheet_plural_name = "ingots"
-	chem_products = list(/datum/reagent/toxin/lead = 20)
-
-
 /material/uranium
 	name = MATERIAL_URANIUM
 	stack_type = /obj/item/stack/material/uranium
@@ -177,6 +166,7 @@
 	ore_scan_icon = "mineral_rare"
 	ore_icon_overlay = "gems"
 	melting_point = 14
+	energy_combustion = 141.86
 
 /material/platinum
 	name = MATERIAL_PLATINUM
@@ -211,6 +201,7 @@
 	chem_products = list(
 				/datum/reagent/iron = 20
 				)
+	energy_combustion = 5.2
 
 /material/tungsten
 	name = MATERIAL_TUNGSTEN
@@ -244,6 +235,8 @@
 	chem_products = list(
 				/datum/reagent/aluminum = 20
 				)
+	energy_combustion = 31
+
 /material/lead
 	name = MATERIAL_LEAD
 	stack_type = /obj/item/stack/material/lead
@@ -254,6 +247,7 @@
 	hardness = 3
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
+	chem_products = list(/datum/reagent/lead = 20)
 
 /material/tin
 	name = MATERIAL_TIN
@@ -276,6 +270,7 @@
 	hardness = 5
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
+	energy_combustion = 5.3
 
 //-------------------------------------
 //	Alloys
@@ -345,7 +340,7 @@
 				/datum/reagent/iron = 15,
 				/datum/reagent/carbon = 5
 				)
-	alloy_materials = list("iron" = 1875, MATERIAL_GRAPHITE = 1875) //graphite is carbon
+	alloy_materials = list(MATERIAL_IRON = 1875, MATERIAL_GRAPHITE = 1875) //graphite is carbon
 	alloy_product = TRUE
 	ore_smelts_to = MATERIAL_STEEL
 
@@ -394,7 +389,7 @@
 	chem_products = list(
 				/datum/reagent/iron = 60
 				)
-	ore_matter = list("iron" = 2000)
+	ore_matter = list(MATERIAL_IRON = 2000)
 
 /material/freibergite
 	name = MATERIAL_FREIBERGITE

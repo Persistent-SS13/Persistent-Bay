@@ -126,33 +126,20 @@
 	..()
 
 /obj/structure/window/reinforced/holowindow/attackby(obj/item/W as obj, mob/user as mob)
-
-	if(!istype(W) || W.item_flags & ITEM_FLAG_NO_BLUDGEON) return
-
-	if(istype(W, /obj/item/weapon/screwdriver))
-		to_chat(user, ("<span class='notice'>It's a holowindow, you can't unfasten it!</span>"))
-	else if(istype(W, /obj/item/weapon/crowbar) && reinf && state <= 1)
-		to_chat(user, ("<span class='notice'>It's a holowindow, you can't pry it!</span>"))
-	else if(istype(W, /obj/item/weapon/wrench) && !anchored && (!state || !reinf))
-		to_chat(user, ("<span class='notice'>It's a holowindow, you can't dismantle it!</span>"))
+	if(istype(W, /obj/item/weapon/tool/screwdriver))
+		to_chat(user, SPAN_NOTICE("It's a holowindow, you can't unfasten it!"))
+	else if(istype(W, /obj/item/weapon/tool/crowbar) && reinf && state <= 1)
+		to_chat(user, SPAN_NOTICE("It's a holowindow, you can't pry it!"))
+	else if(istype(W, /obj/item/weapon/tool/wrench) && !anchored && (!state || !reinf))
+		to_chat(user, SPAN_NOTICE("It's a holowindow, you can't dismantle it!"))
 	else
-		if(W.damtype == BRUTE || W.damtype == BURN)
-			hit(W.force)
-			if(health <= 7)
-				anchored = 0
-				update_nearby_icons()
-				step(src, get_dir(user, src))
-		else
-			playsound(loc, 'sound/effects/Glasshit.ogg', 75, 1)
 		..()
 	return
 
-/obj/structure/window/reinforced/holowindow/shatter(var/display_message = 1)
-	playsound(src, "shatter", 70, 1)
-	if(display_message)
-		visible_message("[src] fades away as it shatters!")
+/obj/structure/window/reinforced/holowindow/destroyed(var/display_message = 1)
+	playsound(src, sound_destroyed, 70, 1)
+	visible_message("[src] fades away as it shatters!")
 	qdel(src)
-	return
 
 /obj/structure/window/reinforced/holowindow/disappearing/Destroy()
 	..()
@@ -161,50 +148,35 @@
 	..()
 
 /obj/machinery/door/window/holowindoor/attackby(obj/item/weapon/I as obj, mob/user as mob)
+	if(src.operating != 1 && ( !istype(I, /obj/item/weapon) || istype(I, /obj/item/weapon/card) ))
+		src.add_fingerprint(user)
+		if (src.allowed(user) || !src.requiresID())
+			if (src.density)
+				open()
+			else
+				close()
+			return 1
+		else if (src.density)
+			flick(text("[]deny", src.base_state), src)
+			return 1
+	return ..()
 
-	if (src.operating == 1)
-		return
-
-	if(src.density && istype(I, /obj/item/weapon) && !istype(I, /obj/item/weapon/card))
-		var/aforce = I.force
-		playsound(src.loc, 'sound/effects/Glasshit.ogg', 75, 1)
-		visible_message("<span class='danger'>\The [src] was hit by \the [I].</span>")
-		if(I.damtype == BRUTE || I.damtype == BURN)
-			take_damage(aforce)
-		return
-
-	src.add_fingerprint(user)
-	if (!src.requiresID())
-		user = null
-
-	if (src.allowed(user))
-		if (src.density)
-			open()
-		else
-			close()
-
-	else if (src.density)
-		flick(text("[]deny", src.base_state), src)
-
-	return
-
-/obj/machinery/door/window/holowindoor/shatter(var/display_message = 1)
+/obj/machinery/door/window/holowindoor/destroyed()
 	src.set_density(0)
-	playsound(src, "shatter", 70, 1)
-	if(display_message)
-		visible_message("[src] fades away as it shatters!")
+	playsound(src, sound_destroyed, 70, 1)
+	visible_message("[src] fades away as it shatters!")
 	qdel(src)
 
 /obj/structure/bed/chair/holochair/Destroy()
 	..()
 
 /obj/structure/bed/chair/holochair/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(istype(W, /obj/item/weapon/wrench))
-		to_chat(user, ("<span class='notice'>It's a holochair, you can't dismantle it!</span>"))
+	if(istype(W, /obj/item/weapon/tool/wrench))
+		to_chat(user, SPAN_NOTICE("It's a holochair, you can't dismantle it!"))
 	return
 
 /obj/item/weapon/holo
-	damtype = PAIN
+	damtype = DAM_PAIN
 	no_attack_log = 1
 
 /obj/item/weapon/holo/esword

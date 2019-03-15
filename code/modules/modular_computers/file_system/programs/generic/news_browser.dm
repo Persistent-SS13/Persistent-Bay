@@ -5,19 +5,14 @@
 	program_icon_state = "generic"
 	program_menu_icon = "contact"
 	size = 4
-	requires_ntnet = 1
-	available_on_ntnet = 1
-
+	requires_ntnet = TRUE
+	available_on_ntnet = TRUE
+	usage_flags = PROGRAM_ALL
 	nanomodule_path = /datum/nano_module/program/computer_newsbrowser/
-//	var/datum/computer_file/data/news_article/loaded_article
-//	var/download_progress = 0
-//	var/download_netspeed = 0
-//	var/downloading = 0
-//	var/message = ""
-//	var/show_archived = 0
 	var/datum/NewsStory/loaded_article
 	var/datum/NewsFeed/loaded_feed
 	var/datum/NewsIssue/loaded_issue
+
 /datum/computer_file/program/newsbrowser/process_tick()
 	SSnano.update_uis(NM)
 

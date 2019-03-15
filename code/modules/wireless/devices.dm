@@ -1,8 +1,8 @@
 //-------------------------------
 // Buttons
-//	Sender: intended to be used by buttons, when the button is pressed it will call activate() on all connected /button 
+//	Sender: intended to be used by buttons, when the button is pressed it will call activate() on all connected /button
 //			receivers.
-//	Receiver: does whatever the subtype does. deactivate() by default calls activate(), so you will have to override in 
+//	Receiver: does whatever the subtype does. deactivate() by default calls activate(), so you will have to override in
 //			  it in a subtype if you want it to do something.
 //-------------------------------
 /datum/wifi/sender/button/activate(mob/living/user)
@@ -13,14 +13,22 @@
 	for(var/datum/wifi/receiver/button/B in connected_devices)
 		B.deactivate(user)
 
+/datum/wifi/sender/button/send_topic(mob/living/user, href_list)
+	for(var/datum/wifi/receiver/button/B in connected_devices)
+		B.receive_topic(user,href_list)
+
 /datum/wifi/receiver/button/proc/activate(mob/living/user)
 
 /datum/wifi/receiver/button/proc/deactivate(mob/living/user)
 	activate(user)		//override this if you want deactivate to actually do something
 
+/datum/wifi/receiver/button/receive_topic(mob/living/user, href_list)
+	if(parent)
+		parent.OnTopic(user,href_list)
+
 //-------------------------------
 // Doors
-//	Sender: sends an open/close request to all connected /door receivers. Utilises spawn_sync to trigger all doors to 
+//	Sender: sends an open/close request to all connected /door receivers. Utilises spawn_sync to trigger all doors to
 //			open at approximately the same time. Waits until all doors have finished opening before returning.
 //	Receiver: will try to open/close the parent door when activate/deactivate is called.
 //-------------------------------
@@ -97,7 +105,7 @@
 	var/obj/machinery/power/emitter/E = parent
 	if(istype(E) && !E.active)
 		E.activate(user)	//if the emitter is not active, trigger the activate proc to toggle it
-		
+
 /datum/wifi/receiver/button/emitter/deactivate(mob/living/user)
 	var/obj/machinery/power/emitter/E = parent
 	if(istype(E) && E.active)
@@ -109,9 +117,9 @@
 //-------------------------------
 /datum/wifi/receiver/button/crematorium/activate(mob/living/user)
 	..()
-	var/obj/structure/crematorium/C = parent
+	var/obj/machinery/incinerator/crematorium/C = parent
 	if(istype(C))
-		C.cremate(user)
+		C.incinerate_start()
 
 //-------------------------------
 // Mounted Flash
@@ -144,16 +152,16 @@
 //-------------------------------
 /datum/wifi/receiver/button/igniter/activate(mob/living/user)
 	..()
-	var/obj/machinery/igniter/I = parent
-	if(istype(I))
-		if(!I.on)
-			I.ignite()
+	//var/obj/machinery/igniter/I = parent
+	//if(istype(I))
+	//	if(!I.ison())
+	//		I.turn_on()
 
 /datum/wifi/receiver/button/igniter/deactivate(mob/living/user)
-	if(istype(parent, /obj/machinery/igniter))
-		var/obj/machinery/igniter/I = parent
-		if(I.on)
-			I.ignite()
+	//if(istype(parent, /obj/machinery/igniter))
+	//	var/obj/machinery/igniter/I = parent
+	//	if(I.ison())
+	//		I.turn_off()
 
 //-------------------------------
 // Sparker
@@ -167,7 +175,7 @@
 
 //-------------------------------
 // Mass Driver
-//	Sender: carries out a sequence of first opening all connected doors, then activating all connected mass drivers, 
+//	Sender: carries out a sequence of first opening all connected doors, then activating all connected mass drivers,
 //			then closes all connected doors. It will wait before continuing the sequence after opening/closing the doors.
 //	Receiver: Triggers the parent mass dirver to activate.
 //-------------------------------

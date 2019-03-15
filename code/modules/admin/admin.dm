@@ -845,7 +845,7 @@ var/global/floorIsLava = 0
 	if(!check_rights(R_ADMIN))
 		return
 	for(var/datum/computer_file/data/email_account/account in ntnet_global.email_accounts)
-		for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
+		for(var/datum/computer_file/report/crew_record/record in GLOB.all_crew_records)
 			if(replacetext(record.get_name(), " ", "_") == account.login)
 				record.email = account
 
@@ -856,7 +856,7 @@ var/global/floorIsLava = 0
 
 	if(!check_rights(R_ADMIN))
 		return
-	for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
+	for(var/datum/computer_file/report/crew_record/record in GLOB.all_crew_records)
 		if(!record.email)
 			record.email = new()
 			record.email.login = "[replacetext(record.get_name(), " ", "_")]@freemail.nt"
@@ -873,9 +873,9 @@ var/global/floorIsLava = 0
 	var/list/recovered = list()
 	var/list/recovering = list()
 	from_file(f["records"],recovered)
-	for(var/datum/computer_file/crew_record/record in recovered)
+	for(var/datum/computer_file/report/crew_record/record in recovered)
 		var/found = 0
-		for(var/datum/computer_file/crew_record/record2 in GLOB.all_crew_records)
+		for(var/datum/computer_file/report/crew_record/record2 in GLOB.all_crew_records)
 			found = 1
 			if(!record2.linked_account)
 				record2.linked_account = record.linked_account
@@ -927,7 +927,7 @@ var/global/floorIsLava = 0
 		return
 	var/real_name = input("Enter the real name to search for", "Real name") as text|null
 	if(real_name)
-		for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
+		for(var/datum/computer_file/report/crew_record/record in GLOB.all_crew_records)
 			if(record.get_name() == real_name)
 				if(!record.email)
 					to_chat(usr, "THE ACCOUNT FOR [real_name] is broken")
@@ -944,7 +944,7 @@ var/global/floorIsLava = 0
 		return
 	var/real_name = input("Enter the real name to search for", "Real name") as text|null
 	if(real_name)
-		for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
+		for(var/datum/computer_file/report/crew_record/record in GLOB.all_crew_records)
 			if(record.get_name() == real_name)
 				if(record.linked_account && istype(record.linked_account, /datum/money_account))
 					if(record.linked_account.account_number == 0)
@@ -976,7 +976,7 @@ var/global/floorIsLava = 0
 
 	if(!check_rights(R_ADMIN))
 		return
-	for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
+	for(var/datum/computer_file/report/crew_record/record in GLOB.all_crew_records)
 		if(!record.linked_account || !istype(record.linked_account, /datum/money_account))
 			record.linked_account = create_account(record.get_name(), 0, null)
 			record.linked_account.remote_access_pin = rand(1111,9999)
@@ -992,7 +992,7 @@ var/global/floorIsLava = 0
 		return
 	var/real_name = input("Enter the real name to record clear", "Real name") as text|null
 	if(real_name)
-		for(var/datum/computer_file/crew_record/record in GLOB.all_crew_records)
+		for(var/datum/computer_file/report/crew_record/record in GLOB.all_crew_records)
 			if(record.get_name() == real_name)
 				GLOB.all_crew_records -= record
 				qdel(record)
@@ -1365,9 +1365,9 @@ var/global/floorIsLava = 0
 		to_chat(usr, "<b>No AIs located</b>")//Just so you know the thing is actually working and not just ignoring you.
 
 
-/datum/admins/proc/show_skills()
+/datum/admins/proc/show_skills(mob/M)
 	set category = "Admin"
-	set name = "Show Skills"
+	set name = "Skill Panel"
 
 	if (!istype(src,/datum/admins))
 		src = usr.client.holder
@@ -1375,12 +1375,15 @@ var/global/floorIsLava = 0
 		to_chat(usr, "Error: you are not an admin!")
 		return
 
-	var/mob/living/carbon/human/M = input("Select mob.", "Select mob.") as null|anything in GLOB.human_mob_list
-	if(!M) return
-
-	show_skill_window(usr, M)
-
-	return
+	if(!M)
+		M = input("Select mob.", "Select mob.") as null|anything in GLOB.player_list
+	if(!istype(M))
+		return
+	var/datum/nano_module/skill_ui/NM = /datum/nano_module/skill_ui
+	if(is_admin(usr))
+		NM = /datum/nano_module/skill_ui/admin //They get the fancy version that lets you change skills and debug stuff.
+	NM = new NM(usr, override = M.skillset)
+	NM.ui_interact(usr)
 
 /client/proc/update_mob_sprite(mob/living/carbon/human/H as mob)
 	set category = "Admin"
@@ -1558,7 +1561,7 @@ datum/admins/var/obj/item/weapon/paper/admin/faxreply // var to hold fax replies
 	if(shouldStamp)
 		P.stamps += "<hr><i>This paper has been stamped by the [P.origin] Quantum Relay.</i>"
 
-		var/image/stampoverlay = image('icons/obj/bureaucracy.dmi')
+		var/image/stampoverlay = image('icons/obj/items/paper.dmi')
 		var/{x; y;}
 		x = rand(-2, 0)
 		y = rand(-1, 2)

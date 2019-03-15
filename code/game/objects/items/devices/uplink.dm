@@ -185,13 +185,13 @@
 		nanoui_data["items"] = items
 	else if(nanoui_menu == 2)
 		var/permanentData[0]
-		for(var/datum/computer_file/crew_record/L in GLOB.all_crew_records)
+		for(var/datum/computer_file/report/crew_record/L in GLOB.all_crew_records)
 			permanentData[++permanentData.len] = list(Name = L.get_name(),"id" = L.uid, "exploit" = length(L.get_antagRecord()))
 		nanoui_data["exploit_records"] = permanentData
 	else if(nanoui_menu == 21)
 		nanoui_data["exploit_exists"] = 0
 
-		for(var/datum/computer_file/crew_record/L in GLOB.all_crew_records)
+		for(var/datum/computer_file/report/crew_record/L in GLOB.all_crew_records)
 			if(L.uid == exploit_id)
 				nanoui_data["exploit"] = list()  // Setting this to equal L.fields passes it's variables that are lists as reference instead of value.
 								 // We trade off being able to automatically add shit for more control over what gets passed to json

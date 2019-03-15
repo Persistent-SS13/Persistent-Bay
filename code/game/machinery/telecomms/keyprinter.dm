@@ -1,7 +1,7 @@
 /obj/machinery/keyprinter
 	name = "encryption key printer"
 	desc = "An advanced ciper machine used to generate physical cypher keys for telecommunications."
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/keyprinter.dmi'
 	icon_state = "keyprinter"
 
 	anchored = 1

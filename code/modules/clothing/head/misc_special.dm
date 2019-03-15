@@ -21,7 +21,6 @@
 		)
 	matter = list(MATERIAL_STEEL = 3000, MATERIAL_GLASS = 1000)
 	var/up = 0
-	armor = list(melee = 10, bullet = 0, laser = 0,energy = 0, bomb = 0, bio = 0, rad = 0)
 	flags_inv = (HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE)
 	body_parts_covered = HEAD|FACE|EYES
 	action_button_name = "Flip Welding Mask"
@@ -30,6 +29,20 @@
 	var/base_state
 	flash_protection = FLASH_PROTECTION_MAJOR
 	tint = TINT_HEAVY
+	armor  = list(
+		DAM_BLUNT 	= 15,
+		DAM_PIERCE 	= 10,
+		DAM_CUT 	= 15,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 5,
+		DAM_ENERGY 	= 5,
+		DAM_BURN 	= 5,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
+
 /obj/item/clothing/head/welding/after_load()
 	base_state = "welding"
 /obj/item/clothing/head/welding/attack_self()
@@ -136,13 +149,13 @@
 	src.onfire = !( src.onfire )
 	if (src.onfire)
 		src.force = 3
-		src.damtype = "fire"
+		src.damtype = DAM_BURN
 		src.icon_state = "cake1"
 		src.item_state = "cake1"
 		START_PROCESSING(SSobj, src)
 	else
 		src.force = null
-		src.damtype = "brute"
+		src.damtype = DAM_BLUNT
 		src.icon_state = "cake0"
 		src.item_state = "cake0"
 	return
@@ -209,4 +222,16 @@
 	name = "crown"
 	desc = "A crown fit for a king, a pretty king maybe? Who are we to judge this day in age."
 	icon_state = "crown"
-	armor = list(melee = 15, bullet = 0, laser = 0, energy = 15, bomb = 0, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 15,
+		DAM_PIERCE 	= 5,
+		DAM_CUT 	= 15,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 15,
+		DAM_BURN 	= 0,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)

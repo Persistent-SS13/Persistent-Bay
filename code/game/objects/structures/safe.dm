@@ -8,10 +8,26 @@ FLOOR SAFES
 /obj/structure/safe
 	name = "safe"
 	desc = "A huge chunk of metal with a dial embedded in it. Fine print on the dial reads \"Scarborough Arms - 2 tumbler safe, guaranteed thermite resistant, explosion resistant, and assistant resistant.\"."
-	icon = 'icons/obj/structures.dmi'
+	icon = 'icons/obj/structures/safes.dmi'
 	icon_state = "safe"
 	anchored = 1
 	density = 1
+	max_health = 500
+	mass = 100
+	armor = list(
+		DAM_BLUNT  	= MaxArmorValue,
+		DAM_PIERCE 	= 90,
+		DAM_CUT 	= MaxArmorValue,
+		DAM_BULLET 	= MaxArmorValue,
+		DAM_ENERGY 	= 80,
+		DAM_BURN 	= MaxArmorValue,
+		DAM_BOMB 	= 80,
+		DAM_EMP 	= MaxArmorValue,
+		DAM_BIO 	= MaxArmorValue,
+		DAM_RADS 	= MaxArmorValue,
+		DAM_STUN 	= MaxArmorValue,
+		DAM_PAIN	= MaxArmorValue,
+		DAM_CLONE   = MaxArmorValue)
 	var/open = 0		//is the safe open?
 	var/tumbler_1_pos	//the tumbler position- from 0 to 72
 	var/tumbler_1_open	//the tumbler position to open at- 0 to 72

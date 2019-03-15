@@ -10,7 +10,7 @@
 
 /datum/computer_file/program/research/handleInteraction(var/obj/item/weapon/W, var/mob/user)
 	var/datum/world_faction/faction = ConnectedFaction()
-	if(!faction || !faction.ModuleResearch)
+	if(!faction /*|| !faction.ModuleResearch*/)
 		return
 
 	if(istype(W, /obj/item/weapon/researchTheorem))

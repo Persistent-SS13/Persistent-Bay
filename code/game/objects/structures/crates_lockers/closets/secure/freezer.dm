@@ -1,37 +1,19 @@
 /obj/structure/closet/secure_closet/freezer/kitchen
 	name = "kitchen cabinet"
 	req_access = list()
-/*
-/obj/structure/closet/secure_closet/freezer/kitchen/WillContain() //Add the contents to Supply Crate.
-	return list(
-		/obj/item/weapon/reagent_containers/food/condiment/flour = 7,
-		/obj/item/weapon/reagent_containers/food/condiment/sugar = 2
-	)
-*/
+
 /obj/structure/closet/secure_closet/freezer/kitchen/mining
 	req_access = list()
 
 /obj/structure/closet/secure_closet/freezer/meat
 	name = "meat fridge"
 	closet_appearance = null
-/*
-/obj/structure/closet/secure_closet/freezer/meat/WillContain()
-	return list(
-		/obj/item/weapon/reagent_containers/food/snacks/meat/monkey = 10
-	)
-*/
+
 /obj/structure/closet/secure_closet/freezer/fridge
 	name = "refrigerator"
 	icon = 'icons/obj/closets/fridge.dmi'
 	closet_appearance = null
-/*
-/obj/structure/closet/secure_closet/freezer/fridge/WillContain()
-	return list(
-		/obj/item/weapon/reagent_containers/food/drinks/milk = 6,
-		/obj/item/weapon/reagent_containers/food/drinks/soymilk = 4,
-		/obj/item/weapon/storage/fancy/egg_box = 4
-	)
-*/
+
 /obj/structure/closet/secure_closet/freezer/money
 	name = "secure locker"
 	req_access = list()

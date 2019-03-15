@@ -37,6 +37,7 @@
 
 	var/material/material
 	var/datum/geosample/geologic_data
+	stacktype = /obj/item/stack/ore
 
 /obj/item/stack/ore/New(var/newloc, var/_mat)
 	if(_mat)
@@ -101,7 +102,9 @@
 	//TODO: Possibly make sprites for largers amounts leading up to the max, would look better really
 
 /obj/item/stack/ore/stacks_can_merge(var/obj/item/stack/other)
-	if(istype(other, /obj/item/stack/ore))
+	if(!istype(other, /obj/item/stack/ore))
+		return FALSE
+	if(src.get_amount() < src.get_max_amount() && other.get_amount() < other.get_max_amount())
 		var/obj/item/stack/ore/otherstack = other
 		if(src.material && otherstack.get_material() && otherstack.get_material().name == src.material.name)
 			return TRUE //Make sure we merge only with similar materials!!!

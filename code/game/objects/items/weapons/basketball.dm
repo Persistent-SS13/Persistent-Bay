@@ -19,7 +19,7 @@
 
 /obj/item/weapon/basketball/attackby(obj/item/W as obj, mob/user as mob)
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(WT.remove_fuel(1,user))
 			playsound(loc, 'sound/items/Welder.ogg', 50, 1)
 			to_chat(user, "<span class='notice'>You begin to melt \the [src]...</span>")
@@ -59,7 +59,7 @@
 				return
 
 		if(isWelder(W))
-			var/obj/item/weapon/weldingtool/WT = W
+			var/obj/item/weapon/tool/weldingtool/WT = W
 
 			if(WT.remove_fuel(5,user))
 				playsound(loc, 'sound/items/Welder.ogg', 50, 1)

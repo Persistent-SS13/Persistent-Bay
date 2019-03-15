@@ -5,8 +5,8 @@
 	program_icon_state = "atmos_control"
 	program_menu_icon = "shuffle"
 	extended_desc = "This program allows remote control of air alarms. This program can not be run on tablet computers."
-	required_access = 999
-	requires_ntnet = 1
+	required_access = core_access_engineering_programs
+	requires_ntnet = TRUE
 	network_destination = "atmospheric control system"
 	requires_ntnet_feature = NTNET_SYSTEMCONTROL
 	usage_flags = PROGRAM_LAPTOP | PROGRAM_CONSOLE
@@ -34,7 +34,7 @@
 
 	if(monitored_alarm_ids)
 		for(var/obj/machinery/alarm/alarm in SSmachines.machinery)
-			if(alarm.alarm_id && alarm.alarm_id in monitored_alarm_ids)
+			if(alarm.id_tag && alarm.id_tag in monitored_alarm_ids)
 				monitored_alarms += alarm
 		// machines may not yet be ordered at this point
 		monitored_alarms = dd_sortedObjectList(monitored_alarms)

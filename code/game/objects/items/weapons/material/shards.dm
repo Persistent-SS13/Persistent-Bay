@@ -6,8 +6,7 @@
 	desc = "Made of nothing. How does this even exist?" // set based on material, if this desc is visible it's a bug (shards default to being made of glass)
 	icon_state = "large"
 	randpixel = 8
-	sharp = 1
-	edge = 1
+	sharpness = 1
 	w_class = ITEM_SIZE_SMALL
 	force_divisor = 0.2 // 6 with hardness 30 (glass)
 	thrown_force_divisor = 0.4 // 4 with weight 15 (glass)
@@ -16,6 +15,8 @@
 	default_material = MATERIAL_GLASS
 	unbreakable = 1 //It's already broken.
 	drops_debris = 0
+	damtype = DAM_CUT
+	mass = 0.250
 
 /obj/item/weapon/material/shard/set_material(var/new_material)
 	..(new_material)
@@ -47,7 +48,7 @@
 
 /obj/item/weapon/material/shard/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(isWelder(W) && material.shard_can_repair)
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(WT.remove_fuel(0, user))
 			material.place_sheet(loc)
 			qdel(src)

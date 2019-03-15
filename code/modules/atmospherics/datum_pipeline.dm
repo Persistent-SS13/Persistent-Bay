@@ -208,6 +208,8 @@
 
 //surface must be the surface area in m^2
 /datum/pipeline/proc/radiate_heat_to_space(surface, thermal_conductivity)
+	if(isnull(air))
+		return FALSE
 	var/gas_density = air.total_moles/air.volume
 	thermal_conductivity *= min(gas_density / ( RADIATOR_OPTIMUM_PRESSURE/(R_IDEAL_GAS_EQUATION*GAS_CRITICAL_TEMPERATURE) ), 1) //mult by density ratio
 
@@ -216,6 +218,7 @@
 	air.add_thermal_energy(heat_gain)
 	if(network)
 		network.update = 1
+	return TRUE
 
 //Returns the amount of heat gained while in space due to thermal radiation (usually a negative value)
 //surface - the surface area in m^2

@@ -35,7 +35,11 @@
 	network = list(NETWORK_NEXUS)
 
 /obj/machinery/camera/network/nexus_security
+	icon_state = "xraycam" // Thanks to Krutchen for the icons.
 	network = list(NETWORK_NEXUS_SECURITY)
+/obj/machinery/camera/network/nexus_security/Initialize()
+	. = ..()
+	upgradeXRay()
 
 // EMP
 

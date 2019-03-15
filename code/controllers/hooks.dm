@@ -32,8 +32,11 @@
 	var/caller = new hook_path
 	var/status = 1
 	for(var/P in typesof("[hook_path]/proc"))
-		if(!call(caller, P)(arglist(args)))
-			error("Hook '[P]' failed or runtimed.")
-			status = 0
+		try
+			if(!call(caller, P)(arglist(args)))
+				error("Hook '[P]' failed or runtimed.")
+				status = 0
+		catch(var/exception/e)
+			log_error("Caught exception in hook '[P]'! '[e]' on [e.file]:[e.line]")
 
 	return status

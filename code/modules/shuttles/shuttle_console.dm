@@ -126,7 +126,7 @@
 				locked_to = ""
 				return 0
 		else
-			var/datum/computer_file/crew_record/record = new()
+			var/datum/computer_file/report/crew_record/record = new()
 			if(!record.load_from_global(locked_to))
 				qdel(record)
 				locked_to = ""

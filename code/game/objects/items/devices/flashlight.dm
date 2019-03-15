@@ -58,7 +58,7 @@
 		return
 
 /obj/item/device/flashlight/attackby(var/obj/item/I, var/mob/user as mob)
-	if(istype(I, /obj/item/weapon/screwdriver))
+	if(istype(I, /obj/item/weapon/tool/screwdriver))
 		if(power_usage && flashlight_cell)	//if contains powercell & uses power
 			flashlight_cell.update_icon()
 			flashlight_cell.dropInto(loc)
@@ -152,7 +152,7 @@
 			return
 		if(XRAY in H.mutations)
 			to_chat(user, "<span class='notice'>\The [H]'s pupils give an eerie glow!</span>")
-		if(vision.damage)
+		if(vision.isdamaged())
 			to_chat(user, "<span class='warning'>There's visible damage to [H]'s [vision.name]!</span>")
 		else if(H.eye_blurry)
 			to_chat(user, "<span class='notice'>\The [H]'s pupils react slower than normally.</span>")
@@ -199,7 +199,7 @@
 	force = 10
 	attack_verb = list ("smacked", "thwacked", "thunked")
 	matter = list(MATERIAL_STEEL = 200,MATERIAL_GLASS = 50)
-	hitsound = "swing_hit"
+	sound_hit = "swing_hit"
 
 /obj/item/device/flashlight/drone
 	name = "low-power flashlight"
@@ -291,8 +291,8 @@
 		return FALSE
 	on = TRUE
 	force = on_damage
-	damtype = "fire"
-	hitsound = "sound/effects/woodhit.ogg"
+	damtype = DAM_BURN
+	sound_hit = "sound/effects/woodhit.ogg"
 	START_PROCESSING(SSobj, src)
 	update_icon()
 	return 1

@@ -7,11 +7,18 @@
 	var/enabled = 1					// If the hardware is turned off set this to 0.
 	var/critical = 1				// Prevent disabling for important component, like the HDD.
 	var/hardware_size = 1			// Limits which devices can contain this component. 1: Tablets/Laptops/Consoles, 2: Laptops/Consoles, 3: Consoles only
-	var/damage = 0					// Current damage level
-	var/max_damage = 100			// Maximal damage level.
-	var/damage_malfunction = 20		// "Malfunction" threshold. When damage exceeds this value the hardware piece will semi-randomly fail and do !!FUN!! things
-	var/damage_failure = 50			// "Failure" threshold. When damage exceeds this value the hardware piece will not work at all.
+	max_health = 100			// Maximal damage level.
+	var/malfunction_threshold = 0.8		// "Malfunction" threshold. When damage exceeds this value the hardware piece will semi-randomly fail and do !!FUN!! things
+	var/break_threshold = 0.5			// "Failure" threshold. When damage exceeds this value the hardware piece will not work at all.
 	var/malfunction_probability = 10// Chance of malfunction when the component is damaged
+	var/usage_flags = PROGRAM_ALL
+
+/obj/item/weapon/computer_hardware/New()
+	..()
+	ADD_SAVED_VAR(holder2)
+	ADD_SAVED_VAR(enabled)
+
+	ADD_SKIP_EMPTY(holder2)
 
 /obj/item/weapon/computer_hardware/attackby(var/obj/item/W as obj, var/mob/living/user as mob)
 	// Multitool. Runs diagnostics
@@ -23,30 +30,31 @@
 	// Nanopaste. Repair all damage if present for a single unit.
 	var/obj/item/stack/S = W
 	if(istype(S, /obj/item/stack/nanopaste))
-		if(!damage)
+		if(health == max_health)
 			to_chat(user, "\The [src] doesn't seem to require repairs.")
 			return 1
 		if(S.use(1))
 			to_chat(user, "You apply a bit of \the [W] to \the [src]. It immediately repairs all damage.")
-			damage = 0
+			health = max_health
 		return 1
 	// Cable coil. Works as repair method, but will probably require multiple applications and more cable.
 	if(isCoil(S))
-		if(!damage)
+		if(health == max_health)
 			to_chat(user, "\The [src] doesn't seem to require repairs.")
 			return 1
 		if(S.use(1))
 			to_chat(user, "You patch up \the [src] with a bit of \the [W].")
-			take_damage(-10)
+			add_health(10)
 		return 1
 	return ..()
 
 
 // Called on multitool click, prints diagnostic information to the user.
 /obj/item/weapon/computer_hardware/proc/diagnostics(var/mob/user)
-	to_chat(user, "Hardware Integrity Test... (Corruption: [damage]/[max_damage]) [damage > damage_failure ? "FAIL" : damage > damage_malfunction ? "WARN" : "PASS"]")
+	to_chat(user, "Hardware Integrity Test... (Integrity: [health]/[max_health]) [isfailing() ? "FAIL" : ismalfunctioning() ? "WARN" : "PASS"]")
 
 /obj/item/weapon/computer_hardware/New(var/obj/L)
+	..()
 	w_class = hardware_size
 	if(istype(L, /obj/item/modular_computer))
 		holder2 = L
@@ -56,32 +64,33 @@
 	holder2 = null
 	return ..()
 
+/obj/item/weapon/computer_hardware/proc/isfailing()
+	return health < (break_threshold * max_health)
+
+/obj/item/weapon/computer_hardware/proc/ismalfunctioning()
+	return health < (malfunction_threshold * max_health)
+
 // Handles damage checks
 /obj/item/weapon/computer_hardware/proc/check_functionality()
 	// Turned off
 	if(!enabled)
-		return 0
+		return FALSE
 	// Too damaged to work at all.
-	if(damage > damage_failure)
-		return 0
+	if(isfailing())
+		return FALSE
 	// Still working. Well, sometimes...
-	if(damage > damage_malfunction)
+	if(ismalfunctioning())
 		if(prob(malfunction_probability))
-			return 0
+			return FALSE
 	// Good to go.
-	return 1
+	return TRUE
 
 /obj/item/weapon/computer_hardware/examine(var/mob/user)
 	. = ..()
-	if(damage > damage_failure)
+	if(isfailing())
 		to_chat(user, "<span class='danger'>It seems to be severely damaged!</span>")
-	else if(damage > damage_malfunction)
+	else if(ismalfunctioning())
 		to_chat(user, "<span class='notice'>It seems to be damaged!</span>")
-	else if(damage)
+	else if(health < max_health)
 		to_chat(user, "It seems to be slightly damaged.")
-
-// Damages the component. Contains necessary checks. Negative damage "heals" the component.
-/obj/item/weapon/computer_hardware/proc/take_damage(var/amount)
-	damage += round(amount) 					// We want nice rounded numbers here.
-	damage = between(0, damage, max_damage)		// Clamp the value.
 

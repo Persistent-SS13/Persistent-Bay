@@ -194,6 +194,7 @@
 	response_harm   = "kicks"
 	attacktext = "kicked"
 	health = 1
+	density = 0
 	var/amount_grown = 0
 	pass_flags = PASS_FLAG_TABLE | PASS_FLAG_GRILLE
 	mob_size = MOB_MINISCULE
@@ -235,6 +236,7 @@ var/global/chicken_count = 0
 	response_harm   = "kicks"
 	attacktext = "kicked"
 	health = 10
+	density = 0
 	var/eggsleft = 0
 	var/body_color
 	pass_flags = PASS_FLAG_TABLE

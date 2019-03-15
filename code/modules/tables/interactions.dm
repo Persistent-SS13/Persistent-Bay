@@ -43,10 +43,11 @@
 	return 1
 
 /obj/structure/table/bullet_act(obj/item/projectile/P)
-	if(!(P.damage_type == BRUTE || P.damage_type == BURN))
+	if(!IsDamageTypePhysical(P.damtype))
 		return 0
 
-	if(take_damage(P.damage/2))
+	return ..(P)
+	if(take_damage(P.force/2, P.damtype, P.armor_penetration))
 		//prevent tables with 1 health left from stopping bullets outright
 		return PROJECTILE_CONTINUE //the projectile destroyed the table, so it gets to keep going
 

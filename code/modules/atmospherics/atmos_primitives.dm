@@ -483,11 +483,11 @@
 	var/hydrogen = 0
 	var/reagent = 0
 	if(atmosphere.total_moles) // Division by zero prevention
-		oxygen = (atmosphere.gas["oxygen"] / atmosphere.total_moles) * 100 // Percentage of the gas
-		phoron = (atmosphere.gas["phoron"] / atmosphere.total_moles) * 100
-		carbondioxide = (atmosphere.gas["carbon_dioxide"] / atmosphere.total_moles) * 100
-		nitrousoxide = (atmosphere.gas["sleeping_agent"] / atmosphere.total_moles) * 100
-		hydrogen = (atmosphere.gas["hydrogen"] / atmosphere.total_moles) * 100
+		oxygen = (atmosphere.gas[GAS_OXYGEN] / atmosphere.total_moles) * 100 // Percentage of the gas
+		phoron = (atmosphere.gas[GAS_PHORON] / atmosphere.total_moles) * 100
+		carbondioxide = (atmosphere.gas[GAS_CO2] / atmosphere.total_moles) * 100
+		nitrousoxide = (atmosphere.gas[GAS_N2O] / atmosphere.total_moles) * 100
+		hydrogen = (atmosphere.gas[GAS_HYDROGEN] / atmosphere.total_moles) * 100
 
 		for(var/g in atmosphere.gas)
 			if(gas_data.flags[g] & XGM_GAS_REAGENT_GAS)

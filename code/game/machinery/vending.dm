@@ -27,7 +27,7 @@
 	var/active = 1 //No sales pitches if off!
 	var/vend_ready = 1 //Are we ready to vend?? Is it time??
 	var/vend_delay = 10 //How long does it take to vend?
-	var/categories = CAT_NORMAL // Bitmask of cats we're currently showing
+	var/categories = VENDINGM_CAT_NORMAL // Bitmask of cats we're currently showing
 	var/datum/stored_items/vending_products/currently_vending = null // What we're requesting payment for right now
 	var/status_message = "" // Status screen messages like "insufficient funds", displayed in NanoUI
 	var/status_error = 0 // Set to 1 if status_message is an error
@@ -100,9 +100,9 @@
  */
 /obj/machinery/vending/proc/build_inventory()
 	var/list/all_products = list(
-		list(src.products, CAT_NORMAL),
-		list(src.contraband, CAT_HIDDEN),
-		list(src.premium, CAT_COIN))
+		list(src.products, VENDINGM_CAT_NORMAL),
+		list(src.contraband, VENDINGM_CAT_HIDDEN),
+		list(src.premium, VENDINGM_CAT_COIN))
 
 	for(var/current_list in all_products)
 		var/category = current_list[2]
@@ -180,7 +180,7 @@
 	if (I || istype(W, /obj/item/weapon/spacecash))
 		attack_hand(user)
 		return
-	else if(istype(W, /obj/item/weapon/screwdriver))
+	else if(istype(W, /obj/item/weapon/tool/screwdriver))
 		src.panel_open = !src.panel_open
 		to_chat(user, "You [src.panel_open ? "open" : "close"] the maintenance panel.")
 		src.overlays.Cut()
@@ -193,15 +193,14 @@
 		if(src.panel_open)
 			attack_hand(user)
 		return
-	else if((obj_flags & OBJ_FLAG_ANCHORABLE) && isWrench(W))
-		wrench_floor_bolts(user)
+	else if((obj_flags & OBJ_FLAG_ANCHORABLE) && default_wrench_floor_bolts(user, W))
 		power_change()
 		return
 	else if(istype(W, /obj/item/weapon/material/coin) && premium.len > 0)
 		user.drop_item()
 		W.forceMove(src)
 		coin = W
-		categories |= CAT_COIN
+		categories |= VENDINGM_CAT_COIN
 		to_chat(user, "<span class='notice'>You insert \the [W] into \the [src].</span>")
 		SSnano.update_uis(src)
 		return
@@ -401,7 +400,7 @@
 			usr.put_in_hands(coin)
 		to_chat(usr, "<span class='notice'>You remove \the [coin] from \the [src]</span>")
 		coin = null
-		categories &= ~CAT_COIN
+		categories &= ~VENDINGM_CAT_COIN
 
 	if ((usr.contents.Find(src) || (in_range(src, usr) && istype(src.loc, /turf))))
 		if ((href_list["vend"]) && (src.vend_ready) && (!currently_vending))
@@ -449,7 +448,7 @@
 	src.status_error = 0
 	SSnano.update_uis(src)
 
-	if (R.category & CAT_COIN)
+	if (R.category & VENDINGM_CAT_COIN)
 		if(!coin)
 			to_chat(user, "<span class='notice'>You need to insert a coin to get this item.</span>")
 			return
@@ -460,11 +459,11 @@
 				to_chat(user, "<span class='notice'>You weren't able to pull the coin out fast enough, the machine ate it, string and all.</span>")
 				qdel(coin)
 				coin = null
-				categories &= ~CAT_COIN
+				categories &= ~VENDINGM_CAT_COIN
 		else
 			qdel(coin)
 			coin = null
-			categories &= ~CAT_COIN
+			categories &= ~VENDINGM_CAT_COIN
 
 	if(((src.last_reply + (src.vend_delay + 200)) <= world.time) && src.vend_reply)
 		spawn(0)
@@ -654,7 +653,7 @@
 
 /obj/machinery/vending/assist
 	products = list(	/obj/item/device/assembly/prox_sensor = 5,/obj/item/device/assembly/igniter = 3,/obj/item/device/assembly/signaler = 4,
-						/obj/item/weapon/wirecutters = 1, /obj/item/weapon/cartridge/signal = 4)
+						/obj/item/weapon/tool/wirecutters = 1, /obj/item/weapon/cartridge/signal = 4)
 	contraband = list(/obj/item/device/flashlight = 5,/obj/item/device/assembly/timer = 2)
 	product_ads = "Only the finest!;Have some tools.;The most robust equipment.;The finest gear in space!"
 
@@ -857,27 +856,6 @@
 					/obj/item/device/transfer_valve = 6,/obj/item/device/assembly/timer = 6,/obj/item/device/assembly/signaler = 6,
 					/obj/item/device/assembly/prox_sensor = 6,/obj/item/device/assembly/igniter = 6)
 
-/obj/machinery/vending/wallmed1
-	name = "NanoMed"
-	desc = "A wall-mounted version of the NanoMed."
-	product_ads = "Go save some lives!;The best stuff for your medbay.;Only the finest tools.;Natural chemicals!;This stuff saves lives.;Don't you want some?"
-	icon_state = "wallmed"
-	icon_deny = "wallmed-deny"
-	density = 0 //It is wall-mounted, and thus, not dense. --Superxpdude
-	products = list(/obj/item/stack/medical/bruise_pack = 2,/obj/item/stack/medical/ointment = 2,/obj/item/weapon/reagent_containers/hypospray/autoinjector = 4)
-	contraband = list(/obj/item/weapon/reagent_containers/syringe/antitoxin = 4,/obj/item/weapon/reagent_containers/syringe/antiviral = 4,/obj/item/weapon/reagent_containers/pill/tox = 1)
-
-/obj/machinery/vending/wallmed2
-	name = "NanoMed Mini"
-	desc = "A wall-mounted version of the NanoMed, containing only vital first aid equipment."
-	product_ads = "Go save some lives!;The best stuff for your medbay.;Only the finest tools.;Natural chemicals!;This stuff saves lives.;Don't you want some?"
-	icon_state = "wallmed"
-	icon_deny = "wallmed-deny"
-	density = 0 //It is wall-mounted, and thus, not dense. --Superxpdude
-	products = list(/obj/item/weapon/reagent_containers/hypospray/autoinjector = 5,/obj/item/weapon/reagent_containers/syringe/antitoxin = 1,/obj/item/stack/medical/bruise_pack = 3,
-					/obj/item/stack/medical/ointment =3)
-	contraband = list(/obj/item/weapon/reagent_containers/pill/tox = 3, /obj/item/weapon/reagent_containers/hypospray/autoinjector/pain = 2)
-
 /obj/machinery/vending/security
 	name = "SecTech"
 	desc = "A security equipment vendor."
@@ -931,9 +909,9 @@
  */
 /obj/machinery/vending/hydroseeds/build_inventory()
 	var/list/all_products = list(
-		list(src.products, CAT_NORMAL),
-		list(src.contraband, CAT_HIDDEN),
-		list(src.premium, CAT_COIN))
+		list(src.products, VENDINGM_CAT_NORMAL),
+		list(src.contraband, VENDINGM_CAT_HIDDEN),
+		list(src.premium, VENDINGM_CAT_COIN))
 
 	for(var/current_list in all_products)
 		var/category = current_list[2]
@@ -1006,10 +984,10 @@
 	icon_deny = "tool-deny"
 	icon_vend = "tool-vend"
 	vend_delay = 11
-	products = list(/obj/item/stack/cable_coil/random = 10,/obj/item/weapon/crowbar = 5,/obj/item/weapon/weldingtool = 3,/obj/item/weapon/wirecutters = 5,
-					/obj/item/weapon/wrench = 5,/obj/item/device/analyzer = 5,/obj/item/device/t_scanner = 5,/obj/item/weapon/screwdriver = 5,
+	products = list(/obj/item/stack/cable_coil/random = 10,/obj/item/weapon/tool/crowbar = 5,/obj/item/weapon/tool/weldingtool = 3,/obj/item/weapon/tool/wirecutters = 5,
+					/obj/item/weapon/tool/wrench = 5,/obj/item/device/analyzer = 5,/obj/item/device/t_scanner = 5,/obj/item/weapon/tool/screwdriver = 5,
 					/obj/item/device/flashlight/glowstick = 3, /obj/item/device/flashlight/glowstick/red = 3)
-	contraband = list(/obj/item/weapon/weldingtool/hugetank = 2,/obj/item/clothing/gloves/insulated/cheap = 2)
+	contraband = list(/obj/item/weapon/tool/weldingtool/hugetank = 2,/obj/item/clothing/gloves/insulated/cheap = 2)
 	premium = list(/obj/item/clothing/gloves/insulated = 1)
 
 /obj/machinery/vending/engivend
@@ -1031,9 +1009,9 @@
 	icon_state = "engi"
 	icon_deny = "engi-deny"
 	req_one_access = list(core_access_engineering_programs,core_access_engineering_programs)
-	products = list(/obj/item/weapon/storage/belt/utility = 4,/obj/item/clothing/glasses/meson = 4,/obj/item/clothing/gloves/insulated = 4, /obj/item/weapon/screwdriver = 12,
-					/obj/item/weapon/crowbar = 12,/obj/item/weapon/wirecutters = 12,/obj/item/device/multitool = 12,/obj/item/weapon/wrench = 12,/obj/item/device/t_scanner = 12,
-					/obj/item/weapon/cell = 8, /obj/item/weapon/weldingtool = 8,/obj/item/clothing/head/welding = 8,
+	products = list(/obj/item/weapon/storage/belt/utility = 4,/obj/item/clothing/glasses/meson = 4,/obj/item/clothing/gloves/insulated = 4, /obj/item/weapon/tool/screwdriver = 12,
+					/obj/item/weapon/tool/crowbar = 12,/obj/item/weapon/tool/wirecutters = 12,/obj/item/device/multitool = 12,/obj/item/weapon/tool/wrench = 12,/obj/item/device/t_scanner = 12,
+					/obj/item/weapon/cell = 8, /obj/item/weapon/tool/weldingtool = 8,/obj/item/clothing/head/welding = 8,
 					/obj/item/weapon/light/tube = 10,/obj/item/weapon/stock_parts/scanning_module = 5,/obj/item/weapon/stock_parts/micro_laser = 5,
 					/obj/item/weapon/stock_parts/matter_bin = 5,/obj/item/weapon/stock_parts/manipulator = 5,/obj/item/weapon/stock_parts/console_screen = 5,
 					/obj/item/weapon/stock_parts/capacitor = 5)
@@ -1051,7 +1029,7 @@
 	req_access = list(core_access_science_programs)
 	products = list(/obj/item/stack/cable_coil = 4,/obj/item/device/flash/synthetic = 4,/obj/item/weapon/cell = 4,/obj/item/device/healthanalyzer = 2,
 					/obj/item/weapon/scalpel = 1,/obj/item/weapon/circular_saw = 1,/obj/item/weapon/tank/anesthetic = 2,/obj/item/clothing/mask/breath/medical = 5,
-					/obj/item/weapon/screwdriver = 2,/obj/item/weapon/crowbar = 2)
+					/obj/item/weapon/tool/screwdriver = 2,/obj/item/weapon/tool/crowbar = 2)
 	contraband = list(/obj/item/device/flash = 2)
 
 //FOR ACTORS GUILD - mainly props that cannot be spawned otherwise

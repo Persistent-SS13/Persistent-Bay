@@ -42,8 +42,8 @@
 	var/fire_alert = 0
 
 	//Atmos effect - Yes, you can make creatures that require phoron or co2 to survive. N2O is a trace gas and handled separately, hence why it isn't here. It'd be hard to add it. Hard and me don't mix (Yes, yes make all the dick jokes you want with that.) - Errorage
-	var/min_gas = list("oxygen" = 5)
-	var/max_gas = list("phoron" = 1, "carbon_dioxide" = 5)
+	var/min_gas = list(GAS_OXYGEN = 5)
+	var/max_gas = list(GAS_PHORON = 1, GAS_CO2 = 5)
 	var/unsuitable_atoms_damage = 2	//This damage is taken when atmos doesn't fit all the requirements above
 	var/speed = 0 //LETS SEE IF I CAN SET SPEEDS FOR SIMPLE MOBS WITHOUT DESTROYING EVERYTHING. Higher speed is slower, negative speed is faster
 
@@ -63,10 +63,13 @@
 	// contained in a cage
 	var/in_stasis = 0
 
+	//Grabbing up 
+	holder_type = /obj/item/weapon/holder
+
 /mob/living/simple_animal/after_load()
 	if(stat == 2)
 		death()
-	
+
 /mob/living/simple_animal/Life()
 	..()
 
@@ -172,7 +175,7 @@
 	if(!Proj || Proj.nodamage)
 		return
 
-	adjustBruteLoss(Proj.damage)
+	adjustBruteLoss(Proj.force)
 	return 0
 
 /mob/living/simple_animal/attack_hand(mob/living/carbon/human/M as mob)
@@ -233,7 +236,7 @@
 		return 2
 
 	var/damage = O.force
-	if (O.damtype == PAIN)
+	if (O.damtype == DAM_PAIN)
 		damage = 0
 	if(supernatural && istype(O,/obj/item/weapon/nullrod))
 		damage *= 2
@@ -274,7 +277,7 @@
 	switch (severity)
 		if (1.0)
 			damage = 500
-			if(!prob(getarmor(null, "bomb")))
+			if(!prob(getarmor(null, DAM_BOMB)))
 				gib()
 
 		if (2.0)
@@ -283,7 +286,7 @@
 		if(3.0)
 			damage = 30
 
-	adjustBruteLoss(damage * blocked_mult(getarmor(null, "bomb")))
+	adjustBruteLoss(damage * blocked_mult(getarmor(null, DAM_BOMB)))
 
 /mob/living/simple_animal/adjustBruteLoss(damage)
 	..()
@@ -345,12 +348,10 @@
 			user.visible_message("<span class='danger'>[user] butchers \the [src] messily!</span>")
 			gib()
 
-/mob/living/simple_animal/handle_fire()
-	return
-
-/mob/living/simple_animal/update_fire()
-	return
-/mob/living/simple_animal/IgniteMob()
-	return
-/mob/living/simple_animal/ExtinguishMob()
-	return
+///mob/living/simple_animal/handle_fire()
+//	return
+//
+///mob/living/simple_animal/IgniteMob()
+//	return
+///mob/living/simple_animal/ExtinguishMob()
+//	return

@@ -38,6 +38,7 @@ datum/preferences
 
 	var/bonus_slots = 0
 	var/bonus_notes = ""
+
 /datum/preferences/New(client/C)
 	player_setup = new(src)
 	gender = pick(MALE, FEMALE)
@@ -58,32 +59,32 @@ datum/preferences
 		save_preferences()
 		save_character()
 
-/datum/preferences/proc/ZeroSkills(var/forced = 0)
-	for(var/V in SKILLS) for(var/datum/skill/S in SKILLS[V])
-		if(!skills.Find(S.ID) || forced)
-			skills[S.ID] = SKILL_NONE
+// /datum/preferences/proc/ZeroSkills(var/forced = 0)
+// 	for(var/V in SKILLS) for(var/datum/skill/S in SKILLS[V])
+// 		if(!skills.Find(S.ID) || forced)
+// 			skills[S.ID] = SKILL_NONE
 
-/datum/preferences/proc/CalculateSkillPoints()
-	used_skillpoints = 0
-	for(var/V in SKILLS) for(var/datum/skill/S in SKILLS[V])
-		var/multiplier = S.cost_multiplier
-		switch(skills[S.ID])
-			if(SKILL_NONE)
-				used_skillpoints += 0 * multiplier
-			if(SKILL_BASIC)
-				used_skillpoints += 1 * multiplier
-			if(SKILL_ADEPT)
-				// secondary skills cost less
-				if(S.secondary)
-					used_skillpoints += 1 * multiplier
-				else
-					used_skillpoints += 3 * multiplier
-			if(SKILL_EXPERT)
-				// secondary skills cost less
-				if(S.secondary)
-					used_skillpoints += 3 * multiplier
-				else
-					used_skillpoints += 6 * multiplier
+// /datum/preferences/proc/CalculateSkillPoints()
+// 	skillpoints = 0
+// 	for(var/V in SKILLS) for(var/datum/skill/S in SKILLS[V])
+// 		var/multiplier = S.cost_multiplier
+// 		switch(skills[S.ID])
+// 			if(SKILL_NONE)
+// 				used_skillpoints += 0 * multiplier
+// 			if(SKILL_BASIC)
+// 				used_skillpoints += 1 * multiplier
+// 			if(SKILL_ADEPT)
+// 				// secondary skills cost less
+// 				if(S.secondary)
+// 					used_skillpoints += 1 * multiplier
+// 				else
+// 					used_skillpoints += 3 * multiplier
+// 			if(SKILL_EXPERT)
+// 				// secondary skills cost less
+// 				if(S.secondary)
+// 					used_skillpoints += 3 * multiplier
+// 				else
+// 					used_skillpoints += 6 * multiplier
 
 /datum/preferences/proc/GetSkillClass(points)
 	return CalculateSkillClass(points, age)
@@ -362,7 +363,7 @@ datum/preferences
 	character.religion = religion
 
 	character.skills = skills
-	character.used_skillpoints = used_skillpoints
+	character.skillpoints = skillpoints
 
 	if(!character.isSynthetic())
 		character.nutrition = rand(140,360)

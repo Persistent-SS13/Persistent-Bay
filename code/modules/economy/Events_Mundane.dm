@@ -19,19 +19,19 @@
 	if(!body)
 		body = ""
 		switch(event_type)
-			if(RESEARCH_BREAKTHROUGH)
+			if(EC_RESEARCH_BREAKTHROUGH)
 				body = "A major breakthough in the field of [pick("phoron research","super-compressed materials","nano-augmentation","bluespace research","volatile power manipulation")] \
 				was announced [pick("yesterday","a few days ago","last week","earlier this month")] by a private firm on [affected_dest.name]. \
 				[GLOB.using_map.company_name] declined to comment as to whether this could impinge on profits."
 
-			if(ELECTION)
+			if(EC_ELECTION)
 				body = "The pre-selection of an additional candidates was announced for the upcoming [pick("supervisors council","advisory board","governership","board of inquisitors")] \
 				election on [affected_dest.name] was announced earlier today, \
 				[pick("media mogul","web celebrity", "industry titan", "superstar", "famed chef", "popular gardener", "ex-army officer", "multi-billionaire")] \
 				[random_name(pick(MALE,FEMALE))]. In a statement to the media they said '[pick("My only goal is to help the [pick("sick","poor","children")]",\
 				"I will maintain my company's record profits","I believe in our future","We must return to our moral core","Just like... chill out dudes")]'."
 
-			if(RESIGNATION)
+			if(EC_RESIGNATION)
 				body = "[GLOB.using_map.company_name] regretfully announces the resignation of [pick("Sector Admiral","Division Admiral","Ship Admiral","Vice Admiral")] [random_name(pick(MALE,FEMALE))]."
 				if(prob(25))
 					var/locstring = pick("Segunda","Salusa","Cepheus","Andromeda","Gruis","Corona","Aquila","Asellus") + " " + pick("I","II","III","IV","V","VI","VII","VIII")
@@ -50,7 +50,7 @@
 				else
 					body += " Administration Aerospace wishes them the best of luck in their retirement ceremony on [affected_dest.name]."
 
-			if(CELEBRITY_DEATH)
+			if(EC_CELEBRITY_DEATH)
 				body = "It is with regret today that we announce the sudden passing of the "
 				if(prob(33))
 					body += "[pick("distinguished","decorated","veteran","highly respected")] \
@@ -68,18 +68,18 @@
 				" during an industrial accident",\
 				" due to [pick("heart failure","kidney failure","liver failure","brain hemorrhage")]")]"
 
-			if(BARGAINS)
-				body += "BARGAINS! BARGAINS! BARGAINS! Commerce Control on [affected_dest.name] wants you to know that everything must go! Across all retail centres, \
+			if(EC_BARGAINS)
+				body += "EC_BARGAINS! EC_BARGAINS! EC_BARGAINS! Commerce Control on [affected_dest.name] wants you to know that everything must go! Across all retail centres, \
 				all goods are being slashed, and all retailors are onboard - so come on over for the \[shopping\] time of your life."
 
-			if(SONG_DEBUT)
+			if(EC_SONG_DEBUT)
 				body += "[pick("Singer","Singer/songwriter","Saxophonist","Pianist","Guitarist","TV personality","Star")] [random_name(pick(MALE,FEMALE))] \
 				announced the debut of their new [pick("single","album","EP","label")] '[pick("Everyone's","Look at the","Baby don't eye those","All of those","Dirty nasty")] \
 				[pick("roses","three stars","starships","nanobots","cyborgs",SPECIES_SKRELL,"Sren'darr")] \
 				[pick("on Venus","on Reade","on Moghes","in my hand","slip through my fingers","die for you","sing your heart out","fly away")]' \
 				with [pick("pre-puchases available","a release tour","cover signings","a launch concert")] on [affected_dest.name]."
 
-			if(MOVIE_RELEASE)
+			if(EC_MOVIE_RELEASE)
 				body += "From the [pick("desk","home town","homeworld","mind")] of [pick("acclaimed","award-winning","popular","stellar")] \
 				[pick("playwright","author","director","actor","TV star")] [random_name(pick(MALE,FEMALE))] comes the latest sensation: '\
 				[pick("Deadly","The last","Lost","Dead")] [pick("Starships","Warriors","outcasts",SPECIES_UNATHI,SPECIES_SKRELL)] \
@@ -87,7 +87,7 @@
 				[pick("Moghes","Earth","Biesel","Ahdomai","S'randarr","the Void","the Edge of Space")]'.\
 				. Own it on webcast today, or visit the galactic premier on [affected_dest.name]!"
 
-			if(BIG_GAME_HUNTERS)
+			if(EC_BIG_GAME_HUNTERS)
 				body += "Game hunters on [affected_dest.name] "
 				if(prob(33))
 					body += "were surprised when an unusual species experts have since identified as \
@@ -100,7 +100,7 @@
 					body += "brought in an unusually [pick("valuable","rare","large","vicious","intelligent")] [pick("mammal","predator","farwa","samak")] for inspection \
 					[pick("today","yesterday","last week")]. Speculators suggest they may be tipped to break several records."
 
-			if(GOSSIP)
+			if(EC_GOSSIP)
 				body += "[pick("TV host","Webcast personality","Superstar","Model","Actor","Singer")] [random_name(pick(MALE,FEMALE))] "
 				if(prob(33))
 					body += "and their partner announced the birth of their [pick("first","second","third")] child on [affected_dest.name] early this morning. \
@@ -117,7 +117,7 @@
 					body += "is recovering from plastic surgery in a clinic on [affected_dest.name] for the [pick("second","third","fourth")] time, reportedly having made the decision in response to "
 					body += "[pick("unkind comments by an ex","rumours started by jealous friends",\
 					"the decision to be dropped by a major sponsor","a disasterous interview on Nyx Tonight")]."
-			if(TOURISM)
+			if(EC_TOURISM)
 				body += "Tourists are flocking to [affected_dest.name] after the surprise announcement of [pick("major shopping bargains by a wily retailer",\
 				"a huge new ARG by a popular entertainment company","a secret tour by popular artiste [random_name(pick(MALE,FEMALE))]")]. \
 				Nyx Daily is offering discount tickets for two to see [random_name(pick(MALE,FEMALE))] live in return for eyewitness reports and up to the minute coverage."
@@ -140,7 +140,7 @@
 	"Pens proclaim pencils obsolete, 'lead is dead'.",\
 	"Rock and paper sues scissors for discrimination.",\
 	"Steak tell-all book reveals he never liked sitting by potato.",\
-	"Woodchuck stops counting how many times he’s chucked 'Never again'.",\
+	"Woodchuck stops counting how many times heï¿½s chucked 'Never again'.",\
 	"[affected_dest.name] clerk first person able to pronounce '@*$%!'.",\
 	"[affected_dest.name] delis serving boiled paperback dictionaries, 'Adjectives chewy' customers declare.",\
 	"[affected_dest.name] weather deemed 'boring'; meteors and rad storms to be imported.",\
@@ -155,8 +155,8 @@
 	"Skrell marries computer; wedding attended by 100 modems.",\
 	"Chef reports successfully using harmonica as cheese grater.",\
 	"[GLOB.using_map.company_name] invents handkerchief that says 'Bless you' after sneeze.",\
-	"Clone accused of posing for other clones’s school photo.",\
-	"Clone accused of stealing other clones’s employee of the month award.",\
+	"Clone accused of posing for other clonesï¿½s school photo.",\
+	"Clone accused of stealing other clonesï¿½s employee of the month award.",\
 	"Woman robs [station_name()] with hair dryer; crewmen love new style.",\
 	"This space for rent.",\
 	"[affected_dest.name] Baker Wins Pickled Crumpet Toss Three Years Running",\

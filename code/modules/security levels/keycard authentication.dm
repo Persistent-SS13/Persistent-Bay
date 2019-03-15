@@ -3,6 +3,11 @@
 	desc = "This device is used to trigger functions which require more than one ID card to authenticate."
 	icon = 'icons/obj/monitors.dmi'
 	icon_state = "auth_off"
+	anchored = TRUE
+	use_power = POWER_USE_IDLE
+	idle_power_usage = 2
+	active_power_usage = 6
+	power_channel = ENVIRON
 	var/active = 0 //This gets set to 1 on all devices except the one where the initial request was made.
 	var/event = ""
 	var/screen = 1
@@ -14,18 +19,16 @@
 	var/mob/event_confirmed_by
 	//1 = select event
 	//2 = authenticate
-	anchored = 1.0
-	use_power = 1
-	idle_power_usage = 2
-	active_power_usage = 6
-	power_channel = ENVIRON
+
 
 /obj/machinery/keycard_auth/attack_ai(mob/user as mob)
-	to_chat(user, "<span class='warning'>A firewall prevents you from interfacing with this device!</span>")
+	to_chat(user, SPAN_WARNING("A firewall prevents you from interfacing with this device!"))
 	return
 
 /obj/machinery/keycard_auth/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(stat & (NOPOWER|BROKEN))
+	if(isWrench(W))
+		return default_wrench_floor_bolts(user, 2 SECONDS)
+	if(inoperable())
 		to_chat(user, "This device is not powered.")
 		return
 	if(istype(W,/obj/item/weapon/card/id))
@@ -37,18 +40,18 @@
 					event_source.confirmed = 1
 					event_source.event_confirmed_by = usr
 				else
-					to_chat(user, "<span class='warning'>Unable to confirm, DNA matches that of origin.</span>")
+					to_chat(user, SPAN_WARNING("Unable to confirm, DNA matches that of origin."))
 			else if(screen == 2)
 				event_triggered_by = usr
 				broadcast_request() //This is the device making the initial event request. It needs to broadcast to other devices
 
 //icon_state gets set everwhere besides here, that needs to be fixed sometime
 /obj/machinery/keycard_auth/update_icon()
-	if(stat &NOPOWER)
+	if(!ispowered())
 		icon_state = "auth_off"
 
 /obj/machinery/keycard_auth/attack_hand(mob/user as mob)
-	if(user.stat || stat & (NOPOWER|BROKEN))
+	if(user.stat || inoperable())
 		to_chat(user, "This device is not powered.")
 		return
 	if(!user.IsAdvancedToolUser())
@@ -132,7 +135,7 @@
 	reset()
 
 /obj/machinery/keycard_auth/proc/receive_request(var/obj/machinery/keycard_auth/source)
-	if(stat & (BROKEN|NOPOWER))
+	if(inoperable())
 		return
 	event_source = source
 	busy = 1

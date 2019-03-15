@@ -1,6 +1,5 @@
 /obj/item/projectile/hivebotbullet
-	damage = 10
-	damage_type = BRUTE
+	force = 10
 
 /mob/living/simple_animal/hostile/hivebot
 	name = "Hivebot"

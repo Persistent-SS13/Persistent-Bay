@@ -25,6 +25,8 @@
 	holder_type = /obj/item/weapon/holder/cat
 	mob_size = MOB_SMALL
 	possession_candidate = 1
+	density = 0
+	pass_flags = PASS_FLAG_TABLE
 
 /mob/living/simple_animal/cat/Life()
 	if(!..() || incapacitated() || client)

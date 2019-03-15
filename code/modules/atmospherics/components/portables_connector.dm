@@ -1,27 +1,50 @@
 /obj/machinery/atmospherics/portables_connector
 	icon = 'icons/atmos/connector.dmi'
 	icon_state = "map_connector"
-
 	name = "Connector Port"
 	desc = "For connecting portable devices related to atmospherics control."
-
 	dir = SOUTH
 	initialize_directions = SOUTH
-
-	var/obj/machinery/portable_atmospherics/connected_device
-
-	var/obj/machinery/atmospherics/node
-
-	var/datum/pipe_network/network
-
-	var/on = 0
-	use_power = 0
+	use_power = POWER_USE_OFF
 	level = 1
+	active_power_usage = 0
+	idle_power_usage = 0
+	interact_offline = TRUE
+	var/obj/machinery/portable_atmospherics/connected_device
+	var/obj/machinery/atmospherics/node
+	var/datum/pipe_network/network
+	var/on = FALSE
 
+/obj/machinery/atmospherics/portables_connector/Destroy()
+	loc = null
+	if(connected_device)
+		connected_device.disconnect()
 
-/obj/machinery/atmospherics/portables_connector/Initialize()
-	initialize_directions = dir
+	if(node)
+		node.disconnect(src)
+		qdel(network)
+
+	node = null
 	. = ..()
+
+/obj/machinery/atmospherics/portables_connector/atmos_init()
+	..()
+	if(node) 
+		return
+
+	var/node_connect = dir
+
+	for(var/obj/machinery/atmospherics/target in get_step(src,node_connect))
+		if(target.initialize_directions & get_dir(target,src))
+			if (check_connect_types(target,src))
+				node = target
+				break
+
+	queue_icon_update()
+	update_underlays()
+
+/obj/machinery/atmospherics/portables_connector/setup_initialize_directions()
+	initialize_directions = dir
 
 /obj/machinery/atmospherics/portables_connector/update_icon()
 	icon_state = "connector"
@@ -42,11 +65,17 @@
 	if(!on)
 		return
 	if(!connected_device)
-		on = 0
+		on = FALSE
 		return
 	if(network)
 		network.update = 1
 	return 1
+
+/obj/machinery/atmospherics/portables_connector/build_network()
+	if(!network && node)
+		network = new /datum/pipe_network()
+		network.normal_members += src
+		network.build_network(node, src)
 
 // Housekeeping and pipe network stuff below
 /obj/machinery/atmospherics/portables_connector/network_expand(datum/pipe_network/new_network, obj/machinery/atmospherics/pipe/reference)
@@ -59,42 +88,6 @@
 	new_network.normal_members += src
 
 	return null
-
-/obj/machinery/atmospherics/portables_connector/Destroy()
-	loc = null
-
-	if(connected_device)
-		connected_device.disconnect()
-
-	if(node)
-		node.disconnect(src)
-		qdel(network)
-
-	node = null
-
-	. = ..()
-
-/obj/machinery/atmospherics/portables_connector/atmos_init()
-	..()
-	if(node) return
-
-	var/node_connect = dir
-
-	for(var/obj/machinery/atmospherics/target in get_step(src,node_connect))
-		if(target.initialize_directions & get_dir(target,src))
-			if (check_connect_types(target,src))
-				node = target
-				break
-
-	update_icon()
-	update_underlays()
-
-/obj/machinery/atmospherics/portables_connector/build_network()
-	if(!network && node)
-		network = new /datum/pipe_network()
-		network.normal_members += src
-		network.build_network(node, src)
-
 
 /obj/machinery/atmospherics/portables_connector/return_network(obj/machinery/atmospherics/reference)
 	build_network()

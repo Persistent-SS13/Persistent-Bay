@@ -122,20 +122,20 @@
 	// In the unlikely event someone manages to create that many files.
 	// BYOND is acting weird with numbers above 999 in loops (infinite loop prevention)
 	if(stored_files.len >= 999)
-		return 0
+		return FALSE
 	if(used_capacity + size > max_capacity)
-		return 0
+		return FALSE
 	else
-		return 1
+		return TRUE
 
 // Checks whether we can store the file. We can only store unique files, so this checks whether we wouldn't get a duplicity by adding a file.
 /obj/item/weapon/computer_hardware/hard_drive/proc/try_store_file(var/datum/computer_file/F)
 	if(!F || !istype(F))
-		return 0
+		return FALSE
 	var/name = F.filename + "." + F.filetype
 	for(var/datum/computer_file/file in stored_files)
 		if((file.filename + "." + file.filetype) == name)
-			return 0
+			return FALSE
 	return can_store_file(F.size)
 
 
@@ -156,12 +156,21 @@
 			return F
 	return null
 
+/obj/item/weapon/computer_hardware/hard_drive/New()
+	..()
+	ADD_SAVED_VAR(stored_files)
+	ADD_SAVED_VAR(used_capacity)
+	
+	ADD_SKIP_EMPTY(stored_files)
+	ADD_SKIP_EMPTY(used_capacity)
+
 /obj/item/weapon/computer_hardware/hard_drive/Destroy()
 	if(holder2 && (holder2.hard_drive == src))
 		holder2.hard_drive = null
 	stored_files = null
 	return ..()
 
-/obj/item/weapon/computer_hardware/hard_drive/New()
-	install_default_programs()
-	..()
+/obj/item/weapon/computer_hardware/hard_drive/Initialize()
+	.=..()
+	if(!map_storage_loaded)
+		install_default_programs()

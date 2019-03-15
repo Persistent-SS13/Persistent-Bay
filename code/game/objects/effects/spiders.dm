@@ -3,56 +3,16 @@
 	name = "web"
 	desc = "It's stringy and sticky."
 	icon = 'icons/effects/effects.dmi'
+	obj_flags = OBJ_FLAG_DAMAGEABLE
 	anchored = 1
 	density = 0
-	var/health = 15
-
-//similar to weeds, but only barfed out by nurses manually
-/obj/effect/spider/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			qdel(src)
-		if(2.0)
-			if (prob(50))
-				qdel(src)
-		if(3.0)
-			if (prob(5))
-				qdel(src)
-	return
-
-/obj/effect/spider/attackby(var/obj/item/weapon/W, var/mob/user)
-	user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-
-	if(W.attack_verb.len)
-		visible_message("<span class='warning'>\The [src] have been [pick(W.attack_verb)] with \the [W][(user ? " by [user]." : ".")]</span>")
-	else
-		visible_message("<span class='warning'>\The [src] have been attacked with \the [W][(user ? " by [user]." : ".")]</span>")
-
-	var/damage = W.force / 4.0
-
-	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
-
-		if(WT.remove_fuel(0, user))
-			damage = 15
-			playsound(loc, 'sound/items/Welder.ogg', 100, 1)
-
-	health -= damage
-	healthcheck()
-
-/obj/effect/spider/bullet_act(var/obj/item/projectile/Proj)
-	..()
-	health -= Proj.get_structure_damage()
-	healthcheck()
-
-/obj/effect/spider/proc/healthcheck()
-	if(health <= 0)
-		qdel(src)
+	max_health = 15
+	should_save = 1
 
 /obj/effect/spider/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	if(exposed_temperature > 300 + T0C)
 		health -= 5
-		healthcheck()
+		update_health()
 
 /obj/effect/spider/stickyweb
 	icon_state = "stickyweb1"
@@ -66,7 +26,7 @@
 		return 1
 	else if(istype(mover, /mob/living))
 		if(prob(50))
-			to_chat(mover, "<span class='warning'>You get stuck in \the [src] for a moment.</span>")
+			to_chat(mover, SPAN_WARNING("You get stuck in \the [src] for a moment."))
 			return 0
 	else if(istype(mover, /obj/item/projectile))
 		return prob(30)
@@ -116,7 +76,7 @@
 	anchored = 0
 	plane = OBJ_PLANE
 	layer = BELOW_OBJ_LAYER
-	health = 3
+	max_health = 3
 	var/mob/living/simple_animal/hostile/giant_spider/greater_form
 	var/last_itch = 0
 	var/amount_grown = -1
@@ -186,9 +146,8 @@
 	new /obj/effect/decal/cleanable/spiderling_remains(loc)
 	qdel(src)
 
-/obj/effect/spider/spiderling/healthcheck()
-	if(health <= 0)
-		die()
+/obj/effect/spider/spiderling/destroyed()
+	die()
 
 /obj/effect/spider/spiderling/Process()
 	if(travelling_in_vent)
@@ -271,9 +230,9 @@
 			src.loc = O.owner ? O.owner.loc : O.loc
 			src.visible_message("<span class='warning'>\A [src] emerges from inside [O.owner ? "[O.owner]'s [O.name]" : "\the [O]"]!</span>")
 			if(O.owner)
-				O.owner.apply_damage(1, BRUTE, O.organ_tag)
+				O.owner.apply_damage(1, DAM_PIERCE, O.organ_tag)
 		else if(prob(1))
-			O.owner.apply_damage(1, TOX, O.organ_tag)
+			O.owner.apply_damage(1, DAM_BIO, O.organ_tag)
 			if(world.time > last_itch + 30 SECONDS)
 				last_itch = world.time
 				to_chat(O.owner, "<span class='notice'>Your [O.name] itches...</span>")
@@ -296,7 +255,7 @@
 	name = "cocoon"
 	desc = "Something wrapped in silky spider web."
 	icon_state = "cocoon1"
-	health = 60
+	max_health = 60
 
 	New()
 		icon_state = pick("cocoon1","cocoon2","cocoon3")

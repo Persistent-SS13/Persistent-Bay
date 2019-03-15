@@ -17,7 +17,7 @@
 	var/lit = 0	//on or off
 	var/operating = 0//cooldown
 	var/turf/previousturf = null
-	var/obj/item/weapon/weldingtool/weldtool = null
+	var/obj/item/weapon/tool/weldingtool/weldtool = null
 	var/obj/item/device/assembly/igniter/igniter = null
 	var/obj/item/weapon/tank/phoron/ptank = null
 
@@ -144,7 +144,7 @@
 	usr.set_machine(src)
 	if(href_list["light"])
 		if(!ptank)	return
-		if(ptank.air_contents.gas["phoron"] < 1)	return
+		if(ptank.air_contents.gas[GAS_PHORON] < 1)	return
 		if(!status)	return
 		lit = !lit
 		if(lit)
@@ -170,8 +170,9 @@
 /obj/item/weapon/flamethrower/proc/flame_turf(turflist)
 	if(!lit || operating)	return
 	operating = 1
+	playsound(src.loc, 'sound/weapons/flamethrower.ogg', 50, 0)
 	for(var/turf/T in turflist)
-		if(T.density || istype(T, /turf/space))
+		if(T.density)
 			break
 		if(!previousturf && length(turflist)>1)
 			previousturf = get_turf(src)
@@ -193,8 +194,8 @@
 	//Transfer 5% of current tank air contents to turf
 	var/datum/gas_mixture/air_transfer = ptank.air_contents.remove_ratio(0.02*(throw_amount/100))
 	//air_transfer.toxins = air_transfer.toxins * 5 // This is me not comprehending the air system. I realize this is retarded and I could probably make it work without fucking it up like this, but there you have it. -- TLE
-	new/obj/effect/decal/cleanable/liquid_fuel/flamethrower_fuel(target,air_transfer.gas["phoron"],get_dir(loc,target))
-	air_transfer.gas["phoron"] = 0
+	new/obj/effect/decal/cleanable/liquid_fuel/flamethrower_fuel(target,air_transfer.gas[GAS_PHORON],get_dir(loc,target))
+	air_transfer.gas[GAS_PHORON] = 0
 	target.assume_air(air_transfer)
 	//Burn it based on transfered gas
 	//target.hotspot_expose(part4.air_contents.temperature*2,300)
@@ -204,7 +205,7 @@
 
 /obj/item/weapon/flamethrower/full/New(var/loc)
 	..()
-	weldtool = new /obj/item/weapon/weldingtool(src)
+	weldtool = new /obj/item/weapon/tool/weldingtool(src)
 	weldtool.status = 0
 	igniter = new /obj/item/device/assembly/igniter(src)
 	igniter.secured = 0

@@ -48,7 +48,7 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='warning'>[user]'s hand slips, slicing [target]'s throat wth \the [tool]!</span>" , \
 	"<span class='warning'>Your hand slips, slicing [target]'s throat wth \the [tool]!</span>" )
-	affected.take_damage(40, 0, (DAM_SHARP|DAM_EDGE), used_weapon = tool)
+	affected.take_damage(40, DAM_CUT, damsrc = tool)
 	target.losebreath += 10
 
 //////////////////////////////////////////////////////////////////
@@ -88,7 +88,7 @@
 /datum/surgery_step/face/fix_face
 	allowed_tools = list(
 	/obj/item/weapon/retractor = 100, 	\
-	/obj/item/weapon/crowbar = 55,	\
+	/obj/item/weapon/tool/crowbar = 55,	\
 	/obj/item/weapon/material/kitchen/utensil/fork = 75)
 
 	min_duration = 80
@@ -111,7 +111,7 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='warning'>[user]'s hand slips, tearing skin on [target]'s face with \the [tool]!</span>", \
 	"<span class='warning'>Your hand slips, tearing skin on [target]'s face with \the [tool]!</span>")
-	affected.take_damage(10, 0, (DAM_SHARP|DAM_EDGE), used_weapon = tool)
+	affected.take_damage(10, DAM_CUT, damsrc = tool)
 
 //////////////////////////////////////////////////////////////////
 //	facial skin cauterization surgery step
@@ -121,7 +121,7 @@
 	/obj/item/weapon/cautery = 100,			\
 	/obj/item/clothing/mask/smokable/cigarette = 75,	\
 	/obj/item/weapon/flame/lighter = 50,			\
-	/obj/item/weapon/weldingtool = 25
+	/obj/item/weapon/tool/weldingtool = 25
 	)
 
 	min_duration = 70
@@ -148,4 +148,4 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='warning'>[user]'s hand slips, leaving a small burn on [target]'s face with \the [tool]!</span>", \
 	"<span class='warning'>Your hand slips, leaving a small burn on [target]'s face with \the [tool]!</span>")
-	affected.take_damage(0, 4, used_weapon = tool)
+	affected.take_damage(4, DAM_BURN, damsrc = tool)

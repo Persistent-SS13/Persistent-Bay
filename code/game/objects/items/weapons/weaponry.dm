@@ -11,31 +11,10 @@
 	w_class = ITEM_SIZE_SMALL
 
 /obj/item/weapon/nullrod/attack(mob/M as mob, mob/living/user as mob) //Paste from old-code to decult with a null rod.
-	admin_attack_log(user, M, "Attacked using \a [src]", "Was attacked with \a [src]", "used \a [src] to attack")
-
-	user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-	user.do_attack_animation(M)
-	//if(user != M)
-	if(M.mind && M.mind.learned_spells)
-		M.silence_spells(300) //30 seconds
-		to_chat(M, "<span class='danger'>You've been silenced!</span>")
-		return
-
-	if (!istype(user, /mob/living/carbon/human))
-		to_chat(user, "<span class='danger'>You don't have the dexterity to do this!</span>")
-		return
-
-	if ((CLUMSY in user.mutations) && prob(50))
-		to_chat(user, "<span class='danger'>The rod slips out of your hand and hits your head.</span>")
-		user.take_organ_damage(10)
-		user.Paralyse(20)
-		return
-
 	if(cult && iscultist(M))
 		M.visible_message("<span class='notice'>\The [user] waves \the [src] over \the [M]'s head.</span>")
 		cult.offer_uncult(M)
 		return
-
 	..()
 
 /obj/item/weapon/nullrod/afterattack(var/atom/A, var/mob/user, var/proximity)
@@ -89,14 +68,15 @@
 	desc = "It's a net made of green energy."
 	icon = 'icons/effects/effects.dmi'
 	icon_state = "energynet"
-
+	obj_flags = OBJ_FLAG_DAMAGEABLE
 	density = 1
 	opacity = 0
 	mouse_opacity = 1
 	anchored = 1
 	can_buckle = 0 //no manual buckling or unbuckling
+	should_save = 1
 
-	var/health = 25
+	max_health = 25
 	var/countdown = 15
 	var/temporary = 1
 	var/mob/living/carbon/captured = null
@@ -108,7 +88,7 @@
 	desc = "An energized net meant to subdue animals."
 
 	anchored = 0
-	health = 1
+	max_health = 1
 	temporary = 0
 	min_free_time = 0
 	max_free_time = 0
@@ -140,16 +120,14 @@
 		countdown = 0
 	if(countdown <= 0)
 		health = 0
-	healthcheck()
+	update_health()
 
 /obj/effect/energy_net/Move()
 	..()
-
 	if(buckled_mob)
 		buckled_mob.forceMove(src.loc)
 	else
 		countdown = 0
-
 
 /obj/effect/energy_net/proc/capture_mob(mob/living/M)
 	captured = M
@@ -175,26 +153,16 @@
 		layer = ABOVE_HUMAN_LAYER
 		visible_message("\The [M] was caught in [src]!")
 	else
-		to_chat(M,"<span class='warning'>You are free of the net!</span>")
+		to_chat(M,SPAN_WARNING("You are free of the net!"))
 		reset_plane_and_layer()
 
-/obj/effect/energy_net/proc/healthcheck()
-	if(health <=0)
-		set_density(0)
-		if(countdown <= 0)
-			visible_message("<span class='warning'>\The [src] fades away!</span>")
-		else
-			visible_message("<span class='danger'>\The [src] is torn apart!</span>")
-		qdel(src)
-
-/obj/effect/energy_net/bullet_act(var/obj/item/projectile/Proj)
-	health -= Proj.get_structure_damage()
-	healthcheck()
-	return 0
+/obj/effect/energy_net/destroyed(var/damtype)
+	set_density(0)
+	visible_message(SPAN_DANGER("\The [src] is torn apart!"))
+	..()
 
 /obj/effect/energy_net/ex_act()
-	health = 0
-	healthcheck()
+	destroyed(DAM_BURN)
 
 /obj/effect/energy_net/attack_hand(var/mob/user)
 
@@ -202,37 +170,30 @@
 	if(istype(H))
 		if(H.species.can_shred(H))
 			playsound(src.loc, 'sound/weapons/slash.ogg', 80, 1)
-			health -= rand(10, 20)
+			rem_health(rand(10, 20))
 		else
-			health -= rand(1,3)
+			rem_health(rand(1,3))
 
 	else if (HULK in user.mutations)
-		health = 0
+		destroyed()
 	else
-		health -= rand(5,8)
+		rem_health(rand(5,8))
 
-	to_chat(H,"<span class='danger'>You claw at the energy net.</span>")
+	to_chat(H, SPAN_DANGER("You claw at the energy net."))
 
-	healthcheck()
+	update_health()
 	return
-
-/obj/effect/energy_net/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	health -= W.force
-	healthcheck()
-	..()
 
 obj/effect/energy_net/user_unbuckle_mob(mob/user)
 	return escape_net(user)
 
-
 /obj/effect/energy_net/proc/escape_net(mob/user as mob)
 	visible_message(
-		"<span class='danger'>\The [user] attempts to free themselves from \the [src]!</span>",
-		"<span class='warning'>You attempt to free yourself from \the [src]!</span>"
+		SPAN_DANGER("\The [user] attempts to free themselves from \the [src]!"),
+		SPAN_WARNING("You attempt to free yourself from \the [src]!")
 		)
 	if(do_after(user, rand(min_free_time, max_free_time), src, incapacitation_flags = INCAPACITATION_DISABLED))
-		health = 0
-		healthcheck()
+		destroyed()
 		return 1
 	else
 		return 0

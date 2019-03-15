@@ -55,26 +55,74 @@
 	icon = 'icons/obj/clothing/modular_armor.dmi'
 	icon_state = "armor_light"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO
-	armor = list(melee = 30, bullet = 15, laser = 40, energy = 10, bomb = 25, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 30,
+		DAM_PIERCE 	= 25,
+		DAM_CUT 	= 30,
+		DAM_BULLET 	= 15,
+		DAM_LASER 	= 40,
+		DAM_ENERGY 	= 10,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 25,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 1)
 	slot = ACCESSORY_SLOT_ARMOR_C
 
 /obj/item/clothing/accessory/armorplate/medium
 	name = "medium armor plate"
 	desc = "A plasteel-reinforced synthetic armor plate, providing good protection. Attaches to a plate carrier."
 	icon_state = "armor_medium"
-	armor = list(melee = 40, bullet = 40, laser = 40, energy = 25, bomb = 30, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 40,
+		DAM_PIERCE 	= 35,
+		DAM_CUT 	= 40,
+		DAM_BULLET 	= 40,
+		DAM_LASER 	= 50,
+		DAM_ENERGY 	= 25,
+		DAM_BURN 	= 10,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 2)
 
 /obj/item/clothing/accessory/armorplate/tactical
 	name = "tactical armor plate"
 	desc = "A medium armor plate with additional ablative coating. Attaches to a plate carrier."
 	icon_state = "armor_tactical"
-	armor = list(melee = 40, bullet = 40, laser = 60, energy = 35, bomb = 30, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 40,
+		DAM_PIERCE 	= 35,
+		DAM_CUT 	= 40,
+		DAM_BULLET 	= 40,
+		DAM_LASER 	= 60,
+		DAM_ENERGY 	= 40,
+		DAM_BURN 	= 40,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 2)
 
 /obj/item/clothing/accessory/armorplate/merc
 	name = "heavy armor plate"
 	desc = "A ceramics-reinforced synthetic armor plate, providing state of of the art protection. Attaches to a plate carrier."
 	icon_state = "armor_heavy"
-	armor = list(melee = 60, bullet = 60, laser = 60, energy = 40, bomb = 40, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 70,
+		DAM_PIERCE 	= 65,
+		DAM_CUT 	= 70,
+		DAM_BULLET 	= 70,
+		DAM_LASER 	= 60,
+		DAM_ENERGY 	= 40,
+		DAM_BURN 	= 35,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 5)
 
 //Arm guards
 /obj/item/clothing/accessory/armguards
@@ -86,7 +134,19 @@
 	icon_state = "armguards"
 	gender = PLURAL
 	body_parts_covered = ARMS
-	armor = list(melee = 40, bullet = 40, laser = 40, energy = 25, bomb = 30, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 40,
+		DAM_PIERCE 	= 35,
+		DAM_CUT 	= 40,
+		DAM_BULLET 	= 40,
+		DAM_LASER 	= 40,
+		DAM_ENERGY 	= 25,
+		DAM_BURN 	= 25,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 5)
 	slot = ACCESSORY_SLOT_ARMOR_A
 
 /obj/item/clothing/accessory/armguards/blue
@@ -109,7 +169,19 @@
 	name = "heavy arm guards"
 	desc = "A pair of red-trimmed black arm pads reinforced with heavy armor plating. Attaches to a plate carrier."
 	icon_state = "armguards_merc"
-	armor = list(melee = 60, bullet = 60, laser = 60, energy = 40, bomb = 40, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 60,
+		DAM_PIERCE 	= 55,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 60,
+		DAM_LASER 	= 60,
+		DAM_ENERGY 	= 40,
+		DAM_BURN 	= 25,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 10)
 
 //Leg guards
 /obj/item/clothing/accessory/legguards
@@ -121,7 +193,19 @@
 	icon_state = "legguards"
 	gender = PLURAL
 	body_parts_covered = LEGS
-	armor = list(melee = 40, bullet = 40, laser = 40, energy = 25, bomb = 30, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 40,
+		DAM_PIERCE 	= 35,
+		DAM_CUT 	= 40,
+		DAM_BULLET 	= 40,
+		DAM_LASER 	= 40,
+		DAM_ENERGY 	= 25,
+		DAM_BURN 	= 25,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 5)
 	slot = ACCESSORY_SLOT_ARMOR_L
 
 /obj/item/clothing/accessory/legguards/blue
@@ -144,7 +228,19 @@
 	name = "heavy leg guards"
 	desc = "A pair of heavily armored leg pads in red-trimmed black. Attaches to a plate carrier."
 	icon_state = "legguards_merc"
-	armor = list(melee = 60, bullet = 60, laser = 60, energy = 40, bomb = 40, bio = 0, rad = 0)
+	armor  = list(
+		DAM_BLUNT 	= 60,
+		DAM_PIERCE 	= 55,
+		DAM_CUT 	= 60,
+		DAM_BULLET 	= 60,
+		DAM_LASER 	= 60,
+		DAM_ENERGY 	= 40,
+		DAM_BURN 	= 25,
+		DAM_BOMB 	= 40,
+		DAM_EMP 	= 5,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 10)
 
 
 //Decorative attachments

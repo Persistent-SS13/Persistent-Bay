@@ -26,7 +26,7 @@
 							)
 
 /obj/item/weapon/circuitboard/vendor/attackby(obj/item/I, mob/user, params)
-	if(istype(I, /obj/item/weapon/screwdriver))
+	if(istype(I, /obj/item/weapon/tool/screwdriver))
 		set_type(pick(names_paths), user)
 
 
@@ -150,7 +150,7 @@
 							/obj/machinery/smartfridge/drying_rack = "Drying Rack",)
 
 /obj/item/weapon/circuitboard/smartfridge/attackby(obj/item/I, mob/user, params)
-	if(istype(I, /obj/item/weapon/screwdriver))
+	if(istype(I, /obj/item/weapon/tool/screwdriver))
 		set_type(pick(names_paths), user)
 
 /obj/item/weapon/circuitboard/smartfridge/proc/set_type(typepath, mob/user)

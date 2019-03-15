@@ -21,6 +21,7 @@ var/datum/antagonist/godcultist/godcult
 	initial_spawn_req = 2
 	initial_spawn_target = 2
 	antaghud_indicator = "hudcultist"
+	skill_setter = /datum/antag_skill_setter/station
 
 /datum/antagonist/godcultist/New()
 	..()

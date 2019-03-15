@@ -15,11 +15,6 @@
 	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	slot_flags = SLOT_BELT
 
-///obj/item/weapon/reagent_containers/hypospray/New() //comment this to make hypos start off empty
-//	..()
-//	reagents.add_reagent(/datum/reagent/tricordrazine, 30)
-//	return
-
 /obj/item/weapon/reagent_containers/hypospray/do_surgery(mob/living/carbon/M, mob/living/user)
 	if(user.a_intent != I_HELP) //in case it is ever used as a surgery tool
 		return ..()
@@ -105,7 +100,7 @@
 		else
 			to_chat(user,"<span class='notice'>\The [src] already has a vial.</span>")
 	else
-		..()
+		return ..()
 
 /obj/item/weapon/reagent_containers/hypospray/autoinjector
 	name = "autoinjector"
@@ -116,19 +111,19 @@
 	volume = 5
 	var/list/starts_with = list(/datum/reagent/inaprovaline = 5)
 
-/obj/item/weapon/reagent_containers/hypospray/autoinjector/New()
-	..()
-	for(var/T in starts_with)
-		reagents.add_reagent(T, starts_with[T])
+/obj/item/weapon/reagent_containers/hypospray/autoinjector/Initialize()
+	.=..()
+	if(!map_storage_loaded)
+		for(var/T in starts_with)
+			reagents.add_reagent(T, starts_with[T])
 	update_icon()
-	return
 
 /obj/item/weapon/reagent_containers/hypospray/autoinjector/attack(mob/M as mob, mob/user as mob)
-	..()
+	. = ..()
 	if(reagents.total_volume <= 0) //Prevents autoinjectors to be refilled.
 		atom_flags &= ~ATOM_FLAG_OPEN_CONTAINER
 	update_icon()
-	return
+	return .
 
 /obj/item/weapon/reagent_containers/hypospray/autoinjector/update_icon()
 	if(reagents.total_volume > 0)

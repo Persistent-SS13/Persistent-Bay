@@ -12,6 +12,7 @@
 		create_default(player.current)
 	else
 		create_antagonist(player, move_to_spawn, do_not_announce, preserve_appearance)
+		skill_setter.initialize_skills(player.current.skillset)
 		if(!do_not_equip)
 			equip(player.current)
 
@@ -64,7 +65,10 @@
 		faction_members -= player
 		player.special_role = null
 		update_icons_removed(player)
-		BITSET(player.current.hud_updateflag, SPECIALROLE_HUD)
+
+		if(player.current)
+			BITSET(player.current.hud_updateflag, SPECIALROLE_HUD)
+			player.current.reset_skillset() //Reset their skills to be job-appropriate.
 
 		if(!is_special_character(player))
 			player.current.verbs -= /mob/living/proc/write_ambition

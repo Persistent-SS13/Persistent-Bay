@@ -165,9 +165,9 @@
 				if(I.organ_tag == BP_BRAIN)
 					H.confused++
 					H.drowsyness++
-					if(I.damage >= I.min_bruised_damage)
+					if(I.get_damages() >= I.min_bruised_damage)
 						continue
-				I.damage = max(I.damage - (removed), 0)
+				I.add_health(removed)
 
 /datum/reagent/clonexadone
 	name = "Clonexadone"
@@ -192,9 +192,9 @@
 				if(I.organ_tag == BP_BRAIN)
 					H.confused++
 					H.drowsyness++
-					if(I.damage >= I.min_bruised_damage)
+					if(I.get_damages() >= I.min_bruised_damage)
 						continue
-				I.damage = max(I.damage - (removed), 0)
+				I.add_health(removed)
 
 /* Painkillers */
 
@@ -350,8 +350,8 @@
 		var/mob/living/carbon/human/H = M
 		var/obj/item/organ/internal/eyes/E = H.internal_organs_by_name[BP_EYES]
 		if(E && istype(E))
-			if(E.damage > 0)
-				E.damage = max(E.damage - 5 * removed, 0)
+			if(E.isdamaged())
+				E.add_health(E.get_damages() - 5 * removed)
 
 /datum/reagent/peridaxon
 	name = "Peridaxon"
@@ -372,9 +372,9 @@
 			if(I.organ_tag == BP_BRAIN)
 				H.confused++
 				H.drowsyness++
-				if(I.damage >= I.min_bruised_damage)
+				if(I.get_damages() >= I.min_bruised_damage)
 					continue
-			I.damage = max(I.damage - removed, 0)
+			I.add_health(removed)
 
 /datum/reagent/ryetalyn
 	name = "Ryetalyn"
@@ -460,7 +460,7 @@
 	M.radiation = max(M.radiation - 70 * removed, 0)
 	M.adjustToxLoss(-10 * removed)
 	if(prob(60))
-		M.take_organ_damage(4 * removed, 0)
+		M.apply_damage(4 * removed)
 
 /datum/reagent/spaceacillin
 	name = "Spaceacillin"
@@ -761,7 +761,7 @@
 // Sleeping agent, produced by breathing N2O.
 /datum/reagent/nitrous_oxide
 	name = "Nitrous Oxide"
-	gas_id = "sleeping_agent"
+	gas_id = GAS_N2O
 	description = "An ubiquitous sleeping agent also known as laughing gas."
 	taste_description = "dental surgery"
 	reagent_state = LIQUID
@@ -771,6 +771,7 @@
 
 /datum/reagent/nitrous_oxide/xenon
 	name = "Xenon"
+	gas_id = GAS_XENON
 	description = "A nontoxic gas used as a general anaesthetic."
 	do_giggle = FALSE
 	taste_description = "nothing"

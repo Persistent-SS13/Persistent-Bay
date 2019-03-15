@@ -56,7 +56,7 @@
 			var/mob/living/M = target
 			if(M.stat>1) return
 			if(chassis.occupant.a_intent == I_HURT)
-				M.take_overall_damage(dam_force)
+				M.take_overall_damage(dam_force, DAM_BLUNT)
 				M.adjustOxyLoss(round(dam_force/2))
 				M.updatehealth()
 				occupant_message("<span class='warning'>You squeeze [target] with [src.name]. Something cracks.</span>")
@@ -865,11 +865,11 @@
 			return
 		var/datum/gas_mixture/GM = new
 		if(prob(10))
-			T.assume_gas("phoron", 100, 1500+T0C)
+			T.assume_gas(GAS_PHORON, 100, 1500+T0C)
 			T.visible_message("The [src] suddenly disgorges a cloud of heated phoron.")
 			destroy()
 		else
-			T.assume_gas("phoron", 5, istype(T) ? T.air.temperature : T20C)
+			T.assume_gas(GAS_PHORON, 5, istype(T) ? T.air.temperature : T20C)
 			T.visible_message("The [src] suddenly disgorges a cloud of phoron.")
 		T.assume_air(GM)
 		return

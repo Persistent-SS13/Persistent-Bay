@@ -5,7 +5,7 @@ var/datum/species/shapeshifter/promethean/prometheans
 
 	name =             SPECIES_PROMETHEAN
 	name_plural =      "Prometheans"
-	blurb =            "What has Science done?"
+	description =            "What has Science done?"
 	show_ssd =         "totally quiescent"
 	death_message =    "rapidly loses cohesion, splattering across the ground..."
 	knockout_message = "collapses inwards, forming a disordered puddle of goo."
@@ -99,8 +99,8 @@ var/datum/species/shapeshifter/promethean/prometheans
 	// Theoretically the only internal organ a slime will have
 	// is the slime core. but we might as well be thorough.
 	for(var/obj/item/organ/I in H.internal_organs)
-		if(I.damage > 0)
-			I.damage = max(I.damage - heal_rate, 0)
+		if(I.isdamaged())
+			I.add_health(heal_rate)
 			if (prob(5))
 				H << "<span class='notice'>You feel a soothing sensation within your [I.name]...</span>"
 			return 1

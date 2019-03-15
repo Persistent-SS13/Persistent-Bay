@@ -2,10 +2,9 @@
 	name = "ion bolt"
 	icon_state = "ion"
 	fire_sound = 'sound/weapons/Laser.ogg'
-	damage = 0
-	damage_type = BURN
-	nodamage = 1
-	check_armour = "energy"
+	force = 0
+	damtype = DAM_EMP
+	nodamage = TRUE
 	var/pulse_range = 1
 
 	on_hit(var/atom/target, var/blocked = 0)
@@ -19,10 +18,9 @@
 /obj/item/projectile/bullet/gyro
 	name ="explosive bolt"
 	icon_state= "bolter"
-	damage = 25
-	check_armour = "bullet"
-	sharp = 1
-	edge = 1
+	force = 25
+	sharpness = 1
+	mass = 0.012
 
 	on_hit(var/atom/target, var/blocked = 0)
 		explosion(target, -1, 0, 2)
@@ -32,11 +30,10 @@
 	name = "freeze beam"
 	icon_state = "ice_2"
 	fire_sound = 'sound/weapons/pulse3.ogg'
-	damage = 0
-	damage_type = BURN
-	nodamage = 1
-	check_armour = "energy"
-	var/temperature = 300
+	force = 0
+	damtype = DAM_BURN
+	nodamage = TRUE
+	temperature = T0C - 80
 
 
 	on_hit(var/atom/target, var/blocked = 0)//These two could likely check temp protection on the mob
@@ -49,10 +46,9 @@
 	name = "meteor"
 	icon = 'icons/obj/meteor.dmi'
 	icon_state = "smallf"
-	damage = 0
-	damage_type = BRUTE
-	nodamage = 1
-	check_armour = "bullet"
+	force = 0
+	damtype = DAM_BULLET
+	nodamage = TRUE
 
 	Bump(atom/A as mob|obj|turf|area)
 		if(A == firer)
@@ -79,10 +75,9 @@
 	name = "alpha somatoray"
 	icon_state = "energy"
 	fire_sound = 'sound/effects/stealthoff.ogg'
-	damage = 0
-	damage_type = TOX
-	nodamage = 1
-	check_armour = "energy"
+	force = 0
+	damtype = DAM_RADS
+	nodamage = TRUE
 
 	on_hit(var/atom/target, var/blocked = 0)
 		var/mob/living/M = target
@@ -90,7 +85,7 @@
 			var/mob/living/carbon/human/H = M
 			if((H.species.species_flags & SPECIES_FLAG_IS_PLANT) && (H.nutrition < 500))
 				if(prob(15))
-					H.apply_effect((rand(30,80)),IRRADIATE,blocked = H.getarmor(null, "rad"))
+					H.apply_effect((rand(30,80)),IRRADIATE,blocked = H.getarmor(null, DAM_RADS))
 					H.Weaken(5)
 					for (var/mob/V in viewers(src))
 						V.show_message("<span class='warning'>[M] writhes in pain as \his vacuoles boil.</span>", 3, "<span class='warning'>You hear the crunching of leaves.</span>", 2)
@@ -113,20 +108,18 @@
 	name = "gamma somatoray"
 	icon_state = "energy2"
 	fire_sound = 'sound/effects/stealthoff.ogg'
-	damage = 0
-	damage_type = TOX
-	nodamage = 1
-	check_armour = "energy"
+	force = 0
+	damtype = DAM_RADS
+	nodamage = TRUE
 	var/decl/plantgene/gene = null
 
 /obj/item/projectile/energy/florayield
 	name = "beta somatoray"
 	icon_state = "energy2"
 	fire_sound = 'sound/effects/stealthoff.ogg'
-	damage = 0
-	damage_type = TOX
-	nodamage = 1
-	check_armour = "energy"
+	force = 0
+	damtype = DAM_RADS
+	nodamage = TRUE
 
 	on_hit(var/atom/target, var/blocked = 0)
 		var/mob/M = target
@@ -147,23 +140,22 @@
 		if(ishuman(target))
 			var/mob/living/carbon/human/M = target
 			M.confused += rand(5,8)
+
 /obj/item/projectile/chameleon
 	name = "bullet"
 	icon_state = "bullet"
-	damage = 1 // stop trying to murderbone with a fake gun dumbass!!!
-	embed = 0 // nope
-	nodamage = 1
-	damage_type = PAIN
+	force = 1 // stop trying to murderbone with a fake gun dumbass!!!
+	embed = FALSE // nope
+	nodamage = TRUE
+	damtype = DAM_PAIN
 	muzzle_type = /obj/effect/projectile/bullet/muzzle
 
 /obj/item/projectile/plasma
 	name = "plasma blast"
 	icon_state = "purplelaser"
-	damage_type = BRUTE
-	check_armour = "energy"
-	sharp = 1
-	edge = 1
-	damage = 20
+	damtype = DAM_ENERGY
+	sharpness = 1
+	force = 20
 	var/pressure_decrease_active = FALSE
 	var/pressure_decrease = 0.25
 	kill_count=15
@@ -172,5 +164,5 @@
 		. = ..()
 		if(!is_below_sound_pressure(get_turf(src)))
 			name = "weakened [name]"
-			damage = damage * pressure_decrease
+			force = force * pressure_decrease
 			pressure_decrease_active = TRUE

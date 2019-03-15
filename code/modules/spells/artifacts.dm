@@ -8,9 +8,9 @@
 	throw_speed = 3
 	throw_range = 7
 	throwforce = 10
-	damtype = BURN
+	damtype = DAM_BURN
 	force = 10
-	hitsound = 'sound/items/welder2.ogg'
+	sound_hit = 'sound/items/welder2.ogg'
 
 /obj/item/weapon/scrying/attack_self(mob/user as mob)
 	if((user.mind && !wizards.is_antagonist(user.mind)))

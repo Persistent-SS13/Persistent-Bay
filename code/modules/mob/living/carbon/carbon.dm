@@ -56,7 +56,7 @@
 						organ.take_damage(d, 0)
 					H.updatehealth()
 				else
-					src.take_organ_damage(d)
+					src.apply_damage(d)
 				user.visible_message("<span class='danger'>[user] attacks [src]'s stomach wall with the [I.name]!</span>")
 				playsound(user.loc, 'sound/effects/attackblob.ogg', 50, 1)
 
@@ -135,7 +135,7 @@
 		return 0
 	if(shock_damage < 1)
 		shock_damage = 1
-	apply_damage(shock_damage, BURN, def_zone, used_weapon="Electrocution")
+	apply_damage(shock_damage, DAM_ELECTRIC, def_zone, used_weapon="Electrocution")
 	return(shock_damage)
 
 /mob/proc/swap_hand()

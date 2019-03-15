@@ -5,10 +5,11 @@
 	program_icon_state = "generic"
 	program_menu_icon = "folder-collapsed"
 	size = 8
-	requires_ntnet = 0
-	available_on_ntnet = 0
-	undeletable = 1
+	requires_ntnet = FALSE
+	available_on_ntnet = FALSE
+	undeletable = TRUE
 	nanomodule_path = /datum/nano_module/program/computer_filemanager/
+	usage_flags = PROGRAM_ALL
 	var/open_file
 	var/error
 

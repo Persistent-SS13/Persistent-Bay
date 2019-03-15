@@ -1,0 +1,27 @@
+<h1>Area Air Control</h1>
+<div class="item">
+	<div class="itemContentWide">{{:data.status}}</div>
+	<div class="itemContentWide">{{:data.zones}}</div>
+	<div class="itemContent">{{:helper.link('Scan', null, {'scan' : 1})}}</div>
+</div>
+
+{{for data.scrubbers}}
+	<div class="item">
+		<div class="itemLabelWide">{{:value.name}}</div>
+		<div class="item">
+			<div class="itemLabel">Pressure:</div>
+			<div class="itemContent">{{:value.pressure}} kPa</div>
+		</div>
+		<div class="item">
+			<div class="itemLabel">Flow Rate:</div>
+			<div class="itemContent">{{:value.flowrate}} L/s</div>
+		</div>
+		<div class="item">
+			<div class="itemLabel">Load:</div>
+			<div class="itemContent">{{:value.load}} W</div>
+		</div>
+		<div class="item">
+			{{:helper.link( value.power? 'On' : 'Off', null, {'toggle' : 1, 'scrub' : value.id})}}
+		</div>
+	</div>
+{{/for}}

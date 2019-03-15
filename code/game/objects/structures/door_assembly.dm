@@ -5,6 +5,7 @@
 	anchored = 0
 	density = 1
 	w_class = ITEM_SIZE_NO_CONTAINER
+	max_health = 100
 	var/state = 0
 	var/base_icon_state = ""
 	var/base_name = "Airlock"
@@ -97,7 +98,7 @@
 		return
 
 	if(isWelder(W) && ( (istext(glass)) || (glass == 1) || (!anchored) ))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if (WT.remove_fuel(0, user))
 			playsound(src.loc, 'sound/items/Welder2.ogg', 50, 1)
 			if(istext(glass))

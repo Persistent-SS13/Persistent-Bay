@@ -1,12 +1,10 @@
 /obj/machinery/atmospherics/trinary/mixer
 	icon = 'icons/atmos/mixer.dmi'
 	icon_state = "map"
-	density = 0
+	density = FALSE
 	level = 1
-
 	name = "Gas mixer"
-
-	use_power = 1
+	use_power = POWER_USE_IDLE
 	idle_power_usage = 150		//internal circuitry, friction losses and stuff
 	power_rating = 3700	//This also doubles as a measure of how powerful the mixer is, in Watts. 3700 W ~ 5 HP
 
@@ -72,7 +70,7 @@
 	last_power_draw = 0
 	last_flow_rate = 0
 
-	if((stat & (NOPOWER|BROKEN)) || !use_power)
+	if(inoperable() || !use_power)
 		return
 
 	//Figure out the amount of moles to transfer
@@ -171,14 +169,11 @@
 
 obj/machinery/atmospherics/trinary/mixer/t_mixer
 	icon_state = "tmap"
-
 	dir = SOUTH
 	initialize_directions = SOUTH|EAST|WEST
-
 	//node 3 is the outlet, nodes 1 & 2 are intakes
 
-obj/machinery/atmospherics/trinary/mixer/t_mixer/New()
-	..()
+obj/machinery/atmospherics/trinary/mixer/t_mixer/setup_initialize_directions()
 	switch(dir)
 		if(NORTH)
 			initialize_directions = EAST|NORTH|WEST
@@ -217,26 +212,11 @@ obj/machinery/atmospherics/trinary/mixer/t_mixer/atmos_init()
 
 obj/machinery/atmospherics/trinary/mixer/m_mixer
 	icon_state = "mmap"
-
 	dir = SOUTH
 	initialize_directions = SOUTH|NORTH|EAST
-
 	//node 3 is the outlet, nodes 1 & 2 are intakes
 
-obj/machinery/atmospherics/trinary/mixer/m_mixer/New()
-	..()
-	switch(dir)
-		if(NORTH)
-			initialize_directions = WEST|NORTH|SOUTH
-		if(SOUTH)
-			initialize_directions = SOUTH|EAST|NORTH
-		if(EAST)
-			initialize_directions = EAST|WEST|NORTH
-		if(WEST)
-			initialize_directions = WEST|SOUTH|EAST
-
-obj/machinery/atmospherics/trinary/mixer/m_mixer/after_load()
-	..()
+obj/machinery/atmospherics/trinary/mixer/m_mixer/setup_initialize_directions()
 	switch(dir)
 		if(NORTH)
 			initialize_directions = WEST|NORTH|SOUTH

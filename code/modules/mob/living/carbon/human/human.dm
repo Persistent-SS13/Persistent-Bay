@@ -109,7 +109,7 @@
 		if (1.0)
 			b_loss = 400
 			f_loss = 100
-			if (!prob(getarmor(null, "bomb")))
+			if (!prob(getarmor(null, DAM_BOMB)))
 				gib()
 				return
 			else
@@ -138,13 +138,13 @@
 				Paralyse(10)
 
 	// factor in armour
-	var/protection = blocked_mult(getarmor(null, "bomb"))
+	var/protection = blocked_mult(getarmor(null, DAM_BOMB))
 	b_loss *= protection
 	f_loss *= protection
 
 	// focus most of the blast on one organ
 	var/obj/item/organ/external/take_blast = pick(organs)
-	take_blast.take_damage(b_loss * 0.7, f_loss * 0.7, used_weapon = "Explosive blast")
+	take_blast.take_damage(damlist = list(DAM_BOMB = b_loss * 0.7, DAM_BURN = f_loss * 0.7), damsrc = "Explosive blast")
 
 	// distribute the remaining 30% on all limbs equally (including the one already dealt damage)
 	b_loss *= 0.3
@@ -159,7 +159,7 @@
 			loss_val = 0.4
 		else
 			loss_val = 0.05
-		temp.take_damage(b_loss * loss_val, f_loss * loss_val, used_weapon = weapon_message)
+		temp.take_damage(damlist = list(DAM_BOMB = b_loss * loss_val, DAM_BURN = f_loss * loss_val), damsrc = weapon_message)
 
 /mob/living/carbon/human/proc/implant_loyalty(mob/living/carbon/human/M, override = FALSE) // Won't override by default.
 	if(!config.use_loyalty_implants && !override) return // Nuh-uh.
@@ -443,7 +443,7 @@
 					else
 						perpname = name
 
-					var/datum/computer_file/crew_record/R = faction.get_record(perpname)
+					var/datum/computer_file/report/crew_record/R = faction.get_record(perpname)
 					if(R)
 						var/setcriminal = input(usr, "Specify a new criminal status for this person.", "Security HUD", R.get_criminalStatus()) in GLOB.security_statuses as null|text
 						if(hasHUD(usr, "security") && setcriminal)
@@ -480,7 +480,7 @@
 							perpname = tempPda.owner
 					else
 						perpname = src.name
-					var/datum/computer_file/crew_record/E = faction.get_record(perpname)
+					var/datum/computer_file/report/crew_record/E = faction.get_record(perpname)
 					if(E)
 						if(hasHUD(usr,"security"))
 							to_chat(usr, "<b>Name:</b> [E.get_name()]")
@@ -510,7 +510,7 @@
 					else
 						perpname = src.name
 
-					var/datum/computer_file/crew_record/E = faction.get_record(perpname)
+					var/datum/computer_file/report/crew_record/E = faction.get_record(perpname)
 					if(E)
 						var/setmedical = input(usr, "Specify a new medical status for this person.", "Medical HUD", E.get_status()) in GLOB.physical_statuses as null|text
 						if(hasHUD(usr,"medical") && setmedical)
@@ -543,7 +543,7 @@
 							perpname = tempPda.owner
 					else
 						perpname = src.name
-					var/datum/computer_file/crew_record/E = get_crewmember_record(perpname)
+					var/datum/computer_file/report/crew_record/E = get_crewmember_record(perpname)
 					if(E)
 						if(hasHUD(usr,"medical"))
 							to_chat(usr, "<b>Name:</b> [E.get_name()]")
@@ -951,7 +951,7 @@
 	var/obj/item/organ/external/groin = src.get_organ(BP_GROIN)
 	if(groin && stomach_contents && stomach_contents.len)
 		for(var/obj/item/O in stomach_contents)
-			if(O.edge || O.sharp)
+			if(O.sharpness || ISDAMTYPE(O.damtype, DAM_PIERCE) || ISDAMTYPE(O.damtype, DAM_CUT))
 				if(prob(1))
 					stomach_contents.Remove(O)
 					if(can_feel_pain())

@@ -13,23 +13,33 @@
 	throwpass = 1
 	layer = TABLE_LAYER
 
-	var/health = 100
+	mass = 20
+	max_health = 100
+	damthreshold_brute 	= 5
+	damthreshold_burn	= 5
 	var/paint_color
 	var/stripe_color
 
 	blend_objects = list(/obj/machinery/door, /turf/simulated/wall) // Objects which to blend with
 	noblend_objects = list(/obj/machinery/door/window)
-	var/material/material = MATERIAL_STEEL
+	var/material/material = new /material/steel
 
 /obj/structure/wall_frame/New(var/new_loc, var/materialtype)
 	..(new_loc)
-
 	if(!materialtype)
-		materialtype = MATERIAL_STEEL
-	material = SSmaterials.get_material_by_name(materialtype)
-	health = material.integrity
+		materialtype = new /material/steel
+	
+	//Since people keeps passing strings for some reasons lets double check
+	if(istext(materialtype))
+		material = SSmaterials.get_material_by_name(materialtype)
+	else if(istype(materialtype, /material))
+		material = materialtype
 
-	update_connections(1)
+/obj/structure/wall_frame/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		health = material.integrity
+	update_connections(TRUE)
 	update_icon()
 
 /obj/structure/wall_frame/examine(mob/user)
@@ -119,8 +129,7 @@
 			to_chat(user, "<span class='notice'>You dissasembled the low wall!</span>")
 			dismantle()
 
-	..()
-	return
+	return ..()
 
 /obj/structure/wall_frame/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
 	if(air_group || (height==0)) return 1
@@ -156,8 +165,25 @@
 
 	..()
 
+
+/obj/structure/wall_frame/dismantle()
+	refund_matter()
+	qdel(src)
+
+/obj/structure/wall_frame/destroyed()
+	dismantle()
+
+//Subtypes
+/obj/structure/wall_frame/standard
+	paint_color = COLOR_GUNMETAL
+
+/obj/structure/wall_frame/titanium
+	material = new /material/titanium
+
+/obj/structure/wall_frame/hull
+	paint_color = COLOR_HULL
+//Hull init
 /obj/structure/wall_frame/hull/Initialize()
-	. = ..()
 	if(prob(40))
 		var/spacefacing = FALSE
 		for(var/direction in GLOB.cardinal)
@@ -169,40 +195,4 @@
 		if(spacefacing)
 			var/bleach_factor = rand(10,50)
 			paint_color = adjust_brightness(paint_color, bleach_factor)
-		update_icon()
-
-/obj/structure/wall_frame/bullet_act(var/obj/item/projectile/Proj)
-	var/proj_damage = Proj.get_structure_damage()
-	var/damage = min(proj_damage, 100)
-	take_damage(damage)
-	return
-
-/obj/structure/wall_frame/hitby(AM as mob|obj, var/speed=THROWFORCE_SPEED_DIVISOR)
-	..()
-	if(ismob(AM))
-		return
-	var/obj/O = AM
-	var/tforce = O.throwforce * (speed/THROWFORCE_SPEED_DIVISOR)
-	if (tforce < 15)
-		return
-	take_damage(tforce)
-
-/obj/structure/wall_frame/proc/take_damage(damage)
-	health -= damage
-	if(health <= 0)
-		dismantle()
-
-/obj/structure/wall_frame/proc/dismantle()
-	if(material)
-		material.place_sheet(get_turf(src), 2)
-	qdel(src)
-
-//Subtypes
-/obj/structure/wall_frame/standard
-	paint_color = COLOR_GUNMETAL
-
-/obj/structure/wall_frame/titanium
-	material = MATERIAL_TITANIUM
-
-/obj/structure/wall_frame/hull
-	paint_color = COLOR_HULL
+	. = ..()

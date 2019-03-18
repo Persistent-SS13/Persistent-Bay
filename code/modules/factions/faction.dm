@@ -26,7 +26,7 @@ var/PriorityQueue/all_feeds
 	var/approved = 0
 	var/purpose = ""
 	var/datum/money_account/signed_account
-	var/datum/computer_file/crew_record/signed_record
+	var/datum/computer_file/report/crew_record/signed_record
 
 	var/ownership = 1 // how many stocks the contract is worth (if a stock contract)
 	var/pay_to = ""
@@ -83,7 +83,7 @@ var/PriorityQueue/all_feeds
 	if(!usr || (usr.stat || usr.restrained()))
 		return
 	if(href_list["pay"])
-		var/datum/computer_file/crew_record/R = Retrieve_Record(usr.real_name)
+		var/datum/computer_file/report/crew_record/R = Retrieve_Record(usr.real_name)
 		if(!R)
 			to_chat(usr, "Record not found. Contact AI.")
 			message_admins("record not found for user [usr.real_name]")

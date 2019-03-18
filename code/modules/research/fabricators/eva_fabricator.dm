@@ -20,21 +20,23 @@
 										// in addition to any material costs.
 
 /obj/machinery/fabricator/eva_fabricator/can_connect(var/datum/world_faction/trying, var/mob/M)
-	if(!trying.limits) return 0
+	var/datum/machine_limits/limits = trying.get_limits()
+	
+	
 	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(req_access_faction)))
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
-	if(trying.limits.limit_voidfab <= trying.limits.voidfabs.len)
+	if(limits.limit_voidfab <= limits.voidfabs.len)
 		if(M)
 			to_chat(M, "[trying.name] cannot connect any more machines of this type.")
 		return 0
-	trying.limits.voidfabs |= src
+	limits.voidfabs |= src
 	req_access_faction = trying.uid
 	connected_faction = src
 
 /obj/machinery/fabricator/eva_fabricator/can_disconnect(var/datum/world_faction/trying, var/mob/M)
-	if(!trying.limits) return 0
-	trying.limits.voidfabs -= src
+	var/datum/machine_limits/limits = trying.get_limits()
+	limits.voidfabs -= src
 	req_access_faction = ""
 	connected_faction = null
 	if(M) to_chat(M, "The machine has been disconnected.")

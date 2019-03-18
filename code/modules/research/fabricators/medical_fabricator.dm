@@ -12,21 +12,22 @@
 										// in addition to any material costs.
 
 /obj/machinery/fabricator/medical_fabricator/can_connect(var/datum/world_faction/trying, var/mob/M)
-	if(!trying.limits) return 0
+	var/datum/machine_limits/limits = trying.get_limits()
 	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(req_access_faction)))
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
-	if(trying.limits.limit_medicalfab <= trying.limits.medicalfabs.len)
+	if(limits.limit_medicalfab <= limits.medicalfabs.len)
 		if(M)
 			to_chat(M, "[trying.name] cannot connect any more machines of this type.")
 		return 0
-	trying.limits.medicalfabs |= src
+	limits.medicalfabs |= src
 	req_access_faction = trying.uid
 	connected_faction = src
 
 /obj/machinery/fabricator/medical_fabricator/can_disconnect(var/datum/world_faction/trying, var/mob/M)
-	if(trying.limits)
-		trying.limits.medicalfabs -= src
+	var/datum/machine_limits/limits = trying.get_limits()
+	if(limits)
+		limits.medicalfabs -= src
 	req_access_faction = ""
 	connected_faction = null
 	if(M) to_chat(M, "The machine has been disconnected.")

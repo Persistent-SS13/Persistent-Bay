@@ -1,6 +1,6 @@
 /datum/computer_file/program/governor
-	filename = "governor"
-	filedesc = "Nexus City Governor Control"
+	filename = "ceo"
+	filedesc = "Business CEO Panel"
 	program_icon_state = "comm"
 	program_menu_icon = "flag"
 	nanomodule_path = /datum/nano_module/program/governor

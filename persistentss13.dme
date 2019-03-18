@@ -2002,6 +2002,7 @@
 #include "code\modules\modular_computers\file_system\programs\antagonist\dos.dm"
 #include "code\modules\modular_computers\file_system\programs\antagonist\hacked_camera.dm"
 #include "code\modules\modular_computers\file_system\programs\antagonist\revelation.dm"
+#include "code\modules\modular_computers\file_system\programs\business\registration.dm"
 #include "code\modules\modular_computers\file_system\programs\command\buisness.dm"
 #include "code\modules\modular_computers\file_system\programs\command\business_core.dm"
 #include "code\modules\modular_computers\file_system\programs\command\card.dm"

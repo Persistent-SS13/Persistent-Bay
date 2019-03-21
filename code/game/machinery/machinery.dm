@@ -97,7 +97,7 @@ Class Procs:
 	icon = 'icons/obj/stationobjs.dmi'
 	w_class = ITEM_SIZE_NO_CONTAINER
 	obj_flags = OBJ_FLAG_DAMAGEABLE
-	layer = 2.9
+	layer = MACHINERY_LAYER
 	var/stat = 0
 	var/emagged = 0
 	var/malf_upgraded = 0
@@ -453,11 +453,11 @@ Class Procs:
 /obj/machinery/proc/default_deconstruction_screwdriver(var/mob/user, var/obj/item/weapon/tool/screwdriver/S)
 	if(!istype(S))
 		return 0
-	playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
-	panel_open = !panel_open
-	to_chat(user, SPAN_NOTICE("You [panel_open ? "open" : "close"] the maintenance hatch of \the [src]."))
-	update_icon()
-	return 1
+	if(S.use_tool(user, src, 1 SECOND))
+		panel_open = !panel_open
+		to_chat(user, SPAN_NOTICE("You [panel_open ? "open" : "close"] the maintenance hatch of \the [src]."))
+		update_icon()
+		return 1
 
 /obj/machinery/proc/default_part_replacement(var/mob/user, var/obj/item/weapon/storage/part_replacer/R)
 	if(!istype(R))
@@ -509,7 +509,7 @@ Class Procs:
 	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
 	return T && T.is_connected()
 
-/obj/machinery/proc/create_transmitter(var/id, var/frequency = 0, var/filter = RADIO_DEFAULT, var/range = null, var/filterout = null)
+/obj/machinery/proc/create_transmitter(var/id, var/frequency, var/filter = RADIO_DEFAULT, var/range = null, var/filterout = null)
 	if(has_transmitter())
 		delete_transmitter()
 	set_extension(src, RADIO_TRANSMITTER_TYPE, RADIO_TRANSMITTER_TYPE, frequency, id, range, filter, filterout)
@@ -549,13 +549,6 @@ Class Procs:
 	if(T)
 		return T.match_id(signal)
 	return FALSE
-
-//Returns the target id_tag of the specified signal
-// /obj/machinery/proc/signal_target_id(var/datum/signal/signal)
-// 	var/datum/extension/interactive/radio_transmitter/T = get_transmitter()
-// 	if(T)
-// 		return T.match_target(signal)
-// 	return null
 
 /obj/machinery/proc/set_radio_filter(var/filter as text)
 	src.radio_filter_in = filter
@@ -620,7 +613,7 @@ Class Procs:
 	T.broadcast_signal(signal, overridefilter, overridefreq)
 	return TRUE
 
-//Signals received go straight to the machine's topic handling, so handling radio signal is seamless.
+//Signals matching this one's frequency and etc are captured here
 /obj/machinery/receive_signal(var/datum/signal/signal, var/receive_method, var/receive_param)
 	if(!signal || !has_transmitter() || inoperable() || (signal && signal.source == src) || (signal && signal.source == null))
 		return
@@ -631,11 +624,6 @@ Class Procs:
 //Signals received by default go straight to the machine's topic handling, so handling radio signal is seamless.
 /obj/machinery/proc/OnSignal(var/datum/signal/signal)
 	return
-//	return OnTopic(usr, signal.data, GLOB.default_state)
-
-//Used to emit status updates to any machines listening to this one
-// /obj/machinery/proc/broadcast_status()
-// 	return
 
 //Used to generate a id_tag that would be unique to the machine at that specific coordinate
 /obj/machinery/proc/make_loc_string_id(var/prefix)
@@ -645,7 +633,7 @@ Class Procs:
 // Damage procs
 //----------------------------------
 /obj/machinery/update_health(var/damagetype)
-	..(damagetype)
+	..()
 	//Determine if we're broken or not
 	if(health <= (max_health * break_threshold))
 		broken(damagetype)

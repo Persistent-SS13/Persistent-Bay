@@ -214,6 +214,9 @@ Class Procs:
 	update_icon()
 
 /obj/machinery/proc/ison()
+	return !isoff()
+
+/obj/machinery/proc/isactive()
 	return use_power == POWER_USE_ACTIVE
 
 /obj/machinery/proc/isidle()
@@ -223,6 +226,9 @@ Class Procs:
 	return use_power == POWER_USE_OFF
 
 /obj/machinery/proc/turn_on()
+	turn_active()
+
+/obj/machinery/proc/turn_active()
 	update_use_power(POWER_USE_ACTIVE)
 	update_icon()
 

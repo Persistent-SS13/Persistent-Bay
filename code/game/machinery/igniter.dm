@@ -55,7 +55,7 @@
 		if (isturf(location))
 			location.hotspot_expose(1000,500,1)
 
-/obj/machinery/igniter/turn_on()
+/obj/machinery/igniter/turn_active()
 	use_power(50)
 	time_next_spark = world.time + 1 SECONDS
 	..()
@@ -64,7 +64,7 @@
 	if(ison())
 		turn_idle()
 	else
-		turn_on()
+		turn_active()
 
 /obj/machinery/igniter/interact()
 	toggle()

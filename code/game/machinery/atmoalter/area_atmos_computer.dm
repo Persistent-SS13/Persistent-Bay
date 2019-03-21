@@ -65,10 +65,10 @@
 				connectedscrubbers -= scrubber
 				src.updateUsrDialog()
 			return
-		if(scrubber.ison())
+		if(scrubber.isactive())
 			scrubber.turn_idle()
 		else
-			scrubber.turn_on()
+			scrubber.turn_active()
 
 
 /obj/machinery/computer/area_atmos/proc/validscrubber( var/obj/machinery/portable_atmospherics/powered/scrubber/huge/scrubber as obj )

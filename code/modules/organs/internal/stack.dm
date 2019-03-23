@@ -193,11 +193,11 @@ GLOBAL_LIST_EMPTY(neural_laces)
 			if(record)
 				var/citizenshipp
 				switch(record.citizenship)
-					if(1)
+					if(RESIDENT)
 						citizenshipp = "Resident"
-					if(2)
+					if(CITIZEN)
 						citizenshipp = "Citizen"
-					if(3)
+					if(PRISONER)
 						citizenshipp = "Prisoner"
 
 				data["citizenship_status"] = citizenshipp

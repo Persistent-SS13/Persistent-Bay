@@ -48,11 +48,11 @@ FIELD_SHORT_SECURE("DNA", dna, core_access_security_programs)
 FIELD_SHORT_SECURE("Fingerprint", fingerprint, core_access_security_programs)
 
 // EMPLOYMENT RECORDS
-FIELD_LONG_SECURE("Employment Record", emplRecord, core_access_employee_records)
-FIELD_SHORT_SECURE("Home System", homeSystem, core_access_employee_records)
-FIELD_SHORT_SECURE("Faction", faction, core_access_employee_records)
-FIELD_SHORT_SECURE("Religion", religion, core_access_employee_records)
-FIELD_LONG_SECURE("Qualifications", skillset, core_access_employee_records)
+FIELD_LONG_SECURE("Employment Record", emplRecord, core_access_reassignment)
+FIELD_SHORT_SECURE("Home System", homeSystem, core_access_reassignment)
+FIELD_SHORT_SECURE("Faction", faction, core_access_reassignment)
+FIELD_SHORT_SECURE("Religion", religion, core_access_reassignment)
+FIELD_LONG_SECURE("Qualifications", skillset, core_access_reassignment)
 
 // ANTAG RECORDS
 FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)

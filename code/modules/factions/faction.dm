@@ -733,6 +733,9 @@ var/PriorityQueue/all_feeds
 	var/datum/assignment/councillor_assignment
 	var/datum/assignment/judge_assignment
 	var/datum/assignment/governor_assignment
+	var/datum/assignment/resident_assignment
+	var/datum/assignment/citizen_assignment
+	var/datum/assignment/prisoner_assignment
 
 	var/datum/assignment_category/special_category
 
@@ -1249,8 +1252,12 @@ var/PriorityQueue/all_feeds
 	var/user_leader = 0
 	var/target_leader = 0
 	var/same_department = 0
+	var/user_auth = 0
+	var/target_auth = 0
+	
 	var/datum/assignment/assignment = get_assignment(R.assignment_uid, R.get_name())
 	if(assignment)
+		user_auth = assignment.edit_authority
 		if(assignment.parent)
 			user_command = assignment.parent.command_faction
 			if(assignment.parent.head_position && assignment.parent.head_position.name == assignment.name)
@@ -1259,6 +1266,7 @@ var/PriorityQueue/all_feeds
 		return 0
 	var/datum/assignment/target_assignment = get_assignment(target_record.assignment_uid, target_record.get_name())
 	if(target_assignment)
+		target_auth = user_assignment.authority_restriction
 		if(target_assignment.any_assign)
 			same_department = 1
 		if(target_assignment.parent)
@@ -1270,19 +1278,21 @@ var/PriorityQueue/all_feeds
 	else
 		return 1
 	if(user_command)
-		if(!target_command) return 1
+	//	if(!target_command) return 1
 		if(user_leader)
 			if(!target_leader) return 1
 		else
 			if(target_leader) return 0
-		if(user_rank >= target_rank) return 1
+	//	if(user_rank >= target_rank) return 1
+		if(user_auth >= target_auth) return 1
 		else return 0
 	if(same_department)
 		if(user_leader)
 			if(!target_leader) return 1
 		else
 			if(target_leader) return 0
-		if(user_rank >= target_rank) return 1
+	//	if(user_rank >= target_rank) return 1
+		if(user_auth >= target_auth) return 1
 		else return 0
 	return 0
 
@@ -1328,7 +1338,10 @@ var/PriorityQueue/all_feeds
 	var/any_assign = 0 // this makes it so that the assignment can be assigned by anyone with the reassignment access,
 
 	var/task
-
+	var/edit_authority = 1
+	var/authority_restriction = 1
+	
+	
 /datum/accesses
 	var/list/accesses = list()
 	var/expense_limit = 0

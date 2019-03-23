@@ -201,11 +201,11 @@
 						to_chat(usr, "No record found to change citizenship. You must use the full and real name of a defendant if you want to change citizenship status.")
 					switch(verdict_citizenship)
 						if("Resident")
-							citizenship_stat = 1
+							citizenship_stat = RESIDENT
 						if("Citizen")
-							citizenship_stat = 2
+							citizenship_stat = CITIZEN
 						if("Prisoner")
-							citizenship_stat = 3
+							citizenship_stat = PRISONER
 					record.citizenship = citizenship_stat
 				var/datum/verdict/verdict = new()
 				verdict.judge = usr.real_name

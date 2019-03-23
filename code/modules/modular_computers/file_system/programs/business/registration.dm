@@ -23,6 +23,9 @@
 	var/ceo_wage = 100
 	var/list/signed_contracts = list()
 	var/list/pending_contracts = list()
+	
+	
+
 /datum/nano_module/program/newbusiness/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data = host.initial_data()
 
@@ -31,16 +34,16 @@
 		data["type_desc"] = selected_type.desc
 		data["cost"] = selected_type.cost
 		if(selected_spec)
-			data["selected_spec"] = selected_spec.name
+			data["business_spec"] = selected_spec.name
 			data["spec_desc"] = selected_spec.desc
 			data["chose_business"] = 1
 		else
-			data["selected_spec"] = "*NONE*"
+			data["business_spec"] = "*NONE*"
 			data["spec_desc"] = ""
 	else
-		data["business_type"] = "*NONE"
+		data["business_type"] = "*NONE*"
 		data["type_desc"] = ""
-		data["selected_spec"] = "*NONE*"
+		data["business_spec"] = "*NONE*"
 		data["spec_desc"] = ""
 
 	if(business_uid)
@@ -57,9 +60,10 @@
 
 	if(ceo_name)
 		data["business_ceo"] = ceo_name
-		data["business_ceowage"] = "[ceo_wage]$$/30 minutes"
 		data["chose_ceo"] = 1
-
+	else
+		data["business_ceo"] = "*NONE*"
+	data["business_ceowage"] = "[ceo_wage]$$/30 minutes"
 	var/list/formatted_names[0]
 	for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
 		formatted_names[++formatted_names.len] = list("signed_contract" = "[contract.ownership] stocks for [contract.required_cash]$$ to [contract.signed_by]")
@@ -74,30 +78,18 @@
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
-		ui = new(user, src, ui_key, "new_business.tmpl", name, 600, 500, state = state)
+		ui = new(user, src, ui_key, "new_business.tmpl", name, 800, 700, state = state)
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
 		ui.open()
 
 
-/datum/nano_module/program/newbusiness/proc/get_distributed()
-	var/distributed = 0
-	for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
-		distributed += contract.ownership
-	if(distributed > 100)
-		cancel_contracts()
-		return 0
-	return distributed
 
 /datum/nano_module/program/newbusiness/Topic(href, href_list)
 	if(..())
 		return 1
 	. = SSnano.update_uis(src)
 	var/mob/user = usr
-	var/datum/world_faction/democratic/connected_faction = program.computer.network_card.connected_network.holder
-	if(!istype(connected_faction) || !(connected_faction.is_governor(user.real_name)))
-		return .
-
 	switch(href_list["action"])
 
 		if("change_business_type")
@@ -227,6 +219,7 @@
 			commitment -= selected_type.cost
 			for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
 				if(!contract.is_solvent())
+					message_admins("insolvent contract")
 					contract.cancel()
 					SSnano.update_uis(src)
 					return 0
@@ -287,4 +280,13 @@
 	for(var/obj/item/weapon/paper/contract/contract in pending_contracts)
 		contract.cancel()
 		pending_contracts -= contract
+
+/datum/nano_module/program/newbusiness/proc/get_distributed()
+	var/distributed = 0
+	for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
+		distributed += contract.ownership
+	if(distributed > 100)
+		cancel_contracts()
+		return 0
+	return distributed
 

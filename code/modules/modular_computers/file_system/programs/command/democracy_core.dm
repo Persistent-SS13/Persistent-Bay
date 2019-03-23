@@ -15,11 +15,11 @@
 
 /datum/computer_file/program/democracy_core
 	filename = "democracy_core"
-	filedesc = "Executive Government Control"
+	filedesc = "Nexus Assignment/Access Config"
 	program_icon_state = "comm"
 	program_menu_icon = "flag"
 	nanomodule_path = /datum/nano_module/program/democracy_core
-	extended_desc = "Used by the Executive Branch to manage the government."
+	extended_desc = "Used by the Executive Branch to manage the government assignment and access, plus print expense cards."
 	required_access = core_access_leader
 	requires_ntnet = TRUE
 	size = 65
@@ -120,6 +120,12 @@
 			data["title"] = selected_assignment.name
 			data["cryonetwork"] = selected_assignment.cryo_net
 			data["selected_rank"] = selected_rank
+			data["authlevel"] = selected_assignment.edit_authority
+			data["reqauthlevel"] = selected_assignment.authority_restriction
+			if(selected_assignment.task)
+				data["assignment_task"] = selected_assignment.task
+			else
+				data["assignment_task"] = "*No custom task. The organization-wide task will be displayed.*"
 			if(selected_rank < selected_assignment.ranks.len+1)
 				data["increase_button"] = 1
 			if(selected_rank != 1)
@@ -197,8 +203,11 @@
 			if(!selected_assignment)
 				menu = DCORE_ASSIGNMENTMENU
 				return ui_interact(user, ui_key, ui, force_open, state)
+			if(selected_assignment.uid == "judge" || selected_assignment.uid == "councillor") data["proper_job"] = 1
 			data["pay"] = selected_assignment.payscale
 			data["cryonetwork"] = selected_assignment.cryo_net
+			data["authlevel"] = selected_assignment.edit_authority
+			data["reqauthlevel"] = selected_assignment.authority_restriction
 			if(selected_assignment.accesses.len)
 				if(selected_assignment.accesses["1"] && !istype(selected_assignment.accesses["1"], /datum/accesses))
 					var/datum/accesses/copy = new()
@@ -500,6 +509,7 @@
 					SSnano.update_uis(src)
 					return 1
 				selected_assignment.name = select_name
+				
 		if("edit_assignment_pay")
 			var/new_pay = input("Enter new wage. This wage is paid every thirty minutes.","Rank 1 Wage") as null|num
 			if(!new_pay && new_pay != 0) return 1
@@ -511,6 +521,26 @@
 				to_chat(usr, "Payscale cannot be higher than the CEO pay or the pay of the higher ranks.")
 				return
 			selected_assignment.payscale = new_pay
+			
+		if("edit_assignment_authority")
+			var/new_auth = input("Enter authority level. Holders of this assignment will be able to manage and assign any assignment with a required authority at or below this level.","Authority Level", selected_assignment.edit_authority) as null|num
+			if(!new_auth && new_auth != 0) return 1
+			selected_assignment.edit_authority = new_auth
+			
+		if("edit_assignment_requirement")
+			var/new_auth = input("Enter authority requirement. Managers will require an authority level at or greater than this value to assign, unassign and promote holders of this assignment.","Requirement Level", selected_assignment.authority_restriction) as null|num
+			if(!new_auth && new_auth != 0) return 1
+			selected_assignment.authority_restriction = new_auth
+			
+			
+		if("set_custom_task")
+			var/start_uid = selected_assignment.uid
+			var/newValue = replacetext(input(usr, "Edit custom task. This task can be viewed through the neural lace when employees are clocked in. Pencode formatting is allowed.", "Set Task", replacetext(html_decode(selected_assignment.task), "\[br\]", "\n")) as null|message, "\n", "\[br\]")
+			if(selected_assignment.uid == start_uid)
+				selected_assignment.task = newValue
+		if("remive_custom_task")
+			selected_assignment.task = null
+			
 		if("delete_assignmentcategory")
 			if(selected_assignmentcategory.assignments.len)
 				to_chat(usr,"You must delete all assignments inside a category before removing the category.")

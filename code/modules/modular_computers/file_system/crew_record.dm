@@ -47,10 +47,10 @@ FIELD_SHORT_SECURE("DNA", dna, core_access_security_programs)
 FIELD_SHORT_SECURE("Fingerprint", fingerprint, core_access_security_programs)
 
 // EMPLOYMENT RECORDS
-FIELD_LONG_SECURE("Employment Record", emplRecord, core_access_employee_records)
-FIELD_SHORT_SECURE("Home System", homeSystem, core_access_employee_records)
-FIELD_SHORT_SECURE("Faction", faction, core_access_employee_records)
-FIELD_SHORT_SECURE("Religion", religion, core_access_employee_records)
+FIELD_LONG_SECURE("Employment Record", emplRecord, core_access_reassignment)
+FIELD_SHORT_SECURE("Home System", homeSystem, core_access_reassignment)
+FIELD_SHORT_SECURE("Faction", faction, core_access_reassignment)
+FIELD_SHORT_SECURE("Religion", religion, core_access_reassignment)
 
 // ANTAG RECORDS
 FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
@@ -81,7 +81,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/expenses = 0
 	var/datum/computer_file/data/email_account/email
 
-	var/citizenship = 1 // 1 = resident, 2 = citizen, 3 = prisoner (todo convert all magic numbers in ss13 to defines)
+	var/citizenship = RESIDENT
 
 /datum/computer_file/crew_record/New()
 	..()

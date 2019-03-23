@@ -1246,9 +1246,7 @@ var/PriorityQueue/all_feeds
 	var/datum/computer_file/report/crew_record/target_record = get_record(target)
 	if(!target_record) return 1
 	var/user_command = 0
-	var/target_command = 0
-	var/user_rank = R.rank
-	var/target_rank = target_record.rank
+//	var/target_command = 0
 	var/user_leader = 0
 	var/target_leader = 0
 	var/same_department = 0
@@ -1266,11 +1264,11 @@ var/PriorityQueue/all_feeds
 		return 0
 	var/datum/assignment/target_assignment = get_assignment(target_record.assignment_uid, target_record.get_name())
 	if(target_assignment)
-		target_auth = user_assignment.authority_restriction
+		target_auth = target_assignment.authority_restriction
 		if(target_assignment.any_assign)
 			same_department = 1
 		if(target_assignment.parent)
-			target_command = target_assignment.parent.command_faction
+	//		target_command = target_assignment.parent.command_faction
 			if(target_assignment.parent.head_position && target_assignment.parent.head_position.name == target_assignment.name)
 				target_leader = 1
 			if(assignment.parent && target_assignment.parent.name == assignment.parent.name)

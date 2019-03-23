@@ -82,7 +82,7 @@
 	<br><hr>
 	<br><br>{{:helper.link("Create New Employee Category", 'pencil', {'action' : 'create_assignmentcategory'})}}
 	<br><hr>
-	{{:helper.link('City Councillor', '', {'action' : 'select_councillor'})}}{{:helper.link('Judge', '', {'action' : 'select_judge'})}}<br><br>
+	{{:helper.link('City Councillor', '', {'action' : 'select_councillor'})}}{{:helper.link('Judge', '', {'action' : 'select_judge'})}}{{:helper.link('Resident', '', {'action' : 'select_resident'})}}{{:helper.link('Citizen', '', {'action' : 'select_citizen'})}}{{:helper.link('Prisoner', '', {'action' : 'select_prisoner'})}}<br><br>
 	{{for data.assignment_categories}}
 		{{:helper.link(value.name, '', {'action' : 'select_assignmentcategory', 'selected_ref' : value.ref})}}{{:helper.link("Create New Assignment", '', {'action' : 'create_assignment_two', 'selected_ref' : value.ref})}}:<br><br>
 		{{for value.assignments :assignmentValue:assignmentIndex}}

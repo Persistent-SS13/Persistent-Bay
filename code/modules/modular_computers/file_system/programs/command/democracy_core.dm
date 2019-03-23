@@ -371,17 +371,20 @@
 				if(curr_name == select_name) return 1
 				selected_accesscategory.accesses[x] = select_name
 				to_chat(usr, "Access successfully edited.")
+
 		if("delete_access")
 			var/x = selected_accesscategory.accesses[selected_access]
 			selected_accesscategory.accesses -= x
 			connected_faction.rebuild_all_access()
 			to_chat(usr, "Access successfully deleted.")
 			menu = DCORE_ACCESSMENU
+
 		if("select_access_noref")
 			if(!selected_accesscategory) return 1
 			selected_access = text2num(href_list["selected_ind"])
 			menu = DCORE_ACCESS
 			prior_menu = DCORE_ACCESSCATEGORY
+
 		if("create_assignmentcategory")
 			var/select_name = sanitizeName(input(usr,"Enter new assignment category name.","Create Assignment Category", "") as null|text, MAX_NAME_LEN, 1, 0)
 			if(select_name)
@@ -394,11 +397,13 @@
 				category.parent = connected_faction
 				connected_faction.assignment_categories |= category
 				to_chat(usr, "Assignment category successfully created.")
+
 		if("select_assignmentcategory")
 			selected_assignmentcategory = locate(href_list["selected_ref"])
 			if(!selected_assignmentcategory) return 1
 			menu = DCORE_ASSIGNMENTCATEGORY
 			prior_menu = DCORE_ASSIGNMENTMENU
+
 		if("select_assignment")
 			selected_assignmentcategory = locate(href_list["category_ref"])
 			if(!selected_assignmentcategory) return 1
@@ -406,6 +411,7 @@
 			if(!selected_assignment) return 1
 			menu = DCORE_ASSIGNMENT
 			prior_menu = DCORE_ASSIGNMENTMENU
+
 		if("select_judge")
 			selected_assignment = connected_faction.judge_assignment
 			if(!selected_assignment) return 1
@@ -418,23 +424,48 @@
 			menu = DCORE_SPECIALASSIGNMENT
 			prior_menu = DCORE_ASSIGNMENTMENU
 		
+		if("select_resident")
+			selected_assignment = connected_faction.resident_assignment
+			if(!selected_assignment) return 1
+			menu = DCORE_SPECIALASSIGNMENT
+			prior_menu = DCORE_ASSIGNMENTMENU
+			
+		if("select_citizen")
+			selected_assignment = connected_faction.citizen_assignment
+			if(!selected_assignment) return 1
+			menu = DCORE_SPECIALASSIGNMENT
+			prior_menu = DCORE_ASSIGNMENTMENU
+			
+		if("select_prisoner")
+			selected_assignment = connected_faction.prisoner_assignment
+			if(!selected_assignment) return 1
+			menu = DCORE_SPECIALASSIGNMENT
+			prior_menu = DCORE_ASSIGNMENTMENU	
+		
 		if("select_assignment_two")
 			selected_assignment = locate(href_list["selected_ref"])
 			if(!selected_assignment) return 1
 			menu = DCORE_ASSIGNMENT
 			prior_menu = DCORE_ASSIGNMENTCATEGORY
+
 		if("assignmentcategory_leadership_yes")
 			selected_assignmentcategory.command_faction = 1
+
 		if("assignmentcategory_leadership_no")
 			selected_assignmentcategory.command_faction = 0
+
 		if("assignmentcategory_membership_yes")
 			selected_assignmentcategory.member_faction = 1
+
 		if("assignmentcategory_membership_no")
 			selected_assignmentcategory.member_faction = 0
+
 		if("assignmentcategory_account_on")
 			selected_assignmentcategory.account_status = 1
+
 		if("assignmentcategory_account_off")
 			selected_assignmentcategory.account_status = 0
+
 		if("assignmentcategory_changeleader")
 			var/curr = selected_assignmentcategory.head_position
 			var/datum/assignment/selected = input(usr,"Choose which assignment","Enter Parameter",null) as null|anything in (selected_assignmentcategory.assignments + "None")
@@ -446,6 +477,7 @@
 				selected_assignmentcategory.head_position = null
 			else
 				selected_assignmentcategory.head_position = selected
+
 		if("create_assignment")
 			var/x = selected_assignmentcategory
 			var/select_name = sanitizeName(input(usr,"Enter the new assignments uid. This cannot be changed. Spaces are not allowed.","New Assignment UID", "") as null|text, MAX_NAME_LEN, 1, 0,1)
@@ -468,6 +500,7 @@
 					new_assignment.cryo_net = "Last Known Cryonet"
 					selected_assignmentcategory.assignments |= new_assignment
 					to_chat(usr, "Assignment successfully created.")
+					
 		if("create_assignment_two")
 			var/datum/assignment_category/selected_assignmentcategory2 = locate(href_list["selected_ref"])
 			var/x = selected_assignmentcategory2
@@ -491,6 +524,7 @@
 					new_assignment.cryo_net = "Last Known Cryonet"
 					selected_assignmentcategory2.assignments |= new_assignment
 					to_chat(usr, "Assignment successfully created.")
+					
 		if("edit_assignmentcategory")
 			var/curr_name = selected_assignmentcategory.name
 			var/select_name = sanitizeName(input(usr,"Enter new assignment category name.","Edit Assignment Category", "") as null|text, MAX_NAME_LEN, 1, 0)
@@ -500,6 +534,7 @@
 					SSnano.update_uis(src)
 					return 1
 				selected_assignmentcategory.name = select_name
+				
 		if("edit_assignment")
 			var/curr_name = selected_assignment.name
 			var/select_name = sanitizeName(input(usr,"Enter new rank 1 title.","Rank 1 Title", "") as null|text, MAX_NAME_LEN, 1, 0)
@@ -532,12 +567,12 @@
 			if(!new_auth && new_auth != 0) return 1
 			selected_assignment.authority_restriction = new_auth
 			
-			
 		if("set_custom_task")
 			var/start_uid = selected_assignment.uid
 			var/newValue = replacetext(input(usr, "Edit custom task. This task can be viewed through the neural lace when employees are clocked in. Pencode formatting is allowed.", "Set Task", replacetext(html_decode(selected_assignment.task), "\[br\]", "\n")) as null|message, "\n", "\[br\]")
 			if(selected_assignment.uid == start_uid)
 				selected_assignment.task = newValue
+				
 		if("remive_custom_task")
 			selected_assignment.task = null
 			
@@ -551,6 +586,7 @@
 				qdel(selected_assignmentcategory)
 				to_chat(usr, "Assignment Category successfully deleted.")
 			menu = DCORE_ASSIGNMENTMENU
+			
 		if("delete_assignment")
 			var/choice = input(usr,"Are you sure you want to delete this assignment? All ranking data will be lost.") in list("Confirm", "Cancel")
 			if(choice == "Confirm")
@@ -559,11 +595,14 @@
 				connected_faction.rebuild_all_assignments()
 				to_chat(usr, "Assignment successfully deleted.")
 			menu = prior_menu
+			
 		if("view_access")
 			viewing_ranks = 0
+			
 		if("view_ranks")
 			viewing_ranks = 1
 			selected_rank = 1
+			
 		if("create_rank")
 			var/select_name = sanitizeName(input(usr,"Enter new rank title.","New rank title", "") as null|text, MAX_NAME_LEN, 1, 0)
 			if(select_name)
@@ -610,6 +649,7 @@
 				selected_assignment.ranks.Insert(ind, select_name)
 				selected_assignment.ranks[select_name] = new_pay
 				to_chat(usr, "Rank successfully created.")
+				
 		if("delete_rank")
 			var/choice2 = input(usr, "Are you sure you want to delete a rank? All higher ranks will be moved down by one, giving existing lower ranks an instant promotion.") in list("Confirm", "Cancel")
 			if(choice2 == "Cancel") return 1
@@ -624,6 +664,7 @@
 			ind = text2num(items[1])-1
 			selected_assignment.ranks.Cut(ind, ind+1)
 			to_chat(usr, "Rank successfully deleted.")
+			
 		if("pick_access")
 			var/datum/access_category/category = locate(href_list["selected_ref"])
 			var/ind = text2num(href_list["selected_ind"])

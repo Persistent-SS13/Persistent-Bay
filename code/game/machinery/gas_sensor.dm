@@ -15,7 +15,6 @@
 	radio_filter_out= RADIO_ATMOSIA
 
 	var/time_next_broadcast = 0
-	var/state = 0
 	var/on = TRUE
 	var/output = 255
 	//Flags:
@@ -32,11 +31,16 @@
 	//Buffer list to transmit data on each process call
 	var/tmp/list/transmitted_data = list() 
 
+/obj/machinery/air_sensor/New()
+	. = ..()
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(output)
+
 /obj/machinery/air_sensor/update_icon()
 	icon_state = "gsensor[on]"
 
 /obj/machinery/air_sensor/Process()
-	if(!has_transmitter() || !transmitter_ready() || inoperable())
+	if(!has_transmitter() || !transmitter_ready() || inoperable() || isnull(loc))
 		return
 	
 	if(on && world.time >= time_next_broadcast)

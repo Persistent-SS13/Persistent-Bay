@@ -76,7 +76,6 @@
 // Damage above this value must be repaired with surgery.
 #define ROBOLIMB_SELF_REPAIR_CAP 30
 
-#define ORGAN_ASSISTED 1
 #define ORGAN_ROBOT    2
 
 //Germs and infections.

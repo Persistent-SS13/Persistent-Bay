@@ -92,7 +92,7 @@
 	usr << "\blue Peering through the glass, you see that it contains:"
 	if(occupant)
 		usr << "\icon[occupant] \blue \A [occupant]"
-	else:
+	else
 		usr << "Nothing."
 
 /obj/structure/displaycase/proc/dump()

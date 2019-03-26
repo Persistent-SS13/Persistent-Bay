@@ -111,10 +111,6 @@
 /atom/proc/HasProximity(atom/movable/AM as mob|obj)
 	return
 
-/atom/proc/set_density(var/new_density)
-	if(density != new_density)
-		density = !!new_density
-
 /atom/proc/in_contents_of(container)//can take class or object instance as argument
 	if(ispath(container))
 		if(istype(src.loc, container))

@@ -101,7 +101,7 @@
 		H.apply_effects(5, 3)
 		for(var/i = 0; i < 2; i++)
 			var/def_zone = ran_zone()
-			H.apply_damage(2 / (move_delay ? move_delay : 0.1), BRUTE, def_zone, H.run_armor_check(def_zone, "melee"))
+			H.apply_damage(2 / (move_delay ? move_delay : 0.1), DAM_BLUNT, def_zone, H.run_armor_check(def_zone, DAM_BLUNT))
 
 		var/turf/turf = get_step(H, pick(throw_dirs))
 		H.throw_at(turf, 3)
@@ -293,7 +293,7 @@
 				return
 
 		playsound(src.loc, 'sound/effects/grillehit.ogg', 80, 0, 10)
-		health -= round(2/(move_delay ? move_delay : 0.1)) // BYOND rounding can lead to a division by zero error. Ditto throughout the file.
+		take_damage(round(2/(move_delay ? move_delay : 0.1)), DAM_BLUNT, 0, Obstacle) // BYOND rounding can lead to a division by zero error. Ditto throughout the file.
 
 		var/list/throw_dirs = list(NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST)
 
@@ -336,7 +336,7 @@
 
 	src.audible_message("\The [src] rumbles to life.")
 
-	anchored = 1
+	anchored = TRUE
 
 	update_icon()
 

@@ -219,7 +219,7 @@
 		else
 			if(E.is_stump())
 				wound_flavor_text[E.name] += "<b>[T.He] [T.has] a stump where [T.his] [organ_descriptor] should be.</b>\n"
-				if(E.wounds.len && E.parent)
+				if(LAZYLEN(E.wounds) && E.parent)
 					wound_flavor_text[E.name] += "[T.He] [T.has] [E.get_wounds_desc()] on [T.his] [E.parent.name].<br>"
 			else
 				if(!is_synth && BP_IS_ROBOTIC(E) && (E.parent && !BP_IS_ROBOTIC(E.parent)))
@@ -234,9 +234,19 @@
 				wound_flavor_text[E.name] += "[T.His] [E.name] is dented and swollen!<br>"
 
 		for(var/datum/wound/wound in E.wounds)
-			if(wound.embedded_objects.len)
-				shown_objects += wound.embedded_objects
-				wound_flavor_text["[E.name]"] += "The [wound.desc] on [T.his] [E.name] has \a [english_list(wound.embedded_objects, and_text = " and \a ", comma_text = ", \a ")] sticking out of it!<br>"
+			var/list/embedlist = wound.embedded_objects
+			if(LAZYLEN(embedlist))
+				shown_objects += embedlist
+				var/parsedembed[0]
+				for(var/obj/embedded in embedlist)
+					if(!parsedembed.len || (!parsedembed.Find(embedded.name) && !parsedembed.Find("multiple [embedded.name]")))
+						parsedembed.Add(embedded.name)
+					else if(!parsedembed.Find("multiple [embedded.name]"))
+						parsedembed.Remove(embedded.name)
+						parsedembed.Add("multiple "+embedded.name)
+				wound_flavor_text["[E.name]"] += "The [wound.desc] on [T.his] [E.name] has \a [english_list(parsedembed, and_text = " and \a ", comma_text = ", \a ")] sticking out of it!<br>"
+	for(var/hidden in hidden_bleeders)
+		wound_flavor_text[hidden] = "[T.He] [T.has] blood soaking through [hidden] around [T.his] [english_list(hidden_bleeders[hidden])]!<br>"
 
 	msg += "<span class='warning'>"
 	for(var/limb in wound_flavor_text)

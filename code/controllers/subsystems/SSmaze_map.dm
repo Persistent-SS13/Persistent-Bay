@@ -1,9 +1,12 @@
 SUBSYSTEM_DEF(mazemap)
 	name = "Maze Map"
-	wait = 5 MINUTES
+	wait = 3 MINUTES
 //	next_fire = 3 HOURS	// To prevent saving upon start.
 	var/init = 0
 	var/list/map_data = list()
+	var/list/activity_checklist
+	var/stat_active_wild_maps = 0
+
 /datum/controller/subsystem/mazemap/stat_entry()
 	..("Maze Map Running")
 
@@ -13,7 +16,9 @@ SUBSYSTEM_DEF(mazemap)
 		init = 1
 		inits()
 		return
-	respawn()
+	check_activity()
+	update_levels()
+
 /datum/controller/subsystem/mazemap/proc/inits()
 	map_data["1"] = new /datum/zlevel_data/one()
 	map_data["2"] = new /datum/zlevel_data/two()
@@ -57,24 +62,39 @@ SUBSYSTEM_DEF(mazemap)
 			barrier.dir = EAST
 			if(transition_dir)
 				barrier.alpha = 50
-		transition_dir = 0	
+		transition_dir = 0
 		if(data.W_connect)
 			transition_dir = 1
 		for(var/i = TRANSITIONEDGE+1 to world.maxy-TRANSITIONEDGE-1)
 			barrier = new(locate(TRANSITIONEDGE, i, op_z))
 			if(transition_dir)
 				barrier.alpha = 50
-		transition_dir = 0		
+		transition_dir = 0
 		if(data.E_connect)
 			transition_dir = 1
 		for(var/i = TRANSITIONEDGE+1 to world.maxy-TRANSITIONEDGE-1)
 			barrier = new(locate(world.maxx-TRANSITIONEDGE, i, op_z))
 			if(transition_dir)
 				barrier.alpha = 50
-		transition_dir = 0			
-		data.replenish_monsters()
-		
-/datum/controller/subsystem/mazemap/proc/respawn()
-	for(var/datum/zlevel_data/data in map_data)
-		data.replenish_monsters()
+		transition_dir = 0
 
+/datum/controller/subsystem/mazemap/proc/check_activity()
+	activity_checklist = list()
+	for (var/client/C in GLOB.clients)
+		var/mob/M = C.mob
+		if (!M.z || !isliving(M) || M.stat == DEAD)
+			continue
+		if(activity_checklist["[M.z]"])
+			activity_checklist["[M.z]"] = TRUE
+
+
+/datum/controller/subsystem/mazemap/proc/update_levels()
+	stat_active_wild_maps = 0 // For stat purposes
+	for(var/z in map_data)
+		var/datum/zlevel_data/data = map_data[z]
+		if (activity_checklist[z] == TRUE)
+			data.set_active()
+			stat_active_wild_maps++
+		else
+			data.lower_state()
+		data.update()

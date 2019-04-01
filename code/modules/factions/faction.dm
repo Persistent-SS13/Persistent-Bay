@@ -6,10 +6,16 @@ GLOBAL_LIST_EMPTY(recent_articles)
 
 var/PriorityQueue/all_feeds
 
+
+
 /datum/proc/contract_signed(var/obj/item/weapon/paper/contract/contract)
 	return 0
+
+
 /datum/proc/contract_cancelled(var/obj/item/weapon/paper/contract/contract)
 	return 0
+
+
 /obj/item/weapon/paper/contract
 	name = "contract"
 	var/required_cash = 0
@@ -20,6 +26,8 @@ var/PriorityQueue/all_feeds
 	var/approved = 0
 	var/purpose = ""
 	var/datum/money_account/signed_account
+	var/datum/computer_file/report/crew_record/signed_record
+
 	var/ownership = 1 // how many stocks the contract is worth (if a stock contract)
 	var/pay_to = ""
 	var/created_by = ""
@@ -55,68 +63,41 @@ var/PriorityQueue/all_feeds
 		can_read = get_dist(src, AI.camera) < 2
 	var/info2 = info
 	if(cancelled || !linked)
-		info2 += "<br>This contract has been cancelled. Any pending charges have been dropped, this can be shredded."
+		info2 += "<br>This contract has been cancelled. This can be shredded."
 	else if(approved)
-		info2 += "<br>This contract has been finalized. Any pending charges have gone through, this is just for record keeping."
+		info2 += "<br>This contract has been finalized. This is just for record keeping."
 	else if(signed)
-		info2 += "<br>This contract has been signed and is pending finalization. Any pending charges will go through when the deal is finalized."
+		info2 += "<br>This contract has been signed and is pending finalization."
 	else if(src.Adjacent(user) && !signed)
-		info2 += "<br><A href='?src=\ref[src];pay=1'>Or enter account info here.</A>"
+		info2 += "<br><A href='?src=\ref[src];pay=1'>Or scan lace.</A>"
 	else
-		info2 += "<br>Or enter account info here."
+		info2 += "<br>Or scan lace."
 	user << browse("<HTML><HEAD><TITLE>[name]</TITLE></HEAD><BODY bgcolor='[color]'>[can_read ? info2 : stars(info)][stamps]</BODY></HTML>", "window=[name]")
 	onclose(user, "[name]")
 
 /obj/item/weapon/paper/contract/attackby(obj/item/weapon/P as obj, mob/user as mob)
 	if(istype(P, /obj/item/weapon/pen))
 		return
-	else if(istype(P, /obj/item/weapon/card/id))
-		if(signed || !linked || approved || cancelled) return 1
-		var/obj/item/weapon/card/id/id = P
-		if(!id.valid) return 0
-
-		if(required_cash)
-			var/datum/money_account/account = get_account(id.associated_account_number)
-			if(!account) return
-			if(account.security_level != 0) //If card requires pin authentication (ie seclevel 1 or 2)
-				var/attempt_pin = input("Enter pin code", "Vendor transaction") as num
-				if(account.remote_access_pin != attempt_pin)
-					to_chat(user, "Unable to access account: incorrect credentials.")
-					return
-
-			if(required_cash > account.money-account.reserved)
-				to_chat(user, "Unable to complete transaction: insufficient funds.")
-				return
-			signed_account = account
-			signed_account.reserved += required_cash
-		signed_by = id.registered_name
-		if(linked.contract_signed(src))
-			signed = 1
-			info = replacetext(info, "*Unsigned*", "[signed_account.owner_name]")
-		else
-			signed_by = ""
-			signed_account = null
-		update_icon()
-		return 1
 	..()
 /obj/item/weapon/paper/contract/Topic(href, href_list)
 	if(!usr || (usr.stat || usr.restrained()))
 		return
 	if(href_list["pay"])
-		if(signed || !linked || approved || cancelled) return 1
-		var/datum/money_account/linked_account
-		var/attempt_account_num = input("Enter account number to pay the contract with.", "account number") as num
-		var/attempt_pin = input("Enter pin code", "Account pin") as num
-		linked_account = attempt_account_access(attempt_account_num, attempt_pin, 1)
+		var/datum/computer_file/report/crew_record/R = Retrieve_Record(usr.real_name)
+		if(!R)
+			to_chat(usr, "Record not found. Contact AI.")
+			message_admins("record not found for user [usr.real_name]")
+			return
+		var/datum/money_account/linked_account = R.linked_account
 		if(linked_account)
 			if(linked_account.suspended)
 				linked_account = null
 				to_chat(usr, "\icon[src]<span class='warning'>Account has been suspended.</span>")
-			if(required_cash > linked_account.money-linked_account.reserved)
+			if(required_cash > linked_account.money)
 				to_chat(usr, "Unable to complete transaction: insufficient funds.")
 				return
 			signed_account = linked_account
-			signed_account.reserved += required_cash
+			signed_record = R
 		else
 			to_chat(usr, "\icon[src]<span class='warning'>Account not found.</span>")
 			return
@@ -752,6 +733,9 @@ var/PriorityQueue/all_feeds
 	var/datum/assignment/councillor_assignment
 	var/datum/assignment/judge_assignment
 	var/datum/assignment/governor_assignment
+	var/datum/assignment/resident_assignment
+	var/datum/assignment/citizen_assignment
+	var/datum/assignment/prisoner_assignment
 
 	var/datum/assignment_category/special_category
 
@@ -1128,12 +1112,32 @@ var/PriorityQueue/all_feeds
 	var/desc = ""
 
 
+
+
+
+
+
 /datum/world_faction/business
+	var/datum/business_module/module
+	var/list/stock_holders = list()
+	var/datum/assignment/CEO
+
+
+
+
+
+
+
 
 /datum/world_faction/after_load()
+
 	if(!debts)
 		debts = list()
 	..()
+
+/datum/world_faction/proc/get_limits()
+	return limits
+
 /datum/world_faction/proc/get_duty_status(var/real_name)
 	for(var/obj/item/organ/internal/stack/stack in connected_laces)
 		if(stack.get_owner_name() == real_name)
@@ -1242,14 +1246,16 @@ var/PriorityQueue/all_feeds
 	var/datum/computer_file/report/crew_record/target_record = get_record(target)
 	if(!target_record) return 1
 	var/user_command = 0
-	var/target_command = 0
-	var/user_rank = R.rank
-	var/target_rank = target_record.rank
+//	var/target_command = 0
 	var/user_leader = 0
 	var/target_leader = 0
 	var/same_department = 0
+	var/user_auth = 0
+	var/target_auth = 0
+	
 	var/datum/assignment/assignment = get_assignment(R.assignment_uid, R.get_name())
 	if(assignment)
+		user_auth = assignment.edit_authority
 		if(assignment.parent)
 			user_command = assignment.parent.command_faction
 			if(assignment.parent.head_position && assignment.parent.head_position.name == assignment.name)
@@ -1258,10 +1264,11 @@ var/PriorityQueue/all_feeds
 		return 0
 	var/datum/assignment/target_assignment = get_assignment(target_record.assignment_uid, target_record.get_name())
 	if(target_assignment)
+		target_auth = target_assignment.authority_restriction
 		if(target_assignment.any_assign)
 			same_department = 1
 		if(target_assignment.parent)
-			target_command = target_assignment.parent.command_faction
+	//		target_command = target_assignment.parent.command_faction
 			if(target_assignment.parent.head_position && target_assignment.parent.head_position.name == target_assignment.name)
 				target_leader = 1
 			if(assignment.parent && target_assignment.parent.name == assignment.parent.name)
@@ -1269,19 +1276,21 @@ var/PriorityQueue/all_feeds
 	else
 		return 1
 	if(user_command)
-		if(!target_command) return 1
+	//	if(!target_command) return 1
 		if(user_leader)
 			if(!target_leader) return 1
 		else
 			if(target_leader) return 0
-		if(user_rank >= target_rank) return 1
+	//	if(user_rank >= target_rank) return 1
+		if(user_auth >= target_auth) return 1
 		else return 0
 	if(same_department)
 		if(user_leader)
 			if(!target_leader) return 1
 		else
 			if(target_leader) return 0
-		if(user_rank >= target_rank) return 1
+	//	if(user_rank >= target_rank) return 1
+		if(user_auth >= target_auth) return 1
 		else return 0
 	return 0
 
@@ -1289,6 +1298,7 @@ var/PriorityQueue/all_feeds
 
 /datum/world_faction/proc/create_faction_account()
 	central_account = create_account(name, 0)
+	central_account.account_type = 2
 
 /datum/world_faction/proc/proposal_approved(var/datum/proposal/proposal)
 	return 0
@@ -1325,8 +1335,11 @@ var/PriorityQueue/all_feeds
 	var/cryo_net = "default"
 	var/any_assign = 0 // this makes it so that the assignment can be assigned by anyone with the reassignment access,
 
-	varr/task
-
+	var/task
+	var/edit_authority = 1
+	var/authority_restriction = 1
+	
+	
 /datum/accesses
 	var/list/accesses = list()
 	var/expense_limit = 0
@@ -1513,6 +1526,8 @@ var/PriorityQueue/all_feeds
 
 
 /datum/machine_limits
+	var/cost = 0 // used when this serves as a business level datum
+
 	var/limit_genfab = 0
 	var/list/genfabs = list()
 	var/limit_engfab = 0
@@ -1529,26 +1544,537 @@ var/PriorityQueue/all_feeds
 	var/list/atnonstandards = list()
 	var/limit_atstandard = 0
 	var/list/atstandards = list()
-	var/limit_atstorage = 0
-	var/list/atstorages = list()
-	var/limit_attactical = 0
-	var/list/attacticals = list()
 	var/limit_ammofab = 0
 	var/list/ammofabs = list()
 	var/limit_consumerfab = 0
 	var/list/consumerfabs = list()
 	var/limit_servicefab = 0
 	var/list/servicefabs = list()
-	
+
+	var/limit_drills = 0
+	var/list/drills = list()
+
+	var/limit_botany = 0
+	var/list/botany = list()
+
+	var/limit_shuttles = 0
+	var/list/shuttles = list()
+
+	var/limit_area = 0
+	var/list/apcs = list()
+
+	var/limit_tcomms = 0
+	var/list/tcomms = list()
+
+
+
 	var/limit_tech_general = 0
 	var/limit_tech_engi = 0
 	var/limit_tech_medical = 0
 	var/limit_tech_consumer = 0
 	var/limit_tech_combat = 0
 
+
+
+
+// ENGINEERING LIMITS
+
+/datum/machine_limits/eng/spec/tcomms
+	limit_tcomms = 3
+	limit_shuttles = 2
+	limit_voidfab = 1
+
+/datum/machine_limits/eng/spec/realestate
+	limit_tech_consumer = 2
+	limit_area = 400
+	limit_consumerfab = 1
+
+/datum/machine_limits/eng/one
+	limit_tech_engi = 2
+	limit_tech_general = 1
+	limit_shuttles = 1
+	limit_area = 300
+	limit_genfab = 2
+	limit_engfab = 2
+	limit_tcomms = 1
+	limit_voidfab = 1
+
+
+/datum/machine_limits/eng/two
+	cost = 1000
+	limit_tech_engi = 3
+	limit_tech_general = 2
+	limit_shuttles = 1
+	limit_area = 400
+	limit_genfab = 3
+	limit_engfab = 3
+	limit_voidfab = 1
+	limit_tcomms = 1
+
+/datum/machine_limits/eng/three
+	cost = 3000
+	limit_tech_engi = 4
+	limit_tech_general = 3
+	limit_shuttles = 2
+	limit_area = 500
+	limit_genfab = 4
+	limit_engfab = 4
+	limit_voidfab = 2
+	limit_tcomms = 2
+
+/datum/machine_limits/eng/four
+	cost = 7500
+	limit_tech_engi = 4
+	limit_tech_general = 4
+	limit_tech_medical = 1
+	limit_tech_consumer = 1
+	limit_shuttles = 3
+	limit_area = 600
+	limit_genfab = 5
+	limit_engfab = 5
+	limit_voidfab = 3
+	limit_tcomms = 3
+	limit_consumerfab = 1
+	limit_medicalfab = 1
+
+// END ENGINEERING LIMITS
+
+// RETAIL LIMITS
+
+/datum/machine_limits/retail/spec/combat
+	limit_tech_combat = 2
+	limit_ammofab = 1
+	limit_shuttles = 1
+/datum/machine_limits/retail/spec/bigstore
+	limit_tech_engi = 2
+	limit_engfab = 1
+	limit_voidfab = 1
+	limit_area = 200
+
+/datum/machine_limits/retail/one
+	limit_tech_consumer = 2
+	limit_tech_general = 1
+	limit_area = 200
+	limit_genfab = 2
+	limit_consumerfab = 2
+	limit_ataccessories = 1
+	limit_atstandard = 1
+	limit_atnonstandard = 1
+
+
+/datum/machine_limits/retail/two
+	cost = 1000
+	limit_tech_consumer = 3
+	limit_tech_general = 2
+	limit_area = 300
+	limit_genfab = 3
+	limit_consumerfab = 3
+	limit_ataccessories = 2
+	limit_atstandard = 2
+	limit_atnonstandard = 2
+
+/datum/machine_limits/retail/three
+	cost = 3000
+	limit_tech_consumer = 4
+	limit_tech_general = 3
+	limit_tech_combat = 1
+	limit_tech_engi = 1
+	limit_area = 400
+	limit_genfab = 3
+	limit_consumerfab = 3
+	limit_ataccessories = 2
+	limit_atstandard = 2
+	limit_atnonstandard = 2
+	limit_voidfab = 1
+	limit_shuttles = 1
+
+/datum/machine_limits/retail/four
+	cost = 7500
+	limit_tech_consumer = 4
+	limit_tech_general = 4
+	limit_tech_combat = 2
+	limit_tech_engi = 2
+	limit_area = 500
+	limit_genfab = 3
+	limit_consumerfab = 3
+	limit_ataccessories = 3
+	limit_atstandard = 3
+	limit_atnonstandard = 3
+	limit_voidfab = 2
+	limit_shuttles = 2
+	limit_ammofab = 1
+	limit_engfab = 1
+
+// END RETAIL LIMITS
+
+// MEDICAL LIMITS
+
+/datum/machine_limits/medical/spec/paramedic
+	limit_voidfab = 1
+	limit_shuttles = 2
+
+/datum/machine_limits/medical/spec/pharma
+	limit_servicefab = 1
+	limit_botany = 2
+	limit_area = 200
+
+/datum/machine_limits/medical/one
+	limit_tech_medical = 2
+	limit_tech_general = 1
+	limit_area = 300
+	limit_genfab = 2
+	limit_medicalfab = 2
+
+
+/datum/machine_limits/medical/two
+	cost = 1000
+	limit_tech_medical = 3
+	limit_tech_general = 2
+	limit_area = 400
+	limit_genfab = 3
+	limit_medicalfab = 3
+	limit_voidfab = 1
+
+
+/datum/machine_limits/medical/three
+	cost = 3000
+	limit_tech_medical = 4
+	limit_tech_general = 3
+	limit_area = 500
+	limit_genfab = 3
+	limit_medicalfab = 3
+	limit_voidfab = 2
+	limit_shuttles = 1
+	limit_botany = 1
+	limit_servicefab = 1
+
+/datum/machine_limits/medical/four
+	cost = 7500
+	limit_tech_medical = 4
+	limit_tech_general = 4
+	limit_area = 600
+	limit_genfab = 4
+	limit_medicalfab = 4
+	limit_voidfab = 3
+	limit_shuttles = 2
+	limit_botany = 3
+	limit_servicefab = 1
+
+// END MEDICAL LIMITS
+
+// SERVICE LIMITS
+
+/datum/machine_limits/service/spec/culinary
+	limit_tech_engi = 1
+	limit_engfab = 1
+	limit_area = 200
+
+/datum/machine_limits/service/spec/farmer
+	limit_botany = 4
+	limit_atstandard = 1
+	limit_ataccessories = 1
+
+/datum/machine_limits/service/one
+	limit_tech_consumer = 2
+	limit_tech_general = 1
+	limit_area = 200
+	limit_genfab = 2
+	limit_servicefab = 2
+	limit_botany = 2
+
+/datum/machine_limits/service/two
+	cost = 750
+	limit_tech_consumer = 3
+	limit_tech_general = 2
+	limit_area = 300
+	limit_genfab = 3
+	limit_servicefab = 3
+	limit_botany = 3
+
+/datum/machine_limits/service/three
+	cost = 1600
+	limit_tech_consumer = 4
+	limit_tech_general = 3
+	limit_area = 400
+	limit_genfab = 3
+	limit_servicefab = 3
+	limit_botany = 3
+	limit_voidfab = 1
+	limit_shuttles = 1
+
+/datum/machine_limits/service/four
+	cost = 2250
+	limit_tech_consumer = 4
+	limit_tech_general = 4
+	limit_tech_medical = 1
+	limit_tech_engi = 1
+	limit_area = 500
+	limit_genfab = 3
+	limit_servicefab = 3
+	limit_botany = 4
+	limit_voidfab = 2
+	limit_shuttles = 2
+	limit_engfab = 1
+	limit_medicalfab = 1
+
+// END SERVICE LIMITS
+
+// MINING LIMITS
+
+/datum/machine_limits/mining/spec/monsterhunter
+	limit_tech_medical = 2
+	limit_medicalfab = 1
+	limit_area = 200
+	limit_botany = 2
+
+/datum/machine_limits/mining/spec/massdrill
+	limit_tech_engi = 1
+	limit_engfab = 1
+	limit_drills = 2
+	limit_shuttles = 1
+
+/datum/machine_limits/mining/one
+	limit_tech_combat = 2
+	limit_tech_general = 1
+	limit_area = 200
+	limit_genfab = 2
+	limit_ammofab = 2
+	limit_drills = 1
+	limit_voidfab = 1
+	limit_shuttles = 1
+
+/datum/machine_limits/mining/two
+	cost = 1000
+	limit_tech_combat = 3
+	limit_tech_general = 2
+	limit_area = 300
+	limit_genfab = 3
+	limit_ammofab = 3
+	limit_drills = 2
+	limit_voidfab = 2
+	limit_shuttles = 1
+
+/datum/machine_limits/mining/three
+	cost = 3000
+	limit_tech_combat = 4
+	limit_tech_general = 3
+	limit_area = 400
+	limit_genfab = 3
+	limit_ammofab = 3
+	limit_drills = 3
+	limit_voidfab = 3
+	limit_shuttles = 2
+	limit_botany = 1
+
+/datum/machine_limits/mining/four
+	cost = 7500
+	limit_tech_combat = 4
+	limit_tech_general = 4
+	limit_tech_engi = 1
+	limit_tech_medical = 1
+	limit_area = 500
+	limit_genfab = 3
+	limit_ammofab = 3
+	limit_drills = 4
+	limit_voidfab = 3
+	limit_shuttles = 3
+	limit_botany = 2
+	limit_engfab = 1
+	limit_medicalfab = 1
+
+
+
+// END MINING LIMITS
+
+
+// MEDIA LIMITS
+
+/datum/machine_limits/media/spec/journalism
+	limit_voidfab = 1
+	limit_shuttles = 1
+	limit_tech_medical = 1
+	limit_medicalfab = 1
+
+/datum/machine_limits/media/spec/bookpublishing
+	limit_tech_engi = 1
+	limit_engfab = 1
+	limit_area = 200
+
+/datum/machine_limits/media/one
+	limit_tech_consumer = 1
+	limit_tech_general = 1
+	limit_area = 200
+	limit_genfab = 2
+	limit_consumerfab = 1
+
+/datum/machine_limits/media/two
+	cost = 750
+	limit_tech_consumer = 2
+	limit_tech_general = 2
+	limit_area = 300
+	limit_genfab = 3
+	limit_consumerfab = 2
+
+/datum/machine_limits/media/three
+	cost = 1600
+	limit_tech_consumer = 3
+	limit_tech_general = 3
+	limit_area = 300
+	limit_genfab = 3
+	limit_consumerfab = 2
+
+/datum/machine_limits/media/four
+	cost = 3500
+	limit_tech_consumer = 4
+	limit_tech_general = 4
+	limit_area = 400
+	limit_genfab = 3
+	limit_consumerfab = 2
+	limit_shuttles = 1
+
+
+
+// END MEDIA LIMITS
+
+
+/datum/business_spec
+	var/name = ""
+	var/desc = ""
+	var/datum/machine_limits/limits
+	var/list/objectives = list()
+
+/datum/business_spec/New()
+	limits = new limits()
+
 /datum/business_module
+	var/cost = 500
+	var/name = ""
+	var/desc = ""
+	var/current_level = 1
+	var/list/levels = list()
+	var/datum/machine_limits/limits
+	var/datum/business_spec/spec
+	var/list/specs = list()
+
+/datum/business_module/New()
+	var/list/specs_c = specs.Copy()
+	specs = list()
+	for(var/x in specs_c)
+		specs |= new x()
+	var/list/levels_c = levels.Copy()
+	levels = list()
+	for(var/x in levels_c)
+		levels |= new x()
 
 /datum/business_module/engineering
+	cost = 500
+	name = "Engineering"
+	desc = "An engineering business has tools to develop areas of the station and construct shuttles plus the unique capacity to manage private radio communications. Engineering businesses can reserve larger spaces than other businesses and develop those into residential areas to be leased to individuals."
+	levels = list(/datum/machine_limits/eng/one, /datum/machine_limits/eng/two, /datum/machine_limits/eng/three, /datum/machine_limits/eng/four)
+	specs = list(/datum/business_spec/eng/realestate, /datum/business_spec/eng/tcomms)
+
+/datum/business_spec/eng/realestate
+	name = "Real-Estate"
+	desc = "With this specialization the engineering business gains another 200 tiles of area limit plus a consumer fabricator limit and two levels of consumer tech limit so that you can better furnish interiors."
+	limits = /datum/machine_limits/eng/spec/realestate
+
+/datum/business_spec/eng/tcomms
+	name = "Communication & Travel"
+	desc = "This specialization grants operation of three extra telecomms machines that can operate three frequencies each. It also allows for two shuttles and an extra EVA fabricator."
+	limits = /datum/machine_limits/eng/spec/realestate
+
+
+/datum/business_module/medical
+	cost = 500
+	name = "Medical"
+	desc = "A medical firm has unqiue capacity to develop medications and implants. Programs can be used to register clients under your care and recieve a weekly insurance payment from them, in exchange for tracking their health and responding to medical emergencies."
+	levels = list(/datum/machine_limits/medical/one, /datum/machine_limits/medical/two, /datum/machine_limits/medical/three, /datum/machine_limits/medical/four)
+	specs = list(/datum/business_spec/medical/paramedic, /datum/business_spec/medical/pharma)
+
+/datum/business_spec/medical/paramedic
+	name = "Paramedic"
+	desc = "The Paramedic specialization allows the business to operate a voidsuit fabricator and two shuttles to retrieve clients from the dangerous sectors of the Nexus outer-space."
+	limits = /datum/machine_limits/medical/spec/paramedic
+
+/datum/business_spec/medical/pharma
+	name = "Pharmacy"
+	desc = "This specialization gives the business capacity for a service fabricator and two botany trays that can produce reagents that can be further refined into valuable and effective medicines. It also grants 200 extra tiles to the area limit so you can have larger medical facilities."
+	limits = /datum/machine_limits/medical/spec/pharma
+
+
+/datum/business_module/retail
+	cost = 500
+	name = "Retail"
+	desc = "A retail business has exclusive production capacity so that they can sell clothing and furniture to individuals and organizations. With additional specialization they can branch out into combat equipment or engineering supplies, but they are reliant on the material market to supply their production."
+	levels = list(/datum/machine_limits/retail/one, /datum/machine_limits/retail/two, /datum/machine_limits/retail/three, /datum/machine_limits/retail/four)
+	specs = list(/datum/business_spec/retail/combat, /datum/business_spec/retail/bigstore)
+
+/datum/business_spec/retail/combat
+	name = "Combat"
+	desc = "The Combat specialization gives limits for a combat fabricator and an early combat tech limit which will increase as the business network expands. You can also maintain a shuttle, but you'll need to purchase the EVA equipment elsewhere."
+	limits = /datum/machine_limits/retail/spec/combat
+
+/datum/business_spec/retail/bigstore
+	name = "Grand Emporium"
+	desc = "This specialization gives the business capacity for an engineering fabricator, an EVA fabricator, an engineering tech limit, plus 200 extra tiles for the area limit so that you can produce a grand emporium that sells all manner of things."
+	limits = /datum/machine_limits/retail/spec/bigstore
+
+
+
+/datum/business_module/service
+	cost = 400
+	name = "Service"
+	desc = "A service business has a fabricator that can produce culinary and botany equipment. A service business can serve food or drink and supply freshly grown plants for other organizations, a crucial source of cloth and biomass."
+	levels = list(/datum/machine_limits/service/one, /datum/machine_limits/service/two, /datum/machine_limits/service/three, /datum/machine_limits/service/four)
+	specs = list(/datum/business_spec/service/culinary, /datum/business_spec/service/farmer)
+
+/datum/business_spec/service/culinary
+	name = "Culinary"
+	desc = "This specialization gives 200 extra tiles to the area limit, plus an engineering fabricator and tech level so that you can put together the perfect space for your customers."
+	limits = /datum/machine_limits/service/spec/culinary
+
+/datum/business_spec/service/farmer
+	name = "Farming"
+	desc = "Farming gives four additional botany trays and limits for two of the exclusive auto-tailor types, so you can process cloth into a finished product for selling. The extra botany trays can produce plants or reagents to be sold to all sorts of other businesses."
+	limits = /datum/machine_limits/service/spec/farmer
+
+
+/datum/business_module/mining
+	cost = 500
+	name = "Mining"
+	desc = "Mining companies send teams out into the hostile outer-space armed with picks, drills and a variety of other EVA equipment plus weapons and armor to defend themselves. The ores they recover can be processed and then sold on the Material Marketplace to other organizations for massive profits."
+	levels = list(/datum/machine_limits/mining/one, /datum/machine_limits/mining/two, /datum/machine_limits/mining/three, /datum/machine_limits/mining/four)
+	specs = list(/datum/machine_limits/mining/spec/massdrill, /datum/machine_limits/mining/spec/monsterhunter)
+
+/datum/business_spec/mining/massdrill
+	name = "Mass Production"
+	desc = "The Mass Production specialization allows operation of two extra drills, an extra shuttle, plus an engineering fabricator and a engineering tech limit. Take multiple teams to harvest materials from the managable sectors of outer-space."
+	limits = /datum/machine_limits/mining/spec/massdrill
+
+/datum/business_spec/mining/monsterhunter
+	name = "Monster Hunt"
+	desc = "This specialization gives the business capacity for a medical fabricator and tech that can produce machines and equipment to keep employees alive while fighting the top tier of monsters. Travel to the outer reaches and dig for riches, let the monsters come to you."
+	limits = /datum/machine_limits/retail/spec/bigstore
+
+
+/datum/business_module/media
+	cost = 350
+	name = "Media"
+	desc = "Media companies have simple production and tech capacities but exclusive access to programs that can publish books and news articles for paid redistribution. It is also much less expensive than other types, making it a good choice for generic business."
+	levels = list(/datum/machine_limits/media/one, /datum/machine_limits/media/two, /datum/machine_limits/media/three, /datum/machine_limits/media/four)
+	specs = list(/datum/business_spec/media/journalism, /datum/business_spec/media/bookpublishing)
+
+/datum/business_spec/media/journalism
+	name = "Journalism"
+	desc = "Specializing in Journalism gives capacity for an EVA fabricator and shuttle, plus a medical fabricator with basic medical tech limitation. Explore every corner of Nexus-space, but best to carry basic medical supplies."
+	limits = /datum/machine_limits/media/spec/journalism
+
+/datum/business_spec/media/bookpublishing
+	name = "Publishing"
+	desc = "The Publishing specialization grants 200 extra tiles to the area limit and an engineering fabricator and tech limit. You can build a proper library and publishing house, or perhaps some other artistic facility."
+	limits = /datum/machine_limits/media/spec/bookpublishing
+
+
 
 /datum/business_module/medical
 

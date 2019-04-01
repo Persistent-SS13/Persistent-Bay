@@ -12,21 +12,22 @@
 										// in addition to any material costs.
 
 /obj/machinery/fabricator/consumer_fabricator/can_connect(var/datum/world_faction/trying, var/mob/M)
-	if(!trying.limits) return 0
+	var/datum/machine_limits/limits = trying.get_limits()
 	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(req_access_faction)))
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
-	if(trying.limits.limit_consumerfab <= trying.limits.consumerfabs.len)
+	if(limits.limit_consumerfab <= limits.consumerfabs.len)
 		if(M)
 			to_chat(M, "[trying.name] cannot connect any more machines of this type.")
 		return 0
-	trying.limits.consumerfabs |= src
+	limits.consumerfabs |= src
 	req_access_faction = trying.uid
 	connected_faction = src
 
 /obj/machinery/fabricator/consumer_fabricator/can_disconnect(var/datum/world_faction/trying, var/mob/M)
-	if(trying.limits)
-		trying.limits.consumerfabs -= src
+	var/datum/machine_limits/limits = trying.get_limits()
+	if(limits)
+		limits.consumerfabs -= src
 	req_access_faction = ""
 	connected_faction = null
 	if(M) to_chat(M, "The machine has been disconnected.")
@@ -566,7 +567,7 @@
 	name = "cardemon booster pack"
 	build_path = /obj/item/weapon/pack/cardemon
 	materials = list(MATERIAL_PLASTIC = 0.25 SHEETS)
-	
+
 /datum/design/item/consumerfab/consumer/games/spaceball
 	name = "spaceball booster pack"
 	build_path = /obj/item/weapon/pack/spaceball

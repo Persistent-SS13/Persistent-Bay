@@ -24,6 +24,8 @@
 	var/clean_up_time = 0
 	var/last_found = 0
 
+	should_save = 0
+
 /mob/living/simple_animal/hostile/New()
 	..()
 	last_found = world.time
@@ -112,7 +114,7 @@
 	if(!Adjacent(target_mob))
 		return
 	if(attack_sound)
-		playsound(loc, attack_sound, 50, 1, 1)	
+		playsound(loc, attack_sound, 50, 1, 1)
 	if(isliving(target_mob))
 		var/mob/living/L = target_mob
 		L.attack_generic(src,rand(melee_damage_lower,melee_damage_upper),attacktext,damtype,defense)

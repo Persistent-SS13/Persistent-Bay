@@ -19,30 +19,35 @@
 	<h2>{{:data.selected_assignment}} (Special Assignment)</h2>
 	<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
 	<br><hr>
-	<div class='item'>
-		<div class='itemLabel'>
-			Expense Limit:
+	{{if data.proper_job}}
+		<div class='item'>
+			<div class='itemLabel'>
+				Expense Limit:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link(data.expense_limit, '', {'action' : 'change_expense_limit'})}}
+			</div>
 		</div>
-		<div class='itemContent'>
-			{{:helper.link(data.expense_limit, '', {'action' : 'change_expense_limit'})}}
+		<div class='item'>
+			<div class='itemLabel'>
+				Cryo-network:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link(data.cryonetwork, 'pencil', {'action' : 'edit_assignment_cryonet'})}}
+			</div>
 		</div>
-	</div>
-	<div class='item'>
-		<div class='itemLabel'>
-			Cryo-network:
+		<div class='item'>
+			<div class='itemLabel'>
+				Pay:
+			</div>
+			<div class='itemContent'>
+				{{:data.pay}}
+			</div>
 		</div>
-		<div class='itemContent'>
-			{{:helper.link(data.cryonetwork, 'pencil', {'action' : 'edit_assignment_cryonet'})}}
-		</div>
-	</div>
-	<div class='item'>
-		<div class='itemLabel'>
-			Pay:
-		</div>
-		<div class='itemContent'>
-			{{:data.pay}}
-		</div>
-	</div>
+		<br><br>{{:helper.link("Change Authority Level", 'flag', {'action' : 'edit_assignment_authority'})}} Auth Level: {{:data.authlevel}}
+		<br><br>If the assignment has management access, it will not be able to assign anyone to an assignment with an authority requirement higher than its authority level. The assignment will not be able to reassign, promote or demote assignments with a higher authority requirement.
+		<br><br>
+	{{/if}}
 	{{for data.access_categories}}
 		{{:value.name}} :<br><br>
 		{{for value.accesses :accessValue:accessIndex}}
@@ -77,7 +82,7 @@
 	<br><hr>
 	<br><br>{{:helper.link("Create New Employee Category", 'pencil', {'action' : 'create_assignmentcategory'})}}
 	<br><hr>
-	{{:helper.link('City Councillor', '', {'action' : 'select_councillor'})}}{{:helper.link('Judge', '', {'action' : 'select_judge'})}}<br><br>
+	{{:helper.link('City Councillor', '', {'action' : 'select_councillor'})}}{{:helper.link('Judge', '', {'action' : 'select_judge'})}}{{:helper.link('Resident', '', {'action' : 'select_resident'})}}{{:helper.link('Citizen', '', {'action' : 'select_citizen'})}}{{:helper.link('Prisoner', '', {'action' : 'select_prisoner'})}}<br><br>
 	{{for data.assignment_categories}}
 		{{:helper.link(value.name, '', {'action' : 'select_assignmentcategory', 'selected_ref' : value.ref})}}{{:helper.link("Create New Assignment", '', {'action' : 'create_assignment_two', 'selected_ref' : value.ref})}}:<br><br>
 		{{for value.assignments :assignmentValue:assignmentIndex}}
@@ -148,9 +153,15 @@
 	<br><br>{{:helper.link("Change Rank 1 Title", 'pencil', {'action' : 'edit_assignment'})}} Title: {{:data.title}}
 	<br><br>{{:helper.link("Change Rank 1 Payscale", 'pencil', {'action' : 'edit_assignment_pay'})}} Pay: {{:data.pay}}
 	<br><br>{{:helper.link("Delete Assignment", 'cross', {'action' : 'delete_assignment'})}}
-	<br><br>{{:helper.link("View/Edit Access", '', {'action' : 'view_access'}, data.view_ranks ? null : 'selected')}}{{:helper.link("View/Edit Ranks", '', {'action' : 'view_ranks'}, data.view_ranks ? 'selected' : null)}}
 	<br><br>{{:helper.link("Change Cryo-network", 'pencil', {'action' : 'edit_assignment_cryonet'})}} Cryo-network: {{:data.cryonetwork}}
+	<br><br>{{:helper.link("Change Authority Level", 'flag', {'action' : 'edit_assignment_authority'})}} Auth Level: {{:data.authlevel}}
+	<br><br>{{:helper.link("Change Authority Requirement", 'flag', {'action' : 'edit_assignment_requirement'})}} Required Auth Level: {{:data.reqauthlevel}}
+	<br><br>If the assignment has management access, it will not be able to assign anyone to an assignment with an authority requirement higher than its authority level. The assignment will not be able to reassign, promote or demote assignments with a higher authority requirement.
+	<br><br>{{:helper.link("Set Custom Task", 'pencil', {'action' : 'set_custom_task'})}}{{:helper.link("Remove Custom Task", 'cross', {'action' : 'remove_custom_task'})}}
 	<br><hr><br>
+		{{:data.assignment_task}}
+	<br><hr><br>
+	<br><br>{{:helper.link("View/Edit Access", '', {'action' : 'view_access'}, data.view_ranks ? null : 'selected')}}{{:helper.link("View/Edit Ranks", '', {'action' : 'view_ranks'}, data.view_ranks ? 'selected' : null)}}
 	{{if data.view_ranks}}
 		{{:helper.link("Add New Rank", '', {'action' : 'create_rank'})}}{{:helper.link("Delete rank", '', {'action' : 'delete_rank'})}}<br><br><hr>
 		{{for data.ranks}}

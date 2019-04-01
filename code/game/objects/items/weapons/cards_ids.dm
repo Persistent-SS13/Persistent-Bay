@@ -436,6 +436,26 @@ var/const/NO_EMAG_ACT = -50
 					if(copy)
 						for(var/x in copy.accesses)
 							final_access |= text2num(x)
+			if(istype(faction, /datum/world_faction/democratic))
+				var/datum/world_faction/democratic/democratic = faction
+				var/datum/computer_file/report/crew_record/record2 = Retrieve_Record(registered_name)
+				if(record2)
+					var/datum/assignment/assignment2
+					switch(record2.citizenship)
+						if(RESIDENT)
+							assignment2 = democratic.resident_assignment
+						if(CITIZEN)
+							assignment2 = democratic.citizen_assignment
+						if(PRISONER)
+							assignment2 = democratic.prisoner_assignment
+					
+					if(assignment2)
+						for(var/i=1; i<=record.rank; i++)
+							var/datum/accesses/copy = assignment2.accesses["[i]"]
+							if(copy)
+								for(var/x in copy.accesses)
+									final_access |= text2num(x)
+			
 			return final_access
 		else
 			if(faction.allow_id_access)

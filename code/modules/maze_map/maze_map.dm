@@ -1,5 +1,9 @@
 GLOBAL_LIST_EMPTY(maze_map_data)
 
+#define ZLEVEL_INACTIVE		0	//Inactive - Dont process nor spawn any mobs
+#define ZLEVEL_DORMANT		1	//Dormant - It is still active, but it no longer spawns mobs (Failed one check)
+#define ZLEVEL_ACTIVE		2	//Active - This zlevel currently has players in it.
+
 /obj/structure/transition_barrier
 	name = "bluespace barrier"
 	desc = "These barriers split the regions of the nexus quadrant into a maze."
@@ -9,26 +13,31 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	anchored = 1
 	dir = NORTH
 	should_save = 0
-	
-	
+
+
 /datum/zlevel_data
 	var/z // which z this datum controls
-	
+
 	var/N_connect // these control
 	var/W_connect // which zlevel is accessed
 	var/E_connect // by traveling in
 	var/S_connect // the correspodning direction
-	
-	var/difficulty = 0 // used for exploration/base establishment objectives
-	
-	var/list/monster_types = list() // types of monsters that will occur on this map.
-	var/monster_quantity = 0 // and how many will occur/respawn
-	
+
+	var/state = ZLEVEL_INACTIVE //Used to check whether this zlevel is worth processing at all
+	var/difficulty = 1 // used for exploration/base establishment objectives
+
+	var/list/monster_types = list(/mob/living/simple_animal/hostile/carp) // types of monsters that will occur on this map.
+	var/monster_quantity = 5 // and how many will occur/respawn
+
 	var/list/current_monsters = list()
 	var/list/despawning = list()
-	
+
 	var/coord = "(0,0)"
 	var/name = "Nexus"
+
+/datum/zlevel_data/proc/update()
+	if (isWild() && state == ZLEVEL_ACTIVE)
+		replenish_monsters()
 
 /datum/zlevel_data/proc/replenish_monsters()
 	if(current_monsters.len < monster_quantity)
@@ -40,18 +49,61 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 			var/mob/living/simple_animal/monster = new monster_type(T)
 			current_monsters |= monster
 			monster.faction = "spawned"
-			
+
+/datum/zlevel_data/proc/isWild()
+	if (difficulty == 0)
+		return FALSE
+	else
+		return TRUE
+
+/datum/zlevel_data/proc/lower_state()
+	if (state == ZLEVEL_INACTIVE)
+		return 0
+	else if (state == ZLEVEL_ACTIVE)
+		set_state(ZLEVEL_DORMANT)
+	else
+		set_state(ZLEVEL_INACTIVE)
+	return 1
+
+/datum/zlevel_data/proc/set_active()
+	set_state(ZLEVEL_ACTIVE)
+	return 1
+
+/datum/zlevel_data/proc/set_state(var/target_state)
+	if (target_state == state)
+		return 0
+	else if (target_state == ZLEVEL_ACTIVE && state == ZLEVEL_INACTIVE) //Need to spawn dem bois
+		on_active()
+	else if (target_state == ZLEVEL_INACTIVE)
+		on_inactive()
+	state = target_state
+	return 1
+
+/datum/zlevel_data/proc/on_inactive()
+	for(var/mob/m in current_monsters)
+		if ( m in SSmobs.mob_list )
+			STOP_PROCESSING(SSmobs, m)
+
+/datum/zlevel_data/proc/on_active()
+	for(var/mob/m in current_monsters)
+		if (! m in SSmobs.mob_list )
+			START_PROCESSING(SSmobs, m)
+	replenish_monsters()
+
 /datum/zlevel_data/one
 	z = 1
-	
+	difficulty = 0
+
 /datum/zlevel_data/two
 	z = 2
-	
+	difficulty = 0
+
 /datum/zlevel_data/three
 	z = 3
+	difficulty = 0
 	N_connect = 4
 	S_connect = 9
-	
+
 /datum/zlevel_data/four
 	z = 4
 	coord = "(0,1)"
@@ -65,7 +117,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	name = "Julian's Corner"
 	N_connect = 4
 	W_connect = 6
-	
+
 /datum/zlevel_data/six
 	z = 6
 	coord = "(-1,2)"
@@ -73,19 +125,19 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	E_connect = 5
 	W_connect = 7
 	S_connect = 8
-	
+
 /datum/zlevel_data/seven
 	z = 7
 	coord = "(-2,2)"
 	name = "Shadowlands"
 	E_connect = 6
-	
+
 /datum/zlevel_data/eight
 	z = 8
 	coord = "(-1,1)"
 	name = "Blue Effigy"
-	N_connect = 6	
-	
+	N_connect = 6
+
 /datum/zlevel_data/nine
 	z = 9
 	coord = "(0,-1)"
@@ -99,7 +151,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	name = "Gerald's Zone"
 	W_connect = 9
 	N_connect = 11
-	
+
 /datum/zlevel_data/eleven
 	z = 11
 	coord = "(1,0)"
@@ -107,8 +159,8 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	S_connect = 10
 	N_connect = 12
 	W_connect = 13
-	
-	
+
+
 /datum/zlevel_data/twelve
 	z = 12
 	coord = "(1,1)"
@@ -120,6 +172,8 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	coord = "(2,0)"
 	name = "Far Reach"
 	E_connect = 11
-	
 
 
+#undef ZLEVEL_INACTIVE
+#undef ZLEVEL_DORMANT
+#undef ZLEVEL_ACTIVE

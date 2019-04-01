@@ -279,12 +279,12 @@
 				new_z = data.E_connect
 
 		else if (y <= TRANSITIONEDGE-1) 					// South
-			new_y = TRANSITIONEDGE + 1
+			new_y = world.maxy - TRANSITIONEDGE - 1
 			var/datum/zlevel_data/data = SSmazemap.map_data["[z]"]
 			if(data && data.S_connect)
 				new_z = data.S_connect
 		else if (y >= (world.maxy + 1 - TRANSITIONEDGE))	// North
-			new_y = world.maxy - TRANSITIONEDGE - 1
+			new_y = TRANSITIONEDGE + 1
 			var/datum/zlevel_data/data = SSmazemap.map_data["[z]"]
 			if(data && data.N_connect)
 				new_z = data.N_connect

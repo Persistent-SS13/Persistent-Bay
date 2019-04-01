@@ -1,0 +1,83 @@
+<h2>Create a new business</h2>
+<br>
+Businesses are created by dividing the cost of the business license between stock contracts that distribute the initial stocks of the business in return for initial investment that pays the license fee.
+Anything invested past the license fee will be the businesses starting funds, and the transaction will be untaxed so it is a good idea for businesses to find more investment than just the license fee.
+<br>
+This program has no access restriction so that it can be shared by all investors. Making changes to the details of the prospective business will automatically devalidate all pending contracts, so make sure this console is in a secure location.
+<br>
+<hr>
+Step 1. Choose your business type<br>
+{{:helper.link(data.business_type, null, {'action' : 'change_business_type'})}}
+<br><br>
+{{:data.type_desc}}
+<br><br>
+Specialization<br>
+{{:helper.link(data.business_spec, null, {'action' : 'change_business_spec'})}}
+<br><br>
+{{:data.spec_desc}}
+<br><hr>
+{{if data.chose_business}}
+	Step 2. Choose your business unique identifier (UID)<br>
+	{{:helper.link(data.business_uid, null, {'action' : 'change_business_uid'})}}
+	<br><br>
+	The UID must be unused by other businesses and cannot be changed once the business is created. It is used to connect modular computers to the organizations network, to connect and access unique programs and manage organization IDs and access.<br>
+	If the UID is known by law enforcement an audit can be performed that will give details about ownership for the business
+	<br><hr>
+	{{if data.chose_uid}}
+		Step 3. Choose your business display name<br>
+		{{:helper.link(data.business_name, null, {'action' : 'change_business_name'})}}
+		<br><br>
+		The display name shows up on invoices, contracts and in employees neural lace menu when they are clocking in. It can be changed at any time by the current CEO of the business.
+		<br><hr>
+		{{if data.chose_name}}
+			Step 4. Name Starting CEO<br>
+			{{:helper.link(data.business_ceo, null, {'action' : 'change_business_ceo'})}}
+			<br><br>
+			The CEO of the business has all-access and can design the assignments and access, hire and fire anyone from the employment network. A CEO can be forced to step down or replaced through a stockholders vote.
+			<br><br>
+			Compensation<bro>
+			{{:helper.link(data.business_ceowage, null, {'action' : 'change_business_ceowage'})}}
+			<br><br>
+			The CEO can be compensated in different ways including dividends based on profit. The CEO compensation type and rate can be changed at any time via a stockholders vote.
+			<br><hr>
+			{{if data.chose_ceo}}
+				Step 5. Collect Investment & Distribute Stocks<br>
+				Every business has 100 stocks that must be distributed to individuals in order to be created. Each stock represents 1% ownership in the company and is used for all stock-holder votes. Dividends from the business are automatically paid based on stock ownership.
+				Stock contracts can be signed to commit funds in exchange for stocks for the business, and when 100 stocks have been distributed and the license fee covered through investment, the business can be finalized.
+				<br>
+				{{:helper.link('Print new stock contract', '', {'action' : 'business_contract'}, null)}}<br><br>
+				Signed Stock Contracts
+				<div class="statusDisplay" style="overflow: auto;">
+					{{for data.signed_contracts}}
+						{{:value.signed_contract}}<br><hr>
+					{{/for}}
+				</div>
+				<div class='item'>
+					<div class='itemLabel'>
+						Current Commitment/Cost:
+					</div>
+					<div class='itemContent'>
+						{{:data.commitment}}/{{:data.cost}}
+					</div>
+				</div>
+				<div class='item'>
+					<div class='itemLabel'>
+						Distributed Stocks:
+					</div>
+					<div class='itemContent'>
+						{{:data.signed_stocks}}/100
+					</div>
+				</div>
+				<div class='item'>
+					<div class='itemLabel'>
+						Finalize:
+					</div>
+					<div class='itemContent'>
+						{{:helper.link('Complete Registration', '', {'action' : 'business_finalize'}, data.finish_ready ? null : 'disabled')}}
+					</div>
+				</div>
+				When all the stocks are distributed and at least the cost of the license collected as investment, the business can be completed.
+			{{/if}}
+		{{/if}}
+	{{/if}}
+{{/if}}

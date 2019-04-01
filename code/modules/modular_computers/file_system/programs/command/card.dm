@@ -17,10 +17,6 @@
 		return 1
 	var/list/accesses_to_check = list()
 	accesses_to_check |= access_to_check
-	accesses_to_check |= core_access_promotion
-	accesses_to_check |= core_access_employee_records
-	accesses_to_check |= core_access_expenses
-	accesses_to_check |= core_access_termination
 	// Admin override - allows operation of any computer as aghosted admin, as if you had any required access.
 	if(isghost(user) && check_rights(R_ADMIN, 0, user))
 		return 1
@@ -383,7 +379,7 @@
 				computer.proc_eject_id(user)
 		if("terminate")
 			if(computer && can_run(user, 1))
-				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_termination in user_accesses))
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_reassignment in user_accesses))
 					to_chat(usr, "Access Denied.")
 					return 0
 				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
@@ -393,7 +389,7 @@
 				update_ids(module.record.get_name())
 		if("unterminate")
 			if(computer && can_run(user, 1))
-				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_termination in user_accesses))
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_reassignment in user_accesses))
 					to_chat(usr, "Access Denied.")
 					return 0
 				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
@@ -403,7 +399,7 @@
 				update_ids(module.record.get_name())
 		if("reset_expenses")
 			if(computer && can_run(user, 1))
-				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_expenses in user_accesses))
+				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_reassignment in user_accesses))
 					to_chat(usr, "Access Denied.")
 					return 0
 				module.record.expenses = 0
@@ -414,7 +410,7 @@
 					to_chat(usr, "Access Denied.")
 					return 0
 				if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
-					to_chat(usr, "Insufficent Rank.")
+					to_chat(usr, "Insufficent Authority.")
 					return 0
 				var/t1 = href_list["assign_target"]
 				if(t1 == "Custom")
@@ -433,6 +429,9 @@
 						user_assignment = connected_faction.get_assignment(record.assignment_uid, record.get_name())
 					var/datum/assignment/assignment = locate(href_list["assign_target"])
 					if(!assignment) return 0
+					if(!isleader && assignment.authority_restriction > user_assignment.edit_authority)
+						to_chat(usr, "Your assignment does not have the authority to assign [assignment.name].")
+						return 0
 					if(check_rights(R_ADMIN, 0, user) || connected_faction.in_command(user_id_card.registered_name) || (user_assignment && user_assignment.parent.name == assignment.parent.name) || isleader)
 						module.record.assignment_data[module.record.assignment_uid] = "[module.record.rank]"
 						module.record.assignment_uid = assignment.uid
@@ -454,7 +453,7 @@
 						id_card.access += access_type
 		if("promote")
 			if(!user_id_card) return
-			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_promotion in user_accesses))
+			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_reassignment in user_accesses))
 				to_chat(usr, "Access Denied.")
 				return 0
 			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
@@ -464,7 +463,7 @@
 			module.record.check_rank_change(connected_faction)
 		if("demote")
 			if(!user_id_card) return
-			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_promotion in user_accesses))
+			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_reassignment in user_accesses))
 				to_chat(usr, "Access Denied.")
 				return 0
 			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))
@@ -487,7 +486,7 @@
 			to_chat(user, "Card successfully resynced to [connected_faction.name]")
 			update_ids(id_card.registered_name)
 		if("edit_record")
-			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_employee_records in user_accesses))
+			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !(core_access_reassignment in user_accesses))
 				to_chat(usr, "Access Denied.")
 				return 0
 			if(!(isghost(user) && check_rights(R_ADMIN, 0, user)) && !isleader && !connected_faction.outranks(user_id_card.registered_name, module.record.get_name()))

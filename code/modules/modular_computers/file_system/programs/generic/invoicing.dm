@@ -1,6 +1,6 @@
 /datum/computer_file/program/invoicing
 	filename = "invoicing-program"
-	filedesc = "Invoicing creation"
+	filedesc = "Organization Invoice Creation"
 	nanomodule_path = /datum/nano_module/program/invoicing
 	program_icon_state = "supply"
 	program_menu_icon = "cart"
@@ -8,7 +8,6 @@
 	size = 21
 	available_on_ntnet = 1
 	requires_ntnet = 1
-	required_access = core_access_invoicing
 	usage_flags = PROGRAM_ALL
 
 /datum/nano_module/program/invoicing

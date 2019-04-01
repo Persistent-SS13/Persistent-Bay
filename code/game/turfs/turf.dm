@@ -126,6 +126,8 @@ var/const/enterloopsanity = 100
 
 	if(ismob(A))
 		var/mob/M = A
+		if (isliving(M) && M.stat != DEAD)
+			SSmazemap.map_data["[M.z]"].set_active()
 		if(!M.check_solid_ground())
 			inertial_drift(M)
 			//we'll end up checking solid ground again but we still need to check the other things.

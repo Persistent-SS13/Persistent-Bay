@@ -4,7 +4,7 @@
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "register_idle"
 	obj_flags = ITEM_FLAG_NO_BLUDGEON
-	req_access = list(core_access_command_programs)
+	req_access = list()
 	anchored = 1
 
 	var/locked = 1

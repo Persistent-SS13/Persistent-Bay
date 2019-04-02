@@ -54,7 +54,7 @@
 
 	var/obj/O = nano_host()
 	if(!istype(O, /obj))
-		log_warning("/datum/nano_module/rcon/ui_interact(): No host!")
+		log_warning(" /datum/nano_module/rcon/ui_interact(): No host!")
 		return
 	data["faction"] = O.req_access_faction
 
@@ -127,7 +127,7 @@
 /datum/nano_module/rcon/proc/FindDevices()
 	var/obj/O = nano_host()
 	if(!istype(O, /obj))
-		log_warning("/datum/nano_module/rcon/proc/FindDevices(): No host!")
+		log_warning(" /datum/nano_module/rcon/proc/FindDevices(): No host!")
 		return
 	var/fac = O.req_access_faction
 

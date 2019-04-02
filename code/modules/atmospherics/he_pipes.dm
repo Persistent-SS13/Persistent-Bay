@@ -56,6 +56,8 @@
 	update_icon()
 
 /obj/machinery/atmospherics/pipe/simple/heat_exchanging/Process()
+	if(isnull(loc))
+		return
 	if(!parent)
 		..()
 	else

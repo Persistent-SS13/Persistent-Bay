@@ -8,7 +8,7 @@
 	desc = "A smaller welder, meant for quick or emergency use."
 	matter = list(MATERIAL_STEEL = 70, MATERIAL_GLASS = 30)
 	w_class = ITEM_SIZE_SMALL
-	tank = /obj/item/weapon/welder_tank/mini
+	tank = new /obj/item/weapon/welder_tank/mini
 	welding_efficiency = 0.9
 
 /obj/item/weapon/tool/weldingtool/mini/empty

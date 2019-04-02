@@ -317,7 +317,7 @@
 			M << browse(dat + "<html><head><title>[title]</title></head>" \
 			+ "<body style='overflow:hidden'>" \
 			+ "<div> <center><img src='tmp_photo.png' width = '180'" \
-			+ "[P.scribble ? "<div><i>[P.scribble]</i>" : ]"\
+			+ "[P.scribble ? "<div><i>[P.scribble]</i>" : null]"\
 			+ "</center></body></html>", "window=[title]")
 								
 	else

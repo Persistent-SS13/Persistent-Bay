@@ -44,6 +44,16 @@
 /obj/vehicle/New()
 	..()
 	//spawn the cell you want in each vehicle
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(open)
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(stat)
+	ADD_SAVED_VAR(emagged)
+	ADD_SAVED_VAR(cell)
+	ADD_SAVED_VAR(load)
+
+	ADD_SKIP_EMPTY(cell)
+	ADD_SKIP_EMPTY(load)
 
 /obj/vehicle/Move()
 	if(special_movement)
@@ -89,28 +99,31 @@
 		return
 	else if(isScrewdriver(W))
 		if(!locked)
-			open = !open
-			update_icon()
-			to_chat(user, SPAN_NOTICE("Maintenance panel is now [open ? "opened" : "closed"]."))
+			var/obj/item/weapon/tool/screwdriver/T = W
+			if(T.use_tool(user, src, 1 SECOND))
+				open = !open
+				update_icon()
+				to_chat(user, SPAN_NOTICE("Maintenance panel is now [open ? "opened" : "closed"]."))
+				return TRUE
+		else
+			to_chat(user, SPAN_WARNING("Its locked.."))
 	else if(isCrowbar(W) && cell && open)
 		remove_cell(user)
-
 	else if(istype(W, /obj/item/weapon/cell) && !cell && open)
 		insert_cell(W, user)
 	else if(isWelder(W))
 		var/obj/item/weapon/tool/weldingtool/T = W
-		if(T.welding)
-			if(health < max_health)
-				if(open)
-					health = min(max_health, health+10)
-					user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
-					user.visible_message(SPAN_WARNING("\The [user] repairs \the [src]!"), SPAN_NOTICE("You repair \the [src]!"))
-				else
-					to_chat(user, SPAN_NOTICE("Unable to repair with the maintenance panel closed."))
-			else
-				to_chat(user, SPAN_NOTICE("[src] does not need a repair."))
+		if(isdamaged())
+			if(!open)
+				to_chat(user, SPAN_NOTICE("Unable to repair with the maintenance panel closed."))
+				return TRUE
+			if(T.use_tool(user, src, 5 SECONDS))
+				add_health(10)
+				user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
+				user.visible_message(SPAN_WARNING("\The [user] repairs some of the damages on \the [src]!"), SPAN_NOTICE("You repair some of the damages on \the [src]!"))
+				return TRUE
 		else
-			to_chat(user, SPAN_NOTICE("Unable to repair while [src] is off."))
+			to_chat(user, SPAN_NOTICE("[src] does not need repairs."))
 	else
 		. = ..()
 
@@ -164,7 +177,7 @@
 		emagged = TRUE
 		if(locked)
 			locked = FALSE
-			to_chat(user, "<span class='warning'>You bypass [src]'s controls.</span>")
+			to_chat(user, SPAN_WARNING("You bypass [src]'s controls."))
 		return 1
 
 /obj/vehicle/make_debris()

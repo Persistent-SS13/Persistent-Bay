@@ -186,7 +186,7 @@
 			if(ison())
 				turn_idle()
 			else
-				turn_on()
+				turn_active()
 		return TOPIC_REFRESH
 
 	if (href_list["ejectdish"])

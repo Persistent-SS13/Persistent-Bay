@@ -74,6 +74,11 @@
 	if(loc)
 		initial_loc = get_area(loc)
 		area_uid = initial_loc.uid
+	ADD_SAVED_VAR(pump_direction)
+	ADD_SAVED_VAR(welded)
+	ADD_SAVED_VAR(external_pressure_bound)
+	ADD_SAVED_VAR(internal_pressure_bound)
+	ADD_SAVED_VAR(pressure_checks)
 
 /obj/machinery/atmospherics/unary/vent_pump/Initialize()
 	.=..()
@@ -171,7 +176,8 @@
 
 /obj/machinery/atmospherics/unary/vent_pump/Process()
 	..()
-
+	if(isnull(loc))
+		return
 	if (hibernate > world.time)
 		return 1
 
@@ -233,6 +239,8 @@
 	return pressure_delta
 
 /obj/machinery/atmospherics/unary/vent_pump/proc/broadcast_status()
+	if(isnull(initial_loc))
+		return FALSE
 	var/list/data = list(
 		"area" 		= src.area_uid,
 		"device" 	= "AVP",

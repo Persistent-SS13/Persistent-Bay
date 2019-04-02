@@ -4,16 +4,30 @@
 	var/flags = EXTENSION_FLAG_NONE
 
 /datum/extension/New(var/datum/holder)
-	if(!istype(holder, expected_type))
-		CRASH("Invalid holder type. Expected [expected_type], was [holder.type]")
+	if(!istype(holder, expected_type) && !isnull(holder)) //Let null extensions be built, otherwise we get runtime spam on save load!!
+		CRASH("Invalid holder type. Expected [expected_type], was [isnull(holder)? "null" : holder.type]")
 	src.holder = holder
 
 /datum/extension/Destroy()
 	holder = null
 	. = ..()
 
+/datum/extension/proc/set_holder(var/holder)
+	src.holder = holder
+
 /datum
 	var/list/datum/extension/extensions
+
+/datum/after_load()
+	. = ..()
+	if(extensions)
+		for(var/key in extensions)
+			var/list/extension = extensions[key]
+			if(!islist(extension))
+				var/datum/extension/ext = extension
+				ext.set_holder(src) //Ensure the holder is set properly
+			else
+				log_debug("/datum/after_load(): found a list extension.. Not setting holder.")
 
 /datum/Destroy()
 	if(extensions)

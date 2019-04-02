@@ -1000,7 +1000,6 @@
 #include "code\game\objects\items\weapons\tools\welders\mini_welder.dm"
 #include "code\game\objects\items\weapons\tools\welders\upgraded_welder.dm"
 #include "code\game\objects\items\weapons\tools\welders\weldbackpack.dm"
-#include "code\game\objects\items\weapons\tools\welders\weldertank.dm"
 #include "code\game\objects\random\random.dm"
 #include "code\game\objects\structures\bedsheet_bin.dm"
 #include "code\game\objects\structures\catwalk.dm"

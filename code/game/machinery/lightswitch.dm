@@ -42,7 +42,8 @@
 	if(name == initial(name))
 		name = "light switch ([connected_area.name])"
 
-	connected_area.set_lightswitch(on)
+	if(!isnull(connected_area))
+		connected_area.set_lightswitch(on)
 	update_icon()
 
 /obj/machinery/light_switch/update_icon()

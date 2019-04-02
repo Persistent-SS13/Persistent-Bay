@@ -1,69 +1,19 @@
 //wip wip wup
 /obj/structure/mirror
-	name = "mirror"
-	desc = "A SalonPro Nano-Mirror(TM) brand mirror! The leading technology in hair salon products, utilizing nano-machinery to style your hair just right."
-	icon = 'icons/obj/watercloset.dmi'
-	icon_state = "mirror"
-	density = 0
-	anchored = 1
-	mass = 3
-	max_health = 10
-	var/shattered = 0
+	name 			= "mirror"
+	desc 			= "A SalonPro Nano-Mirror(TM) brand mirror! The leading technology in hair salon products, utilizing nano-machinery to style your hair just right."
+	icon 			= 'icons/obj/watercloset.dmi'
+	icon_state 		= "mirror"
+	density 		= FALSE
+	anchored 		= TRUE
+	mass 			= 1 //Kg
+	max_health 		= 10
+	sound_destroyed	= "shatter"
+	sound_hit 		= 'sound/effects/hit_on_shattered_glass.ogg'
+	matter			= list(MATERIAL_GLASS = 50)
+
+	var/broken_health = 5
 	var/list/ui_users = list()
-
-/obj/structure/mirror/attack_hand(mob/user as mob)
-
-	if(shattered)	return
-
-	if(ishuman(user))
-		var/datum/nano_module/appearance_changer/AC = ui_users[user]
-		if(!AC)
-			AC = new(src, user)
-			AC.name = "SalonPro Nano-Mirror&trade;"
-			ui_users[user] = AC
-		AC.ui_interact(user)
-
-/obj/structure/mirror/proc/shatter()
-	if(shattered)	return
-	shattered = 1
-	icon_state = "mirror_broke"
-	playsound(src, "shatter", 70, 1)
-	desc = "Oh no, seven years of bad luck!"
-
-
-/obj/structure/mirror/bullet_act(var/obj/item/projectile/Proj)
-
-	if(prob(Proj.get_structure_damage() * 2))
-		if(!shattered)
-			shatter()
-		else
-			playsound(src, 'sound/effects/hit_on_shattered_glass.ogg', 70, 1)
-	..()
-
-/obj/structure/mirror/attackby(obj/item/I as obj, mob/user as mob)
-	if(shattered)
-		playsound(src.loc, 'sound/effects/hit_on_shattered_glass.ogg', 70, 1)
-		return
-
-	if(prob(I.force * 2))
-		visible_message("<span class='warning'>[user] smashes [src] with [I]!</span>")
-		shatter()
-	else
-		visible_message("<span class='warning'>[user] hits [src] with [I]!</span>")
-		playsound(src.loc, 'sound/effects/Glasshit.ogg', 70, 1)
-
-/obj/structure/mirror/attack_generic(var/mob/user, var/damage)
-	attack_animation(user)
-	if(shattered)
-		playsound(src.loc, 'sound/effects/hit_on_shattered_glass.ogg', 70, 1)
-		return 0
-
-	if(damage)
-		user.visible_message("<span class='danger'>[user] smashes [src]!</span>")
-		shatter()
-	else
-		user.visible_message("<span class='danger'>[user] hits [src] and bounces off!</span>")
-	return 1
 
 /obj/structure/mirror/Destroy()
 	for(var/user in ui_users)
@@ -72,12 +22,65 @@
 	ui_users.Cut()
 	..()
 
+/obj/structure/mirror/attack_hand(mob/user as mob)
+	if(attack_hand(user))
+		return TRUE
+	if(ishuman(user))
+		var/datum/nano_module/appearance_changer/AC = ui_users[user]
+		if(!AC)
+			AC = new(src, user)
+			AC.name = "SalonPro Nano-Mirror&trade;"
+			ui_users[user] = AC
+		AC.ui_interact(user)
+		return TRUE
+
+/obj/structure/mirror/attackby(obj/item/W as obj, mob/user as mob)
+	if((isScrewdriver(W)) && (istype(loc, /turf/simulated) || anchored))
+		playsound(loc, 'sound/items/Screwdriver.ogg', 100, 1)
+		anchored = !anchored
+		user.visible_message("<span class='notice'>[user] [anchored ? "fastens" : "unfastens"] the [src].</span>", \
+								 "<span class='notice'>You have [anchored ? "fastened the [src] to" : "unfastened the [src] from"] the floor.</span>")
+		return
+
+	else if(isWrench(W))
+		to_chat(user, "You remove the [src] assembly from the wall!")
+		new /obj/item/frame/mirror(get_turf(user))
+		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
+		qdel(src)
+		return
+
+/obj/structure/mirror/examine(mob/user)
+	if(health < broken_health)
+		desc = "Oh no, seven years of bad luck!"
+	else 
+		desc = "A SalonPro Nano-Mirror(TM) brand mirror! The leading technology in hair salon products, utilizing nano-machinery to style your hair just right."
+	. = ..()
+
+/obj/structure/mirror/update_icon()
+	switch(dir)
+		if(NORTH)
+			src.pixel_x = 0
+			src.pixel_y = -30
+		if(SOUTH)
+			src.pixel_x = 0
+			src.pixel_y = 30
+		if(WEST)
+			src.pixel_x = 30
+			src.pixel_y = 0
+		if(EAST)
+			src.pixel_x = -30
+			src.pixel_y = 0
+
+	if(health < broken_health)
+		icon_state = "mirror_broke"
+	else
+		icon_state = "mirror" 
+
 // The following mirror is ~special~.
 /obj/structure/mirror/raider
 	name = "cracked mirror"
 	desc = "Something seems strange about this old, dirty mirror. Your reflection doesn't look like you remember it."
 	icon_state = "mirror_broke"
-	shattered = 1
 
 /obj/structure/mirror/raider/attack_hand(var/mob/living/carbon/human/user)
 	if(istype(get_area(src),/area/syndicate_mothership))
@@ -124,22 +127,3 @@
 		qdel(AC)
 	ui_users.Cut()
 	..()
-
-
-
-
-
-/obj/structure/mirror/attackby(obj/item/W as obj, mob/user as mob)
-	if((isScrewdriver(W)) && (istype(loc, /turf/simulated) || anchored))
-		playsound(loc, 'sound/items/Screwdriver.ogg', 100, 1)
-		anchored = !anchored
-		user.visible_message("<span class='notice'>[user] [anchored ? "fastens" : "unfastens"] the [src].</span>", \
-								 "<span class='notice'>You have [anchored ? "fastened the [src] to" : "unfastened the [src] from"] the floor.</span>")
-		return
-
-	else if(isWrench(W))
-		to_chat(user, "You remove the [src] assembly from the wall!")
-		new /obj/item/frame/mirror(get_turf(user))
-		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
-		qdel(src)
-		return

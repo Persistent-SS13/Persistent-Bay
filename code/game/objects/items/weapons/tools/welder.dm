@@ -31,27 +31,28 @@
 	var/welding = 0 	//Whether or not the welding tool is off(0), on(1) or currently welding(2)
 	var/status = 1 		//Whether the welder is secured or unsecured (able to attach rods to it to make a flamethrower)
 
-	var/obj/item/weapon/welder_tank/tank = /obj/item/weapon/welder_tank // where the fuel is stored
+	var/obj/item/weapon/welder_tank/tank = new /obj/item/weapon/welder_tank() // where the fuel is stored
 	var/fuel_rate = 0.05 //The idle fuel burn rate while the welder is on
 	var/fuel_cost_use = 1 //The initial fuel cost for various actions
 	var/welding_efficiency = 1.0 //Base welding multiplier for fuel use
 
 /obj/item/weapon/tool/weldingtool/empty
-	tank = /obj/item/weapon/welder_tank/empty
+	tank = new /obj/item/weapon/welder_tank/empty()
+
+/obj/item/weapon/tool/weldingtool/New()
+	..()
+	ADD_SAVED_VAR(tank)
+
+	ADD_SKIP_EMPTY(tank)
 
 /obj/item/weapon/tool/weldingtool/Initialize()
-	if(!map_storage_loaded)
-		if(ispath(tank))
-			tank = new tank
-
 	set_extension(src, /datum/extension/base_icon_state, /datum/extension/base_icon_state, icon_state)
-	update_icon()
 	. = ..()
+	update_icon()
 
 /obj/item/weapon/tool/weldingtool/Destroy()
 	if(welding)
 		STOP_PROCESSING(SSobj, src)
-
 	QDEL_NULL(tank)
 
 	return ..()
@@ -70,7 +71,7 @@
 	if(istype(over, /obj/item/weapon/weldpack))
 		var/obj/item/weapon/weldpack/wp = over
 		if(wp.welder)
-			to_chat(usr, "\The [wp] already has \a [wp.welder] attached.")
+			to_chat(usr, SPAN_WARNING("\The [wp] already has \a [wp.welder] attached."))
 		else
 			usr.drop_from_inventory(src, wp)
 			wp.welder = src
@@ -82,15 +83,15 @@
 
 /obj/item/weapon/tool/weldingtool/attackby(obj/item/W as obj, mob/user as mob)
 	if(welding)
-		to_chat(user, "<span class='danger'>Stop welding first!</span>")
+		to_chat(user, SPAN_DANGER("Stop welding first!"))
 		return 0
 
 	if(isScrewdriver(W))
 		status = !status
 		if(status)
-			to_chat(user, "<span class='notice'>You secure the welder.</span>")
+			to_chat(user, SPAN_NOTICE("You secure the welder."))
 		else
-			to_chat(user, "<span class='notice'>The welder can now be attached and modified.</span>")
+			to_chat(user, SPAN_NOTICE("The welder can now be attached and modified."))
 		src.add_fingerprint(user)
 		return 1
 
@@ -117,17 +118,18 @@
 
 	if(istype(W, /obj/item/weapon/welder_tank))
 		if(tank)
-			to_chat(user, "Remove the current tank first.")
+			to_chat(user, SPAN_WARNING("Remove the current tank first."))
 			return 0
 
 		if(W.w_class >= w_class)
-			to_chat(user, "\The [W] is too large to fit in \the [src].")
+			to_chat(user, SPAN_WARNING("\The [W] is too large to fit in \the [src]."))
 			return 0
 
-		user.drop_from_inventory(W, src)
-		tank = W
-		user.visible_message("[user] slots \a [W] into \the [src].", "You slot \a [W] into \the [src].")
-		update_icon()
+		if(user.unEquip(W))
+		//user.drop_from_inventory(W, src)
+			tank = W
+			user.visible_message("[user] slots \a [W] into \the [src].", "You slot \a [W] into \the [src].")
+			update_icon()
 		return 1
 
 	return ..()
@@ -141,9 +143,9 @@
 				tank = null
 				update_icon()
 			else
-				to_chat(user, "\The [tank] can't be removed.")
+				to_chat(user, SPAN_WARNING("\The [tank] can't be removed."))
 		else
-			to_chat(user, "<span class='danger'>Stop welding first!</span>")
+			to_chat(user, SPAN_DANGER("Stop welding first!"))
 
 	else
 		return ..()
@@ -157,10 +159,10 @@
 	if(!proximity) return
 	if (istype(O, /obj/structure/reagent_dispensers/fueltank) && get_dist(src,O) <= 1 && !src.welding)
 		if(!tank)
-			to_chat(user, "\The [src] has no tank attached!")
+			to_chat(user, SPAN_WARNING("\The [src] has no tank attached!"))
 			return
 		O.reagents.trans_to_obj(tank, tank.tank_volume)
-		to_chat(user, "<span class='notice'>You refuel \the [tank].</span>")
+		to_chat(user, SPAN_NOTICE("You refuel \the [tank]."))
 		playsound(src.loc, 'sound/effects/refill.ogg', 50, 1, -6)
 		return
 	if (src.welding)
@@ -194,7 +196,7 @@
 		return 1
 	else
 		if(M)
-			to_chat(M, "<span class='notice'>You need more welding fuel to complete this task.</span>")
+			to_chat(M, SPAN_NOTICE("You need more welding fuel to complete this task."))
 		return 0
 
 /obj/item/weapon/tool/weldingtool/proc/burn_fuel(var/amount)
@@ -258,9 +260,9 @@
 	if(set_welding && !welding)
 		if (get_fuel() > 0)
 			if(M)
-				to_chat(M, "<span class='notice'>You switch the [src] on.</span>")
+				to_chat(M, SPAN_NOTICE("You switch the [src] on."))
 			else if(T)
-				T.visible_message("<span class='danger'>\The [src] turns on.</span>")
+				T.visible_message(SPAN_DANGER("\The [src] turns on."))
 			src.force = 15
 			src.damtype = DAM_BURN
 			welding = 1
@@ -268,15 +270,15 @@
 			START_PROCESSING(SSobj, src)
 		else
 			if(M)
-				to_chat(M, "<span class='notice'>You need more welding fuel to complete this task.</span>")
+				to_chat(M, SPAN_NOTICE("You need more welding fuel to complete this task."))
 			return
 	//Otherwise
 	else if(!set_welding && welding)
 		STOP_PROCESSING(SSobj, src)
 		if(M)
-			to_chat(M, "<span class='notice'>You switch \the [src] off.</span>")
+			to_chat(M, SPAN_NOTICE("You switch \the [src] off."))
 		else if(T)
-			T.visible_message("<span class='warning'>\The [src] turns off.</span>")
+			T.visible_message(SPAN_WARNING("\The [src] turns off."))
 		src.force = 3
 		src.damtype = DAM_BLUNT
 		src.welding = 0
@@ -294,28 +296,28 @@
 		var/safety = H.eyecheck()
 		switch(safety)
 			if(FLASH_PROTECTION_MODERATE)
-				to_chat(H, "<span class='warning'>Your eyes sting a little.</span>")
+				to_chat(H, SPAN_WARNING("Your eyes sting a little."))
 				E.take_damage(rand(1, 2))
 				if(E.get_damages() > 12)
 					H.eye_blurry += rand(3,6)
 			if(FLASH_PROTECTION_NONE)
-				to_chat(H, "<span class='warning'>Your eyes burn.</span>")
+				to_chat(H, SPAN_WARNING("Your eyes burn."))
 				E.take_damage(rand(2, 4))
 				if(E.get_damages() > 10)
 					E.take_damage(rand(4,10))
 			if(FLASH_PROTECTION_REDUCED)
-				to_chat(H, "<span class='danger'>Your equipment intensifies the welder's glow. Your eyes itch and burn severely.</span>")
+				to_chat(H, SPAN_DANGER("Your equipment intensifies the welder's glow. Your eyes itch and burn severely."))
 				H.eye_blurry += rand(12,20)
 				E.take_damage(rand(12, 16))
 		if(safety<FLASH_PROTECTION_MAJOR)
 			if(E.get_damages() > 10)
-				to_chat(user, "<span class='warning'>Your eyes are really starting to hurt. This can't be good for you!</span>")
+				to_chat(user, SPAN_WARNING("Your eyes are really starting to hurt. This can't be good for you!"))
 
 			if (E.get_damages() >= E.min_broken_damage)
-				to_chat(H, "<span class='danger'>You go blind!</span>")
+				to_chat(H, SPAN_DANGER("You go blind!"))
 				H.sdisabilities |= BLIND
 			else if (E.get_damages() >= E.min_bruised_damage)
-				to_chat(H, "<span class='danger'>You go blind!</span>")
+				to_chat(H, SPAN_DANGER("You go blind!"))
 				H.eye_blind = 5
 				H.eye_blurry = 5
 				// We don't want this to cure nearsightedness accidentally
@@ -333,7 +335,7 @@
 			return ..()
 
 		if(!welding)
-			to_chat(user, "<span class='warning'>You'll need to turn [src] on to patch the damage on [M]'s [S.name]!</span>")
+			to_chat(user, SPAN_WARNING("You'll need to turn [src] on to patch the damage on [M]'s [S.name]!"))
 			return 1
 
 		if(S.robo_repair(15, DAM_BLUNT, "some dents", src, user))
@@ -347,15 +349,15 @@
 
 /obj/item/weapon/tool/weldingtool/use_tool(var/mob/living/user, var/obj/target, var/time = 0, var/required_fuel = 0, var/outputMessage = null)
 	if(!isOn())
-		to_chat(user, "<span class='notice'>The welding tool must be on to complete this task.</span>")
+		to_chat(user, SPAN_NOTICE("The welding tool must be on to complete this task."))
 		return FALSE
 	if(required_fuel && (apply_fuel_efficiency(required_fuel) < get_fuel()))
-		to_chat(user, "<span class='notice'>You need more fuel to complete this task.</span>")
+		to_chat(user, SPAN_NOTICE("You need more fuel to complete this task."))
 		return FALSE
 	user.setClickCooldown(DEFAULT_QUICK_COOLDOWN)
 	playsound(get_turf(target), 'sound/items/Welder.ogg', 50, 1)
 	if(outputMessage)
-		to_chat(user, "<span class='notice'>[outputMessage]</span>")
+		to_chat(user, SPAN_NOTICE("[outputMessage]"))
 	if(do_after(user, max(1, time * welding_efficiency), target))
 		if(isOn())
 			remove_fuel(apply_fuel_efficiency(required_fuel), user)
@@ -387,13 +389,13 @@
 
 /obj/item/weapon/welder_tank/examine(mob/user)
 	if(..(user, 0))
-		to_chat(user, "<span class='notice'>There is [reagents.total_volume]/[tank_volume] units of fuel remaining.</span>")
+		to_chat(user, SPAN_NOTICE("There is [reagents.total_volume]/[tank_volume] units of fuel remaining."))
 
 /obj/item/weapon/welder_tank/afterattack(obj/O as obj, mob/user as mob, proximity)
 	if(!proximity) return
 	if (istype(O, /obj/structure/reagent_dispensers/fueltank) && get_dist(src,O) <= 1)
 		O.reagents.trans_to_obj(src, tank_volume)
-		to_chat(user, "<span class='notice'>You refuel \the [src].</span>")
+		to_chat(user, SPAN_NOTICE("You refuel \the [src]."))
 		playsound(src.loc, 'sound/effects/refill.ogg', 50, 1, -6)
 		return
 

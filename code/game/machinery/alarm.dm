@@ -114,11 +114,25 @@
 		pixel_y = (dir & 3)? (dir ==1 ? -21 : 21) : 0
 		update_icon()
 		frame.transfer_fingerprints_to(src)
+	
+	ADD_SAVED_VAR(remote_control)
+	ADD_SAVED_VAR(rcon_setting)
+	ADD_SAVED_VAR(shorted)
+	ADD_SAVED_VAR(wiresexposed)
+	ADD_SAVED_VAR(aidisabled)
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(mode)
+	ADD_SAVED_VAR(buildstage)
+	ADD_SAVED_VAR(target_temperature)
+	ADD_SAVED_VAR(TLV)
+	ADD_SAVED_VAR(report_danger_level)
+	ADD_SAVED_VAR(breach_detection)
 
 /obj/machinery/alarm/after_load()
 	. = ..()
 	alarm_area = get_area(src)
 	if(!alarm_area)
+		log_debug("/obj/machinery/alarm/after_load() : Alarm is in null area after load!!")
 		return
 	area_uid = alarm_area.uid
 // 	if (name == "alarm")
@@ -136,6 +150,7 @@
 	. = ..()
 	alarm_area = get_area(src)
 	if(!alarm_area)
+		log_debug("/obj/machinery/alarm/Initialize() : Alarm is in null area on initialize!!")
 		return
 	area_uid = alarm_area.uid
 	if (name == initial(name))
@@ -166,7 +181,7 @@
 	return ..()
 
 /obj/machinery/alarm/Process()
-	if(inoperable() || shorted || buildstage != 2)
+	if(inoperable() || shorted || buildstage != 2 || isnull(loc))
 		return
 
 	var/turf/simulated/location = loc
@@ -211,14 +226,14 @@
 	if (!regulating_temperature)
 		//check for when we should start adjusting temperature
 		if(!get_danger_level(target_temperature, TLV["temperature"]) && abs(environment.temperature - target_temperature) > 2.0)
-			update_use_power(2)
+			update_use_power(POWER_USE_ACTIVE)
 			regulating_temperature = 1
 			visible_message("\The [src] clicks as it starts [environment.temperature > target_temperature ? "cooling" : "heating"] the room.",\
 			"You hear a click and a faint electronic hum.")
 	else
 		//check for when we should stop adjusting temperature
 		if (get_danger_level(target_temperature, TLV["temperature"]) || abs(environment.temperature - target_temperature) <= 0.5)
-			update_use_power(1)
+			update_use_power(POWER_USE_IDLE)
 			regulating_temperature = 0
 			visible_message("\The [src] clicks quietly as it stops [environment.temperature > target_temperature ? "cooling" : "heating"] the room.",\
 			"You hear a click as a faint electronic humming stops.")
@@ -323,7 +338,7 @@
 		return
 
 	var/icon_level = danger_level
-	if (alarm_area.atmosalm)
+	if (alarm_area && alarm_area.atmosalm)
 		icon_level = max(icon_level, 1)	//if there's an atmos alarm but everything is okay locally, no need to go past yellow
 
 	var/new_color = null

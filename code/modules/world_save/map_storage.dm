@@ -72,7 +72,7 @@ var/global/list/debug_data = list()
 
 /obj/after_load()
 	..()
-	update_icon()
+	queue_icon_update()
 /area
 	map_storage_saved_vars = ""
 
@@ -103,7 +103,7 @@ var/global/list/debug_data = list()
 
 /turf/after_load()
 	..()
-	update_icon()
+	queue_icon_update()
 	if(dynamic_lighting)
 		lighting_build_overlay()
 	else

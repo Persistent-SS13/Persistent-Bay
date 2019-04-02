@@ -34,6 +34,9 @@
 	..()
 	air_contents.volume = ATMOS_DEFAULT_VOLUME_FILTER
 	icon = null
+	ADD_SAVED_VAR(welded)
+	ADD_SAVED_VAR(scrubbing_gas)
+	ADD_SAVED_VAR(scrubbing)
 
 /obj/machinery/atmospherics/unary/vent_scrubber/after_load()
 	..()
@@ -97,6 +100,8 @@
 				add_underlay(T,, dir)
 
 /obj/machinery/atmospherics/unary/vent_scrubber/proc/broadcast_status()
+	if(isnull(initial_loc))
+		return
 	var/list/data = list(
 		"area"			= area_uid,
 		"device"		= "AScr",
@@ -125,7 +130,8 @@
 
 /obj/machinery/atmospherics/unary/vent_scrubber/Process()
 	..()
-
+	if(isnull(loc))
+		return
 	if (hibernate > world.time)
 		return 1
 

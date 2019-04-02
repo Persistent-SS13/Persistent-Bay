@@ -54,7 +54,10 @@ GLOBAL_LIST_EMPTY(chat_client_sessions)
 
 /datum/computer_file/program/chatclient/before_save()
 	. = ..()
-	saved_channelid = channel.title
+	if(channel)
+		saved_channelid = channel.title
+	else 
+		saved_channelid = null
 
 /datum/computer_file/program/chatclient/Destroy()
 	GLOB.chat_client_sessions -= src

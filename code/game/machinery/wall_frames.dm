@@ -44,14 +44,14 @@
 	var/turf/loc = get_turf(usr)
 	var/area/A = loc.loc
 	if (!istype(loc, /turf/simulated/floor))
-		to_chat(usr, "<span class='danger'>\The [src] cannot be placed on this spot.</span>")
+		to_chat(usr, SPAN_DANGER("\The [src] cannot be placed on this spot."))
 		return
 	if (A.requires_power == 0 || A.name == "Space")
-		to_chat(usr, "<span class='danger'>\The [src] cannot be placed in this area.</span>")
+		to_chat(usr, SPAN_DANGER("\The [src] cannot be placed in this area."))
 		return
 
 	if(gotwallitem(loc, ndir))
-		to_chat(usr, "<span class='danger'>There's already an item on this wall!</span>")
+		to_chat(usr, SPAN_DANGER("There's already an item on this wall!"))
 		return
 
 	new build_machine_type(loc, ndir, src)
@@ -112,7 +112,7 @@
 /obj/item/frame/intercom
 	name = "Intercom Frame"
 	desc = "Used for building intercoms"
-	icon = 'icons/obj/radio.dmi'
+	icon = 'icons/obj/machines/radio_intercom.dmi'
 	icon_state = "intercom-p"
 	build_machine_type = /obj/item/device/radio/intercom
 
@@ -138,7 +138,7 @@
 /obj/item/frame/mirror
 	name = "Mirror Frame"
 	desc = "Used for building Mirrors"
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "mirror"
 	matter = list(MATERIAL_SILVER = 2 * SHEET_MATERIAL_AMOUNT)
 	build_machine_type = /obj/structure/mirror
@@ -153,7 +153,7 @@
 /obj/item/frame/wallflash
 	name = "Wall Flash Frame"
 	desc = "Used for building Wall Mounted Flashes"
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/flashers.dmi'
 	icon_state = "mflash1"
 	build_machine_type = /obj/machinery/flasher
 
@@ -229,7 +229,7 @@
 /obj/item/frame/newscaster
 	name = "News Caster Frame"
 	desc = "Used for building News Casters"
-	icon = 'icons/obj/terminals.dmi'
+	icon = 'icons/obj/machines/terminals/newscaster.dmi'
 	icon_state = "newscaster_off"
 	build_machine_type = /obj/machinery/newscaster
 
@@ -247,7 +247,7 @@
 /obj/item/frame/atm
 	name = "atm"
 	desc = "An ATM, just secure to the wall."
-	icon = 'icons/obj/terminals.dmi'
+	icon = 'icons/obj/machines/terminals/atm.dmi'
 	icon_state = "atm_frame"
 	build_machine_type = /obj/machinery/atm
 	reverse = 1
@@ -269,7 +269,7 @@
 /obj/item/frame/request_console
 	name = "request console frame"
 	desc = "A frame for a wall mounted request console."
-	icon = 'icons/obj/terminals.dmi'
+	icon = 'icons/obj/machines/terminals/reqterm.dmi'
 	icon_state = "req_comp_off"
 	build_machine_type = /obj/machinery/requests_console
 	reverse = 1
@@ -277,7 +277,7 @@
 /obj/item/frame/sparker
 	name = "mounted igniter"
 	desc = "A frame for a wall mounted igniter."
-	icon = 'icons/obj/stationobjs.dmi'
+	icon = 'icons/obj/machines/igniters.dmi'
 	icon_state = "migniter"
 	build_machine_type = /obj/machinery/sparker
 	reverse = 1

@@ -79,7 +79,7 @@
 		return 0 //organs don't work very well in the body when they aren't properly attached
 
 	// robotic organs emulate behavior of the equivalent flesh organ of the species
-	if(robotic >= ORGAN_ROBOT || !species)
+	if(status & ORGAN_ROBOTIC || !species)
 		species = target.species
 
 	..()
@@ -184,7 +184,7 @@
 
 /obj/item/organ/internal/emp_act(severity)
 	..()
-//	if(severity > 1 && scarred <3) // A strong enough EMP can mess up your robotic organs permanantly
+//	if(severity > 1 && scarred <3) // A strong enough EMP can mess up your status organs permanantly
 //		scarred++
 
 /obj/item/organ/internal/examine(mob/user)

@@ -23,7 +23,7 @@
 		return 0
 	if (affected.is_stump())
 		return 0
-	if (affected.robotic >= ORGAN_ROBOT)
+	if (affected.status & ORGAN_ROBOTIC)
 		return 0
 	return 1
 
@@ -254,7 +254,7 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	if(!affected)
 		return FALSE
-	if(affected.robotic >= ORGAN_ROBOT)
+	if(affected.status & ORGAN_ROBOTIC)
 		return FALSE
 	if(!affected.get_incision(1))
 		to_chat(user, "<span class='warning'>There are no incisions on [target]'s [affected.name] that can be closed cleanly with \the [tool]!</span>")

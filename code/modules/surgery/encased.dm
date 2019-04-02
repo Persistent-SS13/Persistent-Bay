@@ -18,7 +18,7 @@
 		return 0
 
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
-	return affected && !(affected.robotic >= ORGAN_ROBOT) && affected.encased && affected.how_open() >= SURGERY_RETRACTED
+	return affected && !(affected.status & ORGAN_ROBOTIC) && affected.encased && affected.how_open() >= SURGERY_RETRACTED
 
 //////////////////////////////////////////////////////////////////
 //	ribcage sawing surgery step

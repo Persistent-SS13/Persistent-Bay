@@ -13,9 +13,8 @@
 	..(holder, internal)
 	if(istype(limb))
 		max_health = limb.max_health
-		if((limb.robotic >= ORGAN_ROBOT) && (!parent || (parent.robotic >= ORGAN_ROBOT)))
+		if((limb.status & ORGAN_ROBOTIC) && (!parent || (parent.status & ORGAN_ROBOTIC)))
 			robotize() //if both limb and the parent are robotic, the stump is robotic too
-
 /obj/item/organ/external/stump/is_stump()
 	return 1
 

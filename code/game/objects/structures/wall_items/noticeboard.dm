@@ -27,10 +27,10 @@ var/const/NBOARD_MAX_NOTICES = 5
 
 /obj/structure/noticeboard/update_icon()
 	switch(dir)
-		if(SOUTH)
+		if(NORTH)
 			src.pixel_x = 0
 			src.pixel_y = -30
-		if(NORTH)
+		if(SOUTH)
 			src.pixel_x = 0
 			src.pixel_y = 30
 		if(WEST)

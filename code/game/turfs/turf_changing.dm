@@ -17,6 +17,7 @@
 
 //Creates a new turf
 /turf/proc/ChangeTurf(var/turf/N, var/tell_universe=1, var/force_lighting_update = 0, var/space_override = 0)
+	var/old_density = density
 	var/old_type = src.type
 	var/old_resources = null
 	if(istype(src, /turf/simulated))
@@ -37,10 +38,6 @@
 	var/obj/fire/old_fire = fire
 	var/old_opacity = opacity
 	var/old_dynamic_lighting = dynamic_lighting
-//	var/old_affecting_lights = affecting_lights
-//	var/old_lighting_overlay = lighting_overlay
-//	var/old_corners = corners
-
 //	log_debug("Replacing [src.type] with [N]")
 
 
@@ -88,19 +85,10 @@
 		lighting_clear_overlay()
 	if((old_opacity != opacity) || (dynamic_lighting != old_dynamic_lighting))
 		reconsider_lights()
-	/**
-	if(lighting_overlays_initialised)
-		lighting_overlay = old_lighting_overlay
-		affecting_lights = old_affecting_lights
-		corners = old_corners
-		if((old_opacity != opacity) || (dynamic_lighting != old_dynamic_lighting))
-			reconsider_lights()
-		if(dynamic_lighting != old_dynamic_lighting)
-			if(dynamic_lighting)
-				lighting_build_overlay()
-			else
-				lighting_clear_overlay()
-	**/
+	if(density != old_density)
+		GLOB.density_set_event.raise_event(src, old_density, density)
+
+
 /turf/proc/transport_properties_from(turf/other)
 	if(!istype(other, src.type))
 		return 0

@@ -27,7 +27,7 @@
 		return
 
 	if(!cell || (cell.charge < (use * CELLRATE)))
-		turn_off(1)
+		turn_off()
 		return
 
 	// If the cell is almost empty rarely "flicker" the light. Aesthetic only.
@@ -66,9 +66,9 @@
 		return attack_hand(user)
 
 	if(on)
-		turn_off(1)
+		turn_off()
 	else
-		if(!turn_on(1))
+		if(!turn_on())
 			to_chat(user, "You try to turn on \the [src] but it does not work.")
 
 
@@ -92,9 +92,9 @@
 		return
 
 	if(on)
-		turn_off(1)
+		turn_off()
 	else
-		if(!turn_on(1))
+		if(!turn_on())
 			to_chat(user, "You try to turn on \the [src] but it does not work.")
 			return
 	playsound(src, "sound/machines/switch-big-power.ogg", 30)

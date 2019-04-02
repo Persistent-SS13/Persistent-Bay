@@ -85,6 +85,8 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 			STOP_PROCESSING(SSmobs, m)
 
 /datum/zlevel_data/proc/on_active()
+	if (!isWild())
+		return
 	for(var/mob/m in current_monsters)
 		if (! m in SSmobs.mob_list )
 			START_PROCESSING(SSmobs, m)

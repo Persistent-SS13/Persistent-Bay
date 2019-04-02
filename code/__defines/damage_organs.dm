@@ -76,9 +76,6 @@
 // Damage above this value must be repaired with surgery.
 #define ROBOLIMB_SELF_REPAIR_CAP 30
 
-#define ORGAN_ASSISTED 1
-#define ORGAN_ROBOT    2
-
 //Germs and infections.
 #define GERM_LEVEL_AMBIENT  110 // Maximum germ level you can reach by standing still.
 #define GERM_LEVEL_MOVE_CAP 200 // Maximum germ level you can reach by running around.

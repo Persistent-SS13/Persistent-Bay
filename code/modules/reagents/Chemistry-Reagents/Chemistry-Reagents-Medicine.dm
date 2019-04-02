@@ -160,7 +160,7 @@
 		if(ishuman(M))
 			var/mob/living/carbon/human/H = M
 			for(var/obj/item/organ/internal/I in H.internal_organs)
-				if(I.robotic >= ORGAN_ROBOT)
+				if(I.status & ORGAN_ROBOTIC)
 					continue
 				if(I.organ_tag == BP_BRAIN)
 					H.confused++
@@ -187,7 +187,7 @@
 		if(ishuman(M))
 			var/mob/living/carbon/human/H = M
 			for(var/obj/item/organ/internal/I in H.internal_organs)
-				if(I.robotic >= ORGAN_ROBOT)
+				if(I.status & ORGAN_ROBOTIC)
 					continue
 				if(I.organ_tag == BP_BRAIN)
 					H.confused++
@@ -367,7 +367,7 @@
 	if(ishuman(M))
 		var/mob/living/carbon/human/H = M
 		for(var/obj/item/organ/internal/I in H.internal_organs)
-			if(I.robotic >= ORGAN_ROBOT)
+			if(I.status & ORGAN_ROBOTIC)
 				continue
 			if(I.organ_tag == BP_BRAIN)
 				H.confused++

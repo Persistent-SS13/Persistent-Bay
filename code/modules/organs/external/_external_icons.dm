@@ -16,7 +16,7 @@ var/list/limb_icon_cache = list()
 	s_tone = null
 	s_col = null
 	h_col = list(human.r_hair, human.g_hair, human.b_hair)
-	if(robotic >= ORGAN_ROBOT)
+	if(status & ORGAN_ROBOTIC)
 		var/datum/robolimb/franchise = all_robolimbs[model]
 		if(!(franchise && franchise.skintone))
 			return
@@ -31,7 +31,7 @@ var/list/limb_icon_cache = list()
 	s_tone = null
 	s_col = null
 	h_col = list(dna.GetUIValue(DNA_UI_HAIR_R),dna.GetUIValue(DNA_UI_HAIR_G),dna.GetUIValue(DNA_UI_HAIR_B))
-	if(robotic >= ORGAN_ROBOT)
+	if(status & ORGAN_ROBOTIC)
 		var/datum/robolimb/franchise = all_robolimbs[model]
 		if(!(franchise && franchise.skintone))
 			return
@@ -75,7 +75,7 @@ var/list/limb_icon_cache = list()
 		icon = force_icon
 	else if (!dna)
 		icon = 'icons/mob/human_races/species/human/body.dmi'
-	else if (robotic >= ORGAN_ROBOT)
+	else if (status & ORGAN_ROBOTIC)
 		icon = 'icons/mob/human_races/cyberlimbs/robotic.dmi'
 	else if (status & ORGAN_MUTATED)
 		icon = species.deform
@@ -146,7 +146,7 @@ var/list/robot_hud_colours = list("#ffffff","#cccccc","#aaaaaa","#888888","#6666
 	if(min_dam_state && dam_state < min_dam_state)
 		dam_state = min_dam_state
 	// Apply colour and return product.
-	var/list/hud_colours = (robotic < ORGAN_ROBOT) ? flesh_hud_colours : robot_hud_colours
+	var/list/hud_colours = (!(status & ORGAN_ROBOTIC)) ? flesh_hud_colours : robot_hud_colours
 	hud_damage_image.color = hud_colours[max(1,min(ceil(dam_state*hud_colours.len),hud_colours.len))]
 	return hud_damage_image
 

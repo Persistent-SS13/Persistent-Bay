@@ -33,7 +33,7 @@
 					return /datum/wound/puncture/small
 		if(DAM_BLUNT)
 			return /datum/wound/bruise
-		if(DAM_BURN, DAM_LASER)
+		if(DAM_BURN, DAM_LASER, DAM_ENERGY)
 			switch(damage)
 				if(50 to INFINITY)
 					return /datum/wound/burn/carbonised

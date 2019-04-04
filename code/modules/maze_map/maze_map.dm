@@ -3,6 +3,8 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 #define ZLEVEL_INACTIVE		0	//Inactive - Dont process nor spawn any mobs
 #define ZLEVEL_DORMANT		1	//Dormant - It is still active, but it no longer spawns mobs (Failed one check)
 #define ZLEVEL_ACTIVE		2	//Active - This zlevel currently has players in it.
+#define ZLEVELDATA_MONSTER_HEALTH_MULT_PER_DIFFICULTY	0.05
+#define ZLEVELDATA_MONSTER_DAMAGE_MULT_PER_DIFFICULTY	0.04
 
 /obj/structure/transition_barrier
 	name = "bluespace barrier"
@@ -39,6 +41,20 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 	if (isWild() && state == ZLEVEL_ACTIVE)
 		replenish_monsters()
 
+/datum/zlevel_data/proc/spawn_monster(var/turf/location, var/monster_type, var/diff = difficulty)
+	if (!location || !monster_type || !diff)
+		return 0
+	var/mob/living/simple_animal/monster = new monster_type(location)
+	var/mult_health = 1 + (diff == 1 ? 0 : diff) * ZLEVELDATA_MONSTER_HEALTH_MULT_PER_DIFFICULTY
+	var/mult_damage = 1 + (diff == 1 ? 0 : diff) * ZLEVELDATA_MONSTER_DAMAGE_MULT_PER_DIFFICULTY
+	monster.maxHealth = ceil(monster.maxHealth * mult_health)
+	monster.health = monster.maxHealth
+	monster.melee_damage_lower = ceil(monster.melee_damage_lower * mult_damage)
+	monster.melee_damage_upper = ceil(monster.melee_damage_upper * mult_damage)
+
+	current_monsters |= monster
+	monster.faction = "spawned"
+
 /datum/zlevel_data/proc/replenish_monsters()
 	if(current_monsters.len < monster_quantity)
 		var/difference = monster_quantity - current_monsters.len
@@ -46,9 +62,7 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 			var/turf/T = locate(rand(TRANSITIONEDGE, world.maxx - TRANSITIONEDGE - 1),rand(TRANSITIONEDGE, world.maxy - TRANSITIONEDGE - 1),z)
 			if(!istype(T, /turf/space)) continue
 			var/monster_type = pick(monster_types)
-			var/mob/living/simple_animal/monster = new monster_type(T)
-			current_monsters |= monster
-			monster.faction = "spawned"
+			spawn_monster(T,monster_type)
 
 /datum/zlevel_data/proc/isWild()
 	if (difficulty == 0)
@@ -179,3 +193,5 @@ GLOBAL_LIST_EMPTY(maze_map_data)
 #undef ZLEVEL_INACTIVE
 #undef ZLEVEL_DORMANT
 #undef ZLEVEL_ACTIVE
+#undef ZLEVELDATA_MONSTER_HEALTH_MULT_PER_DIFFICULTY
+#undef ZLEVELDATA_MONSTER_DAMAGE_MULT_PER_DIFFICULTY

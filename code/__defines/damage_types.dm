@@ -8,6 +8,7 @@
 #define DAM_BURN        BURN			//Generic heat exposure damage
 #define DAM_BOMB        "bomb"			//Explosion exposure damage
 #define DAM_RADS        "rad"			//Ionizing radiation exposure damage
+#define DAM_SHATTER		"shatter"		//
 
 //Damage affecting biological entities
 #define DAM_BIO         TOX				//Acid and toxin exposure damage

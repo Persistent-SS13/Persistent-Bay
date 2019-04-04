@@ -361,7 +361,7 @@
 	playsound(src.loc, 'sound/machines/ding.ogg', 50, 1)
 	src.visible_message("<span class='warning'>The microwave gets covered in muck!</span>")
 	src.dirty = 100 // Make it dirty so it can't be used util cleaned
-	src.obj_flags = null //So you can't add condiments
+	src.atom_flags &= ~ATOM_FLAG_OPEN_CONTAINER //So you can't add condiments
 	src.operating = 0 // Turn it off again aferwards
 	src.updateUsrDialog()
 	src.update_icon()
@@ -372,7 +372,7 @@
 	s.start()
 	src.visible_message("<span class='warning'>The microwave breaks!</span>") //Let them know they're stupid
 	src.broken = 2 // Make it broken so it can't be used util fixed
-	src.obj_flags = null //So you can't add condiments
+	src.atom_flags &= ~ATOM_FLAG_OPEN_CONTAINER //So you can't add condiments
 	src.operating = 0 // Turn it off again aferwards
 	src.updateUsrDialog()
 	src.update_icon()

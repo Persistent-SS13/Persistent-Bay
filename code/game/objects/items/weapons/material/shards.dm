@@ -80,9 +80,9 @@
 				var/picked = pick(check)
 				var/obj/item/organ/external/affecting = H.get_organ(picked)
 				if(affecting)
-					if(affecting.robotic >= ORGAN_ROBOT)
+					if(BP_IS_ROBOTIC(affecting))
 						return
-					affecting.take_damage(5, 0)
+					affecting.take_damage(5, DAM_CUT)
 					H.updatehealth()
 					if(affecting.can_feel_pain())
 						H.Weaken(3)

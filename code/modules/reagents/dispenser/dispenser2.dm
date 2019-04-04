@@ -19,7 +19,7 @@
 	idle_power_usage = 100
 	density = 1
 	anchored = 1
-	obj_flags = OBJ_FLAG_ANCHORABLE
+	obj_flags = OBJ_FLAG_ANCHORABLE | OBJ_FLAG_DAMAGEABLE
 
 /obj/machinery/chemical_dispenser/New()
 	..()

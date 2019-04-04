@@ -5,7 +5,7 @@
 	icon_state = "grille"
 	density = 1
 	anchored = 1
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	obj_flags = OBJ_FLAG_CONDUCTIBLE | OBJ_FLAG_DAMAGEABLE
 	layer = BELOW_OBJ_LAYER
 	explosion_resistance = 1
 	max_health = 50

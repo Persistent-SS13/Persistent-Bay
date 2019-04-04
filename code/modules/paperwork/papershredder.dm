@@ -6,7 +6,7 @@
 	density = 1
 	anchored = 1
 	atom_flags = ATOM_FLAG_CLIMBABLE
-	obj_flags = OBJ_FLAG_ANCHORABLE
+	obj_flags = OBJ_FLAG_ANCHORABLE | OBJ_FLAG_DAMAGEABLE
 	mass = 5
 	max_health = 30
 	var/max_paper = 10

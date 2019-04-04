@@ -79,7 +79,7 @@
 		return 0 //organs don't work very well in the body when they aren't properly attached
 
 	// robotic organs emulate behavior of the equivalent flesh organ of the species
-	if(robotic >= ORGAN_ROBOT || !species)
+	if(BP_IS_ROBOTIC(src) || !species)
 		species = target.species
 
 	..()
@@ -115,7 +115,7 @@
 	min_broken_damage += 10
 
 /obj/item/organ/internal/proc/getToxLoss()
-	if(isrobotic())
+	if(BP_IS_ROBOTIC(src))
 		return get_damages() * 0.5
 	return get_damages()
 
@@ -129,15 +129,33 @@
 /obj/item/organ/internal/proc/isinplace()
 	return (owner && parent_organ && owner.get_organ(parent_organ))
 
-/obj/item/organ/internal/take_damage(damage, damagetype, armorbypass, damsrc, var/silent=0)
-	if(isrobotic())
+obj/item/organ/internal/take_general_damage(var/amount, var/silent = FALSE)
+	take_internal_damage(amount, silent)
+
+/obj/item/organ/internal/proc/take_internal_damage(amount, var/silent=0)
+	if(BP_IS_ROBOTIC(src))
+		rem_health(amount * 0.8)
+	else
+		rem_health(amount)
+		//only show this if the organ is not robotic
+		if(owner && can_feel_pain() && parent_organ && (amount > 5 || prob(10)))
+			var/obj/item/organ/external/parent = owner.get_organ(parent_organ)
+			if(parent && !silent)
+				var/degree = ""
+				if(is_bruised())
+					degree = " a lot"
+				if(get_damages() < 5)
+					degree = " a bit"
+
+
+	if(BP_IS_ROBOTIC(src))
 		damage = (damage * 0.8)
-	else if(!silent && isinplace() && can_feel_pain() && (damage > min_bruised_damage/2 || prob(10)) )
+	else if(owner && !silent && isinplace() && can_feel_pain() && (damage > min_bruised_damage/2 || prob(10)) )
 		var/obj/item/organ/external/parent = owner.get_organ(parent_organ)
 		var/degree = ""
 		if(is_bruised())
 			degree = " a lot"
-		else if((max_health - health) < min_bruised_damage/2)
+		else if(get_damages() < min_bruised_damage/2)
 			degree = " a bit"
 		owner.custom_pain("Something inside your [parent.name] hurts[degree].", damage, affecting = parent)
 	return ..(damage, damagetype, armorbypass, damsrc)
@@ -171,7 +189,7 @@
 // Organs will heal very minor damage on their own without much work
 // As long as no toxins are present in the system
 /obj/item/organ/internal/proc/handle_regeneration()
-	if(!isdamaged() || isrobotic() || !owner || owner.chem_effects[CE_TOXIN])
+	if(!isdamaged() || BP_IS_ROBOTIC(src) || !owner || owner.chem_effects[CE_TOXIN])
 		return
 	if(get_damages() < min_bruised_damage) // If it's not even bruised, it will just heal very slowly.
 		heal_damage(0.01)

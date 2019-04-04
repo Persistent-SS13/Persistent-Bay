@@ -260,7 +260,16 @@
 // returns the amount of damages that was applied to the object
 // - armorbypass: how much armor is bypassed for the damage specified. Usually a number from 0 to 100
 // - damsrc: A string or object reference to what caused the damage.
-/obj/proc/take_damage(var/damage = 0 as num, var/damtype = DAM_BLUNT, var/armorbypass = 0, var/damsrc = null)
+/obj/proc/take_damage(var/damage = 0 as num, var/damtype = DAM_BLUNT, var/armorbypass = 0, var/damsrc = null, var/damflags = null)
+	if(!isnum(damage))
+		log_warning("/obj/proc/take_damage(): damage is not a number! [damage]")
+		return 0
+	if(!istext(damtype))
+		log_warning("/obj/proc/take_damage(): damtype is not a string! [damtype]")
+		return 0
+	if(!isnum(armorbypass))
+		log_warning("/obj/proc/take_damage(): armorbypass is not a number! [armorbypass]")
+		return 0
 	if(!isdamageable() || !vulnerable_to_damtype(damtype))
 		return 0
 	var/resultingdmg = max(0, damage * blocked_mult(armor_absorb(damage, armorbypass, damtype)))
@@ -269,20 +278,6 @@
 	. = resultingdmg
 	log_debug("[src] took [resultingdmg] [damtype] damages from [damsrc]! Before armor: [damage] damages.")
 	return .
-
-//Handles several damage types as a list
-//It simply does multiple calls to take_damage for each damage specified in the list.
-// - damage : list in the format {DAM_TYPE = n, DAM_TYPE2 = i} where DAM_TYPE are the damage types inflicted, and n and i the damage values.
-// - armorbypass: how much armor is bypassed for all the damage specified. Usually a number from 0 to 100
-// - damsrc: A string or object reference to what caused the damage.
-/obj/proc/take_multi_damage(var/list/damage, var/armorbypass = 0 as num, var/damsrc = null)
-	if(!isdamageable())
-		return 0
-	log_debug("Multi-damage: [src]")
-	for(var/dam in damage)
-		. += take_damage(damage[dam], dam, armorbypass, damsrc)
-	return .
-	
 
 //Like take damage, but meant to instantly destroy the object from an external source.
 // Call this if you want to instantly destroy something and have its damage effects, debris and etc to trigger as it would from take_damage.

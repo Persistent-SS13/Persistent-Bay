@@ -4,7 +4,7 @@
 	var/active_throwforce
 	armor_penetration = 50
 	damtype = DAM_BLUNT
-	atom_flags = ATOM_FLAG_NO_BLOOD
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_NO_BLOOD
 	mass = 0.5
 	icon = 'icons/obj/weapons/melee/energy.dmi'
 
@@ -71,7 +71,7 @@
 	throw_speed = 1
 	throw_range = 5
 	w_class = ITEM_SIZE_NORMAL
-	atom_flags = ATOM_FLAG_NO_BLOOD
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_NO_BLOOD
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	origin_tech = list(TECH_MAGNET = 3, TECH_COMBAT = 4)
 	attack_verb = list("attacked", "chopped", "cleaved", "torn", "cut")
@@ -82,7 +82,7 @@
 	..()
 	icon_state = "axe1"
 	to_chat(user, "<span class='notice'>\The [src] is now energised.</span>")
-	damtype = list(DAM_ENERGY = force/2, DAM_CUT = force)
+	damtype = DAM_ENERGY
 
 /obj/item/weapon/melee/energy/axe/deactivate(mob/living/user)
 	..()
@@ -106,7 +106,7 @@
 	throw_speed = 1
 	throw_range = 5
 	w_class = ITEM_SIZE_SMALL
-	atom_flags = ATOM_FLAG_NO_BLOOD
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_NO_BLOOD
 	origin_tech = list(TECH_MAGNET = 3, TECH_ILLEGAL = 4)
 	sharpness = 1
 	mass = 0.8
@@ -138,7 +138,7 @@
 	..()
 	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
 	icon_state = "sword[blade_color]"
-	damtype = DAM_CUT && DAM_ENERGY
+	damtype = DAM_ENERGY
 
 /obj/item/weapon/melee/energy/sword/deactivate(mob/living/user)
 	if(active)
@@ -185,7 +185,7 @@
 	throw_speed = 1
 	throw_range = 1
 	w_class = ITEM_SIZE_TINY //technically it's just energy or something, I dunno
-	atom_flags = ATOM_FLAG_NO_BLOOD
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_NO_BLOOD
 	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
 	mass = 0.5
 	var/mob/living/creator

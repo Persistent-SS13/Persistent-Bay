@@ -3,13 +3,13 @@
 	desc = "Used for building machines."
 	icon = 'icons/obj/monitors.dmi'
 	icon_state = "fire_bitem"
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	obj_flags = OBJ_FLAG_CONDUCTIBLE | OBJ_FLAG_DAMAGEABLE
 	var/build_machine_type
 	var/reverse = 0 //if resulting object faces opposite its dir (like light fixtures)
 	matter = list(MATERIAL_STEEL = 2 * SHEET_MATERIAL_AMOUNT)
 
 /obj/item/frame/plastic
-	obj_flags = 0
+	obj_flags = OBJ_FLAG_DAMAGEABLE
 	matter = list(MATERIAL_PLASTIC = 2 * SHEET_MATERIAL_AMOUNT)
 
 /obj/item/frame/attackby(obj/item/weapon/W as obj, mob/user as mob)

@@ -12,7 +12,7 @@
 	var/locked = 1
 	var/max_range = 8
 	var/storedpower = 0
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	obj_flags = OBJ_FLAG_CONDUCTIBLE | OBJ_FLAG_DAMAGEABLE
 	//There have to be at least two posts, so these are effectively doubled
 	var/power_draw = 30 KILOWATTS //30 kW. How much power is drawn from powernet. Increase this to allow the generator to sustain longer shields, at the cost of more power draw.
 	var/max_stored_power = 50 KILOWATTS //50 kW

@@ -17,7 +17,7 @@
 	density = 1
 	anchored = 1
 	atom_flags = ATOM_FLAG_CLIMBABLE
-	obj_flags = OBJ_FLAG_ANCHORABLE
+	obj_flags = OBJ_FLAG_ANCHORABLE | OBJ_FLAG_DAMAGEABLE
 	mass = 50
 	max_health = 250
 	damthreshold_brute 	= 5
@@ -52,7 +52,7 @@
 	desc = "A filing cabinet installed into a cavity in the wall to save space. Wow!"
 	icon_state = "wallcabinet"
 	density = 0
-	obj_flags = 0
+	obj_flags = OBJ_FLAG_DAMAGEABLE
 
 
 /obj/structure/filingcabinet/filingcabinet	//not changing the path to avoid unecessary map issues, but please don't name stuff like this in the future -Pete

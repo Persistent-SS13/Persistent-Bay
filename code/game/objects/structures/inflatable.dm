@@ -53,30 +53,7 @@
 	return ..()
 
 /obj/structure/inflatable/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
-	return 0
-
-/obj/structure/inflatable/bullet_act(var/obj/item/projectile/Proj)
-	var/proj_damage = Proj.get_structure_damage()
-	if(!proj_damage) return
-
-	health -= proj_damage
-	..()
-	if(health <= 0)
-		deflate(1)
-	return
-
-/obj/structure/inflatable/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			qdel(src)
-			return
-		if(2.0)
-			deflate(1)
-			return
-		if(3.0)
-			if(prob(50))
-				deflate(1)
-				return
+	return FALSE
 
 /obj/structure/inflatable/attack_hand(mob/user as mob)
 	add_fingerprint(user)
@@ -92,7 +69,7 @@
 	return
 
 /obj/structure/inflatable/proc/hit(var/damage, var/sound_effect = 1)
-	health = max(0, health - damage)
+	rem_health(damage)
 	if(sound_effect)
 		playsound(loc, 'sound/effects/Glasshit.ogg', 75, 1)
 	if(health <= 0)

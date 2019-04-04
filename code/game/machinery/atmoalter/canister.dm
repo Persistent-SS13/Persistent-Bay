@@ -4,7 +4,7 @@
 	icon_state = "yellow"
 	density = 1
 	max_health = 100
-	obj_flags = OBJ_FLAG_CONDUCTIBLE
+	obj_flags = OBJ_FLAG_CONDUCTIBLE | OBJ_FLAG_DAMAGEABLE
 	w_class = ITEM_SIZE_GARGANTUAN
 
 	var/valve_open = 0

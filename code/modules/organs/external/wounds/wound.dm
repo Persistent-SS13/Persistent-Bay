@@ -49,6 +49,21 @@
 	if(istype(organ))
 		parent_organ = organ
 
+	ADD_SAVED_VAR(damage)
+	ADD_SAVED_VAR(current_stage)
+	ADD_SAVED_VAR(bleed_timer)
+	ADD_SAVED_VAR(bandaged)
+	ADD_SAVED_VAR(clamped)
+	ADD_SAVED_VAR(salved)
+	ADD_SAVED_VAR(disinfected)
+	ADD_SAVED_VAR(amount)
+	ADD_SAVED_VAR(parent_organ)
+	ADD_SAVED_VAR(germ_level)
+
+/datum/wound/after_load()
+	. = ..()
+	
+
 /datum/wound/Destroy()
 	parent_organ = null
 	. = ..()
@@ -75,11 +90,10 @@
 // checks whether the wound has been appropriately treated
 /datum/wound/proc/is_treated()
 	if(!embedded_objects.len)
-		switch(damage_type)
-			if(DAM_BLUNT, DAM_CUT, DAM_PIERCE)
-				return bandaged
-			if(DAM_BURN)
-				return salved
+		if(IsDamageTypeBrute(damage_type))
+			return bandaged
+		if(IsDamageTypeBurn(damage_type))
+			return salved
 
 	// Checks whether other other can be merged into src.
 /datum/wound/proc/can_merge(var/datum/wound/other)
@@ -114,17 +128,16 @@
 		germ_level = 0	//reset this, just in case
 		return 0
 
-	if (damage_type == DAM_BLUNT && !bleeding()) //bruises only infectable if bleeding
+	if (ISDAMTYPE(damage_type, DAM_BLUNT) && !bleeding()) //bruises only infectable if bleeding
 		return 0
 
 	var/dam_coef = round(damage/10)
-	switch (damage_type)
-		if (DAM_BLUNT)
-			return prob(dam_coef*5)
-		if (DAM_BURN)
-			return prob(dam_coef*10)
-		if (DAM_CUT)
-			return prob(dam_coef*20)
+	if (ISDAMTYPE(damage_type, DAM_BLUNT))
+		return prob(dam_coef*5)
+	else if (ISDAMTYPE(damage_type, DAM_BURN))
+		return prob(dam_coef*10)
+	else if (ISDAMTYPE(damage_type, DAM_CUT))
+		return prob(dam_coef*20)
 
 	return 0
 
@@ -142,7 +155,6 @@
 /datum/wound/proc/heal_damage(amount)
 	if(embedded_objects.len)
 		return amount // heal nothing
-
 	if(parent_organ)
 		if(IsDamageTypeBurn(damage_type) && !(parent_organ.burn_ratio < 1 || parent_organ.can_heal_overkill()))
 			return amount	//We don't want to heal wounds on irreparable organs.

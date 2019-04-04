@@ -130,9 +130,9 @@
 		return
 
 	if(IsDamageTypeBrute(Proj.damtype))
-		take_damage(null,Proj.force / brute_resist)
+		take_damage(Proj.force / brute_resist)
 	else if(IsDamageTypeBurn(Proj.damtype))
-		take_damage(null,(Proj.force / laser_resist) / fire_resist)
+		take_damage((Proj.force / laser_resist) / fire_resist)
 	return 0
 
 /obj/effect/blob/attackby(var/obj/item/weapon/W, var/mob/user)
@@ -146,7 +146,7 @@
 			playsound(loc, 'sound/items/Welder.ogg', 100, 1)
 	else if(IsDamageTypeBurn(W.damtype))
 		damage = (W.force / brute_resist)
-	take_damage(null, damage)
+	take_damage(damage)
 	return
 
 /obj/effect/blob/core

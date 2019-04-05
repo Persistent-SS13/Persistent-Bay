@@ -15,7 +15,7 @@
 	welding_efficiency = 0.8
 
 /obj/item/weapon/tool/weldingtool/largetank/empty
-	tank = /obj/item/weapon/welder_tank/large/empty
+	tank = new /obj/item/weapon/welder_tank/large/empty
 
 //===================================
 //	Industrial welder tool tank

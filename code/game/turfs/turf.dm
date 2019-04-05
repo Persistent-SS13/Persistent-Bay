@@ -126,7 +126,7 @@ var/const/enterloopsanity = 100
 
 	if(ismob(A))
 		var/mob/M = A
-		if (isliving(M) && M.stat != DEAD)
+		if (isliving(M) && M.stat != DEAD && M.client)
 			SSmazemap.map_data["[M.z]"].set_active()
 		if(!M.check_solid_ground())
 			inertial_drift(M)

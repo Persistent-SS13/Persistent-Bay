@@ -115,8 +115,6 @@
 		var/turf/tile = loc
 		tile.clean(src)
 		for(var/obj/effect/E in tile)
-			if (istype(E,/obj/effect/decal/cleanable/puddle_chem))
-				continue
 			if(istype(E,/obj/effect/rune) || istype(E,/obj/effect/decal/cleanable) || istype(E,/obj/effect/overlay))
 				qdel(E)
 

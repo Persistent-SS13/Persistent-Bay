@@ -52,8 +52,8 @@
 // "Brute" damage mostly damages the casing.
 /obj/item/modular_computer/bullet_act(var/obj/item/projectile/Proj)
 	if(IsDamageTypeBrute(Proj.damtype))
-		take_damage(Proj.force, component_probability = Proj.force / 2)
+		take_damage(Proj.force, Proj.damtype, component_probability = Proj.force / 2)
 	else if(IsDamageTypeBurn(Proj.damtype))
-		take_damage(Proj.force, component_probability = Proj.force / 1.5)
+		take_damage(Proj.force, Proj.damtype, component_probability = Proj.force / 1.5)
 	else if(ISDAMTYPE(Proj.damtype, DAM_PAIN))
-		take_damage(Proj.force, component_probability = Proj.force / 3, 0)
+		take_damage(Proj.force, Proj.damtype, component_probability = Proj.force / 3)

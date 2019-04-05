@@ -36,11 +36,11 @@
 /obj/effect/blob/ex_act(var/severity)
 	switch(severity)
 		if(1)
-			take_damage(null, rand(100, 120) / brute_resist)
+			take_damage(rand(100, 120) / brute_resist)
 		if(2)
-			take_damage(null, rand(60, 100) / brute_resist)
+			take_damage(rand(60, 100) / brute_resist)
 		if(3)
-			take_damage(null, rand(20, 60) / brute_resist)
+			take_damage(rand(20, 60) / brute_resist)
 
 /obj/effect/blob/update_icon()
 	if(health > max_health / 2)
@@ -57,7 +57,7 @@
 		return
 	if(istype(T, /turf/simulated/wall))
 		var/turf/simulated/wall/SW = T
-		SW.take_damage(null, 80)
+		SW.take_damage(80)
 		return
 	var/obj/structure/girder/G = locate() in T
 	if(G)
@@ -92,11 +92,11 @@
 	var/obj/mecha/M = locate() in T
 	if(M)
 		M.visible_message("<span class='danger'>The blob attacks \the [M]!</span>")
-		M.take_damage(null, 40)
+		M.take_damage(40)
 		return
 	var/obj/machinery/camera/CA = locate() in T
 	if(CA)
-		CA.take_damage(null, 30)
+		CA.take_damage(30)
 		return
 
 	// Above things, we destroy completely and thus can use locate. Mobs are different.
@@ -130,9 +130,9 @@
 		return
 
 	if(IsDamageTypeBrute(Proj.damtype))
-		take_damage(null,Proj.force / brute_resist)
+		take_damage(Proj.force / brute_resist)
 	else if(IsDamageTypeBurn(Proj.damtype))
-		take_damage(null,(Proj.force / laser_resist) / fire_resist)
+		take_damage((Proj.force / laser_resist) / fire_resist)
 	return 0
 
 /obj/effect/blob/attackby(var/obj/item/weapon/W, var/mob/user)
@@ -146,7 +146,7 @@
 			playsound(loc, 'sound/items/Welder.ogg', 100, 1)
 	else if(IsDamageTypeBurn(W.damtype))
 		damage = (W.force / brute_resist)
-	take_damage(null, damage)
+	take_damage(damage)
 	return
 
 /obj/effect/blob/core

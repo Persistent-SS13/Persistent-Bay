@@ -144,7 +144,8 @@
 
 	// focus most of the blast on one organ
 	var/obj/item/organ/external/take_blast = pick(organs)
-	take_blast.take_damage(damlist = list(DAM_BOMB = b_loss * 0.7, DAM_BURN = f_loss * 0.7), damsrc = "Explosive blast")
+	take_blast.take_damage(b_loss * 0.7, DAM_BOMB, damsrc ="Explosive blast")
+	take_blast.take_damage(f_loss * 0.7, DAM_BURN, damsrc ="Explosive blast")
 
 	// distribute the remaining 30% on all limbs equally (including the one already dealt damage)
 	b_loss *= 0.3
@@ -159,7 +160,8 @@
 			loss_val = 0.4
 		else
 			loss_val = 0.05
-		temp.take_damage(damlist = list(DAM_BOMB = b_loss * loss_val, DAM_BURN = f_loss * loss_val), damsrc = weapon_message)
+		temp.take_damage(b_loss * loss_val, DAM_BOMB, damsrc = weapon_message)
+		temp.take_damage(f_loss * loss_val, DAM_BURN, damsrc = weapon_message)
 
 /mob/living/carbon/human/proc/implant_loyalty(mob/living/carbon/human/M, override = FALSE) // Won't override by default.
 	if(!config.use_loyalty_implants && !override) return // Nuh-uh.
@@ -971,7 +973,7 @@
 			"<span class='warning'>Your movement jostles [O] in your [organ.name] painfully.</span>")
 		custom_pain(msg,40,affecting = organ)
 
-	organ.take_damage(rand(1,3), 0, 0)
+	organ.take_damage(rand(1,3), DAM_CUT)
 	if(!(organ.robotic >= ORGAN_ROBOT) && (should_have_organ(BP_HEART))) //There is no blood in protheses.
 		organ.status |= ORGAN_BLEEDING
 		src.adjustToxLoss(rand(1,3))

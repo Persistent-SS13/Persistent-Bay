@@ -141,7 +141,7 @@
 
 	var/dtype = has_edge? DAM_CUT : DAM_PIERCE
 	dtype = target.HandleArmorDamTypeConversion(dtype, blocked)
-	target.apply_damage(damage, dtype, target_limb, blocked, 0, "Thorns")
+	target.apply_damage(damage, dtype, target_limb, blocked, 0, used_weapon = "Thorns")
 
 // Adds reagents to a target.
 /datum/seed/proc/do_sting(var/mob/living/carbon/human/target, var/obj/item/fruit)

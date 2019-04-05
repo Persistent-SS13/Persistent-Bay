@@ -29,7 +29,7 @@
 		to_chat(user, "<span class='danger'>An unexplicable force rips through you, tearing the sword from your grasp!</span>")
 
 	//random amount of damage between half of the blade's force and the full force of the blade.
-	user.apply_damage(rand(force/2, force), damtype, zone, 0)
+	user.apply_damage(rand(force/2, force), damtype, zone)
 	user.Weaken(5)
 
 	user.drop_from_inventory(src)

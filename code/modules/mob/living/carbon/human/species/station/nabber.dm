@@ -202,7 +202,7 @@
 	..()
 
 	var/armor = affecting.run_armor_check(BP_CHEST, DAM_PIERCE)
-	affecting.apply_damage(15, DAM_PIERCE, BP_CHEST, armor, 0, "organic punctures")
+	affecting.apply_damage(15, DAM_PIERCE, BP_CHEST, armor, 0, used_weapon = "organic punctures")
 	affecting.visible_message("<span class='danger'>[assailant]'s spikes dig in painfully!</span>")
 	affecting.Stun(10)
 

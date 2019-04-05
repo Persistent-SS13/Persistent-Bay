@@ -103,7 +103,7 @@
 	// Pass reagents from the gas into our body.
 	// Presumably if you breathe it you have a specialized metabolism for it, so we drop/ignore breath_type. Also avoids
 	// humans processing thousands of units of oxygen over the course of a round for the sole purpose of poisoning vox.
-	var/ratio = (status & ORGAN_ROBOTIC) ? 0.66 : 1
+	var/ratio = BP_IS_ROBOTIC(src) ? 0.66 : 1
 	for(var/gasname in breath.gas - breath_type)
 		if(gasname == GAS_OXYGEN)
 			take_damage(0.5)
@@ -134,7 +134,7 @@
 		heal_damage(0.1)
 		last_failed_breath = null
 		owner.adjustOxyLoss(-5 * inhale_efficiency)
-		if(!(status & ORGAN_ROBOTIC) && species.breathing_sound && is_below_sound_pressure(get_turf(owner)))
+		if(!BP_IS_ROBOTIC(src) && species.breathing_sound && is_below_sound_pressure(get_turf(owner)))
 			if(breathing || owner.shock_stage >= 10)
 				sound_to(owner, sound(species.breathing_sound,0,0,0,5))
 				breathing = 0

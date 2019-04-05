@@ -31,7 +31,7 @@
 	if (!hasorgans(target))
 		return 0
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
-	return affected && (!(affected.status & ORGAN_ROBOTIC)) && affected.how_open() >= 2 && affected.stage == 0
+	return affected && (!BP_IS_ROBOTIC(affected)) && affected.how_open() >= 2 && affected.stage == 0
 
 /datum/surgery_step/glue_bone/begin_step(mob/user, mob/living/carbon/human/target, target_zone, obj/item/tool)
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
@@ -76,7 +76,7 @@
 	if (!hasorgans(target))
 		return 0
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
-	return affected && affected.organ_tag != BP_HEAD && !(affected.status & ORGAN_ROBOTIC) && affected.how_open() >= SURGERY_RETRACTED && affected.stage == 1
+	return affected && affected.organ_tag != BP_HEAD && !BP_IS_ROBOTIC(affected) && affected.how_open() >= SURGERY_RETRACTED && affected.stage == 1
 
 /datum/surgery_step/set_bone/begin_step(mob/user, mob/living/carbon/human/target, target_zone, obj/item/tool)
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
@@ -124,7 +124,7 @@
 	if (!hasorgans(target))
 		return 0
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
-	return affected && affected.organ_tag == BP_HEAD && (!(affected.status & ORGAN_ROBOTIC)) && affected.how_open() >= SURGERY_RETRACTED && affected.stage == 1
+	return affected && affected.organ_tag == BP_HEAD && (!BP_IS_ROBOTIC(affected)) && affected.how_open() >= SURGERY_RETRACTED && affected.stage == 1
 
 /datum/surgery_step/mend_skull/begin_step(mob/user, mob/living/carbon/human/target, target_zone, obj/item/tool)
 	user.visible_message("[user] is beginning to piece together [target]'s skull with \the [tool]."  , \
@@ -169,7 +169,7 @@
 	if (!hasorgans(target))
 		return 0
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
-	return affected && affected.how_open() >= SURGERY_RETRACTED && !(affected.status & ORGAN_ROBOTIC) && affected.stage == 2
+	return affected && affected.how_open() >= SURGERY_RETRACTED && !BP_IS_ROBOTIC(affected) && affected.stage == 2
 
 /datum/surgery_step/finish_bone/begin_step(mob/user, mob/living/carbon/human/target, target_zone, obj/item/tool)
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)

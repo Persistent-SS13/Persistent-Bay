@@ -498,7 +498,7 @@ var/list/global/slot_flags_enumeration = list(
 		eyes.rem_health(rand(3,4))
 		if(eyes.get_damages() >= eyes.min_bruised_damage)
 			if(M.stat != 2)
-				if(!(eyes.status & ORGAN_ROBOTIC)) //robot eyes bleeding might be a bit silly
+				if(!BP_IS_ROBOTIC(eyes)) //robot eyes bleeding might be a bit silly
 					to_chat(M, "<span class='danger'>Your eyes start to bleed profusely!</span>")
 			if(prob(50))
 				if(M.stat != 2)

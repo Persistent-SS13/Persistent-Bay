@@ -16,7 +16,7 @@
 		return 0
 	if (affected.status & ORGAN_CUT_AWAY)
 		return 0
-	if (!(affected.status & ORGAN_ROBOTIC))
+	if (!BP_IS_ROBOTIC(affected))
 		return 0
 	return 1
 
@@ -289,7 +289,7 @@
 
 	for(var/obj/item/organ/I in affected.internal_organs)
 		if(I && I.isdamaged())
-			if(I.status & ORGAN_ROBOTIC)
+			if(BP_IS_ROBOTIC(I))
 				user.visible_message("[user] starts mending the damage to [target]'s [I.name]'s mechanisms.", \
 				"You start mending the damage to [target]'s [I.name]'s mechanisms." )
 	..()
@@ -302,7 +302,7 @@
 	for(var/obj/item/organ/I in affected.internal_organs)
 
 		if(I && I.isdamaged())
-			if(I.status & ORGAN_ROBOTIC)
+			if(BP_IS_ROBOTIC(I))
 				user.visible_message("<span class='notice'>[user] repairs [target]'s [I.name] with [tool].</span>", \
 				"<span class='notice'>You repair [target]'s [I.name] with [tool].</span>" )
 				I.set_health(I.get_max_health())
@@ -389,7 +389,7 @@
 
 /datum/surgery_step/robotics/attach_organ_robotic/can_use(mob/living/user, mob/living/carbon/human/target, target_zone, obj/item/tool)
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
-	if(!(affected && (affected.status & ORGAN_ROBOTIC)))
+	if(!(affected && BP_IS_ROBOTIC(affected)))
 		return 0
 	if(affected.hatch_state != HATCH_OPENED)
 		return 0
@@ -398,7 +398,7 @@
 
 	var/list/removable_organs = list()
 	for(var/obj/item/organ/I in affected.implants)
-		if ((I.status & ORGAN_CUT_AWAY) && (I.status & ORGAN_ROBOTIC) && (I.parent_organ == target_zone))
+		if ((I.status & ORGAN_CUT_AWAY) && BP_IS_ROBOTIC(I) && (I.parent_organ == target_zone))
 			removable_organs |= I.organ_tag
 
 	var/organ_to_replace = input(user, "Which organ do you want to reattach?") as null|anything in removable_organs
@@ -457,7 +457,7 @@
 		to_chat(user, "<span class='danger'>That brain is not usable.</span>")
 		return SURGERY_FAILURE
 
-	if(!(affected.status & ORGAN_ROBOTIC))
+	if(!BP_IS_ROBOTIC(affected))
 		to_chat(user, "<span class='danger'>You cannot install a computer brain into a meat body.</span>")
 		return SURGERY_FAILURE
 

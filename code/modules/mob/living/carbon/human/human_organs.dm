@@ -166,7 +166,7 @@
 
 	drop_from_inventory(thing)
 
-	if(affected.status & ORGAN_ROBOTIC)
+	if(BP_IS_ROBOTIC(affected))
 		visible_message("<B>\The [src]</B> drops what they were holding, \his [affected.name] malfunctioning!")
 
 		var/datum/effect/effect/system/spark_spread/spark_system = new /datum/effect/effect/system/spark_spread()

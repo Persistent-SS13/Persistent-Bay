@@ -142,6 +142,7 @@ Class Procs:
 	ADD_SAVED_VAR(malf_upgraded)
 	ADD_SAVED_VAR(emagged)
 	ADD_SAVED_VAR(stat)
+	ADD_SAVED_VAR(id_tag)
 
 	ADD_SKIP_EMPTY(extensions)
 	ADD_SKIP_EMPTY(component_parts)

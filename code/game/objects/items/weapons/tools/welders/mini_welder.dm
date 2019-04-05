@@ -12,7 +12,7 @@
 	welding_efficiency = 0.9
 
 /obj/item/weapon/tool/weldingtool/mini/empty
-	tank = /obj/item/weapon/welder_tank/mini/empty
+	tank = new /obj/item/weapon/welder_tank/mini/empty
 
 //===================================
 //	Mini welder tool tank

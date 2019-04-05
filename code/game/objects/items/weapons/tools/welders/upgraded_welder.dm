@@ -16,7 +16,7 @@
 	welding_efficiency = 0.6
 
 /obj/item/weapon/tool/weldingtool/hugetank/empty
-	tank = /obj/item/weapon/welder_tank/huge/empty
+	tank = new /obj/item/weapon/welder_tank/huge/empty
 
 //===================================
 //	Upgraded welder tool tank

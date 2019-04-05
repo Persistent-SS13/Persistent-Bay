@@ -84,8 +84,7 @@ SUBSYSTEM_DEF(mazemap)
 		var/mob/M = C.mob
 		if (!M.z || !isliving(M) || M.stat == DEAD)
 			continue
-		if(activity_checklist["[M.z]"])
-			activity_checklist["[M.z]"] = TRUE
+		activity_checklist["[M.z]"] = TRUE
 
 
 /datum/controller/subsystem/mazemap/proc/update_levels()

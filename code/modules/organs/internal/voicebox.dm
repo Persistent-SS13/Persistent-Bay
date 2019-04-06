@@ -1,5 +1,4 @@
 /obj/item/organ/internal/voicebox // I'm going to make this an actual organ that allows people to talk, just so you can tear it out
-	robotic = ORGAN_ROBOT
 	status = 0
 	name = "voicebox"
 	icon_state = "voicebox"

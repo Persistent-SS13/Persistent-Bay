@@ -189,13 +189,34 @@
 				contract.purpose = "Investment contract for [amount] stocks at [cost]$$"
 				contract.ownership = amount
 				contract.name = "[business_name] investment contract"
-				var/t = ""
-				t += "<font face='Verdana' color=blue><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'><center></td><tr><td><H1>Investment Contract for [business_name]</td>"
-				t += "<tr><td><br>[selected_spec.name] [selected_type.name]<br>"
-				t += "<tr><td><br>Initial CEO [ceo_name] paid [ceo_wage] every thirty minutes.<br>"
-				t += "<b>Stock Amount:</b> [amount] stocks<br>"
-				t += "<b>Investment Cost:</b> [cost] $$ Centera<br><br>"
-				t += "<tr><td><h3>Status</H3>*Unsigned*<br></td></tr></table><br><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>"
+				var/t = {"
+<font face='Verdana' color=blue>
+	<table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>
+		<tr>
+			<td>
+				<center><h1>Investment Contract for [business_name]</h1></center>
+			</td>
+		</tr>	
+		<tr>
+			<td>
+				<br>[selected_spec.name] [selected_type.name]<br>
+			</td>
+		</td>
+		<tr>
+			<td>
+				<br>Initial CEO [ceo_name] paid [ceo_wage] every thirty minutes.<br>
+				<b>Stock Amount:</b> [amount] stocks<br>
+				<b>Investment Cost:</b> [cost] $$ Centera<br><br>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<h3>Status</h3>*Unsigned*<br>
+			</td>
+		</tr>
+	</table>
+</font>
+				"}
 				contract.info = t
 				contract.loc = get_turf(program.computer)
 				contract.update_icon()

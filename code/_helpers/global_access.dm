@@ -17,6 +17,8 @@
 			return global.CMinutes;
 		if("DEPT_FREQS")
 			return global.DEPT_FREQS;
+		if("DISPOSAL_PIPES_DISPENSER_BUILDABLES")
+			return global.DISPOSAL_PIPES_DISPENSER_BUILDABLES;
 		if("Debug2")
 			return global.Debug2;
 		if("Failsafe")
@@ -119,6 +121,8 @@
 			return global.SSturbolift;
 		if("SSturf")
 			return global.SSturf;
+		if("SSvehicleprocess")
+			return global.SSvehicleprocess;
 		if("SSvines")
 			return global.SSvines;
 		if("SSwireless")
@@ -1082,6 +1086,8 @@
 			global.CMinutes=newval;
 		if("DEPT_FREQS")
 			global.DEPT_FREQS=newval;
+		if("DISPOSAL_PIPES_DISPENSER_BUILDABLES")
+			global.DISPOSAL_PIPES_DISPENSER_BUILDABLES=newval;
 		if("Debug2")
 			global.Debug2=newval;
 		if("Failsafe")
@@ -1184,6 +1190,8 @@
 			global.SSturbolift=newval;
 		if("SSturf")
 			global.SSturf=newval;
+		if("SSvehicleprocess")
+			global.SSvehicleprocess=newval;
 		if("SSvines")
 			global.SSvines=newval;
 		if("SSwireless")
@@ -2138,6 +2146,7 @@
 	"CENT_FREQS",
 	"CMinutes",
 	"DEPT_FREQS",
+	"DISPOSAL_PIPES_DISPENSER_BUILDABLES",
 	"Debug2",
 	"Failsafe",
 	"GLOB",
@@ -2189,6 +2198,7 @@
 	"SStrade",
 	"SSturbolift",
 	"SSturf",
+	"SSvehicleprocess",
 	"SSvines",
 	"SSwireless",
 	"SSxenoarch",
@@ -2371,7 +2381,6 @@
 	"forced_ambience_list",
 	"found_vars",
 	"fruit_icon_cache",
-	"fuel_injectors",
 	"fusion_cores",
 	"fusion_reactions",
 	"game_id",

@@ -557,12 +557,6 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/weapon/stock_parts/subspace/filter
 	sort_string = "UAAAB"
 
-/datum/design/item/stock_part/subspace_amplifier
-	id = "s-amplifier"
-	req_tech = list(TECH_DATA = 3, TECH_MAGNET = 4, TECH_MATERIAL = 4, TECH_BLUESPACE = 2)
-	materials = list(MATERIAL_STEEL = 10, MATERIAL_GOLD = 30, MATERIAL_URANIUM = 15)
-	build_path = /obj/item/weapon/stock_parts/subspace/amplifier
-	sort_string = "UAAAC"
 
 /datum/design/item/stock_part/subspace_treatment
 	id = "s-treatment"
@@ -654,26 +648,6 @@ other types of metals and chemistry for reagents).
 	chemicals = list(/datum/reagent/acid = 80)
 	build_path = /obj/item/weapon/defibrillator/compact
 	sort_string = "VACBD"
-
-/datum/design/item/lmi
-	name = "Lace-machine interface"
-	id = "lmi"
-	req_tech = list(TECH_DATA = 2, TECH_BIO = 3)
-	build_type = PROTOLATHE | MECHFAB
-	materials = list(MATERIAL_STEEL = 1000, MATERIAL_GLASS = 500)
-	build_path = /obj/item/device/lmi
-	category = "Misc"
-	sort_string = "VACBA"
-
-/datum/design/item/lmi_radio
-	name = "Radio-enabled lace-machine interface"
-	id = "lmi_radio"
-	req_tech = list(TECH_DATA = 2, TECH_BIO = 4)
-	build_type = PROTOLATHE | MECHFAB
-	materials = list(MATERIAL_STEEL = 1200, MATERIAL_GLASS = 500)
-	build_path = /obj/item/device/lmi/radio_enabled
-	category = "Misc"
-	sort_string = "VACBB"
 
 /datum/design/item/beacon
 	name = "Bluespace tracking beacon design"

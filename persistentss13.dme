@@ -910,6 +910,7 @@
 #include "code\game\objects\items\weapons\circuitboards\machinery\medical.dm"
 #include "code\game\objects\items\weapons\circuitboards\machinery\mining.dm"
 #include "code\game\objects\items\weapons\circuitboards\machinery\pacman.dm"
+#include "code\game\objects\items\weapons\circuitboards\machinery\pipe_dispenser.dm"
 #include "code\game\objects\items\weapons\circuitboards\machinery\power.dm"
 #include "code\game\objects\items\weapons\circuitboards\machinery\recharge_station.dm"
 #include "code\game\objects\items\weapons\circuitboards\machinery\replicator.dm"

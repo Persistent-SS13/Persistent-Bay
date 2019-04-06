@@ -49,6 +49,7 @@
 	. = ..()
 	for(var/obj/machinery/door/firedoor/F in loc)
 		if(F != src)
+			log_debug("Found multiple [src.type] at '[log_info_line(loc)]'. Deleting self!")
 			return INITIALIZE_HINT_QDEL
 	var/area/A = get_area(src)
 	ASSERT(istype(A))

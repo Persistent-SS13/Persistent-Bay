@@ -1,8 +1,8 @@
 /obj/structure/lattice
 	name = "lattice"
 	desc = "A lightweight support lattice."
-	icon = 'icons/obj/structures.dmi'
-	icon_state = "latticefull"
+	icon = 'icons/obj/smoothlattice.dmi'
+	icon_state = "lattice15"	// Only temporary for mapping. Updates in Init
 	density = 0
 	anchored = 1.0
 	w_class = ITEM_SIZE_NORMAL
@@ -14,39 +14,22 @@
 
 /obj/structure/lattice/Initialize()
 	. = ..()
-	for(var/obj/structure/lattice/LAT in loc)
-		if(LAT != src)
-			log_debug("Found multiple lattices at '[log_info_line(loc)]'. Deleting extra lattices!")
-			qdel(LAT)
-	icon = 'icons/obj/smoothlattice.dmi'
-	icon_state = "latticeblank"
-	updateOverlays()
-	for (var/dir in GLOB.cardinal)
-		var/obj/structure/lattice/L
-		if(locate(/obj/structure/lattice, get_step(src, dir)))
-			L = locate(/obj/structure/lattice, get_step(src, dir))
-			L.updateOverlays()
+	for(var/obj/structure/lattice/L in loc)
+		if(L != src)
+			log_debug("Found multiple [src.type] at '[log_info_line(loc)]'. Deleting self!")
+			return INITIALIZE_HINT_QDEL
+
+	update_icon(1)
 
 /obj/structure/lattice/Destroy()
-	for (var/dir in GLOB.cardinal)
-		var/obj/structure/lattice/L
-		if(locate(/obj/structure/lattice, get_step(src, dir)))
-			L = locate(/obj/structure/lattice, get_step(src, dir))
-			L.updateOverlays(src.loc)
-	. = ..()
+	
+	// After this is deleted, the other lattices are updated.
+	for(var/dir in GLOB.cardinal)
+		var/obj/structure/lattice/L = locate(/obj/structure/lattice, get_step(src, dir))
+		if(L)
+			addtimer(CALLBACK(L, /obj/structure/lattice/update_icon))
 
-/obj/structure/lattice/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			qdel(src)
-			return
-		if(2.0)
-			qdel(src)
-			return
-		if(3.0)
-			return
-		else
-	return
+	. = ..()	// Has to be called after, otherwise location is null
 
 /obj/structure/lattice/attackby(obj/item/C as obj, mob/user as mob)
 
@@ -54,6 +37,7 @@
 		var/turf/T = get_turf(src)
 		T.attackby(C, user) //BubbleWrap - hand this off to the underlying turf instead
 		return
+
 	if(isWelder(C))
 		var/obj/item/weapon/tool/weldingtool/WT = C
 		if(WT.remove_fuel(0, user))
@@ -75,22 +59,21 @@
 **/
 	return
 
-/obj/structure/lattice/proc/updateOverlays()
-	//if(!(istype(src.loc, /turf/space)))
-	//	qdel(src)
-	spawn(1)
-		overlays = list()
+/obj/structure/lattice/update_icon(var/propagate = 0)
+	. = ..()
 
-		var/dir_sum = 0
+	var/dir_sum = 0
 
-		var/turf/T
-		for (var/direction in GLOB.cardinal)
-			T = get_step(src, direction)
-			if(locate(/obj/structure/lattice, T) || locate(/obj/structure/catwalk, T))
-				dir_sum += direction
-			else
-				if(!(istype(get_step(src, direction), /turf/space)) && !(istype(get_step(src, direction), /turf/simulated/open)))
-					dir_sum += direction
+	for(var/dir in GLOB.cardinal)
+		var/turf/T = get_step(src, dir)
+		var/obj/structure/lattice/L = locate(/obj/structure/lattice, T)
+		
+		if(L)
+			dir_sum += dir
+			if(propagate)
+				L.update_icon()
+			
+		if(!istype(T, /turf/space) && !istype(T, /turf/simulated/open))
+			dir_sum += dir
 
-		icon_state = "lattice[dir_sum]"
-		return
+	icon_state = "lattice[dir_sum]"

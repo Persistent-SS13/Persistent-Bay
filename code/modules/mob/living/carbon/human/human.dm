@@ -974,7 +974,8 @@
 		custom_pain(msg,40,affecting = organ)
 
 	organ.take_damage(rand(1,3), DAM_CUT)
-	if(!(organ.robotic >= ORGAN_ROBOT) && (should_have_organ(BP_HEART))) //There is no blood in protheses.
+	if(!BP_IS_ROBOTIC(organ) && (should_have_organ(BP_HEART))) //There is no blood in protheses.
+
 		organ.status |= ORGAN_BLEEDING
 		src.adjustToxLoss(rand(1,3))
 
@@ -1194,7 +1195,7 @@
 		to_chat(user, "<span class='warning'>They are missing that limb.</span>")
 		return 0
 
-	if(affecting.robotic >= ORGAN_ROBOT)
+	if(affecting.status & ORGAN_ROBOT)
 		to_chat(user, "<span class='warning'>That limb is robotic.</span>")
 		return 0
 
@@ -1445,7 +1446,7 @@
 	else if(organ_check in list(BP_LIVER, BP_KIDNEYS))
 		affecting = organs_by_name[BP_GROIN]
 
-	if(affecting && (affecting.robotic >= ORGAN_ROBOT))
+	if(affecting && (affecting.status & ORGAN_ROBOT))
 		return 0
 	return (species && species.has_organ[organ_check])
 
@@ -1462,7 +1463,7 @@
 	. = ..()
 	var/obj/item/organ/internal/heart/H = internal_organs_by_name[BP_HEART]
 	if(H)
-		. *= (H.robotic < ORGAN_ROBOT) ? pulse()/PULSE_NORM : 1.5
+		. *= !(H.status & ORGAN_ROBOT) ? pulse()/PULSE_NORM : 1.5
 
 /mob/living/carbon/human/need_breathe()
 	if(species.breathing_organ && should_have_organ(species.breathing_organ))
@@ -1532,7 +1533,7 @@
 	if(!is_asystole() || !should_have_organ(BP_HEART))
 		return
 	var/obj/item/organ/internal/heart/heart = internal_organs_by_name[BP_HEART]
-	if(istype(heart) && heart.robotic <= ORGAN_ROBOT && !(heart.status & ORGAN_DEAD))
+	if(istype(heart) && !(heart.status & ORGAN_DEAD))
 		var/species_organ = species.breathing_organ
 		var/active_breaths = 0
 		if(species_organ)

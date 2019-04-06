@@ -133,7 +133,7 @@
 
 	user.visible_message("<span class='notice'>[user] puts \the [tool] inside [target]'s [affected.cavity_name] cavity.</span>", \
 	"<span class='notice'>You put \the [tool] inside [target]'s [affected.cavity_name] cavity.</span>" )
-	if (tool.w_class > affected.cavity_max_w_class/2 && prob(50) && !(affected.robotic >= ORGAN_ROBOT) && affected.sever_artery())
+	if (tool.w_class > affected.cavity_max_w_class/2 && prob(50) && !BP_IS_ROBOTIC(affected) && affected.sever_artery())
 		to_chat(user, "<span class='warning'>You tear some blood vessels trying to fit such a big object in this cavity.</span>")
 		affected.owner.custom_pain("You feel something rip in your [affected.name]!", 1,affecting = affected)
 	user.drop_item()
@@ -158,7 +158,7 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	if(!affected)
 		return FALSE
-	if(affected.robotic < ORGAN_ROBOT)
+	if(!BP_IS_ROBOTIC(affected))
 		return affected.how_open() >= SURGERY_RETRACTED
 	else
 		return affected.hatch_state == HATCH_OPENED
@@ -175,7 +175,7 @@
 	var/exposed = 0
 	if(affected.how_open() >= (affected.encased ? SURGERY_ENCASED : SURGERY_RETRACTED))
 		exposed = 1
-	if(affected.robotic >= ORGAN_ROBOT && affected.hatch_state == HATCH_OPENED)
+	if(BP_IS_ROBOTIC(affected) && affected.hatch_state == HATCH_OPENED)
 		exposed = 1
 
 	var/find_prob = 0

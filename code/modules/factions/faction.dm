@@ -1405,7 +1405,7 @@ var/PriorityQueue/all_feeds
 		fact.network.secured = 1
 		fact.network.password = network_password
 	fact.network.invisible = network_invisible
-	LAZYADD(GLOB.all_world_factions, fact)
+	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
 	report_progress("Adding [name] faction. Faction list is \ref[GLOB.all_world_factions]")
 
 /obj/faction_spawner/democratic
@@ -1461,7 +1461,7 @@ var/PriorityQueue/all_feeds
 	fact.city_council |= councillor5
 	council_elect.ballots |= councillor5
 	fact.waiting_elections |= council_elect
-	LAZYADD(GLOB.all_world_factions, fact)
+	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
 	report_progress("Adding [name] faction. Faction list is \ref[GLOB.all_world_factions]")
 
 /obj/faction_spawner/Nanotrasen

@@ -1386,7 +1386,7 @@ var/PriorityQueue/all_feeds
 /obj/faction_spawner/Initialize()
 	. = ..()
 	spawn_faction()
-	qdel_self()
+	return INITIALIZE_HINT_QDEL
 
 /obj/faction_spawner/proc/spawn_faction()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)

@@ -129,7 +129,7 @@
 /obj/item/organ/internal/proc/isinplace()
 	return (owner && parent_organ && owner.get_organ(parent_organ))
 
-/obj/item/organ/internal/take_damage(damage, damagetype, armorbypass, damsrc, var/silent=0)
+/obj/item/organ/internal/take_damage(damage, damagetype, armorbypass, damsrc, var/silent=FALSE)
 	if(isrobotic())
 		damage = (damage * 0.8)
 	else if(!silent && isinplace() && can_feel_pain() && (damage > min_bruised_damage/2 || prob(10)) )

@@ -54,13 +54,12 @@
 	if(welding)
 		STOP_PROCESSING(SSobj, src)
 	QDEL_NULL(tank)
-
 	return ..()
 
 /obj/item/weapon/tool/weldingtool/examine(mob/user)
 	if(..(user, 0))
 		if(tank)
-			to_chat(user, "<span class='notice'>\icon[tank] \The [tank] contains [get_fuel()]/[tank.tank_volume] units of fuel!</span>")
+			to_chat(user, SPAN_NOTICE("\icon[tank] \The [tank] contains [get_fuel()]/[tank.tank_volume] units of fuel!"))
 		else
 			to_chat(user, "There is no tank attached.")
 
@@ -240,7 +239,7 @@
 	item_state = welding ? "welder1" : "welder"
 
 	underlays.Cut()
-	if(tank)
+	if(istype(tank))
 		var/image/tank_image = image(tank.icon, icon_state = tank.icon_state)
 		tank_image.pixel_z = 0
 		underlays += tank_image

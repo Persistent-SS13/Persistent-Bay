@@ -609,7 +609,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 			contract.finalize()
 			signed_contracts -= contract
 		var/datum/world_faction/new_faction = new()
-		LAZYADD(GLOB.all_world_factions, new_faction)
+		LAZYDISTINCTADD(GLOB.all_world_factions, new_faction)
 		new_faction.uid = chosen_uid
 		new_faction.name = chosen_name
 		new_faction.abbreviation = chosen_short

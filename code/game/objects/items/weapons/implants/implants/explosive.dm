@@ -132,7 +132,7 @@
 			if (part)
 				if (istype(part,/obj/item/organ/external/chest) ||	\
 					istype(part,/obj/item/organ/external/groin))
-					part.take_damage(60, used_weapon = "Explosion")
+					part.take_damage(60, damsrc = "Explosion")
 				else
 					part.droplimb(0,DROPLIMB_BLUNT)
 			explosion(T, -1, -1, 2, 3)

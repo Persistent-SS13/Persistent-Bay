@@ -83,7 +83,7 @@
 		damage *= FLUIDLOSS_CONC_BURN/FLUIDLOSS_WIDE_BURN
 
 	if(!P.nodamage)
-		apply_damage(damage, damtype, def_zone, absorb, 0, P)
+		apply_damage(damage, damtype, def_zone, absorb, 0, used_weapon = P)
 	P.on_hit(src, absorb, def_zone)
 
 	return absorb
@@ -162,7 +162,7 @@
 		var/armor = run_armor_check(null, dtype)
 		if(armor < 100)
 			dtype = HandleArmorDamTypeConversion(dtype, armor)
-			apply_damage(throw_damage, dtype, null, armor, 0, O)
+			apply_damage(throw_damage, dtype, null, armor, 0, used_weapon = O)
 
 		O.throwing = 0		//it hit, so stop moving
 

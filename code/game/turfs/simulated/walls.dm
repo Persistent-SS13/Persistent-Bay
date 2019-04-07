@@ -142,15 +142,15 @@
 
 //Damage
 
-/turf/simulated/wall/proc/take_damage(var/damage, var/damageType)
+/turf/simulated/wall/proc/take_damage(damage, damtype, armorbypass, damsrc)
 	playsound(src, hitsound, 80, 1)
 	if(locate(/obj/effect/overlay/wallrot) in src)
 		damage *= 3
-	if(IsDamageTypeBrute(damageType))
+	if(IsDamageTypeBrute(damtype))
 		damage -= BruteArmor()
-	else if(IsDamageTypeBurn(damageType))
+	else if(IsDamageTypeBurn(damtype))
 		damage -= BurnArmor()
-	else if(ISDAMTYPE(damageType, DAM_BOMB))
+	else if(ISDAMTYPE(damtype, DAM_BOMB))
 		damage -= ExplosionArmor()
 	integrity -= max(0, damage)
 	if(integrity <= 0)

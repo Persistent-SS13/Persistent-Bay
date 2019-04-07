@@ -346,7 +346,7 @@ meteor_act
 		if(armor < 100)
 			if(prob(armor))
 				dtype = DAM_BLUNT //If amor absorb it, turn to blunt
-			created_wound = apply_damage(throw_damage, dtype, zone, armor, 0, O)
+			created_wound = apply_damage(throw_damage, dtype, zone, armor, 0, used_weapon = O)
 
 		if(ismob(O.thrower))
 			var/mob/M = O.thrower

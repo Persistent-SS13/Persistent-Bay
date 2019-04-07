@@ -98,7 +98,7 @@ var/global/list/stool_cache = list() //haha stool
 
 		var/blocked = target.run_armor_check(hit_zone, DAM_BLUNT)
 		target.Weaken(10 * blocked_mult(blocked))
-		target.apply_damage(20, DAM_BLUNT, hit_zone, blocked, src)
+		target.apply_damage(20, DAM_BLUNT, hit_zone, blocked, used_weapon = src)
 		return
 
 	..()

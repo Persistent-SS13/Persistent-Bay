@@ -100,11 +100,11 @@
 	affecting.visible_message("<span class='danger'>[assailant] crushes [affecting]'s [damaging.name]!</span>")
 
 	if(prob(30))
-		affecting.apply_damage(max(attack_damage + 10, 15), DAM_PIERCE, hit_zone, armor, 0, "organic punctures")
+		affecting.apply_damage(max(attack_damage + 10, 15), DAM_PIERCE, hit_zone, armor, 0, used_weapon = "organic punctures")
 		affecting.apply_effect(attack_damage, PAIN, armor)
 		affecting.visible_message("<span class='danger'>[assailant]'s spikes dig in painfully!</span>")
 	else
-		affecting.apply_damage(attack_damage, DAM_BLUNT, hit_zone, armor, 0, "crushing")
+		affecting.apply_damage(attack_damage, DAM_BLUNT, hit_zone, armor, 0, used_weapon = "crushing")
 	playsound(assailant.loc, 'sound/weapons/bite.ogg', 25, 1, -1)
 
 	admin_attack_log(assailant, affecting, "Crushed their victim.", "Was crushed.", "crushed")
@@ -118,7 +118,7 @@
 
 	var/armor = affecting.run_armor_check(hit_zone, DAM_PIERCE)
 
-	affecting.apply_damage(attack_damage, DAM_PIERCE, hit_zone, armor, 0, "mandibles")
+	affecting.apply_damage(attack_damage, DAM_PIERCE, hit_zone, armor, 0, used_weapon = "mandibles")
 	affecting.visible_message("<span class='danger'>[assailant] chews on [affecting]'s [damaging.name]!</span>")
 	playsound(assailant.loc, 'sound/weapons/bite.ogg', 25, 1, -1)
 

@@ -264,7 +264,7 @@
 				else
 					new_business.stock_holders[contract.signed_by] = contract.ownership
 				signed_contracts -= contract
-			LAZYADD(GLOB.all_world_factions, new_business)
+			LAZYDISTINCTADD(GLOB.all_world_factions, new_business)
 			business_name = null
 			business_uid = null
 			ceo_name = null

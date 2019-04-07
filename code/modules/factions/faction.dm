@@ -693,7 +693,7 @@ var/PriorityQueue/all_feeds
 	nexus.network.password = ""
 	nexus.network.invisible = 0
 
-	GLOB.all_world_factions |= nexus
+	LAZYDISTINCTADD(GLOB.all_world_factions, nexus)
 
 
 /datum/world_faction/democratic/New()
@@ -1373,6 +1373,7 @@ var/PriorityQueue/all_feeds
 
 /obj/faction_spawner
 	name = "Name to start faction with"
+	should_save =  FALSE
 	var/name_short = "Faction Abbreviation"
 	var/name_tag = "Faction Tag"
 	var/uid = "faction_uid"
@@ -1382,9 +1383,12 @@ var/PriorityQueue/all_feeds
 	var/network_password
 	var/network_invisible = FALSE
 
-/obj/faction_spawner/New()
-	if(!GLOB.all_world_factions)
-		GLOB.all_world_factions = list()
+/obj/faction_spawner/Initialize()
+	. = ..()
+	spawn_faction()
+	return INITIALIZE_HINT_QDEL
+
+/obj/faction_spawner/proc/spawn_faction()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 		if(existing_faction.uid == uid)
 			qdel(src)
@@ -1401,16 +1405,13 @@ var/PriorityQueue/all_feeds
 		fact.network.secured = 1
 		fact.network.password = network_password
 	fact.network.invisible = network_invisible
-	GLOB.all_world_factions |= fact
-	qdel(src)
-	return
+	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
+	report_progress("Adding [name] faction. Faction list is \ref[GLOB.all_world_factions]")
 
 /obj/faction_spawner/democratic
 	var/purpose = ""
 
-/obj/faction_spawner/democratic/New()
-	if(!GLOB.all_world_factions)
-		GLOB.all_world_factions = list()
+/obj/faction_spawner/democratic/spawn_faction()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 		if(existing_faction.uid == uid)
 			qdel(src)
@@ -1425,12 +1426,43 @@ var/PriorityQueue/all_feeds
 	fact.network.net_uid = network_uid
 	fact.purpose = src.purpose
 	if(network_password)
-		fact.network.secured = 1
+		fact.network.secured = TRUE
 		fact.network.password = network_password
 	fact.network.invisible = network_invisible
-	GLOB.all_world_factions |= fact
-	qdel(src)
-	return
+	fact.gov = new()
+
+	var/datum/election/gov/gov_elect = new()
+	gov_elect.ballots |= fact.gov
+	fact.waiting_elections |= gov_elect
+
+	var/datum/election/council_elect = new()
+	var/datum/democracy/councillor/councillor1 = new()
+	councillor1.title = "Councillor of Justice and Criminal Matters"
+	fact.city_council |= councillor1
+	council_elect.ballots |= councillor1
+
+	var/datum/democracy/councillor/councillor2 = new()
+	councillor2.title = "Councillor of Budget and Tax Measures"
+	fact.city_council |= councillor2
+	council_elect.ballots |= councillor2
+
+	var/datum/democracy/councillor/councillor3 = new()
+	councillor3.title = "Councillor of Commerce and Business Relations"
+	fact.city_council |= councillor3
+	council_elect.ballots |= councillor3
+
+	var/datum/democracy/councillor/councillor4 = new()
+	councillor4.title = "Councillor for Culture and Ethical Oversight"
+	fact.city_council |= councillor4
+	council_elect.ballots |= councillor4
+
+	var/datum/democracy/councillor/councillor5 = new()
+	councillor5.title = "Councillor for the Domestic Affairs"
+	fact.city_council |= councillor5
+	council_elect.ballots |= councillor5
+	fact.waiting_elections |= council_elect
+	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
+	report_progress("Adding [name] faction. Faction list is \ref[GLOB.all_world_factions]")
 
 /obj/faction_spawner/Nanotrasen
 	name = "Nanotrasen Corporate Colony"

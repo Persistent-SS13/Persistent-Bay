@@ -331,7 +331,7 @@
 		var/mob/living/carbon/human/H = M
 		var/obj/item/organ/external/S = H.organs_by_name[target_zone]
 
-		if(!S || !(S.robotic >= ORGAN_ROBOT) || user.a_intent != I_HELP)
+		if(!S || !BP_IS_ROBOTIC(S) || user.a_intent != I_HELP)
 			return ..()
 
 		if(!welding)
@@ -347,7 +347,10 @@
 /obj/item/weapon/tool/weldingtool/proc/apply_fuel_efficiency(var/fuel_needed)
 	return fuel_needed * welding_efficiency
 
-/obj/item/weapon/tool/weldingtool/use_tool(var/mob/living/user, var/obj/target, var/time = 0, var/required_fuel = 0, var/outputMessage = null)
+/obj/item/weapon/tool/weldingtool/apply_duration_efficiency(var/defduration)
+	return  max(1, defduration * welding_efficiency)
+
+/obj/item/weapon/tool/weldingtool/use_tool(var/mob/living/user, var/obj/target, var/time = 0, var/output_message = null, var/required_skill = null, var/required_fuel = 0 )
 	if(!isOn())
 		to_chat(user, SPAN_NOTICE("The welding tool must be on to complete this task."))
 		return FALSE
@@ -355,13 +358,23 @@
 		to_chat(user, SPAN_NOTICE("You need more fuel to complete this task."))
 		return FALSE
 	user.setClickCooldown(DEFAULT_QUICK_COOLDOWN)
-	playsound(get_turf(target), 'sound/items/Welder.ogg', 50, 1)
-	if(outputMessage)
-		to_chat(user, SPAN_NOTICE("[outputMessage]"))
-	if(do_after(user, max(1, time * welding_efficiency), target))
-		if(isOn())
-			remove_fuel(apply_fuel_efficiency(required_fuel), user)
-			return TRUE
+	play_tool_sound()
+	if(output_message)
+		to_chat(user, SPAN_NOTICE("[output_message]"))
+
+	var/done = (required_skill)? user.do_skilled(apply_duration_efficiency(time), required_skill, target) : do_after(user, apply_duration_efficiency(time), target)
+	if(required_skill && prob(skill_fail_chance(required_skill, 1)))
+		to_chat(user, SPAN_DANGER("You're not very good at this and fail the task.."))
+		return FALSE  //There's a chance to screw up if not skilled enough
+	if(done && isOn())
+		remove_fuel(apply_fuel_efficiency(required_fuel), user)
+		return TRUE
+	else
+		//The user moved and cancelled
+		return FALSE
+
+/obj/item/weapon/tool/weldingtool/play_tool_sound()
+	playsound(get_turf(src), 'sound/items/Welder.ogg', 50, 1)
 
 //===================================
 //	Small welder tool tank

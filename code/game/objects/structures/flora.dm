@@ -208,6 +208,7 @@
 
 
 //potted plants credit: Flashkirby
+//potted plants 27-30: Cajoes
 /obj/structure/flora/pottedplant
 	name = "potted plant"
 	desc = "Really brings the room together."
@@ -217,13 +218,6 @@
 	layer = ABOVE_HUMAN_LAYER
 	max_health = 50
 	mass = 8
-
-/obj/structure/flora/pottedplant/large
-	name = "large potted plant"
-	desc = "This is a large plant. Three branches support pairs of waxy leaves."
-	icon_state = "plant-26"
-	max_health = 80
-	mass = 12
 
 /obj/structure/flora/pottedplant/fern
 	name = "potted fern"
@@ -264,7 +258,10 @@
 	name = "unusual potted plant"
 	desc = "This is an unusual plant. It's bulbous ends emit a soft blue light."
 	icon_state = "plant-09"
-	set_light(l_range = 1, l_power = 0.5, l_color = "#0000ff")
+
+/obj/structure/flora/pottedplant/unusual/Initialize()
+	. = ..()
+	set_light(0.4, 0.1, 2, 2, "#007fff")
 
 /obj/structure/flora/pottedplant/orientaltree
 	name = "potted oriental tree"
@@ -282,7 +279,7 @@
 	icon_state = "plant-12"
 
 /obj/structure/flora/pottedplant/sticky
-	name = "styicky potted plant"
+	name = "sticky potted plant"
 	desc = "This is an odd plant. Its sticky leaves trap insects."
 	icon_state = "plant-13"
 
@@ -320,7 +317,10 @@
 	name = "subterranean potted plant"
 	desc = "This is a subterranean plant. It's bulbous ends glow faintly."
 	icon_state = "plant-20"
-	set_light(l_range = 1, l_power = 0.5, l_color = "#ff6633")
+
+/obj/structure/flora/pottedplant/subterranean/Initialize()
+	. = ..()
+	set_light(0.4, 0.1, 2, 2, "#ff6633")
 
 /obj/structure/flora/pottedplant/minitree
 	name = "potted tree"
@@ -347,8 +347,32 @@
 	desc = "This is the dried up remains of a dead plant. Someone should replace it."
 	icon_state = "plant-25"
 
+/obj/structure/flora/pottedplant/large
+	name = "large potted plant"
+	desc = "This is a large plant. Three branches support pairs of waxy leaves."
+	icon_state = "plant-26"
+
 /obj/structure/flora/pottedplant/decorative
 	name = "decorative potted plant"
 	desc = "This is a decorative shrub. It's been trimmed into the shape of an apple."
 	icon_state = "applebush"
 
+/obj/structure/flora/pottedplant/deskfern
+	name = "fancy ferny potted plant"
+	desc = "This leafy desk fern could do with a trim."
+	icon_state = "plant-27"
+
+/obj/structure/flora/pottedplant/floorleaf
+	name = "fancy leafy floor plant"
+	desc = "This plant has remarkably waxy leaves."
+	icon_state = "plant-28"
+
+/obj/structure/flora/pottedplant/deskleaf
+	name = "fancy leafy potted desk plant"
+	desc = "A tiny waxy leafed plant specimen."
+	icon_state = "plant-29"
+
+/obj/structure/flora/pottedplant/deskferntrim
+	name = "fancy trimmed ferny potted plant"
+	desc = "This leafy desk fern seems to have been trimmed too much."
+	icon_state = "plant-30"

@@ -10,13 +10,6 @@
 
 	var/mob/living/silicon/ai/carded_ai
 
-/obj/item/weapon/aicard/attack(mob/living/silicon/decoy/M as mob, mob/user as mob)
-	if (!istype (M, /mob/living/silicon/decoy))
-		return ..()
-	else
-		M.death()
-		to_chat(user, "<b>ERROR ERROR ERROR</b>")
-
 /obj/item/weapon/aicard/attack_self(mob/user)
 
 	ui_interact(user)
@@ -76,7 +69,7 @@
 		update_icon()
 	return 1
 
-/obj/item/weapon/aicard/update_icon()
+/obj/item/weapon/aicard/on_update_icon()
 	overlays.Cut()
 	if(carded_ai)
 		if (!carded_ai.control_disabled)
@@ -106,7 +99,7 @@
 
 	ai.carded = 1
 	admin_attack_log(user, ai, "Carded with [src.name]", "Was carded with [src.name]", "used the [src.name] to card")
-	src.name = "[initial(name)] - [ai.name]"
+	src.SetName("[initial(name)] - [ai.name]")
 
 	ai.forceMove(src)
 	ai.destroy_eyeobj(src)
@@ -127,7 +120,7 @@
 /obj/item/weapon/aicard/proc/clear()
 	if(carded_ai && istype(carded_ai.loc, /turf))
 		carded_ai.carded = 0
-	name = initial(name)
+	SetName(initial(name))
 	carded_ai.calculate_power_usage()
 	carded_ai = null
 	update_icon()

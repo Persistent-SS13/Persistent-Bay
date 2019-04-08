@@ -21,31 +21,14 @@
 	attack_verb = list("stabbed")
 	lock_picking_level = 5
 	damtype = DAM_PIERCE
+	var/build_from_parts = TRUE
+	var/valid_colours = list(COLOR_RED, COLOR_CYAN_BLUE, COLOR_PURPLE, COLOR_CHESTNUT, COLOR_GREEN, COLOR_TEAL, COLOR_ASSEMBLY_YELLOW, COLOR_BOTTLE_GREEN, COLOR_VIOLET, COLOR_GRAY80, COLOR_GRAY20)
 
 /obj/item/weapon/tool/screwdriver/Initialize()
-	switch(pick("red","blue","purple","brown","green","cyan","yellow"))
-		if ("red")
-			icon_state = "screwdriver2"
-			item_state = "screwdriver"
-		if ("blue")
-			icon_state = "screwdriver"
-			item_state = "screwdriver_blue"
-		if ("purple")
-			icon_state = "screwdriver3"
-			item_state = "screwdriver_purple"
-		if ("brown")
-			icon_state = "screwdriver4"
-			item_state = "screwdriver_brown"
-		if ("green")
-			icon_state = "screwdriver5"
-			item_state = "screwdriver_green"
-		if ("cyan")
-			icon_state = "screwdriver6"
-			item_state = "screwdriver_cyan"
-		if ("yellow")
-			icon_state = "screwdriver7"
-			item_state = "screwdriver_yellow"
-
+	if(build_from_parts)
+		icon_state = "screwdriver_handle"
+		color = pick(valid_colours)
+		overlays += overlay_image(icon, "screwdriver_hardware", flags=RESET_COLOR)
 	if (prob(75))
 		src.pixel_y = rand(0, 16)
 	. = ..()
@@ -55,7 +38,7 @@
 		return ..()
 	if(user.zone_sel.selecting != BP_EYES && user.zone_sel.selecting != BP_HEAD)
 		return ..()
-	if((CLUMSY in user.mutations) && prob(50))
+	if((MUTATION_CLUMSY in user.mutations) && prob(50))
 		M = user
 	return eyestab(M,user)
 

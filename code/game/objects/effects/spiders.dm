@@ -11,8 +11,7 @@
 
 /obj/effect/spider/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	if(exposed_temperature > 300 + T0C)
-		health -= 5
-		update_health()
+		rem_health(5)
 
 /obj/effect/spider/stickyweb
 	icon_state = "stickyweb1"
@@ -38,15 +37,12 @@
 	icon_state = "eggs"
 	var/amount_grown = 0
 
-/obj/effect/spider/eggcluster/Initialize()
-		. = ..()
-		pixel_x = rand(3,-3)
-		pixel_y = rand(3,-3)
-		START_PROCESSING(SSobj, src)
-
-/obj/effect/spider/eggcluster/New(var/mapload, var/atom/parent)
+/obj/effect/spider/eggcluster/Initialize(mapload, atom/parent)
+	. = ..()
 	get_light_and_color(parent)
-	..()
+	pixel_x = rand(3,-3)
+	pixel_y = rand(3,-3)
+	START_PROCESSING(SSobj, src)
 
 /obj/effect/spider/eggcluster/Destroy()
 	STOP_PROCESSING(SSobj, src)
@@ -56,9 +52,10 @@
 	. = ..()
 
 /obj/effect/spider/eggcluster/Process()
-	amount_grown += rand(0,2)
+	if(prob(80))
+		amount_grown += rand(0,2)
 	if(amount_grown >= 100)
-		var/num = rand(6,24)
+		var/num = rand(3,9)
 		var/obj/item/organ/external/O = null
 		if(istype(loc, /obj/item/organ/external))
 			O = loc
@@ -86,9 +83,14 @@
 	var/growth_chance = 1 // % chance of beginning growth, and eventually become a beautiful death machine
 
 	var/shift_range = 6
+	var/castes = list(/mob/living/simple_animal/hostile/giant_spider = 2,
+					  /mob/living/simple_animal/hostile/giant_spider/guard = 2,
+					  /mob/living/simple_animal/hostile/giant_spider/nurse = 2,
+					  /mob/living/simple_animal/hostile/giant_spider/spitter = 2,
+					  /mob/living/simple_animal/hostile/giant_spider/hunter = 1)
 
-/obj/effect/spider/spiderling/Initialize(var/location, var/atom/parent)
-	greater_form = pick(typesof(/mob/living/simple_animal/hostile/giant_spider))
+/obj/effect/spider/spiderling/Initialize(var/mapload, var/atom/parent)
+	greater_form = pickweight(castes)
 	icon_state = initial(greater_form.icon_state)
 	pixel_x = rand(-shift_range, shift_range)
 	pixel_y = rand(-shift_range, shift_range)
@@ -137,7 +139,7 @@
 
 /obj/effect/spider/spiderling/Bump(atom/user)
 	if(istype(user, /obj/structure/table))
-		src.loc = user.loc
+		forceMove(user.loc)
 	else
 		..()
 
@@ -150,6 +152,13 @@
 	die()
 
 /obj/effect/spider/spiderling/Process()
+
+	if(loc)
+		var/datum/gas_mixture/environment = loc.return_air()
+		if(environment && environment.gas["methyl_bromide"] > 0)
+			die()
+			return
+
 	if(travelling_in_vent)
 		if(istype(src.loc, /turf))
 			travelling_in_vent = 0
@@ -168,12 +177,12 @@
 					src.visible_message("<B>[src] scrambles into the ventillation ducts!</B>")*/
 
 				spawn(rand(20,60))
-					loc = exit_vent
+					forceMove(exit_vent)
 					var/travel_time = round(get_dist(loc, exit_vent.loc) / 2)
 					spawn(travel_time)
 
 						if(!exit_vent || exit_vent.welded)
-							loc = entry_vent
+							forceMove(entry_vent)
 							entry_vent = null
 							return
 
@@ -182,10 +191,10 @@
 						sleep(travel_time)
 
 						if(!exit_vent || exit_vent.welded)
-							loc = entry_vent
+							forceMove(entry_vent)
 							entry_vent = null
 							return
-						loc = exit_vent.loc
+						forceMove(exit_vent.loc)
 						entry_vent = null
 						var/area/new_area = get_area(loc)
 						if(new_area)
@@ -227,7 +236,7 @@
 		if(!O.owner || O.owner.stat == DEAD || amount_grown > 80)
 			amount_grown = 20 //reset amount_grown so that people have some time to react to spiderlings before they grow big
 			O.implants -= src
-			src.loc = O.owner ? O.owner.loc : O.loc
+			forceMove(O.owner ? O.owner.loc : O.loc)
 			src.visible_message("<span class='warning'>\A [src] emerges from inside [O.owner ? "[O.owner]'s [O.name]" : "\the [O]"]!</span>")
 			if(O.owner)
 				O.owner.apply_damage(1, DAM_PIERCE, O.organ_tag)
@@ -257,8 +266,9 @@
 	icon_state = "cocoon1"
 	max_health = 60
 
-	New()
-		icon_state = pick("cocoon1","cocoon2","cocoon3")
+/obj/effect/spider/cocoon/Initialize()
+	. = ..()
+	icon_state = pick("cocoon1","cocoon2","cocoon3")
 
 /obj/effect/spider/cocoon/Destroy()
 	src.visible_message("<span class='warning'>\The [src] splits open.</span>")

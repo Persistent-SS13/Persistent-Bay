@@ -40,11 +40,11 @@
 	oxygentanks = 0
 	phorontanks = 0
 
-/obj/structure/dispenser/New()
+/obj/structure/dispenser/Initialize()
+	. = ..()
 	update_icon()
 
-
-/obj/structure/dispenser/update_icon()
+/obj/structure/dispenser/on_update_icon()
 	overlays.Cut()
 	switch(oxygentanks)
 		if(1 to 3)	overlays += "oxygen-[oxygentanks]"
@@ -71,8 +71,8 @@
 /obj/structure/dispenser/attackby(obj/item/I as obj, mob/user as mob)
 	if(istype(I, /obj/item/weapon/tank/oxygen) || istype(I, /obj/item/weapon/tank/air) || istype(I, /obj/item/weapon/tank/anesthetic))
 		if(oxygentanks < 10)
-			user.drop_item()
-			I.loc = src
+			if(!user.unEquip(I, src))
+				return
 			oxytanks.Add(I)
 			oxygentanks++
 			to_chat(user, "<span class='notice'>You put [I] in [src].</span>")
@@ -84,8 +84,8 @@
 		return
 	if(istype(I, /obj/item/weapon/tank/phoron))
 		if(phorontanks < 10)
-			user.drop_item()
-			I.loc = src
+			if(!user.unEquip(I, src))
+				return
 			platanks.Add(I)
 			phorontanks++
 			to_chat(user, "<span class='notice'>You put [I] in [src].</span>")
@@ -126,7 +126,7 @@
 					oxytanks.Remove(O)
 				else
 					O = new /obj/item/weapon/tank/oxygen(loc)
-				O.loc = loc
+				O.dropInto(loc)
 				to_chat(usr, "<span class='notice'>You take [O] out of [src].</span>")
 				oxygentanks--
 				update_icon()
@@ -138,7 +138,7 @@
 					platanks.Remove(P)
 				else
 					P = new /obj/item/weapon/tank/phoron(loc)
-				P.loc = loc
+				P.dropInto(loc)
 				to_chat(usr, "<span class='notice'>You take [P] out of [src].</span>")
 				phorontanks--
 				update_icon()

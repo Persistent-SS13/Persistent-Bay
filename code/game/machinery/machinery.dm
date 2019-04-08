@@ -21,7 +21,7 @@ Class Variables:
    power_channel (num)
 	  What channel to draw from when drawing power for power mode
 	  Possible Values:
-		 EQUIP:0 -- Equipment Channel
+		 EQUIP:1 -- Equipment Channel
 		 LIGHT:2 -- Lighting Channel
 		 ENVIRON:3 -- Environment Channel
 
@@ -51,27 +51,15 @@ Class Procs:
 
    Destroy()					 'game/machinery/machine.dm'
 
-   auto_use_power()			'game/machinery/machine.dm'
-	  This proc determines how power mode power is deducted by the machine.
-	  'auto_use_power()' is called by the 'machines' subsystem every tick.
-
-	  Return Value:
-		 return:1 -- if object is powered
-		 return:0 -- if object is not powered.
-
-	  Default definition uses 'use_power', 'power_channel', 'active_power_usage',
-	  'idle_power_usage', 'powered()', and 'use_power()' implement behavior.
-
-   powered(chan = EQUIP)		 'modules/power/power.dm'
+   powered(chan = EQUIP)		 'modules/power/power_usage.dm'
 	  Checks to see if area that contains the object has power available for power
 	  channel given in 'chan'.
 
-   use_power(amount, chan=EQUIP, autocalled)   'modules/power/power.dm'
+   use_power_oneoff(amount, chan=power_channel)   'modules/power/power_usage.dm'
 	  Deducts 'amount' from the power channel 'chan' of the area that contains the object.
-	  If it's autocalled then everything is normal, if something else calls use_power we are going to
-	  need to recalculate the power two ticks in a row.
+	  This is not a continuous draw, but rather will be cleared after one APC update.
 
-   power_change()			   'modules/power/power.dm'
+   power_change()			   'modules/power/power_usage.dm'
 	  Called by the area that contains the object when ever that area under goes a
 	  power state change (area runs out of power, or area channel is turned off).
 
@@ -85,8 +73,8 @@ Class Procs:
    assign_uid()			   'game/machinery/machine.dm'
 	  Called by machine to assign a value to the uid variable.
 
-   process()				  'game/machinery/machine.dm'
-	  Called by the 'machines' subsystem once per game tick for each machine that is listed in the 'machines' list.
+   Process()				  'game/machinery/machine.dm'
+	  Called by the 'master_controller' once per game tick for each machine that is listed in the 'machines' list.
 
 
 	Compiled by Aygar
@@ -108,6 +96,7 @@ Class Procs:
 	var/idle_power_usage = 0
 	var/active_power_usage = 0
 	var/power_channel = EQUIP //EQUIP, ENVIRON or LIGHT
+	var/power_init_complete = FALSE // Helps with bookkeeping when initializing atoms. Don't modify.
 	var/list/component_parts = null //list of all the parts used to build it, if made from certain kinds of frames.
 	var/uid
 	var/panel_open = 0
@@ -115,6 +104,8 @@ Class Procs:
 	var/interact_offline = 0 // Can the machine be interacted with while de-powered.
 	var/clicksound			// sound played on succesful interface use by a carbon lifeform
 	var/clickvol = 40		// sound played on succesful interface use
+	var/core_skill = SKILL_DEVICES //The skill used for skill checks for this machine (mostly so subtypes can use different skills).
+	var/operator_skill      // Machines often do all operations on Process(). This caches the user's skill while the operations are running.
 	var/multiplier = 0
 	var/datum/world_faction/faction
 	var/faction_uid
@@ -156,9 +147,11 @@ Class Procs:
 	init_transmitter()
 	if(d)
 		set_dir(d)
-	START_PROCESSING(SSmachines, src)
+	START_PROCESSING(SSmachines, src) // It's safe to remove machines from here.
+	SSmachines.machinery += src // All machines should remain in this list, always.
 
 /obj/machinery/Destroy()
+	SSmachines.machinery -= src
 	STOP_PROCESSING(SSmachines, src)
 	if(component_parts)
 		for(var/atom/A in component_parts)
@@ -203,15 +196,15 @@ Class Procs:
 
 /obj/machinery/proc/set_broken(var/state)
 	src.stat = state? (src.stat | BROKEN) : (stat & ~BROKEN)
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/proc/set_emped(var/state)
 	src.stat = state? (src.stat | EMPED) : (stat & ~EMPED)
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/proc/set_maintenance(var/state)
 	src.stat = state? (src.stat | MAINT) : (stat & ~MAINT)
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/proc/ison()
 	return !isoff()
@@ -440,6 +433,16 @@ Class Procs:
 		return 1
 	return 0
 
+/obj/machinery/proc/display_parts(mob/user)
+	to_chat(user, "<span class='notice'>Following parts detected in the machine:</span>")
+	for(var/var/obj/item/C in component_parts)
+		to_chat(user, "<span class='notice'>	[C.name]</span>")
+
+/obj/machinery/examine(mob/user)
+	. = ..(user)
+	if(component_parts && hasHUD(user, HUD_SCIENCE))
+		display_parts(user)
+
 //----------------------------------
 //	Default Interaction Procs
 //----------------------------------
@@ -479,15 +482,13 @@ Class Procs:
 						R.handle_item_insertion(A, 1)
 						component_parts -= A
 						component_parts += B
-						B.loc = null
+						B.forceMove(null)
 						to_chat(user, SPAN_NOTICE("[A.name] replaced with [B.name]."))
 						break
 			update_icon()
 			RefreshParts()
 	else
-		to_chat(user, SPAN_NOTICE("Following parts detected in the machine:"))
-		for(var/var/obj/item/C in component_parts)
-			to_chat(user, SPAN_NOTICE("	[C.name]"))
+		display_parts(user)
 	return 1
 
 //----------------------------------
@@ -663,3 +664,14 @@ Class Procs:
 //Called in process after the emp wears off. Override in your subclass
 /obj/machinery/proc/emp_end()
 	update_icon()
+
+// This is really pretty crap and should be overridden for specific machines.
+/obj/machinery/water_act(var/depth)
+	..()
+	if(!(stat & (NOPOWER|BROKEN)) && !waterproof && (depth > FLUID_DEEP))
+		ex_act(3)
+
+/obj/machinery/Move()
+	. = ..()
+	if(. && !CanFluidPass())
+		fluid_update()

@@ -6,7 +6,7 @@
 	uniform = /obj/item/clothing/under/color/grey
 	back = /obj/item/weapon/tank/jetpack/oxygen
 	mask = /obj/item/clothing/mask/breath
-	flags = OUTFIT_HAS_JETPACK
+	flags = OUTFIT_HAS_JETPACK|OUTFIT_RESET_EQUIPMENT
 
 /decl/hierarchy/outfit/soviet_soldier
 	name = "Soviet soldier"
@@ -36,7 +36,7 @@
 	id_slot = slot_wear_id
 	id_type = /obj/item/weapon/card/id/merchant
 	pda_slot = slot_r_store
-	pda_type = /obj/item/device/pda/chef //cause I like the look
+	pda_type = /obj/item/modular_computer/pda //cause I like the look
 	id_pda_assignment = "Merchant"
 
 /decl/hierarchy/outfit/merchant/vox

@@ -133,7 +133,7 @@ LINEN BINS
 	to_chat(user, "There are [amount] bed sheets in the bin.")
 
 
-/obj/structure/bedsheetbin/update_icon()
+/obj/structure/bedsheetbin/on_update_icon()
 	switch(amount)
 		if(0)				icon_state = "linenbin-empty"
 		if(1 to amount / 2)	icon_state = "linenbin-half"
@@ -144,8 +144,8 @@ LINEN BINS
 
 /obj/structure/bedsheetbin/attackby(obj/item/I as obj, mob/user as mob)
 	if(istype(I, /obj/item/weapon/bedsheet))
-		user.drop_item()
-		I.loc = src
+		if(!user.unEquip(I, src))
+			return
 		sheets.Add(I)
 		amount++
 		to_chat(user, SPAN_NOTICE("You put [I] in [src]."))
@@ -155,8 +155,8 @@ LINEN BINS
 		qdel(src)
 		return 1
 	else if(user.a_intent != I_HURT && can_hide_item(I))	//make sure there's sheets to hide it among, make sure nothing else is hidden in there.
-		user.drop_item()
-		I.loc = src
+		if(!user.unEquip(I, src))
+			return
 		hidden = I
 		to_chat(user, SPAN_NOTICE("You hide [I] among the sheets."))
 		return 1
@@ -170,7 +170,7 @@ LINEN BINS
 			to_chat(user, SPAN_WARNING("\The [src] is empty!"))
 			return
 		add_fingerprint(user)
-		B.loc = user.loc
+		B.forcemove(user.loc)
 		user.put_in_hands(B)
 		to_chat(user, SPAN_NOTICE("You take [B] out of [src]."))
 
@@ -186,11 +186,11 @@ LINEN BINS
 	if(!B)
 		to_chat(user, SPAN_WARNING("\The [src] is empty!"))
 		return
-	B.loc = loc
+	B.dropInto(loc)
 	to_chat(user, SPAN_NOTICE("You telekinetically remove [B] from [src]."))
 
 	if(hidden)
-		hidden.loc = loc
+		hidden.dropInto(loc)
 		hidden = null
 
 /obj/structure/bedsheetbin/proc/take_sheet()

@@ -7,9 +7,11 @@
 	anchored = TRUE
 	w_class = ITEM_SIZE_HUGE
 	canhear_range = 2
-	atom_flags = ATOM_FLAG_NO_BLOOD
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_NO_BLOOD
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	layer = ABOVE_WINDOW_LAYER
+	cell = null
+	power_usage = 0
 	var/number = 0
 	var/last_tick //used to delay the powercheck
 	var/buildstage = 0
@@ -58,6 +60,7 @@
 /obj/item/device/radio/intercom/Initialize()
 	. = ..()
 	START_PROCESSING(SSobj, src)
+	queue_icon_update()
 
 /obj/item/device/radio/intercom/department/medbay/Initialize()
 	. = ..()
@@ -116,9 +119,6 @@
 /obj/item/device/radio/intercom/receive_range(freq, level, faction)
 	if (!on)
 		return -1
-//	if(!faction || faction == "")
-//		if(!public_mode)
-//			return -1
 	if(faction && faction != "" && faction != faction_uid)
 		return -1
 	if(!(0 in level))
@@ -136,6 +136,7 @@
 /obj/item/device/radio/intercom/Process()
 	if(((world.timeofday - last_tick) > 30) || ((world.timeofday - last_tick) < 0))
 		last_tick = world.timeofday
+		var/old_on = on
 
 		if(!src.loc)
 			on = FALSE
@@ -146,10 +147,28 @@
 			else
 				on = A.powered(EQUIP) // set "on" to the power status
 
-		if(!on)
-			icon_state = "intercom-p"
-		else
-			icon_state = "intercom"
+		if (on != old_on)
+			queue_icon_update()
+
+/obj/item/device/radio/intercom/on_update_icon()
+	if(!on)
+		icon_state = "intercom-p"
+	else if (broadcasting && listening)
+		icon_state = "intercom_11"
+	else if (broadcasting)
+		icon_state = "intercom_10"
+	else if (listening)
+		icon_state = "intercom_01"
+	else
+		icon_state = "intercom_00"
+
+/obj/item/device/radio/intercom/ToggleBroadcast()
+	..()
+	update_icon()
+
+/obj/item/device/radio/intercom/ToggleReception()
+	..()
+	update_icon()
 
 /obj/item/device/radio/intercom/broadcasting
 	broadcasting = TRUE

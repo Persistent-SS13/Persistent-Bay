@@ -79,7 +79,6 @@
 	var/pressure_dangerlevel = 0
 	var/oxygen_dangerlevel = 0
 	var/co2_dangerlevel = 0
-
 	var/temperature_dangerlevel = 0
 	var/other_dangerlevel = 0
 
@@ -154,7 +153,7 @@
 		return
 	area_uid = alarm_area.uid
 	if (name == initial(name))
-		name = "[alarm_area.name] Air Alarm"
+		SetName("[alarm_area.name] Air Alarm")
 
 	if(!wires)
 		wires = new(src)
@@ -173,8 +172,7 @@
 
 	if (!master_is_operating())
 		elect_master()
-
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/alarm/Destroy()
 	QDEL_NULL(wires)
@@ -253,7 +251,6 @@
 				var/energy_used = min( gas.get_thermal_energy_change(target_temperature) , active_power_usage)
 
 				gas.add_thermal_energy(energy_used)
-				//use_power(energy_used, ENVIRON) //handle by update_use_power instead
 			else	//gas cooling
 				var/heat_transfer = min(abs(gas.get_thermal_energy_change(target_temperature)), active_power_usage)
 
@@ -265,8 +262,6 @@
 				heat_transfer = min(heat_transfer, cop * active_power_usage)	//this ensures that we don't use more than active_power_usage amount of power
 
 				heat_transfer = -gas.add_thermal_energy(-heat_transfer)	//get the actual heat transfer
-
-				//use_power(heat_transfer / cop, ENVIRON)	//handle by update_use_power instead
 
 			environment.merge(gas)
 
@@ -289,7 +284,6 @@
 		pressure_dangerlevel,
 		oxygen_dangerlevel,
 		co2_dangerlevel,
-
 		other_dangerlevel,
 		temperature_dangerlevel
 		)
@@ -313,9 +307,11 @@
 	return alarm_area.master_air_alarm && alarm_area.master_air_alarm.operable()
 
 
-/obj/machinery/alarm/proc/elect_master()
+/obj/machinery/alarm/proc/elect_master(exclude_self = FALSE)
 	for (var/obj/machinery/alarm/AA in alarm_area)
-		if (AA.operable())
+		if(exclude_self && AA == src)
+			continue
+		if (!(AA.stat & (NOPOWER|BROKEN)))
 			alarm_area.master_air_alarm = AA
 			return 1
 	return 0
@@ -327,7 +323,7 @@
 		return 1
 	return 0
 
-/obj/machinery/alarm/update_icon()
+/obj/machinery/alarm/on_update_icon()
 	if(wiresexposed)
 		icon_state = "alarmx"
 		set_light(0)
@@ -366,7 +362,7 @@
 		else if(dir == EAST)
 			pixel_x = -21
 
-	set_light(l_range = 2, l_power = 0.6, l_color = new_color)
+	set_light(0.25, 0.1, 1, 2, new_color)
 
 /obj/machinery/alarm/OnSignal(datum/signal/signal)
 	. = ..()
@@ -435,7 +431,7 @@
 	switch(mode)
 		if(AALARM_MODE_SCRUBBING)
 			for(var/device_id in alarm_area.air_scrub_names)
-				send_signal(device_id, list("power"= 1, "co2_scrub"= 1, "scrubbing"= 1, "panic_siphon"= 0) )
+				send_signal(device_id, list("power"= 1, "co2_scrub"= 1, "scrubbing"= SCRUBBER_SCRUB, "panic_siphon"= 0) )
 			for(var/device_id in alarm_area.air_vent_names)
 				send_signal(device_id, list("power"= 1, "checks"= "default", "set_external_pressure"= "default") )
 
@@ -466,7 +462,8 @@
 /obj/machinery/alarm/proc/apply_danger_level(var/new_danger_level)
 	if (report_danger_level && alarm_area.atmosalert(new_danger_level, src))
 		post_alert(new_danger_level)
-	update_icon()
+
+	queue_icon_update()
 
 /obj/machinery/alarm/proc/post_alert(alert_level)
 	if(!has_transmitter())
@@ -819,7 +816,7 @@
 				update_icon()
 				return
 
-			if (istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/device/pda))// trying to unlock the interface with an ID card
+			if (istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/modular_computer))// trying to unlock the interface with an ID card
 				if(inoperable())
 					to_chat(user, "It does nothing")
 					return
@@ -846,13 +843,12 @@
 			else if(isCrowbar(W))
 				to_chat(user, "You start prying out the circuit.")
 				playsound(src.loc, 'sound/items/Crowbar.ogg', 50, 1)
-				if(do_after(user,20))
-					if(buildstage == 1) //Prevents circuit duplication
-						to_chat(user, "You pry out the circuit!")
-						var/obj/item/weapon/airalarm_electronics/circuit = new /obj/item/weapon/airalarm_electronics()
-						circuit.dropInto(user.loc)
-						buildstage = 0
-						update_icon()
+				if(do_after(user,20) && buildstage == 1)
+					to_chat(user, "You pry out the circuit!")
+					var/obj/item/weapon/airalarm_electronics/circuit = new /obj/item/weapon/airalarm_electronics()
+					circuit.dropInto(user.loc)
+					buildstage = 0
+					update_icon()
 				return
 		if(0)
 			if(istype(W, /obj/item/weapon/airalarm_electronics))

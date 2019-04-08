@@ -1,7 +1,7 @@
 /obj/structure/closet/crate
 	name = "crate"
 	desc = "A rectangular steel crate."
-	atom_flags = ATOM_FLAG_CLIMBABLE
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
 	setup = 0
 	storage_types = CLOSET_STORAGE_ITEMS
 	mass = 12
@@ -46,7 +46,7 @@
 /obj/structure/closet/crate/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(opened)
 		return ..()
-	else if(istype(W, /obj/item/weapon/packageWrap))
+	else if(istype(W, /obj/item/stack/package_wrap))
 		return
 	else if(istype(W, /obj/item/stack/cable_coil))
 		var/obj/item/stack/cable_coil/C = W
@@ -59,9 +59,9 @@
 			return
 	else if(istype(W, /obj/item/device/assembly_holder) || istype(W, /obj/item/device/assembly))
 		if(rigged)
+			if(!user.unEquip(W, src))
+				return
 			to_chat(user, "<span class='notice'>You attach [W] to [src].</span>")
-			user.drop_item()
-			W.forceMove(src)
 			return
 	else if(isWirecutter(W))
 		if(rigged)
@@ -117,6 +117,13 @@
 	desc = "A internals crate."
 	closet_appearance = /decl/closet_appearance/crate/oxygen
 
+/obj/structure/closet/crate/internals/fuel
+	name = "\improper Fuel tank crate"
+	desc = "A fuel tank crate."
+
+/obj/structure/closet/crate/internals/fuel/WillContain()
+	return list(/obj/item/weapon/tank/hydrogen = 4)
+
 /obj/structure/closet/crate/trashcart
 	name = "trash cart"
 	desc = "A heavy, metal trashcart with wheels."
@@ -168,14 +175,34 @@
 /obj/structure/closet/crate/freezer
 	name = "freezer"
 	desc = "A freezer."
+	temperature = -16 CELSIUS
 	closet_appearance = /decl/closet_appearance/crate/freezer
+
+	var/target_temp = T0C - 40
+	var/cooling_power = 40
+
+/obj/structure/closet/crate/freezer/return_air()
+	var/datum/gas_mixture/gas = (..())
+	if(!gas)	return null
+	var/datum/gas_mixture/newgas = new/datum/gas_mixture()
+	newgas.copy_from(gas)
+	if(newgas.temperature <= target_temp)	return
+
+	if((newgas.temperature - cooling_power) > target_temp)
+		newgas.temperature -= cooling_power
+	else
+		newgas.temperature = target_temp
+	return newgas
+
+/obj/structure/closet/crate/freezer/ProcessAtomTemperature()
+	return PROCESS_KILL
 
 /obj/structure/closet/crate/freezer/rations //Fpr use in the escape shuttle
 	name = "emergency rations"
 	desc = "A crate of emergency rations."
 
 /obj/structure/closet/crate/freezer/rations/WillContain()
-	return list(/obj/item/weapon/reagent_containers/food/snacks/liquidfood = 4)
+	return list(/obj/random/mre = 6)
 
 /obj/structure/closet/crate/bin
 	name = "large bin"

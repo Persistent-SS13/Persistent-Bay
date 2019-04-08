@@ -30,79 +30,41 @@
 proc/random_hair_style(gender, species = SPECIES_HUMAN)
 	var/h_style = "Bald"
 
-	var/list/valid_hairstyles = list()
-	for(var/hairstyle in hair_styles_list)
-		var/datum/sprite_accessory/S = hair_styles_list[hairstyle]
-
-		if(gender != NEUTER && gender != PLURAL)
-			if(gender == MALE && S.gender == FEMALE)
-				continue
-			if(gender == FEMALE && S.gender == MALE)
-				continue
-
-		if( !(species in S.species_allowed))
-			continue
-		valid_hairstyles[hairstyle] = hair_styles_list[hairstyle]
-
+	var/datum/species/mob_species = all_species[species]
+	var/list/valid_hairstyles = mob_species.get_hair_styles()
 	if(valid_hairstyles.len)
 		h_style = pick(valid_hairstyles)
 
 	return h_style
 
-proc/random_facial_hair_style(gender, species = SPECIES_HUMAN)
+proc/random_facial_hair_style(gender, var/species = SPECIES_HUMAN)
 	var/f_style = "Shaved"
-
-	var/list/valid_facialhairstyles = list()
-	for(var/facialhairstyle in facial_hair_styles_list)
-		var/datum/sprite_accessory/S = facial_hair_styles_list[facialhairstyle]
-
-		if(gender != NEUTER && gender != PLURAL)
-			if(gender == MALE && S.gender == FEMALE)
-				continue
-			if(gender == FEMALE && S.gender == MALE)
-				continue
-
-		if( !(species in S.species_allowed))
-			continue
-
-		valid_facialhairstyles[facialhairstyle] = facial_hair_styles_list[facialhairstyle]
-
+	var/datum/species/mob_species = all_species[species]
+	var/list/valid_facialhairstyles = mob_species.get_facial_hair_styles(gender)
 	if(valid_facialhairstyles.len)
 		f_style = pick(valid_facialhairstyles)
-
 		return f_style
 
-proc/sanitize_name(name, species = SPECIES_HUMAN)
-	var/datum/species/current_species
-	if(species)
-		current_species = all_species[species]
-
-	return current_species ? current_species.sanitize_name(name) : sanitizeName(name)
-
 proc/random_name(gender, species = SPECIES_HUMAN)
-
-	var/datum/species/current_species
 	if(species)
-		current_species = all_species[species]
+		var/datum/species/current_species = all_species[species]
+		if(current_species)
+			var/decl/cultural_info/current_culture = SSculture.get_culture(current_species.default_cultural_info[TAG_CULTURE])
+			if(current_culture)
+				return current_culture.get_random_name(gender)
+	return capitalize(pick(gender == FEMALE ? GLOB.first_names_female : GLOB.first_names_male)) + " " + capitalize(pick(GLOB.last_names))
 
-	if(!current_species)
-		if(gender==FEMALE)
-			return capitalize(pick(GLOB.first_names_female)) + " " + capitalize(pick(GLOB.last_names))
-		else
-			return capitalize(pick(GLOB.first_names_male)) + " " + capitalize(pick(GLOB.last_names))
-	else
-		return current_species.get_random_name(gender)
-
-proc/random_skin_tone()
+proc/random_skin_tone(var/datum/species/current_species)
+	var/species_tone = current_species ? 35 - current_species.max_skin_tone() : -185
 	switch(pick(60;"caucasian", 15;"afroamerican", 10;"african", 10;"latino", 5;"albino"))
 		if("caucasian")		. = -10
 		if("afroamerican")	. = -115
 		if("african")		. = -165
 		if("latino")		. = -55
 		if("albino")		. = 34
-		else				. = rand(-185,34)
-	return min(max( .+rand(-25, 25), -185),34)
+		else				. = rand(species_tone,34)
 
+	return min(max(. + rand(-25, 25), species_tone), 34)
 proc/vatgrown_skin_tone()
 	return rand(0, 30)
 
@@ -143,12 +105,12 @@ proc/age2agedescription(age)
 	if (!thing || !istype(thing.loc, /mob/living/silicon/robot))
 		return 0
 	var/mob/living/silicon/robot/R = thing.loc
-	return (thing in R.module.modules)
+	return (thing in R.module.equipment)
 
 /proc/get_exposed_defense_zone(var/atom/movable/target)
 	return pick(BP_HEAD, BP_L_HAND, BP_R_HAND, BP_L_FOOT, BP_R_FOOT, BP_L_ARM, BP_R_ARM, BP_L_LEG, BP_R_LEG, BP_CHEST, BP_GROIN)
 
-/proc/do_mob(mob/user , mob/target, time = 30, target_zone = 0, uninterruptible = 0, progress = 1)
+/proc/do_mob(mob/user , mob/target, time = 30, target_zone = 0, uninterruptible = 0, progress = 1, var/incapacitation_flags = INCAPACITATION_DEFAULT)
 	if(!user || !target)
 		return 0
 	var/user_loc = user.loc
@@ -172,7 +134,7 @@ proc/age2agedescription(age)
 		if(uninterruptible)
 			continue
 
-		if(!user || user.incapacitated() || user.loc != user_loc)
+		if(!user || user.incapacitated(incapacitation_flags) || user.loc != user_loc)
 			. = 0
 			break
 
@@ -191,7 +153,7 @@ proc/age2agedescription(age)
 	if (progbar)
 		qdel(progbar)
 
-/proc/do_after(mob/user, delay, atom/target = null, needhand = 1, progress = 1, var/incapacitation_flags = INCAPACITATION_DEFAULT, var/same_direction = 0)
+/proc/do_after(mob/user, delay, atom/target = null, needhand = 1, progress = 1, var/incapacitation_flags = INCAPACITATION_DEFAULT, var/same_direction = 0, var/can_move = 0)
 	if(!user)
 		return 0
 	var/atom/target_loc = null
@@ -219,7 +181,7 @@ proc/age2agedescription(age)
 		if (progress)
 			progbar.update(world.time - starttime)
 
-		if(!user || user.incapacitated(incapacitation_flags) || user.loc != original_loc || (same_direction && user.dir != original_dir))
+		if(!user || user.incapacitated(incapacitation_flags) || (user.loc != original_loc && !can_move) || (same_direction && user.dir != original_dir))
 			. = 0
 			break
 

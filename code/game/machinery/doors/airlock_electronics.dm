@@ -105,9 +105,19 @@
 	var/last_configurator = null
 	var/locked = 1
 	var/lockable = 1
+	var/autoset = FALSE // Whether the door should inherit access from surrounding areas
 	var/datum/world_faction/connected_faction
 	var/business_name = ""
 	var/list/business_access = list()
+
+/obj/item/weapon/airlock_electronics/New()
+	..()
+	ADD_SAVED_VAR(conf_access)
+	ADD_SAVED_VAR(one_access)
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(connected_faction)
+	ADD_SAVED_VAR(business_name)
+	ADD_SAVED_VAR(business_access)
 
 /obj/item/weapon/airlock_electronics/attack_self(mob/user as mob)
 	if (!ishuman(user) && !istype(user,/mob/living/silicon/robot))
@@ -148,6 +158,7 @@
 	data["oneAccess"] = one_access
 	data["locked"] = locked
 	data["lockable"] = lockable
+	data["autoset"] = autoset
 
 	return data
 
@@ -161,6 +172,9 @@
 			return TRUE
 		if("one_access")
 			one_access = !one_access
+			return TRUE
+		if("autoset")
+			autoset = !autoset
 			return TRUE
 		if("set")
 			var/access = text2num(params["access"])

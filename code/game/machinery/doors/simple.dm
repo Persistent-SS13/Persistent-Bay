@@ -7,6 +7,7 @@
 	icon 		= 'icons/obj/doors/material_doors.dmi'
 	icon_state 	= "metal"
 	sound_hit 	= 'sound/weapons/genhit.ogg'
+	autoset_access = FALSE // Doesn't even use access
 
 	var/material/material
 	var/icon_base
@@ -21,10 +22,18 @@
 	if(!material)
 		qdel(src)
 		return
+	//Material is handled in the UpdateMaterial proc
 	if(initial_lock_value)
 		locked = initial_lock_value
 	if(locked)
 		lock = new(src,locked)
+
+	if(material.opacity < 0.5)
+		glass = 1
+		set_opacity(0)
+	else
+		set_opacity(1)
+	queue_icon_update()
 
 /obj/machinery/door/unpowered/simple/Initialize(mapload, d)
 	. = ..()
@@ -81,7 +90,14 @@
 		//cap projectile damage so that there's still a minimum number of hits required to break the door
 		take_damage(min(damage, SIMPLE_DOOR_DAMAGE_CAP), Proj.damtype, Proj.armor_penetration, Proj)
 
-/obj/machinery/door/unpowered/simple/update_icon()
+/obj/machinery/door/unpowered/simple/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
+	TemperatureAct(exposed_temperature)
+
+/obj/machinery/door/unpowered/simple/proc/TemperatureAct(temperature)
+	take_damage(100*material.combustion_effect(get_turf(src),temperature, 0.3))
+
+
+/obj/machinery/door/unpowered/simple/on_update_icon()
 	if(density)
 		icon_state = "[icon_base]"
 	else
@@ -111,12 +127,6 @@
 	playsound(src.loc, material.dooropen_noise, SIMPLE_DOOR_SOUND_VOL, TRUE)
 	..()
 
-/obj/machinery/door/unpowered/simple/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
-	TemperatureAct(exposed_temperature)
-
-/obj/machinery/door/unpowered/simple/proc/TemperatureAct(temperature)
-	take_damage(100 * material.combustion_effect(get_turf(src),temperature, 0.3))
-
 /obj/machinery/door/unpowered/simple/deconstruct(mob/user, moved = FALSE)
 	material.place_dismantled_product(get_turf(src))
 	qdel(src)
@@ -129,7 +139,7 @@
 			return attack_hand(user)
 
 /obj/machinery/door/unpowered/simple/attackby(obj/item/I as obj, mob/user as mob)
-	src.add_fingerprint(user)
+	src.add_fingerprint(user, 0, I)
 	if((isScrewdriver(I)) && (istype(loc, /turf/simulated) && (!lock.isLocked() || anchored)))
 		var/obj/item/weapon/tool/T = I
 		if(T.use_tool(user, src, 1 SECOND))
@@ -215,7 +225,9 @@
 		to_chat(user, SPAN_NOTICE("It appears to have a lock."))
 
 /obj/machinery/door/unpowered/simple/can_open()
-	return ..() && !(lock && lock.isLocked())
+	if(!..() || (lock && lock.isLocked()))
+		return 0
+	return 1
 
 
 //------------------------------------
@@ -245,6 +257,18 @@
 
 /obj/machinery/door/unpowered/simple/wood/New(var/newloc,var/material_name,var/complexity)
 	..(newloc, MATERIAL_WOOD, complexity)
+
+/obj/machinery/door/unpowered/simple/mahogany/New(var/newloc,var/material_name,var/complexity)
+	..(newloc, MATERIAL_MAHOGANY, complexity)
+
+/obj/machinery/door/unpowered/simple/maple/New(var/newloc,var/material_name,var/complexity)
+	..(newloc, MATERIAL_MAPLE, complexity)
+
+/obj/machinery/door/unpowered/simple/ebony/New(var/newloc,var/material_name,var/complexity)
+	..(newloc, MATERIAL_EBONY, complexity)
+
+/obj/machinery/door/unpowered/simple/walnut/New(var/newloc,var/material_name,var/complexity)
+	..(newloc, MATERIAL_WALNUT, complexity)
 
 /obj/machinery/door/unpowered/simple/wood/saloon
 	icon_base = "saloon"

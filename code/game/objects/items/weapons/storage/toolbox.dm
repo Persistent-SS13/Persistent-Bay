@@ -9,6 +9,8 @@
 	item_state = "toolbox_red"
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	force = 5
+	attack_cooldown = 21
+	melee_accuracy_bonus = -20
 	throwforce = 10
 	throw_speed = 1
 	throw_range = 7
@@ -18,6 +20,7 @@
 	max_storage_space = DEFAULT_LARGEBOX_STORAGE //enough to hold all starting contents
 	origin_tech = list(TECH_COMBAT = 1)
 	attack_verb = list("robusted")
+	use_sound = 'sound/effects/storage/toolbox.ogg'
 
 /obj/item/weapon/storage/toolbox/emergency
 	name = "emergency toolbox"

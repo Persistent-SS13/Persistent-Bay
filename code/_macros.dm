@@ -1,4 +1,15 @@
+#define PUBLIC_GAME_MODE "extended"
+
+#define Clamp(value, low, high) 	(value <= low ? low : (value >= high ? high : value))
+#define CLAMP01(x) 		(Clamp(x, 0, 1))
+
 #define get_turf(A) get_step(A,0)
+
+#define get_x(A) (get_step(A, 0)?.x || 0)
+
+#define get_y(A) (get_step(A, 0)?.y || 0)
+
+#define get_z(A) (get_step(A, 0)?.z || 0)
 
 #define isAI(A) istype(A, /mob/living/silicon/ai)
 
@@ -70,36 +81,23 @@
 
 #define isopenspace(A) istype(A, /turf/simulated/open)
 
-#define isWrench(A) istype(A, /obj/item/weapon/tool/wrench)
-
-#define isWelder(A) istype(A, /obj/item/weapon/tool/weldingtool)
-
-#define isCoil(A) istype(A, /obj/item/stack/cable_coil)
-
-#define isWirecutter(A) istype(A, /obj/item/weapon/tool/wirecutters)
-
-#define isScissors(A) istype(A, /obj/item/weapon/scissors)
-
-#define isScrewdriver(A) istype(A, /obj/item/weapon/tool/screwdriver)
-
-#define isMultitool(A) istype(A, /obj/item/device/multitool)
-
-#define isCrowbar(A) istype(A, /obj/item/weapon/tool/crowbar)
+#define isPlunger(A) istype(A, /obj/item/clothing/mask/plunger) || istype(A, /obj/item/device/plunger/robot)
 
 #define sequential_id(key) uniqueness_repository.Generate(/datum/uniqueness_generator/id_sequential, key)
 
 #define random_id(key,min_id,max_id) uniqueness_repository.Generate(/datum/uniqueness_generator/id_random, key, min_id, max_id)
 
-#define to_chat(target, message)                            target << message
-#define to_world(message)                                   world << message
-#define to_world_log(message)                               world.log << message
-#define sound_to(target, sound)                             target << sound
-#define to_file(file_entry, source_var)                     file_entry << source_var
-#define from_file(file_entry, target_var)                   file_entry >> target_var
-#define show_browser(target, browser_content, browser_info) target << browse(browser_content, browser_info)
-#define close_browser(target, browser_info)                 target << browse(null, browser_info)
-#define show_image(target, image)                           target << image
+#define to_chat(target, message)                            target << (message)
+#define to_world(message)                                   world << (message)
+#define to_world_log(message)                               world.log << (message)
+#define sound_to(target, sound)                             target << (sound)
+#define to_file(file_entry, source_var)                     file_entry << (source_var)
+#define from_file(file_entry, target_var)                   file_entry >> (target_var)
+#define show_browser(target, browser_content, browser_name) target << browse(browser_content, browser_name)
+#define close_browser(target, browser_name)                 target << browse(null, browser_name)
+#define show_image(target, image)                           target << (image)
 #define send_rsc(target, rsc_content, rsc_name)             target << browse_rsc(rsc_content, rsc_name)
+#define open_link(target, url)                              target << link(url)
 //Currently used in SDQL2 stuff
 #define send_output(target, msg, control) target << output(msg, control)
 #define send_link(target, url) target << link(url)
@@ -120,9 +118,13 @@
 
 #define CanPhysicallyInteractWith(user, target) CanInteractWith(user, target, GLOB.physical_state)
 
-#define QDEL_NULL_LIST(x) if(x) { for(var/y in x) { qdel(y) } ; x = null }
+#define QDEL_NULL_LIST(x) if(x) { for(var/y in x) { qdel(y) }}; if(x) {x.Cut(); x = null } // Second x check to handle items that LAZYREMOVE on qdel.
 
 #define QDEL_NULL(x) if(x) { qdel(x) ; x = null }
+
+#define QDEL_IN(item, time) addtimer(CALLBACK(GLOBAL_PROC, .proc/qdel, item), time, TIMER_STOPPABLE)
+
+#define DROP_NULL(x) if(x) { x.dropInto(loc); x = null; }
 
 #define ARGS_DEBUG log_debug("[__FILE__] - [__LINE__]") ; for(var/arg in args) { log_debug("\t[log_info_line(arg)]") }
 
@@ -136,7 +138,7 @@
 // Sets a L back to null if it is empty
 #define UNSETEMPTY(L) if (L && !L.len) L = null
 // Removes I from list L, and sets I to null if it is now empty
-#define LAZYREMOVE(L, I) if(L) { L -= I; if(!L.len) { L = null; } }
+#define LAZYREMOVE(L, I) if(L) { L -= I; if(!length(L)) { L = null; } }
 // Adds I to L, initalizing L if necessary
 #define LAZYADD(L, I) if(!L) { L = list(); } L += I;
 // Insert I into L at position X, initalizing L if necessary
@@ -146,7 +148,7 @@
 // Sets L[A] to I, initalizing L if necessary
 #define LAZYSET(L, A, I) if(!L) { L = list(); } L[A] = I;
 // Reads I from L safely - Works with both associative and traditional lists.
-#define LAZYACCESS(L, I) (L ? (isnum(I) ? (I > 0 && I <= L.len ? L[I] : null) : L[I]) : null)
+#define LAZYACCESS(L, I) (L ? (isnum(I) ? (I > 0 && I <= length(L) ? L[I] : null) : L[I]) : null)
 // Reads the length of L, returning 0 if null
 #define LAZYLEN(L) length(L)
 // Safely checks if I is in L
@@ -158,6 +160,11 @@
 
 // Insert an object A into a sorted list using cmp_proc (/code/_helpers/cmp.dm) for comparison.
 #define ADD_SORTED(list, A, cmp_proc) if(!list.len) {list.Add(A)} else {list.Insert(FindElementIndex(A, list, cmp_proc), A)}
+
+// Spawns multiple objects of the same type
+#define cast_new(type, num, args...) if((num) == 1) { new type(args) } else { for(var/i=0;i<(num),i++) { new type(args) } }
+
+#define FLAGS_EQUALS(flag, flags) ((flag & (flags)) == (flags))
 
 #define JOINTEXT(X) jointext(X, null)
 

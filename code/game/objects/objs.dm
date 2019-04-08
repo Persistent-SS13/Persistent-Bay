@@ -86,7 +86,7 @@
 					is_in_use = 1
 					src.attack_ai(usr)
 
-		// check for TK users
+		// check for MUTATION_TK users
 
 		if (istype(usr, /mob/living/carbon/human))
 			if(istype(usr.l_hand, /obj/item/tk_grab) || istype(usr.r_hand, /obj/item/tk_grab/))
@@ -377,7 +377,7 @@
 	var/hitsoundoverride = sound_hit //So we can override the sound for special cases
 	var/damoverride = damtype
 	var/mob/living/carbon/human/H = user
-	if(HULK in user.mutations)
+	if(MUTATION_HULK in user.mutations)
 		user.say(pick(";RAAAAAAAARGH!", ";HNNNNNNNNNGGGGGGH!", ";GWAAAAAAAARRRHHH!", "NNNNNNNNGGGGGGGGHH!", ";AAAAAAARRRGH!"))
 		user.visible_message(SPAN_DANGER("[user] smashes through [src]!"))
 	else if(H && H.species.can_shred(user))

@@ -40,6 +40,9 @@
 /obj/item/device/suit_sensor_jammer/attack_self(var/mob/user)
 	tg_ui_interact(user)
 
+/obj/item/device/suit_sensor_jammer/get_cell()
+	return bcell
+
 /obj/item/device/suit_sensor_jammer/attackby(obj/item/I as obj, mob/user as mob)
 	if(isCrowbar(I))
 		if(bcell)
@@ -59,7 +62,7 @@
 		else
 			to_chat(user, "<span class='warning'>You're unable to insert the battery.</span>")
 
-/obj/item/device/suit_sensor_jammer/update_icon()
+/obj/item/device/suit_sensor_jammer/on_update_icon()
 	overlays.Cut()
 	if(bcell)
 		var/percent = bcell.percent()

@@ -27,7 +27,7 @@
 #define SEE_INVISIBLE_MINIMUM 5
 #define INVISIBILITY_MAXIMUM 100
 
-// Some arbitrary defines to be used by self-pruning global lists.
+// Some arbitrary defines to be used by self-pruning global lists. (see master_controller)
 #define PROCESS_KILL 26 // Used to trigger removal from a processing list.
 
 // For secHUDs and medHUDs and variants. The number is the location of the image on the list hud_list of humans.
@@ -74,11 +74,26 @@
 #define DEFAULT_JOB_TYPE /datum/job/assistant
 
 //Area flags, possibly more to come
-#define AREA_FLAG_RAD_SHIELDED 1 // shielded from radiation, clearly
-#define AREA_FLAG_EXTERNAL     2 // External as in exposed to space, not outside in a nice, green, forest
+#define AREA_FLAG_RAD_SHIELDED      1 // shielded from radiation, clearly
+#define AREA_FLAG_EXTERNAL          2 // External as in exposed to space, not outside in a nice, green, forest
+#define AREA_FLAG_ION_SHIELDED      4 // shielded from ionospheric anomalies as an FBP / IPC
+#define AREA_FLAG_IS_NOT_PERSISTENT 8 // SSpersistence will not track values from this area.
+
+//Map template flags
+#define TEMPLATE_FLAG_ALLOW_DUPLICATES 1 // Lets multiple copies of the template to be spawned
+#define TEMPLATE_FLAG_SPAWN_GUARANTEED 2 // Makes it ignore away site budget and just spawn (only for away sites)
+#define TEMPLATE_FLAG_CLEAR_CONTENTS   4 // if it should destroy objects it spawns on top of
+#define TEMPLATE_FLAG_NO_RUINS         8 // if it should forbid ruins from spawning on top of it
+#define TEMPLATE_FLAG_NO_RADS          16// Removes all radiation from the template after spawning.
 
 // Convoluted setup so defines can be supplied by Bay12 main server compile script.
 // Should still work fine for people jamming the icons into their repo.
+#ifndef CUSTOM_ITEM_CONFIG
+#define CUSTOM_ITEM_CONFIG "config/custom_items.txt"
+#endif
+#ifndef CUSTOM_ITEM_SYNTH_CONFIG
+#define CUSTOM_ITEM_SYNTH_CONFIG "config/custom_sprites.txt"
+#endif
 #ifndef CUSTOM_ITEM_OBJ
 #define CUSTOM_ITEM_OBJ 'icons/obj/custom_items_obj.dmi'
 #endif
@@ -91,9 +106,6 @@
 
 #define WALL_CAN_OPEN 1
 #define WALL_OPENING 2
-
-#define OBJ_ANCHORABLE 0x1
-#define OBJ_CLIMBABLE 0x2
 
 #define BOMBCAP_DVSTN_RADIUS (GLOB.max_explosion_range/4)
 #define BOMBCAP_HEAVY_RADIUS (GLOB.max_explosion_range/2)
@@ -112,12 +124,12 @@
 #define NTNETSPEED_DOS_AMPLIFICATION 5	// Multiplier for Denial of Service program. Resulting load on NTNet relay is this multiplied by NTNETSPEED of the device
 
 // Program bitflags
-#define PROGRAM_ALL        0x1F
-#define PROGRAM_CONSOLE    0x01
-#define PROGRAM_LAPTOP     0x02
-#define PROGRAM_TABLET     0x04
-#define PROGRAM_TELESCREEN 0x08
-#define PROGRAM_PDA        0x10
+#define PROGRAM_ALL 		0x1F
+#define PROGRAM_CONSOLE 	0x1
+#define PROGRAM_LAPTOP 		0x2
+#define PROGRAM_TABLET 		0x4
+#define PROGRAM_TELESCREEN 	0x8
+#define PROGRAM_PDA 		0x10
 
 #define PROGRAM_STATE_KILLED 0
 #define PROGRAM_STATE_BACKGROUND 1
@@ -126,11 +138,6 @@
 // Caps for NTNet logging. Less than 10 would make logging useless anyway, more than 500 may make the log browser too laggy. Defaults to 100 unless user changes it.
 #define MAX_NTNET_LOGS 500
 #define MIN_NTNET_LOGS 10
-
-//Affects the chance that armour will block an attack. Should be between 0 and 1.
-//If set to 0, then armor will always prevent the same amount of damage, always, with no randomness whatsoever.
-//Of course, this will affect code that checks for blocked < 100, as blocked will be less likely to actually be 100.
-#define ARMOR_BLOCK_CHANCE_MULT 1.0
 
 // Special return values from bullet_act(). Positive return values are already used to indicate the blocked level of the projectile.
 #define PROJECTILE_CONTINUE   -1 //if the projectile should continue flying after calling bullet_act()
@@ -207,7 +214,34 @@
 #define SUPPLY_SECURITY_ELEVATED 1
 #define SUPPLY_SECURITY_HIGH 2
 
+// secure gun authorization settings
+#define UNAUTHORIZED      0
+#define AUTHORIZED        1
+#define ALWAYS_AUTHORIZED 2
+
+// wrinkle states for clothes
+#define WRINKLES_DEFAULT	0
+#define WRINKLES_WRINKLY	1
+#define WRINKLES_NONE		2
+
+//detergent states for clothes
+#define SMELL_DEFAULT	0
+#define SMELL_CLEAN		1
+#define SMELL_STINKY	2
+
+//Shuttle mission stages
+#define SHUTTLE_MISSION_PLANNED  1
+#define SHUTTLE_MISSION_STARTED  2
+#define SHUTTLE_MISSION_FINISHED 3
+#define SHUTTLE_MISSION_QUEUED   4
+
 //Built-in email accounts
 #define EMAIL_DOCUMENTS "document.server@internal-services.net"
 #define EMAIL_SYSADMIN  "admin@internal-services.net"
 #define EMAIL_BROADCAST "broadcast@internal-services.net"
+
+//Number of slots a modular computer has which can be tweaked via gear tweaks.
+#define TWEAKABLE_COMPUTER_PART_SLOTS 7
+
+//Lying animation
+#define ANIM_LYING_TIME 2

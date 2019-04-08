@@ -129,28 +129,14 @@
 /obj/item/organ/internal/proc/isinplace()
 	return (owner && parent_organ && owner.get_organ(parent_organ))
 
-obj/item/organ/internal/take_general_damage(var/amount, var/silent = FALSE)
+/obj/item/organ/internal/take_general_damage(var/amount, var/silent = FALSE)
 	take_internal_damage(amount, silent)
 
-/obj/item/organ/internal/proc/take_internal_damage(amount, var/silent=0)
+/obj/item/organ/internal/proc/take_internal_damage(var/amount, var/silent = FALSE)
 	if(BP_IS_ROBOTIC(src))
 		rem_health(amount * 0.8)
-	else
-		rem_health(amount)
-		//only show this if the organ is not robotic
-		if(owner && can_feel_pain() && parent_organ && (amount > 5 || prob(10)))
-			var/obj/item/organ/external/parent = owner.get_organ(parent_organ)
-			if(parent && !silent)
-				var/degree = ""
-				if(is_bruised())
-					degree = " a lot"
-				if(get_damages() < 5)
-					degree = " a bit"
-
-
-	if(BP_IS_ROBOTIC(src))
-		damage = (damage * 0.8)
 	else if(owner && !silent && isinplace() && can_feel_pain() && (damage > min_bruised_damage/2 || prob(10)) )
+		rem_health(amount)
 		var/obj/item/organ/external/parent = owner.get_organ(parent_organ)
 		var/degree = ""
 		if(is_bruised())
@@ -158,7 +144,6 @@ obj/item/organ/internal/take_general_damage(var/amount, var/silent = FALSE)
 		else if(get_damages() < min_bruised_damage/2)
 			degree = " a bit"
 		owner.custom_pain("Something inside your [parent.name] hurts[degree].", damage, affecting = parent)
-	return ..(damage, damagetype, armorbypass, damsrc)
 
 /obj/item/organ/internal/proc/get_visible_state()
 	if(health <= 0)
@@ -194,16 +179,10 @@ obj/item/organ/internal/take_general_damage(var/amount, var/silent = FALSE)
 	if(get_damages() < min_bruised_damage) // If it's not even bruised, it will just heal very slowly.
 		heal_damage(0.01)
 	else if(is_bruised()) // If it is bruised, it will heal a little faster, but it will scar if it's not aided by medication or surgery
-	//	if(((damage - 0.02) < (min_bruised_damage)) && (scarred < 3))
-	//		scarred++
-	//		max_damage -= scarring_effect
-	//		min_broken_damage -= scarring_effect
 		heal_damage(0.02)
 
 /obj/item/organ/internal/emp_act(severity)
 	..()
-//	if(severity > 1 && scarred <3) // A strong enough EMP can mess up your robotic organs permanantly
-//		scarred++
 
 /obj/item/organ/internal/examine(mob/user)
 	if(!..(user, 1))
@@ -211,4 +190,3 @@ obj/item/organ/internal/take_general_damage(var/amount, var/silent = FALSE)
 
 	to_chat(user, "<span class='neutral'>You examine the [get_visible_state()].</span>")
 	return 1
-// Shows the damage of the organ when examined.

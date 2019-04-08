@@ -27,7 +27,7 @@
 	if(isnull(full_prosthetic))
 		robolimb_count = 0
 		for(var/obj/item/organ/external/E in organs)
-			if(E.robotic >= ORGAN_ROBOT)
+			if(BP_IS_ROBOTIC(E))
 				robolimb_count++
 		full_prosthetic = (robolimb_count == organs.len)
 		update_emotes()
@@ -88,17 +88,17 @@ proc/getsensorlevel(A)
 
 //The base miss chance for the different defence zones
 var/list/global/base_miss_chance = list(
-	BP_HEAD = 50,
+	BP_HEAD = 70,
 	BP_CHEST = 10,
 	BP_GROIN = 20,
-	BP_L_LEG = 50,
-	BP_R_LEG = 50,
+	BP_L_LEG = 60,
+	BP_R_LEG = 60,
 	BP_L_ARM = 30,
 	BP_R_ARM = 30,
 	BP_L_HAND = 50,
 	BP_R_HAND = 50,
-	BP_L_FOOT = 60,
-	BP_R_FOOT = 60,
+	BP_L_FOOT = 70,
+	BP_R_FOOT = 70,
 )
 
 //Used to weight organs when an organ is hit randomly (i.e. not a directed, aimed attack).
@@ -172,15 +172,18 @@ var/list/global/organ_rel_size = list(
 				return zone
 
 	var/miss_chance = 10
+	var/scatter_chance
 	if (zone in base_miss_chance)
 		miss_chance = base_miss_chance[zone]
 	miss_chance = max(miss_chance + miss_chance_mod, 0)
+	scatter_chance = min(95, miss_chance + 60)
 	if(prob(miss_chance))
-		if(prob(70))
+		if(ranged_attack && prob(scatter_chance))
 			return null
-		return pick(base_miss_chance)
+		else if(prob(70))
+			return null
+		return (ran_zone())
 	return zone
-
 
 //Replaces some of the characters with *, used in whispers. pr = probability of no star.
 //Will try to preserve HTML formatting. re_encode controls whether the returned text is HTML encoded outside tags.
@@ -609,7 +612,7 @@ proc/is_blind(A)
 /mob/proc/fully_replace_character_name(var/new_name, var/in_depth = TRUE)
 	if(!new_name || new_name == real_name)	return 0
 	real_name = new_name
-	name = new_name
+	SetName(new_name)
 	if(mind)
 		mind.name = new_name
 	if(dna)
@@ -630,14 +633,50 @@ proc/is_blind(A)
 			return 0//Robotic hearts don't get jittery.
 	if(src.jitteriness >= 400 && prob(5)) //Kills people if they have high jitters.
 		if(prob(1))
-			L.take_damage(L.get_max_health() / 2)
+			L.take_internal_damage(L.max_damage / 2, FALSE)
 			to_chat(src, "<span class='danger'>Something explodes in your heart.</span>")
 			admin_victim_log(src, "has taken <b>lethal heart damage</b> at jitteriness level [src.jitteriness].")
 		else
-			L.take_damage(1)
+			L.take_internal_damage(1, FALSE)
 			to_chat(src, "<span class='danger'>The jitters are killing you! You feel your heart beating out of your chest.</span>")
 			admin_victim_log(src, "has taken <i>minor heart damage</i> at jitteriness level [src.jitteriness].")
 	return 1
+
+/mob/proc/try_teleport(var/area/thearea)
+	if(!istype(thearea))
+		if(istype(thearea, /list))
+			thearea = thearea[1]
+	var/list/L = list()
+	for(var/turf/T in get_area_turfs(thearea))
+		if(!T.density)
+			var/clear = 1
+			for(var/obj/O in T)
+				if(O.density)
+					clear = 0
+					break
+			if(clear)
+				L+=T
+
+	if(buckled)
+		buckled = null
+
+	var/attempt = null
+	var/success = 0
+	var/turf/end
+	while(L.len)
+		attempt = pick(L)
+		success = Move(attempt)
+		if(!success)
+			L.Remove(attempt)
+		else
+			end = attempt
+			break
+
+	if(!success)
+		end = pick(L)
+		forceMove(end)
+
+	return end
 
 //Tries to find the mob's email.
 /proc/find_email(real_name)
@@ -662,7 +701,7 @@ proc/is_blind(A)
 				choice = input(src, message, title, default) as null|num
 			if(MOB_INPUT_MESSAGE)
 				choice = input(src, message, title, default) as null|message
-	if(isnull(choice) || src.incapacitated() || (required_item && !GLOB.hands_state.can_use_topic(required_item, src)))
+	if(isnull(choice) || src.incapacitated() || (required_item && !GLOB.hands_state.can_use_topic(required_item,src)))
 		return null
 	return choice
 

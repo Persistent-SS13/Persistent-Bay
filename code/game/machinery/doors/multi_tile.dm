@@ -36,6 +36,10 @@
 	SetBounds()
 	..()
 
+/obj/machinery/door/airlock/multi_tile/Move()
+	. = ..()
+	SetBounds()
+
 /obj/machinery/door/airlock/multi_tile/proc/SetBounds()
 	if(dir in list(NORTH, SOUTH))
 		bound_width = width * world.icon_size
@@ -45,7 +49,7 @@
 		bound_height = width * world.icon_size
 
 
-/obj/machinery/door/airlock/multi_tile/update_icon(state=0, override=0)
+/obj/machinery/door/airlock/multi_tile/on_update_icon(state=0, override=0)
 	//Since some of the icons are off-center, we have to align them for now
 	// Would tweak the icons themselves, but dm is currently crashing when trying to edit icons at all!
 	switch(dir)
@@ -131,7 +135,7 @@
 
 /obj/machinery/door/airlock/multi_tile/research
 	door_color = COLOR_WHITE
-	stripe_color = COLOR_NT_RED
+	stripe_color = COLOR_RESEARCH
 	req_one_access = list(core_access_science_programs)
 
 /obj/machinery/door/airlock/multi_tile/science
@@ -197,7 +201,7 @@
 
 /obj/machinery/door/airlock/multi_tile/glass/research
 	door_color = COLOR_WHITE
-	stripe_color = COLOR_NT_RED
+	stripe_color = COLOR_RESEARCH
 	req_one_access = list(core_access_science_programs)
 
 /obj/machinery/door/airlock/multi_tile/glass/science

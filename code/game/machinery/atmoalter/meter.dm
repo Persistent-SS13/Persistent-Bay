@@ -26,9 +26,19 @@
 	. = ..()
 	if (!target)
 		src.target = locate(/obj/machinery/atmospherics/pipe) in loc
-	update_icon()
+	queue_icon_update()
 
-/obj/machinery/meter/update_icon()
+/obj/machinery/meter/proc/set_target(atom/new_target)
+	clear_target()
+	target = new_target
+	GLOB.destroyed_event.register(target, src, .proc/clear_target)
+
+/obj/machinery/meter/proc/clear_target()
+	if(target)
+		GLOB.destroyed_event.unregister(target, src)
+		target = null	
+
+/obj/machinery/meter/on_update_icon()
 	if(!target || last_pressure == -1)
 		icon_state = "meterX"
 		return 0
@@ -91,6 +101,7 @@
 
 
 /obj/machinery/meter/Click()
+
 	if(istype(usr, /mob/living/silicon/ai)) // ghosts can call ..() for examine
 		usr.examinate(src)
 		return 1
@@ -111,15 +122,10 @@
 		qdel(src)
 
 // TURF METER - REPORTS A TILE'S AIR CONTENTS
-/obj/machinery/meter/turf/New()
-	..()
-	src.target = loc
-	return 1
 
 /obj/machinery/meter/turf/Initialize()
-	. = ..()
 	if (!target)
-		src.target = loc
+		set_target(loc)
+	. = ..()
 
 /obj/machinery/meter/turf/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
-	return

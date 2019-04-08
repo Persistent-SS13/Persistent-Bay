@@ -12,7 +12,7 @@
 /obj/item/weapon/computer_hardware/scanner/medical/can_use_scanner(mob/user, mob/living/carbon/human/target, proximity = TRUE)
 	if(!..())
 		return 0
-	if(CLUMSY in user.mutations)
+	if(MUTATION_CLUMSY in user.mutations)
 		return 0
 	if(!istype(target))
 		return 0

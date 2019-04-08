@@ -5,79 +5,41 @@
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "target_h"
 	density = 0
-	var/hp = 2400
+	var/obj/structure/target_stake/stake
+	var/hp = 1800
 	var/icon/virtualIcon
 	var/list/bulletholes = list()
 
-	Destroy()
-		// if a target is deleted and associated with a stake, force stake to forget
-		for(var/obj/structure/target_stake/T in view(3,src))
-			if(T.pinned_target == src)
-				T.pinned_target = null
-				T.set_density(1)
-				break
-		..() // delete target
+/obj/item/target/Destroy()
+	. = ..()
+	if (stake)
+		stake.set_target(null)
 
-	Move()
-		..()
-		// After target moves, check for nearby stakes. If associated, move to target
-		for(var/obj/structure/target_stake/M in view(3,src))
-			if(M.density == 0 && M.pinned_target == src)
-				M.loc = loc
+/obj/item/target/attackby(var/obj/item/W, var/mob/user)
+	if(isWelder(W))
+		var/obj/item/weapon/weldingtool/WT = W
+		if(WT.remove_fuel(0, user))
+			overlays.Cut()
+			bulletholes.Cut()
+			hp = initial(hp)
+			to_chat(usr, "<span class='notice'>You slice off [src]'s uneven chunks of aluminum and scorch marks.</span>")
+			return
 
-		// This may seem a little counter-intuitive but I assure you that's for a purpose.
-		// Stakes are the ones that carry targets, yes, but in the stake code we set
-		// a stake's density to 0 meaning it can't be pushed anymore. Instead of pushing
-		// the stake now, we have to push the target.
+/obj/item/target/attack_hand(var/mob/user)
+	// taking pinned targets off!
+	if (stake)
+		stake.attack_hand(user)
+	else
+		return ..()
 
-
-
-	attackby(obj/item/W as obj, mob/user as mob)
-		if(isWelder(W))
-			var/obj/item/weapon/tool/weldingtool/WT = W
-			if(WT.remove_fuel(0, user))
-				overlays.Cut()
-				to_chat(usr, "You slice off [src]'s uneven chunks of aluminum and scorch marks.")
-				return
-
-
-	attack_hand(mob/user as mob)
-		// taking pinned targets off!
-		var/obj/structure/target_stake/stake
-		for(var/obj/structure/target_stake/T in view(3,src))
-			if(T.pinned_target == src)
-				stake = T
-				break
-
-		if(stake)
-			if(stake.pinned_target)
-				stake.set_density(1)
-				set_density(0)
-				layer = OBJ_LAYER
-
-				forceMove(user.loc)
-				if(ishuman(user))
-					if(!user.get_active_hand())
-						user.put_in_hands(src)
-						to_chat(user, "You take the target out of the stake.")
-				else
-					src.loc = get_turf(user)
-					to_chat(user, "You take the target out of the stake.")
-
-				stake.pinned_target = null
-				return
-
-		else
-			..()
-
-	syndicate
-		icon_state = "target_s"
-		desc = "A shooting target that looks like a hostile agent."
-		hp = 3400 // i guess syndie targets are sturdier?
-	alien
-		icon_state = "target_q"
-		desc = "A shooting target with a threatening silhouette."
-		hp = 2800 // alium onest too kinda
+/obj/item/target/syndicate
+	icon_state = "target_s"
+	desc = "A shooting target that looks like a hostile agent."
+	hp = 2600 // i guess syndie targets are sturdier?
+/obj/item/target/alien
+	icon_state = "target_q"
+	desc = "A shooting target with a threatening silhouette."
+	hp = 2350 // alium onest too kinda
 
 /obj/item/target/bullet_act(var/obj/item/projectile/Proj)
 	var/p_x = Proj.p_x + pick(0,0,0,0,0,-1,1) // really ugly way of coding "sometimes offset Proj.p_x!"
@@ -92,7 +54,7 @@
 
 	if( virtualIcon.GetPixel(p_x, p_y) ) // if the located pixel isn't blank (null)
 
-		hp -= Proj.force
+		hp -= Proj.damage
 		if(hp <= 0)
 			for(var/mob/O in oviewers())
 				if ((O.client && !( O.blinded )))
@@ -115,7 +77,7 @@
 			bmark.pixel_x--
 			bmark.pixel_y--
 
-			if(Proj.force >= 20 || istype(Proj, /obj/item/projectile/beam/practice))
+			if(Proj.damage >= 20 || istype(Proj, /obj/item/projectile/beam/practice))
 				bmark.icon_state = "scorch"
 				bmark.set_dir(pick(NORTH,SOUTH,EAST,WEST)) // random scorch design
 
@@ -127,12 +89,12 @@
 			// Bullets are hard. They make dents!
 			bmark.icon_state = "dent"
 
-		if(Proj.force >= 10 && bulletholes.len <= 35) // maximum of 35 bullet holes
+		if(Proj.damage >= 10 && bulletholes.len <= 35) // maximum of 35 bullet holes
 			if(decaltype == 2) // bullet
-				if(prob(Proj.force+30)) // bullets make holes more commonly!
+				if(prob(Proj.damage+30)) // bullets make holes more commonly!
 					new/datum/bullethole(src, bmark.pixel_x, bmark.pixel_y) // create new bullet hole
 			else // Lasers!
-				if(prob(Proj.force-10)) // lasers make holes less commonly
+				if(prob(Proj.damage-10)) // lasers make holes less commonly
 					new/datum/bullethole(src, bmark.pixel_x, bmark.pixel_y) // create new bullet hole
 
 		// draw bullet holes

@@ -2,13 +2,7 @@
 	user.visible_message("<span class='notice'>\The [user] has used \an [src] on \the [A].</span>")
 	A.add_fingerprint(user)
 
-	var/air_contents
-
-	if(istype(A, /obj/machinery/atmospherics))
-		var/obj/machinery/atmospherics/machine = A
-		air_contents = machine.atmos_scan()
-	else
-		air_contents = A.return_air()
+	var/air_contents = A.return_air()
 	if(!air_contents)
 		to_chat(user, "<span class='warning'>Your [src] flashes a red light as it fails to analyze \the [A].</span>")
 		return 0
@@ -21,7 +15,7 @@
 	for(var/line in result)
 		to_chat(user, "<span class='notice'>[line]</span>")
 
-/proc/atmosanalyzer_scan(var/atom/target, mixture, advanced)
+/proc/atmosanalyzer_scan(var/atom/target, var/datum/gas_mixture/mixture, advanced)
 	. = list()
 	. += "<span class='notice'>Results of the analysis of \the [target]:</span>"
 	if(!mixture)

@@ -24,17 +24,16 @@
 	spawn(3 + metal * 3)
 		Process()
 		checkReagents()
-	spawn(120)
-		STOP_PROCESSING(SSobj, src)
-		sleep(30)
-		if(metal)
-			var/obj/structure/foamedmetal/M = new(src.loc)
-			M.metal = metal
-			M.update_icon()
-		flick("[icon_state]-disolve", src)
-		sleep(5)
-		qdel(src)
-	return
+	addtimer(CALLBACK(src, .proc/remove_foam), 12 SECONDS)
+
+/obj/effect/effect/foam/proc/remove_foam()
+	STOP_PROCESSING(SSobj, src)
+	if(metal)
+		var/obj/structure/foamedmetal/M = new(src.loc)
+		M.metal = metal
+		M.update_icon()
+	flick("[icon_state]-disolve", src)
+	QDEL_IN(src, 5)
 
 /obj/effect/effect/foam/proc/checkReagents() // transfer any reagents to the floor
 	if(!metal && reagents)
@@ -143,7 +142,7 @@
 	update_nearby_tiles(1)
 	..()
 
-/obj/structure/foamedmetal/update_icon()
+/obj/structure/foamedmetal/on_update_icon()
 	if(metal == 1)
 		icon_state = "metalfoam"
 	else
@@ -157,7 +156,7 @@
 		qdel(src)
 
 /obj/structure/foamedmetal/attack_hand(var/mob/user)
-	if ((HULK in user.mutations) || (prob(75 - metal * 25)))
+	if ((MUTATION_HULK in user.mutations) || (prob(75 - metal * 25)))
 		user.visible_message("<span class='warning'>[user] smashes through the foamed metal.</span>", "<span class='notice'>You smash through the metal foam wall.</span>")
 		qdel(src)
 	else

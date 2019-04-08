@@ -284,14 +284,14 @@
 			var/obj/item/weapon/storage/laundry_basket/LB = W
 			var/turf/T = get_turf(src)
 			for(var/obj/item/I in LB.contents)
-				LB.remove_from_storage(I, T)
+				LB.remove_from_storage(I, T, 1)
+			LB.finish_bulk_removal()
 			user.visible_message("<span class='notice'>[user] empties \the [LB] into \the [src].</span>", \
 								 "<span class='notice'>You empty \the [LB] into \the [src].</span>", \
 								 "<span class='notice'>You hear rustling of clothes.</span>")
 			return
 
-		if(usr.drop_item())
-			W.forceMove(loc)
+		if(user.unEquip(W, loc))
 			W.pixel_x = 0
 			W.pixel_y = 0
 			W.pixel_z = 0
@@ -327,7 +327,7 @@
 					"You hear ratchet.")
 				src.anchored = 1
 		return
-	else if(istype(W, /obj/item/weapon/packageWrap))
+	else if(istype(W, /obj/item/stack/package_wrap))
 		return
 	else if(isWelder(W) && (setup & CLOSET_CAN_BE_WELDED))
 		var/obj/item/weapon/tool/T = W
@@ -409,7 +409,7 @@
 	else
 		to_chat(usr, "<span class='warning'>This mob type can't use this verb.</span>")
 
-/obj/structure/closet/update_icon()
+/obj/structure/closet/on_update_icon()
 	if(opened)
 		icon_state = "open"
 		overlays.Cut()
@@ -454,7 +454,7 @@
 			return
 
 		playsound(src.loc, 'sound/effects/grillehit.ogg', 100, 1)
-		animate_shake()
+		shake_animation()
 		add_fingerprint(escapee)
 
 	//Well then break it!
@@ -463,7 +463,7 @@
 	visible_message("<span class='danger'>\The [escapee] successfully broke out of \the [src]!</span>")
 	playsound(src.loc, 'sound/effects/grillehit.ogg', 100, 1)
 	break_open()
-	animate_shake()
+	shake_animation()
 
 /obj/structure/closet/proc/break_open()
 	welded = 0
@@ -476,12 +476,6 @@
 		var/obj/structure/bigDelivery/BD = loc
 		BD.unwrap()
 	open()
-
-/obj/structure/closet/proc/animate_shake()
-	var/init_px = pixel_x
-	var/shake_dir = pick(-1, 1)
-	animate(src, transform=turn(matrix(), 8*shake_dir), pixel_x=init_px + 2*shake_dir, time=1)
-	animate(transform=null, pixel_x=init_px, time=6, easing=ELASTIC_EASING)
 
 /obj/structure/closet/onDropInto(var/atom/movable/AM)
 	return
@@ -511,6 +505,9 @@
 
 	add_fingerprint(user)
 
+	if(!id_card)
+		id_card = user.GetIdCard()
+
 	if(!user.IsAdvancedToolUser())
 		to_chat(user, FEEDBACK_YOU_LACK_DEXTERITY)
 		return FALSE
@@ -521,7 +518,7 @@
 		update_icon()
 		return TRUE
 	else
-		to_chat(user, "<span class='warning'>Access Denied</span>")
+		to_chat(user, "<span class='warning'>Access denied!</span>")
 		return FALSE
 
 /obj/structure/closet/proc/CanToggleLock(var/mob/user, var/obj/item/weapon/card/id/id_card)
@@ -532,6 +529,9 @@
 		togglelock(user)
 	else
 		return ..()
+
+/obj/structure/closet/CtrlAltClick(var/mob/user)
+	verb_toggleopen()
 
 /obj/structure/closet/emp_act(severity)
 	for(var/obj/O in src)

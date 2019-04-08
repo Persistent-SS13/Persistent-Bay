@@ -75,6 +75,10 @@ GLOBAL_LIST_EMPTY(minds)
 	src.key = key
 	..()
 
+/datum/mind/Destroy()
+	SSticker.minds -= src
+	. = ..()
+
 /datum/mind/proc/transfer_to(mob/living/new_character)
 	if(!istype(new_character))
 		world.log << "## DEBUG: transfer_to(): Some idiot has tried to transfer_to() a non mob/living mob. Please inform Carn"
@@ -88,7 +92,7 @@ GLOBAL_LIST_EMPTY(minds)
 		SSnano.user_transferred(current, new_character) // transfer active NanoUI instances to new user
 	if(new_character.mind)		//remove any mind currently in our new body's mind variable
 		new_character.mind.current = null
-	
+
 	new_character.skillset.obtain_from_mob(current)	//handles moving skills over.
 
 	current = new_character		//link ourself to our new body
@@ -487,7 +491,8 @@ GLOBAL_LIST_EMPTY(minds)
 //HUMAN
 /mob/living/carbon/human/mind_initialize()
 	..()
-	if(!mind.assigned_role)	mind.assigned_role = "Assistant"	//defualt
+	if(!mind.assigned_role)
+		mind.assigned_role = GLOB.using_map.default_assistant_title
 
 //slime
 /mob/living/carbon/slime/mind_initialize()

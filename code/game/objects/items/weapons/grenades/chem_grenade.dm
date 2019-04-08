@@ -16,6 +16,7 @@
 	var/affected_area = 3
 
 	New()
+		..()
 		create_reagents(1000)
 
 	attack_self(mob/user as mob)
@@ -33,7 +34,7 @@
 					if(istype(B))
 						beakers -= B
 						user.put_in_hands(B)
-			name = "unsecured grenade with [beakers.len] containers[detonator?" and detonator":""]"
+			SetName("unsecured grenade with [beakers.len] containers[detonator?" and detonator":""]")
 		if(stage > 1 && !active && clown_check(user))
 			to_chat(user, "<span class='warning'>You prime \the [name]!</span>")
 
@@ -55,11 +56,11 @@
 			if(!det.secured)
 				to_chat(user, "<span class='warning'>Assembly must be secured with screwdriver.</span>")
 				return
+			if(!user.unEquip(det, src))
+				return
 			path = 1
 			to_chat(user, "<span class='notice'>You add [W] to the metal casing.</span>")
 			playsound(src.loc, 'sound/items/Screwdriver2.ogg', 25, -3)
-			user.remove_from_mob(det)
-			det.loc = src
 			detonator = det
 			if(istimer(detonator.a_left))
 				var/obj/item/device/assembly/timer/T = detonator.a_left
@@ -68,18 +69,18 @@
 				var/obj/item/device/assembly/timer/T = detonator.a_right
 				det_time = 10*T.time
 			icon_state = initial(icon_state) +"_ass"
-			name = "unsecured grenade with [beakers.len] containers[detonator?" and detonator":""]"
+			SetName("unsecured grenade with [beakers.len] containers[detonator?" and detonator":""]")
 			stage = 1
 		else if(isScrewdriver(W) && path != 2)
 			if(stage == 1)
 				path = 1
 				if(beakers.len)
 					to_chat(user, "<span class='notice'>You lock the assembly.</span>")
-					name = "grenade"
+					SetName("grenade")
 				else
 //					to_chat(user, "<span class='warning'>You need to add at least one beaker before locking the assembly.</span>")
 					to_chat(user, "<span class='notice'>You lock the empty assembly.</span>")
-					name = "fake grenade"
+					SetName("fake grenade")
 				playsound(src.loc, 'sound/items/Screwdriver.ogg', 25, -3)
 				icon_state = initial(icon_state) +"_locked"
 				stage = 2
@@ -91,7 +92,7 @@
 				else
 					to_chat(user, "<span class='notice'>You unlock the assembly.</span>")
 					playsound(src.loc, 'sound/items/Screwdriver.ogg', 25, -3)
-					name = "unsecured grenade with [beakers.len] containers[detonator?" and detonator":""]"
+					SetName("unsecured grenade with [beakers.len] containers[detonator?" and detonator":""]")
 					icon_state = initial(icon_state) + (detonator?"_ass":"")
 					stage = 1
 					active = 0
@@ -102,12 +103,12 @@
 				return
 			else
 				if(W.reagents.total_volume)
+					if(!user.unEquip(W, src))
+						return
 					to_chat(user, "<span class='notice'>You add \the [W] to the assembly.</span>")
-					user.drop_item()
-					W.loc = src
 					beakers += W
 					stage = 1
-					name = "unsecured grenade with [beakers.len] containers[detonator?" and detonator":""]"
+					SetName("unsecured grenade with [beakers.len] containers[detonator?" and detonator":""]")
 				else
 					to_chat(user, "<span class='warning'>\The [W] is empty.</span>")
 

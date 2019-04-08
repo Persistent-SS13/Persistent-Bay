@@ -102,7 +102,6 @@
 		if(do_after(user, 5 SECONDS, src))
 			to_chat(user, "You dismantled \the [src]!")
 			qdel(src)
-		return
 	else if (istype(P, /obj/item/weapon/pen))
 		var/t = input(user, "What would you like the label to be?", text("[]", src.name), null)  as text
 		if (user.get_active_hand() != P)
@@ -111,20 +110,18 @@
 			return
 		t = sanitizeSafe(t, MAX_NAME_LEN)
 		if (t)
-			src.name = text("Morgue- '[]'", t)
+			src.SetName(text("Morgue- '[]'", t))
 		else
-			src.name = "Morgue"
-		src.add_fingerprint(user)
-		return
-
-	return ..()
+			src.SetName("Morgue")
+	else
+		return ..()
+	src.add_fingerprint(user)
 
 /obj/structure/morgue/relaymove(mob/user as mob)
 	if (user.stat)
 		return
 	src.connected = new /obj/structure/m_tray( src.loc )
 	step(src.connected, EAST)
-	src.connected.layer = OBJ_LAYER
 	var/turf/T = get_step(src, EAST)
 	if (T.contents.Find(src.connected))
 		src.connected.connected = src
@@ -151,7 +148,6 @@
 	var/obj/structure/morgue/connected = null
 	anchored = 1
 	throwpass = 1
-	obj_flags = 0
 
 /obj/structure/m_tray/Destroy()
 	if(connected && connected.connected == src)
@@ -164,7 +160,6 @@
 		for(var/atom/movable/A as mob|obj in src.loc)
 			if (!( A.anchored ))
 				A.forceMove(src.connected)
-			//Foreach goto(26)
 		src.connected.connected = null
 		src.connected.update()
 		add_fingerprint(user)

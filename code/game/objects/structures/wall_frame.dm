@@ -7,7 +7,7 @@
 	icon = 'icons/obj/wall_frame.dmi'
 	icon_state = "frame"
 
-	atom_flags = ATOM_FLAG_CLIMBABLE
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
 	anchored = 1
 	density = 1
 	throwpass = 1
@@ -22,23 +22,25 @@
 
 	blend_objects = list(/obj/machinery/door, /turf/simulated/wall) // Objects which to blend with
 	noblend_objects = list(/obj/machinery/door/window)
-	var/material/material = new /material/steel
+	material = DEFAULT_WALL_MATERIAL
 
 /obj/structure/wall_frame/New(var/new_loc, var/materialtype)
-	..(new_loc)
-	if(!materialtype)
-		materialtype = new /material/steel
-	
-	//Since people keeps passing strings for some reasons lets double check
-	if(istext(materialtype))
-		material = SSmaterials.get_material_by_name(materialtype)
-	else if(istype(materialtype, /material))
-		material = materialtype
+	..()
 
-/obj/structure/wall_frame/Initialize()
+/obj/structure/wall_frame/Initialize(var/mapload, var/new_loc, var/materialtype = null)
 	. = ..()
+	if(!mapload) //Handles parameters passed to new when not loading the map
+		if(!materialtype)
+			materialtype = DEFAULT_WALL_MATERIAL
+		//Since people keeps passing strings for some reasons lets double check
+		if(istext(materialtype))
+			material = SSmaterials.get_material_by_name(materialtype)
+		else if(istype(materialtype, /material))
+			material = materialtype
+
 	if(!map_storage_loaded)
 		health = material.integrity
+		health = max_health
 	update_connections(TRUE)
 	update_icon()
 
@@ -64,55 +66,21 @@
 /obj/structure/wall_frame/attackby(var/obj/item/weapon/W, var/mob/user)
 	src.add_fingerprint(user)
 
-	//grille placing begin
-	if(istype(W, /obj/item/stack/rods))
-		var/obj/item/stack/rods/ST = W
+	//grille placing
+	if(istype(W, /obj/item/stack/material/rods))
 		for(var/obj/structure/window/WINDOW in loc)
 			if(WINDOW.dir == get_dir(src, user))
 				to_chat(user, "<span class='notice'>There is a window in the way.</span>")
 				return
-		if(!in_use)
-			if(ST.get_amount() < 2)
-				to_chat(user, "<span class='warning'>You need at least two rods to do this.</span>")
-				return
-			to_chat(usr, "<span class='notice'>Assembling grille...</span>")
-			ST.in_use = 1
-			if (!do_after(user, 10))
-				ST.in_use = 0
-				return
-			var/obj/structure/grille/F = new /obj/structure/grille(loc)
-			to_chat(usr, "<span class='notice'>You assemble a grille</span>")
-			ST.in_use = 0
-			F.add_fingerprint(usr)
-			ST.use(2)
+		place_grille(user, loc, W)
 		return
-	//grille placing end
 
-	//window placing begin
+	//window placing
 	else if(istype(W,/obj/item/stack/material))
 		var/obj/item/stack/material/ST = W
-		if(!ST.material.created_window)
+		if(ST.material.opacity > 0.7)
 			return 0
-
-		for(var/obj/structure/window/WINDOW in loc)
-			if(WINDOW)
-				to_chat(user, "<span class='notice'>There is already a window here.</span>")
-				return
-		to_chat(user, "<span class='notice'>You start placing the window.</span>")
-		if(do_after(user,20,src))
-			for(var/obj/structure/window/WINDOW in loc)
-				if(WINDOW)//checking this for a 2nd time to check if a window was made while we were waiting.
-					to_chat(user, "<span class='notice'>There is already a window here.</span>")
-					return
-
-			var/wtype = ST.material.created_window
-			if (ST.use(4))
-				var/obj/structure/window/WD = new wtype(loc, 5, 1)
-				to_chat(user, "<span class='notice'>You place the [WD] on [src].</span>")
-				WD.update_connections(1)
-				WD.update_icon()
-		return
-	//window placing end
+		place_window(user, loc, SOUTHWEST, ST)
 
 	if(isWrench(W))
 		for(var/obj/structure/S in loc)
@@ -129,7 +97,7 @@
 			to_chat(user, "<span class='notice'>You dissasembled the low wall!</span>")
 			dismantle()
 
-	return ..()
+	return  ..()
 
 /obj/structure/wall_frame/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
 	if(air_group || (height==0)) return 1
@@ -140,7 +108,7 @@
 
 // icon related
 
-/obj/structure/wall_frame/update_icon()
+/obj/structure/wall_frame/on_update_icon()
 	overlays.Cut()
 	var/image/I
 
@@ -163,27 +131,8 @@
 			I.color = stripe_color
 			overlays += I
 
-	..()
-
-
-/obj/structure/wall_frame/dismantle()
-	refund_matter()
-	qdel(src)
-
-/obj/structure/wall_frame/destroyed()
-	dismantle()
-
-//Subtypes
-/obj/structure/wall_frame/standard
-	paint_color = COLOR_GUNMETAL
-
-/obj/structure/wall_frame/titanium
-	material = new /material/titanium
-
-/obj/structure/wall_frame/hull
-	paint_color = COLOR_HULL
-//Hull init
 /obj/structure/wall_frame/hull/Initialize()
+	. = ..()
 	if(prob(40))
 		var/spacefacing = FALSE
 		for(var/direction in GLOB.cardinal)
@@ -195,4 +144,28 @@
 		if(spacefacing)
 			var/bleach_factor = rand(10,50)
 			paint_color = adjust_brightness(paint_color, bleach_factor)
-	. = ..()
+		update_icon()
+
+/obj/structure/wall_frame/bullet_act(var/obj/item/projectile/Proj)
+	var/proj_damage = Proj.get_structure_damage()
+	var/damage = min(proj_damage, 100)
+	take_damage(damage)
+	return
+
+
+/obj/structure/wall_frame/dismantle()
+	refund_matter()
+	qdel(src)
+
+/obj/structure/wall_frame/destroyed()
+	dismantle()
+
+//Subtypes
+/obj/structure/wall_frame/standard
+	paint_color = COLOR_WALL_GUNMETAL
+
+/obj/structure/wall_frame/titanium
+	material = MATERIAL_TITANIUM
+
+/obj/structure/wall_frame/hull
+	paint_color = COLOR_HULL

@@ -136,7 +136,7 @@
 
 var/list/turret_icons
 
-/obj/machinery/porta_turret/update_icon()
+/obj/machinery/porta_turret/on_update_icon()
 	if(!turret_icons)
 		turret_icons = list()
 		turret_icons["open"] = image(icon, "openTurretCover")
@@ -260,11 +260,11 @@ var/list/turret_icons
 /obj/machinery/porta_turret/power_change()
 	if(powered())
 		stat &= ~NOPOWER
-		update_icon()
+		queue_icon_update()
 	else
 		spawn(rand(0, 15))
 			stat |= NOPOWER
-			update_icon()
+			queue_icon_update()
 
 
 /obj/machinery/porta_turret/attackby(obj/item/I, mob/user)
@@ -427,7 +427,7 @@ var/list/turret_icons
 				popDown() // no valid targets, close the cover
 
 	if(auto_repair && (health < max_health))
-		use_power(20000)
+		use_power_oneoff(20000)
 		health = min(health+1, max_health) // 1HP for 20kJ
 
 /obj/machinery/porta_turret/proc/assess_and_assign(var/mob/living/L, var/list/targets, var/list/secondarytargets)
@@ -642,7 +642,7 @@ var/list/turret_icons
 
 	// Lethal/emagged turrets use twice the power due to higher energy beams
 	// Emagged turrets again use twice as much power due to higher firing rates
-	use_power(reqpower * (2 * (emagged || lethal)) * (2 * emagged))
+	use_power_oneoff(reqpower * (2 * (emagged || lethal)) * (2 * emagged))
 
 	//Turrets aim for the center of mass by default.
 	//If the target is grabbing someone then the turret smartly aims for extremities
@@ -812,7 +812,7 @@ var/list/turret_icons
 
 					//The final step: create a full turret
 					var/obj/machinery/porta_turret/Turret = new target_type(loc)
-					Turret.name = finish_name
+					Turret.SetName(finish_name)
 					Turret.installation = installation
 					Turret.gun_charge = gun_charge
 					Turret.enabled = 0

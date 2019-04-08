@@ -21,7 +21,7 @@
 	attack_verb = list("bashed", "battered", "bludgeoned", "whacked")
 
 /obj/item/weapon/tool/wrench/Initialize()
-	icon_state = "wrench[pick("","_red","_black")]"
+	icon_state = "wrench[pick("","_red","_black","_green","_blue")]"
 	. = ..()
 
 /obj/item/weapon/tool/wrench/play_tool_sound()

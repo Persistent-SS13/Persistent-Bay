@@ -14,46 +14,11 @@
 	radio_check_id 		= TRUE
 
 	var/obj/machinery/mass_driver/connected = null
-	var/timing 	= 0.0
-	var/time 	= 30.0
-	var/title 	= "Mass Driver Controls"
+	var/timing = 0.0
+	var/time = 30.0
+	var/title = "Mass Driver Controls"
 
-//
-//
-//
-/obj/machinery/computer/pod/old
-	name = "DoorMex Control Computer"
-	icon_state = "oldcomp"
-	icon_keyboard = null
-	icon_screen = "library"
-	title = "Door Controls"
 
-//
-//
-//
-/obj/machinery/computer/pod/old/swf
-	name = "Magix System IV"
-	desc = "An arcane artifact that holds much magic. Running E-Knock 2.2: Sorceror's Edition."
-
-//
-//
-//
-/obj/machinery/computer/pod/old/syndicate
-	name = "ProComp Executive IIc"
-	desc = "Criminals often operate on a tight budget. Operates external airlocks."
-	title = "External Airlock Controls"
-	req_access = list(access_syndicate)
-
-/obj/machinery/computer/pod/old/syndicate/attack_hand(var/mob/user as mob)
-	if(!allowed(user))
-		to_chat(user, SPAN_WARNING("Access Denied"))
-		return
-	else
-		..()
-
-//
-//
-//
 /obj/machinery/computer/pod/Initialize()
 	. = ..()
 	return INITIALIZE_HINT_LATELOAD
@@ -74,7 +39,7 @@
 		return
 
 	if(!( connected ))
-		visible_message(SPAN_WARNING("Cannot locate mass driver connector. Cancelling firing sequence!"))
+		to_chat(viewers(null, null), "Cannot locate mass driver connector. Cancelling firing sequence!")
 		return
 
 	for(var/obj/machinery/door/blast/M in world)
@@ -183,7 +148,6 @@
 		dat += "<BR>\n<A href = '?src=\ref[src];door=1'>Toggle Outer Door</A><BR>"
 	dat += "<BR><BR><A href='?src=\ref[user];mach_close=computer'>Close</A></TT></BODY></HTML>"
 	user << browse(dat, "window=computer;size=400x500")
-	add_fingerprint(usr)
 	onclose(user, "computer")
 	return
 
@@ -199,37 +163,65 @@
 			time = 0
 			timing = 0
 		updateDialog()
-	return
 
-
-/obj/machinery/computer/pod/Topic(href, href_list)
-	if(..())
-		return 1
-
+/obj/machinery/computer/pod/OnTopic(user, href_list)
 	if(href_list["power"])
 		var/t = text2num(href_list["power"])
 		t = min(max(0.25, t), 16)
 		if(connected)
 			connected.power = t
-	if(href_list["alarm"])
+		. = TOPIC_REFRESH
+	else if(href_list["alarm"])
 		alarm()
-	if(href_list["drive"])
+		. = TOPIC_REFRESH
+	else if(href_list["drive"])
 		for(var/obj/machinery/mass_driver/M in SSmachines.machinery)
 			if(M.id_tag == id_tag)
 				M.power = connected.power
 				M.drive()
-
-	if(href_list["time"])
+		. = TOPIC_REFRESH
+	else if(href_list["time"])
 		timing = text2num(href_list["time"])
-	if(href_list["tp"])
+		. = TOPIC_REFRESH
+	else if(href_list["tp"])
 		var/tp = text2num(href_list["tp"])
 		time += tp
 		time = min(max(round(time), 0), 120)
-	if(href_list["door"])
+		. = TOPIC_REFRESH
+	else if(href_list["door"])
 		for(var/obj/machinery/door/blast/M in world)
 			if(M.id_tag == id_tag)
 				if(M.density)
 					M.open()
 				else
 					M.close()
-	updateUsrDialog()
+		. = TOPIC_REFRESH
+
+	if(. == TOPIC_REFRESH)
+		updateUsrDialog()
+
+/obj/machinery/computer/pod/old
+	icon_state = "oldcomp"
+	icon_keyboard = null
+	icon_screen = "library"
+	name = "DoorMex Control Computer"
+	title = "Door Controls"
+
+
+
+/obj/machinery/computer/pod/old/syndicate
+	name = "ProComp Executive IIc"
+	desc = "Criminals often operate on a tight budget. Operates external airlocks."
+	title = "External Airlock Controls"
+	req_access = list(access_syndicate)
+
+/obj/machinery/computer/pod/old/syndicate/attack_hand(var/mob/user as mob)
+	if(!allowed(user))
+		to_chat(user, "<span class='warning'>Access Denied</span>")
+		return
+	else
+		..()
+
+/obj/machinery/computer/pod/old/swf
+	name = "Magix System IV"
+	desc = "An arcane artifact that holds much magic. Running E-Knock 2.2: Sorceror's Edition."

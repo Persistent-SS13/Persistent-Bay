@@ -18,6 +18,7 @@
 	layer 			= BELOW_DOOR_LAYER
 	open_layer 		= BELOW_DOOR_LAYER
 	closed_layer 	= ABOVE_WINDOW_LAYER
+	movable_flags = MOVABLE_FLAG_Z_INTERACT
 	power_channel 	= ENVIRON
 	use_power 		= POWER_USE_IDLE
 	idle_power_usage = 5
@@ -39,11 +40,18 @@
 	var/welded_file = 'icons/obj/doors/hazard/welded.dmi'
 	var/list/tile_info[4]
 	var/list/dir_alerts[4] // 4 dirs, bitflags
+
 	// MUST be in same order as FIREDOOR_ALERT_*
 	var/list/ALERT_STATES=list(
 		"hot",
 		"cold"
 	)
+
+	blend_objects = list(/obj/machinery/door/firedoor, /obj/structure/wall_frame, /turf/unsimulated/wall, /obj/structure/window) // Objects which to blend with
+	
+/obj/machinery/door/firedoor/autoset
+	autoset_access = TRUE	//subtype just to make mapping away sites with custom access usage
+	req_access = list()
 
 /obj/machinery/door/firedoor/Initialize()
 	. = ..()
@@ -52,6 +60,7 @@
 			return INITIALIZE_HINT_QDEL
 	var/area/A = get_area(src)
 	ASSERT(istype(A))
+
 	LAZYADD(A.all_doors, src)
 	areas_added = list(A)
 
@@ -176,7 +185,7 @@
 				close()
 
 /obj/machinery/door/firedoor/attackby(obj/item/weapon/C as obj, mob/user as mob)
-	add_fingerprint(user)
+	add_fingerprint(user, 0, C)
 	if(operating)
 		return//Already doing something.
 	if(isWelder(C) && !repairing)
@@ -338,7 +347,7 @@
 		if(inoperable())
 			return //needs power to open unless it was forced
 		else
-			use_power(360)
+			use_power_oneoff(360)
 	else
 		log_admin("[usr]([usr.ckey]) has forced open an emergency shutter.")
 		message_admins("[usr]([usr.ckey]) has forced open an emergency shutter.")
@@ -365,7 +374,7 @@
 			return
 	return TRUE
 
-obj/machinery/door/firedoor/do_animate(animation)
+/obj/machinery/door/firedoor/do_animate(animation)
 	switch(animation)
 		if("opening")
 			flick("opening", src)
@@ -373,7 +382,8 @@ obj/machinery/door/firedoor/do_animate(animation)
 			flick("closing", src)
 	return
 
-/obj/machinery/door/firedoor/update_icon()
+
+/obj/machinery/door/firedoor/on_update_icon()
 	var/icon/lights_overlay
 	var/icon/panel_overlay
 	var/icon/weld_overlay

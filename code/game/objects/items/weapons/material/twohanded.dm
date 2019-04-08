@@ -18,6 +18,7 @@
  */
 /obj/item/weapon/material/twohanded
 	w_class = ITEM_SIZE_HUGE
+	slot_flags = SLOT_BACK
 	var/wielded = 0
 	var/force_wielded = 0
 	var/force_unwielded
@@ -26,6 +27,7 @@
 	var/base_icon
 	var/base_name
 	var/unwielded_force_divisor = 0.25
+	var/wielded_parry_bonus = 15
 
 /obj/item/weapon/material/twohanded/update_twohanding()
 	var/mob/living/M = loc
@@ -39,6 +41,7 @@
 	..()
 
 /obj/item/weapon/material/twohanded/update_force()
+	..()
 	base_name = name
 	if(ISDAMTYPE(damtype, DAM_CUT))
 		force_wielded = material.get_edge_damage()
@@ -55,18 +58,16 @@
 	..()
 	update_icon()
 
-//Allow a small chance of parrying melee attacks when wielded - maybe generalize this to other weapons someday
-/obj/item/weapon/material/twohanded/handle_shield(mob/user, var/damage, atom/damage_source = null, mob/attacker = null, var/def_zone = null, var/attack_text = "the attack")
-	if(wielded && default_parry_check(user, attacker, damage_source) && prob(15))
-		user.visible_message("<span class='danger'>\The [user] parries [attack_text] with \the [src]!</span>")
-		playsound(user.loc, 'sound/weapons/punchmiss.ogg', 50, 1)
-		return 1
-	return 0
+/obj/item/weapon/material/twohanded/get_parry_chance(mob/user)
+	. = ..()
+	if(wielded)
+		. += wielded_parry_bonus
 
-/obj/item/weapon/material/twohanded/update_icon()
+/obj/item/weapon/material/twohanded/on_update_icon()
 	icon_state = "[base_icon][wielded]"
 	item_state_slots[slot_l_hand_str] = icon_state
 	item_state_slots[slot_r_hand_str] = icon_state
+	item_state_slots[slot_back_str] = base_icon
 
 /*
  * Fireaxe
@@ -77,12 +78,10 @@
 	name = "fire axe"
 	desc = "Truly, the weapon of a madman. Who would think to fight fire with an axe?"
 
-	// 15/32 with hardness 60 (steel) and 20/42 with hardness 80 (plasteel)
 	force_divisor = 0.525
 	unwielded_force_divisor = 0.25
 	sharpness = 1
-	w_class = ITEM_SIZE_HUGE
-	slot_flags = SLOT_BACK
+
 	force_wielded = 30
 	attack_verb = list("attacked", "chopped", "cleaved", "torn", "cut")
 	applies_material_colour = 0
@@ -109,8 +108,7 @@
 	name = "spear"
 	desc = "A haphazardly-constructed yet still deadly weapon of ancient design."
 	force = 10
-	w_class = ITEM_SIZE_HUGE
-	slot_flags = SLOT_BACK
+	applies_material_colour = 0
 
 	// 12/19 with hardness 60 (steel) or 10/16 with hardness 50 (glass)
 	force_divisor = 0.33
@@ -121,6 +119,7 @@
 	sound_hit = 'sound/weapons/bladeslice.ogg'
 	attack_verb = list("attacked", "poked", "jabbed", "torn", "gored")
 	default_material = MATERIAL_GLASS
+	does_spin = FALSE
 	damtype = DAM_PIERCE
 	mass = 2
 

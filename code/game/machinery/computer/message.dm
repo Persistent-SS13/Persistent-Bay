@@ -2,7 +2,7 @@
 
 /obj/machinery/computer/message_monitor
 	name = "messaging monitor console"
-	desc = "Used to access and maintain data on messaging servers. Allows you to view PDA and request console messages."
+	desc = "Used to access and maintain data on messaging servers. Allows you to view request console messages."
 	icon_screen = "comm_logs"
 	light_color = "#00b000"
 	var/hack_icon = "error"
@@ -64,7 +64,7 @@
 		else
 			to_chat(user, "<span class='notice'>A no server error appears on the screen.</span>")
 
-/obj/machinery/computer/message_monitor/update_icon()
+/obj/machinery/computer/message_monitor/on_update_icon()
 	if(emag || hacking)
 		icon_screen = hack_icon
 	else
@@ -86,7 +86,8 @@
 	//If the computer is being hacked or is emagged, display the reboot message.
 	if(hacking || emag)
 		message = rebootmsg
-	var/dat = "<head><title>Message Monitor Console</title></head><body>"
+	var/list/dat = list()
+	dat += "<head><title>Message Monitor Console</title></head><body>"
 	dat += "<center><h2>Message Monitor Console</h2></center><hr>"
 	dat += "<center><h4><font color='blue'[message]</h5></center>"
 
@@ -121,8 +122,7 @@
 					dat += "<dd><A href='?src=\ref[src];msg=1'>&#09;[++i]. Send Admin Message</a><br></dd>"
 					dat += "<dd><A href='?src=\ref[src];spam=1'>&#09;[++i]. Modify Spam Filter</a><br></dd>"
 			else
-				for(var/n = ++i; n <= optioncount; n++)
-					dat += "<dd><font color='blue'>&#09;[n]. ---------------</font><br></dd>"
+				dat += "<br><hr><dd><span class='notice'>Please authenticate with the server in order to show additional options.</span>"
 			if((istype(user, /mob/living/silicon/ai) || istype(user, /mob/living/silicon/robot)) && (user.mind.special_role && user.mind.original == user))
 				//Malf/Traitor AIs can bruteforce into the system to gain the Key.
 				dat += "<dd><A href='?src=\ref[src];hack=1'><i><font color='Red'>*&@#. Bruteforce Key</font></i></font></a><br></dd>"
@@ -254,8 +254,9 @@
 
 	dat += "</body>"
 	message = defaultmsg
-	user << browse(dat, "window=message;size=700x700")
-	onclose(user, "message")
+	var/datum/browser/popup = new(user, "message", "Message Monitoring Console", 700, 700)
+	popup.set_content(JOINTEXT(dat))
+	popup.open()
 	return
 
 /obj/machinery/computer/message_monitor/attack_ai(mob/user as mob)

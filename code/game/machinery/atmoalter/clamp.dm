@@ -51,7 +51,7 @@
 	. = ..()
 
 /obj/machinery/clamp/proc/open()
-	if(open)
+	if(open || !target)
 		return 0
 
 	target.build_network()
@@ -144,8 +144,8 @@
 	if (istype(A, /obj/machinery/atmospherics/pipe/simple))
 		to_chat(user, "<span class='notice'>You begin to attach \the [src] to \the [A]...</span>")
 		if (do_after(user, 30, src))
+			if(!user.unEquip(src))
+				return
 			to_chat(user, "<span class='notice'>You have attached \the [src] to \the [A].</span>")
 			new/obj/machinery/clamp(A.loc, A)
-			user.drop_from_inventory(src)
 			qdel(src)
-

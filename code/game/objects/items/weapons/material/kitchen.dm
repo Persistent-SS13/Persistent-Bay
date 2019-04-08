@@ -28,7 +28,7 @@
 
 	if(user.a_intent != I_HELP)
 		if(user.zone_sel.selecting == BP_HEAD || user.zone_sel.selecting == BP_EYES)
-			if((CLUMSY in user.mutations) && prob(50))
+			if((MUTATION_CLUMSY in user.mutations) && prob(50))
 				M = user
 			return eyestab(M,user)
 		else
@@ -106,7 +106,7 @@
 	mass = 0.3
 
 /obj/item/weapon/material/kitchen/utensil/knife/attack(target as mob, mob/living/user as mob)
-	if ((CLUMSY in user.mutations) && prob(50))
+	if ((MUTATION_CLUMSY in user.mutations) && prob(50))
 		to_chat(user, "<span class='warning'>You accidentally cut yourself with \the [src].</span>")
 		user.apply_damage(20, DAM_CUT)
 		return
@@ -131,9 +131,8 @@
 	mass = 0.5
 
 /obj/item/weapon/material/kitchen/rollingpin/attack(mob/living/M as mob, mob/living/user as mob)
-	if ((CLUMSY in user.mutations) && prob(50))
+	if ((MUTATION_CLUMSY in user.mutations) && prob(50) && user.unEquip(src))
 		to_chat(user, "<span class='warning'>\The [src] slips out of your hand and hits your head.</span>")
-		user.drop_from_inventory(src)
 		user.apply_damage(10)
 		user.Paralyse(2)
 		return

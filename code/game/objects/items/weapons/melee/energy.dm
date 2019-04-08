@@ -8,8 +8,10 @@
 	mass = 0.5
 	icon = 'icons/obj/weapons/melee/energy.dmi'
 
+/obj/item/weapon/melee/energy/can_embed()
+	return FALSE
+
 /obj/item/weapon/melee/energy/proc/activate(mob/living/user)
-	anchored = 1
 	if(active)
 		return
 	active = 1
@@ -21,7 +23,6 @@
 	playsound(user, 'sound/weapons/saberon.ogg', 50, 1)
 
 /obj/item/weapon/melee/energy/proc/deactivate(mob/living/user)
-	anchored = 0
 	if(!active)
 		return
 	playsound(user, 'sound/weapons/saberoff.ogg', 50, 1)
@@ -34,7 +35,7 @@
 
 /obj/item/weapon/melee/energy/attack_self(mob/living/user as mob)
 	if (active)
-		if ((CLUMSY in user.mutations) && prob(50))
+		if ((MUTATION_CLUMSY in user.mutations) && prob(50))
 			user.visible_message("<span class='danger'>\The [user] accidentally cuts \himself with \the [src].</span>",\
 			"<span class='danger'>You accidentally cut yourself with \the [src].</span>")
 			user.apply_damage(5, DAM_CUT)
@@ -77,6 +78,7 @@
 	attack_verb = list("attacked", "chopped", "cleaved", "torn", "cut")
 	sharpness = 1
 	mass = 2.5
+	melee_accuracy_bonus = 15
 
 /obj/item/weapon/melee/energy/axe/activate(mob/living/user)
 	..()
@@ -94,7 +96,6 @@
  * Energy Sword
  */
 /obj/item/weapon/melee/energy/sword
-	color
 	name = "energy sword"
 	desc = "May the force be within you."
 	icon_state = "sword0"
@@ -110,27 +111,30 @@
 	origin_tech = list(TECH_MAGNET = 3, TECH_ILLEGAL = 4)
 	sharpness = 1
 	mass = 0.8
+	base_parry_chance = 50
 	var/blade_color
+
+/obj/item/weapon/melee/energy/sword/Initialize()
+	. = ..()
+	if(!blade_color)
+		blade_color = pick("red","blue","green","purple")
+
+/obj/item/weapon/melee/energy/sword/green
+	blade_color = "green"
+
+/obj/item/weapon/melee/energy/sword/red
+	blade_color = "red"
+
+/obj/item/weapon/melee/energy/sword/blue
+	blade_color = "blue"
+
+/obj/item/weapon/melee/energy/sword/purple
+	blade_color = "purple"
 
 /obj/item/weapon/melee/energy/sword/dropped(var/mob/user)
 	..()
 	if(!istype(loc,/mob))
 		deactivate(user)
-
-/obj/item/weapon/melee/energy/sword/New()
-	blade_color = pick("red","blue","green","purple")
-
-/obj/item/weapon/melee/energy/sword/green/New()
-	blade_color = "green"
-
-/obj/item/weapon/melee/energy/sword/red/New()
-	blade_color = "red"
-
-/obj/item/weapon/melee/energy/sword/blue/New()
-	blade_color = "blue"
-
-/obj/item/weapon/melee/energy/sword/purple/New()
-	blade_color = "purple"
 
 /obj/item/weapon/melee/energy/sword/activate(mob/living/user)
 	if(!active)
@@ -149,15 +153,14 @@
 	damtype = DAM_BLUNT
 
 /obj/item/weapon/melee/energy/sword/handle_shield(mob/user, var/damage, atom/damage_source = null, mob/attacker = null, var/def_zone = null, var/attack_text = "the attack")
-	if(active && default_parry_check(user, attacker, damage_source) && prob(50))
-		user.visible_message("<span class='danger'>\The [user] parries [attack_text] with \the [src]!</span>")
-
+	if(.)
 		var/datum/effect/effect/system/spark_spread/spark_system = new /datum/effect/effect/system/spark_spread()
 		spark_system.set_up(5, 0, user.loc)
 		spark_system.start()
 		playsound(user.loc, 'sound/weapons/blade1.ogg', 50, 1)
-		return 1
-	return 0
+
+/obj/item/weapon/melee/energy/sword/get_parry_chance(mob/user)
+	return active ? ..() : 0
 
 /obj/item/weapon/melee/energy/sword/pirate
 	name = "energy cutlass"
@@ -167,11 +170,11 @@
 /obj/item/weapon/melee/energy/sword/pirate/activate(mob/living/user)
 	..()
 	icon_state = "cutlass1"
+
 /*
  *Energy Blade
  */
 
-//Can't be activated or deactivated, so no reason to be a subtype of energy
 /obj/item/weapon/melee/energy/blade
 	name = "energy blade"
 	desc = "A concentrated beam of energy in the shape of a blade. Very stylish... and lethal."
@@ -210,11 +213,11 @@
 
 /obj/item/weapon/melee/energy/blade/attack_self(mob/user as mob)
 	user.drop_from_inventory(src)
-	spawn(1) if(src) qdel(src)
+	QDEL_IN(src, 0)
 
 /obj/item/weapon/melee/energy/blade/dropped()
 	..()
-	spawn(1) if(src) qdel(src)
+	QDEL_IN(src, 0)
 
 /obj/item/weapon/melee/energy/blade/Process()
 	if(!creator || loc != creator || (creator.l_hand != src && creator.r_hand != src))
@@ -229,4 +232,4 @@
 			host.pinned -= src
 			host.embedded -= src
 			host.drop_from_inventory(src)
-		spawn(1) if(src) qdel(src)
+		QDEL_IN(src, 0)

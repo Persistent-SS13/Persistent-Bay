@@ -1,3 +1,4 @@
+
 /obj/machinery/microwave
 	name = "microwave"
 	icon = 'icons/obj/kitchen.dmi'
@@ -5,11 +6,9 @@
 	layer = BELOW_OBJ_LAYER
 	density = 1
 	anchored = 1
-	use_power = 1
 	idle_power_usage = 5
 	active_power_usage = 100
-	atom_flags = ATOM_FLAG_NO_REACT
-	atom_flags = ATOM_FLAG_OPEN_CONTAINER
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_NO_REACT | ATOM_FLAG_OPEN_CONTAINER
 	var/operating = 0 // Is it on?
 	var/dirty = 0 // = {0..100} Does it need cleaning?
 	var/broken = 0 // ={0,1,2} How broken is it???
@@ -104,7 +103,7 @@
 				src.broken = 0 // Fix it!
 				src.dirty = 0 // just to be sure
 				src.update_icon()
-				src.atom_flags = ATOM_FLAG_OPEN_CONTAINER
+				src.atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_OPEN_CONTAINER
 			return
 		else
 			to_chat(user, "<span class='warning'>It's broken!</span>")
@@ -123,7 +122,7 @@
 				src.dirty = 0 // It's clean!
 				src.broken = 0 // just to be sure
 				src.update_icon()
-				src.atom_flags = ATOM_FLAG_OPEN_CONTAINER
+				src.atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_OPEN_CONTAINER
 		else //Otherwise bad luck!!
 			to_chat(user, "<span class='warning'>It's dirty!</span>")
 			return 1
@@ -141,7 +140,8 @@
 					"<span class='notice'>You add one of [O] to \the [src].</span>")
 			return
 		else
-			user.drop_item(src)
+			if (!user.unEquip(O, src))
+				return
 			user.visible_message( \
 				"<span class='notice'>\The [user] has added \the [O] to \the [src].</span>", \
 				"<span class='notice'>You add \the [O] to \the [src].</span>")
@@ -167,16 +167,16 @@
 			"<span class='notice'>You attempt to [src.anchored ? "secure" : "unsecure"] the microwave.</span>"
 			)
 		if (do_after(user,20, src))
+			src.anchored = !src.anchored
 			user.visible_message( \
 			"<span class='notice'>\The [user] [src.anchored ? "secures" : "unsecures"] the microwave.</span>", \
 			"<span class='notice'>You [src.anchored ? "secure" : "unsecure"] the microwave.</span>"
 			)
-			src.anchored = !src.anchored
 			return
 		else
 			to_chat(user, "<span class='notice'>You decide not to do that.</span>")
 	else
-		..()
+		return ..()
 	src.updateUsrDialog()
 
 /obj/machinery/microwave/attack_ai(mob/user as mob)
@@ -317,7 +317,7 @@
 	for (var/i=1 to seconds)
 		if (stat & (NOPOWER|BROKEN))
 			return 0
-		use_power(500)
+		use_power_oneoff(500)
 		sleep(10)
 	return 1
 
@@ -377,7 +377,7 @@
 	src.updateUsrDialog()
 	src.update_icon()
 
-/obj/machinery/microwave/update_icon()
+/obj/machinery/microwave/on_update_icon()
 	if(dirty == 100)
 		src.icon_state = "mwbloody[operating]"
 	else if(broken)

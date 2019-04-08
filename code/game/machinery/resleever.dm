@@ -5,9 +5,8 @@
 
 	anchored = 1
 	density = 1
-	use_power = 1
 	idle_power_usage = 4
-	active_power_usage = 4000 // 4 Kw. A CT scan machine uses 1-15 kW depending on the model and equipment involved.
+	active_power_usage = 4 KILOWATTS // A CT scan machine uses 1-15 kW depending on the model and equipment involved.
 	req_access = list(core_access_medical_programs)
 
 	icon_state = "body_scanner_0"
@@ -49,10 +48,10 @@ obj/machinery/resleever/Process()
 	if(occupant)
 		occupant.Paralyse(4) // We need to always keep the occupant sleeping if they're in here.
 	if(stat & (NOPOWER|BROKEN) || !anchored)
-		update_use_power(0)
+		update_use_power(POWER_USE_OFF)
 		return
 	if(resleeving)
-		update_use_power(2)
+		update_use_power(POWER_USE_ACTIVE)
 		if(remaining < timetosleeve)
 			remaining += 1
 
@@ -61,12 +60,12 @@ obj/machinery/resleever/Process()
 		else
 			remaining = 0
 			resleeving = 0
-			update_use_power(1)
+			update_use_power(POWER_USE_IDLE)
 			eject_occupant()
-			playsound(loc, 'sound/machines/ping.ogg', 100, 1)
+			playsound(loc, 'sound/machines/ping.ogg', 100, vary = TRUE)
 			visible_message("\The [src] pings as it completes its procedure!", 3)
 			return
-	update_use_power(0)
+	update_use_power(POWER_USE_OFF)
 	return
 
 /obj/machinery/resleever/proc/isOccupiedEjectable()
@@ -144,7 +143,7 @@ obj/machinery/resleever/Process()
 	return TRUE
 
 /obj/machinery/resleever/proc/sleeve()
-	if(lace && occupant)
+	if(lace && !lace.prompting && occupant) // Not only check for the lace and occupant, but also if the lace isn't already prompting the dead user.
 		var/obj/item/organ/O = occupant.get_organ(lace.parent_organ)
 		if(istype(O))
 			lace.status &= ~ORGAN_CUT_AWAY //ensure the lace is properly attached
@@ -201,11 +200,9 @@ obj/machinery/resleever/Process()
 		if(istype(W, /obj/item/organ/internal/stack/vat))
 			to_chat(user, "<span class='warning'>[W] does not fit into [src], and you get the horrifying feeling that it was not meant to.</span>")
 			return
-		if(isnull(lace))
+		if(isnull(lace) && user.unEquip(W, src))
 			to_chat(user, "<span class='notice'>You insert \the [W] into [src].</span>")
-			user.drop_from_inventory(W)
 			lace = W
-			W.forceMove(src)
 			if(lace.backup)
 				lace_name = lace.backup.name
 		else
@@ -291,7 +288,7 @@ obj/machinery/resleever/Process()
 		else
 	return
 
-/obj/machinery/resleever/update_icon()
+/obj/machinery/resleever/on_update_icon()
 	..()
 	icon_state = empty_state
 	if(occupant)

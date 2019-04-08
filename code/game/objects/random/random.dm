@@ -117,7 +117,7 @@
 /obj/random/tech_supply/spawn_choices()
 	return list(/obj/random/powercell = 3,
 				/obj/random/technology_scanner = 2,
-				/obj/item/weapon/packageWrap = 1,
+				/obj/item/stack/package_wrap/twenty_five = 1,
 				/obj/item/weapon/hand_labeler = 1,
 				/obj/random/bomb_supply = 2,
 				/obj/item/weapon/extinguisher = 1,
@@ -133,7 +133,7 @@
 	name = "Random Medical equipment"
 	desc = "This is a random medical item."
 	icon = 'icons/obj/items.dmi'
-	icon_state = "traumakit"
+	icon_state = "medrandom"
 
 /obj/random/medical/spawn_choices()
 	return list(/obj/random/medical/lite = 21,
@@ -156,7 +156,7 @@
 	name = "Random Medicine"
 	desc = "This is a random simple medical item."
 	icon = 'icons/obj/items.dmi'
-	icon_state = "brutepack"
+	icon_state = "medrandom"
 	spawn_nothing_percentage = 25
 
 /obj/random/medical/lite/spawn_choices()
@@ -170,7 +170,12 @@
 				/obj/item/bodybag/cryobag = 1,
 				/obj/item/weapon/reagent_containers/hypospray/autoinjector = 3,
 				/obj/item/weapon/storage/pill_bottle/kelotane = 2,
-				/obj/item/weapon/storage/pill_bottle/antitox = 2)
+				/obj/item/weapon/storage/pill_bottle/antitox = 2,
+				/obj/item/weapon/storage/med_pouch/trauma = 2,
+				/obj/item/weapon/storage/med_pouch/burn = 2,
+				/obj/item/weapon/storage/med_pouch/toxin = 2,
+				/obj/item/weapon/storage/med_pouch/radiation = 2,
+				/obj/item/weapon/storage/med_pouch/oxyloss = 2)
 
 /obj/random/firstaid
 	name = "Random First Aid Kit"
@@ -180,11 +185,13 @@
 
 /obj/random/firstaid/spawn_choices()
 	return list(/obj/item/weapon/storage/firstaid/regular = 4,
+				/obj/item/weapon/storage/firstaid/trauma = 3,
 				/obj/item/weapon/storage/firstaid/toxin = 3,
 				/obj/item/weapon/storage/firstaid/o2 = 3,
+				/obj/item/weapon/storage/firstaid/stab = 2,
 				/obj/item/weapon/storage/firstaid/adv = 2,
 				/obj/item/weapon/storage/firstaid/combat = 1,
-				/obj/item/weapon/storage/firstaid = 2,
+				/obj/item/weapon/storage/firstaid/empty = 2,
 				/obj/item/weapon/storage/firstaid/fire = 3)
 
 /obj/random/contraband

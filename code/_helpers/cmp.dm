@@ -32,6 +32,9 @@
 /proc/cmp_numeric_asc(a,b)
 	return a - b
 
+/proc/cmp_numeric_dsc(a,b)
+	return b - a
+
 /proc/cmp_subsystem_display(datum/controller/subsystem/a, datum/controller/subsystem/b)
 	return sorttext(b.name, a.name)
 
@@ -64,3 +67,12 @@
 
 /proc/cmp_timer(datum/timedevent/a, datum/timedevent/b)
 	return a.timeToRun - b.timeToRun
+
+/proc/cmp_clientcolor_priority(datum/client_color/A, datum/client_color/B)
+	return B.priority - A.priority
+
+/proc/cmp_fusion_reaction_asc(var/decl/fusion_reaction/A, var/decl/fusion_reaction/B)
+	return A.priority - B.priority
+
+/proc/cmp_fusion_reaction_des(var/decl/fusion_reaction/A, var/decl/fusion_reaction/B)
+	return B.priority - A.priority

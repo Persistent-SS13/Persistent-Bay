@@ -15,12 +15,14 @@
 	var/can_absorb = 0							// Whether this grab state is strong enough to, as a changeling, absorb the person you're grabbing.
 	var/shield_assailant = 0					// Whether the person you're grabbing will shield you from bullets.,,
 	var/point_blank_mult = 1					// How much the grab increases point blank damage.
+	var/damage_stage = 1						// Affects how much damage is being dealt using certain actions.
 	var/same_tile = 0							// If the grabbed person and the grabbing person are on the same tile.
 	var/ladder_carry = 0						// If the grabber can carry the grabbed person up or down ladders.
 	var/can_throw = 0							// If the grabber can throw the person grabbed.
 	var/downgrade_on_action = 0					// If the grab needs to be downgraded when the grabber does stuff.
 	var/downgrade_on_move = 0					// If the grab needs to be downgraded when the grabber moves.
 	var/force_danger = 0						// If the grab is strong enough to be able to force someone to do something harmful to them.
+	var/restrains = 0							// If the grab acts like cuffs and prevents action from the victim.
 
 	var/grab_slowdown = 7
 
@@ -98,13 +100,14 @@
 	let_go_effect(G)
 	G.force_drop()
 
-/datum/grab/proc/process(var/obj/item/grab/G)
-	var/diff_zone = G.target_change()
-	if(diff_zone && G.special_target_functional)
-		special_target_change(G, diff_zone)
-	else
+/datum/grab/proc/on_target_change(var/obj/item/grab/G, old_zone, new_zone)
+	G.special_target_functional = check_special_target(G)
+	if(G.special_target_functional)
+		special_target_change(G, old_zone, new_zone)
 		special_target_effect(G)
 
+/datum/grab/proc/process(var/obj/item/grab/G)
+	special_target_effect(G)
 	process_effect(G)
 
 /datum/grab/proc/throw_held(var/obj/item/grab/G)
@@ -257,6 +260,9 @@
 /datum/grab/proc/resolve_openhand_attack(var/obj/item/grab/G)
 	return 0
 
+// Used when you want an effect to happen when the grab enters this state as an upgrade
+/datum/grab/proc/enter_as_up(var/obj/item/grab/G)
+
 /datum/grab/proc/item_attack(var/obj/item/grab/G, var/obj/item)
 
 /datum/grab/proc/resolve_item_attack(var/obj/item/grab/G, var/mob/living/carbon/human/user, var/obj/item/I, var/target_zone)
@@ -266,9 +272,14 @@
 	var/mob/living/carbon/human/affecting = G.affecting
 	var/mob/living/carbon/human/assailant = G.assailant
 
-	var/break_strength = breakability + size_difference(affecting, assailant)
+	if(affecting.incapacitated(INCAPACITATION_KNOCKOUT | INCAPACITATION_STUNNED))
+		to_chat(G.assailant, "<span class='warning'>You can't resist in your current state!</span>")
+	var/skill_mod = Clamp(affecting.get_skill_difference(SKILL_COMBAT, assailant), -1, 1)
+	var/break_strength = breakability + size_difference(affecting, assailant) + skill_mod
 
-	if(affecting.lying)
+	if(affecting.incapacitated(INCAPACITATION_ALL))
+		break_strength--
+	if(affecting.confused)
 		break_strength--
 
 	if(break_strength < 1)

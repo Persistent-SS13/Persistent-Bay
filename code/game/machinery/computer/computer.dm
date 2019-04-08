@@ -7,7 +7,7 @@
 	use_power = POWER_USE_IDLE
 	idle_power_usage = 300
 	active_power_usage = 300
-	atom_flags = ATOM_FLAG_CLIMBABLE
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
 	clicksound = "keyboard"
 	frame_type = /obj/structure/computerframe
 
@@ -15,8 +15,9 @@
 	var/processing = FALSE
 	var/icon_keyboard = "generic_key"
 	var/icon_screen = "generic"
-	var/light_range_on = 2
-	var/light_power_on = 1
+	var/light_max_bright_on = 0.2
+	var/light_inner_range_on = 0.1
+	var/light_outer_range_on = 2
 	var/overlay_layer
 
 /obj/machinery/computer/New()
@@ -28,7 +29,7 @@
 	power_change()
 	update_icon()
 
-/obj/machinery/computer/update_icon()
+/obj/machinery/computer/on_update_icon()
 	overlays.Cut()
 	if(!ispowered() || isoff())
 		set_light(0)
@@ -36,7 +37,7 @@
 			overlays += image(icon,"[icon_keyboard]_off", overlay_layer)
 		return
 	else
-		set_light(light_range_on, light_power_on)
+		set_light(light_max_bright_on, light_inner_range_on, light_outer_range_on, 2, light_color)
 
 	if(isbroken())
 		overlays += image(icon,"[icon_state]_broken", overlay_layer)
@@ -51,7 +52,7 @@
 	text = replacetext(text, "\n", "<BR>")
 	return text
 
-/obj/machinery/computer/attackby(var/obj/item/weapon/tool/I, user as mob)
+/obj/machinery/computer/attackby(var/obj/item/weapon/tool/I, var/mob/user)
 	if(isScrewdriver(I) && circuit)
 		to_chat(user, SPAN_NOTICE("You begin disassembling the computer monitor.."))
 		if(I.use_tool(user, src, 20))

@@ -7,6 +7,7 @@
 	return list(
 		/obj/item/stack/medical/splint = 2,
 		/obj/item/stack/medical/advanced/bruise_pack = 10,
+		/obj/item/weapon/reagent_containers/pill/sugariron = 6,
 		/obj/item/weapon/storage/pill_bottle/paracetamol = 2,
 		/obj/item/weapon/storage/pill_bottle/inaprovaline
 		)
@@ -44,5 +45,6 @@
 /obj/structure/closet/crate/med_crate/toxin/WillContain()
 	return list(
 		/obj/item/weapon/storage/firstaid/surgery,
-		/obj/item/weapon/storage/pill_bottle/dylovene = 2
+		/obj/item/weapon/storage/pill_bottle/dylovene = 2,
+		/obj/item/weapon/reagent_containers/pill/hyronalin = 12
 			)

@@ -17,6 +17,16 @@
 		max_z = max(z, max_z)
 	return max_z
 
+/proc/living_observers_present(var/list/zlevels)
+	if(LAZYLEN(zlevels))
+		for(var/A in GLOB.player_list) //if a tree ticks on the empty zlevel does it really tick
+			var/mob/M = A
+			if(M.stat != DEAD) //(no it doesn't)
+				var/turf/T = get_turf(M)
+				if(T && (T.z in zlevels))
+					return TRUE
+	return FALSE
+
 /proc/get_area(O)
 	var/turf/loc = get_turf(O)
 	if(loc)

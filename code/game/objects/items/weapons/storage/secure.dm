@@ -105,7 +105,7 @@
 					src.l_set = 1
 				else if ((src.code == src.l_code) && (src.emagged == 0) && (src.l_set == 1))
 					src.locked = 0
-					src.overlays = null
+					overlays.Cut()
 					overlays += image(src.icon, icon_opened)
 					src.code = null
 				else
@@ -113,14 +113,13 @@
 			else
 				if ((href_list["type"] == "R") && (src.emagged == 0) && (!src.l_setshort))
 					src.locked = 1
-					src.overlays = null
+					overlays.Cut()
 					src.code = null
 					src.close(usr)
 				else
 					src.code += text("[]", href_list["type"])
 					if (length(src.code) > 5)
 						src.code = "ERROR"
-			src.add_fingerprint(usr)
 			for(var/mob/M in viewers(1, src.loc))
 				if ((M.client && M.machine == src))
 					src.attack_self(M)
@@ -132,7 +131,7 @@
 		emagged = 1
 		src.overlays += image(src.icon, icon_sparking)
 		sleep(6)
-		src.overlays = null
+		overlays.Cut()
 		overlays += image(src.icon, icon_locking)
 		locked = 0
 		to_chat(user, (feedback ? feedback : "You short out the lock of \the [src]."))
@@ -143,6 +142,7 @@
 // -----------------------------
 /obj/item/weapon/storage/secure/briefcase
 	name = "secure briefcase"
+	icon = 'icons/obj/storage.dmi'
 	icon_state = "secure"
 	item_state = "sec-case"
 	desc = "A large briefcase with a digital locking system."
@@ -152,6 +152,7 @@
 	w_class = ITEM_SIZE_HUGE
 	max_w_class = ITEM_SIZE_NORMAL
 	max_storage_space = DEFAULT_BACKPACK_STORAGE
+	use_sound = 'sound/effects/storage/briefcase.ogg'
 
 	attack_hand(mob/user as mob)
 		if ((src.loc == user) && (src.locked == 1))
@@ -172,6 +173,7 @@
 
 /obj/item/weapon/storage/secure/safe
 	name = "secure safe"
+	icon = 'icons/obj/storage.dmi'
 	icon_state = "safe"
 	icon_opened = "safe0"
 	icon_locking = "safeb"

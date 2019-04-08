@@ -5,7 +5,7 @@
 	icon_state = "sextractor"
 	density = 1
 	anchored = 1
-	use_power = 2
+	use_power = POWER_USE_ACTIVE
 	idle_power_usage = 10
 	active_power_usage = 2000
 
@@ -23,8 +23,8 @@ obj/machinery/seed_extractor/attackby(var/obj/item/O as obj, var/mob/user as mob
 
 	// Fruits and vegetables.
 	if(istype(O, /obj/item/weapon/reagent_containers/food/snacks/grown) || istype(O, /obj/item/weapon/grown))
-
-		user.remove_from_mob(O)
+		if(!user.unEquip(O))
+			return
 
 		var/datum/seed/new_seed_type
 		if(istype(O, /obj/item/weapon/grown))

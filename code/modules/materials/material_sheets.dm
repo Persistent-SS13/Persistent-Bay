@@ -248,9 +248,9 @@
 //	Aluminum
 //--------------------------------
 /obj/item/stack/material/aluminum
-	name = MATERIAL_ALUMINUM
+	name = MATERIAL_ALUMINIUM
 	icon_state = "sheet-silver"
-	default_type = MATERIAL_ALUMINUM
+	default_type = MATERIAL_ALUMINIUM
 	apply_colour = 1
 
 /obj/item/stack/material/aluminum/ten

@@ -27,8 +27,8 @@
 /obj/machinery/portable_atmospherics/powered/scrubber/make_cell()
 	return new/obj/item/weapon/cell/apc(src)
 
-/obj/machinery/portable_atmospherics/powered/pump/update_icon()
-	src.overlays = 0
+/obj/machinery/portable_atmospherics/powered/pump/on_update_icon()
+	overlays.Cut()
 
 	if(on && cell && cell.charge)
 		icon_state = "psiphon:1"
@@ -63,7 +63,7 @@
 	..()
 	var/power_draw = -1
 
-	if(on && cell && cell.charge)
+	if(on && ( powered() || (cell && cell.charge) ) )
 		var/datum/gas_mixture/environment
 		if(holding)
 			environment = holding.air_contents
@@ -89,19 +89,24 @@
 				power_draw = pump_gas(src, air_contents, environment, transfer_moles, power_rating)
 			else
 				power_draw = pump_gas(src, environment, air_contents, transfer_moles, power_rating)
+			if(holding)
+				holding.queue_icon_update()
 
 	if (power_draw < 0)
 		last_flow_rate = 0
 		last_power_draw = 0
 	else
 		power_draw = max(power_draw, power_losses)
-		cell.use(power_draw * CELLRATE)
+		if(!powered())
+			cell.use(power_draw * CELLRATE)
+		else
+			use_power_oneoff(power_draw)
 		last_power_draw = power_draw
 
 		update_connected_network()
 
 		//ran out of charge
-		if (!cell.charge)
+		if (!cell.charge && !powered())
 			power_change()
 			update_icon()
 

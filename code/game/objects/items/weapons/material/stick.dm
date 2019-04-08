@@ -1,5 +1,5 @@
 /obj/item/weapon/material/stick
-	name = "staff"
+	name = "stick"
 	desc = "You feel the urge to poke someone with this."
 	icon_state = "stick"
 	item_state = "stickmat"
@@ -21,7 +21,7 @@
 	if(W.sharpness && !sharpness)
 		user.visible_message("<span class='warning'>[user] sharpens [src] with [W].</span>", "<span class='warning'>You sharpen [src] using [W].</span>")
 		sharpness = 1 //Sharpen stick
-		name = "sharpened " + name
+		SetName("sharpened " + name)
 		update_force()
 	return ..()
 

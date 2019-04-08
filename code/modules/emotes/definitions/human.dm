@@ -1,4 +1,4 @@
-/decl/emote/human
+/decl/emote/human/vomit
 	key = "vomit"
 
 /decl/emote/human/check_user(var/mob/living/carbon/human/user)

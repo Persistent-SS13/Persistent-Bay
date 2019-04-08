@@ -174,7 +174,7 @@
 		else
 			rem_health(rand(1,3))
 
-	else if (HULK in user.mutations)
+	else if (MUTATION_HULK in user.mutations)
 		destroyed()
 	else
 		rem_health(rand(5,8))

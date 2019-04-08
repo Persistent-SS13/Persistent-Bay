@@ -178,6 +178,7 @@
 				if(stat & BROKEN)
 					assembly.state = 2
 					to_chat(user, "<span class='notice'>You repaired \the [src] frame.</span>")
+					cancelCameraAlarm()
 				else
 					assembly.state = 1
 					to_chat(user, "<span class='notice'>You cut \the [src] free from the wall.</span>")
@@ -241,6 +242,7 @@
 /obj/machinery/camera/broken()
 	wires.RandomCutAll()
 	triggerCameraAlarm()
+	queue_icon_update()
 	update_coverage()
 	..()
 	//sparks
@@ -260,6 +262,18 @@
 	return 0
 
 /obj/machinery/camera/update_icon()
+	pixel_x = 0
+	pixel_y = 0
+
+	var/turf/T = get_step(get_turf(src), turn(src.dir, 180))
+	if(istype(T, /turf/simulated/wall))
+		if(dir == SOUTH)
+			pixel_y = 21
+		else if(dir == WEST)
+			pixel_x = 10
+		else if(dir == EAST)
+			pixel_x = -10
+
 	if (!status || isbroken())
 		icon_state = "[initial(icon_state)]1"
 	else if (stat & EMPED)
@@ -415,18 +429,16 @@
 	cam["name"] = sanitize(c_tag)
 	cam["deact"] = !can_use()
 	cam["camera"] = "\ref[src]"
-	cam["x"] = x
-	cam["y"] = y
-	cam["z"] = z
+	cam["x"] = get_x(src)
+	cam["y"] = get_y(src)
+	cam["z"] = get_z(src)
 	return cam
 
 // Resets the camera's wires to fully operational state. Used by one of Malfunction abilities.
 /obj/machinery/camera/proc/reset_wires()
 	if(!wires)
 		return
-	if (stat & BROKEN) // Fix the camera
-		stat &= ~BROKEN
+	set_broken(FALSE) // Fixes the camera and updates the icon.
 	wires.CutAll()
 	wires.MendAll()
-	update_icon()
 	update_coverage()

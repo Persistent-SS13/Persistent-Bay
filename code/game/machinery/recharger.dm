@@ -173,6 +173,15 @@ obj/machinery/recharger/attackby(obj/item/weapon/G as obj, mob/user as mob)
 	else
 		icon_state = icon_state_idle
 
+obj/machinery/recharger/examine(mob/user)
+	. = ..()
+	if(!. || isnull(charging))
+		return
+
+	else
+		var/obj/item/weapon/cell/C = charging.get_cell()
+		if(!isnull(C))
+			to_chat(user, "Item's charge at [round(C.percent())]%.")
 
 /obj/machinery/recharger/wallcharger
 	name = "wall recharger"

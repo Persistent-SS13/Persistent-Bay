@@ -23,7 +23,7 @@
 		return 0
 	if (affected.is_stump())
 		return 0
-	if (affected.robotic >= ORGAN_ROBOT)
+	if (BP_IS_ROBOTIC(affected))
 		return 0
 	return 1
 
@@ -58,7 +58,7 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='notice'>[user] has made a bloodless incision on [target]'s [affected.name] with \the [tool].</span>", \
 	"<span class='notice'>You have made a bloodless incision on [target]'s [affected.name] with \the [tool].</span>",)
-	affected.createwound(CUT, affected.min_broken_damage/2, 1)
+	affected.createwound(DAM_CUT, affected.min_broken_damage/2, 1)
 	affected.clamp()
 	spread_germs_to_organ(affected, user)
 
@@ -66,7 +66,8 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='warning'>[user]'s hand slips as the blade sputters, searing a long gash in [target]'s [affected.name] with \the [tool]!</span>", \
 	"<span class='warning'>Your hand slips as the blade sputters, searing a long gash in [target]'s [affected.name] with \the [tool]!</span>")
-	affected.take_multi_damage(list(DAM_CUT = 15, DAM_BURN = 5), damsrc = tool)
+	affected.take_damage(15, DAM_CUT, damsrc = tool)
+	affected.take_damage(5, DAM_BURN, damsrc = tool)
 
 //////////////////////////////////////////////////////////////////
 //	laser scalpel surgery step
@@ -97,7 +98,7 @@
 	user.visible_message("<span class='notice'>[user] has constructed a prepared incision on and within [target]'s [affected.name] with \the [tool].</span>", \
 	"<span class='notice'>You have constructed a prepared incision on and within [target]'s [affected.name] with \the [tool].</span>",)
 
-	affected.createwound(CUT, affected.min_broken_damage/2, 1)
+	affected.createwound(DAM_CUT, affected.min_broken_damage/2, 1)
 	affected.clamp()
 	affected.open_incision()
 
@@ -105,7 +106,8 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='warning'>[user]'s hand jolts as the system sparks, ripping a gruesome hole in [target]'s [affected.name] with \the [tool]!</span>", \
 	"<span class='warning'>Your hand jolts as the system sparks, ripping a gruesome hole in [target]'s [affected.name] with \the [tool]!</span>")
-	affected.take_multi_damage(list(DAM_CUT = 20, DAM_BURN = 15), damsrc = tool)
+	affected.take_damage(20, DAM_CUT, damsrc = tool)
+	affected.take_damage(15, DAM_BURN, damsrc = tool)
 
 //////////////////////////////////////////////////////////////////
 //	 scalpel surgery step
@@ -144,7 +146,7 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='notice'>[user] has made an incision on [target]'s [affected.name] with \the [tool].</span>", \
 	"<span class='notice'>You have made an incision on [target]'s [affected.name] with \the [tool].</span>",)
-	affected.createwound(CUT, affected.min_broken_damage/2, 1)
+	affected.createwound(DAM_CUT, affected.min_broken_damage/2, 1)
 	playsound(target.loc, 'sound/weapons/bladeslice.ogg', 15, 1)
 
 /datum/surgery_step/generic/cut_open/fail_step(mob/living/user, mob/living/carbon/human/target, target_zone, obj/item/tool)
@@ -254,7 +256,7 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	if(!affected)
 		return FALSE
-	if(affected.robotic >= ORGAN_ROBOT)
+	if(BP_IS_ROBOTIC(affected))
 		return FALSE
 	if(!affected.get_incision(1))
 		to_chat(user, "<span class='warning'>There are no incisions on [target]'s [affected.name] that can be closed cleanly with \the [tool]!</span>")

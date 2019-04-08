@@ -29,11 +29,11 @@
 		to_chat(user, "<span class='danger'>An unexplicable force rips through you, tearing the sword from your grasp!</span>")
 
 	//random amount of damage between half of the blade's force and the full force of the blade.
-	user.apply_damage(rand(force/2, force), damtype, zone, 0)
+	user.apply_damage(rand(force/2, force), damtype, zone, 0, armor_pen = 100, used_weapon = src)
 	user.Weaken(5)
 
-	user.drop_from_inventory(src)
-	throw_at(get_edge_target_turf(src, pick(GLOB.alldirs)), rand(1,3), throw_speed)
+	if(user.unEquip(src))
+		throw_at(get_edge_target_turf(src, pick(GLOB.alldirs)), rand(1,3), throw_speed)
 
 	var/spooky = pick('sound/hallucinations/growl1.ogg', 'sound/hallucinations/growl2.ogg', 'sound/hallucinations/growl3.ogg', 'sound/hallucinations/wail.ogg')
 	playsound(loc, spooky, 50, 1)

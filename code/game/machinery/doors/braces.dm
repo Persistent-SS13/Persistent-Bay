@@ -51,7 +51,8 @@
 		if(99 to INFINITY)
 			return "\The [src] is in excellent condition."
 
-/obj/item/weapon/airlock_brace/update_icon()
+
+/obj/item/weapon/airlock_brace/on_update_icon()
 	if(airlock)
 		icon_state = "brace_closed"
 	else
@@ -116,7 +117,7 @@
 		user.put_in_hands(src)
 		airlock.visible_message("\The [user] removes \the [src] from \the [airlock]!")
 	else
-		forceMove(get_turf(src))
+		dropInto(loc)
 	airlock.brace = null
 	airlock.update_icon()
 	airlock = null

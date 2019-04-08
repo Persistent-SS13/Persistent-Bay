@@ -38,7 +38,7 @@
 	if(ison() && time_next_spark)
 		time_next_spark = world.time + time_next_spark
 
-/obj/machinery/igniter/update_icon()
+/obj/machinery/igniter/on_update_icon()
 	icon_state = "igniter[ison()]"
 
 /obj/machinery/igniter/Destroy()

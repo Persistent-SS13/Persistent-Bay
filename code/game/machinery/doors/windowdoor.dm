@@ -5,7 +5,7 @@
 	icon_state = "left"
 	visible = 0.0
 	use_power = POWER_USE_OFF
-	atom_flags = ATOM_FLAG_CHECKS_BORDER
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CHECKS_BORDER
 	opacity = 0
 	explosion_resistance = 5
 	air_properties_vary_with_direction = 1
@@ -41,7 +41,23 @@
 		src.base_state = src.icon_state
 	return
 
-/obj/machinery/door/window/update_icon()
+/obj/machinery/door/window/Initialize(mapload, obj/structure/windoor_assembly/assembly)
+	if(assembly)
+		set_dir(assembly.dir)
+		set_density(0)
+		if(assembly.electronics)
+			if(assembly.electronics.autoset)
+				autoset_access = TRUE // Being careful in case of subtypes or something.
+			else
+				req_access = assembly.electronics.conf_access
+				if(assembly.electronics.one_access)
+					req_access = list(req_access)
+				autoset_access = FALSE
+			electronics = assembly.electronics
+			electronics.forceMove(src)
+	. = ..()
+
+/obj/machinery/door/window/on_update_icon()
 	if(density)
 		icon_state = base_state
 	else
@@ -53,19 +69,10 @@
 	CC.amount = 2
 	var/obj/item/weapon/airlock_electronics/ae
 	if(!electronics)
-		ae = new/obj/item/weapon/airlock_electronics( src.loc )
-		if(!src.req_access)
-			src.check_access()
-		if(src.req_access.len)
-			ae.conf_access = src.req_access
-		else if (src.req_one_access.len)
-			ae.conf_access = src.req_one_access
-			ae.one_access = 1
-		ae.req_access_faction = req_access_faction
-	else
-		ae = electronics
-		electronics = null
-		ae.loc = src.loc
+		create_electronics()
+	ae = electronics
+	electronics = null
+	ae.dropInto(loc)
 	if(operating == -1)
 		ae.icon_state = "door_electronics_smoked"
 		operating = 0
@@ -100,7 +107,6 @@
 					close()
 		return
 	var/mob/M = AM // we've returned by here if M is not a mob
-
 	if (src.operating)
 		return
 	if (src.density && (!issmall(M) || ishuman(M)) && src.allowed(AM))
@@ -192,6 +198,9 @@
 			open()
 	..()
 
+/obj/machinery/door/window/CanFluidPass(var/coming_from)
+	return ((dir in GLOB.cardinal) && coming_from != dir)
+
 /obj/machinery/door/window/attackby(obj/item/weapon/I as obj, mob/user as mob)
 
 	//If it's in the process of opening/closing, ignore the click
@@ -218,9 +227,9 @@
 			var/obj/structure/windoor_assembly/wa = new/obj/structure/windoor_assembly(src.loc)
 			if (istype(src, /obj/machinery/door/window/brigdoor))
 				wa.secure = "secure_"
-				wa.name = "Secure Wired Windoor Assembly"
+				wa.SetName("Secure Wired Windoor Assembly")
 			else
-				wa.name = "Wired Windoor Assembly"
+				wa.SetName("Wired Windoor Assembly")
 			if (src.base_state == "right" || src.base_state == "rightsecure")
 				wa.facing = "r"
 			wa.set_dir(src.dir)
@@ -231,15 +240,14 @@
 
 			var/obj/item/weapon/airlock_electronics/ae
 			if(!electronics)
-				ae = new/obj/item/weapon/airlock_electronics( src.loc )
-				if(!src.req_access)
-					src.check_access()
-				if(src.req_access.len)
-					ae.conf_access = src.req_access
-				else if (src.req_one_access.len)
-					ae.conf_access = src.req_one_access
-					ae.one_access = 1
-				ae.req_access_faction = req_access_faction
+				create_electronics()
+			ae = electronics
+			electronics = null
+			ae.dropInto(loc)
+			ae.icon_state = "door_electronics_smoked"
+
+			operating = 0
+			kill()
 			return
 
 	//If it's a weapon, smash windoor. Unless it's an id card, agent card, ect.. then ignore it (Cards really shouldnt damage a door anyway)
@@ -247,7 +255,7 @@
 		return ..()
 
 
-	src.add_fingerprint(user)
+	src.add_fingerprint(user, 0, I)
 
 	if (src.allowed(user))
 		if (src.density)
@@ -258,9 +266,9 @@
 	else if (src.density)
 		flick(text("[]deny", src.base_state), src)
 
-	return
-
-
+/obj/machinery/door/window/create_electronics(var/electronics_type = /obj/item/weapon/airlock_electronics)
+	electronics = ..()
+	return electronics	
 
 /obj/machinery/door/window/brigdoor
 	name = "secure door"

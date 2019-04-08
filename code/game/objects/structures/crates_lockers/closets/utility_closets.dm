@@ -8,6 +8,7 @@
  *		Hydrant
  *		First Aid
  *		Excavation Closet
+ *		Shipping Supplies Closet
  */
 
 /*
@@ -41,11 +42,14 @@
 			new /obj/item/weapon/tank/emergency/oxygen/engi(src)
 			new /obj/item/clothing/mask/gas/half(src)
 			new /obj/item/clothing/mask/gas/half(src)
+
 		if ("large")
 			new /obj/item/weapon/tank/emergency/oxygen/double(src)
 			new /obj/item/weapon/tank/emergency/oxygen/double(src)
 			new /obj/item/clothing/mask/gas(src)
 			new /obj/item/clothing/mask/gas(src)
+			new /obj/item/device/oxycandle(src)
+
 		if ("both")
 			new /obj/item/weapon/storage/toolbox/emergency(src)
 			new /obj/item/weapon/tank/emergency/oxygen/engi(src)
@@ -57,6 +61,7 @@
 			new /obj/item/clothing/suit/space/emergency(src)
 			new /obj/item/clothing/head/helmet/space/emergency(src)
 			new /obj/item/clothing/head/helmet/space/emergency(src)
+			new /obj/item/device/oxycandle(src)
 
 /obj/structure/closet/emcloset/legacy/New()
 	..()
@@ -71,13 +76,16 @@
 	desc = "It's a storage unit for fire-fighting supplies."
 	closet_appearance = /decl/closet_appearance/oxygen/fire
 
-/obj/structure/closet/firecloset/filled/New()
-	..()
-	new /obj/item/clothing/suit/fire/firefighter(src)
-	new /obj/item/clothing/mask/gas(src)
-	new /obj/item/weapon/tank/oxygen/red(src)
-	new /obj/item/weapon/extinguisher(src)
-	new /obj/item/clothing/head/hardhat/red(src)
+
+/obj/structure/closet/firecloset/WillContain()
+	return list(
+		/obj/item/weapon/storage/med_pouch/burn,
+		/obj/item/clothing/suit/fire/firefighter,
+		/obj/item/clothing/mask/gas,
+		/obj/item/device/flashlight,
+		/obj/item/weapon/tank/oxygen/red,
+		/obj/item/weapon/extinguisher,
+		/obj/item/clothing/head/hardhat/red)
 
 /*
  * Tool Closet
@@ -129,14 +137,14 @@
 	desc = "It's a storage unit for rad-protective suits."
 	closet_appearance = /decl/closet_appearance/secure_closet/engineering/tools/radiation
 
-/obj/structure/closet/radiation/filled/New()
-	..()
-	new /obj/item/clothing/suit/radiation(src)
-	new /obj/item/clothing/head/radiation(src)
-	new /obj/item/clothing/suit/radiation(src)
-	new /obj/item/clothing/head/radiation(src)
-	new /obj/item/device/geiger(src)
-	new /obj/item/device/geiger(src)
+/obj/structure/closet/radiation/filled/WillContain()
+	return list(
+		/obj/item/weapon/storage/med_pouch/toxin = 2,
+		/obj/item/clothing/suit/radiation,
+		/obj/item/clothing/head/radiation,
+		/obj/item/clothing/suit/radiation,
+		/obj/item/clothing/head/radiation,
+		/obj/item/device/geiger = 2)
 
 /*
  * Bombsuit closet
@@ -146,12 +154,12 @@
 	desc = "It's a storage unit for explosion-protective suits."
 	closet_appearance = /decl/closet_appearance/bomb
 
-/obj/structure/closet/bombcloset/filled/New()
-	..()
-	new /obj/item/clothing/suit/bomb_suit( src )
-	new /obj/item/clothing/under/color/black( src )
-	new /obj/item/clothing/shoes/black( src )
-	new /obj/item/clothing/head/bomb_hood( src )
+/obj/structure/closet/bombcloset/filled/WillContain()
+	return list(
+		/obj/item/clothing/suit/bomb_suit,
+		/obj/item/clothing/under/color/black,
+		/obj/item/clothing/shoes/black,
+		/obj/item/clothing/head/bomb_hood)
 
 
 /obj/structure/closet/bombclosetsecurity
@@ -159,12 +167,12 @@
 	desc = "It's a storage unit for explosion-protective suits."
 	closet_appearance = /decl/closet_appearance/bomb/security
 
-/obj/structure/closet/bombclosetsecurity/filled/New()
-	..()
-	new /obj/item/clothing/suit/bomb_suit/security( src )
-	new /obj/item/clothing/under/rank/security( src )
-	new /obj/item/clothing/shoes/brown( src )
-	new /obj/item/clothing/head/bomb_hood/security( src )
+/obj/structure/closet/bombclosetsecurity/filled/WillContain()
+	return list(
+		/obj/item/clothing/suit/bomb_suit/security,
+		/obj/item/clothing/under/rank/security,
+		/obj/item/clothing/shoes/brown,
+		/obj/item/clothing/head/bomb_hood/security)
 
 /*
  * General purpose
@@ -191,16 +199,16 @@
 	desc = "It's a storage unit for fire-fighting supplies."
 	closet_appearance = /decl/closet_appearance/wall/hydrant
 
-/obj/structure/closet/wall/hydrant/filled/New()
-	..()
-	new /obj/item/inflatable/door(src)
-	new /obj/item/inflatable/door(src)
-	new /obj/item/clothing/suit/fire/firefighter(src)
-	new /obj/item/clothing/mask/gas/half(src)
-	new /obj/item/device/flashlight(src)
-	new /obj/item/weapon/tank/oxygen/red(src)
-	new /obj/item/weapon/extinguisher(src)
-	new /obj/item/clothing/head/hardhat/red(src)
+/obj/structure/closet/wall/hydrant/filled/WillContain()
+	return list(
+		/obj/item/inflatable/door = 2,
+		/obj/item/weapon/storage/med_pouch/burn = 2,
+		/obj/item/clothing/suit/fire/firefighter,
+		/obj/item/clothing/mask/gas/half,
+		/obj/item/device/flashlight,
+		/obj/item/weapon/tank/oxygen/red,
+		/obj/item/weapon/extinguisher,
+		/obj/item/clothing/head/hardhat/red)
 
 /*
  * First Aid
@@ -227,4 +235,4 @@
 	return list(
 		/obj/item/stack/material/cardboard/ten,
 		/obj/item/device/destTagger,
-		/obj/item/weapon/packageWrap)
+		/obj/item/stack/package_wrap/twenty_five)

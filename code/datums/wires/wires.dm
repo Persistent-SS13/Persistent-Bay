@@ -22,9 +22,11 @@ var/list/wireColours = list("red", "blue", "green", "darkred", "orange", "brown"
 
 	var/table_options = " align='center'"
 	var/row_options1 = " width='80px'"
-	var/row_options2 = " width='260px'"
-	var/window_x = 370
+	var/row_options2 = " width='320px'"
+	var/window_x = 450
 	var/window_y = 470
+
+	var/list/descriptions // Descriptions of wires (datum/wire_description) for use with examining.
 
 /datum/wires/New(var/atom/holder)
 	..()
@@ -40,6 +42,9 @@ var/list/wireColours = list("red", "blue", "green", "darkred", "orange", "brown"
 	// Generate new wires
 	if(random)
 		GenerateWires()
+		for(var/datum/wire_description/desc in descriptions)
+			if(prob(50))
+				desc.skill_level++
 	// Get the same wires
 	else
 		// We don't have any wires to copy yet, generate some and then copy it.
@@ -72,12 +77,11 @@ var/list/wireColours = list("red", "blue", "green", "darkred", "orange", "brown"
 		src.wires[colour] = index
 		//wires = shuffle(wires)
 
-
 /datum/wires/proc/Interact(var/mob/living/user)
 
 	var/html = null
 	if(holder && CanUse(user))
-		html = GetInteractWindow()
+		html = GetInteractWindow(user)
 	if(html)
 		user.set_machine(holder)
 	else
@@ -91,25 +95,33 @@ var/list/wireColours = list("red", "blue", "green", "darkred", "orange", "brown"
 	popup.set_title_image(user.browse_rsc_icon(holder.icon, holder.icon_state))
 	popup.open()
 
-/datum/wires/proc/GetInteractWindow()
-	var/html = "<div class='block'>"
+/datum/wires/proc/GetInteractWindow(mob/user)
+	var/html = list()
+	html += "<div class='block'>"
 	html += "<h3>Exposed Wires</h3>"
 	html += "<table[table_options]>"
 
+	var/list/wires_used = list()
 	for(var/colour in wires)
+		wires_used += prob(user.skill_fail_chance(SKILL_ELECTRICAL, 20, SKILL_ADEPT)) ? pick(wires) : colour
+	if(!user.skill_check(SKILL_ELECTRICAL, SKILL_BASIC))
+		wires_used = shuffle(wires_used)
+
+	for(var/colour in wires_used)
 		html += "<tr>"
 		html += "<td[row_options1]><font color='[colour]'>&#9724;</font>[capitalize(colour)]</td>"
 		html += "<td[row_options2]>"
 		html += "<A href='?src=\ref[src];action=1;cut=[colour]'>[IsColourCut(colour) ? "Mend" :  "Cut"]</A>"
 		html += " <A href='?src=\ref[src];action=1;pulse=[colour]'>Pulse</A>"
-		html += " <A href='?src=\ref[src];action=1;attach=[colour]'>[IsAttached(colour) ? "Detach" : "Attach"] Signaller</A></td></tr>"
+		html += " <A href='?src=\ref[src];action=1;attach=[colour]'>[IsAttached(colour) ? "Detach" : "Attach"] Signaller</A>"
+		html += " <A href='?src=\ref[src];action=1;examine=[colour]'>Examine</A></td></tr>"
 	html += "</table>"
 	html += "</div>"
 
 	if (random)
 		html += "<i>\The [holder] appears to have tamper-resistant electronics installed.</i><br><br>" //maybe this could be more generic?
 
-	return html
+	return JOINTEXT(html)
 
 /datum/wires/Topic(href, href_list)
 	..()
@@ -123,16 +135,34 @@ var/list/wireColours = list("red", "blue", "green", "darkred", "orange", "brown"
 				if(isWirecutter(I))
 					var/colour = href_list["cut"]
 					CutWireColour(colour)
+					if(prob(L.skill_fail_chance(SKILL_ELECTRICAL, 20, SKILL_ADEPT)))
+						RandomCut()
+						to_chat(L, "<span class='danger'>You accidentally nick another wire!</span>")
+					else if(!L.skill_check(SKILL_ELECTRICAL, SKILL_BASIC))
+						RandomCutAll(10)
+						to_chat(L, "<span class='danger'>You think you might have nicked some of the other wires!</span>")
 				else
 					to_chat(L, "<span class='error'>You need wirecutters!</span>")
 			else if(href_list["pulse"])
 				if(isMultitool(I))
 					var/colour = href_list["pulse"]
-					PulseColour(colour)
+					if(prob(L.skill_fail_chance(SKILL_ELECTRICAL, 30, SKILL_ADEPT)))
+						RandomPulse()
+						to_chat(L, "<span class='danger'>You accidentally pulse another wire!</span>")
+						if(prob(L.skill_fail_chance(SKILL_ELECTRICAL, 60, SKILL_BASIC)))
+							RandomPulse() //or two
+					else
+						PulseColour(colour)
+					if(prob(L.skill_fail_chance(SKILL_ELECTRICAL, 50, SKILL_BASIC)))
+						wires = shuffle(wires) //Leaves them in a different order for anyone else.
+						to_chat(L, "<span class='danger'>You get the wires all tangled up!</span>")
 				else
 					to_chat(L, "<span class='error'>You need a multitool!</span>")
 			else if(href_list["attach"])
 				var/colour = href_list["attach"]
+				if(prob(L.skill_fail_chance(SKILL_ELECTRICAL, 80, SKILL_EXPERT)))
+					colour = pick(wires)
+					to_chat(L, "<span class='danger'>Are you sure you got the right wire?</span>")
 				// Detach
 				if(IsAttached(colour))
 					var/obj/item/O = Detach(colour)
@@ -142,12 +172,13 @@ var/list/wireColours = list("red", "blue", "green", "darkred", "orange", "brown"
 				// Attach
 				else
 					if(istype(I, /obj/item/device/assembly/signaler))
-						L.drop_item()
-						Attach(colour, I)
+						if(L.unEquip(I))
+							Attach(colour, I)
 					else
 						to_chat(L, "<span class='error'>You need a remote signaller!</span>")
-
-
+			else if(href_list["examine"])
+				var/colour = href_list["examine"]
+				to_chat(usr, examine(GetIndex(colour), usr))
 
 		// Update Window
 			Interact(usr)
@@ -167,6 +198,16 @@ var/list/wireColours = list("red", "blue", "green", "darkred", "orange", "brown"
 // Called when wire pulsed. Add code here.
 /datum/wires/proc/UpdatePulsed(var/index)
 	return
+
+/datum/wires/proc/examine(index, mob/user)
+	. = "You aren't sure what this wire does."
+
+	var/datum/wire_description/wd = get_description(index)
+	if(!wd)
+		return
+	if(wd.skill_level && !user.skill_check(SKILL_ELECTRICAL, wd.skill_level))
+		return
+	return wd.description
 
 /datum/wires/proc/CanUse(var/mob/living/L)
 	return 1
@@ -197,6 +238,11 @@ var/const/POWER = 8
 // Helper Procs
 //
 
+/datum/wires/proc/get_description(index)
+	for(var/datum/wire_description/desc in descriptions)
+		if(desc.index == index)
+			return desc
+
 /datum/wires/proc/PulseColour(var/colour)
 	PulseIndex(GetIndex(colour))
 
@@ -215,7 +261,7 @@ var/const/POWER = 8
 
 /datum/wires/proc/RandomPulse()
 	var/index = rand(1, wires.len)
-	PulseIndex(index)
+	PulseColour(wires[index])
 
 //
 // Is Index/Colour Cut procs
@@ -285,7 +331,7 @@ var/const/POWER = 8
 
 /datum/wires/proc/RandomCut()
 	var/r = rand(1, wires.len)
-	CutWireIndex(r)
+	CutWireColour(wires[r])
 
 /datum/wires/proc/RandomCutAll(var/probability = 10)
 	for(var/i = 1; i < MAX_FLAG && i < (1 << wire_count); i += i)

@@ -125,7 +125,7 @@
 				user.do_attack_animation(src)
 				user.drop_item()
 				user.Weaken(3)
-				H.apply_damage(rand(10,20),BRUTE)
+				H.apply_damage(rand(10,20), DAM_BLUNT)
 				new /obj/effect/decal/cleanable/blood/drip(user.loc)
 				playsound(loc, 'sound/weapons/punch4.ogg', 30, 1)
 				visible_message("<span class='bad'>[user] attempts to dunk [W] into [src], but flounders mid-air!</span>")

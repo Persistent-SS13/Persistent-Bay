@@ -225,7 +225,7 @@
 	ore_matter = list(MATERIAL_TUNGSTEN = 2000)
 
 /material/aluminum
-	name = MATERIAL_ALUMINUM
+	name = MATERIAL_ALUMINIUM
 	stack_type = /obj/item/stack/material/aluminum
 	integrity = 125
 	melting_point = 933

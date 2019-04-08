@@ -232,7 +232,7 @@
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
 	ore_compresses_to = MATERIAL_BAUXITE
-	ore_smelts_to = MATERIAL_ALUMINUM
+	ore_smelts_to = MATERIAL_ALUMINIUM
 	ore_matter = list(MATERIAL_BAUXITE = 2000)
 	energy_combustion = 31
 

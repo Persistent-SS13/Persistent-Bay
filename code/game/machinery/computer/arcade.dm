@@ -42,17 +42,16 @@
 			return INITIALIZE_HINT_QDEL
 
 /obj/machinery/computer/arcade/proc/prizevend()
-	return ":)"
-	if(!contents.len)
-		var/prizeselect = pickweight(prizes)
-		new prizeselect(src.loc)
-
-		if(istype(prizeselect, /obj/item/clothing/suit/syndicatefake)) //Helmet is part of the suit
-			new	/obj/item/clothing/head/syndicatefake(src.loc)
-
-	else
-		var/atom/movable/prize = pick(contents)
-		prize.forceMove(src.loc)
+//	if(!contents.len)
+//		var/prizeselect = pickweight(prizes)
+//		new prizeselect(src.loc)
+//
+//		if(istype(prizeselect, /obj/item/clothing/suit/syndicatefake)) //Helmet is part of the suit
+//			new	/obj/item/clothing/head/syndicatefake(src.loc)
+//
+//	else
+//		var/atom/movable/prize = pick(contents)
+//		prize.forceMove(src.loc)
 
 /obj/machinery/computer/arcade/attack_ai(mob/user as mob)
 	return src.attack_hand(user)
@@ -109,7 +108,7 @@
 	name_part2 = pick("Melonoid", "Murdertron", "Sorcerer", "Ruin", "Jeff", "Ectoplasm", "Crushulon", "Uhangoid", "Vhakoid", "Peteoid", "slime", "Griefer", "ERPer", "Lizard Man", "Unicorn", "Bloopers")
 
 	src.enemy_name = replacetext((name_part1 + name_part2), "the ", "")
-	src.name = (name_action + name_part1 + name_part2)
+	src.SetName((name_action + name_part1 + name_part2))
 
 
 /obj/machinery/computer/arcade/battle/attack_hand(mob/user as mob)

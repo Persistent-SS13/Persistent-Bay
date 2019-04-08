@@ -364,7 +364,7 @@
 	name = "Floorlength Braid"
 	icon_state = "hair_braid"
 	gender = FEMALE
-	flags = HAIR_TRIPPABLE
+	flags = HAIR_TIEABLE
 
 /datum/sprite_accessory/hair/odango
 	name = "Odango"

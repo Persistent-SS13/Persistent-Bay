@@ -13,6 +13,7 @@
 	stop_automated_movement_when_pulled = 0
 	maxHealth = 100
 	health = 100
+	can_escape = 1
 
 	harm_intent_damage = 5
 	melee_damage_lower = 30
@@ -20,7 +21,7 @@
 	attacktext = "slashed"
 	attack_sound = 'sound/weapons/bladeslice.ogg'
 
-	unsuitable_atoms_damage = 15
+	unsuitable_atmos_damage = 15
 	var/corpse = /obj/effect/landmark/mobcorpse/pirate
 	var/weapon1 = /obj/item/weapon/melee/energy/sword/pirate
 

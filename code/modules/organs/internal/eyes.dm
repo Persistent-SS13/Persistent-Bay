@@ -13,7 +13,7 @@
 	max_health = 45
 
 /obj/item/organ/internal/eyes/optics
-	robotic = ORGAN_ROBOT
+	robotic = ORGAN_ROBOTIC
 	organ_tag = BP_OPTICS
 
 /obj/item/organ/internal/eyes/optics/New()

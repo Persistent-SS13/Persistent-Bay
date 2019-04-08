@@ -91,12 +91,16 @@
 		return											//We go ahead and process them 5 times for HUD images and other stuff though.
 
 	//Update our name based on whether our face is obscured/disfigured
-	name = get_visible_name()
+	SetName(get_visible_name())
 
 /mob/living/carbon/human/set_stat(var/new_stat)
+	var/old_stat = stat
 	. = ..()
 	if(stat)
 		update_skin(1)
+	if(client && client.is_afk())
+		if(old_stat == UNCONSCIOUS && stat == CONSCIOUS)
+			playsound_local(null, 'sound/effects/bells.ogg', 100, is_global=TRUE)
 
 /mob/living/carbon/human/proc/handle_some_updates()
 	if(life_tick > 5 && timeofdeath && (timeofdeath < 5 || world.time - timeofdeath > 6000))	//We are long dead, or we're junk mobs spawned like the clowns on the clown shuttle
@@ -185,16 +189,13 @@
 	..()
 	if(stat != DEAD)
 		if ((disabilities & COUGHING) && prob(5) && paralysis <= 1)
-			drop_item()
+			unequip_item()
 			spawn(0)
 				emote("cough")
 
 /mob/living/carbon/human/handle_mutations_and_radiation()
-	if(!species)
-		species = new()
-
 	if(getFireLoss())
-		if((COLD_RESISTANCE in mutations) || (prob(1)))
+		if((MUTATION_COLD_RESISTANCE in mutations) || (prob(1)))
 			heal_organ_damage(0,1)
 
 	// DNA2 - Gene processing.
@@ -265,8 +266,8 @@
 			damage = 8
 			radiation -= 4 * RADIATION_SPEED_COEFFICIENT
 
+		damage = Floor(damage * (isSynthetic() ? 0.5 : species.radiation_mod))
 		if(damage)
-			damage *= isSynthetic() ? 0.5 : species.radiation_mod
 			adjustToxLoss(damage * RADIATION_SPEED_COEFFICIENT)
 			updatehealth()
 			if(!isSynthetic() && organs.len)
@@ -359,7 +360,7 @@
 	return !failed_last_breath
 
 /mob/living/carbon/human/handle_environment(datum/gas_mixture/environment)
-	if(!environment)
+	if(!environment || (MUTATION_SPACERES in mutations))
 		return
 
 	//Stuff like the xenomorph's plasma regen happens here.
@@ -413,7 +414,7 @@
 		fire_alert = max(fire_alert, 1)
 		if(status_flags & GODMODE)	return 1	//godmode
 		var/burn_dam = 0
-		if(bodytemperature < getSpeciesOrSynthTemp(HEAT_LEVEL_1))
+		if(bodytemperature < getSpeciesOrSynthTemp(HEAT_LEVEL_2))
 			burn_dam = HEAT_DAMAGE_LEVEL_1
 		else if(bodytemperature < getSpeciesOrSynthTemp(HEAT_LEVEL_3))
 			burn_dam = HEAT_DAMAGE_LEVEL_2
@@ -497,7 +498,7 @@
 //		log_debug("Hot. Difference = [body_temperature_difference]. Recovering [recovery_amt]")
 		bodytemperature += recovery_amt
 
-	//This proc returns a number made up of the flags for body parts which you are protected on. (such as HEAD, UPPER_TORSO, LOWER_TORSO, etc. See items_clothing.dm for the full list)
+	//This proc returns a number made up of the flags for body parts which you are protected on. (such as HEAD, UPPER_TORSO, LOWER_TORSO, etc. See setup.dm for the full list)
 /mob/living/carbon/human/proc/get_heat_protection_flags(temperature) //Temperature is the temperature you're being exposed to.
 	. = 0
 	//Handle normal clothing
@@ -520,7 +521,7 @@
 	return get_thermal_protection(thermal_protection_flags)
 
 /mob/living/carbon/human/get_cold_protection(temperature)
-	if(COLD_RESISTANCE in mutations)
+	if(MUTATION_COLD_RESISTANCE in mutations)
 		return 1 //Fully protected from the cold.
 
 	temperature = max(temperature, 2.7) //There is an occasional bug where the temperature is miscalculated in ares with a small amount of gas on them, so this is necessary to ensure that that bug does not affect this calculation. Space's temperature is 2.7K and most suits that are intended to protect against any cold, protect down to 2.0K.
@@ -566,10 +567,10 @@
 
 	if(reagents)
 		if(touching) touching.metabolize()
-		if(ingested) ingested.metabolize()
 		if(bloodstr) bloodstr.metabolize()
 
 	// Trace chemicals
+	var/datum/reagents/metabolism/ingested = get_ingested_reagents()
 	for(var/T in chem_doses)
 		if(bloodstr.has_reagent(T) || ingested.has_reagent(T) || touching.has_reagent(T))
 			continue
@@ -579,8 +580,6 @@
 			chem_doses -= T
 
 	updatehealth()
-
-	return //TODO: DEFERRED
 
 // Check if we should die.
 /mob/living/carbon/human/proc/handle_death_check()
@@ -598,7 +597,7 @@
 	if(status_flags & GODMODE)	return 0
 
 	//SSD check, if a logged player is awake put them back to sleep!
-	if(ssd_check() && species.get_ssd(src))
+	if(ssd_check() && species.get_ssd(src) || player_triggered_sleeping)
 		Sleeping(2)
 	if(stat == DEAD)	//DEAD. BROWN BREAD. SWIMMING WITH THE SPESS CARP
 		blinded = 1
@@ -618,7 +617,7 @@
 		if(get_shock() >= species.total_health)
 			if(!stat)
 				to_chat(src, "<span class='warning'>[species.halloss_message_self]</span>")
-				src.visible_message("<B>[src]</B> [species.halloss_message].")
+				src.visible_message("<B>[src]</B> [species.halloss_message]")
 			Paralyse(10)
 
 		if(paralysis || sleeping)
@@ -633,11 +632,7 @@
 					//Are they SSD? If so we'll keep them asleep but work off some of that sleep var in case of stoxin or similar.
 					if(client || sleeping > 3)
 						AdjustSleeping(-1)
-				if(prob(2) && !failed_last_breath && !isSynthetic())
-					if(!paralysis)
-						emote("snore")
-					else
-						emote("groan")
+				species.handle_sleeping(src)
 			if(prob(2) && is_asystole() && isSynthetic())
 				visible_message(src, "<b>[src]</b> [pick("emits low pitched whirr","beeps urgently")]")
 		//CONSCIOUS
@@ -670,8 +665,6 @@
 					if(stat == CONSCIOUS)
 						to_chat(src, "<span class='notice'>You are about to fall asleep...</span>")
 					Sleeping(5)
-
-		confused = max(0, confused - 1)
 
 		// If you're dirty, your gloves will become dirty, too.
 		if(gloves && germ_level > gloves.germ_level && prob(10))
@@ -754,13 +747,12 @@
 			clear_fullscreen("brute")
 
 		if(healths)
+			healths.overlays.Cut()
 			if (chem_effects[CE_PAINKILLER] > 100)
-				healths.overlays.Cut()
 				healths.icon_state = "health_numb"
 			else
 				// Generate a by-limb health display.
 				healths.icon_state = "blank"
-				healths.overlays = null
 
 				var/no_damage = 1
 				var/trauma_val = 0 // Used in calculating softcrit/hardcrit indicators.
@@ -833,34 +825,35 @@
 					else					bodytemp.icon_state = "temp-4"
 			else
 				//TODO: precalculate all of this stuff when the species datum is created
-				if(species.base_temperature == null) //some species don't have a set metabolic temperature
-					species.base_temperature = (getSpeciesOrSynthTemp(HEAT_LEVEL_1) + getSpeciesOrSynthTemp(COLD_LEVEL_1))/2
+				var/base_temperature = species.body_temperature
+				if(base_temperature == null) //some species don't have a set metabolic temperature
+					base_temperature = (getSpeciesOrSynthTemp(HEAT_LEVEL_1) + getSpeciesOrSynthTemp(COLD_LEVEL_1))/2
 
 				var/temp_step
-				if (bodytemperature >= species.base_temperature)
-					temp_step = (getSpeciesOrSynthTemp(HEAT_LEVEL_1) - species.base_temperature)/4
+				if (bodytemperature >= base_temperature)
+					temp_step = (getSpeciesOrSynthTemp(HEAT_LEVEL_1) - base_temperature)/4
 
 					if (bodytemperature >= getSpeciesOrSynthTemp(HEAT_LEVEL_1))
 						bodytemp.icon_state = "temp4"
-					else if (bodytemperature >= species.base_temperature + temp_step*3)
+					else if (bodytemperature >= base_temperature + temp_step*3)
 						bodytemp.icon_state = "temp3"
-					else if (bodytemperature >= species.base_temperature + temp_step*2)
+					else if (bodytemperature >= base_temperature + temp_step*2)
 						bodytemp.icon_state = "temp2"
-					else if (bodytemperature >= species.base_temperature + temp_step*1)
+					else if (bodytemperature >= base_temperature + temp_step*1)
 						bodytemp.icon_state = "temp1"
 					else
 						bodytemp.icon_state = "temp0"
 
-				else if (bodytemperature < species.base_temperature)
-					temp_step = (species.base_temperature - getSpeciesOrSynthTemp(COLD_LEVEL_1))/4
+				else if (bodytemperature < base_temperature)
+					temp_step = (base_temperature - getSpeciesOrSynthTemp(COLD_LEVEL_1))/4
 
 					if (bodytemperature <= getSpeciesOrSynthTemp(COLD_LEVEL_1))
 						bodytemp.icon_state = "temp-4"
-					else if (bodytemperature <= species.base_temperature - temp_step*3)
+					else if (bodytemperature <= base_temperature - temp_step*3)
 						bodytemp.icon_state = "temp-3"
-					else if (bodytemperature <= species.base_temperature - temp_step*2)
+					else if (bodytemperature <= base_temperature - temp_step*2)
 						bodytemp.icon_state = "temp-2"
-					else if (bodytemperature <= species.base_temperature - temp_step*1)
+					else if (bodytemperature <= base_temperature - temp_step*1)
 						bodytemp.icon_state = "temp-1"
 					else
 						bodytemp.icon_state = "temp0"
@@ -882,7 +875,7 @@
 	if(chem_effects[CE_ALCOHOL])
 		vomit_score += 10
 	if(stat != DEAD && vomit_score > 25 && prob(10))
-		spawn vomit(1, vomit_score, vomit_score/25)
+		vomit(vomit_score, vomit_score/25)
 
 	//0.1% chance of playing a scary sound to someone who's in complete darkness
 	if(isturf(loc) && rand(1,1000) == 1)
@@ -896,24 +889,6 @@
 	if(stat == UNCONSCIOUS && world.time - l_move_time < 5 && prob(10))
 		to_chat(src,"<span class='notice'>You feel like you're [pick("moving","flying","floating","falling","hovering")].</span>")
 
-/mob/living/carbon/human/handle_stomach()
-	spawn(0)
-		for(var/a in stomach_contents)
-			if(!(a in contents) || isnull(a))
-				stomach_contents.Remove(a)
-				continue
-			if(iscarbon(a)|| isanimal(a))
-				var/mob/living/M = a
-				if(M.stat == DEAD)
-					M.death(1)
-					stomach_contents.Remove(M)
-					qdel(M)
-					continue
-				if(life_tick % 3 == 1)
-					if(!(M.status_flags & GODMODE))
-						M.adjustBruteLoss(5)
-					nutrition += 10
-
 /mob/living/carbon/human/proc/handle_changeling()
 	if(mind && mind.changeling)
 		mind.changeling.regenerate()
@@ -926,11 +901,11 @@
 		return
 
 	if(is_asystole())
-		shock_stage = max(shock_stage, 61)
+		shock_stage = max(shock_stage + 1, 61)
 	var/traumatic_shock = get_shock()
 	if(traumatic_shock >= max(30, 0.8*shock_stage))
 		shock_stage += 1
-	else
+	else if (!is_asystole())
 		shock_stage = min(shock_stage, 160)
 		var/recovery = 1
 		if(traumatic_shock < 0.5 * shock_stage) //lower shock faster if pain is gone completely
@@ -1190,5 +1165,5 @@
 
 /mob/living/carbon/human/update_living_sight()
 	..()
-	if(XRAY in mutations)
+	if((CE_THIRDEYE in chem_effects) || (MUTATION_XRAY in mutations))
 		set_sight(sight|SEE_TURFS|SEE_MOBS|SEE_OBJS)

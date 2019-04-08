@@ -52,7 +52,7 @@
 				break
 			total_powerload += 500
 			INVOKE_ASYNC(O, /atom/movable/.proc/throw_at, target, (drive_range * power), power)
-	use_power(total_powerload)
+	use_power_oneoff(total_powerload)
 	flick("mass_driver1", src)
 	return
 

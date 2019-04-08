@@ -1,9 +1,3 @@
-#define FOOTSTEP_CARPET 	"carpet"
-#define FOOTSTEP_TILES 		"tiles"
-#define FOOTSTEP_PLATING 	"plating"
-#define FOOTSTEP_WOOD 		"wood"
-#define FOOTSTEP_ASTEROID 	"asteroid"
-
 /turf/simulated/floor/var/global/list/footstep_sounds = list(
 	FOOTSTEP_WOOD = list(
 		'sound/effects/footstep/wood1.ogg',

@@ -7,26 +7,23 @@
 
 	layer = SIDE_WINDOW_LAYER
 	anchored = 1.0
-	atom_flags = ATOM_FLAG_CHECKS_BORDER
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CHECKS_BORDER
 	alpha = 180
-	var/maximal_heat = T0C + 100 		// Maximal heat before this window begins taking damage from fire
+	var/material/reinf_material
+	var/init_material = MATERIAL_GLASS
+	var/init_reinf_material = null
+	max_health = 30
 	var/damage_per_fire_tick = 2.0 		// Amount of damage per fire tick. Regular windows are not fireproof so they might as well break quickly.
+	var/construction_state = 2
 	var/ini_dir = null
-	var/state = 2
-	var/reinf = 0
 	var/polarized = 0
 	var/basestate = "window"
-	var/shardtype = /obj/item/weapon/material/shard
-	var/glasstype = null // Set this in subtypes. Null is assumed strange or otherwise impossible to dismantle, such as for shuttle glass.
-	var/silicate = 0 // number of units of silicate
-	var/max_silicate = 200 //Maximum units of silicate
-	var/on_frame = FALSE
-	var/material_color
+	var/reinf_basestate = "rwindow"
 	blend_objects = list(/obj/machinery/door, /turf/simulated/wall) // Objects which to blend with
 	noblend_objects = list(/obj/machinery/door/window)
 	sound_hit = 'sound/effects/Glasshit.ogg'
 	sound_destroyed = "shatter"
-	max_health = 30
+	
 	armor = list(
 		DAM_BLUNT  	= 10,
 		DAM_PIERCE 	= 5,
@@ -45,33 +42,54 @@
 	damthreshold_burn = 5
 
 	atmos_canpass = CANPASS_PROC
-	var/saved_dir = 0
 
-/obj/structure/window/New(Loc, start_dir=null, constructed=0)
+/obj/structure/window/get_material()
+	return material
+
+/obj/structure/window/New(Loc, start_dir=null, constructed=0, var/new_material, var/new_reinf_material)
 	..()
 	ADD_SAVED_VAR(state)
-	ADD_SAVED_VAR(on_frame)
-	ADD_SAVED_VAR(silicate)
+	ADD_SAVED_VAR(reinf_material)
+	ADD_SAVED_VAR(init_material)
+	ADD_SAVED_VAR(init_reinf_material)
+	ADD_SAVED_VAR(reinf_basestate)
 
-	//player-constructed windows
-	if (constructed)
-		set_anchored(FALSE)
+/obj/structure/window/Initialize(mapload, start_dir=null, constructed=0, var/new_material, var/new_reinf_material)
+	. = ..()
+	if(!new_material)
+		new_material = init_material
+		if(!new_material)
+			new_material = MATERIAL_GLASS
+	if(!new_reinf_material)
+		new_reinf_material = init_reinf_material
+	material = SSmaterials.get_material_by_name(new_material)
+	if(!istype(material))
+		return INITIALIZE_HINT_QDEL
+
+	if(new_reinf_material)
+		reinf_material = SSmaterials.get_material_by_name(new_reinf_material)
+
+	name = "[reinf_material ? "reinforced " : ""][material.display_name] window"
+	desc = "A window pane made from [material.display_name]."
+	color =  material.icon_colour
 
 	if (start_dir)
 		set_dir(start_dir)
 
+	max_health = material.integrity
+	if(reinf_material)
+		max_health += 0.25 * reinf_material.integrity
+
 	if(is_fulltile())
 		max_health *= 4
+		layer = FULL_WINDOW_LAYER
 
 	health = max_health
 
-	ini_dir = dir
-
+	set_anchored(!constructed)
 	update_connections(1)
 	update_icon()
-
 	update_nearby_tiles(need_rebuild=1)
-	update_nearby_icons()
 
 /obj/structure/window/Destroy()
 	set_density(0)
@@ -81,12 +99,32 @@
 	for(var/obj/structure/window/W in orange(location, 1))
 		W.update_icon()
 
+/obj/structure/window/examine(mob/user)
+	. = ..(user)
+	if(reinf_material)
+		to_chat(user, "<span class='notice'>It is reinforced with the [reinf_material.display_name] lattice.</span>")
+	if(health == max_health)
+		to_chat(user, "<span class='notice'>It looks fully intact.</span>")
+	else
+		var/perc = health / max_health
+		if(perc > 0.75)
+			to_chat(user, "<span class='notice'>It has a few cracks.</span>")
+		else if(perc > 0.5)
+			to_chat(user, "<span class='warning'>It looks slightly damaged.</span>")
+		else if(perc > 0.25)
+			to_chat(user, "<span class='warning'>It looks moderately damaged.</span>")
+		else
+			to_chat(user, "<span class='danger'>It looks heavily damaged.</span>")
+
 /obj/structure/window/after_load()
 	dir = saved_dir
 	ini_dir = dir
 	update_nearby_tiles(need_rebuild=1)
 	..()
 	update_icon()
+
+/obj/structure/window/CanFluidPass(var/coming_from)
+	return (!is_fulltile() && coming_from != dir)
 
 /obj/structure/window/Write(savefile/f)
 	saved_dir = dir
@@ -148,13 +186,12 @@
 /obj/structure/window/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
 	if(istype(mover) && mover.checkpass(PASS_FLAG_GLASS))
 		return 1
-	if(is_full_window())
+	if(is_fulltile())
 		return 0	//full tile window, you can't move into it!
 	if(get_dir(loc, target) & dir)
 		return !density
 	else
 		return 1
-
 
 /obj/structure/window/CheckExit(atom/movable/O as mob|obj, target as turf)
 	if(istype(O) && O.checkpass(PASS_FLAG_GLASS))
@@ -172,8 +209,8 @@
 	else if(isobj(AM))
 		var/obj/item/I = AM
 		tforce = I.throwforce
-	if(reinf) tforce *= 0.25
-	if(health - tforce <= 7 && !reinf)
+	if(reinf_material) tforce *= 0.25
+	if(health - tforce <= 7 && !reinf_material)
 		set_anchored(FALSE)
 		step(src, get_dir(AM, src))
 	..(AM,speed,tforce)
@@ -183,7 +220,7 @@
 	playsound(loc, sound_hit, vol=50, vary=1, extrarange=8, falloff=6)
 
 /obj/structure/window/attack_hand(mob/user as mob)
-	if(HULK in user.mutations)
+	if(MUTATION_HULK in user.mutations)
 		..(user,100)
 		return 1
 	else if (usr.a_intent == I_HURT)
@@ -358,20 +395,23 @@
 	return istype(S, /obj/structure/window)
 
 //merges adjacent full-tile windows into one (blatant ripoff from game/smoothwall.dm)
-/obj/structure/window/update_icon()
+/obj/structure/window/on_update_icon()
 	//A little cludge here, since I don't know how it will work with slim windows. Most likely VERY wrong.
 	//this way it will only update full-tile ones
+	if(reinf_material)
+		basestate = reinf_basestate
+	else
+		basestate = initial(basestate)
 	overlays.Cut()
-	update_onframe()
 	layer = FULL_WINDOW_LAYER
 	if(!is_fulltile())
 		layer = SIDE_WINDOW_LAYER
-		icon_state = "[basestate]"
+		icon_state = basestate
 		return
 
 	var/image/I
 	icon_state = ""
-	if(on_frame)
+	if(is_on_frame())
 		for(var/i = 1 to 4)
 			if(other_connections[i] != "0")
 				I = image(icon, "[basestate]_other_onframe[connections[i]]", dir = 1<<(i-1))
@@ -386,9 +426,13 @@
 				I = image(icon, "[basestate][connections[i]]", dir = 1<<(i-1))
 			overlays += I
 
-/obj/structure/window/fire_consume(var/datum/gas_mixture/air, var/exposed_temperature, var/exposed_volume)
-	if(exposed_temperature > maximal_heat)
-		take_damage(damage_per_fire_tick, DAM_BURN)
+/obj/structure/window/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
+	var/melting_point = material.melting_point
+	if(reinf_material)
+		melting_point += 0.25*reinf_material.melting_point
+	if(exposed_temperature > melting_point)
+		hit(damage_per_fire_tick, 0)
+	..()
 
 /obj/structure/window/basic
 	desc = "It looks thin and flimsy. A few knocks with... anything, really should shatter it."
@@ -408,13 +452,9 @@
 	name = "phoron window"
 	desc = "A borosilicate alloy window. It seems to be quite strong."
 	icon_state = "phoronwindow"
-	shardtype = /obj/item/weapon/material/shard/phoron
-	glasstype = /obj/item/stack/material/glass/phoronglass
-	maximal_heat = T0C + 2000
-	damage_per_fire_tick = 1.0
 	max_health = 80
-	material_color = GLASS_COLOR_PHORON
 	color = GLASS_COLOR_PHORON
+	init_material = MATERIAL_PHORON_GLASS
 	armor = list(
 		DAM_BLUNT  	= 50,
 		DAM_PIERCE 	= 55,
@@ -440,15 +480,10 @@
 	name = "reinforced borosilicate window"
 	desc = "A borosilicate alloy window, with rods supporting it. It seems to be very strong."
 	icon_state = "rwindow"
-	basestate = "rwindow"
-	shardtype = /obj/item/weapon/material/shard/phoron
-	glasstype = /obj/item/stack/material/glass/phoronrglass
-	reinf = 1
-	maximal_heat = T0C + 4000
-	damage_per_fire_tick = 1.0 // This should last for 80 fire ticks if the window is not damaged at all. The idea is that borosilicate windows have something like ablative layer that protects them for a while.
 	max_health = 200
-	material_color = GLASS_COLOR_PHORON
 	color = GLASS_COLOR_PHORON
+	init_material = MATERIAL_PHORON_GLASS
+	init_reinf_material = MATERIAL_STEEL
 	armor = list(
 		DAM_BLUNT  	= 85,
 		DAM_PIERCE 	= 85,
@@ -474,14 +509,9 @@
 	name = "reinforced window"
 	desc = "It looks rather strong. Might take a few good hits to shatter it."
 	icon_state = "rwindow"
-	basestate = "rwindow"
+	init_material = MATERIAL_GLASS
+	init_reinf_material = MATERIAL_STEEL
 	max_health = 90
-	reinf = 1
-	maximal_heat = T0C + 750
-	damage_per_fire_tick = 2.0
-	glasstype = /obj/item/stack/material/glass/reinforced
-	material_color = GLASS_COLOR
-	color = GLASS_COLOR
 	armor = list(
 		DAM_BLUNT  	= 40,
 		DAM_PIERCE 	= 35,
@@ -561,11 +591,8 @@
 	name = "shuttle window"
 	desc = "It looks rather strong. Might take a few good hits to shatter it."
 	icon = 'icons/obj/podwindows.dmi'
-	icon_state = "window"
-	basestate = "window"
 	max_health = 200
-	reinf = 1
-	basestate = "w"
+	reinf_basestate = "w"
 	dir = 5
 	armor = list(
 		DAM_BLUNT  	= 50,

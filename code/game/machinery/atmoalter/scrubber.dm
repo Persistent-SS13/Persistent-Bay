@@ -42,8 +42,8 @@
 
 	..(severity)
 
-/obj/machinery/portable_atmospherics/powered/scrubber/update_icon()
-	src.overlays = 0
+/obj/machinery/portable_atmospherics/powered/scrubber/on_update_icon()
+	overlays.Cut()
 
 	if(on && cell && cell.charge)
 		icon_state = "pscrubber:1"
@@ -63,7 +63,7 @@
 
 	var/power_draw = -1
 
-	if(on && cell && cell.charge)
+	if(on && ( powered() || (cell && cell.charge) ) )
 		var/datum/gas_mixture/environment
 		if(holding)
 			environment = holding.air_contents
@@ -79,15 +79,20 @@
 		last_power_draw = 0
 	else
 		power_draw = max(power_draw, power_losses)
-		cell.use(power_draw * CELLRATE)
+		if(!powered())
+			cell.use(power_draw * CELLRATE)
+		else
+			use_power_oneoff(power_draw)
 		last_power_draw = power_draw
 
 		update_connected_network()
 
 		//ran out of charge
-		if (!cell.charge)
+		if (!cell.charge && !powered())
 			power_change()
 			update_icon()
+		if(holding)
+			holding.queue_icon_update()
 
 	//src.update_icon()
 	src.updateDialog()
@@ -192,7 +197,7 @@
 
 /obj/machinery/portable_atmospherics/powered/scrubber/huge/Process()
 	if(!ison() || inoperable())
-		update_use_power(0)
+		update_use_power(POWER_USE_OFF)
 		last_flow_rate = 0
 		last_power_draw = 0
 		return 0
@@ -207,7 +212,7 @@
 		last_flow_rate = 0
 		last_power_draw = 0
 	else
-		use_power(power_draw)
+		use_power_oneoff(power_draw)
 		update_connected_network()
 
 /obj/machinery/portable_atmospherics/powered/scrubber/huge/default_wrench_floor_bolts(mob/user, obj/item/weapon/tool/W, delay)

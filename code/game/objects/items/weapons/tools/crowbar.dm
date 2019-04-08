@@ -11,8 +11,10 @@
 	icon_state = "crowbar"
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
-	force = 7.0
-	throwforce = 7.0
+	force = 7
+	attack_cooldown = 2*DEFAULT_WEAPON_COOLDOWN
+	melee_accuracy_bonus = -20
+	throwforce = 7
 	throw_range = 3
 	item_state = "crowbar"
 	w_class = ITEM_SIZE_NORMAL

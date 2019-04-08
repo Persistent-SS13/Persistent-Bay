@@ -32,7 +32,7 @@
 					state = 1
 			if(isWelder(P))
 				var/obj/item/weapon/tool/weldingtool/WT = P
-				if(WT.use_tool(user, src, 20))
+				if(WT.use_tool(user, src, 2 SECONDS))
 					if(!src) return
 					to_chat(user, "<span class='notice'>You deconstruct the frame.</span>")
 					new /obj/item/stack/material/plasteel( loc, 4)
@@ -45,13 +45,11 @@
 					to_chat(user, "<span class='notice'>You unfasten the frame.</span>")
 					anchored = 0
 					state = 0
-			if(istype(P, /obj/item/weapon/circuitboard/aicore) && !circuit)
+			if(istype(P, /obj/item/weapon/circuitboard/aicore) && !circuit && user.unEquip(P, src))
 				playsound(loc, 'sound/items/Deconstruct.ogg', 50, 1)
 				to_chat(user, "<span class='notice'>You place the circuit board inside the frame.</span>")
 				icon_state = "1"
 				circuit = P
-				user.drop_item()
-				P.loc = src
 			if(isScrewdriver(P) && circuit)
 				playsound(loc, 'sound/items/Screwdriver.ogg', 50, 1)
 				to_chat(user, "<span class='notice'>You screw the circuit board into place.</span>")
@@ -62,7 +60,7 @@
 				to_chat(user, "<span class='notice'>You remove the circuit board.</span>")
 				state = 1
 				icon_state = "0"
-				circuit.loc = loc
+				circuit.dropInto(loc)
 				circuit = null
 		if(2)
 			if(isScrewdriver(P) && circuit)
@@ -130,24 +128,29 @@
 				laws.add_inherent_law(M.newFreeFormLaw)
 				to_chat(usr, "Added a freeform law.")
 
-			if(istype(P, /obj/item/device/mmi))
-				var/obj/item/device/mmi/M = P
-				if(!M.brainmob)
+			if(istype(P, /obj/item/device/mmi) || istype(P, /obj/item/organ/internal/posibrain))
+				var/mob/living/carbon/brain/B
+				if(istype(P, /obj/item/device/mmi))
+					var/obj/item/device/mmi/M = P
+					B = M.brainmob
+				else
+					var/obj/item/organ/internal/posibrain/PB = P
+					B = PB.brainmob
+				if(!B)
 					to_chat(user, "<span class='warning'>Sticking an empty [P] into the frame would sort of defeat the purpose.</span>")
 					return
-				if(M.brainmob.stat == 2)
+				if(B.stat == DEAD)
 					to_chat(user, "<span class='warning'>Sticking a dead [P] into the frame would sort of defeat the purpose.</span>")
 					return
 
-				if(jobban_isbanned(M.brainmob, "AI"))
+				if(jobban_isbanned(B, "AI"))
 					to_chat(user, "<span class='warning'>This [P] does not seem to fit.</span>")
 					return
+				if(!user.unEquip(P, src))
+					return
+				if(B.mind)
+					clear_antag_roles(B.mind, 1)
 
-				if(M.brainmob.mind)
-					clear_antag_roles(M.brainmob.mind, 1)
-
-				user.drop_item()
-				P.loc = src
 				brain = P
 				to_chat(usr, "Added [P].")
 				icon_state = "3b"
@@ -155,7 +158,7 @@
 			if(isCrowbar(P) && brain)
 				playsound(loc, 'sound/items/Crowbar.ogg', 50, 1)
 				to_chat(user, "<span class='notice'>You remove the brain.</span>")
-				brain.loc = loc
+				brain.dropInto(loc)
 				brain = null
 				icon_state = "3"
 
@@ -210,7 +213,7 @@
 	transfer.aiRestorePowerRoutine = 0
 	transfer.control_disabled = 0
 	transfer.ai_radio.disabledAi = 0
-	transfer.loc = get_turf(src)
+	transfer.dropInto(src)
 	transfer.create_eyeobj()
 	transfer.cancel_camera()
 	to_chat(user, "<span class='notice'>Transfer successful:</span> [transfer.name] ([rand(1000,9999)].exe) downloaded to host terminal. Local copy wiped.")
@@ -223,7 +226,7 @@
 
 /obj/structure/AIcore/deactivated/proc/check_malf(var/mob/living/silicon/ai/ai)
 	if(!ai) return
-	for (var/datum/mind/malfai in malf.current_antagonists)
+	for (var/datum/mind/malfai in GLOB.malf.current_antagonists)
 		if (ai.mind == malfai)
 			return 1
 

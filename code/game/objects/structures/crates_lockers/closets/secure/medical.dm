@@ -82,7 +82,6 @@
 	    /obj/item/clothing/suit/storage/toggle/fr_jacket,
 	    /obj/item/clothing/suit/storage/toggle/labcoat,
 	    /obj/item/device/radio/headset/headset_med,
-	    /obj/item/weapon/cartridge/medical,
 	    /obj/item/device/flashlight,
 	    /obj/item/weapon/tank/emergency/oxygen/engi,
 	    /obj/item/clothing/glasses/hud/health,
@@ -111,7 +110,6 @@
 		/obj/item/clothing/under/rank/chief_medical_officer,
 		/obj/item/clothing/suit/storage/toggle/labcoat/cmo,
 		/obj/item/clothing/suit/storage/toggle/labcoat/cmoalt,
-		/obj/item/weapon/cartridge/cmo,
 		/obj/item/clothing/gloves/latex,
 		/obj/item/clothing/shoes/brown,
 		/obj/item/device/radio/headset/heads/cmo,
@@ -137,7 +135,6 @@
 	name = "first aid closet"
 	desc = "It's a secure wall-mounted storage unit for first aid supplies."
 	closet_appearance = /decl/closet_appearance/wall/medical
-
 	anchored = 1
 	density = 0
 	wall_mounted = 1
@@ -156,21 +153,23 @@
 		/obj/item/clothing/under/rank/chaplain,
 		/obj/item/clothing/shoes/black,
 		/obj/item/clothing/suit/chaplain_hoodie,
-		/obj/item/weapon/storage/fancy/candle_box = 2,
+		/obj/item/weapon/storage/candle_box = 2,
 		/obj/item/weapon/deck/tarot,
 		/obj/item/weapon/reagent_containers/food/drinks/bottle/holywater,
 		/obj/item/weapon/nullrod,
+		/obj/item/weapon/storage/bible,
 		/obj/item/clothing/suit/straight_jacket,
 		/obj/item/weapon/reagent_containers/glass/bottle/stoxin,
 		/obj/item/weapon/reagent_containers/syringe,
 		/obj/item/weapon/storage/pill_bottle/citalopram,
 		/obj/item/weapon/reagent_containers/pill/methylphenidate,
-		/obj/item/weapon/clipboard,
+		/obj/item/weapon/material/clipboard,
 		/obj/item/weapon/folder/white,
 		/obj/item/device/taperecorder,
 		/obj/item/device/tape/random = 3,
 		/obj/item/device/camera,
 		/obj/item/toy/therapy_blue,
+		/obj/item/weapon/storage/belt/general
 	)
 
 /obj/structure/closet/secure_closet/virology

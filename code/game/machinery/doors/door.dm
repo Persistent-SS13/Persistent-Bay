@@ -57,6 +57,13 @@
 
 /obj/machinery/door/New()
 	. = ..()
+	if(density)
+		layer = closed_layer
+		update_heat_protection(get_turf(src))
+	else
+		layer = open_layer
+
+
 	if(width > 1)
 		if(dir in list(EAST, WEST))
 			bound_width = width * world.icon_size
@@ -64,15 +71,25 @@
 		else
 			bound_width = world.icon_size
 			bound_height = width * world.icon_size
-	if(density)
-		layer = closed_layer
-		update_heat_protection(get_turf(src))
-	else
-		layer = open_layer
+
 	update_connections(TRUE)
-	update_icon()
+	queue_icon_update()
 	update_nearby_tiles(need_rebuild = TRUE)
 
+/obj/machinery/door/Initialize()
+	set_extension(src, /datum/extension/penetration, /datum/extension/penetration/proc_call, .proc/CheckPenetration)
+	. = ..()
+	if(autoset_access)
+#ifdef UNIT_TEST
+		if(length(req_access))
+			crash_with("A door with mapped access restrictions was set to autoinitialize access.")
+#endif
+		return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/door/LateInitialize()
+	..()
+	if(autoset_access) // Delayed because apparently the dir is not set by mapping and we need to wait for nearby walls to init and turn us.
+		inherit_access_from_area()
 
 /obj/machinery/door/Destroy()
 	set_density(FALSE)
@@ -112,7 +129,7 @@
 		var/mob/M = AM
 		if(world.time - M.last_bumped <= 10) return	//Can bump-open one airlock per second. This is to prevent shock spam.
 		M.last_bumped = world.time
-		if(!M.restrained() && (!issmall(M) || ishuman(M)))
+		if(!M.restrained() && (!issmall(M) || ishuman(M) || issilicon(M)))
 			bumpopen(M)
 		return
 	else if(istype(AM, /mob/living/bot))
@@ -315,17 +332,7 @@
 		visible_message("\The [src] shows signs of damage!" )
 	update_icon()
 
-/obj/machinery/door/set_broken(var/state)
-	..(state)
-	if(state)
-		visible_message(SPAN_WARNING("\The [src.name] breaks!"))
 
-/obj/machinery/door/ex_act(severity)
-	if(severity == 3 && prob(80))
-		var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
-		s.set_up(2, 1, src)
-		s.start()
-	..(severity)
 
 /obj/machinery/door/examine(mob/user)
 	. = ..()
@@ -338,7 +345,20 @@
 	else if(src.health < src.max_health * 3/4)
 		to_chat(user, "\The [src] shows signs of damage!")
 
-/obj/machinery/door/update_icon()
+/obj/machinery/door/set_broken(var/state)
+	. = ..()
+	if(. && new_state)
+		visible_message(SPAN_WARNING("\The [src.name] breaks!"))
+
+/obj/machinery/door/ex_act(severity)
+	if(severity == 3 && prob(80))
+		var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
+		s.set_up(2, 1, src)
+		s.start()
+	..(severity)
+
+
+/obj/machinery/door/on_update_icon()
 	// if(connections in list(NORTH, SOUTH, NORTH|SOUTH))
 	// 	if(connections in list(WEST, EAST, EAST|WEST))
 	// 		set_dir(SOUTH)

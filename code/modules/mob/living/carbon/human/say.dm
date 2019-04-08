@@ -16,13 +16,13 @@
 
 	message = sanitize(message)
 	var/obj/item/organ/internal/voicebox/vox = locate() in internal_organs
-	var/snowflake_speak = (speaking && (speaking.flags & NONVERBAL|SIGNLANG)) || (vox && vox.is_usable() && (speaking in vox.assists_languages))
+	var/snowflake_speak = (speaking && (speaking.flags & (NONVERBAL|SIGNLANG))) || (vox && vox.is_usable() && vox.assists_languages[speaking])
 	if(!isSynthetic() && need_breathe() && failed_last_breath && !snowflake_speak)
 		var/obj/item/organ/internal/lungs/L = internal_organs_by_name[species.breathing_organ]
 		if(L.breath_fail_ratio > 0.9)
-			if(world.time < L.last_failed_breath + 2 MINUTES) //if we're in grace suffocation period, give it up for last words
+			if(world.time < L.last_successful_breath + 2 MINUTES) //if we're in grace suffocation period, give it up for last words
 				to_chat(src, "<span class='warning'>You use your remaining air to say something!</span>")
-				L.last_failed_breath = world.time - 2 MINUTES
+				L.last_successful_breath = world.time - 2 MINUTES
 				return ..(message, alt_name = alt_name, speaking = speaking)
 
 			to_chat(src, "<span class='warning'>You don't have enough air in [L] to make a sound!</span>")
@@ -139,7 +139,7 @@
 		verb = speaking.get_spoken_verb(ending)
 	else
 		if(ending == "!")
-			verb="exclaims"//pick("exclaims","shouts","yells")
+			verb=pick("exclaims","shouts","yells")
 		else if(ending == "?")
 			verb="asks"
 
@@ -237,7 +237,7 @@
 			if(has_radio)
 				R.talk_into(src,message,null,verb,speaking)
 				used_radios += R
-		if("whisper")
+		if("whisper") //It's going to get sanitized again immediately, so decode.
 			whisper_say(html_decode(message), speaking, alt_name)
 			return 1
 		else
@@ -258,21 +258,12 @@
 	return ..()
 
 /mob/living/carbon/human/can_speak(datum/language/speaking)
-	var/needs_assist = 0
-	var/can_speak_assist = 0
-
-	if(species && speaking.name in species.assisted_langs)
-		needs_assist = 1
-		for(var/obj/item/organ/internal/I in src.internal_organs)
-			if((speaking in I.assists_languages) && (I.is_usable()))
-				can_speak_assist = 1
-
-	if(needs_assist && !can_speak_assist)
-		return 0
-	else if(needs_assist && can_speak_assist)
-		return 1
-
-	return ..()
+	if(species && (speaking.name in species.assisted_langs))
+		for(var/obj/item/organ/internal/voicebox/I in src.internal_organs)
+			if(I.is_usable() && I.assists_languages[speaking])
+				return TRUE
+		return FALSE
+	. = ..()
 
 /mob/living/carbon/human/parse_language(var/message)
 	var/prefix = copytext(message,1,2)

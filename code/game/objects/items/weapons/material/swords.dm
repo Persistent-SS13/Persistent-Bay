@@ -10,17 +10,10 @@
 	sharpness = 1
 	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
 	sound_attack = 'sound/weapons/bladeslice.ogg'
+	base_parry_chance = 50
+	melee_accuracy_bonus = 10
 	damtype = DAM_CUT
 	mass = 3.6 
-
-/obj/item/weapon/material/sword/handle_shield(mob/user, var/damage, atom/damage_source = null, mob/attacker = null, var/def_zone = null, var/attack_text = "the attack")
-
-	if(default_parry_check(user, attacker, damage_source) && prob(50))
-		user.visible_message("<span class='danger'>\The [user] parries [attack_text] with \the [src]!</span>")
-		playsound(user.loc, 'sound/weapons/punchmiss.ogg', 50, 1)
-		return 1
-	return 0
-
 /obj/item/weapon/material/sword/replica
 	sharpness = 0
 	force_divisor = 0.2
@@ -33,6 +26,7 @@
 	desc = "Woefully underpowered in D20. This one looks pretty sharp."
 	icon_state = "katana"
 	item_state = "katana"
+	furniture_icon = "katana_handle"
 	slot_flags = SLOT_BELT | SLOT_BACK
 	mass = 1.5
 

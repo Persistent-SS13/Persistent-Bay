@@ -14,7 +14,7 @@ meteor_act
 		return PROJECTILE_FORCE_MISS //if they don't have the organ in question then the projectile just passes by.
 
 	//Shields
-	var/shield_check = check_shields(P.force, P, null, def_zone, "the [P.name]")
+	var/shield_check = check_shields(P.damage, P, null, def_zone, "the [P.name]")
 	if(shield_check)
 		if(shield_check < 0)
 			return shield_check
@@ -23,20 +23,18 @@ meteor_act
 			return 100
 
 	var/obj/item/organ/external/organ = get_organ(def_zone)
-	var/armor = getarmor_organ(organ, P.damtype)
-	var/penetrating_damage = ((P.force + P.armor_penetration) * P.penetration_modifier) - armor
+	var/blocked = ..(P, def_zone)
+	var/penetrating_damage = ((P.damage + P.armor_penetration) * P.penetration_modifier) - blocked
 
 	//Embed or sever artery
 	if(P.can_embed() && !(species.species_flags & SPECIES_FLAG_NO_EMBED) && prob(22.5 + max(penetrating_damage, -10)) && !(prob(50) && (organ.sever_artery())))
-		var/obj/item/weapon/material/shard/shrapnel/SP = new()
-		SP.name = (P.name != "shrapnel")? "[P.name] shrapnel" : "shrapnel"
+		var/obj/item/weapon/material/shard/shrapnel/SP = new P.shrapnel_type()
+		SP.SetName((P.name != "shrapnel")? "[P.name] shrapnel" : "shrapnel")
 		SP.desc = "[SP.desc] It looks like it was fired from [P.shot_from]."
-		SP.loc = organ
+		SP.forceMove(organ)
 		organ.embed(SP)
 
-	var/blocked = ..(P, def_zone)
-
-	projectile_hit_bloody(P, P.force*blocked_mult(blocked), def_zone)
+	projectile_hit_bloody(P, P.damage*blocked_mult(blocked), def_zone)
 
 	return blocked
 
@@ -54,27 +52,37 @@ meteor_act
 
 	..(stun_amount, agony_amount, def_zone)
 
-/mob/living/carbon/human/getarmor(var/def_zone, var/type)
-	var/armorval = 0
-	var/total = 0
+/mob/living/carbon/human/get_blocked_ratio(def_zone, damage_type, damage_flags, armor_pen)
+	if(!def_zone && (damage_flags & DAM_DISPERSED))
+		var/tally
+		for(var/zone in organ_rel_size)
+			tally += organ_rel_size[zone]
+		for(var/zone in organ_rel_size)
+			def_zone = zone
+			. += .() * organ_rel_size/tally
+		return
+	return ..()
 
-	if(def_zone)
-		if(isorgan(def_zone))
-			return getarmor_organ(def_zone, type)
-		var/obj/item/organ/external/affecting = get_organ(def_zone)
-		if(affecting)
-			return getarmor_organ(affecting, type)
-		//If a specific bodypart is targetted, check how that bodypart is protected and return the value.
-
-	//If you don't specify a bodypart, it checks ALL your bodyparts for protection, and averages out the values
-	for(var/organ_name in organs_by_name)
-		if (organ_name in organ_rel_size)
-			var/obj/item/organ/external/organ = organs_by_name[organ_name]
-			if(organ)
-				var/weight = organ_rel_size[organ_name]
-				armorval += (getarmor_organ(organ, type) * weight) //use plain addition here because we are calculating an average
-				total += weight
-	return (armorval/max(total, 1))
+/mob/living/carbon/human/get_armors_by_zone(obj/item/organ/external/def_zone, damage_type, damage_flags)
+	. = ..()
+	if(!def_zone)
+		def_zone = ran_zone()
+	if(!istype(def_zone))
+		def_zone = get_organ(check_zone(def_zone))
+	if(!def_zone)
+		return
+	var/list/protective_gear = list(head, wear_mask, wear_suit, w_uniform, gloves, shoes)
+	for(var/obj/item/clothing/gear in protective_gear)
+		if(gear.body_parts_covered & def_zone.body_part)
+			var/armor = get_extension(gear, /datum/extension/armor)
+			if(armor)
+				. += armor
+		if(gear.accessories.len)
+			for(var/obj/item/clothing/accessory/bling in gear.accessories)
+				if(bling.body_parts_covered & def_zone.body_part)
+					var/armor = get_extension(bling, /datum/extension/armor)
+					if(armor)
+						. += armor
 
 //this proc returns the Siemens coefficient of electrical resistivity for a particular external organ.
 /mob/living/carbon/human/proc/get_siemens_coefficient_organ(var/obj/item/organ/external/def_zone)
@@ -90,24 +98,6 @@ meteor_act
 
 	return siemens_coefficient
 
-//this proc returns the armour value for a particular external organ.
-/mob/living/carbon/human/proc/getarmor_organ(var/obj/item/organ/external/def_zone, var/amtype)
-	if(!type || !def_zone) return 0
-	if(!istype(def_zone))
-		def_zone = get_organ(check_zone(def_zone))
-	if(!def_zone)
-		return 0
-	var/protection = 0
-	var/list/protective_gear = list(head, wear_mask, wear_suit, w_uniform, gloves, shoes)
-	for(var/obj/item/clothing/gear in protective_gear)
-		if(gear.body_parts_covered & def_zone.body_part)
-			protection = add_armor(protection, gear.get_armor_value(amtype))
-		if(gear.accessories.len)
-			for(var/obj/item/clothing/accessory/bling in gear.accessories)
-				if(bling.body_parts_covered & def_zone.body_part)
-					protection = add_armor(protection, bling.get_armor_value(amtype))
-	return protection
-
 /mob/living/carbon/human/proc/check_head_coverage()
 
 	var/list/body_parts = list(head, wear_mask, wear_suit, w_uniform)
@@ -120,7 +110,7 @@ meteor_act
 	return 0
 
 //Used to check if they can be fed food/drinks/pills
-/mob/living/carbon/human/proc/check_mouth_coverage()
+/mob/living/carbon/human/check_mouth_coverage()
 	var/list/protective_gear = list(head, wear_mask, wear_suit, w_uniform)
 	for(var/obj/item/gear in protective_gear)
 		if(istype(gear) && (gear.body_parts_covered & FACE) && !(gear.item_flags & ITEM_FLAG_FLEXIBLEMATERIAL))
@@ -128,6 +118,13 @@ meteor_act
 	return null
 
 /mob/living/carbon/human/proc/check_shields(var/damage = 0, var/atom/damage_source = null, var/mob/attacker = null, var/def_zone = null, var/attack_text = "the attack")
+
+	var/obj/item/projectile/P = damage_source
+	if(istype(P) && !P.disrupts_psionics() && psi && P.starting && prob(psi.get_armour(get_armor_key(P.damage_type, P.damage_flags())) * 0.5) && psi.spend_power(round(damage/10)))
+		visible_message("<span class='danger'>\The [src] deflects [attack_text]!</span>")
+		P.redirect(P.starting.x + rand(-2,2), P.starting.y + rand(-2,2), get_turf(src), src)
+		return PROJECTILE_FORCE_MISS
+
 	for(var/obj/item/shield in list(l_hand, r_hand, wear_suit))
 		if(!shield) continue
 		. = shield.handle_shield(src, damage, damage_source, attacker, def_zone, attack_text)
@@ -143,7 +140,12 @@ meteor_act
 	if(user == src) // Attacking yourself can't miss
 		return target_zone
 
-	var/hit_zone = get_zone_with_miss_chance(target_zone, src)
+	var/accuracy_penalty = user.melee_accuracy_mods()
+	accuracy_penalty += 10*get_skill_difference(SKILL_COMBAT, user)
+	accuracy_penalty += 10*(I.w_class - ITEM_SIZE_NORMAL)
+	accuracy_penalty -= I.melee_accuracy_bonus
+
+	var/hit_zone = get_zone_with_miss_chance(target_zone, src, accuracy_penalty)
 
 	if(!hit_zone)
 		visible_message("<span class='danger'>\The [user] misses [src] with \the [I]!</span>")
@@ -165,21 +167,18 @@ meteor_act
 		return //should be prevented by attacked_with_item() but for sanity.
 
 	visible_message("<span class='danger'>[src] has been [I.attack_verb.len? pick(I.attack_verb) : "attacked"] in the [affecting.name] with [I.name] by [user]!</span>")
+	return standard_weapon_hit_effects(I, user, effective_force, hit_zone)
 
-	var/blocked = run_armor_check(hit_zone, I.damtype, I.armor_penetration, "Your armor has protected your [affecting.name].", "Your armor has softened the blow to your [affecting.name].")
-	standard_weapon_hit_effects(I, user, effective_force, blocked, hit_zone)
-
-	return blocked
-
-/mob/living/carbon/human/standard_weapon_hit_effects(obj/item/I, mob/living/user, var/effective_force, var/blocked, var/hit_zone)
+/mob/living/carbon/human/standard_weapon_hit_effects(obj/item/I, mob/living/user, var/effective_force, var/hit_zone)
 	var/obj/item/organ/external/affecting = get_organ(hit_zone)
 	if(!affecting)
 		return 0
 
+	var/blocked = get_blocked_ratio(hit_zone, I.damtype, I.damage_flags(), I.armor_penetration)
 	// Handle striking to cripple.
 	if(user.a_intent == I_DISARM)
 		effective_force *= 0.66 //reduced effective force...
-		if(!..(I, user, effective_force, blocked, hit_zone))
+		if(!..(I, user, effective_force, hit_zone))
 			return 0
 
 		//set the dislocate mult less than the effective force mult so that
@@ -195,13 +194,15 @@ meteor_act
 			if(headcheck(hit_zone))
 				//Harder to score a stun but if you do it lasts a bit longer
 				if(prob(effective_force))
-					visible_message("<span class='danger'>[src] [species.knockout_message]</span>")
 					apply_effect(20, PARALYZE, blocked)
+					if(lying)
+						visible_message("<span class='danger'>[src] [species.knockout_message]</span>")
 			else
 				//Easier to score a stun but lasts less time
-				if(prob(effective_force + 10))
-					visible_message("<span class='danger'>[src] has been knocked down!</span>")
-					apply_effect(6, WEAKEN, blocked)
+				if(prob(effective_force + 5))
+					apply_effect(3, WEAKEN, blocked)
+					if(lying)
+						visible_message("<span class='danger'>[src] has been knocked down!</span>")
 
 		//Apply blood
 		attack_bloody(I, user, effective_force, hit_zone)
@@ -284,14 +285,14 @@ meteor_act
 
 /mob/living/carbon/human/emag_act(var/remaining_charges, mob/user, var/emag_source)
 	var/obj/item/organ/external/affecting = get_organ(user.zone_sel.selecting)
-	if(!affecting || !(affecting.robotic >= ORGAN_ROBOT))
+	if(!affecting || !BP_IS_ROBOTIC(affecting))
 		to_chat(user, "<span class='warning'>That limb isn't robotic.</span>")
 		return -1
-	if(affecting.sabotaged)
+	if(affecting.status & ORGAN_SABOTAGED)
 		to_chat(user, "<span class='warning'>[src]'s [affecting.name] is already sabotaged!</span>")
 		return -1
 	to_chat(user, "<span class='notice'>You sneakily slide [emag_source] into the dataport on [src]'s [affecting.name] and short out the safeties.</span>")
-	affecting.sabotaged = 1
+	affecting.status |= ORGAN_SABOTAGED
 	return 1
 
 //this proc handles being hit by a thrown atom
@@ -310,10 +311,11 @@ meteor_act
 		var/dtype = O.damtype
 		var/throw_damage = O.throwforce*(speed/THROWFORCE_SPEED_DIVISOR)
 
-		var/zone
+		var/zone = BP_CHEST
 		if (istype(O.thrower, /mob/living))
 			var/mob/living/L = O.thrower
-			zone = check_zone(L.zone_sel.selecting)
+			if(L.zone_sel)
+				zone = check_zone(L.zone_sel.selecting)
 		else
 			zone = ran_zone(BP_CHEST,75)	//Hits a random part of the body, geared towards the chest
 
@@ -342,11 +344,7 @@ meteor_act
 		var/datum/wound/created_wound
 
 		src.visible_message("<span class='warning'>\The [src] has been hit in the [hit_area] by \the [O].</span>")
-		var/armor = run_armor_check(affecting, dtype, O.armor_penetration, "Your armor has protected your [hit_area].", "Your armor has softened hit to your [hit_area].")
-		if(armor < 100)
-			if(prob(armor))
-				dtype = DAM_BLUNT //If amor absorb it, turn to blunt
-			created_wound = apply_damage(throw_damage, dtype, zone, armor, 0, O)
+		created_wound = apply_damage(throw_damage, dtype, zone, O.damage_flags(), O, O.armor_penetration)
 
 		if(ismob(O.thrower))
 			var/mob/M = O.thrower
@@ -358,10 +356,9 @@ meteor_act
 		if(IsDamageTypeBrute(dtype) && istype(O,/obj/item))
 			var/obj/item/I = O
 			if (!is_robot_module(I))
-				var/sharp = is_sharp(I)
+				var/sharp = I.can_embed()
 				var/damage = throw_damage //the effective damage used for embedding purposes, no actual damage is dealt here
-				if (armor)
-					damage *= blocked_mult(armor)
+				damage *= (1 - get_blocked_ratio(zone, BRUTE, O.damage_flags(), O.armor_penetration))
 
 				//blunt objects should really not be embedding in things unless a huge amount of force is involved
 				var/embed_chance = sharp? damage/I.w_class : damage/(I.w_class*3)
@@ -371,6 +368,7 @@ meteor_act
 				//Thrown sharp objects have some momentum already and have a small chance to embed even if the damage is below the threshold
 				if((sharp && prob(damage/(10*I.w_class)*100)) || (damage > embed_threshold && prob(embed_chance)))
 					affecting.embed(I, supplied_wound = created_wound)
+					I.has_embedded()
 
 		// Begin BS12 momentum-transfer code.
 		var/mass = AM.mass
@@ -391,7 +389,7 @@ meteor_act
 				var/turf/T = near_wall(dir,2)
 
 				if(T)
-					src.loc = T
+					src.forceMove(T)
 					visible_message("<span class='warning'>[src] is pinned to the wall by [O]!</span>","<span class='warning'>You are pinned to the wall by [O]!</span>")
 					src.anchored = 1
 					src.pinned += O
@@ -404,10 +402,11 @@ meteor_act
 		affecting.embed(O, supplied_wound = supplied_wound)
 
 /mob/living/carbon/human/proc/bloody_hands(var/mob/living/source, var/amount = 2)
-	if (gloves)
+	var/obj/item/clothing/gloves/gloves = get_equipped_item(slot_gloves)
+	if(istype(gloves))
 		gloves.add_blood(source)
-		gloves:transfer_blood = amount
-		gloves:bloody_hands_mob = source
+		gloves.transfer_blood = amount
+		gloves.bloody_hands_mob = source
 	else
 		add_blood(source)
 		bloody_hands = amount

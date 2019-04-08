@@ -269,7 +269,7 @@ var/list/organ_cache = list()
 	status = ORGAN_ASSISTED
 
 /obj/item/organ/emp_act(severity)
-	if(!(robotic >= ORGAN_ROBOT))
+	if(!BP_IS_ROBOTIC(src))
 		return
 	switch (severity)
 		if (1)
@@ -380,7 +380,7 @@ var/list/organ_cache = list()
 		. += "Genetic Rejection"
 
 /obj/item/organ/proc/isrobotic()
-	return robotic >= ORGAN_ROBOT
+	return BP_IS_ROBOTIC(src)
 
 //used by stethoscope
 /obj/item/organ/proc/listen()

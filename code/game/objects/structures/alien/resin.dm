@@ -31,7 +31,7 @@
 	..()
 
 /obj/structure/alien/resin/attack_hand(var/mob/user)
-	if (HULK in user.mutations)
+	if (MUTATION_HULK in user.mutations)
 		visible_message(SPAN_DANGER("\The [user] destroys \the [name]!"))
 		kill()
 	else
@@ -45,5 +45,4 @@
 		visible_message(SPAN_DANGER("\The [user] claws at \the [src]!"))
 		// Todo check attack datums.
 		rem_health(rand(5,10))
-	update_health()
 	return

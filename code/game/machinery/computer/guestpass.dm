@@ -4,8 +4,8 @@
 /obj/item/weapon/card/id/guest
 	name = "guest pass"
 	desc = "Allows temporary access to restricted areas."
-	icon_state = "guest"
-	light_color = "#0099ff"
+	color = COLOR_PALE_GREEN_GRAY
+	detail_color = COLOR_GREEN
 
 	var/temp_access = list() //to prevent agent cards stealing access as permanent
 	var/expiration_time = 0
@@ -121,27 +121,24 @@
 	onclose(user, "guestpass")
 
 
-/obj/machinery/computer/guestpass/Topic(href, href_list)
-	if(..())
-		return 1
-
+/obj/machinery/computer/guestpass/OnTopic(var/mob/user, href_list, state)
 	if (href_list["mode"])
 		mode = text2num(href_list["mode"])
-		. = 1
+		. = TOPIC_REFRESH
 
-	if (href_list["choice"])
+	else if (href_list["choice"])
 		switch(href_list["choice"])
 			if ("giv_name")
-				var/nam = sanitize(input("Person pass is issued to", "Name", giv_name) as text|null)
-				if (nam)
+				var/nam = sanitize(input(user, "Person pass is issued to", "Name", giv_name) as text|null)
+				if (nam && CanUseTopic(user, state))
 					giv_name = nam
 			if ("reason")
-				var/reas = sanitize(input("Reason why pass is issued", "Reason", reason) as text|null)
-				if(reas)
+				var/reas = sanitize(input(user, "Reason why pass is issued", "Reason", reason) as text|null)
+				if(reas && CanUseTopic(user, state))
 					reason = reas
 			if ("duration")
-				var/dur = input("Duration (in minutes) during which pass is valid (up to 30 minutes).", "Duration") as num|null
-				if (dur)
+				var/dur = input(user, "Duration (in minutes) during which pass is valid (up to 30 minutes).", "Duration") as num|null
+				if (dur && CanUseTopic(user, state))
 					if (dur > 0 && dur <= 30)
 						duration = dur
 					else
@@ -152,32 +149,32 @@
 					accesses.Remove(A)
 				else if(giver && (A in giver.access))
 					accesses.Add(A)
-		. = 1
-	if (href_list["action"])
+		. = TOPIC_REFRESH
+	else if (href_list["action"])
 		switch(href_list["action"])
 			if ("id")
 				if (giver)
-					giver.forceMove(usr.loc)
-					if(ishuman(usr))
-						usr.put_in_hands(giver)
+					giver.dropInto(user.loc)
+					if(ishuman(user))
+						user.put_in_hands(giver)
 					giver = null
 					accesses.Cut()
 				else
-					var/obj/item/I = usr.get_active_hand()
-					if (istype(I, /obj/item/weapon/card/id) && usr.unEquip(I))
+					var/obj/item/I = user.get_active_hand()
+					if (istype(I, /obj/item/weapon/card/id) && user.unEquip(I))
 						I.forceMove(src)
 						giver = I
-				. = 1
+				. = TOPIC_REFRESH
 			if ("print")
 				var/dat = "<h3>Activity log of guest pass terminal #[uid]</h3><br>"
 				for (var/entry in internal_log)
 					dat += "[entry]<br><hr>"
-//				to_chat(usr, "Printing the log, standby...")
+//				to_chat(user, "Printing the log, standby...")
 				//sleep(50)
 				var/obj/item/weapon/paper/P = new/obj/item/weapon/paper( loc )
-				P.name = "activity log"
+				P.SetName("activity log")
 				P.info = dat
-				. = 1
+				. = TOPIC_REFRESH
 
 			if ("issue")
 				if (giver && accesses.len)
@@ -196,10 +193,10 @@
 					pass.registered_name = giv_name
 					pass.expiration_time = world.time + duration MINUTES
 					pass.reason = reason
-					pass.name = "guest pass #[number]"
+					pass.SetName("guest pass #[number]")
 					pass.assignment = "Guest"
 					playsound(src.loc, 'sound/machines/ping.ogg', 25, 0)
-					. = 1
+					. = TOPIC_REFRESH
 				else if(!giver)
 					to_chat(usr, SPAN_WARNING("Cannot issue pass without issuing ID."))
 				else if(!accesses.len)

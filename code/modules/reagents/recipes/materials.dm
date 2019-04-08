@@ -7,8 +7,8 @@
 	result = null
 	required_reagents = list(/datum/reagent/iron = 5, /datum/reagent/frostoil = 5, /datum/reagent/toxin/phoron = 20)
 	result_amount = 1
-	minimum_temperature = (-80 CELCIUS) - 100
-	maximum_temperature = -80 CELCIUS
+	minimum_temperature = (-80 CELSIUS) - 100
+	maximum_temperature = -80 CELSIUS
 	mix_message = "The solution hardens and begins to crystallize."
 
 /datum/chemical_reaction/phoronsolidification/on_reaction(var/datum/reagents/holder, var/created_volume)

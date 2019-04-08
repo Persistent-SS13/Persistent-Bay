@@ -20,7 +20,7 @@
 	throw_range = 4
 	action_button_name = "Toggle Heatsink"
 
-	matter = list(MATERIAL_STEEL = 15000, MATERIAL_GLASS = 3500)
+	matter = list(MATERIAL_ALUMINIUM = 15000, MATERIAL_GLASS = 3500)
 	origin_tech = list(TECH_MAGNET = 2, TECH_MATERIAL = 2)
 
 	var/on = 0								//is it turned on?
@@ -96,7 +96,7 @@
 		if(ishuman(user))
 			user.put_in_hands(cell)
 		else
-			cell.forceMove(get_turf(src))
+			cell.dropInto(loc)
 
 		cell.add_fingerprint(user)
 		cell.update_icon()
@@ -131,8 +131,8 @@
 			if(cell)
 				to_chat(user, "There is a [cell] already installed here.")
 			else
-				user.drop_item()
-				W.forceMove(src)
+				if(!user.unEquip(W, src))
+					return
 				cell = W
 				to_chat(user, "You insert the [cell].")
 		update_icon()
@@ -140,7 +140,7 @@
 
 	return ..()
 
-/obj/item/device/suit_cooling_unit/update_icon()
+/obj/item/device/suit_cooling_unit/on_update_icon()
 	overlays.Cut()
 	if (cover_open)
 		if (cell)

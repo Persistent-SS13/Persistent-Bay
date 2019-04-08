@@ -50,6 +50,25 @@
 			update_ui_after_item_insertion()
 	update_icon()
 	return 1
+// -----------------------------
+//          Evidence bag
+// -----------------------------
+/obj/item/weapon/storage/evidence
+	name = "evidence case"
+	desc = "A heavy steel case for storing evidence."
+	icon = 'icons/obj/forensics.dmi'
+	icon_state = "case"
+	max_storage_space = 100
+	max_w_class = ITEM_SIZE_SMALL
+	w_class = ITEM_SIZE_NORMAL
+	can_hold = list(
+		/obj/item/weapon/sample,
+		/obj/item/weapon/evidencebag,
+		/obj/item/weapon/forensics
+	)
+	allow_quick_gather = 1
+	allow_quick_empty = 1
+	use_to_pickup = 1
 
 // -----------------------------
 //          Plant bag
@@ -184,8 +203,8 @@
 
 	storage_ui = /datum/storage_ui/default/sheetsnatcher
 
-	var/capacity = 60; //the number of sheets it can carry.
-	w_class = ITEM_SIZE_LARGE
+	var/capacity = 300; //the number of sheets it can carry.
+	w_class = ITEM_SIZE_NORMAL
 	storage_slots = 7
 
 	allow_quick_empty = 1 // this function is superceded
@@ -279,6 +298,7 @@
 //    Sheet Snatcher (Cyborg)
 // -----------------------------
 
-/obj/item/weapon/storage/sheetsnatcher/borg	//Borgs probably shouldn't have this
-	name = "material carrybag"
+/obj/item/weapon/storage/sheetsnatcher/borg
+	name = "sheet snatcher 9000"
 	desc = ""
+	capacity = 500//Borgs get more because >specialization

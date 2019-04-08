@@ -5,7 +5,7 @@
 	icon_state = "cart"
 	anchored = 0
 	density = 1
-	atom_flags = ATOM_FLAG_CLIMBABLE | ATOM_FLAG_OPEN_CONTAINER
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_OPEN_CONTAINER | ATOM_FLAG_CLIMBABLE
 	max_health = 120
 	mass = 10
 	armor = list(
@@ -56,9 +56,9 @@
 
 /obj/structure/janitorialcart/attackby(obj/item/I, mob/user)
 	if(istype(I, /obj/item/weapon/storage/bag/trash) && !mybag)
-		user.drop_item()
+		if(!user.unEquip(I, src))
+			return
 		mybag = I
-		I.loc = src
 		update_icon()
 		updateUsrDialog()
 		to_chat(user, "<span class='notice'>You put [I] into [src].</span>")
@@ -69,33 +69,33 @@
 	else if(istype(I, /obj/item/weapon/mop))
 		fill_from_bucket(I, user)
 		if(!mymop)
-			user.drop_item()
+			if(!user.unEquip(I, src))
+				return
 			mymop = I
-			I.loc = src
 			update_icon()
 			updateUsrDialog()
 			to_chat(user, "<span class='notice'>You put [I] into [src].</span>")
 
 	else if(istype(I, /obj/item/weapon/reagent_containers/spray) && !myspray)
-		user.drop_item()
+		if(!user.unEquip(I, src))
+			return
 		myspray = I
-		I.loc = src
 		update_icon()
 		updateUsrDialog()
 		to_chat(user, "<span class='notice'>You put [I] into [src].</span>")
 
 	else if(istype(I, /obj/item/device/lightreplacer) && !myreplacer)
-		user.drop_item()
+		if(!user.unEquip(I, src))
+			return
 		myreplacer = I
-		I.loc = src
 		update_icon()
 		updateUsrDialog()
 		to_chat(user, "<span class='notice'>You put [I] into [src].</span>")
 
 	else if(istype(I, /obj/item/weapon/caution))
 		if(signs < 4)
-			user.drop_item()
-			I.loc = src
+			if(!user.unEquip(I, src))
+				return
 			signs++
 			update_icon()
 			updateUsrDialog()
@@ -174,8 +174,8 @@
 	updateUsrDialog()
 
 
-/obj/structure/janitorialcart/update_icon()
-	overlays = null
+/obj/structure/janitorialcart/on_update_icon()
+	overlays.Cut()
 	if(mybag)
 		overlays += "cart_garbage"
 	if(mymop)

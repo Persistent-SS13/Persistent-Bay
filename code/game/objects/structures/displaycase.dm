@@ -102,42 +102,19 @@
 	occupant_overlay=null
 
 
-/obj/structure/displaycase/bullet_act(var/obj/item/projectile/Proj)
-	if(IsDamageTypePhysical(Proj.damtype))
-		health -= Proj.force
+/obj/structure/displaycase/destroyed()
+	for(var/atom/movable/AM in src)
+		AM.dropInto(loc)
 	..()
-	src.healthcheck()
-	return
 
-/obj/structure/displaycase/proc/healthcheck()
-	if (src.health <= 0)
-		if (!( src.destroyed ))
-			src.density = 0
-			src.destroyed = 1
-		//	new /obj/item/weapon/shard (loc)
-			playsound(get_turf(src), "shatter", 70, 1)
-			update_icon()
+/obj/structure/displaycase/on_update_icon()
+	if(destroyed)
+		icon_state = "glassboxb"
 	else
-		playsound(get_turf(src), 'sound/effects/Glasshit.ogg', 75, 1)
-	return
-
-/obj/structure/displaycase/update_icon()
-	if(src.destroyed)
-		src.icon_state = "glassboxb"
-	else
-		src.icon_state = "glassbox[locked]"
-	overlays = 0
-	if(occupant)
-		var/icon/occupant_icon=getFlatIcon(occupant)
-		occupant_icon.Scale(16,16)
-		occupant_overlay = image(occupant_icon)
-		occupant_overlay.pixel_x=8
-		occupant_overlay.pixel_y=8
-		if(locked)
-			occupant_overlay.alpha=128//ChangeOpacity(0.5)
-		//underlays += occupant_overlay
-		overlays += occupant_overlay
-	return
+		icon_state = "glassbox"
+	underlays.Cut()
+	for(var/atom/movable/AM in contents)
+		underlays += AM.appearance
 
 
 /obj/structure/displaycase/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
@@ -181,9 +158,7 @@
 			new /obj/machinery/constructable_frame/machine_frame(T)
 		del(src)
 	if(user.a_intent == "harm")
-		src.health -= W.force
-		src.healthcheck()
-		..()
+		return ..()
 	else
 		if(locked)
 			user << "\red It's locked, you can't put anything into it."

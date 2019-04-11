@@ -31,6 +31,7 @@ addons:
       - oracle-java8-set-default
       - python
       - python-pip
+      - uchardet
 
 script:
   - test/run-test.sh

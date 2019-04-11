@@ -63,7 +63,7 @@
 	var/datum/nano_module/appearance_changer/AC = ui_users[user]
 	if(!AC)
 		AC = new(src, user)
-		AC.name = "SalonPro AuthentiBarber™;"
+		AC.name = "SalonPro AuthentiBarber;"
 		AC.flags = APPEARANCE_HAIR
 		ui_users[user] = AC
 	AC.ui_interact(user)

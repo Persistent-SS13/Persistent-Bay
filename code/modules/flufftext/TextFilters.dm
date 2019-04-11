@@ -151,7 +151,7 @@ proc/RadioChat(mob/living/user, message, distortion_chance = 60, distortion_spee
 					if("s")
 						newletter = "$"
 					if("e")
-						newletter = "€"
+						newletter = "£"
 					if("w")
 						newletter = "ø"
 					if("y")

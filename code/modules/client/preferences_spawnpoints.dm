@@ -27,6 +27,10 @@ GLOBAL_VAR(spawntypes)
 
 	return 1
 
+//Called after mob is created, moved to a turf and equipped.
+/datum/spawnpoint/proc/after_join(mob/victim)
+	return
+
 #ifdef UNIT_TEST
 /datum/spawnpoint/Del()
 	crash_with("Spawn deleted: [log_info_line(src)]")
@@ -56,7 +60,7 @@ GLOBAL_VAR(spawntypes)
 /datum/spawnpoint/cryo
 	display_name = "Cryogenic Storage"
 	msg = "has completed cryogenic revival"
-	disallow_job = list("Cyborg")
+	disallow_job = list("Robot")
 
 /datum/spawnpoint/cryo/New()
 	..()
@@ -65,7 +69,7 @@ GLOBAL_VAR(spawntypes)
 /datum/spawnpoint/cyborg
 	display_name = "Cyborg Storage"
 	msg = "has been activated from storage"
-	restrict_job = list("Cyborg")
+	restrict_job = list("Robot")
 
 /datum/spawnpoint/cyborg/New()
 	..()

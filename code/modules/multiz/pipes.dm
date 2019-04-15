@@ -106,12 +106,12 @@ obj/machinery/atmospherics/pipe/zpipe/Destroy()
 		node1.disconnect(src)
 	if(node2)
 		node2.disconnect(src)
-	..()
+	. = ..()
 
 obj/machinery/atmospherics/pipe/zpipe/pipeline_expansion()
 	return list(node1, node2)
 
-obj/machinery/atmospherics/pipe/zpipe/update_icon()
+obj/machinery/atmospherics/pipe/zpipe/on_update_icon()
 	return
 
 obj/machinery/atmospherics/pipe/zpipe/disconnect(obj/machinery/atmospherics/reference)
@@ -130,11 +130,11 @@ obj/machinery/atmospherics/pipe/zpipe/disconnect(obj/machinery/atmospherics/refe
 // the elusive up pipe //
 /////////////////////////
 obj/machinery/atmospherics/pipe/zpipe/up
-		icon = 'icons/obj/structures.dmi'
-		icon_state = "up"
+	icon = 'icons/obj/structures.dmi'
+	icon_state = "up"
 
-		name = "upwards pipe"
-		desc = "A pipe segment to connect upwards."
+	name = "upwards pipe"
+	desc = "A pipe segment to connect upwards."
 
 obj/machinery/atmospherics/pipe/zpipe/up/atmos_init()
 	..()
@@ -170,11 +170,11 @@ obj/machinery/atmospherics/pipe/zpipe/up/atmos_init()
 ///////////////////////
 
 obj/machinery/atmospherics/pipe/zpipe/down
-		icon = 'icons/obj/structures.dmi'
-		icon_state = "down"
+	icon = 'icons/obj/structures.dmi'
+	icon_state = "down"
 
-		name = "downwards pipe"
-		desc = "A pipe segment to connect downwards."
+	name = "downwards pipe"
+	desc = "A pipe segment to connect downwards."
 
 obj/machinery/atmospherics/pipe/zpipe/down/atmos_init()
 	..()

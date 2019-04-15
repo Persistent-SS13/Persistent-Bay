@@ -5,6 +5,9 @@
 	if(electrified != 0)
 		if(shock(user)) //Handles removing charge from the cell, as well. No need to do that here.
 			return
+	if(is_type_in_list(W,banned_modules))
+		to_chat(user, "<span class='danger'>\The [src] cannot mount this type of module.</span>")
+		return
 
 	// Pass repair items on to the chestpiece.
 	if(chest && (istype(W,/obj/item/stack/material) || isWelder(W)))
@@ -17,7 +20,7 @@
 			to_chat(user, "<span class='danger'>It looks like the locking system has been shorted out.</span>")
 			return
 
-		if((!req_access || !req_access.len) && (!req_one_access || !req_one_access.len))
+		if(!length(req_access) && !length(req_one_access))
 			locked = 0
 			to_chat(user, "<span class='danger'>\The [src] doesn't seem to have a locking mechanism.</span>")
 			return
@@ -40,15 +43,21 @@
 		to_chat(user, "You [open ? "open" : "close"] the access panel.")
 		return
 
+	else if(isScrewdriver(W))
+		p_open = !p_open
+		to_chat(user, "You [p_open ? "open" : "close"] the wire cover.")
+
+	// Hacking.
+	else if(isWirecutter(W) || isMultitool(W))
+		if(p_open)
+			wires.Interact(user)
+		else
+			to_chat(user, "You can't reach the wiring.")
+		return
+
 	if(open)
 
-		// Hacking.
-		if(isWirecutter(W) || isMultitool(W))
-			if(open)
-				wires.Interact(user)
-			else
-				to_chat(user, "You can't reach the wiring.")
-			return
+
 		// Air tank.
 		if(istype(W,/obj/item/weapon/tank)) //Todo, some kind of check for suits without integrated air supplies.
 
@@ -102,26 +111,16 @@
 
 		else if(isWrench(W))
 
-			if(!air_supply)
-				to_chat(user, "There is not tank to remove.")
-				return
-
-			user.put_in_hands(air_supply)
-			to_chat(user, "You detach and remove \the [air_supply].")
-			air_supply = null
-			return
-
-		else if(isScrewdriver(W))
-
 			var/list/current_mounts = list()
 			if(cell) current_mounts   += "cell"
+			if(air_supply) current_mounts += "tank"
 			if(installed_modules && installed_modules.len) current_mounts += "system module"
 
 			var/to_remove = input("Which would you like to modify?") as null|anything in current_mounts
 			if(!to_remove)
 				return
 
-			if(istype(src.loc,/mob/living/carbon/human) && to_remove != "cell")
+			if(istype(src.loc,/mob/living/carbon/human) && to_remove != "cell" && to_remove != "tank")
 				var/mob/living/carbon/human/H = src.loc
 				if(H.back == src)
 					to_chat(user, "You can't remove an installed device while the hardsuit is being worn.")
@@ -139,6 +138,15 @@
 						cell = null
 					else
 						to_chat(user, "There is nothing loaded in that mount.")
+
+				if("tank")
+					if(!air_supply)
+						to_chat(user, "There is no tank to remove.")
+						return
+
+					user.put_in_hands(air_supply)
+					to_chat(user, "You detach and remove \the [air_supply].")
+					air_supply = null
 
 				if("system module")
 
@@ -158,10 +166,22 @@
 
 					var/obj/item/rig_module/removed = possible_removals[removal_choice]
 					to_chat(user, "You detach \the [removed] from \the [src].")
-					removed.forceMove(get_turf(src))
+					removed.dropInto(loc)
 					removed.removed()
 					installed_modules -= removed
 					update_icon()
+
+		else if(istype(W,/obj/item/stack/nanopaste)) //EMP repair
+			var/obj/item/stack/S = W
+			if(malfunctioning || malfunction_delay)
+				if(S.use(1))
+					to_chat(user, "You pour some of \the [S] over \the [src]'s control circuitry and watch as the nanites do their work with impressive speed and precision.")
+					malfunctioning = 0
+					malfunction_delay = 0
+				else
+					to_chat(user, "\The [S] is empty!")
+			else
+				to_chat(user, "You don't see any use for \the [S].")
 
 		return
 

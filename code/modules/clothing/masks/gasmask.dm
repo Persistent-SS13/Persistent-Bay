@@ -10,6 +10,8 @@
 	gas_transfer_coefficient = 0.01
 	permeability_coefficient = 0.01
 	siemens_coefficient = 0.9
+	var/clogged
+	var/filter_water
 	var/gas_filter_strength = 1			//For gas mask filters
 	var/list/filtered_gases = list(GAS_PHORON, GAS_N2O, GAS_CO2, GAS_CHLORINE)
 	armor  = list(
@@ -25,6 +27,23 @@
 		DAM_BIO 	= 75,
 		DAM_RADS 	= 5,
 		DAM_STUN 	= 0)
+
+/obj/item/clothing/mask/gas/examine(var/mob/user)
+	. = ..()
+	if(clogged)
+		to_chat(user, "<span class='warning'>The intakes are clogged with [clogged]!</span>")
+
+/obj/item/clothing/mask/gas/filters_water()
+	return (filter_water && !clogged)
+
+/obj/item/clothing/mask/gas/attack_self(var/mob/user)
+	if(clogged)
+		user.visible_message("<span class='notice'>\The [user] begins unclogging the intakes of \the [src].</span>")
+		if(do_after(user, 100, progress = 1) && clogged)
+			user.visible_message("<span class='notice'>\The [user] has unclogged \the [src].</span>")
+			clogged = FALSE
+		return
+	. = ..()
 
 /obj/item/clothing/mask/gas/filter_air(datum/gas_mixture/air)
 	var/datum/gas_mixture/filtered = new
@@ -61,6 +80,48 @@
 		DAM_RADS 	= 5,
 		DAM_STUN 	= 0)
 
+//In scaling order of utility and seriousness
+
+/obj/item/clothing/mask/gas/radical
+	name = "gas mask"
+	desc = "A face-covering mask that can be connected to an air supply. Filters harmful gases from the air. This one has additional filters to remove radioactive particles."
+	icon_state = "gas_mask"
+	item_state = "gas_mask"
+	body_parts_covered = FACE|EYES
+	armor  = list(
+		DAM_BLUNT 	= 5,
+		DAM_PIERCE 	= 4,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 5,
+		DAM_ENERGY 	= 0,
+		DAM_BURN 	= 0,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 75,
+		DAM_RADS 	= 25,
+		DAM_STUN 	= 0)
+
+/obj/item/clothing/mask/gas/budget
+	name = "gas mask"
+	desc = "A face-covering mask that can be connected to an air supply. Filters harmful gases from the air. This one looks pretty dodgy. Are you sure it works?"
+	icon_state = "gas_alt"
+	item_state = "gas_alt"
+	body_parts_covered = FACE|EYES
+	armor  = list(
+		DAM_BLUNT 	= 5,
+		DAM_PIERCE 	= 2,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 5,
+		DAM_LASER 	= 5,
+		DAM_ENERGY 	= 0,
+		DAM_BURN 	= 0,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 25,
+		DAM_RADS 	= 5,
+		DAM_STUN 	= 0)
+
 //Plague Dr suit can be found in clothing/suits/bio.dm
 /obj/item/clothing/mask/gas/plaguedoctor
 	name = "plague doctor mask"
@@ -86,6 +147,7 @@
 	name = "\improper SWAT mask"
 	desc = "A close-fitting tactical mask that can be connected to an air supply."
 	icon_state = "swat"
+	item_state = "swat"
 	siemens_coefficient = 0.7
 	body_parts_covered = FACE|EYES
 	armor  = list(
@@ -112,6 +174,7 @@
 	name = "tactical mask"
 	desc = "A close-fitting tactical mask that can be connected to an air supply."
 	icon_state = "swat"
+	item_state = "swat"
 	siemens_coefficient = 0.7
 	armor  = list(
 		DAM_BLUNT 	= 15,
@@ -126,6 +189,19 @@
 		DAM_BIO 	= 75,
 		DAM_RADS 	= 5,
 		DAM_STUN 	= 0)
+
+/obj/item/clothing/mask/gas/death_commando
+	name = "\improper Death Commando Mask"
+	desc = "A grim tactical mask worn by the fictional Death Commandos, elites of the also fictional Space Syndicate. Saturdays at 10!"
+	icon_state = "death"
+	item_state = "death"
+	siemens_coefficient = 0.2
+
+/obj/item/clothing/mask/gas/cyborg
+	name = "cyborg visor"
+	desc = "Beep boop!"
+	icon_state = "death"
+	item_state = "death"
 
 /obj/item/clothing/mask/gas/clown_hat
 	name = "clown wig and mask"
@@ -176,13 +252,36 @@
 	name = "owl mask"
 	desc = "Twoooo!"
 	icon_state = "owl"
+	item_state = "owl"
 	body_parts_covered = HEAD|FACE|EYES
+
+//Vox Unique Masks
 
 /obj/item/clothing/mask/gas/vox
 	name = "vox breathing mask"
 	desc = "A small oxygen filter for use by Vox"
 	icon_state = "respirator"
+	item_state = "respirator"
 	flags_inv = 0
 	body_parts_covered = 0
-	species_restricted = list(SPECIES_VOX)
+	species_restricted = list(SPECIES_VOX, SPECIES_VOX_ARMALIS)
+	filtered_gases = list("phoron", "sleeping_agent", "oxygen")
+
+
+/obj/item/clothing/mask/gas/swat/vox
+	name = "alien mask"
+	desc = "Clearly not designed for a human face."
+	icon_state = "voxswat"
+	item_state = "voxswat"
+	body_parts_covered = 0 //Hack to allow vox to eat while wearing this mask.
+	species_restricted = list(SPECIES_VOX, SPECIES_VOX_ARMALIS)
+	filtered_gases = list("phoron", "sleeping_agent", "oxygen")
+
+/obj/item/clothing/mask/gas/aquabreather
+	name = "aquabreather"
+	desc = "A compact CO2 scrubber and breathing apparatus that draws oxygen from water."
+	icon_state = "halfgas"
+	filter_water = TRUE
+	body_parts_covered = FACE
+	w_class = 2
 	filtered_gases = list(GAS_PHORON, GAS_N2O, GAS_OXYGEN)

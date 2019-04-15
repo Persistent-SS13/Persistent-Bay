@@ -133,7 +133,7 @@
 	var/obj/effect/overlay/pulse2 = new /obj/effect/overlay(loc)
 	pulse2.icon = 'icons/effects/effects.dmi'
 	pulse2.icon_state = "empdisable"
-	pulse2.name = "emp sparks"
+	pulse2.SetName("emp sparks")
 	pulse2.anchored = TRUE
 	pulse2.set_dir(pick(GLOB.cardinal))
 
@@ -182,8 +182,8 @@
 
 /obj/vehicle/make_debris()
 	var/turf/Tsec = get_turf(src)
-	new /obj/item/stack/rods(Tsec)
-	new /obj/item/stack/rods(Tsec)
+	new /obj/item/stack/material/rods(Tsec)
+	new /obj/item/stack/material/rods(Tsec)
 	new /obj/item/stack/cable_coil/cut(Tsec)
 	if(cell)
 		cell.forceMove(Tsec)
@@ -223,9 +223,8 @@
 		return
 	if(!istype(C))
 		return
-
-	H.drop_from_inventory(C)
-	C.forceMove(src)
+	if(!H.unEquip(C, src))
+		return
 	cell = C
 	powercheck()
 	to_chat(usr, SPAN_NOTICE("You install [C] in [src]."))

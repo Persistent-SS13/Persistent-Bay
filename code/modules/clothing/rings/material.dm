@@ -1,7 +1,7 @@
 /////////////////////////////////////////
 //Material Rings
 /obj/item/clothing/ring/material
-	icon = 'icons/obj/clothing/rings.dmi'
+	icon = 'icons/obj/clothing/obj_hands_ring.dmi'
 	icon_state = "material"
 	var/material/material
 
@@ -21,7 +21,7 @@
 	return material
 
 /obj/item/clothing/ring/material/wood/New(var/newloc)
-	..(newloc, MATERIAL_WOOD)
+	..(newloc, MATERIAL_WALNUT)
 
 /obj/item/clothing/ring/material/plastic/New(var/newloc)
 	..(newloc, MATERIAL_PLASTIC)

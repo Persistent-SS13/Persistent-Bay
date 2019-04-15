@@ -6,10 +6,8 @@ var/list/gear_datums = list()
 	var/gear_slot = 1  //The current gear save slot
 
 /datum/preferences/proc/Gear()
-	return 0
-	if(!gear_list)
-		gear_list = list()
-	return gear_list[gear_slot]
+	//Disabled
+	//return gear_list[gear_slot]
 
 /datum/loadout_category
 	var/category = ""
@@ -25,6 +23,8 @@ var/list/gear_datums = list()
 	for(var/geartype in typesof(/datum/gear)-/datum/gear)
 		var/datum/gear/G = geartype
 		if(initial(G.category) == geartype)
+			continue
+		if(GLOB.using_map.loadout_blacklist && (geartype in GLOB.using_map.loadout_blacklist))
 			continue
 
 		var/use_name = initial(G.display_name)
@@ -168,11 +168,12 @@ var/list/gear_datums = list()
 		var/list/entry = list()
 		var/datum/gear/G = LC.gear[gear_name]
 		var/ticked = (G.display_name in pref.gear_list[pref.gear_slot])
-		entry += "<tr style='vertical-align:top;'><td width=25%><a style='white-space:normal;' [ticked ? "class='linkOn' " : ""]href='?src=\ref[src];toggle_gear=[html_encode(G.display_name)]'>[G.display_name]</a></td>"
+		entry += "<tr style='vertical-align:top;'><td width=25%><a style='white-space:normal;' [ticked ? "class='linkOn' " : ""]href='?src=\ref[src];toggle_gear=\ref[G]'>[G.display_name]</a></td>"
 		entry += "<td width = 10% style='vertical-align:top'>[G.cost]</td>"
-		entry += "<td><font size=2>[G.description]</font>"
+		entry += "<td><font size=2>[G.get_description(get_gear_metadata(G,1))]</font>"
 		var/allowed = 1
-		if(G.allowed_roles)
+
+		if(allowed && G.allowed_roles)
 			var/good_job = 0
 			var/bad_job = 0
 			entry += "<br><i>"
@@ -193,19 +194,20 @@ var/list/gear_datums = list()
 		if(ticked)
 			entry += "<tr><td colspan=3>"
 			for(var/datum/gear_tweak/tweak in G.gear_tweaks)
-				entry += " <a href='?src=\ref[src];gear=[G.display_name];tweak=\ref[tweak]'>[tweak.get_contents(get_tweak_metadata(G, tweak))]</a>"
+				entry += " <a href='?src=\ref[src];gear=\ref[G];tweak=\ref[tweak]'>[tweak.get_contents(get_tweak_metadata(G, tweak))]</a>"
 			entry += "</td></tr>"
 		if(!hide_unavailable_gear || allowed || ticked)
 			. += entry
 	. += "</table>"
 	. = jointext(.,null)
 
-/datum/category_item/player_setup_item/loadout/proc/get_gear_metadata(var/datum/gear/G)
+/datum/category_item/player_setup_item/loadout/proc/get_gear_metadata(var/datum/gear/G, var/readonly)
 	var/list/gear = pref.gear_list[pref.gear_slot]
 	. = gear[G.display_name]
 	if(!.)
 		. = list()
-		gear[G.display_name] = .
+		if(!readonly)
+			gear[G.display_name] = .
 
 /datum/category_item/player_setup_item/loadout/proc/get_tweak_metadata(var/datum/gear/G, var/datum/gear_tweak/tweak)
 	var/list/metadata = get_gear_metadata(G)
@@ -220,7 +222,9 @@ var/list/gear_datums = list()
 
 /datum/category_item/player_setup_item/loadout/OnTopic(href, href_list, user)
 	if(href_list["toggle_gear"])
-		var/datum/gear/TG = gear_datums[href_list["toggle_gear"]]
+		var/datum/gear/TG = locate(href_list["toggle_gear"])
+		if(!istype(TG) || gear_datums[TG.display_name] != TG)
+			return TOPIC_REFRESH
 		if(TG.display_name in pref.gear_list[pref.gear_slot])
 			pref.gear_list[pref.gear_slot] -= TG.display_name
 		else
@@ -232,9 +236,9 @@ var/list/gear_datums = list()
 				pref.gear_list[pref.gear_slot] += TG.display_name
 		return TOPIC_REFRESH_UPDATE_PREVIEW
 	if(href_list["gear"] && href_list["tweak"])
-		var/datum/gear/gear = gear_datums[href_list["gear"]]
+		var/datum/gear/gear = locate(href_list["gear"])
 		var/datum/gear_tweak/tweak = locate(href_list["tweak"])
-		if(!tweak || !istype(gear) || !(tweak in gear.gear_tweaks))
+		if(!tweak || !istype(gear) || !(tweak in gear.gear_tweaks) || gear_datums[gear.display_name] != gear)
 			return TOPIC_NOACTION
 		var/metadata = tweak.get_metadata(user, get_tweak_metadata(gear, tweak))
 		if(!metadata || !CanUseTopic(user))
@@ -293,6 +297,7 @@ var/list/gear_datums = list()
 	var/cost = 1           //Number of points used. Items in general cost 1 point, storage/armor/gloves/special use costs 2 points.
 	var/slot               //Slot to equip to.
 	var/list/allowed_roles //Roles that can spawn with this item.
+	var/list/allowed_branches //Service branches that can spawn with it.
 	var/whitelisted        //Term to check the whitelist for..
 	var/sort_category = "General"
 	var/flags              //Special tweaks in new
@@ -300,14 +305,22 @@ var/list/gear_datums = list()
 	var/list/gear_tweaks = list() //List of datums which will alter the item after it has been spawned.
 
 /datum/gear/New()
-	..()
+	if(FLAGS_EQUALS(flags, GEAR_HAS_TYPE_SELECTION|GEAR_HAS_SUBTYPE_SELECTION))
+		CRASH("May not have both type and subtype selection tweaks")
 	if(!description)
 		var/obj/O = path
 		description = initial(O.desc)
 	if(flags & GEAR_HAS_COLOR_SELECTION)
 		gear_tweaks += gear_tweak_free_color_choice()
 	if(flags & GEAR_HAS_TYPE_SELECTION)
-		gear_tweaks += new/datum/gear_tweak/path(path)
+		gear_tweaks += new/datum/gear_tweak/path/type(path)
+	if(flags & GEAR_HAS_SUBTYPE_SELECTION)
+		gear_tweaks += new/datum/gear_tweak/path/subtype(path)
+
+/datum/gear/proc/get_description(var/metadata)
+	. = description
+	for(var/datum/gear_tweak/gt in gear_tweaks)
+		. = gt.tweak_description(., metadata["[gt]"])
 
 /datum/gear_data
 	var/path
@@ -320,23 +333,20 @@ var/list/gear_datums = list()
 /datum/gear/proc/spawn_item(var/location, var/metadata)
 	var/datum/gear_data/gd = new(path, location)
 	for(var/datum/gear_tweak/gt in gear_tweaks)
-		gt.tweak_gear_data(metadata["[gt]"], gd)
+		gt.tweak_gear_data(metadata && metadata["[gt]"], gd)
 	var/item = new gd.path(gd.location)
 	for(var/datum/gear_tweak/gt in gear_tweaks)
-		gt.tweak_item(item, metadata["[gt]"])
+		gt.tweak_item(item, metadata && metadata["[gt]"])
 	return item
 
 /datum/gear/proc/spawn_on_mob(var/mob/living/carbon/human/H, var/metadata)
 	var/obj/item/item = spawn_item(H, metadata)
-
 	if(H.equip_to_slot_if_possible(item, slot, del_on_fail = 1, force = 1))
-		to_chat(H, "<span class='notice'>Equipping you with \the [item]!</span>")
-		return TRUE
-
-	return FALSE
+		. = item
 
 /datum/gear/proc/spawn_in_storage_or_drop(var/mob/living/carbon/human/H, var/metadata)
 	var/obj/item/item = spawn_item(H, metadata)
+	item.add_fingerprint(H)
 
 	var/atom/placed_in = H.equip_to_storage(item)
 	if(placed_in)
@@ -346,7 +356,4 @@ var/list/gear_datums = list()
 	else if(H.put_in_hands(item))
 		to_chat(H, "<span class='notice'>Placing \the [item] in your hands!</span>")
 	else
-		to_chat(H, "<span class='danger'>Failed to locate a storage object on your mob, either you spawned with no arms and no backpack or this is a bug.</span>")
-		to_chat(H, "<span class='notice'>Dropping \the [item] on the ground!</span>")
-		item.forceMove(get_turf(H))
-		item.add_fingerprint(H)
+		to_chat(H, "<span class='danger'>Dropping \the [item] on the ground!</span>")

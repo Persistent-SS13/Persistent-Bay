@@ -82,7 +82,7 @@ Thus, the two variables affect pump operation are set in New():
 
 	if (power_draw >= 0)
 		last_power_draw = power_draw
-		use_power(power_draw)
+		use_power_oneoff(power_draw)
 
 		if(network1)
 			network1.update = 1
@@ -177,7 +177,7 @@ Thus, the two variables affect pump operation are set in New():
 	if((. = ..())) return
 
 	if(href_list["power"])
-		use_power = !use_power
+		update_use_power(!use_power)
 		. = TOPIC_REFRESH
 
 	switch(href_list["set_press"])

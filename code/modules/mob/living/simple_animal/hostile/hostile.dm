@@ -33,7 +33,8 @@
 												/obj/structure/table,
 												/obj/structure/grille,
 												/obj/structure/barricade,
-												/obj/structure/wall_frame)
+												/obj/structure/wall_frame,
+												/obj/structure/railing)
 
 /mob/living/simple_animal/hostile/proc/can_act()
 	if(stat || stop_automation || incapacitated())
@@ -45,10 +46,6 @@
 		stance = HOSTILE_STANCE_ATTACK
 	else
 		stance = HOSTILE_STANCE_IDLE
-
-/mob/living/simple_animal/hostile/New()
-	..()
-
 
 /mob/living/simple_animal/hostile/proc/FindTarget()
 	if(!can_act())

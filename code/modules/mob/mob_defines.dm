@@ -140,7 +140,7 @@
 
 	var/voice_name = "unidentifiable voice"
 
-	var/faction = "neutral" //Used for checking whether hostile simple animals will attack you, possibly more stuff later
+	var/faction = MOB_FACTION_NEUTRAL //Used for checking whether hostile simple animals will attack you, possibly more stuff later
 	var/blinded = null
 	var/ear_deaf = null		//Carbon
 
@@ -181,8 +181,6 @@
 	var/memory = ""
 	var/flavor_text = ""
 
-	var/nabbing = 0  // Whether a creature with a CAN_NAB tag is grabbing normally or in nab mode.
-	
 	var/oxyburn = 0 //used to check if phorosians are already burning from exposure to the air
 	
 	var/spawn_type = 1 // 1 = cryobed, 2 = newplayer spawn... this should be set to 2 for new players
@@ -190,4 +188,5 @@
 	var/spawn_loc_2 // this is used for secondary cryobed networks
 	
 	var/datum/skillset/skillset = /datum/skillset
-	
+
+	var/last_radio_sound = -INFINITY

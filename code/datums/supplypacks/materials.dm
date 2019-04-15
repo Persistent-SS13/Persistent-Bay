@@ -1,6 +1,14 @@
 /decl/hierarchy/supply_pack/materials
 	name = "Materials"
 
+/decl/hierarchy/supply_pack/materials/New()
+	for(var/thing in contains)
+		var/obj/item/stack/material/S = thing
+		var/material/mat = SSmaterials.get_material_by_name(initial(S.default_type))
+		if(istype(mat) && mat.sale_price)
+			cost += mat.sale_price * initial(S.amount)
+	..()
+
 // Material Sheets - Bulk!
 /decl/hierarchy/supply_pack/materials/steel200
 	name = "Basic Material - Steel Bulk Order - (x200)"
@@ -21,23 +29,17 @@
 	cost = 30
 	containername = "steel sheets crate"
 
+/decl/hierarchy/supply_pack/materials/alum50
+	name = "50 aluminium sheets"
+	contains = list(/obj/item/stack/material/aluminium/fifty)
+	cost = 10
+	containername = "aluminium sheets crate"
+
 /decl/hierarchy/supply_pack/materials/glass50
 	name = "Basic Material - Glass (x50)"
 	contains = list(/obj/item/stack/material/glass/fifty)
 	cost = 15
 	containername = "glass sheets crate"
-
-/decl/hierarchy/supply_pack/materials/cardboard50
-	name = "Basic Material - Cardboard (x50)"
-	contains = list(/obj/item/stack/material/cardboard/fifty)
-	cost = 5
-	containername = "cardboard sheets crate"
-
-/decl/hierarchy/supply_pack/materials/wood50
-	name = "Basic Material - Wooden planks (x50)"
-	contains = list(/obj/item/stack/material/wood/fifty)
-	cost = 100
-	containername = "wooden planks crate"
 
 /decl/hierarchy/supply_pack/materials/plastic50
 	name = "Basic Material - Plastic (x50)"
@@ -122,3 +124,42 @@
 	contains = list(/obj/item/stack/material/diamond/ten)
 	cost = 200
 	containername = "diamond sheets crate"
+
+//wood zone
+/decl/hierarchy/supply_pack/materials/wood50
+	name = "50 wooden planks"
+	contains = list(/obj/item/stack/material/wood/fifty)
+	cost = 10
+	containername = "wooden planks crate"
+
+/decl/hierarchy/supply_pack/materials/mahogany25
+	name = "25 mahogany planks"
+	contains = list(/obj/item/stack/material/wood/mahogany/twentyfive)
+	cost = 10
+	containername = "wooden planks crate"
+
+/decl/hierarchy/supply_pack/materials/maple25
+	name = "25 maple planks"
+	contains = list(/obj/item/stack/material/wood/maple/twentyfive = 2)
+	cost = 10
+	containername = "wooden planks crate"
+
+/decl/hierarchy/supply_pack/materials/walnut25
+	name = "25 walnut planks"
+	contains = list(/obj/item/stack/material/wood/walnut/twentyfive)
+	cost = 10
+	containername = "walnut planks crate"
+
+/decl/hierarchy/supply_pack/materials/ebony25
+	name = "25 ebony planks"
+	contains = list(/obj/item/stack/material/wood/ebony/twentyfive)
+	cost = 15 //luxury tax
+	containername = "ebony planks crate"
+
+
+/decl/hierarchy/supply_pack/materials/cardboard50
+	name = "Basic Material - Cardboard (x50)"
+	contains = list(/obj/item/stack/material/cardboard/fifty)
+	cost = 5
+	containername = "cardboard sheets crate"
+

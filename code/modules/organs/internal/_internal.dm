@@ -5,11 +5,8 @@
 	var/dead_icon // Icon to use when the organ has died.
 	var/surface_accessible = FALSE
 	var/relative_size = 25   // Relative size of the organ. Roughly % of space they take in the target projection :D
-	var/list/will_assist_languages = list()
-	var/list/datum/language/assists_languages = list()
 	var/min_bruised_damage = 10       // Damage before considered bruised
-	var/scarred = 0	// To what degree this organ is scarred
-	var/scarring_effect = 3	// How much durability a scar will remove
+	var/damage_reduction = 0.5     //modifier for internal organ injury
 
 /obj/item/organ/internal/New(var/mob/living/carbon/holder)
 	if(max_health)
@@ -126,8 +123,10 @@
 /obj/item/organ/internal/proc/is_bruised()
 	return get_damages() >= min_bruised_damage
 
-/obj/item/organ/internal/proc/isinplace()
-	return (owner && parent_organ && owner.get_organ(parent_organ))
+/obj/item/organ/internal/proc/set_max_health(var/nhealth)
+	max_health = Floor(nhealth)
+	min_broken_damage = Floor(0.75 * nhealth)
+	min_bruised_damage = Floor(0.25 * nhealth)
 
 /obj/item/organ/internal/take_general_damage(var/amount, var/silent = FALSE)
 	take_internal_damage(amount, silent)
@@ -137,13 +136,17 @@
 		rem_health(amount * 0.8)
 	else if(owner && !silent && isinplace() && can_feel_pain() && (damage > min_bruised_damage/2 || prob(10)) )
 		rem_health(amount)
-		var/obj/item/organ/external/parent = owner.get_organ(parent_organ)
-		var/degree = ""
-		if(is_bruised())
-			degree = " a lot"
-		else if(get_damages() < min_bruised_damage/2)
-			degree = " a bit"
-		owner.custom_pain("Something inside your [parent.name] hurts[degree].", damage, affecting = parent)
+		
+		//only show this if the organ is not robotic
+		if(owner && can_feel_pain() && parent_organ && (amount > 5 || prob(10)))
+			var/obj/item/organ/external/parent = owner.get_organ(parent_organ)
+			if(parent && !silent)
+				var/degree = ""
+				if(is_bruised())
+					degree = " a lot"
+				if(get_damages() < 5)
+					degree = " a bit"
+				owner.custom_pain("Something inside your [parent.name] hurts[degree].", amount, affecting = parent)
 
 /obj/item/organ/internal/proc/get_visible_state()
 	if(health <= 0)
@@ -154,12 +157,6 @@
 		. = "badly damaged "
 	else if(get_damages() > 5)
 		. = "damaged "
-	else if(scarred == 1)
-		. = "slightly scarred "
-	else if(scarred == 2)
-		. = "scarred "
-	else if(scarred == 3)
-		. = "heavily scarred "
 	if(status & ORGAN_DEAD)
 		if(can_recover())
 			. = "decaying [.]"
@@ -174,19 +171,39 @@
 // Organs will heal very minor damage on their own without much work
 // As long as no toxins are present in the system
 /obj/item/organ/internal/proc/handle_regeneration()
-	if(!isdamaged() || BP_IS_ROBOTIC(src) || !owner || owner.chem_effects[CE_TOXIN])
+	if(!isdamaged() || BP_IS_ROBOTIC(src) || !owner || owner.chem_effects[CE_TOXIN] || owner.is_asystole())
 		return
 	if(get_damages() < min_bruised_damage) // If it's not even bruised, it will just heal very slowly.
 		heal_damage(0.01)
 	else if(is_bruised()) // If it is bruised, it will heal a little faster, but it will scar if it's not aided by medication or surgery
 		heal_damage(0.02)
 
+/obj/item/organ/internal/proc/surgical_fix(mob/user)
+	if(damage > min_broken_damage)
+		var/scarring = damage/max_damage
+		scarring = 1 - 0.3 * scarring ** 2 // Between ~15 and 30 percent loss
+		var/new_max_dam = Floor(scarring * max_damage)
+		if(new_max_dam < max_damage)
+			to_chat(user, "<span class='warning'>Not every part of [src] could be saved, some dead tissue had to be removed, making it more suspectable to damage in the future.</span>")
+			set_max_damage(new_max_dam)
+	heal_damage(damage)
+
+/obj/item/organ/internal/proc/get_scarring_level()
+	. = (initial(max_damage) - max_damage)/initial(max_damage)
+
+/obj/item/organ/internal/get_scan_results()
+	. = ..()
+	var/scar_level = get_scarring_level()
+	if(scar_level > 0.01)
+		. += "[get_wound_severity(get_scarring_level())] scarring"
+
 /obj/item/organ/internal/emp_act(severity)
-	..()
-
-/obj/item/organ/internal/examine(mob/user)
-	if(!..(user, 1))
-		return 0
-
-	to_chat(user, "<span class='neutral'>You examine the [get_visible_state()].</span>")
-	return 1
+	if(!BP_IS_ROBOTIC(src))
+		return
+	switch (severity)
+		if (1)
+			take_internal_damage(9)
+		if (2)
+			take_internal_damage(3)
+		if (3)
+			take_internal_damage(1)

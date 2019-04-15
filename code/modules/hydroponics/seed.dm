@@ -11,6 +11,7 @@
 	var/display_name               // Prettier name.
 	var/roundstart                 // If set, seed will not display variety number.
 	var/mysterious                 // Only used for the random seed packets.
+	var/scanned                    // If it was scanned with a plant analyzer.
 	var/can_self_harvest = 0       // Mostly used for living mobs.
 	var/growth_stages = 0          // Number of stages the plant passes through before it is mature.
 	var/list/traits = list()       // Initialized in New()
@@ -115,10 +116,9 @@
 
 
 	if(!target_limb) target_limb = pick(BP_ALL_LIMBS)
-	var/blocked = target.run_armor_check(target_limb, DAM_PIERCE)
 	var/obj/item/organ/external/affecting = target.get_organ(target_limb)
 
-	if(blocked >= 100 || (target.species && target.species.species_flags & (SPECIES_FLAG_NO_EMBED|SPECIES_FLAG_NO_MINOR_CUT)))
+	if((target.species && target.species.species_flags & (SPECIES_FLAG_NO_EMBED|SPECIES_FLAG_NO_MINOR_CUT)))
 		to_chat(target, "<span class='danger'>\The [fruit]'s thorns scratch against the armour on your [affecting.name]!</span>")
 		return
 
@@ -140,8 +140,7 @@
 		has_edge = prob(get_trait(TRAIT_POTENCY)/5)
 
 	var/dtype = has_edge? DAM_CUT : DAM_PIERCE
-	dtype = target.HandleArmorDamTypeConversion(dtype, blocked)
-	target.apply_damage(damage, dtype, target_limb, blocked, 0, "Thorns")
+	target.apply_damage(damage, dtype, target_limb, used_weapon = "Thorns")
 
 // Adds reagents to a target.
 /datum/seed/proc/do_sting(var/mob/living/carbon/human/target, var/obj/item/fruit)
@@ -171,7 +170,7 @@
 	if(splat_type && !(locate(/obj/effect/vine) in T))
 		var/obj/effect/vine/splat = new splat_type(T, src)
 		if(!istype(splat)) // Plants handle their own stuff.
-			splat.name = "[thrown.name] [pick("smear","smudge","splatter")]"
+			splat.SetName("[thrown.name] [pick("smear","smudge","splatter")]")
 			if(get_trait(TRAIT_BIOLUM))
 				var/clr
 				if(get_trait(TRAIT_BIOLUM_COLOUR))
@@ -435,10 +434,18 @@
 		var/list/banned_chems = list(
 			/datum/reagent/adminordrazine,
 			/datum/reagent/nutriment,
-			/datum/reagent/nanites
+			/datum/reagent/nanites,
+			/datum/reagent/water/holywater,
+			/datum/reagent/toxin/plantbgone,
+			/datum/reagent/chloralhydrate/beer2
 			)
+		banned_chems += subtypesof(/datum/reagent/ethanol)
+		banned_chems += subtypesof(/datum/reagent/tobacco)
+		banned_chems += typesof(/datum/reagent/drink)
+		banned_chems += typesof(/datum/reagent/nutriment)
+		banned_chems += typesof(/datum/reagent/toxin/fertilizer)
+		banned_chems += typesof(/datum/reagent/crayon_dust)
 
-		if(prob(30))	banned_chems |= typesof(/datum/reagent/ethanol)
 		if(prob(30))	banned_chems |= typesof(/datum/reagent/toxin)
 
 		for(var/x=1;x<=additional_chems;x++)

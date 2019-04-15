@@ -21,8 +21,15 @@
 
 /datum/uplink_item/item/visible_weapons/g9mm
 	name = "Silenced Holdout Pistol"
+	desc = "Holdout pistol with silencer kit and ammunition."
 	item_cost = 32
 	path = /obj/item/weapon/storage/box/syndie_kit/g9mm
+
+/datum/uplink_item/item/badassery/money_cannon
+	name = "Modified Money Cannon"
+	item_cost = 48
+	path = /obj/item/weapon/gun/launcher/money/hacked
+	desc = "Too much money? Not enough screaming? Try the Money Cannon."
 
 /datum/uplink_item/item/visible_weapons/riggedlaser
 	name = "Exosuit (APLU) Rigged Laser"
@@ -36,6 +43,7 @@
 
 /datum/uplink_item/item/visible_weapons/revolver
 	name = "Revolver, .357"
+	desc = "Magnum revolver, with ammunition."
 	item_cost = 56
 	antag_costs = list(MODE_MERCENARY = 7)
 	path = /obj/item/weapon/storage/backpack/satchel/syndie_kit/revolver
@@ -74,7 +82,16 @@
 	name = "Anti-materiel Rifle with ammunition"
 	item_cost = 68
 	path = /obj/item/weapon/storage/secure/briefcase/heavysniper
+	antag_roles = list(MODE_MERCENARY)
+
 /*
+/datum/uplink_item/item/visible_weapons/psi_amp
+	name = "Cerebroenergetic Psionic Amplifier"
+	item_cost = 50
+	path = /obj/item/clothing/head/helmet/space/psi_amp/lesser
+	desc = "A powerful, illegal psi-amp. Boosts latent psi-faculties to extremely high levels."
+*/
+
 /datum/uplink_item/item/visible_weapons/machine_pistol
 	name = "Machine Pistol"
 	item_cost = 45
@@ -84,7 +101,7 @@
 	name = "Combat Shotgun"
 	item_cost = 52
 	path = /obj/item/weapon/gun/projectile/shotgun/pump/combat
-*/
+
 /datum/uplink_item/item/visible_weapons/sawnoff
 	name = "Sawnoff Shotgun"
 	item_cost = 45
@@ -111,3 +128,21 @@
 	item_cost = 60
 	antag_costs = list(MODE_MERCENARY = 9)
 	path = /obj/item/weapon/gun/magnetic/railgun/flechette
+	antag_roles = list(MODE_MERCENARY)
+
+/datum/uplink_item/item/visible_weapons/railgun // Like a semi-auto AMR
+	name = "Railgun"
+	item_cost = DEFAULT_TELECRYSTAL_AMOUNT - (DEFAULT_TELECRYSTAL_AMOUNT - (DEFAULT_TELECRYSTAL_AMOUNT % 6)) / 6
+	antag_roles = list(MODE_MERCENARY)
+	path = /obj/item/weapon/gun/magnetic/railgun
+
+/datum/uplink_item/item/visible_weapons/railguntcc // Only slightly better than the normal railgun; but cooler looking
+	name = "Advanced Railgun"
+	antag_roles = list(MODE_MERCENARY)
+	item_cost = DEFAULT_TELECRYSTAL_AMOUNT
+	path = /obj/item/weapon/gun/magnetic/railgun/tcc
+
+/datum/uplink_item/item/visible_weapons/harpoonbomb
+	name = "Explosive Harpoon"
+	item_cost = 12
+	path = /obj/item/weapon/material/harpoon/bomb

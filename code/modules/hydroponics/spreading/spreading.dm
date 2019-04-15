@@ -80,7 +80,7 @@
 	if(start_matured)
 		mature_time = 0
 		health = max_health
-
+	..()
 
 /obj/effect/vine/Initialize()
 	. = ..()
@@ -129,7 +129,7 @@
 		var/turf/T = get_turf(src)
 		T.ex_act(prob(80) ? 3 : 2)
 
-/obj/effect/vine/update_icon()
+/obj/effect/vine/on_update_icon()
 	overlays.Cut()
 	var/growth = growth_threshold ? min(max_growth, round(health/growth_threshold)) : 1
 	var/at_fringe = get_dist(src,parent)
@@ -289,3 +289,6 @@
 
 /obj/effect/vine/proc/is_mature()
 	return (health >= (max_health/3) && world.time > mature_time)
+
+/obj/effect/vine/is_burnable()
+	return seed.get_trait(TRAIT_HEAT_TOLERANCE) < 1000

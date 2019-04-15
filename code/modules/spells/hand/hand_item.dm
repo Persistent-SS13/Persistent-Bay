@@ -48,8 +48,6 @@ Basically: I can use it to target things where I click. I can then pass these ta
 			user.ExtraMoveCooldown(hand_spell.move_delay)
 		if(hand_spell.click_delay)
 			user.setClickCooldown(hand_spell.move_delay)
-	else
-		user.drop_from_inventory(src)
 
 /obj/item/magic_hand/afterattack(var/atom/A, var/mob/user, var/proximity)
 	if(hand_spell)
@@ -60,9 +58,9 @@ Basically: I can use it to target things where I click. I can then pass these ta
 
 /obj/item/magic_hand/dropped() //gets deleted on drop
 	..()
-	loc = null
 	qdel(src)
 
 /obj/item/magic_hand/Destroy() //better save than sorry.
+	hand_spell.current_hand = null
 	hand_spell = null
-	..()
+	. = ..()

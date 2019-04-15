@@ -153,8 +153,8 @@
 				Paralyse(10)
 
 	// focus most of the blast on one organ
-	apply_damage(0.7 * b_loss, DAM_BOMB, null, DAM_EXPLODE, used_weapon = "Explosive blast")
-	apply_damage(0.7 * f_loss, DAM_BURN, null, DAM_EXPLODE, used_weapon = "Explosive blast")
+	apply_damage(0.7 * b_loss, DAM_BOMB, null, 0, used_weapon = "Explosive blast")
+	apply_damage(0.7 * f_loss, DAM_BURN, null, 0, used_weapon = "Explosive blast")
 
 	// distribute the remaining 30% on all limbs equally (including the one already dealt damage)
 	apply_damage(0.3 * b_loss, DAM_BOMB, null, DAM_DISPERSED, used_weapon = "Explosive blast")

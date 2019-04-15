@@ -144,41 +144,43 @@
 	return candidates
 
 /datum/antagonist/proc/attempt_random_spawn()
-	update_current_antag_max(SSticker.mode)
-	build_candidate_list(SSticker.mode, flags & (ANTAG_OVERRIDE_MOB|ANTAG_OVERRIDE_JOB))
-	attempt_spawn()
-	finalize_spawn()
+	return FALSE
+	// update_current_antag_max(SSticker.mode)
+	// build_candidate_list(SSticker.mode, flags & (ANTAG_OVERRIDE_MOB|ANTAG_OVERRIDE_JOB))
+	// attempt_spawn()
+	// finalize_spawn()
 
 /datum/antagonist/proc/attempt_auto_spawn()
-	if(!can_late_spawn())
-		return 0
+	return FALSE
+	// if(!can_late_spawn())
+	// 	return 0
 
-	update_current_antag_max(SSticker.mode)
-	var/active_antags = get_active_antag_count()
-	message_admins("[uppertext(id)]: Found [active_antags]/[cur_max] active [role_text_plural].")
+	// update_current_antag_max(SSticker.mode)
+	// var/active_antags = get_active_antag_count()
+	// message_admins("[uppertext(id)]: Found [active_antags]/[cur_max] active [role_text_plural].")
 
-	if(active_antags >= cur_max)
-		message_admins("Could not auto-spawn a [role_text], active antag limit reached.")
-		return 0
+	// if(active_antags >= cur_max)
+	// 	message_admins("Could not auto-spawn a [role_text], active antag limit reached.")
+	// 	return 0
 
-	build_candidate_list(SSticker.mode, flags & (ANTAG_OVERRIDE_MOB|ANTAG_OVERRIDE_JOB))
-	if(!candidates.len)
-		message_admins("Could not auto-spawn a [role_text], no candidates found.")
-		return 0
+	// build_candidate_list(SSticker.mode, flags & (ANTAG_OVERRIDE_MOB|ANTAG_OVERRIDE_JOB))
+	// if(!candidates.len)
+	// 	message_admins("Could not auto-spawn a [role_text], no candidates found.")
+	// 	return 0
 
-	attempt_spawn(1) //auto-spawn antags one at a time
-	if(!pending_antagonists.len)
-		message_admins("Could not auto-spawn a [role_text], none of the available candidates could be selected.")
-		return 0
+	// attempt_spawn(1) //auto-spawn antags one at a time
+	// if(!pending_antagonists.len)
+	// 	message_admins("Could not auto-spawn a [role_text], none of the available candidates could be selected.")
+	// 	return 0
 
-	var/datum/mind/player = pending_antagonists[1]
-	if(!add_antagonist(player,0,0,0,1,1))
-		message_admins("Could not auto-spawn a [role_text], failed to add antagonist.")
-		return 0
+	// var/datum/mind/player = pending_antagonists[1]
+	// if(!add_antagonist(player,0,0,0,1,1))
+	// 	message_admins("Could not auto-spawn a [role_text], failed to add antagonist.")
+	// 	return 0
 
-	reset_antag_selection()
+	// reset_antag_selection()
 
-	return 1
+	// return 1
 
 //Selects players that will be spawned in the antagonist role from the potential candidates
 //Selected players are added to the pending_antagonists lists.
@@ -202,32 +204,33 @@
 	return 1
 
 /datum/antagonist/proc/draft_antagonist(var/datum/mind/player)
-	//Check if the player can join in this antag role, or if the player has already been given an antag role.
-	if(!can_become_antag(player))
-		log_debug("[player.key] was selected for [role_text] by lottery, but is not allowed to be that role.")
-		return 0
-	if(player.special_role)
-		log_debug("[player.key] was selected for [role_text] by lottery, but they already have a special role.")
-		return 0
-	if(!(flags & ANTAG_OVERRIDE_JOB) && (!player.current || istype(player.current, /mob/new_player)))
-		log_debug("[player.key] was selected for [role_text] by lottery, but they have not joined the game.")
-		return 0
-	if(GAME_STATE >= RUNLEVEL_GAME && (isghostmind(player) || isnewplayer(player.current)) && !(player in SSticker.antag_pool))
-		log_debug("[player.key] was selected for [role_text] by lottery, but they are a ghost not in the antag pool.")
-		return 0
+	return 0
+	// //Check if the player can join in this antag role, or if the player has already been given an antag role.
+	// if(!can_become_antag(player))
+	// 	log_debug("[player.key] was selected for [role_text] by lottery, but is not allowed to be that role.")
+	// 	return 0
+	// if(player.special_role)
+	// 	log_debug("[player.key] was selected for [role_text] by lottery, but they already have a special role.")
+	// 	return 0
+	// if(!(flags & ANTAG_OVERRIDE_JOB) && (!player.current || istype(player.current, /mob/new_player)))
+	// 	log_debug("[player.key] was selected for [role_text] by lottery, but they have not joined the game.")
+	// 	return 0
+	// if(GAME_STATE >= RUNLEVEL_GAME && (isghostmind(player) || isnewplayer(player.current)) && !(player in SSticker.antag_pool))
+	// 	log_debug("[player.key] was selected for [role_text] by lottery, but they are a ghost not in the antag pool.")
+	// 	return 0
 
-	pending_antagonists |= player
-	log_debug("[player.key] has been selected for [role_text] by lottery.")
+	// pending_antagonists |= player
+	// log_debug("[player.key] has been selected for [role_text] by lottery.")
 
-	//Ensure that antags with ANTAG_OVERRIDE_JOB do not occupy job slots.
-	if(flags & ANTAG_OVERRIDE_JOB)
-		player.assigned_role = role_text
-		player.role_alt_title = null
+	// //Ensure that antags with ANTAG_OVERRIDE_JOB do not occupy job slots.
+	// if(flags & ANTAG_OVERRIDE_JOB)
+	// 	player.assigned_role = role_text
+	// 	player.role_alt_title = null
 
-	//Ensure that a player cannot be drafted for multiple antag roles, taking up slots for antag roles that they will not fill.
-	player.special_role = role_text
+	// //Ensure that a player cannot be drafted for multiple antag roles, taking up slots for antag roles that they will not fill.
+	// player.special_role = role_text
 
-	return 1
+	// return 1
 
 //Spawns all pending_antagonists. This is done separately from attempt_spawn in case the game mode setup fails.
 /datum/antagonist/proc/finalize_spawn()

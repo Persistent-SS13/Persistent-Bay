@@ -131,21 +131,21 @@
 	materials = list(MATERIAL_PLASTIC = 0.25 SHEETS)
 
 /datum/design/item/consumerfab/consumer/glowstick
-	build_path = /obj/item/device/flashlight/glowstick
+	build_path = /obj/item/device/flashlight/flare/glowstick
 	materials = list(MATERIAL_PLASTIC = 0.5 SHEETS, MATERIAL_COPPER = 0.15)
 
 /datum/design/item/consumerfab/consumer/glowstick/red
-	build_path = /obj/item/device/flashlight/glowstick/red
+	build_path = /obj/item/device/flashlight/flare/glowstick/red
 
 /datum/design/item/consumerfab/consumer/glowstick/blue
-	build_path = /obj/item/device/flashlight/glowstick/blue
+	build_path = /obj/item/device/flashlight/flare/glowstick/blue
 
 /datum/design/item/consumerfab/consumer/glowstick/orange
-	build_path = /obj/item/device/flashlight/glowstick/orange
+	build_path = /obj/item/device/flashlight/flare/glowstick/orange
 
 
 /datum/design/item/consumerfab/consumer/glowstick/yellow
-	build_path = /obj/item/device/flashlight/glowstick/yellow
+	build_path = /obj/item/device/flashlight/flare/glowstick/yellow
 
 
 
@@ -509,59 +509,59 @@
 	materials = list(MATERIAL_WOOD = 0.25 SHEETS)
 /datum/design/item/consumerfab/consumer/games/checker
 	name = "black checker"
-	build_path = /obj/item/weapon/checker
+	build_path = /obj/item/weapon/reagent_containers/food/snacks/checker
 
 /datum/design/item/consumerfab/consumer/games/redchecker
 	name = "red checker"
-	build_path = /obj/item/weapon/checker/red
+	build_path = /obj/item/weapon/reagent_containers/food/snacks/checker/red
 
 /datum/design/item/consumerfab/consumer/games/pawn
 	name = "black pawn"
-	build_path = /obj/item/weapon/checker/pawn
+	build_path = /obj/item/weapon/reagent_containers/food/snacks/checker/pawn
 
 /datum/design/item/consumerfab/consumer/games/redpawn
 	name = "red pawn"
-	build_path = /obj/item/weapon/checker/pawn/red
+	build_path = /obj/item/weapon/reagent_containers/food/snacks/checker/pawn/red
 
 /datum/design/item/consumerfab/consumer/games/knight
 	name = "black knight"
-	build_path = /obj/item/weapon/checker/knight
+	build_path = /obj/item/weapon/reagent_containers/food/snacks/checker/knight
 
 /datum/design/item/consumerfab/consumer/games/redknight
 	name = "red knight"
-	build_path = /obj/item/weapon/checker/knight/red
+	build_path = /obj/item/weapon/reagent_containers/food/snacks/checker/knight/red
 
 /datum/design/item/consumerfab/consumer/games/bishop
 	name = "black bishop"
-	build_path = /obj/item/weapon/checker/bishop
+	build_path = /obj/item/weapon/reagent_containers/food/snacks/checker/bishop
 
 /datum/design/item/consumerfab/consumer/games/redbishop
 	name = "red bishop"
-	build_path = /obj/item/weapon/checker/bishop/red
+	build_path = /obj/item/weapon/reagent_containers/food/snacks/checker/bishop/red
 
 /datum/design/item/consumerfab/consumer/games/rook
 	name = "black rook"
-	build_path = /obj/item/weapon/checker/rook
+	build_path = /obj/item/weapon/reagent_containers/food/snacks/checker/rook
 
 /datum/design/item/consumerfab/consumer/games/redrook
 	name = "red rook"
-	build_path = /obj/item/weapon/checker/rook/red
+	build_path = /obj/item/weapon/reagent_containers/food/snacks/checker/rook/red
 
 /datum/design/item/consumerfab/consumer/games/queen
 	name = "black queen"
-	build_path = /obj/item/weapon/checker/queen
+	build_path = /obj/item/weapon/reagent_containers/food/snacks/checker/queen
 
 /datum/design/item/consumerfab/consumer/games/redqueen
 	name = "red queen"
-	build_path = /obj/item/weapon/checker/queen/red
+	build_path = /obj/item/weapon/reagent_containers/food/snacks/checker/queen/red
 
 /datum/design/item/consumerfab/consumer/games/king
 	name = "black king"
-	build_path = /obj/item/weapon/checker/king
+	build_path = /obj/item/weapon/reagent_containers/food/snacks/checker/king
 
 /datum/design/item/consumerfab/consumer/games/redking
 	name = "red king"
-	build_path = /obj/item/weapon/checker/king/red
+	build_path = /obj/item/weapon/reagent_containers/food/snacks/checker/king/red
 
 /datum/design/item/consumerfab/consumer/games/cardemon
 	name = "cardemon booster pack"

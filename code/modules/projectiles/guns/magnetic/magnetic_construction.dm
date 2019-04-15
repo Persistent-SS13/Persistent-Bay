@@ -4,7 +4,7 @@
 /obj/item/weapon/coilgun_assembly
 	name = "coilgun stock"
 	desc = "It might be a coilgun, someday."
-	icon = 'icons/obj/coilgun.dmi'
+	icon = 'icons/obj/weapons/guns/coilgun.dmi'
 	icon_state = "coilgun_construction_1"
 
 	var/construction_stage = 1

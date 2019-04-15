@@ -22,6 +22,7 @@
 		DAM_RADS 	= 20,
 		DAM_STUN 	= 0)
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|BLOCKHAIR
+	item_flags = ITEM_FLAG_THICKMATERIAL
 	body_parts_covered = HEAD|FACE|EYES
 	siemens_coefficient = 0.9
 
@@ -52,6 +53,7 @@
 		DAM_RADS 	= 20,
 		DAM_STUN 	= 0)
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT|HIDETAIL
+	item_flags = ITEM_FLAG_THICKMATERIAL
 	siemens_coefficient = 0.9
 
 /obj/item/clothing/suit/bio_suit/New()

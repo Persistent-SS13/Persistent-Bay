@@ -120,7 +120,7 @@
 			else
 				air2.temperature = air2.temperature + heat/air2_heat_capacity
 				air1.temperature = air1.temperature - energy_transfer/air1_heat_capacity
-		playsound(src.loc, 'sound/effects/beam.ogg', 25, 0, 10,  is_ambience = 1)
+		playsound(src.loc, 'sound/effects/beam.ogg', 25, 0, 10,  is_ambiance = 1)
 
 	CHECK_TICK
 
@@ -170,7 +170,7 @@
 		user.visible_message("[user.name] [anchored ? "secures" : "unsecures"] the bolts holding [src.name] to the floor.", \
 					"You [anchored ? "secure" : "unsecure"] the bolts holding [src] to the floor.", \
 					"You hear a ratchet")
-		use_power = anchored
+		update_use_power(anchored)
 		if(anchored) // Powernet connection stuff.
 			connect_to_network()
 		else

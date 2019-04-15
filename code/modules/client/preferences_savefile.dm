@@ -3,22 +3,34 @@
 
 /proc/load_path(ckey,filename="preferences.sav")
 	if(!ckey)	return
-	var/path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
-	return path
+	return "data/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 
 /proc/beta_path(ckey,filename="preferences.sav")
 	if(!ckey) return
-	var/path = "exports/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
-	return path
+	return "exports/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 
 /proc/exit_path(ckey,filename="preferences.sav")
 	if(!ckey)	return
-	var/path = "exits/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
-	return path
+	return "exits/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
+
+/datum/preferences/proc/load_path(ckey,filename="preferences.sav")
+	if(!ckey)	return
+	path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
+	savefile_version = SAVEFILE_VERSION_MAX
+
+/datum/preferences/proc/beta_path(ckey,filename="preferences.sav")
+	if(!ckey) return
+	path = "exports/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
+	savefile_version = SAVEFILE_VERSION_MAX
+
+/datum/preferences/proc/exit_path(ckey,filename="preferences.sav")
+	if(!ckey)	return
+	path = "exits/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
+	savefile_version = SAVEFILE_VERSION_MAX
 
 
 /datum/preferences/proc/load_preferences()
-	path = load_path(client.ckey)
+	if(!path)				return 0
 	if(!fexists(path))		return 0
 	var/savefile/S = new /savefile(path)
 	if(!S)					return 0
@@ -30,7 +42,7 @@
 	return 1
 
 /datum/preferences/proc/save_preferences()
-	path = load_path(client.ckey)
+	if(!path)				return 0
 	var/savefile/S = new /savefile(path)
 	if(!S)					return 0
 	S.cd = "/"
@@ -47,12 +59,6 @@
 //	if(!S)					return 0
 //	S.cd = "/"
 //	if(!slot)	slot = default_slot
-
-
-
-
-
-
 
 	/**
 	if(slot != SAVE_RESET) // SAVE_RESET will reset the slot as though it does not exist, but keep the current slot for saving purposes.

@@ -75,13 +75,16 @@
 /obj/machinery/power/apc
 	name = "area power controller"
 	desc = "A control terminal for the area electrical systems."
-	icon = 'icons/obj/apc.dmi'
+
 	icon_state = "apc0"
+	icon = 'icons/obj/apc.dmi'
+	plane = ABOVE_HUMAN_PLANE
 	anchored = 1
-	use_power = 0
-	layer = ABOVE_WINDOW_LAYER
+	use_power = POWER_USE_OFF
 	req_access = list(core_access_engineering_programs)
 	clicksound = "switch"
+	layer = ABOVE_WINDOW_LAYER
+	var/needs_powerdown_sound
 	var/area/area
 	var/areastring = null
 	var/obj/item/weapon/cell/cell
@@ -130,6 +133,9 @@
 	var/global/list/status_overlays_environ
 
 
+/obj/machinery/power/apc/get_cell()
+	return cell
+
 /obj/machinery/power/apc/updateDialog()
 	if (stat & (BROKEN|MAINT))
 		return
@@ -170,13 +176,13 @@
 
 	wires = new(src)
 
-	// offset 24 pixels in direction of dir
+	// offset 22 pixels in direction of dir
 	// this allows the APC to be embedded in a wall, yet still inside an area
 	if (building)
 		set_dir(ndir)
 
-	pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 21 : -21)
-	pixel_y = (src.dir & 3)? (src.dir ==1 ? 23 : -28) : 0
+	pixel_x = (src.dir & 3)? 0 : (src.dir == 4 ? 22 : -22)
+	pixel_y = (src.dir & 3)? (src.dir ==1 ? 22 : -22) : 0
 
 	if (building==0)
 		init_round_start()
@@ -185,7 +191,7 @@
 		area.apc = src
 		opened = 1
 		operating = 0
-		name = "\improper [area.name] APC"
+		SetName("\improper [area.name] APC")
 		stat |= MAINT
 		src.update_icon()
 
@@ -220,6 +226,7 @@
 	if(emp_hardened)
 		return
 	failure_timer = max(failure_timer, round(duration))
+	playsound(src, 'sound/machines/apc_nopower.ogg', 75, 0)
 
 /obj/machinery/power/apc/after_load()
 	connect_to_network()
@@ -233,6 +240,8 @@
 
 /obj/machinery/power/apc/proc/init_round_start()
 	has_electronics = 2 //installed and secured
+	if(!terminal)
+		make_terminal() //wired
 	// is starting with a power cell installed, create it and set its charge level
 	if(!map_storage_loaded)
 		if(cell_type)
@@ -248,10 +257,10 @@
 		//if area isn't specified use current
 		if(isarea(A) && src.areastring == null)
 			src.area = A
-			name = "\improper [area.name] APC"
+			SetName("\improper [area.name] APC")
 		else
 			src.area = get_area_name(areastring)
-			name = "\improper [area.name] APC"
+			SetName("\improper [area.name] APC")
 		area.apc = src
 		update_icon()
 
@@ -281,7 +290,7 @@
 
 // update the APC icon to show the three base states
 // also add overlays for indicator lights
-/obj/machinery/power/apc/update_icon()
+/obj/machinery/power/apc/on_update_icon()
 	if (!status_overlays)
 		status_overlays = 1
 		status_overlays_lock = new
@@ -303,27 +312,34 @@
 		status_overlays_charging[2] = image(icon, "apco3-1")
 		status_overlays_charging[3] = image(icon, "apco3-2")
 
-		status_overlays_equipment[POWERCHAN_OFF + 1] = image(icon, "apco0-0")
-		status_overlays_equipment[POWERCHAN_OFF_TEMP + 1] = image(icon, "apco0-1")
-		status_overlays_equipment[POWERCHAN_OFF_AUTO + 1] = image(icon, "apco0-1")
-		status_overlays_equipment[POWERCHAN_ON + 1] = image(icon, "apco0-2")
-		status_overlays_equipment[POWERCHAN_ON_AUTO + 1] = image(icon, "apco0-3")
+		var/list/channel_overlays = list(status_overlays_equipment, status_overlays_lighting, status_overlays_environ)
+		var/channel = 0
+		for(var/list/channel_leds in channel_overlays)
+			channel_leds[POWERCHAN_OFF + 1] = overlay_image(icon,"apco[channel]",COLOR_RED)
+			channel_leds[POWERCHAN_OFF_TEMP + 1] = overlay_image(icon,"apco[channel]",COLOR_ORANGE)
+			channel_leds[POWERCHAN_OFF_AUTO + 1] = overlay_image(icon,"apco[channel]",COLOR_ORANGE)
+			channel_leds[POWERCHAN_ON + 1] = overlay_image(icon,"apco[channel]",COLOR_LIME)
+			channel_leds[POWERCHAN_ON_AUTO + 1] = overlay_image(icon,"apco[channel]",COLOR_BLUE)
+			channel++
 
-		status_overlays_lighting[POWERCHAN_OFF + 1] = image(icon, "apco1-0")
-		status_overlays_lighting[POWERCHAN_OFF_TEMP + 1] = image(icon, "apco1-1")
-		status_overlays_lighting[POWERCHAN_OFF_AUTO + 1] = image(icon, "apco1-1")
-		status_overlays_lighting[POWERCHAN_ON + 1] = image(icon, "apco1-2")
-		status_overlays_lighting[POWERCHAN_ON_AUTO + 1] = image(icon, "apco1-3")
-
-		status_overlays_environ[POWERCHAN_OFF + 1] = image(icon, "apco2-0")
-		status_overlays_environ[POWERCHAN_OFF_TEMP + 1] = image(icon, "apco2-1")
-		status_overlays_environ[POWERCHAN_OFF_AUTO + 1] = image(icon, "apco2-1")
-		status_overlays_environ[POWERCHAN_ON + 1] = image(icon, "apco2-2")
-		status_overlays_environ[POWERCHAN_ON_AUTO + 1] = image(icon, "apco2-3")
+	if(update_state < 0)
+		pixel_x = 0
+		pixel_y = 0
+		var/turf/T = get_step(get_turf(src), dir)
+		if(istype(T) && T.density)
+			if(dir == SOUTH)
+				pixel_y = -22
+			else if(dir == NORTH)
+				pixel_y = 22
+			else if(dir == EAST)
+				pixel_x = 22
+			else if(dir == WEST)
+				pixel_x = -22
 
 	var/update = check_updates() 		//returns 0 if no need to update icons.
 						// 1 if we need to update the icon_state
 						// 2 if we need to update the overlays
+
 	if(!update)
 		return
 
@@ -348,12 +364,12 @@
 
 	if(!(update_state & UPDATE_ALLGOOD))
 		if(overlays.len)
-			overlays = 0
+			overlays.Cut()
 			return
 
 	if(update & 2)
 		if(overlays.len)
-			overlays.len = 0
+			overlays.Cut()
 		if(!(stat & (BROKEN|MAINT)) && update_state & UPDATE_ALLGOOD)
 			overlays += status_overlays_lock[locked+1]
 			overlays += status_overlays_charging[charging+1]
@@ -366,7 +382,7 @@
 		if(update_state & (UPDATE_OPENED1|UPDATE_OPENED2|UPDATE_BROKE))
 			set_light(0)
 		else if(update_state & UPDATE_BLUESCREEN)
-			set_light(l_range = 2, l_power = 0.5, l_color = "#0000ff")
+			set_light(0.8, 0.1, 1, 2, "#00ecff")
 		else if(!(stat & (BROKEN|MAINT)) && update_state & UPDATE_ALLGOOD)
 			var/color
 			switch(charging)
@@ -376,7 +392,7 @@
 					color = "#a8b0f8"
 				if(2)
 					color = "#82ff4c"
-			set_light(l_range = 2, l_power = 0.5, l_color = color)
+			set_light(0.8, 0.1, 1, l_color = color)
 		else
 			set_light(0)
 
@@ -438,10 +454,10 @@
 //attack with an item - open/close cover, insert cell, or (un)lock interface
 
 /obj/machinery/power/apc/attackby(obj/item/W, mob/user)
-
 	if (istype(user, /mob/living/silicon) && get_dist(src,user)>1)
 		return src.attack_hand(user)
 	src.add_fingerprint(user)
+	if(istype(W, /obj/item/inducer)) return // inducer.dm afterattack handles this
 	if(isCrowbar(W) && opened)
 		if (has_electronics==1)
 			if (terminal)
@@ -484,8 +500,8 @@
 			to_chat(user, "\The [W] is too [W.w_class < ITEM_SIZE_NORMAL? "small" : "large"] to fit here.")
 			return
 
-		user.drop_item()
-		W.forceMove(src)
+		if(!user.unEquip(W, src))
+			return
 		cell = W
 		user.visible_message(\
 			"<span class='warning'>[user.name] has inserted the power cell to [src.name]!</span>",\
@@ -518,7 +534,7 @@
 			to_chat(user, "The wires have been [wiresexposed ? "exposed" : "unexposed"]")
 			update_icon()
 
-	else if (istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))			// trying to unlock the interface with an ID card
+	else if (istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/modular_computer))			// trying to unlock the interface with an ID card
 		if(emagged)
 			to_chat(user, "The interface is broken.")
 		else if(opened)
@@ -581,8 +597,7 @@
 						return
 				new /obj/item/stack/cable_coil(loc,10)
 				to_chat(user, "<span class='notice'>You cut the cables and dismantle the power terminal.</span>")
-				qdel(terminal)
-				terminal = null
+				QDEL_NULL(terminal)
 	else if (istype(W, /obj/item/weapon/module/power_control) && opened && has_electronics==0 && !((stat & BROKEN)))
 		user.visible_message("<span class='warning'>[user.name] inserts the power control board into [src].</span>", \
 							"You start to insert the power control board into the frame...")
@@ -641,14 +656,14 @@
 				"<span class='notice'>[user.name] has replaced the damaged APC frame with new one.</span>",\
 				"You replace the damaged APC frame with new one.")
 			qdel(W)
-			stat &= ~BROKEN
+			set_broken(FALSE)
 			// Malf AI, removes the APC from AI's hacked APCs list.
 			if(hacker && hacker.hacked_apcs && (src in hacker.hacked_apcs))
 				hacker.hacked_apcs -= src
 				hacker = null
 			if (opened==2)
 				opened = 1
-			update_icon()
+			queue_icon_update()
 	else
 		if (((stat & BROKEN) || (hacker && !hacker.hacked_apcs_hidden)) \
 				&& !opened \
@@ -668,6 +683,20 @@
 			user.visible_message("<span class='danger'>The [src.name] has been hit with the [W.name] by [user.name]!</span>", \
 				"<span class='danger'>You hit the [src.name] with your [W.name]!</span>", \
 				"You hear a bang")
+			if(W.force >= 5 && W.w_class >= ITEM_SIZE_NORMAL && prob(W.force))
+				var/roulette = rand(1,100)
+				switch(roulette)
+					if(1 to 10)
+						locked = FALSE
+						to_chat(user, "<span class='notice'>You manage to disable the lock on \the [src]!</span>")
+					if(50 to 70)
+						to_chat(user, "<span class='notice'>You manage to bash the lid open!</span>")
+						opened = 1
+					if(90 to 100)
+						to_chat(user, "<span class='warning'>There's a nasty sound and \the [src] goes cold...</span>")
+						set_broken(TRUE)
+				queue_icon_update()
+		playsound(get_turf(src), 'sound/weapons/smash.ogg', 75, 1)
 
 // attack with hand - remove cell (if cover open) or interact with the APC
 
@@ -838,6 +867,13 @@
 		area.power_environ = 0
 
 	area.power_change()
+
+	if(!cell || cell.charge <= 0)
+		if(needs_powerdown_sound == TRUE)
+			playsound(src, 'sound/machines/apc_nopower.ogg', 75, 0)
+			needs_powerdown_sound = FALSE
+		else
+			needs_powerdown_sound = TRUE
 
 /obj/machinery/power/apc/proc/isWireCut(var/wireIndex)
 	return wires.IsIndexCut(wireIndex)
@@ -1138,8 +1174,8 @@
 // on 0=off, 1=on, 2=autooff
 // defines a state machine, returns the new state
 obj/machinery/power/apc/proc/autoset(var/cur_state, var/on)
+	//autoset will never turn on a channel set to off
 	switch(cur_state)
-		//if(POWERCHAN_OFF); //autoset will never turn on a channel set to off
 		if(POWERCHAN_OFF_TEMP)
 			if(on == 1 || on == 2)
 				return POWERCHAN_ON
@@ -1186,12 +1222,12 @@ obj/machinery/power/apc/proc/autoset(var/cur_state, var/on)
 			return
 		if(2.0)
 			if (prob(50))
-				set_broken()
+				set_broken(TRUE)
 				if (cell && prob(50))
 					cell.ex_act(2.0)
 		if(3.0)
 			if (prob(25))
-				set_broken()
+				set_broken(TRUE)
 				if (cell && prob(25))
 					cell.ex_act(3.0)
 	return

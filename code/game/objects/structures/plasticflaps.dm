@@ -50,7 +50,7 @@
 			user.visible_message("<span class='notice'>[user] [anchored ? "fastens" : "unfastens"] the [src].</span>", \
 								 "<span class='notice'>You have [anchored ? "fastened the [src] to" : "unfastened the [src] from"] the floor.</span>")
 			return
-	if(isWelder(W) W.use_tool(src, 3 SECONDS))
+	if(isWelder(W) && W.use_tool(src, 3 SECONDS))
 		dismantle()
 		user.visible_message("<span class='warning'>\The [user] deconstructs \the [src].</span>", "<span class='warning'>You deconstruct \the [src].</span>")
 		return

@@ -17,8 +17,12 @@
 	var/list/flags = list()
 	//Products created when burned. For fuel only for now (not oxidizers)
 	var/list/burn_product = list()
-	//Reagent created when inhaled by lungs.
-	var/breathed_product = list()
+	// Reagent created when inhaled by lungs.
+	var/list/breathed_product = list()
+	// Temperature in K that the gas will condense.
+	var/list/condensation_points = list()
+	// Reagent path resulting from condesation.
+	var/list/condensation_products = list()
 	//Ratio of the reagents that one mole of the gas is (molecularly) made of.
 	var/list/component_reagents = list()
 
@@ -34,7 +38,9 @@
 	var/flags = 0
 	var/burn_product = GAS_CO2
 	var/breathed_product
-	var/component_reagents
+	var/condensation_point = INFINITY
+	var/condensation_product
+	var/list/component_reagents
 
 /hook/startup/proc/generateGasData()
 	gas_data = new
@@ -58,6 +64,9 @@
 		gas_data.breathed_product[gas.id] = gas.breathed_product
 		gas_data.component_reagents[gas.id] = gas.component_reagents
 
+		if(!isnull(gas.condensation_product) && !isnull(gas.condensation_point))
+			gas_data.condensation_points[gas.id] = gas.condensation_point
+			gas_data.condensation_products[gas.id] = gas.condensation_product
 	//Reagent gases
 	for(var/r in (typesof(/datum/reagent) - /datum/reagent))
 		var/datum/reagent/reagent = new r

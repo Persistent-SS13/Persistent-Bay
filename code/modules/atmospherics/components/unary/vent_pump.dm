@@ -215,7 +215,7 @@
 
 	if (power_draw >= 0)
 		last_power_draw = power_draw
-		use_power(power_draw)
+		use_power_oneoff(power_draw)
 		if(network)
 			network.update = TRUE
 
@@ -258,7 +258,7 @@
 	if(!initial_loc.air_vent_names[id_tag])
 		var/new_name = "[initial_loc.name] Vent Pump #[initial_loc.air_vent_names.len+1]"
 		initial_loc.air_vent_names[id_tag] = new_name
-		src.name = new_name
+		src.SetName(new_name)
 	initial_loc.air_vent_info[id_tag] = data
 
 	if(!id_tag) //No points in emitting signal when no tag assigned
@@ -279,10 +279,10 @@
 		pump_direction = 1
 
 	if(signal.data["power"] != null)
-		use_power = text2num(signal.data["power"])
+		update_use_power(sanitize_integer(text2num(signal.data["power"]), POWER_USE_OFF, POWER_USE_ACTIVE, use_power))
 
 	if(signal.data["power_toggle"] != null)
-		use_power = !use_power
+		update_use_power(!use_power)
 
 	if(signal.data["direction_toggle"] != null)
 		pump_direction = !pump_direction
@@ -334,7 +334,7 @@
 		)
 
 	if(signal.data["init"] != null)
-		name = signal.data["init"]
+		SetName(signal.data["init"])
 		return
 
 	if(signal.data["status"] != null)

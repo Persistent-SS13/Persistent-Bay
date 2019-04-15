@@ -34,6 +34,7 @@
 		set_slowdown()
 		force = 5
 		if(icon_base) icon_state = "[icon_base]1"
+		playsound(get_turf(src), 'sound/effects/magnetclamp.ogg', 20)
 		to_chat(user, "You enable the mag-pulse traction system.")
 	user.update_inv_shoes()	//so our mob-overlays update
 	user.update_action_buttons()
@@ -48,8 +49,9 @@
 			to_chat(user, "You are unable to wear \the [src] as \the [H.shoes] are in the way.")
 			shoes = null
 			return 0
-		H.drop_from_inventory(shoes)	//Remove the old shoes so you can put on the magboots.
-		shoes.forceMove(src)
+		if(!H.unEquip(shoes, src))//Remove the old shoes so you can put on the magboots.
+			shoes = null
+			return 0
 
 	if(!..())
 		if(shoes) 	//Put the old shoes back on if the check fails.
@@ -77,7 +79,7 @@
 	var/mob/living/carbon/human/H = wearer
 	if(shoes && istype(H))
 		if(!H.equip_to_slot_if_possible(shoes, slot_shoes))
-			shoes.forceMove(get_turf(src))
+			shoes.dropInto(loc)
 		src.shoes = null
 	wearer.update_floating()
 	wearer = null

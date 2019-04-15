@@ -103,7 +103,7 @@
 	materials = list(MATERIAL_GLASS = 0.25 SHEETS)
 
 /datum/design/item/medicalfab/meditools/adv/bloodpack
-	build_path = /obj/item/weapon/reagent_containers/blood/empty
+	build_path = /obj/item/weapon/reagent_containers/ivbag
 	materials = list(MATERIAL_PLASTIC = 0.25 SHEETS)
 
 /datum/design/item/medicalfab/meditools/adv/syringe_cartridge

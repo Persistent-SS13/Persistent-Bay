@@ -110,7 +110,7 @@
 
 /obj/item/weapon/material/sword/blazing
 	name = "blazing blade"
-	damtype = BURN
+	damtype = DAM_BURN
 	icon_state = "fireblade"
 	item_state = "fireblade"
 	applies_material_colour = FALSE

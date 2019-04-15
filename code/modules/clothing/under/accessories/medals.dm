@@ -27,27 +27,27 @@
 /obj/item/clothing/accessory/medal/gold
 	name = "gold medal"
 	desc = "A simple gold medal."
-	icon_state = MATERIAL_GOLD
-	item_state = MATERIAL_GOLD
+	icon_state = "gold"
+	item_state = "gold"
 
 //NT medals
 
 /obj/item/clothing/accessory/medal/gold/nanotrasen
-	name = "\improper Nanotrasen command medal"
-	desc = "A gold medal awarded to Nanotrasen employees for service as the Captain of a Nanotrasen facility, station, or vessel."
+	name = "corporate command medal"
+	desc = "A gold medal awarded to employees for service as the Captain of a corporate facility, station, or vessel."
 	icon_state = "gold_nt"
 
 /obj/item/clothing/accessory/medal/silver/nanotrasen
-	name = "\improper Nanotrasen service medal"
-	desc = "A silver medal awarded to Nanotrasen employees for distinguished service in support of corporate interests."
+	name = "corporate service medal"
+	desc = "A silver medal awarded to employees for distinguished service in support of corporate interests."
 	icon_state = "silver_nt"
 
 /obj/item/clothing/accessory/medal/bronze/nanotrasen
-	name = "\improper Nanotrasen sciences medal"
-	desc = "A bronze medal awarded to Nanotrasen employees for signifigant contributions to the fields of science or engineering."
+	name = "corporate sciences medal"
+	desc = "A bronze medal awarded to employees for signifigant contributions to the fields of science or engineering."
 	icon_state = "bronze_nt"
 
 /obj/item/clothing/accessory/medal/iron/nanotrasen
-	name = "\improper Nanotrasen merit medal"
-	desc = "An iron medal awarded to Nanotrasen employees for merit."
+	name = "corporate merit medal"
+	desc = "An iron medal awarded to employees for merit."
 	icon_state = "iron_nt"

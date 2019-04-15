@@ -90,8 +90,8 @@
 /obj/vehicle/train/cargo/engine/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/weapon/key/cargo_train))
 		if(!key)
-			user.drop_item()
-			W.forceMove(src)
+			if(!user.unEquip(W, src))
+				return
 			key = W
 			verbs += /obj/vehicle/train/cargo/engine/verb/remove_key
 		return
@@ -104,7 +104,7 @@
 		return
 	..()
 
-/obj/vehicle/train/cargo/update_icon()
+/obj/vehicle/train/cargo/on_update_icon()
 	if(open)
 		icon_state = initial(icon_state) + "_open"
 	else
@@ -269,9 +269,7 @@
 	if(on)
 		turn_off()
 
-	key.loc = usr.loc
-	if(!usr.get_active_hand())
-		usr.put_in_hands(key)
+	usr.put_in_hands(key)
 	key = null
 
 	verbs -= /obj/vehicle/train/cargo/engine/verb/remove_key

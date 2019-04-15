@@ -211,12 +211,18 @@ var/list/spells = typesof(/spell) //needed for the badmin verb for now
 /*Checkers, cost takers, message makers, etc*/
 
 /spell/proc/cast_check(skipcharge = 0,mob/user = usr, var/list/targets) //checks if the spell can be cast based on its settings; skipcharge is used when an additional cast_check is called inside the spell
+	
 	if(silenced > 0)
 		return 0
 
 	if(!(src in user.mind.learned_spells) && holder == user && !(isanimal(user)))
 		error("[user] utilized the spell '[src]' without having it.")
 		to_chat(user, "<span class='warning'>You shouldn't have this spell! Something's wrong.</span>")
+		return 0
+
+	var/spell_leech = user.disrupts_psionics()
+	if(spell_leech)
+		to_chat(user, SPAN_WARNING("You try to marshal your energy, but find it leeched away by \the [spell_leech]!"))
 		return 0
 
 	var/turf/user_turf = get_turf(user)
@@ -231,29 +237,32 @@ var/list/spells = typesof(/spell) //needed for the badmin verb for now
 			if(findNullRod(T))
 				return 0
 
-	if(istype(user, /mob/living/simple_animal) && holder == user)
-		var/mob/living/simple_animal/SA = user
-		if(SA.purge)
-			to_chat(SA, "<span class='warning'>The nullrod's power interferes with your own!</span>")
-			return 0
-
 	if(!src.check_charge(skipcharge, user)) //sees if we can cast based on charges alone
 		return 0
 
-	if(!(spell_flags & GHOSTCAST) && holder == user)
-		if(user.stat && !(spell_flags & STATALLOWED))
-			to_chat(usr, "Not when you're incapacitated.")
-			return 0
-
-		if(ishuman(user) && !(invocation_type in list(SpI_EMOTE, SpI_NONE)))
-			if(istype(user.wear_mask, /obj/item/clothing/mask/muzzle))
-				to_chat(user, "Mmmf mrrfff!")
+	if(holder == user)
+		if(istype(user, /mob/living/simple_animal))
+			var/mob/living/simple_animal/SA = user
+			if(SA.purge)
+				to_chat(SA, "<span class='warning'>The null sceptre's power interferes with your own!</span>")
 				return 0
 
-	var/spell/noclothes/spell = locate() in user.mind.learned_spells
-	if((spell_flags & NEEDSCLOTHES) && !(spell && istype(spell)) && holder == user)//clothes check
-		if(!user.wearing_wiz_garb())
-			return 0
+		if(!(spell_flags & GHOSTCAST))
+			if(!(spell_flags & NO_SOMATIC))
+				var/mob/living/L = user
+				if(L.incapacitated(INCAPACITATION_STUNNED|INCAPACITATION_RESTRAINED|INCAPACITATION_BUCKLED_FULLY|INCAPACITATION_FORCELYING|INCAPACITATION_KNOCKOUT))
+					to_chat(user, "<span class='warning'>You can't cast spells while incapacitated!</span>")
+					return 0
+
+			if(ishuman(user) && !(invocation_type in list(SpI_EMOTE, SpI_NONE)))
+				if(istype(user.wear_mask, /obj/item/clothing/mask/muzzle))
+					to_chat(user, "Mmmf mrrfff!")
+					return 0
+
+		var/spell/noclothes/spell = locate() in user.mind.learned_spells
+		if((spell_flags & NEEDSCLOTHES) && !(spell && istype(spell)))//clothes check
+			if(!user.wearing_wiz_garb())
+				return 0
 
 	return 1
 
@@ -379,8 +388,8 @@ var/list/spells = typesof(/spell) //needed for the badmin verb for now
 	if(!user || isnull(user))
 		return 0
 
-	var/incap_flags = INCAPACITATION_STUNNED
-	if(!(spell_flags & (STATALLOWED|GHOSTCAST)))
+	var/incap_flags = INCAPACITATION_STUNNED|INCAPACITATION_RESTRAINED|INCAPACITATION_BUCKLED_FULLY|INCAPACITATION_FORCELYING
+	if(!(spell_flags & (GHOSTCAST)))
 		incap_flags |= INCAPACITATION_KNOCKOUT
 
 	return do_after(user,delay, incapacitation_flags = incap_flags)

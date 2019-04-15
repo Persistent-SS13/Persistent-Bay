@@ -62,6 +62,42 @@ var/intercom_range_display_status = 0
 			new/obj/effect/debugging/camera_range(C.loc)
 	feedback_add_details("admin_verb","mCRD") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
+/client/proc/sec_camera_report()
+	set category = "Mapping"
+	set name = "Camera Report"
+
+	var/list/obj/machinery/camera/CL = list()
+
+	for(var/obj/machinery/camera/C in cameranet.cameras)
+		CL += C
+
+	var/output = {"<B>CAMERA ANNOMALITIES REPORT</B><HR>
+<B>The following annomalities have been detected. The ones in red need immediate attention: Some of those in black may be intentional.</B><BR><ul>"}
+
+	for(var/obj/machinery/camera/C1 in CL)
+		for(var/obj/machinery/camera/C2 in CL)
+			if(C1 != C2)
+				if(C1.c_tag == C2.c_tag)
+					output += "<li><font color='red'>c_tag match for sec. cameras at \[[C1.x], [C1.y], [C1.z]\] ([C1.loc.loc]) and \[[C2.x], [C2.y], [C2.z]\] ([C2.loc.loc]) - c_tag is [C1.c_tag]</font></li>"
+				if(C1.loc == C2.loc && C1.dir == C2.dir && C1.pixel_x == C2.pixel_x && C1.pixel_y == C2.pixel_y)
+					output += "<li><font color='red'>FULLY overlapping sec. cameras at \[[C1.x], [C1.y], [C1.z]\] ([C1.loc.loc]) Networks: [C1.network] and [C2.network]</font></li>"
+				if(C1.loc == C2.loc)
+					output += "<li>overlapping sec. cameras at \[[C1.x], [C1.y], [C1.z]\] ([C1.loc.loc]) Networks: [C1.network] and [C2.network]</font></li>"
+		var/turf/T = get_step(C1,turn(C1.dir,180))
+		if(!T || !isturf(T) || !T.density )
+			if(!(locate(/obj/structure/grille,T)))
+				var/window_check = 0
+				for(var/obj/structure/window/W in T)
+					if (W.dir == turn(C1.dir,180) || W.dir in list(5,6,9,10) )
+						window_check = 1
+						break
+				if(!window_check)
+					output += "<li><font color='red'>Camera not connected to wall at \[[C1.x], [C1.y], [C1.z]\] ([C1.loc.loc]) Network: [C1.network]</color></li>"
+
+	output += "</ul>"
+	usr << browse(output,"window=airreport;size=1000x500")
+	SSstatistics.add_field_details("admin_verb","mCRP") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+
 /client/proc/intercom_view()
 	set category = "Mapping"
 	set name = "Intercom Range Display"
@@ -85,6 +121,7 @@ var/intercom_range_display_status = 0
 var/list/debug_verbs = list (
 		/client/proc/do_not_use_these
 		,/client/proc/camera_view
+		,/client/proc/sec_camera_report
 		,/client/proc/intercom_view
 		,/client/proc/Cell
 		,/client/proc/atmosscan
@@ -111,6 +148,7 @@ var/list/debug_verbs = list (
 		,/datum/admins/proc/setup_supermatter
 		,/client/proc/atmos_toggle_debug
 		,/client/proc/spawn_tanktransferbomb
+		,/client/proc/find_leaky_pipes
 	)
 
 
@@ -291,3 +329,15 @@ var/list/debug_verbs = list (
 
 /proc/get_zas_image(var/turf/T, var/icon_state)
 	return image_repository.atom_image(T, 'icons/misc/debug_group.dmi', icon_state, plane = ABOVE_TURF_PLANE, layer = ABOVE_TILE_LAYER)
+
+//Special for Cakey
+/client/proc/find_leaky_pipes()
+	set category = "Mapping"
+	set name = "Find Leaky Pipes"
+
+	var/list/baddies = list("LEAKY PIPES")
+	for(var/obj/machinery/atmospherics/pipe/P in SSmachines.machinery)
+		if(P.leaking)
+			baddies += "[P] ([P.x],[P.y],[P.z] - <A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[P.x];Y=[P.y];Z=[P.z]'>JMP</a>)"
+
+	to_chat(usr,jointext(baddies, "<br>"))

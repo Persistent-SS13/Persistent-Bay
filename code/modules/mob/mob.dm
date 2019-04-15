@@ -425,6 +425,9 @@
 	getFiles(
 		'html/88x31.png',
 		'html/bug-minus.png',
+		'html/burn-exclamation.png',
+		'html/chevron.png',
+		'html/chevron-expand.png',
 		'html/cross-circle.png',
 		'html/hard-hat-exclamation.png',
 		'html/image-minus.png',
@@ -433,13 +436,10 @@
 		'html/music-minus.png',
 		'html/music-plus.png',
 		'html/tick-circle.png',
-		'html/wrench-screwdriver.png',
+		'html/scales.png',
 		'html/spell-check.png',
-		'html/burn-exclamation.png',
-		'html/chevron.png',
-		'html/chevron-expand.png',
+		'html/wrench-screwdriver.png',
 		'html/changelog.css',
-		'html/changelog.js',
 		'html/changelog.html'
 		)
 	src << browse('html/changelog.html', "window=changes;size=675x650")
@@ -655,7 +655,7 @@
 	return stat == DEAD
 
 /mob/proc/is_mechanical()
-	if(mind && (mind.assigned_role == "Cyborg" || mind.assigned_role == "AI"))
+	if(mind && (mind.assigned_role == "Robot" || mind.assigned_role == "AI"))
 		return 1
 	return istype(src, /mob/living/silicon) || get_species() == SPECIES_IPC
 
@@ -940,7 +940,7 @@
 			LAZYREMOVE(wound.embedded_objects, implant)
 		if(!surgical_removal)
 			shock_stage+=20
-			affected.take_external_damage((implant.w_class * 3), 0, DAM_EDGE, "Embedded object extraction")
+			affected.take_damage((implant.w_class * 3), 0, DAM_CUT, damsrc = "Embedded object extraction")
 			if(!BP_IS_ROBOTIC(affected) && prob(implant.w_class * 5) && affected.sever_artery()) //I'M SO ANEMIC I COULD JUST -DIE-.
 				custom_pain("Something tears wetly in your [affected.name] as [implant] is pulled free!", 50, affecting = affected)
 	. = ..()
@@ -1181,8 +1181,23 @@
 /mob/proc/has_admin_rights()
 	return check_rights(R_ADMIN, 0, src)
 
+/mob/proc/handle_drowning()
+	return FALSE
+
+/mob/proc/can_drown()
+	return 0
+
 /mob/proc/get_sex()
 	return gender
+
+/mob/is_fluid_pushable(var/amt)
+	if(..() && !buckled && (lying || !Check_Shoegrip()) && (amt >= mob_size * (lying ? 5 : 10)))
+		if(!lying)
+			Weaken(1)
+			if(lying && prob(10))
+				to_chat(src, "<span class='danger'>You are pushed down by the flood!</span>")
+		return TRUE
+	return FALSE
 
 /mob/proc/get_footstep(var/footstep_type)
 	return

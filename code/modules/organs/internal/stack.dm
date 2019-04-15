@@ -12,6 +12,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	parent_organ = BP_HEAD
 	icon_state = "cortical-stack"
 	organ_tag = BP_STACK
+	status = ORGAN_ROBOTIC
 	vital = 1
 	origin_tech = list(TECH_BIO = 4, TECH_MATERIAL = 4, TECH_MAGNET = 2, TECH_DATA = 3)
 	relative_size = 10
@@ -22,6 +23,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	var/save_slot
 	var/list/languages = list()
 	var/datum/mind/backup
+	var/prompting = FALSE // Are we waiting for a user prompt?
 	action_button_name = "Access Neural Lace UI"
 	action_button_is_hands_free = 1
 	action_button_icon = 'icons/misc/lace.dmi'
@@ -379,6 +381,8 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	if(!..(target, affected))
 		message_admins("stack replace() failed")
 		return 0
+	if(prompting) // Don't spam the player with twenty dialogs because someone doesn't know what they're doing or panicking.
+		return 0
 
 	if(lacemob)
 		. = overwrite()		// If overwrite returns 0, then we pass it on
@@ -388,11 +392,12 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 	if(owner && !backup_inviable())
 		var/current_owner = owner
+		prompting = TRUE
 		var/response = input(find_dead_player(ownerckey, 1), "Your neural backup has been placed into a new body. Do you wish to return to life?", "Resleeving") as anything in list("Yes", "No")
+		prompting = FALSE
 		if(src && response == "Yes" && owner == current_owner)
 			overwrite()
 	sleep(-1)
-
 	do_backup()
 
 	return 1
@@ -421,6 +426,8 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 /obj/item/organ/internal/stack/proc/overwrite()
 	if(owner.mind && owner.ckey) //Someone is already in this body!
+		if(owner.mind == backup) // Oh, it's the same mind in the backup. Someone must've spammed the 'Start Procedure' button in a panic.
+			return
 		owner.visible_message("<span class='danger'>\The [owner] spasms violently!</span>")
 		to_chat(owner, "<span class='danger'>You fight off the invading tendrils of another mind, holding onto your own body!</span>")
 		return 0	// People should not be able to overwrite someone else.

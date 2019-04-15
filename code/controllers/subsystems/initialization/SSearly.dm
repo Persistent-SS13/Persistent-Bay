@@ -8,7 +8,7 @@ SUBSYSTEM_DEF(early)
 	employment_controller = new
 
 	populate_robolimb_list()
-	setupFlooring()
+	//setupFlooring()
 	setupgenetics()
 //	PopulateExperiments()
 

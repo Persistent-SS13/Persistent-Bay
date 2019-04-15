@@ -364,8 +364,6 @@
 	switch (severity)
 		if (1)
 			damage = 500
-			if(!prob(getarmor(null, DAM_BOMB)))
-				gib()
 
 		if (2)
 			damage = 120

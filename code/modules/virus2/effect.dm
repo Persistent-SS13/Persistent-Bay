@@ -32,6 +32,16 @@
 	var/hold_until		//can only fire after this worldtime
 	var/allow_multiple	//allow to have more than 1 effect of this type in the same virus
 
+/datum/disease2/effect/proc/get_effect_info(verbose = 1)
+	. = list()
+	if(verbose)
+		. += "([stage]) [name]    "
+		. += "<small><u>Strength:</u> [multiplier >= 3 ? "Severe" : multiplier > 1 ? "Above Average" : "Average"]    "
+		. += "<u>Verosity:</u> [chance * 15]</small><br>"
+	else
+		. += name
+	return JOINTEXT(.)
+
 /datum/disease2/effect/proc/fire(var/mob/living/carbon/human/mob,var/current_stage)
 	if(oneshot == -1)
 		return
@@ -78,21 +88,20 @@
 				if(O)
 					O.droplimb(0,DROPLIMB_BLUNT)
 
-/**
 /datum/disease2/effect/radian
 	name = "Radian's Syndrome"
 	stage = 4
 	multiplier_max = 3
 	badness = VIRUS_COMMON
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
-		mob.apply_effect(2*multiplier, IRRADIATE, blocked = 0)
-**/
+		mob.apply_damage(2*multiplier, IRRADIATE, armor_pen = 100)
+
 /datum/disease2/effect/deaf
 	name = "Dead Ear Syndrome"
 	stage = 4
 	badness = VIRUS_COMMON
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
-		mob.ear_deaf += 20
+		mob.ear_deaf = min(mob.ear_deaf + 10, 50)
 
 /datum/disease2/effect/monkey
 	name = "Two Percent Syndrome"
@@ -100,14 +109,14 @@
 	badness = VIRUS_EXOTIC
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		mob.monkeyize()
-/**
+
 /datum/disease2/effect/killertoxins
 	name = "Toxification Syndrome"
 	stage = 4
 	badness = VIRUS_COMMON
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		mob.adjustToxLoss(15*multiplier)
-**/
+
 /datum/disease2/effect/dna
 	name = "Reverse Pattern Syndrome"
 	stage = 4
@@ -144,12 +153,14 @@
 	stage = 4
 	badness = VIRUS_ENGINEERED
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
-		for (var/obj/item/organ/external/E in mob.organs)
+		for (var/external in mob.organs)
+			var/obj/item/organ/external/E = external
 			if (E.status & ORGAN_BROKEN && prob(30))
 				to_chat(mob, "<span class='notice'>Your [E.name] suddenly feels much better!</span>")
 				E.status ^= ORGAN_BROKEN
 				break
-		for (var/obj/item/organ/internal/I in mob.internal_organs)
+		for (var/internal in mob.internal_organs)
+			var/obj/item/organ/internal/I = internal
 			if (I.isdamaged() && prob(30))
 				to_chat(mob, "<span class='notice'>Your [mob.get_organ(I.parent_organ)] feels a bit warm...</span>")
 				I.heal_damage(2*multiplier)
@@ -176,7 +187,7 @@
 			E.min_broken_damage = initial(E.min_broken_damage)
 
 ////////////////////////STAGE 3/////////////////////////////////
-/**
+
 /datum/disease2/effect/toxins
 	name = "Hyperacidity"
 	stage = 3
@@ -184,22 +195,21 @@
 	badness = VIRUS_COMMON
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		mob.adjustToxLoss((2*multiplier))
-**/
+
 /datum/disease2/effect/shakey
 	name = "World Shaking Syndrome"
 	stage = 3
 	multiplier_max = 3
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		shake_camera(mob,5*multiplier)
-/**
+
 /datum/disease2/effect/telepathic
 	name = "Telepathy Syndrome"
 	stage = 3
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		mob.dna.SetSEState(GLOB.REMOTETALKBLOCK,1)
 		domutcheck(mob, null, MUTCHK_FORCED)
-**/
-/**
+
 /datum/disease2/effect/mind
 	name = "Lazy Mind Syndrome"
 	stage = 3
@@ -207,8 +217,8 @@
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		var/obj/item/organ/internal/brain/B = mob.internal_organs_by_name[BP_BRAIN]
 		if (B && B.damage < B.min_broken_damage)
-			B.take_damage(5)
-**/
+			B.take_internal_damage(5)
+
 /datum/disease2/effect/deaf
 	name = "Hard of Hearing Syndrome"
 	stage = 3
@@ -220,15 +230,15 @@
 	stage = 3
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		to_chat(mob, "<span class='notice'>You have trouble telling right and left apart all of a sudden.</span>")
-		mob.confused += 10
-/**
+		mob.confused = min(mob.confused + 10, 50)
+
 /datum/disease2/effect/mutation
 	name = "DNA Degradation"
 	stage = 3
 	badness = VIRUS_COMMON
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
-		mob.apply_damage(2, DAM_CLONE)
-**/
+		mob.apply_damage(2, CLONE)
+
 /datum/disease2/effect/chem_synthesis
 	name = "Chemical Synthesis"
 	stage = 3
@@ -257,13 +267,12 @@
 	allow_multiple = 1
 
 ////////////////////////STAGE 2/////////////////////////////////
-/**
 /datum/disease2/effect/drowsness
 	name = "Automated Sleeping Syndrome"
 	stage = 2
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
-		mob.drowsyness += 10
-**/
+		mob.drowsyness = min(mob.drowsyness + 10, 50)
+
 /datum/disease2/effect/sleepy
 	name = "Resting Syndrome"
 	stage = 2
@@ -324,7 +333,7 @@
 		if (mob.reagents.get_reagent_amount(/datum/reagent/hyperzine) < 10)
 			mob.reagents.add_reagent(/datum/reagent/hyperzine, 4)
 		if (prob(30))
-			mob.jitteriness += 10
+			mob.jitteriness = min(mob.jitteriness + 10, 500)
 
 ////////////////////////STAGE 1/////////////////////////////////
 

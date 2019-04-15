@@ -36,7 +36,7 @@
 //		to_chat(src, "<span class='warning'>You have been hit by [P]!</span>")
 
 	//Armor
-	var/damage = P.force
+	var/damage = P.damage
 	var/flags = P.damage_flags()
 	var/damaged
 	if(!P.nodamage)
@@ -44,6 +44,28 @@
 	if(damaged || P.nodamage) // Run the block computation if we did damage or if we only use armor for effects (nodamage)
 		. = get_blocked_ratio(def_zone, P.damage_type, flags, P.armor_penetration)
 	P.on_hit(src, ., def_zone)
+
+/mob/living/proc/aura_check(var/type)
+	if(!auras)
+		return TRUE
+	. = TRUE
+	var/list/newargs = args - args[1]
+	for(var/a in auras)
+		var/obj/aura/aura = a
+		var/result = 0
+		switch(type)
+			if(AURA_TYPE_WEAPON)
+				result = aura.attackby(arglist(newargs))
+			if(AURA_TYPE_BULLET)
+				result = aura.bullet_act(arglist(newargs))
+			if(AURA_TYPE_THROWN)
+				result = aura.hitby(arglist(newargs))
+			if(AURA_TYPE_LIFE)
+				result = aura.life_tick()
+		if(result & AURA_FALSE)
+			. = FALSE
+		if(result & AURA_CANCEL)
+			break
 
 
 //Handles the effects of "stun" weapons
@@ -92,12 +114,14 @@
 		effective_force *= 2
 
 	//Apply weapon damage
-	var/damtype = HandleArmorDamTypeConversion(I.damtype, blocked) //armour provides a chance to turn sharp/edge weapon attacks into blunt ones
-	return apply_damage(effective_force, damtype, hit_zone, damage_flags, used_weapon=I)
+	var/damage_flags = I.damage_flags()
 
+	return apply_damage(effective_force, I.damtype, hit_zone, damage_flags, used_weapon=I)
 
 //this proc handles being hit by a thrown atom
 /mob/living/hitby(atom/movable/AM as mob|obj,var/speed = THROWFORCE_SPEED_DIVISOR)//Standardization and logging -Sieve
+	if(!aura_check(AURA_TYPE_THROWN, AM, speed))
+		return
 	if(istype(AM,/obj/))
 		var/obj/O = AM
 		var/dtype = O.damtype
@@ -193,14 +217,14 @@
 /mob/living/proc/IgniteMob()
 	if(fire_stacks > 0 && !on_fire)
 		on_fire = 1
-		set_light(light_range + 3)
+		set_light(0.6, 0.1, 4, l_color = COLOR_ORANGE)
 		update_fire()
 
 /mob/living/proc/ExtinguishMob()
 	if(on_fire)
 		on_fire = 0
 		fire_stacks = 0
-		set_light(max(0, light_range - 3))
+		set_light(0)
 		update_fire()
 
 /mob/living/proc/update_fire()
@@ -282,10 +306,10 @@
 	if(hud_used.hud_shown != 1)	//Hud toggled to minimal
 		return
 
-//	client.screen -= hud_used.hide_actions_toggle
-//	for(var/datum/action/A in actions)
-//		if(A.button)
-//			client.screen -= A.button
+	client.screen -= hud_used.hide_actions_toggle
+	for(var/datum/action/A in actions)
+		if(A.button)
+			client.screen -= A.button
 
 	if(hud_used.action_buttons_hidden)
 		if(!hud_used.hide_actions_toggle)
@@ -327,3 +351,33 @@
 			hud_used.hide_actions_toggle.screen_loc = hud_used.ButtonNumberToScreenCoords(button_number+1)
 			//hud_used.SetButtonCoords(hud_used.hide_actions_toggle,button_number+1)
 		client.screen += hud_used.hide_actions_toggle
+
+/mob/living/lava_act(datum/gas_mixture/air, temperature, pressure)
+	fire_act(air, temperature)
+	FireBurn(0.4*vsc.fire_firelevel_multiplier, temperature, pressure)
+	. =  (health <= 0) ? ..() : FALSE
+
+//Convenience proc to handle adding health to the object
+/mob/living/proc/add_health(var/addhealth)
+	set_health(addhealth + get_health())
+
+//Convenience proc to handle removing health from the object
+/mob/living/proc/rem_health(var/remhealth)
+	set_health(get_health() - remhealth)
+
+//Directly sets health, without updating object state
+/mob/living/proc/set_health(var/newhealth)
+	health = between(minHealth, round(newhealth, 0.1), get_max_health()) //round(max(0, min(newhealth, max_health)), 0.1)
+	update_health()
+
+/mob/living/proc/update_health()
+	return
+
+/mob/living/proc/get_health()
+	return health
+
+/mob/living/proc/get_max_health()
+	return maxHealth
+
+/mob/living/proc/get_min_health()
+	return minHealth

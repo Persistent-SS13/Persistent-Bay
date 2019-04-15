@@ -31,47 +31,47 @@
 	item_cost = 8
 	path = /obj/item/ammo_magazine/c556
 
-/datum/uplink_item/item/ammo/sniperammo
-	name = "14.5mm"
-	item_cost = 8
-	path = /obj/item/weapon/storage/box/sniperammo
+// /datum/uplink_item/item/ammo/sniperammo
+// 	name = "14.5mm"
+// 	item_cost = 8
+// 	path = /obj/item/weapon/storage/box/sniperammo
 
-/datum/uplink_item/item/ammo/sniperammo/apds
-	name = "14.5mm APDS"
-	item_cost = 12
-	path = /obj/item/weapon/storage/box/sniperammo/apds
+// /datum/uplink_item/item/ammo/sniperammo/apds
+// 	name = "14.5mm APDS"
+// 	item_cost = 12
+// 	path = /obj/item/weapon/storage/box/sniperammo/apds
 
-/datum/uplink_item/item/ammo/shotgun_shells
-	name = "Shotgun Shells box"
-	item_cost = 8
-	path = /obj/item/weapon/storage/box/shotgunshells
+// /datum/uplink_item/item/ammo/shotgun_shells
+// 	name = "Shotgun Shells box"
+// 	item_cost = 8
+// 	path = /obj/item/weapon/storage/box/shotgunshells
 
-/datum/uplink_item/item/ammo/shotgun_slugs
-	name = "Shotgun Slugs box"
-	item_cost = 8
-	path = /obj/item/weapon/storage/box/shotgunammo
+// /datum/uplink_item/item/ammo/shotgun_slugs
+// 	name = "Shotgun Slugs box"
+// 	item_cost = 8
+// 	path = /obj/item/weapon/storage/box/shotgunammo
 
-/datum/uplink_item/item/ammo/c45uzi
-	name = ".45 SMG Magazine"
-	item_cost = 8
-	path = /obj/item/ammo_magazine/c45uzi
+// /datum/uplink_item/item/ammo/c45uzi
+// 	name = ".45 SMG Magazine"
+// 	item_cost = 8
+// 	path = /obj/item/ammo_magazine/c45uzi
 
-/datum/uplink_item/item/ammo/a50
-	name = ".50 AE magazine"
-	item_cost = 8
-	path = /obj/item/ammo_magazine/a50
+// /datum/uplink_item/item/ammo/a50
+// 	name = ".50 AE magazine"
+// 	item_cost = 8
+// 	path = /obj/item/ammo_magazine/a50
 
-/datum/uplink_item/item/ammo/c50
-	name = ".50 AE speedloader"
-	item_cost = 8
-	path = /obj/item/ammo_magazine/c50
+// /datum/uplink_item/item/ammo/c50
+// 	name = ".50 AE speedloader"
+// 	item_cost = 8
+// 	path = /obj/item/ammo_magazine/c50
 
-/datum/uplink_item/item/ammo/c38
-	name = ".38 speedloader"
-	item_cost = 8
-	path = /obj/item/ammo_magazine/c38
+// /datum/uplink_item/item/ammo/c38
+// 	name = ".38 speedloader"
+// 	item_cost = 8
+// 	path = /obj/item/ammo_magazine/c38
 
-/datum/uplink_item/item/ammo/flechette
-	name = "Flechette Magazine"
-	item_cost = 8
-	path = /obj/item/weapon/magnetic_ammo
+// /datum/uplink_item/item/ammo/flechette
+// 	name = "Flechette Magazine"
+// 	item_cost = 8
+// 	path = /obj/item/weapon/magnetic_ammo

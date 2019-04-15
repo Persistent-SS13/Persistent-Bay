@@ -40,7 +40,7 @@
 	if(!isGlass || !smash_duration)
 		return 0
 
-	var/list/chance_table = list(95, 95, 90, 85, 75, 55, 35) //starting from distance 0
+	var/list/chance_table = list(95, 95, 90, 85, 75, 60, 40, 15) //starting from distance 0
 	var/idx = max(distance + 1, 1) //since list indices start at 1
 	if(idx > chance_table.len)
 		return 0
@@ -108,32 +108,30 @@
 	if(rag) return
 	..()
 
-/obj/item/weapon/reagent_containers/food/drinks/bottle/update_icon()
+/obj/item/weapon/reagent_containers/food/drinks/bottle/on_update_icon()
 	underlays.Cut()
 	if(rag)
 		var/underlay_image = image(icon='icons/obj/drinks.dmi', icon_state=rag.on_fire? "[rag_underlay]_lit" : rag_underlay)
 		underlays += underlay_image
-		set_light(rag.light_range, rag.light_power, rag.light_color)
+		set_light(rag.light_max_bright, 0.1, rag.light_outer_range, 2, rag.light_color)
 	else
 		set_light(0)
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/apply_hit_effect(mob/living/target, mob/living/user, var/hit_zone)
-	var/blocked = ..()
+	. = ..()
 
 	if(user.a_intent != I_HURT)
 		return
 	if(!smash_check(1))
 		return //won't always break on the first hit
 
-	// You are going to knock someone out for longer if they are not wearing a helmet.
-	var/weaken_duration = 0
-	if(blocked < 100)
-		weaken_duration = smash_duration + min(0, force - target.getarmor(hit_zone, DAM_BLUNT) + 10)
-
 	var/mob/living/carbon/human/H = target
 	if(istype(H) && H.headcheck(hit_zone))
 		var/obj/item/organ/affecting = H.get_organ(hit_zone) //headcheck should ensure that affecting is not null
 		user.visible_message("<span class='danger'>[user] smashes [src] into [H]'s [affecting.name]!</span>")
+		// You are going to knock someone out for longer if they are not wearing a helmet.
+		var/blocked = target.get_blocked_ratio(hit_zone, BRUTE) * 100 
+		var/weaken_duration = smash_duration + min(0, force - blocked + 10)
 		if(weaken_duration)
 			target.apply_effect(min(weaken_duration, 5), WEAKEN, blocked) // Never weaken more than a flash!
 	else
@@ -147,8 +145,6 @@
 	//Finally, smash the bottle. This kills (qdel) the bottle.
 	var/obj/item/weapon/broken_bottle/B = smash(target.loc, target)
 	user.put_in_active_hand(B)
-
-	return blocked
 
 //Keeping this here for now, I'll ask if I should keep it here.
 /obj/item/weapon/broken_bottle
@@ -380,6 +376,34 @@
 		..()
 		reagents.add_reagent(/datum/reagent/ethanol/pwine, 100)
 
+//////////////////////////PREMIUM ALCOHOL ///////////////////////
+/obj/item/weapon/reagent_containers/food/drinks/bottle/premiumvodka
+	name = "Four Stripes Quadruple Distilled"
+	desc = "Premium distilled vodka imported directly from the Gilgamesh Colonial Confederation."
+	icon_state = "premiumvodka"
+	center_of_mass = "x=17;y=3"
+
+/obj/item/weapon/reagent_containers/food/drinks/bottle/premiumvodka/New()
+	..()
+	reagents.add_reagent(/datum/reagent/ethanol/vodka/premium, 100)
+	var/namepick = pick("Four Stripes","Gilgamesh","Novaya Zemlya","Indie","STS-35")
+	var/typepick = pick("Absolut","Gold","Quadruple Distilled","Platinum","Standard")
+	name = "[namepick] [typepick]"
+
+/obj/item/weapon/reagent_containers/food/drinks/bottle/premiumwine
+	name = "Uve De Blanc"
+	desc = "You feel pretentious just looking at it."
+	icon_state = "premiumwine"
+	center_of_mass = "x=16;y=4"
+
+/obj/item/weapon/reagent_containers/food/drinks/bottle/premiumwine/New()
+	..()
+	reagents.add_reagent(/datum/reagent/ethanol/wine/premium, 100)
+	var/namepick = pick("Calumont","Sciacchemont","Recioto","Torcalota")
+	var/agedyear = rand(game_year-150,game_year)
+	name = "Chateau [namepick] De Blanc"
+	desc += " This bottle is marked as [agedyear] Vintage."
+
 //////////////////////////JUICES AND STUFF ///////////////////////
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/orangejuice
@@ -430,7 +454,7 @@
 /obj/item/weapon/reagent_containers/food/drinks/bottle/small
 	volume = 50
 	smash_duration = 1
-	obj_flags = 0 //starts closed
+	atom_flags = 0 //starts closed
 	rag_underlay = "rag_small"
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/small/beer
@@ -451,6 +475,8 @@
 /obj/item/weapon/reagent_containers/food/drinks/bottle/small/ale/New()
 	. = ..()
 	reagents.add_reagent(/datum/reagent/ethanol/ale, 30)
+
+//Probably not the right place for it, but no idea where else to put it without making a brand new DM and slogging through making vars from scratch.
 
 /obj/item/weapon/reagent_containers/food/drinks/bottle/oiljug
 	name = "oil jug"

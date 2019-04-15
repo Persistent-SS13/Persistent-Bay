@@ -1,21 +1,26 @@
 /material/uranium
 	name = MATERIAL_URANIUM
+	lore_text = "A highly radioactive metal. Commonly used as fuel in fission reactors."
+	mechanics_text = "Uranium ingots are used as fuel in some forms of portable generator."
 	stack_type = /obj/item/stack/material/uranium
 	radioactivity = 12
-	icon_colour = "#007a00"
 	icon_base = "stone"
+	door_icon_base = "stone"
+	table_icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	icon_door = "stone"
-	icon_table = "stone"
+	icon_colour = "#007a00"
 	weight = 22
 	melting_point = 1405
 	stack_origin_tech = list(TECH_MATERIAL = 5)
 	chem_products = list(
 				/datum/reagent/uranium = 20
 				)
+	construction_difficulty = 2
+	sale_price = 2
 
 /material/gold
 	name = MATERIAL_GOLD
+	lore_text = "A heavy, soft, ductile metal. Once considered valuable enough to back entire currencies, now predominantly used in corrosion-resistant electronics."
 	stack_type = /obj/item/stack/material/gold
 	icon_colour = "#ffcc33"
 	icon_base = "metal"
@@ -32,6 +37,7 @@
 	chem_products = list(
 				/datum/reagent/gold = 20
 				)
+	construction_difficulty = 2
 	ore_smelts_to = MATERIAL_GOLD
 	ore_result_amount = 5
 	ore_name = "native gold"
@@ -45,6 +51,7 @@
 		)
 	ore_icon_overlay = "nugget"
 	ore_matter = list(MATERIAL_GOLD = 2000)
+	sale_price = 3
 
 /material/copper
 	name = MATERIAL_COPPER
@@ -59,9 +66,12 @@
 	chem_products = list(
 		/datum/reagent/copper = 20,
 		)
+	construction_difficulty = 2
+	sale_price = 1
 
 /material/silver
 	name = MATERIAL_SILVER
+	lore_text = "A soft, white, lustrous transition metal. Has many and varied industrial uses in electronics, solar panels and mirrors."
 	stack_type = /obj/item/stack/material/silver
 	icon_colour = "#d1e6e3"
 	icon_base = "metal"
@@ -77,6 +87,7 @@
 	chem_products = list(
 				/datum/reagent/silver = 20
 				)
+	construction_difficulty = 2
 	ore_smelts_to = MATERIAL_SILVER
 	ore_result_amount = 5
 	ore_spread_chance = 10
@@ -84,6 +95,7 @@
 	ore_scan_icon = "mineral_uncommon"
 	ore_icon_overlay = "shiny"
 	ore_matter = list(MATERIAL_SILVER = 1200)
+	sale_price = 2
 
 /material/steel/holographic
 	name = "holo" + MATERIAL_STEEL
@@ -93,9 +105,12 @@
 	conductive = 0
 	alloy_materials = null
 	alloy_product = FALSE
+	sale_price = null
+	hidden_from_codex = TRUE
 
 /material/titanium
 	name = MATERIAL_TITANIUM
+	lore_text = "A light, strong, corrosion-resistant metal. Perfect for cladding high-velocity ballistic supply pods."
 	brute_armor = 10
 	burn_armor = 8
 	integrity = 250
@@ -104,6 +119,10 @@
 	hardness = 75
 	stack_type = /obj/item/stack/material/titanium
 	icon_colour = "#d1e6e3"
+	icon_reinf = "reinf_metal"
+	construction_difficulty = 3
+	alloy_materials = null
+	alloy_product = FALSE
 	stack_origin_tech = list(TECH_MATERIAL = 3)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
@@ -114,22 +133,28 @@
 
 /material/osmium
 	name = MATERIAL_OSMIUM
+	lore_text = "An extremely hard form of platinum."
 	stack_type = /obj/item/stack/material/osmium
 	icon_colour = "#9999ff"
 	stack_origin_tech = list(TECH_MATERIAL = 5)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
+	construction_difficulty = 3
+	sale_price = 3
 	ore_smelts_to = MATERIAL_OSMIUM
 	melting_point = 3306
 
 /material/tritium
 	name = MATERIAL_TRITIUM
+	lore_text = "A radioactive isotope of hydrogen. Useful as a fusion reactor fuel material."
+	mechanics_text = "Tritium is useable as a fuel in some forms of portable generator. It can also be converted into a fuel rod suitable for a R-UST fusion plant injector by clicking a stack on a fuel compressor. It fuses hotter than deuterium but is correspondingly more unstable."
 	stack_type = /obj/item/stack/material/tritium
 	icon_colour = "#777777"
 	stack_origin_tech = list(TECH_MATERIAL = 5)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
 	is_fusion_fuel = 1
+	construction_difficulty = 2
 	ore_smelts_to = MATERIAL_TRITIUM
 	ore_name = "raw tritium"
 	ore_scan_icon = "mineral_rare"
@@ -138,12 +163,15 @@
 
 /material/deuterium
 	name = MATERIAL_DEUTERIUM
+	lore_text = "One of the two stable isotopes of hydrogen; also known as heavy hydrogen. Useful as a chemically synthesised fusion reactor fuel material."
+	mechanics_text = "Deuterium can be converted into a fuel rod suitable for a R-UST fusion plant injector by clicking a stack on a fuel compressor. It is the most 'basic' fusion fuel."
 	stack_type = /obj/item/stack/material/deuterium
 	icon_colour = "#999999"
 	stack_origin_tech = list(TECH_MATERIAL = 3)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
 	is_fusion_fuel = 1
+	construction_difficulty = 2
 	ore_smelts_to = MATERIAL_DEUTERIUM
 	ore_name = "raw deuterium"
 	ore_scan_icon = "mineral_rare"
@@ -153,6 +181,7 @@
 
 /material/mhydrogen
 	name = MATERIAL_HYDROGEN
+	lore_text = "When hydrogen is exposed to extremely high pressures and temperatures, such as at the core of gas giants like Jupiter, it can take on metallic properties and - more importantly - acts as a room temperature superconductor. Achieving solid metallic hydrogen at room temperature, though, has proven to be rather tricky."
 	display_name = "metallic hydrogen"
 	stack_type = /obj/item/stack/material/mhydrogen
 	icon_colour = "#e6c5de"
@@ -161,21 +190,25 @@
 	chem_products = list(
 				/datum/reagent/hydrazine = 20
 				)
-	ore_smelts_to = MATERIAL_HYDROGEN
+	construction_difficulty = 2
+	ore_smelts_to = MATERIAL_TRITIUM
 	ore_name = "raw hydrogen"
 	ore_scan_icon = "mineral_rare"
 	ore_icon_overlay = "gems"
+	sale_price = 5
 	melting_point = 14
 	energy_combustion = 141.86
 
 /material/platinum
 	name = MATERIAL_PLATINUM
+	lore_text = "A very dense, unreactive, precious metal. Has many industrial uses, particularly as a catalyst."
 	stack_type = /obj/item/stack/material/platinum
-	icon_colour = "#9999ff"
+	icon_colour = "#deddff"
 	weight = 27
 	stack_origin_tech = list(TECH_MATERIAL = 2)
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
+	construction_difficulty = 2
 	ore_smelts_to = MATERIAL_PLATINUM
 	ore_compresses_to = MATERIAL_OSMIUM
 	ore_result_amount = 5
@@ -183,11 +216,13 @@
 	ore_name = "raw platinum"
 	ore_scan_icon = "mineral_rare"
 	ore_icon_overlay = "shiny"
+	sale_price = 5
 	ore_matter = list(MATERIAL_PLATINUM = 1000)
 	melting_point = 2041
 
 /material/iron
 	name = MATERIAL_IRON
+	lore_text = "A ubiquitous, very common metal. The epitaph of stars and the primary ingredient in Earth's core."
 	stack_type = /obj/item/stack/material/iron
 	icon_reinf = "jaggy"
 	icon_colour = "#5c5454"
@@ -198,9 +233,11 @@
 	sheet_singular_name = "ingot"
 	sheet_plural_name = "ingots"
 	hitsound = 'sound/weapons/smash.ogg'
+	construction_difficulty = 1
 	chem_products = list(
 				/datum/reagent/iron = 20
 				)
+	sale_price = 1
 	energy_combustion = 5.2
 
 /material/tungsten
@@ -286,12 +323,16 @@
 	explosion_resistance = 200 // Hull plating.
 	hardness = 500
 	weight = 500
+	construction_difficulty = 2
+	hidden_from_codex = TRUE
 
 // Likewise.
 /material/voxalloy/elevatorium
 	name = MATERIAL_ELEVATORIUM
 	display_name = "elevator panelling"
 	icon_colour = "#666666"
+	construction_difficulty = 2
+	hidden_from_codex = TRUE
 	icon_base = "metal"
 	icon_reinf = "metal"
 

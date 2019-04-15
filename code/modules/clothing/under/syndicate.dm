@@ -20,7 +20,14 @@
 		DAM_STUN 	= 0)
 	siemens_coefficient = 0.9
 
-//only keeping because of arcade reward
+/obj/item/clothing/under/syndicate/combat
+	name = "combat turtleneck"
+	desc = "The height of fashion and tactical utility."
+	icon_state = "combat"
+	item_state = "bl_suit"
+	worn_state = "combat"
+	has_sensor = SUIT_HAS_SENSORS
+
 /obj/item/clothing/under/syndicate/tacticool
 	name = "\improper Tacticool turtleneck"
 	desc = "Just looking at it makes you want to buy an SKS, go into the woods, and -operate-."

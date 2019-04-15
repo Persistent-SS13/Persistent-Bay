@@ -9,7 +9,7 @@
  * Library Scanner
  */
 /obj/machinery/libraryscanner
-	name = "\improper Book Scanner"
+	name = "scanner"
 	icon = 'icons/obj/library.dmi'
 	icon_state = "bigscanner"
 	anchored = 1
@@ -27,8 +27,8 @@
 
 /obj/machinery/libraryscanner/attackby(var/obj/O as obj, var/mob/living/user as mob)
 	if(istype(O, /obj/item/weapon/book))
-		user.drop_item()
-		O.loc = src
+		if(!user.unEquip(O, src))
+			return
 	if(default_deconstruction_screwdriver(user, O))
 		return
 	if(default_deconstruction_crowbar(user, O))
@@ -64,7 +64,7 @@
 		cache = null
 	if(href_list["eject"])
 		for(var/obj/item/weapon/book/B in contents)
-			B.loc = src.loc
+			B.dropInto(loc)
 	src.add_fingerprint(usr)
 	src.updateUsrDialog()
 	return

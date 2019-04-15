@@ -1,7 +1,7 @@
 /*
  * Combitool
  */
-/obj/item/weapon/combitool
+/obj/item/weapon/tool/combitool
 	name = "combi-tool"
 	desc = "It even has one of those nubbins for doing the thingy."
 	icon = 'icons/obj/items.dmi'
@@ -19,19 +19,19 @@
 	var/list/tools = list()
 	var/current_tool = 1
 
-/obj/item/weapon/combitool/examine()
+/obj/item/weapon/tool/combitool/examine()
 	..()
 	if(loc == usr && tools.len)
 		to_chat(usr, "It has the following fittings:")
 		for(var/obj/item/tool in tools)
 			to_chat(usr, "\icon[tool] - [tool.name][tools[current_tool]==tool?" (selected)":""]")
 
-/obj/item/weapon/combitool/New()
+/obj/item/weapon/tool/combitool/New()
 	..()
 	for(var/type in spawn_tools)
 		tools |= new type(src)
 
-/obj/item/weapon/combitool/attack_self(mob/user as mob)
+/obj/item/weapon/tool/combitool/attack_self(mob/user as mob)
 	if(++current_tool > tools.len) current_tool = 1
 	var/obj/item/tool = tools[current_tool]
 	if(!tool)
@@ -40,14 +40,14 @@
 		to_chat(user, "You switch \the [src] to the [tool.name] fitting.")
 	return 1
 
-/obj/item/weapon/combitool/attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
+/obj/item/weapon/tool/combitool/attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
 	if(!M.Adjacent(user))
 		return 0
 	var/obj/item/tool = tools[current_tool]
 	if(!tool) return 0
 	return (tool ? tool.attack(M,user) : 0)
 
-/obj/item/weapon/combitool/afterattack(var/atom/target, var/mob/living/user, proximity, params)
+/obj/item/weapon/tool/combitool/afterattack(var/atom/target, var/mob/living/user, proximity, params)
 	if(!proximity)
 		return 0
 	var/obj/item/tool = tools[current_tool]

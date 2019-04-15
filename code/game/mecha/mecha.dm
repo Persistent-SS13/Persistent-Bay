@@ -98,8 +98,9 @@
 
 /obj/mecha/New()
 	..()
-	icon_state += "-open"
 	events = new
+
+	icon_state += "-open"
 	add_radio()
 	add_cabin()
 	spark_system.set_up(2, 0, src)
@@ -107,6 +108,7 @@
 	add_iterators()
 	removeVerb(/obj/mecha/verb/disconnect_from_port)
 	log_message("[src.name] created.")
+	loc.Entered(src)
 	mechas_list += src //global mech list
 	return
 
@@ -164,8 +166,26 @@
 		if(internal_tank)
 			WR.crowbar_salvage += internal_tank
 			internal_tank.forceMove(WR)
+	else
+		for(var/obj/item/mecha_parts/mecha_equipment/E in equipment)
+			E.detach(loc)
+			E.destroy()
+		if(cell)
+			qdel(cell)
+		if(internal_tank)
+			qdel(internal_tank)
 	equipment.Cut()
-	qdel(src)
+	cell = null
+	internal_tank = null
+
+	QDEL_NULL(pr_int_temp_processor)
+	QDEL_NULL(pr_inertial_movement)
+	QDEL_NULL(pr_give_air)
+	QDEL_NULL(pr_internal_damage)
+	QDEL_NULL(spark_system)
+
+	mechas_list -= src //global mech list
+	. = ..()
 
 ////////////////////////
 ////// Helpers /////////
@@ -1031,8 +1051,8 @@
 	set popup_menu = 0
 	if(usr!=occupant)	return
 	lights = !lights
-	if(lights)	set_light(light_range + lights_power)
-	else		set_light(light_range - lights_power)
+	if(lights)	set_light(lights_power, 1, light_range)
+	else		set_light(0)
 	src.occupant_message("Toggled lights [lights?"on":"off"].")
 	log_message("Toggled lights [lights?"on":"off"].")
 	return
@@ -1072,7 +1092,7 @@
 	if(iscarbon(usr))
 		var/mob/living/carbon/C = usr
 		if(C.handcuffed)
-			to_chat(usr, "<span class='danger'>Kinda hard to climb in while handcuffed don't you think?</span>")
+			to_chat(usr, "<span class='danger'>Kinda hard to climb in while handcuffed, don't you think?</span>")
 			return
 	if (src.occupant)
 		to_chat(usr, "<span class='danger'>The [src.name] is already occupied!</span>")
@@ -1142,15 +1162,6 @@
 	//pr_update_stats.start()
 	src.occupant << browse(src.get_stats_html(), "window=exosuit")
 	return
-
-/*
-/obj/mecha/verb/force_eject()
-	set category = "Object"
-	set name = "Force Eject"
-	set src in view(5)
-	src.go_out()
-	return
-*/
 
 /obj/mecha/verb/eject()
 	set name = "Eject"

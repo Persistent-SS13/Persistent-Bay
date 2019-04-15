@@ -167,3 +167,6 @@
 #define CULTURE_NABBER_AMINUS "Grade A-"
 #define CULTURE_NABBER_A      "Grade A"
 #define CULTURE_NABBER_APLUS  "Grade A+"
+
+// Bogani culture
+#define CULTURE_BOGANI "Bogani"

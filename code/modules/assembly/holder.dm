@@ -32,20 +32,23 @@
 	return 1
 
 
-/obj/item/device/assembly_holder/attach(var/obj/item/device/D, var/obj/item/device/D2, var/mob/user)
-	if((!D)||(!D2))	return 0
-	if((!isassembly(D))||(!isassembly(D2)))	return 0
-	if((D:secured)||(D2:secured))	return 0
+/obj/item/device/assembly_holder/attach(var/obj/item/device/assembly/D, var/obj/item/device/assembly/D2, var/mob/user)
+	if((!D)||(!D2))
+		return 0
+	if((!istype(D))||(!istype(D2)))
+		return 0
+	if((D.secured)||(D2.secured))
+		return 0
 	if(user)
-		user.remove_from_mob(D)
-		user.remove_from_mob(D2)
-	D:holder = src
-	D2:holder = src
-	D.loc = src
-	D2.loc = src
+		user.drop_from_inventory(D)
+		user.drop_from_inventory(D2)
+	D.holder = src
+	D2.holder = src
+	D.forceMove(src)
+	D2.forceMove(src)
 	a_left = D
 	a_right = D2
-	name = "[D.name]-[D2.name] assembly"
+	SetName("[D.name]-[D2.name] assembly")
 	update_icon()
 	usr.put_in_hands(src)
 
@@ -59,7 +62,7 @@
 /*		if(O:Attach_Holder())
 		special_assembly = O
 		update_icon()
-		src.name = "[a_left.name] [a_right.name] [special_assembly.name] assembly"
+		src.SetName("[a_left.name] [a_right.name] [special_assembly.name] assembly")
 */
 	return
 
@@ -185,11 +188,11 @@
 		var/turf/T = get_turf(src)
 		if(!T)	return 0
 		if(a_left)
-			a_left:holder = null
-			a_left.loc = T
+			a_left.holder = null
+			a_left.forceMove(T)
 		if(a_right)
-			a_right:holder = null
-			a_right.loc = T
+			a_right.holder = null
+			a_right.forceMove(T)
 		spawn(0)
 			qdel(src)
 	return
@@ -256,7 +259,7 @@
 	a_right = ign
 	secured = 1
 	update_icon()
-	name = initial(name) + " ([tmr.time] secs)"
+	SetName(initial(name) + " ([tmr.time] secs)")
 	if(loc)
 		loc.verbs += /obj/item/device/assembly_holder/timer_igniter/verb/configure
 

@@ -916,7 +916,7 @@ var/global/list/common_tools = list(
 		if(/obj/item/weapon/melee/energy)
 			return 3500
 		if(/obj/item/weapon/blob_tendril) 
-			if(W.damtype == BURN)
+			if(IsDamageTypeBurn(W.damtype))
 				return 1000
 			else
 				return 0

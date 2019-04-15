@@ -22,6 +22,7 @@
 	health = 60
 	melee_damage_lower = 20
 	melee_damage_upper = 30
+	can_escape = 1
 
 	//Space bears aren't affected by atmos.
 	min_gas = null
@@ -31,7 +32,7 @@
 
 	faction = "russian"
 
-//SPACE BEARS! SQUEEEEEEEE~     OW! FUCK! IT BIT MY HAND OFF!!
+//SPACE BEARS! SQUEEEEEEEE~	 OW! FUCK! IT BIT MY HAND OFF!!
 /mob/living/simple_animal/hostile/bear/Hudson
 	name = "Hudson"
 	desc = ""
@@ -40,9 +41,9 @@
 	response_harm   = "pokes"
 
 /mob/living/simple_animal/hostile/bear/Life()
-	. =..()
+	. = ..()
 	if(!.)
-		return
+		return FALSE
 
 	if(loc && istype(loc,/turf/space))
 		icon_state = "bear"

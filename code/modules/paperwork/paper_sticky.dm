@@ -16,9 +16,11 @@
 
 /obj/item/sticky_pad/New()
 	..()
-	map_storage_saved_vars += ";papers"
+	ADD_SAVED_VAR(papers)
+	ADD_SAVED_VAR(written_text)
+	ADD_SAVED_VAR(paper_type)
 
-/obj/item/sticky_pad/update_icon()
+/obj/item/sticky_pad/on_update_icon()
 	if(papers <= 15)
 		icon_state = "pad_empty"
 	else if(papers <= 50)
@@ -101,7 +103,7 @@
 	color = COLOR_YELLOW
 	slot_flags = 0
 
-/obj/item/weapon/paper/sticky/update_icon()
+/obj/item/weapon/paper/sticky/on_update_icon()
 	if(icon_state != "scrap")
 		icon_state = info ? "paper_words" : "paper"
 

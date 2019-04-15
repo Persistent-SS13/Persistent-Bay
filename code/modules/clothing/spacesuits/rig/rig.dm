@@ -37,6 +37,7 @@
 	permeability_coefficient = 0.1
 	unacidable = 1
 
+	var/equipment_overlay_icon = 'icons/mob/onmob/onmob_rig_modules.dmi'
 	var/hides_uniform = 1 	//used to determinate if uniform should be visible whenever the suit is sealed or not
 
 	var/interface_path = "hardsuit.tmpl"
@@ -71,6 +72,7 @@
 
 	// Rig status vars.
 	var/open = 0                                              // Access panel status.
+	var/p_open = 0											  // Wire panel status
 	var/locked = 1                                            // Lock status.
 	var/subverted = 0
 	var/interface_locked = 0
@@ -91,12 +93,15 @@
 	var/vision_restriction = TINT_NONE
 	var/offline_vision_restriction = TINT_HEAVY               // tint value given to helmet
 	var/airtight = 1 //If set, will adjust ITEM_FLAG_AIRTIGHT and ITEM_FLAG_STOPPRESSUREDAMAGE flags on components. Otherwise it should leave them untouched.
+	var/visible_name
 
 	var/emp_protection = 0
 
 	// Wiring! How exciting.
 	var/datum/wires/rig/wires
 	var/datum/effect/effect/system/spark_spread/spark_system
+
+	var/banned_modules = list()
 
 /obj/item/weapon/rig/examine()
 	. = ..()
@@ -109,6 +114,7 @@
 	if(src.loc == usr)
 		to_chat(usr, "The access panel is [locked? "locked" : "unlocked"].")
 		to_chat(usr, "The maintenance panel is [open ? "open" : "closed"].")
+		to_chat(usr, "The wire panel is [p_open ? "open" : "closed"].")
 		to_chat(usr, "Hardsuit systems are [offline ? "<font color='red'>offline</font>" : "<font color='green'>online</font>"].")
 
 		if(open)
@@ -120,7 +126,7 @@
 	item_state = icon_state
 	wires = new(src)
 
-	if((!req_access || !req_access.len) && (!req_one_access || !req_one_access.len))
+	if(!length(req_access) && !length(req_one_access.len))
 		locked = 0
 
 	spark_system = new()
@@ -176,6 +182,26 @@
 		if(allowed)
 			chest.allowed = allowed
 		verbs |= /obj/item/weapon/rig/proc/toggle_chest
+
+	for(var/obj/item/piece in list(gloves,helmet,boots,chest))
+		if(!istype(piece))
+			continue
+		piece.canremove = 0
+		piece.SetName("[suit_type] [initial(piece.name)]")
+		piece.desc = "It seems to be part of a [src.name]."
+		piece.icon_state = "[initial(icon_state)]"
+		piece.min_cold_protection_temperature = min_cold_protection_temperature
+		piece.max_heat_protection_temperature = max_heat_protection_temperature
+		if(piece.siemens_coefficient > siemens_coefficient) //So that insulated gloves keep their insulation.
+			piece.siemens_coefficient = siemens_coefficient
+		piece.permeability_coefficient = permeability_coefficient
+		piece.unacidable = unacidable
+		if(islist(armor))
+			remove_extension(piece, /datum/extension/armor)
+			set_extension(piece, /datum/extension/armor, /datum/extension/armor/rig, armor)
+
+	set_slowdown_and_vision(!offline)
+	update_icon(1)
 
 /obj/item/weapon/rig/Destroy()
 	for(var/obj/item/piece in list(gloves,boots,helmet,chest))
@@ -302,10 +328,9 @@
 								helmet.update_light(wearer)
 
 					//sealed pieces become airtight, protecting against diseases
-					if (!seal_target)
-						piece.armor[DAM_BIO] = 100
-					else
-						piece.armor[DAM_BIO] = src.armor[DAM_BIO]
+					var/datum/extension/armor/rig/armor_datum = get_extension(piece, /datum/extension/armor)
+					if(istype(armor_datum))
+						armor_datum.sealed = !seal_target
 
 				else
 					failed_to_seal = 1
@@ -524,22 +549,22 @@
 		ui.open()
 		ui.set_auto_update(1)
 
-/obj/item/weapon/rig/update_icon(var/update_mob_icon)
+/obj/item/weapon/rig/on_update_icon(var/update_mob_icon)
 
 	//TODO: Maybe consider a cache for this (use mob_icon as blank canvas, use suit icon overlay).
 	overlays.Cut()
 	if(!mob_icon || update_mob_icon)
-		var/species_icon = 'icons/mob/rig_back.dmi'
+		var/species_icon = 'icons/mob/onmob/onmob_rig_back.dmi'
 		// Since setting mob_icon will override the species checks in
 		// update_inv_wear_suit(), handle species checks here.
 		if(wearer && sprite_sheets && sprite_sheets[wearer.species.get_bodytype(wearer)])
 			species_icon =  sprite_sheets[wearer.species.get_bodytype(wearer)]
 		mob_icon = image("icon" = species_icon, "icon_state" = "[icon_state]")
 
-	if(installed_modules.len)
+	if(equipment_overlay_icon && LAZYLEN(installed_modules))
 		for(var/obj/item/rig_module/module in installed_modules)
 			if(module.suit_overlay)
-				chest.overlays += image("icon" = 'icons/mob/rig_modules.dmi', "icon_state" = "[module.suit_overlay]", "dir" = SOUTH)
+				chest.overlays += image("icon" = equipment_overlay_icon, "icon_state" = "[module.suit_overlay]", "dir" = SOUTH)
 
 	if(wearer)
 		wearer.update_inv_shoes()
@@ -556,9 +581,10 @@
 	if(slot != slot_back_str || offline)
 		return ret
 
-	for(var/obj/item/rig_module/module in installed_modules)
-		if(module.suit_overlay)
-			ret.overlays += image("icon" = 'icons/mob/rig_modules.dmi', "icon_state" = "[module.suit_overlay]")
+	if(equipment_overlay_icon && LAZYLEN(installed_modules))
+		for(var/obj/item/rig_module/module in installed_modules)
+			if(module.suit_overlay)
+				ret.overlays += image("icon" = equipment_overlay_icon, "icon_state" = "[module.suit_overlay]")
 	return ret
 
 /obj/item/weapon/rig/proc/check_suit_access(var/mob/living/carbon/human/user)
@@ -635,7 +661,7 @@
 			if(M && M.back == src)
 				if(!M.unEquip(src))
 					return
-			src.forceMove(get_turf(src))
+			src.dropInto(loc)
 			return
 
 	if(istype(M) && M.back == src)

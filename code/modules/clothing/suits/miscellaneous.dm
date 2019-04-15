@@ -386,30 +386,35 @@
 /obj/item/clothing/suit/poncho/colored
 	name = "poncho"
 	desc = "A simple, comfortable poncho."
+	species_restricted = null
 	icon_state = "classicponcho"
 	item_state = "classicponcho"
 
 /obj/item/clothing/suit/poncho/colored/green
 	name = "green poncho"
 	desc = "A simple, comfortable cloak without sleeves. This one is green."
+	species_restricted = null
 	icon_state = "greenponcho"
 	item_state = "greenponcho"
 
 /obj/item/clothing/suit/poncho/colored/red
 	name = "red poncho"
 	desc = "A simple, comfortable cloak without sleeves. This one is red."
+	species_restricted = null
 	icon_state = "redponcho"
 	item_state = "redponcho"
 
 /obj/item/clothing/suit/poncho/colored/purple
 	name = "purple poncho"
 	desc = "A simple, comfortable cloak without sleeves. This one is purple."
+	species_restricted = null
 	icon_state = "purpleponcho"
 	item_state = "purpleponcho"
 
 /obj/item/clothing/suit/poncho/colored/blue
 	name = "blue poncho"
 	desc = "A simple, comfortable cloak without sleeves. This one is blue."
+	species_restricted = null
 	icon_state = "blueponcho"
 	item_state = "blueponcho"
 
@@ -452,6 +457,16 @@
 	icon_open = "brown_jacket_nt_open"
 	icon_closed = "brown_jacket_nt"
 
+/obj/item/clothing/suit/storage/toggle/agent_jacket
+	name = "agent jacket"
+	desc = "A black leather jacket belonging to an agent of the Office of Civil Investigation and Enforcement."
+	icon_state = "agent_jacket"
+	item_state = "agent_jacket"
+	icon_open = "agent_jacket_open"
+	icon_closed = "agent_jacket"
+	valid_accessory_slots = list(ACCESSORY_SLOT_INSIGNIA)
+	body_parts_covered = UPPER_TORSO|ARMS
+
 /obj/item/clothing/suit/storage/toggle/hoodie
 	name = "hoodie"
 	desc = "A warm sweatshirt."
@@ -464,27 +479,27 @@
 
 /obj/item/clothing/suit/storage/toggle/hoodie/cti
 	name = "\improper CTI hoodie"
-	desc = "A warm, black sweatshirt.  It bears the letters CTI on the back, a lettering to the prestigious university in Tau Ceti, Ceti Technical Institute.  There is a blue supernova embroidered on the front, the emblem of CTI."
+	desc = "A warm, black sweatshirt.  It bears the letters 'CTI' on the back, a lettering to the prestigious university in Tau Ceti, Ceti Technical Institute.  There is a blue supernova embroidered on the front, the emblem of CTI."
 	icon_state = "cti_hoodie"
 	icon_open = "cti_hoodie_open"
 	icon_closed = "cti_hoodie"
 
 /obj/item/clothing/suit/storage/toggle/hoodie/mu
 	name = "\improper Mariner University hoodie"
-	desc = "A warm, gray sweatshirt.  It bears the letters MU on the front, a lettering to the well-known public college, Mariner University."
+	desc = "A warm, gray sweatshirt.  It bears the letters 'MU' on the front, a lettering to the well-known public college, Mariner University."
 	icon_state = "mu_hoodie"
 	icon_open = "mu_hoodie_open"
 	icon_closed = "mu_hoodie"
 
 /obj/item/clothing/suit/storage/toggle/hoodie/nt
-	name = "Nanotrasen hoodie"
-	desc = "A warm, blue sweatshirt.  It proudly bears the silver Nanotrasen insignia lettering on the back.  The edges are trimmed with silver."
+	name = "\improper NanoTrasen hoodie"
+	desc = "A warm, blue sweatshirt. It proudly bears the NanoTrasen logo on the back. The edges are trimmed with silver."
 	icon_state = "nt_hoodie"
 	icon_open = "nt_hoodie_open"
 	icon_closed = "nt_hoodie"
 
 /obj/item/clothing/suit/storage/toggle/hoodie/smw
-	name = "Space Mountain Wind hoodie"
+	name = "\improper Space Mountain Wind hoodie"
 	desc = "A warm, black sweatshirt.  It has the logo for the popular softdrink Space Mountain Wind on both the front and the back."
 	icon_state = "smw_hoodie"
 	icon_open = "smw_hoodie_open"
@@ -503,31 +518,42 @@
 
 /obj/item/clothing/suit/poncho/roles/security
 	name = "security poncho"
-	desc = "A simple, comfortable cloak without sleeves. This one is black and red, which are standard Nanotrasen Security colors."
+	desc = "A simple, comfortable cloak without sleeves. This one is black and red, which are standard Security colors."
+	species_restricted = null
 	icon_state = "secponcho"
 	item_state = "secponcho"
 
 /obj/item/clothing/suit/poncho/roles/medical
 	name = "medical poncho"
 	desc = "A simple, comfortable cloak without sleeves. This one is white with a blue tint, which are standard Medical colors."
+	species_restricted = null
 	icon_state = "medponcho"
 	item_state = "medponcho"
 
 /obj/item/clothing/suit/poncho/roles/engineering
 	name = "engineering poncho"
 	desc = "A simple, comfortable cloak without sleeves. This one is yellow and orange, which are standard Engineering colors."
+	species_restricted = null
 	icon_state = "engiponcho"
 	item_state = "engiponcho"
 
 /obj/item/clothing/suit/poncho/roles/science
 	name = "science poncho"
-	desc = "A simple, comfortable cloak without sleeves. This one is white with a few red stripes, which are standard Nanotrasen Science colors."
+	desc = "A simple, comfortable cloak without sleeves. This one is white with a few bottle green stripes, corporate colors."
+	species_restricted = null
 	icon_state = "sciponcho"
 	item_state = "sciponcho"
+
+/obj/item/clothing/suit/poncho/roles/science/nanotrasen
+	name = "\improper NanoTrasen poncho"
+	desc = "A simple, comfortable cloak without sleeves. This one is white with a few red stripes, colors of NanoTrasen. Go NanoTrasen!"
+	icon_state = "sciponcho_nt"
+	item_state = "sciponcho_nt"
 
 /obj/item/clothing/suit/poncho/roles/cargo
 	name = "cargo poncho"
 	desc = "A simple, comfortable cloak without sleeves. This one is tan and grey, which are standard Cargo colors."
+	species_restricted = null
 	icon_state = "cargoponcho"
 	item_state = "cargoponcho"
 
@@ -569,6 +595,13 @@
 	icon_open = "trackjacketwhite_open"
 	icon_closed = "trackjacketwhite"
 
+/obj/item/clothing/suit/storage/toggle/track/gcc
+	name = "GCC track jacket"
+	desc = "An Independent track jacket, for the truly cheeki breeki."
+	icon_state = "trackjackettcc"
+	icon_open = "trackjackettcc_open"
+	icon_closed = "trackjackettcc"
+
 /obj/item/clothing/suit/rubber
 	name = "human suit"
 	desc = "A Human suit made out of rubber."
@@ -588,4 +621,3 @@
 	name = "unathi suit"
 	desc = "A Unathi suit made out of rubber."
 	icon_state = "lizsuit"
-

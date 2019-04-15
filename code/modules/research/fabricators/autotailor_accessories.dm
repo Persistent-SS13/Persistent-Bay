@@ -202,7 +202,12 @@
 /datum/design/item/autotailor/accessories/attach/cliptie_red_black
 	name = "Tie - red & black w. clip"
 	id = "cliptie_red_black"
-	build_path = /obj/item/clothing/accessory/nt
+	build_path = /obj/item/clothing/accessory/red
+
+/datum/design/item/autotailor/accessories/attach/cliptie_nt
+	name = "Tie - NT"
+	id = "cliptie_nt"
+	build_path = /obj/item/clothing/accessory/corptie/nanotrasen
 
 /datum/design/item/autotailor/accessories/attach/cliptie_blue
 	name = "Tie - blue w. clip"
@@ -774,11 +779,11 @@
 	build_path = /obj/item/clothing/gloves/thick
 	materials = list(MATERIAL_LEATHER = 4000)
 
-/datum/design/item/autotailor/accessories/gloves/brown_thick
-	name = "Gloves - thick brown"
-	id = "brown_thick"
-	build_path = /obj/item/clothing/gloves/duty
-	materials = list(MATERIAL_LEATHER = 4000)
+// /datum/design/item/autotailor/accessories/gloves/brown_thick
+// 	name = "Gloves - thick brown"
+// 	id = "brown_thick"
+// 	build_path = /obj/item/clothing/gloves/duty
+// 	materials = list(MATERIAL_LEATHER = 4000)
 
 /datum/design/item/autotailor/accessories/gloves/leather_thick
 	name = "Gloves - thick leather"
@@ -1163,12 +1168,12 @@
 /datum/design/item/autotailor/accessories/hats/bandana_orange
 	name = "Bandana - orange"
 	id = "bandana_orange"
-	build_path = /obj/item/clothing/head/orangebandana
+	build_path = /obj/item/clothing/head/bandana/orange
 
 /datum/design/item/autotailor/accessories/hats/bandana_green
 	name = "Bandana - green"
 	id = "bandana_green"
-	build_path = /obj/item/clothing/head/greenbandana
+	build_path = /obj/item/clothing/head/bandana/green
 
 /datum/design/item/autotailor/accessories/hats/headscarf_white	//custom colors?, also xeno sprite gives it some clipping on humans
 	name = "Headscarf - white"
@@ -1260,17 +1265,17 @@
 /datum/design/item/autotailor/accessories/backpacks/green_satch
 	name = "Green satchel"
 	id = "green_satch"
-	build_path = /obj/item/weapon/storage/backpack/satchel_hyd
+	build_path = /obj/item/weapon/storage/backpack/satchel/hyd
 
 /datum/design/item/autotailor/accessories/backpacks/brown_l_satchel	//can use custom colors
 	name = "Brown leather satchel"
 	id = "brown_l_satchel"
-	build_path = /obj/item/weapon/storage/backpack/satchel/brown
+	build_path = /obj/item/weapon/storage/backpack/satchel/leather
 
 /datum/design/item/autotailor/accessories/backpacks/black_l_satchel
 	name = "Black leather satchel"
 	id = "black_l_satchel"
-	build_path = /obj/item/weapon/storage/backpack/satchel/black
+	build_path = /obj/item/weapon/storage/backpack/satchel/leather/black
 
 /datum/design/item/autotailor/accessories/backpacks/black_pocketbook	//can use custom colors
 	name = "Black small pocketbook"
@@ -1307,7 +1312,7 @@
 /datum/design/item/autotailor/accessories/backpacks/indu_satch
 	name = "Industrial satchel"
 	id = "indu_satch"
-	build_path = /obj/item/weapon/storage/backpack/satchel_eng
+	build_path = /obj/item/weapon/storage/backpack/satchel/eng
 
 /datum/design/item/autotailor/accessories/backpacks/indu_mess
 	name = "Industrial messenger bag"
@@ -1328,7 +1333,7 @@
 /datum/design/item/autotailor/accessories/backpacks/sci_satch
 	name = "Scientist satchel"
 	id = "sci_satch"
-	build_path = /obj/item/weapon/storage/backpack/satchel_tox
+	build_path = /obj/item/weapon/storage/backpack/satchel/tox
 
 /datum/design/item/autotailor/accessories/backpacks/sci_mess
 	name = "Scientst messenger bag"
@@ -1358,22 +1363,22 @@
 /datum/design/item/autotailor/accessories/backpacks/med_satch
 	name = "Medical satchel"
 	id = "med_satch"
-	build_path = /obj/item/weapon/storage/backpack/satchel_med
+	build_path = /obj/item/weapon/storage/backpack/satchel/med
 
 /datum/design/item/autotailor/accessories/backpacks/chem_satch
 	name = "Chemist satchel"
 	id = "chem_satch"
-	build_path = /obj/item/weapon/storage/backpack/satchel_chem
+	build_path = /obj/item/weapon/storage/backpack/satchel/chem
 
 /datum/design/item/autotailor/accessories/backpacks/viro_satch
 	name = "Virologist satchel"
 	id = "viro_satch"
-	build_path = /obj/item/weapon/storage/backpack/satchel_vir
+	build_path = /obj/item/weapon/storage/backpack/satchel/vir
 
 /datum/design/item/autotailor/accessories/backpacks/gene_satch
 	name = "Geneticist satchel"
 	id = "gene_satch"
-	build_path = /obj/item/weapon/storage/backpack/satchel_gen
+	build_path = /obj/item/weapon/storage/backpack/satchel/gen
 
 /datum/design/item/autotailor/accessories/backpacks/med_mess
 	name = "Medical messenger bag"
@@ -1404,7 +1409,7 @@
 /datum/design/item/autotailor/accessories/backpacks/sec_satch
 	name = "Security satchel"
 	id = "sec_satch"
-	build_path = /obj/item/weapon/storage/backpack/satchel_sec
+	build_path = /obj/item/weapon/storage/backpack/satchel/sec
 
 /datum/design/item/autotailor/accessories/backpacks/sec_mess
 	name = "Security messenger bag"
@@ -1425,7 +1430,7 @@
 /datum/design/item/autotailor/accessories/backpacks/cap_satch
 	name = "Captain satchel"
 	id = "cap_satch"
-	build_path = /obj/item/weapon/storage/backpack/satchel_cap
+	build_path = /obj/item/weapon/storage/backpack/satchel/cap
 
 /datum/design/item/autotailor/accessories/backpacks/cap_mess
 	name = "Captain messenger bag"
@@ -1548,7 +1553,7 @@
 /datum/design/item/autotailor/accessories/waist/sec_tan
 	name = "Security belt - tan"
 	id = "sec_tan"
-	build_path = /obj/item/weapon/storage/belt/security/tactical
+	build_path = /obj/item/weapon/storage/belt/holster/security/tactical
 
 /datum/design/item/autotailor/accessories/waist/sec_combat
 	name = "Security combat belt"

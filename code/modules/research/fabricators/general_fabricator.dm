@@ -441,13 +441,13 @@
 // 	materials = list(MATERIAL_STEEL = 01 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
 // 	build_path = /obj/item/weapon/computer_hardware/dna_scanner
 
-/datum/design/item/genfab/computer/adv/pda
-	name = "PDA design"
-	desc = "Cheaper than whiny non-digital assistants."
-	req_tech = list(TECH_ENGINEERING = 2, TECH_POWER = 3)
-	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 1 SHEET, MATERIAL_COPPER = 1.5 SHEETS)
-	build_path = /obj/item/device/pda
-	research = "computer_1"
+// /datum/design/item/genfab/computer/adv/pda
+// 	name = "PDA design"
+// 	desc = "Cheaper than whiny non-digital assistants."
+// 	req_tech = list(TECH_ENGINEERING = 2, TECH_POWER = 3)
+// 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 1 SHEET, MATERIAL_COPPER = 1.5 SHEETS)
+// 	build_path = /obj/item/device/pda
+// 	research = "computer_1"
 // Cartridges
 /**
 /datum/design/item/genfab/computer/adv/pda_cartridge

@@ -30,9 +30,9 @@
 	#define SEC_HUD 1 //Security HUD mode
 	#define MED_HUD 2 //Medical HUD mode
 
-/mob/living/silicon/New()
+/mob/living/silicon/Initialize()
 	GLOB.silicon_mob_list += src
-	..()
+	. = ..()
 
 	if(silicon_radio)
 		silicon_radio = new silicon_radio(src)
@@ -54,6 +54,7 @@
 
 /mob/living/silicon/fully_replace_character_name(new_name)
 	..()
+	create_or_rename_email(new_name, "root.rt")
 	if(istype(idcard))
 		idcard.registered_name = new_name
 		idcard.update_name()
@@ -72,10 +73,11 @@
 /mob/living/silicon/emp_act(severity)
 	switch(severity)
 		if(1)
-			src.apply_damage(20, DAM_EMP)
-			Stun(rand(5,10))
+			src.apply_damage(16, DAM_EMP)
+			if(prob(50)) Stun(rand(5,10))
+			else confused = (min(confused + 2, 40))
 		if(2)
-			src.apply_damage(10, DAM_EMP)
+			src.apply_damage(7, DAM_EMP)
 			confused = (min(confused + 2, 30))
 	flash_eyes(affect_silicon = 1)
 	to_chat(src, "<span class='danger'><B>*BZZZT*</B></span>")
@@ -179,7 +181,7 @@
 	return universal_speak || (speaking in src.speech_synthesizer_langs)	//need speech synthesizer support to vocalize a language
 
 /mob/living/silicon/add_language(var/language, var/can_speak=1)
-	var/var/datum/language/added_language = all_languages[language]
+	var/datum/language/added_language = all_languages[language]
 	if(!added_language)
 		return
 
@@ -260,24 +262,18 @@
 		if(1.0)
 			brute = 400
 			burn = 100
-			if(!anchored && !prob(getarmor(null, DAM_BOMB)))
-				gib()
 		if(2.0)
 			brute = 60
 			burn = 60
 		if(3.0)
 			brute = 30
 
-	var/protection = blocked_mult(getarmor(null, DAM_BOMB))
-	brute *= protection
-	burn *= protection
-
-	adjustBruteLoss(brute)
-	adjustFireLoss(burn)
-
-	updatehealth()
+	apply_damage(brute, DAM_BOMB, damage_flags = 0)
+	apply_damage(burn, DAM_BURN, damage_flags = 0)
 
 /mob/living/silicon/proc/receive_alarm(var/datum/alarm_handler/alarm_handler, var/datum/alarm/alarm, was_raised)
+	if(!(alarm.alarm_z() in GetConnectedZlevels(get_z(src))))
+		return // Didn't actually hear it as far as we're concerned.
 	if(!next_alarm_notice)
 		next_alarm_notice = world.time + SecondsToTicks(10)
 
@@ -337,10 +333,10 @@
 
 
 /mob/living/silicon/proc/is_traitor()
-	return mind && (mind in traitors.current_antagonists)
+	return mind && (mind in GLOB.traitors.current_antagonists)
 
 /mob/living/silicon/proc/is_malf()
-	return mind && (mind in malf.current_antagonists)
+	return mind && (mind in GLOB.malf.current_antagonists)
 
 /mob/living/silicon/proc/is_malf_or_traitor()
 	return is_traitor() || is_malf()
@@ -374,3 +370,6 @@
 /mob/living/silicon/flash_eyes(intensity = FLASH_PROTECTION_MODERATE, override_blindness_check = FALSE, affect_silicon = FALSE, visual = FALSE, type = /obj/screen/fullscreen/flash)
 	if(affect_silicon)
 		return ..()
+
+/mob/living/silicon/seizure()
+	flash_eyes(affect_silicon = TRUE)

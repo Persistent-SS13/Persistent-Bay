@@ -42,6 +42,9 @@
 	set category = "Fun"
 	set name = "Make Robot"
 
+	if(GAME_STATE < RUNLEVEL_GAME)
+		alert("Wait until the game starts")
+		return
 	if(istype(M, /mob/living/carbon/human))
 		log_admin("[key_name(src)] has robotized [M.key].")
 		spawn(10)
@@ -53,6 +56,10 @@
 /client/proc/cmd_admin_animalize(var/mob/M in SSmobs.mob_list)
 	set category = "Fun"
 	set name = "Make Simple Animal"
+
+	if(GAME_STATE < RUNLEVEL_GAME)
+		alert("Wait until the game starts")
+		return
 
 	if(!M)
 		alert("That mob doesn't seem to exist, close the panel and try again.")
@@ -85,7 +92,7 @@
 			return 0
 	var/obj/item/device/paicard/card = new(T)
 	var/mob/living/silicon/pai/pai = new(card)
-	pai.name = sanitizeSafe(input(choice, "Enter your pAI name:", "pAI Name", "Personal AI") as text)
+	pai.SetName(sanitizeSafe(input(choice, "Enter your pAI name:", "pAI Name", "Personal AI") as text))
 	pai.real_name = pai.name
 	pai.key = choice.key
 	card.setPersonality(pai)
@@ -98,6 +105,9 @@
 	set category = "Fun"
 	set name = "Make slime"
 
+	if(GAME_STATE < RUNLEVEL_GAME)
+		alert("Wait until the game starts")
+		return
 	if(ishuman(M))
 		log_admin("[key_name(src)] has slimeized [M.key].")
 		spawn(10)
@@ -144,22 +154,22 @@
 	set category = "Admin"
 	set name = "Grant Full Access"
 
+	if (GAME_STATE < RUNLEVEL_GAME)
+		alert("Wait until the game starts")
+		return
 	if (istype(M, /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = M
-		if (H.wear_id)
-			var/obj/item/weapon/card/id/id = H.wear_id
-			if(istype(H.wear_id, /obj/item/device/pda))
-				var/obj/item/device/pda/pda = H.wear_id
-				id = pda.id
-			id.icon_state = MATERIAL_GOLD
+		var/obj/item/weapon/card/id/id = H.GetIdCard()
+		if(id)
+			id.icon_state = "gold"
 			id.access = get_all_accesses()
 		else
-			var/obj/item/weapon/card/id/id = new/obj/item/weapon/card/id(M);
-			id.icon_state = MATERIAL_GOLD
+			id = new/obj/item/weapon/card/id(M);
+			id.icon_state = "gold"
 			id.access = get_all_accesses()
 			id.registered_name = H.real_name
 			id.assignment = "Captain"
-			id.name = "[id.registered_name]'s ID Card ([id.assignment])"
+			id.SetName("[id.registered_name]'s ID Card ([id.assignment])")
 			H.equip_to_slot_or_del(id, slot_wear_id)
 			H.update_inv_wear_id()
 	else
@@ -294,6 +304,10 @@
 	if(!outfit)
 		return
 
+	var/reset_equipment = (outfit.flags&OUTFIT_RESET_EQUIPMENT)
+	if(!reset_equipment)
+		reset_equipment = alert("Do you wish to delete all current equipment first?", "Delete Equipment?","Yes", "No") == "Yes"
+
 	feedback_add_details("admin_verb","SEQ")
 	dressup_human(H, outfit)
 
@@ -346,7 +360,7 @@
 				Phoron.air_contents.gas[GAS_PHORON] = 70
 				Rad.drainratio = 0
 				Rad.P = Phoron
-				Phoron.loc = Rad
+				Phoron.forceMove(Rad)
 
 			if(!Rad.active)
 				Rad.toggle_power()
@@ -378,6 +392,9 @@
 
 // DNA2 - Admin Hax
 /client/proc/cmd_admin_toggle_block(var/mob/M,var/block)
+	if(GAME_STATE < RUNLEVEL_GAME)
+		alert("Wait until the game starts")
+		return
 	if(istype(M, /mob/living/carbon))
 		M.dna.SetSEState(block,!M.dna.GetSEState(block))
 		domutcheck(M,null,MUTCHK_FORCED)

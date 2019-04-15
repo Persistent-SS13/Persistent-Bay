@@ -1,3 +1,6 @@
+#ifndef T_BOARD
+#error T_BOARD macro is not defined but we need it!
+#endif
 /obj/item/weapon/circuitboard/sleeper
 	name = "circuit board (Sleeper)"
 	build_path = /obj/machinery/sleeper
@@ -31,16 +34,16 @@
 							/obj/item/stack/cable_coil = 2,
 							/obj/item/weapon/stock_parts/console_screen = 2)
 
-/obj/item/weapon/circuitboard/cryo_tube
-	name = "circuit board (Cryotube)"
+obj/item/weapon/circuitboard/cryo_cell
+	name = T_BOARD("cryo cell")
 	build_path = /obj/machinery/atmospherics/unary/cryo_cell
 	board_type = "machine"
-	origin_tech = list(TECH_DATA = 2, TECH_BIO = 3, TECH_ENGINEERING = 4)
-	frame_desc = "Requires 1 Matter Bin, 1 piece of cable and 4 Console Screens."
-	req_components = list(
-							/obj/item/weapon/stock_parts/matter_bin = 1,
-							/obj/item/stack/cable_coil = 1,
-							/obj/item/weapon/stock_parts/console_screen = 4)
+	origin_tech = list(TECH_ENGINEERING = 4, TECH_BIO = 6, TECH_DATA = 3)
+	req_components = list (
+							/obj/item/weapon/stock_parts/scanning_module = 1,
+							/obj/item/weapon/stock_parts/manipulator = 2,
+							/obj/item/weapon/stock_parts/console_screen = 1,
+							/obj/item/pipe = 1)
 
 /obj/item/weapon/circuitboard/resleever
 	name = "circuit board (resleever)"

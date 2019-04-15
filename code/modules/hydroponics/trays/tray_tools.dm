@@ -3,6 +3,10 @@
 /obj/item/weapon/tool/wirecutters/clippers
 	name = "plant clippers"
 	desc = "A tool used to take samples from plants."
+	handle_icon = "clippers_handle"
+	hardware_icon = "clippers_hardware"
+	
+	valid_colours = list(COLOR_GREEN_GRAY, COLOR_BOTTLE_GREEN, COLOR_PALE_BTL_GREEN, COLOR_DARK_GREEN_GRAY, COLOR_PAKISTAN_GREEN)
 
 /obj/item/device/analyzer/plant_analyzer
 	name = "plant analyzer"
@@ -33,16 +37,15 @@
 		to_chat(user, "There is no scan data to print.")
 		return
 	var/obj/item/weapon/paper/P = new /obj/item/weapon/paper(get_turf(src))
-	P.name = "paper - [form_title]"
+	P.SetName("paper - [form_title]")
 	P.info = "[last_data]"
 	if(istype(user,/mob/living/carbon/human) && !(user.l_hand && user.r_hand))
 		user.put_in_hands(P)
 	user.visible_message("\The [src] spits out a piece of paper.")
 	return
 
-/obj/item/device/analyzer/plant_analyzer/attack_self(mob/user as mob)
+/obj/item/device/analyzer/plant_analyzer/attack_self(mob/user)
 	print_report(user)
-	return 0
 
 /obj/item/device/analyzer/plant_analyzer/afterattack(obj/target, mob/user, flag)
 	if(!flag) return
@@ -210,4 +213,6 @@
 		dat += "<br><br>\[<a href='?src=\ref[src];print=1'>print report</a>\]"
 		user << browse(dat,"window=plant_analyzer")
 
-	return
+	if(grown_seed.mysterious && !grown_seed.scanned && !(get_z(src) in GLOB.using_map.station_levels))
+		grown_seed.scanned = TRUE
+		SSstatistics.add_field("xenoplants_scanned", 1)

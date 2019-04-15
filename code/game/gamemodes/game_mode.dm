@@ -121,9 +121,9 @@ var/global/list/additional_antag_types = list()
 			return
 		var/datum/antagonist/antag = GLOB.all_antag_types_[choice]
 		if(antag)
-			if(!islist(SSticker.mode.antag_templates))
-				SSticker.mode.antag_templates = list()
-			SSticker.mode.antag_templates |= antag
+			if(!islist(antag_templates))
+				antag_templates = list()
+			antag_templates |= antag
 			message_admins("Admin [key_name_admin(usr)] added [antag.role_text] template to game mode.")
 
 	// I am very sure there's a better way to do this, but I'm not sure what it might be. ~Z

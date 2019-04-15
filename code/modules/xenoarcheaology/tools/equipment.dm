@@ -53,7 +53,7 @@
 		DAM_BIO 	= 100,
 		DAM_RADS 	= 100,
 		DAM_STUN 	= 0)
-	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit,/obj/item/stack/flag,/obj/item/weapon/storage/excavation,/obj/item/weapon/pickaxe,/obj/item/device/healthanalyzer,/obj/item/device/measuring_tape,/obj/item/device/ano_scanner,/obj/item/device/depth_scanner,/obj/item/device/core_sampler,/obj/item/device/gps,/obj/item/device/beacon_locator,/obj/item/device/radio/beacon,/obj/item/weapon/pickaxe/hand,/obj/item/weapon/storage/bag/fossils)
+	allowed = list(/obj/item/device/flashlight,/obj/item/weapon/tank,/obj/item/device/suit_cooling_unit,/obj/item/stack/flag,/obj/item/weapon/storage/excavation,/obj/item/weapon/pickaxe,/obj/item/device/healthanalyzer,/obj/item/device/measuring_tape,/obj/item/device/ano_scanner,/obj/item/device/depth_scanner,/obj/item/device/core_sampler,/obj/item/device/gps,/obj/item/weapon/pinpointer/radio,/obj/item/device/radio/beacon,/obj/item/weapon/pickaxe/hand,/obj/item/weapon/storage/bag/fossils)
 
 /obj/item/clothing/head/helmet/space/void/excavation
 	name = "Scientist voidsuit helmet"
@@ -87,7 +87,7 @@
 	can_hold = list(
 		/obj/item/weapon/storage/box/samplebags,
 		/obj/item/device/core_sampler,
-		/obj/item/device/beacon_locator,
+		/obj/item/weapon/pinpointer/radio,
 		/obj/item/device/radio/beacon,
 		/obj/item/device/gps,
 		/obj/item/device/measuring_tape,
@@ -100,7 +100,7 @@
 		/obj/item/weapon/folder,
 		/obj/item/weapon/pen,
 		/obj/item/weapon/folder,
-		/obj/item/weapon/clipboard,
+		/obj/item/weapon/material/clipboard,
 		/obj/item/weapon/anodevice,
 		/obj/item/clothing/glasses,
 		/obj/item/weapon/tool/wrench,
@@ -108,4 +108,4 @@
 		/obj/item/weapon/anobattery,
 		/obj/item/device/ano_scanner,
 		/obj/item/taperoll,
-		/obj/item/weapon/pickaxe/hand)
+		/obj/item/weapon/pickaxe/xeno/hand)

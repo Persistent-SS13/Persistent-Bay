@@ -1,4 +1,4 @@
-/obj/structure/toilet
+/obj/structure/hygiene/toilet
 	name = "toilet"
 	desc = "The HT-451, a torque rotation-based, waste disposal unit for small matter. This one seems remarkably clean."
 	icon = 'icons/obj/watercloset.dmi'
@@ -13,11 +13,11 @@
 	var/w_items = 0			//the combined w_class of all the items in the cistern
 	var/mob/living/swirlie = null	//the mob being given a swirlie
 
-/obj/structure/toilet/New()
+/obj/structure/hygiene/toilet/New()
 	open = round(rand(0, 1))
 	update_icon()
 
-/obj/structure/toilet/attack_hand(mob/living/user as mob)
+/obj/structure/hygiene/toilet/attack_hand(mob/living/user as mob)
 	if(swirlie)
 		usr.visible_message("<span class='danger'>[user] slams the toilet seat onto [swirlie.name]'s head!</span>", "<span class='notice'>You slam the toilet seat onto [swirlie.name]'s head!</span>", "You hear reverberating porcelain.")
 		swirlie.adjustBruteLoss(8)
@@ -40,10 +40,10 @@
 	open = !open
 	update_icon()
 
-/obj/structure/toilet/update_icon()
+/obj/structure/hygiene/toilet/update_icon()
 	icon_state = "toilet[open][cistern]"
 
-/obj/structure/toilet/attackby(obj/item/I as obj, mob/living/user as mob)
+/obj/structure/hygiene/toilet/attackby(obj/item/I as obj, mob/living/user as mob)
 	if(isWrench(I))
 		to_chat(usr, "<span class='notice'>You begin to dismantle \the [src].</span>")
 		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)

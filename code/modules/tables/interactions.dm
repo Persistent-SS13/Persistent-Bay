@@ -71,11 +71,10 @@
 		return ..()
 	if(isrobot(user))
 		return
-	user.drop_item()
+	user.unequip_item()
 	if (O.loc != src.loc)
 		step(O, get_dir(O, src))
 	return
-
 
 /obj/structure/table/attackby(obj/item/W, mob/user, var/click_params)
 	if (!W) return
@@ -105,7 +104,7 @@
 	if(W.loc != user) // This should stop mounted modules ending up outside the module.
 		return
 
-	if(istype(W, /obj/item/weapon/melee/energy/blade))
+	if(istype(W, /obj/item/weapon/melee/energy/blade) || istype(W,/obj/item/psychic_power/psiblade/master/grand/paramount))
 		var/datum/effect/effect/system/spark_spread/spark_system = new /datum/effect/effect/system/spark_spread()
 		spark_system.set_up(5, 0, src.loc)
 		spark_system.start()
@@ -120,11 +119,9 @@
 		return
 
 	// Placing stuff on tables
-	if(user.drop_from_inventory(W, src.loc))
+	if(user.unEquip(W, src.loc))
 		auto_align(W, click_params)
 		return 1
-
-	return
 
 /*
 Automatic alignment of items to an invisible grid, defined by CELLS and CELLSIZE, defined in code/__defines/misc.dm.
@@ -174,8 +171,8 @@ Note: This proc can be overwritten to allow for different types of auto-alignmen
 		if (I.anchored || !I.center_of_mass)
 			continue
 		i++
-		I.pixel_x = max(3-i*3, -3) + 1 // There's a sprite layering bug for 0/0 pixelshift, so we avoid it.
-		I.pixel_y = max(4-i*4, -4) + 1
+		I.pixel_x = 1  // There's a sprite layering bug for 0/0 pixelshift, so we avoid it.
+		I.pixel_y = max(3-i*3, -3) + 1
 		I.pixel_z = 0
 
 /obj/structure/table/attack_tk() // no telehulk sorry

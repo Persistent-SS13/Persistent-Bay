@@ -50,9 +50,9 @@
 		return 1
 	else if(istype(I,/obj/item/weapon/reagent_containers))
 		if(!container)
+			if(!user.unEquip(I, src))
+				return
 			container = I
-			user.drop_from_inventory(I)
-			I.forceMove(src)
 		return 1
 	else if(istype(I,/obj/item/weapon/virusdish))
 		if(virusing)

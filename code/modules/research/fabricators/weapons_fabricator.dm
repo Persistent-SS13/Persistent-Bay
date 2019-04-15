@@ -400,7 +400,7 @@
 // MELEE WEAPONS
 
 /datum/design/item/weaponfab/weapons/tacknife // tier 0
-	build_path = /obj/item/weapon/material/hatchet/tacknife
+	build_path = /obj/item/weapon/material/knife/combat
 	materials = list(MATERIAL_STEEL = 3 SHEETS)
 	research = "melee_1"
 /datum/design/item/weaponfab/weapons/unathiknife // tier 1 cosmetic
@@ -577,7 +577,7 @@
 /datum/design/item/weaponfab/armor/barmour/basic_vest_nt	// tier 1	//NT item
 	name = "armor vest - basic NT"
 	id = "basic_vest_nt"
-	build_path = /obj/item/clothing/suit/armor/vest/old/nt
+	build_path = /obj/item/clothing/suit/armor/vest/old/security
 
 /datum/design/item/weaponfab/armor/barmour/basic_vest_brown // tier 1
 	name = "armor vest - basic brown"
@@ -593,7 +593,7 @@
 /datum/design/item/weaponfab/armor/barmour/basic_vest_laser // tier 1
 	name = "armor vest - basic laserproof"
 	id = "basic_vest_laser"
-	build_path = /obj/item/clothing/suit/armor/laserproof/vest
+	build_path = /obj/item/clothing/suit/armor/laserproof/empty
 	materials = list(MATERIAL_LEATHER = 2.5 SHEETS, MATERIAL_SILVER = 2.5 SHEETS)
 
 /datum/design/item/weaponfab/armor/barmour/tact_vest
@@ -629,7 +629,7 @@
 /datum/design/item/weaponfab/armor/barmour/stab_vest
 	name = "armor vest - stab protection"
 	id = "stab_vest"
-	build_path = /obj/item/clothing/suit/armor/riot/vest
+	build_path = /obj/item/clothing/suit/armor/riot/empty
 	materials = list(MATERIAL_LEATHER = 2.5 SHEETS, MATERIAL_STEEL = 5 SHEETS)
 
 /datum/design/item/weaponfab/armor/barmour/pocket_vest
@@ -1165,31 +1165,31 @@
 /datum/design/item/weaponfab/armor/accessory/holster_waist
 	name = "Holster - waist"
 	id = "holster_waist"
-	build_path = /obj/item/clothing/accessory/holster/waist
+	build_path = /obj/item/clothing/accessory/storage/holster/waist
 	materials = list(MATERIAL_LEATHER = 30000, MATERIAL_STEEL = 2.5 SHEETS)
 
 /datum/design/item/weaponfab/armor/accessory/holster_arm
 	name = "Holster - armpit"
 	id = "holster_arm"
-	build_path = /obj/item/clothing/accessory/holster/armpit
+	build_path = /obj/item/clothing/accessory/storage/holster/armpit
 	materials = list(MATERIAL_LEATHER = 30000, MATERIAL_STEEL = 2.5 SHEETS)
 
 /datum/design/item/weaponfab/armor/accessory/holster_hip
 	name = "Holster - hip"
 	id = "holster_hip"
-	build_path = /obj/item/clothing/accessory/holster/hip
+	build_path = /obj/item/clothing/accessory/storage/holster/hip
 	materials = list(MATERIAL_LEATHER = 30000, MATERIAL_STEEL = 2.5 SHEETS)
 
 /datum/design/item/weaponfab/armor/accessory/holster_thigh
 	name = "Holster - thigh"
 	id = "holster_thigh"
-	build_path = /obj/item/clothing/accessory/holster/thigh
+	build_path = /obj/item/clothing/accessory/storage/holster/thigh
 	materials = list(MATERIAL_LEATHER = 30000, MATERIAL_STEEL = 2.5 SHEETS)
 
 /datum/design/item/weaponfab/armor/accessory/holster_machete
 	name = "Holster - machete"
 	id = "holster_machete"
-	build_path = /obj/item/clothing/accessory/holster/machete
+	build_path = /obj/item/clothing/accessory/storage/holster/machete
 	materials = list(MATERIAL_LEATHER = 30000, MATERIAL_STEEL = 2.5 SHEETS)
 
 /datum/design/item/weaponfab/armor/accessory/holster_knife
@@ -1246,11 +1246,11 @@
 	build_path = /obj/item/clothing/accessory/badge/old
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)
 
-/datum/design/item/weaponfab/armor/accessory/holobadge_marshal
-	name = "Holobadge - marshal"
-	id = "holobadge_marshal"
-	build_path = /obj/item/clothing/accessory/badge/marshal
-	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)
+// /datum/design/item/weaponfab/armor/accessory/holobadge_marshal
+// 	name = "Holobadge - marshal"
+// 	id = "holobadge_marshal"
+// 	build_path = /obj/item/clothing/accessory/badge/marshal
+// 	materials = list(MATERIAL_STEEL = 0.5 SHEETS, MATERIAL_PHORON = 0.5 SHEETS)
 
 /datum/design/item/weaponfab/armor/accessory/holotag_det
 	name = "Holotag - detective"

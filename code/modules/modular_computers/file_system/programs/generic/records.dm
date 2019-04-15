@@ -3,18 +3,19 @@
 	filedesc = "Crew Records"
 	extended_desc = "This program allows access to the crew's various records."
 	program_icon_state = "generic"
+	program_key_state = "generic_key"
 	size = 14
 	requires_ntnet = TRUE
 	available_on_ntnet = TRUE
-	nanomodule_path = /datum/nano_module/program/records
+	nanomodule_path = /datum/nano_module/records
 	usage_flags = PROGRAM_ALL
 
-/datum/nano_module/program/records
+/datum/nano_module/records
 	name = "Crew Records"
 	var/datum/computer_file/report/crew_record/active_record
 	var/message = null
 
-/datum/nano_module/program/records/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
+/datum/nano_module/records/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
 	var/list/data = host.initial_data()
 	var/list/user_access = get_record_access(user)
 
@@ -115,8 +116,8 @@
 		ui.open()
 
 
-/datum/nano_module/program/records/proc/get_record_access(var/mob/user)
-	var/list/user_access = user.GetAccess()
+/datum/nano_module/records/proc/get_record_access(var/mob/user)
+	var/list/user_access = using_access || user.GetAccess()
 
 	var/obj/item/modular_computer/PC = nano_host()
 	if(istype(PC) && PC.computer_emagged)
@@ -125,17 +126,17 @@
 
 	return user_access
 
-/datum/nano_module/program/records/proc/edit_field(var/mob/user, var/field)
+/datum/nano_module/records/proc/edit_field(var/mob/user, var/field_ID)
 	var/datum/computer_file/report/crew_record/R = active_record
 	if(!R)
 		return
-	var/record_field/F = locate(field) in R.fields
+	var/datum/report_field/F = R.field_from_ID(field_ID)
 	if(!F)
 		return
-
-	if(!F.can_edit(get_record_access(user)))
+	if(!F.verify_access_edit(get_record_access(user)))
 		to_chat(user, "<span class='notice'>\The [nano_host()] flashes an \"Access Denied\" warning.</span>")
 		return
+	F.ask_value(user)
 
 	var/newValue
 	switch(F.valtype)
@@ -157,7 +158,7 @@
 	if(newValue)
 		return F.set_value(newValue)
 
-/datum/nano_module/program/records/Topic(href, href_list)
+/datum/nano_module/records/Topic(href, href_list)
 
 	var/datum/world_faction/connected_faction
 	var/list/faction_records = list()
@@ -196,12 +197,13 @@
 		print_text(record_to_html(active_record, get_record_access(usr)), usr)
 		return 1
 	if(href_list["search"])
-		var/field = text2path("/record_field/"+href_list["search"])
+		var/field_name = href_list["search"]
 		var/search = sanitize(input("Enter the value for search for.") as null|text)
 		if(!search)
 			return
 		for(var/datum/computer_file/report/crew_record/R in faction_records)
-			if(lowertext(R.get_field(field)) == lowertext(search))
+			var/datum/report_field/field = R.field_from_name(field_name)
+			if(lowertext(field.get_value()) == lowertext(search))
 				active_record = R
 				return 1
 		message = "Unable to find record containing '[search]'"
@@ -221,10 +223,10 @@
 			active_record.photo_side = photo
 		return 1
 	if(href_list["edit_field"])
-		edit_field(usr, text2path(href_list["edit_field"]))
+		edit_field(usr, text2num(href_list["edit_field"]))
 		return 1
 
-/datum/nano_module/program/records/proc/get_photo(var/mob/user)
+/datum/nano_module/records/proc/get_photo(var/mob/user)
 	if(istype(user.get_active_hand(), /obj/item/weapon/photo))
 		var/obj/item/weapon/photo/photo = user.get_active_hand()
 		return photo.img

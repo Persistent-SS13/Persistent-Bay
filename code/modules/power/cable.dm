@@ -22,12 +22,9 @@ If d1 = dir1 and d2 = dir2, it's a full X-X cable, getting from dir1 to dir2
 By design, d1 is the smallest direction and d2 is the highest
 */
 
-var/list/possible_cable_coil_colours
-
 /obj/structure/cable
 	level = 1
 	anchored =1
-	dir = SOUTH
 	var/datum/powernet/powernet
 	name = "power cable"
 	desc = "A flexible superconducting cable for heavy-duty power transfer."
@@ -39,7 +36,7 @@ var/list/possible_cable_coil_colours
 	plane = ABOVE_TURF_PLANE
 	layer = EXPOSED_WIRE_LAYER
 
-	color = COLOR_RED
+	color = COLOR_MAROON
 	var/obj/machinery/power/breakerbox/breaker_box
 
 
@@ -54,25 +51,25 @@ var/list/possible_cable_coil_colours
 	return PN.draw_power(amount)
 
 /obj/structure/cable/yellow
-	color = COLOR_YELLOW
+	color = COLOR_AMBER
 
 /obj/structure/cable/green
-	color = COLOR_LIME
+	color = COLOR_GREEN
 
 /obj/structure/cable/blue
-	color = COLOR_BLUE
+	color = COLOR_CYAN_BLUE
 
 /obj/structure/cable/pink
-	color = COLOR_PINK
+	color = COLOR_PURPLE
 
 /obj/structure/cable/orange
 	color = COLOR_ORANGE
 
 /obj/structure/cable/cyan
-	color = COLOR_CYAN
+	color = COLOR_SKY_BLUE
 
 /obj/structure/cable/white
-	color = COLOR_WHITE
+	color = COLOR_SILVER
 
 /obj/structure/cable/New()
 	..()
@@ -137,7 +134,7 @@ var/list/possible_cable_coil_colours
 /obj/structure/cable/hides_under_flooring()
 	return 1
 
-/obj/structure/cable/update_icon()
+/obj/structure/cable/on_update_icon()
 	icon_state = "[d1]-[d2]"
 	alpha = invisibility ? 127 : 255
 
@@ -162,37 +159,7 @@ var/list/possible_cable_coil_colours
 		return
 
 	if(isWirecutter(W))
-		if(d1 == UP || d2 == UP)
-			to_chat(user, "<span class='warning'>You must cut this cable from above.</span>")
-			return
-
-		if(breaker_box)
-			to_chat(user, "<span class='warning'>This cable is connected to nearby breaker box. Use breaker box to interact with it.</span>")
-			return
-
-		if (shock(user, 50))
-			return
-
-		if(src.d1)	// 0-X cables are 1 unit, X-X cables are 2 units long
-			new/obj/item/stack/cable_coil(T, 2, color)
-		else
-			new/obj/item/stack/cable_coil(T, 1, color)
-
-		for(var/mob/O in viewers(src, null))
-			O.show_message("<span class='warning'>[user] cuts the cable.</span>", 1)
-
-		if(d1 == DOWN || d2 == DOWN)
-			var/turf/turf = GetBelow(src)
-			if(turf)
-				for(var/obj/structure/cable/c in turf)
-					if(c.d1 == UP || c.d2 == UP)
-						qdel(c)
-
-		investigate_log("was cut by [key_name(usr, usr.client)] in [user.loc.loc]","wires")
-
-		qdel(src)
-		return
-
+		cut_wire(W, user)
 
 	else if(isCoil(W))
 		var/obj/item/stack/cable_coil/coil = W
@@ -211,11 +178,56 @@ var/list/possible_cable_coil_colours
 
 		shock(user, 5, 0.2)
 
-	else
-		if (W.obj_flags & OBJ_FLAG_CONDUCTIBLE)
-			shock(user, 50, 0.7)
+
+	else if(W.sharness)
+
+		var/delay_holder
+
+		if(W.force < 5)
+			visible_message("<span class='warning'>[user] starts sawing away roughly at the cable with \the [W].</span>")
+			delay_holder = 8 SECONDS
+		else
+			visible_message("<span class='warning'>[user] begins to cut through the cable with \the [W].</span>")
+			delay_holder = 3 SECONDS
+
+		if(user.do_skilled(delay_holder, SKILL_ELECTRICAL, src))
+			cut_wire(W, user)
+			if(W.obj_flags & OBJ_FLAG_CONDUCTIBLE)
+				shock(user, 66, 0.7)
+		else
+			visible_message("<span class='warning'>[user] stops cutting before any damage is done.</span>")
 
 	src.add_fingerprint(user)
+
+/obj/structure/cable/proc/cut_wire(obj/item/W, mob/user)
+	var/turf/T = get_turf(src)
+	if(!T || !T.is_plating())
+		return
+
+	if(d1 == UP || d2 == UP)
+		to_chat(user, "<span class='warning'>You must cut this cable from above.</span>")
+		return
+
+	if(breaker_box)
+		to_chat(user, "<span class='warning'>This cable is connected to a nearby breaker box. Use the breaker box to interact with it.</span>")
+		return
+
+	if (shock(user, 50))
+		return
+
+	new/obj/item/stack/cable_coil(T, (src.d1 ? 2 : 1), color)
+
+	visible_message("<span class='warning'>[user] cuts the cable.</span>")
+
+	if(HasBelow(z))
+		for(var/turf/turf in GetBelow(src))
+			for(var/obj/structure/cable/c in turf)
+				if(c.d1 == UP || c.d2 == UP)
+					qdel(c)
+
+	investigate_log("was cut by [key_name(usr, usr.client)] in [user.loc.loc]","wires")
+
+	qdel(src)
 
 // shock the user with probability prb
 /obj/structure/cable/proc/shock(mob/user, prb, var/siemens_coeff = 1.0)
@@ -480,13 +492,13 @@ obj/structure/cable/proc/cableColor(var/colorC)
 	randpixel = 2
 	amount = MAXCOIL
 	max_amount = MAXCOIL
-	color = COLOR_RED
+	color = COLOR_MAROON
 	desc = "A coil of wiring, for delicate electronics use aswell as the more basic cable laying."
 	throwforce = 0
 	w_class = ITEM_SIZE_NORMAL
 	throw_speed = 2
 	throw_range = 5
-	matter = list(MATERIAL_COPPER = 20)
+	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 20, MATERIAL_PLASTIC = 20)
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT
 	item_state = "coil"
@@ -537,6 +549,10 @@ obj/structure/cable/proc/cableColor(var/colorC)
 		if(!BP_IS_ROBOTIC(S) || user.a_intent != I_HELP)
 			return ..()
 
+		if(BP_IS_BRITTLE(S))
+			to_chat(user, "<span class='warning'>\The [H]'s [S.name] is hard and brittle - \the [src] cannot repair it.</span>")
+			return 1
+
 		var/use_amt = min(src.amount, ceil(S.burn_dam/3), 5)
 		if(can_use(use_amt))
 			if(S.robo_repair(3*use_amt, DAM_BURN, "some damaged wiring", src, user))
@@ -545,27 +561,27 @@ obj/structure/cable/proc/cableColor(var/colorC)
 	return ..()
 
 
-/obj/item/stack/cable_coil/update_icon()
+/obj/item/stack/cable_coil/on_update_icon()
 	if (!color)
-		color = possible_cable_coil_colours[pick(possible_cable_coil_colours)]
+		color = GLOB.possible_cable_colours[pick(GLOB.possible_cable_colours)]
 	if(amount == 1)
 		icon_state = "coil1"
-		name = "cable piece"
+		SetName("cable piece")
 	else if(amount == 2)
 		icon_state = "coil2"
-		name = "cable piece"
+		SetName("cable piece")
 	else
-		icon_state = "coil"
-		name = "cable coil"
+		icon_state = initial(icon_state)
+		SetName(initial(name))
 
 /obj/item/stack/cable_coil/proc/set_cable_color(var/selected_color, var/user)
 	if(!selected_color)
 		return
 
-	var/final_color = possible_cable_coil_colours[selected_color]
+	var/final_color = GLOB.possible_cable_colours[selected_color]
 	if(!final_color)
 		selected_color = "Red"
-		final_color = possible_cable_coil_colours[selected_color]
+		final_color = GLOB.possible_cable_colours[selected_color]
 	color = final_color
 	to_chat(user, "<span class='notice'>You change \the [src]'s color to [lowertext(selected_color)].</span>")
 
@@ -610,7 +626,7 @@ obj/structure/cable/proc/cableColor(var/colorC)
 	set name = "Change Colour"
 	set category = "Object"
 
-	var/selected_type = input("Pick new colour.", "Cable Colour", null, null) as null|anything in possible_cable_coil_colours
+	var/selected_type = input("Pick new colour.", "Cable Colour", null, null) as null|anything in GLOB.possible_cable_colours
 	set_cable_color(selected_type, usr)
 
 // Items usable on a cable coil :
@@ -625,7 +641,7 @@ obj/structure/cable/proc/cableColor(var/colorC)
 /obj/item/stack/cable_coil/transfer_to(obj/item/stack/cable_coil/S)
 	if(!istype(S))
 		return
-	if(!can_merge(S))
+	if(!(can_merge(S) || S.can_merge(src)))
 		return
 
 	..()
@@ -818,26 +834,26 @@ obj/structure/cable/proc/cableColor(var/colorC)
 	update_wclass()
 
 /obj/item/stack/cable_coil/yellow
-	color = COLOR_YELLOW
+	color = COLOR_AMBER
 
 /obj/item/stack/cable_coil/blue
-	color = COLOR_BLUE
+	color = COLOR_CYAN_BLUE
 
 /obj/item/stack/cable_coil/green
-	color = COLOR_LIME
+	color = COLOR_GREEN
 
 /obj/item/stack/cable_coil/pink
-	color = COLOR_PINK
+	color = COLOR_PURPLE
 
 /obj/item/stack/cable_coil/orange
 	color = COLOR_ORANGE
 
 /obj/item/stack/cable_coil/cyan
-	color = COLOR_CYAN
+	color = COLOR_SKY_BLUE
 
 /obj/item/stack/cable_coil/white
-	color = COLOR_WHITE
+	color = COLOR_SILVER
 
 /obj/item/stack/cable_coil/random/New()
-	color = possible_cable_coil_colours[pick(possible_cable_coil_colours)]
+	color = GLOB.possible_cable_colours[pick(GLOB.possible_cable_colours)]
 	..()

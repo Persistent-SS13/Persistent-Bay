@@ -44,21 +44,23 @@
 		if(beaker)
 			to_chat(user, "\The [src] is already loaded.")
 			return
-		user.drop_from_inventory(O)
+		if(!user.unEquip(O, src))
+			return
 		beaker = O
-		O.forceMove(src)
 
 		user.visible_message("[user] adds \a [O] to \the [src]!", "You add \a [O] to \the [src]!")
 		SSnano.update_uis(src)
+
 		src.attack_hand(user)
 		return 1
 	else if(istype(O, /obj/item/weapon/virusdish))
 		if(dish)
-			to_chat(user, "The dish tray is aleady full!")
+			to_chat(user, "The dish tray is already full!")
 			return
-		user.drop_from_inventory(O)
+		if(!user.unEquip(O, src))
+			return
 		dish = O
-		O.forceMove(src)
+
 		user.visible_message("[user] adds \a [O] to \the [src]!", "You add \a [O] to \the [src]!")
 		SSnano.update_uis(src)
 		src.attack_hand(user)
@@ -109,7 +111,8 @@
 		ui.set_initial_data(data)
 		ui.open()
 
-/obj/machinery/disease2/incubator/update_icon()
+/obj/machinery/disease2/incubator/on_update_icon()
+	..()
 	if(ison())
 		icon_state = "incubator_on"
 	else
@@ -120,6 +123,8 @@
 		return
 	
 	if(ison() && dish && dish.virus2)
+		use_power_oneoff(50,EQUIP)
+		var/threshold_mod = 0
 		if(foodsupply)
 			if(dish.growth + 3 >= 100 && dish.growth < 100)
 				ping("\The [src] pings, \"Sufficient viral growth density achieved.\"")
@@ -129,6 +134,7 @@
 			SSnano.update_uis(src)
 
 		if(radiation)
+			threshold_mod++
 			if(radiation > 50 & prob(5))
 				dish.virus2.majormutate()
 				if(dish.info)
@@ -147,6 +153,7 @@
 			dish.growth = 0
 			dish.virus2 = null
 			SSnano.update_uis(src)
+		infect_nearby(dish.virus2, 10 * 2**threshold_mod, SKILL_BASIC + threshold_mod)
 	else if(ison() && !dish)
 		turn_idle()
 		SSnano.update_uis(src)
@@ -161,7 +168,7 @@
 			foodsupply = min(100, foodsupply+(food_taken * 2))
 			SSnano.update_uis(src)
 
-		if (locate(/datum/reagent/toxin) in beaker.reagents.reagent_list && toxins < 100)
+		if ((locate(/datum/reagent/toxin) in beaker.reagents.reagent_list) && toxins < 100)
 			for(var/datum/reagent/toxin/T in beaker.reagents.reagent_list)
 				toxins += max(T.strength,1)
 				beaker.reagents.remove_reagent(T.type,1)
@@ -171,6 +178,7 @@
 			SSnano.update_uis(src)
 
 /obj/machinery/disease2/incubator/OnTopic(mob/user, href_list)
+	operator_skill = user.get_skill_value(core_skill)
 	if (href_list["close"])
 		SSnano.close_user_uis(user, src, "main")
 		return TOPIC_HANDLED

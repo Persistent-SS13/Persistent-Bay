@@ -11,6 +11,7 @@
 	bolts_file = 'icons/obj/doors/elevator/lights_bolts.dmi'
 	deny_file = 'icons/obj/doors/elevator/lights_deny.dmi'
 	lights_file = 'icons/obj/doors/elevator/lights_green.dmi'
+
 	paintable = 0
 
 	var/datum/turbolift/lift

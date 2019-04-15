@@ -115,7 +115,7 @@
 	materials = list(MATERIAL_STEEL = 2 SHEET)
 /datum/design/item/servicefab/culinarytools/butch
 	name = "butcher knife"
-	build_path = /obj/item/weapon/material/knife/butch
+	build_path = /obj/item/weapon/material/knife/kitchen/cleaver
 	materials = list(MATERIAL_STEEL = 2.5 SHEET)
 /datum/design/item/servicefab/culinarytools/utensil_knife
 	name = "dining knife"

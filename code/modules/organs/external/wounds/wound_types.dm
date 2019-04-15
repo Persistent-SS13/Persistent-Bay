@@ -45,6 +45,19 @@
 					return /datum/wound/burn/large
 				if(0 to 15)
 					return /datum/wound/burn/moderate
+		if(DAM_SHATTER)
+			switch(damage)
+				if(50 to INFINITY)
+					return /datum/wound/shatter/smashed
+				if(40 to 50)
+					return /datum/wound/shatter/wide
+				if(30 to 40)
+					return /datum/wound/shatter/narrow
+				if(15 to 30)
+					return /datum/wound/shatter/cracked
+				if(0 to 15)
+					return /datum/wound/shatter/chipped
+
 	return null //no wound
 
 /datum/wound/proc/close()
@@ -67,7 +80,6 @@
 	current_stage = max_bleeding_stage + 1
 	desc = desc_list[current_stage]
 	min_damage = damage_list[current_stage]
-	damage = min(min_damage, damage)
 	if(damage > min_damage)
 		heal_damage(damage-min_damage)
 

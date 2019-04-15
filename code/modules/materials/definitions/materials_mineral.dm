@@ -22,6 +22,7 @@
 		)
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
+	sale_price = 2
 	ore_matter = list(MATERIAL_URANIUM = 2000)
 
 /material/graphite
@@ -42,6 +43,7 @@
 	chem_products = list(
 		/datum/reagent/carbon = 40
 		)
+	sale_price = 1
 	ore_matter = list(MATERIAL_GRAPHITE = 2000)
 	energy_combustion = 32.7
 
@@ -55,6 +57,7 @@
 	name = MATERIAL_QUARTZ
 	ore_compresses_to = MATERIAL_QUARTZ
 	ore_name = MATERIAL_QUARTZ
+	opacity = 0.5
 	ore_result_amount = 10
 	ore_spread_chance = 10
 	ore_scan_icon = "mineral_common"
@@ -70,6 +73,7 @@
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
 	ore_matter = list(MATERIAL_QUARTZ = 2000)
+	sale_price = 2
 
 /material/pyrite
 	name = MATERIAL_PYRITE
@@ -90,6 +94,7 @@
 	sheet_plural_name = "bricks"
 	ore_compresses_to = MATERIAL_SULFUR
 	ore_matter = list(MATERIAL_SULFUR = 2000, MATERIAL_IRON = 1000)
+	sale_price = 2
 
 /material/sulfur
 	name = MATERIAL_SULFUR
@@ -136,6 +141,7 @@
 	sheet_plural_name = "bricks"
 	ore_matter = list(MATERIAL_SPODUMENE = 2000, MATERIAL_ALUMINUM = 500)
 	energy_combustion = 43.1
+	sale_price = 2
 
 /material/cinnabar
 	name = MATERIAL_CINNABAR
@@ -155,6 +161,7 @@
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
 	ore_matter = list(MATERIAL_CINNABAR = 2000)
+	sale_price = 2
 
 /material/phosphorite
 	name = MATERIAL_PHOSPHORITE
@@ -174,6 +181,7 @@
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
 	ore_matter = list(MATERIAL_PHOSPHORITE = 2000)
+	sale_price = 2
 
 /material/rocksalt
 	name = MATERIAL_ROCK_SALT
@@ -195,6 +203,7 @@
 	sheet_plural_name = "bricks"
 	ore_matter = list(MATERIAL_ROCK_SALT = 2000)
 	energy_combustion = 9.23
+	sale_price = 2
 
 /material/potash
 	name = MATERIAL_POTASH
@@ -214,6 +223,7 @@
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
 	ore_matter = list(MATERIAL_POTASH = 2000)
+	sale_price = 2
 
 /material/bauxite
 	name = MATERIAL_BAUXITE
@@ -235,6 +245,7 @@
 	ore_smelts_to = MATERIAL_ALUMINIUM
 	ore_matter = list(MATERIAL_BAUXITE = 2000)
 	energy_combustion = 31
+	sale_price = 1
 
 /material/sand
 	name = MATERIAL_SAND
@@ -268,6 +279,7 @@
 	chem_products = list(
 		/datum/reagent/toxin/phoron = 20
 		)
+	construction_difficulty = 2
 	ore_name = MATERIAL_PHORON
 	ore_compresses_to = MATERIAL_PHORON
 	ore_result_amount = 5
@@ -286,12 +298,14 @@
 
 /material/phoron/supermatter
 	name = MATERIAL_SUPERMATTER
+	lore_text = "Hypercrystalline supermatter is a subset of non-baryonic 'exotic' matter. It is found mostly in the heart of large stars, and features heavily in bluespace technology."
 	icon_colour = "#ffff00"
 	radioactivity = 20
 	stack_origin_tech = list(TECH_BLUESPACE = 2, TECH_MATERIAL = 6, TECH_PHORON = 4)
 	stack_type = null
 	luminescence = 3
 	ore_compresses_to = null
+	sale_price = null
 
 //Controls phoron and phoron based objects reaction to being in a turf over 200c -- Phoron's flashpoint.
 /material/phoron/combustion_effect(var/turf/T, var/temperature, var/effect_multiplier)

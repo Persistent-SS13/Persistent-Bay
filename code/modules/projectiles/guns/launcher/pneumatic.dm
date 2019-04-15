@@ -1,9 +1,10 @@
 /obj/item/weapon/gun/launcher/pneumatic
 	name = "pneumatic cannon"
 	desc = "A large gas-powered cannon."
-	icon = 'icons/obj/weapons/pneumatic_canon.dmi'
+	icon = 'icons/obj/weapons/guns/pneumatic_canon.dmi'
 	icon_state = "pneumatic"
 	item_state = "pneumatic"
+	origin_tech = list(TECH_COMBAT = 4, TECH_MATERIAL = 3)
 	slot_flags = SLOT_BELT
 	w_class = ITEM_SIZE_HUGE
 	obj_flags =  OBJ_FLAG_CONDUCTIBLE
@@ -22,10 +23,10 @@
 	var/force_divisor = 400                             // Force equates to speed. Speed/5 equates to a damage multiplier for whoever you hit.
 	                                                    // For reference, a fully pressurized oxy tank at 50% gas release firing a health
 	                                                    // analyzer with a force_divisor of 10 hit with a damage multiplier of 3000+.
-/obj/item/weapon/gun/launcher/pneumatic/New()
-	..()
+/obj/item/weapon/gun/launcher/pneumatic/Initialize()
+	. = ..()
 	item_storage = new(src)
-	item_storage.name = "hopper"
+	item_storage.SetName("hopper")
 	item_storage.max_w_class = max_w_class
 	item_storage.max_storage_space = max_storage_space
 	item_storage.use_sound = null
@@ -65,8 +66,7 @@
 		return ..()
 
 /obj/item/weapon/gun/launcher/pneumatic/attackby(obj/item/W as obj, mob/user as mob)
-	if(!tank && istype(W,/obj/item/weapon/tank))
-		user.drop_from_inventory(W, src)
+	if(!tank && istype(W,/obj/item/weapon/tank) && user.unEquip(W, src))
 		tank = W
 		user.visible_message("[user] jams [W] into [src]'s valve and twists it closed.","You jam [W] into [src]'s valve and twist it closed.")
 		update_icon()
@@ -118,13 +118,13 @@
 /obj/item/weapon/gun/launcher/pneumatic/handle_post_fire()
 	if(tank)
 		var/lost_gas_amount = tank.air_contents.total_moles*(pressure_setting/100)
-		var/datum/gas_mixture/removed = tank.air_contents.remove(lost_gas_amount)
+		var/datum/gas_mixture/removed = tank.remove_air(lost_gas_amount)
 
 		var/turf/T = get_turf(src.loc)
 		if(T) T.assume_air(removed)
 	..()
 
-/obj/item/weapon/gun/launcher/pneumatic/update_icon()
+/obj/item/weapon/gun/launcher/pneumatic/on_update_icon()
 	if(tank)
 		icon_state = "pneumatic-tank"
 		item_state = "pneumatic-tank"
@@ -139,13 +139,13 @@
 /obj/item/weapon/cannonframe
 	name = "pneumatic cannon frame"
 	desc = "A half-finished pneumatic cannon."
-	icon = 'icons/obj/weapons/pneumatic_canon.dmi'
+	icon = 'icons/obj/weapons/guns/pneumatic_canon.dmi'
 	icon_state = "pneumatic0"
 	item_state = "pneumatic"
 
 	var/buildstate = 0
 
-/obj/item/weapon/cannonframe/update_icon()
+/obj/item/weapon/cannonframe/on_update_icon()
 	icon_state = "pneumatic[buildstate]"
 
 /obj/item/weapon/cannonframe/examine(mob/user)

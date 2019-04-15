@@ -120,8 +120,14 @@ var/const/HOLOPAD_MODE = RANGE_BASED
 			if(last_request + 200 < world.time) //don't spam other people with requests either, you jerk!
 				last_request = world.time
 				var/list/holopadlist = list()
+				var/zlevels = GetConnectedZlevels(z)
+				if(GLOB.using_map.use_overmap && holopadType == HOLOPAD_LONG_RANGE)
+					for(var/zlevel in map_sectors)
+						var/obj/effect/overmap/O = map_sectors["[zlevel]"]
+						if(!isnull(O))
+							zlevels |= O.map_z
 				for(var/obj/machinery/hologram/holopad/H in SSmachines.machinery)
-					if(H.operable())
+					if((H.z in zlevels) && H.operable())
 						var/area/area = get_area(H)
 						holopadlist["[area.name]"] = H	//Define a list and fill it with the area of every holopad in the world
 				holopadlist = sortAssoc(holopadlist)

@@ -12,7 +12,7 @@
 	//Power
 	use_power = POWER_USE_IDLE
 	idle_power_usage = 150		//internal circuitry, friction losses and stuff
-	power_rating = 7500	//This also doubles as a measure of how powerful the filter is, in Watts. 7500 W ~ 10 HP
+	power_rating = 15000	//This also doubles as a measure of how powerful the filter is, in Watts. 7500 W ~ 10 HP
 	//Radio
 	frequency 		= null
 	id_tag 			= null
@@ -47,7 +47,7 @@
 /obj/machinery/atmospherics/trinary/filter/Initialize()
 	. = ..()
 
-/obj/machinery/atmospherics/trinary/filter/update_icon()
+/obj/machinery/atmospherics/trinary/filter/on_update_icon()
 	if(istype(src, /obj/machinery/atmospherics/trinary/filter/m_filter))
 		icon_state = "m"
 	else
@@ -101,7 +101,8 @@
 			network1.update = 1
 	if (power_draw >= 0)
 		last_power_draw = power_draw
-		use_power(power_draw)
+		use_power_oneoff(power_draw)
+
 	return 1
 
 /obj/machinery/atmospherics/trinary/filter/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)

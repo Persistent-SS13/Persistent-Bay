@@ -24,8 +24,8 @@
 /obj/item/weapon/computer_hardware/scanner/medical/do_on_afterattack(mob/user, mob/living/carbon/human/target, proximity)
 	if(!can_use_scanner(user, target, proximity))
 		return
-	var/dat = medical_scan_results(target, 1)
-	if(driver && driver.using_scanner)
+	var/dat = medical_scan_action(target, user, holder2, 1)
+	if(dat && driver && driver.using_scanner)
 		driver.data_buffer = html2pencode(dat)
 		SSnano.update_uis(driver.NM)
 	user.visible_message("<span class='notice'>\The [user] runs \the [src] on \the [holder2] over \the [target].</span>")

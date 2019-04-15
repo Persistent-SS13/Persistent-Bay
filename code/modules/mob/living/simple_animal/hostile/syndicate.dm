@@ -17,9 +17,10 @@
 	harm_intent_damage = 5
 	melee_damage_lower = 10
 	melee_damage_upper = 10
+	can_escape = 1
 	attacktext = "punched"
 	a_intent = I_HURT
-	var/corpse = /obj/effect/landmark/mobcorpse/syndicatesoldier
+	var/corpse = /obj/effect/landmark/corpse/syndicate
 	var/weapon1
 	var/weapon2
 	unsuitable_atmos_damage = 15
@@ -69,7 +70,7 @@
 /mob/living/simple_animal/hostile/syndicate/melee/bullet_act(var/obj/item/projectile/Proj)
 	if(!Proj)	return
 	if(prob(65))
-		src.health -= Proj.force
+		src.health -= Proj.damage
 	else
 		visible_message("<span class='danger'>\The [src] blocks \the [Proj] with its shield!</span>")
 	return 0
@@ -82,7 +83,7 @@
 	icon_state = "syndicatemeleespace"
 	icon_living = "syndicatemeleespace"
 	name = "Syndicate Commando"
-	corpse = /obj/effect/landmark/mobcorpse/syndicatecommando
+	corpse = /obj/effect/landmark/corpse/syndicate
 	speed = 0
 
 /mob/living/simple_animal/hostile/syndicate/ranged
@@ -103,7 +104,7 @@
 	min_gas = null
 	max_gas = null
 	minbodytemp = 0
-	corpse = /obj/effect/landmark/mobcorpse/syndicatecommando
+	corpse = /obj/effect/landmark/corpse/syndicate/commando
 	speed = 0
 
 /mob/living/simple_animal/hostile/viscerator

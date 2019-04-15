@@ -54,7 +54,7 @@ GLOBAL_LIST_INIT(weighted_minerals_rich, \
 	iterations = 5
 	descriptor = "moon caves"
 	wall_type =  /turf/simulated/mineral
-	floor_type = /turf/simulated/asteroid
+	floor_type = /turf/simulated/floor/asteroid
 	target_turf_type = /turf/unsimulated/mask
 
 	var/mineral_turf = /turf/simulated/mineral/random
@@ -150,7 +150,7 @@ GLOBAL_LIST_INIT(weighted_minerals_rich, \
 
 		num_applied += 1
 		T.ChangeTurf(new_path, minerals)
-
+		get_additional_spawns(map[tmp_cell], T)
 		CHECK_TICK
 
 	game_log("ASGEN", "Applied [num_applied] turfs.")

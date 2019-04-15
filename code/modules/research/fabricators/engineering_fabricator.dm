@@ -186,7 +186,7 @@
 
 /datum/design/item/engifab/engitools/combitool
 	name = "Combitool"
-	build_path = /obj/item/weapon/combitool
+	build_path = /obj/item/weapon/tool/combitool
 	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_COPPER = 2 SHEETS, MATERIAL_PHORON = 2 SHEET)
 	research = "combitool"
 	time = 60

@@ -5,6 +5,4 @@ SUBSYSTEM_DEF(late)
 
 /datum/controller/subsystem/late/Initialize()
 	populate_lathe_recipes()
-
-	supply_controller.generate_initial()
 	. = ..()

@@ -46,6 +46,7 @@ var/global/datum/ntnet/ntnet_global = new()
 	build_software_lists()
 	build_news_list()
 	build_emails_list()
+	build_reports_list()
 	add_log("NTNet logging system activated.")
 
 /datum/ntnet/proc/add_log_with_ids_check(var/log_string, var/obj/item/weapon/computer_hardware/network_card/source = null)
@@ -219,8 +220,7 @@ var/global/datum/ntnet/ntnet_global = new()
 	for(var/datum/computer_file/data/email_account/A in ntnet_global.email_accounts)
 		if(A.login == login)
 			return A
-	return null
-
+	return 0
 
 // Assigning emails to mobs
 

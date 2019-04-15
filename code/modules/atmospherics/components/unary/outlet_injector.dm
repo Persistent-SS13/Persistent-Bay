@@ -26,7 +26,7 @@
 	..()
 	air_contents.volume = ATMOS_DEFAULT_VOLUME_PUMP + 500	//Give it a small reservoir for injecting. Also allows it to have a higher flow rate limit than vent pumps, to differentiate injectors a bit more.
 
-/obj/machinery/atmospherics/unary/outlet_injector/update_icon()
+/obj/machinery/atmospherics/unary/outlet_injector/on_update_icon()
 	if(!powered())
 		icon_state = "off"
 	else
@@ -57,7 +57,8 @@
 
 	if (power_draw >= 0)
 		last_power_draw = power_draw
-		use_power(power_draw)
+		use_power_oneoff(power_draw)
+
 		if(network)
 			network.update = TRUE
 	return 1
@@ -74,7 +75,7 @@
 
 	if(air_contents.temperature > 0)
 		var/power_used = pump_gas(src, air_contents, environment, air_contents.total_moles, power_rating)
-		use_power(power_used)
+		use_power_oneoff(power_used)
 
 		if(network)
 			network.update = TRUE
@@ -102,10 +103,10 @@
 		return TOPIC_NOACTION
 
 	if(href_list["power"])
-		use_power = text2num(href_list["power"])
+		update_use_power(sanitize_integer(text2num(signal.data["power"]), POWER_USE_OFF, POWER_USE_ACTIVE, use_power))
 
 	if(href_list["power_toggle"])
-		use_power = !use_power
+		update_use_power(!use_power)
 
 	if(href_list["inject"])
 		spawn inject()
@@ -116,10 +117,10 @@
 		volume_rate = between(0, number, air_contents.volume)
 
 	if(href_list["status"])
-		broadcast_status()
+		addtimer(CALLBACK(src, .proc/broadcast_status), 2, TIMER_UNIQUE)
 		return //do not update_icon
 
-	broadcast_status()
+	addtimer(CALLBACK(src, .proc/broadcast_status), 2, TIMER_UNIQUE)
 	update_icon()
 	return TOPIC_REFRESH
 

@@ -26,18 +26,18 @@
 
   var/list/products = list()
   for(var/i = 1; i <= length(products); i++)
-	products.Add(list(list(
-	"owner" = products[i]["owner"],
-	"name" = products[i]["name"],
-	"cost" = products[i]["cost"],
-	"id" = i,
-	"contents" = showContents ? products[i]["contents"] : 0
-	)))
+    products.Add(list(list(
+      "owner" = products[i]["owner"],
+      "name" = products[i]["name"],
+      "cost" = products[i]["cost"],
+      "id" = i,
+      "contents" = showContents ? products[i]["contents"] : 0
+    )))
   data["products"] = products
 
   ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
   if(!ui)
-	ui = new(user, src, ui_key, "trade.tmpl", name, 900, 700, state = state)
-	ui.set_auto_update(1)
-	ui.set_initial_data(data)
-	ui.open()
+    ui = new(user, src, ui_key, "trade.tmpl", name, 900, 700, state = state)
+    ui.set_auto_update(1)
+    ui.set_initial_data(data)
+    ui.open()

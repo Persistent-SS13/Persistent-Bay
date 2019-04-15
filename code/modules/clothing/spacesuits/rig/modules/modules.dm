@@ -110,7 +110,7 @@
 	..()
 
 /obj/item/rig_module/Initialize()
-	. = ..()
+	. =..()
 	if(suit_overlay_inactive)
 		suit_overlay = suit_overlay_inactive
 
@@ -301,6 +301,7 @@
 			name += " ([module.passive_power_cost*10]P)"
 
 		module_mode = "deactivate"
+
 /stat_rig_module/deactivate/after_load()
 	..()
 	if(module)
@@ -320,6 +321,7 @@
 		if(module.use_power_cost)
 			name += " ([module.use_power_cost*10]E)"
 		module_mode = "engage"
+
 /stat_rig_module/engage/after_load()
 	..()
 	if(module)
@@ -327,6 +329,7 @@
 		if(module.use_power_cost)
 			name += " ([module.use_power_cost*10]E)"
 		module_mode = "engage"
+
 /stat_rig_module/engage/CanUse()
 	return module.usable
 

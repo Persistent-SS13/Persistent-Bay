@@ -63,7 +63,7 @@
 	if (has_transmitter())
 		src.broadcast_status()
 
-/obj/machinery/atmospherics/binary/dp_vent_pump/update_icon(var/safety = 0)
+/obj/machinery/atmospherics/binary/dp_vent_pump/on_update_icon(var/safety = 0)
 	if(!check_icon_cache())
 		return
 	overlays.Cut()
@@ -135,7 +135,7 @@
 
 	if (power_draw >= 0)
 		last_power_draw = power_draw
-		use_power(power_draw)
+		use_power_oneoff(power_draw)
 
 	return 1
 
@@ -184,10 +184,10 @@
 		return
 
 	if(signal.data["power"])
-		use_power = text2num(signal.data["power"])
+		update_use_power(sanitize_integer(text2num(signal.data["power"]), POWER_USE_OFF, POWER_USE_ACTIVE, use_power))
 
 	if(signal.data["power_toggle"])
-		use_power = !use_power
+		update_use_power(!use_power)
 
 	if(signal.data["direction"])
 		pump_direction = text2num(signal.data["direction"])

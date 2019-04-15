@@ -181,15 +181,23 @@
 		icon_state = initial(icon_state)
 		to_chat(user, "You lower the ear flaps on the ushanka.")
 
+/obj/item/clothing/head/ushanka/gcc
+	name = "GCC ushanka"
+	desc = "Perfect for keeping ears warm during your court-martial."
+	icon_state = "tccushankadown"
+	icon_state_up = "tccushankaup"
+
 /*
  * Pumpkin head
  */
 /obj/item/clothing/head/pumpkinhead
 	name = "carved pumpkin"
 	desc = "A jack o' lantern! Believed to ward off evil spirits."
-	icon_state = "hardhat0_pumpkin"
+	icon_state = "hardhat0_pumpkin"//Could stand to be renamed
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|HIDEFACE|BLOCKHAIR
 	body_parts_covered = HEAD|FACE|EYES
+	brightness_on = 2
+	light_overlay = "helmet_light"
 	w_class = ITEM_SIZE_NORMAL
 
 /*
@@ -205,10 +213,10 @@
 
 	update_icon(var/mob/living/carbon/human/user)
 		if(!istype(user)) return
-		var/icon/ears = new/icon("icon" = 'icons/mob/head.dmi', "icon_state" = "kitty")
+		var/icon/ears = new/icon("icon" = 'icons/mob/onmob/onmob_head.dmi', "icon_state" = "kitty")
 		ears.Blend(rgb(user.r_hair, user.g_hair, user.b_hair), ICON_ADD)
 
-		var/icon/earbit = new/icon("icon" = 'icons/mob/head.dmi', "icon_state" = "kittyinner")
+		var/icon/earbit = new/icon("icon" = 'icons/mob/onmob/onmob_head.dmi', "icon_state" = "kittyinner")
 		ears.Blend(earbit, ICON_OVERLAY)
 
 /obj/item/clothing/head/richard

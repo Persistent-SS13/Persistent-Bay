@@ -9,6 +9,7 @@
 	show_message = " throws sparks from their hands"
 	spell_delay = 120
 	hud_state = "wiz_burn"
+	cast_sound = 'sound/magic/fireball.ogg'
 	compatible_targets = list(/mob/living/carbon/human)
 
 /spell/hand/burning_grip/valid_target(var/mob/living/L, var/mob/user)
@@ -25,6 +26,9 @@
 	if(H.r_hand)
 		targets += BP_R_HAND
 
+	var/obj/O = new /obj/effect/temporary(get_turf(H),3, 'icons/effects/effects.dmi', "fire_goon")
+	O.alpha = 150
+
 	for(var/organ in targets)
 		var/obj/item/organ/external/E = H.get_organ(organ)
 		E.take_damage(10, DAM_BURN, damsrc = "hot iron")
@@ -33,3 +37,6 @@
 		else
 			E.take_damage(6, DAM_BURN, damsrc = "hot iron")
 			to_chat(H, "<span class='warning'>You look down to notice that your [E] is burned.</span>")
+
+/spell/hand/burning_grip/tower
+	charge_max = 3

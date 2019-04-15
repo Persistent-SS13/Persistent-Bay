@@ -48,7 +48,7 @@
 		crash_with("Warning: [src]([type]) initialized multiple times!")
 	atom_flags |= ATOM_FLAG_INITIALIZED
 
-	if(light_power && light_range)
+	if(light_max_bright && light_outer_range)
 		update_light()
 
 	if(opacity)
@@ -121,7 +121,7 @@
 /atom/proc/emp_act(var/severity)
 	return
 
-/atom/proc/set_density(var/new_density)
+/atom/set_density(var/new_density)
 	if(density != new_density)
 		density = !!new_density
 

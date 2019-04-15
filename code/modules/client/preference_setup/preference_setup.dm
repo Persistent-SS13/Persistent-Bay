@@ -1,6 +1,7 @@
 #define TOPIC_UPDATE_PREVIEW 4
 #define TOPIC_REFRESH_UPDATE_PREVIEW (TOPIC_REFRESH|TOPIC_UPDATE_PREVIEW)
 
+var/const/CHARACTER_PREFERENCE_INPUT_TITLE = "Character Preference"
 // PERSISTENCE EDIT
 // This greatly improves the way inputs work, plus its really hard to understand/use, it fits right in with baycode
 proc
@@ -52,22 +53,50 @@ prompts
 	sort_order = 1
 	category_item_type = /datum/category_item/player_setup_item/welcome
 
-/datum/category_group/player_setup_category/general_preferences
-	name = "Character"
+/datum/category_group/player_setup_category/physical_preferences
+	name = "Physical"
+	sort_order = 1
+	category_item_type = /datum/category_item/player_setup_item/physical
+
+/datum/category_group/player_setup_category/background_preferences
+	name = "Background"
 	sort_order = 2
-	category_item_type = /datum/category_item/player_setup_item/general
+	category_item_type = /datum/category_item/player_setup_item/background
+
+/datum/category_group/player_setup_category/background_preferences/content(var/mob/user)
+	. = ""
+	for(var/datum/category_item/player_setup_item/PI in items)
+		. += "[PI.content(user)]<br>"
 
 /datum/category_group/player_setup_category/skill_preferences
 	name = "Skills"
 	sort_order = 3
 	category_item_type = /datum/category_item/player_setup_item/skills
 
+///datum/category_group/player_setup_category/appearance_preferences
+//	name = "Roles"
+//	sort_order = 4
+//	category_item_type = /datum/category_item/player_setup_item/antagonism
+
+/datum/category_group/player_setup_category/relations_preferences
+	name = "Relations"
+	sort_order = 5
+	category_item_type = /datum/category_item/player_setup_item/relations
+
+/datum/category_group/player_setup_category/loadout_preferences
+	name = "Loadout"
+	sort_order = 6
+	category_item_type = /datum/category_item/player_setup_item/loadout
 
 /datum/category_group/player_setup_category/global_preferences
 	name = "Game Settings"
 	sort_order = 7
 	category_item_type = /datum/category_item/player_setup_item/player_global
 
+///datum/category_group/player_setup_category/law_pref
+//	name = "Laws"
+//	sort_order = 8
+//	category_item_type = /datum/category_item/player_setup_item/law_pref
 
 
 /****************************
@@ -194,6 +223,7 @@ prompts
 			. += "</td><td></td><td style='width:50%'>"
 		. += "[PI.content(user)]<br>"
 	. += "</td></tr></table>"
+
 /datum/category_group/player_setup_category/occupation_preferences/content(var/mob/user)
 	for(var/datum/category_item/player_setup_item/PI in items)
 		. += "[PI.content(user)]<br>"
@@ -264,6 +294,12 @@ prompts
 		return 1
 
 	. = OnTopic(href, href_list, usr)
+
+	// The user might have joined the game or otherwise had a change of mob while tweaking their preferences.
+	pref_mob = preference_mob()
+	if(!pref_mob || !pref_mob.client)
+		return 1
+
 	if(. & TOPIC_UPDATE_PREVIEW)
 		pref_mob.client.prefs.preview_icon = null
 	if(. & TOPIC_REFRESH)

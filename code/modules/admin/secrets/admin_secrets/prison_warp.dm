@@ -17,7 +17,7 @@
 			continue
 		H.Paralyse(5)
 		if(H.wear_id)
-			var/obj/item/weapon/card/id/id = H.get_idcard()
+			var/obj/item/weapon/card/id/id = H.GetIdCard()
 			for(var/A in id.access)
 				if(A == access_security)
 					security++

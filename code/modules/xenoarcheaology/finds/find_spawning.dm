@@ -19,7 +19,6 @@
 /obj/item/weapon/archaeological_find/Initialize()
 	. = ..()
 	var/obj/item/I = spawn_item()
-
 	var/source_material = ""
 	var/material_descriptor = ""
 	if(prob(40))
@@ -83,7 +82,7 @@
 		desc = "This item is completely [pick("alien","bizarre")]."
 
 	//icon and icon_state should have already been set
-	I.name = name
+	I.SetName(name)
 	I.desc = desc
 
 	if(prob(5))
@@ -138,7 +137,7 @@
 	if(prob(25))
 		new_item = new /obj/item/weapon/material/kitchen/utensil/fork(loc)
 	else if(prob(50))
-		new_item = new /obj/item/weapon/material/kitchen/utensil/knife(loc)
+		new_item = new /obj/item/weapon/material/knife/table(loc)
 	else
 		new_item = new /obj/item/weapon/material/kitchen/utensil/spoon(loc)
 	additional_desc = "[pick("It's like no [item_type] you've ever seen before",\
@@ -157,7 +156,7 @@
 		new_item = new /obj/item/weapon/vampiric(loc)
 	else
 		new_item = new(loc)
-	new_item.name = "statuette"
+	new_item.SetName("statuette")
 	new_item.icon = 'icons/obj/xenoarchaeology.dmi'
 	new_item.icon_state = "statuette"
 
@@ -173,7 +172,7 @@
 
 /obj/item/weapon/archaeological_find/instrument/spawn_item()
 	var/obj/item/new_item = new(loc)
-	new_item.name = "instrument"
+	new_item.SetName("instrument")
 	new_item.icon = 'icons/obj/xenoarchaeology.dmi'
 	new_item.icon_state = "instrument"
 	if(prob(30))
@@ -190,7 +189,7 @@
 
 /obj/item/weapon/archaeological_find/knife/spawn_item()
 	item_type = "[pick("bladed knife","serrated blade","sharp cutting implement")]"
-	var/obj/item/new_item = new /obj/item/weapon/material/knife(loc)
+	var/obj/item/new_item = new /obj/item/weapon/material/knife/combat(loc)
 	additional_desc = "[pick("It doesn't look safe.",\
 	"It looks wickedly jagged",\
 	"There appear to be [pick("dark red","dark purple","dark green","dark blue")] stains along the edges")]."
@@ -502,6 +501,7 @@
 	return I
 
 /obj/item/weapon/archaeological_find/remains/robot
+	icon = 'icons/mob/robots_gibs.dmi'
 	icon_state = "remainsrobot"
 	find_type = ARCHAEO_REMAINS_ROBOT
 	descs = list("Almost mistakeable for the remains of a modern cyborg.",\

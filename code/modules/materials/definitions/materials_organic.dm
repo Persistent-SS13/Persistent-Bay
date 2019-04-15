@@ -1,25 +1,30 @@
 /material/plastic
 	name = MATERIAL_PLASTIC
+	lore_text = "A generic polymeric material. Probably the most flexible and useful substance ever created by human science; mostly used to make disposable cutlery."
 	stack_type = /obj/item/stack/material/plastic
 	flags = MATERIAL_BRITTLE
-	icon_colour = "#cccccc"
 	icon_base = "solid"
-	icon_reinf = "jaggy"
+	icon_reinf = "reinf_over"
+	icon_colour = COLOR_GRAY80
 	hardness = 10
 	weight = 5
 	melting_point = T0C+371 //assuming heat resistant plastic
 	stack_origin_tech = list(TECH_MATERIAL = 3)
 	conductive = 0
+	construction_difficulty = 1
 	chem_products = list(
 				/datum/reagent/toxin/plasticide = 20
 				)
+	sale_price = 1
 	energy_combustion = 46.3
 
 /material/plastic/holographic
-	name = "holoplastic"
+	name = "holo" + MATERIAL_PLASTIC
 	display_name = MATERIAL_PLASTIC
 	stack_type = null
 	shard_type = SHARD_NONE
+	sale_price = null
+	hidden_from_codex = TRUE
 
 /material/wood
 	name = MATERIAL_WOOD
@@ -59,6 +64,7 @@
 
 /material/cardboard
 	name = MATERIAL_CARDBOARD
+	lore_text = "What with the difficulties presented by growing plants in orbit, a stock of cardboard in space is probably more valuable than gold."
 	stack_type = /obj/item/stack/material/cardboard
 	flags = MATERIAL_BRITTLE
 	integrity = 10
@@ -89,6 +95,8 @@
 	hardness = 1
 	weight = 1
 	energy_combustion = 8
+	hidden_from_codex = TRUE
+	construction_difficulty = 1
 
 //TODO PLACEHOLDERS:
 /material/leather
@@ -103,6 +111,8 @@
 	hardness = 1
 	weight = 1
 	energy_combustion = 8
+	hidden_from_codex = TRUE
+	construction_difficulty = 1
 
 /material/carpet
 	name = MATERIAL_CARPET
@@ -116,13 +126,15 @@
 	sheet_plural_name = "tiles"
 	conductive = 0
 	stack_type = null
+	construction_difficulty = 1
 	hardness = 1
 	weight = 1
 	energy_combustion = 8
 
-/material/cotton
+/material/cloth
 	name = MATERIAL_COTTON
 	display_name ="grey"
+	use_name = "grey cloth"
 	icon_colour = "#ffffff"
 	flags = MATERIAL_PADDING
 	ignition_point = T0C+232
@@ -133,9 +145,18 @@
 	weight = 1
 	energy_combustion = 8
 
-/material/cloth_yellow
+/material/cloth/carpet
+	name = "carpet"
+	display_name = "red"
+	use_name = "red upholstery"
+	icon_colour = "#9d2300"
+	sheet_singular_name = "tile"
+	sheet_plural_name = "tiles"
+
+/material/cloth/yellow
 	name = "yellow"
 	display_name ="yellow"
+	use_name = "yellow cloth"
 	icon_colour = "#ffbf00"
 	flags = MATERIAL_PADDING
 	ignition_point = T0C+232
@@ -145,9 +166,9 @@
 	hardness = 1
 	weight = 1
 
-/material/cloth_teal
+/material/cloth/teal
 	name = "teal"
-	display_name ="teal"
+	display_name = "teal"
 	use_name = "teal cloth"
 	icon_colour = "#00e1ff"
 	flags = MATERIAL_PADDING
@@ -158,7 +179,7 @@
 	hardness = 1
 	weight = 1
 
-/material/cloth_black
+/material/cloth/black
 	name = "black"
 	display_name = "black"
 	use_name = "black cloth"
@@ -171,7 +192,7 @@
 	hardness = 1
 	weight = 1
 
-/material/cloth_green
+/material/cloth/green
 	name = "green"
 	display_name = "green"
 	use_name = "green cloth"
@@ -184,7 +205,7 @@
 	hardness = 1
 	weight = 1
 
-/material/cloth_puple
+/material/cloth/puple
 	name = "purple"
 	display_name = "purple"
 	use_name = "purple cloth"
@@ -197,7 +218,7 @@
 	hardness = 1
 	weight = 1
 
-/material/cloth_blue
+/material/cloth/blue
 	name = "blue"
 	display_name = "blue"
 	use_name = "blue cloth"
@@ -210,7 +231,7 @@
 	hardness = 1
 	weight = 1
 
-/material/cloth_beige
+/material/cloth/beige
 	name = "beige"
 	display_name = "beige"
 	use_name = "beige cloth"
@@ -223,7 +244,7 @@
 	hardness = 1
 	weight = 1
 
-/material/cloth_lime
+/material/cloth/lime
 	name = "lime"
 	display_name = "lime"
 	use_name = "lime cloth"

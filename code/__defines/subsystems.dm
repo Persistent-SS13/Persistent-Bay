@@ -52,7 +52,9 @@
 #define SS_INIT_CULTURE          11
 #define SS_INIT_SKYBOX           9
 #define SS_INIT_MAPPING          8
+#define SS_INIT_JOBS             7
 #define SS_INIT_EARLY_INIT       6
+#define SS_INIT_CHAR_SETUP       6
 #define SS_INIT_CIRCUIT          5
 #define SS_INIT_OPEN_SPACE       4
 #define SS_INIT_ATOMS            3

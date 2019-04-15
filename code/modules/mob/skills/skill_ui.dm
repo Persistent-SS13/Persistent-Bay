@@ -118,6 +118,8 @@ The generic antag version.
 /datum/nano_module/skill_ui/antag/Topic(href, href_list)
 	if(..())
 		return 1
+	if(!skillset || !skillset.owner)
+		return 1 // This probably means that we are being deleted but fielding badly timed user input or similar.
 
 	if(href_list["add_skill"])
 		if(!can_choose())
@@ -304,5 +306,4 @@ Admin version, with debugging options.
 /datum/skill_buff/admin/proc/change_value(skill_type, new_value)
 	var/old_value = skillset.get_value(skill_type)
 	buffs[skill_type] = new_value - old_value + buffs[skill_type]
-	skillset.update_verbs()
-	skillset.refresh_uis()
+	skillset.on_levels_change()

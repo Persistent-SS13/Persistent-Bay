@@ -456,14 +456,12 @@
 	worn_state = "redskirt"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO
 
-
 /obj/item/clothing/under/dress/sailor_dress
 	name = "sailor dress"
 	desc = "A red sailor dress."
 	icon_state = "sailor_dress"
 	item_state = "kilt"
 	worn_state = "sailor_dress"
-
 
 /obj/item/clothing/under/dress/geisha
 	name = "geisha dress"
@@ -486,7 +484,6 @@
 	item_state = "kilt"
 	worn_state = "ysing"
 
-
 /obj/item/clothing/under/secskirt
 	name = "security skirt"
 	desc = "A skirt in traditional security red and black."
@@ -495,18 +492,8 @@
 	worn_state = "secskirt"
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO
 
-
-
-
 /obj/item/clothing/under/wedding/
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS
-
-
-
-
-
-
-
 
 /obj/item/clothing/under/wedding/bride_orange
 	name = "orange wedding dress"
@@ -613,6 +600,7 @@
 	icon_state = "charcoal_suit"
 	item_state = "bl_suit"
 	worn_state = "charcoal_suit"
+	starting_accessories = list(/obj/item/clothing/accessory/navy, /obj/item/clothing/accessory/toggleable/charcoal_jacket)
 
 /obj/item/clothing/under/suit_jacket/navy
 	name = "navy suit"
@@ -620,6 +608,7 @@
 	icon_state = "navy_suit"
 	item_state = "bl_suit"
 	worn_state = "navy_suit"
+	starting_accessories = list(/obj/item/clothing/accessory/red, /obj/item/clothing/accessory/toggleable/navy_jacket)
 
 /obj/item/clothing/under/suit_jacket/burgundy
 	name = "burgundy suit"
@@ -627,6 +616,7 @@
 	icon_state = "burgundy_suit"
 	item_state = "r_suit"
 	worn_state = "burgundy_suit"
+	starting_accessories = list(/obj/item/clothing/accessory/black, /obj/item/clothing/accessory/toggleable/burgundy_jacket)
 
 /obj/item/clothing/under/suit_jacket/checkered
 	name = "checkered suit"
@@ -634,6 +624,7 @@
 	icon_state = "checkered_suit"
 	item_state = "gy_suit"
 	worn_state = "checkered_suit"
+	starting_accessories = list(/obj/item/clothing/accessory/black, /obj/item/clothing/accessory/toggleable/checkered_jacket)
 
 /obj/item/clothing/under/suit_jacket/tan
 	name = "tan suit"
@@ -641,12 +632,13 @@
 	icon_state = "tan_suit"
 	item_state = "lb_suit"
 	worn_state = "tan_suit"
+	starting_accessories = list(/obj/item/clothing/accessory/yellow, /obj/item/clothing/accessory/toggleable/tan_jacket)
 
 /obj/item/clothing/under/serviceoveralls
-	name = "simple workers outfit"
-	desc = "A uniform suitable for basic labor."
+	name = "workman outfit"
+	desc = "The very image of a working man. Not that you're probably doing work."
+	icon_state = "mechanic"
 	item_state = "lb_suit"
-	icon_state = "grayson"
 	worn_state = "mechanic"
 
 /obj/item/clothing/under/cheongsam
@@ -687,6 +679,13 @@
 	item_state = "jensensuit"
 	worn_state = "pcrc"
 
+/obj/item/clothing/under/pcrcsuit
+	name = "\improper PCRC suit"
+	desc = "A suit belonging to Proxima Centauri Risk Control, a private security firm. This one looks more formal than its utility counterpart."
+	icon_state = "pcrcsuit"
+	item_state = "jensensuit"
+	worn_state = "pcrcsuit"
+
 /obj/item/clothing/under/grayson
 	name = "\improper Grayson overalls"
 	desc = "A set of overalls belonging to Grayson Manufactories, a mining Trans-Stellar."
@@ -699,11 +698,29 @@
 	icon_state = "wardt"
 	worn_state = "wardt"
 
+/obj/item/clothing/under/dais
+	name = "\improper Deimos Advanced Information Systems uniform"
+	desc = "The uniform of Deimos Advanced Information Systems, an IT company."
+	icon_state = "dais"
+	worn_state = "dais"
+
 /obj/item/clothing/under/mbill
 	name = "\improper Major Bill's uniform"
 	desc = "A uniform belonging to Major Bill's Transportation, a shipping megacorporation."
 	icon_state = "mbill"
 	worn_state = "mbill"
+
+/obj/item/clothing/under/morpheus
+	name = "\improper Morpheus Cyberkinetics uniform"
+	desc = "A pair of overalls belonging to Morpheus Cyberkinetics, an IPC manufacturing company. It doesn't look like it would be comfortable on a human."
+	icon_state = "morpheus"
+	worn_state = "morpheus"
+
+/obj/item/clothing/under/skinner
+	name = "\improper Skinner Catering uniform"
+	desc = "A uniform belonging to Skinner's Catering, a dining company."
+	icon_state = "skinner"
+	worn_state = "skinner"
 
 // Replace this with actual uniform when someone wants to sprite one
 /obj/item/clothing/under/confederacy
@@ -748,7 +765,7 @@
 	icon_state = "punpun"
 	worn_state = "punpun"
 	species_restricted = list("Monkey")
-	sprite_sheets = list("Monkey" = 'icons/mob/species/monkey/uniform.dmi')
+	sprite_sheets = list("Monkey" = 'icons/mob/species/monkey/onmob_under_monkey.dmi')
 
 /obj/item/clothing/under/punpants
 	name = "monkey pants"
@@ -756,7 +773,7 @@
 	icon_state = "jeansmustang"
 	worn_state = "jeansmustang"
 	species_restricted = list("Monkey")
-	sprite_sheets = list("Monkey" = 'icons/mob/species/monkey/uniform.dmi')
+	sprite_sheets = list("Monkey" = 'icons/mob/species/monkey/onmob_under_monkey.dmi')
 
 /obj/item/clothing/under/rank/psych/turtleneck/sweater
 	desc = "A warm looking sweater and a pair of dark blue slacks."
@@ -828,6 +845,12 @@
 		DAM_BIO 	= 30,
 		DAM_RADS 	= 0,
 		DAM_STUN 	= 0)
+
+/obj/item/clothing/under/kimono
+	desc = "A traditional robe with remarkably long sleeves, mostly worn by women. <i>Sugoi.</i>"
+	name = "kimono"
+	icon_state = "kimono"
+	worn_state = "kimono"
 
 /obj/item/clothing/under/shinypurple
 	name = "shiny purple suit"

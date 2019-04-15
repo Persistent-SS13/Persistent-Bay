@@ -1058,10 +1058,28 @@
 	id = "bup_black"
 	build_path = /obj/item/clothing/under/suit_jacket/nt
 
-/datum/design/item/autotailor/under/dressclothes/jacket_black	//nt item
+/datum/design/item/autotailor/under/dressclothes/jacket_black
 	name = "Suit jacket - black"
 	id = "jacket_black"
-	build_path = /obj/item/clothing/accessory/toggleable/nanotrasen_jacket
+	build_path = /obj/item/clothing/suit/storage/leather_jacket
+	materials = list(MATERIAL_LEATHER = 4000, MATERIAL_PHORON = 2000)
+
+/datum/design/item/autotailor/under/dressclothes/jacket_black_nt	//nt item
+	name = "Suit jacket - black NT"
+	id = "jacket_black_nt"
+	build_path = /obj/item/clothing/suit/storage/leather_jacket/nanotrasen
+	materials = list(MATERIAL_LEATHER = 4000, MATERIAL_PHORON = 2000)
+
+/datum/design/item/autotailor/under/dressclothes/jacket_brown
+	name = "Suit jacket - brown"
+	id = "jacket_brown"
+	build_path = /obj/item/clothing/suit/storage/toggle/brown_jacket
+	materials = list(MATERIAL_LEATHER = 4000, MATERIAL_PHORON = 2000)
+
+/datum/design/item/autotailor/under/dressclothes/jacket_brown_nt	//nt item
+	name = "Suit jacket - brown NT"
+	id = "jacket_brown_nt"
+	build_path = /obj/item/clothing/suit/storage/toggle/brown_jacket/nanotrasen
 	materials = list(MATERIAL_LEATHER = 4000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/under/dressclothes/bup_checkered

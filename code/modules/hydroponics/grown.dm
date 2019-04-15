@@ -28,7 +28,7 @@
 	if(!seed)
 		return INITIALIZE_HINT_QDEL
 
-	name = "[seed.seed_name]"
+	SetName("[seed.seed_name]")
 	trash = seed.get_trash_type()
 	if(!dried_type)
 		dried_type = type
@@ -129,7 +129,7 @@
 		SSplants.product_descs["[seed.uid]"] = desc
 	desc += ". Delicious! Probably."
 
-/obj/item/weapon/reagent_containers/food/snacks/grown/update_icon()
+/obj/item/weapon/reagent_containers/food/snacks/grown/on_update_icon()
 	if(!seed)
 		return
 	overlays.Cut()
@@ -188,21 +188,15 @@
 				qdel(src)
 				return
 			else if(seed.chems)
-				if(istype(W,/obj/item/weapon/material/hatchet) && !isnull(seed.chems[/datum/reagent/woodpulp]))
-					user.show_message("<span class='notice'>You make planks out of \the [src]!</span>", 1)
-					var/flesh_colour = seed.get_trait(TRAIT_FLESH_COLOUR)
-					if(!flesh_colour) flesh_colour = seed.get_trait(TRAIT_PRODUCT_COLOUR)
-					for(var/i=0,i<2,i++)
-						var/obj/item/stack/material/wood/NG = new (user.loc)
-						if(flesh_colour) NG.color = flesh_colour
-						for (var/obj/item/stack/material/wood/G in user.loc)
-							if(G==NG)
-								continue
-							if(G.amount>=G.max_amount)
-								continue
-							G.attackby(NG, user)
-						to_chat(user, "You add the newly-formed wood to the stack. It now contains [NG.amount] planks.")
-					qdel(src)
+				if(istype(W,/obj/item/weapon/material/hatchet || istype(W,/obj/item/weapon/material/knife)))
+					if(!isnull(seed.chems[/datum/reagent/woodpulp]))
+						user.visible_message("<span class='notice'>\The [user] makes planks out of \the [src].</span>")
+						new /obj/item/stack/material/wood(user.loc)
+						qdel(src)
+					else if(!isnull(seed.chems[/datum/reagent/bamboo]))
+						user.visible_message("<span class='notice'>\The [user] makes planks out of \the [src].</span>")
+						new /obj/item/stack/material/wood/bamboo(user.loc)
+						qdel(src)
 					return
 				else if(!isnull(seed.chems[/datum/reagent/drink/juice/potato]))
 					to_chat(user, "You slice \the [src] into sticks.")

@@ -2,14 +2,30 @@
 	name = "desert exoplanet"
 	desc = "An arid exoplanet with sparse biological resources but rich mineral deposits underground."
 	color = "#d6cca4"
+	planetary_area = /area/exoplanet/desert
+	rock_colors = list(COLOR_BEIGE, COLOR_PALE_YELLOW, COLOR_GRAY80, COLOR_BROWN)
+	possible_features = list(/datum/map_template/ruin/exoplanet/monolith,
+							 /datum/map_template/ruin/exoplanet/oasis,
+							 /datum/map_template/ruin/exoplanet/oasis/oasis2,
+							 /datum/map_template/ruin/exoplanet/oasis/oasis3,
+							 /datum/map_template/ruin/exoplanet/fountain,
+							 /datum/map_template/ruin/exoplanet/marooned,
+							 /datum/map_template/ruin/exoplanet/hydrobase,
+							 /datum/map_template/ruin/exoplanet/lodge,
+							 /datum/map_template/ruin/exoplanet/crashed_pod,
+							 /datum/map_template/ruin/exoplanet/drill_site,
+							 /datum/map_template/ruin/exoplanet/radshrine,
+							 /datum/map_template/ruin/exoplanet/playablecolony,
+							 /datum/map_template/ruin/exoplanet/datacapsule)
 
 /obj/effect/overmap/sector/exoplanet/desert/generate_map()
+	..()
 	if(prob(70))
 		lightlevel = rand(5,10)/10	//deserts are usually :lit:
 	for(var/zlevel in map_z)
-		var/datum/random_map/noise/exoplanet/M = new /datum/random_map/noise/exoplanet/desert(md5(world.time + rand(-100,1000)),1,1,zlevel,maxx,maxy,0,1,1)
+		var/datum/random_map/noise/exoplanet/M = new /datum/random_map/noise/exoplanet/desert(null,1,1,zlevel,maxx,maxy,0,1,1,planetary_area)
 		get_biostuff(M)
-		new /datum/random_map/noise/ore/rich(md5(world.time + rand(-100,1000)),1,1,zlevel,maxx,maxy,0,1,1)
+		new /datum/random_map/noise/ore/rich(null,1,1,zlevel,maxx,maxy,0,1,1)
 
 /obj/effect/overmap/sector/exoplanet/desert/generate_atmosphere()
 	..()
@@ -31,13 +47,12 @@
 	descriptor = "desert exoplanet"
 	smoothing_iterations = 4
 	land_type = /turf/simulated/floor/exoplanet/desert
-	planetary_area = /area/exoplanet/desert
-	plantcolors = list("#efdd6f","#7b4a12","#e49135","#ba6222","#5c755e","#120309")
+	plantcolors = list("#efdd6f","#7b4a12","#e49135","#ba6222","#5c755e","#420d22")
 
 	flora_prob = 10
 	large_flora_prob = 0
 	flora_diversity = 4
-	fauna_types = list(/mob/living/simple_animal/thinbug, /mob/living/simple_animal/tindalos)
+	fauna_types = list(/mob/living/simple_animal/thinbug, /mob/living/simple_animal/tindalos, /mob/living/simple_animal/hostile/voxslug)
 
 /datum/random_map/noise/exoplanet/desert/get_additional_spawns(var/value, var/turf/T)
 	..()
@@ -48,10 +63,9 @@
 			new/obj/structure/quicksand(T)
 
 /datum/random_map/noise/ore/rich
-	deep_val = 0.75
-	rare_val = 0.65
+	deep_val = 0.7
+	rare_val = 0.5
 
-	
 /area/exoplanet/desert
 	ambience = list('sound/effects/wind/desert0.ogg','sound/effects/wind/desert1.ogg','sound/effects/wind/desert2.ogg','sound/effects/wind/desert3.ogg','sound/effects/wind/desert4.ogg','sound/effects/wind/desert5.ogg')
 	base_turf = /turf/simulated/floor/exoplanet/desert
@@ -63,9 +77,9 @@
 	icon_state = "desert[rand(0,5)]"
 	..()
 
-/turf/simulated/floor/exoplanet/desert/fire_act(datum/gas_mixture/air, temperature, volume)
+/turf/simulated/floor/exoplanet/desert/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	if((temperature > T0C + 1700 && prob(5)) || temperature > T0C + 3000)
-		name = "molten silica"
+		SetName("molten silica")
 		icon_state = "sandglass"
 		diggable = 0
 
@@ -114,6 +128,10 @@
 			else
 				user.visible_message("<span class='notice'>\The [buckled_mob] has been freed from \the [src] by \the [user].</span>")
 			unbuckle_mob()
+		else
+			busy = 0
+			to_chat(user, "<span class='warning'>You slip and fail to get out!</span>")
+			return
 
 /obj/structure/quicksand/unbuckle_mob()
 	..()
@@ -123,7 +141,7 @@
 	..()
 	update_icon()
 
-/obj/structure/quicksand/update_icon()
+/obj/structure/quicksand/on_update_icon()
 	if(!exposed)
 		return
 	icon_state = "open"
@@ -153,6 +171,8 @@
 /obj/structure/quicksand/Crossed(AM)
 	if(isliving(AM))
 		var/mob/living/L = AM
+		if (L.can_overcome_gravity())
+			return
 		buckle_mob(L)
 		if(!exposed)
 			expose()

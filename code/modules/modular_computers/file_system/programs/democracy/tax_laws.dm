@@ -73,7 +73,7 @@
 		sync_from_faction()
 	data["taxee"] = taxee
 	var/subtype = "Flat Tax"
-	if(tax_tye == 2)
+	if(tax_type == 2)
 		subtype = "Progressive Tax"
 	if(taxee == 2)
 		data["tax"] = "Business [subtype]"

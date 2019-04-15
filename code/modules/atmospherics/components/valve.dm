@@ -78,7 +78,7 @@
 	..()
 	return PROCESS_KILL
 
-/obj/machinery/atmospherics/valve/update_icon(animation)
+/obj/machinery/atmospherics/valve/on_update_icon(animation)
 	if(animation)
 		flick("valve[src.open][!src.open]",src)
 	else
@@ -246,7 +246,7 @@
 		return
 	..()
 
-/obj/machinery/atmospherics/valve/digital/update_icon()
+/obj/machinery/atmospherics/valve/digital/on_update_icon()
 	..()
 	if(!powered())
 		icon_state = "valve[open]nopower"

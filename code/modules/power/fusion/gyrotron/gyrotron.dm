@@ -1,7 +1,5 @@
 #define GYRO_POWER 25000
 
-var/list/gyrotrons = list()
-
 /obj/machinery/power/emitter/gyrotron
 	name = "gyrotron"
 	icon = 'icons/obj/machines/power/fusion.dmi'
@@ -10,7 +8,8 @@ var/list/gyrotrons = list()
 	req_access = list(core_access_engineering_programs)
 	use_power = POWER_USE_IDLE
 	active_power_usage = GYRO_POWER
-	id_tag = null
+
+	var/initial_id_tag
 	var/rate = 3
 	var/mega_energy = 1
 
@@ -20,16 +19,15 @@ var/list/gyrotrons = list()
 	state = 2
 
 /obj/machinery/power/emitter/gyrotron/Initialize()
-	gyrotrons += src
-	active_power_usage = mega_energy * GYRO_POWER
+	set_extension(src, /datum/extension/fusion_plant_member, /datum/extension/fusion_plant_member)
+	if(initial_id_tag)
+		var/datum/extension/fusion_plant_member/fusion = get_extension(src, /datum/extension/fusion_plant_member)
+		fusion.set_tag(null, initial_id_tag)
+	change_power_consumption(mega_energy * GYRO_POWER, POWER_USE_ACTIVE)
 	. = ..()
 
-/obj/machinery/power/emitter/gyrotron/Destroy()
-	gyrotrons -= src
-	return ..()
-
 /obj/machinery/power/emitter/gyrotron/Process()
-	active_power_usage = mega_energy * GYRO_POWER
+	change_power_consumption(mega_energy * GYRO_POWER, POWER_USE_ACTIVE)
 	. = ..()
 
 /obj/machinery/power/emitter/gyrotron/get_rand_burst_delay()
@@ -40,10 +38,10 @@ var/list/gyrotrons = list()
 
 /obj/machinery/power/emitter/gyrotron/get_emitter_beam()
 	var/obj/item/projectile/beam/emitter/E = ..()
-	E.force = mega_energy * 50
+	E.damage = mega_energy * 50
 	return E
 
-/obj/machinery/power/emitter/gyrotron/update_icon()
+/obj/machinery/power/emitter/gyrotron/on_update_icon()
 	if (active && powernet && avail(active_power_usage))
 		icon_state = "emitter-on"
 	else
@@ -51,9 +49,8 @@ var/list/gyrotrons = list()
 
 /obj/machinery/power/emitter/gyrotron/attackby(var/obj/item/W, var/mob/user)
 	if(isMultitool(W))
-		var/new_ident = input("Enter a new ident tag.", "Gyrotron", id_tag) as null|text
-		if(new_ident && user.Adjacent(src))
-			id_tag = new_ident
+		var/datum/extension/fusion_plant_member/fusion = get_extension(src, /datum/extension/fusion_plant_member)
+		fusion.get_new_tag(user)
 		return
 	return ..()
 

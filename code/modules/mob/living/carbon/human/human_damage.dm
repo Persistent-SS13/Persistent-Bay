@@ -299,7 +299,7 @@
 
 	var/dam_avg = damage / length(parts)
 	for(var/obj/item/organ/external/E in parts)
-		apply_damage(dam_avg, damtype, blocked = getarmor_organ(E, damtype), used_weapon = used_weapon, given_organ = E)
+		apply_damage(dam_avg, damtype, used_weapon = used_weapon, silent = TRUE, given_organ = E)
 	updatehealth()
 	BITSET(hud_updateflag, HEALTH_HUD)
 
@@ -341,7 +341,7 @@ This function restores all organs.
 /mob/living/carbon/human/get_stack()
 	return internal_organs_by_name[BP_STACK]
 
-/mob/living/carbon/human/apply_damage(var/damage = 0, var/damagetype = DAM_BLUNT, var/def_zone = null, var/blocked = 0, var/damage_flags = 0, var/obj/used_weapon = null, var/obj/item/organ/external/given_organ = null)
+/mob/living/carbon/human/apply_damage(var/damage = 0,var/damagetype = DAM_BLUNT, var/def_zone = null, var/damage_flags = 0, var/used_weapon = null, var/armor_pen = 0, var/silent = FALSE, var/obj/item/organ/external/given_organ = null)
 	var/obj/item/organ/external/organ = given_organ
 	if(!organ)
 		if(isorgan(def_zone))
@@ -389,9 +389,9 @@ This function restores all organs.
 	else if(IsDamageTypeBurn(damagetype))
 		damage = damage*species.burn_mod
 		created_wound = organ.take_damage(damage, damagetype, damsrc = used_weapon)
-	if(ISDATYPE(damagetype, DAM_PAIN))
+	if(ISDAMTYPE(damagetype, DAM_PAIN))
 		organ.add_pain(damage)
-	if(ISDATYPE(damagetype, DAM_CLONE))
+	if(ISDAMTYPE(damagetype, DAM_CLONE))
 		organ.add_genetic_damage(damage)
 
 	// Will set our damageoverlay icon to the next level, which will then be set back to the normal level the next mob.Life().

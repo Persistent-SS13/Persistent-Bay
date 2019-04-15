@@ -42,7 +42,7 @@
 			qdel(rice)
 	update_icon()
 
-/obj/item/weapon/reagent_containers/food/snacks/sushi/update_icon()
+/obj/item/weapon/reagent_containers/food/snacks/sushi/on_update_icon()
 	name = "[fish_type] sushi"
 	overlays = list("[fish_type]", "nori")
 
@@ -65,7 +65,7 @@
 	name = "[fish_type] sashimi"
 	update_icon()
 
-/obj/item/weapon/reagent_containers/food/snacks/sashimi/update_icon()
+/obj/item/weapon/reagent_containers/food/snacks/sashimi/on_update_icon()
 	icon_state = "sashimi_base"
 	var/list/adding = list()
 	var/slice_offset = (slices-1)*2
@@ -121,6 +121,7 @@
 		 istype(I, /obj/item/weapon/reagent_containers/food/snacks/tofu) || \
 		 istype(I, /obj/item/weapon/reagent_containers/food/snacks/cutlet) || \
 		 istype(I, /obj/item/weapon/reagent_containers/food/snacks/rawcutlet) || \
+		 istype(I, /obj/item/weapon/reagent_containers/food/snacks/spider) || \
 		 istype(I, /obj/item/weapon/reagent_containers/food/snacks/meat/chicken))
 			new /obj/item/weapon/reagent_containers/food/snacks/sushi(get_turf(src), src, I)
 			return

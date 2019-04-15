@@ -63,7 +63,7 @@ obj/machinery/resleever/Process()
 			update_use_power(POWER_USE_IDLE)
 			eject_occupant()
 			playsound(loc, 'sound/machines/ping.ogg', 100, vary = TRUE)
-			visible_message("\The [src] pings as it completes its procedure!", 3)
+			visible_message("\The [src] pings as it completes its procedure!", "You hear a ping.", range = 3)
 			return
 	update_use_power(POWER_USE_OFF)
 	return

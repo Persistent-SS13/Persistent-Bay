@@ -57,7 +57,7 @@
 
 	update_icon()
 
-/obj/machinery/atmospherics/unary/freezer/update_icon()
+/obj/machinery/atmospherics/unary/freezer/on_update_icon()
 	if(node)
 		if(use_power && cooling)
 			icon_state = "freezer_1"
@@ -108,7 +108,7 @@
 	if(..())
 		return 1
 	if(href_list["toggleStatus"])
-		use_power = !use_power
+		update_use_power(!use_power)
 		update_icon()
 	if(href_list["temp"])
 		var/amount = text2num(href_list["temp"])
@@ -144,7 +144,7 @@
 		if(debug)
 			visible_message("[src]: Removing [removed] W.")
 
-		use_power(power_rating)
+		use_power_oneoff(power_rating)
 
 		network.update = 1
 	else

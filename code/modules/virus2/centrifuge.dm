@@ -61,10 +61,9 @@
 		if(sample)
 			to_chat(user, "\The [src] is already loaded.")
 			return
-
+		if(!user.unEquip(O, src))
+			return
 		sample = O
-		user.drop_from_inventory(O)
-		O.forceMove(src)
 
 		user.visible_message("[user] adds \a [O] to \the [src]!", "You add \a [O] to \the [src]!")
 		SSnano.update_uis(src)
@@ -72,7 +71,7 @@
 	else
 		return ..()
 
-/obj/machinery/centrifuge/update_icon()
+/obj/machinery/centrifuge/on_update_icon()
 	..()
 	if(operable() && (isolating || curing))
 		icon_state = "centrifuge_moving"
@@ -138,6 +137,9 @@
 		time_isolating_end = null
 		isolate()
 
+	if(virus2)
+		infect_nearby(virus2)
+
 /obj/machinery/centrifuge/OnTopic(user, href_list)
 	if (href_list["close"])
 		SSnano.close_user_uis(user, src, "main")
@@ -155,6 +157,7 @@
 			isolating = TRUE
 			time_curing_end = world.time + 40 SECONDS
 			update_icon()
+			operator_skill = user.get_skill_value(core_skill)
 		return TOPIC_REFRESH
 
 	switch(href_list["action"])
@@ -165,6 +168,12 @@
 				state("\The [src] buzzes, \"No antibody carrier detected.\"", "blue")
 				return TOPIC_HANDLED
 
+			var/list/viruses = B.data["virus2"]
+			if(length(viruses))
+				var/ID = pick(viruses)
+				var/datum/disease2/disease/V = viruses[ID]
+				virus2 = V.getcopy()
+			operator_skill = user.get_skill_value(core_skill)
 			var/has_toxins = locate(/datum/reagent/toxin) in sample.reagents.reagent_list
 			var/has_radium = sample.reagents.has_reagent(/datum/reagent/radium)
 			if (has_toxins || has_radium)
@@ -182,7 +191,7 @@
 
 		if("sample")
 			if(sample)
-				sample.loc = src.loc
+				sample.dropInto(loc)
 				sample = null
 			return TOPIC_REFRESH
 
@@ -195,6 +204,7 @@
 	var/amt= sample.reagents.get_reagent_amount(/datum/reagent/blood)
 	sample.reagents.remove_reagent(/datum/reagent/blood, amt)
 	sample.reagents.add_reagent(/datum/reagent/antibodies, amt, data)
+	operator_skill = null
 
 	SSnano.update_uis(src)
 	update_icon()
@@ -205,6 +215,7 @@
 	var/obj/item/weapon/virusdish/dish = new/obj/item/weapon/virusdish(loc)
 	dish.virus2 = virus2
 	virus2 = null
+	operator_skill = null
 
 	SSnano.update_uis(src)
 	update_icon()
@@ -212,7 +223,7 @@
 
 /obj/machinery/centrifuge/proc/print(var/mob/user)
 	var/obj/item/weapon/paper/P = new /obj/item/weapon/paper(loc)
-	P.name = "paper - Pathology Report"
+	P.SetName("paper - Pathology Report")
 	P.info = {"
 		[virology_letterhead("Pathology Report")]
 		<large><u>Sample:</u></large> [sample.name]<br>

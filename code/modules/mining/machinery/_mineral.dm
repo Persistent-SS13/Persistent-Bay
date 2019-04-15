@@ -126,7 +126,7 @@
 	if(isnull(choice) || !can_configure(user)) return
 
 	var/list/_dirs = list("North" = NORTH, "South" = SOUTH, "East" = EAST, "West" = WEST, "Clear" = 0)
-	var/dchoice = input("[choice] should be...") as null|anything in _dirs
+	var/dchoice = input("Do you wish to change the input direction, or the output direction?") as null|anything in _dirs
 	if(isnull(dchoice) || !can_configure(user)) return
 
 	if(choice == "Input")

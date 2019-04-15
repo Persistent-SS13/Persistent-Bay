@@ -693,7 +693,7 @@ var/list/floor_decals = list()
 
 /obj/effect/floor_decal/corner/research
 	name = "research corner"
-	color = COLOR_PURPLE
+	color = COLOR_RESEARCH
 
 /obj/effect/floor_decal/corner/research/diagonal
 	icon_state = "corner_white_diagonal"
@@ -1022,6 +1022,10 @@ var/list/floor_decals = list()
 /obj/effect/floor_decal/ntlogo
 	icon_state = "ntlogo"
 
+/obj/effect/floor_decal/torchltdlogo
+	alpha = 230
+	icon = 'icons/turf/flooring/corp_floor.dmi'
+	icon_state = "bottomleft"
 
 //Techfloor
 

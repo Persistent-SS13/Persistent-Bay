@@ -1,9 +1,11 @@
 /mob/living/bot/secbot/ed209
 	name = "ED-209 Security Robot"
 	desc = "A security robot.  He looks less than thrilled."
-	icon = 'icons/obj/aibots.dmi'
+	icon = 'icons/mob/bot/ED209.dmi'
 	icon_state = "ed2090"
 	attack_state = "ed209-c"
+	plane = MOB_PLANE
+	layer = MOB_LAYER
 	density = 1
 	health = 100
 	maxHealth = 100
@@ -69,7 +71,7 @@
 /obj/item/weapon/secbot_assembly/ed209_assembly
 	name = "ED-209 assembly"
 	desc = "Some sort of bizarre assembly."
-	icon = 'icons/obj/aibots.dmi'
+	icon = 'icons/mob/bot/ED209.dmi'
 	icon_state = "ed209_frame"
 	item_state = "ed209_frame"
 	created_name = "ED-209 Security Robot"
@@ -90,11 +92,10 @@
 	switch(build_step)
 		if(0, 1)
 			if(istype(W, /obj/item/robot_parts/l_leg) || istype(W, /obj/item/robot_parts/r_leg))
-				user.drop_item()
 				qdel(W)
 				build_step++
 				to_chat(user, "<span class='notice'>You add the robot leg to [src].</span>")
-				name = "legs/frame assembly"
+				SetName("legs/frame assembly")
 				if(build_step == 1)
 					item_state = "ed209_leg"
 					icon_state = "ed209_leg"
@@ -108,11 +109,10 @@
 					if(!locate(/obj/item/clothing/accessory/armorplate) in W.contents)
 						to_chat(user, "There's no armor plates on this [W].")
 						return
-				user.drop_item()
 				qdel(W)
 				build_step++
 				to_chat(user, "<span class='notice'>You add [W] to [src].</span>")
-				name = "vest/legs/frame assembly"
+				SetName("vest/legs/frame assembly")
 				item_state = "ed209_shell"
 				icon_state = "ed209_shell"
 
@@ -121,25 +121,23 @@
 				var/obj/item/weapon/tool/weldingtool/WT = W
 				if(WT.remove_fuel(0, user))
 					build_step++
-					name = "shielded frame assembly"
+					SetName("shielded frame assembly")
 					to_chat(user, "<span class='notice'>You welded the vest to [src].</span>")
 		if(4)
 			if(istype(W, /obj/item/clothing/head/helmet))
-				user.drop_item()
 				qdel(W)
 				build_step++
 				to_chat(user, "<span class='notice'>You add the helmet to [src].</span>")
-				name = "covered and shielded frame assembly"
+				SetName("covered and shielded frame assembly")
 				item_state = "ed209_hat"
 				icon_state = "ed209_hat"
 
 		if(5)
 			if(isprox(W))
-				user.drop_item()
 				qdel(W)
 				build_step++
 				to_chat(user, "<span class='notice'>You add the prox sensor to [src].</span>")
-				name = "covered, shielded and sensored frame assembly"
+				SetName("covered, shielded and sensored frame assembly")
 				item_state = "ed209_prox"
 				icon_state = "ed209_prox"
 
@@ -154,17 +152,16 @@
 					if(C.use(1))
 						build_step++
 						to_chat(user, "<span class='notice'>You wire the ED-209 assembly.</span>")
-						name = "wired ED-209 assembly"
+						SetName("wired ED-209 assembly")
 				return
 
 		if(7)
 			if(istype(W, /obj/item/weapon/gun/energy/taser))
-				name = "taser ED-209 assembly"
+				SetName("taser ED-209 assembly")
 				build_step++
 				to_chat(user, "<span class='notice'>You add [W] to [src].</span>")
 				item_state = "ed209_taser"
 				icon_state = "ed209_taser"
-				user.drop_item()
 				qdel(W)
 
 		if(8)
@@ -175,7 +172,7 @@
 				sleep(40)
 				if(get_turf(user) == T && build_step == 8)
 					build_step++
-					name = "armed [name]"
+					SetName("armed [name]")
 					to_chat(user, "<span class='notice'>Taser gun attached.</span>")
 
 		if(9)
@@ -184,7 +181,5 @@
 				to_chat(user, "<span class='notice'>You complete the ED-209.</span>")
 				var/turf/T = get_turf(src)
 				new /mob/living/bot/secbot/ed209(T,created_name,lasercolor)
-				user.drop_item()
 				qdel(W)
-				user.drop_from_inventory(src)
 				qdel(src)

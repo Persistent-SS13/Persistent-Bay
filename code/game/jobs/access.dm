@@ -51,12 +51,23 @@
 
 	return check_access_list(M.GetAccess(req_access_faction))
 
+//FIXME?: Why provide the faction uid if the ID contains it??
 /atom/movable/proc/GetAccess(var/faction_uid)
 	var/obj/item/weapon/card/id/id = GetIdCard()
 	return id ? id.GetAccess(faction_uid) : list()
+
 /atom/movable/proc/GetFaction()
 	var/obj/item/weapon/card/id/id = GetIdCard()
 	return id ? id.GetFaction() : ""
+
+/atom/movable/proc/GetAccess()
+	. = list()
+	var/obj/item/weapon/card/id/id = GetIdCard()
+	if(id)
+		. += id.GetAccess()
+	if(maint_all_access)
+		. |= access_maint_tunnels
+
 /atom/movable/proc/GetIdCard()
 	return null
 

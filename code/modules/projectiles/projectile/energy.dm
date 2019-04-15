@@ -1,20 +1,21 @@
 /obj/item/projectile/energy
 	name = "energy"
 	icon_state = "spark"
-	force = 0
+	damage = 0
 	damtype = DAM_ENERGY
+	distance_falloff = 2.5
 
 //releases a burst of light on impact or after travelling a distance
 /obj/item/projectile/energy/flash
 	name = "chemical shell"
 	icon_state = "bullet"
 	fire_sound = 'sound/weapons/gunshot/gunshot_pistol.ogg'
-	force = 5
+	damage = 5
 	agony = 10
 	kill_count = 15 //if the shell hasn't hit anything after travelling this far it just explodes.
 	muzzle_type = /obj/effect/projectile/bullet/muzzle
 	damtype = DAM_BULLET
-	var/flash_range = 0
+	var/flash_range = 1
 	var/brightness = 7
 	var/light_colour = "#ffffff"
 
@@ -22,10 +23,12 @@
 	var/turf/T = flash_range? src.loc : get_turf(A)
 	if(!istype(T)) return
 
-	//blind adjacent people
+	//blind and confuse adjacent people
 	for (var/mob/living/carbon/M in viewers(T, flash_range))
-		if(M.eyecheck() < FLASH_PROTECTION_MODERATE)
+		if(M.eyecheck() < FLASH_PROTECTION_MAJOR)
 			M.flash_eyes()
+			M.eye_blurry += (brightness / 2)
+			M.confused += (brightness / 2)
 
 	//snap pop
 	playsound(src, 'sound/effects/snap.ogg', 50, 1)
@@ -36,36 +39,39 @@
 	sparks.start()
 
 	new /obj/effect/decal/cleanable/ash(src.loc) //always use src.loc so that ash doesn't end up inside windows
-	new /obj/effect/effect/smoke/illumination(T, 5, brightness, brightness, light_colour)
+	new /obj/effect/effect/smoke/illumination(T, 5, 4, 1, light_colour)
 
-//blinds people like the flash round, but in a small area and can also be used for temporary illumination
+//blinds people like the flash round, but in a larger area and can also be used for temporary illumination
 /obj/item/projectile/energy/flash/flare
-	force = 10
+	damage = 10
+	agony = 25
 	fire_sound = 'sound/weapons/gunshot/shotgun.ogg'
 	flash_range = 2
 	brightness = 15
 
 /obj/item/projectile/energy/flash/flare/on_impact(var/atom/A)
 	light_colour = pick("#e58775", "#ffffff", "#90ff90", "#a09030")
-
+	set_light(1, 1, 4, 2, light_colour)
 	..() //initial flash
 
 	//residual illumination
-	new /obj/effect/effect/smoke/illumination(src.loc, rand(190,240) SECONDS, range=8, power=3, color=light_colour) //same lighting power as flare
+	new /obj/effect/effect/smoke/illumination(src.loc, rand(190,240), range=8, power=1, color=light_colour) //same lighting power as flare
 
 /obj/item/projectile/energy/electrode
 	name = "electrode"
 	icon_state = "spark"
 	fire_sound = 'sound/weapons/Taser.ogg'
 	nodamage = 1
-	taser_effect = 1
 	agony = 30
-	damtype = DAM_PAIN
-	//Damage will be handled on the MOB side, to prevent window shattering.
+	damtype = DAM_PAIN //Damage will be handled on the MOB side, to prevent window shattering.
+	step_delay = 0.7
+
+/obj/item/projectile/energy/electrode/green
+	icon_state = "spark_green"
 
 /obj/item/projectile/energy/electrode/stunshot
 	nodamage = 0
-	force = 10
+	damage = 10
 	agony = 35
 	damtype = DAM_STUN
 	armor_penetration = 10
@@ -74,7 +80,7 @@
 	name = "decloner beam"
 	icon_state = "declone"
 	fire_sound = 'sound/weapons/pulse3.ogg'
-	force = 10
+	damage = 10
 	damtype = DAM_CLONE
 	irradiate = 10
 
@@ -82,7 +88,7 @@
 /obj/item/projectile/energy/dart
 	name = "dart"
 	icon_state = "toxin"
-	force = 5
+	damage = 5
 	damtype = DAM_BIO
 	weaken = 5
 
@@ -90,7 +96,7 @@
 /obj/item/projectile/energy/bolt
 	name = "bolt"
 	icon_state = "cbbolt"
-	force = 10
+	damage = 10
 	damtype = DAM_BULLET
 	nodamage = 0
 	agony = 35
@@ -99,14 +105,14 @@
 
 /obj/item/projectile/energy/bolt/large
 	name = "largebolt"
-	force = 15
+	damage = 15
 	agony = 40
 
 
 /obj/item/projectile/energy/neurotoxin
 	name = "neuro"
 	icon_state = "neurotoxin"
-	force = 5
+	damage = 5
 	damtype = DAM_BIO
 	weaken = 5
 
@@ -114,7 +120,7 @@
 	name = "phoron bolt"
 	icon_state = "energy"
 	fire_sound = 'sound/effects/stealthoff.ogg'
-	force = 5
+	damage = 5
 	damtype = DAM_BIO
 	irradiate = 5
 
@@ -124,7 +130,7 @@
 	fire_sound = 'sound/weapons/blaster.ogg'
 	armor_penetration = 10
 	kill_count = 4
-	force = 5
+	damage = 5
 	agony = 40
 	damtype = DAM_STUN
 	vacuum_traversal = 0
@@ -154,7 +160,7 @@
 		to_chat(M, "<span class='danger'>Your ears start to ring badly!</span>")
 		if (prob(M.ear_damage - 5))
 			to_chat(M, "<span class='danger'>You can't hear anything!</span>")
-			M.sdisabilities |= DEAF
+			M.set_sdisability(DEAF)
 	else
 		if (M.ear_damage >= 5)
 			to_chat(M, "<span class='danger'>Your ears start to ring!</span>")

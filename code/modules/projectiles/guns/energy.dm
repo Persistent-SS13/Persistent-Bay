@@ -1,3 +1,5 @@
+GLOBAL_LIST_INIT(registered_weapons, list())
+GLOBAL_LIST_INIT(registered_cyborg_weapons, list())
 #define ENERGY_LOAD_FIXED_CELL 0
 #define ENERGY_LOAD_HOTSWAP_CELL 1
 #define ENERGY_LOAD_REMOVABLE_CELL 2
@@ -5,9 +7,11 @@
 /obj/item/weapon/gun/energy
 	name = "energy gun"
 	desc = "A basic energy-based gun."
+	icon = 'icons/obj/weapons/guns/basic_energy.dmi'
 	icon_state = "energy"
 	fire_sound = 'sound/weapons/Taser.ogg'
 	fire_sound_text = "laser blast"
+	accuracy = 1
 
 	var/obj/item/weapon/cell/power_supply //What type of power cell this uses
 	var/charge_cost = 20 //How much energy is needed to fire.
@@ -16,6 +20,7 @@
 	var/projectile_type = /obj/item/projectile/beam/practice
 	var/modifystate
 	var/charge_meter = 1	//if set, the icon state will be chosen based on the current charge
+
 	//self-recharging
 	var/self_recharge = 0	//if set, the weapon will recharge itself
 	var/use_external_power = 0 //if set, the weapon will look for an external power source to draw from, otherwise it recharges magically
@@ -32,7 +37,10 @@
 /obj/item/weapon/gun/energy/Initialize()
 	. = ..()
 	if(!map_storage_loaded)
-		power_supply = new cell_type(src,max_shots*charge_cost)
+		if(cell_type)
+			power_supply = new cell_type(src,max_shots*charge_cost)
+		else
+			power_supply = new /obj/item/weapon/cell/device/variable(src, max_shots*charge_cost)
 	if(self_recharge)
 		START_PROCESSING(SSobj, src)
 	update_icon()
@@ -41,6 +49,9 @@
 	if(self_recharge)
 		STOP_PROCESSING(SSobj, src)
 	return ..()
+
+/obj/item/weapon/gun/energy/get_cell()
+	return power_supply
 
 /obj/item/weapon/gun/energy/Process()
 	if(self_recharge) //Every [recharge_time] ticks, recharge a shot for the cyborg
@@ -98,7 +109,7 @@
 		to_chat(usr, "Has no power source inserted.")
 	return
 
-/obj/item/weapon/gun/energy/update_icon()
+/obj/item/weapon/gun/energy/on_update_icon()
 	..()
 	if(charge_meter)
 		var/ratio = 0

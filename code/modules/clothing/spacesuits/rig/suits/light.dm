@@ -66,6 +66,7 @@
 		/obj/item/rig_module/electrowarfare_suite,
 		/obj/item/rig_module/voice,
 		/obj/item/rig_module/vision,
+		/obj/item/rig_module/cooling_unit
 		)
 
 //The cybersuit is not space-proof. It does however, have good siemens_coefficient values
@@ -82,6 +83,8 @@
 
 /obj/item/clothing/gloves/lightrig/hacker
 	siemens_coefficient = 0
+	item_flags = ITEM_FLAG_THICKMATERIAL | ITEM_FLAG_NOCUFFS
+
 
 /obj/item/weapon/rig/light/ninja
 	name = "ominous suit control module"
@@ -118,12 +121,14 @@
 		/obj/item/rig_module/vision,
 		/obj/item/rig_module/voice,
 		/obj/item/rig_module/fabricator/energy_net,
-		/obj/item/rig_module/chem_dispenser,
-		/obj/item/rig_module/grenade_launcher,
+		/obj/item/rig_module/chem_dispenser/combat,
+		/obj/item/rig_module/grenade_launcher/ninja,
 		/obj/item/rig_module/ai_container,
 		/obj/item/rig_module/power_sink,
 		/obj/item/rig_module/datajack,
-		/obj/item/rig_module/self_destruct)
+		/obj/item/rig_module/self_destruct,
+		/obj/item/rig_module/cooling_unit
+		)
 
 /obj/item/weapon/rig/light/ninja/verb/rename_suit()
 	set name = "Name Ninja Suit"
@@ -136,7 +141,7 @@
 	if(src && input && !M.incapacitated() && in_range(M,src))
 		if(!findtext(input, "the", 1, 4))
 			input = "\improper [input]"
-		name = input
+		SetName(input)
 		to_chat(M, "Suit naming succesful!")
 		verbs -= /obj/item/weapon/rig/light/ninja/verb/rename_suit
 		return 1
@@ -159,6 +164,7 @@
 /obj/item/clothing/gloves/rig/light/ninja
 	name = "insulated gloves"
 	siemens_coefficient = 0
+	item_flags = ITEM_FLAG_THICKMATERIAL | ITEM_FLAG_NOCUFFS
 
 /obj/item/clothing/suit/space/rig/light/ninja
 	breach_threshold = 38 //comparable to regular hardsuits

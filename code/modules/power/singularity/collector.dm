@@ -2,15 +2,17 @@
 var/global/list/rad_collectors = list()
 
 /obj/machinery/power/rad_collector
-	name = "Radiation Collector Array"
+	name = "radiation collector array"
 	desc = "A device which uses radiation and phoron to produce power."
 	icon = 'icons/obj/singularity.dmi'
 	icon_state = "ca"
 	anchored = 0
 	density = 1
 	req_access = list(core_access_engineering_programs)
-//	use_power = 0
 	var/obj/item/weapon/tank/phoron/P = null
+	max_health = 100
+	var/max_safe_temp = 1000 + T0C
+	var/melted
 	var/last_power = 0
 	var/last_power_new = 0
 	var/active = 0
@@ -26,6 +28,16 @@ var/global/list/rad_collectors = list()
 	. = ..()
 
 /obj/machinery/power/rad_collector/Process()
+	if((stat & BROKEN) || melted)
+		return
+	var/turf/T = get_turf(src)
+	if(T)
+		var/datum/gas_mixture/our_turfs_air = T.return_air()
+		if(our_turfs_air.temperature > max_safe_temp)
+			health -= ((our_turfs_air.temperature - max_safe_temp) / 10)
+			if(health <= 0)
+				collector_break()
+
 	//so that we don't zero out the meter if the SM is processed first.
 	last_power = last_power_new
 	last_power_new = 0
@@ -40,12 +52,12 @@ var/global/list/rad_collectors = list()
 			investigate_log("<font color='red'>out of fuel</font>.","singulo")
 			eject()
 		else
-			P.air_contents.adjust_gas(GAS_PHORON, -0.001*drainratio)
-	return
-
+			P.air_adjust_gas(GAS_PHORON, -0.001*drainratio)
 
 /obj/machinery/power/rad_collector/attack_hand(mob/user as mob)
 	if(anchored)
+		if((stat & BROKEN) || melted)
+			to_chat(user, "<span class='warning'>The [src] is completely destroyed!</span>")
 		if(!src.locked)
 			toggle_power()
 			user.visible_message("[user.name] turns the [src.name] [active? "on":"off"].", \
@@ -67,10 +79,10 @@ var/global/list/rad_collectors = list()
 		if(src.P)
 			to_chat(user, "<span class='warning'>There's already a phoron tank loaded.</span>")
 			return 1
-		user.drop_item()
+		if(!user.unEquip(W, src))
+			return
 		src.P = W
-		W.loc = src
-		update_icons()
+		update_icon()
 		return 1
 	else if(isCrowbar(W))
 		if(P && !src.locked)
@@ -89,12 +101,12 @@ var/global/list/rad_collectors = list()
 		user.visible_message("[user.name] [anchored? "secures":"unsecures"] the [src.name].", \
 			"You [anchored? "secure":"undo"] the external bolts.", \
 			"You hear a ratchet")
-		if(anchored)
+		if(anchored && !isbroken())
 			connect_to_network()
 		else
 			disconnect_from_network()
 		return 1
-	else if(istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))
+	else if(istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/modular_computer))
 		if (src.allowed(user))
 			if(active)
 				src.locked = !src.locked
@@ -108,7 +120,7 @@ var/global/list/rad_collectors = list()
 	return ..()
 
 /obj/machinery/power/rad_collector/examine(mob/user)
-	if (..(user, 3))
+	if (..(user, 3) && !isbroken())
 		to_chat(user, "The meter indicates that \the [src] is collecting [last_power] W.")
 		return 1
 
@@ -117,6 +129,23 @@ var/global/list/rad_collectors = list()
 		if(2, 3)
 			eject()
 	return ..()
+
+/obj/machinery/power/rad_collector/proc/collector_break()
+	if(P && P.air_contents)
+		var/turf/T = get_turf(src)
+		if(T)
+			T.assume_air(P.air_contents)
+			audible_message(SPAN_DANGER("\The [P] detonates, sending shrapnel flying!"))
+			fragmentate(T, 2, 4, list(/obj/item/projectile/bullet/pellet/fragment/tank/small = 3, /obj/item/projectile/bullet/pellet/fragment/tank = 1))
+			explosion(T, -1, -1, 0)
+			QDEL_NULL(P)
+	disconnect_from_network()
+	stat |= BROKEN
+	melted = TRUE
+	anchored = FALSE
+	active = FALSE
+	desc += " This one is destroyed beyond repair."
+	update_icon()
 
 /obj/machinery/power/rad_collector/return_air()
 	if(P)
@@ -127,13 +156,13 @@ var/global/list/rad_collectors = list()
 	var/obj/item/weapon/tank/phoron/Z = src.P
 	if (!Z)
 		return
-	Z.forceMove(get_turf(src))
+	Z.dropInto(loc)
 	Z.reset_plane_and_layer()
 	src.P = null
 	if(active)
 		toggle_power()
 	else
-		update_icons()
+		update_icon()
 
 /obj/machinery/power/rad_collector/proc/receive_pulse(var/pulse_strength)
 	if(P && active)
@@ -145,7 +174,14 @@ var/global/list/rad_collectors = list()
 	return
 
 
-/obj/machinery/power/rad_collector/proc/update_icons()
+/obj/machinery/power/rad_collector/on_update_icon()
+	if(melted)
+		icon_state = "ca_melt"
+	else if(active)
+		icon_state = "ca_on"
+	else
+		icon_state = "ca"
+
 	overlays.Cut()
 	if(P)
 		overlays += image('icons/obj/singularity.dmi', "ptank")
@@ -158,10 +194,7 @@ var/global/list/rad_collectors = list()
 /obj/machinery/power/rad_collector/proc/toggle_power()
 	active = !active
 	if(active)
-		icon_state = "ca_on"
 		flick("ca_active", src)
 	else
-		icon_state = "ca"
 		flick("ca_deactive", src)
-	update_icons()
-	return
+	update_icon()

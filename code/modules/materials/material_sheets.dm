@@ -10,32 +10,33 @@
 	throw_range = 3
 	max_amount = 60
 	randpixel = 3
+	icon = 'icons/obj/materials.dmi'
 
 	var/default_type = MATERIAL_STEEL
 	var/material/material
+	var/default_reinf_type
+	var/material/reinf_material
 	var/perunit = SHEET_MATERIAL_AMOUNT
-	var/apply_colour //temp pending icon rewrite
+	var/material_flags = USE_MATERIAL_COLOR|USE_MATERIAL_SINGULAR_NAME|USE_MATERIAL_PLURAL_NAME
+	var/plural_name
+	var/matter_multiplier = 1
 
-/obj/item/stack/material/New(var/loc, var/amount, var/_material)
+/obj/item/stack/material/Initialize(mapload, var/amount, var/_material, var/_reinf_material)
+	. = ..()
 	if(_material)
 		default_type = _material
-	if(!default_type)
-		default_type = MATERIAL_STEEL
-	..()
-
-/obj/item/stack/material/Initialize()
-	. = ..()
-	material = SSmaterials.get_material_by_name("[default_type]")
+	if(_reinf_material)
+		default_reinf_type = _reinf_material
+	material = SSmaterials.get_material_by_name(default_type)
 	if(!material)
 		return INITIALIZE_HINT_QDEL
-
-	recipes = material.get_recipes()
-	stacktype = material.stack_type
+	if(default_reinf_type)
+		reinf_material = SSmaterials.get_material_by_name(default_reinf_type)
+	
+	if(!stacktype)
+		stacktype = material.stack_type
 	if(islist(material.stack_origin_tech))
 		origin_tech = material.stack_origin_tech.Copy()
-
-	if(apply_colour)
-		color = material.icon_colour
 
 	if(material.conductive)
 		obj_flags |= OBJ_FLAG_CONDUCTIBLE
@@ -43,59 +44,117 @@
 		obj_flags &= (~OBJ_FLAG_CONDUCTIBLE)
 
 	update_strings()
+	update_icon()
+
+/obj/item/stack/material/list_recipes(mob/user, recipes_sublist)
+	if(!material)
+		return
+	recipes = material.get_recipes(reinf_material && reinf_material.name)
+	..() 
+
+/obj/item/stack/material/get_codex_value()
+	return (material && !material.hidden_from_codex) ? "[lowertext(material.display_name)] (material)" : ..()
+
+/obj/item/stack/material/proc/set_amount(var/_amount)
+	amount = max(1, min(_amount, max_amount))
+	update_strings()
 
 /obj/item/stack/material/get_material()
 	return material
 
-/obj/item/stack/material/update_strings()
+/obj/item/stack/material/proc/update_strings()
 	// Update from material datum.
-	singular_name = material.sheet_singular_name
-
 	matter = material.get_matter()
 	for(var/mat in matter)
-		matter[mat] *= amount
+		matter[mat] = round(matter[mat]*matter_multiplier*amount)
+	if(reinf_material)
+		var/list/rmatter = reinf_material.get_matter()
+		for(var/mat in rmatter)
+			rmatter[mat] = round(0.5*rmatter[mat]*matter_multiplier*amount)
+			matter[mat] += rmatter[mat]
 
+	if(material_flags & USE_MATERIAL_SINGULAR_NAME)
+		singular_name = material.sheet_singular_name
+
+	if(material_flags & USE_MATERIAL_PLURAL_NAME)
+		plural_name = material.sheet_plural_name
+	
 	if(amount>1)
-		name = "[material.use_name] [material.sheet_plural_name]"
-		desc = "A stack of [material.use_name] [material.sheet_plural_name]."
+		SetName("[material.use_name] [plural_name]")
+		desc = "A stack of [material.use_name] [plural_name]."
 		gender = PLURAL
 	else
-		name = "[material.use_name] [material.sheet_singular_name]"
-		desc = "A [material.sheet_singular_name] of [material.use_name]."
+		SetName("[material.use_name] [singular_name]")
+		desc = "A [singular_name] of [material.use_name]."
 		gender = NEUTER
+	if(reinf_material)
+		SetName("reinforced [name]")
+		desc = "[desc]\nIt is reinforced with the [reinf_material.use_name] lattice."
 
 /obj/item/stack/material/use(var/used)
 	. = ..()
 	update_strings()
 	return
 
-/obj/item/stack/material/transfer_to(obj/item/stack/S, var/tamount=null, var/type_verified)
-	var/obj/item/stack/material/M = S
-	if(!istype(M) || material.name != M.material.name)
+/obj/item/stack/material/proc/is_same(obj/item/stack/material/M)
+	if(!istype(M))
+		return FALSE
+	if(matter_multiplier != M.matter_multiplier)
+		return FALSE
+	if(material.name != M.material.name)
+		return FALSE
+	if((reinf_material && reinf_material.name) != (M.reinf_material && M.reinf_material.name))
+		return FALSE
+	return TRUE
+
+/obj/item/stack/material/transfer_to(obj/item/stack/material/M, var/tamount=null, var/type_verified)
+	if(!is_same(M))
 		return 0
-	var/transfer = ..(S,tamount,1)
+	var/transfer = ..(M,tamount,1)
 	if(src) update_strings()
 	if(M) M.update_strings()
 	return transfer
 
-/obj/item/stack/material/attack_self(var/mob/user)
-	if(!material.build_windows(user, src))
-		..()
+/obj/item/stack/material/copy_from(var/obj/item/stack/material/other)
+	..()
+	if(istype(other))
+		material = other.material
+		reinf_material = other.reinf_material
+		update_strings()
+		update_icon()
 
 /obj/item/stack/material/attackby(var/obj/item/W, var/mob/user)
 	if(isCoil(W))
 		material.build_wired_product(user, W, src)
 		return
-	else if(istype(W, /obj/item/stack/rods))
-		material.build_rod_product(user, W, src)
+	else if(istype(W, /obj/item/stack/material))
+		if(is_same(W))
+			..()
+		else if(!reinf_material)
+			material.reinforce(user, W, src)
 		return
+	else if(reinf_material && reinf_material.stack_type && isWelder(W))
+		var/obj/item/weapon/weldingtool/WT = W
+		if(WT.isOn() && WT.get_fuel() > 2 && use(2))
+			WT.remove_fuel(2, user)
+			to_chat(user,"<span class='notice'>You recover some [reinf_material.use_name] from the [src].</span>")
+			reinf_material.place_sheet(get_turf(user), 1)
+			return
 	return ..()
+
+/obj/item/stack/material/on_update_icon()
+	if(material_flags & USE_MATERIAL_COLOR)
+		color = material.icon_colour
+		alpha = 100 + max(1, amount/25)*(material.opacity * 255)
+	if(plural_icon_state && amount > 2)
+		icon_state = plural_icon_state
 
 //--------------------------------
 //	Generic
 //--------------------------------
 /obj/item/stack/material/generic
-	icon_state = "sheet-silver"
+	icon_state = "ingot"
+	plural_icon_state = "ingot-mult"
 
 /obj/item/stack/material/generic/Initialize()
 	. = ..()
@@ -106,9 +165,9 @@
 //--------------------------------
 /obj/item/stack/material/iron
 	name = MATERIAL_IRON
-	icon_state = "sheet-silver"
+	icon_state = "ingot"
+	plural_icon_state = "ingot-mult"
 	default_type = MATERIAL_IRON
-	apply_colour = 1
 
 /obj/item/stack/material/iron/ten
 	amount = 10
@@ -135,8 +194,9 @@
 //--------------------------------
 /obj/item/stack/material/plasteel
 	name = MATERIAL_PLASTEEL
-	icon_state = "sheet-plasteel"
+	icon_state = "sheet-reinf"
 	item_state = "sheet-metal"
+	plural_icon_state = "sheet-reinf-mult"
 	default_type = MATERIAL_PLASTEEL
 
 /obj/item/stack/material/plasteel/ten
@@ -150,7 +210,8 @@
 //--------------------------------
 /obj/item/stack/material/gold
 	name = MATERIAL_GOLD
-	icon_state = "sheet-gold"
+	icon_state = "ingot"
+	plural_icon_state = "ingot-mult"
 	default_type = MATERIAL_GOLD
 
 /obj/item/stack/material/gold/ten
@@ -164,7 +225,8 @@
 //--------------------------------
 /obj/item/stack/material/silver
 	name = MATERIAL_SILVER
-	icon_state = "sheet-silver"
+	icon_state = "ingot"
+	plural_icon_state = "ingot-mult"
 	default_type = MATERIAL_SILVER
 
 /obj/item/stack/material/silver/ten
@@ -178,9 +240,9 @@
 //--------------------------------
 /obj/item/stack/material/copper
 	name = MATERIAL_COPPER
-	icon_state = "sheet-silver"
+	icon_state = "sheet"
+	item_state = "sheet-metal"
 	default_type = MATERIAL_COPPER
-	apply_colour = 1
 
 /obj/item/stack/material/copper/ten
 	amount = 10
@@ -193,9 +255,9 @@
 //--------------------------------
 /obj/item/stack/material/bronze
 	name = MATERIAL_BRONZE
-	icon_state = "sheet-silver"
+	icon_state = "sheet"
+	item_state = "sheet-metal"
 	default_type = MATERIAL_BRONZE
-	apply_colour = 1
 
 /obj/item/stack/material/bronze/ten
 	amount = 10
@@ -208,9 +270,9 @@
 //--------------------------------
 /obj/item/stack/material/brass
 	name = MATERIAL_BRASS
-	icon_state = "sheet-silver"
+	icon_state = "sheet"
+	item_state = "sheet-metal"
 	default_type = MATERIAL_BRASS
-	apply_colour = 1
 
 /obj/item/stack/material/brass/ten
 	amount = 10
@@ -223,9 +285,9 @@
 //--------------------------------
 /obj/item/stack/material/tin
 	name = MATERIAL_TIN
-	icon_state = "sheet-silver"
+	icon_state = "sheet"
+	item_state = "sheet-metal"
 	default_type = MATERIAL_TIN
-	apply_colour = 1
 /obj/item/stack/material/tin/ten
 	amount = 10
 /obj/item/stack/material/tin/fifty
@@ -236,9 +298,9 @@
 //--------------------------------
 /obj/item/stack/material/zinc
 	name = MATERIAL_ZINC
-	icon_state = "sheet-silver"
+	icon_state = "sheet"
+	item_state = "sheet-metal"
 	default_type = MATERIAL_ZINC
-	apply_colour = 1
 /obj/item/stack/material/zinc/ten
 	amount = 10
 /obj/item/stack/material/zinc/fifty
@@ -249,9 +311,9 @@
 //--------------------------------
 /obj/item/stack/material/aluminum
 	name = MATERIAL_ALUMINIUM
-	icon_state = "sheet-silver"
+	icon_state = "sheet"
+	item_state = "sheet-metal"
 	default_type = MATERIAL_ALUMINIUM
-	apply_colour = 1
 
 /obj/item/stack/material/aluminum/ten
 	amount = 10
@@ -409,7 +471,8 @@
 //--------------------------------
 /obj/item/stack/material/diamond
 	name = MATERIAL_DIAMOND
-	icon_state = "sheet-diamond"
+	icon_state = "diamond"
+	plural_icon_state = "diamond-mult"
 	default_type = MATERIAL_DIAMOND
 
 /obj/item/stack/material/diamond/ten
@@ -472,7 +535,8 @@
 //--------------------------------
 /obj/item/stack/material/plastic
 	name = MATERIAL_PLASTIC
-	icon_state = "sheet-plastic"
+	icon_state = "sheet"
+	plural_icon_state = "sheet-mult"
 	default_type = MATERIAL_PLASTIC
 
 /obj/item/stack/material/plastic/ten
@@ -497,9 +561,9 @@
 	amount = 50
 /obj/item/stack/material/lead
 	name = "lead"
-	icon_state = "sheet-silver"
-	default_type = "lead"
-	apply_colour = 1
+	icon_state = "ingot"
+	plural_icon_state = "ingot-mult"
+	default_type = MATERIAL_LEAD
 
 /obj/item/stack/material/lead/ten
 	amount = 10
@@ -525,9 +589,9 @@
 //Fuel for MRSPACMAN generator.
 /obj/item/stack/material/tritium
 	name = MATERIAL_TRITIUM
-	icon_state = "sheet-silver"
+	icon_state = "ingot"
+	plural_icon_state = "ingot-mult"
 	default_type = MATERIAL_TRITIUM
-	apply_colour = 1
 
 /obj/item/stack/material/tritium/ten
 	amount = 10
@@ -552,9 +616,19 @@
 //	Glass
 //--------------------------------
 /obj/item/stack/material/glass
-	name = MATERIAL_GLASS
-	icon_state = "sheet-glass"
+	name = "glass"
+	icon_state = "sheet-shiny"
+	plural_icon_state = "sheet-shiny-mult"
 	default_type = MATERIAL_GLASS
+
+/obj/item/stack/material/glass/on_update_icon()
+	if(reinf_material) 
+		icon_state = "sheet-reinf"
+		plural_icon_state = "sheet-reinf-mult"
+	else
+		icon_state = "sheet-shiny"
+		plural_icon_state = "sheet-shiny-mult"
+	..()
 
 /obj/item/stack/material/glass/ten
 	amount = 10
@@ -567,8 +641,10 @@
 //--------------------------------
 /obj/item/stack/material/glass/reinforced
 	name = "reinforced glass"
-	icon_state = "sheet-rglass"
-	default_type = MATERIAL_REINFORCED_GLASS
+	icon_state = "sheet-reinf"
+	plural_icon_state = "sheet-reinf-mult"
+	default_type = MATERIAL_GLASS
+	default_reinf_type = MATERIAL_STEEL
 
 /obj/item/stack/material/glass/reinforced/ten
 	amount = 10
@@ -582,8 +658,6 @@
 /obj/item/stack/material/glass/phoronglass
 	name = "borosilicate glass"
 	desc = "This sheet is special platinum-glass alloy designed to withstand large temperatures."
-	singular_name = "borosilicate glass sheet"
-	icon_state = "sheet-phoronglass"
 	default_type = MATERIAL_PHORON_GLASS
 
 /obj/item/stack/material/glass/phoronglass/ten
@@ -598,9 +672,8 @@
 /obj/item/stack/material/glass/phoronrglass
 	name = "reinforced borosilicate glass"
 	desc = "This sheet is special platinum-glass alloy designed to withstand large temperatures. It is reinforced with few rods."
-	singular_name = "reinforced borosilicate glass sheet"
-	icon_state = "sheet-phoronrglass"
-	default_type = MATERIAL_REINFORCED_PHORON_GLASS
+	default_type = MATERIAL_PHORON_GLASS
+	default_reinf_type = MATERIAL_STEEL
 
 /obj/item/stack/material/glass/phoronrglass/ten
 	amount = 10
@@ -643,12 +716,63 @@
 /obj/item/stack/material/wood
 	name = "wooden plank"
 	icon_state = "sheet-wood"
+	plural_icon_state = "sheet-wood-mult"
 	default_type = MATERIAL_WOOD
 
 /obj/item/stack/material/wood/ten
 	amount = 10
 
 /obj/item/stack/material/wood/fifty
+	amount = 50
+
+/obj/item/stack/material/wood/mahogany
+	name = "mahogany plank"
+	default_type = MATERIAL_MAHOGANY
+
+/obj/item/stack/material/wood/mahogany/ten
+	amount = 10
+
+/obj/item/stack/material/wood/mahogany/twentyfive
+	amount = 25
+
+/obj/item/stack/material/wood/maple
+	name = "maple plank"
+	default_type = MATERIAL_MAPLE
+
+/obj/item/stack/material/wood/maple/ten
+	amount = 10
+
+/obj/item/stack/material/wood/maple/twentyfive
+	amount = 25
+
+/obj/item/stack/material/wood/ebony
+	name = "ebony plank"
+	default_type = MATERIAL_EBONY
+
+/obj/item/stack/material/wood/ebony/ten
+	amount = 10
+
+/obj/item/stack/material/wood/ebony/twentyfive
+	amount = 25
+
+/obj/item/stack/material/wood/walnut
+	name = "walnut plank"
+	default_type = MATERIAL_WALNUT
+
+/obj/item/stack/material/wood/walnut/ten
+	amount = 10
+
+/obj/item/stack/material/wood/walnut/twentyfive
+	amount = 25
+
+/obj/item/stack/material/wood/bamboo
+	name = "bamboo plank"
+	default_type = MATERIAL_BAMBOO
+
+/obj/item/stack/material/wood/bamboo/ten
+	amount = 10
+
+/obj/item/stack/material/wood/bamboo/fifty
 	amount = 50
 
 //--------------------------------
@@ -672,6 +796,7 @@
 	name = MATERIAL_CARDBOARD
 	icon_state = "sheet-card"
 	default_type = MATERIAL_CARDBOARD
+	material_flags = USE_MATERIAL_SINGULAR_NAME|USE_MATERIAL_PLURAL_NAME
 
 /obj/item/stack/material/cardboard/ten
 	amount = 10
@@ -687,6 +812,7 @@
 	desc = "The by-product of mob grinding."
 	icon_state = "sheet-leather"
 	default_type = MATERIAL_LEATHER
+	material_flags = USE_MATERIAL_SINGULAR_NAME|USE_MATERIAL_PLURAL_NAME
 
 /obj/item/stack/material/leather/ten
 	amount = 10

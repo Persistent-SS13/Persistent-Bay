@@ -15,6 +15,7 @@
 	var/color = "#000000"
 	var/color_weight = 1
 	var/flags = 0
+	var/hidden_from_codex
 
 	var/glass_icon = DRINK_ICON_DEFAULT
 	var/glass_name = "something"
@@ -31,12 +32,32 @@
 	var/gas_id									// Override for reagents inwhich name != id of parent gas
 	// END GAS DATA
 
+	// Matter state data.
+	var/chilling_point
+	var/chilling_message = "crackles and freezes!"
+	var/chilling_sound = 'sound/effects/bubbles.ogg'
+	var/list/chilling_products
+
+	var/list/heating_products
+	var/heating_point
+	var/heating_message = "begins to boil!"
+	var/heating_sound = 'sound/effects/bubbles.ogg'
+
+	var/temperature_multiplier = 1
+
 /datum/reagent/New(var/datum/reagents/holder)
+	if(!istype(holder))
+		CRASH("Invalid reagents holder: [log_info_line(holder)]")
 	src.holder = holder
 	..()
 
 /datum/reagent/proc/remove_self(var/amount) // Shortcut
+	if(QDELETED(src)) // In case we remove multiple times without being careful.
+		return
 	holder.remove_reagent(type, amount)
+
+/datum/reagent/proc/on_leaving_metabolism(var/mob/parent, var/metabolism_class)
+	return
 
 // This doesn't apply to skin contact - this is for, e.g. extinguishers and sprays. The difference is that reagent is not directly on the mob's skin - it might just be on their clothing.
 /datum/reagent/proc/touch_mob(var/mob/M, var/amount)
@@ -48,10 +69,9 @@
 /datum/reagent/proc/touch_turf(var/turf/T, var/amount) // Cleaner cleaning, lube lubbing, etc, all go here
 	return
 
-/datum/reagent/proc/touch_target(var/mob/M, var/amount, var/bodypart, var/blocked)
-	return
-
 /datum/reagent/proc/on_mob_life(var/mob/living/carbon/M, var/alien, var/location) // Currently, on_mob_life is called on carbons. Any interaction with non-carbon mobs (lube) will need to be done in touch_mob.
+	if(QDELETED(src))
+		return // Something else removed us.
 	if(!istype(M))
 		return
 	if(!(flags & AFFECTS_DEAD) && M.stat == DEAD && (world.time - M.timeofdeath > 150))
@@ -68,7 +88,6 @@
 	if(touch_met && (location == CHEM_TOUCH))
 		removed = touch_met
 	removed = M.get_adjusted_metabolism(removed)
-
 
 	//adjust effective amounts - removed, dose, and max_dose - for mob size
 	var/effective = removed
@@ -87,7 +106,6 @@
 
 	if(volume)
 		remove_self(removed)
-	return
 
 /datum/reagent/proc/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	return
@@ -123,6 +141,9 @@
 	holder = null
 	. = ..()
 
+/datum/reagent/proc/ex_act(obj/item/weapon/reagent_containers/holder, severity)
+	return
+
 /* DEPRECATED - TODO: REMOVE EVERYWHERE */
 
 /datum/reagent/proc/reaction_turf(var/turf/target)
@@ -133,3 +154,5 @@
 
 /datum/reagent/proc/reaction_mob(var/mob/target)
 	touch_mob(target)
+
+/datum/reagent/proc/custom_temperature_effects(var/temperature)

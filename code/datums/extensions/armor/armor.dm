@@ -1,3 +1,9 @@
+// There is a disconnect between legacy damage and armor code. This here helps bridge the gap.
+// Not on this codebase
+///proc/get_armor_key(damage_type, damage_flags)
+//	return damage_type
+#define get_armor_key(damage_type, damage_flags) damage_type
+
 /datum/extension/armor
 	expected_type = /atom/movable
 	var/list/armor_values
@@ -20,7 +26,10 @@
 	if(prob(blocked * 100))
 		if(damage_flags & DAM_LASER)
 			damage *= FLUIDLOSS_CONC_BURN/FLUIDLOSS_WIDE_BURN
-		damage_flags &= ~(DAM_SHARP | DAM_EDGE | DAM_LASER)
+		if(ISDAMTYPE(damage_type, DAM_LASER))
+			damage_type = DAM_BURN
+		if(ISDAMTYPE(damage_type, DAM_CUT) || ISDAMTYPE(damage_type, DAM_PIERCE))
+			damage_type = DAM_BLUNT
 
 	on_blocking(damage, blocked)
 
@@ -69,8 +78,3 @@
 /datum/extension/armor/proc/get_value(key)
 	return min(armor_values[key], 100)
 
-// There is a disconnect between legacy damage and armor code. This here helps bridge the gap.
-// Not on this codebase
-///proc/get_armor_key(damage_type, damage_flags)
-//	return damage_type
-#define get_armor_key(damage_type, damage_flags) damage_type

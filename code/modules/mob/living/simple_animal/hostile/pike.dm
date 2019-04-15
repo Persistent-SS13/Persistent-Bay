@@ -23,3 +23,9 @@
 	can_escape = 1
 
 	break_stuff_probability = 55
+
+/mob/living/simple_animal/hostile/carp/pike/carp_randomify()
+	return
+
+/mob/living/simple_animal/hostile/carp/pike/on_update_icon()
+	return

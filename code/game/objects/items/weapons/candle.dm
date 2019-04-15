@@ -66,4 +66,15 @@
 		update_icon()
 		set_light(0)
 
+/obj/item/weapon/storage/candle_box
+	name = "candle pack"
+	desc = "A pack of unscented candles in a variety of colours."
+	icon = 'icons/obj/candle.dmi'
+	icon_state = "candlebox"
+	throwforce = 2
+	w_class = ITEM_SIZE_SMALL
+	max_w_class = ITEM_SIZE_TINY
+	max_storage_space = 7
+	slot_flags = SLOT_BELT
 
+	startswith = list(/obj/item/weapon/flame/candle = 7)

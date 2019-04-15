@@ -3,6 +3,7 @@ var/decl/hierarchy/supply_pack/cargo_supply_packs	// Non-category supply packs
 
 /decl/hierarchy/supply_pack
 	name = "Supply Packs"
+	hierarchy_type = /decl/hierarchy/supply_pack
 	var/list/contains = list()
 	var/manifest = ""
 	var/cost = null
@@ -54,9 +55,9 @@ var/decl/hierarchy/supply_pack/cargo_supply_packs	// Non-category supply packs
 //SUPPLY PACKS
 //NOTE: only secure crate types use the access var (and are lockable)
 //NOTE: hidden packs only show up when the computer has been hacked.
-//ANOTER NOTE: Contraband is obtainable through e-magged supplycomp computers.
+//ANOTER NOTE: Contraband is obtainable through modified supplycomp circuitboards.
 //BIG NOTE: Don't add living things to crates, that's bad, it will break the shuttle.
-//NEW NOTE: Do NOT set the price of any crates below 7 points. Doing so allows infinite points. //May not be true any longer.
+//NEW NOTE: Do NOT set the price of any crates below 7 points. Doing so allows infinite points.
 */
 
 var/list/supply_methods_

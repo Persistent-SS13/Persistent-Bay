@@ -21,21 +21,41 @@
 	contains = list(/obj/vehicle/train/cargo/trolley)
 	cost = 15
 	containertype = /obj/structure/largecrate
-	containername = "train trolley crate"
-/**
-/decl/hierarchy/supply_pack/operations/hoverpod
-	name = "Equipment - Hoverpod"
-	contains = list()
-	cost = 120
-	containertype = /obj/structure/largecrate/hoverpod
-	containername = "hoverpod crate"
-**/	
-/*
+	containername = "cargo train trolley crate"
+
+/decl/hierarchy/supply_pack/operations/contraband
+	num_contained = 5
+	contains = list(/obj/item/seeds/bloodtomatoseed,
+					/obj/item/weapon/storage/pill_bottle/zoom,
+					/obj/item/weapon/storage/pill_bottle/happy,
+					/obj/item/weapon/storage/pill_bottle/three_eye,
+					/obj/item/weapon/reagent_containers/food/drinks/bottle/pwine)
+
+	name = "UNLISTED - Contraband crate"
+	cost = 30
+	containername = "unlabeled crate"
+	contraband = 1
+	supply_method = /decl/supply_method/randomized
+
+///decl/hierarchy/supply_pack/operations/hoverpod
+//	name = "Equipment - Hoverpod Shipment"
+//	contains = list()
+//	cost = 120
+//	containertype = /obj/structure/largecrate/hoverpod
+//	containername = "hoverpod crate"
+
+/decl/hierarchy/supply_pack/operations/orebox
+	name = "Equipment - Ore box"
+	contains = list(/obj/structure/ore_box)
+	cost = 15
+	containertype = /obj/structure/largecrate
+	containername = "Ore box crate"
+
 //gear
 /decl/hierarchy/supply_pack/operations/webbing
-	name = "Gear - Webbing"
+	name = "Gear - Webbing, vests, holsters."
 	num_contained = 4
-	contains = list(/obj/item/clothing/accessory/holster,
+	contains = list(/obj/item/clothing/accessory/storage/holster,
 					/obj/item/clothing/accessory/storage/black_vest,
 					/obj/item/clothing/accessory/storage/brown_vest,
 					/obj/item/clothing/accessory/storage/white_vest,
@@ -45,22 +65,24 @@
 					/obj/item/clothing/accessory/storage/webbing)
 	cost = 15
 	containername = "webbing crate"
-*/
-//bureaucracy
+
 /decl/hierarchy/supply_pack/operations/bureaucracy
 	name = "Bureaucracy - Office supplies"
 	contains = list(/obj/item/weapon/clipboard,
 					/obj/item/weapon/clipboard,
 					/obj/item/weapon/pen/red,
-					/obj/item/weapon/pen/blue = 2,
+					/obj/item/weapon/pen/blue,
+					 /obj/item/weapon/pen/green,
 					/obj/item/device/camera_film,
 					/obj/item/weapon/folder/blue,
 					/obj/item/weapon/folder/red,
 					/obj/item/weapon/folder/yellow,
 					/obj/item/weapon/hand_labeler,
 					/obj/item/weapon/tape_roll,
+
 					/obj/item/weapon/paper_bin,
-					/obj/item/sticky_pad/random = 4
+					/obj/item/sticky_pad/random = 4,
+					 /obj/structure/filingcabinet/chestdrawer{anchored = 0},
 					)
 	cost = 10
 	containertype = /obj/structure/closet/crate/large
@@ -110,6 +132,7 @@
 	cost = 100
 	containertype = /obj/structure/closet/crate/large
 	containername = "basic voidsuit crate"
+
 
 /decl/hierarchy/supply_pack/operations/voidsuit_purple
 	name = "EVA - Deluxe purple voidsuit"

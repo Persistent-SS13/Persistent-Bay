@@ -228,7 +228,7 @@
 	name = "Beacon tracking pinpointer"
 	req_tech = list(TECH_MAGNET = 3, TECH_ENGINEERING = 2, TECH_BLUESPACE = 3)
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPER = 0.5 SHEETS)
-	build_path = /obj/item/device/beacon_locator
+	build_path = /obj/item/weapon/pinpointer/radio
 
 /datum/design/item/genfab/eva/adv/marshalling_wand
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_COPPER = 0.5 SHEETS)

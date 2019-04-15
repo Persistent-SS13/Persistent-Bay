@@ -12,6 +12,7 @@
 	var/base_desc = "The naked hull."
 	var/base_icon = 'icons/turf/flooring/plating.dmi'
 	var/base_icon_state = "plating"
+	var/base_color = COLOR_WHITE
 
 	// Flooring data.
 	var/flooring_override
@@ -65,12 +66,15 @@
 
 	overlays.Cut()
 
-	name = base_name
+	for(var/obj/effect/decal/writing/W in src)
+		qdel(W)
+
+	SetName(base_name)
 	desc = base_desc
 	icon = base_icon
 	icon_state = base_icon_state
+	color = base_color
 	plane = PLATING_PLANE
-	color = initial(color)
 
 	if(flooring)
 		flooring.on_remove()
@@ -95,3 +99,15 @@
 		plane = TURF_PLANE
 	else
 		plane = PLATING_PLANE
+
+/turf/simulated/floor/can_engrave()
+	return (!flooring || flooring.can_engrave)
+
+/turf/simulated/floor/shuttle_ceiling
+	name = "hull plating"
+	icon = 'icons/turf/flooring/tiles.dmi'
+	icon_state = "reinforced_light"
+	initial_gas = null
+
+/turf/simulated/floor/shuttle_ceiling/air
+	initial_gas = list("oxygen" = MOLES_O2STANDARD, "nitrogen" = MOLES_N2STANDARD)

@@ -212,7 +212,7 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	
 	for(var/mob/new_player/player in GLOB.player_list)
 		player.panel.close()
-		player.newPlayerPanel()
+		player.new_player_panel()
 		if(player && player.ready && player.mind)
 			player.loadCharacter()
 		else

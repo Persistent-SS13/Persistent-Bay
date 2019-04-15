@@ -11,6 +11,10 @@
 	relative_size = 15
 	max_health = 45
 	var/open
+	var/list/external_pump
+
+/obj/item/organ/internal/heart/open
+	open = 1
 
 /obj/item/organ/internal/heart/die()
 	if(dead_icon)
@@ -27,9 +31,9 @@
 		if(pulse)
 			handle_heartbeat()
 			if(pulse == PULSE_2FAST && prob(1))
-				take_damage(0.5)
+				take_internal_damage(0.5)
 			if(pulse == PULSE_THREADY && prob(5))
-				take_damage(0.5)
+				take_internal_damage(0.5)
 		handle_blood()
 	..()
 
@@ -41,6 +45,8 @@
 	var/pulse_mod = owner.chem_effects[CE_PULSE]
 
 	if(owner.shock_stage > 30)
+		pulse_mod++
+	if(owner.shock_stage > 80)
 		pulse_mod++
 
 	var/oxy = owner.get_blood_oxygenation()
@@ -59,14 +65,14 @@
 	else //and if it's beating, let's see if it should
 		var/should_stop = prob(80) && owner.get_blood_circulation() < BLOOD_VOLUME_SURVIVE //cardiovascular shock, not enough liquid to pump
 		should_stop = should_stop || prob(max(0, owner.getBrainLoss() - owner.maxHealth * 0.75)) //brain failing to work heart properly
-		should_stop = should_stop || (prob(10) && owner.shock_stage >= 120) //traumatic shock
-		should_stop = should_stop || (prob(10) && pulse == PULSE_THREADY) //erratic heart patterns, usually caused by oxyloss
+		should_stop = should_stop || (prob(5) && pulse == PULSE_THREADY) //erratic heart patterns, usually caused by oxyloss
 		if(should_stop) // The heart has stopped due to going into traumatic or cardiovascular shock.
 			to_chat(owner, "<span class='danger'>Your heart has stopped!</span>")
 			pulse = PULSE_NONE
 			return
 
-	if(pulse && oxy <= BLOOD_VOLUME_SURVIVE && !owner.chem_effects[CE_STABLE])	//I SAID MOAR OXYGEN
+	var/fibrillation = oxy <= BLOOD_VOLUME_SURVIVE || (prob(30) && owner.shock_stage > 120)
+	if(pulse && fibrillation && !owner.chem_effects[CE_STABLE])	//I SAID MOAR OXYGEN
 		pulse = PULSE_THREADY
 		return
 
@@ -86,7 +92,7 @@
 
 		if(heartbeat >= rate)
 			heartbeat = 0
-			sound_to(owner, sound(beat_sound,0,0,0,10))
+			sound_to(owner, sound(beat_sound,0,0,0,50))
 		else
 			heartbeat++
 
@@ -129,7 +135,7 @@
 							blood_max += W.damage / 40
 
 			if(temp.status & ORGAN_ARTERY_CUT)
-				var/bleed_amount = Floor((owner.vessel.total_volume / (temp.applied_pressure ? 400 : 250))*temp.arterial_bleed_severity)
+				var/bleed_amount = Floor((owner.vessel.total_volume / (temp.applied_pressure || !open_wound ? 400 : 250))*temp.arterial_bleed_severity)
 				if(bleed_amount)
 					if(open_wound)
 						blood_max += bleed_amount
@@ -178,6 +184,8 @@
 		return "no pulse"
 
 	var/pulsesound = "normal"
+	if(is_bruised())
+		pulsesound = "irregular"
 
 	switch(pulse)
 		if(PULSE_SLOW)
@@ -188,8 +196,5 @@
 			pulsesound = "very fast"
 		if(PULSE_THREADY)
 			pulsesound = "extremely fast and faint"
-
-	if(is_bruised())
-		pulsesound = "irregular, but otherwise " + pulsesound
 
 	. = "[pulsesound] pulse"

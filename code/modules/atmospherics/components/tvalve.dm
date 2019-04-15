@@ -83,7 +83,7 @@
 		if(WEST)
 			initialize_directions = EAST|WEST|NORTH
 
-/obj/machinery/atmospherics/tvalve/update_icon(animation)
+/obj/machinery/atmospherics/tvalve/on_update_icon(animation)
 	if(animation)
 		flick("tvalve[src.state][!src.state]",src)
 	else
@@ -288,7 +288,7 @@
 	icon_state = "map_tvalve1"
 	state = 1
 
-/obj/machinery/atmospherics/tvalve/digital/update_icon()
+/obj/machinery/atmospherics/tvalve/digital/on_update_icon()
 	..()
 	if(!powered())
 		icon_state = "tvalvenopower"

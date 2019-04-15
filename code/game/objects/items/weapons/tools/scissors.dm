@@ -4,7 +4,7 @@
 //
 
 //All of the scissor stuff <-- TGameCo
-/obj/item/weapon/scissors
+/obj/item/weapon/tool/scissors
 	name = "Scissors"
 	desc = "Those are scissors. Don't run with them!"
 	icon = 'icons/obj/scissors.dmi'
@@ -20,8 +20,8 @@
 	mass = 0.200
 	var/childpart = /obj/item/weapon/improvised/scissorknife //This is so any thing made is specified. It's helpful for things
 
-/obj/item/weapon/scissors/attackby(var/obj/item/I, mob/user as mob) //Seperation of the scissors
-	if(istype(I, /obj/item/weapon/tool/screwdriver))
+/obj/item/weapon/tool/scissors/attackby(var/obj/item/I, mob/user as mob) //Seperation of the scissors
+	if(isScrewdriver(I))
 		var/obj/item/weapon/improvised/scissorknife/left_part = new childpart
 		var/obj/item/weapon/improvised/scissorknife/right_part = new childpart
 
@@ -44,7 +44,7 @@
 		return ..()
 
 // Barber scissors, used especially for cutting of hair
-/obj/item/weapon/scissors/barber
+/obj/item/weapon/tool/scissors/barber
 	name = "Barber's Scissors"
 	desc = "A pair of scissors used by the barber."
 	icon_state = "scissors_barber"
@@ -53,11 +53,11 @@
 	childpart = /obj/item/weapon/improvised/scissorknife/barber
 	var/list/ui_users = list()
 
-/obj/item/weapon/scissors/barber/attack_self(mob/user as mob)
+/obj/item/weapon/tool/scissors/barber/attack_self(mob/user as mob)
 	if(ishuman(user))
 		cut_hair(user, user)
 
-/obj/item/weapon/scissors/barber/proc/cut_hair(var/mob/living/carbon/human/target, var/mob/user)
+/obj/item/weapon/tool/scissors/barber/proc/cut_hair(var/mob/living/carbon/human/target, var/mob/user)
 	if(!istype(target))
 		return
 	var/datum/nano_module/appearance_changer/AC = ui_users[user]
@@ -69,7 +69,7 @@
 	AC.ui_interact(user)
 	return TRUE
 
-/obj/item/weapon/scissors/barber/Destroy()
+/obj/item/weapon/tool/scissors/barber/Destroy()
 	for(var/user in ui_users)
 		var/datum/nano_module/appearance_changer/AC = ui_users[user]
 		qdel(AC)
@@ -77,7 +77,7 @@
 	..()
 
 //Makes scissors cut hair, special thanks to Miauw and Xerux -Nien
-/obj/item/weapon/scissors/barber/attack(mob/living/carbon/M as mob, mob/user as mob)
+/obj/item/weapon/tool/scissors/barber/attack(mob/living/carbon/M as mob, mob/user as mob)
 	if(user.a_intent != I_HELP || !ishuman(M) || !Adjacent(M))
 		return ..()
 	return cut_hair(M, user)
@@ -85,7 +85,7 @@
 
 // This used to be standard office scissors, but I moved those down to the root scissors/
 // Plastic Craft scissors, like those used by schoolchildren.
-/obj/item/weapon/scissors/craft 
+/obj/item/weapon/tool/scissors/craft 
 	name = "Craft Scissors"
 	desc = "A pair of scissors used for arts and crafts. It's probably safe to run with"
 	icon_state = "scissors_craft"
@@ -111,13 +111,13 @@
 	w_class = 2
 	item_icons = list(slot_l_hand_str = 'icons/mob/items/lefthand_tools.dmi', slot_r_hand_str = 'icons/mob/items/righthand_tools.dmi')
 	attack_verb = list("slices", "cuts", "stabs", "jabs")
-	var/parentscissor = /obj/item/weapon/scissors
+	var/parentscissor = /obj/item/weapon/tool/scissors
 
 /obj/item/weapon/improvised/scissorsassembly/barber
 	icon_state = "scissors_barber"
 	item_state = "scissors_barber"
 	attack_verb = list("beautifully slices", "artistically cuts", "smoothly stabs", "quickly jabs")
-	parentscissor = /obj/item/weapon/scissors/barber
+	parentscissor = /obj/item/weapon/tool/scissors/barber
 
 /obj/item/weapon/improvised/scissorsassembly/craft
 	icon_state = "scissors_craft"
@@ -126,10 +126,10 @@
 	force = 1
 	sharpness = 0
 	attack_verb = list("prods", "pokes", "nudges", "annoys")
-	parentscissor = /obj/item/weapon/scissors/craft
+	parentscissor = /obj/item/weapon/tool/scissors/craft
 
 /obj/item/weapon/improvised/scissorsassembly/attackby(var/obj/item/I, mob/user as mob) //Putting it together
-	if(istype(I, /obj/item/weapon/tool/screwdriver))
+	if(isScrewdriver(I))
 		var/obj/item/weapon/scissors/N = new parentscissor
 		user.remove_from_mob(src)
 		user.put_in_hands(N)

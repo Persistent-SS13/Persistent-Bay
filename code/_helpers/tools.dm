@@ -27,23 +27,23 @@
 /atom/proc/iscrowbar()
 	return FALSE
 
-/obj/item/weapon/wrench/iswrench()
+/obj/item/weapon/tool/wrench/iswrench()
 	return TRUE
 
-/obj/item/weapon/weldingtool/iswelder()
+/obj/item/weapon/tool/weldingtool/iswelder()
 	return TRUE
 
 /obj/item/stack/cable_coil/iscoil()
 	return TRUE
 
-/obj/item/weapon/wirecutters/iswirecutter()
+/obj/item/weapon/tool/wirecutters/iswirecutter()
 	return TRUE
 
-/obj/item/weapon/screwdriver/isscrewdriver()
+/obj/item/weapon/tool/screwdriver/isscrewdriver()
 	return TRUE
 
 /obj/item/device/multitool/ismultitool()
 	return TRUE
 
-/obj/item/weapon/crowbar/iscrowbar()
+/obj/item/weapon/tool/crowbar/iscrowbar()
 	return TRUE

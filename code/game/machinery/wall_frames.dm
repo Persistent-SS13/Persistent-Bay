@@ -46,7 +46,7 @@
 	if (!istype(loc, /turf/simulated/floor))
 		to_chat(usr, SPAN_DANGER("\The [src] cannot be placed on this spot."))
 		return
-	if (A.requires_power == 0 || A.name == "Space")
+	if (A.requires_power == 0 || A.name == "Space" && !isLightFrame())
 		to_chat(usr, SPAN_DANGER("\The [src] cannot be placed in this area."))
 		return
 
@@ -57,6 +57,9 @@
 	new build_machine_type(loc, ndir, src)
 	qdel(src)
 
+/obj/item/frame/proc/isLightFrame()
+	return FALSE
+
 /obj/item/frame/fire_alarm
 	name = "fire alarm frame"
 	desc = "Used for building fire alarms."
@@ -66,9 +69,9 @@
 
 /obj/item/frame/air_alarm
 	name = "air alarm frame"
-	desc = "Used for building air alarms."
 	icon = 'icons/obj/monitors.dmi'
-	icon_state = "alarmx"
+	icon_state = "alarm_bitem"
+	desc = "Used for building air alarms."
 	build_machine_type = /obj/machinery/alarm
 
 /obj/item/frame/light
@@ -78,6 +81,9 @@
 	icon_state = "tube-construct-item"
 	build_machine_type = /obj/machinery/light_construct
 	reverse = 1
+
+/obj/item/frame/light/isLightFrame()
+	return TRUE
 
 /obj/item/frame/light/small
 	name = "small light fixture frame"

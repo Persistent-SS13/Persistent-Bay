@@ -13,5 +13,5 @@
 
 	var/dist = get_dist(src_object, user)
 	if((dist > 1) || (!ishuman(user)))
-		// Can't be used unless adjacent and human, even with MUTATION_TK
+		// Can't be used unless adjacent and human, even with TK
 		. = min(., UI_UPDATE)

@@ -9,7 +9,6 @@
 	anchored = 1
 	icon = 'icons/obj/virology.dmi'
 	icon_state = "isolator"
-	use_power = POWER_USE_IDLE
 	var/isolating = 0
 	var/state = HOME
 	var/datum/disease2/disease/virus2 = null
@@ -94,10 +93,10 @@
 						if (ID in virusDB)
 							R = virusDB[ID]
 
-						var/datum/dna/A = B.data["donor"]
-						var/datum/dna/D = A.Clone()
+						var/weakref/W = B.data["donor"]
+						var/mob/living/carbon/human/D = W.resolve()
 						pathogen_pool.Add(list(list(\
-							"name" = "[D ? D.species : "Unidentified"] [B.name]", \
+							"name" = "[D ? D.get_species() : "Unidentified"] [B.name]", \
 							"dna" = B.data["blood_DNA"], \
 							"unique_id" = V.uniqueID, \
 							"reference" = "\ref[V]", \
@@ -132,6 +131,8 @@
 /obj/machinery/disease2/isolator/Process()
 	if (isolating > 0)
 		isolating -= 1
+		if(virus2)
+			infect_nearby(virus2)
 		if (isolating == 0)
 			if (virus2)
 				var/obj/item/weapon/virusdish/d = new /obj/item/weapon/virusdish(src.loc)
@@ -142,7 +143,7 @@
 			SSnano.update_uis(src)
 			update_icon()
 
-/obj/machinery/disease2/isolator/OnTopic(user, href_list)
+/obj/machinery/disease2/isolator/OnTopic(mob/user, href_list)
 	if (href_list["close"])
 		SSnano.close_user_uis(user, src, "main")
 		return TOPIC_HANDLED
@@ -169,6 +170,7 @@
 	if(!sample) return TOPIC_HANDLED
 
 	if (href_list["isolate"])
+		operator_skill = user.get_skill_value(core_skill)
 		var/datum/disease2/disease/V = locate(href_list["isolate"])
 		if (V)
 			virus2 = V
@@ -190,7 +192,7 @@
 	switch (state)
 		if (HOME)
 			if (!sample) return
-			P.name = "paper - Patient Diagnostic Report"
+			P.SetName("paper - Patient Diagnostic Report")
 			P.info = {"
 				[virology_letterhead("Patient Diagnostic Report")]
 				<center><small><font color='red'><b>CONFIDENTIAL MEDICAL REPORT</b></font></small></center><br>
@@ -203,9 +205,9 @@
 			P.info += "<hr>"
 
 			for(var/datum/reagent/blood/B in sample.reagents.reagent_list)
-				var/datum/dna/A = B.data["donor"]
-				var/datum/dna/D = A.Clone()
-				P.info += "<large><u>[D ? D.species : "Unidentified"] [B.name]:</u></large><br>[B.data["blood_DNA"]]<br>"
+				var/weakref/W = B.data["donor"]
+				var/mob/living/carbon/human/D = W.resolve()
+				P.info += "<large><u>[D ? D.get_species() : "Unidentified"] [B.name]:</u></large><br>[B.data["blood_DNA"]]<br>"
 
 				var/list/virus = B.data["virus2"]
 				P.info += "<u>Pathogens:</u> <br>"
@@ -222,7 +224,7 @@
 "}
 
 		if (LIST)
-			P.name = "paper - Virus List"
+			P.SetName("paper - Virus List")
 			P.info = {"
 				[virology_letterhead("Virus List")]
 "}
@@ -240,7 +242,7 @@
 "}
 
 		if (ENTRY)
-			P.name = "paper - Viral Profile"
+			P.SetName("paper - Viral Profile")
 			P.info = {"
 				[virology_letterhead("Viral Profile")]
 				[entry.fields["description"]]

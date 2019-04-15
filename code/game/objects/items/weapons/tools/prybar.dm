@@ -1,4 +1,4 @@
-/obj/item/weapon/crowbar/prybar
+/obj/item/weapon/tool/crowbar/prybar
 	name = "pry bar"
 	desc = "A steel bar with a wedge. It comes in a variety of configurations and colours - collect them all."
 	icon_state = "prybar_preview"
@@ -12,7 +12,7 @@
 	var/prybar_types = list("1","2","3","4","5")
 	var/valid_colours = list(COLOR_RED_GRAY, COLOR_BLUE_GRAY, COLOR_BOTTLE_GREEN, COLOR_MAROON, COLOR_DARK_BROWN, COLOR_VIOLET, COLOR_GRAY20)
 
-/obj/item/weapon/crowbar/prybar/Initialize()
+/obj/item/weapon/tool/crowbar/prybar/Initialize()
 	var/shape = pick(prybar_types)
 	icon_state = "bar[shape]_handle"
 	color = pick(valid_colours)

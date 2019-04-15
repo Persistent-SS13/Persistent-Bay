@@ -11,9 +11,10 @@
 	touch_met = 50 // It's acid!
 	var/power = 5
 	var/meltdose = 10 // How much is needed to melt
+	var/max_damage = 40
 
 /datum/reagent/acid/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
-	M.apply_damage(removed * power * 2, DAM_BURN)
+	M.apply_damage(removed * power, DAM_BURN)
 
 /datum/reagent/acid/affect_touch(var/mob/living/carbon/M, var/alien, var/removed) // This is the most interesting
 	if(ishuman(M))
@@ -61,18 +62,18 @@
 	if(M.unacidable)
 		return
 
-	if(volume < meltdose) // Not enough to melt anything
-		M.apply_damage(removed * power * 0.1, DAM_BURN) //burn damage, since it causes chemical burns. Acid doesn't make bones shatter, like brute trauma would.
+	if(removed < meltdose) // Not enough to melt anything
+		M.apply_damage(min(removed * power * 0.1, max_damage), DAM_BURN) //burn damage, since it causes chemical burns. Acid doesn't make bones shatter, like brute trauma would.
 	else
-		M.apply_damage(removed * power * 0.2, DAM_BURN)
-		if(removed && ishuman(M) && prob(100 * removed / meltdose)) // Applies disfigurement
+		M.apply_damage(min(removed * power * 0.2, max_damage), DAM_BURN)
+		if(ishuman(M)) // Applies disfigurement
 			var/mob/living/carbon/human/H = M
 			var/screamed
 			for(var/obj/item/organ/external/affecting in H.organs)
 				if(!screamed && affecting.can_feel_pain())
 					screamed = 1
 					H.emote("scream")
-				affecting.disfigured = 1
+				affecting.status |= ORGAN_DISFIGURED
 
 /datum/reagent/acid/touch_obj(var/obj/O)
 	if(O.unacidable)
@@ -85,8 +86,14 @@
 		qdel(O)
 		remove_self(meltdose) // 10 units of acid will not melt EVERYTHING on the tile
 
-/datum/reagent/acid/touch_target(var/mob/living/M, var/amount, var/bodypart, var/blocked)
-	M.apply_damage(power*amount*0.05, DAM_BURN, bodypart, blocked) //for reference, a puddle of 120(using 30% on touch) pure acid (power 5) volume using normal shoes (perm 0.5) will deal 4,5 DAM_BURN damage every half a second. the last multiplier is for balancing purposes
+//--------------------------------
+//	Stomach Acid
+//--------------------------------
+/datum/reagent/acid/stomach
+	name = "stomach acid"
+	taste_description = "coppery foulness"
+	power = 2
+	color = "#d8ff00"
 
 //--------------------------------
 //	Hydrochloric Acid
@@ -123,3 +130,4 @@
 	color = "#8e18a9"
 	power = 10
 	meltdose = 4
+	max_damage = 60

@@ -594,7 +594,7 @@ default behaviour is:
 					if (pulling)
 						if (istype(pulling, /obj/structure/window))
 							var/obj/structure/window/W = pulling
-							if(W.is_full_window())
+							if(W.is_fulltile())
 								for(var/obj/structure/window/win in get_step(pulling,get_dir(pulling.loc, T)))
 									stop_pulling()
 					if (pulling)
@@ -652,8 +652,8 @@ default behaviour is:
 			if(istype(A,/mob/living/simple_animal/borer) || istype(A,/obj/item/weapon/holder))
 				return
 		M.status_flags &= ~PASSEMOTES
-	else if(istype(H.loc,/obj/item/clothing/accessory/holster))
-		var/obj/item/clothing/accessory/holster/holster = H.loc
+	else if(istype(H.loc,/obj/item/clothing/accessory/storage/holster) || istype(H.loc,/obj/item/weapon/storage/belt/holster))
+		var/datum/extension/holster/holster = get_extension(src, /datum/extension/holster)
 		if(holster.holstered == H)
 			holster.clear_holster()
 		to_chat(src, "<span class='warning'>You extricate yourself from \the [holster].</span>")
@@ -686,11 +686,11 @@ default behaviour is:
 		visible_message("<span class='danger'>[src] resists!</span>")
 
 /mob/living/verb/lay_down()
-	set name = "Lay down"
+	set name = "Rest"
 	set category = "IC"
 
 	resting = !resting
-	to_chat(src, "<span class='notice'>You are now [resting ? "laying down" : "getting up"]</span>")
+	to_chat(src, "<span class='notice'>You are now [resting ? "resting" : "getting up"]</span>")
 
 //called when the mob receives a bright flash
 /mob/living/flash_eyes(intensity = FLASH_PROTECTION_MODERATE, override_blindness_check = FALSE, affect_silicon = FALSE, visual = FALSE, type = /obj/screen/fullscreen/flash)
@@ -794,8 +794,24 @@ default behaviour is:
 	else
 		..()
 
-/mob/living/Destroy()
+/mob/living/update_icons()
+	if(auras)
+		overlays |= auras
 
+/mob/living/proc/add_aura(var/obj/aura/aura)
+	LAZYDISTINCTADD(auras,aura)
+	update_icons()
+	return 1
+
+/mob/living/proc/remove_aura(var/obj/aura/aura)
+	LAZYREMOVE(auras,aura)
+	update_icons()
+	return 1
+
+/mob/living/Destroy()
+	if(auras)
+		for(var/a in auras)
+			remove_aura(a)
 	return ..()
 
 /mob/living/proc/melee_accuracy_mods()
@@ -824,6 +840,26 @@ default behaviour is:
 	if(MUTATION_CLUMSY in mutations)
 		. -= 3
 
+/mob/living/can_drown()
+	return TRUE
+
+/mob/living/handle_drowning()
+	if(!can_drown() || !loc.is_flooded(lying))
+		return FALSE
+	if(prob(5))
+		to_chat(src, "<span class='danger'>You choke and splutter as you inhale water!</span>")
+	var/turf/T = get_turf(src)
+	T.show_bubbles()
+	return TRUE // Presumably chemical smoke can't be breathed while you're underwater.
+
+/mob/living/water_act(var/depth)
+	..()
+	wash_mob(src)
+	for(var/thing in get_equipped_items(TRUE))
+		if(isnull(thing)) continue
+		var/atom/movable/A = thing
+		if(A.simulated && !A.waterproof)
+			A.water_act(depth)
 
 /mob/living/proc/nervous_system_failure()
 	return FALSE

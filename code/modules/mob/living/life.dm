@@ -25,7 +25,8 @@
 	// human/handle_regular_status_updates() needs a cleanup, as blindness should be handled in handle_disabilities()
 	handle_regular_status_updates() // Status & health update, are we dead or alive etc.
 
-//	if(stat != DEAD) // commented out until when/if I port Auras
+	if(stat != DEAD)
+		aura_check(AURA_TYPE_LIFE)
 
 	//Check if we're on fire
 	handle_fire()

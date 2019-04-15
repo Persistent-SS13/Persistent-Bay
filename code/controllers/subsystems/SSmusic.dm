@@ -30,7 +30,7 @@ SUBSYSTEM_DEF(music)
 				toPlay["[Z]"] = musicFile
 
 	for(var/client/C in GLOB.clients)
-		if(C.mob && C.get_preference_value(/datum/client_preference/play_ambience) == GLOB.PREF_YES)
+		if(C.mob && C.get_preference_value(/datum/client_preference/play_ambiance) == GLOB.PREF_YES)
 			var/mob/M = C.mob
 			if(M.z)
 				var/datum/music_file/musicFile = toPlay["[M.z]"]

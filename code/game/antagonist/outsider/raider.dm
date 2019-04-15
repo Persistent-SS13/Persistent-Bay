@@ -79,20 +79,20 @@ GLOBAL_DATUM_INIT(raiders, /datum/antagonist/raider, new)
 		/obj/item/weapon/gun/launcher/grenade/loaded,
 		/obj/item/weapon/gun/launcher/pneumatic,
 		/obj/item/weapon/gun/projectile/automatic/machine_pistol,
-		/obj/item/weapon/gun/projectile/automatic/merc_smg,
-		/obj/item/weapon/gun/projectile/automatic/sec_smg,
-		/obj/item/weapon/gun/projectile/automatic/assault_rifle,
+		// /obj/item/weapon/gun/projectile/automatic/merc_smg,
+		// /obj/item/weapon/gun/projectile/automatic/sec_smg,
+		// /obj/item/weapon/gun/projectile/automatic/assault_rifle,
 		/obj/item/weapon/gun/projectile/shotgun/pump,
 		/obj/item/weapon/gun/projectile/shotgun/pump/combat,
 		/obj/item/weapon/gun/projectile/shotgun/doublebarrel,
 		/obj/item/weapon/gun/projectile/shotgun/doublebarrel/pellet,
 		/obj/item/weapon/gun/projectile/shotgun/doublebarrel/sawn,
-		/obj/item/weapon/gun/projectile/pistol/sec,
-		/obj/item/weapon/gun/projectile/pistol/holdout,
+		// /obj/item/weapon/gun/projectile/pistol/sec,
+		// /obj/item/weapon/gun/projectile/pistol/holdout,
 		/obj/item/weapon/gun/projectile/revolver,
 		/obj/item/weapon/gun/projectile/pirate,
-		/obj/item/weapon/gun/projectile/revolver/medium,
-		/obj/item/weapon/gun/projectile/pistol/throwback
+		// /obj/item/weapon/gun/projectile/revolver/medium,
+		// /obj/item/weapon/gun/projectile/pistol/throwback
 		)
 
 	var/list/raider_holster = list(

@@ -58,12 +58,12 @@ SUBSYSTEM_DEF(asteroid)
 
 	for(var/Z in mob_targets)
 		for(var/mob/living/M in mob_targets[Z])
-			if(M.stat || !istype(get_turf(M), /turf/simulated/asteroid))
+			if(M.stat || !istype(get_turf(M), /turf/simulated/wall/asteroid))
 				mob_targets[Z] -= M
 
 	for(var/Z in drill_targets)
 		for(var/obj/machinery/D in drill_targets[Z])
-			if(D.stat || !istype(get_turf(D), /turf/simulated/asteroid))
+			if(D.stat || !istype(get_turf(D), /turf/simulated/wall/asteroid))
 				drill_targets[Z] -= D
 
 	mob_targets["[current]"] = shuffle(mob_targets["[current]"])

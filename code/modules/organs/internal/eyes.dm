@@ -12,36 +12,23 @@
 	var/innate_flash_protection = FLASH_PROTECTION_NONE
 	max_health = 45
 
-/obj/item/organ/internal/eyes/optics
-	robotic = ORGAN_ROBOTIC
-	organ_tag = BP_OPTICS
-
-/obj/item/organ/internal/eyes/optics/New()
-	..()
-	robotize()
-
-/obj/item/organ/internal/eyes/robotize()
-	..()
-	name = "optical sensor"
-	icon = 'icons/obj/robot_component.dmi'
-	icon_state = "camera"
-	dead_icon = "camera_broken"
-	update_colour()
-
-/obj/item/organ/internal/eyes/robot
-	name = "optical sensor"
-
-/obj/item/organ/internal/eyes/robot/New()
-	..()
-	robotize()
-
-/obj/item/organ/internal/eyes/removed(var/mob/living/user)
-	..()
-	// Your eyes can't be disabled if you don't have eyes ;)
-	if(owner && owner.disabilities & NEARSIGHTED)
-		owner.disabilities &= ~NEARSIGHTED
-		owner.sdisabilities &= ~BLIND
-
+/obj/item/organ/internal/eyes/proc/change_eye_color()
+	set name = "Change Eye Color"
+	set desc = "Changes your robotic eye color."
+	set category = "IC"
+	set src in usr
+	if (!owner || owner.incapacitated())
+		return
+	var/new_eyes = input("Please select eye color.", "Eye Color", rgb(owner.r_eyes, owner.g_eyes, owner.b_eyes)) as color|null
+	if(new_eyes)
+		var/r_eyes = hex2num(copytext(new_eyes, 2, 4))
+		var/g_eyes = hex2num(copytext(new_eyes, 4, 6))
+		var/b_eyes = hex2num(copytext(new_eyes, 6, 8))
+		if(do_after(owner, 10) && owner.change_eye_color(r_eyes, g_eyes, b_eyes))
+			update_colour()
+			// Finally, update the eye icon on the mob.
+			owner.regenerate_icons()
+			owner.visible_message(SPAN_NOTICE("\The [owner] changes their eye color."),SPAN_NOTICE("You change your eye color."),)
 
 /obj/item/organ/internal/eyes/replaced(var/mob/living/carbon/human/target)
 
@@ -62,7 +49,7 @@
 		owner.b_eyes ? owner.b_eyes : 0
 		)
 
-/obj/item/organ/internal/eyes/take_damage(damage, damtype, armorbypass, damsrc, var/silent=0)
+/obj/item/organ/internal/eyes/take_internal_damage(amount, var/silent=0)
 	var/oldbroken = is_broken()
 	. = ..()
 	if(is_broken() && !oldbroken && owner && !owner.stat)
@@ -77,23 +64,24 @@
 	if(is_broken())
 		owner.eye_blind = 20
 
-	if(scarred)
-		if(scarred > 2 && !(owner.sdisabilities & BLIND))
-			owner.sdisabilities |= BLIND
-		else if(scarred < 3 && !(owner.sdisabilities & BLIND))
-			owner.sdisabilities &= ~BLIND
-
-		if(!(owner.disabilities & NEARSIGHTED))
-			owner.disabilities |= NEARSIGHTED
-
-	else // If your eyes are somehow un-scarred, you'll be all better
-		if(owner.sdisabilities & BLIND)
-			owner.sdisabilities &= ~BLIND
-		if(owner.disabilities & NEARSIGHTED)
-			owner.disabilities &= ~NEARSIGHTED
-
 /obj/item/organ/internal/eyes/proc/get_total_protection(var/flash_protection = FLASH_PROTECTION_NONE)
 	return (flash_protection + innate_flash_protection)
 
 /obj/item/organ/internal/eyes/proc/additional_flash_effects(var/intensity)
 	return -1
+
+/obj/item/organ/internal/eyes/robot
+	name = "optical sensor"
+
+/obj/item/organ/internal/eyes/robot/New()
+	..()
+	robotize()
+
+/obj/item/organ/internal/eyes/robotize()
+	..()
+	name = "optical sensor"
+	icon = 'icons/obj/robot_component.dmi'
+	icon_state = "camera"
+	dead_icon = "camera_broken"
+	verbs |= /obj/item/organ/internal/eyes/proc/change_eye_color
+	update_colour()

@@ -273,7 +273,7 @@ datum/controller/vote
 
 					if(!config.allow_extra_antags)
 						return 0
-					var/list/all_antag_types = all_antag_types()
+					var/list/all_antag_types = GLOB.all_antag_types()
 					for(var/antag_type in all_antag_types)
 						var/datum/antagonist/antag = all_antag_types[antag_type]
 						if(!(antag.id in additional_antag_types) && antag.is_votable())

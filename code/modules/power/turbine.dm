@@ -95,7 +95,7 @@
 
 
 	if(starter && !(stat & NOPOWER))
-		use_power(2800)
+		use_power_oneoff(2800)
 		if(rpm<1000)
 			rpmtarget = 1000
 	else
@@ -116,33 +116,43 @@
 
 /obj/machinery/power/turbine/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/turbine(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 30)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
+
+/obj/machinery/power/turbine/Initialize()
+	.=..()
+	if(!map_storage_loaded)
+		component_parts = list()
+		component_parts += new /obj/item/weapon/circuitboard/turbine(src)
+		component_parts += new /obj/item/stack/cable_coil(src, 30)
+		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
+		component_parts += new /obj/item/stack/material/plasteel(src)
+		component_parts += new /obj/item/stack/material/plasteel(src)
+		component_parts += new /obj/item/stack/material/plasteel(src)
+		component_parts += new /obj/item/stack/material/plasteel(src)
+		component_parts += new /obj/item/stack/material/plasteel(src)
+		component_parts += new /obj/item/stack/material/plasteel(src)
+		component_parts += new /obj/item/stack/material/plasteel(src)
+		component_parts += new /obj/item/stack/material/plasteel(src)
+		component_parts += new /obj/item/stack/material/plasteel(src)
+		component_parts += new /obj/item/stack/material/plasteel(src)
 	RefreshParts()
-
 	outturf = get_step(src, dir)
+	return INITIALIZE_HINT_LATELOAD
 
-	spawn(5)
+/obj/machinery/power/turbine/LateInitialize()
+	..()
+	compressor = locate() in get_step(src, get_dir(outturf, src))
+	if(!compressor)
+		set_broken(TRUE)
+	else
+		compressor.set_broken(FALSE)
+		compressor.turbine = src
 
-		compressor = locate() in get_step(src, get_dir(outturf, src))
-		if(!compressor)
-			stat |= BROKEN
-		else
-			compressor.stat &= !BROKEN
-			compressor.turbine = src
-
+/obj/machinery/power/turbine/Destroy()
+	if(compressor)
+		compressor.turbine = null
+		compressor.set_broken(TRUE)
+		compressor = null
+	return ..()
 
 #define TURBPRES 9000000
 #define TURBGENQ 20000
@@ -155,7 +165,7 @@
 	if(stat & BROKEN)
 		return
 	if(!compressor)
-		stat |= BROKEN
+		set_broken(TRUE)
 		return
 	lastgen = ((compressor.rpm / TURBGENQ)**TURBGENG) *TURBGENQ
 
@@ -239,40 +249,10 @@
 		if(P.id_tag == id)
 			doors += P
 
-/*
-/obj/machinery/computer/turbine_computer/attackby(I as obj, user as mob)
-	if(istype(I, /obj/item/weapon/tool/screwdriver))
-		playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
-		if(do_after(user, 20))
-			if (src.stat & BROKEN)
-				to_chat(user, "<span class='notice'>The broken glass falls out.</span>")
-				var/obj/structure/computerframe/A = new /obj/structure/computerframe( src.loc )
-				new /obj/item/weapon/material/shard( src.loc )
-				var/obj/item/weapon/circuitboard/turbine_control/M = new /obj/item/weapon/circuitboard/turbine_control( A )
-				for (var/obj/C in src)
-					C.loc = src.loc
-				M.id = src.id
-				A.circuit = M
-				A.state = 3
-				A.icon_state = "3"
-				A.anchored = 1
-				qdel(src)
-			else
-				to_chat(user, "<span class='notice'>You disconnect the monitor.</span>")
-				var/obj/structure/computerframe/A = new /obj/structure/computerframe( src.loc )
-				var/obj/item/weapon/circuitboard/turbine_control/M = new /obj/item/weapon/circuitboard/turbine_control( A )
-				for (var/obj/C in src)
-					C.loc = src.loc
-				M.id = src.id
-				A.circuit = M
-				A.state = 4
-				A.icon_state = "4"
-				A.anchored = 1
-				qdel(src)
-	else
-		src.attack_hand(user)
-	return
-*/
+/obj/machinery/computer/turbine_computer/Destroy()
+	doors.Cut()
+	compressor = null
+	return ..()
 
 /obj/machinery/computer/turbine_computer/attack_hand(var/mob/user as mob)
 	user.machine = src

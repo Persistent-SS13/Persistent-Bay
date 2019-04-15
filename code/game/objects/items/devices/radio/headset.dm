@@ -28,9 +28,9 @@
 	recalculateChannels(1)
 
 /obj/item/device/radio/headset/Destroy()
-	encryption_keys = null
-	starter_keys = null
-	custom_radio_keys = null
+	QDEL_NULL_LIST(encryption_keys)
+	QDEL_NULL_LIST(starter_keys)
+	QDEL_NULL_LIST(custom_radio_keys)
 	return ..()
 
 /obj/item/device/radio/headset/list_channels(var/mob/user)

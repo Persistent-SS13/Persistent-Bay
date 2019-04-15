@@ -15,11 +15,12 @@
 	var/accept_drinking = 0
 	var/amount = 30
 
-	use_power = 1
 	idle_power_usage = 100
 	density = 1
 	anchored = 1
 	obj_flags = OBJ_FLAG_ANCHORABLE | OBJ_FLAG_DAMAGEABLE
+	core_skill = SKILL_CHEMISTRY
+	var/can_contaminate = TRUE
 
 /obj/machinery/chemical_dispenser/New()
 	..()
@@ -43,22 +44,24 @@
 			to_chat(user, "<span class='warning'>\The [src] does not have any slots open for \the [C] to fit into!</span>")
 		return
 
-	if(!C.label_text)
+	if(!C.label)
 		if(user)
 			to_chat(user, "<span class='warning'>\The [C] does not have a label!</span>")
 		return
 
-	if(cartridges[C.label_text])
+	if(cartridges[C.label])
 		if(user)
 			to_chat(user, "<span class='warning'>\The [src] already contains a cartridge with that label!</span>")
 		return
 
 	if(user)
-		user.drop_from_inventory(C)
-		to_chat(user, "<span class='notice'>You add \the [C] to \the [src].</span>")
+		if(user.unEquip(C))
+			to_chat(user, "<span class='notice'>You add \the [C] to \the [src].</span>")
+		else
+			return
 
-	C.loc = src
-	cartridges[C.label_text] = C
+	C.forceMove(src)
+	cartridges[C.label] = C
 	cartridges = sortAssoc(cartridges)
 	SSnano.update_uis(src)
 
@@ -77,7 +80,7 @@
 		var/obj/item/weapon/reagent_containers/chem_disp_cartridge/C = remove_cartridge(label)
 		if(C)
 			to_chat(user, "<span class='notice'>You remove \the [C] from \the [src].</span>")
-			C.loc = loc
+			C.dropInto(loc)
 
 	else if(istype(W, /obj/item/weapon/reagent_containers/glass) || istype(W, /obj/item/weapon/reagent_containers/food))
 		if(container)
@@ -93,10 +96,9 @@
 		if(!RC.is_open_container())
 			to_chat(user, "<span class='warning'>You don't see how \the [src] could dispense reagents into \the [RC].</span>")
 			return
-
+		if(!user.unEquip(RC, src))
+			return
 		container =  RC
-		user.drop_from_inventory(RC)
-		RC.loc = src
 		update_icon()
 		to_chat(user, "<span class='notice'>You set \the [RC] on \the [src].</span>")
 		SSnano.update_uis(src) // update all UIs attached to src
@@ -136,8 +138,9 @@
 		ui = new(user, src, ui_key, "chem_disp.tmpl", ui_title, 390, 680)
 		ui.set_initial_data(data)
 		ui.open()
+		ui.set_auto_update(1)
 
-/obj/machinery/chemical_dispenser/OnTopic(user, href_list)
+/obj/machinery/chemical_dispenser/OnTopic(mob/user, href_list)
 	if(href_list["amount"])
 		amount = round(text2num(href_list["amount"]), 1) // round to nearest 1
 		amount = max(0, min(120, amount)) // Since the user can actually type the commands himself, some sanity checking
@@ -147,7 +150,17 @@
 		var/label = href_list["dispense"]
 		if(cartridges[label] && container && container.is_open_container())
 			var/obj/item/weapon/reagent_containers/chem_disp_cartridge/C = cartridges[label]
-			C.reagents.trans_to(container, amount)
+			var/mult = 1 + (-0.5 + round(rand(), 0.1))*(user.skill_fail_chance(core_skill, 0.3, SKILL_ADEPT))
+			C.reagents.trans_to(container, amount*mult)
+			var/contaminants_left = rand(0, max(SKILL_ADEPT - user.get_skill_value(core_skill), 0)) * can_contaminate
+			var/choices = cartridges.Copy()
+			while(length(choices) && contaminants_left)
+				var/chosen_label = pick_n_take(choices)
+				var/obj/item/weapon/reagent_containers/chem_disp_cartridge/choice = cartridges[chosen_label]
+				if(choice == C)
+					continue
+				choice.reagents.trans_to(container, round(rand()*amount/5, 0.1))
+				contaminants_left--
 			return TOPIC_REFRESH
 		return TOPIC_HANDLED
 
@@ -166,7 +179,7 @@
 /obj/machinery/chemical_dispenser/attack_hand(mob/user as mob)
 	ui_interact(user)
 
-/obj/machinery/chemical_dispenser/update_icon()
+/obj/machinery/chemical_dispenser/on_update_icon()
 	overlays.Cut()
 	if(container)
 		var/mutable_appearance/beaker_overlay

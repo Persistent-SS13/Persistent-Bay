@@ -93,10 +93,10 @@
 	build_path = /obj/item/weapon/circuitboard/operating
 	build_type = MEDICALFAB
 /datum/design/circuit/cryo_cell
-	name = "Cryotube"
+	name = "Cryocell"
 	id = "cryocell"
 	req_tech = list(TECH_DATA = 2, TECH_BIO = 3, TECH_ENGINEERING = 4)
-	build_path = /obj/item/weapon/circuitboard/cryo_tube
+	build_path = /obj/item/weapon/circuitboard/cryo_cell
 	build_type = MEDICALFAB
 /datum/design/circuit/resleever
 	name = "neural lace resleever"

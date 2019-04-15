@@ -89,17 +89,17 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/scissors
 	name = "scissors"
-	path = /obj/item/weapon/scissors
+	path = /obj/item/weapon/tool/scissors
 	category = "Tools"
 
 /datum/autolathe/recipe/barber_scissors
 	name = "barber scissors"
-	path = /obj/item/weapon/scissors/barber
+	path = /obj/item/weapon/scissors/tool/barber
 	category = "Tools"
 
 /datum/autolathe/recipe/plastic_scissors
 	name = "plastic scissors"
-	path = /obj/item/weapon/scissors/craft 
+	path = /obj/item/weapon/scissors/tool/craft 
 	category = "Tools"
 
 /datum/autolathe/recipe/crowbar
@@ -222,12 +222,12 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/knife
 	name = "kitchen knife"
-	path = /obj/item/weapon/material/knife
+	path = /obj/item/weapon/material/knife/kitchen
 	category = "General"
 
 /datum/autolathe/recipe/knife/butch
 	name = "butcher knife"
-	path = /obj/item/weapon/material/knife/butch
+	path = /obj/item/weapon/material/knife/kitchen/cleaver
 	category = "General"
 
 /datum/autolathe/recipe/taperecorder
@@ -444,7 +444,7 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/tacknife
 	name = "tactical knife"
-	path = /obj/item/weapon/material/hatchet/tacknife
+	path = /obj/item/weapon/material/knife/combat
 	hidden = 1
 	category = "Arms and Ammunition"
 

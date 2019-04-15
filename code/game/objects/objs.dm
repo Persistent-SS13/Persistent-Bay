@@ -86,7 +86,7 @@
 					is_in_use = 1
 					src.attack_ai(usr)
 
-		// check for MUTATION_TK users
+		// check for TK users
 
 		if (istype(usr, /mob/living/carbon/human))
 			if(istype(usr.l_hand, /obj/item/tk_grab) || istype(usr.r_hand, /obj/item/tk_grab/))
@@ -176,6 +176,9 @@
 
 /obj/proc/show_message(msg, type, alt, alt_type)//Message, type of message (1 or 2), alternative message, alt message type (1 or 2)
 	return
+
+/obj/proc/damage_flags()
+	return 0
 
 /obj/proc/default_wrench_floor_bolts(mob/user, obj/item/weapon/tool/W, delay=20)
 	if(!isWrench(W))

@@ -5,8 +5,10 @@
 	var/list/obj/machinery/atmospherics/pipe/edges //Used for building networks
 
 	var/datum/pipe_network/network
+	// Leaking nodes
+	var/list/leaks = list()
 
-	var/alert_pressure = 0
+	var/maximum_pressure = 0
 
 /datum/pipeline/New()
 	START_PROCESSING(SSprocessing, src)
@@ -20,14 +22,15 @@
 		QDEL_NULL(air)
 	for(var/obj/machinery/atmospherics/pipe/P in members)
 		P.parent = null
-
+	leaks.Cut()
+	members.Cut()
+	edges.Cut()
 	. = ..()
 
 /datum/pipeline/Process()//This use to be called called from the pipe networks
-
 	//Check to see if pressure is within acceptable limits
 	var/pressure = air.return_pressure()
-	if(pressure > alert_pressure)
+	if(pressure > maximum_pressure)
 		for(var/obj/machinery/atmospherics/pipe/member in members)
 			if(!member.check_pressure(pressure))
 				members.Remove(member)
@@ -51,13 +54,16 @@
 
 	var/volume = base.volume
 	base.parent = src
-	alert_pressure = base.alert_pressure
+	maximum_pressure = base.maximum_pressure
 
 	if(base.air_temporary)
 		air = base.air_temporary
 		base.air_temporary = null
 	else
 		air = new
+
+	if(base.leaking)
+		leaks |= base
 
 	while(possible_expansions.len>0)
 		for(var/obj/machinery/atmospherics/pipe/borderline in possible_expansions)
@@ -76,10 +82,13 @@
 						volume += item.volume
 						item.parent = src
 
-						alert_pressure = min(alert_pressure, item.alert_pressure)
+						maximum_pressure = min(maximum_pressure, item.maximum_pressure)
 
 						if(item.air_temporary)
 							air.merge(item.air_temporary)
+
+						if(item.leaking)
+							leaks |= item
 
 					edge_check--
 
@@ -98,6 +107,7 @@
 	new_network.line_members += src
 
 	network = new_network
+	network.leaks |= leaks
 
 	for(var/obj/machinery/atmospherics/pipe/edge in edges)
 		for(var/obj/machinery/atmospherics/result in edge.pipeline_expansion())

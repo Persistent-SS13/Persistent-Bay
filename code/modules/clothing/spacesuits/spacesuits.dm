@@ -79,8 +79,8 @@
 	desc = "Your average general use softsuit. Though lacking in protection that modern voidsuits give, its cheap cost and portable size makes it perfect for those still getting used to life on the frontier."
 	icon_state = "civ_softsuit"
 	item_icons = list(
-		slot_l_hand_str = 'icons/mob/items/lefthand_spacesuits.dmi',
-		slot_r_hand_str = 'icons/mob/items/righthand_spacesuits.dmi',
+		slot_l_hand_str = 'icons/mob/onmob/items/lefthand_spacesuits.dmi',
+		slot_r_hand_str = 'icons/mob/onmob/items/righthand_spacesuits.dmi',
 		)
 	item_state_slots = list(
 		slot_l_hand_str = "s_suit",
@@ -112,6 +112,7 @@
 	center_of_mass = null
 	randpixel = 0
 	species_restricted = list("exclude", SPECIES_NABBER, "Xenophage")
+	valid_accessory_slots = list(ACCESSORY_SLOT_INSIGNIA)
 
 /obj/item/clothing/suit/space/New()
 	..()

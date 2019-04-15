@@ -9,6 +9,7 @@
 	key = "q"
 	flags = RESTRICTED
 	syllables = list("hs","zt","kr","st","sh")
+	shorthand = "RT"
 
 /datum/language/diona/get_random_name()
 	var/new_name = "[pick(list("To Sleep Beneath","Wind Over","Embrace of","Dreams of","Witnessing","To Walk Beneath","Approaching the"))]"
@@ -40,6 +41,7 @@
 		"ra", "ar", "re", "er", "ri", "ir", "ro", "or", "ru", "ur", "rs", "sr",
 		"a",  "a",  "e",  "e",  "i",  "i",  "o",  "o",  "u",  "u",  "s",  "s"
 	)
+	shorthand = "UT"
 
 /datum/language/skrell
 	name = LANGUAGE_SKRELLIAN
@@ -51,6 +53,7 @@
 	key = "k"
 	flags = WHITELISTED
 	syllables = list("qr","qrr","xuq","qil","quum","xuqm","vol","xrim","zaoo","qu-uu","qix","qoo","zix","*","!")
+	shorthand = "SK"
 
 /datum/language/human
 	name = LANGUAGE_SOL_COMMON
@@ -60,13 +63,14 @@
 	colour = "solcom"
 	key = "1"
 	flags = WHITELISTED
+	shorthand = "Sol"
 
 	//syllables are at the bottom of the file
 
 /datum/language/human/get_spoken_verb(var/msg_end)
 	switch(msg_end)
 		if("!")
-			return "exclaims"//pick("exclaims","shouts","yells") //TODO: make the basic proc handle lists of verbs.
+			return pick("exclaims","shouts","yells") //TODO: make the basic proc handle lists of verbs.
 		if("?")
 			return ask_verb
 	return speech_verb
@@ -91,6 +95,7 @@
 	flags = NO_STUTTER
 	syllables = list("beep","beep","beep","beep","beep","boop","boop","boop","bop","bop","dee","dee","doo","doo","hiss","hss","buzz","buzz","bzz","ksssh","keey","wurr","wahh","tzzz")
 	space_chance = 10
+	shorthand = "EAL"
 
 /datum/language/machine/can_speak_special(var/mob/living/speaker)
 	return speaker.isSynthetic()
@@ -170,14 +175,16 @@
 	syllables = list("rus","zem","ave","groz","ski","ska","ven","konst","pol","lin","svy",
 	"danya","da","mied","zan","das","krem","myka","to","st","no","na","ni",
 	"ko","ne","en","po","ra","li","on","byl","cto","eni","ost","ol","ego","ver","stv","pro")
+	shorthand = "IN"
 
 /datum/language/nabber
 	name = LANGUAGE_NABBER
 	desc = "A strange language that can be understood both by the sounds made and by the movement needed to create those sounds."
 	signlang_verb = list("chitters", "grinds its mouthparts", "chitters and grinds its mouthparts")
 	key = "n"
-	flags = RESTRICTED | SIGNLANG | NO_STUTTER | NONVERBAL
+	flags = WHITELISTED | SIGNLANG | NO_STUTTER | NONVERBAL
 	colour = ".nabber_lang"
+	shorthand = "SD"
 
 /datum/language/nabber/get_random_name(var/gender)
 	if(gender == FEMALE)
@@ -193,3 +200,27 @@
 	syllables = list ("die", "en", "skei", "van", "son", "der", "aar", "ch", "op", "ruk", "aa", "be", "ne", "het",
  	"ek", "ras", "ver", "zan", "das", "waa", "geb", "vol", "lu", "min", "breh", "rus", "stv", "ee", "goe", "sk",
  	"la", "ver", "we", "ge", "luk", "an", "ar", "at", "es", "et", "bel", "du", "jaa", "ch", "kk", "gh", "ll", "uu", "wat")
+	partial_understanding = list(LANGUAGE_GALCOM = 15, LANGUAGE_INDEPENDENT = 15, LANGUAGE_SOL_COMMON = 15, LANGUAGE_LUNAR = 20, LANGUAGE_GUTTER = 10)
+	shorthand = "SP"
+
+/datum/language/yeosa
+	name = LANGUAGE_YEOSA
+	desc = "A language of Moghes consisting of a combination of spoken word and gesticulation. While it is uncommonly spoken in the drier regions, it enjoys popular usage as the official tongue of the Yeosa clans."
+	speech_verb = "hisses"
+	ask_verb = "rattles"
+	exclaim_verb = "barks"
+	colour = "yeosa"
+	key = "h"
+	flags = WHITELISTED
+	space_chance = 40
+	syllables = list(
+		"azs","zis","zau","azua","skiu","zuakz","izo","aei","ki","kut","zo",
+		"za", "az", "ze", "ez", "zi", "iz", "zo", "oz", "zu", "uz", "zs", "sz",
+		"ha", "ah", "he", "eh", "hi", "ih", "ho", "oh", "hu", "uh", "hs", "sh",
+		"la", "al", "le", "el", "li", "il", "lo", "ol", "lu", "ul", "ls", "sl",
+		"ka", "ak", "ke", "ek", "ki", "ik", "ko", "ok", "ku", "uk", "ks", "sk",
+		"sa", "as", "se", "es", "si", "is", "so", "os", "su", "us", "ss", "ss",
+		"ra", "ar", "re", "er", "ri", "ir", "ro", "or", "ru", "ur", "rs", "sr",
+		"a",  "a",  "e",  "e",  "i",  "i",  "o",  "o",  "u",  "u",  "s",  "s"
+	)
+	shorthand = "YU"

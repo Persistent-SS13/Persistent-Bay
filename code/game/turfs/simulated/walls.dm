@@ -11,12 +11,14 @@
 
 	var/integrity = 150 // Placeholder until assigned
 	var/damage_overlay = 0
+	var/global/damage_overlays[16]
+	var/active
 	var/can_open = FALSE
-	var/reinf_material		// Material to be updated to the latest
-	var/material/material	// Material the girder is made out of
-	var/material/r_material	// Material used to reinforce the girder
-	var/material/p_material	// Material used to plate the girder
-	var/state
+	var/material/material
+	var/material/reinf_material
+	var/datum/girder_data/girder
+	var/last_state
+	var/construction_stage
 	var/hitsound = 'sound/weapons/Genhit.ogg'
 	var/list/wall_connections = list("0", "0", "0", "0")
 	var/list/other_connections = list("0", "0", "0", "0")
@@ -25,7 +27,7 @@
 	var/stripe_color
 	var/global/list/wall_stripe_cache = list()
 
-	var/global/damage_overlays[16]
+
 
 /turf/simulated/wall/r_wall/after_load()
 	..()
@@ -37,24 +39,22 @@
 	r_material = r_mat
 	p_material = p_mat
 
-/turf/simulated/wall/New(var/newloc, var/material/mat, var/material/r_mat, var/material/p_mat)
+/turf/simulated/wall/New(var/newloc, var/materialtype, var/rmaterialtype)
 	..(newloc)
+	icon_state = "blank"
+	if(!materialtype)
+		materialtype = DEFAULT_WALL_MATERIAL
+	material = SSmaterials.get_material_by_name(materialtype)
+	if(!isnull(rmaterialtype))
+		reinf_material = SSmaterials.get_material_by_name(rmaterialtype)
+	update_material()
+	hitsound = material.hitsound
 
-	//Since people keep passing strings for some reasons lets double check
-	if(istext(mat))
-		material = SSmaterials.get_material_by_name(mat)
-	else if(istype(mat, /material))
-		material = mat
+/turf/simulated/wall/Initialize()
+	set_extension(src, /datum/extension/penetration, /datum/extension/penetration/proc_call, .proc/CheckPenetration)
+	START_PROCESSING(SSturf, src) //Used for radiation.
+	. = ..()
 
-	if(istext(r_mat))
-		r_material = SSmaterials.get_material_by_name(r_mat)
-	else if(istype(r_mat, /material))
-		r_material = r_mat
-
-	if(istext(p_mat))
-		p_material = SSmaterials.get_material_by_name(p_mat)
-	else if(istype(p_mat, /material))
-		p_material = p_mat
 	
 /turf/simulated/wall/after_load()
 	..()
@@ -74,7 +74,7 @@
 
 /turf/simulated/wall/Destroy()
 	STOP_PROCESSING(SSturf, src)
-	dismantle_wall(TRUE)
+	dismantle_wall(null,null,1)
 	. = ..()
 
 // Walls always hide the stuff below them.
@@ -87,19 +87,40 @@
 	return (istype(O) && O.hides_under_flooring()) || ..()
 
 /turf/simulated/wall/Process(wait, times_fired)
-	var/how_often = max(round(2 SECONDS / wait), 1)
-
+	var/how_often = max(round(2 SECONDS/wait), 1)
 	if(times_fired % how_often)
 		return //We only work about every 2 seconds
-
 	if(!radiate())
 		return PROCESS_KILL
 
+/turf/simulated/wall/proc/get_material()
+	return material
+
+/turf/simulated/wall/bullet_act(var/obj/item/projectile/Proj)
+	if(istype(Proj,/obj/item/projectile/beam))
+		burn(2500)
+	else if(istype(Proj,/obj/item/projectile/ion))
+		burn(500)
+
+	var/proj_damage = Proj.get_structure_damage()
+
+	if(reinf_material)
+		if(Proj.damage_type == BURN)
+			proj_damage /= reinf_material.burn_armor
+		else if(Proj.damage_type == BRUTE)
+			proj_damage /= reinf_material.brute_armor
+
+	//cap the amount of damage, so that things like emitters can't destroy walls in one hit.
+	var/damage = min(proj_damage, 100)
+
+	take_damage(damage, Proj.damtype)
+	return
 
 /turf/simulated/wall/hitby(AM as mob|obj, var/speed=THROWFORCE_SPEED_DIVISOR)
 	..()
 	if(ismob(AM))
 		return
+
 	var/obj/O = AM
 	var/tforce = O.throwforce * (speed/THROWFORCE_SPEED_DIVISOR)
 	take_damage(tforce, DAM_BLUNT)
@@ -167,9 +188,12 @@
 
 /turf/simulated/wall/adjacent_fire_act(turf/simulated/floor/adj_turf, datum/gas_mixture/adj_air, adj_temp, adj_volume)
 	burn(adj_temp)
+	if(adj_temp > material.melting_point)
+		take_damage(log(RAND_F(0.9, 1.1) * (adj_temp - material.melting_point)))
+
 	return ..()
 
-/turf/simulated/wall/proc/dismantle_wall(var/devastated)
+/turf/simulated/wall/proc/dismantle_wall(var/devastated, var/explode, var/no_product)
 	if(!devastated)
 		playsound(src, 'sound/items/Welder.ogg', 100, 1)
 		var/obj/structure/girder/G
@@ -199,9 +223,8 @@
 			O.forceMove(src)
 
 	clear_plants()
-	material = null
-	r_material = null
-	p_material = null
+	material = SSmaterials.get_material_by_name("placeholder")
+	reinf_material = null
 	update_connections(TRUE)
 
 	ChangeTurf(floor_type)
@@ -229,9 +252,16 @@
 	for(var/i=0, i<number_rots, i++)
 		new/obj/effect/overlay/wallrot(src)
 
+/turf/simulated/wall/proc/can_melt()
+	if(material.flags & MATERIAL_UNMELTABLE)
+		return 0
+	return 1
+
 /turf/simulated/wall/proc/thermitemelt(mob/user as mob)
+	if(!can_melt())
+		return
 	var/obj/effect/overlay/O = new/obj/effect/overlay( src )
-	O.name = "Thermite"
+	O.SetName("Thermite")
 	O.desc = "Looks hot."
 	O.icon = 'icons/effects/fire.dmi'
 	O.icon_state = "2"
@@ -240,20 +270,21 @@
 	O.plane = LIGHTING_PLANE
 	O.layer = FIRE_LAYER
 
-	to_chat(user, "<span class='warning'>The thermite starts burning the wall.</span>")
-	var/endtime = world.time + 100
-	while (world.time < endtime)
-		burn(2500)
-		sleep(1)
+	src.ChangeTurf(/turf/simulated/floor/plating)
 
-	if(O)
-		qdel(O)
+	var/turf/simulated/floor/F = src
+	F.burn_tile()
+	F.icon_state = "wall_thermite"
+	to_chat(user, "<span class='warning'>The thermite starts melting through the wall.</span>")
 
+	spawn(100)
+		if(O)
+			qdel(O)
 //	F.sd_LumReset()		//TODO: ~Carn
 	return
 
 /turf/simulated/wall/proc/radiate()
-	var/total_radiation = p_material.radioactivity + (r_material ? r_material.radioactivity / 4 : 0) + (material.radioactivity / 16)
+	var/total_radiation = material.radioactivity + (reinf_material ? reinf_material.radioactivity / 2 : 0)
 	if(!total_radiation)
 		return
 
@@ -261,10 +292,7 @@
 	return total_radiation
 
 /turf/simulated/wall/proc/burn(temperature)
-	// This looks like it is performance intensive, however combustion_effect
-	// returns 0 instantly if the temperature is not hot enough, making this
-	// actually performance friendly
-	if(p_material.combustion_effect(src, temperature, 6))
+	if(material.combustion_effect(src, temperature, 0.7))
 		spawn(2)
 			new /obj/structure/girder(src, material, r_material)
 			if(r_material)
@@ -329,6 +357,12 @@
 
 /turf/simulated/wall/get_color()
 	return paint_color
+
+/turf/simulated/wall/proc/CheckPenetration(var/base_chance, var/damage)
+	return round(damage/material.integrity*180)
+
+/turf/simulated/wall/can_engrave()
+	return (material && material.hardness >= 10 && material.hardness <= 100)
 
 //Tungsten rwalls!
 /turf/simulated/wall/r_wall/tungsten

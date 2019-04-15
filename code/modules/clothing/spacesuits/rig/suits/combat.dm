@@ -31,16 +31,29 @@
 
 /obj/item/clothing/head/helmet/space/rig/combat
 	light_overlay = "helmet_light_dual_green"
-	species_restricted = list(SPECIES_HUMAN)
+	species_restricted = list(SPECIES_HUMAN, SPECIES_UNATHI)
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_head_unathi.dmi'
+		)
 
 /obj/item/clothing/suit/space/rig/combat
-	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL)
+	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL, SPECIES_UNATHI)
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_suit_unathi.dmi'
+		)
 
 /obj/item/clothing/shoes/magboots/rig/combat
-	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL)
+	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL, SPECIES_UNATHI)
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_feet_unathi.dmi'
+		)
 
 /obj/item/clothing/gloves/rig/combat
-	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL)
+	item_flags = ITEM_FLAG_THICKMATERIAL | ITEM_FLAG_NOCUFFS
+	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL, SPECIES_UNATHI)
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_hands_unathi.dmi'
+		)
 
 /obj/item/weapon/rig/combat/equipped
 	initial_modules = list(
@@ -50,7 +63,8 @@
 		/obj/item/rig_module/ai_container,
 		/obj/item/rig_module/power_sink,
 		/obj/item/rig_module/electrowarfare_suite,
-		/obj/item/rig_module/chem_dispenser/combat
+		/obj/item/rig_module/chem_dispenser/combat,
+		/obj/item/rig_module/cooling_unit
 		)
 
 //Extremely OP, hardly standard issue equipment
@@ -89,15 +103,28 @@
 /obj/item/clothing/head/helmet/space/rig/military
 	light_overlay = "helmet_light_dual_green"
 	species_restricted = list(SPECIES_HUMAN)
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/onmob_head_helmet_unathi.dmi'
+		)
 
 /obj/item/clothing/suit/space/rig/military
-	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL)
+	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL, SPECIES_UNATHI)
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_suit_unathi.dmi'
+		)
 
 /obj/item/clothing/shoes/magboots/rig/military
-	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL)
+	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL, SPECIES_UNATHI)
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_feet_unathi.dmi'
+		)
 
 /obj/item/clothing/gloves/rig/military
-	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL)
+	item_flags = ITEM_FLAG_THICKMATERIAL | ITEM_FLAG_NOCUFFS
+	species_restricted = list(SPECIES_HUMAN,SPECIES_SKRELL, SPECIES_UNATHI)
+	sprite_sheets = list(
+		SPECIES_UNATHI = 'icons/mob/species/unathi/generated/onmob_hands_unathi.dmi'
+		)
 
 /obj/item/weapon/rig/military/equipped
 	initial_modules = list(
@@ -107,5 +134,6 @@
 		/obj/item/rig_module/ai_container,
 		/obj/item/rig_module/power_sink,
 		/obj/item/rig_module/electrowarfare_suite,
-		/obj/item/rig_module/chem_dispenser/injector
+		/obj/item/rig_module/chem_dispenser/combat,
+		/obj/item/rig_module/cooling_unit
 		)

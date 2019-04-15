@@ -11,6 +11,7 @@
 	slot_flags = 0
 	origin_tech = list(TECH_COMBAT = 8, TECH_MATERIAL = 5)
 	fire_sound = 'sound/effects/bang.ogg'
+	combustion = 1
 
 	release_force = 15
 	throw_distance = 30
@@ -25,8 +26,8 @@
 /obj/item/weapon/gun/launcher/rocket/attackby(obj/item/I as obj, mob/user as mob)
 	if(istype(I, /obj/item/ammo_casing/rocket))
 		if(rockets.len < max_rockets)
-			user.drop_item()
-			I.loc = src
+			if(!user.unEquip(I, src))
+				return
 			rockets += I
 			to_chat(user, "<span class='notice'>You put the rocket in [src].</span>")
 			to_chat(user, "<span class='notice'>[rockets.len] / [max_rockets] rockets.</span>")

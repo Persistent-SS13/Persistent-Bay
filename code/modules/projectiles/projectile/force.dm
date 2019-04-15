@@ -2,7 +2,7 @@
 	name = "force bolt"
 	icon = 'icons/obj/projectiles.dmi'
 	icon_state = "ice_1"
-	force = 20
+	damage = 20
 	damtype = DAM_ENERGY
 
 /obj/item/projectile/forcebolt/strong
@@ -13,16 +13,3 @@
 		var/throwdir = get_dir(firer,target)
 		target.throw_at(get_edge_target_turf(target, throwdir),10,10)
 		return 1
-
-/*
-/obj/item/projectile/forcebolt/strong/on_hit(var/atom/target, var/blocked = 0)
-
-	// NONE OF THIS WORKS. DO NOT USE.
-	var/throwdir = null
-
-	for(var/mob/M in hearers(2, src))
-		if(M.loc != src.loc)
-			throwdir = get_dir(src,target)
-			M.throw_at(get_edge_target_turf(M, throwdir),15,1)
-	return ..()
-*/

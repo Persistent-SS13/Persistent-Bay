@@ -47,7 +47,7 @@
 	if(node)
 		node.update_underlays()
 
-/obj/machinery/atmospherics/pipe/cap/update_icon(var/safety = 0)
+/obj/machinery/atmospherics/pipe/cap/on_update_icon(var/safety = 0)
 	if(!check_icon_cache())
 		return
 

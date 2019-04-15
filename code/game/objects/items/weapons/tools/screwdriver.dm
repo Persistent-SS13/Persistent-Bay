@@ -4,9 +4,6 @@
 /obj/item/weapon/tool/screwdriver
 	name = "screwdriver"
 	desc = "Your archetypal flathead screwdriver, with a nice, heavy polymer handle."
-	description_info = "This tool is used to expose or safely hide away cabling. It can open and shut the maintenance panels on vending machines, airlocks, and much more. You can also use it, in combination with a crowbar, to install or remove windows."
-	description_fluff = "Screws have not changed significantly in centuries, and neither have the drivers used to install and remove them."
-	description_antag = "In the world of breaking and entering, tools like multitools and wirecutters are the bread; the screwdriver is the butter. In a pinch, try targetting someone's eyes and stabbing them with it - it'll really hurt!"
 	icon = 'icons/obj/items/tools.dmi'
 	icon_state = "screwdriver"
 	obj_flags = OBJ_FLAG_CONDUCTIBLE

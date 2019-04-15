@@ -12,7 +12,7 @@
 	density 			= TRUE
 	anchored 			= TRUE
 	animate_movement	= TRUE
-	light_range 		= 4
+	light_outer_range = 3
 	can_buckle 			= TRUE
 	buckle_movable 		= TRUE
 	buckle_lying 		= FALSE
@@ -163,7 +163,7 @@
 	if(powered && cell.charge < (charge_use * CELLRATE))
 		return 0
 	on = TRUE
-	set_light(initial(light_range))
+	set_light(0.8, 1, 5)
 	update_icon()
 	return 1
 
@@ -331,7 +331,12 @@
 		unbuckle_mob(load)
 
 	load = null
+	queue_icon_update()
+
 	return 1
+
+/obj/vehicle/get_cell()
+	return cell
 
 //-------------------------------------------------------
 // Stat update procs

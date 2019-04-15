@@ -34,6 +34,8 @@ SUBSYSTEM_DEF(event)
 				EVENT_LEVEL_MODERATE	= new/datum/event_container/moderate,
 				EVENT_LEVEL_MAJOR 		= new/datum/event_container/major
 			)
+	if(GLOB.using_map.use_overmap)
+		overmap_event_handler.create_events(GLOB.using_map.overmap_z, GLOB.using_map.overmap_size, GLOB.using_map.overmap_event_areas)
 	. = ..()
 
 /datum/controller/subsystem/event/Recover()
@@ -342,4 +344,4 @@ SUBSYSTEM_DEF(event)
 	set category = "Admin"
 	if(SSevent)
 		SSevent.Interact(usr)
-	feedback_add_details("admin_verb","EMP") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	SSstatistics.add_field_details("admin_verb","EMP") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!

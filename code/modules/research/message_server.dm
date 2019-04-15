@@ -308,19 +308,19 @@ var/obj/machinery/blackbox_recorder/blackbox
 
 	feedback_set_details("radio_usage","")
 
-	feedback_add_details("radio_usage","COM-[msg_common.len]")
-	feedback_add_details("radio_usage","SCI-[msg_science.len]")
-	feedback_add_details("radio_usage","HEA-[msg_command.len]")
-	feedback_add_details("radio_usage","MED-[msg_medical.len]")
-	feedback_add_details("radio_usage","ENG-[msg_engineering.len]")
-	feedback_add_details("radio_usage","SEC-[msg_security.len]")
-	feedback_add_details("radio_usage","DTH-[msg_deathsquad.len]")
-	feedback_add_details("radio_usage","SYN-[msg_syndicate.len]")
-	feedback_add_details("radio_usage","CAR-[msg_cargo.len]")
-	feedback_add_details("radio_usage","SRV-[msg_service.len]")
-	feedback_add_details("radio_usage","OTH-[messages.len]")
-	feedback_add_details("radio_usage","PDA-[pda_msg_amt]")
-	feedback_add_details("radio_usage","RC-[rc_msg_amt]")
+	SSstatistics.add_field_details("radio_usage","COM-[msg_common.len]")
+	SSstatistics.add_field_details("radio_usage","SCI-[msg_science.len]")
+	SSstatistics.add_field_details("radio_usage","HEA-[msg_command.len]")
+	SSstatistics.add_field_details("radio_usage","MED-[msg_medical.len]")
+	SSstatistics.add_field_details("radio_usage","ENG-[msg_engineering.len]")
+	SSstatistics.add_field_details("radio_usage","SEC-[msg_security.len]")
+	SSstatistics.add_field_details("radio_usage","DTH-[msg_deathsquad.len]")
+	SSstatistics.add_field_details("radio_usage","SYN-[msg_syndicate.len]")
+	SSstatistics.add_field_details("radio_usage","CAR-[msg_cargo.len]")
+	SSstatistics.add_field_details("radio_usage","SRV-[msg_service.len]")
+	SSstatistics.add_field_details("radio_usage","OTH-[messages.len]")
+	SSstatistics.add_field_details("radio_usage","PDA-[pda_msg_amt]")
+	SSstatistics.add_field_details("radio_usage","RC-[rc_msg_amt]")
 
 
 	feedback_set_details("round_end","[time2text(world.realtime)]") //This one MUST be the last one that gets set.
@@ -348,13 +348,6 @@ var/obj/machinery/blackbox_recorder/blackbox
 		var/sql = "INSERT INTO erro_feedback VALUES (null, Now(), [round_id], \"[FV.get_variable()]\", [FV.get_value()], \"[FV.get_details()]\")"
 		var/DBQuery/query_insert = dbcon.NewQuery(sql)
 		query_insert.Execute()
-
-// Sanitize inputs to avoid SQL injection attacks
-proc/sql_sanitize_text(var/text)
-	text = replacetext(text, "'", "''")
-	text = replacetext(text, ";", "")
-	text = replacetext(text, "&", "")
-	return text
 
 proc/feedback_set(var/variable,var/value)
 	if(!blackbox) return

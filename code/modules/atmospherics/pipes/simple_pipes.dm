@@ -33,6 +33,121 @@
 		node1 = null
 	. = ..()
 
+/obj/machinery/atmospherics/pipe/simple/setup_initialize_directions()
+	switch(dir)
+		if(SOUTH)
+			initialize_directions = SOUTH|NORTH
+		if(NORTH)
+			initialize_directions = NORTH|SOUTH
+		if(EAST)
+			initialize_directions = EAST|WEST
+		if(WEST)
+			initialize_directions = WEST|EAST
+		if(NORTHEAST)
+			initialize_directions = NORTH|EAST
+		if(NORTHWEST)
+			initialize_directions = NORTH|WEST
+		if(SOUTHEAST)
+			initialize_directions = SOUTH|EAST
+		if(SOUTHWEST)
+			initialize_directions = SOUTH|WEST
+
+/obj/machinery/atmospherics/pipe/simple/hide(var/i)
+	if(istype(loc, /turf/simulated))
+		set_invisibility(i ? 101 : 0)
+	update_icon()
+
+/obj/machinery/atmospherics/pipe/simple/Process()
+	if(!parent) //This should cut back on the overhead calling build_network thousands of times per cycle
+		..()
+	else if(leaking)
+		parent.mingle_with_turf(loc, volume)
+		if(!sound_token && parent.air.return_pressure())
+			update_sound(1)
+		else if(sound_token && !parent.air.return_pressure())
+			update_sound(0)
+	else
+		. = PROCESS_KILL
+
+/obj/machinery/atmospherics/pipe/simple/check_pressure(var/pressure)
+	// Don't ask me, it happened somehow.
+	var/turf/T = get_turf(src)
+	if (!istype(T))
+		return 1
+
+	var/datum/gas_mixture/environment = T.return_air()
+	var/pressure_difference = pressure - environment.return_pressure()
+
+	if(pressure_difference > maximum_pressure)
+		if(prob(40))
+			burst()
+	if(pressure_difference > fatigue_pressure)
+		if(world.time >= time_next_fatigue_dmg)
+			take_damage(1, DAM_BLUNT, 100, "pressure fatigue") //Apply fatigue damage
+			time_next_fatigue_dmg = world.time + 2 SECONDS //Apply 1 damage every 2 seconds
+		return
+	return 1
+
+/obj/machinery/atmospherics/pipe/simple/destroyed()
+	burst()
+
+/obj/machinery/atmospherics/pipe/simple/proc/burst()
+	ASSERT(parent)
+	parent.temporarily_store_air()
+	src.visible_message(SPAN_DANGER("\The [src] bursts!"))
+	playsound(src.loc, 'sound/effects/bang.ogg', 25, 1)
+	var/datum/effect/effect/system/smoke_spread/smoke = new
+	smoke.set_up(1,0, src.loc, 0)
+	smoke.start()
+	log_debug("[src] at [x],[y],[z] bursted open!")
+	qdel(src)
+
+/obj/machinery/atmospherics/pipe/simple/proc/normalize_dir()
+	if(dir == (NORTH | SOUTH))
+		set_dir(NORTH)
+	else if(dir == (EAST | WEST))
+		set_dir(EAST)
+
+/obj/machinery/atmospherics/pipe/simple/pipeline_expansion()
+	return list(node1, node2)
+
+/obj/machinery/atmospherics/pipe/simple/change_color(var/new_color)
+	..()
+	//for updating connected atmos device pipes (i.e. vents, manifolds, etc)
+	if(node1)
+		node1.update_underlays()
+	if(node2)
+		node2.update_underlays()
+
+/obj/machinery/atmospherics/pipe/simple/on_update_icon(var/safety = 0)
+	if(!atmos_initalized)
+		return
+	if(!check_icon_cache())
+		return
+
+	alpha = 255
+
+	overlays.Cut()
+
+	if(!node1 && !node2)
+		var/turf/T = get_turf(src)
+		new /obj/item/pipe(loc, make_from=src)
+		for (var/obj/machinery/meter/meter in T)
+			if (meter.target == src)
+				new /obj/item/pipe_meter(T)
+				qdel(meter)
+		log_debug("[src]([x],[y],[z]) was deleted in update_icon() because both its nodes are null!")
+		qdel(src)
+	else if(node1 && node2)
+		overlays += icon_manager.get_atmos_icon("pipe", , pipe_color, "[pipe_icon]intact[icon_connect_type]")
+		set_leaking(FALSE)
+	else
+		overlays += icon_manager.get_atmos_icon("pipe", , pipe_color, "[pipe_icon]exposed[node1?1:0][node2?1:0][icon_connect_type]")
+		set_leaking(TRUE)
+
+/obj/machinery/atmospherics/pipe/simple/update_underlays()
+	return
+
 /obj/machinery/atmospherics/pipe/simple/atmos_init()
 	..()
 	normalize_dir()
@@ -66,121 +181,7 @@
 	if(level == 1 && !T.is_plating()) 
 		hide(1)
 	queue_icon_update()
-
-/obj/machinery/atmospherics/pipe/simple/setup_initialize_directions()
-	switch(dir)
-		if(SOUTH)
-			initialize_directions = SOUTH|NORTH
-		if(NORTH)
-			initialize_directions = NORTH|SOUTH
-		if(EAST)
-			initialize_directions = EAST|WEST
-		if(WEST)
-			initialize_directions = WEST|EAST
-		if(NORTHEAST)
-			initialize_directions = NORTH|EAST
-		if(NORTHWEST)
-			initialize_directions = NORTH|WEST
-		if(SOUTHEAST)
-			initialize_directions = SOUTH|EAST
-		if(SOUTHWEST)
-			initialize_directions = SOUTH|WEST
-
-/obj/machinery/atmospherics/pipe/simple/hide(var/i)
-	if(istype(loc, /turf/simulated))
-		set_invisibility(i ? 101 : 0)
-	update_icon()
-
-/obj/machinery/atmospherics/pipe/simple/Process()
-	if(!parent) //This should cut back on the overhead calling build_network thousands of times per cycle
-		..()
-	else if(leaking)
-		parent.mingle_with_turf(loc, volume)
-	else
-		. = PROCESS_KILL
-
-/obj/machinery/atmospherics/pipe/simple/check_pressure(var/pressure)
-	// Don't ask me, it happened somehow.
-	var/turf/T = get_turf(src)
-	if (!istype(T))
-		return 1
-
-	var/datum/gas_mixture/environment = T.return_air()
-	var/pressure_difference = pressure - environment.return_pressure()
-
-	if(pressure_difference > maximum_pressure)
-		if(prob(40))
-			burst()
-	if(pressure_difference > fatigue_pressure)
-		if(world.time >= time_next_fatigue_dmg)
-			take_damage(1, DAM_BLUNT, 100, "pressure fatigue") //Apply fatigue damage
-			time_next_fatigue_dmg = world.time + 2 SECONDS //Apply 1 damage every 2 seconds
-		return
-	return 1
-
-/obj/machinery/atmospherics/pipe/simple/destroyed()
-	burst()
-
-/obj/machinery/atmospherics/pipe/simple/proc/burst()
-	ASSERT(parent)
-	parent.temporarily_store_air()
-	src.visible_message(SPAN_DANGER("<span class='danger'>\The [src] bursts!</span>"))
-	playsound(src.loc, 'sound/effects/bang.ogg', 25, 1)
-	var/datum/effect/effect/system/smoke_spread/smoke = new
-	smoke.set_up(1,0, src.loc, 0)
-	smoke.start()
-	log_debug("[src] at [x],[y],[z] bursted open!")
-	qdel(src)
-
-/obj/machinery/atmospherics/pipe/simple/proc/normalize_dir()
-	if(dir == (NORTH | SOUTH))
-		set_dir(NORTH)
-	else if(dir == (EAST | WEST))
-		set_dir(EAST)
-
-/obj/machinery/atmospherics/pipe/simple/pipeline_expansion()
-	return list(node1, node2)
-
-/obj/machinery/atmospherics/pipe/simple/change_color(var/new_color)
-	..()
-	//for updating connected atmos device pipes (i.e. vents, manifolds, etc)
-	if(node1)
-		node1.update_underlays()
-	if(node2)
-		node2.update_underlays()
-
-/obj/machinery/atmospherics/pipe/simple/update_icon(var/safety = 0)
-	if(!atmos_initalized)
-		return
-	if(!check_icon_cache())
-		return
-
-	alpha = 255
-
-	overlays.Cut()
-
-	if(!node1 && !node2)
-		var/turf/T = get_turf(src)
-		new /obj/item/pipe(loc, make_from=src)
-		for (var/obj/machinery/meter/meter in T)
-			if (meter.target == src)
-				new /obj/item/pipe_meter(T)
-				qdel(meter)
-		log_debug("[src]([x],[y],[z]) was deleted in update_icon() because both its nodes are null!")
-		qdel(src)
-	else if(node1 && node2)
-		overlays += icon_manager.get_atmos_icon("pipe", , pipe_color, "[pipe_icon]intact[icon_connect_type]")
-		if(leaking)
-			leaking = FALSE
-	else
-		overlays += icon_manager.get_atmos_icon("pipe", , pipe_color, "[pipe_icon]exposed[node1?1:0][node2?1:0][icon_connect_type]")
-		if(!leaking)
-			leaking = TRUE
-			START_PROCESSING(SSmachines, src)
-
-/obj/machinery/atmospherics/pipe/simple/update_underlays()
-	return
-
+	
 /obj/machinery/atmospherics/pipe/simple/disconnect(obj/machinery/atmospherics/reference)
 	if(reference == node1)
 		if(istype(node1, /obj/machinery/atmospherics/pipe))

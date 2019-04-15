@@ -285,7 +285,7 @@
 	can_paint = null
 
 /decl/flooring/reinforced/cult/on_remove()
-	cult.remove_cultiness(CULTINESS_PER_TURF)
+	GLOB.cult.remove_cultiness(CULTINESS_PER_TURF)
 
 /decl/flooring/reinforced/shuttle
 	name = "floor"

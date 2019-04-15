@@ -1,10 +1,10 @@
 /obj/machinery/embedded_controller
-	var/datum/computer/file/embedded_program/program	//the currently executing program
 	name = "Embedded Controller"
 	anchored = TRUE
 	use_power = POWER_USE_IDLE
 	idle_power_usage = 10
 	var/on = TRUE
+	var/datum/computer/file/embedded_program/program	//the currently executing program
 
 /obj/machinery/embedded_controller/Initialize()
 	if(program)

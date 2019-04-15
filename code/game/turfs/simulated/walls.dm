@@ -194,26 +194,14 @@
 	return ..()
 
 /turf/simulated/wall/proc/dismantle_wall(var/devastated, var/explode, var/no_product)
-	if(!devastated)
-		playsound(src, 'sound/items/Welder.ogg', 100, 1)
-		var/obj/structure/girder/G
-		if(r_material)
-			G = new(src, material, r_material)
-			G.state = 7
-			new /obj/item/stack/rods(src, 4)
-		else
-			G = new(src, material)
-			G.state = 2
-		G.anchored = 1
-		G.update_icon()
-		new p_material.stack_type(src, 2)
-		src.ChangeTurf(floor_type)
-	//else
-		//Put destroyed wall sound here
 
-	for(var/turf/simulated/wall/W in orange(src, 1))
-		W.update_connections()
-		W.update_icon()
+	playsound(src, 'sound/items/Welder.ogg', 100, 1)
+	if(!no_product)
+		if(reinf_material)
+			reinf_material.place_dismantled_girder(src, reinf_material)
+		else
+			material.place_dismantled_girder(src)
+		material.place_dismantled_product(src,devastated)
 
 	for(var/obj/O in src.contents) //Eject contents!
 		if(istype(O,/obj/structure/sign/poster))

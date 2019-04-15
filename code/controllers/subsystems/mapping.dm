@@ -4,15 +4,20 @@ SUBSYSTEM_DEF(mapping)
 	flags = SS_NO_FIRE
 
 	var/list/map_templates = list()
-
 	var/list/space_ruins_templates = list()
 	var/list/exoplanet_ruins_templates = list()
+	var/list/away_sites_templates = list()
+	var/list/submaps = list()
+	var/list/submap_archetypes = list()
 
 /datum/controller/subsystem/mapping/Initialize(timeofday)
 	GLOB.visibility_pref = 1
 	world.update_hub_visibility()
 	all_feeds = new/PriorityQueue(/proc/cmp_newsfeed)
 	preloadTemplates()
+	for(var/atype in subtypesof(/decl/submap_archetype))
+		submap_archetypes[atype] = new atype
+	GLOB.using_map.build_away_sites()
 	..()
 	Load_World()
 	
@@ -21,6 +26,7 @@ SUBSYSTEM_DEF(mapping)
 	map_templates = SSmapping.map_templates
 	space_ruins_templates = SSmapping.space_ruins_templates
 	exoplanet_ruins_templates = SSmapping.exoplanet_ruins_templates
+	away_sites_templates = SSmapping.away_sites_templates
 
 /datum/controller/subsystem/mapping/proc/preloadTemplates(path = "maps/templates/") //see master controller setup
 	var/list/filelist = flist(path)
@@ -61,3 +67,5 @@ SUBSYSTEM_DEF(mapping)
 			exoplanet_ruins_templates[R.name] = R
 		else if(istype(R, /datum/map_template/ruin/space))
 			space_ruins_templates[R.name] = R
+		else if(istype(R, /datum/map_template/ruin/away_site))
+			away_sites_templates[R.name] = R

@@ -9,7 +9,7 @@
 	layer = ABOVE_HUMAN_LAYER
 	explosion_resistance = 5
 	obj_flags = OBJ_FLAG_ANCHORABLE
-		atmos_canpass = CANPASS_NEVER
+	atmos_canpass = CANPASS_NEVER
 	mass = 5
 	max_health = 60
 	var/list/mobs_can_pass = list(

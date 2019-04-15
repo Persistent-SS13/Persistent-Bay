@@ -1,5 +1,3 @@
-#define ALARM_RESET_DELAY 100 // How long will the alarm/trigger remain active once origin/source has been found to be gone?
-
 /datum/alarm_source
 	var/source		= null	// The source trigger
 	var/source_name = ""	// The name of the source should it be lost (for example a destroyed camera)
@@ -150,5 +148,3 @@ area/get_alarm_z()
 
 /mob/living/silicon/robot/syndicate/get_alarm_cameras()
 	return list()
-
-#undef ALARM_RESET_DELAY

@@ -16,6 +16,5 @@
 	#define using_map_DATUM /datum/map/nexus
 
 #elif !defined(MAP_OVERRIDE)
-	#warn A map has already been included, ignoring Vignette
-
+	#warn A map has already been included, ignoring Nexus
 #endif

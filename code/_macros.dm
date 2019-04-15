@@ -173,5 +173,3 @@
 #define SPAN_DANGER(X) "<span class='danger'>[X]</span>"
 #define SPAN_GOOD(X) "<span class='good'>[X]</span>"
 #define SPAN_BAD(X) "<span class='bad'>[X]</span>"
-
-#define cast_new(type, num, args...) if((num) == 1) { new type(args) } else { for(var/i=0;i<(num),i++) { new type(args) } }

@@ -222,10 +222,6 @@
 	..()
 	GLOB.listening_objects += src
 
-/obj/item/device/assembly_holder/after_load()
-	..()
-	GLOB.listening_objects += src
-
 /obj/item/device/assembly_holder/Destroy()
 	GLOB.listening_objects -= src
 	return ..()
@@ -261,11 +257,10 @@
 	update_icon()
 	SetName(initial(name) + " ([tmr.time] secs)")
 	if(loc)
-		loc.verbs += /obj/item/device/assembly_holder/timer_igniter/verb/configure
+		loc.verbs |= /obj/item/device/assembly_holder/timer_igniter/verb/configure
 
 /obj/item/device/assembly_holder/timer_igniter/after_load()
-	if(loc)
-		loc.verbs |= /obj/item/device/assembly_holder/timer_igniter/verb/configure
+	..()
 
 /obj/item/device/assembly_holder/timer_igniter/detached()
 	loc.verbs -= /obj/item/device/assembly_holder/timer_igniter/verb/configure

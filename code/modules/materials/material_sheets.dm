@@ -180,7 +180,8 @@
 //--------------------------------
 /obj/item/stack/material/steel
 	name = MATERIAL_STEEL
-	icon_state = "sheet-metal"
+	icon_state = "sheet"
+	plural_icon_state = "sheet-mult"
 	default_type = MATERIAL_STEEL
 
 /obj/item/stack/material/steel/ten
@@ -241,7 +242,7 @@
 /obj/item/stack/material/copper
 	name = MATERIAL_COPPER
 	icon_state = "sheet"
-	item_state = "sheet-metal"
+	plural_icon_state = "sheet-mult"
 	default_type = MATERIAL_COPPER
 
 /obj/item/stack/material/copper/ten
@@ -256,7 +257,7 @@
 /obj/item/stack/material/bronze
 	name = MATERIAL_BRONZE
 	icon_state = "sheet"
-	item_state = "sheet-metal"
+	plural_icon_state = "sheet-mult"
 	default_type = MATERIAL_BRONZE
 
 /obj/item/stack/material/bronze/ten
@@ -271,7 +272,7 @@
 /obj/item/stack/material/brass
 	name = MATERIAL_BRASS
 	icon_state = "sheet"
-	item_state = "sheet-metal"
+	plural_icon_state = "sheet-mult"
 	default_type = MATERIAL_BRASS
 
 /obj/item/stack/material/brass/ten
@@ -286,7 +287,7 @@
 /obj/item/stack/material/tin
 	name = MATERIAL_TIN
 	icon_state = "sheet"
-	item_state = "sheet-metal"
+	plural_icon_state = "sheet-mult"
 	default_type = MATERIAL_TIN
 /obj/item/stack/material/tin/ten
 	amount = 10
@@ -299,7 +300,7 @@
 /obj/item/stack/material/zinc
 	name = MATERIAL_ZINC
 	icon_state = "sheet"
-	item_state = "sheet-metal"
+	plural_icon_state = "sheet-mult"
 	default_type = MATERIAL_ZINC
 /obj/item/stack/material/zinc/ten
 	amount = 10
@@ -312,7 +313,7 @@
 /obj/item/stack/material/aluminum
 	name = MATERIAL_ALUMINIUM
 	icon_state = "sheet"
-	item_state = "sheet-metal"
+	plural_icon_state = "sheet-mult"
 	default_type = MATERIAL_ALUMINIUM
 
 /obj/item/stack/material/aluminum/ten
@@ -340,9 +341,9 @@
 //--------------------------------
 /obj/item/stack/material/tungsten
 	name = MATERIAL_TUNGSTEN
-	icon_state = "sheet-silver"
+	icon_state = "ingot"
+	plural_icon_state = "ingot-mult"
 	default_type = MATERIAL_TUNGSTEN
-	apply_colour = 1
 
 /obj/item/stack/material/tungsten/ten
 	amount = 10
@@ -355,9 +356,9 @@
 //--------------------------------
 /obj/item/stack/material/lead
 	name = MATERIAL_LEAD
-	icon_state = "sheet-silver"
+	icon_state = "ingot"
+	plural_icon_state = "ingot-mult"
 	default_type = MATERIAL_LEAD
-	apply_colour = 1
 
 /obj/item/stack/material/lead/ten
 	amount = 10
@@ -370,9 +371,9 @@
 //--------------------------------
 /obj/item/stack/material/osmium
 	name = MATERIAL_OSMIUM
-	icon_state = "sheet-silver"
+	icon_state = "ingot"
+	plural_icon_state = "ingot-mult"
 	default_type = MATERIAL_OSMIUM
-	apply_colour = 1
 
 /obj/item/stack/material/osmium/ten
 	amount = 10
@@ -382,10 +383,10 @@
 //--------------------------------
 /obj/item/stack/material/ocp
 	name = MATERIAL_OSMIUM_CARBIDE_PLASTEEL
-	icon_state = "sheet-plasteel"
+	icon_state = "sheet-reinf"
 	item_state = "sheet-metal"
+	plural_icon_state = "sheet-reinf-mult"
 	default_type = MATERIAL_OSMIUM_CARBIDE_PLASTEEL
-	apply_colour = 1
 
 /obj/item/stack/material/ocp/ten
 	amount = 10
@@ -398,10 +399,10 @@
 //--------------------------------
 /obj/item/stack/material/titanium
 	name = MATERIAL_TITANIUM
-	icon_state = "sheet-plasteel"
+	icon_state = "sheet-reinf"
 	item_state = "sheet-metal"
+	plural_icon_state = "sheet-reinf-mult"
 	default_type = MATERIAL_TITANIUM
-	apply_colour = 1
 
 /obj/item/stack/material/titanium/ten
 	amount = 10
@@ -414,7 +415,8 @@
 //--------------------------------
 /obj/item/stack/material/sandstone
 	name = "sandstone brick"
-	icon_state = "sheet-sandstone"
+	icon_state = "brick"
+	plural_icon_state = "brick-mult"
 	default_type = MATERIAL_SANDSTONE
 
 /obj/item/stack/material/sandstone/ten
@@ -428,7 +430,8 @@
 //--------------------------------
 /obj/item/stack/material/marble
 	name = "marble brick"
-	icon_state = "sheet-marble"
+	icon_state = "brick"
+	plural_icon_state = "brick-mult"
 	default_type = MATERIAL_MARBLE
 
 /obj/item/stack/material/marble/ten
@@ -442,7 +445,8 @@
 //--------------------------------
 /obj/item/stack/material/salt
 	name = "salt brick"
-	icon_state = "sheet-marble"
+	icon_state = "brick"
+	plural_icon_state = "brick-mult"
 	default_type = MATERIAL_ROCK_SALT
 
 /obj/item/stack/material/salt/ten
@@ -456,9 +460,9 @@
 //--------------------------------
 /obj/item/stack/material/carbon
 	name = "graphite brick"
-	icon_state = "sheet-marble"
+	icon_state = "brick"
+	plural_icon_state = "brick-mult"
 	default_type = MATERIAL_GRAPHITE
-	apply_colour = 1
 
 /obj/item/stack/material/carbon/ten
 	amount = 10
@@ -488,6 +492,7 @@
 	name = MATERIAL_URANIUM
 	icon_state = "sheet-uranium"
 	default_type = MATERIAL_URANIUM
+	material_flags = USE_MATERIAL_SINGULAR_NAME|USE_MATERIAL_PLURAL_NAME
 
 /obj/item/stack/material/uranium/ten
 	amount = 10
@@ -502,6 +507,7 @@
 	name = "solid phoron"
 	icon_state = "sheet-phoron"
 	default_type = MATERIAL_PHORON
+	material_flags = USE_MATERIAL_SINGULAR_NAME|USE_MATERIAL_PLURAL_NAME
 
 
 // Lay the groundwork for an engaging phoron experience
@@ -550,23 +556,15 @@
 //--------------------------------
 /obj/item/stack/material/sulfur
 	name = MATERIAL_SULFUR
-	icon_state = "sheet-marble"
+	icon_state = "brick"
+	plural_icon_state = "brick-mult"
 	default_type = MATERIAL_SULFUR
-	apply_colour = 1
 
 /obj/item/stack/material/sulfur/ten
 	amount = 10
 
 /obj/item/stack/material/sulfur/fifty
 	amount = 50
-/obj/item/stack/material/lead
-	name = "lead"
-	icon_state = "ingot"
-	plural_icon_state = "ingot-mult"
-	default_type = MATERIAL_LEAD
-
-/obj/item/stack/material/lead/ten
-	amount = 10
 
 //--------------------------------
 //	Metallic Hydrogen
@@ -576,6 +574,7 @@
 	name = "metallic hydrogen"
 	icon_state = "sheet-mythril"
 	default_type = MATERIAL_HYDROGEN
+	material_flags = USE_MATERIAL_SINGULAR_NAME|USE_MATERIAL_PLURAL_NAME
 
 /obj/item/stack/material/mhydrogen/ten
 	amount = 10
@@ -605,9 +604,9 @@
 // Fusion fuel.
 /obj/item/stack/material/deuterium
 	name = MATERIAL_DEUTERIUM
-	icon_state = "sheet-silver"
+	icon_state = "ingot"
+	plural_icon_state = "ingot-mult"
 	default_type = MATERIAL_DEUTERIUM
-	apply_colour = 1
 
 /obj/item/stack/material/deuterium/fifty
 	amount = 50
@@ -824,19 +823,24 @@
 	. = ..()
 	if(material) color = material.icon_colour
 
+//--------------------------------
+//	Edible
+//--------------------------------
 //Edible materials!
 /obj/item/stack/material/edible
 	name = "edible"
 	icon_state = "sheet-leather"
 	default_type = "pinkgoo"
 
+//--------------------------------
+//	Pink Goo
+//--------------------------------
 /obj/item/stack/material/edible/pink_goo_slab
 	name = "pink goo"
 	desc = "A mix of meats, from various origins and species, grinded finely and pressed into thick meaty slabs.."
 	singular_name = "pink goo slab"
 	icon_state = "sheet-leather"
 	default_type = "pinkgoo"
-	apply_colour = 1
 
 /obj/item/stack/material/edible/pink_goo_slab/ten
 	amount = 10

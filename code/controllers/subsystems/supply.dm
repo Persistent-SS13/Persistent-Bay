@@ -2,11 +2,6 @@
 #define SUPPLY_DOCKZ 2          //Z-level of the Dock.
 #define SUPPLY_STATIONZ 1       //Z-level of the Station.
 
-//Supply packs are in /code/defines/obj/supplypacks.dm
-//Computers are in /code/game/machinery/computer/supply.dm
-
-var/datum/controller/supply/supply_controller = new()
-
 var/list/mechtoys = list(
 	/obj/item/toy/prize/ripley,
 	/obj/item/toy/prize/fireripley,
@@ -26,10 +21,11 @@ var/list/valid_phoron_designs = list()	// Todo, fix this
 
 SUBSYSTEM_DEF(supply)
 	name = "Supply"
-	wait = 30 SECONDS
-	flags = SS_NO_INIT
+	wait = 20 SECONDS
+	priority = SS_PRIORITY_SUPPLY
+	//Initializes at default time
+	flags = SS_NO_TICK_CHECK
 
-/datum/controller/supply
 	//supply points
 	var/points = 50
 	var/points_per_process = 1.5
@@ -43,25 +39,44 @@ SUBSYSTEM_DEF(supply)
 	var/ordernum
 	var/list/shoppinglist = list()
 	var/list/requestlist = list()
+	var/list/donelist = list()
 	var/list/master_supply_list = list()
 	//shuttle movement
 	var/movetime = 1200
 	var/datum/shuttle/autodock/ferry/supply/shuttle
+	var/list/point_source_descriptions = list(
+		"time" = "Base station supply",
+		"manifest" = "From exported manifests",
+		"crate" = "From exported crates",
+		"virology_antibodies" = "From uploaded antibody data",
+		"virology_dishes" = "From exported virus dishes",
+		"gep" = "From uploaded good explorer points",
+		"total" = "Total" // If you're adding additional point sources, add it here in a new line. Don't forget to put a comma after the old last line.
+	)
+	//virus dishes uniqueness
+	var/list/sold_virus_strains = list()
 
 	var/exportnum = 0
 	var/list/all_exports = list()
 	var/list/old_exports = list()
 
-/datum/controller/supply/New()
+/datum/controller/subsystem/supply/Initialize()
+	. = ..()
 	ordernum = rand(1,9000)
 
 	//Build master supply list
-	for(var/decl/hierarchy/supply_pack/sp in cargo_supply_pack_root.children)
+	var/decl/hierarchy/supply_pack/root = decls_repository.get_decl(/decl/hierarchy/supply_pack)
+	for(var/decl/hierarchy/supply_pack/sp in root.children)
 		if(sp.is_category())
-			for(var/decl/hierarchy/supply_pack/spc in sp.children)
+			for(var/decl/hierarchy/supply_pack/spc in sp.get_descendents())
+				spc.setup()
 				master_supply_list += spc
 
-/datum/controller/supply/proc/generate_initial()
+	for(var/material/mat in SSmaterials.materials)
+		if(mat.sale_price > 0)
+			point_source_descriptions[mat.display_name] = "From exported [mat.display_name]"
+
+/datum/controller/subsystem/supply/proc/generate_initial()
 	generate_export("manufacturing-basic")
 	generate_export("manufacturing-advanced")
 	generate_export("manufacturing-phoron")
@@ -71,7 +86,11 @@ SUBSYSTEM_DEF(supply)
 	generate_export("xenobiology")
 	generate_export("cooking")
 
-/datum/controller/supply/proc/close_order(var/datum/export_order/export)
+// Just add points over time.
+/datum/controller/subsystem/supply/fire()
+	//add_points_from_source(points_per_process, "time")
+
+/datum/controller/subsystem/supply/proc/close_order(var/datum/export_order/export)
 	var/order_type = export.order_type
 	old_exports |= export
 	all_exports -= export
@@ -79,18 +98,24 @@ SUBSYSTEM_DEF(supply)
 	generate_export(order_type)
 
 
-/datum/controller/supply/proc/get_export_name(var/id)
+/datum/controller/subsystem/supply/proc/get_export_name(var/id)
 	for(var/datum/export_order/export in all_exports)
 		if(export.id == id)
 			return export.name
 	return "None"
 
-/datum/controller/supply/proc/fill_order(var/id, var/closet)
+/datum/controller/subsystem/supply/proc/add_points_from_source(amount, source)
+	points += amount
+	point_sources[source] += amount
+	point_sources["total"] += amount
+
+/datum/controller/subsystem/supply/proc/fill_order(var/id, var/closet)
 	for(var/datum/export_order/export in all_exports)
 		if(export.id == id)
 			return export.fill(closet)
 	return 0
-/datum/controller/supply/proc/generate_export(var/typee = "")
+
+/datum/controller/subsystem/supply/proc/generate_export(var/typee = "")
 	exportnum++
 	var/datum/export_order/export
 	switch(typee)
@@ -266,11 +291,8 @@ SUBSYSTEM_DEF(supply)
 				return export
 
 
-/datum/controller/supply/proc/process()
-	add_points_from_source(points_per_process, "time")
-
 	//To stop things being sent to centcomm which should not be sent to centcomm. Recursively checks for these types.
-/datum/controller/supply/proc/forbidden_atoms_check(atom/A)
+/datum/controller/subsystem/supply/proc/forbidden_atoms_check(atom/A)
 	if(istype(A,/mob/living))
 		return 1
 	if(istype(A,/obj/item/weapon/disk/nuclear))
@@ -286,18 +308,16 @@ SUBSYSTEM_DEF(supply)
 			return 1
 
 	//Sellin
-/datum/controller/supply/proc/sell()
-	var/phoron_count = 0
-	var/plat_count = 0
+/datum/controller/subsystem/supply/proc/sell()
+	var/list/material_count = list()
+
 	for(var/area/subarea in shuttle.shuttle_area)
-		for(var/atom/movable/MA in subarea)
-			if(MA.anchored)	continue
-
-			// Must be in a crate!
-			if(istype(MA,/obj/structure/closet/crate))
-				var/obj/structure/closet/crate/CR = MA
+		for(var/atom/movable/AM in subarea)
+			if(AM.anchored)
+				continue
+			if(istype(AM, /obj/structure/closet/crate/))
+				var/obj/structure/closet/crate/CR = AM
 				callHook("sell_crate", list(CR, subarea))
-
 				add_points_from_source(CR.points_per_crate, "crate")
 				var/find_slip = 1
 
@@ -306,69 +326,87 @@ SUBSYSTEM_DEF(supply)
 					var/atom/A = atom
 					if(find_slip && istype(A,/obj/item/weapon/paper/manifest))
 						var/obj/item/weapon/paper/manifest/slip = A
-						if(!slip.is_copy && slip.stamped && slip.stamped.len) //yes, the clown stamp will work. clown is the highest authority on the station, it makes sense
+						if(!slip.is_copy && slip.stamped && slip.stamped.len) //Any stamp works.
 							add_points_from_source(points_per_slip, "manifest")
 							find_slip = 0
 						continue
 
-					// Sell phoron and platinum
-					if(istype(A, /obj/item/stack))
-						var/obj/item/stack/P = A
-						switch(P.get_material_name())
-							if(MATERIAL_PHORON) phoron_count += P.get_amount()
-							if(MATERIAL_PLATINUM) plat_count += P.get_amount()
-			qdel(MA)
+					// Sell materials
+					if(istype(A, /obj/item/stack/material))
+						var/obj/item/stack/material/P = A
+						if(P.material && P.material.sale_price > 0)
+							material_count[P.material.display_name] += P.get_amount() * P.material.sale_price * P.matter_multiplier
+						if(P.reinf_material && P.reinf_material.sale_price > 0)
+							material_count[P.reinf_material.display_name] += P.get_amount() * P.reinf_material.sale_price * P.matter_multiplier * 0.5
+						continue
 
-	if(phoron_count)
-		var/temp = phoron_count * points_per_phoron
-		add_points_from_source(temp, MATERIAL_PHORON)
+					// Must sell ore detector disks in crates
+					if(istype(A, /obj/item/weapon/disk/survey))
+						var/obj/item/weapon/disk/survey/D = A
+						add_points_from_source(round(D.Value() * 0.005), "gep")
 
-	if(plat_count)
-		var/temp = plat_count * points_per_platinum
-		add_points_from_source(temp, MATERIAL_PLATINUM)
+					// Sell virus dishes.
+					if(istype(A, /obj/item/weapon/virusdish))
+						//Obviously the dish must be unique and never sold before.
+						var/obj/item/weapon/virusdish/dish = A
+						if(dish.analysed && istype(dish.virus2) && dish.virus2.uniqueID)
+							if(!(dish.virus2.uniqueID in sold_virus_strains))
+								add_points_from_source(5, "virology_dishes")
+								sold_virus_strains += dish.virus2.uniqueID
 
-	//Buyin
-/datum/controller/supply/proc/buy()
-	if(!shoppinglist.len) return
+			qdel(AM)
+
+	if(material_count.len)
+		for(var/material_type in material_count)
+			add_points_from_source(material_count[material_type], material_type)
+
+//Buyin
+/datum/controller/subsystem/supply/proc/buy()
+	if(!shoppinglist.len)
+		return
 	var/list/clear_turfs = list()
+
 	for(var/area/subarea in shuttle.shuttle_area)
 		for(var/turf/T in subarea)
-			if(T.density)	continue
-			var/contcount
+			if(T.density)
+				continue
+			var/occupied = 0
 			for(var/atom/A in T.contents)
 				if(!A.simulated)
 					continue
-				contcount++
-			if(contcount)
-				continue
-			clear_turfs += T
+				occupied = 1
+				break
+			if(!occupied)
+				clear_turfs += T
 	for(var/S in shoppinglist)
-		if(!clear_turfs.len)	break
-		var/i = rand(1,clear_turfs.len)
-		var/turf/pickedloc = clear_turfs[i]
-		clear_turfs.Cut(i,i+1)
+		if(!clear_turfs.len)
+			break
+		var/turf/pickedloc = pick_n_take(clear_turfs)
 		shoppinglist -= S
+		donelist += S
 
 		var/datum/supply_order/SO = S
 		var/decl/hierarchy/supply_pack/SP = SO.object
 
 		var/obj/A = new SP.containertype(pickedloc)
-		A.name = "[SP.containername][SO.comment ? " ([SO.comment])":"" ]"
+		A.SetName("[SP.containername][SO.comment ? " ([SO.comment])":"" ]")
 		//supply manifest generation begin
 
 		var/obj/item/weapon/paper/manifest/slip
 		if(!SP.contraband)
-			slip = new /obj/item/weapon/paper/manifest(A)
+			var/info = list()
+			info +="<h3>[command_name()] Shipping Manifest</h3><hr><br>"
+			info +="Order #[SO.ordernum]<br>"
+			info +="Destination: [GLOB.using_map.station_name]<br>"
+			info +="[shoppinglist.len] PACKAGES IN THIS SHIPMENT<br>"
+			info +="CONTENTS:<br><ul>"
+
+			slip = new /obj/item/weapon/paper/manifest(A, JOINTEXT(info))
 			slip.is_copy = 0
-			slip.info = "<h3>[command_name()] Shipping Manifest</h3><hr><br>"
-			slip.info +="Order #[SO.ordernum]<br>"
-			slip.info +="Destination: [GLOB.using_map.station_name]<br>"
-			slip.info +="[shoppinglist.len] PACKAGES IN THIS SHIPMENT<br>"
-			slip.info +="CONTENTS:<br><ul>"
 
 		//spawn the stuff, finish generating the manifest while you're at it
 		if(SP.access)
-			if(isnum(SP.access))
+			if(!islist(SP.access))
 				A.req_access = list(SP.access)
 			else if(islist(SP.access))
 				var/list/L = SP.access // access var is a plain var, we need a list
@@ -382,17 +420,6 @@ SUBSYSTEM_DEF(supply)
 				slip.info += "<li>[content.name]</li>" //add the item to the manifest
 			slip.info += "</ul><br>"
 			slip.info += "CHECK CONTENTS AND STAMP BELOW THE LINE TO CONFIRM RECEIPT OF GOODS<hr>"
-
-	return
-
-/datum/controller/subsystem/supply/fire(resumed = FALSE)
-	supply_controller.process()
-
-//Adds the points from different sources together and saves them for the export overview
-/datum/controller/supply/proc/add_points_from_source(amount, source)
-	points += amount
-	point_sources[source] += amount
-	point_sources["total"] += amount
 
 //Order
 /datum/supply_order

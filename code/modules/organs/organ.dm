@@ -60,9 +60,6 @@ var/list/organ_cache = list()
 /obj/item/organ/proc/update_health()
 	return
 
-/obj/item/organ/proc/is_broken()
-	return (damage >= min_broken_damage || (status & ORGAN_CUT_AWAY) || (status & ORGAN_BROKEN))
-
 //Second argument may be a dna datum; if null will be set to holder's dna.
 /obj/item/organ/New(var/mob/living/carbon/holder, var/datum/dna/given_dna)
 	..(holder)
@@ -109,7 +106,7 @@ var/list/organ_cache = list()
 	return ..()
 
 /obj/item/organ/proc/heal_damage(var/amount)
-	add_health(amount)
+	add_health(round(amount, 0.1))
 
 /obj/item/organ/update_health()
 	if(!isdamageable())
@@ -289,10 +286,6 @@ var/list/organ_cache = list()
 
 /obj/item/organ/proc/take_general_damage(var/amount, var/silent = FALSE)
 	CRASH("Not Implemented")
-
-/obj/item/organ/proc/heal_damage(amount)
-	damage = between(0, damage - round(amount, 0.1), max_damage)
-
 
 /obj/item/organ/proc/robotize() //Being used to make robutt hearts, etc
 	status = ORGAN_ROBOTIC

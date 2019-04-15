@@ -60,13 +60,13 @@
 	var/obj/item/weapon/card/id/id = GetIdCard()
 	return id ? id.GetFaction() : ""
 
-/atom/movable/proc/GetAccess()
-	. = list()
-	var/obj/item/weapon/card/id/id = GetIdCard()
-	if(id)
-		. += id.GetAccess()
-	if(maint_all_access)
-		. |= access_maint_tunnels
+// /atom/movable/proc/GetAccess()
+// 	. = list()
+// 	var/obj/item/weapon/card/id/id = GetIdCard()
+// 	if(id)
+// 		. += id.GetAccess()
+// 	if(maint_all_access)
+// 		. |= access_maint_tunnels
 
 /atom/movable/proc/GetIdCard()
 	return null

@@ -86,12 +86,13 @@
 	if(node3)
 		node3.update_underlays()
 
-/obj/machinery/atmospherics/pipe/manifold/update_icon(var/safety = 0)
+/obj/machinery/atmospherics/pipe/manifold/on_update_icon(var/safety = 0)
 	if(!atmos_initalized)
 		return
 	if(!check_icon_cache())
 		return
 
+	set_leaking(!(node1 && node2 && node3))
 	alpha = 255
 
 	if(!node1 && !node2 && !node3)

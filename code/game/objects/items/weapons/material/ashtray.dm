@@ -48,7 +48,7 @@
 		..()
 		health = max(0,health - W.force)
 		if (health < 1)
-			shatter()
+			kill()
 
 /obj/item/weapon/material/ashtray/throw_impact(atom/hit_atom)
 	if (health > 0)
@@ -58,7 +58,7 @@
 			for (var/obj/O in contents)
 				O.dropInto(loc)
 		if (health < 1)
-			shatter()
+			kill()
 			return
 		update_icon()
 	return ..()

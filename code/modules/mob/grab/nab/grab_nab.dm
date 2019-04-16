@@ -73,7 +73,7 @@
 		G.affecting.apply_damage(max(attack_damage + 10, 15), DAM_PIERCE, hit_zone, used_weapon = "organic punctures")
 		var/armor = 100 * G.affecting.get_blocked_ratio(hit_zone, DAM_PIERCE)
 		G.affecting.apply_effect(attack_damage, PAIN, armor)
-		G.affecting.visible_message("<span class='danger'>[assailant]'s spikes dig in painfully!</span>")
+		G.affecting.visible_message("<span class='danger'>[G.assailant]'s spikes dig in painfully!</span>")
 	else
 		G.affecting.apply_damage(attack_damage, DAM_BLUNT, hit_zone, used_weapon = "crushing")
 	playsound(get_turf(G.assailant), 'sound/weapons/bite.ogg', 25, 1, -1)

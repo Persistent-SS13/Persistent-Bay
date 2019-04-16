@@ -481,7 +481,7 @@ SUBSYSTEM_DEF(supply)
 		. = filled*rate
 		spawn(10)
 			if(supplied >= required)
-				supply_controller.close_order(src)
+				SSsupply.close_order(src)
 
 
 /obj/var/export_value = 10
@@ -552,5 +552,5 @@ SUBSYSTEM_DEF(supply)
 		. = filled*rate
 		spawn(10)
 			if(supplied >= required)
-				supply_controller.close_order(src)
+				SSshuttle.close_order(src)
 

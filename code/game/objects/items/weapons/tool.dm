@@ -17,8 +17,8 @@
 	if(!operable())
 		return FALSE
 	play_tool_sound()
-	var/done = (required_skill)? user.do_skilled(apply_duration_efficiency(time), require_skill, target) : do_after(user, apply_duration_efficiency(time), target)
-	if(require_skill && prob(skill_fail_chance(require_skill, 1)))
+	var/done = (required_skill)? user.do_skilled(apply_duration_efficiency(time), required_skill, target) : do_after(user, apply_duration_efficiency(time), target)
+	if(required_skill && prob(skill_fail_chance(required_skill, 1)))
 		to_chat(user, SPAN_DANGER("You're not very good at this and fail the task.."))
 		return FALSE  //There's a chance to screw up if not skilled enough
 	if(done)

@@ -54,7 +54,7 @@ var/global/list/sparring_attack_cache = list()
 		return
 
 	var/stun_chance = rand(0, 100)
-	var/armour = target.get_blocked_ratio(zone, BRUTE)
+	var/armour = target.get_blocked_ratio(zone, damtype)
 
 	if(attack_damage >= 5 && armour < 1 && !(target == user) && stun_chance <= attack_damage * 5) // 25% standard chance
 		switch(zone) // strong punches can have effects depending on where they hit
@@ -116,7 +116,7 @@ var/global/list/sparring_attack_cache = list()
 	user.visible_message("<span class='danger'>[user] attempts to press \his [eye_attack_text] into [target]'s eyes, but they don't have any!</span>")
 
 /datum/unarmed_attack/proc/damage_flags()
-	return (src.sharp? DAM_SHARP : 0)|(src.edge? DAM_EDGE : 0)
+	return 0
 
 /datum/unarmed_attack/bite
 	attack_verb = list("bit")

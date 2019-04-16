@@ -13,7 +13,7 @@
 	mass = 1.2
 
 /obj/item/weapon/melee/cultblade/attack(mob/living/M, mob/living/user, var/target_zone)
-	if(iscultist(user) || (user.mind in godcult.current_antagonists))
+	if(iscultist(user) || (user.mind in GLOB.godcult.current_antagonists))
 		return ..()
 
 	var/zone = (user.hand ? BP_L_ARM : BP_R_ARM)

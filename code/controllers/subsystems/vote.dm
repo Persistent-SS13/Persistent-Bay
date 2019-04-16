@@ -1,7 +1,7 @@
 SUBSYSTEM_DEF(vote)
 	name = "Voting"
 	wait = 1 SECOND
-	priority = SS_PRIORITY_VOTE
+	priority = SS_PRIORITY_EVENT
 	flags = SS_NO_TICK_CHECK | SS_KEEP_TIMING
 	runlevels = RUNLEVELS_DEFAULT | RUNLEVEL_LOBBY
 
@@ -176,14 +176,14 @@ SUBSYSTEM_DEF(vote)
 	if(!config.allow_extra_antags)
 		return 0
 	// Gamemode has to be determined before we can add antagonists, so we can respect gamemode's add antag vote settings.
-	if((GAME_STATE <= RUNLEVEL_SETUP) || !SSticker.mode)
-		return 0
-	if(automatic)
-		return (SSticker.mode.addantag_allowed & ADDANTAG_AUTO) && !antag_added
-	if(is_admin(creator))
-		return SSticker.mode.addantag_allowed & (ADDANTAG_ADMIN|ADDANTAG_PLAYER)
-	else
-		return (SSticker.mode.addantag_allowed & ADDANTAG_PLAYER) && !antag_added
+	// if((GAME_STATE <= RUNLEVEL_SETUP) || !SSticker.mode)
+	// 	return 0
+	// if(automatic)
+	// 	return (SSticker.mode.addantag_allowed & ADDANTAG_AUTO) && !antag_added
+	// if(is_admin(creator))
+	// 	return SSticker.mode.addantag_allowed & (ADDANTAG_ADMIN|ADDANTAG_PLAYER)
+	// else
+	// 	return (SSticker.mode.addantag_allowed & ADDANTAG_PLAYER) && !antag_added
 
 /mob/verb/vote()
 	set category = "OOC"

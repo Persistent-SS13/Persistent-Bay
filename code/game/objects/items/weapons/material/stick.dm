@@ -14,7 +14,7 @@
 
 /obj/item/weapon/material/stick/attack_self(mob/user as mob)
 	user.visible_message("<span class='warning'>\The [user] snaps [src].</span>", "<span class='warning'>You snap [src].</span>")
-	shatter(0)
+	kill()
 
 
 /obj/item/weapon/material/stick/attackby(obj/item/weapon/W as obj, mob/user as mob)

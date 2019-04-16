@@ -94,12 +94,12 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/barber_scissors
 	name = "barber scissors"
-	path = /obj/item/weapon/scissors/tool/barber
+	path = /obj/item/weapon/tool/scissors/barber
 	category = "Tools"
 
 /datum/autolathe/recipe/plastic_scissors
 	name = "plastic scissors"
-	path = /obj/item/weapon/scissors/tool/craft 
+	path = /obj/item/weapon/tool/scissors/craft 
 	category = "Tools"
 
 /datum/autolathe/recipe/crowbar

@@ -248,7 +248,7 @@
 			if(ap >= resist)
 				return 0 //bypass armor
 			var/effective_armor = (resist - ap)/MaxArmorValue
-			var/fullblock = (effective_armor*effective_armor) * ARMOR_BLOCK_CHANCE_MULT
+			var/fullblock = (effective_armor*effective_armor)
 
 			if(fullblock >= 1 || prob(fullblock * MaxArmorValue))
 				. = MaxArmorValue
@@ -566,3 +566,9 @@
 //callback used by objects to react to incoming radio signals
 /obj/proc/receive_signal(var/datum/signal/signal, var/receive_method = TRANSMISSION_RADIO, var/receive_param = null)
 	return null
+
+/obj/is_fluid_pushable(var/amt)
+	return ..() && w_class <= round(amt/20)
+
+/obj/proc/can_embed()
+	return is_sharp(src)

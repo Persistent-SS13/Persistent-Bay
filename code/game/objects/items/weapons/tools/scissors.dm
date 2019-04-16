@@ -26,7 +26,7 @@
 		var/obj/item/weapon/improvised/scissorknife/right_part = new childpart
 
 		// Craft scissors have unique left/right colors. To maintain this with the knives, I set the right part to have the icon of the right part
-		if(istype(src, /obj/item/weapon/scissors/craft))
+		if(istype(src, /obj/item/weapon/tool/scissors/craft))
 			left_part.icon_state = "scissors_knife_craft_left"
 			right_part.item_state = "scissors_knife_craft_right"
 		else

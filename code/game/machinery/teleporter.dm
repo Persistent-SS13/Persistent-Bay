@@ -243,6 +243,9 @@
 	var/obj/machinery/teleport/hub/com
 	var/active = 0
 	var/engaged = 0
+	idle_power_usage = 10
+	active_power_usage = 2000
+	var/obj/machinery/computer/teleporter/com
 	var/obj/machinery/teleport/hub/hub
 
 /obj/machinery/teleport/station/New()

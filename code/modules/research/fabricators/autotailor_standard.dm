@@ -311,10 +311,10 @@
 	id = "sci"
 	build_path = /obj/item/clothing/under/rank/scientist
 
-/datum/design/item/autotailor/under/worksuits/sci_jacket	//nt item
-	name = "Scientist tunic"
-	id = "sci_jacket"
-	build_path = /obj/item/clothing/accessory/nt_tunic
+// /datum/design/item/autotailor/under/worksuits/sci_jacket	//nt item
+// 	name = "Scientist tunic"
+// 	id = "sci_jacket"
+// 	build_path = /obj/item/clothing/accessory/nt_tunic
 
 /datum/design/item/autotailor/under/worksuits/sci_exec	//nt item
 	name = "Scientist jumpsuit - executive"
@@ -322,11 +322,11 @@
 	build_path = /obj/item/clothing/under/rank/scientist/executive
 	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_PHORON = 2000)
 
-/datum/design/item/autotailor/under/worksuits/sci_exec_jacket	//nt item
-	name = "Scientist tunic - executive"
-	id = "sci_exec_jacket"
-	build_path = /obj/item/clothing/accessory/nt_tunic/exec
-	materials = list(MATERIAL_LEATHER = 2000, MATERIAL_PHORON = 1000)
+// /datum/design/item/autotailor/under/worksuits/sci_exec_jacket	//nt item
+// 	name = "Scientist tunic - executive"
+// 	id = "sci_exec_jacket"
+// 	build_path = /obj/item/clothing/accessory/nt_tunic/exec
+// 	materials = list(MATERIAL_LEATHER = 2000, MATERIAL_PHORON = 1000)
 
 /datum/design/item/autotailor/under/worksuits/sci_casual
 	name = "Scientist jumpsuit - casual"

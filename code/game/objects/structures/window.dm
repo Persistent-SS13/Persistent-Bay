@@ -16,6 +16,7 @@
 	var/damage_per_fire_tick = 2.0 		// Amount of damage per fire tick. Regular windows are not fireproof so they might as well break quickly.
 	var/construction_state = 2
 	var/ini_dir = null
+	var/id_tag
 	var/polarized = 0
 	var/basestate = "window"
 	var/reinf_basestate = "rwindow"
@@ -152,30 +153,12 @@
 	else if(health < get_max_health() * 3/4 && initialhealth >= get_max_health() * 3/4)
 		visible_message("Cracks begin to appear in [src]!" )
 
-/obj/structure/window/proc/apply_silicate(var/amount)
-	if(isdamaged()) // Mend the damage
-		add_health(amount * 3)
-		if(!isdamaged())
-			visible_message(SPAN_NOTICE("[src] looks fully repaired."))
-	else // Reinforce
-		silicate = min(silicate + amount, max_silicate)
-		updateSilicate()
-
-/obj/structure/window/proc/updateSilicate()
-	if (overlays)
-		overlays.Cut()
-
-	var/image/img = image(src.icon, src.icon_state)
-	img.color = "#ffffff"
-	img.alpha = silicate * 255 / max_silicate
-	overlays += img
-
-/obj/structure/window/destroyed()
-	visible_message(SPAN_DANGER("[src] shatters!"))
-	cast_new(shardtype, is_fulltile() ? 4 : 1, loc)
-	if(reinf)
-		cast_new(/obj/item/stack/rods, is_fulltile() ? 4 : 1, loc)
-	..()
+/obj/structure/window/make_debris()
+	var/debris_count = is_fulltile() ? 4 : 1
+	for(var/i = 0 to debris_count)
+		material.place_shard(loc)
+		if(reinf_material)
+			new /obj/item/stack/material/rods(loc, 1, reinf_material.name)
 
 //TODO: Make full windows a separate type of window.
 //Once a full window, it will always be a full window, so there's no point
@@ -223,24 +206,23 @@
 	if(MUTATION_HULK in user.mutations)
 		..(user,100)
 		return 1
-	else if (usr.a_intent == I_HURT)
+	else if (user.a_intent && user.a_intent == I_HURT)
 		if (istype(usr,/mob/living/carbon/human))
 			var/mob/living/carbon/human/H = usr
 			if(H.species.can_shred(H))
 				..(H,25)
 				return 1
-		
 		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
 		playsound(src.loc, 'sound/effects/glassknock.ogg', vol=100, vary=1, extrarange=12, falloff=10)
 		user.do_attack_animation(src)
-		usr.visible_message("<span class='danger'>\The [usr] bangs against \the [src]!</span>",
+		user.visible_message("<span class='danger'>\The [user] bangs against \the [src]!</span>",
 							"<span class='danger'>You bang against \the [src]!</span>",
 							"You hear a banging sound.")
 		return 1
 	else if (usr.a_intent == I_HELP)
 		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
 		playsound(src.loc, 'sound/effects/glassknock.ogg', vol=80, vary=1, extrarange=8, falloff=6)
-		usr.visible_message("[usr.name] knocks on the [src.name].",
+		user.visible_message("[user.name] knocks on the [src.name].",
 							"You knock on the [src.name].",
 							"You hear a knocking sound.")
 		return 1
@@ -261,56 +243,75 @@
 
 /obj/structure/window/attackby(obj/item/W as obj, mob/user as mob)
 	if(isScrewdriver(W))
-		if(reinf && state >= 1)
-			state = 3 - state
+		if(reinf_material && construction_state >= 1)
+			construction_state = 3 - construction_state
 			update_nearby_icons()
 			playsound(loc, 'sound/items/Screwdriver.ogg', 75, 1)
-			to_chat(user, (state == 1 ? "<span class='notice'>You have unfastened the window from the frame.</span>" : "<span class='notice'>You have fastened the window to the frame.</span>"))
-		else if(reinf && state == 0)
+			to_chat(user, (construction_state == 1 ? "<span class='notice'>You have unfastened the window from the frame.</span>" : "<span class='notice'>You have fastened the window to the frame.</span>"))
+		else if(reinf_material && construction_state == 0)
 			set_anchored(!anchored)
 			playsound(loc, 'sound/items/Screwdriver.ogg', 75, 1)
 			to_chat(user, (anchored ? "<span class='notice'>You have fastened the frame to the floor.</span>" : "<span class='notice'>You have unfastened the frame from the floor.</span>"))
-		else if(!reinf)
+		else if(!reinf_material)
 			set_anchored(!anchored)
 			playsound(loc, 'sound/items/Screwdriver.ogg', 75, 1)
 			to_chat(user, (anchored ? "<span class='notice'>You have fastened the window to the floor.</span>" : "<span class='notice'>You have unfastened the window.</span>"))
-		return 1
-	else if(isCrowbar(W) && reinf && state <= 1)
-		state = 1 - state
+	else if(isCrowbar(W) && reinf_material && construction_state <= 1)
+		construction_state = 1 - construction_state
 		playsound(loc, 'sound/items/Crowbar.ogg', 75, 1)
-		to_chat(user, (state ? "<span class='notice'>You have pried the window into the frame.</span>" : "<span class='notice'>You have pried the window out of the frame.</span>"))
-		return 1
-	else if(isWrench(W) && !anchored && (!state || !reinf))
-		if(!glasstype)
+		to_chat(user, (construction_state ? "<span class='notice'>You have pried the window into the frame.</span>" : "<span class='notice'>You have pried the window out of the frame.</span>"))
+	else if(isWrench(W) && !anchored && (!construction_state || !reinf_material))
+		if(!material.stack_type)
 			to_chat(user, "<span class='notice'>You're not sure how to dismantle \the [src] properly.</span>")
 		else
 			playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
 			visible_message("<span class='notice'>[user] dismantles \the [src].</span>")
-			if(dir == SOUTHWEST)
-				var/obj/item/stack/material/mats = new glasstype(loc)
-				mats.amount = is_fulltile() ? 4 : 2
-			else
-				new glasstype(loc)
+			var/obj/item/stack/material/S = material.place_sheet(loc, is_fulltile() ? 4 : 2)
+			if(S && reinf_material)
+				S.reinf_material = reinf_material
+				S.update_strings()
+				S.update_icon()
 			qdel(src)
-		return 1
-	else if(isCoil(W) && reinf && !polarized)
+	else if(isCoil(W) && reinf_material && !polarized)
 		var/obj/item/stack/cable_coil/C = W
 		if (C.use(1))
 			playsound(src.loc, 'sound/effects/sparks1.ogg', 75, 1)
-			var/obj/structure/window/reinforced/polarized/P = new(loc)
-			P.set_dir(dir)
-			P.health = health
-			P.state = state
-			P.icon_state = icon_state
-			P.basestate = basestate
-			P.update_icon()
-			qdel(src)
-		return 1
+			polarized = TRUE
+	else if(polarized && isMultitool(W))
+		var/t = sanitizeSafe(input(user, "Enter the ID for the window.", src.name, null), MAX_NAME_LEN)
+		if(user.incapacitated() || !user.Adjacent(src))
+			return
+		if (user.get_active_hand() != W)
+			return
+		if (t)
+			src.id = t
+			to_chat(user, "<span class='notice'>The new ID of the window is [id]</span>")
+		return
 	else
 		return ..()
 
 /obj/structure/window/AltClick()
 	rotate()
+
+/obj/structure/window/grab_attack(var/obj/item/grab/G)
+	if (G.assailant.a_intent != I_HURT)
+		return TRUE
+	if (!G.force_danger())
+		to_chat(G.assailant, "<span class='danger'>You need a better grip to do that!</span>")
+		return TRUE
+	var/def_zone = ran_zone(BP_HEAD, 20)
+	if(G.damage_stage() < 2)
+		G.affecting.visible_message("<span class='danger'>[G.assailant] bashes [G.affecting] against \the [src]!</span>")
+		if (prob(50))
+			G.affecting.Weaken(1)
+		G.affecting.apply_damage(10, DAM_BLUNT, def_zone, used_weapon = src)
+		hit(25)
+	else
+		G.affecting.visible_message("<span class='danger'>[G.assailant] crushes [G.affecting] against \the [src]!</span>")
+		G.affecting.Weaken(5)
+		G.affecting.apply_damage(20, DAM_BLUNT, def_zone, used_weapon = src)
+		hit(50)
+	return TRUE
 
 /obj/structure/window/proc/rotate()
 	set name = "Rotate Window Counter-Clockwise"
@@ -326,10 +327,7 @@
 
 	update_nearby_tiles(need_rebuild=1) //Compel updates before
 	set_dir(turn(dir, 90))
-	updateSilicate()
 	update_nearby_tiles(need_rebuild=1)
-	return
-
 
 /obj/structure/window/proc/revrotate()
 	set name = "Rotate Window Clockwise"
@@ -345,10 +343,7 @@
 
 	update_nearby_tiles(need_rebuild=1) //Compel updates before
 	set_dir(turn(dir, 270))
-	updateSilicate()
 	update_nearby_tiles(need_rebuild=1)
-	return
-
 
 /obj/structure/window/Move()
 	var/ini_dir = dir
@@ -385,7 +380,6 @@
 	else
 		verbs += /obj/structure/window/proc/rotate
 		verbs += /obj/structure/window/proc/revrotate
-
 
 // Visually connect with every type of window as long as it's full-tile.
 /obj/structure/window/can_visually_connect()
@@ -592,6 +586,7 @@
 	desc = "It looks rather strong. Might take a few good hits to shatter it."
 	icon = 'icons/obj/podwindows.dmi'
 	max_health = 200
+	basestate = "w"
 	reinf_basestate = "w"
 	dir = 5
 	armor = list(
@@ -615,12 +610,25 @@
 	name = "electrochromic window"
 	desc = "Adjusts its tint with voltage. Might take a few good hits to shatter it."
 	basestate = "rwindow"
-	var/id
 	polarized = 1
 
 /obj/structure/window/reinforced/polarized/full
 	dir = 5
 	icon_state = "rwindow_full"
+
+/obj/structure/window/proc/toggle()
+	if(!polarized)
+		return
+	if(opacity)
+		animate(src, color=material.icon_colour, time=5)
+		set_opacity(0)
+	else
+		animate(src, color=GLASS_COLOR_TINTED, time=5)
+		set_opacity(1)
+
+/obj/structure/window/proc/is_on_frame()
+	if(locate(/obj/structure/wall_frame) in loc)
+		return TRUE
 
 /obj/structure/window/reinforced/polarized/attackby(obj/item/W as obj, mob/user as mob)
 	if(isMultitool(W))

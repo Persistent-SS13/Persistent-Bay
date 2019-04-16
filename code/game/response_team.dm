@@ -15,7 +15,7 @@ var/can_call_ert
 		to_chat(usr, "<span class='danger'>Only administrators may use this command.</span>")
 		return
 	if(GAME_STATE < RUNLEVEL_GAME)
-		to_chat(usr, "<span class='danger'>The round hasn't started yet!</span>")
+		to_chat(usr, "<span class='danger'>The game hasn't started yet!</span>")
 		return
 	if(send_emergency_team)
 		to_chat(usr, "<span class='danger'>[GLOB.using_map.boss_name] has already dispatched an emergency response team!</span>")

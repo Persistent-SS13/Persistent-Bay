@@ -94,7 +94,7 @@
 /obj/item/weapon/material/proc/check_shatter()
 	if(!unbreakable && prob(material.hardness))
 		if(material.is_brittle())
-			die()
+			kill()
 		else
 			rem_health(1)
 

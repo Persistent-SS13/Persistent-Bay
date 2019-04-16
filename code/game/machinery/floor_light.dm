@@ -16,10 +16,10 @@ var/list/floor_light_cache = list()
 	max_health = 10
 	sound_hit = 'sound/effects/Glasshit.ogg'
 	sound_destroyed = "shatter"
-	var/default_light_range = 4
-	var/default_light_power = 2
+	var/default_light_max_bright = 0.75
+	var/default_light_inner_range = 1
+	var/default_light_outer_range = 3
 	var/default_light_colour = "#ffffff"
-	var/flicker = 0 //Used for randomizing the flicker effect
 
 /obj/machinery/floor_light/prebuilt
 	anchored = TRUE
@@ -62,6 +62,13 @@ var/list/floor_light_cache = list()
 		set_broken(FALSE)
 		update_brightness()
 		return TRUE
+	else if(isWrench(W))
+		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
+		to_chat(user, "<span class='notice'>You dismantle the floor light.</span>")
+		new /obj/item/stack/material/steel(src.loc, 1)
+		new /obj/item/stack/material/glass(src.loc, 1)
+		qdel(src)
+		return TRUE
 	return ..()
 
 /obj/machinery/floor_light/update_use_power(var/new_use_power)
@@ -100,10 +107,10 @@ var/list/floor_light_cache = list()
 	//	if(light_range || light_power)
 	//		set_light(0)
 
-	active_power_usage = ((light_range + light_power) * 10)
+	change_power_consumption((light_outer_range + light_max_bright) * 20, POWER_USE_ACTIVE)
 	update_icon()
 
-/obj/machinery/floor_light/update_icon()
+/obj/machinery/floor_light/on_update_icon()
 	overlays.Cut()
 	//if(ison() && ispowered())
 	//	if(health >= (max_health * break_threshold))

@@ -283,9 +283,6 @@
 			user.l_hand.update_twohanding()
 		if(user.r_hand)
 			user.r_hand.update_twohanding()
-	//observation stuff
-	GLOB.mob_unequipped_event.raise_event(user, src)
-	GLOB.item_unequipped_event.raise_event(src, user)
 
 // called just as an item is picked up (loc is not yet changed)
 /obj/item/proc/pickup(mob/user)
@@ -321,10 +318,6 @@
 		M.l_hand.update_twohanding()
 	if(M.r_hand)
 		M.r_hand.update_twohanding()
-
-	//Observation stuff
-	GLOB.mob_equipped_event.raise_event(user, src, slot)
-	GLOB.item_equipped_event.raise_event(src, user, slot)
 
 //Defines which slots correspond to which slot flags
 var/list/global/slot_flags_enumeration = list(
@@ -502,17 +495,17 @@ var/list/global/slot_flags_enumeration = list(
 //Otherwise should return 0 to indicate that the attack is not affected in any way.
 /obj/item/proc/handle_shield(mob/user, var/damage, atom/damage_source = null, mob/attacker = null, var/def_zone = null, var/attack_text = "the attack")
 	var/parry_chance = get_parry_chance(user)
-	if(attacker)	
+	if(attacker)
 		parry_chance = max(0, parry_chance - 10 * attacker.get_skill_difference(SKILL_COMBAT, user))
 	if(parry_chance)
 		if(default_parry_check(user, attacker, damage_source) && prob(parry_chance))
 			user.visible_message("<span class='danger'>\The [user] parries [attack_text] with \the [src]!</span>")
 			playsound(user.loc, 'sound/weapons/punchmiss.ogg', 50, 1)
-			on_parry()
+			on_parry(damage_source)
 			return 1
 	return 0
 
-/obj/item/proc/on_parry()
+/obj/item/proc/on_parry(damage_source)
 	return
 
 /obj/item/proc/get_parry_chance(mob/user)

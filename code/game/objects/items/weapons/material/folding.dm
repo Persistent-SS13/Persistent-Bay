@@ -12,9 +12,9 @@
 	unbreakable = TRUE
 	w_class = ITEM_SIZE_SMALL
 	attack_verb = list("prodded", "tapped")
-	hitsound = "swing_hit"
-	edge = FALSE
-	sharp = FALSE
+	sound_hit = "swing_hit"
+	sharpness = 2
+	damtype = DAM_CUT
 
 	var/open = FALSE
 	var/takes_colour = TRUE
@@ -45,17 +45,15 @@
 
 /obj/item/weapon/material/knife/folding/update_force()
 	if(open)
-		edge = 1
-		sharp = 1
-		hitsound = 'sound/weapons/bladeslice.ogg'
+		sharpness = 1
+		sound_hit = 'sound/weapons/bladeslice.ogg'
 		w_class = ITEM_SIZE_NORMAL
 		attack_verb = list("slashed", "stabbed")
 		..()
 	else
 		force = initial(force)
-		edge = initial(edge)
-		sharp = initial(sharp)
-		hitsound = initial(hitsound)
+		sharpness = initial(sharpness)
+		sound_hit = initial(hitsound)
 		w_class = initial(w_class)
 		attack_verb = closed_attack_verbs
 

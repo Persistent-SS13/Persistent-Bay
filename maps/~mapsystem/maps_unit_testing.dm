@@ -63,8 +63,8 @@
 		/area/exoplanet/snow,
 		/area/exoplanet/garbage,
 		/area/template_noop,
-		/area/map_template,
-		/area/map_template/little_house
+		// /area/map_template,
+		// /area/map_template/little_house
 	)
 
 	var/list/area_purity_test_exempt_areas = list()

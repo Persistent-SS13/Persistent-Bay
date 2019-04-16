@@ -4,42 +4,55 @@
 	</div>
 </div>
 <br>
-{{if data.allowed > 1}}
+{{if data.access}}
     {{if data.ui_mode == 0}}
         <div class="item">
             <div class="itemLabelWide">
                 Turret Status:
             </div>
             <div class="itemContentNarrow">
-                {{:helper.link('Enabled', null, {'command' : 'enable', 'value' : 1},  data.enabled ? 'redButton' : null)}}
-                {{:helper.link('Disabled',null, {'command' : 'enable', 'value' : 0}, !data.enabled ? 'selected' : null)}}
+		{{:helper.link('Enabled', null, {'command' : 'enable', 'value' : 1},  data.enabled ?'redButton' : null)}}
+		{{:helper.link('Disabled',null, {'command' : 'enable', 'value' : 0}, !data.enabled ? 'selected' : null)}}
             </div>
         </div>	
-		
-		<div class="item">
-			<div class="itemLabelWide">
-				Range
-			</div>
-			<div class="itemContentNarrow">
-				<div style="clear: both; padding-top: 4px;">
-					{{:helper.link('-', null, {'command' : 'range', 'value' : -1}, (data.range > data.minrange) ? null : 'disabled')}}
-					<div style="float: left; width: 80px; text-align: center;">&nbsp;{{:data.range}} &nbsp;</div>
-					{{:helper.link('+', null, {'command' : 'range', 'value' : 1}, (data.range < data.maxrange) ? null : 'disabled')}}
-				</div>
+
+	<div class="item">
+		<div class="itemLabelWide">
+			Range
+		</div>
+		<div class="itemContentNarrow">
+			<div style="clear: both; padding-top: 4px;">
+				{{:helper.link('-', null, {'command' : 'range', 'value' : -1}, (data.range > data.minrange) ? null : 'disabled')}}
+				<div style="float: left; width: 80px; text-align: center;">&nbsp;{{:data.range}} &nbsp;</div>
+				{{:helper.link('+', null, {'command' : 'range', 'value' : 1}, (data.range < data.maxrange) ? null : 'disabled')}}
 			</div>
 		</div>
-		
+	</div>	
+
+	    {{if data.is_lethal}}
+		<div class="item">
+		    <div class="itemLabelWide">
+		        Lethal Mode:
+		    </div>
+		    <div class="itemContentNarrow">
+		        {{:helper.link('On', null, {'command' : 'lethal', 'value' : 1},  data.lethal ?'redButton' : null)}}
+		        {{:helper.link('Off',null, {'command' : 'lethal', 'value' : 0}, !data.lethal ? 'selected' : null)}}
+		    </div>
+		</div>	
+	    {{/if}}
+    
+	    {{for data.settings}}
+		<div class="item">
+		    <div class="itemLabelWide">
+		        {{:value.category}}
+		    </div>
+		    <div class="itemContentNarrow">
+		        {{:helper.link('On', null, {'command' : value.setting, 'value' : 1},  value.value ? 'selected' : null)}}
+		        {{:helper.link('Off',null, {'command' : value.setting, 'value' : 0}, !value.value ? 'selected' : null)}}
+		    </div>
+		</div>
+	    {{/for}}
         <div class="item">
-            <div class="itemLabelWide">
-                Lethal Mode:
-            </div>
-            <div class="itemContentNarrow">
-                {{:helper.link('On', null, {'command' : 'lethal', 'value' : 1},  data.lethal ?'redButton' : null)}}
-                {{:helper.link('Off', null, {'command' : 'lethal', 'value' : 0}, !data.lethal ? 'selected' : null)}}
-            </div>
-		</div>
-		
-		<div class="item">
             <div class="itemLabelWide">
                 Check Faction:
             </div>

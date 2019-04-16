@@ -507,7 +507,7 @@
 			charges -= healburn
 			healbrute = min(healbrute, charges)
 			charges -= healbrute
-		user.heal_organ_damage(healbrute, healburn)
+		user.heal_organ_damage(healbrute, healburn, 1)
 		statuses += "your wounds mend"
 		if(!charges)
 			return statuses
@@ -561,7 +561,7 @@
 		M.add_chemical_effect(CE_PAINKILLER, 40)
 		M.add_chemical_effect(CE_SPEEDBOOST, 1)
 		M.adjustOxyLoss(-10 * removed)
-		M.heal_organ_damage(5 * removed, 5 * removed)
+		M.heal_organ_damage(5 * removed, 5 * removed, 1)
 		M.adjustToxLoss(-5 * removed)
 	else
 		M.fire_stacks = max(2, M.fire_stacks)

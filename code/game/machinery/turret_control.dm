@@ -87,6 +87,12 @@
 
 	return 0
 
+/obj/machinery/turretid/CanUseTopic(mob/user)
+	if(isLocked(user))
+		return STATUS_CLOSE
+
+	return ..()
+
 /obj/machinery/turretid/attackby(obj/item/weapon/W, mob/user)
 	if(default_deconstruction_screwdriver(user,W))
 		return TRUE
@@ -94,7 +100,8 @@
 		return TRUE
 	if(isbroken())
 		return
-	if(istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))
+
+	if(istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/modular_computer))
 		if(src.allowed(usr))
 			if(emagged)
 				to_chat(user, SPAN_NOTICE("The turret control is unresponsive."))
@@ -109,6 +116,7 @@
 		to_chat(user, SPAN_DANGER("You short out the turret controls' access analysis module."))
 		emagged = TRUE
 		locked = FALSE
+		ailock = FALSE
 		return 1
 
 /obj/machinery/turretid/attack_ai(mob/user as mob)
@@ -257,6 +265,7 @@
 	..()
 	malf_upgraded = TRUE
 	locked = TRUE
+	ailock = FALSE
 	to_chat(user, "\The [src] has been upgraded. It has been locked and can not be tampered with by anyone but you and your cyborgs.")
 	master_ai = user
 	return 1

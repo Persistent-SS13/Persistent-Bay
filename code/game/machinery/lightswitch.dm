@@ -97,6 +97,15 @@
 	set_state(!on)
 	use_power_oneoff(active_power_usage)
 
+/obj/machinery/light_switch/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
+	if(istype(W, /obj/item/device/reagent_scanner))
+		return FALSE
+	if(isWrench(W))
+		to_chat(user, SPAN_NOTICE("You detach \the [src] from the wall."))
+		dismantle()
+		return TRUE
+	return src.attack_hand(user)
+
 /obj/machinery/light_switch/powered()
 	. = ..(power_channel, connected_area) //tie our powered status to the connected area
 
@@ -113,11 +122,3 @@
 	power_change()
 	..(severity)
 
-/obj/machinery/light_switch/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
-	if(istype(W, /obj/item/device/reagent_scanner))
-		return FALSE
-	if(isWrench(W))
-		to_chat(user, SPAN_NOTICE("You detach \the [src] from the wall."))
-		dismantle()
-		return TRUE
-	return src.attack_hand(user)

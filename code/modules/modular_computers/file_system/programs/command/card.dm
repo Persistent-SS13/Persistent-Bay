@@ -138,18 +138,12 @@
 			data["promote_button"] = promote_button
 			data["demote_button"] = demote_button
 			var/expense_limit = 0
-			var/datum/accesses/expenses = assignment.accesses["[record.rank]"]
+			var/datum/accesses/expenses = assignment.accesses[record.rank]
 			if(expenses)
 				expense_limit = expenses.expense_limit
 			data["expense_limit"] = expense_limit
 			data["expenses"] = record.expenses
-			if(!record.rank || record.rank == 1 || !assignment.ranks.len)
-				data["title"] = assignment.name
-			else
-				var/use_rank = record.rank
-				if(record.rank-1 > assignment.ranks.len)
-					use_rank = assignment.ranks.len+1
-				data["title"] = assignment.ranks[use_rank-1]
+			data["title"] = assignment.get_title(record.rank)
 			if(record.custom_title)
 				data["custom_title"] = record.custom_title
 			else
@@ -169,10 +163,7 @@
 				var/selected = 0
 				var/x = text2num(record.assignment_data[assignmentz.uid])
 				var/title = ""
-				if(x && x > 1 && assignmentz.ranks.len >= x-1)
-					title = assignmentz.ranks[x-1]
-				else
-					title = assignmentz.name
+				title = assignmentz.get_title(x)
 				if(assignment && assignment.uid == assignmentz.uid)
 					selected = 1
 					none_select = 0

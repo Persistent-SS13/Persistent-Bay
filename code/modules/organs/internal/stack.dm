@@ -324,14 +324,10 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 	var/datum/assignment/assignment = faction.get_assignment(records.try_duty(), records.get_name())
 	if(assignment && assignment.duty_able)
-		var/title = assignment.name
-		if(records.rank > 1 && assignment.ranks.len >= records.rank-1)
-			title = assignment.ranks[records.rank-1]
-		return "Working as [title] for [faction.name].<br>Making [assignment.payscale]$ for every thirty minutes clocked in."
+		var/title = assignment.get_title(record.rank)
+		return "Working as [title] for [faction.name].<br>Making [assignment.get_pay(record.rank)]$ for every thirty minutes clocked in."
 	else
 		return "No paying assignment."
-
-
 
 
 /obj/item/organ/internal/stack/proc/try_connect()
@@ -343,7 +339,14 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		faction = null
 		return 0
 	else
-		faction.connected_laces |= src
+		var/datum/assignment/assignment = faction.get_assignment(record.try_duty(), record.get_name())
+		if(assignment && assignment.duty_able)
+			faction.connected_laces |= src
+		else
+			faction = null
+			return 0
+
+
 /obj/item/organ/internal/stack/emp_act()
 	return
 

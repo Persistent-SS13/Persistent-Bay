@@ -38,10 +38,6 @@ var/PriorityQueue/all_feeds
 	if(signed_account)
 		if(signed_account.money < required_cash)
 			return 0
-		if(signed_account.reserved > signed_account.money)
-			return 0
-		if(signed_account.reserved < required_cash)
-			return 0
 		return 1
 	return 0
 /obj/item/weapon/paper/contract/after_load()
@@ -647,6 +643,8 @@ var/PriorityQueue/all_feeds
 
 	var/datum/faction_research/research
 
+	var/status = 1
+
 /proc/spawn_nexus_gov()
 	var/datum/world_faction/democratic/nexus = new()
 	nexus.name = "Nexus City Government"
@@ -693,7 +691,7 @@ var/PriorityQueue/all_feeds
 	nexus.network.password = ""
 	nexus.network.invisible = 0
 
-	LAZYDISTINCTADD(GLOB.all_world_factions, nexus)
+	GLOB.all_world_factions |= nexus
 
 
 /datum/world_faction/democratic/New()
@@ -1252,7 +1250,7 @@ var/PriorityQueue/all_feeds
 	var/same_department = 0
 	var/user_auth = 0
 	var/target_auth = 0
-	
+
 	var/datum/assignment/assignment = get_assignment(R.assignment_uid, R.get_name())
 	if(assignment)
 		user_auth = assignment.edit_authority
@@ -1338,11 +1336,41 @@ var/PriorityQueue/all_feeds
 	var/task
 	var/edit_authority = 1
 	var/authority_restriction = 1
-	
-	
+
+/datum/assignment/proc/get_title(var/rank)
+	if(!rank)	rank = 1
+	if(!accesses.len)
+		message_admins("broken assignment [src.uid]")
+		return "BROKEN"
+	if(accesses.len < rank)
+		var/datum/accesses/access = accesses[accesses.len]
+		return access.name
+	else
+		var/datum/accesses/access = accesses[rank]
+		return access.name
+
+
+/datum/assignment/proc/get_pay(var/rank)
+	if(!rank)	rank = 1
+	if(!accesses.len)
+		message_admins("broken assignment [src.uid]")
+		return 0
+	if(accesses.len < rank)
+		var/datum/accesses/access = accesses[accesses.len]
+		return access.pay
+	else
+		var/datum/accesses/access = accesses[rank]
+		return access.pay
+
+
 /datum/accesses
 	var/list/accesses = list()
 	var/expense_limit = 0
+	var/pay
+	var/name
+	var/auth_req
+	var/auth_level
+
 /datum/assignment/after_load()
 	..()
 
@@ -1354,26 +1382,22 @@ var/PriorityQueue/all_feeds
 	name = "Core Access"
 
 /datum/access_category/core/New()
-	accesses["100"] = "Logistics Control, Leadership"
-	accesses["101"] = "Command Machinery"
-	accesses["102"] = "Promotion/Demotion Vote"
-	accesses["103"] = "Reassignment"
-	accesses["104"] = "Edit Employment Records"
-	accesses["105"] = "Reset Expenses"
-	accesses["106"] = "Suspension/Termination"
-	accesses["107"] = "Engineering Programs"
-	accesses["108"] = "Medical Programs"
-	accesses["109"] = "Security Programs"
-	accesses["110"] = "Networking Programs"
-	accesses["111"] = "Lock Electronics"
-	accesses["112"] = "Import Approval"
-	accesses["113"] = "Invoicing & Exports"
-	accesses["114"] = "Science Machinery & Programs"
-	accesses["115"] = "Shuttle Control & Access"
+	accesses["101"] = "Access & Assignment Control"
+	accesses["102"] = "Command Programs"
+	accesses["103"] = "Reassignment/Promotion Vote"
+	accesses["104"] = "Research Control"
+	accesses["105"] = "Engineering Programs"
+	accesses["106"] = "Medical Programs"
+	accesses["107"] = "Security Programs"
+	accesses["108"] = "Shuttle Control"
+	accesses["109"] = "Machine Linking"
+	accesses["110"] = "Computer Linking"
+	accesses["111"] = "Budget View"
+	accesses["112"] = "Contract Signing/Control"
+
 
 /obj/faction_spawner
 	name = "Name to start faction with"
-	should_save =  FALSE
 	var/name_short = "Faction Abbreviation"
 	var/name_tag = "Faction Tag"
 	var/uid = "faction_uid"
@@ -1383,12 +1407,9 @@ var/PriorityQueue/all_feeds
 	var/network_password
 	var/network_invisible = FALSE
 
-/obj/faction_spawner/Initialize()
-	. = ..()
-	spawn_faction()
-	return INITIALIZE_HINT_QDEL
-
-/obj/faction_spawner/proc/spawn_faction()
+/obj/faction_spawner/New()
+	if(!GLOB.all_world_factions)
+		GLOB.all_world_factions = list()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 		if(existing_faction.uid == uid)
 			qdel(src)
@@ -1405,13 +1426,16 @@ var/PriorityQueue/all_feeds
 		fact.network.secured = 1
 		fact.network.password = network_password
 	fact.network.invisible = network_invisible
-	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
-	report_progress("Adding [name] faction. Faction list is \ref[GLOB.all_world_factions]")
+	GLOB.all_world_factions |= fact
+	qdel(src)
+	return
 
 /obj/faction_spawner/democratic
 	var/purpose = ""
 
-/obj/faction_spawner/democratic/spawn_faction()
+/obj/faction_spawner/democratic/New()
+	if(!GLOB.all_world_factions)
+		GLOB.all_world_factions = list()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 		if(existing_faction.uid == uid)
 			qdel(src)
@@ -1426,43 +1450,12 @@ var/PriorityQueue/all_feeds
 	fact.network.net_uid = network_uid
 	fact.purpose = src.purpose
 	if(network_password)
-		fact.network.secured = TRUE
+		fact.network.secured = 1
 		fact.network.password = network_password
 	fact.network.invisible = network_invisible
-	fact.gov = new()
-
-	var/datum/election/gov/gov_elect = new()
-	gov_elect.ballots |= fact.gov
-	fact.waiting_elections |= gov_elect
-
-	var/datum/election/council_elect = new()
-	var/datum/democracy/councillor/councillor1 = new()
-	councillor1.title = "Councillor of Justice and Criminal Matters"
-	fact.city_council |= councillor1
-	council_elect.ballots |= councillor1
-
-	var/datum/democracy/councillor/councillor2 = new()
-	councillor2.title = "Councillor of Budget and Tax Measures"
-	fact.city_council |= councillor2
-	council_elect.ballots |= councillor2
-
-	var/datum/democracy/councillor/councillor3 = new()
-	councillor3.title = "Councillor of Commerce and Business Relations"
-	fact.city_council |= councillor3
-	council_elect.ballots |= councillor3
-
-	var/datum/democracy/councillor/councillor4 = new()
-	councillor4.title = "Councillor for Culture and Ethical Oversight"
-	fact.city_council |= councillor4
-	council_elect.ballots |= councillor4
-
-	var/datum/democracy/councillor/councillor5 = new()
-	councillor5.title = "Councillor for the Domestic Affairs"
-	fact.city_council |= councillor5
-	council_elect.ballots |= councillor5
-	fact.waiting_elections |= council_elect
-	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
-	report_progress("Adding [name] faction. Faction list is \ref[GLOB.all_world_factions]")
+	GLOB.all_world_factions |= fact
+	qdel(src)
+	return
 
 /obj/faction_spawner/Nanotrasen
 	name = "Nanotrasen Corporate Colony"

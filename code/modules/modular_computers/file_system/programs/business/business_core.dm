@@ -1,33 +1,33 @@
-#define DCORE_MAIN 1
-#define DCORE_SPECIALASSIGNMENT 2
-#define DCORE_ACCESSMENU 3
-#define DCORE_ASSIGNMENTMENU 4
-#define DCORE_ACCESSCATEGORY 5
-#define DCORE_ACCESS 6
-#define DCORE_ASSIGNMENTCATEGORY 7
-#define DCORE_ASSIGNMENT 8
-#define DCORE_ECONOMY 9
-#define DCORE_PROMOTION 10
-#define DCORE_CRYO 11
+#define BCORE_MAIN 1
+#define BCORE_SPECIALASSIGNMENT 2
+#define BCORE_ACCESSMENU 3
+#define BCORE_ASSIGNMENTMENU 4
+#define BCORE_ACCESSCATEGORY 5
+#define BCORE_ACCESS 6
+#define BCORE_ASSIGNMENTCATEGORY 7
+#define BCORE_ASSIGNMENT 8
+#define BCORE_ECONOMY 9
+#define BCORE_PROMOTION 10
+#define BCORE_CRYO 11
 
 
 
 
-/datum/computer_file/program/democracy_core
-	filename = "democracy_core"
-	filedesc = "Nexus Assignment/Access Config"
+/datum/computer_file/program/business_core
+	filename = "business_core"
+	filedesc = "Business Employment Control"
 	program_icon_state = "comm"
 	program_menu_icon = "flag"
-	nanomodule_path = /datum/nano_module/program/democracy_core
-	extended_desc = "Used by the Executive Branch to manage the government assignment and access, plus print expense cards."
+	nanomodule_path = /datum/nano_module/program/business_core
+	extended_desc = "Used by upper management to manage assignments and ranks."
 	required_access = core_access_leader
-	requires_ntnet = TRUE
+	requires_ntnet = 1
 	size = 65
 	usage_flags = PROGRAM_CONSOLE
-	democratic = 1
-	
-/datum/nano_module/program/democracy_core
-	name = "Executive Government Control"
+	business = 1
+
+/datum/nano_module/program/business_core
+	name = "Business Employment Control"
 	available_to_ai = TRUE
 	var/connected = 0
 	var/attempted_password = ""
@@ -46,15 +46,15 @@
 
 
 
-/datum/nano_module/program/democracy_core/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
+/datum/nano_module/program/business_core/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data = host.initial_data()
-	var/datum/world_faction/democratic/connected_faction
+	var/datum/world_faction/business/connected_faction
 	if(program.computer.network_card && program.computer.network_card.connected_network)
 		connected_faction = program.computer.network_card.connected_network.holder
 	if(connected_faction)
 		data["faction_name"] = connected_faction.name
 		data["faction_uid"] = connected_faction.uid
-		if(menu == DCORE_ACCESSMENU)
+		if(menu == BCORE_ACCESSMENU)
 			var/list/access_categories[0]
 			var/datum/access_category/core/core
 			if(!core_access)
@@ -74,7 +74,7 @@
 					"name" = sanitize("([x]) [name]"),
 					"ind" = ind))
 			data["access_categories"] = access_categories
-		if(menu == DCORE_ASSIGNMENTMENU)
+		if(menu == BCORE_ASSIGNMENTMENU)
 			var/list/assignment_categories[0]
 			for(var/datum/assignment_category/category in connected_faction.assignment_categories)
 				assignment_categories[++assignment_categories.len] = list("name" = category.name, "assignments" = list(), "ref" = "\ref[category]")
@@ -84,9 +84,9 @@
 					"ref2" = "\ref[assignment]"
 					))
 			data["assignment_categories"] = assignment_categories
-		if(menu == DCORE_ACCESSCATEGORY)
+		if(menu == BCORE_ACCESSCATEGORY)
 			if(!selected_accesscategory)
-				menu = DCORE_ACCESSMENU
+				menu = BCORE_ACCESSMENU
 				return ui_interact(user, ui_key, ui, force_open, state)
 			var/list/accesses[0]
 			var/ind = 0
@@ -95,13 +95,13 @@
 				var/name = selected_accesscategory.accesses[x]
 				accesses[++accesses.len] = list("name" = "([x]) [name]", "ind" = ind)
 			data["accesses"] = accesses
-		if(menu == DCORE_ACCESS)
+		if(menu == BCORE_ACCESS)
 			if(!selected_access)
-				menu = DCORE_ACCESSMENU
+				menu = BCORE_ACCESSMENU
 				return ui_interact(user, ui_key, ui, force_open, state)
-		if(menu == DCORE_ASSIGNMENTCATEGORY) // assignment category view
+		if(menu == BCORE_ASSIGNMENTCATEGORY) // assignment category view
 			if(!selected_assignmentcategory)
-				menu = DCORE_ASSIGNMENTMENU
+				menu = BCORE_ASSIGNMENTMENU
 				return ui_interact(user, ui_key, ui, force_open, state)
 			data["leader_faction"] = selected_assignmentcategory.command_faction
 			data["membership_faction"] = selected_assignmentcategory.member_faction
@@ -112,48 +112,49 @@
 			for(var/datum/assignment/assignment in selected_assignmentcategory.assignments)
 				assignments[++assignments.len] = list("name" = "([assignment.uid]) [assignment.name]", "ref" = "\ref[assignment]")
 			data["assignments"] = assignments
-		if(menu == DCORE_ASSIGNMENT)
+		if(menu == BCORE_ASSIGNMENT)
 			if(!selected_assignment)
-				menu = DCORE_ASSIGNMENTMENU
+				menu = BCORE_ASSIGNMENTMENU
 				return ui_interact(user, ui_key, ui, force_open, state)
 			data["pay"] = selected_assignment.payscale
 			data["title"] = selected_assignment.name
 			data["cryonetwork"] = selected_assignment.cryo_net
 			data["selected_rank"] = selected_rank
-			data["authlevel"] = selected_assignment.edit_authority
-			data["reqauthlevel"] = selected_assignment.authority_restriction
-			if(selected_assignment.task)
-				data["assignment_task"] = selected_assignment.task
-			else
-				data["assignment_task"] = "*No custom task. The organization-wide task will be displayed.*"
 			if(selected_rank < selected_assignment.ranks.len+1)
 				data["increase_button"] = 1
 			if(selected_rank != 1)
 				data["decrease_button"] = 1
 			if(selected_assignment.accesses.len)
-				if(selected_assignment.accesses["1"] && !istype(selected_assignment.accesses["1"], /datum/accesses))
+				if(selected_assignment.accesses[1] && !istype(selected_assignment.accesses[1], /datum/accesses))
 					var/datum/accesses/copy = new()
-					copy.accesses = selected_assignment.accesses.Copy()
-					selected_assignment.accesses["1"] = copy
+					selected_assignment.accesses[1] = copy
+					message_admins("Broken assignment [selected_assignment.uid]")
 			else
 				var/datum/accesses/copy = new()
-				selected_assignment.accesses["1"] = copy
-				
+				selected_assignment.accesses[1] = copy
+
 			var/list/all_access = list()
 			var/expense_limit = 0
+			var/title = ""
+			var/auth_level = 0
+			var/auth_req = 0
+			var/pay = 0
+			if(selected_rank > selected_assignment.accesses.len)
+				selected_rank = selected_assignment.accesses.len
 			for(var/i=1;i<=selected_rank;i++)
-				if(i > selected_assignment.accesses.len)
-					var/datum/accesses/copy = new /datum/accesses()
-					var/datum/accesses/copy2 = selected_assignment.accesses["[i-1]"] 
-					if(copy2)
-						copy.expense_limit = copy2.expense_limit
-					selected_assignment.accesses["[i]"] = copy
-					continue
-				var/datum/accesses/copy = selected_assignment.accesses["[i]"]
+				var/datum/accesses/copy = selected_assignment.accesses[i]
 				if(istype(copy))
 					expense_limit = copy.expense_limit
+					title = copy.name
+					auth_level = copy.auth_level
+					auth_req = copy.auth_req
+					pay = copy.pay
 					all_access |= copy.accesses
 			data["expense_limit"] = expense_limit
+			data["rank_title"] = title
+			data["rank_wage"] = pay
+			data["auth_level"] = auth_level
+			data["auth_req"] = auth_req
 			var/list/access_categories[0]
 			var/datum/access_category/core/core
 			if(!core_access)
@@ -178,59 +179,60 @@
 					"existing" = existing))
 			data["access_categories"] = access_categories
 			var/list/ranks[0]
-			for(var/title in selected_assignment.ranks)
-				ranks[++ranks.len] = list("name" = "[title]:[selected_assignment.ranks[title]]")
+			var/ind = 0
+			for(var/datum/accesses/access in selected_assignment.accesses)
+				var/rtitle = access.name
+				ind++
+				ranks[++ranks.len] = list("name" = "[rtitle]", "ind" = "[ind]")
+
+
 			data["ranks"] = ranks
 			data["view_ranks"] = viewing_ranks
-		if(menu == DCORE_ECONOMY)
+		if(menu == BCORE_ECONOMY)
 			data["money_rate"] = connected_faction.payrate
 			data["money_debt"] = connected_faction.get_debt()
 			data["money_balance"] = connected_faction.central_account.money
 			data["tax_rate"] = connected_faction.tax_rate
 			data["import_rate"] = connected_faction.import_profit
 			data["export_rate"] = connected_faction.export_profit
-		if(menu == DCORE_PROMOTION)
+		if(menu == BCORE_PROMOTION)
 			data["rank1_req"] = connected_faction.all_promote_req
 			data["rank3_req"] = connected_faction.three_promote_req
 			data["rank5_req"] = connected_faction.five_promote_req
-		if(menu == DCORE_CRYO) // cryo menu
+		if(menu == BCORE_CRYO) // cryo menu
 			var/list/cryos[0]
 			cryos[++cryos.len] = list("name" = "default")
 			for(var/cryoname in connected_faction.cryo_networks)
 				cryos[++cryos.len] = list("name" = cryoname)
 			data["cryos"] = cryos
-		if(menu == DCORE_SPECIALASSIGNMENT)
+		if(menu == BCORE_SPECIALASSIGNMENT)
 			if(!selected_assignment)
-				menu = DCORE_ASSIGNMENTMENU
+				menu = BCORE_ASSIGNMENTMENU
 				return ui_interact(user, ui_key, ui, force_open, state)
-			if(selected_assignment.uid == "judge" || selected_assignment.uid == "councillor") data["proper_job"] = 1
 			data["pay"] = selected_assignment.payscale
 			data["cryonetwork"] = selected_assignment.cryo_net
-			data["authlevel"] = selected_assignment.edit_authority
-			data["reqauthlevel"] = selected_assignment.authority_restriction
-			if(selected_assignment.accesses.len)
-				if(selected_assignment.accesses["1"] && !istype(selected_assignment.accesses["1"], /datum/accesses))
-					var/datum/accesses/copy = new()
-					copy.accesses = selected_assignment.accesses.Copy()
-					selected_assignment.accesses["1"] = copy
-			else
-				var/datum/accesses/copy = new()
-				selected_assignment.accesses["1"] = copy
 			var/list/all_access = list()
 			var/expense_limit = 0
+			var/title = ""
+			var/auth_level = 0
+			var/auth_req = 0
+			var/pay = 0
+			if(selected_rank > selected_assignment.accesses.len)
+				selected_rank = selected_assignment.accesses.len
 			for(var/i=1;i<=selected_rank;i++)
-				if(i > selected_assignment.accesses.len)
-					var/datum/accesses/copy = new /datum/accesses()
-					var/datum/accesses/copy2 = selected_assignment.accesses["[i-1]"] 
-					if(copy2)
-						copy.expense_limit = copy2.expense_limit
-					selected_assignment.accesses["[i]"] = copy
-					continue
-				var/datum/accesses/copy = selected_assignment.accesses["[i]"]
+				var/datum/accesses/copy = selected_assignment.accesses[i]
 				if(istype(copy))
 					expense_limit = copy.expense_limit
+					title = copy.name
+					auth_level = copy.auth_level
+					auth_req = copy.auth_req
+					pay = copy.pay
 					all_access |= copy.accesses
 			data["expense_limit"] = expense_limit
+			data["rank_title"] = title
+			data["rank_wage"] = pay
+			data["auth_level"] = auth_level
+			data["auth_req"] = auth_req
 			var/list/access_categories[0]
 			var/datum/access_category/core/core
 			if(!core_access)
@@ -254,7 +256,7 @@
 					"ind" = ind,
 					"existing" = existing))
 			data["access_categories"] = access_categories
-			
+
 	if(selected_accesscategory)
 		data["selected_accesscategory"] = selected_accesscategory.name
 	if(selected_access && selected_accesscategory)
@@ -265,14 +267,17 @@
 	if(selected_assignmentcategory)
 		data["selected_assignmentcategory"] = selected_assignmentcategory.name
 	if(selected_assignment)
-		data["selected_assignment"] = "([selected_assignment.uid]) [selected_assignment.name]"
+		if(selected_rank > selected_assignment.accesses.len)
+			selected_rank = selected_assignment.accesses.len
+		var/datum/accesses/access = selected_assignment.accesses[selected_rank]
+		data["selected_assignment"] = "([selected_assignment.uid]) [access.name]"
 	data["prior_menu"] = prior_menu
 	data["menu"] = menu
-	
-	
+
+
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
-		ui = new(user, src, ui_key, "democracy_core.tmpl", name, 550, 650, state = state)
+		ui = new(user, src, ui_key, "business_core.tmpl", name, 550, 650, state = state)
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
 		ui.open()
@@ -285,14 +290,14 @@
 		connected_faction = program.computer.network_card.connected_network.holder
 	if(!program.can_run(usr)) return 1
 	switch (href_list["action"])
-	
+
 		if("change_menu")
 			var/select_menu = text2num(href_list["menu_target"])
 			menu = select_menu
 			selected_rank = 1
-			prior_menu = DCORE_MAIN
+			prior_menu = BCORE_MAIN
 		if("menu_back")
-			menu = DCORE_MAIN
+			menu = BCORE_MAIN
 		if("create_accesscategory")
 			var/select_name = sanitizeName(input(usr,"Enter new access category name.","Create Access Category", "") as null|text, MAX_NAME_LEN, 1, 0)
 			if(select_name)
@@ -307,8 +312,8 @@
 		if("select_accesscategory")
 			selected_accesscategory = locate(href_list["selected_ref"])
 			if(!selected_accesscategory) return 1
-			menu = DCORE_ACCESSCATEGORY
-			prior_menu = DCORE_ASSIGNMENTMENU
+			menu = BCORE_ACCESSCATEGORY
+			prior_menu = BCORE_ASSIGNMENTMENU
 		if("edit_accesscategory")
 			var/curr_name = selected_accesscategory.name
 			var/select_name = sanitizeName(input(usr,"Enter new name.","Change Access Category Name", curr_name) as null|text, MAX_NAME_LEN, 1, 0)
@@ -327,13 +332,13 @@
 			connected_faction.access_categories -= selected_accesscategory
 			qdel(selected_accesscategory)
 			selected_accesscategory = null
-			menu = DCORE_ACCESSMENU
+			menu = BCORE_ACCESSMENU
 		if("select_access")
 			selected_accesscategory = locate(href_list["selected_ref"])
 			if(!selected_accesscategory) return 1
 			selected_access = text2num(href_list["selected_ind"])
-			menu = DCORE_ACCESS
-			prior_menu = DCORE_ACCESSMENU
+			menu = BCORE_ACCESS
+			prior_menu = BCORE_ACCESSMENU
 		if("create_access")
 			var/selected_uid = input(usr,"Enter unique access number (1 - 99)", "Enter Access Number") as null|num
 			if(!selected_uid || selected_uid < 1 || selected_uid > 99)
@@ -371,20 +376,17 @@
 				if(curr_name == select_name) return 1
 				selected_accesscategory.accesses[x] = select_name
 				to_chat(usr, "Access successfully edited.")
-
 		if("delete_access")
 			var/x = selected_accesscategory.accesses[selected_access]
 			selected_accesscategory.accesses -= x
 			connected_faction.rebuild_all_access()
 			to_chat(usr, "Access successfully deleted.")
-			menu = DCORE_ACCESSMENU
-
+			menu = BCORE_ACCESSMENU
 		if("select_access_noref")
 			if(!selected_accesscategory) return 1
 			selected_access = text2num(href_list["selected_ind"])
-			menu = DCORE_ACCESS
-			prior_menu = DCORE_ACCESSCATEGORY
-
+			menu = BCORE_ACCESS
+			prior_menu = BCORE_ACCESSCATEGORY
 		if("create_assignmentcategory")
 			var/select_name = sanitizeName(input(usr,"Enter new assignment category name.","Create Assignment Category", "") as null|text, MAX_NAME_LEN, 1, 0)
 			if(select_name)
@@ -397,75 +399,47 @@
 				category.parent = connected_faction
 				connected_faction.assignment_categories |= category
 				to_chat(usr, "Assignment category successfully created.")
-
 		if("select_assignmentcategory")
 			selected_assignmentcategory = locate(href_list["selected_ref"])
 			if(!selected_assignmentcategory) return 1
-			menu = DCORE_ASSIGNMENTCATEGORY
-			prior_menu = DCORE_ASSIGNMENTMENU
-
+			menu = BCORE_ASSIGNMENTCATEGORY
+			prior_menu = BCORE_ASSIGNMENTMENU
 		if("select_assignment")
 			selected_assignmentcategory = locate(href_list["category_ref"])
 			if(!selected_assignmentcategory) return 1
 			selected_assignment = locate(href_list["selected_ref"])
 			if(!selected_assignment) return 1
-			menu = DCORE_ASSIGNMENT
-			prior_menu = DCORE_ASSIGNMENTMENU
-
+			menu = BCORE_ASSIGNMENT
+			prior_menu = BCORE_ASSIGNMENTMENU
 		if("select_judge")
 			selected_assignment = connected_faction.judge_assignment
 			if(!selected_assignment) return 1
-			menu = DCORE_SPECIALASSIGNMENT
-			prior_menu = DCORE_ASSIGNMENTMENU
-		
+			menu = BCORE_SPECIALASSIGNMENT
+			prior_menu = BCORE_ASSIGNMENTMENU
+
 		if("select_councillor")
 			selected_assignment = connected_faction.councillor_assignment
 			if(!selected_assignment) return 1
-			menu = DCORE_SPECIALASSIGNMENT
-			prior_menu = DCORE_ASSIGNMENTMENU
-		
-		if("select_resident")
-			selected_assignment = connected_faction.resident_assignment
-			if(!selected_assignment) return 1
-			menu = DCORE_SPECIALASSIGNMENT
-			prior_menu = DCORE_ASSIGNMENTMENU
-			
-		if("select_citizen")
-			selected_assignment = connected_faction.citizen_assignment
-			if(!selected_assignment) return 1
-			menu = DCORE_SPECIALASSIGNMENT
-			prior_menu = DCORE_ASSIGNMENTMENU
-			
-		if("select_prisoner")
-			selected_assignment = connected_faction.prisoner_assignment
-			if(!selected_assignment) return 1
-			menu = DCORE_SPECIALASSIGNMENT
-			prior_menu = DCORE_ASSIGNMENTMENU	
-		
+			menu = BCORE_SPECIALASSIGNMENT
+			prior_menu = BCORE_ASSIGNMENTMENU
+
 		if("select_assignment_two")
 			selected_assignment = locate(href_list["selected_ref"])
 			if(!selected_assignment) return 1
-			menu = DCORE_ASSIGNMENT
-			prior_menu = DCORE_ASSIGNMENTCATEGORY
-
+			menu = BCORE_ASSIGNMENT
+			prior_menu = BCORE_ASSIGNMENTCATEGORY
 		if("assignmentcategory_leadership_yes")
 			selected_assignmentcategory.command_faction = 1
-
 		if("assignmentcategory_leadership_no")
 			selected_assignmentcategory.command_faction = 0
-
 		if("assignmentcategory_membership_yes")
 			selected_assignmentcategory.member_faction = 1
-
 		if("assignmentcategory_membership_no")
 			selected_assignmentcategory.member_faction = 0
-
 		if("assignmentcategory_account_on")
 			selected_assignmentcategory.account_status = 1
-
 		if("assignmentcategory_account_off")
 			selected_assignmentcategory.account_status = 0
-
 		if("assignmentcategory_changeleader")
 			var/curr = selected_assignmentcategory.head_position
 			var/datum/assignment/selected = input(usr,"Choose which assignment","Enter Parameter",null) as null|anything in (selected_assignmentcategory.assignments + "None")
@@ -477,7 +451,6 @@
 				selected_assignmentcategory.head_position = null
 			else
 				selected_assignmentcategory.head_position = selected
-
 		if("create_assignment")
 			var/x = selected_assignmentcategory
 			var/select_name = sanitizeName(input(usr,"Enter the new assignments uid. This cannot be changed. Spaces are not allowed.","New Assignment UID", "") as null|text, MAX_NAME_LEN, 1, 0,1)
@@ -500,7 +473,6 @@
 					new_assignment.cryo_net = "Last Known Cryonet"
 					selected_assignmentcategory.assignments |= new_assignment
 					to_chat(usr, "Assignment successfully created.")
-					
 		if("create_assignment_two")
 			var/datum/assignment_category/selected_assignmentcategory2 = locate(href_list["selected_ref"])
 			var/x = selected_assignmentcategory2
@@ -524,7 +496,6 @@
 					new_assignment.cryo_net = "Last Known Cryonet"
 					selected_assignmentcategory2.assignments |= new_assignment
 					to_chat(usr, "Assignment successfully created.")
-					
 		if("edit_assignmentcategory")
 			var/curr_name = selected_assignmentcategory.name
 			var/select_name = sanitizeName(input(usr,"Enter new assignment category name.","Edit Assignment Category", "") as null|text, MAX_NAME_LEN, 1, 0)
@@ -534,7 +505,6 @@
 					SSnano.update_uis(src)
 					return 1
 				selected_assignmentcategory.name = select_name
-				
 		if("edit_assignment")
 			var/curr_name = selected_assignment.name
 			var/select_name = sanitizeName(input(usr,"Enter new rank 1 title.","Rank 1 Title", "") as null|text, MAX_NAME_LEN, 1, 0)
@@ -544,38 +514,7 @@
 					SSnano.update_uis(src)
 					return 1
 				selected_assignment.name = select_name
-				
-		if("edit_assignment_pay")
-			var/new_pay = input("Enter new wage. This wage is paid every thirty minutes.","Rank 1 Wage") as null|num
-			if(!new_pay && new_pay != 0) return 1
-			var/maximum = 10
-			if(selected_assignment.ranks.len)
-				var/x = selected_assignment.ranks[selected_assignment.ranks.len]
-				maximum = selected_assignment.ranks[x]
-			if(new_pay > maximum)
-				to_chat(usr, "Payscale cannot be higher than the CEO pay or the pay of the higher ranks.")
-				return
-			selected_assignment.payscale = new_pay
-			
-		if("edit_assignment_authority")
-			var/new_auth = input("Enter authority level. Holders of this assignment will be able to manage and assign any assignment with a required authority at or below this level.","Authority Level", selected_assignment.edit_authority) as null|num
-			if(!new_auth && new_auth != 0) return 1
-			selected_assignment.edit_authority = new_auth
-			
-		if("edit_assignment_requirement")
-			var/new_auth = input("Enter authority requirement. Managers will require an authority level at or greater than this value to assign, unassign and promote holders of this assignment.","Requirement Level", selected_assignment.authority_restriction) as null|num
-			if(!new_auth && new_auth != 0) return 1
-			selected_assignment.authority_restriction = new_auth
-			
-		if("set_custom_task")
-			var/start_uid = selected_assignment.uid
-			var/newValue = replacetext(input(usr, "Edit custom task. This task can be viewed through the neural lace when employees are clocked in. Pencode formatting is allowed.", "Set Task", replacetext(html_decode(selected_assignment.task), "\[br\]", "\n")) as null|message, "\n", "\[br\]")
-			if(selected_assignment.uid == start_uid)
-				selected_assignment.task = newValue
-				
-		if("remive_custom_task")
-			selected_assignment.task = null
-			
+
 		if("delete_assignmentcategory")
 			if(selected_assignmentcategory.assignments.len)
 				to_chat(usr,"You must delete all assignments inside a category before removing the category.")
@@ -585,8 +524,7 @@
 				connected_faction.assignment_categories -= selected_assignmentcategory
 				qdel(selected_assignmentcategory)
 				to_chat(usr, "Assignment Category successfully deleted.")
-			menu = DCORE_ASSIGNMENTMENU
-			
+			menu = BCORE_ASSIGNMENTMENU
 		if("delete_assignment")
 			var/choice = input(usr,"Are you sure you want to delete this assignment? All ranking data will be lost.") in list("Confirm", "Cancel")
 			if(choice == "Confirm")
@@ -595,104 +533,66 @@
 				connected_faction.rebuild_all_assignments()
 				to_chat(usr, "Assignment successfully deleted.")
 			menu = prior_menu
-			
 		if("view_access")
 			viewing_ranks = 0
-			
 		if("view_ranks")
 			viewing_ranks = 1
 			selected_rank = 1
-			
 		if("create_rank")
 			var/select_name = sanitizeName(input(usr,"Enter new rank title.","New rank title", "") as null|text, MAX_NAME_LEN, 1, 0)
+
 			if(select_name)
-				if(select_name == selected_assignment.name || selected_assignment.ranks.Find(select_name))
-					to_chat(usr, "A rank with this title already exists.")
-					return 1
-				var/max = 10
-				var/min = 0
-				var/ind = 0
-				if(selected_assignment.ranks.len)
-					var/list/choices = list()
-					for(var/x in 2 to selected_assignment.ranks.len+2)
-						choices += "[x]"
-					ind = text2num(input(usr,"Choose where to place this rank on the structure.","Choose rank position",null) as null|anything in choices)-1
-					if(!ind) return 1
-					if(ind > selected_assignment.ranks.len)
-						ind = 0
-						min = selected_assignment.payscale
-						if(selected_assignment.ranks.len)
-							min = selected_assignment.ranks[selected_assignment.ranks[selected_assignment.ranks.len]]
-					if(ind)
-						if(ind == 1)
-							min = selected_assignment.payscale
-							max = text2num(selected_assignment.ranks[selected_assignment.ranks[ind]])
-						else
-							max = text2num(selected_assignment.ranks[selected_assignment.ranks[ind]])
-							min = text2num(selected_assignment.ranks[selected_assignment.ranks[ind-1]])
-				var/new_pay = input("Enter new rank wage. Payscale cannot be less than the prior rank ([min]) amd cannot be higher than the CEO or the higher ranks pay ([max])","Rank Wage") as null|num
+				var/new_pay = input("Enter new rank wage.","Rank Wage") as null|num
 				if(!new_pay && new_pay != 0) return 1
-				if(new_pay > max)
-					to_chat(usr, "Pay exceeded maximum. Rank creation failed.")
-					return 1
-				if(new_pay < min)
-					to_chat(usr, "Pay under minimum. Rank creaton failed.")
-					return 1
-				var/ranknum = ind
-				if(!ranknum)
-					ranknum = selected_assignment.ranks.len+1
-				var/datum/accesses/copy2 = selected_assignment.accesses["[ranknum-1]"]
+				var/datum/accesses/copy2 = selected_assignment.accesses[selected_assignment.accesses.len]
 				var/datum/accesses/copy = new()
-				selected_assignment.accesses["[ranknum]"] = copy
+				selected_assignment.accesses |= copy
 				if(copy2)
 					copy.expense_limit = copy2.expense_limit
-				selected_assignment.ranks.Insert(ind, select_name)
-				selected_assignment.ranks[select_name] = new_pay
+					copy.accesses = copy2.accesses.Copy()
 				to_chat(usr, "Rank successfully created.")
-				
 		if("delete_rank")
-			var/choice2 = input(usr, "Are you sure you want to delete a rank? All higher ranks will be moved down by one, giving existing lower ranks an instant promotion.") in list("Confirm", "Cancel")
+			if(selected_assignment.accesses.len < 2)
+				to_chat(usr, "You cannot delete the first rank. Delete the whole assignment instead.")
+				return 0
+			var/choice2 = input(usr, "Are you sure you want to delete the highest rank?") in list("Confirm", "Cancel")
 			if(choice2 == "Cancel") return 1
-			if(!selected_assignment.ranks.len) return 1
-			var/list/choices = list()
-			var/ind = 1
-			for(var/x in selected_assignment.ranks)
-				ind++
-				choices += "[ind] [x]"
-			var/choice = input(usr,"Choose which rank to delete.","Delete rank",null) as null|anything in choices
-			var/list/items = splittext(choice," ")
-			ind = text2num(items[1])-1
-			selected_assignment.ranks.Cut(ind, ind+1)
+			selected_assignment.accesses.Cut(selected_assignment.accesses.len-1, selected_assignment.accesses.len)
 			to_chat(usr, "Rank successfully deleted.")
-			
 		if("pick_access")
 			var/datum/access_category/category = locate(href_list["selected_ref"])
 			var/ind = text2num(href_list["selected_ind"])
 			var/x = category.accesses[ind]
-			for(var/i=1;i<=selected_rank;i++)
-				if(i > selected_assignment.accesses.len)
-					selected_assignment.accesses["[i]"] = new /datum/accesses()
-					continue
-				var/datum/accesses/copy = selected_assignment.accesses["[i]"]
-				if(istype(copy))
-					var/list/all_access = copy.accesses
-					if(all_access.Find(x))
-						all_access -= x
-					else if(i == selected_rank)
-						all_access |= x
-				else
-					selected_assignment.accesses["[i]"] = new /datum/accesses()
-					
-					
+			if(selected_rank > selected_assignment.accesses.len)
+				selected_rank = selected_assignment.accesses.len
+			var/datum/accesses/copy = selected_assignment.accesses[selected_rank]
+			var/list/all_access = copy.accesses
+			if(all_access.Find(x))
+				all_access -= x
+			else
+				all_access |= x
+
+		if("edit_assignment_pay")
+			var/datum/accesses/copy = selected_assignment.accesses[selected_rank]
+			if(istype(copy))
+				var/new_pay = input("Enter new wage. This wage is paid every thirty minutes.","Rank 1 Wage") as null|num
+				if(!new_pay && new_pay != 0) return 1
+				copy.pay = new_pay
+			else
+				selected_assignment.accesses[selected_rank] = new /datum/accesses()
+
+
+
+
 		if("change_expense_limit")
-			var/datum/accesses/copy = selected_assignment.accesses["[selected_rank]"]
+			var/datum/accesses/copy = selected_assignment.accesses[selected_rank]
 			if(istype(copy))
 				var/new_pay = input("Enter new expense limit. Expenses are used when approving orders and paying invoices with an expense card.","Change expense limit") as null|num
 				if(!new_pay && new_pay != 0) return 1
-				copy.expense_limit = new_pay				
+				copy.expense_limit = new_pay
 			else
-				selected_assignment.accesses["[selected_rank]"] = new /datum/accesses()
-								
+				selected_assignment.accesses[selected_rank] = new /datum/accesses()
+
 		if("money_settle")
 			connected_faction.pay_debt()
 		if("req1_change")

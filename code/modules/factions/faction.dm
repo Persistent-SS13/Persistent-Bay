@@ -579,6 +579,19 @@ var/PriorityQueue/all_feeds
 	else
 		return "BROKE"
 
+/datum/world_faction/proc/close_business()
+	for(var/obj/item/organ/internal/stack/stack in connected_laces)
+		if(stack.owner)
+			to_chat(stack.owner, "Your neural lace vibrates letting you know that [src.name] is closed for business and you have been automatically clocked out.")
+		if(employment_log > 100)
+			employment_log.Cut(1,2)
+		employment_log += "At [stationdate2text()] [stationtime2text()] [stack.owner.real_name] clocked out."
+	connected_laces.Cut()
+	status = 0
+
+/datum/world_faction/proc/open_business()
+	status = 1
+
 /datum/world_faction/proc/get_leadername()
 	return leader_name
 
@@ -644,6 +657,10 @@ var/PriorityQueue/all_feeds
 	var/datum/faction_research/research
 
 	var/status = 1
+
+	var/list/employment_log
+
+	var/objective = ""
 
 /proc/spawn_nexus_gov()
 	var/datum/world_faction/democratic/nexus = new()
@@ -1179,6 +1196,8 @@ var/PriorityQueue/all_feeds
 	create_faction_account()
 	limits = new()
 	research = new()
+
+
 /datum/world_faction/proc/rebuild_cargo_telepads()
 	cargo_telepads.Cut()
 	for(var/obj/machinery/telepad_cargo/telepad in GLOB.cargotelepads)

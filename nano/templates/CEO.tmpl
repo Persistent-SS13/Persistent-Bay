@@ -1,5 +1,5 @@
-<h2>{{:data.business_name}} Management</h2><br>
-{{:helper.link("Central Options", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
+<h2>{{:data.business_name}} Central Options</h2><br>
+{{:helper.link("Status Control", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
 {{:helper.link("Employee Log", '', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
 {{:helper.link("View/Edit General Task", '', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
 <br><hr>
@@ -10,7 +10,7 @@
 			Business Status
 		</div>
 		<div class='itemContent'>
-			{{:helper.link("Open", '', {'action' : 'business_open'}, data.business_status == 1 ? 'selected' : null)}}{{:helper.link("Closed", '', {'action' : 'business_close'}, data.business_status == 1 ? 'selected' : null)}}	
+			{{:helper.link("Open", '', {'action' : 'business_open'}, data.business_status ? 'selected' : null)}}{{:helper.link("Closed", '', {'action' : 'business_close'}, data.business_status ? null : 'selected')}}	
 		</div>
 	</div>
 	Employees will not be able to clock in to the business when it's closed.
@@ -26,6 +26,7 @@
 {{/if}}
 {{if data.menu == 2}}
 	<h4>Employee Log</h4>
+	{{:helper.link('Newer Page', 'bullet', {'page_down' : 1}, data.page_down ? null : 'disabled')}}{{:helper.link('Older Page', 'bullet', {'page_up' : 1}, data.page_up ? null : 'disabled')}}<br><br>
 	<div class="statusDisplay" style="overflow: auto;">
 		{{for data.entries}}
 			{{:value.entry}}<br>

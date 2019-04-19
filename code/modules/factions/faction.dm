@@ -836,7 +836,7 @@ var/PriorityQueue/all_feeds
 				tax_amount = amount * (tax_bprog1_rate/100)
 		else
 			tax_amount = amount * (tax_bflat_rate/100)
-		
+
 	else
 		if(tax_type_p == 2)
 			if(account.money >= tax_pprog4_amount)
@@ -1176,7 +1176,7 @@ var/PriorityQueue/all_feeds
 	var/stock_amount
 	if(ceo_tax)
 		ceo_amount = round((amount/100)*ceo_tax)
-	if(stock_tax)
+	if(stockholder_tax)
 		stock_amount = round((amount/100)*ceo_tax)
 	if(ceo_amount)
 		var/datum/money_account/target_account = get_account_record(leader_name)
@@ -1199,7 +1199,7 @@ var/PriorityQueue/all_feeds
 			if(amount_taken)
 				var/datum/transaction/T = new("Shareholders", "Shareholder Revenue Share", -amount_taken, "Nexus Economy Network")
 				account.do_transaction(T)
-	
+
 /datum/world_faction/business/proc/get_ceo_wage()
 	return CEO.get_pay(1)
 
@@ -1240,20 +1240,21 @@ var/PriorityQueue/all_feeds
 /datum/world_faction/business/proc/instant_dividend(var/target)
 	if(target > 100) target = 100
 	var/amount = (central_account.money/100)*target
+	var/amount_taken = 0
 	for(var/x in stock_holders)
 		var/datum/stockholder/holder = stock_holders[x]
 		var/holder_amount = round((amount/100)*holder.stocks)
 		if(holder_amount)
 			var/datum/money_account/target_account = get_account_record(holder.real_name)
 			if(target_account)
-				var/datum/transaction/Te = new("[account.owner_name]", "Instant Dividend", holder_amount, "Nexus Economy Network")
+				var/datum/transaction/Te = new("[central_account.owner_name]", "Instant Dividend", holder_amount, "Nexus Economy Network")
 				target_account.do_transaction(Te)
 				amount_taken += holder_amount
-		if(amount_taken)
-			var/datum/transaction/T = new("Shareholders", "Instant Dividend", -amount_taken, "Nexus Economy Network")
-			account.do_transaction(T)
-	
-	
+	if(amount_taken)
+		var/datum/transaction/T = new("Shareholders", "Instant Dividend", -amount_taken, "Nexus Economy Network")
+		central_account.do_transaction(T)
+
+
 
 /datum/world_faction/business/proc/pass_proposal(var/datum/stock_proposal/proposal)
 	if(!proposal) return
@@ -1261,21 +1262,21 @@ var/PriorityQueue/all_feeds
 		if(STOCKPROPOSAL_CEOFIRE)
 			leader_name = ""
 		if(STOCKPROPOSAL_CEOREPLACE)
-			leader_name = target
+			leader_name = proposal.target
 		if(STOCKPROPOSAL_CEOWAGE)
 			var/datum/accesses/access = CEO.accesses[1]
-			access.pay = target			
+			access.pay = proposal.target
 		if(STOCKPROPOSAL_CEOTAX)
-			ceo_tax = target
+			ceo_tax = proposal.target
 		if(STOCKPROPOSAL_STOCKHOLDERTAX)
-			stockholder_tax = target
+			stockholder_tax = proposal.target
 		if(STOCKPROPOSAL_INSTANTDIVIDEND)
-			instant_dividend(target)
+			instant_dividend(proposal.target)
 		if(STOCKPROPOSAL_PUBLIC)
 			public_stock = 1
 		if(STOCKPROPOSAL_UNPUBLIC)
 			public_stock = 0
-		
+
 	proposals -= proposal
 
 
@@ -1318,8 +1319,8 @@ var/PriorityQueue/all_feeds
 			proposal.required = 75
 	proposals |= proposal
 	proposal.connected_faction = src
-	
-	
+
+
 /datum/stockholder
 	var/real_name = ""
 	var/stocks = 0
@@ -1353,7 +1354,7 @@ var/PriorityQueue/all_feeds
 
 /datum/stock_proposal/proc/pass_proposal()
 	connected_faction.pass_proposal(src)
-	
+
 /datum/world_faction/after_load()
 
 	if(!debts)

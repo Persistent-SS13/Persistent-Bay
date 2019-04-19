@@ -15,6 +15,28 @@ var/PriorityQueue/all_feeds
 /datum/proc/contract_cancelled(var/obj/item/weapon/paper/contract/contract)
 	return 0
 
+/datum/stock_contract
+
+/datum/stock_contract/contract_signed(var/obj/item/weapon/paper/contract/contract)
+	var/datum/world_faction/business/connected_faction = get_faction(contract.org_uid)
+	if(connected_faction && istype(connected_faction))
+		var/datum/stockholder/holder = connected_faction.get_stockholder_datum(contract.created_by)
+		if(holder.stocks < contract.ownership)
+			contract.cancelled = 1
+			contract.linked = null
+			contract.update_icon()
+			return 0
+		if(contract.finalize())
+			var/datum/stockholder/newholder
+			newholder = connected_faction.get_stockholder_datum(contract.signed_by)
+			if(!newholder)
+				newholder = new()
+				newholder.real_name = contract.signed_by
+				connected_faction.stock_holders[contract.signed_by] = newholder
+			newholder.stocks += contract.ownership
+			holder.stocks -= contract.ownership
+			if(!holder.stocks)
+				connected_faction.stock_holders -= holder.real_name
 
 /obj/item/weapon/paper/contract
 	name = "contract"
@@ -29,6 +51,8 @@ var/PriorityQueue/all_feeds
 	var/datum/computer_file/report/crew_record/signed_record
 
 	var/ownership = 1 // how many stocks the contract is worth (if a stock contract)
+	var/org_uid = "" // what org this belongs to
+
 	var/pay_to = ""
 	var/created_by = ""
 	var/func = 1
@@ -812,6 +836,7 @@ var/PriorityQueue/all_feeds
 				tax_amount = amount * (tax_bprog1_rate/100)
 		else
 			tax_amount = amount * (tax_bflat_rate/100)
+		
 	else
 		if(tax_type_p == 2)
 			if(account.money >= tax_pprog4_amount)
@@ -1136,14 +1161,199 @@ var/PriorityQueue/all_feeds
 	var/datum/business_module/module
 	var/list/stock_holders = list()
 	var/datum/assignment/CEO
+	var/list/proposals = list()
+
+	var/ceo_tax = 0
+	var/stockholder_tax = 0
 
 
 
+	var/public_stock = 0
 
 
+/datum/world_faction/business/proc/pay_dividends(var/datum/money_account/account, var/amount)
+	var/ceo_amount
+	var/stock_amount
+	if(ceo_tax)
+		ceo_amount = round((amount/100)*ceo_tax)
+	if(stock_tax)
+		stock_amount = round((amount/100)*ceo_tax)
+	if(ceo_amount)
+		var/datum/money_account/target_account = get_account_record(leader_name)
+		if(target_account)
+			var/datum/transaction/T = new(leader_name, "CEO Revenue Share", -ceo_amount, "Nexus Economy Network")
+			account.do_transaction(T)
+			var/datum/transaction/Te = new("[account.owner_name]", "CEO Revenue Share", ceo_amount, "Nexus Economy Network")
+			target_account.do_transaction(Te)
+	if(stock_amount)
+		var/amount_taken = 0
+		for(var/x in stock_holders)
+			var/datum/stockholder/holder = stock_holders[x]
+			var/holder_amount = round((stock_amount/100)*holder.stocks)
+			if(holder_amount)
+				var/datum/money_account/target_account = get_account_record(holder.real_name)
+				if(target_account)
+					var/datum/transaction/Te = new("[account.owner_name]", "Stockholder Revenue Share", holder_amount, "Nexus Economy Network")
+					target_account.do_transaction(Te)
+					amount_taken += holder_amount
+			if(amount_taken)
+				var/datum/transaction/T = new("Shareholders", "Shareholder Revenue Share", -amount_taken, "Nexus Economy Network")
+				account.do_transaction(T)
+	
+/datum/world_faction/business/proc/get_ceo_wage()
+	return CEO.get_pay(1)
+
+/datum/world_faction/business/proc/get_ceo()
+	if(!leader_name || leader_name == "") return "**NONE**"
+	return leader_name
 
 
+/datum/world_faction/business/proc/subscribe_stockholder(var/real_name)
+	if(real_name in stock_holders)
+		var/datum/stockholder/holder = stock_holders[real_name]
+		holder.subscribed = 1
 
+/datum/world_faction/business/proc/unsubscribe_stockholder(var/real_name)
+	if(real_name in stock_holders)
+		var/datum/stockholder/holder = stock_holders[real_name]
+		holder.subscribed = 0
+
+/datum/world_faction/business/proc/get_stockholder_datum(var/real_name)
+	if(real_name in stock_holders)
+		var/datum/stockholder/holder = stock_holders[real_name]
+		return holder
+
+/datum/world_faction/business/proc/get_stockholder(var/real_name)
+	if(real_name in stock_holders)
+		var/datum/stockholder/holder = stock_holders[real_name]
+		return holder.stocks
+
+/datum/world_faction/business/proc/get_stockholder_subscribed(var/real_name)
+	if(real_name in stock_holders)
+		var/datum/stockholder/holder = stock_holders[real_name]
+		return holder.subscribed
+
+/datum/world_faction/business/proc/has_proposal(var/real_name)
+	for(var/datum/stock_proposal/proposal in proposals)
+		if(proposal.started_by == real_name) return 1
+
+/datum/world_faction/business/proc/instant_dividend(var/target)
+	if(target > 100) target = 100
+	var/amount = (central_account.money/100)*target
+	for(var/x in stock_holders)
+		var/datum/stockholder/holder = stock_holders[x]
+		var/holder_amount = round((amount/100)*holder.stocks)
+		if(holder_amount)
+			var/datum/money_account/target_account = get_account_record(holder.real_name)
+			if(target_account)
+				var/datum/transaction/Te = new("[account.owner_name]", "Instant Dividend", holder_amount, "Nexus Economy Network")
+				target_account.do_transaction(Te)
+				amount_taken += holder_amount
+		if(amount_taken)
+			var/datum/transaction/T = new("Shareholders", "Instant Dividend", -amount_taken, "Nexus Economy Network")
+			account.do_transaction(T)
+	
+	
+
+/datum/world_faction/business/proc/pass_proposal(var/datum/stock_proposal/proposal)
+	if(!proposal) return
+	switch(proposal.func)
+		if(STOCKPROPOSAL_CEOFIRE)
+			leader_name = ""
+		if(STOCKPROPOSAL_CEOREPLACE)
+			leader_name = target
+		if(STOCKPROPOSAL_CEOWAGE)
+			var/datum/accesses/access = CEO.accesses[1]
+			access.pay = target			
+		if(STOCKPROPOSAL_CEOTAX)
+			ceo_tax = target
+		if(STOCKPROPOSAL_STOCKHOLDERTAX)
+			stockholder_tax = target
+		if(STOCKPROPOSAL_INSTANTDIVIDEND)
+			instant_dividend(target)
+		if(STOCKPROPOSAL_PUBLIC)
+			public_stock = 1
+		if(STOCKPROPOSAL_UNPUBLIC)
+			public_stock = 0
+		
+	proposals -= proposal
+
+
+/datum/world_faction/business/proc/create_proposal(var/real_name, var/func, var/target)
+	var/datum/stock_proposal/proposal = new()
+	proposal.func = func
+	switch(func)
+		if(STOCKPROPOSAL_CEOFIRE)
+			proposal.required = 51
+			proposal.name = "Proposal to fire the current CEO."
+		if(STOCKPROPOSAL_CEOREPLACE)
+			proposal.required = 51
+			proposal.name = "Proposal to make [target] the CEO of the business."
+		if(STOCKPROPOSAL_CEOWAGE)
+			proposal.name = "Proposal to change CEO wage to [target]."
+			if(target > get_ceo_wage())
+				proposal.required = 75
+			else
+				proposal.required = 51
+		if(STOCKPROPOSAL_CEOTAX)
+			proposal.name = "Proposal to change CEO revenue share to [target]."
+			if(target > ceo_tax)
+				proposal.required = 75
+			else
+				proposal.required = 51
+		if(STOCKPROPOSAL_STOCKHOLDERTAX)
+			proposal.name = "Proposal to change stockholders revenue share to [target]."
+			if(target < ceo_tax)
+				proposal.required = 61
+			else
+				proposal.required = 51
+		if(STOCKPROPOSAL_INSTANTDIVIDEND)
+			proposal.name = "Proposal to enact an instant dividend of [target]%."
+			proposal.required = 51
+		if(STOCKPROPOSAL_PUBLIC)
+			proposal.name = "Proposal to publically list the business on the stock market."
+			proposal.required = 51
+		if(STOCKPROPOSAL_UNPUBLIC)
+			proposal.name = "Proposal to remove the business from the stock market listings.."
+			proposal.required = 75
+	proposals |= proposal
+	proposal.connected_faction = src
+	
+	
+/datum/stockholder
+	var/real_name = ""
+	var/stocks = 0
+	var/subscribed = 0
+
+/datum/stock_proposal
+	var/func = 0
+	var/required = 0
+	var/list/supporting = list()
+	var/datum/stockholder/started_by
+	var/name
+	var/target
+	var/datum/world_faction/business/connected_faction
+
+
+/datum/stock_proposal/proc/is_supporting(var/real_name)
+	for(var/datum/stockholder/holder in supporting)
+		if(holder.real_name == real_name) return 1
+
+/datum/stock_proposal/proc/is_started_by(var/real_name)
+	if(started_by.real_name == real_name) return 1
+
+
+/datum/stock_proposal/proc/get_support()
+	var/amount = 0
+	for(var/datum/stockholder/holder in supporting)
+		amount += holder.stocks
+	if(amount > required)
+		pass_proposal()
+	return amount
+
+/datum/stock_proposal/proc/pass_proposal()
+	connected_faction.pass_proposal(src)
+	
 /datum/world_faction/after_load()
 
 	if(!debts)

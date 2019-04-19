@@ -282,10 +282,10 @@
 		ui.set_initial_data(data)
 		ui.open()
 
-/datum/nano_module/program/democracy_core/Topic(href, href_list)
+/datum/nano_module/program/business_core/Topic(href, href_list)
 	if(..())
 		return 1
-	var/datum/world_faction/democratic/connected_faction
+	var/datum/world_faction/business/connected_faction
 	if(program.computer.network_card && program.computer.network_card.connected_network)
 		connected_faction = program.computer.network_card.connected_network.holder
 	if(!program.can_run(usr)) return 1

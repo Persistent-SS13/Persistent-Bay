@@ -401,6 +401,26 @@ var/global/list/debug_data = list()
 	return 1
 
 
+/proc/Send_Email(var/key, var/sender = "Unknown", var/subject, var/body)
+	var/datum/computer_file/report/crew_record/record = Retrieve_Record(key)
+	if(record && record.email)
+		var/datum/computer_file/data/email_message/message = new()
+		message.title = subject
+		message.stored_data = body
+		message.source = sender
+		var/datum/computer_file/data/email_account/recipient = Get_Email_Account(recipient_address)
+		if(!istype(recipient))
+			return 0
+		if(!recipient.receive_mail(message))
+			return
+		return 1
+		
+		
+/proc/Get_Email_Account(var/key) // 2 = ATM account
+	var/datum/computer_file/report/crew_record/record = Retrieve_Record(key)
+	if(record && record.email)
+		return record.email
+		
 /proc/Retrieve_Record(var/key, var/func = 1) // 2 = ATM account
 	for(var/datum/computer_file/report/crew_record/record2 in GLOB.all_crew_records)
 		if(record2.get_name() == key)

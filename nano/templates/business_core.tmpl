@@ -1,82 +1,75 @@
 {{if data.menu == 1}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
-	<h2>Business Control</h2>
+	<h2>Business Assignment Control</h2>
 	<br><hr>
-	<br><br>{{:helper.link("Central Options", 'wrench', {'action' : 'change_menu', 'menu_target' : '2'})}}<br>
-	Change the name, abbreviation and mission statement for the business. These changes will be logged for shareholders.
-	<br><br>{{:helper.link("Access Config", 'locked', {'action' : 'change_menu', 'menu_target' : '3'})}}<br>
+	<br><br>{{:helper.link("Access Config", 'locked', {'action' : 'change_menu', 'menu_target' : '3'})}}<br><br>
 	Setup accesses that can be given out to assignments which control doors and machines linked to your network.
-	<br><br>{{:helper.link("Assignments Config", 'pencil', {'action' : 'change_menu', 'menu_target' : '4'})}}<br>
-	Setup assignments, ranks and departments that control the structure of your employees, including access, wages and expense limits.
-	<br><br>{{:helper.link("Economy Menu", 'calculator', {'action' : 'change_menu', 'menu_target' : '9'})}}<br>
-	View the account balance and debt of the business, and control expense cards.
-	<br><br>{{:helper.link("Promotion Control", 'flag', {'action' : 'change_menu', 'menu_target' : '10'})}}<br>
-	Set how many promotion votes it takes for non-CEO employees to authorize a promotion within the company. 
-	<br><br>{{:helper.link("Cryo-networks", '', {'action' : 'change_menu', 'menu_target' : '11'})}}<br>
-	Control the different cryo networks that your business can maintain.
+	<br><br>{{:helper.link("Assignments Config", 'pencil', {'action' : 'change_menu', 'menu_target' : '4'})}}<br><br>
+	Setup assignments, ranks and departments that control the structure of your government employees, including access, wages and expense limits.
+	<br><br>{{:helper.link("Economy Menu", 'calculator', {'action' : 'change_menu', 'menu_target' : '9'})}}<br><br>
+	View the account balance and debt of the business, the current tax policy and print expense cards.
+	<br><br>{{:helper.link("Promotion Control", 'flag', {'action' : 'change_menu', 'menu_target' : '10'})}}<br><br>
+	Set how many promotion votes it takes for management to authorize a promotion within the government.
+	<br><br>{{:helper.link("Cryo-networks", '', {'action' : 'change_menu', 'menu_target' : '11'})}}<br><br>
+	Control the different cryo networks that your government can maintain.
 {{/if}}
-{{if data.menu == 12}}
+
+{{if data.menu == 2}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
-	<h2>Status and Modules</h2>
-	<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'menu_back'})}}
+	<h2>{{:data.selected_assignment}} (Special Assignment)</h2>
+	<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
 	<br><hr>
 	<div class='item'>
 		<div class='itemLabel'>
-			Business Status:
+			Expense Limit:
 		</div>
 		<div class='itemContent'>
-			{{:data.business_size}}
+			{{:helper.link(data.expense_limit, '', {'action' : 'change_expense_limit'})}}
 		</div>
 	</div>
-	
-	
+	<div class='item'>
+		<div class='itemLabel'>
+			Cryo-network:
+		</div>
+		<div class='itemContent'>
+			{{:helper.link(data.cryonetwork, 'pencil', {'action' : 'edit_assignment_cryonet'})}}
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			Pay:
+		</div>
+		<div class='itemContent'>
+			{{:data.rank_wage}}
+		</div>
+	</div>
+	{{for data.access_categories}}
+		{{:value.name}} :<br><br>
+		{{for value.accesses :accessValue:accessIndex}}
+			{{:helper.link(accessValue.name, '', {'action' : 'pick_access', 'selected_ref' : value.ref, 'selected_ind' : accessValue.ind}, null, accessValue.existing ? 'selected' : null)}}
+		{{/for}}
+		<br><br><br><br><br><br><br><hr><br>
+	{{/for}}
 {{/if}}
-{{if data.menu == 13}}
-	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
-	<h2>Change Minor Module</h2>
-	<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'menu_back'})}}
-	<br><hr>
-	Warning! Changing your minor module will change your research and machine limits. Any research exceeding your new limit will be inaccessible and any machines exceeding the limits will be automatically disconnected.
-	<br><br>
-	
-	
-{{/if}}
-{{if data.menu == 14}}
 
-{{/if}}
-{{if data.menu == 2}}
-	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
-	<h2>Central Options</h2>
-	<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'menu_back'})}}
-	<br><hr>
-	<br><br>{{:helper.link("Change Business Name", 'pencil', {'action' : 'change_name'})}} Full Name: <b>{{:data.faction_name}}</b>
-	<br><br>{{:helper.link("Change Abbreviation", 'pencil', {'action' : 'change_abbreviation'})}} Abbreviation: <b>{{:data.faction_abbreviation}}</b><br>
-	The abbreviation is used where a shortened business name is needed.
-	<br><br>{{:helper.link("Change Tag", 'pencil', {'action' : 'change_tag'})}} Tag: <b>{{:data.faction_tag}}</b><br>
-	The tag is applied to nametags printed out of our network, identifying one of our employees. It can also be used if the stock is listed on a public market. It must be unique.
-	<br><br>{{:helper.link("Change Description/Mission Statement", 'pencil', {'action' : 'change_purpose'})}}<br>
-	This is shown from the business information screen on any computer connected to the network.
-	<div class='block'>
-		{{:data.faction_purpose}}
-	</div
-{{/if}}
 {{if data.menu == 3}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>Access Configuration</h2>
 	<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
 	<br><br>{{:helper.link("Create New Access Category", 'pencil', {'action' : 'create_accesscategory'})}}
 	<br><hr>
-	Core Access - Core access cannot be deleted or used outside their named purpose. More core access will be added as your business adds modules.<br>
+	Core access cannot be deleted or used outside their named purpose.<br>
 	<br>
-	
 	{{for data.access_categories}}
 		{{:helper.link(value.name, '', {'action' : 'select_accesscategory', 'selected_ref' : value.ref})}}{{:helper.link("Create new access", '', {'action' : 'create_access_two', 'selected_ref' : value.ref})}}:<br><br>
 		{{for value.accesses :accessValue:accessIndex}}
 			{{:helper.link(accessValue.name, '', {'action' : 'select_access', 'selected_ref' : value.ref, 'selected_ind' : accessValue.ind})}}
 		{{/for}}
-		<br><br><br><br><hr><br>
+		<br><br><br><br><br><br><br><hr><br>
 	{{/for}}
 {{/if}}
+
+
 {{if data.menu == 4}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>Assignment/Category Configuration</h2>
@@ -92,6 +85,9 @@
 		<br><br><hr><br>
 	{{/for}}
 {{/if}}
+
+
+
 {{if data.menu == 5}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>{{:data.selected_accesscategory}} (Access Category)</h2>
@@ -106,6 +102,9 @@
 		{{:helper.link(value.name, '', {'action' : 'select_access_noref', 'selected_ind' : value.ind})}}
 	{{/for}}
 {{/if}}
+
+
+
 {{if data.menu == 6}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>({{:data.accessnum}}) {{:data.selected_access}} (Access)</h2>
@@ -118,6 +117,8 @@
 	Name: <b>{{:data.selected_access}}</b><br>
 	Access Category: <b>{{:data.selected_accesscategory}}</b><br>
 {{/if}}
+
+
 {{if data.menu == 7}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>{{:data.selected_assignmentcategory}} (Assignment Category)</h2>
@@ -136,26 +137,42 @@
 		{{:helper.link(value.name, '', {'action' : 'select_assignment_two', 'selected_ref' : value.ref})}}
 	{{/for}}
 {{/if}}
+
+
 {{if data.menu == 8}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>{{:data.selected_assignment}} (Assignment)</h2>
 	<br><br>{{:helper.link("Back", 'arrowreturn-1-w', {'action' : 'change_menu', 'menu_target' : data.prior_menu})}}
 	<br><hr>
-	<br><br>{{:helper.link("Change Rank 1 Title", 'pencil', {'action' : 'edit_assignment'})}} Title: {{:data.title}}
-	<br><br>{{:helper.link("Change Rank 1 Payscale", 'pencil', {'action' : 'edit_assignment_pay'})}} Pay: {{:data.pay}}
 	<br><br>{{:helper.link("Delete Assignment", 'cross', {'action' : 'delete_assignment'})}}
-	<br><br>{{:helper.link("View/Edit Access", '', {'action' : 'view_access'}, data.view_ranks ? null : 'selected')}}{{:helper.link("View/Edit Ranks", '', {'action' : 'view_ranks'}, data.view_ranks ? 'selected' : null)}}
 	<br><br>{{:helper.link("Change Cryo-network", 'pencil', {'action' : 'edit_assignment_cryonet'})}} Cryo-network: {{:data.cryonetwork}}
 	<br><hr><br>
+	{{:helper.link("Edit Ranks", '', {'action' : 'view_access'}, data.view_ranks ? null : 'selected')}}{{:helper.link("Add/Delete Ranks", '', {'action' : 'view_ranks'}, data.view_ranks ? 'selected' : null)}}<br><br>
 	{{if data.view_ranks}}
 		{{:helper.link("Add New Rank", '', {'action' : 'create_rank'})}}{{:helper.link("Delete rank", '', {'action' : 'delete_rank'})}}<br><br><hr>
 		{{for data.ranks}}
-			{{:helper.link(value.name, '', {'action' : 'nothing'})}}
+			{{:helper.link(value.name, '', {'action' : 'select_rank', 'ind' : value.ind})}}
 		{{/for}}
 	{{else}}
 		Select the expense limit and access that this assignment should have when at rank {{:data.selected_rank}} or above.<br><br>
 		{{:helper.link("<-", '', {'action' : 'decrease_selected_rank'}, data.decrease_button ? null : 'disabled')}}{{:helper.link(data.selected_rank, '', {'action' : 'nothing'})}}{{:helper.link("->", '', {'action' : 'increase_selected_rank'}, data.increase_button ? null : 'disabled')}}
 		<br><br><hr>
+		<div class='item'>
+			<div class='itemLabel'>
+				Title:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link(data.rank_title, '', {'action' : 'change_rank_title'})}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Half-Hourly Wage:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link(data.rank_wage, '', {'action' : 'change_rank_wage'})}}
+			</div>
+		</div>
 		<div class='item'>
 			<div class='itemLabel'>
 				Expense Limit:
@@ -164,15 +181,35 @@
 				{{:helper.link(data.expense_limit, '', {'action' : 'change_expense_limit'})}}
 			</div>
 		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Authority Level:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link(data.auth_level, '', {'action' : 'change_auth_level'})}}
+			</div>
+		</div>
+		This determines when this assignment can reassign and vote to promote/demote other people, and which assignments they can assign.
+		<div class='item'>
+			<div class='itemLabel'>
+				Authority Requirement:
+			</div>
+			<div class='itemContent'>
+				{{:helper.link(data.auth_req, '', {'action' : 'change_auth_req'})}}
+			</div>
+		</div>
+		To assign or modify the record of anyone holding this assignment/rank, the person must have an authority level higher than this authority requirement.
 		{{for data.access_categories}}
 			{{:value.name}} :<br><br>
 			{{for value.accesses :accessValue:accessIndex}}
 				{{:helper.link(accessValue.name, '', {'action' : 'pick_access', 'selected_ref' : value.ref, 'selected_ind' : accessValue.ind}, null, accessValue.existing ? 'selected' : null)}}
 			{{/for}}
-			<br><br><br><br><br><hr><br>
+			<br><br><br><br><br><br><br><hr><br>
 		{{/for}}	
 	{{/if}}
 {{/if}}
+
+
 {{if data.menu == 9}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>Economy Menu</h2>
@@ -207,6 +244,8 @@
 	<br> Expense cards can be swiped on any invoice to pay it directly out of the network account. The expense card looks for the users ID and only works if the user has enough expenses left. It is still important to control the networks expense cards, if some get lost you can devalidate all of the existing cards.
 
 {{/if}}
+
+
 {{if data.menu == 10}}
 	<h2>{{:data.faction_name}} ({{:data.faction_uid}})</h2><br>
 	<h2>Promotion Control</h2>
@@ -253,3 +292,6 @@
 	<br><br><hr><br>
 	{{:helper.link("Add", '', {'action' : 'add_cryo'})}}  {{:helper.link("Remove", '', {'action' : 'remove_cryo'})}}
 {{/if}}
+
+
+

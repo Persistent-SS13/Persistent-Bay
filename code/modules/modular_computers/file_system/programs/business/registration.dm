@@ -176,7 +176,7 @@
 			if(!amount || amount < 0)
 				amount = 0
 			if(amount > to_be)
-				to_chat(user, "Theirs not that many stocks left to be distributed.")
+				to_chat(user, "Their is not that many stocks left to be distributed.")
 				return
 			var/cost = round(input("How much centera should be invested for the [amount] stocks?", "Price", 10*amount) as null|num)
 			if(!cost || cost < 0)
@@ -190,32 +190,32 @@
 				contract.ownership = amount
 				contract.name = "[business_name] investment contract"
 				var/t = {"
-<font face='Verdana' color=blue>
-	<table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>
-		<tr>
-			<td>
-				<center><h1>Investment Contract for [business_name]</h1></center>
-			</td>
-		</tr>	
-		<tr>
-			<td>
-				<br>[selected_spec.name] [selected_type.name]<br>
-			</td>
-		</td>
-		<tr>
-			<td>
-				<br>Initial CEO [ceo_name] paid [ceo_wage] every thirty minutes.<br>
-				<b>Stock Amount:</b> [amount] stocks<br>
-				<b>Investment Cost:</b> [cost] $$ Centera<br><br>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<h3>Status</h3>*Unsigned*<br>
-			</td>
-		</tr>
-	</table>
-</font>
+						<font face='Verdana' color=blue>
+							<table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>
+								<tr>
+									<td>
+										<center><h1>Investment Contract for [business_name]</h1></center>
+									</td>
+								</tr>	
+								<tr>
+									<td>
+										<br>[selected_spec.name] [selected_type.name]<br>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<br>Initial CEO [ceo_name] paid [ceo_wage] every thirty minutes.<br>
+										<b>Stock Amount:</b> [amount] stocks<br>
+										<b>Investment Cost:</b> [cost] $$ Centera<br><br>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h3>Status</h3>*Unsigned*<br>
+									</td>
+								</tr>
+							</table>
+						</font>
 				"}
 				contract.info = t
 				contract.loc = get_turf(program.computer)
@@ -260,9 +260,13 @@
 			for(var/obj/item/weapon/paper/contract/contract in signed_contracts)
 				contract.finalize()
 				if(new_business.stock_holders[contract.signed_by])
-					new_business.stock_holders[contract.signed_by] = new_business.stock_holders[contract.signed_by]+contract.ownership
+					var/datum/stockholder/holder = new_business.stock_holders[contract.signed_by]
+					holder.stocks += contract.ownership
 				else
-					new_business.stock_holders[contract.signed_by] = contract.ownership
+					var/datum/stockholder/holder = new()
+					holder.real_name = contract.signed_by
+					holder.stocks = contract.ownership
+					new_business.stock_holders[contract.signed_by] = holder
 				signed_contracts -= contract
 			LAZYDISTINCTADD(GLOB.all_world_factions, new_business)
 			business_name = null

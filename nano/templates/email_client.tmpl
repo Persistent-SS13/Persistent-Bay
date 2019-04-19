@@ -29,17 +29,7 @@
 	{{:helper.link('New Message', 'mail-closed', {'new_message' : 1})}}
 	{{:helper.link('Change Password', 'locked', {'changepassword' : 1})}}
 	{{:helper.link('Log Out', 'key', {'logout' : 1})}}<br><br>
-	{{if data.addressbook}}
-		{{:helper.link('Back', null, {'close_addressbook' : 1})}}
-		{{:helper.link('Enter Email', 'pencil', {'edit_recipient' : 1})}}
-		<br><br>
-		<table>
-		<tr><td>Address book:
-		{{for data.accounts}}
-			<tr class="candystripe"><td>{{:helper.link(value.login, null, {'set_recipient' : value.login})}}
-		{{/for}}
-		</table>
-	{{else data.new_message}}
+	{{if data.new_message}}
 		<div class="item">
 			<div class="itemLabel">
 				{{:helper.link('', 'pencil', {'edit_title' : 1})}} Title: 
@@ -52,7 +42,7 @@
 		</div>
 		<div class="item">
 			<div class="itemLabel">
-				{{:helper.link('', 'plusthick', {'addressbook' : 1})}} Recipient:
+				{{:helper.link('', 'pencil', {'edit_recipient' : 1})}} Recipient:
 			</div>
 			<div class="itemContent">
 				<div class="statusDisplayComm" style="width:100%;min-height:1.7em;padding-bottom: 0;">
@@ -168,27 +158,8 @@
 		{{/if}}
 	{{/if}}
 {{else}}
-	<b>Welcome to NTNet Email System. Please log in.</b>
+	<b>ERROR SCREEN.</b>
 	<div class="item">
-		<div class="itemLabel">
-			Email address:
-		</div>
-		<div class="itemContent">
-			{{:data.stored_login}}&nbsp
-		</div>
-		<div class="itemLabel">
-			Password:
-		</div>
-		<div class="itemContent">
-			{{:data.stored_password}}&nbsp
-		</div>
-		<div class="itemLabel">
-			Options:
-		</div>
-		<div class="itemContent">
-			{{:helper.link('Enter Login', null, {'edit_login' : 1})}}
-			{{:helper.link('Enter Password', null, {'edit_password' : 1})}}
-			{{:helper.link('Log In', null, {'login' : 1})}}
-		</div>
+		Something has gone wrong and your email account is not loading. Contact an administrator.
 	</div>
 {{/if}}

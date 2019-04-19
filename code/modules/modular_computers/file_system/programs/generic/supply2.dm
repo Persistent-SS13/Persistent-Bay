@@ -374,7 +374,7 @@
 		var/expense_limit = 0
 		var/datum/assignment/assignment = connected_faction.get_assignment(R.assignment_uid, R.get_name())
 		if(assignment)
-			var/datum/accesses/expenses = assignment.accesses["[R.rank]"]
+			var/datum/accesses/expenses = assignment.accesses[R.rank]
 			if(expenses)
 				expense_limit = expenses.expense_limit
 		var/id = text2num(href_list["approve_order"])

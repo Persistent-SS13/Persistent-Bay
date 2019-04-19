@@ -52,11 +52,7 @@
 			rank = CR.custom_title
 		if(assignment)
 			if(!rank)
-				var/x = text2num(CR.assignment_data[assignment.uid])
-				if(x && x > 1)
-					rank = assignment.ranks[x-1]
-				else
-					rank = assignment.name
+				rank = assignment.get_title(CR.rank)
 			var/found_place = 0
 			var/datum/assignment_category/category = assignment.parent
 			if(category)
@@ -95,11 +91,7 @@
 			rank = CR.custom_title
 		if(assignment)
 			if(!rank)
-				var/x = text2num(CR.assignment_data[assignment.uid])
-				if(x && x > 1)
-					rank = assignment.ranks[x-1]
-				else
-					rank = assignment.name
+				rank = assignment.get_title(CR.rank)
 		if(!rank) rank = "Unset"
 		for(var/list/department in dept_data)
 			var/list/names = department["names"]

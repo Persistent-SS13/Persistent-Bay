@@ -14,6 +14,8 @@
 
 	var/account_type = 1	//1 - personal account
 							//2 - business account
+							
+	var/datum/world_faction/business/connected_business
 	var/list/recently_paid = list()
 /datum/money_account/after_load()
 	var/datum/money_account/M = get_account_loadless(account_number)
@@ -38,8 +40,13 @@
 	if(transaction_log.len > 50)
 		transaction_log.Cut(1,2)
 	transaction_log += T
+	if(T.amount > 0 && connected_business)
+		if(istype(connected_business))
+			connected_business.pay_dividends(src, T.amount)
+		
 	if(T.amount > 0 && nexus_account && nexus_account != src)
 		nexus.pay_tax(src, T.amount)
+		
 /datum/money_account/proc/get_balance()
 	. = 0
 	for(var/datum/transaction/T in transaction_log)

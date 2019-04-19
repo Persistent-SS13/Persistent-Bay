@@ -211,3 +211,12 @@
 #define EMAIL_DOCUMENTS "document.server@internal-services.net"
 #define EMAIL_SYSADMIN  "admin@internal-services.net"
 #define EMAIL_BROADCAST "broadcast@internal-services.net"
+
+#define STOCKPROPOSAL_CEOFIRE 1
+#define STOCKPROPOSAL_CEOREPLACE 2
+#define STOCKPROPOSAL_CEOWAGE 3
+#define STOCKPROPOSAL_CEOTAX 4
+#define STOCKPROPOSAL_STOCKHOLDERTAX 5
+#define STOCKPROPOSAL_INSTANTDIVIDEND 6
+#define STOCKPROPOSAL_PUBLIC 7
+#define STOCKPROPOSAL_UNPUBLIC 8

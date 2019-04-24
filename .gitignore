@@ -30,3 +30,4 @@ saved_vars/
 *.exe.stackdump
 .vscode
 Discord_PSS13_BOT
+/config/DB

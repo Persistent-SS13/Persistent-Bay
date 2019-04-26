@@ -36,13 +36,13 @@
 //		to_chat(src, "<span class='warning'>You have been hit by [P]!</span>")
 
 	//Armor
-	var/damage = P.damage
+	var/damage = P.force
 	var/flags = P.damage_flags()
 	var/damaged
 	if(!P.nodamage)
-		damaged = apply_damage(damage, P.damage_type, def_zone, flags, P, P.armor_penetration)
+		damaged = apply_damage(damage, P.damtype, def_zone, flags, P, P.armor_penetration)
 	if(damaged || P.nodamage) // Run the block computation if we did damage or if we only use armor for effects (nodamage)
-		. = get_blocked_ratio(def_zone, P.damage_type, flags, P.armor_penetration)
+		. = get_blocked_ratio(def_zone, P.damtype, flags, P.armor_penetration)
 	P.on_hit(src, ., def_zone)
 
 /mob/living/proc/aura_check(var/type)
@@ -209,7 +209,7 @@
 	//adjustBruteLoss(damage)
 	admin_attack_log(user, src, "Attacked", "Was attacked", "attacked")
 
-	src.visible_message("<span class='danger'>[user] has [attack_message] [src]!</span>")
+	src.visible_message("<span class='danger'>\The [user] has [attack_message] \the [src]!</span>")
 	user.do_attack_animation(src)
 	apply_damage(damage, DAM_BLUNT)
 	return 1
@@ -286,18 +286,25 @@
 	for(var/obj/item/I in src)
 		if(I.action_button_name)
 			if(!I.action)
-				if(I.action_button_is_hands_free)
-					I.action = new/datum/action/item_action/hands_free
-				else
-					I.action = new/datum/action/item_action
-				I.action.name = I.action_button_name
-				I.action.target = I
-				if(I.action_button_icon)
-					I.action.icon_override = I.action_button_icon
-					I.action.override_state = I.action_button_state
-
+				I.action = new I.default_action_type
+			I.action.name = I.action_button_name
+			I.action.SetTarget(I)
 			I.action.Grant(src)
 	return
+
+
+//				if(I.action_button_is_hands_free)
+//					I.action = new/datum/action/item_action/hands_free
+//				else
+//					I.action = new/datum/action/item_action
+//				I.action.name = I.action_button_name
+//				I.action.SetTarget(I)
+//				if(I.action_button_icon)
+//					I.action.icon_override = I.action_button_icon
+//					I.action.override_state = I.action_button_state
+//
+//			I.action.Grant(src)
+//	return
 
 /mob/living/update_action_buttons()
 	if(!hud_used) return
@@ -369,6 +376,8 @@
 /mob/living/proc/set_health(var/newhealth)
 	health = between(minHealth, round(newhealth, 0.1), get_max_health()) //round(max(0, min(newhealth, max_health)), 0.1)
 	update_health()
+
+
 
 /mob/living/proc/update_health()
 	return

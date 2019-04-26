@@ -1,6 +1,7 @@
 /obj/structure/closet/crate
 	name = "crate"
 	desc = "A rectangular steel crate."
+	closet_appearance = /decl/closet_appearance/crate
 	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
 	setup = 0
 	storage_types = CLOSET_STORAGE_ITEMS
@@ -17,7 +18,6 @@
 		DAM_BOMB 	= 15,
 		DAM_EMP 	= 0)
 	matter = list(MATERIAL_STEEL = 2*SHEET_MATERIAL_AMOUNT)
-	closet_appearance = /decl/closet_appearance/crate
 	var/points_per_crate = 5
 	var/rigged = 0
 
@@ -75,6 +75,7 @@
 /obj/structure/closet/crate/secure
 	desc = "A secure crate."
 	name = "Secure crate"
+	closet_appearance = /decl/closet_appearance/crate/secure
 	mass = 17
 	max_health = 400
 	damthreshold_brute 	= 10
@@ -89,7 +90,6 @@
 		DAM_EMP 	= 80)
 	setup = CLOSET_HAS_LOCK
 	locked = TRUE
-	closet_appearance = /decl/closet_appearance/crate/secure
 
 /obj/structure/closet/crate/secure/Initialize()
 	. = ..()
@@ -305,6 +305,8 @@
 /obj/structure/closet/crate/secure/large
 	name = "large crate"
 	desc = "A hefty metal crate with an electronic locking system."
+	closet_appearance = /decl/closet_appearance/large_crate/secure
+
 	storage_capacity = 2 * MOB_LARGE
 	storage_types = CLOSET_STORAGE_ITEMS|CLOSET_STORAGE_STRUCTURES
 	mass = 30
@@ -318,7 +320,6 @@
 		DAM_ENERGY 	= 40,
 		DAM_BURN 	= 30,
 		DAM_BOMB 	= 40)
-	closet_appearance = /decl/closet_appearance/large_crate/secure
 
 /obj/structure/closet/crate/secure/large/phoron
 	closet_appearance = /decl/closet_appearance/large_crate/secure/hazard
@@ -352,7 +353,7 @@
 		/obj/item/weapon/storage/plants = 2,
 		/obj/item/weapon/material/hatchet = 2,
 		/obj/item/weapon/tool/wirecutters/clippers = 2,
-		/obj/item/device/analyzer/plant_analyzer = 2
+		/obj/item/device/scanner/plant = 2
 	)
 
 /obj/structure/closet/crate/secure/biohazard
@@ -361,12 +362,18 @@
 	open_sound = 'sound/items/Deconstruct.ogg'
 	close_sound = 'sound/items/Deconstruct.ogg'
 	req_access = list(core_access_science_programs)
+	closet_appearance = /decl/closet_appearance/cart/biohazard
 	storage_capacity = 2 * MOB_LARGE
 	storage_types = CLOSET_STORAGE_ITEMS|CLOSET_STORAGE_MOBS|CLOSET_STORAGE_STRUCTURES
-	closet_appearance = /decl/closet_appearance/cart/biohazard
 
 /obj/structure/closet/crate/secure/biohazard/blanks/WillContain()
-	return list(/mob/living/carbon/human/blank, /obj/item/usedcryobag)
+	return list(/obj/structure/closet/body_bag/cryobag/blank)
+
+/obj/structure/closet/crate/secure/biohazard/blanks/can_close()
+	for(var/obj/structure/closet/closet in get_turf(src))
+		if(closet != src && !(istype(closet, /obj/structure/closet/body_bag/cryobag)))
+			return 0
+	return 1
 
 /obj/structure/closet/crate/paper_refill
 	name = "paper refill crate"

@@ -145,9 +145,9 @@
 	color = COLOR_DARK_GRAY
 	build_type = /obj/item/stack/tile/floor_dark
 
-/decl/flooring/tiling/dark/mono
-	icon_base = "monotile"
-	build_type = /obj/item/stack/tile/floor_dark/mono
+// /decl/flooring/tiling/dark/mono
+// 	icon_base = "monotile"
+// 	build_type = /obj/item/stack/tile/floor_dark/mono
 
 /decl/flooring/tiling/freezer
 	desc = "Don't slip."

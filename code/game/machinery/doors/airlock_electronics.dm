@@ -234,6 +234,20 @@
 		ui = new(user, src, ui_key, "airlock_electronics", src.name, 1000, 500, master_ui, state)
 		ui.open()
 
+/obj/item/weapon/airlock_electronics/proc/set_access(var/obj/object)
+	if(!object.req_access || !object.req_one_access || !object.req_access_faction)
+		object.check_access()
+	if(object.req_one_access.len)
+		for(var/entry in object.req_one_access)
+			req_one_access |= entry
+	if(object.req_access.len)
+		conf_access = list()
+		for(var/entry in object.req_access)
+			conf_access |= entry // This flattens the list, turning everything into AND
+			// Can be reworked to have the electronics inherit a precise access set, but requires UI changes.
+	if(object.req_access_faction)
+		src.req_access_faction = object.req_access_faction
+
 /obj/item/weapon/airlock_electronics/keypad_electronics
  	name = "keypad airlock electronics"
  	icon_state = "door_electronics_keypad"

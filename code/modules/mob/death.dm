@@ -67,7 +67,7 @@
 	drop_r_hand()
 	drop_l_hand()
 
-	//SSstatistics.report_death(src)
+	SSstatistics.report_death(src)
 
 	//TODO:  Change death state to health_dead for all these icon files.  This is a stop gap.
 	if(healths)

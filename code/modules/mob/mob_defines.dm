@@ -119,7 +119,7 @@
 	var/obj/item/weapon/storage/s_active = null//Carbon
 	var/obj/item/clothing/mask/wear_mask = null//Carbon
 
-	var/list/grabbed_by = list(  )
+	var/list/grabbed_by = list()
 
 	var/in_throw_mode = 0
 
@@ -135,7 +135,7 @@
 	var/list/mutations = list() //Carbon -- Doohl
 	//see: setup.dm for list of mutations
 
-	var/radiation = 0.0 // Carbon
+	var/radiation = 0.0//Carbon
 	var/phoronation = 0.0 // Sanity meter related to phoron exposure which carbons can have - more is scarier
 
 	var/voice_name = "unidentifiable voice"

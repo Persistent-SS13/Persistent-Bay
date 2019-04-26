@@ -204,8 +204,8 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	// Loop.
 	Master.StartProcessing(0)
 
-	job_master.ResetOccupations()
-	job_master.DivideOccupations() // Apparently important for new antagonist system to register specific job antags properly.
+	SSjobs.reset_occupations()
+	SSjobs.divide_occupations() // Apparently important for new antagonist system to register specific job antags properly.
 
 	GLOB.using_map.setup_economy()
 	Master.SetRunLevel(RUNLEVEL_GAME)

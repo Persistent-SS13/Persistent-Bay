@@ -218,9 +218,9 @@
 	if(!Proj || Proj.nodamage)
 		return
 
-	var/damage = Proj.damage
+	var/damage = Proj.force
 	if(Proj.damtype == STUN)
-		damage = Proj.damage / 6
+		damage = Proj.force / 6
 	if(Proj.agony)
 		damage += Proj.agony / 6
 		if(health < Proj.agony * 3)
@@ -252,7 +252,7 @@
 				var/datum/unarmed_attack/attack = M.get_unarmed_attack(src)
 				dealt_damage = attack.damage <= dealt_damage ? dealt_damage : attack.damage
 				harm_verb = pick(attack.attack_verb)
-				if(attack.sharp || attack.edge)
+				if(attack.sharpness)
 					adjustBleedTicks(dealt_damage)
 
 			adjustBruteLoss(dealt_damage)

@@ -25,7 +25,7 @@
 	name = "Refills - Bar soft drink dispenser refill"
 	contains = list(
 			/obj/item/weapon/reagent_containers/chem_disp_cartridge/water,
-			/obj/item/weapon/reagent_containers/chem_disp_cartridge/icetea,
+			/obj/item/weapon/reagent_containers/chem_disp_cartridge/green_tea,
 			/obj/item/weapon/reagent_containers/chem_disp_cartridge/cola,
 			/obj/item/weapon/reagent_containers/chem_disp_cartridge/smw,
 			/obj/item/weapon/reagent_containers/chem_disp_cartridge/dr_gibb,
@@ -78,7 +78,7 @@ SEC_PACK(carbon,    /obj/item/weapon/reagent_containers/chem_disp_cartridge/carb
 SEC_PACK(ammonia,   /obj/item/weapon/reagent_containers/chem_disp_cartridge/ammonia,    "Reagent refill - Ammonia",       "ammonia reagent cartridge crate",       15, core_access_medical_programs)
 SEC_PACK(oxygen,    /obj/item/weapon/reagent_containers/chem_disp_cartridge/acetone,    "Reagent refill - Acetone",       "acetone reagent cartridge crate",       20, core_access_medical_programs)
 SEC_PACK(sodium,    /obj/item/weapon/reagent_containers/chem_disp_cartridge/sodium,     "Reagent refill - Sodium",        "sodium reagent cartridge crate",        20, core_access_medical_programs)
-SEC_PACK(aluminium, /obj/item/weapon/reagent_containers/chem_disp_cartridge/aluminum,   "Reagent refill - Aluminum",      "aluminum reagent cartridge crate",      20, core_access_medical_programs)
+SEC_PACK(aluminium, /obj/item/weapon/reagent_containers/chem_disp_cartridge/aluminium,   "Reagent refill - Aluminium",      "aluminum reagent cartridge crate",    20, core_access_medical_programs)
 SEC_PACK(silicon,   /obj/item/weapon/reagent_containers/chem_disp_cartridge/silicon,    "Reagent refill - Silicon",       "silicon reagent cartridge crate",       20, core_access_medical_programs)
 SEC_PACK(phosphorus,/obj/item/weapon/reagent_containers/chem_disp_cartridge/phosphorus, "Reagent refill - Phosphorus",    "phosphorus reagent cartridge crate",    20, core_access_medical_programs)
 SEC_PACK(sulfur,    /obj/item/weapon/reagent_containers/chem_disp_cartridge/sulfur,     "Reagent refill - Sulfur",        "sulfur reagent cartridge crate",        20, core_access_medical_programs)

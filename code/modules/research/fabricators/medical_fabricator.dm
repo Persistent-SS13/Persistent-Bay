@@ -145,7 +145,7 @@
 
 
 /datum/design/item/medicalfab/meditools/healthscanner
-	build_path = /obj/item/device/healthanalyzer
+	build_path = /obj/item/device/scanner/health
 	materials = list(MATERIAL_STEEL = 3 SHEET, MATERIAL_GLASS = 0.5 SHEETS, MATERIAL_COPPER = 1 SHEETS)
 	research = "health_scanner"
 
@@ -155,31 +155,31 @@
 
 
 /datum/design/item/medicalfab/meditools/adv/mass_spectrometer
-	build_path = /obj/item/device/mass_spectrometer
+	build_path = /obj/item/device/scanner/spectrometer
 	materials = list(MATERIAL_STEEL = 3 SHEET, MATERIAL_GLASS = 1 SHEETS, MATERIAL_COPPER = 2 SHEETS)
 	research = "mass_spectrometer"
 
 
 /datum/design/item/medicalfab/meditools/adv/adv_mass_spectrometer
-	build_path = /obj/item/device/mass_spectrometer/adv
+	build_path = /obj/item/device/scanner/spectrometer/adv
 	materials = list(MATERIAL_STEEL = 5 SHEET, MATERIAL_GLASS = 3 SHEETS, MATERIAL_SILVER = 5 SHEETS)
 	research = "adv_mass_spectrometer"
 
 
 /datum/design/item/medicalfab/meditools/adv/reagent_scanner
-	build_path = /obj/item/device/reagent_scanner
+	build_path = /obj/item/device/scanner/reagent
 	materials = list(MATERIAL_STEEL = 3 SHEET, MATERIAL_GLASS = 1 SHEETS, MATERIAL_COPPER = 2 SHEETS)
 	research = "reagent_scanner"
 
 
 //datum/design/item/medicalfab/meditools/adv/adv_reagent_scanner
-	build_path = /obj/item/device/reagent_scanner/adv
+	build_path = /obj/item/device/scanner/reagent/adv
 	materials = list(MATERIAL_STEEL = 5 SHEET, MATERIAL_GLASS = 3 SHEETS, MATERIAL_SILVER = 5 SHEETS)
 	research = "adv_reagent_scanner"
 
 
 /datum/design/item/medicalfab/meditools/adv/slime_scanner
-	build_path = /obj/item/device/slime_scanner
+	build_path = /obj/item/device/scanner/xenobio
 	materials = list(MATERIAL_STEEL = 1 SHEET, MATERIAL_GLASS = 0.5 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
 
 

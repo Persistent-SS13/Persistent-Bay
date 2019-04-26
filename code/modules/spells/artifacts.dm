@@ -10,7 +10,7 @@
 	throwforce = 10
 	damtype = DAM_BURN
 	force = 10
-	sound_hit = 'sound/items/welder2.ogg'
+	sound_hit = 'sound/magic/forcewall.ogg'
 
 /obj/item/weapon/scrying/attack_self(mob/user as mob)
 	if((user.mind && !GLOB.wizards.is_antagonist(user.mind)))

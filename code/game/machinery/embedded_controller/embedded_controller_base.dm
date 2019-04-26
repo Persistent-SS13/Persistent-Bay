@@ -16,7 +16,7 @@
 		qdel(program) // the program will clear the ref in its Destroy
 	return ..()
 
-/obj/machinery/embedded_controller/proc/post_signal(datum/signal/signal, comm_line)
+/obj/machinery/embedded_controller/post_signal(datum/signal/signal, comm_line)
 	return 0
 
 /obj/machinery/embedded_controller/receive_signal(datum/signal/signal, receive_method, receive_param)

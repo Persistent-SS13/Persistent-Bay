@@ -62,9 +62,9 @@
 			if(BP_IS_ROBOTIC(regen_organ))
 				continue
 			if(istype(regen_organ))
-				if(regen_organ.damage > 0 && !(regen_organ.status & ORGAN_DEAD))
+				if(regen_organ.isdamaged() && !(regen_organ.status & ORGAN_DEAD))
 					if (H.nutrition >= organ_mult)
-						regen_organ.damage = max(regen_organ.damage - organ_mult, 0)
+						regen_organ.heal_damage(organ_mult)
 						H.nutrition -= organ_mult
 						if(prob(5))
 							to_chat(H, replacetext(regen_message,"ORGAN", regen_organ.name))
@@ -143,7 +143,7 @@
 /obj/aura/regenerating/human/unathi/life_tick()
 	var/mob/living/carbon/human/H = user
 	if(innate_heal && istype(H) && H.stat != DEAD && H.nutrition < 50)
-		H.apply_damage(5, TOX)
+		H.apply_damage(5, DAM_BIO)
 		H.nutrition += 3
 		return 1
 	return ..()

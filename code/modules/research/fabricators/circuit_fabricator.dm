@@ -474,7 +474,7 @@
 	name = "Body Scanner Console"
 	id = "bodyscanner_console"
 	req_tech = list(TECH_MATERIAL = 3, TECH_ENGINEERING = 3, TECH_BIO = 2, TECH_DATA = 3)
-	build_path = /obj/item/weapon/circuitboard/bodyscanner_console
+	build_path = /obj/item/weapon/circuitboard/body_scanconsole
 	build_type = MEDICALFAB
 
 /datum/design/circuit/bodyscanner

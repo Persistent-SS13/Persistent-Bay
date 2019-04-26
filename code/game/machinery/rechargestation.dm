@@ -65,7 +65,7 @@
 		recharge_amount = (occupant ? restore_power_active : restore_power_passive) * CELLRATE
 
 		recharge_amount = cell.give(recharge_amount)
-		use_power(recharge_amount / CELLRATE)
+		use_power_oneoff(recharge_amount / CELLRATE)
 
 	if(icon_update_tick >= 10)
 		icon_update_tick = 0
@@ -74,19 +74,6 @@
 
 	if(occupant || recharge_amount)
 		update_icon()
-
-//since the recharge station can still be on even with NOPOWER. Instead it draws from the internal cell.
-/obj/machinery/recharge_station/auto_use_power()
-	if(!(stat & NOPOWER))
-		return ..()
-
-	if(!has_cell_power())
-		return 0
-	if(src.use_power == 1)
-		cell.use(idle_power_usage * CELLRATE)
-	else if(src.use_power >= 2)
-		cell.use(active_power_usage * CELLRATE)
-	return 1
 
 //Processes the occupant, drawing from the internal power cell if needed.
 /obj/machinery/recharge_station/proc/process_occupant()
@@ -200,7 +187,7 @@
 		if(99 to 110)
 			overlays += image('icons/obj/objects.dmi', "statn_c100")
 
-/obj/machinery/recharge_station/update_icon()
+/obj/machinery/recharge_station/on_update_icon()
 	..()
 	if(stat & BROKEN)
 		icon_state = "borgcharger0"

@@ -12,6 +12,7 @@
 	unacidable = 1
 	matter = list(MATERIAL_STEEL = 100) //Not made from steel buuut we need a way to recycle them
 	var/spawn_reagent = null
+	var/label = ""
 
 /obj/item/weapon/reagent_containers/chem_disp_cartridge/New()
 	. = ..()
@@ -29,6 +30,26 @@
 		to_chat(user, "It contains [reagents.total_volume] units of liquid.")
 	if(!is_open_container())
 		to_chat(user, "The cap is sealed.")
+
+/obj/item/weapon/reagent_containers/chem_disp_cartridge/verb/verb_set_label(L as text)
+	set name = "Set Cartridge Label"
+	set category = "Object"
+	set src in view(usr, 1)
+
+	setLabel(L, usr)
+
+/obj/item/weapon/reagent_containers/chem_disp_cartridge/proc/setLabel(L, mob/user = null)
+	if(L)
+		if(user)
+			to_chat(user, "<span class='notice'>You set the label on \the [src] to '[L]'.</span>")
+
+		label = L
+		SetName("[initial(name)] - '[L]'")
+	else
+		if(user)
+			to_chat(user, "<span class='notice'>You clear the label on \the [src].</span>")
+		label = ""
+		SetName(initial(name))
 
 /obj/item/weapon/reagent_containers/chem_disp_cartridge/attack_self()
 	..()

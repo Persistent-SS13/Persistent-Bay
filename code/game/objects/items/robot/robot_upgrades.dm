@@ -264,7 +264,7 @@
 /obj/item/borg/module_chip/engineering
 	name = "Engineering Module."
 	desc = "Contains tools and supplies for an engineering cyborg."
-	module_type = /obj/item/weapon/robot_module/engineering/general
+	module_type = /obj/item/weapon/robot_module/engineering
 	default_icon = "robotEngi"
 /obj/item/borg/module_chip/janitor
 	name = "Service Module."

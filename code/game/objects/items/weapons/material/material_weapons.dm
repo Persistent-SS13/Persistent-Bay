@@ -23,6 +23,7 @@
 
 /obj/item/weapon/material/New(var/newloc, var/material_key)
 	..(newloc)
+	queue_icon_update()
 	if(!material_key)
 		material_key = default_material
 	set_material(material_key)
@@ -55,7 +56,7 @@
 	if(!material)
 		qdel(src)
 	else
-		max_health = round(material.integrity/10)
+		max_health = round(material.integrity/5)
 		health = max_health
 		if(material.products_need_process())
 			START_PROCESSING(SSobj, src)
@@ -71,7 +72,7 @@
 
 /obj/item/weapon/material/on_update_icon()
 	overlays.Cut()
-	if(applies_material_colour)
+	if(applies_material_colour && istype(material))
 		color = material.icon_colour
 		alpha = 100 + material.opacity * 255
 	if(furniture_icon)
@@ -88,8 +89,9 @@
 	if(material.is_brittle() || target.get_blocked_ratio(hit_zone, damtype) * 100 >= material.hardness/5)
 		check_shatter()
 
-/obj/item/weapon/material/on_parry()
-	check_shatter()
+/obj/item/weapon/material/on_parry(damage_source)
+	if(istype(damage_source, /obj/item/weapon/material))
+		check_shatter()
 
 /obj/item/weapon/material/proc/check_shatter()
 	if(!unbreakable && prob(material.hardness))

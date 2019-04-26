@@ -21,8 +21,8 @@
 	construction_difficulty = 1
 	hidden_from_codex = TRUE
 
-/material/cult/place_dismantled_girder(var/turf/target)
-	new /obj/structure/girder/cult(target)
+// /material/cult/place_dismantled_girder(var/turf/target)
+// 	new /obj/structure/girder/cult(target)
 
 /material/cult/reinf
 	name = MATERIAL_REINFORCED_CULT
@@ -32,7 +32,7 @@
 	name = MATERIAL_RESIN
 	icon_colour = "#e85dd8"
 	dooropen_noise = 'sound/effects/attackblob.ogg'
-	icon_door = "resin"
+	door_icon_base = "resin"
 	melting_point = T0C+300
 	sheet_singular_name = "blob"
 	sheet_plural_name = "blobs"

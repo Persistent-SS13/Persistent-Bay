@@ -225,8 +225,8 @@
 	item_state = "cult"
 
 /obj/item/clothing/shoes/cyborg
-	name = "black shoes"
-	desc = "Some plain, black shoes."
+	name = "cyborg boots"
+	desc = "Shoes for a cyborg costume."
 	icon_state = "boots"
 
 /obj/item/clothing/shoes/slippers

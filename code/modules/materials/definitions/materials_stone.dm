@@ -5,8 +5,8 @@
 	flags = MATERIAL_UNMELTABLE
 	cut_delay = 60
 	icon_colour = COLOR_DIAMOND
-	icon_door = "metal"
-	icon_table = "metal"
+	door_icon_base = "metal"
+	table_icon_base = "metal"
 	opacity = 0.4
 	shard_type = SHARD_SHARD
 	tableslam_noise = 'sound/effects/Glasshit.ogg'
@@ -16,7 +16,7 @@
 	stack_origin_tech = list(TECH_MATERIAL = 6)
 	conductive = 0
 	construction_difficulty = 3
-	ore_name = MATERIAL_DIAMOND
+	ore_name = "rough diamonds"
 	ore_compresses_to = MATERIAL_DIAMOND
 	ore_result_amount = 5
 	ore_spread_chance = 10
@@ -41,14 +41,14 @@
 	lore_text = "A clastic sedimentary rock. The cost of boosting it to orbit is almost universally much higher than the actual value of the material."
 	stack_type = /obj/item/stack/material/sandstone
 	icon_base = "stone"
+	table_icon_base = "stone"
 	icon_reinf = "reinf_stone"
 	icon_colour = "#d9c179"
-	icon_door = "stone"
 	shard_type = SHARD_STONE_PIECE
 	weight = 22
 	hardness = 55
 	brute_armor = 3
-	icon_door = "stone"
+	door_icon_base = "stone"
 	sheet_singular_name = "brick"
 	sheet_plural_name = "bricks"
 	conductive = 0

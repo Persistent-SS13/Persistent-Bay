@@ -65,15 +65,34 @@
 
 
 				<h2><a name="Modules">Cyborg Modules</h2>
-				When a cyborg is created it picks out of an array of modules to designate its purpose. There are 6 different cyborg modules.
+				When a cyborg is created it picks out of an array of modules to designate its purpose. There are 11 different cyborg modules.<br>
+				All cyborg modules carry a flash.
 
 				<h3>Standard Cyborg</h3>
 				The standard cyborg module is a multi-purpose cyborg. It is equipped with various modules, allowing it to do basic tasks.<br>A Standard Cyborg comes with:
 				<ul>
 				  <li>Crowbar</li>
+				  <li>Wrench</li>
 				  <li>Stun Baton</li>
 				  <li>Health Analyzer</li>
 				  <li>Fire Extinguisher</li>
+				</ul>
+
+				<h3>Research Cyborg</h3>
+				The research cyborg module is an effective researching machine. It is equipped with tools to effectively run RnD.<be>A Research Cyborg comes with:
+				<ul>
+				  <li>Portable Destructive Analyzer</li>
+				  <li>Research Gripper</li>
+				  <li>Sheet Loader</li>
+				  <li>Robot Analyzer</li>
+				  <li>Robot Card</li>
+				  <li>Set of Engineering Tools</li>
+				  <li>Laser Scalpel</li>
+				  <li>Circular Saw</li>
+				  <li>Fire Extinguisher</li>
+				  <li>Syringe</li>
+				  <li>Chemistry Gripper</li>
+				  <li>Nanopaste</li>
 				</ul>
 
 				<h3>Engineering Cyborg</h3>
@@ -81,28 +100,34 @@
 				<ul>
 				  <li>A basic set of engineering tools</li>
 				  <li>Metal Synthesizer</li>
+				  <li>Plasteel Synthesizer</li>
 				  <li>Reinforced Glass Synthesizer</li>
-				  <li>An RCD</li>
 				  <li>Wire Synthesizer</li>
 				  <li>Fire Extinguisher</li>
+				  <li>Roll of Tape</li>
 				  <li>Built-in Optical Meson Scanners</li>
 				</ul>
 
 				<h3>Mining Cyborg</h3>
 				The Mining Cyborg module comes equipped with the latest in mining equipment. They are efficient at mining due to no need for oxygen, but their power cells limit their time in the mines.<br>A Mining Cyborg comes with:
 				<ul>
-				  <li>Jackhammer</li>
-				  <li>Shovel</li>
-				  <li>Mining Satchel</li>
-				  <li>Built-in Optical Meson Scanners</li>
+				  <li>Wrench</li>
+				  <li>Scredriver</li>
+				  <li>Crowbar</li>
+				  <li>Ore Satchel</li>
+				  <li>Borg Drill</li>
+				  <li>Mining Gripper</li>
+				  <li>Ore Scanner</li>
 				</ul>
 
 				<h3>Security Cyborg</h3>
-				The Security Cyborg module is equipped with effective security measures used to apprehend and arrest criminals without harming them a bit.<br>A Security Cyborg comes with:
+				The Security Cyborg module is equipped with effective security measures used to apprehend and arrest criminals.<br>A Security Cyborg comes with:
 				<ul>
 				  <li>Stun Baton</li>
 				  <li>Handcuffs</li>
-				  <li>Taser</li>
+				  <li>Energy Gun</li>
+				  <li>Megaphone</li>
+				  <li>Roll of Tape</li>
 				</ul>
 
 				<h3>Janitor Cyborg</h3>
@@ -111,18 +136,71 @@
 				  <li>Mop</li>
 				  <li>Hand Bucket</li>
 				  <li>Cleaning Spray Synthesizer and Spray Nozzle</li>
+				  <li>Light Replacer</li>
+				  <li>Trash Bag</li>
 				</ul>
 
 				<h3>Service Cyborg</h3>
 				The service cyborg module comes ready to serve your human needs. It includes various entertainment and refreshment devices. Occasionally some service cyborgs may have been referred to as "Bros."<br>A Service Cyborg comes with:
 				<ul>
-				  <li>Shaker</li>
-				  <li>Industrial Dropper</li>
-				  <li>Platter</li>
-				  <li>Beer Synthesizer</li>
+				  <li>Service Gripper</li>
+				  <li>Bucket</li>
+				  <li>Hoe</li>
+				  <li>Hatchet</li>
 				  <li>Zippo Lighter</li>
 				  <li>Rapid-Service-Fabricator (Produces various entertainment and refreshment objects)</li>
+				  <li>Plant Analyzer</li>
+				  <li>Robot Harvester</li>
+				  <li>Rolling Pin</li>
+				  <li>Knife</li>
+				</ul>
+
+				<h3>Clerical Cyborg</h3>
+				The clerical cyborg module is prepared to run the supply department, including a vareity of stamps.<br>A clerical cyborg comes with:
+				<ul>
 				  <li>Pen</li>
+				  <li>Paper Dispenser</li>
+				  <li>Clerical Gripper</li>
+				  <li>Hand Labeler</li>
+				  <li>Generic Stamp</li>
+				  <li>Denied Stamp</li>
+				  <li>Package Wrapper</li>
+				  <li>Destination Tagger</li>
+				</ul>
+
+				<h3>Crisis Cyborg</h3>
+				The crisis cyborg module is prepared to handle a variety of non-surgical medical emergencies.<br>A medical cyborg comes with:
+				<ul>
+				  <li>Crowbar</li>
+				  <li>Health Analyzer</li>
+				  <li>Reagent Scanner</li>
+				  <li>Roller Bed Rack</li>
+				  <li>Body Bag Rack</li>
+				  <li>Hypospray</li>
+				  <li>Automatic Defibrillator</li>
+				  <li>Industrial Dropper</li>
+				  <li>Syringe</li>
+				  <li>Chemistry Gripper</li>
+				  <li>Fire Extinguisher</li>
+				  <li>Inflatables Dispenser</li>
+				  <li>Roll of Tape</li>
+				</ul>
+
+				<h3>Surgeon Cyborg</h3>
+				The surgeon cyborg modules is prepared to handle a variety of surgical medical emergencies.<br>A medical cyborg comes with:
+				<ul>
+				  <li>Set of Surgery Tools</li>
+				  <li>Health Analyzer</li>
+				  <li>Roller Bed Rack</li>
+				  <li>Body Bag Rack</li>
+				  <li>Hypospray</li>
+				  <li>Automatic Defibrillator</li>
+				  <li>Industrial Dropper</li>
+				  <li>Syringe</li>
+				  <li>Chemistry Gripper</li>
+				  <li>Fire Extinguisher</li>
+				  <li>Inflatables Dispenser</li>
+				  <li>Roll of Tape</li>
 				</ul>
 
 				<h2><a name="Construction">Cyborg Construction</h2>
@@ -310,31 +388,35 @@
 				</style>
 				</head>
 				<body>
-				<h1>OPERATING MANUAL FOR MK 1 PROTOTYPE THERMOELECTRIC SUPERMATTER ENGINE 'TOMBOLA'</h1>
+				<h1>OPERATING MANUAL FOR MK 1 THERMOELECTRIC SUPERMATTER ENGINE "JUPITER"</h1>
 				<br>
 				<h2>OPERATING PRINCIPLES</h2>
 				<br>
-				<li>The supermatter crystal serves as the fundamental power source of the engine. Upon being charged, it begins to emit large amounts of heat and radiation, as well and oxygen and phoron gas. As oxygen accelerates the reaction, and phoron carries the risk of fire, these must be filtered out. NOTE: Supermatter radiation will not charge radiation collectors.</li>
+				<li>The supermatter crystal serves as the fundamental power source of the engine. Upon being charged, it begins to emit large amounts of heat and radiation, as well and oxygen and phoron gas. As oxygen accelerates the reaction, and phoron carries the risk of fire, these must be filtered out.</li>
 				<br>
-				<li>Air in the reactor chamber housing the supermatter is circulated through the reactor loop, which passes through the filters and thermoelectric generators. The thermoelectric generators transfer heat from the reactor loop to the colder radiator loop, thereby generating power. Additional power is generated from internal turbines in the circulators.</li>
+				<li>Gas in the reactor chamber housing the supermatter is circulated through the reactor loop, which passes through the filters and thermoelectric generators. The thermoelectric generators transfer heat from the reactor loop to the colder radiator loop, thereby generating power. Additional power is generated from internal turbines in the circulators.</li>
 				<br>
-				<li>Air in the radiator loop is circulated through the radiator bank, located in space. This rapidly cools the air, preserving the temperature differential needed for power generation.</li>
+				<li>Gas in the radiator loop is circulated through the radiator bank, located in space. The radiative cooling provides the temperature differential required for power generation.</li>
 				<br>
-				<li>The MK 1 Prototype Thermoelectric Supermatter Engine is designed to operate at reactor temperatures of 3000K to 4000K and generate up to 1MW of power. Beyond 1MW, the thermoelectric generators will begin to lose power through electrical discharge, reducing efficiency, but additional power generation remains feasible.</li>
+				<li>The MK 1 Thermoelectric Supermatter Engine is designed to operate at reactor temperatures of 2000 K to 4000 K and generate up to 1 MW of power. Beyond 1 MW, the thermoelectric generators will begin to lose power through electrical discharge, reducing efficiency, but additional power generation remains feasible.</li>
 				<br>
-				<li>The crystal structure of the supermatter will begin to liquefy if its temperature exceeds 5000K. This eventually results in a massive release of light, heat and radiation, disintegration of both the supermatter crystal and most of the surrounding area, and as as-of-yet poorly documented psychological effects on all animals within a 2km radius. Appropriate action should be taken to stabilize or eject the supermatter before such occurs.</li>
+				<li>The crystal structure of the supermatter will begin to delaminate if its temperature exceeds 5000 K. This eventually results in a massive release of light, heat and radiation, disintegration of both the supermatter crystal and most of the surrounding area, and as as-of-yet poorly documented psychological effects on all animals within a 2km radius. Appropriate action should be taken to stabilize or eject the supermatter before such occurs.</li>
 				<br>
 				<h2>SUPERMATTER HANDLING</h2>
 				<li>Do not expose supermatter to oxygen.</li>
-				<li>Do not <del>touch supermatter</del> <del>without gloves</del> <del>without exosuit protection</del> allow supermatter to contact any solid object apart from specially-designed supporting pallet.</li>
+				<li>Do not touch supermatter or allow supermatter to contact any solid object apart from the specially-designed supporting pallet.</li>
 				<li>Do not directly view supermatter without meson goggles.</li>
 				<li>While handles on pallet allow moving the supermatter via pulling, pushing should not be attempted.</li>
 				<br>
 				<h2>STARTUP PROCEDURE</h2>
 				<ol>
-				<li>Fill reactor loop and radiator loop with two (2) standard canisters of nitrogen gas each.</li>
-				<li>Ensure that pumps and filters are on and operating at maximum power.</li>
-				<li>Fire <del>5</del> <del>15</del> <del>2</del> <del>UNKNOWN</del> 8-12 pulses from emitter at supermatter crystal. Reactor blast doors must be open for this procedure.</li>
+				<li>Fill the reactor loop (green and yellow) and the radiator loop (cyan) with two (2) standard canisters of hydrogen gas each.</li>
+				<li>Additional canisters of hydrogen can be obtained from Atmospherics or Atmospherics Tank Storage if required.</li>
+				<li>Ensure that the Thermoelectric Generator (TEG) high-power pumps (on cyan pipes) are switched on at maximum pressure.</li>
+				<li><i>IMPORTANT: </i>Set filters (port-side of engine room) to Hydrogen instead of Carbon Dioxide, and afterwards ensure each filter is switched on.</li>
+				<li>Ensure the pump to the phoron canister is set to max.</li>
+				<li>Switch on the waste pump to the engines (connecting black pipes - under blast door near the phoron canister).</li>
+				<li>Monitoring EER with the Supermatter Monitoring program, fire the emitter until EER reaches 150-200. Reactor blast doors must be open for this procedure.</li>
 				</ol>
 				<br>
 				<h2>OPERATION AND MAINTENANCE</h2>
@@ -343,15 +425,16 @@
 				<li>Ensure that reactor and radiator loops are undamaged and unobstructed.</li>
 				<li>Ensure that phoron and oxygen gas exhaust from filters is properly contained or disposed. Do not allow exhaust pressure to exceed 4500 kPa.</li>
 				<li>Ensure that engine room Area Power Controller (APC) and engine Superconducting Magnetic Energy Storage unit (SMES) are properly charged.</li>
-				<li>Ensure that reactor temperature does not exceed 5000K. In event of reactor temperature exceeding 5000K, see EMERGENCY COOLING PROCEDURE.</li>
+				<li>Ensure that reactor temperature does not exceed 5000 K. In event of reactor temperature exceeding 5000 K, either pump in more gas to cool the engine, or see EMERGENCY COOLING PROCEDURE.</li>
 				<li>In event of imminent and/or unavoidable delamination, see EJECTION PROCEDURE.</li>
 				</ol>
 				<br>
 				<h2>EMERGENCY COOLING PROCEDURE</h2>
 				<ol>
-				<li>Open Emergency Cooling Valve 1 and Emergency Cooling Valve 2.</li>
-				<li>When reactor temperature returns to safe operating levels, close Emergency Cooling Valve 1 and Emergency Cooling Valve 2.</li>
-				<li>If reactor temperature does not return to safe operating levels, see EJECTION PROCEDURE.</li>
+				<li>Open the Emergency Cooling Valve, which allows for Heat Exchangers to cool the reactor loop (green) with the radiator (cyan) loop</li>
+				<li>If the reactor temperature does not return to safe operating levels, open both the Emergency Cooling Bypass Valve and TEG Bypass Valve</li>
+				<li>If the reactor becomes safe, close the three aforementioned valves to resume power generation</li>
+				<li>If the reactor temperature does not return to safe operating levels, see EJECTION PROCEDURE.</li>
 				</ol>
 				<br>
 				<h2>EJECTION PROCEDURE</h2>
@@ -364,9 +447,8 @@
 			</html>"}
 
 
-
 /obj/item/weapon/book/manual/rust_engine
-	name = "R-UST Operating Manual 2553"
+	name = "R-UST Operating Manual"
 	icon_state = "bookMagazine"
 	author = "Cindy Crawfish"
 	title = "R-UST Operating Manual"
@@ -735,7 +817,7 @@
 				and then is screwed in for one and a quarter full rotations clockwise, leaving the faceplate directly in front of you. There is a small button on the right side of the helmet that activates the helmet light.
 				The tanks that fasten onto the side slot are emergency tanks, as well as full-sized oxygen tanks, leaving your back free for a backpack or satchel.<BR><BR>
 
-				These suits generally only fit one species. Nanotrasen's are usually human-fitting by default, but there's equipment that can make modifications to the hardsuits to fit them to other species.<BR><BR>
+				These suits generally only fit one species. Standard-issue suits are usually human-fitting by default, but there's equipment that can make modifications to the hardsuits to fit them to other species.<BR><BR>
 
 				<h2><a name="Equipment">Modification Equipment</a></h2>
 				<I>How to actually make hardsuits fit you.</I><BR>

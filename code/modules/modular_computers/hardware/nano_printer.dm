@@ -12,7 +12,6 @@
 /obj/item/weapon/computer_hardware/nano_printer/New()
 	..()
 	ADD_SAVED_VAR(stored_paper)
-	ADD_SKIP_EMPTY(stored_paper)
 
 /obj/item/weapon/computer_hardware/nano_printer/Destroy()
 	if(holder2 && (holder2.nano_printer == src))
@@ -27,7 +26,7 @@
 /obj/item/weapon/computer_hardware/nano_printer/proc/print_text(var/text_to_print, var/paper_title = null, var/paper_type = /obj/item/weapon/paper, var/list/md = null)
 	if(printer_ready())
 		// Damaged printer causes the resulting paper to be somewhat harder to read.
-		if(damage > damage_malfunction)
+		if(ismalfunctioning())
 			text_to_print = stars(text_to_print, 100-malfunction_probability)
 		new paper_type(get_turf(holder2),text_to_print, paper_title, md)
 		stored_paper--

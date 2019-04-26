@@ -682,7 +682,7 @@
 		return
 
 	if(statpanel("Status"))
-		if(GAME_STATE != RUNLEVEL_INIT)
+		if(GAME_STATE >= RUNLEVEL_SETUP)
 			stat("Local Time", stationtime2text())
 			stat("Local Date", stationdate2text())
 			stat("Server Uptime", roundduration2text())
@@ -1041,9 +1041,9 @@
 		facing_dir = dir
 
 /mob/set_dir()
-	if(!isnull(client))
-		client.pixel_x = 0
-		client.pixel_y = 0
+//	if(!isnull(client))
+//		client.pixel_x = 0
+//		client.pixel_y = 0
 	if(facing_dir)
 		if(!canface() || lying || buckled || restrained())
 			facing_dir = null
@@ -1128,6 +1128,22 @@
 	if(src.throw_icon)
 		src.throw_icon.icon_state = "act_throw_on"
 
+///mob/proc/toggle_antag_pool()
+//	set name = "Toggle Add-Antag Candidacy"
+//	set desc = "Toggles whether or not you will be considered a candidate by an add-antag vote."
+//	set category = "OOC"
+//	if(isghostmind(src.mind) || isnewplayer(src))
+//		if(SSticker.looking_for_antags)
+//			if(src.mind in SSticker.antag_pool)
+//				SSticker.antag_pool -= src.mind
+//				to_chat(usr, "You have left the antag pool.")
+//			else
+//				SSticker.antag_pool += src.mind
+//				to_chat(usr, "You have joined the antag pool. Make sure you have the needed role set to high!")
+//		else
+//			to_chat(usr, "The game is not currently looking for antags.")
+//	else
+//		to_chat(usr, "You must be observing or in the lobby to join the antag pool.")
 /mob/proc/is_invisible_to(var/mob/viewer)
 	return (!alpha || !mouse_opacity || viewer.see_invisible < invisibility)
 

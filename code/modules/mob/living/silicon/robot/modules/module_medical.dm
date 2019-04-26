@@ -27,7 +27,7 @@
 	equipment = list(
 		/obj/item/device/flash,
 		/obj/item/borg/sight/hud/med,
-		/obj/item/device/healthanalyzer,
+		/obj/item/device/scanner/health,
 		/obj/item/weapon/reagent_containers/borghypo/surgeon,
 		/obj/item/weapon/scalpel/manager,
 		/obj/item/weapon/hemostat,
@@ -40,7 +40,7 @@
 		/obj/item/weapon/surgicaldrill,
 		/obj/item/weapon/gripper/organ,
 		/obj/item/weapon/shockpaddles/robot,
-		/obj/item/weapon/crowbar,
+		/obj/item/weapon/tool/crowbar,
 		/obj/item/stack/nanopaste,
 		/obj/item/stack/medical/advanced/bruise_pack
 	)
@@ -90,11 +90,11 @@
 		"Needles" = "medicalrobot"
 	)
 	equipment = list(
-		/obj/item/weapon/crowbar,
+		/obj/item/weapon/tool/crowbar,
 		/obj/item/device/flash,
 		/obj/item/borg/sight/hud/med,
-		/obj/item/device/healthanalyzer,
-		/obj/item/device/reagent_scanner/adv,
+		/obj/item/device/scanner/health,
+		/obj/item/device/scanner/reagent/adv,
 		/obj/item/robot_rack/body_bag,
 		/obj/item/weapon/reagent_containers/borghypo/crisis,
 		/obj/item/weapon/shockpaddles/robot,

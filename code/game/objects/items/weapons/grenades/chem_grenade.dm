@@ -38,7 +38,7 @@
 		if(stage > 1 && !active && clown_check(user))
 			to_chat(user, "<span class='warning'>You prime \the [name]!</span>")
 
-			msg_admin_attack("[user.name] ([user.ckey]) primed \a [src]. (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[user.x];Y=[user.y];Z=[user.z]'>JMP</a>)")
+			log_and_message_admins("has primed \a [src].")
 
 			activate()
 			add_fingerprint(user)
@@ -59,6 +59,7 @@
 			if(!user.unEquip(det, src))
 				return
 			path = 1
+			log_and_message_admins("has attached \a [W] to \the [src].")
 			to_chat(user, "<span class='notice'>You add [W] to the metal casing.</span>")
 			playsound(src.loc, 'sound/items/Screwdriver2.ogg', 25, -3)
 			detonator = det
@@ -131,7 +132,7 @@
 			icon_state = initial(icon_state) + "_active"
 
 			if(user)
-				msg_admin_attack("[user.name] ([user.ckey]) primed \a [src] (<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[user.x];Y=[user.y];Z=[user.z]'>JMP</a>)")
+				log_and_message_admins("has primed \a [src].")
 
 		return
 
@@ -203,7 +204,7 @@
 		var/obj/item/weapon/reagent_containers/glass/beaker/B1 = new(src)
 		var/obj/item/weapon/reagent_containers/glass/beaker/B2 = new(src)
 
-		B1.reagents.add_reagent(/datum/reagent/aluminum, 30)
+		B1.reagents.add_reagent(/datum/reagent/aluminium, 30)
 		B2.reagents.add_reagent(/datum/reagent/foaming_agent, 10)
 		B2.reagents.add_reagent(/datum/reagent/acid/polyacid, 10)
 
@@ -224,7 +225,7 @@
 		var/obj/item/weapon/reagent_containers/glass/beaker/B1 = new(src)
 		var/obj/item/weapon/reagent_containers/glass/beaker/B2 = new(src)
 
-		B1.reagents.add_reagent(/datum/reagent/aluminum, 15)
+		B1.reagents.add_reagent(/datum/reagent/aluminium, 15)
 		B1.reagents.add_reagent(/datum/reagent/fuel,20)
 		B2.reagents.add_reagent(/datum/reagent/toxin/phoron, 15)
 		B2.reagents.add_reagent(/datum/reagent/acid, 15)

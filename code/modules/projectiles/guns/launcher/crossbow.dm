@@ -3,7 +3,7 @@
 /obj/item/weapon/arrow
 	name = "bolt"
 	desc = "It's got a tip for you - get the point?"
-	icon = 'icons/obj/weapons/guns/crossbows.dmi'
+	icon = 'icons/obj/weapons/guns/crossbow.dmi'
 	icon_state = "bolt"
 	item_state = "bolt"
 	throwforce = 8
@@ -31,7 +31,7 @@
 /obj/item/weapon/arrow/quill
 	name = "vox quill"
 	desc = "A wickedly barbed quill from some bizarre animal."
-	icon = 'icons/obj/weapons/guns/crossbows.dmi'
+	icon = 'icons/obj/weapons/guns/crossbow.dmi'
 	icon_state = "quill"
 	item_state = "quill"
 	throwforce = 5
@@ -54,7 +54,7 @@
 /obj/item/weapon/gun/launcher/crossbow
 	name = "powered crossbow"
 	desc = "A 2557AD twist on an old classic. Pick up that can."
-	icon = 'icons/obj/weapons/guns/crossbows.dmi'
+	icon = 'icons/obj/weapons/guns/crossbow.dmi'
 	icon_state = "crossbow"
 	item_state = "crossbow-solid"
 	fire_sound = 'sound/weapons/punchmiss.ogg' // TODO: Decent THWOK noise.
@@ -71,6 +71,14 @@
 	var/obj/item/weapon/cell/cell = null    // Used for firing superheated rods.
 	var/current_user                        // Used to check if the crossbow has changed hands since being drawn.
 	var/draw_time = 20						// Time needed to draw the bow back by one "tension"
+
+/obj/item/weapon/gun/launcher/crossbow/New()
+	..()
+	ADD_SAVED_VAR(bolt)
+	ADD_SAVED_VAR(cell)
+	
+	ADD_SKIP_EMPTY(bolt)
+	ADD_SKIP_EMPTY(cell)
 
 /obj/item/weapon/gun/launcher/crossbow/toggle_safety(var/mob/user)
 	to_chat(user, "<span class='warning'>There's no safety on \the [src]!</span>")
@@ -209,7 +217,7 @@
 /obj/item/weapon/crossbowframe
 	name = "crossbow frame"
 	desc = "A half-finished crossbow."
-	icon = 'icons/obj/weapons/guns/crossbows.dmi'
+	icon = 'icons/obj/weapons/guns/crossbow.dmi'
 	icon_state = "crossbowframe0"
 	item_state = "crossbow-solid"
 	mass = 2

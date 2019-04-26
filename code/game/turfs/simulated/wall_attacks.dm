@@ -58,7 +58,7 @@
 
 /turf/simulated/wall/proc/fail_smash(var/mob/user)
 	to_chat(user, "<span class='danger'>You smash against \the [src]!</span>")
-	take_damage(rand(25,75) - BruteArmor())
+	take_damage(rand(25,75))
 
 /turf/simulated/wall/proc/success_smash(var/mob/user)
 	to_chat(user, "<span class='danger'>You smash through \the [src]!</span>")
@@ -113,11 +113,15 @@
 		try_touch(user, rotting)
 		return
 
-	take_damage(damage, DAM_BLUNT)
-
-	if(wallbreaker == 2)
+	if(rotting)
 		return success_smash(user)
-	return fail_smash(user)
+
+	if(reinf_material)
+		if(damage >= max(material.hardness,reinf_material.hardness))
+			return success_smash(user)
+	else if(wallbreaker == 2 || damage >= material.hardness)
+		return success_smash(user)
+	return ..()
 
 /turf/simulated/wall/attackby(var/obj/item/weapon/W, var/mob/user)
 
@@ -186,8 +190,8 @@
 		var/dismantle_verb
 		var/dismantle_sound
 
-		if(istype(W,/obj/item/weapon/weldingtool))
-			var/obj/item/weapon/weldingtool/WT = W
+		if(istype(W,/obj/item/weapon/tool/weldingtool))
+			var/obj/item/weapon/tool/weldingtool/WT = W
 			if(!WT.isOn())
 				return
 			if(!WT.remove_fuel(0,user))
@@ -268,8 +272,8 @@
 						return
 			if(4)
 				var/cut_cover
-				if(istype(W,/obj/item/weapon/weldingtool))
-					var/obj/item/weapon/weldingtool/WT = W
+				if(istype(W,/obj/item/weapon/tool/weldingtool))
+					var/obj/item/weapon/tool/weldingtool/WT = W
 					if(!WT.isOn())
 						return
 					if(WT.remove_fuel(0,user))
@@ -310,8 +314,8 @@
 					return
 			if(1)
 				var/cut_cover
-				if(istype(W, /obj/item/weapon/weldingtool))
-					var/obj/item/weapon/weldingtool/WT = W
+				if(istype(W, /obj/item/weapon/tool/weldingtool))
+					var/obj/item/weapon/tool/weldingtool/WT = W
 					if( WT.remove_fuel(0,user) )
 						cut_cover=1
 					else
@@ -333,8 +337,8 @@
 				if(isCrowbar(W))
 					to_chat(user, "<span class='notice'>You struggle to pry off the outer sheath.</span>")
 					playsound(src, 'sound/items/Crowbar.ogg', 100, 1)
-					if(!do_after(user,100,src) || !istype(src, /turf/simulated/wall) || !user || !W || !T )	return
-					if(user.loc == T && user.get_active_hand() == W )
+					if(!do_after(user,100,src) || !istype(src, /turf/simulated/wall) || !user || !W)	return
+					if(user.get_active_hand() == W )
 						to_chat(user, "<span class='notice'>You pry off the outer sheath.</span>")
 						dismantle_wall()
 					return

@@ -7,6 +7,11 @@
 	fire_sound_text = "a metallic thunk"
 	var/obj/item/weapon/net_shell/chambered
 
+/obj/item/weapon/gun/launcher/net/New()
+	..()
+	ADD_SAVED_VAR(chambered)
+	ADD_SKIP_EMPTY(chambered)
+
 /obj/item/weapon/net_shell
 	name = "net gun shell"
 	desc = "A casing containing an autodeploying net for use in a net gun. Kind of looks like a flash light."

@@ -103,7 +103,7 @@
 		return TOPIC_NOACTION
 
 	if(href_list["power"])
-		update_use_power(sanitize_integer(text2num(signal.data["power"]), POWER_USE_OFF, POWER_USE_ACTIVE, use_power))
+		update_use_power(sanitize_integer(text2num(href_list["power"]), POWER_USE_OFF, POWER_USE_ACTIVE, use_power))
 
 	if(href_list["power_toggle"])
 		update_use_power(!use_power)

@@ -287,7 +287,7 @@
 				origin_tech = list(TECH_MATERIAL = 2)
 			if("fire")
 				desc = "A tendril removed from an asteroclast. It's so hot that it almost hurts to hold onto it."
-				damtype = BURN
+				damtype = DAM_BURN
 				force = 15
 				color = COLOR_AMBER
 				origin_tech = list(TECH_POWER = 2)

@@ -9,11 +9,6 @@
 	var/sound_in = 'sound/effects/holster/holsterin.ogg'
 	var/sound_out = 'sound/effects/holster/holsterout.ogg'
 
-/obj/item/clothing/accessory/holster/after_load()
-	..()
-	if(has_suit)
-		has_suit.verbs += /obj/item/clothing/accessory/holster/verb/holster_verb
-
 /obj/item/clothing/accessory/storage/holster/Initialize()
 	. = ..()
 	set_extension(src, /datum/extension/holster, /datum/extension/holster, hold, sound_in, sound_out, can_holster)

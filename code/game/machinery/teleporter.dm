@@ -240,7 +240,6 @@
 	use_power 			= POWER_USE_IDLE
 	idle_power_usage 	= 10
 	active_power_usage 	= 2 KILOWATTS
-	var/obj/machinery/teleport/hub/com
 	var/active = 0
 	var/engaged = 0
 	idle_power_usage = 10

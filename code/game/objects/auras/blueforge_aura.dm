@@ -10,8 +10,8 @@
 	return 0
 
 /obj/aura/blueforge_aura/bullet_act(var/obj/item/projectile/P)
-	if(P.damtype == BURN)
-		P.damage *=2
+	if(IsDamageTypeBurn(P.damtype))
+		P.force *=2
 	else if(P.agony || P.stun)
 		return AURA_FALSE
-	return 0
+	return ..()

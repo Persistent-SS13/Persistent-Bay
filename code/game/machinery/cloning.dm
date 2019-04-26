@@ -40,7 +40,7 @@
 	power_change()
 		..()
 		if(!(stat & (BROKEN|NOPOWER)))
-			set_light(2)
+			set_light(1)
 		else
 			set_light(0)
 
@@ -246,7 +246,7 @@
 			default_deconstruction_crowbar(W)
 		return
 
-	if(istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))
+	if(istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/modular_computer/pda))
 		if(!check_access(W))
 			to_chat(user, "\red Access Denied.")
 			return

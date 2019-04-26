@@ -37,6 +37,15 @@
 	//var/list/icon_keys = list()		//keys
 	//var/list/ammo_states = list()	//values
 
+/obj/item/weapon/gun/projectile/New()
+	..()
+	ADD_SAVED_VAR(chambered)
+	ADD_SAVED_VAR(ammo_magazine)
+	ADD_SAVED_VAR(is_jammed)
+
+	ADD_SKIP_EMPTY(chambered)
+	ADD_SKIP_EMPTY(ammo_magazine)
+
 /obj/item/weapon/gun/projectile/Initialize()
 	. = ..()
 	if(!map_storage_loaded)
@@ -46,7 +55,7 @@
 					loaded += new ammo_type(src)
 			if(ispath(magazine_type) && (load_method & MAGAZINE))
 				ammo_magazine = new magazine_type(src)
-	update_icon()
+	queue_icon_update()
 
 /obj/item/weapon/gun/projectile/consume_next_projectile()
 	if(!is_jammed && prob(jam_chance/5))

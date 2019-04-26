@@ -85,7 +85,8 @@
 	if(mode == SYRINGE_BROKEN)
 		icon_state = "broken"
 		return
-
+	if(!reagents)
+		return
 	var/rounded_vol = Clamp(round((reagents.total_volume / volume * 15),5), 5, 15)
 	if (reagents.total_volume == 0)
 		rounded_vol = 0
@@ -137,7 +138,7 @@
 				if(istype(target, /mob/living/carbon/human))
 					CRASH("[T] \[[T.type]\] was missing their dna datum!")
 				return
-			if(NOCLONE in T.mutations) //target done been et, no more blood in him
+			if(MUTATION_NOCLONE in T.mutations) //target done been et, no more blood in him
 				to_chat(user, SPAN_WARNING("You are unable to locate any blood."))
 				return
 
@@ -154,7 +155,7 @@
 			if(prob(user.skill_fail_chance(SKILL_MEDICAL, 60, SKILL_BASIC)))
 				to_chat(user, "<span class='warning'>You miss the vein!</span>")
 				var/target_zone = check_zone(user.zone_sel.selecting)
-				T.apply_damage(3, BRUTE, target_zone, damage_flags=DAM_SHARP)
+				T.apply_damage(3, DAM_PIERCE, target_zone, damage_flags=0)
 				return
 
 			injtime *= user.skill_delay_mult(SKILL_MEDICAL)
@@ -291,7 +292,7 @@
 
 	else
 		user.visible_message(SPAN_DANGER("[user] stabs [target] with [src.name]!"))
-		target.apply_damage(3, DAM_PIERCE, target_zone)
+		target.apply_damage(3, DAM_PIERCE)
 
 	var/syringestab_amount_transferred = rand(0, (reagents.total_volume - 5)) //nerfed by popular demand
 	var/contained_reagents = reagents.get_reagents()

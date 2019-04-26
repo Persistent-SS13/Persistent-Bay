@@ -423,7 +423,7 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/clipboard
 	name = "clipboard"
-	path = /obj/item/weapon/clipboard
+	path = /obj/item/weapon/material/clipboard
 	category = "General"
 
 /datum/autolathe/recipe/destTagger
@@ -527,7 +527,7 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/healthscanner
 	name = "health scanner"
-	path = /obj/item/device/healthanalyzer
+	path = /obj/item/device/scanner/health
 	category = "Medical"
 
 /datum/autolathe/recipe/mop

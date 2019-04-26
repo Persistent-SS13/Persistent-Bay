@@ -544,9 +544,9 @@
 			var/obj/item/weapon/card/id/I
 			if(istype(human_user.wear_id, /obj/item/weapon/card/id) )
 				I = human_user.wear_id
-			else if(istype(human_user.wear_id, /obj/item/device/pda) )
-				var/obj/item/device/pda/P = human_user.wear_id
-				I = P.id
+			else if(istype(human_user.wear_id, /obj/item/modular_computer/pda) )
+				var/obj/item/modular_computer/pda/P = human_user.wear_id
+				I = P.GetIdCard()
 			if(I)
 				return I
 

@@ -77,7 +77,7 @@
 	closet_appearance = /decl/closet_appearance/oxygen/fire
 
 
-/obj/structure/closet/firecloset/WillContain()
+/obj/structure/closet/firecloset/filled/WillContain()
 	return list(
 		/obj/item/weapon/storage/med_pouch/burn,
 		/obj/item/clothing/suit/fire/firefighter,

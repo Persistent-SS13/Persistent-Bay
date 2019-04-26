@@ -1,4 +1,4 @@
-/obj/item/weapon/clipboard
+/obj/item/weapon/material/clipboard
 	name = "clipboard"
 	desc = "It's a board with a clip used to organise papers."
 	icon = 'icons/obj/items/clipboard.dmi'

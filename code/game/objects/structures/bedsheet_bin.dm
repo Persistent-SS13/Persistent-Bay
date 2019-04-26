@@ -170,12 +170,12 @@ LINEN BINS
 			to_chat(user, SPAN_WARNING("\The [src] is empty!"))
 			return
 		add_fingerprint(user)
-		B.forcemove(user.loc)
+		B.forceMove(user.loc)
 		user.put_in_hands(B)
 		to_chat(user, SPAN_NOTICE("You take [B] out of [src]."))
 
 		if(hidden)
-			hidden.loc = user.loc
+			hidden.forceMove(user.loc)
 			to_chat(user, SPAN_NOTICE("[hidden] falls out of [B]!"))
 			hidden = null
 	else

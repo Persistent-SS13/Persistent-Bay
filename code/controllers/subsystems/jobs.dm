@@ -223,8 +223,8 @@ SUBSYSTEM_DEF(jobs)
 			continue
 		if(flag && !(flag in player.client.prefs.be_special_role))
 			continue
-		if(player.client.prefs.CorrectLevel(job,level))
-			candidates += player
+//		if(player.client.prefs.CorrectLevel(job,level))
+		candidates += player
 	return candidates
 
 /datum/controller/subsystem/jobs/proc/give_random_job(var/mob/new_player/player)
@@ -298,85 +298,85 @@ SUBSYSTEM_DEF(jobs)
  *  This proc must not have any side effect besides of modifying "assigned_role".
  **/
 /datum/controller/subsystem/jobs/proc/divide_occupations(datum/game_mode/mode)
-	if(GLOB.triai)
-		for(var/datum/job/A in primary_job_datums)
-			if(A.title == "AI")
-				A.spawn_positions = 3
-				break
-	//Get the players who are ready
-	for(var/mob/new_player/player in GLOB.player_list)
-		if(player.ready && player.mind && !player.mind.assigned_role)
-			unassigned_roundstart += player
-	if(unassigned_roundstart.len == 0)	return 0
-	//Shuffle players and jobs
-	unassigned_roundstart = shuffle(unassigned_roundstart)
-	//People who wants to be assistants, sure, go on.
-	var/datum/job/assist = new DEFAULT_JOB_TYPE ()
-	var/list/assistant_candidates = find_occupation_candidates(assist, 3)
-	for(var/mob/new_player/player in assistant_candidates)
-		assign_role(player, GLOB.using_map.default_assistant_title)
-		assistant_candidates -= player
+	// if(GLOB.triai)
+	// 	for(var/datum/job/A in primary_job_datums)
+	// 		if(A.title == "AI")
+	// 			A.spawn_positions = 3
+	// 			break
+	// //Get the players who are ready
+	// for(var/mob/new_player/player in GLOB.player_list)
+	// 	if(player.ready && player.mind && !player.mind.assigned_role)
+	// 		unassigned_roundstart += player
+	// if(unassigned_roundstart.len == 0)	return 0
+	// //Shuffle players and jobs
+	// unassigned_roundstart = shuffle(unassigned_roundstart)
+	// //People who wants to be assistants, sure, go on.
+	// var/datum/job/assist = new DEFAULT_JOB_TYPE ()
+	// var/list/assistant_candidates = find_occupation_candidates(assist, 3)
+	// for(var/mob/new_player/player in assistant_candidates)
+	// 	assign_role(player, GLOB.using_map.default_assistant_title)
+	// 	assistant_candidates -= player
 
-	//Select one head
-	fill_head_position()
+	// //Select one head
+	// fill_head_position()
 
-	//Other jobs are now checked
-	// New job giving system by Donkie
-	// This will cause lots of more loops, but since it's only done once it shouldn't really matter much at all.
-	// Hopefully this will add more randomness and fairness to job giving.
+	// //Other jobs are now checked
+	// // New job giving system by Donkie
+	// // This will cause lots of more loops, but since it's only done once it shouldn't really matter much at all.
+	// // Hopefully this will add more randomness and fairness to job giving.
 
-	// Loop through all levels from high to low
-	var/list/shuffledoccupations = shuffle(primary_job_datums)
-	for(var/level = 1 to 3)
-		//Check the head jobs first each level
-		CheckHeadPositions(level)
+	// // Loop through all levels from high to low
+	// var/list/shuffledoccupations = shuffle(primary_job_datums)
+	// for(var/level = 1 to 3)
+	// 	//Check the head jobs first each level
+	// 	CheckHeadPositions(level)
 
-		// Loop through all unassigned players
-		var/list/deferred_jobs = list()
-		for(var/mob/new_player/player in unassigned_roundstart)
-			// Loop through all jobs
-			for(var/datum/job/job in shuffledoccupations) // SHUFFLE ME BABY
-				if(job && !mode.disabled_jobs.Find(job.title) )
-					if(job.defer_roundstart_spawn)
-						deferred_jobs[job] = TRUE
-					else if(attempt_role_assignment(player, job, level))
-						unassigned_roundstart -= player
-						break
+	// 	// Loop through all unassigned players
+	// 	var/list/deferred_jobs = list()
+	// 	for(var/mob/new_player/player in unassigned_roundstart)
+	// 		// Loop through all jobs
+	// 		for(var/datum/job/job in shuffledoccupations) // SHUFFLE ME BABY
+	// 			if(job && !mode.disabled_jobs.Find(job.title) )
+	// 				if(job.defer_roundstart_spawn)
+	// 					deferred_jobs[job] = TRUE
+	// 				else if(attempt_role_assignment(player, job, level))
+	// 					unassigned_roundstart -= player
+	// 					break
 
-		if(LAZYLEN(deferred_jobs))
-			for(var/mob/new_player/player in unassigned_roundstart)
-				for(var/datum/job/job in deferred_jobs)
-					if(attempt_role_assignment(player, job, level))
-						unassigned_roundstart -= player
-						break
-			deferred_jobs.Cut()
+	// 	if(LAZYLEN(deferred_jobs))
+	// 		for(var/mob/new_player/player in unassigned_roundstart)
+	// 			for(var/datum/job/job in deferred_jobs)
+	// 				if(attempt_role_assignment(player, job, level))
+	// 					unassigned_roundstart -= player
+	// 					break
+	// 		deferred_jobs.Cut()
 
-	// Hand out random jobs to the people who didn't get any in the last check
-	// Also makes sure that they got their preference correct
-	for(var/mob/new_player/player in unassigned_roundstart)
-		if(player.client.prefs.alternate_option == GET_RANDOM_JOB)
-			give_random_job(player)
-	// For those who wanted to be assistant if their preferences were filled, here you go.
-	for(var/mob/new_player/player in unassigned_roundstart)
-		if(player.client.prefs.alternate_option == BE_ASSISTANT)
-			var/datum/job/ass = /datum/job/assistant
-			if((GLOB.using_map.flags & MAP_HAS_BRANCH) && player.client.prefs.branches[initial(ass.title)])
-				var/datum/mil_branch/branch = mil_branches.get_branch(player.client.prefs.branches[initial(ass.title)])
-				ass = branch.assistant_job
-			assign_role(player, initial(ass.title))
-	//For ones returning to lobby
-	for(var/mob/new_player/player in unassigned_roundstart)
-		if(player.client.prefs.alternate_option == RETURN_TO_LOBBY)
-			player.ready = 0
-			player.new_player_panel()
-			unassigned_roundstart -= player
-	return TRUE
+	// // Hand out random jobs to the people who didn't get any in the last check
+	// // Also makes sure that they got their preference correct
+	// for(var/mob/new_player/player in unassigned_roundstart)
+	// 	if(player.client.prefs.alternate_option == GET_RANDOM_JOB)
+	// 		give_random_job(player)
+	// // For those who wanted to be assistant if their preferences were filled, here you go.
+	// for(var/mob/new_player/player in unassigned_roundstart)
+	// 	if(player.client.prefs.alternate_option == BE_ASSISTANT)
+	// 		var/datum/job/ass = /datum/job/assistant
+	// 		if((GLOB.using_map.flags & MAP_HAS_BRANCH) && player.client.prefs.branches[initial(ass.title)])
+	// 			var/datum/mil_branch/branch = mil_branches.get_branch(player.client.prefs.branches[initial(ass.title)])
+	// 			ass = branch.assistant_job
+	// 		assign_role(player, initial(ass.title))
+	// //For ones returning to lobby
+	// for(var/mob/new_player/player in unassigned_roundstart)
+	// 	if(player.client.prefs.alternate_option == RETURN_TO_LOBBY)
+	// 		player.ready = 0
+	// 		player.new_player_panel()
+	// 		unassigned_roundstart -= player
+	// return TRUE
 
 /datum/controller/subsystem/jobs/proc/attempt_role_assignment(var/mob/new_player/player, var/datum/job/job, var/level)
 	if(!jobban_isbanned(player, job.title) && \
 	 job.player_old_enough(player.client) && \
-	 player.client.prefs.CorrectLevel(job, level) && \
 	 job.is_position_available())
+	 //	 player.client.prefs.CorrectLevel(job, level) && \
 		assign_role(player, job.title)
 		return TRUE
 	return FALSE
@@ -445,14 +445,14 @@ SUBSYSTEM_DEF(jobs)
 	var/list/spawn_in_storage
 
 	if(job)
-		if(H.client)
-			if(GLOB.using_map.flags & MAP_HAS_BRANCH)
-				H.char_branch = mil_branches.get_branch(H.client.prefs.branches[rank])
-			if(GLOB.using_map.flags & MAP_HAS_RANK)
-				H.char_rank = mil_branches.get_rank(H.client.prefs.branches[rank], H.client.prefs.ranks[rank])
+		// if(H.client)
+		// 	if(GLOB.using_map.flags & MAP_HAS_BRANCH)
+		// 		H.char_branch = mil_branches.get_branch(H.client.prefs.branches[rank])
+		// 	if(GLOB.using_map.flags & MAP_HAS_RANK)
+		// 		H.char_rank = mil_branches.get_rank(H.client.prefs.branches[rank], H.client.prefs.ranks[rank])
 
 		// Transfers the skill settings for the job to the mob
-		H.skillset.obtain_from_client(job, H.client)
+		//H.skillset.obtain_from_client(job, H.client)
 
 		//Equip job items.
 		job.setup_account(H)

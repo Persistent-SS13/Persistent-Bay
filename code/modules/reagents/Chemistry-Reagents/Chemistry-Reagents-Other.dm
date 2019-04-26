@@ -165,6 +165,12 @@
 			if(prob(2))
 				var/obj/effect/spider/spiderling/S = new /obj/effect/spider/spiderling(M.loc)
 				M.visible_message("<span class='warning'>\The [M] coughs up \the [S]!</span>")
+		else if(M.mind && GLOB.godcult.is_antagonist(M.mind))
+			if(volume > 5)
+				M.adjustHalLoss(5)
+				M.adjustBruteLoss(1)
+				if(prob(10)) //Only annoy them a /bit/
+					to_chat(M,"<span class='danger'>You feel your insides curdle and burn!</span> \[<a href='?src=\ref[src];deconvert=\ref[M]'>Give Into Purity</a>\]")
 
 /datum/reagent/water/holywater/Topic(href, href_list)
 	. = ..()
@@ -503,3 +509,24 @@
 	description = "Ammonia Nitrate Fuel Oil, with aluminium powder, an explosive compound known for centuries. Safe to handle, can be set off with a small explosion."
 	color = "#ffe8e8"
 	boompower = 2
+
+/datum/reagent/nitrogen
+	name = "Nitrogen"
+	gas_id = GAS_NITROGEN
+	taste_description = "nothing"
+	reagent_state = LIQUID
+	color = COLOR_GREEN_GRAY
+
+/datum/reagent/hydrogen
+	name = "Hydrogen"
+	gas_id = GAS_HYDROGEN
+	taste_description = "nothing"
+	reagent_state = LIQUID
+	color = COLOR_BLUE_GRAY
+
+/datum/reagent/carbon_dioxide
+	name = "Carbon Dioxide"
+	gas_id = GAS_CO2
+	taste_description = "nothing"
+	reagent_state = LIQUID
+	color = COLOR_GRAY15

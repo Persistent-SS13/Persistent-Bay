@@ -9,7 +9,7 @@
 	light_color = "#ff00dc"
 
 	mouse_opacity = 0
-	should_save = 0
+	should_save = FALSE
 
 /obj/effect/projectile/proc/set_transform(var/matrix/M)
 	if(istype(M))

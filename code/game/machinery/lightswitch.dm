@@ -98,7 +98,7 @@
 	use_power_oneoff(active_power_usage)
 
 /obj/machinery/light_switch/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
-	if(istype(W, /obj/item/device/reagent_scanner))
+	if(istype(W, /obj/item/device/scanner/reagent))
 		return FALSE
 	if(isWrench(W))
 		to_chat(user, SPAN_NOTICE("You detach \the [src] from the wall."))

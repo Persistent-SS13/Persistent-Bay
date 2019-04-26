@@ -88,7 +88,7 @@
 			success = 1
 		else
 			for(var/obj/O in T)
-				for(var/b_type in BLEND_OBJECTS)
+				for(var/b_type in blend_objects)
 					if( istype(O, b_type))
 						success = 1
 					if(success)
@@ -225,4 +225,3 @@
 /obj/machinery/door/airlock/multi_tile/glass/civilian
 	stripe_color = COLOR_CIVIE_GREEN
 
-#undef BLEND_OBJECTS

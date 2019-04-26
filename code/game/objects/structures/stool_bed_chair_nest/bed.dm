@@ -20,7 +20,6 @@
 	mass = 50
 	max_health = 200
 	damthreshold_brute 	= 5
-	var/material/material
 	var/material/padding_material
 	var/base_icon = "bed"
 	var/material_alteration = MATERIAL_ALTERATION_ALL

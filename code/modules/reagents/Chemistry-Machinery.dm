@@ -9,6 +9,7 @@
 	anchored = 1
 	icon = 'icons/obj/chemical.dmi'
 	icon_state = "mixer0"
+	layer = BELOW_OBJ_LAYER
 	idle_power_usage = 20
 	clicksound = "button"
 	clickvol = 20
@@ -602,7 +603,7 @@
 
 	var/dam = rand(10, 15)
 	user.visible_message("<span class='danger'>\The [user]'s hand gets caught in \the [src]!</span>", "<span class='danger'>Your hand gets caught in \the [src]!</span>")
-	user.apply_damage(dam, BRUTE, hand, damage_flags = DAM_SHARP, used_weapon = "grinder")
+	user.apply_damage(dam, DAM_CUT, hand, used_weapon = "grinder")
 	if(BP_IS_ROBOTIC(hand_organ))
 		beaker.reagents.add_reagent(/datum/reagent/iron, dam)
 	else

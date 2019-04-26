@@ -1,13 +1,9 @@
-#define BLEND_TURFS			list(/turf/simulated/wall/cult)
-#define BLEND_OBJECTS 		list(/obj/machinery/door, /obj/structure/wall_frame, /obj/structure/grille, /obj/structure/window/reinforced/full, /obj/structure/window/reinforced/polarized/full, /obj/structure/window/shuttle, /obj/structure/window/phoronbasic/full, /obj/structure/window/phoronreinforced/full) // Objects which to blend with
-#define NO_BLEND_OBJECTS 	list(/obj/machinery/door/window) //Objects to avoid blending with (such as children of listed blend objects.
-
 /turf/simulated/wall/proc/update_full(var/propagate, var/integrity)
 	update_material(integrity)
 	update_connections(propagate)
-	update_icon()
+	queue_icon_update()
 
-/turf/simulated/wall/proc/update_material()
+/turf/simulated/wall/proc/update_material(var/integrity)
 
 	if(!material)
 		return
@@ -19,6 +15,8 @@
 	if(!material)
 		material = SSmaterials.get_material_by_name(DEFAULT_WALL_MATERIAL)
 	if(material)
+		if(integrity)
+			src.integrity = MaxIntegrity()
 		explosion_resistance = material.explosion_resistance
 	if(reinf_material && reinf_material.explosion_resistance > explosion_resistance)
 		explosion_resistance = reinf_material.explosion_resistance
@@ -52,14 +50,8 @@
 	if(!damage_overlays[1]) //list hasn't been populated; note that it is always of fixed length, so we must check for membership.
 		generate_overlays()
 
-	if(r_material)
-		name = "[state != null ? "incomplete " : ""][r_material.display_name] reinforced [p_material.display_name] [initial(name)]"
-		desc = "It seems to be [state != null ? "an incomplete" : "a"] section of hull reinforced with [r_material.display_name] and plated with [p_material.display_name]."
-	else
-		name = "[state != null ? "incomplete " : ""][p_material.display_name] [initial(name)]"
-		desc = "It seems to be [state != null ? "an incomplete" : "a"] section of hull plated with [p_material.display_name]."
-
 	overlays.Cut()
+
 	var/image/I
 	var/base_color = paint_color ? paint_color : material.icon_colour
 	if(!density)
@@ -105,11 +97,15 @@
 			overlays += I
 
 	if(integrity != MaxIntegrity())
-		var/overlay = round(damage_overlays.len * (1 / (integrity / MaxIntegrity())))
+		var/mat_integrity = material.integrity
+		if(reinf_material)
+			mat_integrity += reinf_material.integrity
+
+		var/overlay = round((MaxIntegrity() - integrity) / mat_integrity * damage_overlays.len) + 1
 		if(overlay > damage_overlays.len)
 			overlay = damage_overlays.len
 
-		overlays = overlays.Copy() + damage_overlays[overlay]
+		overlays += damage_overlays[overlay]
 	return
 
 /turf/simulated/wall/proc/generate_overlays()
@@ -123,7 +119,7 @@
 
 
 /turf/simulated/wall/proc/update_connections(propagate = FALSE)
-	if(!p_material)
+	if(!material)
 		return
 	var/list/wall_dirs = list()
 	var/list/other_dirs = list()
@@ -144,10 +140,10 @@
 	for(var/turf/T in orange(src, 1))
 		var/success = FALSE
 		for(var/obj/O in T)
-			for(var/b_type in BLEND_OBJECTS)
+			for(var/b_type in blend_objects)
 				if(istype(O, b_type))
 					success = TRUE
-				for(var/nb_type in NO_BLEND_OBJECTS)
+				for(var/nb_type in noblend_objects)
 					if(istype(O, nb_type))
 						success = FALSE
 				if(success)
@@ -168,11 +164,7 @@
 		if((reinf_material && W.reinf_material) || (!reinf_material && !W.reinf_material))
 			return 1
 		return 2
-	for(var/wb_type in BLEND_TURFS)
+	for(var/wb_type in blend_turfs)
 		if(istype(W, wb_type))
 			return 2
 	return 0
-
-#undef BLEND_TURFS
-#undef BLEND_OBJECTS
-#undef NO_BLEND_OBJECTS

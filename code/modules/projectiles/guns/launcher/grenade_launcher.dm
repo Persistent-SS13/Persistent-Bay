@@ -26,6 +26,13 @@
 
 	matter = list(MATERIAL_STEEL = 2000)
 
+/obj/item/weapon/gun/launcher/grenade/New()
+	..()
+	ADD_SAVED_VAR(chambered)
+	ADD_SAVED_VAR(grenades)
+	ADD_SKIP_EMPTY(chambered)
+	ADD_SKIP_EMPTY(grenades)
+
 //revolves the magazine, allowing players to choose between multiple grenade types
 /obj/item/weapon/gun/launcher/grenade/proc/pump(mob/M as mob)
 	playsound(M, 'sound/weapons/shotgunpump.ogg', 60, 1)

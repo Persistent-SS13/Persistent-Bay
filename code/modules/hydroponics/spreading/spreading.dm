@@ -101,7 +101,7 @@
 		growth_type = seed.get_growth_type()
 	else
 		max_growth = seed.growth_stages
-		growth_threshold = max_health/seed.growth_stages
+		growth_threshold = max_growth && max_health/max_growth
 
 	if(max_growth > 2 && prob(50))
 		max_growth-- //Ensure some variation in final sprite, makes the carpet of crap look less wonky.
@@ -177,7 +177,7 @@
 
 	// Apply colour and light from seed datum.
 	if(seed.get_trait(TRAIT_BIOLUM))
-		set_light(1+round(seed.get_trait(TRAIT_POTENCY)/20), l_color = seed.get_trait(TRAIT_BIOLUM_COLOUR))
+		set_light(0.5, 0.1, 3, l_color = seed.get_trait(TRAIT_BIOLUM_COLOUR))
 	else
 		set_light(0)
 

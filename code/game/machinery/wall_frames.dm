@@ -147,14 +147,14 @@
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "mirror"
 	matter = list(MATERIAL_SILVER = 2 * SHEET_MATERIAL_AMOUNT)
-	build_machine_type = /obj/structure/mirror
+	build_machine_type = /obj/item/weapon/storage/mirror
 
 /obj/item/frame/plastic/shower
 	name = "Shower Frame"
 	desc = "Used for building Showers"
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "shower"
-	build_machine_type = /obj/machinery/shower
+	build_machine_type = /obj/structure/hygiene/shower
 
 /obj/item/frame/wallflash
 	name = "Wall Flash Frame"
@@ -192,21 +192,21 @@
 	desc = "Used for building Sinks"
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "sink"
-	build_machine_type = /obj/structure/sink
+	build_machine_type = /obj/structure/hygiene/sink
 
 /obj/item/frame/plastic/urinal
 	name = "Urinal Frame"
 	desc = "Used for building urinals"
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "urinal"
-	build_machine_type = /obj/structure/urinal
+	build_machine_type = /obj/structure/hygiene/urinal
 
 /obj/item/frame/plastic/kitchensink
 	name = "Kitchen Sink Frame"
 	desc = "Used for building Kitchen Sinks"
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "sink_alt"
-	build_machine_type = /obj/structure/sink/kitchen
+	build_machine_type = /obj/structure/hygiene/sink/kitchen
 
 /obj/item/frame/plastic/virusfoodtank
 	name = "Virus Food Dispenser Frame"

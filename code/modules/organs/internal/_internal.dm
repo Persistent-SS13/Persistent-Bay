@@ -134,7 +134,7 @@
 /obj/item/organ/internal/proc/take_internal_damage(var/amount, var/silent = FALSE)
 	if(BP_IS_ROBOTIC(src))
 		rem_health(amount * 0.8)
-	else if(owner && !silent && isinplace() && can_feel_pain() && (damage > min_bruised_damage/2 || prob(10)) )
+	else if(owner && !silent && can_feel_pain() && (get_damages() > min_bruised_damage/2 || prob(10)) )
 		rem_health(amount)
 		
 		//only show this if the organ is not robotic
@@ -179,17 +179,18 @@
 		heal_damage(0.02)
 
 /obj/item/organ/internal/proc/surgical_fix(mob/user)
-	if(damage > min_broken_damage)
-		var/scarring = damage/max_damage
+	var/damages = get_damages()
+	if(damages > min_broken_damage)
+		var/scarring = damages/max_health
 		scarring = 1 - 0.3 * scarring ** 2 // Between ~15 and 30 percent loss
-		var/new_max_dam = Floor(scarring * max_damage)
-		if(new_max_dam < max_damage)
+		var/new_max_dam = Floor(scarring * max_health)
+		if(new_max_dam < max_health)
 			to_chat(user, "<span class='warning'>Not every part of [src] could be saved, some dead tissue had to be removed, making it more suspectable to damage in the future.</span>")
-			set_max_damage(new_max_dam)
-	heal_damage(damage)
+			set_max_health(new_max_dam)
+	heal_damage(damages)
 
 /obj/item/organ/internal/proc/get_scarring_level()
-	. = (initial(max_damage) - max_damage)/initial(max_damage)
+	. = (initial(max_health) - max_health)/initial(max_health)
 
 /obj/item/organ/internal/get_scan_results()
 	. = ..()

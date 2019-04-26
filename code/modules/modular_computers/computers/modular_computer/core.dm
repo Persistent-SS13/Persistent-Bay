@@ -52,7 +52,7 @@
 	return 1
 
 /obj/item/modular_computer/proc/install_default_programs_by_job(var/mob/living/carbon/human/H)
-	var/datum/job/jb = job_master.occupations_by_title[H.job]
+	var/datum/job/jb = SSjobs.get_by_title(H.job)
 	if(!jb) return
 	for(var/prog_type in jb.software_on_spawn)
 		var/datum/computer_file/program/prog_file = prog_type
@@ -271,10 +271,6 @@
 		active_program = P
 		idle_threads.Remove(P)
 		update_icon()
-		return
-
-	if(idle_threads.len >= processor_unit.max_idle_programs+1)
-		to_chat(user, "<span class='notice'>\The [src] displays a \"Maximal CPU load reached. Unable to run another program.\" error</span>")
 		return
 
 	if(P.requires_ntnet && !get_ntnet_status(P.requires_ntnet_feature)) // The program requires NTNet connection, but we are not connected to NTNet.

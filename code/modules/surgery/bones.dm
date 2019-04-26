@@ -63,7 +63,7 @@
 	name = "Set bone"
 	allowed_tools = list(
 		/obj/item/weapon/bonesetter = 100,
-		/obj/item/weapon/wrench = 75
+		/obj/item/weapon/tool/wrench = 75
 	)
 	min_duration = 60
 	max_duration = 70
@@ -105,7 +105,7 @@
 	user.visible_message("<span class='warning'>\The [user]'s hand slips, damaging the [affected.encased ? affected.encased : "bones"] in \the [target]'s [affected.name] with \the [tool]!</span>" , \
 		"<span class='warning'>Your hand slips, damaging the [affected.encased ? affected.encased : "bones"] in \the [target]'s [affected.name] with \the [tool]!</span>")
 	affected.fracture()
-	affected.take_external_damage(5, used_weapon = tool)
+	affected.take_damage(5, DAM_BLUNT, used_weapon = tool)
 
 //////////////////////////////////////////////////////////////////
 //	post setting bone-gelling surgery step

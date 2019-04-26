@@ -10,10 +10,10 @@ SUBSYSTEM_DEF(turbolift)
 		if(world.time < moving_lifts[liftref])
 			continue
 		var/datum/turbolift/lift = locate(liftref)
-		if(lift.busy)
+		if(lift.busy_state)
 			continue
 		spawn(0)
-			lift.busy = 1
+			lift.busy_state = 1
 			if(!lift.do_move())
 				moving_lifts[liftref] = null
 				moving_lifts -= liftref
@@ -22,7 +22,7 @@ SUBSYSTEM_DEF(turbolift)
 					lift.target_floor = null
 			else
 				lift_is_moving(lift)
-			lift.busy = 0
+			lift.busy_state = 0
 		MC_TICK_CHECK
 
 /datum/controller/subsystem/turbolift/proc/lift_is_moving(var/datum/turbolift/lift)

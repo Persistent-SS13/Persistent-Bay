@@ -64,6 +64,7 @@
 		. += wielded_parry_bonus
 
 /obj/item/weapon/material/twohanded/on_update_icon()
+	..()
 	icon_state = "[base_icon][wielded]"
 	item_state_slots[slot_l_hand_str] = icon_state
 	item_state_slots[slot_r_hand_str] = icon_state
@@ -123,7 +124,7 @@
 	damtype = DAM_PIERCE
 	mass = 2
 
-/obj/item/weapon/material/twohanded/spear/shatter(var/consumed)
+/obj/item/weapon/material/twohanded/spear/destroyed(var/damtype, var/user, var/consumed)
 	if(!consumed)
 		new /obj/item/weapon/material/wirerod(get_turf(src)) //give back the wired rod
 	..()

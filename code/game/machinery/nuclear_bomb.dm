@@ -371,28 +371,25 @@ var/bomb_set
 
 /obj/item/weapon/disk/nuclear/Initialize()
 	. = ..()
-	nuke_disks |= src
+//	LAZYDISTINCTADD(GLOB.nuke_disks, src)
 	// Can never be quite sure that a game mode has been properly initiated or not at this point, so always register
 	GLOB.moved_event.register(src, src, /obj/item/weapon/disk/nuclear/proc/check_z_level)
 
 /obj/item/weapon/disk/nuclear/proc/check_z_level()
-	if(!(istype(SSticker.mode, /datum/game_mode/nuclear)))
-		GLOB.moved_event.unregister(src, src, /obj/item/weapon/disk/nuclear/proc/check_z_level) // However, when we are certain unregister if necessary
-		return
 	var/turf/T = get_turf(src)
 	if(!T || isNotStationLevel(T.z))
 		qdel(src)
 
 /obj/item/weapon/disk/nuclear/Destroy()
 	GLOB.moved_event.unregister(src, src, /obj/item/weapon/disk/nuclear/proc/check_z_level)
-	nuke_disks -= src
-	if(!nuke_disks.len)
-		var/turf/T = pick_area_turf(/area/maintenance, list(/proc/is_station_turf, /proc/not_turf_contains_dense_objects))
-		if(T)
-			var/obj/D = new /obj/item/weapon/disk/nuclear(T)
-			log_and_message_admins("[src], the last authentication disk, has been destroyed. Spawning [D] at ([D.x], [D.y], [D.z]).", location = T)
-		else
-			log_and_message_admins("[src], the last authentication disk, has been destroyed. Failed to respawn disc!")
+//	LAZYREMOVE(GLOB.nuke_disks, src)
+	// if(!LAZYLEN(GLOB.nuke_disks))
+	// 	var/turf/T = pick_area_turf(/area/maintenance, list(/proc/is_station_turf, /proc/not_turf_contains_dense_objects))
+	// 	if(T)
+	// 		var/obj/D = new /obj/item/weapon/disk/nuclear(T)
+	// 		log_and_message_admins("[src], the last authentication disk, has been destroyed. Spawning [D] at ([D.x], [D.y], [D.z]).", location = T)
+	// 	else
+	// 		log_and_message_admins("[src], the last authentication disk, has been destroyed. Failed to respawn disc!")
 	return ..()
 
 //====the nuclear football (holds the disk and instructions)====

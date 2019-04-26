@@ -11,7 +11,10 @@
 	var/use = 200 // 200W light
 	var/unlocked = 0
 	var/open = 0
-	var/brightness_on = 8		//can't remember what the maxed out value is
+
+	var/l_max_bright = 0.8 //brightness of light when on, can be negative
+	var/l_inner_range = 1 //inner range of light when on, can be negative
+	var/l_outer_range = 6 //outer range of light when on, can be negative
 
 /obj/machinery/floodlight/New()
 	if(!map_storage_loaded)

@@ -64,6 +64,17 @@
 
 	return ..()
 
+/* lighting debugging verb
+/mob/verb/self_light()
+	set name = "set self light"
+	set category = "Light"
+	var/v1 = input(usr, "Enter max bright", "max bright", 1) as num|null
+	var/v2 = input(usr, "Enter inner range", "inner range", 0.1) as num|null
+	var/v3 = input(usr, "Enter outer range", "outer range", 4) as num|null
+	var/v4 = input(usr, "Enter curve", "curve", 2) as num|null
+	set_light(v1, v2, v3, v4, "#0066ff")
+*/
+
 // Kill ourselves.
 /datum/light_source/proc/destroy()
 	total_lighting_sources--

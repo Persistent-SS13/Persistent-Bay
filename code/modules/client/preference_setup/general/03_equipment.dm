@@ -97,28 +97,28 @@
 
 
 /datum/category_item/player_setup_item/physical/equipment/content()
-	if(pref.home_system && pref.home_system != last_background)
-		last_background = pref.home_system
+	if(pref.cultural_info[TAG_FACTION] && pref.cultural_info[TAG_FACTION] != last_background)
+		last_background = pref.cultural_info[TAG_FACTION]
 		if(!possible_under_extra)
 			possible_under_extra = list()
 		else
 			for(var/obj/x in possible_under_extra)
 				qdel(x)
 			possible_under_extra.Cut()
-		switch(pref.home_system)
-			if("Earth Citizen")
+		switch(pref.cultural_info[TAG_FACTION])
+			if(CULTURE_HUMAN_EARTH)
 				possible_under_extra |= new /obj/item/clothing/under/assistantformal
 				possible_under_extra |= new /obj/item/clothing/under/gentlesuit
-			if("Inner Core Settler")
+			if(CULTURE_HUMAN_SPACER)
 				possible_under_extra |= new /obj/item/clothing/under/frontier
 				possible_under_extra |= new /obj/item/clothing/under/serviceoveralls
-			if("Agartha Settler")
+			if(CULTURE_HUMAN_CONFED)
 				possible_under_extra |= new /obj/item/clothing/under/confederacy
 				possible_under_extra |= new /obj/item/clothing/under/saare
-			if("Outer Core Settler")
+			if(CULTURE_HUMAN_SPAFRO)
 				possible_under_extra |= new /obj/item/clothing/under/frontier
 				possible_under_extra |= new /obj/item/clothing/under/serviceoveralls
-			if("Corporate Colonist")
+			if(CULTURE_HUMAN_OTHER) // "Corporate Colonist"
 				possible_under_extra |= new /obj/item/clothing/under/mbill
 				possible_under_extra |= new /obj/item/clothing/under/wardt
 				possible_under_extra |= new	/obj/item/clothing/under/pcrc

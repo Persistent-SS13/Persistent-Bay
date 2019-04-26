@@ -91,7 +91,7 @@
 
 
 // Opens and unlocks doors, power check
-/obj/machinery/door_timer/proc/timer_end()
+/obj/machinery/door_timer/proc/timer_end(var/broadcast_to_huds = 0)
 	if(inoperable())	
 		return FALSE
 	// Reset releasetime

@@ -36,7 +36,7 @@
 					/obj/item/clothing/head/helmet/tactical,
 					/obj/item/clothing/mask/balaclava/tactical,
 					/obj/item/clothing/glasses/tacgoggles,
-					/obj/item/weapon/storage/belt/security/tactical,
+					/obj/item/weapon/storage/belt/holster/security/tactical,
 					/obj/item/clothing/shoes/tactical,
 					/obj/item/clothing/gloves/tactical)
 	cost = 45
@@ -203,7 +203,7 @@
 
 /decl/hierarchy/supply_pack/security/weapons_detcolt
 	name = "Weapons - Detective handguns"
-	contains = list(/obj/item/weapon/gun/projectile/colt/detective = 2)
+	contains = list(/obj/item/weapon/gun/projectile/pistol/m1911 = 2)
 	cost = 40
 	containertype = /obj/structure/closet/crate/secure/weapon
 	containername = "detective handgun crate"
@@ -228,15 +228,15 @@
 //ammunition
 /decl/hierarchy/supply_pack/security/pistolammopractice
 	name = "Ammunition - .45 practice"
-	contains = list(/obj/item/ammo_magazine/c45m/practice = 8)
+	contains = list(/obj/item/ammo_magazine/box/c45/practice = 8)
 	cost = 8
 	containertype = /obj/structure/closet/crate/secure/weapon
 	containername = "\improper .45 practice ammunition crate"
 	access = core_access_security_programs
 
 /decl/hierarchy/supply_pack/security/pdwammopractice
-	name = "Ammunition - 9mm top mounted practice"
-	contains = list(/obj/item/ammo_magazine/mc9mmt/practice = 8)
+	name = "Ammunition - WT550 9mm top mounted practice"
+	contains = list(/obj/item/ammo_magazine/box/wt550/practice = 8)
 	cost = 8
 	containertype = /obj/structure/closet/crate/secure/weapon
 	containername = "\improper 9mm practice ammunition crate"
@@ -244,7 +244,7 @@
 
 /decl/hierarchy/supply_pack/security/bullpupammopractice
 	name = "Ammunition - 7.62 practice"
-	contains = list(/obj/item/ammo_magazine/a762/practice = 8)
+	contains = list(/obj/item/ammo_magazine/box/c762/practice = 8)
 	cost = 8
 	containertype = /obj/structure/closet/crate/secure/weapon
 	containername = "\improper 7.62 practice ammunition crate"
@@ -279,10 +279,10 @@
 					/obj/item/weapon/folder/blue,
 					/obj/item/clothing/gloves/forensic,
 					/obj/item/device/taperecorder,
-					/obj/item/device/mass_spectrometer,
+					/obj/item/device/scanner/spectrometer,
 					/obj/item/device/camera_film = 2,
 					/obj/item/weapon/storage/photo_album,
-					/obj/item/device/reagent_scanner,
+					/obj/item/device/scanner/reagent,
 					/obj/item/weapon/storage/briefcase/crimekit)
 	cost = 30
 	containername = "forensics kit crate"

@@ -227,7 +227,7 @@
 /turf/simulated/floor/tiled/techfloor,
 /area/map_template/marooned)
 "aI" = (
-/obj/item/weapon/wirecutters,
+/obj/item/weapon/tool/wirecutters,
 /obj/item/stack/cable_coil,
 /obj/machinery/power/port_gen/pacman/super,
 /obj/structure/cable{

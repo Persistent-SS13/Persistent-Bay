@@ -10,6 +10,7 @@
 	anchored = TRUE
 	use_power = POWER_USE_OFF
 	idle_power_usage = 5			// 5 Watts for thermostat related circuitry
+	circuit_type = /obj/item/weapon/circuitboard/unary_atmos/cooler
 
 	var/heatsink_temperature = T20C	// The constant temperature reservoir into which the freezer pumps heat. Probably the hull of the station or something.
 	var/internal_volume = 600		// L
@@ -22,19 +23,21 @@
 
 /obj/machinery/atmospherics/unary/freezer/New()
 	..()
+	ADD_SAVED_VAR(power_setting)
+	ADD_SAVED_VAR(set_temperature)
 
 /obj/machinery/atmospherics/unary/freezer/Initialize(mapload, d)
 	. = ..()
 	if(!map_storage_loaded)
 		initialize_directions = dir
-		component_parts = list()
-		component_parts += new /obj/item/weapon/circuitboard/unary_atmos/cooler(src)
-		component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-		component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-		component_parts += new /obj/item/stack/cable_coil(src, 2)
-	RefreshParts()
+
+/obj/machinery/atmospherics/unary/freezer/SetupParts()
+	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/matter_bin(src))
+	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/capacitor(src))
+	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/capacitor(src))
+	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/manipulator(src))
+	LAZYADD(component_parts, new /obj/item/stack/cable_coil(src, 2))
+	. = ..()
 
 /obj/machinery/atmospherics/unary/freezer/atmos_init()
 	..()
@@ -55,7 +58,7 @@
 			node = null
 			break
 
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/atmospherics/unary/freezer/on_update_icon()
 	if(node)
@@ -127,7 +130,7 @@
 
 	if(inoperable() || isoff())
 		cooling = 0
-		update_icon()
+		queue_icon_update()
 		return
 
 	if(network && air_contents.temperature > set_temperature)
@@ -150,7 +153,7 @@
 	else
 		cooling = FALSE
 
-	update_icon()
+	queue_icon_update()
 
 //upgrading parts
 /obj/machinery/atmospherics/unary/freezer/RefreshParts()
@@ -168,7 +171,8 @@
 			bin_rating += P.rating
 
 	power_rating = initial(power_rating) * cap_rating / 2			//more powerful
-	heatsink_temperature = initial(heatsink_temperature) / ((manip_rating + bin_rating) / 2)	//more efficient
+	var/eff = manip_rating + bin_rating
+	heatsink_temperature = initial(heatsink_temperature) / ((eff? eff : 1) / 2)	//more efficient
 	air_contents.volume = max(initial(internal_volume) - 200, 0) + 200 * bin_rating
 	set_power_level(power_setting)
 

@@ -5,7 +5,7 @@
 
 /obj/structure/closet/secure_closet/captains/filled/WillContain() //Add the contents to Supply Crate.
 	return list(
-		new/datum/atom_creator/weighted(list(/obj/item/weapon/storage/backpack/captain, /obj/item/weapon/storage/backpack/satchel_cap)),
+		new/datum/atom_creator/weighted(list(/obj/item/weapon/storage/backpack/captain, /obj/item/weapon/storage/backpack/satchel/cap)),
 		new/datum/atom_creator/simple(/obj/item/weapon/storage/backpack/dufflebag/captain, 50),
 		/obj/item/clothing/suit/captunic,
 		/obj/item/clothing/suit/captunic/capjacket,
@@ -36,7 +36,7 @@
 		/obj/item/clothing/head/helmet,
 		/obj/item/device/radio/headset/heads/hop,
 		/obj/item/weapon/storage/box/ids = 2,
-		/obj/item/weapon/gun/projectile/sec/flash,
+		/obj/item/weapon/gun/projectile/sec,
 		/obj/item/device/flash
 	)
 
@@ -69,7 +69,7 @@
 
 /obj/structure/closet/secure_closet/hos/filled/WillContain()
 	return list(
-		new/datum/atom_creator/weighted(list(/obj/item/weapon/storage/backpack/security, /obj/item/weapon/storage/backpack/satchel_sec)),
+		new/datum/atom_creator/weighted(list(/obj/item/weapon/storage/backpack/security, /obj/item/weapon/storage/backpack/satchel/sec)),
 		/obj/item/clothing/head/HoS,
 		/obj/item/clothing/head/helmet/nt,
 		/obj/item/clothing/suit/armor/vest/nt,
@@ -101,7 +101,7 @@
 
 /obj/structure/closet/secure_closet/warden/filled/WillContain()
 	return list(
-		new/datum/atom_creator/weighted(list(/obj/item/weapon/storage/backpack/security, /obj/item/weapon/storage/backpack/satchel_sec)),
+		new/datum/atom_creator/weighted(list(/obj/item/weapon/storage/backpack/security, /obj/item/weapon/storage/backpack/satchel/sec)),
 		new/datum/atom_creator/simple(/obj/item/weapon/storage/backpack/dufflebag/sec, 50),
 		/obj/item/clothing/head/helmet/nt,
 		/obj/item/clothing/suit/armor/vest/nt,
@@ -131,7 +131,7 @@
 
 /obj/structure/closet/secure_closet/security/filled/WillContain()
 	return list(
-		new/datum/atom_creator/weighted(list(/obj/item/weapon/storage/backpack/security, /obj/item/weapon/storage/backpack/satchel_sec)),
+		new/datum/atom_creator/weighted(list(/obj/item/weapon/storage/backpack/security, /obj/item/weapon/storage/backpack/satchel/sec)),
 		new/datum/atom_creator/simple(/obj/item/weapon/storage/backpack/dufflebag/sec, 50),
 		/obj/item/clothing/suit/armor/vest/nt,
 		/obj/item/clothing/head/helmet,
@@ -193,9 +193,9 @@
 		/obj/item/weapon/storage/box/evidence,
 		/obj/item/device/radio/headset/headset_sec,
 		/obj/item/clothing/suit/armor/vest/detective,
-		/obj/item/ammo_magazine/c45m/flash,
+		/obj/item/ammo_magazine/box/c45/flash,
 		/obj/item/taperoll/police,
-		/obj/item/weapon/gun/projectile/colt/detective,
+		/obj/item/weapon/gun/projectile/pistol/sec,
 		/obj/item/clothing/accessory/storage/holster/armpit,
 		/obj/item/weapon/reagent_containers/food/drinks/flask/detflask,
 		/obj/item/weapon/storage/briefcase/crimekit,

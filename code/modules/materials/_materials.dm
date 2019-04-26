@@ -50,7 +50,7 @@
 	var/display_name                      // Prettier name for display.
 	var/adjective_name
 	var/use_name
-	var/flags = 0							// Various status modifiers.
+	var/flags = 0                         // Various status modifiers.
 	var/sheet_singular_name = "sheet"
 	var/sheet_plural_name = "sheets"
 	var/is_fusion_fuel
@@ -68,12 +68,12 @@
 	var/destruction_desc = "breaks apart" // Fancy string for barricades/tables/objects exploding.
 
 	// Icons
-	var/icon_colour							// Colour applied to products of this material.
-	var/icon_base = "comp_solid"			// Regular wall icon tag. See header for valid icons.
-	var/icon_reinf = "comp_solid"				// Reinforced wall icon tag. See header for valid icons.
-	var/icon_door = "metal"					// Door icon tag. See header for valid icons.
-	var/icon_table = "solid"				// Table icon tag. See header for valid icons.
-
+	var/icon_colour                                      // Colour applied to products of this material.
+	var/icon_base = "metal"                              // Wall and table base icon tag. See header.
+	var/door_icon_base = "metal"                         // Door base icon tag. See header.
+	var/icon_reinf = "reinf_metal"                       // Overlay used
+	var/table_icon_base = "metal"
+	var/table_reinf = "reinf_metal"
 	var/list/stack_origin_tech = list(TECH_MATERIAL = 1) // Research level for stacks.
 
 	// Attributes
@@ -217,8 +217,10 @@
 	name = "placeholder"
 
 // Places a girder object when a wall is dismantled, also applies reinforced material.
-/material/proc/place_dismantled_girder(var/turf/target, var/material/reinf_material)
+/material/proc/place_dismantled_girder(var/turf/target, var/material/material, var/material/reinf_material)
 	var/obj/structure/girder/G = new(target)
+	if(material)
+		G.material = material
 	if(reinf_material)
 		G.reinf_material = reinf_material
 		G.reinforce_girder()

@@ -134,7 +134,7 @@
 			to_chat(user, SPAN_WARNING("\The [src] is currently running."))
 			return
 		else
-			wrench_floor_bolts(user)
+			default_wrench_floor_bolts(user)
 			update_use_power(anchored)
 			return
 	else if(istype(W,/obj/item/grab))

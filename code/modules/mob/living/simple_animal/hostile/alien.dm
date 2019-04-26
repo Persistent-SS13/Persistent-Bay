@@ -81,7 +81,7 @@
 	health = 400
 
 /obj/item/projectile/neurotox
-	damage = 30
+	force = 30
 	icon_state = "toxin"
 
 /mob/living/simple_animal/hostile/alien/death(gibbed, deathmessage, show_dead_message)

@@ -183,16 +183,13 @@
 	layer = RUNE_LAYER
 
 /obj/structure/stairs/Initialize()
-	//var/foundabove = FALSE
 	for(var/turf/turf in locs)
 		var/turf/simulated/open/above = GetAbove(turf)
-		if(above)
-			//foundabove = TRUE
-			if(!istype(above))
-				above.ChangeTurf(/turf/simulated/open)
-	//if(!foundabove)
-	//	warning("Stair created without level above: ([loc.x], [loc.y], [loc.z])")
-	//	return INITIALIZE_HINT_QDEL
+		if(!above)
+			warning("Stair created without level above: ([loc.x], [loc.y], [loc.z])")
+			return INITIALIZE_HINT_QDEL
+		if(!istype(above))
+			above.ChangeTurf(/turf/simulated/open)
 	. = ..()
 
 /obj/structure/stairs/CheckExit(atom/movable/mover as mob|obj, turf/target as turf)

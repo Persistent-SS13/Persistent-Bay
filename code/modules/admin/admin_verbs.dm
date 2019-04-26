@@ -17,6 +17,9 @@ var/list/admin_verbs_admin = list(
 	/client/proc/player_panel_new,		//shows an interface for all players, with links to various panels,
 	/client/proc/invisimin,				//allows our mob to go invisible/visible,
 //	/datum/admins/proc/show_traitor_panel,	//interface which shows a mob's mind, -Removed due to rare practical use. Moved to debug verbs ~Errorage,
+//	/datum/admins/proc/show_game_mode,  //Configuration window for the current game mode.,
+//	/datum/admins/proc/force_mode_latespawn, //Force the mode to try a latespawn proc,
+//	/datum/admins/proc/force_antag_latespawn, //Force a specific template to try a latespawn proc,
 	/datum/admins/proc/toggleenter,		//toggles whether people can join the current game,
 	/datum/admins/proc/toggleguests,	//toggles whether guests can join the current game,
 	/datum/admins/proc/announce,		//priority announce something to all clients.,
@@ -52,6 +55,7 @@ var/list/admin_verbs_admin = list(
 	/client/proc/check_ai_laws,			//shows AI and borg laws,
 	/client/proc/rename_silicon,		//properly renames silicons,
 	/client/proc/manage_silicon_laws,	// Allows viewing and editing silicon laws. ,
+	// /client/proc/check_antagonists,
 	/client/proc/admin_memo,			//admin memo system. show/delete/write. +SERVER needed to delete admin memos of others,
 	/client/proc/dsay,					//talk in deadchat using our ckey,
 //	/client/proc/toggle_hear_deadcast,	//toggles whether we hear deadchat,
@@ -80,7 +84,8 @@ var/list/admin_verbs_admin = list(
 	/datum/admins/proc/PlayerNotes,
 	/client/proc/cmd_mod_say,
 	/datum/admins/proc/show_player_info,
-	/client/proc/free_slot,			//frees slot for chosen job,
+	/client/proc/free_slot_submap,
+	/client/proc/free_slot_crew,			//frees slot for chosen job,
 	/client/proc/cmd_admin_change_custom_event,
 	/client/proc/cmd_admin_rejuvenate,
 	/client/proc/toggleghostwriters,
@@ -89,7 +94,7 @@ var/list/admin_verbs_admin = list(
 	/client/proc/check_customitem_activity,
 	/client/proc/man_up,
 	/client/proc/global_man_up,
-	/client/proc/response_team, // Response Teams admin verb,
+//	/client/proc/response_team, // Response Teams admin verb,
 	/client/proc/toggle_antagHUD_use,
 	/client/proc/toggle_antagHUD_restrictions,
 	/client/proc/allow_character_respawn,    // Allows a ghost to respawn ,
@@ -172,7 +177,7 @@ var/list/admin_verbs_server = list(
 	/client/proc/nanomapgen_DumpImage
 	)
 var/list/admin_verbs_debug = list(
-	/client/proc/getruntimelog,                     // allows us to access runtime logs to somebody,
+	/client/proc/getruntimelog, // allows us to access runtime logs to somebody,
 	/datum/admins/proc/jump_to_fluid_source,
 	/datum/admins/proc/jump_to_fluid_active,
 	/client/proc/cmd_admin_list_open_jobs,
@@ -320,10 +325,11 @@ var/list/admin_verbs_mod = list(
 	/client/proc/dsay,
 	/datum/admins/proc/show_skills,
 	/datum/admins/proc/show_player_panel,
+	// /client/proc/check_antagonists,
 	/client/proc/cmd_admin_subtle_message, // send an message to somebody as a 'voice in their head',
 	/client/proc/aooc,
-	/datum/admins/proc/sendFax
-
+	/datum/admins/proc/sendFax,
+	/datum/admins/proc/paralyze_mob,
 )
 
 var/list/admin_verbs_mentor = list(
@@ -474,6 +480,15 @@ var/list/admin_verbs_mentor = list(
 	SSstatistics.add_field_details("admin_verb","PPN") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 	return
 
+// /client/proc/check_antagonists()
+// 	set name = "Check Antagonists"
+// 	set category = "Admin"
+// 	if(holder)
+// 		holder.check_antagonists()
+// 		log_admin("[key_name(usr)] checked antagonists.")	//for tsar~
+// 	SSstatistics.add_field_details("admin_verb","CHA") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+// 	return
+
 /client/proc/jobbans()
 	set name = "Display Job bans"
 	set category = "Admin"
@@ -552,7 +567,7 @@ var/list/admin_verbs_mentor = list(
 	var/datum/preferences/D
 	var/client/C = GLOB.ckey_directory[warned_ckey]
 	if(C)	D = C.prefs
-	else	D = preferences_datums[warned_ckey]
+	else	D = SScharacter_setup.preferences_datums[warned_ckey]
 
 	if(!D)
 		to_chat(src, "<font color='red'>Error: warn(): No such ckey found.</font>")
@@ -567,7 +582,7 @@ var/list/admin_verbs_mentor = list(
 		else
 			message_admins("[key_name_admin(src)] has warned [warned_ckey] resulting in a [AUTOBANTIME] minute ban.")
 		AddBan(warned_ckey, D.last_id, "Autobanning due to too many formal warnings", ckey, 1, AUTOBANTIME)
-		feedback_inc("ban_warn",1)
+		SSstatistics.add_field("ban_warn",1)
 	else
 		if(C)
 			to_chat(C, "<font color='red'><BIG><B>You have been formally warned by an administrator.</B></BIG><br>Further warnings will result in an autoban.</font>")
@@ -683,7 +698,7 @@ var/list/admin_verbs_mentor = list(
 		deadmin_holder.reassociate()
 		log_admin("[src] re-admined themself.")
 		message_admins("[src] re-admined themself.", 1)
-		to_chat(src, "<span class='interface'>You now have the keys to control the planet, or atleast a small space station</span>")
+		to_chat(src, "<span class='interface'>You now have the keys to control the planet, or at least [GLOB.using_map.full_name].</span>")
 		verbs -= /client/proc/readmin_self
 
 /client/proc/deadmin_self()
@@ -856,12 +871,12 @@ var/list/admin_verbs_mentor = list(
 		M.s_tone =  -M.s_tone + 35
 
 	// hair
-	var/new_hstyle = input(usr, "Select a hair style", "Grooming")  as null|anything in hair_styles_list
+	var/new_hstyle = input(usr, "Select a hair style", "Grooming")  as null|anything in GLOB.hair_styles_list
 	if(new_hstyle)
 		M.h_style = new_hstyle
 
 	// facial hair
-	var/new_fstyle = input(usr, "Select a facial hair style", "Grooming")  as null|anything in facial_hair_styles_list
+	var/new_fstyle = input(usr, "Select a facial hair style", "Grooming")  as null|anything in GLOB.facial_hair_styles_list
 	if(new_fstyle)
 		M.f_style = new_fstyle
 
@@ -885,21 +900,46 @@ var/list/admin_verbs_mentor = list(
 		holder.PlayerNotes()
 	return
 
-/client/proc/free_slot()
-	set name = "Free Job Slot"
+/client/proc/free_slot_submap()
+	set name = "Free Job Slot (Submap)"
+	set category = "Admin"
+	if(!holder) return
+
+	var/list/jobs = list()
+	for(var/thing in SSmapping.submaps)
+		var/datum/submap/submap = thing
+		for(var/otherthing in submap.jobs)
+			var/datum/job/submap/job = submap.jobs[otherthing]
+			if(!job.is_position_available())
+				jobs["[job.title] - [submap.name]"] = job
+
+	if(!LAZYLEN(jobs))
+		to_chat(usr, "There are no fully staffed offsite jobs.")
+		return
+
+	var/job_name = input("Please select job slot to free", "Free job slot")  as null|anything in jobs
+	if(job_name)
+		var/datum/job/submap/job = jobs[job_name]
+		if(istype(job) && !job.is_position_available())
+			job.make_position_available()
+			message_admins("An offsite job slot for [job_name] has been opened by [key_name_admin(usr)]")
+
+/client/proc/free_slot_crew()
+	set name = "Free Job Slot (Crew)"
 	set category = "Admin"
 	if(holder)
 		var/list/jobs = list()
-		for (var/datum/job/J in job_master.occupations)
-			if (J.current_positions >= J.total_positions && J.total_positions != -1)
-				jobs += J.title
+		for (var/datum/job/J in SSjobs.primary_job_datums)
+			if(!J.is_position_available())
+				jobs[J.title] = J
 		if (!jobs.len)
 			to_chat(usr, "There are no fully staffed jobs.")
 			return
-		var/job = input("Please select job slot to free", "Free job slot")  as null|anything in jobs
-		if (job)
-			job_master.FreeRole(job)
-			message_admins("A job slot for [job] has been opened by [key_name_admin(usr)]")
+		var/job_title = input("Please select job slot to free", "Free job slot")  as null|anything in jobs
+		var/datum/job/job = jobs[job_title]
+		if(job && !job.is_position_available())
+			job.make_position_available()
+			message_admins("A job slot for [job_title] has been opened by [key_name_admin(usr)]")
 			return
 
 /client/proc/toggleghostwriters()

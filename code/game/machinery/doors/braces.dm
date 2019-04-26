@@ -7,6 +7,8 @@
 	icon_state = "maintenance_jack"
 	force = 8 //It has a hammer head, should probably do some more damage. - Cirra
 	throwforce = 10
+	attack_cooldown = 2.5*DEFAULT_WEAPON_COOLDOWN
+	melee_accuracy_bonus = -25
 
 // BRACE - Can be installed on airlock to reinforce it and keep it closed.
 /obj/item/weapon/airlock_brace

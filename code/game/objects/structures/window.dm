@@ -57,18 +57,19 @@
 
 /obj/structure/window/Initialize(mapload, start_dir=null, constructed=0, var/new_material, var/new_reinf_material)
 	. = ..()
-	if(!new_material)
-		new_material = init_material
+	if(!map_storage_loaded)
 		if(!new_material)
-			new_material = MATERIAL_GLASS
-	if(!new_reinf_material)
-		new_reinf_material = init_reinf_material
-	material = SSmaterials.get_material_by_name(new_material)
-	if(!istype(material))
-		return INITIALIZE_HINT_QDEL
+			new_material = init_material
+			if(!new_material)
+				new_material = MATERIAL_GLASS
+		if(!new_reinf_material)
+			new_reinf_material = init_reinf_material
+		material = SSmaterials.get_material_by_name(new_material)
+		if(!istype(material))
+			return INITIALIZE_HINT_QDEL
 
-	if(new_reinf_material)
-		reinf_material = SSmaterials.get_material_by_name(new_reinf_material)
+		if(new_reinf_material)
+			reinf_material = SSmaterials.get_material_by_name(new_reinf_material)
 
 	name = "[reinf_material ? "reinforced " : ""][material.display_name] window"
 	desc = "A window pane made from [material.display_name]."
@@ -77,15 +78,16 @@
 	if (start_dir)
 		set_dir(start_dir)
 
-	max_health = material.integrity
-	if(reinf_material)
-		max_health += 0.25 * reinf_material.integrity
+	if(!map_storage_loaded)
+		max_health = material.integrity
+		if(reinf_material)
+			max_health += 0.25 * reinf_material.integrity
 
-	if(is_fulltile())
-		max_health *= 4
-		layer = FULL_WINDOW_LAYER
+		if(is_fulltile())
+			max_health *= 4
+			layer = FULL_WINDOW_LAYER
 
-	health = max_health
+		health = max_health
 
 	set_anchored(!constructed)
 	update_connections(1)
@@ -117,34 +119,25 @@
 		else
 			to_chat(user, "<span class='danger'>It looks heavily damaged.</span>")
 
-/obj/structure/window/after_load()
-	dir = saved_dir
-	ini_dir = dir
-	update_nearby_tiles(need_rebuild=1)
-	..()
-	update_icon()
+// /obj/structure/window/after_load()
+// 	set_dir(saved_dir)
+// 	ini_dir = dir
+// 	update_nearby_tiles(need_rebuild=1)
+// 	..()
+// 	update_icon()
 
 /obj/structure/window/CanFluidPass(var/coming_from)
 	return (!is_fulltile() && coming_from != dir)
 
-/obj/structure/window/Write(savefile/f)
-	saved_dir = dir
-	..()
+// /obj/structure/window/Write(savefile/f)
+// 	saved_dir = dir
+// 	..()
 
 /obj/structure/window/damage_description(var/mob/user)
-	. = ..() + "\n"
-	if(silicate)
-		if (silicate < 30)
-			. += SPAN_NOTICE("It has a thin layer of silicate.")
-		else if (silicate < 70)
-			. +=  SPAN_NOTICE("It is covered in silicate.")
-		else
-			. += SPAN_NOTICE("There is a thick layer of silicate covering it.")
+	. = ..()
 
 /obj/structure/window/take_damage(damage, damtype, armorbypass, damsrc)
 	var/initialhealth = health
-	if(silicate)
-		damage = damage * (1 - silicate / max_silicate)
 	..(damage, damtype, armorbypass, damsrc)
 	if(health < get_max_health() / 4 && initialhealth >= get_max_health() / 4)
 		visible_message(SPAN_WARNING("[src] looks like it's about to shatter!"))
@@ -284,8 +277,8 @@
 		if (user.get_active_hand() != W)
 			return
 		if (t)
-			src.id = t
-			to_chat(user, "<span class='notice'>The new ID of the window is [id]</span>")
+			src.id_tag = t
+			to_chat(user, "<span class='notice'>The new ID of the window is [src.id_tag]</span>")
 		return
 	else
 		return ..()
@@ -305,12 +298,12 @@
 		if (prob(50))
 			G.affecting.Weaken(1)
 		G.affecting.apply_damage(10, DAM_BLUNT, def_zone, used_weapon = src)
-		hit(25)
+		take_damage(25)
 	else
 		G.affecting.visible_message("<span class='danger'>[G.assailant] crushes [G.affecting] against \the [src]!</span>")
 		G.affecting.Weaken(5)
 		G.affecting.apply_damage(20, DAM_BLUNT, def_zone, used_weapon = src)
-		hit(50)
+		take_damage(50)
 	return TRUE
 
 /obj/structure/window/proc/rotate()
@@ -425,17 +418,15 @@
 	if(reinf_material)
 		melting_point += 0.25*reinf_material.melting_point
 	if(exposed_temperature > melting_point)
-		hit(damage_per_fire_tick, 0)
+		take_damage(damage_per_fire_tick, silent = 1)
 	..()
 
 /obj/structure/window/basic
 	desc = "It looks thin and flimsy. A few knocks with... anything, really should shatter it."
 	icon_state = "window"
-	glasstype = /obj/item/stack/material/glass
-	maximal_heat = T0C + 100
+	init_material = MATERIAL_GLASS
 	damage_per_fire_tick = 2.0
 	max_health = 60
-	material_color = GLASS_COLOR
 	color = GLASS_COLOR
 
 /obj/structure/window/basic/full
@@ -529,11 +520,9 @@
 	icon_state = "rwindow"
 	basestate = "rwindow"
 	max_health = 120
-	maximal_heat = T0C + 90
+	init_material = MATERIAL_FIBERGLASS
+	init_reinf_material = MATERIAL_STEEL
 	damage_per_fire_tick = 5.0 // These windows are not built for fire
-	shardtype = /obj/item/weapon/material/shard/fiberglass
-	glasstype = /obj/item/stack/material/glass/fiberglass
-	material_color = GLASS_COLOR_FROSTED
 	color = GLASS_COLOR_FROSTED
 	armor = list(
 		DAM_BLUNT  	= MaxArmorValue,
@@ -557,7 +546,7 @@
 
 	//player-constructed windows
 	if (constructed)
-		state = 0
+		construction_state = 0
 	update_connections(1)
 
 /obj/structure/window/Initialize()
@@ -630,28 +619,6 @@
 	if(locate(/obj/structure/wall_frame) in loc)
 		return TRUE
 
-/obj/structure/window/reinforced/polarized/attackby(obj/item/W as obj, mob/user as mob)
-	if(isMultitool(W))
-		var/t = sanitizeSafe(input(user, "Enter the ID for the window.", src.name, null), MAX_NAME_LEN)
-		if (user.get_active_hand() != W)
-			return
-		if (!in_range(src, user) && src.loc != user)
-			return
-		t = sanitizeSafe(t, MAX_NAME_LEN)
-		if (t)
-			src.id = t
-			to_chat(user, "<span class='notice'>The new ID of the window is [id]</span>")
-		return
-	..()
-
-/obj/structure/window/reinforced/polarized/proc/toggle()
-	if(opacity)
-		animate(src, color=material_color, time=5)
-		set_opacity(0)
-	else
-		animate(src, color=GLASS_COLOR_TINTED, time=5)
-		set_opacity(1)
-
 /obj/structure/window/reinforced/crescent/attack_hand()
 	return
 
@@ -670,16 +637,25 @@
 /obj/structure/window/reinforced/crescent/destroyed()
 	return
 
+/proc/place_window(mob/user, loc, dir_to_set, obj/item/stack/material/ST)
+	for(var/obj/structure/window/WINDOW in loc)
+		if(WINDOW.dir == dir_to_set)
+			to_chat(user, "<span class='notice'>There is already a window facing this way there.</span>")
+			return
+		if(WINDOW.is_fulltile() && (dir_to_set & (dir_to_set - 1))) //two fulltile windows
+			to_chat(user, "<span class='notice'>There is already a window there.</span>")
+			return
+	to_chat(user, "<span class='notice'>You start placing the window.</span>")
+	if(do_after(user,20,src))
+		for(var/obj/structure/window/WINDOW in loc)
+			if(WINDOW.dir == dir_to_set)//checking this for a 2nd time to check if a window was made while we were waiting.
+				to_chat(user, "<span class='notice'>There is already a window facing this way there.</span>")
+				return
+			if(WINDOW.is_fulltile() && (dir_to_set & (dir_to_set - 1)))
+				to_chat(user, "<span class='notice'>There is already a window there.</span>")
+				return
 
-/obj/structure/window/proc/update_onframe()
-	var/success = FALSE
-	var/turf/T = get_turf(src)
-	for(var/obj/O in T)
-		if(istype(O, /obj/structure/wall_frame))
-			success = TRUE
-		if(success)
-			break
-	if(success)
-		on_frame = TRUE
-	else
-		on_frame = FALSE
+		if (ST.use(1))
+			var/obj/structure/window/WD = new(loc, dir_to_set, FALSE, ST.material.name, ST.reinf_material && ST.reinf_material.name)
+			to_chat(user, "<span class='notice'>You place the [WD] on [src].</span>")
+			WD.update_icon()

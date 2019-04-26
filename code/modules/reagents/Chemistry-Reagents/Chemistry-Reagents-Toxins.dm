@@ -26,10 +26,10 @@
 				var/can_damage = I.get_max_health() - I.get_damages()
 				if(can_damage > 0)
 					if(dam > can_damage)
-						I.take_damage(can_damage, silent=TRUE)
+						I.take_internal_damage(can_damage, silent=TRUE)
 						dam -= can_damage
 					else
-						I.take_damage(dam, silent=TRUE)
+						I.take_internal_damage(dam, silent=TRUE)
 						dam = 0
 		if(dam)
 			M.adjustToxLoss(target_organ ? (dam * 0.75) : dam)
@@ -651,7 +651,6 @@
 		M.psi.check_latency_trigger(30, "a Three Eye overdose")
 
 /* Transformations */
-
 /datum/reagent/slimetoxin
 	name = "Mutation Toxin"
 	description = "A corruptive toxin produced by slimes."

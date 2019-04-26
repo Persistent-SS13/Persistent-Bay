@@ -220,7 +220,7 @@
 	breathed_product = /datum/reagent/ammonia
 
 /decl/xgm_gas/carbon_monoxide
-	id = GAS_CARBON_MONOXYDE
+	id = GAS_CARBON_MONOXIDE
 	name = "Carbon Monoxide"
 	specific_heat = 30	// J/(mol*K)
 	molar_mass = 0.028	// kg/mol

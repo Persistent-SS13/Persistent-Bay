@@ -7,20 +7,19 @@
 	return (BP_IS_ROBOTIC(src) || brute_dam + burn_dam + additional_damage < max_health * 4)
 
 obj/item/organ/external/take_general_damage(var/amount, var/silent = FALSE)
-	take_external_damage(amount)
+	return take_damage(amount, silent = silent)
 
-/obj/item/organ/external/proc/take_external_damage(brute, burn, damage_flags, used_weapon = null)
-
-	brute = round(brute * get_brute_mod(), 0.1)
-	burn = round(burn * get_burn_mod(), 0.1)
+/obj/item/organ/external/take_damage(damage, damtype, damage_flags, used_weapon = null, var/silent = FALSE)
+	var/brute = (IsDamageTypeBrute(damtype))? round(damage * get_brute_mod(), 0.1) : 0
+	var/burn = (IsDamageTypeBurn(damtype))? round(damage * get_burn_mod(), 0.1) : 0
 
 	if((brute <= 0) && (burn <= 0))
 		return 0
 
-	var/sharp = (damage_flags & DAM_SHARP)
-	var/edge  = (damage_flags & DAM_EDGE)
-	var/laser = (damage_flags & DAM_LASER)
-	var/blunt = brute && !sharp && !edge
+	var/sharp = IsDamageTypeSharp(damtype)
+	var/edge  = IsDamageTypeEdged(damtype)
+	var/laser = ISDAMTYPE(damtype, DAM_LASER)
+	var/blunt = ISDAMTYPE(damtype, DAM_BLUNT) || !sharp && !edge
 
 	// Handle some status-based damage multipliers.
 	if(blunt)
@@ -44,11 +43,11 @@ obj/item/organ/external/take_general_damage(var/amount, var/silent = FALSE)
 	var/spillover = 0
 	var/pure_brute = brute
 	if(!is_damageable(brute + burn))
-		spillover =  brute_dam + burn_dam + brute - max_damage
+		spillover =  brute_dam + burn_dam + brute - max_health
 		if(spillover > 0)
 			brute = max(brute - spillover, 0)
 		else
-			spillover = brute_dam + burn_dam + brute + burn - max_damage
+			spillover = brute_dam + burn_dam + brute + burn - max_health
 			if(spillover > 0)
 				burn = max(burn - spillover, 0)
 	//If limb took enough damage, try to cut or tear it off
@@ -58,7 +57,7 @@ obj/item/organ/external/take_general_damage(var/amount, var/silent = FALSE)
 			var/total_damage = brute_dam + burn_dam + brute + burn + spillover
 			var/threshold = max_health * config.organ_health_multiplier
 			if(total_damage > threshold)
-				if(attempt_dismemberment(pure_brute, burn, dismemeber, damsrc, spillover, total_damage > threshold*6))
+				if(attempt_dismemberment(pure_brute, burn, edge, used_weapon, spillover, total_damage > threshold*6))
 					return
 
 	//blunt damage is gud at fracturing
@@ -89,13 +88,12 @@ obj/item/organ/external/take_general_damage(var/amount, var/silent = FALSE)
 					victims += I
 			if(!victims.len)
 				victims += pick(internal_organs)
-			for(var/obj/item/organ/victim in victims)
-				var/obj/item/organ/internal/victim = v
+			for(var/obj/item/organ/internal/V in victims)
 				brute /= 2
 				if(laser)
 					burn /= 2
-				damage_amt -= max(damage_amt*victim.damage_reduction, 0)
-				victim.take_internal_damage(damage_amt)
+				damage_amt -= max(damage_amt*V.damage_reduction, 0)
+				V.take_internal_damage(damage_amt)
 
 	//Handle pain
 	if(status & ORGAN_BROKEN && brute)
@@ -268,9 +266,9 @@ obj/item/organ/external/take_general_damage(var/amount, var/silent = FALSE)
 		if((limb_flags & ORGAN_FLAG_CAN_STAND) && prob(min(agony_amount * ((body_part == LEG_LEFT || body_part == LEG_RIGHT)? 2 : 4),70)))
 			owner.stance_damage_prone(src)
 
-		if(vital && get_pain() > 0.5 * max_damage)
+		if(vital && get_pain() > 0.5 * max_health)
 			owner.visible_message("<span class='warning'>[owner] reels in pain!</span>")
-			if(has_genitals() || get_pain() + agony_amount > max_damage)
+			if(has_genitals() || get_pain() + agony_amount > max_health)
 				owner.Weaken(6)
 			else
 				owner.Stun(6)

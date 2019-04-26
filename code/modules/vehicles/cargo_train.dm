@@ -173,7 +173,7 @@
 	H.apply_effects(5, 5)
 	for(var/i = 0, i < rand(1,5), i++)
 		var/def_zone = pick(parts)
-		H.apply_damage(rand(5,10), DAM_BLUNT, def_zone, H.run_armor_check(def_zone, DAM_BLUNT))
+		H.apply_damage(rand(5,10), DAM_BLUNT, def_zone)
 
 /obj/vehicle/train/cargo/trolley/RunOver(var/mob/living/carbon/human/H)
 	..()

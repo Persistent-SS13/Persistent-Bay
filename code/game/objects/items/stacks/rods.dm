@@ -5,8 +5,9 @@
 	desc = "Some rods. Can be used for building, or something."
 	singular_name = "rod"
 	plural_name = "rods"
-	icon_state = "single-rod"
-	plural_icon_state = "rods"
+	icon_state = "rod"
+	plural_icon_state = "rod-mult"
+	max_icon_state = "rod-max"
 	w_class = ITEM_SIZE_LARGE
 	attack_cooldown = 21
 	melee_accuracy_bonus = -20

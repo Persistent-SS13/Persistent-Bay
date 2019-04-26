@@ -51,8 +51,6 @@
 
 /datum/nano_module/camera_monitor/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
 	var/list/data = host.initial_data()
-	if(program.computer.network_card && program.computer.network_card.connected_network)
-		connected_faction = program.computer.network_card.connected_network.holder
 	if(connected_faction)
 		data["faction_uid"] = connected_faction.uid
 		data["faction_name"] = connected_faction.name

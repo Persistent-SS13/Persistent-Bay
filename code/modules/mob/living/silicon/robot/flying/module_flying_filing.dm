@@ -24,7 +24,7 @@
 		/obj/item/weapon/stamp,
 		/obj/item/weapon/stamp/denied,
 		/obj/item/device/destTagger,
-		/obj/item/weapon/crowbar,
+		/obj/item/weapon/tool/crowbar,
 		/obj/item/device/megaphone,
 		/obj/item/stack/package_wrap/cyborg
 	)

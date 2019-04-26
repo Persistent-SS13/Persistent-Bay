@@ -22,7 +22,7 @@
 
 /obj/structure/drain/attackby(var/obj/item/thing, var/mob/user)
 	if(isWelder(thing))
-		var/obj/item/weapon/weldingtool/WT = thing
+		var/obj/item/weapon/tool/weldingtool/WT = thing
 		if(WT.isOn())
 			welded = !welded
 			to_chat(user, "<span class='notice'>You weld \the [src] [welded ? "closed" : "open"].</span>")

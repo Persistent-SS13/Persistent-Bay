@@ -78,7 +78,8 @@
 		MATERIAL_POTASH =      TRUE,
 		MATERIAL_BAUXITE =     TRUE,
 		MATERIAL_COPPER =      TRUE,
-		MATERIAL_ALUMINIUM =   TRUE
+		MATERIAL_ALUMINIUM =   TRUE,
+		MATERIAL_RUTILE = 	   TRUE
 	)
 	var/list/stored_matter = list()
 
@@ -162,7 +163,7 @@
 /obj/item/organ/internal/stack/vox/removed()
 	var/obj/item/organ/external/head = owner.get_organ(parent_organ)
 	owner.visible_message(SPAN_DANGER("\The [src] rips gaping holes in \the [owner]'s [head.name] as it is torn loose!"))
-	head.take_external_damage(rand(15,20))
+	head.take_damage(rand(15,20), DAM_CUT)
 	for(var/obj/item/organ/internal/O in head.contents)
 		O.take_internal_damage(rand(30,70))
 	..()

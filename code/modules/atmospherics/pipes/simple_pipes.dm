@@ -8,13 +8,13 @@
 	dir = SOUTH
 	initialize_directions = SOUTH|NORTH
 	alert_pressure = 170*ONE_ATMOSPHERE
+	maximum_pressure = 210*ONE_ATMOSPHERE
+	fatigue_pressure = 170*ONE_ATMOSPHERE
 	level = 1
 	max_health = 30
 
 	var/minimum_temperature_difference = 300
 	var/thermal_conductivity = 0 //WALL_HEAT_TRANSFER_COEFFICIENT No
-	var/maximum_pressure = 210*ONE_ATMOSPHERE
-	var/fatigue_pressure = 170*ONE_ATMOSPHERE
 	var/time_next_fatigue_dmg = 0 //Time until applying fatigue damage again
 
 /obj/machinery/atmospherics/pipe/simple/New()
@@ -94,7 +94,7 @@
 /obj/machinery/atmospherics/pipe/simple/proc/burst()
 	ASSERT(parent)
 	parent.temporarily_store_air()
-	src.visible_message(SPAN_DANGER("\The [src] bursts!"))
+	src.visible_message("<span class='danger'>\The [src] bursts!</span>");
 	playsound(src.loc, 'sound/effects/bang.ogg', 25, 1)
 	var/datum/effect/effect/system/smoke_spread/smoke = new
 	smoke.set_up(1,0, src.loc, 0)
@@ -180,8 +180,8 @@
 	var/turf/T = loc
 	if(level == 1 && !T.is_plating()) 
 		hide(1)
-	queue_icon_update()
-	
+	update_icon()
+
 /obj/machinery/atmospherics/pipe/simple/disconnect(obj/machinery/atmospherics/reference)
 	if(reference == node1)
 		if(istype(node1, /obj/machinery/atmospherics/pipe))

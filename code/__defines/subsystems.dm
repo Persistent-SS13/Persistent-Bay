@@ -62,12 +62,12 @@
 #define SS_INIT_MACHINES         1
 #define SS_INIT_DEFAULT          0
 #define SS_INIT_AIR             -1
-#define SS_INIT_LATE_INIT       -2
 #define SS_INIT_ALARM           -3
 #define SS_INIT_SHUTTLE         -4
 #define SS_INIT_LIGHTING        -5
 #define SS_INIT_XENOARCH        -10
-#define SS_INIT_BAY_LEGACY    -200
+#define SS_INIT_BAY_LEGACY      -200
+#define SS_INIT_LATE_INIT       -201
 
 // SS runlevels
 

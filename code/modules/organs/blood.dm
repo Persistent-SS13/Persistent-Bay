@@ -150,7 +150,6 @@
 
 //Transfers blood from reagents to vessel, respecting blood types compatability.
 /mob/living/carbon/human/inject_blood(var/datum/reagent/blood/injected, var/amount)
-
 	if(!should_have_organ(BP_HEART))
 		reagents.add_reagent(/datum/reagent/blood, amount, injected.data)
 		reagents.update_total()
@@ -310,7 +309,7 @@ proc/blood_splatter(var/target,var/datum/reagent/blood/source,var/large,var/spra
 	blood_volume *= pulse_mod
 
 	var/min_efficiency = recent_pump ? 0.5 : 0.3
-	blood_volume *= max(min_efficiency, (1-(heart.damage / heart.max_damage)))
+	blood_volume *= max(min_efficiency, (1-(heart.get_damages() / heart.get_max_health())))
 
 	if(!heart.open && chem_effects[CE_BLOCKAGE])
 		blood_volume *= max(0, 1-chem_effects[CE_BLOCKAGE])

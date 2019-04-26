@@ -9,7 +9,7 @@
 	req_admin_notify = 1
 	minimal_player_age = 14
 	account_allowed = 0
-	economic_modifier = 0
+	economic_power = 0
 	outfit_type = /decl/hierarchy/outfit/job/silicon/ai
 	loadout_allowed = FALSE
 	hud_icon = "hudblank"
@@ -32,7 +32,7 @@
 	selection_color = "#254c25"
 	minimal_player_age = 7
 	account_allowed = 0
-	economic_modifier = 0
+	economic_power = 0
 	loadout_allowed = FALSE
 	outfit_type = /decl/hierarchy/outfit/job/silicon/cyborg
 	hud_icon = "hudblank"

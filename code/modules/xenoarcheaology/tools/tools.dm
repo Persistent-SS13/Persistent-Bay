@@ -272,7 +272,7 @@
 				<A href='byond://?src=\ref[src];freq=2'>+</A>
 				<A href='byond://?src=\ref[src];freq=10'>+</A><BR>
 				"}
-	user << browse(dat,"window=locater;size=300x150")
+	show_browser(user, dat,"window=locater;size=300x150")
 	onclose(user, "locater")
 
 /obj/item/weapon/pinpointer/radio/OnTopic(user, href_list)

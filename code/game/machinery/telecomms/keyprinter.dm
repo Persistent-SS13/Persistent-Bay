@@ -39,7 +39,7 @@
 	return ..()
 
 /obj/machinery/keyprinter/attackby(var/obj/item/O, var/mob/user)
-	if(istype(O, /obj/item/weapon/card/id) || istype(O, /obj/item/device/pda))
+	if(istype(O, /obj/item/weapon/card/id) || istype(O, /obj/item/modular_computer/pda))
 		if(!connected_faction && O.GetFaction())
 			req_access_faction = O.GetFaction()
 			connected_faction = get_faction(req_access_faction)

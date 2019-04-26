@@ -8,10 +8,10 @@
 	var/chosen_pin = 1000
 	var/chosen_password = "nopassword"
 	//Some faction information.
-	var/home_system           //System of birth.
-	var/citizenship = "None"            //Current home system.
+	// var/home_system           //System of birth.
+	// var/citizenship = "None"            //Current home system.
 	var/faction              //Antag faction/general associated faction.
-	var/religion = "None"               //Religious association.
+	// var/religion = "None"               //Religious association.
 
 /datum/category_item/player_setup_item/background/records
 	name = "Records"
@@ -23,10 +23,10 @@
 	from_file(S["sec_record"],pref.sec_record)
 	from_file(S["gen_record"],pref.gen_record)
 	from_file(S["memory"],pref.memory)
-	from_file(S["home_system"],pref.home_system)
-	from_file(S["citizenship"],pref.citizenship)
+	// from_file(S["home_system"],pref.home_system)
+	// from_file(S["citizenship"],pref.citizenship)
 	from_file(S["faction"],pref.faction)
-	from_file(S["religion"],pref.religion)
+	// from_file(S["religion"],pref.religion)
 	from_file(S["nanotrasen_relation"],pref.nanotrasen_relation)
 
 /datum/category_item/player_setup_item/background/records/save_character(var/savefile/S)
@@ -35,21 +35,21 @@
 	to_file(S["sec_record"],pref.sec_record)
 	to_file(S["gen_record"],pref.gen_record)
 	to_file(S["memory"],pref.memory)
-	to_file(S["home_system"],pref.home_system)
-	to_file(S["citizenship"],pref.citizenship)
+	// to_file(S["home_system"],pref.home_system)
+	// to_file(S["citizenship"],pref.citizenship)
 	to_file(S["faction"],pref.faction)
-	to_file(S["religion"],pref.religion)
+	// to_file(S["religion"],pref.religion)
 	to_file(S["nanotrasen_relation"],pref.nanotrasen_relation)
 
 /datum/category_item/player_setup_item/background/records/content(var/mob/user)
 	. = list()
 	. += "<br/><b>Records</b>:<br/>"
-	. += "Early Life: <a href='?src=\ref[src];home_system=1'>[pref.home_system ? pref.home_system : "Unset*"]</a>"
-	if(pref.home_system)
-		var/datum/species/S = all_species[pref.species ? pref.species : SPECIES_HUMAN]
-		var/background = S.backgrounds[pref.home_system]
-		if(background)
-			. += "<br>[background]<br>"
+	// . += "Early Life: <a href='?src=\ref[src];home_system=1'>[pref.home_system ? pref.home_system : "Unset*"]</a>"
+	// if(pref.home_system)
+	// 	var/datum/species/S = all_species[pref.species ? pref.species : SPECIES_HUMAN]
+	// 	var/background = GLOB.using_map.available_cultural_info[TAG_HOMEWORLD] //S.backgrounds[pref.home_system]
+	// 	if(background)
+	// 		. += "<br>[background]<br>"
 	. += "<br><br>Starting Employer: <a href='?src=\ref[src];faction=1'>[pref.faction ? pref.faction : "Unset*"]</a>"
 	
 	var/datum/world_faction/faction = get_faction(pref.faction)
@@ -109,27 +109,24 @@
 			pref.nanotrasen_relation = new_relation
 			return TOPIC_REFRESH
 
-	else if(href_list["home_system"])
-		var/datum/species/S = all_species[pref.species ? pref.species : SPECIES_HUMAN]
-		if(S.backgrounds.len)
-			var/choice = input(user, "Please choose a background.", CHARACTER_PREFERENCE_INPUT_TITLE, pref.home_system) as null|anything in S.backgrounds
-			if(choice)
-				pref.home_system = choice
-		else
-			pref.home_system = "Unknown"
-		return TOPIC_REFRESH
+	// else if(href_list["home_system"])
+	// 	var/datum/species/S = all_species[pref.species ? pref.species : SPECIES_HUMAN]
+	// 	var/choice = input(user, "Please choose a background.", CHARACTER_PREFERENCE_INPUT_TITLE, pref.home_system) as null|anything in GLOB.using_map.available_cultural_info[TAG_HOMEWORLD]
+	// 	if(choice)
+	// 		pref.home_system = choice
+	// 	return TOPIC_REFRESH
 
-	else if(href_list["citizenship"])
-		var/choice = input(user, "Please choose your current citizenship.", CHARACTER_PREFERENCE_INPUT_TITLE, pref.citizenship) as null|anything in GLOB.using_map.citizenship_choices + list("None","Other")
-		if(!choice || !CanUseTopic(user))
-			return TOPIC_NOACTION
-		if(choice == "Other")
-			var/raw_choice = sanitize(input(user, "Please enter your current citizenship.", CHARACTER_PREFERENCE_INPUT_TITLE) as text|null, MAX_NAME_LEN)
-			if(raw_choice && CanUseTopic(user))
-				pref.citizenship = raw_choice
-		else
-			pref.citizenship = choice
-		return TOPIC_REFRESH
+	// else if(href_list["citizenship"])
+	// 	var/choice = input(user, "Please choose your current citizenship.", CHARACTER_PREFERENCE_INPUT_TITLE, pref.citizenship) as null|anything in GLOB.using_map.available_cultural_info[TAG_FACTION] + list("None","Other")
+	// 	if(!choice || !CanUseTopic(user))
+	// 		return TOPIC_NOACTION
+	// 	if(choice == "Other")
+	// 		var/raw_choice = sanitize(input(user, "Please enter your current citizenship.", CHARACTER_PREFERENCE_INPUT_TITLE) as text|null, MAX_NAME_LEN)
+	// 		if(raw_choice && CanUseTopic(user))
+	// 			pref.citizenship = raw_choice
+	// 	else
+	// 		pref.citizenship = choice
+	// 	return TOPIC_REFRESH
 
 	else if(href_list["faction"])
 		var/list/joinable = list()
@@ -141,17 +138,17 @@
 			pref.faction = choice.uid
 		return TOPIC_REFRESH
 
-	else if(href_list["religion"])
-		var/choice = input(user, "Please choose a religion.", CHARACTER_PREFERENCE_INPUT_TITLE, pref.religion) as null|anything in GLOB.using_map.religion_choices + list("None","Other")
-		if(!choice || !CanUseTopic(user))
-			return TOPIC_NOACTION
-		if(choice == "Other")
-			var/raw_choice = sanitize(input(user, "Please enter a religon.", CHARACTER_PREFERENCE_INPUT_TITLE)  as text|null, MAX_NAME_LEN)
-			if(raw_choice)
-				pref.religion = raw_choice
-		else
-			pref.religion = choice
-		return TOPIC_REFRESH
+	// else if(href_list["religion"])
+	// 	var/choice = input(user, "Please choose a religion.", CHARACTER_PREFERENCE_INPUT_TITLE, pref.religion) as null|anything in GLOB.using_map.available_cultural_info[TAG_RELIGION] + list("None","Other")
+	// 	if(!choice || !CanUseTopic(user))
+	// 		return TOPIC_NOACTION
+	// 	if(choice == "Other")
+	// 		var/raw_choice = sanitize(input(user, "Please enter a religon.", CHARACTER_PREFERENCE_INPUT_TITLE)  as text|null, MAX_NAME_LEN)
+	// 		if(raw_choice)
+	// 			pref.religion = raw_choice
+	// 	else
+	// 		pref.religion = choice
+	// 	return TOPIC_REFRESH
 
 	else if(href_list["set_pin"])
 		var/chose = input(user,"Enter starting bank pin (1000-9999)", CHARACTER_PREFERENCE_INPUT_TITLE) as num

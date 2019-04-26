@@ -97,7 +97,6 @@
 	name = "Navpoint"
 	landmark_tag = "navpoint"
 	flags = SLANDMARK_FLAG_AUTOSET
-	var/shuttle_restricted //name of the shuttle, null for generic waypoint
 
 /obj/effect/shuttle_landmark/automatic/Initialize()
 	landmark_tag += "-[x]-[y]-[z]-[random_id("landmarks",1,9999)]"

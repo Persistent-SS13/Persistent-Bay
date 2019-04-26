@@ -58,12 +58,12 @@ SUBSYSTEM_DEF(asteroid)
 
 	for(var/Z in mob_targets)
 		for(var/mob/living/M in mob_targets[Z])
-			if(M.stat || !istype(get_turf(M), /turf/simulated/asteroid))
+			if(M.stat || !istype(get_turf(M), /turf/simulated/floor/asteroid))
 				mob_targets[Z] -= M
 
 	for(var/Z in drill_targets)
 		for(var/obj/machinery/D in drill_targets[Z])
-			if(D.stat || !istype(get_turf(D), /turf/simulated/asteroid))
+			if(D.stat || !istype(get_turf(D), /turf/simulated/floor/asteroid))
 				drill_targets[Z] -= D
 
 	mob_targets["[current]"] = shuffle(mob_targets["[current]"])
@@ -276,7 +276,7 @@ SUBSYSTEM_DEF(asteroid)
 	monsters |= M
 
 /datum/controller/subsystem/asteroid/proc/get_asteroid_spawn(var/atom/movable/A)
-	var/turf/simulated/asteroid/T = locate() in shuffle(orange(7, get_turf(A)))
+	var/turf/simulated/floor/asteroid/T = locate() in shuffle(orange(7, get_turf(A)))
 	return T
 
 /datum/controller/subsystem/asteroid/proc/agitate(var/atom/movable/A, var/amount = 0)

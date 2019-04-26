@@ -29,8 +29,8 @@
 		to_chat(usr, "<span class='notice'>The solution dissolves the ink on the book.</span>")
 	return
 
-/datum/reagent/aluminum
-	name = "Aluminum"
+/datum/reagent/aluminium
+	name = "Aluminium"
 	taste_description = "metal"
 	taste_mult = 1.1
 	description = "A silvery white and ductile member of the boron group of chemical elements."
@@ -310,6 +310,7 @@
 	taste_mult = 1.8
 	reagent_state = SOLID
 	color = "#ffffff"
+	scannable = 1
 
 	glass_name = "sugar"
 	glass_desc = "The organic compound commonly known as table sugar and sometimes called saccharose. This white, odorless, crystalline powder has a pleasing, sweet taste."

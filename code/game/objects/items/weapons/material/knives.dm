@@ -83,7 +83,7 @@
 	icon_state = "table"
 	default_material = MATERIAL_ALUMINIUM
 	force_divisor = 0.1
-	sharp = FALSE
+	sharpness = 1
 	attack_verb = list("prodded")
 	applies_material_name = FALSE
 	w_class = ITEM_SIZE_SMALL

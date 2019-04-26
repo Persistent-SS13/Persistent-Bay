@@ -367,6 +367,10 @@ default behaviour is:
 	adjustFireLoss(-burn)
 	src.updatehealth()
 
+// damage ONE external organ, organ gets randomly selected from damaged ones.
+// /mob/living/proc/take_organ_damage(var/damage, var/damtype = DAM_BLUNT, var/used_weapon = null)
+// 	return take_overall_damage(damage, damtype, used_weapon)
+
 // heal MANY external organs, in random order
 /mob/living/proc/heal_overall_damage(var/brute, var/burn)
 	adjustBruteLoss(-brute)
@@ -480,8 +484,8 @@ default behaviour is:
 	if(repair_brain && should_have_organ(BP_BRAIN))
 		repair_brain = FALSE
 		var/obj/item/organ/internal/brain/brain = internal_organs_by_name[BP_BRAIN]
-		if(brain.damage > (brain.max_damage/2))
-			brain.damage = (brain.max_damage/2)
+		if(brain.get_damages() > (brain.get_max_health()/2))
+			brain.set_health(brain.get_max_health()/2)
 		if(brain.status & ORGAN_DEAD)
 			brain.status &= ~ORGAN_DEAD
 			START_PROCESSING(SSobj, brain)

@@ -1,7 +1,7 @@
 /obj/item/projectile/animate
 	name = "bolt of animation"
 	icon_state = "ice_1"
-	damage = 0
+	force = 0
 	damtype = DAM_ENERGY
 	nodamage = 1
 	damage_flags = 0

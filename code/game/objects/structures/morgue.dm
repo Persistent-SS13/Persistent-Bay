@@ -95,7 +95,7 @@
 		return attack_hand(user)
 	else return ..()
 
-/obj/structure/morgue/attackby(P as obj, mob/user as mob)
+/obj/structure/morgue/attackby(var/obj/item/P, mob/user as mob)
 	if(isWrench(P))
 		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 		to_chat(user, "You begin dismantling \the [src]..")

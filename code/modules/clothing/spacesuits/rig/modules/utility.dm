@@ -33,7 +33,7 @@
 	interface_desc = "Shows an informative health readout when used on a subject."
 	use_power_cost = 200
 	origin_tech = list(TECH_MAGNET = 3, TECH_BIO = 3, TECH_ENGINEERING = 5)
-	device_type = /obj/item/device/healthanalyzer
+	device_type = /obj/item/device/scanner/health
 
 /obj/item/rig_module/device/drill
 	name = "hardsuit drill mount"
@@ -42,8 +42,9 @@
 	interface_name = "mounted drill"
 	interface_desc = "A diamond-tipped industrial drill."
 	suit_overlay_active = "mounted-drill"
-	suit_overlay_inactive = "mounted-drill"
-	use_power_cost = 75
+	suit_overlay_inactive = null
+	use_power_cost = 1800
+	module_cooldown = 0
 	origin_tech = list(TECH_MATERIAL = 6, TECH_POWER = 4, TECH_ENGINEERING = 6)
 	device_type = /obj/item/weapon/pickaxe/diamonddrill
 
@@ -81,7 +82,7 @@
 	interface_desc = "A device for building or removing walls. Cell-powered."
 	usable = 1
 	engage_string = "Configure RCD"
-	use_power_cost = 100 KILOWATTS // Matter fabrication is a very energy-demanding process.
+	use_power_cost = 300
 	origin_tech = list(TECH_MATERIAL = 6, TECH_MAGNET = 5, TECH_ENGINEERING = 7)
 	device_type = /obj/item/weapon/rcd/mounted
 
@@ -246,6 +247,8 @@
 	usable = 0
 	selectable = 1
 	disruptive = 1
+
+	suit_overlay_active = "mounted-injector"
 
 	interface_name = "mounted chem injector"
 	interface_desc = "Dispenses loaded chemicals via an arm-mounted injector."

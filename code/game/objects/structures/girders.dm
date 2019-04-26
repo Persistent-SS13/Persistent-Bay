@@ -6,10 +6,18 @@
 	layer = BELOW_OBJ_LAYER
 	w_class = ITEM_SIZE_NO_CONTAINER
 	var/state = 0
-	var/health = 200
+	max_health = 200
 	var/cover = 50 //how much cover the girder provides against projectiles.
 	var/material/reinf_material
 	var/reinforcing = 0
+
+/obj/structure/girder/New()
+	..()
+	ADD_SAVED_VAR(state)
+	ADD_SAVED_VAR(reinf_material)
+	ADD_SAVED_VAR(reinforcing)
+	
+	ADD_SKIP_EMPTY(reinf_material)
 
 /obj/structure/girder/Initialize()
 	set_extension(src, /datum/extension/penetration, /datum/extension/penetration/simple, 100)
@@ -18,35 +26,22 @@
 /obj/structure/girder/displaced
 	icon_state = "displaced"
 	anchored = 0
-	health = 50
+	max_health = 50
 	cover = 25
 
-/obj/structure/girder/attack_generic(var/mob/user, var/damage, var/attack_message = "smashes apart", var/wallbreaker)
-	if(!damage || !wallbreaker)
-		return 0
-	attack_animation(user)
-	visible_message("<span class='danger'>[user] [attack_message] the [src]!</span>")
-	spawn(1) dismantle()
-	return 1
+// /obj/structure/girder/attack_generic(var/mob/user, var/damage, var/attack_message = "smashes apart", var/wallbreaker)
+// 	if(!damage || !wallbreaker)
+// 		return 0
+// 	attack_animation(user)
+// 	visible_message("<span class='danger'>[user] [attack_message] the [src]!</span>")
+// 	spawn(1) dismantle()
+// 	return 1
 
 /obj/structure/girder/bullet_act(var/obj/item/projectile/Proj)
 	//Girders only provide partial cover. There's a chance that the projectiles will just pass through. (unless you are trying to shoot the girder)
 	if(Proj.original != src && !prob(cover))
 		return PROJECTILE_CONTINUE //pass through
-
-	var/damage = Proj.get_structure_damage()
-	if(!damage)
-		return
-
-	if(!istype(Proj, /obj/item/projectile/beam))
-		damage *= 0.4 //non beams do reduced damage
-
-	health -= damage
-	..()
-	if(health <= 0)
-		dismantle()
-
-	return
+	return ..()
 
 /obj/structure/girder/CanFluidPass(var/coming_from)
 	return TRUE
@@ -54,7 +49,9 @@
 /obj/structure/girder/proc/reset_girder()
 	anchored = 1
 	cover = initial(cover)
-	health = min(health,initial(health))
+	if(material)
+		max_health = material.integrity 
+	health = max_health 
 	state = 0
 	icon_state = initial(icon_state)
 	reinforcing = 0
@@ -198,7 +195,7 @@
 
 /obj/structure/girder/proc/reinforce_girder()
 	cover = 75
-	health = 500
+	max_health = 500
 	state = 2
 	icon_state = "reinforced"
 	reinforcing = 0
@@ -234,7 +231,7 @@
 /obj/structure/girder/cult
 	icon= 'icons/obj/cult.dmi'
 	icon_state= "cultgirder"
-	health = 250
+	max_health = 250
 	cover = 70
 
 /obj/structure/girder/cult/dismantle()

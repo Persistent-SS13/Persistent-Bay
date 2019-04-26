@@ -14,6 +14,7 @@
 /repository/decls/proc/get_decl(var/decl_type)
 	. = fetched_decls[decl_type]
 	if(!.)
+		if(!ispath(decl_type)) log_debug(" get_decl(): Got invalid type path [decl_type]");
 		. = new decl_type()
 		fetched_decls[decl_type] = .
 

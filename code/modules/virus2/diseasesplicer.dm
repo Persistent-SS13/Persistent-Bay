@@ -166,7 +166,7 @@
 
 				ping("\The [src] pings, \"Backup disk saved.\"")
 				SSnano.update_uis(src)
-	if((scanning || splicing || burning) && dish && dish.virus2)
+	if(busy_state && dish && dish.virus2)
 		infect_nearby(dish.virus2, 40, SKILL_PROF)
 
 /obj/machinery/computer/diseasesplicer/OnTopic(mob/user, href_list)

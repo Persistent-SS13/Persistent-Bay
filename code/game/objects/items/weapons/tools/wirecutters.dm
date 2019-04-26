@@ -22,11 +22,16 @@
 	sharpness = 2
 	damtype = DAM_CUT
 	mass = 0.100
+	var/build_from_parts = TRUE
+	var/handle_icon = "cutters_handle"
+	var/hardware_icon = "cutters_hardware"
+	var/valid_colours = list(COLOR_RED, PIPE_COLOR_YELLOW, COLOR_BLUE_GRAY, COLOR_MAROON, COLOR_SEDONA, COLOR_BABY_BLUE, COLOR_VIOLET, COLOR_GRAY80, COLOR_GRAY20)
 
 /obj/item/weapon/tool/wirecutters/Initialize()
-	if(prob(50))
-		icon_state = "cutters-y"
-		item_state = "cutters_yellow"
+	if(build_from_parts)
+		icon_state = "cutters_handle"
+		color = pick(valid_colours)
+		overlays += overlay_image(icon, "[hardware_icon]", flags=RESET_COLOR)
 	. = ..()
 
 /obj/item/weapon/tool/wirecutters/attack(mob/living/carbon/C as mob, mob/user as mob)

@@ -9,10 +9,9 @@
 	anchored = FALSE
 	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CHECKS_BORDER | ATOM_FLAG_CLIMBABLE
 	icon_state = "railing0-1"
+	max_health = 70
 
 	var/broken =    FALSE
-	var/health =    70
-	var/maxhealth = 70
 	var/neighbor_status = 0
 
 /obj/structure/railing/mapped
@@ -36,15 +35,17 @@
 /obj/structure/railing/Initialize()
 	. = ..()
 
-	if(!isnull(material) && !istype(material))
-		material = SSmaterials.get_material_by_name(material)
-	if(!istype(material))
-		return INITIALIZE_HINT_QDEL
+	if(!map_storage_loaded)
+		if(!isnull(material) && !istype(material))
+			material = SSmaterials.get_material_by_name(material)
+		if(!istype(material))
+			return INITIALIZE_HINT_QDEL
 
 	name = "[material.display_name] [initial(name)]"
 	desc = "A simple [material.display_name] railing designed to protect against careless trespass."
-	maxhealth = round(material.integrity / 5)
-	health = maxhealth
+	max_health = round(material.integrity / 5)
+	if(!map_storage_loaded)
+		health = max_health
 	color = material.icon_colour
 
 	if(material.products_need_process())
@@ -75,8 +76,8 @@
 
 /obj/structure/railing/examine(mob/user)
 	. = ..()
-	if(health < maxhealth)
-		switch(health / maxhealth)
+	if(health < max_health)
+		switch(health / max_health)
 			if(0.0 to 0.5)
 				to_chat(user, "<span class='warning'>It looks severely damaged!</span>")
 			if(0.25 to 0.5)
@@ -84,13 +85,11 @@
 			if(0.5 to 1.0)
 				to_chat(user, "<span class='notice'>It has a few scrapes and dents.</span>")
 
-/obj/structure/railing/take_damage(amount)
-	health -= amount
-	if(health <= 0)
-		visible_message("<span class='danger'>\The [src] [material.destruction_desc]!</span>")
-		playsound(loc, 'sound/effects/grillehit.ogg', 50, 1)
-		material.place_shard(get_turf(usr))
-		qdel(src)
+/obj/structure/railing/destroyed(damagetype, user)
+	visible_message("<span class='danger'>\The [src] [material.destruction_desc]!</span>")
+	playsound(loc, 'sound/effects/grillehit.ogg', 50, 1)
+	material.place_shard(get_turf(usr))
+	qdel(src)
 
 /obj/structure/railing/proc/NeighborsCheck(var/UpdateNeighbors = 1)
 	neighbor_status = 0
@@ -227,10 +226,10 @@
 				if(user.a_intent == I_HURT)
 					visible_message("<span class='danger'>[G.assailant] slams [G.affecting]'s face against \the [src]!</span>")
 					playsound(loc, 'sound/effects/grillehit.ogg', 50, 1)
-					var/blocked = G.affecting.get_blocked_ratio(BP_HEAD, BRUTE)
+					var/blocked = G.affecting.get_blocked_ratio(BP_HEAD, DAM_BLUNT)
 					if (prob(30 * (1 - blocked)))
 						G.affecting.Weaken(5)
-					G.affecting.apply_damage(8, BRUTE, BP_HEAD)
+					G.affecting.apply_damage(8, DAM_BLUNT, BP_HEAD)
 				else
 					if (get_turf(G.affecting) == get_turf(src))
 						G.affecting.forceMove(get_step(src, src.dir))
@@ -266,17 +265,17 @@
 			return
 	// Repair
 	if(isWelder(W))
-		var/obj/item/weapon/weldingtool/F = W
+		var/obj/item/weapon/tool/weldingtool/F = W
 		if(F.isOn())
-			if(health >= maxhealth)
+			if(health >= max_health)
 				to_chat(user, "<span class='warning'>\The [src] does not need repairs.</span>")
 				return
 			playsound(src.loc, 'sound/items/Welder.ogg', 50, 1)
 			if(do_after(user, 20, src))
-				if(health >= maxhealth)
+				if(health >= max_health)
 					return
 				user.visible_message("<span class='notice'>\The [user] repairs some damage to \the [src].</span>", "<span class='notice'>You repair some damage to \the [src].</span>")
-				health = min(health+(maxhealth/5), maxhealth)
+				health = min(health+(max_health/5), max_health)
 			return
 
 	// Install
@@ -314,4 +313,4 @@
 	. = ..()
 	if(.)
 		if(!anchored || material.is_brittle())
-			take_damage(maxhealth) // Fatboy
+			take_damage(max_health) // Fatboy

@@ -1,7 +1,7 @@
 LEGACY_RECORD_STRUCTURE(virus_records, virus_record)
 
 /datum/disease2/disease
-	var/infectionchance = 30
+	var/infectionchance = 70
 	var/speed = 1
 	var/spreadtype = "Contact" // Can also be "Airborne"
 	var/stage = 1
@@ -28,13 +28,13 @@ LEGACY_RECORD_STRUCTURE(virus_records, virus_record)
 	uniqueID = random_id("virusid", 0, 10000)
 	switch(severity)
 		if(1,2)
-			infectionchance = rand(5,10)
+			infectionchance = rand(10,20)
 		else
-			infectionchance = rand(20,40)
+			infectionchance = rand(60,90)
 
 	antigen = list(pick(ALL_ANTIGENS))
 	antigen |= pick(ALL_ANTIGENS)
-	spreadtype = prob(45) ? "Airborne" : "Contact"
+	spreadtype = prob(70) ? "Airborne" : "Contact"
 
 	if(all_species.len)
 		affected_species = get_infectable_species()

@@ -12,10 +12,12 @@
 	idle_power_usage = 40
 	active_power_usage = 300
 
+	circuit_type = /obj/item/weapon/circuitboard/bioprinter
 	var/stored_matter = 0
 	var/max_stored_matter = 0
 	var/print_delay = 100
-	var/printing
+	var/obj/item/organ/printing = null
+	var/time_print_end = 0
 
 	// These should be subtypes of /obj/item/organ
 	var/list/products = list()
@@ -39,13 +41,35 @@
 
 /obj/machinery/organ_printer/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/bioprinter(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	RefreshParts()
+	ADD_SAVED_VAR(stored_matter)
+	ADD_SAVED_VAR(printing)
+	ADD_SAVED_VAR(time_print_end)
+
+	ADD_SKIP_EMPTY(stored_matter)
+	ADD_SKIP_EMPTY(printing)
+	ADD_SKIP_EMPTY(time_print_end)
+
+/obj/machinery/organ_printer/before_save()
+	. = ..()
+	//Make sure we only save the time difference from the start of the printing process
+	time_print_end -= world.time
+
+/obj/machinery/organ_printer/after_load()
+	. = ..()
+	//Add the current time to the time difference we just saved
+	time_print_end += world.time
+
+/obj/machinery/organ_printer/Initialize(mapload, d)
+	. = ..()
+	if(!map_storage_loaded)
+		stored_matter = max_stored_matter
+
+/obj/machinery/organ_printer/SetupParts()
+	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/matter_bin(src))
+	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/matter_bin(src))
+	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/manipulator(src))
+	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/manipulator(src))
+	..()
 
 /obj/machinery/organ_printer/examine(var/mob/user)
 	. = ..()
@@ -62,35 +86,34 @@
 	. = ..()
 
 /obj/machinery/organ_printer/attack_hand(mob/user, var/choice = null)
-
-	if(printing || (stat & (BROKEN|NOPOWER)))
+	if(printing || inoperable())
 		return
 
 	if(!choice)
 		choice = input("What would you like to print?") as null|anything in products
 
-	if(!choice || printing || (stat & (BROKEN|NOPOWER)))
+	if(!choice || printing || inoperable())
 		return
 
 	if(!can_print(choice))
 		return
 
 	stored_matter -= products[choice][2]
-
+	printing = products[choice]
 	update_use_power(POWER_USE_ACTIVE)
-	printing = 1
-	update_icon()
+	//Process will handle the printing
 
-	sleep(print_delay)
-
-	update_use_power(POWER_USE_IDLE)
-	printing = 0
-	update_icon()
-
-	if(!choice || !src || (stat & (BROKEN|NOPOWER)))
+/obj/machinery/organ_printer/Process()
+	if(!..() || !ispath(printing))
 		return
 
-	print_organ(choice)
+	if(world.time >= time_print_end)
+		update_use_power(POWER_USE_IDLE)
+		if(!printing || inoperable() )
+			return
+		print_organ(printing)
+		printing = null
+		time_print_end = 0
 
 /obj/machinery/organ_printer/proc/can_print(var/choice)
 	if(stored_matter < products[choice][2])
@@ -128,21 +151,9 @@
 		BP_R_HAND   = list(/obj/item/organ/external/hand/right, 40)
 		)
 
+	circuit_type = /obj/item/weapon/circuitboard/roboprinter
 	var/matter_amount_per_sheet = 10
 	var/matter_type = MATERIAL_STEEL
-
-/obj/machinery/organ_printer/robot/mapped/Initialize()
-	. = ..()
-	stored_matter = max_stored_matter
-
-/obj/machinery/organ_printer/robot/dismantle()
-	if(stored_matter >= matter_amount_per_sheet)
-		new /obj/item/stack/material/steel(get_turf(src), Floor(stored_matter/matter_amount_per_sheet))
-	return ..()
-
-/obj/machinery/organ_printer/robot/New()
-	..()
-	component_parts += new /obj/item/weapon/circuitboard/roboprinter
 
 /obj/machinery/organ_printer/robot/print_organ(var/choice)
 	var/obj/item/organ/O = ..()
@@ -187,10 +198,6 @@
 		visible_message("<span class='info'>\The [src] displays a warning: 'No DNA saved. Insert a blood sample.'</span>")
 		return 0
 
-/obj/machinery/organ_printer/flesh/mapped/Initialize()
-	. = ..()
-	stored_matter = max_stored_matter
-
 /obj/machinery/organ_printer/flesh/dismantle()
 	var/turf/T = get_turf(src)
 	if(T)
@@ -201,8 +208,15 @@
 
 /obj/machinery/organ_printer/flesh/New()
 	..()
-	component_parts += new /obj/item/device/healthanalyzer
-	component_parts += new /obj/item/weapon/circuitboard/bioprinter
+	ADD_SAVED_VAR(loaded_dna)
+	ADD_SAVED_VAR(loaded_species)
+
+	ADD_SKIP_EMPTY(loaded_dna)
+	ADD_SKIP_EMPTY(loaded_species)
+
+/obj/machinery/organ_printer/flesh/SetupParts()
+	LAZYADD(component_parts, /obj/item/device/scanner/health)
+	. = ..()
 
 /obj/machinery/organ_printer/flesh/print_organ(var/choice)
 	var/obj/item/organ/O

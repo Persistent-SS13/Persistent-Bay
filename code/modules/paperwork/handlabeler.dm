@@ -16,7 +16,7 @@
 		return
 	if(!mode)
 		if(has_extension(A, /datum/extension/labels))
-			A.remove_labels(user, src)
+			remove_extension(A, /datum/extension/labels)
 			user.visible_message("<span class='notice'>[user] removes the label from [A].</span>", \
 							 	"<span class='notice'>You remove the label from [A].</span>")
 		

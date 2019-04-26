@@ -11,14 +11,15 @@ SUBSYSTEM_DEF(mapping)
 	var/list/submap_archetypes = list()
 
 /datum/controller/subsystem/mapping/Initialize(timeofday)
-	GLOB.visibility_pref = 1
-	world.update_hub_visibility()
-	all_feeds = new/PriorityQueue(/proc/cmp_newsfeed)
+	// Load templates and build away sites.
+	//GLOB.visibility_pref = 1
+	//world.update_hub_visibility()
+	//all_feeds = new/PriorityQueue(/proc/cmp_newsfeed)
 	preloadTemplates()
 	for(var/atype in subtypesof(/decl/submap_archetype))
 		submap_archetypes[atype] = new atype
 	GLOB.using_map.build_away_sites()
-	..()
+	. = ..()
 	Load_World()
 	
 /datum/controller/subsystem/mapping/Recover()
@@ -31,7 +32,7 @@ SUBSYSTEM_DEF(mapping)
 /datum/controller/subsystem/mapping/proc/preloadTemplates(path = "maps/templates/") //see master controller setup
 	var/list/filelist = flist(path)
 	for(var/map in filelist)
-		var/datum/map_template/T = new(paths = "[path][map]", rename = "[map]")
+		var/datum/map_template/T = new(paths = list("[path][map]"), rename = "[map]")
 		map_templates[T.name] = T
 	preloadBlacklistableTemplates()
 
@@ -39,7 +40,7 @@ SUBSYSTEM_DEF(mapping)
 	// Still supporting bans by filename
 	var/list/banned_exoplanet_dmms = generateMapList("config/exoplanet_ruin_blacklist.txt")
 	var/list/banned_space_dmms = generateMapList("config/space_ruin_blacklist.txt")
-	var/list/banned_away_site_dmms = generateMapList("config/away_site_blacklist.txt") // still not yet implemented
+	var/list/banned_away_site_dmms = generateMapList("config/away_site_blacklist.txt")
 
 	if (!banned_exoplanet_dmms || !banned_space_dmms || !banned_away_site_dmms)
 		report_progress("One or more map blacklist files are not present in the config directory!")

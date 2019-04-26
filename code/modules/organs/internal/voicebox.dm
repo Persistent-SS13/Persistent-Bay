@@ -4,9 +4,10 @@
 	icon_state = "voicebox"
 	parent_organ = BP_HEAD
 	organ_tag = BP_VOICE
-	will_assist_languages = list(LANGUAGE_GALCOM, LANGUAGE_EAL)
+	//will_assist_languages = list(LANGUAGE_GALCOM, LANGUAGE_EAL)
 
-/obj/item/organ/internal/voicebox/New()
-	for(var/L in will_assist_languages)
-		assists_languages += all_languages[L]
-	robotize()
+//I think this is handled differently now
+// /obj/item/organ/internal/voicebox/New()
+// 	for(var/L in will_assist_languages)
+// 		assists_languages += all_languages[L]
+// 	robotize()

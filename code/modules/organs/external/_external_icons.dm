@@ -75,6 +75,9 @@ var/list/limb_icon_cache = list()
 	else if(owner && owner.gender == FEMALE)
 		gender = "_f"
 
+	if(isnull(species))
+		CRASH("[src] \ref[src] has null specie! Loc is [loc]")
+
 	icon_state = "[icon_name][gender]"
 	if(species.base_skin_colours && !isnull(species.base_skin_colours[s_base]))
 		icon_state += species.base_skin_colours[s_base]
@@ -195,9 +198,9 @@ var/list/robot_hud_colours = list("#ffffff","#cccccc","#aaaaaa","#888888","#6666
 		return 0
 	if(burn_dam + brute_dam == 0)
 		. = 0
-	else if (burn_dam + brute_dam < (max_damage * 0.25 / 2))
+	else if (burn_dam + brute_dam < (max_health * 0.25 / 2))
 		. = 1
-	else if (burn_dam + brute_dam < (max_damage * 0.75 / 2))
+	else if (burn_dam + brute_dam < (max_health * 0.75 / 2))
 		. = 2
 	else
 		. = 3

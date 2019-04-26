@@ -91,6 +91,12 @@
 	var/has_safety = TRUE
 	var/safety_icon 	   //overlay to apply to gun based on safety state, if any
 
+/obj/item/weapon/gun/New()
+	..()
+	ADD_SAVED_VAR(sel_mode)
+	ADD_SAVED_VAR(safety_state)
+
+
 /obj/item/weapon/gun/Initialize()
 	. = ..()
 	for(var/i in 1 to firemodes.len)
@@ -333,7 +339,7 @@
 			max_mult = 1.2
 		for(var/obj/item/grab/G in L.grabbed_by)
 			max_mult = max(max_mult, G.point_blank_mult())
-	P.damage *= max_mult
+	P.force *= max_mult
 
 /obj/item/weapon/gun/proc/process_accuracy(obj/projectile, mob/living/user, atom/target, var/burst, var/held_twohanded)
 	var/obj/item/projectile/P = projectile
@@ -582,3 +588,18 @@
 			var/list/targets = list(user)
 			targets += trange(2, src)
 			afterattack(pick(targets), user)
+
+/obj/item/weapon/gun/verb/rename_gun()
+	set name = "Name Gun"
+	set category = "Object"
+	set desc = "Click to rename your gun."
+
+	var/mob/M = usr
+	if(!M.mind)	return 0
+
+	var/input = sanitizeSafe(input("What do you want to name the gun?", ,""), MAX_NAME_LEN)
+
+	if(src && input && !M.stat && in_range(M,src))
+		name = input
+		to_chat(M, "You name the gun [input]. Say hello to your new friend.")
+		return 1

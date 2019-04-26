@@ -8,13 +8,22 @@
 
 /datum/extension/holster/New(holder, storage, sound_in, sound_out, can_holster)
 	..()
+	if(!holder)
+		log_debug("[src] has null holder!!")
 	atom_holder = holder
-	src.storage = storage
+	if(!storage)
+		src.storage = storage
 	src.sound_in = sound_in || src.sound_in
 	src.sound_out = sound_out || src.sound_out
-	src.can_holster = can_holster
+	if(!can_holster)
+		src.can_holster = can_holster
 
 	atom_holder.verbs += /atom/proc/holster_verb
+	ADD_SAVED_VAR(holstered)
+	ADD_SAVED_VAR(atom_holder)
+	ADD_SAVED_VAR(storage)
+
+	ADD_SKIP_EMPTY(holstered)
 
 /datum/extension/holster/Destroy()
 	. = ..()

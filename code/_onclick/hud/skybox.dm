@@ -69,7 +69,6 @@
 		skybox = new(src)
 		skybox.owner = src
 	client.screen += skybox
-	redraw_inv()
 	..()
 
 /mob/Destroy()

@@ -76,6 +76,12 @@
 			return stomach.ingested
 	return touching // Kind of a shitty hack, but makes more sense to me than digesting them.
 
+/mob/living/carbon/human/proc/metabolize_ingested_reagents()
+	if(should_have_organ(BP_STOMACH))
+		var/obj/item/organ/internal/stomach/stomach = internal_organs_by_name[BP_STOMACH]
+		if(stomach)
+			stomach.metabolize()
+
 /mob/living/carbon/human/get_fullness()
 	if(!should_have_organ(BP_STOMACH))
 		return ..()
@@ -964,7 +970,7 @@
 	var/obj/item/organ/internal/stomach/stomach = internal_organs_by_name[BP_STOMACH]
 	if(stomach && stomach.contents.len)
 		for(var/obj/item/O in stomach.contents)
-			if((O.edge || O.sharp) && prob(5))
+			if(O.sharpness && prob(5))
 				var/obj/item/organ/external/parent = get_organ(stomach.parent_organ)
 				if(prob(1) && can_feel_pain() && O.can_embed())
 					to_chat(src, SPAN_DANGER("You feel something rip out of your [stomach.name]!"))
@@ -1394,7 +1400,7 @@
 		"<span class='danger'>[self ? "You pop" : "[U] pops"] your [current_limb.joint] in the WRONG place!</span>" \
 		)
 		current_limb.add_pain(30)
-		current_limb.take_external_damage(5)
+		current_limb.take_damage(5, DAM_BLUNT)
 		shock_stage += 20
 	else
 		visible_message( \
@@ -1706,7 +1712,7 @@
 	..()
 	if(should_have_organ(BP_STOMACH))
 		var/obj/item/organ/internal/stomach/stomach = internal_organs_by_name[BP_STOMACH]
-		if(!stomach || stomach.is_broken() || (stomach.is_bruised() && prob(stomach.damage)))
+		if(!stomach || stomach.is_broken() || (stomach.is_bruised() && prob(stomach.get_damages())))
 			if(should_have_organ(BP_HEART))
 				vessel.trans_to_obj(vomit, 5)
 			else

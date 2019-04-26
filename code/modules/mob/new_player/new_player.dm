@@ -36,7 +36,7 @@
 	output += "<a href='byond://?src=\ref[src];createCharacter=1'>Create A New Character</a><br><br>"
 	output += "<a href='byond://?src=\ref[src];deleteCharacter=1'>Delete A Character</a><br><br>"
 
-	if(GAME_STATE < RUNLEVEL_GAME)
+	if(GAME_STATE < RUNLEVEL_SETUP)
 		output += "<span class='average'><b>The Game Is Loading!</b></span><br><br>"
 	else
 		output += "<a href='byond://?src=\ref[src];joinGame=1'>Join Game!</a><br><br>"
@@ -100,6 +100,18 @@
 /mob/new_player/Topic(href, href_list[])
 	if(!client)	return 0
 
+	if(href_list["preference"])
+		client.prefs.ShowChoices(src)
+		return 1
+//		client.prefs.process_link(src, href_list)
+//		client.prefs.randomize_appearance_and_body_for()
+//		client.prefs.real_name = null
+//		client.prefs.preview_icon = null
+//		client.prefs.home_system = null
+//		client.prefs.faction = null
+//		client.prefs.selected_under = null
+//		client.prefs.sanitize_preferences()
+
 	if(href_list["createCharacter"])
 		newCharacterPanel()
 		return 0
@@ -134,7 +146,7 @@
 				client.prefs.randomize_appearance_and_body_for()
 				client.prefs.real_name = null
 				client.prefs.preview_icon = null
-				client.prefs.home_system = null
+				// client.prefs.home_system = null
 				client.prefs.faction = null
 				client.prefs.selected_under = null
 				client.prefs.sanitize_preferences()
@@ -144,16 +156,6 @@
 			if("delete")
 				deleteCharacter()
 		return 0
-
-	if(href_list["preference"])
-		client.prefs.process_link(src, href_list)
-		client.prefs.randomize_appearance_and_body_for()
-		client.prefs.real_name = null
-		client.prefs.preview_icon = null
-		client.prefs.home_system = null
-		client.prefs.faction = null
-		client.prefs.selected_under = null
-		client.prefs.sanitize_preferences()
 
 	if(href_list["privacy_poll"])
 		establish_db_connection()
@@ -178,7 +180,7 @@
 			if("nostats")
 				option = "NOSTATS"
 			if("later")
-				usr << browse(null,"window=privacypoll")
+				close_browser(usr, "window=privacypoll")
 				return
 			if("abstain")
 				option = "ABSTAIN"
@@ -191,8 +193,13 @@
 			var/DBQuery/query_insert = dbcon.NewQuery(sql)
 			query_insert.Execute()
 			to_chat(usr, "<b>Thank you for your vote!</b>")
-			usr << browse(null,"window=privacypoll")
+			close_browser(usr, "window=privacypoll")
 
+	if(!ready && href_list["preference"])
+		if(client)
+			client.prefs.process_link(src, href_list)
+//	else if(!href_list["late_join"])
+//		new_player_panel()
 
 	if(href_list["showpoll"])
 
@@ -271,7 +278,7 @@
 			chosen_slot = M.save_slot
 			to_chat(src, "<span class='notice'>A character is already in game.</span>")
 			Retrieve_Record(M.real_name)
-			if(GAME_STATE == RUNLEVEL_GAME)
+			if(GAME_STATE == RUNLEVEL_SETUP)
 				panel?.close()
 				load_panel?.close()
 				M.key = key
@@ -297,33 +304,6 @@
 	load_panel.set_content(data)
 	load_panel.open()
 
-/mob/new_player/proc/crewManifestPanel()
-	var/list/factions = list()
-
-	for(var/obj/item/organ/internal/stack/stack in GLOB.neural_laces)
-		if(!stack.loc) continue
-		var/faction = get_faction(stack.connected_faction)?.name
-		if(factions["[faction]"])
-			factions["[faction]"] += stack
-		else
-			factions["[faction]"] = list(stack)
-
-	var/data = "<div align='center'><br>"
-
-	for(var/faction in factions)
-		data += "<table width=150px>"
-		data += "<tr class='title'><th colspan=3>[faction]</th></tr>"
-		data += "<tr class='title'><th>Name</th><th>Status</th></tr>"
-		var/ind = 0
-		for(var/obj/item/organ/internal/stack/stack in factions[faction])
-			data += "<tr[ind ? " class='alt'" : " class='norm'"]><td>[stack.get_owner_name()]</td><td>[stack.duty_status ? "On Duty" : "Off Duty"]</td></tr>"
-			ind = !ind
-		data += "</table>"
-
-	data += "</div>"
-	load_panel = new(src, "Crew Manifest", "Crew Manifest", 300, 500, src)
-	load_panel.set_content(data)
-	load_panel.open()
 
 /mob/new_player/proc/observeGame()
 	chosen_slot = -1
@@ -480,14 +460,117 @@
 		fdel(load_path(ckey, "[chosen_slot].sav"))
 	load_panel.close()
 
+
+/mob/new_player/proc/crewManifestPanel()
+	var/list/factions = list()
+
+	for(var/obj/item/organ/internal/stack/stack in GLOB.neural_laces)
+		if(!stack.loc) continue
+		var/faction = get_faction(stack.connected_faction)?.name
+		if(factions["[faction]"])
+			factions["[faction]"] += stack
+		else
+			factions["[faction]"] = list(stack)
+
+	var/data = "<div align='center'><br>"
+
+	for(var/faction in factions)
+		data += "<table width=150px>"
+		data += "<tr class='title'><th colspan=3>[faction]</th></tr>"
+		data += "<tr class='title'><th>Name</th><th>Status</th></tr>"
+		var/ind = 0
+		for(var/obj/item/organ/internal/stack/stack in factions[faction])
+			data += "<tr[ind ? " class='alt'" : " class='norm'"]><td>[stack.get_owner_name()]</td><td>[stack.duty_status ? "On Duty" : "Off Duty"]</td></tr>"
+			ind = !ind
+		data += "</table>"
+
+	data += "</div>"
+	load_panel = new(src, "Crew Manifest", "Crew Manifest", 300, 500, src)
+	load_panel.set_content(data)
+	load_panel.open()
+
+// /mob/new_player/proc/create_character(var/turf/spawn_turf)
+// 	spawning = 1
+// 	close_spawn_windows()
+
+// 	var/mob/living/carbon/human/new_character
+
+// 	var/datum/species/chosen_species
+// 	if(client.prefs.species)
+// 		chosen_species = all_species[client.prefs.species]
+
+// 	if(!spawn_turf)
+// 		var/datum/job/job = SSjobs.get_by_title(mind.assigned_role)
+// 		if(!job)
+// 			job = SSjobs.get_by_title(GLOB.using_map.default_assistant_title)
+// 		var/datum/spawnpoint/spawnpoint = job.get_spawnpoint(client, client.prefs.ranks[job.title])
+// 		spawn_turf = pick(spawnpoint.turfs)
+
+// 	if(chosen_species)
+// 		if(!check_species_allowed(chosen_species))
+// 			spawning = 0 //abort
+// 			return null
+// 		new_character = new(spawn_turf, chosen_species.name)
+// 		if(chosen_species.has_organ[BP_POSIBRAIN] && client && client.prefs.is_shackled)
+// 			var/obj/item/organ/internal/posibrain/B = new_character.internal_organs_by_name[BP_POSIBRAIN]
+// 			if(B)	B.shackle(client.prefs.get_lawset())
+
+// 	if(!new_character)
+// 		new_character = new(spawn_turf)
+
+// 	new_character.lastarea = get_area(spawn_turf)
+
+// 	if(GLOB.random_players)
+// 		client.prefs.gender = pick(MALE, FEMALE)
+// 		client.prefs.real_name = random_name(new_character.gender)
+// 		client.prefs.randomize_appearance_and_body_for(new_character)
+// 	client.prefs.copy_to(new_character)
+
+// 	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))// MAD JAMS cant last forever yo
+
+// 	if(mind)
+// 		mind.active = 0 //we wish to transfer the key manually
+// 		mind.original = new_character
+// 		if(client.prefs.memory)
+// 			mind.store_memory(client.prefs.memory)
+// 		if(client.prefs.relations.len)
+// 			for(var/T in client.prefs.relations)
+// 				var/TT = matchmaker.relation_types[T]
+// 				var/datum/relation/R = new TT
+// 				R.holder = mind
+// 				R.info = client.prefs.relations_info[T]
+// 			mind.gen_relations_info = client.prefs.relations_info["general"]
+// 		mind.transfer_to(new_character)					//won't transfer key since the mind is not active
+
+// 	new_character.dna.ready_dna(new_character)
+// 	new_character.dna.b_type = client.prefs.b_type
+// 	new_character.sync_organ_dna()
+// 	if(client.prefs.disabilities)
+// 		// Set defer to 1 if you add more crap here so it only recalculates struc_enzymes once. - N3X
+// 		new_character.dna.SetSEState(GLOB.GLASSESBLOCK,1,0)
+// 		new_character.disabilities |= NEARSIGHTED
+
+// 	// Give them their cortical stack if we're using them.
+// 	if(config && config.use_cortical_stacks && client && client.prefs.has_cortical_stack /*&& new_character.should_have_organ(BP_BRAIN)*/)
+// 		new_character.create_stack()
+
+// 	// Do the initial caching of the player's body icons.
+// 	new_character.force_update_limbs()
+// 	new_character.update_eyes()
+// 	new_character.regenerate_icons()
+
+// 	new_character.key = key		//Manually transfer the key to log them in
+// 	return new_character
+
 /mob/new_player/Move()
 	return 0
 
-/mob/new_player/proc/has_admin_rights()
-	return check_rights(R_ADMIN, 0, src)
+/mob/new_player/proc/close_spawn_windows()
+	src << browse(null, "window=latechoices") //closes late choices window
+	panel.close()
 
 /mob/new_player/proc/check_species_allowed(datum/species/S, var/show_alert=1)
-	if(!(S.spawn_flags & SPECIES_CAN_JOIN) && !has_admin_rights())
+	if(!S.is_available_for_join() && !has_admin_rights())
 		if(show_alert)
 			to_chat(src, alert("Your current species, [client.prefs.species], is not available for play."))
 		return 0

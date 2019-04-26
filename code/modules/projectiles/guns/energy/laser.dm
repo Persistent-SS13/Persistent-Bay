@@ -162,13 +162,6 @@ obj/item/weapon/gun/energy/retro
 	..()
 	item_state_slots[slot_back_str] = icon_state //so that the on-back overlay uses the different charged states
 
-/obj/item/weapon/gun/energy/sniperrifle/verb/scope()
-	set category = "Object"
-	set name = "Use Scope"
-	set popup_menu = 1
-
-	toggle_scope(usr, 2.0)
-
 ////////Laser Tag////////////////////
 
 /obj/item/weapon/gun/energy/lasertag

@@ -132,6 +132,12 @@
 	updatename(modtype)
 	update_icon()
 
+	if(!scrambledcodes && !camera)
+		camera = new /obj/machinery/camera(src)
+		camera.c_tag = real_name
+		camera.replace_networks(list(NETWORK_NEXUS,NETWORK_ROBOTS))
+		if(wires.IsIndexCut(BORG_WIRE_CAMERA))
+			camera.status = 0
 	init()
 	initialize_components()
 
@@ -210,43 +216,43 @@
 		locked = 1
 		to_chat(src, "You lock your cover panel.")
 		
-/mob/living/silicon/robot/verb/ChassisToggle()
-	set category = "Robot Commands"
-	set name = "Toggle Chassis Mod"
-	if(chassis_mod)
-		if(chassis_mod_toggled)
-			src.visible_message("[src] starts to deactivate their chassis mod, radically altering their appearance.", "You begin deactivating your chassis mod.")
-			playsound(loc, 'sound/items/rped.ogg', 75, 1)
-			if(do_after(src,3 SECONDS, target = src.loc))
-				if(src.module)
-					src.icon_state = src.module.robo_icon_state
-				else
-					src.icon_state = "robot"
-				chassis_mod_toggled = 0
-				return 1
-		else
-			if(chassis_mod.req_module)
-				if(istype(src.module, chassis_mod.module_type))
-					src.visible_message("[src] starts to activate their chassis mod, radically altering their appearance.", "You begin activating your chassis mod.")
-					playsound(loc, 'sound/items/rped.ogg', 75, 1)
-					if(do_after(src,3 SECONDS, target = src.loc))
-						src.icon_state = chassis_mod.chassis_type
-						chassis_mod_toggled = 1
-						return 1
-				else
-					to_chat(src, "You do not have the right module activated to use [chassis_mod].")
-					return 0
+// /mob/living/silicon/robot/verb/ChassisToggle()
+// 	set category = "Robot Commands"
+// 	set name = "Toggle Chassis Mod"
+// 	if(chassis_mod)
+// 		if(chassis_mod_toggled)
+// 			src.visible_message("[src] starts to deactivate their chassis mod, radically altering their appearance.", "You begin deactivating your chassis mod.")
+// 			playsound(loc, 'sound/items/rped.ogg', 75, 1)
+// 			if(do_after(src,3 SECONDS, target = src.loc))
+// 				if(src.module)
+// 					src.icon_state = src.module.robo_icon_state
+// 				else
+// 					src.icon_state = "robot"
+// 				chassis_mod_toggled = 0
+// 				return 1
+// 		else
+// 			if(chassis_mod.req_module)
+// 				if(istype(src.module, chassis_mod.module_type))
+// 					src.visible_message("[src] starts to activate their chassis mod, radically altering their appearance.", "You begin activating your chassis mod.")
+// 					playsound(loc, 'sound/items/rped.ogg', 75, 1)
+// 					if(do_after(src,3 SECONDS, target = src.loc))
+// 						src.icon_state = chassis_mod.chassis_type
+// 						chassis_mod_toggled = 1
+// 						return 1
+// 				else
+// 					to_chat(src, "You do not have the right module activated to use [chassis_mod].")
+// 					return 0
 
 
-			else
-				src.visible_message("[src] starts to activate their chassis mod, radically altering their appearance.", "You begin activating your chassis mod.")
-				playsound(loc, 'sound/items/rped.ogg', 75, 1)
-				if(do_after(src,3 SECONDS, target = src.loc))
-					src.icon_state = chassis_mod.chassis_type
-					chassis_mod_toggled = 1
-					return 1
-	else
-		to_chat(src, "You dont have a chassis mod installed.")
+// 			else
+// 				src.visible_message("[src] starts to activate their chassis mod, radically altering their appearance.", "You begin activating your chassis mod.")
+// 				playsound(loc, 'sound/items/rped.ogg', 75, 1)
+// 				if(do_after(src,3 SECONDS, target = src.loc))
+// 					src.icon_state = chassis_mod.chassis_type
+// 					chassis_mod_toggled = 1
+// 					return 1
+// 	else
+// 		to_chat(src, "You dont have a chassis mod installed.")
 
 /mob/living/silicon/robot/proc/recalculate_synth_capacities()
 	if(!module || !module.synths)
@@ -400,7 +406,7 @@
 
 	if(hands)
 		hands.icon_state = lowertext(modtype)
-	feedback_inc("cyborg_[lowertext(modtype)]",1)
+	SSstatistics.add_field("cyborg_[lowertext(modtype)]",1)
 	updatename()
 	recalculate_synth_capacities()
 	if(module)
@@ -842,7 +848,7 @@
 				to_chat(usr, "Upgrade error!")
 
 	else
-		if( !(istype(W, /obj/item/device/robotanalyzer) || istype(W, /obj/item/device/healthanalyzer)) )
+		if( !(istype(W, /obj/item/device/robotanalyzer) || istype(W, /obj/item/device/scanner/health)) )
 			spark_system.start()
 		return ..()
 

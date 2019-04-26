@@ -96,7 +96,7 @@ var/global/list/stool_cache = list() //haha stool
 		dismantle()
 		qdel(src)
 
-		var/blocked = target.get_blocked_ratio(hit_zone, BRUTE)
+		var/blocked = target.get_blocked_ratio(hit_zone, DAM_BLUNT)
 		target.Weaken(10 * (1 - blocked))
 		target.apply_damage(20, DAM_BLUNT, hit_zone, used_weapon = src)
 		return 1

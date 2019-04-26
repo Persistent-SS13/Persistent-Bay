@@ -171,7 +171,6 @@
 	desc = "A suit of armor most often used by Special Weapons and Tactics squads. Includes padded vest with pockets along with shoulder and kneeguards."
 	icon_state = "swatarmor"
 	item_state = "armor"
-	var/obj/item/weapon/gun/holstered = null
 	w_class = ITEM_SIZE_LARGE
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
 	armor  = list(
@@ -188,33 +187,10 @@
 		DAM_RADS 	= 0,
 		DAM_STUN 	= 5)
 	siemens_coefficient = 0.7
-	var/obj/item/clothing/accessory/holster/holster
 
 /obj/item/clothing/suit/armor/tactical/New()
 	..()
-	holster = new(src)
 	slowdown_per_slot[slot_wear_suit] = 1
-
-/obj/item/clothing/suit/armor/tactical/attackby(obj/item/W as obj, mob/user as mob)
-	..()
-	holster.attackby(W, user)
-
-/obj/item/clothing/suit/armor/tactical/verb/holster()
-	set name = "holster"
-	set category = "Object"
-	set src in usr
-	if(!istype(usr, /mob/living)) return
-	if(usr.stat) return
-
-	if(!holster.holstered)
-		var/obj/item/W = usr.get_active_hand()
-		if(!istype(W, /obj/item))
-			to_chat(usr, "<span class='warning'>You need your gun equiped to holster it.</span>")
-			return
-		holster.holster(W, usr)
-	else
-		holster.unholster(usr)
-
 
 //Non-hardsuit ERT armor.
 //Commander

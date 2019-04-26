@@ -748,8 +748,9 @@ var/global/floorIsLava = 0
 		to_world("<span class='danger'>Restarting world!</span> <span class='notice'>Initiated by [usr.key]!</span>")
 		log_admin("[key_name(usr)] initiated a reboot.")
 
-		feedback_set_details("end_error","admin reboot - by [usr.key]")
+		SSstatistics.set_field_details("end_error","admin reboot - by [usr.key]")
 		SSstatistics.add_field_details("admin_verb","R") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+
 		sleep(50)
 		world.Reboot()
 
@@ -920,7 +921,7 @@ var/global/floorIsLava = 0
 	for(var/mob/living/carbon/human/H in world)
 		if(!H.loc) continue
 		cryo.occupant = H
-		cryo.despawnOccupant(1)
+		cryo.despawn_occupant(1)
 
 /datum/admins/proc/spacejunk()
 	set category = "Server"
@@ -1179,7 +1180,7 @@ var/global/floorIsLava = 0
 	to_world("<span class='danger'>Rebooting world!</span> <span class='notice'>Initiated by [usr.key]!</span>")
 	log_admin("[key_name(usr)] initiated an immediate reboot.")
 
-	feedback_set_details("end_error","immediate admin reboot - by [usr.key]")
+	SSstatistics.set_field_details("end_error","immediate admin reboot - by [usr.key]")
 	SSstatistics.add_field_details("admin_verb","IR") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 	world.Reboot()

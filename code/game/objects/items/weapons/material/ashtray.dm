@@ -1,5 +1,6 @@
 /obj/item/weapon/material/ashtray
 	name = "ashtray"
+	desc = "A thing to keep your butts in."
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "ashtray"
 	force_divisor = 0.1
@@ -19,6 +20,7 @@
 		to_chat(user, "It has [contents.len] cig butts in it.")
 
 /obj/item/weapon/material/ashtray/on_update_icon()
+	..()
 	overlays.Cut()
 	if (contents.len == max_butts)
 		overlays |= image('icons/obj/objects.dmi',"ashtray_full")

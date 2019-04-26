@@ -70,7 +70,7 @@ obj/item/clothing/mask/chewable/Destroy()
 	desc = "A disgusting spitwad."
 	icon_state = "spit-chew"
 
-/obj/item/clothing/mask/chewable/proc/extinguish(var/mob/user, var/no_message)
+/obj/item/clothing/mask/chewable/extinguish(var/mob/user, var/no_message)
 	STOP_PROCESSING(SSobj, src)
 	if (type_butt)
 		var/obj/item/butt = new type_butt(get_turf(src))

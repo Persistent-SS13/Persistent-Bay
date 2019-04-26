@@ -51,12 +51,12 @@
 		to_chat(user, "Current charge: [charging.charge]")
 
 /obj/machinery/cell_charger/attackby(obj/item/weapon/W, mob/user)
-	if(default_deconstruction_screwdriver(user, O))
+	if(default_deconstruction_screwdriver(user, W))
 		updateUsrDialog()
 		return
-	if(default_deconstruction_crowbar(user, O))
+	if(default_deconstruction_crowbar(user, W))
 		return
-	if(default_part_replacement(user, O))
+	if(default_part_replacement(user, W))
 		return
 	if(stat & BROKEN)
 		return

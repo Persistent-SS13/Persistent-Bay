@@ -47,7 +47,7 @@
 	sale_price = 2
 
 /material/glass/fiberglass
-	name = "fiberglass"
+	name = MATERIAL_FIBERGLASS
 	display_name = "fiberglass"
 	stack_type = /obj/item/stack/material/glass/fiberglass
 	flags = null //Fiberglass isn't very brittle

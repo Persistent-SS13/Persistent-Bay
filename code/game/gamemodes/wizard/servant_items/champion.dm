@@ -41,14 +41,13 @@
 					slot_belt_str = 'icons/mob/onmob/onmob_belt.dmi'
 					)
 	item_state = "excalibur"
-	edge = 1
-	sharp = 1
+	sharpness = 3
 	w_class = ITEM_SIZE_HUGE
 	force = 35
 	throw_range = 2
 	throwforce = 10
 	slot_flags = SLOT_BELT
-	hitsound = 'sound/weapons/bladeslice.ogg'
+	sound_attack = 'sound/weapons/bladeslice.ogg'
 	attack_verb = list("slashed", "stabbed", "sliced", "torn", "ripped", "cleaved", "sundered")
 
 /obj/item/weapon/excalibur/pickup(var/mob/living/user as mob)
@@ -65,7 +64,7 @@
 			if(H.l_hand == src)
 				hand = BP_L_HAND
 			var/obj/item/organ/external/E = H.get_organ(hand)
-			E.take_external_damage(burn=2,used_weapon="stovetop")
+			E.take_damage( 2, DAM_BURN, used_weapon="stovetop")
 		else
 			var/mob/living/M = loc
 			M.adjustFireLoss(2)

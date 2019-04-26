@@ -41,8 +41,6 @@
 
 	return ..()
 
-
-
 /obj/structure/plasticflaps/attackby(obj/item/weapon/tool/W, mob/user)
 	if((isScrewdriver(W)) && (istype(loc, /turf/simulated) || anchored))
 		if(W.use_tool(src, 4 SECONDS))
@@ -70,6 +68,3 @@
 		if(istype(T, /turf/simulated/floor))
 			T.blocks_air = 0
 
-
-/obj/structure/plasticflaps/airtight // airtight defaults to on 
-	airtight = 1

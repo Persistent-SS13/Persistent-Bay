@@ -4,6 +4,7 @@
 	icon = 'icons/obj/storage.dmi'
 	icon_state = "stasis_cage"
 	density = 1
+	layer = ABOVE_OBJ_LAYER
 	mass = 30
 	max_health = 150
 	armor = list(

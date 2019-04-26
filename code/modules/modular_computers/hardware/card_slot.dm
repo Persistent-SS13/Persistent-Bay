@@ -11,13 +11,33 @@
 	var/can_broadcast = FALSE
 	var/obj/item/weapon/card/id/stored_card = null
 
+/obj/item/weapon/computer_hardware/card_slot/broadcaster // read only
+	name = "RFID card broadcaster"
+	desc = "Reads and broadcasts the RFID signal of an inserted card."
+	can_write = FALSE
+	can_broadcast = TRUE
+	usage_flags = PROGRAM_PDA
+
+/obj/item/weapon/computer_hardware/card_slot/New()
+	..()
+	ADD_SAVED_VAR(stored_card)
+	ADD_SKIP_EMPTY(stored_card)
+
+/obj/item/weapon/computer_hardware/card_slot/Destroy()
+	if(holder2 && (holder2.card_slot == src))
+		holder2.card_slot = null
+	if(stored_card)
+		stored_card.dropInto(holder2 ? holder2.loc : loc)
+	holder2 = null
+	return ..()
+
 /obj/item/weapon/computer_hardware/card_slot/diagnostics(var/mob/user)
 	..()
 	var/to_send = list()
 	to_send += "[name] status: [stored_card ? "Card Inserted" : "Card Not Present"]\n"
 	if(stored_card)
 		to_send += "Testing card read...\n"
-		if( damage >= damage_failure )
+		if(isfailing())
 			to_send += "...FAILURE!\n"
 		else
 			var/read_string_stability
@@ -47,24 +67,3 @@
 				to_send += jointext(list_of_accesses, ", ") + "\n" // Should append a proper, comma separated list.
 	
 	to_chat(user, JOINTEXT(to_send))
-		
-
-/obj/item/weapon/computer_hardware/card_slot/broadcaster // read only
-	name = "RFID card broadcaster"
-	desc = "Reads and broadcasts the RFID signal of an inserted card."
-	can_write = FALSE
-	can_broadcast = TRUE
-	usage_flags = PROGRAM_PDA
-
-/obj/item/weapon/computer_hardware/card_slot/New()
-	..()
-	ADD_SAVED_VAR(stored_card)
-	ADD_SKIP_EMPTY(stored_card)
-
-/obj/item/weapon/computer_hardware/card_slot/Destroy()
-	if(holder2 && (holder2.card_slot == src))
-		holder2.card_slot = null
-	if(stored_card)
-		stored_card.dropInto(holder2 ? holder2.loc : loc)
-	holder2 = null
-	return ..()

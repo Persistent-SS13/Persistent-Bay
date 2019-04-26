@@ -291,8 +291,6 @@
 			return global.base_miss_chance;
 		if("basic_robolimb")
 			return global.basic_robolimb;
-		if("blackbox")
-			return global.blackbox;
 		if("blocked")
 			return global.blocked;
 		if("bomb_set")
@@ -313,10 +311,6 @@
 			return global.cameranet;
 		if("captain_announcement")
 			return global.captain_announcement;
-		if("cargo_supply_pack_root")
-			return global.cargo_supply_pack_root;
-		if("cargo_supply_packs")
-			return global.cargo_supply_packs;
 		if("changelog_hash")
 			return global.changelog_hash;
 		if("channel_color_presets")
@@ -435,12 +429,6 @@
 			return global.explosion_in_progress;
 		if("explosion_turfs")
 			return global.explosion_turfs;
-		if("facial_hair_styles_female_list")
-			return global.facial_hair_styles_female_list;
-		if("facial_hair_styles_list")
-			return global.facial_hair_styles_list;
-		if("facial_hair_styles_male_list")
-			return global.facial_hair_styles_male_list;
 		if("failed_db_connections")
 			return global.failed_db_connections;
 		if("failed_old_db_connections")
@@ -509,12 +497,6 @@
 			return global.gzn_check;
 		if("hadevent")
 			return global.hadevent;
-		if("hair_styles_female_list")
-			return global.hair_styles_female_list;
-		if("hair_styles_list")
-			return global.hair_styles_list;
-		if("hair_styles_male_list")
-			return global.hair_styles_male_list;
 		if("hazard_overlays")
 			return global.hazard_overlays;
 		if("hivemind_bank")
@@ -535,8 +517,6 @@
 			return global.inactive_keys;
 		if("init")
 			return global.init;
-		if("integrated_circuit_blacklist")
-			return global.integrated_circuit_blacklist;
 		if("intents")
 			return global.intents;
 		if("intercom_range_display_status")
@@ -545,8 +525,6 @@
 			return global.invalid_zone;
 		if("jobMax")
 			return global.jobMax;
-		if("job_master")
-			return global.job_master;
 		if("jobban_keylist")
 			return global.jobban_keylist;
 		if("jobban_runonce")
@@ -719,8 +697,6 @@
 			return global.plant_seed_sprites;
 		if("playable_species")
 			return global.playable_species;
-		if("point_source_descriptions")
-			return global.point_source_descriptions;
 		if("possible_changeling_IDs")
 			return global.possible_changeling_IDs;
 		if("poster_designs")
@@ -883,14 +859,10 @@
 			return global.string_part_flags;
 		if("string_slot_flags")
 			return global.string_slot_flags;
-		if("supply_controller")
-			return global.supply_controller;
 		if("supply_drop")
 			return global.supply_drop;
 		if("supply_methods_")
 			return global.supply_methods_;
-		if("surgery_steps")
-			return global.surgery_steps;
 		if("swapmaps_byname")
 			return global.swapmaps_byname;
 		if("swapmaps_compiled_maxx")
@@ -993,8 +965,6 @@
 			return global.virusDB;
 		if("visual_nets")
 			return global.visual_nets;
-		if("vote")
-			return global.vote;
 		if("vsc")
 			return global.vsc;
 		if("wax_recipes")
@@ -1320,8 +1290,6 @@
 			global.base_miss_chance=newval;
 		if("basic_robolimb")
 			global.basic_robolimb=newval;
-		if("blackbox")
-			global.blackbox=newval;
 		if("blocked")
 			global.blocked=newval;
 		if("bomb_set")
@@ -1342,10 +1310,6 @@
 			global.cameranet=newval;
 		if("captain_announcement")
 			global.captain_announcement=newval;
-		if("cargo_supply_pack_root")
-			global.cargo_supply_pack_root=newval;
-		if("cargo_supply_packs")
-			global.cargo_supply_packs=newval;
 		if("changelog_hash")
 			global.changelog_hash=newval;
 		if("channel_color_presets")
@@ -1464,12 +1428,6 @@
 			global.explosion_in_progress=newval;
 		if("explosion_turfs")
 			global.explosion_turfs=newval;
-		if("facial_hair_styles_female_list")
-			global.facial_hair_styles_female_list=newval;
-		if("facial_hair_styles_list")
-			global.facial_hair_styles_list=newval;
-		if("facial_hair_styles_male_list")
-			global.facial_hair_styles_male_list=newval;
 		if("failed_db_connections")
 			global.failed_db_connections=newval;
 		if("failed_old_db_connections")
@@ -1538,12 +1496,6 @@
 			global.gzn_check=newval;
 		if("hadevent")
 			global.hadevent=newval;
-		if("hair_styles_female_list")
-			global.hair_styles_female_list=newval;
-		if("hair_styles_list")
-			global.hair_styles_list=newval;
-		if("hair_styles_male_list")
-			global.hair_styles_male_list=newval;
 		if("hazard_overlays")
 			global.hazard_overlays=newval;
 		if("hivemind_bank")
@@ -1564,8 +1516,6 @@
 			global.inactive_keys=newval;
 		if("init")
 			global.init=newval;
-		if("integrated_circuit_blacklist")
-			global.integrated_circuit_blacklist=newval;
 		if("intents")
 			global.intents=newval;
 		if("intercom_range_display_status")
@@ -1574,8 +1524,6 @@
 			global.invalid_zone=newval;
 		if("jobMax")
 			global.jobMax=newval;
-		if("job_master")
-			global.job_master=newval;
 		if("jobban_keylist")
 			global.jobban_keylist=newval;
 		if("jobban_runonce")
@@ -1748,8 +1696,6 @@
 			global.plant_seed_sprites=newval;
 		if("playable_species")
 			global.playable_species=newval;
-		if("point_source_descriptions")
-			global.point_source_descriptions=newval;
 		if("possible_changeling_IDs")
 			global.possible_changeling_IDs=newval;
 		if("poster_designs")
@@ -1912,14 +1858,10 @@
 			global.string_part_flags=newval;
 		if("string_slot_flags")
 			global.string_slot_flags=newval;
-		if("supply_controller")
-			global.supply_controller=newval;
 		if("supply_drop")
 			global.supply_drop=newval;
 		if("supply_methods_")
 			global.supply_methods_=newval;
-		if("surgery_steps")
-			global.surgery_steps=newval;
 		if("swapmaps_byname")
 			global.swapmaps_byname=newval;
 		if("swapmaps_compiled_maxx")
@@ -2022,8 +1964,6 @@
 			global.virusDB=newval;
 		if("visual_nets")
 			global.visual_nets=newval;
-		if("vote")
-			global.vote=newval;
 		if("vsc")
 			global.vsc=newval;
 		if("wax_recipes")

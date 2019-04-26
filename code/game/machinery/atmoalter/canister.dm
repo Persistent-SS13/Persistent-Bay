@@ -461,6 +461,15 @@ update_flag
 	queue_icon_update()
 
 //--------------------------------------------------------
+// H2 Engine Setup Canister
+//--------------------------------------------------------
+/obj/machinery/portable_atmospherics/canister/hydrogen/engine_setup/init_air_content()
+	..()
+	src.air_contents.adjust_gas(GAS_HYDROGEN, MolesForPressure())
+	queue_icon_update()
+
+
+//--------------------------------------------------------
 // Helium Canister
 //--------------------------------------------------------
 /obj/machinery/portable_atmospherics/canister/helium

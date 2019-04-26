@@ -75,7 +75,7 @@
 		DAM_CLONE   = MaxArmorValue) 	//Resistance for various types of damages
 
 	if(!icon_base)
-		icon_base = material.icon_door
+		icon_base = material.door_icon_base
 	color = material.icon_colour
 	if(material.opacity < 0.5)
 		glass = TRUE

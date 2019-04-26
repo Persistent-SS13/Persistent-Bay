@@ -169,7 +169,7 @@
 
 				if(BLOOD_VOLUME_SAFE to INFINITY)
 					if(can_heal)
-						add_health(1)
+						heal_damage(1)
 				if(BLOOD_VOLUME_OKAY to BLOOD_VOLUME_SAFE)
 					if(prob(1))
 						to_chat(owner, "<span class='warning'>You feel [pick("dizzy","woozy","faint")]...</span>")
@@ -204,8 +204,7 @@
 /obj/item/organ/internal/brain/take_internal_damage(var/damage, var/silent)
 	set waitfor = 0
 	..()
-	var/damages = get_damages()
-	if(damages >= 10) //This probably won't be triggered by oxyloss or mercury. Probably.
+	if(get_damages() >= 10) //This probably won't be triggered by oxyloss or mercury. Probably.
 		var/damage_secondary = damage * 0.20
 		owner.flash_eyes()
 		owner.eye_blurry += damage_secondary
@@ -258,7 +257,7 @@
 	if(blood_volume < BLOOD_VOLUME_SURVIVE)
 		to_chat(user, "<span class='danger'>Parts of [src] didn't survive the procedure due to lack of air supply!</span>")
 		set_max_health(Floor(max_health - 0.25*get_damages()))
-	heal_damage(get_damages())
+	heal_damage(get_max_health())
 
 /obj/item/organ/internal/brain/get_scarring_level()
 	. = (species.total_health - max_health)/species.total_health

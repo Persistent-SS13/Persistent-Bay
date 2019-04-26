@@ -130,7 +130,7 @@
 
 /obj/item/weapon/improvised/scissorsassembly/attackby(var/obj/item/I, mob/user as mob) //Putting it together
 	if(isScrewdriver(I))
-		var/obj/item/weapon/scissors/N = new parentscissor
+		var/obj/item/weapon/tool/scissors/N = new parentscissor
 		user.remove_from_mob(src)
 		user.put_in_hands(N)
 		to_chat(user, SPAN_NOTICE("You tighten the screw on the screwdriver assembley"))

@@ -3,9 +3,10 @@
 	w_class = ITEM_SIZE_NO_CONTAINER
 	layer = STRUCTURE_LAYER
 	obj_flags = OBJ_FLAG_DAMAGEABLE
-	max_health = 100
 	damthreshold_brute 	= 5
 	damthreshold_burn = 5
+	max_health = 100
+	min_health = 0
 	var/parts
 	var/list/connections = list("0", "0", "0", "0")
 	var/list/other_connections = list("0", "0", "0", "0")
@@ -17,6 +18,9 @@
 /obj/structure/New()
 	..()
 	ADD_SAVED_VAR(anchored)
+	ADD_SAVED_VAR(material)
+	
+	ADD_SKIP_EMPTY(material)
 
 /obj/structure/after_load()
 	update_connections(1)
@@ -40,7 +44,6 @@
 	if(. && !CanFluidPass())
 		fluid_update()
 
-
 /obj/structure/attack_hand(mob/user)
 	if(isdamageable())
 		if(MUTATION_HULK in user.mutations)
@@ -61,10 +64,10 @@
 		return TRUE
 	if (G.assailant.a_intent == I_HURT)
 		// Slam their face against the table.
-		var/blocked = G.affecting.get_blocked_ratio(BP_HEAD, BRUTE)
+		var/blocked = G.affecting.get_blocked_ratio(BP_HEAD, DAM_BLUNT)
 		if (prob(30 * (1 - blocked)))
 			G.affecting.Weaken(5)
-		G.affecting.apply_damage(8, BRUTE, BP_HEAD)
+		G.affecting.apply_damage(8, DAM_BLUNT, BP_HEAD)
 		visible_message("<span class='danger'>[G.assailant] slams [G.affecting]'s face against \the [src]!</span>")
 		if (material)
 			playsound(loc, material.tableslam_noise, 50, 1)
@@ -72,7 +75,7 @@
 			playsound(loc, 'sound/weapons/tablehit1.ogg', 50, 1)
 		var/list/L = take_damage(rand(1,5))
 		for(var/obj/item/weapon/material/shard/S in L)
-			if(S.sharp && prob(50))
+			if(S.sharpness && prob(50))
 				G.affecting.visible_message("<span class='danger'>\The [S] slices into [G.affecting]'s face!</span>", "<span class='danger'>\The [S] slices into your face!</span>")
 				G.affecting.standard_weapon_hit_effects(S, G.assailant, S.force*2, BP_HEAD)
 		qdel(G)

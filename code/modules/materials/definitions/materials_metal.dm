@@ -25,8 +25,7 @@
 	icon_colour = "#ffcc33"
 	icon_base = "metal"
 	icon_reinf = "metal"
-	icon_door = "metal"
-	icon_table = "metal"
+	door_icon_base = "metal"
 	weight = 25
 	hardness = 25
 	integrity = 100
@@ -76,8 +75,8 @@
 	icon_colour = "#d1e6e3"
 	icon_base = "metal"
 	icon_reinf = "metal"
-	icon_door = "metal"
-	icon_table = "metal"
+	door_icon_base = "metal"
+	table_icon_base = "metal"
 	weight = 22
 	hardness = 50
 	melting_point = 1234
@@ -192,6 +191,7 @@
 				)
 	construction_difficulty = 2
 	ore_smelts_to = MATERIAL_TRITIUM
+	ore_compresses_to = MATERIAL_HYDROGEN
 	ore_name = "raw hydrogen"
 	ore_scan_icon = "mineral_rare"
 	ore_icon_overlay = "gems"
@@ -263,7 +263,7 @@
 
 /material/aluminum
 	name = MATERIAL_ALUMINIUM
-	stack_type = /obj/item/stack/material/aluminum
+	stack_type = /obj/item/stack/material/aluminium
 	integrity = 125
 	melting_point = 933
 	icon_colour = "#848789"
@@ -374,8 +374,8 @@
 	melting_point = 1643
 	icon_colour = "#666666"
 	icon_reinf = "metal"
-	icon_door = "metal"
-	icon_table = "metal"
+	door_icon_base = "metal"
+	table_icon_base = "metal"
 	hitsound = 'sound/weapons/smash.ogg'
 	chem_products = list(
 				/datum/reagent/iron = 15,
@@ -431,6 +431,18 @@
 				/datum/reagent/iron = 60
 				)
 	ore_matter = list(MATERIAL_IRON = 2000)
+
+/material/rutile
+	name = MATERIAL_RUTILE
+	stack_type = null
+	icon_colour = "#d8ad97"
+	ore_smelts_to = MATERIAL_TITANIUM
+	ore_result_amount = 5
+	ore_spread_chance = 15
+	ore_scan_icon = "mineral_uncommon"
+	ore_name = "rutile"
+	ore_icon_overlay = "lump"
+	ore_matter = list(MATERIAL_TITANIUM = 2000)
 
 /material/freibergite
 	name = MATERIAL_FREIBERGITE

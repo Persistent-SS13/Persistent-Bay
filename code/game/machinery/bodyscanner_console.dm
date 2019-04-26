@@ -4,6 +4,7 @@
 	icon_state = "body_scannerconsole"
 	density = FALSE
 	anchored = TRUE
+	circuit_type = /obj/item/weapon/circuitboard/body_scanconsole
 	var/obj/machinery/bodyscanner/connected	
 	var/stored_scan_subject
 	var/list/display_tags = list()
@@ -19,12 +20,11 @@
 
 /obj/machinery/body_scanconsole/Initialize()
 	. = ..()
-	if(!map_storage_loaded)
-		component_parts = list(
-			new /obj/item/weapon/circuitboard/bodyscanner_console(src),
-			new /obj/item/weapon/stock_parts/console_screen(src))
-	RefreshParts()
 	FindScanner()
+
+/obj/machinery/body_scanconsole/SetupParts()
+	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/console_screen(src))
+	. = ..()
 
 /obj/machinery/body_scanconsole/Destroy()
 	. = ..()

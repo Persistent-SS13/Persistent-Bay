@@ -35,6 +35,7 @@
 	// Matter state data.
 	var/chilling_point
 	var/chilling_message = "crackles and freezes!"
+	
 	var/chilling_sound = 'sound/effects/bubbles.ogg'
 	var/list/chilling_products
 
@@ -47,7 +48,7 @@
 
 /datum/reagent/New(var/datum/reagents/holder)
 	if(!istype(holder))
-		CRASH("Invalid reagents holder: [log_info_line(holder)]")
+		CRASH("[src]: Invalid reagents holder: [log_info_line(holder)]")
 	src.holder = holder
 	..()
 

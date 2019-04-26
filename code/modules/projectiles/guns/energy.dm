@@ -34,6 +34,11 @@ GLOBAL_LIST_INIT(registered_cyborg_weapons, list())
 		/obj/item/weapon/cell/device/high
 		) //Cells typepaths that are accepted by this weapon
 
+/obj/item/weapon/gun/energy/New()
+	..()
+	ADD_SAVED_VAR(power_supply)
+	ADD_SKIP_EMPTY(power_supply)
+
 /obj/item/weapon/gun/energy/Initialize()
 	. = ..()
 	if(!map_storage_loaded)

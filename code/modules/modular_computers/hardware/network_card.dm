@@ -12,6 +12,7 @@ var/global/ntnet_card_uid = 1
 	var/identification_string = "" 	// Identification string, technically nickname seen in the network. Can be set by user.
 	var/long_range = 0
 	var/ethernet = 0 // Hard-wired, therefore always on, ignores NTNet wireless checks.
+	var/proxy_id     // If set, uses the value to funnel connections through another network card.
 	
 	var/connected = 0
 	var/connected_to = ""

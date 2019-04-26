@@ -1,7 +1,7 @@
 /obj/item/weapon/material/harpoon
 	name = "harpoon"
 	desc = "A short throwing spear with a deep barb, specifically designed to embed itself in its target."
-	sharpness = 1
+	sharpness = 2
 	icon_state = "harpoon"
 	item_state = "harpoon"
 	force_divisor = 0.3 // 18 with hardness 60 (steel)
@@ -48,13 +48,19 @@
 	force_divisor = 0.2 // 12 with hardness 60 (steel)
 	thrown_force_divisor = 0.75 // 15 with weight 20 (steel)
 	w_class = ITEM_SIZE_SMALL
-	sharpness = 1
+	sharpness = 2
 	origin_tech = list(TECH_MATERIAL = 2, TECH_COMBAT = 1)
 	attack_verb = list("chopped", "torn", "cut")
 	applies_material_colour = 0
 	sound_hit = "chop"
 	damtype = DAM_CUT
 	mass = 1.1
+
+/obj/item/weapon/material/hatchet/unbreakable
+	obj_flags = 0 //not damageable
+	max_health = 0
+	min_health = 0
+	health = 0
 
 /obj/item/weapon/material/hatchet/unathiknife
 	name = "duelling knife"
@@ -80,6 +86,13 @@
 
 /obj/item/weapon/material/hatchet/machete/unbreakable
 	unbreakable = TRUE
+
+/obj/item/weapon/material/hatchet/machete/steel
+	name = "fabricated machete"
+	desc = "A long, machine-stamped blade with a somewhat ungainly handle. Found in military surplus stores, malls, and horror movies since before interstellar travel."
+	default_material = MATERIAL_STEEL
+	base_parry_chance = 40
+	matter = list(MATERIAL_STEEL = 15000, MATERIAL_PLASTIC = 2500)
 
 /obj/item/weapon/material/hatchet/machete/Initialize()
 	icon_state = "machete[pick("","_red","_blue", "_black", "_olive")]"
@@ -110,13 +123,19 @@
 	damtype = DAM_PIERCE
 	mass = 0.5
 
+/obj/item/weapon/material/minihoe/unbreakable
+	obj_flags = 0 //not damageable
+	max_health = 0
+	min_health = 0
+	health = 0
+
 /obj/item/weapon/material/scythe
 	icon_state = "scythe0"
 	name = "scythe"
 	desc = "A sharp and curved blade on a long fibremetal handle, this tool makes it easy to reap what you sow."
 	force_divisor = 0.275 // 16 with hardness 60 (steel)
 	thrown_force_divisor = 0.25 // 5 with weight 20 (steel)
-	sharpness = 1
+	sharpness = 3
 	throw_speed = 1
 	throw_range = 3
 	w_class = ITEM_SIZE_HUGE

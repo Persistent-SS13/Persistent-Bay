@@ -127,11 +127,11 @@ var/global/list/additional_antag_types = list()
 			message_admins("Admin [key_name_admin(usr)] added [antag.role_text] template to game mode.")
 
 	// I am very sure there's a better way to do this, but I'm not sure what it might be. ~Z
-	spawn(1)
-		for(var/datum/admins/admin in world)
-			if(usr.client == admin.owner)
-				admin.show_game_mode(usr)
-				return
+	// spawn(1)
+	// 	for(var/datum/admins/admin in world)
+	// 		if(usr.client == admin.owner)
+	// 			admin.show_game_mode(usr)
+	// 			return
 
 /datum/game_mode/proc/announce() //to be called when round starts
 	to_world("<B>The current game mode is [capitalize(name)]!</B>")
@@ -238,8 +238,8 @@ var/global/list/additional_antag_types = list()
 	if(evacuation_controller && auto_recall_shuttle)
 		evacuation_controller.recall = 1
 
-	feedback_set_details("round_start","[time2text(world.realtime)]")
-	feedback_set_details("server_ip","[world.internet_address]:[world.port]")
+	SSstatistics.set_field_details("round_start","[time2text(world.realtime)]")
+	SSstatistics.set_field_details("server_ip","[world.internet_address]:[world.port]")
 	return 1
 
 /datum/game_mode/proc/fail_setup()
@@ -344,17 +344,17 @@ var/global/list/additional_antag_types = list()
 	to_world(text)
 
 	if(clients > 0)
-		feedback_set("round_end_clients",clients)
+		SSstatistics.set_field("round_end_clients",clients)
 	if(ghosts > 0)
-		feedback_set("round_end_ghosts",ghosts)
+		SSstatistics.set_field("round_end_ghosts",ghosts)
 	if(surviving_humans > 0)
-		feedback_set("survived_human",surviving_humans)
+		SSstatistics.set_field("survived_human",surviving_humans)
 	if(surviving_total > 0)
-		feedback_set("survived_total",surviving_total)
+		SSstatistics.set_field("survived_total",surviving_total)
 	if(escaped_humans > 0)
-		feedback_set("escaped_human",escaped_humans)
+		SSstatistics.set_field("escaped_human",escaped_humans)
 	if(escaped_total > 0)
-		feedback_set("escaped_total",escaped_total)
+		SSstatistics.set_field("escaped_total",escaped_total)
 
 	send2mainirc("A round of [src.name] has ended - [surviving_total] survivor\s, [ghosts] ghost\s.")
 

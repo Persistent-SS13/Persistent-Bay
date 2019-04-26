@@ -54,9 +54,9 @@
 		else
 			amount *= TABLE_BRITTLE_MATERIAL_MULTIPLIER
 	return ..()
+
 /obj/structure/table/Initialize()
 	. = ..()
-
 	// One table per turf.
 	for(var/obj/structure/table/T in loc)
 		if(T != src)
@@ -93,7 +93,7 @@
 				to_chat(user, "<span class='notice'>It has a few scrapes and dents.</span>")
 
 /obj/structure/table/attackby(obj/item/weapon/W, mob/user)
-	if(reinforced && istype(W, /obj/item/weapon/tool/screwdriver))
+	if(reinforced && isScrewdriver(W))
 		remove_reinforced(W, user)
 		if(!reinforced)
 			update_desc()

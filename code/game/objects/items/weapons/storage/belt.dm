@@ -101,9 +101,6 @@
 /obj/item/weapon/storage/belt/utility
 	name = "tool belt"
 	desc = "A belt of durable leather, festooned with hooks, slots, and pouches."
-	description_info = "The tool-belt has enough slots to carry a full engineer's toolset: screwdriver, crowbar, wrench, welder, cable coil, and multitool. Simply click the belt to move a tool to one of its slots."
-	description_fluff = "Good hide is hard to come by in certain regions of the galaxy. When they can't come across it, most TSCs will outfit their crews with toolbelts made of synthesized leather."
-	description_antag = "Only amateurs skip grabbing a tool-belt."
 	icon_state = "utilitybelt"
 	item_state = "utility"
 	overlay_flags = BELT_OVERLAY_ITEMS
@@ -118,13 +115,13 @@
 		/obj/item/device/flashlight,
 		/obj/item/stack/cable_coil,
 		/obj/item/device/t_scanner,
-		/obj/item/device/analyzer,
+		/obj/item/device/scanner/gas,
 		/obj/item/taperoll/engineering,
 		/obj/item/inducer/,
 		/obj/item/device/robotanalyzer,
 		/obj/item/weapon/material/minihoe,
 		/obj/item/weapon/material/hatchet,
-		/obj/item/device/analyzer/plant_analyzer,
+		/obj/item/device/scanner/plant,
 		/obj/item/taperoll,
 		/obj/item/weapon/extinguisher/mini,
 		/obj/item/weapon/marshalling_wand,
@@ -163,7 +160,7 @@
 	icon_state = "medicalbelt"
 	item_state = "medical"
 	can_hold = list(
-		/obj/item/device/healthanalyzer,
+		/obj/item/device/scanner/health,
 		/obj/item/weapon/reagent_containers/dropper,
 		/obj/item/weapon/reagent_containers/glass/beaker,
 		/obj/item/weapon/reagent_containers/glass/bottle,
@@ -202,7 +199,7 @@
 	storage_slots = 8
 	overlay_flags = BELT_OVERLAY_ITEMS|BELT_OVERLAY_HOLSTER
 	can_hold = list(
-		/obj/item/weapon/crowbar,
+		/obj/item/weapon/tool/crowbar,
 		/obj/item/weapon/grenade,
 		/obj/item/weapon/reagent_containers/spray/pepper,
 		/obj/item/weapon/handcuffs,
@@ -244,6 +241,7 @@
 		/obj/item/ammo_magazine,
 		/obj/item/weapon/reagent_containers/food/snacks/donut/,
 		/obj/item/weapon/melee/baton,
+		/obj/item/weapon/melee/telebaton,
 		/obj/item/weapon/gun/energy/taser,
 		/obj/item/weapon/gun/energy/stunrevolver,
 		/obj/item/weapon/flame/lighter,
@@ -254,8 +252,7 @@
 		/obj/item/device/hailer,
 		/obj/item/device/megaphone,
 		/obj/item/weapon/melee,
-		/obj/item/weapon/gun/projectile/sec,
-		/obj/item/weapon/gun/projectile/colt/detective,
+		/obj/item/weapon/gun/projectile/pistol,
 		/obj/item/taperoll,
 		/obj/item/device/holowarrant,
 		/obj/item/weapon/magnetic_ammo,
@@ -297,7 +294,7 @@
 		/obj/item/clothing/head/soft,
 		/obj/item/weapon/hand_labeler,
 		/obj/item/clothing/gloves,
-		/obj/item/weapon/crowbar/prybar
+		/obj/item/weapon/tool/crowbar/prybar,
 		)
 
 /obj/item/weapon/storage/belt/janitor
@@ -314,8 +311,8 @@
 		/obj/item/holosign_creator,
 		/obj/item/clothing/gloves,
 		/obj/item/device/assembly/mousetrap,
-		/obj/item/weapon/crowbar/prybar,
-		/obj/item/clothing/mask/plunger
+		/obj/item/weapon/tool/crowbar/prybar,
+		/obj/item/clothing/mask/plunger,
 		)
 
 /obj/item/weapon/storage/belt/holster/general
@@ -353,7 +350,7 @@
 		/obj/item/clothing/head/soft,
 		/obj/item/weapon/hand_labeler,
 		/obj/item/clothing/gloves,
-		/obj/item/weapon/crowbar/prybar
+		/obj/item/weapon/tool/crowbar/prybar
 		)
 
 /obj/item/weapon/storage/belt/holster/forensic
@@ -398,8 +395,8 @@
 		/obj/item/device/radio,
 		/obj/item/device/gps,
 		/obj/item/weapon/mining_scanner,
-		/obj/item/device/slime_scanner,
-		/obj/item/device/analyzer/plant_analyzer,
+		/obj/item/device/scanner/xenobio,
+		/obj/item/device/scanner/plant,
 		/obj/item/weapon/folder,
 		/obj/item/weapon/paper,
 		/obj/item/weapon/pen,
@@ -408,7 +405,7 @@
 		/obj/item/weapon/pinpointer/radio,
 		/obj/item/device/taperecorder,
 		/obj/item/device/tape,
-		/obj/item/device/analyzer
+		/obj/item/device/scanner/gas
 		)
 	can_holster = list(/obj/item/weapon/material/hatchet/machete)
 	sound_in = 'sound/effects/holster/sheathin.ogg'

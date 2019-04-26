@@ -158,7 +158,7 @@
 "aC" = (
 /obj/item/weapon/gun/energy/gun/small,
 /obj/item/device/flashlight/upgraded,
-/obj/item/weapon/crowbar/prybar,
+/obj/item/weapon/tool/crowbar/prybar,
 /obj/item/clothing/under/captain_fly,
 /obj/item/clothing/under/color/blackjumpshorts,
 /obj/item/clothing/under/frontier,
@@ -1531,7 +1531,7 @@
 "dj" = (
 /obj/item/weapon/gun/energy/gun/small,
 /obj/item/device/flashlight/upgraded,
-/obj/item/weapon/crowbar/prybar,
+/obj/item/weapon/tool/crowbar/prybar,
 /obj/item/clothing/under/captain_fly,
 /obj/item/clothing/under/color/blackjumpshorts,
 /obj/item/clothing/under/frontier,
@@ -2451,7 +2451,7 @@
 	dir = 5
 	},
 /obj/item/weapon/storage/belt/medical,
-/obj/item/device/healthanalyzer,
+/obj/item/device/scanner/health,
 /obj/item/weapon/storage/pill_bottle/tramadol,
 /obj/item/weapon/storage/pill_bottle/tramadol,
 /obj/item/weapon/storage/pill_bottle/spaceacillin,
@@ -2566,7 +2566,7 @@
 /obj/structure/bed/padded,
 /obj/item/weapon/gun/energy/gun/small,
 /obj/item/device/flashlight/upgraded,
-/obj/item/weapon/crowbar/prybar,
+/obj/item/weapon/tool/crowbar/prybar,
 /obj/item/clothing/under/color/blackjumpshorts,
 /obj/item/clothing/under/captain_fly,
 /obj/item/clothing/under/frontier,
@@ -2635,7 +2635,7 @@
 /obj/item/weapon/storage/toolbox/syndicate,
 /obj/item/weapon/tape_roll,
 /obj/item/weapon/tape_roll,
-/obj/item/weapon/crowbar/brace_jack,
+/obj/item/weapon/tool/crowbar/brace_jack,
 /obj/item/clothing/head/hardhat/white,
 /obj/item/weapon/grenade/chem_grenade/metalfoam,
 /obj/item/weapon/grenade/chem_grenade/metalfoam,
@@ -3053,7 +3053,7 @@
 "fM" = (
 /obj/item/weapon/gun/energy/gun/small,
 /obj/item/device/flashlight/upgraded,
-/obj/item/weapon/crowbar/prybar,
+/obj/item/weapon/tool/crowbar/prybar,
 /obj/item/clothing/under/captain_fly,
 /obj/item/clothing/under/color/blackjumpshorts,
 /obj/item/clothing/under/frontier,

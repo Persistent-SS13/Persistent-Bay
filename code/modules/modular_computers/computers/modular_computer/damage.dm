@@ -21,7 +21,7 @@
 	if(get_health() <= (break_threshold * get_max_health()))
 		broken()
 
-/obj/item/modular_computer/proc/broken()
+/obj/item/modular_computer/broken()
 	shutdown_computer()
 
 /obj/item/modular_computer/take_damage(damage, damtype, armorbypass, damsrc, var/component_probability, var/damage_casing = 1, var/randomize = 1)

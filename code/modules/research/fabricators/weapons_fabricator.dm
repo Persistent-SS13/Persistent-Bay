@@ -269,27 +269,92 @@
 
 // BALLISTICS WEAPONS
 
+//	Pistols
 /datum/design/item/weaponfab/weapons/guns/pistol // tier 0
-	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GOLD = 1.5 SHEETS, MATERIAL_COPPER = 1.5 SHEETS)
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GOLD = 1.5 SHEETS, MATERIAL_COPPER = 1.5 SHEETS) 
 	build_path = /obj/item/weapon/gun/projectile/sec
-
-/datum/design/item/weaponfab/weapons/guns/colt/officer // tier 1 RESKIN of pistol
-	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GOLD = 1.5 SHEETS, MATERIAL_COPPER = 1.5 SHEETS)
-	build_path = /obj/item/weapon/gun/projectile/colt/officer
+/datum/design/item/weaponfab/weapons/guns/pistol/m1911 // tier 1 RESKIN of pistol
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GOLD = 1.5 SHEETS, MATERIAL_COPPER = 1.5 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/pistol/m1911
 	research = "pistol_1"
-/datum/design/item/weaponfab/weapons/guns/colt/detective // tier 1 RESKIN of pistol
-	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GOLD = 1.5 SHEETS, MATERIAL_COPPER = 1.5 SHEETS)
-	build_path = /obj/item/weapon/gun/projectile/colt/detective
+/datum/design/item/weaponfab/weapons/guns/pistol/c96 
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GOLD = 1.5 SHEETS, MATERIAL_COPPER = 1.5 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/pistol/c96
 	research = "pistol_1"
-
+/datum/design/item/weaponfab/weapons/guns/pistol/p08
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GOLD = 1.5 SHEETS, MATERIAL_COPPER = 1.5 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/pistol/p08
+	research = "pistol_1"
 /datum/design/item/weaponfab/weapons/guns/pistol/holdout // tier 1
-	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS)
-	build_path = /obj/item/weapon/gun/projectile/pistol
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/pistol/holdout
 	research = "pistol_1"
-/datum/design/item/weaponfab/weapons/guns/revolver // tier 1
-	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_COPPER = 2.5 SHEETS)
+/datum/design/item/weaponfab/weapons/guns/pistol/bhp // tier 1
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/pistol/bhp
+	research = "pistol_1"
+
+/datum/design/item/weaponfab/weapons/guns/pistol/military // tier 2
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/pistol/military
+	research = "pistol_2"
+/datum/design/item/weaponfab/weapons/guns/pistol/military_alt // tier 2
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/pistol/military/alt
+	research = "pistol_2"
+/datum/design/item/weaponfab/weapons/guns/pistol/silenced // tier 2
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/silenced
+	research = "pistol_2"
+/datum/design/item/weaponfab/weapons/guns/pistol/b92fs // tier 2
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/pistol/b92
+	research = "pistol_2"
+/datum/design/item/weaponfab/weapons/guns/pistol/usp45 // tier 2
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/pistol/usp
+	research = "pistol_2"
+
+/datum/design/item/weaponfab/weapons/guns/pistol/gyrojet // tier 3, but its not very good
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/pistol/gyropistol
+	research = "pistol_3"
+
+/datum/design/item/weaponfab/weapons/guns/pistol/magnum_pistol // tier 4
+	materials = list(MATERIAL_STEEL = 3 SHEETS, MATERIAL_GOLD = 1.3 SHEETS, MATERIAL_COPPER = 1.3 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/pistol/magnum_pistol
+	research = "pistol_4"
+
+//	Revolvers
+/datum/design/item/weaponfab/weapons/guns/revolver/holdout // tier 1, .22lr revolver
+	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_COPPER = 2.5 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/revolver/holdout
+	research = "pistol_1"
+/datum/design/item/weaponfab/weapons/guns/revolver/c38 // tier 1
+	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_COPPER = 2.5 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/revolver/medium
+	research = "pistol_1"
+
+/datum/design/item/weaponfab/weapons/guns/revolver/c357 // tier 2
+	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_COPPER = 2.5 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/revolver
-	research = "pistol_1"
+	research = "pistol_2"
+
+/datum/design/item/weaponfab/weapons/guns/revolver/c44 // tier 3
+	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_COPPER = 2.5 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/revolver/webley
+	research = "pistol_3"
+/datum/design/item/weaponfab/weapons/guns/revolver/deckard44 // tier 3
+	materials = list(MATERIAL_STEEL = 6 SHEETS, MATERIAL_GOLD = 3 SHEETS, MATERIAL_COPPER = 2.5 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/revolver/deckard
+	research = "pistol_3"
+
+/datum/design/item/weaponfab/weapons/guns/revolver/mateba50 // tier 4
+	materials = list(MATERIAL_PLASTEEL = 6 SHEETS, MATERIAL_GOLD = 5 SHEETS, MATERIAL_DIAMOND = 4 SHEETS, MATERIAL_PHORON = 1 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/revolver/mateba
+	research = "pistol_4"
+
+//	Shotguns
 /datum/design/item/weaponfab/weapons/guns/shotgun/doublebarrel // tier 1.5
 	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_WOOD = 4 SHEETS, MATERIAL_GOLD = 3.5 SHEET, MATERIAL_COPPER = 3 SHEET)
 	build_path = /obj/item/weapon/gun/projectile/shotgun/doublebarrel
@@ -298,35 +363,48 @@
 	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GOLD = 4 SHEETS, MATERIAL_DIAMOND = 1 SHEETS)
 	build_path = /obj/item/weapon/gun/projectile/shotgun/pump
 	research = "shotgun_2"
-/datum/design/item/weaponfab/weapons/guns/automatic/uzi // tier 2.5
-	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GOLD = 5 SHEETS, MATERIAL_DIAMOND = 2 SHEETS)
-	build_path = /obj/item/weapon/gun/projectile/automatic/machine_pistol
-	research = "autos_1"
-/datum/design/item/weaponfab/weapons/guns/automatic/wt550 // tier 2.5
-	materials = list(MATERIAL_STEEL = 7 SHEETS, MATERIAL_GOLD = 7 SHEETS, MATERIAL_DIAMOND = 4 SHEETS)
-	build_path = /obj/item/weapon/gun/projectile/automatic/wt550
-	research = "autos_1"
 /datum/design/item/weaponfab/weapons/guns/shotgun/combat // tier 3
 	materials = list(MATERIAL_STEEL = 10 SHEETS, MATERIAL_GOLD = 8 SHEETS, MATERIAL_DIAMOND = 4 SHEETS)
 	build_path = /obj/item/weapon/gun/projectile/shotgun/doublebarrel
 	research = "shotgun_3"
+
+//	SMG
+/datum/design/item/weaponfab/weapons/guns/automatic/wt550 // tier 1
+	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GOLD = 5 SHEETS, MATERIAL_DIAMOND = 2 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/automatic/wt550
+	research = "autos_1"
+
+/datum/design/item/weaponfab/weapons/guns/automatic/uzi // tier 2.5
+	materials = list(MATERIAL_STEEL = 7 SHEETS, MATERIAL_GOLD = 7 SHEETS, MATERIAL_DIAMOND = 4 SHEETS)
+	build_path = /obj/item/weapon/gun/projectile/automatic/machine_pistol
+	research = "autos_2"
+
 /datum/design/item/weaponfab/weapons/guns/automatic/c20r // tier 3.5
 	materials = list(MATERIAL_PLASTEEL = 8 SHEETS, MATERIAL_GOLD = 8 SHEETS, MATERIAL_DIAMOND = 5 SHEETS, MATERIAL_PHORON = 2 SHEETS)
 	build_path = /obj/item/weapon/gun/projectile/automatic/c20r
-	research = "autos_2"
-/datum/design/item/weaponfab/weapons/guns/automatic/revolver/mateba // tier 3.5
-	materials = list(MATERIAL_PLASTEEL = 6 SHEETS, MATERIAL_GOLD = 5 SHEETS, MATERIAL_DIAMOND = 4 SHEETS, MATERIAL_PHORON = 1 SHEETS)
-	build_path = /obj/item/weapon/gun/projectile/revolver/mateba
-	research = "pistol_1"
+	research = "autos_3"
+
+/datum/design/item/weaponfab/weapons/guns/automatic/proto_smg // tier 5
+	materials = list(MATERIAL_PLASTEEL = 8 SHEETS, MATERIAL_GOLD = 8 SHEETS, MATERIAL_DIAMOND = 5 SHEETS, MATERIAL_PHORON = 2 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/automatic/proto_smg
+	research = "autos_4"
+
+//	Rifles
 /datum/design/item/weaponfab/weapons/guns/automatic/sts35 // tier 4
 	materials = list(MATERIAL_PLASTEEL = 12 SHEETS, MATERIAL_GOLD = 10 SHEETS, MATERIAL_DIAMOND = 8 SHEETS, MATERIAL_PHORON = 4 SHEETS)
 	build_path = /obj/item/weapon/gun/projectile/automatic/sts35
 	research = "autos_3"
+
+/datum/design/item/weaponfab/weapons/guns/automatic/z8 // tier 4
+	materials = list(MATERIAL_PLASTEEL = 12 SHEETS, MATERIAL_GOLD = 10 SHEETS, MATERIAL_DIAMOND = 8 SHEETS, MATERIAL_PHORON = 4 SHEETS) //TODO
+	build_path = /obj/item/weapon/gun/projectile/automatic/z8
+	research = "autos_4"
+
+//	Sniper
 /datum/design/item/weaponfab/weapons/guns/automatic/heavysniper // tier 4
 	materials = list(MATERIAL_PLASTEEL = 10 SHEETS, MATERIAL_GOLD = 8 SHEETS, MATERIAL_DIAMOND = 3 SHEETS, MATERIAL_PHORON = 11 SHEETS)
 	build_path = /obj/item/weapon/gun/projectile/heavysniper
 	research = "antimaterial"
-
 
 // END BALLISTIC WEAPONS
 
@@ -1292,23 +1370,29 @@
 	category = "Ammunition"
 	req_tech = list(TECH_MATERIAL = 1, TECH_COMBAT = 1)
 	time = 1
-/datum/design/item/weaponfab/a357
+/datum/design/item/weaponfab/c357
 	name = ".357 Bullet"
-	id = "a357"
-	build_path = /obj/item/ammo_casing/a357
+	id = "c357"
+	build_path = /obj/item/ammo_casing/c357
 	materials = list(MATERIAL_STEEL = 210)
 
-/datum/design/item/weaponfab/a50
+/datum/design/item/weaponfab/c50
 	name = ".50 Bullet"
-	id = "a50"
-	build_path = /obj/item/ammo_casing/a50
+	id = "c50"
+	build_path = /obj/item/ammo_casing/c50
 	materials = list(MATERIAL_STEEL = 260)
 
-/datum/design/item/weaponfab/a75
-	name = "20mm Bullet"
-	id = "75"
-	build_path = /obj/item/ammo_casing/a75
+/datum/design/item/weaponfab/gyrojet
+	name = "gyrojet Round"
+	id = "gyrojet"
+	build_path = /obj/item/ammo_casing/gyrojet
 	materials = list(MATERIAL_STEEL = 320)
+
+/datum/design/item/weaponfab/c22lr
+	name = ".22 Long Rifle Bullet"
+	id = "c22"
+	build_path = /obj/item/ammo_casing/c22lr
+	materials = list(MATERIAL_STEEL = 40)
 
 /datum/design/item/weaponfab/c38
 	name = ".38 Bullet"
@@ -1382,10 +1466,10 @@
 	build_path = /obj/item/ammo_casing/c45/flash
 	materials = list(MATERIAL_STEEL = 60)
 
-/datum/design/item/weaponfab/a10mm
+/datum/design/item/weaponfab/c10mm
 	name = "10mm Bullet"
 	id = "a10mm"
-	build_path = /obj/item/ammo_casing/a10mm
+	build_path = /obj/item/ammo_casing/c10mm
 	materials = list(MATERIAL_STEEL = 75)
 
 /datum/design/item/weaponfab/shotgun
@@ -1430,22 +1514,22 @@
 	build_path = /obj/item/ammo_casing/shotgun/stunshell
 	materials = list(MATERIAL_STEEL = 360, MATERIAL_GLASS = 720)
 
-/datum/design/item/weaponfab/a556
+/datum/design/item/weaponfab/c556
 	name = "5.56mm Bullet"
-	id = "a556"
-	build_path = /obj/item/ammo_casing/a556
+	id = "c556"
+	build_path = /obj/item/ammo_casing/c556
 	materials = list(MATERIAL_STEEL = 90)
 
-/datum/design/item/weaponfab/a762
+/datum/design/item/weaponfab/c762
 	name = "7.76mm Bullet"
-	id = "a762"
-	build_path = /obj/item/ammo_casing/a762
+	id = "c762"
+	build_path = /obj/item/ammo_casing/c762
 	materials = list(MATERIAL_STEEL = 90)
 
-/datum/design/item/weaponfab/a762/practice
+/datum/design/item/weaponfab/c762/practice
 	name = "Practice 7.76mm Bullet"
-	id = "a762p"
-	build_path = /obj/item/ammo_casing/a762/practice
+	id = "c762p"
+	build_path = /obj/item/ammo_casing/c762/practice
 	materials = list(MATERIAL_STEEL = 90)
 
 /datum/design/item/weaponfab/cap
@@ -1453,6 +1537,12 @@
 	id = "cap"
 	build_path = /obj/item/ammo_casing/cap
 	materials = list(MATERIAL_PLASTIC = 50)
+
+/datum/design/item/weaponfab/flechette
+	name = "4mm Flechette Rounds"
+	id = "4mmflechette"
+	build_path = /obj/item/ammo_casing/flechette
+	materials = list(MATERIAL_TUNGSTEN = 90)
 
 //Magazines
 
@@ -1465,118 +1555,206 @@
 	time = 2
 	materials = list(MATERIAL_STEEL = 0.25 SHEETS)
 
+/datum/design/item/weaponfab/magazines/empty/speedloader/c22lr
+	name = ".22lr Speedloader (empty)"
+	build_path = /obj/item/ammo_magazine/speedloader/c22lr/empty
+/datum/design/item/weaponfab/magazines/speedloader/c22lr
+	name = ".22lr Speedloader"
+	build_path = /obj/item/ammo_magazine/speedloader/c22lr
 
-/datum/design/item/weaponfab/magazines/empty/a357
+/datum/design/item/weaponfab/magazines/empty/c357
 	name = ".357 Speedloader (empty)"
-	build_path = /obj/item/ammo_magazine/a357/empty
-
-/datum/design/item/weaponfab/magazines/a357
+	build_path = /obj/item/ammo_magazine/speedloader/c357/empty
+/datum/design/item/weaponfab/magazines/c357
 	name = ".357 Speedloader"
-	build_path = /obj/item/ammo_magazine/a357/empty
+	build_path = /obj/item/ammo_magazine/speedloader/c357
 
 
 /datum/design/item/weaponfab/magazines/empty/c38
 	name = ".38 Speedloader (empty)"
-	build_path = /obj/item/ammo_magazine/c38/empty
-
+	build_path = /obj/item/ammo_magazine/speedloader/c38/empty
 /datum/design/item/weaponfab/magazines/c38
 	name = ".38 Speedloader"
-	build_path = /obj/item/ammo_magazine/c38
+	build_path = /obj/item/ammo_magazine/speedloader/c38
 
 
 /datum/design/item/weaponfab/magazines/empty/c44
 	name = ".44 Speedloader (empty)"
-	build_path = /obj/item/ammo_magazine/c44/empty
-
+	build_path = /obj/item/ammo_magazine/speedloader/c44/empty
 /datum/design/item/weaponfab/magazines/c44
 	name = ".44 Speedloader"
-	build_path = /obj/item/ammo_magazine/c44
+	build_path = /obj/item/ammo_magazine/speedloader/c44
 
 
 /datum/design/item/weaponfab/magazines/empty/c50
 	name = ".50 Speedloader (empty)"
-	build_path = /obj/item/ammo_magazine/c50/empty
-
+	build_path = /obj/item/ammo_magazine/speedloader/c50/empty
 /datum/design/item/weaponfab/magazines/c50
 	name = ".50 Speedloader"
-	build_path = /obj/item/ammo_magazine/c50
+	build_path = /obj/item/ammo_magazine/speedloader/c50
 	materials = list(MATERIAL_STEEL = 1 SHEET)
 
 /datum/design/item/weaponfab/magazines/empty/c45
-	name = ".45 Magazine (empty)"
-	build_path = /obj/item/ammo_magazine/c45m/empty
-
+	name = "Standard 10 rounds, .45 magazine(empty)"
+	build_path = /obj/item/ammo_magazine/box/c45/empty
 /datum/design/item/weaponfab/magazines/c45
-	name = ".45 Magazine"
-	build_path = /obj/item/ammo_magazine/c45m
+	name = "Standard 10 rounds, .45 magazine"
+	build_path = /obj/item/ammo_magazine/box/c45
 
-/** UNUSED
+/datum/design/item/weaponfab/magazines/empty/c45_15
+	name = "Standard 15 rounds, .45 magazine(empty)"
+	build_path = /obj/item/ammo_magazine/box/c45/_15/empty
+/datum/design/item/weaponfab/magazines/c45_15
+	name = "Standard 15 rounds, .45 magazine"
+	build_path = /obj/item/ammo_magazine/box/c45/_15
+
+/datum/design/item/weaponfab/magazines/empty/c45_20
+	name = "Standard 20 rounds, .45 magazine(empty)"
+	build_path = /obj/item/ammo_magazine/box/c45/_20/empty
+/datum/design/item/weaponfab/magazines/c45_20
+	name = "Standard 20 rounds, .45 magazine"
+	build_path = /obj/item/ammo_magazine/box/c45/_20
+
+/datum/design/item/weaponfab/magazines/empty/m1911
+	name = "M1911 Magazine (empty)"
+	build_path = /obj/item/ammo_magazine/box/m1911/empty
+/datum/design/item/weaponfab/magazines/m1911
+	name = "M1911 Magazine"
+	build_path = /obj/item/ammo_magazine/box/m1911
+
+/datum/design/item/weaponfab/magazines/empty/usp
+	name = "USP .45 Pistol Magazine (empty)"
+	build_path = /obj/item/ammo_magazine/box/usp/empty
+/datum/design/item/weaponfab/magazines/usp
+	name = "USP .45 Pistol Magazine"
+	build_path = /obj/item/ammo_magazine/box/usp
+
+
 /datum/design/item/weaponfab/magazines/empty/c45uzi
-	name = ".45 SMG Magazine (empty)"
-	build_path = /obj/item/ammo_magazine/c45uzi/empty
-**/
+	name = ".45 UZI SMG, 16 rounds stick magazine (empty)"
+	build_path = /obj/item/ammo_magazine/box/c45uzi/empty
+/datum/design/item/weaponfab/magazines/c45uzi
+	name = ".45 UZI SMG, 16 rounds stick magazine"
+	build_path = /obj/item/ammo_magazine/box/c45uzi
+
 /datum/design/item/weaponfab/magazines/empty/mc9mm
-	name = "9mm Magazine (empty)"
-	build_path = /obj/item/ammo_magazine/mc9mm/empty
-
+	name = "Standard 9mm, 8 rounds magazine (empty)"
+	build_path = /obj/item/ammo_magazine/box/c9mm/empty
 /datum/design/item/weaponfab/magazines/mc9mm
-	name = "9mm Magazine"
-	build_path = /obj/item/ammo_magazine/mc9mm
+	name = "Standard 9mm, 8 rounds magazine"
+	build_path = /obj/item/ammo_magazine/box/c9mm
+
+/datum/design/item/weaponfab/magazines/empty/c9mm_20
+	name = "Standard 9mm, 20 rounds magazine(empty)"
+	build_path = /obj/item/ammo_magazine/box/c9mm/_20/empty
+/datum/design/item/weaponfab/magazines/c9mm_20
+	name = "Standard 9mm, 20 rounds magazine"
+	build_path = /obj/item/ammo_magazine/box/c9mm/_20
+
+/datum/design/item/weaponfab/magazines/empty/lap39mm
+	name = "LAP3 9mm Pistol Magazine (empty)"
+	build_path = /obj/item/ammo_magazine/box/lap3/empty
+/datum/design/item/weaponfab/magazines/lap39mm
+	name = "LAP3 9mm Pistol Magazine"
+	build_path = /obj/item/ammo_magazine/box/lap3
+
+/datum/design/item/weaponfab/magazines/empty/b92fs
+	name = "92fs Pistol Magazine (empty)"
+	build_path = /obj/item/ammo_magazine/box/b92fs/empty
+/datum/design/item/weaponfab/magazines/box/b92fs
+	name = "92fs Pistol Magazine"
+	build_path = /obj/item/ammo_magazine/box/b92fs
+
+/datum/design/item/weaponfab/magazines/empty/bhp
+	name = "HP-35 Pistol Magazine (empty)"
+	build_path = /obj/item/ammo_magazine/box/bhp/empty
+/datum/design/item/weaponfab/magazines/bhp
+	name = "HP-35 Pistol Magazine"
+	build_path = /obj/item/ammo_magazine/box/bhp
+
+/datum/design/item/weaponfab/magazines/empty/p08
+	name = "P.08 Pistol Magazine (empty)"
+	build_path = /obj/item/ammo_magazine/box/p08/empty
+/datum/design/item/weaponfab/magazines/p08
+	name = "P.08 Pistol Magazine"
+	build_path = /obj/item/ammo_magazine/box/p08
+
+/datum/design/item/weaponfab/magazines/empty/wt550
+	name = "WT550 Magazine (empty)"
+	build_path = /obj/item/ammo_magazine/box/wt550/empty
+/datum/design/item/weaponfab/magazines/wt550
+	name = "WT550 Magazine Magazine"
+	build_path = /obj/item/ammo_magazine/box/wt550
 
 
-/datum/design/item/weaponfab/magazines/empty/mc9mmt
-	name = "9mm Topmount Magazine (empty)"
-	build_path = /obj/item/ammo_magazine/mc9mmt/empty
-
-/datum/design/item/weaponfab/magazines/mc9mmt
-	name = "9mm Topmount Magazine"
-	build_path = /obj/item/ammo_magazine/mc9mmt
-
-
-
-/datum/design/item/weaponfab/magazines/empty/a10mm
+/datum/design/item/weaponfab/magazines/empty/c10mm
 	name = "10mm Magazine (empty)"
-	build_path = /obj/item/ammo_magazine/a10mm/empty
-
-/datum/design/item/weaponfab/magazines/a10mm
+	build_path = /obj/item/ammo_magazine/box/c45/empty
+/datum/design/item/weaponfab/magazines/c10mm
 	name = "10mm Magazine"
-	build_path = /obj/item/ammo_magazine/a10mm
+	build_path = /obj/item/ammo_magazine/box/c45
 
+/datum/design/item/weaponfab/magazines/empty/c44
+	name = ".44 Magazine (empty)"
+	build_path = /obj/item/ammo_magazine/box/c44/empty
+/datum/design/item/weaponfab/magazines/c44
+	name = ".44 Magazine"
+	build_path = /obj/item/ammo_magazine/box/c44
+	materials = list(MATERIAL_STEEL = 1.25 SHEET)
 
-/datum/design/item/weaponfab/magazines/empty/a50
+/datum/design/item/weaponfab/magazines/empty/c50
 	name = ".50 Magazine (empty)"
-	build_path = /obj/item/ammo_magazine/a50/empty
-
-/datum/design/item/weaponfab/magazines/a50
+	build_path = /obj/item/ammo_magazine/box/c50/empty
+/datum/design/item/weaponfab/magazines/c50
 	name = ".50 Magazine"
-	build_path = /obj/item/ammo_magazine/a50
+	build_path = /obj/item/ammo_magazine/box/c50
 	materials = list(MATERIAL_STEEL = 1.25 SHEET)
 
-/datum/design/item/weaponfab/magazines/empty/a762
-	name = "7.62 Magazine (empty)"
-	build_path = /obj/item/ammo_magazine/a762/empty
-
-/datum/design/item/weaponfab/magazines/a762
-	name = "7.62 Magazine"
-	build_path = /obj/item/ammo_magazine/a762/
+/datum/design/item/weaponfab/magazines/empty/c762
+	name = "Standard 7.62mm, 15 rounds magazine (empty)"
+	build_path = /obj/item/ammo_magazine/box/c762/empty
+/datum/design/item/weaponfab/magazines/c762
+	name = "Standard 7.62mm, 15 rounds magazine"
+	build_path = /obj/item/ammo_magazine/box/c762
 	materials = list(MATERIAL_STEEL = 1.25 SHEET)
 
-/datum/design/item/weaponfab/magazines/empty/a75
-	name = "20mm Magazine (empty)"
-	build_path = /obj/item/ammo_magazine/a75/empty
-
-/datum/design/item/weaponfab/magazines/a75
-	name = "20mm Magazine"
-	build_path = /obj/item/ammo_magazine/a75
+/datum/design/item/weaponfab/magazines/empty/gyrojet
+	name = "Gyrojet 6 rounds magazine (empty)"
+	build_path = /obj/item/ammo_magazine/box/gyrojet/empty
+/datum/design/item/weaponfab/magazines/gyrojet
+	name = "Gyrojet 6 rounds magazine"
+	build_path = /obj/item/ammo_magazine/box/gyrojet
 	materials = list(MATERIAL_STEEL = 1.25 SHEET)
 
 /datum/design/item/weaponfab/magazines/empty/c556
-	name = "5.56 Magazine (empty)"
-	build_path = /obj/item/ammo_magazine/c556/empty
-
+	name = "Standard 5.56mm, 20 rounds magazine(empty)"
+	build_path = /obj/item/ammo_magazine/box/c556/empty
 /datum/design/item/weaponfab/magazines/c556
-	name = "5.56 Magazine"
-	build_path = /obj/item/ammo_magazine/c556
+	name = "Standard 5.56mm, 20 rounds magazine"
+	build_path = /obj/item/ammo_magazine/box/c556
+	materials = list(MATERIAL_STEEL = 1.25 SHEET)
+
+/datum/design/item/weaponfab/magazines/empty/proto_smg
+	name = "Flechette SMG Magazine (empty)"
+	build_path = /obj/item/ammo_magazine/box/proto_smg/empty
+/datum/design/item/weaponfab/magazines/proto_smg
+	name = "Flechette SMG Magazine"
+	build_path = /obj/item/ammo_magazine/box/proto_smg
+
+/datum/design/item/weaponfab/magazines/empty/clip762
+	name = "7.62mm 5 rounds Clip (empty)"
+	build_path = /obj/item/ammo_magazine/clip/c762/empty
+/datum/design/item/weaponfab/magazines/clip762
+	name = "7.62mm rounds Clip"
+	build_path = /obj/item/ammo_magazine/clip/c762
+	materials = list(MATERIAL_STEEL = 1.25 SHEET)
+
+/datum/design/item/weaponfab/magazines/empty/clip9mm
+	name = "9mm, 9 rounds Clip (empty)"
+	build_path = /obj/item/ammo_magazine/clip/c9mm/empty
+/datum/design/item/weaponfab/magazines/clip9mm
+	name = "9mm, 9 rounds Clip"
+	build_path = /obj/item/ammo_magazine/clip/c9mm
 	materials = list(MATERIAL_STEEL = 1.25 SHEET)
 
 // Ammo Boxes

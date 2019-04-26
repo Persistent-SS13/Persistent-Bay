@@ -8,8 +8,8 @@
 	var/image/blood_overlay = null //this saves our blood splatter overlay, which will be processed not to go over the edges of the sprite
 	var/randpixel = 9
 	var/r_speed = 1.0
-	var/burn_point = null
-	var/burning = null
+	// var/burn_point = null
+	// var/burning = null
 	var/slot_flags = 0		//This is used to determine on which slots an item can fit.
 	var/no_attack_log = 0			//If it's an item we don't want to log attack_logs with, set this to 1
 //	causeerrorheresoifixthis
@@ -28,6 +28,7 @@
 
 	var/datum/action/item_action/action = null
 	var/action_button_name //It is also the text which gets displayed on the action button. If not set it defaults to 'Use [name]'. If it's not set, there'll be no button.
+	var/default_action_type = /datum/action/item_action // Specify the default type and behavior of the action button for this atom.
 	var/action_button_is_hands_free = 0 //If 1, bypass the restrained, lying, and stunned checks action buttons normally test for
 	var/action_button_icon
 	var/action_button_state
@@ -273,7 +274,7 @@
 	return
 
 // apparently called whenever an item is removed from a slot, container, or anything else.
-/obj/item/proc/dropped(mob/user as mob)
+/obj/item/dropped(mob/user as mob)
 	if(randpixel)
 		pixel_z = randpixel //an idea borrowed from some of the older pixel_y randomizations. Intended to make items appear to drop at a character
 
@@ -283,6 +284,8 @@
 			user.l_hand.update_twohanding()
 		if(user.r_hand)
 			user.r_hand.update_twohanding()
+	//Call the hook
+	.=..()
 
 // called just as an item is picked up (loc is not yet changed)
 /obj/item/proc/pickup(mob/user)
@@ -305,7 +308,7 @@
 // slot uses the slot_X defines found in setup.dm
 // for items that can be placed in multiple slots
 // note this isn't called during the initial dressing of a player
-/obj/item/proc/equipped(var/mob/user, var/slot)
+/obj/item/equipped(var/mob/user, var/slot)
 	hud_layerise()
 	if(user.client)	user.client.screen |= src
 	if(user.pulling == src) user.stop_pulling()
@@ -318,6 +321,8 @@
 		M.l_hand.update_twohanding()
 	if(M.r_hand)
 		M.r_hand.update_twohanding()
+	//Call the hook
+	.=..()
 
 //Defines which slots correspond to which slot flags
 var/list/global/slot_flags_enumeration = list(
@@ -522,7 +527,7 @@ var/list/global/slot_flags_enumeration = list(
 	attacker.apply_damage(force, damtype, attacker.hand ? BP_L_HAND : BP_R_HAND, used_weapon = src)
 	attacker.visible_message("<span class='danger'>[attacker] hurts \his hand on [src]!</span>")
 	playsound(target, 'sound/weapons/thudswoosh.ogg', 50, 1, -1)
-	playsound(target, hitsound, 50, 1, -1)
+	playsound(target, sound_hit, 50, 1, -1)
 	return 1
 
 /obj/item/proc/get_loc_turf()

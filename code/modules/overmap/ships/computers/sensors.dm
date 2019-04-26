@@ -40,7 +40,7 @@
 	data["viewing"] = viewing
 	if(sensors)
 		data["on"] = sensors.use_power
-		data["range"] = sensors.range
+		data["range"] = sensors.sensor_range
 		data["health"] = sensors.health
 		data["max_health"] = sensors.max_health
 		data["heat"] = sensors.heat
@@ -124,7 +124,7 @@
 
 	if(sensors)
 		if (href_list["range"])
-			var/nrange = input("Set new sensors range", "Sensor range", sensors.range) as num|null
+			var/nrange = input("Set new sensors range", "Sensor range", sensors.sensor_range) as num|null
 			if(!CanInteract(user,state))
 				return TOPIC_NOACTION
 			if (nrange)
@@ -143,7 +143,7 @@
 	if(!linked)
 		return
 	if(sensors && sensors.use_power && sensors.powered())
-		var/sensor_range = round(sensors.range*1.5) + 1
+		var/sensor_range = round(sensors.sensor_range*1.5) + 1
 		linked.set_light(1, sensor_range, sensor_range+1)
 	else
 		linked.set_light(0)
@@ -154,19 +154,18 @@
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "sensors"
 	anchored = 1
-	var/max_health = 200
-	var/health = 200
+	max_health = 200
 	var/critical_heat = 50 // sparks and takes damage when active & above this heat
 	var/heat_reduction = 1.5 // mitigates this much heat per tick
 	var/heat = 0
-	var/range = 1
+	var/sensor_range = 1
 	idle_power_usage = 5000
 
 /obj/machinery/shipsensors/attackby(obj/item/weapon/W, mob/user)
 	var/damage = max_health - health
 	if(damage && isWelder(W))
 
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 
 		if(!WT.isOn())
 			return
@@ -244,19 +243,14 @@
 		toggle()
 
 /obj/machinery/shipsensors/proc/set_range(nrange)
-	range = nrange
-	change_power_consumption(1500 * (range**2), POWER_USE_IDLE) //Exponential increase, also affects speed of overheating
+	sensor_range = nrange
+	change_power_consumption(1500 * (sensor_range**2), POWER_USE_IDLE) //Exponential increase, also affects speed of overheating
 
 /obj/machinery/shipsensors/emp_act(severity)
 	if(!use_power)
 		return
 	take_damage(20/severity)
 	toggle()
-
-/obj/machinery/shipsensors/proc/take_damage(value)
-	health = min(max(health - value, 0),max_health)
-	if(use_power && health == 0)
-		toggle()
 
 /obj/machinery/shipsensors/weak
 	heat_reduction = 0.2

@@ -199,7 +199,7 @@
 			to_chat(user, SPAN_WARNING("\The [target]'s [affected.name] is too brittle to be repaired normally."))
 			return FALSE
 		if(isWelder(tool))
-			var/obj/item/weapon/weldingtool/welder = tool
+			var/obj/item/weapon/tool/weldingtool/welder = tool
 			if(!welder.isOn() || !welder.remove_fuel(1,user))
 				return FALSE
 		return TRUE
@@ -323,7 +323,7 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='warning'>[user] causes a short circuit in [target]'s [affected.name]!</span>",
 	"<span class='warning'>You cause a short circuit in [target]'s [affected.name]!</span>")
-	target.apply_damage(rand(5,10), BURN, affected)
+	target.apply_damage(rand(5,10), DAM_ELECTRIC, affected)
 
 //////////////////////////////////////////////////////////////////
 //	 artificial organ repair surgery step
@@ -333,7 +333,7 @@
 	allowed_tools = list(
 		/obj/item/stack/nanopaste = 100,
 		/obj/item/weapon/bonegel = 30,
-		/obj/item/weapon/screwdriver = 70,
+		/obj/item/weapon/tool/screwdriver = 70,
 	)
 	min_duration = 70
 	max_duration = 90
@@ -343,7 +343,7 @@
 	var/obj/item/organ/external/affected = ..()
 	if(affected)
 		for(var/obj/item/organ/internal/I in affected.internal_organs)
-			if(BP_IS_ROBOTIC(I) && !BP_IS_CRYSTAL(I) && I.damage > 0)
+			if(BP_IS_ROBOTIC(I) && !BP_IS_CRYSTAL(I) && I.isdamaged())
 				if(I.surface_accessible)
 					return affected
 				if(affected.how_open() >= (affected.encased ? SURGERY_ENCASED : SURGERY_RETRACTED) || affected.hatch_state == HATCH_OPENED)
@@ -361,7 +361,7 @@
 /decl/surgery_step/robotics/fix_organ_robotic/end_step(mob/living/user, mob/living/carbon/human/target, target_zone, obj/item/tool)
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	for(var/obj/item/organ/I in affected.internal_organs)
-		if(I && I.damage > 0)
+		if(I && I.isdamaged())
 			if(BP_IS_ROBOTIC(I))
 				user.visible_message("<span class='notice'>[user] repairs [target]'s [I.name] with [tool].</span>", \
 				"<span class='notice'>You repair [target]'s [I.name] with [tool].</span>" )
@@ -550,7 +550,7 @@
 	max_duration = 80
 	allowed_tools = list(
 		/obj/item/weapon/hemostat = 100,
-		/obj/item/weapon/wirecutters = 75,
+		/obj/item/weapon/tool/wirecutters = 75,
 		/obj/item/weapon/material/kitchen/utensil/fork = 20
 	)
 	can_infect = 0
@@ -589,4 +589,4 @@
 	user.visible_message( \
 	SPAN_WARNING("\The [user]'s hand slips, damaging \the [target]'s [affected.name] with \the [tool]!"), \
 	SPAN_WARNING("Your hand slips, damaging \the [target]'s [affected.name] with \the [tool]!"))
-	affected.take_external_damage(3, 0, used_weapon = tool)
+	affected.take_damage(3, DAM_BLUNT, used_weapon = tool)

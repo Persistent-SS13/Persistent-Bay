@@ -71,7 +71,6 @@
 	var/locked 			= FALSE
 	var/lock_cut_state 	= BOLTS_FINE
 	var/haskeypad 		= FALSE
-	var/obj/item/weapon/airlock_brace/brace = null		//Airlock brace on this airlock
 
 	//Cycle linking
 	var/obj/machinery/door/airlock/closeOther = null	//Ref to other door entity to close/open when this one opens/closes
@@ -93,6 +92,7 @@
 	//WIFI
 	var/_wifi_id
 	var/datum/wifi/receiver/button/door/wifi_receiver
+	var/obj/item/weapon/airlock_brace/brace = null
 	var/obj/machinery/airlock_controller_norad/norad_controller // For the no radio controller (code/modules/norad_controller)
 	var/norad_UID
 
@@ -677,7 +677,7 @@ About the new airlock wires panel:
 	var/commands[0]
 	commands[++commands.len] = list("name" = "IdScan",					"command"= "idscan",				"active" = !aiDisabledIdScanner,	"enabled" = "Enabled",	"disabled" = "Disable",		"danger" = 0, "act" = 1)
 	commands[++commands.len] = list("name" = "Bolts",					"command"= "bolts",					"active" = !locked,					"enabled" = "Raised ",	"disabled" = "Dropped",		"danger" = 0, "act" = 0)
-	commands[++commands.len] = list("name" = "Bolt Lights",				"command"= "lights",				"active" = lights,					"enabled" = "Enabled",	"disabled" = "Disable",		"danger" = 0, "act" = 1)
+	commands[++commands.len] = list("name" = "Lights",					"command"= "lights",				"active" = lights,					"enabled" = "Enabled",	"disabled" = "Disable",		"danger" = 0, "act" = 1)
 	commands[++commands.len] = list("name" = "Safeties",				"command"= "safeties",				"active" = safe,					"enabled" = "Nominal",	"disabled" = "Overridden",	"danger" = 1, "act" = 0)
 	commands[++commands.len] = list("name" = "Timing",					"command"= "timing",				"active" = normalspeed,				"enabled" = "Nominal",	"disabled" = "Overridden",	"danger" = 1, "act" = 0)
 	commands[++commands.len] = list("name" = "Door State",				"command"= "open",					"active" = density,					"enabled" = "Closed",	"disabled" = "Opened", 		"danger" = 0, "act" = 0)
@@ -829,7 +829,7 @@ About the new airlock wires panel:
 			else if (!activate && !src.normalspeed)
 				normalspeed = 1
 		if("lights")
-			// Bolt lights
+			// Lights
 			if(src.isWireCut(AIRLOCK_WIRE_LIGHT))
 				to_chat(usr, "The bolt lights wire is cut - The door bolt lights are permanently disabled.")
 			else if (!activate && src.lights)
@@ -1261,7 +1261,7 @@ About the new airlock wires panel:
 // Most doors will never be deconstructed over the course of a round,
 // so as an optimization defer the creation of electronics until
 // the airlock is deconstructed
-/obj/machinery/door/airlock/proc/create_electronics()
+/obj/machinery/door/airlock/create_electronics()
 	//create new electronics
 	if (secured_wires)
 		src.electronics = new/obj/item/weapon/airlock_electronics/secure( src.loc )

@@ -128,7 +128,6 @@ SUBSYSTEM_DEF(air)
 	..(out.Join())
 
 /datum/controller/subsystem/air/Initialize(timeofday, simulate = TRUE)
-
 	var/starttime = REALTIMEOFDAY
 	report_progress("Processing Geometry...")
 
@@ -136,7 +135,6 @@ SUBSYSTEM_DEF(air)
 	for(var/turf/simulated/S)
 		simulated_turf_count++
 		S.update_air_properties()
-
 		CHECK_TICK
 
 	report_progress({"Total Simulated Turfs: [simulated_turf_count]

@@ -21,6 +21,8 @@
 	desc = "A complex language known instinctively by Dionaea, 'spoken' by emitting modulated radio waves. This version uses low frequency waves for slow communication at long ranges."
 	key = "w"
 	flags = RESTRICTED | HIVEMIND
+	shorthand = "N/A"
+
 */
 /datum/language/unathi
 	name = LANGUAGE_UNATHI

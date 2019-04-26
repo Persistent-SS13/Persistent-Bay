@@ -28,14 +28,12 @@
 	var/lava = 0
 
 /turf/simulated/floor/Initialize()
-	levelupdate()
-	if(!map_storage_loaded)
-		set_flooring(decls_repository.get_decl(floortype))
+	if(!map_storage_loaded && initial_flooring)
+		set_flooring(decls_repository.get_decl(initial_flooring))
 	else if(flooring)
 		set_flooring(flooring)
 	else
 		make_plating()
-
 	. = ..()
 
 /turf/simulated/floor/ReplaceWithLattice()
@@ -58,8 +56,16 @@
 	..(newloc)
 //	if(!floortype && initial_flooring)
 //		floortype = initial_flooring
-//	if(floortype)
-//		set_flooring(decls_repository.get_decl(floortype))
+	if(floortype)
+		set_flooring(decls_repository.get_decl(floortype))
+	
+	ADD_SAVED_VAR(broken)
+	ADD_SAVED_VAR(burnt)
+	ADD_SAVED_VAR(flooring)
+	ADD_SAVED_VAR(mineral)
+
+	ADD_SKIP_EMPTY(flooring)
+	ADD_SKIP_EMPTY(mineral)
 
 /turf/simulated/floor/proc/set_flooring(var/decl/flooring/newflooring)
 	make_plating(defer_icon_update = 1)

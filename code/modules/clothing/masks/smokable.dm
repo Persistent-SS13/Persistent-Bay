@@ -112,7 +112,7 @@
 			T.visible_message(flavor_text)
 		START_PROCESSING(SSobj, src)
 
-/obj/item/clothing/mask/smokable/proc/extinguish(var/mob/user, var/no_message)
+/obj/item/clothing/mask/smokable/extinguish(var/mob/user, var/no_message)
 	lit = 0
 	damtype = "brute"
 	STOP_PROCESSING(SSobj, src)

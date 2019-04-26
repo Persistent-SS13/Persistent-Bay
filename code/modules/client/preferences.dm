@@ -88,6 +88,12 @@ datum/preferences
 	var/dat = "<html><body><center>"
 
 	if(path)
+		dat += "Slot - "
+		dat += "<a href='?src=\ref[src];load=1'>Load slot</a> - "
+		dat += "<a href='?src=\ref[src];save=1'>Save slot</a> - "
+		dat += "<a href='?src=\ref[src];resetslot=1'>Reset slot</a> - "
+		dat += "<a href='?src=\ref[src];reload=1'>Reload slot</a>"
+
 		dat += "Finish Character - "
 		dat += "<a href='?src=\ref[src];save=1'>Finalize</a>"
 	else
@@ -112,7 +118,7 @@ datum/preferences
 
 	if(href_list["preference"] == "open_whitelist_forum")
 		if(config.forumurl)
-			user << link(config.forumurl)
+			open_link(user, config.forumurl)
 		else
 			to_chat(user, "<span class='danger'>The forum URL is not set in the server configuration.</span>")
 			return
@@ -124,18 +130,21 @@ datum/preferences
 		return 1
 
 	if(href_list["save"])
+		if(!cultural_info)
+			log_error("Something went very wrong with cultural info!!!")
+			return 
 		if(!real_name)
 			to_chat(usr, "You must select a valid character name")
 			return
-		if(!home_system)
-			to_chat(usr, "You must choose a valid early life")
+		if(!cultural_info[TAG_HOMEWORLD])
+			to_chat(usr, "You must choose a valid early life/homeworld")
 			return
 		if(!faction)
 			to_chat(usr, "You must choose a valid employer.")
 			return
 		save_preferences()
 		save_character()
-		usr << browse(null, "window=saves")
+		close_browser(usr, "window=saves")
 		char_panel.close()
 		return 0
 	else if(href_list["reload"])
@@ -155,7 +164,6 @@ datum/preferences
 		randomize_appearance_and_body_for()
 		real_name = null
 		preview_icon = null
-		home_system = null
 		faction = null
 		selected_under = null
 		sanitize_preferences()
@@ -334,10 +342,10 @@ datum/preferences
 	if(LAZYLEN(character.descriptors))
 		for(var/entry in body_descriptors)
 			character.descriptors[entry] = body_descriptors[entry]
-	character.home_system = home_system
-	character.citizenship = citizenship
+	//character.home_system = home_system
+	//character.citizenship = citizenship
 	character.personal_faction = faction
-	character.religion = religion
+	//character.religion = religion
 
 	if(!character.isSynthetic())
 		character.nutrition = rand(140,360)
@@ -490,3 +498,7 @@ datum/preferences
 		slots += 2
 
 	return slots
+
+/datum/preferences/proc/GetPlayerAltTitle(datum/job/job)
+	// return (job.title in player_alt_titles) ? player_alt_titles[job.title] : job.title
+	return (job)? job.title : ""

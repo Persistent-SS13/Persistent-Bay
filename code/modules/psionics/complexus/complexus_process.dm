@@ -160,8 +160,8 @@
 				if(BP_IS_ROBOTIC(I))
 					continue
 
-				if(I.damage > 0 && spend_power(heal_rate))
-					I.damage = max(I.damage - heal_rate, 0)
+				if(I.isdamaged() && spend_power(heal_rate))
+					I.heal_damage(heal_rate)
 					to_chat(H, SPAN_NOTICE("Your innards itch as your autoredactive faculty mends your [I.name]."))
 					return
 
@@ -172,7 +172,7 @@
 					if(BP_IS_ROBOTIC(E))
 						continue
 
-					if ((E.status & ORGAN_BROKEN) && E.damage < (E.min_broken_damage * config.organ_health_multiplier)) // So we don't mend and autobreak.
+					if ((E.status & ORGAN_BROKEN) && E.get_damage() < (E.min_broken_damage * config.organ_health_multiplier)) // So we don't mend and autobreak.
 						if(spend_power(heal_rate))
 							if(E.mend_fracture())
 								to_chat(H, SPAN_NOTICE("Your autoredactive faculty coaxes together the shattered bones in your [E.name]."))

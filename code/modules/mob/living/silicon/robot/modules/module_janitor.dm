@@ -18,7 +18,7 @@
 		/obj/item/device/lightreplacer,
 		/obj/item/borg/sight/hud/jani,
 		/obj/item/device/plunger/robot,
-		/obj/item/weapon/crowbar
+		/obj/item/weapon/tool/crowbar
 	)
 	emag = /obj/item/weapon/reagent_containers/spray
 

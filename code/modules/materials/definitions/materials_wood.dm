@@ -29,6 +29,7 @@
 				/datum/reagent/water = 5
 				)
 	sale_price = 1
+	energy_combustion = 18
 
 /material/wood/holographic
 	name = "holo" + MATERIAL_WOOD

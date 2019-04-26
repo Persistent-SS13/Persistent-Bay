@@ -14,17 +14,17 @@
 	name = "Nexus City Tax Code"
 	available_to_ai = TRUE
 	var/taxee = 1 // 1 = personal, 2 = business
-	
+
 	var/tax_type = 1 // 1 = flat, 2 = progressie
 	var/tax_prog1_rate = 0
 	var/tax_prog2_rate = 0
 	var/tax_prog3_rate = 0
 	var/tax_prog4_rate = 0
-	
+
 	var/tax_prog2_amount = 0
 	var/tax_prog3_amount = 0
 	var/tax_prog4_amount = 0
-	
+
 	var/tax_flat_rate = 0
 	var/synced = 0
 	var/menu = 1
@@ -41,11 +41,11 @@
 			tax_prog2_rate = connected_faction.tax_bprog2_rate
 			tax_prog3_rate = connected_faction.tax_bprog3_rate
 			tax_prog4_rate = connected_faction.tax_bprog4_rate
-			
+
 			tax_prog2_amount = connected_faction.tax_bprog2_amount
 			tax_prog3_amount = connected_faction.tax_bprog3_amount
 			tax_prog4_amount = connected_faction.tax_bprog4_amount
-			
+
 			tax_flat_rate = connected_faction.tax_bflat_rate
 		else
 			tax_type = connected_faction.tax_type_p
@@ -53,20 +53,20 @@
 			tax_prog2_rate = connected_faction.tax_pprog2_rate
 			tax_prog3_rate = connected_faction.tax_pprog3_rate
 			tax_prog4_rate = connected_faction.tax_pprog4_rate
-			
+
 			tax_prog2_amount = connected_faction.tax_pprog2_amount
 			tax_prog3_amount = connected_faction.tax_pprog3_amount
 			tax_prog4_amount = connected_faction.tax_pprog4_amount
-			
+
 			tax_flat_rate = connected_faction.tax_pflat_rate
 	synced = 1
-			
-	
-	
+
+
+
 /datum/nano_module/program/tax_laws/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
-	var/datum/world_faction/democratic/connected_faction
-	if(program.computer.network_card && program.computer.network_card.connected_network)
-		connected_faction = program.computer.network_card.connected_network.holder
+	// var/datum/world_faction/democratic/connected_faction
+	// if(program.computer.network_card && program.computer.network_card.connected_network)
+	// 	connected_faction = program.computer.network_card.connected_network.holder
 	var/list/data = host.initial_data()
 
 	if(!synced)
@@ -85,14 +85,14 @@
 		data["tax_prog2_rate"] = tax_prog2_rate
 		data["tax_prog3_rate"] = tax_prog3_rate
 		data["tax_prog4_rate"] = tax_prog4_rate
-		
+
 		data["tax_prog2_amount"] = tax_prog2_amount
 		data["tax_prog3_amount"] = tax_prog3_amount
 		data["tax_prog4_amount"] = tax_prog4_amount
-		
+
 	else
 		data["tax_flat_rate"] = tax_flat_rate
-		
+
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "tax_laws.tmpl", name, 600, 500, state = state)

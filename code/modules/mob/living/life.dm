@@ -193,7 +193,6 @@
 		reset_view(null)
 
 /mob/living/proc/update_sight()
-	sight = initial(sight)
 	if(stat == DEAD || eyeobj)
 		update_dead_sight()
 	else

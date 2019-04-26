@@ -35,3 +35,6 @@
 
 // Determines the exchange ratio of reagents being converted to gas and vice versa.
 #define REAGENT_GAS_EXCHANGE_FACTOR 10
+
+//C constant, not C because name conflict galore
+#define SPEED_OF_LIGHT 299792458

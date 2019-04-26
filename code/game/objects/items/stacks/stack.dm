@@ -14,7 +14,9 @@
 	origin_tech = list(TECH_MATERIAL = 1)
 	var/list/datum/stack_recipe/recipes
 	var/singular_name
+	var/base_state
 	var/plural_icon_state
+	var/max_icon_state
 	var/amount = 1
 	var/max_amount //also see stack recipes initialisation, param "max_res_amount" must be equal to this max_amount
 	var/stacktype //determines whether different stack types can merge
@@ -27,7 +29,7 @@
 /obj/item/stack/New(var/loc, var/amount=null)
 	if (!stacktype)
 		stacktype = type
-	if (amount)
+	if (amount >= 1)
 		src.amount = amount
 	..()
 	update_material_value()
@@ -187,8 +189,9 @@
 			if(usr)
 				usr.remove_from_mob(src)
 			qdel(src) //should be safe to qdel immediately since if someone is still using this stack it will persist for a little while longer
-		src.update_icon()
-		src.update_material_value()
+		else
+			src.update_icon()
+			src.update_material_value()
 		return 1
 	else
 		if(get_amount() < used)
@@ -210,6 +213,8 @@
 			return 0
 		else
 			amount += extra
+			update_icon()
+		return 1
 	else if(!synths || synths.len < uses_charge)
 		return 0
 	else
@@ -367,8 +372,8 @@
 	if (user.get_inactive_hand() == src)
 		var/N = input("How many stacks of [src] would you like to split off?", "Split stacks", 1) as num|null
 		if(N)
-			var/obj/item/stack/F = split(N)
-			if(F)
+			var/obj/item/stack/F = src.split(N)
+			if (F)
 				user.put_in_hands(F)
 				src.add_fingerprint(user)
 				F.add_fingerprint(user)

@@ -4,9 +4,6 @@
 	anchored = 1
 	icon = 'icons/obj/virology.dmi'
 	icon_state = "incubator"
-	use_power = POWER_USE_IDLE
-	active_power_usage = 800
-	idle_power_usage = 100
 	var/obj/item/weapon/virusdish/dish
 	var/obj/item/weapon/reagent_containers/glass/beaker = null
 	var/radiation	= 0

@@ -1,4 +1,4 @@
-<!--
+<!-- 
 Title: Air Alarm
 Used In File(s): \code\game\machinery\alarm.dm
 
@@ -19,7 +19,7 @@ Used In File(s): \code\game\machinery\alarm.dm
 <H1>Air Status</H1>
 {{if data.has_environment}}
 	{{for data.environment}}
-		{{:value.name}}:
+		{{:value.name}}: 
 		{{if value.danger_level == 2}}
 			<span class='bad'>
 		{{else value.danger_level == 1}}
@@ -59,7 +59,7 @@ Used In File(s): \code\game\machinery\alarm.dm
                 <tr>
                     <td>
                         <div class="item">
-                            <div class="itemContent" style="width: 100%;">
+                            <div class="itemContent" style="width: 100%;">	
                                 {{:helper.link('Off',	null, { 'rcon' : 1}, data.remote_connection && !data.remote_access ? (data.rcon == 1 ? 'yellowButton' : 'disabled') : null, data.rcon == 1 ? 'selected' : null)}}
                                 {{:helper.link('Auto',	null, { 'rcon' : 2}, data.remote_connection && !data.remote_access ? (data.rcon == 2 ? 'yellowButton' : 'disabled') : null, data.rcon == 2 ? 'selected' : null)}}
                                 {{:helper.link('On',	null, { 'rcon' : 3}, data.remote_connection && !data.remote_access ? (data.rcon == 3 ? 'yellowButton' : 'disabled') : null, data.rcon == 3 ? 'selected' : null)}}
@@ -180,7 +180,10 @@ Used In File(s): \code\game\machinery\alarm.dm
 					Operation Mode:
 				</div>
 				<div class="itemContent">
-					{{:helper.link(value.scrubbing ? 'Scrubbing' : 'Siphoning', null, { 'id_tag' : value.id_tag, 'command' : 'scrubbing', 'val' : value.scrubbing ? 0 : 1}, null, value.scrubbing ? null : 'redButton')}}
+					{{:helper.link('Scrub', null, { 'id_tag' : value.id_tag, 'command' : 'scrubbing', 'scrub_mode' : 'scrub'}, null, value.scrubbing == 'scrub' ? 'selected' : null)}}
+					{{:helper.link('Exchange', null, { 'id_tag' : value.id_tag, 'command' : 'scrubbing', 'scrub_mode' : 'exchange'}, null, value.scrubbing == 'exchange' ? 'selected' : null)}}
+					{{:helper.link('Siphon', null, { 'id_tag' : value.id_tag, 'command' : 'scrubbing', 'scrub_mode' : 'siphon'}, null, value.scrubbing == 'siphon' ? 'redButton' : null)}}
+<!--					{{:helper.link(value.scrubbing ? 'Scrubbing' : 'Siphoning', null, { 'id_tag' : value.id_tag, 'command' : 'scrubbing', 'val' : value.scrubbing ? 0 : 1}, null, value.scrubbing ? null : 'redButton')}} -->
 				</div>
 			</div>
 			<div class="item">

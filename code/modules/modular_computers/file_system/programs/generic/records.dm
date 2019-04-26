@@ -15,14 +15,17 @@
 	var/datum/computer_file/report/crew_record/active_record
 	var/message = null
 
+/datum/nano_module/records/proc/get_connected_faction()
+	if(host)
+		var/obj/item/modular_computer/comp = host
+		return comp.ConnectedFaction()
+	return null
+
 /datum/nano_module/records/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null, force_open = 1, state = GLOB.default_state)
 	var/list/data = host.initial_data()
 	var/list/user_access = get_record_access(user)
-
-	var/datum/world_faction/connected_faction
 	var/list/faction_records = list()
-	if(program.computer.network_card && program.computer.network_card.connected_network)
-		connected_faction = program.computer.network_card.connected_network.holder
+	var/datum/world_faction/connected_faction = get_connected_faction()
 	if(connected_faction)
 		faction_records = connected_faction.get_records()
 
@@ -138,32 +141,29 @@
 		return
 	F.ask_value(user)
 
-	var/newValue
-	switch(F.valtype)
-		if(EDIT_SHORTTEXT)
-			newValue = input(user, "Enter [F.name]:", "Record edit", html_decode(F.get_value())) as null|text
-		if(EDIT_LONGTEXT)
-			newValue = replacetext(input(user, "Enter [F.name]. You may use HTML paper formatting tags:", "Record edit", replacetext(html_decode(F.get_value()), "\[br\]", "\n")) as null|message, "\n", "\[br\]")
-		if(EDIT_NUMERIC)
-			newValue = input(user, "Enter [F.name]:", "Record edit", F.get_value()) as null|num
-		if(EDIT_LIST)
-			var/options = F.get_options()
-			newValue = input(user,"Pick [F.name]:", "Record edit", F.get_value()) as null|anything in options
+	// var/newValue
+	// switch(F.valtype)
+	// 	if(EDIT_SHORTTEXT)
+	// 		newValue = input(user, "Enter [F.name]:", "Record edit", html_decode(F.get_value())) as null|text
+	// 	if(EDIT_LONGTEXT)
+	// 		newValue = replacetext(input(user, "Enter [F.name]. You may use HTML paper formatting tags:", "Record edit", replacetext(html_decode(F.get_value()), "\[br\]", "\n")) as null|message, "\n", "\[br\]")
+	// 	if(EDIT_NUMERIC)
+	// 		newValue = input(user, "Enter [F.name]:", "Record edit", F.get_value()) as null|num
+	// 	if(EDIT_LIST)
+	// 		var/options = F.get_options()
+	// 		newValue = input(user,"Pick [F.name]:", "Record edit", F.get_value()) as null|anything in options
 
-	if(active_record != R)
-		return
-	if(!F.can_edit(get_record_access(user)))
-		to_chat(user, "<span class='notice'>\The [nano_host()] flashes an \"Access Denied\" warning.</span>")
-		return
-	if(newValue)
-		return F.set_value(newValue)
+	// if(active_record != R)
+	// 	return
+	// if(!F.can_edit(get_record_access(user)))
+	// 	to_chat(user, "<span class='notice'>\The [nano_host()] flashes an \"Access Denied\" warning.</span>")
+	// 	return
+	// if(newValue)
+	// 	return F.set_value(newValue)
 
 /datum/nano_module/records/Topic(href, href_list)
-
-	var/datum/world_faction/connected_faction
 	var/list/faction_records = list()
-	if(program.computer.network_card && program.computer.network_card.connected_network)
-		connected_faction = program.computer.network_card.connected_network.holder
+	var/datum/world_faction/connected_faction = get_connected_faction()
 	if(connected_faction)
 		faction_records = connected_faction.get_records()
 

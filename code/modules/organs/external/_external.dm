@@ -471,7 +471,7 @@ This function completely restores a damaged organ to perfect condition.
 		return
 
 	if(BP_IS_CRYSTAL(src))
-		type = SHATTER
+		type = DAM_SHATTER
 		playsound(loc, 'sound/effects/hit_on_shattered_glass.ogg', 40, 1) // Crash!
 
 	//moved these before the open_wound check so that having many small wounds for example doesn't somehow protect you from taking internal damage (because of the return)
@@ -883,7 +883,7 @@ Note that amputating the affected organ does in fact remove the infection from t
 			stump.SetName("stump of \a [name]")
 			stump.artery_name = "mangled [artery_name]"
 			stump.arterial_bleed_severity = arterial_bleed_severity
-			stump.add_pain(max_damage)
+			stump.add_pain(max_health)
 			W.parent_organ = stump
 			LAZYADD(stump.wounds, W)
 			victim.organs |= stump

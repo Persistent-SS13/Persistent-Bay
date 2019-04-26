@@ -153,21 +153,11 @@
 /obj/structure/window/reinforced/holowindow/Destroy()
 	..()
 
-/obj/structure/window/reinforced/holowindow/attackby(obj/item/W as obj, mob/user as mob)
-	if(istype(W, /obj/item/weapon/tool/screwdriver))
-		to_chat(user, SPAN_NOTICE("It's a holowindow, you can't unfasten it!"))
-	else if(istype(W, /obj/item/weapon/tool/crowbar) && reinf && state <= 1)
-		to_chat(user, SPAN_NOTICE("It's a holowindow, you can't pry it!"))
-	else if(istype(W, /obj/item/weapon/tool/wrench) && !anchored && (!state || !reinf))
-		to_chat(user, SPAN_NOTICE("It's a holowindow, you can't dismantle it!"))
-	else
-		..()
-	return
-
 /obj/structure/window/reinforced/holowindow/destroyed(var/display_message = 1)
 	playsound(src, sound_destroyed, 70, 1)
 	visible_message("[src] fades away as it shatters!")
 	qdel(src)
+	return
 
 /obj/structure/window/reinforced/holowindow/disappearing/Destroy()
 	..()
@@ -176,18 +166,28 @@
 	..()
 
 /obj/machinery/door/window/holowindoor/attackby(obj/item/weapon/I as obj, mob/user as mob)
-	if(src.operating != 1 && ( !istype(I, /obj/item/weapon) || istype(I, /obj/item/weapon/card) ))
-		src.add_fingerprint(user)
-		if (src.allowed(user) || !src.requiresID())
-			if (src.density)
-				open()
-			else
-				close()
-			return 1
-		else if (src.density)
-			flick(text("[]deny", src.base_state), src)
-			return 1
-	return ..()
+	if(src.density && istype(I, /obj/item/weapon) && !istype(I, /obj/item/weapon/card))
+		var/aforce = I.force
+		playsound(src.loc, 'sound/effects/Glasshit.ogg', 75, 1)
+		visible_message("<span class='danger'>\The [src] was hit by \the [I].</span>")
+		if(IsDamageTypeBrute(I.damtype) || IsDamageTypeBurn(I.damtype))
+			take_damage(aforce)
+		return
+
+	src.add_fingerprint(user)
+	if (!src.requiresID())
+		user = null
+
+	if (src.allowed(user))
+		if (src.density)
+			open()
+		else
+			close()
+
+	else if (src.density)
+		flick(text("[]deny", src.base_state), src)
+
+	return
 
 /obj/machinery/door/window/holowindoor/destroyed()
 	src.set_density(0)
@@ -230,15 +230,15 @@
 		item_color = "red"
 
 /obj/item/weapon/holo/esword/handle_shield(mob/user, var/damage, atom/damage_source = null, mob/attacker = null, var/def_zone = null, var/attack_text = "the attack")
-	if(active && default_parry_check(user, attacker, damage_source) && prob(50))
-		user.visible_message("<span class='danger'>\The [user] parries [attack_text] with \the [src]!</span>")
-
+	. = ..()
+	if(.)
 		var/datum/effect/effect/system/spark_spread/spark_system = new /datum/effect/effect/system/spark_spread()
 		spark_system.set_up(5, 0, user.loc)
 		spark_system.start()
 		playsound(user.loc, 'sound/weapons/blade1.ogg', 50, 1)
-		return 1
-	return 0
+
+/obj/item/weapon/holo/esword/get_parry_chance(mob/user)
+	return active ? ..() : 0
 
 /obj/item/weapon/holo/esword/New()
 	item_color = pick("red","blue","green","purple")

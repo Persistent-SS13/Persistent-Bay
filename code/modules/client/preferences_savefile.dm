@@ -36,7 +36,7 @@
 	if(!S)					return 0
 	S.cd = "/"
 
-	S["version"] >> savefile_version
+	from_file(S["version"], savefile_version)
 	player_setup.load_preferences(S)
 	loaded_preferences = S
 	return 1
@@ -47,7 +47,7 @@
 	if(!S)					return 0
 	S.cd = "/"
 
-	S["version"] << SAVEFILE_VERSION_MAX
+	to_file(S["version"], SAVEFILE_VERSION_MAX)
 	player_setup.save_preferences(S)
 	loaded_preferences = S
 	return 1
@@ -81,6 +81,16 @@
 	return 1
 
 /datum/preferences/proc/save_character()
+	if(!path)				return 0
+	var/savefile/S = new /savefile(path)
+	if(!S)					return 0
+	S.cd = GLOB.using_map.character_save_path(default_slot)
+
+	S["version"] << SAVEFILE_VERSION_MAX
+	player_setup.save_character(S)
+	loaded_character = S
+	return S
+/*
 //	if(!path)				return 0
 //	var/savefile/S = new /savefile(path)
 //	if(!S)					return 0
@@ -137,6 +147,7 @@
 			factions.records.faction_records |= record
 		var/obj/item/weapon/card/id/id = new(mannequin)
 		id.registered_name = real_name
+		faction_uid = factions.uid
 		id.selected_faction = factions.uid
 		id.approved_factions |= factions.uid
 		id.associated_account_number = M.account_number
@@ -148,18 +159,22 @@
 			stack.connected_faction = factions.uid
 			stack.try_connect()
 		mannequin.equip_to_slot_or_del(new /obj/item/device/radio/headset(mannequin),slot_l_ear)
-	mannequin.spawn_loc = faction_uid
+	if(faction)
+		mannequin.spawn_loc = faction_uid
+	else
+		mannequin.spawn_loc = "null"
 	mannequin.spawn_type = 2
 	mannequin.species.equip_survival_gear(mannequin)
 	mannequin.equip_to_slot_or_del(new /obj/item/clothing/shoes/black(mannequin),slot_shoes)
 	for(var/lang in alternate_languages)
 		var/datum/language/chosen_language = all_languages[lang]
 		if(chosen_language)
-			var/is_species_lang = (chosen_language.name in mannequin.species.secondary_langs)
+			var/decl/cultural_info/current_culture = SSculture.get_culture(mannequin.species.default_cultural_info[TAG_CULTURE])
+			var/is_species_lang = (chosen_language in (current_culture.get_spoken_languages()))
 			if(is_species_lang || ((!(chosen_language.flags & RESTRICTED) || check_rights(R_ADMIN, 0, client))))
 				mannequin.add_language(lang)
-	S["name"] << mannequin.real_name
-	S["mob"] << mannequin
+	to_file(S["name"], mannequin.real_name)
+	to_file(S["mob"], mannequin)
 	character_list = list()
 	qdel(mannequin)
 
@@ -167,6 +182,7 @@
 //	player_setup.save_character(S)
 //	loaded_character = S
 //	return S
+*/
 
 /datum/preferences/proc/sanitize_preferences()
 	player_setup.sanitize_setup()

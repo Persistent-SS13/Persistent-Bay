@@ -88,7 +88,7 @@
 			break // If they breathe in the nasty stuff once, no need to continue checking
 
 /mob/living/carbon/proc/get_breath_volume()
-	return species.breath_volume
+	return STD_BREATH_VOLUME
 
 /mob/living/carbon/proc/handle_breath(datum/gas_mixture/breath)
 	return

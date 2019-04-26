@@ -608,8 +608,8 @@
 /obj/machinery/light/small{
 	dir = 1
 	},
-/obj/item/weapon/crowbar,
-/obj/item/weapon/crowbar,
+/obj/item/weapon/tool/crowbar,
+/obj/item/weapon/tool/crowbar,
 /turf/simulated/floor/tiled/dark,
 /area/map_template/crashed_pod)
 "br" = (
@@ -881,8 +881,8 @@
 "bT" = (
 /obj/structure/closet/emcloset,
 /obj/machinery/light/small,
-/obj/item/weapon/crowbar,
-/obj/item/weapon/crowbar,
+/obj/item/weapon/tool/crowbar,
+/obj/item/weapon/tool/crowbar,
 /turf/simulated/floor/tiled/dark,
 /area/map_template/crashed_pod)
 "bU" = (
@@ -1044,7 +1044,7 @@
 "cc" = (
 /obj/structure/table/steel_reinforced,
 /obj/item/device/multitool,
-/obj/item/weapon/screwdriver,
+/obj/item/weapon/tool/screwdriver,
 /obj/item/weapon/cell/device/high,
 /obj/item/weapon/cell/device/high,
 /obj/item/weapon/cell/crap,

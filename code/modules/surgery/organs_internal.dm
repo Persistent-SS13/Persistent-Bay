@@ -27,7 +27,7 @@
 	var/obj/item/organ/external/affected = ..()
 	if(affected)
 		for(var/obj/item/organ/internal/I in affected.internal_organs)
-			if(I.damage > 0)
+			if(I.isdamaged())
 				if(I.surface_accessible || (affected.how_open() >= (affected.encased ? SURGERY_ENCASED : SURGERY_RETRACTED)))
 					return affected
 
@@ -229,7 +229,7 @@
 			var/o_a =  (O.gender == PLURAL) ? "" : "a "
 			if(O.organ_tag == BP_POSIBRAIN && !target.species.has_organ[BP_POSIBRAIN])
 				to_chat(user, SPAN_WARNING("There's no place in [target] to fit \the [O.organ_tag]."))
-			else if(O.damage > (O.max_damage * 0.75))
+			else if(O.health < (O.get_max_health() * 0.75))
 				to_chat(user, SPAN_WARNING("\The [O.name] [o_is] in no state to be transplanted."))
 			else if(O.w_class > affected.cavity_max_w_class)
 				to_chat(user, SPAN_WARNING("\The [O.name] [o_is] too big for [affected.cavity_name] cavity!"))
@@ -370,7 +370,7 @@
 	if(!organ_to_fix.can_recover())
 		to_chat(user, SPAN_WARNING("The [organ_to_fix.name] is necrotic and can't be saved, it will need to be replaced."))
 		return FALSE
-	if(organ_to_fix.damage >= organ_to_fix.max_damage)
+	if(organ_to_fix.health >= organ_to_fix.get_min_health())
 		to_chat(user, SPAN_WARNING("The [organ_to_fix.name] needs to be repaired before it is regenerated."))
 		return FALSE
 	return organ_to_fix

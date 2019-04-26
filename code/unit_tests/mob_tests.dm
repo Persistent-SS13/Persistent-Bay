@@ -469,30 +469,50 @@ datum/unit_test/mob_damage/nabber
 
 datum/unit_test/mob_damage/nabber/brute
 	name = "MOB: GAS Brute Damage Check"
-	damagetype = BRUTE
+	damagetype = DAM_BLUNT
+	expected_vulnerability = ARMORED
+
+datum/unit_test/mob_damage/nabber/cut
+	name = "MOB: GAS cut Damage Check"
+	damagetype = DAM_CUT
+	expected_vulnerability = ARMORED
+
+datum/unit_test/mob_damage/nabber/pierce
+	name = "MOB: GAS pierce Damage Check"
+	damagetype = DAM_PIERCE
 	expected_vulnerability = ARMORED
 
 datum/unit_test/mob_damage/nabber/fire
 	name = "MOB: GAS Fire Damage Check"
-	damagetype = BURN
+	damagetype = DAM_BURN
+	expected_vulnerability = EXTRA_VULNERABLE
+
+datum/unit_test/mob_damage/nabber/laser
+	name = "MOB: GAS Laser Damage Check"
+	damagetype = DAM_LASER
+	expected_vulnerability = EXTRA_VULNERABLE
+
+datum/unit_test/mob_damage/nabber/energy
+	name = "MOB: GAS Energy Damage Check"
+	damagetype = DAM_ENERGY
 	expected_vulnerability = EXTRA_VULNERABLE
 
 datum/unit_test/mob_damage/nabber/tox
 	name = "MOB: GAS Toxins Damage Check"
-	damagetype = TOX
+	damagetype = DAM_BIO
 
 datum/unit_test/mob_damage/nabber/oxy
 	name = "MOB: GAS Oxygen Damage Check"
-	damagetype = OXY
+	damagetype = DAM_OXY
 	expected_vulnerability = ARMORED
 
 datum/unit_test/mob_damage/nabber/clone
 	name = "MOB: GAS Clone Damage Check"
-	damagetype = CLONE
+	damagetype = DAM_CLONE
 
 datum/unit_test/mob_damage/nabber/halloss
 	name = "MOB: GAS Halloss Damage Check"
-	damagetype = PAIN
+	damagetype = DAM_PAIN
 
 // =================================================================
 // SPECIAL WHITTLE SNOWFLAKES aka IPC

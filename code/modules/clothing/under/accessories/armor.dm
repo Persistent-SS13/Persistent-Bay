@@ -113,7 +113,7 @@
 /obj/item/clothing/accessory/armorplate/merc
 	name = "heavy armor plate"
 	desc = "A ceramics-reinforced synthetic armor plate, providing state of of the art protection. Attaches to a plate carrier."
-	icon_state = "armor_heavy"
+	icon_state = "armor_merc"
 	armor  = list(
 		DAM_BLUNT 	= 70,
 		DAM_PIERCE 	= 65,
@@ -127,6 +127,7 @@
 		DAM_BIO 	= 0,
 		DAM_RADS 	= 0,
 		DAM_STUN 	= 5)
+	slowdown = 1
 
 //Arm guards
 /obj/item/clothing/accessory/armguards

@@ -5,31 +5,31 @@
 	item_cost = 4
 	category = /datum/uplink_category/ammunition
 
-/datum/uplink_item/item/ammo/c45m
+/datum/uplink_item/item/ammo/c45
 	name = ".45"
-	path = /obj/item/ammo_magazine/c45m
+	path = /obj/item/ammo_magazine/box/c45
 
-/datum/uplink_item/item/ammo/mc9mm
+/datum/uplink_item/item/ammo/c9mm
 	name = "9mm"
-	path = /obj/item/ammo_magazine/mc9mm
+	path = /obj/item/ammo_magazine/box/c9mm
 
-/datum/uplink_item/item/ammo/a10mm
+/datum/uplink_item/item/ammo/c10mm
 	name = "10mm"
-	path = /obj/item/ammo_magazine/a10mm
+	path = /obj/item/ammo_magazine/box/c45
 
 /datum/uplink_item/item/ammo/darts
 	name = "Darts"
 	path = /obj/item/ammo_magazine/chemdart
 
-/datum/uplink_item/item/ammo/a357
+/datum/uplink_item/item/ammo/c357
 	name = ".357"
 	item_cost = 8
-	path = /obj/item/ammo_magazine/a357
+	path = /obj/item/ammo_magazine/speedloader/c357
 
-/datum/uplink_item/item/ammo/a556
+/datum/uplink_item/item/ammo/c556
 	name = "5.56mm"
 	item_cost = 8
-	path = /obj/item/ammo_magazine/c556
+	path = /obj/item/ammo_magazine/box/c556
 
 // /datum/uplink_item/item/ammo/sniperammo
 // 	name = "14.5mm"

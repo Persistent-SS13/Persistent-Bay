@@ -139,8 +139,7 @@
 				if(istype(TA.loc,/area/space) && !istype(TA,/turf/simulated/wall))
 					TA.ChangeTurf(ceiling_type, 1, 1)
 
-// short_jump - Perform a short shuttle jump
-/datum/shuttle/proc/short_jump(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/location)
+/datum/shuttle/proc/short_jump(var/obj/effect/shuttle_landmark/destination)
 	if(moving_status != SHUTTLE_IDLE) return
 
 	moving_status = SHUTTLE_WARMUP
@@ -160,7 +159,6 @@
 		attempt_move(destination)
 		moving_status = SHUTTLE_IDLE
 
-// long_jump - Perform a long shuttle jump
 /datum/shuttle/proc/long_jump(var/obj/effect/shuttle_landmark/destination, var/obj/effect/shuttle_landmark/interim, var/travel_time)
 	if(moving_status != SHUTTLE_IDLE) return
 

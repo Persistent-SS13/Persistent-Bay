@@ -38,8 +38,8 @@ var/list/mining_floors = list()
 
 	has_resources = 1
 	has_gas_resources = 1
-
 	skip_icon_state = 1
+
 /turf/simulated/mineral/Initialize()
 	. = ..()
 	if (!mining_walls["[src.z]"])
@@ -47,13 +47,13 @@ var/list/mining_floors = list()
 	mining_walls["[src.z]"] += src
 
 /turf/simulated/mineral/proc/setup()
-	spawn(0)
-		MineralSpread()
-	spawn(2)
-		update_icon(1)
+	MineralSpread()
+	update_icon(1)
+
 /turf/simulated/mineral/after_load()
 	queue_icon_update(0)
 	..()
+
 /turf/simulated/mineral/Destroy()
 	if (mining_walls["[src.z]"])
 		mining_walls["[src.z]"] -= src
@@ -123,7 +123,7 @@ var/list/mining_floors = list()
 			GetDrilled()
 
 	//Plasma Cutter Blasts
-	else if(istype(Proj, /obj/item/projectile/plasma))
+	else if(istype(Proj, /obj/item/projectile/beam/plasmacutter))
 		mined_ore = 1
 		GetDrilled()
 
@@ -446,10 +446,6 @@ var/list/mining_floors = list()
 	has_resources = 1
 	has_gas_resources = 1
 
-/turf/simulated/floor/asteroid
-	name = "sand"
-
-
 /turf/simulated/floor/asteroid/Entered(atom/movable/M)
 	. = ..()
 	if(istype(M, /mob/living/carbon) || istype(M, /mob/living/silicon))
@@ -464,7 +460,7 @@ var/list/mining_floors = list()
 	var/xi = x
 	var/yi = y
 	var/zi = z
-	ChangeTurf(/turf/simulated/asteroid)
+	ChangeTurf(/turf/simulated/floor/asteroid)
 	spawn()
 		var/turf/simulated/asteroid = locate(xi,yi,zi)
 		asteroid.resources = resource

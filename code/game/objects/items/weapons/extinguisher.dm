@@ -109,7 +109,7 @@
 		else
 			to_chat(user, SPAN_NOTICE("You fill \the [src] with [amount] units from \the [dispenser]."))
 			playsound(src.loc, 'sound/effects/refill.ogg', 50, 1, -6)
-		if (istype(target, /obj/structure/reagent_dispensers/acid))
+		if (istype(target, /obj/structure/reagent_dispensers/wall/acid))
 			to_chat(user, SPAN_WARNING("The acid violently eats away at \the [src]!"))
 			if (prob(50))
 				reagents.splash(user, 5)

@@ -1,7 +1,7 @@
 /obj/item/weapon/gun/launcher
 	name = "launcher"
 	desc = "A device that launches things."
-	icon = 'icons/obj/guns/weapons/launchers.dmi'
+	icon = 'icons/obj/weapons/guns/launchers.dmi'
 	icon_state = "riotgun"
 	w_class = ITEM_SIZE_HUGE
 	obj_flags =  OBJ_FLAG_CONDUCTIBLE

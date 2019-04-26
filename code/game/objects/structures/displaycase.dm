@@ -1,69 +1,3 @@
-/obj/structure/displaycase_frame
-	name = "display case frame"
-	icon = 'icons/obj/stock_parts.dmi'
-	icon_state="box_glass"
-	max_health = 150
-	var/obj/item/weapon/airlock_electronics/circuit = null
-	var/state=0
-
-/obj/structure/displaycase_frame/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
-	var/pstate=state
-	var/turf/T=get_turf(src)
-	switch(state)
-		if(0)
-			if(istype(W, /obj/item/weapon/airlock_electronics) && W:icon_state != "door_electronics_smoked")
-				user.drop_item()
-				circuit = W
-				circuit.loc = src
-				state++
-				playsound(get_turf(src), 'sound/items/Screwdriver.ogg', 50, 1)
-			if(istype(W, /obj/item/weapon/tool/crowbar))
-				new /obj/machinery/constructable_frame/machine_frame(T)
-				new /obj/item/stack/material/glass(T)
-				del(src)
-				playsound(get_turf(src), 'sound/items/Crowbar.ogg', 50, 1)
-				return
-
-		if(1)
-			if(isScrewdriver(W))
-				var/obj/structure/displaycase/C=new(T)
-				if(circuit.business_name)
-					C.req_access_business = circuit.business_name
-					if(circuit.one_access)
-						C.req_one_access_business_list = circuit.business_access
-					else
-						C.req_access_business_list = circuit.business_access
-					playsound(get_turf(src), 'sound/items/Screwdriver.ogg', 50, 1)
-					del(src)
-					return
-
-				else
-					if(circuit.one_access)
-						C.req_access = null
-						C.req_one_access = circuit.conf_access
-					else
-						C.req_access = circuit.conf_access
-						C.req_one_access = null
-					C.req_access_faction = circuit.req_access_faction
-					playsound(get_turf(src), 'sound/items/Screwdriver.ogg', 50, 1)
-					del(src)
-					return
-			if(istype(W, /obj/item/weapon/tool/crowbar))
-				circuit.loc=T
-				circuit=null
-				state--
-				playsound(get_turf(src), 'sound/items/Crowbar.ogg', 50, 1)
-	if(pstate!=state)
-		pstate=state
-		update_icon()
-
-/obj/structure/displaycase_frame/update_icon()
-	switch(state)
-		if(1)
-			icon_state="box_glass_circuit"
-		else
-			icon_state="box_glass"
-
 /obj/structure/displaycase
 	name = "display case"
 	icon = 'icons/obj/stationobjs.dmi'
@@ -71,44 +5,31 @@
 	desc = "A display case for prized possessions. It taunts you to kick it."
 	density = 1
 	anchored = 1
-	unacidable = 1//Dissolving the case would also delete the contents.
+	unacidable = 1//Dissolving the case would also delete the gun.
+	alpha = 150
 	max_health = 200
-	var/obj/item/occupant = null
-	var/destroyed = 0
-	var/locked = 0
-	var/ue = null
-	var/image/occupant_overlay = null
-	var/obj/item/weapon/airlock_electronics/circuit
+	min_health = -20
+	broken_threshold = 0
+	sound_destroyed = "shatter"
+	sound_hit = 'sound/effects/Glasshit.ogg'
+	matter = list(MATERIAL_GLASS = 5 SHEETS)
+	obj_flags = OBJ_FLAG_ANCHORABLE | OBJ_FLAG_DAMAGEABLE
 
-/obj/structure/displaycase/captains_laser
-	name = "captain's display case"
-	desc = "A display case for the captain's antique laser gun. It taunts you to kick it."
+/obj/structure/displaycase/Initialize()
+	. = ..()
+	var/turf/T = get_turf(src)
+	for(var/atom/movable/AM in T)
+		if(AM.simulated && !AM.anchored)
+			AM.forceMove(src)
+	update_icon()
 
-/obj/structure/proc/getPrint(mob/user as mob)
-	return md5(user:dna:uni_identity)
-
-/obj/structure/displaycase/examine()
+/obj/structure/displaycase/examine(var/user)
 	..()
-	usr << "\blue Peering through the glass, you see that it contains:"
-	if(occupant)
-		usr << "\icon[occupant] \blue \A [occupant]"
-	else
-		usr << "Nothing."
-
-/obj/structure/displaycase/proc/dump()
-	if(occupant)
-		occupant.loc=get_turf(src)
-		occupant=null
-	occupant_overlay=null
-
-
-/obj/structure/displaycase/destroyed()
-	for(var/atom/movable/AM in src)
-		AM.dropInto(loc)
-	..()
+	if(contents.len)
+		to_chat(user, "Inside you see [english_list(contents)].")
 
 /obj/structure/displaycase/on_update_icon()
-	if(destroyed)
+	if(isbroken())
 		icon_state = "glassboxb"
 	else
 		icon_state = "glassbox"
@@ -116,93 +37,15 @@
 	for(var/atom/movable/AM in contents)
 		underlays += AM.appearance
 
-
-/obj/structure/displaycase/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
-	if(istype(W, /obj/item/weapon/card))
-		var/obj/item/weapon/card/id/I=W
-		if(!check_access(I))
-			user << "\red Access denied."
-			return
-		locked = !locked
-		if(!locked)
-			user << "\icon[src] \blue \The [src] clicks as locks release, and it slowly opens for you."
-		else
-			user << "\icon[src] \blue You close \the [src] and swipe your card, locking it."
-		update_icon()
-		return
-	if(istype(W,/obj/item/weapon/tool/crowbar) && (!locked || destroyed))
-		user.visible_message("[user.name] pries \the [src] apart.", \
-			"You pry \the [src] apart.", \
-			"You hear something pop.")
-		var/turf/T=get_turf(src)
-		playsound(T, 'sound/items/Crowbar.ogg', 50, 1)
-		dump()
-		var/obj/item/weapon/airlock_electronics/C = circuit
-		if(!C)
-			C=new (src)
-		C.one_access=!(req_access && req_access.len>0)
-		if(!C.one_access)
-			C.conf_access=req_access
-		else
-			C.conf_access=req_one_access
-		C.req_access_faction = req_access_faction
-		if(!destroyed)
-			var/obj/structure/displaycase_frame/F=new(T)
-			F.state=1
-			F.circuit=C
-			F.circuit.loc=F
-			F.update_icon()
-		else
-			C.loc=T
-			circuit=null
-			new /obj/machinery/constructable_frame/machine_frame(T)
-		del(src)
-	if(user.a_intent == "harm")
-		return ..()
-	else
-		if(locked)
-			user << "\red It's locked, you can't put anything into it."
-			return
-		if(!occupant)
-			user << "\blue You insert \the [W] into \the [src], and it floats as the hoverfield activates."
-			user.drop_item()
-			W.loc=src
-			occupant=W
-			update_icon()
-
+/obj/structure/displaycase/attackby(obj/item/weapon/W as obj, mob/user as mob)
+	//TODO: Deconstruction stuff
+	return ..()
 
 /obj/structure/displaycase/attack_hand(mob/user as mob)
-	if (destroyed)
-		if(occupant)
-			dump()
-			user << "\red You smash your fist into the delicate electronics at the bottom of the case, and deactivate the hover field permanently."
-			src.add_fingerprint(user)
-			update_icon()
+	add_fingerprint(user)
+	if(!isbroken())
+		to_chat(usr, text("<span class='warning'>You kick the display case.</span>"))
+		visible_message("<span class='warning'>[usr] kicks the display case.</span>")
+		take_damage(2)
 	else
-		if(user.a_intent == "harm")
-			user.do_attack_animation(src)
-			user.visible_message("\red [user.name] kicks \the [src]!", \
-				"\red You kick \the [src]!", \
-				"You hear glass crack.")
-			src.health -= 2
-			healthcheck()
-		else if(!locked)
-			if(ishuman(user))
-				if(!ue)
-					user << "\blue Your press your thumb against the fingerprint scanner, registering your identity with the case."
-					ue = getPrint(user)
-					return
-				if(ue!=getPrint(user))
-					user << "\red Access denied."
-					return
-
-				if(occupant)
-					user << "\blue Your press your thumb against the fingerprint scanner, and deactivate the hover field built into the case."
-					dump()
-					update_icon()
-				else
-					src << "\icon[src] \red \The [src] is empty!"
-		else
-			user.visible_message("[user.name] gently runs his hands over \the [src] in appreciation of its contents.", \
-				"You gently run your hands over \the [src] in appreciation of its contents.", \
-				"You hear someone streaking glass with their greasy hands.")
+		return ..()

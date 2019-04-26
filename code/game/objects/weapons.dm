@@ -6,10 +6,11 @@
 	armor_penetration = 0
 	throwforce = 1
 	force = 1
+	attack_cooldown = DEFAULT_ATTACK_COOLDOWN
 	var/miss_chance  = 2 //% Chance for the hit with this weapon to miss
 	var/sound_attack = "swing_hit"
 	var/sound_miss   = "swing_miss"
-	var/attack_cooldown = DEFAULT_ATTACK_COOLDOWN
+
 
 /obj/item/weapon/attack(atom/movable/AM, mob/living/user as mob, var/target_zone)
 	if(!..())

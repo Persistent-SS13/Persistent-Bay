@@ -4,5 +4,9 @@ SUBSYSTEM_DEF(late)
 	flags = SS_NO_FIRE
 
 /datum/controller/subsystem/late/Initialize()
+	GLOB.using_map.build_exoplanets()
+
+	var/decl/asset_cache/asset_cache = decls_repository.get_decl(/decl/asset_cache)
+	asset_cache.load()
 	populate_lathe_recipes()
 	. = ..()

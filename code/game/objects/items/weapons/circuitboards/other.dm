@@ -1,5 +1,5 @@
 #ifndef T_BOARD
-#error T_BOARD macro is not defined but we need it!
+#error T_BOARD macro is not defined but we need it! 
 #endif
 
 //Stuff that doesn't fit into any category goes here
@@ -14,7 +14,6 @@
 	build_path = /obj/machinery/vending/boozeomat
 	board_type = "machine"
 	origin_tech = list(TECH_DATA = 1)
-	frame_desc = "Requires 3 Resupply Canisters."
 	req_components = list(
 							/obj/item/weapon/vending_refill/boozeomat = 3)
 
@@ -135,7 +134,6 @@
 	build_path = /obj/machinery/smartfridge/
 	board_type = "machine"
 	origin_tech = list(TECH_DATA = 1)
-	frame_desc = "Requires 3 Matter Bins"
 	req_components = list(
 							/obj/item/weapon/stock_parts/matter_bin = 3)
 

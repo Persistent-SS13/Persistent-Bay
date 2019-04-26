@@ -1,7 +1,7 @@
 /datum/computer_file/program/camera_monitor/hacked
 	filename = "camcrypt"
 	filedesc = "Camera Decryption Tool"
-	nanomodule_path = /datum/nano_module/program/camera_monitor/hacked
+	nanomodule_path = /datum/nano_module/camera_monitor/hacked
 	program_icon_state = "hostile"
 	program_key_state = "security_key"
 	program_menu_icon = "zoomin"

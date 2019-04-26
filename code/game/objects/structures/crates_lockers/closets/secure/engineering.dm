@@ -14,7 +14,6 @@
 		/obj/item/clothing/head/welding,
 		/obj/item/clothing/gloves/insulated,
 		/obj/item/clothing/shoes/brown,
-		/obj/item/weapon/cartridge/ce,
 		/obj/item/device/radio/headset/heads/ce,
 		/obj/item/weapon/storage/toolbox/mechanical,
 		/obj/item/clothing/suit/storage/hazardvest,

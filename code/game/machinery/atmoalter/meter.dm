@@ -5,7 +5,6 @@
 	icon_state 		= "meterX"
 	anchored 		= TRUE
 	power_channel 	= ENVIRON
-	use_power 		= POWER_USE_IDLE
 	idle_power_usage= 15
 
 	//Radio
@@ -25,7 +24,7 @@
 /obj/machinery/meter/LateInitialize()
 	. = ..()
 	if (!target)
-		src.target = locate(/obj/machinery/atmospherics/pipe) in loc
+		set_target(locate(/obj/machinery/atmospherics/pipe) in loc)
 	queue_icon_update()
 
 /obj/machinery/meter/proc/set_target(atom/new_target)
@@ -37,6 +36,28 @@
 	if(target)
 		GLOB.destroyed_event.unregister(target, src)
 		target = null	
+
+/obj/machinery/meter/Destroy()
+	clear_target()
+	. = ..()
+
+/obj/machinery/meter/Process()
+	. = ..()
+	var/datum/gas_mixture/pipe_air = target.return_air()
+	if(!pipe_air)
+		src.last_pressure = -1
+	else
+		src.last_pressure = pipe_air.return_pressure()
+
+	if(has_transmitter()) 
+		var/list/data = list(
+			// "tag" = id,
+			"device" = "AM",
+			"pressure" = (last_pressure > 0)? round(last_pressure) : 0,
+			"sigtype" = "status"
+		)
+		post_signal(data)
+	update_icon()
 
 /obj/machinery/meter/on_update_icon()
 	if(!target || last_pressure == -1)
@@ -59,24 +80,6 @@
 		icon_state = "meter3_[val]"
 	else
 		icon_state = "meter4"
-
-/obj/machinery/meter/Process()
-	. = ..()
-	var/datum/gas_mixture/pipe_air = target.return_air()
-	if(!pipe_air)
-		src.last_pressure = -1
-	else
-		src.last_pressure = pipe_air.return_pressure()
-
-	if(has_transmitter()) 
-		var/list/data = list(
-			// "tag" = id,
-			"device" = "AM",
-			"pressure" = (last_pressure > 0)? round(last_pressure) : 0,
-			"sigtype" = "status"
-		)
-		post_signal(data)
-	update_icon()
 
 /obj/machinery/meter/attack_hand(mob/user)
 	examine(user)

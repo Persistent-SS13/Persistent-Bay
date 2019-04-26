@@ -50,6 +50,7 @@ SUBSYSTEM_DEF(lighting)
 	for (var/turf/T in (targets || world))
 		if (T.dynamic_lighting && T.loc:dynamic_lighting)
 			T.lighting_build_overlay()
+		CHECK_TICK
 
 /datum/controller/subsystem/lighting/fire(resumed = FALSE, no_mc_tick = FALSE)
 	if (!resumed)

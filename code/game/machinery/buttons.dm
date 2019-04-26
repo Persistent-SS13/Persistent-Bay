@@ -295,8 +295,10 @@
 	return ..()
 
 /obj/machinery/button/windowtint/send_signal()
-	for(var/obj/structure/window/reinforced/polarized/W in range(src, tintrange))
-		if (!W.id || W.id == src.id_tag)
+	for(var/obj/structure/window/W in range(src, tintrange))
+		if(!W.polarized)
+			continue
+		if(!W.id_tag || W.id_tag == src.id_tag)
 			spawn(0)
 				W.toggle()
 				return

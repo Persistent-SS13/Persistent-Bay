@@ -45,9 +45,14 @@ SUBSYSTEM_DEF(wireless)
 		failed_connections = SSwireless.failed_connections
 
 /datum/controller/subsystem/wireless/fire(resumed = 0)
+	ASSERT(islist(retry_connections))
+	ASSERT(islist(failed_connections))
 	//process any connection requests waiting to be retried
 	if(process_queue(retry_connections, failed_connections))
 		return
+
+	ASSERT(islist(pending_connections))
+	ASSERT(islist(retry_connections))
 	//process any pending connection requests
 	if(process_queue(pending_connections, retry_connections))
 		return

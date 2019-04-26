@@ -1,5 +1,5 @@
 //////////////////////////////////////
-// SUIT STORAGE UNIT /////////////////
+// suit STORAGE UNIT /////////////////
 //////////////////////////////////////
 
 
@@ -11,17 +11,17 @@
 	anchored = 1
 	density = 1
 	req_access = list()
-	var/mob/living/carbon/human/OCCUPANT = null
-	var/obj/item/clothing/suit/space/SUIT = null
-	var/SUIT_TYPE = null
-	var/obj/item/clothing/head/helmet/space/HELMET = null
-	var/HELMET_TYPE = null
-	var/obj/item/clothing/shoes/magboots/BOOTS = null
-	var/BOOTS_TYPE = null
-	var/obj/item/weapon/tank/TANK = null
-	var/TANK_TYPE = null
-	var/obj/item/clothing/mask/MASK = null  //All the stuff that's gonna be stored insiiiiiiiiiiiiiiiiiiide, nyoro~n
-	var/MASK_TYPE = null //Erro's idea on standarising SSUs whle keeping creation of other SSU types easy: Make a child SSU, name it something then set the TYPE vars to your desired suit output. New() should take it from there by itself.
+	var/mob/living/carbon/human/occupant = null
+	var/obj/item/clothing/suit/space/suit = null
+	var/suit_type = null
+	var/obj/item/clothing/head/helmet/space/helmet = null
+	var/helmet_type = null
+	var/obj/item/clothing/shoes/magboots/boots = null
+	var/boots_type = null
+	var/obj/item/weapon/tank/tank = null
+	var/tank_type = null
+	var/obj/item/clothing/mask/mask = null  //All the stuff that's gonna be stored insiiiiiiiiiiiiiiiiiiide, nyoro~n
+	var/mask_type = null //Erro's idea on standarising SSUs whle keeping creation of other SSU types easy: Make a child SSU, name it something then set the TYPE vars to your desired suit output. New() should take it from there by itself.
 	var/isopen = 0
 	var/islocked = 0
 	var/isUV = 0
@@ -35,108 +35,108 @@
 //The units themselves/////////////////
 
 /obj/machinery/suit_storage_unit/standard_unit
-	SUIT_TYPE = /obj/item/clothing/suit/space
-	HELMET_TYPE = /obj/item/clothing/head/helmet/space
-	TANK_TYPE = /obj/item/weapon/tank/oxygen
-	MASK_TYPE = /obj/item/clothing/mask/breath
+	suit_type = /obj/item/clothing/suit/space
+	helmet_type = /obj/item/clothing/head/helmet/space
+	tank_type = /obj/item/weapon/tank/oxygen
+	mask_type = /obj/item/clothing/mask/breath
 	req_access = list()		//none of the current core accesses fit a general EVA cycler
 
 /obj/machinery/suit_storage_unit/atmos
 	name = "Atmospherics Voidsuit Storage Unit"
-	SUIT_TYPE = /obj/item/clothing/suit/space/void/atmos
-	HELMET_TYPE = /obj/item/clothing/head/helmet/space/void/atmos
-	BOOTS_TYPE = /obj/item/clothing/shoes/magboots
-	TANK_TYPE = /obj/item/weapon/tank/oxygen
-	MASK_TYPE = /obj/item/clothing/mask/breath
+	suit_type = /obj/item/clothing/suit/space/void/atmos
+	helmet_type = /obj/item/clothing/head/helmet/space/void/atmos
+	boots_type = /obj/item/clothing/shoes/magboots
+	tank_type = /obj/item/weapon/tank/oxygen
+	mask_type = /obj/item/clothing/mask/breath
 	req_access = list(core_access_engineering_programs)
 	islocked = 1
 
 /obj/machinery/suit_storage_unit/atmos/alt
-	SUIT_TYPE = /obj/item/clothing/suit/space/void/atmos/alt
-	HELMET_TYPE = /obj/item/clothing/head/helmet/space/void/atmos/alt
+	suit_type = /obj/item/clothing/suit/space/void/atmos/alt
+	helmet_type = /obj/item/clothing/head/helmet/space/void/atmos/alt
 
 /obj/machinery/suit_storage_unit/engineering
 	name = "Engineering Voidsuit Storage Unit"
-	SUIT_TYPE = /obj/item/clothing/suit/space/void/engineering
-	HELMET_TYPE = /obj/item/clothing/head/helmet/space/void/engineering
-	BOOTS_TYPE = /obj/item/clothing/shoes/magboots
-	TANK_TYPE = /obj/item/weapon/tank/oxygen
-	MASK_TYPE = /obj/item/clothing/mask/breath
+	suit_type = /obj/item/clothing/suit/space/void/engineering
+	helmet_type = /obj/item/clothing/head/helmet/space/void/engineering
+	boots_type = /obj/item/clothing/shoes/magboots
+	tank_type = /obj/item/weapon/tank/oxygen
+	mask_type = /obj/item/clothing/mask/breath
 	req_access = list(core_access_engineering_programs)
 	islocked = 1
 
 /obj/machinery/suit_storage_unit/engineering/alt
-	SUIT_TYPE = /obj/item/clothing/suit/space/void/engineering/alt
-	HELMET_TYPE = /obj/item/clothing/head/helmet/space/void/engineering/alt
-	MASK_TYPE = /obj/item/clothing/mask/breath
+	suit_type = /obj/item/clothing/suit/space/void/engineering/alt
+	helmet_type = /obj/item/clothing/head/helmet/space/void/engineering/alt
+	mask_type = /obj/item/clothing/mask/breath
 
 /obj/machinery/suit_storage_unit/engineering/salvage
-	SUIT_TYPE = /obj/item/clothing/suit/space/void/engineering/salvage
-	HELMET_TYPE = /obj/item/clothing/head/helmet/space/void/engineering/salvage
-	MASK_TYPE = /obj/item/clothing/mask/breath
+	suit_type = /obj/item/clothing/suit/space/void/engineering/salvage
+	helmet_type = /obj/item/clothing/head/helmet/space/void/engineering/salvage
+	mask_type = /obj/item/clothing/mask/breath
 
 /obj/machinery/suit_storage_unit/medical
 	name = "Medical Voidsuit Storage Unit"
-	SUIT_TYPE = /obj/item/clothing/suit/space/void/medical
-	HELMET_TYPE = /obj/item/clothing/head/helmet/space/void/medical
-	BOOTS_TYPE = /obj/item/clothing/shoes/magboots
-	TANK_TYPE = /obj/item/weapon/tank/oxygen
-	MASK_TYPE = /obj/item/clothing/mask/breath
+	suit_type = /obj/item/clothing/suit/space/void/medical
+	helmet_type = /obj/item/clothing/head/helmet/space/void/medical
+	boots_type = /obj/item/clothing/shoes/magboots
+	tank_type = /obj/item/weapon/tank/oxygen
+	mask_type = /obj/item/clothing/mask/breath
 	req_access = list(core_access_medical_programs)
 	islocked = 1
 
 /obj/machinery/suit_storage_unit/medical/alt
-	SUIT_TYPE = /obj/item/clothing/suit/space/void/medical/alt
-	HELMET_TYPE = /obj/item/clothing/head/helmet/space/void/medical/alt
-	MASK_TYPE = /obj/item/clothing/mask/breath
+	suit_type = /obj/item/clothing/suit/space/void/medical/alt
+	helmet_type = /obj/item/clothing/head/helmet/space/void/medical/alt
+	mask_type = /obj/item/clothing/mask/breath
 
 /obj/machinery/suit_storage_unit/mining
 	name = "Mining Voidsuit Storage Unit"
-	SUIT_TYPE = /obj/item/clothing/suit/space/void/mining
-	HELMET_TYPE = /obj/item/clothing/head/helmet/space/void/mining
-	BOOTS_TYPE = /obj/item/clothing/shoes/magboots
-	TANK_TYPE = /obj/item/weapon/tank/oxygen
-	MASK_TYPE = /obj/item/clothing/mask/breath
+	suit_type = /obj/item/clothing/suit/space/void/mining
+	helmet_type = /obj/item/clothing/head/helmet/space/void/mining
+	boots_type = /obj/item/clothing/shoes/magboots
+	tank_type = /obj/item/weapon/tank/oxygen
+	mask_type = /obj/item/clothing/mask/breath
 	req_access = list(core_access_order_approval) //closest thing to mining access
 	islocked = 1
 
 /obj/machinery/suit_storage_unit/mining/alt
-	SUIT_TYPE = /obj/item/clothing/suit/space/void/mining/alt
-	HELMET_TYPE = /obj/item/clothing/head/helmet/space/void/mining/alt
-	MASK_TYPE = /obj/item/clothing/mask/breath
+	suit_type = /obj/item/clothing/suit/space/void/mining/alt
+	helmet_type = /obj/item/clothing/head/helmet/space/void/mining/alt
+	mask_type = /obj/item/clothing/mask/breath
 
 /obj/machinery/suit_storage_unit/science
 	name = "Excavation Voidsuit Storage Unit"
-	SUIT_TYPE = /obj/item/clothing/suit/space/void/excavation
-	HELMET_TYPE = /obj/item/clothing/head/helmet/space/void/excavation
-	BOOTS_TYPE = /obj/item/clothing/shoes/magboots
-	TANK_TYPE = /obj/item/weapon/tank/oxygen
-	MASK_TYPE = /obj/item/clothing/mask/breath
+	suit_type = /obj/item/clothing/suit/space/void/excavation
+	helmet_type = /obj/item/clothing/head/helmet/space/void/excavation
+	boots_type = /obj/item/clothing/shoes/magboots
+	tank_type = /obj/item/weapon/tank/oxygen
+	mask_type = /obj/item/clothing/mask/breath
 	req_access = list(core_access_science_programs)
 	islocked = 1
 
 /obj/machinery/suit_storage_unit/security
 	name = "Security Voidsuit Storage Unit"
-	SUIT_TYPE = /obj/item/clothing/suit/space/void/security
-	HELMET_TYPE = /obj/item/clothing/head/helmet/space/void/security
-	BOOTS_TYPE = /obj/item/clothing/shoes/magboots
-	TANK_TYPE = /obj/item/weapon/tank/oxygen
-	MASK_TYPE = /obj/item/clothing/mask/breath
+	suit_type = /obj/item/clothing/suit/space/void/security
+	helmet_type = /obj/item/clothing/head/helmet/space/void/security
+	boots_type = /obj/item/clothing/shoes/magboots
+	tank_type = /obj/item/weapon/tank/oxygen
+	mask_type = /obj/item/clothing/mask/breath
 	req_access = list(core_access_security_programs)
 	islocked = 1
 
 /obj/machinery/suit_storage_unit/security/alt
-	SUIT_TYPE = /obj/item/clothing/suit/space/void/security/alt
-	HELMET_TYPE = /obj/item/clothing/head/helmet/space/void/security/alt
-	MASK_TYPE = /obj/item/clothing/mask/breath
+	suit_type = /obj/item/clothing/suit/space/void/security/alt
+	helmet_type = /obj/item/clothing/head/helmet/space/void/security/alt
+	mask_type = /obj/item/clothing/mask/breath
 
 /obj/machinery/suit_storage_unit/merc
 	name = "Nonstandard Voidsuit Storage Unit"
-	SUIT_TYPE = /obj/item/clothing/suit/space/void/merc
-	HELMET_TYPE = /obj/item/clothing/head/helmet/space/void/merc
-	BOOTS_TYPE = /obj/item/clothing/shoes/magboots
-	TANK_TYPE = /obj/item/weapon/tank/oxygen
-	MASK_TYPE = /obj/item/clothing/mask/breath
+	suit_type = /obj/item/clothing/suit/space/void/merc
+	helmet_type = /obj/item/clothing/head/helmet/space/void/merc
+	boots_type = /obj/item/clothing/shoes/magboots
+	tank_type = /obj/item/weapon/tank/oxygen
+	mask_type = /obj/item/clothing/mask/breath
 	req_access = list(core_access_security_programs) 	//security are the closest thing we have to antags
 	islocked = 1
 
@@ -144,16 +144,16 @@
 
 /obj/machinery/suit_storage_unit/New()
 	src.update_icon()
-	if(SUIT_TYPE)
-		SUIT = new SUIT_TYPE(src)
-	if(HELMET_TYPE)
-		HELMET = new HELMET_TYPE(src)
-	if(BOOTS_TYPE)
-		BOOTS = new BOOTS_TYPE(src)
-	if(TANK_TYPE)
-		TANK = new TANK_TYPE(src)
-	if(MASK_TYPE)
-		MASK = new MASK_TYPE(src)
+	if(suit_type)
+		suit = new suit_type(src)
+	if(helmet_type)
+		helmet = new helmet_type(src)
+	if(boots_type)
+		boots = new boots_type(src)
+	if(tank_type)
+		tank = new tank_type(src)
+	if(mask_type)
+		mask = new mask_type(src)
 
 	component_parts = list()
 	component_parts += new /obj/item/weapon/circuitboard/suit_storage_unit(src)
@@ -171,11 +171,11 @@
 	var/hashelmet = 0
 	var/hassuit = 0
 	var/hashuman = 0
-	if(HELMET)
+	if(helmet)
 		hashelmet = 1
-	if(SUIT)
+	if(suit)
 		hassuit = 1
-	if(OCCUPANT)
+	if(occupant)
 		hashuman = 1
 	icon_state = text("suitstorage[][][][][][][][][]",hashelmet,hassuit,hashuman,src.isopen,src.islocked,src.isUV,src.ispowered,src.isbroken,src.issuperUV)
 
@@ -241,22 +241,22 @@
 			dat+= "<HEAD><TITLE>Suit storage unit</TITLE></HEAD>"
 			dat+= "<font color='blue'><font size = 4><B>U-Stor-It Suit Storage Unit, model DS1900</B></FONT><BR>"
 			dat+= "<B>Welcome to the Unit control panel.</B></FONT><HR>"
-			dat+= text("<font color='black'>Helmet storage compartment: <B>[]</B></font><BR>",(src.HELMET ? HELMET.name : "</font><font color ='grey'>No helmet detected.") )
-			if(HELMET && src.isopen)
+			dat+= text("<font color='black'>Helmet storage compartment: <B>[]</B></font><BR>",(src.helmet ? helmet.name : "</font><font color ='grey'>No helmet detected.") )
+			if(helmet && src.isopen)
 				dat+=text("<A href='?src=\ref[];dispense_helmet=1'>Dispense helmet</A><BR>",src)
-			dat+= text("<font color='black'>Suit storage compartment: <B>[]</B></font><BR>",(src.SUIT ? SUIT.name : "</font><font color ='grey'>No suit detected.") )
-			if(SUIT && src.isopen)
+			dat+= text("<font color='black'>Suit storage compartment: <B>[]</B></font><BR>",(src.suit ? suit.name : "</font><font color ='grey'>No suit detected.") )
+			if(suit && src.isopen)
 				dat+=text("<A href='?src=\ref[];dispense_suit=1'>Dispense suit</A><BR>",src)
-			dat+= text("<font color='black'>Footwear storage compartment: <B>[]</B></font><BR>",(src.BOOTS ? BOOTS.name : "</font><font color ='grey'>No footwear detected.") )
-			if(BOOTS && src.isopen)
+			dat+= text("<font color='black'>Footwear storage compartment: <B>[]</B></font><BR>",(src.boots ? boots.name : "</font><font color ='grey'>No footwear detected.") )
+			if(boots && src.isopen)
 				dat+=text("<A href='?src=\ref[];dispense_boots=1'>Dispense footwear</A><BR>",src)
-			dat+= text("<font color='black'>Tank storage compartment: <B>[]</B></font><BR>",(src.TANK ? TANK.name : "</font><font color ='grey'>No air tank detected.") )
-			if(TANK && src.isopen)
+			dat+= text("<font color='black'>Tank storage compartment: <B>[]</B></font><BR>",(src.tank ? tank.name : "</font><font color ='grey'>No air tank detected.") )
+			if(tank && src.isopen)
 				dat+=text("<A href='?src=\ref[];dispense_tank=1'>Dispense air tank</A><BR>",src)
-			dat+= text("<font color='black'>Breathmask storage compartment: <B>[]</B></font><BR>",(src.MASK ? MASK.name : "</font><font color ='grey'>No breathmask detected.") )
-			if(MASK && src.isopen)
+			dat+= text("<font color='black'>Breathmask storage compartment: <B>[]</B></font><BR>",(src.mask ? mask.name : "</font><font color ='grey'>No breathmask detected.") )
+			if(mask && src.isopen)
 				dat+=text("<A href='?src=\ref[];dispense_mask=1'>Dispense mask</A><BR>",src)
-			if(src.OCCUPANT)
+			if(src.occupant)
 				dat+= "<HR><B><font color ='red'>WARNING: Biological entity detected inside the Unit's storage. Please remove.</B></font><BR>"
 				dat+= "<A href='?src=\ref[src];eject_guy=1'>Eject extra load</A>"
 			dat+= text("<HR><font color='black'>Unit is: [] - <A href='?src=\ref[];toggle_open=1'>[] Unit</A></font> ",(src.isopen ? "Open" : "Closed"),src,(src.isopen ? "Close" : "Open"))
@@ -385,30 +385,30 @@
 #define dispense_clothing(item) if(src.item){item.dropInto(loc); src.item = null}
 
 /obj/machinery/suit_storage_unit/proc/dispense_helmet(mob/user as mob)
-	dispense_clothing(HELMET)
+	dispense_clothing(helmet)
 
 /obj/machinery/suit_storage_unit/proc/dispense_suit(mob/user as mob)
-	dispense_clothing(SUIT)
+	dispense_clothing(suit)
 
 /obj/machinery/suit_storage_unit/proc/dispense_boots(mob/user as mob)
-	dispense_clothing(BOOTS)
+	dispense_clothing(boots)
 
 /obj/machinery/suit_storage_unit/proc/dispense_tank(mob/user as mob)
-	dispense_clothing(TANK)
+	dispense_clothing(tank)
 
 /obj/machinery/suit_storage_unit/proc/dispense_mask(mob/user as mob)
-	dispense_clothing(MASK)
+	dispense_clothing(mask)
 
 
 /obj/machinery/suit_storage_unit/proc/dump_everything()
 	src.islocked = 0 //locks go free
-	dispense_clothing(SUIT)
-	dispense_clothing(HELMET)
-	dispense_clothing(BOOTS)
-	dispense_clothing(TANK)
-	dispense_clothing(MASK)
-	if(src.OCCUPANT)
-		src.eject_occupant(OCCUPANT)
+	dispense_clothing(suit)
+	dispense_clothing(helmet)
+	dispense_clothing(boots)
+	dispense_clothing(tank)
+	dispense_clothing(mask)
+	if(src.occupant)
+		src.eject_occupant(occupant)
 	return
 
 #undef dispense_clothing
@@ -417,7 +417,7 @@
 	if(src.islocked || src.isUV)
 		to_chat(user, "<span class='warning'>Unable to open unit.</span>")
 		return
-	if(src.OCCUPANT)
+	if(src.occupant)
 		src.eject_occupant(user)
 		return  // eject_occupant opens the door, so we need to return
 	src.isopen = !src.isopen
@@ -425,7 +425,7 @@
 
 
 /obj/machinery/suit_storage_unit/proc/toggle_lock(mob/user as mob)
-	if(src.OCCUPANT && src.safetieson)
+	if(src.occupant && src.safetieson)
 		to_chat(user, "<span class='warning'>The Unit's safety protocols disallow locking when a biological form is detected inside its compartments.</span>")
 		return
 	if(src.isopen)
@@ -437,16 +437,16 @@
 /obj/machinery/suit_storage_unit/proc/start_UV(mob/user as mob)
 	if(src.isUV || src.isopen) //I'm bored of all these sanity checks
 		return
-	if(src.OCCUPANT && src.safetieson)
+	if(src.occupant && src.safetieson)
 		to_chat(user, "<span class='danger'>WARNING:</span><span class='warning'> Biological entity detected in the confines of the Unit's storage. Cannot initiate cycle.</span>")
 		return
-	if(!src.HELMET && !src.MASK && !src.SUIT && !src.BOOTS && !src.TANK && !src.OCCUPANT ) //shit's empty yo
+	if(!src.helmet && !src.mask && !src.suit && !src.boots && !src.tank && !src.occupant ) //shit's empty yo
 		to_chat(user, "<span class='warning'>Unit storage bays empty. Nothing to disinfect -- Aborting.</span>")
 		return
 	to_chat(user, "You start the Unit's cauterisation cycle.")
 	src.cycletime_left = 20
 	src.isUV = 1
-	if(src.OCCUPANT && !src.islocked)
+	if(src.occupant && !src.islocked)
 		src.islocked = 1 //Let's lock it for good measure
 	src.update_icon()
 	src.updateUsrDialog()
@@ -454,58 +454,58 @@
 	var/i //our counter
 	for(i=0,i<4,i++)
 		sleep(50)
-		if(src.OCCUPANT)
-			OCCUPANT.apply_effect(50, IRRADIATE, blocked = OCCUPANT.getarmor(null, DAM_RADS))
-			var/obj/item/organ/internal/xenos/nutrients/rad_organ = locate() in OCCUPANT.internal_organs
+		if(src.occupant)
+			occupant.apply_effect(50, IRRADIATE)
+			var/obj/item/organ/internal/diona/nutrients/rad_organ = locate() in occupant.internal_organs
 			if (!rad_organ)
-				if (OCCUPANT.can_feel_pain())
-					OCCUPANT.emote("scream")
+				if (occupant.can_feel_pain())
+					occupant.emote("scream")
 				if(src.issuperUV)
 					var/burndamage = rand(28,35)
-					OCCUPANT.apply_damage(burndamage, DAM_BURN)
+					occupant.apply_damage(burndamage, DAM_BURN)
 				else
 					var/burndamage = rand(6,10)
-					OCCUPANT.apply_damage(burndamage, DAM_BURN)
+					occupant.apply_damage(burndamage, DAM_BURN)
 		if(i==3) //End of the cycle
 			if(!src.issuperUV)
-				if(src.HELMET)
-					HELMET.clean_blood()
-				if(src.SUIT)
-					SUIT.clean_blood()
-				if(src.BOOTS)
-					BOOTS.clean_blood()
-				if(src.TANK)
-					TANK.clean_blood()
-				if(src.MASK)
-					MASK.clean_blood()
+				if(src.helmet)
+					helmet.clean_blood()
+				if(src.suit)
+					suit.clean_blood()
+				if(src.boots)
+					boots.clean_blood()
+				if(src.tank)
+					tank.clean_blood()
+				if(src.mask)
+					mask.clean_blood()
 			else //It was supercycling, destroy everything
-				if(src.HELMET)
-					src.HELMET = null
-				if(src.SUIT)
-					src.SUIT = null
-				if(src.BOOTS)
-					src.BOOTS = null
-				if(src.TANK)
-					src.TANK = null
-				if(src.MASK)
-					src.MASK = null
+				if(src.helmet)
+					src.helmet = null
+				if(src.suit)
+					src.suit = null
+				if(src.boots)
+					src.boots = null
+				if(src.tank)
+					src.tank = null
+				if(src.mask)
+					src.mask = null
 				visible_message("<font color='red'>With a loud whining noise, the Suit Storage Unit's door grinds open. Puffs of ashen smoke come out of its chamber.</font>", 3)
 				src.isbroken = 1
 				src.isopen = 1
 				src.islocked = 0
-				src.eject_occupant(OCCUPANT) //Mixing up these two lines causes bug. DO NOT DO IT.
+				src.eject_occupant(occupant) //Mixing up these two lines causes bug. DO NOT DO IT.
 			src.isUV = 0 //Cycle ends
 	src.update_icon()
 	src.updateUsrDialog()
 	return
 
 /*	spawn(200) //Let's clean dat shit after 20 secs  //Eh, this doesn't work
-		if(src.HELMET)
-			HELMET.clean_blood()
-		if(src.SUIT)
-			SUIT.clean_blood()
-		if(src.MASK)
-			MASK.clean_blood()
+		if(src.helmet)
+			helmet.clean_blood()
+		if(src.suit)
+			suit.clean_blood()
+		if(src.mask)
+			mask.clean_blood()
 		src.isUV = 0 //Cycle ends
 		src.update_icon()
 		src.updateUsrDialog()
@@ -513,12 +513,12 @@
 	var/i
 	for(i=0,i<4,i++) //Gradually give the guy inside some damaged based on the intensity
 		spawn(50)
-			if(src.OCCUPANT)
+			if(src.occupant)
 				if(src.issuperUV)
-					OCCUPANT.apply_damage(40, DAM_BURN)
+					occupant.apply_damage(40, DAM_BURN)
 					to_chat(user, "Test. You gave him 40 damage")
 				else
-					OCCUPANT.apply_damage(8, DAM_BURN)
+					occupant.apply_damage(8, DAM_BURN)
 					to_chat(user, "Test. You gave him 8 damage")
 	return*/
 
@@ -533,21 +533,21 @@
 	if (src.islocked)
 		return
 
-	if (!src.OCCUPANT)
+	if (!src.occupant)
 		return
 //	for(var/obj/O in src)
 //		O.loc = src.loc
 
-	if (src.OCCUPANT.client)
-		if(user != OCCUPANT)
-			to_chat(OCCUPANT, "<span class='notice'>The machine kicks you out!</span>")
+	if (src.occupant.client)
+		if(user != occupant)
+			to_chat(occupant, "<span class='notice'>The machine kicks you out!</span>")
 		if(user.loc != src.loc)
-			to_chat(OCCUPANT, "<span class='notice'>You leave the not-so-cozy confines of the SSU.</span>")
+			to_chat(occupant, "<span class='notice'>You leave the not-so-cozy confines of the SSU.</span>")
 
-		src.OCCUPANT.client.eye = src.OCCUPANT.client.mob
-		src.OCCUPANT.client.perspective = MOB_PERSPECTIVE
-	src.OCCUPANT.loc = src.loc
-	src.OCCUPANT = null
+		src.occupant.client.eye = src.occupant.client.mob
+		src.occupant.client.perspective = MOB_PERSPECTIVE
+	src.occupant.loc = src.loc
+	src.occupant = null
 	if(!src.isopen)
 		src.isopen = 1
 	src.update_icon()
@@ -581,7 +581,7 @@
 	if (!src.ispowered || src.isbroken)
 		to_chat(usr, "<span class='warning'>The unit is not operational.</span>")
 		return
-	if ( (src.OCCUPANT) || (src.HELMET) || (src.SUIT) )
+	if ( (src.occupant) || (src.helmet) || (src.suit) )
 		to_chat(usr, "<span class='warning'>It's too cluttered inside for you to fit in!</span>")
 		return
 	visible_message("\The [usr] starts squeezing into the suit storage unit!", 3)
@@ -591,7 +591,7 @@
 		usr.client.eye = src
 		usr.loc = src
 //		usr.metabslow = 1
-		src.OCCUPANT = usr
+		src.occupant = usr
 		src.isopen = 0 //Close the thing after the guy gets inside
 		src.update_icon()
 
@@ -602,7 +602,7 @@
 		src.updateUsrDialog()
 		return
 	else
-		src.OCCUPANT = null //Testing this as a backup sanity test
+		src.occupant = null //Testing this as a backup sanity test
 	return
 
 
@@ -634,7 +634,7 @@
 		if (!src.ispowered || src.isbroken)
 			to_chat(usr, "<span class='warning'>The unit is not operational.</span>")
 			return
-		if ( (src.OCCUPANT) || (src.HELMET) || (src.SUIT) || (src.BOOTS) || (src.TANK) || (src.MASK)) //Unit needs to be absolutely empty
+		if ( (src.occupant) || (src.helmet) || (src.suit) || (src.boots) || (src.tank) || (src.mask)) //Unit needs to be absolutely empty
 			to_chat(user, "<span class='warning'>The unit's storage area is too cluttered.</span>")
 			return
 		visible_message("[user] starts putting [G.affecting.name] into the Suit Storage Unit.", 3)
@@ -645,7 +645,7 @@
 				M.client.perspective = EYE_PERSPECTIVE
 				M.client.eye = src
 			M.loc = src
-			src.OCCUPANT = M
+			src.occupant = M
 			src.isopen = 0 //close ittt
 
 			//for(var/obj/O in src)
@@ -660,13 +660,13 @@
 		if(!src.isopen)
 			return
 		var/obj/item/clothing/suit/space/S = I
-		if(src.SUIT)
+		if(src.suit)
 			to_chat(user, "<span class='notice'>The unit already contains a suit.</span>")
 			return
 		to_chat(user, "You load the [S.name] into the storage compartment.")
 		user.drop_item()
 		S.forceMove(src)
-		src.SUIT = S
+		src.suit = S
 		src.update_icon()
 		src.updateUsrDialog()
 		return
@@ -674,13 +674,13 @@
 		if(!src.isopen)
 			return
 		var/obj/item/clothing/head/helmet/H = I
-		if(src.HELMET)
+		if(src.helmet)
 			to_chat(user, "<span class='notice'>The unit already contains a helmet.</span>")
 			return
 		to_chat(user, "You load the [H.name] into the storage compartment.")
 		user.drop_item()
 		H.forceMove(src)
-		src.HELMET = H
+		src.helmet = H
 		src.update_icon()
 		src.updateUsrDialog()
 		return
@@ -688,13 +688,13 @@
 		if(!src.isopen)
 			return
 		var/obj/item/clothing/shoes/magboots/B = I
-		if(src.BOOTS)
+		if(src.boots)
 			to_chat(user, "<span class='notice'>The unit already contains a pair of magboots.</span>")
 			return
 		to_chat(user, "You load the [B.name] into the storage compartment.")
 		user.drop_item()
 		B.forceMove(src)
-		src.BOOTS = B
+		src.boots = B
 		src.update_icon()
 		src.updateUsrDialog()
 		return
@@ -702,13 +702,13 @@
 		if(!src.isopen)
 			return
 		var/obj/item/weapon/tank/T = I
-		if(src.TANK)
+		if(src.tank)
 			to_chat(user, "<span class='notice'>The unit already contains an air tank.</span>")
 			return
 		to_chat(user, "You load the [T.name] into the storage compartment.")
 		user.drop_item()
 		T.forceMove(src)
-		src.TANK = T
+		src.tank = T
 		src.update_icon()
 		src.updateUsrDialog()
 		return
@@ -716,13 +716,13 @@
 		if(!src.isopen)
 			return
 		var/obj/item/clothing/mask/M = I
-		if(src.MASK)
+		if(src.mask)
 			to_chat(user, "<span class='notice'>The unit already contains a mask.</span>")
 			return
 		to_chat(user, "You load the [M.name] into the storage compartment.")
 		user.drop_item()
 		M.forceMove(src)
-		src.MASK = M
+		src.mask = M
 		src.update_icon()
 		src.updateUsrDialog()
 		return
@@ -1138,7 +1138,7 @@
 			occupant.apply_damage(radiation_level*2 + rand(1,3), DAM_BURN)
 		if(radiation_level > 1)
 			occupant.apply_damage(radiation_level + rand(1,3), DAM_BURN)
-		occupant.apply_effect(radiation_level*10, IRRADIATE, blocked = occupant.getarmor(null, DAM_RADS))
+		occupant.apply_effect(radiation_level*10, IRRADIATE)
 
 /obj/machinery/suit_cycler/proc/finished_job()
 	var/turf/T = get_turf(src)

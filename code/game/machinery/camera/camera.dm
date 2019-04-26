@@ -188,10 +188,9 @@
 			return
 
 	// OTHER
-	else if (can_use() && (istype(W, /obj/item/weapon/paper) || istype(W, /obj/item/device/pda)) && isliving(user))
+	else if (can_use() && (istype(W, /obj/item/weapon/paper) && isliving(user)))
 		var/mob/living/U = user
 		var/obj/item/weapon/paper/X = null
-		var/obj/item/device/pda/P = null
 
 		var/itemname = ""
 		var/info = ""
@@ -199,10 +198,6 @@
 			X = W
 			itemname = X.name
 			info = X.info
-		else
-			P = W
-			itemname = P.name
-			info = P.notehtml
 		to_chat(U, "You hold \a [itemname] up to the camera ...")
 		for(var/mob/living/silicon/ai/O in GLOB.living_mob_list_)
 			if(!O.client) continue

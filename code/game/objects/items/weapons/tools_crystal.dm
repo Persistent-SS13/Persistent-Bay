@@ -1,4 +1,4 @@
-/obj/item/weapon/weldingtool/electric/crystal
+/obj/item/weapon/tool/weldingtool/electric/crystal
 	name = "crystalline arc welder"
 	desc = "A crystalline welding tool of an alien make."
 	icon_state = "crystal_welder"
@@ -8,10 +8,10 @@
 	cell = null
 	fuel_cost_multiplier = 1
 
-/obj/item/weapon/weldingtool/electric/crystal/attackby(var/obj/item/W, var/mob/user)
+/obj/item/weapon/tool/weldingtool/electric/crystal/attackby(var/obj/item/W, var/mob/user)
 	return
 
-/obj/item/weapon/weldingtool/electric/crystal/on_update_icon()
+/obj/item/weapon/tool/weldingtool/electric/crystal/on_update_icon()
 	icon_state = welding ? "crystal_welder_on" : "crystal_welder"
 	item_state = welding ? "crystal_tool_lit"  : "crystal_tool"
 	var/mob/M = loc
@@ -19,7 +19,7 @@
 		M.update_inv_l_hand()
 		M.update_inv_r_hand()
 
-/obj/item/weapon/weldingtool/electric/crystal/get_available_charge()
+/obj/item/weapon/tool/weldingtool/electric/crystal/get_available_charge()
 	. = 0
 	var/mob/living/carbon/human/adherent = loc
 	if(istype(adherent))
@@ -27,7 +27,7 @@
 			if(!cell.is_broken())
 				. += cell.get_charge()
 
-/obj/item/weapon/weldingtool/electric/crystal/spend_charge(var/amount)
+/obj/item/weapon/tool/weldingtool/electric/crystal/spend_charge(var/amount)
 	var/mob/living/carbon/human/adherent = loc
 	if(istype(adherent))
 		for(var/obj/item/organ/internal/cell/cell in adherent.internal_organs)
@@ -38,7 +38,7 @@
 				if(amount <= 0)
 					break
 
-/obj/item/weapon/wirecutters/crystal
+/obj/item/weapon/tool/wirecutters/crystal
 	name = "crystalline shears"
 	desc = "A crystalline shearing tool of an alien make."
 	icon_state = "crystal_wirecutter"
@@ -47,12 +47,12 @@
 	matter = list(MATERIAL_CRYSTAL = 1250)
 	build_from_parts = FALSE
 
-/obj/item/weapon/wirecutters/crystal/Initialize()
+/obj/item/weapon/tool/wirecutters/crystal/Initialize()
 	. = ..()
 	icon_state = initial(icon_state)
 	item_state = initial(item_state)
 
-/obj/item/weapon/screwdriver/crystal
+/obj/item/weapon/tool/screwdriver/crystal
 	name = "crystalline screwdriver"
 	desc = "A crystalline screwdriving tool of an alien make."
 	icon_state = "crystal_screwdriver"
@@ -61,12 +61,12 @@
 	matter = list(MATERIAL_CRYSTAL = 1250)
 	build_from_parts = FALSE
 
-/obj/item/weapon/screwdriver/crystal/Initialize()
+/obj/item/weapon/tool/screwdriver/crystal/Initialize()
 	. = ..()
 	icon_state = initial(icon_state)
 	item_state = initial(item_state)
 
-/obj/item/weapon/crowbar/crystal
+/obj/item/weapon/tool/crowbar/crystal
 	name = "crystalline prytool"
 	desc = "A crystalline prying tool of an alien make."
 	icon_state = "crystal_crowbar"
@@ -74,12 +74,12 @@
 	icon = 'icons/obj/crystal_tools.dmi'
 	matter = list(MATERIAL_CRYSTAL = 1250)
 
-/obj/item/weapon/crowbar/crystal/Initialize()
+/obj/item/weapon/tool/crowbar/crystal/Initialize()
 	. = ..()
 	icon_state = initial(icon_state)
 	item_state = initial(item_state)
 
-/obj/item/weapon/wrench/crystal
+/obj/item/weapon/tool/wrench/crystal
 	name = "crystalline wrench"
 	desc = "A crystalline wrenching tool of an alien make."
 	icon_state = "crystal_wrench"
@@ -87,7 +87,7 @@
 	icon = 'icons/obj/crystal_tools.dmi'
 	matter = list(MATERIAL_CRYSTAL = 1250)
 
-/obj/item/weapon/wrench/crystal/Initialize()
+/obj/item/weapon/tool/wrench/crystal/Initialize()
 	. = ..()
 	icon_state = initial(icon_state)
 	item_state = initial(item_state)
@@ -108,10 +108,10 @@
 
 /obj/item/weapon/storage/belt/utility/vigil/Initialize()
 	new /obj/item/device/multitool/crystal(src)
-	new /obj/item/weapon/wrench/crystal(src)
-	new /obj/item/weapon/crowbar/crystal(src)
-	new /obj/item/weapon/screwdriver/crystal(src)
-	new /obj/item/weapon/wirecutters/crystal(src)
-	new /obj/item/weapon/weldingtool/electric/crystal(src)
+	new /obj/item/weapon/tool/wrench/crystal(src)
+	new /obj/item/weapon/tool/crowbar/crystal(src)
+	new /obj/item/weapon/tool/screwdriver/crystal(src)
+	new /obj/item/weapon/tool/wirecutters/crystal(src)
+	new /obj/item/weapon/tool/weldingtool/electric/crystal(src)
 	update_icon()
 	. = ..()

@@ -8,6 +8,7 @@
 	use_power = POWER_USE_IDLE
 	idle_power_usage = 60
 	active_power_usage = 10000	//10 kW. It's a big all-body scanner.
+	circuit_type = /obj/item/weapon/circuitboard/bodyscanner
 	var/mob/living/carbon/human/occupant
 	var/locked
 
@@ -18,17 +19,13 @@
 
 	ADD_SKIP_EMPTY(occupant)
 
-/obj/machinery/bodyscanner/Initialize()
+/obj/machinery/bodyscanner/SetupParts()
+	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/scanning_module(src))
+	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/scanning_module(src))
+	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/manipulator(src))
+	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/manipulator(src))
+	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/console_screen(src))
 	. = ..()
-	if(!map_storage_loaded)
-		component_parts = list(
-			new /obj/item/weapon/circuitboard/bodyscanner(src),
-			new /obj/item/weapon/stock_parts/scanning_module(src),
-			new /obj/item/weapon/stock_parts/scanning_module(src),
-			new /obj/item/weapon/stock_parts/manipulator(src),
-			new /obj/item/weapon/stock_parts/manipulator(src),
-			new /obj/item/weapon/stock_parts/console_screen(src))
-	RefreshParts()
 
 /obj/machinery/bodyscanner/Destroy()
 	if(occupant)

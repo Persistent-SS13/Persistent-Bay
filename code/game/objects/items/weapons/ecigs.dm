@@ -24,9 +24,19 @@
 
 /obj/item/clothing/mask/smokable/ecig/New()
 	..()
-	if(ispath(cell_type))
-		cigcell = new cell_type
-	ec_cartridge = new cartridge_type(src)
+	ADD_SAVED_VAR(cigcell)
+	ADD_SAVED_VAR(ec_cartridge)
+
+	ADD_SKIP_EMPTY(cigcell)
+	ADD_SKIP_EMPTY(ec_cartridge)
+
+/obj/item/clothing/mask/smokable/ecig/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		if(ispath(cell_type))
+			cigcell = new cell_type
+		if(cartridge_type)
+			ec_cartridge = new cartridge_type(src)
 
 /obj/item/clothing/mask/smokable/ecig/get_cell()
 	return cigcell
@@ -65,7 +75,12 @@
 
 /obj/item/clothing/mask/smokable/ecig/util/New()
 	..()
-	color = pick(ecig_colors)
+	ADD_SAVED_VAR(color) //Save the random color
+
+/obj/item/clothing/mask/smokable/ecig/util/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		color = pick(ecig_colors)
 
 obj/item/clothing/mask/smokable/ecig/util/examine(mob/user)
 	..()

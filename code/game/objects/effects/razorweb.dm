@@ -131,13 +131,13 @@
 				E = thing
 				break
 
-		if(E && !prob(100 * L.get_blocked_ratio(null, BRUTE)))
+		if(E && !prob(100 * L.get_blocked_ratio(null, DAM_CUT)))
 			E = H.organs_by_name[E]
 			visible_message(SPAN_DANGER("The crystalline strands slice straight through \the [H]'s [E.amputation_point || E.name]!"))
 			E.droplimb()
 			severed = TRUE
 
-	if(!severed && !prob(100 * L.get_blocked_ratio(null, BRUTE)))
+	if(!severed && !prob(100 * L.get_blocked_ratio(null, DAM_CUT)))
 		L.apply_damage(rand(25, 50), used_weapon = src)
 		visible_message(SPAN_DANGER("The crystalline strands cut deeply into \the [L]!"))
 

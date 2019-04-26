@@ -386,7 +386,7 @@
 
 /datum/design/item/genfab/miningtools/adv/arch/hand
 	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_CLOTH = 0.5 SHEETS)
-	build_path = /obj/item/weapon/pickaxe/hand
+	build_path = /obj/item/weapon/pickaxe/xeno/hand
 **/
 
 

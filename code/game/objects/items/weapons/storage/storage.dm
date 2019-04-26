@@ -371,20 +371,19 @@
 
 	storage_ui = new storage_ui(src)
 	prepare_ui()
-	if(!map_storage_loaded)
-		if(startswith)
-			for(var/item_path in startswith)
-				var/list/data = startswith[item_path]
-				if(islist(data))
-					var/qty = data[1]
-					var/list/argsl = data.Copy()
-					argsl[1] = src
-					for(var/i in 1 to qty)
-						new item_path(arglist(argsl))
-				else
-					for(var/i in 1 to (isnull(data)? 1 : data))
-						new item_path(src)
-			update_icon()
+	if(!map_storage_loaded && startswith)
+		for(var/item_path in startswith)
+			var/list/data = startswith[item_path]
+			if(islist(data))
+				var/qty = data[1]
+				var/list/argsl = data.Copy()
+				argsl[1] = src
+				for(var/i in 1 to qty)
+					new item_path(arglist(argsl))
+			else
+				for(var/i in 1 to (isnull(data)? 1 : data))
+					new item_path(src)
+	queue_icon_update()
 
 /obj/item/weapon/storage/after_load()
 	. = ..()

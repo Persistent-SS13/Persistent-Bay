@@ -50,13 +50,13 @@
 	containertype = /obj/structure/closet
 	containername = "lasertag Closet"
 
-/decl/hierarchy/supply_pack/nonessent/instruments
-	name = "Rec - Musical Instruments"
-	contains = list(/obj/item/device/synthesized_instrument/synthesizer,
-					/obj/item/device/synthesized_instrument/guitar/multi,
-					/obj/item/device/synthesized_instrument/trumpet)
-	cost = 40
-	containername = "musical instrument crate"
+// /decl/hierarchy/supply_pack/nonessent/instruments
+// 	name = "Rec - Musical Instruments"
+// 	contains = list(/obj/item/device/synthesized_instrument/synthesizer,
+// 					/obj/item/device/synthesized_instrument/guitar/multi,
+// 					/obj/item/device/synthesized_instrument/trumpet)
+// 	cost = 40
+// 	containername = "musical instrument crate"
 
 
 /decl/hierarchy/supply_pack/nonessent/llamps
@@ -169,7 +169,6 @@
 	contains = list(/obj/item/clothing/accessory/toggleable/flannel/red,
 					/obj/item/clothing/accessory/toggleable/hawaii,
 					/obj/item/clothing/accessory/toggleable/zhongshan,
-					/obj/item/clothing/accessory/toggleable/nanotrasen_jacket,
 					/obj/item/clothing/accessory/toggleable/navy_jacket,
 					/obj/item/clothing/accessory/toggleable/charcoal_jacket,
 					/obj/item/clothing/accessory/toggleable/burgundy_jacket,

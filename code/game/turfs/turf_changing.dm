@@ -20,13 +20,10 @@
 		return
 
 	// This makes sure that turfs are not changed to space when one side is part of a zone
-	if(N == /turf/space && !keep_air)
-		for(var/atom/movable/lighting_overlay/overlay in contents)
-			overlay.loc = null
-			qdel(overlay)
+	if(N == /turf/space)
 		var/turf/below = GetBelow(src)
 		if(istype(below) && !istype(below,/turf/space))
-			N = below.density ? /turf/simulated/floor/airless : /turf/simulated/open
+			N = /turf/simulated/open
 
 	var/old_air = air
 	var/old_fire = fire
@@ -35,6 +32,11 @@
 	var/old_affecting_lights = affecting_lights
 	var/old_lighting_overlay = lighting_overlay
 	var/old_corners = corners
+	var/old_type = type
+	var/old_resources = null
+	if(istype(src, /turf/simulated))
+		var/turf/simulated/T = src
+		old_resources = T.resources
 
 //	log_debug("Replacing [src.type] with [N]")
 
@@ -70,7 +72,7 @@
 		simu.resources = old_resources
 		if(old_fire)
 			fire = old_fire
-		if (istype(W,/turf/simulated/floor) && old_type == /turf/simulated/asteroid)
+		if (istype(W,/turf/simulated/floor) && old_type == /turf/simulated/floor/asteroid)
 			var/turf/simulated/floor/F = W
 			F.prior_floortype = old_type
 			F.prior_resources = old_resources
@@ -141,7 +143,9 @@
 		return 0
 	paint_color = other.paint_color
 	material = other.material
-	p_material = other.p_material
+	reinf_material = other.reinf_material
+	girder_material = other.girder_material
+	girder_reinf_material = other.girder_reinf_material
 	return 1
 
 //No idea why resetting the base appearence from New() isn't enough, but without this it doesn't work

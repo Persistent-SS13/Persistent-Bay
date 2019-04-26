@@ -35,6 +35,7 @@
 	var/fuel_rate = 0.05 //The idle fuel burn rate while the welder is on
 	var/fuel_cost_use = 1 //The initial fuel cost for various actions
 	var/welding_efficiency = 1.0 //Base welding multiplier for fuel use
+	var/welding_resource = /datum/reagent/fuel
 
 /obj/item/weapon/tool/weldingtool/empty
 	tank = new /obj/item/weapon/welder_tank/empty()
@@ -59,10 +60,13 @@
 
 /obj/item/weapon/tool/weldingtool/examine(mob/user)
 	if(..(user, 0))
-		if(tank)
-			to_chat(user, "<span class='notice'>\icon[tank] \The [tank] contains [get_fuel()]/[tank.tank_volume] units of fuel!</span>")
-		else
-			to_chat(user, "There is no tank attached.")
+		show_fuel(user)
+
+/obj/item/weapon/tool/weldingtool/proc/show_fuel(var/mob/user)
+	if(tank)
+		to_chat(user, "\icon[tank] \The [tank] contains [get_fuel()]/[tank.tank_volume] units of [welding_resource]!")
+	else
+		to_chat(user, "There is no tank attached.")
 
 /obj/item/weapon/tool/weldingtool/MouseDrop(atom/over)
 	if(!CanMouseDrop(over, usr))
@@ -124,7 +128,7 @@
 		if(W.w_class >= w_class)
 			to_chat(user, SPAN_WARNING("\The [W] is too large to fit in \the [src]."))
 			return 0
-
+		
 		if(user.unEquip(W))
 		//user.drop_from_inventory(W, src)
 			tank = W
@@ -150,6 +154,10 @@
 	else
 		return ..()
 
+/obj/item/weapon/tool/weldingtool/water_act()
+	if(welding && !waterproof)
+		setWelding(0)
+
 /obj/item/weapon/tool/weldingtool/Process()
 	if(welding)
 		if(!remove_fuel(fuel_rate))
@@ -157,7 +165,7 @@
 
 /obj/item/weapon/tool/weldingtool/afterattack(obj/O as obj, mob/user as mob, proximity)
 	if(!proximity) return
-	if (istype(O, /obj/structure/reagent_dispensers/fueltank) && get_dist(src,O) <= 1 && !src.welding)
+	if (O.is_open_container() && get_dist(src,O) <= 1 && !src.welding)
 		if(!tank)
 			to_chat(user, SPAN_WARNING("\The [src] has no tank attached!"))
 			return
@@ -165,8 +173,7 @@
 		to_chat(user, SPAN_NOTICE("You refuel \the [tank]."))
 		playsound(src.loc, 'sound/effects/refill.ogg', 50, 1, -6)
 		return
-	if (src.welding)
-		remove_fuel(fuel_cost_use)
+	if (src.welding && remove_fuel(fuel_cost_use))
 		var/turf/location = get_turf(user)
 		if(isliving(O))
 			var/mob/living/L = O
@@ -182,7 +189,7 @@
 
 //Returns the amount of fuel in the welder
 /obj/item/weapon/tool/weldingtool/proc/get_fuel()
-	return tank ? tank.reagents.get_reagent_amount(tank.fuel_type) : 0
+	return tank ? tank.reagents.get_reagent_amount(welding_resource) : 0
 
 
 //Removes fuel from the welding tool. If a mob is passed, it will perform an eyecheck on the mob. This should probably be renamed to use()
@@ -196,7 +203,7 @@
 		return 1
 	else
 		if(M)
-			to_chat(M, SPAN_NOTICE("You need more welding fuel to complete this task."))
+			to_chat(M, SPAN_NOTICE("You need more [welding_resource] to complete this task."))
 		return 0
 
 /obj/item/weapon/tool/weldingtool/proc/burn_fuel(var/amount)
@@ -213,11 +220,11 @@
 
 	if(in_mob)
 		amount = max(amount, 2)
-		tank.reagents.trans_type_to(in_mob, tank.fuel_type, amount)
+		tank.reagents.trans_type_to(in_mob, welding_resource, amount)
 		in_mob.IgniteMob()
 
 	else
-		tank.reagents.remove_reagent(tank.fuel_type, amount)
+		tank.reagents.remove_reagent(welding_resource, amount)
 		var/turf/location = get_turf(src.loc)
 		if(location)
 			location.hotspot_expose(700, 5)
@@ -231,24 +238,23 @@
 		return ITEM_SIZE_NO_CONTAINER
 	return ..()
 
-/obj/item/weapon/tool/weldingtool/update_icon()
+/obj/item/weapon/tool/weldingtool/on_update_icon()
 	..()
-
 	var/datum/extension/base_icon_state/bis = get_extension(src, /datum/extension/base_icon_state)
-	if(bis)
-		icon_state = welding ? "[bis.base_icon_state]1" : "[bis.base_icon_state]"
+	icon_state = welding ? "[bis.base_icon_state]1" : "[bis.base_icon_state]"
 	item_state = welding ? "welder1" : "welder"
+	update_tank_underlay()
+	var/mob/M = loc
+	if(istype(M))
+		M.update_inv_l_hand()
+		M.update_inv_r_hand()
 
+/obj/item/weapon/tool/weldingtool/proc/update_tank_underlay()
 	underlays.Cut()
 	if(tank)
 		var/image/tank_image = image(tank.icon, icon_state = tank.icon_state)
 		tank_image.pixel_z = 0
 		underlays += tank_image
-
-	var/mob/M = loc
-	if(istype(M))
-		M.update_inv_l_hand()
-		M.update_inv_r_hand()
 
 //Sets the welding state of the welding tool. If you see W.welding = 1 anywhere, please change it to W.setWelding(1)
 //so that the welding tool updates accordingly
@@ -279,8 +285,8 @@
 			to_chat(M, SPAN_NOTICE("You switch \the [src] off."))
 		else if(T)
 			T.visible_message(SPAN_WARNING("\The [src] turns off."))
-		src.force = 3
-		src.damtype = DAM_BLUNT
+		src.force = initial(src.force)
+		src.damtype = initial(src.damtype)
 		src.welding = 0
 		update_icon()
 
@@ -363,7 +369,7 @@
 		to_chat(user, SPAN_NOTICE("[output_message]"))
 
 	var/done = (required_skill)? user.do_skilled(apply_duration_efficiency(time), required_skill, target) : do_after(user, apply_duration_efficiency(time), target)
-	if(required_skill && prob(skill_fail_chance(required_skill, 1)))
+	if(required_skill && prob(user.skill_fail_chance(required_skill, 1)))
 		to_chat(user, SPAN_DANGER("You're not very good at this and fail the task.."))
 		return FALSE  //There's a chance to screw up if not skilled enough
 	if(done && isOn())
@@ -385,6 +391,7 @@
 	icon = 'icons/obj/items/tools.dmi'
 	icon_state = "fuel_m"
 	w_class = ITEM_SIZE_SMALL
+	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	var/tank_volume = 40
 	var/starting_fuel = 40
 	var/can_remove = 1
@@ -402,7 +409,7 @@
 
 /obj/item/weapon/welder_tank/examine(mob/user)
 	if(..(user, 0))
-		to_chat(user, SPAN_NOTICE("There is [reagents.total_volume]/[tank_volume] units of fuel remaining."))
+		to_chat(user, SPAN_NOTICE("There is [reagents.total_volume]/[tank_volume] units of liquid remaining."))
 
 /obj/item/weapon/welder_tank/afterattack(obj/O as obj, mob/user as mob, proximity)
 	if(!proximity) return
@@ -411,6 +418,7 @@
 		to_chat(user, SPAN_NOTICE("You refuel \the [src]."))
 		playsound(src.loc, 'sound/effects/refill.ogg', 50, 1, -6)
 		return
+	return ..()
 
 /obj/item/weapon/welder_tank/proc/get_tank_volume()
 	return tank_volume

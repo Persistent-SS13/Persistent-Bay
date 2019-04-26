@@ -399,7 +399,7 @@ var/global/list/valid_bloodtypes = list("A+", "A-", "B+", "B-", "AB+", "AB-", "O
 			pref.real_name = null	//to make sure vatgrown don't get any disallowed names
 
 			//prune_occupation_prefs()
-			pref.skills_allocated = pref.sanitize_skills(pref.skills_allocated)
+//			pref.skills_allocated = pref.sanitize_skills(pref.skills_allocated)
 
 			pref.cultural_info = mob_species.default_cultural_info.Copy()
 

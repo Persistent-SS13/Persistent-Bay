@@ -14,24 +14,25 @@
 	var/delay = 10
 	req_access = list(core_access_science_programs) //Only the R&D can change server settings.
 
-/obj/machinery/r_n_d/server/New()
-	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/rdserver(src)
-	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
-	component_parts += new /obj/item/stack/cable_coil(src)
-	component_parts += new /obj/item/stack/cable_coil(src)
+/obj/machinery/r_n_d/server/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		component_parts = list()
+		component_parts += new /obj/item/weapon/circuitboard/rdserver(src)
+		component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
+		component_parts += new /obj/item/stack/cable_coil(src)
+		component_parts += new /obj/item/stack/cable_coil(src)
 	RefreshParts()
 
 /obj/machinery/r_n_d/server/Destroy()
 	griefProtection()
-	. = ..()
+	..()
 
 /obj/machinery/r_n_d/server/RefreshParts()
 	var/tot_rating = 0
 	for(var/obj/item/weapon/stock_parts/SP in src)
 		tot_rating += SP.rating
-	idle_power_usage /= max(1, tot_rating)
+	change_power_consumption(initial(idle_power_usage)/max(1, tot_rating), POWER_USE_IDLE)
 
 /obj/machinery/r_n_d/server/Initialize()
 	. = ..()
@@ -163,18 +164,16 @@
 	var/list/consoles = list()
 	var/badmin = 0
 
-/obj/machinery/computer/rdservercontrol/Topic(href, href_list)
-	if(..())
-		return 1
+/obj/machinery/computer/rdservercontrol/CanUseTopic(user)
+	if(!allowed(user) && !emagged)
+		to_chat(user, "<span class='warning'>You do not have the required access level</span>")
+		return STATUS_CLOSE
+	return ..()
 
-	add_fingerprint(usr)
-	usr.set_machine(src)
-	if(!allowed(usr) && !emagged)
-		to_chat(usr, "<span class='warning'>You do not have the required access level</span>")
-		return
-
+/obj/machinery/computer/rdservercontrol/OnTopic(user, href_list, state)
 	if(href_list["main"])
 		screen = 0
+		. = TOPIC_REFRESH
 
 	else if(href_list["access"] || href_list["data"] || href_list["transfer"])
 		temp_server = null
@@ -197,6 +196,7 @@
 				if(S == src)
 					continue
 				servers += S
+		. = TOPIC_REFRESH
 
 	else if(href_list["upload_toggle"])
 		var/num = text2num(href_list["upload_toggle"])
@@ -204,6 +204,7 @@
 			temp_server.id_with_upload -= num
 		else
 			temp_server.id_with_upload += num
+		. = TOPIC_REFRESH
 
 	else if(href_list["download_toggle"])
 		var/num = text2num(href_list["download_toggle"])
@@ -211,27 +212,30 @@
 			temp_server.id_with_download -= num
 		else
 			temp_server.id_with_download += num
+		. = TOPIC_REFRESH
 
 	else if(href_list["reset_tech"])
-		var/choice = alert("Technology Data Rest", "Are you sure you want to reset this technology to its default data? Data lost cannot be recovered.", "Continue", "Cancel")
-		if(choice == "Continue")
+		var/choice = alert(user, "Technology Data Rest", "Are you sure you want to reset this technology to its default data? Data lost cannot be recovered.", "Continue", "Cancel")
+		if(choice == "Continue" && CanUseTopic(user, state))
 			for(var/datum/tech/T in temp_server.files.known_tech)
 				if(T.id == href_list["reset_tech"])
 					T.level = 1
 					break
 		temp_server.files.RefreshResearch()
+		. = TOPIC_REFRESH
 
 	else if(href_list["reset_design"])
-		var/choice = alert("Design Data Deletion", "Are you sure you want to delete this design? If you still have the prerequisites for the design, it'll reset to its base reliability. Data lost cannot be recovered.", "Continue", "Cancel")
-		if(choice == "Continue")
+		var/choice = alert(user, "Design Data Deletion", "Are you sure you want to delete this design? If you still have the prerequisites for the design, it'll reset to its base reliability. Data lost cannot be recovered.", "Continue", "Cancel")
+		if(choice == "Continue" && CanUseTopic(user, state))
 			for(var/datum/design/D in temp_server.files.known_designs)
 				if(D.id == href_list["reset_design"])
 					temp_server.files.known_designs -= D
 					break
 		temp_server.files.RefreshResearch()
+		. = TOPIC_REFRESH
 
-	updateUsrDialog()
-	return
+	if(. == TOPIC_REFRESH)
+		attack_hand(user)
 
 /obj/machinery/computer/rdservercontrol/attack_hand(mob/user as mob)
 	if(stat & (BROKEN|NOPOWER))

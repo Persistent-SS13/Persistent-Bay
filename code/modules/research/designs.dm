@@ -308,35 +308,35 @@ other types of metals and chemistry for reagents).
 	desc = "A device for analyzing chemicals in blood."
 	id = "mass_spectrometer"
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 2)
-	build_path = /obj/item/device/mass_spectrometer
+	build_path = /obj/item/device/scanner/spectrometer
 	sort_string = "MACAA"
 
 /datum/design/item/medical/adv_mass_spectrometer
 	desc = "A device for analyzing chemicals in blood and their quantities."
 	id = "adv_mass_spectrometer"
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 4)
-	build_path = /obj/item/device/mass_spectrometer/adv
+	build_path = /obj/item/device/scanner/spectrometer/adv
 	sort_string = "MACAB"
 
 /datum/design/item/medical/reagent_scanner
 	desc = "A device for identifying chemicals."
 	id = "reagent_scanner"
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 2)
-	build_path = /obj/item/device/reagent_scanner
+	build_path = /obj/item/device/scanner/reagent
 	sort_string = "MACBA"
 
 /datum/design/item/medical/adv_reagent_scanner
 	desc = "A device for identifying chemicals and their proportions."
 	id = "adv_reagent_scanner"
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 4)
-	build_path = /obj/item/device/reagent_scanner/adv
+	build_path = /obj/item/device/scanner/reagent/adv
 	sort_string = "MACBB"
 
 /datum/design/item/medical/slime_scanner
 	desc = "A device for scanning identified and unidentified lifeforms."
 	id = "slime_scanner"
 	req_tech = list(TECH_BIO = 2, TECH_MAGNET = 2)
-	build_path = /obj/item/device/slime_scanner
+	build_path = /obj/item/device/scanner/xenobio
 	sort_string = "MACBC"
 
 /datum/design/item/beaker/AssembleDesignName()
@@ -474,29 +474,29 @@ other types of metals and chemistry for reagents).
 	build_path = /obj/item/ammo_magazine/box/c9mm
 	sort_string = "TAACA"
 
-/datum/design/item/weapon/ammo_emp_38
-	id = "ammo_emp_38"
-	desc = "A .38 round with an integrated EMP charge."
-	materials = list(MATERIAL_STEEL = 2500, MATERIAL_URANIUM = 750)
-	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 3)
-	build_path = /obj/item/ammo_magazine/box/emp
-	sort_string = "TAACC"
+// /datum/design/item/weapon/ammo_emp_38
+// 	id = "ammo_emp_38"
+// 	desc = "A .38 round with an integrated EMP charge."
+// 	materials = list(MATERIAL_STEEL = 2500, MATERIAL_URANIUM = 750)
+// 	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 3)
+// 	build_path = /obj/item/ammo_magazine/box/c38/emp
+// 	sort_string = "TAACC"
 
 /datum/design/item/weapon/ammo_emp_45
 	id = "ammo_emp_45"
 	desc = "A .45 round with an integrated EMP charge."
 	materials = list(MATERIAL_STEEL = 2500, MATERIAL_URANIUM = 750)
 	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 3)
-	build_path = /obj/item/ammo_magazine/box/emp/c45
+	build_path = /obj/item/ammo_magazine/box/c45/emp
 	sort_string = "TAACD"
 
-/datum/design/item/weapon/ammo_emp_10
-	id = "ammo_emp_10"
-	desc = "A .10mm round with an integrated EMP charge."
-	materials = list(MATERIAL_STEEL = 2500, MATERIAL_URANIUM = 750)
-	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 3)
-	build_path = /obj/item/ammo_magazine/box/emp/a10mm
-	sort_string = "TAACE"
+// /datum/design/item/weapon/ammo_emp_10
+// 	id = "ammo_emp_10"
+// 	desc = "A .10mm round with an integrated EMP charge."
+// 	materials = list(MATERIAL_STEEL = 2500, MATERIAL_URANIUM = 750)
+// 	req_tech = list(TECH_COMBAT = 3, TECH_MATERIAL = 3)
+// 	build_path = /obj/item/ammo_magazine/box/c10mm/emp
+// 	sort_string = "TAACE"
 
 /datum/design/item/weapon/ammo_emp_slug
 	id = "ammo_emp_slug"

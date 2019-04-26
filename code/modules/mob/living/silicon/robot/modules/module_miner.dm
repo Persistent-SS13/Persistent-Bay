@@ -22,14 +22,14 @@
 	equipment = list(
 		/obj/item/device/flash,
 		/obj/item/borg/sight/meson,
-		/obj/item/weapon/wrench,
-		/obj/item/weapon/screwdriver,
+		/obj/item/weapon/tool/wrench,
+		/obj/item/weapon/tool/screwdriver,
 		/obj/item/weapon/storage/ore,
 		/obj/item/weapon/pickaxe/borgdrill,
 		/obj/item/weapon/storage/sheetsnatcher/borg,
 		/obj/item/weapon/gripper/miner,
 		/obj/item/weapon/mining_scanner,
-		/obj/item/weapon/crowbar
+		/obj/item/weapon/tool/crowbar
 	)
 	emag = /obj/item/weapon/gun/energy/plasmacutter
 

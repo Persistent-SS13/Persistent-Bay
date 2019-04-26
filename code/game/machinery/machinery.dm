@@ -120,13 +120,15 @@ Class Procs:
 	var/time_emped = 0		  //Time left being emped
 	var/emped_disabled_max_time = 5 MINUTES //Maximum time this machine can be disabled by EMP(Aka for severity 1)
 	var/frame_type = /obj/machinery/constructable_frame/machine_frame //The type of frame that will be left behind after deconstruction
-	//Radio stuff
-	var/id_tag						//Mappervar: Sets the initial id_tag.
+	var/obj/item/circuit_type = null //Convenience var for handling the obligatory circuit most machines need when spawning
+	
+	//Initial Radio stuff
+	var/id_tag				= null	//Mappervar: Sets the initial id_tag.
 	var/frequency 		 	= null	//Mappervar: Sets the initial radio listening frequency.
 	var/range 				= null	//Mappervar: Sets the initial radio range.
 	var/radio_filter_out 	= null	//Mappervar: Sets the initial output radio filter.
 	var/radio_filter_in 	= null	//Mappervar: Sets the initial listening radio filter.
-	var/radio_check_id 		= TRUE //Whether the machine checks it own id against the target id of a radio command before executing the command.
+	var/radio_check_id 		= TRUE	//Whether the machine checks it own id against the target id of a radio command before executing the command.
 
 /obj/machinery/New()
 	..()
@@ -138,9 +140,11 @@ Class Procs:
 	ADD_SAVED_VAR(malf_upgraded)
 	ADD_SAVED_VAR(emagged)
 	ADD_SAVED_VAR(stat)
+	ADD_SAVED_VAR(faction)
 
 	ADD_SKIP_EMPTY(extensions)
 	ADD_SKIP_EMPTY(component_parts)
+	ADD_SKIP_EMPTY(faction)
 
 /obj/machinery/after_load()
 	..()
@@ -149,6 +153,8 @@ Class Procs:
 
 /obj/machinery/Initialize(mapload, d=0)
 	. = ..()
+	if(!map_storage_loaded)
+		SetupParts()
 	REPORT_POWER_CONSUMPTION_CHANGE(0, get_power_usage())
 	GLOB.moved_event.register(src, src, .proc/update_power_on_move)
 	power_init_complete = TRUE
@@ -172,6 +178,12 @@ Class Procs:
 	if(has_transmitter())
 		delete_transmitter()
 	. = ..()
+
+//Installs parts when creating a machine for the first time
+/obj/machinery/proc/SetupParts()
+	if(circuit_type)
+		LAZYDISTINCTADD(component_parts, new circuit_type(src))
+	RefreshParts()
 
 /obj/machinery/proc/RefreshParts() //Placeholder proc for machines that are built using frames.
 	return
@@ -244,7 +256,7 @@ Class Procs:
 	update_icon()
 
 //Flags
-/obj/machinery/proc/isbroken()
+/obj/machinery/isbroken()
 	return (stat & BROKEN)
 
 /obj/machinery/proc/ispowered()
@@ -718,7 +730,7 @@ This is /obj/machinery level code to properly manage power usage from the area.
 		broken(damagetype)
 
 //Called when the machine is broken
-/obj/machinery/proc/broken(var/damagetype)
+/obj/machinery/broken(var/damagetype)
 	set_broken(TRUE)
 	update_icon()
 

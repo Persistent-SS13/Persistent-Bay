@@ -20,10 +20,20 @@
 	return -1
 
 /obj/machinery/atmospherics/pipe/New()
+	..()
+	ADD_SAVED_VAR(air_temporary)
+	ADD_SAVED_VAR(leaking)
+	ADD_SAVED_VAR(in_stasis)
+
+	ADD_SKIP_EMPTY(air_temporary)
+
+/obj/machinery/atmospherics/pipe/Initialize()
+	. = ..()
 	if(loc)
 		if(istype(get_turf(src), /turf/simulated/wall) || istype(get_turf(src), /turf/simulated/shuttle/wall) || istype(get_turf(src), /turf/unsimulated/wall))
 			level = 1
-	..()
+	if(map_storage_loaded)
+		set_leaking(leaking)
 
 /obj/machinery/atmospherics/pipe/hides_under_flooring()
 	return level != 2

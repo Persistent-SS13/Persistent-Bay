@@ -14,7 +14,7 @@
 	active_power_usage = 500 //multiplied by field strength
 	anchored = FALSE
 	id_tag = null
-	atom_flag = ATOM_ANCHORABLE
+	obj_flags = OBJ_FLAG_ANCHORABLE
 	var/obj/effect/fusion_em_field/owned_field
 	var/field_strength = 1//0.01
 	var/initial_id_tag

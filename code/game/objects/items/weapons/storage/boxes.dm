@@ -100,7 +100,7 @@
 	icon_state = "survivalphoron"
 	startswith = list(/obj/item/weapon/tank/emergency/phoron = 1,
 					/obj/item/weapon/reagent_containers/hypospray/autoinjector = 1,
-					/obj/item/device/flashlight/glowstick = 1)
+					/obj/item/device/flashlight/flare/glowstick = 1)
 
 /obj/item/weapon/storage/box/engineer/
 	name = "engineer survival kit"
@@ -199,11 +199,11 @@
 /obj/item/weapon/storage/box/ammo/sniperammo
 	name = "box of 14.5mm shells"
 	desc = "It has a picture of a gun and several warning symbols on the front.<br>WARNING: Live ammunition. Misuse may result in serious injury or death."
-	startswith = list(/obj/item/ammo_casing/a145 = 7)
+	startswith = list(/obj/item/ammo_casing/c145 = 7)
 
 /obj/item/weapon/storage/box/ammo/sniperammo/apds
 	name = "box of 14.5mm APDS shells"
-	startswith = list(/obj/item/ammo_casing/a145/apds = 3)
+	startswith = list(/obj/item/ammo_casing/c145/apds = 3)
 
 /obj/item/weapon/storage/box/flashbangs
 	name = "box of flashbangs"

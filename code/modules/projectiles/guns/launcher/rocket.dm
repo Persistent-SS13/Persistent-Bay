@@ -18,6 +18,11 @@
 	var/max_rockets = 1
 	var/list/rockets = new/list()
 
+/obj/item/weapon/gun/launcher/rocket/New()
+	..()
+	ADD_SAVED_VAR(rockets)
+	ADD_SKIP_EMPTY(rockets)
+
 /obj/item/weapon/gun/launcher/rocket/examine(mob/user)
 	if(!..(user, 2))
 		return

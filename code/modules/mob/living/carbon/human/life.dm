@@ -213,9 +213,9 @@
 			set_light(0)
 	else
 		if(species.appearance_flags & RADIATION_GLOWS)
-			set_light(max(1,min(10,radiation/10)), max(1,min(20,radiation/20)), species.get_flesh_colour(src))
+			set_light(0.3, 0.1, max(1,min(20,radiation/20)), 2, species.get_flesh_colour(src))
 		// END DOGSHIT SNOWFLAKE
-		/*
+
 		var/obj/item/organ/internal/diona/nutrients/rad_organ = locate() in internal_organs
 		if (rad_organ && !rad_organ.is_broken())
 			var/rads = radiation/25
@@ -229,7 +229,7 @@
 			nutrition = Clamp(nutrition, 0, 550)
 
 			return
-		*/
+
 		var/damage = 0
 		radiation -= 1 * RADIATION_SPEED_COEFFICIENT
 		if(prob(25))
@@ -257,7 +257,7 @@
 			radiation -= 3 * RADIATION_SPEED_COEFFICIENT
 			if(!isSynthetic())
 				if(prob(5))
-					take_overall_damage(5 * RADIATION_SPEED_COEFFICIENT, DAM_BURN, used_weapon = "Radiation Burns")
+					take_overall_damage(0, 5 * RADIATION_SPEED_COEFFICIENT, used_weapon = "Radiation Burns")
 				if(prob(1))
 					to_chat(src, "<span class='warning'>You feel strange!</span>")
 					adjustCloneLoss(5 * RADIATION_SPEED_COEFFICIENT)
@@ -565,12 +565,14 @@
 	if(isSynthetic())
 		return
 
+	var/datum/reagents/metabolism/ingested = get_ingested_reagents()
+
 	if(reagents)
 		if(touching) touching.metabolize()
 		if(bloodstr) bloodstr.metabolize()
+		if(ingested) metabolize_ingested_reagents()
 
 	// Trace chemicals
-	var/datum/reagents/metabolism/ingested = get_ingested_reagents()
 	for(var/T in chem_doses)
 		if(bloodstr.has_reagent(T) || ingested.has_reagent(T) || touching.has_reagent(T))
 			continue
@@ -625,7 +627,6 @@
 			set_stat(UNCONSCIOUS)
 			animate_tail_reset()
 			adjustHalLoss(-3)
-
 			if(sleeping)
 				handle_dreams()
 				if (mind)
@@ -1023,7 +1024,7 @@
 		if(wear_id)
 			var/obj/item/weapon/card/id/I = wear_id.GetIdCard()
 			if(I)
-				var/datum/job/J = job_master.GetJob(I.GetJobName())
+				var/datum/job/J = SSjobs.get_by_title(I.GetJobName())
 				if(J)
 					holder.icon_state = J.hud_icon
 

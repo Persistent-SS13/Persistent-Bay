@@ -60,20 +60,25 @@
 		skill.update_special_effects(owner, get_value(skill.type))
 
 /datum/skillset/proc/obtain_from_client(datum/job/job, client/given_client, override = 0)
+	//### Disabled skill transfer from skill assignment menu for now ###
 	if(!skills_transferable)
 		return
 	if(!override && owner.mind && player_is_antag(owner.mind))		//Antags are dealt with at a different time. Note that this may be called before or after antag roles are assigned.
 		return
 	if(!given_client)
 		return
-
-	var/allocation = given_client.prefs.skills_allocated[job] || list()
+	var/allocation = list()
 	skill_list = list()
-
 	for(var/decl/hierarchy/skill/S in GLOB.skills)
-		var/min = job ? given_client.prefs.get_min_skill(job, S) : SKILL_MIN
-		skill_list[S.type] = min + (allocation[S] || 0)
+		skill_list[S.type] = SKILL_MIN + (allocation[S] || 0)
 	on_levels_change()
+	// var/allocation = given_client.prefs.skills_allocated[job] || list()
+	// skill_list = list()
+
+	// for(var/decl/hierarchy/skill/S in GLOB.skills)
+	// 	var/min = job ? given_client.prefs.get_min_skill(job, S) : SKILL_MIN
+	// 	skill_list[S.type] = min + (allocation[S] || 0)
+	// on_levels_change()
 
 //Skill-related mob helper procs
 
@@ -84,7 +89,7 @@
 	qdel(skillset)
 	var/new_type = initial(skillset)
 	skillset = new new_type(src)
-	var/datum/job/job = mind && job_master.GetJob(mind.assigned_role)
+	var/datum/job/job = mind && SSjobs.get_by_title(mind.assigned_role)
 	skillset.obtain_from_client(job, client)
 
 // Use to perform skill checks

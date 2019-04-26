@@ -2,40 +2,71 @@
 	var/active = 0
 	var/active_force
 	var/active_throwforce
-	armor_penetration = 50
+	var/active_icon
+	var/lighting_color
+	var/active_attack_verb
+	var/inactive_attack_verb = list()
+	sharpness = 0
 	damtype = DAM_BLUNT
+	armor_penetration = 50
 	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_NO_BLOOD
 	mass = 0.5
 	icon = 'icons/obj/weapons/melee/energy.dmi'
 
 /obj/item/weapon/melee/energy/can_embed()
 	return FALSE
+	
+/obj/item/weapon/melee/energy/Initialize()
+	. = ..()
+	if(active)
+		active = FALSE
+		activate()
+	else
+		active = TRUE
+		deactivate()
+		
+/obj/item/weapon/melee/energy/on_update_icon()
+	. = ..()
+	if(active)
+		icon_state = active_icon
+	else
+		icon_state = initial(icon_state)
 
 /obj/item/weapon/melee/energy/proc/activate(mob/living/user)
 	if(active)
 		return
-	active = 1
+	active = TRUE
 	force = active_force
 	throwforce = active_throwforce
 	sharpness = 1
-	slot_flags |= SLOT_DENYPOCKET
 	damtype = DAM_ENERGY
-	playsound(user, 'sound/weapons/saberon.ogg', 50, 1)
-
+	slot_flags |= SLOT_DENYPOCKET
+	attack_verb = active_attack_verb
+	update_icon()
+	if(user)
+		playsound(user, 'sound/weapons/saberon.ogg', 50, 1)
+		to_chat(user, "<span class='notice'>\The [src] is now energised.</span>")
+	set_light(0.8, 1, 2, 4, lighting_color)
+	
 /obj/item/weapon/melee/energy/proc/deactivate(mob/living/user)
 	if(!active)
 		return
-	playsound(user, 'sound/weapons/saberoff.ogg', 50, 1)
-	active = 0
+	active = FALSE
 	force = initial(force)
 	throwforce = initial(throwforce)
 	sharpness = initial(sharpness)
+	damtype = initial(damtype)
 	slot_flags = initial(slot_flags)
-	damtype = DAM_BLUNT
+	attack_verb = inactive_attack_verb
+	update_icon()
+	if(user)
+		playsound(user, 'sound/weapons/saberoff.ogg', 50, 1)
+		to_chat(user, "<span class='notice'>\The [src] deactivates!</span>")
+	set_light(0)
 
 /obj/item/weapon/melee/energy/attack_self(mob/living/user as mob)
-	if (active)
-		if ((MUTATION_CLUMSY in user.mutations) && prob(50))
+	if(active)
+		if((MUTATION_CLUMSY in user.mutations) && prob(50))
 			user.visible_message("<span class='danger'>\The [user] accidentally cuts \himself with \the [src].</span>",\
 			"<span class='danger'>You accidentally cut yourself with \the [src].</span>")
 			user.apply_damage(5, DAM_CUT)
@@ -64,6 +95,8 @@
 	name = "energy axe"
 	desc = "An energised battle axe."
 	icon_state = "axe0"
+	active_icon = "axe1"
+	lighting_color = COLOR_SABER_AXE
 	damtype = DAM_CUT
 	active_force = 18
 	active_throwforce = 14
@@ -75,20 +108,14 @@
 	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_NO_BLOOD
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	origin_tech = list(TECH_MAGNET = 3, TECH_COMBAT = 4)
-	attack_verb = list("attacked", "chopped", "cleaved", "torn", "cut")
+	active_attack_verb = list("attacked", "chopped", "cleaved", "torn", "cut")
+	inactive_attack_verb = list("attacked", "chopped", "cleaved", "torn", "cut")
 	sharpness = 1
 	mass = 2.5
 	melee_accuracy_bonus = 15
 
-/obj/item/weapon/melee/energy/axe/activate(mob/living/user)
-	..()
-	icon_state = "axe1"
-	to_chat(user, "<span class='notice'>\The [src] is now energised.</span>")
-	damtype = DAM_ENERGY
-
 /obj/item/weapon/melee/energy/axe/deactivate(mob/living/user)
-	..()
-	icon_state = initial(icon_state)
+	. = ..()
 	to_chat(user, "<span class='notice'>\The [src] is de-energised. It's just a regular axe now.</span>")
 	damtype = DAM_CUT
 
@@ -99,7 +126,6 @@
 	name = "energy sword"
 	desc = "May the force be within you."
 	icon_state = "sword0"
-	damtype = DAM_BLUNT
 	active_force = 15
 	active_throwforce = 10
 	force = 3
@@ -112,12 +138,18 @@
 	sharpness = 1
 	mass = 0.8
 	base_parry_chance = 50
+	active_attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
 	var/blade_color
 
 /obj/item/weapon/melee/energy/sword/Initialize()
-	. = ..()
 	if(!blade_color)
 		blade_color = pick("red","blue","green","purple")
+	
+	active_icon = "sword[blade_color]"
+	var/color_hex = list("red" = COLOR_SABER_RED,  "blue" = COLOR_SABER_BLUE, "green" = COLOR_SABER_GREEN, "purple" = COLOR_SABER_PURPLE)
+	lighting_color = color_hex[blade_color]
+	
+	. = ..()
 
 /obj/item/weapon/melee/energy/sword/green
 	blade_color = "green"
@@ -136,22 +168,6 @@
 	if(!istype(loc,/mob))
 		deactivate(user)
 
-/obj/item/weapon/melee/energy/sword/activate(mob/living/user)
-	if(!active)
-		to_chat(user, "<span class='notice'>\The [src] is now energised.</span>")
-	..()
-	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
-	icon_state = "sword[blade_color]"
-	damtype = DAM_ENERGY
-
-/obj/item/weapon/melee/energy/sword/deactivate(mob/living/user)
-	if(active)
-		to_chat(user, "<span class='notice'>\The [src] deactivates!</span>")
-	..()
-	attack_verb = list()
-	icon_state = initial(icon_state)
-	damtype = DAM_BLUNT
-
 /obj/item/weapon/melee/energy/sword/handle_shield(mob/user, var/damage, atom/damage_source = null, mob/attacker = null, var/def_zone = null, var/attack_text = "the attack")
 	if(.)
 		var/datum/effect/effect/system/spark_spread/spark_system = new /datum/effect/effect/system/spark_spread()
@@ -166,10 +182,8 @@
 	name = "energy cutlass"
 	desc = "Arrrr matey."
 	icon_state = "cutlass0"
-
-/obj/item/weapon/melee/energy/sword/pirate/activate(mob/living/user)
-	..()
-	icon_state = "cutlass1"
+	active_icon = "cutlass1"
+	lighting_color = COLOR_SABER_CUTLASS
 
 /*
  *Energy Blade
@@ -179,8 +193,10 @@
 	name = "energy blade"
 	desc = "A concentrated beam of energy in the shape of a blade. Very stylish... and lethal."
 	icon_state = "blade"
-	damtype = DAM_BLUNT
+	active_icon = "blade"	//It's all energy, so it should always be visible.
+	lighting_color = COLOR_SABER_GREEN
 	force = 20 //Normal attacks deal very high damage - about the same as wielded fire axe
+	active = 1
 	armor_penetration = 10
 	sharpness = 1
 	anchored = 1    // Never spawned outside of inventory, should be fine.
@@ -189,7 +205,7 @@
 	throw_range = 1
 	w_class = ITEM_SIZE_TINY //technically it's just energy or something, I dunno
 	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_NO_BLOOD
-	attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
+	active_attack_verb = list("attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut")
 	mass = 0.5
 	var/mob/living/creator
 	var/datum/effect/effect/system/spark_spread/spark_system
@@ -213,7 +229,6 @@
 
 /obj/item/weapon/melee/energy/blade/attack_self(mob/user as mob)
 	user.drop_from_inventory(src)
-	QDEL_IN(src, 0)
 
 /obj/item/weapon/melee/energy/blade/dropped()
 	..()
@@ -233,3 +248,17 @@
 			host.embedded -= src
 			host.drop_from_inventory(src)
 		QDEL_IN(src, 0)
+		
+/obj/item/weapon/melee/energy/machete
+	name = "energy machete"
+	desc = "A machete handle that extends out into a long, purple machete blade. It appears to be Skrellian in origin."
+	icon_state = "machete_skrell_x"
+	active_icon = "machete_skrell"
+	active_force = 16		//In line with standard machetes at time of creation.
+	active_throwforce = 17.25
+	lighting_color = COLOR_SABER_SKRELL
+	force = 3
+	throwforce = 1
+	w_class = ITEM_SIZE_SMALL
+	origin_tech = list(TECH_MAGNET = 3)
+	active_attack_verb = list("attacked", "chopped", "cleaved", "torn", "cut")

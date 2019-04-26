@@ -149,7 +149,10 @@
 	var/transfer_moles = 0
 	if(scrubbing == SCRUBBER_SIPHON) //Just siphon all air
 		//limit flow rate from turfs
-		var/transfer_moles = min(environment.total_moles, environment.total_moles*MAX_SCRUBBER_FLOWRATE/environment.volume)	//group_multiplier gets divided out here
+		transfer_moles = min(environment.total_moles, environment.total_moles*MAX_SIPHON_FLOWRATE/environment.volume)	//group_multiplier gets divided out here
+		power_draw = pump_gas(src, environment, air_contents, transfer_moles, power_rating)
+	else  //limit flow rate from turfs
+		transfer_moles = min(environment.total_moles, environment.total_moles*MAX_SCRUBBER_FLOWRATE/environment.volume)	//group_multiplier gets divided out here
 		//checking what reagent gases need to be filtered
 		var/list/scrubbed_gases_final
 		if(GAS_REAGENTS in scrubbing_gas)
@@ -157,16 +160,7 @@
 			for(var/g in environment.gas)
 				if(gas_data.flags[g] & XGM_GAS_REAGENT_GAS)
 					scrubbed_gases_final += g
-
-		power_draw = scrub_gas(src, scrubbed_gases_final ? scrubbed_gases_final : scrubbing_gas, environment, air_contents, transfer_moles, power_rating)
-	else //Just siphon all air
-		//limit flow rate from turfs
-		var/transfer_moles = min(environment.total_moles, environment.total_moles*MAX_SIPHON_FLOWRATE/environment.volume)	//group_multiplier gets divided out here
-
-		power_draw = pump_gas(src, environment, air_contents, transfer_moles, power_rating)
-	else //limit flow rate from turfs
-		transfer_moles = min(environment.total_moles, environment.total_moles*MAX_SCRUBBER_FLOWRATE/environment.volume)	//group_multiplier gets divided out here
-		power_draw = scrub_gas(src, scrubbing_gas, environment, air_contents, transfer_moles, power_rating)
+		power_draw = scrub_gas(src, scrubbed_gases_final, environment, air_contents, transfer_moles, power_rating)
 
 	if(scrubbing != SCRUBBER_SIPHON && power_draw <= 0)	//99% of all scrubbers
 		//Fucking hibernate because you ain't doing shit.

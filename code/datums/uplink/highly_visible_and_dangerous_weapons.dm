@@ -19,7 +19,7 @@
 	item_cost = 32
 	path = /obj/item/weapon/melee/energy/sword
 
-/datum/uplink_item/item/visible_weapons/g9mm
+/datum/uplink_item/item/visible_weapons/silenced
 	name = "Silenced Holdout Pistol"
 	desc = "Holdout pistol with silencer kit and ammunition."
 	item_cost = 32

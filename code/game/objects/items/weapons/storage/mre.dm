@@ -23,7 +23,8 @@ MRE Stuff
 	)
 
 /obj/item/weapon/storage/mre/Initialize()
-	create_objects_in_loc(src, main_meal)
+	if(!map_storage_loaded)
+		create_objects_in_loc(src, main_meal)
 	. = ..()
 	make_exact_fit()
 

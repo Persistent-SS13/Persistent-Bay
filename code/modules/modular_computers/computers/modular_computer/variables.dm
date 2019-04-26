@@ -67,5 +67,5 @@
 	var/list/terminals          // List of open terminal datums.
 
 /obj/item/modular_computer/proc/ConnectedFaction()
-	return network_card.connected_network
+	return network_card? network_card.connected_network : null
 

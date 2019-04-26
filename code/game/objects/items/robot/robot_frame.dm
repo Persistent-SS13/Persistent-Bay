@@ -128,13 +128,14 @@
 		if(!O)
 			return
 
-		O.mmi = W
-		O.real_name = M.brainmob.real_name
 		if(islace)
-			var/obj/item/device/lmi/L = W
-			L.add_lace_action()
-			L.spawn_loc = M.brainmob.spawn_loc
-			L.spawn_loc_2 = M.brainmob.spawn_loc_2
+			O.lmi = W //For some reasons we need to set the lace here as well
+		O.mmi = W
+		O.real_name = B.real_name
+		if(islace)
+			O.add_lace_action()
+			O.spawn_loc = B.spawn_loc
+			O.spawn_loc_2 = B.spawn_loc_2
 		O.set_invisibility(0)
 		O.custom_name = created_name
 		O.updatename("Default")

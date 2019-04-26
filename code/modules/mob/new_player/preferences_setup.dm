@@ -29,10 +29,6 @@
 					else
 						ASSIGN_LIST_TO_COLORS(current_species.get_random_facial_hair_color(), r_facial, g_facial, b_facial)
 
-			// if(current_species.appearance_flags & IS_VATGROWN)
-			// 	s_tone = vatgrown_skin_tone()
-			// 	vatgrown_hair_color("hair")
-			// 	vatgrown_hair_color("facial")
 		if(current_species.appearance_flags & HAS_UNDERWEAR)
 			if(all_underwear)
 				all_underwear.Cut()
@@ -64,7 +60,7 @@
 	var/update_icon = FALSE
 	copy_to(mannequin, TRUE)
 
-	var/datum/job/previewJob
+	//var/datum/job/previewJob
 	// if(equip_preview_mob)
 	// 	// Determine what job is marked as 'High' priority, and dress them up as such.
 	// 	if(GLOB.using_map.default_assistant_title in job_low)

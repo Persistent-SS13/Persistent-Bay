@@ -122,4 +122,4 @@
 
 /obj/effect/wingrille_spawn/reinforced/polarized/handle_window_spawn(var/obj/structure/window/reinforced/polarized/P)
 	if(id)
-		P.id = id
+		P.id_tag = id

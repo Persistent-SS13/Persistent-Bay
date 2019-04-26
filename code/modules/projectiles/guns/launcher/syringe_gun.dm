@@ -13,6 +13,11 @@
 	mass = 0.1
 	var/obj/item/weapon/reagent_containers/syringe/syringe
 
+/obj/item/weapon/syringe_cartridge/New()
+	..()
+	ADD_SAVED_VAR(syringe)
+	ADD_SKIP_EMPTY(syringe)
+
 /obj/item/weapon/syringe_cartridge/on_update_icon()
 	underlays.Cut()
 	if(syringe)
@@ -81,6 +86,14 @@
 	var/list/darts = list()
 	var/max_darts = 1
 	var/obj/item/weapon/syringe_cartridge/next
+
+/obj/item/weapon/gun/launcher/syringe/New()
+	..()
+	ADD_SAVED_VAR(next)
+	ADD_SAVED_VAR(darts)
+
+	ADD_SKIP_EMPTY(next)
+	ADD_SKIP_EMPTY(darts)
 
 /obj/item/weapon/gun/launcher/syringe/consume_next_projectile()
 	if(next)

@@ -21,28 +21,37 @@
 	var/plural_name
 	var/matter_multiplier = 1
 
-/obj/item/stack/material/Initialize(mapload, var/amount, var/_material, var/_reinf_material)
+/obj/item/stack/material/Initialize(mapload, var/amount, var/material, var/reinf_material)
 	. = ..()
-	if(_material)
-		default_type = _material
-	if(_reinf_material)
-		default_reinf_type = _reinf_material
-	material = SSmaterials.get_material_by_name(default_type)
-	if(!material)
+	log_debug("Initialized [src] \ref[src], mapload=[mapload], amount=[amount], material=[src.material], reinf_material=[src.reinf_material]")
+	if(!map_storage_loaded)
+		if(material)
+			src.default_type = material
+		if(reinf_material)
+			src.default_reinf_type = reinf_material
+		if(amount > 0)
+			src.amount = amount
+
+	src.material = SSmaterials.get_material_by_name(src.default_type)
+	if(!src.material)
+		log_warning(" /obj/item/stack/material/Initialize() : Missing or invalid material type ([src.default_type])!")
 		return INITIALIZE_HINT_QDEL
-	if(default_reinf_type)
-		reinf_material = SSmaterials.get_material_by_name(default_reinf_type)
+	if(src.default_reinf_type)
+		src.reinf_material = SSmaterials.get_material_by_name(src.default_reinf_type)
+		if(!src.reinf_material)
+			log_warning(" /obj/item/stack/material/Initialize() : Missing or invalid reinf_material type([src.default_reinf_type])!")
 	
 	if(!stacktype)
-		stacktype = material.stack_type
-	if(islist(material.stack_origin_tech))
-		origin_tech = material.stack_origin_tech.Copy()
+		stacktype = src.material.stack_type
+	if(islist(src.material.stack_origin_tech))
+		origin_tech = src.material.stack_origin_tech.Copy()
 
-	if(material.conductive)
+	if(src.material.conductive)
 		obj_flags |= OBJ_FLAG_CONDUCTIBLE
 	else
 		obj_flags &= (~OBJ_FLAG_CONDUCTIBLE)
 
+	log_debug("Initialized [src] \ref[src], [src.default_type] - ([src.material]), [src.default_reinf_type] - ([src.reinf_material])")
 	update_strings()
 	update_icon()
 
@@ -55,14 +64,10 @@
 /obj/item/stack/material/get_codex_value()
 	return (material && !material.hidden_from_codex) ? "[lowertext(material.display_name)] (material)" : ..()
 
-/obj/item/stack/material/proc/set_amount(var/_amount)
-	amount = max(1, min(_amount, max_amount))
-	update_strings()
-
 /obj/item/stack/material/get_material()
 	return material
 
-/obj/item/stack/material/proc/update_strings()
+/obj/item/stack/material/update_strings()
 	// Update from material datum.
 	matter = material.get_matter()
 	for(var/mat in matter)
@@ -134,7 +139,7 @@
 			material.reinforce(user, W, src)
 		return
 	else if(reinf_material && reinf_material.stack_type && isWelder(W))
-		var/obj/item/weapon/weldingtool/WT = W
+		var/obj/item/weapon/tool/weldingtool/WT = W
 		if(WT.isOn() && WT.get_fuel() > 2 && use(2))
 			WT.remove_fuel(2, user)
 			to_chat(user,"<span class='notice'>You recover some [reinf_material.use_name] from the [src].</span>")
@@ -143,6 +148,9 @@
 	return ..()
 
 /obj/item/stack/material/on_update_icon()
+	if(!material)
+		log_debug("[src] has null material")
+		return
 	if(material_flags & USE_MATERIAL_COLOR)
 		color = material.icon_colour
 		alpha = 100 + max(1, amount/25)*(material.opacity * 255)
@@ -310,16 +318,16 @@
 //--------------------------------
 //	Aluminum
 //--------------------------------
-/obj/item/stack/material/aluminum
+/obj/item/stack/material/aluminium
 	name = MATERIAL_ALUMINIUM
 	icon_state = "sheet"
 	plural_icon_state = "sheet-mult"
 	default_type = MATERIAL_ALUMINIUM
 
-/obj/item/stack/material/aluminum/ten
+/obj/item/stack/material/aluminium/ten
 	amount = 10
 
-/obj/item/stack/material/aluminum/fifty
+/obj/item/stack/material/aluminium/fifty
 	amount = 50
 
 //--------------------------------
@@ -701,11 +709,8 @@
 	name = MATERIAL_QUARTZ
 	icon_state = "sheet-glass"
 	default_type = MATERIAL_QUARTZ
-	apply_colour = 1
-
 /obj/item/stack/material/glass/quartz/ten
 	amount = 10
-
 /obj/item/stack/material/glass/quartz/fifty
 	amount = 50
 

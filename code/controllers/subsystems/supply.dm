@@ -28,7 +28,7 @@ SUBSYSTEM_DEF(supply)
 
 	//supply points
 	var/points = 50
-	var/points_per_process = 1.5
+	var/points_per_process = 1
 	var/points_per_slip = 2
 	var/points_per_platinum = 5 // 5 points per sheet
 	var/points_per_phoron = 5
@@ -360,10 +360,7 @@ SUBSYSTEM_DEF(supply)
 		for(var/material_type in material_count)
 			add_points_from_source(material_count[material_type], material_type)
 
-//Buyin
-/datum/controller/subsystem/supply/proc/buy()
-	if(!shoppinglist.len)
-		return
+/datum/controller/subsystem/supply/proc/get_clear_turfs()
 	var/list/clear_turfs = list()
 
 	for(var/area/subarea in shuttle.shuttle_area)
@@ -378,6 +375,16 @@ SUBSYSTEM_DEF(supply)
 				break
 			if(!occupied)
 				clear_turfs += T
+
+	return clear_turfs
+
+//Buyin
+/datum/controller/subsystem/supply/proc/buy()
+	if(!shoppinglist.len)
+		return
+
+	var/list/clear_turfs = get_clear_turfs()
+
 	for(var/S in shoppinglist)
 		if(!clear_turfs.len)
 			break
@@ -421,7 +428,18 @@ SUBSYSTEM_DEF(supply)
 			slip.info += "</ul><br>"
 			slip.info += "CHECK CONTENTS AND STAMP BELOW THE LINE TO CONFIRM RECEIPT OF GOODS<hr>"
 
-//Order
+// Adds any given item to the supply shuttle
+/datum/controller/subsystem/supply/proc/addAtom(var/atom/movable/A)
+	var/list/clear_turfs = get_clear_turfs()
+	if(!clear_turfs.len)
+		return FALSE
+
+	var/turf/pickedloc = pick(clear_turfs)
+
+	A.forceMove(pickedloc)
+
+	return TRUE
+
 /datum/supply_order
 	var/ordernum
 	var/decl/hierarchy/supply_pack/object = null
@@ -552,5 +570,5 @@ SUBSYSTEM_DEF(supply)
 		. = filled*rate
 		spawn(10)
 			if(supplied >= required)
-				SSshuttle.close_order(src)
+				SSsupply.close_order(src)
 

@@ -10,7 +10,7 @@
 		/obj/item/device/flash,
 		/obj/item/weapon/melee/energy/sword,
 		/obj/item/weapon/gun/energy/pulse_rifle/destroyer,
-		/obj/item/weapon/crowbar,
+		/obj/item/weapon/tool/crowbar,
 		/obj/item/weapon/card/emag,
 		/obj/item/weapon/tank/jetpack/carbondioxide
 	)

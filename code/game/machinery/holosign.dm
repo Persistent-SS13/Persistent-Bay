@@ -7,9 +7,9 @@
 	layer = ABOVE_DOOR_LAYER
 	idle_power_usage = 2
 	active_power_usage = 70
-	anchored = 1
+	anchored = TRUE
+	id_tag = null
 	var/lit = 0
-	var/id = null
 	var/on_icon = "sign_on"
 	var/_wifi_id
 	var/datum/wifi/receiver/button/holosign/wifi_receiver
@@ -50,6 +50,7 @@
 	desc = "A remote control switch for holosign."
 	icon = 'icons/obj/power.dmi'
 	icon_state = "crema_switch"
+	id_tag = null
 
 /obj/machinery/button/holosign/attack_hand(mob/user as mob)
 	if(..())
@@ -60,7 +61,7 @@
 	update_icon()
 
 	for(var/obj/machinery/holosign/M in SSmachines.machinery)
-		if (M.id == src.id)
+		if (M.id_tag == src.id_tag)
 			M.toggle()
 
 /obj/machinery/button/holosign/on_update_icon()

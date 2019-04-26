@@ -37,7 +37,6 @@
 	icon 				= 'icons/obj/monitors.dmi'
 	icon_state 			= "alarm0"
 	anchored 			= TRUE
-	use_power 			= POWER_USE_IDLE
 	idle_power_usage 	= 80
 	active_power_usage 	= 1000 //For heating/cooling rooms. 1000 joules equates to about 1 degree every 2 seconds for a single tile of air.
 	power_channel 		= ENVIRON
@@ -99,6 +98,13 @@
 	req_access = list(core_access_science_programs, core_access_engineering_programs, core_access_engineering_programs)
 	TLV["temperature"] =	list(T0C-26, T0C, T0C+30, T0C+40) // K
 	target_temperature = T0C+10
+
+/obj/machinery/alarm/Destroy()
+	QDEL_NULL(wires)
+	if(alarm_area && alarm_area.master_air_alarm == src)
+		alarm_area.master_air_alarm = null
+		elect_master(exclude_self = TRUE)
+	return ..()
 
 /obj/machinery/alarm/New(var/loc, var/dir, atom/frame)
 	..(loc)
@@ -174,10 +180,6 @@
 		elect_master()
 	queue_icon_update()
 
-/obj/machinery/alarm/Destroy()
-	QDEL_NULL(wires)
-	return ..()
-
 /obj/machinery/alarm/Process()
 	if(inoperable() || shorted || buildstage != 2 || isnull(loc))
 		return
@@ -188,7 +190,8 @@
 	var/datum/gas_mixture/environment = location.return_air()
 
 	//Handle temperature adjustment here.
-	handle_heating_cooling(environment)
+	if(environment.return_pressure() > ONE_ATMOSPHERE*0.05)
+		handle_heating_cooling(environment)
 
 	var/old_level = danger_level
 	var/old_pressurelevel = pressure_dangerlevel
@@ -372,6 +375,12 @@
 		//elect_master()
 		if (alarm_area.master_air_alarm != src)
 			return
+
+	if(id_tag == signal.data["alarm_id"] && signal.data["command"] == "shutdown")
+		mode = AALARM_MODE_OFF
+		apply_mode()
+		return
+
 	if (signal.data["area"] != area_uid)
 		return
 	if (signal.data["sigtype"] != "status")

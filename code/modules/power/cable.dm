@@ -179,7 +179,7 @@ By design, d1 is the smallest direction and d2 is the highest
 		shock(user, 5, 0.2)
 
 
-	else if(W.sharness)
+	else if(W.sharpness)
 
 		var/delay_holder
 
@@ -570,8 +570,11 @@ obj/structure/cable/proc/cableColor(var/colorC)
 	else if(amount == 2)
 		icon_state = "coil2"
 		SetName("cable piece")
+	else if(amount > 2 && amount != max_amount)
+		icon_state = "coil"
+		SetName(initial(name))
 	else
-		icon_state = initial(icon_state)
+		icon_state = "coil-max"
 		SetName(initial(name))
 
 /obj/item/stack/cable_coil/proc/set_cable_color(var/selected_color, var/user)

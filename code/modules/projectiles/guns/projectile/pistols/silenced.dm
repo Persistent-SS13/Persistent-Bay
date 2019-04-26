@@ -1,11 +1,15 @@
 /obj/item/weapon/gun/projectile/silenced
-	name = "silenced pistol"
-	desc = "A handgun with an integral silencer. Uses .45 rounds."
+	name = "silenced .45 pistol"
+	desc = "A handgun with an integral silencer. Compatible with standard mags."
 	icon_state = "silenced_pistol"
 	w_class = ITEM_SIZE_NORMAL
-	caliber = ".45"
-	silenced = 1
+	caliber = CALIBER_45
+	silenced = TRUE
 	origin_tech = list(TECH_COMBAT = 2, TECH_MATERIAL = 2, TECH_ILLEGAL = 8)
 	load_method = MAGAZINE
-	magazine_type = /obj/item/ammo_magazine/c45m
-	allowed_magazines = /obj/item/ammo_magazine/c45m
+	magazine_type = /obj/item/ammo_magazine/box/c45
+	allowed_magazines = /obj/item/ammo_magazine/box/c45
+
+/obj/item/weapon/gun/projectile/silenced/New()
+	..()
+	ADD_SAVED_VAR(silenced)

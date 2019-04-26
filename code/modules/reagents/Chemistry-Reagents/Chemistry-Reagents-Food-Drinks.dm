@@ -53,11 +53,12 @@
 /datum/reagent/nutriment/glucose
 	name = "Glucose"
 	color = "#ffffff"
+	scannable = 1
 
 	injectable = 1
 
 /datum/reagent/nutriment/protein // Bad for Skrell!
-	name = "animal protein"
+	name = "Animal Protein"
 	taste_description = "some sort of protein"
 	color = "#440000"
 
@@ -762,7 +763,7 @@
 	adj_drowsy = -3
 	adj_sleepy = -2
 	adj_temp = 25
-	overdose = 45
+	overdose = 60
 
 	glass_name = "coffee"
 	glass_desc = "Don't drop it, or you'll send scalding liquid and glass shards everywhere."
@@ -772,9 +773,12 @@
 	if(alien == IS_DIONA)
 		return
 	..()
+
 	if(adj_temp > 0)
 		holder.remove_reagent(/datum/reagent/frostoil, 10 * removed)
 	if(volume > 15)
+		M.add_chemical_effect(CE_PULSE, 1)
+	if(volume > 45)
 		M.add_chemical_effect(CE_PULSE, 1)
 
 /datum/reagent/nutriment/coffee/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
@@ -785,7 +789,7 @@
 	if(alien == IS_DIONA)
 		return
 	M.make_jittery(5)
-	M.add_chemical_effect(CE_PULSE, 2)
+	M.add_chemical_effect(CE_PULSE, 1)
 
 /datum/reagent/drink/coffee/icecoffee
 	name = "Iced Coffee"
@@ -1833,52 +1837,6 @@
 	glass_name = "moonshine"
 	glass_desc = "You've really hit rock bottom now... your liver packed its bags and left last night."
 
-/datum/reagent/ethanol/bluebird
-	name = "Blue Bird"
-	description = "A classy drink that you know only the prettiest of birds have."
-	taste_description = "fluttering sourness"
-	reagent_state = LIQUID
-	color = "#5a92ed"
-	strength = 15
-
-	glass_name = "Blue Bird"
-	glass_desc = "A classy drink that you know only the prettiest of birds have."
-
-/datum/reagent/ethanol/bj
-	name = "BJ"
-	description = "Nothing like a good BJ to get you started."
-	taste_description = "creamy chocolate alcohol"
-	reagent_state = LIQUID
-	color = "#ccb280"
-	strength = 15
-
-	glass_name = "BJ"
-	glass_desc = "Nothing like a good BJ to get you started."
-
-/datum/reagent/ethanol/starrycola
-	name = "Starry Cola"
-	description = "Looking at it, you'd think you're looking at space."
-	taste_description = "sweet twinkling fizz with a bite"
-	reagent_state = LIQUID
-	color = "#1c2168"
-	strength = 12
-
-	glass_name = "Starry Cola"
-	glass_desc = "Looking at it, you'd think you're looking at space."
-	glass_special = list(DRINK_FIZZ)
-
-/datum/reagent/ethanol/calvincraig
-	name = "Calvin Craig"
-	description = "A sweet something-or-other for that special someone."
-	taste_description = "sweet and sour melon candies"
-	reagent_state = LIQUID
-	color = "#6dcea2"
-	strength = 18
-
-	glass_name = "Calvin Craig"
-	glass_desc = "A sweet something-or-other for that special someone."
-	glass_special = list(DRINK_FIZZ)
-
 /datum/reagent/ethanol/neurotoxin
 	name = "Neurotoxin"
 	description = "A strong neurotoxin that puts the subject into a death-like state."
@@ -2196,3 +2154,50 @@
 
 	glass_name = "Maghrebi mint tea"
 	glass_desc = "Iced green tea prepared with mint and sugar. Refreshing!"
+
+/datum/reagent/ethanol/bluebird
+	name = "Blue Bird"
+	description = "A classy drink that you know only the prettiest of birds have."
+	taste_description = "fluttering sourness"
+	reagent_state = LIQUID
+	color = "#5a92ed"
+	strength = 15
+
+	glass_name = "Blue Bird"
+	glass_desc = "A classy drink that you know only the prettiest of birds have."
+
+/datum/reagent/ethanol/bj
+	name = "BJ"
+	description = "Nothing like a good BJ to get you started."
+	taste_description = "creamy chocolate alcohol"
+	reagent_state = LIQUID
+	color = "#ccb280"
+	strength = 15
+
+	glass_name = "BJ"
+	glass_desc = "Nothing like a good BJ to get you started."
+
+/datum/reagent/ethanol/starrycola
+	name = "Starry Cola"
+	description = "Looking at it, you'd think you're looking at space."
+	taste_description = "sweet twinkling fizz with a bite"
+	reagent_state = LIQUID
+	color = "#1c2168"
+	strength = 12
+
+	glass_name = "Starry Cola"
+	glass_desc = "Looking at it, you'd think you're looking at space."
+	glass_special = list(DRINK_FIZZ)
+
+/datum/reagent/ethanol/calvincraig
+	name = "Calvin Craig"
+	description = "A sweet something-or-other for that special someone."
+	taste_description = "sweet and sour melon candies"
+	reagent_state = LIQUID
+	color = "#6dcea2"
+	strength = 18
+
+	glass_name = "Calvin Craig"
+	glass_desc = "A sweet something-or-other for that special someone."
+	glass_special = list(DRINK_FIZZ)
+

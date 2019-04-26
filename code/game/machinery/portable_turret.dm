@@ -95,7 +95,7 @@
 	ailock = 0
 	malf_upgraded = 1
 	to_chat(user, "\The [src] has been upgraded. It's damage and rate of fire has been increased. Auto-regeneration system has been enabled. Power usage has increased.")
-	maxhealth = round(initial(maxhealth) * 1.5)
+	max_health = round(initial(max_health) * 1.5)
 	shot_delay = round(initial(shot_delay) / 2)
 	auto_repair = 1
 	change_power_consumption(round(initial(active_power_usage) * 5), POWER_USE_ACTIVE)

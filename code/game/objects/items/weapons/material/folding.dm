@@ -53,7 +53,7 @@
 	else
 		force = initial(force)
 		sharpness = initial(sharpness)
-		sound_hit = initial(hitsound)
+		sound_hit = initial(sound_hit)
 		w_class = initial(w_class)
 		attack_verb = closed_attack_verbs
 

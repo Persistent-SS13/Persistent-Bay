@@ -7,7 +7,7 @@
 	icon_state = "bell"
 	force_divisor = 0.8
 	thrown_force_divisor = 0.3
-	hitsound = 'sound/items/oneding.ogg'
+	sound_hit = 'sound/items/oneding.ogg'
 	default_material = MATERIAL_ALUMINIUM
 
 /obj/item/weapon/material/bell/attack_hand(mob/user as mob)
@@ -22,4 +22,4 @@
 
 /obj/item/weapon/material/bell/apply_hit_effect()
 	. = ..()
-	shatter()
+	kill()

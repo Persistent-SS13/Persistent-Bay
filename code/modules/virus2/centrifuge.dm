@@ -1,9 +1,10 @@
-/obj/machinery/centrifuge
+/obj/machinery/computer/centrifuge
 	name = "isolation centrifuge"
 	desc = "Used to separate things with different weights. Spin 'em round, round, right round."
 	icon = 'icons/obj/virology.dmi'
 	icon_state = "centrifuge"
 	density = 1
+	core_skill = SKILL_VIROLOGY
 	var/curing = FALSE
 	var/isolating = FALSE
 	var/obj/item/weapon/reagent_containers/glass/beaker/vial/sample = null
@@ -11,7 +12,7 @@
 	var/time_curing_end
 	var/time_isolating_end
 
-/obj/machinery/centrifuge/New()
+/obj/machinery/computer/centrifuge/New()
 	..()
 	ADD_SAVED_VAR(curing)
 	ADD_SAVED_VAR(isolating)
@@ -25,7 +26,7 @@
 	ADD_SKIP_EMPTY(time_curing_end)
 	ADD_SKIP_EMPTY(time_isolating_end)
 
-/obj/machinery/centrifuge/Initialize()
+/obj/machinery/computer/centrifuge/Initialize()
 	. = ..()
 	if(!map_storage_loaded)
 		component_parts = list()
@@ -36,7 +37,7 @@
 		component_parts += new /obj/item/stack/material/glass(src)
 	RefreshParts()
 
-/obj/machinery/centrifuge/before_save()
+/obj/machinery/computer/centrifuge/before_save()
 	. = ..()
 	//Convert to absolute time
 	if(curing && time_curing_end)
@@ -44,7 +45,7 @@
 	if(isolating && time_isolating_end)
 		time_isolating_end = world.time - time_isolating_end
 
-/obj/machinery/centrifuge/after_load()
+/obj/machinery/computer/centrifuge/after_load()
 	. = ..()
 	//Convert to relative time
 	if(curing && time_curing_end)
@@ -52,7 +53,7 @@
 	if(isolating && time_isolating_end)
 		time_isolating_end = world.time + time_isolating_end
 
-/obj/machinery/centrifuge/attackby(var/obj/O as obj, var/mob/user as mob)
+/obj/machinery/computer/centrifuge/attackby(var/obj/O as obj, var/mob/user as mob)
 	if(default_deconstruction_screwdriver(user, O))
 		return 1
 	else if(default_deconstruction_crowbar(user, O))
@@ -71,17 +72,17 @@
 	else
 		return ..()
 
-/obj/machinery/centrifuge/on_update_icon()
+/obj/machinery/computer/centrifuge/on_update_icon()
 	..()
 	if(operable() && (isolating || curing))
 		icon_state = "centrifuge_moving"
 
-/obj/machinery/centrifuge/attack_hand(var/mob/user as mob)
+/obj/machinery/computer/centrifuge/attack_hand(var/mob/user as mob)
 	if(..()) 
 		return
 	ui_interact(user)
 
-/obj/machinery/centrifuge/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
+/obj/machinery/computer/centrifuge/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 	user.set_machine(src)
 
 	var/data[0]
@@ -122,7 +123,7 @@
 		ui.set_initial_data(data)
 		ui.open()
 
-/obj/machinery/centrifuge/Process()
+/obj/machinery/computer/centrifuge/Process()
 	..()
 	if (inoperable())
 		return
@@ -140,7 +141,7 @@
 	if(virus2)
 		infect_nearby(virus2)
 
-/obj/machinery/centrifuge/OnTopic(user, href_list)
+/obj/machinery/computer/centrifuge/OnTopic(mob/user, href_list)
 	if (href_list["close"])
 		SSnano.close_user_uis(user, src, "main")
 		return TOPIC_HANDLED
@@ -195,7 +196,7 @@
 				sample = null
 			return TOPIC_REFRESH
 
-/obj/machinery/centrifuge/proc/cure()
+/obj/machinery/computer/centrifuge/proc/cure()
 	if (!sample) return
 	var/datum/reagent/blood/B = locate(/datum/reagent/blood) in sample.reagents.reagent_list
 	if (!B) return
@@ -210,7 +211,7 @@
 	update_icon()
 	ping("\The [src] pings, \"Antibody isolated.\"")
 
-/obj/machinery/centrifuge/proc/isolate()
+/obj/machinery/computer/centrifuge/proc/isolate()
 	if (!sample) return
 	var/obj/item/weapon/virusdish/dish = new/obj/item/weapon/virusdish(loc)
 	dish.virus2 = virus2
@@ -221,7 +222,7 @@
 	update_icon()
 	ping("\The [src] pings, \"Pathogen isolated.\"")
 
-/obj/machinery/centrifuge/proc/print(var/mob/user)
+/obj/machinery/computer/centrifuge/proc/print(var/mob/user)
 	var/obj/item/weapon/paper/P = new /obj/item/weapon/paper(loc)
 	P.SetName("paper - Pathology Report")
 	P.info = {"

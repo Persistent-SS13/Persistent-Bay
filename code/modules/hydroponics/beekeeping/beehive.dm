@@ -5,6 +5,7 @@
 	desc = "A wooden box designed specifically to house our buzzling buddies. Far more efficient than traditional hives. Just insert a frame and a queen, close it up, and you're good to go!"
 	density = 1
 	anchored = 1
+	layer = BELOW_OBJ_LAYER
 	mass = 5
 	max_health = 100
 	damthreshold_brute 	= 2
@@ -106,7 +107,7 @@
 			B.fill()
 		update_icon()
 		return
-	else if(istype(I, /obj/item/device/analyzer/plant_analyzer))
+	else if(istype(I, /obj/item/device/scanner/plant))
 		to_chat(user, "<span class='notice'>Scan result of \the [src]...</span>")
 		to_chat(user, "Beehive is [bee_count ? "[round(bee_count)]% full" : "empty"].[bee_count > 90 ? " Colony is ready to split." : ""]")
 		if(frames)

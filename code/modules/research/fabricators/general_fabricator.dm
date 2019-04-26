@@ -446,7 +446,7 @@
 // 	desc = "Cheaper than whiny non-digital assistants."
 // 	req_tech = list(TECH_ENGINEERING = 2, TECH_POWER = 3)
 // 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 1 SHEET, MATERIAL_COPPER = 1.5 SHEETS)
-// 	build_path = /obj/item/device/pda
+// 	build_path = /obj/item/modular_computer/pda
 // 	research = "computer_1"
 // Cartridges
 /**
@@ -634,7 +634,7 @@
 
 /datum/design/item/genfab/communication/clipboard
 	name = "clipboard"
-	build_path = /obj/item/weapon/clipboard
+	build_path = /obj/item/weapon/material/clipboard
 	materials = list(MATERIAL_WOOD = 0.05 SHEET)
 /datum/design/item/genfab/communication/folder
 	name = "grey folder"

@@ -60,9 +60,9 @@
 		src.overlays.Cut()
 		to_chat(user, "You cut the tag off \the [src].")
 		return
-	else if(istype(W, /obj/item/device/healthanalyzer/) && !opened)
+	else if(istype(W, /obj/item/device/scanner/health/) && !opened)
 		if(contains_body)
-			var/obj/item/device/healthanalyzer/HA = W
+			var/obj/item/device/scanner/health/HA = W
 			for(var/mob/living/L in contents)
 				HA.afterattack(L, user, TRUE)
 		else

@@ -13,8 +13,8 @@
 	throwpass = 1
 	layer = TABLE_LAYER
 
-	mass = 20
 	max_health = 100
+	mass = 20
 	damthreshold_brute 	= 5
 	damthreshold_burn	= 5
 	var/paint_color
@@ -27,19 +27,23 @@
 /obj/structure/wall_frame/New(var/new_loc, var/materialtype)
 	..()
 
+//	if(!materialtype)
+//		materialtype = DEFAULT_WALL_MATERIAL
+//	material = SSmaterials.get_material_by_name(materialtype)
+//	health = material.integrity
+
 /obj/structure/wall_frame/Initialize(var/mapload, var/new_loc, var/materialtype = null)
 	. = ..()
-	if(!mapload) //Handles parameters passed to new when not loading the map
+	if(!map_storage_loaded) //Handles parameters passed to new when not loading the map
 		if(!materialtype)
 			materialtype = DEFAULT_WALL_MATERIAL
 		//Since people keeps passing strings for some reasons lets double check
 		if(istext(materialtype))
 			material = SSmaterials.get_material_by_name(materialtype)
+			ASSERT(material)
 		else if(istype(materialtype, /material))
 			material = materialtype
-
-	if(!map_storage_loaded)
-		health = material.integrity
+		max_health = material.integrity
 		health = max_health
 	update_connections(TRUE)
 	update_icon()
@@ -109,6 +113,9 @@
 // icon related
 
 /obj/structure/wall_frame/on_update_icon()
+	if(!istype(material, /material))
+		log_warning("[src] ([x], [y], [z]) \ref[src] has no valid material([material]) during icon update!!")
+		return
 	overlays.Cut()
 	var/image/I
 
@@ -117,17 +124,17 @@
 
 	for(var/i = 1 to 4)
 		if(other_connections[i] != "0")
-			I = image('icons/obj/wall_frame.dmi', "frame_other[connections[i]]", dir = 1<<(i-1))
+			I = image(icon, "frame_other[connections[i]]", dir = 1<<(i-1))
 		else
-			I = image('icons/obj/wall_frame.dmi', "frame[connections[i]]", dir = 1<<(i-1))
+			I = image(icon, "frame[connections[i]]", dir = 1<<(i-1))
 		overlays += I
 
 	if(stripe_color)
 		for(var/i = 1 to 4)
 			if(other_connections[i] != "0")
-				I = image('icons/obj/wall_frame.dmi', "stripe_other[connections[i]]", dir = 1<<(i-1))
+				I = image(icon, "stripe_other[connections[i]]", dir = 1<<(i-1))
 			else
-				I = image('icons/obj/wall_frame.dmi', "stripe[connections[i]]", dir = 1<<(i-1))
+				I = image(icon, "stripe[connections[i]]", dir = 1<<(i-1))
 			I.color = stripe_color
 			overlays += I
 
@@ -144,7 +151,7 @@
 		if(spacefacing)
 			var/bleach_factor = rand(10,50)
 			paint_color = adjust_brightness(paint_color, bleach_factor)
-		update_icon()
+	queue_icon_update()
 
 /obj/structure/wall_frame/bullet_act(var/obj/item/projectile/Proj)
 	var/proj_damage = Proj.get_structure_damage()

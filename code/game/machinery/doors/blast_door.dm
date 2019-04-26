@@ -101,12 +101,12 @@
 // Description: Updates icon of this object. Uses icon state variables.
 /obj/machinery/door/blast/on_update_icon()
 	if(density)
-		if(is_broken())
+		if(isbroken())
 			icon_state = icon_state_closed_broken
 		else
 			icon_state = icon_state_closed
 	else
-		if(is_broken())
+		if(isbroken())
 			icon_state = icon_state_open_broken
 		else
 			icon_state = icon_state_open

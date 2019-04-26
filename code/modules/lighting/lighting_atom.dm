@@ -49,8 +49,9 @@
 			light.destroy()
 			light = null
 		if(light_max_bright > 1)
+			var/old = light_max_bright
 			light_max_bright = 1
-			CRASH("Attempted to call update_light() on atom [src] \ref[src] with a light_max_bright value greater than one")
+			CRASH("Attempted to call update_light() on atom [src] \ref[src] with a light_max_bright value greater than one ([old])")
 	else
 		if(!istype(loc, /atom/movable))
 			. = src

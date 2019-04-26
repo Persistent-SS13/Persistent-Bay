@@ -54,7 +54,7 @@
 			delete_area()
 
 /obj/item/blueprints/admin/interact()
-	var/area/A = getArea(usr)
+	var/area/A = get_area()
 	var/text = "<HTML><head><title>[src]</title></head><BODY>"
 	text += "<p>According to the blueprints, you are now in <b>[A.name]</b>.</p>"
 	text += "<br>" + (isspace(A) ? "<a href='?src=\ref[src];action=create_area'>Create Area</a>" : "Create Area - An area already exists here")
@@ -66,7 +66,7 @@
 	onclose(usr, "blueprints")
 
 /obj/item/blueprints/interact()
-	var/area/A = getArea(usr)
+	var/area/A = get_area()
 	var/text = "<HTML><head><title>[src]</title></head><BODY>"
 	text += "<p>According to the blueprints, you are now in <b>[A.name]</b>.</p>"
 	if(!istype(A, /area/turbolift))

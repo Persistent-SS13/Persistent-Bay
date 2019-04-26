@@ -4,22 +4,22 @@
 	origin = "Toy Shop"
 	trade_flags = TRADER_GOODS|TRADER_MONEY|TRADER_WANTED_ONLY
 	possible_origins = list("Toys R Ours", "LEGS GO", "Kay-Cee Toys", "Build-a-Cat", "Magic Box", "The Positronic's Dungeon and Baseball Card Shop")
-	speech = list("hail_generic"    = "Uuhh... hello? Welcome to ORIGIN, I hope you have a uh.... good shoping trip.",
+	speech = list("hail_generic"    = "Uhh... hello? Welcome to ORIGIN, I hope you have a, uhh.... good shopping trip.",
 				"hail_deny"         = "Nah, you're not allowed here. At all",
 
-				"trade_complete"       = "Thanks for shopping... here.... at ORIGIN.",
-				"trade_blacklist"      = "Uuuuuuuuuuuuuuuuuuuh.... no.",
+				"trade_complete"       = "Thanks for shopping... here... at ORIGIN.",
+				"trade_blacklist"      = "Uuuhhh.... no.",
 				"trade_found_unwanted" = "Nah! That's not what I'm looking for. Something rarer.",
-				"trade_not_enough"   = "Just cause they're made of cardboard doesn't mean they don't cost money...",
-				"how_much"          = "Uuuuuuuh... I'm thinking like... VALUE. Right? Or something rare that complements my interest.",
-				"what_want"         = "Uuuuum..... I guess I want",
+				"trade_not_enough"   = "Just 'cause they're made of cardboard doesn't mean they don't cost money...",
+				"how_much"          = "Uhh... I'm thinking like... VALUE. Right? Or something rare that complements my interest.",
+				"what_want"         = "Ummmm..... I guess I want",
 
 				"compliment_deny"   = "Ha! Very funny! You should write your own television show.",
 				"compliment_accept" = "Why yes, I do work out.",
-				"insult_good"       = "Well well well. Guess we learned who was the troll here.",
-				"insult_bad"        = "I've already written a nasty spacebook post in my mind about you.",
+				"insult_good"       = "Well, well, well. Guess we learned who was the troll here.",
+				"insult_bad"        = "I've already written a nasty Spacebook post in my mind about you.",
 
-				"bribe_refusal"     = "Nah. I need to get moving as soon as uh... possible.",
+				"bribe_refusal"     = "Nah. I need to get moving as soon as uhh... possible.",
 				"bribe_accept"      = "You know what, I wasn't doing anything for TIME minutes anyways.",
 				)
 
@@ -49,14 +49,14 @@
 	origin = "Electronic Shop"
 	possible_origins = list("Best Sale", "Overstore", "Oldegg", "Circuit Citadel", "Silicon Village", "Positronic Solutions LLC", "Sunvolt Inc.")
 
-	speech = list("hail_generic"    = "Hello sir! Welcome to ORIGIN, I hope you find what you are looking for.",
+	speech = list("hail_generic"    = "Hello, sir! Welcome to ORIGIN, I hope you find what you are looking for.",
 				"hail_deny"         = "Your call has been disconnected.",
 
 				"trade_complete"    = "Thank you for shopping at ORIGIN, would you like to get the extended warranty as well?",
 				"trade_blacklist"   = "Sir, this is a /electronics/ store.",
 				"trade_no_goods"    = "As much as I'd love to buy that from you, I can't.",
 				"trade_not_enough"  = "Your offer isn't adequate, sir.",
-				"how_much"          = "Your total comes out to VALUE ethericoins.",
+				"how_much"          = "Your total comes out to VALUE thalers.",
 
 				"compliment_deny"   = "Hahaha! Yeah... funny...",
 				"compliment_accept" = "That's very nice of you!",
@@ -203,11 +203,11 @@ Sells devices, odds and ends, and medical stuff
 								/obj/item/device/megaphone                 = TRADER_THIS_TYPE,
 								/obj/item/device/paicard                   = TRADER_THIS_TYPE,
 								/obj/item/device/pipe_painter              = TRADER_THIS_TYPE,
-								/obj/item/device/healthanalyzer            = TRADER_THIS_TYPE,
-								/obj/item/device/analyzer                  = TRADER_ALL,
-								/obj/item/device/mass_spectrometer         = TRADER_ALL,
-								/obj/item/device/reagent_scanner           = TRADER_ALL,
-								/obj/item/device/slime_scanner             = TRADER_THIS_TYPE,
+								/obj/item/device/scanner/health            = TRADER_THIS_TYPE,
+								/obj/item/device/scanner/gas                  = TRADER_ALL,
+								/obj/item/device/scanner/spectrometer         = TRADER_ALL,
+								/obj/item/device/scanner/reagent           = TRADER_ALL,
+								/obj/item/device/scanner/xenobio             = TRADER_THIS_TYPE,
 								/obj/item/device/suit_cooling_unit         = TRADER_THIS_TYPE,
 								/obj/item/device/t_scanner                 = TRADER_THIS_TYPE,
 								/obj/item/device/taperecorder              = TRADER_THIS_TYPE,
@@ -314,7 +314,7 @@ Sells devices, odds and ends, and medical stuff
 	possible_trading_items = list(/mob/living/simple_animal/hostile/carp= TRADER_THIS_TYPE,
 								/obj/item/device/dociler              = TRADER_THIS_TYPE,
 								/obj/item/weapon/beartrap			  = TRADER_THIS_TYPE,
-								/obj/item/device/slime_scanner = TRADER_THIS_TYPE)
+								/obj/item/device/scanner/xenobio = TRADER_THIS_TYPE)
 
 /datum/trader/medical
 	name = "Medical Supplier"

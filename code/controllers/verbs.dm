@@ -23,9 +23,6 @@
 		return
 
 	switch(controller)
-		if("Jobs")
-			debug_variables(job_master)
-			SSstatistics.add_field_details("admin_verb","DJobs")
 		if("Sun")
 			debug_variables(GLOB.sun)
 			SSstatistics.add_field_details("admin_verb","DSun")
@@ -44,6 +41,9 @@
 		if("Cameras")
 			debug_variables(cameranet)
 			SSstatistics.add_field_details("admin_verb","DCameras")
+//		if("Transfer Controller")
+//			debug_variables(transfer_controller)
+//			SSstatistics.add_field_details("admin_verb","DAutovoter")
 		if("Gas Data")
 			debug_variables(gas_data)
 			SSstatistics.add_field_details("admin_verb","DGasdata")

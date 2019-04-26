@@ -18,6 +18,7 @@
 	var/health 					= null	//Current health
 	var/max_health 				= 0		//Maximum health
 	var/min_health 				= 0 	//Minimum health. If you want negative health numbers, change this to a negative number! Used to determine at what health something "dies"
+	var/broken_threshold		= -1 	//If the object's health goes under this value, its considered "broken", and the broken() proc is called.
 	var/const/MaxArmorValue 	= 100	//Maximum armor resistance possible for objects (Was hardcoded to 100 for mobs..)
 	var/list/armor						//Resistance to damage types
 	var/damthreshold_brute 		= 0		//Minimum amount of brute damages required to damage the object. Damages of that type below this value have no effect.
@@ -37,15 +38,21 @@
 	var/burning 	= FALSE			//Whether the object is on fire
 
 	//Interaction State
-	var/in_use		= FALSE // If we have a user using us, this will be set on. We will check if the user has stopped using us, and thus stop updating and LAGGING EVERYTHING!
+	var/tmp/in_use	= FALSE // If we have a user using us, this will be set on. We will check if the user has stopped using us, and thus stop updating and LAGGING EVERYTHING!
 	var/anchor_fall = FALSE
+	var/holographic = FALSE //if the obj is a holographic object spawned by the holodeck
 
 /obj/New()
 	..()
-	if(!health)
-		health = max_health
 	ADD_SAVED_VAR(health)
 	ADD_SAVED_VAR(burning)
+
+	ADD_SKIP_EMPTY(health) //Skip null health
+
+/obj/Initialize()
+	if(!map_storage_loaded)
+		health = max_health
+	. = ..()
 
 /obj/Destroy()
 	STOP_PROCESSING(SSobj, src)
@@ -128,7 +135,10 @@
 			return SPAN_NOTICE("It looks moderately damaged.")
 		else
 			return SPAN_DANGER("It looks heavily damaged.")
+	if(isbroken())
+		return SPAN_WARNING("It seems broken.")
 
+//The minimum health is not included in this.
 /obj/proc/health_percentage()
 	if(!isdamageable())
 		return 100
@@ -180,20 +190,6 @@
 /obj/proc/damage_flags()
 	return 0
 
-/obj/proc/default_wrench_floor_bolts(mob/user, obj/item/weapon/tool/W, delay=20)
-	if(!isWrench(W))
-		return FALSE
-	playsound(loc, 'sound/items/Ratchet.ogg', vol=50, vary=1, extrarange=4, falloff=2)
-	if(anchored)
-		user.visible_message("\The [user] begins unsecuring \the [src] from the floor.", "You start unsecuring \the [src] from the floor.")
-	else
-		user.visible_message("\The [user] begins securing \the [src] to the floor.", "You start securing \the [src] to the floor.")
-	if(do_after(user, delay, src))
-		if(!src) return
-		to_chat(user, SPAN_NOTICE("You [anchored? "un" : ""]secured \the [src]!"))
-		set_anchored(!anchored)
-	return TRUE
-
 /obj/proc/set_anchored(var/new_anchored)
 	anchored = new_anchored
 	update_icon()
@@ -209,12 +205,6 @@
 /obj/proc/pass_damage_threshold(var/damage, var/damtype)
 	return (IsDamageTypeBrute(damtype)   && damage > damthreshold_brute) || \
 		   (IsDamageTypeBurn(damtype)    && damage > damthreshold_burn)
-
-/obj/proc/pass_damage_threshold_list(var/list/damlist)
-	for(var/key in damlist)
-		if(pass_damage_threshold(damlist[key], key))
-			return TRUE
-	return FALSE
 
 //Return whether the entity is vulenrable to the specified damage type
 // override to change what damage will be rejected on take_damage
@@ -290,6 +280,13 @@
 	set_health(min_health)
 	update_health(damagetype)
 
+/obj/proc/isbroken()
+	return health <= broken_threshold
+
+//Called when the health of the object goes below the broken_threshold, and while the health is higher than min_health
+/obj/proc/broken(var/damagetype, var/user)
+	//do stuff
+
 //Handles checking if the object is destroyed and etc..
 // - damagetype : is the damage type that triggered the health update.
 // - user : is the attacker
@@ -301,6 +298,8 @@
 			melt(user)
 		else
 			destroyed(damagetype,user)
+	else if(health <= broken_threshold)
+		broken(damagetype, user)
 	update_icon()
 
 //Called when the object's health reaches 0, with the last damage type that hit it
@@ -572,3 +571,17 @@
 
 /obj/proc/can_embed()
 	return is_sharp(src)
+
+/obj/proc/default_wrench_floor_bolts(mob/user, obj/item/weapon/tool/W, delay=20)
+	if(!isWrench(W))
+		return FALSE
+	playsound(loc, 'sound/items/Ratchet.ogg', vol=50, vary=1, extrarange=4, falloff=2)
+	if(anchored)
+		user.visible_message("\The [user] begins unsecuring \the [src] from the floor.", "You start unsecuring \the [src] from the floor.")
+	else
+		user.visible_message("\The [user] begins securing \the [src] to the floor.", "You start securing \the [src] to the floor.")
+	if(do_after(user, delay, src))
+		if(!src) return
+		to_chat(user, SPAN_NOTICE("You [anchored? "un" : ""]secured \the [src]!"))
+		set_anchored(!anchored)
+	return TRUE

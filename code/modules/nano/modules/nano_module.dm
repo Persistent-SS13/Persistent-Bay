@@ -35,6 +35,11 @@
 /datum/nano_module/proc/check_access(var/mob/user, var/access, var/faction_uid)
 	if(!access)
 		return 1
+	if(!islist(access))
+		access = list(access) //listify a single access code.
+	if(has_access(access, using_access))
+		return 1 //This is faster, and often enough.
+	return has_access(access, get_access(user)) //Also checks the mob's ID.
 
 	if(!istype(user))
 		return 0

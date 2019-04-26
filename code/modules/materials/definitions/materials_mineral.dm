@@ -65,8 +65,8 @@
 	icon_colour = "#effffe"
 	icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	icon_door = "stone"
-	icon_table = "stone"
+	door_icon_base = "stone"
+	table_icon_base = "stone"
 	chem_products = list(
 		/datum/reagent/silicon = 20
 		)
@@ -85,7 +85,7 @@
 	icon_colour = "#ccc9a3"
 	icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	icon_door = "stone"
+	door_icon_base = "stone"
 	chem_products = list(
 		/datum/reagent/sulfur = 20,
 		/datum/reagent/iron = 10,
@@ -131,7 +131,7 @@
 	icon_colour = "#e5becb"
 	icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	icon_door = "stone"
+	door_icon_base = "stone"
 	chem_products = list(
 		/datum/reagent/lithium = 20,
 		/datum/reagent/silicon = 40,
@@ -154,7 +154,7 @@
 	icon_colour = "#e54e4e"
 	icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	icon_door = "stone"
+	door_icon_base = "stone"
 	chem_products = list(
 		/datum/reagent/mercury  = 20
 	)
@@ -174,7 +174,7 @@
 	icon_colour = "#acad95"
 	icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	icon_door = "stone"
+	door_icon_base = "stone"
 	chem_products = list(
 		/datum/reagent/phosphorus = 20
 	)
@@ -195,7 +195,7 @@
 	icon_colour = "#d1c0bc"
 	icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	icon_door = "stone"
+	door_icon_base = "stone"
 	chem_products = list(
 		/datum/reagent/sodium = 20
 	)
@@ -216,7 +216,7 @@
 	icon_colour = "#b77464"
 	icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	icon_door = "stone"
+	door_icon_base = "stone"
 	chem_products = list(
 		/datum/reagent/potassium = 20
 		)
@@ -235,7 +235,7 @@
 	icon_colour = "#d8ad97"
 	icon_base = "stone"
 	icon_reinf = "reinf_stone"
-	icon_door = "stone"
+	door_icon_base = "stone"
 	chem_products = list(
 		/datum/reagent/aluminum = 20
 		)
@@ -272,7 +272,7 @@
 	shard_type = SHARD_SHARD
 	hardness = 30
 	stack_origin_tech = list(TECH_MATERIAL = 2, TECH_PHORON = 2)
-	icon_door = "stone"
+	door_icon_base = "stone"
 	sheet_singular_name = "crystal"
 	sheet_plural_name = "crystals"
 	is_fusion_fuel = 1
@@ -293,6 +293,7 @@
 		)
 	xarch_source_mineral = MATERIAL_PHORON
 	ore_icon_overlay = "gems"
+	sale_price = 5
 	ore_matter = list(MATERIAL_PHORON = 2000)
 	energy_combustion = 150
 

@@ -650,7 +650,7 @@
 	if(ISDAMTYPE(Proj.damtype, DAM_PAIN) && !(src.r_deflect_coeff > 1))
 		use_power(Proj.agony * 5)
 
-	src.log_message("Hit by projectile. Type: [Proj.name]([Proj.damtype]).",1)
+	src.log_message("Hit by projectile. Type: [Proj.name]([get_armor_key(Proj.damtype, Proj.damage_flags())]).",1)
 	if(deflect_hit(is_melee=0))
 		src.occupant_message("<span class='notice'>The armor deflects incoming projectile.</span>")
 		src.visible_message("The [src.name] armor deflects the projectile.")
@@ -661,7 +661,7 @@
 		var/ignore_threshold
 		if(istype(Proj, /obj/item/projectile/beam/pulse))
 			ignore_threshold = 1
-		src.hit_damage(Proj.force, Proj.damtype, is_melee=0)
+		src.hit_damage(Proj.force, get_armor_key(Proj.damtype, Proj.damage_flags()), is_melee=0)
 		if(prob(25)) spark_system.start()
 		src.check_for_internal_damage(list(MECHA_INT_FIRE,MECHA_INT_TEMP_CONTROL,MECHA_INT_TANK_BREACH,MECHA_INT_CONTROL_LOST,MECHA_INT_SHORT_CIRCUIT),ignore_threshold)
 
@@ -859,37 +859,6 @@
 		user.visible_message("[user] attaches [W] to [src].", "You attach [W] to [src]")
 		return
 
-#define LOCKED 1
-#define OCCUPIED 2
-	else if(istype(W, /obj/item/grab))
-		if ((locate(/obj/item/mecha_parts/mecha_equipment/tool/passenger) in contents))
-			var/obj/item/grab/G = W
-			if(iscarbon(G.affecting))
-				var/result = 0
-				for(var/obj/item/mecha_parts/mecha_equipment/tool/passenger/P in contents) //clarity for user
-					if (P.occupant)
-						result |= OCCUPIED
-						continue
-
-					if (P.door_locked)
-						result |= LOCKED
-						continue
-
-					P.stuff_inside(G, user)
-					return
-
-				switch (result)
-					if (OCCUPIED)
-						to_chat(user, "<span class='danger'>The passenger compartment is already occupied!</span>")
-					if (LOCKED)
-						to_chat(user, "<span class='warning'>The passenger compartment hatch is locked!</span>")
-					if (OCCUPIED|LOCKED)
-						to_chat(user, "<span class='danger'>All of the passenger compartments are already occupied or locked!</span>")
-					if (0)
-						to_chat(user, "<span class='warning'>\The [src] doesn't have a passenger compartment.</span>")
-#undef LOCKED
-#undef OCCUPIED
-
 	else
 		src.log_message("Attacked by [W]. Attacker - [user]")
 
@@ -1051,7 +1020,7 @@
 	set popup_menu = 0
 	if(usr!=occupant)	return
 	lights = !lights
-	if(lights)	set_light(lights_power, 1, light_range)
+	if(lights)	set_light(0.6, 1, 6)
 	else		set_light(0)
 	src.occupant_message("Toggled lights [lights?"on":"off"].")
 	log_message("Toggled lights [lights?"on":"off"].")

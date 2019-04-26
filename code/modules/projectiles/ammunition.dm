@@ -17,13 +17,12 @@
 	var/fall_sounds = list('sound/weapons/guns/casingfall1.ogg','sound/weapons/guns/casingfall2.ogg','sound/weapons/guns/casingfall3.ogg')
 
 /obj/item/ammo_casing/Initialize()
+	if(ispath(projectile_type))
+		BB = new projectile_type(src)
+	if(randpixel)
+		pixel_x = rand(-randpixel, randpixel)
+		pixel_y = rand(-randpixel, randpixel)
 	. = ..()
-	if(!map_storage_loaded)
-		if(ispath(projectile_type))
-			BB = new projectile_type(src)
-		if(randpixel)
-			pixel_x = rand(-randpixel, randpixel)
-			pixel_y = rand(-randpixel, randpixel)
 
 //removes the projectile from the ammo casing
 /obj/item/ammo_casing/proc/expend()

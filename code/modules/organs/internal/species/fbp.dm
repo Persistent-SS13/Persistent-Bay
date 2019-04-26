@@ -27,7 +27,7 @@
 		return 0
 	if(status & ORGAN_DEAD)
 		return 0
-	return round(cell.charge*(1 - damage/max_damage))
+	return round(cell.charge*(1 - get_damages()/max_health))
 
 /obj/item/organ/internal/cell/proc/check_charge(var/amount)
 	return get_charge() >= amount
@@ -38,7 +38,7 @@
 		return 1
 
 /obj/item/organ/internal/cell/proc/get_servo_cost()
-	var/damage_factor = 1 + 10 * damage/max_damage
+	var/damage_factor = 1 + 10 * get_damages()/max_health
 	return servo_cost * damage_factor
 
 /obj/item/organ/internal/cell/Process()

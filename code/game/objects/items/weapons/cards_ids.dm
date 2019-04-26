@@ -24,6 +24,33 @@ GLOBAL_LIST_EMPTY(all_expense_cards)
 	var/list/files = list()
 	var/associated_account_number = 0
 
+/obj/item/weapon/card/union
+	name = "union card"
+	desc = "A card showing membership in the local worker's union."
+	icon_state = "union"
+	slot_flags = SLOT_ID
+	var/signed_by
+
+/obj/item/weapon/card/union/examine(var/mob/user)
+	. = ..()
+	if(.)
+		if(signed_by)
+			to_chat(user, "It has been signed by [signed_by].")
+		else
+			to_chat(user, "It has a blank space for a signature.")
+
+/obj/item/weapon/card/union/attackby(var/obj/item/thing, var/mob/user)
+	if(istype(thing, /obj/item/weapon/pen))
+		if(signed_by)
+			to_chat(user, SPAN_WARNING("\The [src] has already been signed."))
+		else
+			var/signature = sanitizeSafe(input("What do you want to sign the card as?", "Union Card") as text, MAX_NAME_LEN)
+			if(signature && !signed_by && !user.incapacitated() && Adjacent(user))
+				signed_by = signature
+				user.visible_message(SPAN_NOTICE("\The [user] signs \the [src] with a flourish."))
+		return
+	..()
+
 /obj/item/weapon/card/data
 	name = "data card"
 	desc = "A plastic magstripe card for simple and speedy data storage and transfer. This one has a stripe running down the middle."
@@ -87,6 +114,8 @@ GLOBAL_LIST_EMPTY(all_expense_cards)
 	origin_tech = list(TECH_MAGNET = 2, TECH_ILLEGAL = 2)
 	var/uses = 10
 
+	var/static/list/card_choices
+
 var/const/NO_EMAG_ACT = -50
 /obj/item/weapon/card/emag/resolve_attackby(atom/A, mob/user)
 	var/used_uses = A.emag_act(uses, user, src)
@@ -106,19 +135,50 @@ var/const/NO_EMAG_ACT = -50
 
 	return 1
 
-/obj/item/weapon/card/attackby(var/obj/item/W, var/mob/user)
-	if(isWelder(W))
-		var/obj/item/weapon/tool/weldingtool/WT = W
-		if(WT.remove_fuel(0,user))
-			for (var/mob/M in viewers(src))
-				M.show_message("<span class='notice'>[src] is melted by [user.name] with the welding tool.</span>", 3, "<span class='notice'>You hear welding.</span>", 2)
-			qdel(src)
+/obj/item/weapon/card/emag/proc/generate_emag_choices(var/card_choices)
+	. = list()
+
+	var/i = 1 //in case there is a collision with both name AND icon_state
+	for(var/typepath in card_choices)
+		var/obj/O = typepath
+		if(initial(O.icon) && initial(O.icon_state))
+			var/name = initial(O.name)
+			if(name in .)
+				name += " ([initial(O.icon_state)])"
+			if(name in .)
+				name += " \[[i++]\]"
+			.[name] = typepath
+
+/obj/item/weapon/card/emag/Initialize()
+	. = ..()
+	if(!card_choices)
+		card_choices = list(/obj/item/weapon/card/union,
+							/obj/item/weapon/card/data,
+							/obj/item/weapon/card/data/full_color,
+							/obj/item/weapon/card/data/disk,
+							/obj/item/weapon/card/id,
+						) //Should be enough of a selection for most purposes
+		card_choices = generate_emag_choices(card_choices)
+
+/obj/item/weapon/card/emag/verb/change(picked in card_choices)
+	set name = "Change Cryptographic Sequencer Appearance"
+	set category = "Chameleon Items"
+	set src in usr
+
+	if(!ispath(card_choices[picked]))
 		return
-	if(isWirecutter(W) || isScissors(W))
-		for (var/mob/M in viewers(src))
-			M.show_message("<span class='notice'>[src] is sliced up by [user.name] with the wirecutters.</span>", 3, "<span class='notice'>You hear a snipping sound.</span>", 2)
-		qdel(src)
+
+	disguise(card_choices[picked], usr)
+	update_icon()
+
+/obj/item/weapon/card/emag/examine(mob/user)
+	. = ..()
+	if(!.)
 		return
+		
+	if(user.skill_check(SKILL_DEVICES,SKILL_ADEPT))
+		to_chat(user, SPAN_WARNING("This ID card has some non-standard modifications commonly used to gain illicit access to computer systems."))
+
 
 /obj/item/weapon/card/expense // the fabled expense card
 	desc = "This card is used to expense invoices."
@@ -284,6 +344,8 @@ var/const/NO_EMAG_ACT = -50
 	var/datum/mil_branch/military_branch = null //Vars for tracking branches and ranks on multi-crewtype maps
 	var/datum/mil_rank/military_rank = null
 
+	var/formal_name_prefix
+	var/formal_name_suffix
 	var/selected_faction // faction this ID syncs to.. where should this be set?
 	var/selected_business
 
@@ -297,7 +359,7 @@ var/const/NO_EMAG_ACT = -50
 	.=..()
 	GLOB.all_id_cards |= src
 	if(job_access_type)
-		var/datum/job/j = job_master.GetJobByType(job_access_type)
+		var/datum/job/j = SSjobs.get_by_path(job_access_type)
 		if(j)
 			rank = j.title
 			assignment = rank
@@ -328,8 +390,8 @@ var/const/NO_EMAG_ACT = -50
 			return TOPIC_HANDLED
 
 /obj/item/weapon/card/id/examine(mob/user)
-	. = ..()
 	set src in oview(1)
+	. = ..()
 	if(in_range(usr, src))
 		show(usr)
 		to_chat(usr, desc)
@@ -413,6 +475,7 @@ var/const/NO_EMAG_ACT = -50
 
 /mob/proc/set_id_info(var/obj/item/weapon/card/id/id_card)
 	id_card.age = 0
+
 	id_card.formal_name_prefix = initial(id_card.formal_name_prefix)
 	id_card.formal_name_suffix = initial(id_card.formal_name_suffix)
 	if(client && client.prefs)
@@ -423,6 +486,7 @@ var/const/NO_EMAG_ACT = -50
 				id_card.formal_name_suffix = "[id_card.formal_name_suffix][culture.get_formal_name_suffix()]"
 
 	id_card.registered_name = real_name
+
 	var/gender_term = "Unset"
 	var/datum/gender/G = gender_datums[get_sex()]
 	if(G)
@@ -439,10 +503,8 @@ var/const/NO_EMAG_ACT = -50
 /mob/living/carbon/human/set_id_info(var/obj/item/weapon/card/id/id_card)
 	..()
 	id_card.age = age
-
 	if(GLOB.using_map.flags & MAP_HAS_BRANCH)
 		id_card.military_branch = char_branch
-
 	if(GLOB.using_map.flags & MAP_HAS_RANK)
 		id_card.military_rank = char_rank
 
@@ -740,9 +802,6 @@ var/const/NO_EMAG_ACT = -50
 	desc = "A card issued to engineering staff."
 	job_access_type = /datum/job/engineer
 	detail_color = COLOR_SUN
-
-/obj/item/weapon/card/id/engineering/atmos
-	job_access_type = /datum/job/atmos
 
 /obj/item/weapon/card/id/engineering/head
 	name = "identification card"

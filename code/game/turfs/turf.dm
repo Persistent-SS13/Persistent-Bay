@@ -46,6 +46,12 @@
 		luminosity = 0
 	else
 		luminosity = 1
+	ADD_SAVED_VAR(holy)
+	ADD_SAVED_VAR(blessed)
+	ADD_SAVED_VAR(flooded)
+	ADD_SAVED_VAR(decals)
+	
+	ADD_SKIP_EMPTY(decals)
 
 /turf/on_update_icon()
 	update_flood_overlay()
@@ -150,8 +156,8 @@ var/const/enterloopsanity = 100
 
 	if(ismob(A))
 		var/mob/M = A
-		if (isliving(M) && M.stat != DEAD)
-			SSmazemap.map_data["[M.z]"].set_active()
+//		if (isliving(M) && M.stat != DEAD)
+//			SSmazemap.map_data["[M.z]"].set_active()
 		if(!M.check_solid_ground())
 			inertial_drift(M)
 			//we'll end up checking solid ground again but we still need to check the other things.
@@ -266,9 +272,9 @@ var/const/enterloopsanity = 100
 	if(decals && decals.len)
 		decals.Cut()
 		decals = null
-	if(saved_decals && saved_decals.len)
-		saved_decals.Cut()
-		saved_decals = null
+//	if(saved_decals && saved_decals.len)
+//		saved_decals.Cut()
+//		saved_decals = null
 // Called when turf is hit by a thrown object
 /turf/hitby(atom/movable/AM as mob|obj, var/speed)
 	if(src.density)
@@ -283,7 +289,7 @@ var/const/enterloopsanity = 100
 
 /turf/proc/try_graffiti(var/mob/vandal, var/obj/item/tool)
 
-	if(!tool.sharp || !can_engrave() || vandal.a_intent != I_HELP)
+	if(!tool.sharpness || !can_engrave() || vandal.a_intent != I_HELP)
 		return FALSE
 
 	if(jobban_isbanned(vandal, "Graffiti"))
@@ -313,7 +319,7 @@ var/const/enterloopsanity = 100
 	var/obj/effect/decal/writing/graffiti = new(src)
 	graffiti.message = message
 	graffiti.author = vandal.ckey
-
+	vandal.update_personal_goal(/datum/goal/achievement/graffiti, TRUE)
 
 	if(lowertext(message) == "elbereth")
 		to_chat(vandal, "<span class='notice'>You feel much safer.</span>")

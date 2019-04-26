@@ -48,7 +48,7 @@
 						new /obj/item/weapon/material/shard(get_turf(E), result_mat)
 					E.droplimb(0, DROPLIMB_BLUNT)
 				else
-					E.take_external_damage(rand(20,30), 0)
+					E.take_damage(rand(20,30), 0)
 					E.status |= ORGAN_CRYSTAL
 					E.status |= ORGAN_BRITTLE
 			return

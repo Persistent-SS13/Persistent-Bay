@@ -56,6 +56,7 @@
 		if(1) to_chat(user, "It's an empty frame.")
 		if(2) to_chat(user, "It's wired.")
 		if(3) to_chat(user, "The casing is closed.")
+
 /obj/machinery/light_construct/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	src.add_fingerprint(user)
 	if(isWrench(W))
@@ -147,10 +148,12 @@
 	power_channel = LIGHT //Lights are calc'd via area so they dont need to be in the machine list
 	frame_type = /obj/machinery/light_construct
 
+	var/on = 1					// 1 if on, 0 if off
 	var/flickering = 0
 	var/light_type = /obj/item/weapon/light/tube		// the type of light item
 	var/datum/effect/effect/system/spark_spread/sparks = new /datum/effect/effect/system/spark_spread
 	var/obj/item/weapon/light/lightbulb
+
 	var/current_mode = null
 
 // the smaller bulb light fixture
@@ -175,6 +178,12 @@
 //-----------------------------------------
 // Light Fixture
 //-----------------------------------------
+/obj/machinery/light/New()
+	..()
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(lightbulb)
+	ADD_SKIP_EMPTY(lightbulb)
+
 // create a new lighting fixture
 /obj/machinery/light/Initialize(mapload, obj/machinery/light_construct/construct = null)
 	. = ..(mapload)
@@ -183,10 +192,11 @@
 		frame_type = construct.type
 		construct.transfer_fingerprints_to(src)
 		set_dir(construct.dir)
-	else 
+	else if(!map_storage_loaded)
 		lightbulb = new light_type(src)
-	update_icon(0)
-	update_lighting()
+	if(powered())
+		turn_on()
+	queue_icon_update(0)
 
 /obj/machinery/light/Destroy()
 	QDEL_NULL(lightbulb)
@@ -207,36 +217,41 @@
 		else if(src.dir == WEST)
 			pixel_x = -10
 
+	var/_state
 	switch(get_status())		// set icon_states
 		if(LIGHT_OK)
-			icon_state = "[base_state][!isoff()]"
+			_state = "[base_state][on]"
 		if(LIGHT_EMPTY)
-			icon_state = "[base_state]_empty"
+			_state = "[base_state]_empty"
+			on = 0
 		if(LIGHT_BURNED)
-			icon_state = "[base_state]_burned"
+			_state = "[base_state]_burned"
+			on = 0
 		if(LIGHT_BROKEN)
-			icon_state = "[base_state]_broken"
+			_state = "[base_state]_broken"
+			on = 0
 
 	if(istype(lightbulb, /obj/item/weapon/light/))
 		var/image/I = image(icon, src, _state)
 		I.color = lightbulb.b_colour
 		overlays += I
 
-/obj/machinery/light/proc/update_lighting(var/play_effects = TRUE)
-	if(!isoff() && get_status() == LIGHT_OK)
+	if(on)
+
+		update_use_power(POWER_USE_ACTIVE)
+
 		var/changed = 0
 		if(current_mode && (current_mode in lightbulb.lighting_modes))
 			changed = set_light(arglist(lightbulb.lighting_modes[current_mode]))
 		else
 			changed = set_light(lightbulb.b_max_bright, lightbulb.b_inner_range, lightbulb.b_outer_range, lightbulb.b_curve, lightbulb.b_colour)
 
-		if(changed)
-			if(play_effects)
-				lightbulb.switch_on()
-			change_power_consumption((light_outer_range * light_max_bright) * LIGHTING_POWER_FACTOR, POWER_USE_ACTIVE)
+		if(trigger && changed && get_status() == LIGHT_OK)
+			switch_check()
 	else
 		update_use_power(POWER_USE_OFF)
 		set_light(0)
+	change_power_consumption((light_outer_range * light_max_bright) * LIGHTING_POWER_FACTOR, POWER_USE_ACTIVE)
 
 /obj/machinery/light/proc/get_status()
 	if(!lightbulb)
@@ -244,10 +259,10 @@
 	else
 		return lightbulb.status
 
-// /obj/machinery/light/proc/switch_check()
-// 	lightbulb.switch_on()
-// 	if(get_status() != LIGHT_OK)
-// 		set_light(0)
+/obj/machinery/light/proc/switch_check()
+	lightbulb.switch_on()
+	if(get_status() != LIGHT_OK)
+		set_light(0)
 
 /obj/machinery/light/attack_generic(var/mob/user, var/damage)
 	if(!damage)
@@ -266,8 +281,7 @@
 /obj/machinery/light/proc/set_mode(var/new_mode)
 	if(current_mode != new_mode)
 		current_mode = new_mode
-		update_icon()
-		update_lighting(FALSE)
+		update_icon(0)
 
 /obj/machinery/light/proc/set_emergency_lighting(var/enable)
 	if(enable)
@@ -281,8 +295,14 @@
 
 // attempt to set the light's on/off status
 // will not switch on if broken/burned/empty
-/obj/machinery/light/turn_on(var/state)
-	on = (state && get_status() == LIGHT_OK)
+/obj/machinery/light/turn_on()
+	on = (get_status() == LIGHT_OK)
+	update_use_power((on)? POWER_USE_ACTIVE : POWER_USE_OFF)
+	queue_icon_update()
+
+/obj/machinery/light/turn_off()
+	on = FALSE
+	update_use_power(POWER_USE_OFF)
 	queue_icon_update()
 
 // examine verb
@@ -291,7 +311,7 @@
 	var/fitting = get_fitting_name()
 	switch(get_status())
 		if(LIGHT_OK)
-			to_chat(user, "[desc] It is turned [!isoff()? "on" : "off"].")
+			to_chat(user, "It is turned [on? "on" : "off"].")
 		if(LIGHT_EMPTY)
 			to_chat(user, "[desc] The [fitting] has been removed.")
 		if(LIGHT_BURNED)
@@ -308,8 +328,10 @@
 /obj/machinery/light/proc/insert_bulb(obj/item/weapon/light/L)
 	L.forceMove(src)
 	lightbulb = L
+	if(powered())
+		turn_on()
+	on = powered()
 	update_icon()
-	update_lighting()
 
 /obj/machinery/light/proc/remove_bulb()
 	. = lightbulb
@@ -317,7 +339,6 @@
 	lightbulb.update_icon()
 	lightbulb = null
 	update_icon()
-	update_lighting()
 
 /obj/machinery/light/attackby(obj/item/W, mob/user)
 	//Light replacer code
@@ -345,12 +366,15 @@
 		//If xenos decide they want to smash a light bulb with a toolbox, who am I to stop them? /N
 
 	else if(lightbulb && (lightbulb.status != LIGHT_BROKEN))
+
 		if(prob(1 + W.force * 5))
+		
 			user.visible_message("<span class='warning'>[user.name] smashed the light!</span>", "<span class='warning'>You smash the light!</span>", "You hear a tinkle of breaking glass")
-			if(!isoff() && (W.obj_flags & OBJ_FLAG_CONDUCTIBLE))
+			if(on && (W.obj_flags & OBJ_FLAG_CONDUCTIBLE))
 				if (prob(12))
 					electrocute_mob(user, get_area(src), src, 0.3)
 			broken()
+
 		else
 			to_chat(user, "You hit the light!")
 
@@ -387,17 +411,15 @@
 		return
 	flickering = TRUE
 	spawn(0)
-		if(!isoff() && get_status() == LIGHT_OK)
+		if(on && get_status() == LIGHT_OK)
 			for(var/i = 0; i < amount; i++)
 				if(get_status() != LIGHT_OK) 
 					break
-				update_use_power(isoff()? POWER_USE_ACTIVE : POWER_USE_OFF)
-				update_icon()
-				update_lighting(FALSE)
+				on = !on
+				update_icon(0)
 				sleep(rand(5, 15))
-			update_use_power( (get_status() == LIGHT_OK)? POWER_USE_ACTIVE : POWER_USE_OFF)
-			update_icon()
-			update_lighting(FALSE)
+			on = (get_status() == LIGHT_OK)
+			update_icon(0)
 		flickering = FALSE
 
 // ai attack - make lights flicker, because why not
@@ -418,7 +440,7 @@
 			broken()
 			return
 	// make it burn hands if not wearing fire-insulated gloves
-	if(!isoff())
+	if(on)
 		var/prot = 0
 		var/mob/living/carbon/human/H = user
 
@@ -469,20 +491,18 @@
 	if(!skip_sound_and_sparks)
 		if(lightbulb && !(lightbulb.status == LIGHT_BROKEN))
 			playsound(src.loc, 'sound/effects/Glasshit.ogg', 75, 1)
-		if(!isoff())
+		if(on)
 			sparks.set_up(3, 1, src)
 			sparks.start()
 	lightbulb.status = LIGHT_BROKEN
 	update_icon()
-	update_lighting()
 
 /obj/machinery/light/proc/fix()
 	if(get_status() == LIGHT_OK)
 		return
 	lightbulb.status = LIGHT_OK
-	update_use_power(POWER_USE_ACTIVE)
+	on = 1
 	update_icon()
-	update_lighting()
 
 // called when area power state changes
 /obj/machinery/light/power_change()
@@ -491,7 +511,6 @@
 			turn_on()
 		else
 			turn_off()
-		update_lighting()
 
 
 // called when on fire
@@ -520,6 +539,7 @@
 	icon_state = "nav10"
 	base_state = "nav1"
 	light_type = /obj/item/weapon/light/tube/large
+	on = TRUE
 
 /obj/machinery/light/navigation/delay2
 		icon_state = "nav20"
@@ -594,6 +614,11 @@
 	b_outer_range = 8
 	b_curve = 2.5
 
+/obj/item/weapon/light/tube/large/party/Initialize(mapload) //Randomly colored light tubes. Mostly for testing, but maybe someone will find a use for them.
+	. = ..()
+	if(!mapload)
+		b_colour = rgb(pick(0,255), pick(0,255), pick(0,255))
+
 /obj/item/weapon/light/tube/red
 	name = "red light tube"
 	color = "#da0205"
@@ -617,7 +642,7 @@
 /obj/item/weapon/light/tube/pink
 	name = "pink light tube"
 	color = "#da0271"
-	brightness_color = "#da0271"
+	b_colour = "#da0271"
 
 /obj/item/weapon/light/tube/yellow
 	name = "yellow light tube"

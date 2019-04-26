@@ -68,8 +68,8 @@
 
 /decl/hierarchy/supply_pack/operations/bureaucracy
 	name = "Bureaucracy - Office supplies"
-	contains = list(/obj/item/weapon/clipboard,
-					/obj/item/weapon/clipboard,
+	contains = list(/obj/item/weapon/material/clipboard,
+					/obj/item/weapon/material/clipboard,
 					/obj/item/weapon/pen/red,
 					/obj/item/weapon/pen/blue,
 					 /obj/item/weapon/pen/green,

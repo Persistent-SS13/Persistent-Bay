@@ -30,7 +30,7 @@
 	icon_state = "lantern"
 	desc = "A mining lantern."
 
-/*****************************Pickaxe********************************/
+/**********'pickaxes' but theyre drills actually***************/
 
 /obj/item/weapon/pickaxe
 	name = "mining drill"
@@ -110,7 +110,7 @@
 	digspeed = 30
 	origin_tech = list(TECH_MATERIAL = 3)
 	drill_verb = "picking"
-	sharp = 1
+	sharpness = 2
 	build_from_parts = TRUE
 	hardware_color = COLOR_SILVER
 
@@ -122,7 +122,7 @@
 	digspeed = 20
 	origin_tech = list(TECH_MATERIAL = 4)
 	drill_verb = "picking"
-	sharp = 1
+	sharpness = 1
 	build_from_parts = TRUE
 	hardware_color = COLOR_GOLD
 
@@ -134,7 +134,7 @@
 	digspeed = 10
 	origin_tech = list(TECH_MATERIAL = 6, TECH_ENGINEERING = 4)
 	drill_verb = "picking"
-	sharp = 1
+	sharpness = 3
 	build_from_parts = TRUE
 	hardware_color = COLOR_DIAMOND
 

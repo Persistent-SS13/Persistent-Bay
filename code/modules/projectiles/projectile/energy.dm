@@ -1,7 +1,7 @@
 /obj/item/projectile/energy
 	name = "energy"
 	icon_state = "spark"
-	damage = 0
+	force = 0
 	damtype = DAM_ENERGY
 	distance_falloff = 2.5
 
@@ -10,7 +10,7 @@
 	name = "chemical shell"
 	icon_state = "bullet"
 	fire_sound = 'sound/weapons/gunshot/gunshot_pistol.ogg'
-	damage = 5
+	force = 5
 	agony = 10
 	kill_count = 15 //if the shell hasn't hit anything after travelling this far it just explodes.
 	muzzle_type = /obj/effect/projectile/bullet/muzzle
@@ -43,7 +43,7 @@
 
 //blinds people like the flash round, but in a larger area and can also be used for temporary illumination
 /obj/item/projectile/energy/flash/flare
-	damage = 10
+	force = 10
 	agony = 25
 	fire_sound = 'sound/weapons/gunshot/shotgun.ogg'
 	flash_range = 2
@@ -71,7 +71,7 @@
 
 /obj/item/projectile/energy/electrode/stunshot
 	nodamage = 0
-	damage = 10
+	force = 10
 	agony = 35
 	damtype = DAM_STUN
 	armor_penetration = 10
@@ -80,7 +80,7 @@
 	name = "decloner beam"
 	icon_state = "declone"
 	fire_sound = 'sound/weapons/pulse3.ogg'
-	damage = 10
+	force = 10
 	damtype = DAM_CLONE
 	irradiate = 10
 
@@ -88,7 +88,7 @@
 /obj/item/projectile/energy/dart
 	name = "dart"
 	icon_state = "toxin"
-	damage = 5
+	force = 5
 	damtype = DAM_BIO
 	weaken = 5
 
@@ -96,7 +96,7 @@
 /obj/item/projectile/energy/bolt
 	name = "bolt"
 	icon_state = "cbbolt"
-	damage = 10
+	force = 10
 	damtype = DAM_BULLET
 	nodamage = 0
 	agony = 35
@@ -105,14 +105,14 @@
 
 /obj/item/projectile/energy/bolt/large
 	name = "largebolt"
-	damage = 15
+	force = 15
 	agony = 40
 
 
 /obj/item/projectile/energy/neurotoxin
 	name = "neuro"
 	icon_state = "neurotoxin"
-	damage = 5
+	force = 5
 	damtype = DAM_BIO
 	weaken = 5
 
@@ -120,7 +120,7 @@
 	name = "phoron bolt"
 	icon_state = "energy"
 	fire_sound = 'sound/effects/stealthoff.ogg'
-	damage = 5
+	force = 5
 	damtype = DAM_BIO
 	irradiate = 5
 
@@ -130,7 +130,7 @@
 	fire_sound = 'sound/weapons/blaster.ogg'
 	armor_penetration = 10
 	kill_count = 4
-	damage = 5
+	force = 5
 	agony = 40
 	damtype = DAM_STUN
 	vacuum_traversal = 0

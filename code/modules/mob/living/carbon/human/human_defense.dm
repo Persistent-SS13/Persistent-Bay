@@ -14,7 +14,7 @@ meteor_act
 		return PROJECTILE_FORCE_MISS //if they don't have the organ in question then the projectile just passes by.
 
 	//Shields
-	var/shield_check = check_shields(P.damage, P, null, def_zone, "the [P.name]")
+	var/shield_check = check_shields(P.force, P, null, def_zone, "the [P.name]")
 	if(shield_check)
 		if(shield_check < 0)
 			return shield_check
@@ -24,7 +24,7 @@ meteor_act
 
 	var/obj/item/organ/external/organ = get_organ(def_zone)
 	var/blocked = ..(P, def_zone)
-	var/penetrating_damage = ((P.damage + P.armor_penetration) * P.penetration_modifier) - blocked
+	var/penetrating_damage = ((P.force + P.armor_penetration) * P.penetration_modifier) - blocked
 
 	//Embed or sever artery
 	if(P.can_embed() && !(species.species_flags & SPECIES_FLAG_NO_EMBED) && prob(22.5 + max(penetrating_damage, -10)) && !(prob(50) && (organ.sever_artery())))
@@ -34,7 +34,7 @@ meteor_act
 		SP.forceMove(organ)
 		organ.embed(SP)
 
-	projectile_hit_bloody(P, P.damage*blocked_mult(blocked), def_zone)
+	projectile_hit_bloody(P, P.force*blocked_mult(blocked), def_zone)
 
 	return blocked
 
@@ -120,7 +120,7 @@ meteor_act
 /mob/living/carbon/human/proc/check_shields(var/damage = 0, var/atom/damage_source = null, var/mob/attacker = null, var/def_zone = null, var/attack_text = "the attack")
 
 	var/obj/item/projectile/P = damage_source
-	if(istype(P) && !P.disrupts_psionics() && psi && P.starting && prob(psi.get_armour(get_armor_key(P.damage_type, P.damage_flags())) * 0.5) && psi.spend_power(round(damage/10)))
+	if(istype(P) && !P.disrupts_psionics() && psi && P.starting && prob(psi.get_armour(get_armor_key(P.damtype, P.damage_flags())) * 0.5) && psi.spend_power(round(damage/10)))
 		visible_message("<span class='danger'>\The [src] deflects [attack_text]!</span>")
 		P.redirect(P.starting.x + rand(-2,2), P.starting.y + rand(-2,2), get_turf(src), src)
 		return PROJECTILE_FORCE_MISS

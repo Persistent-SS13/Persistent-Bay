@@ -27,6 +27,7 @@
 	if(!reagents.total_volume)
 		M.visible_message("<span class='notice'>[M] finishes eating \the [src].</span>","<span class='notice'>You finish eating \the [src].</span>")
 		M.drop_item()
+		M.update_personal_goal(/datum/goal/achievement/specific_object/food, type)
 		if(trash)
 			if(ispath(trash,/obj/item))
 				var/obj/item/TrashItem = new trash(get_turf(M))
@@ -159,9 +160,9 @@
 			if (W.w_class >= src.w_class || is_robot_module(W) || istype(W,/obj/item/weapon/reagent_containers/food/condiment) || istype(W, /obj/item/organ/internal/stack))
 				return
 			if(!user.unEquip(W, src))
+				return
 
 			to_chat(user, "<span class='warning'>You slip \the [W] inside \the [src].</span>")
-			user.drop_from_inventory(W, src)
 			add_fingerprint(user)
 			contents += W
 			return
@@ -241,7 +242,7 @@
 
 
 /obj/item/weapon/reagent_containers/food/snacks/aesirsalad
-	name = "Aesir salad"
+	name = "\improper Aesir salad"
 	desc = "Probably too incredible for mortal men to fully enjoy."
 	icon_state = "aesirsalad"
 	trash = /obj/item/trash/snack_bowl
@@ -388,7 +389,7 @@
 	reagents.add_reagent(/datum/reagent/nutriment/softtofu, 6)
 
 /obj/item/weapon/reagent_containers/food/snacks/tofurkey
-	name = "Tofurkey"
+	name = "\improper Tofurkey"
 	desc = "A fake turkey made from tofu."
 	icon_state = "tofurkey"
 	filling_color = "#fffee0"

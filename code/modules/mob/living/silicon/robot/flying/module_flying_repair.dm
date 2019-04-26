@@ -14,14 +14,14 @@
 	equipment = list(
 		/obj/item/borg/sight/meson,
 		/obj/item/weapon/extinguisher,
-		/obj/item/weapon/weldingtool/largetank,
-		/obj/item/weapon/screwdriver,
-		/obj/item/weapon/wrench,
-		/obj/item/weapon/crowbar,
-		/obj/item/weapon/wirecutters,
+		/obj/item/weapon/tool/weldingtool/largetank,
+		/obj/item/weapon/tool/screwdriver,
+		/obj/item/weapon/tool/wrench,
+		/obj/item/weapon/tool/crowbar,
+		/obj/item/weapon/tool/wirecutters,
 		/obj/item/device/multitool,
 		/obj/item/device/t_scanner,
-		/obj/item/device/analyzer,
+		/obj/item/device/scanner/gas,
 		/obj/item/device/geiger,
 		/obj/item/taperoll/engineering,
 		/obj/item/taperoll/atmos,
@@ -40,7 +40,7 @@
 		/obj/item/stack/material/cyborg/glass/reinforced,
 		/obj/item/stack/cable_coil/cyborg,
 		/obj/item/stack/material/cyborg/plasteel,
-		/obj/item/device/plunger/robot
+		/obj/item/device/plunger/robot,
 	)
 	synths = list(
 		/datum/matter_synth/metal = 	30000,

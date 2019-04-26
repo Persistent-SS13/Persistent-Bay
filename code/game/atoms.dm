@@ -35,6 +35,9 @@
 
 	if(atom_flags & ATOM_FLAG_CLIMBABLE)
 		verbs += /atom/proc/climb_on
+	
+	ADD_SAVED_VAR(reagents)
+	ADD_SKIP_EMPTY(reagents)
 
 //Called after New if the map is being loaded. mapload = TRUE
 //Called from base of New if the map is not being loaded. mapload = FALSE

@@ -10,6 +10,7 @@
 	origin_tech = list(TECH_ENGINEERING = 4, TECH_PHORON = 3)
 	matter = list(MATERIAL_STEEL = 800, MATERIAL_GLASS = 360, MATERIAL_SILVER = 200, MATERIAL_PHORON = 50 )
 	tank = new /obj/item/weapon/welder_tank/experimental
+	welding_resource = /datum/reagent/toxin/phoron
 	fuel_rate = 0.001 //The fuel burn rate while the welder is on
 	fuel_cost_use = 0.001 //Multiplier for static fuel costs when starting a task
 	welding_efficiency = 0.5 //Welds faster, for less fuel

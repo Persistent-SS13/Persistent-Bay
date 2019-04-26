@@ -7,6 +7,7 @@ var/list/organ_cache = list()
 	obj_flags = OBJ_FLAG_DAMAGEABLE
 	w_class = ITEM_SIZE_TINY
 	default_action_type = /datum/action/item_action/organ
+	action = /datum/action/item_action/organ
 	matter = list("pinkgoo" = 100)
 	damthreshold_brute = 0
 	damthreshold_burn  = 0
@@ -57,8 +58,9 @@ var/list/organ_cache = list()
 /obj/item/organ/attack_self(var/mob/user)
 	return (owner && loc == owner && owner == user)
 
-/obj/item/organ/proc/update_health()
-	return
+//Already handled in /obj/
+// /obj/item/organ/proc/update_health()
+// 	return
 
 //Second argument may be a dna datum; if null will be set to holder's dna.
 /obj/item/organ/New(var/mob/living/carbon/holder, var/datum/dna/given_dna)
@@ -66,10 +68,10 @@ var/list/organ_cache = list()
 	if(!istype(given_dna))
 		given_dna = null
 
-	if(max_damage)
-		min_broken_damage = Floor(max_damage / 2)
+	if(max_health)
+		min_broken_damage = Floor(max_health / 2)
 	else
-		max_damage = min_broken_damage * 2
+		max_health = min_broken_damage * 2
 
 	if(istype(holder))
 		owner = holder
@@ -88,7 +90,7 @@ var/list/organ_cache = list()
 		create_reagents(5 * (w_class-1)**2)
 		reagents.add_reagent(/datum/reagent/nutriment/protein, reagents.maximum_volume)
 
-	update_icon()
+	queue_icon_update()
 	ADD_SAVED_VAR(min_broken_damage)
 	ADD_SAVED_VAR(robotic)
 	ADD_SAVED_VAR(status)
@@ -420,7 +422,7 @@ var/list/organ_cache = list()
 	return
 
 /obj/item/organ/vulnerable_to_damtype(var/damtype)
-	if(isrobotic())
+	if(BP_IS_ROBOTIC(src))
 		return DAMAGE_AFFECT_OBJ(damtype)
 	else
 		return DAMAGE_AFFECT_MOB(damtype)

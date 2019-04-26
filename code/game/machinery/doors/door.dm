@@ -1,6 +1,5 @@
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:31
 #define DOOR_REPAIR_AMOUNT 50	//amount of health regained per stack amount used
-#define BLEND_OBJECTS 	   list(/obj/structure/wall_frame, /obj/structure/window, /obj/structure/grille, /obj/machinery/door) // Objects which to blend with
 
 /obj/machinery/door
 	name 				= "Door"
@@ -45,8 +44,9 @@
 	var/block_air_zones = TRUE 	//If set, air zones cannot merge across the door even when it is opened.
 	var/close_door_at 	= 0 	//When to automatically close the door, if possible
 	var/destroy_hits 	= 10 	//How many strong hits it takes to destroy the door
-
+	var/autoset_access = TRUE // Determines whether the door will automatically set its access from the areas surrounding it. Can be used for mapping.
 	var/list/connections = list("0", "0", "0", "0")
+	var/list/blend_objects = list(/obj/structure/wall_frame, /obj/structure/window, /obj/structure/grille) // Objects which to blend with
 	var/air_properties_vary_with_direction = 0
 	var/obj/item/stack/material/repairing
 	// turf animation
@@ -242,7 +242,7 @@
 		else
 			repairing = stack.split(amount_needed, force=TRUE)
 			if (repairing)
-				repairing.loc = src
+				repairing.dropInto(loc)
 				transfer = repairing.amount
 				repairing.uses_charge = FALSE //for clean robot door repair - stacks hint immortal if true
 
@@ -301,6 +301,7 @@
 		sleep(6)
 		open()
 		operating = -1
+		return 1
 
 //psa to whoever coded this, there are plenty of objects that need to call attack() on doors without bludgeoning them.
 /obj/machinery/door/proc/check_force(obj/item/I as obj, mob/user as mob)
@@ -345,7 +346,7 @@
 	else if(src.health < src.max_health * 3/4)
 		to_chat(user, "\The [src] shows signs of damage!")
 
-/obj/machinery/door/set_broken(var/state)
+/obj/machinery/door/set_broken(var/new_state)
 	. = ..()
 	if(. && new_state)
 		visible_message(SPAN_WARNING("\The [src.name] breaks!"))
@@ -503,7 +504,7 @@
 			success = TRUE
 		else
 			for(var/obj/O in T)
-				for(var/b_type in BLEND_OBJECTS)
+				for(var/b_type in blend_objects)
 					if( istype(O, b_type))
 						success = TRUE
 					if(success)
@@ -514,3 +515,33 @@
 		if(success)
 			dirs |= direction
 	connections = dirs
+
+/obj/machinery/door/CanFluidPass(var/coming_from)
+	return !density
+
+// Most doors will never be deconstructed over the course of a round,
+// so as an optimization defer the creation of electronics until
+// the airlock is deconstructed
+/obj/machinery/door/proc/create_electronics(var/electronics_type = /obj/item/weapon/airlock_electronics)
+	var/obj/item/weapon/airlock_electronics/electronics = new electronics_type(loc)
+	electronics.set_access(src)
+	electronics.autoset = autoset_access
+	return electronics
+
+/obj/machinery/door/proc/access_area_by_dir(direction)
+	var/turf/T = get_turf(get_step(src, direction))
+	if (T && !T.density)
+		return get_area(T)
+
+/obj/machinery/door/proc/inherit_access_from_area()
+	var/area/fore = access_area_by_dir(dir)
+	var/area/aft = access_area_by_dir(GLOB.reverse_dir[dir])
+	fore = fore || aft
+	aft = aft || fore
+	
+	if (!fore && !aft)
+		req_access = list()
+	else if (fore.secure || aft.secure)
+		req_access = req_access_union(fore, aft)
+	else
+		req_access = req_access_diff(fore, aft)

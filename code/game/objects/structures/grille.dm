@@ -26,6 +26,7 @@
 		DAM_STUN 	= MaxArmorValue,
 		DAM_PAIN	= MaxArmorValue,
 		DAM_CLONE   = MaxArmorValue)
+	var/init_material = MATERIAL_STEEL
 	var/destroyed = 0
 
 	blend_objects = list(/obj/machinery/door, /turf/simulated/wall) // Objects which to blend with
@@ -34,11 +35,16 @@
 /obj/structure/grille/get_material()
 	return material
 
+/obj/structure/grille/New()
+	..()
+	ADD_SAVED_VAR(init_material)
+
 /obj/structure/grille/Initialize(mapload, var/new_material)
 	. = ..()
-	if(!new_material)
-		new_material = init_material
-	material = SSmaterials.get_material_by_name(new_material)
+	if(!map_storage_loaded)
+		if(!new_material)
+			new_material = init_material
+		material = SSmaterials.get_material_by_name(new_material)
 	if(!istype(material))
 		..()
 		return INITIALIZE_HINT_QDEL
@@ -46,7 +52,9 @@
 	name = "[material.display_name] grille"
 	desc = "A lattice of [material.display_name] rods, with screws to secure it to the floor."
 	color =  material.icon_colour
-	health = max(1, round(material.integrity/15))
+	max_health = max(1, round(material.integrity/15))
+	if(!map_storage_loaded)
+		health = max_health
 	update_connections(1)
 	update_icon()
 
@@ -131,21 +139,21 @@
 	if(IsDamageTypeBrute(Proj.damtype))
 		//bullets
 		if(Proj.original == src || prob(20))
-			Proj.damage *= between(0, Proj.damage/60, 0.5)
+			Proj.force *= between(0, Proj.force/60, 0.5)
 			if(prob(max((damage-10)/25, 0))*100)
 				passthrough = 1
 		else
-			Proj.damage *= between(0, Proj.damage/60, 1)
+			Proj.force *= between(0, Proj.force/60, 1)
 			passthrough = 1
 	else if(IsDamageTypeBurn(Proj.damtype))
 		//beams and other projectiles are either blocked completely by grilles or stop half the damage.
 		if(!(Proj.original == src || prob(20)))
-			Proj.damage *= 0.5
+			Proj.force *= 0.5
 			passthrough = 1
 
 	if(passthrough)
 		. = PROJECTILE_CONTINUE
-		damage = between(0, (damage - Proj.damage)*(IsDamageTypeBrute(Proj.damtype)? 0.4 : 1), 10) //if the bullet passes through then the grille avoids most of the damage
+		damage = between(0, (damage - Proj.force)*(IsDamageTypeBrute(Proj.damtype)? 0.4 : 1), 10) //if the bullet passes through then the grille avoids most of the damage
 
 	take_damage(damage*0.2)
 
@@ -191,21 +199,16 @@
 		return ..()
 	return..()
 
-/obj/structure/grille/proc/update_health()
-	if(health <= broken_threshold)
-		if(!destroyed)
-			set_density(0)
-			destroyed = 1
-			visible_message("<span class='notice'>\The [src] falls to pieces!</span>")
-			update_icon()
-			new /obj/item/stack/material/rods(get_turf(src), 1, material.name)
+/obj/structure/grille/broken()
+	if(!destroyed)
+		set_density(0)
+		destroyed = 1
+		visible_message("<span class='notice'>\The [src] falls to pieces!</span>")
+		update_icon()
 
-		else
-			if(health <= min_health)
-				new /obj/item/stack/material/rods(get_turf(src), 1, material.name)
-				qdel(src)
-				return
-	return
+/obj/structure/grille/make_debris()
+	if(material)
+		new /obj/item/stack/material/rods(get_turf(src), 1, material.name)
 
 // shock user with probability prb (if all connections & power are working)
 // returns 1 if shocked, 0 otherwise
@@ -241,12 +244,12 @@
 	..()
 
 // Used in mapping to avoid
-/obj/structure/grille/broken
+/obj/structure/grille/damaged
 	destroyed = 1
 	icon_state = "broken"
 	density = 0
 
-/obj/structure/grille/broken/Initialize()
+/obj/structure/grille/damaged/Initialize()
 	. = ..()
 	take_damage(rand(1, 5)) //In the destroyed but not utterly threshold.
 

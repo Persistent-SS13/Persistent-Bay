@@ -129,6 +129,7 @@
 		/datum/reagent/toxin/fertilizer/left4zed = 30)
 
 /obj/machinery/portable_atmospherics/hydroponics/after_load()
+	..()
 	update_icon()
 
 /obj/machinery/portable_atmospherics/hydroponics/AltClick()
@@ -425,7 +426,7 @@
 	if (O.is_open_container())
 		return 0
 
-	if(isWirecutter(O) || istype(O, /obj/item/weapon/scalpel) || isScissors(O))
+	if(isWirecutter(O) || istype(O, /obj/item/weapon/scalpel) || O.sharpness >= 1)
 
 		if(!seed)
 			to_chat(user, "There is nothing to take a sample from in \the [src].")

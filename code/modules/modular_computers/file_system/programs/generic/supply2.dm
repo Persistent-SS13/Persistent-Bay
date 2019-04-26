@@ -475,7 +475,8 @@
 		return 1
 	category_names = list()
 	category_contents = list()
-	for(var/decl/hierarchy/supply_pack/sp in cargo_supply_pack_root.children)
+	var/decl/hierarchy/supply_pack/root = decls_repository.get_decl(/decl/hierarchy/supply_pack)
+	for(var/decl/hierarchy/supply_pack/sp in root.children)
 		if(sp.is_category())
 			category_names.Add(sp.name)
 			var/list/category[0]
@@ -532,8 +533,8 @@
 /datum/nano_module/program/supply/proc/print_summary(var/mob/user)
 	var/t = ""
 	t += "<center><BR><b><large>[GLOB.using_map.station_name]</large></b><BR><i>[station_date]</i><BR><i>Export overview<field></i></center><hr>"
-	for(var/source in point_source_descriptions)
-		t += "[point_source_descriptions[source]]: [SSsupply.point_sources[source] || 0]<br>"
+	for(var/source in SSsupply.point_sources)
+		t += "[SSsupply.point_sources[source]]: [SSsupply.point_sources[source] || 0]<br>"
 	print_text(t, user)
 /datum/nano_module/program/supply/proc/print_export(var/mob/user, var/id)
 	var/datum/world_faction/connected_faction

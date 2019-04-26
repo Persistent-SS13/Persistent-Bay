@@ -167,11 +167,14 @@
 	self_recharge = 1
 	charge_meter = 0
 	load_method = ENERGY_LOAD_FIXED_CELL
+	var/required_antag_type = MODE_WIZARD
 
 /obj/item/weapon/gun/energy/staff/special_check(var/mob/user)
-	if((user.mind && !wizards.is_antagonist(user.mind)))
-		to_chat(usr, "<span class='warning'>You focus your mind on \the [src], but nothing happens!</span>")
-		return 0
+	if(required_antag_type)
+		var/datum/antagonist/antag = get_antag_data(required_antag_type)
+		if(user.mind && !antag.is_antagonist(user.mind))
+			to_chat(usr, "<span class='warning'>You focus your mind on \the [src], but nothing happens!</span>")
+			return 0
 
 	return ..()
 

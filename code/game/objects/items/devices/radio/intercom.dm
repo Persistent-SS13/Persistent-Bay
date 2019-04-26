@@ -201,7 +201,7 @@
 	wires.CutWireIndex(WIRE_TRANSMIT)
 
 /obj/item/device/radio/intercom/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
-	if(istype(W, /obj/item/device/reagent_scanner))
+	if(istype(W, /obj/item/device/scanner/reagent))
 		return
 	if(istype(W, /obj/item/weapon/tool/wrench))
 		to_chat(user, "<span class='notice'>You detach \the [src] from the wall.</span>")

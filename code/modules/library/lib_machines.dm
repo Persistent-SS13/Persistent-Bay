@@ -200,8 +200,8 @@
 		if(held_paper || held_bundle)
 			to_chat(user, "Theirs already paper loaded")
 			return
-		user.drop_item()
-		O.loc = src
+		if(!user.unEquip(O, src))
+			return
 		user.visible_message("[user] loads some paper into [src].", "You load some paper into [src].")
 		held_paper = O
 		return

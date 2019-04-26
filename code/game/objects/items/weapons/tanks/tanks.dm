@@ -62,7 +62,7 @@ var/list/global/tank_gauge_cache = list()
 		air_contents.update_values()
 
 	START_PROCESSING(SSobj, src)
-	update_icon(override = TRUE)
+	update_icon(TRUE)
 
 /obj/item/weapon/tank/Destroy()
 	QDEL_NULL(air_contents)
@@ -80,7 +80,6 @@ var/list/global/tank_gauge_cache = list()
 /obj/item/weapon/tank/examine(mob/user)
 	. = ..(user, 0)
 	if(.)
-		var/celsius_temperature = air_contents.temperature - T0C
 		var/descriptive
 		if(!air_contents)
 			descriptive = "empty"
@@ -114,7 +113,7 @@ var/list/global/tank_gauge_cache = list()
 	if (istype(loc, /obj/item/assembly))
 		icon = loc
 
-	if (istype(W, /obj/item/device/analyzer))
+	if (istype(W, /obj/item/device/scanner/gas))
 		return
 
 	if (istype(W,/obj/item/latexballon))
@@ -127,7 +126,7 @@ var/list/global/tank_gauge_cache = list()
 		if(C.use(1))
 			wired = 1
 			to_chat(user, "<span class='notice'>You attach the wires to the tank.</span>")
-			update_icon(override = TRUE)
+			update_icon(TRUE)
 
 	if(isWirecutter(W))
 		if(wired && proxyassembly.assembly)
@@ -149,7 +148,7 @@ var/list/global/tank_gauge_cache = list()
 						assy.a_right = null
 						proxyassembly.assembly = null
 						qdel(assy)
-				update_icon(override = TRUE)
+				update_icon(TRUE)
 
 			else
 				to_chat(user, "<span class='danger'>You slip and bump the igniter!</span>")
@@ -160,7 +159,7 @@ var/list/global/tank_gauge_cache = list()
 			if(do_after(user, 10, src))
 				to_chat(user, "<span class='notice'>You quickly clip the wire from the tank.</span>")
 				wired = 0
-				update_icon(override = TRUE)
+				update_icon(TRUE)
 
 		else
 			to_chat(user, "<span class='notice'>There are no wires to cut!</span>")
@@ -525,7 +524,7 @@ var/list/global/tank_gauge_cache = list()
 	H.master = proxyassembly
 
 	H.update_icon()
-	update_icon(override = TRUE)
+	update_icon(TRUE)
 
 /obj/item/weapon/tank/phoron/onetankbomb/Initialize()
 	. = ..()
@@ -598,7 +597,7 @@ var/list/global/tank_gauge_cache = list()
 
 /obj/item/projectile/bullet/pellet/fragment/tank
 	name = "metal fragment"
-	damage = 9  //Big chunks flying off.
+	force = 9  //Big chunks flying off.
 	range_step = 1 //controls damage falloff with distance. projectiles lose a "pellet" each time they travel this distance. Can be a non-integer.
 
 	base_spread = 0 //causes it to be treated as a shrapnel explosion instead of cone
@@ -612,9 +611,9 @@ var/list/global/tank_gauge_cache = list()
 
 /obj/item/projectile/bullet/pellet/fragment/tank/small
 	name = "small metal fragment"
-	damage = 6
+	force = 6
 
 /obj/item/projectile/bullet/pellet/fragment/tank/big
 	name = "large metal fragment"
-	damage = 17
+	force = 17
 

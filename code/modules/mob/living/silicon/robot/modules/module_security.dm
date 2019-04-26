@@ -47,7 +47,7 @@
 		/obj/item/taperoll/police,
 		/obj/item/device/megaphone,
 		/obj/item/device/holowarrant,
-		/obj/item/weapon/crowbar,
+		/obj/item/weapon/tool/crowbar,
 		/obj/item/device/hailer
 	)
 	emag = /obj/item/weapon/gun/energy/laser/mounted
@@ -67,6 +67,6 @@
 		/obj/item/weapon/gun/energy/plasmacutter,
 		/obj/item/borg/combat/shield,
 		/obj/item/borg/combat/mobility,
-		/obj/item/weapon/crowbar
+		/obj/item/weapon/tool/crowbar
 	)
 	emag = /obj/item/weapon/gun/energy/lasercannon/mounted

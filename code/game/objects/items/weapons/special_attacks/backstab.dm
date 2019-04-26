@@ -28,11 +28,11 @@ location_check: bool. allows facestabs if set to false, skipping the check for b
 Proc returns a boolean if successful.
 */
 
-/obj/item/weapon/proc/backstab(var/mob/living/target, mob/user, var/damage = 30, var/damage_type = BRUTE, var/damage_flags, var/target_zone = BP_CHEST, var/location_check = TRUE)
+/obj/item/weapon/proc/backstab(var/mob/living/target, mob/user, var/damage = 30, var/damage_type = DAM_CUT, var/damage_flags, var/target_zone = BP_CHEST, var/location_check = TRUE)
 
 	//Runtime prevention.
-	if( !( damage_type in list( BRUTE, BURN, TOX, OXY, CLONE, PAIN ) ) ) //End the proc with a false return if we're not doing a valid damage type.
-		return FALSE
+	// if( !( damage_type in list( BRUTE, BURN, TOX, OXY, CLONE, PAIN ) ) ) //End the proc with a false return if we're not doing a valid damage type.
+	// 	return FALSE
 
 	if(!iscarbon(target)) //No. You cannot backstab the borg.
 		return FALSE
@@ -46,7 +46,7 @@ Proc returns a boolean if successful.
 	//B-stabs can only occur on a mob from behind, in cases where they are both facing the same direction. More notably, a mob lying face-up cannot be backstabbed.
 	if(location_check)
 
-		if(!( sharp ))
+		if(sharpness < 2)
 			user.visible_message("<span class = 'danger'>\The [user] tries to stab deep into \The [target]'s back, but it dinks off, scraping \him instead!</span>", "<span class = 'warning'>\The [src] is too dull for a proper backstab!</span>", "<span class = 'notice'>You hear a soft dinking noise.</span>")
 			return FALSE
 
@@ -77,7 +77,7 @@ Proc returns a boolean if successful.
 
 			H = target
 			var/obj/item/organ/external/stabbed_part = H.get_organ(target_zone)
-			if( !prob(H.get_blocked_ratio(target_zone, BRUTE) * 100) && !isnull(stabbed_part) && length(stabbed_part.internal_organs) )
+			if( !prob(H.get_blocked_ratio(target_zone, damage_type) * 100) && !isnull(stabbed_part) && length(stabbed_part.internal_organs) )
 
 				var/obj/item/organ/internal/damaged_organ = pick(stabbed_part.internal_organs) //This could be improved by checking the size of an internal organ.
 
@@ -87,7 +87,7 @@ Proc returns a boolean if successful.
 				H.custom_pain("<span class = 'danger' font size='10'>You feel a stabbing pain in the back of your [stabbed_part]!</span>") //Only the stabber and stabbed should know how bad this is.
 
 		else
-			target.apply_damage(damage, damage_type, target_zone, DAM_SHARP, src) //Backstabbing. Does extra damage to simple mobs only.
+			target.apply_damage(damage, damage_type, target_zone, used_weapon = src) //Backstabbing. Does extra damage to simple mobs only.
 			to_chat(user, "<span class = 'danger'>You stab [target] in the back!</span>")
 
 	return TRUE //Returns a value in case you want to layer additional behavior on this.

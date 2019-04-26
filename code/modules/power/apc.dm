@@ -1243,13 +1243,13 @@ obj/machinery/power/apc/proc/autoset(var/cur_state, var/on)
 		src.visible_message("<span class='notice'>[src]'s screen flickers with warnings briefly!</span>")
 		power_alarm.triggerAlarm(loc, src)
 		spawn(rand(2,5))
-			src.visible_message("<span class='notice'>[src]'s screen suddenly explodes in rain of sparks and small debris!</span>")
-			..(state)
+			visible_message("<span class='notice'>[src]'s screen suddenly explodes in rain of sparks and small debris!</span>")
+			..()
 			operating = 0
 			update_icon()
 			update()
 	else
-		..(state)
+		..()
 
 /obj/machinery/power/apc/proc/reboot()
 	//reset various counters so that process() will start fresh

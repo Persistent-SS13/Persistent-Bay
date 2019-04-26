@@ -216,7 +216,7 @@
 	badness = VIRUS_COMMON
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
 		var/obj/item/organ/internal/brain/B = mob.internal_organs_by_name[BP_BRAIN]
-		if (B && B.damage < B.min_broken_damage)
+		if (B && B.get_damages() < B.min_broken_damage)
 			B.take_internal_damage(5)
 
 /datum/disease2/effect/deaf
@@ -237,7 +237,7 @@
 	stage = 3
 	badness = VIRUS_COMMON
 	activate(var/mob/living/carbon/human/mob,var/multiplier)
-		mob.apply_damage(2, CLONE)
+		mob.apply_damage(2, DAM_CLONE)
 
 /datum/disease2/effect/chem_synthesis
 	name = "Chemical Synthesis"

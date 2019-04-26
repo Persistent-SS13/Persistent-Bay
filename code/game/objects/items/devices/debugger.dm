@@ -5,7 +5,7 @@
  */
 
 /obj/item/device/debugger
-	name = "software hack detector"
+	name = "debugger"
 	desc = "Used to debug electronic equipment."
 	icon = 'icons/obj/hacktool.dmi'
 	icon_state = "hacktool-g"

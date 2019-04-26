@@ -29,6 +29,7 @@ var/list/floor_light_cache = list()
 	update_brightness()
 
 /obj/machinery/floor_light/Destroy()
+	log_debug("Deleting floor_light from [loc]")
 	turn_off()
 	. = ..()
 
@@ -76,10 +77,10 @@ var/list/floor_light_cache = list()
 	update_brightness()
 
 /obj/machinery/floor_light/proc/toggle()
-	//if(ison())
-	//	turn_off()
-	//else
-	//	turn_on()
+	if(ison())
+		turn_off()
+	else
+		turn_on()
 
 /obj/machinery/floor_light/attack_hand(var/mob/user)
 	if(..())
@@ -99,37 +100,38 @@ var/list/floor_light_cache = list()
 	return TRUE
 
 /obj/machinery/floor_light/proc/update_brightness()
-	//if(ison())
-	//	if(light_range != default_light_range || light_power != default_light_power || light_color != default_light_colour)
-	//		set_light(default_light_range, default_light_power, default_light_colour)
-	//else
-	//	turn_off()
-	//	if(light_range || light_power)
-	//		set_light(0)
+	if(ison())
+		if(light_outer_range != default_light_outer_range || light_max_bright != default_light_max_bright || light_color != default_light_colour)
+			set_light(default_light_max_bright, default_light_inner_range, default_light_outer_range, l_color = default_light_colour)
+	else
+		turn_off()
+		if(light_outer_range || light_max_bright)
+			set_light(0)
 
 	change_power_consumption((light_outer_range + light_max_bright) * 20, POWER_USE_ACTIVE)
 	update_icon()
 
 /obj/machinery/floor_light/on_update_icon()
 	overlays.Cut()
-	//if(ison() && ispowered())
-	//	if(health >= (max_health * break_threshold))
-	//		var/cache_key = "floorlight-[default_light_colour]"
-	//		if(!floor_light_cache[cache_key])
-	//			var/image/I = image("on")
-	//			I.color = default_light_colour
-	//			I.plane = plane
-	//			I.layer = layer+0.001
-	//			floor_light_cache[cache_key] = I
-	//		overlays |= floor_light_cache[cache_key]
-	//	else
-	//		if(flicker == 0) //Needs init.
-	//			flicker = rand(1,4)
-	//		var/cache_key = "floorlight-broken[flicker]-[default_light_colour]"
-	//		if(!floor_light_cache[cache_key])
-	//			var/image/I = image("flicker[flicker]")
-	//			I.color = default_light_colour
-	//			I.plane = plane
-	//			I.layer = layer+0.001
-	//			floor_light_cache[cache_key] = I
-	//		overlays |= floor_light_cache[cache_key]
+	var/damaged = isdamaged()
+	if(ison() && ispowered())
+		if(!isbroken())
+			var/cache_key = "floorlight-[default_light_colour]"
+			if(!floor_light_cache[cache_key])
+				var/image/I = image("on")
+				I.color = default_light_colour
+				I.plane = plane
+				I.layer = layer+0.001
+				floor_light_cache[cache_key] = I
+			overlays |= floor_light_cache[cache_key]
+		else
+			if(damaged == 0) //Needs init.
+				damaged = rand(1,4)
+			var/cache_key = "floorlight-broken[damaged]-[default_light_colour]"
+			if(!floor_light_cache[cache_key])
+				var/image/I = image("flicker[damaged]")
+				I.color = default_light_colour
+				I.plane = plane
+				I.layer = layer+0.001
+				floor_light_cache[cache_key] = I
+			overlays |= floor_light_cache[cache_key]

@@ -1,27 +1,32 @@
 /obj/item/weapon/gun/projectile/automatic/z8
-	name = "bullpup assault rifle"
-	desc = "The Z8 Bulldog is an older model bullpup carbine, made by the now defunct Zendai Foundries. Uses armor piercing 7.62mm rounds. Makes you feel like a space marine when you hold it."
+	name = "Z8 carbine"
+	desc = "The Hephaestus Industries Z8 Bulldog is an older model bullpup carbine. Makes you feel like a space marine when you hold it. Uses standard 7.62mm magazines."
+	icon = 'icons/obj/guns/bullpup_rifle.dmi'
 	icon_state = "carbine"
 	item_state = "z8carbine"
 	w_class = ITEM_SIZE_HUGE
 	force = 10
-	caliber = "a762"
+	caliber = CALIBER_762MM
 	origin_tech = list(TECH_COMBAT = 8, TECH_MATERIAL = 3)
-	ammo_type = /obj/item/ammo_casing/a762
+	ammo_type = /obj/item/ammo_casing/c762
 	slot_flags = SLOT_BACK
 	load_method = MAGAZINE
-	magazine_type = /obj/item/ammo_magazine/a762
-	allowed_magazines = /obj/item/ammo_magazine/a762
+	magazine_type = /obj/item/ammo_magazine/box/c762
+	allowed_magazines = /obj/item/ammo_magazine/box/c762
 	auto_eject = 1
 	auto_eject_sound = 'sound/weapons/smg_empty_alarm.ogg'
-	one_hand_penalty = 5
+	accuracy = 2
+	accuracy_power = 7
+	one_hand_penalty = 8
+	bulk = GUN_BULK_RIFLE
 	burst_delay = 4
 	wielded_item_state = "z8carbine-wielded"
-	//would have one_hand_penalty=4,5 but the added weight of a grenade launcher makes one-handing even harder
+	mag_insert_sound = 'sound/weapons/guns/interaction/batrifle_magin.ogg'
+	mag_remove_sound = 'sound/weapons/guns/interaction/batrifle_magout.ogg'
 	firemodes = list(
-		list(mode_name="semiauto",       burst=1,    fire_delay=0,    move_delay=null, use_launcher=null, one_hand_penalty=5, burst_accuracy=null, dispersion=null),
-		list(mode_name="3-round bursts", burst=3,    fire_delay=null, move_delay=6,    use_launcher=null, one_hand_penalty=6, burst_accuracy=list(0,-1,-1), dispersion=list(0.0, 0.6, 1.0), jam_chance=10),
-		list(mode_name="fire grenades",  burst=null, fire_delay=null, move_delay=null, use_launcher=1,    one_hand_penalty=5, burst_accuracy=null, dispersion=null)
+		list(mode_name="semi auto",       burst=1,    fire_delay=null,    move_delay=null, use_launcher=null, one_hand_penalty=8, burst_accuracy=null, dispersion=null),
+		list(mode_name="3-round bursts", burst=3,    fire_delay=null, move_delay=6,    use_launcher=null, one_hand_penalty=9, burst_accuracy=list(0,-1,-1), dispersion=list(0.0, 0.6, 1.0)),
+		list(mode_name="fire grenades",  burst=null, fire_delay=null, move_delay=null, use_launcher=1,    one_hand_penalty=10, burst_accuracy=null, dispersion=null)
 		)
 
 	var/use_launcher = 0
@@ -51,7 +56,7 @@
 	else
 		..()
 
-/obj/item/weapon/gun/projectile/automatic/z8/update_icon()
+/obj/item/weapon/gun/projectile/automatic/z8/on_update_icon()
 	..()
 	if(ammo_magazine)
 		if(ammo_magazine.stored_ammo.len)
@@ -60,7 +65,6 @@
 			icon_state = "carbine-empty"
 	else
 		icon_state = "carbine"
-	return
 
 /obj/item/weapon/gun/projectile/automatic/z8/examine(mob/user)
 	. = ..()

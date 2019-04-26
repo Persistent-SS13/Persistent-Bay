@@ -27,7 +27,7 @@
 	var/last_temperature
 	var/target_temperature
 	var/obj/item/container
-	var/circuit_type = /obj/item/weapon/circuitboard/reagent_heater
+	circuit_type = /obj/item/weapon/circuitboard/reagent_heater
 
 /obj/machinery/reagent_temperature/cooler
 	name = "chemical cooler"
@@ -39,16 +39,14 @@
 	circuit_type =     /obj/item/weapon/circuitboard/reagent_heater/cooler
 
 /obj/machinery/reagent_temperature/Initialize()
-
 	target_temperature = min_temperature
-
-	component_parts = list(
-		new circuit_type(src),
-		new /obj/item/weapon/stock_parts/micro_laser(src),
-		new /obj/item/weapon/stock_parts/capacitor(src)
-	)
 	. = ..()
 	RefreshParts()
+
+/obj/machinery/reagent_temperature/SetupParts()
+	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/micro_laser(src))
+	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/capacitor(src))
+	. = ..()
 
 /obj/machinery/reagent_temperature/Destroy()
 	if(container)

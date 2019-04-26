@@ -16,7 +16,7 @@
 	//There have to be at least two posts, so these are effectively doubled
 	var/power_draw = 30 KILOWATTS //30 kW. How much power is drawn from powernet. Increase this to allow the generator to sustain longer shields, at the cost of more power draw.
 	var/max_stored_power = 50 KILOWATTS //50 kW
-	use_power = 0	//Draws directly from power net. Does not use APC power.
+	use_power = POWER_USE_OFF	//Draws directly from power net. Does not use APC power.
 	active_power_usage = 1200
 
 /obj/machinery/shieldwallgen/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
@@ -34,7 +34,7 @@
 		ui.open()
 		ui.set_auto_update(1)
 
-/obj/machinery/shieldwallgen/update_icon()
+/obj/machinery/shieldwallgen/on_update_icon()
 //	if(stat & BROKEN) -TODO: Broken icon
 	if(!active)
 		icon_state = "Shield_Gen"
@@ -190,8 +190,7 @@
 		var/field_dir = get_dir(T2,get_step(T2, NSEW))
 		T = get_step(T2, NSEW)
 		T2 = T
-		var/obj/machinery/shieldwall/CF = new/obj/machinery/shieldwall/(src, G) //(ref to this gen, ref to connected gen)
-		CF.loc = T
+		var/obj/machinery/shieldwall/CF = new(T, G) //(ref to this gen, ref to connected gen)
 		CF.set_dir(field_dir)
 
 
@@ -213,7 +212,7 @@
 			src.anchored = 0
 			return
 
-	if(istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))
+	if(istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/modular_computer))
 		if (src.allowed(user))
 			src.locked = !src.locked
 			to_chat(user, "Controls are now [src.locked ? "locked." : "unlocked."]")
@@ -254,23 +253,23 @@
 
 //////////////Containment Field START
 /obj/machinery/shieldwall
-		name = "Shield"
-		desc = "An energy shield."
-		icon = 'icons/effects/effects.dmi'
-		icon_state = "shieldwall"
-		anchored = 1
-		density = 1
-		unacidable = 1
-		light_range = 3
-		var/needs_power = 0
-		var/active = 1
-		var/delay = 5
-		var/last_active
-		var/mob/U
-		var/obj/machinery/shieldwallgen/gen_primary
-		var/obj/machinery/shieldwallgen/gen_secondary
-		var/power_usage = 800	//how much power it takes to sustain the shield
-		var/generate_power_usage = 5000	//how much power it takes to start up the shield
+	name = "Shield"
+	desc = "An energy shield."
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "shieldwall"
+	anchored = 1
+	density = 1
+	unacidable = 1
+	light_outer_range = 3
+	var/needs_power = 0
+	var/active = 1
+	var/delay = 5
+	var/last_active
+	var/mob/U
+	var/obj/machinery/shieldwallgen/gen_primary
+	var/obj/machinery/shieldwallgen/gen_secondary
+	var/power_usage = 800	//how much power it takes to sustain the shield
+	var/generate_power_usage = 5000	//how much power it takes to start up the shield
 
 /obj/machinery/shieldwall/New(var/obj/machinery/shieldwallgen/A, var/obj/machinery/shieldwallgen/B)
 	..()

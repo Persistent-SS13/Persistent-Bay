@@ -590,7 +590,7 @@ var/global/list/robot_modules = list(
 
 /obj/item/weapon/robot_module/miner
 	name = "miner robot module"
-	subsystems = list(/datum/nano_module/program/supply)
+	subsystems = list(/datum/nano_module/program/materialmarket)
 	channels = list("Supply" = 1, "Science" = 1)
 	networks = list(NETWORK_MINE)
 	sprites = list(

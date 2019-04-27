@@ -1,4 +1,3 @@
-	
 {{if data.stockholder}}	
 	<h2>{{:data.business_name}} Stockholders Panel</h2><br>
 	{{:helper.link("Current Proposals", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
@@ -101,7 +100,7 @@
 				Current Holdings: {{:data.holdings}}
 			</div>
 			<div class='itemContent'>
-				{{:helper.link("Print stock sell contract", '', {'action' : 'stock_contract'}, null)}}
+				{{:helper.link("Print stock sell contract", '', {'action' : 'stock_contract'})}}
 			</div>	
 		</div>
 		This will print a contract that will automatically pay you for the stocks when a person digitally signs it.
@@ -109,7 +108,7 @@
 
 	{{if data.menu == 4}}
 		<h4>{{:data.proposal_name}}</h4>
-		{{:helper.link("Back", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}<br>
+		{{:helper.link('Back', '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}<br><br>
 		<b>Current Supporters</b>
 		<div class="statusDisplay" style="overflow: auto;">
 			{{for data.support}}
@@ -119,15 +118,9 @@
 		<div class='itemLabel'>
 			{{:data.supporting}} / {{:data.required}} Support
 		</div>
-		{{if data.proposal_owner}}
-			<div class='itemContent'>
-				{{:helper.link("Retract Proposal", '', {'action' : 'retract'}, null)}}
-			</div>
-		{{else]}
-			<div class='itemContent'>
-				{{:helper.link("Support", '', {'action' : 'support'}, data.supported ? 'selected' : null)}}{{:helper.link("Unsupport", '', {'action' : 'unsupport'}, data.supported ? null : 'selected')}}
-			</div>
-		{{/if}}
+		<div class='itemContent'>
+			{{:helper.link("Support", '', {'action' : 'support'}, data.supported ? 'selected' : null)}}{{:helper.link("Unsupport", '', {'action' : 'unsupport'}, data.supported ? null : 'selected')}}
+		</div>
 	{{/if}}
 	
 {{else}}

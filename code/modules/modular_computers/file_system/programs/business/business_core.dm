@@ -411,17 +411,6 @@
 			if(!selected_assignment) return 1
 			menu = BCORE_ASSIGNMENT
 			prior_menu = BCORE_ASSIGNMENTMENU
-		if("select_judge")
-			selected_assignment = connected_faction.judge_assignment
-			if(!selected_assignment) return 1
-			menu = BCORE_SPECIALASSIGNMENT
-			prior_menu = BCORE_ASSIGNMENTMENU
-
-		if("select_councillor")
-			selected_assignment = connected_faction.councillor_assignment
-			if(!selected_assignment) return 1
-			menu = BCORE_SPECIALASSIGNMENT
-			prior_menu = BCORE_ASSIGNMENTMENU
 
 		if("select_assignment_two")
 			selected_assignment = locate(href_list["selected_ref"])

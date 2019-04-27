@@ -27,7 +27,7 @@
 				var/datum/extension/ext = extension
 				ext.set_holder(src) //Ensure the holder is set properly
 			else
-				log_debug("/datum/after_load(): found a list extension.. Not setting holder.")
+				log_debug(" /datum/after_load(): found a list extension.. Not setting holder.")
 
 /datum/Destroy()
 	if(extensions)

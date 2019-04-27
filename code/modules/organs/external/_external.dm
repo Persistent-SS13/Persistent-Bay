@@ -368,7 +368,7 @@ var/global/list/ORGAN_ENERGY_DAMAGES = list(DAM_BURN, DAM_LASER)
 		damage_amount = brute_dam
 	else if(IsDamageTypeBurn(damage_type))
 		damage_amount = burn_dam
-	else 
+	else
 		return 0
 
 	if(!damage_amount)

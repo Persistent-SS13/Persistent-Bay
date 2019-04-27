@@ -56,12 +56,12 @@
 	min_cold_protection_temperature = SPACE_HELMET_MIN_COLD_PROTECTION_TEMPERATURE
 	siemens_coefficient = 0.8 //That's a pretty cool opening in the hood. Also: Cloth making physical contact to the skull.
 	armor = list(DAM_BLUNT = 30, DAM_PIERCE = 10, DAM_CUT = 20, DAM_BULLET = 10, DAM_LASER = 5, DAM_ENERGY = 5, DAM_BURN = 5,
-		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0) 
+		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0)
 
 /obj/item/clothing/head/culthood/costume
 	siemens_coefficient = 1.0
 	armor  = list(DAM_BLUNT = 0, DAM_PIERCE = 0, DAM_CUT = 0, DAM_BULLET = 0, DAM_LASER = 0, DAM_ENERGY = 0, DAM_BURN = 0,
-		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0) 
+		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0)
 
 /obj/item/clothing/head/culthood/magus
 	name = "magus helm"
@@ -70,12 +70,12 @@
 	flags_inv = HIDEFACE | BLOCKHAIR
 	body_parts_covered = HEAD|FACE|EYES
 	armor  = list(DAM_BLUNT = 50, DAM_PIERCE = 40, DAM_CUT = 50, DAM_BULLET = 40, DAM_LASER = 30, DAM_ENERGY = 20, DAM_BURN = 30,
-		DAM_BOMB = 15, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0) 
+		DAM_BOMB = 15, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0)
 
 /obj/item/clothing/head/culthood/magus/costume
 	siemens_coefficient = 1.0
 	armor  = list(DAM_BLUNT = 0, DAM_PIERCE = 0, DAM_CUT = 0, DAM_BULLET = 0, DAM_LASER = 0, DAM_ENERGY = 0, DAM_BURN = 0,
-		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0) 
+		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0)
 
 /obj/item/clothing/head/culthood/alt
 	icon_state = "cult_hoodalt"
@@ -83,7 +83,7 @@
 /obj/item/clothing/head/culthood/alt/costume
 	siemens_coefficient = 1.0
 	armor  = list(DAM_BLUNT = 0, DAM_PIERCE = 0, DAM_CUT = 0, DAM_BULLET = 0, DAM_LASER = 0, DAM_ENERGY = 0, DAM_BURN = 0,
-		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0) 
+		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0)
 
 /obj/item/clothing/suit/cultrobes
 	name = "cult robes"
@@ -94,12 +94,12 @@
 	flags_inv = HIDEJUMPSUIT
 	siemens_coefficient = 0.6
 	armor  = list(DAM_BLUNT = 35, DAM_PIERCE = 25, DAM_CUT = 25, DAM_BULLET = 30, DAM_LASER = 25, DAM_ENERGY = 20, DAM_BURN = 25,
-		DAM_BOMB = 25, DAM_EMP = 0, DAM_BIO = 10, DAM_RADS = 0, DAM_STUN = 0) 
+		DAM_BOMB = 25, DAM_EMP = 0, DAM_BIO = 10, DAM_RADS = 0, DAM_STUN = 0)
 
 /obj/item/clothing/suit/cultrobes/costume
 	siemens_coefficient = 1.0
 	armor  = list(DAM_BLUNT = 0, DAM_PIERCE = 0, DAM_CUT = 0, DAM_BULLET = 0, DAM_LASER = 0, DAM_ENERGY = 0, DAM_BURN = 0,
-		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0) 
+		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0)
 
 /obj/item/clothing/suit/cultrobes/alt
 	icon_state = "cultrobesalt"
@@ -107,7 +107,7 @@
 /obj/item/clothing/suit/cultrobes/alt/costume
 	siemens_coefficient = 1.0
 	armor  = list(DAM_BLUNT = 0, DAM_PIERCE = 0, DAM_CUT = 0, DAM_BULLET = 0, DAM_LASER = 0, DAM_ENERGY = 0, DAM_BURN = 0,
-		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0) 
+		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0)
 
 /obj/item/clothing/suit/cultrobes/magusred
 	name = "magus robes"
@@ -116,11 +116,11 @@
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT
 	armor  = list(DAM_BLUNT = 75, DAM_PIERCE = 65, DAM_CUT = 75, DAM_BULLET = 50, DAM_LASER = 55, DAM_ENERGY = 40, DAM_BURN = 55,
-		DAM_BOMB = 50, DAM_EMP = 0, DAM_BIO = 10, DAM_RADS = 0, DAM_STUN = 0) 
+		DAM_BOMB = 50, DAM_EMP = 0, DAM_BIO = 10, DAM_RADS = 0, DAM_STUN = 0)
 
 /obj/item/clothing/suit/cultrobes/magusred/costume
 	armor  = list(DAM_BLUNT = 0, DAM_PIERCE = 0, DAM_CUT = 0, DAM_BULLET = 0, DAM_LASER = 0, DAM_ENERGY = 0, DAM_BURN = 0,
-		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0) 
+		DAM_BOMB = 0, DAM_EMP = 0, DAM_BIO = 0, DAM_RADS = 0, DAM_STUN = 0)
 
 /obj/item/clothing/suit/cultrobes/magusred/New()
 	..()
@@ -132,7 +132,7 @@
 	icon_state = "cult_helmet"
 	siemens_coefficient = 0.3 //Bone is not very conducive to electricity.
 	armor  = list(DAM_BLUNT = 60, DAM_PIERCE = 50, DAM_CUT = 60, DAM_BULLET = 60, DAM_LASER = 60, DAM_ENERGY = 15, DAM_BURN = 60,
-		DAM_BOMB = 30, DAM_EMP = 0, DAM_BIO = 100, DAM_RADS = 30, DAM_STUN = 0) 
+		DAM_BOMB = 30, DAM_EMP = 0, DAM_BIO = 100, DAM_RADS = 30, DAM_STUN = 0)
 
 /obj/item/clothing/suit/space/cult
 	name = "cult armour"
@@ -142,7 +142,7 @@
 	siemens_coefficient = 0.2
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS|HANDS
 	armor  = list(DAM_BLUNT = 60, DAM_PIERCE = 50, DAM_CUT = 60, DAM_BULLET = 50, DAM_LASER = 60, DAM_ENERGY = 15, DAM_BURN = 60,
-		DAM_BOMB = 30, DAM_EMP = 0, DAM_BIO = 100, DAM_RADS = 30, DAM_STUN = 0) 
+		DAM_BOMB = 30, DAM_EMP = 0, DAM_BIO = 100, DAM_RADS = 30, DAM_STUN = 0)
 
 /obj/item/clothing/suit/space/cult/New()
 	..()

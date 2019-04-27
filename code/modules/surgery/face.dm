@@ -29,7 +29,7 @@
 	user.visible_message("<span class='notice'>[user] repairs \the [target]'s face with \the [tool].</span>",	\
 	"<span class='notice'>You repair \the [target]'s face with \the [tool].</span>")
 	var/obj/item/organ/external/head/h = target.get_organ(target_zone)
-	if(h) 
+	if(h)
 		h.status &= ~ORGAN_DISFIGURED
 
 /decl/surgery_step/fix_face/fail_step(mob/living/user, mob/living/carbon/human/target, target_zone, obj/item/tool)

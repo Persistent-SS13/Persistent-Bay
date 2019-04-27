@@ -260,7 +260,7 @@
 				unlock()
 			else
 				lock()
-			to_chat(user, "<span class='notice> You [locked ? "lock" : "unlock"]  \the [src].")
+			to_chat(user, SPAN_NOTICE("You [locked ? "lock" : "unlock"]  \the [src]."))
 	..()
 /obj/machinery/door/airlock/attack_generic(var/mob/user, var/damage)
 	if(inoperable())

@@ -19,7 +19,6 @@ var/list/organ_cache = list()
 	// Status tracking.
 	var/status = 0                    // Various status flags (such as robotic)
 	var/vital                         // Lose a vital limb, die immediately.
-	var/robotic = 0
 
 	// Reference data.
 	var/mob/living/carbon/human/owner // Current mob owning the organ.
@@ -92,7 +91,6 @@ var/list/organ_cache = list()
 
 	queue_icon_update()
 	ADD_SAVED_VAR(min_broken_damage)
-	ADD_SAVED_VAR(robotic)
 	ADD_SAVED_VAR(status)
 	ADD_SAVED_VAR(owner)
 	ADD_SAVED_VAR(dna)

@@ -50,7 +50,7 @@
 	ADD_SAVED_VAR(blessed)
 	ADD_SAVED_VAR(flooded)
 	ADD_SAVED_VAR(decals)
-	
+
 	ADD_SKIP_EMPTY(decals)
 
 /turf/on_update_icon()

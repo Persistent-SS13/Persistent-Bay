@@ -2200,4 +2200,3 @@
 	glass_name = "Calvin Craig"
 	glass_desc = "A sweet something-or-other for that special someone."
 	glass_special = list(DRINK_FIZZ)
-

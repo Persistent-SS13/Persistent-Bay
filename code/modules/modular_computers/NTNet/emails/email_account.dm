@@ -40,10 +40,7 @@
 
 /datum/computer_file/data/email_account/proc/send_mail(var/recipient_address, var/datum/computer_file/data/email_message/message, var/relayed = 0)
 	var/datum/computer_file/data/email_account/recipient
-	for(var/datum/computer_file/data/email_account/account in ntnet_global.email_accounts)
-		if(account.login == recipient_address)
-			recipient = account
-			break
+	recipient = Get_Email_Account(recipient_address)
 
 	if(!istype(recipient))
 		return 0

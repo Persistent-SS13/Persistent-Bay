@@ -223,7 +223,7 @@ var/const/NO_EMAG_ACT = -50
 		var/datum/assignment/assignment = faction.get_assignment(record.assignment_uid, record.get_name())
 		if(!assignment)
 			return 0
-		var/datum/accesses/copy = assignment.accesses["[record.rank]"]
+		var/datum/accesses/copy = assignment.accesses[record.rank]
 		if(!copy)
 			return 0
 		var/available = copy.expense_limit - record.expenses
@@ -421,10 +421,7 @@ var/const/NO_EMAG_ACT = -50
 			rank = 0
 			name = text("[registered_name]'s ID Card [get_faction_tag(selected_faction)]-([assignment])")
 			return
-		if(record.rank > 1)
-			assignment = job.ranks[record.rank-1]
-		else
-			assignment = job.name
+		assignment = job.get_title(record.rank)
 	rank = record.rank	//actual job
 	name = text("[registered_name]'s ID Card [get_faction_tag(selected_faction)]-([assignment])")
 
@@ -556,7 +553,7 @@ var/const/NO_EMAG_ACT = -50
 			var/datum/assignment/assignment = faction.get_assignment(record.try_duty(), registered_name)
 			if(assignment)
 				for(var/i=1; i<=record.rank; i++)
-					var/datum/accesses/copy = assignment.accesses["[i]"]
+					var/datum/accesses/copy = assignment.accesses[i]
 					if(copy)
 						for(var/x in copy.accesses)
 							final_access |= text2num(x)
@@ -575,7 +572,7 @@ var/const/NO_EMAG_ACT = -50
 					
 					if(assignment2)
 						for(var/i=1; i<=record.rank; i++)
-							var/datum/accesses/copy = assignment2.accesses["[i]"]
+							var/datum/accesses/copy = assignment2.accesses[i]
 							if(copy)
 								for(var/x in copy.accesses)
 									final_access |= text2num(x)
@@ -669,7 +666,7 @@ var/const/NO_EMAG_ACT = -50
 			var/datum/assignment/assignment = faction.get_assignment(record.try_duty(), record.get_name())
 			if(assignment)
 				for(var/i=1; i<=record.rank; i++)
-					var/datum/accesses/copy = assignment.accesses["[i]"]
+					var/datum/accesses/copy = assignment.accesses[i]
 					if(copy)
 						for(var/x in copy.accesses)
 							final_access |= text2num(x)

@@ -55,7 +55,6 @@
 	if(welding)
 		STOP_PROCESSING(SSobj, src)
 	QDEL_NULL(tank)
-
 	return ..()
 
 /obj/item/weapon/tool/weldingtool/examine(mob/user)
@@ -128,7 +127,7 @@
 		if(W.w_class >= w_class)
 			to_chat(user, SPAN_WARNING("\The [W] is too large to fit in \the [src]."))
 			return 0
-		
+
 		if(user.unEquip(W))
 		//user.drop_from_inventory(W, src)
 			tank = W
@@ -251,7 +250,7 @@
 
 /obj/item/weapon/tool/weldingtool/proc/update_tank_underlay()
 	underlays.Cut()
-	if(tank)
+	if(istype(tank))
 		var/image/tank_image = image(tank.icon, icon_state = tank.icon_state)
 		tank_image.pixel_z = 0
 		underlays += tank_image

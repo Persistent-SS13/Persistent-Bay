@@ -136,7 +136,7 @@
 		rem_health(amount * 0.8)
 	else if(owner && !silent && can_feel_pain() && (get_damages() > min_bruised_damage/2 || prob(10)) )
 		rem_health(amount)
-		
+
 		//only show this if the organ is not robotic
 		if(owner && can_feel_pain() && parent_organ && (amount > 5 || prob(10)))
 			var/obj/item/organ/external/parent = owner.get_organ(parent_organ)

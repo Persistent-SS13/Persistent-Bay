@@ -73,4 +73,3 @@
 	finish(mob/living/carbon/human/H)
 		if(!H.reagents.has_reagent(/datum/reagent/dylovene))
 			H.confused += 100
-

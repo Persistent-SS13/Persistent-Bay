@@ -1623,7 +1623,7 @@ datum/admins/var/obj/item/weapon/paper/admin/faxreply // var to hold fax replies
 	set category = "Debug"
 	set desc = "Spawn the Nexus Gov + a beacon at (100,100,1)"
 	set name = "Generate Faction Beacon"
-	if(!GLOB.all_world_factions) GLOB.all_world_factions = list()
+	LAZYINITLIST(GLOB.all_world_factions)
 	spawn_nexus_gov()
 	var/obj/structure/frontier_beacon/beacon
 	beacon = new /obj/structure/frontier_beacon(locate(100,100,1)) //

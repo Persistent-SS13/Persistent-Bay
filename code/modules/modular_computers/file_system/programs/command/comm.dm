@@ -17,7 +17,7 @@
 	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP
 	network_destination = "long-range communication array"
 	var/datum/comm_message_listener/message_core = new
-
+	democratic = 1
 /datum/computer_file/program/comm/clone()
 	var/datum/computer_file/program/comm/temp = ..()
 	temp.message_core.messages = null

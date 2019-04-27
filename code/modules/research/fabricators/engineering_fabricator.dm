@@ -232,24 +232,9 @@
 	build_path = /obj/item/clamp
 	materials = list(MATERIAL_STEEL = 2 SHEETS)
 
-
-/datum/design/item/engifab/engitools/simple/welder_mini
-	name = "Miniture welding tool"
-	id = "miniature_welding_tool"
-	build_path = /obj/item/weapon/tool/weldingtool/mini/empty
-	materials = list(MATERIAL_STEEL = 1 SHEETS, MATERIAL_GLASS = 0.5 SHEET)
-
-/datum/design/item/engifab/engitools/weldertool
-	name = "Welding tool"
-	id = "welding_tool"
-	build_path = /obj/item/weapon/tool/weldingtool/empty
-	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 1 SHEETS)
-
 /datum/design/item/engifab/engitools/weldingpack
 	build_path = /obj/item/weapon/weldpack
 	materials = list(MATERIAL_STEEL = 5 SHEETS, MATERIAL_GLASS = 3 SHEETS)
-
-
 
 /datum/design/item/engifab/engitools/welder_industrial
 	name = "Industrial welding tool"

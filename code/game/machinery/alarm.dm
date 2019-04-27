@@ -137,7 +137,7 @@
 	. = ..()
 	alarm_area = get_area(src)
 	if(!alarm_area)
-		log_debug("/obj/machinery/alarm/after_load() : Alarm is in null area after load!!")
+		log_debug(" /obj/machinery/alarm/after_load() : Alarm is in null area after load!!")
 		return
 	area_uid = alarm_area.uid
 // 	if (name == "alarm")
@@ -155,7 +155,7 @@
 	. = ..()
 	alarm_area = get_area(src)
 	if(!alarm_area)
-		log_debug("/obj/machinery/alarm/Initialize() : Alarm is in null area on initialize!!")
+		log_debug(" /obj/machinery/alarm/Initialize() : Alarm is in null area on initialize!!")
 		return
 	area_uid = alarm_area.uid
 	if (name == initial(name))

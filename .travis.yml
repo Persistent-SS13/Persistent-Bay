@@ -13,7 +13,6 @@ env:
     - TEST=CODE
     - TEST=WEB
     - TEST=MAP MAP_PATH=nexus
-    - TEST=MAP MAP_PATH=vignette
 
 cache:
   directories:
@@ -32,6 +31,7 @@ addons:
       - oracle-java8-set-default
       - python
       - python-pip
+      - uchardet
 
 script:
   - test/run-test.sh

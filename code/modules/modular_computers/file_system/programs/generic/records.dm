@@ -50,9 +50,8 @@
 				if(!job)
 					assignment = "Unassigned"
 					rank = 0
-				if(active_record.rank > 1  && (active_record.rank-1) <= job.ranks.len)
-					assignment = job.ranks[active_record.rank-1]
-					rank = active_record.rank
+				else
+					assignment = job.get_title(active_record.rank)
 		fields.Add(list(list(
 			"key" = "assignment",
 			"name" = "Assignment",

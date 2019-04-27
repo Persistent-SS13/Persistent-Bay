@@ -30,7 +30,7 @@
 
 /obj/item/device/flashlight/Initialize()
 	. = ..()
-	
+
 	set_flashlight()
 	queue_icon_update()
 
@@ -54,11 +54,11 @@
 	if(!isturf(user.loc))
 		to_chat(user, "You cannot turn the [name] on while in this [user.loc].")//To prevent some lighting anomalities.
 		return 0
-	
+
 	if (flashlight_flags & FLASHLIGHT_SINGLE_USE && on)
 		to_chat(user, "The [name] is already lit.")
 		return 0
-	if(power_usage) 
+	if(power_usage)
 		if(!get_cell() || (get_cell() && !(get_cell().check_charge(power_usage * CELLRATE))))
 			to_chat(user, "<span class='warning'>\The [src] refuses to operate.</span> ")
 			return FALSE
@@ -172,7 +172,7 @@
 	if(H == user)	//can't look into your own eyes buster
 		return
 
-	if(!BP_IS_ROBOTIC(vision))
+	if(!BP_IS_ROBOTIC(vision))	// If it's not robotic
 
 		if(vision.owner.stat == DEAD || H.blinded)	//mob is dead or fully blind
 			to_chat(user, "<span class='warning'>\The [H]'s pupils do not react to the light!</span>")

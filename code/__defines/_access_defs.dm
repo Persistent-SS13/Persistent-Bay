@@ -15,15 +15,19 @@
 #define ACCESS_TYPE_ALL (ACCESS_TYPE_NONE|ACCESS_TYPE_CENTCOM|ACCESS_TYPE_STATION|ACCESS_TYPE_SYNDICATE)
 
 #define core_access_leader 101
-#define core_access_reassignment 102
-#define core_access_engineering_programs 103
-#define core_access_medical_programs 104
-#define core_access_security_programs 105
-#define core_access_science_programs 106
-#define core_access_shuttle_programs 107
-#define core_access_machine_linking 108
-#define core_access_network_linking 109
-#define core_access_budget_view 110
+#define core_access_command_programs 102
+#define core_access_reassignment 103
+#define core_access_science_programs 104
+#define core_access_engineering_programs 105
+#define core_access_medical_programs 106
+#define core_access_security_programs 107
+#define core_access_shuttle_programs 108
+#define core_access_machine_linking 109
+#define core_access_network_linking 110
+#define core_access_budget_view 111
+#define core_access_contracts 112
+
+
 
 #define RESIDENT 1
 #define CITIZEN 2
@@ -36,7 +40,6 @@
 #define core_access_termination 107
 #define core_access_door_configuration 112
 #define core_access_order_approval 113
-#define core_access_command_programs 102
 #define core_access_expenses 104
 #define core_access_promotion 102
 

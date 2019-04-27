@@ -121,7 +121,7 @@ Class Procs:
 	var/emped_disabled_max_time = 5 MINUTES //Maximum time this machine can be disabled by EMP(Aka for severity 1)
 	var/frame_type = /obj/machinery/constructable_frame/machine_frame //The type of frame that will be left behind after deconstruction
 	var/obj/item/circuit_type = null //Convenience var for handling the obligatory circuit most machines need when spawning
-	
+
 	//Initial Radio stuff
 	var/id_tag				= null	//Mappervar: Sets the initial id_tag.
 	var/frequency 		 	= null	//Mappervar: Sets the initial radio listening frequency.
@@ -141,6 +141,7 @@ Class Procs:
 	ADD_SAVED_VAR(emagged)
 	ADD_SAVED_VAR(stat)
 	ADD_SAVED_VAR(faction)
+	ADD_SAVED_VAR(id_tag)
 
 	ADD_SKIP_EMPTY(extensions)
 	ADD_SKIP_EMPTY(component_parts)

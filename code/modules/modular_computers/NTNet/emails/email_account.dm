@@ -54,6 +54,8 @@
 
 /datum/computer_file/data/email_account/proc/receive_mail(var/datum/computer_file/data/email_message/received_message, var/relayed)
 	received_message.set_timestamp()
+	message_admins("CHECK 1")
+	discord_api.mail(src.login, received_message)
 	if(!ntnet_global.intrusion_detection_enabled)
 		inbox.Add(received_message)
 		return 1

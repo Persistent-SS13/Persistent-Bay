@@ -26,6 +26,7 @@
 #define core_access_network_linking 110
 #define core_access_budget_view 111
 #define core_access_contracts 112
+#define core_access_materials 113
 
 
 

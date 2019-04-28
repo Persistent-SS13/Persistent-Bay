@@ -31,7 +31,7 @@
 				var/minus = i+(10*(curr_page-1))
 				if(minus >= connected_faction.employment_log.len) break
 				var/entry = connected_faction.employment_log[connected_faction.employment_log.len-minus]
-				formatted_log[++formatted_log.len] = list("entry" = entry) 
+				formatted_log[++formatted_log.len] = list("entry" = entry)
 		data["entries"] = formatted_log
 		var/pages = connected_faction.employment_log.len/10
 		if(pages < 1)
@@ -52,9 +52,8 @@
 	if(..())
 		return 1
 	. = SSnano.update_uis(src)
-	var/mob/user = usr
 	var/datum/world_faction/business/connected_faction = program.computer.network_card.connected_network.holder
-	if(!istype(connected_faction) || !(connected_faction.is_governor(user.real_name)))
+	if(!istype(connected_faction))
 		return .
 	if(href_list["page_up"])
 		curr_page++

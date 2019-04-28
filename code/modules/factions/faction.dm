@@ -682,9 +682,19 @@ var/PriorityQueue/all_feeds
 
 	var/status = 1
 
-	var/list/employment_log
+	var/list/employment_log = list()
 
 	var/objective = ""
+
+	var/datum/material_inventory/inventory
+
+	var/obj/machinery/telepad_cargo/default_telepad
+	var/default_telepad_x
+	var/default_telepad_y
+	var/default_telepad_z
+
+
+
 
 /proc/spawn_nexus_gov()
 	var/datum/world_faction/democratic/nexus = new()
@@ -1153,8 +1163,107 @@ var/PriorityQueue/all_feeds
 
 
 
+/datum/world_faction/proc/give_inventory(var/typepath, var/amount)
+	var/obj/machinery/telepad_cargo/using_telepad
+	var/remaining_amount = amount
+	rebuild_cargo_telepads()
+	if(default_telepad)
+		using_telepad = default_telepad
+	else
+		using_telepad = pick(cargo_telepads)
+	if(!using_telepad) return 0
+	for(var/x in 1 to amount)
+		if(!remaining_amount) break
+		var/obj/item/stack/material/stack = new typepath(using_telepad.loc)
+		var/distributing = min(remaining_amount, stack.max_amount)
+		remaining_amount -= distributing
+		stack.amount = distributing
+	return 1
 
+/datum/world_faction/proc/take_inventory(var/typepath, var/amount)
+	var/remaining_amount = amount
+	rebuild_cargo_telepads()
+	var/list/found_stacks
+	for(var/obj/machinery/telepad_cargo/telepad in cargo_telepads)
+		if(!remaining_amount)
+			break
+		if(telepad.loc)
+			var/list/stacks = telepad.loc.search_contents_for(/obj/item/stack/material, list(/mob/))
+			if(!stacks.len) continue
+			for(var/ind in 1 to stacks.len)
+				if(!remaining_amount)
+					break
+				var/obj/item/stack/material/stack = stacks[ind]
+				if(istype(stack, typepath))
+					remaining_amount -= stack.amount
+					found_stacks |= stack
+	if(remaining_amount)
+		return 0
+	var/taken = 0
+	for(var/obj/item/stack/material/stack in found_stacks)
+		if(taken >= amount)
+			break
+		var/take = min(stack.amount, (amount-taken))
+		stack.amount -= take
+		if(!stack.amount)
+			qdel(stack)
+		taken += take
+	return 1
 
+/datum/world_faction/proc/rebuild_inventory()
+	inventory.steel = 0
+	inventory.glass = 0
+	inventory.gold = 0
+	inventory.silver = 0
+	inventory.copper = 0
+	inventory.wood = 0
+	inventory.cloth = 0
+	inventory.leather = 0
+	inventory.phoron = 0
+	inventory.diamond = 0
+	inventory.uranium = 0
+	rebuild_cargo_telepads()
+	for(var/obj/machinery/telepad_cargo/telepad in cargo_telepads)
+		if(telepad.loc)
+			var/list/stacks = telepad.loc.search_contents_for(/obj/item/stack/material, list(/mob/))
+			if(!stacks.len) continue
+			for(var/ind in 1 to stacks.len)
+				var/obj/item/stack/material/stack = stacks[ind]
+				if(istype(stack, /obj/item/stack/material/steel))
+					inventory.steel += stack.amount
+				if(istype(stack, /obj/item/stack/material/glass))
+					inventory.glass += stack.amount
+				if(istype(stack, /obj/item/stack/material/gold))
+					inventory.gold += stack.amount
+				if(istype(stack, /obj/item/stack/material/silver))
+					inventory.silver += stack.amount
+				if(istype(stack, /obj/item/stack/material/copper))
+					inventory.copper += stack.amount
+				if(istype(stack, /obj/item/stack/material/wood))
+					inventory.wood += stack.amount
+				if(istype(stack, /obj/item/stack/material/cloth))
+					inventory.cloth += stack.amount
+				if(istype(stack, /obj/item/stack/material/leather))
+					inventory.leather += stack.amount
+				if(istype(stack, /obj/item/stack/material/phoron))
+					inventory.phoron += stack.amount
+				if(istype(stack, /obj/item/stack/material/diamond))
+					inventory.diamond += stack.amount
+				if(istype(stack, /obj/item/stack/material/uranium))
+					inventory.uranium += stack.amount
+
+/datum/material_inventory
+	var/steel = 0
+	var/glass = 0
+	var/gold = 0
+	var/silver = 0
+	var/copper = 0
+	var/wood = 0
+	var/cloth = 0
+	var/leather = 0
+	var/phoron = 0
+	var/diamond = 0
+	var/uranium = 0
 
 
 /datum/world_faction/business
@@ -1165,10 +1274,11 @@ var/PriorityQueue/all_feeds
 
 	var/ceo_tax = 0
 	var/stockholder_tax = 0
-
-
-
 	var/public_stock = 0
+
+/datum/world_faction/business/New()
+	..()
+	CEO = new()
 
 
 /datum/world_faction/business/proc/pay_dividends(var/datum/money_account/account, var/amount)
@@ -1282,7 +1392,9 @@ var/PriorityQueue/all_feeds
 
 /datum/world_faction/business/proc/create_proposal(var/real_name, var/func, var/target)
 	var/datum/stock_proposal/proposal = new()
+	proposal.started_by = real_name
 	proposal.func = func
+	proposal.target = target
 	switch(func)
 		if(STOCKPROPOSAL_CEOFIRE)
 			proposal.required = 51
@@ -1355,8 +1467,19 @@ var/PriorityQueue/all_feeds
 /datum/stock_proposal/proc/pass_proposal()
 	connected_faction.pass_proposal(src)
 
-/datum/world_faction/after_load()
 
+/datum/world_faction/before_save()
+	if(default_telepad)
+		default_telepad_x = default_telepad.x
+		default_telepad_y = default_telepad.y
+		default_telepad_z = default_telepad.z
+
+/datum/world_faction/after_load()
+	if(default_telepad_x && default_telepad_y && default_telepad_z)
+		var/turf/T = locate(default_telepad_x, default_telepad_y, default_telepad_z)
+		for(var/obj/machinery/telepad_cargo/telepad in T.contents)
+			default_telepad = telepad
+			break
 	if(!debts)
 		debts = list()
 	..()
@@ -1407,7 +1530,7 @@ var/PriorityQueue/all_feeds
 	create_faction_account()
 	limits = new()
 	research = new()
-
+	inventory = new()
 
 /datum/world_faction/proc/rebuild_cargo_telepads()
 	cargo_telepads.Cut()
@@ -1415,9 +1538,11 @@ var/PriorityQueue/all_feeds
 		if(telepad.req_access_faction == uid)
 			telepad.connected_faction = src
 			cargo_telepads |= telepad
+
 /datum/world_faction/proc/rebuild_all_access()
 	all_access = list()
-	for(var/datum/access_category/access_category in access_categories)
+	var/datum/access_category/core/core = new()
+	for(var/datum/access_category/access_category in access_categories+core)
 		for(var/x in access_category.accesses)
 			all_access |= x
 
@@ -1624,7 +1749,7 @@ var/PriorityQueue/all_feeds
 	accesses["110"] = "Computer Linking"
 	accesses["111"] = "Budget View"
 	accesses["112"] = "Contract Signing/Control"
-
+	accesses["113"] = "Material Marketplace"
 
 /obj/faction_spawner
 	name = "Name to start faction with"

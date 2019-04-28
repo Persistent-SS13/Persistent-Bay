@@ -102,7 +102,7 @@
 	hard_drive.store_file(new/datum/computer_file/program/newsbrowser())
 	hard_drive.store_file(new/datum/computer_file/program/camera_monitor())
 	hard_drive.store_file(new/datum/computer_file/program/email_client())
-	hard_drive.store_file(new/datum/computer_file/program/supply())
+	hard_drive.store_file(new/datum/computer_file/program/materialmarket())
 	hard_drive.store_file(new/datum/computer_file/program/records())
 	hard_drive.store_file(new/datum/computer_file/program/wordprocessor())
 
@@ -118,7 +118,7 @@
 
 /obj/item/modular_computer/console/preset/supply/install_default_programs()
 	..()
-	hard_drive.store_file(new/datum/computer_file/program/supply())
+	hard_drive.store_file(new/datum/computer_file/program/materialmarket())
 	set_autorun("supply")
 
 // ERT

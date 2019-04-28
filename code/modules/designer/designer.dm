@@ -81,12 +81,13 @@ var/global/datum/designer_system/designer_system = new()
 
 	var/list/pixel_list
 	if (icon_custom)
-		icon_custom.Shift(EAST, -icon_offset_x)
-		icon_custom.Shift(SOUTH, -icon_offset_y)
-		pixel_list = new/list(icon_custom.Width(),icon_custom.Height())
-		for ( var/x = 1 to icon_custom.Width() )
-			for ( var/y = 1 to icon_custom.Height() )
-				var/list/color = ReadRGB(icon_custom.GetPixel(x,y))
+		var/icon/ico = new(icon_custom)
+		ico.Shift(EAST, -icon_offset_x)
+		ico.Shift(SOUTH, -icon_offset_y)
+		pixel_list = new/list(ico.Width(),ico.Height())
+		for ( var/x = 1 to ico.Width() )
+			for ( var/y = 1 to ico.Height() )
+				var/list/color = ReadRGB(ico.GetPixel(x,y))
 				if (!color || !color.len ||color.len < 3)
 					continue
 				pixel_list[x][y] = color
@@ -104,13 +105,12 @@ var/global/datum/designer_system/designer_system = new()
 			of what should happen when 'new_saveIcon()' is up and running.
 		*/
 		if ("getIcon")
-			icon_custom = icon('icons/effects/effects.dmi', "icon_state"="nothing")
+			icon_custom = new()
 			creator_ckey = usr.ckey
-			message_admins("The icon width is [icon_custom.Width()]")
 
 			var/icon_array = json_decode(href_list["json_string"])
-			for ( var/x = 1 to icon_custom.Width() )
-				for ( var/y = 1 to icon_custom.Height() )
+			for ( var/x = 1 to icon_width )
+				for ( var/y = 1 to icon_height )
 					var/color = rgb(icon_array[x][y][0], icon_array[x][y][1], icon_array[x][y][2], icon_array[x][y][3])
 					processIcon(x,y,color)
 			finishIcon()

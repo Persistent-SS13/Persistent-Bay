@@ -129,11 +129,48 @@
 	var/global/list/status_overlays_lighting
 	var/global/list/status_overlays_environ
 
+	var/datum/world_faction/connected_faction
+	var/menu = 1
+	var/alarm_status = 0
+	var/alarm_access = 0
+	
+
 
 /obj/machinery/power/apc/updateDialog()
 	if (stat & (BROKEN|MAINT))
 		return
 	..()
+	
+/obj/machinery/power/apc/can_connect(var/datum/world_faction/trying, var/mob/M)
+	if(!area)
+		return 0
+	var/list/turfs = get_area_turfs(area)
+	var/claimed_area = 0
+
+	var/datum/machine_limits/limits = trying.get_limits()
+	if(M && !has_access(list(core_access_engineering_programs), list(), M.GetAccess(req_access_faction)))
+		to_chat(M, "You do not have access to link machines to [trying.name].")
+		return 0
+	for(var/obj/machinery/power/apc/apc in limits.apcs)
+		if(apc.area)
+		var/list/apc_turfs = get_area_turfs(apc.area)
+		claimed_area += apc_turfs.len
+	
+	if(limits.limit_area <= limits.area + claimed_area)
+		if(M)
+			to_chat(M, "[trying.name] cannot connect this APC as it will exceed its area limit.")
+		return 0
+	limits.apcs |= src
+	req_access_faction = trying.uid
+	connected_faction = src
+
+/obj/machinery/power/apc/can_disconnect(var/datum/world_faction/trying, var/mob/M)
+	var/datum/machine_limits/limits = trying.get_limits()
+	limits.apcs -= src
+	req_access_faction = ""
+	connected_faction = null
+	if(M) to_chat(M, "The machine has been disconnected.")
+	
 
 /obj/machinery/power/apc/connect_to_network()
 	//Override because the APC does not directly connect to the network; it goes through a terminal.
@@ -521,6 +558,17 @@
 	else if (istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))			// trying to unlock the interface with an ID card
 		if(emagged)
 			to_chat(user, "The interface is broken.")
+		else if(!connected_faction)
+			var/obj/item/weapon/card/id/id
+			if(istype(W, /obj/item/weapon/card/id))
+				id = W
+			else if(istype(W, /obj/item/device/pda))
+				id = pda.id
+			if(id)
+				var/datum/world_faction/faction = get_faction(id.selected_faction)
+				if(faction)
+					can_connect(trying, usr)
+					return
 		else if(opened)
 			to_chat(user, "You must close the cover to swipe an ID card.")
 		else if(wiresexposed)
@@ -752,7 +800,6 @@
 /obj/machinery/power/apc/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 	if(!user)
 		return
-
 	var/list/data = list(
 		"pChan_Off" = POWERCHAN_OFF,
 		"pChan_Off_T" = POWERCHAN_OFF_TEMP,
@@ -803,6 +850,21 @@
 			)
 		)
 	)
+	if(connected_faction)
+		data["connected_faction"] = connected_faction.name
+	else
+		menu = 1
+		
+	data["menu"] = menu
+	if(menu == 2)
+		data["alarm_status"] = alarm_status
+		if(alarm_access)
+			data["required"] = connected_faction.get_access_name(alarm_access)
+		else
+			data["required"] = "*Unset*"
+
+
+
 
 	// update the ui if it exists, returns null if no ui is passed/found
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
@@ -894,10 +956,36 @@
 		// Shouldn't happen, this is here to prevent href exploits
 		to_chat(usr, "You must unlock the panel to use this!")
 		return 1
-
+	
 	if (href_list["lock"])
 		coverlocked = !coverlocked
 
+	if (href_list["menu"])
+		menu = text2num(href_list["menu"])
+
+	if(href_list["arm"])
+		if(!connected_faction) return
+		if(src.allowed(usr) || isWireCut(APC_WIRE_IDSCAN))
+			alarm_status = 1
+	if(href_list["disarm"])
+		if(!connected_faction) return
+		if(src.allowed(usr) || isWireCut(APC_WIRE_IDSCAN))
+			alarm_status = 0
+	if(href_list["set_alarm"])
+		if(!connected_faction) return
+		var/list/choices = list()
+		connected_faction.rebuild_all_access()
+		for(var/x in connected_faction.all_access)
+			choices[connected_faction.get_access_name(x)] = x
+		var/choice = input(usr, "Choose which access the alarm should look for.", "Select Access") as null|anything in choices
+		if(choice)
+			alarm_access = choices[choice]
+			to_chat(usr, "Alarm access set.")
+	if(href_list["disconnect"])
+		if(!connected_faction) return
+		if(src.allowed(usr) || isWireCut(APC_WIRE_IDSCAN))
+			can_disconnect(connected_faction, usr)
+			return
 	else if( href_list["reboot"] )
 		failure_timer = 0
 		update_icon()
@@ -1090,6 +1178,10 @@
 		power_alarm.triggerAlarm(loc, src)
 		autoflag = 0
 
+//	if(!connected_faction)
+//		equipment = autoset(equipment, 0)
+//		lighting = autoset(lighting, 0)
+		
 	// update icon & area power if anything changed
 	if(last_lt != lighting || last_eq != equipment || last_en != environ || force_update)
 		force_update = 0

@@ -144,32 +144,32 @@
 /obj/machinery/power/apc/can_connect(var/datum/world_faction/trying, var/mob/M)
 	if(!area)
 		return 0
-	var/list/turfs = get_area_turfs(area)
-	var/claimed_area = 0
 
+	var/list/turfs = get_area_turfs(area)
 	var/datum/machine_limits/limits = trying.get_limits()
+
 	if(M && !has_access(list(core_access_engineering_programs), list(), M.GetAccess(req_access_faction)))
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
-	for(var/obj/machinery/power/apc/apc in limits.apcs)
-		if(!apc.area) continue
-		var/list/apc_turfs = get_area_turfs(apc.area)
-		claimed_area += apc_turfs.len
 
-	if(limits.limit_area <= turfs.len + claimed_area)
+	if(limits.limit_area <= turfs.len + trying.get_claimed_area())
 		if(M)
 			to_chat(M, "[trying.name] cannot connect this APC as it will exceed its area limit.")
 		return 0
 	limits.apcs |= src
 	req_access_faction = trying.uid
-	connected_faction = src
+	connected_faction = trying
+	trying.calculate_claimed_area()
+	to_chat(M, "You successfuly connect this APC to [trying.name].")
 
 /obj/machinery/power/apc/can_disconnect(var/datum/world_faction/trying, var/mob/M)
 	var/datum/machine_limits/limits = trying.get_limits()
 	limits.apcs -= src
 	req_access_faction = ""
 	connected_faction = null
-	if(M) to_chat(M, "The machine has been disconnected.")
+	locked = 1
+	trying.calculate_claimed_area()
+	if(M) to_chat(M, "You successfuly disconnect this APC from [trying.name].")
 
 
 /obj/machinery/power/apc/connect_to_network()
@@ -558,18 +558,6 @@
 	else if (istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))			// trying to unlock the interface with an ID card
 		if(emagged)
 			to_chat(user, "The interface is broken.")
-		else if(!connected_faction)
-			var/obj/item/weapon/card/id/id
-			if(istype(W, /obj/item/weapon/card/id))
-				id = W
-			else if(istype(W, /obj/item/device/pda))
-				var/obj/item/device/pda/pda = W
-				id = pda.id
-			if(id)
-				var/datum/world_faction/faction = get_faction(id.selected_faction)
-				if(faction)
-					can_connect(faction, usr)
-					return
 		else if(opened)
 			to_chat(user, "You must close the cover to swipe an ID card.")
 		else if(wiresexposed)
@@ -582,6 +570,19 @@
 			if(src.allowed(usr) && !isWireCut(APC_WIRE_IDSCAN))
 				locked = !locked
 				to_chat(user, "You [ locked ? "lock" : "unlock"] the APC interface.")
+				if(!connected_faction && !locked)
+					var/obj/item/weapon/card/id/id
+					if(istype(W, /obj/item/weapon/card/id))
+						id = W
+					else if(istype(W, /obj/item/device/pda))
+						var/obj/item/device/pda/pda = W
+						id = pda.id
+					if(id)
+						var/datum/world_faction/faction = get_faction(id.selected_faction)
+						if(faction)
+							var/do_connect = input("Do you want to connect this APC to [faction.name] ?", faction.name, null) in list("Yes", "No") as text|null
+							if (do_connect == "Yes")
+								can_connect(faction, usr)
 				update_icon()
 			else
 				to_chat(user, "<span class='warning'>Access denied.</span>")

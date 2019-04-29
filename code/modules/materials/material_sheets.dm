@@ -40,7 +40,7 @@
 		src.reinf_material = SSmaterials.get_material_by_name(src.default_reinf_type)
 		if(!src.reinf_material)
 			log_warning(" /obj/item/stack/material/Initialize() : Missing or invalid reinf_material type([src.default_reinf_type])!")
-	
+
 	if(!stacktype)
 		stacktype = src.material.stack_type
 	if(islist(src.material.stack_origin_tech))
@@ -59,7 +59,7 @@
 	if(!material)
 		return
 	recipes = material.get_recipes(reinf_material && reinf_material.name)
-	..() 
+	..()
 
 /obj/item/stack/material/get_codex_value()
 	return (material && !material.hidden_from_codex) ? "[lowertext(material.display_name)] (material)" : ..()
@@ -83,7 +83,7 @@
 
 	if(material_flags & USE_MATERIAL_PLURAL_NAME)
 		plural_name = material.sheet_plural_name
-	
+
 	if(amount>1)
 		SetName("[material.use_name] [plural_name]")
 		desc = "A stack of [material.use_name] [plural_name]."
@@ -335,7 +335,8 @@
 //--------------------------------
 /obj/item/stack/material/platinum
 	name = MATERIAL_PLATINUM
-	icon_state = "sheet-adamantine"
+	icon_state = "sheet-sheen"
+	plural_icon_state = "sheet-sheen-mult"
 	default_type = MATERIAL_PLATINUM
 
 /obj/item/stack/material/platinum/ten
@@ -624,17 +625,17 @@
 //--------------------------------
 /obj/item/stack/material/glass
 	name = "glass"
-	icon_state = "sheet-shiny"
-	plural_icon_state = "sheet-shiny-mult"
+	icon_state = "sheet-clear"
+	plural_icon_state = "sheet-clear-mult"
 	default_type = MATERIAL_GLASS
 
 /obj/item/stack/material/glass/on_update_icon()
-	if(reinf_material) 
-		icon_state = "sheet-reinf"
-		plural_icon_state = "sheet-reinf-mult"
+	if(reinf_material)
+		icon_state = "sheet-glass-reinf"
+		plural_icon_state = "sheet-glass-reinf-mult"
 	else
-		icon_state = "sheet-shiny"
-		plural_icon_state = "sheet-shiny-mult"
+		icon_state = "sheet-clear"
+		plural_icon_state = "sheet-clear-mult"
 	..()
 
 /obj/item/stack/material/glass/ten
@@ -648,8 +649,8 @@
 //--------------------------------
 /obj/item/stack/material/glass/reinforced
 	name = "reinforced glass"
-	icon_state = "sheet-reinf"
-	plural_icon_state = "sheet-reinf-mult"
+	icon_state = "sheet-glass-reinf"
+	plural_icon_state = "sheet-glass-reinf-mult"
 	default_type = MATERIAL_GLASS
 	default_reinf_type = MATERIAL_STEEL
 
@@ -679,6 +680,8 @@
 /obj/item/stack/material/glass/phoronrglass
 	name = "reinforced borosilicate glass"
 	desc = "This sheet is special platinum-glass alloy designed to withstand large temperatures. It is reinforced with few rods."
+	icon_state = "sheet-glass-reinf"
+	plural_icon_state = "sheet-glass-reinf-mult"
 	default_type = MATERIAL_PHORON_GLASS
 	default_reinf_type = MATERIAL_STEEL
 
@@ -693,8 +696,7 @@
 //--------------------------------
 /obj/item/stack/material/glass/fiberglass
 	name = "fiberglass"
-	icon_state = "sheet-fiberglass"
-	default_type = "fiberglass"
+	default_type = MATERIAL_FIBERGLASS
 
 /obj/item/stack/material/glass/fiberglass/ten
 	amount = 10
@@ -707,7 +709,6 @@
 //--------------------------------
 /obj/item/stack/material/glass/quartz
 	name = MATERIAL_QUARTZ
-	icon_state = "sheet-glass"
 	default_type = MATERIAL_QUARTZ
 /obj/item/stack/material/glass/quartz/ten
 	amount = 10
@@ -799,6 +800,7 @@
 /obj/item/stack/material/cardboard
 	name = MATERIAL_CARDBOARD
 	icon_state = "sheet-card"
+	plural_icon_state = "sheet-card-mult"
 	default_type = MATERIAL_CARDBOARD
 	material_flags = USE_MATERIAL_SINGULAR_NAME|USE_MATERIAL_PLURAL_NAME
 

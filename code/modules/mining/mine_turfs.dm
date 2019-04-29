@@ -505,11 +505,11 @@ var/list/mining_floors = list()
 	if(!W || !user)
 		return 0
 
-	if (istype(W, /obj/item/stack/rods))
+	if (istype(W, /obj/item/stack/material/rods))
 		var/obj/structure/lattice/L = locate(/obj/structure/lattice, src)
 		if(L)
 			return L.attackby(W, user)
-		var/obj/item/stack/rods/R = W
+		var/obj/item/stack/material/rods/R = W
 		if (R.use(1))
 			to_chat(user, "<span class='notice'>Constructing support lattice ...</span>")
 			playsound(src, 'sound/weapons/Genhit.ogg', 50, 1)

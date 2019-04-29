@@ -50,7 +50,7 @@
 		else
 			to_chat(user, "<span class='warning'>You must remain still while building.</span>")
 			return
-	
+
 	if(istype(W, /obj/item/stack))
 		var/obj/item/stack/D = W
 		if(D.get_material_name() != material.name)
@@ -100,6 +100,7 @@
 //spikey barriers
 /obj/structure/barricade/spike
 	name = "cheval-de-frise"
+	icon = 'icons/obj/structures/spikes.dmi'
 	icon_state = "cheval"
 	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE
 	spiky = TRUE
@@ -137,7 +138,7 @@
 
 	if(MOVING_DELIBERATELY(victim)) //walking into this is less hurty than running
 		damage_holder = (damage / 4)
-	
+
 	if(isanimal(victim)) //simple animals have simple health, reduce our damage
 		damage_holder = (damage / 4)
 

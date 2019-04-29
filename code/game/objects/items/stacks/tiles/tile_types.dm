@@ -379,7 +379,7 @@
 	name = "concrete"
 	singular_name = "concrete"
 	desc = "A piece of concrete flooring. It is the same size as a normal floor tile!"
-	icon_state = "tile-concrete"
+	icon_state = "tile_concrete"
 	matter = list(MATERIAL_SAND = 900)
 /obj/item/stack/tile/concrete/fifty
 	amount = 50

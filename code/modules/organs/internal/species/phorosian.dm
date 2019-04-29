@@ -1,11 +1,12 @@
 //INTERNAL ORGANS
 /obj/item/organ/internal/lungs/phorosian
 	name = "phoronized lungs"
-	icon_state = "lungs-plasma"
+	//icon_state = "lungs-plasma"
 	desc = "A set of lungs seemingly made out of fleshy phoron."
 	breath_type = GAS_PHORON
 	poison_types = list(GAS_OXYGEN = TRUE) //It burns to breathe!
 	exhale_type = GAS_HYDROGEN
+	color = "#7e4ba0"
 
 /obj/item/organ/internal/liver/phorosian
 	name = "phoron processor"

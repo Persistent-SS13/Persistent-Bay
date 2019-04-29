@@ -187,7 +187,7 @@
 /obj/machinery/door/destroyed(damtype)
 	if(!IsDamageTypeBurn(damtype))
 		new /obj/item/stack/material/steel(src.loc, 2)
-		new /obj/item/stack/rods(src.loc, 3)
+		new /obj/item/stack/material/rods(src.loc, 3)
 	return ..()
 
 /obj/machinery/door/melt()

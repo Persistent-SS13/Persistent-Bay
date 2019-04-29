@@ -146,6 +146,7 @@ Class Procs:
 	ADD_SKIP_EMPTY(extensions)
 	ADD_SKIP_EMPTY(component_parts)
 	ADD_SKIP_EMPTY(faction)
+	ADD_SKIP_EMPTY(id_tag)
 
 /obj/machinery/after_load()
 	..()

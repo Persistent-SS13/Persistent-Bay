@@ -60,7 +60,6 @@ var/list/solars_list = list()
 	update_icon()
 
 /obj/machinery/power/solar/attackby(obj/item/weapon/W, mob/user)
-
 	if(isCrowbar(W))
 		playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
 		user.visible_message("<span class='notice'>[user] begins to take the glass off the solar panel.</span>")
@@ -73,12 +72,8 @@ var/list/solars_list = list()
 			user.visible_message("<span class='notice'>[user] takes the glass off the solar panel.</span>")
 			qdel(src)
 		return
-	..()
+	return ..()
 
-/obj/machinery/power/solar/update_health(var/damtype)
-	if (src.health <= 0)
-		if(!isbroken())
-			set_broken(TRUE)
 
 /obj/machinery/power/solar/on_update_icon()
 	..()

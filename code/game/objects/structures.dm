@@ -51,17 +51,12 @@
 			for(var/atom/movable/AM in contents)
 				AM.loc = loc
 				AM.ex_act(severity++)
-			qdel(src)
-			return
 		if(2.0)
 			if(prob(50))
 				for(var/atom/movable/AM in contents)
 					AM.loc = loc
 					AM.ex_act(severity++)
-				qdel(src)
-				return
-		if(3.0)
-			return
+	return ..()
 
 /obj/structure/attack_hand(mob/user)
 	if(isdamageable())
@@ -108,18 +103,6 @@
 		visible_message("<span class='danger'>[G.assailant] puts [G.affecting] on \the [src].</span>")
 		qdel(G)
 		return TRUE
-
-/obj/structure/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			qdel(src)
-			return
-		if(2.0)
-			if(prob(50))
-				qdel(src)
-				return
-		if(3.0)
-			return
 
 /obj/structure/proc/can_visually_connect()
 	return anchored

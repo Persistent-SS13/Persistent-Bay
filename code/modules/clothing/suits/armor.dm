@@ -313,7 +313,7 @@
 /obj/item/clothing/suit/storage/vest/nt/hos
 	name = "commander heavy armored vest"
 	desc = "A synthetic armor vest with COMMANDER printed in gold lettering on the chest. This one has added webbing and ballistic plates."
-	icon_state = "comwebvest"
+	icon_state = "comwebvest" //Icon is missing
 
 /obj/item/clothing/suit/storage/vest/pcrc
 	name = "contractor heavy armored vest"

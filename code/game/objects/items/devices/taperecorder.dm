@@ -1,7 +1,7 @@
 /obj/item/device/taperecorder
 	name = "universal recorder"
 	desc = "A device that can record to cassette tapes, and play them. It automatically translates the content in playback."
-	icon = 'icons/obj/items.dmi'
+	icon = 'icons/obj/device.dmi'
 	icon_state = "taperecorder"
 	item_state = "analyzer"
 	w_class = ITEM_SIZE_SMALL
@@ -497,7 +497,7 @@
 		var/index = text2num(href_list["cut_after"])
 		if(index >= timestamp.len)
 			return
-		
+
 		to_chat(user, "<span class='notice'>You remove part of the tape off.</span>")
 		get_loose_tape(user, index)
 		cut(user)

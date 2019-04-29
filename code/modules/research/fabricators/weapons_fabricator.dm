@@ -271,13 +271,13 @@
 
 //	Pistols
 /datum/design/item/weaponfab/weapons/guns/pistol // tier 0
-	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GOLD = 1.5 SHEETS, MATERIAL_COPPER = 1.5 SHEETS) 
+	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GOLD = 1.5 SHEETS, MATERIAL_COPPER = 1.5 SHEETS)
 	build_path = /obj/item/weapon/gun/projectile/sec
 /datum/design/item/weaponfab/weapons/guns/pistol/m1911 // tier 1 RESKIN of pistol
 	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GOLD = 1.5 SHEETS, MATERIAL_COPPER = 1.5 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/pistol/m1911
 	research = "pistol_1"
-/datum/design/item/weaponfab/weapons/guns/pistol/c96 
+/datum/design/item/weaponfab/weapons/guns/pistol/c96
 	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GOLD = 1.5 SHEETS, MATERIAL_COPPER = 1.5 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/pistol/c96
 	research = "pistol_1"
@@ -734,11 +734,11 @@
 	build_path = /obj/item/clothing/suit/storage/vest/nt/warden
 	materials = list(MATERIAL_LEATHER = 2.5 SHEETS, MATERIAL_STEEL = 5 SHEETS, MATERIAL_SILVER = 2 SHEETS)
 
-/datum/design/item/weaponfab/armor/barmour/pocket_vest_com
-	name = "armor vest - webbed commander"
-	id = "pocket_vest_com"
-	build_path = /obj/item/clothing/suit/storage/vest/nt/hos
-	materials = list(MATERIAL_LEATHER = 2.5 SHEETS, MATERIAL_STEEL = 5 SHEETS, MATERIAL_SILVER = 2 SHEETS)
+///datum/design/item/weaponfab/armor/barmour/pocket_vest_com
+//	name = "armor vest - webbed commander"
+//	id = "pocket_vest_com"
+//	build_path = /obj/item/clothing/suit/storage/vest/nt/hos
+//	materials = list(MATERIAL_LEATHER = 2.5 SHEETS, MATERIAL_STEEL = 5 SHEETS, MATERIAL_SILVER = 2 SHEETS)
 
 /datum/design/item/weaponfab/armor/barmour/pocket_vest_tact
 	name = "armor vest - large webbed tactical"

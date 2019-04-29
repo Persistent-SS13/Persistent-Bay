@@ -210,7 +210,7 @@
 					/obj/item/clothing/suit/leathercoat,
 					/obj/item/clothing/suit/browncoat,
 					/obj/item/clothing/suit/neocoat,
-					/obj/item/clothing/suit/stripper/stripper_pink,
+					/obj/item/clothing/under/stripper/stripper_pink,
 					/obj/item/clothing/under/stripper/mankini,
 					/obj/item/clothing/under/swimsuit/blue,
 					/obj/item/clothing/under/swimsuit/purple,

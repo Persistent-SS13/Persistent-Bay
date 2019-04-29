@@ -153,9 +153,9 @@
 			else
 				to_chat(user, "<span class='notice'>You need at least ten steel sheets to complete this task.</span>")
 			return
-	else if(istype(W,/obj/item/stack/rods))
+	else if(istype(W,/obj/item/stack/material/rods))
 		if(buildstate == 8)
-			var/obj/item/stack/rods/R = W
+			var/obj/item/stack/material/rods/R = W
 			if(R.use(3))
 				user.visible_message("[user] attaches [R] onto \the [src]'s bolt.", "<span class='notice'>You attach the rods to the bolt.</span>")
 				buildstate++

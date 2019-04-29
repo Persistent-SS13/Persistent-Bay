@@ -111,13 +111,13 @@
 				possible_under_extra |= new /obj/item/clothing/under/gentlesuit
 			if(CULTURE_HUMAN_SPACER)
 				possible_under_extra |= new /obj/item/clothing/under/frontier
-				possible_under_extra |= new /obj/item/clothing/under/serviceoveralls
+				possible_under_extra |= new /obj/item/clothing/under/overalls ///obj/item/clothing/under/serviceoveralls
 			if(CULTURE_HUMAN_CONFED)
 				possible_under_extra |= new /obj/item/clothing/under/confederacy
 				possible_under_extra |= new /obj/item/clothing/under/saare
 			if(CULTURE_HUMAN_SPAFRO)
 				possible_under_extra |= new /obj/item/clothing/under/frontier
-				possible_under_extra |= new /obj/item/clothing/under/serviceoveralls
+				possible_under_extra |= new /obj/item/clothing/under/overalls ///obj/item/clothing/under/serviceoveralls
 			if(CULTURE_HUMAN_OTHER) // "Corporate Colonist"
 				possible_under_extra |= new /obj/item/clothing/under/mbill
 				possible_under_extra |= new /obj/item/clothing/under/wardt
@@ -125,7 +125,7 @@
 		pref.selected_under = pick(possible_under_extra)
 		pref.preview_icon = null
 		pref.ShowChoices(usr)
-	
+
 	. = list()
 	. += "<b>Starting Equipment:</b><br>"
 	. += "Starting Clothing: <a href='?src=\ref[src];change_under=1'><b>[pref.selected_under ? pref.selected_under.name : "Unset*"]</b></a><br>"

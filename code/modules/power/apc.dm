@@ -133,14 +133,14 @@
 	var/menu = 1
 	var/alarm_status = 0
 	var/alarm_access = 0
-	
+
 
 
 /obj/machinery/power/apc/updateDialog()
 	if (stat & (BROKEN|MAINT))
 		return
 	..()
-	
+
 /obj/machinery/power/apc/can_connect(var/datum/world_faction/trying, var/mob/M)
 	if(!area)
 		return 0
@@ -152,11 +152,11 @@
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
 	for(var/obj/machinery/power/apc/apc in limits.apcs)
-		if(apc.area)
+		if(!apc.area) continue
 		var/list/apc_turfs = get_area_turfs(apc.area)
 		claimed_area += apc_turfs.len
-	
-	if(limits.limit_area <= limits.area + claimed_area)
+
+	if(limits.limit_area <= turfs.len + claimed_area)
 		if(M)
 			to_chat(M, "[trying.name] cannot connect this APC as it will exceed its area limit.")
 		return 0
@@ -170,7 +170,7 @@
 	req_access_faction = ""
 	connected_faction = null
 	if(M) to_chat(M, "The machine has been disconnected.")
-	
+
 
 /obj/machinery/power/apc/connect_to_network()
 	//Override because the APC does not directly connect to the network; it goes through a terminal.
@@ -563,11 +563,12 @@
 			if(istype(W, /obj/item/weapon/card/id))
 				id = W
 			else if(istype(W, /obj/item/device/pda))
+				var/obj/item/device/pda/pda = W
 				id = pda.id
 			if(id)
 				var/datum/world_faction/faction = get_faction(id.selected_faction)
 				if(faction)
-					can_connect(trying, usr)
+					can_connect(faction, usr)
 					return
 		else if(opened)
 			to_chat(user, "You must close the cover to swipe an ID card.")
@@ -854,7 +855,7 @@
 		data["connected_faction"] = connected_faction.name
 	else
 		menu = 1
-		
+
 	data["menu"] = menu
 	if(menu == 2)
 		data["alarm_status"] = alarm_status
@@ -956,7 +957,7 @@
 		// Shouldn't happen, this is here to prevent href exploits
 		to_chat(usr, "You must unlock the panel to use this!")
 		return 1
-	
+
 	if (href_list["lock"])
 		coverlocked = !coverlocked
 
@@ -1181,7 +1182,7 @@
 //	if(!connected_faction)
 //		equipment = autoset(equipment, 0)
 //		lighting = autoset(lighting, 0)
-		
+
 	// update icon & area power if anything changed
 	if(last_lt != lighting || last_eq != equipment || last_en != environ || force_update)
 		force_update = 0

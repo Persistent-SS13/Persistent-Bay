@@ -15,7 +15,7 @@
 		return 0
 	limits.ataccessories |= src
 	req_access_faction = trying.uid
-	connected_faction = src
+	connected_faction = trying
 
 /obj/machinery/fabricator/autotailor/accessories/can_disconnect(var/datum/world_faction/trying, var/mob/M)
 	var/datum/machine_limits/limits = trying.get_limits()

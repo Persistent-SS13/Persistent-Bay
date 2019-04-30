@@ -409,8 +409,6 @@
 			return global.designer_system;
 		if("diary")
 			return global.diary;
-		if("discord_api")
-			return global.discord_api;
 		if("dna_activity_bounds")
 			return global.dna_activity_bounds;
 		if("dna_genes")
@@ -1480,8 +1478,6 @@
 			global.designer_system=newval;
 		if("diary")
 			global.diary=newval;
-		if("discord_api")
-			global.discord_api=newval;
 		if("dna_activity_bounds")
 			global.dna_activity_bounds=newval;
 		if("dna_genes")
@@ -2346,7 +2342,6 @@
 	"description_icons",
 	"designer_system",
 	"diary",
-	"discord_api",
 	"dna_activity_bounds",
 	"dna_genes",
 	"dreams",

@@ -8,7 +8,7 @@ Any troubles just contact me - Stigma
 
 
 //GLOBAL DEFINE//
-var/global/datum/discord_api/discord_api = new()
+GLOBAL_DATUM_INIT(discord_api, /datum/discord_api, new)
 /////////////////
 
 //This unique datum holds the information required to use the database-
@@ -40,8 +40,8 @@ var/global/datum/discord_api/discord_api = new()
 /datum/discord_api/proc/mail(receiver_name, var/datum/computer_file/data/email_message/message)
 	var/receiver_ckey = Retrieve_Record(receiver_name).ckey
 	var/sender_name = message.source
-	var/database/query/g = new("SELECT * FROM [discord_api.usersTable] WHERE ckey = ? AND valid = 1", receiver_ckey)
-	if (g.Execute(discord_api.db) && g.NextRow())
+	var/database/query/g = new("SELECT * FROM [usersTable] WHERE ckey = ? AND valid = 1", receiver_ckey)
+	if (g.Execute(GLOB.discord_api.db) && g.NextRow())
 		var/list/data = g.GetRowData()
 		var/discordID = data["userID"]
 		var/msg = "MAIL|[discordID]|[sender_name]|[receiver_name]|[message.title]|\n\n[message.stored_data]"
@@ -54,7 +54,7 @@ var/global/datum/discord_api/discord_api = new()
 	set desc = "VERY EARLY DEV"
 	var/msg = input(usr, "Message:", "Discord") as text|null
 	if (msg)
-		discord_api.send_message("BROADCAST|[msg]")
+		GLOB.discord_api.send_message("BROADCAST|[msg]")
 
 
 /client/verb/linkdiscord()
@@ -65,12 +65,12 @@ var/global/datum/discord_api/discord_api = new()
 	var/userID = input(usr, "Discord User ID:", "Discord") as text|null
 	if (userID)
 		userID = "\"[userID]\""
-		var/database/query/g = new("SELECT * FROM [discord_api.usersTable] WHERE ckey = ? OR userID = ?", usr.ckey, userID)
-		if (g.Execute(discord_api.db) && g.NextRow())
+		var/database/query/g = new("SELECT * FROM [GLOB.discord_api.usersTable] WHERE ckey = ? OR userID = ?", usr.ckey, userID)
+		if (g.Execute(GLOB.discord_api.db) && g.NextRow())
 			to_chat(usr, SPAN_WARNING("Could not complete your Discord Account link request. It seems you have already linked this BYOND account OR this discord ID is already linked to another account."))
 		else
-			var/database/query/q = new("INSERT INTO [discord_api.usersTable] VALUES(?,?,0) ", userID, usr.ckey)
-			if(!q.Execute(discord_api.db))
+			var/database/query/q = new("INSERT INTO [GLOB.discord_api.usersTable] VALUES(?,?,0) ", userID, usr.ckey)
+			if(!q.Execute(GLOB.discord_api.db))
 				message_admins(q.ErrorMsg())
 				return
 			to_chat(usr, SPAN_NOTICE("Your account has been successfuly linked. To finish the process, however, you MUST validate your link on your discord. Just type in '!validatelink YOUR_CKEY' on the official discord server. (Or by PMing the Bot with that command.)"))
@@ -80,10 +80,10 @@ var/global/datum/discord_api/discord_api = new()
 	set name = "Discord Account - Disassociate"
 	set desc = "Devalidates the link between your BYOND and Discord account."
 
-	var/database/query/g = new("SELECT * FROM [discord_api.usersTable] WHERE ckey = ?", usr.ckey)
-	if (g.Execute(discord_api.db) && g.NextRow())
-		var/database/query/delete = new("DELETE FROM [discord_api.usersTable] WHERE ckey = ?", usr.ckey)
-		if (delete.Execute(discord_api.db))
+	var/database/query/g = new("SELECT * FROM [GLOB.discord_api.usersTable] WHERE ckey = ?", usr.ckey)
+	if (g.Execute(GLOB.discord_api.db) && g.NextRow())
+		var/database/query/delete = new("DELETE FROM [GLOB.discord_api.usersTable] WHERE ckey = ?", usr.ckey)
+		if (delete.Execute(GLOB.discord_api.db))
 			to_chat(usr, SPAN_NOTICE("You have successfuly disassociated your Discord and BYOND accounts."))
 	else
 		to_chat(usr, SPAN_WARNING("There is no Discord Account associated with your BYOND account."))

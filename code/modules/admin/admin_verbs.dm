@@ -113,6 +113,7 @@ var/list/admin_verbs_admin = list(
 	/client/proc/add_trader,
 	/client/proc/remove_trader,
 	/datum/admins/proc/sendFax,
+	/datum/admins/proc/discord_broadcast
 )
 var/list/admin_verbs_ban = list(
 	/client/proc/unban_panel,

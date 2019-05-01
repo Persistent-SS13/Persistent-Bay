@@ -571,4 +571,3 @@ SUBSYSTEM_DEF(supply)
 		spawn(10)
 			if(supplied >= required)
 				SSsupply.close_order(src)
-

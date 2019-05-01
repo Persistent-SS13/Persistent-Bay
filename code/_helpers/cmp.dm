@@ -13,6 +13,12 @@
 /proc/cmp_newsfeed(var/datum/NewsFeed/a, var/datum/NewsFeed/b)
 	return b.last_published - a.last_published
 	
+/proc/cmp_buyorders(var/datum/material_order/a, var/datum/material_order/b)
+	return b.price - a.price
+
+/proc/cmp_sellorders(var/datum/material_order/a, var/datum/material_order/b)
+	return a.price - b.price
+
 
 /proc/cmp_follow_holder(var/datum/follow_holder/a, var/datum/follow_holder/b)
 	if(a.sort_order == b.sort_order)

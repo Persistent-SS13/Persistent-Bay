@@ -16,7 +16,7 @@
 		return 0
 	limits.mechfabs |= src
 	req_access_faction = trying.uid
-	connected_faction = src
+	connected_faction = trying
 	
 /obj/machinery/fabricator/mecha_part_fabricator/can_disconnect(var/datum/world_faction/trying, var/mob/M)
 	var/datum/machine_limits/limits = trying.get_limits()

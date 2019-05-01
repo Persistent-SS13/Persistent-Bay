@@ -27,7 +27,7 @@
 		return 0
 	limits.genfabs |= src
 	req_access_faction = trying.uid
-	connected_faction = src
+	connected_faction = trying
 
 /obj/machinery/fabricator/general_fabricator/can_disconnect(var/datum/world_faction/trying, var/mob/M)
 	var/datum/machine_limits/limits = trying.get_limits()

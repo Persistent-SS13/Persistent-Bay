@@ -53,7 +53,7 @@
 			var/author_consent = input("Do you Also want to sign it?", "Designer", "Yes") in list("Yes", "No")
 			if (author_consent == "Yes")
 				src.name += " by [usr.real_name]"
-	designer_unit.Design(src, icon_offset_x, icon_offset_y)
+	designer_unit.Design(src)
 
 /obj/item/frame/canvas/designer_update_icon()
 	overlays.Cut()
@@ -114,9 +114,9 @@
 		//PUT SOUND HERE... LATA.
 		var/obj/item/frame/canvas/c_item = new canvas_item (loc)
 		c_item.designer_associate(designer_unit)
-		c_item.designer_update_icon()
 		c_item.name = name
 		c_item.dir = SOUTH
+		c_item.designer_update_icon()
 		qdel(src)
 
 /obj/structure/canvas/designer_update_icon()

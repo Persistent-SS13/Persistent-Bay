@@ -682,9 +682,19 @@ var/PriorityQueue/all_feeds
 
 	var/status = 1
 
-	var/list/employment_log
+	var/list/employment_log = list()
 
 	var/objective = ""
+
+	var/datum/material_inventory/inventory
+
+	var/obj/machinery/telepad_cargo/default_telepad
+	var/default_telepad_x
+	var/default_telepad_y
+	var/default_telepad_z
+
+
+
 
 /proc/spawn_nexus_gov()
 	var/datum/world_faction/democratic/nexus = new()
@@ -1153,8 +1163,170 @@ var/PriorityQueue/all_feeds
 
 
 
+/datum/world_faction/proc/give_inventory(var/typepath, var/amount)
+	var/obj/machinery/telepad_cargo/using_telepad
+	var/remaining_amount = amount
+	rebuild_cargo_telepads()
+	if(default_telepad)
+		using_telepad = default_telepad
+	else
+		using_telepad = pick(cargo_telepads)
+	if(!using_telepad) return 0
+	for(var/x in 1 to amount)
+		if(!remaining_amount) break
+		var/obj/item/stack/material/stack = new typepath(using_telepad.loc)
+		var/distributing = min(remaining_amount, stack.max_amount)
+		remaining_amount -= distributing
+		stack.amount = distributing
+	return 1
+
+/datum/world_faction/proc/take_inventory(var/typepath, var/amount)
+	var/remaining_amount = amount
+	rebuild_cargo_telepads()
+	var/list/found_stacks
+	for(var/obj/machinery/telepad_cargo/telepad in cargo_telepads)
+		if(!remaining_amount)
+			break
+		if(telepad.loc)
+			var/list/stacks = telepad.loc.search_contents_for(/obj/item/stack/material, list(/mob/))
+			if(!stacks.len) continue
+			for(var/ind in 1 to stacks.len)
+				if(!remaining_amount)
+					break
+				var/obj/item/stack/material/stack = stacks[ind]
+				if(istype(stack, typepath))
+					remaining_amount -= stack.amount
+					found_stacks |= stack
+	if(remaining_amount)
+		return 0
+	var/taken = 0
+	for(var/obj/item/stack/material/stack in found_stacks)
+		if(taken >= amount)
+			break
+		var/take = min(stack.amount, (amount-taken))
+		stack.amount -= take
+		if(!stack.amount)
+			qdel(stack)
+		taken += take
+	return 1
 
 
+/datum/world_faction/proc/rebuild_limits()
+	return
+	
+/datum/world_faction/democratic/rebuild_limits()
+	limits.limit_genfab = 5
+	limits.limit_engfab = 5
+	limits.limit_medicalfab = 5
+	limits.limit_mechfab = 5
+	limits.limit_voidfab = 5
+	limits.limit_ataccessories = 5
+	limits.limit_atnonstandard = 5
+	limits.limit_atstandard = 5
+	limits.limit_ammofab = 5
+	limits.limit_consumerfab = 5
+	limits.limit_servicefab = 5
+
+	limits.limit_drills = 2
+
+	limits.limit_botany = 2
+
+	limits.limit_shuttles = 3
+
+	limits.limit_area = 100000
+
+	limits.limit_tcomms = 5
+	
+	limits.limit_tech_general = 4
+	limits.limit_tech_engi = 4
+	limits.limit_tech_medical = 4
+	limits.limit_tech_consumer =  4
+	limits.limit_tech_combat =  4
+	
+/datum/world_faction/business/rebuild_limits()
+	var/datum/machine_limits/current_level = new module.levels[module.current_level]
+	limits.limit_genfab = module.spec.limits.limit_genfab + current_level.limit_genfab
+	limits.limit_engfab = module.spec.limits.limit_engfab + current_level.limit_engfab
+	limits.limit_medicalfab = module.spec.limits.limit_medicalfab + current_level.limit_medicalfab
+	limits.limit_mechfab = module.spec.limits.limit_mechfab + current_level.limit_mechfab
+	limits.limit_voidfab = module.spec.limits.limit_voidfab + current_level.limit_voidfab
+	limits.limit_ataccessories = module.spec.limits.limit_ataccessories + current_level.limit_ataccessories
+	limits.limit_atnonstandard = module.spec.limits.limit_atnonstandard + current_level.limit_atnonstandard
+	limits.limit_atstandard = module.spec.limits.limit_atstandard + current_level.limit_atstandard
+	limits.limit_ammofab = module.spec.limits.limit_ammofab + current_level.limit_ammofab
+	limits.limit_consumerfab = module.spec.limits.limit_consumerfab + current_level.limit_consumerfab
+	limits.limit_servicefab = module.spec.limits.limit_servicefab + current_level.limit_servicefab
+
+	limits.limit_drills = module.spec.limits.limit_drills + current_level.limit_drills
+
+	limits.limit_botany = module.spec.limits.limit_botany + current_level.limit_botany
+
+	limits.limit_shuttles = module.spec.limits.limit_shuttles + current_level.limit_shuttles
+
+	limits.limit_area = module.spec.limits.limit_area + current_level.limit_area
+
+	limits.limit_tcomms = module.spec.limits.limit_tcomms + current_level.limit_tcomms
+	
+	limits.limit_tech_general = module.spec.limits.limit_tech_general + current_level.limit_tech_general
+	limits.limit_tech_engi = module.spec.limits.limit_tech_engi + current_level.limit_tech_engi
+	limits.limit_tech_medical = module.spec.limits.limit_tech_medical + current_level.limit_tech_medical
+	limits.limit_tech_consumer =  module.spec.limits.limit_tech_consumer + current_level.limit_tech_consumer
+	limits.limit_tech_combat =  module.spec.limits.limit_tech_combat + current_level.limit_tech_combat
+
+/datum/world_faction/proc/rebuild_inventory()
+	inventory.steel = 0
+	inventory.glass = 0
+	inventory.gold = 0
+	inventory.silver = 0
+	inventory.copper = 0
+	inventory.wood = 0
+	inventory.cloth = 0
+	inventory.leather = 0
+	inventory.phoron = 0
+	inventory.diamond = 0
+	inventory.uranium = 0
+	rebuild_cargo_telepads()
+	for(var/obj/machinery/telepad_cargo/telepad in cargo_telepads)
+		if(telepad.loc)
+			var/list/stacks = telepad.loc.search_contents_for(/obj/item/stack/material, list(/mob/))
+			if(!stacks.len) continue
+			for(var/ind in 1 to stacks.len)
+				var/obj/item/stack/material/stack = stacks[ind]
+				if(istype(stack, /obj/item/stack/material/steel))
+					inventory.steel += stack.amount
+				if(istype(stack, /obj/item/stack/material/glass))
+					inventory.glass += stack.amount
+				if(istype(stack, /obj/item/stack/material/gold))
+					inventory.gold += stack.amount
+				if(istype(stack, /obj/item/stack/material/silver))
+					inventory.silver += stack.amount
+				if(istype(stack, /obj/item/stack/material/copper))
+					inventory.copper += stack.amount
+				if(istype(stack, /obj/item/stack/material/wood))
+					inventory.wood += stack.amount
+				if(istype(stack, /obj/item/stack/material/cloth))
+					inventory.cloth += stack.amount
+				if(istype(stack, /obj/item/stack/material/leather))
+					inventory.leather += stack.amount
+				if(istype(stack, /obj/item/stack/material/phoron))
+					inventory.phoron += stack.amount
+				if(istype(stack, /obj/item/stack/material/diamond))
+					inventory.diamond += stack.amount
+				if(istype(stack, /obj/item/stack/material/uranium))
+					inventory.uranium += stack.amount
+
+/datum/material_inventory
+	var/steel = 0
+	var/glass = 0
+	var/gold = 0
+	var/silver = 0
+	var/copper = 0
+	var/wood = 0
+	var/cloth = 0
+	var/leather = 0
+	var/phoron = 0
+	var/diamond = 0
+	var/uranium = 0
 
 
 /datum/world_faction/business
@@ -1165,10 +1337,11 @@ var/PriorityQueue/all_feeds
 
 	var/ceo_tax = 0
 	var/stockholder_tax = 0
-
-
-
 	var/public_stock = 0
+
+/datum/world_faction/business/New()
+	..()
+	CEO = new()
 
 
 /datum/world_faction/business/proc/pay_dividends(var/datum/money_account/account, var/amount)
@@ -1282,7 +1455,9 @@ var/PriorityQueue/all_feeds
 
 /datum/world_faction/business/proc/create_proposal(var/real_name, var/func, var/target)
 	var/datum/stock_proposal/proposal = new()
+	proposal.started_by = real_name
 	proposal.func = func
+	proposal.target = target
 	switch(func)
 		if(STOCKPROPOSAL_CEOFIRE)
 			proposal.required = 51
@@ -1355,14 +1530,41 @@ var/PriorityQueue/all_feeds
 /datum/stock_proposal/proc/pass_proposal()
 	connected_faction.pass_proposal(src)
 
-/datum/world_faction/after_load()
 
+/datum/world_faction/before_save()
+	if(default_telepad)
+		default_telepad_x = default_telepad.x
+		default_telepad_y = default_telepad.y
+		default_telepad_z = default_telepad.z
+
+/datum/world_faction/after_load()
+	if(default_telepad_x && default_telepad_y && default_telepad_z)
+		var/turf/T = locate(default_telepad_x, default_telepad_y, default_telepad_z)
+		for(var/obj/machinery/telepad_cargo/telepad in T.contents)
+			default_telepad = telepad
+			break
 	if(!debts)
 		debts = list()
 	..()
 
 /datum/world_faction/proc/get_limits()
 	return limits
+
+//(Re)Calculates the current claimed area and returns it.
+/datum/world_faction/proc/get_claimed_area()
+	src.calculate_claimed_area()
+	return limits.claimed_area
+
+//Calculates the current claimed area. Only used by "get_claimed_area()" and "apc/can_disconnect()" procs.~
+//Call "get_claimed_area()" directly instead (in most cases).
+/datum/world_faction/proc/calculate_claimed_area()
+	var/new_claimed_area = 0
+
+	for(var/obj/machinery/power/apc/apc in limits.apcs)
+		if(!apc.area) continue
+		var/list/apc_turfs = get_area_turfs(apc.area)
+		new_claimed_area += apc_turfs.len
+	limits.claimed_area = new_claimed_area
 
 /datum/world_faction/proc/get_duty_status(var/real_name)
 	for(var/obj/item/organ/internal/stack/stack in connected_laces)
@@ -1407,7 +1609,7 @@ var/PriorityQueue/all_feeds
 	create_faction_account()
 	limits = new()
 	research = new()
-
+	inventory = new()
 
 /datum/world_faction/proc/rebuild_cargo_telepads()
 	cargo_telepads.Cut()
@@ -1415,9 +1617,11 @@ var/PriorityQueue/all_feeds
 		if(telepad.req_access_faction == uid)
 			telepad.connected_faction = src
 			cargo_telepads |= telepad
+
 /datum/world_faction/proc/rebuild_all_access()
 	all_access = list()
-	for(var/datum/access_category/access_category in access_categories)
+	var/datum/access_category/core/core = new()
+	for(var/datum/access_category/access_category in access_categories+core)
 		for(var/x in access_category.accesses)
 			all_access |= x
 
@@ -1535,7 +1739,8 @@ var/PriorityQueue/all_feeds
 	return 0
 
 /datum/world_faction/proc/get_access_name(var/access)
-	for(var/datum/access_category/access_category in access_categories)
+	var/datum/access_category/core/core = new()
+	for(var/datum/access_category/access_category in access_categories+core)
 		if(access in access_category.accesses) return access_category.accesses[access]
 	return 0
 
@@ -1624,7 +1829,7 @@ var/PriorityQueue/all_feeds
 	accesses["110"] = "Computer Linking"
 	accesses["111"] = "Budget View"
 	accesses["112"] = "Contract Signing/Control"
-
+	accesses["113"] = "Material Marketplace"
 
 /obj/faction_spawner
 	name = "Name to start faction with"
@@ -1817,6 +2022,8 @@ var/PriorityQueue/all_feeds
 
 	var/limit_area = 0
 	var/list/apcs = list()
+	var/claimed_area = 0
+	
 
 	var/limit_tcomms = 0
 	var/list/tcomms = list()
@@ -2207,7 +2414,6 @@ var/PriorityQueue/all_feeds
 	var/desc = ""
 	var/current_level = 1
 	var/list/levels = list()
-	var/datum/machine_limits/limits
 	var/datum/business_spec/spec
 	var/list/specs = list()
 

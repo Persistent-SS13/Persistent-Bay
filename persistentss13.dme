@@ -1831,6 +1831,7 @@
 #include "code\modules\detectivework\tools\storage.dm"
 #include "code\modules\detectivework\tools\swabs.dm"
 #include "code\modules\detectivework\tools\uvlight.dm"
+#include "code\modules\discord_persistence\_hook.dm"
 #include "code\modules\economy\Accounts.dm"
 #include "code\modules\economy\Accounts_DB.dm"
 #include "code\modules\economy\ATM.dm"
@@ -2436,8 +2437,10 @@
 #include "code\modules\modular_computers\file_system\programs\antagonist\hacked_camera.dm"
 #include "code\modules\modular_computers\file_system\programs\antagonist\revelation.dm"
 #include "code\modules\modular_computers\file_system\programs\antagonist\uplink.dm"
+#include "code\modules\modular_computers\file_system\programs\business\business_core.dm"
+#include "code\modules\modular_computers\file_system\programs\business\ceo.dm"
 #include "code\modules\modular_computers\file_system\programs\business\registration.dm"
-#include "code\modules\modular_computers\file_system\programs\command\buisness.dm"
+#include "code\modules\modular_computers\file_system\programs\business\stockholders.dm"
 #include "code\modules\modular_computers\file_system\programs\command\card.dm"
 #include "code\modules\modular_computers\file_system\programs\command\comm.dm"
 #include "code\modules\modular_computers\file_system\programs\command\faction_core.dm"
@@ -2465,6 +2468,7 @@
 #include "code\modules\modular_computers\file_system\programs\generic\id_management.dm"
 #include "code\modules\modular_computers\file_system\programs\generic\invoicing.dm"
 #include "code\modules\modular_computers\file_system\programs\generic\library.dm"
+#include "code\modules\modular_computers\file_system\programs\generic\materialmarket.dm"
 #include "code\modules\modular_computers\file_system\programs\generic\news_browser.dm"
 #include "code\modules\modular_computers\file_system\programs\generic\ntdownloader.dm"
 #include "code\modules\modular_computers\file_system\programs\generic\ntnrc_client.dm"
@@ -3345,4 +3349,3 @@
 #include "maps\~unit_tests\unit_testing.dm"
 #include "~code\global_init.dm"
 // END_INCLUDE
-

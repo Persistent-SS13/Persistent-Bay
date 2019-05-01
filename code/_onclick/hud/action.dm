@@ -62,7 +62,7 @@
 	switch(action_type)
 		if(AB_ITEM)
 			if(target)
-				var/obj/item/item = target
+				var/obj/item = target
 				item.ui_action_click()
 		//if(AB_SPELL)
 		//	if(target)

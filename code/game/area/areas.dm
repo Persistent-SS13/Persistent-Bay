@@ -265,6 +265,9 @@ var/list/mob/living/forced_ambience_list = new
 	L.lastarea = newarea
 	play_ambience(L)
 
+	if(apc && apc.operating && !apc.shorted && !apc.failure_timer && !apc.stat & (BROKEN|MAINT))
+		apc.AlarmOnEntered(A)
+
 /area/proc/play_ambience(var/mob/living/M)
 	if(!M.client || M.get_preference_value(/datum/client_preference/play_ambience) == GLOB.PREF_NO || M.ear_deaf)
 		return 0

@@ -41,6 +41,11 @@
 #define APC_UPOVERLAY_LOCKED 8
 #define APC_UPOVERLAY_OPERATING 16
 
+// Alarm stuff
+#define ALARM_THREAT	1
+#define ALARM_WARN		2
+#define ALARM_OFF		0
+
 // Various APC types
 /obj/machinery/power/apc/critical
 	is_critical = 1
@@ -131,8 +136,13 @@
 
 	var/datum/world_faction/connected_faction
 	var/menu = 1
+
 	var/alarm_status = 0
 	var/alarm_access = 0
+	var/alarm_alert = FALSE
+	var/alarm_threat_warning = FALSE
+	var/alarm_threat_warning_timebuffer
+	var/alarm_threat_warning_timeout = 5 SECONDS
 
 
 
@@ -971,6 +981,7 @@
 		if(!connected_faction) return
 		if(src.allowed(usr) || isWireCut(APC_WIRE_IDSCAN))
 			alarm_status = 0
+			AlarmSet(ALARM_OFF)
 	if(href_list["set_alarm"])
 		if(!connected_faction) return
 		var/list/choices = list()
@@ -1190,6 +1201,8 @@
 	else if (last_ch != charging)
 		queue_icon_update()
 
+	AlarmUpdate()
+
 /obj/machinery/power/apc/proc/update_channels()
 	// Allow the APC to operate as normal if the cell can charge
 	if(charging && longtermpower < 10)
@@ -1381,6 +1394,58 @@ obj/machinery/power/apc/proc/autoset(var/cur_state, var/on)
 	to_chat(user, "\The [src] has been upgraded. It is now protected against EM pulses.")
 	return 1
 
+// ALARM HANDLERS
 
+/obj/machinery/power/apc/proc/AlarmOnEntered(var/mob/living/carbon/human/A)
+	if (!istype(A))
+		return
+	if (text2num(alarm_access) in A.GetAccess(req_access_faction))
+		return
+
+	AlarmHandleThreat(A)
+
+/obj/machinery/power/apc/proc/AlarmHandleThreat(var/mob/living/carbon/human/A)
+	if (!alarm_status || alarm_threat_warning || alarm_alert)
+		return
+	playsound(src, 'sound/effects/compbeep3.ogg', 80, 1)
+	to_chat(A, SPAN_DANGER("You detect what seems to be an alarm in this area. You have over [alarm_threat_warning_timeout/10] seconds to leave/deactivate the alarm.") )
+	AlarmSet(ALARM_WARN)
+
+/obj/machinery/power/apc/proc/AlarmCheckForThreats()
+	for (var/mob/living/carbon/human/A in src.area)
+		message_admins("Human found [A]")
+		if ( ! (text2num(alarm_access) in A.GetAccess(req_access_faction)) )
+			return AlarmSet(ALARM_THREAT)
+	return AlarmSet(ALARM_OFF)
+
+/obj/machinery/power/apc/proc/AlarmSet(var/status)
+	switch (status)
+		if (ALARM_WARN)
+			alarm_threat_warning = TRUE
+			alarm_threat_warning_timebuffer = world.time
+			alarm_alert = FALSE
+		if (ALARM_THREAT)
+			alarm_threat_warning = FALSE
+			alarm_threat_warning_timebuffer = null
+			alarm_alert = TRUE
+		if (ALARM_OFF)
+			alarm_threat_warning = FALSE
+			alarm_threat_warning_timebuffer = null
+			alarm_alert = FALSE
+
+/obj/machinery/power/apc/proc/AlarmUpdate()
+	if (!operating || !alarm_status)
+		AlarmSet(ALARM_OFF)
+		return
+	if (alarm_threat_warning)
+		if (world.time >= alarm_threat_warning_timebuffer + alarm_threat_warning_timeout)
+			AlarmCheckForThreats()
+	if (alarm_alert)
+		visible_message("** BEEP ** BEEP **** BEEP ** BEEP **")
+		playsound(src, 'sound/machines/airalarm.ogg', 80, 1)
 
 #undef APC_UPDATE_ICON_COOLDOWN
+
+#undef ALARM_OFF
+#undef ALARM_THREAT
+#undef ALARM_WARN

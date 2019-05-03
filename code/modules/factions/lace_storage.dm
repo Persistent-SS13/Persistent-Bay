@@ -1,4 +1,13 @@
-
+/proc/GetLaceStorage(var/mob/living/carbon/lace/character)
+	var/returnLoc = null
+	for(var/obj/machinery/lace_storage/S in GLOB.lace_storages)
+		if(S.req_access_faction == character.spawn_loc || S.req_access_faction == character.container.connected_faction)
+			if(S.network == character.spawn_loc_2)
+				returnLoc = S
+				break
+			else
+				returnLoc = S
+	return returnLoc
 
 /obj/machinery/lace_storage
 	name = "Lace Storage"
@@ -7,7 +16,7 @@
 	density = 1
 	icon = 'icons/obj/machines/dock_beacon.dmi'
 	icon_state = "unpowered2"
-	use_power = 0			//1 = idle, 2 = active
+	use_power = 2			//1 = idle, 2 = active
 	var/network = "default"
 
 /obj/machinery/lace_storage/New()
@@ -57,52 +66,71 @@
 	user.set_machine(src)
 	src.add_fingerprint(user)
 
-	var/datum/world_faction/faction = get_faction(req_access_faction)
+	ui_interact(user)
 
-	var/data[]
-	data += "<hr><br><b>Lace Storage Control</b></br>"
-	data += "This Lace Storage is [faction ? "connected to " + faction.name : "Not Connected"]<br><hr>"
-	if(faction)
-		data += "It's lace storage network is set to [network]<br><br>"
-		data += "<a href='?src=\ref[src];enter=1'>Enter Pod</a><br>"
-		data += "<a href='?src=\ref[src];eject=1'>Eject Occupant</a><br><br>"
-		data += "Those authorized can <a href='?src=\ref[src];disconnect=1'>disconnect this pod from the logistics network</a> or <a href='?src=\ref[src];connect_net=1'>connect to a different cryonetwork</a>."
+/obj/machinery/lace_storage/Topic(href, href_list)
+	switch (href_list["action"])
+		// ACTUAL LACE STORAGE CALLS (MADE FROM LIVING MOBS)
+		if("eject_lace")
+			EjectLaces()
+		if("disconnect")
+			if(allowed(usr) && req_access_faction)
+				var/datum/world_faction/faction = get_faction(req_access_faction)
+				req_access_faction = ""
+				to_chat(usr, SPAN_NOTICE("\The [src] has been disconnected from [faction? faction.name : "ERROR" ] .") )
+			else
+				to_chat(usr, SPAN_WARNING("Access Denied.") )
+		// LACE ONLY ACTION CALLS (MADE FROM DA DED)
+		if ("despawn")
+			var/mob/living/carbon/lace/mob = usr
+			message_admins("USR = [mob.container]")
+			DespawnLace(mob.container)
+		if ("ping_insurance")
+			// TO-DO
+			return 1
+	SSnano.update_uis(src)
+
+/obj/machinery/lace_storage/proc/lace_ui_interact(var/mob/user)
+	ui_interact(user)
+
+/obj/machinery/lace_storage/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.interactive_state)
+	var/list/data = list()
+
+	data["living"] = TRUE
+
+	if (istype(user, /mob/living/carbon/lace))
+		data["living"] = FALSE
+		data["can_insurance"] = FALSE // NOT YET IMPLEMENTED!
 	else
-		data += "Those authorized can connect this lace storage using an ID on it.</a>"
+		var/datum/world_faction/faction = get_faction(req_access_faction)
+		data["faction"] = faction? faction.name : null
 
-	show_browser(user, data, "window=cryopod")
-	onclose(user, "cryopod")
-
-/obj/machinery/lace_storage/OnTopic(var/mob/user = usr, href_list)
-	if(href_list["eject"])
-		EjectLaces()
-	if(href_list["disconnect"])
-		if(allowed(user) && req_access_faction)
-			var/datum/world_faction/faction = get_faction(req_access_faction)
-			req_access_faction = ""
-			to_chat(user, SPAN_NOTICE("\The [src] has been disconnected from [faction? faction.name : "ERROR" ] .") )
-		else
-			to_chat(user, SPAN_WARNING("Access Denied.") )
-
-/obj/machinery/lace_storage/ui_action_click()
-	attack_hand(usr)
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
+	if(!ui)
+		ui = new(user, src, ui_key, "lace_storage.tmpl", "[name] UI", 550, 450, state = state)
+		ui.auto_update_layout = 1
+		ui.set_initial_data(data)
+		ui.open()
 
 /obj/machinery/lace_storage/Process()
+	. = ..()
 	if (!use_power || stat)
 		return
 
 	for (var/obj/item/organ/internal/stack/S in contents)
 		var/mob/living/carbon/lace/mob = S.lacemob
-		if (!mob || !istype(mob))
+		if (!mob || !istype(mob) || mob.perma_dead)
 			qdel(S)
 			continue
 		if (!mob.client)
 			DespawnLace(S)
 			continue
-		/*if (!mob.storage_action)
-			mob.storage_action = new(src)
-			mob.storage_action.Grant(mob)
-			mob.update_action_buttons()*/
+		if (!mob.tmp_storage_action)
+			mob.tmp_storage_action = new(src)
+			mob.tmp_storage_action.button_icon = icon
+			mob.tmp_storage_action.button_icon_state = icon_state
+			mob.tmp_storage_action.Grant(mob)
+			mob.update_action_buttons()
 
 /obj/machinery/lace_storage/proc/InsertLace(var/obj/item/organ/internal/stack/S, var/mob/user)
 	if (!S)
@@ -115,10 +143,10 @@
 	to_chat(user, SPAN_NOTICE("You insert \the [S] into \the [src]."))
 
 /obj/machinery/lace_storage/proc/DespawnLace(var/obj/item/organ/internal/stack/S)
-	if(!S)
+	if(!S || !istype(S))
 		return 0
 
-	if (!S.lacemob)
+	if (!S.lacemob || S.lacemob.perma_dead)
 		qdel(S)
 		return
 
@@ -195,8 +223,7 @@
 	if (! ejecting in contents)
 		return
 	ejecting.loc = get_turf(src)
-	/*if (ejecting.lacemob.storage_action)
-		ejecting.lacemob.storage_action.Remove()
-		ejecting.lacemob.storage_action = null
+	if (ejecting.lacemob.tmp_storage_action)
+		ejecting.lacemob.tmp_storage_action.Remove(ejecting.lacemob)
+		QDEL_NULL(ejecting.lacemob.tmp_storage_action)
 	ejecting.lacemob.update_action_buttons()
-	*/

@@ -13,6 +13,8 @@
 
 	var/teleport_time = 0 // time when you can teleport back to nexus
 
+	var/datum/action/lace_storage/tmp_storage_action
+
 /mob/living/carbon/lace/New()
 	container = loc
 	var/datum/action/lace/laceaction = new(container)

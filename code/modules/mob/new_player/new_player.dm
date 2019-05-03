@@ -241,13 +241,7 @@
 			character.spawn_loc_2 = " default"
 
 		if (istype(character, /mob/living/carbon/lace) )
-			for(var/obj/machinery/lace_storage/S in GLOB.lace_storages)
-				if(S.req_access_faction == character.spawn_loc)
-					if(S.network == character.spawn_loc_2)
-						spawnTurf = S
-						break
-					else
-						spawnTurf = S
+			spawnTurf = GetLaceStorage(character)
 
 		if (!spawnTurf)
 			for(var/obj/machinery/cryopod/pod in GLOB.cryopods)

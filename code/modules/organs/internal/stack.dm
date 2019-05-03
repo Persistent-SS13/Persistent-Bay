@@ -85,7 +85,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	lacemob.real_name = H.real_name
 	lacemob.dna = H.dna.Clone()
 	lacemob.timeofhostdeath = H.timeofdeath
-	lacemob.teleport_time = H.timeofdeath + 30 MINUTES
+	lacemob.teleport_time = H.timeofdeath + 15 SECONDS//30 MINUTES //TESTING!!!!
 	lacemob.container = src
 	if(owner && isnull(owner.gc_destroyed))
 		lacemob.container2 = owner
@@ -172,7 +172,14 @@ GLOBAL_LIST_EMPTY(neural_laces)
 			selected_ballot = locate(href_list["ref"])
 
 		if("teleport") // NEEDS TO BE DONE
-			return 1
+			var/mob/living/carbon/lace/mob = usr
+			var/obj/machinery/lace_storage/storage = GetLaceStorage(mob)
+			if (storage)
+				mob.container.forceMove(storage)
+				return 1
+			else
+				message_admins("Couldnt find a Lace Storage for lacemob [mob] (stack.dm)")
+			return 0
 
 	if(href_list["page_up"])
 		curr_page++

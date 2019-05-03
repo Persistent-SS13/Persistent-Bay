@@ -85,7 +85,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	lacemob.real_name = H.real_name
 	lacemob.dna = H.dna.Clone()
 	lacemob.timeofhostdeath = H.timeofdeath
-	lacemob.teleport_time = H.timeofdeath + 15 SECONDS//30 MINUTES //TESTING!!!!
+	lacemob.teleport_time = H.timeofdeath + 30 MINUTES
 	lacemob.container = src
 	if(owner && isnull(owner.gc_destroyed))
 		lacemob.container2 = owner

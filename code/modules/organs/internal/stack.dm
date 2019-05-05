@@ -1,3 +1,6 @@
+// How long should dead lace mobs wait before being able to teleport ?
+#define DEAD_LACEMOB_STORAGE_TELEPORT_DELAY	120 MINUTES
+
 GLOBAL_LIST_EMPTY(neural_laces)
 /mob/var/perma_dead = 0
 
@@ -85,7 +88,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	lacemob.real_name = H.real_name
 	lacemob.dna = H.dna.Clone()
 	lacemob.timeofhostdeath = H.timeofdeath
-	lacemob.teleport_time = H.timeofdeath + 30 MINUTES
+	lacemob.teleport_time = H.timeofdeath + DEAD_LACEMOB_STORAGE_TELEPORT_DELAY
 	lacemob.container = src
 	if(owner && isnull(owner.gc_destroyed))
 		lacemob.container2 = owner
@@ -171,14 +174,13 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		if("select_ballot")
 			selected_ballot = locate(href_list["ref"])
 
-		if("teleport") // NEEDS TO BE DONE
-			var/mob/living/carbon/lace/mob = usr
-			var/obj/machinery/lace_storage/storage = GetLaceStorage(mob)
+		if("teleport")
+			var/obj/machinery/lace_storage/storage = GetLaceStorage(lacemob)
 			if (storage)
-				mob.container.forceMove(storage)
+				forceMove(storage)
 				return 1
 			else
-				message_admins("Couldnt find a Lace Storage for lacemob [mob] (stack.dm)")
+				message_admins("Couldnt find a Lace Storage for lacemob [lacemob] (stack.dm)")
 			return 0
 
 	if(href_list["page_up"])

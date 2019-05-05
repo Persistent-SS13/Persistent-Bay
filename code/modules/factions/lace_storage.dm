@@ -1,3 +1,5 @@
+
+// This general proc is used to retrieve a lace storage for a matching character, depending on its faction.
 /proc/GetLaceStorage(var/mob/living/carbon/lace/character)
 	var/returnLoc = null
 	for(var/obj/machinery/lace_storage/S in GLOB.lace_storages)
@@ -9,6 +11,7 @@
 				returnLoc = S
 	return returnLoc
 
+// Actual lace_storage code below
 /obj/machinery/lace_storage
 	name = "Lace Storage"
 	desc = "Home to those who departed to their better selves."
@@ -23,15 +26,19 @@
 	. = ..()
 	GLOB.lace_storages |= src
 
+/obj/machinery/lace_storage/Destroy()
+	GLOB.lace_storages -= src
+	DespawnAllLaces()
+	. = ..()
 
+// Despawn all the laces as we don't really want to save them if they are inside this machine already.
 /obj/machinery/lace_storage/before_save()
-	for (var/obj/item/organ/internal/stack/S in contents)
-		DespawnLace(S)
+	DespawnAllLaces()
 	..()
 
 /obj/machinery/lace_storage/attackby(var/obj/item/O, var/mob/user = usr)
-
-	if (istype(O, /obj/item/weapon/card/id)||istype(O, /obj/item/device/pda))			// trying to unlock the interface with an ID card
+	// Connecting the machine to the faction by id/pda
+	if (istype(O, /obj/item/weapon/card/id)||istype(O, /obj/item/device/pda))
 		if(!req_access_faction)
 			var/obj/item/weapon/card/id/id
 			if(istype(O, /obj/item/weapon/card/id))
@@ -46,18 +53,20 @@
 					to_chat(user, SPAN_NOTICE("\The [src] has been connected to your organization.") )
 				else
 					to_chat(user, SPAN_WARNING("Access Denied.") )
-
+	// We don't really want to do anything else further if we don't have the machine connected to a faction
 	if(!req_access_faction)
 		to_chat(user, "<span class='notice'>\The [src] hasn't been connected to a organization.</span>")
 		return
+	// Inserting a lace item
 	if(istype(O, /obj/item/organ/internal/stack))
 		InsertLace(O, user)
 		return
 
 /obj/machinery/lace_storage/interact(mob/user)
+	// When is this even called anymore ?
 	if (!user)
 		return
-	attack_hand(user)
+	ui_interact(user)
 
 /obj/machinery/lace_storage/attack_hand(var/mob/user = usr)
 	if(stat)	// If there are any status flags, it shouldn't be opperable
@@ -91,6 +100,8 @@
 	SSnano.update_uis(src)
 
 /obj/machinery/lace_storage/proc/lace_ui_interact(var/mob/user)
+	// This proc is called only by the lace's action when inside the machine.
+	// Since they dont have hands they need some help right...
 	ui_interact(user)
 
 /obj/machinery/lace_storage/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.interactive_state)
@@ -100,7 +111,7 @@
 
 	if (istype(user, /mob/living/carbon/lace))
 		data["living"] = FALSE
-		data["can_insurance"] = FALSE // NOT YET IMPLEMENTED!
+		data["has_insurance"] = FALSE // NOT YET IMPLEMENTED!
 	else
 		var/datum/world_faction/faction = get_faction(req_access_faction)
 		data["faction"] = faction? faction.name : null
@@ -143,6 +154,7 @@
 	to_chat(user, SPAN_NOTICE("You insert \the [S] into \the [src]."))
 
 /obj/machinery/lace_storage/proc/DespawnLace(var/obj/item/organ/internal/stack/S)
+	// Uses similar code to the despawnOccupant() on cryopods.
 	if(!S || !istype(S))
 		return 0
 
@@ -210,12 +222,16 @@
 	S.loc = null
 	QDEL_NULL(S)
 
+/obj/machinery/lace_storage/proc/DespawnAllLaces()
+	for (var/obj/item/organ/internal/stack/S in contents)
+		DespawnLace(S)
+
 /obj/machinery/lace_storage/proc/EjectLaces()
 	var/list/laces = new()
 	for (var/obj/item/organ/internal/stack/S in contents)
 		laces |= S
 
-	var/obj/item/organ/internal/stack/ejecting = input("Choose a Lace to eject from \The [src]", "[src]") in laces
+	var/obj/item/organ/internal/stack/ejecting = input("Choose a Lace to eject from \The [src]", "[src]", null) in laces
 	if (ejecting)
 		EjectLace(ejecting)
 

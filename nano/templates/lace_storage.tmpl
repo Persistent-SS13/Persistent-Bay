@@ -1,16 +1,27 @@
 <h2>Lace Storage Control Panel</h2>
 <br><hr>
+
 {{if data.living}}
+
 	{{if data.faction}}
 		<h3>This Lace Storage unit is connected to {{:data.faction}}.</h3><br>
-		<div class='itemLabel'>
-			{{:helper.link("Disconnect", '', {'action' : 'disconnect'},  null)}}
+		<div class='item'>
+			<div class='itemLabel'>
+				{{:helper.link("Disconnect", '', {'action' : 'disconnect'},  null)}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				{{:helper.link("Eject a Lace", '', {'action' : 'eject_lace'},  null)}}
+			</div>
+			<div class='itemContent'>
+				You'll be prompted to choose a lace to pick up.
+			</div>
 		</div>
 	{{/if}}
-	<div class='itemLabel'>
-		{{:helper.link("Eject Lace", '', {'action' : 'eject_lace'},  null)}}
-	</div>
+
 {{else}}
+
 	<h3>Death Controls</h3><br>
 	Your conciousness burns inside this mechanical prison. You review your options.<br>
 	<div class='item'>
@@ -24,7 +35,7 @@
 	</div>
 	<div class='item'>
 		<div class='itemLabel'>
-			{{:helper.link("Ping Insurance", '', {'action' : 'ping_insurance'}, data.can_insurance ? null : 'disabled')}}
+			{{:helper.link("Ping Insurance", '', {'action' : 'ping_insurance'}, data.has_insurance ? null : 'disabled')}}
 		</div>
 		<div class='itemContent'>
 			Ping your insurance company of the position of your lace, so that you get replaced onto a body as soon as possible!

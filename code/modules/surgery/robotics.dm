@@ -496,7 +496,7 @@
 			to_chat(user, SPAN_WARNING("You're pretty sure [target.species.name_plural] don't normally have a brain."))
 		else if(target.internal_organs[BP_BRAIN])
 			to_chat(user, SPAN_WARNING("Your subject already has a brain."))
-		else
+		else 
 			return TRUE
 	return FALSE
 

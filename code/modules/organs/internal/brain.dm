@@ -127,8 +127,6 @@
 
 /obj/item/organ/internal/brain/proc/handle_severe_brain_damage()
 	set waitfor = FALSE
-	testing("[src]\ref[src] Brain damage triggered, [get_damages()]")
-
 	healed_threshold = 0
 	to_chat(owner, "<span class = 'notice' font size='10'><B>Where am I...?</B></span>")
 	sleep(5 SECONDS)

@@ -64,6 +64,8 @@ var/list/organ_cache = list()
 //Already handled in /obj/
 // /obj/item/organ/proc/update_health()
 // 	return
+/obj/item/organ/proc/is_broken()
+	return ((max_health - health) >= min_broken_damage || (status & ORGAN_CUT_AWAY) || (status & ORGAN_BROKEN))
 
 /obj/item/organ/Initialize()
 	. = ..()
@@ -123,9 +125,6 @@ var/list/organ_cache = list()
 	if(health <= min_health)
 		die()
 	update_icon()
-
-/obj/item/organ/proc/is_broken()
-	return ((max_health - health) >= min_broken_damage || (status & ORGAN_CUT_AWAY) || (status & ORGAN_BROKEN))
 
 /obj/item/organ/destroyed()
 	die()

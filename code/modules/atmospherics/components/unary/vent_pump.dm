@@ -13,7 +13,7 @@
 	icon_state 			= "map_vent"
 	use_power 			= POWER_USE_IDLE
 	idle_power_usage 	= 150		//internal circuitry, friction losses and stuff
-	power_rating 		= 7500			//7500 W ~ 10 HP
+	power_rating 		= 30000			// 30000 W ~ 40 HP//7500			//7500 W ~ 10 HP
 	level 				= 1
 	connect_types 		= CONNECT_TYPE_REGULAR|CONNECT_TYPE_SUPPLY //connects to regular and supply pipes
 
@@ -105,7 +105,7 @@
 /obj/machinery/atmospherics/unary/vent_pump/high_volume
 	name = "Large Air Vent"
 	power_channel = EQUIP
-	power_rating = 15000	//15 kW ~ 20 HP
+	power_rating = 45000
 
 /obj/machinery/atmospherics/unary/vent_pump/high_volume/New()
 	..()
@@ -124,7 +124,7 @@
 	. = ..()
 	update_use_power(POWER_USE_OFF)
 
-/obj/machinery/atmospherics/unary/vent_pump/update_icon(var/safety = 0)
+/obj/machinery/atmospherics/unary/vent_pump/on_update_icon(var/safety = 0)
 	if(!check_icon_cache())
 		return
 	overlays.Cut()

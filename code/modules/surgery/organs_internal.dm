@@ -233,7 +233,7 @@
 				to_chat(user, SPAN_WARNING("\The [O.name] [o_is] in no state to be transplanted."))
 			else if(O.w_class > affected.cavity_max_w_class)
 				to_chat(user, SPAN_WARNING("\The [O.name] [o_is] too big for [affected.cavity_name] cavity!"))
-			else
+			else 
 				var/obj/item/organ/internal/I = target.internal_organs_by_name[O.organ_tag]
 				if(I && (I.parent_organ == affected.organ_tag || istype(O, /obj/item/organ/internal/stack)))
 					to_chat(user, SPAN_WARNING("\The [target] already has [o_a][O.name]."))

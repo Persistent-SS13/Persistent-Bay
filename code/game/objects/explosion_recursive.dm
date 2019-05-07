@@ -87,8 +87,6 @@ proc/explosion_rec(turf/epicenter, power, shaped)
 		M.color = "#ffcc00"
 */
 	var/spread_power = power - src.get_explosion_resistance() //This is the amount of power that will be spread to the tile in the direction of the blast
-	for(var/obj/O in src)
-		spread_power -= O.get_explosion_resistance()
 
 	var/turf/T = get_step(src, direction)
 	if(T)
@@ -105,11 +103,21 @@ proc/explosion_rec(turf/epicenter, power, shaped)
 
 /atom/var/explosion_resistance
 /atom/proc/get_explosion_resistance()
-	if(simulated && density)
+	if(simulated)
 		return explosion_resistance
+
+/turf/get_explosion_resistance()
+	. = ..()
+	for(var/obj/O in src)
+		. += O.get_explosion_resistance()
 
 /turf/space
 	explosion_resistance = 3
+
+/turf/simulated/floor/get_explosion_resistance()
+	. = ..()
+	if(is_below_sound_pressure(src))
+		. *= 3
 
 /turf/simulated/floor
 	explosion_resistance = 1
@@ -122,3 +130,9 @@ proc/explosion_rec(turf/epicenter, power, shaped)
 
 /turf/simulated/wall
 	explosion_resistance = 10
+
+/obj/machinery/door/get_explosion_resistance()
+	if(!density)
+		return 0
+	else
+		return ..()

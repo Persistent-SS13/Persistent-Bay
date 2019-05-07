@@ -130,14 +130,11 @@
 	for(var/datum/computer_file/program/P in idle_threads)
 		P.event_idremoved(1)
 
-	card_slot.stored_card.forceMove(get_turf(src))
-	if(Adjacent(user) && !issilicon(user))
-		user.put_in_hands(card_slot.stored_card)
+	user.put_in_hands(card_slot.stored_card)
+	to_chat(user, "You remove [card_slot.stored_card] from [src].")
 	card_slot.stored_card = null
 	update_uis()
 	update_verbs()
-	to_chat(user, "You remove [card_slot.stored_card] from [src].")
-
 
 /obj/item/modular_computer/proc/proc_eject_usb(mob/user)
 	if(!user)
@@ -189,8 +186,9 @@
 		turn_on(user)
 
 /obj/item/modular_computer/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
-	if(active_program?.handleInteraction(W, user))
-		return
+	//Tell the program
+	if(active_program && active_program.event_item_used(W, user))
+		return 1
 	if(istype(W, /obj/item/weapon/card/id)) // ID Card, try to insert it.
 		var/obj/item/weapon/card/id/I = W
 		if(!card_slot)
@@ -236,10 +234,10 @@
 		var/obj/item/weapon/paper/paper = W
 		if(scanner && paper.info)
 			scanner.do_on_attackby(user, W)
-	if(istype(W, /obj/item/weapon/paper) || istype(W, /obj/item/weapon/paper_bundle) || istype(W, /obj/item/weapon/shreddedp))
-		if(!nano_printer)
 			return
-		nano_printer.attackby(W, user)
+	if(istype(W, /obj/item/weapon/paper) || istype(W, /obj/item/weapon/paper_bundle) || istype(W, /obj/item/weapon/shreddedp))
+		if(nano_printer)
+			nano_printer.attackby(W, user)
 	if(istype(W, /obj/item/weapon/aicard))
 		if(!ai_slot)
 			return

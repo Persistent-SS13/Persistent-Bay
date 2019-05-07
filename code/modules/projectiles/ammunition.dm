@@ -16,6 +16,10 @@
 	var/spent_icon = "pistolcasing-spent"
 	var/fall_sounds = list('sound/weapons/guns/casingfall1.ogg','sound/weapons/guns/casingfall2.ogg','sound/weapons/guns/casingfall3.ogg')
 
+/obj/item/ammo_casing/New()
+	..()
+	ADD_SAVED_VAR(BB)
+
 /obj/item/ammo_casing/Initialize()
 	if(ispath(projectile_type))
 		BB = new projectile_type(src)

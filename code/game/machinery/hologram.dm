@@ -227,10 +227,10 @@ For the other part of the code, check silicon say.dm. Particularly robot talk.*/
 			master.show_message(get_hear_message(name_used, ai_text, verb, speaking), 2)
 	var/name_used = M.GetVoice()
 	var/message = get_hear_message(name_used, text, verb, speaking)
-	if(targetpad) //If this is the pad you're making the call from
+	if(targetpad && !targetpad.incoming_connection) //If this is the pad you're making the call from and the call is accepted
 		targetpad.audible_message(message)
 		targetpad.last_message = message
-	if(sourcepad) //If this is a pad receiving a call
+	if(sourcepad && sourcepad.targetpad && !sourcepad.targetpad.incoming_connection) //If this is a pad receiving a call and the call is accepted
 		if(name_used==caller_id||text==last_message||findtext(text, "Holopad received")) //prevent echoes
 			return
 		sourcepad.audible_message(message)
@@ -370,6 +370,8 @@ For the other part of the code, check silicon say.dm. Particularly robot talk.*/
 		var/obj/effect/overlay/hologram = masters[user]
 		hologram.dir = new_dir
 
+
+
 /*
  * Hologram
  */
@@ -431,6 +433,11 @@ Holographic project of everything else.
 
 	if(loc)
 		desc = "It's a floor-mounted device for projecting holographic images. This one utilizes a bluespace transmitter to communicate with far away locations. Its ID is '[loc.loc]'"
+
+// Used for overmap capable ships that should have communications, but not be AI accessible
+/obj/machinery/hologram/holopad/longrange/remoteship
+	allow_ai = FALSE
+
 #undef RANGE_BASED
 #undef AREA_BASED
 #undef HOLOPAD_PASSIVE_POWER_USAGE

@@ -31,7 +31,13 @@
 	if(!win_path)
 		return
 
-	if(mapload || GAME_STATE < RUNLEVEL_GAME)	// That way you can lay down a bunch and activate them manually
+	// sometimes it's useful to plonk these down and activate them all manually,
+	// once all your ducks are in a row. So if we're already playing, only
+	// auto-activate if this has been put down by a maploader, not a creative admin
+	// see https://github.com/Baystation12/Baystation12/pull/9907#issuecomment-114896669
+	var/auto_activate = mapload || (GAME_STATE < RUNLEVEL_GAME)
+
+	if(auto_activate)
 		activate()
 		return INITIALIZE_HINT_QDEL
 

@@ -3,6 +3,7 @@
 	desc 			= "A gas flow meter. Monitors the pipe it is attached to."
 	icon 			= 'icons/obj/meter.dmi'
 	icon_state 		= "meterX"
+	layer = ABOVE_WINDOW_LAYER
 	anchored 		= TRUE
 	power_channel 	= ENVIRON
 	idle_power_usage= 15

@@ -26,13 +26,7 @@
 	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/console_screen(src))
 	. = ..()
 
-/obj/machinery/body_scanconsole/Destroy()
-	. = ..()
-	for(var/D in connected_displays)
-		remove_display(D)
-	unlink_scanner(connected)
-
-/obj/machinery/body_scanconsole/update_icon()
+/obj/machinery/body_scanconsole/on_update_icon()
 	if(inoperable())
 		icon_state = "body_scannerconsole-p"	
 	else
@@ -153,3 +147,9 @@
 /obj/machinery/body_scanconsole/proc/remove_display(var/obj/machinery/body_scan_display/display)
 	connected_displays -= display
 	GLOB.destroyed_event.unregister(display, src, .proc/remove_display)
+
+/obj/machinery/body_scanconsole/Destroy()
+	. = ..()
+	for(var/D in connected_displays)
+		remove_display(D)
+	unlink_scanner(connected)

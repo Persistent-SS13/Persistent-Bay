@@ -46,11 +46,11 @@
 
 	if(!material)
 		return
+	
+	LAZYCLEARLIST(overlays)
 
-	if(!damage_overlays[1]) //list hasn't been populated; note that it is always of fixed length, so we must check for membership.
+	if(!damage_overlays || damage_overlays && !damage_overlays[1]) //list hasn't been populated; note that it is always of fixed length, so we must check for membership.
 		generate_overlays()
-
-	overlays.Cut()
 
 	var/image/I
 	var/base_color = paint_color ? paint_color : material.icon_colour

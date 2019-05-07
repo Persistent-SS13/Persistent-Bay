@@ -23,6 +23,15 @@
 	var/efficiency
 	var/current_heat_capacity = 50
 
+/obj/machinery/atmospherics/unary/cryo_cell/New()
+	..()
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(occupant)
+	ADD_SAVED_VAR(beaker)
+
+	ADD_SKIP_EMPTY(occupant)
+	ADD_SKIP_EMPTY(beaker)
+
 /obj/machinery/atmospherics/unary/cryo_cell/Initialize()
 	. = ..()
 	icon = 'icons/obj/cryogenics_split.dmi'

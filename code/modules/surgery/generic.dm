@@ -76,10 +76,9 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='notice'>[user] has constructed a prepared incision on and within [target]'s [affected.name] with \the [tool].</span>", \
 	"<span class='notice'>You have constructed a prepared incision on and within [target]'s [affected.name] with \the [tool].</span>",)
-
-	affected.createwound(DAM_CUT, affected.min_broken_damage/2, 1)
-	affected.clamp()
-	affected.open_incision()
+	affected.createwound(DAM_CUT, affected.min_broken_damage/2, 1) // incision
+	affected.clamp() // clamp
+	affected.open_incision() // retract
 
 /decl/surgery_step/generic/managed/fail_step(mob/living/user, mob/living/carbon/human/target, target_zone, obj/item/tool)
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)

@@ -222,7 +222,7 @@
 //Used to calculate armor damage reduction. Returns the integer percentage of the damage absorbed
 /obj/proc/armor_absorb(var/damage, var/ap, var/damagetype)
 	if(!damagetype)
-		log_warning("Null damage type was passed to armor_absorb for \the [src] object! With damage = [damage], and ap = [ap]!")
+		log_warning("Null damage type was passed to armor_absorb for \the [src] \ref[src] object! With damage = [damage], and ap = [ap]!")
 		return 0
 	if(ap >= MaxArmorValue || !armor)
 		return 0 //bypass armor

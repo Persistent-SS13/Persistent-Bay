@@ -17,6 +17,10 @@
 
 /obj/machinery/deployable/barrier/New()
 	..()
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(anchored)
+
+/obj/machinery/deployable/barrier/on_update_icon()
 	src.icon_state = "barrier[src.locked]"
 
 /obj/machinery/deployable/barrier/attackby(obj/item/weapon/W as obj, mob/user as mob)

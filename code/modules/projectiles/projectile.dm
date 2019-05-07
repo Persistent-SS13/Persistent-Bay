@@ -295,7 +295,9 @@
 	//the bullet passes through a dense object!
 	if(passthrough)
 		//move ourselves onto A so we can continue on our way.
-		forceMove(get_turf(A))
+		var/turf/T = get_turf(A)
+		if(T)
+			forceMove(T)
 		permutated.Add(A)
 		bumped = 0 //reset bumped variable!
 		return 0
@@ -354,7 +356,6 @@
 			first_step = 0
 		else if(!bumped && kill_count > 0)
 			tracer_effect(effect_transform)
-
 		if(!hitscan)
 			sleep(step_delay)	//add delay between movement iterations if it's not a hitscan weapon
 

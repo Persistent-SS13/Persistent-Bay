@@ -2145,7 +2145,11 @@
 	description = "Subtle green tea, it has antioxidants, it's good for you!"
 	taste_description = "subtle green tea"
 	color = "#b4cd94"
+<<<<<<< Updated upstream
 
+=======
+	
+>>>>>>> Stashed changes
 	glass_name = "green tea"
 	glass_desc = "Subtle green tea, it has antioxidants, it's good for you!"
 
@@ -2154,16 +2158,27 @@
 	description = "It's the green tea you know and love, but now it's cold."
 	taste_description = "cold green tea"
 	color = "#b4cd94"
+<<<<<<< Updated upstream
 
 	glass_name = "iced green tea"
 	glass_desc = "It's the green tea you know and love, but now it's cold."
 
+=======
+	
+	glass_name = "iced green tea"
+	glass_desc = "It's the green tea you know and love, but now it's cold."
+	
+>>>>>>> Stashed changes
 /datum/reagent/drink/tea/icetea/green/sweet
 	name = "Sweet Green Tea"
 	description = "It's the green tea you know and love, but now it's cold. And sweet."
 	taste_description = "sweet green tea"
 	color = "#b4cd94"
+<<<<<<< Updated upstream
 
+=======
+	
+>>>>>>> Stashed changes
 	glass_name = "sweet green tea"
 	glass_desc = "It's the green tea you know and love, but now it's cold. And sweet."
 

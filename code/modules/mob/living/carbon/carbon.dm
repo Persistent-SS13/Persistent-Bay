@@ -25,7 +25,7 @@
 	bloodstr.clear_reagents()
 	touching.clear_reagents()
 	var/datum/reagents/R = get_ingested_reagents()
-	if(istype(R))
+	if(istype(R)) 
 		R.clear_reagents()
 	nutrition = 400
 	..()

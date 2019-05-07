@@ -27,11 +27,10 @@
 	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/console_screen(src))
 	. = ..()
 
-/obj/machinery/bodyscanner/Destroy()
-	if(occupant)
-		occupant.dropInto(loc)
-		occupant = null
+/obj/machinery/bodyscanner/examine(mob/user)
 	. = ..()
+	if (. && occupant && user.Adjacent(src))
+		occupant.examine(user)
 
 /obj/machinery/bodyscanner/examine(mob/user)
 	. = ..()
@@ -154,3 +153,8 @@
 	return ..()
 
 
+/obj/machinery/bodyscanner/Destroy()
+	if(occupant)
+		occupant.dropInto(loc)
+		occupant = null
+	. = ..()

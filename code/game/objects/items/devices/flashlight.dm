@@ -172,7 +172,7 @@
 	if(H == user)	//can't look into your own eyes buster
 		return
 
-	if(!BP_IS_ROBOTIC(vision))	// If it's not robotic
+	if(!BP_IS_ROBOTIC(vision))
 
 		if(vision.owner.stat == DEAD || H.blinded)	//mob is dead or fully blind
 			to_chat(user, "<span class='warning'>\The [H]'s pupils do not react to the light!</span>")

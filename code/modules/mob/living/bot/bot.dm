@@ -53,6 +53,11 @@
 	access_scanner.req_access = req_access.Copy()
 	access_scanner.req_one_access = req_one_access.Copy()
 
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(open)
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(emagged)
+
 /mob/living/bot/Initialize()
 	. = ..()
 	if(on)

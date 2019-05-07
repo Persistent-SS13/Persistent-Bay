@@ -26,11 +26,6 @@
 	item_state = "atmos_suit"
 	worn_state = "atmos"
 	gender_icons = 1
-<<<<<<< Updated upstream
-=======
-	heat_protection = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
-	max_heat_protection_temperature = 1000
->>>>>>> Stashed changes
 	armor  = list(
 		DAM_BLUNT 	= 0,
 		DAM_PIERCE 	= 2,
@@ -52,11 +47,6 @@
 	item_state = "engi_suit"
 	worn_state = "engine"
 	gender_icons = 1
-<<<<<<< Updated upstream
-=======
-	heat_protection = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
-	max_heat_protection_temperature = 800
->>>>>>> Stashed changes
 	armor  = list(
 		DAM_BLUNT 	= 0,
 		DAM_PIERCE 	= 2,

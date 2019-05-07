@@ -301,7 +301,16 @@
 	if(istype(I, /obj/item/weapon/nullrod))
 		user.visible_message("<span class='notice'>\The [user] touches \the [src] with \the [I], and it disappears.</span>", "<span class='notice'>You disrupt the vile magic with the deadening field of \the [I].</span>")
 		qdel(src)
+	else if(I.force)
+		user.visible_message("<span class='notice'>\The [user] hits \the [src] with \the [I].</span>", "<span class='notice'>You hit \the [src] with \the [I].</span>")
+		take_damage(I.force, I.damtype)
+		user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
+		user.do_attack_animation(src)
+
+/obj/effect/cultwall/bullet_act(var/obj/item/projectile/Proj)
+	if(!(IsDamageTypeBrute(Proj.damtype)|| IsDamageTypeBurn(Proj.damtype)))
 		return
+	take_damage(Proj.force, Proj.damtype)
 	..()
 
 /obj/effect/cultwall/destroyed()
@@ -348,6 +357,34 @@
 	visible_message("<span class='warning'>\The [src] embeds into the floor and walls around it, changing them!</span>", "You hear liquid flow.")
 	qdel(src)
 
+/obj/effect/rune/obscure
+	cultname = "obscure"
+
+/obj/effect/rune/obscure/cast(var/mob/living/user)
+	var/runecheck = 0
+	for(var/obj/effect/rune/R in orange(1, src))
+		if(R != src)
+			R.set_invisibility(INVISIBILITY_OBSERVER)
+		runecheck = 1
+	if(runecheck)
+		speak_incantation(user, "Kla[pick("'","`")]atu barada nikt'o!")
+		visible_message("<span class='warning'>\ The rune turns into gray dust that conceals the surrounding runes.</span>")
+		qdel(src)
+
+/obj/effect/rune/reveal
+	cultname = "reveal"
+
+/obj/effect/rune/reveal/cast(var/mob/living/user)
+	var/irunecheck = 0
+	for(var/obj/effect/rune/R in orange(1, src))
+		if(R != src)
+			R.set_invisibility(SEE_INVISIBLE_NOLIGHTING)
+		irunecheck = 1
+	if(irunecheck)
+		speak_incantation(user, "Nikt[pick("'","`")]o barada kla'atu!")
+		visible_message("<span class='warning'>\ The rune turns into red dust that reveals the surrounding runes.</span>")
+		qdel(src)
+
 /* Tier 2 runes */
 
 
@@ -364,10 +401,10 @@
 		user.equip_to_slot_or_del(new /obj/item/clothing/head/culthood/alt(user), slot_head)
 	O = user.get_equipped_item(slot_wear_suit)
 	if(O && !istype(O, /obj/item/clothing/suit/cultrobes) && user.unEquip(O))
-		user.equip_to_slot_or_del(new /obj/item/clothing/suit/cultrobes/alt(user), slot_wear_suit)	
+		user.equip_to_slot_or_del(new /obj/item/clothing/suit/cultrobes/alt(user), slot_wear_suit)
 	O = user.get_equipped_item(slot_shoes)
 	if(O && !istype(O, /obj/item/clothing/shoes/cult) && user.unEquip(O))
-		user.equip_to_slot_or_del(new /obj/item/clothing/shoes/cult(user), slot_shoes)	
+		user.equip_to_slot_or_del(new /obj/item/clothing/shoes/cult(user), slot_shoes)
 
 	O = user.get_equipped_item(slot_back)
 	if(istype(O, /obj/item/weapon/storage) && !istype(O, /obj/item/weapon/storage/backpack/cultpack) && user.unEquip(O)) // We don't want to make the vox drop their nitrogen tank, though
@@ -824,6 +861,10 @@
 	new papertype(get_turf(src))
 	qdel(target)
 	qdel(src)
+
+/obj/effect/rune/imbue/stun
+	cultname = "stun imbue"
+	papertype = /obj/item/weapon/paper/talisman/stun
 
 /obj/effect/rune/imbue/emp
 	cultname = "destroy technology imbue"

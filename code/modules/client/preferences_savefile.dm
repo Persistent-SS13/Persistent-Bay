@@ -15,17 +15,17 @@
 
 /datum/preferences/proc/load_path(ckey,filename="preferences.sav")
 	if(!ckey)	return
-	path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
+	path = load_path(ckey, filename)
 	savefile_version = SAVEFILE_VERSION_MAX
 
 /datum/preferences/proc/beta_path(ckey,filename="preferences.sav")
 	if(!ckey) return
-	path = "exports/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
+	path =  beta_path(ckey, filename)
 	savefile_version = SAVEFILE_VERSION_MAX
 
 /datum/preferences/proc/exit_path(ckey,filename="preferences.sav")
 	if(!ckey)	return
-	path = "exits/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
+	path = exit_path(ckey, filename)
 	savefile_version = SAVEFILE_VERSION_MAX
 
 
@@ -53,11 +53,11 @@
 	return 1
 
 /datum/preferences/proc/load_character(slot)
-//	if(!path)				return 0
-//	if(!fexists(path))		return 0
-//	var/savefile/S = new /savefile(path)
-//	if(!S)					return 0
-//	S.cd = "/"
+	// if(!path)				return 0
+	// if(!fexists(path))		return 0
+	// var/savefile/S = new /savefile(path)
+	// if(!S)					return 0
+	// S.cd = "/"
 //	if(!slot)	slot = default_slot
 
 	/**
@@ -81,20 +81,10 @@
 	return 1
 
 /datum/preferences/proc/save_character()
-	if(!path)				return 0
-	var/savefile/S = new /savefile(path)
-	if(!S)					return 0
-	S.cd = GLOB.using_map.character_save_path(default_slot)
-
-	S["version"] << SAVEFILE_VERSION_MAX
-	player_setup.save_character(S)
-	loaded_character = S
-	return S
-/*
-//	if(!path)				return 0
-//	var/savefile/S = new /savefile(path)
-//	if(!S)					return 0
-//	S.cd = GLOB.using_map.character_save_path(default_slot)
+	// if(!path)				return 0
+	//var/savefile/S = new /savefile(path)
+	//if(!S)					return 0
+	//S.cd = GLOB.using_map.character_save_path(default_slot)
 	var/use_path = load_path(client.ckey, "")
 	var/savefile/S = new("[use_path][chosen_slot].sav")
 	var/mob/living/carbon/human/mannequin = new()
@@ -182,7 +172,6 @@
 //	player_setup.save_character(S)
 //	loaded_character = S
 //	return S
-*/
 
 /datum/preferences/proc/sanitize_preferences()
 	player_setup.sanitize_setup()

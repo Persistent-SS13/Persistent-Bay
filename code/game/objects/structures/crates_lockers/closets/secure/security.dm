@@ -1,7 +1,7 @@
 /obj/structure/closet/secure_closet/captains
 	name = "captain's locker"
-	closet_appearance = /decl/closet_appearance/secure_closet/command
 	req_access = list(core_access_leader)
+	closet_appearance = /decl/closet_appearance/secure_closet/command
 
 /obj/structure/closet/secure_closet/captains/filled/WillContain() //Add the contents to Supply Crate.
 	return list(

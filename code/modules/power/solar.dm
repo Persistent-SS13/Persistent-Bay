@@ -59,6 +59,14 @@ var/list/solars_list = list()
 		health *= 2 								 //this need to be placed here, because panels already on the map don't have an assembly linked to
 	update_icon()
 
+/obj/machinery/power/solar/attack_ai(mob/user)
+	. = ..()
+	return interact(user);
+
+/obj/machinery/power/solar/attack_ghost(mob/user)
+	. = ..()
+	return interact(user);
+
 /obj/machinery/power/solar/attackby(obj/item/weapon/W, mob/user)
 	if(isCrowbar(W))
 		playsound(src.loc, 'sound/machines/click.ogg', 50, 1)
@@ -108,7 +116,7 @@ var/list/solars_list = list()
 		return
 	if(!GLOB.sun || !control) //if there's no sun or the panel is not linked to a solar control computer, no need to proceed
 		return
-
+	testing("processing [src] \ref[src], PN:[powernet](\ref[powernet]), CT:[control](\ref[control]), Gen:[solar_gen_rate * sunfrac * efficiency]")
 	if(powernet)
 		if(powernet == control.powernet)//check if the panel is still connected to the computer
 			if(obscured) //get no light from the sun, so don't generate power
@@ -136,7 +144,6 @@ var/list/solars_list = list()
 
 /obj/machinery/power/solar/fake/Process()
 	. = PROCESS_KILL
-	return
 
 //trace towards sun to see if we're in shadow
 /obj/machinery/power/solar/proc/occlusion()
@@ -247,7 +254,6 @@ var/list/solars_list = list()
 	idle_power_usage = 250
 	max_health=50
 	break_threshold = 0.25
-	var/id = 0
 	var/cdir = 0
 	var/targetdir = 0		// target angle in manual tracking (since it updates every game minute)
 	var/gen = 0
@@ -258,10 +264,15 @@ var/list/solars_list = list()
 	var/obj/machinery/power/tracker/connected_tracker = null
 	var/list/connected_panels = list()
 
+/obj/machinery/power/solar_control/New()
+	..()
+	ADD_SAVED_VAR(track)
+	ADD_SAVED_VAR(trackrate)
+	ADD_SAVED_VAR(nexttime)
+
 /obj/machinery/power/solar_control/Initialize()
 	. = ..()
-	if(map_storage_loaded)
-		. = INITIALIZE_HINT_LATELOAD
+	return INITIALIZE_HINT_LATELOAD
 
 /obj/machinery/power/solar_control/LateInitialize()
 	..()
@@ -414,6 +425,7 @@ var/list/solars_list = list()
 	lastgen = gen
 	gen = 0
 
+	testing("Processing [src](\ref[src]). LastGen:[lastgen]")
 	if(inoperable())
 		return
 
@@ -430,11 +442,11 @@ var/list/solars_list = list()
 
 /obj/machinery/power/solar_control/Topic(href, href_list)
 	if(..())
-		usr << browse(null, "window=solcon")
+		close_browser(usr, "window=solcon")
 		usr.unset_machine()
 		return 0
 	if(href_list["close"] )
-		usr << browse(null, "window=solcon")
+		close_browser(usr, "window=solcon")
 		usr.unset_machine()
 		return 0
 
@@ -466,6 +478,12 @@ var/list/solars_list = list()
 		if(connected_tracker && track == 2)
 			connected_tracker.set_angle(GLOB.sun.angle)
 		src.set_panels(cdir)
+
+	if(href_list["disconnect"])
+		for(var/obj/machinery/power/solar/M in connected_panels)
+			M.unset_control()
+		if(connected_tracker)
+			connected_tracker.unset_control()
 
 	interact(usr)
 	return 1

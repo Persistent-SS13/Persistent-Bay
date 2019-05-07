@@ -1,17 +1,4 @@
-/obj/item/device/mmi
-	name = "man-machine interface"
-	desc = "A complex life support shell that interfaces between a brain and electronic devices."
-	icon = 'icons/obj/assemblies.dmi'
-	icon_state = "mmi_empty"
-	w_class = ITEM_SIZE_NORMAL
-	origin_tech = list(TECH_BIO = 3)
-	req_access = list(core_access_science_programs)
-
-	//Revised. Brainmob is now contained directly within object of transfer. MMI in this case.
-	var/locked = 0
-	var/mob/living/carbon/brain/brainmob = null//The current occupant.
-	var/obj/item/organ/internal/brain/brainobj = null	//The current brain organ.
-	var/obj/mecha = null//This does not appear to be used outside of reference in mecha.dm.
+//This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:32
 
 /obj/item/device/mmi/digital/New()
 	src.brainmob = new(src)
@@ -40,6 +27,22 @@
 	if(H.mind)
 		H.mind.transfer_to(brainmob)
 	return
+
+/obj/item/device/mmi
+	name = "man-machine interface"
+	desc = "A complex life support shell that interfaces between a brain and electronic devices."
+	icon = 'icons/obj/assemblies.dmi'
+	icon_state = "mmi_empty"
+	w_class = ITEM_SIZE_NORMAL
+	origin_tech = list(TECH_BIO = 3)
+	req_access = list(core_access_science_programs)
+
+	//Revised. Brainmob is now contained directly within object of transfer. MMI in this case.
+
+	var/locked = 0
+	var/mob/living/carbon/brain/brainmob = null//The current occupant.
+	var/obj/item/organ/internal/brain/brainobj = null	//The current brain organ.
+	var/obj/mecha = null//This does not appear to be used outside of reference in mecha.dm.
 
 /obj/item/device/mmi/attackby(var/obj/item/O as obj, var/mob/user as mob)
 	if(istype(O,/obj/item/organ/internal/brain) && !brainmob) //Time to stick a brain in it --NEO

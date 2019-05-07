@@ -278,7 +278,7 @@ other types of metals and chemistry for reagents).
 	id = "mining_scanner"
 	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2)
 	materials = list(MATERIAL_STEEL = 1000,MATERIAL_GLASS = 1000)
-	build_path = /obj/item/weapon/mining_scanner
+	build_path = /obj/item/device/scanner/mining/
 	sort_string = "KAAAF"
 
 /datum/design/item/device/depth_scanner

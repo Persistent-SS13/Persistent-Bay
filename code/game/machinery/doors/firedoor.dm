@@ -60,6 +60,9 @@
 			log_debug("Found multiple [src.type] at '[log_info_line(loc)]'. Deleting self!")
 			return INITIALIZE_HINT_QDEL
 	var/area/A = get_area(src)
+	if(!istype(A))
+		log_debug("[src](\ref[src]) has invalid area, probably in nullspace. Deleting..")
+		return INITIALIZE_HINT_QDEL
 	ASSERT(istype(A))
 
 	LAZYADD(A.all_doors, src)

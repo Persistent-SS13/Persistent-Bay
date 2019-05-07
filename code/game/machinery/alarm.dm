@@ -369,6 +369,9 @@
 
 /obj/machinery/alarm/OnSignal(datum/signal/signal)
 	. = ..()
+	if(!alarm_area)
+		log_warning("\"[src]\"(\ref[src]) ([x], [y], [z]): has invalid alarm area \"[alarm_area]\", and receiving a signal..")
+		return 
 	if (alarm_area.master_air_alarm != src)
 		if (master_is_operating())
 			return
@@ -717,6 +720,10 @@
 					send_signal(device_id, list(href_list["command"] = text2num(href_list["val"]) ) )
 					return TOPIC_HANDLED
 
+				if("scrubbing")
+					send_signal(device_id, list(href_list["command"] = href_list["scrub_mode"]) )
+					return TOPIC_REFRESH
+
 				if("set_threshold")
 					var/env = href_list["env"]
 					var/threshold = text2num(href_list["var"])
@@ -892,3 +899,5 @@ Just a object used in constructing air alarms
 	desc = "Looks like a circuit. Probably is."
 	w_class = ITEM_SIZE_SMALL
 	matter = list(MATERIAL_STEEL = 50, MATERIAL_GLASS = 50)
+
+

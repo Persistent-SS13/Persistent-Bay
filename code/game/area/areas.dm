@@ -212,8 +212,8 @@ var/list/mob/living/forced_ambiance_list = new
 	if(apc && apc.operating && !apc.shorted && !apc.failure_timer && !apc.stat & (BROKEN|MAINT))
 		apc.AlarmOnEntered(A)
 
-/area/proc/play_ambience(var/mob/living/M)
-	if(!M.client || M.get_preference_value(/datum/client_preference/play_ambience) == GLOB.PREF_NO || M.ear_deaf)
+/area/proc/play_ambience(var/mob/living/L)
+	if(!L.client || L.get_preference_value(/datum/client_preference/play_ambiance) == GLOB.PREF_NO || L.ear_deaf)
 		return 0
 
 	var/turf/T = get_turf(L)

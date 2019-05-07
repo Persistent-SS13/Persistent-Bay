@@ -30,9 +30,7 @@ var/list/floor_light_cache = list()
 
 /obj/machinery/floor_light/Destroy()
 	log_debug("Deleting floor_light from [loc]")
-	turn_off()
 	. = ..()
-
 
 /obj/machinery/floor_light/after_load()
 	..()

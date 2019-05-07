@@ -114,7 +114,14 @@ GLOBAL_LIST_EMPTY(all_expense_cards)
 	origin_tech = list(TECH_MAGNET = 2, TECH_ILLEGAL = 2)
 	var/uses = 10
 
-	var/static/list/card_choices
+	var/static/list/card_choices = list(
+							/obj/item/weapon/card/emag,
+							/obj/item/weapon/card/union,
+							/obj/item/weapon/card/data,
+							/obj/item/weapon/card/data/full_color,
+							/obj/item/weapon/card/data/disk,
+							/obj/item/weapon/card/id,
+						) //Should be enough of a selection for most purposes
 
 var/const/NO_EMAG_ACT = -50
 /obj/item/weapon/card/emag/resolve_attackby(atom/A, mob/user)
@@ -151,14 +158,8 @@ var/const/NO_EMAG_ACT = -50
 
 /obj/item/weapon/card/emag/Initialize()
 	. = ..()
-	if(!card_choices)
-		card_choices = list(/obj/item/weapon/card/union,
-							/obj/item/weapon/card/data,
-							/obj/item/weapon/card/data/full_color,
-							/obj/item/weapon/card/data/disk,
-							/obj/item/weapon/card/id,
-						) //Should be enough of a selection for most purposes
-		card_choices = generate_emag_choices(card_choices)
+	if(length(card_choices) && !card_choices[card_choices[1]])
+		card_choices = generate_chameleon_choices(card_choices)
 
 /obj/item/weapon/card/emag/verb/change(picked in card_choices)
 	set name = "Change Cryptographic Sequencer Appearance"
@@ -173,10 +174,7 @@ var/const/NO_EMAG_ACT = -50
 
 /obj/item/weapon/card/emag/examine(mob/user)
 	. = ..()
-	if(!.)
-		return
-		
-	if(user.skill_check(SKILL_DEVICES,SKILL_ADEPT))
+	if(. && user.skill_check(SKILL_DEVICES,SKILL_ADEPT))
 		to_chat(user, SPAN_WARNING("This ID card has some non-standard modifications commonly used to gain illicit access to computer systems."))
 
 

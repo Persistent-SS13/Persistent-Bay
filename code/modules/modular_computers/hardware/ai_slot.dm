@@ -16,14 +16,6 @@
 	ADD_SAVED_VAR(stored_card)
 	ADD_SKIP_EMPTY(stored_card)
 
-/obj/item/weapon/computer_hardware/ai_slot/Destroy()
-	if(holder2 && (holder2.ai_slot == src))
-		holder2.ai_slot = null
-	if(stored_card)
-		stored_card.dropInto(holder2 ? holder2.loc : loc)
-	holder2 = null
-	return ..()
-
 /obj/item/weapon/computer_hardware/ai_slot/proc/update_power_usage()
 	if(!stored_card || !stored_card.carded_ai)
 		power_usage = power_usage_idle
@@ -47,3 +39,10 @@
 		stored_card = null
 		update_power_usage()
 
+/obj/item/weapon/computer_hardware/ai_slot/Destroy()
+	if(holder2 && (holder2.ai_slot == src))
+		holder2.ai_slot = null
+	if(stored_card)
+		stored_card.dropInto(holder2 ? holder2.loc : loc)
+	holder2 = null
+	return ..()

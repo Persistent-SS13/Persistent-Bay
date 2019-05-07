@@ -5,6 +5,7 @@
 	item_state = "bl_suit"
 	worn_state = "syndicate"
 	has_sensor = 0
+	gender_icons = 1
 	armor  = list(
 		DAM_BLUNT 	= 10,
 		DAM_PIERCE 	= 5,
@@ -26,6 +27,7 @@
 	icon_state = "combat"
 	item_state = "bl_suit"
 	worn_state = "combat"
+	gender_icons = 1
 	has_sensor = SUIT_HAS_SENSORS
 
 /obj/item/clothing/under/syndicate/tacticool

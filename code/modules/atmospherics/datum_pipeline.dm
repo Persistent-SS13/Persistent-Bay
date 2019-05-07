@@ -22,9 +22,9 @@
 		QDEL_NULL(air)
 	for(var/obj/machinery/atmospherics/pipe/P in members)
 		P.parent = null
-	leaks.Cut()
-	members.Cut()
-	edges.Cut()
+	LAZYCLEARLIST(leaks)
+	LAZYCLEARLIST(members)
+	LAZYCLEARLIST(edges)
 	. = ..()
 
 /datum/pipeline/Process()//This use to be called called from the pipe networks

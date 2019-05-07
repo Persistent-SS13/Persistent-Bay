@@ -47,19 +47,17 @@
 	update_icon()
 
 /obj/machinery/light_switch/on_update_icon()
+	pixel_x = 0
+	pixel_y = 0
 	switch(dir)
 		if(NORTH)
-			src.pixel_x = 0
-			src.pixel_y = -22
+			pixel_y = -30
 		if(SOUTH)
-			src.pixel_x = 0
-			src.pixel_y = 30
+			pixel_y = 22
 		if(EAST)
-			src.pixel_x = 22
-			src.pixel_y = 0
+			pixel_x = 22
 		if(WEST)
-			src.pixel_x = -22
-			src.pixel_y = 0
+			pixel_x = -22
 
 	if(!overlay)
 		overlay = image(icon, "light1-overlay")

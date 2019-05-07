@@ -122,6 +122,8 @@
 				possible_under_extra |= new /obj/item/clothing/under/mbill
 				possible_under_extra |= new /obj/item/clothing/under/wardt
 				possible_under_extra |= new	/obj/item/clothing/under/pcrc
+			else
+				possible_under_extra |= new /obj/item/clothing/under/color/grey
 		pref.selected_under = pick(possible_under_extra)
 		pref.preview_icon = null
 		pref.ShowChoices(usr)

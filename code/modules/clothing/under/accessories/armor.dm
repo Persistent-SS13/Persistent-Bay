@@ -94,21 +94,22 @@
 
 /obj/item/clothing/accessory/armorplate/tactical
 	name = "tactical armor plate"
-	desc = "A medium armor plate with additional ablative coating. Attaches to a plate carrier."
+	desc = "A heavier armor plate with additional ablative coating. Attaches to a plate carrier."
 	icon_state = "armor_tactical"
 	armor  = list(
-		DAM_BLUNT 	= 40,
+		DAM_BLUNT 	= 50,
 		DAM_PIERCE 	= 35,
-		DAM_CUT 	= 40,
-		DAM_BULLET 	= 40,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 50,
 		DAM_LASER 	= 60,
-		DAM_ENERGY 	= 40,
+		DAM_ENERGY 	= 35,
 		DAM_BURN 	= 40,
-		DAM_BOMB 	= 40,
+		DAM_BOMB 	= 30,
 		DAM_EMP 	= 0,
 		DAM_BIO 	= 0,
 		DAM_RADS 	= 0,
 		DAM_STUN 	= 2)
+	slowdown = 0.5
 
 /obj/item/clothing/accessory/armorplate/merc
 	name = "heavy armor plate"

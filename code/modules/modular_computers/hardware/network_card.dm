@@ -23,6 +23,8 @@ var/global/ntnet_card_uid = 1
 
 /obj/item/weapon/computer_hardware/network_card/New(var/l)
 	..(l)
+	identification_id = ntnet_card_uid
+	ntnet_card_uid++
 	ADD_SAVED_VAR(identification_id)
 	ADD_SAVED_VAR(identification_string)
 	ADD_SAVED_VAR(connected_to)
@@ -33,10 +35,6 @@ var/global/ntnet_card_uid = 1
 	ADD_SKIP_EMPTY(identification_string)
 	ADD_SKIP_EMPTY(connected_to)
 	ADD_SKIP_EMPTY(password)
-
-	identification_id = ntnet_card_uid
-	ntnet_card_uid++
-
 
 /obj/item/weapon/computer_hardware/network_card/proc/get_faction()
 	get_network()
@@ -104,7 +102,14 @@ var/global/ntnet_card_uid = 1
 	return ..()
 
 // Returns a string identifier of this network card
-/obj/item/weapon/computer_hardware/network_card/proc/get_network_tag()
+/obj/item/weapon/computer_hardware/network_card/proc/get_network_tag(list/routed_through) // Argument is a safety parameter for internal calls. Don't use manually.
+	if(!connected_network)
+		return null
+	if(proxy_id && !(src in routed_through))
+		var/obj/item/modular_computer/comp = connected_network.get_computer_by_nid(proxy_id)
+		if(comp) // If not we default to exposing ourselves, but it means there was likely a logic error elsewhere.
+			LAZYADD(routed_through, src)
+			return comp.network_card.get_network_tag(routed_through)
 	return "[identification_string] (NID [identification_id])"
 
 /obj/item/weapon/computer_hardware/network_card/proc/is_banned()
@@ -112,55 +117,44 @@ var/global/ntnet_card_uid = 1
 		return connected_network.check_banned(identification_id)
 
 // 0 - No signal, 1 - Low signal, 2 - High signal. 3 - Wired Connection
-/obj/item/weapon/computer_hardware/network_card/proc/get_signal(var/specific_action = 0)
+/obj/item/weapon/computer_hardware/network_card/proc/get_signal(var/specific_action = 0, list/routed_through)
+	. = 0
 	if(!holder2) // Hardware is not installed in anything. No signal. How did this even get called?
-		return 0
+		return
 
 	if(!enabled)
-		return 0
+		return
 	get_network()
 	if(!check_functionality() || !connected_network || is_banned())
 		return 0
 
 	if(ethernet) // Computer is connected via wired connection.
-		return 3
+		return
 
 	if(!connected_network.check_function(specific_action)) // NTNet is down and we are not connected via wired connection. No signal.
-		return 0
-		
-	if(long_range)
-		return 2
-	else
-		return 1
-		
-/obj/item/weapon/computer_hardware/network_card/proc/get_signal_old(var/specific_action = 0)
-	if(!holder2) // Hardware is not installed in anything. No signal. How did this even get called?
-		return 0
+		if(!ethernet || specific_action) // Wired connection ensures a basic connection to NTNet, however no usage of disabled network services.
+			return
 
-	if(!enabled)
-		return 0
+	var/strength = 1
+	if(ethernet)
+		strength = 3
+	else if(long_range)
+		strength = 2
 
-	if(!check_functionality() || !ntnet_global || is_banned())
-		return 0
+	var/turf/T = get_turf(holder2)
+	if(!istype(T)) //no reception in nullspace
+		return
+	if(T.z in GLOB.using_map.station_levels)
+		// Computer is on station. Low/High signal depending on what type of network card you have
+		. = strength
+	else if(T.z in GLOB.using_map.contact_levels) //not on station, but close enough for radio signal to travel
+		. = strength - 1
 
-	if(ethernet) // Computer is connected via wired connection.
-		return 3
-
-	if(!ntnet_global.check_function(specific_action)) // NTNet is down and we are not connected via wired connection. No signal.
-		return 0
-
-	if(holder2)
-		var/turf/T = get_turf(holder2)
-		if(!istype(T)) //no reception in nullspace
+	if(proxy_id)
+		var/obj/item/modular_computer/comp = connected_network.get_computer_by_nid(proxy_id)
+		if(!comp || !comp.enabled)
 			return 0
-		if(T.z in GLOB.using_map.station_levels)
-			// Computer is on station. Low/High signal depending on what type of network card you have
-			if(long_range)
-				return 2
-			else
-				return 1
-		if(T.z in GLOB.using_map.contact_levels) //not on station, but close enough for radio signal to travel
-			if(long_range) // Computer is not on station, but it has upgraded network card. Low signal.
-				return 1
-
-	return 0 // Computer is not on station and does not have upgraded network card. No signal.
+		if(src in routed_through) // circular proxy chain
+			return 0
+		LAZYADD(routed_through, src)
+		. = min(., comp.network_card.get_signal(specific_action, routed_through))

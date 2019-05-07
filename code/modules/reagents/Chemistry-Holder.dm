@@ -5,13 +5,31 @@ GLOBAL_DATUM_INIT(temp_reagents_holder, /obj, new)
 	var/total_volume = 0
 	var/maximum_volume = 120
 	var/atom/my_atom = null
+	//Saving
+	var/atom/saved_atom
 
 /datum/reagents/New(var/maximum_volume = 120, var/atom/my_atom)
-	if(!istype(my_atom))
+	if(!istype(my_atom) && !map_storage_loaded)
 		CRASH("Invalid reagents holder: [log_info_line(my_atom)]")
 	..()
 	src.my_atom = my_atom
 	src.maximum_volume = maximum_volume
+	ADD_SAVED_VAR(reagent_list)
+	ADD_SAVED_VAR(saved_atom)
+	ADD_SAVED_VAR(maximum_volume)
+	ADD_SAVED_VAR(total_volume)
+
+	ADD_SKIP_EMPTY(reagent_list)
+	ADD_SKIP_EMPTY(saved_atom)
+
+/datum/reagents/before_save()
+	. = ..()
+	saved_atom = my_atom
+
+/datum/reagents/after_load()
+	. = ..()
+	my_atom = saved_atom
+	
 
 /datum/reagents/Destroy()
 	. = ..()

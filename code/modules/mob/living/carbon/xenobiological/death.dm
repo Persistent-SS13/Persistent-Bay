@@ -8,7 +8,7 @@
 		M.Friends = Friends.Copy()
 		step_away(M, src)
 		is_adult = 0
-		maxHealth = 200
+		maxHealth = 150
 		revive()
 		if (!client) rabid = 1
 		number = rand(1, 1000)

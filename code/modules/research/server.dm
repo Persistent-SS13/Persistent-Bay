@@ -2,6 +2,7 @@
 	name = "R&D Server"
 	icon = 'icons/obj/machines/research.dmi'
 	icon_state = "server"
+	circuit_type = /obj/item/weapon/circuitboard/rdserver
 	var/datum/research/files
 	max_health = 100
 	var/list/id_with_upload = list()	//List of R&D consoles with upload to server access.
@@ -17,11 +18,9 @@
 /obj/machinery/r_n_d/server/Initialize()
 	. = ..()
 	if(!map_storage_loaded)
-		component_parts = list()
-		component_parts += new /obj/item/weapon/circuitboard/rdserver(src)
-		component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
-		component_parts += new /obj/item/stack/cable_coil(src)
-		component_parts += new /obj/item/stack/cable_coil(src)
+		LAZYADD(component_parts, new /obj/item/weapon/stock_parts/scanning_module(src))
+		LAZYADD(component_parts, new /obj/item/stack/cable_coil(src))
+		LAZYADD(component_parts, new /obj/item/stack/cable_coil(src))
 	RefreshParts()
 
 /obj/machinery/r_n_d/server/Destroy()

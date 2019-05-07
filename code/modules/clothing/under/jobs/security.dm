@@ -115,6 +115,7 @@
 	icon_state = "swatunder"
 	//item_state = "swatunder"
 	worn_state = "swatunder"
+	gender_icons = 1
 	armor  = list(
 		DAM_BLUNT 	= 10,
 		DAM_PIERCE 	= 8,
@@ -139,6 +140,7 @@
 	icon_state = "detective"
 	item_state = "det"
 	worn_state = "detective"
+	gender_icons = 1
 	armor  = list(
 		DAM_BLUNT 	= 10,
 		DAM_PIERCE 	= 8,
@@ -158,6 +160,7 @@
 /obj/item/clothing/under/det/grey
 	icon_state = "detective2"
 	worn_state = "detective2"
+	gender_icons = 1
 	desc = "A serious-looking tan dress shirt paired with freshly-pressed black slacks."
 	starting_accessories = list(/obj/item/clothing/accessory/red_long)
 
@@ -165,6 +168,7 @@
 	icon_state = "detective3"
 	worn_state = "detective3"
 	item_state = "sl_suit"
+	gender_icons = 1
 	desc = "An immaculate white dress shirt, paired with a pair of dark grey dress pants, a red tie, and a charcoal vest."
 	starting_accessories = list(/obj/item/clothing/accessory/red_long, /obj/item/clothing/accessory/toggleable/vest)
 

@@ -107,6 +107,7 @@ What is the naming convention for planes or layers?
 	#define EXPOSED_WIRE_LAYER          6
 	#define EXPOSED_WIRE_TERMINAL_LAYER 7
 	#define CATWALK_LAYER               8
+	#define FLOOR_MACHINE_LAYER         8.5
 	#define BLOOD_LAYER                 9
 	#define MOUSETRAP_LAYER             10
 	#define PLANT_LAYER                 11

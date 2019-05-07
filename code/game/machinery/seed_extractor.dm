@@ -16,7 +16,7 @@
 	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
 	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
 	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/device/analyzer/plant_analyzer(src)
+	component_parts += new /obj/item/device/scanner/plant(src)
 	RefreshParts()
 
 obj/machinery/seed_extractor/attackby(var/obj/item/O as obj, var/mob/user as mob)

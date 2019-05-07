@@ -1,4 +1,5 @@
 /datum/reagent
+	should_save = FALSE
 	var/name = "Reagent"
 	var/description = "A non-descript chemical."
 	var/taste_description = "old rotten bandaids"

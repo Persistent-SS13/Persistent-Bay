@@ -5,12 +5,12 @@
 	program_icon_state = "generic"
 	program_key_state = "generic_key"
 	size = 6
-	requires_ntnet = FALSE
-	available_on_ntnet = TRUE
+	requires_ntnet = 0
+	available_on_ntnet = 1
 	usage_flags = PROGRAM_ALL
 	nanomodule_path = /datum/nano_module/program/scanner
 
-	var/using_scanner = FALSE	//Whether or not the program is synched with the scanner module.
+	var/using_scanner = 0	//Whether or not the program is synched with the scanner module.
 	var/data_buffer = ""	//Buffers scan output for saving/viewing.
 	var/scan_file_type = /datum/computer_file/data/text		//The type of file the data will be saved to.
 	var/list/metadata_buffer = list()

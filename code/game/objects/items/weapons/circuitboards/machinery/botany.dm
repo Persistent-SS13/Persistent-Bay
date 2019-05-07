@@ -39,4 +39,4 @@
 							/obj/item/weapon/stock_parts/scanning_module = 1,
 							/obj/item/weapon/stock_parts/manipulator = 1,
 							/obj/item/weapon/stock_parts/console_screen = 1,
-							/obj/item/device/analyzer/plant_analyzer)
+							/obj/item/device/scanner/plant)

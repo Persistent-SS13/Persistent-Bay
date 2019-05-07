@@ -56,6 +56,23 @@
 
 #undef ASSIGN_LIST_TO_COLORS
 
+/datum/preferences/proc/dress_preview_mob(var/mob/living/carbon/human/mannequin, var/finalize = FALSE)
+	var/update_icon = TRUE
+	copy_to(mannequin, !finalize)
+	mannequin.real_name = real_name
+	if(selected_under)
+		selected_under.loc = mannequin
+		mannequin.equip_to_slot_if_possible(selected_under,slot_w_uniform)
+	else
+		selected_under = new /obj/item/clothing/under/color/grey()
+		mannequin.equip_to_slot_if_possible(selected_under,slot_w_uniform)
+	
+	mannequin.equip_to_slot_or_del(selected_under,slot_w_uniform)
+
+	if(update_icon)
+		mannequin.update_icons()
+
+/*
 /datum/preferences/proc/dress_preview_mob(var/mob/living/carbon/human/mannequin)
 	var/update_icon = FALSE
 	copy_to(mannequin, TRUE)
@@ -104,7 +121,7 @@
 
 	if(update_icon)
 		mannequin.update_icons()
-
+*/
 /datum/preferences/proc/update_preview_icon()
 	var/mob/living/carbon/human/dummy/mannequin/mannequin = get_mannequin(client_ckey)
 	mannequin.delete_inventory(TRUE)

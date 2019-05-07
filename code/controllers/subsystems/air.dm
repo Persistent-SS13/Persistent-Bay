@@ -135,7 +135,6 @@ SUBSYSTEM_DEF(air)
 	for(var/turf/simulated/S)
 		simulated_turf_count++
 		S.update_air_properties()
-		CHECK_TICK
 
 	report_progress({"Total Simulated Turfs: [simulated_turf_count]
 Total Zones: [zones.len]

@@ -12,11 +12,18 @@ var/list/floor_decals = list()
 	var/supplied_dir
 
 /obj/effect/floor_decal/New(var/newloc, var/newdir, var/newcolour)
-	supplied_dir = newdir
+	if(!isnull(newdir))
+		supplied_dir = newdir
 	if(newcolour) color = newcolour
 	..(newloc)
+	ADD_SAVED_VAR(supplied_dir)
 
 /obj/effect/floor_decal/Initialize()
+	. = ..()
+	return INITIALIZE_HINT_LATELOAD //Gotta lateload since floors sometimes default to plating during init
+
+/obj/effect/floor_decal/LateInitialize()
+	. = ..()
 	if(supplied_dir) set_dir(supplied_dir)
 	var/turf/T = get_turf(src)
 	if(istype(T, /turf/simulated/floor) || istype(T, /turf/unsimulated/floor))

@@ -5,7 +5,7 @@
 	flags = MATERIAL_BRITTLE
 	icon_base = "solid"
 	icon_reinf = "reinf_over"
-	icon_colour = COLOR_GRAY80
+	icon_colour = COLOR_WHITE
 	hardness = 10
 	weight = 5
 	melting_point = T0C+371 //assuming heat resistant plastic
@@ -25,42 +25,6 @@
 	shard_type = SHARD_NONE
 	sale_price = null
 	hidden_from_codex = TRUE
-
-// /material/wood
-// 	name = MATERIAL_WOOD
-// 	adjective_name = "wooden"
-// 	stack_type = /obj/item/stack/material/wood
-// 	icon_colour = COLOR_WOOD
-// 	icon_base = "solid"
-// 	icon_reinf = "jaggy"
-// 	door_icon_base = "wood"
-// 	integrity = 50
-// 	explosion_resistance = 2
-// 	shard_type = SHARD_SPLINTER
-// 	shard_can_repair = 0 // you can't weld splinters back into planks
-// 	hardness = 15
-// 	brute_armor = 1
-// 	weight = 18
-// 	melting_point = T0C+300 //okay, not melting in this case, but hot enough to destroy wood
-// 	ignition_point = T0C+288
-// 	stack_origin_tech = list(TECH_MATERIAL = 1, TECH_BIO = 1)
-// 	dooropen_noise = 'sound/effects/doorcreaky.ogg'
-// 	destruction_desc = "splinters"
-// 	sheet_singular_name = "plank"
-// 	sheet_plural_name = "planks"
-// 	hitsound = 'sound/effects/woodhit.ogg'
-// 	conductive = 0
-// 	chem_products = list(
-// 				/datum/reagent/carbon = 10,
-// 				/datum/reagent/water = 5
-// 				)
-// 	energy_combustion = 18
-
-/material/wood/holographic
-	name = "holowood"
-	display_name = MATERIAL_WOOD
-	stack_type = null
-	shard_type = SHARD_NONE
 
 /material/cardboard
 	name = MATERIAL_CARDBOARD

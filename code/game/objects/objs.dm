@@ -255,13 +255,13 @@
 // - damsrc: A string or object reference to what caused the damage.
 /obj/proc/take_damage(var/damage = 0 as num, var/damtype = DAM_BLUNT, var/armorbypass = 0, var/damsrc = null, var/damflags = null)
 	if(!isnum(damage))
-		log_warning("/obj/proc/take_damage(): damage is not a number! [damage]")
+		log_warning(" obj.proc.take_damage(): damage is not a number! [damage]")
 		return 0
 	if(!istext(damtype))
-		log_warning("/obj/proc/take_damage(): damtype is not a string! [damtype]")
+		log_warning(" obj.proc.take_damage(): damtype is not a string! [damtype]")
 		return 0
 	if(!isnum(armorbypass))
-		log_warning("/obj/proc/take_damage(): armorbypass is not a number! [armorbypass]")
+		log_warning(" obj.proc.take_damage(): armorbypass is not a number! [armorbypass]")
 		return 0
 	if(!isdamageable() || !vulnerable_to_damtype(damtype))
 		return 0
@@ -269,7 +269,7 @@
 	rem_health(resultingdmg)
 	update_health(damtype)
 	. = resultingdmg
-	log_debug("[src] took [resultingdmg] [damtype] damages from [damsrc]! Before armor: [damage] damages.")
+	log_debug("\The \"[src]\" (\ref[src])([x], [y], [z]) took [resultingdmg] \"[damtype]\" damages from \"[damsrc]\"! Before armor: [damage] damages.")
 	return .
 
 //Like take damage, but meant to instantly destroy the object from an external source.

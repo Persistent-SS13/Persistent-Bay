@@ -147,7 +147,13 @@
 	var/alarm_threat_warning_timebuffer
 	var/alarm_threat_warning_timeout = 5 SECONDS
 
+/obj/machinery/power/apc/New()
+	..()
+	ADD_SAVED_VAR(connected_faction)
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(coverlocked)
 
+	ADD_SKIP_EMPTY(connected_faction)
 
 /obj/machinery/power/apc/get_cell()
 	return cell
@@ -276,6 +282,7 @@
 	playsound(src, 'sound/machines/apc_nopower.ogg', 75, 0)
 
 /obj/machinery/power/apc/after_load()
+	. = ..()
 	connect_to_network()
 
 /obj/machinery/power/apc/proc/make_terminal()
@@ -581,16 +588,11 @@
 			to_chat(user, "The wires have been [wiresexposed ? "exposed" : "unexposed"]")
 			update_icon()
 
-	else if (istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/modular_computer))			// trying to unlock the interface with an ID card
+	else if (W.GetIdCard())			// trying to unlock the interface with an ID card
 		if(emagged)
 			to_chat(user, "The interface is broken.")
 		else if(!connected_faction)
-			var/obj/item/weapon/card/id/id
-			if(istype(W, /obj/item/weapon/card/id))
-				id = W
-			else if(istype(W, /obj/item/device/pda))
-				var/obj/item/device/pda/pda = W
-				id = pda.id
+			var/obj/item/weapon/card/id/id =  W.GetIdCard()
 			if(id)
 				var/datum/world_faction/faction = get_faction(id.selected_faction)
 				if(faction)

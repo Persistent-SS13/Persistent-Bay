@@ -38,7 +38,7 @@ SUBSYSTEM_DEF(atoms)
 		created_atoms.len--
 		if(!(A.atom_flags & ATOM_FLAG_INITIALIZED))
 			InitAtom(A, arguments)
-			CHECK_TICK
+			// CHECK_TICK
 
 	// If wondering why not just store all atoms in created_atoms and use the block above: that turns out unbearably expensive.
 	// Instead, atoms without extra arguments in New created on server start are fished out of world directly.
@@ -48,7 +48,7 @@ SUBSYSTEM_DEF(atoms)
 			if(!(A.atom_flags & ATOM_FLAG_INITIALIZED))
 				InitAtom(A, mapload_arg)
 				++count
-				CHECK_TICK
+				// CHECK_TICK
 
 	report_progress("Initialized [count] atom\s")
 	pass(count)

@@ -95,11 +95,11 @@
 					/obj/item/clothing/glasses/material,
 					/obj/item/clothing/gloves/thick,
 					/obj/item/weapon/storage/backpack/industrial,
-					/obj/item/weapon/mining_scanner,
+					/obj/item/device/scanner/mining/,
 					/obj/item/weapon/storage/ore,
 					/obj/item/weapon/shovel,
 					/obj/item/weapon/pickaxe,
-					/obj/item/device/analyzer,
+					/obj/item/device/scanner/gas,
 					/obj/item/device/flashlight/lantern,
 					/obj/item/device/radio/headset/headset_cargo)
 	cost = 10

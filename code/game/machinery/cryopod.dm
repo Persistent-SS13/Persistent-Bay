@@ -68,6 +68,7 @@
 			ocmob.resting = 1
 	for(var/atom/movable/A in InsertedContents())
 		A.forceMove(get_turf(src))
+	GLOB.cryopods -= src
 	. = ..()
 
 /obj/machinery/cryopod/before_save()
@@ -77,11 +78,9 @@
 
 /obj/machinery/cryopod/proc/find_control_computer(urgent=0)
 	// Workaround for http://www.byond.com/forum/?post=2007448
-	for(var/obj/machinery/computer/cryopod/C in src.loc.loc)
+	for(var/obj/machinery/computer/cryopod/C in get_area(src))
 		control_computer = C
 		break
-	// control_computer = locate(/obj/machinery/computer/cryopod) in src.loc.loc
-
 	// Don't send messages unless we *need* the computer, and less than five minutes have passed since last time we messaged
 	if(!control_computer && urgent && last_no_computer_message + 5*60*10 < world.time)
 		log_admin("Cryopod in [src.loc.loc] could not find control computer!")

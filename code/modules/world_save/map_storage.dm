@@ -103,13 +103,14 @@ var/global/list/debug_data = list()
 
 /turf/after_load()
 	..()
+	decals = saved_decals.Copy()
 	queue_icon_update()
 	if(dynamic_lighting)
 		lighting_build_overlay()
 	else
 		lighting_clear_overlay()
-	// for(var/obj/effect/floor_decal/decal in saved_decals)
-	// 	decal.init_for(src)
+//	for(var/obj/effect/floor_decal/decal in saved_decals)
+//		decal.init_for(src)
 
 /atom/movable/lighting_overlay/after_load()
 	loc = null

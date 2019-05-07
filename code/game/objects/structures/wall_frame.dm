@@ -22,7 +22,6 @@
 
 	blend_objects = list(/obj/machinery/door, /turf/simulated/wall) // Objects which to blend with
 	noblend_objects = list(/obj/machinery/door/window)
-	material = DEFAULT_WALL_MATERIAL
 
 /obj/structure/wall_frame/New(var/new_loc, var/materialtype)
 	..()
@@ -46,7 +45,7 @@
 		max_health = material.integrity
 		health = max_health
 	update_connections(TRUE)
-	update_icon()
+	queue_icon_update()
 
 /obj/structure/wall_frame/examine(mob/user)
 	. = ..(user)
@@ -114,7 +113,7 @@
 
 /obj/structure/wall_frame/on_update_icon()
 	if(!istype(material, /material))
-		log_warning("[src] ([x], [y], [z]) \ref[src] has no valid material([material]) during icon update!!")
+		log_warning("[src]\ref[src] ([x], [y], [z]) has no valid material([material? material.type : null]::[material]) during icon update!!")
 		return
 	overlays.Cut()
 	var/image/I

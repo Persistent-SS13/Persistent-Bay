@@ -101,14 +101,14 @@ if(current_step == this_step || (check_resumed && !resumed)) {\
 			NewPN.add_cable(PC)
 			propagate_network(PC,PC.powernet)
 
-datum/controller/subsystem/machines/proc/setup_atmos_machinery(list/machines)
+/datum/controller/subsystem/machines/proc/setup_atmos_machinery(list/machines)
 	set background=1
 
 	var/pretime = REALTIMEOFDAY
 	report_progress("Initializing atmos machinery")
 	for(var/obj/machinery/atmospherics/A in machines)
 		A.atmos_init()
-		CHECK_TICK
+		//CHECK_TICK
 	report_progress("Done in [(REALTIMEOFDAY - pretime) / 10] second\s")
 
 //Those are already initialized in their atmos_init
@@ -125,7 +125,7 @@ datum/controller/subsystem/machines/proc/setup_atmos_machinery(list/machines)
 	report_progress("Initializing pipe networks")
 	for(var/obj/machinery/atmospherics/machine in machines)
 		machine.build_network()
-		CHECK_TICK
+		//CHECK_TICK
 	report_progress("Done in [(REALTIMEOFDAY - pretime) / 10] second\s")
 
 /datum/controller/subsystem/machines/stat_entry()

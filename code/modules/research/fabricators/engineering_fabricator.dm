@@ -59,7 +59,7 @@
 
 /datum/design/item/engifab/engitools/adv/analyzer
 	name = "Gas Analyzer"
-	build_path = /obj/item/device/analyzer
+	build_path = /obj/item/device/scanner/gas
 	materials = list(MATERIAL_STEEL = 0.25 SHEETS, MATERIAL_GLASS = 0.25 SHEETS, MATERIAL_COPPER = 0.25 SHEETS)
 
 /datum/design/item/engifab/engitools/adv/geiger

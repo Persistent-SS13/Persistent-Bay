@@ -13,10 +13,12 @@
 #define AIRLOCK_STRIPABLE 2
 #define AIRLOCK_DETAILABLE 4
 
+var/list/airlock_overlays = list()
+
 /obj/machinery/door/airlock
 	name = "airlock"
 	icon = 'icons/obj/doors/station/door.dmi'
-	icon_state = "closed"
+	icon_state = "preview"
 	power_channel = ENVIRON
 	autoclose = TRUE
 	normalspeed = 1
@@ -219,12 +221,14 @@
 		brace.forceMove(src)
 	update_connections()
 	. = ..()
-	update_icon()
+	queue_icon_update()
 	return INITIALIZE_HINT_LATELOAD
 
 //Later on during init check for a nearby door
 /obj/machinery/door/airlock/LateInitialize()
 	. = ..()
+	if(QDELETED(src))
+		return
 	if(src.closeOtherId != null)
 		for (var/obj/machinery/door/airlock/A in world)
 			if(A.closeOtherId == src.closeOtherId && A != src)
@@ -857,7 +861,7 @@ About the new airlock wires panel:
 			return 0
 		cut_verb = "cutting"
 		cut_sound = 'sound/items/Welder.ogg'
-	else if(istype(item,/obj/item/weapon/gun/energy/plasmacutter))
+	else if(istype(item,/obj/item/weapon/gun/energy/plasmacutter)) //They could probably just shoot them out, but who cares!
 		cut_verb = "cutting"
 		cut_sound = 'sound/items/Welder.ogg'
 		cut_delay *= 0.66
@@ -927,14 +931,14 @@ About the new airlock wires panel:
 	if(!brace && istype(C, /obj/item/weapon/airlock_brace))
 		var/obj/item/weapon/airlock_brace/A = C
 		if(!density)
-			to_chat(user, "You must close \the [src] before installing \the [A]!")
+			to_chat(user, "<span class='warning'>You must close \the [src] before installing \the [A]!</span>")
 			return
 
 		if((!length(A.req_access) && !A.req_one_access) && (alert("\the [A]'s 'Access Not Set' light is flashing. Install it anyway?", "Access not set", "Yes", "No") == "No"))
 			return
 
 		if(do_after(user, 50, src) && density && A && user.unEquip(A, src))
-			to_chat(user, "You successfully install \the [A]. \The [src] has been locked.")
+			to_chat(user, SPAN_NOTICE("You successfully install \the [A]. \The [src] has been locked."))
 			brace = A
 			brace.airlock = src
 			update_icon()

@@ -50,7 +50,7 @@ prompts
 
 /datum/category_group/player_setup_category/welcome_preferences
 	name = "Welcome"
-	sort_order = 1
+	sort_order = 0
 	category_item_type = /datum/category_item/player_setup_item/welcome
 
 /datum/category_group/player_setup_category/physical_preferences
@@ -78,15 +78,15 @@ prompts
 //	sort_order = 4
 //	category_item_type = /datum/category_item/player_setup_item/antagonism
 
-/datum/category_group/player_setup_category/relations_preferences
-	name = "Relations"
-	sort_order = 5
-	category_item_type = /datum/category_item/player_setup_item/relations
+// /datum/category_group/player_setup_category/relations_preferences
+// 	name = "Relations"
+// 	sort_order = 5
+// 	category_item_type = /datum/category_item/player_setup_item/relations
 
-/datum/category_group/player_setup_category/loadout_preferences
-	name = "Loadout"
-	sort_order = 6
-	category_item_type = /datum/category_item/player_setup_item/loadout
+// /datum/category_group/player_setup_category/loadout_preferences
+// 	name = "Loadout"
+// 	sort_order = 6
+// 	category_item_type = /datum/category_item/player_setup_item/loadout
 
 /datum/category_group/player_setup_category/global_preferences
 	name = "Game Settings"

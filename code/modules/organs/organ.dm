@@ -46,6 +46,10 @@ var/list/organ_cache = list()
 
 	var/death_time
 
+	// Bioprinter stats
+	var/can_be_printed = TRUE
+	var/print_cost
+
 /obj/item/organ/Destroy()
 	owner = null
 	dna = null
@@ -60,6 +64,11 @@ var/list/organ_cache = list()
 //Already handled in /obj/
 // /obj/item/organ/proc/update_health()
 // 	return
+
+/obj/item/organ/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		health = max_health
 
 //Second argument may be a dna datum; if null will be set to holder's dna.
 /obj/item/organ/New(var/mob/living/carbon/holder, var/datum/dna/given_dna)

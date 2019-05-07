@@ -31,7 +31,6 @@ datum/preferences
 	var/savefile/loaded_character
 	var/datum/category_collection/player_setup_collection/player_setup
 	var/datum/browser/panel
-	var/datum/browser/char_panel
 	// Persistent Edit, Adding the character list..
 	var/list/character_list = list()
 	var/list/icon_list = list()
@@ -87,17 +86,17 @@ datum/preferences
 
 	var/dat = "<html><body><center>"
 
-	if(path)
-		dat += "Slot - "
-		dat += "<a href='?src=\ref[src];load=1'>Load slot</a> - "
-		dat += "<a href='?src=\ref[src];save=1'>Save slot</a> - "
-		dat += "<a href='?src=\ref[src];resetslot=1'>Reset slot</a> - "
-		dat += "<a href='?src=\ref[src];reload=1'>Reload slot</a>"
+	// if(path)
+		// dat += "Slot - "
+		// dat += "<a href='?src=\ref[src];load=1'>Load slot</a> - "
+		// dat += "<a href='?src=\ref[src];save=1'>Save slot</a> - "
+		// dat += "<a href='?src=\ref[src];resetslot=1'>Reset slot</a> - "
+		// dat += "<a href='?src=\ref[src];reload=1'>Reload slot</a>"
 
-		dat += "Finish Character - "
-		dat += "<a href='?src=\ref[src];save=1'>Finalize</a>"
-	else
-		dat += "Please create an account to save your preferences."
+	dat += "Finish Character - "
+	dat += "<a href='?src=\ref[src];save=1'>Finalize</a>"
+	// else
+	// 	dat += "Please create an account to save your preferences."
 
 	dat += "<br>"
 	dat += player_setup.header()
@@ -107,9 +106,9 @@ datum/preferences
 		update_preview_icon()
 		return ShowChoices(user)
 	dat += "</html></body>"
-	var/datum/browser/popup =  new(user, "Create a new character","Create a new character", 1200, 800, src)
-	popup.set_content(dat)
-	popup.open()
+	panel =  new(user, "Create a new character","Create a new character", 1200, 800, src)
+	panel.set_content(dat)
+	panel.open()
 
 /datum/preferences/proc/process_link(mob/user, list/href_list)
 
@@ -145,7 +144,8 @@ datum/preferences
 		save_preferences()
 		save_character()
 		close_browser(usr, "window=saves")
-		char_panel.close()
+		if(panel)
+			panel.close()
 		return 0
 	else if(href_list["reload"])
 		load_preferences()
@@ -185,9 +185,9 @@ datum/preferences
 	player_setup.sanitize_setup()
 	character.set_species(species)
 
-	if(be_random_name)
-		var/decl/cultural_info/culture = SSculture.get_culture(cultural_info[TAG_CULTURE])
-		if(culture) real_name = culture.get_random_name(gender)
+	// if(be_random_name)
+	// 	var/decl/cultural_info/culture = SSculture.get_culture(cultural_info[TAG_CULTURE])
+	// 	if(culture) real_name = culture.get_random_name(gender)
 
 	if(config.humans_need_surnames)
 		var/firstspace = findtext(real_name, " ")
@@ -355,10 +355,10 @@ datum/preferences
 /proc/UpdateCharacter(var/ind, var/ckey)
 	var/savefile/F = new(load_path(ckey, "[ind].sav"))
 	var/mob/M
-	F >> M
+	from_file(F, M)
 	fdel(F)
-	F["name"] << M.real_name
-	F["mob"] << M
+	to_file(F["name"], M.real_name)
+	to_file(F["mob"], M)
 	qdel(M)
 	
 /proc/Character(var/ind, var/ckey)
@@ -368,10 +368,10 @@ datum/preferences
 	var/savefile/F = new(load_path(ckey, "[ind].sav"))
 	var/mob/M
 	if(!F.dir.Find("mob"))
-		F >> M
+		from_file(F, M)
 		sleep(10)
 		return M
-	F["mob"] >> M
+	from_file(F["mob"], M)
 	return M
 
 /proc/CharacterName(var/ind, var/ckey)
@@ -382,10 +382,10 @@ datum/preferences
 	var/name
 	if(!F.dir.Find("name"))
 		var/mob/M
-		F >> M
+		from_file(F, M)
 		sleep(10)
 		return M.real_name
-	F["name"] >> name
+	from_file(F["name"], name)
 	return name
 
 /proc/CharacterIcon(var/ind, var/ckey)
@@ -446,7 +446,7 @@ datum/preferences
 		var/name
 		for(var/i=1, i<= slots, i++)
 			S.cd = GLOB.using_map.character_load_path(S, i)
-			S["real_name"] >> name
+			from_file(S["real_name"], name)
 			if(!name)	name = "Character[i]"
 			if(i==default_slot)
 				name = "<b>[name]</b>"
@@ -488,7 +488,7 @@ datum/preferences
 	if(panel)
 		panel.close()
 		panel = null
-	user << browse(null, "window=saves")
+	close_browser(user, "window=saves")
 
 
 /datum/preferences/proc/Slots()

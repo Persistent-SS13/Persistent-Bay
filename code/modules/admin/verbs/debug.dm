@@ -164,7 +164,7 @@
 			id.icon_state = "gold"
 			id.access = get_all_accesses()
 		else
-			id = new/obj/item/weapon/card/id(M);
+			id = new /obj/item/weapon/card/id/captains_spare(M);
 			id.icon_state = "gold"
 			id.access = get_all_accesses()
 			id.registered_name = H.real_name

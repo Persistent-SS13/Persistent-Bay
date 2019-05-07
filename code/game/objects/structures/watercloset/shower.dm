@@ -40,7 +40,7 @@
 	update_icon()
 
 /obj/structure/hygiene/shower/attackby(obj/item/I as obj, mob/user as mob)
-	if(I.type == /obj/item/device/analyzer)
+	if(I.type == /obj/item/device/scanner/gas)
 		to_chat(user, "<span class='notice'>The water temperature seems to be [watertemp].</span>")
 	if(isWrench(I))
 		var/newtemp = input(user, "What setting would you like to set the temperature valve to?", "Water Temperature Valve") in temperature_settings

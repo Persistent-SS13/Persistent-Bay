@@ -31,4 +31,4 @@
 
 /obj/item/organ/external/head/unbreakable/slime
 	max_health = 15
-	eye_icon_location = null
+	draw_eyes = null

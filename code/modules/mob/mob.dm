@@ -249,6 +249,9 @@
 		if(buckling == FULLY_BUCKLED && (incapacitation_flags & INCAPACITATION_BUCKLED_FULLY))
 			return 1
 
+	if((incapacitation_flags & INCAPACITATION_WEAKENED) && weakened)
+		return 1
+
 	return 0
 
 #undef UNBUCKLED
@@ -929,7 +932,7 @@
 
 /mob/living/carbon/human/remove_implant(var/obj/item/implant, var/surgical_removal = FALSE, var/obj/item/organ/external/affected)
 	if(!affected) //Grab the organ holding the implant.
-		for(var/obj/item/organ/external/organ in organs) 
+		for(var/obj/item/organ/external/organ in organs)
 			for(var/obj/item/O in organ.implants)
 				if(O == implant)
 					affected = organ
@@ -1041,9 +1044,6 @@
 		facing_dir = dir
 
 /mob/set_dir()
-//	if(!isnull(client))
-//		client.pixel_x = 0
-//		client.pixel_y = 0
 	if(facing_dir)
 		if(!canface() || lying || buckled || restrained())
 			facing_dir = null

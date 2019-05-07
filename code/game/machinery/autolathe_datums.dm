@@ -522,7 +522,7 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/analyzer
 	name = "gas analyzer"
-	path = /obj/item/device/analyzer
+	path = /obj/item/device/scanner/gas
 	category = "Tools"
 
 /datum/autolathe/recipe/healthscanner

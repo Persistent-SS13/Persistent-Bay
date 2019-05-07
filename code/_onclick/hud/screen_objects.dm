@@ -266,34 +266,10 @@
 									if (!isnull(t.manipulated_by) && t.manipulated_by != C.real_name && findtext(t.desc,breathes))
 										contents.Add(t.air_contents.total_moles)	//Someone messed with the tank and put unknown gasses
 										continue					//in it, so we're going to believe the tank is what it says it is
-									switch(breathes)
-																		//These tanks we're sure of their contents
-										if(GAS_NITROGEN) 							//So we're a bit more picky about them.
-
-											if(t.air_contents.gas[GAS_NITROGEN] && !t.air_contents.gas[GAS_OXYGEN])
-												contents.Add(t.air_contents.gas[GAS_NITROGEN])
-											else
-												contents.Add(0)
-
-										if (GAS_OXYGEN)
-											if(t.air_contents.gas[GAS_OXYGEN] && !t.air_contents.gas[GAS_PHORON])
-												contents.Add(t.air_contents.gas[GAS_OXYGEN])
-											else
-												contents.Add(0)
-										if (GAS_PHORON)
-											if(t.air_contents.gas[GAS_PHORON] && !t.air_contents.gas[GAS_OXYGEN])
-												contents.Add(t.air_contents.gas[GAS_PHORON])
-											else
-												contents.Add(0)
-
-										// No races breath this, but never know about downstream servers.
-										if (GAS_CO2)
-											if(t.air_contents.gas[GAS_CO2] && !t.air_contents.gas[GAS_PHORON])
-												contents.Add(t.air_contents.gas[GAS_CO2])
-											else
-												contents.Add(0)
-
-
+									if(t.air_contents.gas[breathes] && !t.air_contents.gas["phoron"])
+										contents.Add(t.air_contents.gas[breathes])
+									else
+										contents.Add(0)
 								else
 									//no tank so we set contents to 0
 									contents.Add(0)
@@ -322,7 +298,7 @@
 								if(C.internals)
 									C.internals.icon_state = "internal1"
 							else
-								to_chat(C, "<span class='notice'>You don't have a[breathes==GAS_OXYGEN ? "n oxygen" : addtext(" ",breathes)] tank.</span>")
+								to_chat(C, "<span class='notice'>You don't have \a [breathes] tank.</span>")
 		if("act_intent")
 			usr.a_intent_change("right")
 

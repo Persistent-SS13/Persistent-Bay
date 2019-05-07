@@ -113,6 +113,8 @@
 	src.icon = other.icon
 	src.overlays = other.overlays.Copy()
 	src.underlays = other.underlays.Copy()
+	if(other.saved_decals)
+		src.saved_decals = other.saved_decals.Copy()
 	if(other.decals)
 		src.decals = other.decals.Copy()
 		src.update_icon()
@@ -141,11 +143,15 @@
 /turf/simulated/wall/transport_properties_from(turf/simulated/wall/other)
 	if(!..())
 		return 0
+	integrity = other.integrity
 	paint_color = other.paint_color
 	material = other.material
 	reinf_material = other.reinf_material
 	girder_material = other.girder_material
 	girder_reinf_material = other.girder_reinf_material
+	construction_stage = other.construction_stage
+	can_open = other.can_open
+	blocks_air = other.blocks_air
 	return 1
 
 //No idea why resetting the base appearence from New() isn't enough, but without this it doesn't work

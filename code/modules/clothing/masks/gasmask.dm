@@ -122,27 +122,6 @@
 		DAM_RADS 	= 5,
 		DAM_STUN 	= 0)
 
-//Plague Dr suit can be found in clothing/suits/bio.dm
-/obj/item/clothing/mask/gas/plaguedoctor
-	name = "plague doctor mask"
-	desc = "A modernised version of the classic design, this mask will not only filter out phoron but it can also be connected to an air supply."
-	icon_state = "plaguedoctor"
-	item_state = "gas_mask"
-	body_parts_covered = HEAD|FACE|EYES
-	armor  = list(
-		DAM_BLUNT 	= 5,
-		DAM_PIERCE 	= 2,
-		DAM_CUT 	= 5,
-		DAM_BULLET 	= 0,
-		DAM_LASER 	= 0,
-		DAM_ENERGY 	= 0,
-		DAM_BURN 	= 0,
-		DAM_BOMB 	= 0,
-		DAM_EMP 	= 0,
-		DAM_BIO 	= 90,
-		DAM_RADS 	= 5,
-		DAM_STUN 	= 0)
-
 /obj/item/clothing/mask/gas/swat
 	name = "\improper SWAT mask"
 	desc = "A close-fitting tactical mask that can be connected to an air supply."
@@ -203,14 +182,32 @@
 	icon_state = "death"
 	item_state = "death"
 
+//Plague Dr suit can be found in clothing/suits/bio.dm
+/obj/item/clothing/mask/gas/plaguedoctor
+	name = "plague doctor mask"
+	desc = "A modernised version of the classic design, this mask will not only filter out phoron but it can also be connected to an air supply."
+	icon_state = "plaguedoctor"
+	item_state = "plaguedoctor"
+	armor  = list(
+		DAM_BLUNT 	= 5,
+		DAM_PIERCE 	= 2,
+		DAM_CUT 	= 5,
+		DAM_BULLET 	= 0,
+		DAM_LASER 	= 0,
+		DAM_ENERGY 	= 0,
+		DAM_BURN 	= 0,
+		DAM_BOMB 	= 0,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 90,
+		DAM_RADS 	= 5,
+		DAM_STUN 	= 0)
+	body_parts_covered = HEAD|FACE|EYES
+
 /obj/item/clothing/mask/gas/clown_hat
 	name = "clown wig and mask"
 	desc = "A true prankster's facial attire. A clown is incomplete without their wig and mask."
 	icon_state = "clown"
-	item_state = "clown_hat"
 	item_state = "clown"
-	item_flags = ITEM_FLAG_AIRTIGHT
-	flags_inv = BLOCKHAIR
 
 /obj/item/clothing/mask/gas/sexyclown
 	name = "sexy-clown wig and mask"
@@ -236,17 +233,6 @@
 	desc = "A traditional female mime's mask."
 	icon_state = "sexymime"
 	item_state = "sexymime"
-
-/obj/item/clothing/mask/gas/death_commando
-	name = "Death Commando Mask"
-	icon_state = "death_commando_mask"
-	item_state = "death_commando_mask"
-	siemens_coefficient = 0.2
-
-/obj/item/clothing/mask/gas/cyborg
-	name = "cyborg visor"
-	desc = "Beep boop!"
-	icon_state = "death"
 
 /obj/item/clothing/mask/gas/owl_mask
 	name = "owl mask"
@@ -284,4 +270,3 @@
 	filter_water = TRUE
 	body_parts_covered = FACE
 	w_class = 2
-	filtered_gases = list(GAS_PHORON, GAS_N2O, GAS_OXYGEN)

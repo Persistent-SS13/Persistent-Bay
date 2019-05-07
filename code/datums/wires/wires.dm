@@ -10,7 +10,7 @@ var/list/same_wires = list()
 var/list/wireColours = list("red", "blue", "green", "darkred", "orange", "brown", "gold", "gray", "cyan", "navy", "purple", "pink", "black", "yellow")
 
 /datum/wires
-
+	should_save = FALSE
 	var/random = 0 // Will the wires be different for every single instance.
 	var/atom/holder = null // The holder
 	var/holder_type = null // The holder type; used to make sure that the holder is the correct type.
@@ -30,10 +30,6 @@ var/list/wireColours = list("red", "blue", "green", "darkred", "orange", "brown"
 
 /datum/wires/New(var/atom/holder)
 	..()
-	ADD_SAVED_VAR(holder)
-	ADD_SAVED_VAR(holder_type)
-	ADD_SAVED_VAR(wires_status)
-	
 	src.holder = holder
 	if(!istype(holder, holder_type) && !ispath(holder, holder_type) ) //Check for inheritance too
 		CRASH("Our holder is null/the wrong type [holder_type] != [holder? holder.type : "null"]!")

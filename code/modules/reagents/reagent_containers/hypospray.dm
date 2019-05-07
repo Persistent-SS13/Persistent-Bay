@@ -132,14 +132,14 @@
 	if(!map_storage_loaded)
 		for(var/T in starts_with)
 			reagents.add_reagent(T, starts_with[T])
-	update_icon()
+	queue_icon_update()
 
 /obj/item/weapon/reagent_containers/hypospray/autoinjector/attack(mob/M as mob, mob/user as mob)
 	. = ..()
 	if(reagents.total_volume <= 0) //Prevents autoinjectors to be refilled.
 		atom_flags &= ~ATOM_FLAG_OPEN_CONTAINER
 	update_icon()
-	return .
+
 
 /obj/item/weapon/reagent_containers/hypospray/autoinjector/on_update_icon()
 	overlays.Cut()

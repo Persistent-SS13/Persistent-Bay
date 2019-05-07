@@ -7,7 +7,6 @@ FIRE ALARM
 	icon = 'icons/obj/monitors.dmi'
 	icon_state = "fire0"
 	anchored = TRUE
-	use_power = POWER_USE_IDLE
 	idle_power_usage = 2
 	active_power_usage = 6
 	power_channel = ENVIRON
@@ -32,30 +31,30 @@ FIRE ALARM
 		wiresexposed = TRUE
 		frame.transfer_fingerprints_to(src)
 
-/obj/machinery/firealarm/Initialize()
-	. = ..()
-	update_icon()
-
 /obj/machinery/firealarm/examine(mob/user)
 	. = ..(user)
 	var/decl/security_state/security_state = decls_repository.get_decl(GLOB.using_map.security_state)
 	to_chat(user, "The current alert level is [security_state.current_security_level.name].")
 
-/obj/machinery/firealarm/update_icon()
+/obj/machinery/firealarm/Initialize()
+	. = ..()
+	if(z in GLOB.using_map.contact_levels)
+		queue_icon_update()
+
+/obj/machinery/firealarm/on_update_icon()
 	overlays.Cut()
+
+	pixel_x = 0
+	pixel_y = 0
 	switch(dir)
 		if(NORTH)
-			src.pixel_x = 0
-			src.pixel_y = -21
+			pixel_y = -21
 		if(SOUTH)
-			src.pixel_x = 0
-			src.pixel_y = 21
+			pixel_y = 21
 		if(EAST)
-			src.pixel_x = -21
-			src.pixel_y = 0
+			pixel_x = -21
 		if(WEST)
-			src.pixel_x = 21
-			src.pixel_y = 0
+			pixel_x = 21
 
 	if(wiresexposed)
 		switch(buildstage)
@@ -104,7 +103,6 @@ FIRE ALARM
 	..()
 
 /obj/machinery/firealarm/attackby(obj/item/W as obj, mob/user as mob)
-
 	if(isScrewdriver(W) && buildstage == 2)
 		wiresexposed = !wiresexposed
 		update_icon()
@@ -270,27 +268,6 @@ FIRE ALARM
 	update_icon()
 	playsound(src, 'sound/machines/fire_alarm.ogg', 75, 0)
 	return
-
-
-
-/obj/machinery/firealarm/New(loc, dir, atom/frame)
-	..(loc)
-
-	if(dir)
-		src.set_dir((dir & (NORTH|SOUTH)) ? dir : GLOB.reverse_dir[dir])
-
-	if(istype(frame))
-		buildstage = 0
-		wiresexposed = 1
-		pixel_x = (dir & 3)? 0 : (dir == 4 ? -21 : 21)
-		pixel_y = (dir & 3)? (dir ==1 ? -21 : 21) : 0
-		update_icon()
-		frame.transfer_fingerprints_to(src)
-
-/obj/machinery/firealarm/Initialize()
-	. = ..()
-	if(z in GLOB.using_map.contact_levels)
-		update_icon()
 
 /*
 FIRE ALARM CIRCUIT

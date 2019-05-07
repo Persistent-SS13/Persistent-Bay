@@ -14,6 +14,8 @@
 	attack_verb = list("attacked", "slapped", "whacked")
 	relative_size = 85
 	damage_reduction = 0
+	can_be_printed = FALSE
+	max_health = 200
 
 	var/can_use_mmi = TRUE
 	var/mob/living/carbon/brain/brainmob = null
@@ -125,6 +127,8 @@
 
 /obj/item/organ/internal/brain/proc/handle_severe_brain_damage()
 	set waitfor = FALSE
+	testing("[src]\ref[src] Brain damage triggered, [get_damages()]")
+
 	healed_threshold = 0
 	to_chat(owner, "<span class = 'notice' font size='10'><B>Where am I...?</B></span>")
 	sleep(5 SECONDS)

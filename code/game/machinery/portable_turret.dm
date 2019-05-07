@@ -367,23 +367,14 @@ var/list/turret_icons
 			)
 
 		wrenching = 1
-		if(do_after(user, 50, src))
-			//This code handles moving the turret around. After all, it's a portable turret!
-			if(!anchored)
-				playsound(loc, 'sound/items/Ratchet.ogg', 100, 1)
-				anchored = 1
-				update_icon()
-				to_chat(user, "<span class='notice'>You secure the exterior bolts on the turret.</span>")
-			else if(anchored)
-				playsound(loc, 'sound/items/Ratchet.ogg', 100, 1)
-				anchored = 0
-				to_chat(user, "<span class='notice'>You unsecure the exterior bolts on the turret.</span>")
-				update_icon()
+		default_wrench_floor_bolts(user, I, 5 SECONDS)
 		wrenching = 0
+		return
 
-	else if(istype(I, /obj/item/weapon/card/id) || istype(I, /obj/item/modular_computer))
-		if(!connected_faction && I.GetFaction())
-			req_access_faction = I.GetFaction()
+	else if(istype(I, /obj/item/weapon/card/id) || I.GetIdCard())
+		var/obj/item/weapon/card/id/theid = I.GetIdCard()
+		if(!connected_faction && theid.GetFaction())
+			req_access_faction = theid.GetFaction()
 			connected_faction = get_faction(req_access_faction)
 			for(var/access in user.GetAccess(connected_faction.uid))
 				req_access["[access]"] = 3

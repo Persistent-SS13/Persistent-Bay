@@ -40,7 +40,7 @@
 	startswith = null
 
 /obj/item/weapon/storage/toolbox/mechanical/filled
-	startswith = list(/obj/item/weapon/tool/screwdriver, /obj/item/weapon/tool/wrench, /obj/item/weapon/tool/weldingtool, /obj/item/weapon/tool/crowbar, /obj/item/device/analyzer, /obj/item/weapon/tool/wirecutters)
+	startswith = list(/obj/item/weapon/tool/screwdriver, /obj/item/weapon/tool/wrench, /obj/item/weapon/tool/weldingtool, /obj/item/weapon/tool/crowbar, /obj/item/device/scanner/gas, /obj/item/weapon/tool/wirecutters)
 
 /obj/item/weapon/storage/toolbox/electrical
 	name = "electrical toolbox"

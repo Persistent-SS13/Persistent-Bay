@@ -10,4 +10,4 @@
 		if(turf_initializer)
 			var/decl/turf_initializer/ti = decls_repository.get_decl(turf_initializer)
 			ti.InitializeTurf(T)
-		CHECK_TICK
+		//CHECK_TICK

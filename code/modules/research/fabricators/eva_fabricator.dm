@@ -344,7 +344,7 @@
 /datum/design/item/genfab/miningtools/adv/mining_scanner
 	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2)
 	materials = list(MATERIAL_STEEL = 0.5 SHEETS,MATERIAL_GLASS = 0.5 SHEETS)
-	build_path = /obj/item/weapon/mining_scanner
+	build_path = /obj/item/device/scanner/mining/
 
 /datum/design/item/genfab/miningtools/adv/depth_scanner
 	req_tech = list(TECH_MAGNET = 2, TECH_ENGINEERING = 2, TECH_BLUESPACE = 2)

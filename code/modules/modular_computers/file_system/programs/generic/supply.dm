@@ -20,6 +20,15 @@
 	var/datum/nano_module/supply/SNM = NM
 	if(istype(SNM))
 		SNM.emagged = computer_emagged
+		if(SNM.notifications_enabled)
+			if(SSsupply.requestlist.len)
+				ui_header = "supply_new_order.gif"
+			else if(SSsupply.shoppinglist.len)
+				ui_header = "supply_awaiting_delivery.gif"
+			else
+				ui_header = "supply_idle.gif"
+		else if(ui_header)
+			ui_header = null
 
 /datum/nano_module/supply
 	name = "Supply Management program"
@@ -29,7 +38,7 @@
 	var/list/category_contents = list()
 	var/showing_contents_of_ref = null
 	var/list/contents_of_order = list()
-	var/emagged = FALSE	// TODO: Implement synchronisation with modular computer framework.
+	var/emagged = FALSE	// TODO: Implement synchronization with modular computer framework.
 	var/emagged_memory = FALSE // Keeps track if the program has to regenerate the catagories after an emag.
 	var/current_security_level
 	var/notifications_enabled = FALSE
@@ -39,32 +48,42 @@
 	var/list/data = host.initial_data()
 	var/is_admin = check_access(user, access_cargo)
 	var/decl/security_state/security_state = decls_repository.get_decl(GLOB.using_map.security_state)
-	if(!LAZYLEN(category_names) || !LAZYLEN(category_contents)  || current_security_level != security_state.current_security_level)
+	if(!LAZYLEN(category_names) || !LAZYLEN(category_contents) || current_security_level != security_state.current_security_level || emagged_memory != emagged )
 		generate_categories()
 		current_security_level = security_state.current_security_level
+		emagged_memory = emagged
 
 	data["is_admin"] = is_admin
+	if(is_admin)
+		data["shopping_cart_length"] = SSsupply.shoppinglist.len
+		data["request_length"] = SSsupply.requestlist.len
 	data["screen"] = screen
 	data["credits"] = "[SSsupply.points]"
+	data["currency"] = GLOB.using_map.supply_currency_name
+	data["currency_short"] = GLOB.using_map.supply_currency_name_short
 	switch(screen)
 		if(1)// Main ordering menu
 			data["categories"] = category_names
 			if(selected_category)
 				data["category"] = selected_category
 				data["possible_purchases"] = category_contents[selected_category]
+				if(showing_contents_of_ref)
+					data["showing_contents_of"] = showing_contents_of_ref
+					data["contents_of_order"] = contents_of_order
 
 		if(2)// Statistics screen with credit overview
-			data["total_credits"] = SSsupply.point_sources["total"] ? SSsupply.point_sources["total"] : 0
-			data["credits_passive"] = SSsupply.point_sources["time"] ? SSsupply.point_sources["time"] : 0
-			data["credits_crates"] = SSsupply.point_sources["crate"] ? SSsupply.point_sources["crate"] : 0
-			data["credits_phoron"] = SSsupply.point_sources[MATERIAL_PHORON] ? SSsupply.point_sources[MATERIAL_PHORON] : 0
-			data["credits_platinum"] = SSsupply.point_sources[MATERIAL_PLATINUM] ? SSsupply.point_sources[MATERIAL_PLATINUM] : 0
-			data["credits_paperwork"] = SSsupply.point_sources["manifest"] ? SSsupply.point_sources["manifest"] : 0
-			data["credits_virology"] = SSsupply.point_sources["virology"] ? SSsupply.point_sources["virology"] : 0
+			var/list/point_breakdown = list()
+			for(var/tag in SSsupply.point_source_descriptions)
+				var/entry = list()
+				entry["desc"] = SSsupply.point_source_descriptions[tag]
+				entry["points"] = SSsupply.point_sources[tag] || 0
+				point_breakdown += list(entry) //Make a list of lists, don't flatten
+			data["point_breakdown"] = point_breakdown
 			data["can_print"] = can_print()
 
 		if(3)// Shuttle monitoring and control
 			var/datum/shuttle/autodock/ferry/supply/shuttle = SSsupply.shuttle
+			data["shuttle_name"] = shuttle.name
 			if(istype(shuttle))
 				data["shuttle_location"] = shuttle.at_station() ? GLOB.using_map.name : "Remote location"
 			else
@@ -74,26 +93,22 @@
 
 
 		if(4)// Order processing
-			var/list/cart[0]
-			var/list/requests[0]
-			for(var/datum/supply_order/SO in SSsupply.shoppinglist)
-				cart.Add(list(list(
-					"id" = SO.ordernum,
-					"object" = SO.object.name,
-					"orderer" = SO.orderedby,
-					"cost" = SO.object.cost,
-					"reason" = SO.reason
-				)))
-			for(var/datum/supply_order/SO in SSsupply.requestlist)
-				requests.Add(list(list(
-					"id" = SO.ordernum,
-					"object" = SO.object.name,
-					"orderer" = SO.orderedby,
-					"cost" = SO.object.cost,
-					"reason" = SO.reason
-					)))
-			data["cart"] = cart
-			data["requests"] = requests
+			if(is_admin) // No bother sending all of this if the user can't see it.
+				var/list/cart[0]
+				var/list/requests[0]
+				var/list/done[0]
+				for(var/datum/supply_order/SO in SSsupply.shoppinglist)
+					cart.Add(order_to_nanoui(SO, SUPPLY_LIST_ID_CART))
+				for(var/datum/supply_order/SO in SSsupply.requestlist)
+					requests.Add(order_to_nanoui(SO, SUPPLY_LIST_ID_REQUEST))
+				for(var/datum/supply_order/SO in SSsupply.donelist)
+					done.Add(order_to_nanoui(SO, SUPPLY_LIST_ID_DONE))
+				data["cart"] = cart
+				data["requests"] = requests
+				data["done"] = done
+				data["can_print"] = can_print()
+				data["is_NTOS"] = istype(nano_host(), /obj/item/modular_computer) // Can we even use notifications?
+				data["notifications_enabled"] = notifications_enabled
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
@@ -272,9 +287,9 @@
 
 		return 1
 
-	// if(href_list["toggle_notifications"])
-	// 	notifications_enabled = !notifications_enabled
-	// 	return 1
+	if(href_list["toggle_notifications"])
+		notifications_enabled = !notifications_enabled
+		return 1
 
 /datum/nano_module/supply/proc/generate_categories()
 	category_names.Cut()

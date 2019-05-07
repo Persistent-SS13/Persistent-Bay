@@ -41,7 +41,7 @@ SUBSYSTEM_DEF(xenoarch)
 			if(T in range(5, M))
 				farEnough = 0
 				break
-			CHECK_TICK
+			//CHECK_TICK
 		if(!farEnough)
 			continue
 
@@ -63,13 +63,13 @@ SUBSYSTEM_DEF(xenoarch)
 				if(T in processed_turfs)
 					continue
 				viable_adjacent_turfs.Add(T)
-				CHECK_TICK
+				//CHECK_TICK
 
 			target_digsite_size = min(target_digsite_size, viable_adjacent_turfs.len)
 
 		for(var/i = 1 to target_digsite_size)
 			turfs_to_process += pick_n_take(viable_adjacent_turfs)
-			CHECK_TICK
+			//CHECK_TICK
 
 		while(turfs_to_process.len)
 			var/turf/simulated/mineral/archeo_turf = pop(turfs_to_process)
@@ -96,21 +96,21 @@ SUBSYSTEM_DEF(xenoarch)
 			//have a chance for an artifact to spawn here, but not in animal or plant digsites
 			if(isnull(M.artifact_find) && digsite != DIGSITE_GARDEN && digsite != DIGSITE_ANIMAL)
 				artifact_spawning_turfs.Add(archeo_turf)
-			CHECK_TICK
-		CHECK_TICK
-	CHECK_TICK
+			//CHECK_TICK
+		//CHECK_TICK
+	//CHECK_TICK
 
 	//create artifact machinery
 	var/num_artifacts_spawn = rand(ARTIFACTSPAWNNUM_LOWER, ARTIFACTSPAWNNUM_UPPER)
 	while(artifact_spawning_turfs.len > num_artifacts_spawn)
 		pick_n_take(artifact_spawning_turfs)
-		CHECK_TICK
+		//CHECK_TICK
 
 	var/list/artifacts_spawnturf_temp = artifact_spawning_turfs.Copy()
 	while(artifacts_spawnturf_temp.len > 0)
 		var/turf/simulated/mineral/artifact_turf = pop(artifacts_spawnturf_temp)
 		artifact_turf.artifact_find = new()
-		CHECK_TICK
+		//CHECK_TICK
 
 #undef XENOARCH_SPAWN_CHANCE
 #undef DIGSITESIZE_LOWER

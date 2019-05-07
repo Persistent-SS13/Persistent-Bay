@@ -96,9 +96,11 @@
 	ADD_SKIP_EMPTY(stored_pen)
 
 /obj/item/modular_computer/Initialize()
+	. = ..()
 	START_PROCESSING(SSobj, src)
 
 	if(!map_storage_loaded)
+		health = max_health
 		install_default_hardware()
 		if(hard_drive)
 			install_default_programs()

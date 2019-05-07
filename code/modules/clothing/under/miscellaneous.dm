@@ -4,6 +4,7 @@
 	icon_state = "red_pyjamas"
 	worn_state = "red_pyjamas"
 	item_state = "w_suit"
+	gender_icons = 1
 
 /obj/item/clothing/under/pj/blue
 	name = "blue pj's"
@@ -11,6 +12,7 @@
 	icon_state = "blue_pyjamas"
 	worn_state = "blue_pyjamas"
 	item_state = "w_suit"
+	gender_icons = 1
 
 /obj/item/clothing/under/captain_fly
 	name = "rogue's uniform"
@@ -32,6 +34,7 @@
 	icon_state = "sl_suit"
 	worn_state = "sl_suit"
 	item_state = "sl_suit"
+	gender_icons = 1
 
 /obj/item/clothing/under/waiter
 	name = "waiter's outfit"
@@ -39,6 +42,7 @@
 	icon_state = "waiter"
 	item_state = "waiter"
 	worn_state = "waiter"
+	gender_icons = 1
 
 /obj/item/clothing/under/rank/mailman
 	name = "mailman's jumpsuit"
@@ -166,6 +170,7 @@
 	icon_state = "rainbow"
 	item_state = "rainbow"
 	worn_state = "rainbow"
+	gender_icons = 1
 
 /obj/item/clothing/under/cloud
 	name = "cloud"
@@ -213,7 +218,7 @@
 	desc = "A formal black suit and red tie, intended for the galaxy's finest."
 	icon_state = "really_black_suit"
 	item_state = "jensensuit"
-	worn_state = "black_suit"
+	worn_state = "really_black_suit"
 
 /obj/item/clothing/under/suit_jacket/female
 	name = "executive suit"
@@ -221,6 +226,7 @@
 	icon_state = "black_suit_fem"
 	item_state = "lawyer_black"
 	worn_state = "black_suit_fem"
+	gender_icons = 1
 
 /obj/item/clothing/under/suit_jacket/red
 	name = "red suit"
@@ -258,6 +264,7 @@
 	icon_state = "pirate"
 	item_state = "sl_suit"
 	worn_state = "pirate"
+	gender_icons = 1
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS
 
 /obj/item/clothing/under/soviet
@@ -600,6 +607,7 @@
 	icon_state = "charcoal_suit"
 	item_state = "bl_suit"
 	worn_state = "charcoal_suit"
+	gender_icons = 1
 	starting_accessories = list(/obj/item/clothing/accessory/navy, /obj/item/clothing/accessory/toggleable/charcoal_jacket)
 
 /obj/item/clothing/under/suit_jacket/navy
@@ -608,6 +616,7 @@
 	icon_state = "navy_suit"
 	item_state = "bl_suit"
 	worn_state = "navy_suit"
+	gender_icons = 1
 	starting_accessories = list(/obj/item/clothing/accessory/red, /obj/item/clothing/accessory/toggleable/navy_jacket)
 
 /obj/item/clothing/under/suit_jacket/burgundy
@@ -616,6 +625,7 @@
 	icon_state = "burgundy_suit"
 	item_state = "r_suit"
 	worn_state = "burgundy_suit"
+	gender_icons = 1
 	starting_accessories = list(/obj/item/clothing/accessory/black, /obj/item/clothing/accessory/toggleable/burgundy_jacket)
 
 /obj/item/clothing/under/suit_jacket/checkered
@@ -624,6 +634,7 @@
 	icon_state = "checkered_suit"
 	item_state = "gy_suit"
 	worn_state = "checkered_suit"
+	gender_icons = 1
 	starting_accessories = list(/obj/item/clothing/accessory/black, /obj/item/clothing/accessory/toggleable/checkered_jacket)
 
 /obj/item/clothing/under/suit_jacket/tan
@@ -632,6 +643,7 @@
 	icon_state = "tan_suit"
 	item_state = "lb_suit"
 	worn_state = "tan_suit"
+	gender_icons = 1
 	starting_accessories = list(/obj/item/clothing/accessory/yellow, /obj/item/clothing/accessory/toggleable/tan_jacket)
 
 ///obj/item/clothing/under/serviceoveralls
@@ -678,6 +690,7 @@
 	icon_state = "pcrc"
 	item_state = "jensensuit"
 	worn_state = "pcrc"
+	gender_icons = 1
 
 /obj/item/clothing/under/pcrcsuit
 	name = "\improper PCRC suit"
@@ -685,6 +698,7 @@
 	icon_state = "pcrcsuit"
 	item_state = "jensensuit"
 	worn_state = "pcrcsuit"
+	gender_icons = 1
 
 /obj/item/clothing/under/grayson
 	name = "\improper Grayson overalls"
@@ -697,6 +711,7 @@
 	desc = "A jumpsuit belonging to Ward-Takahashi, a Trans-Stellar in the consumer goods market."
 	icon_state = "wardt"
 	worn_state = "wardt"
+	gender_icons = 1
 
 /obj/item/clothing/under/dais
 	name = "\improper Deimos Advanced Information Systems uniform"
@@ -709,6 +724,7 @@
 	desc = "A uniform belonging to Major Bill's Transportation, a shipping megacorporation."
 	icon_state = "mbill"
 	worn_state = "mbill"
+	gender_icons = 1
 
 /obj/item/clothing/under/morpheus
 	name = "\improper Morpheus Cyberkinetics uniform"
@@ -734,6 +750,7 @@
 	desc = "A uniform that citizens of Agartha wear in solidarity with their navy and armed forces."
 	icon_state = "saare"
 	worn_state = "saare"
+	gender_icons = 1
 
 /obj/item/clothing/under/frontier
 	name = "frontier clothes"
@@ -746,6 +763,7 @@
 	desc = "A jumpsuit belonging to Aether Atmospherics and Recycling, a Trans-Stellar that supplies recycling and atmospheric systems to colonies."
 	icon_state = "aether"
 	worn_state = "aether"
+	gender_icons = 1
 
 /obj/item/clothing/under/focal
 	name = "\improper Focal Point jumpsuit"
@@ -758,6 +776,7 @@
 	desc = "A jumpsuit belonging to Hephaestus Industries, a Trans-Stellar best known for its arms production."
 	icon_state = "heph"
 	worn_state = "heph"
+	gender_icons = 1
 
 /obj/item/clothing/under/punpun
 	name = "fancy uniform"
@@ -809,6 +828,7 @@
 	icon_state = "hazard"
 	item_state = "engi_suit"
 	worn_state = "hazard"
+	gender_icons = 1
 	siemens_coefficient = 0.8
 	armor  = list(
 		DAM_BLUNT 	= 1,
@@ -831,6 +851,7 @@
 	icon_state = "sterile"
 	item_state = "w_suit"
 	worn_state = "sterile"
+	gender_icons = 1
 	permeability_coefficient = 0.50
 	armor  = list(
 		DAM_BLUNT 	= 1,
@@ -851,6 +872,7 @@
 	name = "kimono"
 	icon_state = "kimono"
 	worn_state = "kimono"
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
 
 /obj/item/clothing/under/shinypurple
 	name = "shiny purple suit"

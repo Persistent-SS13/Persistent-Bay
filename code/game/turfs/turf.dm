@@ -49,9 +49,9 @@
 	ADD_SAVED_VAR(holy)
 	ADD_SAVED_VAR(blessed)
 	ADD_SAVED_VAR(flooded)
-	ADD_SAVED_VAR(decals)
+	ADD_SAVED_VAR(saved_decals)
 
-	ADD_SKIP_EMPTY(decals)
+	ADD_SKIP_EMPTY(saved_decals)
 
 /turf/on_update_icon()
 	update_flood_overlay()
@@ -93,7 +93,7 @@
 	if(Adjacent(user))
 		attack_hand(user)
 
-turf/attackby(obj/item/weapon/W as obj, mob/user as mob)
+/turf/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/weapon/storage))
 		var/obj/item/weapon/storage/S = W
 		if(S.use_to_pickup && S.collection_mode)
@@ -156,8 +156,8 @@ var/const/enterloopsanity = 100
 
 	if(ismob(A))
 		var/mob/M = A
-//		if (isliving(M) && M.stat != DEAD)
-//			SSmazemap.map_data["[M.z]"].set_active()
+		if (isliving(M) && M.stat != DEAD)
+			SSmazemap.map_data["[M.z]"].set_active()
 		if(!M.check_solid_ground())
 			inertial_drift(M)
 			//we'll end up checking solid ground again but we still need to check the other things.
@@ -269,12 +269,11 @@ var/const/enterloopsanity = 100
 	return
 
 /turf/proc/remove_decals()
-	if(decals && decals.len)
-		decals.Cut()
-		decals = null
-//	if(saved_decals && saved_decals.len)
-//		saved_decals.Cut()
-//		saved_decals = null
+	if(LAZYLEN(decals))
+		QDEL_NULL_LIST(decals)
+	if(LAZYLEN(saved_decals))
+		QDEL_NULL_LIST(saved_decals)
+
 // Called when turf is hit by a thrown object
 /turf/hitby(atom/movable/AM as mob|obj, var/speed)
 	if(src.density)

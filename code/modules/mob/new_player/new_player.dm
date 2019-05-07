@@ -36,7 +36,7 @@
 	output += "<a href='byond://?src=\ref[src];createCharacter=1'>Create A New Character</a><br><br>"
 	output += "<a href='byond://?src=\ref[src];deleteCharacter=1'>Delete A Character</a><br><br>"
 
-	if(GAME_STATE < RUNLEVEL_SETUP)
+	if(GAME_STATE < RUNLEVEL_GAME)
 		output += "<span class='average'><b>The Game Is Loading!</b></span><br><br>"
 	else
 		output += "<a href='byond://?src=\ref[src];joinGame=1'>Join Game!</a><br><br>"
@@ -120,10 +120,6 @@
 		selectCharacterPanel("load")
 		return 0
 
-	if(href_list["refresh"])
-		panel.close()
-		new_player_panel()
-
 	if(href_list["crewManifest"])
 		crewManifestPanel()
 		return 0
@@ -136,6 +132,9 @@
 		selectCharacterPanel("delete")
 		return 0
 
+	if(href_list["refresh"])
+		panel.close()
+		new_player_panel()
 
 	if(href_list["pickSlot"])
 		chosen_slot = text2num(copytext(href_list["pickSlot"], 1, 2))
@@ -278,7 +277,7 @@
 			chosen_slot = M.save_slot
 			to_chat(src, "<span class='notice'>A character is already in game.</span>")
 			Retrieve_Record(M.real_name)
-			if(GAME_STATE == RUNLEVEL_SETUP)
+			if(GAME_STATE == RUNLEVEL_GAME)
 				panel?.close()
 				load_panel?.close()
 				M.key = key
@@ -566,7 +565,7 @@
 	return 0
 
 /mob/new_player/proc/close_spawn_windows()
-	src << browse(null, "window=latechoices") //closes late choices window
+	close_browser(src, "window=latechoices") //closes late choices window
 	panel.close()
 
 /mob/new_player/proc/check_species_allowed(datum/species/S, var/show_alert=1)

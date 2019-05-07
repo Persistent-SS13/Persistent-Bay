@@ -1842,9 +1842,14 @@ var/PriorityQueue/all_feeds
 	var/network_password
 	var/network_invisible = FALSE
 
-/obj/faction_spawner/New()
-	if(!GLOB.all_world_factions)
-		GLOB.all_world_factions = list()
+//Psy_commando:
+//In order to reliably have the faction spawn and not be deleted, we need to have the faction spawned in LateInitialize().
+//Otherwise, when globabl variables are initialized, the all_world_faction list may or may not be overwritten on startup, when not loading a save.
+/obj/faction_spawner/Initialize()
+	..()
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/faction_spawner/LateInitialize()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 		if(existing_faction.uid == uid)
 			qdel(src)
@@ -1861,16 +1866,14 @@ var/PriorityQueue/all_feeds
 		fact.network.secured = 1
 		fact.network.password = network_password
 	fact.network.invisible = network_invisible
-	GLOB.all_world_factions |= fact
+	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
 	qdel(src)
 	return
 
 /obj/faction_spawner/democratic
 	var/purpose = ""
 
-/obj/faction_spawner/democratic/New()
-	if(!GLOB.all_world_factions)
-		GLOB.all_world_factions = list()
+/obj/faction_spawner/democratic/LateInitialize()
 	for(var/datum/world_faction/existing_faction in GLOB.all_world_factions)
 		if(existing_faction.uid == uid)
 			qdel(src)
@@ -1888,7 +1891,7 @@ var/PriorityQueue/all_feeds
 		fact.network.secured = 1
 		fact.network.password = network_password
 	fact.network.invisible = network_invisible
-	GLOB.all_world_factions |= fact
+	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
 	qdel(src)
 	return
 

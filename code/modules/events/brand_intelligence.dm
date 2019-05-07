@@ -49,6 +49,10 @@
 								 "You don't want to buy anything? Yeah, well I didn't want to buy your mom either."))
 
 /datum/event/brand_intelligence/end()
+	if(!originMachine || QDELETED(originMachine))
+		log_warning("The machine used for the event [src], was either null or qdeleted before the end of the event.")
+		originMachine = null
+		return
 	originMachine.shut_up = 1
 	originMachine.shooting_chance = initial(originMachine.shooting_chance)
 	for(var/weakref/W in infectedVendingMachines)

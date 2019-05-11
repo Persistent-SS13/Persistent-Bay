@@ -84,6 +84,7 @@
 /obj/item/weapon/material/kitchen/utensil/knife
 	name = "knife"
 	desc = "A knife for eating with. Can cut through any food."
+	icon = 'icons/obj/knife.dmi'
 	icon_state = "knife"
 	force_divisor = 0.1 // 6 when wielded with hardness 60 (steel)
 	scoop_food = 0
@@ -97,7 +98,7 @@
 /obj/item/weapon/material/kitchen/utensil/knife/boot
 	name = "small knife"
 	desc = "A small, easily concealed knife."
-	icon = 'icons/obj/weapons.dmi'
+	icon = 'icons/obj/knife.dmi'
 	icon_state = "pocketknife_open"
 	item_state = "knife"
 	applies_material_colour = 0

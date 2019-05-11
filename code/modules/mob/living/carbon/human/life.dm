@@ -1124,7 +1124,7 @@
 
 	for(var/obj/item/organ/external/E in organs)
 		if(!(E.body_part & protected_limbs) && prob(20))
-			E.take_damage(round(species_heat_mod * log(10, (burn_temperature + 10)), 0.1), DAM_BURN, damsrc = fire)
+			E.take_damage(round(species_heat_mod * log(10, (burn_temperature + 10)), 0.1), DAM_BURN, used_weapon = fire)
 
 /mob/living/carbon/human/rejuvenate()
 	restore_blood()

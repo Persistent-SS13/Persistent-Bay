@@ -35,48 +35,35 @@ SUBSYSTEM_DEF(wireless)
 	..("RL:[receiver_list.len]|PC:[pending_connections.len]|RC:[retry_connections.len]|FC:[failed_connections.len]")
 
 /datum/controller/subsystem/wireless/Recover()
-	// if (istype(SSwireless.receiver_list))
-	// 	receiver_list = SSwireless.receiver_list
-	// if (istype(SSwireless.pending_connections))
-	// 	pending_connections = SSwireless.pending_connections
-	// if (istype(SSwireless.retry_connections))
-	// 	retry_connections = SSwireless.retry_connections
-	// if (istype(SSwireless.failed_connections))
-	// 	failed_connections = SSwireless.failed_connections
+	if (istype(SSwireless.receiver_list))
+		receiver_list = SSwireless.receiver_list
+	if (istype(SSwireless.pending_connections))
+		pending_connections = SSwireless.pending_connections
+	if (istype(SSwireless.retry_connections))
+		retry_connections = SSwireless.retry_connections
+	if (istype(SSwireless.failed_connections))
+		failed_connections = SSwireless.failed_connections
 
 /datum/controller/subsystem/wireless/fire(resumed = 0)
-	// ASSERT(islist(retry_connections))
-	// ASSERT(islist(failed_connections))
-	// //process any connection requests waiting to be retried
-	// if(process_queue(retry_connections, failed_connections))
-	// 	return
-
-	// ASSERT(islist(pending_connections))
-	// ASSERT(islist(retry_connections))
-	// //process any pending connection requests
-	// if(process_queue(pending_connections, retry_connections))
-	// 	return
+	//process any connection requests waiting to be retried
+	if(process_queue(retry_connections, failed_connections))
+		return
+	//process any pending connection requests
+	if(process_queue(pending_connections, retry_connections))
+		return
 
 /datum/controller/subsystem/wireless/proc/process_queue(var/list/process_connections, var/list/unsuccesful_connections)
-	// if(process_connections == -1)
-	// 	CRASH("SSwireless: processing list is -1 somehow???? PC:[pending_connections], RC:[retry_connections]")
-	// while(LAZYLEN(process_connections))
-	// 	var/datum/connection_request/C = process_connections[LAZYLEN(process_connections) - 1]
-	// 	if(process_connections && (LAZYLEN(process_connections) > 0))
-	// 		process_connections.Remove(process_connections[(LAZYLEN(process_connections) - 1)])
-	// 	else
-	// 		return
-	// 	//process_connections--
-	// 	var/target_found = 0
-	// 	for(var/datum/wifi/receiver/R in receiver_list)
-	// 		if(R.id == C.id)
-	// 			var/datum/wifi/sender/S = C.source
-	// 			S.connect_device(R)
-	// 			R.connect_device(S)
-	// 			target_found = 1
-	// 	if(!target_found)
-	// 		unsuccesful_connections += C
-	// 	if(process_connections == -1)
-	// 		CRASH("SSwireless: (INLOOP!!!) processing list is -1 somehow???? PC:[pending_connections], RC:[retry_connections]")
-	// 	if(MC_TICK_CHECK)
-	// 		return TRUE
+	while(process_connections.len)
+		var/datum/connection_request/C = process_connections[process_connections.len]
+		process_connections--
+		var/target_found = 0
+		for(var/datum/wifi/receiver/R in receiver_list)
+			if(R.id == C.id)
+				var/datum/wifi/sender/S = C.source
+				S.connect_device(R)
+				R.connect_device(S)
+				target_found = 1
+		if(!target_found)
+			unsuccesful_connections += C
+		if(MC_TICK_CHECK)
+			return TRUE

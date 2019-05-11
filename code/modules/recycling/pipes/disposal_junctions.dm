@@ -2,6 +2,9 @@
 /obj/structure/disposalpipe/junction
 	icon_state = "pipe-j1"
 
+/obj/structure/disposalpipe/junction/flipped
+	icon_state = "pipe-j2"
+
 /obj/structure/disposalpipe/junction/yjunction
 	icon_state = "pipe-y"
 

@@ -17,6 +17,10 @@
 	ADD_SAVED_VAR(desc)
 	ADD_SAVED_VAR(icon_state)
 
+/obj/structure/sign/Initialize()
+	. = ..()
+	queue_icon_update()
+
 /obj/structure/sign/attackby(obj/item/tool as obj, mob/user as mob)	//deconstruction
 	if(default_deconstruction_screwdriver(tool, user, 3 SECONDS))
 		return 1
@@ -30,6 +34,20 @@
 	S.icon_state = icon_state
 	S.sign_state = icon_state
 	qdel(src)
+
+/obj/item/sign/on_update_icon()
+	..()
+	pixel_y = 0
+	pixel_x = 0
+	switch(dir)
+		if(NORTH)
+			pixel_y = 32
+		if(SOUTH)
+			pixel_y = -32
+		if(EAST)
+			pixel_x = 32
+		if(WEST)
+			pixel_x = -32
 
 //---------------------------------------
 // Sign Item

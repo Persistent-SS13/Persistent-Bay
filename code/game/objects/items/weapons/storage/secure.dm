@@ -142,7 +142,7 @@
 // -----------------------------
 /obj/item/weapon/storage/secure/briefcase
 	name = "secure briefcase"
-	icon = 'icons/obj/storage.dmi'
+	icon = 'icons/obj/items/storage/secure.dmi'
 	icon_state = "secure"
 	item_state = "sec-case"
 	desc = "A large briefcase with a digital locking system."
@@ -173,7 +173,7 @@
 
 /obj/item/weapon/storage/secure/safe
 	name = "secure safe"
-	icon = 'icons/obj/storage.dmi'
+	icon = 'icons/obj/items/storage/secure.dmi'
 	icon_state = "safe"
 	icon_opened = "safe0"
 	icon_locking = "safeb"

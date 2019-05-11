@@ -65,8 +65,6 @@ proc/random_skin_tone(var/datum/species/current_species)
 		else				. = rand(species_tone,34)
 
 	return min(max(. + rand(-25, 25), species_tone), 34)
-proc/vatgrown_skin_tone()
-	return rand(0, 30)
 
 proc/skintone2racedescription(tone)
 	switch (tone)

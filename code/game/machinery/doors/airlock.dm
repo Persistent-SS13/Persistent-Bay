@@ -1310,9 +1310,9 @@ About the new airlock wires panel:
 	return
 
 // Braces can act as an extra layer of armor - they will take damage first.
-/obj/machinery/door/airlock/take_damage(damage, damagetype, armorbypass, damsrc)
+/obj/machinery/door/airlock/take_damage(damage, damagetype, armorbypass, used_weapon)
 	if(brace)
-		brace.take_damage(damage, damagetype, armorbypass, damsrc)
+		brace.take_damage(damage, damagetype, armorbypass, used_weapon)
 	else
 		..()
 	update_icon()
@@ -1347,8 +1347,8 @@ About the new airlock wires panel:
 
 	//if there's no power, recieve the signal but just don't do anything. This allows airlocks to continue to work normally once power is restored
 	if(arePowerSystemsOn())
-		spawn()
-			execute_current_command()
+		INVOKE_ASYNC(src, .proc/execute_current_command)
+			//execute_current_command()
 
 /obj/machinery/door/airlock/proc/execute_current_command()
 	if(operating)

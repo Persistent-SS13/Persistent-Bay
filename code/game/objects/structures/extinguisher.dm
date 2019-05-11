@@ -56,6 +56,18 @@
 	update_icon()
 
 /obj/structure/extinguisher_cabinet/on_update_icon()
+	pixel_x = 0
+	pixel_y = 0
+	switch(dir)
+		if(NORTH)
+			pixel_y = 24
+		if(SOUTH)
+			pixel_y = -24
+		if(EAST)
+			pixel_x = 24
+		if(WEST)
+			pixel_x = -24
+
 	if(!opened)
 		icon_state = "extinguisher_closed"
 		return

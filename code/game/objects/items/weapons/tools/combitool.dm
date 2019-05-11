@@ -4,7 +4,7 @@
 /obj/item/weapon/tool/combitool
 	name = "combi-tool"
 	desc = "It even has one of those nubbins for doing the thingy."
-	icon = 'icons/obj/items.dmi'
+	icon = 'icons/obj/tools.dmi'
 	icon_state = "combitool"
 	w_class = ITEM_SIZE_SMALL
 

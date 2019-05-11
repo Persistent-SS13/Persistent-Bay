@@ -375,8 +375,8 @@ SUBSYSTEM_DEF(jobs)
 /datum/controller/subsystem/jobs/proc/attempt_role_assignment(var/mob/new_player/player, var/datum/job/job, var/level)
 	if(!jobban_isbanned(player, job.title) && \
 	 job.player_old_enough(player.client) && \
+	 //player.client.prefs.CorrectLevel(job, level) &&
 	 job.is_position_available())
-	 //	 player.client.prefs.CorrectLevel(job, level) && \
 		assign_role(player, job.title)
 		return TRUE
 	return FALSE
@@ -554,7 +554,7 @@ SUBSYSTEM_DEF(jobs)
 	BITSET(H.hud_updateflag, ID_HUD)
 	BITSET(H.hud_updateflag, IMPLOYAL_HUD)
 	BITSET(H.hud_updateflag, SPECIALROLE_HUD)
-	
+
 	job.post_equip_rank(H)
 
 	return H

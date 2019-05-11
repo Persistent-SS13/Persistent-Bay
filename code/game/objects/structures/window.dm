@@ -136,9 +136,9 @@
 /obj/structure/window/damage_description(var/mob/user)
 	. = ..()
 
-/obj/structure/window/take_damage(damage, damtype, armorbypass, damsrc)
+/obj/structure/window/take_damage(damage, damtype, armorbypass, used_weapon)
 	var/initialhealth = health
-	..(damage, damtype, armorbypass, damsrc)
+	..(damage, damtype, armorbypass, used_weapon)
 	if(health < get_max_health() / 4 && initialhealth >= get_max_health() / 4)
 		visible_message(SPAN_WARNING("[src] looks like it's about to shatter!"))
 	else if(health < get_max_health() / 2 && initialhealth >= get_max_health() / 2)

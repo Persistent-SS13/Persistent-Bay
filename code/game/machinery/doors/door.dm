@@ -317,12 +317,12 @@
 			playsound(src.loc, sound_hit, 100, 1)
 			take_damage(W.force, W.damtype, W.armor_penetration, W)
 
-/obj/machinery/door/take_damage(damage, damtype, armorbypass, damsrc)
+/obj/machinery/door/take_damage(damage, damtype, armorbypass, used_weapon)
 	var/initialhealth = src.health
 	//cap projectile damage so that there's still a minimum number of hits required to break the door
 	if(damage)
 		damage = min(damage, 100)
-	..(damage, damtype, armorbypass, damsrc)
+	..(damage, damtype, armorbypass, used_weapon)
 	if(src.health <= 0 && initialhealth > 0)
 		src.set_broken()
 	else if(src.health < src.max_health / 4 && initialhealth >= src.max_health / 4)
@@ -360,6 +360,7 @@
 
 
 /obj/machinery/door/on_update_icon()
+	//Don't do that. It does weird shit with multi-tile doors and some wall placements, and its generally uneeded
 	// if(connections in list(NORTH, SOUTH, NORTH|SOUTH))
 	// 	if(connections in list(WEST, EAST, EAST|WEST))
 	// 		set_dir(SOUTH)

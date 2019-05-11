@@ -24,10 +24,9 @@
 
 	var/blocked = get_blocked(damage_type, damage_flags, armor_pen)
 	if(prob(blocked * 100))
-		if(damage_flags & DAM_LASER)
-			damage *= FLUIDLOSS_CONC_BURN/FLUIDLOSS_WIDE_BURN
 		if(ISDAMTYPE(damage_type, DAM_LASER))
 			damage_type = DAM_BURN
+			damage *= FLUIDLOSS_CONC_BURN/FLUIDLOSS_WIDE_BURN
 		if(ISDAMTYPE(damage_type, DAM_CUT) || ISDAMTYPE(damage_type, DAM_PIERCE))
 			damage_type = DAM_BLUNT
 

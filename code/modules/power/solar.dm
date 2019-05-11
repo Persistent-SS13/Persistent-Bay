@@ -1,6 +1,6 @@
 #define SOLAR_MAX_DIST 40
 
-var/solar_gen_rate = 1500
+var/solar_gen_rate = 1.5 KILOWATTS
 var/list/solars_list = list()
 
 /obj/machinery/power/solar
@@ -12,7 +12,6 @@ var/list/solars_list = list()
 	density = 1
 	idle_power_usage = 0
 	active_power_usage = 0
-	var/id = 0
 	max_health = 10
 	var/obscured = 0
 	var/sunfrac = 0
@@ -87,9 +86,9 @@ var/list/solars_list = list()
 	..()
 	overlays.Cut()
 	if(isbroken())
-		overlays += image('icons/obj/power.dmi', icon_state = "solar_panel-b", layer = FLY_LAYER)
+		overlays += image(icon, icon_state = "solar_panel-b", layer = FLY_LAYER)
 	else
-		overlays += image('icons/obj/power.dmi', icon_state = "solar_panel", layer = FLY_LAYER)
+		overlays += image(icon, icon_state = "solar_panel", layer = FLY_LAYER)
 		src.set_dir(angle2dir(adir))
 	return
 
@@ -112,12 +111,8 @@ var/list/solars_list = list()
 	//isn't the power recieved from the incoming light proportionnal to cos(p_angle) (Lambert's cosine law) rather than cos(p_angle)^2 ?
 
 /obj/machinery/power/solar/Process()//TODO: remove/add this from machines to save on processing as needed ~Carn PRIORITY
-	if(isbroken())
-		return
-	if(!GLOB.sun || !control) //if there's no sun or the panel is not linked to a solar control computer, no need to proceed
-		return
-	testing("processing [src] \ref[src], PN:[powernet](\ref[powernet]), CT:[control](\ref[control]), Gen:[solar_gen_rate * sunfrac * efficiency]")
-	if(powernet)
+	if(!isbroken() && GLOB.sun && control && powernet)
+		//testing("processing [src] \ref[src], PN:[powernet](\ref[powernet]), CT:[control](\ref[control]), Gen:[solar_gen_rate * sunfrac * efficiency]")
 		if(powernet == control.powernet)//check if the panel is still connected to the computer
 			if(obscured) //get no light from the sun, so don't generate power
 				return
@@ -425,7 +420,7 @@ var/list/solars_list = list()
 	lastgen = gen
 	gen = 0
 
-	testing("Processing [src](\ref[src]). LastGen:[lastgen]")
+	//testing("Processing [src](\ref[src]). LastGen:[lastgen]")
 	if(inoperable())
 		return
 

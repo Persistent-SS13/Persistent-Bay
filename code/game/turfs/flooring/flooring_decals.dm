@@ -9,6 +9,7 @@ var/list/floor_decals = list()
 	plane = ABOVE_TURF_PLANE
 	layer = DECAL_LAYER
 	appearance_flags = RESET_COLOR
+	anchored = TRUE
 	var/supplied_dir
 
 /obj/effect/floor_decal/New(var/newloc, var/newdir, var/newcolour)

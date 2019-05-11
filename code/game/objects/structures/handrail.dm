@@ -6,6 +6,8 @@
 	density = 0
 	anchored = 1
 	can_buckle = 1
+	max_health = 80
+	mass = 15
 
 /obj/structure/handrai/buckle_mob(mob/living/M)
 	. = ..()

@@ -514,7 +514,7 @@
 ////////  Health related procs  ////////
 ////////////////////////////////////////
 
-/obj/mecha/take_damage(damage, damtype, armorbypass, damsrc)
+/obj/mecha/take_damage(damage, damtype, armorbypass, used_weapon)
 	if(damage)
 		var/amount = absorb_damage(damage,damtype)
 		health -= amount

@@ -85,7 +85,7 @@
 	. = ..(company, skip_prosthetics, 1)
 	has_lips = null
 
-/obj/item/organ/external/head/take_damage(damage, damtype, armorbypass, damsrc)
+/obj/item/organ/external/head/take_damage(damage, damtype, armorbypass, used_weapon)
 	. = ..()
 	if (!(status & ORGAN_DISFIGURED))
 		if (brute_dam > 40)

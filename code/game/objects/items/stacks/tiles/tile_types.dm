@@ -205,6 +205,45 @@
 	desc = "A smooth, flat slab of some kind of stone."
 	icon_state = "tile_stone"
 
+/obj/item/stack/tile/new_tile
+	name = "old tiles"
+	singular_name = "old tile"
+	desc = "A worn down floor tile."
+	icon_state = "tile_full"
+	matter = list(MATERIAL_PLASTIC = 900)
+/obj/item/stack/tile/new_tile/fifty
+	amount = 50
+
+/obj/item/stack/tile/new_tile/gray
+	name = "old gray tiles"
+	singular_name = "old gray tile"
+	color = COLOR_GRAY
+/obj/item/stack/tile/new_tile/gray/fifty
+	amount = 50
+
+/obj/item/stack/tile/old_cargo
+	name = "old mono tiles"
+	singular_name = "old mono tile"
+	desc = "A worn down mono floor tile."
+	icon_state = "cargo_one_full"
+	matter = list(MATERIAL_PLASTIC = 900)
+/obj/item/stack/tile/old_cargo/fifty
+	amount = 50
+
+/obj/item/stack/tile/old_cargo/gray
+	name = "old gray mono tiles"
+	singular_name = "old gray mono tile"
+	color = COLOR_GRAY
+/obj/item/stack/tile/old_cargo/gray/fifty
+	amount = 50
+
+/obj/item/stack/tile/kafel
+	name = "kafel tile"
+	singular_name = "kafel tile"
+	icon_state = "kafel_full"
+/obj/item/stack/tile/kafel/fifty
+	amount = 50
+
 /*
  * Carpets
  */

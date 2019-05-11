@@ -313,7 +313,7 @@
 
 
 // Takes specific amount of damage
-/obj/machinery/power/shield_generator/take_damage(damage, damtype, armorbypass, damsrc)
+/obj/machinery/power/shield_generator/take_damage(damage, damtype, armorbypass, used_weapon)
 	var/energy_to_use = damage * ENERGY_PER_HP
 	if(check_flag(MODEFLAG_MODULATE))
 		mitigation_em -= MITIGATION_HIT_LOSS

@@ -4,7 +4,7 @@ PROCESSING_SUBSYSTEM_DEF(plants)
 	runlevels = RUNLEVEL_GAME|RUNLEVEL_POSTGAME
 	flags = SS_BACKGROUND|SS_POST_FIRE_TIMING
 	init_order = SS_INIT_PLANTS
-	wait = 90 SECONDS
+	wait = 20 SECONDS
 
 	process_proc = /obj/machinery/portable_atmospherics/hydroponics/Process
 

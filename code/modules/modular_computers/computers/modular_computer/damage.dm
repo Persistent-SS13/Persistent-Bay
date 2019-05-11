@@ -24,7 +24,7 @@
 /obj/item/modular_computer/broken()
 	shutdown_computer()
 
-/obj/item/modular_computer/take_damage(damage, damtype, armorbypass, damsrc, var/component_probability, var/damage_casing = 1, var/randomize = 1)
+/obj/item/modular_computer/take_damage(damage, damtype, armorbypass, used_weapon, var/component_probability, var/damage_casing = 1, var/randomize = 1)
 	if(randomize)
 		// 75%-125%, rand() works with integers, apparently.
 		damage *= (rand(75, 125) / 100.0)

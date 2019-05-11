@@ -24,6 +24,10 @@ var/list/floor_light_cache = list()
 /obj/machinery/floor_light/prebuilt
 	anchored = TRUE
 
+/obj/machinery/floor_light/New()
+	..()
+	testing("created [src]\ref[src]")
+
 /obj/machinery/floor_light/after_load()
 	..()
 	update_brightness()

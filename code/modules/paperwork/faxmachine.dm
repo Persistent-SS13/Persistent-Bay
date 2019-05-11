@@ -5,7 +5,7 @@ GLOBAL_LIST_EMPTY(adminfaxes)	//cache for faxes that have been sent to admins
 
 /obj/machinery/photocopier/faxmachine
 	name = "fax machine"
-	icon = 'icons/obj/library.dmi'
+	icon = 'icons/obj/machines/faxmachine.dmi'
 	icon_state = "fax"
 	insert_anim = "faxsend"
 	req_one_access = list(access_lawyer, access_heads, access_armory, access_qm)
@@ -37,7 +37,7 @@ GLOBAL_LIST_EMPTY(adminfaxes)	//cache for faxes that have been sent to admins
 			return
 		scan = O
 		to_chat(user, "<span class='notice'>You insert \the [O] into \the [src].</span>")
-	else 
+	else
 		..()
 
 /obj/machinery/photocopier/faxmachine/attack_hand(mob/user as mob)

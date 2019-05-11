@@ -140,6 +140,9 @@
 //Returns the heat capacity of the gas mix based on the specific heat of the gases.
 /datum/gas_mixture/proc/heat_capacity()
 	. = 0
+	if(isnull(gas_data))
+		log_debug("gas_mixture.heat_capacity() : gas_data is null! We tried to get gas data before the list was generated!")
+		return .
 	for(var/g in gas)
 		. += gas_data.specific_heat[g] * gas[g]
 	. *= group_multiplier

@@ -23,7 +23,7 @@
 	audible_message(SPAN_WARNING("\The [src] emits a long, harsh tone!"))
 	playsound(loc, 'sound/weapons/bombwhine.ogg', 100, 0, -3)
 	addtimer(CALLBACK(src, .proc/harpoon_detonate), 4 SECONDS) //for suspense
-	
+
 /obj/item/weapon/material/harpoon/bomb/proc/harpoon_detonate()
 	audible_message(SPAN_DANGER("\The [src] detonates!")) //an actual sound will be handled by explosion()
 	var/turf/T = get_turf(src)
@@ -65,7 +65,7 @@
 /obj/item/weapon/material/hatchet/unathiknife
 	name = "duelling knife"
 	desc = "A razor sharp blade meant to inflict painful wounds."
-	icon = 'icons/obj/weapons.dmi'
+	icon = 'icons/obj/knife.dmi'
 	icon_state = "unathiknife"
 	attack_verb = list("ripped", "torn", "cut")
 	damtype = DAM_CUT

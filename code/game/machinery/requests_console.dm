@@ -52,7 +52,7 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 	var/priority = -1 ; //Priority of the message being sent
 	light_outer_range = 0
 	var/datum/announcement/announcement = new
-	
+
 /obj/machinery/requests_console/New()
 	..()
 	allConsoles += src
@@ -92,17 +92,15 @@ var/list/obj/machinery/requests_console/allConsoles = list()
 /obj/machinery/requests_console/update_icon()
 	pixel_x = 0
 	pixel_y = 0
-	var/turf/T = get_step(get_turf(src), turn(dir, 180))
-	if(istype(T) && T.density)
-		switch(dir)
-			if(NORTH)
-				pixel_y = -32
-			if(SOUTH)
-				pixel_y = 32
-			if(WEST)
-				pixel_x = 34
-			if(EAST)
-				pixel_x = -34
+	switch(dir)
+		if(NORTH)
+			pixel_y = -32
+		if(SOUTH)
+			pixel_y = 32
+		if(WEST)
+			pixel_x = 34
+		if(EAST)
+			pixel_x = -34
 
 	if(stat & NOPOWER)
 		if(icon_state != "req_comp_off")

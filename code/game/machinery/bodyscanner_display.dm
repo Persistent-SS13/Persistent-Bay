@@ -9,6 +9,8 @@
 	idle_power_usage = 75
 	active_power_usage = 300
 	w_class = ITEM_SIZE_HUGE
+	circuit_type = /obj/item/weapon/circuitboard/bodyscannerdisplay
+	max_health = 80
 	var/list/bodyscans = list()
 	var/selected = 0
 
@@ -33,6 +35,16 @@
 			selected--
 		bodyscans -= list(bodyscans[selection])
 		return TOPIC_REFRESH
+
+/obj/machinery/bodyscanner/attackby(obj/item/grab/normal/G, user as mob)
+	if(default_deconstruction_screwdriver(user, G))
+		updateUsrDialog()
+		return
+	else if(default_deconstruction_crowbar(user, G))
+		return
+	else if(default_part_replacement(user, G))
+		return
+	return ..()
 
 /obj/machinery/body_scan_display/attack_ai(user as mob)
 	return attack_hand(user)
@@ -62,3 +74,22 @@
 		ui = new(user, src, ui_key, "body_scan_display.tmpl", "Body Scan Display Console", 600, 800)
 		ui.set_initial_data(data)
 		ui.open()
+
+/obj/machinery/body_scan_display/update_icon()
+	..()
+	if(!ispowered())
+		icon_state = icon_state_unpowered
+	else
+		icon_state = initial(icon_state)
+
+	src.pixel_x = 0
+	src.pixel_y = 0
+	switch(dir)
+		if(NORTH)
+			src.pixel_y = -24
+		if(SOUTH)
+			src.pixel_y = 24
+		if(EAST)
+			src.pixel_x = -30
+		if(WEST)
+			src.pixel_x = 30

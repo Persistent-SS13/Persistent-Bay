@@ -184,7 +184,14 @@ Class Procs:
 //Installs parts when creating a machine for the first time
 /obj/machinery/proc/SetupParts()
 	if(circuit_type)
-		LAZYDISTINCTADD(component_parts, new circuit_type(src))
+		LAZYDISTINCTADD(component_parts, new circuit_type(src)) //only one circuit allowed
+		//Auto-add components from the circuit board components list
+		if(istype(circuit_type, /obj/item/weapon/circuitboard))
+			var/obj/item/weapon/circuitboard/board = circuit_type
+			for(var/key in board.req_components)
+				//Add the specified amount of parts
+				for(var/i = 0, i < board.req_components[key], ++i )
+					LAZYADD(component_parts, new key(src))
 	RefreshParts()
 
 /obj/machinery/proc/RefreshParts() //Placeholder proc for machines that are built using frames.

@@ -35,19 +35,19 @@
 	S.sign_state = icon_state
 	qdel(src)
 
-/obj/item/sign/on_update_icon()
+/obj/structure/sign/on_update_icon()
 	..()
-	pixel_y = 0
-	pixel_x = 0
+	src.pixel_y = 0
+	src.pixel_x = 0
 	switch(dir)
 		if(NORTH)
-			pixel_y = 32
+			src.pixel_y = -32
 		if(SOUTH)
-			pixel_y = -32
+			src.pixel_y = 32
 		if(EAST)
-			pixel_x = 32
+			src.pixel_x = -32
 		if(WEST)
-			pixel_x = -32
+			src.pixel_x = 32
 
 //---------------------------------------
 // Sign Item

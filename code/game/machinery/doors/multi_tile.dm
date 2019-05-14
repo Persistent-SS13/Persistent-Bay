@@ -3,6 +3,7 @@
 	airlock_type = "double"
 	name = "\improper Airlock"
 	icon = 'icons/obj/doors/double/door.dmi'
+	icon_state = "closed"
 	fill_file = 'icons/obj/doors/double/fill_steel.dmi'
 	color_file = 'icons/obj/doors/double/color.dmi'
 	color_fill_file = 'icons/obj/doors/double/fill_color.dmi'

@@ -124,8 +124,6 @@ var/global/list/valid_bloodtypes = list("A+", "A-", "B+", "B-", "AB+", "AB-", "O
 	var/datum/species/mob_species = all_species[pref.species]
 	if(mob_species && mob_species.spawn_flags & SPECIES_NO_LACE)
 		pref.has_cortical_stack = FALSE
-	if(mob_species && mob_species.spawn_flags & SPECIES_HAS_VATCHIP)
-		pref.has_vatgrown_chip = TRUE
 
 	var/low_skin_tone = mob_species ? (35 - mob_species.max_skin_tone()) : -185
 	sanitize_integer(pref.s_tone, low_skin_tone, 34, initial(pref.s_tone))

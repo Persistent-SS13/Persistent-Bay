@@ -209,9 +209,7 @@
 		O.dropInto(usr.loc)
 		O.reset_plane_and_layer()
 		O.add_fingerprint(usr)
-	usr.drop_from_inventory(src)
 	qdel(src)
-	return
 
 
 /obj/item/weapon/paper_bundle/on_update_icon()

@@ -82,9 +82,17 @@
 		\[grid\] - \[/grid\] : Table without visible borders, for layouts.
 		\[row\] - New table row.
 		\[cell\] - New table cell.
-		\[logo\] - Inserts NT logo image.
+		\[logo\] - Inserts the Nexus logo image.
+		\[exologo\] - Inserts EXO logo image.
+		\[ntlogo\] - Inserts the NT logo image.
 		\[bluelogo\] - Inserts blue NT logo image.
 		\[solcrest\] - Inserts SCG crest image.
+		\[eclogo\] - Inserts the Expeditionary Corps logo.
+		\[daislogo\] - Inserts the Deimos Advanced Information Systems logo.
+		\[xynlogo\] - Inserts the Xyngergy logo.
+		\[iccgseal\] - Inserts ICCG seal
+		\[fleetlogo\] - Inserts the logo of the SCG Fleet
+		\[ocielogo\] - Inserts the logo of the Office of Civil Investigation and Enforcement
 		\[terraseal\] - Inserts TCC seal.
 		\[nfrseal\] - Inserts NFR seal."}
 

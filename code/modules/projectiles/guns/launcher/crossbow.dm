@@ -3,7 +3,7 @@
 /obj/item/weapon/arrow
 	name = "bolt"
 	desc = "It's got a tip for you - get the point?"
-	icon = 'icons/obj/weapons/guns/crossbow.dmi'
+	icon = 'icons/obj/guns/crossbow.dmi'
 	icon_state = "bolt"
 	item_state = "bolt"
 	throwforce = 8
@@ -31,7 +31,7 @@
 /obj/item/weapon/arrow/quill
 	name = "vox quill"
 	desc = "A wickedly barbed quill from some bizarre animal."
-	icon = 'icons/obj/weapons/guns/crossbow.dmi'
+	icon = 'icons/obj/guns/crossbow.dmi'
 	icon_state = "quill"
 	item_state = "quill"
 	throwforce = 5
@@ -76,7 +76,7 @@
 	..()
 	ADD_SAVED_VAR(bolt)
 	ADD_SAVED_VAR(cell)
-	
+
 	ADD_SKIP_EMPTY(bolt)
 	ADD_SKIP_EMPTY(cell)
 

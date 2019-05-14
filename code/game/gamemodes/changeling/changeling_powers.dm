@@ -187,7 +187,7 @@ var/global/list/possible_changeling_IDs = list("Alpha","Beta","Gamma","Delta","E
 				to_chat(src, "<span class='notice'>We stab [T] with the proboscis.</span>")
 				src.visible_message("<span class='danger'>[src] stabs [T] with the proboscis!</span>")
 				to_chat(T, "<span class='danger'>You feel a sharp stabbing pain!</span>")
-				affecting.take_damage(39, DAM_PIERCE, damsrc = "large organic needle")
+				affecting.take_damage(39, DAM_PIERCE, used_weapon = "large organic needle")
 
 		SSstatistics.add_field_details("changeling_powers","A[stage]")
 		if(!do_mob(src, T, 150))

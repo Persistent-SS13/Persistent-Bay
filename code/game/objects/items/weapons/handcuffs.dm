@@ -122,7 +122,7 @@ var/last_chew = 0
 	H.visible_message("<span class='warning'>\The [H] chews on \his [O.name]!</span>", "<span class='warning'>You chew on your [O.name]!</span>")
 	admin_attacker_log(H, "chewed on their [O.name]!")
 
-	O.take_damage(3, DAM_PIERCE, damsrc = "teeth marks")
+	O.take_damage(3, DAM_PIERCE, used_weapon = "teeth marks")
 
 	last_chew = world.time
 

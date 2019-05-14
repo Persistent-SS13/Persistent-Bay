@@ -943,7 +943,7 @@
 			LAZYREMOVE(wound.embedded_objects, implant)
 		if(!surgical_removal)
 			shock_stage+=20
-			affected.take_damage((implant.w_class * 3), 0, DAM_CUT, damsrc = "Embedded object extraction")
+			affected.take_damage((implant.w_class * 3), 0, DAM_CUT, used_weapon = "Embedded object extraction")
 			if(!BP_IS_ROBOTIC(affected) && prob(implant.w_class * 5) && affected.sever_artery()) //I'M SO ANEMIC I COULD JUST -DIE-.
 				custom_pain("Something tears wetly in your [affected.name] as [implant] is pulled free!", 50, affecting = affected)
 	. = ..()

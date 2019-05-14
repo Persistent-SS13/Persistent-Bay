@@ -118,14 +118,14 @@
 		// The closer we are to impact site, the longer it takes for shield to come back up.
 		S.fail(-(-range + get_dist(src, S)) * 2)
 
-/obj/effect/shield/take_damage(damage, damtype, armorbypass, damsrc, var/hitby)
+/obj/effect/shield/take_damage(damage, damtype, armorbypass, used_weapon, var/hitby)
 	if(!gen)
 		qdel(src)
 		return
 
 	if(!damage)
 		return
-	..(damage, damtype, armorbypass, damsrc)
+	..(damage, damtype, armorbypass, used_weapon)
 
 	damage = round(damage)
 
@@ -296,7 +296,7 @@
 /obj/effect/meteor/shield_impact(var/obj/effect/shield/S)
 	if(!S.gen.check_flag(MODEFLAG_HYPERKINETIC))
 		return
-	S.take_damage(get_shield_damage(), SHIELD_DAMTYPE_PHYSICAL, damsrc = src)
+	S.take_damage(get_shield_damage(), SHIELD_DAMTYPE_PHYSICAL, used_weapon = src)
 	visible_message("<span class='danger'>\The [src] breaks into dust!</span>")
 	make_debris()
 	qdel(src)

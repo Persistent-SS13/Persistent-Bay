@@ -11,7 +11,7 @@
 /obj/structure/bed
 	name = "bed"
 	desc = "This is used to lie in, sleep in or strap on."
-	icon = 'icons/obj/structures/beds.dmi'
+	icon = 'icons/obj/furniture.dmi'
 	icon_state = "bed"
 	anchored = 1
 	can_buckle = 1
@@ -196,7 +196,7 @@
  */
 /obj/structure/bed/roller
 	name = "roller bed"
-	icon = 'icons/obj/structures/rollerbed.dmi'
+	icon = 'icons/obj/rollerbed.dmi'
 	icon_state = "down"
 	anchored = 0
 	buckle_pixel_shift = "x=0;y=6"
@@ -256,11 +256,11 @@
 		if(iv_attached)
 			detach_iv(M, usr)
 		queue_icon_update()
-		
+
 /obj/structure/bed/roller/Process()
 	if(!iv_attached || !buckled_mob || !beaker)
 		return PROCESS_KILL
-	
+
 	//SSObj fires twice as fast as SSMobs, so gotta slow down to not OD our victims.
 	if(SSobj.times_fired % 2)
 		return
@@ -268,7 +268,7 @@
 	if(beaker.volume > 0)
 		beaker.reagents.trans_to_mob(buckled_mob, beaker.amount_per_transfer_from_this, CHEM_BLOOD)
 		queue_icon_update()
-		
+
 /obj/structure/bed/roller/proc/remove_beaker(mob/user)
 	to_chat(user, "You detach \the [beaker] to \the [src].")
 	iv_attached = FALSE
@@ -304,7 +304,7 @@
 		if(user_buckle_mob(over_object, usr))
 			attach_iv(buckled_mob, usr)
 			return
-	if(beaker) 
+	if(beaker)
 		remove_beaker(usr)
 		return
 	if(buckled_mob)	return
@@ -313,7 +313,7 @@
 /obj/item/roller
 	name = "roller bed"
 	desc = "A collapsed roller bed that can be carried around."
-	icon = 'icons/obj/structures/rollerbed.dmi'
+	icon = 'icons/obj/rollerbed.dmi'
 	icon_state = "folded"
 	item_state = "rbed"
 	slot_flags = SLOT_BACK

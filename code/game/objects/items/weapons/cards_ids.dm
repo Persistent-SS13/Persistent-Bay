@@ -63,7 +63,7 @@ GLOBAL_LIST_EMPTY(all_expense_cards)
 
 /obj/item/weapon/card/data/Initialize()
 	.=..()
-	update_icon()
+	queue_icon_update()
 
 /obj/item/weapon/card/data/on_update_icon()
 	overlays.Cut()
@@ -80,7 +80,7 @@ GLOBAL_LIST_EMPTY(all_expense_cards)
 
 /obj/item/weapon/card/data/clown
 	name = "\proper the coordinates to clown planet"
-	icon_state = "data"
+	icon_state = "data_1"
 	item_state = "card-id"
 	level = 2
 	desc = "This card contains coordinates to the fabled Clown Planet. Handle with care."
@@ -181,15 +181,30 @@ var/const/NO_EMAG_ACT = -50
 /obj/item/weapon/card/expense // the fabled expense card
 	desc = "This card is used to expense invoices."
 	name = "expense card"
-	icon_state = "permit"
+	icon_state = "expense"
 	item_state = "card-id"
 	var/ctype = 1 // 1 = faction, 2 = business
 	var/linked = "" // either business or faction
 	var/valid = 1
+	var/detail_color = COLOR_SILVER
+	var/stripe_color = COLOR_BLUE
 
 /obj/item/weapon/card/expense/New()
 	..()
 	GLOB.all_expense_cards |= src
+
+/obj/item/weapon/card/expense/Destroy()
+	GLOB.all_expense_cards -= src
+	..()
+
+/obj/item/weapon/card/expense/on_update_icon()
+	overlays.Cut()
+	var/image/detail_overlay = image(icon, src,"[icon_state]-color")
+	var/image/stripe_overlay = image(icon, src,"[icon_state]-color-stripe")
+	detail_overlay.color = detail_color
+	stripe_overlay.color = stripe_color
+	overlays += detail_overlay
+	overlays += stripe_overlay
 
 /obj/item/weapon/card/expense/proc/pay(var/amount, var/mob/user, var/obj/item/weapon/paper/invoice/invoice)
 	if(!user || !invoice || !valid)
@@ -312,6 +327,7 @@ var/const/NO_EMAG_ACT = -50
 					id.assignment = "DEVALIDATED"
 					id.rank = 0	//actual job
 					id.name = text("Devalidated Name Tag")
+
 /obj/item/weapon/card/id
 	name = "identification card"
 	desc = "A card used to provide ID and determine access."
@@ -567,14 +583,14 @@ var/const/NO_EMAG_ACT = -50
 							assignment2 = democratic.citizen_assignment
 						if(PRISONER)
 							assignment2 = democratic.prisoner_assignment
-					
+
 					if(assignment2)
 						for(var/i=1; i<=record.rank; i++)
 							var/datum/accesses/copy = assignment2.accesses[i]
 							if(copy)
 								for(var/x in copy.accesses)
 									final_access |= text2num(x)
-			
+
 			return final_access
 		else
 			if(faction.allow_id_access)

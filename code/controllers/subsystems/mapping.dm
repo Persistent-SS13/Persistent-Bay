@@ -12,9 +12,9 @@ SUBSYSTEM_DEF(mapping)
 
 /datum/controller/subsystem/mapping/Initialize(timeofday)
 	// Load templates and build away sites.
-	//GLOB.visibility_pref = 1
-	//world.update_hub_visibility()
-	//all_feeds = new/PriorityQueue(/proc/cmp_newsfeed)
+	GLOB.visibility_pref = 1
+	world.update_hub_visibility()
+	all_feeds = new/PriorityQueue(/proc/cmp_newsfeed)
 	preloadTemplates()
 	for(var/atype in subtypesof(/decl/submap_archetype))
 		submap_archetypes[atype] = new atype

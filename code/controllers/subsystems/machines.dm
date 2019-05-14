@@ -53,16 +53,13 @@ SUBSYSTEM_DEF(machines)
 
 	var/list/processing  = list() // These are the machines which are processing.
 	var/list/current_run = list()
-	var/current_machine = null
-
-/datum/controller/subsystem/machines/PreInit()
-	 processing = machinery
+	var/current_machine
 
 /datum/controller/subsystem/machines/Initialize(timeofday)
 	makepowernets()
 	setup_atmos_machinery(machinery)
 	fire()
-	..()
+	. = ..()
 
 #define INTERNAL_PROCESS_STEP(this_step, check_resumed, proc_to_call, cost_var, next_step)\
 if(current_step == this_step || (check_resumed && !resumed)) {\
@@ -108,7 +105,7 @@ if(current_step == this_step || (check_resumed && !resumed)) {\
 	report_progress("Initializing atmos machinery")
 	for(var/obj/machinery/atmospherics/A in machines)
 		A.atmos_init()
-		//CHECK_TICK
+		CHECK_TICK
 	report_progress("Done in [(REALTIMEOFDAY - pretime) / 10] second\s")
 
 //Those are already initialized in their atmos_init
@@ -125,7 +122,7 @@ if(current_step == this_step || (check_resumed && !resumed)) {\
 	report_progress("Initializing pipe networks")
 	for(var/obj/machinery/atmospherics/machine in machines)
 		machine.build_network()
-		//CHECK_TICK
+		CHECK_TICK
 	report_progress("Done in [(REALTIMEOFDAY - pretime) / 10] second\s")
 
 /datum/controller/subsystem/machines/stat_entry()
@@ -167,10 +164,9 @@ if(current_step == this_step || (check_resumed && !resumed)) {\
 	var/list/current_run = src.current_run
 	while(current_run.len)
 		var/obj/machinery/M = current_run[current_run.len]
+		current_machine = "Machinery[M]\ref[M]"
 		current_run.len--
-		if(M)
-			current_machine = "Machinery[M]\ref[M]"
-		if(istype(M) && !QDELETED(M) && !(M.Process(wait) == PROCESS_KILL))
+		if(!QDELETED(M) && (M.Process(wait) == PROCESS_KILL))
 			processing.Remove(M)
 			M.is_processing = null
 		if(MC_TICK_CHECK)

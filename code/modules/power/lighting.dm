@@ -40,7 +40,7 @@
 			fixture_type = fixture.type
 		fixture.transfer_fingerprints_to(src)
 
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/light_construct/on_update_icon()
 	switch(stage)
@@ -114,6 +114,9 @@
 			return
 	..()
 
+//-----------------------------------------
+// Small light construct
+//-----------------------------------------
 /obj/machinery/light_construct/small
 	name = "small light fixture frame"
 	desc = "A small light fixture under construction."
@@ -132,6 +135,49 @@
 		if(2) icon_state = "bulb-construct-stage2"
 		if(3) icon_state = "bulb-empty"
 
+//-----------------------------------------
+// Small floor light construct
+//-----------------------------------------
+/obj/machinery/light_construct/small/floor
+	name = "small floor light fixture frame"
+	desc = "A small floor light fixture under construction."
+	icon = 'icons/obj/lighting.dmi'
+	icon_state = "floor-construct-stage1"
+	anchored = TRUE
+	plane = ABOVE_TURF_PLANE
+	layer = FLOOR_MACHINE_LAYER
+	stage = 1
+	fixture_type = /obj/machinery/light/small/floor
+	sheets_refunded = 1
+
+/obj/machinery/light_construct/small/on_update_icon()
+	switch(stage)
+		if(1) icon_state = "floor-construct-stage1"
+		if(2) icon_state = "floor-construct-stage2"
+		if(3) icon_state = "floor-empty"
+
+//-----------------------------------------
+// Navigation light construct
+//-----------------------------------------
+//Nav light fixture
+/obj/machinery/light_construct/nav
+	name = "small light fixture frame"
+	desc = "A small light fixture under construction."
+	icon = 'icons/obj/lighting_nav.dmi'
+	icon_state = "nav-construct"
+	anchored = TRUE
+	plane = ABOVE_TURF_PLANE
+	layer = FLOOR_MACHINE_LAYER
+	stage = 1
+	fixture_type = /obj/machinery/light/navigation
+	sheets_refunded = 1
+
+/obj/machinery/light_construct/small/on_update_icon()
+	icon_state = initial(icon_state) //Placeholder
+
+//-----------------------------------------
+// Tube fixture
+//-----------------------------------------
 // the standard tube light fixture
 /obj/machinery/light
 	name = "light fixture"
@@ -156,6 +202,9 @@
 
 	var/current_mode = null
 
+//-----------------------------------------
+// Small fixture
+//-----------------------------------------
 // the smaller bulb light fixture
 /obj/machinery/light/small
 	icon_state = "bulb_map"
@@ -164,20 +213,39 @@
 	light_type = /obj/item/weapon/light/bulb
 	frame_type = /obj/machinery/light_construct/small
 
+//-----------------------------------------
+// Small emergency fixture
+//-----------------------------------------
 /obj/machinery/light/small/emergency
 	light_type = /obj/item/weapon/light/bulb/red
 
+//-----------------------------------------
+// Small red light fixture
+//-----------------------------------------
 /obj/machinery/light/small/red
 	light_type = /obj/item/weapon/light/bulb/red
 
+//-----------------------------------------
+// Spotlight fixture
+//-----------------------------------------
 /obj/machinery/light/spot
 	name = "spotlight"
 	desc = "A more robust socket for light tubes that demand more power."
 	light_type = /obj/item/weapon/light/tube/large
 
 //-----------------------------------------
-// Light Fixture
+// Small floor light fixture
 //-----------------------------------------
+/obj/machinery/light/small/floor
+	name = "floor light"
+	desc = "A small, floor mounted lighting fixture."
+	light_type = /obj/item/weapon/light/bulb
+	frame_type = /obj/machinery/light_construct/small/floor
+	icon_state = "floor_map"
+	base_state = "floor"
+	plane = ABOVE_TURF_PLANE
+	layer = FLOOR_MACHINE_LAYER
+
 /obj/machinery/light/New()
 	..()
 	ADD_SAVED_VAR(on)
@@ -532,6 +600,9 @@
 	else
 		set_mode(null)
 
+//-----------------------------------------
+// Navigation Light
+//-----------------------------------------
 /obj/machinery/light/navigation
 	name = "navigation light"
 	desc = "A periodically flashing light."

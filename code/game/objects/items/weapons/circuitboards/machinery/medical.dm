@@ -31,6 +31,15 @@
 							/obj/item/stack/cable_coil = 2,
 							/obj/item/weapon/stock_parts/console_screen = 2)
 
+/obj/item/weapon/circuitboard/bodyscannerdisplay
+	name = T_BOARD("body scanner display")
+	build_path = /obj/machinery/body_scan_display
+	board_type = "machine"
+	origin_tech = list(TECH_ENGINEERING = 2, TECH_BIO = 4, TECH_DATA = 4)
+	req_components = list(
+							/obj/item/stack/cable_coil = 2,
+							/obj/item/weapon/stock_parts/console_screen = 2)
+
 /obj/item/weapon/circuitboard/sleeper
 	name = T_BOARD("sleeper")
 	build_path = /obj/machinery/sleeper

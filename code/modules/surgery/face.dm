@@ -36,4 +36,4 @@
 	var/obj/item/organ/external/affected = target.get_organ(target_zone)
 	user.visible_message("<span class='warning'>[user]'s hand slips, tearing skin on [target]'s face with \the [tool]!</span>", \
 	"<span class='warning'>Your hand slips, tearing skin on [target]'s face with \the [tool]!</span>")
-	affected.take_damage(10, DAM_CUT, damsrc = tool)
+	affected.take_damage(10, DAM_CUT, used_weapon = tool)

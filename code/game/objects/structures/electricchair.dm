@@ -1,7 +1,7 @@
 /obj/structure/bed/chair/e_chair
 	name = "electric chair"
 	desc = "Looks absolutely SHOCKING!"
-	icon = 'icons/obj/structures/chairs.dmi'
+	icon = 'icons/obj/structures/echair.dmi'
 	icon_state = "echair0"
 	base_icon = "echair0"
 	max_health = 150

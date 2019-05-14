@@ -99,7 +99,7 @@
 //kitchen knives
 /obj/item/weapon/material/knife/kitchen
 	name = "kitchen knife"
-	icon = 'icons/obj/kitchen.dmi'
+	icon = 'icons/obj/knife.dmi'
 	icon_state = "kitchenknife"
 	desc = "A general purpose chef's knife made by SpaceCook Incorporated. Guaranteed to stay sharp for years to come."
 	applies_material_name = FALSE

@@ -1,3 +1,5 @@
+//Initializes relatively late in subsystem init order.
+
 SUBSYSTEM_DEF(late)
 	name = "Late Initialization"
 	init_order = SS_INIT_LATE_INIT
@@ -8,5 +10,5 @@ SUBSYSTEM_DEF(late)
 
 	var/decl/asset_cache/asset_cache = decls_repository.get_decl(/decl/asset_cache)
 	asset_cache.load()
-	populate_lathe_recipes()
+	populate_lathe_recipes() // This creates and deletes objects; could use improvement.
 	. = ..()

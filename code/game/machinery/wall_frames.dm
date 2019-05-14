@@ -333,3 +333,47 @@
 	icon = 'icons/obj/closet.dmi'
 	icon_state = "extinguisher_empty"
 	build_machine_type = /obj/item/weapon/storage/secure/safe
+
+
+/obj/item/frame/light/small/floor
+	name = "small floor light fixture frame"
+	icon = 'icons/obj/lighting.dmi'
+	icon_state = "floor-construct-stage1"
+	build_machine_type = /obj/machinery/light_construct/small/floor
+
+/obj/item/frame/light/small/floor/try_build(turf/on_wall)
+	if(!build_machine_type)
+		log_debug("[name]([type]) was placed but has no resulting machine type set..")
+		return
+	if (get_dist(on_wall,usr)>1)
+		return
+	var/turf/T = get_turf(usr)
+	var/area/A = get_area(on_wall)
+	if (!istype(on_wall, /turf/simulated/floor))
+		to_chat(usr, SPAN_DANGER("\The [src] cannot be placed on this spot."))
+		return
+	if (A.requires_power == 0 || A.name == "Space" && !isLightFrame())
+		to_chat(usr, SPAN_DANGER("\The [src] cannot be placed in this area."))
+		return
+	new build_machine_type(T, dir, src)
+	qdel(src)
+
+/obj/item/frame/light/nav
+	name = "navigation light fixture frame"
+	icon = 'icons/obj/lighting_nav.dmi'
+	icon_state = "nav-construct-item"
+	matter = list(MATERIAL_STEEL = SHEET_MATERIAL_AMOUNT)
+	build_machine_type = /obj/machinery/light_construct/nav
+
+/obj/item/frame/light/nav/try_build(turf/on_wall)
+	if(!build_machine_type)
+		log_debug("[name]([type]) was placed but has no resulting machine type set..")
+		return
+	if (get_dist(on_wall,usr)>1)
+		return
+	var/turf/T = get_turf(usr)
+	if (!istype(on_wall, /turf/simulated/floor))
+		to_chat(usr, SPAN_DANGER("\The [src] cannot be placed on this spot."))
+		return
+	new build_machine_type(T, src.dir, src)
+	qdel(src)

@@ -173,16 +173,26 @@
 /decl/flooring/tiling/new_tile
 	icon_base = "tile_full"
 	color = null
-	build_type = null
-	
-/decl/flooring/tiling/new_tile/cargo_one
+	build_type = /obj/item/stack/tile/new_tile
+
+/decl/flooring/tiling/new_tile/gray
+	icon_base = "tile_full"
+	color = COLOR_GRAY
+	build_type = /obj/item/stack/tile/new_tile/gray
+
+/decl/flooring/tiling/new_tile/old_cargo
 	icon_base = "cargo_one_full"
-	build_type = null
-	
+	build_type = /obj/item/stack/tile/old_cargo
+
+/decl/flooring/tiling/new_tile/old_cargo/gray
+	icon_base = "cargo_one_full"
+	color = COLOR_GRAY
+	build_type = /obj/item/stack/tile/old_cargo/gray
+
 /decl/flooring/tiling/new_tile/kafel
 	icon_base = "kafel_full"
-	build_type = null
-	
+	build_type = /obj/item/stack/tile/kafel
+
 /decl/flooring/tiling/stone
 	icon_base = "stone"
 	build_type = /obj/item/stack/tile/stone
@@ -326,7 +336,7 @@
 	icon_base = "floor7"
 	build_type = /obj/item/stack/tile/shuttle/black
 
-	
+
 /decl/flooring/reinforced/shuttle/skrell
 	icon = 'icons/turf/skrellturf.dmi'
 	icon_base = "skrellblack"
@@ -352,7 +362,7 @@
 	build_type = null
 	flags = TURF_ACID_IMMUNE | TURF_CAN_BREAK | TURF_REMOVE_CROWBAR
 	color = "#00ffe1"
-	
+
 
 /decl/flooring/reinforced/shuttle/plates
 	icon_base = "vfloor"

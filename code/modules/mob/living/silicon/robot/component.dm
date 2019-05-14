@@ -40,7 +40,7 @@
 	installed = 1
 	install()
 
-/datum/robot_component/proc/take_damage(var/damage, var/damtype = DAM_BLUNT, var/armor_bypass = 0, var/damsrc = null)
+/datum/robot_component/proc/take_damage(var/damage, var/damtype = DAM_BLUNT, var/armor_bypass = 0, var/used_weapon = null)
 	if(installed != 1 || damage == 0) 
 		return
 

@@ -255,11 +255,17 @@
 	name = "floor"
 	icon_state = "tile_full"
 	initial_flooring = /decl/flooring/tiling/new_tile
+/turf/simulated/floor/tiled/old_tile/gray
+	initial_flooring = /decl/flooring/tiling/new_tile/gray
+	color = COLOR_GRAY
 
 /turf/simulated/floor/tiled/old_cargo
 	name = "floor"
 	icon_state = "cargo_one_full"
-	initial_flooring = /decl/flooring/tiling/new_tile/cargo_one
+	initial_flooring = /decl/flooring/tiling/new_tile/old_cargo
+/turf/simulated/floor/tiled/old_cargo/gray
+	initial_flooring = /decl/flooring/tiling/new_tile/old_cargo/gray
+	color = COLOR_GRAY
 
 /turf/simulated/floor/tiled/kafel_full
 	name = "floor"
@@ -275,7 +281,7 @@
 	name = "floor"
 	icon_state = "techfloor_grid"
 	initial_flooring = /decl/flooring/tiling/tech/grid
-	
+
 /turf/simulated/floor/tiled/skrell
 	icon = 'icons/turf/skrellturf.dmi'
 	icon_state = "skrellblack"

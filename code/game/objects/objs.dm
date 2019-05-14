@@ -252,8 +252,8 @@
 //Called whenever the object is receiving damages
 // returns the amount of damages that was applied to the object
 // - armorbypass: how much armor is bypassed for the damage specified. Usually a number from 0 to 100
-// - damsrc: A string or object reference to what caused the damage.
-/obj/proc/take_damage(var/damage = 0 as num, var/damtype = DAM_BLUNT, var/armorbypass = 0, var/damsrc = null, var/damflags = null)
+// - used_weapon: A string or object reference to what caused the damage.
+/obj/proc/take_damage(var/damage = 0 as num, var/damtype = DAM_BLUNT, var/armorbypass = 0, var/used_weapon = null, var/damflags = null)
 	if(!isnum(damage))
 		log_warning(" obj.proc.take_damage(): damage is not a number! [damage]")
 		return 0
@@ -269,7 +269,7 @@
 	rem_health(resultingdmg)
 	update_health(damtype)
 	. = resultingdmg
-	log_debug("\The \"[src]\" (\ref[src])([x], [y], [z]) took [resultingdmg] \"[damtype]\" damages from \"[damsrc]\"! Before armor: [damage] damages.")
+	log_debug("\The \"[src]\" (\ref[src])([x], [y], [z]) took [resultingdmg] \"[damtype]\" damages from \"[used_weapon]\"! Before armor: [damage] damages.")
 	return .
 
 //Like take damage, but meant to instantly destroy the object from an external source.
@@ -419,7 +419,7 @@
 	if(!pass_damage_threshold(W.force, W.damtype))
 		hit_deflected_by_armor(W, user)
 		return 0
-	take_damage(W.force, W.damtype, armorbypass = W.armor_penetration, damsrc = W)
+	take_damage(W.force, W.damtype, armorbypass = W.armor_penetration, used_weapon = W)
 	playsound(loc, sound_hit, vol=40, vary=1, extrarange=4, falloff=1)
 	return ..()
 

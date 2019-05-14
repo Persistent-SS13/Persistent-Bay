@@ -175,7 +175,7 @@
 
 //Damage
 
-/turf/simulated/wall/proc/take_damage(damage, damtype, armorbypass, damsrc)
+/turf/simulated/wall/proc/take_damage(damage, damtype, armorbypass, used_weapon)
 	playsound(src, hitsound, 80, 1)
 	if(locate(/obj/effect/overlay/wallrot) in src)
 		damage *= 3

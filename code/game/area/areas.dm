@@ -213,8 +213,9 @@ var/list/mob/living/forced_ambiance_list = new
 		apc.AlarmOnEntered(A)
 
 /area/proc/play_ambience(var/mob/living/L)
-	if(!L.client || L.get_preference_value(/datum/client_preference/play_ambiance) == GLOB.PREF_NO || L.ear_deaf)
-		return 0
+	// Ambience goes down here -- make sure to list each area seperately for ease of adding things in later, thanks! Note: areas adjacent to each other should have the same sounds to prevent cutoff when possible.- LastyScratch
+	if(!(L && L.client && L.get_preference_value(/datum/client_preference/play_ambiance) == GLOB.PREF_YES) || L.ear_deaf)
+		return FALSE
 
 	var/turf/T = get_turf(L)
 	var/hum = 0
@@ -237,11 +238,11 @@ var/list/mob/living/forced_ambiance_list = new
 			forced_ambiance_list |= L
 			L.playsound_local(T,sound(pick(forced_ambience), repeat = 1, wait = 0, volume = 25, channel = GLOB.lobby_sound_channel))
 		else	//stop any old area's forced ambience, and try to play our non-forced ones
-			sound_to(L, sound(null, channel = 1))
+			sound_to(L, sound(null, channel = GLOB.lobby_sound_channel))
 			forced_ambiance_list -= L
-			if(ambience.len && prob(35) && (world.time >= L.client.played + 3 MINUTES))
-				L.playsound_local(T, sound(pick(ambience), repeat = 0, wait = 0, volume = 15, channel = GLOB.lobby_sound_channel))
-				L.client.played = world.time
+	if(ambience.len && prob(35) && (world.time >= L.client.played + 3 MINUTES))
+		L.playsound_local(T, sound(pick(ambience), repeat = 0, wait = 0, volume = 15, channel = GLOB.lobby_sound_channel))
+		L.client.played = world.time
 
 /area/proc/gravitychange(var/gravitystate = 0)
 	has_gravity = gravitystate
@@ -307,3 +308,4 @@ var/list/mob/living/forced_ambiance_list = new
 
 /area/proc/has_turfs()
 	return !!(locate(/turf) in src)
+

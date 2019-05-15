@@ -1,6 +1,6 @@
 /obj/item/blueprints
 	name = "blueprints"
-	desc = "Blueprints for building a station. There is a \"Classified\" stamp and several coffee stains on it."
+	desc = "Blueprints..."
 	icon = 'icons/obj/items.dmi'
 	icon_state = "blueprints"
 	attack_verb = list("attacked", "bapped", "hit")
@@ -24,7 +24,7 @@
 	desc = "Blueprints of the [station_name()]. There is a \"Classified\" stamp and several coffee stains on it."
 
 /obj/item/blueprints/attack_self(mob/M as mob)
-	if(!istype(M,/mob/living/carbon/human))
+	if (!istype(M,/mob/living/carbon/human))
 		to_chat(M, "This stack of blue paper means nothing to you.")//monkeys cannot into projecting
 
 		return
@@ -38,7 +38,7 @@
 	if (!href_list["action"])
 		return
 	switch(href_list["action"])
-		if("create_area")
+		if ("create_area")
 			if (get_area_type()!=AREA_SPACE)
 				interact()
 				return

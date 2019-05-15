@@ -465,7 +465,7 @@ var/global/list/debug_data = list()
 	if(!fexists("record_saves/[faction.uid]/[key].sav")) return
 	var/savefile/f = new("record_saves/[faction.uid]/[key].sav")
 	var/v
-	f >> v
+	from_file(f, v)
 	var/list/records = faction.get_records()
 	records |= v
 	return v
@@ -480,8 +480,7 @@ var/global/list/debug_data = list()
 	var/turf/ve = null
 	from_file(f["email"],ntnet_global.email_accounts)
 	from_file(f["records"],GLOB.all_crew_records)
-	if(!GLOB.all_crew_records)
-		GLOB.all_crew_records = list()
+	LAZYINITLIST(GLOB.all_crew_records)
 	from_file(f["factions"],GLOB.all_world_factions)
 	from_file(f["material_marketplace"],GLOB.material_marketplace)
 	if(!GLOB.material_marketplace)

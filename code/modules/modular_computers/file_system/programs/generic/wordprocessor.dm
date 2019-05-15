@@ -14,6 +14,7 @@
 	var/error
 	var/is_edited
 	usage_flags = PROGRAM_ALL
+	category = PROG_OFFICE
 
 /datum/computer_file/program/wordprocessor/New(comp)
 	..(comp)

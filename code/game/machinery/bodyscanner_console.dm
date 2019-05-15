@@ -22,10 +22,6 @@
 	. = ..()
 	FindScanner()
 
-/obj/machinery/body_scanconsole/SetupParts()
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/console_screen(src))
-	. = ..()
-
 /obj/machinery/body_scanconsole/on_update_icon()
 	if(inoperable())
 		icon_state = "body_scannerconsole-p"	

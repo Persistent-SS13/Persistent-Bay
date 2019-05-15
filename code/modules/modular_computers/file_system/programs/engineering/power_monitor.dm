@@ -11,7 +11,8 @@
 	requires_ntnet = TRUE
 	network_destination = "power monitoring system"
 	size = 9
-	var/has_alert = FALSE
+	category = PROG_ENG
+	var/has_alert = 0
 
 /datum/computer_file/program/power_monitor/process_tick()
 	..()

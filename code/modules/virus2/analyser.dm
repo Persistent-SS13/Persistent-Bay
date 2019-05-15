@@ -4,6 +4,7 @@
 	icon_state = "analyser"
 	anchored = 1
 	density = 1
+	circuit_type = /obj/item/weapon/circuitboard/diseaseanalyser
 	var/scanning = FALSE
 	var/obj/item/weapon/virusdish/dish = null
 	var/time_scan_end
@@ -16,16 +17,6 @@
 
 	ADD_SKIP_EMPTY(dish)
 	ADD_SKIP_EMPTY(time_scan_end)
-
-/obj/machinery/disease2/diseaseanalyser/Initialize()
-	. = ..()
-	if(!map_storage_loaded)
-		component_parts = list()
-		component_parts += new /obj/item/weapon/circuitboard/diseaseanalyser(src)
-		component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
-		component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-		component_parts += new /obj/item/weapon/computer_hardware/hard_drive/portable(src)
-	RefreshParts()
 
 /obj/machinery/disease2/diseaseanalyser/before_save()
 	. = ..()

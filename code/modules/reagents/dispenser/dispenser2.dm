@@ -113,7 +113,7 @@
 	var/data[0]
 	data["amount"] = amount
 	data["isBeakerLoaded"] = container ? 1 : 0
-	data[MATERIAL_GLASS] = accept_drinking
+	data["glass"] = accept_drinking
 	var beakerD[0]
 	if(container && container.reagents && container.reagents.reagent_list.len)
 		for(var/datum/reagent/R in container.reagents.reagent_list)

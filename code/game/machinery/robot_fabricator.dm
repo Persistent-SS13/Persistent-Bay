@@ -4,11 +4,12 @@
 	icon_state = "fab-idle"
 	density = 1
 	anchored = 1
+	idle_power_usage = 40
+	active_power_usage = 10000
+	circuit_type = /obj/item/weapon/circuitboard/machinery/robotic_fabricator
 	var/metal_amount = 0
 	var/operating = 0
 	var/obj/item/robot_parts/being_built = null
-	idle_power_usage = 40
-	active_power_usage = 10000
 	var/efficiency
 	var/initial_bin_rating = 1
 
@@ -22,9 +23,8 @@
 				if(M)
 					if(!M.get_amount())
 						return
-					while(metal_amount < 150000 && M.amount)
+					while(metal_amount < 150000 && M.use(1))
 						src.metal_amount += O.matter[MATERIAL_STEEL] /*O:height * O:width * O:length * 100000.0*/
-						M.use(1)
 						count++
 
 					to_chat(user, "You insert [count] metal sheet\s into the fabricator.")
@@ -141,30 +141,6 @@ Please wait until completion...</TT><BR>
 
 /obj/machinery/robotic_fabricator/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/machinery/robotic_fabricator(src)
-
-	var/obj/item/weapon/stock_parts/matter_bin/B = new(src)
-	B.rating = initial_bin_rating
-	component_parts += B
-
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 1)
-	RefreshParts()
-
-
-/obj/machinery/robotic_fabricator/upgraded/New()
-	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/machinery/robotic_fabricator(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin/super(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator/pico(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 1)
-	RefreshParts()
 
 /obj/machinery/robotic_fabricator/RefreshParts()
 	var/E

@@ -7,10 +7,10 @@
 	program_key_state = "atmos_key"
 	program_menu_icon = "alert"
 	extended_desc = "This program provides visual interface for the alarm system."
-	requires_ntnet = TRUE
+	requires_ntnet = 1
 	network_destination = "alarm monitoring network"
 	size = 5
-	usage_flags = PROGRAM_ALL
+	category = PROG_MONITOR
 	var/has_alert = 0
 
 /datum/computer_file/program/alarm_monitor/process_tick()

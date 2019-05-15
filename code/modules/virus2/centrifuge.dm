@@ -5,6 +5,7 @@
 	icon_state = "centrifuge"
 	density = 1
 	core_skill = SKILL_VIROLOGY
+	circuit_type = /obj/item/weapon/circuitboard/centrifuge
 	var/curing = FALSE
 	var/isolating = FALSE
 	var/obj/item/weapon/reagent_containers/glass/beaker/vial/sample = null
@@ -25,17 +26,6 @@
 	ADD_SKIP_EMPTY(virus2)
 	ADD_SKIP_EMPTY(time_curing_end)
 	ADD_SKIP_EMPTY(time_isolating_end)
-
-/obj/machinery/computer/centrifuge/Initialize()
-	. = ..()
-	if(!map_storage_loaded)
-		component_parts = list()
-		component_parts += new /obj/item/weapon/circuitboard/centrifuge(src)
-		component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
-		component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-		component_parts += new /obj/item/weapon/computer_hardware/hard_drive/portable(src)
-		component_parts += new /obj/item/stack/material/glass(src)
-	RefreshParts()
 
 /obj/machinery/computer/centrifuge/before_save()
 	. = ..()
@@ -74,8 +64,8 @@
 
 /obj/machinery/computer/centrifuge/on_update_icon()
 	..()
-	if(operable() && (isolating || curing))
-		icon_state = "centrifuge_moving"
+	if(! (stat & (BROKEN|NOPOWER)))
+		icon_state = (isolating || curing) ? "centrifuge_moving" : "centrifuge"
 
 /obj/machinery/computer/centrifuge/attack_hand(var/mob/user as mob)
 	if(..()) 
@@ -148,7 +138,7 @@
 
 	if (href_list["print"])
 		print(user)
-		return TOPIC_REFRESH
+		return TOPIC_HANDLED
 
 	if(href_list["isolate"])
 		var/datum/reagent/blood/B = locate(/datum/reagent/blood) in sample.reagents.reagent_list

@@ -5,7 +5,6 @@
 	icon_state = "body_scanner_0"
 	density = TRUE
 	anchored = TRUE
-	use_power = POWER_USE_IDLE
 	idle_power_usage = 60
 	active_power_usage = 10000	//10 kW. It's a big all-body scanner.
 	circuit_type = /obj/item/weapon/circuitboard/bodyscanner
@@ -19,18 +18,6 @@
 
 	ADD_SKIP_EMPTY(occupant)
 
-/obj/machinery/bodyscanner/SetupParts()
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/scanning_module(src))
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/scanning_module(src))
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/manipulator(src))
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/manipulator(src))
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/console_screen(src))
-	. = ..()
-
-/obj/machinery/bodyscanner/examine(mob/user)
-	. = ..()
-	if (. && occupant && user.Adjacent(src))
-		occupant.examine(user)
 
 /obj/machinery/bodyscanner/examine(mob/user)
 	. = ..()

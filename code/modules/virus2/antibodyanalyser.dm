@@ -5,6 +5,7 @@
 	icon_state = "analyser"
 	anchored = 1
 	density = 1
+	circuit_type = /obj/item/weapon/circuitboard/antibodyanalyser
 
 	var/scanning = 0
 	var/list/known_antibodies = list()
@@ -21,16 +22,6 @@
 	ADD_SKIP_EMPTY(known_antibodies)
 	ADD_SKIP_EMPTY(container)
 	ADD_SKIP_EMPTY(time_scanning_end)
-
-/obj/machinery/disease2/antibodyanalyser/Initialize()
-	. = ..()
-	if(!map_storage_loaded)
-		component_parts = list()
-		component_parts += new /obj/item/weapon/circuitboard/antibodyanalyser(src)
-		component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
-		component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-		component_parts += new /obj/item/weapon/computer_hardware/hard_drive/portable(src)
-	RefreshParts()
 
 /obj/machinery/disease2/antibodyanalyser/before_save()
 	. = ..()
@@ -50,7 +41,7 @@
 		container = null
 	. = ..()
 
-/obj/machinery/disease2/antibodyanalyser/update_icon()
+/obj/machinery/disease2/antibodyanalyser/on_update_icon()
 	if(scanning)
 		icon_state = "analyser_processing"
 	else
@@ -62,8 +53,7 @@
 	else if(default_deconstruction_crowbar(user, I))
 		return 1
 	else if(istype(I,/obj/item/weapon/reagent_containers))
-		if(!container)
-			user.drop_from_inventory(I)
+		if(!container && user.unEquip(I))
 			container = I
 			I.forceMove(src)
 			user.visible_message("[user] adds a sample to \the [src]!", "You add a sample to \the [src]!")

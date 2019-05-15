@@ -43,11 +43,6 @@
 	. = ..()
 	RefreshParts()
 
-/obj/machinery/reagent_temperature/SetupParts()
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/micro_laser(src))
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/capacitor(src))
-	. = ..()
-
 /obj/machinery/reagent_temperature/Destroy()
 	if(container)
 		container.dropInto(loc)

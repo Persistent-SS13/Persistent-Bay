@@ -39,6 +39,15 @@ GLOBAL_LIST_INIT(registered_cyborg_weapons, list())
 	ADD_SAVED_VAR(power_supply)
 	ADD_SKIP_EMPTY(power_supply)
 
+/obj/item/weapon/gun/energy/switch_firemodes()
+	. = ..()
+	if(.)
+		update_icon()
+
+/obj/item/weapon/gun/energy/emp_act(severity)
+	..()
+	update_icon()
+
 /obj/item/weapon/gun/energy/Initialize()
 	. = ..()
 	if(!map_storage_loaded)
@@ -75,15 +84,6 @@ GLOBAL_LIST_INIT(registered_cyborg_weapons, list())
 		power_supply.give(charge_cost) //... to recharge the shot
 		update_icon()
 	return 1
-
-/obj/item/weapon/gun/energy/switch_firemodes()
-	. = ..()
-	if(.)
-		update_icon()
-
-/obj/item/weapon/gun/energy/emp_act(severity)
-	..()
-	update_icon()
 
 /obj/item/weapon/gun/energy/consume_next_projectile()
 	if(!power_supply) return null
@@ -124,7 +124,7 @@ GLOBAL_LIST_INIT(registered_cyborg_weapons, list())
 			if(power_supply.charge < charge_cost)
 				ratio = 0
 			else
-				ratio = max(round(ratio, 25), 25)
+				ratio = Clamp(round(ratio, 25), 25, 100)
 
 		if(modifystate)
 			icon_state = "[modifystate][ratio]"

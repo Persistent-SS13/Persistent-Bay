@@ -47,7 +47,7 @@
 	if(isWelder(W))
 		var/obj/item/weapon/tool/weldingtool/WT = W
 
-		if(get_amount() < 2)
+		if(!can_use(2))
 			to_chat(user, "<span class='warning'>You need at least two rods to do this.</span>")
 			return
 
@@ -65,7 +65,7 @@
 		return
 
 	if (istype(W, /obj/item/weapon/tape_roll))
-		if(get_amount() < 1)
+		if(!can_use(1))
 			user.visible_message("<span class='warning'>You need at least a [singular_name] to make a splint!</span>")
 			return
 		var/obj/item/weapon/tape_roll/thetape = W

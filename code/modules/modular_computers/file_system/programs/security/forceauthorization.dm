@@ -6,10 +6,11 @@
 	usage_flags = PROGRAM_CONSOLE | PROGRAM_LAPTOP
 	program_icon_state = "security"
 	program_menu_icon = "locked"
-	requires_ntnet = TRUE
-	available_on_ntnet = TRUE
+	requires_ntnet = 1
+	available_on_ntnet = 1
 	required_access = access_armory
 	nanomodule_path = /datum/nano_module/forceauthorization/
+	category = PROG_SEC
 
 /datum/nano_module/forceauthorization/
 	name = "Use of Force Authorization Manager"

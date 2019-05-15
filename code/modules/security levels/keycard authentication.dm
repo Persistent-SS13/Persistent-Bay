@@ -25,8 +25,8 @@
 	return
 
 /obj/machinery/keycard_auth/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(isWrench(W))
-		return default_wrench_floor_bolts(user, 2 SECONDS)
+	if(default_wrench_floor_bolts(user, 2 SECONDS))
+		return 
 	if(inoperable())
 		to_chat(user, "This device is not powered.")
 		return

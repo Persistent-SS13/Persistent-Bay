@@ -9,6 +9,7 @@
 	available_on_ntnet = TRUE
 	nanomodule_path = /datum/nano_module/records
 	usage_flags = PROGRAM_ALL
+	category = PROG_OFFICE
 
 /datum/nano_module/records
 	name = "Crew Records"
@@ -31,10 +32,13 @@
 
 	data["message"] = message
 	if(active_record)
-		user << browse_rsc(active_record.photo_front, "front_[active_record.uid].png")
-		user << browse_rsc(active_record.photo_side, "side_[active_record.uid].png")
-		data["pic_edit"] = check_access(user, core_access_reassignment)
+		send_rsc(user, active_record.photo_front, "front_[active_record.uid].png")
+		send_rsc(user, active_record.photo_side, "side_[active_record.uid].png")
+		data["pic_edit"] = check_access(user, core_access_reassignment, connected_faction.uid)
+		data += active_record.generate_nano_data(user_access, connected_faction)
 		data["uid"] = active_record.uid
+
+		///////////////////////////////////////// stuff ???
 		var/list/fields = list()
 		var/assignment = "Unassigned"
 		var/rank = 0
@@ -66,10 +70,10 @@
 			"editable" = 0,
 			"large" = 0
 		)))
-		for(var/record_field/F in active_record.fields)
+		for(var/datum/report_field/F in active_record.fields)
 			if(F.name == "Job" || F.name == "Branch" || F.name == "Rank")
 				continue
-			if(F.can_see(user_access))
+			if(F.verify_access(user_access, connected_faction))
 				fields.Add(list(list(
 					"key" = F.type,
 					"name" = F.name,
@@ -78,6 +82,7 @@
 					"large" = (F.valtype == EDIT_LONGTEXT)
 				)))
 		data["fields"] = fields
+		////////////////////////////////// stuff ????
 	else
 		var/list/all_records = list()
 		if(faction_records)
@@ -101,8 +106,8 @@
 							rank = R.rank
 				all_records.Add(list(list(
 					"name" = R.get_name(),
-					"rank" = assignment,
-					"milrank" = rank,
+					"rank" = R.get_job(),
+					"milrank" = R.get_rank(),
 					"id" = R.uid
 				)))
 			data["all_records"] = all_records
@@ -139,26 +144,6 @@
 		to_chat(user, "<span class='notice'>\The [nano_host()] flashes an \"Access Denied\" warning.</span>")
 		return
 	F.ask_value(user)
-
-	// var/newValue
-	// switch(F.valtype)
-	// 	if(EDIT_SHORTTEXT)
-	// 		newValue = input(user, "Enter [F.name]:", "Record edit", html_decode(F.get_value())) as null|text
-	// 	if(EDIT_LONGTEXT)
-	// 		newValue = replacetext(input(user, "Enter [F.name]. You may use HTML paper formatting tags:", "Record edit", replacetext(html_decode(F.get_value()), "\[br\]", "\n")) as null|message, "\n", "\[br\]")
-	// 	if(EDIT_NUMERIC)
-	// 		newValue = input(user, "Enter [F.name]:", "Record edit", F.get_value()) as null|num
-	// 	if(EDIT_LIST)
-	// 		var/options = F.get_options()
-	// 		newValue = input(user,"Pick [F.name]:", "Record edit", F.get_value()) as null|anything in options
-
-	// if(active_record != R)
-	// 	return
-	// if(!F.can_edit(get_record_access(user)))
-	// 	to_chat(user, "<span class='notice'>\The [nano_host()] flashes an \"Access Denied\" warning.</span>")
-	// 	return
-	// if(newValue)
-	// 	return F.set_value(newValue)
 
 /datum/nano_module/records/Topic(href, href_list)
 	var/list/faction_records = list()

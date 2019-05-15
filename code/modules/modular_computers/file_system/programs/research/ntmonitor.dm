@@ -10,6 +10,7 @@
 	required_access = core_access_machine_linking
 	available_on_ntnet = TRUE
 	nanomodule_path = /datum/nano_module/program/computer_ntnetmonitor/
+	category = PROG_ADMIN
 
 /datum/nano_module/program/computer_ntnetmonitor
 	name = "NTNet Diagnostics and Monitoring"

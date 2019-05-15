@@ -11,6 +11,7 @@
 	requires_ntnet = TRUE
 	network_destination = "supermatter monitoring system"
 	size = 5
+	category = PROG_ENG
 	var/last_status = 0
 
 /datum/computer_file/program/supermatter_monitor/process_tick()

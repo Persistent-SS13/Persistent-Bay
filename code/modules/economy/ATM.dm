@@ -6,12 +6,11 @@
 /obj/item/weapon/card/id/var/money = 2000
 
 /obj/machinery/atm
-	name = "Automatic Teller Machine"
+	name = "automatic teller machine"
 	desc = "For all your monetary needs!"
 	icon = 'icons/obj/machines/terminals/atm.dmi'
 	icon_state = "atm"
 	anchored = 1
-	use_power = 1
 	idle_power_usage = 10
 	var/datum/money_account/authenticated_account
 	var/number_incorrect_tries = 0
@@ -28,6 +27,7 @@
 	var/buildstage = 2	// 2 = complete, 1 = no wires,  0 = circuit gone
 	var/wiresexposed = 0
 	frame_type = /obj/item/frame/atm
+	circuit_type = /obj/item/weapon/circuitboard/atm
 
 /obj/machinery/atm/New(loc, dir, atom/frame, var/ndir)	//ATM is created from frame
 	..(loc)
@@ -47,7 +47,7 @@
 
 /obj/machinery/atm/Initialize(mapload, d)
 	. = ..()
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/atm/update_icon()	//Sprites for each build stage
 	overlays.Cut()
@@ -145,7 +145,7 @@
 			number_incorrect_tries = 0
 
 	for(var/obj/item/weapon/spacecash/S in src)
-		S.loc = src.loc
+		S.dropInto(loc)
 		if(prob(50))
 			playsound(loc, 'sound/items/polaroid1.ogg', 50, 1)
 		else
@@ -178,18 +178,19 @@
 	qdel(src)
 
 /obj/machinery/atm/attackby(obj/item/I as obj, mob/user as mob)
-	if(..())
-		return
 	if(istype(I, /obj/item/weapon/card))
 		if(emagged > 0)
 			//prevent inserting id into an emagged ATM
 			to_chat(user, "\icon[src] <span class='warning'>CARD READER ERROR. This system has been compromised!</span>")
 			return
+		if(stat & NOPOWER)
+			to_chat(user, "You try to insert your card into [src], but nothing happens.")
+			return
 
 		var/obj/item/weapon/card/id/idcard = I
 		if(!held_card)
-			usr.drop_item()
-			idcard.loc = src
+			if(!user.unEquip(idcard, src))
+				return
 			held_card = idcard
 			if(authenticated_account && held_card.associated_account_number != authenticated_account.account_number)
 				authenticated_account = null
@@ -210,6 +211,8 @@
 			to_chat(user, "<span class='info'>You insert [I] into [src].</span>")
 			src.attack_hand(user)
 			qdel(I)
+	else
+		return ..()
 
 
 /obj/machinery/atm/attack_hand(mob/user)	//Prevent ATM from being used when under de/construction
@@ -221,6 +224,7 @@
 		interact(user)
 
 /obj/machinery/atm/interact(mob/user)
+
 
 	if(get_dist(src,user) <= 1)
 		//make the window the user interacts with, divided out into welcome message, card 'slot', then login/data screen
@@ -385,7 +389,9 @@
 					//Below is to avoid a runtime
 					if(tried_account_num)
 						D = get_account(tried_account_num)
-						account_security_level = D.security_level
+
+						if(D)
+							account_security_level = D.security_level
 
 					authenticated_account = attempt_account_access(tried_account_num, tried_pin, held_card && login_card.associated_account_number == tried_account_num ? 2 : 1)
 
@@ -455,8 +461,8 @@
 			if("balance_statement")
 				if(authenticated_account)
 					var/obj/item/weapon/paper/R = new(src.loc)
-					R.name = "Account balance: [authenticated_account.owner_name]"
-					R.info = "<b>NT Automated Teller Account Statement</b><br><br>"
+					R.SetName("Account balance: [authenticated_account.owner_name]")
+					R.info = "<b>Automated Teller Account Statement</b><br><br>"
 					R.info += "<i>Account holder:</i> [authenticated_account.owner_name]<br>"
 					R.info += "<i>Account number:</i> [authenticated_account.account_number]<br>"
 					R.info += "<i>Balance:</i> T[authenticated_account.money]<br>"
@@ -479,7 +485,7 @@
 			if ("print_transaction")
 				if(authenticated_account)
 					var/obj/item/weapon/paper/R = new(src.loc)
-					R.name = "Transaction logs: [authenticated_account.owner_name]"
+					R.SetName("Transaction logs: [authenticated_account.owner_name]")
 					R.info = "<b>Transaction logs</b><br>"
 					R.info += "<i>Account holder:</i> [authenticated_account.owner_name]<br>"
 					R.info += "<i>Account number:</i> [authenticated_account.account_number]<br>"
@@ -527,8 +533,8 @@
 					else
 						var/obj/item/I = usr.get_active_hand()
 						if (istype(I, /obj/item/weapon/card/id))
-							usr.drop_item()
-							I.loc = src
+							if(!usr.unEquip(I, src))
+								return
 							held_card = I
 				else
 					release_held_id(usr)
@@ -540,22 +546,16 @@
 
 /obj/machinery/atm/proc/scan_user(mob/living/carbon/human/human_user as mob)
 	if(!authenticated_account)
-		if(human_user.wear_id)
-			var/obj/item/weapon/card/id/I
-			if(istype(human_user.wear_id, /obj/item/weapon/card/id) )
-				I = human_user.wear_id
-			else if(istype(human_user.wear_id, /obj/item/modular_computer/pda) )
-				var/obj/item/modular_computer/pda/P = human_user.wear_id
-				I = P.GetIdCard()
-			if(I)
-				return I
+		var/obj/item/weapon/card/id/I = human_user.GetIdCard()
+		if(istype(I))
+			return I
 
 // put the currently held id on the ground or in the hand of the user
 /obj/machinery/atm/proc/release_held_id(mob/living/carbon/human/human_user as mob)
 	if(!held_card)
 		return
 
-	held_card.loc = src.loc
+	held_card.dropInto(loc)
 	authenticated_account = null
 	account_security_level = 0
 

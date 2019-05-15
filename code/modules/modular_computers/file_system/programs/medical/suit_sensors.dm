@@ -2,6 +2,7 @@
 	filename = "sensormonitor"
 	filedesc = "Suit Sensors Monitoring"
 	nanomodule_path = /datum/nano_module/crew_monitor
+	ui_header = "crew_green.gif"
 	program_icon_state = "crew"
 	program_key_state = "med_key"
 	program_menu_icon = "heart"
@@ -10,6 +11,7 @@
 	requires_ntnet = TRUE
 	network_destination = "crew lifesigns monitoring system"
 	size = 11
+	category = PROG_MONITOR
 	var/has_alert = FALSE
 
 /datum/computer_file/program/suit_sensors/process_tick()

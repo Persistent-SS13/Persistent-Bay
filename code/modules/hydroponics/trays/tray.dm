@@ -130,7 +130,7 @@
 
 /obj/machinery/portable_atmospherics/hydroponics/after_load()
 	..()
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/portable_atmospherics/hydroponics/AltClick()
 	if(mechanical && !usr.incapacitated() && Adjacent(usr))

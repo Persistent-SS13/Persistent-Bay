@@ -56,6 +56,8 @@
 
 	possible_trading_items = list(/obj/item/weapon/gun/energy/taser                      = TRADER_THIS_TYPE,
 								/obj/item/weapon/gun/energy/stunrevolver                 = TRADER_THIS_TYPE,
+								/obj/item/weapon/gun/energy/xray                         = TRADER_THIS_TYPE,
+								/obj/item/weapon/gun/energy/laser                        = TRADER_THIS_TYPE,
 								/obj/item/weapon/gun/energy/gun                          = TRADER_THIS_TYPE,
 								/obj/item/weapon/cell                                    = TRADER_THIS_TYPE,
 								/obj/item/weapon/cell/crap                               = TRADER_THIS_TYPE,

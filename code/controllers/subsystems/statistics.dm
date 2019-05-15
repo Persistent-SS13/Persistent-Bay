@@ -19,7 +19,7 @@
 SUBSYSTEM_DEF(statistics)
 	name = "Statistics"
 	wait = 10 MINUTES
-	init_order = SS_INIT_LATE_INIT
+	init_order = SS_INIT_MISC_LATE
 	flags = SS_NO_INIT
 
 	var/extracted_slime_cores_amount = 0

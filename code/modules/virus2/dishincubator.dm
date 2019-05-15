@@ -4,6 +4,7 @@
 	anchored = 1
 	icon = 'icons/obj/virology.dmi'
 	icon_state = "incubator"
+	circuit_type = /obj/item/weapon/circuitboard/incubator
 	var/obj/item/weapon/virusdish/dish
 	var/obj/item/weapon/reagent_containers/glass/beaker = null
 	var/radiation	= 0
@@ -20,17 +21,6 @@
 
 	ADD_SKIP_EMPTY(dish)
 	ADD_SKIP_EMPTY(beaker)
-
-
-/obj/machinery/disease2/incubator/Initialize()
-	. = ..()
-	if(!map_storage_loaded)
-		component_parts = list()
-		component_parts += new /obj/item/weapon/circuitboard/incubator(src)
-		component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
-		component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-		component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	RefreshParts()
 
 /obj/machinery/disease2/incubator/attackby(var/obj/O as obj, var/mob/user as mob)
 	if(default_deconstruction_screwdriver(user, O))

@@ -1,6 +1,6 @@
 SUBSYSTEM_DEF(robots)
 	name = "Robots"
-	init_order = SS_INIT_EARLY_INIT
+	init_order = SS_INIT_MISC
 	flags = SS_NO_FIRE
 
 	var/list/modules_by_category         = list()

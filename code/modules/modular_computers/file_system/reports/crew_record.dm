@@ -5,58 +5,55 @@ GLOBAL_VAR_INIT(default_physical_status, "Active")
 GLOBAL_LIST_INIT(security_statuses, list("None", "Released", "Parolled", "Incarcerated", "Arrest"))
 GLOBAL_VAR_INIT(default_security_status, "None")
 GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
-#define GETTER_SETTER(KEY) /datum/computer_file/report/crew_record/proc/get_##KEY(){var/record_field/F = locate(/record_field/##KEY) in fields; if(F) return F.get_value()} \
-/datum/computer_file/report/crew_record/proc/set_##KEY(value){var/record_field/F = locate(/record_field/##KEY) in fields; if(F) return F.set_value(value)}
+#define GETTER_SETTER(PATH, KEY) /datum/computer_file/report/crew_record/proc/get_##KEY(){var/datum/report_field/F = locate(/datum/report_field/##PATH/##KEY) in fields; if(F) return F.get_value()} \
+/datum/computer_file/report/crew_record/proc/set_##KEY(given_value){var/datum/report_field/F = locate(/datum/report_field/##PATH/##KEY) in fields; if(F) F.set_value(given_value)}
+#define SETUP_FIELD(NAME, KEY, PATH, ACCESS, ACCESS_EDIT) GETTER_SETTER(PATH, KEY); /datum/report_field/##PATH/##KEY;\
+/datum/computer_file/report/crew_record/generate_fields(){..(); var/datum/report_field/##KEY = add_field(/datum/report_field/##PATH/##KEY, ##NAME);\
+KEY.set_access(ACCESS, ACCESS_EDIT || ACCESS || core_access_reassignment)}
 
 // Fear not the preprocessor, for it is a friend. To add a field, use one of these, depending on value type and if you need special access to see it.
 // It will also create getter/setter procs for record datum, named like /get_[key here]() /set_[key_here](value) e.g. get_name() set_name(value)
 // Use getter setters to avoid errors caused by typoing the string key.
-#define FIELD_SHORT(NAME, KEY) /record_field/##KEY/name = ##NAME; GETTER_SETTER(##KEY)
-#define FIELD_SHORT_SECURE(NAME, KEY, ACCESS) FIELD_SHORT(##NAME, ##KEY); /record_field/##KEY/acccess = ##ACCESS
-
-#define FIELD_LONG(NAME, KEY) FIELD_SHORT(##NAME, ##KEY); /record_field/##KEY/valtype = EDIT_LONGTEXT
-#define FIELD_LONG_SECURE(NAME, KEY, ACCESS) FIELD_LONG(##NAME, ##KEY); /record_field/##KEY/acccess = ##ACCESS
-
-#define FIELD_NUM(NAME, KEY) FIELD_SHORT(##NAME, ##KEY); /record_field/##KEY/valtype = EDIT_NUMERIC; /record_field/##KEY/value = 0
-#define FIELD_NUM_SECURE(NAME, KEY, ACCESS) FIELD_NUM(##NAME, ##KEY); /record_field/##KEY/acccess = ##ACCESS
-
-#define FIELD_LIST(NAME, KEY, OPTIONS) FIELD_SHORT(##NAME, ##KEY); /record_field/##KEY/valtype = EDIT_LIST; /record_field/##KEY/get_options(){. = ##OPTIONS;}
-#define FIELD_LIST_SECURE(NAME, KEY, OPTIONS, ACCESS) FIELD_LIST(##NAME, ##KEY, ##OPTIONS); /record_field/##KEY/acccess = ##ACCESS
+#define FIELD_SHORT(NAME, KEY, ACCESS, ACCESS_EDIT) SETUP_FIELD(NAME, KEY, simple_text/crew_record, ACCESS, ACCESS_EDIT)
+#define FIELD_LONG(NAME, KEY, ACCESS, ACCESS_EDIT) SETUP_FIELD(NAME, KEY, pencode_text/crew_record, ACCESS, ACCESS_EDIT)
+#define FIELD_NUM(NAME, KEY, ACCESS, ACCESS_EDIT) SETUP_FIELD(NAME, KEY, number/crew_record, ACCESS, ACCESS_EDIT)
+#define FIELD_LIST(NAME, KEY, OPTIONS, ACCESS, ACCESS_EDIT) FIELD_LIST_EDIT(NAME, KEY, OPTIONS, ACCESS, ACCESS_EDIT)
+#define FIELD_LIST_EDIT(NAME, KEY, OPTIONS, ACCESS, ACCESS_EDIT) SETUP_FIELD(NAME, KEY, options/crew_record, ACCESS, ACCESS_EDIT);\
+/datum/report_field/options/crew_record/##KEY/get_options(){return OPTIONS}
 
 // GENERIC RECORDS
-FIELD_SHORT("Name",name)
-FIELD_SHORT("Formal Name", formal_name)
-FIELD_SHORT("Job",job)
-FIELD_LIST("Sex", sex, record_genders())
-FIELD_NUM("Age", age)
+FIELD_SHORT("Name", name, null, core_access_reassignment)
+FIELD_SHORT("Formal Name", formal_name, null, core_access_reassignment)
+FIELD_SHORT("Job", job, null, core_access_reassignment)
+FIELD_LIST("Sex", sex, record_genders(), null, core_access_reassignment)
+FIELD_NUM("Age", age, null, core_access_reassignment)
+FIELD_LIST_EDIT("Status", status, GLOB.physical_statuses, null, core_access_medical_programs)
 
-FIELD_LIST("Status", status, GLOB.physical_statuses)
-/record_field/status/acccess_edit = core_access_medical_programs
+FIELD_SHORT("Species",species, null, core_access_reassignment)
+FIELD_LIST("Branch", branch, record_branches(), null, core_access_reassignment)
+FIELD_LIST("Rank", rank, record_ranks(), null, core_access_reassignment)
 
-FIELD_SHORT("Species",species)
-FIELD_LIST("Branch", branch, record_branches())
-FIELD_LIST("Rank", rank, record_ranks())
+FIELD_LONG("General Notes (Public)", public_record, null, core_access_reassignment)
 
 // MEDICAL RECORDS
-FIELD_LIST("Blood Type", bloodtype, GLOB.blood_types)
-FIELD_LONG_SECURE("Medical Record", medRecord, core_access_medical_programs)
+FIELD_LIST("Blood Type", bloodtype, GLOB.blood_types, core_access_medical_programs, core_access_medical_programs)
+FIELD_LONG("Medical Record", medRecord, core_access_medical_programs, core_access_medical_programs)
+FIELD_SHORT("Religion", religion, core_access_medical_programs, core_access_medical_programs)
 
 // SECURITY RECORDS
-FIELD_LIST_SECURE("Criminal Status", criminalStatus, GLOB.security_statuses, core_access_security_programs)
-FIELD_LONG_SECURE("Security Record", secRecord, core_access_security_programs)
-FIELD_SHORT_SECURE("DNA", dna, core_access_security_programs)
-FIELD_SHORT_SECURE("Fingerprint", fingerprint, core_access_security_programs)
+FIELD_LIST("Criminal Status", criminalStatus, GLOB.security_statuses, core_access_security_programs, core_access_security_programs)
+FIELD_LONG("Security Record", secRecord, core_access_security_programs, core_access_security_programs)
+FIELD_SHORT("DNA", dna, core_access_security_programs, core_access_security_programs)
+FIELD_SHORT("Fingerprint", fingerprint, core_access_security_programs, core_access_security_programs)
 
 // EMPLOYMENT RECORDS
-FIELD_LONG_SECURE("Employment Record", emplRecord, core_access_reassignment)
-FIELD_SHORT_SECURE("Home System", homeSystem, core_access_reassignment)
-FIELD_SHORT_SECURE("Faction", faction, core_access_reassignment)
-FIELD_SHORT_SECURE("Religion", religion, core_access_reassignment)
-FIELD_LONG_SECURE("Qualifications", skillset, core_access_reassignment)
+FIELD_LONG("Employment Record", emplRecord, core_access_reassignment, core_access_reassignment)
+FIELD_SHORT("Home System", homeSystem, core_access_reassignment, core_access_reassignment)
+FIELD_SHORT("Faction", faction, core_access_reassignment, core_access_reassignment)
+FIELD_LONG("Qualifications", skillset, core_access_reassignment, core_access_reassignment)
 
 // ANTAG RECORDS
-FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
-
+FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_syndicate)
 
 // Kept as a computer file for possible future expansion into servers.
 /datum/computer_file/report/crew_record
@@ -84,7 +81,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/ckey
 /datum/computer_file/report/crew_record/New()
 	..()
-	for(var/T in subtypesof(/record_field/))
+	for(var/T in subtypesof(/datum/report_field/))
 		new T(src)
 	load_from_mob(null)
 
@@ -308,16 +305,34 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	if(!email && H)
 		email = new()
 		email.login = H.real_name
+	// Add honorifics, etc.
+	var/formal_name = "Unset"
+	if(H)
+		formal_name = H.real_name
+		if(H.client && H.client.prefs)
+			for(var/culturetag in H.client.prefs.cultural_info)
+				var/decl/cultural_info/culture = SSculture.get_culture(H.client.prefs.cultural_info[culturetag])
+				if(H.char_rank && H.char_rank.name_short)
+					formal_name = "[formal_name][culture.get_formal_name_suffix()]"
+				else
+					formal_name = "[culture.get_formal_name_prefix()][formal_name][culture.get_formal_name_suffix()]"
 
 	// Generic record
 	set_name(H ? H.real_name : "Unset")
+	set_formal_name(formal_name)
 	set_job(H ? GetAssignment(H) : "Unset")
-	set_sex(H ? gender2text(H.gender) : "Unset")
+	var/gender_term = "Unset"
+	if(H)
+		var/datum/gender/G = gender_datums[H.get_sex()]
+		if(G)
+			gender_term = gender2text(G.formal_term)
+	set_sex(gender_term)
 	set_age(H ? H.age : 30)
 	set_status(GLOB.default_physical_status)
 	set_species(H ? H.get_species() : SPECIES_HUMAN)
 	set_branch(H ? (H.char_branch && H.char_branch.name) : "None")
 	set_rank(H ? (H.char_rank && H.char_rank.name) : "None")
+	set_public_record(H && H.public_record && !jobban_isbanned(H, "Records") ? html_decode(H.public_record) : "No record supplied")
 
 	// Medical record
 	set_bloodtype(H ? H.b_type : "Unset")
@@ -326,15 +341,29 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	// Security record
 	set_criminalStatus(GLOB.default_security_status)
 	set_dna(H ? H.dna.unique_enzymes : "")
-	set_fingerprint(H ? md5("[H.real_name]+fingerprint") : "")
-
-	set_secRecord((H && H.sec_record && !jobban_isbanned(H, "Records") ? html_decode(H.sec_record) : "No record supplied"))
+	set_fingerprint(H ? md5(H.dna.uni_identity) : "")
+	set_secRecord(H && H.sec_record && !jobban_isbanned(H, "Records") ? html_decode(H.sec_record) : "No record supplied")
 
 	// Employment record
-	set_emplRecord((H && H.gen_record && !jobban_isbanned(H, "Records") ? html_decode(H.gen_record) : "No record supplied"))
-	set_homeSystem(H ? H.home_system : "Unset")
-	set_faction(H ? H.personal_faction : "Unset")
-	set_religion(H ? H.religion : "Unset")
+	var/employment_record = "No record supplied"
+	if(H)
+		if(H.gen_record && !jobban_isbanned(H, "Records"))
+			employment_record = html_decode(H.gen_record)
+		if(H.client && H.client.prefs)
+			var/list/qualifications
+			for(var/culturetag in H.client.prefs.cultural_info)
+				var/decl/cultural_info/culture = SSculture.get_culture(H.client.prefs.cultural_info[culturetag])
+				var/extra_note = culture.get_qualifications()
+				if(extra_note)
+					LAZYADD(qualifications, extra_note)
+			if(LAZYLEN(qualifications))
+				employment_record = "[employment_record ? "[employment_record]\[br\]" : ""][jointext(qualifications, "\[br\]>")]"
+	set_emplRecord(employment_record)
+
+	// Misc cultural info.
+	set_homeSystem(H ? html_decode(H.get_cultural_value(TAG_HOMEWORLD)) : "Unset")
+	set_faction(H ? html_decode(H.get_cultural_value(TAG_FACTION)) : "Unset")
+	set_religion(H ? html_decode(H.get_cultural_value(TAG_RELIGION)) : "Unset")
 
 	if(H)
 		var/skills = list()
@@ -346,7 +375,7 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		set_skillset(jointext(skills,"\n"))
 
 	// Antag record
-	set_antagRecord((H && H.exploit_record && !jobban_isbanned(H, "Records") ? html_decode(H.exploit_record) : ""))
+	set_antagRecord(H && H.exploit_record && !jobban_isbanned(H, "Records") ? html_decode(H.exploit_record) : "")
 
 // Returns independent copy of this file.
 /datum/computer_file/report/crew_record/clone(var/rename = 0)
@@ -354,12 +383,12 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	return temp
 
 /datum/computer_file/report/crew_record/proc/get_field(var/field_type)
-	var/record_field/F = locate(field_type) in fields
+	var/datum/report_field/F = locate(field_type) in fields
 	if(F)
 		return F.get_value()
 
 /datum/computer_file/report/crew_record/proc/set_field(var/field_type, var/value)
-	var/record_field/F = locate(field_type) in fields
+	var/datum/report_field/F = locate(field_type) in fields
 	if(F)
 		return F.set_value(value)
 
@@ -392,15 +421,15 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 
 // Simple record to HTML (for paper purposes) conversion.
 // Not visually that nice, but it gets the work done, feel free to tweak it visually
-/proc/record_to_html(var/datum/computer_file/report/crew_record/CR, var/access)
+/proc/record_to_html(var/datum/computer_file/report/crew_record/CR, var/access, var/faction_uid)
 	var/dat = "<tt><H2>RECORD DATABASE DATA DUMP</H2><i>Generated on: [stationdate2text()] [stationtime2text()]</i><br>******************************<br>"
 	dat += "<table>"
-	for(var/record_field/F in CR.fields)
-		if(F.can_see(access))
-			dat += "<tr><td><b>[F.name]</b>"
-			if(F.valtype == EDIT_LONGTEXT)
+	for(var/datum/report_field/F in CR.fields)
+		if(F.verify_access(access, faction_uid))
+			dat += "<tr><td><b>[F.display_name()]</b>"
+			if(F.needs_big_box)
 				dat += "<tr>"
-			dat += "<td>[F.get_display_value()]"
+			dat += "<td>[F.get_value()]"
 	dat += "</tt>"
 	return dat
 
@@ -421,87 +450,6 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 		return H.mind.role_alt_title
 	return H.mind.assigned_role
 
-/record_field
-	var/name = "Unknown"
-	var/value = "Unset"
-	var/valtype = EDIT_SHORTTEXT
-	var/acccess
-	var/acccess_edit
-	var/record_id
-
-/record_field/New(var/datum/computer_file/report/crew_record/record)
-	if(!acccess_edit)
-		acccess_edit = acccess ? acccess : access_heads
-	if(record)
-		record_id = record.uid
-		record.fields += src
-	..()
-
-/record_field/proc/get_value()
-	return value
-
-/record_field/proc/get_display_value()
-	if(valtype == EDIT_LONGTEXT)
-		return pencode2html(value)
-	return value
-
-/record_field/proc/set_value(var/newval)
-	if(isnull(newval))
-		return
-	switch(valtype)
-		if(EDIT_LIST)
-			var/options = get_options()
-			if(!(newval in options))
-				return
-		if(EDIT_SHORTTEXT)
-			newval = newval
-		if(EDIT_LONGTEXT)
-			newval = sanitize(replacetext(newval, "\n", "\[br\]"), MAX_PAPER_MESSAGE_LEN)
-	value = newval
-	return 1
-
-/record_field/proc/get_options()
-	return list()
-
-/record_field/proc/can_edit(var/used_access)
-	if(!acccess_edit)
-		return TRUE
-	if(!used_access)
-		return FALSE
-	return islist(used_access) ? (acccess_edit in used_access) : acccess_edit == used_access
-
-/record_field/proc/can_see(var/used_access)
-	if(!acccess)
-		return TRUE
-	if(!used_access)
-		return FALSE
-	return islist(used_access) ? (acccess_edit in used_access) : acccess_edit == used_access
-
-//Options builderes
-/record_field/rank/proc/record_ranks()
-	for(var/datum/computer_file/report/crew_record/R in GLOB.all_crew_records)
-		if(R.uid == record_id)
-			var/datum/mil_branch/branch = mil_branches.get_branch(R.get_branch())
-			if(!branch)
-				return null
-			. = list()
-			. |= "Unset"
-			for(var/rank in branch.ranks)
-				var/datum/mil_rank/RA = branch.ranks[rank]
-				. |= RA.name
-
-/record_field/sex/proc/record_genders()
-	. = list()
-	. |= "Unset"
-	for(var/G in gender_datums)
-		. |= gender2text(G)
-
-/record_field/branch/proc/record_branches()
-	. = list()
-	. |= "Unset"
-	for(var/B in mil_branches.branches)
-		var/datum/mil_branch/BR = mil_branches.branches[B]
-		. |= BR.name
 
 //Options builderes
 /datum/report_field/options/crew_record/rank/proc/record_ranks()
@@ -528,3 +476,11 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	for(var/B in mil_branches.branches)
 		var/datum/mil_branch/BR = mil_branches.branches[B]
 		. |= BR.name
+
+#undef GETTER_SETTER
+#undef SETUP_FIELD
+#undef FIELD_SHORT
+#undef FIELD_LONG
+#undef FIELD_NUM
+#undef FIELD_LIST
+#undef FIELD_LIST_EDIT

@@ -33,7 +33,7 @@
 		src.amount = amount
 	..()
 	update_material_value()
-	update_icon()
+	queue_icon_update()
 
 /obj/item/stack/Destroy()
 	if(uses_charge)

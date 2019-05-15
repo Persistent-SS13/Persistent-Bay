@@ -50,6 +50,7 @@
 #define SS_INIT_PLANTS           13
 #define SS_INIT_ANTAGS           12
 #define SS_INIT_CULTURE          11
+#define SS_INIT_MISC             10
 #define SS_INIT_SKYBOX           9
 #define SS_INIT_MAPPING          8
 #define SS_INIT_JOBS             7
@@ -62,12 +63,14 @@
 #define SS_INIT_MACHINES         1
 #define SS_INIT_DEFAULT          0
 #define SS_INIT_AIR             -1
+#define SS_INIT_MISC_LATE       -2
 #define SS_INIT_ALARM           -3
 #define SS_INIT_SHUTTLE         -4
 #define SS_INIT_LIGHTING        -5
 #define SS_INIT_XENOARCH        -10
 #define SS_INIT_BAY_LEGACY      -200
 #define SS_INIT_LATE_INIT       -201
+#define SS_INIT_UNIT_TESTS      -100
 
 // SS runlevels
 

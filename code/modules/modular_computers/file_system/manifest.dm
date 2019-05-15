@@ -165,7 +165,7 @@
 	"}
 	// sort mobs
 	for(var/datum/computer_file/report/crew_record/CR in GLOB.all_crew_records)
-		var/name = CR.get_name()
+		var/name = CR.get_formal_name()
 		var/rank = CR.get_job()
 		mil_ranks[name] = ""
 
@@ -176,16 +176,16 @@
 			if(branch_obj && rank_obj)
 				mil_ranks[name] = "<abbr title=\"[rank_obj.name], [branch_obj.name]\">[rank_obj.name_short]</abbr> "
 
-		var/active = 0
-		for(var/mob/M in GLOB.player_list)
-			if(M.real_name == name && M.client && M.client.inactivity <= 10 * 60 * 10)
-				active = 1
-				break
-
-		if(!active)
-			isactive[name] = "Inactive"
+		if(OOC)
+			var/active = 0
+			for(var/mob/M in GLOB.player_list)
+				var/mob_real_name = M.real_name
+				if(sanitize(mob_real_name) == CR.get_name() && M.client && M.client.inactivity <= 10 MINUTES)
+					active = 1
+					break
+			isactive[name] = active ? "Active" : "Inactive"
 		else
-			isactive[name] = OOC ? "Active" : CR.get_status()
+			isactive[name] = CR.get_status()
 
 		var/datum/job/job = SSjobs.get_by_title(rank)
 		var/found_place = 0

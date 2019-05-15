@@ -119,6 +119,7 @@
 /obj/machinery/botany/extractor
 	name = "lysis-isolation centrifuge"
 	icon_state = "traitcopier"
+	circuit_type = /obj/item/weapon/circuitboard/lysis
 
 	var/datum/seed/genetics // Currently scanned seed genetic structure.
 	var/degradation = 0     // Increments with each scan, stops allowing gene mods after a certain point.
@@ -139,12 +140,6 @@
 /obj/machinery/botany/extractor/New()
 	..()
 
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/botany_extractor(null)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(null)
-	component_parts += new /obj/item/weapon/stock_parts/scanning_module(null)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
-	RefreshParts()
 
 /obj/machinery/botany/extractor/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 
@@ -281,6 +276,7 @@
 	name = "bioballistic delivery system"
 	icon_state = "traitgun"
 	disk_needs_genes = 1
+	circuit_type = /obj/item/weapon/circuitboard/editor
 
 /obj/machinery/botany/editor/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 
@@ -351,11 +347,7 @@
 	usr.set_machine(src)
 	src.add_fingerprint(usr)
 
-
-
-
 /obj/machinery/botany/editor/attackby(var/obj/item/O as obj, var/mob/user as mob)
-
 	if(default_deconstruction_screwdriver(user, O))
 		updateUsrDialog()
 		return
@@ -365,15 +357,3 @@
 		return
 	return ..()
 
-/obj/machinery/botany/editor/New()
-	..()
-
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/botany_editor(null)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(null)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(null)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
-	RefreshParts()
-
-/obj/machinery/botany/editor/RefreshParts()
-	return

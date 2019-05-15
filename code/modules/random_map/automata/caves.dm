@@ -15,7 +15,7 @@ GLOBAL_LIST_INIT(weighted_minerals_sparse, \
 		MATERIAL_PHOSPHORITE =  3, \
 		MATERIAL_ROCK_SALT =    3, \
 		MATERIAL_POTASH =       3, \
-		MATERIAL_BAUXITE =      5, \
+		MATERIAL_BAUXITE =      3, \
 		MATERIAL_RUTILE =       3, \
 		MATERIAL_TUNGSTEN =     8, \
 		MATERIAL_TETRAHEDRITE =	10, \

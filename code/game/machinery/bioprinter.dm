@@ -64,13 +64,6 @@
 	if(!map_storage_loaded)
 		stored_matter = max_stored_matter
 
-/obj/machinery/organ_printer/SetupParts()
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/matter_bin(src))
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/matter_bin(src))
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/manipulator(src))
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/manipulator(src))
-	..()
-
 /obj/machinery/organ_printer/examine(var/mob/user)
 	. = ..()
 	to_chat(user, "<span class='notice'>It is loaded with [stored_matter]/[max_stored_matter] matter units.</span>")
@@ -213,10 +206,6 @@
 
 	ADD_SKIP_EMPTY(loaded_dna)
 	ADD_SKIP_EMPTY(loaded_species)
-
-/obj/machinery/organ_printer/flesh/SetupParts()
-	LAZYADD(component_parts, /obj/item/device/scanner/health)
-	. = ..()
 
 /obj/machinery/organ_printer/flesh/print_organ(var/choice)
 	var/obj/item/organ/O

@@ -6,7 +6,6 @@
 	circuit = /obj/item/weapon/circuitboard/curefab
 	active_power_usage = 500//Watts
 	idle_power_usage = 50
-	use_power = POWER_USE_IDLE
 	var/curing = FALSE
 	var/virusing = FALSE
 	var/obj/item/weapon/reagent_containers/container = null

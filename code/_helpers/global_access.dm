@@ -403,8 +403,6 @@
 			return global.dreams;
 		if("dummy_lighting_corner")
 			return global.dummy_lighting_corner;
-		if("economic_species_modifier")
-			return global.economic_species_modifier;
 		if("employment_controller")
 			return global.employment_controller;
 		if("empty_playable_ai_cores")
@@ -1402,8 +1400,6 @@
 			global.dreams=newval;
 		if("dummy_lighting_corner")
 			global.dummy_lighting_corner=newval;
-		if("economic_species_modifier")
-			global.economic_species_modifier=newval;
 		if("employment_controller")
 			global.employment_controller=newval;
 		if("empty_playable_ai_cores")

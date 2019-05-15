@@ -29,13 +29,18 @@
 	product_ads = "Go save some lives!;The best stuff for your medbay.;Only the finest tools.;Natural chemicals!;This stuff saves lives.;Don't you want some?"
 	icon_state = "wallmed"
 	icon_deny = "wallmed-deny"
-	
-	products = list(/obj/item/stack/medical/bruise_pack = 2,
-					/obj/item/stack/medical/ointment = 2,
-					/obj/item/weapon/reagent_containers/hypospray/autoinjector = 4)
-	contraband = list(/obj/item/weapon/reagent_containers/syringe/antitoxin = 4,
-					/obj/item/weapon/reagent_containers/syringe/antiviral = 4,
-					/obj/item/weapon/reagent_containers/pill/tox = 1)
+	icon_vend = "wallmed-vend"
+	density = 0 //It is wall-mounted, and thus, not dense. --Superxpdude
+	products = list(
+		/obj/item/stack/medical/bruise_pack = 3,
+		/obj/item/stack/medical/ointment = 3,
+		/obj/item/weapon/reagent_containers/pill/paracetamol = 4,
+		/obj/item/weapon/storage/med_pouch/trauma,
+		/obj/item/weapon/storage/med_pouch/burn,
+		/obj/item/weapon/storage/med_pouch/oxyloss,
+		/obj/item/weapon/storage/med_pouch/toxin
+		)
+	contraband = list(/obj/item/weapon/reagent_containers/syringe/antitoxin = 4,/obj/item/weapon/reagent_containers/syringe/antiviral = 4,/obj/item/weapon/reagent_containers/pill/tox = 1)
 
 /obj/machinery/vending/wall/med2
 	name = "NanoMed Mini"
@@ -43,10 +48,16 @@
 	product_ads = "Go save some lives!;The best stuff for your medbay.;Only the finest tools.;Natural chemicals!;This stuff saves lives.;Don't you want some?"
 	icon_state = "wallmed"
 	icon_deny = "wallmed-deny"
-
-	products = list(/obj/item/weapon/reagent_containers/hypospray/autoinjector = 5,
-					/obj/item/weapon/reagent_containers/syringe/antitoxin = 1,
-					/obj/item/stack/medical/bruise_pack = 3,
-					/obj/item/stack/medical/ointment =3)
-	contraband = list(/obj/item/weapon/reagent_containers/pill/tox = 3, 
-					/obj/item/weapon/reagent_containers/hypospray/autoinjector/pain = 2)
+	icon_vend = "wallmed-vend"
+	density = 0 //It is wall-mounted, and thus, not dense. --Superxpdude
+	products = list(
+		/obj/item/weapon/reagent_containers/hypospray/autoinjector = 5,
+		/obj/item/stack/medical/bruise_pack = 4,
+		/obj/item/stack/medical/ointment = 4,
+		/obj/item/weapon/storage/med_pouch/trauma,
+		/obj/item/weapon/storage/med_pouch/burn,
+		/obj/item/weapon/storage/med_pouch/oxyloss,
+		/obj/item/weapon/storage/med_pouch/toxin,
+		/obj/item/weapon/storage/med_pouch/radiation
+		)
+	contraband = list(/obj/item/weapon/reagent_containers/pill/tox = 3, /obj/item/weapon/reagent_containers/hypospray/autoinjector/pain = 2)

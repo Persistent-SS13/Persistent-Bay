@@ -27,6 +27,7 @@
 	RefreshParts()
 
 /obj/machinery/cryopod/Destroy()
+	GLOB.cryopods -= src
 	for(var/atom/movable/A in InsertedContents())
 		A.forceMove(get_turf(src))
 	. = ..()

@@ -240,18 +240,22 @@
 			// The character doesn't have a spawn_loc_2, so use the one for their assignment or the default
 			character.spawn_loc_2 = " default"
 
-		for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
-			if(!pod.loc)
-				qdel(pod)
-				continue
-			if(pod.req_access_faction == character.spawn_loc)
-				if(pod.network == character.spawn_loc_2)
+		if (istype(character, /mob/living/carbon/lace) )
+			spawnTurf = GetLaceStorage(character)
+
+		if (!spawnTurf)
+			for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+				if(!pod.loc)
+					qdel(pod)
+					continue
+				if(pod.req_access_faction == character.spawn_loc)
+					if(pod.network == character.spawn_loc_2)
+						spawnTurf = get_turf(pod)
+						break
+					else
+						spawnTurf = get_turf(pod)
+				else if(!spawnTurf)
 					spawnTurf = get_turf(pod)
-					break
-				else
-					spawnTurf = get_turf(pod)
-			else if(!spawnTurf)
-				spawnTurf = get_turf(pod)
 
 		if(!spawnTurf)
 			log_and_message_admins("WARNING! No cryopods avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
@@ -280,6 +284,7 @@
 		log_and_message_admins("WARNING! Unable To Find Any Spawn Turf!!! Prehaps you didn't include a map?")
 		return
 
+	character.forceMove(spawnTurf)
 	character.after_spawn()
 
 	if(!character.mind)		// Not entirely sure what this if() block does, but keeping it just in case
@@ -289,7 +294,6 @@
 			mind.store_memory(client.prefs.memory)
 			mind.transfer_to(character)
 
-	character.forceMove(spawnTurf)
 	character.stored_ckey = key
 	character.key = key
 	character.save_slot = chosen_slot

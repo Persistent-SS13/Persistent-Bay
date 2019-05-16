@@ -1,6 +1,22 @@
-# Persistent SS13
 
-[Website](https://persistentss13.com/) - [Code](https://github.com/Persistent-SS13/Persistent-Bay)
+<h1 align="center">
+	<br>
+	Persistent SS13
+	<br>
+</h1>
+<p align="center">
+	<a href="https://persistentss13.com/"><img alt="Website" src="https://img.shields.io/website/https/persistentss13.com.svg?down_message=Offline...&label=Website&up_message=Online%21"></a>
+	<a href="https://discord.gg/QCWcHxN"><img alt="Discord" src="https://img.shields.io/discord/332252466206998539.svg?label=Discord"></a>
+	---
+	<a href="https://github.com/Persistent-SS13/Persistent-Bay/tree/dev"><img alt="GitHub last commit (branch)" src="https://img.shields.io/github/last-commit/Persistent-SS13/Persistent-Bay/dev.svg?label=Last%20Update"></a>
+	<img alt="Travis (.org)" src="https://img.shields.io/travis/Persistent-SS13/Persistent-Bay.svg?label=Latest%20Build">
+
+</p>
+
+![Website](https://img.shields.io/website/https/persistentss13.com.svg?down_color=lightgrey&down_message=Offline%21&label=Website&up_color=green&up_message=Online%21)
+![Discord](https://img.shields.io/discord/332252466206998539.svg)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Persistent-SS13/Persistent-Bay/dev.svg?label=Last%20Update)
+
 
 ---
 

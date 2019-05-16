@@ -17,8 +17,11 @@
 	<p>
 	<h4 align="center">
 		Built on top of Baystation's codebase, Persistent SS13 (aka Persistence) is a whole different concept from other SS13 deviations.
+		<br>
 		You, and the rest of the community, are the ones that will sculpt the story.
+		<br>
 		Start out as a nobody and make your own living in this collaborative role-play game!
+		<br>
 		Be an adventurer, a janitor, build your own business, open up a restaurant or build a god damn space shuttle... You decide.
 	</h4>
 	</p>

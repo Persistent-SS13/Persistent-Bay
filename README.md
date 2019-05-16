@@ -10,12 +10,12 @@
 	<a href="https://github.com/Persistent-SS13/Persistent-Bay/tree/dev"><img alt="GitHub last commit (branch)" src="https://img.shields.io/github/last-commit/Persistent-SS13/Persistent-Bay/dev.svg?label=Last%20Update"></a>
 	<img alt="Travis (.org)" src="https://img.shields.io/travis/Persistent-SS13/Persistent-Bay.svg?label=Latest%20Build">
 </p>
-<p align="center">
-	<h3>
+<p>
+	<h3 align="center">
 		The #1 persistent SS13 game!
 	</h3>
 	<p>
-	<h4>
+	<h4 align="center">
 		Built on top of Baystation's codebase, Persistent SS13 (aka Persistence) is a whole different concept from other SS13 deviations.
 		You, and the rest of the community, are the ones that will sculpt the story.
 		Start out as a nobody and make your own living in this collaborative role-play game!

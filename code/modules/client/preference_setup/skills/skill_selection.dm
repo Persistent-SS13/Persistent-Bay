@@ -23,11 +23,11 @@
 // 		return 0
 // 	return get_level_cost(S, get_min_skill(S) + skills[S])
 
-// /datum/preferences/proc/get_level_cost(decl/hierarchy/skill/S, level)
-// 	var/min = get_min_skill(S)
-// 	. = 0
-// 	for(var/i=min+1, i <= level, i++)
-// 		. += S.get_cost(i)
+/datum/preferences/proc/get_level_cost(decl/hierarchy/skill/S, level)
+	var/min = get_min_skill(S)
+	. = 0
+	for(var/i=min+1, i <= level, i++)
+		. += S.get_cost(i)
 
 // /datum/preferences/proc/get_max_affordable(decl/hierarchy/skill/S)
 // 	var/current_level = get_min_skill(S)

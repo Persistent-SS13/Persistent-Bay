@@ -43,12 +43,6 @@
 	ore_matter = list(MATERIAL_GRAPHITE = 2000)
 	energy_combustion = 32.7
 
-//DELETEME: Once transition is done
-/material/graphite/graphene //So old graphene ore is still usable
-	name = MATERIAL_GRAPHENE
-	ore_compresses_to = MATERIAL_GRAPHENE
-	ore_name = MATERIAL_GRAPHENE
-
 /material/quartz
 	name = MATERIAL_QUARTZ
 	ore_compresses_to = MATERIAL_QUARTZ

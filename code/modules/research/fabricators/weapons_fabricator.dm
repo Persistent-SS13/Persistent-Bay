@@ -272,7 +272,7 @@
 //	Pistols
 /datum/design/item/weaponfab/weapons/guns/pistol // tier 0
 	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GOLD = 1.5 SHEETS, MATERIAL_COPPER = 1.5 SHEETS)
-	build_path = /obj/item/weapon/gun/projectile/sec
+	build_path = /obj/item/weapon/gun/projectile/pistol/sec
 /datum/design/item/weaponfab/weapons/guns/pistol/m1911 // tier 1 RESKIN of pistol
 	materials = list(MATERIAL_STEEL = 4 SHEETS, MATERIAL_GOLD = 1.5 SHEETS, MATERIAL_COPPER = 1.5 SHEETS) //TODO
 	build_path = /obj/item/weapon/gun/projectile/pistol/m1911

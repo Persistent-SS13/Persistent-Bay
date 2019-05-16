@@ -5,30 +5,32 @@
 	density = 1
 	anchored = 1
 	idle_power_usage = 40
-	active_power_usage = 10000
+	active_power_usage = 10 KILOWATTS
 	circuit_type = /obj/item/weapon/circuitboard/machinery/robotic_fabricator
 	var/metal_amount = 0
 	var/operating = 0
 	var/obj/item/robot_parts/being_built = null
 	var/efficiency
 	var/initial_bin_rating = 1
+	var/time_finished = 0
 
 /obj/machinery/robotic_fabricator/attackby(var/obj/item/O as obj, var/mob/user as mob)
 	if (istype(O, /obj/item/stack/material) && O.get_material_name() == MATERIAL_STEEL)
 		var/obj/item/stack/M = O
 		if (src.metal_amount < 150000.0)
 			var/count = 0
-			src.overlays += "fab-load-metal"
+			//src.overlays += "fab-load-metal"
+			flick("fab-load-metal", src)
 			spawn(15)
 				if(M)
 					if(!M.get_amount())
 						return
 					while(metal_amount < 150000 && M.use(1))
-						src.metal_amount += O.matter[MATERIAL_STEEL] /*O:height * O:width * O:length * 100000.0*/
+						src.metal_amount += O.matter[MATERIAL_STEEL] 
 						count++
 
 					to_chat(user, "You insert [count] metal sheet\s into the fabricator.")
-					src.overlays -= "fab-load-metal"
+					//src.overlays -= "fab-load-metal"
 					updateDialog()
 		else
 			to_chat(user, "The robot part maker is full. Please remove metal from the robot part maker in order to insert more.")
@@ -57,7 +59,7 @@ Please wait until completion...</TT><BR>
 <A href='?src=\ref[src];make=7'>Robot Frame (75,000 cc metal).<BR>
 "}
 
-	user << browse("<HEAD><TITLE>Robotic Fabricator Control Panel</TITLE></HEAD><TT>[dat]</TT>", "window=robot_fabricator")
+	show_browser(user, "<HEAD><TITLE>Robotic Fabricator Control Panel</TITLE></HEAD><TT>[dat]</TT>", "window=robot_fabricator")
 	onclose(user, "robot_fabricator")
 	return
 
@@ -113,34 +115,42 @@ Please wait until completion...</TT><BR>
 
 			var/building = build_type
 			if (!isnull(building))
-				if (src.metal_amount >= build_cost)
-					src.operating = 1
-					src.update_use_power(POWER_USE_ACTIVE)
-
-					src.metal_amount = max(0, src.metal_amount - build_cost)
-
-					src.being_built = new building(src)
-
-					src.overlays += "fab-active"
-					src.updateUsrDialog()
-
-					spawn (build_time)
-						if (!isnull(src.being_built))
-							src.being_built.dropInto(loc)
-							src.being_built = null
-						src.update_use_power(POWER_USE_IDLE)
-						src.operating = 0
-						src.overlays -= "fab-active"
+				if (metal_amount >= build_cost)
+					time_finished = world.time + build_time
+					operating = 1
+					update_use_power(POWER_USE_ACTIVE)
+					metal_amount = max(0, src.metal_amount - build_cost)
+					being_built = new building(src)
+					updateUsrDialog()
+					on_update_icon()
 		return
 
 	for (var/mob/M in viewers(1, src))
 		if (M.client && M.machine == src)
-			src.attack_hand(M)
-
-
+			attack_hand(M)
 
 /obj/machinery/robotic_fabricator/New()
 	..()
+	ADD_SAVED_VAR(being_built)
+	ADD_SAVED_VAR(operating)
+	ADD_SAVED_VAR(time_finished)
+	
+	ADD_SKIP_EMPTY(being_built)
+
+/obj/machinery/robotic_fabricator/before_save()
+	. = ..()
+	if(operating)
+		time_finished = max(time_finished - world.time, 0) //Change time left to a relative value on save
+
+/obj/machinery/robotic_fabricator/after_save()
+	. = ..()
+	if(operating)
+		time_finished += world.time //Change it back to absolute after we saved, so we don't mess up the game
+
+/obj/machinery/robotic_fabricator/after_load()
+	. = ..()
+	if(operating)
+		time_finished += world.time //Change it to absolute on load
 
 /obj/machinery/robotic_fabricator/RefreshParts()
 	var/E
@@ -162,3 +172,21 @@ Please wait until completion...</TT><BR>
 	if(default_part_replacement(user, O))
 		return
 	return ..()
+
+/obj/machinery/robotic_fabricator/Process()
+	. = ..()
+	if(operating && world.time >= time_finished)
+		if (!isnull(being_built))
+			being_built.dropInto(loc)
+			being_built = null
+		update_use_power(POWER_USE_IDLE)
+		operating = FALSE
+		time_finished = 0
+		on_update_icon()
+
+/obj/machinery/robotic_fabricator/on_update_icon()
+	. = ..()
+	overlays.Cut()
+	if(operating)
+		overlays += "fab-active"
+	

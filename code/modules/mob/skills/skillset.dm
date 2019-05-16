@@ -76,8 +76,8 @@
 	// skill_list = list()
 
 	// for(var/decl/hierarchy/skill/S in GLOB.skills)
-	// 	var/min = job ? given_client.prefs.get_min_skill(job, S) : SKILL_MIN
-	// 	skill_list[S.type] = min + (allocation[S] || 0)
+	//	var/min = job ? given_client.prefs.get_min_skill(job, S) : SKILL_MIN
+	//	skill_list[S.type] = min + (allocation[S] || 0)
 	// on_levels_change()
 
 //Skill-related mob helper procs

@@ -2,15 +2,15 @@
 	display_name = "cane"
 	path = /obj/item/weapon/cane
 
-// /datum/gear/union_card
-// 	display_name = "union membership"
-// 	path = /obj/item/weapon/card/union
+/datum/gear/union_card
+	display_name = "union membership"
+	path = /obj/item/weapon/card/union
 
-// /datum/gear/union_card/spawn_on_mob(var/mob/living/carbon/human/H, var/metadata)
-// 	. = ..()
-// 	if(.)
-// 		var/obj/item/weapon/card/union/card = .
-// 		card.signed_by = H.real_name
+/datum/gear/union_card/spawn_on_mob(var/mob/living/carbon/human/H, var/metadata)
+	. = ..()
+	if(.)
+		var/obj/item/weapon/card/union/card = .
+		card.signed_by = H.real_name
 
 /datum/gear/dice
 	display_name = "dice pack"
@@ -213,3 +213,9 @@
 	display_name = "bible"
 	path = /obj/item/weapon/storage/bible
 	cost = 2
+
+/datum/gear/swiss
+	display_name = "multi-tool"
+	path = /obj/item/weapon/material/knife/folding/swiss
+	cost = 4
+	flags = GEAR_HAS_COLOR_SELECTION

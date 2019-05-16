@@ -287,6 +287,3 @@ var/global/datum/ntnet/ntnet_global = new()
 		ntnet_global.create_email(src, newname, domain)
 	else
 		ntnet_global.rename_email(src, old_email, newname, domain)
-
-
-

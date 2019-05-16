@@ -1,7 +1,5 @@
 #define SAVE_RESET -1
 
-var/list/preferences_datums = list()
-
 datum/preferences
 	//doohickeys for savefiles
 	var/path
@@ -39,7 +37,6 @@ datum/preferences
 	var/bonus_notes = ""
 
 /datum/preferences/New(client/C)
-	player_setup = new(src)
 	if(istype(C))
 		client = C
 		client_ckey = C.ckey
@@ -342,24 +339,19 @@ datum/preferences
 	if(LAZYLEN(character.descriptors))
 		for(var/entry in body_descriptors)
 			character.descriptors[entry] = body_descriptors[entry]
-	//character.home_system = home_system
-	//character.citizenship = citizenship
 	character.personal_faction = faction
-	//character.religion = religion
 
 	if(!character.isSynthetic())
 		character.nutrition = rand(140,360)
 
-	return
 
 /datum/preferences/proc/delete_character(var/slot)
-	var/path_to = load_path(client.ckey, "")
 	if(!slot) return
-	fdel("[path_to][slot].sav")
+	fdel(GLOB.using_map.character_save_path(slot))
 	if(character_list && (character_list.len >= slot))
 		character_list[slot] = "nothing"
+
 /datum/preferences/proc/load_characters()
-/*	var/path_to = load_path(client.ckey, "")
 	character_list = list()
 	var/slots = config.character_slots
 	if(check_rights(R_ADMIN, 0, client))
@@ -367,10 +359,11 @@ datum/preferences
 	slots += client.prefs.bonus_slots
 	var/list/loaded = list()
 	for(var/i=1, i<= slots, i++)
-		if(fexists("[path_to][i].sav"))
-			var/savefile/S =  new("[path_to][i].sav")
+		var/savefile/S =  new(path)
+		if(S)
+			S.cd = GLOB.using_map.character_save_path(i)
 			var/mob/M
-			S >> M
+			from_file(S, M)
 			loaded |= M
 			if(M)
 				M.after_load()
@@ -385,7 +378,8 @@ datum/preferences
 		else
 			character_list += "empty"
 	return 1
-	*/
+
+
 /datum/preferences/proc/open_load_dialog(mob/user)
 	var/dat  = list()
 	dat += "<body>"

@@ -216,8 +216,8 @@
 			return "General"
 		if(ACCESS_REGION_SUPPLY) //supply
 			return "Supply"
-		// if(ACCESS_REGION_NT) //nt
-		// 	return "Corporate"
+		if(ACCESS_REGION_NT) //nt
+			return "Corporate"
 
 /proc/get_access_desc(id)
 	var/list/AS = priv_all_access_datums_id || get_all_access_datums_by_id()
@@ -232,15 +232,15 @@
 	var/list/AS = priv_all_access_datums_id || get_all_access_datums_by_id()
 	return AS[num2text(id)]
 
-/proc/get_all_jobs()
-	var/list/all_jobs = list()
-	var/list/all_datums = typesof(/datum/job)
-	all_datums -= exclude_jobs
-	var/datum/job/jobdatum
-	for(var/jobtype in all_datums)
-		jobdatum = new jobtype
-		all_jobs.Add(jobdatum.title)
-	return all_jobs
+///proc/get_all_jobs()
+//	var/list/all_jobs = list()
+//	var/list/all_datums = typesof(/datum/job)
+//	all_datums -= exclude_jobs
+//	var/datum/job/jobdatum
+//	for(var/jobtype in all_datums)
+//		jobdatum = new jobtype
+//		all_jobs.Add(jobdatum.title)
+//	return all_jobs
 
 /proc/get_all_centcom_jobs()
 	return list("VIP Guest",
@@ -299,7 +299,7 @@
 	return missing_id_name
 
 /proc/get_all_job_icons() //For all existing HUD icons
-	return joblist + list("Prisoner")
+	return SSjobs.titles_to_datums + list("Prisoner")
 
 /obj/proc/GetJobName() //Used in secHUD icon generation
 	var/obj/item/weapon/card/id/I = GetIdCard()

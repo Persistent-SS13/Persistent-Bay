@@ -409,10 +409,10 @@ SUBSYSTEM_DEF(jobs)
 					else
 						permitted = 1
 
-				if(permitted && G.allowed_skills)
-					for(var/required in G.allowed_skills)
-						if(!H.skill_check(required,G.allowed_skills[required]))
-							permitted = 0
+				// if(permitted && G.allowed_skills)
+				// 	for(var/required in G.allowed_skills)
+				// 		if(!H.skill_check(required,G.allowed_skills[required]))
+				// 			permitted = 0
 
 				if(G.whitelisted && (!(H.species.name in G.whitelisted)))
 					permitted = 0

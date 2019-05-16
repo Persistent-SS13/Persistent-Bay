@@ -77,9 +77,9 @@
 				fields.Add(list(list(
 					"key" = F.type,
 					"name" = F.name,
-					"val" = F.get_display_value(),
-					"editable" = F.can_edit(user_access),
-					"large" = (F.valtype == EDIT_LONGTEXT)
+					"val" = F.get_value(),
+					"editable" = F.verify_access_edit(user_access, connected_faction.uid),
+					"large" = F.needs_big_box
 				)))
 		data["fields"] = fields
 		////////////////////////////////// stuff ????

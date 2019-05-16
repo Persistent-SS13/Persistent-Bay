@@ -276,7 +276,7 @@
 	return list(/obj/item/weapon/gun/projectile/shotgun/pump = 3,
 				/obj/item/weapon/gun/projectile/automatic/c20r = 2,
 				/obj/item/weapon/gun/projectile/pistol/m1911 = 4,
-				/obj/item/weapon/gun/projectile/sec = 4,
+				/obj/item/weapon/gun/projectile/pistol/sec = 4,
 				/obj/item/weapon/gun/projectile/pistol/military/alt = 3,
 				/obj/item/weapon/gun/projectile/pistol/holdout = 4,
 				/obj/item/weapon/gun/projectile/revolver = 2,

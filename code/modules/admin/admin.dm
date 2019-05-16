@@ -691,10 +691,10 @@ var/global/floorIsLava = 0
 	var/ckey = lowertext(input(usr, "Enter the ckey of the person you want to edit", "Bonus Panel", "") as text|null)
 	if(!ckey) return
 	var/datum/preferences/prefs
-	prefs = preferences_datums[ckey]
+	prefs = SScharacter_setup.preferences_datums[ckey]
 	if(!prefs)
 		prefs = new /datum/preferences(src)
-		preferences_datums[ckey] = prefs
+		SScharacter_setup.preferences_datums[ckey] = prefs
 	var/bonus_slots = prefs.bonus_slots
 	var/bonus_notes = prefs.bonus_notes
 
@@ -713,10 +713,10 @@ var/global/floorIsLava = 0
 	if(!check_rights(R_ADMIN))
 		return
 	var/datum/preferences/prefs
-	prefs = preferences_datums[ckey]
+	prefs = SScharacter_setup.preferences_datums[ckey]
 	if(!prefs)
 		prefs = new /datum/preferences(src)
-		preferences_datums[ckey] = prefs
+		SScharacter_setup.preferences_datums[ckey] = prefs
 	var/bonus_slots = prefs.bonus_slots
 	var/bonus_notes = prefs.bonus_notes
 	var/dat = ""
@@ -1574,7 +1574,8 @@ datum/admins/var/obj/item/weapon/paper/admin/faxreply // var to hold fax replies
 		P.stamps += "<hr><i>This paper has been stamped by the [P.origin] Quantum Relay.</i>"
 
 		var/image/stampoverlay = image('icons/obj/items/paper.dmi')
-		var/x; var/y;
+		var/x
+		var/y
 		x = rand(-2, 0)
 		y = rand(-1, 2)
 		P.offset_x += x

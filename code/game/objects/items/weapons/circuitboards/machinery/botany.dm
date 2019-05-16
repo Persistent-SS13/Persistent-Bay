@@ -10,6 +10,7 @@
 	req_components = list(
 							/obj/item/weapon/stock_parts/matter_bin = 1,
 							/obj/item/weapon/stock_parts/manipulator = 1)
+
 /obj/item/weapon/circuitboard/botany_extractor
 	name = T_BOARD("Lysis-Isolation Centrifuge")
 	build_path = /obj/machinery/botany/extractor

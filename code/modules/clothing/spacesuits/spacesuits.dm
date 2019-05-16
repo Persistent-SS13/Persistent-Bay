@@ -43,6 +43,8 @@
 	brightness_on = 0.8
 	on = 0
 
+	var/tinted = null	//Set to non-null for toggleable tint helmets
+
 /obj/item/clothing/head/helmet/space/Destroy()
 	if(camera && !ispath(camera))
 		QDEL_NULL(camera)

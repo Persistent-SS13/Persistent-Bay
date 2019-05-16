@@ -124,6 +124,8 @@ var/global/list/debug_data = list()
 
 /datum/proc/before_save()
 	return
+/datum/proc/after_save() //Sometimes we change the value of some variables for saving purpose only.. and want to change them back after
+	return
 
 /datum/proc/StandardWrite(var/savefile/f)
 	if(QDELETED(src) && !istype(src, /datum/money_account))	// If we are deleted, we shouldn't be saving
@@ -160,6 +162,7 @@ var/global/list/debug_data = list()
 			to_file(f["[variable]"],D)
 		else
 			to_file(f["[variable]"],vars[variable])
+	after_save()
 
 /datum/Write(savefile/f)
 	StandardWrite(f)

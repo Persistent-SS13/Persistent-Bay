@@ -137,8 +137,6 @@
 	..(newloc, MATERIAL_HEMATITE)
 /obj/item/stack/ore/graphite/New(var/newloc)
 	..(newloc, MATERIAL_GRAPHITE)
-/obj/item/stack/ore/coal/New(var/newloc)
-	..(newloc, MATERIAL_GRAPHENE)
 /obj/item/stack/ore/glass/New(var/newloc)
 	..(newloc, MATERIAL_SAND)
 /obj/item/stack/ore/silver/New(var/newloc)

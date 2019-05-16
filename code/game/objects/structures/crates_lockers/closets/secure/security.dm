@@ -36,7 +36,7 @@
 		/obj/item/clothing/head/helmet,
 		/obj/item/device/radio/headset/heads/hop,
 		/obj/item/weapon/storage/box/ids = 2,
-		/obj/item/weapon/gun/projectile/sec,
+		/obj/item/weapon/gun/projectile/pistol/sec,
 		/obj/item/device/flash
 	)
 

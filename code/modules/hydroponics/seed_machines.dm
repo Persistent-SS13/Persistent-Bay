@@ -119,7 +119,7 @@
 /obj/machinery/botany/extractor
 	name = "lysis-isolation centrifuge"
 	icon_state = "traitcopier"
-	circuit_type = /obj/item/weapon/circuitboard/lysis
+	circuit_type = /obj/item/weapon/circuitboard/botany_extractor
 
 	var/datum/seed/genetics // Currently scanned seed genetic structure.
 	var/degradation = 0     // Increments with each scan, stops allowing gene mods after a certain point.
@@ -276,7 +276,7 @@
 	name = "bioballistic delivery system"
 	icon_state = "traitgun"
 	disk_needs_genes = 1
-	circuit_type = /obj/item/weapon/circuitboard/editor
+	circuit_type = /obj/item/weapon/circuitboard/botany_editor
 
 /obj/machinery/botany/editor/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 

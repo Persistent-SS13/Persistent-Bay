@@ -1,7 +1,7 @@
 
-<div style="background-color:#000008; padding-top:12px; padding-bottom:12px">
+<div background-color="#000011">
 	<h1 align="center">
-		<img src="https://persistentss13.com/wiki/resources/assets/NT.png?30a85" style="vertical-align:middle;max-height:48px"/>
+		<img src="https://persistentss13.com/wiki/resources/assets/NT.png?30a85" height="24px"/>
 		<a href="https://github.com/Persistent-SS13/Persistent-Bay/" style="">
 			Persistent SS13
 		</a>
@@ -26,7 +26,7 @@
 			<br>
 			Be an adventurer, a janitor, build your own business, open up a restaurant or build a god damn space shuttle... You decide.
 			<br><br>
-			<img src="https://i.imgur.com/9iJOPlL.gif"/>
+			<img src="https://persistentss13.com/wiki/images/e/e5/PS13-AI.gif"/>
 		</h4>
 	</p>
 </div>

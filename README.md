@@ -1,31 +1,35 @@
 
-<h1 align="center">
-	<br>
-	Persistent SS13
-	<br>
-</h1>
-<p align="center">
-	<a href="https://persistentss13.com/"><img alt="Website" src="https://img.shields.io/website/https/persistentss13.com.svg?down_message=Offline...&label=Website&up_message=Online%21"></a>
-	<a href="https://discord.gg/QCWcHxN"><img alt="Discord" src="https://img.shields.io/discord/332252466206998539.svg?label=Discord"></a>
-	<a href="https://github.com/Persistent-SS13/Persistent-Bay/tree/dev"><img alt="GitHub last commit (branch)" src="https://img.shields.io/github/last-commit/Persistent-SS13/Persistent-Bay/dev.svg?label=Last%20Update"></a>
-	<img alt="Travis (.org)" src="https://img.shields.io/travis/Persistent-SS13/Persistent-Bay.svg?label=Latest%20Build">
-</p>
-<p>
+<div style="background-color:#000008; padding-top:12px; padding-bottom:12px">
+	<h1 align="center">
+		<img src="https://persistentss13.com/wiki/resources/assets/NT.png?30a85" style="vertical-align:middle;max-height:48px"/>
+		<a href="https://github.com/Persistent-SS13/Persistent-Bay/" style="">
+			Persistent SS13
+		</a>
+		<br>
+	</h1>
+	<p align="center">
+		<a href="https://persistentss13.com/"><img alt="Website" src="https://img.shields.io/website/https/persistentss13.com.svg?down_message=Offline...&label=Website&up_message=Online%21"></a>
+		<a href="https://discord.gg/QCWcHxN"><img alt="Discord" src="https://img.shields.io/discord/332252466206998539.svg?label=Discord"></a>
+		<a href="https://github.com/Persistent-SS13/Persistent-Bay/tree/dev"><img alt="GitHub last commit (branch)" src="https://img.shields.io/github/last-commit/Persistent-SS13/Persistent-Bay/dev.svg?label=Last%20Update"></a>
+		<img alt="Travis (.org)" src="https://img.shields.io/travis/Persistent-SS13/Persistent-Bay.svg?label=Latest%20Build">
+	</p>
 	<h3 align="center">
 		The #1 persistent SS13 game!
 	</h3>
 	<p>
-	<h4 align="center">
-		Built on top of Baystation's codebase, Persistent SS13 (aka Persistence) is a whole different concept from other SS13 deviations.
-		<br>
-		You, and the rest of the community, are the ones that will sculpt the story.
-		<br>
-		Start out as a nobody and make your own living in this collaborative role-play game!
-		<br>
-		Be an adventurer, a janitor, build your own business, open up a restaurant or build a god damn space shuttle... You decide.
-	</h4>
+		<h4 align="center">
+			Built on top of Baystation's codebase, Persistent SS13 (aka Persistence) is a whole different concept from other SS13 deviations.
+			<br>
+			You, and the rest of the community, are the ones that will sculpt the story.
+			<br>
+			Start out as a nobody and make your own living in this collaborative role-play game!
+			<br>
+			Be an adventurer, a janitor, build your own business, open up a restaurant or build a god damn space shuttle... You decide.
+			<br><br>
+			<img src="https://i.imgur.com/9iJOPlL.gif"/>
+		</h4>
 	</p>
-</p>
+</div>
 
 
 ---

@@ -16,6 +16,7 @@
 /datum/preferences/proc/load_path(ckey,filename="preferences.sav")
 	if(!ckey)	return
 	path = load_path(ckey, filename)
+	char_save_path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/"
 	savefile_version = SAVEFILE_VERSION_MAX
 
 /datum/preferences/proc/beta_path(ckey,filename="preferences.sav")
@@ -27,6 +28,10 @@
 	if(!ckey)	return
 	path = exit_path(ckey, filename)
 	savefile_version = SAVEFILE_VERSION_MAX
+
+/datum/preferences/proc/character_load_path(slot)
+	if(!char_save_path || !slot)	return
+	return "[char_save_path][slot].sav"
 
 
 /datum/preferences/proc/load_preferences()
@@ -53,13 +58,15 @@
 	return 1
 
 /datum/preferences/proc/load_character(slot)
-	if(!path)				return 0
-	if(!fexists(path))		return 0
-	var/savefile/S = new /savefile(path)
-	if(!S)					return 0
-	S.cd = "/"
-	if(!slot)	slot = default_slot
+//	var/char_path = character_load_path(slot)
+//	if(!char_path)				return 0
+//	if(!fexists(char_path))		return 0
+//	var/savefile/S = new /savefile(char_path)
+//	if(!S)					return 0
+//	S.cd = "/"
+//	if(!slot)	slot = default_slot
 
+	/**
 	if(slot != SAVE_RESET) // SAVE_RESET will reset the slot as though it does not exist, but keep the current slot for saving purposes.
 		slot = sanitize_integer(slot, 1, config.character_slots, initial(default_slot))
 		if(slot != default_slot)
@@ -69,21 +76,23 @@
 		to_file(S["default_slot"], default_slot)
 
 	if(slot != SAVE_RESET)
-		S.cd = GLOB.using_map.character_load_path(S, slot)
+		// S.cd = GLOB.using_map.character_load_path(S, slot)
 		player_setup.load_character(S)
 	else
 		player_setup.load_character(S)
-		S.cd = GLOB.using_map.character_load_path(S, default_slot)
+		// S.cd = GLOB.using_map.character_load_path(S, default_slot)
 
 	loaded_character = S
-
+	**/
 	return 1
 
 /datum/preferences/proc/save_character()
-	if(!path)				return 0
-	var/savefile/S = new /savefile(path)
+	var/char_path = character_load_path(chosen_slot)
+	if(!char_path)				return 0
+	var/savefile/S = new /savefile(char_path)
 	if(!S)					return 0
-	S.cd = GLOB.using_map.character_save_path(default_slot)
+	S.cd = "/"
+	//S.cd = GLOB.using_map.character_save_path(default_slot)
 
 	// var/use_path = load_path(client.ckey, "")
 	// var/savefile/S = new("[use_path][chosen_slot].sav")

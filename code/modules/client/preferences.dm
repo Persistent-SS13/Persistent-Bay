@@ -3,6 +3,7 @@
 datum/preferences
 	//doohickeys for savefiles
 	var/path
+	var/char_save_path
 	var/default_slot = 1				//Holder so it doesn't default to slot 1, rather the last one used
 	var/chosen_slot = 0
 	var/savefile_version = 0
@@ -56,7 +57,7 @@ datum/preferences
 	b_type = RANDOM_BLOOD_TYPE
 
 	if(client && !IsGuestKey(client.key))
-		load_path(client.ckey)
+		src.load_path(client.ckey)
 		load_preferences()
 		load_and_update_character()
 	sanitize_preferences()
@@ -346,12 +347,15 @@ datum/preferences
 
 
 /datum/preferences/proc/delete_character(var/slot)
+	var/path_to = load_path(client.ckey, "")
 	if(!slot) return
-	fdel(GLOB.using_map.character_save_path(slot))
+//	character_load_path()
+	fdel("[path_to][slot].sav")
 	if(character_list && (character_list.len >= slot))
 		character_list[slot] = "nothing"
 
 /datum/preferences/proc/load_characters()
+/*	var/path_to = load_path(client.ckey, "")
 	character_list = list()
 	var/slots = config.character_slots
 	if(check_rights(R_ADMIN, 0, client))
@@ -359,9 +363,8 @@ datum/preferences
 	slots += client.prefs.bonus_slots
 	var/list/loaded = list()
 	for(var/i=1, i<= slots, i++)
-		var/savefile/S =  new(path)
-		if(S)
-			S.cd = GLOB.using_map.character_save_path(i)
+		if(fexists("[path_to][i].sav"))
+			var/savefile/S =  new("[path_to][i].sav")
 			var/mob/M
 			from_file(S, M)
 			loaded |= M
@@ -378,7 +381,7 @@ datum/preferences
 		else
 			character_list += "empty"
 	return 1
-
+	*/
 
 /datum/preferences/proc/open_load_dialog(mob/user)
 	var/dat  = list()

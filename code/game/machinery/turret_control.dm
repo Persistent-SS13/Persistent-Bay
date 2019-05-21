@@ -215,6 +215,7 @@
 		updateTurrets()
 
 /obj/machinery/turretid/on_update_icon()
+	..()
 	switch(dir)
 		if(NORTH)
 			src.pixel_x = 0
@@ -228,7 +229,6 @@
 		if(WEST)
 			src.pixel_x = 30
 			src.pixel_y = 0
-	..()
 	if(!ispowered())
 		icon_state = "control_off"
 		set_light(0)

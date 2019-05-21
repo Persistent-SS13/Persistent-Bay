@@ -550,6 +550,19 @@
 	..()
 	desc = "A direction sign, pointing out which way \the [src] is."
 
+/obj/structure/sign/directions/on_update_icon()
+	src.pixel_y = 0
+	src.pixel_x = 0
+	switch(dir)
+		if(NORTH)
+			src.pixel_y = 32
+		if(SOUTH)
+			src.pixel_y = -32
+		if(EAST)
+			src.pixel_x = 32
+		if(WEST)
+			src.pixel_x = -32
+
 /obj/structure/sign/directions/science
 	name = "\improper Research Division"
 	icon_state = "direction_sci"

@@ -1,7 +1,7 @@
 /obj/item/weapon/tool/weldingtool/electric
 	name = "arc welder"
 	desc = "A man-portable arc welding tool."
-	icon = 'icons/obj/items/tools.dmi'
+	icon = 'icons/obj/tools.dmi'
 	icon_state = "welder_arc"
 	tank = null
 	waterproof = TRUE

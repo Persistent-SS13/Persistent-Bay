@@ -373,21 +373,21 @@
 		//Precache the client with all other assets slowly, so as to not block other browse() calls
 		getFilesSlow(src, asset_cache.cache, register_asset = FALSE)
 
-mob/proc/MayRespawn()
+/mob/proc/MayRespawn()
 	return 0
 
-client/proc/MayRespawn()
+/client/proc/MayRespawn()
 	if(mob)
 		return mob.MayRespawn()
 
 	// Something went wrong, client is usually kicked or transfered to a new mob at this point
 	return 0
 
-client/verb/character_setup()
-	set name = "Character Setup"
-	set category = "OOC"
-	if(prefs)
-		prefs.ShowChoices(usr)
+// client/verb/character_setup()
+// 	set name = "Character Setup"
+// 	set category = "OOC"
+// 	if(prefs)
+// 		prefs.ShowChoices(usr)
 
 /client/proc/apply_fps(var/client_fps)
 	if(world.byond_version >= 511 && byond_version >= 511 && client_fps >= CLIENT_MIN_FPS && client_fps <= CLIENT_MAX_FPS)

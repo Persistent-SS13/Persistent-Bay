@@ -41,27 +41,27 @@
 // DEPRECATED
 // These are used on individual outposts as backup should power line be cut, or engineering outpost lost power.
 // 1M Charge, 150K I/O
-/obj/machinery/power/smes/buildable/outpost_substation/New()
-	..(0)
-	component_parts += new /obj/item/weapon/smes_coil/weak(src)
+/obj/machinery/power/smes/buildable/outpost_substation/SetupParts()
+	. = ..()
+	LAZYADD(component_parts, new /obj/item/weapon/smes_coil/weak(src))
 	recalc_coils()
 
 // This one is pre-installed on engineering shuttle. Allows rapid charging/discharging for easier transport of power to outpost
 // 11M Charge, 2.5M I/O
-/obj/machinery/power/smes/buildable/power_shuttle/New()
-	..(0)
-	component_parts += new /obj/item/weapon/smes_coil/super_io(src)
-	component_parts += new /obj/item/weapon/smes_coil/super_io(src)
-	component_parts += new /obj/item/weapon/smes_coil(src)
+/obj/machinery/power/smes/buildable/power_shuttle/SetupParts()
+	. = ..()
+	LAZYADD(component_parts, new /obj/item/weapon/smes_coil/super_io(src))
+	LAZYADD(component_parts, new /obj/item/weapon/smes_coil/super_io(src))
+	LAZYADD(component_parts, new /obj/item/weapon/smes_coil(src))
 	recalc_coils()
 
 
 //Used as battery bank
-/obj/machinery/power/smes/buildable/batterybank/New()
-	..(0)
-	component_parts += new /obj/item/weapon/smes_coil/super_capacity(src)
-	component_parts += new /obj/item/weapon/smes_coil/super_capacity(src)
-	component_parts += new /obj/item/weapon/smes_coil/super_capacity(src)
+/obj/machinery/power/smes/buildable/batterybank/SetupParts()
+	. = ..()
+	LAZYADD(component_parts, new /obj/item/weapon/smes_coil/super_capacity(src))
+	LAZYADD(component_parts, new /obj/item/weapon/smes_coil/super_capacity(src))
+	LAZYADD(component_parts, new /obj/item/weapon/smes_coil/super_capacity(src))
 	recalc_coils()
 
 
@@ -328,7 +328,7 @@
 /obj/machinery/power/smes/buildable/on_update_icon()
 	if (failing)
 		overlays.Cut()
-		overlays += image('icons/obj/power.dmi', "smes-crit")
+		overlays += image(icon, "smes-crit")
 	else
 		..()
 

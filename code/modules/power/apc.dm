@@ -152,8 +152,12 @@
 	ADD_SAVED_VAR(connected_faction)
 	ADD_SAVED_VAR(locked)
 	ADD_SAVED_VAR(coverlocked)
+	ADD_SAVED_VAR(cell)
+	ADD_SAVED_VAR(has_electronics)
+	ADD_SAVED_VAR(autoflag)
 
 	ADD_SKIP_EMPTY(connected_faction)
+	ADD_SKIP_EMPTY(cell)
 
 /obj/machinery/power/apc/get_cell()
 	return cell

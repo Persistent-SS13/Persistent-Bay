@@ -3,8 +3,8 @@
  */
 /obj/item/weapon/tool/weldingtool
 	name = "welding tool"
-	icon = 'icons/obj/items/tools.dmi'
-	icon_state = "welder_m"
+	icon = 'icons/obj/tools.dmi'
+	icon_state = "welder"
 	item_state = "welder"
 	desc = "A heavy but portable welding gun with its own interchangeable fuel tank. It features a simple toggle switch and a port for attaching an external tank."
 	description_info = "Use in your hand to toggle the welder on and off. Hold in one hand and click with an empty hand to remove its internal tank. Click on an object to try to weld it. You can seal airlocks, attach heavy-duty machines like emitters and disposal chutes, and repair damaged walls - these are only a few of its uses. Each use of the welder will consume a unit of fuel. Be sure to wear protective equipment such as goggles, a mask, or certain voidsuit helmets to prevent eye damage. You can refill the welder with a welder tank by clicking on it, but be sure to turn it off first!"
@@ -239,10 +239,8 @@
 
 /obj/item/weapon/tool/weldingtool/on_update_icon()
 	..()
-	var/datum/extension/base_icon_state/bis = get_extension(src, /datum/extension/base_icon_state)
-	icon_state = welding ? "[bis.base_icon_state]1" : "[bis.base_icon_state]"
+	//icon_state = initial(icon_state) + (tank ? "_" + tank.icon_state : "") + (welding ? "_on" : "")
 	item_state = welding ? "welder1" : "welder"
-	update_tank_underlay()
 	var/mob/M = loc
 	if(istype(M))
 		M.update_inv_l_hand()
@@ -387,8 +385,8 @@
 /obj/item/weapon/welder_tank
 	name = "welding fuel tank"
 	desc = "An interchangeable fuel tank meant for a welding tool."
-	icon = 'icons/obj/items/tools.dmi'
-	icon_state = "fuel_m"
+	icon = 'icons/obj/tools.dmi'
+	icon_state = "tank_normal"
 	w_class = ITEM_SIZE_SMALL
 	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	var/tank_volume = 40

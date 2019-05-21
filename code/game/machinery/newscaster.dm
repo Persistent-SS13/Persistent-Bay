@@ -134,6 +134,7 @@ var/list/obj/machinery/newscaster/allCasters = list() //Global list that will co
 	layer = ABOVE_WINDOW_LAYER
 	frame_type = /obj/item/frame/newscaster
 	light_outer_range = 0
+	idle_power_usage = 20 //WATTS
 	var/alert = 0
 
 	var/datum/NewsStory/loaded_article

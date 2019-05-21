@@ -4,7 +4,7 @@
 /obj/item/weapon/tool/screwdriver
 	name = "screwdriver"
 	desc = "Your archetypal flathead screwdriver, with a nice, heavy polymer handle."
-	icon = 'icons/obj/items/tools.dmi'
+	icon = 'icons/obj/tools.dmi'
 	icon_state = "screwdriver"
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	slot_flags = SLOT_BELT | SLOT_EARS

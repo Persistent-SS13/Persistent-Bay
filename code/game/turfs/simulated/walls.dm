@@ -81,7 +81,9 @@
 	. = ..()
 	if(!map_storage_loaded)
 		update_full(TRUE, TRUE)
-		hitsound = material.hitsound
+	else
+		update_full(FALSE, FALSE) //Don't propagate on load
+	hitsound = material.hitsound
 	START_PROCESSING(SSturf, src) //Used for radiation.
 
 /turf/simulated/wall/Destroy()

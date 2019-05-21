@@ -12,7 +12,7 @@
 
 /obj/structure/hygiene/sink/New(loc, dir, atom/frame)
 	..(loc)
-	create_reagents(30)
+	
 	if(dir)
 		src.set_dir(dir)
 
@@ -22,6 +22,8 @@
 
 /obj/structure/hygiene/sink/Initialize(mapload, d)
 	. = ..()
+	if(!reagents)
+		create_reagents(30)
 	queue_icon_update()
 
 /obj/structure/hygiene/sink/kitchen/update_icon()

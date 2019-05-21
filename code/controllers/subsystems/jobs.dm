@@ -469,7 +469,7 @@ SUBSYSTEM_DEF(jobs)
 				if(H.char_branch.email_domain)
 					domain = H.char_branch.email_domain
 			else
-				domain = "freemail.net"
+				domain = EMAIL_DOMAIN_DEFAULT
 			if(domain)
 				ntnet_global.create_email(H, H.real_name, domain)
 		// END EMAIL GENERATION

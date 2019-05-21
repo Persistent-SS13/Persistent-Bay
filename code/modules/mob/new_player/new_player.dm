@@ -103,14 +103,14 @@
 	if(href_list["preference"])
 		client.prefs.ShowChoices(src)
 		return 1
-		client.prefs.process_link(src, href_list)
-		client.prefs.randomize_appearance_and_body_for()
-		client.prefs.real_name = null
-		client.prefs.preview_icon = null
+//		client.prefs.process_link(src, href_list)
+//		client.prefs.randomize_appearance_and_body_for()
+//		client.prefs.real_name = null
+//		client.prefs.preview_icon = null
 //		client.prefs.home_system = null
 //		client.prefs.faction = null
-		client.prefs.selected_under = null
-		client.prefs.sanitize_preferences()
+//		client.prefs.selected_under = null
+//		client.prefs.sanitize_preferences()
 
 	if(href_list["createCharacter"])
 		newCharacterPanel()
@@ -260,7 +260,7 @@
 	data += "<b>Select the slot you want to save this character under.</b><br>"
 
 	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
-		var/characterName = CharacterName(ind, ckey)
+		var/characterName = SScharacter_setup.peek_character_name(ind, ckey)
 		if(characterName)
 			data += "<b>[characterName]</b><br>"
 		else
@@ -289,9 +289,9 @@
 	data += "<b>Select the character you want to [action].</b><br>"
 
 	for(var/ind = 1, ind <= client.prefs.Slots(), ind++)
-		var/characterName = CharacterName(ind, ckey)
+		var/characterName = SScharacter_setup.peek_character_name(ind, ckey)
 		if(characterName)
-			var/icon/preview = CharacterIcon(ind, ckey)
+			var/icon/preview = SScharacter_setup.peek_character_icon(ind, ckey)
 			if(preview)
 				send_rsc(src, preview, "[ind]preview.png")
 			data += "<img src=[ind]preview.png width=[preview.Width()] height=[preview.Height()]><br>"
@@ -324,7 +324,7 @@
 	panel?.close()
 	load_panel?.close()
 
-	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = 1))
+	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
 
 	for(var/mob/M in SSmobs.mob_list)
 		if(M.loc && !M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
@@ -343,7 +343,7 @@
 		qdel(src)
 		return
 
-	var/mob/character = Character(chosen_slot, ckey)
+	var/mob/character = SScharacter_setup.load_character(chosen_slot, ckey)
 	Retrieve_Record(character.real_name)
 	var/turf/spawnTurf
 
@@ -381,7 +381,6 @@
 		to_chat(character, "You eject from your cryosleep, ready to resume life in the frontier.")
 
 	else if(character.spawn_type == 2)
-		character.equip_to_slot_or_del(new /obj/item/clothing/under/color/grey(character), slot_w_uniform)
 		for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
 			if(!beacon.loc)
 				qdel(beacon)
@@ -408,12 +407,16 @@
 		mind.original = character
 		if(client && client.prefs.memory)
 			mind.store_memory(client.prefs.memory)
-			mind.transfer_to(character)
+		mind.transfer_to(character)					//won't transfer key since the mind is not active
 
 	character.forceMove(spawnTurf)
 	character.stored_ckey = key
 	character.key = key
 	character.save_slot = chosen_slot
+
+	//Make sure dna is spread to limbs
+	character.dna.ready_dna(character)
+	character.sync_organ_dna()
 
 	GLOB.minds |= character.mind
 	character.redraw_inv()
@@ -442,7 +445,7 @@
 				client.screen -= cinematic
 
 		spawn_type = 1
-		sound_to(src, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = 1))
+		sound_to(src, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
 		spawn()
 			shake_camera(src, 3, 1)
 		druggy = 3
@@ -455,8 +458,9 @@
 		to_chat(src, "You eject from your cryosleep, ready to resume life in the frontier.")
 
 /mob/new_player/proc/deleteCharacter()
-	if(input("Are you SURE you want to delete [CharacterName(chosen_slot, ckey)]? THIS IS PERMANENT. enter the character\'s full name to conform.", "DELETE A CHARACTER", "") == CharacterName(chosen_slot, ckey))
-		fdel(load_path(ckey, "[chosen_slot].sav"))
+	var/charname = SScharacter_setup.peek_character_name(chosen_slot, ckey)
+	if(input("Are you SURE you want to delete [charname]? THIS IS PERMANENT. enter the character\'s full name to conform.", "DELETE A CHARACTER", "") == charname)
+		SScharacter_setup.delete_character(chosen_slot, ckey)
 	load_panel.close()
 
 

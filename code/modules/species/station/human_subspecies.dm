@@ -73,6 +73,8 @@
 	default_cultural_info = list(
 		TAG_CULTURE = CULTURE_HUMAN_VATGROWN
 	)
+	spawns_with_stack = TRUE
+	stack_type = /obj/item/organ/internal/stack/vat
 
 /datum/species/human/tritonian
 	name = SPECIES_TRITONIAN

@@ -347,10 +347,9 @@ datum/preferences
 
 
 /datum/preferences/proc/delete_character(var/slot)
-	var/path_to = load_path(client.ckey, "")
-	if(!slot) return
-//	character_load_path()
-	fdel("[path_to][slot].sav")
+	if(!slot) 
+		return
+	SScharacter_setup.delete_character(slot, client.ckey)
 	if(character_list && (character_list.len >= slot))
 		character_list[slot] = "nothing"
 
@@ -396,8 +395,8 @@ datum/preferences
 		dat += "<b>Select a character slot to load</b><hr>"
 		var/name
 		for(var/i=1, i<= slots, i++)
-			S.cd = GLOB.using_map.character_load_path(S, i)
-			from_file(S["real_name"], name)
+			name = SScharacter_setup.peek_character_name(i, client.ckey)
+			from_file(S["name"], name)
 			if(!name)	name = "Character[i]"
 			if(i==default_slot)
 				name = "<b>[name]</b>"
@@ -414,18 +413,17 @@ datum/preferences
 	if(check_rights(R_ADMIN, 0, client))
 		slots += 2
 	slots += client.prefs.bonus_slots
-	if(!character_list || (character_list.len < slots))
-		load_characters()
+	// if(!character_list || (character_list.len < slots))
+	// 	load_characters()
 	var/dat  = list()
 	dat += "<body>"
 	dat += "<tt><center>"
 	dat += "<b>Select the character slot you want to save this character under.</b><hr>"
 	var/ind = 0
-	for(var/x in character_list)
-		ind++
-		var/mob/M = x
-		if(istype(M))
-			dat += "<b>[M.real_name]</b><br>"
+	for(var/ind = 0, ind < slots, ind++)
+		var/name = SScharacter_setup.peek_character_name(i, client.ckey)
+		if(!isnull(name))
+			dat += "<b>[name]</b><br>"
 		else
 			dat += "<a href='?src=\ref[src];pickslot=[ind]'>Open Slot [ind]</a><br>"
 	dat += "<hr>"

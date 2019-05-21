@@ -16,7 +16,7 @@ proc/GetNbSavedZLevels()
 	admin_levels = list(25)
 	empty_levels = list(24)
 	accessible_z_levels = list("1"=1,"2"=1,"3"=1,"4"=1,"5"=1,"6"=1,"7"=1,"8"=1,"9"=1,"10"=1,"11"=1,"12"=1,"13"=1,"14"=1,"15"=1,"16"=1,"17"=1,"18"=1,"19"=1,"20"=1)
-	usable_email_tlds = list("freemail.glo")
+	usable_email_tlds = list(EMAIL_DOMAIN_DEFAULT)
 
 	allowed_spawns = list("Cryogenic Storage", "Cyborg Storage")
 	default_spawn = "Cryogenic Storage"
@@ -29,6 +29,7 @@ proc/GetNbSavedZLevels()
 	boss_short    = "Nexus"
 	company_name  = "Nexus"
 	company_short = "NX"
+	default_faction_uid = "null"
 
 	use_overmap = TRUE		//If overmap should be used (including overmap space travel override)
 	overmap_size = 20		//Dimensions of overmap zlevel if overmap is used.

@@ -397,7 +397,7 @@ FIELD_LONG("Exploitable Information", antagRecord, access_syndicate, access_synd
 /proc/CreateModularRecord(var/mob/living/carbon/human/H)
 	for(var/datum/computer_file/report/crew_record/R in GLOB.all_crew_records)
 		if(R.get_name() == H.real_name)
-			message_admins("record already found heh")
+			message_admins("[H.real_name]'s record already found heh")
 			return R
 	var/datum/computer_file/report/crew_record/R = Retrieve_Record(H.real_name)
 	if(R) return R

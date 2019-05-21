@@ -886,7 +886,7 @@ var/global/floorIsLava = 0
 	for(var/datum/computer_file/report/crew_record/record in GLOB.all_crew_records)
 		if(!record.email)
 			record.email = new()
-			record.email.login = "[replacetext(record.get_name(), " ", "_")]@freemail.nt"
+			record.email.login = "[replacetext(record.get_name(), " ", "_")]@[EMAIL_DOMAIN_DEFAULT]"
 			record.email.password = "recovery[rand(1,99)]"
 
 /datum/admins/proc/fixrecords()

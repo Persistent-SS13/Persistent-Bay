@@ -104,6 +104,7 @@
 
 	var/limbs_are_nonsolid
 	var/spawns_with_stack = 0
+	var/stack_type = /obj/item/organ/internal/stack //stack to spawn with by default
 	// Environment tolerance/life processes vars.
 	var/reagent_tag                                             // Used for metabolizing reagents.
 	var/breath_pressure = 16                                    // Minimum partial pressure safe for breathing, kPa

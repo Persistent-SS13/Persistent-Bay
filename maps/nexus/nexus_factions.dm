@@ -1,3 +1,4 @@
+//Faction for nexus citizens
 /obj/faction_spawner/democratic/Nexus
 	name 			= "Nexus City Government"
 	name_short 		= "Nexus"
@@ -7,19 +8,22 @@
 	network_name 	= "NEXUSGOV-NET"//"NexusNet"
 	network_uid 	= "nx_net"
 	purpose 		= "To represent the citizenship of Nexus and keep the station operating."
+	starter_outfit	= /decl/hierarchy/outfit/frontier/citizen
 
 	//Mapper helpers
 	icon 			= 'icons/misc/map_helpers.dmi'
 	icon_state 		= "faction"
 
+//Faction for slums denizens
 /obj/faction_spawner/Freemen
-	name 			= "Null"
-	name_short 		= "Null"
-	name_tag 		= "Null"
+	name 			= "Resident"
+	name_short 		= "Resident"
+	name_tag 		= "RD"
 	uid 			= "null"
-	password 		= null
+	password 		= ""
 	network_name 	= "FreeNet"
 	network_uid 	= "free_net"
+	starter_outfit	= /decl/hierarchy/outfit/frontier/starter
 
 	//Mapper helpers
 	icon 			= 'icons/misc/map_helpers.dmi'

@@ -692,6 +692,7 @@ var/PriorityQueue/all_feeds
 	var/default_telepad_x
 	var/default_telepad_y
 	var/default_telepad_z
+	var/decl/hierarchy/outfit/starter_outfit = /decl/hierarchy/outfit/frontier/starter //Outfit members of this faction spawn with by default
 
 
 

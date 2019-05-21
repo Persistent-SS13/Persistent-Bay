@@ -114,6 +114,8 @@
 			RELIGION_VOX
 		)
 	)
+	spawns_with_stack = TRUE
+	stack_type = /obj/item/organ/internal/stack/vox
 
 /datum/species/vox/equip_survival_gear(var/mob/living/carbon/human/H)
 	H.equip_to_slot_or_del(new /obj/item/clothing/mask/gas/vox(H), slot_wear_mask)

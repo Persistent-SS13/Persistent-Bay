@@ -36,3 +36,38 @@ SUBSYSTEM_DEF(character_setup)
 
 /datum/controller/subsystem/character_setup/proc/queue_preferences_save(var/datum/preferences/prefs)
 	save_queue |= prefs
+
+/datum/controller/subsystem/character_setup/proc/save_character(var/ind, var/ckey, var/mob/living/carbon/human/mannequin)
+	if(!istype(mannequin))
+		return
+	var/savefile/S = CHAR_SAVE_FILE(ind, ckey)
+	to_file(S["name"], mannequin.real_name)
+	to_file(S["mob"], mannequin)
+
+/datum/controller/subsystem/character_setup/proc/delete_character(var/ind, var/ckey)
+	fdel(CHAR_SAVE_FILE_PATH(ckey, ind))
+
+/datum/controller/subsystem/character_setup/proc/load_character(var/ind, var/ckey)
+	if(!fexists(CHAR_SAVE_FILE_PATH(ckey, ind)))
+		return
+	var/savefile/F = CHAR_SAVE_FILE(ckey, ind)
+	var/mob/M
+	from_file(F["mob"], M)
+	return M
+
+/datum/controller/subsystem/character_setup/proc/peek_character_name(var/ind, var/ckey)
+	if(!fexists(CHAR_SAVE_FILE_PATH(ckey, ind)))
+		return
+	var/savefile/F = CHAR_SAVE_FILE(ckey, ind)
+	var/name
+	from_file(F["name"], name)
+	return name
+
+/datum/controller/subsystem/character_setup/proc/peek_character_icon(var/ind, var/ckey)
+	var/mob/M = src.load_character(ind, ckey)
+	if(!M)
+		return
+	M.regenerate_icons()
+	var/icon/I = get_preview_icon(M)
+	qdel(M)
+	return I

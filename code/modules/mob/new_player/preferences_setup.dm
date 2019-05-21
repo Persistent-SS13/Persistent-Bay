@@ -33,18 +33,18 @@
 			if(all_underwear)
 				all_underwear.Cut()
 			for(var/datum/category_group/underwear/WRC in GLOB.underwear.categories)
-				if(WRC.name == "Underwear, top")
-					if(gender == FEMALE)
-						all_underwear[WRC.name] = "Bra"
-					else
-						all_underwear[WRC.name] = "None"
-					continue
-				if(WRC.name == "Underwear, top")
-					if(gender == FEMALE)
-						all_underwear[WRC.name] = "Panties"
-					else
-						all_underwear[WRC.name] = "Boxers"
-					continue
+				// if(WRC.name == "Underwear, top")
+				// 	if(gender == FEMALE)
+				// 		all_underwear[WRC.name] = "Bra"
+				// 	else
+				// 		all_underwear[WRC.name] = "None"
+				// 	continue
+				// if(WRC.name == "Underwear, top")
+				// 	if(gender == FEMALE)
+				// 		all_underwear[WRC.name] = "Panties"
+				// 	else
+				// 		all_underwear[WRC.name] = "Boxers"
+				// 	continue
 				var/datum/category_item/underwear/WRI = pick(WRC.items)
 				all_underwear[WRC.name] = WRI.name
 
@@ -57,17 +57,44 @@
 #undef ASSIGN_LIST_TO_COLORS
 
 /datum/preferences/proc/dress_preview_mob(var/mob/living/carbon/human/mannequin, var/finalize = FALSE)
-	var/update_icon = TRUE
+	var/update_icon = FALSE
+	var/adjustflags = finalize? OUTFIT_RESET_EQUIPMENT : OUTFIT_ADJUSTMENT_SKIP_POST_EQUIP|OUTFIT_ADJUSTMENT_SKIP_ID_PDA
 	copy_to(mannequin, !finalize)
 	mannequin.real_name = real_name
+
+	//Do default faction outfit
+	if(faction && faction.starter_outfit)
+		faction.starter_outfit.equip(mannequin, equip_adjustments = adjustflags)
+		update_icon = TRUE
+
+	//If we have selected a specific uniform, replace the default one
 	if(selected_under)
-		selected_under.loc = mannequin
-		mannequin.equip_to_slot_if_possible(selected_under,slot_w_uniform)
-	else
-		selected_under = new /obj/item/clothing/under/color/grey()
-		mannequin.equip_to_slot_if_possible(selected_under,slot_w_uniform)
-	
-	mannequin.equip_to_slot_or_del(selected_under,slot_w_uniform)
+		mannequin.equip_to_slot_or_del(selected_under,slot_w_uniform)
+		update_icon = TRUE
+
+	//Backpack
+	if(istype(backpack, /decl/backpack_outfit))
+		var/decl/backpack_outfit/outback = backpack
+		outback.equip(mannequin, equip_adjustments = adjustflags)
+		update_icon = TRUE
+
+	//Extra starter gear
+	if(finalize || (!finalize && (equip_preview_mob & EQUIP_PREVIEW_LOADOUT)))
+		// Equip custom gear loadout, replacing any job items
+		var/list/loadout_taken_slots = list()
+		for(var/thing in Gear())
+			var/datum/gear/G = gear_datums[thing]
+			if(G)
+				var/permitted = 1
+				if(G.whitelisted && (G.whitelisted != mannequin.species.name))
+					permitted = 0
+
+				if(!permitted)
+					continue
+
+				if(G.slot && G.slot != slot_tie && !(G.slot in loadout_taken_slots) && G.spawn_on_mob(mannequin, gear_list[gear_slot][G.display_name]))
+					loadout_taken_slots.Add(G.slot)
+					update_icon = TRUE
 
 	if(update_icon)
 		mannequin.update_icons()

@@ -1,6 +1,7 @@
 /mob/living/carbon/
 	gender = MALE
 	var/datum/species/species //Contains icon generation and language information, set during New().
+	var/saved_species //Stores the name of the species during save since the species datums are globally loaded, and "species" is just a pointer on one
 	var/list/datum/disease2/disease/virus2 = list()
 	var/list/antibodies = list()
 

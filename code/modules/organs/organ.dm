@@ -90,6 +90,7 @@ var/list/organ_cache = list()
 			given_dna = holder.dna
 		else
 			log_debug("[src] spawned in [holder] without a proper DNA.")
+		species = owner.species
 
 	if (given_dna)
 		set_dna(given_dna)
@@ -101,6 +102,8 @@ var/list/organ_cache = list()
 		reagents.add_reagent(/datum/reagent/nutriment/protein, reagents.maximum_volume)
 
 	queue_icon_update()
+	
+	//Setup saved vars
 	ADD_SAVED_VAR(min_broken_damage)
 	ADD_SAVED_VAR(status)
 	ADD_SAVED_VAR(owner)

@@ -147,8 +147,9 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		if("die")
 			var/choice = input(usr,"THIS WILL PERMANENTLY KILL YOUR CHARACTER! YOU WILL NOT BE ALLOWED TO REMAKE THE SAME CHARACTER.") in list("Kill my character, return to character creation", "Cancel")
 			if(choice == "Kill my character, return to character creation")
-				if(input("Are you SURE you want to delete [CharacterName(save_slot, lacemob.ckey)]? THIS IS PERMANENT. enter the character\'s full name to confirm.", "DELETE A CHARACTER", "") == CharacterName(save_slot, lacemob.ckey))
-					fdel(load_path(lacemob.ckey, "[save_slot].sav"))
+				var/charname = SScharacter_setup.peek_character_name(save_slot, lacemob.ckey)
+				if(input("Are you SURE you want to delete [charname]? THIS IS PERMANENT. enter the character\'s full name to confirm.", "DELETE A CHARACTER", "") == charname)
+					SScharacter_setup.delete_character(save_slot, lacemob.ckey)
 					var/mob/new_player/M = new /mob/new_player()
 					M.loc = null
 					M.key = lacemob.key

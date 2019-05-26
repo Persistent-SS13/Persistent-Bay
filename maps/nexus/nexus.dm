@@ -13,6 +13,8 @@
 	#include "nexus_elevator.dm"
 	#include "nexus_factions.dm"
 	#include "nexus_presets.dm"
+	#include "nexus_outfits.dm"
+	#include "obj/nexus_headsets.dm"
 	#define using_map_DATUM /datum/map/nexus
 
 #elif !defined(MAP_OVERRIDE)

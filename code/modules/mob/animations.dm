@@ -229,3 +229,20 @@ note dizziness decrements automatically in the mob's Life() proc.
 		return
 	playsound(T, "sparks", 50, 1)
 	anim(src,'icons/mob/mob.dmi',,"phaseout",,dir)
+
+/mob/New(loc, ...)
+	. = ..()
+	ADD_SAVED_VAR(dizziness)
+	ADD_SAVED_VAR(is_dizzy)
+	ADD_SAVED_VAR(is_jittery)
+	ADD_SAVED_VAR(jitteriness)
+
+	//Since it skips nulls, we can use this to save some perf
+	ADD_SKIP_EMPTY(dizziness)
+	ADD_SKIP_EMPTY(is_dizzy)
+	ADD_SKIP_EMPTY(is_jittery)
+	ADD_SKIP_EMPTY(jitteriness)
+
+/mob/after_load()
+	. = ..()
+	update_floating()

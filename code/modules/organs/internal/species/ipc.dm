@@ -30,11 +30,19 @@
 
 /obj/item/organ/internal/posibrain/New(var/mob/living/carbon/H)
 	..()
-	if(!brainmob && H)
-		init(H)
-	robotize()
-	unshackle()
-	update_icon()
+	ADD_SAVED_VAR(brainmob)
+	ADD_SAVED_VAR(shackle)
+
+	ADD_SKIP_EMPTY(brainmob)
+
+/obj/item/organ/internal/posibrain/Initialize(var/mapload, var/mob/living/carbon/H)
+	. = ..()
+	if(!mapload)
+		if(!brainmob && H)
+			init(H)
+		robotize()
+		unshackle()
+	queue_icon_update()
 
 /obj/item/organ/internal/posibrain/proc/init(var/mob/living/carbon/H)
 	brainmob = new(src)
@@ -142,7 +150,7 @@
 
 	overlays.Cut()
 	if(shackle)
-		overlays |= image('icons/obj/assemblies.dmi', "posibrain-shackles")
+		overlays |= image(icon, "posibrain-shackles")
 
 /obj/item/organ/internal/posibrain/proc/transfer_identity(var/mob/living/carbon/H)
 	if(H && H.mind)

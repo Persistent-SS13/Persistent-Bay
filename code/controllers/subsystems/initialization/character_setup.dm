@@ -45,20 +45,20 @@ SUBSYSTEM_DEF(character_setup)
 	to_file(S["mob"], mannequin)
 
 /datum/controller/subsystem/character_setup/proc/delete_character(var/ind, var/ckey)
-	fdel(CHAR_SAVE_FILE_PATH(ckey, ind))
+	fdel(CHAR_SAVE_FILE_PATH(ind, ckey))
 
 /datum/controller/subsystem/character_setup/proc/load_character(var/ind, var/ckey)
-	if(!fexists(CHAR_SAVE_FILE_PATH(ckey, ind)))
+	if(!fexists(CHAR_SAVE_FILE_PATH(ind, ckey)))
 		return
-	var/savefile/F = CHAR_SAVE_FILE(ckey, ind)
+	var/savefile/F = CHAR_SAVE_FILE(ind, ckey)
 	var/mob/M
 	from_file(F["mob"], M)
 	return M
 
 /datum/controller/subsystem/character_setup/proc/peek_character_name(var/ind, var/ckey)
-	if(!fexists(CHAR_SAVE_FILE_PATH(ckey, ind)))
+	if(!fexists(CHAR_SAVE_FILE_PATH(ind, ckey)))
 		return
-	var/savefile/F = CHAR_SAVE_FILE(ckey, ind)
+	var/savefile/F = CHAR_SAVE_FILE(ind, ckey)
 	var/name
 	from_file(F["name"], name)
 	return name
@@ -67,6 +67,11 @@ SUBSYSTEM_DEF(character_setup)
 	var/mob/M = src.load_character(ind, ckey)
 	if(!M)
 		return
+	M.after_spawn()
+	if(ishuman(M))
+		var/mob/living/carbon/human/H = M
+		H.force_update_limbs()
+		H.update_eyes()
 	M.regenerate_icons()
 	var/icon/I = get_preview_icon(M)
 	qdel(M)

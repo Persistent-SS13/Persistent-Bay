@@ -8,12 +8,19 @@
 		current.on_leaving_metabolism(parent, metabolism_class)
 	. = ..()
 
-/datum/reagents/metabolism/New(var/max = 100, mob/living/carbon/parent_mob, var/met_class)
-	..(max, parent_mob)
+/datum/reagents/metabolism/New(var/max = 100, var/mob/living/carbon/parent_mob, var/met_class)
+	if(map_storage_loaded)
+		testing("reagents.metabolism.New() map_storage_loaded is true")
+		..(max, parent)
+	else
+		..(max, parent_mob)
 
 	metabolism_class = met_class
 	if(istype(parent_mob))
 		parent = parent_mob
+
+	ADD_SAVED_VAR(metabolism_class)
+	ADD_SAVED_VAR(parent)
 
 /datum/reagents/metabolism/proc/metabolize()
 	if(parent)

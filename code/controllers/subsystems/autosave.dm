@@ -2,6 +2,7 @@ SUBSYSTEM_DEF(autosave)
 	name = "Autosave"
 	wait = 3 HOURS
 	next_fire = 3 HOURS	// To prevent saving upon start.
+	runlevels = RUNLEVEL_GAME
 
 	var/saving = 0
 	var/announced = 0

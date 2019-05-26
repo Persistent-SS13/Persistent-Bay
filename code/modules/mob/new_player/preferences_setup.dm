@@ -58,14 +58,18 @@
 
 /datum/preferences/proc/dress_preview_mob(var/mob/living/carbon/human/mannequin, var/finalize = FALSE)
 	var/update_icon = FALSE
-	var/adjustflags = finalize? OUTFIT_RESET_EQUIPMENT : OUTFIT_ADJUSTMENT_SKIP_POST_EQUIP|OUTFIT_ADJUSTMENT_SKIP_ID_PDA
+	var/adjustflags = finalize? OUTFIT_RESET_EQUIPMENT : OUTFIT_ADJUSTMENT_SKIP_POST_EQUIP|OUTFIT_ADJUSTMENT_SKIP_ID_PDA|OUTFIT_ADJUSTMENT_SKIP_SURVIVAL_GEAR
 	copy_to(mannequin, !finalize)
 	mannequin.real_name = real_name
 
 	//Do default faction outfit
-	if(faction && faction.starter_outfit)
-		faction.starter_outfit.equip(mannequin, equip_adjustments = adjustflags)
-		update_icon = TRUE
+	if(faction)
+		var/datum/world_faction/fac = get_faction(src.faction)
+		if(fac && fac.starter_outfit)
+			var/decl/hierarchy/outfit/clothes = new fac.starter_outfit()
+			ASSERT(istype(clothes))
+			clothes.equip(mannequin, equip_adjustments = adjustflags)
+			update_icon = TRUE
 
 	//If we have selected a specific uniform, replace the default one
 	if(selected_under)
@@ -75,7 +79,7 @@
 	//Backpack
 	if(istype(backpack, /decl/backpack_outfit))
 		var/decl/backpack_outfit/outback = backpack
-		outback.equip(mannequin, equip_adjustments = adjustflags)
+		outback.spawn_backpack(mannequin, )
 		update_icon = TRUE
 
 	//Extra starter gear

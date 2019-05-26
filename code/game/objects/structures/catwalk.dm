@@ -11,6 +11,13 @@
 	var/hatch_open = FALSE
 	var/obj/item/stack/tile/mono/plated_tile
 
+/obj/structure/catwalk/New()
+	. = ..()
+	ADD_SAVED_VAR(hatch_open)
+	ADD_SAVED_VAR(plated_tile)
+
+	ADD_SKIP_EMPTY(plated_tile)
+
 /obj/structure/catwalk/Initialize()
 	. = ..()
 	for(var/obj/structure/catwalk/C in get_turf(src))
@@ -39,10 +46,10 @@
 	var/image/I
 	if(!hatch_open)
 		for(var/i = 1 to 4)
-			I = image('icons/obj/catwalks.dmi', "catwalk[connections[i]]", dir = 1<<(i-1))
+			I = image(icon, "catwalk[connections[i]]", dir = 1<<(i-1))
 			overlays += I
 	if(plated_tile)
-		I = image('icons/obj/catwalks.dmi', "plated")
+		I = image(icon, "plated")
 		I.color = plated_tile.color
 		overlays += I
 

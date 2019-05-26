@@ -1,12 +1,60 @@
 /mob/living/carbon/New()
-	//setup reagent holders
-	bloodstr = new/datum/reagents/metabolism(120, src, CHEM_BLOOD)
-	touching = new/datum/reagents/metabolism(1000, src, CHEM_TOUCH)
-	reagents = bloodstr
+	..()
+	//Restore any saved species before any sub-classes run its New() proc.
+	if(saved_species)
+		species = all_species[saved_species]
+		saved_species = null //no need to keep this around after load
+
+	ADD_SAVED_VAR(saved_species)
+	ADD_SAVED_VAR(virus2)
+	ADD_SAVED_VAR(antibodies)
+	ADD_SAVED_VAR(handcuffed)
+	ADD_SAVED_VAR(surgeries_in_progress)
+	ADD_SAVED_VAR(touching)
+	ADD_SAVED_VAR(nutrition)
+	ADD_SAVED_VAR(internal_organs_by_name) //Save only organs by name, since we don't want useless duplicate lists of organs
+	ADD_SAVED_VAR(organs_by_name)
+
+	ADD_SKIP_EMPTY(saved_species)
+	ADD_SKIP_EMPTY(virus2)
+	ADD_SKIP_EMPTY(antibodies)
+	ADD_SKIP_EMPTY(handcuffed)
+	ADD_SKIP_EMPTY(surgeries_in_progress)
+	ADD_SKIP_EMPTY(internal_organs_by_name)
+	ADD_SKIP_EMPTY(organs_by_name)
+
+/mob/living/carbon/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		//setup reagent holders
+		bloodstr = new/datum/reagents/metabolism(120, src, CHEM_BLOOD)
+		touching = new/datum/reagents/metabolism(1000, src, CHEM_TOUCH)
+		reagents = bloodstr
 
 	if (!default_language && species_language)
 		default_language = all_languages[species_language]
-	..()
+
+/mob/living/carbon/after_load()
+	. = ..()
+	bloodstr = reagents //Since reagents is saved, but not bloodstream
+
+	//Rebuild organ list, from saved organs
+	organs = list()
+	internal_organs = list()
+	for(var/name in organs_by_name)
+		organs |= organs_by_name[name]
+	for(var/name in internal_organs_by_name)
+		internal_organs |= internal_organs_by_name[name]
+
+/mob/living/carbon/human/before_save()
+	. = ..()
+	//Put the specie name as species type during saving
+	saved_species = species?.name
+
+/mob/living/carbon/human/after_save()
+	. = ..()
+	//Clear the saved species var to save some memory
+	saved_species = null
 
 /mob/living/carbon/Destroy()
 	QDEL_NULL(touching)

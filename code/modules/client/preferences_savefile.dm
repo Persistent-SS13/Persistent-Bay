@@ -1,18 +1,6 @@
 #define SAVEFILE_VERSION_MIN	8
 #define SAVEFILE_VERSION_MAX	17
 
-/proc/load_path(ckey,filename="preferences.sav")
-	if(!ckey)	return
-	return "data/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
-
-/proc/beta_path(ckey,filename="preferences.sav")
-	if(!ckey) return
-	return "exports/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
-
-/proc/exit_path(ckey,filename="preferences.sav")
-	if(!ckey)	return
-	return "exits/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
-
 /datum/preferences/proc/load_path(ckey,filename="preferences.sav")
 	if(!ckey)	return
 	path = load_path(ckey, filename)
@@ -87,16 +75,14 @@
 	return 1
 
 /datum/preferences/proc/save_character()
+	var/mob/mannequin = create_mannequin()
+	SScharacter_setup.save_character(chosen_slot, client.ckey, mannequin)
+	character_list = list()
 	// var/char_path = character_load_path(chosen_slot)
 	// if(!char_path)				return 0
 	// var/savefile/S = new /savefile(char_path)
 	// if(!S)					return 0
 	// S.cd = "/"
-	var/mob/mannequin = create_mannequin()
-	SScharacter_setup.save_character(chosen_slot, client.ckey, mannequin)
-	character_list = list()
-	qdel(mannequin)
-
 	//to_file(S["version"], SAVEFILE_VERSION_MAX)
 	// player_setup.save_character(S)
 	// loaded_character = S
@@ -113,6 +99,7 @@
 		return 0
 	return player_setup.update_setup(preferences, character)
 
+//Creates the dummy mob used to store initial character data in the save file
 /datum/preferences/proc/create_mannequin()
 	var/mob/living/carbon/human/mannequin = new()
 	dress_preview_mob(mannequin, TRUE)
@@ -164,11 +151,6 @@
 	else
 		mannequin.spawn_loc = "null"
 	mannequin.spawn_type = 2
-
-
-	//mannequin.species.equip_survival_gear(mannequin)
-	//mannequin.equip_to_slot_or_del(new /obj/item/clothing/shoes/black(mannequin),slot_shoes)
-
 
 	//Languages
 	for(var/token in cultural_info)

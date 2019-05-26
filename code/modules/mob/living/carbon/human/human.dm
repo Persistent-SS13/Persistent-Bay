@@ -13,20 +13,16 @@
 	var/step_count
 
 /mob/living/carbon/human/New(var/new_loc, var/new_species = null)
-
 	grasp_limbs = list()
 	stance_limbs = list()
-
 	if(!dna)
 		dna = new /datum/dna(null)
 		// Species name is handled by set_species()
-
 	if(!species)
 		if(new_species)
 			set_species(new_species,1)
 		else
 			set_species()
-
 	var/decl/cultural_info/culture = SSculture.get_culture(cultural_info[TAG_CULTURE])
 	if(culture)
 		real_name = culture.get_random_name(gender, species.name)
@@ -47,13 +43,26 @@
 
 	GLOB.human_mob_list |= src
 	..()
-
 	if(dna)
 		dna.ready_dna(src)
 		dna.real_name = real_name
 		dna.s_base = s_base
 		sync_organ_dna()
-	make_blood()
+		
+	ADD_SAVED_VAR(wearing_rig)
+	ADD_SAVED_VAR(stance_limbs)
+	ADD_SAVED_VAR(grasp_limbs)
+
+	ADD_SKIP_EMPTY(wearing_rig)
+	ADD_SKIP_EMPTY(stance_limbs)
+	ADD_SKIP_EMPTY(grasp_limbs)
+
+/mob/living/carbon/human/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		make_blood() //do this last
+	else
+		queue_icon_update()
 
 /mob/living/carbon/human/Destroy()
 	GLOB.human_mob_list -= src

@@ -692,7 +692,7 @@ var/PriorityQueue/all_feeds
 	var/default_telepad_x
 	var/default_telepad_y
 	var/default_telepad_z
-	var/decl/hierarchy/outfit/starter_outfit = /decl/hierarchy/outfit/frontier/starter //Outfit members of this faction spawn with by default
+	var/decl/hierarchy/outfit/starter_outfit = /decl/hierarchy/outfit/nexus/starter //Outfit members of this faction spawn with by default
 
 
 
@@ -1842,6 +1842,7 @@ var/PriorityQueue/all_feeds
 	var/network_uid = "network_uid"
 	var/network_password
 	var/network_invisible = FALSE
+	var/decl/hierarchy/outfit/starter_outfit = /decl/hierarchy/outfit/job //Faction's base outfit, is overriden by creation screen
 
 //Psy_commando:
 //In order to reliably have the faction spawn and not be deleted, we need to have the faction spawned in LateInitialize().

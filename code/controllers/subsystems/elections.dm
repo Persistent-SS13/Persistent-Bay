@@ -2,6 +2,7 @@ SUBSYSTEM_DEF(elections)
 	name = "Elections"
 	wait = 5 MINUTES
 	next_fire = 5 MINUTES	// To prevent firing upon start
+	runlevels = RUNLEVEL_GAME
 
 /datum/controller/subsystem/elections/stat_entry()
 	..("Next election check in [round((next_fire - world.time) / (1 MINUTE), 0.1)] minutes.")

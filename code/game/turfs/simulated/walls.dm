@@ -31,18 +31,6 @@
 	var/list/blend_objects = list(/obj/machinery/door, /obj/structure/wall_frame, /obj/structure/grille, /obj/structure/window/reinforced/full, /obj/structure/window/reinforced/polarized/full, /obj/structure/window/shuttle, ,/obj/structure/window/phoronbasic/full, /obj/structure/window/phoronreinforced/full) // Objects which to blend with
 	var/list/noblend_objects = list(/obj/machinery/door/window) //Objects to avoid blending with (such as children of listed blend objects.
 
-
-
-///turf/simulated/wall/r_wall/after_load()
-//	..()
-//	var/mat = material
-//	var/r_mat = reinf_material
-//	var/p_mat = material
-//	ChangeTurf(/turf/simulated/wall)
-//	material = mat
-//	reinf_material = r_mat
-//	material = p_mat
-
 /turf/simulated/wall/New(var/newloc, var/materialtype, var/rmaterialtype, var/girder_mat, var/girder_reinf_mat)
 	..(newloc)
 	//icon_state = "blank"
@@ -378,4 +366,3 @@
 
 /turf/simulated/wall/r_wall/tungsten/New(newloc, material/mat, material/r_mat, material/p_mat)
 	. = ..(newloc, src.material, src.reinf_material, src.material) //Keeps the base ctor from being a dipshit
-	

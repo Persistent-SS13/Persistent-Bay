@@ -49,7 +49,8 @@
 
 /mob/Initialize()
 	. = ..()
-	skillset = new skillset(src)
+	if(!map_storage_loaded)
+		skillset = new skillset(src)
 	move_intent = decls_repository.get_decl(move_intent)
 	START_PROCESSING(SSmobs, src)
 
@@ -1261,4 +1262,61 @@
 		to_chat(src, "<span class='warning'>This verb may only be used by living mobs, sorry.</span>")
 	return
 	
+//For mobs with organs
+/mob/proc/sync_organ_dna()
+	return
 
+/mob/New(loc, ...)
+	. = ..()
+	ADD_SAVED_VAR(lastKnownIP)
+	ADD_SAVED_VAR(stat)
+	ADD_SAVED_VAR(sdisabilities)
+	ADD_SAVED_VAR(disabilities)
+
+	ADD_SAVED_VAR(timeofdeath)
+	ADD_SAVED_VAR(radiation)
+	ADD_SAVED_VAR(phoronation)
+	ADD_SAVED_VAR(faction) //Need to save for pacified pet mobs
+	ADD_SAVED_VAR(blinded)
+	ADD_SAVED_VAR(ear_deaf)
+	ADD_SAVED_VAR(paralysis)
+	ADD_SAVED_VAR(stunned)
+	ADD_SAVED_VAR(druggy)
+	ADD_SAVED_VAR(confused)
+	ADD_SAVED_VAR(sleeping)
+	ADD_SAVED_VAR(resting)
+	ADD_SAVED_VAR(weakened)
+	ADD_SAVED_VAR(drowsyness)
+	ADD_SAVED_VAR(bhunger)
+	ADD_SAVED_VAR(lying)
+	ADD_SAVED_VAR(riding)
+	ADD_SAVED_VAR(buckled)
+	ADD_SAVED_VAR(bodytemperature)
+	ADD_SAVED_VAR(inertia_dir)
+
+	ADD_SAVED_VAR(dna)
+	ADD_SAVED_VAR(l_hand)
+	ADD_SAVED_VAR(r_hand)
+	ADD_SAVED_VAR(back)
+	ADD_SAVED_VAR(s_active)
+	ADD_SAVED_VAR(wear_mask)
+	ADD_SAVED_VAR(pinned)
+	ADD_SAVED_VAR(embedded)
+	ADD_SAVED_VAR(active_genes)
+	ADD_SAVED_VAR(mutations)
+	ADD_SAVED_VAR(skillset)
+
+	ADD_SKIP_EMPTY(dna)
+	ADD_SKIP_EMPTY(l_hand)
+	ADD_SKIP_EMPTY(r_hand)
+	ADD_SKIP_EMPTY(back)
+	ADD_SKIP_EMPTY(s_active)
+	ADD_SKIP_EMPTY(wear_mask)
+	ADD_SKIP_EMPTY(pinned)
+	ADD_SKIP_EMPTY(embedded)
+	ADD_SKIP_EMPTY(active_genes)
+	ADD_SKIP_EMPTY(mutations)
+	ADD_SKIP_EMPTY(skillset)
+
+/mob/after_load()
+	. = ..()

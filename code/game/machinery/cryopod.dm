@@ -112,11 +112,11 @@
 			C.SetStasis(2)
 
 		//Allow a one minute gap between entering the pod and actually despawning.
-		if ((world.time - time_entered < time_till_despawn))
+		if ((world.time - time_entered) < time_till_despawn)
 			return
 
 		var/mob/M = occupant
-		if(M && !M.client && !M.is_dead()) //Occupant is living and has no client.
+		if(M && !M.is_dead()) //Occupant is living
 			if(!control_computer)
 				if(!find_control_computer())
 					log_debug("[src] \ref[src] ([x], [y], [z]): No control computer, skipping advanced stuff.")
@@ -291,7 +291,7 @@
 	var/mob/character
 	var/key
 	var/name = ""
-	var/dir = 0
+	var/saveslot = 0
 	var/islace = istype(occupant, /obj/item/organ/internal/stack)
 
 	if(istype(occupant, /obj/item/organ/internal/stack))
@@ -305,7 +305,7 @@
 			player.ckey = S.lacemob.stored_ckey
 		name = S.get_owner_name()
 		character = S.lacemob
-		dir = S.lacemob.save_slot
+		saveslot = S.lacemob.save_slot
 		S.lacemob.spawn_loc = req_access_faction
 		S.lacemob.spawn_loc_2 = network
 		S.lacemob.spawn_type = 1
@@ -322,7 +322,7 @@
 			player.ckey = M.stored_ckey
 		name = M.real_name
 		character = M
-		dir = M.save_slot
+		saveslot = M.save_slot
 		if(!autocryo)
 			M.spawn_loc = req_access_faction
 			M.spawn_loc_2 = network
@@ -331,20 +331,20 @@
 
 	key = copytext(key, max(findtext(key, "@"), 1))
 
-	if(!dir)
+	if(!saveslot)
 		log_and_message_admins("Warning! [key]'s [occupant] failed to find a save_slot, and is picking one!")
 		for(var/file in flist(load_path(key, "")))
 			var/firstNumber = text2num(copytext(file, 1, 2))
 			if(firstNumber)
-				var/storedName = CharacterName(firstNumber, key)
+				var/storedName = SScharacter_setup.peek_character_name(firstNumber, key)
 				if(storedName == name)
-					dir = firstNumber
+					saveslot = firstNumber
 					log_and_message_admins("[key]'s [occupant] found a savefile with it's realname [file]")
 					break
-		if(!dir)
-			dir++
-			while(fexists(load_path(key, "[dir].sav")))
-				dir++
+		if(!saveslot)
+			saveslot++
+			while(fexists(load_path(key, "[saveslot].sav")))
+				saveslot++
 
 	//Ignore all items not on the preservation list.
 	var/list/items = occupant.contents.Copy()
@@ -406,16 +406,16 @@
 	if(islace && control_computer)
 		control_computer.add_lace(occupant, src)
 
-	var/savefile/F = new(load_path(key, "[dir].sav"))
+	var/savefile/F = new(load_path(key, "[saveslot].sav"))
 	to_file(F["name"], name)
 	to_file(F["mob"], character)
 	if(req_access_faction == "betaquad")
-		var/savefile/E = new(beta_path(key, "[dir].sav"))
+		var/savefile/E = new(beta_path(key, "[saveslot].sav"))
 		to_file(E["name"], name)
 		to_file(E["mob"], character)
 		to_file(E["records"], Retrieve_Record(name))
 	if(req_access_faction == "exiting")
-		var/savefile/E = new(beta_path(key, "[dir].sav"))
+		var/savefile/E = new(beta_path(key, "[saveslot].sav"))
 		to_file(E["name"], name)
 		to_file(E["mob"], character)
 		to_file(E["records"], Retrieve_Record(name))

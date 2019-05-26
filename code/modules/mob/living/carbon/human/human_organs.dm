@@ -240,7 +240,7 @@
 		else
 			visible_message("<B>\The [src]</B> drops what they were holding in their [grasp_name]!")
 
-/mob/living/carbon/human/proc/sync_organ_dna()
+/mob/living/carbon/human/sync_organ_dna()
 	var/list/all_bits = internal_organs|organs
 	for(var/obj/item/organ/O in all_bits)
 		O.set_dna(dna)

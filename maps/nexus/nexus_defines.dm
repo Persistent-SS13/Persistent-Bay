@@ -83,3 +83,36 @@ proc/GetNbSavedZLevels()
 		new /datum/event_meta(EVENT_LEVEL_MAJOR, "Containment Breach",	/datum/event/prison_break/station,0,list(ASSIGNMENT_ANY = 5)),
 		new /datum/event_meta(EVENT_LEVEL_MAJOR, "Space Vines",			/datum/event/spacevine, 		0,	list(ASSIGNMENT_ENGINEER = 15), 1),
 	)
+
+//Spawn code particular to this map
+//This proc is called right after a new character is spawned for the first time
+//It plays the spawn cutscene and etc 
+/datum/map/nexus/on_new_spawn(var/mob/new_player/newchar)
+	if(!istype(newchar))
+		return
+	if(src.intro_icon)
+		var/obj/screen/cinematic
+		cinematic = new
+		cinematic.icon = src.intro_icon
+		cinematic.icon_state = "blank"
+		cinematic.plane = HUD_PLANE
+		cinematic.layer = HUD_ABOVE_ITEM_LAYER
+		cinematic.mouse_opacity = 2
+		cinematic.screen_loc = "WEST,SOUTH"
+		
+		if(newchar.client)
+			newchar.client.screen += cinematic
+			flick("cinematic",cinematic)
+			sleep(106)
+			newchar.client.screen -= cinematic
+
+	newchar.spawn_type = 1
+	sound_to(newchar, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
+	spawn()
+		shake_camera(newchar, 3, 1)
+	newchar.druggy = 3
+	newchar.Weaken(3)
+	to_chat(newchar, "<span class='danger'>Your trip through the frontier gateway is like nothing you have ever experienced!</span>")
+	to_chat(newchar, "In fact, it was like your consciousness was ripped from your body and then hammered back inside moments later.")
+	to_chat(newchar, "However, you've made it to the uncharted frontier. You don't know when you'll be able to return to the places you've left behind.")
+	to_chat(newchar, "No time to think about that, your first priority is to get your bearings and find a job that pays. Whatever you decide to do in this new frontier, you're going to need a lot more cash than what you have now.")

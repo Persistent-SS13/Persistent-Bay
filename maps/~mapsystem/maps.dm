@@ -364,3 +364,8 @@ var/const/MAP_HAS_RANK = 2		//Rank system, also togglable
 		num2text(SUP_FREQ)   = list(access_cargo),
 		num2text(SRV_FREQ)   = list(access_janitor, access_hydroponics),
 	)
+
+//This proc is called right after a new character is spawned for the first time
+//It plays the spawn cutscene and etc 
+/datum/map/proc/on_new_spawn(var/mob/new_player/newchar)
+	return

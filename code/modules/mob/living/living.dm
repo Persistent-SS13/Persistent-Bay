@@ -1,9 +1,31 @@
 /mob/living/New()
 	..()
+	ADD_SAVED_VAR(health)
+	ADD_SAVED_VAR(silent)
+	ADD_SAVED_VAR(eye_blind)
+	ADD_SAVED_VAR(eye_blurry)
+	ADD_SAVED_VAR(ear_damage)
+	ADD_SAVED_VAR(stuttering)
+	ADD_SAVED_VAR(slurring)
+
+	ADD_SKIP_EMPTY(silent)
+	ADD_SKIP_EMPTY(eye_blind)
+	ADD_SKIP_EMPTY(eye_blurry)
+	ADD_SKIP_EMPTY(ear_damage)
+	ADD_SKIP_EMPTY(stuttering)
+	ADD_SKIP_EMPTY(slurring)
+
+/mob/living/Initialize()
+	. = ..()
 	if(stat == DEAD)
 		add_to_dead_mob_list()
 	else
 		add_to_living_mob_list()
+
+/mob/living/after_load()
+	. = ..()
+	if(stat != DEAD)
+		updatehealth()
 
 //mob verbs are faster than object verbs. See mob/verb/examine.
 /mob/living/verb/pulled(atom/movable/AM as mob|obj in oview(1))

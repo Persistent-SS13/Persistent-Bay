@@ -36,7 +36,7 @@ SUBSYSTEM_DEF(music)
 				var/datum/music_file/musicFile = toPlay["[M.z]"]
 
 				if(musicFile)
-					sound_to(M, sound(musicFile.path, repeat = 0, wait = 0, volume = 30, channel = 1))
+					sound_to(M, sound(musicFile.path, repeat = 0, wait = 0, volume = 30, channel = GLOB.ambience_sound_channel))
 
 /datum/controller/subsystem/music/proc/GetMusicByGenre(var/G)
 	var/list/search = list()

@@ -16,6 +16,10 @@
 	if(ispath(cell))
 		cell = new cell(src)
 	..()
+	ADD_SAVED_VAR(open)
+	ADD_SAVED_VAR(cell)
+
+	ADD_SKIP_EMPTY(cell)
 
 /obj/item/organ/internal/cell/proc/percent()
 	if(!cell)
@@ -121,6 +125,14 @@
 	update_from_mmi()
 	persistantMind = owner.mind
 	ownerckey = owner.ckey
+
+	ADD_SAVED_VAR(stored_mmi)
+	ADD_SKIP_EMPTY(stored_mmi)
+
+/obj/item/organ/internal/mmi_holder/after_load()
+	. = ..()
+	if(stored_mmi)
+		update_from_mmi()
 
 /obj/item/organ/internal/mmi_holder/proc/update_from_mmi()
 

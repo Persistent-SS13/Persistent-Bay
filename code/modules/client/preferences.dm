@@ -419,9 +419,8 @@ datum/preferences
 	dat += "<body>"
 	dat += "<tt><center>"
 	dat += "<b>Select the character slot you want to save this character under.</b><hr>"
-	var/ind = 0
 	for(var/ind = 0, ind < slots, ind++)
-		var/name = SScharacter_setup.peek_character_name(i, client.ckey)
+		var/name = SScharacter_setup.peek_character_name(ind, client.ckey)
 		if(!isnull(name))
 			dat += "<b>[name]</b><br>"
 		else

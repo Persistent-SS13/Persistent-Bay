@@ -33,12 +33,11 @@
 
 	var/output = list()
 	output += "<div align='center'><hr><br>"
-	output += "<a href='byond://?src=\ref[src];createCharacter=1'>Create A New Character</a><br><br>"
-	output += "<a href='byond://?src=\ref[src];deleteCharacter=1'>Delete A Character</a><br><br>"
-
 	if(GAME_STATE < RUNLEVEL_GAME)
 		output += "<span class='average'><b>The Game Is Loading!</b></span><br><br>"
 	else
+		output += "<a href='byond://?src=\ref[src];createCharacter=1'>Create A New Character</a><br><br>"
+		output += "<a href='byond://?src=\ref[src];deleteCharacter=1'>Delete A Character</a><br><br>"
 		output += "<a href='byond://?src=\ref[src];joinGame=1'>Join Game!</a><br><br>"
 
 	if(check_rights(R_DEBUG, 0, client))
@@ -65,7 +64,7 @@
 
 	output += "</div>"
 
-	panel = new(src, "Persistent SS13","Persistent SS13", 250, 350, src)
+	panel = new(src, "Persistent SS13","Persistent SS13", 250, 400, src)
 	panel.set_window_options("can_close=0")
 	panel.set_content(JOINTEXT(output))
 	panel.open()
@@ -426,43 +425,13 @@
 
 /mob/proc/finishLoadCharacter()
 	if(spawn_type == 2)
-		if(GLOB.using_map.intro_icon)
-			var/obj/screen/cinematic
-
-			cinematic = new
-			cinematic.icon = GLOB.using_map.intro_icon
-			cinematic.icon_state = "blank"
-			cinematic.plane = HUD_PLANE
-			cinematic.layer = HUD_ABOVE_ITEM_LAYER
-			cinematic.mouse_opacity = 2
-			cinematic.screen_loc = "WEST,SOUTH"
-
-			if(client)
-				client.screen += cinematic
-
-				flick("cinematic",cinematic)
-				sleep(106)
-				client.screen -= cinematic
-
-		spawn_type = 1
-		sound_to(src, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
-		spawn()
-			shake_camera(src, 3, 1)
-		druggy = 3
-		Weaken(3)
-		to_chat(src, "<span class='danger'>Your trip through the frontier gateway is like nothing you have ever experienced!</span>")
-		to_chat(src, "In fact, it was like your consciousness was ripped from your body and then hammered back inside moments later.")
-		to_chat(src, "However, you've made it to the uncharted frontier. You don't know when you'll be able to return to the places you've left behind.")
-		to_chat(src, "No time to think about that, your first priority is to get your bearings and find a job that pays. Whatever you decide to do in this new frontier, you're going to need a lot more cash than what you have now.")
-	else
-		to_chat(src, "You eject from your cryosleep, ready to resume life in the frontier.")
+		GLOB.using_map.on_new_spawn(src) //Moved to overridable map specific code
 
 /mob/new_player/proc/deleteCharacter()
 	var/charname = SScharacter_setup.peek_character_name(chosen_slot, ckey)
 	if(input("Are you SURE you want to delete [charname]? THIS IS PERMANENT. enter the character\'s full name to conform.", "DELETE A CHARACTER", "") == charname)
 		SScharacter_setup.delete_character(chosen_slot, ckey)
 	load_panel.close()
-
 
 /mob/new_player/proc/crewManifestPanel()
 	var/list/factions = list()

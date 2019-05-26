@@ -8,7 +8,7 @@
 	network_name 	= "NEXUSGOV-NET"//"NexusNet"
 	network_uid 	= "nx_net"
 	purpose 		= "To represent the citizenship of Nexus and keep the station operating."
-	starter_outfit	= /decl/hierarchy/outfit/frontier/citizen
+	starter_outfit	= /decl/hierarchy/outfit/nexus/citizen
 
 	//Mapper helpers
 	icon 			= 'icons/misc/map_helpers.dmi'
@@ -19,11 +19,11 @@
 	name 			= "Resident"
 	name_short 		= "Resident"
 	name_tag 		= "RD"
-	uid 			= "null"
+	uid 			= "resident"
 	password 		= ""
 	network_name 	= "FreeNet"
 	network_uid 	= "free_net"
-	starter_outfit	= /decl/hierarchy/outfit/frontier/starter
+	starter_outfit	= /decl/hierarchy/outfit/nexus/starter
 
 	//Mapper helpers
 	icon 			= 'icons/misc/map_helpers.dmi'

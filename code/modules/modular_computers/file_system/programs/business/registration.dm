@@ -141,7 +141,7 @@
 			business_name = select_name
 
 		if("change_business_ceo")
-			var/select_name = input(usr,"Enter the full name of the starting CEO.","CEO", ceo_name) as null|text
+			var/select_name =  sanitize(input(usr,"Enter the full name of the starting CEO.","CEO", ceo_name) as null|text)
 			if(!select_name) return
 			if(!Retrieve_Record(select_name))
 				to_chat(user, "Record not found for [select_name].")

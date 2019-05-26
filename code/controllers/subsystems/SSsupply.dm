@@ -1,4 +1,5 @@
 GLOBAL_DATUM_INIT(material_marketplace, /datum/material_marketplace, new)
+GLOBAL_DATUM_INIT(contract_database, /datum/contract_database, new)
 
 SUBSYSTEM_DEF(supply)
 	name = "Supply"
@@ -9,6 +10,211 @@ SUBSYSTEM_DEF(supply)
 /datum/controller/subsystem/supply/fire(resumed = FALSE)
 	supply_controller.process()
 	GLOB.material_marketplace.process()
+	GLOB.contract_database.process()
+
+/datum/contract_database/proc/process()
+	for(var/datum/recurring_contract/contract in all_contracts)
+		contract.process()
+
+/datum/contract_database/proc/get_service_desc(var/service)
+	switch(service)
+		if(CONTRACT_SERVICE_NONE)
+			return ""
+		if(CONTRACT_SERVICE_MEDICAL)
+			return "The signing party will be able to call in medical emergencies through a medical-response beacon. If its health drops into a critical state, a medical emergency will trigger. For organization contracts this applies to everyone clocked in to the signing organization."
+		if(CONTRACT_SERVICE_SECURITY)
+			return "Areas trespasser alarms from the signing party will be forwarded to the contracted organization. The signing party will be able to call security emergencies through a security-response beacon. For organization contracts this applies to everyone clocked in to the signing organization (but not areas those employees have leased)."
+		if(CONTRACT_SERVICE_LEASE)
+			return "As long as this contract is in place, this contracts APC and area it controls will be considered under the control of the signing party. The trespasser alarm will respond based on the settings of the signing party."
+	return ""
+
+/datum/contract_database
+	var/list/all_contracts
+	
+/datum/contract_database/proc/add_contract(var/datum/recurring_contract/contract)
+	if(contract.auto_pay)
+		if(contract.handle_payment())
+			contract.add_services()
+			all_contracts |= contract	
+	
+/datum/contract_database/proc/get_contracts(var/uid, var/typee)
+	var/list/contracts = list()
+	for(var/datum/recurring_contract/contract in all_contracts)
+		if((contract.payee == uid && contract.payee_type == typee && !contract.payee_clear) || (contract.payer == uid && contract.payer_type == typee && !contract.payer_clear))
+			contracts |= contract
+	return contracts
+	
+	
+	
+/datum/recurring_contract/proc/get_status()
+	switch(status)
+		if(CONTRACT_STATUS_CANCELLED)
+			return "Cancelled"
+		if(CONTRACT_STATUS_COMPLETED)
+			return "Completed"
+		if(CONTRACT_STATUS_OPEN)
+			return "Ongoing"
+
+/datum/recurring_contract/proc/get_paytype()
+	switch(auto_pay)
+		if(CONTRACT_PAY_NONE)
+			return "None"
+		if(CONTRACT_PAY_DAILY)
+			return "[pay_amount] Daily"
+		if(CONTRACT_PAY_WEEKLY)
+			return "[pay_amount] Weekly"
+		
+/datum/recurring_contract/proc/get_marked(var/uid, var/type = CONTRACT_BUSINESS)
+	if(payee_type == type)
+		if(uid == payee)
+			if(payee_completed)
+				return 1
+	if(payer_type == type)
+		if(uid == payer)
+			if(payer_completed)
+				return 1
+				
+/datum/recurring_contract/proc/handle_payment()
+	var/datum/money_account/payer_account
+	var/datum/money_account/payee_account
+	if(payer_type == CONTRACT_BUSINESS)
+		var/datum/world_faction/faction = get_faction(payer)
+		if(faction)
+			payer_account = faction.central_account
+	else
+		var/datum/computer_file/report/crew_record/R = Retrieve_Record(payer)
+		if(R)
+			payer_account = R.linked_account
+	if(payer_account)
+		if(payee_type == CONTRACT_BUSINESS)
+			var/datum/world_faction/faction = get_faction(payee)
+			if(faction)
+				payee_account = faction.central_account
+		else
+			var/datum/computer_file/report/crew_record/R = Retrieve_Record(payee)
+			if(R)
+				payee_account = R.linked_account
+		if(payee_account)
+			if(payee_account.money >= pay_amount)
+				var/datum/transaction/T = new("[payee] (via recurring contract)", "Contract Payment", -pay_amount, "Recurring Contract")
+				payer_account.do_transaction(T)
+				//transfer the money
+				var/datum/transaction/Te = new("[payer] (via recurring contract)", "Contract Payment", pay_amount, "Recurring Contract")
+				payee_account.do_transaction(Te)
+				last_pay = world.realtime
+				return 1
+	return 0
+
+/datum/recurring_contract/proc/add_services()
+	var/datum/world_faction/faction = get_faction(payee)
+	if(!faction) return
+	if(CONTRACT_STATUS_OPEN)
+		if(func == CONTRACT_SERVICE_MEDICAL)
+			if(payer_type == CONTRACT_BUSINESS)
+				faction.service_medical_business |= payer
+			else
+				faction.service_medical_personal |= payer
+		if(func == CONTRACT_SERVICE_SECURITY)
+			if(payer_type == CONTRACT_BUSINESS)
+				faction.service_security_business |= payer
+			else
+				faction.service_security_personal |= payer
+				
+/datum/recurring_contract/proc/remove_services()
+	var/datum/world_faction/faction = get_faction(payee)
+	if(!faction) return
+	if(CONTRACT_STATUS_OPEN)
+		if(func == CONTRACT_SERVICE_MEDICAL)
+			if(payer_type == CONTRACT_BUSINESS)
+				faction.service_medical_business -= payer
+			else
+				faction.service_medical_personal -= payer
+		if(func == CONTRACT_SERVICE_SECURITY)
+			if(payer_type == CONTRACT_BUSINESS)
+				faction.service_security_business -= payer
+			else
+				faction.service_security_personal -= payer
+	
+/datum/recurring_contract/after_load()
+	add_services()
+	
+/datum/recurring_contract/proc/update_status()
+	if(CONTRACT_STATUS_OPEN)
+		if(payee_cancelled)
+			cancel_party = payee
+			status = CONTRACT_STATUS_CANCELLED
+			cancel_reason = "Manual Cancel"
+		if(payer_cancelled)
+			cancel_party = payer
+			status = CONTRACT_STATUS_CANCELLED
+			cancel_reason = "Manual Cancel"
+		if(payee_completed && payer_completed)
+			status = CONTRACT_STATUS_COMPLETED
+	if(payer_clear && payee_clear)
+		GLOB.contract_database.all_contracts -= src
+	
+/datum/recurring_contract/proc/process()
+	if(auto_pay == CONTRACT_PAY_DAILY)
+		if(world.realtime >= (last_pay + 1 DAY))
+			if(!handle_payment())
+				cancel_party = payer
+				cancel_reason = "Insufficent funds for autopay"
+				status = CONTRACT_STATUS_CANCELLED
+				remove_services()
+	if(auto_pay == CONTRACT_PAY_WEEKLY)
+		if(world.realtime >= (last_pay + 7 DAYS))
+			if(!handle_payment())
+				cancel_party = payer
+				cancel_reason = "Insufficent funds for autopay"
+				status = CONTRACT_STATUS_CANCELLED
+				remove_services()
+	update_status()
+	
+/datum/recurring_contract
+	var/name
+	var/payee_type = CONTRACT_BUSINESS
+	var/payer_type = CONTRACT_BUSINESS
+	
+	var/payee = ""
+	var/payer = ""
+	
+	var/details = ""
+	
+	var/payee_cancelled = 0
+	var/payee_completed = 0
+	var/payee_clear = 0
+	
+	var/payer_cancelled = 0
+	var/payer_completed = 0
+	var/payer_clear = 0
+	
+	var/auto_pay = CONTRACT_PAY_NONE
+	var/pay_amount = 0
+	
+	var/last_pay = 0 // real time the payment went through
+	
+	var/func = "None"
+	
+	var/status = CONTRACT_STATUS_OPEN
+	
+	var/signer_name = ""
+	
+	var/cancel_party = ""
+	var/cancel_reason = ""
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
 
 /datum/material_marketplace
 	var/datum/material_market_entry/steel/steel

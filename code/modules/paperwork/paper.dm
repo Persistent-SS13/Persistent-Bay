@@ -541,7 +541,7 @@
 	if(!usr || (usr.stat || usr.restrained()))
 		return
 	if(href_list["connect"])
-		var/select_name = input(usr,"Enter the full name of the business.","Connect Business", "") as null|text
+		var/select_name =  sanitize(input(usr,"Enter the full name of the business.","Connect Business", "") as null|text)
 		var/datum/small_business/viewing = get_business(select_name)
 		if(viewing && src.Adjacent(usr))
 			business_name = viewing.name

@@ -221,6 +221,7 @@
 				to_chat(usr, "You must wait before printing.")
 				return
 			last_print = world.time + 10 SECONDS
+			playsound(get_turf(program.computer), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
 			var/obj/item/weapon/paper/contract/contract = new()
 			var/t = {"
 					<font face='Verdana' color=blue>
@@ -252,7 +253,7 @@
 			"}
 			contract.info = t
 			contract.name = selected_contract.name
-			contract.cancelled = 1
+			contract.approved = 1
 			contract.update_icon()
 		if("mark_complete")
 			if(selected_contract.payee_type == CONTRACT_BUSINESS && selected_contract.payee == connected_faction.uid)

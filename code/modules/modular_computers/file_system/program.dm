@@ -27,7 +27,7 @@
 	var/operator_skill = SKILL_MIN                  // Holder for skill value of current/recent operator for programs that tick.
 	var/democratic = 0
 	var/business = 0
-	var/required_module = 0
+	var/required_module
 
 
 /datum/computer_file/program/New(var/obj/item/modular_computer/comp = null)
@@ -80,7 +80,7 @@
 		return
 	if(get_file(newname))
 		return
-	
+
 	var/datum/computer_file/data/F = new file_type(md = metadata)
 	F.filename = newname
 	F.stored_data = data
@@ -142,15 +142,28 @@
 		return 0
 	if(democratic)
 		if(!(computer && computer.network_card && computer.network_card.connected_network && istype(computer.network_card.connected_network.holder, /datum/world_faction/democratic)))
-			to_chat(user, "<span class='notice'>\The [computer] must be connected to the government network for this program to run.</span>")
+			if(loud)
+				to_chat(user, "<span class='notice'>\The [computer] must be connected to the government network for this program to run.</span>")
 			return 0
 	if(business)
 		if(!(computer && computer.network_card && computer.network_card.connected_network && istype(computer.network_card.connected_network.holder, /datum/world_faction/business)))
-			to_chat(user, "<span class='notice'>\The [computer] must be connected to a business network for this program to run.</span>")
-			return 0		
+			if(loud)
+				to_chat(user, "<span class='notice'>\The [computer] must be connected to a business network for this program to run.</span>")
+			return 0
+		if(required_module)
+			if((computer && computer.network_card && computer.network_card.connected_network && computer.network_card.connected_network.holder))
+				var/datum/world_faction/business/business = computer.network_card.connected_network.holder
+				if(!istype(business.module, required_module))
+					if(loud)
+						to_chat(user, "<span class='notice'>\The [computer] must be connected to a business that has the correct module for this program..</span>")
+					return 0
+			else
+				to_chat(user, "<span class='notice'>\The [computer] must be connected to a business that has the correct module for this program..</span>")
+				return 0
+
 	if(!access_to_check) // No required_access, allow it.
 		return 1
-		
+
 	var/obj/item/weapon/card/id/I = user.GetIdCard()
 	if(!I)
 		if(loud)
@@ -177,7 +190,7 @@
 // This is performed on program startup. May be overriden to add extra logic. Remember to include ..() call. Return 1 on success, 0 on failure.
 // When implementing new program based device, use this to run the program.
 /datum/computer_file/program/proc/run_program(var/mob/living/user)
-	if(can_run(user, 1) || !requires_access_to_run)
+	if(can_run(user, 1))
 		if(nanomodule_path)
 			NM = new nanomodule_path(src, new /datum/topic_manager/program(src), src)
 		if(requires_ntnet && network_destination)

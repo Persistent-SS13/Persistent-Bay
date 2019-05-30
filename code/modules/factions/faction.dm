@@ -98,6 +98,9 @@ var/PriorityQueue/all_feeds
 		if(sign_type == CONTRACT_BUSINESS)
 			var/obj/item/weapon/card/id/id = usr.get_idcard()
 			if(id)
+				if(id.selected_faction == contract_payee)
+					to_chat(usr, "An organization cannot sign its own contract.")
+					return 0
 				var/datum/world_faction/connected_faction = get_faction(id.selected_faction)
 				if(connected_faction)
 					if(has_access(list(core_access_contracts), list(), usr.GetAccess(connected_faction.uid)))
@@ -385,6 +388,9 @@ var/PriorityQueue/all_feeds
 
 	var/uid
 
+	var/announce = 0
+	var/cost = 0
+
 /datum/NewsIssue
 	var/name = "None"
 	var/list/stories = list()
@@ -395,6 +401,9 @@ var/PriorityQueue/all_feeds
 
 	var/uid
 
+	var/cost = 0
+	
+	
 /datum/NewsFeed
 	var/name = "None"
 	var/visible = 0
@@ -404,8 +413,6 @@ var/PriorityQueue/all_feeds
 	var/per_issue = 60
 	var/announcement = "Breaking News!"
 	var/last_published = 0
-
-
 	var/datum/small_business/parent
 
 /datum/NewsFeed/New()
@@ -413,7 +420,10 @@ var/PriorityQueue/all_feeds
 	current_issue.parent = src
 	current_issue.name = "[name] News Issue"
 	all_feeds.Enqueue(src)
+	
+	
 /datum/NewsFeed/proc/publish_issue()
+	
 	for(var/obj/machinery/newscaster/caster in allCasters)
 		caster.newsAlert("[name] just published a full issue! [current_issue.name]")
 	all_issues |= current_issue
@@ -427,9 +437,15 @@ var/PriorityQueue/all_feeds
 /datum/NewsFeed/proc/publish_story(var/datum/NewsStory/story)
 	current_issue.stories |= story
 	story.parent = current_issue
-	for(var/obj/machinery/newscaster/caster in allCasters)
-		caster.newsAlert("(From [name]) [announcement] ([story.name])")
+	if(story.announce)
+		for(var/obj/machinery/newscaster/caster in allCasters)
+			caster.newsAlert("(From [name]) [announcement] ([story.name])")
 	GLOB.recent_articles |= story
+
+
+/datum/LibraryDatabase
+	var/list/books = list()
+	
 
 
 /datum/small_business
@@ -826,8 +842,9 @@ var/PriorityQueue/all_feeds
 	
 	var/list/service_security_personal = list() // list of all people linked to the security services
 
-
-
+	var/datum/NewsFeed/feed
+	var/datum/LibraryDatabase/library
+	
 /proc/spawn_nexus_gov()
 	var/datum/world_faction/democratic/nexus = new()
 	nexus.name = "Nexus City Government"
@@ -1474,8 +1491,8 @@ var/PriorityQueue/all_feeds
 /datum/world_faction/business/New()
 	..()
 	CEO = new()
-
-
+	feed = new()
+	library = new()
 /datum/world_faction/business/proc/pay_dividends(var/datum/money_account/account, var/amount)
 	var/ceo_amount
 	var/stock_amount
@@ -1742,6 +1759,7 @@ var/PriorityQueue/all_feeds
 	limits = new()
 	research = new()
 	inventory = new()
+	
 
 /datum/world_faction/proc/rebuild_cargo_telepads()
 	cargo_telepads.Cut()
@@ -2666,19 +2684,6 @@ var/PriorityQueue/all_feeds
 	name = "Publishing"
 	desc = "The Publishing specialization grants 200 extra tiles to the area limit and an engineering fabricator and tech limit. You can build a proper library and publishing house, or perhaps some other artistic facility."
 	limits = /datum/machine_limits/media/spec/bookpublishing
-
-
-
-/datum/business_module/medical
-
-/datum/business_module/retail
-
-/datum/business_module/service
-
-/datum/business_module/mining
-
-/datum/business_module/media
-
 
 
 

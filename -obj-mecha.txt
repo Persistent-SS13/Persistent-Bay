@@ -1,0 +1,1 @@
+contents%0d%0a=&equipment%0d%0a=&cell%0d%0a=&dna%0d%0a=%0d%0a&internal_tank%0d%0a=&health%0d%0a=&occupant%0d%0a=&internal_damage%0d%0a=&cabin_air%0d%0a=&use_internal_tank%0d%0a=&lights%0d%0a=&dropped_items%0d%0a=&state%0d%0a=&maint_access%0d%0a=&connected_port

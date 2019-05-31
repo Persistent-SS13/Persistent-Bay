@@ -1,0 +1,1 @@
+target_temperature%0d%0a=&TLV%0d%0a=&wiresexposed%0d%0a=&locked%0d%0a=&mode%0d%0a=&aidisabled%0d%0a=&oxygen_dangerlevel%0d%0a=&co2_dangerlevel%0d%0a=&rcon_setting%0d%0a=&regulating_temperature%0d%0a=&report_danger_level

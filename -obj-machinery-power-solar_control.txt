@@ -1,0 +1,1 @@
+%0d%0a=&connected_tracker%0d%0a=&connected_panels%0d%0a=&track%0d%0a=&trackrate%0d%0a=&targetdir

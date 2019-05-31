@@ -1,0 +1,1 @@
+cell_type%0d%0a=&power_supply%0d%0a=&charge_meter

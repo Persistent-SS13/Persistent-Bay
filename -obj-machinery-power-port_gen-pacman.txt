@@ -1,0 +1,1 @@
+sheets%0d%0a=&sheet_left%0d%0a=&temperature%0d%0a=&overheating

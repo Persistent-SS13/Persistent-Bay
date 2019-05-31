@@ -1,0 +1,1 @@
+autolinkers%0d%0a=&id%0d%0a=&network%0d%0a=&freq_listening%0d%0a=&machinetype%0d%0a=&toggled%0d%0a=&on%0d%0a=&integrity%0d%0a=%0d%0a%0d%0a&links_coords%0d%0a=&links_coords

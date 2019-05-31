@@ -1,0 +1,1 @@
+name%0d%0a=&ballots%0d%0a=&start_hour%0d%0a=&end_hour%0d%0a=&cut_off%0d%0a=&start_day%0d%0a=&end_day%0d%0a=&typed%0d%0a=&num_type

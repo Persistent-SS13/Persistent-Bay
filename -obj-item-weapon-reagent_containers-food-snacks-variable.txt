@@ -1,0 +1,1 @@
+bitecount%0d%0a=&bitesize%0d%0a=&color%0d%0a=&desc%0d%0a=&icon%0d%0a=&nutriment_amt%0d%0a=&nutriment_desc%0d%0a=&slices_num%0d%0a=&slice_path%0d%0a=&suffix%0d%0a=&trash%0d%0a=&cooked%0d%0a=&dried_type%0d%0a=&dry%0d%0a=&possible_transfer_amounts%0d%0a=&volume

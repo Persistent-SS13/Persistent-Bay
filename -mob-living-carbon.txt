@@ -1,0 +1,1 @@
+bloodstr%0d%0a=&ingested%0d%0a=&reagents%0d%0a=&touching%0d%0a=&nutrition

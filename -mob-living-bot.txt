@@ -1,0 +1,1 @@
+faction%0d%0a=%0d%0a&req_access_faction%0d%0a=&on%0d%0a=&will_patrol%0d%0a=&open%0d%0a=&name%0d%0a=&locked

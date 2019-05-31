@@ -1,0 +1,1 @@
+hardware_flag%0d%0a=&computer_emagged%0d%0a=&bsod%0d%0a=&damage%0d%0a=&processor_unit%0d%0a=&network_card%0d%0a=&hard_drive%0d%0a=&battery_module%0d%0a=&card_slot%0d%0a=&nano_printer%0d%0a=&portable_drive%0d%0a=&ai_slot%0d%0a=&tesla_link%0d%0a=&dna_scanner%0d%0a=%0d%0a&logistic_processor%0d%0a=%0d%0a%0d%0a%0d%0a

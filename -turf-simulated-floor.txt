@@ -1,0 +1,1 @@
+flooring=&burnt%0d%0a=&prior_floortype%0d%0a=&prior_resources

@@ -1,0 +1,1 @@
+health%0d%0a=&locked%0d%0a=&enabled%0d%0a=&lethal%0d%0a=%0d%0a%0d%0a%0d%0a%0d%0a%0d%0a%0d%0a&installation%0d%0a=&check_access%0d%0a=&check_faction%0d%0a=&anchored

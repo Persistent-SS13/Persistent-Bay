@@ -1,0 +1,1 @@
+fill_icon%0d%0a=&panel_icon%0d%0a=&glass_icon%0d%0a=&dir

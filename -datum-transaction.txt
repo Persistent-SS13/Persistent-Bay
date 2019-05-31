@@ -1,0 +1,1 @@
+date%0d%0a=&amount%0d%0a=&target_name%0d%0a=&tag%0d%0a=&time%0d%0a=&purpose%0d%0a=&source_terminal

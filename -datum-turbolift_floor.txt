@@ -1,0 +1,1 @@
+doors%0d%0a=&ext_panel%0d%0a=&label%0d%0a=&name%0d%0a=&announce_str%0d%0a=&arrival_sound%0d%0a=&area_contents%0d%0a=&extra_turfs

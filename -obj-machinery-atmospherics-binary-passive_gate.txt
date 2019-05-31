@@ -1,0 +1,1 @@
+unlocked%0d%0a=&icon_state%0d%0a=&target_pressure%0d%0a=&air1%0d%0a=&air2%0d%0a=&regulate_mode

@@ -1,0 +1,1 @@
+id_tag%0d%0a=%0d%0a&locked%0d%0a=&frequency%0d%0a=&welded%0d%0a=&brace%0d%0a=&lock_cut_state%0d%0a=&secured_wires%0d%0a=&safe%0d%0a=&closeOtherId%0d%0a=&closeOther%0d%0a=%0d%0a&airlock_type%0d%0a=&door_color%0d%0a=&stripe_color%0d%0a=&symbol_color

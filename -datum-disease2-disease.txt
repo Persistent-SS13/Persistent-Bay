@@ -1,0 +1,1 @@
+infectionchance%0d%0a=&speed%0d%0a=&spreadtype%0d%0a=&stage%0d%0a=&dead%0d%0a=&clicks%0d%0a=&uniqueID%0d%0a=&effects%0d%0a=&antigen%0d%0a=&max_stage%0d%0a=&affected_species

@@ -1,0 +1,1 @@
+timing%0d%0a=&time

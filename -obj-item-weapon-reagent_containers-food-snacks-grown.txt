@@ -1,0 +1,1 @@
+color%0d%0a=&filling_color%0d%0a=&dried_type%0d%0a=&seed%0d%0a=&seed%0d%0a=&reagents%0d%0a=&germ_level%0d%0a=&bitesize%0d%0a=&amount_per_transfer_from_this%0d%0a=%0d%0a&plantname%0d%0a=&potency%0d%0a=&potency%0d%0a=&name%0d%0a=&icon_state%0d%0a=&cooked%0d%0a=&dry

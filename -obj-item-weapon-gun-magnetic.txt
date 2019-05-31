@@ -1,0 +1,1 @@
+cell%0d%0a=&capacitor%0d%0a=&loaded%0d%0a=&load_type%0d%0a=&load_type

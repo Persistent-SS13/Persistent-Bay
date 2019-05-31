@@ -1,0 +1,1 @@
+attack_same%0d%0a=&desc%0d%0a=&faction%0d%0a=&name

@@ -1,0 +1,1 @@
+cell%0d%0a=&cell_type%0d%0a=&opened%0d%0a=&shorted%0d%0a=&lighting%0d%0a=&equipment%0d%0a=&environ%0d%0a=&operating%0d%0a=&chargemode%0d%0a=%0d%0a&chargecount%0d%0a=&locked%0d%0a=&coverlocked%0d%0a=&aidisabled%0d%0a=&lastused_light%0d%0a=&terminal%0d%0a=&main_status%0d%0a=&has_electronics%0d%0a=&beenhit%0d%0a=&is_critical

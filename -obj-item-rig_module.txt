@@ -1,0 +1,1 @@
+holder%0d%0a=&active%0d%0a=&charges%0d%0a=&charge_selected

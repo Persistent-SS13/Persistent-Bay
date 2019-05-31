@@ -1,0 +1,1 @@
+current_stage%0d%0a=&damage%0d%0a=&bleed_timer%0d%0a=%0d%0a&bleed_threshold%0d%0a=&min_damage%0d%0a=&bandaged%0d%0a=&clamped%0d%0a=&salved%0d%0a=&disinfected%0d%0a=&created%0d%0a=&amount%0d%0a=&germ_level%0d%0a=&embedded_objects%0d%0a=&desc_list%0d%0a=&damage_list

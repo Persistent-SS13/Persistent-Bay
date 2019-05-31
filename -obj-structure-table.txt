@@ -1,0 +1,1 @@
+flipped%0d%0a=&health%0d%0a=&carpeted%0d%0a=&material%0d%0a=&reinforced%0d%0a=&anchored

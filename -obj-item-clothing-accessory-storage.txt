@@ -1,0 +1,1 @@
+hold%0d%0a=&slots%0d%0a=&slot_flags

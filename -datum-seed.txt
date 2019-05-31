@@ -1,0 +1,1 @@
+name%0d%0a=&seed_name%0d%0a=&display_name%0d%0a=&seed_noun%0d%0a=&can_self_harvest%0d%0a=&growth_stages%0d%0a=&traits%0d%0a=&mutants%0d%0a=&chems%0d%0a=&consume_gasses%0d%0a=&exude_gasses%0d%0a=&kitchen_tag%0d%0a=&trash_type%0d%0a=&splat_type%0d%0a=&has_mob_product%0d%0a=&force_layer

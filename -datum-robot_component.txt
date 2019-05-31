@@ -1,0 +1,1 @@
+owner%0d%0a=&installed%0d%0a=&powered%0d%0a=&toggled%0d%0a=&brute_damage%0d%0a=&electronics_damage%0d%0a=%0d%0a&wrapped

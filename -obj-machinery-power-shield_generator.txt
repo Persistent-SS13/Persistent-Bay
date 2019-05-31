@@ -1,0 +1,1 @@
+shield_modes%0d%0a=&max_energy%0d%0a=&current_energy%0d%0a=&input_cap%0d%0a=&field_radius%0d%0a=&running%0d%0a=&mitigation_em%0d%0a=&mitigation_heat%0d%0a=&mitigation_max%0d%0a=&mitigation_physical%0d%0a=&mode_changes_locked%0d%0a=&upkeep_multiplier%0d%0a=&upkeep_power_usage%0d%0a=&mode_list%0d%0a=&offline_for%0d%0a=

@@ -1,0 +1,1 @@
+body%0d%0a=&name%0d%0a=&sponsor%0d%0a=&time_started%0d%0a=&time_signed%0d%0a=&signer%0d%0a=&yes_votes%0d%0a=&no_votes%0d%0a=%0d%0a&bill_type%0d%0a=&taxtype%0d%0a=&flatrate%0d%0a=&prograte1%0d%0a=&prograte2%0d%0a=&prograte3%0d%0a=%0d%0a&tax%0d%0a=&prograte4%0d%0a=&progamount2%0d%0a=&progamount3%0d%0a=&progamount4%0d%0a=&impeaching%0d%0a=&nominated

@@ -1,0 +1,1 @@
+capacity%0d%0a=&charge%0d%0a=&input_attempt%0d%0a=&input_level%0d%0a=&output_attempt%0d%0a=&output_level%0d%0a=&name_tag%0d%0a=&terminals

@@ -1,0 +1,1 @@
+b_type%0d%0a=&unique_enzymes%0d%0a=&struc_enzymes%0d%0a=&species%0d%0a=&SE%0d%0a=&UI%0d%0a=&real_name%0d%0a=&uni_identity

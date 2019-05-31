@@ -1,0 +1,1 @@
+opacity%0d%0a=%0d%0a%0d%0a%0d%0a&material%0d%0a=%0d%0a&material%0d%0a=&r_material%0d%0a=&p_material%0d%0a=&state%0d%0a=&integrity%0d%0a=%0d%0a%0d%0a&floor_type%0d%0a=&paint_color%0d%0a=&stripe_color

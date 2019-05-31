@@ -1,0 +1,1 @@
+control_panel_interior%0d%0a=&current_floor%0d%0a=&current_floor%0d%0a=&doors%0d%0a=&floors%0d%0a=%0d%0a%0d%0a&doors

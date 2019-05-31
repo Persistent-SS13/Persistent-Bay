@@ -1,0 +1,1 @@
+real_name%0d%0a=&mind%0d%0a=&contents%0d%0a=&dna%0d%0a=%0d%0a&feet_blood_color%0d%0a=&gender%0d%0a=&spawn_type%0d%0a=&spawn_loc%0d%0a=&spawn_loc_2%0d%0a=&stat%0d%0a=&languages%0d%0a=&save_slot

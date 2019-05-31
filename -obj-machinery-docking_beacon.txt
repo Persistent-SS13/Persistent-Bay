@@ -1,0 +1,1 @@
+anchored%0d%0a=&id%0d%0a=&dimensions%0d%0a=&visible_mode%0d%0a=&status

@@ -1,0 +1,1 @@
+scanning%0d%0a=&time%0d%0a=&timing%0d%0a=&range

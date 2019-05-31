@@ -1,0 +1,1 @@
+airflow_speed%0d%0a=&last_airflow%0d%0a=&last_flow_rate%0d%0a=%0d%0a%0d%0a%0d%0a%0d%0a%0d%0a%0d%0a%0d%0a%0d%0a%0d%0a%0d%0a%0d%0a%0d%0a%0d%0a%0d%0a%0d%0a

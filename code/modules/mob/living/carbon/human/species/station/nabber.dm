@@ -30,11 +30,11 @@
 
 	reagent_tag = IS_NABBER
 
-	icon_template = 'icons/mob/human_races/r_nabber_template.dmi'
-	icobase = 'icons/mob/human_races/r_nabber.dmi'
-	deform = 'icons/mob/human_races/r_nabber.dmi'
+	icon_template = 'icons/mob/human_races/species/template_tall.dmi'
+	icobase = 'icons/mob/human_races/species/nabber/body.dmi'
+	deform = 'icons/mob/human_races/species/nabber/body.dmi'
 
-	blood_mask = 'icons/mob/human_races/masks/blood_nabber.dmi'
+	blood_mask = 'icons/mob/human_races/species/nabber/blood_mask.dmi'
 
 	has_floating_eyes = 1
 
@@ -45,6 +45,7 @@
 	total_health = 200
 	brute_mod = 0.85
 	burn_mod =  1.35
+	oxy_mod  =	1.05
 	gluttonous = GLUT_SMALLER
 	mob_size = MOB_LARGE
 	strength = STR_HIGH
@@ -236,7 +237,7 @@
 			var/image/threat_image = skin_overlays[image_key]
 			if(!threat_image)
 				var/icon/base_icon = icon(H.stand_icon)
-				var/icon/I = new('icons/mob/human_races/r_nabber_threat.dmi', "threat")
+				var/icon/I = new('icons/mob/human_races/species/nabber/threat.dmi', "threat")
 				base_icon.Blend(COLOR_BLACK, ICON_MULTIPLY)
 				base_icon.Blend(I, ICON_ADD)
 				threat_image  = image(base_icon)

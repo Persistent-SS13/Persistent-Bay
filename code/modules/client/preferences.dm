@@ -36,6 +36,8 @@ datum/preferences
 
 	var/bonus_slots = 0
 	var/bonus_notes = ""
+	var/datum/category_item/player_setup_item/player_global/settings/settings //Since we don't want people to change character after they created them, make a separate settings screen
+	var/datum/browser/prefspanel
 
 /datum/preferences/New(client/C)
 	if(istype(C))
@@ -91,7 +93,7 @@ datum/preferences
 		// dat += "<a href='?src=\ref[src];resetslot=1'>Reset slot</a> - "
 		// dat += "<a href='?src=\ref[src];reload=1'>Reload slot</a>"
 
-	dat += "Finish Character - "
+	//dat += "Finish Character - "
 	dat += "<a href='?src=\ref[src];save=1'>Finalize</a>"
 	// else
 	// 	dat += "Please create an account to save your preferences."
@@ -172,6 +174,9 @@ datum/preferences
 			return 0
 		load_character(SAVE_RESET)
 		sanitize_preferences()
+	else if(href_list["saveprefs"])
+		save_preferences()
+		prefspanel?.close()
 	else
 		return 0
 
@@ -450,3 +455,24 @@ datum/preferences
 /datum/preferences/proc/GetPlayerAltTitle(datum/job/job)
 	// return (job.title in player_alt_titles) ? player_alt_titles[job.title] : job.title
 	return (job)? job.title : ""
+
+//Shows preferences only
+/datum/preferences/proc/ShowPreferences(mob/user)
+	if(!SScharacter_setup.initialized)
+		return
+	if(!user || !user.client)
+		return
+
+	src.settings = new(user.client)
+	if(!src.loaded_preferences)
+		src.load_preferences()
+	src.settings.load_preferences(src.loaded_preferences)
+	var/dat = "<html><body><center>"
+	dat += "<a href='?src=\ref[src];saveprefs=1'>Save Preferences</a>"
+	dat += "<br>"
+	dat += "<br><HR></center>"
+	dat += src.settings.content(user)
+	dat += "</html></body>"
+	src.prefspanel = new(user, "prefs","Change settings", 1200, 800, src)
+	src.prefspanel.set_content(dat)
+	src.prefspanel.open()

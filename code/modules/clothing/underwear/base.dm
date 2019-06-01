@@ -1,7 +1,23 @@
 /obj/item/underwear
+	icon = 'icons/mob/human.dmi' //Default icon file
 	w_class = ITEM_SIZE_TINY
 	var/required_slot_flags
 	var/required_free_body_parts
+
+/obj/item/underwear/New()
+	. = ..()
+	//Because the underwears are all a single item, we gotta save these
+	ADD_SAVED_VAR(name)
+	ADD_SAVED_VAR(gender)
+	ADD_SAVED_VAR(color)
+	ADD_SAVED_VAR(icon)
+	ADD_SAVED_VAR(icon_state)
+
+/obj/item/underwear/Initialize()
+	. = ..()
+	if(!icon_state)
+		log_debug("[src](\ref[src])([x],[y],[z]) was deleted, because it had no sprite.")
+		return INITIALIZE_HINT_QDEL //Lets avoid having bugged out underwears everywhere
 
 /obj/item/underwear/afterattack(var/atom/target, var/mob/user, var/proximity)
 	if(!proximity)
@@ -108,13 +124,17 @@
 	RemoveUnderwear(usr, usr)
 
 /obj/item/underwear/socks
+	icon_state = "socks_norm"
 	required_free_body_parts = FEET
 
 /obj/item/underwear/top
+	icon_state = "bra"
 	required_free_body_parts = UPPER_TORSO
 
 /obj/item/underwear/bottom
+	icon_state = "briefs"
 	required_free_body_parts = FEET|LEGS|LOWER_TORSO
 
 /obj/item/underwear/undershirt
+	icon_state = "undershirt"
 	required_free_body_parts = UPPER_TORSO

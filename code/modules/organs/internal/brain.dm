@@ -40,9 +40,9 @@
 		tmp_owner.internal_organs_by_name[organ_tag] = new replace_path(tmp_owner, 1)
 		tmp_owner = null
 
-/obj/item/organ/internal/brain/robotize()
-	. = ..()
-	icon_state = "brain-prosthetic"
+// /obj/item/organ/internal/brain/robotize()
+// 	. = ..()
+// 	icon_state = "brain-prosthetic"
 
 /obj/item/organ/internal/brain/New(var/mob/living/carbon/holder)
 	..()

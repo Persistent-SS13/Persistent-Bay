@@ -18,6 +18,7 @@
 	return D.weakref
 
 /weakref
+	should_save = FALSE
 	var/ref
 
 	// Handy info for debugging

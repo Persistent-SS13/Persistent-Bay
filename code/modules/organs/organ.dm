@@ -113,6 +113,20 @@ var/list/organ_cache = list()
 	ADD_SAVED_VAR(death_time)
 	ADD_SAVED_VAR(organ_tag)
 
+/obj/item/organ/after_load()
+	. = ..()
+	if(istype(owner))
+		w_class = max(w_class + mob_size_difference(owner.mob_size, MOB_MEDIUM), 1) //smaller mobs have smaller organs.
+		if(!dna)
+			set_dna(owner.dna)
+		if(!species)
+			species = owner.species
+		if (!species)
+			species = all_species[SPECIES_HUMAN]
+
+	if(BP_IS_ROBOTIC(src))
+		robotize()
+
 /obj/item/organ/Destroy()
 	owner = null
 	dna = null
@@ -150,6 +164,7 @@ var/list/organ_cache = list()
 	death_time = world.time
 	if(owner && vital)
 		owner.death()
+	queue_icon_update()
 
 /obj/item/organ/Process()
 
@@ -300,9 +315,11 @@ var/list/organ_cache = list()
 
 /obj/item/organ/proc/robotize() //Being used to make robutt hearts, etc
 	status = ORGAN_ROBOTIC
+	queue_icon_update()
 
 /obj/item/organ/proc/mechassist() //Used to add things like pacemakers, etc
 	status = ORGAN_ASSISTED
+	queue_icon_update()
 
 /**
  *  Remove an organ

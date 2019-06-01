@@ -66,6 +66,9 @@ var/list/limb_icon_cache = list()
 
 /obj/item/organ/external/var/icon_cache_key
 /obj/item/organ/external/on_update_icon(var/regenerate = 0)
+	if(QDELING(src) || QDELETED(src))
+		return
+
 	var/gender = "_m"
 	if(!has_gendered_icon())
 		gender = null

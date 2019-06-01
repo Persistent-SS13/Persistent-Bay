@@ -33,12 +33,12 @@
 		// /obj/item/weapon/card/id/captains_spare,
 		/obj/item/weapon/aicard,
 		// /obj/item/device/mmi,
-		/obj/item/device/paicard,
+		///obj/item/device/paicard,
 		// /obj/item/weapon/gun,
 		// /obj/item/weapon/pinpointer,
 		// /obj/item/clothing/suit,
 		// /obj/item/clothing/shoes/magboots,
-		/obj/item/blueprints,
+		///obj/item/blueprints,
 		// /obj/item/clothing/head/helmet/space,
 		// /obj/item/weapon/storage/internal
 	)

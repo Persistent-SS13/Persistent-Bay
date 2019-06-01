@@ -1,5 +1,4 @@
 /datum/reagent
-	should_save = FALSE
 	var/name = "Reagent"
 	var/description = "A non-descript chemical."
 	var/taste_description = "old rotten bandaids"
@@ -48,10 +47,19 @@
 	var/temperature_multiplier = 1
 
 /datum/reagent/New(var/datum/reagents/holder)
-	if(!istype(holder))
-		CRASH("[src]: Invalid reagents holder: [log_info_line(holder)]")
+	//Have to comment this CRASH, because on mapload it breaks everything
+	// if(!istype(holder))
+	// 	CRASH("[src]: Invalid reagents holder: [log_info_line(holder)]")
 	src.holder = holder
 	..()
+
+	//We only want to save what's actually neccessary, the rest will be initialized properly to its default values
+	ADD_SAVED_VAR(volume)
+	ADD_SAVED_VAR(data)
+	ADD_SAVED_VAR(reagent_state)
+	ADD_SAVED_VAR(holder)
+
+	ADD_SKIP_EMPTY(data)
 
 /datum/reagent/proc/remove_self(var/amount) // Shortcut
 	if(QDELETED(src)) // In case we remove multiple times without being careful.

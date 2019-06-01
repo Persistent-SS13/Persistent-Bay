@@ -11,6 +11,8 @@
 	var/list/stance_limbs
 	var/list/grasp_limbs
 	var/step_count
+	var/co2overloadtime = null
+	var/temperature_resistance = T0C+75
 
 /mob/living/carbon/human/New(var/new_loc, var/new_species = null)
 	grasp_limbs = list()
@@ -48,25 +50,111 @@
 		dna.real_name = real_name
 		dna.s_base = s_base
 		sync_organ_dna()
-		
+	
+	ADD_SAVED_VAR(r_hair)
+	ADD_SAVED_VAR(g_hair)
+	ADD_SAVED_VAR(b_hair)
+	ADD_SAVED_VAR(h_style)
+	ADD_SAVED_VAR(r_facial)
+	ADD_SAVED_VAR(g_facial)
+	ADD_SAVED_VAR(b_facial)
+	ADD_SAVED_VAR(f_style)
+	ADD_SAVED_VAR(r_eyes)
+	ADD_SAVED_VAR(g_eyes)
+	ADD_SAVED_VAR(b_eyes)
+	ADD_SAVED_VAR(s_tone)
+	ADD_SAVED_VAR(s_base)
+	ADD_SAVED_VAR(r_skin)
+	ADD_SAVED_VAR(g_skin)
+	ADD_SAVED_VAR(b_skin)
+	ADD_SAVED_VAR(size_multiplier)
+	ADD_SAVED_VAR(damage_multiplier)
+	ADD_SAVED_VAR(lip_style)
+	ADD_SAVED_VAR(age)
+	ADD_SAVED_VAR(b_type)
+	ADD_SAVED_VAR(worn_underwear)
+	ADD_SAVED_VAR(backpack_setup) //Only saved once when creating a new character, clear it after use plz
+	ADD_SAVED_VAR(wear_suit)
+	ADD_SAVED_VAR(w_uniform)
+	ADD_SAVED_VAR(shoes)
+	ADD_SAVED_VAR(belt)
+	ADD_SAVED_VAR(gloves)
+	ADD_SAVED_VAR(glasses)
+	ADD_SAVED_VAR(head)
+	ADD_SAVED_VAR(l_ear)
+	ADD_SAVED_VAR(r_ear)
+	ADD_SAVED_VAR(wear_id)
+	ADD_SAVED_VAR(r_store)
+	ADD_SAVED_VAR(l_store)
+	ADD_SAVED_VAR(s_store)
+	ADD_SAVED_VAR(voice)
+	ADD_SAVED_VAR(special_voice)
+	ADD_SAVED_VAR(flavor_texts)
+	ADD_SAVED_VAR(full_prosthetic)
+	ADD_SAVED_VAR(public_record)
+	ADD_SAVED_VAR(med_record)
+	ADD_SAVED_VAR(sec_record)
+	ADD_SAVED_VAR(gen_record)
+	ADD_SAVED_VAR(exploit_record)
+	ADD_SAVED_VAR(stance_damage)
+	ADD_SAVED_VAR(shock_stage)
+	ADD_SAVED_VAR(descriptors)
+	ADD_SAVED_VAR(decaylevel)
 	ADD_SAVED_VAR(wearing_rig)
-	ADD_SAVED_VAR(stance_limbs)
-	ADD_SAVED_VAR(grasp_limbs)
+	ADD_SAVED_VAR(branded)
+	ADD_SAVED_VAR(vessel) //Defined in module/organs/blood.dm
+	ADD_SAVED_VAR(side_effects) //Defined in another file
 
+	ADD_SKIP_EMPTY(backpack_setup)
+	ADD_SKIP_EMPTY(side_effects)
+	ADD_SKIP_EMPTY(lip_style)
 	ADD_SKIP_EMPTY(wearing_rig)
-	ADD_SKIP_EMPTY(stance_limbs)
-	ADD_SKIP_EMPTY(grasp_limbs)
+	ADD_SKIP_EMPTY(descriptors)
+	ADD_SKIP_EMPTY(decaylevel)
+	ADD_SKIP_EMPTY(branded)
 
 /mob/living/carbon/human/Initialize()
 	. = ..()
 	if(!map_storage_loaded)
 		make_blood() //do this last
-	else
-		queue_icon_update()
+
+/mob/living/carbon/human/after_load()
+	. = ..()
+	testing("loaded [src]\ref[src]([x], [y], [z]): blood vessel contain [vessel.reagent_list?.len] reagents")
+	for(var/datum/reagent/blood/B in vessel.reagent_list)
+		if(B.type == /datum/reagent/blood)
+			B.sync_to(src)
+	
+	regenerate_icons()
+	redraw_inv()
+	handle_organs(1)
+	update_inv_back(1)
+	update_inv_ears(1)
+	update_inv_wear_mask(1)
+	update_inv_handcuffed(1)
+	update_inv_l_hand(1)
+	update_inv_r_hand(1)
+	update_inv_belt(1)
+	update_inv_wear_id(1)
+	update_inv_glasses(1)
+	update_inv_gloves(1)
+	update_inv_head(1)
+	update_inv_shoes(1)
+	update_inv_w_uniform(1)
+	update_inv_wear_suit(1)
+	update_inv_pockets(1)
+	update_inv_s_store(1)
+	update_action_buttons()
+
+	updatehealth()
+	BITSET(hud_updateflag, HEALTH_HUD) //Force hud update
+	BITSET(hud_updateflag, STATUS_HUD)
+	BITSET(hud_updateflag, LIFE_HUD)
+	queue_icon_update()
 
 /mob/living/carbon/human/Destroy()
 	GLOB.human_mob_list -= src
-	worn_underwear = null
+	QDEL_NULL_LIST(worn_underwear)
 	for(var/organ in internal_organs)
 		if(src.loc && istype(organ, /obj/item/organ/internal/stack))
 			var/obj/item/organ/internal/stack/lace = organ
@@ -208,10 +296,6 @@
 	for (var/obj/item/grab/G in grabbed_by)
 		if(G.restrains())
 			return TRUE
-
-/mob/living/carbon/human/var/co2overloadtime = null
-/mob/living/carbon/human/var/temperature_resistance = T0C+75
-
 
 /mob/living/carbon/human/show_inv(mob/user as mob)
 	if(user.incapacitated()  || !user.Adjacent(src) || !user.IsAdvancedToolUser())

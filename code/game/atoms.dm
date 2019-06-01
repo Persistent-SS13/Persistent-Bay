@@ -47,6 +47,9 @@
 //Must return an Initialize hint. Defined in __DEFINES/subsystems.dm
 
 /atom/proc/Initialize(mapload, ...)
+	if(QDELETED(src) || QDELING(src))
+		return INITIALIZE_HINT_QDEL //Happens because of map loading shennanigans
+
 	if(atom_flags & ATOM_FLAG_INITIALIZED)
 		crash_with("Warning: [src]([type]) initialized multiple times!")
 	atom_flags |= ATOM_FLAG_INITIALIZED

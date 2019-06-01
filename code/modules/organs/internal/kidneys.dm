@@ -8,9 +8,6 @@
 	min_broken_damage = 45
 	max_health = 70
 
-/obj/item/organ/internal/kidneys/robotize()
-	. = ..()
-	icon_state = "kidneys-prosthetic"
 
 /obj/item/organ/internal/kidneys/Process()
 	..()
@@ -43,4 +40,9 @@
 			if(status & ORGAN_DEAD)
 				owner.adjustToxLoss(1)
 
-
+/obj/item/organ/internal/kidneys/on_update_icon()
+	. = ..()
+	if(BP_IS_ROBOTIC(src))
+		icon_state = "[initial(icon_state)]-prosthetic"
+	else
+		icon_state = initial(icon_state)

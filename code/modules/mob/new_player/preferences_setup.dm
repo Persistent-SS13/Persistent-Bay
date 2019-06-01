@@ -33,18 +33,6 @@
 			if(all_underwear)
 				all_underwear.Cut()
 			for(var/datum/category_group/underwear/WRC in GLOB.underwear.categories)
-				// if(WRC.name == "Underwear, top")
-				// 	if(gender == FEMALE)
-				// 		all_underwear[WRC.name] = "Bra"
-				// 	else
-				// 		all_underwear[WRC.name] = "None"
-				// 	continue
-				// if(WRC.name == "Underwear, top")
-				// 	if(gender == FEMALE)
-				// 		all_underwear[WRC.name] = "Panties"
-				// 	else
-				// 		all_underwear[WRC.name] = "Boxers"
-				// 	continue
 				var/datum/category_item/underwear/WRI = pick(WRC.items)
 				all_underwear[WRC.name] = WRI.name
 
@@ -58,7 +46,7 @@
 
 /datum/preferences/proc/dress_preview_mob(var/mob/living/carbon/human/mannequin, var/finalize = FALSE)
 	var/update_icon = FALSE
-	var/adjustflags = finalize? OUTFIT_RESET_EQUIPMENT : OUTFIT_ADJUSTMENT_SKIP_POST_EQUIP|OUTFIT_ADJUSTMENT_SKIP_ID_PDA|OUTFIT_ADJUSTMENT_SKIP_SURVIVAL_GEAR
+	var/adjustflags = finalize? 0 : OUTFIT_ADJUSTMENT_SKIP_POST_EQUIP|OUTFIT_ADJUSTMENT_SKIP_ID_PDA|OUTFIT_ADJUSTMENT_SKIP_SURVIVAL_GEAR
 	copy_to(mannequin, !finalize)
 	mannequin.real_name = real_name
 
@@ -66,23 +54,15 @@
 	if(faction)
 		var/datum/world_faction/fac = get_faction(src.faction)
 		if(fac && fac.starter_outfit)
-			var/decl/hierarchy/outfit/clothes = new fac.starter_outfit()
+			var/decl/hierarchy/outfit/clothes = outfit_by_type(fac.starter_outfit)
 			ASSERT(istype(clothes))
+			//If we have selected a specific uniform, replace the default one
+			if(selected_under)
+				clothes.uniform = selected_under.type //The outfit class uses types not instances
 			clothes.equip(mannequin, equip_adjustments = adjustflags)
 			update_icon = TRUE
 
-	//If we have selected a specific uniform, replace the default one
-	if(selected_under)
-		mannequin.equip_to_slot_or_del(selected_under,slot_w_uniform)
-		update_icon = TRUE
-
-	//Backpack
-	if(istype(backpack, /decl/backpack_outfit))
-		var/decl/backpack_outfit/outback = backpack
-		outback.spawn_backpack(mannequin, )
-		update_icon = TRUE
-
-	//Extra starter gear
+	//Extra starter gear, left in for possible use in the future
 	if(finalize || (!finalize && (equip_preview_mob & EQUIP_PREVIEW_LOADOUT)))
 		// Equip custom gear loadout, replacing any job items
 		var/list/loadout_taken_slots = list()

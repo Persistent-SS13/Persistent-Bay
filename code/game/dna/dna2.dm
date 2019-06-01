@@ -83,6 +83,22 @@ var/global/list/datum/dna/gene/dna_genes[0]
 	var/s_base = ""
 	var/list/body_markings = list()
 
+/datum/dna/New()
+	. = ..()
+	ADD_SAVED_VAR(b_type)
+	ADD_SAVED_VAR(real_name)
+	ADD_SAVED_VAR(s_base)
+	ADD_SAVED_VAR(body_markings)
+	ADD_SAVED_VAR(SE)
+	ADD_SAVED_VAR(UI)
+
+/datum/dna/after_load()
+	. = ..()
+	unique_enzymes = md5(real_name)
+	GLOB.reg_dna[unique_enzymes] = real_name
+	UpdateUI()
+	UpdateSE()
+
 // Make a copy of this strand.
 // USE THIS WHEN COPYING STUFF OR YOU'LL GET CORRUPTION!
 /datum/dna/proc/Clone()

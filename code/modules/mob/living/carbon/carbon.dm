@@ -5,6 +5,7 @@
 		species = all_species[saved_species]
 		saved_species = null //no need to keep this around after load
 
+	ADD_SAVED_VAR(immunity) //defined in viruses.dm
 	ADD_SAVED_VAR(saved_species)
 	ADD_SAVED_VAR(virus2)
 	ADD_SAVED_VAR(antibodies)
@@ -14,6 +15,7 @@
 	ADD_SAVED_VAR(nutrition)
 	ADD_SAVED_VAR(internal_organs_by_name) //Save only organs by name, since we don't want useless duplicate lists of organs
 	ADD_SAVED_VAR(organs_by_name)
+	ADD_SAVED_VAR(losebreath)
 
 	ADD_SKIP_EMPTY(saved_species)
 	ADD_SKIP_EMPTY(virus2)

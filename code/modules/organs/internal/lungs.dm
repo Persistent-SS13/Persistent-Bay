@@ -30,6 +30,12 @@
 	var/last_successful_breath
 	var/breath_fail_ratio // How badly they failed a breath. Higher is worse.
 
+/obj/item/organ/internal/lungs/New(mob/living/carbon/holder)
+	. = ..()
+	ADD_SAVED_VAR(active_breathing)
+	ADD_SAVED_VAR(oxygen_deprivation)
+	ADD_SAVED_VAR(breathing)
+
 /obj/item/organ/internal/lungs/proc/can_drown()
 	return (is_broken() || !has_gills)
 
@@ -49,9 +55,6 @@
 		return 100
 	return round((oxygen_deprivation/species.total_health)*100)
 
-/obj/item/organ/internal/lungs/robotize()
-	. = ..()
-	icon_state = "lungs-prosthetic"
 
 /obj/item/organ/internal/lungs/set_dna(var/datum/dna/new_dna)
 	..()
@@ -346,3 +349,10 @@
 	. += "[english_list(breathtype)] breathing"
 
 	return english_list(.)
+
+/obj/item/organ/internal/lungs/on_update_icon()
+	. = ..()
+	if(BP_IS_ROBOTIC(src))
+		icon_state = "[initial(icon_state)]-prosthetic"
+	else
+		icon_state = initial(icon_state)

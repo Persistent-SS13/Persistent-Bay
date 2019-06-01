@@ -1,6 +1,11 @@
 /mob/living
 	var/datum/psi_complexus/psi
 
+/mob/living/New()
+	. = ..()
+	ADD_SAVED_VAR(psi)
+	ADD_SKIP_EMPTY(psi)
+
 /mob/living/Login()
 	. = ..()
 	if(psi)

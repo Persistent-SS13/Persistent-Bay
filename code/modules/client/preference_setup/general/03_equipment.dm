@@ -4,7 +4,7 @@
 
 	var/decl/backpack_outfit/backpack
 	var/list/backpack_metadata
-	var/obj/selected_under
+	var/obj/item/clothing/under/selected_under
 
 /datum/category_item/player_setup_item/physical/equipment
 	name = "Clothing"
@@ -47,10 +47,10 @@
 	to_file(S["backpack_metadata"], pref.backpack_metadata)
 
 /datum/category_item/player_setup_item/physical/equipment/sanitize_character()
-	if(!pref.selected_under)
-		pref.selected_under = pick(possible_under)
-	if(!(pref.selected_under in possible_under) && !(pref.selected_under in possible_under_extra))
-		pref.selected_under = pick(possible_under)
+	// if(!pref.selected_under)
+	// 	pref.selected_under = pick(possible_under)
+	// if(!(pref.selected_under in possible_under) && !(pref.selected_under in possible_under_extra))
+	// 	pref.selected_under = pick(possible_under)
 	if(!istype(pref.all_underwear))
 		pref.all_underwear = list()
 
@@ -101,29 +101,30 @@
 		last_background = pref.cultural_info[TAG_FACTION]
 		if(!possible_under_extra)
 			possible_under_extra = list()
-		else
-			for(var/obj/x in possible_under_extra)
-				qdel(x)
-			possible_under_extra.Cut()
-		switch(pref.cultural_info[TAG_FACTION])
-			if(CULTURE_HUMAN_EARTH)
-				possible_under_extra |= new /obj/item/clothing/under/assistantformal
-				possible_under_extra |= new /obj/item/clothing/under/gentlesuit
-			if(CULTURE_HUMAN_SPACER)
-				possible_under_extra |= new /obj/item/clothing/under/frontier
-				possible_under_extra |= new /obj/item/clothing/under/overalls ///obj/item/clothing/under/serviceoveralls
-			if(CULTURE_HUMAN_CONFED)
-				possible_under_extra |= new /obj/item/clothing/under/confederacy
-				possible_under_extra |= new /obj/item/clothing/under/saare
-			if(CULTURE_HUMAN_SPAFRO)
-				possible_under_extra |= new /obj/item/clothing/under/frontier
-				possible_under_extra |= new /obj/item/clothing/under/overalls ///obj/item/clothing/under/serviceoveralls
-			if(CULTURE_HUMAN_OTHER) // "Corporate Colonist"
-				possible_under_extra |= new /obj/item/clothing/under/mbill
-				possible_under_extra |= new /obj/item/clothing/under/wardt
-				possible_under_extra |= new	/obj/item/clothing/under/pcrc
-			else
-				possible_under_extra |= new /obj/item/clothing/under/color/grey
+		// else
+		// 	for(var/obj/x in possible_under_extra)
+		// 		qdel(x)
+		// 	possible_under_extra.Cut()
+		// switch(pref.cultural_info[TAG_FACTION])
+		// 	if(CULTURE_HUMAN_EARTH)
+		// 		possible_under_extra |= new /obj/item/clothing/under/assistantformal
+		// 		possible_under_extra |= new /obj/item/clothing/under/gentlesuit
+		// 	if(CULTURE_HUMAN_SPACER)
+		// 		possible_under_extra |= new /obj/item/clothing/under/frontier
+		// 		possible_under_extra |= new /obj/item/clothing/under/overalls ///obj/item/clothing/under/serviceoveralls
+		// 	if(CULTURE_HUMAN_CONFED)
+		// 		possible_under_extra |= new /obj/item/clothing/under/confederacy
+		// 		possible_under_extra |= new /obj/item/clothing/under/saare
+		// 	if(CULTURE_HUMAN_SPAFRO)
+		// 		possible_under_extra |= new /obj/item/clothing/under/frontier
+		// 		possible_under_extra |= new /obj/item/clothing/under/overalls ///obj/item/clothing/under/serviceoveralls
+		// 	if(CULTURE_HUMAN_OTHER) // "Corporate Colonist"
+		// 		possible_under_extra |= new /obj/item/clothing/under/mbill
+		// 		possible_under_extra |= new /obj/item/clothing/under/wardt
+		// 		possible_under_extra |= new	/obj/item/clothing/under/pcrc
+		// 	else
+		// 		possible_under_extra |= new /obj/item/clothing/under/color/grey
+		possible_under_extra = populate_uniforms(usr.client)
 		pref.selected_under = pick(possible_under_extra)
 		pref.preview_icon = null
 		pref.ShowChoices(usr)
@@ -206,7 +207,7 @@
 			pref.backpack = backpacks_by_name[new_backpack]
 			return TOPIC_REFRESH_UPDATE_PREVIEW
 	else if(href_list["change_under"])
-		var/obj/new_under = input(user, "Choose backpack style:", "Character Preference", pref.backpack) as null|anything in possible_under+possible_under_extra
+		var/obj/new_under = input(user, "Choose uniform:", CHARACTER_PREFERENCE_INPUT_TITLE, pref.selected_under) as null|anything in possible_under+possible_under_extra
 		if(new_under)
 			pref.selected_under = new_under
 			return TOPIC_REFRESH_UPDATE_PREVIEW
@@ -248,3 +249,30 @@
 
 		to_file(character["backpack"], pref.backpack.name)
 		return 1
+
+//Used to populate the chosen uniform list in the character creation menu, returns a list of clothing types
+/datum/category_item/player_setup_item/physical/equipment/proc/populate_uniforms(var/client/C)
+	LAZYCLEARLIST(possible_under_extra)
+	LAZYINITLIST(possible_under_extra)
+	//First add culture-related possibilities
+	switch(pref.cultural_info[TAG_FACTION])
+		if(CULTURE_HUMAN_EARTH)
+			possible_under_extra |= new /obj/item/clothing/under/assistantformal()
+			possible_under_extra |= new /obj/item/clothing/under/gentlesuit()
+		if(CULTURE_HUMAN_SPACER)
+			possible_under_extra |= new /obj/item/clothing/under/frontier()
+			possible_under_extra |= new /obj/item/clothing/under/overalls() ///obj/item/clothing/under/serviceoveralls
+		if(CULTURE_HUMAN_CONFED)
+			possible_under_extra |= new /obj/item/clothing/under/confederacy()
+			possible_under_extra |= new /obj/item/clothing/under/saare()
+		if(CULTURE_HUMAN_SPAFRO)
+			possible_under_extra |= new /obj/item/clothing/under/frontier()
+			possible_under_extra |= new /obj/item/clothing/under/overalls() ///obj/item/clothing/under/serviceoveralls
+		if(CULTURE_HUMAN_OTHER) // "Corporate Colonist"
+			possible_under_extra |= new /obj/item/clothing/under/mbill()
+			possible_under_extra |= new /obj/item/clothing/under/wardt()
+			possible_under_extra |= new /obj/item/clothing/under/pcrc()
+	
+	//Then add any extra possibilities
+	possible_under_extra |= GLOB.using_map.populate_uniforms(C)
+	return possible_under_extra

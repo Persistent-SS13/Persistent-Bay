@@ -137,9 +137,12 @@
 	. = ..()
 	alarm_area = get_area(src)
 	if(!alarm_area)
-		log_debug(" /obj/machinery/alarm/after_load() : Alarm is in null area after load!!")
+		log_debug(" /obj/machinery/alarm/after_load() : [src]\ref[src]'s area is null area after load!!")
 		return
 	area_uid = alarm_area.uid
+	if(!TLV)
+		log_warning(" obj/machinery/alarm/after_load(): TLV for [src]\ref[src] after loading was null!!")
+		TLV = list()
 // 	if (name == "alarm")
 // 		name = "[alarm_area.name] Air Alarm"
 
@@ -164,7 +167,7 @@
 	if(!wires)
 		wires = new(src)
 
-	if(!map_storage_loaded)
+	if(!TLV?.len)
 		TLV[GAS_OXYGEN] =		list(16, 19, 135, 140) // Partial pressure, kpa
 		TLV[GAS_CO2] = 			list(-1.0, -1.0, 5, 10) // Partial pressure, kpa
 		TLV[GAS_PHORON] =		list(-1.0, -1.0, 0.2, 0.5) // Partial pressure, kpa

@@ -10,9 +10,6 @@
 	max_health = 70
 	relative_size = 60
 
-/obj/item/organ/internal/liver/robotize()
-	. = ..()
-	icon_state = "liver-prosthetic"
 
 /obj/item/organ/internal/liver/Process()
 
@@ -76,3 +73,10 @@
 //We got it covered in Process with more detailed thing
 /obj/item/organ/internal/liver/handle_regeneration()
 	return
+
+/obj/item/organ/internal/liver/on_update_icon()
+	. = ..()
+	if(BP_IS_ROBOTIC(src))
+		icon_state = "[initial(icon_state)]-prosthetic"
+	else
+		icon_state = initial(icon_state)

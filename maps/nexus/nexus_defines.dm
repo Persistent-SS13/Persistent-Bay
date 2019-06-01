@@ -109,6 +109,7 @@ proc/GetNbSavedZLevels()
 	newchar.spawn_type = 1
 	sound_to(newchar, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
 	spawn()
+		new /obj/effect/portal(get_turf(newchar), null, 5 SECONDS, 0)
 		shake_camera(newchar, 3, 1)
 	newchar.druggy = 3
 	newchar.Weaken(3)
@@ -116,3 +117,11 @@ proc/GetNbSavedZLevels()
 	to_chat(newchar, "In fact, it was like your consciousness was ripped from your body and then hammered back inside moments later.")
 	to_chat(newchar, "However, you've made it to the uncharted frontier. You don't know when you'll be able to return to the places you've left behind.")
 	to_chat(newchar, "No time to think about that, your first priority is to get your bearings and find a job that pays. Whatever you decide to do in this new frontier, you're going to need a lot more cash than what you have now.")
+
+//Example for adding map specific starter uniforms
+/datum/map/nexus/populate_uniforms(var/client/C)
+	. = ..()
+	switch(C.prefs.cultural_info[TAG_FACTION])
+		if(CULTURE_HUMAN_SPACER)
+			. |= new /obj/item/clothing/under/blazer()
+	

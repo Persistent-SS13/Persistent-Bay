@@ -9,11 +9,12 @@ GLOBAL_DATUM_INIT(temp_reagents_holder, /obj, new)
 	var/atom/saved_atom
 
 /datum/reagents/New(var/maximum_volume = 120, var/atom/my_atom)
-	if(!istype(my_atom) && !map_storage_loaded)
-		CRASH("Invalid reagents holder: [log_info_line(my_atom)]")
-	..()
+	//Have to comment this CRASH, because on mapload it breaks everything
+	// if(!istype(my_atom))
+	// 	log_debug("Invalid reagents holder: [log_info_line(my_atom)]")
 	src.my_atom = my_atom
 	src.maximum_volume = maximum_volume
+	..()
 	ADD_SAVED_VAR(reagent_list)
 	ADD_SAVED_VAR(saved_atom)
 	ADD_SAVED_VAR(maximum_volume)
@@ -29,13 +30,14 @@ GLOBAL_DATUM_INIT(temp_reagents_holder, /obj, new)
 /datum/reagents/after_load()
 	. = ..()
 	my_atom = saved_atom
+	saved_atom = null // clear it
 	
-
 /datum/reagents/Destroy()
 	. = ..()
 	UNQUEUE_REACTIONS(src) // While marking for reactions should be avoided just before deleting if possible, the async nature means it might be impossible.
 	QDEL_NULL_LIST(reagent_list)
 	my_atom = null
+	saved_atom = null
 
 /* Internal procs */
 /datum/reagents/proc/get_free_space() // Returns free space.

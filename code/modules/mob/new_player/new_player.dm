@@ -43,6 +43,7 @@
 	if(check_rights(R_DEBUG, 0, client))
 		output += "<a href='byond://?src=\ref[src];observeGame=1'>Observe</a><br><br>"
 	output += "<a href='byond://?src=\ref[src];refreshPanel=1'>Refresh</a><br><br>"
+	//output += "<a href='byond://?src=\ref[src];show_preferences=1'>Preferences</a><br><br>"
 
 	if(!IsGuestKey(src.key))
 		establish_db_connection()
@@ -100,7 +101,8 @@
 	if(!client)	return 0
 
 	if(href_list["preference"])
-		client.prefs.ShowChoices(src)
+		preferences_panel()
+		//client.prefs.ShowChoices(src)
 		return 1
 //		client.prefs.process_link(src, href_list)
 //		client.prefs.randomize_appearance_and_body_for()
@@ -318,12 +320,7 @@
 	if(spawning)
 		return
 
-	spawning = 1
-
-	panel?.close()
-	load_panel?.close()
-
-	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
+	spawning = TRUE
 
 	for(var/mob/M in SSmobs.mob_list)
 		if(M.loc && !M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
@@ -345,7 +342,6 @@
 	var/mob/character = SScharacter_setup.load_character(chosen_slot, ckey)
 	Retrieve_Record(character.real_name)
 	var/turf/spawnTurf
-
 
 	if(character.spawn_type == 1)
 		var/datum/world_faction/faction = get_faction(character.spawn_loc)
@@ -377,28 +373,33 @@
 			log_and_message_admins("WARNING! No cryopods avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
 			spawnTurf = locate(102, 98, 1)
 
-		to_chat(character, "You eject from your cryosleep, ready to resume life in the frontier.")
-
 	else if(character.spawn_type == 2)
 		for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
 			if(!beacon.loc)
 				qdel(beacon)
 				continue
 			if(beacon.req_access_faction == character.spawn_loc)
-				spawnTurf = get_step(get_turf(beacon), pick(GLOB.cardinal))
+				spawnTurf = get_turf(beacon)//get_step(get_turf(beacon), pick(GLOB.cardinal)) //Set it to get turf because people spawn in the walls
 				break
 			if(!spawnTurf)
-				spawnTurf = get_step(get_turf(beacon), pick(GLOB.cardinal))
+				spawnTurf = get_turf(beacon)//get_step(get_turf(beacon), pick(GLOB.cardinal)) //Set it to get turf because people spawn in the walls
 
 		if(!spawnTurf)
 			log_and_message_admins("WARNING! No frontier beacons avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
 			spawnTurf = locate(102, 98, 1)
-		new /obj/effect/portal(spawnTurf, delete_after = 50)
 
 	if(!spawnTurf)
 		log_and_message_admins("WARNING! Unable To Find Any Spawn Turf!!! Prehaps you didn't include a map?")
 		return
 
+	//If the atmos is bad or etc.. Ask the player if they still want to spawn!
+	if(!SSjobs.check_unsafe_spawn(character, spawnTurf))
+		spawning = FALSE
+		return
+
+	panel?.close()
+	load_panel?.close()
+	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
 	character.after_spawn()
 
 	if(!character.mind)		// Not entirely sure what this if() block does, but keeping it just in case
@@ -420,11 +421,14 @@
 	GLOB.minds |= character.mind
 	character.redraw_inv()
 	CreateModularRecord(character)
+	update_ids(character.real_name)
 	character.finishLoadCharacter()	// This is ran because new_players don't like to stick around long.
 	return 1
 
 /mob/proc/finishLoadCharacter()
-	if(spawn_type == 2)
+	if(spawn_type == 1)
+		to_chat(src, "You eject from your cryosleep, ready to resume life in the frontier.")
+	else if(spawn_type == 2)
 		GLOB.using_map.on_new_spawn(src) //Moved to overridable map specific code
 
 /mob/new_player/proc/deleteCharacter()
@@ -587,4 +591,6 @@ mob/new_player/MayRespawn()
 /mob/new_player/say(var/message)
 	sanitize_and_communicate(/decl/communication_channel/ooc, client, message)
 
+//Open the preferences panel
+/mob/new_player/proc/preferences_panel()
 

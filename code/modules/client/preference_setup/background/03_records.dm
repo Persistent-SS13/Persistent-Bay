@@ -9,6 +9,7 @@
 	var/chosen_password = "nopassword"
 	//Some faction information.
 	var/faction              //Antag faction/general associated faction.
+	var/travel_reason        //Reason to move to the frontier, stored as a string
 
 /datum/category_item/player_setup_item/background/records
 	name = "Records"
@@ -22,6 +23,7 @@
 	from_file(S["memory"],pref.memory)
 	from_file(S["faction"],pref.faction)
 	from_file(S["nanotrasen_relation"],pref.nanotrasen_relation)
+	from_file(S["travel_reason"], pref.travel_reason)
 
 /datum/category_item/player_setup_item/background/records/save_character(var/savefile/S)
 	to_file(S["public_record"],pref.public_record)
@@ -31,13 +33,14 @@
 	to_file(S["memory"],pref.memory)
 	to_file(S["faction"],pref.faction)
 	to_file(S["nanotrasen_relation"],pref.nanotrasen_relation)
+	to_file(S["travel_reason"], pref.travel_reason)
 
 /datum/category_item/player_setup_item/background/records/content(var/mob/user)
+	var/datum/world_faction/faction = get_faction(pref.faction)
 	. = list()
 	. += "<br/><b>Records</b>:<br/>"
-	. += "<br><br>Starting Employer: <a href='?src=\ref[src];faction=1'>[pref.faction ? pref.faction : "Unset*"]</a>"
+	. += "<br><br>Starting Employer: <a href='?src=\ref[src];faction=1'>[faction ? faction.name : "Unset*"]</a>"
 	
-	var/datum/world_faction/faction = get_faction(pref.faction)
 	if(faction)
 		. += "<br>[faction.purpose]<br><br>"
 	. += "<br><br>Bank Account Pin:<br>"

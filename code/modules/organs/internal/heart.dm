@@ -16,14 +16,15 @@
 /obj/item/organ/internal/heart/open
 	open = 1
 
-/obj/item/organ/internal/heart/die()
-	if(dead_icon)
-		icon_state = dead_icon
-	..()
-
-/obj/item/organ/internal/heart/robotize()
+/obj/item/organ/internal/heart/New(mob/living/carbon/holder)
 	. = ..()
-	icon_state = "heart-prosthetic"
+	ADD_SAVED_VAR(pulse)
+	ADD_SAVED_VAR(heartbeat)
+	ADD_SAVED_VAR(open)
+
+/obj/item/organ/internal/heart/after_load()
+	. = ..()
+	Process()
 
 /obj/item/organ/internal/heart/Process()
 	if(owner)
@@ -219,3 +220,12 @@
 			pulsesound = "extremely fast and faint"
 
 	. = "[pulsesound] pulse"
+
+/obj/item/organ/internal/heart/on_update_icon()
+	. = ..()
+	if(BP_IS_ROBOTIC(src))
+		icon_state = "heart-prosthetic"
+	else if((status & ORGAN_DEAD) && dead_icon)
+		icon_state = dead_icon
+	else
+		icon_state = initial(icon_state)

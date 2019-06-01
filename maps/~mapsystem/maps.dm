@@ -369,3 +369,9 @@ var/const/MAP_HAS_RANK = 2		//Rank system, also togglable
 //It plays the spawn cutscene and etc 
 /datum/map/proc/on_new_spawn(var/mob/new_player/newchar)
 	return
+
+//Called by /datum/category_item/player_setup_item/physical/equipment/populate_uniforms() 
+// when the list of possible character outfit is shown to the player. Just add new clothing 
+// types to the list and they'll be added to the list displayed to the current client
+/datum/map/proc/populate_uniforms(var/client/C)
+	return list()

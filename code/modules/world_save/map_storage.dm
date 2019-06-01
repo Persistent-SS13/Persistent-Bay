@@ -109,18 +109,10 @@ var/global/list/debug_data = list()
 		lighting_build_overlay()
 	else
 		lighting_clear_overlay()
-//	for(var/obj/effect/floor_decal/decal in saved_decals)
-//		decal.init_for(src)
 
 /atom/movable/lighting_overlay/after_load()
 	loc = null
 	qdel(src)
-
-/mob/living/carbon/human/after_load()
-	..()
-	regenerate_icons()
-	redraw_inv()
-	handle_organs(1)
 
 /datum/proc/before_save()
 	return
@@ -313,6 +305,7 @@ var/global/list/debug_data = list()
 	to_file(f,holder)
 
 /proc/Save_Records(var/backup_dir)
+	to_world("<font size=3 color='green'>Saving crew records..</font>")
 	for(var/datum/computer_file/report/crew_record/L in GLOB.all_crew_records)
 		var/key = L.get_name()
 		fcopy("record_saves/[key].sav", "backups/[backup_dir]/records/[key].sav")
@@ -339,7 +332,7 @@ var/global/list/debug_data = list()
 		to_file(fe, L)
 		to_file(fe, L.linked_account)
 
-
+	to_world("<font size=3 color='green'>Saving faction records..</font>")
 	for(var/datum/world_faction/faction in GLOB.all_world_factions)
 		var/list/records = faction.get_records()
 		for(var/datum/computer_file/report/crew_record/L in records)
@@ -368,6 +361,7 @@ var/global/list/debug_data = list()
 		else
 			backup = 1
 	found_vars = list()
+	to_world("<font size=3 color='green'>Saving chunks..</font>")
 	for(var/z in 1 to SAVED_ZLEVELS)
 		fcopy("map_saves/z[z].sav", "backups/[dir]/z[z].sav")
 		fdel("map_saves/z[z].sav")
@@ -380,6 +374,7 @@ var/global/list/debug_data = list()
 	fdel("map_saves/extras.sav")
 	var/savefile/f = new("map_saves/extras.sav")
 	var/list/formatted_areas = list()
+	to_world("<font size=3 color='green'>Saving areas..</font>")
 	for(var/area/A in areas_to_save)
 		if(istype(A, /area/space)) continue
 		var/datum/area_holder/holder = new()
@@ -388,10 +383,13 @@ var/global/list/debug_data = list()
 		holder.turfs = A.get_turf_coords()
 		formatted_areas += holder
 	var/list/zones = list()
+	to_world("<font size=3 color='green'>Saving zones..</font>")
 	for(var/zone/Z in zones_to_save)
 		Z.turf_coords = Z.get_turf_coords()
 		zones |= Z
+	to_world("<font size=3 color='green'>Saving factions..</font>")
 	to_file(f["factions"],GLOB.all_world_factions)
+	to_world("<font size=3 color='green'>Saving marketplace..</font>")
 	to_file(f["material_marketplace"],GLOB.material_marketplace)
 	to_file(f["zones"],zones)
 	to_file(f["areas"],formatted_areas)

@@ -41,8 +41,10 @@ SUBSYSTEM_DEF(character_setup)
 	if(!istype(mannequin))
 		return
 	var/savefile/S = CHAR_SAVE_FILE(ind, ckey)
+	mannequin.before_save()
 	to_file(S["name"], mannequin.real_name)
 	to_file(S["mob"], mannequin)
+	mannequin.after_save()
 
 /datum/controller/subsystem/character_setup/proc/delete_character(var/ind, var/ckey)
 	fdel(CHAR_SAVE_FILE_PATH(ind, ckey))
@@ -53,6 +55,7 @@ SUBSYSTEM_DEF(character_setup)
 	var/savefile/F = CHAR_SAVE_FILE(ind, ckey)
 	var/mob/M
 	from_file(F["mob"], M)
+	M.after_spawn() //Runs after_load
 	return M
 
 /datum/controller/subsystem/character_setup/proc/peek_character_name(var/ind, var/ckey)
@@ -67,12 +70,12 @@ SUBSYSTEM_DEF(character_setup)
 	var/mob/M = src.load_character(ind, ckey)
 	if(!M)
 		return
-	M.after_spawn()
 	if(ishuman(M))
 		var/mob/living/carbon/human/H = M
 		H.force_update_limbs()
 		H.update_eyes()
 	M.regenerate_icons()
+	M.update_icon()
 	var/icon/I = get_preview_icon(M)
-	qdel(M)
+	QDEL_IN(M, 1 SECONDS)
 	return I

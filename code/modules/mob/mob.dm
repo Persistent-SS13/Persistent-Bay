@@ -1306,6 +1306,10 @@
 	ADD_SAVED_VAR(mutations)
 	ADD_SAVED_VAR(skillset)
 
+	ADD_SAVED_VAR(spawn_type)
+	ADD_SAVED_VAR(spawn_loc)
+	ADD_SAVED_VAR(spawn_loc_2)
+
 	ADD_SKIP_EMPTY(dna)
 	ADD_SKIP_EMPTY(l_hand)
 	ADD_SKIP_EMPTY(r_hand)
@@ -1317,6 +1321,8 @@
 	ADD_SKIP_EMPTY(active_genes)
 	ADD_SKIP_EMPTY(mutations)
 	ADD_SKIP_EMPTY(skillset)
+	ADD_SKIP_EMPTY(spawn_loc)
+	ADD_SKIP_EMPTY(spawn_loc_2)
 
 /mob/after_load()
 	. = ..()

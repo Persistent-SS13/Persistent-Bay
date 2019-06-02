@@ -1,11 +1,12 @@
 /obj/item/weapon/gun/projectile/automatic/tcc/smg
-	name = "submachine gun"
+	name = "Mako SMG"
 	desc = "The C-20r is a lightweight and rapid firing SMG, for when you REALLY need someone dead. Uses 10mm rounds. Has a 'Scarborough Arms - Per falcis, per pravitas' buttstamp."
 	icon_state = "c20r"
 	item_state = "c20r"
 	slot_flags = SLOT_BACK
 	w_class = ITEM_SIZE_LARGE
 	force = 10
+	throwforce = 10
 	caliber = "10mm"
 	origin_tech = list(TECH_COMBAT = 5, TECH_MATERIAL = 2)
 	slot_flags = SLOT_BELT|SLOT_BACK
@@ -32,13 +33,14 @@
 	return
 
 /obj/item/weapon/gun/projectile/automatic/tcc/lmg
-	name = "light machine gun"
+	name = "'Great White' LMG"
 	desc = "A rather traditionally made L6 SAW with a pleasantly lacquered wooden pistol grip. Has 'Aussec Armoury- 2531' engraved on the reciever." //probably should refluff this
 	icon_state = "l6closed100"
 	item_state = "l6closedmag"
 	slot_flags = SLOT_BACK
 	w_class = ITEM_SIZE_HUGE
-	force = 10
+	force = 15
+	throwforce = 15
 	slot_flags = 0
 	max_shells = 50
 	caliber = "a556"
@@ -117,7 +119,8 @@
 	item_state = null
 	slot_flags = SLOT_BACK
 	w_class = ITEM_SIZE_HUGE
-	force = 10
+	force = 15
+	throwforce = 15
 	caliber = "a556"
 	origin_tech = list(TECH_COMBAT = 6, TECH_MATERIAL = 1)
 	slot_flags = SLOT_BACK
@@ -129,7 +132,7 @@
 
 	//Assault rifle, burst fire degrades quicker than SMG, worse one-handing penalty, slightly increased move delay
 	firemodes = list(
-		list(mode_name="semiauto",       burst=1, fire_delay=0,    move_delay=null, one_hand_penalty=4, burst_accuracy=null, dispersion=null),
+		list(mode_name="semiauto",       burst=1, fire_delay=0,    move_delay=5, one_hand_penalty=4, burst_accuracy=null, dispersion=null),
 		list(mode_name="3-round bursts", burst=3, fire_delay=null, move_delay=6,    one_hand_penalty=5, burst_accuracy=list(0,-1,-1),       dispersion=list(0.0, 0.6, 1.0), jam_chance=10),
 		list(mode_name="short bursts",   burst=5, fire_delay=null, move_delay=6,    one_hand_penalty=6, burst_accuracy=list(0,-1,-2,-3,-3), dispersion=list(0.6, 1.0, 1.2, 1.2, 1.5), jam_chance=15),
 		)
@@ -140,32 +143,34 @@
 	..()
 
 /obj/item/weapon/gun/projectile/shotgun/pump/tcc/shotgun
-	name = "triple barreled combat shotgun"
+	name = "Bull Shotgun"
 	desc = "Built for close quarters combat, the Hephaestus Industries KS-40 is widely regarded as a weapon of choice for repelling boarders."
 	icon_state = "cshotgun"
 	item_state = "cshotgun"
 	slot_flags = SLOT_BACK
+	force = 15
+	throwforce = 15
 	origin_tech = list(TECH_COMBAT = 5, TECH_MATERIAL = 2)
 	max_shells = 5 //match the ammo box capacity, also it can hold a round in the chamber anyways, for a total of 8.
 	burst	   = 3
 	burst_delay = 0
 	ammo_type = /obj/item/ammo_casing/shotgun
 	one_hand_penalty = 4 //a little heavier than the regular shotgun
-
 	firemodes = list(
-		list(mode_name="1 barrel",       burst=1, fire_delay=0,    move_delay=null, one_hand_penalty=4, burst_accuracy=null, dispersion=null),
+		list(mode_name="1 barrel",       burst=1, fire_delay=0,    move_delay=5, one_hand_penalty=4, burst_accuracy=null, dispersion=null),
 		list(mode_name="2 barrels", burst=2, fire_delay=null, move_delay=6,    one_hand_penalty=5, burst_accuracy=list(0,-1,-1),       dispersion=list(0.0, 0.6, 1.0), jam_chance=10),
 		list(mode_name= "3 barrels",   burst=3, fire_delay=null, move_delay=6,    one_hand_penalty=6, burst_accuracy=list(0,-1,-2,-3), dispersion=list(0.6, 1.0, 1.2, 1.2, 1.5), jam_chance=30),
 		)
 
 /obj/item/weapon/gun/projectile/automatic/tcc/dmr
-	name = "assault rifle"
+	name = "Tigerfin DMR"
 	desc = "The rugged STS-35 is a durable automatic weapon of a make popular weapons of choice in frontier conflicts. Uses 5.56mm rounds."
 	icon_state = "arifle"
 	item_state = null
 	slot_flags = SLOT_BACK
 	w_class = ITEM_SIZE_HUGE
-	force = 10
+	force = 15
+	throwforce = 15
 	caliber = "a75"
 	origin_tech = list(TECH_COMBAT = 6, TECH_MATERIAL = 1)
 	slot_flags = SLOT_BACK
@@ -177,7 +182,7 @@
 
 	//Assault rifle, burst fire degrades quicker than SMG, worse one-handing penalty, slightly increased move delay
 	firemodes = list(
-		list(mode_name="semiauto",       burst=1, fire_delay=0,    move_delay=null, one_hand_penalty=4, burst_accuracy=null, dispersion=null),
+		list(mode_name="semiauto",       burst=1, fire_delay=0,    move_delay=5, one_hand_penalty=4, burst_accuracy=null, dispersion=null),
 		)
 
 /obj/item/weapon/gun/projectile/automatic/tcc/dmr/update_icon()
@@ -186,12 +191,13 @@
 	..()
 
 /obj/item/weapon/gun/energy/tcc/pulse_rifle
-	name = "pulse rifle"
+	name = "X-39 Prototype Thermal Projector"
 	desc = "A weapon that uses advanced pulse-based beam generation technology to emit powerful laser blasts. Because of its complexity and cost, it is rarely seen in use except by specialists."
 	icon_state = "pulse"
 	item_state = "pulse"
 	slot_flags = SLOT_BACK
-	force = 12
+	force = 15
+	throwforce = 15
 	projectile_type = /obj/item/projectile/tcc/thermal
 	max_shots = 8
 	w_class = ITEM_SIZE_HUGE
@@ -203,3 +209,24 @@
 	accuracy = -1
 	wielded_item_state = "gun_wielded"
 	load_method = ENERGY_LOAD_FIXED_CELL
+	firemodes = list(
+		list(mode_name="semiauto",       burst=1, fire_delay=0,    move_delay=5, one_hand_penalty=4, burst_accuracy=null, dispersion=null),
+		)
+
+/obj/item/weapon/gun/launcher/grenade/tcc/glauncher
+	name = "Hammerhead Grenade Launcher"
+	desc = "A bulky pump-action grenade launcher. Holds up to 6 grenades in a revolving magazine."
+	icon_state = "riotgun"
+	item_state = "riotgun"
+	w_class = ITEM_SIZE_HUGE
+	force = 15
+	throwforce = 15
+	fire_sound = 'sound/weapons/empty.ogg'
+	fire_sound_text = "a metallic thunk"
+	screen_shake = 0
+	throw_distance = 7
+	release_force = 5
+	matter = list(MATERIAL_STEEL = 2000)
+	firemodes = list(
+		list(mode_name="semiauto",       burst=1, fire_delay=0,    move_delay=5, one_hand_penalty=4, burst_accuracy=null, dispersion=null),
+		)

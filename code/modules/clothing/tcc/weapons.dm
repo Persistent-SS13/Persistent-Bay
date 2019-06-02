@@ -1,9 +1,9 @@
 /obj/item/weapon/gun/projectile/automatic/tcc/smg
 	name = "Mako SMG"
-	desc = "The C-20r is a lightweight and rapid firing SMG, for when you REALLY need someone dead. Uses 10mm rounds. Has a 'Scarborough Arms - Per falcis, per pravitas' buttstamp."
-	icon_state = "c20r"
-	item_state = "c20r"
-	slot_flags = SLOT_BACK
+	desc = "The Mako SMG is a lightweight and rapid firing SMG, for when you REALLY need someone dead. Uses 10mm rounds. Has a 'Scarborough Arms - Per falcis, per pravitas' buttstamp."
+	icon_state = "tcc_smg"
+	item_state = "tcc_smg"
+	slot_flags = SLOT_BACK|SLOT_BELT
 	w_class = ITEM_SIZE_LARGE
 	force = 10
 	throwforce = 10
@@ -19,7 +19,7 @@
 
 	//SMG
 	firemodes = list(
-		list(mode_name="semiauto",       burst=1, fire_delay=0,    move_delay=null, one_hand_penalty=2, burst_accuracy=null, dispersion=null),
+		list(mode_name="semiauto",       burst=1, fire_delay=0,    move_delay=3, one_hand_penalty=2, burst_accuracy=0, dispersion=0.0),
 		list(mode_name="3-round bursts", burst=3, fire_delay=null, move_delay=4,    one_hand_penalty=3, burst_accuracy=list(0,-1,-1),       dispersion=list(0.0, 0.6, 1.0), jam_chance=10),
 		list(mode_name="short bursts",   burst=5, fire_delay=null, move_delay=4,    one_hand_penalty=4, burst_accuracy=list(0,-1,-1,-1,-2), dispersion=list(0.6, 0.6, 1.0, 1.0, 1.2), jam_chance=15),
 		)
@@ -27,16 +27,16 @@
 /obj/item/weapon/gun/projectile/automatic/tcc/smg/update_icon()
 	..()
 	if(ammo_magazine)
-		icon_state = "c20r-[round(ammo_magazine.stored_ammo.len,4)]"
+		icon_state = "tcc_smg"
 	else
-		icon_state = "c20r"
+		icon_state = "tcc_smg_unloaded"
 	return
 
 /obj/item/weapon/gun/projectile/automatic/tcc/lmg
 	name = "'Great White' LMG"
-	desc = "A rather traditionally made L6 SAW with a pleasantly lacquered wooden pistol grip. Has 'Aussec Armoury- 2531' engraved on the reciever." //probably should refluff this
-	icon_state = "l6closed100"
-	item_state = "l6closedmag"
+	desc = "A rather traditionally made LMG. Has 'Aussec Armoury- 2531' engraved on the reciever." //probably should refluff this
+	icon_state = "tcc_lmg"
+	item_state = "tcc_lmg"
 	slot_flags = SLOT_BACK
 	w_class = ITEM_SIZE_HUGE
 	force = 15
@@ -90,14 +90,14 @@
 
 /obj/item/weapon/gun/projectile/automatic/tcc/lmg/update_icon()
 	if(istype(ammo_magazine, /obj/item/ammo_magazine/box))
-		icon_state = "l6[cover_open ? "open" : "closed"][round(ammo_magazine.stored_ammo.len, 25)]"
-		item_state = "l6[cover_open ? "open" : "closed"]"
+		icon_state = "tcc_lmg"
+		item_state = "tcc_lmg"
 	else if(ammo_magazine)
-		icon_state = "l6[cover_open ? "open" : "closed"]mag"
-		item_state = "l6[cover_open ? "open" : "closed"]mag"
+		icon_state = "tcc_lmg"
+		item_state = "tcc_lmg"
 	else
-		icon_state = "l6[cover_open ? "open" : "closed"]-empty"
-		item_state = "l6[cover_open ? "open" : "closed"]-empty"
+		icon_state = "tcc_lmg_unloaded"
+		item_state = "tcc_lmg_unloaded"
 	..()
 
 /obj/item/weapon/gun/projectile/automatic/tcc/lmg/load_ammo(var/obj/item/A, mob/user)
@@ -113,10 +113,10 @@
 	..()
 
 /obj/item/weapon/gun/projectile/automatic/tcc/arifle
-	name = "assault rifle"
+	name = "Goblin Assault Rifle"
 	desc = "The rugged STS-35 is a durable automatic weapon of a make popular weapons of choice in frontier conflicts. Uses 5.56mm rounds."
-	icon_state = "arifle"
-	item_state = null
+	icon_state = "tcc_assault"
+	item_state = "tcc_assault"
 	slot_flags = SLOT_BACK
 	w_class = ITEM_SIZE_HUGE
 	force = 15
@@ -128,7 +128,7 @@
 	magazine_type = /obj/item/ammo_magazine/c556
 	allowed_magazines = /obj/item/ammo_magazine/c556
 	one_hand_penalty = 3
-	wielded_item_state = "arifle-wielded"
+	wielded_item_state = "tcc_assault"
 
 	//Assault rifle, burst fire degrades quicker than SMG, worse one-handing penalty, slightly increased move delay
 	firemodes = list(
@@ -138,15 +138,15 @@
 		)
 
 /obj/item/weapon/gun/projectile/automatic/tcc/arifle/update_icon()
-	icon_state = (ammo_magazine)? "arifle" : "arifle-empty"
-	wielded_item_state = (ammo_magazine)? "arifle-wielded" : "arifle-wielded-empty"
+	icon_state = (ammo_magazine)? "tcc_assault" : "tcc_assault_unloaded"
+	wielded_item_state = (ammo_magazine)? "tcc_assault" : "tcc_assault_unloaded"
 	..()
 
 /obj/item/weapon/gun/projectile/shotgun/pump/tcc/shotgun
 	name = "Bull Shotgun"
 	desc = "Built for close quarters combat, the Hephaestus Industries KS-40 is widely regarded as a weapon of choice for repelling boarders."
-	icon_state = "cshotgun"
-	item_state = "cshotgun"
+	icon_state = "tcc_shotgun"
+	item_state = "tcc_shotgun"
 	slot_flags = SLOT_BACK
 	force = 15
 	throwforce = 15
@@ -165,8 +165,8 @@
 /obj/item/weapon/gun/projectile/automatic/tcc/dmr
 	name = "Tigerfin DMR"
 	desc = "The rugged STS-35 is a durable automatic weapon of a make popular weapons of choice in frontier conflicts. Uses 5.56mm rounds."
-	icon_state = "arifle"
-	item_state = null
+	icon_state = "tcc_dmr"
+	item_state = "tcc_dmr"
 	slot_flags = SLOT_BACK
 	w_class = ITEM_SIZE_HUGE
 	force = 15
@@ -178,7 +178,7 @@
 	magazine_type = /obj/item/ammo_magazine/dmr/a75
 	allowed_magazines = /obj/item/ammo_magazine/dmr/a75
 	one_hand_penalty = 3
-	wielded_item_state = "arifle-wielded"
+	wielded_item_state = "tcc_dmr"
 
 	//Assault rifle, burst fire degrades quicker than SMG, worse one-handing penalty, slightly increased move delay
 	firemodes = list(
@@ -186,20 +186,20 @@
 		)
 
 /obj/item/weapon/gun/projectile/automatic/tcc/dmr/update_icon()
-	icon_state = (ammo_magazine)? "arifle" : "arifle-empty"
-	wielded_item_state = (ammo_magazine)? "arifle-wielded" : "arifle-wielded-empty"
+	icon_state = (ammo_magazine)? "tcc_dmr" : "tcc_dmr_unloaded"
+	wielded_item_state = (ammo_magazine)? "tcc_dmr" : "tcc_dmr_unloaded"
 	..()
 
 /obj/item/weapon/gun/energy/tcc/pulse_rifle
 	name = "X-39 Prototype Thermal Projector"
 	desc = "A weapon that uses advanced pulse-based beam generation technology to emit powerful laser blasts. Because of its complexity and cost, it is rarely seen in use except by specialists."
-	icon_state = "pulse"
-	item_state = "pulse"
+	icon_state = "tcc_thermalbeam"
+	item_state = "tcc_thermalbeam"
 	slot_flags = SLOT_BACK
 	force = 15
 	throwforce = 15
 	projectile_type = /obj/item/projectile/tcc/thermal
-	max_shots = 8
+	max_shots = 9
 	w_class = ITEM_SIZE_HUGE
 	one_hand_penalty= 6
 	multi_aim = 1
@@ -207,8 +207,7 @@
 	burst = 1
 	move_delay = 4
 	accuracy = -1
-	wielded_item_state = "gun_wielded"
-	load_method = ENERGY_LOAD_FIXED_CELL
+	wielded_item_state = "tcc_thermalbeam"
 	firemodes = list(
 		list(mode_name="semiauto",       burst=1, fire_delay=0,    move_delay=5, one_hand_penalty=4, burst_accuracy=null, dispersion=null),
 		)
@@ -216,8 +215,8 @@
 /obj/item/weapon/gun/launcher/grenade/tcc/glauncher
 	name = "Hammerhead Grenade Launcher"
 	desc = "A bulky pump-action grenade launcher. Holds up to 6 grenades in a revolving magazine."
-	icon_state = "riotgun"
-	item_state = "riotgun"
+	icon_state = "tcc_grenadelauncher"
+	item_state = "tcc_grenadelauncher"
 	w_class = ITEM_SIZE_HUGE
 	force = 15
 	throwforce = 15

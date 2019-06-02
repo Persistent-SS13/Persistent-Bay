@@ -1928,7 +1928,6 @@
 #include "code\modules\mob\living\carbon\human\species\station\human_subspecies.dm"
 #include "code\modules\mob\living\carbon\human\species\station\machine.dm"
 #include "code\modules\mob\living\carbon\human\species\station\monkey.dm"
-#include "code\modules\mob\living\carbon\human\species\station\nabber.dm"
 #include "code\modules\mob\living\carbon\human\species\station\phorosian.dm"
 #include "code\modules\mob\living\carbon\human\species\station\prometheans.dm"
 #include "code\modules\mob\living\carbon\human\species\station\station.dm"

@@ -16,6 +16,18 @@
 /obj/item/ammo_magazine/a357/empty
 	initial_ammo = 0
 
+/obj/item/ammo_magazine/dmr/a75
+	name = "ammo magazine (20mm)"
+	icon_state = "75"
+	mag_type = MAGAZINE
+	caliber = "75"
+	ammo_type = /obj/item/ammo_casing/a75
+	multiple_sprites = 1
+	max_ammo = 10
+
+/obj/item/ammo_magazine/dmr/a75/empty
+	initial_ammo = 0
+
 /obj/item/ammo_magazine/c50
 	name = "speed loader (.50)"
 	desc = "A speed loader for revolvers."

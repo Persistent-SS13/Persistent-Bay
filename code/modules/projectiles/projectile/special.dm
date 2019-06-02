@@ -166,3 +166,18 @@
 			name = "weakened [name]"
 			force = force * pressure_decrease
 			pressure_decrease_active = TRUE
+
+/obj/item/projectile/tcc/thermal
+	name = "thermal pulse laser"
+	icon_state = "u_laser"
+	fire_sound='sound/weapons/pulse.ogg'
+	force = 25
+	damtype = DAM_BURN
+	temperature = T100C - 120
+
+
+	on_hit(var/atom/target, var/blocked = 0)//These two could likely check temp protection on the mob
+		if(istype(target, /mob/living))
+			var/mob/M = target
+			M.bodytemperature = temperature
+		return 1

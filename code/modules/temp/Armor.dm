@@ -155,7 +155,7 @@
 	//item_state = "swat_suit"
 	valid_accessory_slots = list(ACCESSORY_SLOT_INSIGNIA)
 	w_class = ITEM_SIZE_LARGE
-	body_parts_covered = HEAD | UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	body_parts_covered = HEAD|UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
 	armor  = list(
 		DAM_BLUNT 	= 40,
 		DAM_PIERCE 	= 35,
@@ -172,5 +172,53 @@
 	siemens_coefficient = 0.7
 
 /obj/item/clothing/suit/armor/bulletproof/hazmat/New()
+	..()
+	slowdown_per_slot[slot_wear_suit] = 1
+
+/obj/item/clothing/suit/armor/raider/heavy/helmet
+	name = "ballistic suit"
+	desc = "A suit of armor with heavy plates to protect against ballistic projectiles. Looks like it might impair movement."
+	icon_state = "bulletproof"
+	//item_state = "swat_suit"
+	w_class = ITEM_SIZE_NORMAL
+	body_parts_covered = HEAD
+	armor  = list(
+		DAM_BLUNT 	= 50,
+		DAM_PIERCE 	= 45,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 75,
+		DAM_LASER 	= 45,
+		DAM_ENERGY 	= 15,
+		DAM_BURN 	= 15,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 2)
+	siemens_coefficient = 0.7
+
+/obj/item/clothing/suit/armor/raider/heavy
+	name = "ballistic suit"
+	desc = "A suit of armor with heavy plates to protect against ballistic projectiles. Looks like it might impair movement."
+	icon_state = "bulletproof"
+	//item_state = "swat_suit"
+	w_class = ITEM_SIZE_LARGE
+	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|ARMS
+	armor  = list(
+		DAM_BLUNT 	= 50,
+		DAM_PIERCE 	= 45,
+		DAM_CUT 	= 50,
+		DAM_BULLET 	= 75,
+		DAM_LASER 	= 45,
+		DAM_ENERGY 	= 15,
+		DAM_BURN 	= 15,
+		DAM_BOMB 	= 30,
+		DAM_EMP 	= 0,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 2)
+	siemens_coefficient = 0.7
+
+/obj/item/clothing/suit/armor/raider/heavy/New()
 	..()
 	slowdown_per_slot[slot_wear_suit] = 1

@@ -2565,6 +2565,8 @@
 #include "code\modules\telesci\bscrystal.dm"
 #include "code\modules\telesci\telepad.dm"
 #include "code\modules\temp\Armor.dm"
+#include "code\modules\temp\clothing.dm"
+#include "code\modules\temp\weapons.dm"
 #include "code\modules\tgui\external.dm"
 #include "code\modules\tgui\states.dm"
 #include "code\modules\tgui\tgui.dm"

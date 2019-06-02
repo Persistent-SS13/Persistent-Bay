@@ -247,7 +247,15 @@
 	set name = "Nab"
 	set desc = "Nab someone."
 
-	if(!can_nab())
+	if(last_special > world.time)
+		return
+
+	if(incapacitated(INCAPACITATION_DISABLED) || buckled || pinned.len)
+		to_chat(src, "<span class='warning'>You cannot nab in your current state.</span>")
+		return
+
+	if(!cloaked || pulling_punches)
+		to_chat(src, "<span class='warning'>You can only nab people when you are well hidden and ready to hunt.</span>")
 		return
 
 	var/list/choices = list()
@@ -256,8 +264,18 @@
 			choices += M
 	choices -= src
 
-	var/mob/living/T = input(src, "Who do you wish to nab?") as null|anything in choices
-	if(!T || !can_nab(T))
+	var/mob/living/T = input(src,"Who do you wish to nab?") as null|anything in choices
+
+	if(!T || !src || src.stat) return
+
+	if(!Adjacent(T)) return
+
+	//check again because we waited for user input
+	if(last_special > world.time)
+		return
+
+	if(incapacitated(INCAPACITATION_DISABLED) || buckled || pinned.len)
+		to_chat(src, "<span class='warning'>You cannot nab in your current state.</span>")
 		return
 
 	last_special = world.time + 50
@@ -267,11 +285,12 @@
 	to_chat(src, "<span class='warning'>You drop everything as you spring out to nab someone!.</span>")
 
 	playsound(loc, 'sound/weapons/pierce.ogg', 25, 1, -1)
-	remove_cloaking_source(species)
+	cloaked = 0
+	update_icons()
 
 	if(prob(90) && src.make_grab(src, T, GRAB_NAB_SPECIAL))
 		T.Weaken(rand(1,3))
-		visible_message("<span class='danger'>\The [src] suddenly lunges out and grabs \the [T]!</span>")
+		visible_message("<span class='danger'>[src] suddenly appears, lunging out and grabbing [T]!</span>")
 		LAssailant = src
 
 		src.do_attack_animation(T)
@@ -279,18 +298,20 @@
 		return 1
 
 	else
-		visible_message("<span class='danger'>\The [src] suddenly lunges out, almost grabbing \the [T]!</span>")
+		visible_message("<span class='danger'>[src] suddenly appears, lunging and almost grabbing [T]!</span>")
 
 /mob/living/carbon/human/proc/active_camo()
 	set category = "Abilities"
 	set name = "Active Camo"
 	set desc = "Camouflage yourself"
-
-	if(is_cloaked_by(species))
-		remove_cloaking_source(species)
-	else
-		add_cloaking_source(species)
+	cloaked = !cloaked
+	if(cloaked)
 		apply_effect(2, STUN, 0)
+		to_chat(src, "<span class='notice'>You hold perfectly still, shifting your exterior to match the things around you.</span>")
+	else
+		visible_message("<span class='danger'>[src] suddenly appears!</span>")
+	update_icons()
+
 
 /mob/living/carbon/human/proc/switch_stance()
 	set category = "Abilities"
@@ -300,15 +321,14 @@
 	if(stat) return
 
 	to_chat(src, "<span class='notice'>You begin to adjust the fluids in your arms, dropping everything and getting ready to swap which set you're using.</span>")
-	var/hidden = is_cloaked()
-	if(!hidden)
-		visible_message("[src] shifts \his arms.")
 
 	if(l_hand) unEquip(l_hand)
 	if(r_hand) unEquip(r_hand)
 
+	// So there's a progress bar if you're not cloaked and there isn't one if you are cloaked.
+	var/hidden = cloaked
+
 	if(do_after(src, 30))
-		hidden = is_cloaked()
 		pulling_punches = !pulling_punches
 		nabbing = !pulling_punches
 
@@ -323,8 +343,8 @@
 			current_grab_type = all_grabobjects[GRAB_NAB]
 			to_chat(src, "<span class='notice'>You pull in your manipulation arms, dropping any items and unfolding your massive hunting arms in preparation of grabbing prey.</span>")
 			if(!hidden)
-				visible_message("<span class='warning'>[src] tenses as \he brings \his smaller arms in close to \his body. \His two massive spiked arms reach \
-				out. \He looks ready to attack.</span>")
+				visible_message("<span class='warning'>[src] tenses as \he brings his smaller arms in close to \his body. \his two massive apiked arms reach \
+				out. \he looks dangerous and ready to attack.</span>")
 	else
 		to_chat(src, "<span class='notice'>You stop adjusting your arms and don't switch between them.</span>")
 

@@ -14,6 +14,7 @@
 	min_age = 17
 	max_age = 100
 	gluttonous = GLUT_TINY
+	strength = STR_LOW
 
 	spawn_flags = SPECIES_CAN_JOIN
 	appearance_flags = HAS_HAIR_COLOR | HAS_SKIN_TONE_NORMAL | HAS_LIPS | HAS_UNDERWEAR | HAS_EYE_COLOR
@@ -95,7 +96,7 @@
 	primitive_form = "Stok"
 	darksight = 3
 	gluttonous = GLUT_TINY
-	strength = STR_HIGH
+	strength = STR_MEDIUM
 	slowdown = 0.5
 	brute_mod = 0.8
 	blood_volume = 800
@@ -175,6 +176,7 @@
 	secondary_langs = list(LANGUAGE_SKRELLIAN)
 	name_language = null
 	health_hud_intensity = 1.75
+	strength = STR_LOW
 
 	min_age = 19
 	max_age = 90

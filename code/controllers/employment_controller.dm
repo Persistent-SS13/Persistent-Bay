@@ -53,6 +53,9 @@ var/datum/controller/employment_controller/employment_controller
 				if(payment && !money_transfer(faction.central_account, employee, "Payroll ([faction.name])", payment))
 					faction.debts["[employee]"] += payment
 				else
+					if(istype(faction, /datum/world_faction/business))
+						var/datum/world_faction/business/business_faction = faction
+						business_faction.employee_objectives(employee)
 					if(payment)
 						if(paydata[employee])
 							paydata[employee] += payment

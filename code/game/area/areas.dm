@@ -35,6 +35,12 @@
 /area/proc/get_contents()
 	return contents
 
+/area/proc/get_turfs()
+	var/list/all_turfs = list()
+	for(var/turf/T in src)
+		all_turfs |= T
+	return all_turfs
+
 /area/proc/get_cameras()
 	var/list/cameras = list()
 	for (var/obj/machinery/camera/C in src)

@@ -100,7 +100,7 @@
 	t += "<b>Total:</b> [amount] $$ Ethericoins<br><br><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>"
 	t += "<td>Authorized by:<br>[idname] [idrank]<br><td>Paid by:<br>*None*</td></tr></table><br></td>"
 	t += "<tr><td><h3>Reason</H3><font size = '1'>[reason]<br></td></tr></table><br><table border=1 cellspacing=0 cellpadding=3 style='border: 1px solid black;'>"
-	t += "<td></font><font size='4'><b>Swipe ID to confirm transaction.</b></font></center></font>"
+	t += "<td></font><font size='4'><b>Swipe Expense Card to confirm transaction.</b></font></center></font>"
 	var/obj/item/weapon/paper/invoice/invoice = new()
 	invoice.info = t
 	invoice.purpose = reason
@@ -140,36 +140,6 @@
 /obj/item/weapon/paper/invoice/attackby(obj/item/weapon/P as obj, mob/user as mob)
 	if(istype(P, /obj/item/weapon/pen))
 		return
-	else if(istype(P, /obj/item/weapon/card/id))
-		if(paid) return 1
-		var/datum/world_faction/connected_faction = get_faction(linked_faction)
-		if(!connected_faction) return
-		var/datum/money_account/target_account = connected_faction.central_account
-		var/obj/item/weapon/card/id/id = P
-		if(!id.valid) return 0
-		var/datum/money_account/account = get_account(id.associated_account_number)
-		if(!account) return
-		if(account.security_level != 0) //If card requires pin authentication (ie seclevel 1 or 2)
-			var/attempt_pin = input("Enter pin code", "Vendor transaction") as num
-			if(account.remote_access_pin != attempt_pin)
-				to_chat(user, "Unable to access account: incorrect credentials.")
-				return
-
-		if(transaction_amount > account.money)
-			to_chat(user, "Unable to complete transaction: insufficient funds.")
-			return
-		else
-			var/datum/transaction/T = new("[connected_faction.name] (via digital invoice)", purpose, -transaction_amount, "Digital Invoice")
-			account.do_transaction(T)
-			//transfer the money
-			var/datum/transaction/Te = new("[account.owner_name]", purpose, transaction_amount, "Digital Invoice")
-			target_account.do_transaction(Te)
-			paid = 1
-			info = replacetext(info, "*Unpaid*", "Paid")
-			info = replacetext(info, "*None*", "[account.owner_name]")
-			to_chat(user, "Payment succesful")
-			update_icon()
-		return
 	else if(istype(P, /obj/item/weapon/card/expense))
 		var/datum/world_faction/connected_faction = get_faction(linked_faction)
 		if(!connected_faction) return
@@ -186,6 +156,9 @@
 			var/datum/transaction/Te = new("[account_name]", purpose, transaction_amount, "Digital Invoice")
 			target_account.do_transaction(Te)
 			paid = 1
+			if(istype(connected_faction, /datum/world_faction/business))
+				var/datum/world_faction/business/business_faction = connected_faction
+				business_faction.sales_objectives(account_name, 2)
 			info = replacetext(info, "*Unpaid*", "Paid")
 			info = replacetext(info, "*None*", "[account_name]")
 			to_chat(user, "Payment succesful")
@@ -201,10 +174,7 @@
 		var/datum/world_faction/connected_faction = get_faction(linked_faction)
 		if(!connected_faction) return
 		var/datum/money_account/target_account = connected_faction.central_account
-		var/datum/money_account/linked_account
-		var/attempt_account_num = input("Enter account number to pay the digital invoice with.", "account number") as num
-		var/attempt_pin = input("Enter pin code", "Account pin") as num
-		linked_account = attempt_account_access(attempt_account_num, attempt_pin, 1)
+		var/datum/money_account/linked_account = get_account_record(usr.real_name)
 		if(linked_account)
 			if(linked_account.suspended)
 				linked_account = null
@@ -220,6 +190,9 @@
 		var/datum/transaction/Te = new("[linked_account.owner_name]", purpose, transaction_amount, "Digital Invoice")
 		target_account.do_transaction(Te)
 		paid = 1
+		if(istype(connected_faction, /datum/world_faction/business))
+			var/datum/world_faction/business/business_faction = connected_faction
+			business_faction.sales_objectives(usr.real_name, 1)
 		info = replacetext(info, "*Unpaid*", "*Paid*")
 		info = replacetext(info, "*None*", "[linked_account.owner_name]")
 		to_chat(usr, "Payment succesful")

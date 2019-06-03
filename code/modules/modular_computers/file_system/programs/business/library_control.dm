@@ -98,7 +98,7 @@
 				book.title = scanned_book.title
 				book.icon_state = scanned_book.icon_state
 				connected_faction.library.books |= book
-
+				connected_faction.publish_book_objectives(book.author_real)
 			else
 				to_chat(usr, "You must scan a book first.")
 

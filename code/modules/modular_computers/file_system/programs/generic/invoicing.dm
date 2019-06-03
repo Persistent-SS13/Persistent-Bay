@@ -4,7 +4,7 @@
 	nanomodule_path = /datum/nano_module/program/invoicing
 	program_icon_state = "supply"
 	program_menu_icon = "cart"
-	extended_desc = "A tool for creating digital invoices that act as one time payment processors for networks to recieve payment from individual accounts. ."
+	extended_desc = "A tool for creating digital invoices that act as one time payment processors for networks to recieve payment from individual accounts."
 	size = 21
 	available_on_ntnet = 1
 	requires_ntnet = 1
@@ -109,6 +109,7 @@
 	invoice.loc = get_turf(program.computer)
 	playsound(get_turf(program.computer), pick('sound/items/polaroid1.ogg', 'sound/items/polaroid2.ogg'), 75, 1, -3)
 	invoice.name = "[connected_faction.abbreviation] digital invoice"
+	invoice.salesperson = idname
 	
 
 	
@@ -119,6 +120,8 @@
 	var/paid = 0
 	var/purpose = ""
 	icon_state = "invoice"
+	
+	var/salesperson = ""
 /obj/item/weapon/paper/invoice/update_icon()
 	if(paid)
 		icon_state = "invoice-paid"
@@ -185,14 +188,24 @@
 		else
 			to_chat(usr, "\icon[src]<span class='warning'>Account not found.</span>")
 		if(!linked_account) return
-		var/datum/transaction/T = new("[connected_faction.name] (via digital invoice)", purpose, -transaction_amount, "Digital Invoice")
-		linked_account.do_transaction(T)
-		var/datum/transaction/Te = new("[linked_account.owner_name]", purpose, transaction_amount, "Digital Invoice")
-		target_account.do_transaction(Te)
-		paid = 1
+		var/final_amount = transaction_amount
 		if(istype(connected_faction, /datum/world_faction/business))
 			var/datum/world_faction/business/business_faction = connected_faction
 			business_faction.sales_objectives(usr.real_name, 1)
+			if(business_faction.commission)
+				var/datum/money_account/sales_account = get_account_record(salesperson)
+				if(sales_account)
+					var/commission_amount = round(final_amount/100*business_faction.commission)
+					if(commission_amount)
+						final_amount -= commission_amount
+						var/datum/transaction/T = new("[connected_faction.name] (via invoice commission)", "Commission", commission_amount, "Digital Invoice")
+						sales_account.do_transaction(T)
+		var/datum/transaction/T = new("[connected_faction.name] (via digital invoice)", purpose, -transaction_amount, "Digital Invoice")
+		linked_account.do_transaction(T)
+		var/datum/transaction/Te = new("[linked_account.owner_name]", purpose, final_amount, "Digital Invoice")
+		target_account.do_transaction(Te)
+		paid = 1
+		
 		info = replacetext(info, "*Unpaid*", "*Paid*")
 		info = replacetext(info, "*None*", "[linked_account.owner_name]")
 		to_chat(usr, "Payment succesful")

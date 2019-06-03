@@ -68,8 +68,8 @@
 		data["drill_limit_used"] = limits.drills.len
 		data["tray_limit"] = limits.limit_botany
 		data["tray_limit_used"] = limits.botany.len
-		data["tcomms_limit"] = limits.limit_tcomms
-		data["tcomms_limit_used"] = limits.tcomms.len
+		data["tcomm_limit"] = limits.limit_tcomms
+		data["tcomm_limit_used"] = limits.tcomms.len
 		data["gen_limit"] = limits.limit_genfab
 		data["gen_limit_used"] = limits.genfabs.len
 		data["eng_limit"] = limits.limit_engfab
@@ -85,40 +85,41 @@
 		data["combat_limit"] = limits.limit_ammofab
 		data["combat_limit_used"] = limits.ammofabs.len
 		data["atstandard_limit"] = limits.limit_atstandard
-		data["atstandard_limit_used"] = limits.atstandards
-		data["ataccessories_limit"] = limits.limit_ataccessories
-		data["ataccessories_limit_used"] = limits.ataccessories
+		data["atstandard_limit_used"] = limits.atstandards.len
+		data["ataccessory_limit"] = limits.limit_ataccessories
+		data["ataccessory_limit_used"] = limits.ataccessories.len
 		data["atspecial_limit"] = limits.limit_atnonstandard
-		data["atspecial_limit_used"] = limits.atnonstandards
+		data["atspecial_limit_used"] = limits.atnonstandards.len
 
 	if(menu == 5)
 		if(connected_faction.hourly_objective)
 			data["objective_hour"] = connected_faction.hourly_objective.name
+			data["objective_hour_status"] = connected_faction.hourly_objective.get_status()
 		else
 			data["objective_hour_status"] = "*None*"
-		data["objective_hour_timer"] = time2text(connected_faction.hourly_assigned + 2 HOURS)
+		data["objective_hour_timer"] = time2text(connected_faction.hourly_assigned + 2 HOURS, "MMM DD hh:mm:ss")
 
 		if(connected_faction.module.current_level >= 2)
 			data["daily_unlocked"] = 1
 			if(connected_faction.daily_objective)
 				data["objective_daily"] = connected_faction.daily_objective.name
-
+				data["objective_daily_status"] = connected_faction.daily_objective.get_status()
 			else
 				data["objective_daily_status"] = "*None*"
-			data["objective_daily_timer"] = time2text(connected_faction.daily_assigned + 1 DAY)
+			data["objective_daily_timer"] = time2text(connected_faction.daily_assigned + 1 DAY, "MMM DD hh:mm:ss")
 		if(connected_faction.module.current_level >= 3)
 			data["weekly_unlocked"] = 1
 			if(connected_faction.weekly_objective)
-				data["objective_weekly"] = connected_faction.daily_objective.name
-
+				data["objective_weekly"] = connected_faction.weekly_objective.name
+				data["objective_weekly_status"] = connected_faction.weekly_objective.get_status()
 			else
 				data["objective_weekly_status"] = "*None*"
-			data["objective_weekly_timer"] = time2text(connected_faction.daily_assigned + 7 DAYS)
+			data["objective_weekly_timer"] = time2text(connected_faction.daily_assigned + 7 DAYS, "MMM DD hh:mm:ss")
 
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
-		ui = new(user, src, ui_key, "management.tmpl", name, 600, 500, state = state)
+		ui = new(user, src, ui_key, "management.tmpl", name, 600, 650, state = state)
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
 		ui.open()
@@ -153,6 +154,11 @@
 			newValue = replacetext(input(usr, "Edit the message displayed to all clocked in laces. You may use HTML paper formatting tags:", "General Task", replacetext(html_decode(connected_faction.objective), "\[br\]", "\n")) as null|message, "\n", "\[br\]")
 			if(newValue)
 				connected_faction.objective = newValue
+		if("commission")
+			var/choseValue
+			choseValue = max(0, input(usr, "Enter the invoice commission percentage.", "Invoice Commission", connected_faction.commission) as null|num)
+			if(!isnull(choseValue))
+				connected_faction.commission = choseValue
 		if("upgrade")
 			if(connected_faction.module.current_level > 3) return
 			var/datum/machine_limits/limit = connected_faction.module.levels[connected_faction.module.current_level+1]

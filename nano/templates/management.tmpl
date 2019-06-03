@@ -1,9 +1,10 @@
 <h2>{{:data.business_name}} Central Options</h2><br>
 {{:helper.link("General Controls", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
-{{:helper.link("Module Info/Upgrades", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
+{{:helper.link("Module Info/Upgrades", '', {'action' : 'change_menu', 'menu_target' : '4'}, data.menu == 4 ? 'selected' : null)}}
+{{:helper.link("Objectives View", '', {'action' : 'change_menu', 'menu_target' : '5'}, data.menu == 5 ? 'selected' : null)}}
 {{:helper.link("Employee Log", '', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
 {{:helper.link("View/Edit General Task", '', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
-<br>
+<br><br>
 <b>Current Account Balance:</b> {{:data.account_balance}}
 <hr>
 {{if data.menu == 1}}
@@ -26,6 +27,16 @@
 		</div>
 	</div>
 	This name is used in many places where the business name is displayed, but the unchangeable UID will still be on contracts
+	<div class='item'>
+		<div class='itemLabel'>
+			Invoice Commission Percentage
+		</div>
+		<div class='itemContent'>
+			{{:helper.link(data.commission, '', {'action' : 'commission'})}}
+		</div>
+	</div>
+	This is a percentage of an invoices sale paid to <b>the salesperson that printed the invoice</b>. A great way to incentivize great salespeople. 
+	
 {{/if}}
 {{if data.menu == 4}}
 	<h4>Module Info/Upgrade</h4>
@@ -50,7 +61,7 @@
 				{{:helper.link(data.upgrade_cost, '', {'action' : 'upgrade'})}}
 			</div>
 		{{/if}}
-		{{:data.upgade_desc}}
+		{{:data.upgrade_desc}}
 	</div>
 	<br>
 	<b>Limits (Available/Used)</b>
@@ -59,7 +70,7 @@
 		<b>Engineering Tech Limit:</b> {{:data.eng_tech}}<br>
 		<b>Medical Tech Limit:</b> {{:data.med_tech}}<br>
 		<b>Consumer Tech Limit:</b> {{:data.consumer_tech}}<br>
-		<b>Combat Tech:</b> {{:data.combat_tech}}<br>
+		<b>Combat Tech Limit:</b> {{:data.combat_tech}}<br>
 		<b>Shuttles:</b> {{:data.shuttle_limit}} / {{:data.shuttle_limit_used}}<br>
 		<b>Area Limit:</b> {{:data.area_limit}} tiles / {{:data.area_limit_used}} tiles<br>
 		<b>Mining Drills:</b> {{:data.drill_limit}} / {{:data.drill_limit_used}}<br>
@@ -147,6 +158,7 @@
 	{{else}}
 		<h4>Daily Objectives Unlocked at Module Level 2</h4>
 	{{/if}}
+	<br><hr>
 	{{if data.weekly_unlocked}}
 		<div class='item'>
 			<div class='itemLabel'>

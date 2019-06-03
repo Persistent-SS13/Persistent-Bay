@@ -566,15 +566,15 @@
 			update_icon()
 
 	else if (istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))			// trying to unlock the interface with an ID card
+		var/obj/item/weapon/card/id/id
+		if(istype(W, /obj/item/weapon/card/id))
+			id = W
+		else if(istype(W, /obj/item/device/pda))
+			var/obj/item/device/pda/pda = W
+			id = pda.id
 		if(emagged)
 			to_chat(user, "The interface is broken.")
 		else if(!connected_faction)
-			var/obj/item/weapon/card/id/id
-			if(istype(W, /obj/item/weapon/card/id))
-				id = W
-			else if(istype(W, /obj/item/device/pda))
-				var/obj/item/device/pda/pda = W
-				id = pda.id
 			if(id)
 				var/datum/world_faction/faction = get_faction(id.selected_faction)
 				if(faction)
@@ -588,7 +588,7 @@
 		else if(hacker && !hacker.hacked_apcs_hidden)
 			to_chat(user, "<span class='warning'>Access denied.</span>")
 		else
-			if(src.allowed(usr) && !isWireCut(APC_WIRE_IDSCAN))
+			if(req_access in id.GetAccess(req_access_faction) && !isWireCut(APC_WIRE_IDSCAN))
 				locked = !locked
 				to_chat(user, "You [ locked ? "lock" : "unlock"] the APC interface.")
 				update_icon()

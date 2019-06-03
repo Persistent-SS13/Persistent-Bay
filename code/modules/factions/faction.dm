@@ -927,7 +927,7 @@ var/PriorityQueue/all_feeds
 	special_category.head_position = governor_assignment
 	special_category.parent = src
 	special_category.command_faction = 1
-
+	limits = new /datum/machine_limits/democracy()
 
 /datum/world_faction/democratic
 
@@ -1398,7 +1398,7 @@ var/PriorityQueue/all_feeds
 	limits.limit_tech_combat =  4
 
 /datum/world_faction/business/rebuild_limits()
-	var/datum/machine_limits/current_level = new module.levels[module.current_level]
+	var/datum/machine_limits/current_level = module.levels[module.current_level]
 	limits.limit_genfab = module.spec.limits.limit_genfab + current_level.limit_genfab
 	limits.limit_engfab = module.spec.limits.limit_engfab + current_level.limit_engfab
 	limits.limit_medicalfab = module.spec.limits.limit_medicalfab + current_level.limit_medicalfab
@@ -1500,6 +1500,7 @@ var/PriorityQueue/all_feeds
 	var/datum/module_objective/weekly_objective
 	var/weekly_assigned = 0
 
+	var/commission = 0
 /datum/world_faction/business/proc/revenue_objectives(var/amount) // run this anytime a revenue objective might be filled
 	if(istype(hourly_objective, /datum/module_objective/hourly/revenue)) // checks if the hourly objective is a revenue objective
 		hourly_objective.filled += amount // fill by the amount
@@ -1884,6 +1885,7 @@ var/PriorityQueue/all_feeds
 
 /datum/world_faction/proc/get_limits()
 	return limits
+
 
 //(Re)Calculates the current claimed area and returns it.
 /datum/world_faction/proc/get_claimed_area()
@@ -2581,6 +2583,33 @@ var/PriorityQueue/all_feeds
 
 
 	var/desc = ""
+	
+	
+/datum/machine_limits/democracy
+	limit_genfab = 5
+	limit_engfab = 5
+	limit_medicalfab = 5
+	limit_mechfab = 5
+	limit_voidfab = 5
+	limit_ataccessories = 5
+	limit_atnonstandard = 5
+	limit_atstandard = 5
+	limit_ammofab = 5
+	limit_consumerfab = 5
+	limit_servicefab = 5
+	limit_drills = 5
+	limit_botany = 10
+	limit_shuttles = 10
+	limit_area = 100000
+	limit_tcomms = 5
+	limit_tech_general = 4
+	limit_tech_engi = 4
+	limit_tech_medical = 4
+	limit_tech_consumer = 4
+	limit_tech_combat = 4
+
+
+	
 
 // ENGINEERING LIMITS
 

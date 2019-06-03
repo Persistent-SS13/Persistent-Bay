@@ -1,3 +1,7 @@
+/obj/item/weapon/gun/projectile/automatic/tcc
+	name = "TCC Framework Weapon"
+	jam_chance = 0
+
 /obj/item/weapon/gun/projectile/automatic/tcc/smg
 	name = "Mako SMG"
 	desc = "The Mako SMG is a lightweight and rapid firing SMG, for when you REALLY need someone dead. Uses 10mm rounds. Has a 'Scarborough Arms - Per falcis, per pravitas' buttstamp."
@@ -142,7 +146,7 @@
 	wielded_item_state = (ammo_magazine)? "tcc_assault" : "tcc_assault_unloaded"
 	..()
 
-/obj/item/weapon/gun/projectile/shotgun/pump/tcc/shotgun
+/obj/item/weapon/gun/projectile/shotgun/tcc/shotgun
 	name = "Bull Shotgun"
 	desc = "Built for close quarters combat, the Hephaestus Industries KS-40 is widely regarded as a weapon of choice for repelling boarders."
 	icon_state = "tcc_shotgun"
@@ -156,6 +160,7 @@
 	burst_delay = 0
 	ammo_type = /obj/item/ammo_casing/shotgun
 	one_hand_penalty = 4 //a little heavier than the regular shotgun
+
 	firemodes = list(
 		list(mode_name="1 barrel",       burst=1, fire_delay=0,    move_delay=5, one_hand_penalty=4, burst_accuracy=null, dispersion=null),
 		list(mode_name="2 barrels", burst=2, fire_delay=null, move_delay=6,    one_hand_penalty=5, burst_accuracy=list(0,-1,-1),       dispersion=list(0.0, 0.6, 1.0), jam_chance=10),
@@ -171,12 +176,12 @@
 	w_class = ITEM_SIZE_HUGE
 	force = 15
 	throwforce = 15
-	caliber = "a75"
+	caliber = "a762"
 	origin_tech = list(TECH_COMBAT = 6, TECH_MATERIAL = 1)
 	slot_flags = SLOT_BACK
 	load_method = MAGAZINE
-	magazine_type = /obj/item/ammo_magazine/dmr/a75
-	allowed_magazines = /obj/item/ammo_magazine/dmr/a75
+	magazine_type = /obj/item/ammo_magazine/a762
+	allowed_magazines = /obj/item/ammo_magazine/a762
 	one_hand_penalty = 3
 	wielded_item_state = "tcc_dmr"
 
@@ -193,8 +198,8 @@
 /obj/item/weapon/gun/energy/tcc/pulse_rifle
 	name = "X-39 Prototype Thermal Projector"
 	desc = "A weapon that uses advanced pulse-based beam generation technology to emit powerful laser blasts. Because of its complexity and cost, it is rarely seen in use except by specialists."
-	icon_state = "tcc_thermalbeam"
-	item_state = "tcc_thermalbeam"
+	icon_state = "tcclaser"
+	item_state = "tcclaser"
 	slot_flags = SLOT_BACK
 	force = 15
 	throwforce = 15

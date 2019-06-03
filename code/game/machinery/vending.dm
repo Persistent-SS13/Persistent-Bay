@@ -1088,3 +1088,14 @@
 	prices = list(/obj/item/toy/blink = 3, /obj/item/toy/spinningtoy = 10, /obj/item/weapon/deck/tarot = 3, /obj/item/weapon/deck/cards = 3, /obj/item/weapon/pack/cardemon = 5, /obj/item/weapon/pack/spaceball = 5, /obj/item/weapon/storage/pill_bottle/dice_nerd = 6, /obj/item/weapon/storage/pill_bottle/dice = 6, /obj/item/weapon/storage/box/checkers = 10, /obj/item/weapon/storage/box/checkers/chess/red = 10, /obj/item/weapon/storage/box/checkers/chess = 10)
 	premium = list(/obj/item/weapon/gun/projectile/revolver/capgun = 1, /obj/item/ammo_magazine/caps = 4)
 	contraband = list(/obj/item/weapon/reagent_containers/spray/waterflower = 2, /obj/item/weapon/storage/box/snappops = 3)
+
+/obj/machinery/vending/guns
+	name = "ArmTech"
+	desc = "A weapons vendor."
+	product_ads = "Blow some brains out!;Beat some heads in!;Don't forget - harm is good!"
+	icon_state = "sec"
+	icon_deny = "sec-deny"
+	icon_vend = "sec-vend"
+	vend_delay = 14
+	products = list(/obj/item/weapon/gun/energy/pulse_rifle/destroyer = 50)
+	prices = list(/obj/item/weapon/gun/energy/pulse_rifle/destroyer = 5500)

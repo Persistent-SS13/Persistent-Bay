@@ -14,7 +14,6 @@
 	min_age = 17
 	max_age = 100
 	gluttonous = GLUT_TINY
-	strength = STR_LOW
 
 	spawn_flags = SPECIES_CAN_JOIN
 	appearance_flags = HAS_HAIR_COLOR | HAS_SKIN_TONE_NORMAL | HAS_LIPS | HAS_UNDERWEAR | HAS_EYE_COLOR

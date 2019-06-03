@@ -1,6 +1,20 @@
 /obj/item/clothing
 	name = "clothing"
 	siemens_coefficient = 0.9
+	armor  = list(
+		DAM_BLUNT 	= 2,
+		DAM_PIERCE 	= 2,
+		DAM_CUT 	= 2,
+		DAM_BULLET 	= 2,
+		DAM_LASER 	= 2,
+		DAM_ENERGY 	= 2,
+		DAM_BURN 	= 2,
+		DAM_BOMB 	= 2,
+		DAM_EMP 	= 0,
+		DAM_PAIN	= 2,
+		DAM_BIO 	= 0,
+		DAM_RADS 	= 0,
+		DAM_STUN 	= 0)
 	var/flash_protection = FLASH_PROTECTION_NONE	// Sets the item's level of flash protection.
 	var/tint = TINT_NONE							// Sets the item's level of visual impairment tint.
 	var/list/species_restricted = list("exclude", SPECIES_NABBER) //Only these species can wear this kit.

@@ -3,8 +3,8 @@
 	icon_state = "bullet"
 	fire_sound = 'sound/weapons/gunshot/gunshot_strong.ogg'
 	force = 25
-	damtype = DAM_BULLET
-	nodamage = 0
+	embed = 1
+	damtype = DAM_BLUNT
 	sharpness = 1
 	penetration_modifier = 1.0
 	var/mob_passthrough_check = 0
@@ -126,36 +126,36 @@
 
 /obj/item/projectile/bullet/pistol
 	fire_sound = 'sound/weapons/gunshot/gunshot_pistol.ogg'
-	force = 8 //9mm, .38, etc
+	force = 16 //9mm, .38, etc
 	armor_penetration = 13.5
 
 /obj/item/projectile/bullet/pistol/medium
-	force = 12 //.45
+	force = 20 //.45
 	armor_penetration = 14.5
 
 /obj/item/projectile/bullet/pistol/medium/smg
 	fire_sound = 'sound/weapons/gunshot/gunshot_smg.ogg'
-	force = 10 //10mm
+	force = 18 //10mm
 	armor_penetration = 15
 
 /obj/item/projectile/bullet/pistol/medium/revolver
 	fire_sound = 'sound/weapons/gunshot/gunshot_strong.ogg'
-	force = 18 //.44 magnum or something
+	force = 26 //.44 magnum or something
 
 /obj/item/projectile/bullet/pistol/strong //matebas
 	fire_sound = 'sound/weapons/gunshot/gunshot_strong.ogg'
-	force = 25 //.50AE
+	force = 33 //.50AE
 	armor_penetration = 30
 
 /obj/item/projectile/bullet/pistol/strong/revolver //revolvers
-	force = 22 //Revolvers get snowflake bullets, to keep them relevant
+	force = 30 //Revolvers get snowflake bullets, to keep them relevant
 	armor_penetration = 20
 
 /obj/item/projectile/bullet/pistol/rubber //"rubber" bullets
 	name = "rubber bullet"
 	damtype = DAM_BLUNT
 	force = 2.5
-	agony = 15
+	agony = 20
 	embed = 0
 	sharpness = 0
 	armor_penetration = 2.5
@@ -165,7 +165,7 @@
 /obj/item/projectile/bullet/shotgun
 	name = "slug"
 	fire_sound = 'sound/weapons/gunshot/shotgun.ogg'
-	force = 20
+	force = 28
 	armor_penetration = 20
 
 /obj/item/projectile/bullet/shotgun/beanbag		//because beanbags are not bullets
@@ -182,7 +182,7 @@
 /obj/item/projectile/bullet/pellet/shotgun
 	name = "shrapnel"
 	fire_sound = 'sound/weapons/gunshot/shotgun.ogg'
-	force = 3
+	force = 7
 	pellets = 6
 	range_step = 1
 	spread_step = 10
@@ -206,22 +206,22 @@
 /obj/item/projectile/bullet/rifle
 	armor_penetration = 25
 	penetrating = 1
-	force = 15
+	force = 23
 
 /obj/item/projectile/bullet/rifle/a556
 	fire_sound = 'sound/weapons/gunshot/gunshot3.ogg'
-	force = 18
+	force = 26
 	mass = 0.004
 
 /obj/item/projectile/bullet/rifle/a762
 	fire_sound = 'sound/weapons/gunshot/gunshot2.ogg'
-	force = 18
+	force = 26
 	armor_penetration = 30
 	mass = 0.009
 
 /obj/item/projectile/bullet/rifle/a145
 	fire_sound = 'sound/weapons/gunshot/sniper.ogg'
-	force = 30
+	force = 38
 	stun = 3
 	weaken = 3
 	penetrating = 2
@@ -231,7 +231,7 @@
 	mass = 0.0665
 
 /obj/item/projectile/bullet/rifle/a145/apds
-	force = 35
+	force = 43
 	penetrating = 5
 	armor_penetration = 95
 	penetration_modifier = 1.5

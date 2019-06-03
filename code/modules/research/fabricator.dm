@@ -404,6 +404,10 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 		if(D.research && D.research != "")
 			handle_uses(D.research)
 		var/obj/new_item = D.Fabricate(loc, src)
+		if(connected_faction)
+			if(istype(connected_faction, /datum/world_faction/business))
+				var/datum/world_faction/business/business_faction = connected_faction
+				business_faction.fabricator_objectives()
 		visible_message("\The [src] pings, indicating that \the [D] is complete.", "You hear a ping.")
 		if(mat_efficiency != 1)
 			if(new_item.matter && new_item.matter.len > 0)

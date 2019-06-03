@@ -15,6 +15,10 @@
 
 	var/datum/action/lace_storage/tmp_storage_action
 
+
+/mob/living/carbon/lace/get_stack()
+	return container
+
 /mob/living/carbon/lace/New()
 	container = loc
 	var/datum/action/lace/laceaction = new(container)

@@ -389,6 +389,7 @@ var/global/list/debug_data = list()
 		zones |= Z
 	to_file(f["factions"],GLOB.all_world_factions)
 	to_file(f["material_marketplace"],GLOB.material_marketplace)
+	to_file(f["contract_database"],GLOB.contract_database)
 	to_file(f["zones"],zones)
 	to_file(f["areas"],formatted_areas)
 	Save_Records(dir)
@@ -485,6 +486,10 @@ var/global/list/debug_data = list()
 	from_file(f["material_marketplace"],GLOB.material_marketplace)
 	if(!GLOB.material_marketplace)
 		GLOB.material_marketplace = new()
+	from_file(f["contract_database"],GLOB.contract_database)
+	if(!GLOB.contract_database)
+		GLOB.contract_database = new()
+	
 	from_file(f["next_account_number"],next_account_number)
 	var/list/areas
 	from_file(f["areas"],areas)

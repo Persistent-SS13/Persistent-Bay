@@ -1,5 +1,7 @@
 GLOBAL_DATUM_INIT(material_marketplace, /datum/material_marketplace, new)
 GLOBAL_DATUM_INIT(contract_database, /datum/contract_database, new)
+GLOBAL_DATUM_INIT(module_objective_manager, /datum/module_objective_manager, new)
+
 
 SUBSYSTEM_DEF(supply)
 	name = "Supply"
@@ -11,6 +13,47 @@ SUBSYSTEM_DEF(supply)
 	supply_controller.process()
 	GLOB.material_marketplace.process()
 	GLOB.contract_database.process()
+	GLOB.module_objective_manager.process()
+
+
+
+
+
+
+/datum/module_objective_manager
+
+/datum/module_objective_manager/proc/process()
+	for(var/datum/world_faction/business/faction in GLOB.all_world_factions)
+		if(faction.hourly_objective)
+			if(faction.hourly_objective.completed || faction.hourly_objective.check_completion())
+				if((faction.hourly_assigned + 2 HOURS) < world.realtime)
+					faction.assign_hourly_objective()
+		else
+			if((faction.hourly_assigned + 2 HOURS) < world.realtime)
+				faction.assign_hourly_objective()
+		if(faction.module.current_level >= 2)
+			if(faction.daily_objective)
+				if(faction.daily_objective.completed || faction.daily_objective.check_completion())
+					if((faction.daily_assigned + 1 DAY) < world.realtime)
+						faction.assign_daily_objective()
+			else
+				if((faction.daily_assigned + 1 DAY) < world.realtime)
+					faction.assign_daily_objective()
+
+		if(faction.module.current_level >= 3)
+			if(faction.weekly_objective)
+				if(faction.weekly_objective.completed || faction.weekly_objective.check_completion())
+					if((faction.weekly_assigned + 1 DAY) < world.realtime)
+						faction.assign_weekly_objective()
+			else
+				if((faction.daily_assigned + 7 DAYS) < world.realtime)
+					faction.assign_weekly_objective()
+
+
+
+
+
+
 
 /datum/contract_database/proc/process()
 	for(var/datum/recurring_contract/contract in all_contracts)
@@ -30,22 +73,25 @@ SUBSYSTEM_DEF(supply)
 
 /datum/contract_database
 	var/list/all_contracts
-	
+
 /datum/contract_database/proc/add_contract(var/datum/recurring_contract/contract)
+	var/datum/world_faction/business/faction = get_faction(contract.payee)
+	if(istype(faction))
+		faction.contract_objectives(contract.payer, contract.payer_type)
 	if(contract.auto_pay)
 		if(contract.handle_payment())
 			contract.add_services()
-			all_contracts |= contract	
-	
+			all_contracts |= contract
+
 /datum/contract_database/proc/get_contracts(var/uid, var/typee)
 	var/list/contracts = list()
 	for(var/datum/recurring_contract/contract in all_contracts)
 		if((contract.payee == uid && contract.payee_type == typee && !contract.payee_clear) || (contract.payer == uid && contract.payer_type == typee && !contract.payer_clear))
 			contracts |= contract
 	return contracts
-	
-	
-	
+
+
+
 /datum/recurring_contract/proc/get_status()
 	switch(status)
 		if(CONTRACT_STATUS_CANCELLED)
@@ -63,7 +109,7 @@ SUBSYSTEM_DEF(supply)
 			return "[pay_amount] Daily"
 		if(CONTRACT_PAY_WEEKLY)
 			return "[pay_amount] Weekly"
-		
+
 /datum/recurring_contract/proc/get_marked(var/uid, var/type = CONTRACT_BUSINESS)
 	if(payee_type == type)
 		if(uid == payee)
@@ -73,7 +119,7 @@ SUBSYSTEM_DEF(supply)
 		if(uid == payer)
 			if(payer_completed)
 				return 1
-				
+
 /datum/recurring_contract/proc/handle_payment()
 	var/datum/money_account/payer_account
 	var/datum/money_account/payee_account
@@ -119,7 +165,7 @@ SUBSYSTEM_DEF(supply)
 				faction.service_security_business |= payer
 			else
 				faction.service_security_personal |= payer
-				
+
 /datum/recurring_contract/proc/remove_services()
 	var/datum/world_faction/faction = get_faction(payee)
 	if(!faction) return
@@ -134,10 +180,10 @@ SUBSYSTEM_DEF(supply)
 				faction.service_security_business -= payer
 			else
 				faction.service_security_personal -= payer
-	
+
 /datum/recurring_contract/after_load()
 	add_services()
-	
+
 /datum/recurring_contract/proc/update_status()
 	if(CONTRACT_STATUS_OPEN)
 		if(payee_cancelled)
@@ -152,7 +198,7 @@ SUBSYSTEM_DEF(supply)
 			status = CONTRACT_STATUS_COMPLETED
 	if(payer_clear && payee_clear)
 		GLOB.contract_database.all_contracts -= src
-	
+
 /datum/recurring_contract/proc/process()
 	if(auto_pay == CONTRACT_PAY_DAILY)
 		if(world.realtime >= (last_pay + 1 DAY))
@@ -169,41 +215,41 @@ SUBSYSTEM_DEF(supply)
 				status = CONTRACT_STATUS_CANCELLED
 				remove_services()
 	update_status()
-	
+
 /datum/recurring_contract
 	var/name
 	var/payee_type = CONTRACT_BUSINESS
 	var/payer_type = CONTRACT_BUSINESS
-	
+
 	var/payee = ""
 	var/payer = ""
-	
+
 	var/details = ""
-	
+
 	var/payee_cancelled = 0
 	var/payee_completed = 0
 	var/payee_clear = 0
-	
+
 	var/payer_cancelled = 0
 	var/payer_completed = 0
 	var/payer_clear = 0
-	
+
 	var/auto_pay = CONTRACT_PAY_NONE
 	var/pay_amount = 0
-	
+
 	var/last_pay = 0 // real time the payment went through
-	
+
 	var/func = "None"
-	
+
 	var/status = CONTRACT_STATUS_OPEN
-	
+
 	var/signer_name = ""
-	
+
 	var/cancel_party = ""
 	var/cancel_reason = ""
-	
-	
-	
+
+
+
 
 
 

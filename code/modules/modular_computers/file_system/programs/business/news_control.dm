@@ -202,6 +202,8 @@
 			insert2_name = null
 			headline = ""
 			filedata = ""
+			connected_faction.publish_article_objectives()
+			
 	if(href_list["PRG_editfile"])
 		var/oldtext = html_decode(filedata)
 		oldtext = replacetext(oldtext, "\[br\]", "\n")

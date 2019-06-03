@@ -1,3 +1,6 @@
+#define TCC_OVERRIDE 'code/modules/clothing/tcc/icons/tcc.dmi'
+#define ITEM_INHAND 'code/modules/clothing/tcc/icons/tcc_items.dmi'
+
 /obj/item/clothing/suit/cloakedtrench
 	name = "Cloaked Trenchcoat"
 	desc = "This suit says to you 'hush'!"

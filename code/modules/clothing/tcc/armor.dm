@@ -11,7 +11,7 @@
 	w_class = ITEM_SIZE_NORMAL
 	body_parts_covered = HEAD
 	slot_flags = SLOT_HEAD
-	flags_inv = HIDEEARS|BLOCKHEADHAIR
+	flags_inv = HIDEEARS|HIDEMASK
 	armor  = list(
 		DAM_BLUNT 	= 65,
 		DAM_PIERCE 	= 60,
@@ -60,7 +60,7 @@
 	icon_state = "tcclightarmor"
 	item_state = "tcclightarmor"
 	valid_accessory_slots = list(ACCESSORY_SLOT_INSIGNIA)
-	w_class = ITEM_SIZE_LARGE
+	w_class = ITEM_SIZE_NORMAL
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO
 	armor  = list(
 		DAM_BLUNT 	= 65,
@@ -118,7 +118,7 @@
 	icon_state = "tccheavyarmor"
 	item_state = "tccheavyarmor"
 	valid_accessory_slots = list(ACCESSORY_SLOT_INSIGNIA)
-	w_class = ITEM_SIZE_LARGE
+	w_class = ITEM_SIZE_HUGE
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO
 	armor  = list(
 		DAM_BLUNT 	= 80,

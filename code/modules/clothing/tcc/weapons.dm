@@ -1,6 +1,9 @@
+#define TCC_WEAPON_OVERRIDE 'icons/obj/gun.dmi'
+
 /obj/item/weapon/gun/projectile/automatic/tcc
 	name = "TCC Framework Weapon"
 	jam_chance = 0
+	is_jammed = 0
 
 /obj/item/weapon/gun/projectile/automatic/tcc/smg
 	name = "Mako SMG"
@@ -20,6 +23,7 @@
 	auto_eject = 1
 	auto_eject_sound = 'sound/weapons/smg_empty_alarm.ogg'
 	one_hand_penalty = 1
+	wielded_item_state = "gun_wielded"
 
 	//SMG
 	firemodes = list(
@@ -132,7 +136,7 @@
 	magazine_type = /obj/item/ammo_magazine/c556
 	allowed_magazines = /obj/item/ammo_magazine/c556
 	one_hand_penalty = 3
-	wielded_item_state = "tcc_assault"
+	wielded_item_state = "gun_wielded"
 
 	//Assault rifle, burst fire degrades quicker than SMG, worse one-handing penalty, slightly increased move delay
 	firemodes = list(
@@ -160,6 +164,7 @@
 	burst_delay = 0
 	ammo_type = /obj/item/ammo_casing/shotgun
 	one_hand_penalty = 4 //a little heavier than the regular shotgun
+	wielded_item_state = "gun_wielded"
 
 	firemodes = list(
 		list(mode_name="1 barrel",       burst=1, fire_delay=0,    move_delay=5, one_hand_penalty=4, burst_accuracy=null, dispersion=null),
@@ -183,7 +188,7 @@
 	magazine_type = /obj/item/ammo_magazine/a762
 	allowed_magazines = /obj/item/ammo_magazine/a762
 	one_hand_penalty = 3
-	wielded_item_state = "tcc_dmr"
+	wielded_item_state = "gun_wielded"
 
 	//Assault rifle, burst fire degrades quicker than SMG, worse one-handing penalty, slightly increased move delay
 	firemodes = list(
@@ -198,6 +203,7 @@
 /obj/item/weapon/gun/energy/tcc/pulse_rifle
 	name = "X-39 Prototype Thermal Projector"
 	desc = "A weapon that uses advanced pulse-based beam generation technology to emit powerful laser blasts. Because of its complexity and cost, it is rarely seen in use except by specialists."
+	icon_override = TCC_WEAPON_OVERRIDE
 	icon_state = "tcclaser"
 	item_state = "tcclaser"
 	slot_flags = SLOT_BACK
@@ -212,7 +218,7 @@
 	burst = 1
 	move_delay = 4
 	accuracy = -1
-	wielded_item_state = "tcc_thermalbeam"
+	wielded_item_state = "gun_wielded"
 	firemodes = list(
 		list(mode_name="semiauto",       burst=1, fire_delay=0,    move_delay=5, one_hand_penalty=4, burst_accuracy=null, dispersion=null),
 		)
@@ -231,6 +237,7 @@
 	throw_distance = 7
 	release_force = 5
 	matter = list(MATERIAL_STEEL = 2000)
+	wielded_item_state = "gun_wielded"
 	firemodes = list(
 		list(mode_name="semiauto",       burst=1, fire_delay=0,    move_delay=5, one_hand_penalty=4, burst_accuracy=null, dispersion=null),
 		)

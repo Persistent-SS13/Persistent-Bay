@@ -1,5 +1,7 @@
 GLOBAL_DATUM_INIT(material_marketplace, /datum/material_marketplace, new)
 GLOBAL_DATUM_INIT(contract_database, /datum/contract_database, new)
+GLOBAL_DATUM_INIT(module_objective_manager, /datum/module_objective_manager, new)
+
 
 SUBSYSTEM_DEF(supply)
 	name = "Supply"
@@ -11,7 +13,7 @@ SUBSYSTEM_DEF(supply)
 	supply_controller.process()
 	GLOB.material_marketplace.process()
 	GLOB.contract_database.process()
-
+	GLOB.module_objective_manager.process()
 
 
 

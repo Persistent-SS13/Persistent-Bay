@@ -1,6 +1,7 @@
 /datum/reagent/blood
 	data = new/list(
 		"donor" = null,
+		"donor_name" = "",
 		"species" = SPECIES_HUMAN,
 		"blood_DNA" = null,
 		"blood_type" = null,
@@ -29,6 +30,23 @@
 	heating_products = list(/datum/reagent/coagulated_blood)
 	heating_point = 318
 	heating_message = "coagulates and clumps together."
+
+	var/tmp/donortmp = null //We use this to temporarily store the donor reference on save, since it cannot be saved properly
+
+/datum/reagent/blood/before_save()
+	. = ..()
+	//Before saving remove the reference in the data to the donor.
+	// Because weakrefs don't save, and blood is re-inited in mobs anyways
+	if(data && istype(data["donor"], /weakref) )
+		donortmp = data["donor"]
+		data["donor"] = null
+
+/datum/reagent/blood/after_save()
+	. = ..()
+	//After the save is done, put the donor back into the saved data
+	if(data && data["donor"])
+		data["donor"] = donortmp
+		donortmp = null
 
 /datum/reagent/blood/initialize_data(var/newdata)
 	..()
@@ -120,6 +138,11 @@
 			var/dam = (30 * removed)
 			if(dam)
 				M.adjustToxLoss(null ? (dam * 0.75) : dam)
+
+/datum/reagent/blood/proc/get_dna()
+	return data["blood_DNA"]
+/datum/reagent/blood/proc/get_bloodtype()
+	return data["blood_type"]
 
 // pure concentrated antibodies
 /datum/reagent/antibodies

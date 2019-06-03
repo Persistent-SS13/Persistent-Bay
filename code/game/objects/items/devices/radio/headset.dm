@@ -40,7 +40,7 @@
 
 /obj/item/device/radio/headset/Destroy()
 	QDEL_NULL_LIST(encryption_keys)
-	QDEL_NULL_LIST(starter_keys)
+	starter_keys = null //The list contains types, so don't delete its content
 	QDEL_NULL_LIST(custom_radio_keys)
 	return ..()
 

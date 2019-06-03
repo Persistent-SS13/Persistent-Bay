@@ -17,6 +17,15 @@ var/global/file_uid = 0
 	file_uid++
 	if(islist(md))
 		metadata = md.Copy()
+	ADD_SAVED_VAR(filename)
+	ADD_SAVED_VAR(filetype)
+	ADD_SAVED_VAR(size)
+	ADD_SAVED_VAR(holder)
+	ADD_SAVED_VAR(unsendable)
+	ADD_SAVED_VAR(undeletable)
+	ADD_SAVED_VAR(uid)
+	ADD_SAVED_VAR(metadata)
+	ADD_SAVED_VAR(papertype)
 
 /datum/computer_file/Destroy()
 	. = ..()

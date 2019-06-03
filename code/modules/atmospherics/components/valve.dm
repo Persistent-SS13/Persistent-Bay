@@ -66,7 +66,7 @@
 
 	build_network()
 
-	update_icon()
+	queue_icon_update()
 	update_underlays()
 
 	if(openDuringInit)

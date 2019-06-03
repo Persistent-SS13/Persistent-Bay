@@ -55,7 +55,7 @@
 /obj/machinery/atmospherics/pipe/simple/hide(var/i)
 	if(istype(loc, /turf/simulated))
 		set_invisibility(i ? 101 : 0)
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/atmospherics/pipe/simple/Process()
 	if(!parent) //This should cut back on the overhead calling build_network thousands of times per cycle
@@ -120,6 +120,8 @@
 		node2.update_underlays()
 
 /obj/machinery/atmospherics/pipe/simple/on_update_icon(var/safety = 0)
+	if(QDELETED(src) || QDELING(src))
+		return
 	if(!atmos_initalized)
 		return
 	if(!check_icon_cache())
@@ -149,6 +151,8 @@
 	return
 
 /obj/machinery/atmospherics/pipe/simple/atmos_init()
+	if(QDELETED(src) || QDELING(src) || !loc)
+		return
 	..()
 	normalize_dir()
 	var/node1_dir
@@ -180,7 +184,7 @@
 	var/turf/T = loc
 	if(level == 1 && !T.is_plating()) 
 		hide(1)
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/atmospherics/pipe/simple/disconnect(obj/machinery/atmospherics/reference)
 	if(reference == node1)
@@ -193,7 +197,7 @@
 			qdel(parent)
 		node2 = null
 
-	update_icon()
+	queue_icon_update()
 
 	return null
 

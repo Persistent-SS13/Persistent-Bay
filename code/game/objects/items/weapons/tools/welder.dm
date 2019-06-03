@@ -49,7 +49,7 @@
 /obj/item/weapon/tool/weldingtool/Initialize()
 	set_extension(src, /datum/extension/base_icon_state, /datum/extension/base_icon_state, icon_state)
 	. = ..()
-	update_icon()
+	queue_icon_update()
 
 /obj/item/weapon/tool/weldingtool/Destroy()
 	if(welding)
@@ -239,8 +239,9 @@
 
 /obj/item/weapon/tool/weldingtool/on_update_icon()
 	..()
-	//icon_state = initial(icon_state) + (tank ? "_" + tank.icon_state : "") + (welding ? "_on" : "")
+	icon_state = initial(icon_state) + (tank ? "_" + tank.icon_state : "") + (welding ? "_on" : "")
 	item_state = welding ? "welder1" : "welder"
+	//update_tank_underlay()
 	var/mob/M = loc
 	if(istype(M))
 		M.update_inv_l_hand()

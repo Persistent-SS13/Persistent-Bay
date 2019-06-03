@@ -16,6 +16,7 @@
 /datum/report_field/New(datum/computer_file/report/report)
 	owner = report
 	..()
+	ADD_SAVED_VAR(name)
 	ADD_SAVED_VAR(value)
 	ADD_SAVED_VAR(access_edit)
 	ADD_SAVED_VAR(access)

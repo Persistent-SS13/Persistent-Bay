@@ -64,7 +64,7 @@
 				node2 = target
 				break
 
-	update_icon()
+	queue_icon_update()
 	update_underlays()
 
 /obj/machinery/atmospherics/binary/build_network()

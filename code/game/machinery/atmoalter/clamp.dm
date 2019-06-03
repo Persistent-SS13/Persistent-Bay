@@ -17,11 +17,18 @@
 	if(istype(to_attach))
 		target = to_attach
 	else
-		target = locate(/obj/machinery/atmospherics/pipe/simple) in loc
+		target = locate(/obj/machinery/atmospherics/pipe/simple) in get_turf(src)
 	if(target)
 		update_networks()
 		dir = target.dir
-	return 1
+	ADD_SAVED_VAR(open)
+
+/obj/machinery/clamp/LateInitialize()
+	. = ..()
+	if(open)
+		open()
+	else
+		close()
 
 /obj/machinery/clamp/proc/update_networks()
 	if(!target)

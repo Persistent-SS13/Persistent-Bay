@@ -1,7 +1,7 @@
 /obj/machinery/fabricator/autotailor/accessories
 	name = "auto-tailor (accessories & storage)"
 	desc = "An advanced machine capable of printing many types of clothing, this one is loaded with accessory type designs."
-	circuit = /obj/item/weapon/circuitboard/fabricator/autotailor/accessories
+	circuit_type = /obj/item/weapon/circuitboard/fabricator/autotailor/accessories
 	build_type = AUTOTAILOR_ACCESSORIES
 
 /obj/machinery/fabricator/autotailor/accessories/can_connect(var/datum/world_faction/trying, var/mob/M)

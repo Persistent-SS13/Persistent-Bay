@@ -66,7 +66,7 @@
 
 	var/turf/T = src.loc			// hide if turf is not intact
 	if(level == 1 && !T.is_plating()) hide(1)
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/atmospherics/pipe/cap/visible
 	level = 2

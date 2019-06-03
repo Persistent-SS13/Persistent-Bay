@@ -36,13 +36,13 @@
 	to_file(S["travel_reason"], pref.travel_reason)
 
 /datum/category_item/player_setup_item/background/records/content(var/mob/user)
-	var/datum/world_faction/faction = get_faction(pref.faction)
+	var/datum/world_faction/F = get_faction(pref.faction)
 	. = list()
 	. += "<br/><b>Records</b>:<br/>"
-	. += "<br><br>Starting Employer: <a href='?src=\ref[src];faction=1'>[faction ? faction.name : "Unset*"]</a>"
-	
-	if(faction)
-		. += "<br>[faction.purpose]<br><br>"
+	. += "<br><br>Starting Employer: <a href='?src=\ref[src];faction=1'>[F ? F.name : "Unset*"]</a>"
+	if(F)
+		. += "<br>[F.purpose]<br><br>"
+
 	. += "<br><br>Bank Account Pin:<br>"
 	. += "<a href='?src=\ref[src];set_pin=1'>[pref.chosen_pin]</a><br>"
 	. += "<br><br>Email Account Password:<br>"
@@ -102,7 +102,7 @@
 		for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
 			var/fac_uid = beacon.req_access_faction
 			joinable |= get_faction(fac_uid)
-		var/datum/world_faction/choice = input(user, "Please choose a starting organization.", CHARACTER_PREFERENCE_INPUT_TITLE, pref.faction) as null|anything in joinable
+		var/datum/world_faction/choice = input(user, "Please choose a starting organization.", CHARACTER_PREFERENCE_INPUT_TITLE, pref.faction? get_faction(pref.faction) : null) as null|anything in joinable
 		if(choice)
 			pref.faction = choice.uid
 		return TOPIC_REFRESH

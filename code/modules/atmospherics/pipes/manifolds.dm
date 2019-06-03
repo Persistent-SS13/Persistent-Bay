@@ -130,6 +130,8 @@
 	update_icon()
 
 /obj/machinery/atmospherics/pipe/manifold/atmos_init()
+	if(QDELETED(src) || QDELING(src) || !loc)
+		return
 	..()
 	var/connect_directions = (NORTH|SOUTH|EAST|WEST)&(~dir)
 
@@ -175,7 +177,7 @@
 
 	var/turf/T = get_turf(src)
 	if(level == 1 && !T.is_plating()) hide(1)
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/atmospherics/pipe/manifold/visible
 	icon_state = "map"

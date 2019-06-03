@@ -332,6 +332,10 @@
 			return
 
 	if(chosen_slot == -1)
+		panel?.close()
+		load_panel?.close()
+		sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
+		
 		var/mob/observer/ghost/observer = new()
 		observer.started_as_observer = 1
 		observer.forceMove(GLOB.cryopods.len ? get_turf(pick(GLOB.cryopods)) : locate(100, 100, 1))
@@ -419,12 +423,20 @@
 	character.sync_organ_dna()
 
 	GLOB.minds |= character.mind
+	character.regenerate_icons()
+	character.update_inv_back()
+	character.update_inv_wear_id()
+	character.update_inv_belt()
+	character.update_inv_pockets()
+	character.update_inv_l_hand()
+	character.update_inv_r_hand()
+	character.update_inv_s_store()
 	character.redraw_inv()
-	CreateModularRecord(character)
 	update_ids(character.real_name)
 	character.finishLoadCharacter()	// This is ran because new_players don't like to stick around long.
 	return 1
 
+//Runs what happens after the character is loaded. Mainly for cinematics and lore text.
 /mob/proc/finishLoadCharacter()
 	if(spawn_type == 1)
 		to_chat(src, "You eject from your cryosleep, ready to resume life in the frontier.")

@@ -2,7 +2,7 @@
 	name = "Circuit Imprinter"
 	desc = "A machine used for the production of circuits."
 	req_access = list(core_access_science_programs)
-	circuit = /obj/item/weapon/circuitboard/fabricator/circuitfab
+	circuit_type = /obj/item/weapon/circuitboard/fabricator/circuitfab
 	build_type = CIRCUITFAB
 
 	icon_state = 	 "circuitfab-idle"

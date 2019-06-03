@@ -1,11 +1,15 @@
 GLOBAL_LIST_EMPTY(neural_laces)
 /mob/var/perma_dead = 0
 
-/mob/living/carbon/human/proc/create_stack()
+/mob/living/carbon/human/proc/create_stack(var/faction_uid, var/silent = FALSE)
 	set waitfor=0
-	sleep(10)
-	internal_organs_by_name[BP_STACK] = new species.stack_type(src,1)
-	to_chat(src, "<span class='notice'>You feel a faint sense of vertigo as your neural lace boots.</span>")
+//	sleep(10)
+	var/obj/item/organ/internal/stack/stack = new species.stack_type(src, faction_uid = faction_uid)
+	if(faction_uid && stack)
+		stack.try_connect()
+	internal_organs_by_name[BP_STACK] = stack
+	if(!silent)
+		to_chat(src, "<span class='notice'>You feel a faint sense of vertigo as your neural lace boots.</span>")
 
 /obj/item/organ/internal/stack
 	name = "neural lace"
@@ -46,11 +50,13 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 	var/time
 
-/obj/item/organ/internal/stack/New()
+/obj/item/organ/internal/stack/New(var/loc, var/faction_uid)
 	..()
 	GLOB.neural_laces |= src
 	do_backup()
 	robotize()
+	if(faction_uid)
+		connected_faction = faction_uid
 
 /obj/item/organ/internal/stack/Destroy()
 	if(lacemob && ((lacemob.key && lacemob.key != "") || (lacemob.key && lacemob.key != "")))

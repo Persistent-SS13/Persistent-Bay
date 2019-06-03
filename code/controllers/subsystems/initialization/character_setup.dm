@@ -79,3 +79,4 @@ SUBSYSTEM_DEF(character_setup)
 	var/icon/I = get_preview_icon(M)
 	QDEL_IN(M, 1 SECONDS)
 	return I
+

@@ -69,7 +69,7 @@
 				node3 = target
 				break
 
-	update_icon()
+	queue_icon_update()
 	update_underlays()
 
 /obj/machinery/atmospherics/tvalve/setup_initialize_directions()

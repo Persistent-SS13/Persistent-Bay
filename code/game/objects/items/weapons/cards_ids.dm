@@ -519,6 +519,22 @@ var/const/NO_EMAG_ACT = -50
 	if(GLOB.using_map.flags & MAP_HAS_RANK)
 		id_card.military_rank = char_rank
 
+	//Set details for money account and loaded records
+	if(mind)
+		var/datum/money_account/M = get_account_record(real_name)
+		if(istype(M))
+			id_card.associated_account_number = M.account_number
+		else
+			log_warning("human.set_id_info(): there is no bank account for [ckey], [src]\ref[src]. Skipping adding it to the id card!")
+	else
+		log_warning("human.set_id_info(): there is no mind for [src]\ref[src]. Skipping adding bank account to the id card!")
+	
+	var/datum/computer_file/report/crew_record/record = Retrieve_Record(ckey)
+	if(record)
+		id_card.sync_from_record(record)
+	else
+		log_warning("human.set_id_info(): there is no existing record for [src]\ref[src]. Skipping syncyng to record!")
+
 /obj/item/weapon/card/id/proc/dat()
 	var/list/dat = list("<table><tr><td>")
 	dat += text("Name: []</A><BR>", "[formal_name_prefix][registered_name][formal_name_suffix]")

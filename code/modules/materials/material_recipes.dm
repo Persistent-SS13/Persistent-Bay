@@ -82,6 +82,14 @@
 	. += new/datum/stack_recipe/fire_alarm(src)
 	. += new/datum/stack_recipe_list("modular computer frames", create_recipe_list(/datum/stack_recipe/computer))
 	. += new/datum/stack_recipe/furniture/coffin(src)
+	. += new/datum/stack_recipe/stairs(src)
+	. += new/datum/stack_recipe/morgue(src)
+	//
+	. += new/datum/stack_recipe/toilet(src)
+	. += new/datum/stack_recipe/shower(src)
+	. += new/datum/stack_recipe/sink(src)
+	. += new/datum/stack_recipe/sink/kitchen(src)
+
 
 /material/plasteel/generate_recipes(var/reinforce_material)
 	. = ..()

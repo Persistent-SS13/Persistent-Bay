@@ -53,7 +53,7 @@
 			node = null
 			break
 
-	update_icon()
+	queue_icon_update()
 
 
 /obj/machinery/atmospherics/unary/heater/on_update_icon()

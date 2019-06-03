@@ -104,7 +104,8 @@ if(current_step == this_step || (check_resumed && !resumed)) {\
 	var/pretime = REALTIMEOFDAY
 	report_progress("Initializing atmos machinery")
 	for(var/obj/machinery/atmospherics/A in machines)
-		A.atmos_init()
+		if(!(QDELETED(A) || QDELING(A)))
+			A.atmos_init()
 		CHECK_TICK
 	report_progress("Done in [(REALTIMEOFDAY - pretime) / 10] second\s")
 

@@ -49,6 +49,8 @@ Pipelines + Other Objects -> Pipe network
 
 /obj/machinery/atmospherics/after_load()
 	. = ..()
+	if(QDELETED(src) || QDELING(src))
+		return
 	setup_initialize_directions()
 
 /obj/machinery/atmospherics/proc/atmos_init()

@@ -24,6 +24,7 @@
  * @returns		1 if all hooked code runs successfully, 0 otherwise.
  */
 /proc/callHook(hook, list/args=null)
+	testing("callHook [hook], ")
 	var/hook_path = text2path("/hook/[hook]")
 	if(!hook_path)
 		error("Invalid hook '/hook/[hook]' called.")
@@ -37,6 +38,6 @@
 				error("Hook '[P]' failed or runtimed.")
 				status = 0
 		catch(var/exception/e)
-			log_error("Caught exception in hook '[P]'! '[e]' on [e.file]:[e.line]")
+			log_warning("Caught exception in hook '[P]'! '[e]' on [e.file]:[e.line]")
 
 	return status

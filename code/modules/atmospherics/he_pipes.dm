@@ -53,7 +53,7 @@
 		qdel(src)
 		return
 
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/atmospherics/pipe/simple/heat_exchanging/Process()
 	if(isnull(loc))
@@ -151,4 +151,4 @@
 		qdel(src)
 		return
 
-	update_icon()
+	queue_icon_update()

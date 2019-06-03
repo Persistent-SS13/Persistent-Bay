@@ -173,6 +173,8 @@
 
 #define SPAN_WARNING(X) "<span class='warning'>[X]</span>"
 
+#define SPAN_INFO(X) "<span class='info'>[X]</span>"
+
 #define SPAN_DANGER(X) "<span class='danger'>[X]</span>"
 #define SPAN_GOOD(X) "<span class='good'>[X]</span>"
 #define SPAN_BAD(X) "<span class='bad'>[X]</span>"

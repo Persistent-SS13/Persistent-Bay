@@ -4,12 +4,12 @@
 	flags = OUTFIT_EXTENDED_SURVIVAL | OUTFIT_HAS_BACKPACK
 
 /decl/hierarchy/outfit/nexus/starter
-	name = "Starter Gear"
-	uniform = /obj/item/clothing/under/color/orange
+	name = "Resident Gear"
+	uniform = /obj/item/clothing/under/color/grey
 	l_ear = /obj/item/device/radio/headset/nexus/starter
 	shoes = /obj/item/clothing/shoes/black
 	id_slot = slot_wear_id
-	id_type = /obj/item/weapon/card/id/guest
+	id_type = /obj/item/weapon/card/id/civilian/residents
 	backpack_contents = list()
 
 /decl/hierarchy/outfit/nexus/citizen
@@ -18,5 +18,5 @@
 	l_ear = /obj/item/device/radio/headset/nexus/citizen
 	shoes = /obj/item/clothing/shoes/black
 	id_slot = slot_wear_id
-	id_type = /obj/item/weapon/card/id/civilian
+	id_type = /obj/item/weapon/card/id/civilian/citizens
 	backpack_contents = list()

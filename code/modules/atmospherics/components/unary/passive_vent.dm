@@ -81,7 +81,7 @@
 			if (check_connect_types(target,src))
 				node1 = target
 				break
-	update_icon()
+	queue_icon_update()
 	update_underlays()
 
 /obj/machinery/atmospherics/pipe/vent/disconnect(obj/machinery/atmospherics/reference)

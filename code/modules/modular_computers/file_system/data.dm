@@ -7,6 +7,13 @@
 	var/do_not_edit = 0				// Whether the user will be reminded that the file probably shouldn't be edited.
 	var/read_only = 0				// Protects files that should never be edited by the user due to special properties.
 
+/datum/computer_file/data/New(list/md)
+	. = ..()
+	ADD_SAVED_VAR(stored_data)
+	ADD_SAVED_VAR(block_size)
+	ADD_SAVED_VAR(do_not_edit)
+	ADD_SAVED_VAR(read_only)
+
 /datum/computer_file/data/clone()
 	var/datum/computer_file/data/temp = ..()
 	temp.stored_data = stored_data

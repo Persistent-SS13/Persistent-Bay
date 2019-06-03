@@ -46,22 +46,6 @@
 	conductive = 0
 	energy_combustion = 8
 
-/material/cloth //todo
-	name = MATERIAL_CLOTH
-	stack_origin_tech = list(TECH_MATERIAL = 2)
-	door_icon_base = "wood"
-	ignition_point = T0C+232
-	melting_point = T0C+300
-	flags = MATERIAL_PADDING
-	brute_armor = 1
-	conductive = 0
-	stack_type = /obj/item/stack/material/cloth
-	hardness = 1
-	weight = 1
-	energy_combustion = 8
-	hidden_from_codex = TRUE
-	construction_difficulty = 1
-
 //TODO PLACEHOLDERS:
 /material/leather
 	name = MATERIAL_LEATHER
@@ -95,14 +79,32 @@
 	weight = 1
 	energy_combustion = 8
 
-/material/cloth
+/material/cotton
 	name = MATERIAL_COTTON
+	stack_origin_tech = list(TECH_MATERIAL = 2)
+	door_icon_base = "wood"
+	ignition_point = T0C+232
+	melting_point = T0C+300
+	flags = MATERIAL_PADDING
+	brute_armor = 1
+	conductive = 0
+	stack_type = /obj/item/stack/material/cotton
+	hardness = 1
+	weight = 1
+	energy_combustion = 8
+	hidden_from_codex = TRUE
+	construction_difficulty = 1
+
+/material/cloth
+	name = MATERIAL_CLOTH
+	stack_origin_tech = list(TECH_MATERIAL = 2)
 	display_name ="grey"
 	use_name = "grey cloth"
 	icon_colour = "#ffffff"
 	flags = MATERIAL_PADDING
 	ignition_point = T0C+232
 	melting_point = T0C+300
+	brute_armor = 1
 	conductive = 0
 	stack_type = null
 	hidden_from_codex = TRUE
@@ -110,6 +112,7 @@
 	hardness = 1
 	weight = 1
 	energy_combustion = 8
+	stack_type = /obj/item/stack/material/cloth
 
 /material/cloth/carpet
 	name = "carpet"

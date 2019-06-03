@@ -148,6 +148,7 @@
 	var/obj/structure/morgue/connected = null
 	anchored = 1
 	throwpass = 1
+	should_save = FALSE //Don't save trays
 
 /obj/structure/m_tray/Destroy()
 	if(connected && connected.connected == src)

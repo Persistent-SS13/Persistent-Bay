@@ -35,7 +35,6 @@ proc/GetNbSavedZLevels()
 	overmap_size = 20		//Dimensions of overmap zlevel if overmap is used.
 	overmap_z = 0		//If 0 will generate overmap zlevel on init. Otherwise will populate the zlevel provided.
 	overmap_event_areas = 0 //How many event "clouds" will be generated
-
 	num_exoplanets = 0
 
 //Overriding event containers to remove random versions of overmap events - electrical storm, dust and meteor

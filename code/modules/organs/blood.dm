@@ -24,6 +24,7 @@
 		if(B.type == /datum/reagent/blood)
 			B.data = list(
 				"donor" = weakref(src),
+				"donor_name" = real_name,
 				"species" = species.name,
 				"blood_DNA" = dna.unique_enzymes,
 				"blood_colour" = species.get_blood_colour(src),
@@ -205,6 +206,7 @@
 /mob/living/carbon/proc/get_blood_data()
 	var/data = list()
 	data["donor"] = weakref(src)
+	data["donor_name"] = src.real_name ? src.real_name : src.name
 	if (!data["virus2"])
 		data["virus2"] = list()
 	data["virus2"] |= virus_copylist(virus2)

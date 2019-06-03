@@ -50,6 +50,7 @@
 		dna.real_name = real_name
 		dna.s_base = s_base
 		sync_organ_dna()
+	make_blood()
 	
 	ADD_SAVED_VAR(r_hair)
 	ADD_SAVED_VAR(g_hair)
@@ -114,20 +115,20 @@
 	ADD_SKIP_EMPTY(branded)
 
 /mob/living/carbon/human/Initialize()
-	. = ..()
-	if(!map_storage_loaded)
-		make_blood() //do this last
+	. = ..()		
 
 /mob/living/carbon/human/after_load()
 	. = ..()
-	testing("loaded [src]\ref[src]([x], [y], [z]): blood vessel contain [vessel.reagent_list?.len] reagents")
+	//testing("loaded [src]\ref[src]([x], [y], [z]): blood vessel contain [vessel.reagent_list?.len] reagents")
+	//Sync blood since some things might get lost along the way
 	for(var/datum/reagent/blood/B in vessel.reagent_list)
 		if(B.type == /datum/reagent/blood)
 			B.sync_to(src)
 	
 	regenerate_icons()
-	redraw_inv()
 	handle_organs(1)
+	update_action_buttons()
+
 	update_inv_back(1)
 	update_inv_ears(1)
 	update_inv_wear_mask(1)
@@ -144,13 +145,13 @@
 	update_inv_wear_suit(1)
 	update_inv_pockets(1)
 	update_inv_s_store(1)
-	update_action_buttons()
 
 	updatehealth()
 	BITSET(hud_updateflag, HEALTH_HUD) //Force hud update
 	BITSET(hud_updateflag, STATUS_HUD)
 	BITSET(hud_updateflag, LIFE_HUD)
 	queue_icon_update()
+	redraw_inv()
 
 /mob/living/carbon/human/Destroy()
 	GLOB.human_mob_list -= src

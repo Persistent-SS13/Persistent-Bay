@@ -31,7 +31,6 @@
 			src.default_reinf_type = reinf_material
 		if(amount > 0)
 			src.amount = amount
-
 	src.material = SSmaterials.get_material_by_name(src.default_type)
 	if(!src.material)
 		log_warning(" /obj/item/stack/material/Initialize() : Missing or invalid material type ([src.default_type])!")
@@ -155,7 +154,7 @@
 
 /obj/item/stack/material/on_update_icon()
 	if(!material)
-		log_debug("[src] has null material")
+		log_error("[src] has null material")
 		return
 	if(material_flags & USE_MATERIAL_COLOR)
 		color = material.icon_colour
@@ -800,6 +799,21 @@
 	amount = 10
 
 /obj/item/stack/material/wood/bamboo/fifty
+	amount = 50
+
+//--------------------------------
+//	Cotton
+//--------------------------------
+/obj/item/stack/material/cotton
+	name = MATERIAL_COTTON
+	icon_state = "sheet-cloth"
+	color = COLOR_WHITE
+	default_type = MATERIAL_COTTON
+
+/obj/item/stack/material/cotton/ten
+	amount = 10
+
+/obj/item/stack/material/cotton/fifty
 	amount = 50
 
 //--------------------------------

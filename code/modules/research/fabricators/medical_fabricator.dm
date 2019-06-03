@@ -69,7 +69,6 @@
 	build_path = /obj/item/bodybag
 	materials = list(MATERIAL_PLASTIC = 4 SHEETS)
 
-
 /datum/design/item/medicalfab/meditools/scalpel
 	build_path = /obj/item/weapon/scalpel
 	materials = list(MATERIAL_STEEL = 1 SHEETS)
@@ -172,7 +171,7 @@
 	research = "reagent_scanner"
 
 
-//datum/design/item/medicalfab/meditools/adv/adv_reagent_scanner
+/datum/design/item/medicalfab/meditools/adv/adv_reagent_scanner
 	build_path = /obj/item/device/scanner/reagent/adv
 	materials = list(MATERIAL_STEEL = 5 SHEET, MATERIAL_GLASS = 3 SHEETS, MATERIAL_SILVER = 5 SHEETS)
 	research = "adv_reagent_scanner"
@@ -326,3 +325,8 @@
 	id = "facecover"
 	build_path = /obj/item/clothing/head/helmet/facecover
 	materials = list(MATERIAL_STEEL = 1000, "plastic" = 1000)
+
+
+/datum/design/item/medicalfab/meditools/autocpr
+	build_path = /obj/item/auto_cpr
+	materials = list(MATERIAL_ALUMINIUM = 3 SHEET, MATERIAL_GLASS = 0.5 SHEETS, MATERIAL_COPPER = 1 SHEETS)

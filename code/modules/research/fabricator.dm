@@ -13,7 +13,8 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	// Things that must be adjusted for each fabricator
 	name = "Fabricator"
 	desc = "A machine used for the production of various items"
-	var/obj/item/weapon/circuitboard/fabricator/circuit = /obj/item/weapon/circuitboard/fabricator
+	var/obj/item/weapon/circuitboard/fabricator/circuit //Pointer to the circuit board, since we save info into it
+	circuit_type = /obj/item/weapon/circuitboard/fabricator
 	var/build_type = PROTOLATHE
 	req_access = list()
 
@@ -54,38 +55,41 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	var/datum/design/selected_design
 
 
-
 /obj/machinery/fabricator/New()
 	..()
-
-	component_parts = list()
-	component_parts += new circuit(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/micro_laser(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	circuit = new circuit()
 	if(has_reagents)
-		component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
-		component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
-		atom_flags += ATOM_FLAG_OPEN_CONTAINER
-	RefreshParts()
+		atom_flags |= ATOM_FLAG_OPEN_CONTAINER
+	ADD_SAVED_VAR(materials)
+	ADD_SAVED_VAR(circuit)
 
+	ADD_SKIP_EMPTY(materials)
+
+/obj/machinery/fabricator/Initialize()
+	. = ..()
 	update_categories()
-	return
+
+//Base class uses the circuit's details to add the required parts to the machine
+/obj/machinery/fabricator/SetupParts()
+	if(has_reagents)
+		LAZYADD(component_parts, new /obj/item/weapon/reagent_containers/glass/beaker(src))
+		LAZYADD(component_parts, new /obj/item/weapon/reagent_containers/glass/beaker(src))
+	..()
+	//Since we already create the circuit in the base class, just fetch it here and save the pointer
+	circuit = locate(circuit_type) in component_parts
+	if(!istype(circuit))
+		CRASH("[src]\ref[src] no circuit found for the fabricator")
 
 /obj/machinery/fabricator/Process()
 	..()
 	if(stat)
 		return
 	if(busy)
-		use_power = 2
+		update_use_power(POWER_USE_ACTIVE)
 		progress += speed
 		check_build()
 	else
-		use_power = 1
-	update_icon()
+		update_use_power(POWER_USE_IDLE)
+	queue_icon_update()
 
 /obj/machinery/fabricator/update_icon()
 	overlays.Cut()

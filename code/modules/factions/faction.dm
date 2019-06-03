@@ -905,6 +905,8 @@ var/PriorityQueue/all_feeds
 			return ballot
 
 /datum/world_faction/democratic/proc/is_governor(var/real_name)
+	if(!gov)
+		return null
 	if(gov.real_name == real_name)
 		return gov
 
@@ -1344,7 +1346,6 @@ var/PriorityQueue/all_feeds
 	..()
 	CEO = new()
 
-
 /datum/world_faction/business/proc/pay_dividends(var/datum/money_account/account, var/amount)
 	var/ceo_amount
 	var/stock_amount
@@ -1646,6 +1647,11 @@ var/PriorityQueue/all_feeds
 	if(is_governor(real_name))
 		return governor_assignment
 	return ..()
+
+//Just a way to customize the starting money for new characters joining a specific faction on spawn
+// Can be expanded to check the specie and origins and etc too
+/datum/world_faction/proc/get_new_character_money(var/mob/living/carbon/human/H)
+	return DEFAULT_NEW_CHARACTER_MONEY //By default just throw the default amount at them
 
 /datum/records_holder
 	var/use_standard = 1

@@ -46,7 +46,7 @@
 
 /datum/preferences/proc/dress_preview_mob(var/mob/living/carbon/human/mannequin, var/finalize = FALSE)
 	var/update_icon = FALSE
-	var/adjustflags = finalize? 0 : OUTFIT_ADJUSTMENT_SKIP_POST_EQUIP|OUTFIT_ADJUSTMENT_SKIP_ID_PDA|OUTFIT_ADJUSTMENT_SKIP_SURVIVAL_GEAR
+	var/adjustflags = finalize? OUTFIT_NONE : OUTFIT_RESET_EQUIPMENT|OUTFIT_ADJUSTMENT_SKIP_POST_EQUIP|OUTFIT_ADJUSTMENT_SKIP_ID_PDA|OUTFIT_ADJUSTMENT_SKIP_SURVIVAL_GEAR
 	copy_to(mannequin, !finalize)
 	mannequin.real_name = real_name
 

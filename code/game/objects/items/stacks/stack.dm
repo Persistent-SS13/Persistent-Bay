@@ -32,7 +32,12 @@
 	if (amount >= 1)
 		src.amount = amount
 	..()
+	ADD_SAVED_VAR(amount)
+
+/obj/item/stack/Initialize()
+	. = ..()
 	update_material_value()
+	base_state = icon_state
 	queue_icon_update()
 
 /obj/item/stack/Destroy()

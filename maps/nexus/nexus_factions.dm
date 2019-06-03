@@ -3,7 +3,7 @@
 	name 			= "Nexus City Government"
 	name_short 		= "Nexus"
 	name_tag 		= "NX"
-	uid 			= "nexus"
+	uid 			= NEXUS_FACTION_CITIZEN
 	password 		= ""
 	network_name 	= "NEXUSGOV-NET"//"NexusNet"
 	network_uid 	= "nx_net"
@@ -19,7 +19,7 @@
 	name 			= "Resident"
 	name_short 		= "Resident"
 	name_tag 		= "RD"
-	uid 			= "resident"
+	uid 			= NEXUS_FACTION_RESIDENT
 	password 		= ""
 	network_name 	= "FreeNet"
 	network_uid 	= "free_net"

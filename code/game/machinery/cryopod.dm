@@ -61,6 +61,8 @@
 	. = ..()
 
 /obj/machinery/cryopod/Destroy()
+	if(announce)
+		QDEL_NULL(announce)
 	if(occupant)
 		var/mob/living/ocmob = occupant
 		occupant.forceMove(loc)
@@ -406,9 +408,7 @@
 	if(islace && control_computer)
 		control_computer.add_lace(occupant, src)
 
-	var/savefile/F = new(load_path(key, "[saveslot].sav"))
-	to_file(F["name"], name)
-	to_file(F["mob"], character)
+	SScharacter_setup.save_character(saveslot, key, character)
 	if(req_access_faction == "betaquad")
 		var/savefile/E = new(beta_path(key, "[saveslot].sav"))
 		to_file(E["name"], name)
@@ -422,7 +422,6 @@
 
 	SetName(initial(src.name))
 	icon_state = base_icon_state
-	occupant.loc = null
 	QDEL_NULL(occupant)
 
 

@@ -83,6 +83,8 @@
 		TAG_HOMEWORLD = HOME_SYSTEM_ROOT,
 		TAG_FACTION = FACTION_POSITRONICS
 	)
+	spawns_with_stack = TRUE
+	spawn_flags =   SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED
 
 /datum/species/machine/handle_death(var/mob/living/carbon/human/H)
 	..()

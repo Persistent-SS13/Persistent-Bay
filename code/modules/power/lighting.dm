@@ -650,8 +650,8 @@
 	var/broken_chance = 2
 
 	var/b_max_bright = 0.9
-	var/b_inner_range = 1
-	var/b_outer_range = 5
+	var/b_inner_range = 3
+	var/b_outer_range = 6
 	var/b_curve = 2
 	var/b_colour = "#fffee0"
 	var/list/lighting_modes = list()
@@ -668,7 +668,7 @@
 	b_outer_range = 5
 	b_colour = "#fffee0"
 	lighting_modes = list(
-		LIGHTMODE_EMERGENCY = list(l_outer_range = 4, l_max_bright = 1, l_color = "#da0205"),
+		LIGHTMODE_EMERGENCY = list(l_outer_range = 5, l_max_bright = 1, l_color = "#da0205"),
 		)
 	sound_on = 'sound/machines/lightson.ogg'
 
@@ -676,6 +676,7 @@
 	. = ..()
 	if(!mapload)
 		b_colour = rgb(pick(0,255), pick(0,255), pick(0,255))
+		queue_icon_update()
 
 /obj/item/weapon/light/tube/large
 	w_class = ITEM_SIZE_SMALL
@@ -689,6 +690,7 @@
 	. = ..()
 	if(!mapload)
 		b_colour = rgb(pick(0,255), pick(0,255), pick(0,255))
+		queue_icon_update()
 
 /obj/item/weapon/light/tube/red
 	name = "red light tube"
@@ -736,12 +738,12 @@
 	matter = list(MATERIAL_GLASS = 100)
 
 	b_max_bright = 0.6
-	b_inner_range = 0.1
+	b_inner_range = 0.5
 	b_outer_range = 4
-	b_curve = 3
+	b_curve = 2.5
 	b_colour = "#fcfcc7"
 	lighting_modes = list(
-		LIGHTMODE_EMERGENCY = list(l_outer_range = 3, l_max_bright = 1, l_color = "#da0205"),
+		LIGHTMODE_EMERGENCY = list(l_outer_range = 5, l_max_bright = 0.85, l_color = "#da0205"),
 		)
 
 /obj/item/weapon/light/bulb/red
@@ -817,7 +819,7 @@
 
 /obj/item/weapon/light/New(atom/newloc, obj/machinery/light/fixture = null)
 	..()
-	update_icon()
+	queue_icon_update()
 
 // attack bulb/tube with object
 // if a syringe, can inject phoron to make it explode

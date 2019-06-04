@@ -1920,6 +1920,7 @@
 #include "code\modules\examine\descriptions\weapons.dm"
 #include "code\modules\ext_scripts\irc.dm"
 #include "code\modules\factions\bluespace_satellite.dm"
+#include "code\modules\factions\docking_beacon.dm"
 #include "code\modules\factions\faction.dm"
 #include "code\modules\factions\frontier_beacon.dm"
 #include "code\modules\flufftext\Dreaming.dm"

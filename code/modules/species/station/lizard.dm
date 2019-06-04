@@ -112,6 +112,8 @@
 			RELIGION_OTHER
 		)
 	)
+	spawns_with_stack = TRUE
+	spawn_flags =   SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED
 
 /datum/species/unathi/equip_survival_gear(var/mob/living/carbon/human/H)
 	..()

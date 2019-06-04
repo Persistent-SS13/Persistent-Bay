@@ -3,11 +3,16 @@ GLOBAL_LIST_EMPTY(neural_laces)
 
 /mob/living/carbon/human/proc/create_stack(var/faction_uid, var/silent = FALSE)
 	set waitfor=0
+	if(internal_organs_by_name && internal_organs_by_name[BP_STACK])
+		log_debug(" /mob/living/carbon/human/proc/create_stack(): Tried adding another stack to [src]\ref[src]. Skipping..")
+		return //We don't want multiple stacks
 //	sleep(10)
+	testing("create_stack(): made a lace for [src]\ref[src], with faction [faction_uid]")
 	var/obj/item/organ/internal/stack/stack = new species.stack_type(src, faction_uid = faction_uid)
 	if(faction_uid && stack)
 		stack.try_connect()
 	internal_organs_by_name[BP_STACK] = stack
+	update_action_buttons()
 	if(!silent)
 		to_chat(src, "<span class='notice'>You feel a faint sense of vertigo as your neural lace boots.</span>")
 
@@ -28,9 +33,10 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	var/list/languages = list()
 	var/datum/mind/backup
 	var/prompting = FALSE // Are we waiting for a user prompt?
+	default_action_type =  /datum/action/item_action/organ/lace
 	action_button_name = "Access Neural Lace UI"
 	action_button_is_hands_free = 1
-	action_button_icon = 'icons/misc/lace.dmi'
+	action_button_icon = 'icons/obj/action_buttons/lace.dmi'
 	action_button_state = "lace"
 	var/connected_faction = ""
 	var/duty_status = 1
@@ -57,6 +63,22 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	robotize()
 	if(faction_uid)
 		connected_faction = faction_uid
+	
+	ADD_SAVED_VAR(ownerckey)
+	ADD_SAVED_VAR(connected_business)
+	ADD_SAVED_VAR(connected_faction)
+
+/obj/item/organ/internal/stack/Initialize()
+	. = ..()
+	if(owner)
+		owner.internal_organs_by_name[BP_STACK] = src
+		owner.update_action_buttons()
+
+/obj/item/organ/internal/stack/after_load()
+	..()
+	try_connect()
+	if(duty_status)
+		try_duty()
 
 /obj/item/organ/internal/stack/Destroy()
 	if(lacemob && ((lacemob.key && lacemob.key != "") || (lacemob.key && lacemob.key != "")))
@@ -382,13 +404,6 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		if(owner.ckey)
 			ownerckey = owner.ckey ? owner.ckey : owner.stored_ckey
 
-
-
-/obj/item/organ/internal/stack/after_load()
-	..()
-	try_connect()
-	if(duty_status)
-		try_duty()
 
 /obj/item/organ/internal/stack/proc/backup_inviable()
 	return 	(!istype(backup) || backup == owner.mind || (backup.current && backup.current.stat != DEAD))

@@ -74,7 +74,7 @@
 	user.s_active = null
 
 /datum/storage_ui/default/on_insertion(var/mob/user)
-	if(user.s_active)
+	if(user && user.s_active)
 		user.s_active.show_to(user)
 
 /datum/storage_ui/default/on_pre_remove(var/mob/user, var/obj/item/W)
@@ -84,7 +84,7 @@
 				M.client.screen -= W
 
 /datum/storage_ui/default/on_post_remove(var/mob/user)
-	if(user.s_active)
+	if(user && user.s_active)
 		user.s_active.show_to(user)
 
 /datum/storage_ui/default/on_hand_attack(var/mob/user)

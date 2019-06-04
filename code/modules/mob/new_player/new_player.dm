@@ -332,6 +332,7 @@
 			return
 
 	if(chosen_slot == -1)
+		//Don't forget to close the panel and stop the lobby music
 		panel?.close()
 		load_panel?.close()
 		sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
@@ -401,6 +402,7 @@
 		spawning = FALSE
 		return
 
+	//Close the menu and stop the lobby music once we're sure we're spawning
 	panel?.close()
 	load_panel?.close()
 	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
@@ -432,7 +434,7 @@
 	character.update_inv_r_hand()
 	character.update_inv_s_store()
 	character.redraw_inv()
-	update_ids(character.real_name)
+	//update_ids(character.real_name)
 	character.finishLoadCharacter()	// This is ran because new_players don't like to stick around long.
 	return 1
 

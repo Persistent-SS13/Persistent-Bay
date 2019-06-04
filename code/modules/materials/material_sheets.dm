@@ -23,7 +23,7 @@
 
 /obj/item/stack/material/Initialize(mapload, var/amount, var/material, var/reinf_material)
 	. = ..()
-	log_debug("Initialized [src] \ref[src], mapload=[mapload], amount=[amount], material=[src.material], reinf_material=[src.reinf_material]")
+	//testing("Initialized [src] \ref[src], mapload=[mapload], amount=[amount], material=[src.material], reinf_material=[src.reinf_material]")
 	if(!map_storage_loaded)
 		if(material)
 			src.default_type = material
@@ -50,7 +50,7 @@
 	else
 		obj_flags &= (~OBJ_FLAG_CONDUCTIBLE)
 
-	log_debug("Initialized [src] \ref[src], [src.default_type] - ([src.material]), [src.default_reinf_type] - ([src.reinf_material])")
+	//testing("Initialized [src] \ref[src], [src.default_type] - ([src.material]), [src.default_reinf_type] - ([src.reinf_material])")
 	update_strings()
 	update_icon()
 

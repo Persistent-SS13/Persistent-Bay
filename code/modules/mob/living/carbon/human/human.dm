@@ -115,7 +115,11 @@
 	ADD_SKIP_EMPTY(branded)
 
 /mob/living/carbon/human/Initialize()
-	. = ..()		
+	. = ..()
+	updatehealth()
+	redraw_inv()
+	update_action_buttons()	
+	queue_icon_update()
 
 /mob/living/carbon/human/after_load()
 	. = ..()
@@ -127,7 +131,6 @@
 	
 	regenerate_icons()
 	handle_organs(1)
-	update_action_buttons()
 
 	update_inv_back(1)
 	update_inv_ears(1)
@@ -146,12 +149,9 @@
 	update_inv_pockets(1)
 	update_inv_s_store(1)
 
-	updatehealth()
 	BITSET(hud_updateflag, HEALTH_HUD) //Force hud update
 	BITSET(hud_updateflag, STATUS_HUD)
 	BITSET(hud_updateflag, LIFE_HUD)
-	queue_icon_update()
-	redraw_inv()
 
 /mob/living/carbon/human/Destroy()
 	GLOB.human_mob_list -= src

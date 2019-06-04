@@ -107,7 +107,7 @@
 	. += "<b>Starting Equipment:</b><br>"
 	. += "Starting Clothing: <a href='?src=\ref[src];change_under=1'><b>[pref.selected_under ? pref.selected_under.name : "Default Outfit"]</b></a><br>"
 	for(var/datum/category_group/underwear/UWC in GLOB.underwear.categories)
-		if(UWC.name != "Socks") continue
+		// if(UWC.name != "Socks") continue
 		var/item_name = (pref.all_underwear && pref.all_underwear[UWC.name]) ? pref.all_underwear[UWC.name] : "None"
 		. += "[UWC.name]: <a href='?src=\ref[src];change_underwear=[UWC.name]'><b>[item_name]</b></a>"
 
@@ -181,6 +181,7 @@
 			pref.backpack = backpacks_by_name[new_backpack]
 			return TOPIC_REFRESH_UPDATE_PREVIEW
 	else if(href_list["change_under"])
+		populate_uniforms(usr.client)
 		var/obj/new_under = input(user, "Choose uniform:", CHARACTER_PREFERENCE_INPUT_TITLE, pref.selected_under) as null|anything in (possible_under+possible_under_extra)
 		if(new_under)
 			pref.selected_under = new_under

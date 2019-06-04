@@ -1,3 +1,4 @@
+//#TODO: Is this still in use?
 var/global/datum/controller/occupations/job_master
 
 /datum/controller/occupations

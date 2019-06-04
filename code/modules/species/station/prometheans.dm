@@ -66,6 +66,7 @@ var/datum/species/shapeshifter/promethean/prometheans
 
 	valid_transform_species = list(SPECIES_HUMAN, SPECIES_UNATHI, SPECIES_SKRELL, SPECIES_DIONA, "Monkey")
 	monochromatic = 1
+	spawns_with_stack = TRUE
 
 	var/heal_rate = 5 // Temp. Regen per tick.
 

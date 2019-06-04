@@ -9,10 +9,7 @@
 #define AB_CHECK_LYING 4
 #define AB_CHECK_ALIVE 8
 #define AB_CHECK_INSIDE 16
-/mob/living/carbon/lace/Life()
-	update_action_buttons()
-/datum/action/lace
-	name = "Access Lace UI"
+
 /datum/action
 	var/name = "Generic Action"
 	var/action_type = AB_ITEM
@@ -242,8 +239,11 @@
 /datum/action/item_action/organ/augment
 	button_icon = 'icons/obj/augment.dmi'
 
-/datum/action/item_action/lace_action
-	check_flags = AB_CHECK_INSIDE
+/datum/action/item_action/organ/lace
+	name = "Access Lace UI"
+	button_icon = 'icons/obj/action_buttons/lace.dmi'
+	button_icon_state = "lace"
+	background_icon_state = "bg_default"
 
 #undef AB_WEST_OFFSET
 #undef AB_NORTH_OFFSET

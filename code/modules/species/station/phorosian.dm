@@ -75,6 +75,7 @@
 		BP_BRAIN =    /obj/item/organ/internal/brain/phorosian,
 		BP_EYES =     /obj/item/organ/internal/eyes/phorosian,
 		)
+	spawns_with_stack = TRUE
 
 
 /mob/living/carbon/human/phorosian/pl_effects() //you're made of the stuff why would it hurt you?

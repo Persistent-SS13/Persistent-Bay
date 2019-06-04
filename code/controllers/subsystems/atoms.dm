@@ -64,7 +64,7 @@ SUBSYSTEM_DEF(atoms)
 
 /datum/controller/subsystem/atoms/proc/InitAtom(atom/A, list/arguments)
 	var/the_type = A.type
-	if(QDELING(A))
+	if(QDELETED(A))
 		BadInitializeCalls[the_type] |= BAD_INIT_QDEL_BEFORE
 		return TRUE
 

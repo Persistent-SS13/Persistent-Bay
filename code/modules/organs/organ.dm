@@ -7,7 +7,6 @@ var/list/organ_cache = list()
 	obj_flags = OBJ_FLAG_DAMAGEABLE
 	w_class = ITEM_SIZE_TINY
 	default_action_type = /datum/action/item_action/organ
-	action = /datum/action/item_action/organ
 	matter = list("pinkgoo" = 100)
 	damthreshold_brute = 0
 	damthreshold_burn  = 0

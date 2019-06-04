@@ -106,11 +106,11 @@
 	var/chassis_mod_toggled = 0
 
 /mob/living/silicon/robot/proc/add_lace_action()
-	for(var/datum/action/lace/laceac in actions)
+	for(var/datum/action/item_action/organ/lace/laceac in actions)
 		return 1
 	if(lmi)
 		if(lmi.brainobj)
-			var/datum/action/lace/laceaction = new(lmi.brainobj)
+			var/datum/action/item_action/organ/lace/laceaction = new(lmi.brainobj)
 			laceaction.Grant(src)
 
 /mob/living/silicon/robot/Initialize()
@@ -130,7 +130,7 @@
 	module_sprites["Basic"] = "robot"
 	icontype = "Basic"
 	updatename(modtype)
-	update_icon()
+	queue_icon_update()
 
 	if(!scrambledcodes && !camera)
 		camera = new /obj/machinery/camera(src)

@@ -46,15 +46,17 @@
 
 /datum/preferences/proc/dress_preview_mob(var/mob/living/carbon/human/mannequin, var/finalize = FALSE)
 	var/update_icon = FALSE
-	var/adjustflags = finalize? OUTFIT_NONE : OUTFIT_RESET_EQUIPMENT|OUTFIT_ADJUSTMENT_SKIP_POST_EQUIP|OUTFIT_ADJUSTMENT_SKIP_ID_PDA|OUTFIT_ADJUSTMENT_SKIP_SURVIVAL_GEAR
+	var/adjustflags = finalize? OUTFIT_RESET_EQUIPMENT : OUTFIT_RESET_EQUIPMENT|OUTFIT_ADJUSTMENT_SKIP_POST_EQUIP|OUTFIT_ADJUSTMENT_SKIP_ID_PDA|OUTFIT_ADJUSTMENT_SKIP_SURVIVAL_GEAR
 	copy_to(mannequin, !finalize)
 	mannequin.real_name = real_name
 
 	//Do default faction outfit
 	if(faction)
 		var/datum/world_faction/fac = get_faction(src.faction)
+		//testing("dress_preview_mob: got faction [fac?.name]")
 		if(fac && fac.starter_outfit)
 			var/decl/hierarchy/outfit/clothes = outfit_by_type(fac.starter_outfit)
+			//testing("dress_preview_mob: got outfit [clothes]")
 			ASSERT(istype(clothes))
 			//If we have selected a specific uniform, replace the default one
 			if(selected_under)

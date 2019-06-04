@@ -39,6 +39,7 @@
 			CULTURE_HUMAN_OTHER
 		)
 	)
+	spawns_with_stack = TRUE
 
 /datum/species/human/get_bodytype(var/mob/living/carbon/human/H)
 	return SPECIES_HUMAN
@@ -201,6 +202,7 @@
 		BP_BRAIN =    /obj/item/organ/internal/brain,
 		BP_EYES =     /obj/item/organ/internal/eyes/skrell
 		)
+	spawns_with_stack = TRUE
 
 /datum/species/skrell/get_sex(var/mob/living/carbon/H)
 	return descriptors["headtail length"] == 1 ? MALE : FEMALE

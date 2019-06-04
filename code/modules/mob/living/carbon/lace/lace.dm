@@ -15,18 +15,22 @@
 
 /mob/living/carbon/lace/New()
 	container = loc
-	var/datum/action/lace/laceaction = new(container)
+	var/datum/action/item_action/organ/lace/laceaction = new(container)
 	laceaction.Grant(src)
 	default_language = all_languages[LANGUAGE_GALCOM]
 	add_language(LANGUAGE_GALCOM)
 	..()
 
 /mob/living/carbon/lace/after_load()
+	. = ..()
 	if(container)
 		container.lacemob = src
 	for(var/datum/action/action in actions)
-		action.target = container
+		action.SetTarget(container)
 
+/mob/living/carbon/lace/Initialize()
+	. = ..()
+	update_action_buttons()
 
 /mob/living/carbon/lace/Destroy()
 	if(key)				//If there is a mob connected to this thing. Have to check key twice to avoid false death reporting.
@@ -73,3 +77,6 @@
 /mob/living/carbon/lace/check_has_mouth()
 	return 0
 
+// /mob/living/carbon/lace/Life()
+// 	. = ..()
+// 	update_action_buttons()

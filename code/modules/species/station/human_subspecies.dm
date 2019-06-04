@@ -22,6 +22,8 @@
 		)
 
 	appearance_flags = HAS_HAIR_COLOR | HAS_SKIN_TONE_GRAV | HAS_LIPS | HAS_UNDERWEAR | HAS_EYE_COLOR
+	spawns_with_stack = TRUE
+	spawn_flags = SPECIES_IS_RESTRICTED
 
 /datum/species/human/spacer
 	name = SPECIES_SPACER
@@ -46,6 +48,7 @@
 		)
 
 	appearance_flags = HAS_HAIR_COLOR | HAS_SKIN_TONE_SPCR | HAS_LIPS | HAS_UNDERWEAR | HAS_EYE_COLOR
+	spawns_with_stack = TRUE
 
 /datum/species/human/vatgrown
 	name = SPECIES_VATGROWN
@@ -75,6 +78,7 @@
 	)
 	spawns_with_stack = TRUE
 	stack_type = /obj/item/organ/internal/stack/vat
+	spawn_flags =   SPECIES_CAN_JOIN | SPECIES_IS_WHITELISTED
 
 /datum/species/human/tritonian
 	name = SPECIES_TRITONIAN
@@ -117,3 +121,5 @@
 		)
 
 	appearance_flags = HAS_HAIR_COLOR | HAS_SKIN_TONE_TRITON | HAS_LIPS | HAS_UNDERWEAR | HAS_EYE_COLOR
+	spawns_with_stack = TRUE
+	spawn_flags =   SPECIES_IS_RESTRICTED

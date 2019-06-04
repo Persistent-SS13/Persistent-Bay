@@ -77,7 +77,6 @@
 //This saves the initial character after creation is complete
 /datum/preferences/proc/save_character()
 	var/mob/mannequin = create_mannequin()
-	setup_new_accounts(mannequin)
 	SScharacter_setup.save_character(chosen_slot, client.ckey, mannequin)
 	character_list = list()
 	// var/char_path = character_load_path(chosen_slot)
@@ -108,10 +107,8 @@
 	email.login = "[replacetext(H.real_name, " ", "_")]@[pick(GLOB.using_map.usable_email_tlds)]"
 	email.password = chosen_password
 	H.mind.initial_email_login = list("login" = email.login, "password" = email.password)
-	testing("created email for [H], [email.login], [email.password]")
-
-	var/datum/computer_file/report/crew_record/record = CreateModularRecord(H)
-	testing("created modular record for [H], [record]")
+	//testing("created email for [H], [email.login], [email.password]")
+	//testing("created modular record for [H], [record]")
 	var/faction_uid = GLOB.using_map.default_faction_uid
 	var/datum/world_faction/F = get_faction(src.faction)
 	if(F)
@@ -126,17 +123,20 @@
 "})
 		H.mind.initial_account = M
 
-		var/datum/computer_file/report/crew_record/record2 = new()
-		if(!record2.load_from_global(real_name))
-			message_admins("record for [real_name] failed to load in character creation..")
-		else
-			F.records.faction_records |= record
+	//After the bank account and email accounts are made, create the record.
+	// Since the record contains both.
+	var/datum/computer_file/report/crew_record/record = CreateModularRecord(H)
+	var/datum/computer_file/report/crew_record/record2 = new()
+	if(!record2.load_from_global(real_name))
+		message_admins("record for [real_name] failed to load in character creation..")
+	else if(F)
+		F.records.faction_records |= record
 		
-		//ID stuff is handled by the outfit code later on, when the actual final ID is spawned
+	//ID stuff is handled by the outfit code later on, when the actual final ID is spawned
 
 	if(src.faction)
 		H.spawn_loc = faction_uid
-		testing("[H], [H.spawn_loc], src.faction")
+		//testing("Setting spawn loc for [H]. Got faction name: [H.spawn_loc], and faction uid [src.faction]")
 	else
 		H.spawn_loc = "null"
 		log_warning("[H]'s spawn_loc is null! Got faction: [src.faction]'")
@@ -177,15 +177,15 @@
 	// Give them their cortical stack if we're using them.
 	if(config && config.use_cortical_stacks && client && client.prefs.has_cortical_stack)
 		mannequin.create_stack(faction_uid = src.faction, silent = TRUE) //Auto-spawn the correct kind of stack
-		//Faction is auto-assigned
 
+	setup_new_accounts(mannequin)
 	dress_preview_mob(mannequin, TRUE)
 
 	// Do the initial caching of the player's body icons.
 	mannequin.force_update_limbs()
 	mannequin.update_eyes()
 	mannequin.regenerate_icons()
-
+	
 	return mannequin
 
 #undef SAVEFILE_VERSION_MAX

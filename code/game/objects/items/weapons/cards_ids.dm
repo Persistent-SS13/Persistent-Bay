@@ -529,7 +529,7 @@ var/const/NO_EMAG_ACT = -50
 	else
 		log_warning("human.set_id_info(): there is no mind for [src]\ref[src]. Skipping adding bank account to the id card!")
 	
-	var/datum/computer_file/report/crew_record/record = Retrieve_Record(ckey)
+	var/datum/computer_file/report/crew_record/record = get_crewmember_record(real_name)
 	if(record)
 		id_card.sync_from_record(record)
 	else

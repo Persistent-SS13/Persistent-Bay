@@ -210,6 +210,8 @@ var/list/airlock_overlays = list()
 		wires = new/datum/wires/airlock(src)
 
 /obj/machinery/door/airlock/Initialize()
+	if(QDELETED(src) || !loc) //Don't waste time initing if its been deleted already
+		return INITIALIZE_HINT_QDEL
 	//wireless connection
 	if(_wifi_id)
 		wifi_receiver = new(_wifi_id, src)
@@ -227,8 +229,6 @@ var/list/airlock_overlays = list()
 //Later on during init check for a nearby door
 /obj/machinery/door/airlock/LateInitialize()
 	. = ..()
-	if(QDELETED(src))
-		return
 	if(src.closeOtherId != null)
 		for (var/obj/machinery/door/airlock/A in world)
 			if(A.closeOtherId == src.closeOtherId && A != src)
@@ -236,6 +236,8 @@ var/list/airlock_overlays = list()
 				break
 	if (src.closeOtherDir)
 		cyclelinkairlock()
+	
+
 
 /obj/machinery/door/airlock/Destroy()
 	QDEL_NULL(wires)

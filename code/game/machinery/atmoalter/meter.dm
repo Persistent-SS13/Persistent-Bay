@@ -44,6 +44,8 @@
 
 /obj/machinery/meter/Process()
 	. = ..()
+	if(!target)
+		return
 	var/datum/gas_mixture/pipe_air = target.return_air()
 	if(!pipe_air)
 		src.last_pressure = -1
@@ -58,7 +60,7 @@
 			"sigtype" = "status"
 		)
 		post_signal(data)
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/meter/on_update_icon()
 	if(!target || last_pressure == -1)

@@ -30,7 +30,8 @@
 	var/open_sound = null
 
 /obj/item/weapon/storage/Destroy()
-	QDEL_NULL(storage_ui)
+	if(isobj(storage_ui)) //Don't try to delete a type path
+		QDEL_NULL(storage_ui)
 	. = ..()
 
 /obj/item/weapon/storage/MouseDrop(obj/over_object as obj)
@@ -73,11 +74,11 @@
 	return L
 
 /obj/item/weapon/storage/proc/show_to(mob/user as mob)
-	if(storage_ui)
+	if(istype(storage_ui))
 		storage_ui.show_to(user)
 
 /obj/item/weapon/storage/proc/hide_from(mob/user as mob)
-	if(storage_ui)
+	if(istype(storage_ui))
 		storage_ui.hide_from(user)
 
 /obj/item/weapon/storage/proc/open(mob/user as mob)
@@ -369,7 +370,6 @@
 	if(isnull(max_storage_space) && !isnull(storage_slots))
 		max_storage_space = storage_slots*base_storage_cost(max_w_class)
 
-	storage_ui = new storage_ui(src)
 	prepare_ui()
 	if(!map_storage_loaded && startswith)
 		for(var/item_path in startswith)
@@ -387,7 +387,6 @@
 
 /obj/item/weapon/storage/after_load()
 	. = ..()
-	prepare_ui()
 
 /obj/item/weapon/storage/emp_act(severity)
 	if(!istype(src.loc, /mob/living))

@@ -1874,6 +1874,7 @@ var/PriorityQueue/all_feeds
 		fact.network.secured = 1
 		fact.network.password = network_password
 	fact.network.invisible = network_invisible
+	fact.starter_outfit = starter_outfit
 	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
 	qdel(src)
 	return
@@ -1899,6 +1900,7 @@ var/PriorityQueue/all_feeds
 		fact.network.secured = 1
 		fact.network.password = network_password
 	fact.network.invisible = network_invisible
+	fact.starter_outfit = starter_outfit
 	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
 	qdel(src)
 	return

@@ -262,25 +262,24 @@
 // Interprets the message mode when talking into a radio, possibly returning a connection datum
 /obj/item/device/radio/proc/handle_message_mode(mob/living/M as mob, message, message_mode)
 	// If a channel isn't specified, send to common.
-	if(!message_mode || message_mode == "headset")
+	if(!message_mode || message_mode == MESSAGE_MODE_HEADSET)
 		return radio_connection
 
-	// Otherwise, if a channel is specified, look for it.
-	if(channels && channels.len > 0)
-		if (message_mode == "department") // Department radio shortcut
-			message_mode = channels[1]
-
-		if (channels[message_mode]) // only broadcast if the channel is set on
-			return secure_radio_connections[message_mode]
-
-	// If the message_mode doesn't correspond to a normal channel, check to see if there's any custom channels
-	if(custom_channels && custom_channels.len > 0)
-		if (message_mode == "department") // Default should work for custom channels as well
+	//Custom channels handling
+	if(custom_channels && custom_channels.len > 0 && message_mode == MESSAGE_MODE_RADIO_CUSTOM)
+		if (message_mode == MESSAGE_MODE_DEPARTMENT)
 			message_mode = custom_channels[1]
 
 		if (custom_channels[message_mode])
 			return secure_radio_connections[message_mode]
 
+	// Otherwise, if a channel is specified, look for it.
+	if(channels && channels.len > 0)
+		if (message_mode == MESSAGE_MODE_DEPARTMENT) // Department radio shortcut
+			message_mode = channels[1]
+
+		if (channels[message_mode]) // only broadcast if the channel is set on
+			return secure_radio_connections[message_mode]
 
 	// If we were to send to a channel we don't have, drop it.
 	return null
@@ -878,6 +877,13 @@
 /obj/item/device/radio/phone/medbay/New()
 	..()
 	internal_channels = GLOB.default_medbay_channels.Copy()
+
+/obj/item/device/radio/phone/police
+	color = COLOR_GREEN
+	frequency = SEC_I_FREQ
+/obj/item/device/radio/phone/police/New()
+	..()
+	internal_channels = GLOB.default_sec_channels.Copy()
 
 /obj/item/device/radio/CouldUseTopic(var/mob/user)
 	..()

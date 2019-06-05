@@ -37,14 +37,14 @@ SUBSYSTEM_DEF(character_setup)
 /datum/controller/subsystem/character_setup/proc/queue_preferences_save(var/datum/preferences/prefs)
 	save_queue |= prefs
 
-/datum/controller/subsystem/character_setup/proc/save_character(var/ind, var/ckey, var/mob/living/carbon/human/mannequin)
-	if(!istype(mannequin))
+/datum/controller/subsystem/character_setup/proc/save_character(var/ind, var/ckey, var/mob/living/carbon/human/H)
+	if(!istype(H))
 		return
 	var/savefile/S = CHAR_SAVE_FILE(ind, ckey)
-	mannequin.before_save()
-	to_file(S["name"], mannequin.real_name)
-	to_file(S["mob"], mannequin)
-	mannequin.after_save()
+	H.before_save()
+	to_file(S["name"], H.real_name)
+	to_file(S["mob"], H)
+	H.after_save()
 
 /datum/controller/subsystem/character_setup/proc/delete_character(var/ind, var/ckey)
 	fdel(CHAR_SAVE_FILE_PATH(ind, ckey))

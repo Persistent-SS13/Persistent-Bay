@@ -212,6 +212,9 @@
 	reagent_state = SOLID
 	color = "#673910"
 	touch_met = 50
+	gas_specific_heat = 10
+	gas_flags = XGM_GAS_FUEL | XGM_GAS_OXIDIZER | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
 
 /datum/reagent/thermite/touch_turf(var/turf/T)
 	if(volume >= 5)
@@ -236,6 +239,9 @@
 	reagent_state = LIQUID
 	color = "#673910"
 	touch_met = 50
+	gas_specific_heat = 10
+	gas_flags = XGM_GAS_FUEL  | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
 
 /datum/reagent/napalm/touch_turf(var/turf/T)
 	new /obj/effect/decal/cleanable/liquid_fuel(T, volume)
@@ -256,6 +262,9 @@
 	reagent_state = LIQUID
 	color = "#a5f0ee"
 	touch_met = 50
+	gas_specific_heat =50
+	gas_flags = XGM_GAS_CONTAMINANT  | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
 
 /datum/reagent/space_cleaner/touch_obj(var/obj/O)
 	O.clean_blood()
@@ -306,6 +315,9 @@
 	taste_description = "slime"
 	reagent_state = LIQUID
 	color = "#009ca8"
+	gas_specific_heat = 100
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
 
 /datum/reagent/lube/touch_turf(var/turf/simulated/T)
 	if(!istype(T))
@@ -318,6 +330,9 @@
 	description = "A thick greasy industrial lubricant. Commonly found in robotics."
 	taste_description = "greasy diesel"
 	color = "#000000"
+	gas_specific_heat = 80
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_FUEL | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
 
 /datum/reagent/lube/oil/touch_turf(var/turf/simulated/T)
 	if(!istype(T, /turf/space))
@@ -329,6 +344,8 @@
 	taste_description = "sweetness"
 	reagent_state = LIQUID
 	color = "#808080"
+	gas_specific_heat = 120
+	gas_burn_product = GAS_CARBON_MONOXIDE
 
 /datum/reagent/nitroglycerin
 	name = "Nitroglycerin"
@@ -336,6 +353,9 @@
 	taste_description = "oil"
 	reagent_state = LIQUID
 	color = "#808080"
+	gas_specific_heat = 10
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_FUEL | XGM_GAS_OXIDIZER | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
 
 /datum/reagent/nitroglycerin/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	..()
@@ -349,6 +369,7 @@
 	taste_mult = 1.1
 	reagent_state = LIQUID
 	color = "#c8a5dc"
+	gas_specific_heat = COOLANT_LATENT_HEAT
 
 /datum/reagent/coolant/touch_turf(var/turf/simulated/T)
 	if(!istype(T))
@@ -377,6 +398,9 @@
 	description = "An extremely powerful bonding agent."
 	taste_description = "a special education class"
 	color = "#ffffcc"
+	gas_specific_heat = 20
+	gas_flags = XGM_GAS_FUEL | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
 
 /datum/reagent/woodpulp
 	name = "Wood Pulp"
@@ -384,6 +408,9 @@
 	taste_description = "wood"
 	reagent_state = LIQUID
 	color = WOOD_COLOR_GENERIC
+	gas_specific_heat = 50
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_FUEL | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
 
 /datum/reagent/bamboo
 	name = "Bamboo Pulp"
@@ -407,6 +434,7 @@
 
 /datum/reagent/helium
 	name = "Helium"
+	gas_id = GAS_HELIUM
 	description = "A noble gas. It makes your voice squeaky."
 	taste_description = "nothing"
 	reagent_state = LIQUID
@@ -439,6 +467,7 @@
 	reagent_state = LIQUID
 	color = COLOR_GRAY80
 	metabolism = 0.05 // As with helium.
+	gas_id = GAS_CARBON_MONOXIDE
 
 /datum/reagent/carbon_monoxide/affect_blood(var/mob/living/carbon/human/M, var/alien, var/removed)
 	if(!istype(M) || alien == IS_DIONA)

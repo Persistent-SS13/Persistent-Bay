@@ -9,6 +9,8 @@
 	color = "#db5008"
 	metabolism = REM * 2
 	touch_met = 50 // It's acid!
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
+
 	var/power = 5
 	var/meltdose = 10 // How much is needed to melt
 	var/max_damage = 40

@@ -5,6 +5,7 @@
 	reagent_state = LIQUID
 	color = "#808080"
 	metabolism = REM * 0.2
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/acetone/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_NABBER)
@@ -36,6 +37,7 @@
 	description = "A silvery white and ductile member of the boron group of chemical elements."
 	reagent_state = SOLID
 	color = "#a8a8a8"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/ammonia
 	name = "Ammonia"
@@ -46,6 +48,7 @@
 	color = "#404030"
 	metabolism = REM * 0.5
 	overdose = 5
+	gas_id = GAS_AMONIA
 
 /datum/reagent/ammonia/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_VOX)
@@ -91,6 +94,7 @@
 	description = "A highly ductile metal."
 	taste_description = "copper"
 	color = "#6e3b08"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/ethanol
 	name = "Ethanol" //Parent class for all alcoholic reagents.
@@ -110,6 +114,9 @@
 
 	glass_name = "ethanol"
 	glass_desc = "A well-known alcohol with a variety of applications."
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_FUEL | XGM_GAS_REAGENT_GAS
+	gas_burn_product = GAS_CARBON_MONOXIDE
+	gas_specific_heat = 15
 
 /datum/reagent/ethanol/touch_mob(var/mob/living/L, var/amount)
 	if(istype(L))
@@ -186,6 +193,7 @@
 	color = "#808080"
 	metabolism = REM * 0.2
 	touch_met = 5
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_FUEL | XGM_GAS_OXIDIZER | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/hydrazine/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	M.adjustToxLoss(4 * removed)
@@ -205,6 +213,7 @@
 	taste_description = "metal"
 	reagent_state = SOLID
 	color = "#353535"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/iron/affect_ingest(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien != IS_DIONA)
@@ -216,6 +225,7 @@
 	taste_description = "metal"
 	reagent_state = SOLID
 	color = "#808080"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/lithium/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien != IS_DIONA)
@@ -230,6 +240,7 @@
 	taste_mult = 0 //mercury apparently is tasteless. IDK
 	reagent_state = LIQUID
 	color = "#484848"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/mercury/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien != IS_DIONA)
@@ -329,6 +340,7 @@
 	taste_description = "old eggs"
 	reagent_state = SOLID
 	color = "#bf8c00"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/tungsten
 	name = "Tungsten"
@@ -336,3 +348,5 @@
 	taste_mult = 0 //no taste
 	reagent_state = SOLID
 	color = "#dcdcdc"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_OXIDIZER | XGM_GAS_REAGENT_GAS
+

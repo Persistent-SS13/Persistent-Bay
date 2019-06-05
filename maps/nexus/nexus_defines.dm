@@ -29,7 +29,7 @@ proc/GetNbSavedZLevels()
 	boss_short    = "Nexus"
 	company_name  = "Nexus"
 	company_short = "NX"
-	default_faction_uid = "null"
+	default_faction_uid = NEXUS_FACTION_RESIDENT
 
 	use_overmap = TRUE		//If overmap should be used (including overmap space travel override)
 	overmap_size = 20		//Dimensions of overmap zlevel if overmap is used.

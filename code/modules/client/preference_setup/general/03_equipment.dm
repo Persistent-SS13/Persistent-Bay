@@ -101,13 +101,13 @@
 		last_background = pref.cultural_info[TAG_FACTION]
 		pref.preview_icon = null
 		pref.ShowChoices(usr)
+	//Fetch origin based uniform options
 	populate_uniforms(usr.client)
 
 	. = list()
 	. += "<b>Starting Equipment:</b><br>"
 	. += "Starting Clothing: <a href='?src=\ref[src];change_under=1'><b>[pref.selected_under ? pref.selected_under.name : "Default Outfit"]</b></a><br>"
 	for(var/datum/category_group/underwear/UWC in GLOB.underwear.categories)
-		// if(UWC.name != "Socks") continue
 		var/item_name = (pref.all_underwear && pref.all_underwear[UWC.name]) ? pref.all_underwear[UWC.name] : "None"
 		. += "[UWC.name]: <a href='?src=\ref[src];change_underwear=[UWC.name]'><b>[item_name]</b></a>"
 
@@ -229,9 +229,9 @@
 /datum/category_item/player_setup_item/physical/equipment/proc/populate_uniforms(var/client/C)
 	LAZYCLEARLIST(possible_under_extra)
 	LAZYINITLIST(possible_under_extra)
-
 	//First add culture-related possibilities
 	if(pref.cultural_info)
+		testing("culture is [pref.cultural_info[TAG_FACTION]]")
 		switch(pref.cultural_info[TAG_FACTION])
 			if(CULTURE_HUMAN_EARTH)
 				possible_under_extra |= new /obj/item/clothing/under/assistantformal()

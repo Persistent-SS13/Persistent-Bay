@@ -64,6 +64,7 @@
 	reagent_state = LIQUID
 	color = "#792300"
 	strength = 10
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/toxin/carpotoxin
 	name = "Carpotoxin"
@@ -73,6 +74,7 @@
 	color = "#003333"
 	target_organ = BP_BRAIN
 	strength = 10
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/toxin/venom
 	name = "Spider Venom"
@@ -81,6 +83,7 @@
 	color = "#91d895"
 	target_organ = BP_LIVER
 	strength = 7
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/toxin/chlorine
 	name = "Chlorine"
@@ -92,6 +95,7 @@
 	metabolism = REM
 	heating_point = null
 	heating_products = null
+	gas_id = GAS_CHLORINE
 
 /datum/reagent/toxin/phoron
 	name = "Phoron"
@@ -104,6 +108,7 @@
 	var/fire_mult = 5
 	heating_point = null
 	heating_products = null
+	gas_id = GAS_PHORON
 
 /datum/reagent/toxin/phoron/touch_mob(var/mob/living/L, var/amount)
 	if(istype(L))
@@ -157,6 +162,7 @@
 	target_organ = BP_HEART
 	heating_point = null
 	heating_products = null
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/toxin/cyanide/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	..()
@@ -172,6 +178,7 @@
 	overdose = REAGENTS_OVERDOSE
 	heating_point = null
 	heating_products = null
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/toxin/potassium_chloride/overdose(var/mob/living/carbon/M, var/alien)
 	..()
@@ -195,6 +202,7 @@
 	overdose = 20
 	heating_point = null
 	heating_products = null
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/toxin/potassium_chlorophoride/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	..()
@@ -218,6 +226,7 @@
 	target_organ = BP_BRAIN
 	heating_message = "melts into a liquid slurry."
 	heating_products = list(/datum/reagent/toxin/carpotoxin, /datum/reagent/soporific, /datum/reagent/copper)
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/toxin/zombiepowder/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	..()
@@ -247,6 +256,7 @@
 	color = "#664330"
 	heating_point = null
 	heating_products = null
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/toxin/fertilizer/eznutrient
 	name = "EZ Nutrient"
@@ -265,6 +275,7 @@
 	color = "#49002e"
 	strength = 4
 	heating_products = list(/datum/reagent/toxin, /datum/reagent/water)
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/toxin/plantbgone/touch_turf(var/turf/T)
 	if(istype(T, /turf/simulated/wall))
@@ -295,6 +306,7 @@
 	reagent_state = LIQUID
 	color = "#c8a5dc"
 	overdose = REAGENTS_OVERDOSE
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/lexorin/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -351,6 +363,7 @@
 	taste_mult = 1.3
 	reagent_state = LIQUID
 	color = "#801e28"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/slimejelly/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -369,6 +382,7 @@
 	color = "#009ca8"
 	metabolism = REM * 0.5
 	overdose = REAGENTS_OVERDOSE
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/soporific/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -402,6 +416,7 @@
 	color = "#000067"
 	metabolism = REM * 0.5
 	overdose = REAGENTS_OVERDOSE * 0.5
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/chloralhydrate/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -445,6 +460,7 @@
 	color = "#60a584"
 	metabolism = REM * 0.5
 	overdose = REAGENTS_OVERDOSE
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/space_drugs/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -487,6 +503,7 @@
 	overdose = REAGENTS_OVERDOSE
 	heating_point = 61 CELSIUS
 	heating_products = list(/datum/reagent/potassium, /datum/reagent/acetone, /datum/reagent/sugar)
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 
 /datum/reagent/cryptobiolin/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
@@ -505,6 +522,7 @@
 	reagent_state = LIQUID
 	color = "#c8a5dc"
 	overdose = REAGENTS_OVERDOSE
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/impedrezene/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -525,6 +543,7 @@
 	color = "#b31008"
 	metabolism = REM * 0.25
 	overdose = REAGENTS_OVERDOSE
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/mindbreaker/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -542,6 +561,7 @@
 	color = "#e700e7"
 	overdose = REAGENTS_OVERDOSE
 	metabolism = REM * 0.5
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/psilocybin/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	if(alien == IS_DIONA)
@@ -621,6 +641,7 @@
 		"THE BLOOD THE BLOOD THE BLOOD THE BLOOD",
 		"THE LIGHT THE DARK A STAR IN CHAINS"
 	)
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/three_eye/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	M.add_client_color(/datum/client_color/thirdeye)
@@ -658,6 +679,7 @@
 	reagent_state = LIQUID
 	color = "#13bc5e"
 	metabolism = REM * 0.2
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/slimetoxin/affect_blood(var/mob/living/carbon/human/H, var/alien, var/removed)
 	if(!istype(H))
@@ -708,6 +730,7 @@
 	taste_description = "sludge"
 	reagent_state = LIQUID
 	color = "#13bc5e"
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/aslimetoxin/affect_blood(var/mob/living/carbon/M, var/alien, var/removed) // TODO: check if there's similar code anywhere else
 	if(HAS_TRANSFORMATION_MOVEMENT_HANDLER(M))
@@ -758,6 +781,7 @@
 	overdose = REAGENTS_OVERDOSE
 	heating_products = null
 	heating_point = null
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/toxin/hair_remover/affect_touch(var/mob/living/carbon/human/M, var/alien, var/removed)
 	if(alien == IS_SKRELL)	//skrell can't have hair unless you hack it in, also to prevent tentacles from falling off
@@ -779,6 +803,7 @@
 	heating_products = null
 	heating_point = null
 	var/amount_to_zombify = 5
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/toxin/zombie/affect_touch(var/mob/living/carbon/M, var/alien, var/removed)
 	affect_blood(M, alien, removed * 0.5)
@@ -804,6 +829,7 @@
 	strength = 3
 	heating_products = null
 	heating_point = null
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS
 
 /datum/reagent/toxin/methyl_bromide
 	name = "Methyl Bromide"
@@ -814,6 +840,7 @@
 	strength = 5
 	heating_products = null
 	heating_point = null
+	gas_id = GAS_METHYL_BROMIDE
 
 /datum/reagent/toxin/methyl_bromide/touch_turf(var/turf/simulated/T)
 	if(istype(T))
@@ -841,3 +868,4 @@
 	heating_products = list(/datum/reagent/acetone, /datum/reagent/carbon, /datum/reagent/ethanol)
 	heating_point = 145 CELSIUS
 	heating_message = "separates."
+	gas_flags = XGM_GAS_CONTAMINANT | XGM_GAS_REAGENT_GAS

@@ -101,7 +101,7 @@
 	if(!client)	return 0
 
 	if(href_list["preference"])
-		preferences_panel()
+		client.prefs.ShowPreferences()
 		//client.prefs.ShowChoices(src)
 		return 1
 //		client.prefs.process_link(src, href_list)
@@ -384,10 +384,10 @@
 				qdel(beacon)
 				continue
 			if(beacon.req_access_faction == character.spawn_loc)
-				spawnTurf = get_turf(beacon)//get_step(get_turf(beacon), pick(GLOB.cardinal)) //Set it to get turf because people spawn in the walls
+				spawnTurf = get_turf(beacon)//get_step(get_turf(beacon), pick(GLOB.cardinal)) //Set it to get turf because otherwise people spawn in the walls
 				break
 			if(!spawnTurf)
-				spawnTurf = get_turf(beacon)//get_step(get_turf(beacon), pick(GLOB.cardinal)) //Set it to get turf because people spawn in the walls
+				spawnTurf = get_turf(beacon)//get_step(get_turf(beacon), pick(GLOB.cardinal)) //Set it to get turf because otherwise people spawn in the walls
 
 		if(!spawnTurf)
 			log_and_message_admins("WARNING! No frontier beacons avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
@@ -413,6 +413,13 @@
 		mind.original = character
 		if(client && client.prefs.memory)
 			mind.store_memory(client.prefs.memory)
+		if(client.prefs.relations.len)
+			for(var/T in client.prefs.relations)
+				var/TT = matchmaker.relation_types[T]
+				var/datum/relation/R = new TT
+				R.holder = mind
+				R.info = client.prefs.relations_info[T]
+			mind.gen_relations_info = client.prefs.relations_info["general"]
 		mind.transfer_to(character)					//won't transfer key since the mind is not active
 
 	character.forceMove(spawnTurf)
@@ -434,7 +441,8 @@
 	character.update_inv_r_hand()
 	character.update_inv_s_store()
 	character.redraw_inv()
-	//update_ids(character.real_name)
+
+	//Execute post-spawn stuff
 	character.finishLoadCharacter()	// This is ran because new_players don't like to stick around long.
 	return 1
 
@@ -604,7 +612,3 @@ mob/new_player/MayRespawn()
 
 /mob/new_player/say(var/message)
 	sanitize_and_communicate(/decl/communication_channel/ooc, client, message)
-
-//Open the preferences panel
-/mob/new_player/proc/preferences_panel()
-

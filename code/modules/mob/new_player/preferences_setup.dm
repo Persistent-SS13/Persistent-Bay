@@ -51,7 +51,7 @@
 	mannequin.real_name = real_name
 
 	//Do default faction outfit
-	if(faction)
+	if( faction && (finalize || (!finalize && (equip_preview_mob & EQUIP_PREVIEW_JOB))))
 		var/datum/world_faction/fac = get_faction(src.faction)
 		//testing("dress_preview_mob: got faction [fac?.name]")
 		if(fac && fac.starter_outfit)
@@ -61,6 +61,8 @@
 			//If we have selected a specific uniform, replace the default one
 			if(selected_under)
 				clothes.uniform = selected_under.type //The outfit class uses types not instances
+			
+			//The outfit class does most of the equipping from preferences, along with the ID setup, backpack setup, etc.. Its really handy
 			clothes.equip(mannequin, equip_adjustments = adjustflags)
 			update_icon = TRUE
 

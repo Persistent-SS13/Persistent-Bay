@@ -59,6 +59,7 @@ datum/preferences
 	b_type = RANDOM_BLOOD_TYPE
 
 	if(client && !IsGuestKey(client.key))
+		settings = new(client)
 		src.load_path(client.ckey)
 		load_preferences()
 		load_and_update_character()
@@ -463,7 +464,6 @@ datum/preferences
 	if(!user || !user.client)
 		return
 
-	src.settings = new(user.client)
 	if(!src.loaded_preferences)
 		src.load_preferences()
 	src.settings.load_preferences(src.loaded_preferences)

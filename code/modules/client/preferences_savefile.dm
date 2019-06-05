@@ -31,6 +31,7 @@
 
 	from_file(S["version"], savefile_version)
 	player_setup.load_preferences(S)
+	settings.load_preferences(S)
 	loaded_preferences = S
 	return 1
 
@@ -42,9 +43,12 @@
 
 	to_file(S["version"], SAVEFILE_VERSION_MAX)
 	player_setup.save_preferences(S)
+	settings.save_preferences(S)
 	loaded_preferences = S
 	return 1
 
+//Since characters are saved into separate files
+// and not meant to be modified after creation, we don't use this method
 /datum/preferences/proc/load_character(slot)
 //	var/char_path = character_load_path(slot)
 //	if(!char_path)				return 0
@@ -76,8 +80,7 @@
 
 //This saves the initial character after creation is complete
 /datum/preferences/proc/save_character()
-	var/mob/mannequin = create_mannequin()
-	SScharacter_setup.save_character(chosen_slot, client.ckey, mannequin)
+	SScharacter_setup.save_character(chosen_slot, client.ckey, create_initial_character())
 	character_list = list()
 	// var/char_path = character_load_path(chosen_slot)
 	// if(!char_path)				return 0
@@ -91,12 +94,13 @@
 
 /datum/preferences/proc/sanitize_preferences()
 	player_setup.sanitize_setup()
+	settings.sanitize_preferences()
 	if(!bonus_slots) bonus_slots = 0
 	if(!bonus_notes) bonus_notes = ""
 	return 1
 
 /datum/preferences/proc/update_setup(var/savefile/preferences, var/savefile/character)
-	if(!preferences || !character)
+	if(!preferences /*|| !character*/)
 		return 0
 	return player_setup.update_setup(preferences, character)
 
@@ -108,7 +112,6 @@
 	email.password = chosen_password
 	H.mind.initial_email_login = list("login" = email.login, "password" = email.password)
 	//testing("created email for [H], [email.login], [email.password]")
-	//testing("created modular record for [H], [record]")
 	var/faction_uid = GLOB.using_map.default_faction_uid
 	var/datum/world_faction/F = get_faction(src.faction)
 	if(F)
@@ -126,6 +129,7 @@
 	//After the bank account and email accounts are made, create the record.
 	// Since the record contains both.
 	var/datum/computer_file/report/crew_record/record = CreateModularRecord(H)
+	//testing("created modular record for [H], [record]")
 	var/datum/computer_file/report/crew_record/record2 = new()
 	if(!record2.load_from_global(real_name))
 		message_admins("record for [real_name] failed to load in character creation..")
@@ -142,51 +146,51 @@
 		log_warning("[H]'s spawn_loc is null! Got faction: [src.faction]'")
 
 //Creates the dummy mob used to store initial character data in the save file
-/datum/preferences/proc/create_mannequin()
-	var/mob/living/carbon/human/mannequin = new()
-	mannequin.name = real_name
-	mannequin.real_name = real_name
-	mannequin.spawn_type = 2 //For first time spawn
-	if(!mannequin.mind)
-		mannequin.mind = new()
+/datum/preferences/proc/create_initial_character()
+	var/mob/living/carbon/human/H = new()
+	H.name = real_name
+	H.real_name = real_name
+	H.spawn_type = 2 //For first time spawn
+	if(!H.mind)
+		H.mind = new()
 
 	//Languages
 	for(var/token in cultural_info)
-		mannequin.set_cultural_value(token, cultural_info[token], defer_language_update = TRUE)
+		H.set_cultural_value(token, cultural_info[token], defer_language_update = TRUE)
 
 	for(var/lang in alternate_languages)
 		var/datum/language/chosen_language = all_languages[lang]
 		if(chosen_language)
-			var/decl/cultural_info/current_culture = SSculture.get_culture(mannequin.species.default_cultural_info[TAG_CULTURE])
+			var/decl/cultural_info/current_culture = SSculture.get_culture(H.species.default_cultural_info[TAG_CULTURE])
 			var/is_species_lang = (chosen_language in (current_culture.get_spoken_languages()))
 			if(is_species_lang || ((!(chosen_language.flags & RESTRICTED) || check_rights(R_ADMIN, 0, client))))
-				mannequin.add_language(lang)
-	mannequin.update_languages()
+				H.add_language(lang)
+	H.update_languages()
 
 	//DNA should be last
-	mannequin.dna.ResetUIFrom(mannequin)
-	mannequin.dna.ready_dna(mannequin)
-	mannequin.dna.b_type = client.prefs.b_type
-	mannequin.sync_organ_dna()
+	H.dna.ResetUIFrom(H)
+	H.dna.ready_dna(H)
+	H.dna.b_type = client.prefs.b_type
+	H.sync_organ_dna()
 
 	if(client.prefs.disabilities)
 		// Set defer to 1 if you add more crap here so it only recalculates struc_enzymes once. - N3X
-		mannequin.dna.SetSEState(GLOB.GLASSESBLOCK,1,0)
-		mannequin.disabilities |= NEARSIGHTED
+		H.dna.SetSEState(GLOB.GLASSESBLOCK,1,0)
+		H.disabilities |= NEARSIGHTED
 
 	// Give them their cortical stack if we're using them.
 	if(config && config.use_cortical_stacks && client && client.prefs.has_cortical_stack)
-		mannequin.create_stack(faction_uid = src.faction, silent = TRUE) //Auto-spawn the correct kind of stack
+		H.create_stack(faction_uid = src.faction, silent = TRUE) //Auto-spawn the correct kind of stack
 
-	setup_new_accounts(mannequin)
-	dress_preview_mob(mannequin, TRUE)
+	setup_new_accounts(H) //make accounts before! Outfit setup needs the record set
+	dress_preview_mob(H, TRUE)
 
 	// Do the initial caching of the player's body icons.
-	mannequin.force_update_limbs()
-	mannequin.update_eyes()
-	mannequin.regenerate_icons()
+	H.force_update_limbs()
+	H.update_eyes()
+	H.regenerate_icons()
 	
-	return mannequin
+	return H
 
 #undef SAVEFILE_VERSION_MAX
 #undef SAVEFILE_VERSION_MIN

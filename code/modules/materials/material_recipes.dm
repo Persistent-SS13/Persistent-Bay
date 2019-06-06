@@ -83,6 +83,8 @@
 	. += new/datum/stack_recipe_list("modular computer frames", create_recipe_list(/datum/stack_recipe/computer))
 	. += new/datum/stack_recipe/furniture/coffin(src)
 	. += new/datum/stack_recipe/stairs(src)
+	. += new/datum/stack_recipe/ladder(src)
+	. += new/datum/stack_recipe/handrail(src)
 	. += new/datum/stack_recipe/morgue(src)
 	//
 	. += new/datum/stack_recipe/toilet(src)
@@ -173,3 +175,9 @@
 		return
 	. += new/datum/stack_recipe/furniture/table_frame(src)
 	. += new/datum/stack_recipe/grenade(src) 
+
+/material/marble/generate_recipes(reinforce_material)
+	. = ..()
+	if(reinforce_material)
+		return
+	. += new/datum/stack_recipe/fountain(src)

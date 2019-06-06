@@ -53,18 +53,27 @@
 	//Do default faction outfit
 	if( faction && (finalize || (!finalize && (equip_preview_mob & EQUIP_PREVIEW_JOB))))
 		var/datum/world_faction/fac = get_faction(src.faction)
-		//testing("dress_preview_mob: got faction [fac?.name]")
-		if(fac && fac.starter_outfit)
-			var/decl/hierarchy/outfit/clothes = outfit_by_type(fac.starter_outfit)
-			//testing("dress_preview_mob: got outfit [clothes]")
+		var/decl/hierarchy/outfit/clothes
+		//Handle snowflake species uniforms
+		if(species == SPECIES_PHOROSIAN)
+			clothes = outfit_by_type(fac.starter_phorosian_outfit)
 			ASSERT(istype(clothes))
-			//If we have selected a specific uniform, replace the default one
-			if(selected_under)
-				clothes.uniform = selected_under.type //The outfit class uses types not instances
-			
-			//The outfit class does most of the equipping from preferences, along with the ID setup, backpack setup, etc.. Its really handy
-			clothes.equip(mannequin, equip_adjustments = adjustflags)
-			update_icon = TRUE
+		else if(species == SPECIES_VOX)
+			clothes = outfit_by_type(fac.starter_vox_outfit)
+			ASSERT(istype(clothes))
+		else
+			//testing("dress_preview_mob: got faction [fac?.name]")
+			if(fac && fac.starter_outfit)
+				clothes = outfit_by_type(fac.starter_outfit)
+				//testing("dress_preview_mob: got outfit [clothes]")
+				ASSERT(istype(clothes))
+		//If we have selected a specific uniform, replace the default one
+		if(selected_under)
+			clothes.uniform = selected_under.type //The outfit class uses types not instances
+				
+		//The outfit class does most of the equipping from preferences, along with the ID setup, backpack setup, etc.. Its really handy
+		clothes.equip(mannequin, equip_adjustments = adjustflags)
+		update_icon = TRUE
 
 	//Extra starter gear, left in for possible use in the future
 	if(finalize || (!finalize && (equip_preview_mob & EQUIP_PREVIEW_LOADOUT)))

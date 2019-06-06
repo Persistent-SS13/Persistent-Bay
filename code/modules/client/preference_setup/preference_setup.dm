@@ -88,6 +88,7 @@ prompts
 // 	sort_order = 6
 // 	category_item_type = /datum/category_item/player_setup_item/loadout
 
+//Gotta stay enabled or prefs won't save..
 /datum/category_group/player_setup_category/global_preferences
 	name = "Game Settings"
 	sort_order = 7

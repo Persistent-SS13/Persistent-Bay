@@ -20,3 +20,9 @@
 	id_slot = slot_wear_id
 	id_type = /obj/item/weapon/card/id/civilian/citizens
 	backpack_contents = list()
+
+/decl/hierarchy/outfit/phorosian/nexus
+	name = "Phorosian Gear Nexus"
+	l_ear = /obj/item/device/radio/headset/nexus/citizen
+	id_slot = slot_wear_id
+	id_type = /obj/item/weapon/card/id/civilian/citizens

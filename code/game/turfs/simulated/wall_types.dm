@@ -35,7 +35,7 @@
 		if(spacefacing)
 			var/bleach_factor = rand(10,50)
 			paint_color = adjust_brightness(paint_color, bleach_factor)
-	update_icon()
+	queue_icon_update()
 
 /turf/simulated/wall/titanium
 	icon_state = "titanium"

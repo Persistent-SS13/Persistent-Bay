@@ -57,7 +57,7 @@
 		gas_data.name[gas.id] = gas.name
 		gas_data.specific_heat[gas.id] = gas.specific_heat
 		gas_data.molar_mass[gas.id] = gas.molar_mass
-		if(gas.overlay_limit) 
+		if(gas.overlay_limit)
 			gas_data.overlay_limit[gas.id] = gas.overlay_limit
 			var/obj/effect/gas_overlay/I = new()
 			if(gas.tile_overlay)
@@ -91,7 +91,7 @@
 		gas_data.burn_product[gas_id] =       reagent.gas_burn_product
 		gas_data.component_reagents[gas_id] = list(reagent.type = 1)
 		gas_data.condensation_points[gas_id] = reagent.heating_point
-		gas_data.condensation_products[gas.id] = reagent.type
+		gas_data.condensation_products[gas_id] = reagent.type
 		qdel(reagent)
 
 	return 1

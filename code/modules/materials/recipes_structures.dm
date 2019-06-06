@@ -34,6 +34,34 @@
 	difficulty = 2
 	send_material_data = 1
 	one_per_turf = 1
+/datum/stack_recipe/stairs/can_make(mob/user)
+	. = ..()
+	if(!.)
+		return .
+	//Check if the upper Z-level has open space to place the stairs under
+	var/turf/simulated/open/above = GetAbove(get_turf(user))
+	if(!above)
+		to_chat(user, SPAN_WARNING("The space above has to be open to place a stair here!"))
+		return FALSE
+
+/datum/stack_recipe/ladder
+	title = "ladder"
+	result_type = /obj/structure/ladder
+	req_amount = 10
+	time = 8 SECONDS
+	on_floor = 1
+	difficulty = 2
+	send_material_data = 1
+	one_per_turf = 1
+/datum/stack_recipe/stairs/can_make(mob/user)
+	. = ..()
+	if(!.)
+		return .
+	//Check if the upper Z-level has open space to place the stairs under
+	var/turf/simulated/open/above = GetAbove(get_turf(user))
+	if(!above)
+		to_chat(user, SPAN_WARNING("The space above has to be open to place a stair here!"))
+		return FALSE
 
 /datum/stack_recipe/morgue
 	title = "morgue slab"
@@ -78,3 +106,19 @@
 	send_material_data = 1
 	one_per_turf = 1
 
+/datum/stack_recipe/handrail
+	title = "handrail"
+	result_type = /obj/structure/handrai
+	req_amount = 5
+	time = 4 SECONDS
+	on_floor = 1
+	difficulty = 2
+	send_material_data = 1
+
+/datum/stack_recipe/fountain
+	title = "fountain"
+	result_type = /obj/structure/fountain/mundane
+	req_amount = 20
+	on_floor = 1
+	difficulty = 2
+	send_material_data = 1

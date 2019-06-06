@@ -48,21 +48,20 @@
 	ADD_SKIP_EMPTY(reinf_material)
 	ADD_SKIP_EMPTY(girder_reinf_material)
 
-/turf/simulated/wall/Initialize(mapload, var/newloc, var/materialtype, var/rmaterialtype, var/girder_mat, var/girder_reinf_mat)
+/turf/simulated/wall/Initialize(mapload, var/materialtype, var/rmaterialtype, var/girder_mat, var/girder_reinf_mat)
+	testing("wall/initialize([mapload], [materialtype], [rmaterialtype], [girder_mat], [girder_reinf_mat])")
 	set_extension(src, /datum/extension/penetration, /datum/extension/penetration/proc_call, .proc/CheckPenetration)
-	START_PROCESSING(SSturf, src) //Used for radiation.
 	. = ..()
 	if(!map_storage_loaded)
 		if(!materialtype)
 			materialtype = DEFAULT_WALL_MATERIAL
-		material = SSmaterials.get_material_by_name(materialtype)
+		material = (istext(materialtype))?  SSmaterials.get_material_by_name(materialtype) : materialtype
 		if(!isnull(rmaterialtype))
-			reinf_material = SSmaterials.get_material_by_name(rmaterialtype)
+			reinf_material = (istext(rmaterialtype))? SSmaterials.get_material_by_name(rmaterialtype) : rmaterialtype
 		if(!isnull(girder_mat))
-			girder_material = SSmaterials.get_material_by_name(girder_mat)
+			girder_material = (istext(girder_mat))? SSmaterials.get_material_by_name(girder_mat) : girder_mat
 		if(!isnull(girder_reinf_mat))
-			girder_reinf_material = SSmaterials.get_material_by_name(girder_reinf_mat)
-
+			girder_reinf_material = (istext(girder_reinf_mat))? SSmaterials.get_material_by_name(girder_reinf_mat) : girder_reinf_mat
 	return INITIALIZE_HINT_LATELOAD
 
 /turf/simulated/wall/LateInitialize()

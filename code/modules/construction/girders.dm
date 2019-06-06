@@ -1,4 +1,3 @@
-
 /obj/structure/girder
 	name = "girder"
 	desc = "The internals of a wall"
@@ -14,28 +13,25 @@
 	var/state = 0
 	var/cover = 50 //how much cover the girder provides against projectiles.
 	var/material/reinf_material
-	var/reinforcing = 0
 
-/obj/structure/girder/displaced
-	icon_state = "displaced"
-	anchored = 0
-	health = 50
-	cover = 25
+/obj/structure/girder/anchored
+	icon_state = "girder"
+	anchored = 1
 
 /obj/structure/girder/New(var/newloc, var/mat, var/r_mat)
 	..()
 	ADD_SAVED_VAR(state)
 	ADD_SAVED_VAR(reinf_material)
-	ADD_SAVED_VAR(reinforcing)
+	ADD_SAVED_VAR(cover)
 
 	ADD_SKIP_EMPTY(reinf_material)
 
-/obj/structure/girder/Initialize(var/mapload, var/newloc, var/mat, var/r_mat)
+/obj/structure/girder/Initialize(var/mapload, var/mat, var/r_mat)
 	set_extension(src, /datum/extension/penetration, /datum/extension/penetration/simple, 100)
 	. = ..()
 	if(!map_storage_loaded)
-		material = mat
-		reinf_material = r_mat
+		material = (istext(mat))?  SSmaterials.get_material_by_name(mat) : mat
+		reinf_material = (istext(r_mat))?  SSmaterials.get_material_by_name(r_mat) : r_mat
 		update_material(1) // Handles lack of material
 	else
 		update_material()
@@ -48,188 +44,159 @@
 	cover = initial(cover)
 	health = min(health,max_health)
 	state = 0
-	icon_state = initial(icon_state)
-	reinforcing = 0
 	if(reinf_material)
 		reinforce_girder()
 
 /obj/structure/girder/on_update_icon()
 	color = material.icon_colour
 	overlays.Cut()
-	switch(state)
-		if(0)
-			icon_state = "girder_d"
-		if(1)
-			icon_state = "girder_w"
-		else
-			icon_state = "girder"
+	if(anchored)
+		switch(state)
+			if(0)
+				icon_state = "girder_d"
+			if(1)
+				icon_state = "girder_w"
+			else
+				icon_state = "girder"
+		if(reinf_material)
+			var/image/I = image(icon, "girder_r")
+			I.color = reinf_material.icon_colour
+			overlays += I
+	else
+		icon_state = "girder_d"
 	name = "[reinf_material ? "[reinf_material.display_name] reinforced " : ""][material.display_name] [initial(name)]"
 	desc = "It seems to be a [reinf_material ? "[reinf_material.display_name] reinforced " : ""][material.display_name] [initial(name)]."
-	if(reinf_material)
-		var/image/I = image(icon, "girder_r")
-		I.color = reinf_material.icon_colour
-		overlays += I
 
 /obj/structure/girder/attackby(var/obj/item/W, var/mob/user)
 	if(istype(W, /obj/item/weapon/pickaxe/diamonddrill))
-		to_chat(user, SPAN_NOTICE("You drill through the girder!"))
+		to_chat(user, SPAN_NOTICE("You drill through \the [src]!"))
 		dismantle()
 		return 1
 	else if(istype(W, /obj/item/weapon/gun/energy/plasmacutter) || istype(W, /obj/item/psychic_power/psiblade/master/grand/paramount))
-		to_chat(user, SPAN_NOTICE("Now slicing apart the girder..."))
+		to_chat(user, SPAN_NOTICE("Now slicing apart \the [src]..."))
 		if(do_after(user, 3 SECONDS, src))
 			if(!src) return
-			to_chat(user, SPAN_NOTICE("You slice apart the girder!"))
+			to_chat(user, SPAN_NOTICE("You slice apart \the [src]!"))
 			dismantle()
 			return 1
 	switch(state)
 		if(0)
-			if(isWrench(W))
-				var/obj/item/weapon/tool/T = W
-				if(anchored && !reinf_material)
-					to_chat(user, SPAN_NOTICE("Now disassembling the girder..."))
-					if(T.use_tool(user, src, 4 SECONDS))
-						to_chat(user, SPAN_NOTICE("You dissasembled the girder!"))
-						dismantle()
-					return 1
-				else if(!anchored)
-					to_chat(user, SPAN_NOTICE("Now securing the girder..."))
-					if(T.use_tool(user, src, 4 SECONDS))
-						to_chat(user, SPAN_NOTICE("You secured the girder!"))
-						reset_girder()
-					return 1
-		
-			if(isCrowbar(W) && anchored)
-				var/obj/item/weapon/tool/T = W
-				to_chat(user, SPAN_NOTICE("Now dislodging the girder..."))
-				if(T.use_tool(user, src, 4 SECONDS))
-					to_chat(user, SPAN_NOTICE("You dislodged the girder!"))
-					icon_state = "displaced"
-					anchored = 0
-					health = 50
-					cover = 25
-					update_icon()
+			if(Weld(W, user, null, "You start to dismantle \the [src]"))
+				to_chat(user, "<span class='notice'>You dismantle \the [src].</span>")
+				dismantle()
+				return 1
+			if(!anchored && Wrench(W, user, null, "You start to disassemble \the [src]"))
+				to_chat(user, "<span class='notice'>You disassemble \the [src] into parts.</span>")
+				new /obj/item/girderpart(get_turf(src), material)
+				qdel(src)
+				return 1
+			if(Crowbar(W, user))
+				to_chat(user, "<span class='notice'>You pry \the [src] [anchored ? "out of" : "into"] place</span>")
+				anchored = !anchored
+				update_icon()
+				return 1
+			if(anchored && Wrench(W, user))
+				to_chat(user, "<span class='notice'>You secure \the [src] into place.</span>")
+				anchored = 1
+				state = 1
+				update_icon()
 				return 1
 		if(1)
-			if(isWrench(W))
-				var/obj/item/weapon/tool/T = W
-				to_chat(user, SPAN_NOTICE("You begin unsecuring \the [src]..."))
-				if(T.use_tool(user, src, 4 SECONDS))
-					to_chat(user, SPAN_NOTICE("You unsecure \the [src]."))
-					if(reinf_material)
-						reinf_material.place_dismantled_product(get_turf(src))
-						reinf_material = null
-					reset_girder()
+			if(Weld(W, user, null, "You start to weld \the [src] into place."))
+				to_chat(user, "<span class='notice'>You weld \the [src] into place.</span>")
+				state = 2
+				update_icon()
 				return 1
-
-			if(isWelder(W))
-				var/obj/item/weapon/tool/T = W
-				to_chat(user, SPAN_NOTICE("You start to weld \the [src] into place."))
-				if(T.use_tool(user, src, 3 SECONDS))
-					to_chat(user, "<span class='notice'>You weld \the [src] into place.</span>")
-					state = 2
-					update_icon()
+			if(Wrench(W, user, null))
+				to_chat(user, "<span class='notice'>You unsecure \the [src].</span>")
+				state = 0
+				update_icon()
 				return 1
 		if(2)
-
-			if(isWelder(W))
-				var/obj/item/weapon/tool/T = W
-				to_chat(user, SPAN_NOTICE("You start to unweld \the [src] from the floor."))
-				if(T.use_tool(user, src, 4 SECONDS))
-					state = 1
-					update_icon()
+			if(Weld(W, user, null, "You start to unweld \the [src] from the floor."))
+				to_chat(user, "<span class='notice'>You unweld \the [src] from the floor.</span>")
+				state = 1
+				update_icon()
 				return 1
-
-			if(isScrewdriver(W))
-				var/obj/item/weapon/tool/T = W
-				if(anchored && !reinf_material && T.use_tool(user, src, 1 SECONDS))
-					reinforcing = !reinforcing
-					to_chat(user, SPAN_NOTICE("\The [src] can now be [reinforcing? "reinforced" : "constructed"]!"))
+			if(UseMaterial(W, user, null, "You start applying the material.", null, null, 4))
+				to_chat(user, "<span class='notice'>You finish applying the material.</span>")
+				var/obj/item/stack/material/st = W
+				if(construct_wall(st, user))
+					qdel(src)
+				return
+			if(Screwdriver(W, user, 0))
+				to_chat(user, "<span class='notice'>\The [src] can now be reinforced.</span>")
+				state = 3
+				update_icon()
 				return 1
-
-			if(istype(W, /obj/item/stack/material))
-				if(reinforcing && !reinf_material)
-					if(!reinforce_with_material(W, user))
-						reinforcing = FALSE
-						state = 3 //Reinforcing means extra steps
-						return ..()
-				else
-					if(!construct_wall(W, user))
-						return ..()
-
 		if(3)
-
-			if(reinf_material && isCrowbar(W))
-				var/obj/item/weapon/tool/T = W
-				to_chat(user, SPAN_NOTICE("You start removing \the [reinf_material.display_name]."))
-				if(T.use_tool(user, src, 5 SECONDS))
-					to_chat(user, SPAN_NOTICE("You finish removing \the [reinf_material.display_name]."))
-					reinf_material.place_sheet(get_turf(src), 6)
-					reinf_material = null
-					state = 2
-					update_icon()
+			if(reinforce_with_material(W, user))
+				state = 4
 				return 1
-
-			if(isWrench(W))
-				var/obj/item/weapon/tool/T = W
-				if(T.use_tool(user, src, 4 SECONDS))
-					to_chat(user, "<span class='notice'>You secure the material to \the [src]</span>")
-					state = 4
-					update_icon()
+			if(!reinf_material && Screwdriver(W, user, 0))
+				to_chat(user, "<span class='notice'>\The [src] can now be constructed.</span>")
+				state = 2
+				update_icon()
 				return 1
-
+			if(reinf_material && Wirecutter(W, user, 5, "You start removing \the [reinf_material.display_name]."))
+				to_chat(user, "<span class='notice'>You finish removing \the [reinf_material.display_name].</span>")
+				new reinf_material.stack_type(src, 6)
+				reinf_material = null
+				state = 2
+				update_icon()
+				return 1
 		if(4)
-			
-			if(isCrowbar(W))
-				var/obj/item/weapon/tool/T = W
-				if(T.use_tool(user, src, 1 SECOND))
-					to_chat(user, "<span class='notice'>You bend the material around \the [src]</span>")
-					state = 5
-					update_icon()
+			if(Wrench(W, user, 10))
+				to_chat(user, "<span class='notice'>You secure the material to \the [src]</span>")
+				state = 5
+				update_icon()
 				return 1
-			
-			if(isWrench(W))
-				var/obj/item/weapon/tool/T = W
-				if(T.use_tool(user, src, 1 SECOND))
-					to_chat(user, "<span class='notice'>You unsecure the material from \the [src].</span>")
-					state = 3
-					update_icon()
+			if(Crowbar(W, user, 5, "You start prying \the [reinf_material.display_name] up."))
+				to_chat(user, "<span class='notice'>You finish prying \the [reinf_material.display_name].</span>")
+				new reinf_material.stack_type(src, 2)
+				state = 3
+				update_icon()
 				return 1
-		
 		if(5)
-		
-			if(isWelder(W))
-				var/obj/item/weapon/tool/T = W
-				if(T.use_tool(user, src, 4 SECOND))
-					to_chat(user, "<span class='notice'>You weld the material to \the [src]</span>")
-					state = 6
-					update_icon()
+			if(Crowbar(W, user))
+				to_chat(user, "<span class='notice'>You bend the material around \the [src]</span>")
+				state = 6
+				update_icon()
 				return 1
-
-			if(isCrowbar(W))
-				var/obj/item/weapon/tool/T = W
-				if(T.use_tool(user, src, 2 SECOND))
-					to_chat(user, "<span class='notice'>You unbend the material from around \the [src]</span>")
-					state = 4
-					update_icon()
+			if(Wrench(W, user, 10))
+				to_chat(user, "<span class='notice'>You unsecure the material from \the [src].</span>")
+				state = 4
+				update_icon()
 				return 1
-
 		if(6)
-
-			if(istype(W, /obj/item/stack/material))
-				if(!construct_wall(W, user))
-					return ..()
-
-			if(isWelder(W))
-				var/obj/item/weapon/tool/T = W
-				if(T.use_tool(user, src, 4 SECONDS))
-					to_chat(user, "<span class='notice'>You unweld the material from \the [src]</span>")
-					state = 5
-					update_icon()
+			if(Weld(W, user))
+				to_chat(user, "<span class='notice'>You weld the material to \the [src]</span>")
+				state = 7
+				update_icon()
+				return 1
+			if(Crowbar(W, user))
+				to_chat(user, "<span class='notice'>You unbend the material from around \the [src]</span>")
+				state = 5
+				update_icon()
+				return 1
+		if(7)
+			if(UseMaterial(W, user, 20, "You start applying the material to \the [src]", null, null, 4))
+				to_chat(user, "<span class='notice'>You apply the material to \the [src].</span>")
+				var/obj/item/stack/material/st = W
+				if(construct_wall(st, user))
+					qdel(src)
+				return 1
+			if(Weld(W, user))
+				to_chat(user, "<span class='notice'>You unweld the material from \the [src]</span>")
+				state = 6
+				update_icon()
 				return 1
 	return ..()
 
 /obj/structure/girder/proc/construct_wall(obj/item/stack/material/S, mob/user)
+	if(!istype(S))
+		log_warning("girder/construct_wall(): Got invalid type material stack! [S]")
+		return 
 	if(S.get_amount() < 2)
 		to_chat(user, "<span class='notice'>There isn't enough material here to construct a wall.</span>")
 		return 0
@@ -268,7 +235,6 @@
 	T.add_hiddenprint(usr)
 	T.update_material(1)
 	T.update_icon()
-	qdel(src)
 	return 1
 
 /obj/structure/girder/proc/reinforce_with_material(obj/item/stack/material/S, mob/user) //if the verb is removed this can be renamed.
@@ -296,10 +262,9 @@
 
 /obj/structure/girder/proc/reinforce_girder()
 	cover = 75
-	health = 500
+	update_material(1)
 	state = 2
-	icon_state = "reinforced"
-	reinforcing = 0
+	update_icon()
 
 /obj/structure/girder/proc/update_material(var/update_Integrity)
 	if(!istype(material, /material))
@@ -315,7 +280,7 @@
 		else
 			reinf_material = null
 	if(!material)
-		material = SSmaterials.get_material_by_name(MATERIAL_STEEL)
+		material = SSmaterials.get_material_by_name(DEFAULT_WALL_MATERIAL)
 		update_Integrity = 1
 
 	if(update_Integrity)

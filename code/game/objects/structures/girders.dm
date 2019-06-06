@@ -1,3 +1,6 @@
+//
+//	This is replaced by the code in modules/construction
+//
 /obj/structure/girder
 	icon_state = "girder"
 	anchored = 1

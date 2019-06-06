@@ -167,14 +167,14 @@
 /obj/structure/proc/dismantle()
 	if(parts)
 		new parts(loc)
+	qdel(src)
 
 /obj/structure/proc/default_deconstruction_screwdriver(var/obj/item/weapon/tool/screwdriver/S, var/mob/living/user, var/deconstruct_time = null)
 	if(!istype(S))
 		return FALSE
 	src.add_fingerprint(user)
 	user.visible_message(SPAN_NOTICE("You begin to unscrew \the [src]."), SPAN_NOTICE("[user] begins to unscrew \the [src]."))
-	playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
-	if(do_after(usr, deconstruct_time? deconstruct_time : 6 SECONDS, src) && src)
+	if(S.use_tool(user, src, deconstruct_time? deconstruct_time : 6 SECONDS) && src)
 		user.visible_message(SPAN_NOTICE("You finish unscrewing \the [src]."), SPAN_NOTICE("[user] finishes unscrewing \the [src]."))
 		dismantle()
 		return TRUE
@@ -184,10 +184,9 @@
 	if(!istype(W))
 		return FALSE
 	src.add_fingerprint(user)
-	to_chat(usr, SPAN_NOTICE("You begin to dismantle \the [src]."))
-	playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
-	if(do_after(usr, deconstruct_time? deconstruct_time : 4 SECONDS, src) && src)
-		to_chat(usr, SPAN_NOTICE("You finish dismantling \the [src]."))
+	user.visible_message(SPAN_NOTICE("You begin to dismantle \the [src]."), SPAN_NOTICE("[user] begins to dismantle \the [src]."))
+	if(W.use_tool(user, src, deconstruct_time? deconstruct_time : 4 SECONDS) && src)
+		user.visible_message(SPAN_NOTICE("You finish dismantling \the [src]."), SPAN_NOTICE("[user] finishes dismantling \the [src]."))
 		dismantle()
 		return TRUE
 	return FALSE

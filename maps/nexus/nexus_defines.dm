@@ -120,7 +120,7 @@ proc/GetNbSavedZLevels()
 //Example for adding map specific starter uniforms
 /datum/map/nexus/populate_uniforms(var/client/C)
 	. = ..()
-	switch(C.prefs.cultural_info[TAG_FACTION])
+	switch(C.prefs.cultural_info[TAG_CULTURE])
 		if(CULTURE_HUMAN_SPACER)
 			. |= new /obj/item/clothing/under/blazer()
 	

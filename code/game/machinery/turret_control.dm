@@ -19,6 +19,7 @@
 	var/lethal = FALSE
 	var/locked = TRUE
 	var/area/control_area //can be area name, path or nothing.
+	var/tmp/area/saving_control_area = null //Stores the area during saving
 	var/mob/living/silicon/ai/master_ai
 
 	var/check_arrest = 1	//checks if the perp is set to arrest
@@ -38,12 +39,46 @@
 	lethal = TRUE
 	icon_state = "control_kill"
 
+/obj/machinery/turretid/New()
+	. = ..()
+	ADD_SAVED_VAR(enabled)
+	ADD_SAVED_VAR(lethal)
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(ailock)
+	ADD_SAVED_VAR(check_arrest)
+	ADD_SAVED_VAR(check_records)
+	ADD_SAVED_VAR(check_weapons)
+	ADD_SAVED_VAR(check_access)
+	ADD_SAVED_VAR(check_anomalies)
+	ADD_SAVED_VAR(check_synth)
+	ADD_SAVED_VAR(control_area)
+
+	ADD_SKIP_EMPTY(control_area)
+
 /obj/machinery/turretid/Destroy()
 	if(control_area)
 		var/area/A = control_area
 		if(A && istype(A))
 			A.turret_controls -= src
 	. = ..()
+
+//Since we can't save references to areas, we'll do a little trick to
+// save only the area name, and then restore it on save load.
+/obj/machinery/turretid/before_save()
+	. = ..()
+	if(istype(control_area))
+		saving_control_area = control_area
+		control_area = control_area.name
+/obj/machinery/turretid/after_save()
+	. = ..()
+	if(istype(saving_control_area))
+		control_area = saving_control_area
+		saving_control_area = null
+
+/obj/machinery/turretid/after_load()
+	. = ..()
+	if(istext(control_area))
+		control_area = get_area(control_area)
 
 /obj/machinery/turretid/Initialize()
 	if(!control_area)

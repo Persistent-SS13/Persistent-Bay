@@ -44,14 +44,15 @@
 /atom/proc/update_light()
 	set waitfor = FALSE
 
-	if(!light_max_bright || !light_outer_range || light_max_bright > 1)
+	//Removed the stupid check for max_bright, because a lot of things still uses larger than 1 values and its sometimes desirable
+	if(!light_max_bright || !light_outer_range /*|| light_max_bright > 1*/)
 		if(light)
 			light.destroy()
 			light = null
-		if(light_max_bright > 1)
-			var/old = light_max_bright
-			light_max_bright = 1
-			CRASH("Attempted to call update_light() on atom [src] \ref[src] with a light_max_bright value greater than one ([old])")
+		// if(light_max_bright > 1)
+		// 	var/old = light_max_bright
+		// 	light_max_bright = 1
+		// 	CRASH("Attempted to call update_light() on atom [src] \ref[src] with a light_max_bright value greater than one ([old])")
 	else
 		if(!istype(loc, /atom/movable))
 			. = src

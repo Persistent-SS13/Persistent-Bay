@@ -33,7 +33,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 	var/list/languages = list()
 	var/datum/mind/backup
 	var/prompting = FALSE // Are we waiting for a user prompt?
-	default_action_type =  /datum/action/item_action/organ/lace
+	default_action_type =  /datum/action/lace
 	action_button_name = "Access Neural Lace UI"
 	action_button_is_hands_free = 1
 	action_button_icon = 'icons/obj/action_buttons/lace.dmi'

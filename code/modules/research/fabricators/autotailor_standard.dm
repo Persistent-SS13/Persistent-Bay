@@ -51,10 +51,10 @@
 	category = "Undersuits - Jumpsuits"
 	materials = list(MATERIAL_CLOTH = 5000)
 
-///datum/design/item/autotailor/under/jumpsuit/br_overalls
-//	name = "Overalls - brown"
-//	id = "br_overalls"
-//	build_path = /obj/item/clothing/under/serviceoveralls
+/datum/design/item/autotailor/under/jumpsuit/br_overalls
+	name = "Overalls - brown"
+	id = "br_overalls"
+	build_path = /obj/item/clothing/under/serviceoveralls
 
 /datum/design/item/autotailor/under/jumpsuit/blue_overalls
 	name = "Overalls - blue"

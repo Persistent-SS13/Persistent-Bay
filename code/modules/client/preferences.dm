@@ -36,7 +36,6 @@ datum/preferences
 
 	var/bonus_slots = 0
 	var/bonus_notes = ""
-	var/datum/category_item/player_setup_item/player_global/settings/settings //Since we don't want people to change character after they created them, make a separate settings screen
 	var/datum/browser/prefspanel
 
 /datum/preferences/New(client/C)
@@ -59,7 +58,6 @@ datum/preferences
 	b_type = RANDOM_BLOOD_TYPE
 
 	if(client && !IsGuestKey(client.key))
-		settings = new(client)
 		src.load_path(client.ckey)
 		load_preferences()
 		load_and_update_character()
@@ -456,23 +454,3 @@ datum/preferences
 /datum/preferences/proc/GetPlayerAltTitle(datum/job/job)
 	// return (job.title in player_alt_titles) ? player_alt_titles[job.title] : job.title
 	return (job)? job.title : ""
-
-//Shows preferences only
-/datum/preferences/proc/ShowPreferences(mob/user)
-	if(!SScharacter_setup.initialized)
-		return
-	if(!user || !user.client)
-		return
-
-	if(!src.loaded_preferences)
-		src.load_preferences()
-	src.settings.load_preferences(src.loaded_preferences)
-	var/dat = "<html><body><center>"
-	dat += "<a href='?src=\ref[src];saveprefs=1'>Save Preferences</a>"
-	dat += "<br>"
-	dat += "<br><HR></center>"
-	dat += src.settings.content(user)
-	dat += "</html></body>"
-	src.prefspanel = new(user, "prefs","Change settings", 1200, 800, src)
-	src.prefspanel.set_content(dat)
-	src.prefspanel.open()

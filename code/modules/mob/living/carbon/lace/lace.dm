@@ -15,7 +15,7 @@
 
 /mob/living/carbon/lace/New()
 	container = loc
-	var/datum/action/item_action/organ/lace/laceaction = new(container)
+	var/datum/action/lace/laceaction = new(container)
 	laceaction.Grant(src)
 	default_language = all_languages[LANGUAGE_GALCOM]
 	add_language(LANGUAGE_GALCOM)

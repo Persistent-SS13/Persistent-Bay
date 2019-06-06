@@ -210,11 +210,14 @@
 // Places a girder object when a wall is dismantled, also applies reinforced material.
 /material/proc/place_dismantled_girder(var/turf/target, var/material/material, var/material/reinf_material)
 	var/obj/structure/girder/G = new(target)
+	G.anchored = TRUE
 	if(material)
 		G.material = material
+		G.state = 2
 	if(reinf_material)
 		G.reinf_material = reinf_material
 		G.reinforce_girder()
+		G.state = 3
 
 // General wall debris product placement.
 // Not particularly necessary aside from snowflakey cult girders.

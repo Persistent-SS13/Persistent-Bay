@@ -100,19 +100,6 @@
 /mob/new_player/Topic(href, href_list[])
 	if(!client)	return 0
 
-	if(href_list["preference"])
-		client.prefs.ShowPreferences()
-		//client.prefs.ShowChoices(src)
-		return 1
-//		client.prefs.process_link(src, href_list)
-//		client.prefs.randomize_appearance_and_body_for()
-//		client.prefs.real_name = null
-//		client.prefs.preview_icon = null
-//		client.prefs.home_system = null
-//		client.prefs.faction = null
-//		client.prefs.selected_under = null
-//		client.prefs.sanitize_preferences()
-
 	if(href_list["createCharacter"])
 		newCharacterPanel()
 		return 0

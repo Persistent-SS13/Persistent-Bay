@@ -25,6 +25,11 @@
 	damthreshold_burn	= 5
 	var/mob/living/simple_animal/contained
 
+/obj/structure/stasis_cage/New()
+	. = ..()
+	ADD_SAVED_VAR(contained)
+	ADD_SKIP_EMPTY(contained)
+
 /obj/structure/stasis_cage/Initialize()
 	. = ..()
 
@@ -70,6 +75,12 @@
 
 /obj/structure/stasis_cage/Destroy()
 	release()
+	return ..()
+
+/obj/structure/stasis_cage/attackby(obj/item/O, mob/user)
+	if(default_deconstruction_wrench(O, user) && src)
+		dismantle()
+		return 1
 	return ..()
 
 /mob/living/simple_animal/MouseDrop(var/obj/structure/stasis_cage/over_object)

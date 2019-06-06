@@ -573,7 +573,7 @@ obj/random/obstruction //Large objects to block things off in maintenance
 obj/random/obstruction/spawn_choices()
 	return list(/obj/structure/barricade,
 				/obj/structure/girder,
-				/obj/structure/girder/displaced,
+				/obj/structure/girder/anchored,
 				/obj/structure/grille,
 				/obj/structure/grille/broken,
 				/obj/structure/foamedmetal,

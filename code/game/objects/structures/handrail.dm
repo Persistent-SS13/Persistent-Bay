@@ -13,3 +13,16 @@
 	. = ..()
 	if(.)
 		playsound(src, 'sound/effects/buckle.ogg', 20)
+
+/obj/structure/handrai/dismantle()
+	unbuckle_mob()
+	var/obj/item/stack/material/steel/pieces = new(loc)
+	pieces.set_amount(5)
+	qdel(src)
+
+/obj/structure/handrai/attackby(obj/item/O, mob/user)
+	if(default_deconstruction_wrench(O, user))
+		dismantle()
+		return 1
+	. = ..()
+	

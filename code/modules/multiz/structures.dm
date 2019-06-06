@@ -18,18 +18,26 @@
 	var/const/climb_time = 2 SECONDS
 	var/static/list/climbsounds = list('sound/effects/ladder.ogg','sound/effects/ladder2.ogg','sound/effects/ladder3.ogg','sound/effects/ladder4.ogg')
 	var/dnr = 0
+
+/obj/structure/ladder/New()
+	. = ..()
+	ADD_SAVED_VAR(allowed_directions)
+
+/obj/structure/ladder/proc/link_ladders()
+	// the upper will connect to the lower
+	for(var/obj/structure/ladder/L in GetBelow(src))
+		log_debug("Tring to link [src]([x][y][z]) down with [L]([L.x],[L.y],[L.z])")
+		log_debug("Linked!")
+		target_down = L
+		allowed_directions |= DOWN
+		L.target_up = src
+		L.allowed_directions |= UP
+		return
+
 /obj/structure/ladder/Initialize()
 	. = ..()
-	// the upper will connect to the lower
-	if(allowed_directions & DOWN) //we only want to do the top one, as it will initialize the ones before it.
-		for(var/obj/structure/ladder/L in GetBelow(src))
-			log_debug("Tring to link [src]([x][y][z]) down with [L]([L.x],[L.y],[L.z])")
-			if(L.allowed_directions & UP)
-				log_debug("Linked!")
-				target_down = L
-				L.target_up = src
-				return
-	update_icon()
+	link_ladders()
+	queue_icon_update()
 
 /obj/structure/ladder/Destroy()
 	if(target_down)
@@ -182,14 +190,15 @@
 	plane = ABOVE_TURF_PLANE
 	layer = RUNE_LAYER
 
-/obj/structure/stairs/Initialize()
+/obj/structure/stairs/Initialize(var/mapload)
 	for(var/turf/turf in locs)
 		var/turf/simulated/open/above = GetAbove(turf)
 		if(!above)
 			warning("Stair created without level above: ([loc.x], [loc.y], [loc.z])")
 			return INITIALIZE_HINT_QDEL
-		if(!istype(above))
-			above.ChangeTurf(/turf/simulated/open)
+		//Don't do that, it can be exploited to get into places
+		// if(!istype(above))
+		// 	above.ChangeTurf(/turf/simulated/open)
 	. = ..()
 
 /obj/structure/stairs/CheckExit(atom/movable/mover as mob|obj, turf/target as turf)

@@ -3,7 +3,7 @@
 	desc = "You shouldn't be seeing this."
 	icon = 'code/modules/torch/icons/obj/obj_under_solgov.dmi'
 	item_icons = list(slot_w_uniform_str = 'code/modules/torch/icons/mob/onmob_under_solgov.dmi')
-	armor = list(DAM_BLUNT = 5, DAM_CUT = 5, DAM_PIERCE = 0, DAM_BULLET = 0, DAM_LASER = 5, DAM_ENERGY = 5, DAM_BOMB = 0, DAM_BIO = 5, DAM_RADS = 5)
+	//armor = list(DAM_BLUNT = 5, DAM_CUT = 5, DAM_PIERCE = 0, DAM_BULLET = 0, DAM_LASER = 5, DAM_ENERGY = 5, DAM_BOMB = 0, DAM_BIO = 5, DAM_RADS = 5)
 	siemens_coefficient = 0.8
 	gender_icons = 1
 
@@ -243,7 +243,7 @@
 	desc = "A service uniform of some kind."
 	icon_state = "whiteservice"
 	worn_state = "whiteservice"
-	armor = list(DAM_BLUNT = 5, DAM_CUT = 5, DAM_PIERCE = 0, DAM_BULLET = 0, DAM_LASER = 0, DAM_ENERGY = 0, DAM_BOMB = 0, DAM_BIO = 5, DAM_RADS = 0)
+	//armor = list(DAM_BLUNT = 5, DAM_CUT = 5, DAM_PIERCE = 0, DAM_BULLET = 0, DAM_LASER = 0, DAM_ENERGY = 0, DAM_BOMB = 0, DAM_BIO = 5, DAM_RADS = 0)
 	siemens_coefficient = 0.9
 
 /obj/item/clothing/under/solgov/service/expeditionary
@@ -321,7 +321,7 @@
 	desc = "A dress uniform of some kind."
 	icon_state = "greydress"
 	worn_state = "greydress"
-	armor = list(DAM_BLUNT = 5, DAM_CUT = 5, DAM_PIERCE = 0, DAM_BULLET = 0, DAM_LASER = 0, DAM_ENERGY = 0, DAM_BOMB = 0, DAM_BIO = 5, DAM_RADS = 0)
+	//armor = list(DAM_BLUNT = 5, DAM_CUT = 5, DAM_PIERCE = 0, DAM_BULLET = 0, DAM_LASER = 0, DAM_ENERGY = 0, DAM_BOMB = 0, DAM_BIO = 5, DAM_RADS = 0)
 	siemens_coefficient = 0.9
 
 /obj/item/clothing/under/solgov/mildress/army

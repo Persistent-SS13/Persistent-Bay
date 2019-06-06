@@ -31,7 +31,6 @@
 
 	from_file(S["version"], savefile_version)
 	player_setup.load_preferences(S)
-	settings.load_preferences(S)
 	loaded_preferences = S
 	return 1
 
@@ -43,7 +42,6 @@
 
 	to_file(S["version"], SAVEFILE_VERSION_MAX)
 	player_setup.save_preferences(S)
-	settings.save_preferences(S)
 	loaded_preferences = S
 	return 1
 
@@ -94,13 +92,12 @@
 
 /datum/preferences/proc/sanitize_preferences()
 	player_setup.sanitize_setup()
-	settings.sanitize_preferences()
 	if(!bonus_slots) bonus_slots = 0
 	if(!bonus_notes) bonus_notes = ""
 	return 1
 
 /datum/preferences/proc/update_setup(var/savefile/preferences, var/savefile/character)
-	if(!preferences /*|| !character*/)
+	if(!preferences /*|| !character*/) //since character aren't saved the same way, we don't care
 		return 0
 	return player_setup.update_setup(preferences, character)
 

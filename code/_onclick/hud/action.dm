@@ -239,11 +239,11 @@
 /datum/action/item_action/organ/augment
 	button_icon = 'icons/obj/augment.dmi'
 
-/datum/action/item_action/organ/lace
+/datum/action/lace
+	action_type = AB_ITEM_USE_ICON
 	name = "Access Lace UI"
 	button_icon = 'icons/obj/action_buttons/lace.dmi'
 	button_icon_state = "lace"
-	background_icon_state = "bg_default"
 
 #undef AB_WEST_OFFSET
 #undef AB_NORTH_OFFSET

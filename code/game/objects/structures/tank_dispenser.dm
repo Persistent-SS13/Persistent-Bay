@@ -40,9 +40,19 @@
 	oxygentanks = 0
 	phorontanks = 0
 
+/obj/structure/dispenser/New()
+	. = ..()
+	ADD_SAVED_VAR(oxygentanks)
+	ADD_SAVED_VAR(phorontanks)
+	ADD_SAVED_VAR(oxytanks)
+	ADD_SAVED_VAR(platanks)
+
+	ADD_SKIP_EMPTY(oxygentanks)
+	ADD_SKIP_EMPTY(platanks)
+
 /obj/structure/dispenser/Initialize()
 	. = ..()
-	update_icon()
+	queue_icon_update()
 
 /obj/structure/dispenser/on_update_icon()
 	overlays.Cut()

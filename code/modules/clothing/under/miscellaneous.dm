@@ -646,12 +646,12 @@
 	gender_icons = 1
 	starting_accessories = list(/obj/item/clothing/accessory/yellow, /obj/item/clothing/accessory/toggleable/tan_jacket)
 
-///obj/item/clothing/under/serviceoveralls
-//	name = "workman outfit"
-//	desc = "The very image of a working man. Not that you're probably doing work."
-//	icon_state = "mechanic"
-//	item_state = "lb_suit"
-//	worn_state = "mechanic" //Icon missing
+/obj/item/clothing/under/serviceoveralls
+	name = "workman outfit"
+	desc = "The very image of a working man. Not that you're probably doing work."
+	icon_state = "mechanic"
+	item_state = "lb_suit"
+	worn_state = "mechanic"
 
 /obj/item/clothing/under/cheongsam
 	name = "cheongsam"
@@ -949,3 +949,10 @@
 	item_state = "bl_suit"
 	icon_state = "referee"
 	worn_state = "referee"
+
+/obj/item/clothing/under/tourist
+	name = "Blue shirt and shorts"
+	desc = "A causual getup."
+	icon_state = "tourist"
+	worn_state = "tourist"
+

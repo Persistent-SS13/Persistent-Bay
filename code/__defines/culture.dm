@@ -180,3 +180,6 @@
 
 // Bogani culture
 #define CULTURE_BOGANI "Bogani"
+
+//	Phorosian culture
+#define CULTURE_PHOROSIAN "Phorosian"

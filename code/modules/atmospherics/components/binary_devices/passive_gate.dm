@@ -34,6 +34,10 @@
 	..()
 	air1.volume = ATMOS_DEFAULT_VOLUME_PUMP * 2.5
 	air2.volume = ATMOS_DEFAULT_VOLUME_PUMP * 2.5
+	ADD_SAVED_VAR(unlocked)
+	ADD_SAVED_VAR(target_pressure)
+	ADD_SAVED_VAR(set_flow_rate)
+	ADD_SAVED_VAR(regulate_mode)
 
 /obj/machinery/atmospherics/binary/passive_gate/on_update_icon()
 	icon_state = (unlocked && flowing)? "on" : "off"

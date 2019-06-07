@@ -14,6 +14,11 @@
 	var/list/bodyscans = list()
 	var/selected = 0
 
+/obj/machinery/body_scan_display/New()
+	. = ..()
+	ADD_SAVED_VAR(bodyscans)
+	ADD_SAVED_VAR(selected)
+
 /obj/machinery/body_scan_display/proc/add_new_scan(var/list/scan)
 	bodyscans += list(scan.Copy())
 	updateUsrDialog()
@@ -75,7 +80,7 @@
 		ui.set_initial_data(data)
 		ui.open()
 
-/obj/machinery/body_scan_display/update_icon()
+/obj/machinery/body_scan_display/on_update_icon()
 	..()
 	if(!ispowered())
 		icon_state = icon_state_unpowered

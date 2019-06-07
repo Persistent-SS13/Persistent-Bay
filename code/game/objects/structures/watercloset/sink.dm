@@ -7,6 +7,7 @@
 	mass = 12
 	max_health = 110
 	damthreshold_brute 	= 3
+	matter = list(MATERIAL_PLASTIC = 5 SHEETS)
 	var/frame_type = /obj/item/frame/plastic/sink/
 	var/busy = 0 	//Something's being washed at the moment
 
@@ -26,7 +27,7 @@
 		create_reagents(30)
 	queue_icon_update()
 
-/obj/structure/hygiene/sink/kitchen/update_icon()
+/obj/structure/hygiene/sink/kitchen/on_update_icon()
 	. = ..()
 	switch(dir)
 		if(NORTH)
@@ -119,16 +120,9 @@
 		to_chat(user, SPAN_NOTICE("You wet \the [O] in \the [src]."))
 		playsound(loc, 'sound/effects/slosh.ogg', 25, 1)
 		return 1
-	else if(default_deconstruction_wrench(O,user))
-
-		to_chat(usr, SPAN_NOTICE("You begin to unsecure \the [src] from the floor."))
-		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
-		if(do_after(usr, 30, src))
-			if(!src)
-				return 1
-			to_chat(usr, SPAN_NOTICE("You finish dismantling \the [src]."))
-
-			return 1
+	else if(default_deconstruction_wrench(O,user) && src)
+		to_chat(usr, SPAN_NOTICE("You finish dismantling \the [src]."))
+		return 1
 	else if(istype(O, /obj/item))
 		to_chat(usr, SPAN_NOTICE("You start washing \the [O]."))
 		busy = 1

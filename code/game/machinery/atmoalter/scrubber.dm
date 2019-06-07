@@ -19,6 +19,12 @@
 
 	var/list/scrubbing_gas
 
+/obj/machinery/portable_atmospherics/powered/scrubber/New()
+	. = ..()
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(volume_rate)
+	ADD_SAVED_VAR(scrubbing_gas)
+
 /obj/machinery/portable_atmospherics/powered/scrubber/make_cell()
 	return new/obj/item/weapon/cell/apc(src)
 
@@ -90,7 +96,7 @@
 		//ran out of charge
 		if (!cell.charge && !powered())
 			power_change()
-			update_icon()
+			queue_icon_update()
 		if(holding)
 			holding.queue_icon_update()
 
@@ -193,7 +199,7 @@
 	var/old_stat = stat
 	..()
 	if (old_stat != stat)
-		update_icon()
+		queue_icon_update()
 
 /obj/machinery/portable_atmospherics/powered/scrubber/huge/Process()
 	if(!ison() || inoperable())

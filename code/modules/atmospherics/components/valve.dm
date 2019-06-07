@@ -16,6 +16,17 @@
 	open = 1
 	icon_state = "map_valve1"
 
+/obj/machinery/atmospherics/valve/New()
+	. = ..()
+	ADD_SAVED_VAR(open)
+
+/obj/machinery/atmospherics/valve/after_load()
+	. = ..()
+	if(open)
+		open()
+	else
+		close()
+
 /obj/machinery/atmospherics/valve/Destroy()
 	loc = null
 

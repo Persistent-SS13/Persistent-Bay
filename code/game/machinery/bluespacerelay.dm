@@ -9,6 +9,10 @@
 	idle_power_usage = 15 KILOWATTS
 	var/on = 1
 
+/obj/machinery/bluespacerelay/New()
+	. = ..()
+	ADD_SAVED_VAR(on)
+
 /obj/machinery/bluespacerelay/on_update_icon()
 	if(stat & (BROKEN|NOPOWER))
 		icon_state = "[initial(icon_state)]_off"

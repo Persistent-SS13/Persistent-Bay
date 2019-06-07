@@ -23,6 +23,17 @@
 	icon_state = "map_tvalve1"
 	state = 1
 
+/obj/machinery/atmospherics/tvalve/New()
+	. = ..()
+	ADD_SAVED_VAR(state)
+
+/obj/machinery/atmospherics/tvalve/after_load()
+	. = ..()
+	if(state)
+		go_to_side()
+	else
+		go_straight()
+
 /obj/machinery/atmospherics/tvalve/Destroy()
 	loc = null
 
@@ -407,7 +418,7 @@
 	radio_filter_in 	= RADIO_ATMOSIA
 	radio_filter_out 	= RADIO_ATMOSIA
 	radio_check_id 		= TRUE
-	mirrored = TRUE
+	mirrored 			= TRUE
 
 /obj/machinery/atmospherics/tvalve/mirrored/digital/bypass
 	icon_state = "map_tvalvem1"

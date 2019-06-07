@@ -15,6 +15,11 @@
 	var/datum/pipe_network/network
 	var/on = FALSE
 
+/obj/machinery/atmospherics/portables_connector/New()
+	. = ..()
+	ADD_SAVED_VAR(connected_device)
+	ADD_SAVED_VAR(on)
+
 /obj/machinery/atmospherics/portables_connector/Destroy()
 	loc = null
 	if(connected_device)

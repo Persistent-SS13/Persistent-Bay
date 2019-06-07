@@ -20,6 +20,7 @@
 	open()
 	hide(1)
 	..()
+	ADD_SAVED_VAR(close_on_leaks)
 
 /obj/machinery/atmospherics/valve/shutoff/attack_hand(var/mob/user as mob)
 	close_on_leaks = !close_on_leaks

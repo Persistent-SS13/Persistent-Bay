@@ -38,9 +38,6 @@
 	ADD_SAVED_VAR(scrubbing_gas)
 	ADD_SAVED_VAR(scrubbing)
 
-/obj/machinery/atmospherics/unary/vent_scrubber/after_load()
-	..()
-
 /obj/machinery/atmospherics/unary/vent_scrubber/Initialize()
 	if(loc)
 		initial_loc = get_area(loc)
@@ -179,7 +176,7 @@
 	return 1
 
 /obj/machinery/atmospherics/unary/vent_scrubber/hide(var/i) //to make the little pipe section invisible, the icon changes.
-	update_icon()
+	queue_icon_update()
 	update_underlays()
 
 /obj/machinery/atmospherics/unary/vent_scrubber/OnSignal(datum/signal/signal)
@@ -262,7 +259,7 @@
 //			log_admin("DEBUG \[[world.timeofday]\]: vent_scrubber/receive_signal: unknown command \"[signal.data["command"]]\"\n[signal.debug_print()]")
 	spawn(2)
 		broadcast_status()
-	update_icon()
+	queue_icon_update()
 	return
 
 /obj/machinery/atmospherics/unary/vent_scrubber/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)

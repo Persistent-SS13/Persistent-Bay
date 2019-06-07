@@ -23,6 +23,10 @@
 	air2.volume = 200
 	air3.volume = 200
 
+	ADD_SAVED_VAR(air1)
+	ADD_SAVED_VAR(air2)
+	ADD_SAVED_VAR(air3)
+
 /obj/machinery/atmospherics/trinary/setup_initialize_directions()
 	..()
 	switch(dir)

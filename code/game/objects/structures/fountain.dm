@@ -60,6 +60,7 @@
 	desc = "A beautifully constructed fountain."
 	icon_state = "fountain_g"
 	used = TRUE
+	matter = list(MATERIAL_MARBLE = 20 SHEETS)
 
 /obj/structure/fountain/mundane/attack_hand()
 	return examine(usr)
@@ -72,7 +73,6 @@
 	return ..()
 
 /obj/structure/fountain/mundane/dismantle()
-	var/obj/item/stack/material/marble/S = new(get_turf(src))
-	S.set_amount(20)
+	refund_matter()
 	qdel(src)
 	

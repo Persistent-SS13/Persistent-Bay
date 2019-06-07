@@ -117,9 +117,14 @@
 /mob/living/carbon/human/Initialize()
 	. = ..()
 	updatehealth()
-	redraw_inv()
 	update_action_buttons()	
 	queue_icon_update()
+	redraw_inv()
+	return INITIALIZE_HINT_LATELOAD
+
+/mob/living/carbon/human/LateInitialize()
+	. = ..()
+	redraw_inv() //Refresh the hud damn you
 
 /mob/living/carbon/human/after_load()
 	. = ..()
@@ -152,6 +157,7 @@
 	BITSET(hud_updateflag, HEALTH_HUD) //Force hud update
 	BITSET(hud_updateflag, STATUS_HUD)
 	BITSET(hud_updateflag, LIFE_HUD)
+	redraw_inv()
 
 /mob/living/carbon/human/Destroy()
 	GLOB.human_mob_list -= src

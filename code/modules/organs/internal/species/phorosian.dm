@@ -31,10 +31,10 @@
 	phoron_guard = 1
 
 /obj/item/organ/internal/eyes/phorosian/New()
+	..()
 	update_colour()
 
-
-
+//Psy_commando: Had to comment this out.
 //lung stuff - makes phorosians gain blood depending on intake of phoron. Also makes their lungs burn if they breathe oxygen.
 
 // /obj/item/organ/internal/lungs/phorosian/handle_breath(datum/gas_mixture/breath, var/forced)

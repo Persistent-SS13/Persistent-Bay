@@ -25,6 +25,8 @@
 /obj/machinery/atmospherics/unary/outlet_injector/New()
 	..()
 	air_contents.volume = ATMOS_DEFAULT_VOLUME_PUMP + 500	//Give it a small reservoir for injecting. Also allows it to have a higher flow rate limit than vent pumps, to differentiate injectors a bit more.
+	ADD_SAVED_VAR(injecting)
+	ADD_SAVED_VAR(volume_rate)
 
 /obj/machinery/atmospherics/unary/outlet_injector/on_update_icon()
 	if(!powered())
@@ -121,7 +123,7 @@
 		return //do not update_icon
 
 	addtimer(CALLBACK(src, .proc/broadcast_status), 2, TIMER_UNIQUE)
-	update_icon()
+	queue_icon_update()
 	return TOPIC_REFRESH
 
 /obj/machinery/atmospherics/unary/outlet_injector/hide(var/i)

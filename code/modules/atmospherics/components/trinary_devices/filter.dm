@@ -43,9 +43,9 @@
 	air1.volume = ATMOS_DEFAULT_VOLUME_FILTER
 	air2.volume = ATMOS_DEFAULT_VOLUME_FILTER
 	air3.volume = ATMOS_DEFAULT_VOLUME_FILTER
-
-/obj/machinery/atmospherics/trinary/filter/Initialize()
-	. = ..()
+	ADD_SAVED_VAR(set_flow_rate)
+	ADD_SAVED_VAR(filter_type)
+	ADD_SAVED_VAR(filtered_out)
 
 /obj/machinery/atmospherics/trinary/filter/on_update_icon()
 	if(istype(src, /obj/machinery/atmospherics/trinary/filter/m_filter))

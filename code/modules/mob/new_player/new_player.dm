@@ -309,7 +309,13 @@
 
 	spawning = TRUE
 
+	//Check if our character is already in-game
 	for(var/mob/M in SSmobs.mob_list)
+		//Don't forget to close the panel and stop the lobby music
+		panel?.close()
+		load_panel?.close()
+		sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
+		
 		if(M.loc && !M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
 			if(istype(M, /mob/observer))
 				qdel(M)

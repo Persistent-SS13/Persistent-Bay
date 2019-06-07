@@ -67,7 +67,7 @@
 	return
 
 
-/obj/item/device/assembly_holder/update_icon()
+/obj/item/device/assembly_holder/on_update_icon()
 	overlays.Cut()
 	if(a_left)
 		overlays += "[a_left.icon_state]_left"
@@ -220,6 +220,17 @@
 //
 /obj/item/device/assembly_holder/New()
 	..()
+	ADD_SAVED_VAR(secured)
+	ADD_SAVED_VAR(a_left)
+	ADD_SAVED_VAR(a_right)
+	ADD_SAVED_VAR(special_assembly)
+
+	ADD_SKIP_EMPTY(a_left)
+	ADD_SKIP_EMPTY(a_right)
+	ADD_SKIP_EMPTY(special_assembly)
+
+/obj/item/device/assembly_holder/Initialize()
+	. = ..()
 	GLOB.listening_objects += src
 
 /obj/item/device/assembly_holder/Destroy()

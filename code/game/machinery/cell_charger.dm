@@ -7,29 +7,20 @@
 	idle_power_usage = 5
 	active_power_usage = 60 KILOWATTS	//This is the power drawn when charging
 	power_channel = EQUIP
+	circuit_type = /obj/item/weapon/circuitboard/machinery/cell_charger
 	var/obj/item/weapon/cell/charging = null
 	var/chargelevel = -1
 
-
-
 /obj/machinery/cell_charger/New()
-
 	..()
-	//Create parts for Machine
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/machinery/cell_charger(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	RefreshParts()
+	ADD_SAVED_VAR(charging)
+	ADD_SAVED_VAR(chargelevel)
 
 /obj/machinery/cell_charger/Destroy()
 	if(charging)
 		charging.forceMove(get_turf(src))
 	qdel()
 	return ..()
-
 
 /obj/machinery/cell_charger/on_update_icon()
 	icon_state = "ccharger[charging ? 1 : 0]"
@@ -129,4 +120,5 @@
 	if(!charging)
 		return PROCESS_KILL
 	charging.give(active_power_usage*CELLRATE)
-	update_icon()
+	if((world.time % 10) == 0) //Only update every 1 seconds pls
+		queue_icon_update()

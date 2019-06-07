@@ -9,8 +9,6 @@
 	network_uid 	= "nx_net"
 	purpose 		= "To represent the citizenship of Nexus and keep the station operating."
 	starter_outfit	= /decl/hierarchy/outfit/nexus/citizen
-	starter_phorosian_outfit	= /decl/hierarchy/outfit/phorosian/nexus
-	starter_vox_outfit	= /decl/hierarchy/outfit/vox/nexus
 
 	//Mapper helpers
 	icon 			= 'icons/misc/map_helpers.dmi'
@@ -26,9 +24,7 @@
 	network_name 	= "FreeNet"
 	network_uid 	= "free_net"
 	starter_outfit	= /decl/hierarchy/outfit/nexus/starter
-	starter_phorosian_outfit	= /decl/hierarchy/outfit/phorosian/nexus
-	starter_vox_outfit	= /decl/hierarchy/outfit/vox/nexus
-	
+
 	//Mapper helpers
 	icon 			= 'icons/misc/map_helpers.dmi'
 	icon_state 		= "faction"

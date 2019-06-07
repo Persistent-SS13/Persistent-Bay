@@ -97,7 +97,7 @@
 /obj/item/weapon/storage/box/phoron/
 	name = "Phorosian survival kit"
 	desc = "A box decorated in warning colors that contains a limited supply of survival tools. The panel and purple stripe indicate this one contains Phoron."
-	icon_state = "survivalphoron"
+	icon_state = "survival"
 	startswith = list(/obj/item/weapon/tank/emergency/phoron = 1,
 					/obj/item/weapon/reagent_containers/hypospray/autoinjector = 1,
 					/obj/item/device/flashlight/flare/glowstick = 1)

@@ -43,11 +43,9 @@ Thus, the two variables affect pump operation are set in New():
 	..()
 	air1.volume = ATMOS_DEFAULT_VOLUME_PUMP
 	air2.volume = ATMOS_DEFAULT_VOLUME_PUMP
+	ADD_SAVED_VAR(target_pressure)
 
-/obj/machinery/atmospherics/binary/pump/Initialize()
-	. = ..()
-
-/obj/machinery/atmospherics/binary/pump/update_icon()
+/obj/machinery/atmospherics/binary/pump/on_update_icon()
 	if(!powered() || isoff())
 		icon_state = "off"
 	else

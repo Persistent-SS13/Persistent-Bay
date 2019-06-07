@@ -27,7 +27,7 @@
 /obj/machinery/computer/Initialize()
 	. = ..()
 	power_change()
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/computer/on_update_icon()
 	overlays.Cut()

@@ -27,6 +27,9 @@
 	..()
 	if(!inputs)
 		inputs = list()
+	ADD_SAVED_VAR(inputs)
+	ADD_SAVED_VAR(output)
+	ADD_SAVED_VAR(mixing_inputs)
 
 /obj/machinery/atmospherics/omni/mixer/Initialize()
 	.=..()

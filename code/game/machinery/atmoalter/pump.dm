@@ -18,6 +18,12 @@
 	power_rating = 7500 //7500 W ~ 10 HP
 	power_losses = 150
 
+/obj/machinery/portable_atmospherics/powered/pump/New()
+	. = ..()
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(direction_out)
+	ADD_SAVED_VAR(target_pressure)
+
 /obj/machinery/portable_atmospherics/powered/pump/init_air_content()
 	..()
 	var/list/air_mix = StandardAirMix()
@@ -108,7 +114,7 @@
 		//ran out of charge
 		if (!cell.charge && !powered())
 			power_change()
-			update_icon()
+			queue_icon_update()
 
 	src.updateDialog()
 

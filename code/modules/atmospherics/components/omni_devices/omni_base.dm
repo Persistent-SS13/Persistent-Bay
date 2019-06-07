@@ -42,11 +42,15 @@
 		if(new_port.mode > 0)
 			initialize_directions |= d
 		ports += new_port
+
+	ADD_SAVED_VAR(ports)
+
+/obj/machinery/atmospherics/omni/Initialize()
+	. = ..()
 	build_icons()
 
 /obj/machinery/atmospherics/omni/after_load()
 	update_ports()
-	build_icons()
 	..()
 
 /obj/machinery/atmospherics/omni/on_update_icon()

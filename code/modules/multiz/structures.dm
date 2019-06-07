@@ -189,6 +189,16 @@
 	anchored = TRUE
 	plane = ABOVE_TURF_PLANE
 	layer = RUNE_LAYER
+	var/tmp/was_already_saved = FALSE //In order to fix multi-tiles objects we gotta make sure only the base turf of the object saves it
+
+/obj/structure/stairs/should_save(datum/saver)
+	. = ..()
+	if(!.)
+		return FALSE
+	var/turf/T = saver
+	if(istype(saver))
+		return T == get_turf(src) //only save if we're on the "base" turf on which the stairs rest on
+	return FALSE
 
 /obj/structure/stairs/Initialize(var/mapload)
 	for(var/turf/turf in locs)

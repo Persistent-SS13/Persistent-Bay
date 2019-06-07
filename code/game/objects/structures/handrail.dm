@@ -8,6 +8,7 @@
 	can_buckle = 1
 	max_health = 80
 	mass = 15
+	matter = list(MATERIAL_STEEL = 5 SHEETS)
 
 /obj/structure/handrai/buckle_mob(mob/living/M)
 	. = ..()
@@ -16,8 +17,7 @@
 
 /obj/structure/handrai/dismantle()
 	unbuckle_mob()
-	var/obj/item/stack/material/steel/pieces = new(loc)
-	pieces.set_amount(5)
+	refund_matter()
 	qdel(src)
 
 /obj/structure/handrai/attackby(obj/item/O, mob/user)

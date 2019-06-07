@@ -15,7 +15,8 @@
 	air2 = new
 	air1.volume = 200
 	air2.volume = 200
-
+	ADD_SAVED_VAR(air1)
+	ADD_SAVED_VAR(air2)
 
 /obj/machinery/atmospherics/binary/setup_initialize_directions()
 	..()
@@ -117,7 +118,7 @@
 		qdel(network2)
 		node2 = null
 
-	update_icon()
+	queue_icon_update()
 	update_underlays()
 
 	return null

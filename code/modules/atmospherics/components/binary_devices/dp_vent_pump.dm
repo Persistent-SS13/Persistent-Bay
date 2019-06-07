@@ -43,6 +43,11 @@
 	air1.volume = ATMOS_DEFAULT_VOLUME_PUMP
 	air2.volume = ATMOS_DEFAULT_VOLUME_PUMP
 	icon = null
+	ADD_SAVED_VAR(pump_direction)
+	ADD_SAVED_VAR(external_pressure_bound)
+	ADD_SAVED_VAR(input_pressure_min)
+	ADD_SAVED_VAR(output_pressure_max)
+	ADD_SAVED_VAR(pressure_checks)
 
 /obj/machinery/atmospherics/binary/dp_vent_pump/high_volume
 	name = "Large Dual Port Air Vent"
@@ -231,7 +236,7 @@
 
 	spawn(2)
 		broadcast_status()
-	update_icon()
+	queue_icon_update()
 
 #undef DEFAULT_PRESSURE_DELTA
 

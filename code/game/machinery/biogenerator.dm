@@ -49,12 +49,10 @@
 /obj/machinery/biogenerator/SetupParts()
 	create_reagents(1000)
 	beaker = new /obj/item/weapon/reagent_containers/glass/bottle(src)
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/matter_bin(src))
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/manipulator(src))
 	..()
 
 /obj/machinery/biogenerator/on_reagent_change()			//When the reagents change, change the icon as well.
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/biogenerator/on_update_icon()
 	if(state == BG_NO_BEAKER)

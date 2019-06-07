@@ -77,7 +77,8 @@
 	var/datum/reagents/R = get_ingested_reagents()
 	if(istype(R)) 
 		R.clear_reagents()
-	nutrition = 400
+	if(!(src.species.species_flags & SPECIES_FLAG_NO_HUNGER))
+		nutrition = 400
 	..()
 
 /mob/living/carbon/Move(NewLoc, direct)
@@ -85,7 +86,7 @@
 	if(!.)
 		return
 
-	if (src.nutrition && src.stat != 2)
+	if (src.nutrition && src.stat != DEAD && !(src.species.species_flags & SPECIES_FLAG_NO_HUNGER))
 		src.nutrition -= DEFAULT_HUNGER_FACTOR/10
 		if (move_intent.flags & MOVE_INTENT_EXERTIVE)
 			src.nutrition -= DEFAULT_HUNGER_FACTOR/10

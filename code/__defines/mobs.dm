@@ -128,6 +128,7 @@
 #define STR_VLOW       -2
 
 // Gluttony levels.
+#define GLUT_NONE 0       // Eat nothing, meant for phorosians
 #define GLUT_TINY 1       // Eat anything tiny and smaller
 #define GLUT_SMALLER 2    // Eat anything smaller than we are
 #define GLUT_ANYTHING 4   // Eat anything, ever

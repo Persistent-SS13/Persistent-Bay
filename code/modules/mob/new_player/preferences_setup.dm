@@ -55,18 +55,18 @@
 		var/datum/world_faction/fac = get_faction(src.faction)
 		var/decl/hierarchy/outfit/clothes
 		//Handle snowflake species uniforms
-		if(species == SPECIES_PHOROSIAN)
-			clothes = outfit_by_type(fac.starter_phorosian_outfit)
+		// if(species == SPECIES_PHOROSIAN)
+		// 	clothes = outfit_by_type(fac.starter_phorosian_outfit)
+		// 	ASSERT(istype(clothes))
+		// else if(species == SPECIES_VOX)
+		// 	clothes = outfit_by_type(fac.starter_vox_outfit)
+		// 	ASSERT(istype(clothes))
+		// else
+		//testing("dress_preview_mob: got faction [fac?.name]")
+		if(fac && fac.starter_outfit)
+			clothes = outfit_by_type(fac.starter_outfit)
+			//testing("dress_preview_mob: got outfit [clothes]")
 			ASSERT(istype(clothes))
-		else if(species == SPECIES_VOX)
-			clothes = outfit_by_type(fac.starter_vox_outfit)
-			ASSERT(istype(clothes))
-		else
-			//testing("dress_preview_mob: got faction [fac?.name]")
-			if(fac && fac.starter_outfit)
-				clothes = outfit_by_type(fac.starter_outfit)
-				//testing("dress_preview_mob: got outfit [clothes]")
-				ASSERT(istype(clothes))
 		//If we have selected a specific uniform, replace the default one
 		if(selected_under)
 			clothes.uniform = selected_under.type //The outfit class uses types not instances

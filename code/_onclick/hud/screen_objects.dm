@@ -266,7 +266,7 @@
 									if (!isnull(t.manipulated_by) && t.manipulated_by != C.real_name && findtext(t.desc,breathes))
 										contents.Add(t.air_contents.total_moles)	//Someone messed with the tank and put unknown gasses
 										continue					//in it, so we're going to believe the tank is what it says it is
-									if(t.air_contents.gas[breathes] && !t.air_contents.gas["phoron"])
+									if(t.air_contents.gas[breathes] /*&& !t.air_contents.gas["phoron"]*/) //Phorosian say hi
 										contents.Add(t.air_contents.gas[breathes])
 									else
 										contents.Add(0)

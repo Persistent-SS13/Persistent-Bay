@@ -1849,8 +1849,6 @@ var/PriorityQueue/all_feeds
 	var/network_password
 	var/network_invisible = FALSE
 	var/decl/hierarchy/outfit/starter_outfit = /decl/hierarchy/outfit/job //Faction's base outfit, is overriden by creation screen
-	var/decl/hierarchy/outfit/starter_phorosian_outfit = /decl/hierarchy/outfit/phorosian
-	var/decl/hierarchy/outfit/starter_vox_outfit = /decl/hierarchy/outfit/vox
 
 //Psy_commando:
 //In order to reliably have the faction spawn and not be deleted, we need to have the faction spawned in LateInitialize().
@@ -1877,8 +1875,6 @@ var/PriorityQueue/all_feeds
 		fact.network.password = network_password
 	fact.network.invisible = network_invisible
 	fact.starter_outfit = starter_outfit
-	fact.starter_phorosian_outfit = starter_phorosian_outfit
-	fact.starter_vox_outfit = starter_vox_outfit
 	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
 	qdel(src)
 	return
@@ -1905,8 +1901,6 @@ var/PriorityQueue/all_feeds
 		fact.network.password = network_password
 	fact.network.invisible = network_invisible
 	fact.starter_outfit = starter_outfit
-	fact.starter_phorosian_outfit = starter_phorosian_outfit
-	fact.starter_vox_outfit = starter_vox_outfit
 	LAZYDISTINCTADD(GLOB.all_world_factions, fact)
 	qdel(src)
 	return

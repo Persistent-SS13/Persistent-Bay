@@ -15,8 +15,10 @@
 /obj/machinery/body_scanconsole/New()
 	..()
 	ADD_SAVED_VAR(stored_scan_subject)
+	ADD_SAVED_VAR(display_tags)
 	
 	ADD_SKIP_EMPTY(stored_scan_subject)
+	ADD_SKIP_EMPTY(display_tags)
 
 /obj/machinery/body_scanconsole/Initialize()
 	. = ..()

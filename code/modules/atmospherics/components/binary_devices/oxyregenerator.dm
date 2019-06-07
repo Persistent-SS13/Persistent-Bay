@@ -8,6 +8,7 @@
 	use_power = POWER_USE_OFF
 	idle_power_usage = 200		//internal circuitry, friction losses and stuff
 	power_rating = 10000
+	circuit_type = /obj/item/weapon/circuitboard/oxyregenerator
 	var/target_pressure = 10*ONE_ATMOSPHERE
 	var/id = null
 	var/power_setting = 1 //power consumption setting, 1 through five
@@ -22,12 +23,12 @@
 /obj/machinery/atmospherics/binary/oxyregenerator/New()
 	..()
 	inner_tank.volume = tank_volume
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/oxyregenerator(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)//Takes CO2
-	component_parts += new /obj/item/weapon/stock_parts/micro_laser(src)//Breaks bond
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)//Stores carbon
-	RefreshParts()
+	ADD_SAVED_VAR(target_pressure)
+	ADD_SAVED_VAR(id)
+	ADD_SAVED_VAR(power_setting)
+	ADD_SAVED_VAR(carbon_stored)
+	ADD_SAVED_VAR(phase)
+	ADD_SAVED_VAR(inner_tank)
 
 /obj/machinery/atmospherics/binary/oxyregenerator/RefreshParts()
 	for(var/obj/item/weapon/stock_parts/P in component_parts)

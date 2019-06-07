@@ -106,6 +106,7 @@
 	if(reinforce_material)	//recipies below don't support composite materials
 		return
 	. += new/datum/stack_recipe/furniture/planting_bed(src)
+	. += new/datum/stack_recipe/fountain(src)
 
 /material/plastic/generate_recipes(var/reinforce_material)
 	. = ..()
@@ -176,8 +177,3 @@
 	. += new/datum/stack_recipe/furniture/table_frame(src)
 	. += new/datum/stack_recipe/grenade(src) 
 
-/material/marble/generate_recipes(reinforce_material)
-	. = ..()
-	if(reinforce_material)
-		return
-	. += new/datum/stack_recipe/fountain(src)

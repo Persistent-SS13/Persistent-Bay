@@ -32,7 +32,11 @@
 
 	var/active = FALSE
 	var/operating = FALSE
-	
+
+/obj/machinery/button/New()
+	. = ..()
+	ADD_SAVED_VAR(_wifi_id)
+	ADD_SAVED_VAR(activate_func)
 
 /obj/machinery/button/Initialize()
 	. = ..()

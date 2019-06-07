@@ -31,14 +31,6 @@
 	if(!map_storage_loaded)
 		initialize_directions = dir
 
-/obj/machinery/atmospherics/unary/freezer/SetupParts()
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/matter_bin(src))
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/capacitor(src))
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/capacitor(src))
-	LAZYADD(component_parts, new /obj/item/weapon/stock_parts/manipulator(src))
-	LAZYADD(component_parts, new /obj/item/stack/cable_coil(src, 2))
-	. = ..()
-
 /obj/machinery/atmospherics/unary/freezer/atmos_init()
 	..()
 	if(node)
@@ -112,7 +104,7 @@
 		return 1
 	if(href_list["toggleStatus"])
 		update_use_power(!use_power)
-		update_icon()
+		queue_icon_update()
 	if(href_list["temp"])
 		var/amount = text2num(href_list["temp"])
 		if(amount > 0)

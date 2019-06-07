@@ -32,7 +32,7 @@
 	var/list/noblend_objects = list(/obj/machinery/door/window) //Objects to avoid blending with (such as children of listed blend objects.
 
 /turf/simulated/wall/New(var/newloc, var/materialtype, var/rmaterialtype, var/girder_mat, var/girder_reinf_mat)
-	..(newloc)
+	..()
 	//icon_state = "blank"
 	ADD_SAVED_VAR(paint_color)
 	ADD_SAVED_VAR(stripe_color)

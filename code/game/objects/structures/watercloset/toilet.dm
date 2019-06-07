@@ -14,8 +14,13 @@
 	var/mob/living/swirlie = null	//the mob being given a swirlie
 
 /obj/structure/hygiene/toilet/New()
-	open = round(rand(0, 1))
-	update_icon()
+	..()
+	ADD_SAVED_VAR(open)
+	ADD_SAVED_VAR(cistern)
+
+/obj/structure/hygiene/toilet/Initialize()
+	. = ..()
+	queue_icon_update()
 
 /obj/structure/hygiene/toilet/attack_hand(mob/living/user as mob)
 	if(swirlie)
@@ -40,7 +45,7 @@
 	open = !open
 	update_icon()
 
-/obj/structure/hygiene/toilet/update_icon()
+/obj/structure/hygiene/toilet/on_update_icon()
 	icon_state = "toilet[open][cistern]"
 
 /obj/structure/hygiene/toilet/attackby(obj/item/I as obj, mob/living/user as mob)

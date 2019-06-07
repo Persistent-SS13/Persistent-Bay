@@ -136,6 +136,7 @@ prompts
 	from_file(S["bonus_slots"],preferences.bonus_slots)
 	from_file(S["bonus_notes"],preferences.bonus_notes)
 /datum/category_collection/player_setup_collection/proc/save_preferences(var/savefile/S)
+	testing("player_setup_collection/save_preferences() : Attempting to save prefs (S = [S] )")
 	for(var/datum/category_group/player_setup_category/PS in categories)
 		PS.save_preferences(S)
 	to_file(S["bonus_slots"],preferences.bonus_slots)
@@ -205,9 +206,12 @@ prompts
 		PI.load_preferences(S)
 
 /datum/category_group/player_setup_category/proc/save_preferences(var/savefile/S)
+	testing("player_setup_category/save_preferences() : Attempting to save prefs (S = [S] )")
 	for(var/datum/category_item/player_setup_item/PI in items)
+		testing("player_setup_category/save_preferences() : Sanitizing [PI]")
 		PI.sanitize_preferences()
 	for(var/datum/category_item/player_setup_item/PI in items)
+		testing("player_setup_category/save_preferences() : Saving [PI]")
 		PI.save_preferences(S)
 
 /datum/category_group/player_setup_category/proc/update_setup(var/savefile/preferences, var/savefile/character)

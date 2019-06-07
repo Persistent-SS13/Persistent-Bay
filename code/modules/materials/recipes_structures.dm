@@ -74,17 +74,17 @@
 	one_per_turf = 1
 
 /datum/stack_recipe/sink
-	title = "sink"
-	result_type = /obj/structure/hygiene/sink
+	title = "sink frame"
+	result_type = /obj/item/frame/plastic/sink/
 	req_amount = 5
 	time = 4 SECONDS
 	on_floor = 0
 	difficulty = 2
 	send_material_data = 1
-	one_per_turf = 1
+
 /datum/stack_recipe/sink/kitchen
-	title = "kitchen sink"
-	result_type = /obj/structure/hygiene/sink/kitchen
+	title = "kitchen sink frame"
+	result_type = /obj/item/frame/plastic/kitchensink
 
 /datum/stack_recipe/shower
 	title = "shower"

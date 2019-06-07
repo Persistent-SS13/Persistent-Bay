@@ -1799,6 +1799,7 @@
 #include "code\modules\culture_descriptor\_culture.dm"
 #include "code\modules\culture_descriptor\culture\_culture.dm"
 #include "code\modules\culture_descriptor\culture\culture_bogani.dm"
+#include "code\modules\culture_descriptor\culture\culture_phorosian.dm"
 #include "code\modules\culture_descriptor\culture\cultures.dm"
 #include "code\modules\culture_descriptor\culture\cultures_adherent.dm"
 #include "code\modules\culture_descriptor\culture\cultures_diona.dm"

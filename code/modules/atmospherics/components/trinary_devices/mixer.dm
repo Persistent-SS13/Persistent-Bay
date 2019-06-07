@@ -63,6 +63,9 @@
 
 	if (!mixing_inputs)
 		mixing_inputs = list(src.air1 = node1_concentration, src.air2 = node2_concentration)
+	
+	ADD_SAVED_VAR(set_flow_rate)
+	ADD_SAVED_VAR(mixing_inputs)
 
 /obj/machinery/atmospherics/trinary/mixer/Process()
 	..()

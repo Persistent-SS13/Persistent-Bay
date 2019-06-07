@@ -10,6 +10,7 @@
 	anchored = 1
 	use_power = POWER_USE_OFF
 	idle_power_usage = 5			//5 Watts for thermostat related circuitry
+	circuit_type = /obj/item/weapon/circuitboard/unary_atmos/heater
 
 	var/max_temperature = T20C + 680
 	var/internal_volume = 600	//L
@@ -22,16 +23,12 @@
 
 /obj/machinery/atmospherics/unary/heater/New()
 	..()
+	ADD_SAVED_VAR(set_temperature)
+	ADD_SAVED_VAR(power_setting)
+
+/obj/machinery/atmospherics/unary/heater/setup_initialize_directions()
+	..()
 	initialize_directions = dir
-
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/unary_atmos/heater(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 5)
-
-	RefreshParts()
 
 /obj/machinery/atmospherics/unary/heater/atmos_init()
 	..()
@@ -72,7 +69,7 @@
 
 	if(stat & (NOPOWER|BROKEN) || !use_power)
 		heating = 0
-		update_icon()
+		queue_icon_update()
 		return
 
 	if(network && air_contents.total_moles && air_contents.temperature < set_temperature)
@@ -84,7 +81,7 @@
 	else
 		heating = 0
 
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/atmospherics/unary/heater/attack_ai(mob/user as mob)
 	ui_interact(user)

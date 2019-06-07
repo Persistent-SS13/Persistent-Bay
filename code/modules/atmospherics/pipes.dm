@@ -29,8 +29,6 @@
 
 /obj/machinery/atmospherics/pipe/Initialize()
 	. = ..()
-	if(QDELETED(src) || QDELING(src))
-		return INITIALIZE_HINT_QDEL
 	if(loc)
 		if(istype(get_turf(src), /turf/simulated/wall) || istype(get_turf(src), /turf/simulated/shuttle/wall) || istype(get_turf(src), /turf/unsimulated/wall))
 			level = 1

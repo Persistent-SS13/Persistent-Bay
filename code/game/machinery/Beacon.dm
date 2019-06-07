@@ -36,7 +36,7 @@
 		update_icon()
 
 	// update the icon_state
-	update_icon()
+	on_update_icon()
 		var/state="floor_beacon"
 
 		if(invisibility)
@@ -49,10 +49,9 @@
 		if(!Beacon)
 			Beacon = new /obj/item/device/radio/beacon(get_turf(src))
 			Beacon.set_invisibility(INVISIBILITY_MAXIMUM)
+			queue_icon_update()
 		if(Beacon)
 			if(Beacon.loc != loc)
 				Beacon.forceMove(loc)
-
-		update_icon()
 
 

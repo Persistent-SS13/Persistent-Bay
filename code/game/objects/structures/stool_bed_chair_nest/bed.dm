@@ -26,15 +26,22 @@
 	var/buckling_sound = 'sound/effects/buckle.ogg'
 
 /obj/structure/bed/New(newloc, new_material = DEFAULT_FURNITURE_MATERIAL, new_padding_material)
-	..(newloc)
-	color = null
-	material = SSmaterials.get_material_by_name(new_material)
+	..()
+	ADD_SAVED_VAR(padding_material)
+	ADD_SKIP_EMPTY(padding_material)
+
+/obj/structure/bed/Initialize(mapload, new_material = DEFAULT_FURNITURE_MATERIAL, new_padding_material)
+	. = ..()
+	if(!map_storage_loaded)
+		color = null
+		material = SSmaterials.get_material_by_name(new_material)
 	if(!istype(material))
+		log_warning("obj/structure/bed/Initialize(): [src]\ref[src] has a bad material type. Deleting!")
 		qdel(src)
 		return
-	if(new_padding_material)
+	if(new_padding_material && !map_storage_loaded)
 		padding_material = SSmaterials.get_material_by_name(new_padding_material)
-	update_icon()
+	queue_icon_update()
 
 /obj/structure/bed/get_material()
 	return material
@@ -42,7 +49,7 @@
 // Reuse the cache/code from stools, todo maybe unify.
 /obj/structure/bed/on_update_icon()
 	// Prep icon.
-	icon_state = ""
+	icon_state = "blank"
 	overlays.Cut()
 	// Base icon.
 	var/cache_key = "[base_icon]-[material.name]"

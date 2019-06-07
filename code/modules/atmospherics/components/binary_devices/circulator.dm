@@ -2,13 +2,14 @@
 //node2, air2, network2 correspond to output
 
 /obj/machinery/atmospherics/binary/circulator
-	name 		= "circulator"
-	desc 		= "A gas circulator turbine and heat exchanger."
-	icon 		= 'icons/obj/pipes.dmi'
-	icon_state 	= "circ-off"
-	anchored 	= FALSE
-	density 	= TRUE
-	mass		= 50.0 //kg
+	name 			= "circulator"
+	desc 			= "A gas circulator turbine and heat exchanger."
+	icon 			= 'icons/obj/pipes.dmi'
+	icon_state 		= "circ-off"
+	anchored 		= FALSE
+	density 		= TRUE
+	mass			= 50.0 //kg
+	circuit_type 	= /obj/item/weapon/circuitboard/circulator
 
 	var/kinetic_efficiency = 0.04 //combined kinetic and kinetic-to-electric efficiency
 	var/volume_ratio = 0.2
@@ -24,25 +25,19 @@
 
 /obj/machinery/atmospherics/binary/circulator/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/circulator(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 30)
-	component_parts += new /obj/item/pipe(src)
-	component_parts += new /obj/item/pipe(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	RefreshParts()
-
-	desc = initial(desc) + " Its outlet port is to the [dir2text(dir)]."
 	air1.volume = 400
+	ADD_SAVED_VAR(recent_moles_transferred)
+	ADD_SAVED_VAR(last_heat_capacity)
+	ADD_SAVED_VAR(last_temperature)
+	ADD_SAVED_VAR(last_pressure_delta)
+	ADD_SAVED_VAR(last_worldtime_transfer)
+	ADD_SAVED_VAR(last_stored_energy_transferred)
+	ADD_SAVED_VAR(volume_capacity_used)
+	ADD_SAVED_VAR(stored_energy)
+
+/obj/machinery/atmospherics/binary/circulator/Initialize()
+	. = ..()
+	desc = initial(desc) + " Its outlet port is to the [dir2text(dir)]."
 
 /obj/machinery/atmospherics/binary/circulator/proc/return_transfer_air()
 	var/datum/gas_mixture/removed
@@ -83,11 +78,11 @@
 	return last_stored_energy_transferred
 
 /obj/machinery/atmospherics/binary/circulator/Process()
-	..()
+	. = ..()
 
 	if(last_worldtime_transfer < world.time - 50)
 		recent_moles_transferred = 0
-		update_icon()
+		queue_icon_update()
 
 /obj/machinery/atmospherics/binary/circulator/on_update_icon()
 	if(stat & (BROKEN|NOPOWER) || !anchored)

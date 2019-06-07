@@ -87,6 +87,12 @@
 	if((!pixel_x && !pixel_y) && isturf(loc)) //hopefully this will prevent us from messing with mapper-set pixel_x/y
 		randomize_pixel_offset()
 
+	ADD_SAVED_VAR(master)
+	ADD_SAVED_VAR(hidden_uplink)
+
+	ADD_SKIP_EMPTY(master)
+	ADD_SKIP_EMPTY(hidden_uplink)
+
 /obj/item/proc/randomize_pixel_offset(var/reset = 0)
 	if(!reset && randpixel)
 		pixel_x = rand(-randpixel, randpixel)

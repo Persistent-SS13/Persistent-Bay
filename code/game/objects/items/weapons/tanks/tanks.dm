@@ -48,6 +48,17 @@ var/list/global/tank_gauge_cache = list()
 	Wired and assembled tanks may be disarmed with a set of wirecutters. Any exploding or rupturing tank will generate shrapnel, assuming their relief valves have been welded beforehand. Even if not, they can be incited to expel hot gas on ignition if pushed above 173°C. \
 	Relatively easy to make, the single tank bomb requries no tank transfer valve, and is still a fairly formidable weapon that can be manufactured from any tank."
 
+/obj/item/weapon/tank/New()
+	. = ..()
+	ADD_SAVED_VAR(air_contents)
+	ADD_SAVED_VAR(distribute_pressure)
+	ADD_SAVED_VAR(valve_welded)
+	ADD_SAVED_VAR(proxyassembly)
+	ADD_SAVED_VAR(leaking)
+	ADD_SAVED_VAR(wired)
+	
+	ADD_SKIP_EMPTY(air_contents)
+	ADD_SKIP_EMPTY(proxyassembly)
 
 /obj/item/weapon/tank/Initialize()
 	. = ..()
@@ -62,14 +73,12 @@ var/list/global/tank_gauge_cache = list()
 		air_contents.update_values()
 
 	START_PROCESSING(SSobj, src)
-	update_icon(TRUE)
+	queue_icon_update(TRUE)
 
 /obj/item/weapon/tank/Destroy()
-	QDEL_NULL(air_contents)
-
 	STOP_PROCESSING(SSobj, src)
+	QDEL_NULL(air_contents)
 	QDEL_NULL(proxyassembly)
-
 	if(istype(loc, /obj/item/device/transfer_valve))
 		var/obj/item/device/transfer_valve/TTV = loc
 		TTV.remove_tank(src)
@@ -543,6 +552,11 @@ var/list/global/tank_gauge_cache = list()
 	desc = "Used as a stand in to trigger single tank assemblies... but you shouldn't see this."
 	var/obj/item/weapon/tank/tank = null
 	var/obj/item/device/assembly_holder/assembly = null
+
+/obj/item/device/tankassemblyproxy/New()
+	. = ..()
+	ADD_SAVED_VAR(tank)
+	ADD_SAVED_VAR(assembly)
 
 /obj/item/device/tankassemblyproxy/receive_signal()	//This is mainly called by the sensor through sense() to the holder, and from the holder to here.
 	tank.triggered()	//boom (or not boom if you made shijwtty mix)

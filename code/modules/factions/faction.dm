@@ -26,6 +26,12 @@ var/PriorityQueue/all_feeds
 			contract.linked = null
 			contract.update_icon()
 			return 0
+		var/datum/computer_file/report/crew_record/R = Retrieve_Record(contract.signed_by)
+		if((contract.ownership + R.get_holdings()) > R.get_stock_limit())
+			contract.cancelled = 1
+			contract.linked = null
+			contract.update_icon()
+			return 0
 		if(contract.finalize())
 			var/datum/stockholder/newholder
 			newholder = connected_faction.get_stockholder_datum(contract.signed_by)
@@ -178,7 +184,7 @@ var/PriorityQueue/all_feeds
 	var/datum/money_account/signed_account
 	var/datum/computer_file/report/crew_record/signed_record
 
-	var/ownership = 1 // how many stocks the contract is worth (if a stock contract)
+	var/ownership = 0 // how many stocks the contract is worth (if a stock contract)
 	var/org_uid = "" // what org this belongs to
 
 	var/pay_to = ""
@@ -237,6 +243,10 @@ var/PriorityQueue/all_feeds
 			message_admins("record not found for user [usr.real_name]")
 			return
 		var/datum/money_account/linked_account = R.linked_account
+
+		if((R.get_holdings() + ownership) > R.get_stock_limit())
+			to_chat(usr, "This stock contract will exceed your stock limit.")
+			return
 		if(linked_account)
 			if(linked_account.suspended)
 				linked_account = null
@@ -1501,6 +1511,26 @@ var/PriorityQueue/all_feeds
 	var/weekly_assigned = 0
 
 	var/commission = 0
+
+/datum/world_faction/business/proc/surrender_stocks(var/real_name)
+	var/datum/stockholder/holder = get_stockholder_datum(real_name)
+	if(holder)
+		if(stock_holders.len == 1) // last stock holder
+
+		else
+			var/remainder = holder.stocks % (stock_holders.len-1)
+			var/division = (holder.stocks-remainder)/(stock_holders.len-1)
+			stock_holders -= holder
+			for(var/datum/stockholder/secondholder in stock_holders)
+				secondholder.stocks += division
+			if(remainder)
+				var/list/stock_holders_copy = stock_holders.Copy()
+				for(var/x in 1 to remainder)
+					if(!stock_holders_copy.len)
+						stock_holders_copy = stock_holders.Copy()
+					var/datum/stockholder/holderr = pick_n_take(stock_holders_copy)
+					holderr.stocks++
+
 /datum/world_faction/business/proc/revenue_objectives(var/amount) // run this anytime a revenue objective might be filled
 	if(istype(hourly_objective, /datum/module_objective/hourly/revenue)) // checks if the hourly objective is a revenue objective
 		hourly_objective.filled += amount // fill by the amount
@@ -2583,8 +2613,8 @@ var/PriorityQueue/all_feeds
 
 
 	var/desc = ""
-	
-	
+
+
 /datum/machine_limits/democracy
 	limit_genfab = 5
 	limit_engfab = 5
@@ -2609,7 +2639,7 @@ var/PriorityQueue/all_feeds
 	limit_tech_combat = 4
 
 
-	
+
 
 // ENGINEERING LIMITS
 

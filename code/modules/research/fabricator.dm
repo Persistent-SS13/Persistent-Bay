@@ -128,7 +128,6 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 
 /obj/machinery/fabricator/ui_interact(var/mob/user, var/ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 	var/data[0]
-
 	var/datum/design/current = queue.len ? queue[1] : null
 	if(current)
 		data["current"] = current.name
@@ -141,6 +140,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	if(!connected_faction && req_access_faction && req_access_faction != "")
 		connected_faction = get_faction(req_access_faction)
 	if(!connected_faction)
+		menu = 3
 		req_access = list()
 	if(menu == 1)
 		if(!selected_design)
@@ -191,25 +191,43 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 		return
 
 	if(href_list["select"])
+		if(!connected_faction)
+			to_chat(usr, "You must connect the fabricator to a faction first.")
+			return 0
 		selected_design = locate(href_list["select"])
 
 	if(href_list["remove"])
+		if(!connected_faction)
+			to_chat(usr, "You must connect the fabricator to a faction first.")
+			return 0
 		remove_from_queue(text2num(href_list["remove"]))
 
 	if(href_list["category"])
+		if(!connected_faction)
+			to_chat(usr, "You must connect the fabricator to a faction first.")
+			return 0
 		if(href_list["category"] in categories)
 			category = href_list["category"]
 
 	if(href_list["eject"])
+		if(!connected_faction)
+			to_chat(usr, "You must connect the fabricator to a faction first.")
+			return 0
 		eject_materials(href_list["eject"], text2num(href_list["amount"]))
 
 	if(href_list["menu"])
 		menu = text2num(href_list["menu"])
 
 	if(href_list["back"])
+		if(!connected_faction)
+			to_chat(usr, "You must connect the fabricator to a faction first.")
+			return 0
 		selected_design = null
 
 	if(href_list["build"])
+		if(!connected_faction)
+			to_chat(usr, "You must connect the fabricator to a faction first.")
+			return 0
 		add_to_queue(selected_design)
 	return 1
 
@@ -313,6 +331,7 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	update_busy()
 
 /obj/machinery/fabricator/proc/can_build(var/datum/design/D)
+	if(!connected_faction) return 0
 	for(var/M in D.materials)
 		if(materials[M] <= D.materials[M] * mat_efficiency)
 			return 0

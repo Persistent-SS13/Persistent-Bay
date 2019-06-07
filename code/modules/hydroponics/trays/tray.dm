@@ -123,6 +123,9 @@
 		/datum/reagent/mutagen = 15,
 		/datum/reagent/toxin/fertilizer/left4zed = 30)
 
+	var/datum/world_faction/connected_faction
+
+
 /obj/machinery/portable_atmospherics/hydroponics/after_load()
 	update_icon()
 
@@ -142,6 +145,30 @@
 	var/response = alert(user, "Are you sure you want to harvest this [seed.display_name]?", "Living plant request", "Yes", "No")
 	if(response == "Yes")
 		harvest()
+
+
+/obj/machinery/portable_atmospherics/hydroponics/can_connect(var/datum/world_faction/trying, var/mob/M)
+	var/datum/machine_limits/limits = trying.get_limits()
+	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(req_access_faction)))
+		to_chat(M, "You do not have access to link machines to [trying.name].")
+		return 0
+	if(limits.limit_botany <= limits.botany.len)
+		if(M)
+			to_chat(M, "[trying.name] cannot connect any more machines of this type.")
+		return 0
+	limits.botany |= src
+	req_access_faction = trying.uid
+	connected_faction = trying
+
+
+/obj/machinery/portable_atmospherics/hydroponics/can_disconnect(var/datum/world_faction/trying, var/mob/M)
+	var/datum/machine_limits/limits = trying.get_limits()
+	limits.botany -= src
+	req_access_faction = ""
+	connected_faction = null
+	if(M) to_chat(M, "The machine has been disconnected.")
+
+
 
 /obj/machinery/portable_atmospherics/hydroponics/Initialize()
 	. = ..()
@@ -445,6 +472,20 @@
 		Process()
 
 		return
+
+
+
+
+	else if(istype(O, /obj/item/weapon/card/id))
+		var/obj/item/weapon/card/id/id = O
+		if(!req_access_faction || req_access_faction == "")
+			var/datum/world_faction/faction = get_faction(id.selected_faction)
+			if(faction)
+				can_connect(faction,usr)
+		else
+			var/datum/world_faction/faction = get_faction(id.selected_faction)
+			if(faction)
+				can_disconnect(faction,usr)
 
 	else if(istype(O, /obj/item/weapon/reagent_containers/syringe))
 

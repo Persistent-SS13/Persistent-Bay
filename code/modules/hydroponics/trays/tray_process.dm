@@ -1,5 +1,6 @@
 /obj/machinery/portable_atmospherics/hydroponics/Process()
-
+	if(!connected_faction)
+		return
 	// Handle nearby smoke if any.
 	for(var/obj/effect/effect/smoke/chem/smoke in view(1, src))
 		if(smoke.reagents.total_volume)

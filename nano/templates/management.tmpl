@@ -64,28 +64,28 @@
 		{{:data.upgrade_desc}}
 	</div>
 	<br>
-	<b>Limits (Available/Used)</b>
+	<b>Limits (Used/Available)</b>
 	<div class="statusDisplay"style="overflow: auto;">
 		<b>General Tech Limit :</b> {{:data.gen_tech}}<br>
 		<b>Engineering Tech Limit:</b> {{:data.eng_tech}}<br>
 		<b>Medical Tech Limit:</b> {{:data.med_tech}}<br>
 		<b>Consumer Tech Limit:</b> {{:data.consumer_tech}}<br>
 		<b>Combat Tech Limit:</b> {{:data.combat_tech}}<br>
-		<b>Shuttles:</b> {{:data.shuttle_limit}} / {{:data.shuttle_limit_used}}<br>
-		<b>Area Limit:</b> {{:data.area_limit}} tiles / {{:data.area_limit_used}} tiles<br>
-		<b>Mining Drills:</b> {{:data.drill_limit}} / {{:data.drill_limit_used}}<br>
-		<b>Botany Trays:</b> {{:data.tray_limit}} / {{:data.tray_limit_used}}<br>
-		<b>Telecommunication Hubs:</b> {{:data.tcomm_limit}} / {{:data.tcomm_limit_used}}<br>
-		<b>General Fabricators:</b> {{:data.gen_limit}} / {{:data.gen_limit_used}}<br>
-		<b>Engineering Fabricators:</b> {{:data.eng_limit}} / {{:data.eng_limit_used}}<br>
-		<b>Medical Fabricators:</b> {{:data.med_limit}} / {{:data.med_limit_used}}<br>
-		<b>EVA Fabricators:</b> {{:data.eva_limit}} / {{:data.eva_limit_used}}<br>
-		<b>Consumer Fabricators:</b> {{:data.consumer_limit}} / {{:data.consumer_limit_used}}<br>
-		<b>Service Fabricators:</b> {{:data.service_limit}} / {{:data.service_limit_used}}<br>
-		<b>Combat Fabricators:</b> {{:data.combat_limit}} / {{:data.combat_limit_used}}<br>
-		<b>Standard Autotailor:</b> {{:data.atstandard_limit}} / {{:data.atstandard_limit_used}}<br>
-		<b>Accessory Autotailor:</b> {{:data.ataccessory_limit}} / {{:data.ataccessory_limit_used}}<br>
-		<b>Nonstandard Autotailor:</b> {{:data.atspecial_limit}} / {{:data.atspecial_limit_used}}<br>
+		<b>Shuttles:</b>{{:data.shuttle_limit_used}} / {{:data.shuttle_limit}}<br>
+		<b>Area Limit:</b>{{:data.area_limit_used}} tiles / {{:data.area_limit}} tiles {{:helper.link('Unlink All', '', {'action' : 'unlink_area'})}}<br><br>
+		<b>Telecommunication Frequencies:</b>{{:data.tcomm_limit_used}} / {{:data.tcomm_limit}} <br><br>
+		<b>Mining Drills:</b>{{:data.drill_limit_used}} / {{:data.drill_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_drill'})}}<br><br>
+		<b>Botany Trays:</b>{{:data.tray_limit_used}} / {{:data.tray_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_tray'})}}<br><br>
+		<b>General Fabricators:</b>{{:data.gen_limit_used}} / {{:data.gen_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_gen'})}}<br><br>
+		<b>Engineering Fabricators:</b>{{:data.eng_limit_used}} / {{:data.eng_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_eng'})}}<br><br>
+		<b>Medical Fabricators:</b>{{:data.med_limit_used}} / {{:data.med_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_med'})}}<br><br>
+		<b>EVA Fabricators:</b>{{:data.eva_limit_used}} / {{:data.eva_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_eva'})}}<br><br>
+		<b>Consumer Fabricators:</b>{{:data.consumer_limit_used}} / {{:data.consumer_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_consumer'})}}<br><br>
+		<b>Service Fabricators:</b> {{:data.service_limit_used}} / {{:data.service_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_service'})}}<br><br>
+		<b>Combat Fabricators:</b>{{:data.combat_limit_used}} / {{:data.combat_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_combat'})}}<br><br>
+		<b>Standard Autotailor:</b>{{:data.atstandard_limit_used}} / {{:data.atstandard_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_atstandard'})}}<br><br>
+		<b>Accessory Autotailor:</b>{{:data.ataccessory_limit_used}} / {{:data.ataccessory_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_ataccessory'})}}<br><br>
+		<b>Nonstandard Autotailor:</b>{{:data.atspecial_limit_used}} / {{:data.atspecial_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_atspecial'})}}<br><br>
 	</div>
 	
 {{/if}}
@@ -199,6 +199,7 @@
 {{if data.menu == 2}}
 	<h4>Employee Log</h4>
 	{{:helper.link('Newer Page', 'bullet', {'page_down' : 1}, data.page_down ? null : 'disabled')}}{{:helper.link('Older Page', 'bullet', {'page_up' : 1}, data.page_up ? null : 'disabled')}}<br><br>
+	<br><br>
 	<div class="statusDisplay" style="overflow: auto;">
 		{{for data.entries}}
 			{{:value.entry}}<br>
@@ -207,7 +208,7 @@
 {{/if}}
 {{if data.menu == 3}}
 	<h4>View/Edit General Task</h4>
-	<br>
+	<br><br>
 	{{:helper.link('Edit Task', '', {'action' : 'business_task'})}}
 	<div class="statusDisplay" style="overflow: auto;">
 		{{:data.business_task}}

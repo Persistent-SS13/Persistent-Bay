@@ -25,6 +25,7 @@
 	data["account_balance"] = connected_faction.central_account.money
 	if(menu == 1)
 		data["business_status"] = connected_faction.status
+		data["commission"] = connected_faction.commission
 	if(menu == 2)
 		var/list/formatted_log[0]
 		if(connected_faction.employment_log.len)
@@ -119,7 +120,7 @@
 
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
-		ui = new(user, src, ui_key, "management.tmpl", name, 600, 650, state = state)
+		ui = new(user, src, ui_key, "management.tmpl", name, 750, 650, state = state)
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
 		ui.open()
@@ -146,7 +147,7 @@
 		if("business_close")
 			connected_faction.close_business()
 		if("business_name")
-			var/select_name = sanitizeName(input(usr,"Enter the new business display name.","Business Name", "") as null|text, MAX_NAME_LEN, 1, 0,1)
+			var/select_name = sanitize(input(usr,"Enter the new business display name.","Business Name", "") as null|text, MAX_NAME_LEN+10)
 			if(select_name)
 				connected_faction.name = select_name
 		if("edit_task")
@@ -156,7 +157,7 @@
 				connected_faction.objective = newValue
 		if("commission")
 			var/choseValue
-			choseValue = max(0, input(usr, "Enter the invoice commission percentage.", "Invoice Commission", connected_faction.commission) as null|num)
+			choseValue = min(max(0, input(usr, "Enter the invoice commission percentage.", "Invoice Commission", connected_faction.commission) as null|num),95)
 			if(!isnull(choseValue))
 				connected_faction.commission = choseValue
 		if("upgrade")
@@ -187,5 +188,57 @@
 			if(choice == "Confirm")
 				if(connected_faction.weekly_objective == curr_objective)
 					connected_faction.weekly_objective = null
+					
+		if("unlink_area")
+			for(var/obj/machinery/power/apc/apc in connected_faction.limits.apcs)
+				apc.can_disconnect(connected_faction, usr)
+				
+		if("unlink_drill")
+			for(var/obj/machinery/mining/drill/drill in connected_faction.limits.drills)
+				drill.can_disconnect(connected_faction, usr)
+		
+		if("unlink_tray")
+			for(var/obj/machinery/portable_atmospherics/hydroponics/tray in connected_faction.limits.botany)
+				tray.can_disconnect(connected_faction, usr)		
+
+		if("unlink_gen")
+			for(var/obj/machinery/fabricator/fab in connected_faction.limits.genfabs)
+				fab.can_disconnect(connected_faction, usr)
+
+		if("unlink_eng")
+			for(var/obj/machinery/fabricator/fab in connected_faction.limits.engfabs)
+				fab.can_disconnect(connected_faction, usr)
+
+		if("unlink_med")
+			for(var/obj/machinery/fabricator/fab in connected_faction.limits.medicalfabs)
+				fab.can_disconnect(connected_faction, usr)
+		
+		if("unlink_eva")
+			for(var/obj/machinery/fabricator/fab in connected_faction.limits.voidfabs)
+				fab.can_disconnect(connected_faction, usr)
+		
+		if("unlink_consumer")
+			for(var/obj/machinery/fabricator/fab in connected_faction.limits.consumerfabs)
+				fab.can_disconnect(connected_faction, usr)
+		
+		if("unlink_service")
+			for(var/obj/machinery/fabricator/fab in connected_faction.limits.servicefabs)
+				fab.can_disconnect(connected_faction, usr)
+
+		if("unlink_combat")
+			for(var/obj/machinery/fabricator/fab in connected_faction.limits.ammofabs)
+				fab.can_disconnect(connected_faction, usr)
+
+		if("unlink_atstandard")
+			for(var/obj/machinery/fabricator/fab in connected_faction.limits.atstandards)
+				fab.can_disconnect(connected_faction, usr)
+
+		if("unlink_ataccessories")
+			for(var/obj/machinery/fabricator/fab in connected_faction.limits.ataccessories)
+				fab.can_disconnect(connected_faction, usr)
+
+		if("unlink_atspecial")
+			for(var/obj/machinery/fabricator/fab in connected_faction.limits.atnonstandards)
+				fab.can_disconnect(connected_faction, usr)
 
 

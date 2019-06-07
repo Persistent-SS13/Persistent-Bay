@@ -588,7 +588,7 @@
 		else if(hacker && !hacker.hacked_apcs_hidden)
 			to_chat(user, "<span class='warning'>Access denied.</span>")
 		else
-			if(req_access in id.GetAccess(req_access_faction) && !isWireCut(APC_WIRE_IDSCAN))
+			if((req_access in id.GetAccess(req_access_faction)) && !isWireCut(APC_WIRE_IDSCAN))
 				locked = !locked
 				to_chat(user, "You [ locked ? "lock" : "unlock"] the APC interface.")
 				update_icon()

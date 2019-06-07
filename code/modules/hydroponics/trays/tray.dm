@@ -608,11 +608,13 @@
 /obj/machinery/portable_atmospherics/hydroponics/examine()
 
 	. = ..()
-
+	if(!connected_faction)
+		to_chat(usr, "The tray is not connected to an organization and so it is not growing correctly.")
+		
 	if(!seed)
 		to_chat(usr, "[src] is empty.")
 		return
-
+	
 	to_chat(usr, "<span class='notice'>[seed.display_name] are growing here.</span>")
 
 	if(!Adjacent(usr))

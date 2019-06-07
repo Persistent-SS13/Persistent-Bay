@@ -8,7 +8,7 @@
 	requires_ntnet = 1
 	size = 12
 	business = 1
-	
+
 /datum/nano_module/program/personal
 	name = "Personal Options"
 	available_to_ai = TRUE
@@ -20,7 +20,7 @@
 	data["menu"] = menu
 	var/datum/computer_file/report/crew_record/R = Retrieve_Record(usr.real_name)
 	data["account_balance"] = R.linked_account.money
-	var/datum/personal_limits/limits = R.get_limits()	
+	var/datum/personal_limits/limits = R.get_limits()
 	if(menu == 1)
 		var/list/formatted_orgs[0]
 		for(var/datum/world_faction/faction in GLOB.all_world_factions)
@@ -34,7 +34,7 @@
 	if(menu == 2)
 		var/list/holdings = list()
 		var/total = 0
-		for(var/datum/world_faction/faction in GLOB.all_world_factions)
+		for(var/datum/world_faction/business/faction in GLOB.all_world_factions)
 			var/holding = faction.get_stockholder(usr.real_name)
 			if(holding)
 				total += holding
@@ -42,10 +42,10 @@
 		data["stock_owned"] = total
 		data["stock_limit"] = limits.stock_limit
 		var/list/formatted_holdings[0]
-		for(var/datum/world_faction/faction in holding)
-			var/holding = holding[faction]
+		for(var/datum/world_faction/business/faction in holdings)
+			var/holding = holdings[faction]
 			formatted_holdings[++formatted_holdings.len] = list("holding" = "[holding] stocks in [faction.name]", "ref" = "\ref[faction]")
-		data["holdings"] = formatted_holdings	
+		data["holdings"] = formatted_holdings
 	if(menu == 3)
 		data["level"] = R.network_level
 		if(R.network_level >= 4)
@@ -56,14 +56,14 @@
 		data["stock_limit"] = limits.stock_limit
 		data["shuttle_limit"] = limits.shuttle_limit
 		data["shuttle_limit_used"] = 0
-		
+
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "management.tmpl", name, 750, 650, state = state)
 		ui.auto_update_layout = 1
 		ui.set_initial_data(data)
 		ui.open()
-	
+
 /datum/nano_module/program/management/Topic(href, href_list)
 	if(..())
 		return 1
@@ -89,8 +89,8 @@
 				var/choice = input(usr,"This will give up all stocks you hold in [faction.name] ([faction.uid]). Are you sure you want to proceed") in list("Confirm", "Cancel")
 				if(choice == "Confirm")
 					faction.surrender_stocks(usr.real_name)
-		
+
 		if("upgrade")
 			R.upgrade(usr)
-			
+
 

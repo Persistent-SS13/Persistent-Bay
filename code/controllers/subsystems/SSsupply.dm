@@ -1,6 +1,7 @@
 GLOBAL_DATUM_INIT(material_marketplace, /datum/material_marketplace, new)
 GLOBAL_DATUM_INIT(contract_database, /datum/contract_database, new)
 GLOBAL_DATUM_INIT(module_objective_manager, /datum/module_objective_manager, new)
+GLOBAL_DATUM_INIT(stock_market, /datum/stock_market, new)
 
 
 SUBSYSTEM_DEF(supply)
@@ -14,7 +15,7 @@ SUBSYSTEM_DEF(supply)
 	GLOB.material_marketplace.process()
 	GLOB.contract_database.process()
 	GLOB.module_objective_manager.process()
-
+	GLOB.stock_market.process()
 
 
 
@@ -250,14 +251,35 @@ SUBSYSTEM_DEF(supply)
 
 
 
+/datum/stock_market
+	var/takedata = 1 HOUR
 
+/datum/stock_market/proc/process()
+	if(round_duration_in_ticks > takedata)
+		takedata = round_duration_in_ticks + 1 HOUR
+		TakeData()
+	for(var/datum/world_faction/business/faction in GLOB.all_world_factions)
+		faction.verify_orders()
 
+/datum/stock_market/proc/TakeData()
+	for(var/datum/world_faction/business/faction in GLOB.all_world_factions)
+		faction.stock_sales_data += "[faction.stock_sales]"
+		if(faction.stock_sales_data.len > 24)
+			faction.stock_sales_data.Cut(1,2)
+		faction.stock_sales = 0
+		
+/datum/stock_order/proc/get_remaining_volume()
+	return (volume - filled)
+	
+/datum/stock_order/proc/get_total_value()
+	var/left = volume - filled
+	return (price * left)
 
-
-
-
-
-
+/datum/stock_order
+	var/real_name
+	var/price = 0
+	var/volume = 0
+	var/filled = 0
 
 
 
@@ -318,7 +340,7 @@ SUBSYSTEM_DEF(supply)
 		entry.sales_data += "[entry.sales]"
 		if(entry.sales_data.len > 24)
 			entry.sales_data.Cut(1,2)
-
+		entry.sales = 0
 /datum/material_market_entry
 	var/name = ""
 	var/typepath = /obj/item/stack/material
@@ -351,25 +373,7 @@ SUBSYSTEM_DEF(supply)
 	var/datum/material_order/order = sellorders.L[1]
 	if(order)
 		return order.price
-/datum/material_market_entry/proc/verify_orders()
-	for(var/datum/material_order/order in buyorders.L)
-		if(order.admin_order) continue
-		var/datum/world_faction/faction = get_faction(order.faction_uid)
-		if(!faction || !faction.central_account)
-			buyorders.L -= order
-			continue
-		if(faction.central_account.money < order.get_total_value())
-			buyorders.L -= order
-			continue
-	for(var/datum/material_order/order in sellorders.L)
-		if(order.admin_order) continue
-		var/datum/world_faction/faction = get_faction(order.faction_uid)
-		if(!faction || !faction.inventory)
-			sellorders.L -= order
-			continue
-		if(faction.inventory.vars[name] < order.get_remaining_volume())
-			sellorders.L -= order
-			continue
+
 
 /datum/material_market_entry/proc/fill_order(var/datum/material_order/buyorder, var/datum/material_order/sellorder)
 	if(buyorder.price > sellorder.price) return
@@ -424,19 +428,6 @@ SUBSYSTEM_DEF(supply)
 	buyorders.L -= order
 	sellorders.L -= order
 
-/datum/material_market_entry/proc/add_buyorder_admin(var/price, var/volume)
-	var/datum/material_order/order = new()
-	order.price = price
-	order.volume = volume
-	order.admin_order = 1
-	for(var/datum/material_order/sell_order in sellorders.L)
-		if(!order.get_remaining_volume()) break
-		if(sell_order.price <= order.price)
-			fill_order(order, sell_order)
-	if(!order.get_remaining_volume()) // order filled
-		return 1
-	buyorders.Enqueue(order)
-
 /datum/material_market_entry/proc/add_buyorder(var/price, var/volume, var/faction_uid)
 	var/datum/material_order/order = new()
 	order.price = price
@@ -449,20 +440,6 @@ SUBSYSTEM_DEF(supply)
 	if(!order.get_remaining_volume()) // order filled
 		return 1
 	buyorders.Enqueue(order)
-
-/datum/material_market_entry/proc/add_sellorder_admin(var/price, var/volume)
-	var/datum/material_order/order = new()
-	order.price = price
-	order.volume = volume
-	order.admin_order = 1
-	for(var/datum/material_order/buy_order in buyorders.L)
-		if(!order.get_remaining_volume()) break
-		if(order.price <= buy_order.price)
-			fill_order(buy_order, order)
-	if(!order.get_remaining_volume()) // order filled
-		return 1
-	sellorders.Enqueue(order)
-
 
 /datum/material_market_entry/proc/add_sellorder(var/price, var/volume, var/faction_uid)
 	var/datum/material_order/order = new()
@@ -499,6 +476,62 @@ SUBSYSTEM_DEF(supply)
 		final_price += transact*sell_order.price
 		remaining_volume -= transact
 	return final_price
+		
+		
+/datum/material_market_entry/proc/verify_orders()
+	for(var/datum/material_order/order in buyorders.L)
+		if(order.admin_order) continue
+		var/datum/world_faction/faction = get_faction(order.faction_uid)
+		if(!faction || !faction.central_account)
+			buyorders.L -= order
+			continue
+		if(faction.central_account.money < order.get_total_value())
+			buyorders.L -= order
+			continue
+	for(var/datum/material_order/order in sellorders.L)
+		if(order.admin_order) continue
+		var/datum/world_faction/faction = get_faction(order.faction_uid)
+		if(!faction || !faction.inventory)
+			sellorders.L -= order
+			continue
+		if(faction.inventory.vars[name] < order.get_remaining_volume())
+			sellorders.L -= order
+			continue
+
+
+
+
+/datum/material_market_entry/proc/add_buyorder_admin(var/price, var/volume)
+	var/datum/material_order/order = new()
+	order.price = price
+	order.volume = volume
+	order.admin_order = 1
+	for(var/datum/material_order/sell_order in sellorders.L)
+		if(!order.get_remaining_volume()) break
+		if(sell_order.price <= order.price)
+			fill_order(order, sell_order)
+	if(!order.get_remaining_volume()) // order filled
+		return 1
+	buyorders.Enqueue(order)
+
+
+	
+	
+/datum/material_market_entry/proc/add_sellorder_admin(var/price, var/volume)
+	var/datum/material_order/order = new()
+	order.price = price
+	order.volume = volume
+	order.admin_order = 1
+	for(var/datum/material_order/buy_order in buyorders.L)
+		if(!order.get_remaining_volume()) break
+		if(order.price <= buy_order.price)
+			fill_order(buy_order, order)
+	if(!order.get_remaining_volume()) // order filled
+		return 1
+	sellorders.Enqueue(order)
+
+
+
 
 /datum/material_market_entry/proc/quick_buy(var/volume, var/faction_uid)
 	var/final_price = 0

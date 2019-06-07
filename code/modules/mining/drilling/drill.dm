@@ -143,6 +143,8 @@
 		update_icon()
 		return
 	else if(supported && !panel_open)
+		if(!connected_faction)
+			to_chat(user,"<span class='notice'>\The [src] is not connected to a organization.</span>")
 		if(use_cell_power())
 			active = !active
 			if(active)

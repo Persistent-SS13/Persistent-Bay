@@ -192,26 +192,26 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 
 	if(href_list["select"])
 		if(!connected_faction)
-			to_chat(usr, "You must connect the fabricator to a faction first.")
+			to_chat(usr, "You must connect the fabricator to an organization first.")
 			return 0
 		selected_design = locate(href_list["select"])
 
 	if(href_list["remove"])
 		if(!connected_faction)
-			to_chat(usr, "You must connect the fabricator to a faction first.")
+			to_chat(usr, "You must connect the fabricator to an organization first.")
 			return 0
 		remove_from_queue(text2num(href_list["remove"]))
 
 	if(href_list["category"])
 		if(!connected_faction)
-			to_chat(usr, "You must connect the fabricator to a faction first.")
+			to_chat(usr, "You must connect the fabricator to an organization first.")
 			return 0
 		if(href_list["category"] in categories)
 			category = href_list["category"]
 
 	if(href_list["eject"])
 		if(!connected_faction)
-			to_chat(usr, "You must connect the fabricator to a faction first.")
+			to_chat(usr, "You must connect the fabricator to an organization first.")
 			return 0
 		eject_materials(href_list["eject"], text2num(href_list["amount"]))
 
@@ -220,13 +220,13 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 
 	if(href_list["back"])
 		if(!connected_faction)
-			to_chat(usr, "You must connect the fabricator to a faction first.")
+			to_chat(usr, "You must connect the fabricator to an organization first.")
 			return 0
 		selected_design = null
 
 	if(href_list["build"])
 		if(!connected_faction)
-			to_chat(usr, "You must connect the fabricator to a faction first.")
+			to_chat(usr, "You must connect the fabricator to an organization first.")
 			return 0
 		add_to_queue(selected_design)
 	return 1

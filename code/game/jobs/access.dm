@@ -49,7 +49,7 @@
 		return 1
 	
 
-	return check_access_list(M.GetAccess(req_access_faction))
+	return check_access_list(M.GetAccess(trying.uid))
 
 /atom/movable/proc/GetAccess(var/faction_uid)
 	var/obj/item/weapon/card/id/id = GetIdCard()

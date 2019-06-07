@@ -21,7 +21,7 @@
 
 /obj/machinery/fabricator/voidsuit_fabricator/can_connect(var/datum/world_faction/trying, var/mob/M)
 	if(!trying.limits) return 0
-	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(req_access_faction)))
+	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(trying.uid)))
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
 	if(trying.limits.limit_voidfab <= trying.limits.voidfabs.len)

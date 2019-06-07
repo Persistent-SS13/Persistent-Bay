@@ -14,7 +14,7 @@
 	has_reagents = TRUE
 
 /obj/machinery/fabricator/circuit_fabricator/can_connect(var/datum/world_faction/trying, var/mob/M)
-	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(req_access_faction)))
+	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(trying.uid)))
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
 	req_access_faction = trying.uid

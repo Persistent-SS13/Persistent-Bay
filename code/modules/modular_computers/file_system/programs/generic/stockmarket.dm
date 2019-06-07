@@ -136,6 +136,9 @@
 				return
 			if(buy_ordering)
 				var/final_price = selected_amount * selected_price
+				if((selected_amount + R.get_holdings()) > R.get_stock_limit())
+					to_chat(usr, "This order will exceed your stock limit.")
+					return
 				if(final_price > R.linked_account.money)
 					to_chat(usr, "There is not enough money in your account to complete this order.")
 					return

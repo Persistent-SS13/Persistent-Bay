@@ -216,6 +216,9 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 		eject_materials(href_list["eject"], text2num(href_list["amount"]))
 
 	if(href_list["menu"])
+		if(!connected_faction)
+			to_chat(usr, "You must connect the fabricator to an organization first.")
+			return 0
 		menu = text2num(href_list["menu"])
 
 	if(href_list["back"])
@@ -229,6 +232,23 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 			to_chat(usr, "You must connect the fabricator to an organization first.")
 			return 0
 		add_to_queue(selected_design)
+	if(href_list["link_org"])
+		var/obj/item/weapon/card/id = usr.GetIdCard()
+		if(id)
+			var/datum/world_faction/faction = get_faction(id.selected_faction)
+			if(faction)
+				can_connect(faction, usr)
+	if(href_list["unlink_org"])			
+		if(M && !has_access(list(core_access_machine_linking), list(), usr.GetAccess(req_access_faction)))
+			to_chat(usr, "You do not have access to unlink machines.")
+			return 0
+		can_disconnect(connected_faction, usr)
+	if(href_list["link_org"])
+		var/obj/item/weapon/card/id = usr.GetIdCard()
+		if(id)
+			var/datum/world_faction/faction = get_faction(id.selected_faction)
+			if(faction)
+				can_connect(faction, usr)
 	return 1
 
 /obj/machinery/fabricator/attackby(var/obj/item/I as obj, var/mob/user as mob)

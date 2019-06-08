@@ -475,7 +475,7 @@
 	var/warning_message
 	var/warning_prob = 10
 	var/dosage = M.chem_doses[type]
-	if(dosage >= 3)
+	if(dosage >= (3 * REAGENT_GAS_EXCHANGE_FACTOR)) //Apparently this keeps people from dying easily to CO2
 		warning_message = pick("extremely dizzy","short of breath","faint","confused")
 		warning_prob = 15
 		M.adjustOxyLoss(10,20)

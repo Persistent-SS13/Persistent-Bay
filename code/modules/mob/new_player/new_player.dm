@@ -296,26 +296,26 @@
 	chosen_slot = -1
 	loadCharacter()
 
+//Stops the lobby music and close the main menu panels
+/mob/new_player/proc/transitionToGame()
+	panel?.close()
+	load_panel?.close()
+	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
+
 /mob/new_player/proc/loadCharacter()
 	if(!config.enter_allowed && !check_rights(R_ADMIN|R_MENTOR|R_MOD, 0, src))
 		to_chat(usr, "<span class='notice'>There is an administrative lock on entering the game!</span>")
 		return
-
 	if(!chosen_slot)
 		return
-
 	if(spawning)
 		return
 
 	spawning = TRUE
 
-	//Check if our character is already in-game
+	//Resume playing
 	for(var/mob/M in SSmobs.mob_list)
-		//Don't forget to close the panel and stop the lobby music
-		panel?.close()
-		load_panel?.close()
-		sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
-
+		transitionToGame() //Don't forget to close the panel and stop the lobby music
 		if(M.loc && !M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
 			if(istype(M, /mob/observer))
 				qdel(M)
@@ -324,12 +324,9 @@
 			qdel(src)
 			return
 
+	//Observer Spawn
 	if(chosen_slot == -1)
-		//Don't forget to close the panel and stop the lobby music
-		panel?.close()
-		load_panel?.close()
-		sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
-
+		transitionToGame() //Don't forget to close the panel and stop the lobby music
 		var/mob/observer/ghost/observer = new()
 		observer.started_as_observer = 1
 		observer.forceMove(GLOB.cryopods.len ? get_turf(pick(GLOB.cryopods)) : locate(100, 100, 1))
@@ -339,9 +336,9 @@
 
 	var/mob/character = SScharacter_setup.load_character(chosen_slot, ckey)
 	Retrieve_Record(character.real_name)
-	var/turf/spawnTurf
+	var/turf/spawnTurf = locate(0,0,0) //Instead of null start with 0,0,0 because the unsafe spawn check will kick in and warn the user if there's something wrong
 
-	if(character.spawn_type == 1)
+	if(character.spawn_type == CHARACTER_SPAWN_TYPE_CRYONET)
 		var/datum/world_faction/faction = get_faction(character.spawn_loc)
 		var/assignmentSpawnLocation = faction?.get_assignment(faction?.get_record(character.real_name)?.assignment_uid, character.real_name)?.cryo_net
 		if (assignmentSpawnLocation == "Last Known Cryonet")
@@ -354,28 +351,24 @@
 			// The character doesn't have a spawn_loc_2, so use the one for their assignment or the default
 			character.spawn_loc_2 = " default"
 
-		if (istype(character, /mob/living/carbon/lace) )
-			spawnTurf = GetLaceStorage(character)
-
-		if (!spawnTurf)
-			for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
-				if(!pod.loc)
-					qdel(pod)
-					continue
-				if(pod.req_access_faction == character.spawn_loc)
-					if(pod.network == character.spawn_loc_2)
-						spawnTurf = get_turf(pod)
-						break
-					else
-						spawnTurf = get_turf(pod)
-				else if(!spawnTurf)
+		for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+			if(!pod.loc)
+				qdel(pod)
+				continue
+			if(pod.req_access_faction == character.spawn_loc)
+				if(pod.network == character.spawn_loc_2)
 					spawnTurf = get_turf(pod)
+					break
+				else
+					spawnTurf = get_turf(pod)
+			else if(!spawnTurf)
+				spawnTurf = get_turf(pod)
 
 		if(!spawnTurf)
 			log_and_message_admins("WARNING! No cryopods avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
 			spawnTurf = locate(102, 98, 1)
 
-	else if(character.spawn_type == 2)
+	else if(character.spawn_type == CHARACTER_SPAWN_TYPE_FRONTIER_BEACON)
 		for(var/obj/structure/frontier_beacon/beacon in GLOB.frontierbeacons)
 			if(!beacon.loc)
 				qdel(beacon)
@@ -389,10 +382,12 @@
 		if(!spawnTurf)
 			log_and_message_admins("WARNING! No frontier beacons avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
 			spawnTurf = locate(102, 98, 1)
-
-	if(!spawnTurf)
-		log_and_message_admins("WARNING! Unable To Find Any Spawn Turf!!! Prehaps you didn't include a map?")
-		return
+	
+	else if(character.spawn_type == CHARACTER_SPAWN_TYPE_LACE_STORAGE)
+		spawnTurf = GetLaceStorage(character)
+		if(!spawnTurf)
+			log_and_message_admins("WARNING! Unable To Find Any Spawn Turf!!! Prehaps you didn't include a map?")
+			return
 
 	//If the atmos is bad or etc.. Ask the player if they still want to spawn!
 	if(!SSjobs.check_unsafe_spawn(character, spawnTurf))
@@ -400,9 +395,7 @@
 		return
 
 	//Close the menu and stop the lobby music once we're sure we're spawning
-	panel?.close()
-	load_panel?.close()
-	sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
+	transitionToGame()
 	character.after_spawn()
 
 	if(!character.mind)		// Not entirely sure what this if() block does, but keeping it just in case
@@ -419,6 +412,7 @@
 			mind.gen_relations_info = client.prefs.relations_info["general"]
 		mind.transfer_to(character)					//won't transfer key since the mind is not active
 
+	character.forceMove(spawnTurf)
 	character.stored_ckey = key
 	character.key = key
 	character.save_slot = chosen_slot
@@ -444,10 +438,12 @@
 
 //Runs what happens after the character is loaded. Mainly for cinematics and lore text.
 /mob/proc/finishLoadCharacter()
-	if(spawn_type == 1)
+	if(spawn_type == CHARACTER_SPAWN_TYPE_CRYONET)
 		to_chat(src, "You eject from your cryosleep, ready to resume life in the frontier.")
-	else if(spawn_type == 2)
+	else if(spawn_type == CHARACTER_SPAWN_TYPE_FRONTIER_BEACON)
 		GLOB.using_map.on_new_spawn(src) //Moved to overridable map specific code
+	else if(spawn_type == CHARACTER_SPAWN_TYPE_LACE_STORAGE)
+		to_chat(src, "You regain consciousness, still prisoner of your neural lace.")
 
 /mob/new_player/proc/deleteCharacter()
 	var/charname = SScharacter_setup.peek_character_name(chosen_slot, ckey)

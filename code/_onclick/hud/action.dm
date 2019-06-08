@@ -19,7 +19,7 @@
 /datum/action/lace_storage
 	name = "Access Lace Storage UI"
 	action_type = AB_GENERIC
-	button_icon = 'icons/misc/lace.dmi'
+	button_icon = 'icons/obj/action_buttons/lace.dmi'
 	button_icon_state = "lace"
 	procname = "lace_ui_interact"
 

@@ -80,3 +80,20 @@ SUBSYSTEM_DEF(character_setup)
 	QDEL_IN(M, 1 SECONDS)
 	return I
 
+//Used for when we need to find a character slot to
+/datum/controller/subsystem/character_setup/proc/find_character_save_slot(var/mob/living/carbon/human/H, var/ckey)
+	var/saveslot = 0
+	log_and_message_admins("Warning! [ckey]'s [H] failed to find a save_slot, and is picking one!")
+	for(var/file in flist(load_path(ckey, "")))
+		var/firstNumber = text2num(copytext(file, 1, 2))
+		if(firstNumber)
+			var/storedName = SScharacter_setup.peek_character_name(firstNumber, ckey)
+			if(storedName == name)
+				saveslot = firstNumber
+				log_and_message_admins("[ckey]'s [H] found a savefile with it's realname [file]")
+				break
+	if(!saveslot)
+		saveslot++
+		while(fexists(load_path(ckey, "[saveslot].sav")))
+			saveslot++
+	return saveslot

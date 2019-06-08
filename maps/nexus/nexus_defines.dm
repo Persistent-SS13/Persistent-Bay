@@ -105,7 +105,7 @@ proc/GetNbSavedZLevels()
 			sleep(106)
 			newchar.client.screen -= cinematic
 
-	newchar.spawn_type = 1
+	newchar.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
 	sound_to(newchar, sound('sound/music/brandon_morris_loop.ogg', repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
 	spawn()
 		new /obj/effect/portal(get_turf(newchar), null, 5 SECONDS, 0)

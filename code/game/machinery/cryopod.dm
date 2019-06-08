@@ -310,9 +310,8 @@
 		saveslot = S.lacemob.save_slot
 		S.lacemob.spawn_loc = req_access_faction
 		S.lacemob.spawn_loc_2 = network
-		S.lacemob.spawn_type = 1
+		S.lacemob.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
 		S.loc = null
-
 	else
 		var/mob/M = occupant
 		if(M.ckey)
@@ -328,25 +327,13 @@
 		if(!autocryo)
 			M.spawn_loc = req_access_faction
 			M.spawn_loc_2 = network
-			M.spawn_type = 1
+			M.spawn_type = CHARACTER_SPAWN_TYPE_CRYONET
 			M.loc = null
 
 	key = copytext(key, max(findtext(key, "@"), 1))
 
 	if(!saveslot)
-		log_and_message_admins("Warning! [key]'s [occupant] failed to find a save_slot, and is picking one!")
-		for(var/file in flist(load_path(key, "")))
-			var/firstNumber = text2num(copytext(file, 1, 2))
-			if(firstNumber)
-				var/storedName = SScharacter_setup.peek_character_name(firstNumber, key)
-				if(storedName == name)
-					saveslot = firstNumber
-					log_and_message_admins("[key]'s [occupant] found a savefile with it's realname [file]")
-					break
-		if(!saveslot)
-			saveslot++
-			while(fexists(load_path(key, "[saveslot].sav")))
-				saveslot++
+		saveslot = SScharacter_setup.find_character_save_slot(occupant, key)
 
 	//Ignore all items not on the preservation list.
 	var/list/items = occupant.contents.Copy()

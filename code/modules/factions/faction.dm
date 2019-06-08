@@ -849,11 +849,11 @@ var/PriorityQueue/all_feeds
 	var/default_telepad_z
 	var/decl/hierarchy/outfit/starter_outfit = /decl/hierarchy/outfit/nexus/starter //Outfit members of this faction spawn with by default
 
-		var/list/service_medical_business = list() // list of all organizations linked into the medical service for this business
+	var/list/service_medical_business = list() // list of all organizations linked into the medical service for this business
 
-		var/list/service_medical_personal = list() // list of all people linked int othe medical service for this business
+	var/list/service_medical_personal = list() // list of all people linked int othe medical service for this business
 
-		var/list/service_security_business = list() // list of all orgs linked to the security services
+	var/list/service_security_business = list() // list of all orgs linked to the security services
 
 	var/list/service_security_personal = list() // list of all people linked to the security services
 

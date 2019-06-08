@@ -151,7 +151,7 @@
 	var/mob/living/carbon/human/H = new()
 	H.name = real_name
 	H.real_name = real_name
-	H.spawn_type = 2 //For first time spawn
+	H.spawn_type = CHARACTER_SPAWN_TYPE_FRONTIER_BEACON //For first time spawn
 	if(!H.mind)
 		H.mind = new()
 

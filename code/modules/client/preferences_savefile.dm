@@ -28,7 +28,7 @@
 	if(!fexists(path))		return 0
 	var/savefile/S = new /savefile(path)
 	if(!S)					return 0
-	//S.cd = "/"
+	S.cd = "/"
 
 	from_file(S["version"], savefile_version)
 	player_setup.load_preferences(S)
@@ -36,12 +36,13 @@
 	return 1
 
 /datum/preferences/proc/save_preferences()
-	testing("preferences/save_preferences() : Attempting to save prefs (path = [path], )")
+	testing("preferences/save_preferences() : Attempting to save prefs (path = [path])")
 	if(!path)
 		path = src.load_path(client_ckey)
+		testing("preferences/save_preferences() : Set path to (path = [path])")
 	var/savefile/S = new /savefile(path)
 	if(!S)					return 0
-	//S.cd = "/"
+	S.cd = "/"
 
 	to_file(S["version"], SAVEFILE_VERSION_MAX)
 	player_setup.save_preferences(S)

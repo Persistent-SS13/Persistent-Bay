@@ -55,9 +55,9 @@
 		if(SOUTH)
 			pixel_y = 22
 		if(EAST)
-			pixel_x = 22
-		if(WEST)
 			pixel_x = -22
+		if(WEST)
+			pixel_x = 22
 
 	if(!overlay)
 		overlay = image(icon, "light1-overlay")

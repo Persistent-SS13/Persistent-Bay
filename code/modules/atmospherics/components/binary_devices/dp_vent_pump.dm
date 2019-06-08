@@ -108,7 +108,7 @@
 	update_underlays()
 
 /obj/machinery/atmospherics/binary/dp_vent_pump/Process()
-	..()
+	. = ..()
 	last_power_draw = 0
 	last_flow_rate = 0
 	if(inoperable()|| !powered())

@@ -30,6 +30,13 @@
 		if(WEST)
 			initialize_directions = EAST|WEST
 
+/obj/machinery/atmospherics/binary/Process()
+	//Rebuild the networks if something is wrong
+	if( (network1 && !network1.normal_members && !network1.line_members) || (network2 && !network2.normal_members && !network2.line_members) )
+		. = ..()
+	last_power_draw = 0
+	last_flow_rate = 0
+
 // Housekeeping and pipe network stuff below
 /obj/machinery/atmospherics/binary/network_expand(datum/pipe_network/new_network, obj/machinery/atmospherics/pipe/reference)
 	if(reference == node1)

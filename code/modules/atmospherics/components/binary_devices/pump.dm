@@ -64,8 +64,10 @@ Thus, the two variables affect pump operation are set in New():
 	update_underlays()
 
 /obj/machinery/atmospherics/binary/pump/Process()
-	last_power_draw = 0
-	last_flow_rate = 0
+	. = ..()
+	//Those are done in the base class
+	// last_power_draw = 0
+	// last_flow_rate = 0
 
 	if(inoperable() || isoff())
 		return

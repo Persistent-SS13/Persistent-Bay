@@ -1136,6 +1136,7 @@
 	restore_blood()
 	full_prosthetic = null
 	shock_stage = 0
+	decaylevel = 0
 	..()
 
 /mob/living/carbon/human/reset_view(atom/A)

@@ -669,11 +669,11 @@
 	matter = list(MATERIAL_GLASS = 100, MATERIAL_ALUMINIUM = 20)
 	b_max_bright = 0.95
 	b_inner_range = 2
-	b_outer_range = 7
+	b_outer_range = 6
 	b_curve = 3
 	b_colour = "#fffee0"
 	lighting_modes = list(
-		LIGHTMODE_EMERGENCY = list(l_outer_range = 7, l_max_bright = 1, l_color = "#da0205"),
+		LIGHTMODE_EMERGENCY = list(l_outer_range = 6, l_max_bright = 0.8, l_color = "#da0205"),
 		)
 	sound_on = 'sound/machines/lightson.ogg'
 
@@ -688,7 +688,7 @@
 	name = "large light tube"
 	b_max_bright = 0.95
 	b_inner_range = 2
-	b_outer_range = 12
+	b_outer_range = 10
 	b_curve = 3
 
 /obj/item/weapon/light/tube/large/party/Initialize(mapload) //Randomly colored light tubes. Mostly for testing, but maybe someone will find a use for them.
@@ -744,11 +744,11 @@
 
 	b_max_bright = 0.6
 	b_inner_range = 0.5
-	b_outer_range = 7
+	b_outer_range = 5
 	b_curve = 2.5
 	b_colour = "#fcfcc7"
 	lighting_modes = list(
-		LIGHTMODE_EMERGENCY = list(l_outer_range = 6, l_max_bright = 0.85, l_color = "#da0205"),
+		LIGHTMODE_EMERGENCY = list(l_outer_range = 5, l_max_bright = 0.85, l_color = "#da0205"),
 		)
 
 /obj/item/weapon/light/bulb/red

@@ -6,11 +6,19 @@
 	var/ID
 
 /datum/seed_pile/New(var/obj/item/seeds/O, var/ID)
+	..()
 	name = O.name
 	amount = 1
 	seed_type = O.seed
 	seeds += O
 	src.ID = ID
+	ADD_SAVED_VAR(name)
+	ADD_SAVED_VAR(amount)
+	ADD_SAVED_VAR(seed_type)
+	ADD_SAVED_VAR(seeds)
+	ADD_SAVED_VAR(ID)
+
+	ADD_SKIP_EMPTY(seeds)
 
 /datum/seed_pile/proc/matches(var/obj/item/seeds/O)
 	if (O.seed == seed_type)
@@ -29,17 +37,26 @@
 	var/seeds_initialized = 0 // Map-placed ones break if seeds are loaded right at the start of the round, so we do it on the first interaction
 	var/list/datum/seed_pile/piles = list()
 	var/list/starting_seeds = list()
-	var/list/scanner = list() // What properties we can view
+	var/list/scanner = list("stats", "produce", "soil", "temperature", "light") // What properties we can view
+
+/obj/machinery/seed_storage/New()
+	. = ..()
+	ADD_SAVED_VAR(piles)
+
+/obj/machinery/seed_storage/after_load()
+	. = ..()
+	seeds_initialized = 1 //Always force this after load, since we don't want it to init again
 
 /obj/machinery/seed_storage/Initialize(var/mapload)
 	. = ..()
-	for(var/typepath in starting_seeds)
-		var/amount = starting_seeds[typepath]
-		if(isnull(amount))
-			amount = 1
-		for (var/i = 1 to amount)
-			var/O = new typepath
-			add(O)
+	if(!map_storage_loaded)
+		for(var/typepath in starting_seeds)
+			var/amount = starting_seeds[typepath]
+			if(isnull(amount))
+				amount = 1
+			for (var/i = 1 to amount)
+				var/O = new typepath
+				add(O)
 
 /obj/machinery/seed_storage/random // This is mostly for testing, but I guess admins could spawn it
 	name = "Random seed storage"

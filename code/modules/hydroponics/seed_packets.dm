@@ -10,7 +10,14 @@ var/global/list/plant_seed_sprites = list()
 	var/seed_type
 	var/datum/seed/seed
 	var/modified = 0
+/obj/item/seeds/New()
+	. = ..()
+	ADD_SAVED_VAR(seed_type)
+	ADD_SAVED_VAR(seed)
+	ADD_SAVED_VAR(modified)
+
 /obj/item/seeds/after_load()
+	..()
 	update_seed()
 /obj/item/seeds/Initialize()
 	update_seed()
@@ -75,8 +82,9 @@ var/global/list/plant_seed_sprites = list()
 	seed_type = null
 
 /obj/item/seeds/random/Initialize()
-	seed = SSplants.create_random_seed()
-	seed_type = seed.name
+	if(!map_storage_loaded)
+		seed = SSplants.create_random_seed()
+		seed_type = seed.name
 	. = ..()
 /*
 /obj/item/seeds/replicapod

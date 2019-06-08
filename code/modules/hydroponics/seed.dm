@@ -2,6 +2,12 @@
 	var/genetype    // Label used when applying trait.
 	var/list/values // Values to copy into the target seed datum.
 
+/datum/plantgene/New()
+	. = ..()
+	ADD_SAVED_VAR(genetype)
+	ADD_SAVED_VAR(values)
+	ADD_SKIP_EMPTY(values)
+
 /datum/seed
 	//Tracking.
 	var/uid                        // Unique identifier.
@@ -66,6 +72,26 @@
 	update_growth_stages()
 
 	uid = sequential_id(/datum/seed/)
+
+	ADD_SAVED_VAR(name)
+	ADD_SAVED_VAR(seed_name)
+	ADD_SAVED_VAR(seed_noun)
+	ADD_SAVED_VAR(display_name)
+	ADD_SAVED_VAR(roundstart)
+	ADD_SAVED_VAR(mysterious)
+	ADD_SAVED_VAR(scanned)
+	ADD_SAVED_VAR(can_self_harvest)
+	ADD_SAVED_VAR(growth_stages)
+	ADD_SAVED_VAR(traits)
+	ADD_SAVED_VAR(mutants)
+	ADD_SAVED_VAR(chems)
+	ADD_SAVED_VAR(consume_gasses)
+	ADD_SAVED_VAR(exude_gasses)
+	ADD_SAVED_VAR(kitchen_tag)
+	ADD_SAVED_VAR(trash_type)
+	ADD_SAVED_VAR(splat_type)
+	ADD_SAVED_VAR(has_mob_product)
+	ADD_SAVED_VAR(force_layer)
 
 /datum/seed/proc/get_trait(var/trait)
 	return traits["[trait]"]

@@ -19,6 +19,14 @@
 /proc/cmp_sellorders(var/datum/material_order/a, var/datum/material_order/b)
 	return a.price - b.price
 
+/proc/cmp_buyorders_stock(var/datum/stock_order/a, var/datum/stock_order/b)
+	return b.price - a.price
+
+/proc/cmp_sellorders_stock(var/datum/stock_order/a, var/datum/stock_order/b)
+	return a.price - b.price
+
+
+
 
 /proc/cmp_follow_holder(var/datum/follow_holder/a, var/datum/follow_holder/b)
 	if(a.sort_order == b.sort_order)

@@ -26,6 +26,12 @@ var/PriorityQueue/all_feeds
 			contract.linked = null
 			contract.update_icon()
 			return 0
+		var/datum/computer_file/report/crew_record/R = Retrieve_Record(contract.signed_by)
+		if((contract.ownership + R.get_holdings()) > R.get_stock_limit())
+			contract.cancelled = 1
+			contract.linked = null
+			contract.update_icon()
+			return 0
 		if(contract.finalize())
 			var/datum/stockholder/newholder
 			newholder = connected_faction.get_stockholder_datum(contract.signed_by)
@@ -37,6 +43,134 @@ var/PriorityQueue/all_feeds
 			holder.stocks -= contract.ownership
 			if(!holder.stocks)
 				connected_faction.stock_holders -= holder.real_name
+
+/obj/item/weapon/paper/contract/recurring
+	var/sign_type = CONTRACT_BUSINESS
+	var/contract_payee = ""
+	var/contract_desc = ""
+	var/contract_title = ""
+	var/additional_function = CONTRACT_SERVICE_NONE
+	var/contract_paytype = CONTRACT_PAY_NONE
+	var/contract_pay = 0
+/obj/item/weapon/paper/contract/recurring/update_icon()
+	if(approved)
+		icon_state = "contract-approved"
+	else if(cancelled)
+		icon_state = "contract-cancelled"
+	else if(signed)
+		icon_state = "contract-pending"
+	else
+		icon_state = "contract"
+
+
+/obj/item/weapon/paper/contract/recurring/show_content(mob/user, forceshow)
+	var/can_read = (istype(user, /mob/living/carbon/human) || isghost(user) || istype(user, /mob/living/silicon)) || forceshow
+	if(!forceshow && istype(user,/mob/living/silicon/ai))
+		var/mob/living/silicon/ai/AI = user
+		can_read = get_dist(src, AI.camera) < 2
+	var/info2 = info
+	if(sign_type == CONTRACT_PERSON)
+		if(cancelled || !linked)
+			info2 += "<br>This contract has been cancelled. This can be shredded."
+		else if(approved)
+			info2 += "<br>This contract has been finalized. This is just for record keeping."
+		else if(signed)
+			info2 += "<br>This contract has been signed and is pending finalization."
+		else if(src.Adjacent(user) && !signed)
+			info2 += "<br><A href='?src=\ref[src];pay=1'>Scan lace to sign contract.</A>"
+		else
+			info2 += "<br>Scan lace to sign contract."
+	else
+		if(cancelled)
+			info2 += "<br>This contract has been cancelled. This can be shredded."
+		else if(approved)
+			info2 += "<br>This contract has been finalized. This is just for record keeping."
+		else if(signed)
+			info2 += "<br>This contract has been signed and is pending finalization."
+		else if(src.Adjacent(user) && !signed)
+			info2 += "<br>This contract must be signed by an organization.<br><A href='?src=\ref[src];pay=1'>Scan or swipe ID linked to organization.</A>"
+		else
+			info2 += "<br>This contract must be signed by an organization.<br><A href='?src=\ref[src];pay=1'>Scan or swipe ID linked to organization.</A>"
+
+
+	user << browse("<HTML><HEAD><TITLE>[name]</TITLE></HEAD><BODY bgcolor='[color]'>[can_read ? info2 : stars(info)][stamps]</BODY></HTML>", "window=[name]")
+	onclose(user, "[name]")
+
+/obj/item/weapon/paper/contract/recurring/Topic(href, href_list)
+	if(!usr || (usr.stat || usr.restrained()))
+		return
+	if(href_list["pay"])
+		if(signed) return
+		if(sign_type == CONTRACT_BUSINESS)
+			var/obj/item/weapon/card/id/id = usr.get_idcard()
+			if(id)
+				if(id.selected_faction == contract_payee)
+					to_chat(usr, "An organization cannot sign its own contract.")
+					return 0
+				var/datum/world_faction/connected_faction = get_faction(id.selected_faction)
+				if(connected_faction)
+					if(has_access(list(core_access_contracts), list(), usr.GetAccess(connected_faction.uid)))
+						if(contract_paytype == CONTRACT_PAY_NONE || contract_pay <= connected_faction.central_account.money)
+							var/datum/recurring_contract/new_contract = new()
+							new_contract.name = contract_title
+							new_contract.payer_type = sign_type
+
+							new_contract.payee = contract_payee
+
+							new_contract.payer = connected_faction.uid
+							new_contract.details = contract_desc
+
+							new_contract.auto_pay = contract_paytype
+							new_contract.pay_amount = contract_pay
+							new_contract.func = additional_function
+							new_contract.signer_name = usr.real_name
+
+							GLOB.contract_database.add_contract(new_contract)
+							signed = 1
+							info = replacetext(info, "*Unsigned*", "[connected_faction.uid]")
+							signed_by = usr.real_name
+						else
+							to_chat(usr, "Insufficent funds to sign contract.")
+							return
+
+					else
+						to_chat(usr, "Access denied. Cannot sign contracts for [connected_faction.name].")
+						return
+		else
+
+			var/datum/computer_file/report/crew_record/R = Retrieve_Record(usr.real_name)
+			if(!R)
+				to_chat(usr, "Record not found. Contact AI.")
+				message_admins("record not found for user [usr.real_name]")
+				return
+			if(contract_paytype == CONTRACT_PAY_NONE || contract_pay <= R.linked_account.money)
+				var/datum/recurring_contract/new_contract = new()
+				new_contract.name = contract_title
+				new_contract.payer_type = sign_type
+
+				new_contract.payee = contract_payee
+
+				new_contract.payer = usr.real_name
+				new_contract.details = contract_desc
+
+				new_contract.auto_pay = contract_paytype
+				new_contract.pay_amount = contract_pay
+				new_contract.func = additional_function
+				new_contract.signer_name = usr.real_name
+
+				GLOB.contract_database.add_contract(new_contract)
+				signed = 1
+
+				info = replacetext(info, "*Unsigned*", "[usr.real_name]")
+				signed_by = usr.real_name
+			else
+				to_chat(usr, "Insufficent funds to sign contract.")
+				return
+
+	..()
+
+
+
 
 /obj/item/weapon/paper/contract
 	name = "contract"
@@ -50,7 +184,7 @@ var/PriorityQueue/all_feeds
 	var/datum/money_account/signed_account
 	var/datum/computer_file/report/crew_record/signed_record
 
-	var/ownership = 1 // how many stocks the contract is worth (if a stock contract)
+	var/ownership = 0 // how many stocks the contract is worth (if a stock contract)
 	var/org_uid = "" // what org this belongs to
 
 	var/pay_to = ""
@@ -89,9 +223,9 @@ var/PriorityQueue/all_feeds
 	else if(signed)
 		info2 += "<br>This contract has been signed and is pending finalization."
 	else if(src.Adjacent(user) && !signed)
-		info2 += "<br><A href='?src=\ref[src];pay=1'>Or scan lace.</A>"
+		info2 += "<br><A href='?src=\ref[src];pay=1'>Scan lace to sign contract.</A>"
 	else
-		info2 += "<br>Or scan lace."
+		info2 += "<br>Scan lace to sign contract."
 	user << browse("<HTML><HEAD><TITLE>[name]</TITLE></HEAD><BODY bgcolor='[color]'>[can_read ? info2 : stars(info)][stamps]</BODY></HTML>", "window=[name]")
 	onclose(user, "[name]")
 
@@ -109,6 +243,10 @@ var/PriorityQueue/all_feeds
 			message_admins("record not found for user [usr.real_name]")
 			return
 		var/datum/money_account/linked_account = R.linked_account
+
+		if((R.get_holdings() + ownership) > R.get_stock_limit())
+			to_chat(usr, "This stock contract will exceed your stock limit.")
+			return
 		if(linked_account)
 			if(linked_account.suspended)
 				linked_account = null
@@ -241,8 +379,6 @@ var/PriorityQueue/all_feeds
 /datum/NewsStory/proc/allowed(var/real_name)
 	if(real_name in purchased)
 		return 1
-	if(parent.parent.parent.has_access(real_name, "Newsfeed"))
-		return 1
 	return 0
 
 
@@ -261,6 +397,15 @@ var/PriorityQueue/all_feeds
 
 	var/uid
 
+	var/announce = 0
+	var/cost = 0
+
+/datum/NewsStory/proc/view_story(var/mob/M)
+	purchased |= M.real_name
+	if(istype(parent.parent.parent))
+		parent.parent.parent.article_view_objectives(M.real_name)
+
+
 /datum/NewsIssue
 	var/name = "None"
 	var/list/stories = list()
@@ -271,6 +416,9 @@ var/PriorityQueue/all_feeds
 
 	var/uid
 
+	var/cost = 0
+
+
 /datum/NewsFeed
 	var/name = "None"
 	var/visible = 0
@@ -280,16 +428,17 @@ var/PriorityQueue/all_feeds
 	var/per_issue = 60
 	var/announcement = "Breaking News!"
 	var/last_published = 0
-
-
-	var/datum/small_business/parent
+	var/datum/world_faction/business/parent
 
 /datum/NewsFeed/New()
 	current_issue = new()
 	current_issue.parent = src
 	current_issue.name = "[name] News Issue"
 	all_feeds.Enqueue(src)
+
+
 /datum/NewsFeed/proc/publish_issue()
+
 	for(var/obj/machinery/newscaster/caster in allCasters)
 		caster.newsAlert("[name] just published a full issue! [current_issue.name]")
 	all_issues |= current_issue
@@ -303,9 +452,15 @@ var/PriorityQueue/all_feeds
 /datum/NewsFeed/proc/publish_story(var/datum/NewsStory/story)
 	current_issue.stories |= story
 	story.parent = current_issue
-	for(var/obj/machinery/newscaster/caster in allCasters)
-		caster.newsAlert("(From [name]) [announcement] ([story.name])")
+	if(story.announce)
+		for(var/obj/machinery/newscaster/caster in allCasters)
+			caster.newsAlert("(From [name]) [announcement] ([story.name])")
 	GLOB.recent_articles |= story
+
+
+/datum/LibraryDatabase
+	var/list/books = list()
+
 
 
 /datum/small_business
@@ -693,9 +848,17 @@ var/PriorityQueue/all_feeds
 	var/default_telepad_y
 	var/default_telepad_z
 	var/decl/hierarchy/outfit/starter_outfit = /decl/hierarchy/outfit/nexus/starter //Outfit members of this faction spawn with by default
-	var/decl/hierarchy/outfit/starter_phorosian_outfit = /decl/hierarchy/outfit/phorosian //starter outfit for phorosian, since they need a suit
-	var/decl/hierarchy/outfit/starter_vox_outfit = /decl/hierarchy/outfit/phorosian
 
+		var/list/service_medical_business = list() // list of all organizations linked into the medical service for this business
+
+		var/list/service_medical_personal = list() // list of all people linked int othe medical service for this business
+
+		var/list/service_security_business = list() // list of all orgs linked to the security services
+
+	var/list/service_security_personal = list() // list of all people linked to the security services
+
+	var/datum/NewsFeed/feed
+	var/datum/LibraryDatabase/library
 
 /proc/spawn_nexus_gov()
 	var/datum/world_faction/democratic/nexus = new()
@@ -774,7 +937,7 @@ var/PriorityQueue/all_feeds
 	special_category.head_position = governor_assignment
 	special_category.parent = src
 	special_category.command_faction = 1
-
+	limits = new /datum/machine_limits/democracy()
 
 /datum/world_faction/democratic
 
@@ -1216,7 +1379,7 @@ var/PriorityQueue/all_feeds
 
 /datum/world_faction/proc/rebuild_limits()
 	return
-	
+
 /datum/world_faction/democratic/rebuild_limits()
 	limits.limit_genfab = 5
 	limits.limit_engfab = 5
@@ -1239,15 +1402,15 @@ var/PriorityQueue/all_feeds
 	limits.limit_area = 100000
 
 	limits.limit_tcomms = 5
-	
+
 	limits.limit_tech_general = 4
 	limits.limit_tech_engi = 4
 	limits.limit_tech_medical = 4
 	limits.limit_tech_consumer =  4
 	limits.limit_tech_combat =  4
-	
+
 /datum/world_faction/business/rebuild_limits()
-	var/datum/machine_limits/current_level = new module.levels[module.current_level]
+	var/datum/machine_limits/current_level = module.levels[module.current_level]
 	limits.limit_genfab = module.spec.limits.limit_genfab + current_level.limit_genfab
 	limits.limit_engfab = module.spec.limits.limit_engfab + current_level.limit_engfab
 	limits.limit_medicalfab = module.spec.limits.limit_medicalfab + current_level.limit_medicalfab
@@ -1269,7 +1432,7 @@ var/PriorityQueue/all_feeds
 	limits.limit_area = module.spec.limits.limit_area + current_level.limit_area
 
 	limits.limit_tcomms = module.spec.limits.limit_tcomms + current_level.limit_tcomms
-	
+
 	limits.limit_tech_general = module.spec.limits.limit_tech_general + current_level.limit_tech_general
 	limits.limit_tech_engi = module.spec.limits.limit_tech_engi + current_level.limit_tech_engi
 	limits.limit_tech_medical = module.spec.limits.limit_tech_medical + current_level.limit_tech_medical
@@ -1342,9 +1505,348 @@ var/PriorityQueue/all_feeds
 	var/stockholder_tax = 0
 	var/public_stock = 0
 
+	var/datum/module_objective/hourly_objective
+	var/hourly_assigned = 0
+	var/datum/module_objective/daily_objective
+	var/daily_assigned = 0
+	var/datum/module_objective/weekly_objective
+	var/weekly_assigned = 0
+
+	var/commission = 0
+	var/PriorityQueue/buyorders
+	var/PriorityQueue/sellorders
+	var/stock_sales = 0 // stock sales this hour
+	var/list/stock_sales_data = list() // stock sales in the past 24 hours
+
+/datum/world_faction/business/proc/verify_orders()
+	for(var/datum/stock_order/order in buyorders.L)
+		var/datum/computer_file/report/crew_record/R = Retrieve_Record(order.real_name)
+		if(!R || !R.linked_account)
+			buyorders.L -= order
+			continue
+		if(R.linked_account.money < order.get_total_value())
+			buyorders.L -= order
+			continue
+	for(var/datum/stock_order/order in sellorders.L)
+		if(get_stockholder(order.real_name) < order.get_remaining_volume())
+			sellorders.L -= order
+			continue
+
+
+/datum/world_faction/business/proc/get_last_hour()
+	if(!stock_sales_data.len) return 0
+	return text2num(stock_sales_data[stock_sales_data.len])
+
+/datum/world_faction/business/proc/get_last_24()
+	var/total = 0
+	for(var/x in stock_sales_data)
+		total += text2num(x)
+	return total
+
+/datum/world_faction/business/proc/get_best_buy()
+	if(!buyorders.L.len) return null
+	var/datum/stock_order/order = buyorders.L[1]
+	if(order)
+		return order.price
+/datum/world_faction/business/proc/get_best_sell()
+	if(!sellorders.L.len) return null
+	var/datum/stock_order/order = sellorders.L[1]
+	if(order)
+		return order.price
+
+
+/datum/world_faction/business/proc/fill_order(var/datum/stock_order/buyorder, var/datum/stock_order/sellorder)
+	if(buyorder.price > sellorder.price) return
+	var/buyer_name = buyorder.real_name
+	var/datum/computer_file/report/crew_record/buyer = Retrieve_Record(buyorder.real_name)
+	var/datum/computer_file/report/crew_record/seller = Retrieve_Record(sellorder.real_name)
+	var/datum/stockholder/initial_holder = get_stockholder_datum()
+	if(!buyer || !seller) return
+	var/moving = min(buyorder.get_remaining_volume(), sellorder.get_remaining_volume())
+	if(initial_holder.stocks < moving)
+		moving = initial_holder.stocks
+	var/cost = moving*sellorder.price
+
+	if(!buyer.linked_account.money >= cost || ((moving + buyer.get_holdings()) > buyer.get_stock_limit()))
+		var/datum/stockholder/new_holder = get_stockholder_datum(buyer_name)
+		if(!new_holder)
+			new_holder = new()
+			new_holder.real_name = buyer_name
+			stock_holders |= new_holder
+		var/datum/transaction/T = new("Stock Buy", "Buy Order for [moving] stocks of [uid]", -cost, "Stock Market")
+		buyer.linked_account.do_transaction(T)
+		var/datum/transaction/Te = new("Stock Sale", "Sell Order for [moving] stocks of [uid]", cost, "Stock Market")
+		seller.linked_account.do_transaction(Te)
+		sellorder.filled += moving
+		buyorder.filled += moving
+		stock_sales += moving
+		if(!sellorder.get_remaining_volume())
+			sellorders.L -= sellorder
+		if(!buyorder.get_remaining_volume())
+			buyorders.L -= buyorder
+	else
+		buyorders.L -= buyorder
+		return 0
+
+/datum/world_faction/business/proc/cancel_order(var/datum/stock_order/order)
+	buyorders.L -= order
+	sellorders.L -= order
+
+/datum/world_faction/business/proc/add_buyorder(var/price, var/volume, var/real_name)
+	var/datum/stock_order/order = new()
+	order.price = price
+	order.volume = volume
+	order.real_name = real_name
+	for(var/datum/stock_order/sell_order in sellorders.L)
+		if(!order.get_remaining_volume()) break
+		if(sell_order.price <= order.price)
+			fill_order(order, sell_order)
+	if(!order.get_remaining_volume()) // order filled
+		return 1
+	buyorders.Enqueue(order)
+
+/datum/world_faction/business/proc/add_sellorder(var/price, var/volume, var/real_name)
+	var/datum/stock_order/order = new()
+	order.price = price
+	order.volume = volume
+	order.real_name = real_name
+	for(var/datum/stock_order/buy_order in buyorders.L)
+		if(!order.get_remaining_volume()) break
+		if(order.price <= buy_order.price)
+			fill_order(buy_order, order)
+	if(!order.get_remaining_volume()) // order filled
+		return 1
+	sellorders.Enqueue(order)
+
+/datum/world_faction/business/proc/get_buyvolume()
+	var/volume = 0
+	for(var/datum/stock_order/buy_order in buyorders.L)
+		volume += buy_order.volume
+	return volume
+
+/datum/world_faction/business/proc/get_sellvolume()
+	var/volume = 0
+	for(var/datum/stock_order/sell_order in sellorders.L)
+		volume += sell_order.volume
+	return volume
+
+
+/datum/world_faction/business/proc/get_buyprice(var/volume)
+	var/final_price = 0
+	var/remaining_volume = volume
+	for(var/datum/stock_order/sell_order in sellorders.L)
+		if(!remaining_volume) break
+		var/transact = min(sell_order.get_remaining_volume(), remaining_volume)
+		final_price += transact*sell_order.price
+		remaining_volume -= transact
+	return final_price
+
+
+
+
+/datum/world_faction/business/proc/surrender_stocks(var/real_name)
+	var/datum/stockholder/holder = get_stockholder_datum(real_name)
+	if(holder)
+		if(stock_holders.len == 1) // last stock holder
+			stock_holders.Cut()
+			GLOB.all_world_factions -= src
+			qdel(src)
+			return
+		else
+			var/remainder = holder.stocks % (stock_holders.len-1)
+			var/division = (holder.stocks-remainder)/(stock_holders.len-1)
+			stock_holders -= holder
+			for(var/datum/stockholder/secondholder in stock_holders)
+				secondholder.stocks += division
+			if(remainder)
+				var/list/stock_holders_copy = stock_holders.Copy()
+				for(var/x in 1 to remainder)
+					if(!stock_holders_copy.len)
+						stock_holders_copy = stock_holders.Copy()
+					var/datum/stockholder/holderr = pick_n_take(stock_holders_copy)
+					holderr.stocks++
+
+/datum/world_faction/business/proc/revenue_objectives(var/amount) // run this anytime a revenue objective might be filled
+	if(istype(hourly_objective, /datum/module_objective/hourly/revenue)) // checks if the hourly objective is a revenue objective
+		hourly_objective.filled += amount // fill by the amount
+		hourly_objective.check_completion() // check if its done
+	if(istype(daily_objective, /datum/module_objective/daily/revenue)) // repeat for daily, weekly
+		daily_objective.filled += amount
+		daily_objective.check_completion()
+	if(istype(weekly_objective, /datum/module_objective/weekly/revenue))
+		weekly_objective.filled += amount
+		weekly_objective.check_completion()
+
+/datum/world_faction/business/proc/cost_objectives(var/amount) // run this anytime a cost objective might be filled
+	if(istype(hourly_objective, /datum/module_objective/hourly/cost)) // checks if the hourly objective is a cost objective
+		hourly_objective.filled += amount // fill by the amount
+		hourly_objective.check_completion() // check if its done
+	if(istype(daily_objective, /datum/module_objective/daily/cost)) // repeat for daily, weekly
+		daily_objective.filled += amount
+		daily_objective.check_completion()
+	if(istype(weekly_objective, /datum/module_objective/weekly/cost))
+		weekly_objective.filled += amount
+		weekly_objective.check_completion()
+
+/datum/world_faction/business/proc/monster_objectives() // run this anytime a monster objective might be filled
+	if(istype(hourly_objective, /datum/module_objective/hourly/monsters))
+		hourly_objective.filled++ // fill by one
+		hourly_objective.check_completion()
+	if(istype(daily_objective, /datum/module_objective/daily/monsters)) // repeat for daily, weekly
+		daily_objective.filled++
+		daily_objective.check_completion()
+	if(istype(weekly_objective, /datum/module_objective/weekly/monsters))
+		weekly_objective.filled++
+		weekly_objective.check_completion()
+
+/datum/world_faction/business/proc/publish_article_objectives() // run this anytime a publish article objective might be filled
+	if(istype(hourly_objective, /datum/module_objective/hourly/publish_article))
+		hourly_objective.filled++ // fill by one
+		hourly_objective.check_completion()
+
+/datum/world_faction/business/proc/publish_book_objectives(var/real_name) // run this anytime a publish book objective might be filled
+	if(istype(hourly_objective, /datum/module_objective/hourly/publish_book))
+		hourly_objective.filled++ // fill by one
+		hourly_objective.check_completion()
+	if(istype(daily_objective, /datum/module_objective/daily/publish_book) && !(real_name in daily_objective.unique_characters)) // repeat for daily, weekly
+		daily_objective.filled++
+		daily_objective.check_completion()
+	if(istype(weekly_objective, /datum/module_objective/weekly/publish_book) && !(real_name in weekly_objective.unique_characters))
+		weekly_objective.filled++
+		weekly_objective.check_completion()
+
+/datum/world_faction/business/proc/contract_objectives(var/namee, var/sale_type)
+	if(istype(hourly_objective, /datum/module_objective/hourly/contract))
+		if(sale_type == CONTRACT_PERSON && !(namee in hourly_objective.unique_characters)) //
+			hourly_objective.filled++ // increase by one
+			hourly_objective.unique_characters |= namee
+			hourly_objective.check_completion() // check if its done
+		else if(sale_type == CONTRACT_BUSINESS && !(namee in hourly_objective.unique_factions)) //
+			hourly_objective.filled++ // increase by one
+			hourly_objective.unique_factions |= namee
+			hourly_objective.check_completion() // check if its done
+	if(istype(daily_objective, /datum/module_objective/daily/contract)) //
+		if(sale_type == CONTRACT_PERSON && !(namee in daily_objective.unique_characters)) //
+			daily_objective.filled++ // increase by one
+			daily_objective.unique_characters |= namee
+			daily_objective.check_completion() // check if its done
+		else if(sale_type == CONTRACT_BUSINESS && !(namee in daily_objective.unique_factions)) //
+			daily_objective.filled++ // increase by one
+			daily_objective.unique_factions |= namee
+			daily_objective.check_completion() // check if its done
+	if(istype(weekly_objective, /datum/module_objective/weekly/contract)) //
+		if(sale_type == CONTRACT_PERSON && !(namee in weekly_objective.unique_characters)) //
+			weekly_objective.filled++ // increase by one
+			weekly_objective.unique_characters |= namee
+			weekly_objective.check_completion() // check if its done
+		else if(sale_type == CONTRACT_BUSINESS && !(namee in weekly_objective.unique_factions)) //
+			weekly_objective.filled++ // increase by one
+			weekly_objective.unique_factions |= namee
+			weekly_objective.check_completion() // check if its done
+
+
+
+
+/datum/world_faction/business/proc/sales_objectives(var/namee, var/sale_type) // sale_type 1 == character, 2 == business
+	if(istype(hourly_objective, /datum/module_objective/hourly/sales))
+		if(sale_type == 1 && !(namee in hourly_objective.unique_characters)) // if its a individual sale, check if the name is already used by characters
+			hourly_objective.filled++ // increase by one
+			hourly_objective.unique_characters |= namee
+			hourly_objective.check_completion() // check if its done
+		else if(sale_type == 2 && !(namee in hourly_objective.unique_factions)) // if its with another faction, check if its in the list of factions
+			hourly_objective.filled++ // increase by one
+			hourly_objective.unique_factions |= namee
+			hourly_objective.check_completion() // check if its done
+	if(istype(daily_objective, /datum/module_objective/daily/sales)) // checks if the hourly objective is a cost objective
+		if(sale_type == 1 && !(namee in daily_objective.unique_characters)) // if its a individual sale, check if the name is already used by characters
+			daily_objective.filled++ // increase by one
+			daily_objective.unique_characters |= namee
+			daily_objective.check_completion() // check if its done
+		else if(sale_type == 2 && !(namee in daily_objective.unique_factions)) // if its with another faction, check if its in the list of factions
+			daily_objective.filled++ // increase by one
+			daily_objective.unique_factions |= namee
+			daily_objective.check_completion() // check if its done
+	if(istype(weekly_objective, /datum/module_objective/weekly/sales)) // checks if the hourly objective is a cost objective
+		if(sale_type == 1 && !(namee in weekly_objective.unique_characters)) // if its a individual sale, check if the name is already used by characters
+			weekly_objective.filled++ // increase by one
+			weekly_objective.unique_characters |= namee
+			weekly_objective.check_completion() // check if its done
+		else if(sale_type == 2 && !(namee in weekly_objective.unique_factions)) // if its with another faction, check if its in the list of factions
+			weekly_objective.filled++ // increase by one
+			weekly_objective.unique_factions |= namee
+			weekly_objective.check_completion() // check if its done
+
+
+/datum/world_faction/business/proc/employee_objectives(var/real_name) // run anytime a employee objective might be filled
+	if(istype(hourly_objective, /datum/module_objective/hourly/employees)) // check for objective
+		if(!(real_name in hourly_objective.unique_characters)) // this means IF the name of the employee IS NOT already used to fill the objective
+			hourly_objective.unique_characters |= real_name // put the name in the unique names list to prevent duplicates
+			hourly_objective.filled++ // increased filled by 1 (++ increases by 1)
+			hourly_objective.check_completion() // check if its done
+	if(istype(daily_objective, /datum/module_objective/daily/employees)) // repeat for daily, weekly
+		if(!(real_name in daily_objective.unique_characters))
+			daily_objective.unique_characters |= real_name
+			daily_objective.filled++
+			daily_objective.check_completion()
+	if(istype(weekly_objective, /datum/module_objective/weekly/employees)) // repeat for daily, weekly
+		if(!(real_name in weekly_objective.unique_characters))
+			weekly_objective.unique_characters |= real_name
+			weekly_objective.filled++
+			weekly_objective.check_completion()
+
+/datum/world_faction/business/proc/fabricator_objectives()
+	if(istype(hourly_objective, /datum/module_objective/hourly/fabricate))
+		hourly_objective.filled++ // fill by one
+		hourly_objective.check_completion()
+	if(istype(daily_objective, /datum/module_objective/daily/fabricate)) // repeat for daily, weekly
+		daily_objective.filled++
+		daily_objective.check_completion()
+	if(istype(weekly_objective, /datum/module_objective/weekly/fabricate))
+		weekly_objective.filled++
+		weekly_objective.check_completion()
+
+/datum/world_faction/business/proc/article_view_objectives(var/real_name) // run anytime a employee objective might be filled
+	if(istype(daily_objective, /datum/module_objective/daily/article_viewers)) // repeat for daily, weekly
+		if(!(real_name in daily_objective.unique_characters))
+			daily_objective.unique_characters |= real_name
+			daily_objective.filled++
+			daily_objective.check_completion()
+	if(istype(weekly_objective, /datum/module_objective/weekly/article_viewers)) // repeat for daily, weekly
+		if(!(real_name in weekly_objective.unique_characters))
+			weekly_objective.unique_characters |= real_name
+			weekly_objective.filled++
+			weekly_objective.check_completion()
+
+
+/datum/world_faction/business/proc/assign_hourly_objective()
+	var/list/possible = list()
+	possible |= module.hourly_objectives
+	possible |= module.spec.hourly_objectives
+	var/chose_type = pick(possible)
+	hourly_objective = new chose_type()
+	hourly_assigned = world.realtime
+/datum/world_faction/business/proc/assign_daily_objective()
+	var/list/possible = list()
+	possible |= module.daily_objectives
+	possible |= module.spec.daily_objectives
+	var/chose_type = pick(possible)
+	daily_objective = new chose_type()
+	daily_assigned = world.realtime
+/datum/world_faction/business/proc/assign_weekly_objective()
+	var/list/possible = list()
+	possible |= module.weekly_objectives
+	possible |= module.spec.weekly_objectives
+	var/chose_type = pick(possible)
+	weekly_objective = new chose_type()
+	weekly_assigned = world.realtime
+
 /datum/world_faction/business/New()
 	..()
 	CEO = new()
+	feed = new()
+	library = new()
+	buyorders = new /PriorityQueue(/proc/cmp_buyorders_stock)
+	sellorders = new /PriorityQueue(/proc/cmp_sellorders_stock)
 
 /datum/world_faction/business/proc/pay_dividends(var/datum/money_account/account, var/amount)
 	var/ceo_amount
@@ -1451,6 +1953,8 @@ var/PriorityQueue/all_feeds
 			public_stock = 1
 		if(STOCKPROPOSAL_UNPUBLIC)
 			public_stock = 0
+			buyorders.L.Cut()
+			sellorders.L.Cut()
 
 	proposals -= proposal
 
@@ -1552,6 +2056,7 @@ var/PriorityQueue/all_feeds
 /datum/world_faction/proc/get_limits()
 	return limits
 
+
 //(Re)Calculates the current claimed area and returns it.
 /datum/world_faction/proc/get_claimed_area()
 	src.calculate_claimed_area()
@@ -1612,6 +2117,7 @@ var/PriorityQueue/all_feeds
 	limits = new()
 	research = new()
 	inventory = new()
+
 
 /datum/world_faction/proc/rebuild_cargo_telepads()
 	cargo_telepads.Cut()
@@ -1905,99 +2411,306 @@ var/PriorityQueue/all_feeds
 	qdel(src)
 	return
 
-/obj/faction_spawner/Nanotrasen
-	name = "Nanotrasen Corporate Colony"
-	name_short = "Nanotrasen"
-	name_tag = "NT"
-	uid = "nanotrasen"
-	password = "rosebud"
-	network_name = "Nanotrasen Network"
-	network_uid = "nt_net"
-
-/obj/faction_spawner/Refugee
-	name = "Refugee Network"
-	name_short = "Refugee Net"
-	name_tag = "RG"
-	uid = "refugee"
-	password = "Hope97"
-	network_name = "freenet"
-	network_uid = "freenet"
 
 
-/datum/beacon_objective
+/datum/module_objective
 	var/name = "Objective name"
 	var/payout = 0 // how much to pay upon completion
-	var/req_level = 0 // required level of the beacon
+	var/research_payout = 0 // ho many research points to award
 
+	var/filled = 0 // how much has been provided of whatever is required
 	var/required = 10 // How much of whatever is required to fill the objective
 
+	var/completed = 0 // is the objective completed
+
+	var/list/unique_characters = list() // a list of unique characters for objective tracking
+	var/list/unique_factions = list() // a list of unique factions for objective tracking
+
+	var/datum/world_faction/business/parent
 
 
-/datum/beacon_objective/profit
-	name = "Have X$$ in your business account, an increase of Y$$."
+/datum/module_objective/proc/check_completion()
+	if(completed) return 1
+	if(filled >= required)
+		completed = 1
+		if(parent)
+			var/datum/transaction/Te = new("Completed Objective", "Nexus Economic Stimulus", payout, "Nexus Economic Module")
+			parent.central_account.do_transaction(Te)
+		return 1
 
-/datum/beacon_objective/sales_total
-	name = "Do X$$ in sales to other residents."
+/datum/module_objective/proc/get_status()
+	if(completed)
+		return "Objective Complete. [payout]$$ and [research_payout] tech has been awarded to the business."
+	else
+		return "[filled] out of [required] complete."
 
-/datum/beacon_objective/sales_unique
-	name = "Do sales with X unique people."
-
-/datum/beacon_objective/export
-	name = "Deliver X units of Y via telepad."
-
-/datum/beacon_objective/survey_beacon
-	name = "Survey the sensor beacon X located in zone Y."
-
-/datum/beacon_objective/publish_articles
-	name = "Publish X amount of quality articles."
-
-/datum/beacon_objective/article_sales
-	name = "Have your articles purchased X amount of time."
-
-/datum/beacon_objective/listeners
-	name = "Have X amount of patrons in the vicinity of one of your music emitters."
-
-/datum/beacon_objective/reaction
-	name = "Produce X units of Y in a chemmaster."
-
-/datum/beacon_objective/drugs
-	name = "Produce X 10 unit Ys (patches, pills) in a chemmaster."
-
-/datum/beacon_objective/production
-	name = "Produce X amount of objects in a Z (fabricator type)."
-
-/datum/beacon_objective/recycling
-	name = "Break down X objects in a recycling machine."
-
-/datum/beacon_objective/cleaning
-	name = "Have a clocked in employee clean X amount of tiles."
-
-/datum/beacon_objective/unlock_designs
-	name = "Unlock X amount of designs."
-
-/datum/beacon_objective/produce_designs
-	name = "Produce X amount of design disks."
-
-/datum/beacon_objective/farm
-	name = "Grow X amount of Y."
-
-/datum/beacon_objective/farm/food
-	name = "Grow X amount of Y (food)."
-
-/datum/beacon_objective/farm/drugs
-	name = "Grow X amount of Y (drugs)."
-
-/datum/beacon_objective/add_books
-	name = "Add X unique and quality books to your library network."
-
-/datum/beacon_objective/bind_books
-	name = "Have X amount of books printed off your library network."
-
-/datum/beacon_objective/body_scans
-	name = "Have scan X unique indivduals in a body scanner."
+/datum/module_objective/hourly // these are for every 2 hours
+	payout = 250
+	research_payout = 100
 
 
+/datum/module_objective/hourly/visitors
+	name = "Have 7 people visit an area controlled by your business and remain for long enough to be counted."
+	required = 7
 
+/datum/module_objective/hourly/visitors/check_completion() // special cod to handle vistors compltion
+	if(parent) // parent is faction objective is assigned to
+		for(var/obj/machinery/power/apc/apc in parent.limits.apcs) // parent.limits.apcs is a list of all apcs connected to the faction, iterate through them
+			var/area/A = apc.area // area the apc represents
+			if(A)
+				for(var/mob/living/carbon/M in A) // all valid mobs (laces and humans) in the area
+					if(M.key && !(M.real_name in unique_characters)) // the mob must have a key (a player active) and not be in the unique_characters list
+						unique_characters |= M.real_name // add them to list to prevent duplicates
+						filled++ // add to filled
+	..()
+
+
+/datum/module_objective/hourly/revenue
+	name = "Earn 350$$ in revenue from any source by providing a useful function in the economy."
+	required = 350
+
+/datum/module_objective/hourly/employees
+	name = "Have 3 employees get paid for productively working."
+	required = 3
+
+/datum/module_objective/hourly/cost
+	name = "Spend 300$$ out of the business account for useful goods and services."
+	required = 300
+
+/datum/module_objective/hourly/sales
+	name = "Have 4 people or businesses pay us through an invoice."
+	required = 4
+
+/datum/module_objective/hourly/monsters
+	name = "Have clocked in employees kill 5 wilderness creatures."
+	required = 5
+
+/datum/module_objective/hourly/travel
+	name = "Have clocked in employees travel to 2 different wilderness sectors and remain long enough to be counted."
+	required = 2
+
+/datum/module_objective/hourly/travel/check_completion()
+	if(parent)
+		for(var/obj/item/organ/internal/stack/stack in parent.connected_laces)
+			var/mob/M = stack.get_owner()
+			if(M && M.z > 3 && !("[M.z]" in unique_factions))
+				unique_factions |= "[M.z]"
+				filled++
+	..()
+/datum/module_objective/hourly/publish_article
+	name = "Publish a quality article in the news feed."
+	required = 1
+
+/datum/module_objective/hourly/publish_book
+	name = "Add a new book to the library database."
+	required = 1
+
+/datum/module_objective/hourly/contract
+	name = "Have an individual or organization sign a new contract with us."
+	required = 1
+
+/datum/module_objective/hourly/fabricate
+	name = "Fabricate 15 items to sell or help us conduct business."
+	required = 15
+
+
+/datum/module_objective/daily
+	payout = 650
+	research_payout = 400
+
+/datum/module_objective/daily/visitors
+	name = "Have 20 people visit an area controlled by your business and remain for long enough to be counted."
+	required = 20
+
+/datum/module_objective/daily/visitors/check_completion() // special cod to handle vistors compltion
+	if(parent) // parent is faction objective is assigned to
+		for(var/obj/machinery/power/apc/apc in parent.limits.apcs) // parent.limits.apcs is a list of all apcs connected to the faction, iterate through them
+			var/area/A = apc.area // area the apc represents
+			if(A)
+				for(var/mob/living/carbon/M in A) // all valid mobs (laces and humans) in the area
+					if(M.key && !(M.real_name in unique_characters)) // the mob must have a key (a player active) and not be in the unique_characters list
+						unique_characters |= M.real_name // add them to list to prevent duplicates
+						filled++ // add to filled
+	..()
+
+
+/datum/module_objective/daily/revenue
+	name = "Earn 1100$$ in revenue from any source by providing a useful function in the economy."
+	required = 1100
+
+/datum/module_objective/daily/employees
+	name = "Have 6 employees get paid for productively working."
+	required = 6
+
+/datum/module_objective/daily/cost
+	name = "Spend 1000$$ out of the business account for useful goods and services."
+	required = 1000
+
+/datum/module_objective/daily/sales
+	name = "Have 10 people or businesses pay us through an invoice."
+	required = 10
+
+/datum/module_objective/daily/monsters
+	name = "Have 25 wilderness creatures die in proximity to a clocked in employee."
+	required = 25
+
+/datum/module_objective/daily/travel
+	name = "Have clocked in employees travel to 4 different wilderness sectors and remain long enough to be counted."
+	required = 4
+
+
+/datum/module_objective/daily/travel/check_completion()
+	if(parent)
+		for(var/obj/item/organ/internal/stack/stack in parent.connected_laces)
+			var/mob/M = stack.get_owner()
+			if(M && M.z > 3 && !("[M.z]" in unique_factions))
+				unique_factions |= "[M.z]"
+				filled++
+	..()
+
+/datum/module_objective/daily/article_viewers
+	name = "Have 15 unique viewers for articles in your news feed."
+	required = 15
+
+/datum/module_objective/daily/publish_book
+	name = "Add 3 books printed by seperate individuals to the library database."
+	required = 3
+
+/datum/module_objective/daily/contract
+	name = "Have 2 individuals or organizations sign new contracts with us."
+	required = 2
+
+/datum/module_objective/daily/fabricate
+	name = "Fabricate 40 items to sell or help us conduct business."
+	required = 40
+
+
+/datum/module_objective/weekly
+	payout = 1200
+	research_payout = 1000
+
+/datum/module_objective/weekly/visitors
+	name = "Have 60 people visit an area controlled by your business and remain for long enough to be counted."
+	required = 60
+
+/datum/module_objective/weekly/visitors/check_completion() // special cod to handle vistors compltion
+	if(parent) // parent is faction objective is assigned to
+		for(var/obj/machinery/power/apc/apc in parent.limits.apcs) // parent.limits.apcs is a list of all apcs connected to the faction, iterate through them
+			var/area/A = apc.area // area the apc represents
+			if(A)
+				for(var/mob/living/carbon/M in A) // all valid mobs (laces and humans) in the area
+					if(M.key && !(M.real_name in unique_characters)) // the mob must have a key (a player active) and not be in the unique_characters list
+						unique_characters |= M.real_name // add them to list to prevent duplicates
+						filled++ // add to filled
+	..()
+
+
+/datum/module_objective/weekly/employees
+	name = "Have 12 employees get paid for productively working."
+	required = 12
+
+/datum/module_objective/weekly/revenue
+	name = "Earn 6500$$ in revenue from any source by providing a useful function in the economy."
+	required = 6500
+
+
+/datum/module_objective/weekly/cost
+	name = "Spend 6000$$ out of the business account for useful goods and services."
+	required = 6000
+
+/datum/module_objective/weekly/sales
+	name = "Have 40 people or businesses pay us through an invoice."
+	required = 40
+
+/datum/module_objective/weekly/monsters
+	name = "Have 100 wilderness creatures die in proximity to a clocked in employee."
+	required = 100
+
+/datum/module_objective/weekly/travel
+	name = "Have clocked in employees travel to 8 different wilderness sectors and remain long enough to be counted."
+	required = 8
+
+/datum/module_objective/weekly/travel/check_completion()
+	if(parent)
+		for(var/obj/item/organ/internal/stack/stack in parent.connected_laces)
+			var/mob/M = stack.get_owner()
+			if(M && M.z > 3 && !("[M.z]" in unique_factions))
+				unique_factions |= "[M.z]"
+				filled++
+	..()
+
+/datum/module_objective/weekly/article_viewers
+	name = "Have 40 unique viewers for articles in your news feed."
+	required = 40
+
+/datum/module_objective/weekly/publish_book
+	name = "Add 7 books printed by seperate individuals to the library database."
+	required = 3
+
+/datum/module_objective/weekly/contract
+	name = "Have 6 individuals or organizations sign new contracts with us."
+	required = 6
+
+/datum/module_objective/weekly/fabricate
+	name = "Fabricate 200 items to sell or help us conduct business."
+	required = 200
+
+
+
+
+
+
+
+
+
+
+/datum/world_faction/business/get_limits()
+	rebuild_limits()
+	return limits
+	/**
+	var/datum/machine_limits/final_limits = new()
+	var/datum/machine_limits/module_limits = module.levels[module.current_level]
+	var/datum/machine_limits/spec_limits = module.spec.limits
+
+	final_limits.genfabs = module_limits.genfabs
+	final_limits.engfabs = module_limits.engfabs
+	final_limits.medicalfabs = module_limits.medicalfabs
+	final_limits.voidfabs = module_limits.voidfabs
+	final_limits.ataccessories = module_limits.ataccessories
+	final_limits.atnonstandards = module_limits.atnonstandards
+	final_limits.atstandards = module_limits.atstandards
+	final_limits.ammofabs = module_limits.ammofabs
+	final_limits.consumerfabs = module_limits.consumerfabs
+	final_limits.servicefabs = module_limits.servicefabs
+	final_limits.drills = module_limits.drills
+	final_limits.botany = module_limits.botany
+	final_limits.shuttles = module_limits.shuttles
+	final_limits.apcs = module_limits.apcs
+	final_limits.tcomms = module_limits.tcomms
+
+
+	final_limits.limit_genfab = module_limits.limit_genfab + spec_limits.limit_genfab
+	final_limits.limit_engfab = module_limits.limit_engfab + spec_limits.limit_engfab
+	final_limits.limit_medicalfab = module_limits.limit_medicalfab + spec_limits.limit_medicalfab
+	final_limits.limit_voidfab = module_limits.limit_voidfab + spec_limits.limit_voidfab
+	final_limits.limit_ataccessories = module_limits.limit_ataccessories + spec_limits.limit_ataccessories
+	final_limits.limit_atnonstandard = module_limits.limit_atnonstandard + spec_limits.limit_atnonstandard
+	final_limits.limit_atstandard = module_limits.limit_atstandard + spec_limits.limit_atstandard
+	final_limits.limit_ammofab = module_limits.limit_ammofab + spec_limits.limit_ammofab
+	final_limits.limit_consumerfab = module_limits.limit_consumerfab + spec_limits.limit_consumerfab
+	final_limits.limit_servicefab = module_limits.limit_servicefab + spec_limits.limit_servicefab
+	final_limits.limit_drills = module_limits.limit_drills + spec_limits.limit_drills
+	final_limits.limit_botany = module_limits.limit_botany + spec_limits.limit_botany
+	final_limits.limit_shuttles = module_limits.limit_shuttles + spec_limits.limit_shuttles
+	final_limits.limit_area = module_limits.limit_area + spec_limits.limit_area
+	final_limits.limit_tcomms = module_limits.limit_tcomms + spec_limits.limit_tcomms
+	final_limits.limit_tech_combat = min(4, module_limits.limit_tech_combat + spec_limits.limit_tech_combat)
+	final_limits.limit_tech_consumer = min(4, module_limits.limit_tech_consumer + spec_limits.limit_tech_consumer)
+	final_limits.limit_tech_engi = min(4, module_limits.limit_tech_engi + spec_limits.limit_tech_engi)
+	final_limits.limit_tech_general = min(4, module_limits.limit_tech_general + spec_limits.limit_tech_general)
+	final_limits.limit_tech_medical = min(4, module_limits.limit_tech_medical + spec_limits.limit_tech_medical)
+	return final_limits
+	**/
 /datum/machine_limits
 	var/cost = 0 // used when this serves as a business level datum
 
@@ -2036,7 +2749,7 @@ var/PriorityQueue/all_feeds
 	var/limit_area = 0
 	var/list/apcs = list()
 	var/claimed_area = 0
-	
+
 
 	var/limit_tcomms = 0
 	var/list/tcomms = list()
@@ -2050,6 +2763,33 @@ var/PriorityQueue/all_feeds
 	var/limit_tech_combat = 0
 
 
+	var/desc = ""
+
+
+/datum/machine_limits/democracy
+	limit_genfab = 5
+	limit_engfab = 5
+	limit_medicalfab = 5
+	limit_mechfab = 5
+	limit_voidfab = 5
+	limit_ataccessories = 5
+	limit_atnonstandard = 5
+	limit_atstandard = 5
+	limit_ammofab = 5
+	limit_consumerfab = 5
+	limit_servicefab = 5
+	limit_drills = 5
+	limit_botany = 10
+	limit_shuttles = 10
+	limit_area = 100000
+	limit_tcomms = 5
+	limit_tech_general = 4
+	limit_tech_engi = 4
+	limit_tech_medical = 4
+	limit_tech_consumer = 4
+	limit_tech_combat = 4
+
+
 
 
 // ENGINEERING LIMITS
@@ -2060,6 +2800,7 @@ var/PriorityQueue/all_feeds
 	limit_voidfab = 1
 
 /datum/machine_limits/eng/spec/realestate
+	cost = 0
 	limit_tech_consumer = 2
 	limit_area = 400
 	limit_consumerfab = 1
@@ -2085,6 +2826,7 @@ var/PriorityQueue/all_feeds
 	limit_engfab = 3
 	limit_voidfab = 1
 	limit_tcomms = 1
+	desc = "Increase area size, tech levels and add an extra to engineering and general fabricator limit."
 
 /datum/machine_limits/eng/three
 	cost = 3000
@@ -2096,6 +2838,7 @@ var/PriorityQueue/all_feeds
 	limit_engfab = 4
 	limit_voidfab = 2
 	limit_tcomms = 2
+	desc = "Increase area size, tech levels and adds an extra shuttle, telecomms machine and extra fabricators."
 
 /datum/machine_limits/eng/four
 	cost = 7500
@@ -2111,7 +2854,7 @@ var/PriorityQueue/all_feeds
 	limit_tcomms = 3
 	limit_consumerfab = 1
 	limit_medicalfab = 1
-
+	desc = "Gain final tech levels, area limit, extra fabricators plus gain an extra shuttle and a medical fabricator."
 // END ENGINEERING LIMITS
 
 // RETAIL LIMITS
@@ -2147,6 +2890,9 @@ var/PriorityQueue/all_feeds
 	limit_ataccessories = 2
 	limit_atstandard = 2
 	limit_atnonstandard = 2
+	desc = "Increase area size, tech levels and add an extra to many fabricator limits."
+
+
 
 /datum/machine_limits/retail/three
 	cost = 3000
@@ -2162,6 +2908,7 @@ var/PriorityQueue/all_feeds
 	limit_atnonstandard = 2
 	limit_voidfab = 1
 	limit_shuttles = 1
+	desc = "Increase area size, tech levels, fabricator limits but most importantly adds a shuttle and EVA fabricator."
 
 /datum/machine_limits/retail/four
 	cost = 7500
@@ -2179,6 +2926,7 @@ var/PriorityQueue/all_feeds
 	limit_shuttles = 2
 	limit_ammofab = 1
 	limit_engfab = 1
+	desc = "Gain final tech levels, area limit, extra fabricators including an engineering and combat fabricator, plus an extra shuttle."
 
 // END RETAIL LIMITS
 
@@ -2209,7 +2957,7 @@ var/PriorityQueue/all_feeds
 	limit_genfab = 3
 	limit_medicalfab = 3
 	limit_voidfab = 1
-
+	desc = "Increase area size, tech levels, fabricator limits and gain an EVA equipment fabricator."
 
 /datum/machine_limits/medical/three
 	cost = 3000
@@ -2222,7 +2970,7 @@ var/PriorityQueue/all_feeds
 	limit_shuttles = 1
 	limit_botany = 1
 	limit_servicefab = 1
-
+	desc = "Increase area size, tech levels, fabricator limits, botany tray, service fabricator, and a shuttle limit."
 /datum/machine_limits/medical/four
 	cost = 7500
 	limit_tech_medical = 4
@@ -2234,7 +2982,7 @@ var/PriorityQueue/all_feeds
 	limit_shuttles = 2
 	limit_botany = 3
 	limit_servicefab = 1
-
+	desc = "Gain final tech levels, area limit, extra fabricators, botany trays, plus an extra shuttle."
 // END MEDICAL LIMITS
 
 // SERVICE LIMITS
@@ -2258,16 +3006,16 @@ var/PriorityQueue/all_feeds
 	limit_botany = 2
 
 /datum/machine_limits/service/two
-	cost = 750
+	cost = 1250
 	limit_tech_consumer = 3
 	limit_tech_general = 2
 	limit_area = 300
 	limit_genfab = 3
 	limit_servicefab = 3
 	limit_botany = 3
-
+	desc = "Increase area size, tech levels, fabricator limits and get an extra botany tray."
 /datum/machine_limits/service/three
-	cost = 1600
+	cost = 2500
 	limit_tech_consumer = 4
 	limit_tech_general = 3
 	limit_area = 400
@@ -2276,9 +3024,9 @@ var/PriorityQueue/all_feeds
 	limit_botany = 3
 	limit_voidfab = 1
 	limit_shuttles = 1
-
+	desc = "Increase area size, tech levels, fabricator limits and get an EVA fabricator and shuttle limit."
 /datum/machine_limits/service/four
-	cost = 2250
+	cost = 5000
 	limit_tech_consumer = 4
 	limit_tech_general = 4
 	limit_tech_medical = 1
@@ -2291,7 +3039,7 @@ var/PriorityQueue/all_feeds
 	limit_shuttles = 2
 	limit_engfab = 1
 	limit_medicalfab = 1
-
+	desc = "Gain final tech levels, area limit, extra fabricators including a medical and engineering fabricator, botany trays, plus an extra shuttle."
 // END SERVICE LIMITS
 
 // MINING LIMITS
@@ -2328,6 +3076,7 @@ var/PriorityQueue/all_feeds
 	limit_drills = 2
 	limit_voidfab = 2
 	limit_shuttles = 1
+	desc = "Increase area size, tech levels, fabricator limits and an extra drill."
 
 /datum/machine_limits/mining/three
 	cost = 3000
@@ -2340,6 +3089,7 @@ var/PriorityQueue/all_feeds
 	limit_voidfab = 3
 	limit_shuttles = 2
 	limit_botany = 1
+	desc = "Increase area size, tech levels, fabricators, drills, and adds a botany tray plus an extra shuttle."
 
 /datum/machine_limits/mining/four
 	cost = 7500
@@ -2356,7 +3106,7 @@ var/PriorityQueue/all_feeds
 	limit_botany = 2
 	limit_engfab = 1
 	limit_medicalfab = 1
-
+	desc = "Gain final tech levels, area limit, extra fabricators including a medical and engineering fabricator, botany trays, drills plus an extra shuttle."
 
 
 // END MINING LIMITS
@@ -2389,24 +3139,24 @@ var/PriorityQueue/all_feeds
 	limit_area = 300
 	limit_genfab = 3
 	limit_consumerfab = 2
-
+	desc = "Increase area size, tech levels and fabricator limits."
 /datum/machine_limits/media/three
 	cost = 1600
 	limit_tech_consumer = 3
 	limit_tech_general = 3
-	limit_area = 300
-	limit_genfab = 3
-	limit_consumerfab = 2
-
-/datum/machine_limits/media/four
-	cost = 3500
-	limit_tech_consumer = 4
-	limit_tech_general = 4
 	limit_area = 400
 	limit_genfab = 3
 	limit_consumerfab = 2
+	desc = "Increase area size, tech levels and fabricator limits."
+/datum/machine_limits/media/four
+	cost = 3200
+	limit_tech_consumer = 4
+	limit_tech_general = 4
+	limit_area = 500
+	limit_genfab = 3
+	limit_consumerfab = 2
 	limit_shuttles = 1
-
+	desc = "Gain final tech levels, area limit, fabricators and a shuttle."
 
 
 // END MEDIA LIMITS
@@ -2416,8 +3166,9 @@ var/PriorityQueue/all_feeds
 	var/name = ""
 	var/desc = ""
 	var/datum/machine_limits/limits
-	var/list/objectives = list()
-
+	var/list/hourly_objectives = list()
+	var/list/daily_objectives = list()
+	var/list/weekly_objectives = list()
 /datum/business_spec/New()
 	limits = new limits()
 
@@ -2429,6 +3180,11 @@ var/PriorityQueue/all_feeds
 	var/list/levels = list()
 	var/datum/business_spec/spec
 	var/list/specs = list()
+
+	var/list/hourly_objectives = list()
+	var/list/daily_objectives = list()
+	var/list/weekly_objectives = list()
+
 
 /datum/business_module/New()
 	var/list/specs_c = specs.Copy()
@@ -2446,7 +3202,9 @@ var/PriorityQueue/all_feeds
 	desc = "An engineering business has tools to develop areas of the station and construct shuttles plus the unique capacity to manage private radio communications. Engineering businesses can reserve larger spaces than other businesses and develop those into residential areas to be leased to individuals."
 	levels = list(/datum/machine_limits/eng/one, /datum/machine_limits/eng/two, /datum/machine_limits/eng/three, /datum/machine_limits/eng/four)
 	specs = list(/datum/business_spec/eng/realestate, /datum/business_spec/eng/tcomms)
-
+	hourly_objectives = list(/datum/module_objective/hourly/revenue, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/contract)
+	daily_objectives = list(/datum/module_objective/daily/revenue, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/contract)
+	weekly_objectives = list(/datum/module_objective/weekly/revenue, /datum/module_objective/weekly/employees, /datum/module_objective/weekly/cost, /datum/module_objective/weekly/contract)
 /datum/business_spec/eng/realestate
 	name = "Real-Estate"
 	desc = "With this specialization the engineering business gains another 200 tiles of area limit plus a consumer fabricator limit and two levels of consumer tech limit so that you can better furnish interiors."
@@ -2463,13 +3221,17 @@ var/PriorityQueue/all_feeds
 	name = "Medical"
 	desc = "A medical firm has unqiue capacity to develop medications and implants. Programs can be used to register clients under your care and recieve a weekly insurance payment from them, in exchange for tracking their health and responding to medical emergencies."
 	levels = list(/datum/machine_limits/medical/one, /datum/machine_limits/medical/two, /datum/machine_limits/medical/three, /datum/machine_limits/medical/four)
-	specs = list(/datum/business_spec/medical/paramedic, /datum/business_spec/medical/pharma)
+	hourly_objectives = list(/datum/module_objective/hourly/visitors, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/contract)
+	daily_objectives = list(/datum/module_objective/daily/visitors, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/contract)
+	weekly_objectives = list(/datum/module_objective/weekly/visitors, /datum/module_objective/weekly/employees, /datum/module_objective/weekly/cost, /datum/module_objective/weekly/contract)
 
 /datum/business_spec/medical/paramedic
 	name = "Paramedic"
 	desc = "The Paramedic specialization allows the business to operate a voidsuit fabricator and two shuttles to retrieve clients from the dangerous sectors of the Nexus outer-space."
 	limits = /datum/machine_limits/medical/spec/paramedic
-
+	hourly_objectives = list(/datum/module_objective/hourly/travel)
+	daily_objectives = list(/datum/module_objective/daily/travel)
+	weekly_objectives = list(/datum/module_objective/weekly/travel)
 /datum/business_spec/medical/pharma
 	name = "Pharmacy"
 	desc = "This specialization gives the business capacity for a service fabricator and two botany trays that can produce reagents that can be further refined into valuable and effective medicines. It also grants 200 extra tiles to the area limit so you can have larger medical facilities."
@@ -2482,7 +3244,9 @@ var/PriorityQueue/all_feeds
 	desc = "A retail business has exclusive production capacity so that they can sell clothing and furniture to individuals and organizations. With additional specialization they can branch out into combat equipment or engineering supplies, but they are reliant on the material market to supply their production."
 	levels = list(/datum/machine_limits/retail/one, /datum/machine_limits/retail/two, /datum/machine_limits/retail/three, /datum/machine_limits/retail/four)
 	specs = list(/datum/business_spec/retail/combat, /datum/business_spec/retail/bigstore)
-
+	hourly_objectives = list(/datum/module_objective/hourly/visitors, /datum/module_objective/hourly/employees, /datum/module_objective/hourly/cost, /datum/module_objective/hourly/sales, /datum/module_objective/weekly/fabricate, /datum/module_objective/hourly/revenue)
+	daily_objectives = list(/datum/module_objective/daily/visitors, /datum/module_objective/daily/employees, /datum/module_objective/daily/cost, /datum/module_objective/daily/sales, /datum/module_objective/weekly/fabricate, /datum/module_objective/daily/revenue)
+	weekly_objectives = list(/datum/module_objective/weekly/visitors, /datum/module_objective/weekly/employees, /datum/module_objective/weekly/cost, /datum/module_objective/weekly/sales, /datum/module_objective/weekly/fabricate, /datum/module_objective/weekly/revenue)
 /datum/business_spec/retail/combat
 	name = "Combat"
 	desc = "The Combat specialization gives limits for a combat fabricator and an early combat tech limit which will increase as the business network expands. You can also maintain a shuttle, but you'll need to purchase the EVA equipment elsewhere."
@@ -2501,11 +3265,18 @@ var/PriorityQueue/all_feeds
 	desc = "A service business has a fabricator that can produce culinary and botany equipment. A service business can serve food or drink and supply freshly grown plants for other organizations, a crucial source of cloth and biomass."
 	levels = list(/datum/machine_limits/service/one, /datum/machine_limits/service/two, /datum/machine_limits/service/three, /datum/machine_limits/service/four)
 	specs = list(/datum/business_spec/service/culinary, /datum/business_spec/service/farmer)
+	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/sales, /datum/module_objective/hourly/cost)
+	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/sales, /datum/module_objective/daily/cost)
+	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/sales, /datum/module_objective/weekly/cost)
 
 /datum/business_spec/service/culinary
 	name = "Culinary"
 	desc = "This specialization gives 200 extra tiles to the area limit, plus an engineering fabricator and tech level so that you can put together the perfect space for your customers."
 	limits = /datum/machine_limits/service/spec/culinary
+	hourly_objectives = list(/datum/module_objective/hourly/visitors)
+	daily_objectives = list(/datum/module_objective/daily/visitors)
+	weekly_objectives = list(/datum/module_objective/weekly/visitors)
+
 
 /datum/business_spec/service/farmer
 	name = "Farming"
@@ -2519,6 +3290,10 @@ var/PriorityQueue/all_feeds
 	desc = "Mining companies send teams out into the hostile outer-space armed with picks, drills and a variety of other EVA equipment plus weapons and armor to defend themselves. The ores they recover can be processed and then sold on the Material Marketplace to other organizations for massive profits."
 	levels = list(/datum/machine_limits/mining/one, /datum/machine_limits/mining/two, /datum/machine_limits/mining/three, /datum/machine_limits/mining/four)
 	specs = list(/datum/machine_limits/mining/spec/massdrill, /datum/machine_limits/mining/spec/monsterhunter)
+	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/travel, /datum/module_objective/hourly/cost)
+	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/travel, /datum/module_objective/daily/cost)
+	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/travel, /datum/module_objective/weekly/cost)
+
 
 /datum/business_spec/mining/massdrill
 	name = "Mass Production"
@@ -2529,7 +3304,9 @@ var/PriorityQueue/all_feeds
 	name = "Monster Hunt"
 	desc = "This specialization gives the business capacity for a medical fabricator and tech that can produce machines and equipment to keep employees alive while fighting the top tier of monsters. Travel to the outer reaches and dig for riches, let the monsters come to you."
 	limits = /datum/machine_limits/retail/spec/bigstore
-
+	hourly_objectives = list(/datum/module_objective/hourly/monsters)
+	daily_objectives = list(/datum/module_objective/daily/monsters)
+	weekly_objectives = list(/datum/module_objective/weekly/monsters)
 
 /datum/business_module/media
 	cost = 350
@@ -2537,30 +3314,23 @@ var/PriorityQueue/all_feeds
 	desc = "Media companies have simple production and tech capacities but exclusive access to programs that can publish books and news articles for paid redistribution. It is also much less expensive than other types, making it a good choice for generic business."
 	levels = list(/datum/machine_limits/media/one, /datum/machine_limits/media/two, /datum/machine_limits/media/three, /datum/machine_limits/media/four)
 	specs = list(/datum/business_spec/media/journalism, /datum/business_spec/media/bookpublishing)
-
+	hourly_objectives = list(/datum/module_objective/hourly/employees, /datum/module_objective/hourly/revenue, /datum/module_objective/hourly/sales)
+	daily_objectives = list(/datum/module_objective/daily/employees, /datum/module_objective/daily/revenue, /datum/module_objective/daily/sales)
+	weekly_objectives = list(/datum/module_objective/weekly/employees, /datum/module_objective/weekly/revenue, /datum/module_objective/weekly/sales)
 /datum/business_spec/media/journalism
 	name = "Journalism"
 	desc = "Specializing in Journalism gives capacity for an EVA fabricator and shuttle, plus a medical fabricator with basic medical tech limitation. Explore every corner of Nexus-space, but best to carry basic medical supplies."
 	limits = /datum/machine_limits/media/spec/journalism
-
+	hourly_objectives = list(/datum/module_objective/hourly/publish_article)
+	daily_objectives = list(/datum/module_objective/daily/article_viewers)
+	weekly_objectives = list(/datum/module_objective/weekly/article_viewers)
 /datum/business_spec/media/bookpublishing
 	name = "Publishing"
 	desc = "The Publishing specialization grants 200 extra tiles to the area limit and an engineering fabricator and tech limit. You can build a proper library and publishing house, or perhaps some other artistic facility."
 	limits = /datum/machine_limits/media/spec/bookpublishing
-
-
-
-/datum/business_module/medical
-
-/datum/business_module/retail
-
-/datum/business_module/service
-
-/datum/business_module/mining
-
-/datum/business_module/media
-
-
+	hourly_objectives = list(/datum/module_objective/hourly/publish_book)
+	daily_objectives = list(/datum/module_objective/daily/publish_book)
+	weekly_objectives = list(/datum/module_objective/weekly/publish_book)
 
 
 
@@ -2573,5 +3343,3 @@ var/PriorityQueue/all_feeds
 	var/list/connected_orgs = list()
 	var/list/connected_orgs_uids = list()
 	var/completed_objectives = 0
-
-

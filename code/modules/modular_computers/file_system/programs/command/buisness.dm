@@ -1183,7 +1183,7 @@
 
 		if("login")
 			if(!user_id_card) return
-			var/select_name = input(usr,"Enter the full name of the business.","Log in", "") as null|text
+			var/select_name =  sanitize(input(usr,"Enter the full name of the business.","Log in", "") as null|text)
 			var/datum/small_business/viewing = get_business(select_name)
 			if(!viewing)
 				to_chat(usr, "Business not found,")
@@ -1212,7 +1212,7 @@
 		if("business_name")
 			var/choice = input(usr,"Warning! Changing the name of the business will reset any pending contracts!") in list("Confirm", "Cancel")
 			if(choice == "Confirm")
-				var/select_name = input(usr,"Enter the full name of the new business.","business name", "") as null|text
+				var/select_name =  sanitize(input(usr,"Enter the full name of the new business.","business name", "") as null|text)
 				var/datum/small_business/viewing = get_business(select_name)
 				if(viewing)
 					to_chat(usr, "That business already exists!")

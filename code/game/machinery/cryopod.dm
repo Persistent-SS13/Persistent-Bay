@@ -122,13 +122,13 @@
 			if(!control_computer)
 				if(!find_control_computer())
 					log_debug("[src] \ref[src] ([x], [y], [z]): No control computer, skipping advanced stuff.")
-					
+
 			despawn_occupant()
 
 /obj/machinery/cryopod/attackby(var/obj/item/O, var/mob/user = usr)
 	src.add_fingerprint(user)
 	if(!req_access_faction)
-		to_chat(user, "<span class='notice'>\The [src] hasn't been connected to a faction.</span>")
+		to_chat(user, "<span class='notice'>\The [src] hasn't been connected to an organization.</span>")
 		return
 	if(occupant)
 		to_chat(user, "<span class='notice'>\The [src] is in use.</span>")
@@ -238,7 +238,7 @@
 
 /obj/machinery/cryopod/proc/insertOccupant(var/atom/movable/A, var/mob/user = usr)
 	if(!req_access_faction)
-		to_chat(user, "<span class='notice'>\The [src] hasn't been connected to a faction.</span>")
+		to_chat(user, "<span class='notice'>\The [src] hasn't been connected to an organization.</span>")
 		return 0
 
 	if(occupant)
@@ -652,4 +652,3 @@
 		if(occupant && !launched)
 			launch()
 		..()
-

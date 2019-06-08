@@ -11,7 +11,7 @@
 
 /datum/nano_module/program/materialmarket
 	name = "Material Marketplace"
-	var/menu = 0
+	var/menu = 1
 	var/datum/material_market_entry/selected_material
 	var/selected_amount = 0
 	var/selected_price = 0

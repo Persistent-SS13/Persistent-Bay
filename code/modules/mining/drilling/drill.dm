@@ -26,8 +26,35 @@
 	//Flags
 	var/need_update_field = 0
 	var/need_player_check = 0
+	
+	var/datum/world_faction/connected_faction
+
+
 
 /obj/machinery/mining/proc/drop_contents()
+
+
+/obj/machinery/mining/drill/can_connect(var/datum/world_faction/trying, var/mob/M)
+	var/datum/machine_limits/limits = trying.get_limits()
+	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(trying.uid)))
+		to_chat(M, "You do not have access to link machines to [trying.name].")
+		return 0
+	if(limits.limit_drills <= limits.drills.len)
+		if(M)
+			to_chat(M, "[trying.name] cannot connect any more machines of this type.")
+		return 0
+	limits.drills |= src
+	req_access_faction = trying.uid
+	connected_faction = trying
+
+
+/obj/machinery/mining/drill/can_disconnect(var/datum/world_faction/trying, var/mob/M)
+	var/datum/machine_limits/limits = trying.get_limits()
+	limits.drills -= src
+	req_access_faction = ""
+	connected_faction = null
+	if(M) to_chat(M, "The machine has been disconnected.")
+
 
 /obj/machinery/mining/attack_generic(var/mob/user, var/damage)
 	health = max(0, health-damage)
@@ -116,6 +143,8 @@
 		update_icon()
 		return
 	else if(supported && !panel_open)
+		if(!connected_faction)
+			to_chat(user,"<span class='notice'>\The [src] is not connected to a organization.</span>")
 		if(use_cell_power())
 			active = !active
 			if(active)
@@ -256,6 +285,7 @@
 
 	check_supports()
 
+	if(!connected_faction) return
 	if(!active) return
 
 	if(!anchored || !use_cell_power())

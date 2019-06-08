@@ -23,7 +23,7 @@
 	var/datum/machine_limits/limits = trying.get_limits()
 	
 	
-	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(req_access_faction)))
+	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(trying.uid)))
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
 	if(limits.limit_voidfab <= limits.voidfabs.len)

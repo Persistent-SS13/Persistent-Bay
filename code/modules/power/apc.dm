@@ -174,7 +174,7 @@
 	var/list/turfs = get_area_turfs(area)
 	var/datum/machine_limits/limits = trying.get_limits()
 
-	if(M && !has_access(list(core_access_engineering_programs), list(), M.GetAccess(req_access_faction)))
+	if(M && !has_access(list(core_access_engineering_programs), list(), M.GetAccess(trying.uid)))
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
 
@@ -610,7 +610,7 @@
 		else if(hacker && !hacker.hacked_apcs_hidden)
 			to_chat(user, "<span class='warning'>Access denied.</span>")
 		else
-			if(src.allowed(usr) && !isWireCut(APC_WIRE_IDSCAN))
+			if((req_access in id.GetAccess(req_access_faction)) && !isWireCut(APC_WIRE_IDSCAN))
 				locked = !locked
 				to_chat(user, "You [ locked ? "lock" : "unlock"] the APC interface.")
 				update_icon()

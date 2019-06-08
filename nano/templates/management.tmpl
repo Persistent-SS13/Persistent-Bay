@@ -1,0 +1,216 @@
+<h2>{{:data.business_name}} Central Options</h2><br>
+{{:helper.link("General Controls", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
+{{:helper.link("Module Info/Upgrades", '', {'action' : 'change_menu', 'menu_target' : '4'}, data.menu == 4 ? 'selected' : null)}}
+{{:helper.link("Objectives View", '', {'action' : 'change_menu', 'menu_target' : '5'}, data.menu == 5 ? 'selected' : null)}}
+{{:helper.link("Employee Log", '', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
+{{:helper.link("View/Edit General Task", '', {'action' : 'change_menu', 'menu_target' : '3'}, data.menu == 3 ? 'selected' : null)}}	
+<br><br>
+<b>Current Account Balance:</b> {{:data.account_balance}}
+<hr>
+{{if data.menu == 1}}
+	<h4>General Controls</h4>
+	<div class='item'>
+		<div class='itemLabel'>
+			Business Status
+		</div>
+		<div class='itemContent'>
+			{{:helper.link("Open", '', {'action' : 'business_open'}, data.business_status ? 'selected' : null)}}{{:helper.link("Closed", '', {'action' : 'business_close'}, data.business_status ? null : 'selected')}}	
+		</div>
+	</div>
+	Employees will not be able to clock in to the business when it's closed.
+	<div class='item'>
+		<div class='itemLabel'>
+			Display Name
+		</div>
+		<div class='itemContent'>
+			{{:helper.link(data.business_name, '', {'action' : 'business_name'})}}
+		</div>
+	</div>
+	This name is used in many places where the business name is displayed, but the unchangeable UID will still be on contracts
+	<div class='item'>
+		<div class='itemLabel'>
+			Invoice Commission Percentage
+		</div>
+		<div class='itemContent'>
+			{{:helper.link(data.commission, '', {'action' : 'commission'})}}
+		</div>
+	</div>
+	This is a percentage of an invoices sale paid to <b>the salesperson that printed the invoice</b>. A great way to incentivize great salespeople. 
+	
+{{/if}}
+{{if data.menu == 4}}
+	<h4>Module Info/Upgrade</h4>
+	<div class='item'>
+		<div class='itemLabel'>
+			Module Information
+		</div>
+		<div class='itemContent'>
+			{{:data.module_spec}} {{:data.module_name}} Level {{:data.module_level}}
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			Upgrade
+		</div>
+		{{if data.max_level}}
+			<div class='itemContent'>
+				Module Level Maxed
+			</div>
+		{{else}}
+			<div class='itemContent'>
+				{{:helper.link(data.upgrade_cost, '', {'action' : 'upgrade'})}}
+			</div>
+		{{/if}}
+		{{:data.upgrade_desc}}
+	</div>
+	<br>
+	<b>Limits (Used/Available)</b>
+	<div class="statusDisplay"style="overflow: auto;">
+		<b>General Tech Limit :</b> {{:data.gen_tech}}<br>
+		<b>Engineering Tech Limit:</b> {{:data.eng_tech}}<br>
+		<b>Medical Tech Limit:</b> {{:data.med_tech}}<br>
+		<b>Consumer Tech Limit:</b> {{:data.consumer_tech}}<br>
+		<b>Combat Tech Limit:</b> {{:data.combat_tech}}<br>
+		<b>Shuttles:</b>{{:data.shuttle_limit_used}} / {{:data.shuttle_limit}}<br>
+		<b>Area Limit:</b>{{:data.area_limit_used}} tiles / {{:data.area_limit}} tiles {{:helper.link('Unlink All', '', {'action' : 'unlink_area'})}}<br><br>
+		<b>Telecommunication Frequencies:</b>{{:data.tcomm_limit_used}} / {{:data.tcomm_limit}} <br><br>
+		<b>Mining Drills:</b>{{:data.drill_limit_used}} / {{:data.drill_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_drill'})}}<br><br>
+		<b>Botany Trays:</b>{{:data.tray_limit_used}} / {{:data.tray_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_tray'})}}<br><br>
+		<b>General Fabricators:</b>{{:data.gen_limit_used}} / {{:data.gen_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_gen'})}}<br><br>
+		<b>Engineering Fabricators:</b>{{:data.eng_limit_used}} / {{:data.eng_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_eng'})}}<br><br>
+		<b>Medical Fabricators:</b>{{:data.med_limit_used}} / {{:data.med_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_med'})}}<br><br>
+		<b>EVA Fabricators:</b>{{:data.eva_limit_used}} / {{:data.eva_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_eva'})}}<br><br>
+		<b>Consumer Fabricators:</b>{{:data.consumer_limit_used}} / {{:data.consumer_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_consumer'})}}<br><br>
+		<b>Service Fabricators:</b> {{:data.service_limit_used}} / {{:data.service_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_service'})}}<br><br>
+		<b>Combat Fabricators:</b>{{:data.combat_limit_used}} / {{:data.combat_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_combat'})}}<br><br>
+		<b>Standard Autotailor:</b>{{:data.atstandard_limit_used}} / {{:data.atstandard_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_atstandard'})}}<br><br>
+		<b>Accessory Autotailor:</b>{{:data.ataccessory_limit_used}} / {{:data.ataccessory_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_ataccessory'})}}<br><br>
+		<b>Nonstandard Autotailor:</b>{{:data.atspecial_limit_used}} / {{:data.atspecial_limit}} {{:helper.link('Unlink All', '', {'action' : 'unlink_atspecial'})}}<br><br>
+	</div>
+	
+{{/if}}
+{{if data.menu == 5}}
+	<h4>Objectives View</h4><br><hr>
+	Objectives are updated every thirty seconds.<br>
+	{{:helper.link('Refresh Page', '', {'action' : 'refresh'})}}
+	<div class='item'>
+		<div class='itemLabel'>
+			Bi-Hourly Objective
+		</div>
+		{{if data.objective_hour}}
+			<div class='itemContent'>
+				{{:data.objective_hour}}{{:helper.link('Abandon Objective', 'cross', {'action' : 'objective_hour_abandon'})}}
+			</div>
+		{{else}}
+			<div class='itemContent'>
+				*None*
+			</div>
+		{{/if}}
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			Status
+		</div>
+		<div class='itemContent'>
+			{{:data.objective_hour_status}}
+		</div>
+	</div>
+	<div class='item'>
+		<div class='itemLabel'>
+			New Objective Available:
+		</div>
+		<div class='itemContent'>
+			{{:data.objective_hour_timer}}
+		</div>
+	</div>
+	<br><hr>
+	{{if data.daily_unlocked}}
+		<div class='item'>
+			<div class='itemLabel'>
+				Daily Objective
+			</div>
+			{{if data.objective_daily}}
+				<div class='itemContent'>
+					{{:data.objective_daily}}{{:helper.link('Abandon Objective', 'cross', {'action' : 'objective_daily_abandon'})}}
+				</div>
+			{{else}}
+				<div class='itemContent'>
+					*None*
+				</div>
+			{{/if}}
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Status
+			</div>
+			<div class='itemContent'>
+				{{:data.objective_daily_status}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				New Objective Available:
+			</div>
+			<div class='itemContent'>
+				{{:data.objective_daily_timer}}
+			</div>
+		</div>	
+	{{else}}
+		<h4>Daily Objectives Unlocked at Module Level 2</h4>
+	{{/if}}
+	<br><hr>
+	{{if data.weekly_unlocked}}
+		<div class='item'>
+			<div class='itemLabel'>
+				Weekly Objective
+			</div>
+			{{if data.objective_weekly}}
+				<div class='itemContent'>
+					{{:data.objective_weekly}}{{:helper.link('Abandon Objective', 'cross', {'action' : 'objective_weekly_abandon'})}}
+				</div>
+			{{else}}
+				<div class='itemContent'>
+					*None*
+				</div>
+			{{/if}}
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				Status
+			</div>
+			<div class='itemContent'>
+				{{:data.objective_weekly_status}}
+			</div>
+		</div>
+		<div class='item'>
+			<div class='itemLabel'>
+				New Objective Available:
+			</div>
+			<div class='itemContent'>
+				{{:data.objective_weekly_timer}}
+			</div>
+		</div>	
+	{{else}}
+		<h4>Weekly Objectives Unlocked at Module Level 3</h4>
+	{{/if}}
+{{/if}}
+
+
+{{if data.menu == 2}}
+	<h4>Employee Log</h4>
+	{{:helper.link('Newer Page', 'bullet', {'page_down' : 1}, data.page_down ? null : 'disabled')}}{{:helper.link('Older Page', 'bullet', {'page_up' : 1}, data.page_up ? null : 'disabled')}}<br><br>
+	<br><br>
+	<div class="statusDisplay" style="overflow: auto;">
+		{{for data.entries}}
+			{{:value.entry}}<br>
+		{{/for}}
+	</div>
+{{/if}}
+{{if data.menu == 3}}
+	<h4>View/Edit General Task</h4>
+	<br><br>
+	{{:helper.link('Edit Task', '', {'action' : 'business_task'})}}
+	<div class="statusDisplay" style="overflow: auto;">
+		{{:data.business_task}}
+	</div>
+{{/if}}

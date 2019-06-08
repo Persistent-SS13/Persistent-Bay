@@ -1,0 +1,159 @@
+<h2>Contract Management</h2><br>
+{{:helper.link("Existing Contracts", '', {'action' : 'change_menu', 'menu_target' : '1'}, data.menu == 1 ? 'selected' : null)}}
+{{:helper.link("New Contract", '', {'action' : 'change_menu', 'menu_target' : '2'}, data.menu == 2 ? 'selected' : null)}}	
+<br><hr>
+{{if data.menu == 1}}
+	<h4>Existing Contracts</h4>
+	<br>
+	<b>{{:data.connected_faction}} Contracts</b>
+	<div class="statusDisplay" style="overflow: auto;">
+		{{for data.contracts}}
+			{{:helper.link(value.name, '', {'action' : 'select_contract', 'ref' : value.ref})}}<br><br>
+		{{/for}}
+	</div>
+{{/if}}
+{{if data.menu == 2}}
+	<h4>New Contract</h4>
+	<div class="item">
+		<div class="itemLabel">
+			Title: 
+		</div>
+		<div class="itemContent">
+			{{:helper.link(data.title, null, {'action' : 'change_title'})}}
+		</div>
+	</div>
+	<div class="item">
+		<div class="itemLabel">
+			Details: 
+		</div>
+		<div class="itemContent">
+			{{:helper.link('Change', null, {'action' : 'change_desc'})}}
+		</div>
+	</div>
+	<div class="statusDisplay" style="overflow: auto;">
+		{{:data.desc}}
+	</div>
+	The specifics of the contract should be included in the details. Be as detailed as possible to ensure the contract is honored by both parties.
+	<div class="item">
+		<div class="itemLabel">
+			Contract Type: 
+		</div>
+		<div class="itemContent">
+			{{:helper.link('Organization', null, {'action' : 'select_org'}, data.contract_personal ? null : 'selected')}}{{:helper.link('Individual', null, {'action' : 'select_personal'}, data.contract_personal ? 'selected' : null)}}
+		</div>
+	</div>
+	The contract type determines whether it can be signed by an individual or an organization to be the other side of the contract.
+	<div class="item">
+		<div class="itemLabel">
+			Auto-Payment Type: 
+		</div>
+		<div class="itemContent">
+			{{:helper.link(data.payment_type, null, {'action' : 'change_payment_type'})}}
+		</div>
+	</div>
+	This will be paid to {{:data.connected_faction}} by whatever entity signs the contract.
+	{{if data.paytype}}
+		<div class="item">
+			<div class="itemLabel">
+				Paid {{:data.payment_type}}: 
+			</div>
+			<div class="itemContent">
+				{{:helper.link(data.pay, null, {'action' : 'change_payment'})}}
+			</div>
+		</div>
+	{{/if}}
+	<div class="item">
+		<div class="itemLabel">
+			Additional Service 
+		</div>
+		<div class="itemContent">
+			{{:helper.link(data.service, null, {'action' : 'change_service'})}}
+		</div>
+	</div>
+	{{if data.service_desc}}
+		{{:data.service_desc}}
+	{{/if}}
+	<div class="item">
+		<div class="itemLabel">
+			Finalize
+		</div>
+		<div class="itemContent">
+			{{:helper.link('Print Contract', null, {'action' : 'finish'})}}
+		</div>
+	</div>
+{{/if}}
+
+{{if data.menu == 3}}
+	<h4>{{:data.contract}}</h4>
+	<br>
+	Contracted Organization: {{:data.contracted}}<br>
+	Signing Party: {{:data.signed}}<br>
+	{{:data.details}}
+	<br><hr><br>
+	{{:helper.link('Print Copy', 'print', {'action' : 'print'}), data.can_print ? null : 'disabled'}}
+	<div class="item">
+		<div class="itemLabel">
+			Status: 
+		</div>
+		<div class="itemContent">
+			{{:data.contract_status}}
+		</div>
+	</div>
+	<div class="item">
+		<div class="itemLabel">
+			Auto-Payment Type: 
+		</div>
+		<div class="itemContent">
+			{{:data.payment_type}}
+		</div>
+	</div>
+	{{if data.pay}}
+		<div class="item">
+			<div class="itemLabel">
+				Time of Last Payment: 
+			</div>
+			<div class="itemContent">
+				{{:data.paytime}}
+			</div>
+		</div>
+	{{/if}}
+	<div class="item">
+		<div class="itemLabel">
+			Additional Service: 
+		</div>
+		<div class="itemContent">
+			{{:data.service}}
+		</div>
+	</div>
+	<div class="item">
+		<div class="itemLabel">
+			Mark as Complete: 
+		</div>
+		<div class="itemContent">
+			{{:helper.link('Mark', 'check', {'action' : 'mark_complete'}, data.complete ? 'selected' : null)}}{{:helper.link('Unmark', 'cross', {'action' : 'unmark_complete'}, data.complete ? null : 'selected')}}
+		</div>
+	</div>
+	If both sides mark the contract as complete, it will end amicably and no further auto-payments will be made. If a contract is mutally marked as complete, it will be zero legal liability for both sides.
+	<div class="item">
+		<div class="itemLabel">
+			Cancel Contract: 
+		</div>
+		<div class="itemContent">
+			{{:helper.link('Cancel', 'cross', {'action' : 'cancel_contract'}, data.cancelable ? null : 'disabled')}}
+		</div>
+	</div>
+	Cancelling the contract will stop all auto payments without requriing the consent of the other side and end the contract. This may open the organization up to legal liability. 
+	{{if data.clearable}}
+		<div class="item">
+			<div class="itemLabel">
+				Clear Contract: 
+			</div>
+			<div class="itemContent">
+				{{:helper.link('Clear Contract', '', {'action' : 'clear_contract'})}}
+			</div>
+		</div>
+		Clearing the contract will remove it from this organizations list of contracts permanently. Use this to clean up old contracts that you no longer need digital record of.
+	{{/if}}
+{{/if}}
+
+

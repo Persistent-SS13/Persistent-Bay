@@ -96,7 +96,7 @@
 			else
 				to_chat(usr, "There is currently no CEO to fire.")
 		if("choose_ceo")
-			var/select_name = input(usr,"Enter the full name of the new CEO appointee.","CEO name", "") as null|text
+			var/select_name = sanitize(input(usr,"Enter the full name of the new CEO appointee.","CEO name", "") as null|text)
 			if(connected_faction.has_proposal(user.real_name))
 				to_chat(user, "You can only have one active proposal at a time.")
 				return 1

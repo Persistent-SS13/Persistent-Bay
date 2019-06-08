@@ -75,6 +75,21 @@ GLOBAL_DATUM_INIT(discord_api, /datum/discord_api, new)
 				return
 			to_chat(usr, SPAN_NOTICE("Your account has been successfuly linked. To finish the process, however, you MUST validate your link on your discord. Just type in '!validatelink YOUR_CKEY' on the official discord server. (Or by PMing the Bot with that command.)"))
 
+/client/proc/link_discord()
+	var/userID = input(usr, "Discord User ID:", "Discord") as text|null
+	if (userID)
+		userID = "\"[userID]\""
+		var/database/query/g = new("SELECT * FROM [GLOB.discord_api.usersTable] WHERE ckey = ? OR userID = ?", usr.ckey, userID)
+		if (g.Execute(GLOB.discord_api.db) && g.NextRow())
+			to_chat(usr, SPAN_WARNING("Could not complete your Discord Account link request. It seems you have already linked this BYOND account OR this discord ID is already linked to another account."))
+		else
+			var/database/query/q = new("INSERT INTO [GLOB.discord_api.usersTable] VALUES(?,?,0) ", userID, usr.ckey)
+			if(!q.Execute(GLOB.discord_api.db))
+				message_admins(q.ErrorMsg())
+				return
+			to_chat(usr, SPAN_NOTICE("Your account has been successfuly linked. To finish the process, however, you MUST validate your link on your discord. Just type in '!validatelink YOUR_CKEY' on the official discord server. (Or by PMing the Bot with that command.)"))
+
+
 /client/verb/unlinkdiscord()
 	set category = "Special Verbs"
 	set name = "Discord Account - Disassociate"

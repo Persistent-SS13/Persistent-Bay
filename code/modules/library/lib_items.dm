@@ -234,7 +234,7 @@
 /obj/item/weapon/book/multipage
 	var/list/pages = list()
 	var/current_page = 0 // If 0 the book is closed
-	
+	var/original = 0
 		
 /obj/item/weapon/book/multipage/attack_self(var/mob/user as mob)
 	if(carved)

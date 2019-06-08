@@ -315,7 +315,7 @@
 		panel?.close()
 		load_panel?.close()
 		sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
-		
+
 		if(M.loc && !M.perma_dead && M.type != /mob/new_player && (M.stored_ckey == ckey || M.stored_ckey == "@[ckey]"))
 			if(istype(M, /mob/observer))
 				qdel(M)
@@ -329,7 +329,7 @@
 		panel?.close()
 		load_panel?.close()
 		sound_to(src, sound(null, repeat = 0, wait = 0, volume = 85, channel = GLOB.lobby_sound_channel))
-		
+
 		var/mob/observer/ghost/observer = new()
 		observer.started_as_observer = 1
 		observer.forceMove(GLOB.cryopods.len ? get_turf(pick(GLOB.cryopods)) : locate(100, 100, 1))
@@ -354,18 +354,22 @@
 			// The character doesn't have a spawn_loc_2, so use the one for their assignment or the default
 			character.spawn_loc_2 = " default"
 
-		for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
-			if(!pod.loc)
-				qdel(pod)
-				continue
-			if(pod.req_access_faction == character.spawn_loc)
-				if(pod.network == character.spawn_loc_2)
+		if (istype(character, /mob/living/carbon/lace) )
+			spawnTurf = GetLaceStorage(character)
+
+		if (!spawnTurf)
+			for(var/obj/machinery/cryopod/pod in GLOB.cryopods)
+				if(!pod.loc)
+					qdel(pod)
+					continue
+				if(pod.req_access_faction == character.spawn_loc)
+					if(pod.network == character.spawn_loc_2)
+						spawnTurf = get_turf(pod)
+						break
+					else
+						spawnTurf = get_turf(pod)
+				else if(!spawnTurf)
 					spawnTurf = get_turf(pod)
-					break
-				else
-					spawnTurf = get_turf(pod)
-			else if(!spawnTurf)
-				spawnTurf = get_turf(pod)
 
 		if(!spawnTurf)
 			log_and_message_admins("WARNING! No cryopods avalible for spawning! Get some spawned and connected to the starting factions uid (req_access_faction)")
@@ -415,7 +419,6 @@
 			mind.gen_relations_info = client.prefs.relations_info["general"]
 		mind.transfer_to(character)					//won't transfer key since the mind is not active
 
-	character.forceMove(spawnTurf)
 	character.stored_ckey = key
 	character.key = key
 	character.save_slot = chosen_slot

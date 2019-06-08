@@ -16,6 +16,7 @@
 	var/minimum_temperature_difference = 300
 	var/thermal_conductivity = 0 //WALL_HEAT_TRANSFER_COEFFICIENT No
 	var/time_next_fatigue_dmg = 0 //Time until applying fatigue damage again
+	var/time_next_sndupdate = 0
 
 /obj/machinery/atmospherics/pipe/simple/New()
 	..()
@@ -58,14 +59,17 @@
 	queue_icon_update()
 
 /obj/machinery/atmospherics/pipe/simple/Process()
-	if(!parent) //This should cut back on the overhead calling build_network thousands of times per cycle
+	if(QDELETED(parent)) //This should cut back on the overhead calling build_network thousands of times per cycle
+		parent = null //Sometimes the pipeline stays stuck
 		..()
 	else if(leaking)
 		parent.mingle_with_turf(loc, volume)
-		if(!sound_token && parent.air.return_pressure())
-			update_sound(1)
-		else if(sound_token && !parent.air.return_pressure())
-			update_sound(0)
+		if(world.time >= time_next_sndupdate) //only check every seconds at most
+			if(!sound_token && parent.air && parent.air.return_pressure())
+				update_sound(1)
+			else if(sound_token && parent.air && !parent.air.return_pressure())
+				update_sound(0)
+			time_next_sndupdate = world.time + 1 SECOND
 	else
 		. = PROCESS_KILL
 

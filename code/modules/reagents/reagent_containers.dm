@@ -8,6 +8,7 @@
 	var/possible_transfer_amounts = "5;10;15;25;30"
 	var/volume = 30
 	var/label_text
+	var/list/datum/reagent/starts_with = null
 
 /obj/item/weapon/reagent_containers/proc/cannot_interact(mob/user)
 	if(!CanPhysicallyInteract(user))
@@ -31,10 +32,20 @@
 		amount_per_transfer_from_this = N
 
 /obj/item/weapon/reagent_containers/New()
-	create_reagents(volume)
 	..()
 	if(!possible_transfer_amounts)
 		src.verbs -= /obj/item/weapon/reagent_containers/verb/set_amount_per_transfer_from_this
+	ADD_SAVED_VAR(amount_per_transfer_from_this)
+	ADD_SAVED_VAR(label_text)
+	ADD_SAVED_VAR(atom_flags) //Since we change the open_container flag a lot
+
+/obj/item/weapon/reagent_containers/SetupReagents()
+	..()
+	create_reagents(volume)
+	if(starts_with)
+		for(var/T in starts_with)
+			reagents.add_reagent(T, starts_with[T])
+		queue_icon_update()
 
 /obj/item/weapon/reagent_containers/attack_self(mob/user as mob)
 	return

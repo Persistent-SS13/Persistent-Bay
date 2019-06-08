@@ -13,6 +13,12 @@
 	var/carbon_amount
 	var/list/papers = new/list()	//List of papers put in the bin for reference.
 
+/obj/item/weapon/paper_bin/New()
+	. = ..()
+	ADD_SAVED_VAR(amount)
+	ADD_SAVED_VAR(carbon_amount)
+	ADD_SAVED_VAR(papers)
+	ADD_SKIP_EMPTY(papers)
 
 /obj/item/weapon/paper_bin/MouseDrop(mob/user as mob)
 	if((user == usr && (!( usr.restrained() ) && (!( usr.stat ) && (usr.contents.Find(src) || in_range(src, usr))))))

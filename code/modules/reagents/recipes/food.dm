@@ -2,7 +2,7 @@
 /datum/chemical_reaction/tofu
 	name = "Tofu"
 	result = null
-	required_reagents = list(/datum/reagent/drink/milk/soymilk = 10)
+	required_reagents = list(/datum/reagent/drink/milk/soymilk = 10, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 1
 
@@ -101,7 +101,7 @@
 /datum/chemical_reaction/cheesewheel
 	name = "Cheesewheel"
 	result = null
-	required_reagents = list(/datum/reagent/drink/milk = 40)
+	required_reagents = list(/datum/reagent/drink/milk = 40, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 1
 	mix_message = "The solution thickens and curdles into a rich yellow substance."
@@ -213,7 +213,7 @@
 /datum/chemical_reaction/vinegar2
 	name = "Clear Vinegar"
 	result = /datum/reagent/nutriment/vinegar
-	required_reagents = list(/datum/reagent/ethanol = 10)
+	required_reagents = list(/datum/reagent/ethanol = 10, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 

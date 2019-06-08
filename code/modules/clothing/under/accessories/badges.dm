@@ -14,6 +14,11 @@
 	var/badge_string = "Detective"
 	var/stored_name
 
+/obj/item/clothing/accessory/badge/New()
+	. = ..()
+	ADD_SAVED_VAR(badge_string)
+	ADD_SAVED_VAR(stored_name)
+
 /obj/item/clothing/accessory/badge/proc/set_name(var/new_name)
 	stored_name = new_name
 
@@ -91,6 +96,12 @@
 /obj/item/clothing/accessory/badge/holo/NT/cord
 	icon_state = "holobadge-cord"
 	slot_flags = SLOT_MASK | SLOT_TIE
+
+/obj/item/clothing/accessory/badge/holo/New()
+	. = ..()
+	ADD_SAVED_VAR(badge_access)
+	ADD_SAVED_VAR(badge_number)
+	ADD_SAVED_VAR(emagged)
 
 /obj/item/clothing/accessory/badge/holo/set_name(var/new_name)
 	..()

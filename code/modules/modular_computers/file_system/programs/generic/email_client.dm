@@ -175,7 +175,7 @@
 
 /datum/nano_module/email_client/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data = host.initial_data()
-	var/datum/computer_file/data/email_account/current_account = Get_Email_Account(user.real_name)
+	var/datum/computer_file/data/email_account/current_account = Get_Email_Account(user.real_name) //#FIXME: This is being called a lot when running the email client!! It seems fairly expensive too.
 
 	// Password has been changed by other client connected to this email account
 	if(current_account)

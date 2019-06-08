@@ -9,6 +9,7 @@
 	idle_power_usage = 5
 	active_power_usage = 100
 	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_NO_REACT | ATOM_FLAG_OPEN_CONTAINER
+	circuit_type = /obj/item/weapon/circuitboard/microwave
 	var/operating = 0 // Is it on?
 	var/dirty = 0 // = {0..100} Does it need cleaning?
 	var/broken = 0 // ={0,1,2} How broken is it???
@@ -27,7 +28,12 @@
 
 /obj/machinery/microwave/New()
 	..()
-	create_reagents(100)
+	ADD_SAVED_VAR(dirty)
+	ADD_SAVED_VAR(broken)
+	ADD_SAVED_VAR(atom_flags) //Since we change those based on the state of the thing we have to save them
+
+/obj/machinery/microwave/Initialize()
+	. = ..()
 	if (!available_recipes)
 		available_recipes = new
 		for (var/type in (typesof(/datum/recipe)-/datum/recipe))
@@ -47,12 +53,9 @@
 		acceptable_items |= /obj/item/weapon/holder
 		acceptable_items |= /obj/item/weapon/reagent_containers/food/snacks/grown
 
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/microwave(null)
-	component_parts += new /obj/item/weapon/stock_parts/micro_laser(null)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(null)
-	component_parts += new /obj/item/stack/cable_coil(null, 2)
-	RefreshParts()
+/obj/machinery/microwave/SetupParts()
+	. = ..()
+	create_reagents(100)
 
 /obj/machinery/microwave/RefreshParts()
 	var/E = 0

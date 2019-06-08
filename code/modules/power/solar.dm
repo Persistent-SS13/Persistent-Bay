@@ -177,6 +177,12 @@ var/list/solars_list = list()
 	var/tracker = 0
 	var/glass_type = null
 
+/obj/item/solar_assembly/New()
+	. = ..()
+	ADD_SAVED_VAR(tracker)
+	ADD_SAVED_VAR(glass_type)
+	ADD_SKIP_EMPTY(glass_type)
+
 /obj/item/solar_assembly/attack_hand(var/mob/user)
 	if(!anchored && isturf(loc)) // You can't pick it up
 		..()
@@ -250,6 +256,8 @@ var/list/solars_list = list()
 	idle_power_usage = 250
 	max_health=50
 	break_threshold = 0.25
+	circuit_type = /obj/item/weapon/circuitboard/solar_control
+	frame_type = /obj/structure/computerframe
 	var/cdir = 0
 	var/targetdir = 0		// target angle in manual tracking (since it updates every game minute)
 	var/gen = 0
@@ -262,6 +270,7 @@ var/list/solars_list = list()
 
 /obj/machinery/power/solar_control/New()
 	..()
+	ADD_SAVED_VAR(targetdir)
 	ADD_SAVED_VAR(track)
 	ADD_SAVED_VAR(trackrate)
 	ADD_SAVED_VAR(nexttime)
@@ -391,36 +400,19 @@ var/list/solars_list = list()
 
 	return
 
-/obj/machinery/power/solar_control/attackby(var/obj/item/I, var/mob/user)
+/obj/machinery/power/solar_control/attackby(var/obj/item/weapon/tool/screwdriver/I, var/mob/user)
 	if(isScrewdriver(I))
 		playsound(src.loc, 'sound/items/Screwdriver.ogg', 50, 1)
-		if(do_after(user, 20,src))
+		if(I.use_tool(user, src, 2 SECONDS))
 			if (src.stat & BROKEN)
 				to_chat(user, "<span class='notice'>The broken glass falls out.</span>")
-				var/obj/structure/computerframe/A = new /obj/structure/computerframe( src.loc )
-				new /obj/item/weapon/material/shard( src.loc )
-				var/obj/item/weapon/circuitboard/solar_control/M = new /obj/item/weapon/circuitboard/solar_control( A )
-				for (var/obj/C in src)
-					C.dropInto(loc)
-				A.circuit = M
-				A.state = 3
-				A.icon_state = "3"
-				A.anchored = 1
-				qdel(src)
+				dismantle()
+				return 1
 			else
 				to_chat(user, "<span class='notice'>You disconnect the monitor.</span>")
-				var/obj/structure/computerframe/A = new /obj/structure/computerframe( src.loc )
-				var/obj/item/weapon/circuitboard/solar_control/M = new /obj/item/weapon/circuitboard/solar_control( A )
-				for (var/obj/C in src)
-					C.dropInto(loc)
-				A.circuit = M
-				A.state = 4
-				A.icon_state = "4"
-				A.anchored = 1
-				qdel(src)
-	else
-		src.attack_hand(user)
-	return
+				dismantle()
+				return 1
+	return ..()
 
 /obj/machinery/power/solar_control/Process()
 	lastgen = gen
@@ -494,7 +486,7 @@ var/list/solars_list = list()
 	for(var/obj/machinery/power/solar/S in connected_panels)
 		S.adir = cdir //instantly rotates the panel
 		S.occlusion()//and
-		S.update_icon() //update it
+		S.queue_icon_update() //update it
 	update_icon()
 
 /obj/machinery/power/solar_control/broken()

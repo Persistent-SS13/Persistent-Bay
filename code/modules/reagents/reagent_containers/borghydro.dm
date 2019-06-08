@@ -23,6 +23,10 @@
 /obj/item/weapon/reagent_containers/borghypo/crisis
 	reagent_ids = list(/datum/reagent/tricordrazine, /datum/reagent/inaprovaline, /datum/reagent/tramadol)
 
+/obj/item/weapon/reagent_containers/borghypo/New()
+	. = ..()
+	ADD_SAVED_VAR(mode)
+
 /obj/item/weapon/reagent_containers/borghypo/Initialize()
 	. = ..()
 

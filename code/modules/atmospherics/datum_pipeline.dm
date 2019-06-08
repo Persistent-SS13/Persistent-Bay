@@ -11,6 +11,7 @@
 	var/maximum_pressure = 0
 
 /datum/pipeline/New()
+	..()
 	START_PROCESSING(SSprocessing, src)
 
 /datum/pipeline/Destroy()

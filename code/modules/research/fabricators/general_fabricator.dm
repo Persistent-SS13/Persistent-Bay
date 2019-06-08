@@ -196,7 +196,7 @@
 
 /datum/design/item/genfab/container/beerkeg
 	build_path = /obj/structure/reagent_dispensers/beerkeg/empty
-	materials = list(MATERIAL_STEEL = 0.25 SHEET)
+	materials = list(MATERIAL_ALUMINIUM = 20 SHEET)
 
 /datum/design/item/genfab/container/sci/dropper
 	build_path = /obj/item/weapon/reagent_containers/dropper
@@ -284,6 +284,7 @@
 
 /datum/design/item/genfab/container/drinkingglass/shaker
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/shaker
+	materials = list(MATERIAL_ALUMINIUM = 0.45 SHEET)
 
 /datum/design/item/genfab/container/drinkingglass/teapot
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/teapot

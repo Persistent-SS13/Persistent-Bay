@@ -11,6 +11,7 @@
 	power_channel = EQUIP
 	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_CLIMBABLE
 	obj_flags = OBJ_FLAG_ANCHORABLE | OBJ_FLAG_DAMAGEABLE
+	circuit_type = /obj/item/weapon/circuitboard/photocopier
 	var/obj/item/copyitem = null	//what's in the copier!
 	var/copies = 1	//how many copies to print!
 	var/toner = 30 //how much toner is left! woooooo~
@@ -18,13 +19,12 @@
 
 /obj/machinery/photocopier/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/photocopier(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	return
+	ADD_SAVED_VAR(copyitem)
+	ADD_SAVED_VAR(copies)
+	ADD_SAVED_VAR(toner)
+
+	ADD_SKIP_EMPTY(copyitem)
+
 /obj/machinery/photocopier/attack_ai(mob/user as mob)
 	return attack_hand(user)
 
@@ -72,7 +72,7 @@
 				to_chat(usr, "<span class='warning'>\The [copyitem] can't be copied by \the [src].</span>")
 				break
 
-			use_power(active_power_usage)
+			use_power_oneoff(active_power_usage)
 		updateUsrDialog()
 	else if(href_list["remove"])
 		if(copyitem)

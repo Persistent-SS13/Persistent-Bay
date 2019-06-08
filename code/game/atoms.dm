@@ -62,6 +62,9 @@
 		var/turf/T = loc
 		if(istype(T))
 			T.handle_opacity_change(src)
+	
+	if(!reagents)
+		SetupReagents()
 
 	return INITIALIZE_HINT_NORMAL
 
@@ -575,3 +578,7 @@ its easier to just keep the beam vertical.
 // Not sure where to define this, so it can sit here for the rest of time.
 /atom/proc/drain_power(var/drain_check,var/surge, var/amount = 0)
 	return -1
+
+//This is used to set the initial reagents for an atom. Its called only on an atom that wasn't loaded from save
+/atom/proc/SetupReagents()
+	return

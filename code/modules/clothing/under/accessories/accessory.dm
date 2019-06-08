@@ -21,6 +21,10 @@
 	var/slowdown //used when an accessory is meant to slow the wearer down when attached to clothing
 	var/removable = TRUE
 
+/obj/item/clothing/accessory/New()
+	. = ..()
+	ADD_SAVED_VAR(has_suit)
+
 /obj/item/clothing/accessory/Destroy()
 	on_removed()
 	return ..()

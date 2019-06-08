@@ -17,7 +17,14 @@
 	center_of_mass = "x=16;y=16"
 	w_class = ITEM_SIZE_SMALL
 
-/obj/item/weapon/reagent_containers/food/snacks/Initialize()
+/obj/item/weapon/reagent_containers/food/snacks/New()
+	. = ..()
+	ADD_SAVED_VAR(bitecount)
+	ADD_SAVED_VAR(slices_num)
+	ADD_SAVED_VAR(dry)
+	ADD_SAVED_VAR(nutriment_amt)
+
+/obj/item/weapon/reagent_containers/food/snacks/SetupReagents()
 	.=..()
 	if(nutriment_amt)
 		reagents.add_reagent(/datum/reagent/nutriment,nutriment_amt,nutriment_desc)

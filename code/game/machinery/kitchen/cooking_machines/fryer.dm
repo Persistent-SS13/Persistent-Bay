@@ -8,24 +8,25 @@
 	off_icon = "fryer_off"
 	food_color = "#ffad33"
 	cooked_sound = 'sound/machines/ding.ogg'
+	circuit_type = /obj/item/weapon/circuitboard/deepfryer
 
-/obj/machinery/cooker/fryer/New()
-	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/deepfryer(null)
-	component_parts += new /obj/item/weapon/stock_parts/micro_laser(null)
-	component_parts += new /obj/item/weapon/stock_parts/micro_laser(null)
-	component_parts += new /obj/item/stack/cable_coil(null, 5)
-	RefreshParts()
+// /obj/machinery/cooker/fryer/New()
+// 	..()
+// 	component_parts = list()
+// 	component_parts += new /obj/item/weapon/circuitboard/deepfryer(null)
+// 	component_parts += new /obj/item/weapon/stock_parts/micro_laser(null)
+// 	component_parts += new /obj/item/weapon/stock_parts/micro_laser(null)
+// 	component_parts += new /obj/item/stack/cable_coil(null, 5)
+// 	RefreshParts()
 
-/obj/machinery/cooker/fryer/upgraded/New()
-	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/deepfryer(null)
-	component_parts += new /obj/item/weapon/stock_parts/micro_laser/ultra(null)
-	component_parts += new /obj/item/weapon/stock_parts/micro_laser/ultra(null)
-	component_parts += new /obj/item/stack/cable_coil(null, 5)
-	RefreshParts()
+// /obj/machinery/cooker/fryer/upgraded/New()
+// 	..()
+// 	component_parts = list()
+// 	component_parts += new /obj/item/weapon/circuitboard/deepfryer(null)
+// 	component_parts += new /obj/item/weapon/stock_parts/micro_laser/ultra(null)
+// 	component_parts += new /obj/item/weapon/stock_parts/micro_laser/ultra(null)
+// 	component_parts += new /obj/item/stack/cable_coil(null, 5)
+// 	RefreshParts()
 
 /obj/machinery/cooker/fryer/RefreshParts()
 	return

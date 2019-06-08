@@ -22,6 +22,10 @@
 		/obj/item/weapon/sample/print = 1
 		)
 
+/obj/machinery/papershredder/New()
+	. = ..()
+	ADD_SAVED_VAR(paperamount)
+
 /obj/machinery/papershredder/attackby(var/obj/item/W, var/mob/user)
 
 	if(istype(W, /obj/item/weapon/storage))
@@ -151,4 +155,9 @@
 
 /obj/item/weapon/shreddedp/New()
 	..()
-	if(prob(65)) color = pick("#bababa","#7f7f7f")
+	ADD_SAVED_VAR(color)
+
+/obj/item/weapon/shreddedp/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		if(prob(65)) color = pick("#bababa","#7f7f7f")

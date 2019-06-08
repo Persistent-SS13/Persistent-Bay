@@ -32,8 +32,10 @@
 	if(loc)
 		if(istype(get_turf(src), /turf/simulated/wall) || istype(get_turf(src), /turf/simulated/shuttle/wall) || istype(get_turf(src), /turf/unsimulated/wall))
 			level = 1
-	if(map_storage_loaded)
-		set_leaking(leaking)
+
+/obj/machinery/atmospherics/pipe/after_load()
+	. = ..()
+	set_leaking(leaking)
 
 /obj/machinery/atmospherics/pipe/hides_under_flooring()
 	return level != 2

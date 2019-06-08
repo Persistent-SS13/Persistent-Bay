@@ -33,6 +33,13 @@
 		wires = new/datum/wires/smartfridge/secure(src)
 	else
 		wires = new/datum/wires/smartfridge(src)
+	ADD_SAVED_VAR(item_records)
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(is_secure)
+	ADD_SAVED_VAR(scan_id)
+	
+/obj/machinery/smartfridge/Initialize()
+	. = ..()
 	queue_icon_update()
 
 /obj/machinery/smartfridge/SetupParts()

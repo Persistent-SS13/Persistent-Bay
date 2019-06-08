@@ -11,6 +11,11 @@
 	icon_state = "booster"
 	allowed_organs = list(BP_AUGMENT_HEAD)
 
+/obj/item/organ/internal/augment/boost/New(mob/living/carbon/holder)
+	. = ..()
+	ADD_SAVED_VAR(active)
+	ADD_SAVED_VAR(debuffing)
+
 /obj/item/organ/internal/augment/boost/Initialize()
 	. = ..()
 	id = "[/obj/item/organ/internal/augment/boost]_[sequential_id(/obj/item/organ/internal/augment/boost)]"

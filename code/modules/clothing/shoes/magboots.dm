@@ -15,6 +15,18 @@
 	center_of_mass = null
 	randpixel = 0
 
+/obj/item/clothing/shoes/magboots/New()
+	. = ..()
+	ADD_SAVED_VAR(magpulse)
+	ADD_SAVED_VAR(shoes)
+	ADD_SKIP_EMPTY(shoes)
+
+/obj/item/clothing/shoes/magboots/after_load()
+	. = ..()
+	if(ismob(loc))
+		wearer = loc
+		equipped()
+
 /obj/item/clothing/shoes/magboots/proc/set_slowdown()
 	slowdown_per_slot[slot_shoes] = shoes? max(0, shoes.slowdown_per_slot[slot_shoes]): 0	//So you can't put on magboots to make you walk faster.
 	if (magpulse)

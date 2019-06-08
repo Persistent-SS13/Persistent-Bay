@@ -382,7 +382,7 @@ Class Procs:
 /obj/machinery/proc/dismantle()
 	playsound(loc, 'sound/items/Crowbar.ogg', 50, 1)
 	for(var/obj/I in component_parts)
-		I.forceMove(get_turf(src))
+		I.dropInto(get_turf(src))
 	var/obj/M = new frame_type(get_turf(src), state = MACHINE_FRAME_CABLED)
 	M.set_dir(src.dir)
 	qdel(src)
@@ -642,7 +642,7 @@ Class Procs:
 	if(use_power && operable())
 		set_emped(TRUE)
 		time_emped = (emped_disabled_max_time / severity)
-		use_power(7500/severity)
+		use_power_oneoff(7500/severity)
 
 		var/obj/effect/overlay/pulse2 = new /obj/effect/overlay(loc)
 		pulse2.icon = 'icons/effects/effects.dmi'

@@ -3,6 +3,10 @@
 	action_button_name = "Activate"
 	var/obj/item/organ/external/limb
 
+/obj/item/organ/internal/augment/active/after_load()
+	. = ..()
+	onInstall()
+
 /obj/item/organ/internal/augment/active/proc/activate()
 
 //Give verbs on install

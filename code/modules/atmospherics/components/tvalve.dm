@@ -27,12 +27,12 @@
 	. = ..()
 	ADD_SAVED_VAR(state)
 
-/obj/machinery/atmospherics/tvalve/after_load()
+/obj/machinery/atmospherics/tvalve/Initialize()
 	. = ..()
 	if(state)
-		go_to_side()
+		go_to_side() // 1
 	else
-		go_straight()
+		go_straight() // 2
 
 /obj/machinery/atmospherics/tvalve/Destroy()
 	loc = null
@@ -337,9 +337,9 @@
 /obj/machinery/atmospherics/tvalve/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
 	if(!isWrench(W))
 		return ..()
-	if (istype(src, /obj/machinery/atmospherics/tvalve/digital))
-		to_chat(user, "<span class='warning'>You cannot unwrench \the [src], it's too complicated.</span>")
-		return 1
+	// if (istype(src, /obj/machinery/atmospherics/tvalve/digital))
+	// 	to_chat(user, "<span class='warning'>You cannot unwrench \the [src], it's too complicated.</span>")
+	// 	return 1
 	var/datum/gas_mixture/int_air = return_air()
 	var/datum/gas_mixture/env_air = loc.return_air()
 	if ((int_air.return_pressure()-env_air.return_pressure()) > 2*ONE_ATMOSPHERE)

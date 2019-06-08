@@ -95,9 +95,10 @@
 	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	origin_tech = list(TECH_MATERIAL = 2, TECH_ILLEGAL = 5)
 
-/obj/item/weapon/pen/reagent/New()
-	..()
-	create_reagents(30)
+/obj/item/weapon/pen/reagent/Initialize()
+	. = ..()
+	if(!reagents)
+		create_reagents(30)
 
 /obj/item/weapon/pen/reagent/attack(mob/living/M, mob/user, var/target_zone)
 
@@ -120,9 +121,10 @@
 	desc = "It's a black ink pen with a sharp point and a carefully engraved \"Waffle Co.\"."
 	origin_tech = list(TECH_MATERIAL = 2, TECH_ILLEGAL = 5)
 
-/obj/item/weapon/pen/reagent/sleepy/New()
-	..()
-	reagents.add_reagent(/datum/reagent/chloralhydrate, 15)	//Used to be 100 sleep toxin//30 Chloral seems to be fatal, reducing it to 22, reducing it further to 15 because fuck you OD code./N
+/obj/item/weapon/pen/reagent/sleepy/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		reagents.add_reagent(/datum/reagent/chloralhydrate, 15)	//Used to be 100 sleep toxin//30 Chloral seems to be fatal, reducing it to 22, reducing it further to 15 because fuck you OD code./N
 
 
 /*
@@ -207,6 +209,10 @@
 	var/instant = 0
 	var/colourName = "red" //for updateIcon purposes
 	color_description = "red crayon"
+
+/obj/item/weapon/pen/crayon/New()
+	. = ..()
+	ADD_SAVED_VAR(uses)
 
 /obj/item/weapon/pen/crayon/Initialize()
 	name = "[colourName] crayon"

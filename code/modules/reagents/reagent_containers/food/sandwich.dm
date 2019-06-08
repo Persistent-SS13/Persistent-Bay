@@ -15,6 +15,15 @@
 
 	var/list/ingredients = list()
 
+/obj/item/weapon/reagent_containers/food/snacks/csandwich/New()
+	. = ..()
+	ADD_SAVED_VAR(ingredients)
+	ADD_SKIP_EMPTY(ingredients)
+
+/obj/item/weapon/reagent_containers/food/snacks/csandwich/Initialize()
+	. = ..()
+	update()
+
 /obj/item/weapon/reagent_containers/food/snacks/csandwich/attackby(obj/item/W as obj, mob/user as mob)
 
 	var/sandwich_limit = 4

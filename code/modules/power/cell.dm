@@ -16,11 +16,15 @@
 	var/overlay_state
 	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 50, MATERIAL_PLASTIC = 20)
 
+/obj/item/weapon/cell/New()
+	. = ..()
+	ADD_SAVED_VAR(charge)
+
 /obj/item/weapon/cell/Initialize()
 	. = ..()
 	if(isnull(charge))
 		charge = maxcharge
-	update_icon()
+	queue_icon_update()
 
 /obj/item/weapon/cell/drain_power(var/drain_check, var/surge, var/power = 0)
 

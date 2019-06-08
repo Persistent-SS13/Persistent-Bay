@@ -19,10 +19,15 @@
 
 /obj/item/device/assembly/signaler/New()
 	..()
-	spawn(40)
-		set_frequency(frequency)
-	return
+	ADD_SAVED_VAR(code)
+	ADD_SAVED_VAR(frequency)
+	ADD_SAVED_VAR(delay)
+	ADD_SAVED_VAR(airlock_wire)
+	ADD_SAVED_VAR(deadman)
 
+/obj/item/device/assembly/signaler/Initialize()
+	. = ..()
+	set_frequency(frequency)
 
 /obj/item/device/assembly/signaler/activate()
 	if(cooldown > 0)	return 0

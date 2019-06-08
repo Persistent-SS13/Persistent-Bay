@@ -7,7 +7,12 @@
 	var/object
 
 /obj/item/weapon/sample/New(var/newloc, var/atom/supplied)
-	..(newloc)
+	..()
+	ADD_SAVED_VAR(evidence)
+	ADD_SAVED_VAR(object)
+
+/obj/item/weapon/sample/Initialize(mapload, var/atom/supplied)
+	. = ..()
 	if(supplied)
 		copy_evidence(supplied)
 		name = "[initial(name)] (\the [supplied])"

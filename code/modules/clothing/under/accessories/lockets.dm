@@ -10,6 +10,12 @@
 	var/open
 	var/obj/item/held //Item inside locket.
 
+/obj/item/clothing/accessory/locket/New()
+	. = ..()
+	ADD_SAVED_VAR(open)
+	ADD_SAVED_VAR(held)
+	ADD_SKIP_EMPTY(held)
+
 /obj/item/clothing/accessory/locket/attack_self(mob/user as mob)
 	if(!base_icon)
 		base_icon = icon_state

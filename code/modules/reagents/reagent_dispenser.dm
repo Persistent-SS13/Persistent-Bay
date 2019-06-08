@@ -15,16 +15,19 @@
 
 /obj/structure/reagent_dispensers/New()
 	..()
-	if (!possible_transfer_amounts)
-		src.verbs -= /obj/structure/reagent_dispensers/verb/set_amount_per_transfer_from_this
+	ADD_SAVED_VAR(amount_per_transfer_from_this)
 
 /obj/structure/reagent_dispensers/Initialize()
 	. = ..()
-	if(!map_storage_loaded)
-		create_reagents(initial_capacity)
-		for(var/reagent_type in initial_reagent_types)
-			var/reagent_ratio = initial_reagent_types[reagent_type]
-			reagents.add_reagent(reagent_type, reagent_ratio * initial_capacity)
+	if (!possible_transfer_amounts)
+		src.verbs -= /obj/structure/reagent_dispensers/verb/set_amount_per_transfer_from_this
+
+/obj/structure/reagent_dispensers/SetupReagents()
+	. = ..()
+	create_reagents(initial_capacity)
+	for(var/reagent_type in initial_reagent_types)
+		var/reagent_ratio = initial_reagent_types[reagent_type]
+		reagents.add_reagent(reagent_type, reagent_ratio * initial_capacity)
 
 /obj/structure/reagent_dispensers/attackby(var/obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W,/obj/item/weapon/reagent_containers))
@@ -71,23 +74,10 @@
 	if (N)
 		amount_per_transfer_from_this = N
 
-/obj/structure/reagent_dispensers/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			qdel(src)
-			return
-		if(2.0)
-			if (prob(50))
-				new /obj/effect/effect/water(src.loc)
-				qdel(src)
-				return
-		if(3.0)
-			if (prob(5))
-				new /obj/effect/effect/water(src.loc)
-				qdel(src)
-				return
-		else
-	return
+/obj/structure/reagent_dispensers/destroyed(damagetype, user)
+	if(reagents)
+		reagents.splash(loc, reagents.total_volume, 1, 0, 80, 100)
+	. = ..()
 
 /obj/structure/reagent_dispensers/AltClick(var/mob/user)
 	if(possible_transfer_amounts)

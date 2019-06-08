@@ -22,11 +22,15 @@
 /obj/machinery/power/fusion_core/mapped
 	anchored = TRUE
 
+/obj/machinery/power/fusion_core/New()
+	. = ..()
+	ADD_SAVED_VAR(field_strength)
+
 /obj/machinery/power/fusion_core/Initialize()
 	. = ..()
 	connect_to_network()
 	set_extension(src, /datum/extension/fusion_plant_member, /datum/extension/fusion_plant_member)
-	if(initial_id_tag)
+	if(!map_storage_loaded && initial_id_tag)
 		var/datum/extension/fusion_plant_member/fusion = get_extension(src, /datum/extension/fusion_plant_member)
 		fusion.set_tag(null, initial_id_tag)
 

@@ -6,7 +6,8 @@
 	icon_state = "grinder"
 	density = 1
 	anchored = 1
-	req_access = list(access_kitchen,access_morgue)
+	req_access = list()
+	circuit_type = /obj/item/weapon/circuitboard/gibber
 
 	var/operating = 0        //Is it on?
 	var/dirty = 0            // Does it need cleaning?
@@ -17,29 +18,35 @@
 	idle_power_usage = 2
 	active_power_usage = 500
 
+/obj/machinery/gibber/New()
+	..()
+	ADD_SAVED_VAR(dirty)
+	ADD_SAVED_VAR(occupant)
+	ADD_SKIP_EMPTY(occupant)
+
 /obj/machinery/gibber/Initialize()
 	. = ..()
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/gibber/on_update_icon()
 	overlays.Cut()
 	if (dirty)
-		src.overlays += image('icons/obj/kitchen.dmi', "grbloody")
+		src.overlays += image(icon, "grbloody")
 	if(stat & (NOPOWER|BROKEN))
 		return
 	if (!occupant)
-		src.overlays += image('icons/obj/kitchen.dmi', "grjam")
+		src.overlays += image(icon, "grjam")
 	else if (operating)
-		src.overlays += image('icons/obj/kitchen.dmi', "gruse")
+		src.overlays += image(icon, "gruse")
 	else
-		src.overlays += image('icons/obj/kitchen.dmi', "gridle")
+		src.overlays += image(icon, "gridle")
 
 /obj/machinery/gibber/relaymove(mob/user as mob)
 	src.go_out()
 	return
 
 /obj/machinery/gibber/attack_hand(mob/user as mob)
-	if(stat & (NOPOWER|BROKEN))
+	if(inoperable())
 		return
 	if(operating)
 		to_chat(user, "<span class='danger'>\The [src] is locked and running, wait for it to finish.</span>")
@@ -200,18 +207,6 @@
 			thing.dropInto(loc) // Attempts to drop it onto the turf for throwing.
 			thing.throw_at(get_edge_target_turf(src,gib_throw_dir),rand(0,3),emagged ? 100 : 50) // Being pelted with bits of meat and bone would hurt.
 		update_icon()
-
-
-/obj/machinery/gibber/New()
-	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/gibber(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 1)
-
-
 
 /obj/machinery/gibber/attackby(var/obj/item/O as obj, var/mob/user as mob)
 

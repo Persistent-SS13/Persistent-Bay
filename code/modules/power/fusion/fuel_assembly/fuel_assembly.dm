@@ -16,6 +16,12 @@
 	fuel_type = _material
 	fuel_colour = _colour
 	..(newloc)
+	ADD_SAVED_VAR(material_name)
+	ADD_SAVED_VAR(percent_depleted)
+	ADD_SAVED_VAR(rod_quantities)
+	ADD_SAVED_VAR(fuel_type)
+	ADD_SAVED_VAR(fuel_colour)
+	ADD_SAVED_VAR(radioactivity)
 
 /obj/item/weapon/fuel_assembly/Initialize()
 	. = ..()

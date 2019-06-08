@@ -142,7 +142,7 @@
 		..()
 		update_icon()
 
-	update_icon()
+	on_update_icon()
 		overlays.Cut()
 
 		if(reagents.total_volume)
@@ -240,16 +240,10 @@
 	volume = 120
 
 /obj/item/weapon/reagent_containers/glass/beaker/cryoxadone
-	New()
-		..()
-		reagents.add_reagent(/datum/reagent/cryoxadone, 30)
-		update_icon()
+	starts_with = list(/datum/reagent/cryoxadone = 30)
 
 /obj/item/weapon/reagent_containers/glass/beaker/sulphuric
-	New()
-		..()
-		reagents.add_reagent(/datum/reagent/acid, 60)
-		update_icon()
+	starts_with = list(/datum/reagent/acid = 30)
 
 /obj/item/weapon/reagent_containers/glass/bucket
 	name = "bucket"

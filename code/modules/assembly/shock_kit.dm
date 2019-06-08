@@ -8,6 +8,11 @@
 	w_class = ITEM_SIZE_HUGE
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 
+/obj/item/assembly/shock_kit/New()
+	. = ..()
+	ADD_SAVED_VAR(part1)
+	ADD_SAVED_VAR(part2)
+
 /obj/item/assembly/shock_kit/Destroy()
 	qdel(part1)
 	qdel(part2)

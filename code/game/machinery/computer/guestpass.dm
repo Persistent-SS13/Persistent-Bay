@@ -58,7 +58,7 @@
 	..()
 	uid = "[random_id("guestpass_serial_number",100,999)]-G[rand(10,99)]"
 
-/obj/machinery/computer/guestpass/update_icon()
+/obj/machinery/computer/guestpass/on_update_icon()
 	. = ..()
 	switch(dir)
 		if(NORTH)

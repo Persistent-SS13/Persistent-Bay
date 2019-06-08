@@ -79,6 +79,8 @@
 /obj/item/weapon/reagent_containers/food/drinks/glass2/New()
 	..()
 	icon_state = base_icon
+	ADD_SAVED_VAR(extras)
+	ADD_SAVED_VAR(rim_pos)
 
 /obj/item/weapon/reagent_containers/food/drinks/glass2/on_reagent_change()
 	update_icon()

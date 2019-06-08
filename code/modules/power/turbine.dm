@@ -5,6 +5,8 @@
 	icon_state = "compressor"
 	anchored = 1
 	density = 1
+	circuit_type = /obj/item/weapon/circuitboard/compressor
+	id_tag = ""
 	var/obj/machinery/power/turbine/turbine
 	var/datum/gas_mixture/gas_contained
 	var/turf/simulated/inturf
@@ -12,7 +14,6 @@
 	var/rpm = 0
 	var/rpmtarget = 0
 	var/capacity = 1e6
-	var/comp_id = 0
 
 /obj/machinery/power/turbine
 	name = "gas turbine generator"
@@ -21,6 +22,7 @@
 	icon_state = "turbine"
 	anchored = 1
 	density = 1
+	circuit_type = /obj/item/weapon/circuitboard/turbine
 	var/obj/machinery/compressor/compressor
 	var/turf/simulated/outturf
 	var/lastgen
@@ -34,43 +36,44 @@
 	circuit = /obj/item/weapon/circuitboard/turbine_control
 	anchored = 1
 	density = 1
+	id_tag = ""
 	var/obj/machinery/compressor/compressor
 	var/list/obj/machinery/door/blast/doors
-	var/id = 0
 	var/door_status = 0
 
 // the inlet stage of the gas turbine electricity generator
 
 /obj/machinery/compressor/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/compressor(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 30)
-	component_parts += new /obj/item/pipe(src)
-	component_parts += new /obj/item/pipe(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	component_parts += new /obj/item/stack/material/ocp(src)
-	RefreshParts()
-
 	gas_contained = new
 	inturf = get_step(src, dir)
+	ADD_SAVED_VAR(gas_contained)
+	ADD_SAVED_VAR(starter)
+	ADD_SAVED_VAR(rpm)
+	ADD_SAVED_VAR(rpmtarget)
 
-	spawn(5)
-		turbine = locate() in get_step(src, get_dir(inturf, src))
-		if(!turbine)
-			stat |= BROKEN
-		else
-			turbine.stat &= !BROKEN
-			turbine.compressor = src
+/obj/machinery/compressor/Destroy()
+	if(turbine)
+		turbine.compressor = null
+		turbine.set_broken(TRUE)
+		turbine = null
+	if(gas_contained)
+		QDEL_NULL(gas_contained)
+	inturf = null
+	. = ..()
 
+/obj/machinery/compressor/Initialize()
+	. = ..()
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/machinery/compressor/LateInitialize()
+	. = ..()
+	turbine = locate() in get_step(src, get_dir(inturf, src))
+	if(!turbine)
+		stat |= BROKEN
+	else
+		turbine.stat &= !BROKEN
+		turbine.compressor = src
 
 #define COMPFRICTION 5e5
 #define COMPSTARTERLOAD 2800
@@ -78,7 +81,7 @@
 /obj/machinery/compressor/Process()
 	if(!starter)
 		return
-	overlays.Cut()
+
 	if(stat & BROKEN)
 		return
 	if(!turbine)
@@ -93,7 +96,6 @@
 
 	rpm = max(0, rpm - (rpm*rpm)/COMPFRICTION)
 
-
 	if(starter && !(stat & NOPOWER))
 		use_power_oneoff(2800)
 		if(rpm<1000)
@@ -101,40 +103,24 @@
 	else
 		if(rpm<1000)
 			rpmtarget = 0
-
-
-
-	if(rpm>50000)
-		overlays += image('icons/obj/pipes.dmi', "comp-o4", FLY_LAYER)
-	else if(rpm>10000)
-		overlays += image('icons/obj/pipes.dmi', "comp-o3", FLY_LAYER)
-	else if(rpm>2000)
-		overlays += image('icons/obj/pipes.dmi', "comp-o2", FLY_LAYER)
-	else if(rpm>500)
-		overlays += image('icons/obj/pipes.dmi', "comp-o1", FLY_LAYER)
 	 //TODO: DEFERRED
+	if(world.time % 10 == 0) //every second
+		queue_icon_update()
 
-/obj/machinery/power/turbine/New()
-	..()
+/obj/machinery/compressor/on_update_icon()
+	. = ..()
+	overlays.Cut()
+	if(rpm>50000)
+		overlays += image(icon, "comp-o4", FLY_LAYER)
+	else if(rpm>10000)
+		overlays += image(icon, "comp-o3", FLY_LAYER)
+	else if(rpm>2000)
+		overlays += image(icon, "comp-o2", FLY_LAYER)
+	else if(rpm>500)
+		overlays += image(icon, "comp-o1", FLY_LAYER)
 
 /obj/machinery/power/turbine/Initialize()
 	.=..()
-	if(!map_storage_loaded)
-		component_parts = list()
-		component_parts += new /obj/item/weapon/circuitboard/turbine(src)
-		component_parts += new /obj/item/stack/cable_coil(src, 30)
-		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-		component_parts += new /obj/item/stack/material/plasteel(src)
-		component_parts += new /obj/item/stack/material/plasteel(src)
-		component_parts += new /obj/item/stack/material/plasteel(src)
-		component_parts += new /obj/item/stack/material/plasteel(src)
-		component_parts += new /obj/item/stack/material/plasteel(src)
-		component_parts += new /obj/item/stack/material/plasteel(src)
-		component_parts += new /obj/item/stack/material/plasteel(src)
-		component_parts += new /obj/item/stack/material/plasteel(src)
-		component_parts += new /obj/item/stack/material/plasteel(src)
-		component_parts += new /obj/item/stack/material/plasteel(src)
-	RefreshParts()
 	outturf = get_step(src, dir)
 	return INITIALIZE_HINT_LATELOAD
 
@@ -161,7 +147,7 @@
 /obj/machinery/power/turbine/Process()
 	if(!compressor.starter)
 		return
-	overlays.Cut()
+
 	if(stat & BROKEN)
 		return
 	if(!compressor)
@@ -181,36 +167,35 @@
 		var/datum/gas_mixture/removed = compressor.gas_contained.remove(oamount)
 		outturf.assume_air(removed)
 
-	if(lastgen > 100)
-		overlays += image('icons/obj/pipes.dmi', "turb-o", FLY_LAYER)
-
-
 	for(var/mob/M in viewers(1, src))
 		if ((M.client && M.machine == src))
 			src.interact(M)
 	AutoUpdateAI(src)
+	if(world.time % 10 == 0) //every second
+		queue_icon_update()
+
+/obj/machinery/power/turbine/on_update_icon()
+	. = ..()
+	overlays.Cut()
+	if(lastgen > 100)
+		overlays += image(icon, "turb-o", FLY_LAYER)
 
 /obj/machinery/power/turbine/interact(mob/user)
 
-	if ( (get_dist(src, user) > 1 ) || (stat & (NOPOWER|BROKEN)) && (!istype(user, /mob/living/silicon/ai)) )
+	if ( (get_dist(src, user) > 1 ) || inoperable() && (!istype(user, /mob/living/silicon/ai)) )
 		user.machine = null
-		user << browse(null, "window=turbine")
+		close_browser(user, "window=turbine")
 		return
 
 	user.machine = src
 
-	var/t = "<TT><B>Gas Turbine Generator</B><HR><PRE>"
-
-	t += "Generated power : [round(lastgen)] W<BR><BR>"
-
-	t += "Turbine: [round(compressor.rpm)] RPM<BR>"
-
-	t += "Starter: [ compressor.starter ? "<A href='?src=\ref[src];str=1'>Off</A> <B>On</B>" : "<B>Off</B> <A href='?src=\ref[src];str=1'>On</A>"]"
-
-	t += "</PRE><HR><A href='?src=\ref[src];close=1'>Close</A>"
-
-	t += "</TT>"
-	user << browse(t, "window=turbine")
+	var/t = {"<TT><B>Gas Turbine Generator</B><HR><PRE>
+Generated power : [round(lastgen)] W<BR><BR>
+Turbine: [round(compressor.rpm)] RPM<BR>
+Starter: [ compressor.starter ? "<A href='?src=\ref[src];str=1'>Off</A> <B>On</B>" : "<B>Off</B> <A href='?src=\ref[src];str=1'>On</A>"]
+</PRE><HR><A href='?src=\ref[src];close=1'>Close</A>
+</TT>"}
+	show_browser(user, t, "window=turbine")
 	onclose(user, "turbine")
 
 	return
@@ -223,7 +208,7 @@
 
 /obj/machinery/power/turbine/OnTopic(user, href_list)
 	if(href_list["close"])
-		usr << browse(null, "window=turbine")
+		close_browser(user, "window=turbine")
 		return TOPIC_HANDLED
 
 	if(href_list["str"])
@@ -237,16 +222,14 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
 /obj/machinery/computer/turbine_computer/Initialize()
 	. = ..()
 	for(var/obj/machinery/compressor/C in SSmachines.machinery)
-		if(id == C.comp_id)
+		if(id_tag == C.id_tag)
 			compressor = C
 	doors = new /list()
 	for(var/obj/machinery/door/blast/P in SSmachines.machinery)
-		if(P.id_tag == id)
+		if(P.id_tag == id_tag)
 			doors += P
 
 /obj/machinery/computer/turbine_computer/Destroy()
@@ -254,6 +237,7 @@
 	compressor = null
 	return ..()
 
+//#TODO: Make this use Nano instead. Its pretty messy right now..
 /obj/machinery/computer/turbine_computer/attack_hand(var/mob/user as mob)
 	user.machine = src
 	var/dat
@@ -272,7 +256,7 @@
 	else
 		dat += "<span class='danger'>No compatible attached compressor found.</span>"
 
-	user << browse(dat, "window=computer;size=400x500")
+	show_browser(user, dat, "window=computer;size=400x500")
 	onclose(user, "computer")
 	return
 
@@ -297,12 +281,13 @@
 					door_status = 0
 		. = TOPIC_REFRESH
 	else if( href_list["close"] )
-		user << browse(null, "window=computer")
+		close_browser(user, "window=computer")
 		return TOPIC_HANDLED
 
 	if(. == TOPIC_REFRESH)
 		interact(user)
 
 /obj/machinery/computer/turbine_computer/Process()
-	src.updateDialog()
-	return
+	. = ..()
+	if(world.time % 10 == 0) //#TODO: Remove this once its using Nano
+		src.updateDialog()

@@ -34,11 +34,11 @@
 	update_icon()
 
 /obj/item/weapon/reagent_containers/syringe/pickup(mob/user)
-	..()
+	. = ..()
 	update_icon()
 
 /obj/item/weapon/reagent_containers/syringe/dropped(mob/user)
-	..()
+	. = ..()
 	update_icon()
 
 /obj/item/weapon/reagent_containers/syringe/attack_self(mob/user as mob)
@@ -52,7 +52,7 @@
 	update_icon()
 
 /obj/item/weapon/reagent_containers/syringe/attack_hand()
-	..()
+	. = ..()
 	update_icon()
 
 /obj/item/weapon/reagent_containers/syringe/attackby(obj/item/I as obj, mob/user as mob)
@@ -336,61 +336,41 @@
 /obj/item/weapon/reagent_containers/syringe/inaprovaline
 	name = "Syringe (inaprovaline)"
 	desc = "Contains inaprovaline - used to stabilize patients."
-
-/obj/item/weapon/reagent_containers/syringe/inaprovaline/New()
-	..()
-	reagents.add_reagent(/datum/reagent/inaprovaline, 15)
 	mode = SYRINGE_INJECT
-	update_icon()
+	starts_with = list(/datum/reagent/inaprovaline = 15)
 
 /obj/item/weapon/reagent_containers/syringe/antitoxin
 	name = "Syringe (anti-toxin)"
 	desc = "Contains anti-toxins."
-
-/obj/item/weapon/reagent_containers/syringe/antitoxin/New()
-	..()
-	reagents.add_reagent(/datum/reagent/dylovene, 15)
 	mode = SYRINGE_INJECT
-	update_icon()
+	starts_with = list(/datum/reagent/dylovene = 15)
 
 /obj/item/weapon/reagent_containers/syringe/antiviral
 	name = "Syringe (spaceacillin)"
 	desc = "Contains antiviral agents."
-
-/obj/item/weapon/reagent_containers/syringe/antiviral/New()
-	..()
-	reagents.add_reagent(/datum/reagent/spaceacillin, 15)
 	mode = SYRINGE_INJECT
-	update_icon()
+	starts_with = list(/datum/reagent/spaceacillin = 15)
 
 /obj/item/weapon/reagent_containers/syringe/drugs
 	name = "Syringe (drugs)"
 	desc = "Contains aggressive drugs meant for torture."
-
-/obj/item/weapon/reagent_containers/syringe/drugs/New()
-	..()
-	reagents.add_reagent(/datum/reagent/space_drugs, 5)
-	reagents.add_reagent(/datum/reagent/mindbreaker, 5)
-	reagents.add_reagent(/datum/reagent/cryptobiolin, 5)
 	mode = SYRINGE_INJECT
-	update_icon()
+	starts_with = list(/datum/reagent/spaceacillin = 15,
+			/datum/reagent/space_drugs = 5,
+			/datum/reagent/mindbreaker = 5,
+			/datum/reagent/cryptobiolin = 5,
+		)
 
 /obj/item/weapon/reagent_containers/syringe/ld50_syringe/choral
-
-/obj/item/weapon/reagent_containers/syringe/ld50_syringe/choral/New()
-	..()
-	reagents.add_reagent(/datum/reagent/chloralhydrate, 60)
 	mode = SYRINGE_INJECT
-	update_icon()
+	starts_with = list(/datum/reagent/chloralhydrate = 60)
 
 /obj/item/weapon/reagent_containers/syringe/steroid
 	name = "Syringe (anabolic steroids)"
 	desc = "Contains drugs for muscle growth."
-
-/obj/item/weapon/reagent_containers/syringe/steroid/New()
-	..()
-	reagents.add_reagent(/datum/reagent/adrenaline, 5)
-	reagents.add_reagent(/datum/reagent/hyperzine, 10)
+	starts_with = list(/datum/reagent/adrenaline = 5,
+		/datum/reagent/hyperzine = 10,
+	)
 
 
 // TG ports

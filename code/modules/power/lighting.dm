@@ -39,7 +39,10 @@
 		if(istype(fixture, /obj/machinery/light))
 			fixture_type = fixture.type
 		fixture.transfer_fingerprints_to(src)
+	ADD_SAVED_VAR(stage)
 
+/obj/machinery/light_construct/Initialize()
+	. = ..()
 	queue_icon_update()
 
 /obj/machinery/light_construct/on_update_icon()

@@ -251,9 +251,8 @@
 /obj/item/device/assembly_holder/timer_igniter
 	name = "timer-igniter assembly"
 
-/obj/item/device/assembly_holder/timer_igniter/New()
-	..()
-
+/obj/item/device/assembly_holder/timer_igniter/Initialize()
+	. = ..()
 	var/obj/item/device/assembly/igniter/ign = new(src)
 	ign.secured = 1
 	ign.holder = src
@@ -265,7 +264,7 @@
 	a_left = tmr
 	a_right = ign
 	secured = 1
-	update_icon()
+	queue_icon_update()
 	SetName(initial(name) + " ([tmr.time] secs)")
 	if(loc)
 		loc.verbs |= /obj/item/device/assembly_holder/timer_igniter/verb/configure

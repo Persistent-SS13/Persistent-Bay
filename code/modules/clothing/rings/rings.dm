@@ -45,9 +45,10 @@
 	atom_flags = ATOM_FLAG_OPEN_CONTAINER
 	origin_tech = list(TECH_MATERIAL = 2, TECH_ILLEGAL = 4)
 
-/obj/item/clothing/ring/reagent/New()
-	..()
-	create_reagents(15)
+/obj/item/clothing/ring/reagent/Initialize()
+	. = ..()
+	if(!reagents)
+		create_reagents(15)
 
 /obj/item/clothing/ring/reagent/equipped(var/mob/living/carbon/human/H)
 	..()
@@ -68,9 +69,10 @@
 	icon_state = "material"
 	origin_tech = list(TECH_MATERIAL = 2, TECH_ILLEGAL = 5)
 
-/obj/item/clothing/ring/reagent/sleepy/New()
-	..()
-	reagents.add_reagent(/datum/reagent/chloralhydrate, 15) // Less than a sleepy-pen, but still enough to knock someone out
+/obj/item/clothing/ring/reagent/sleepy/Initialize()
+	. = ..()
+	if(!reagents)
+		reagents.add_reagent(/datum/reagent/chloralhydrate, 15) // Less than a sleepy-pen, but still enough to knock someone out
 
 /////////////////////////////////////////
 //Seals and Signet Rings

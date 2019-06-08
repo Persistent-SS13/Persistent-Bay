@@ -21,7 +21,13 @@
 /obj/item/clothing/mask/smokable/New()
 	..()
 	atom_flags |= ATOM_FLAG_NO_REACT // so it doesn't react until you light it
-	create_reagents(chem_volume) // making the cigarrete a chemical holder with a maximum volume of 15
+	ADD_SAVED_VAR(lit)
+	ADD_SAVED_VAR(atom_flags)
+
+/obj/item/clothing/mask/smokable/Initialize()
+	if(!reagents)
+		create_reagents(chem_volume) // making the cigarrete a chemical holder with a maximum volume of 15
+	. = ..()
 
 /obj/item/clothing/mask/smokable/Destroy()
 	. = ..()
@@ -168,10 +174,11 @@
 	brand = "\improper Trans-Stellar Duty-free"
 	var/list/filling = list(/datum/reagent/tobacco = 1)
 
-/obj/item/clothing/mask/smokable/cigarette/New()
-	..()
-	for(var/R in filling)
-		reagents.add_reagent(R, filling[R])
+/obj/item/clothing/mask/smokable/cigarette/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		for(var/R in filling)
+			reagents.add_reagent(R, filling[R])
 
 /obj/item/clothing/mask/smokable/cigarette/on_update_icon()
 	..()
@@ -439,8 +446,13 @@
 
 /obj/item/weapon/reagent_containers/terrbacco/New()
 	..()
-	for(var/R in filling)
-		reagents.add_reagent(R, filling[R])
+	ADD_SAVED_VAR(dry)
+
+/obj/item/weapon/reagent_containers/terrbacco/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		for(var/R in filling)
+			reagents.add_reagent(R, filling[R])
 
 /obj/item/weapon/reagent_containers/terrbacco/bad
 	desc = "A wad of carefully cured and dried tobacco. Ground into a coarse mess."

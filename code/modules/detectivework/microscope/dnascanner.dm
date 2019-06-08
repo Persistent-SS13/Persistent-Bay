@@ -6,6 +6,7 @@
 	icon_state = "dnaopen"
 	anchored = 1
 	density = 1
+	circuit_type = /obj/item/weapon/circuitboard/dnaforensics
 
 	var/obj/item/weapon/forensics/swab/bloodsamp = null
 	var/closed = 0
@@ -17,12 +18,11 @@
 
 /obj/machinery/dnaforensics/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/dnaforensics(src)
-	component_parts += new /obj/item/stack/material/glass(src)	//The glass cover the analyzer has
-	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	RefreshParts()
+	ADD_SAVED_VAR(bloodsamp)
+	ADD_SAVED_VAR(closed)
+	ADD_SAVED_VAR(scanning)
+	ADD_SAVED_VAR(scanner_progress)
+	ADD_SAVED_VAR(report_num)
 
 /obj/machinery/dnaforensics/attackby(var/obj/item/W, var/obj/item/O as obj, mob/user as mob)
 	if(closed)

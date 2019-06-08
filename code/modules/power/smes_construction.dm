@@ -51,8 +51,8 @@
 /obj/machinery/power/smes/buildable/power_shuttle/SetupParts()
 	. = ..()
 	LAZYADD(component_parts, new /obj/item/weapon/smes_coil/super_io(src))
-	LAZYADD(component_parts, new /obj/item/weapon/smes_coil/super_io(src))
-	LAZYADD(component_parts, new /obj/item/weapon/smes_coil(src))
+	component_parts += new /obj/item/weapon/smes_coil/super_io(src)
+	component_parts += new /obj/item/weapon/smes_coil(src)
 	recalc_coils()
 
 
@@ -60,8 +60,8 @@
 /obj/machinery/power/smes/buildable/batterybank/SetupParts()
 	. = ..()
 	LAZYADD(component_parts, new /obj/item/weapon/smes_coil/super_capacity(src))
-	LAZYADD(component_parts, new /obj/item/weapon/smes_coil/super_capacity(src))
-	LAZYADD(component_parts, new /obj/item/weapon/smes_coil/super_capacity(src))
+	component_parts += new /obj/item/weapon/smes_coil/super_capacity(src)
+	component_parts += new /obj/item/weapon/smes_coil/super_capacity(src)
 	recalc_coils()
 
 
@@ -80,6 +80,7 @@
 	var/RCon_tag = "NO_TAG"		// RCON tag, change to show it on SMES Remote control console.
 	var/emp_proof = 0			// Whether the SMES is EMP proof
 
+	circuit_type = /obj/item/weapon/circuitboard/smes
 	charge = 0
 	should_be_mapped = 1
 
@@ -90,7 +91,6 @@
 	recalc_coils()
 	to_chat(user, "\The [src] has been upgraded. It's transfer rate and capacity has increased, and it is now resistant against EM pulses.")
 	return 1
-
 
 /obj/machinery/power/smes/buildable/max_cap_in_out/Initialize()
 	. = ..()
@@ -142,23 +142,28 @@
 // Parameters: None
 // Description: Adds standard components for this SMES, and forces recalculation of properties.
 /obj/machinery/power/smes/buildable/New()
-	component_parts = list()
-	component_parts += new /obj/item/stack/cable_coil(src,30)
-	component_parts += new /obj/item/weapon/circuitboard/smes(src)
 	src.wires = new /datum/wires/smes(src)
+	..()
+	ADD_SAVED_VAR(cur_coils)
+	ADD_SAVED_VAR(safeties_enabled)
+	ADD_SAVED_VAR(failing)
+	ADD_SAVED_VAR(grounding)
+	ADD_SAVED_VAR(RCon)
+	ADD_SAVED_VAR(RCon_tag)
 
+/obj/machinery/power/smes/buildable/SetupParts()
+	. = ..()
 	// Allows for mapped-in SMESs with larger capacity/IO
 	if(cur_coils)
 		for(var/i = 1, i <= cur_coils, i++)
 			component_parts += new /obj/item/weapon/smes_coil(src)
 		recalc_coils()
-	..()
 
 // Proc: attack_hand()
 // Parameters: None
 // Description: Opens the UI as usual, and if cover is removed opens the wiring panel.
 /obj/machinery/power/smes/buildable/attack_hand()
-	..()
+	. = ..()
 	if(panel_open)
 		wires.Interact(usr)
 
@@ -168,6 +173,7 @@
 /obj/machinery/power/smes/buildable/after_load()
 	recalc_coils()
 	..()
+
 /obj/machinery/power/smes/buildable/proc/recalc_coils()
 	cur_coils = 0
 	capacity = 0
@@ -339,7 +345,7 @@
 	// No more disassembling of overloaded SMESs. You broke it, now enjoy the consequences.
 	if (failing)
 		to_chat(user, "<span class='warning'>The [src]'s screen is flashing with alerts. It seems to be overloaded! Touching it now is probably not a good idea.</span>")
-		return
+		return 1
 	// If parent returned 1:
 	// - Hatch is open, so we can modify the SMES
 	// - No action was taken in parent function (terminal de/construction atm).
@@ -351,15 +357,15 @@
 			if(newtag)
 				RCon_tag = newtag
 				to_chat(user, "<span class='notice'>You changed the RCON tag to: [newtag]</span>")
-			return
+			return 1
 		// Charged above 1% and safeties are enabled.
 		if((charge > (capacity/100)) && safeties_enabled)
 			to_chat(user, "<span class='warning'>Safety circuit of [src] is preventing modifications while it's charged!</span>")
-			return
+			return 1
 
 		if (output_attempt || input_attempt)
 			to_chat(user, "<span class='warning'>Turn off the [src] first!</span>")
-			return
+			return 1
 
 		// Probability of failure if safety circuit is disabled (in %)
 		var/failure_probability = round((charge / capacity) * 100)
@@ -370,32 +376,23 @@
 
 		// Crowbar - Disassemble the SMES.
 		if(isCrowbar(W))
+			var/obj/item/weapon/tool/C = W
 			if (terminals.len)
 				to_chat(user, "<span class='warning'>You have to disassemble the terminal first!</span>")
-				return
+				return 1
 
-			playsound(get_turf(src), 'sound/items/Crowbar.ogg', 50, 1)
 			to_chat(user, "<span class='warning'>You begin to disassemble the [src]!</span>")
-			if (do_after(usr, 50 * cur_coils, src)) // More coils = takes longer to disassemble. It's complex so largest one with 6 coils will take 30s
-
+			if (C.use_tool(user, src, 50 * cur_coils)) // More coils = takes longer to disassemble. It's complex so largest one with 6 coils will take 30s
 				if (failure_probability && prob(failure_probability))
 					total_system_failure(failure_probability, user)
-					return
-
+					return 1
 				to_chat(usr, "<span class='warning'>You have disassembled the SMES cell!</span>")
-				var/obj/machinery/constructable_frame/machine_frame/M = new /obj/machinery/constructable_frame/machine_frame(src.loc)
-				M.state = 2
-				M.icon_state = "box_1"
-				for(var/obj/I in component_parts)
-					I.forceMove(src.loc)
-					component_parts -= I
-				qdel(src)
-				return
+				dismantle()
+				return 1
 
 		// Superconducting Magnetic Coil - Upgrade the SMES
 		else if(istype(W, /obj/item/weapon/smes_coil))
 			if (cur_coils < max_coils)
-
 				if (failure_probability && prob(failure_probability))
 					total_system_failure(failure_probability, user)
 					return
@@ -406,6 +403,8 @@
 				recalc_coils()
 			else
 				to_chat(usr, "<span class='warning'>You can't insert more coils to this SMES unit!</span>")
+			return 1
+	return ..()
 
 // Proc: toggle_input()
 // Parameters: None

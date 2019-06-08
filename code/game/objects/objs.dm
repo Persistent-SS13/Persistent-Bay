@@ -1,12 +1,12 @@
 /obj
 	layer 			 = OBJ_LAYER //Determine over what the object's sprite will be drawn
 	animate_movement = 2	//
-	mass 			 = 5	//Kg or something
+	mass 			 = 0.05	//Kg Used for calculating throw force, inertia, and possibly more things..
 	//Properties
 	var/obj_flags		//Flags changing the behavior of the object.
 	var/list/matter		//Used to store information about the contents of the object.
 	var/w_class 		// Size of the object.
-	var/sharpness	= 0	// whether this object cuts, mainly used for tools
+	var/sharpness	= 0	// A measure of how much this item cuts, mainly used for tools. 0 = Doesn't cut, 1 = Cuts, 2 = Cuts things that sharpness 1 wouldn't, and so on
 
 	//Damage effects
 	var/throwforce 			= 1			//Damage power this object has on impact when thrown
@@ -44,10 +44,10 @@
 
 /obj/New()
 	..()
-	ADD_SAVED_VAR(health)
+	if(obj_flags & OBJ_FLAG_DAMAGEABLE && max_health) //save health only when its relevant
+		ADD_SAVED_VAR(health)
+		ADD_SKIP_EMPTY(health) //Skip null health
 	ADD_SAVED_VAR(burning)
-
-	ADD_SKIP_EMPTY(health) //Skip null health
 
 /obj/Initialize()
 	if(!map_storage_loaded)
@@ -266,10 +266,21 @@
 	if(!isdamageable() || !vulnerable_to_damtype(damtype))
 		return 0
 	var/resultingdmg = max(0, damage * blocked_mult(armor_absorb(damage, armorbypass, damtype)))
-	rem_health(resultingdmg)
-	update_health(damtype)
+	var/name_ref = "\The \"[src]\" (\ref[src])([x], [y], [z])"
+
+	//Dispersed affect contents
+	if(damflags & DAM_DISPERSED && resultingdmg)
+		for(var/atom/movable/A as mob|obj in src)
+			if(isobj(A))
+				var/obj/O = A
+				O.take_damage(resultingdmg, damtype, armorbypass, used_weapon)
+			if(isliving(A))
+				var/mob/living/M = A
+				M.apply_damage(resultingdmg, damtype, null, damflags, used_weapon, armorbypass)
+
+	rem_health(resultingdmg, damtype)
 	. = resultingdmg
-	log_debug("\The \"[src]\" (\ref[src])([x], [y], [z]) took [resultingdmg] \"[damtype]\" damages from \"[used_weapon]\"! Before armor: [damage] damages.")
+	log_debug("[name_ref] took [resultingdmg] \"[damtype]\" damages from \"[used_weapon]\"! Before armor: [damage] damages.")
 	return .
 
 //Like take damage, but meant to instantly destroy the object from an external source.
@@ -277,8 +288,7 @@
 /obj/proc/kill(var/damagetype = DAM_BLUNT)
 	if(!isdamageable())
 		return
-	set_health(min_health)
-	update_health(damagetype)
+	set_health(min_health, damagetype)
 
 /obj/proc/isbroken()
 	return health <= broken_threshold
@@ -315,17 +325,17 @@
 	qdel(src)
 
 //Directly sets health, without updating object state
-/obj/proc/set_health(var/newhealth)
+/obj/proc/set_health(var/newhealth, var/dtype = DAM_BLUNT)
 	health = between(min_health, round(newhealth, 0.1), get_max_health()) //round(max(0, min(newhealth, max_health)), 0.1)
-	update_health()
+	update_health(dtype, usr)
 
 //Convenience proc to handle adding health to the object
-/obj/proc/add_health(var/addhealth)
-	set_health(addhealth + get_health())
+/obj/proc/add_health(var/addhealth, var/dtype = DAM_BLUNT)
+	set_health(addhealth + get_health(), dtype)
 
 //Convenience proc to handle removing health from the object
-/obj/proc/rem_health(var/remhealth)
-	set_health(get_health() - remhealth)
+/obj/proc/rem_health(var/remhealth, var/dtype = DAM_BLUNT)
+	set_health(get_health() - remhealth, dtype)
 
 /obj/proc/get_health()
 	return health
@@ -436,7 +446,7 @@
 		return
 	if(!force)
 		force = (explosion_base_damage ** (4 - severity)) //Severity is a value from 1 to 3, with 1 being the strongest. So each severity level is
-	take_damage(force, DAM_BOMB)
+	take_damage(force, DAM_BOMB, 0, "Explosion", DAM_DISPERSED)
 
 //Called when under effect of a emp weapon
 /obj/emp_act(var/severity, var/force = 0)
@@ -572,15 +582,15 @@
 /obj/proc/can_embed()
 	return is_sharp(src)
 
-/obj/proc/default_wrench_floor_bolts(mob/user, obj/item/weapon/tool/W, delay=20)
-	if(!isWrench(W))
+//Handles anchoring and un-anchoring the obj to the floor with a wrench
+/obj/proc/default_wrench_floor_bolts(mob/user, obj/item/weapon/tool/wrench/W, delay=2 SECONDS)
+	if(!istype(W))
 		return FALSE
-	playsound(loc, 'sound/items/Ratchet.ogg', vol=50, vary=1, extrarange=4, falloff=2)
 	if(anchored)
 		user.visible_message("\The [user] begins unsecuring \the [src] from the floor.", "You start unsecuring \the [src] from the floor.")
 	else
 		user.visible_message("\The [user] begins securing \the [src] to the floor.", "You start securing \the [src] to the floor.")
-	if(do_after(user, delay, src))
+	if(W.use_tool(user, src, delay))
 		if(!src) return
 		to_chat(user, SPAN_NOTICE("You [anchored? "un" : ""]secured \the [src]!"))
 		set_anchored(!anchored)

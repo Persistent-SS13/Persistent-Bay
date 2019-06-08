@@ -35,12 +35,12 @@
 	overlays.Cut()
 	var/percent = round(reagents.total_volume / volume * 100)
 	if(reagents.total_volume)
-		var/image/filling = image('icons/obj/bloodpack.dmi', "[round(percent,25)]")
+		var/image/filling = image(icon, "[round(percent,25)]")
 		filling.color = reagents.get_color()
 		overlays += filling
-	overlays += image('icons/obj/bloodpack.dmi', "top")
+	overlays += image(icon, "top")
 	if(attached)
-		overlays += image('icons/obj/bloodpack.dmi', "dongle")
+		overlays += image(icon, "dongle")
 
 /obj/item/weapon/reagent_containers/ivbag/MouseDrop(over_object, src_location, over_location)
 	if(!CanMouseDrop(over_object))
@@ -64,7 +64,7 @@
 		if(!loc.Adjacent(attached))
 			attached = null
 			visible_message("\The [attached] detaches from \the [src]")
-			update_icon()
+			queue_icon_update()
 			return PROCESS_KILL
 	else
 		return PROCESS_KILL
@@ -77,9 +77,10 @@
 		return
 
 	reagents.trans_to_mob(attached, amount_per_transfer_from_this, CHEM_BLOOD)
-	update_icon()
+	if(world.time % 10 == 0) //Only update icon every 1 seconds
+		queue_icon_update()
 
-/obj/item/weapon/reagent_containers/ivbag/nanoblood/New()
+/obj/item/weapon/reagent_containers/ivbag/nanoblood/SetupReagents()
 	..()
 	reagents.add_reagent(/datum/reagent/nanoblood, volume)
 
@@ -87,10 +88,14 @@
 	name = "blood pack"
 	var/blood_type = null
 
-/obj/item/weapon/reagent_containers/ivbag/blood/New()
-	..()
+/obj/item/weapon/reagent_containers/ivbag/blood/Initialize()
+	. = ..()
 	if(blood_type)
 		name = "blood pack [blood_type]"
+
+/obj/item/weapon/reagent_containers/ivbag/blood/SetupReagents()
+	..()
+	if(blood_type)
 		reagents.add_reagent(/datum/reagent/blood, volume, list("donor" = null, "donor_name" = "redacted", "blood_DNA" = null, "blood_type" = blood_type, "trace_chem" = null, "virus2" = list(), "antibodies" = list()))
 
 /obj/item/weapon/reagent_containers/ivbag/blood/APlus

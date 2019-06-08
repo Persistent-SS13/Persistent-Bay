@@ -25,7 +25,7 @@
 	var/flush_count = 0 //this var adds 1 once per tick. When it reaches flush_every_ticks it resets and tries to flush.
 	var/last_sound = 0
 	var/list/allowed_objects = list(/obj/structure/closet)
-	active_power_usage = 2200	//the pneumatic pump power. 3 HP ~ 2200W
+	active_power_usage = 500 //Reduced to 500w because they're comically draining power for no real reasons	//the pneumatic pump power. 3 HP ~ 2200W
 	idle_power_usage = 100
 	atom_flags = ATOM_FLAG_CLIMBABLE
 
@@ -33,16 +33,18 @@
 // find the attached trunk (if present) and init gas resvr.
 /obj/machinery/disposal/New()
 	..()
-	spawn(5)
-		trunk = locate() in src.loc
-		if(!trunk)
-			mode = 0
-			flush = 0
-		else
-			trunk.linked = src	// link the pipe trunk to self
+	air_contents = new/datum/gas_mixture(PRESSURE_TANK_VOLUME)
+	ADD_SAVED_VAR(mode)
 
-		air_contents = new/datum/gas_mixture(PRESSURE_TANK_VOLUME)
-		update_icon()
+/obj/machinery/disposal/Initialize()
+	. = ..()
+	trunk = locate() in src.loc
+	if(!trunk)
+		mode = 0
+		flush = 0
+	else
+		trunk.linked = src	// link the pipe trunk to self
+	queue_icon_update()
 
 /obj/machinery/disposal/Destroy()
 	eject()
@@ -326,7 +328,7 @@
 	update_icon()
 
 // update the icon & overlays to reflect mode & status
-/obj/machinery/disposal/update_icon()
+/obj/machinery/disposal/on_update_icon()
 	overlays.Cut()
 	if(stat & BROKEN)
 		mode = 0
@@ -335,7 +337,7 @@
 
 	// flush handle
 	if(flush)
-		overlays += image('icons/obj/pipes/disposal.dmi', "dispover-handle")
+		overlays += image(icon, "dispover-handle")
 
 	// only handle is shown if no power
 	if(stat & NOPOWER || mode == -1)
@@ -343,19 +345,19 @@
 
 	// 	check for items in disposal - occupied light
 	if(contents.len > 0)
-		overlays += image('icons/obj/pipes/disposal.dmi', "dispover-full")
+		overlays += image(icon, "dispover-full")
 
 	// charging and ready light
 	if(mode == 1)
-		overlays += image('icons/obj/pipes/disposal.dmi', "dispover-charge")
+		overlays += image(icon, "dispover-charge")
 	else if(mode == 2)
-		overlays += image('icons/obj/pipes/disposal.dmi', "dispover-ready")
+		overlays += image(icon, "dispover-ready")
 
 // timed process
 // charge the gas reservoir and perform flush if ready
 /obj/machinery/disposal/Process()
 	if(!air_contents || (stat & BROKEN))			// nothing can happen if broken
-		update_use_power(0)
+		update_use_power(POWER_USE_OFF)
 		return
 
 	flush_count++
@@ -373,16 +375,16 @@
 		flush()
 
 	if(mode != 1) //if off or ready, no need to charge
-		update_use_power(1)
+		update_use_power(POWER_USE_IDLE)
 	else if(air_contents.return_pressure() >= SEND_PRESSURE)
 		mode = 2 //if full enough, switch to ready mode
-		update_icon()
+		queue_icon_update()
 	else
 		src.pressurize() //otherwise charge
 
 /obj/machinery/disposal/proc/pressurize()
 	if(stat & NOPOWER)			// won't charge if no power
-		update_use_power(0)
+		update_use_power(POWER_USE_OFF)
 		return
 
 	var/atom/L = loc						// recharging from loc turf
@@ -397,7 +399,7 @@
 		power_draw = pump_gas(src, env, air_contents, transfer_moles, active_power_usage)
 
 	if (power_draw > 0)
-		use_power(power_draw)
+		use_power_oneoff(power_draw)
 
 // perform a flush
 /obj/machinery/disposal/proc/flush()
@@ -442,7 +444,7 @@
 // called when area power changes
 /obj/machinery/disposal/power_change()
 	..()	// do default setting/reset of stat NOPOWER bit
-	update_icon()	// update icon
+	queue_icon_update()	// update icon
 	return
 
 

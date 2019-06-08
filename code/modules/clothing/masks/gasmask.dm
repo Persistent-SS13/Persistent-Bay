@@ -28,6 +28,10 @@
 		DAM_RADS 	= 5,
 		DAM_STUN 	= 0)
 
+/obj/item/clothing/mask/gas/New()
+	. = ..()
+	ADD_SAVED_VAR(clogged)
+
 /obj/item/clothing/mask/gas/examine(var/mob/user)
 	. = ..()
 	if(clogged)

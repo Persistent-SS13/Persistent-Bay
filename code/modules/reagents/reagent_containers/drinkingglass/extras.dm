@@ -61,6 +61,7 @@
 	glass_addition = "stick"
 	glass_desc = "There is a stick in the glass."
 	icon_state = "stick"
+	matter = list(MATERIAL_WOOD = 0.01 SHEETS)
 
 /obj/item/weapon/glass_extra/straw
 	name = "straw"
@@ -68,5 +69,6 @@
 	glass_addition = "straw"
 	glass_desc = "There is a straw in the glass."
 	icon_state = "straw"
+	matter = list(MATERIAL_PLASTIC = 0.01 SHEETS)
 
 #undef DRINK_ICON_FILE

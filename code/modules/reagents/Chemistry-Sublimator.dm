@@ -44,9 +44,13 @@
 
 /obj/machinery/portable_atmospherics/reagent_sublimator/New()
 	. = ..()
+	ADD_SAVED_VAR(container)
+
+/obj/machinery/portable_atmospherics/reagent_sublimator/Initialize()
+	. = ..()
+	queue_icon_update()
 	if(holding)   verbs |= /obj/machinery/portable_atmospherics/reagent_sublimator/proc/remove_tank
 	if(container) verbs |= /obj/machinery/portable_atmospherics/reagent_sublimator/proc/remove_container
-	update_icon()
 
 // Coded this before realizing base type didn't support tank mixing, leaving it in just in case someone decides to add it.
 /obj/machinery/portable_atmospherics/reagent_sublimator/proc/remove_tank()
@@ -97,12 +101,13 @@
 		to_chat(user, "<span class='warning'>\The [src] is not currently functional.</span>")
 		return
 	update_use_power(use_power == POWER_USE_ACTIVE ? POWER_USE_IDLE : POWER_USE_ACTIVE)
-	user.visible_message("<span class='notice'>\The [user] switches \the [src] [use_power == 2 ? "on" : "off"].</span>")
+	user.visible_message("<span class='notice'>\The [user] switches \the [src] [use_power == POWER_USE_ACTIVE ? "on" : "off"].</span>")
 	update_icon()
 
 /obj/machinery/portable_atmospherics/reagent_sublimator/attackby(var/obj/item/weapon/thing, var/mob/user)
 	if(istype(thing, /obj/item/weapon/tank))
 		to_chat(user, "<span class='warning'>\The [src] has no socket for a gas tank.</span>")
+		return 1
 	else if(istype(thing, /obj/item/weapon/reagent_containers))
 		if(container)
 			to_chat(user, "<span class='warning'>\The [src] is already loaded with \the [container].</span>")
@@ -111,22 +116,14 @@
 			user.visible_message("<span class='notice'>\The [user] loads \the [thing] into \the [src].</span>")
 			verbs |= /obj/machinery/portable_atmospherics/reagent_sublimator/proc/remove_container
 		update_icon()
+		return 1
 	else
 		. = ..()
 
 /obj/machinery/portable_atmospherics/reagent_sublimator/Process()
-
 	. = ..()
-
 	if(. == PROCESS_KILL)
-		return
-
-	if(stat & (BROKEN|NOPOWER))
-		if(use_power)
-			update_use_power(POWER_USE_OFF)
-			update_icon()
-		return
-
+		return .
 	if(use_power >= POWER_USE_ACTIVE && container && container.reagents)
 		var/datum/gas_mixture/produced = new
 		var/added_gas = FALSE
@@ -146,7 +143,7 @@
 		else
 			visible_message("<span class='notice'>\The [src] pings as it finishes processing the contents of \the [container].</span>")
 			update_use_power(POWER_USE_IDLE)
-			update_icon()
+			queue_icon_update()
 
 /obj/machinery/portable_atmospherics/reagent_sublimator/on_update_icon()
 	icon_state = "sublimator-[use_power == POWER_USE_ACTIVE ? "on" : "off"]-[container ? "loaded" : "unloaded"]-[holding ? "tank" : "notank"]"

@@ -4,7 +4,7 @@
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "beertankTEMP"
 	amount_per_transfer_from_this = 10
-	matter = list(MATERIAL_STEEL = 20000)
+	matter = list(MATERIAL_ALUMINIUM = 20 SHEET)
 	initial_reagent_types = list(/datum/reagent/ethanol/beer = 1)
 	atom_flags = ATOM_FLAG_CLIMBABLE
 

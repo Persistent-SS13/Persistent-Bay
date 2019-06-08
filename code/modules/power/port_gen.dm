@@ -109,10 +109,10 @@
 /obj/machinery/power/port_gen/pacman
 	name = "\improper P.A.C.M.A.N.-type Portable Generator"
 	desc = "A power generator that runs on solid phoron sheets. Rated for 80 kW max safe output."
+	circuit_type = /obj/item/weapon/circuitboard/pacman
 
 	var/sheet_name = "Phoron Sheets"
 	var/sheet_path = /obj/item/stack/material/phoron
-	var/board_path = /obj/item/weapon/circuitboard/pacman
 
 	/*
 		These values were chosen so that the generator can run safely up to 80 kW
@@ -142,14 +142,9 @@
 
 /obj/machinery/power/port_gen/pacman/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/micro_laser(src)
-	component_parts += new /obj/item/stack/cable_coil(src)
-	component_parts += new /obj/item/stack/cable_coil(src)
-	component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-	component_parts += new board_path(src)
-	RefreshParts()
+	ADD_SAVED_VAR(sheets)
+	ADD_SAVED_VAR(sheet_left)
+	ADD_SAVED_VAR(operating_temperature)
 
 /obj/machinery/power/port_gen/pacman/Destroy()
 	DropFuel()
@@ -436,8 +431,12 @@
 	sheet_path = /obj/item/stack/material/uranium
 	sheet_name = "Uranium Sheets"
 	time_per_sheet = 576 //same power output, but a 50 sheet stack will last 2 hours at max safe power
-	board_path = /obj/item/weapon/circuitboard/pacman/super
+	circuit_type =  /obj/item/weapon/circuitboard/pacman/super
 	var/rad_power = 2
+
+/obj/machinery/power/port_gen/pacman/super/New()
+	. = ..()
+	ADD_SAVED_VAR(rad_power)
 
 //nuclear energy is green energy!
 /obj/machinery/power/port_gen/pacman/super/process_exhaust()
@@ -484,12 +483,12 @@
 	time_per_sheet = 400
 	rad_power = 6
 	atom_flags = ATOM_FLAG_OPEN_CONTAINER
-	board_path = /obj/item/weapon/circuitboard/pacman/super/potato
+	circuit_type = /obj/item/weapon/circuitboard/pacman/super/potato
 	anchored = 1
 
-/obj/machinery/power/port_gen/pacman/super/potato/New()
+/obj/machinery/power/port_gen/pacman/super/potato/SetupParts()
 	create_reagents(120)
-	..()
+	. = ..()
 
 /obj/machinery/power/port_gen/pacman/super/potato/examine(mob/user)
 	..()
@@ -541,7 +540,7 @@
 	time_per_sheet = 576
 	max_temperature = 800
 	temperature_gain = 90
-	board_path = /obj/item/weapon/circuitboard/pacman/mrs
+	circuit_type = /obj/item/weapon/circuitboard/pacman/mrs
 
 /obj/machinery/power/port_gen/pacman/mrs/explode()
 	//no special effects, but the explosion is pretty big (same as a supermatter shard).

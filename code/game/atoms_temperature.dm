@@ -5,6 +5,11 @@
 	var/temperature = T20C
 	var/temperature_coefficient = MAX_TEMPERATURE_COEFFICIENT
 
+/atom/New()
+	..()
+	if(!(atom_flags & ATOM_FLAG_NO_TEMP_CHANGE))
+		ADD_SAVED_VAR(temperature) //Save temp only when its actually relevant
+	
 /atom/movable/Entered(var/atom/movable/atom, var/atom/old_loc)
 	. = ..()
 	QUEUE_TEMPERATURE_ATOMS(atom)

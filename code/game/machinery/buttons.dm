@@ -74,7 +74,7 @@
 		return FALSE
 	operating = TRUE
 	active = TRUE
-	use_power(active_power_usage)
+	use_power_oneoff(active_power_usage)
 	send_signal()
 	update_icon()
 	if(icon_anim_act)

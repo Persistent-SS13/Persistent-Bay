@@ -14,9 +14,13 @@
 	var/injecting = FALSE
 	var/obj/item/weapon/fuel_assembly/cur_assembly
 
+/obj/machinery/fusion_fuel_injector/New()
+	. = ..()
+	ADD_SAVED_VAR(injecting)
+
 /obj/machinery/fusion_fuel_injector/Initialize()
 	set_extension(src, /datum/extension/fusion_plant_member, /datum/extension/fusion_plant_member)
-	if(initial_id_tag)
+	if(!map_storage_loaded && initial_id_tag)
 		var/datum/extension/fusion_plant_member/fusion = get_extension(src, /datum/extension/fusion_plant_member)
 		fusion.set_tag(null, initial_id_tag)
 	. = ..()

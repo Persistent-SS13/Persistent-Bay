@@ -12,6 +12,11 @@
 	var/timing = 0
 	var/time = 10
 
+/obj/item/device/assembly/timer/New()
+	. = ..()
+	ADD_SAVED_VAR(timing)
+	ADD_SAVED_VAR(time)
+
 /obj/item/device/assembly/timer/proc/timer_end()
 
 

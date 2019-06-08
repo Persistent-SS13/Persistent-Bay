@@ -6,6 +6,9 @@
 	matter = list(MATERIAL_STEEL = 100)
 	var/armed = 0
 
+	New()
+		. = ..()
+		ADD_SAVED_VAR(armed)
 
 	examine(mob/user)
 		. = ..(user)

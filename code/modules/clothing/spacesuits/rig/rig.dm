@@ -103,6 +103,21 @@
 
 	var/banned_modules = list()
 
+/obj/item/weapon/rig/New()
+	. = ..()
+	ADD_SAVED_VAR(open)
+	ADD_SAVED_VAR(p_open)
+	ADD_SAVED_VAR(locked)
+	ADD_SAVED_VAR(subverted)
+	ADD_SAVED_VAR(malfunctioning)
+	ADD_SAVED_VAR(security_check_enabled)
+	ADD_SAVED_VAR(electrified)
+	ADD_SAVED_VAR(locked_down)
+	ADD_SAVED_VAR(sealing)
+	ADD_SAVED_VAR(installed_modules)
+	ADD_SAVED_VAR(cell)
+	ADD_SAVED_VAR(air_supply)
+
 /obj/item/weapon/rig/examine()
 	. = ..()
 	if(wearer)
@@ -136,7 +151,7 @@
 	START_PROCESSING(SSobj, src)
 
 	if(!map_storage_loaded)
-		create_initial_parts()
+		create_initial_parts() //Don't create duplicates
 
 	for(var/obj/item/piece in list(gloves,helmet,boots,chest))
 		if(!istype(piece))
@@ -154,7 +169,7 @@
 		if(islist(armor)) piece.armor = armor.Copy()
 
 	set_slowdown_and_vision(!offline)
-	update_icon(1)
+	queue_icon_update(1)
 
 /obj/item/weapon/rig/proc/create_initial_parts()
 	if(initial_modules && initial_modules.len)

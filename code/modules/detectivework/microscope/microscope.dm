@@ -6,6 +6,7 @@
 	icon_state = "microscope"
 	anchored = 1
 	density = 1
+	circuit_type = /obj/item/weapon/circuitboard/microscope
 
 	var/obj/item/sample = null
 	var/report_num = 0
@@ -17,12 +18,8 @@
 
 /obj/machinery/microscope/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/microscope(src)
-	component_parts += new /obj/item/stack/material/glass(src)	//The "lens" of the microscope
-	component_parts += new /obj/item/weapon/stock_parts/scanning_module(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	RefreshParts()
+	ADD_SAVED_VAR(sample)
+	ADD_SAVED_VAR(report_num)
 
 /obj/machinery/microscope/attackby(obj/item/W, mob/user)
 

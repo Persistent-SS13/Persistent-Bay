@@ -28,6 +28,13 @@
 	var/list/trace_dna
 	var/used
 
+/obj/item/weapon/forensics/swab/New()
+	. = ..()
+	ADD_SAVED_VAR(gunshot_residue_sample)
+	ADD_SAVED_VAR(dna)
+	ADD_SAVED_VAR(trace_dna)
+	ADD_SAVED_VAR(used)
+
 /obj/item/weapon/forensics/swab/proc/is_used()
 	return used
 

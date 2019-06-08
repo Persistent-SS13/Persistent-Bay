@@ -13,6 +13,10 @@
 	var/rate = 3
 	var/mega_energy = 1
 
+/obj/machinery/power/emitter/gyrotron/New()
+	. = ..()
+	ADD_SAVED_VAR(rate)
+	ADD_SAVED_VAR(mega_energy)
 
 /obj/machinery/power/emitter/gyrotron/anchored
 	anchored = TRUE

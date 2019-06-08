@@ -23,6 +23,13 @@
 	var/const/WIRE_RADIO_RECEIVE = 8		//Allows Pulsed(1) to call Activate()
 	var/const/WIRE_RADIO_PULSE = 16		//Allows Pulse(1) to send a radio message
 
+/obj/item/device/assembly/New()
+	. = ..()
+	ADD_SAVED_VAR(secured)
+	ADD_SAVED_VAR(attached_overlays)
+	ADD_SAVED_VAR(holder)
+	ADD_SAVED_VAR(wires)
+
 /obj/item/device/assembly/proc/activate()									//What the device does when turned on
 	return
 

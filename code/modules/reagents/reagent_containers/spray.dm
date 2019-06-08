@@ -20,8 +20,8 @@
 	volume = 250
 	matter = list(MATERIAL_GLASS = 60)
 
-/obj/item/weapon/reagent_containers/spray/New()
-	..()
+/obj/item/weapon/reagent_containers/spray/Initialize()
+	. = ..()
 	src.verbs -= /obj/item/weapon/reagent_containers/verb/set_amount_per_transfer_from_this
 
 /obj/item/weapon/reagent_containers/spray/afterattack(atom/A as mob|obj, mob/user as mob, proximity)
@@ -103,26 +103,17 @@
 	name = "space cleaner"
 	desc = "BLAM!-brand non-foaming space cleaner!"
 	step_delay = 6
-
-/obj/item/weapon/reagent_containers/spray/cleaner/New()
-	..()
-	reagents.add_reagent(/datum/reagent/space_cleaner, volume)
+	starts_with = list(/datum/reagent/space_cleaner = 250)
 
 /obj/item/weapon/reagent_containers/spray/sterilizine
 	name = "sterilizine"
 	desc = "Great for hiding incriminating bloodstains and sterilizing scalpels."
-
-/obj/item/weapon/reagent_containers/spray/sterilizine/New()
-	..()
-	reagents.add_reagent(/datum/reagent/sterilizine, volume)
+	starts_with = list(/datum/reagent/sterilizine = 250)
 
 /obj/item/weapon/reagent_containers/spray/hair_remover
 	name = "hair remover"
 	desc = "Very effective at removing hair, feathers, spines and horns."
-
-/obj/item/weapon/reagent_containers/spray/hair_remover/New()
-	..()
-	reagents.add_reagent(/datum/reagent/toxin/hair_remover, volume)
+	starts_with = list(/datum/reagent/toxin/hair_remover = 250)
 
 /obj/item/weapon/reagent_containers/spray/pepper
 	name = "pepperspray"
@@ -134,9 +125,6 @@
 	volume = 60
 	var/safety = 1
 	step_delay = 1
-
-/obj/item/weapon/reagent_containers/spray/pepper/New()
-	..()
 
 /obj/item/weapon/reagent_containers/spray/pepper/examine(mob/user)
 	if(..(user, 1))
@@ -161,9 +149,6 @@
 	amount_per_transfer_from_this = 1
 	possible_transfer_amounts = null
 	volume = 10
-
-/obj/item/weapon/reagent_containers/spray/waterflower/New()
-	..()
 
 /obj/item/weapon/reagent_containers/spray/chemsprayer
 	name = "chem sprayer"
@@ -206,16 +191,13 @@
 	item_state = "plantbgone"
 	volume = 100
 
-/obj/item/weapon/reagent_containers/spray/plantbgone/New()
-	..()
-
 /obj/item/weapon/reagent_containers/spray/plantbgone/afterattack(atom/A as mob|obj, mob/user as mob, proximity)
 	if(!proximity) return
 
 	if(istype(A, /obj/effect/blob)) // blob damage in blob code
 		return
 
-	..()
+	return ..()
 
 /obj/item/weapon/reagent_containers/spray/cleaner/deodorant
 	name = "deodorant"

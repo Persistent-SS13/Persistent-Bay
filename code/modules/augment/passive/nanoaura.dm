@@ -17,6 +17,12 @@
 	var/obj/aura/nanoaura/aura = null
 	var/charges = 4
 
+/obj/item/organ/internal/augment/active/nanounit/New(mob/living/carbon/holder)
+	. = ..()
+	ADD_SAVED_VAR(aura)
+	ADD_SAVED_VAR(charges)
+
+	ADD_SKIP_EMPTY(aura)
 
 /obj/item/organ/internal/augment/active/nanounit/onInstall()
 	aura = new /obj/aura/nanoaura(owner, src)
@@ -49,6 +55,12 @@
 /obj/item/organ/internal/augment/active/nanounit/Destroy()
 	. = ..()
 	QDEL_NULL(aura)
+
+/obj/aura/nanoaura/New(mob/living/target)
+	. = ..()
+	ADD_SAVED_VAR(unit)
+	ADD_SAVED_VAR(active)
+	ADD_SKIP_EMPTY(unit)
 
 /obj/aura/nanoaura/Initialize(var/maploading, var/obj/item/organ/internal/augment/active/nanounit/holder)
 	. = ..()

@@ -59,7 +59,12 @@
 
 /obj/item/weapon/reagent_containers/hypospray/vial/New()
 	..()
-	loaded_vial = new /obj/item/weapon/reagent_containers/glass/beaker/vial(src)
+	ADD_SAVED_VAR(loaded_vial)
+
+/obj/item/weapon/reagent_containers/hypospray/vial/Initialize()
+	. = ..()
+	if(!map_storage_loaded)
+		loaded_vial = new /obj/item/weapon/reagent_containers/glass/beaker/vial(src)
 	volume = loaded_vial.volume
 	reagents.maximum_volume = loaded_vial.reagents.maximum_volume
 
@@ -125,14 +130,17 @@
 	origin_tech = list(TECH_MATERIAL = 2, TECH_BIO = 2)
 	slot_flags = SLOT_BELT | SLOT_EARS
 	w_class = ITEM_SIZE_TINY
-	var/list/starts_with = list(/datum/reagent/inaprovaline = 5)
+	starts_with = list(/datum/reagent/inaprovaline = 5)
 	var/band_color = COLOR_CYAN
 
-/obj/item/weapon/reagent_containers/hypospray/autoinjector/Initialize()
-	.=..()
-	if(!map_storage_loaded)
-		for(var/T in starts_with)
-			reagents.add_reagent(T, starts_with[T])
+/obj/item/weapon/reagent_containers/hypospray/autoinjector/New()
+	. = ..()
+	ADD_SAVED_VAR(band_color)
+
+/obj/item/weapon/reagent_containers/hypospray/autoinjector/SetupReagents()
+	..()
+	for(var/T in starts_with)
+		reagents.add_reagent(T, starts_with[T])
 	queue_icon_update()
 
 /obj/item/weapon/reagent_containers/hypospray/autoinjector/attack(mob/M as mob, mob/user as mob)

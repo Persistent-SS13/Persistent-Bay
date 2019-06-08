@@ -11,6 +11,11 @@
 	var/list/harvesting = list()
 	var/obj/machinery/power/fusion_core/harvest_from
 
+/obj/machinery/kinetic_harvester/New()
+	. = ..()
+	ADD_SAVED_VAR(stored)
+	ADD_SKIP_EMPTY(stored)
+
 /obj/machinery/kinetic_harvester/Initialize()
 	set_extension(src, /datum/extension/fusion_plant_member, /datum/extension/fusion_plant_member)
 	if(initial_id_tag)

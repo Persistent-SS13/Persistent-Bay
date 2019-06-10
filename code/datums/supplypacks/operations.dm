@@ -72,18 +72,16 @@
 					/obj/item/weapon/material/clipboard,
 					/obj/item/weapon/pen/red,
 					/obj/item/weapon/pen/blue,
-					 /obj/item/weapon/pen/green,
+					/obj/item/weapon/pen/green,
 					/obj/item/device/camera_film,
 					/obj/item/weapon/folder/blue,
 					/obj/item/weapon/folder/red,
 					/obj/item/weapon/folder/yellow,
 					/obj/item/weapon/hand_labeler,
 					/obj/item/weapon/tape_roll,
-
 					/obj/item/weapon/paper_bin,
 					/obj/item/sticky_pad/random = 4,
-					 /obj/structure/filingcabinet/chestdrawer{anchored = 0},
-					)
+					/obj/structure/filingcabinet/chestdrawer{anchored = 0})
 	cost = 10
 	containertype = /obj/structure/closet/crate/large
 	containername = "office supplies crate"

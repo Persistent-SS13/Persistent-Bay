@@ -266,7 +266,7 @@
 	if(!isdamageable() || !vulnerable_to_damtype(damtype))
 		return 0
 	var/resultingdmg = max(0, damage * blocked_mult(armor_absorb(damage, armorbypass, damtype)))
-	var/name_ref = "\The \"[src]\" (\ref[src])([x], [y], [z])"
+	//var/name_ref = "\The \"[src]\" (\ref[src])([x], [y], [z])"
 
 	//Dispersed affect contents
 	if(damflags & DAM_DISPERSED && resultingdmg)
@@ -280,7 +280,7 @@
 
 	rem_health(resultingdmg, damtype)
 	. = resultingdmg
-	log_debug("[name_ref] took [resultingdmg] \"[damtype]\" damages from \"[used_weapon]\"! Before armor: [damage] damages.")
+	//testing("[name_ref] took [resultingdmg] \"[damtype]\" damages from \"[used_weapon]\"! Before armor: [damage] damages.")
 	return .
 
 //Like take damage, but meant to instantly destroy the object from an external source.

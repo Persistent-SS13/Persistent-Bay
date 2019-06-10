@@ -465,6 +465,9 @@
 	materials = list(MATERIAL_GLASS = 0.25 SHEETS)
 	research = "color_lights"
 
+/datum/design/item/engifab/lights/tube/large/nav
+	build_path = /obj/item/weapon/light/tube/large/nav
+
 /datum/design/item/engifab/lights/tube/large
 	build_path = /obj/item/weapon/light/tube/large
 

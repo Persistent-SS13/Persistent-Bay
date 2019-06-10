@@ -9,6 +9,8 @@
 	opacity = 0
 	explosion_resistance = 5
 	air_properties_vary_with_direction = 1
+	density = 1
+	autoclose = 1
 
 	sound_hit = 'sound/effects/Glasshit.ogg'
 	sound_destroyed = "shatter"
@@ -158,7 +160,7 @@
 	if (src.operating)
 		return 0
 	operating = 1
-	flick(text("[]closing", src.base_state), src)
+	flick("[src.base_state]closing", src)
 	playsound(src.loc, 'sound/machines/windowdoor.ogg', 100, 1)
 	set_density(1)
 	update_icon()
@@ -275,7 +277,7 @@
 	icon = 'icons/obj/doors/windoor.dmi'
 	icon_state = "leftsecure"
 	base_state = "leftsecure"
-	req_access = list(access_security)
+	req_access = list(core_access_security_programs)
 	var/id = null
 	max_health = 300 //Stronger doors for prison (regular window door health is 150)
 	armor = list(

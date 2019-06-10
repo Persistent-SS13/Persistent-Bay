@@ -37,7 +37,7 @@
 	if(activation_message)
 		to_chat(M, "<span class='warning'>[activation_message]</span>")
 	else
-		testing("[name] has no activation message.")
+		log_warning("[name] has no activation message.")
 
 /datum/dna/gene/disability/deactivate(var/mob/M, var/connected, var/flags)
 	if(mutation && (mutation in M.mutations))
@@ -49,7 +49,7 @@
 	if(deactivation_message)
 		to_chat(M, "<span class='warning'>[deactivation_message]</span>")
 	else
-		testing("[name] has no deactivation message.")
+		log_warning("[name] has no deactivation message.")
 
 // Note: Doesn't seem to do squat, at the moment.
 /datum/dna/gene/disability/hallucinate

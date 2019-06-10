@@ -57,6 +57,7 @@ GLOBAL_LIST_EMPTY(all_docking_beacons)
 	. = ..()
 	if(. != INITIALIZE_HINT_QDEL)
 		GLOB.all_docking_beacons |= src //The list is initialized later on a new map
+	queue_icon_update()
 
 /obj/machinery/docking_beacon/proc/get_top_turf()
 	switch(dir)

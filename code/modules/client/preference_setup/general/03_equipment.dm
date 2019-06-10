@@ -244,7 +244,7 @@
 
 	//First add culture-related possibilities
 	if(pref.cultural_info)
-		testing("culture is [pref.cultural_info[TAG_CULTURE]]")
+		//testing("culture is [pref.cultural_info[TAG_CULTURE]]")
 		switch(pref.cultural_info[TAG_CULTURE])
 			if(CULTURE_HUMAN_EARTH)
 				possible_under_extra |= new /obj/item/clothing/under/assistantformal()

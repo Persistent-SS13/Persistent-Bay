@@ -10,7 +10,7 @@ GLOBAL_LIST_EMPTY(neural_laces)
 		log_debug(" /mob/living/carbon/human/proc/create_stack(): Tried adding another stack to [src]\ref[src]. Skipping..")
 		return //We don't want multiple stacks
 //	sleep(10)
-	testing("create_stack(): made a lace for [src]\ref[src], with faction [faction_uid]")
+	//testing("create_stack(): made a lace for [src]\ref[src], with faction [faction_uid]")
 	var/obj/item/organ/internal/stack/stack = new species.stack_type(src, faction_uid = faction_uid)
 	if(faction_uid && stack)
 		stack.try_connect()

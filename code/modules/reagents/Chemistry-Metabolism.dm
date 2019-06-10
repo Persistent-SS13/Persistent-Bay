@@ -9,11 +9,7 @@
 	. = ..()
 
 /datum/reagents/metabolism/New(var/max = 100, var/mob/living/carbon/parent_mob, var/met_class)
-	if(map_storage_loaded)
-		testing("reagents.metabolism.New() map_storage_loaded is true")
-		..(max, parent)
-	else
-		..(max, parent_mob)
+	..(max, parent_mob)
 
 	metabolism_class = met_class
 	if(istype(parent_mob))

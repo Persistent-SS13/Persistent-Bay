@@ -583,7 +583,6 @@
 		else
 			turn_off()
 
-
 // called when on fire
 /obj/machinery/light/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	if(prob(max(0, exposed_temperature - 673)))   //0% at <400C, 100% at >500C
@@ -612,7 +611,7 @@
 	icon = 'icons/obj/lighting_nav.dmi'
 	icon_state = "nav10"
 	base_state = "nav1"
-	light_type = /obj/item/weapon/light/tube/large
+	light_type = /obj/item/weapon/light/tube/large/nav
 	on = TRUE
 
 /obj/machinery/light/navigation/delay2
@@ -653,7 +652,7 @@
 	var/broken_chance = 2
 
 	var/b_max_bright = 0.9
-	var/b_inner_range = 3
+	var/b_inner_range = 1
 	var/b_outer_range = 7
 	var/b_curve = 2
 	var/b_colour = "#fffee0"
@@ -670,10 +669,10 @@
 	b_max_bright = 0.95
 	b_inner_range = 2
 	b_outer_range = 10
-	b_curve = 3
+	b_curve = 4
 	b_colour = "#fffee0"
 	lighting_modes = list(
-		LIGHTMODE_EMERGENCY = list(l_outer_range = 8, l_max_bright = 0.8, l_color = "#da0205"),
+		LIGHTMODE_EMERGENCY = list(l_outer_range = 7, l_max_bright = 0.8, l_color = "#da0205"),
 		)
 	sound_on = 'sound/machines/lightson.ogg'
 
@@ -688,8 +687,16 @@
 	name = "large light tube"
 	b_max_bright = 0.95
 	b_inner_range = 2
-	b_outer_range = 15
-	b_curve = 3
+	b_outer_range = 8
+	b_curve = 2.5
+
+/obj/item/weapon/light/tube/large/nav
+	w_class = ITEM_SIZE_SMALL
+	name = "large nav light tube"
+	b_max_bright = 0.95
+	b_inner_range = 2
+	b_outer_range = 8
+	b_curve = 2.5
 
 /obj/item/weapon/light/tube/large/party/Initialize(mapload) //Randomly colored light tubes. Mostly for testing, but maybe someone will find a use for them.
 	. = ..()

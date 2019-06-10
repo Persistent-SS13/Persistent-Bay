@@ -80,7 +80,7 @@ SUBSYSTEM_DEF(character_setup)
 	QDEL_IN(M, 1 SECONDS)
 	return I
 
-//Used for when we need to find a character slot to
+//Used for when we're trying to find a free character slot to save a character without a slot
 /datum/controller/subsystem/character_setup/proc/find_character_save_slot(var/mob/living/carbon/human/H, var/ckey)
 	var/saveslot = 0
 	log_and_message_admins("Warning! [ckey]'s [H] failed to find a save_slot, and is picking one!")

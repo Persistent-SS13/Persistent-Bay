@@ -208,7 +208,7 @@
 
 	if(istype(destination) && !destination.is_valid(src))
 		return FALSE
-	testing("[src] moving to [destination]. Areas are [english_list(shuttle_area)]")
+	log_debug("[src] moving to [destination]. Areas are [english_list(shuttle_area)]")
 	var/list/translation = list()
 	for(var/area/A in shuttle_area)
 		if(istype(A, /area/space))

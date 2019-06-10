@@ -49,7 +49,7 @@
 	ADD_SKIP_EMPTY(girder_reinf_material)
 
 /turf/simulated/wall/Initialize(mapload, var/materialtype, var/rmaterialtype, var/girder_mat, var/girder_reinf_mat)
-	testing("wall/initialize([mapload], [materialtype], [rmaterialtype], [girder_mat], [girder_reinf_mat])")
+	//testing("wall/initialize([mapload], [materialtype], [rmaterialtype], [girder_mat], [girder_reinf_mat])")
 	set_extension(src, /datum/extension/penetration, /datum/extension/penetration/proc_call, .proc/CheckPenetration)
 	. = ..()
 	if(!map_storage_loaded)

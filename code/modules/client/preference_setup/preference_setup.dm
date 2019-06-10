@@ -138,6 +138,7 @@ prompts
 /datum/category_collection/player_setup_collection/proc/save_preferences(var/savefile/S)
 	testing("player_setup_collection/save_preferences() : Attempting to save prefs (S = [S] )")
 	for(var/datum/category_group/player_setup_category/PS in categories)
+		testing("player_setup_collection/save_preferences() : Saving category [PS]..")
 		PS.save_preferences(S)
 	to_file(S["bonus_slots"],preferences.bonus_slots)
 	to_file(S["bonus_notes"],preferences.bonus_notes)

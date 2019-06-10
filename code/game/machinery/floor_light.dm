@@ -26,22 +26,14 @@ var/list/floor_light_cache = list()
 
 /obj/machinery/floor_light/New()
 	..()
-	testing("created [src]\ref[src]")
+	testing("created [src]\ref[src] ([x], [y], [z]) loc: [loc]")
 
 /obj/machinery/floor_light/after_load()
 	..()
 	update_brightness()
 
 /obj/machinery/floor_light/Destroy()
-	log_debug("Deleting floor_light from [loc]")
-	. = ..()
-
-/obj/machinery/floor_light/after_load()
-	..()
-	update_brightness()
-
-/obj/machinery/floor_light/Destroy()
-	turn_off()
+	testing("Deleting floor_light from [loc]")
 	. = ..()
 
 /obj/machinery/floor_light/attackby(var/obj/item/W, var/mob/user)
@@ -111,7 +103,7 @@ var/list/floor_light_cache = list()
 			set_light(0)
 
 	change_power_consumption((light_outer_range + light_max_bright) * 20, POWER_USE_ACTIVE)
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/floor_light/on_update_icon()
 	overlays.Cut()

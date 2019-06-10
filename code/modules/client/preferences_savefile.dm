@@ -23,8 +23,8 @@
 
 
 /datum/preferences/proc/load_preferences()
-	if(!path)
-		path = src.load_path(client_ckey)
+	// if(!path)
+	path = load_path(client_ckey, "")
 	if(!fexists(path))		return 0
 	var/savefile/S = new /savefile(path)
 	if(!S)					return 0
@@ -36,10 +36,10 @@
 	return 1
 
 /datum/preferences/proc/save_preferences()
-	testing("preferences/save_preferences() : Attempting to save prefs (path = [path])")
-	if(!path)
-		path = src.load_path(client_ckey)
-		testing("preferences/save_preferences() : Set path to (path = [path])")
+	testing("preferences/save_preferences() : Attempting to save prefs (ckey = [client_ckey], path = [path])")
+	//if(!path || (path && (length(path) == 0) ) )
+	path = load_path(client_ckey, "")
+	testing("preferences/save_preferences() : Set path to (path = [path])")
 	var/savefile/S = new /savefile(path)
 	if(!S)					return 0
 	S.cd = "/"

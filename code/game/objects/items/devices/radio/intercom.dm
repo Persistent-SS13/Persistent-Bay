@@ -232,10 +232,10 @@
 			src.pixel_x = 0
 			src.pixel_y = 24
 		if(EAST)
-			src.pixel_x = -24
+			src.pixel_x = -22
 			src.pixel_y = 0
 		if(WEST)
-			src.pixel_x = 24
+			src.pixel_x = 22
 			src.pixel_y = 0
 	if(!circuitry_installed)
 		icon_state="intercom-frame"

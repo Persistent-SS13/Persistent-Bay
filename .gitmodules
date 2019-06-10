@@ -1,0 +1,3 @@
+[submodule "tools/Discord_PSS13_BOT"]
+	path = tools/Discord_PSS13_BOT
+	url = https://github.com/ingles98/pss13_discordbot.git

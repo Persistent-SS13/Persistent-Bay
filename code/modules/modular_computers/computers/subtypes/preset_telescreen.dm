@@ -22,5 +22,5 @@
 
 /obj/item/modular_computer/telescreen/preset/supply/install_default_programs()
 	..()
-	hard_drive.store_file(new/datum/computer_file/program/supply())
+	hard_drive.store_file(new/datum/computer_file/program/materialmarket())
 	set_autorun("supply")

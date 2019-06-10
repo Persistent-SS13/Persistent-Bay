@@ -27,6 +27,7 @@
 	RefreshParts()
 
 /obj/machinery/cryopod/Destroy()
+	GLOB.cryopods -= src
 	for(var/atom/movable/A in InsertedContents())
 		A.forceMove(get_turf(src))
 	. = ..()
@@ -40,7 +41,7 @@
 	src.add_fingerprint(user)
 
 	if(!req_access_faction)
-		to_chat(user, "<span class='notice'>\The [src] hasn't been connected to a faction.</span>")
+		to_chat(user, "<span class='notice'>\The [src] hasn't been connected to an organization.</span>")
 		return
 
 	if(occupant)
@@ -163,7 +164,7 @@
 
 /obj/machinery/cryopod/proc/insertOccupant(var/atom/movable/A, var/mob/user = usr)
 	if(!req_access_faction)
-		to_chat(user, "<span class='notice'>\The [src] hasn't been connected to a faction.</span>")
+		to_chat(user, "<span class='notice'>\The [src] hasn't been connected to an organization.</span>")
 		return 0
 
 	if(occupant)

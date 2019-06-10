@@ -41,6 +41,11 @@
 #define APC_UPOVERLAY_LOCKED 8
 #define APC_UPOVERLAY_OPERATING 16
 
+// Alarm stuff
+#define ALARM_THREAT	1
+#define ALARM_WARN		2
+#define ALARM_OFF		0
+
 // Various APC types
 /obj/machinery/power/apc/critical
 	is_critical = 1
@@ -129,11 +134,53 @@
 	var/global/list/status_overlays_lighting
 	var/global/list/status_overlays_environ
 
+	var/datum/world_faction/connected_faction
+	var/menu = 1
+
+	var/alarm_status = 0
+	var/alarm_access = 0
+	var/alarm_alert = FALSE
+	var/alarm_threat_warning = FALSE
+	var/alarm_threat_warning_timebuffer
+	var/alarm_threat_warning_timeout = 5 SECONDS
+
+
 
 /obj/machinery/power/apc/updateDialog()
 	if (stat & (BROKEN|MAINT))
 		return
 	..()
+
+/obj/machinery/power/apc/can_connect(var/datum/world_faction/trying, var/mob/M)
+	if(!area)
+		return 0
+
+	var/list/turfs = get_area_turfs(area)
+	var/datum/machine_limits/limits = trying.get_limits()
+
+	if(M && !has_access(list(core_access_engineering_programs), list(), M.GetAccess(trying.uid)))
+		to_chat(M, "You do not have access to link machines to [trying.name].")
+		return 0
+
+	if(limits.limit_area <= turfs.len + trying.get_claimed_area())
+		if(M)
+			to_chat(M, "[trying.name] cannot connect this APC as it will exceed its area limit.")
+		return 0
+	limits.apcs |= src
+	req_access_faction = trying.uid
+	connected_faction = trying
+	trying.calculate_claimed_area()
+	to_chat(M, "You successfuly connect this APC to [trying.name].")
+
+/obj/machinery/power/apc/can_disconnect(var/datum/world_faction/trying, var/mob/M)
+	var/datum/machine_limits/limits = trying.get_limits()
+	limits.apcs -= src
+	req_access_faction = ""
+	connected_faction = null
+	locked = 1
+	trying.calculate_claimed_area()
+	if(M) to_chat(M, "You successfuly disconnect this APC from [trying.name].")
+
 
 /obj/machinery/power/apc/connect_to_network()
 	//Override because the APC does not directly connect to the network; it goes through a terminal.
@@ -519,8 +566,19 @@
 			update_icon()
 
 	else if (istype(W, /obj/item/weapon/card/id)||istype(W, /obj/item/device/pda))			// trying to unlock the interface with an ID card
+		var/obj/item/weapon/card/id/id
+		if(istype(W, /obj/item/weapon/card/id))
+			id = W
+		else if(istype(W, /obj/item/device/pda))
+			var/obj/item/device/pda/pda = W
+			id = pda.id
 		if(emagged)
 			to_chat(user, "The interface is broken.")
+		else if(!connected_faction)
+			if(id)
+				var/datum/world_faction/faction = get_faction(id.selected_faction)
+				if(faction)
+					can_connect(faction, usr)
 		else if(opened)
 			to_chat(user, "You must close the cover to swipe an ID card.")
 		else if(wiresexposed)
@@ -530,7 +588,7 @@
 		else if(hacker && !hacker.hacked_apcs_hidden)
 			to_chat(user, "<span class='warning'>Access denied.</span>")
 		else
-			if(src.allowed(usr) && !isWireCut(APC_WIRE_IDSCAN))
+			if((req_access in id.GetAccess(req_access_faction)) && !isWireCut(APC_WIRE_IDSCAN))
 				locked = !locked
 				to_chat(user, "You [ locked ? "lock" : "unlock"] the APC interface.")
 				update_icon()
@@ -752,7 +810,6 @@
 /obj/machinery/power/apc/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 	if(!user)
 		return
-
 	var/list/data = list(
 		"pChan_Off" = POWERCHAN_OFF,
 		"pChan_Off_T" = POWERCHAN_OFF_TEMP,
@@ -803,6 +860,21 @@
 			)
 		)
 	)
+	if(connected_faction)
+		data["connected_faction"] = connected_faction.name
+	else
+		menu = 1
+
+	data["menu"] = menu
+	if(menu == 2)
+		data["alarm_status"] = alarm_status
+		if(alarm_access)
+			data["required"] = connected_faction.get_access_name(alarm_access)
+		else
+			data["required"] = "*Unset*"
+
+
+
 
 	// update the ui if it exists, returns null if no ui is passed/found
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
@@ -898,6 +970,33 @@
 	if (href_list["lock"])
 		coverlocked = !coverlocked
 
+	if (href_list["menu"])
+		menu = text2num(href_list["menu"])
+
+	if(href_list["arm"])
+		if(!connected_faction) return
+		if(src.allowed(usr) || isWireCut(APC_WIRE_IDSCAN))
+			alarm_status = 1
+	if(href_list["disarm"])
+		if(!connected_faction) return
+		if(src.allowed(usr) || isWireCut(APC_WIRE_IDSCAN))
+			alarm_status = 0
+			AlarmSet(ALARM_OFF)
+	if(href_list["set_alarm"])
+		if(!connected_faction) return
+		var/list/choices = list()
+		connected_faction.rebuild_all_access()
+		for(var/x in connected_faction.all_access)
+			choices[connected_faction.get_access_name(x)] = x
+		var/choice = input(usr, "Choose which access the alarm should look for.", "Select Access") as null|anything in choices
+		if(choice)
+			alarm_access = choices[choice]
+			to_chat(usr, "Alarm access set.")
+	if(href_list["disconnect"])
+		if(!connected_faction) return
+		if(src.allowed(usr) || isWireCut(APC_WIRE_IDSCAN))
+			can_disconnect(connected_faction, usr)
+			return
 	else if( href_list["reboot"] )
 		failure_timer = 0
 		update_icon()
@@ -1090,6 +1189,10 @@
 		power_alarm.triggerAlarm(loc, src)
 		autoflag = 0
 
+//	if(!connected_faction)
+//		equipment = autoset(equipment, 0)
+//		lighting = autoset(lighting, 0)
+
 	// update icon & area power if anything changed
 	if(last_lt != lighting || last_eq != equipment || last_en != environ || force_update)
 		force_update = 0
@@ -1097,6 +1200,8 @@
 		update()
 	else if (last_ch != charging)
 		queue_icon_update()
+
+	AlarmUpdate()
 
 /obj/machinery/power/apc/proc/update_channels()
 	// Allow the APC to operate as normal if the cell can charge
@@ -1289,6 +1394,58 @@ obj/machinery/power/apc/proc/autoset(var/cur_state, var/on)
 	to_chat(user, "\The [src] has been upgraded. It is now protected against EM pulses.")
 	return 1
 
+// ALARM HANDLERS
 
+/obj/machinery/power/apc/proc/AlarmOnEntered(var/mob/living/carbon/human/A)
+	if (!istype(A))
+		return
+	if (text2num(alarm_access) in A.GetAccess(req_access_faction))
+		return
+
+	AlarmHandleThreat(A)
+
+/obj/machinery/power/apc/proc/AlarmHandleThreat(var/mob/living/carbon/human/A)
+	if (!alarm_status || alarm_threat_warning || alarm_alert)
+		return
+	playsound(src, 'sound/effects/compbeep3.ogg', 80, 1)
+	to_chat(A, SPAN_DANGER("You detect what seems to be an alarm in this area. You have over [alarm_threat_warning_timeout/10] seconds to leave/deactivate the alarm.") )
+	AlarmSet(ALARM_WARN)
+
+/obj/machinery/power/apc/proc/AlarmCheckForThreats()
+	for (var/mob/living/carbon/human/A in src.area)
+		message_admins("Human found [A]")
+		if ( ! (text2num(alarm_access) in A.GetAccess(req_access_faction)) )
+			return AlarmSet(ALARM_THREAT)
+	return AlarmSet(ALARM_OFF)
+
+/obj/machinery/power/apc/proc/AlarmSet(var/status)
+	switch (status)
+		if (ALARM_WARN)
+			alarm_threat_warning = TRUE
+			alarm_threat_warning_timebuffer = world.time
+			alarm_alert = FALSE
+		if (ALARM_THREAT)
+			alarm_threat_warning = FALSE
+			alarm_threat_warning_timebuffer = null
+			alarm_alert = TRUE
+		if (ALARM_OFF)
+			alarm_threat_warning = FALSE
+			alarm_threat_warning_timebuffer = null
+			alarm_alert = FALSE
+
+/obj/machinery/power/apc/proc/AlarmUpdate()
+	if (!operating || !alarm_status)
+		AlarmSet(ALARM_OFF)
+		return
+	if (alarm_threat_warning)
+		if (world.time >= alarm_threat_warning_timebuffer + alarm_threat_warning_timeout)
+			AlarmCheckForThreats()
+	if (alarm_alert)
+		visible_message("** BEEP ** BEEP **** BEEP ** BEEP **")
+		playsound(src, 'sound/machines/airalarm.ogg', 80, 1)
 
 #undef APC_UPDATE_ICON_COOLDOWN
+
+#undef ALARM_OFF
+#undef ALARM_THREAT
+#undef ALARM_WARN

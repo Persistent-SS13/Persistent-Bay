@@ -58,6 +58,101 @@ FIELD_LONG_SECURE("Qualifications", skillset, core_access_reassignment)
 FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 
 
+/datum/personal_limits
+	var/stock_limit = 0
+	var/shuttle_limit = 0
+	var/cost = 0
+
+/datum/personal_limits/one
+	stock_limit = 125
+
+/datum/personal_limits/two
+	stock_limit = 175
+	shuttle_limit = 1
+	cost = 3000
+
+/datum/personal_limits/three
+	stock_limit = 225
+	shuttle_limit = 2
+	cost = 6500
+
+/datum/personal_limits/four
+	stock_limit = 275
+	shuttle_limit = 3
+	cost = 10000
+
+/datum/computer_file/report/crew_record/proc/get_holdings()
+	var/total = 0
+	for(var/datum/world_faction/business/faction in GLOB.all_world_factions)
+		var/holding = faction.get_stockholder(usr.real_name)
+		if(holding)
+			total += holding
+	return total
+
+/datum/computer_file/report/crew_record/proc/get_limits()
+	switch(network_level)
+		if(1)
+			return new /datum/personal_limits/one()
+		if(2)
+			return new /datum/personal_limits/two()
+		if(3)
+			return new /datum/personal_limits/three()
+		if(4)
+			return new /datum/personal_limits/four()
+		else
+			return new /datum/personal_limits/one()
+
+
+/datum/computer_file/report/crew_record/proc/upgrade(var/mob/user)
+	var/cost = get_upgrade_cost()
+	if(network_level >= 4) return
+	if(linked_account.money < cost)
+		to_chat(user, "Insufficent funds.")
+		return
+	var/datum/transaction/T = new("Nexus Account Upgrade", "Nexus Account Upgrade", cost, "Nexus Account Upgrade")
+	linked_account.do_transaction(T)
+	network_level++
+
+/datum/computer_file/report/crew_record/proc/get_stock_limit()
+	switch(network_level)
+		if(1)
+			var/datum/personal_limits/limit = new /datum/personal_limits/one()
+			return limit.stock_limit
+		if(2)
+			var/datum/personal_limits/limit = new /datum/personal_limits/two()
+			return limit.stock_limit
+		if(3)
+			var/datum/personal_limits/limit = new /datum/personal_limits/three()
+			return limit.stock_limit
+		if(4)
+			var/datum/personal_limits/limit = new /datum/personal_limits/four()
+			return limit.stock_limit
+		else
+			var/datum/personal_limits/limit = new /datum/personal_limits/one()
+			return limit.stock_limit
+/datum/computer_file/report/crew_record/proc/get_upgrade_cost()
+	switch(network_level)
+		if(1)
+			var/datum/personal_limits/limit = new /datum/personal_limits/two()
+			return limit.cost
+		if(2)
+			var/datum/personal_limits/limit = new /datum/personal_limits/three()
+			return limit.cost
+		if(3)
+			var/datum/personal_limits/limit = new /datum/personal_limits/four()
+			return limit.cost
+
+/datum/computer_file/report/crew_record/proc/get_upgrade_desc()
+	switch(network_level)
+		if(1)
+			return "Increase stock limit to 175 and gain a personal shuttle."
+		if(2)
+			return "Increase stock limit to 225 and gain another personal shuttle."
+		if(3)
+			return "Increase stock limit to 275 and gain another personal shuttle."
+
+
+
 // Kept as a computer file for possible future expansion into servers.
 /datum/computer_file/report/crew_record
 	filetype = "CDB"
@@ -81,6 +176,14 @@ FIELD_LONG_SECURE("Exploitable Information", antagRecord, access_syndicate)
 	var/expenses = 0
 	var/datum/computer_file/data/email_account/email
 	var/citizenship = 1 // 1 = resident, 2 = citizen, 3 = prisoner (todo convert all magic numbers in ss13 to defines
+	var/ckey
+
+
+	var/network_level = 1
+	var/notifications = 1 // whether or not to be notified when a new email is sent
+	var/list/subscribed_orgs = list()
+
+
 /datum/computer_file/report/crew_record/New()
 	..()
 	for(var/T in subtypesof(/record_field/))

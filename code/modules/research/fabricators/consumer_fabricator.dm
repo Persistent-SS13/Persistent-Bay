@@ -13,7 +13,7 @@
 
 /obj/machinery/fabricator/consumer_fabricator/can_connect(var/datum/world_faction/trying, var/mob/M)
 	var/datum/machine_limits/limits = trying.get_limits()
-	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(req_access_faction)))
+	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(trying.uid)))
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
 	if(limits.limit_consumerfab <= limits.consumerfabs.len)
@@ -22,7 +22,7 @@
 		return 0
 	limits.consumerfabs |= src
 	req_access_faction = trying.uid
-	connected_faction = src
+	connected_faction = trying
 
 /obj/machinery/fabricator/consumer_fabricator/can_disconnect(var/datum/world_faction/trying, var/mob/M)
 	var/datum/machine_limits/limits = trying.get_limits()

@@ -170,6 +170,7 @@
 		printing = 0
 		src.visible_message("[src] whirs as it prints and binds a new book.")
 		var/obj/item/weapon/book/multipage/book = new(loc)
+		book.original = 1
 		if(held_paper)
 			book.pages |= held_paper
 			held_paper.loc = book
@@ -181,6 +182,7 @@
 		book.author = author
 		book.author_real = user.real_name
 		book.title = title
+		book.name = title
 		book.icon_state = covers[cover]
 		
 	if(href_list["cover"])

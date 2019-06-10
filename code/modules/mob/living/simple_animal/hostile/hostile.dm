@@ -147,7 +147,17 @@
 /mob/living/simple_animal/hostile/death(gibbed, deathmessage, show_dead_message)
 	..(gibbed, deathmessage, show_dead_message)
 	walk(src, 0)
-
+	if(z > 3)
+		var/list/counted_factions = list()
+		for(var/mob/living/carbon/M in range(7))
+			if(key)
+				var/obj/item/organ/internal/stack/stack = M.get_stack()
+				if(stack && stack.connected_faction != "" && !(stack.connected_faction in counted_factions))
+					var/datum/world_faction/business/faction = get_faction(stack.connected_faction)
+					if(istype(faction))
+						counted_factions |= stack.connected_faction
+						faction.monster_objectives()
+					
 /mob/living/simple_animal/hostile/Life()
 	. = ..()
 	if(!.)

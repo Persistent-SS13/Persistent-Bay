@@ -120,8 +120,6 @@
 		mannequin.equip_to_slot_or_del(backpack,slot_back)
 	mannequin.mind.initial_account = M
 	var/datum/computer_file/report/crew_record/record = CreateModularRecord(mannequin)
-	var/faction_uid = "refugee"
-	faction_uid = "nanotrasen"
 	var/datum/world_faction/factions = get_faction(faction)
 	if(factions)
 		var/datum/computer_file/report/crew_record/record2 = new()
@@ -142,7 +140,7 @@
 			stack.connected_faction = factions.uid
 			stack.try_connect()
 		mannequin.equip_to_slot_or_del(new /obj/item/device/radio/headset(mannequin),slot_l_ear)
-	mannequin.spawn_loc = faction_uid
+	mannequin.spawn_loc = faction
 	mannequin.spawn_type = 2
 	mannequin.species.equip_survival_gear(mannequin)
 	mannequin.equip_to_slot_or_del(new /obj/item/clothing/shoes/black(mannequin),slot_shoes)

@@ -7,7 +7,6 @@
 	extended_desc = "Used to register new businesses."
 	requires_ntnet = 1
 	size = 12
-	democratic = 1
 
 
 /datum/nano_module/program/newbusiness
@@ -23,8 +22,8 @@
 	var/ceo_wage = 100
 	var/list/signed_contracts = list()
 	var/list/pending_contracts = list()
-	
-	
+
+
 
 /datum/nano_module/program/newbusiness/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data = host.initial_data()
@@ -142,7 +141,7 @@
 			business_name = select_name
 
 		if("change_business_ceo")
-			var/select_name = input(usr,"Enter the full name of the starting CEO.","CEO", ceo_name) as null|text
+			var/select_name =  sanitize(input(usr,"Enter the full name of the starting CEO.","CEO", ceo_name) as null|text)
 			if(!select_name) return
 			if(!Retrieve_Record(select_name))
 				to_chat(user, "Record not found for [select_name].")
@@ -196,7 +195,7 @@
 									<td>
 										<center><h1>Investment Contract for [business_name]</h1></center>
 									</td>
-								</tr>	
+								</tr>
 								<tr>
 									<td>
 										<br>[selected_spec.name] [selected_type.name]<br>
@@ -250,11 +249,15 @@
 				if(spec.type == selected_spec.type)
 					new_business.module.spec = spec
 					break
-			new_business.CEO.payscale = ceo_wage
+			var/datum/accesses/rank = new()
+			rank.pay = ceo_wage
+			new_business.CEO.accesses |= rank
 			new_business.leader_name = ceo_name
 			new_business.name = business_name
 			new_business.uid = business_uid
-
+			new_business.network.net_uid = business_uid
+			new_business.network.name = business_name
+			new_business.network.invisible = 1
 			if(commitment)
 				new_business.central_account.money += commitment
 			for(var/obj/item/weapon/paper/contract/contract in signed_contracts)

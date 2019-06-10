@@ -193,6 +193,18 @@ var/list/point_source_descriptions = list(
 	var/exportnum = 0
 	var/list/all_exports = list()
 	var/list/old_exports = list()
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 /datum/controller/supply/New()
 	ordernum = rand(1,9000)
 

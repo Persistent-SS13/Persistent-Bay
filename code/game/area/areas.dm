@@ -35,6 +35,12 @@
 /area/proc/get_contents()
 	return contents
 
+/area/proc/get_turfs()
+	var/list/all_turfs = list()
+	for(var/turf/T in src)
+		all_turfs |= T
+	return all_turfs
+
 /area/proc/get_cameras()
 	var/list/cameras = list()
 	for (var/obj/machinery/camera/C in src)
@@ -264,6 +270,9 @@ var/list/mob/living/forced_ambience_list = new
 
 	L.lastarea = newarea
 	play_ambience(L)
+
+	if(apc && apc.operating && !apc.shorted && !apc.failure_timer && !apc.stat & (BROKEN|MAINT))
+		apc.AlarmOnEntered(A)
 
 /area/proc/play_ambience(var/mob/living/M)
 	if(!M.client || M.get_preference_value(/datum/client_preference/play_ambience) == GLOB.PREF_NO || M.ear_deaf)

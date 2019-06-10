@@ -7,7 +7,7 @@
 /PriorityQueue
 	var/list/L //the actual queue
 	var/cmp //the weight function used to order the queue
-
+	map_storage_saved_vars = "L;cmp"
 /PriorityQueue/New(compare)
 	L = new()
 	cmp = compare

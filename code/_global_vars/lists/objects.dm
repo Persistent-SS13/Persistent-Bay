@@ -12,6 +12,8 @@ GLOBAL_LIST_EMPTY(reg_dna)
 GLOBAL_LIST_EMPTY(global_map)
 
 GLOBAL_LIST_EMPTY(cryopods)
+GLOBAL_LIST_EMPTY(lace_storages)
+
 GLOBAL_LIST_EMPTY(frontierbeacons)
 GLOBAL_LIST_EMPTY(cargotelepads)
 

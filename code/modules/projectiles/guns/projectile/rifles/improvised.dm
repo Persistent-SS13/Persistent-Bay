@@ -2,29 +2,33 @@
 
 /obj/item/weapon/gun/projectile/boltaction/imprifle
 	name = "improvised rifle"
-	icon = 'icons/obj/weapons/improvised_rifle.dmi'
+	icon = 'icons/obj/weapons/guns/improvised_rifle.dmi'
 	desc = "A shoddy 7.62 improvised rifle."
 	wielded_item_state = "woodarifle-wielded"
 	icon_state = "308bolt"
 	item_state = "dshotgun" //placeholder
 	w_class = ITEM_SIZE_HUGE
-	one_hand_penalty = 4
+	one_hand_penalty = 8
 	force = 10
 	slot_flags = SLOT_BACK
 	origin_tech = list(TECH_COMBAT = 2, TECH_MATERIAL = 1)
-	caliber = "a762"
-	//fire_sound = 'sound/weapons/sniper.ogg'
+	caliber = CALIBER_762MM
 	handle_casings = HOLD_CASINGS
-	load_method = SINGLE_CASING
+	load_method = SPEEDLOADER
 	max_shells = 5
-	ammo_type = /obj/item/ammo_casing/a762
+	ammo_type = /obj/item/ammo_casing/c762
+	allowed_magazines = /obj/item/ammo_magazine/clip/c762
 	accuracy = -1
-	jam_chance = 5
+	accuracy_power = 4
+	scoped_accuracy = 4
+	scope_zoom = 1
+	jam_chance = 2
+	bulk = GUN_BULK_RIFLE
 
 
 /obj/item/weapon/gun/projectile/boltaction/imprifle/impriflesawn
 	name = "improvised short rifle"
-	icon = 'icons/obj/weapons/improvised_rifle.dmi'
+	icon = 'icons/obj/weapons/guns/improvised_rifle.dmi'
 	desc = "A crudely cut down 7.62 improvised rifle."
 	icon_state = "308boltsawed"
 	item_state = "sawnshotgun" //placeholder
@@ -32,15 +36,15 @@
 	one_hand_penalty = 0
 	force = 4
 	slot_flags = SLOT_BELT|SLOT_HOLSTER
-	origin_tech = list(TECH_COMBAT = 2, TECH_MATERIAL = 1)
-	caliber = "a762"
-	//fire_sound = 'sound/weapons/sniper.ogg'
 	handle_casings = HOLD_CASINGS
 	load_method = SINGLE_CASING
 	max_shells = 3
-	ammo_type = /obj/item/ammo_casing/a762
-	accuracy = -2
-	jam_chance = 10
+	accuracy = 1
+	accuracy_power = 2
+	scoped_accuracy = null
+	scope_zoom = 0
+	jam_chance = 4
+	bulk = 1
 
 /obj/item/weapon/gun/projectile/boltaction/imprifle/impriflesawn/update_icon()
 	if(bolt_open)
@@ -52,17 +56,21 @@
 /obj/item/weapon/imprifleframe/imprifleframesawn
 	name = "unfinished improvised short rifle"
 	desc = "An almost-complete improvised short rifle."
-	icon = 'icons/obj/weapons/improvised_rifle.dmi'
+	icon = 'icons/obj/weapons/guns/improvised_rifle.dmi'
 	icon_state = "308boltsawed"
 	item_state = "sawnshotgun"
 
 /obj/item/weapon/imprifleframe
 	name = "improvised rifle stock"
 	desc = "A half-finished improvised rifle."
-	icon = 'icons/obj/weapons/improvised_rifle.dmi'
+	icon = 'icons/obj/weapons/guns/improvised_rifle.dmi'
 	icon_state = "308boltframe0"
 	item_state = "sawnshotgun"
 	var/buildstate = 0
+
+/obj/item/weapon/imprifleframe/New()
+	..()
+	ADD_SAVED_VAR(buildstate)
 
 /obj/item/weapon/imprifleframe/update_icon()
 	icon_state = "308boltframe[buildstate]"
@@ -145,9 +153,9 @@
 			else
 				to_chat(user, "<span class='notice'>You need at least ten steel sheets to complete this task.</span>")
 			return
-	else if(istype(W,/obj/item/stack/rods))
+	else if(istype(W,/obj/item/stack/material/rods))
 		if(buildstate == 8)
-			var/obj/item/stack/rods/R = W
+			var/obj/item/stack/material/rods/R = W
 			if(R.use(3))
 				user.visible_message("[user] attaches [R] onto \the [src]'s bolt.", "<span class='notice'>You attach the rods to the bolt.</span>")
 				buildstate++

@@ -8,18 +8,18 @@
 	UpdateLyingBuckledAndVerbStatus()
 	remove_from_dead_mob_list()
 
-	var/atom/movable/overlay/animation = null
-	animation = new(loc)
+	var/atom/movable/overlay/animation = new(src)
 	animation.icon_state = "blank"
 	animation.icon = 'icons/mob/mob.dmi'
-	animation.master = src
 
 	flick(anim, animation)
 	if(do_gibs) gibs(loc, dna)
 
-	spawn(15)
-		if(animation)	qdel(animation)
-		if(src)			qdel(src)
+	addtimer(CALLBACK(src, .proc/check_delete, animation), 15)
+
+/mob/proc/check_delete(var/atom/movable/overlay/animation)
+	if(animation)	qdel(animation)
+	if(src)			qdel(src)
 
 //This is the proc for turning a mob into ash. Mostly a copy of gib code (above).
 //Originally created for wizard disintegrate. I've removed the virus code since it's irrelevant here.
@@ -40,9 +40,7 @@
 	new remains(loc)
 
 	remove_from_dead_mob_list()
-	spawn(15)
-		if(animation)	qdel(animation)
-		if(src)			qdel(src)
+	addtimer(CALLBACK(src, .proc/check_delete, animation), 15)
 
 
 /mob/proc/death(gibbed,deathmessage="seizes up and falls limp...", show_dead_message = "You have died.")
@@ -69,10 +67,11 @@
 	drop_r_hand()
 	drop_l_hand()
 
-	//TODO:  Change death state to health_dead for all these icon files.  This is a stop gap.
+	SSstatistics.report_death(src)
 
+	//TODO:  Change death state to health_dead for all these icon files.  This is a stop gap.
 	if(healths)
-		healths.overlays = null // This is specific to humans but the relevant code is here; shouldn't mess with other mobs.
+		healths.overlays.Cut() // This is specific to humans but the relevant code is here; shouldn't mess with other mobs.
 		if("health7" in icon_states(healths.icon))
 			healths.icon_state = "health7"
 		else

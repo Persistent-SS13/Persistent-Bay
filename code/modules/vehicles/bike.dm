@@ -26,6 +26,7 @@
 	load_item_visible = TRUE
 	buckle_pixel_shift = "x=0;y=5"
 	max_health = 100
+	mass = 170.0 //kg or ~373 lb
 
 	animate_movement = SYNC_STEPS
 
@@ -101,7 +102,7 @@
 		H.apply_effects(5, 3)
 		for(var/i = 0; i < 2; i++)
 			var/def_zone = ran_zone()
-			H.apply_damage(2 / (move_delay ? move_delay : 0.1), DAM_BLUNT, def_zone, H.run_armor_check(def_zone, DAM_BLUNT))
+			H.apply_damage(2 / (move_delay ? move_delay : 0.1), DAM_BLUNT, def_zone)
 
 		var/turf/turf = get_step(H, pick(throw_dirs))
 		H.throw_at(turf, 3)
@@ -109,13 +110,13 @@
 	return ..(H)
 
 /obj/vehicle/bike/attackby(var/obj/item/W, var/mob/user)
-	if(istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/device/pda))
+	if(istype(W, /obj/item/weapon/card/id) || istype(W, /obj/item/modular_computer/pda))
 
 		var/obj/item/weapon/card/id/ID = W
 
-		if(istype(W, /obj/item/device/pda))
-			var/obj/item/device/pda/pda = W
-			ID = pda.id
+		if(istype(W, /obj/item/modular_computer/pda))
+			var/obj/item/modular_computer/pda/pda = W
+			ID = pda.GetIdCard()
 
 		if(!req_access_personal_list.len)
 			req_access_personal_list += ID.registered_name
@@ -285,12 +286,11 @@
 
 		if(istype(Obstacle, /obj/structure/window))
 			var/obj/structure/window/win = Obstacle
-			if(!win.reinf)
-				win.kill()
-				if(istype(load, /mob/living/carbon/human))
-					var/mob/living/carbon/human/H = load
-					H.apply_damage(rand(1, 3))
-				return
+			win.take_damage((mass * (move_delay ? move_delay : 0.1) / 2.0), DAM_BLUNT)
+			if(istype(load, /mob/living/carbon/human))
+				var/mob/living/carbon/human/H = load
+				H.apply_damage(rand(1, 3))
+			return
 
 		playsound(src.loc, 'sound/effects/grillehit.ogg', 80, 0, 10)
 		take_damage(round(2/(move_delay ? move_delay : 0.1)), DAM_BLUNT, 0, Obstacle) // BYOND rounding can lead to a division by zero error. Ditto throughout the file.
@@ -306,7 +306,7 @@
 			H.apply_effects(5, 3)
 			for(var/i = 0; i < 2; i++)
 				var/def_zone = ran_zone()
-				H.apply_damage(1.5 / (move_delay ? move_delay : 0.1), DAM_BLUNT, def_zone, H.run_armor_check(def_zone, DAM_BLUNT))
+				H.apply_damage(1.5 / (move_delay ? move_delay : 0.1), DAM_BLUNT, def_zone)
 
 			var/turf/turf = get_step(H, pick(throw_dirs))
 
@@ -323,7 +323,7 @@
 	H.apply_effects(5, 3)
 	for(var/i = 0; i < 2; i++)
 		var/def_zone = ran_zone()
-		H.apply_damage(1 / (move_delay ? move_delay : 0.1), DAM_BLUNT, def_zone, H.run_armor_check(def_zone, DAM_BLUNT))
+		H.apply_damage(1 / (move_delay ? move_delay : 0.1), DAM_BLUNT, def_zone)
 
 	visible_message(SPAN_DANGER("[H] is run over by \the [src]!"))
 

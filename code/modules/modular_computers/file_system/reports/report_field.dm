@@ -10,16 +10,25 @@
 	var/list/access_edit = list(list())  //The access required to edit the field.
 	var/list/access = list(list())       //The access required to view the field.
 
+	var/faction_uid_access          //faction uid required to access
+	var/faction_uid_edit            //faction uid required to edit
+
 /datum/report_field/New(datum/computer_file/report/report)
 	owner = report
 	..()
+	ADD_SAVED_VAR(name)
+	ADD_SAVED_VAR(value)
+	ADD_SAVED_VAR(access_edit)
+	ADD_SAVED_VAR(access)
+	ADD_SAVED_VAR(faction_uid_access)
+	ADD_SAVED_VAR(faction_uid_edit)
 
 /datum/report_field/Destroy()
 	owner = null
 	. = ..()
 
 //Access stuff. Can be given access constants or lists. See report access procs for documentation.
-/datum/report_field/proc/set_access(access, access_edit, override = 1)
+/datum/report_field/proc/set_access(access, access_edit, override = 1, var/faction_uid_access, var/faction_uid_edit)
 	if(access)
 		if(!islist(access))
 			access = list(access)
@@ -29,12 +38,19 @@
 			access_edit = list(access_edit)
 		override ? (src.access_edit = list(access_edit)) : (src.access_edit += list(access_edit))
 
-/datum/report_field/proc/verify_access(given_access)
+	src.faction_uid_access = faction_uid_access
+	src.faction_uid_edit = faction_uid_edit
+
+/datum/report_field/proc/verify_access(given_access, faction_uid)
+	if(faction_uid_access && faction_uid_access != faction_uid)
+		return FALSE
 	return has_access_pattern(access, given_access)
 
-/datum/report_field/proc/verify_access_edit(given_access)
-	if(!verify_access(given_access))
+/datum/report_field/proc/verify_access_edit(given_access, faction_uid)
+	if(!verify_access(given_access, faction_uid))
 		return
+	if(faction_uid_edit && faction_uid_edit != faction_uid)
+		return FALSE
 	return has_access_pattern(access_edit, given_access)
 
 //Assumes the old and new fields are of the same type. Override if the field stores information differently.
@@ -58,14 +74,57 @@
 /datum/report_field/proc/display_name()
 	return name
 
+/datum/report_field/proc/generate_row_pencode(access, with_fields)
+	if(!ignore_value)
+		. += "\[row\]\[cell\]\[b\][display_name()]:\[/b\]"
+		var/field = ((with_fields && can_edit) ? "\[field\]" : "" )
+		if(!access || verify_access(access))
+			. += (needs_big_box ? "\[/grid\][get_value()][field]\[grid\]" : "\[cell\][get_value()][field]")
+		else
+			. += "\[cell\]\[REDACTED\][field]"
+	else
+		. += "\[/grid\][display_name()]\[grid\]"
+	. = JOINTEXT(.)
+
+/datum/report_field/proc/generate_nano_data(list/given_access, var/datum/world_faction/faction)
+	var/dat = list()
+	if(given_access)
+		dat["access"] = verify_access(given_access, faction?.uid)
+		dat["access_edit"] = verify_access_edit(given_access, faction?.uid)
+	dat["name"] = display_name()
+	dat["value"] = get_value()
+	dat["can_edit"] = can_edit
+	dat["needs_big_box"] = needs_big_box
+	dat["ignore_value"] = ignore_value
+	dat["ID"] = ID
+	return dat
+
 /*
 Basic field subtypes.
 */
 
-//For information between fields.
-/datum/report_field/instruction
+//For plain text without forms.
+/datum/report_field/text_label
 	can_edit = 0
 	ignore_value = 1
+
+//For information between fields.
+/datum/report_field/text_label/instruction/generate_row_pencode(access, with_fields)
+	return "\[small\]\[i\][display_name()]\[i\]\[/small\]"
+
+/datum/report_field/text_label/instruction/generate_nano_data(list/given_access)
+	var/dat = ..()
+	dat["name"] = "<div class='notice'><small><i>[display_name()]</i></small></div>"
+	return dat
+
+//For headers between fields.
+/datum/report_field/text_label/header/generate_row_pencode(access, with_fields)
+	return "\[h3][display_name()]\[h3]"
+
+/datum/report_field/text_label/header/generate_nano_data(list/given_access)
+	var/dat = ..()
+	dat["name"] = "<h3>[display_name()]</h3>"
+	return dat
 
 //Basic text field, for short strings.
 /datum/report_field/simple_text

@@ -41,6 +41,7 @@
 	singular_name = "wood floor tile"
 	desc = "An easy to fit wooden floor tile."
 	icon_state = "tile-wood"
+	matter = list(MATERIAL_WOOD = 450)
 
 /obj/item/stack/tile/wood/cyborg
 	name = "wood floor tile synthesizer"
@@ -49,6 +50,41 @@
 	charge_costs = list(250)
 	stacktype = /obj/item/stack/tile/wood
 	build_type = /obj/item/stack/tile/wood
+
+/obj/item/stack/tile/mahogany
+	name = "mahogany floor tile"
+	singular_name = "mahogany floor tile"
+	desc = "An easy to fit mahogany wood floor tile."
+	icon_state = "tile-mahogany"
+	matter = list(MATERIAL_WOOD = 450)
+
+/obj/item/stack/tile/maple
+	name = "maple floor tile"
+	singular_name = "maple floor tile"
+	desc = "An easy to fit maple wood floor tile."
+	icon_state = "tile-maple"
+	matter = list(MATERIAL_WOOD = 450)
+
+/obj/item/stack/tile/ebony
+	name = "ebony floor tile"
+	singular_name = "ebony floor tile"
+	desc = "An easy to fit ebony floor tile."
+	icon_state = "tile-ebony"
+	matter = list(MATERIAL_WOOD = 450)
+
+/obj/item/stack/tile/walnut
+	name = "walnut floor tile"
+	singular_name = "walnut floor tile"
+	desc = "An easy to fit walnut wood floor tile."
+	icon_state = "tile-walnut"
+	matter = list(MATERIAL_WOOD = 450)
+
+/obj/item/stack/tile/bamboo
+	name = "bamboo floor tile"
+	singular_name = "bamboo floor tile"
+	desc = "An easy to fit bamboo wood floor tile."
+	icon_state = "tile-maple"
+	matter = list(MATERIAL_WOOD = 450)
 
 /obj/item/stack/tile/floor
 	name = "steel floor tile"
@@ -60,6 +96,62 @@
 	throwforce = 15
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 
+/obj/item/stack/tile/mono
+	name = "steel mono tile"
+	singular_name = "steel mono tile"
+	icon_state = "tile"
+	matter = list(MATERIAL_STEEL = 450)
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
+
+/obj/item/stack/tile/mono/dark
+	name = "dark mono tile"
+	singular_name = "dark mono tile"
+	icon_state = "tile"
+	matter = list(MATERIAL_STEEL = 450)
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
+
+/obj/item/stack/tile/mono/white
+	name = "white mono tile"
+	singular_name = "white mono tile"
+	icon_state = "tile"
+	matter = list(MATERIAL_STEEL = 450)
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
+
+/obj/item/stack/tile/grid
+	name = "grey grid tile"
+	singular_name = "grey grid tile"
+	icon_state = "tile_grid"
+	matter = list(MATERIAL_STEEL = 450)
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
+
+/obj/item/stack/tile/ridge
+	name = "grey ridge tile"
+	singular_name = "grey ridge tile"
+	icon_state = "tile_ridged"
+	matter = list(MATERIAL_STEEL = 450)
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
+
+/obj/item/stack/tile/techgrey
+	name = "grey techfloor tile"
+	singular_name = "grey techfloor tile"
+	icon_state = "techtile_grey"
+	matter = list(MATERIAL_STEEL = 450)
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
+
+/obj/item/stack/tile/techgrid
+	name = "grid techfloor tile"
+	singular_name = "grid techfloor tile"
+	icon_state = "techtile_grid"
+	matter = list(MATERIAL_STEEL = 450)
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
+
+/obj/item/stack/tile/techmaint
+	name = "dark techfloor tile"
+	singular_name = "dark techfloor tile"
+	icon_state = "techtile_maint"
+	matter = list(MATERIAL_STEEL = 450)
+	obj_flags = OBJ_FLAG_CONDUCTIBLE
+
 /obj/item/stack/tile/floor_white
 	name = "white floor tile"
 	singular_name = "white floor tile"
@@ -69,12 +161,6 @@
 /obj/item/stack/tile/floor_white/fifty
 	amount = 50
 
-/obj/item/stack/tile/floor_white/mono
-	name = "white floor mono tile"
-	singular_name = "white floor mono tile"
-	icon_state = "monotile"
-	color = COLOR_WHITE
-
 /obj/item/stack/tile/floor_dark
 	name = "dark floor tile"
 	singular_name = "dark floor tile"
@@ -82,14 +168,6 @@
 	matter = list(MATERIAL_PLASTEEL = 937.5)
 
 /obj/item/stack/tile/floor_dark/fifty
-	amount = 50
-
-/obj/item/stack/tile/floor_dark/mono
-	name = "dark floor mono tile"
-	singular_name = "dark floor mono tile"
-	icon_state = "monotile"
-	color = COLOR_DARK_GRAY
-/obj/item/stack/tile/floor_dark/mono/fifty
 	amount = 50
 
 /obj/item/stack/tile/floor_freezer
@@ -115,10 +193,55 @@
 	name = "linoleum"
 	singular_name = "linoleum"
 	desc = "A piece of linoleum. It is the same size as a normal floor tile!"
-	icon_state = "tile-linoleum"
+	icon_state = "tile_linoleum"
 	matter = list(MATERIAL_PLASTIC = 900)
 
 /obj/item/stack/tile/linoleum/fifty
+	amount = 50
+
+/obj/item/stack/tile/stone
+	name = "stone slabs"
+	singular name = "stone slab"
+	desc = "A smooth, flat slab of some kind of stone."
+	icon_state = "tile_stone"
+
+/obj/item/stack/tile/new_tile
+	name = "old tiles"
+	singular_name = "old tile"
+	desc = "A worn down floor tile."
+	icon_state = "tile_full"
+	matter = list(MATERIAL_PLASTIC = 900)
+/obj/item/stack/tile/new_tile/fifty
+	amount = 50
+
+/obj/item/stack/tile/new_tile/gray
+	name = "old gray tiles"
+	singular_name = "old gray tile"
+	color = COLOR_GRAY
+/obj/item/stack/tile/new_tile/gray/fifty
+	amount = 50
+
+/obj/item/stack/tile/old_cargo
+	name = "old mono tiles"
+	singular_name = "old mono tile"
+	desc = "A worn down mono floor tile."
+	icon_state = "cargo_one_full"
+	matter = list(MATERIAL_PLASTIC = 900)
+/obj/item/stack/tile/old_cargo/fifty
+	amount = 50
+
+/obj/item/stack/tile/old_cargo/gray
+	name = "old gray mono tiles"
+	singular_name = "old gray mono tile"
+	color = COLOR_GRAY
+/obj/item/stack/tile/old_cargo/gray/fifty
+	amount = 50
+
+/obj/item/stack/tile/kafel
+	name = "kafel tile"
+	singular_name = "kafel tile"
+	icon_state = "kafel_full"
+/obj/item/stack/tile/kafel/fifty
 	amount = 50
 
 /*
@@ -295,7 +418,7 @@
 	name = "concrete"
 	singular_name = "concrete"
 	desc = "A piece of concrete flooring. It is the same size as a normal floor tile!"
-	icon_state = "tile-concrete"
+	icon_state = "tile_concrete"
 	matter = list(MATERIAL_SAND = 900)
 /obj/item/stack/tile/concrete/fifty
 	amount = 50

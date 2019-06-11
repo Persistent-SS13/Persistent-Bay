@@ -1,4 +1,4 @@
-/obj/item/weapon/researchTheorem
+/obj/item/weapon/paper/researchTheorem
 	name = "Blank Theorem"
 	desc = "A blank research theorem"
 	gender = NEUTER
@@ -10,13 +10,14 @@
 	throw_range = 1
 	throw_speed = 1
 	layer = ABOVE_OBJ_LAYER
+	info = "theorem" //if this is null the scanner ignores it
 
 	var/field = null
 	var/progress = 0
 	var/list/current = list()
 	var/list/research = list()
 
-/obj/item/weapon/researchTheorem/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)
+/obj/item/weapon/paper/researchTheorem/attackby(var/obj/item/weapon/O as obj, var/mob/user as mob)
 
 	if(istype(O, /obj/item/stack))
 		for(var/type in current)
@@ -73,7 +74,7 @@
 
 	. = ..()
 
-/obj/item/weapon/researchTheorem/proc/checkCompletion(var/mob/user)
+/obj/item/weapon/paper/researchTheorem/proc/checkCompletion(var/mob/user)
 	if(current.len)
 		return
 
@@ -91,10 +92,10 @@
 	research["experiment"] = null
 	research["experiments"] = GetExperiments(field, research["completed"])
 
-/obj/item/weapon/researchTheorem/attack_self(mob/living/user as mob)
+/obj/item/weapon/paper/researchTheorem/attack_self(mob/living/user as mob)
 	ui_interact(user)
 
-/obj/item/weapon/researchTheorem/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
+/obj/item/weapon/paper/researchTheorem/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1)
 	var/list/data = list()
 	data["name"] = name
 	data["field"] = field
@@ -153,7 +154,7 @@
 		ui.set_initial_data(data)
 		ui.open()
 
-/obj/item/weapon/researchTheorem/Topic(href, href_list)
+/obj/item/weapon/paper/researchTheorem/Topic(href, href_list)
 	..()
 
 	if(href_list["field"])

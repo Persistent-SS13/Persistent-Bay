@@ -22,6 +22,7 @@
 	health = 60
 	melee_damage_lower = 20
 	melee_damage_upper = 30
+	can_escape = 1
 
 	//Space bears aren't affected by atmos.
 	min_gas = null
@@ -31,7 +32,7 @@
 
 	faction = "russian"
 
-//SPACE BEARS! SQUEEEEEEEE~     OW! FUCK! IT BIT MY HAND OFF!!
+//SPACE BEARS! SQUEEEEEEEE~	 OW! FUCK! IT BIT MY HAND OFF!!
 /mob/living/simple_animal/hostile/bear/Hudson
 	name = "Hudson"
 	desc = ""
@@ -40,9 +41,9 @@
 	response_harm   = "pokes"
 
 /mob/living/simple_animal/hostile/bear/Life()
-	. =..()
+	. = ..()
 	if(!.)
-		return
+		return FALSE
 
 	if(loc && istype(loc,/turf/space))
 		icon_state = "bear"
@@ -116,26 +117,13 @@
 	..(5)
 
 /mob/living/simple_animal/hostile/bear/AttackingTarget()
-	if(!Adjacent(target_mob))
+	if(!target_mob || (target_mob && !Adjacent(target_mob)))
 		return
 	custom_emote(1, pick( list("slashes at [target_mob]", "bites [target_mob]") ) )
 
 	var/damage = rand(20,30)
 
-	if(ishuman(target_mob))
-		var/mob/living/carbon/human/H = target_mob
-		var/dam_zone = pick(BP_CHEST, BP_L_HAND, BP_R_HAND, BP_L_LEG, BP_R_LEG)
-		var/obj/item/organ/external/affecting = H.get_organ(ran_zone(dam_zone))
-		H.apply_damage(damage, DAM_CUT, affecting, H.run_armor_check(affecting, DAM_CUT) )
-		return H
-	else if(isliving(target_mob))
-		var/mob/living/L = target_mob
-		L.adjustBruteLoss(damage)
-		return L
-	//else if(istype(target_mob,/obj/mecha))
-		//var/obj/mecha/M = target_mob
-		//M.attack_animal(src)
-		//return M
+	target_mob.apply_damage(damage, DAM_CUT, used_weapon = src)
 
 
 

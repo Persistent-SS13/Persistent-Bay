@@ -42,11 +42,12 @@
 	desc = "Simple rocket nozzle, expelling gas at hypersonic velocities to propell the ship."
 	icon = 'icons/obj/ship_engine.dmi'
 	icon_state = "nozzle"
-	use_power = 0
+	use_power = POWER_USE_OFF
 	idle_power_usage = 150		//internal circuitry, friction losses and stuff
 	power_rating = 7500			//7500 W ~ 10 HP
 	opacity = 1
 	density = 1
+	atmos_canpass = CANPASS_DENSITY
 	var/on = 1
 	var/datum/ship_engine/gas_thruster/controller
 	var/thrust_limit = 1	//Value between 1 and 0 to limit the resulting thrust
@@ -118,7 +119,7 @@
 	if(flame)
 		icon_state = "exhaust"
 		nloc.hotspot_expose(1000,125)
-		set_light(5, 2)
+		set_light(0.5, 1, 4)
 	set_dir(ndir)
 	spawn(20)
 		qdel(src)

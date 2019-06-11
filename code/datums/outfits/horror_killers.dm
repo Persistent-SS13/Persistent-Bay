@@ -25,18 +25,19 @@
 	l_ear = /obj/item/device/radio/headset
 	glasses = /obj/item/clothing/glasses/thermal/plain/monocle
 	suit = /obj/item/clothing/suit/apron
-	l_pocket = /obj/item/weapon/material/hatchet/tacknife
+	l_pocket = /obj/item/weapon/material/knife/combat
 	r_pocket = /obj/item/weapon/scalpel
 	r_hand = /obj/item/weapon/material/twohanded/fireaxe
 
 /decl/hierarchy/outfit/masked_killer/post_equip(var/mob/living/carbon/human/H)
+	..()
 	var/victim = get_mannequin(H.ckey)
 	for(var/obj/item/carried_item in H.get_equipped_items(TRUE))
 		carried_item.add_blood(victim) //Oh yes, there will be blood.. just not blood from the killer because that's odd
 
 /decl/hierarchy/outfit/reaper
 	name = "Reaper"
-	uniform = /obj/item/clothing/under/suit_jacket{ starting_accessories=list(/obj/item/clothing/accessory/wcoat) }
+	uniform = /obj/item/clothing/under/suit_jacket{ starting_accessories=list(/obj/item/clothing/accessory/wcoat/black) }
 	shoes = /obj/item/clothing/shoes/black
 	gloves = /obj/item/clothing/gloves/thick
 	l_ear = /obj/item/device/radio/headset
@@ -46,9 +47,10 @@
 	id_slot = slot_wear_id
 	id_type = /obj/item/weapon/card/id/syndicate/station_access
 	pda_slot = slot_belt
-	pda_type = /obj/item/device/pda/heads
+	pda_type = /obj/item/modular_computer/pda/heads
 
 /decl/hierarchy/outfit/reaper/post_equip(var/mob/living/carbon/human/H)
+	..()
 	var/obj/item/weapon/storage/secure/briefcase/sec_briefcase = new(H)
 	for(var/obj/item/briefcase_item in sec_briefcase)
 		qdel(briefcase_item)
@@ -56,6 +58,6 @@
 		sec_briefcase.contents += new /obj/item/weapon/spacecash/bundle/c1000
 	sec_briefcase.contents += new /obj/item/weapon/gun/energy/crossbow
 	sec_briefcase.contents += new /obj/item/weapon/gun/projectile/revolver/mateba
-	sec_briefcase.contents += new /obj/item/ammo_magazine/c50
+	sec_briefcase.contents += new /obj/item/ammo_magazine/speedloader/c50
 	sec_briefcase.contents += new /obj/item/weapon/plastique
 	H.equip_to_slot_or_del(sec_briefcase, slot_l_hand)

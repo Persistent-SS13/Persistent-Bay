@@ -231,7 +231,7 @@ var/const/OUTPUT_DELAY = 5 SECONDS //intervals between material being outputed b
 			var/nbheets = round(nbstored / M.units_per_sheet)
 			stored_material[material_key] -= nbheets * M.units_per_sheet
 			M.place_sheet(get_turf(src), nbheets)
-			use_power(500) //Use some more power to output the stuff
+			use_power_oneoff(500) //Use some more power to output the stuff
 			playsound(src, sound_outputs, 30, vary=TRUE, extrarange=8, falloff=3)
 			break //Only output one kind of material per call
 

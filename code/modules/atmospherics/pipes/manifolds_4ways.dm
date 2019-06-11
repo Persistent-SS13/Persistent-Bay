@@ -84,12 +84,13 @@
 	if(node4)
 		node4.update_underlays()
 
-/obj/machinery/atmospherics/pipe/manifold4w/update_icon(var/safety = 0)
+/obj/machinery/atmospherics/pipe/manifold4w/on_update_icon(var/safety = 0)
 	if(!atmos_initalized)
 		return
 	if(!check_icon_cache())
 		return
 
+	set_leaking(!(node1 && node2 && node3 && node4))
 	alpha = 255
 
 	if(!node1 && !node2 && !node3 && !node4)
@@ -147,6 +148,8 @@
 	update_icon()
 
 /obj/machinery/atmospherics/pipe/manifold4w/atmos_init()
+	if(QDELETED(src) || QDELING(src) || !loc)
+		return
 	..()
 	for(var/obj/machinery/atmospherics/target in get_step(src,1))
 		if(target.initialize_directions & 2)
@@ -179,7 +182,7 @@
 
 	var/turf/T = get_turf(src)
 	if(level == 1 && !T.is_plating()) hide(1)
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/atmospherics/pipe/manifold4w/visible
 	icon_state = "map_4way"

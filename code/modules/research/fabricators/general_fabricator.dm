@@ -2,7 +2,7 @@
 	// Things that must be adjusted for each fabricator
 	name = "General Fabricator" // Self-explanatory
 	desc = "A general purpose fabricator that can produce a variety of simple equipment." // Self-explanatory
-	circuit = /obj/item/weapon/circuitboard/fabricator/genfab // Circuit for the machine. These, as well as their designs, should be defined in fabricator_circuits.dm
+	circuit_type = /obj/item/weapon/circuitboard/fabricator/genfab // Circuit for the machine. These, as well as their designs, should be defined in fabricator_circuits.dm
 	build_type = GENERALFAB // The identifer for what gets built in what fabricator. A new one *MUST* be defined in _defines/research.dm for each fabricator.
 						  // More than one can be assigned per design, however, if you want something to be able to be built in more than one fabricator eg. Power Cells
 							// Determines if a sheet loading animation will be applied when loading metals. If you're using a non-standard icon and don't
@@ -18,7 +18,7 @@
 
 /obj/machinery/fabricator/general_fabricator/can_connect(var/datum/world_faction/trying, var/mob/M)
 	var/datum/machine_limits/limits = trying.get_limits()
-	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(req_access_faction)))
+	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(trying.uid)))
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
 	if(limits.limit_genfab <= limits.genfabs.len)
@@ -196,7 +196,7 @@
 
 /datum/design/item/genfab/container/beerkeg
 	build_path = /obj/structure/reagent_dispensers/beerkeg/empty
-	materials = list(MATERIAL_STEEL = 0.25 SHEET)
+	materials = list(MATERIAL_ALUMINIUM = 20 SHEET)
 
 /datum/design/item/genfab/container/sci/dropper
 	build_path = /obj/item/weapon/reagent_containers/dropper
@@ -284,6 +284,7 @@
 
 /datum/design/item/genfab/container/drinkingglass/shaker
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/shaker
+	materials = list(MATERIAL_ALUMINIUM = 0.45 SHEET)
 
 /datum/design/item/genfab/container/drinkingglass/teapot
 	build_path = /obj/item/weapon/reagent_containers/food/drinks/teapot
@@ -441,13 +442,13 @@
 // 	materials = list(MATERIAL_STEEL = 01 SHEETS, MATERIAL_COPPER = 0.5 SHEETS)
 // 	build_path = /obj/item/weapon/computer_hardware/dna_scanner
 
-/datum/design/item/genfab/computer/adv/pda
-	name = "PDA design"
-	desc = "Cheaper than whiny non-digital assistants."
-	req_tech = list(TECH_ENGINEERING = 2, TECH_POWER = 3)
-	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 1 SHEET, MATERIAL_COPPER = 1.5 SHEETS)
-	build_path = /obj/item/device/pda
-	research = "computer_1"
+// /datum/design/item/genfab/computer/adv/pda
+// 	name = "PDA design"
+// 	desc = "Cheaper than whiny non-digital assistants."
+// 	req_tech = list(TECH_ENGINEERING = 2, TECH_POWER = 3)
+// 	materials = list(MATERIAL_STEEL = 2 SHEETS, MATERIAL_GLASS = 1 SHEET, MATERIAL_COPPER = 1.5 SHEETS)
+// 	build_path = /obj/item/modular_computer/pda
+// 	research = "computer_1"
 // Cartridges
 /**
 /datum/design/item/genfab/computer/adv/pda_cartridge
@@ -634,7 +635,7 @@
 
 /datum/design/item/genfab/communication/clipboard
 	name = "clipboard"
-	build_path = /obj/item/weapon/clipboard
+	build_path = /obj/item/weapon/material/clipboard
 	materials = list(MATERIAL_WOOD = 0.05 SHEET)
 /datum/design/item/genfab/communication/folder
 	name = "grey folder"

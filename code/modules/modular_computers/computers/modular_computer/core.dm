@@ -7,6 +7,11 @@
 		shutdown_computer()
 		return 0
 
+	if(updating)
+		handle_power()
+		process_updates()
+		return 1
+
 	if(active_program && active_program.requires_ntnet && !get_ntnet_status(active_program.requires_ntnet_feature)) // Active program requires NTNet to run but we've just lost connection. Crash.
 		active_program.event_networkfailure(0)
 
@@ -36,7 +41,7 @@
 	var/static/list/beepsounds = list('sound/effects/compbeep1.ogg','sound/effects/compbeep2.ogg','sound/effects/compbeep3.ogg','sound/effects/compbeep4.ogg','sound/effects/compbeep5.ogg')
 	if(enabled && world.time > ambience_last_played + 60 SECONDS && prob(1))
 		ambience_last_played = world.time
-		playsound(src.loc, pick(beepsounds),15,1,10, is_ambience = 1)
+		playsound(src.loc, pick(beepsounds),15,1,10, is_ambiance = 1)
 
 // Used to perform preset-specific hardware changes.
 /obj/item/modular_computer/proc/install_default_hardware()
@@ -47,7 +52,7 @@
 	return 1
 
 /obj/item/modular_computer/proc/install_default_programs_by_job(var/mob/living/carbon/human/H)
-	var/datum/job/jb = job_master.occupations_by_title[H.job]
+	var/datum/job/jb = SSjobs.get_by_title(H.job)
 	if(!jb) return
 	for(var/prog_type in jb.software_on_spawn)
 		var/datum/computer_file/program/prog_file = prog_type
@@ -56,7 +61,6 @@
 			hard_drive.store_file(prog_file)
 
 /obj/item/modular_computer/New()
-	START_PROCESSING(SSobj, src)
 	..()
 	ADD_SAVED_VAR(enabled)
 	ADD_SAVED_VAR(screen_on)
@@ -93,7 +97,10 @@
 
 /obj/item/modular_computer/Initialize()
 	. = ..()
+	START_PROCESSING(SSobj, src)
+
 	if(!map_storage_loaded)
+		health = max_health
 		install_default_hardware()
 		if(hard_drive)
 			install_default_programs()
@@ -110,20 +117,11 @@
 	. = ..()
 	if(active_program)
 		run_program(active_program.filename)
-
-/obj/item/modular_computer/after_load()
-	..()
 	update_verbs()
-
-/obj/item/modular_computer/Initialize()
-	. = ..()
-	if(!map_storage_loaded)
-		install_default_hardware()
-		if(hard_drive)
-			install_default_programs()
 
 /obj/item/modular_computer/Destroy()
 	kill_program(1)
+	QDEL_NULL_LIST(terminals)
 	STOP_PROCESSING(SSobj, src)
 	if(istype(stored_pen))
 		QDEL_NULL(stored_pen)
@@ -141,11 +139,11 @@
 		to_chat(user, "You emag \the [src]. It's screen briefly shows a \"OVERRIDE ACCEPTED: New software downloads available.\" message.")
 		return 1
 
-/obj/item/modular_computer/update_icon()
+/obj/item/modular_computer/on_update_icon()
 	icon_state = icon_state_unpowered
 
 	overlays.Cut()
-	if(bsod)
+	if(bsod || updating)
 		overlays.Add("bsod")
 		return
 	if(!enabled)
@@ -156,6 +154,8 @@
 	set_light(0.2, 0.1, light_strength)
 	if(active_program)
 		overlays.Add(active_program.program_icon_state ? active_program.program_icon_state : icon_state_menu)
+		if(active_program.program_key_state)
+			overlays.Add(active_program.program_key_state)
 	else
 		overlays.Add(icon_state_menu)
 
@@ -208,9 +208,17 @@
 
 /obj/item/modular_computer/proc/shutdown_computer(var/loud = 1)
 	kill_program(1)
+	QDEL_NULL_LIST(terminals)
 	for(var/datum/computer_file/program/P in idle_threads)
 		P.kill_program(1)
 		idle_threads.Remove(P)
+
+	//Not so fast!
+	if(updates)
+		handle_updates(TRUE)
+		update_icon()
+		return
+
 	if(loud)
 		visible_message("\The [src] shuts down.", range = 1)
 	enabled = 0
@@ -218,12 +226,18 @@
 
 /obj/item/modular_computer/proc/enable_computer(var/mob/user = null)
 	enabled = 1
+
+	//Not so fast!
+	if(updates)
+		handle_updates(FALSE)
+
 	update_icon()
 
 	// Autorun feature
-	var/datum/computer_file/data/autorun = hard_drive ? hard_drive.find_file_by_name("autorun") : null
-	if(istype(autorun))
-		run_program(autorun.stored_data)
+	if(!updates)
+		var/datum/computer_file/data/autorun = hard_drive ? hard_drive.find_file_by_name("autorun") : null
+		if(istype(autorun))
+			run_program(autorun.stored_data)
 
 	if(user)
 		ui_interact(user)
@@ -252,7 +266,6 @@
 		return
 
 	P.computer = src
-
 	if(!P.is_supported_by_hardware(hardware_flag, 1, user))
 		return
 	if(P in idle_threads)
@@ -260,10 +273,6 @@
 		active_program = P
 		idle_threads.Remove(P)
 		update_icon()
-		return
-
-	if(idle_threads.len >= processor_unit.max_idle_programs+1)
-		to_chat(user, "<span class='notice'>\The [src] displays a \"Maximal CPU load reached. Unable to run another program.\" error</span>")
 		return
 
 	if(P.requires_ntnet && !get_ntnet_status(P.requires_ntnet_feature)) // The program requires NTNet connection, but we are not connected to NTNet.
@@ -341,13 +350,13 @@
 		autorun.stored_data = program
 
 /obj/item/modular_computer/GetIdCard()
-	if(card_slot && card_slot.can_broadcast && istype(card_slot.stored_card))
+	if(card_slot && card_slot.can_broadcast && istype(card_slot.stored_card) && card_slot.check_functionality())
 		return card_slot.stored_card
 
 /obj/item/modular_computer/proc/update_name()
 	return
 
-/obj/item/modular_computer/proc/get_cell()
+/obj/item/modular_computer/get_cell()
 	if(battery_module)
 		return battery_module.get_cell()
 
@@ -372,3 +381,12 @@
 	if(update_progress < updates)
 		update_progress += rand(0, 2500)
 		return
+
+	//It's done.
+	updating = FALSE
+	update_icon()
+	updates = 0
+	update_progress = 0
+
+	if(update_postshutdown)
+		shutdown_computer()

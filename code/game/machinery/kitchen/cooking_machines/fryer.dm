@@ -8,24 +8,25 @@
 	off_icon = "fryer_off"
 	food_color = "#ffad33"
 	cooked_sound = 'sound/machines/ding.ogg'
+	circuit_type = /obj/item/weapon/circuitboard/deepfryer
 
-/obj/machinery/cooker/fryer/New()
-	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/deepfryer(null)
-	component_parts += new /obj/item/weapon/stock_parts/micro_laser(null)
-	component_parts += new /obj/item/weapon/stock_parts/micro_laser(null)
-	component_parts += new /obj/item/stack/cable_coil(null, 5)
-	RefreshParts()
+// /obj/machinery/cooker/fryer/New()
+// 	..()
+// 	component_parts = list()
+// 	component_parts += new /obj/item/weapon/circuitboard/deepfryer(null)
+// 	component_parts += new /obj/item/weapon/stock_parts/micro_laser(null)
+// 	component_parts += new /obj/item/weapon/stock_parts/micro_laser(null)
+// 	component_parts += new /obj/item/stack/cable_coil(null, 5)
+// 	RefreshParts()
 
-/obj/machinery/cooker/fryer/upgraded/New()
-	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/deepfryer(null)
-	component_parts += new /obj/item/weapon/stock_parts/micro_laser/ultra(null)
-	component_parts += new /obj/item/weapon/stock_parts/micro_laser/ultra(null)
-	component_parts += new /obj/item/stack/cable_coil(null, 5)
-	RefreshParts()
+// /obj/machinery/cooker/fryer/upgraded/New()
+// 	..()
+// 	component_parts = list()
+// 	component_parts += new /obj/item/weapon/circuitboard/deepfryer(null)
+// 	component_parts += new /obj/item/weapon/stock_parts/micro_laser/ultra(null)
+// 	component_parts += new /obj/item/weapon/stock_parts/micro_laser/ultra(null)
+// 	component_parts += new /obj/item/stack/cable_coil(null, 5)
+// 	RefreshParts()
 
 /obj/machinery/cooker/fryer/RefreshParts()
 	return
@@ -58,12 +59,10 @@
 			to_chat(user, "<span class='warning'>They are missing that body part!</span>")
 		else
 			visible_message("<span class='danger'>\The [user] shoves \the [victim][E ? "'s [E.name]" : ""] into \the [src]!</span>")
-			var/blocked = H.run_armor_check(target_zone, DAM_BURN)
-			H.apply_damage(rand(20,30), DAM_BURN, target_zone, blocked)
+			H.apply_damage(rand(20,30), DAM_BURN, target_zone, used_weapon = src)
 
 	else
-		var/blocked = victim.run_armor_check(null, DAM_BURN)
-		victim.apply_damage(rand(30,40), DAM_BURN, null, blocked)
+		victim.apply_damage(rand(30,40), DAM_BURN, used_weapon = src)
 
 	if(victim)
 		admin_attack_log(user, victim, "Has [cook_type] their victim in \a [src]", "Has been [cook_type] in \a [src] by the attacker.", "[cook_type], in \a [src], ")

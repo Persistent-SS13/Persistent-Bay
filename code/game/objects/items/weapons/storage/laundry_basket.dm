@@ -43,14 +43,14 @@
 
 /obj/item/weapon/storage/laundry_basket/pickup(mob/user)
 	var/obj/item/weapon/storage/laundry_basket/offhand/O = new(user)
-	O.name = "[name] - second hand"
+	O.SetName("[name] - second hand")
 	O.desc = "Your second grip on the [name]."
 	O.linked = src
 	user.put_in_inactive_hand(O)
 	linked = O
 	return
 
-/obj/item/weapon/storage/laundry_basket/update_icon()
+/obj/item/weapon/storage/laundry_basket/on_update_icon()
 	if(contents.len)
 		icon_state = "laundry-full"
 	else

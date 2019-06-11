@@ -13,7 +13,8 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	// Things that must be adjusted for each fabricator
 	name = "Fabricator"
 	desc = "A machine used for the production of various items"
-	var/obj/item/weapon/circuitboard/fabricator/circuit = /obj/item/weapon/circuitboard/fabricator
+	var/obj/item/weapon/circuitboard/fabricator/circuit //Pointer to the circuit board, since we save info into it
+	circuit_type = /obj/item/weapon/circuitboard/fabricator
 	var/build_type = PROTOLATHE
 	req_access = list()
 
@@ -54,38 +55,41 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 	var/datum/design/selected_design
 
 
-
 /obj/machinery/fabricator/New()
 	..()
-
-	component_parts = list()
-	component_parts += new circuit(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/micro_laser(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
-	circuit = new circuit()
 	if(has_reagents)
-		component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
-		component_parts += new /obj/item/weapon/reagent_containers/glass/beaker(src)
-		atom_flags += ATOM_FLAG_OPEN_CONTAINER
-	RefreshParts()
+		atom_flags |= ATOM_FLAG_OPEN_CONTAINER
+	ADD_SAVED_VAR(materials)
+	ADD_SAVED_VAR(circuit)
 
+	ADD_SKIP_EMPTY(materials)
+
+/obj/machinery/fabricator/Initialize()
+	. = ..()
 	update_categories()
-	return
+
+//Base class uses the circuit's details to add the required parts to the machine
+/obj/machinery/fabricator/SetupParts()
+	if(has_reagents)
+		LAZYADD(component_parts, new /obj/item/weapon/reagent_containers/glass/beaker(src))
+		LAZYADD(component_parts, new /obj/item/weapon/reagent_containers/glass/beaker(src))
+	..()
+	//Since we already create the circuit in the base class, just fetch it here and save the pointer
+	circuit = locate(circuit_type) in component_parts
+	if(!istype(circuit))
+		CRASH("[src]\ref[src] no circuit found for the fabricator")
 
 /obj/machinery/fabricator/Process()
 	..()
 	if(stat)
 		return
 	if(busy)
-		use_power = 2
+		update_use_power(POWER_USE_ACTIVE)
 		progress += speed
 		check_build()
 	else
-		use_power = 1
-	update_icon()
+		update_use_power(POWER_USE_IDLE)
+	queue_icon_update()
 
 /obj/machinery/fabricator/update_icon()
 	overlays.Cut()
@@ -216,6 +220,9 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 		eject_materials(href_list["eject"], text2num(href_list["amount"]))
 
 	if(href_list["menu"])
+		if(!connected_faction)
+			to_chat(usr, "You must connect the fabricator to an organization first.")
+			return 0
 		menu = text2num(href_list["menu"])
 
 	if(href_list["back"])
@@ -229,6 +236,23 @@ as their designs, in a single .dm file. voidsuit_fabricator.dm is an entirely co
 			to_chat(usr, "You must connect the fabricator to an organization first.")
 			return 0
 		add_to_queue(selected_design)
+	if(href_list["link_org"])
+		var/obj/item/weapon/card/id/id = usr.GetIdCard()
+		if(id)
+			var/datum/world_faction/faction = get_faction(id.selected_faction)
+			if(faction)
+				can_connect(faction, usr)
+	if(href_list["unlink_org"])
+		if(!has_access(list(core_access_machine_linking), list(), usr.GetAccess(req_access_faction)))
+			to_chat(usr, "You do not have access to unlink machines.")
+			return 0
+		can_disconnect(connected_faction, usr)
+	if(href_list["link_org"])
+		var/obj/item/weapon/card/id/id = usr.GetIdCard()
+		if(id)
+			var/datum/world_faction/faction = get_faction(id.selected_faction)
+			if(faction)
+				can_connect(faction, usr)
 	return 1
 
 /obj/machinery/fabricator/attackby(var/obj/item/I as obj, var/mob/user as mob)

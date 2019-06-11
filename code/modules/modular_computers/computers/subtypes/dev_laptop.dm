@@ -6,7 +6,7 @@
 	icon_state_unpowered = "laptop-open"
 	icon = 'icons/obj/modular_laptop.dmi'
 	icon_state = "laptop-open"
-	icon_state_screensaver = "standby"
+	w_class = ITEM_SIZE_NORMAL
 	base_idle_power_usage = 25
 	base_active_power_usage = 200
 	max_hardware_size = 2
@@ -36,7 +36,7 @@
 		screen_on = anchored
 		update_icon()
 
-/obj/item/modular_computer/laptop/update_icon()
+/obj/item/modular_computer/laptop/on_update_icon()
 	if(anchored)
 		..()
 	else

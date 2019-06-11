@@ -23,7 +23,7 @@
 		return
 	next_click = world.time + 1
 
-	if(stat)
+	if(incapacitated())
 		return
 
 	var/list/modifiers = params2list(params)
@@ -90,7 +90,9 @@
 	Since the AI handles shift, ctrl, and alt-click differently
 	than anything else in the game, atoms have separate procs
 	for AI shift, ctrl, and alt clicking.
-*//mob/living/silicon/ai/CtrlAltClickOn(var/atom/A)
+*/
+
+/mob/living/silicon/ai/CtrlAltClickOn(var/atom/A)
 	if(!control_disabled && A.AICtrlAltClick(src))
 		return
 	..()
@@ -119,6 +121,7 @@
 	The following criminally helpful code is just the previous code cleaned up;
 	I have no idea why it was in atoms.dm instead of respective files.
 */
+
 /atom/proc/AICtrlAltClick()
 
 /obj/machinery/door/airlock/AICtrlAltClick() // Electrifies doors.
@@ -139,6 +142,8 @@
 	return
 
 /obj/machinery/door/airlock/AIShiftClick()  // Opens and closes doors!
+	if(usr.incapacitated())
+		return
 	if(density)
 		Topic(src, list("command"="open", "activate" = "1"))
 	else
@@ -149,6 +154,8 @@
 	return
 
 /obj/machinery/door/airlock/AICtrlClick() // Bolts doors
+	if(usr.incapacitated())
+		return
 	if(locked)
 		Topic(src, list("command"="bolts", "activate" = "0"))
 	else
@@ -156,10 +163,14 @@
 	return 1
 
 /obj/machinery/power/apc/AICtrlClick() // turns off/on APCs.
+	if(usr.incapacitated())
+		return
 	Topic(src, list("breaker"="1"))
 	return 1
 
 /obj/machinery/turretid/AICtrlClick() //turns off/on Turrets
+	if(usr.incapacitated())
+		return
 	Topic(src, list("command"="enable", "value"="[!enabled]"))
 	return 1
 
@@ -176,14 +187,20 @@
 	return 1
 
 /obj/machinery/turretid/AIAltClick() //toggles lethal on turrets
+	if(usr.incapacitated())
+		return
 	Topic(src, list("command"="lethal", "value"="[!lethal]"))
 	return 1
+
+/obj/machinery/atmospherics/binary/pump/AIAltClick()
+	return AltClick()
 
 /atom/proc/AIMiddleClick(var/mob/living/silicon/user)
 	return 0
 
 /obj/machinery/door/airlock/AIMiddleClick() // Toggles door bolt lights.
-
+	if(usr.incapacitated())
+		return
 	if(..())
 		return
 

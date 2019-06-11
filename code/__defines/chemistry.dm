@@ -1,4 +1,4 @@
-#define DEFAULT_HUNGER_FACTOR 0.05 // Factor of how fast mob nutrition decreases
+#define DEFAULT_HUNGER_FACTOR 0.03 // Factor of how fast mob nutrition decreases
 
 #define REM 0.2 // Means 'Reagent Effect Multiplier'. This is how many units of reagent are consumed per tick
 
@@ -43,8 +43,11 @@
 #define CE_TOXIN         "toxins"       // Generic toxins, stops autoheal.
 #define CE_BREATHLOSS    "breathloss"   // Breathing depression, makes you need more air
 #define CE_MIND    		 "mindbending"  // Stabilizes or wrecks mind. Used for hallucinations
-#define CE_CRYO			 "cryogenic"	// Prevents damage from being frozen
-
+#define CE_CRYO 	     "cryogenic"    // Prevents damage from being frozen
+#define CE_BLOCKAGE	     "blockage"     // Gets in the way of blood circulation, higher the worse
+#define CE_SQUEAKY		 "squeaky"      // Helium voice. Squeak squeak.
+#define CE_THIRDEYE      "thirdeye"     // Gives xray vision.
+#define CE_SEDATE        "sedate"       // Applies sedation effects, i.e. paralysis, inability to use items, etc.
 #define CE_COKE			 "cocaine"		// Cocaine like effects
 #define CE_PHORON		 "phoraine"		// Special phoron-drug events
 

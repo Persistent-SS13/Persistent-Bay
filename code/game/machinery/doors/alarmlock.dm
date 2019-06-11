@@ -9,6 +9,11 @@
 	radio_filter_out= RADIO_TO_AIRALARM
 	autoclose 		= FALSE
 
+/obj/machinery/door/airlock/alarmlock/New()
+	..()
+	ADD_SAVED_VAR(id_tag)
+	ADD_SAVED_VAR(autoclose)
+
 /obj/machinery/door/airlock/alarmlock/Initialize()
 	. = ..()
 	open()

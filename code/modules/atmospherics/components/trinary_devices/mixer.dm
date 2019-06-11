@@ -6,7 +6,7 @@
 	name = "Gas mixer"
 	use_power = POWER_USE_IDLE
 	idle_power_usage = 150		//internal circuitry, friction losses and stuff
-	power_rating = 3700	//This also doubles as a measure of how powerful the mixer is, in Watts. 3700 W ~ 5 HP
+	power_rating = 15000	//This also doubles as a measure of how powerful the mixer is, in Watts. 15000 W ~ 20 HP
 
 	var/set_flow_rate = ATMOS_DEFAULT_VOLUME_MIXER
 	var/list/mixing_inputs
@@ -17,7 +17,7 @@
 
 	//node 3 is the outlet, nodes 1 & 2 are intakes
 
-/obj/machinery/atmospherics/trinary/mixer/update_icon(var/safety = 0)
+/obj/machinery/atmospherics/trinary/mixer/on_update_icon(var/safety = 0)
 	if(istype(src, /obj/machinery/atmospherics/trinary/mixer/m_mixer))
 		icon_state = "m"
 	else if(istype(src, /obj/machinery/atmospherics/trinary/mixer/t_mixer))
@@ -31,7 +31,7 @@
 		icon_state += use_power ? "on" : "off"
 	else
 		icon_state += "off"
-		use_power = 0
+		update_use_power(POWER_USE_OFF)
 
 /obj/machinery/atmospherics/trinary/mixer/update_underlays()
 	if(..())
@@ -63,6 +63,9 @@
 
 	if (!mixing_inputs)
 		mixing_inputs = list(src.air1 = node1_concentration, src.air2 = node2_concentration)
+	
+	ADD_SAVED_VAR(set_flow_rate)
+	ADD_SAVED_VAR(mixing_inputs)
 
 /obj/machinery/atmospherics/trinary/mixer/Process()
 	..()
@@ -91,7 +94,7 @@
 
 	if (power_draw >= 0)
 		last_power_draw = power_draw
-		use_power(power_draw)
+		use_power_oneoff(power_draw)
 
 	return 1
 
@@ -150,7 +153,7 @@
 /obj/machinery/atmospherics/trinary/mixer/Topic(href,href_list)
 	if(..()) return 1
 	if(href_list["power"])
-		use_power = !use_power
+		update_use_power(!use_power)
 	if(href_list["set_press"])
 		var/max_flow_rate = min(air1.volume, air2.volume)
 		var/new_flow_rate = input(usr,"Enter new flow rate limit (0-[max_flow_rate]L/s)","Flow Rate Control",src.set_flow_rate) as num
@@ -207,7 +210,7 @@ obj/machinery/atmospherics/trinary/mixer/t_mixer/atmos_init()
 			node3 = target
 			break
 
-	update_icon()
+	queue_icon_update()
 	update_underlays()
 
 obj/machinery/atmospherics/trinary/mixer/m_mixer
@@ -250,5 +253,5 @@ obj/machinery/atmospherics/trinary/mixer/m_mixer/atmos_init()
 			node3 = target
 			break
 
-	update_icon()
+	queue_icon_update()
 	update_underlays()

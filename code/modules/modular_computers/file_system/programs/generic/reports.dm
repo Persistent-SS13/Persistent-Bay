@@ -10,6 +10,7 @@
 	available_on_ntnet = TRUE
 	requires_ntnet = FALSE
 	usage_flags = PROGRAM_ALL
+	category = PROG_OFFICE
 
 /datum/nano_module/program/reports
 	name = "Report Editor"
@@ -24,12 +25,12 @@
 	switch(prog_state)
 		if(REPORTS_VIEW)
 			if(selected_report)
-				data["report_data"] = selected_report.generate_nano_data(get_access(user))
+				data["report_data"] = selected_report.generate_nano_data(/*get_access(user)*/) //Need to factionalize this
 			data["view_only"] = can_view_only
 			data["printer"] = program.computer.nano_printer
 		if(REPORTS_DOWNLOAD)
 			var/list/L = list()
-			for(var/datum/computer_file/report/report in ntnet_global.fetch_reports(get_access(user)))
+			for(var/datum/computer_file/report/report in ntnet_global.fetch_reports(/*get_access(user)*/)) //Should probably get this from the faction's network instead...
 				var/M = list()
 				M["name"] = report.display_name()
 				M["uid"] = report.uid

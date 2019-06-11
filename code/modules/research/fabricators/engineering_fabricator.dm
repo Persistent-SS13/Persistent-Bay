@@ -2,7 +2,7 @@
 	// Things that must be adjusted for each fabricator
 	name = "Engineering Equipment Fabricator" // Self-explanatory
 	desc = "A machine used for the production of engineering equipment." // Self-explanatory
-	circuit = /obj/item/weapon/circuitboard/fabricator/engfab // Circuit for the machine. These, as well as their designs, should be defined in fabricator_circuits.dm
+	circuit_type = /obj/item/weapon/circuitboard/fabricator/engfab // Circuit for the machine. These, as well as their designs, should be defined in fabricator_circuits.dm
 	build_type = ENGIFAB // The identifer for what gets built in what fabricator. A new one *MUST* be defined in _defines/research.dm for each fabricator.
 						  // More than one can be assigned per design, however, if you want something to be able to be built in more than one fabricator eg. Power Cells
 	metal_load_anim = TRUE				// Determines if a sheet loading animation will be applied when loading metals. If you're using a non-standard icon and don't
@@ -13,7 +13,7 @@
 
 /obj/machinery/fabricator/engineering_fabricator/can_connect(var/datum/world_faction/trying, var/mob/M)
 	var/datum/machine_limits/limits = trying.get_limits()
-	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(req_access_faction)))
+	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(trying.uid)))
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
 	if(limits.limit_engfab <= limits.engfabs.len)
@@ -59,7 +59,7 @@
 
 /datum/design/item/engifab/engitools/adv/analyzer
 	name = "Gas Analyzer"
-	build_path = /obj/item/device/analyzer
+	build_path = /obj/item/device/scanner/gas
 	materials = list(MATERIAL_STEEL = 0.25 SHEETS, MATERIAL_GLASS = 0.25 SHEETS, MATERIAL_COPPER = 0.25 SHEETS)
 
 /datum/design/item/engifab/engitools/adv/geiger
@@ -186,7 +186,7 @@
 
 /datum/design/item/engifab/engitools/combitool
 	name = "Combitool"
-	build_path = /obj/item/weapon/combitool
+	build_path = /obj/item/weapon/tool/combitool
 	materials = list(MATERIAL_STEEL = 8 SHEETS, MATERIAL_GLASS = 2 SHEETS, MATERIAL_COPPER = 2 SHEETS, MATERIAL_PHORON = 2 SHEET)
 	research = "combitool"
 	time = 60
@@ -464,6 +464,9 @@
 	category = "Lights"
 	materials = list(MATERIAL_GLASS = 0.25 SHEETS)
 	research = "color_lights"
+
+/datum/design/item/engifab/lights/tube/large/nav
+	build_path = /obj/item/weapon/light/tube/large/nav
 
 /datum/design/item/engifab/lights/tube/large
 	build_path = /obj/item/weapon/light/tube/large

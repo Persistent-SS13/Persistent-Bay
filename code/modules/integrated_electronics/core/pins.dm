@@ -38,6 +38,9 @@ D [1]/  ||
 
 	holder = loc
 
+	if(!istype(holder))
+		message_admins("ERROR: An integrated_io ([name]) spawned without a valid holder!  This is a bug.")
+
 /datum/integrated_io/Destroy()
 	disconnect_all()
 	data = null
@@ -134,7 +137,7 @@ D [1]/  ||
 /datum/integrated_io/activate/push_data()
 	for(var/k in 1 to linked.len)
 		var/datum/integrated_io/io = linked[k]
-		io.holder.check_then_do_work(io.ord)
+		SScircuit_components.queue_component(io.holder, TRUE, io.ord)
 
 /datum/integrated_io/proc/pull_data()
 	for(var/k in 1 to linked.len)

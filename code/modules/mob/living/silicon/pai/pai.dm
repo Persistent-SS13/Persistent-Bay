@@ -29,7 +29,8 @@
 		"Monkey" = "monkey",
 		"Rabbit" = "rabbit",
 		"Mushroom" = "mushroom",
-		"Corgi" = "corgi"
+		"Corgi" = "corgi",
+		"Crow" = "crow"
 		)
 
 	var/global/list/possible_say_verbs = list(
@@ -38,7 +39,8 @@
 		"Beep" = list("beeps","beeps loudly","boops"),
 		"Chirp" = list("chirps","chirrups","cheeps"),
 		"Feline" = list("purrs","yowls","meows"),
-		"Canine" = list("yaps", "barks", "woofs")
+		"Canine" = list("yaps", "barks", "woofs"),
+		"Corvid" = list("caws", "caws loudly", "whistles")
 		)
 
 	var/obj/item/weapon/pai_cable/cable		// The cable we produce and use when door or camera jacking
@@ -57,8 +59,6 @@
 	var/screen				// Which screen our main window displays
 	var/subscreen			// Which specific function of the main screen is being displayed
 
-	var/obj/item/device/pda/ai/pai/pda = null
-
 	var/secHUD = 0			// Toggles whether the Security HUD is active or not
 	var/medHUD = 0			// Toggles whether the Medical  HUD is active or not
 
@@ -74,24 +74,18 @@
 	var/hackprogress = 0				// Possible values: 0 - 1000, >= 1000 means the hack is complete and will be reset upon next check
 	var/hack_aborted = 0
 
-	var/obj/item/radio/integrated/signal/sradio // AI's signaller
-
 	var/translator_on = 0 // keeps track of the translator module
-
-	var/current_pda_messaging = null
 
 /mob/living/silicon/pai/New(var/obj/item/device/paicard)
 	status_flags |= NO_ANTAG
-	src.loc = paicard
 	card = paicard
-	sradio = new(src)
 
 	//As a human made device, we'll understand sol common without the need of the translator
-	add_language(LANGUAGE_SOL_COMMON, 1)
+	add_language(LANGUAGE_HUMAN_EURO, 1)
 
 	verbs += /mob/living/silicon/pai/proc/choose_chassis
 	verbs += /mob/living/silicon/pai/proc/choose_verbs
-	verbs -= /mob/living/verb/ghost
+	//verbs -= /mob/living/verb/ghost
 
 	..()
 
@@ -101,7 +95,6 @@
 		silicon_radio = card.radio
 
 /mob/living/silicon/pai/Destroy()
-	QDEL_NULL(sradio)
 	card = null
 	silicon_radio = null // Because this radio actually belongs to another instance we simply null
 	. = ..()
@@ -241,7 +234,7 @@
 	last_special = world.time + 100
 
 	//I'm not sure how much of this is necessary, but I would rather avoid issues.
-	if(istype(card.loc,/obj/item/rig_module))
+	if(istype(card.loc,/obj/item/rig_module) || istype(card.loc,/obj/item/integrated_circuit/manipulation/ai/))
 		to_chat(src, "There is no room to unfold inside \the [card.loc]. You're good and stuck.")
 		return 0
 	else if(istype(card.loc,/mob))
@@ -255,13 +248,10 @@
 					H.visible_message("<span class='danger'>\The [src] explodes out of \the [H]'s [affecting.name] in a shower of gore!</span>")
 					break
 		holder.drop_from_inventory(card)
-	else if(istype(card.loc,/obj/item/device/pda))
-		var/obj/item/device/pda/holder = card.loc
-		holder.pai = null
 
 	src.client.perspective = EYE_PERSPECTIVE
 	src.client.eye = src
-	src.forceMove(get_turf(card))
+	dropInto(card.loc)
 
 	card.forceMove(src)
 	card.screen_loc = null
@@ -317,7 +307,7 @@
 	verbs -= /mob/living/silicon/pai/proc/choose_verbs
 
 /mob/living/silicon/pai/lay_down()
-	set name = "Lay down"
+	set name = "Rest"
 	set category = "IC"
 
 	// Pass lying down or getting up to our pet human, if we're in a rig.
@@ -329,7 +319,7 @@
 	else
 		resting = !resting
 		icon_state = resting ? "[chassis]_rest" : "[chassis]"
-		to_chat(src, "<span class='notice'>You are now [resting ? "laying down" : "getting up"]</span>")
+		to_chat(src, "<span class='notice'>You are now [resting ? "resting" : "getting up"]</span>")
 
 //Overriding this will stop a number of headaches down the track.
 /mob/living/silicon/pai/attackby(obj/item/weapon/W as obj, mob/user as mob)
@@ -370,15 +360,12 @@
 	if(istype(H))
 		var/mob/living/M = H.loc
 		if(istype(M))
-			M.drop_from_inventory(H)
-		H.loc = get_turf(src)
-		src.loc = get_turf(H)
+			M.drop_from_inventory(H, get_turf(src))
+		dropInto(loc)
 
 	// Move us into the card and move the card to the ground.
-	src.loc = card
-	card.loc = get_turf(card)
-	src.forceMove(card)
-	card.forceMove(card.loc)
+	forceMove(card)
+	card.dropInto(card.loc)
 	resting = 0
 	icon_state = "[chassis]"
 

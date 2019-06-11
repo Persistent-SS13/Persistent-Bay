@@ -19,9 +19,9 @@
 	name 	= "Large Passive Vent"
 	volume 	= 1000
 
-/obj/machinery/atmospherics/pipe/vent/New()
+/obj/machinery/atmospherics/pipe/vent/setup_initialize_directions()
+	. = ..()
 	initialize_directions = dir
-	..()
 
 /obj/machinery/atmospherics/pipe/vent/Process()
 	..()
@@ -42,7 +42,7 @@
 /obj/machinery/atmospherics/pipe/vent/pipeline_expansion()
 	return list(node1)
 
-/obj/machinery/atmospherics/pipe/vent/update_icon(var/safety = 0)
+/obj/machinery/atmospherics/pipe/vent/on_update_icon(var/safety = 0)
 	if(!check_icon_cache())
 		return
 	overlays.Cut()
@@ -81,7 +81,7 @@
 			if (check_connect_types(target,src))
 				node1 = target
 				break
-	update_icon()
+	queue_icon_update()
 	update_underlays()
 
 /obj/machinery/atmospherics/pipe/vent/disconnect(obj/machinery/atmospherics/reference)
@@ -89,7 +89,7 @@
 		if(istype(node1, /obj/machinery/atmospherics/pipe))
 			qdel(parent)
 		node1 = null
-	update_icon()
+	queue_icon_update()
 	update_underlays()
 	return null
 

@@ -11,13 +11,14 @@
 	w_class = ITEM_SIZE_NORMAL
 	origin_tech = list(TECH_COMBAT = 2)
 	attack_verb = list("beaten")
+	base_parry_chance = 30
 	mass = 0.5
 	damtype = DAM_BLUNT
 	var/stunforce = 0
-	var/agonyforce = 60
+	var/agonyforce = 30
 	var/status = 0		//whether the thing is on or not
 	var/obj/item/weapon/cell/bcell
-	var/hitcost = 10
+	var/hitcost = 7
 
 /obj/item/weapon/melee/baton/loaded
 	bcell = /obj/item/weapon/cell/device/high
@@ -38,6 +39,9 @@
 		bcell = null
 	return ..()
 
+/obj/item/weapon/melee/baton/get_cell()
+	return bcell
+
 /obj/item/weapon/melee/baton/proc/deductcharge(var/chrgdeductamt)
 	if(bcell)
 		if(bcell.checked_use(chrgdeductamt))
@@ -48,7 +52,7 @@
 			return 0
 	return null
 
-/obj/item/weapon/melee/baton/update_icon()
+/obj/item/weapon/melee/baton/on_update_icon()
 	if(status)
 		icon_state = "[initial(name)]_active"
 	else if(!bcell)
@@ -57,7 +61,7 @@
 		icon_state = "[initial(name)]"
 
 	if(icon_state == "[initial(name)]_active")
-		set_light(1.5, 2, "#ff6a00")
+		set_light(0.4, 0.1, 1, 2, "#ff6a00")
 	else
 		set_light(0)
 
@@ -98,6 +102,12 @@
 	set_status(!status, user)
 	add_fingerprint(user)
 
+/obj/item/weapon/melee/baton/throw_impact(atom/hit_atom, var/speed)
+	if(istype(hit_atom,/mob/living))
+		apply_hit_effect(hit_atom, hit_zone = pick(BP_HEAD, BP_CHEST, BP_CHEST, BP_L_LEG, BP_R_LEG, BP_L_ARM, BP_R_ARM))
+	else
+		..()
+
 /obj/item/weapon/melee/baton/proc/set_status(var/newstatus, mob/user)
 	if(bcell && bcell.charge > hitcost)
 		if(status != newstatus)
@@ -122,7 +132,7 @@
 		update_icon()
 
 /obj/item/weapon/melee/baton/attack(mob/M, mob/user)
-	if(status && (CLUMSY in user.mutations) && prob(50))
+	if(status && (MUTATION_CLUMSY in user.mutations) && prob(50))
 		to_chat(user, "<span class='danger'>You accidentally hit yourself with the [src]!</span>")
 		user.Weaken(30)
 		deductcharge(hitcost)
@@ -139,11 +149,11 @@
 	if(ishuman(target))
 		var/mob/living/carbon/human/H = target
 		affecting = H.get_organ(hit_zone)
-
-	if(user.a_intent == I_HURT)
+	var/abuser =  user ? "" : "by [user]"
+	if(user && user.a_intent == I_HURT)
 		. = ..()
-		if (!.)	//item/attack() does it's own messaging and logs
-			return 0	// item/attack() will return 1 if they hit, 0 if they missed.
+		if(.)
+			return
 
 		//whacking someone causes a much poorer electrical contact than deliberately prodding them.
 		stun *= 0.5
@@ -154,14 +164,14 @@
 		//we can't really extract the actual hit zone from ..(), unfortunately. Just act like they attacked the area they intended to.
 	else if(!status)
 		if(affecting)
-			target.visible_message("<span class='warning'>[target] has been prodded in the [affecting.name] with [src] by [user]. Luckily it was off.</span>")
+			target.visible_message("<span class='warning'>[target] has been prodded in the [affecting.name] with [src][abuser]. Luckily it was off.</span>")
 		else
-			target.visible_message("<span class='warning'>[target] has been prodded with [src] by [user]. Luckily it was off.</span>")
+			target.visible_message("<span class='warning'>[target] has been prodded with [src][abuser]. Luckily it was off.</span>")
 	else
 		if(affecting)
-			target.visible_message("<span class='danger'>[target] has been prodded in the [affecting.name] with [src] by [user]!</span>")
+			target.visible_message("<span class='danger'>[target] has been prodded in the [affecting.name] with [src]!</span>")
 		else
-			target.visible_message("<span class='danger'>[target] has been prodded with [src] by [user]!</span>")
+			target.visible_message("<span class='danger'>[target] has been prodded with [src][abuser]!</span>")
 		playsound(loc, 'sound/weapons/Egloves.ogg', 50, 1, -1)
 
 	//stun effects
@@ -175,7 +185,7 @@
 			var/mob/living/carbon/human/H = target
 			H.forcesay(GLOB.hit_appends)
 
-	return 0
+	return 1
 
 /obj/item/weapon/melee/baton/emp_act(severity)
 	if(bcell)
@@ -227,10 +237,10 @@
 	icon = 'icons/obj/device.dmi'
 	icon_state = "electrified_arm"
 
-/obj/item/weapon/melee/baton/robot/electrified_arm/update_icon()
+/obj/item/weapon/melee/baton/robot/electrified_arm/on_update_icon()
 	if(status)
 		icon_state = "electrified_arm_active"
-		set_light(1.5, 2, "#006aff")
+		set_light(0.4, 0.1, 1, 2, "#006aff")
 	else
 		icon_state = "electrified_arm"
 		set_light(0)

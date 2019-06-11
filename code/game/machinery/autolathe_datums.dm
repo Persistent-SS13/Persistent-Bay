@@ -89,17 +89,17 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/scissors
 	name = "scissors"
-	path = /obj/item/weapon/scissors
+	path = /obj/item/weapon/tool/scissors
 	category = "Tools"
 
 /datum/autolathe/recipe/barber_scissors
 	name = "barber scissors"
-	path = /obj/item/weapon/scissors/barber
+	path = /obj/item/weapon/tool/scissors/barber
 	category = "Tools"
 
 /datum/autolathe/recipe/plastic_scissors
 	name = "plastic scissors"
-	path = /obj/item/weapon/scissors/craft 
+	path = /obj/item/weapon/tool/scissors/craft 
 	category = "Tools"
 
 /datum/autolathe/recipe/crowbar
@@ -216,18 +216,18 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/rods
 	name = "metal rods"
-	path = /obj/item/stack/rods
+	path = /obj/item/stack/material/rods
 	category = "General"
 	is_stack = 1
 
 /datum/autolathe/recipe/knife
 	name = "kitchen knife"
-	path = /obj/item/weapon/material/knife
+	path = /obj/item/weapon/material/knife/kitchen
 	category = "General"
 
 /datum/autolathe/recipe/knife/butch
 	name = "butcher knife"
-	path = /obj/item/weapon/material/knife/butch
+	path = /obj/item/weapon/material/knife/kitchen/cleaver
 	category = "General"
 
 /datum/autolathe/recipe/taperecorder
@@ -423,7 +423,7 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/clipboard
 	name = "clipboard"
-	path = /obj/item/weapon/clipboard
+	path = /obj/item/weapon/material/clipboard
 	category = "General"
 
 /datum/autolathe/recipe/destTagger
@@ -444,7 +444,7 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/tacknife
 	name = "tactical knife"
-	path = /obj/item/weapon/material/hatchet/tacknife
+	path = /obj/item/weapon/material/knife/combat
 	hidden = 1
 	category = "Arms and Ammunition"
 
@@ -522,12 +522,12 @@ var/const/EXTRA_COST_FACTOR = 1
 
 /datum/autolathe/recipe/analyzer
 	name = "gas analyzer"
-	path = /obj/item/device/analyzer
+	path = /obj/item/device/scanner/gas
 	category = "Tools"
 
 /datum/autolathe/recipe/healthscanner
 	name = "health scanner"
-	path = /obj/item/device/healthanalyzer
+	path = /obj/item/device/scanner/health
 	category = "Medical"
 
 /datum/autolathe/recipe/mop

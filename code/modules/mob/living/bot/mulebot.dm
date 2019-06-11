@@ -10,7 +10,10 @@
 /mob/living/bot/mulebot
 	name = "Mulebot"
 	desc = "A Multiple Utility Load Effector bot."
+	icon = 'icons/mob/bot/mulebot.dmi'
 	icon_state = "mulebot0"
+	plane = MOB_PLANE
+	layer = MOB_LAYER
 	anchored = 1
 	density = 1
 	health = 150
@@ -232,8 +235,8 @@
 
 	var/turf/Tsec = get_turf(src)
 	new /obj/item/device/assembly/prox_sensor(Tsec)
-	new /obj/item/stack/rods(Tsec)
-	new /obj/item/stack/rods(Tsec)
+	new /obj/item/stack/material/rods(Tsec)
+	new /obj/item/stack/material/rods(Tsec)
 	new /obj/item/stack/cable_coil/cut(Tsec)
 
 	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread

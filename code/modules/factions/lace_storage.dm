@@ -25,6 +25,7 @@
 /obj/machinery/lace_storage/New()
 	. = ..()
 	GLOB.lace_storages |= src
+	ADD_SAVED_VAR(network)
 
 /obj/machinery/lace_storage/Destroy()
 	GLOB.lace_storages -= src
@@ -38,14 +39,9 @@
 
 /obj/machinery/lace_storage/attackby(var/obj/item/O, var/mob/user = usr)
 	// Connecting the machine to the faction by id/pda
-	if (istype(O, /obj/item/weapon/card/id)||istype(O, /obj/item/device/pda))
+	if (O.GetIdCard())
+		var/obj/item/weapon/card/id/id = O.GetIdCard()
 		if(!req_access_faction)
-			var/obj/item/weapon/card/id/id
-			if(istype(O, /obj/item/weapon/card/id))
-				id = O
-			else if(istype(O, /obj/item/device/pda))
-				var/obj/item/device/pda/pda = O
-				id = pda.id
 			if(id)
 				var/datum/world_faction/faction = get_faction(id.selected_faction)
 				if(faction)
@@ -166,7 +162,7 @@
 	var/mob/character
 	var/key
 	var/name = ""
-	var/dir = 0
+	var/lacesaveslot = 0
 
 	if(S.lacemob.ckey)
 		S.lacemob.stored_ckey = S.lacemob.ckey
@@ -177,42 +173,24 @@
 		player.ckey = S.lacemob.stored_ckey
 	name = S.get_owner_name()
 	character = S.lacemob
-	dir = S.lacemob.save_slot
+	lacesaveslot = S.lacemob.save_slot
 	S.lacemob.spawn_loc = req_access_faction
 	S.lacemob.spawn_loc_2 = network
-	S.lacemob.spawn_type = 1
+	S.lacemob.spawn_type = CHARACTER_SPAWN_TYPE_LACE_STORAGE
 	S.loc = null
 
 	//
-
 	key = copytext(key, max(findtext(key, "@"), 1))
-
-	if(!dir)
-		log_and_message_admins("Warning! [key]'s [S] failed to find a save_slot, and is picking one!")
-		for(var/file in flist(load_path(key, "")))
-			var/firstNumber = text2num(copytext(file, 1, 2))
-			if(firstNumber)
-				var/storedName = CharacterName(firstNumber, key)
-				if(storedName == name)
-					dir = firstNumber
-					log_and_message_admins("[key]'s [S] found a savefile with it's realname [file]")
-					break
-		if(!dir)
-			dir++
-			while(fexists(load_path(key, "[dir].sav")))
-				dir++
-
-
-	var/savefile/F = new(load_path(key, "[dir].sav"))
-	to_file(F["name"], name)
-	to_file(F["mob"], character)
+	if(!lacesaveslot)
+		lacesaveslot = SScharacter_setup.find_character_save_slot(character, key)
+	SScharacter_setup.save_character(lacesaveslot, key, character)
 	if(req_access_faction == "betaquad")
-		var/savefile/E = new(beta_path(key, "[dir].sav"))
+		var/savefile/E = new(beta_path(key, "[lacesaveslot].sav"))
 		to_file(E["name"], name)
 		to_file(E["mob"], character)
 		to_file(E["records"], Retrieve_Record(name))
 	if(req_access_faction == "exiting")
-		var/savefile/E = new(beta_path(key, "[dir].sav"))
+		var/savefile/E = new(beta_path(key, "[lacesaveslot].sav"))
 		to_file(E["name"], name)
 		to_file(E["mob"], character)
 		to_file(E["records"], Retrieve_Record(name))

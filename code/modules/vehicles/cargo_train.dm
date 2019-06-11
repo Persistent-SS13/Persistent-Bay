@@ -90,8 +90,8 @@
 /obj/vehicle/train/cargo/engine/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(istype(W, /obj/item/weapon/key/cargo_train))
 		if(!key)
-			user.drop_item()
-			W.forceMove(src)
+			if(!user.unEquip(W, src))
+				return
 			key = W
 			verbs += /obj/vehicle/train/cargo/engine/verb/remove_key
 		return
@@ -104,7 +104,7 @@
 		return
 	..()
 
-/obj/vehicle/train/cargo/update_icon()
+/obj/vehicle/train/cargo/on_update_icon()
 	if(open)
 		icon_state = initial(icon_state) + "_open"
 	else
@@ -173,7 +173,7 @@
 	H.apply_effects(5, 5)
 	for(var/i = 0, i < rand(1,5), i++)
 		var/def_zone = pick(parts)
-		H.apply_damage(rand(5,10), DAM_BLUNT, def_zone, H.run_armor_check(def_zone, DAM_BLUNT))
+		H.apply_damage(rand(5,10), DAM_BLUNT, def_zone)
 
 /obj/vehicle/train/cargo/trolley/RunOver(var/mob/living/carbon/human/H)
 	..()
@@ -269,9 +269,7 @@
 	if(on)
 		turn_off()
 
-	key.loc = usr.loc
-	if(!usr.get_active_hand())
-		usr.put_in_hands(key)
+	usr.put_in_hands(key)
 	key = null
 
 	verbs -= /obj/vehicle/train/cargo/engine/verb/remove_key

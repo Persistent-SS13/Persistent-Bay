@@ -34,7 +34,7 @@
 	density 	= TRUE
 	mass		= 2.0 //kg
 
-/obj/machinery/flasher/portable/update_icon()
+/obj/machinery/flasher/portable/on_update_icon()
 	if (operable())
 		icon_state = "[base_state]1"
 	else
@@ -79,12 +79,14 @@
 //Don't want to render prison breaks impossible
 /obj/machinery/flasher/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(isWirecutter(W))
-		add_fingerprint(user)
+		add_fingerprint(user, 0, W)
 		src.disable = !src.disable
 		if (src.disable)
 			user.visible_message(SPAN_WARNING("[user] has disconnected the [src]'s flashbulb!"), SPAN_WARNING("You disconnect the [src]'s flashbulb!"))
 		if (!src.disable)
 			user.visible_message(SPAN_WARNING("[user] has connected the [src]'s flashbulb!"), SPAN_WARNING("You connect the [src]'s flashbulb!"))
+	else
+		return ..()
 
 //Let the AI trigger them directly.
 /obj/machinery/flasher/attack_ai()
@@ -103,29 +105,37 @@
 	playsound(src.loc, 'sound/weapons/flash.ogg', 100, 1)
 	flick("[base_state]_flash", src)
 	src.last_flash = world.time
-	use_power(1500)
+	use_power_oneoff(1500)
 
-	for (var/mob/O in viewers(src, null))
+	for (var/mob/living/O in viewers(src, null))
 		if (get_dist(src, O) > src.flash_range)
 			continue
 
 		var/flash_time = strength
-		if (istype(O, /mob/living/carbon/human))
-			var/mob/living/carbon/human/H = O
-			if(!H.eyecheck() <= 0)
+		if(isliving(O))
+			if(O.eyecheck() > FLASH_PROTECTION_NONE)
 				continue
-			flash_time *= H.species.flash_mod
-			var/obj/item/organ/internal/eyes/E = H.internal_organs_by_name[BP_EYES]
-			if(!E)
-				return
-			if(E.is_bruised() && prob(E.get_damages() + 50))
-				H.flash_eyes()
-				E.rem_health(rand(1, 5))
-		else
-			if(!O.blinded && isliving(O))
-				var/mob/living/L = O
-				L.flash_eyes()
-		O.Weaken(flash_time)
+			if(ishuman(O))
+				var/mob/living/carbon/human/H = O
+				flash_time = round(H.species.flash_mod * flash_time)
+				if(flash_time <= 0)
+					return
+				var/obj/item/organ/internal/eyes/E = H.internal_organs_by_name[H.species.vision_organ]
+				if(!E)
+					return
+				if(E.is_bruised() && prob(E.get_damages() + 50))
+					H.flash_eyes()
+					E.rem_health(rand(1, 5))
+
+		if(!O.blinded)
+			do_flash(O, flash_time)
+
+/obj/machinery/flasher/proc/do_flash(var/mob/living/victim, var/flash_time)
+			victim.flash_eyes()
+			victim.eye_blurry += flash_time
+			victim.confused += (flash_time + 2)
+			victim.Stun(flash_time / 2)
+			victim.Weaken(3)
 
 /obj/machinery/flasher/emp_act(severity)
 	if(inoperable())
@@ -136,13 +146,16 @@
 	..(severity)
 
 /obj/machinery/flasher/portable/HasProximity(atom/movable/AM as mob|obj)
-	if ((src.disable) || (src.last_flash && world.time < src.last_flash + 150))
+	if(!anchored || disable || last_flash && world.time < last_flash + 150)
 		return
 
 	if(istype(AM, /mob/living/carbon))
 		var/mob/living/carbon/M = AM
-		if (!MOVING_DELIBERATELY(M) && (src.anchored))
-			src.flash()
+		if(!MOVING_DELIBERATELY(M))
+			flash()
+	
+	if(isanimal(AM))
+		flash()
 
 /obj/machinery/flasher/portable/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(isWrench(W))

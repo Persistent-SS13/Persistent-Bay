@@ -1,11 +1,11 @@
-/decl/emote/human
+/decl/emote/human/vomit
 	key = "vomit"
 
 /decl/emote/human/check_user(var/mob/living/carbon/human/user)
 	return (istype(user) && user.check_has_mouth() && !user.isSynthetic())
 
 /decl/emote/human/do_emote(var/mob/living/carbon/human/user)
-	user.vomit()
+	user.vomit(deliberate = TRUE)
 
 /decl/emote/human/deathgasp
 	key = "deathgasp"

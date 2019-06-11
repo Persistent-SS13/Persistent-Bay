@@ -175,8 +175,8 @@
 		to_chat(holder.wearer, "<font color='blue'>Your sensors only have one mode.</font>")
 	return 1
 
-/obj/item/rig_module/vision/New()
-	..()
+/obj/item/rig_module/vision/Initialize()
+	. = ..()
 
 	if(!vision_modes)
 		return

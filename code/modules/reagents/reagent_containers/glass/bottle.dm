@@ -36,7 +36,7 @@
 		if(!icon_state)
 			icon_state = "bottle-[rand(1,4)]"
 
-	update_icon()
+	on_update_icon()
 		overlays.Cut()
 
 		if(reagents.total_volume && (icon_state == "bottle-1" || icon_state == "bottle-2" || icon_state == "bottle-3" || icon_state == "bottle-4"))
@@ -59,6 +59,10 @@
 			var/image/lid = image(icon, src, "lid_bottle")
 			overlays += lid
 
+/obj/item/weapon/reagent_containers/glass/bottle/Initialize()
+	. = ..()
+	queue_icon_update()
+
 
 /obj/item/weapon/reagent_containers/glass/bottle/inaprovaline
 	name = "inaprovaline bottle"
@@ -69,7 +73,6 @@
 /obj/item/weapon/reagent_containers/glass/bottle/inaprovaline/New()
 	..()
 	reagents.add_reagent(/datum/reagent/inaprovaline, 60)
-	update_icon()
 
 
 /obj/item/weapon/reagent_containers/glass/bottle/toxin
@@ -81,7 +84,6 @@
 /obj/item/weapon/reagent_containers/glass/bottle/toxin/New()
 	..()
 	reagents.add_reagent(/datum/reagent/toxin, 60)
-	update_icon()
 
 
 /obj/item/weapon/reagent_containers/glass/bottle/cyanide
@@ -93,7 +95,6 @@
 /obj/item/weapon/reagent_containers/glass/bottle/cyanide/New()
 	..()
 	reagents.add_reagent(/datum/reagent/toxin/cyanide, 30) //volume changed to match chloral
-	update_icon()
 
 
 /obj/item/weapon/reagent_containers/glass/bottle/stoxin
@@ -105,7 +106,6 @@
 /obj/item/weapon/reagent_containers/glass/bottle/stoxin/New()
 	..()
 	reagents.add_reagent(/datum/reagent/soporific, 60)
-	update_icon()
 
 
 /obj/item/weapon/reagent_containers/glass/bottle/chloralhydrate
@@ -117,7 +117,6 @@
 /obj/item/weapon/reagent_containers/glass/bottle/chloralhydrate/New()
 	..()
 	reagents.add_reagent(/datum/reagent/chloralhydrate, 30)		//Intentionally low since it is so strong. Still enough to knock someone out.
-	update_icon()
 
 
 /obj/item/weapon/reagent_containers/glass/bottle/antitoxin
@@ -129,7 +128,6 @@
 /obj/item/weapon/reagent_containers/glass/bottle/antitoxin/New()
 	..()
 	reagents.add_reagent(/datum/reagent/dylovene, 60)
-	update_icon()
 
 
 /obj/item/weapon/reagent_containers/glass/bottle/mutagen
@@ -141,7 +139,6 @@
 /obj/item/weapon/reagent_containers/glass/bottle/mutagen/New()
 	..()
 	reagents.add_reagent(/datum/reagent/mutagen, 60)
-	update_icon()
 
 
 /obj/item/weapon/reagent_containers/glass/bottle/ammonia
@@ -153,7 +150,6 @@
 /obj/item/weapon/reagent_containers/glass/bottle/ammonia/New()
 	..()
 	reagents.add_reagent(/datum/reagent/ammonia, 60)
-	update_icon()
 
 
 /obj/item/weapon/reagent_containers/glass/bottle/eznutrient
@@ -165,7 +161,6 @@
 /obj/item/weapon/reagent_containers/glass/bottle/eznutrient/New()
 	..()
 	reagents.add_reagent(/datum/reagent/toxin/fertilizer/eznutrient, 60)
-	update_icon()
 
 
 /obj/item/weapon/reagent_containers/glass/bottle/left4zed
@@ -177,7 +172,6 @@
 /obj/item/weapon/reagent_containers/glass/bottle/left4zed/New()
 	..()
 	reagents.add_reagent(/datum/reagent/toxin/fertilizer/left4zed, 60)
-	update_icon()
 
 
 /obj/item/weapon/reagent_containers/glass/bottle/robustharvest
@@ -189,7 +183,6 @@
 /obj/item/weapon/reagent_containers/glass/bottle/robustharvest/New()
 	..()
 	reagents.add_reagent(/datum/reagent/toxin/fertilizer/robustharvest, 60)
-	update_icon()
 
 
 /obj/item/weapon/reagent_containers/glass/bottle/diethylamine
@@ -201,7 +194,6 @@
 /obj/item/weapon/reagent_containers/glass/bottle/diethylamine/New()
 	..()
 	reagents.add_reagent(/datum/reagent/diethylamine, 60)
-	update_icon()
 
 
 /obj/item/weapon/reagent_containers/glass/bottle/pacid
@@ -213,7 +205,6 @@
 /obj/item/weapon/reagent_containers/glass/bottle/pacid/New()
 	..()
 	reagents.add_reagent(/datum/reagent/acid/polyacid, 60)
-	update_icon()
 
 
 /obj/item/weapon/reagent_containers/glass/bottle/adminordrazine
@@ -226,7 +217,6 @@
 /obj/item/weapon/reagent_containers/glass/bottle/adminordrazine/New()
 	..()
 	reagents.add_reagent(/datum/reagent/adminordrazine, 60)
-	update_icon()
 
 
 /obj/item/weapon/reagent_containers/glass/bottle/capsaicin
@@ -238,7 +228,6 @@
 /obj/item/weapon/reagent_containers/glass/bottle/capsaicin/New()
 	..()
 	reagents.add_reagent(/datum/reagent/capsaicin, 60)
-	update_icon()
 
 
 /obj/item/weapon/reagent_containers/glass/bottle/frostoil
@@ -250,4 +239,3 @@
 /obj/item/weapon/reagent_containers/glass/bottle/frostoil/New()
 	..()
 	reagents.add_reagent(/datum/reagent/frostoil, 60)
-	update_icon()

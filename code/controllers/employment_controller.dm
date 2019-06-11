@@ -41,13 +41,19 @@ var/datum/controller/employment_controller/employment_controller
 			for(var/employee in faction.unpaid)
 				var/amount = faction.unpaid[employee]
 				var/datum/computer_file/report/crew_record/record = faction.get_record(employee)
+				var/rank = 1
+				var/assignment_uid = "* ! *"
 				if(!record)
-					message_admins("no record found for [employee] during payday")
-					continue
-				var/datum/assignment/job = faction.get_assignment(record.assignment_uid, record.get_name())
+					if(faction.get_leadername() != employee)
+						message_admins("no record found for [employee] during payday")
+						continue
+				else
+					rank = record.rank
+					assignment_uid = record.assignment_uid
+				var/datum/assignment/job = faction.get_assignment(assignment_uid, employee)
 				var/payment
 				if(job)
-					payment = job.get_pay(record.rank) * amount / 6
+					payment = job.get_pay(rank) * amount / 6
 				else
 					payment = 0
 				if(payment && !money_transfer(faction.central_account, employee, "Payroll ([faction.name])", payment))

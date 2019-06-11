@@ -1,13 +1,13 @@
 /obj/machinery/fabricator/autotailor/nonstandard
 	name = "auto-tailor (costumes & special wear)"
 	desc = "An advanced machine capable of printing many types of clothing, this one is loaded with non-standard clothing designs."
-	circuit = /obj/item/weapon/circuitboard/fabricator/autotailor/nonstandard
+	circuit_type = /obj/item/weapon/circuitboard/fabricator/autotailor/nonstandard
 	build_type = AUTOTAILOR_NONSTANDARD
 
 
 /obj/machinery/fabricator/autotailor/nonstandard/can_connect(var/datum/world_faction/trying, var/mob/M)
 	var/datum/machine_limits/limits = trying.get_limits()
-	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(req_access_faction)))
+	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(trying.uid)))
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
 	if(limits.limit_atnonstandard <= limits.atnonstandards.len)

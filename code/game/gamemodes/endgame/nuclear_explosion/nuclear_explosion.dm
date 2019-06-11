@@ -39,6 +39,16 @@
 
 	sleep(200)
 
+//	if(SSticker.mode)
+//		SSticker.mode.station_was_nuked = 1
+//		SSticker.mode.explosion_in_progress = 0
+//		if(!SSticker.mode.check_finished())//If the mode does not deal with the nuke going off so just reboot because everyone is stuck as is
+//			universe_has_ended = 1
+
+/datum/universal_state/nuclear_explosion/OnExit()
+//	if(SSticker.mode)
+//		SSticker.mode.explosion_in_progress = 0
+
 /datum/universal_state/nuclear_explosion/proc/dust_mobs(var/list/affected_z_levels)
 	for(var/mob/living/L in SSmobs.mob_list)
 		var/turf/T = get_turf(L)

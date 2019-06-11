@@ -2,6 +2,7 @@
 	name = "extinguisher cabinet"
 	desc = "A small wall mounted cabinet designed to hold a fire extinguisher."
 	icon = 'icons/obj/extinguisher.dmi'
+	icon_state = "extinguisher_closed"
 	anchored = 1
 	density = 0
 	max_health = 150
@@ -12,9 +13,7 @@
 	if(isrobot(user))
 		return
 	if(istype(O, /obj/item/weapon/extinguisher))
-		if(!has_extinguisher && opened)
-			user.remove_from_mob(O)
-			contents += O
+		if(!has_extinguisher && opened && user.unEquip(O, src))
 			has_extinguisher = O
 			to_chat(user, "<span class='notice'>You place [O] in [src].</span>")
 			playsound(src.loc, 'sound/effects/extin.ogg', 50, 0)
@@ -48,7 +47,7 @@
 
 /obj/structure/extinguisher_cabinet/attack_tk(mob/user)
 	if(has_extinguisher)
-		has_extinguisher.loc = loc
+		has_extinguisher.dropInto(loc)
 		to_chat(user, "<span class='notice'>You telekinetically remove [has_extinguisher] from [src].</span>")
 		has_extinguisher = null
 		opened = 1
@@ -56,7 +55,19 @@
 		opened = !opened
 	update_icon()
 
-/obj/structure/extinguisher_cabinet/update_icon()
+/obj/structure/extinguisher_cabinet/on_update_icon()
+	pixel_x = 0
+	pixel_y = 0
+	switch(dir)
+		if(NORTH)
+			pixel_y = 24
+		if(SOUTH)
+			pixel_y = -24
+		if(EAST)
+			pixel_x = 24
+		if(WEST)
+			pixel_x = -24
+
 	if(!opened)
 		icon_state = "extinguisher_closed"
 		return

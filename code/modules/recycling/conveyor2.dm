@@ -46,7 +46,7 @@
 	else operating = 0
 	update_icon()
 
-/obj/machinery/conveyor/update_icon()
+/obj/machinery/conveyor/on_update_icon()
 	if(isbroken())
 		icon_state = "conveyor-broken"
 		operating = 0
@@ -64,6 +64,7 @@
 		return
 	if(!operating)
 		return
+	use_power_oneoff(100)
 	if(!loc)
 		qdel(src)
 		operating = 0
@@ -107,11 +108,7 @@
 		to_chat(user, "<span class='notice'>You remove the conveyor belt.</span>")
 		qdel(src)
 		return
-	if(isrobot(user))	return //Carn: fix for borgs dropping their modules on conveyor belts
-	if(I.loc != user)	return // This should stop mounted modules ending up outside the module.
-
-	user.drop_item(get_turf(src))
-	return
+	user.unequip_item(get_turf(src))
 
 // attack with hand, move pulled object onto conveyor
 /obj/machinery/conveyor/attack_hand(mob/user as mob)
@@ -157,15 +154,7 @@
 	if(C)
 		C.set_operable(stepdir, id, op)
 
-/*
-/obj/machinery/conveyor/verb/destroy()
-	set src in view()
-	src.broken()
-*/
-
 // the conveyor control switch
-//
-//
 
 /obj/machinery/conveyor_switch
 
@@ -199,7 +188,7 @@
 
 // update the icon depending on the position
 
-/obj/machinery/conveyor_switch/update_icon()
+/obj/machinery/conveyor_switch/on_update_icon()
 	if(position<0)
 		icon_state = "switch-rev"
 	else if(position>0)

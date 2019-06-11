@@ -22,7 +22,7 @@
 
 /obj/machinery/igniter/Initialize()
 	. = ..()
-	update_icon()
+	queue_icon_update()
 	if(_wifi_id)
 		wifi_receiver = new(_wifi_id, src)
 
@@ -38,7 +38,7 @@
 	if(ison() && time_next_spark)
 		time_next_spark = world.time + time_next_spark
 
-/obj/machinery/igniter/update_icon()
+/obj/machinery/igniter/on_update_icon()
 	icon_state = "igniter[ison()]"
 
 /obj/machinery/igniter/Destroy()
@@ -56,7 +56,7 @@
 			location.hotspot_expose(1000,500,1)
 
 /obj/machinery/igniter/turn_active()
-	use_power(50)
+	use_power_oneoff(50)
 	time_next_spark = world.time + 1 SECONDS
 	..()
 

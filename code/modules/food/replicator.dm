@@ -5,9 +5,9 @@
 	icon_state = "soda"
 	density = 1
 	anchored = 1
-	use_power = 1
 	idle_power_usage = 40
 	obj_flags = OBJ_FLAG_ANCHORABLE
+	circuit_type =  /obj/item/weapon/circuitboard/replicator
 	var/biomass = 100
 	var/biomass_max = 100
 	var/biomass_per = 10
@@ -24,31 +24,36 @@
 
 /obj/machinery/food_replicator/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/replicator(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src) //used to hold the biomass
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src) //used to cook the food
-	component_parts += new /obj/item/weapon/stock_parts/micro_laser(src) //used to deconstruct the stuff
+	ADD_SAVED_VAR(biomass)
+	ADD_SAVED_VAR(start_making)
+	ADD_SAVED_VAR(make_time)
 
-	RefreshParts()
+/obj/machinery/food_replicator/before_save()
+	. = ..()
+	make_time = abs(make_time - world.time)
+/obj/machinery/food_replicator/after_save()
+	. = ..()
+	if(make_time)
+		make_time = make_time + world.time
 
 /obj/machinery/food_replicator/attackby(var/obj/item/O, var/mob/user)
 	if(istype(O, /obj/item/weapon/reagent_containers/food/snacks))
 		var/obj/item/weapon/reagent_containers/food/snacks/S = O
-		user.drop_item(O)
 		for(var/datum/reagent/nutriment/N in S.reagents.reagent_list)
 			biomass = Clamp(biomass + round(N.volume*deconstruct_eff),1,biomass_max)
 		qdel(O)
 	else if(istype(O, /obj/item/weapon/storage/plants))
-		if(!O.contents || !O.contents.len)
-			return
-		to_chat(user, "You empty \the [O] into \the [src]")
-		for(var/obj/item/weapon/reagent_containers/food/snacks/grown/G in O.contents)
-			var/obj/item/weapon/storage/S = O
-			S.remove_from_storage(G, null)
+		var/obj/item/weapon/storage/S = O
+		var/success
+		for(var/obj/item/weapon/reagent_containers/food/snacks/grown/G in S)
+			success = 1
+			S.remove_from_storage(G, null, 1)
 			for(var/datum/reagent/nutriment/N in G.reagents.reagent_list)
 				biomass = Clamp(biomass + round(N.volume*deconstruct_eff),1,biomass_max)
 			qdel(G)
+		if(success)
+			S.finish_bulk_removal()
+			to_chat(user, "You empty \the [O] into \the [src]")
 
 	if(default_deconstruction_screwdriver(user, O))
 		return
@@ -60,10 +65,10 @@
 		..()
 	return
 
-/obj/machinery/food_replicator/update_icon()
+/obj/machinery/food_replicator/on_update_icon()
 	if(stat & BROKEN)
 		icon_state = "[initial(icon_state)]-broken"
-	else if( !(stat & NOPOWER) )
+	else if(!(stat & NOPOWER))
 		icon_state = initial(icon_state)
 	else
 		src.icon_state = "[initial(icon_state)]-off"
@@ -108,13 +113,14 @@
 		src.audible_message("<b>\The [src]</b> states, \"Error! I do not have enough biomass to serve any more dishes.\"")
 		queued_dishes.Cut()
 		return 0
+	flick("soda-vend", src)
 	biomass -= biomass_per
 	src.audible_message("<b>\The [src]</b> states, \"Your [text] is ready!\"")
 	playsound(src.loc, 'sound/machines/ding.ogg', 50, 1)
 	var/atom/A = new type(src.loc)
-	A.name = text
+	A.SetName(text)
 	A.desc = "Looks... actually pretty good."
-	use_power(75000)
+	use_power_oneoff(75000)
 	return 1
 
 /obj/machinery/food_replicator/RefreshParts()

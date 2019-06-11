@@ -1,7 +1,7 @@
 /obj/machinery/mining
 	icon = 'icons/obj/mining_drill.dmi'
 	anchored = 0
-	use_power = 0 //The drill takes power directly from a cell.
+	use_power = POWER_USE_OFF //The drill takes power directly from a cell.
 	density = 1
 	plane = ABOVE_HUMAN_PLANE
 	layer = ABOVE_HUMAN_LAYER //So it draws over mobs in the tile north of it.
@@ -36,7 +36,7 @@
 
 /obj/machinery/mining/drill/can_connect(var/datum/world_faction/trying, var/mob/M)
 	var/datum/machine_limits/limits = trying.get_limits()
-	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(req_access_faction)))
+	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(trying.uid)))
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
 	if(limits.limit_drills <= limits.drills.len)
@@ -302,8 +302,8 @@
 		return
 
 	//Drill through the flooring, if any.
-	if(istype(get_turf(src), /turf/simulated/asteroid))
-		var/turf/simulated/asteroid/T = get_turf(src)
+	if(istype(get_turf(src), /turf/simulated/floor/asteroid))
+		var/turf/simulated/floor/asteroid/T = get_turf(src)
 		if(!T.dug)
 			T.gets_dug()
 	else if(istype(get_turf(src), /turf/simulated/floor/exoplanet))

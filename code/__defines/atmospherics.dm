@@ -65,3 +65,5 @@
 #define CONNECT_TYPE_SCRUBBER	4
 #define CONNECT_TYPE_HE			8
 #define CONNECT_TYPE_LARGE		16 //High capacity pipes
+
+#define ADIABATIC_EXPONENT 0.667 //Actually adiabatic exponent - 1.

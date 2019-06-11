@@ -86,5 +86,5 @@
 	if(battery)
 		battery.charge = battery.maxcharge
 
-/obj/item/weapon/computer_hardware/battery_module/proc/get_cell()
+/obj/item/weapon/computer_hardware/battery_module/get_cell()
 	return battery

@@ -36,7 +36,7 @@
 	if(master)
 		master.disconnect_terminal(src)
 		master = null
-	. = ..()
+	return ..()
 
 /obj/machinery/power/terminal/hide(var/do_hide)
 	if(do_hide && level == 1)

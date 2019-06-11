@@ -30,14 +30,14 @@
 	. = ..()
 	queue_icon_update()
 
-/obj/machinery/ai_slipper/update_icon()
+/obj/machinery/ai_slipper/on_update_icon()
 	if (inoperable())
 		icon_state = "motion0"
 	else
 		icon_state = disabled ? "motion0" : "motion3"
 
 /obj/machinery/ai_slipper/proc/setState(var/enabled, var/uses)
-	src.disabled = !enabled
+	src.disabled = disabled
 	src.uses = uses
 	src.power_change()
 
@@ -110,11 +110,11 @@
 		dispense_foam()
 	update_icon()
 
-/obj/machinery/ai_slipper/Topic(href, href_list)
-	..()
+/obj/machinery/ai_slipper/OnTopic(user, href_list)
 	if (href_list["toggleOn"])
 		src.disabled = !src.disabled
 		update_icon()
+		. = TOPIC_REFRESH
 	if (href_list["toggleUse"])
 		dispense_foam()
 		src.power_change()

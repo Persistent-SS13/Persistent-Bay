@@ -49,7 +49,8 @@
 	user.do_attack_animation(target)
 
 	if(do_after(user, 50, target) && in_range(user, target))
-		user.drop_item()
+		if(!user.unequip_item())
+			return
 		src.target = target
 		forceMove(null)
 
@@ -63,8 +64,7 @@
 
 		target.overlays += image_overlay
 		to_chat(user, "Bomb has been planted. Timer counting down from [timer].")
-		spawn(timer*10)
-			explode(get_turf(target))
+		run_timer()
 
 /obj/item/weapon/plastique/proc/explode(var/location)
 	if(!target)
@@ -85,6 +85,18 @@
 	if(target)
 		target.overlays -= image_overlay
 	qdel(src)
+
+/obj/item/weapon/plastique/proc/run_timer() //Basically exists so the C4 will beep when running. Better idea than putting sleeps in attackby.
+	set waitfor = 0
+	var/T = timer
+	while(T > 0)
+		sleep(1 SECOND)
+		if(target)
+			playsound(target, 'sound/items/timer.ogg', 50)
+		else
+			playsound(loc, 'sound/items/timer.ogg', 50)
+		T--
+	explode(get_turf(target))
 
 /obj/item/weapon/plastique/attack(mob/M as mob, mob/user as mob, def_zone)
 	return

@@ -2,7 +2,7 @@
 	// Things that must be adjusted for each fabricator
 	name = "Voidsuit Fabricator" // Self-explanatory
 	desc = "A machine used for the production of voidsuits and other spacesuits" // Self-explanatory
-	circuit = /obj/item/weapon/circuitboard/fabricator/voidfab // Circuit for the machine. These, as well as their designs, should be defined in fabricator_circuits.dm
+	circuit_type = /obj/item/weapon/circuitboard/fabricator/voidfab // Circuit for the machine. These, as well as their designs, should be defined in fabricator_circuits.dm
 	build_type = VOIDFAB // The identifer for what gets built in what fabricator. A new one *MUST* be defined in _defines/research.dm for each fabricator.
 						 					 // More than one can be assigned per design, however, if you want something to be able to be built in more than one fabricator eg. Power Cells
 
@@ -21,7 +21,7 @@
 
 /obj/machinery/fabricator/voidsuit_fabricator/can_connect(var/datum/world_faction/trying, var/mob/M)
 	if(!trying.limits) return 0
-	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(req_access_faction)))
+	if(M && !has_access(list(core_access_machine_linking), list(), M.GetAccess(trying.uid)))
 		to_chat(M, "You do not have access to link machines to [trying.name].")
 		return 0
 	if(trying.limits.limit_voidfab <= trying.limits.voidfabs.len)

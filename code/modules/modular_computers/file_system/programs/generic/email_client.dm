@@ -6,16 +6,31 @@
 	program_key_state = "generic_key"
 	program_menu_icon = "mail-closed"
 	size = 7
-	requires_ntnet = TRUE
-	available_on_ntnet = TRUE
+	requires_ntnet = 1
+	available_on_ntnet = 1
 	var/stored_login = ""
 	var/stored_password = ""
 	usage_flags = PROGRAM_ALL
+	category = PROG_OFFICE
+
 	nanomodule_path = /datum/nano_module/email_client
 
+// Persistency. Unless you log out, or unless your password changes, this will pre-fill the login data when restarting the program
+/datum/computer_file/program/email_client/kill_program()
+	if(NM)
+		var/datum/nano_module/email_client/NME = NM
+		if(NME.current_account)
+			stored_login = NME.stored_login
+			stored_password = NME.stored_password
+			NME.log_out()
+		else
+			stored_login = ""
+			stored_password = ""
+	. = ..()
 
 /datum/computer_file/program/email_client/run_program()
 	. = ..()
+
 	if(NM)
 		var/datum/nano_module/email_client/NME = NM
 		NME.stored_login = stored_login
@@ -64,6 +79,7 @@
 	var/download_progress = 0
 	var/download_speed = 0
 
+	var/datum/computer_file/data/email_account/current_account = null
 	var/datum/computer_file/data/email_message/current_message = null
 
 /datum/nano_module/email_client/proc/mail_received(var/datum/computer_file/data/email_message/received_message)
@@ -79,21 +95,99 @@
 		msg += "*--*"
 		to_chat(L, jointext(msg, null))
 
+/datum/nano_module/email_client/Destroy()
+	log_out()
+	. = ..()
+
 /datum/nano_module/email_client/proc/log_in()
-	return 0
+	var/list/id_login
+
+	if(istype(host, /obj/item/modular_computer))
+		var/obj/item/modular_computer/computer = host
+		var/obj/item/weapon/card/id/id = computer.GetIdCard()
+		if(!id && ismob(computer.loc))
+			var/mob/M = computer.loc
+			id = M.GetIdCard()
+		if(id)
+			id_login = id.associated_email_login.Copy()
+
+	var/datum/computer_file/data/email_account/target
+	for(var/datum/computer_file/data/email_account/account in ntnet_global.email_accounts)
+		if(!account || !account.can_login)
+			continue
+		if(id_login && id_login["login"] == account.login)
+			target = account
+			break
+		if(stored_login && stored_login == account.login)
+			target = account
+			break
+
+	if(!target)
+		error = "Invalid Login"
+		return 0
+
+	if(target.suspended)
+		error = "This account has been suspended. Please contact the system administrator for assistance."
+		return 0
+
+	var/use_pass
+	if(stored_password)
+		use_pass = stored_password
+	else if(id_login)
+		use_pass = id_login["password"]
+
+	if(use_pass == target.password)
+		current_account = target
+		current_account.connected_clients |= src
+		return 1
+	else
+		error = "Invalid Password"
+		return 0
+
 // Returns 0 if no new messages were received, 1 if there is an unread message but notification has already been sent.
 // and 2 if there is a new message that appeared in this tick (and therefore notification should be sent by the program).
 /datum/nano_module/email_client/proc/check_for_new_messages(var/messages_read = FALSE)
-	return 0
+	if(!current_account)
+		return 0
 
+	var/list/allmails = current_account.all_emails()
+
+	if(allmails.len > last_message_count)
+		. = 2
+	else if(allmails.len > read_message_count)
+		. = 1
+	else
+		. = 0
+
+	last_message_count = allmails.len
+	if(messages_read)
+		read_message_count = allmails.len
 
 
 /datum/nano_module/email_client/proc/log_out()
-	return 0
+	if(current_account)
+		current_account.connected_clients -= src
+	current_account = null
+	downloading = null
+	download_progress = 0
+	last_message_count = 0
+	read_message_count = 0
 
 /datum/nano_module/email_client/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/topic_state/state = GLOB.default_state)
 	var/list/data = host.initial_data()
-	var/datum/computer_file/data/email_account/current_account = Get_Email_Account(user.real_name)
+	var/datum/computer_file/data/email_account/current_account = Get_Email_Account(user.real_name) //#FIXME: This is being called a lot when running the email client!! It seems fairly expensive too.
+
+	// Password has been changed by other client connected to this email account
+	if(current_account)
+		if(current_account.password != stored_password)
+			if(!log_in())
+				log_out()
+				error = "Invalid Password"
+		// Banned.
+		else if(current_account.suspended)
+			log_out()
+			error = "This account has been suspended. Please contact the system administrator for assistance."
+
 	if(error)
 		data["error"] = error
 	else if(downloading)
@@ -221,7 +315,11 @@
 	if(..())
 		return 1
 	var/mob/living/user = usr
-	var/datum/computer_file/data/email_account/current_account = Get_Email_Account(user.real_name)
+	var/datum/computer_file/data/email_account/current_account = Get_Email_Account(user.real_name)// Any actual interaction (button pressing) is considered as acknowledging received message, for the purpose of notification icons.
+	if(href_list["open"])
+		ui_interact()
+
+	check_for_new_messages(1)		// Any actual interaction (button pressing) is considered as acknowledging received message, for the purpose of notification icons.
 	if(href_list["login"])
 		log_in()
 		return 1
@@ -254,7 +352,6 @@
 		addressbook = FALSE
 		return 1
 
-
 	if(href_list["edit_title"])
 		var/newtitle = sanitize(input(user,"Enter title for your message:", "Message title", msg_title), 100)
 		if(newtitle)
@@ -264,9 +361,9 @@
 	// This uses similar editing mechanism as the FileManager program, therefore it supports various paper tags and remembers formatting.
 	if(href_list["edit_body"])
 		var/oldtext = html_decode(msg_body)
-		oldtext = replacetext(oldtext, "\[editorbr\]", "\n")
+		oldtext = replacetext(oldtext, "\[br\]", "\n")
 
-		var/newtext = sanitize(replacetext(input(usr, "Enter your message. You may use most tags from paper formatting", "Message Editor", oldtext) as message|null, "\n", "\[editorbr\]"), 20000)
+		var/newtext = sanitize(replacetext(input(usr, "Enter your message. You may use most tags from paper formatting", "Message Editor", oldtext) as message|null, "\n", "\[br\]"), 20000)
 		if(newtext)
 			msg_body = newtext
 		return 1
@@ -275,6 +372,11 @@
 		var/newrecipient = sanitize(input(user,"Enter recipient's email address:", "Recipient", msg_recipient), 100)
 		if(newrecipient)
 			msg_recipient = newrecipient
+			addressbook = 0
+		return 1
+
+	if(href_list["close_addressbook"])
+		addressbook = 0
 		return 1
 
 	if(href_list["edit_login"])
@@ -343,7 +445,7 @@
 		msg_body = "\[editorbr\]\[editorbr\]\[editorbr\]\[br\]==============================\[br\]\[editorbr\]"
 		msg_body += "Received by [current_account.login] at [M.timestamp]\[br\]\[editorbr\][M.stored_data]"
 		var/atom/movable/AM = host
-		if(istype(AM))		
+		if(istype(AM))
 			if(ismob(AM.loc))
 				ui_interact(AM.loc)
 		return 1

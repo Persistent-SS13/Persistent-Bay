@@ -17,6 +17,11 @@
 	var/list/sensors 	= list()
 	var/list/sensor_information = list()
 
+/obj/machinery/computer/general_air_control/New()
+	. = ..()
+	ADD_SAVED_VAR(sensors)
+	ADD_SKIP_EMPTY(sensors)
+
 /obj/machinery/computer/general_air_control/attack_ai(mob/user)
 	. = ..()
 	return attack_hand(user)
@@ -83,6 +88,13 @@
 	var/list/output_info
 	var/input_flow_setting = 200
 	var/pressure_setting = ONE_ATMOSPHERE * 45
+
+/obj/machinery/computer/general_air_control/large_tank_control/New()
+	. = ..()
+	ADD_SAVED_VAR(input_tag)
+	ADD_SAVED_VAR(output_tag)
+	ADD_SAVED_VAR(input_flow_setting)
+	ADD_SAVED_VAR(pressure_setting)
 
 /obj/machinery/computer/general_air_control/large_tank_control/proc/refreshio()
 	post_signal(list("status" = 1), radio_filter_out, input_tag)
@@ -226,6 +238,13 @@
 	var/automation 			= FALSE
 	var/cutoff_temperature 	= 2000
 	var/on_temperature 		= 1200
+
+/obj/machinery/computer/general_air_control/fuel_injection/New()
+	. = ..()
+	ADD_SAVED_VAR(device_tag)
+	ADD_SAVED_VAR(automation)
+	ADD_SAVED_VAR(cutoff_temperature)
+	ADD_SAVED_VAR(on_temperature)
 
 /obj/machinery/computer/general_air_control/fuel_injection/Process()
 	..()

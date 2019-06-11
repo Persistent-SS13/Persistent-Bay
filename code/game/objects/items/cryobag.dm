@@ -52,7 +52,7 @@
 		STOP_PROCESSING(SSobj, src)
 	. = ..()
 
-/obj/structure/closet/body_bag/cryobag/update_icon()
+/obj/structure/closet/body_bag/cryobag/on_update_icon()
 	..()
 	overlays.Cut()
 	var/image/I = image(icon, "indicator[opened]")
@@ -109,3 +109,19 @@
 	desc = "Pretty useless now.."
 	icon_state = "bodybag_used"
 	icon = 'icons/obj/closets/cryobag.dmi'
+
+/obj/structure/closet/body_bag/cryobag/blank
+	stasis_power = 60
+	degradation_time = 1800 //ticks until stasis power degrades, ~5 minutes
+
+/obj/structure/closet/body_bag/cryobag/blank/open()
+	. = ..()
+	new /obj/item/usedcryobag(loc)
+	qdel(src)
+
+/obj/structure/closet/body_bag/cryobag/blank/WillContain()
+	return list(/mob/living/carbon/human/blank)
+
+/obj/structure/closet/body_bag/cryobag/blank/Initialize()
+	. = ..()
+	START_PROCESSING(SSobj, src)

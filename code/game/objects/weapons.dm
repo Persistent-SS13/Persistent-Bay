@@ -6,10 +6,11 @@
 	armor_penetration = 0
 	throwforce = 1
 	force = 1
+	attack_cooldown = DEFAULT_ATTACK_COOLDOWN
 	var/miss_chance  = 2 //% Chance for the hit with this weapon to miss
 	var/sound_attack = "swing_hit"
 	var/sound_miss   = "swing_miss"
-	var/attack_cooldown = DEFAULT_ATTACK_COOLDOWN
+
 
 /obj/item/weapon/attack(atom/movable/AM, mob/living/user as mob, var/target_zone)
 	if(!..())
@@ -21,7 +22,7 @@
 		return 0
 
 	user.do_attack_animation(AM)
-	if ((CLUMSY in user.mutations) && prob(50))
+	if ((MUTATION_CLUMSY in user.mutations) && prob(50))
 		to_chat(user, SPAN_DANGER("\The [src] slips out of your hand and hits your head."))
 		user.apply_damage(10, DAM_BLUNT)
 		user.Paralyse(20)
@@ -47,7 +48,7 @@
 		playsound(src.loc, src.sound_attack, vol=75, vary=1, extrarange=8, falloff=4)
 
 	var/power = src.force
-	if(HULK in user.mutations)
+	if(MUTATION_HULK in user.mutations)
 		power *= 2
 	return target.hit_with_weapon(src, user, power, hit_zone)
 

@@ -49,7 +49,7 @@
 				new_mob = new /mob/living/silicon/robot(M.loc)
 				new_mob.gender = M.gender
 				new_mob.set_invisibility(0)
-				new_mob.job = "Cyborg"
+				new_mob.job = "Robot"
 				var/mob/living/silicon/robot/Robot = new_mob
 				Robot.mmi = new /obj/item/device/mmi(new_mob)
 				Robot.mmi.transfer_identity(M)	//Does not transfer key/client.
@@ -66,13 +66,13 @@
 
 				if(M.gender == MALE)
 					H.gender = MALE
-					H.name = pick(GLOB.first_names_male)
+					H.SetName(pick(GLOB.first_names_male))
 				else if(M.gender == FEMALE)
 					H.gender = FEMALE
-					H.name = pick(GLOB.first_names_female)
+					H.SetName(pick(GLOB.first_names_female))
 				else
 					H.gender = NEUTER
-					H.name = pick(GLOB.first_names_female|GLOB.first_names_male)
+					H.SetName(pick(GLOB.first_names_female|GLOB.first_names_male))
 
 				H.name += " [pick(GLOB.last_names)]"
 				H.real_name = H.name

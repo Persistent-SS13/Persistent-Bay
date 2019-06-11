@@ -3,6 +3,9 @@
 	var/deep_val = 0.8              // Threshold for deep metals, set in new as percentage of cell_range.
 	var/rare_val = 0.7              // Threshold for rare metal, set in new as percentage of cell_range.
 	var/chunk_size = 4              // Size each cell represents on map
+	var/min_surface_ratio = MIN_SURFACE_COUNT_PER_CHUNK
+	var/min_rare_ratio = MIN_RARE_COUNT_PER_CHUNK
+	var/min_deep_ratio = MIN_DEEP_COUNT_PER_CHUNK
 
 /datum/random_map/noise/ore/New(var/seed, var/tx, var/ty, var/tz, var/tlx, var/tly, var/do_not_apply, var/do_not_announce, var/never_be_priority = 0)
 	rare_val = cell_range * rare_val
@@ -27,13 +30,13 @@
 	var/num_chunks = surface_count + rare_count + deep_count
 
 	// Sanity check.
-	if(surface_count < (MIN_SURFACE_COUNT_PER_CHUNK * num_chunks))
+	if(surface_count < (min_surface_ratio * num_chunks))
 		admin_notice("<span class='danger'>Insufficient surface minerals. Rerolling...</span>", R_DEBUG)
 		return 0
-	else if(rare_count < (MIN_RARE_COUNT_PER_CHUNK * num_chunks))
+	else if(rare_count < (min_rare_ratio * num_chunks))
 		admin_notice("<span class='danger'>Insufficient rare minerals. Rerolling...</span>", R_DEBUG)
 		return 0
-	else if(deep_count < (MIN_DEEP_COUNT_PER_CHUNK * num_chunks))
+	else if(deep_count < (min_deep_ratio * num_chunks))
 		admin_notice("<span class='danger'>Insufficient deep minerals. Rerolling...</span>", R_DEBUG)
 		return 0
 	else
@@ -57,13 +60,7 @@ Aluminum-Zinc Asteroids
 	var/tx = ((origin_x-1)+x)*chunk_size
 	var/ty = ((origin_y-1)+y)*chunk_size
 
-	var/tmp_cell
-	var/current_cell = get_map_cell(x,y)
-	if(current_cell)
-		tmp_cell = map[current_cell]
-
 	// Solid Resources
-
 	for(var/i=0,i<chunk_size,i++)
 		for(var/j=0,j<chunk_size,j++)
 			var/turf/simulated/T = locate(tx+j, ty+i, origin_z)
@@ -73,6 +70,10 @@ Aluminum-Zinc Asteroids
 				CHECK_TICK
 			T.resources = list()
 			T.resources[MATERIAL_SAND] = rand(3,5)
+			T.resources[MATERIAL_GRAPHITE] = rand(3,5)
+
+			var/tmp_cell
+			TRANSLATE_AND_VERIFY_COORD(x, y)
 
 			if(tmp_cell < rare_val)      // Surface metals.
 				T.resources[MATERIAL_HEMATITE] =			rand(RESOURCE_HIGH_MIN,	RESOURCE_HIGH_MAX)
@@ -172,13 +173,7 @@ Aluminum-Zinc Asteroids
 	var/tx = ((origin_x-1)+x)*chunk_size
 	var/ty = ((origin_y-1)+y)*chunk_size
 
-	var/tmp_cell
-	var/current_cell = get_map_cell(x,y)
-	if(current_cell)
-		tmp_cell = map[current_cell]
-
 	// Solid Resources
-
 	for(var/i=0,i<chunk_size,i++)
 		for(var/j=0,j<chunk_size,j++)
 			var/turf/simulated/T = locate(tx+j, ty+i, origin_z)
@@ -188,6 +183,9 @@ Aluminum-Zinc Asteroids
 				CHECK_TICK
 			T.resources = list()
 			T.resources[MATERIAL_SAND] = rand(3,5)
+
+			var/tmp_cell
+			TRANSLATE_AND_VERIFY_COORD(x, y)
 
 			if(tmp_cell < rare_val)      // Surface metals.
 				T.resources[MATERIAL_HEMATITE] =			rand(RESOURCE_LOW_MIN,	RESOURCE_LOW_MAX)
@@ -287,11 +285,6 @@ Aluminum-Zinc Asteroids
 	var/tx = ((origin_x-1)+x)*chunk_size
 	var/ty = ((origin_y-1)+y)*chunk_size
 
-	var/tmp_cell
-	var/current_cell = get_map_cell(x,y)
-	if(current_cell)
-		tmp_cell = map[current_cell]
-
 	// Solid Resources
 
 	for(var/i=0,i<chunk_size,i++)
@@ -303,6 +296,9 @@ Aluminum-Zinc Asteroids
 				CHECK_TICK
 			T.resources = list()
 			T.resources[MATERIAL_SAND] = rand(3,5)
+
+			var/tmp_cell
+			TRANSLATE_AND_VERIFY_COORD(x, y)
 
 			if(tmp_cell < rare_val)      // Surface metals.
 				T.resources[MATERIAL_BAUXITE] =				rand(RESOURCE_HIGH_MIN,	RESOURCE_HIGH_MAX)
@@ -402,11 +398,6 @@ Aluminum-Zinc Asteroids
 	var/tx = ((origin_x-1)+x)*chunk_size
 	var/ty = ((origin_y-1)+y)*chunk_size
 
-	var/tmp_cell
-	var/current_cell = get_map_cell(x,y)
-	if(current_cell)
-		tmp_cell = map[current_cell]
-
 	// Solid Resources
 
 	for(var/i=0,i<chunk_size,i++)
@@ -418,6 +409,9 @@ Aluminum-Zinc Asteroids
 				CHECK_TICK
 			T.resources = list()
 			T.resources[MATERIAL_SAND] = rand(3,5)
+
+			var/tmp_cell
+			TRANSLATE_AND_VERIFY_COORD(x, y)
 
 			if(tmp_cell < rare_val)      // Surface metals.
 				T.resources[MATERIAL_BAUXITE] =				rand(RESOURCE_LOW_MIN,	RESOURCE_LOW_MAX)
@@ -546,11 +540,6 @@ Titanium-Fusion Asteroids
 	var/tx = ((origin_x-1)+x)*chunk_size
 	var/ty = ((origin_y-1)+y)*chunk_size
 
-	var/tmp_cell
-	var/current_cell = get_map_cell(x,y)
-	if(current_cell)
-		tmp_cell = map[current_cell]
-
 	// Solid Resources
 
 	for(var/i=0,i<chunk_size,i++)
@@ -562,6 +551,9 @@ Titanium-Fusion Asteroids
 				CHECK_TICK
 			T.resources = list()
 			T.resources[MATERIAL_SAND] = rand(3,5)
+
+			var/tmp_cell
+			TRANSLATE_AND_VERIFY_COORD(x, y)
 
 			if(tmp_cell < rare_val)      // Surface metals.
 				T.resources[MATERIAL_SILVER] =				rand(RESOURCE_MID_MIN,	RESOURCE_MID_MAX)
@@ -665,11 +657,6 @@ Titanium-Fusion Asteroids
 	var/tx = ((origin_x-1)+x)*chunk_size
 	var/ty = ((origin_y-1)+y)*chunk_size
 
-	var/tmp_cell
-	var/current_cell = get_map_cell(x,y)
-	if(current_cell)
-		tmp_cell = map[current_cell]
-
 	// Solid Resources
 
 	for(var/i=0,i<chunk_size,i++)
@@ -681,6 +668,9 @@ Titanium-Fusion Asteroids
 				CHECK_TICK
 			T.resources = list()
 			T.resources[MATERIAL_SAND] = rand(3,5)
+
+			var/tmp_cell
+			TRANSLATE_AND_VERIFY_COORD(x, y)
 
 			if(tmp_cell < rare_val)      // Surface metals.
 				T.resources[MATERIAL_GOLD] =				rand(RESOURCE_MID_MIN,	RESOURCE_MID_MAX)
@@ -787,11 +777,6 @@ Titanium-Fusion Asteroids
 	var/tx = ((origin_x-1)+x)*chunk_size
 	var/ty = ((origin_y-1)+y)*chunk_size
 
-	var/tmp_cell
-	var/current_cell = get_map_cell(x,y)
-	if(current_cell)
-		tmp_cell = map[current_cell]
-
 	// Solid Resources
 
 	for(var/i=0,i<chunk_size,i++)
@@ -803,6 +788,9 @@ Titanium-Fusion Asteroids
 				CHECK_TICK
 			T.resources = list()
 			T.resources[MATERIAL_SAND] = rand(3,5)
+
+			var/tmp_cell
+			TRANSLATE_AND_VERIFY_COORD(x, y)
 
 			if(tmp_cell < rare_val)      // Surface metals.
 				T.resources[MATERIAL_TITANIUM] =			rand(RESOURCE_MID_MIN,	RESOURCE_MID_MAX)
@@ -921,11 +909,6 @@ Titanium-Fusion Asteroids
 	var/tx = ((origin_x-1)+x)*chunk_size
 	var/ty = ((origin_y-1)+y)*chunk_size
 
-	var/tmp_cell
-	var/current_cell = get_map_cell(x,y)
-	if(current_cell)
-		tmp_cell = map[current_cell]
-
 	// Solid Resources
 
 	for(var/i=0,i<chunk_size,i++)
@@ -938,6 +921,9 @@ Titanium-Fusion Asteroids
 			T.resources = list()
 			T.resources[MATERIAL_SAND] = rand(3,5)
 			T.resources[MATERIAL_GRAPHITE] = rand(RESOURCE_HIGH_MIN,  RESOURCE_HIGH_MAX)
+
+			var/tmp_cell
+			TRANSLATE_AND_VERIFY_COORD(x, y)
 
 			if(tmp_cell < rare_val)      // Surface metals.
 				T.resources[MATERIAL_HEMATITE] =			rand(RESOURCE_HIGH_MIN,	RESOURCE_HIGH_MAX)
@@ -1031,6 +1017,9 @@ Titanium-Fusion Asteroids
 
 			T.gas_resources = list()
 
+			var/tmp_cell
+			TRANSLATE_AND_VERIFY_COORD(x, y)
+
 			if(tmp_cell < rare_val)      // Surface gases
 				T.gas_resources[GAS_NITROGEN] = 		rand(GAS_RESOURCE_HIGH_MIN,	GAS_RESOURCE_HIGH_MAX)
 				T.gas_resources[GAS_HYDROGEN] = 		rand(GAS_RESOURCE_MID_MIN,  GAS_RESOURCE_MID_MAX)
@@ -1067,11 +1056,6 @@ Titanium-Fusion Asteroids
 	var/tx = ((origin_x-1)+x)*chunk_size
 	var/ty = ((origin_y-1)+y)*chunk_size
 
-	var/tmp_cell
-	var/current_cell = get_map_cell(x,y)
-	if(current_cell)
-		tmp_cell = map[current_cell]
-
 	// Gas resources
 
 	for(var/k=0,k<chunk_size,k++)
@@ -1083,6 +1067,9 @@ Titanium-Fusion Asteroids
 				CHECK_TICK
 
 			T.gas_resources = list()
+
+			var/tmp_cell
+			TRANSLATE_AND_VERIFY_COORD(x, y)
 
 			if(tmp_cell < rare_val)      // Surface gases
 				T.gas_resources[GAS_NITROGEN] = 		rand(GAS_RESOURCE_MID_MIN,	GAS_RESOURCE_MID_MAX)
@@ -1114,3 +1101,17 @@ Titanium-Fusion Asteroids
 		return "R"
 	else
 		return "D"
+
+/datum/random_map/noise/ore/filthy_rich
+	deep_val = 0.6
+	rare_val = 0.4
+
+/datum/random_map/noise/ore/rich
+	deep_val = 0.7
+	rare_val = 0.5
+	
+/datum/random_map/noise/ore/poor
+	deep_val = 0.8
+	rare_val = 0.7
+	min_rare_ratio = 0.02
+	min_rare_ratio = 0.01

@@ -5,6 +5,7 @@
 	icon_state = "turbine"
 	anchored = 0
 	density = 1
+	circuit_type = /obj/item/weapon/circuitboard/pipeturbine
 
 	var/efficiency = 0.4
 	var/kin_energy = 0
@@ -20,24 +21,15 @@
 
 /obj/machinery/atmospherics/pipeturbine/New()
 	..()
-	component_parts += new /obj/item/weapon/circuitboard/pipeturbine(src)
-	component_parts += new /obj/item/stack/cable_coil(src, 30)
-	component_parts += new /obj/item/pipe(src)
-	component_parts += new /obj/item/pipe(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	component_parts += new /obj/item/stack/material/plasteel(src)
-	RefreshParts()
 	air_in.volume = 200
 	air_out.volume = 800
-	volume_ratio = air_in.volume / (air_in.volume + air_out.volume)
+	ADD_SAVED_VAR(kin_energy)
+	ADD_SAVED_VAR(dP)
+	ADD_SAVED_VAR(air_in)
+	ADD_SAVED_VAR(air_out)
+
+/obj/machinery/atmospherics/pipeturbine/setup_initialize_directions()
+	..()
 	switch(dir)
 		if(NORTH)
 			initialize_directions = EAST|WEST
@@ -48,19 +40,20 @@
 		if(WEST)
 			initialize_directions = NORTH|SOUTH
 
+/obj/machinery/atmospherics/pipeturbine/Initialize()
+	. = ..()
+	volume_ratio = air_in.volume / (air_in.volume + air_out.volume)
+
 /obj/machinery/atmospherics/pipeturbine/Destroy()
 	loc = null
-
 	if(node1)
 		node1.disconnect(src)
 		QDEL_NULL(network1)
 	if(node2)
 		node2.disconnect(src)
 		QDEL_NULL(network2)
-
 	node1 = null
 	node2 = null
-
 	. = ..()
 
 /obj/machinery/atmospherics/pipeturbine/Process()
@@ -80,23 +73,23 @@
 			air_in.merge(air_all.remove(volume_ratio))
 			air_out.merge(air_all)
 
-		update_icon()
+		queue_icon_update()
 
 	if (network1)
 		network1.update = 1
 	if (network2)
 		network2.update = 1
 
-/obj/machinery/atmospherics/pipeturbine/update_icon()
+/obj/machinery/atmospherics/pipeturbine/on_update_icon()
 	overlays.Cut()
 	if (dP > 10)
-		overlays += image('icons/obj/pipeturbine.dmi', "moto-turb")
+		overlays += image(icon, "moto-turb")
 	if (kin_energy > 100000)
-		overlays += image('icons/obj/pipeturbine.dmi', "low-turb")
+		overlays += image(icon, "low-turb")
 	if (kin_energy > 500000)
-		overlays += image('icons/obj/pipeturbine.dmi', "med-turb")
+		overlays += image(icon, "med-turb")
 	if (kin_energy > 1000000)
-		overlays += image('icons/obj/pipeturbine.dmi', "hi-turb")
+		overlays += image(icon, "hi-turb")
 
 /obj/machinery/atmospherics/pipeturbine/attackby(obj/item/weapon/W as obj, mob/user as mob)
 	if(isWrench(W))
@@ -250,31 +243,13 @@
 	icon_state = "motor"
 	anchored = 0
 	density = 1
+	circuit_type = /obj/item/weapon/circuitboard/turbinemotor
 
 	var/kin_to_el_ratio = 0.1	//How much kinetic energy will be taken from turbine and converted into electricity
 	var/obj/machinery/atmospherics/pipeturbine/turbine
 
-/obj/machinery/power/turbinemotor/New()
-	..()
-
 /obj/machinery/power/turbinemotor/Initialize()
 	. = ..()
-	if(!map_storage_loaded)
-		component_parts += new /obj/item/weapon/circuitboard/turbinemotor(src)
-		component_parts += new /obj/item/stack/cable_coil(src, 30)
-		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-		component_parts += new /obj/item/weapon/stock_parts/capacitor(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-		component_parts += new /obj/item/stack/material/ocp(src)
-	RefreshParts()
 	updateConnection()
 
 /obj/machinery/power/turbinemotor/proc/updateConnection()

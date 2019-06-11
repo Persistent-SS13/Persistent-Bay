@@ -17,9 +17,9 @@
 	var/str_max = 7 //how powerful the effect COULD be
 
 /obj/item/device/flash/proc/clown_check(var/mob/user)
-	if(user && (CLUMSY in user.mutations) && prob(50))
+	if(user && (MUTATION_CLUMSY in user.mutations) && prob(50))
 		to_chat(user, "<span class='warning'>\The [src] slips out of your hand.</span>")
-		user.drop_item()
+		user.unequip_item()
 		return 0
 	return 1
 
@@ -65,13 +65,13 @@
 
 	playsound(src.loc, 'sound/weapons/flash.ogg', 100, 1)
 	var/flashfail = 0
+	var/flash_strength = (rand(str_min,str_max))
 
 	if(iscarbon(M))
 		if(M.stat!=DEAD)
 			var/mob/living/carbon/C = M
 			var/safety = C.eyecheck()
 			if(safety < FLASH_PROTECTION_MODERATE)
-				var/flash_strength = (rand(str_min,str_max))
 				if(ishuman(M))
 					var/mob/living/carbon/human/H = M
 					flash_strength = round(H.species.flash_mod * flash_strength)
@@ -88,19 +88,32 @@
 			else
 				flashfail = 1
 
+	else if(isanimal(M))
+		var/mob/living/simple_animal/SA = M
+		var/safety = SA.eyecheck()
+		if(safety < FLASH_PROTECTION_MAJOR)
+			SA.Weaken(2)
+			if(safety < FLASH_PROTECTION_MODERATE)
+				SA.Stun(flash_strength - 2)
+				SA.flash_eyes(2)
+				SA.eye_blurry += flash_strength
+				SA.confused += flash_strength
+		else 
+			flashfail = 1
+
 	else if(issilicon(M))
 		M.Weaken(rand(str_min,6))
+
 	else
 		flashfail = 1
 
 	if(isrobot(user))
 		spawn(0)
-			var/atom/movable/overlay/animation = new(user.loc)
+			var/atom/movable/overlay/animation = new(user)
 			animation.plane = user.plane
 			animation.layer = user.layer + 0.01
 			animation.icon_state = "blank"
 			animation.icon = 'icons/mob/mob.dmi'
-			animation.master = user
 			flick("blspell", animation)
 			sleep(5)
 			qdel(animation)
@@ -195,5 +208,6 @@
 	name = "advanced flash"
 	desc = "A device that produces a very bright flash of light. This is an advanced and expensive version often issued to VIPs."
 	icon_state = "advflash"
+	origin_tech = list(TECH_COMBAT = 2, TECH_MAGNET = 2)
 	str_min = 3
 	str_max = 8

@@ -15,6 +15,13 @@
 
 	var/range = 2
 
+/obj/item/device/assembly/prox_sensor/New()
+	. = ..()
+	ADD_SAVED_VAR(scanning)
+	ADD_SAVED_VAR(timing)
+	ADD_SAVED_VAR(time)
+	ADD_SAVED_VAR(range)
+
 /obj/item/device/assembly/prox_sensor/proc/toggle_scan()
 /obj/item/device/assembly/prox_sensor/proc/sense()
 
@@ -91,7 +98,7 @@
 	return
 
 
-/obj/item/device/assembly/prox_sensor/update_icon()
+/obj/item/device/assembly/prox_sensor/on_update_icon()
 	overlays.Cut()
 	attached_overlays = list()
 	if(timing)

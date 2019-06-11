@@ -417,11 +417,21 @@ proc/TextPreview(var/string,var/len=40)
 	t = replacetext(t, "\[/grid\]", "</td></tr></table>")
 	t = replacetext(t, "\[row\]", "</td><tr>")
 	t = replacetext(t, "\[cell\]", "<td>")
-	t = replacetext(t, "\[logo\]", "<img src = ntlogo.png>")
+	t = replacetext(t, "\[ntlogo\]", "<img src = ntlogo.png>")
+	t = replacetext(t, "\[exologo\]", "<img src = exologo.png>")
 	t = replacetext(t, "\[bluelogo\]", "<img src = bluentlogo.png>")
 	t = replacetext(t, "\[solcrest\]", "<img src = sollogo.png>")
+	t = replacetext(t, "\[torchltd\]", "<img src = exologo.png>")
+	t = replacetext(t, "\[iccgseal\]", "<img src = terralogo.png>")
+	t = replacetext(t, "\[ntlogo\]", "<img src = ntlogo.png>")
+	t = replacetext(t, "\[daislogo\]", "<img src = daislogo.png>")
+	t = replacetext(t, "\[eclogo\]", "<img src = eclogo.png>")
+	t = replacetext(t, "\[xynlogo\]", "<img src = xynlogo.png>")
+	t = replacetext(t, "\[fleetlogo\]", "<img src = fleetlogo.png>")
+	t = replacetext(t, "\[ocielogo\]", "<img src = ocielogo.png>")
 	t = replacetext(t, "\[terraseal\]","<img src = terralogo.png>")
 	t = replacetext(t, "\[nfrseal\]",  "<img src = nfrlogo.png>")
+	t = replacetext(t, "\[logo\]", "<img src = nfrlogo.png>")
 	t = replacetext(t, "\[editorbr\]", "")
 	t = replacetext(t, "\[tab\]", "&nbsp;&nbsp;&nbsp;&nbsp;")
 	return t
@@ -452,10 +462,17 @@ proc/TextPreview(var/string,var/len=40)
 	t = replacetext(t, "</table>", "\[/grid\]")
 	t = replacetext(t, "<tr>", "\[row\]")
 	t = replacetext(t, "<td>", "\[cell\]")
-	t = replacetext(t, "<img src = ntlogo.png>", "\[logo\]")
+	t = replacetext(t, "<img src = ntlogo.png>", "\[ntlogo\]")
 	t = replacetext(t, "<img src = bluentlogo.png>", "\[bluelogo\]")
 	t = replacetext(t, "<img src = sollogo.png>", "\[solcrest\]")
+	t = replacetext(t, "<img src = terralogo.png>", "\[iccgseal\]")
+	t = replacetext(t, "<img src = exologo.png>", "\[exologo\]")
+	t = replacetext(t, "<img src = eclogo.png>", "\[eclogo\]")
+	t = replacetext(t, "<img src = daislogo.png>", "\[daislogo\]")
+	t = replacetext(t, "<img src = xynlogo.png>", "\[xynlogo\]")
+	t = replacetext(t, "<img src = ocielogo.png>", "\[ocielogo\]")
 	t = replacetext(t, "<img src = terralogo.png>", "\[terraseal\]")
+	t = replacetext(t, "<img src = nfrlogo.png>", "\[logo\]")
 	t = replacetext(t, "<span class=\"paper_field\"></span>", "\[field\]")
 	t = strip_html_properly(t)
 	return t
@@ -468,6 +485,7 @@ proc/TextPreview(var/string,var/len=40)
 		user << browse_rsc(img2.icon, "tmp_img2.png")
 		t = replacetext(t, "\[IMG2\]", "<img src='tmp_img2.png' width='192' style='-ms-interpolation-mode:nearest-neighbor' /> ")
 	return t
+
 // Random password generator
 /proc/GenerateKey()
 	//Feel free to move to Helpers.
@@ -532,3 +550,23 @@ proc/TextPreview(var/string,var/len=40)
 	. = base
 	if(rest)
 		. += .(rest)
+
+/proc/deep_string_equals(var/A, var/B)
+	if (lentext(A) != lentext(B))
+		return FALSE
+	for (var/i = 1 to lentext(A))
+		if (text2ascii(A, i) != text2ascii(B, i))
+			return FALSE
+	return TRUE
+
+// If char isn't part of the text the entire text is returned
+/proc/copytext_after_last(var/text, var/char)
+	var/regex/R = regex("(\[^[char]\]*)$")
+	R.Find(text)
+	return R.group[1]
+
+/proc/sql_sanitize_text(var/text)
+	text = replacetext(text, "'", "''")
+	text = replacetext(text, ";", "")
+	text = replacetext(text, "&", "")
+	return text

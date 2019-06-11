@@ -166,10 +166,10 @@
 
 		// Update power usage:
 		if(on)
-			use_power = 2
-			active_power_usage = electricity_level*15
+			update_use_power(POWER_USE_ACTIVE)
+			change_power_consumption(electricity_level*15, POWER_USE_ACTIVE)
 		else
-			use_power = 0
+			update_use_power(POWER_USE_IDLE)
 
 
 		// Overload conditions:
@@ -200,7 +200,7 @@
 					if(istype(S, /mob/living/silicon/ai)) continue
 					step_towards(S, center)
 
-			use_power(electricity_level * 5)
+			use_power_oneoff(electricity_level * 5)
 			sleep(13 - electricity_level)
 
 		pulling = 0

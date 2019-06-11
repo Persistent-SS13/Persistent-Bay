@@ -13,6 +13,7 @@
 
 	clicksound = "keyboard"
 	clickvol = 30
+	circuit_type = /obj/item/weapon/circuitboard/girderlathe
 
 	var/stored_materials = list()
 	var/input = 0
@@ -20,13 +21,9 @@
 
 /obj/machinery/girderlathe/New()
 	..()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/girderlathe(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-	component_parts += new /obj/item/weapon/stock_parts/console_screen(src)
+	ADD_SAVED_VAR(stored_materials)
+	ADD_SAVED_VAR(input)
+	ADD_SAVED_VAR(processing)
 
 /obj/machinery/girderlathe/Process()
 	if(stat & NOPOWER || use_power != 2)

@@ -15,6 +15,7 @@
 	name = "red wizard hat"
 	desc = "Strange-looking, red, hat-wear that most certainly belongs to a real magic user."
 	icon_state = "redwizard"
+	siemens_coefficient = 0.8
 
 /obj/item/clothing/head/wizard/fake
 	name = "wizard hat"
@@ -26,6 +27,7 @@
 	name = "Witch Hat"
 	desc = "Strange-looking hat-wear, makes you want to cast fireballs."
 	icon_state = "marisa"
+	siemens_coefficient = 0.8
 
 /obj/item/clothing/head/wizard/magus
 	name = "Magus Helm"
@@ -36,6 +38,7 @@
 		slot_l_hand_str = "helmet",
 		slot_r_hand_str = "helmet",
 		)
+	siemens_coefficient = 0.8
 	body_parts_covered = HEAD|FACE|EYES
 
 /obj/item/clothing/head/wizard/amp
@@ -55,6 +58,7 @@
 		slot_l_hand_str = "det_hat",
 		slot_r_hand_str = "det_hat",
 		)
+	siemens_coefficient = 0.8
 
 /obj/item/clothing/suit/wizrobe
 	name = "wizard robe"
@@ -112,6 +116,7 @@
 	desc = "Heavy, royal purple robes threaded with psychic amplifiers and weird, bulbous lenses. Do not machine wash."
 	icon_state = "psyamp"
 	item_state = "psyamp"
+	gender = PLURAL
 
 /obj/item/clothing/suit/wizrobe/gentlecoat
 	name = "Gentlemans Coat"

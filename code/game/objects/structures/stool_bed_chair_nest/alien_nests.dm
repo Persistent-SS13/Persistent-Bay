@@ -9,7 +9,7 @@
 	buckle_pixel_shift = "x=0;y=6"
 	max_health = 100
 
-/obj/structure/bed/nest/update_icon()
+/obj/structure/bed/nest/on_update_icon()
 	return
 
 /obj/structure/bed/nest/user_unbuckle_mob(mob/user as mob)
@@ -45,10 +45,10 @@
 	var/mob/living/carbon/xenos = user
 	var/mob/living/carbon/victim = M
 
-	if(istype(victim) && locate(/obj/item/organ/internal/xenos/hivenode) in victim.internal_organs)
+	if(istype(victim) && locate(/obj/item/organ/internal/xeno/hivenode) in victim.internal_organs)
 		return
 
-	if(istype(xenos) && !(locate(/obj/item/organ/internal/xenos/hivenode) in xenos.internal_organs))
+	if(istype(xenos) && !(locate(/obj/item/organ/internal/xeno/hivenode) in xenos.internal_organs))
 		return
 
 	if(M == usr)

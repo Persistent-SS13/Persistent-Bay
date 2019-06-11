@@ -3,8 +3,8 @@
 		return
 
 	if(attacked > 0)
-		if(attacked > 40)
-			attacked = 40 // Let's not get into absurdly long periods of rage
+		if(attacked > 50)
+			attacked = 50 // Let's not get into absurdly long periods of rage
 		--attacked
 
 	if(confused > 0)
@@ -110,7 +110,7 @@
 	return 0
 
 /mob/living/carbon/slime/proc/handle_AI()  // the master AI process
-	if(stat == DEAD || client || Victim)
+	if(QDELETED(src) || stat == DEAD || client || Victim)
 		AIproc = 0
 		return // If we're dead or have a client, we don't need AI, if we're feeding, we continue feeding
 

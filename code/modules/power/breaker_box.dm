@@ -21,6 +21,8 @@
 
 /obj/machinery/power/breakerbox/New()
 	..()
+	ADD_SAVED_VAR(on)
+	ADD_SAVED_VAR(RCon_tag)
 
 /obj/machinery/power/breakerbox/activated
 	icon_state = "bbox_on"
@@ -28,7 +30,8 @@
 	// Enabled on server startup. Used in substations to keep them in bypass mode.
 /obj/machinery/power/breakerbox/activated/Initialize()
 	. = ..()
-	set_state(1)
+	if(!map_storage_loaded)
+		set_state(1)
 
 /obj/machinery/power/breakerbox/examine(mob/user)
 	. = ..()

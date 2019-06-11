@@ -8,3 +8,7 @@
 	volume = 50 //Sets the default container amount for all food items.
 	var/filling_color = "#ffffff" //Used by sandwiches.
 	var/trash = null
+
+/obj/item/weapon/reagent_containers/New()
+	. = ..()
+	ADD_SAVED_VAR(filling_color)

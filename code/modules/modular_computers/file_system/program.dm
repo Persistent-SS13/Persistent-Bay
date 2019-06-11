@@ -11,6 +11,7 @@
 	var/obj/item/modular_computer/computer	// Device that runs this program.
 	var/filedesc = "Unknown Program"		// User-friendly name of this program.
 	var/extended_desc = "N/A"				// Short description of this program's function.
+	var/category = PROG_MISC
 	var/program_icon_state = null			// Program-specific screen icon state
 	var/program_key_state = "standby_key"			// Program-specific keyboard icon state
 	var/program_menu_icon = "newwin"		// Icon to use for program's link in main menu
@@ -31,7 +32,7 @@
 
 
 /datum/computer_file/program/New(var/obj/item/modular_computer/comp = null)
-	..()
+	..(null)
 	if(comp && istype(comp))
 		computer = comp
 	ADD_SAVED_VAR(program_state)
@@ -129,10 +130,12 @@
 // Check if the user can run program. Only humans can operate computer. Automatically called in run_program()
 // User has to wear their ID or have it inhand for ID Scan to work.
 // Can also be called manually, with optional parameter being access_to_check to scan the user's ID
-/datum/computer_file/program/proc/can_run(var/mob/living/user, var/loud = 0, var/access_to_check)
+/datum/computer_file/program/proc/can_run(var/mob/living/user, var/loud = 0, var/access_to_check, var/alt_computer)
 	// Defaults to required_access
 	if(!access_to_check)
 		access_to_check = required_access
+	if(!access_to_check) // No required_access, allow it.
+		return 1
 
 	// Admin override - allows operation of any computer as aghosted admin, as if you had any required access.
 	if(isghost(user) && check_rights(R_ADMIN, 0, user))
@@ -140,6 +143,8 @@
 
 	if(!istype(user))
 		return 0
+	if(!computer)
+		computer = alt_computer
 	if(democratic)
 		if(!(computer && computer.network_card && computer.network_card.connected_network && istype(computer.network_card.connected_network.holder, /datum/world_faction/democratic)))
 			if(loud)
@@ -193,6 +198,8 @@
 	if(can_run(user, 1))
 		if(nanomodule_path)
 			NM = new nanomodule_path(src, new /datum/topic_manager/program(src), src)
+			if(user)
+				NM.using_access = user.GetAccess()
 		if(requires_ntnet && network_destination)
 			generate_network_log("Connection opened to [network_destination].")
 		program_state = PROGRAM_STATE_ACTIVE
@@ -239,10 +246,6 @@
 		return NM.check_eye(user)
 	else
 		return -1
-
-// Called by attackby, relays object and user. Return 1 to prevent further attackby interactions
-/datum/computer_file/program/proc/handleInteraction(var/obj/item/weapon/W, var/mob/user)
-	return 0
 
 /obj/item/modular_computer/initial_data()
 	return get_header_data()

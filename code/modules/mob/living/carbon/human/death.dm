@@ -31,7 +31,7 @@
 	BITSET(hud_updateflag, LIFE_HUD)
 
 	//backs up lace if available.
-	var/obj/item/organ/internal/stack/s = internal_organs_by_name[BP_STACK]
+	var/obj/item/organ/internal/stack/s = get_organ(BP_STACK)
 	if(s)
 		s.do_backup()
 
@@ -44,20 +44,21 @@
 	var/obj/item/organ/external/head = get_organ(BP_HEAD)
 	var/mob/living/simple_animal/borer/B
 
-	for(var/I in head.implants)
-		if(istype(I,/mob/living/simple_animal/borer))
-			B = I
-	if(B)
-		if(!B.ckey && ckey && B.controlling)
-			B.ckey = ckey
-			B.controlling = 0
-		if(B.host_brain.ckey)
-			ckey = B.host_brain.ckey
-			B.host_brain.ckey = null
-			B.host_brain.name = "host brain"
-			B.host_brain.real_name = "host brain"
+	if(head)
+		for(var/I in head.implants)
+			if(istype(I,/mob/living/simple_animal/borer))
+				B = I
+		if(B)
+			if(!B.ckey && ckey && B.controlling)
+				B.ckey = ckey
+				B.controlling = 0
+			if(B.host_brain.ckey)
+				ckey = B.host_brain.ckey
+				B.host_brain.ckey = null
+				B.host_brain.SetName("host brain")
+				B.host_brain.real_name = "host brain"
 
-		verbs -= /mob/living/carbon/proc/release_control
+			verbs -= /mob/living/carbon/proc/release_control
 
 	callHook("death", list(src, gibbed))
 
@@ -73,7 +74,7 @@
 	if(s)
 		s.transfer_identity(src)
 /mob/living/carbon/human/proc/ChangeToHusk()
-	if(HUSK in mutations)	return
+	if(MUTATION_HUSK in mutations)	return
 
 	if(f_style)
 		f_style = "Shaved"		//we only change the icon_state of the hair datum, so it doesn't mess up their UI/UE
@@ -81,19 +82,19 @@
 		h_style = "Bald"
 	update_hair(0)
 
-	mutations.Add(HUSK)
+	mutations.Add(MUTATION_HUSK)
 	for(var/obj/item/organ/external/E in organs)
-		E.disfigured = 1
+		E.status |= ORGAN_DISFIGURED
 	update_body(1)
 	return
 
 /mob/living/carbon/human/proc/Drain()
 	ChangeToHusk()
-	mutations |= HUSK
+	mutations |= MUTATION_HUSK
 	return
 
 /mob/living/carbon/human/proc/ChangeToSkeleton()
-	if(SKELETON in src.mutations)	return
+	if(MUTATION_SKELETON in src.mutations)	return
 
 	if(f_style)
 		f_style = "Shaved"
@@ -101,8 +102,8 @@
 		h_style = "Bald"
 	update_hair(0)
 
-	mutations.Add(SKELETON)
+	mutations.Add(MUTATION_SKELETON)
 	for(var/obj/item/organ/external/E in organs)
-		E.disfigured = 1
+		E.status |= ORGAN_DISFIGURED
 	update_body(1)
 	return

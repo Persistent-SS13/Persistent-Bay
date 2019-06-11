@@ -2,8 +2,6 @@
 	//SECURITY//
 	////////////
 #define UPLOAD_LIMIT		10485760	//Restricts client uploads to the server to 10MB //Boosted this thing. What's the worst that can happen?
-#define MIN_CLIENT_VERSION	0		//Just an ambiguously low version for now, I don't want to suddenly stop people playing.
-									//I would just like the code ready should it ever need to be used.
 
 //#define TOPIC_DEBUGGING 1
 
@@ -44,7 +42,7 @@
 
 	//search the href for script injection
 	if( findtext(href,"<script",1,0) )
-		world.log << "Attempted use of scripts within a topic call, by [src]"
+		to_world_log("Attempted use of scripts within a topic call, by [src]")
 		message_admins("Attempted use of scripts within a topic call, by [src]")
 		//qdel(usr)
 		return
@@ -115,13 +113,33 @@
 
 	if(!(connection in list("seeker", "web")))					//Invalid connection type.
 		return null
-	if(byond_version < MIN_CLIENT_VERSION)		//Out of date client.
-		return null
+	#if DM_VERSION >= 512
+	var/bad_version = config.minimum_byond_version && byond_version < config.minimum_byond_version
+	var/bad_build = config.minimum_byond_build && byond_build < config.minimum_byond_build
+	if (bad_build || bad_version)
+		to_chat(src, "You are attempting to connect with a out of date version of BYOND. Please update to the latest version at http://www.byond.com/ before trying again.")
+		qdel(src)
+		return
+
+	if("[byond_version].[byond_build]" in config.forbidden_versions)
+		_DB_staffwarn_record(ckey, "Tried to connect with broken and possibly exploitable BYOND build.")
+		to_chat(src, "You are attempting to connect with a broken and possibly exploitable BYOND build. Please update to the latest version at http://www.byond.com/ before trying again.")
+		qdel(src)
+		return
+
+	#endif
 
 	if(!config.guests_allowed && IsGuestKey(key))
 		alert(src,"This server doesn't allow guest accounts to play. Please go to http://www.byond.com/ and register for a key.","Guest","OK")
 		qdel(src)
 		return
+
+	if(config.player_limit != 0)
+		if((GLOB.clients.len >= config.player_limit) && !(ckey in admin_datums))
+			alert(src,"This server is currently full and not accepting new connections.","Server Full","OK")
+			log_admin("[ckey] tried to join and was turned away due to the server being full (player_limit=[config.player_limit])")
+			qdel(src)
+			return
 
 	// Change the way they should download resources.
 //	if(config.resource_urls && config.resource_urls.len)
@@ -142,10 +160,10 @@
 		holder.owner = src
 
 	//preferences datum - also holds some persistant data for the client (because we may as well keep these datums to a minimum)
-	prefs = preferences_datums[ckey]
+	prefs = SScharacter_setup.preferences_datums[ckey]
 	if(!prefs)
 		prefs = new /datum/preferences(src)
-		preferences_datums[ckey] = prefs
+		SScharacter_setup.preferences_datums[ckey] = prefs
 	prefs.last_ip = address				//these are gonna be used for banning
 	prefs.last_id = computer_id			//these are gonna be used for banning
 	apply_fps(prefs.clientfps)
@@ -198,6 +216,8 @@
 	//////////////
 /client/Del()
 	ticket_panels -= src
+	if(src && watched_variables_window)
+		STOP_PROCESSING(SSprocessing, watched_variables_window)
 	if(holder)
 		holder.owner = null
 		GLOB.admins -= src
@@ -303,7 +323,6 @@
 
 
 #undef UPLOAD_LIMIT
-#undef MIN_CLIENT_VERSION
 
 //checks if a client is afk
 //3000 frames = 5 minutes
@@ -317,7 +336,8 @@
 
 // Byond seemingly calls stat, each tick.
 // Calling things each tick can get expensive real quick.
-// So we slow this down ee: http://www.byond.com/docs/ref/info.html#/client/proc/Stat
+// So we slow this down a little.
+// See: http://www.byond.com/docs/ref/info.html#/client/proc/Stat
 /client/Stat()
 	if(!usr)
 		return
@@ -340,22 +360,34 @@
 		'html/images/sollogo.png',
 		'html/images/terralogo.png',
 		'html/images/nfrlogo.png',
-		'html/images/talisman.png'
+		'html/images/exologo.png',
+		'html/images/xynlogo.png',
+		'html/images/daislogo.png',
+		'html/images/eclogo.png',
+		'html/images/fleetlogo.png',
+		'html/images/ocielogo.png'
 		)
 
+	var/decl/asset_cache/asset_cache = decls_repository.get_decl(/decl/asset_cache)
 	spawn (10) //removing this spawn causes all clients to not get verbs.
 		//Precache the client with all other assets slowly, so as to not block other browse() calls
 		getFilesSlow(src, asset_cache.cache, register_asset = FALSE)
 
-mob/proc/MayRespawn()
+/mob/proc/MayRespawn()
 	return 0
 
-client/proc/MayRespawn()
+/client/proc/MayRespawn()
 	if(mob)
 		return mob.MayRespawn()
 
 	// Something went wrong, client is usually kicked or transfered to a new mob at this point
 	return 0
+
+// client/verb/character_setup()
+// 	set name = "Character Setup"
+// 	set category = "OOC"
+// 	if(prefs)
+// 		prefs.ShowChoices(usr)
 
 /client/proc/apply_fps(var/client_fps)
 	if(world.byond_version >= 511 && byond_version >= 511 && client_fps >= CLIENT_MIN_FPS && client_fps <= CLIENT_MAX_FPS)

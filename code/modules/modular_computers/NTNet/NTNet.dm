@@ -13,6 +13,7 @@ var/global/datum/ntnet/ntnet_global = new()
 	var/list/relays = list()
 	var/list/logs = list()
 	var/list/available_station_software = list()
+	var/list/available_software_by_category = list()
 	var/list/available_antag_software = list()
 	var/list/available_news = list()
 	var/list/chat_channels = list()
@@ -46,6 +47,7 @@ var/global/datum/ntnet/ntnet_global = new()
 	build_software_lists()
 	build_news_list()
 	build_emails_list()
+	build_reports_list()
 	add_log("NTNet logging system activated.")
 
 /datum/ntnet/proc/add_log_with_ids_check(var/log_string, var/obj/item/weapon/computer_hardware/network_card/source = null)
@@ -123,9 +125,14 @@ var/global/datum/ntnet/ntnet_global = new()
 			continue
 		// Check whether the program should be available for station/antag download, if yes, add it to lists.
 		if(prog.available_on_ntnet)
-			available_station_software.Add(prog)
+			var/list/category_list = available_software_by_category[prog.category]
+			if(!category_list)
+				category_list = list()
+				available_software_by_category[prog.category] = category_list
+			ADD_SORTED(available_station_software, prog, /proc/cmp_program)
+			ADD_SORTED(category_list, prog, /proc/cmp_program)
 		if(prog.available_on_syndinet)
-			available_antag_software.Add(prog)
+			ADD_SORTED(available_antag_software, prog, /proc/cmp_program)
 
 // Builds lists that contain downloadable software.
 /datum/ntnet/proc/build_news_list()
@@ -219,8 +226,7 @@ var/global/datum/ntnet/ntnet_global = new()
 	for(var/datum/computer_file/data/email_account/A in ntnet_global.email_accounts)
 		if(A.login == login)
 			return A
-	return null
-
+	return 0
 
 // Assigning emails to mobs
 
@@ -281,6 +287,3 @@ var/global/datum/ntnet/ntnet_global = new()
 		ntnet_global.create_email(src, newname, domain)
 	else
 		ntnet_global.rename_email(src, old_email, newname, domain)
-
-
-

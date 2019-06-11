@@ -6,27 +6,35 @@
 	var/metabolism_class //CHEM_TOUCH, CHEM_INGEST, or CHEM_BLOOD
 	var/mob/living/carbon/parent
 
-/datum/reagents/metabolism/New(var/max = 100, mob/living/carbon/parent_mob, var/met_class)
+/datum/reagents/metabolism/del_reagent(var/reagent_type)
+	var/datum/reagent/current = locate(reagent_type) in reagent_list
+	if(current)
+		current.on_leaving_metabolism(parent, metabolism_class)
+	. = ..()
+
+/datum/reagents/metabolism/New(var/max = 100, var/mob/living/carbon/parent_mob, var/met_class)
 	..(max, parent_mob)
 
 	metabolism_class = met_class
 	if(istype(parent_mob))
 		parent = parent_mob
 
+	ADD_SAVED_VAR(metabolism_class)
+	ADD_SAVED_VAR(parent)
+
 /datum/reagents/metabolism/proc/metabolize()
+	if(parent)
+		var/metabolism_type = 0 //non-human mobs
+		if(ishuman(parent))
+			var/mob/living/carbon/human/H = parent
+			metabolism_type = H.species.reagent_tag
 
-	var/metabolism_type = 0 //non-human mobs
-	if(ishuman(parent))
-		var/mob/living/carbon/human/H = parent
-		metabolism_type = H.species.reagent_tag
-
-	for(var/datum/reagent/current in reagent_list)
-		current.on_mob_life(parent, metabolism_type, metabolism_class)
-	update_total()
+		for(var/datum/reagent/current in reagent_list)
+			current.on_mob_life(parent, metabolism_type, metabolism_class)
+		update_total()
 
 /datum/metabolism_effects
 	var/mob/living/carbon/parent
-	var/list/present_reagent_ids = list()
 
 	var/list/datum/reagent/withdrawal_levels = list() // Level of 'withdrawal' of the parent mob. Higher levels result in worse symptoms.
 	var/list/datum/reagent/addiction_levels = list()  // Level of 'addiction'  of the parent mob. Higher levels result in a faster rate of withdrawal symptoms.
@@ -37,6 +45,11 @@
 
 	if(istype(parent_mob))
 		parent = parent_mob
+
+	ADD_SAVED_VAR(parent)
+	ADD_SAVED_VAR(withdrawal_levels)
+	ADD_SAVED_VAR(addiction_levels)
+	ADD_SAVED_VAR(last_doses)
 
 /datum/metabolism_effects/proc/check_reagent(datum/reagent/RT, var/volume, var/removed)
 	// Addiction

@@ -28,15 +28,15 @@
 
 /obj/structure/bookcase/attackby(obj/O as obj, mob/user as mob)
 	if(istype(O, /obj/item/weapon/book))
-		user.drop_item()
-		O.loc = src
+		if(!user.unEquip(O, src))
+			return
 		update_icon()
 	else if(istype(O, /obj/item/weapon/pen))
 		var/newname = sanitizeSafe(input("What would you like to title this bookshelf?"), MAX_NAME_LEN)
 		if(!newname)
 			return
 		else
-			name = ("bookcase ([newname])")
+			SetName("bookcase ([newname])")
 	else if(isScrewdriver(O))
 		playsound(loc, 'sound/items/Screwdriver.ogg', 75, 1)
 		to_chat(user, "<span class='notice'>You begin dismantling \the [src].</span>")
@@ -44,7 +44,7 @@
 			to_chat(user, "<span class='notice'>You dismantle \the [src].</span>")
 			new/obj/item/stack/material/wood(get_turf(src), 5)
 			for(var/obj/item/weapon/book/b in contents)
-				b.loc = (get_turf(src))
+				b.dropInto(loc)
 			qdel(src)
 
 	else
@@ -61,7 +61,7 @@
 				if(!user.get_active_hand())
 					user.put_in_hands(choice)
 			else
-				choice.loc = get_turf(src)
+				choice.dropInto(loc)
 			update_icon()
 
 /obj/structure/bookcase/ex_act(severity)
@@ -73,20 +73,20 @@
 			return
 		if(2.0)
 			for(var/obj/item/weapon/book/b in contents)
-				if (prob(50)) b.loc = (get_turf(src))
+				if (prob(50)) b.dropInto(loc)
 				else qdel(b)
 			qdel(src)
 			return
 		if(3.0)
 			if (prob(50))
 				for(var/obj/item/weapon/book/b in contents)
-					b.loc = (get_turf(src))
+					b.dropInto(loc)
 				qdel(src)
 			return
 		else
 	return
 
-/obj/structure/bookcase/update_icon()
+/obj/structure/bookcase/on_update_icon()
 	if(contents.len < 5)
 		icon_state = "book-[contents.len]"
 	else
@@ -152,7 +152,7 @@
 	if(carved)
 		if(store)
 			to_chat(user, "<span class='notice'>[store] falls out of [title]!</span>")
-			store.loc = get_turf(src.loc)
+			store.dropInto(loc)
 			store = null
 			return
 		else
@@ -169,8 +169,8 @@
 	if(carved == 1)
 		if(!store)
 			if(W.w_class < ITEM_SIZE_NORMAL)
-				user.drop_item()
-				W.loc = src
+				if(!user.unEquip(W, src))
+					return
 				store = W
 				to_chat(user, "<span class='notice'>You put [W] in [title].</span>")
 				return
@@ -192,7 +192,7 @@
 					to_chat(usr, "The title is invalid.")
 					return
 				else
-					src.name = newtitle
+					src.SetName(newtitle)
 					src.title = newtitle
 			if("Contents")
 				var/content = sanitize(input("Write your book's contents (HTML NOT allowed):") as message|null, MAX_BOOK_MESSAGE_LEN)

@@ -108,7 +108,7 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	try
 		new/datum/controller/master()
 	catch(var/exception/e)
-		log_error("/proc/Recreate_MC(): '[e]'([e.file]:[e.line])")
+		log_error("proc/Recreate_MC(): '[e]'([e.file]:[e.line])")
 		return -1
 	return 1
 
@@ -204,15 +204,15 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	// Loop.
 	Master.StartProcessing(0)
 
-	job_master.ResetOccupations()
-	job_master.DivideOccupations() // Apparently important for new antagonist system to register specific job antags properly.
+	SSjobs.reset_occupations()
+	SSjobs.divide_occupations() // Apparently important for new antagonist system to register specific job antags properly.
 
 	GLOB.using_map.setup_economy()
 	Master.SetRunLevel(RUNLEVEL_GAME)
 	
 	for(var/mob/new_player/player in GLOB.player_list)
 		player.panel.close()
-		player.newPlayerPanel()
+		player.new_player_panel()
 		if(player && player.ready && player.mind)
 			player.loadCharacter()
 		else
@@ -225,8 +225,8 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	if(isnull(old_runlevel))
 		old_runlevel = "NULL"
 
-	report_progress("MC: Runlevel changed from [old_runlevel] to [new_runlevel]")
 	current_runlevel = log(2, new_runlevel) + 1
+	report_progress("MC: Runlevel changed from [old_runlevel] to [current_runlevel]")
 	if(current_runlevel < 1)
 		CRASH("Attempted to set invalid runlevel: [new_runlevel]")
 
@@ -241,8 +241,8 @@ GLOBAL_REAL(Master, /datum/controller/master) = new
 	rtn = Loop()
 	if (rtn > 0 || processing < 0)
 		return //this was suppose to happen.
-	//catch(var/exception/e)
-	//	log_error(" /datum/controller/master/proc/StartProcessing(): '[e]'([e.file]:[e.line])")
+	// catch(var/exception/e)
+	// 	log_error(" /datum/controller/master/proc/StartProcessing(): '[e]'([e.file]:[e.line])")
 	//loop ended, restart the mc
 	log_game("MC crashed or runtimed (returned [rtn]), restarting")
 	message_admins("MC crashed or runtimed (returned [rtn]), restarting")

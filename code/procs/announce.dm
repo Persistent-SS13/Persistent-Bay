@@ -30,7 +30,7 @@
 	title = "[command_name()] Update"
 	announcement_type = "[command_name()] Update"
 
-/datum/announcement/proc/Announce(var/message as text, var/new_title = "", var/new_sound = null, var/do_newscast = newscast, var/msg_sanitized = 0)
+/datum/announcement/proc/Announce(var/message as text, var/new_title = "", var/new_sound = null, var/do_newscast = newscast, var/msg_sanitized = 0, var/zlevels = GLOB.using_map.contact_levels)
 	if(!message)
 		return
 	var/message_title = new_title ? new_title : title
@@ -49,7 +49,7 @@
 				sound_to(M, message_sound)
 	else
 		for(var/mob/M in GLOB.player_list)
-			if((M.z in (GLOB.using_map.contact_levels | GLOB.using_map.admin_levels)) && !istype(M,/mob/new_player) && !isdeaf(M))
+			if((M.z  in (zlevels | GLOB.using_map.admin_levels)) && !istype(M,/mob/new_player) && !isdeaf(M))
 				to_chat(M, msg)
 				if(message_sound)
 					sound_to(M, message_sound)
@@ -83,9 +83,11 @@ datum/announcement/priority/FormMessage(message as text, message_title as text)
 	. += "<br>"
 
 datum/announcement/priority/command/FormMessage(message as text, message_title as text)
+	. = "<h1 class='alert'>[command_name()] Update</h1>"
 	if (message_title)
 		. += "<br><h2 class='alert'>[message_title]</h2>"
-	. += "<br><span class='alert'>[message]</span>"
+
+	. += "<br><span class='alert'>[message]</span><br>"
 	. += "<br>"
 
 datum/announcement/priority/security/FormMessage(message as text, message_title as text)
@@ -111,8 +113,8 @@ datum/announcement/proc/NewsCast(message as text, message_title as text)
 /proc/level_seven_announcement()
 	GLOB.using_map.level_x_biohazard_announcement(7)
 
-/proc/ion_storm_announcement()
-	command_announcement.Announce("It has come to our attention that the [station_name()] passed through an ion storm.  Please monitor all electronic equipment for malfunctions.", "Anomaly Alert")
+/proc/ion_storm_announcement(list/affecting_z)
+	command_announcement.Announce("It has come to our attention that the [station_name()] passed through an ion storm.  Please monitor all electronic equipment for malfunctions.", "Anomaly Alert", zlevels = affecting_z)
 
 /proc/AnnounceArrival(var/mob/living/carbon/human/character, var/datum/job/job, var/join_message)
 	if(!istype(job) || !job.announced)

@@ -71,7 +71,7 @@
 	if(istype(W, /obj/item/device/pipe_painter))
 		return
 
-	if(istype(W, /obj/item/device/analyzer))
+	if(istype(W, /obj/item/device/scanner/gas))
 		return
 
 /obj/machinery/atmospherics/pipe/tank/air
@@ -159,3 +159,17 @@
 
 	..()
 	icon_state = "n2o"
+
+/obj/machinery/atmospherics/pipe/tank/hydrogen
+	name = "Pressure Tank (Hydrogen)"
+	icon_state = "h2_map"
+
+/obj/machinery/atmospherics/pipe/tank/hydrogen/New()
+	air_temporary = new
+	air_temporary.volume = volume
+	air_temporary.temperature = T20C
+
+	air_temporary.adjust_gas(GAS_HYDROGEN, (start_pressure)*(air_temporary.volume)/(R_IDEAL_GAS_EQUATION*air_temporary.temperature))
+
+	..()
+	icon_state = "h2"

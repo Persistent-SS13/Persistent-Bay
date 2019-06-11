@@ -3,6 +3,7 @@
 	bloodstr = new/datum/reagents/metabolism(1000, src, CHEM_BLOOD)
 	ingested = new/datum/reagents/metabolism(1000, src, CHEM_INGEST)
 	touching = new/datum/reagents/metabolism(1000, src, CHEM_TOUCH)
+	metabolism_effects = new/datum/metabolism_effects(src)
 	reagents = bloodstr
 
 	if (!default_language && species_language)
@@ -12,6 +13,7 @@
 /mob/living/carbon/Destroy()
 	QDEL_NULL(ingested)
 	QDEL_NULL(touching)
+	QDEL_NULL(metabolism_effects)
 	bloodstr = null // We don't qdel(bloodstr) because it's the same as qdel(reagents)
 	QDEL_NULL_LIST(internal_organs)
 	QDEL_NULL_LIST(stomach_contents)
@@ -22,6 +24,7 @@
 	bloodstr.clear_reagents()
 	ingested.clear_reagents()
 	touching.clear_reagents()
+	metabolism_effects.clear_effects()
 	nutrition = 400
 	..()
 

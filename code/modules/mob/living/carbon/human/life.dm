@@ -568,7 +568,7 @@
 		if(touching) touching.metabolize()
 		if(ingested) ingested.metabolize()
 		if(bloodstr) bloodstr.metabolize()
-
+		metabolism_effects.process()
 	// Trace chemicals
 	for(var/T in chem_doses)
 		if(bloodstr.has_reagent(T) || ingested.has_reagent(T) || touching.has_reagent(T))

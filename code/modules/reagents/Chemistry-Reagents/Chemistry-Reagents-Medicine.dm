@@ -232,6 +232,11 @@
 	var/pain_power = 80 //magnitide of painkilling effect
 	var/effective_dose = 0.5 //how many units it need to process to reach max power
 
+	addictiveness = 5
+	addiction_median_dose = 30
+	parent_substance = /datum/reagent/tramadol
+	addiction_display_name = "Opioids"
+
 /datum/reagent/tramadol/affect_blood(var/mob/living/carbon/M, var/alien, var/removed)
 	var/effectiveness = 1
 	if(M.chem_doses[type] < effective_dose) //some ease-in ease-out for the effect
@@ -285,6 +290,9 @@
 	overdose = 20
 	pain_power = 200
 	effective_dose = 2
+
+	addictiveness = 8
+	addiction_median_dose = 20
 
 /* Other medicine */
 

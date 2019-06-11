@@ -74,6 +74,7 @@
 	if(touching) touching.metabolize()
 	if(ingested) ingested.metabolize()
 	if(bloodstr) bloodstr.metabolize()
+	metabolism_effects.process()
 
 	confused = max(0, confused - 1)
 	// decrement dizziness counter, clamped to 0

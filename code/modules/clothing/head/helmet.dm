@@ -17,6 +17,7 @@
 	max_heat_protection_temperature = HELMET_MAX_HEAT_PROTECTION_TEMPERATURE
 	siemens_coefficient = 0.7
 	w_class = ITEM_SIZE_NORMAL
+	species_restricted = list("exclude", SPECIES_NABBER, SPECIES_ADHERENT)
 	armor  = list(
 		DAM_BLUNT 	= 50,
 		DAM_PIERCE 	= 40,
@@ -40,6 +41,9 @@
 	name = "\improper PCRC helmet"
 	desc = "A helmet with 'PRIVATE SECURITY' printed on the back in cyan lettering."
 	icon_state = "helmet_pcrc"
+
+/obj/item/clothing/head/helmet/nt/guard
+	starting_accessories = list(/obj/item/clothing/accessory/armor/helmcover/nt)
 
 /obj/item/clothing/head/helmet/tactical
 	name = "tactical helmet"
@@ -332,6 +336,16 @@
 	desc = "A light grey helmet made from advanced ceramic. Comfortable and robust."
 	icon_state = "m_helmet"
 
+/obj/item/clothing/head/helmet/nt/pilot
+	name = "corporate pilot's helmet"
+	desc = "A corporate pilot's helmet for operating the cockpit in style for a hefty paycheck."
+	icon_state = "pilotnt"
+
+/obj/item/clothing/head/helmet/skrell
+	name = "skrellian helmet"
+	desc = "A helmet built for use by a Skrell. This one appears to be fairly standard and reliable."
+	icon_state = "helmet_skrell"
+	valid_accessory_slots = null
 /obj/item/clothing/head/helmet/guard
 	name = "guard helmet"
 	desc = "A royal blue helmet designed for both ceremonial and practical use."

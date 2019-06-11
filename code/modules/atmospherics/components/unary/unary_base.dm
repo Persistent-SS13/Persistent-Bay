@@ -12,6 +12,7 @@
 	if(!air_contents)
 		air_contents = new
 		air_contents.volume = 200
+	ADD_SAVED_VAR(air_contents)
 
 /obj/machinery/atmospherics/unary/setup_initialize_directions()
 	..()
@@ -52,7 +53,7 @@
 				node = target
 				break
 
-	update_icon()
+	queue_icon_update()
 	update_underlays()
 
 /obj/machinery/atmospherics/unary/build_network()
@@ -85,13 +86,10 @@
 	return results
 
 /obj/machinery/atmospherics/unary/disconnect(obj/machinery/atmospherics/reference)
-	if(reference==node)
-		qdel(network)
-		node = null
-
-	update_icon()
+	if(reference == node)
+		QDEL_NULL(network)
+	queue_icon_update()
 	update_underlays()
-
 	return null
 
 obj/machinery/atmospherics/unary/atmos_scan()

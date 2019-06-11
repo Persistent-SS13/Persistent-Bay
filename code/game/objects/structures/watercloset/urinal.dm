@@ -1,4 +1,4 @@
-/obj/structure/urinal
+/obj/structure/hygiene/urinal
 	name = "urinal"
 	desc = "The HU-452, an experimental urinal."
 	icon = 'icons/obj/watercloset.dmi'
@@ -9,11 +9,11 @@
 	max_health = 40
 	damthreshold_brute 	= 2
 
-/obj/structure/urinal/Initialize()
+/obj/structure/hygiene/urinal/Initialize()
 	. = ..()
 	queue_icon_update()
 
-/obj/structure/urinal/update_icon()
+/obj/structure/hygiene/urinal/update_icon()
 	. = ..()
 	switch(dir)
 		if(NORTH)

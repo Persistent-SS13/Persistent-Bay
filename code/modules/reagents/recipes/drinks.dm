@@ -45,70 +45,70 @@
 /datum/chemical_reaction/moonshine
 	name = "Moonshine"
 	result = /datum/reagent/ethanol/moonshine
-	required_reagents = list(/datum/reagent/nutriment = 10)
+	required_reagents = list(/datum/reagent/nutriment = 10, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 
 /datum/chemical_reaction/grenadine
 	name = "Grenadine Syrup"
 	result = /datum/reagent/drink/grenadine
-	required_reagents = list(/datum/reagent/drink/juice/berry = 10)
+	required_reagents = list(/datum/reagent/drink/juice/berry = 10, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 
 /datum/chemical_reaction/wine
 	name = "Wine"
 	result = /datum/reagent/ethanol/wine
-	required_reagents = list(/datum/reagent/drink/juice/grape = 10)
+	required_reagents = list(/datum/reagent/drink/juice/grape = 10, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 
 /datum/chemical_reaction/pwine
 	name = "Poison Wine"
 	result = /datum/reagent/ethanol/pwine
-	required_reagents = list(/datum/reagent/toxin/poisonberryjuice = 10)
+	required_reagents = list(/datum/reagent/toxin/poisonberryjuice = 10, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 
 /datum/chemical_reaction/melonliquor
 	name = "Melon Liquor"
 	result = /datum/reagent/ethanol/melonliquor
-	required_reagents = list(/datum/reagent/drink/juice/watermelon = 10)
+	required_reagents = list(/datum/reagent/drink/juice/watermelon = 10, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 
 /datum/chemical_reaction/bluecuracao
 	name = "Blue Curacao"
 	result = /datum/reagent/ethanol/bluecuracao
-	required_reagents = list(/datum/reagent/drink/juice/orange = 10)
+	required_reagents = list(/datum/reagent/drink/juice/orange = 10, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 
 /datum/chemical_reaction/spacebeer
 	name = "Space Beer"
 	result = /datum/reagent/ethanol/beer
-	required_reagents = list(/datum/reagent/nutriment/cornoil = 10)
+	required_reagents = list(/datum/reagent/nutriment/cornoil = 10, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 
 /datum/chemical_reaction/vodka
 	name = "Vodka"
 	result = /datum/reagent/ethanol/vodka
-	required_reagents = list(/datum/reagent/drink/juice/potato = 10)
+	required_reagents = list(/datum/reagent/drink/juice/potato = 10, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 
 /datum/chemical_reaction/sake
 	name = "Sake"
 	result = /datum/reagent/ethanol/sake
-	required_reagents = list(/datum/reagent/nutriment/rice = 10)
+	required_reagents = list(/datum/reagent/nutriment/rice = 10, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 
 /datum/chemical_reaction/kahlua
 	name = "Kahlua"
 	result = /datum/reagent/ethanol/coffee/kahlua
-	required_reagents = list(/datum/reagent/drink/coffee = 5, /datum/reagent/sugar = 5)
+	required_reagents = list(/datum/reagent/drink/coffee = 5, /datum/reagent/sugar = 5, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 5
 
@@ -375,7 +375,7 @@
 /datum/chemical_reaction/mead
 	name = "Mead"
 	result = /datum/reagent/ethanol/mead
-	required_reagents = list(/datum/reagent/nutriment/honey = 1, /datum/reagent/water = 1)
+	required_reagents = list(/datum/reagent/nutriment/honey = 1, /datum/reagent/water = 1, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 2
 
@@ -568,7 +568,7 @@
 /datum/chemical_reaction/rum
 	name = "Rum"
 	result = /datum/reagent/ethanol/rum
-	required_reagents = list(/datum/reagent/sugar = 1, /datum/reagent/water = 1)
+	required_reagents = list(/datum/reagent/sugar = 1, /datum/reagent/water = 1, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 2
 

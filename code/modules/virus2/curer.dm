@@ -6,7 +6,6 @@
 	circuit = /obj/item/weapon/circuitboard/curefab
 	active_power_usage = 500//Watts
 	idle_power_usage = 50
-	use_power = POWER_USE_IDLE
 	var/curing = FALSE
 	var/virusing = FALSE
 	var/obj/item/weapon/reagent_containers/container = null
@@ -50,9 +49,9 @@
 		return 1
 	else if(istype(I,/obj/item/weapon/reagent_containers))
 		if(!container)
+			if(!user.unEquip(I, src))
+				return
 			container = I
-			user.drop_from_inventory(I)
-			I.forceMove(src)
 		return 1
 	else if(istype(I,/obj/item/weapon/virusdish))
 		if(virusing)
@@ -135,7 +134,7 @@
 		state("No virus dish inserted!")
 		return
 	var/obj/item/weapon/reagent_containers/glass/beaker/product = new(src.loc)
-	var/list/data = list("donor" = null, "blood_DNA" = null, "blood_type" = null, "trace_chem" = null, "virus2" = list(), "antibodies" = list())
+	var/list/data = list("donor" = null, "donor_name" = "", "blood_DNA" = null, "blood_type" = null, "trace_chem" = null, "virus2" = list(), "antibodies" = list())
 	data["virus2"] |= dish.virus2
 	product.reagents.add_reagent(/datum/reagent/blood,30,data)
 	state("\The [src] Buzzes", "blue")

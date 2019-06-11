@@ -9,7 +9,7 @@
 	var/class = 0                           // Size. Lower is smaller. Uses floating point values!
 	var/descriptor                          // 'gaping hole' etc.
 	var/breachtype = SURFACE_BREACHES       // Punctured or melted
-	var/patched = 0
+	var/patched = FALSE
 	var/obj/item/clothing/suit/space/holder // Suit containing the list of breaches holding this instance.
 	var/global/list/breach_brute_descriptors = list(
 		"tiny puncture",
@@ -115,6 +115,8 @@
 			else if(existing.breachtype == SURFACE_BREACHES)
 				visible_message("<span class = 'warning'>\The [existing.descriptor] on [src] widens[existing.patched ? ", ruining the patch" : ""]!</span>")
 
+			existing.patched = FALSE
+
 	if (amount)
 		//Spawn a new breach.
 		var/datum/breach/B = new()
@@ -139,10 +141,10 @@
 	damage = 0
 	brute_damage = 0
 	burn_damage = 0
-	var/all_patched = 1
+	var/all_patched = TRUE
 
 	if(!can_breach || !breaches || !breaches.len)
-		name = initial(name)
+		SetName(initial(name))
 		return 0
 
 	for(var/datum/breach/B in breaches)
@@ -151,8 +153,8 @@
 			qdel(B)
 		else
 			if(!B.patched)
+				all_patched = FALSE
 				damage += B.class
-				all_patched = 0
 
 			if(B.breachtype == STRUCTURE_BREACHES)
 				brute_damage += B.class
@@ -161,16 +163,15 @@
 
 	if(damage >= 3)
 		if(brute_damage >= 3 && brute_damage > burn_damage)
-			name = "punctured [initial(name)]"
+			SetName("punctured [initial(name)]")
 		else if(burn_damage >= 3 && burn_damage > brute_damage)
-			name = "scorched [initial(name)]"
+			SetName("scorched [initial(name)]")
 		else
-			name = "damaged [initial(name)]"
-
+			SetName("damaged [initial(name)]")
 	else if(all_patched)
-		name = "patched [initial(name)]"
+		SetName("patched [initial(name)]")
 	else
-		name = initial(name)
+		SetName(initial(name))
 
 	return damage
 
@@ -188,6 +189,10 @@
 		if(!repair_power)
 			return
 
+		if(istype(src.loc,/mob/living))
+			to_chat(user, "<span class='warning'>How do you intend to patch a hardsuit while someone is wearing it?</span>")
+			return
+
 		if(burn_damage <= 0)
 			to_chat(user, "There is no surface damage on \the [src] to repair.")
 			return
@@ -199,6 +204,10 @@
 		return
 
 	else if(isWelder(W))
+
+		if(istype(src.loc,/mob/living))
+			to_chat(user, "<span class='warning'>How do you intend to patch a hardsuit while someone is wearing it?</span>")
+			return
 
 		if (brute_damage <= 0)
 			to_chat(user, "There is no structural damage on \the [src] to repair.")
@@ -228,7 +237,7 @@
 			to_chat(user, "There are no open breaches to seal with \the [W].")
 		else if(user != loc || do_after(user, 30, src))		//Doing this in your own inventory is awkward.
 			user.visible_message("<b>[user]</b> uses \the [W] to seal \the [target_breach] on \the [src].")
-			target_breach.patched = 1
+			target_breach.patched = TRUE
 			target_breach.update_descriptor()
 			calc_breach_damage()
 		return

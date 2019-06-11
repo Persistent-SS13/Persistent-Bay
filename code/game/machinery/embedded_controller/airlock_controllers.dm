@@ -3,6 +3,7 @@
 	// Setup parameters only
 	radio_filter_in = RADIO_AIRLOCK
 	radio_filter_out = RADIO_AIRLOCK
+	program = /datum/computer/file/embedded_program/airlock
 	var/tag_exterior_door
 	var/tag_interior_door
 	var/tag_airpump
@@ -12,6 +13,7 @@
 	var/tag_airlock_mech_sensor
 	var/tag_shuttle_mech_sensor
 	var/tag_secure = 0
+	var/tag_air_alarm
 	var/list/dummy_terminals = list()
 	var/cycle_to_external_air = 0
 
@@ -64,36 +66,6 @@
 		ui.open()
 		ui.set_auto_update(1)
 
-/obj/machinery/embedded_controller/radio/airlock/advanced_airlock_controller/Topic(href, href_list)
-	if(..())
-		return
-
-	usr.set_machine(src)
-	src.add_fingerprint(usr)
-
-	var/clean = 0
-	switch(href_list["command"])	//anti-HTML-hacking checks
-		if("cycle_ext")
-			clean = 1
-		if("cycle_int")
-			clean = 1
-		if("force_ext")
-			clean = 1
-		if("force_int")
-			clean = 1
-		if("abort")
-			clean = 1
-		if("purge")
-			clean = 1
-		if("secure")
-			clean = 1
-
-	if(clean)
-		program.receive_user_command(href_list["command"])
-
-	return 1
-
-
 //Airlock controller for airlock control - most airlocks on the station use this
 /obj/machinery/embedded_controller/radio/airlock/airlock_controller
 	name = "Airlock Controller"
@@ -108,39 +80,13 @@
 		"interior_status" = program.memory["interior_status"],
 		"processing" = program.memory["processing"],
 	)
-	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "simple_airlock_console.tmpl", name, 470, 290, state = state)
 		ui.set_initial_data(data)
 		ui.open()
 		ui.set_auto_update(1)
-
-/obj/machinery/embedded_controller/radio/airlock/airlock_controller/Topic(href, href_list)
-	if(..())
-		return
-
-	usr.set_machine(src)
-	src.add_fingerprint(usr)
-
-	var/clean = 0
-	switch(href_list["command"])	//anti-HTML-hacking checks
-		if("cycle_ext")
-			clean = 1
-		if("cycle_int")
-			clean = 1
-		if("force_ext")
-			clean = 1
-		if("force_int")
-			clean = 1
-		if("abort")
-			clean = 1
-
-	if(clean)
-		program.receive_user_command(href_list["command"])
-
-	return 1
-
 
 //Access controller for door control - used in virology and the like
 /obj/machinery/embedded_controller/radio/airlock/access_controller
@@ -151,7 +97,7 @@
 	tag_secure = 1
 
 
-/obj/machinery/embedded_controller/radio/airlock/access_controller/update_icon()
+/obj/machinery/embedded_controller/radio/airlock/access_controller/on_update_icon()
 	if(on && program)
 		if(program.memory["processing"])
 			icon_state = "access_control_process"
@@ -161,7 +107,9 @@
 		icon_state = "access_control_off"
 
 /obj/machinery/embedded_controller/radio/airlock/access_controller/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/nano_ui/master_ui = null, var/datum/topic_state/state = GLOB.default_state)
-	var/list/data = list(
+	var/data[0]
+
+	data = list(
 		"exterior_status" = program.memory["exterior_status"],
 		"interior_status" = program.memory["interior_status"],
 		"processing" = program.memory["processing"]
@@ -173,28 +121,3 @@
 		ui.set_initial_data(data)
 		ui.open()
 		ui.set_auto_update(1)
-
-/obj/machinery/embedded_controller/radio/airlock/access_controller/Topic(href, href_list)
-	if(..())
-		return
-
-	usr.set_machine(src)
-	src.add_fingerprint(usr)
-
-	var/clean = 0
-	switch(href_list["command"])	//anti-HTML-hacking checks
-		if("cycle_ext_door")
-			clean = 1
-		if("cycle_int_door")
-			clean = 1
-		if("force_ext")
-			if(program.memory["interior_status"]["state"] == "closed")
-				clean = 1
-		if("force_int")
-			if(program.memory["exterior_status"]["state"] == "closed")
-				clean = 1
-
-	if(clean)
-		program.receive_user_command(href_list["command"])
-
-	return 1

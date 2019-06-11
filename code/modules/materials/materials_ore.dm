@@ -126,8 +126,7 @@
 			H << "<span class='danger'>Some of \the [src] gets in your eyes!</span>"
 			H.eye_blind += 5
 			H.eye_blurry += 10
-			spawn(1)
-				if(istype(loc, /turf/)) qdel(src)
+			QDEL_IN(src, 1)
 
 //-----------------------------------------
 // Subtypes
@@ -138,8 +137,6 @@
 	..(newloc, MATERIAL_HEMATITE)
 /obj/item/stack/ore/graphite/New(var/newloc)
 	..(newloc, MATERIAL_GRAPHITE)
-/obj/item/stack/ore/coal/New(var/newloc)
-	..(newloc, MATERIAL_GRAPHENE)
 /obj/item/stack/ore/glass/New(var/newloc)
 	..(newloc, MATERIAL_SAND)
 /obj/item/stack/ore/silver/New(var/newloc)
@@ -156,6 +153,8 @@
 	..(newloc, MATERIAL_SLAG)
 /obj/item/stack/ore/copper/New(var/newloc)
 	..(newloc, MATERIAL_TETRAHEDRITE)
+/obj/item/weapon/ore/rutile/New(var/newloc)
+	..(newloc, MATERIAL_RUTILE)
 
 //-----------------------------------------
 // Phoron-specific

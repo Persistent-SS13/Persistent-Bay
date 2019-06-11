@@ -32,20 +32,23 @@
 	return 1
 
 
-/obj/item/device/assembly_holder/attach(var/obj/item/device/D, var/obj/item/device/D2, var/mob/user)
-	if((!D)||(!D2))	return 0
-	if((!isassembly(D))||(!isassembly(D2)))	return 0
-	if((D:secured)||(D2:secured))	return 0
+/obj/item/device/assembly_holder/attach(var/obj/item/device/assembly/D, var/obj/item/device/assembly/D2, var/mob/user)
+	if((!D)||(!D2))
+		return 0
+	if((!istype(D))||(!istype(D2)))
+		return 0
+	if((D.secured)||(D2.secured))
+		return 0
 	if(user)
-		user.remove_from_mob(D)
-		user.remove_from_mob(D2)
-	D:holder = src
-	D2:holder = src
-	D.loc = src
-	D2.loc = src
+		user.drop_from_inventory(D)
+		user.drop_from_inventory(D2)
+	D.holder = src
+	D2.holder = src
+	D.forceMove(src)
+	D2.forceMove(src)
 	a_left = D
 	a_right = D2
-	name = "[D.name]-[D2.name] assembly"
+	SetName("[D.name]-[D2.name] assembly")
 	update_icon()
 	usr.put_in_hands(src)
 
@@ -59,12 +62,12 @@
 /*		if(O:Attach_Holder())
 		special_assembly = O
 		update_icon()
-		src.name = "[a_left.name] [a_right.name] [special_assembly.name] assembly"
+		src.SetName("[a_left.name] [a_right.name] [special_assembly.name] assembly")
 */
 	return
 
 
-/obj/item/device/assembly_holder/update_icon()
+/obj/item/device/assembly_holder/on_update_icon()
 	overlays.Cut()
 	if(a_left)
 		overlays += "[a_left.icon_state]_left"
@@ -185,11 +188,11 @@
 		var/turf/T = get_turf(src)
 		if(!T)	return 0
 		if(a_left)
-			a_left:holder = null
-			a_left.loc = T
+			a_left.holder = null
+			a_left.forceMove(T)
 		if(a_right)
-			a_right:holder = null
-			a_right.loc = T
+			a_right.holder = null
+			a_right.forceMove(T)
 		spawn(0)
 			qdel(src)
 	return
@@ -217,10 +220,17 @@
 //
 /obj/item/device/assembly_holder/New()
 	..()
-	GLOB.listening_objects += src
+	ADD_SAVED_VAR(secured)
+	ADD_SAVED_VAR(a_left)
+	ADD_SAVED_VAR(a_right)
+	ADD_SAVED_VAR(special_assembly)
 
-/obj/item/device/assembly_holder/after_load()
-	..()
+	ADD_SKIP_EMPTY(a_left)
+	ADD_SKIP_EMPTY(a_right)
+	ADD_SKIP_EMPTY(special_assembly)
+
+/obj/item/device/assembly_holder/Initialize()
+	. = ..()
 	GLOB.listening_objects += src
 
 /obj/item/device/assembly_holder/Destroy()
@@ -241,9 +251,8 @@
 /obj/item/device/assembly_holder/timer_igniter
 	name = "timer-igniter assembly"
 
-/obj/item/device/assembly_holder/timer_igniter/New()
-	..()
-
+/obj/item/device/assembly_holder/timer_igniter/Initialize()
+	. = ..()
 	var/obj/item/device/assembly/igniter/ign = new(src)
 	ign.secured = 1
 	ign.holder = src
@@ -255,14 +264,13 @@
 	a_left = tmr
 	a_right = ign
 	secured = 1
-	update_icon()
-	name = initial(name) + " ([tmr.time] secs)"
-	if(loc)
-		loc.verbs += /obj/item/device/assembly_holder/timer_igniter/verb/configure
-
-/obj/item/device/assembly_holder/timer_igniter/after_load()
+	queue_icon_update()
+	SetName(initial(name) + " ([tmr.time] secs)")
 	if(loc)
 		loc.verbs |= /obj/item/device/assembly_holder/timer_igniter/verb/configure
+
+/obj/item/device/assembly_holder/timer_igniter/after_load()
+	..()
 
 /obj/item/device/assembly_holder/timer_igniter/detached()
 	loc.verbs -= /obj/item/device/assembly_holder/timer_igniter/verb/configure

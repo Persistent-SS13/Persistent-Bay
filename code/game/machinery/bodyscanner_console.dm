@@ -4,6 +4,7 @@
 	icon_state = "body_scannerconsole"
 	density = FALSE
 	anchored = TRUE
+	circuit_type = /obj/item/weapon/circuitboard/body_scanconsole
 	var/obj/machinery/bodyscanner/connected	
 	var/stored_scan_subject
 	var/list/display_tags = list()
@@ -14,25 +15,16 @@
 /obj/machinery/body_scanconsole/New()
 	..()
 	ADD_SAVED_VAR(stored_scan_subject)
+	ADD_SAVED_VAR(display_tags)
 	
 	ADD_SKIP_EMPTY(stored_scan_subject)
+	ADD_SKIP_EMPTY(display_tags)
 
 /obj/machinery/body_scanconsole/Initialize()
 	. = ..()
-	if(!map_storage_loaded)
-		component_parts = list(
-			new /obj/item/weapon/circuitboard/bodyscanner_console(src),
-			new /obj/item/weapon/stock_parts/console_screen(src))
-	RefreshParts()
 	FindScanner()
 
-/obj/machinery/body_scanconsole/Destroy()
-	. = ..()
-	for(var/D in connected_displays)
-		remove_display(D)
-	unlink_scanner(connected)
-
-/obj/machinery/body_scanconsole/update_icon()
+/obj/machinery/body_scanconsole/on_update_icon()
 	if(inoperable())
 		icon_state = "body_scannerconsole-p"	
 	else
@@ -153,3 +145,9 @@
 /obj/machinery/body_scanconsole/proc/remove_display(var/obj/machinery/body_scan_display/display)
 	connected_displays -= display
 	GLOB.destroyed_event.unregister(display, src, .proc/remove_display)
+
+/obj/machinery/body_scanconsole/Destroy()
+	. = ..()
+	for(var/D in connected_displays)
+		remove_display(D)
+	unlink_scanner(connected)

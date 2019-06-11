@@ -10,7 +10,9 @@
 	invisibility = INVISIBILITY_LIGHTING
 	color = LIGHTING_BASE_MATRIX
 	icon_state = "light1"
-	blend_mode = BLEND_MULTIPLY
+	blend_mode = BLEND_OVERLAY
+
+	appearance_flags = 0
 
 	var/lum_r = 0
 	var/lum_g = 0
@@ -25,11 +27,7 @@
 
 /atom/movable/lighting_overlay/New(var/atom/loc, var/no_update = FALSE)
 	var/turf/T = loc //If this runtimes atleast we'll know what's creating overlays outside of turfs.
-	if(!T)
-		loc = null
-		qdel(src)
-		return
-	if(T.dynamic_lighting)
+	if(T && T.dynamic_lighting)
 		. = ..()
 		verbs.Cut()
 		total_lighting_overlays++
@@ -40,9 +38,8 @@
 			return
 		update_overlay()
 	else
-		loc = null
 		qdel(src)
-		
+
 /atom/movable/lighting_overlay/proc/update_overlay()
 	set waitfor = FALSE
 	var/turf/T = loc
@@ -50,14 +47,12 @@
 	if(!istype(T))
 		if(loc)
 			log_debug("A lighting overlay realised its loc was NOT a turf (actual loc: [loc][loc ? ", " + loc.type : "null"]) in update_overlay() and got qdel'ed!")
-			loc = null
 		else
 			log_debug("A lighting overlay realised it was in nullspace in update_overlay() and got pooled!")
-		spawn(1) qdel(src)
+		qdel(src)
 		return
 	if(!T.dynamic_lighting)
-		loc = null
-		spawn(1) qdel(src)
+		qdel(src)
 		return
 
 	// To the future coder who sees this and thinks
@@ -111,11 +106,11 @@
 	else
 		icon_state = null
 		color = list(
-			rr, rg, rb, 00,
-			gr, gg, gb, 00,
-			br, bg, bb, 00,
-			ar, ag, ab, 00,
-			00, 00, 00, 01
+			-rr, -rg, -rb, 00,
+			-gr, -gg, -gb, 00,
+			-br, -bg, -bb, 00,
+			-ar, -ag, -ab, 00,
+			01, 01, 01, 01
 		)
 
 	luminosity = set_luminosity
@@ -132,7 +127,7 @@
 	SSlighting.overlay_queue -= src
 
 	var/turf/T = loc
-	if(T && istype(T))
+	if(istype(T))
 		T.lighting_overlay = null
 
 	. = ..()

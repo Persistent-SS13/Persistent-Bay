@@ -10,30 +10,34 @@
 	var/germ_level = GERM_LEVEL_AMBIENT // The higher the germ level, the more germ on the atom.
 	var/simulated = 1 //filter for actions - used by lighting overlays
 	var/fluorescent // Shows up under a UV light.
-	var/datum/reagents/reagents = null
-	var/list/climbers = list()
+	var/datum/reagents/reagents // chemical contents.
+	var/list/climbers
+	var/climb_speed_mult = 1
 
 /atom/New(loc, ...)
 	//atom creation method that preloads variables at creation
 	if(GLOB.use_preloader && (src.type == GLOB._preloader.target_path))//in case the instanciated atom is creating other atoms in New()
 		GLOB._preloader.load(src)
 
-	var/do_initialize = SSatoms.initialized
-	if(do_initialize != INITIALIZATION_INSSATOMS)
+	var/do_initialize = SSatoms.init_state
+	var/list/created = SSatoms.created_atoms
+	if(do_initialize > INITIALIZATION_INSSATOMS_LATE)
 		args[1] = do_initialize == INITIALIZATION_INNEW_MAPLOAD
 		if(SSatoms.InitAtom(src, args))
 			//we were deleted
 			return
-
-	var/list/created = SSatoms.created_atoms
-	if(created)
-		created += src
+	else if(created)
+		var/list/argument_list
+		if(length(args) > 1)
+			argument_list = args.Copy(2)
+		if(argument_list || do_initialize == INITIALIZATION_INSSATOMS_LATE)
+			created[src] = argument_list
 
 	if(atom_flags & ATOM_FLAG_CLIMBABLE)
 		verbs += /atom/proc/climb_on
-
-	if(opacity)
-		updateVisibility(src)
+	
+	ADD_SAVED_VAR(reagents)
+	ADD_SKIP_EMPTY(reagents)
 
 //Called after New if the map is being loaded. mapload = TRUE
 //Called from base of New if the map is not being loaded. mapload = FALSE
@@ -43,12 +47,24 @@
 //Must return an Initialize hint. Defined in __DEFINES/subsystems.dm
 
 /atom/proc/Initialize(mapload, ...)
+	if(QDELETED(src) || QDELING(src))
+		return INITIALIZE_HINT_QDEL //Happens because of map loading shennanigans
+
 	if(atom_flags & ATOM_FLAG_INITIALIZED)
 		crash_with("Warning: [src]([type]) initialized multiple times!")
 	atom_flags |= ATOM_FLAG_INITIALIZED
 
-	if(light_power && light_range)
+	if(light_max_bright && light_outer_range)
 		update_light()
+
+	if(opacity)
+		updateVisibility(src)
+		var/turf/T = loc
+		if(istype(T))
+			T.handle_opacity_change(src)
+	
+	if(!reagents)
+		SetupReagents()
 
 	return INITIALIZE_HINT_NORMAL
 
@@ -110,6 +126,17 @@
 // atom must also have the PROXMOVE flag currently to help with lag. ~ ComicIronic
 /atom/proc/HasProximity(atom/movable/AM as mob|obj)
 	return
+
+/atom/proc/emp_act(var/severity)
+	return
+
+/atom/set_density(var/new_density)
+	if(density != new_density)
+		density = !!new_density
+
+/atom/proc/bullet_act(obj/item/projectile/P, def_zone)
+	P.on_hit(src, 0, def_zone)
+	. = 0
 
 /atom/proc/in_contents_of(container)//can take class or object instance as argument
 	if(ispath(container))
@@ -220,15 +247,12 @@ its easier to just keep the beam vertical.
 /atom/proc/examine(mob/user, var/distance = -1, var/infix = "", var/suffix = "")
 	//This reformat names to get a/an properly working on item descriptions when they are bloody
 	var/f_name = "\a [src][infix]."
-	if(src.blood_DNA && !istype(src, /obj/effect/decal))
+	if(blood_color && !istype(src, /obj/effect/decal))
 		if(gender == PLURAL)
 			f_name = "some "
 		else
 			f_name = "a "
-		if(blood_color != SYNTH_BLOOD_COLOUR)
-			f_name += "<span class='danger'>blood-stained</span> [name][infix]!"
-		else
-			f_name += "oil-stained [name][infix]."
+		f_name += "<font color ='[blood_color]'>stained</font> [name][infix]!"
 
 	to_chat(user, "\icon[src] That's [f_name] [suffix]")
 	to_chat(user, desc)
@@ -257,26 +281,28 @@ its easier to just keep the beam vertical.
 		icon_state = new_icon_state
 
 /atom/proc/update_icon()
+	on_update_icon(arglist(args))
+
+/atom/proc/on_update_icon()
 	return
 
 /atom/proc/ex_act()
 	return
 
-/atom/proc/emp_act(var/severity)
-	return
-
-/atom/proc/bullet_act(obj/item/projectile/P, def_zone)
-	P.on_hit(src, 0, def_zone)
-	. = 0
-
 /atom/proc/emag_act(var/remaining_charges, var/mob/user, var/emag_source)
 	return NO_EMAG_ACT
 
-/atom/proc/fire_act()
+/atom/proc/fire_act(datum/gas_mixture/air, exposed_temperature, exposed_volume)
 	return
 
 /atom/proc/melt()
 	return
+
+/atom/proc/lava_act()
+	visible_message("<span class='danger'>\The [src] sizzles and melts away, consumed by the lava!</span>")
+	playsound(src, 'sound/effects/flare.ogg', 100, 3)
+	qdel(src)
+	. = TRUE
 
 /atom/proc/hitby(atom/movable/AM as mob|obj)
 	if (density)
@@ -303,19 +329,16 @@ its easier to just keep the beam vertical.
 	. = 1
 	return 1
 
-/atom/proc/add_vomit_floor(mob/living/carbon/M as mob, var/toxvomit = 0)
-	if( istype(src, /turf/simulated) )
-		var/obj/effect/decal/cleanable/vomit/this = new /obj/effect/decal/cleanable/vomit(src)
-
-		// Make toxins vomit look different
-		if(toxvomit)
-			this.icon_state = "vomittox_[pick(1,4)]"
+/mob/living/proc/handle_additional_vomit_reagents(var/obj/effect/decal/cleanable/vomit/vomit)
+	vomit.reagents.add_reagent(/datum/reagent/acid/stomach, 5)
 
 /atom/proc/clean_blood()
 	if(!simulated)
 		return
 	fluorescent = 0
-	src.germ_level = 0
+	germ_level = 0
+	blood_color = null
+	gunshot_residue = null
 	if(istype(blood_DNA, /list))
 		blood_DNA = null
 		return 1
@@ -390,9 +413,6 @@ its easier to just keep the beam vertical.
 	while(istype(destination))
 		var/atom/drop_destination = destination.onDropInto(src)
 		if(!istype(drop_destination) || drop_destination == destination)
-			if(istype(src, /obj/item) && istype(destination, /turf))
-				var/obj/item/I = src
-				I.randomize_pixel_offset()
 			return forceMove(destination)
 		destination = drop_destination
 	return forceMove(null)
@@ -410,10 +430,15 @@ its easier to just keep the beam vertical.
 
 /atom/attack_hand(mob/user)
 	..()
-	if(climbers.len && !(user in climbers))
+	if(LAZYLEN(climbers) && !(user in climbers))
 		user.visible_message("<span class='warning'>[user.name] shakes \the [src].</span>", \
 					"<span class='notice'>You shake \the [src].</span>")
 		object_shaken()
+
+// Called when hitting the atom with a grab.
+// Will skip attackby() and afterattack() if returning TRUE.
+/atom/proc/grab_attack(var/obj/item/grab/G)
+	return FALSE
 
 /atom/proc/climb_on()
 
@@ -425,14 +450,14 @@ its easier to just keep the beam vertical.
 	do_climb(usr)
 
 /atom/proc/can_climb(var/mob/living/user, post_climb_check=0)
-	if (!(atom_flags & ATOM_FLAG_CLIMBABLE) || !can_touch(user) || (!post_climb_check && (user in climbers)))
+	if (!(atom_flags & ATOM_FLAG_CLIMBABLE) || !can_touch(user) || (!post_climb_check && climbers && (user in climbers)))
 		return 0
 
 	if (!user.Adjacent(src))
 		to_chat(user, "<span class='danger'>You can't climb there, the way is blocked.</span>")
 		return 0
 
-	var/obj/occupied = turf_is_crowded()
+	var/obj/occupied = turf_is_crowded(user)
 	if(occupied)
 		to_chat(user, "<span class='danger'>There's \a [occupied] in the way.</span>")
 		return 0
@@ -453,11 +478,13 @@ its easier to just keep the beam vertical.
 		return 0
 	return 1
 
-/atom/proc/turf_is_crowded()
+/atom/proc/turf_is_crowded(var/atom/ignore)
 	var/turf/T = get_turf(src)
 	if(!T || !istype(T))
 		return 0
 	for(var/atom/A in T.contents)
+		if(ignore && ignore == A)
+			continue
 		if(A.atom_flags & ATOM_FLAG_CLIMBABLE)
 			continue
 		if(A.density && !(A.atom_flags & ATOM_FLAG_CHECKS_BORDER)) //ON_BORDER structures are handled by the Adjacent() check.
@@ -466,24 +493,32 @@ its easier to just keep the beam vertical.
 
 /atom/proc/do_climb(var/mob/living/user)
 	if (!can_climb(user))
-		return
+		return 0
 
+	add_fingerprint(user)
 	user.visible_message("<span class='warning'>\The [user] starts climbing onto \the [src]!</span>")
-	climbers |= user
+	LAZYDISTINCTADD(climbers,user)
 
-	if(!do_after(user,(issmall(user) ? 30 : 50), src))
-		climbers -= user
-		return
+	if(!do_after(user,(issmall(user) ? MOB_CLIMB_TIME_SMALL : MOB_CLIMB_TIME_MEDIUM) * climb_speed_mult, src))
+		LAZYREMOVE(climbers,user)
+		return 0
 
-	if (!can_climb(user, post_climb_check=1))
-		climbers -= user
-		return
+	if(!can_climb(user, post_climb_check=1))
+		LAZYREMOVE(climbers,user)
+		return 0
 
-	user.forceMove(get_turf(src))
+	var/target_turf = get_turf(src)
 
-	if (get_turf(user) == get_turf(src))
+	//climbing over border objects like railings
+	if((atom_flags & ATOM_FLAG_CHECKS_BORDER) && get_turf(user) == target_turf)
+		target_turf = get_step(src, dir)
+
+	user.forceMove(target_turf)
+
+	if (get_turf(user) == target_turf)
 		user.visible_message("<span class='warning'>\The [user] climbs onto \the [src]!</span>")
-	climbers -= user
+	LAZYREMOVE(climbers,user)
+	return 1
 
 /atom/proc/object_shaken()
 	for(var/mob/living/M in climbers)
@@ -534,9 +569,16 @@ its easier to just keep the beam vertical.
 /atom/proc/get_color()
 	return color
 
+/atom/proc/get_cell()
+	return
+
 // Returns an amount of power drawn from the object (-1 if it's not viable).
 // If drain_check is set it will not actually drain power, just return a value.
 // If surge is set, it will destroy/damage the recipient and not return any power.
 // Not sure where to define this, so it can sit here for the rest of time.
 /atom/proc/drain_power(var/drain_check,var/surge, var/amount = 0)
 	return -1
+
+//This is used to set the initial reagents for an atom. Its called only on an atom that wasn't loaded from save
+/atom/proc/SetupReagents()
+	return

@@ -80,7 +80,7 @@
 	if(start_matured)
 		mature_time = 0
 		health = max_health
-
+	..()
 
 /obj/effect/vine/Initialize()
 	. = ..()
@@ -101,7 +101,7 @@
 		growth_type = seed.get_growth_type()
 	else
 		max_growth = seed.growth_stages
-		growth_threshold = max_health/seed.growth_stages
+		growth_threshold = max_growth && max_health/max_growth
 
 	if(max_growth > 2 && prob(50))
 		max_growth-- //Ensure some variation in final sprite, makes the carpet of crap look less wonky.
@@ -129,7 +129,7 @@
 		var/turf/T = get_turf(src)
 		T.ex_act(prob(80) ? 3 : 2)
 
-/obj/effect/vine/update_icon()
+/obj/effect/vine/on_update_icon()
 	overlays.Cut()
 	var/growth = growth_threshold ? min(max_growth, round(health/growth_threshold)) : 1
 	var/at_fringe = get_dist(src,parent)
@@ -177,7 +177,7 @@
 
 	// Apply colour and light from seed datum.
 	if(seed.get_trait(TRAIT_BIOLUM))
-		set_light(1+round(seed.get_trait(TRAIT_POTENCY)/20), l_color = seed.get_trait(TRAIT_BIOLUM_COLOUR))
+		set_light(0.5, 0.1, 3, l_color = seed.get_trait(TRAIT_BIOLUM_COLOUR))
 	else
 		set_light(0)
 
@@ -289,3 +289,6 @@
 
 /obj/effect/vine/proc/is_mature()
 	return (health >= (max_health/3) && world.time > mature_time)
+
+/obj/effect/vine/is_burnable()
+	return seed.get_trait(TRAIT_HEAT_TOLERANCE) < 1000

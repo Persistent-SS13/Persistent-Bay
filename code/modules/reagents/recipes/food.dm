@@ -2,7 +2,7 @@
 /datum/chemical_reaction/tofu
 	name = "Tofu"
 	result = null
-	required_reagents = list(/datum/reagent/drink/milk/soymilk = 10)
+	required_reagents = list(/datum/reagent/drink/milk/soymilk = 10, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 1
 
@@ -48,8 +48,8 @@
 	result = /datum/reagent/drink/coffee
 	required_reagents = list(/datum/reagent/water = 5, /datum/reagent/nutriment/coffee = 1)
 	result_amount = 5
-	minimum_temperature = 70 CELCIUS
-	maximum_temperature = (70 CELCIUS) + 100
+	minimum_temperature = 70 CELSIUS
+	maximum_temperature = (70 CELSIUS) + 100
 	mix_message = "The solution thickens into a steaming dark brown beverage."
 
 /datum/chemical_reaction/tea
@@ -57,8 +57,8 @@
 	result = /datum/reagent/drink/tea
 	required_reagents = list(/datum/reagent/water = 5, /datum/reagent/nutriment/tea = 1)
 	result_amount = 5
-	minimum_temperature = 70 CELCIUS
-	maximum_temperature = (70 CELCIUS) + 100
+	minimum_temperature = 70 CELSIUS
+	maximum_temperature = (70 CELSIUS) + 100
 	mix_message = "The solution thickens into a steaming black beverage."
 
 /datum/chemical_reaction/hot_coco
@@ -66,8 +66,8 @@
 	result = /datum/reagent/drink/hot_coco
 	required_reagents = list(/datum/reagent/water = 5, /datum/reagent/nutriment/coco = 1)
 	result_amount = 5
-	minimum_temperature = 70 CELCIUS
-	maximum_temperature = (70 CELCIUS) + 100
+	minimum_temperature = 70 CELSIUS
+	maximum_temperature = (70 CELSIUS) + 100
 	mix_message = "The solution thickens into a steaming brown beverage."
 
 /datum/chemical_reaction/grapejuice
@@ -101,12 +101,12 @@
 /datum/chemical_reaction/cheesewheel
 	name = "Cheesewheel"
 	result = null
-	required_reagents = list(/datum/reagent/drink/milk = 40)
+	required_reagents = list(/datum/reagent/drink/milk = 40, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 1
 	mix_message = "The solution thickens and curdles into a rich yellow substance."
-	minimum_temperature = 40 CELCIUS
-	maximum_temperature = (40 CELCIUS) + 100
+	minimum_temperature = 40 CELSIUS
+	maximum_temperature = (40 CELSIUS) + 100
 
 /datum/chemical_reaction/cheesewheel/on_reaction(var/datum/reagents/holder, var/created_volume)
 	..()
@@ -195,8 +195,8 @@
 	required_reagents = list(/datum/reagent/water = 1, /datum/reagent/drink/dry_ramen = 3)
 	result_amount = 3
 	mix_message = "The noodles soften in the hot water, releasing savoury steam."
-	minimum_temperature = 80 CELCIUS
-	maximum_temperature = (100 CELCIUS) + 50
+	minimum_temperature = 80 CELSIUS
+	maximum_temperature = (100 CELSIUS) + 50
 
 /datum/chemical_reaction/hell_ramen
 	name = "Hell Ramen"
@@ -213,7 +213,7 @@
 /datum/chemical_reaction/vinegar2
 	name = "Clear Vinegar"
 	result = /datum/reagent/nutriment/vinegar
-	required_reagents = list(/datum/reagent/ethanol = 10)
+	required_reagents = list(/datum/reagent/ethanol = 10, /datum/reagent/enzyme = 5)
 	catalysts = list(/datum/reagent/enzyme = 5)
 	result_amount = 10
 

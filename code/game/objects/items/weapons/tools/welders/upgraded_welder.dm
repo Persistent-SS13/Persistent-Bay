@@ -3,9 +3,6 @@
 //===================================
 /obj/item/weapon/tool/weldingtool/hugetank
 	name = "upgraded welding tool"
-	icon_state = "welder_h"
-	item_state = "welder"
-	desc = "A sizable welding tool with room to accomodate the largest of fuel tanks."
 	w_class = ITEM_SIZE_NORMAL
 	slot_flags = null	//80 units of fuel should have a drawback
 	origin_tech = list(TECH_ENGINEERING = 3)
@@ -23,7 +20,7 @@
 //===================================
 /obj/item/weapon/welder_tank/huge
 	name = "huge welding fuel tank"
-	icon_state = "fuel_h"
+	icon_state = "tank_huge"
 	w_class = ITEM_SIZE_SMALL
 	tank_volume = 160
 	starting_fuel = 160

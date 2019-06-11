@@ -28,11 +28,7 @@ var/datum/admin_secrets/admin_secrets = new()
 /datum/admin_secret_category
 	var/name = ""
 	var/desc = ""
-	var/list/datum/admin_secret_item/items
-
-/datum/admin_secret_category/New()
-	..()
-	items = list()
+	var/list/datum/admin_secret_item/items = list()
 
 /datum/admin_secret_category/proc/can_view(var/mob/user)
 	for(var/datum/admin_secret_item/item in items)
@@ -65,18 +61,18 @@ var/datum/admin_secrets/admin_secrets = new()
 	if(can_view(user))
 		if(!warn_before_use || alert("Execute the command '[name]'?[istext(warn_before_use) ? " [warn_before_use]" : ""]", name, "No","Yes") == "Yes")
 			return can_view(user)
-	return 0
+	return FALSE
 
 /datum/admin_secret_item/proc/execute(var/mob/user)
 	if(!can_execute(user))
-		return 0
+		return FALSE
 
 	if(log)
 		log_and_message_admins("used secret '[name]'", user)
 	if(feedback)
-		feedback_inc("admin_secrets_used",1)
-		feedback_add_details("admin_secrets_used","[name]")
-	. = 1
+		SSstatistics.add_field("admin_secrets_used",1)
+		SSstatistics.add_field_details("admin_secrets_used","[name]")
+	. = TRUE
 	do_execute(user)
 
 /datum/admin_secret_item/proc/do_execute(var/mob/user)

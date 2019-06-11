@@ -3,16 +3,18 @@
 	filedesc = "NanoWord"
 	extended_desc = "This program allows the editing and preview of text documents."
 	program_icon_state = "word"
+	program_key_state = "atmos_key"
 	size = 4
 	requires_ntnet = 0
 	available_on_ntnet = TRUE
 	nanomodule_path = /datum/nano_module/program/computer_wordprocessor/
-	usage_flags = PROGRAM_ALL
 	var/browsing
 	var/open_file
 	var/loaded_data
 	var/error
 	var/is_edited
+	usage_flags = PROGRAM_ALL
+	category = PROG_OFFICE
 
 /datum/computer_file/program/wordprocessor/New(comp)
 	..(comp)
@@ -34,7 +36,7 @@
 /datum/computer_file/program/wordprocessor/proc/save_file(var/filename)
 	var/datum/computer_file/data/F = get_file(filename)
 	if(!F) //try to make one if it doesn't exist
-		F = create_file(filename, loaded_data)
+		F = create_file(filename, loaded_data, /datum/computer_file/data/text)
 		return !isnull(F)
 	var/datum/computer_file/data/backup = F.clone()
 	var/obj/item/weapon/computer_hardware/hard_drive/HDD = computer.hard_drive
@@ -81,9 +83,17 @@
 		\[grid\] - \[/grid\] : Table without visible borders, for layouts.
 		\[row\] - New table row.
 		\[cell\] - New table cell.
-		\[logo\] - Inserts NT logo image.
+		\[logo\] - Inserts the Nexus logo image.
+		\[exologo\] - Inserts EXO logo image.
+		\[ntlogo\] - Inserts the NT logo image.
 		\[bluelogo\] - Inserts blue NT logo image.
 		\[solcrest\] - Inserts SCG crest image.
+		\[eclogo\] - Inserts the Expeditionary Corps logo.
+		\[daislogo\] - Inserts the Deimos Advanced Information Systems logo.
+		\[xynlogo\] - Inserts the Xyngergy logo.
+		\[iccgseal\] - Inserts ICCG seal
+		\[fleetlogo\] - Inserts the logo of the SCG Fleet
+		\[ocielogo\] - Inserts the logo of the Office of Civil Investigation and Enforcement
 		\[terraseal\] - Inserts TCC seal.
 		\[nfrseal\] - Inserts NFR seal."}
 
@@ -120,7 +130,7 @@
 		var/newname = sanitize(input(usr, "Enter file name:", "New File") as text|null)
 		if(!newname)
 			return 1
-		var/datum/computer_file/data/F = create_file(newname)
+		var/datum/computer_file/data/F = create_file(newname, "", /datum/computer_file/data/text)
 		if(F)
 			open_file = F.filename
 			loaded_data = ""
@@ -133,7 +143,7 @@
 		var/newname = sanitize(input(usr, "Enter file name:", "Save As") as text|null)
 		if(!newname)
 			return 1
-		var/datum/computer_file/data/F = create_file(newname, loaded_data)
+		var/datum/computer_file/data/F = create_file(newname, loaded_data, /datum/computer_file/data/text)
 		if(F)
 			open_file = F.filename
 		else

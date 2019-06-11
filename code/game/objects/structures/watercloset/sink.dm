@@ -1,4 +1,4 @@
-/obj/structure/sink
+/obj/structure/hygiene/sink
 	name = "sink"
 	icon = 'icons/obj/watercloset.dmi'
 	icon_state = "sink"
@@ -7,12 +7,13 @@
 	mass = 12
 	max_health = 110
 	damthreshold_brute 	= 3
+	matter = list(MATERIAL_PLASTIC = 5 SHEETS)
 	var/frame_type = /obj/item/frame/plastic/sink/
 	var/busy = 0 	//Something's being washed at the moment
 
-/obj/machinery/sink/New(loc, dir, atom/frame)
+/obj/structure/hygiene/sink/New(loc, dir, atom/frame)
 	..(loc)
-	create_reagents(30)
+	
 	if(dir)
 		src.set_dir(dir)
 
@@ -20,11 +21,13 @@
 	// 	pixel_x = (dir & 3)? 0 : (dir == 4 ? -20 : 20)
 	// 	pixel_y = (dir & 3)? (dir ==1 ? -32 : 32) : 0
 
-/obj/machinery/sink/Initialize(mapload, d)
+/obj/structure/hygiene/sink/Initialize(mapload, d)
 	. = ..()
+	if(!reagents)
+		create_reagents(30)
 	queue_icon_update()
 
-/obj/structure/sink/kitchen/update_icon()
+/obj/structure/hygiene/sink/kitchen/on_update_icon()
 	. = ..()
 	switch(dir)
 		if(NORTH)
@@ -40,7 +43,7 @@
 			src.pixel_x = 20
 			src.pixel_y = 0
 
-/obj/structure/sink/MouseDrop_T(var/obj/item/thing, var/mob/user)
+/obj/structure/hygiene/sink/MouseDrop_T(var/obj/item/thing, var/mob/user)
 	..()
 	if(!istype(thing) || !thing.is_open_container())
 		return ..()
@@ -54,7 +57,7 @@
 	thing.reagents.clear_reagents()
 	thing.update_icon()
 
-/obj/structure/sink/attack_hand(mob/user as mob)
+/obj/structure/hygiene/sink/attack_hand(mob/user as mob)
 	if (ishuman(user))
 		var/mob/living/carbon/human/H = user
 		var/obj/item/organ/external/temp = H.organs_by_name[BP_R_HAND]
@@ -86,7 +89,7 @@
 		visible_message(SPAN_WARNING("[user] stops washing their hands.."))
 	busy = 0
 
-/obj/structure/sink/attackby(obj/item/O as obj, mob/living/user as mob)
+/obj/structure/hygiene/sink/attackby(obj/item/O as obj, mob/living/user as mob)
 	if(busy)
 		to_chat(user, SPAN_WARNING("Someone's already washing here."))
 		return 0
@@ -117,16 +120,9 @@
 		to_chat(user, SPAN_NOTICE("You wet \the [O] in \the [src]."))
 		playsound(loc, 'sound/effects/slosh.ogg', 25, 1)
 		return 1
-	else if(default_deconstruction_wrench(O,user))
-		
-		to_chat(usr, SPAN_NOTICE("You begin to unsecure \the [src] from the floor."))
-		playsound(src.loc, 'sound/items/Ratchet.ogg', 75, 1)
-		if(do_after(usr, 30, src))
-			if(!src) 
-				return 1
-			to_chat(usr, SPAN_NOTICE("You finish dismantling \the [src]."))
-
-			return 1
+	else if(default_deconstruction_wrench(O,user) && src)
+		to_chat(usr, SPAN_NOTICE("You finish dismantling \the [src]."))
+		return 1
 	else if(istype(O, /obj/item))
 		to_chat(usr, SPAN_NOTICE("You start washing \the [O]."))
 		busy = 1
@@ -134,7 +130,7 @@
 		if(do_after(usr, 4 SECONDS, src))
 			if(!O)
 				visible_message(SPAN_WARNING("\The [objname] dissolves!"))
-			else if(user.get_active_hand() != O) 
+			else if(user.get_active_hand() != O)
 				visible_message(SPAN_WARNING("[user] stopped what they were doing.."))
 			else
 				O.clean_blood()
@@ -148,7 +144,7 @@
 	else
 		return ..()
 
-/obj/structure/sink/dismantle()
+/obj/structure/hygiene/sink/dismantle()
 	new frame_type(src.loc)
 	qdel(src)
 

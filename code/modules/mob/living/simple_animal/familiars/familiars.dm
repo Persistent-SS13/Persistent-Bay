@@ -12,7 +12,7 @@
 
 	min_gas = list(GAS_OXYGEN = 1)
 	max_gas = null
-	unsuitable_atoms_damage = 1
+	unsuitable_atmos_damage = 1
 
 	var/list/wizardy_spells = list()
 
@@ -39,6 +39,7 @@
 	melee_damage_upper = 15
 	attacktext = "pinches"
 	resistance = 9
+	can_escape = 1 //snip snip
 
 /*familiar version of the Pike w/o all the other hostile/carp stuff getting in the way (namely life)
 */
@@ -59,6 +60,7 @@
 	maxHealth = 100
 	melee_damage_lower = 10
 	melee_damage_upper = 10
+	can_escape = 1
 
 	min_gas = null
 
@@ -118,7 +120,9 @@
 	var/icon_rest //so that we can have resting little guys.
 
 /mob/living/simple_animal/familiar/pet/Life()
-	..()
+	. = ..()
+	if(!.)
+		return FALSE
 	if(!icon_rest)
 		return
 	if(stat == UNCONSCIOUS || resting)
@@ -143,6 +147,7 @@
 	maxHealth = 15
 	melee_damage_lower = 1
 	melee_damage_upper = 1
+	can_escape = 1
 	attacktext = "nibbles"
 
 	wizardy_spells = list(/spell/aoe_turf/smoke)

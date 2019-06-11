@@ -17,12 +17,13 @@
 	harm_intent_damage = 5
 	melee_damage_lower = 10
 	melee_damage_upper = 10
+	can_escape = 1
 	attacktext = "punched"
 	a_intent = I_HURT
-	var/corpse = /obj/effect/landmark/mobcorpse/syndicatesoldier
+	var/corpse = /obj/effect/landmark/corpse/syndicate
 	var/weapon1
 	var/weapon2
-	unsuitable_atoms_damage = 15
+	unsuitable_atmos_damage = 15
 	environment_smash = 1
 	faction = "syndicate"
 	status_flags = CANPUSH
@@ -82,7 +83,7 @@
 	icon_state = "syndicatemeleespace"
 	icon_living = "syndicatemeleespace"
 	name = "Syndicate Commando"
-	corpse = /obj/effect/landmark/mobcorpse/syndicatecommando
+	corpse = /obj/effect/landmark/corpse/syndicate
 	speed = 0
 
 /mob/living/simple_animal/hostile/syndicate/ranged
@@ -90,9 +91,9 @@
 	rapid = 1
 	icon_state = "syndicateranged"
 	icon_living = "syndicateranged"
-	casingtype = /obj/item/ammo_casing/a357
+	casingtype = /obj/item/ammo_casing/c357
 	projectilesound = 'sound/weapons/gunshot/gunshot_smg.ogg'
-	projectiletype = /obj/item/projectile/bullet/pistol/medium
+	projectiletype = /obj/item/projectile/bullet/pistol/c357
 
 	weapon1 = /obj/item/weapon/gun/projectile/revolver
 
@@ -103,7 +104,7 @@
 	min_gas = null
 	max_gas = null
 	minbodytemp = 0
-	corpse = /obj/effect/landmark/mobcorpse/syndicatecommando
+	corpse = /obj/effect/landmark/corpse/syndicate/commando
 	speed = 0
 
 /mob/living/simple_animal/hostile/viscerator

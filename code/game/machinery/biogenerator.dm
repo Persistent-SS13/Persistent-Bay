@@ -11,8 +11,8 @@
 	icon_state = "biogen-stand"
 	density = 1
 	anchored = 1
-	use_power = 1
 	idle_power_usage = 40
+	circuit_type = /obj/item/weapon/circuitboard/biogenerator
 	var/processing = 0
 	var/obj/item/weapon/reagent_containers/glass/beaker = null
 	var/points = 0
@@ -39,20 +39,22 @@
 
 /obj/machinery/biogenerator/New()
 	..()
+	ADD_SAVED_VAR(beaker)
+	ADD_SAVED_VAR(points)
+
+	ADD_SKIP_EMPTY(beaker)
+	ADD_SKIP_EMPTY(points)
+	
+/obj/machinery/biogenerator/SetupParts()
 	create_reagents(1000)
 	beaker = new /obj/item/weapon/reagent_containers/glass/bottle(src)
-
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/biogenerator(src)
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin(src)
-	component_parts += new /obj/item/weapon/stock_parts/manipulator(src)
-
-	RefreshParts()
+	..()
 
 /obj/machinery/biogenerator/on_reagent_change()			//When the reagents change, change the icon as well.
-	update_icon()
+	..()
+	queue_icon_update()
 
-/obj/machinery/biogenerator/update_icon()
+/obj/machinery/biogenerator/on_update_icon()
 	if(state == BG_NO_BEAKER)
 		icon_state = "biogen-empty"
 	else if(state == BG_READY || state == BG_COMPLETE)
@@ -203,7 +205,7 @@
 		SSnano.update_uis(src)
 		update_icon()
 		playsound(src.loc, 'sound/machines/blender.ogg', 50, 1)
-		use_power(S * 30)
+		use_power_oneoff(S * 30)
 		sleep((S + 15) / eat_eff)
 		state = BG_READY
 		update_icon()

@@ -20,19 +20,17 @@
 		if(HAS_TRANSFORMATION_MOVEMENT_HANDLER(target))
 			continue
 
-		ADD_TRANSFORMATION_MOVEMENT_HANDLER(target)
 		if(target.buckled)
 			target.buckled.unbuckle_mob()
 		spawn(0)
 			var/mobloc = get_turf(target.loc)
 			var/obj/effect/dummy/spell_jaunt/holder = new /obj/effect/dummy/spell_jaunt( mobloc )
-			var/atom/movable/overlay/animation = new /atom/movable/overlay( mobloc )
-			animation.name = "water"
+			var/atom/movable/overlay/animation = new /atom/movable/overlay(holder)
+			animation.SetName("water")
 			animation.set_density(0)
 			animation.anchored = 1
 			animation.icon = 'icons/mob/mob.dmi'
 			animation.layer = 5
-			animation.master = holder
 			target.ExtinguishMob()
 			if(target.buckled)
 				target.buckled = null
@@ -53,11 +51,9 @@
 					if(T)
 						if(target.forceMove(T))
 							break
-			DEL_TRANSFORMATION_MOVEMENT_HANDLER(target)
 			target.client.eye = target
 			qdel(animation)
 			qdel(holder)
-
 
 /spell/targeted/ethereal_jaunt/empower_spell()
 	if(!..())
@@ -69,9 +65,11 @@
 /spell/targeted/ethereal_jaunt/proc/jaunt_disappear(var/atom/movable/overlay/animation, var/mob/living/target)
 	animation.icon_state = "liquify"
 	flick("liquify",animation)
+	playsound(get_turf(target), 'sound/magic/ethereal_enter.ogg', 30)
 
 /spell/targeted/ethereal_jaunt/proc/jaunt_reappear(var/atom/movable/overlay/animation, var/mob/living/target)
 	flick("reappear",animation)
+	playsound(get_turf(target), 'sound/magic/ethereal_exit.ogg', 30)
 
 /spell/targeted/ethereal_jaunt/proc/jaunt_steam(var/mobloc)
 	var/datum/effect/effect/system/steam_spread/steam = new /datum/effect/effect/system/steam_spread()
@@ -95,23 +93,29 @@
 /obj/effect/dummy/spell_jaunt/Destroy()
 	// Eject contents if deleted somehow
 	for(var/atom/movable/AM in src)
-		AM.loc = get_turf(src)
+		AM.dropInto(loc)
 	return ..()
 
 /obj/effect/dummy/spell_jaunt/relaymove(var/mob/user, direction)
-	if (!src.canmove || reappearing) return
-	var/turf/newLoc = get_step(src,direction)
+	if (!canmove || reappearing) return
+	var/turf/newLoc = get_step(src, direction)
 	if(!(newLoc.turf_flags & TURF_FLAG_NOJAUNT))
-		loc = newLoc
+		forceMove(newLoc)
 		var/turf/T = get_turf(loc)
 		if(!T.contains_dense_objects())
 			last_valid_turf = T
 	else
 		to_chat(user, "<span class='warning'>Some strange aura is blocking the way!</span>")
-	src.canmove = 0
-	spawn(2) src.canmove = 1
+	canmove = 0
+	addtimer(CALLBACK(src, .proc/allow_move), 2)
+
+/obj/effect/dummy/spell_jaunt/proc/allow_move()
+	canmove = TRUE
 
 /obj/effect/dummy/spell_jaunt/ex_act(blah)
 	return
 /obj/effect/dummy/spell_jaunt/bullet_act(blah)
 	return
+
+/spell/targeted/ethereal_jaunt/tower
+	charge_max = 2

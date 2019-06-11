@@ -47,7 +47,7 @@
 	if(node)
 		node.update_underlays()
 
-/obj/machinery/atmospherics/pipe/cap/update_icon(var/safety = 0)
+/obj/machinery/atmospherics/pipe/cap/on_update_icon(var/safety = 0)
 	if(!check_icon_cache())
 		return
 
@@ -66,7 +66,7 @@
 
 	var/turf/T = src.loc			// hide if turf is not intact
 	if(level == 1 && !T.is_plating()) hide(1)
-	update_icon()
+	queue_icon_update()
 
 /obj/machinery/atmospherics/pipe/cap/visible
 	level = 2

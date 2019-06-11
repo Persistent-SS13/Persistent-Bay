@@ -50,6 +50,7 @@
 	item_state = "bgloves"
 	siemens_coefficient = 0.50
 	permeability_coefficient = 0.05
+	item_flags = ITEM_FLAG_THICKMATERIAL
 
 	cold_protection = HANDS
 	min_cold_protection_temperature = GLOVES_MIN_COLD_PROTECTION_TEMPERATURE
@@ -143,7 +144,7 @@
 /obj/item/clothing/gloves/latex/nitrile/modified
 	item_flags = ITEM_FLAG_PREMODIFIED
 
-/obj/item/clothing/gloves/duty
+/obj/item/clothing/gloves/thick/duty
 	desc = "These brown duty gloves are made from a durable synthetic."
 	name = "work gloves"
 	icon_state = "work"
@@ -163,7 +164,7 @@
 		DAM_RADS 	= 0,
 		DAM_STUN 	= 0)
 
-/obj/item/clothing/gloves/duty/modified
+/obj/item/clothing/gloves/thick/duty/modified
 	item_flags = ITEM_FLAG_PREMODIFIED
 
 /obj/item/clothing/gloves/tactical

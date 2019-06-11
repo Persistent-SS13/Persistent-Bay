@@ -20,7 +20,7 @@
 
 	hud_state = "wiz_swap"
 
-	cast_sound = 'sound/effects/bamf.ogg'
+	cast_sound = 'sound/magic/mandswap.ogg'
 
 /spell/targeted/swap/cast(var/list/targets, mob/user)
 	for(var/mob/T in targets)
@@ -37,6 +37,5 @@
 		return 0
 
 	amt_eye_blind += 2
-	amt_weakened += 5
 
-	return "This spell will now weaken and blind the target for a longer period of time."
+	return "This spell will now blind the target."

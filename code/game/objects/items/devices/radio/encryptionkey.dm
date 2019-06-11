@@ -1,4 +1,5 @@
-/obj/item/device/encryptionkey/
+
+/obj/item/device/encryptionkey
 	name = "standard encryption key"
 	desc = "An encryption key for a radio headset. Contains cypherkeys."
 	icon = 'icons/obj/radio.dmi'
@@ -124,6 +125,11 @@
 /obj/item/device/encryptionkey/entertainment
 	name = "entertainment radio key"
 	channels = list("Entertainment" = 1)
+
+/obj/item/device/encryptionkey/headset_mining
+	name = "prospector radio encryption key"
+	icon_state = "srv_cypherkey"
+	channels = list("Supply" = 1)
 
 /obj/item/device/encryptionkey/custom
 	name = "custom encryption key"

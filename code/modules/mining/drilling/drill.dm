@@ -1,7 +1,7 @@
 /obj/machinery/mining
 	icon = 'icons/obj/mining_drill.dmi'
 	anchored = 0
-	use_power = 0 //The drill takes power directly from a cell.
+	use_power = POWER_USE_OFF //The drill takes power directly from a cell.
 	density = 1
 	plane = ABOVE_HUMAN_PLANE
 	layer = ABOVE_HUMAN_LAYER //So it draws over mobs in the tile north of it.
@@ -302,8 +302,8 @@
 		return
 
 	//Drill through the flooring, if any.
-	if(istype(get_turf(src), /turf/simulated/asteroid))
-		var/turf/simulated/asteroid/T = get_turf(src)
+	if(istype(get_turf(src), /turf/simulated/floor/asteroid))
+		var/turf/simulated/floor/asteroid/T = get_turf(src)
 		if(!T.dug)
 			T.gets_dug()
 	else if(istype(get_turf(src), /turf/simulated/floor/exoplanet))

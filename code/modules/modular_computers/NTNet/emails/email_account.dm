@@ -23,6 +23,15 @@
 /datum/computer_file/data/email_account/New()
 	ntnet_global.email_accounts.Add(src)
 	..()
+	ADD_SAVED_VAR(inbox)
+	ADD_SAVED_VAR(outbox)
+	ADD_SAVED_VAR(spam)
+	ADD_SAVED_VAR(deleted)
+	ADD_SAVED_VAR(login)
+	ADD_SAVED_VAR(password)
+	ADD_SAVED_VAR(can_login)
+	ADD_SAVED_VAR(suspended)
+	ADD_SAVED_VAR(blocked)
 
 /datum/computer_file/data/email_account/Destroy()
 	ntnet_global.email_accounts.Remove(src)
@@ -75,7 +84,7 @@
 			ec.mail_received(received_message)
 	return 1
 
-// Address namespace (@internal-services.nt) for email addresses with special purpose only!.
+// Address namespace (@internal-services.net) for email addresses with special purpose only!.
 /datum/computer_file/data/email_account/service/
 	can_login = FALSE
 

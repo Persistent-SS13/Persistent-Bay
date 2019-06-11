@@ -9,7 +9,7 @@
 	density = 1
 	plane = EFFECTS_BELOW_LIGHTING_PLANE
 	layer = SINGULARITY_LAYER
-	light_range = 6
+	light_outer_range = 6
 	unacidable = 1 //Don't comment this out.
 
 	var/current_size = 1
@@ -123,7 +123,7 @@
 
 	switch (temp_allowed_size)
 		if (STAGE_ONE)
-			name = "gravitational singularity"
+			SetName("gravitational singularity")
 			desc = "A gravitational singularity."
 			current_size = STAGE_ONE
 			icon = 'icons/obj/singularity.dmi'
@@ -135,12 +135,12 @@
 			dissipate_delay = 10
 			dissipate_track = 0
 			dissipate_strength = 1
-			overlays = 0
+			overlays.Cut()
 			if(chained)
-				overlays = "chain_s1"
+				overlays = list("chain_s1")
 			visible_message("<span class='notice'>The singularity has shrunk to a rather pitiful size.</span>")
 		if (STAGE_TWO) //1 to 3 does not check for the turfs if you put the gens right next to a 1x1 then its going to eat them.
-			name = "gravitational singularity"
+			SetName("gravitational singularity")
 			desc = "A gravitational singularity."
 			current_size = STAGE_TWO
 			icon = 'icons/effects/96x96.dmi'
@@ -152,16 +152,16 @@
 			dissipate_delay = 5
 			dissipate_track = 0
 			dissipate_strength = 5
-			overlays = 0
+			overlays.Cut()
 			if(chained)
-				overlays = "chain_s3"
+				overlays = list("chain_s3")
 			if(growing)
 				visible_message("<span class='notice'>The singularity noticeably grows in size.</span>")
 			else
 				visible_message("<span class='notice'>The singularity has shrunk to a less powerful size.</span>")
 		if (STAGE_THREE)
 			if ((check_turfs_in(1, 2)) && (check_turfs_in(2, 2)) && (check_turfs_in(4, 2)) && (check_turfs_in(8, 2)))
-				name = "gravitational singularity"
+				SetName("gravitational singularity")
 				desc = "A gravitational singularity."
 				current_size = STAGE_THREE
 				icon = 'icons/effects/160x160.dmi'
@@ -173,16 +173,16 @@
 				dissipate_delay = 4
 				dissipate_track = 0
 				dissipate_strength = 20
-				overlays = 0
+				overlays.Cut()
 				if(chained)
-					overlays = "chain_s5"
+					overlays = list("chain_s5")
 				if(growing)
 					visible_message("<span class='notice'>The singularity expands to a reasonable size.</span>")
 				else
 					visible_message("<span class='notice'>The singularity has returned to a safe size.</span>")
 		if(STAGE_FOUR)
 			if ((check_turfs_in(1, 3)) && (check_turfs_in(2, 3)) && (check_turfs_in(4, 3)) && (check_turfs_in(8, 3)))
-				name = "gravitational singularity"
+				SetName("gravitational singularity")
 				desc = "A gravitational singularity."
 				current_size = STAGE_FOUR
 				icon = 'icons/effects/224x224.dmi'
@@ -194,15 +194,15 @@
 				dissipate_delay = 10
 				dissipate_track = 0
 				dissipate_strength = 10
-				overlays = 0
+				overlays.Cut()
 				if(chained)
-					overlays = "chain_s7"
+					overlays = list("chain_s7")
 				if(growing)
 					visible_message("<span class='warning'>The singularity expands to a dangerous size.</span>")
 				else
 					visible_message("<span class='notice'>Miraculously, the singularity reduces in size, and can be contained.</span>")
 		if(STAGE_FIVE) //This one also lacks a check for gens because it eats everything.
-			name = "gravitational singularity"
+			SetName("gravitational singularity")
 			desc = "A gravitational singularity."
 			current_size = STAGE_FIVE
 			icon = 'icons/effects/288x288.dmi'
@@ -212,15 +212,15 @@
 			grav_pull = 10
 			consume_range = 4
 			dissipate = 0 //It cant go smaller due to e loss.
-			overlays = 0
+			overlays.Cut()
 			if(chained)
-				overlays = "chain_s9"
+				overlays = list("chain_s9")
 			if(growing)
 				visible_message("<span class='danger'><font size='2'>The singularity has grown out of control!</font></span>")
 			else
 				visible_message("<span class='warning'>The singularity miraculously reduces in size and loses its supermatter properties.</span>")
 		if(STAGE_SUPER)//SUPERSINGULO
-			name = "super gravitational singularity"
+			SetName("super gravitational singularity")
 			desc = "A gravitational singularity with the properties of supermatter. <b>It has the power to destroy worlds.</b>"
 			current_size = STAGE_SUPER
 			icon = 'icons/effects/352x352.dmi'
@@ -232,7 +232,7 @@
 			dissipate = 0 //It cant go smaller due to e loss
 			event_chance = 25 //Events will fire off more often.
 			if(chained)
-				overlays = "chain_s9"
+				overlays = list("chain_s9")
 			visible_message("<span class='sinister'><font size='3'>You witness the creation of a destructive force that cannot possibly be stopped by human hands.</font></span>")
 
 	if (current_size == allowed_size)
@@ -414,10 +414,7 @@
 	for(var/mob/living/M in view(toxrange, src.loc))
 		if(M.status_flags & GODMODE)
 			continue
-		toxdamage = (toxdamage - (toxdamage*M.getarmor(null, DAM_RADS)))
-		M.apply_effect(toxdamage, DAM_BIO)
-	return
-
+		M.apply_damage(toxdamage, DAM_BIO, null, damage_flags = DAM_DISPERSED)
 
 /obj/singularity/proc/mezzer()
 	for(var/mob/living/carbon/M in oviewers(8, src))
@@ -463,7 +460,7 @@
 
 /obj/singularity/proc/on_capture()
 	chained = 1
-	overlays = 0
+	overlays.Cut()
 	move_self = 0
 	switch (current_size)
 		if(1)
@@ -479,7 +476,7 @@
 
 /obj/singularity/proc/on_release()
 	chained = 0
-	overlays = 0
+	overlays.Cut()
 	move_self = 1
 
 /obj/singularity/singularity_act(S, size)

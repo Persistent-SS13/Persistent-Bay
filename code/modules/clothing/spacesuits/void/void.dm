@@ -24,12 +24,12 @@
 	//Species-specific stuff.
 	species_restricted = list(SPECIES_HUMAN, SPECIES_IPC, SPECIES_PHOROSIAN)
 	sprite_sheets = list(
-		SPECIES_UNATHI = 'icons/mob/species/unathi/helmet.dmi',
-		SPECIES_SKRELL = 'icons/mob/species/skrell/helmet.dmi'
+		SPECIES_UNATHI = 'icons/mob/species/unathi/onmob_head_helmet_unathi.dmi',
+		SPECIES_SKRELL = 'icons/mob/species/skrell/onmob_head_skrell.dmi',
 		)
 	sprite_sheets_obj = list(
-		SPECIES_UNATHI = 'icons/obj/clothing/species/unathi/hats.dmi',
-		SPECIES_SKRELL = 'icons/obj/clothing/species/skrell/hats.dmi'
+		SPECIES_UNATHI = 'icons/obj/clothing/species/unathi/obj_head_unathi.dmi',
+		SPECIES_SKRELL = 'icons/obj/clothing/species/skrell/obj_head_skrell.dmi',
 		)
 
 	light_overlay = "helmet_light"
@@ -60,13 +60,12 @@
 
 	species_restricted = list(SPECIES_HUMAN, SPECIES_SKRELL, SPECIES_IPC, SPECIES_PHOROSIAN)
 	sprite_sheets = list(
-		SPECIES_UNATHI = 'icons/mob/species/unathi/suit.dmi',
-		SPECIES_SKRELL = 'icons/mob/species/skrell/suit.dmi'
+		SPECIES_UNATHI = 'icons/mob/species/unathi/onmob_suit_unathi.dmi',
+		SPECIES_SKRELL = 'icons/mob/species/skrell/onmob_suit_skrell.dmi',
 		)
-
 	sprite_sheets_obj = list(
-		SPECIES_UNATHI = 'icons/obj/clothing/species/unathi/suits.dmi',
-		SPECIES_SKRELL = 'icons/obj/clothing/species/skrell/suits.dmi'
+		SPECIES_UNATHI = 'icons/obj/clothing/species/unathi/obj_suit_unathi.dmi',
+		SPECIES_SKRELL = 'icons/obj/clothing/species/skrell/obj_suit_skrell.dmi',
 		)
 
 	//Breach thresholds, should ideally be inherited by most (if not all) voidsuits.
@@ -80,6 +79,8 @@
 	var/obj/item/weapon/tank/tank = null              // Deployable tank, if any.
 
 	action_button_name = "Toggle Helmet"
+	var/helmet_deploy_sound = 'sound/items/helmet_close.ogg'
+	var/helmet_retract_sound = 'sound/items/helmet_open.ogg'
 
 #define VOIDSUIT_INIT_EQUIPMENT(equipment_var, expected_path) \
 if(ispath(##equipment_var, ##expected_path )){\
@@ -139,6 +140,7 @@ else if(##equipment_var) {\
 			to_chat(M, "You are unable to deploy your suit's helmet as \the [H.head] is in the way.")
 		else if (H.equip_to_slot_if_possible(helmet, slot_head))
 			to_chat(M, "Your suit's helmet deploys with a hiss.")
+			playsound(loc, helmet_deploy_sound, 30)
 			helmet.canremove = 0
 
 	if(tank)
@@ -159,16 +161,14 @@ else if(##equipment_var) {\
 		H = helmet.loc
 		if(istype(H))
 			if(helmet && H.head == helmet)
-				H.drop_from_inventory(helmet)
-				helmet.forceMove(src)
+				H.drop_from_inventory(helmet, src)
 
 	if(boots)
 		boots.canremove = 1
 		H = boots.loc
 		if(istype(H))
 			if(boots && H.shoes == boots)
-				H.drop_from_inventory(boots)
-				boots.forceMove(src)
+				H.drop_from_inventory(boots, src)
 
 	if(tank)
 		tank.canremove = 1
@@ -195,8 +195,8 @@ else if(##equipment_var) {\
 	if(H.head == helmet)
 		to_chat(H, "<span class='notice'>You retract your suit helmet.</span>")
 		helmet.canremove = 1
-		H.drop_from_inventory(helmet)
-		helmet.forceMove(src)
+		playsound(loc, helmet_retract_sound, 30)
+		H.drop_from_inventory(helmet, src)
 	else
 		if(H.head)
 			to_chat(H, "<span class='danger'>You cannot deploy your helmet while wearing \the [H.head].</span>")
@@ -204,6 +204,7 @@ else if(##equipment_var) {\
 		if(H.equip_to_slot_if_possible(helmet, slot_head))
 			helmet.pickup(H)
 			helmet.canremove = 0
+			playsound(loc, helmet_deploy_sound, 30)
 			to_chat(H, "<span class='info'>You deploy your suit helmet, sealing you off from the world.</span>")
 	helmet.update_light(H)
 
@@ -248,15 +249,15 @@ else if(##equipment_var) {\
 
 			if(choice == tank)	//No, a switch doesn't work here. Sorry. ~Techhead
 				to_chat(user, "You pop \the [tank] out of \the [src]'s storage compartment.")
-				tank.forceMove(get_turf(src))
+				tank.dropInto(loc)
 				src.tank = null
 			else if(choice == helmet)
 				to_chat(user, "You detatch \the [helmet] from \the [src]'s helmet mount.")
-				helmet.forceMove(get_turf(src))
+				helmet.dropInto(loc)
 				src.helmet = null
 			else if(choice == boots)
 				to_chat(user, "You detatch \the [boots] from \the [src]'s boot mounts.")
-				boots.forceMove(get_turf(src))
+				boots.dropInto(loc)
 				src.boots = null
 		else
 			to_chat(user, "\The [src] does not have anything installed.")
@@ -265,18 +266,18 @@ else if(##equipment_var) {\
 		if(helmet)
 			to_chat(user, "\The [src] already has a helmet installed.")
 		else
+			if(!user.unEquip(W, src))
+				return
 			to_chat(user, "You attach \the [W] to \the [src]'s helmet mount.")
-			user.drop_item()
-			W.forceMove(src)
 			src.helmet = W
 		return
 	else if(istype(W,/obj/item/clothing/shoes/magboots))
 		if(boots)
 			to_chat(user, "\The [src] already has magboots installed.")
 		else
+			if(!user.unEquip(W, src))
+				return
 			to_chat(user, "You attach \the [W] to \the [src]'s boot mounts.")
-			user.drop_item()
-			W.forceMove(src)
 			boots = W
 		return
 	else if(istype(W,/obj/item/weapon/tank))
@@ -285,9 +286,9 @@ else if(##equipment_var) {\
 		else if(istype(W,/obj/item/weapon/tank/phoron))
 			to_chat(user, "\The [W] cannot be inserted into \the [src]'s storage compartment.")
 		else
+			if(!user.unEquip(W, src))
+				return
 			to_chat(user, "You insert \the [W] into \the [src]'s storage compartment.")
-			user.drop_item()
-			W.forceMove(src)
 			tank = W
 		return
 

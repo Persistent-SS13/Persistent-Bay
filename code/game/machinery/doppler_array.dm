@@ -53,6 +53,8 @@ GLOBAL_LIST_EMPTY(doppler_arrays)
 	icon = 'icons/obj/machines/research.dmi'
 	icon_state = "tdoppler"
 	density = TRUE
+	circuit_type = /obj/item/weapon/circuitboard/doppler_array
+	max_health = 100
 	var/cooldown = 10
 	var/next_announce = 0
 	var/integrated = FALSE

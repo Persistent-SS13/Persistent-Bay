@@ -5,9 +5,9 @@
 	icon_state = "body_scanner_0"
 	density = TRUE
 	anchored = TRUE
-	use_power = POWER_USE_IDLE
 	idle_power_usage = 60
 	active_power_usage = 10000	//10 kW. It's a big all-body scanner.
+	circuit_type = /obj/item/weapon/circuitboard/bodyscanner
 	var/mob/living/carbon/human/occupant
 	var/locked
 
@@ -18,23 +18,11 @@
 
 	ADD_SKIP_EMPTY(occupant)
 
-/obj/machinery/bodyscanner/Initialize()
-	. = ..()
-	if(!map_storage_loaded)
-		component_parts = list(
-			new /obj/item/weapon/circuitboard/bodyscanner(src),
-			new /obj/item/weapon/stock_parts/scanning_module(src),
-			new /obj/item/weapon/stock_parts/scanning_module(src),
-			new /obj/item/weapon/stock_parts/manipulator(src),
-			new /obj/item/weapon/stock_parts/manipulator(src),
-			new /obj/item/weapon/stock_parts/console_screen(src))
-	RefreshParts()
 
-/obj/machinery/bodyscanner/Destroy()
-	if(occupant)
-		occupant.dropInto(loc)
-		occupant = null
+/obj/machinery/bodyscanner/examine(mob/user)
 	. = ..()
+	if (. && occupant && user.Adjacent(src))
+		occupant.examine(user)
 
 /obj/machinery/bodyscanner/relaymove(mob/user as mob)
 	..()
@@ -68,7 +56,7 @@
 /obj/machinery/bodyscanner/proc/go_out()
 	if ((!( src.occupant ) || src.locked))
 		return
-	drop_contents()	
+	drop_contents()
 	if (src.occupant.client)
 		src.occupant.client.eye = src.occupant.client.mob
 		src.occupant.client.perspective = MOB_PERSPECTIVE
@@ -76,6 +64,7 @@
 	src.occupant = null
 	update_use_power(POWER_USE_IDLE)
 	update_icon()
+	SetName(initial(name))
 
 /obj/machinery/bodyscanner/attackby(obj/item/grab/normal/G, user as mob)
 	if(default_deconstruction_screwdriver(user, G))
@@ -111,18 +100,19 @@
 	update_use_power(POWER_USE_ACTIVE)
 	update_icon()
 	drop_contents()
+	SetName("[name] ([occupant])")
 
 	src.add_fingerprint(user)
 	return TRUE
 
-/obj/machinery/bodyscanner/update_icon()
+/obj/machinery/bodyscanner/on_update_icon()
 	if(!occupant)
 		src.icon_state = "body_scanner_0"
 	else
 		src.icon_state = "body_scanner_1"
 
 //Like grap-put, but for mouse-drop.
-/obj/machinery/bodyscanner/MouseDrop_T(var/mob/target, var/mob/user)	
+/obj/machinery/bodyscanner/MouseDrop_T(var/mob/target, var/mob/user)
 	if(!CanMouseDrop(target, user) || !istype(target))
 		return FALSE
 	user.visible_message("<span class='notice'>\The [user] begins placing \the [target] into \the [src].</span>", "<span class='notice'>You start placing \the [target] into \the [src].</span>")
@@ -131,22 +121,8 @@
 	if(!user_can_move_target_inside(target, user))
 		return
 
-/obj/machinery/bodyscanner/ex_act(severity)
-	switch(severity)
-		if(1.0)
-			for(var/atom/movable/A as mob|obj in src)
-				A.dropInto(loc)
-				A.ex_act(severity)				
-		if(2.0)
-			if (prob(50))
-				for(var/atom/movable/A as mob|obj in src)
-					A.dropInto(loc)
-					A.ex_act(severity)
-		if(3.0)
-			if (prob(25))
-				for(var/atom/movable/A as mob|obj in src)
-					A.dropInto(loc)
-					A.ex_act(severity)
-	return ..()
-
-
+/obj/machinery/bodyscanner/Destroy()
+	if(occupant)
+		occupant.dropInto(loc)
+		occupant = null
+	. = ..()

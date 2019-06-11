@@ -9,11 +9,7 @@
 	min_broken_damage = 45
 	max_health = 70
 	relative_size = 60
-	scarring_effect = 4
 
-/obj/item/organ/internal/liver/robotize()
-	. = ..()
-	icon_state = "liver-prosthetic"
 
 /obj/item/organ/internal/liver/Process()
 
@@ -43,16 +39,13 @@
 		filter_effect += 1
 	else if(owner.chem_effects[CE_ANTITOX])
 		filter_effect += 1
-
 	// If you're not filtering well, you're in trouble. Ammonia buildup to toxic levels and damage from alcohol
 	if(filter_effect < 2)
-		if(owner.reagents.get_reagent_amount(/datum/reagent/ammonia) < 6)
-			owner.reagents.add_reagent(/datum/reagent/ammonia, REM)
 		if(owner.chem_effects[CE_ALCOHOL])
 			owner.adjustToxLoss(0.5 * max(2 - filter_effect, 0) * (owner.chem_effects[CE_ALCOHOL_TOXIC] + 0.5 * owner.chem_effects[CE_ALCOHOL]))
 
 	if(owner.chem_effects[CE_ALCOHOL_TOXIC])
-		take_damage(owner.chem_effects[CE_ALCOHOL_TOXIC], silent=prob(90)) // Chance to warn them
+		take_internal_damage(owner.chem_effects[CE_ALCOHOL_TOXIC], silent=prob(90)) // Chance to warn them
 
 	// Heal a bit if needed and we're not busy. This allows recovery from low amounts of toxloss.
 	if(!owner.chem_effects[CE_ALCOHOL] && !owner.chem_effects[CE_TOXIN] && !owner.radiation && isdamaged())
@@ -62,11 +55,7 @@
 			heal_damage(0.3)
 
 	//Blood regeneration if there is some space
-	var/blood_volume_raw = owner.vessel.get_reagent_amount(/datum/reagent/blood)
-	if(blood_volume_raw < species.blood_volume)
-		var/datum/reagent/blood/B = owner.get_blood(owner.vessel)
-		if(istype(B))
-			B.volume += 0.1 + owner.chem_effects[CE_BLOODRESTORE] // regenerate blood VERY slowly
+	owner.regenerate_blood(0.1 + owner.chem_effects[CE_BLOODRESTORE])
 
 	// Blood loss or liver damage make you lose nutriments
 	var/blood_volume = owner.get_blood_volume()
@@ -76,6 +65,18 @@
 		else if(owner.nutrition >= 200)
 			owner.nutrition -= 3
 
-	if(owner.chem_effects[CE_ALCOHOL] && scarred) // If your liver is messed up, you can't hold liqour very well
-		if(prob(scarred*scarred)) // Scarring 1 == 1%, Scarring 2 == 4%, Scarring 3 == 9%
+	var/scarring = get_scarring_level()
+	if(owner.chem_effects[CE_ALCOHOL] && scarring) // If your liver is messed up, you can't hold liqour very well
+		if(prob(scarring*scarring)) // Scarring 1 == 1%, Scarring 2 == 4%, Scarring 3 == 9%
 			spawn owner.vomit()
+
+//We got it covered in Process with more detailed thing
+/obj/item/organ/internal/liver/handle_regeneration()
+	return
+
+/obj/item/organ/internal/liver/on_update_icon()
+	. = ..()
+	if(BP_IS_ROBOTIC(src))
+		icon_state = "[initial(icon_state)]-prosthetic"
+	else
+		icon_state = initial(icon_state)

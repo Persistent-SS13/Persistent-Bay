@@ -15,13 +15,14 @@ GLOBAL_LIST_INIT(weighted_minerals_sparse, \
 		MATERIAL_PHOSPHORITE =  3, \
 		MATERIAL_ROCK_SALT =    3, \
 		MATERIAL_POTASH =       3, \
-		MATERIAL_BAUXITE =      5,	\
-		MATERIAL_TUNGSTEN = 	 8, \
-		MATERIAL_TETRAHEDRITE =	10,  \
-		MATERIAL_FREIBERGITE =	10,  \
-		MATERIAL_ILMENITE		= 3,\
-		MATERIAL_CASSITERITE		= 3,\
-		MATERIAL_SPHALERITE			= 3,\
+		MATERIAL_BAUXITE =      3, \
+		MATERIAL_RUTILE =       3, \
+		MATERIAL_TUNGSTEN =     8, \
+		MATERIAL_TETRAHEDRITE =	10, \
+		MATERIAL_FREIBERGITE =	10, \
+		MATERIAL_ILMENITE =      3, \
+		MATERIAL_CASSITERITE =   3, \
+		MATERIAL_SPHALERITE =    3,\
 	))
 
 GLOBAL_LIST_INIT(weighted_minerals_rich, \
@@ -42,19 +43,20 @@ GLOBAL_LIST_INIT(weighted_minerals_rich, \
 		MATERIAL_ROCK_SALT =    1, \
 		MATERIAL_POTASH =       1, \
 		MATERIAL_BAUXITE =      3, \
+		MATERIAL_RUTILE =       1, \
 		MATERIAL_TUNGSTEN =    10, \
-		MATERIAL_TETRAHEDRITE = 		 2,  \
-		MATERIAL_FREIBERGITE = 		 2,  \
-		MATERIAL_ILMENITE		= 10,\
-		MATERIAL_CASSITERITE		= 10,\
-		MATERIAL_SPHALERITE			= 10,\
+		MATERIAL_TETRAHEDRITE = 2, \
+		MATERIAL_FREIBERGITE =  2, \
+		MATERIAL_ILMENITE =    10,\
+		MATERIAL_CASSITERITE = 10,\
+		MATERIAL_SPHALERITE =  10,\
 	))
 
 /datum/random_map/automata/cave_system
 	iterations = 5
 	descriptor = "moon caves"
 	wall_type =  /turf/simulated/mineral
-	floor_type = /turf/simulated/asteroid
+	floor_type = /turf/simulated/floor/asteroid
 	target_turf_type = /turf/unsimulated/mask
 
 	var/mineral_turf = /turf/simulated/mineral/random
@@ -150,7 +152,7 @@ GLOBAL_LIST_INIT(weighted_minerals_rich, \
 
 		num_applied += 1
 		T.ChangeTurf(new_path, minerals)
-
+		get_additional_spawns(map[tmp_cell], T)
 		CHECK_TICK
 
 	game_log("ASGEN", "Applied [num_applied] turfs.")

@@ -3,6 +3,7 @@
 	filedesc = "Power Monitoring"
 	nanomodule_path = /datum/nano_module/power_monitor/
 	program_icon_state = "power_monitor"
+	program_key_state = "power_key"
 	program_menu_icon = "battery-3"
 	extended_desc = "This program connects to sensors to provide information about electrical systems"
 	ui_header = "power_norm.gif"
@@ -10,7 +11,8 @@
 	requires_ntnet = TRUE
 	network_destination = "power monitoring system"
 	size = 9
-	var/has_alert = FALSE
+	category = PROG_ENG
+	var/has_alert = 0
 
 /datum/computer_file/program/power_monitor/process_tick()
 	..()

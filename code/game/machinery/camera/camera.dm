@@ -178,6 +178,7 @@
 				if(stat & BROKEN)
 					assembly.state = 2
 					to_chat(user, "<span class='notice'>You repaired \the [src] frame.</span>")
+					cancelCameraAlarm()
 				else
 					assembly.state = 1
 					to_chat(user, "<span class='notice'>You cut \the [src] free from the wall.</span>")
@@ -187,10 +188,9 @@
 			return
 
 	// OTHER
-	else if (can_use() && (istype(W, /obj/item/weapon/paper) || istype(W, /obj/item/device/pda)) && isliving(user))
+	else if (can_use() && (istype(W, /obj/item/weapon/paper) && isliving(user)))
 		var/mob/living/U = user
 		var/obj/item/weapon/paper/X = null
-		var/obj/item/device/pda/P = null
 
 		var/itemname = ""
 		var/info = ""
@@ -198,10 +198,6 @@
 			X = W
 			itemname = X.name
 			info = X.info
-		else
-			P = W
-			itemname = P.name
-			info = P.notehtml
 		to_chat(U, "You hold \a [itemname] up to the camera ...")
 		for(var/mob/living/silicon/ai/O in GLOB.living_mob_list_)
 			if(!O.client) continue
@@ -241,6 +237,7 @@
 /obj/machinery/camera/broken()
 	wires.RandomCutAll()
 	triggerCameraAlarm()
+	queue_icon_update()
 	update_coverage()
 	..()
 	//sparks
@@ -260,6 +257,18 @@
 	return 0
 
 /obj/machinery/camera/update_icon()
+	pixel_x = 0
+	pixel_y = 0
+
+	var/turf/T = get_step(get_turf(src), turn(src.dir, 180))
+	if(istype(T, /turf/simulated/wall))
+		if(dir == SOUTH)
+			pixel_y = 21
+		else if(dir == WEST)
+			pixel_x = 10
+		else if(dir == EAST)
+			pixel_x = -10
+
 	if (!status || isbroken())
 		icon_state = "[initial(icon_state)]1"
 	else if (stat & EMPED)
@@ -415,18 +424,16 @@
 	cam["name"] = sanitize(c_tag)
 	cam["deact"] = !can_use()
 	cam["camera"] = "\ref[src]"
-	cam["x"] = x
-	cam["y"] = y
-	cam["z"] = z
+	cam["x"] = get_x(src)
+	cam["y"] = get_y(src)
+	cam["z"] = get_z(src)
 	return cam
 
 // Resets the camera's wires to fully operational state. Used by one of Malfunction abilities.
 /obj/machinery/camera/proc/reset_wires()
 	if(!wires)
 		return
-	if (stat & BROKEN) // Fix the camera
-		stat &= ~BROKEN
+	set_broken(FALSE) // Fixes the camera and updates the icon.
 	wires.CutAll()
 	wires.MendAll()
-	update_icon()
 	update_coverage()

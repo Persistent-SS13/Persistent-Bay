@@ -20,6 +20,9 @@
 #define SHEETS *SHEET_MATERIAL_AMOUNT
 #define SHEET *SHEET_MATERIAL_AMOUNT
 
+#define IMPRINTER	0x1	//For circuits. Uses glass/chemicals.
+#define CHASSIS		0x8	//For protolathe, but differently
+
 #define PROTOLATHE	1
 #define CIRCUITFAB	2
 #define MECHFAB		3

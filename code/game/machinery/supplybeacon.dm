@@ -15,9 +15,10 @@
 	user.visible_message("<span class='notice'>\The [user] begins setting up \the [src].</span>")
 	if(!do_after(user, deploy_time, src))
 		return
+	if(!user.unEquip(src))
+		return
 	var/obj/S = new deploy_path(get_turf(user))
 	user.visible_message("<span class='notice'>\The [user] deploys \the [S].</span>")
-	user.unEquip(src)
 	qdel(src)
 
 /obj/machinery/power/supply_beacon
@@ -57,7 +58,7 @@
 /obj/machinery/power/supply_beacon/attack_hand(var/mob/user)
 
 	if(expended)
-		use_power = 0
+		update_use_power(POWER_USE_OFF)
 		to_chat(user, "<span class='warning'>\The [src] has used up its charge.</span>")
 		return
 
@@ -77,9 +78,9 @@
 	if(surplus() < 500)
 		if(user) to_chat(user, "<span class='notice'>The connected wire doesn't have enough current.</span>")
 		return
-	set_light(3, 3, "#00ccaa")
+	set_light(1, 0.5, 2, 2, "#00ccaa")
 	icon_state = "beacon_active"
-	use_power = 1
+	update_use_power(POWER_USE_IDLE)
 	if(user) to_chat(user, "<span class='notice'>You activate the beacon. The supply drop will be dispatched soon.</span>")
 
 /obj/machinery/power/supply_beacon/proc/deactivate(var/mob/user, var/permanent)
@@ -89,7 +90,7 @@
 	else
 		icon_state = "beacon"
 	set_light(0)
-	use_power = 0
+	update_use_power(POWER_USE_OFF)
 	target_drop_time = null
 	if(user) to_chat(user, "<span class='notice'>You deactivate the beacon.</span>")
 

@@ -101,14 +101,6 @@
 					if(slot_wear_mask)
 						if(H.wear_mask) H.wear_mask.screen_loc = null
 
-/datum/hud/proc/hands_inventory_update()
-	if(!mymob)
-		return
-
-	if(ishuman(mymob))
-		var/mob/living/carbon/human/H = mymob
-		if(H.l_hand) H.l_hand.screen_loc = ui_lhand
-		if(H.r_hand) H.r_hand.screen_loc = ui_rhand
 
 /datum/hud/proc/persistant_inventory_update()
 	if(!mymob)
@@ -154,6 +146,7 @@
 	var/ui_style = ui_style2icon(mymob.client.prefs.UI_style)
 	var/ui_color = mymob.client.prefs.UI_style_color
 	var/ui_alpha = mymob.client.prefs.UI_style_alpha
+
 
 	FinalizeInstantiation(ui_style, ui_color, ui_alpha)
 
@@ -260,11 +253,7 @@
 	update_action_buttons()
 
 /mob/proc/add_click_catcher()
-	if(!client.void)
-		client.void = create_click_catcher()
-	if(!client.screen)
-		client.screen = list()
-	client.screen |= client.void
+	client.screen |= GLOB.click_catchers
 
 /mob/new_player/add_click_catcher()
 	return

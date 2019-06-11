@@ -18,7 +18,7 @@
 	ammonia		spawn_reagent = /datum/reagent/ammonia
 	acetone		spawn_reagent = /datum/reagent/acetone
 	sodium		spawn_reagent = /datum/reagent/sodium
-	aluminum	spawn_reagent = /datum/reagent/aluminum
+	aluminium	spawn_reagent = /datum/reagent/aluminium
 	silicon		spawn_reagent = /datum/reagent/silicon
 	phosphorus	spawn_reagent = /datum/reagent/phosphorus
 	sulfur		spawn_reagent = /datum/reagent/sulfur
@@ -49,7 +49,7 @@
 	// Bar, soft
 	ice			spawn_reagent = /datum/reagent/drink/ice
 	tea			spawn_reagent = /datum/reagent/drink/tea
-	icetea		spawn_reagent = /datum/reagent/drink/tea/icetea
+	green_tea	spawn_reagent = /datum/reagent/drink/tea/green
 	cola		spawn_reagent = /datum/reagent/drink/space_cola
 	smw			spawn_reagent = /datum/reagent/drink/spacemountainwind
 	dr_gibb		spawn_reagent = /datum/reagent/drink/dr_gibb

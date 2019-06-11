@@ -7,9 +7,11 @@
 	anchored = TRUE
 	w_class = ITEM_SIZE_HUGE
 	canhear_range = 2
-	atom_flags = ATOM_FLAG_NO_BLOOD
+	atom_flags = ATOM_FLAG_NO_TEMP_CHANGE | ATOM_FLAG_NO_BLOOD
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	layer = ABOVE_WINDOW_LAYER
+	cell = null
+	power_usage = 0
 	var/number = 0
 	var/last_tick //used to delay the powercheck
 	var/buildstage = 0
@@ -58,6 +60,7 @@
 /obj/item/device/radio/intercom/Initialize()
 	. = ..()
 	START_PROCESSING(SSobj, src)
+	queue_icon_update()
 
 /obj/item/device/radio/intercom/department/medbay/Initialize()
 	. = ..()
@@ -116,9 +119,6 @@
 /obj/item/device/radio/intercom/receive_range(freq, level, faction)
 	if (!on)
 		return -1
-//	if(!faction || faction == "")
-//		if(!public_mode)
-//			return -1
 	if(faction && faction != "" && faction != faction_uid)
 		return -1
 	if(!(0 in level))
@@ -136,6 +136,7 @@
 /obj/item/device/radio/intercom/Process()
 	if(((world.timeofday - last_tick) > 30) || ((world.timeofday - last_tick) < 0))
 		last_tick = world.timeofday
+		var/old_on = on
 
 		if(!src.loc)
 			on = FALSE
@@ -146,10 +147,28 @@
 			else
 				on = A.powered(EQUIP) // set "on" to the power status
 
-		if(!on)
-			icon_state = "intercom-p"
-		else
-			icon_state = "intercom"
+		if (on != old_on)
+			queue_icon_update()
+
+/obj/item/device/radio/intercom/on_update_icon()
+	if(!on)
+		icon_state = "intercom-p"
+	else if (broadcasting && listening)
+		icon_state = "intercom_11"
+	else if (broadcasting)
+		icon_state = "intercom_10"
+	else if (listening)
+		icon_state = "intercom_01"
+	else
+		icon_state = "intercom_00"
+
+/obj/item/device/radio/intercom/ToggleBroadcast()
+	..()
+	update_icon()
+
+/obj/item/device/radio/intercom/ToggleReception()
+	..()
+	update_icon()
 
 /obj/item/device/radio/intercom/broadcasting
 	broadcasting = TRUE
@@ -182,7 +201,7 @@
 	wires.CutWireIndex(WIRE_TRANSMIT)
 
 /obj/item/device/radio/intercom/attackby(obj/item/weapon/W as obj, mob/user as mob, params)
-	if(istype(W, /obj/item/device/reagent_scanner))
+	if(istype(W, /obj/item/device/scanner/reagent))
 		return
 	if(istype(W, /obj/item/weapon/tool/wrench))
 		to_chat(user, "<span class='notice'>You detach \the [src] from the wall.</span>")
@@ -213,10 +232,10 @@
 			src.pixel_x = 0
 			src.pixel_y = 24
 		if(EAST)
-			src.pixel_x = -24
+			src.pixel_x = -22
 			src.pixel_y = 0
 		if(WEST)
-			src.pixel_x = 24
+			src.pixel_x = 22
 			src.pixel_y = 0
 	if(!circuitry_installed)
 		icon_state="intercom-frame"

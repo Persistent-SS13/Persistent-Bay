@@ -87,9 +87,9 @@
 		else if( href_list["auth"] )
 			var/mob/M = usr
 			var/obj/item/weapon/card/id/I = M.equipped()
-			if (istype(I, /obj/item/device/pda))
-				var/obj/item/device/pda/pda = I
-				I = pda.id
+			if (istype(I, /obj/item/modular_computer/pda))
+				var/obj/item/modular_computer/pda/pda = I
+				I = pda.GetIdCard()
 			if (I && istype(I))
 				if(access_captain in I.access)
 					authorised = 1

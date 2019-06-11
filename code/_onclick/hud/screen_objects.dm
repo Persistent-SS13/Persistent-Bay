@@ -92,61 +92,60 @@
 	var/list/PL = params2list(params)
 	var/icon_x = text2num(PL["icon-x"])
 	var/icon_y = text2num(PL["icon-y"])
-	var/old_selecting = selecting //We're only going to update_icon() if there's been a change
+	var/new_selecting
 
 	switch(icon_y)
 		if(1 to 3) //Feet
 			switch(icon_x)
 				if(10 to 15)
-					selecting = BP_R_FOOT
+					new_selecting = BP_R_FOOT
 				if(17 to 22)
-					selecting = BP_L_FOOT
+					new_selecting = BP_L_FOOT
 				else
 					return 1
 		if(4 to 9) //Legs
 			switch(icon_x)
 				if(10 to 15)
-					selecting = BP_R_LEG
+					new_selecting = BP_R_LEG
 				if(17 to 22)
-					selecting = BP_L_LEG
+					new_selecting = BP_L_LEG
 				else
 					return 1
 		if(10 to 13) //Hands and groin
 			switch(icon_x)
 				if(8 to 11)
-					selecting = BP_R_HAND
+					new_selecting = BP_R_HAND
 				if(12 to 20)
-					selecting = BP_GROIN
+					new_selecting = BP_GROIN
 				if(21 to 24)
-					selecting = BP_L_HAND
+					new_selecting = BP_L_HAND
 				else
 					return 1
 		if(14 to 22) //Chest and arms to shoulders
 			switch(icon_x)
 				if(8 to 11)
-					selecting = BP_R_ARM
+					new_selecting = BP_R_ARM
 				if(12 to 20)
-					selecting = BP_CHEST
+					new_selecting = BP_CHEST
 				if(21 to 24)
-					selecting = BP_L_ARM
+					new_selecting = BP_L_ARM
 				else
 					return 1
 		if(23 to 30) //Head, but we need to check for eye or mouth
 			if(icon_x in 12 to 20)
-				selecting = BP_HEAD
+				new_selecting = BP_HEAD
 				switch(icon_y)
 					if(23 to 24)
 						if(icon_x in 15 to 17)
-							selecting = BP_MOUTH
+							new_selecting = BP_MOUTH
 					if(26) //Eyeline, eyes are on 15 and 17
 						if(icon_x in 14 to 18)
-							selecting = BP_EYES
+							new_selecting = BP_EYES
 					if(25 to 27)
 						if(icon_x in 15 to 17)
-							selecting = BP_EYES
+							new_selecting = BP_EYES
 
-	if(old_selecting != selecting)
-		update_icon()
+	set_selected_zone(new_selecting)
 	return 1
 
 /obj/screen/zone_sel/proc/set_selected_zone(bodypart)
@@ -154,8 +153,9 @@
 	selecting = bodypart
 	if(old_selecting != selecting)
 		update_icon()
+		return TRUE
 
-/obj/screen/zone_sel/update_icon()
+/obj/screen/zone_sel/on_update_icon()
 	overlays.Cut()
 	overlays += image('icons/mob/zone_sel.dmi', "[selecting]")
 
@@ -181,7 +181,7 @@
 	update_icon()
 	usr.a_intent = intent
 
-/obj/screen/intent/update_icon()
+/obj/screen/intent/on_update_icon()
 	icon_state = "intent_[intent]"
 
 /obj/screen/Click(location, control, params)
@@ -266,34 +266,10 @@
 									if (!isnull(t.manipulated_by) && t.manipulated_by != C.real_name && findtext(t.desc,breathes))
 										contents.Add(t.air_contents.total_moles)	//Someone messed with the tank and put unknown gasses
 										continue					//in it, so we're going to believe the tank is what it says it is
-									switch(breathes)
-																		//These tanks we're sure of their contents
-										if(GAS_NITROGEN) 							//So we're a bit more picky about them.
-
-											if(t.air_contents.gas[GAS_NITROGEN] && !t.air_contents.gas[GAS_OXYGEN])
-												contents.Add(t.air_contents.gas[GAS_NITROGEN])
-											else
-												contents.Add(0)
-
-										if (GAS_OXYGEN)
-											if(t.air_contents.gas[GAS_OXYGEN] && !t.air_contents.gas[GAS_PHORON])
-												contents.Add(t.air_contents.gas[GAS_OXYGEN])
-											else
-												contents.Add(0)
-										if (GAS_PHORON)
-											if(t.air_contents.gas[GAS_PHORON] && !t.air_contents.gas[GAS_OXYGEN])
-												contents.Add(t.air_contents.gas[GAS_PHORON])
-											else
-												contents.Add(0)
-
-										// No races breath this, but never know about downstream servers.
-										if (GAS_CO2)
-											if(t.air_contents.gas[GAS_CO2] && !t.air_contents.gas[GAS_PHORON])
-												contents.Add(t.air_contents.gas[GAS_CO2])
-											else
-												contents.Add(0)
-
-
+									if(t.air_contents.gas[breathes] /*&& !t.air_contents.gas["phoron"]*/) //Phorosian say hi
+										contents.Add(t.air_contents.gas[breathes])
+									else
+										contents.Add(0)
 								else
 									//no tank so we set contents to 0
 									contents.Add(0)
@@ -322,7 +298,7 @@
 								if(C.internals)
 									C.internals.icon_state = "internal1"
 							else
-								to_chat(C, "<span class='notice'>You don't have a[breathes==GAS_OXYGEN ? "n oxygen" : addtext(" ",breathes)] tank.</span>")
+								to_chat(C, "<span class='notice'>You don't have \a [breathes] tank.</span>")
 		if("act_intent")
 			usr.a_intent_change("right")
 
@@ -388,7 +364,7 @@
 	// We don't even know if it's a middle click
 	if(!usr.canClick())
 		return 1
-	if(usr.stat || usr.paralysis || usr.stunned || usr.weakened)
+	if(usr.incapacitated())
 		return 1
 	if (istype(usr.loc,/obj/mecha)) // stops inventory actions in a mech
 		return 1
@@ -396,11 +372,17 @@
 		if("r_hand")
 			if(iscarbon(usr))
 				var/mob/living/carbon/C = usr
-				C.activate_hand("r")
+				if(C.hand)
+					C.activate_hand("r")
+				else
+					C.attack_empty_hand(BP_R_HAND)
 		if("l_hand")
 			if(iscarbon(usr))
 				var/mob/living/carbon/C = usr
-				C.activate_hand("l")
+				if(!C.hand)
+					C.activate_hand("l")
+				else
+					C.attack_empty_hand(BP_L_HAND)
 		if("swap")
 			usr:swap_hand()
 		if("hand")

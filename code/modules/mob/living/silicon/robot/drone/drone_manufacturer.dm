@@ -12,7 +12,6 @@
 
 	density = 1
 	anchored = 1
-	use_power = 1
 	idle_power_usage = 20
 	active_power_usage = 5000
 
@@ -34,7 +33,7 @@
 	..()
 
 /obj/machinery/drone_fabricator/power_change()
-	..()
+	. = ..()
 	if (stat & NOPOWER)
 		icon_state = "drone_fab_nopower"
 
@@ -103,7 +102,7 @@
 		to_chat(user, "<span class='danger'>That verb is not currently permitted.</span>")
 		return
 
-	if(jobban_isbanned(user,"Cyborg"))
+	if(jobban_isbanned(user,"Robot"))
 		to_chat(user, "<span class='danger'>You are banned from playing synthetics and cannot spawn as a drone.</span>")
 		return
 

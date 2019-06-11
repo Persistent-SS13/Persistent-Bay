@@ -18,25 +18,24 @@
 	dir = EAST
 	density = 1
 	var/obj/structure/m_tray/connected = null
-	anchored = 1.0
+	anchored = 1
 	mass = 20
 	max_health = 140
+	matter = list(MATERIAL_STEEL = 10 SHEETS)
 
 /obj/structure/morgue/Destroy()
 	if(connected)
-		qdel(connected)
-		connected = null
+		QDEL_NULL(connected)
 	return ..()
 
-/obj/structure/morgue/proc/update()
-	if (src.connected)
-		src.icon_state = "morgue0"
+/obj/structure/morgue/on_update_icon()
+	. = ..()
+	if (connected)
+		icon_state = "morgue0"
+	else if (contents.len)
+		icon_state = "morgue2"
 	else
-		if (src.contents.len)
-			src.icon_state = "morgue2"
-		else
-			src.icon_state = "morgue1"
-	return
+		icon_state = "morgue1"
 
 /obj/structure/morgue/ex_act(severity)
 	switch(severity)
@@ -44,21 +43,18 @@
 			for(var/atom/movable/A as mob|obj in src)
 				A.forceMove(src.loc)
 				ex_act(severity)
-			qdel(src)
 			return
 		if(2.0)
 			if (prob(50))
 				for(var/atom/movable/A as mob|obj in src)
 					A.forceMove(src.loc)
 					ex_act(severity)
-				qdel(src)
 				return
 		if(3.0)
 			if (prob(5))
 				for(var/atom/movable/A as mob|obj in src)
 					A.forceMove(src.loc)
 					ex_act(severity)
-				qdel(src)
 				return
 	return
 
@@ -87,7 +83,7 @@
 			qdel(src.connected)
 			src.connected = null
 	src.add_fingerprint(user)
-	update()
+	update_icon()
 	return
 
 /obj/structure/morgue/attack_robot(var/mob/user)
@@ -95,14 +91,13 @@
 		return attack_hand(user)
 	else return ..()
 
-/obj/structure/morgue/attackby(P as obj, mob/user as mob)
+/obj/structure/morgue/attackby(var/obj/item/P, mob/user as mob)
 	if(isWrench(P))
 		playsound(src.loc, 'sound/items/Ratchet.ogg', 50, 1)
 		to_chat(user, "You begin dismantling \the [src]..")
 		if(do_after(user, 5 SECONDS, src))
 			to_chat(user, "You dismantled \the [src]!")
-			qdel(src)
-		return
+			dismantle()
 	else if (istype(P, /obj/item/weapon/pen))
 		var/t = input(user, "What would you like the label to be?", text("[]", src.name), null)  as text
 		if (user.get_active_hand() != P)
@@ -111,20 +106,18 @@
 			return
 		t = sanitizeSafe(t, MAX_NAME_LEN)
 		if (t)
-			src.name = text("Morgue- '[]'", t)
+			src.SetName(text("Morgue- '[]'", t))
 		else
-			src.name = "Morgue"
-		src.add_fingerprint(user)
-		return
-
-	return ..()
+			src.SetName("Morgue")
+	else
+		return ..()
+	src.add_fingerprint(user)
 
 /obj/structure/morgue/relaymove(mob/user as mob)
 	if (user.stat)
 		return
 	src.connected = new /obj/structure/m_tray( src.loc )
 	step(src.connected, EAST)
-	src.connected.layer = OBJ_LAYER
 	var/turf/T = get_step(src, EAST)
 	if (T.contents.Find(src.connected))
 		src.connected.connected = src
@@ -137,6 +130,9 @@
 		src.connected = null
 	return
 
+/obj/structure/morgue/dismantle()
+	refund_matter()
+	qdel(src)
 
 /*
  * Morgue tray
@@ -151,7 +147,7 @@
 	var/obj/structure/morgue/connected = null
 	anchored = 1
 	throwpass = 1
-	obj_flags = 0
+	should_save = FALSE //Don't save trays
 
 /obj/structure/m_tray/Destroy()
 	if(connected && connected.connected == src)
@@ -164,9 +160,8 @@
 		for(var/atom/movable/A as mob|obj in src.loc)
 			if (!( A.anchored ))
 				A.forceMove(src.connected)
-			//Foreach goto(26)
 		src.connected.connected = null
-		src.connected.update()
+		src.connected.update_icon()
 		add_fingerprint(user)
 		//SN src = null
 		qdel(src)

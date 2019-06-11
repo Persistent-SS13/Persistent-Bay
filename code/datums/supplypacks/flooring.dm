@@ -51,8 +51,14 @@
 	cost = 5
 	containername = "linoleum crate"
 
-/decl/hierarchy/supply_pack/flooring/dark_tiles	//Leaving dark tiles because it is made from plasteel, which is expensive
-	name = "Tiling - Dark floor tiles"
+/decl/hierarchy/supply_pack/flooring/white_tiles
+	name = "White floor tiles"
+	contains = list(/obj/item/stack/tile/floor_white/fifty)
+	cost = 15
+	containername = "white floor tile crate"
+
+/decl/hierarchy/supply_pack/flooring/dark_tiles
+	name = "Dark floor tiles"
 	contains = list(/obj/item/stack/tile/floor_dark/fifty)
 	cost = 5
 	containername = "dark floor tile crate"
@@ -62,9 +68,3 @@
 	contains = list(/obj/item/stack/tile/floor_freezer/fifty)
 	cost = 5
 	containername = "freezer floor tile crate"
-
-/decl/hierarchy/supply_pack/flooring/white_tiles
-	name = "Tiling - White floor tiles"
-	contains = list(/obj/item/stack/tile/floor_white/fifty)
-	cost = 5
-	containername = "white floor tile crate"

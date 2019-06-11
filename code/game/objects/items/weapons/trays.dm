@@ -12,16 +12,23 @@
 	throw_range = 5
 	w_class = ITEM_SIZE_NORMAL
 	obj_flags = OBJ_FLAG_CONDUCTIBLE
-	matter = list(MATERIAL_STEEL = 3000)
+	matter = list(MATERIAL_ALUMINIUM = 3000)
 	var/list/carrying = list() // List of things on the tray. - Doohl
 	var/max_carry = 2*base_storage_cost(ITEM_SIZE_NORMAL)
+
+/obj/item/weapon/tray/resolve_attackby(var/atom/A, mob/user)
+	if(istype(A, /obj/item/weapon/storage/)) // There used to be here where it would just deny the tray storage if it had contents. It seems wiser, considering just how useful this tray is as a weapon, to deny it backpacks entirely without actually raising its weight class.
+		to_chat(user, "<span class='warning'>The tray won't fit in [A].</span>")
+		return
+	else
+		. = ..()
 
 /obj/item/weapon/tray/attack(mob/living/carbon/M as mob, mob/living/carbon/user as mob)
 	user.setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
 	// Drop all the things. All of them.
 	overlays.Cut()
 	for(var/obj/item/I in carrying)
-		I.loc = M.loc
+		I.dropInto(M.loc)
 		carrying.Remove(I)
 		if(isturf(I.loc))
 			spawn()
@@ -31,7 +38,7 @@
 						sleep(rand(2,4))
 
 
-	if((CLUMSY in user.mutations) && prob(50))              //What if he's a clown?
+	if((MUTATION_CLUMSY in user.mutations) && prob(50))              //What if he's a clown?
 		to_chat(M, "<span class='warning'>You accidentally slam yourself with the [src]!</span>")
 		M.Weaken(1)
 		user.apply_damage(2)
@@ -169,7 +176,7 @@
 			if(calc_carry() + add >= max_carry)
 				break
 
-			I.loc = src
+			I.forceMove(src)
 			carrying.Add(I)
 			overlays += image("icon" = I.icon, "icon_state" = I.icon_state, "layer" = 30 + I.layer, "pixel_x" = I.pixel_x, "pixel_y" = I.pixel_y)
 
@@ -187,7 +194,7 @@
 		overlays.Cut()
 
 		for(var/obj/item/I in carrying)
-			I.loc = loc
+			I.dropInto(loc)
 			carrying.Remove(I)
 			if(!foundtable && isturf(loc))
 			// if no table, presume that the person just shittily dropped the tray on the ground and made a mess everywhere!

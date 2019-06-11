@@ -51,9 +51,12 @@
 	var/list/full_manifest = flat_nano_crew_manifest()
 	var/list/formatted_manifest = list()
 	for(var/entry in full_manifest)
-		formatted_manifest[format_output(entry["name"], entry["rank"], entry["milrank"])] = entry
-	var/input = input(user, "[display_name()]:", "Form Input", get_value()) as null|anything in formatted_manifest
-	set_value(formatted_manifest[input])
+		formatted_manifest[format_output(entry["name"], entry["rank"])] = entry
+	if (!length(formatted_manifest))
+		alert(user, "There are no candidates to add from manifest.") // in case someone somehow deletes the entire crew record database.
+	else
+		var/input = input(user, "[display_name()]:", "Form Input", get_value()) as null|anything in formatted_manifest
+		set_value(formatted_manifest[input])
 
 /datum/report_field/people/from_manifest/perform_send(subject, body, attach_report)
 	var/login = find_email(value["name"])
@@ -70,9 +73,9 @@
 	for(var/entry in value)
 		var/milrank = entry["milrank"]
 		if(in_line && (GLOB.using_map.flags & MAP_HAS_RANK))
-			var/datum/computer_file/report/crew_record/rec = get_crewmember_record(entry["name"])
-			if(rec)
-				var/datum/mil_rank/rank_obj = mil_branches.get_rank(rec.get_branch(), rec.get_rank())
+			var/datum/computer_file/report/crew_record/CR = get_crewmember_record(entry["name"])
+			if(CR)
+				var/datum/mil_rank/rank_obj = mil_branches.get_rank(CR.get_branch(), CR.get_rank())
 				milrank = (rank_obj ? rank_obj.name_short : "")
 		dat += format_output(entry["name"], in_line ? null : entry["rank"], milrank)
 	return jointext(dat, in_line ? ", " : "<br>")
@@ -88,7 +91,7 @@
 		if(in_as_list(entry, new_value))
 			continue //ignore repeats
 		new_value += list(entry)
-	value = new_value
+	value = new_value	
 
 /datum/report_field/people/list_from_manifest/ask_value(mob/user)
 	var/alert = alert(user, "Would you like to add or remove a name?", "Form Input", "Add", "Remove")
@@ -98,14 +101,20 @@
 			var/list/full_manifest = flat_nano_crew_manifest()
 			for(var/entry in full_manifest)
 				if(!in_as_list(entry, value)) //Only look at those not already selected.
-					formatted_manifest[format_output(entry["name"], entry["rank"], entry["milrank"])] = entry
-			var/input = input(user, "Add to [display_name()]:", "Form Input", null) as null|anything in formatted_manifest
-			set_value(value + list(formatted_manifest[input]))
+					formatted_manifest[format_output(entry["name"], entry["rank"])] = entry
+			if (!length(formatted_manifest))
+				alert(user, "There are no remaining candidates to add from manifest.")
+			else
+				var/input = input(user, "Add to [display_name()]:", "Form Input", null) as null|anything in formatted_manifest
+				set_value(value + list(formatted_manifest[input]))
 		if("Remove")
 			for(var/entry in value)
-				formatted_manifest[format_output(entry["name"], entry["rank"], entry["milrank"])] = entry
-			var/input = input(user, "Remove from [display_name()]:", "Form Input", null) as null|anything in formatted_manifest
-			set_value(value - list(formatted_manifest[input]))
+				formatted_manifest[format_output(entry["name"], entry["rank"])] = entry
+			if (!length(formatted_manifest))
+				alert(user, "There are no remaining candidates to remove from manifest.")
+			else
+				var/input = input(user, "Remove from [display_name()]:", "Form Input", null) as null|anything in formatted_manifest
+				set_value(value - list(formatted_manifest[input]))
 
 //Batch-emails the list.
 /datum/report_field/people/list_from_manifest/perform_send(subject, body, attach_report)

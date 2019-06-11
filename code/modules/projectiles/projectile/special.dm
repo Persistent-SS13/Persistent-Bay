@@ -5,15 +5,21 @@
 	force = 0
 	damtype = DAM_EMP
 	nodamage = TRUE
-	var/pulse_range = 1
+	var/heavy_effect_range = 1
+	var/light_effect_range = 2
 
-	on_hit(var/atom/target, var/blocked = 0)
-		empulse(target, pulse_range, pulse_range)
+	on_impact(var/atom/A)
+		empulse(A, heavy_effect_range, light_effect_range)
 		return 1
 
 /obj/item/projectile/ion/small
 	name = "ion pulse"
-	pulse_range = 0
+	heavy_effect_range = 0
+	light_effect_range = 1
+
+/obj/item/projectile/ion/tiny
+	heavy_effect_range = 0
+	light_effect_range = 0
 
 /obj/item/projectile/bullet/gyro
 	name ="explosive bolt"
@@ -33,13 +39,12 @@
 	force = 0
 	damtype = DAM_BURN
 	nodamage = TRUE
-	temperature = T0C - 80
-
+	var/firing_temperature = 300
 
 	on_hit(var/atom/target, var/blocked = 0)//These two could likely check temp protection on the mob
 		if(istype(target, /mob/living))
 			var/mob/M = target
-			M.bodytemperature = temperature
+			M.bodytemperature = firing_temperature
 		return 1
 
 /obj/item/projectile/meteor
@@ -52,7 +57,7 @@
 
 	Bump(atom/A as mob|obj|turf|area)
 		if(A == firer)
-			loc = A.loc
+			forceMove(A.loc)
 			return
 
 		sleep(-1) //Might not be important enough for a sleep(-1) but the sleep/spawn itself is necessary thanks to explosions and metoerhits
@@ -85,7 +90,7 @@
 			var/mob/living/carbon/human/H = M
 			if((H.species.species_flags & SPECIES_FLAG_IS_PLANT) && (H.nutrition < 500))
 				if(prob(15))
-					H.apply_effect((rand(30,80)),IRRADIATE,blocked = H.getarmor(null, DAM_RADS))
+					H.apply_damage((rand(30,80)),IRRADIATE, damage_flags = DAM_DISPERSED)
 					H.Weaken(5)
 					for (var/mob/V in viewers(src))
 						V.show_message("<span class='warning'>[M] writhes in pain as \his vacuoles boil.</span>", 3, "<span class='warning'>You hear the crunching of leaves.</span>", 2)
@@ -150,19 +155,15 @@
 	damtype = DAM_PAIN
 	muzzle_type = /obj/effect/projectile/bullet/muzzle
 
-/obj/item/projectile/plasma
-	name = "plasma blast"
-	icon_state = "purplelaser"
-	damtype = DAM_ENERGY
-	sharpness = 1
-	force = 20
-	var/pressure_decrease_active = FALSE
-	var/pressure_decrease = 0.25
-	kill_count=15
+/obj/item/projectile/venom
+	name = "venom bolt"
+	icon_state = "venom"
+	force = 5 //most damage is in the reagent
+	damtype = DAM_BIO
+	damage_flags = 0
 
-	Initialize()
-		. = ..()
-		if(!is_below_sound_pressure(get_turf(src)))
-			name = "weakened [name]"
-			force = force * pressure_decrease
-			pressure_decrease_active = TRUE
+/obj/item/projectile/venom/on_hit(atom/target, blocked, def_zone)
+	. = ..()
+	var/mob/living/L = target
+	if(L.reagents)
+		L.reagents.add_reagent(/datum/reagent/toxin/venom, 5)

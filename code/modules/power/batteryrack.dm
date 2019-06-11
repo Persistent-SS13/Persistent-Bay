@@ -15,6 +15,7 @@
 	capacity = 0
 	charge = 0
 	should_be_mapped = 1
+	circuit_type = /obj/item/weapon/circuitboard/batteryrack
 
 	var/max_transfer_rate = 0							// Maximal input/output rate. Determined by used capacitors when building the device.
 	var/mode = PSU_OFFLINE								// Current inputting/outputting mode
@@ -28,17 +29,8 @@
 
 /obj/machinery/power/smes/batteryrack/New()
 	..()
-	add_parts()
-	RefreshParts()
-
-/obj/machinery/power/smes/batteryrack/proc/add_parts()
-	component_parts = list()
-	component_parts += new /obj/item/weapon/circuitboard/batteryrack
-	component_parts += new /obj/item/weapon/stock_parts/capacitor/				// Capacitors: Maximal I/O
-	component_parts += new /obj/item/weapon/stock_parts/capacitor/
-	component_parts += new /obj/item/weapon/stock_parts/capacitor/
-	component_parts += new /obj/item/weapon/stock_parts/matter_bin/				// Matter Bin: Max. amount of cells.
-
+	ADD_SAVED_VAR(mode)
+	ADD_SAVED_VAR(internal_cells)
 
 /obj/machinery/power/smes/batteryrack/RefreshParts()
 	var/capacitor_efficiency = 0
@@ -60,7 +52,7 @@
 	internal_cells = null
 	return ..()
 
-/obj/machinery/power/smes/batteryrack/update_icon()
+/obj/machinery/power/smes/batteryrack/on_update_icon()
 	overlays.Cut()
 	icon_update = 0
 
@@ -112,7 +104,7 @@
 		// Now try to get least charged cell and use the power from it.
 		var/obj/item/weapon/cell/CL = get_least_charged_cell()
 		if(!CL)
-			return
+			return //no cells
 		amount -= CL.give(amount)
 		if(!amount)
 			return
@@ -163,10 +155,9 @@
 
 	if(internal_cells.len >= max_cells)
 		return 0
-
+	if(user && !user.unEquip(C))
+		return 0
 	internal_cells.Add(C)
-	if(user)
-		user.drop_from_inventory(C)
 	C.forceMove(src)
 	RefreshParts()
 	update_maxcharge()
@@ -192,7 +183,7 @@
 		var/obj/item/weapon/cell/least = get_least_charged_cell()
 		var/obj/item/weapon/cell/most = get_most_charged_cell()
 		// Don't bother equalising charge between two same cells. Also ensure we don't get NULLs or wrong types. Don't bother equalising when difference between charges is tiny.
-		if(least == most || !istype(least) || !istype(most) || least.percent() == most.percent())
+		if(!least || !most || least.percent() == most.percent())
 			return
 		var/percentdiff = (most.percent() - least.percent()) / 2 // Transfer only 50% of power. The reason is that it could lead to situations where least and most charged cells would "swap places" (45->50% and 50%->45%)
 		var/celldiff
@@ -218,18 +209,17 @@
 	data["cells_max"] = max_cells
 	data["cells_cur"] = internal_cells.len
 	var/list/cells = list()
-	var/cell_index = 0
+	var/cell_index = 1
 	for(var/obj/item/weapon/cell/C in internal_cells)
 		var/list/cell[0]
-		cell["slot"] = cell_index + 1
+		cell["slot"] = cell_index
 		cell["used"] = 1
 		cell["percentage"] = round(C.percent(), 0.01)
-		cell["id"] = C.c_uid
 		cell_index++
 		cells += list(cell)
-	while(cell_index < PSU_MAXCELLS)
+	while(cell_index <= PSU_MAXCELLS)
 		var/list/cell[0]
-		cell["slot"] = cell_index + 1
+		cell["slot"] = cell_index
 		cell["used"] = 0
 		cell_index++
 		cells += list(cell)
@@ -244,7 +234,7 @@
 
 /obj/machinery/power/smes/batteryrack/dismantle()
 	for(var/obj/item/weapon/cell/C in internal_cells)
-		C.forceMove(get_turf(src))
+		C.dropInto(loc)
 		internal_cells -= C
 	return ..()
 
@@ -292,16 +282,12 @@
 		equalise = 0
 		return 1
 	else if( href_list["ejectcell"] )
-		var/obj/item/weapon/cell/C
-		for(var/obj/item/weapon/cell/CL in internal_cells)
-			if(CL.c_uid == text2num(href_list["ejectcell"]))
-				C = CL
-				break
-
-		if(!istype(C))
+		var/slot_number = text2num(href_list["ejectcell"])
+		if(slot_number != Clamp(round(slot_number), 1, length(internal_cells)))
 			return 1
+		var/obj/item/weapon/cell/C = internal_cells[slot_number]
 
-		C.forceMove(get_turf(src))
+		C.dropInto(loc)
 		internal_cells -= C
 		update_icon()
 		RefreshParts()

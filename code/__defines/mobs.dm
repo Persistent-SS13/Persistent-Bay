@@ -9,7 +9,7 @@
 #define CANPARALYSE 0x4
 #define CANPUSH     0x8
 #define LEAPING     0x10
-#define PASSEMOTES  0x32    // Mob has a cortical borer or holders inside of it that need to see emotes.
+#define PASSEMOTES  0x20    // Mob has a cortical borer or holders inside of it that need to see emotes.
 #define GODMODE     0x1000
 #define FAKEDEATH   0x2000  // Replaces stuff like changeling.changeling_fakedeath.
 #define NO_ANTAG    0x4000  // Players are restricted from gaining antag roles when occupying this mob
@@ -22,6 +22,7 @@
 
 // Grab levels.
 #define NORM_PASSIVE    "normal passive"
+#define NORM_STRUGGLE   "normal struggle"
 #define NORM_AGGRESSIVE "normal aggressive"
 #define NORM_NECK       "normal neck"
 #define NORM_KILL       "normal kill"
@@ -47,14 +48,15 @@
 #define UNDER 0x4
 
 // Pulse levels, very simplified.
-#define PULSE_NONE    0 // So !M.pulse checks would be possible.
-#define PULSE_SLOW    1 // <60     bpm
-#define PULSE_NORM    2 //  60-90  bpm
-#define PULSE_FAST    3 //  90-120 bpm
-#define PULSE_2FAST   4 // >120    bpm
-#define PULSE_THREADY 5 // Occurs during hypovolemic shock
-#define GETPULSE_HAND 0 // Less accurate. (hand)
-#define GETPULSE_TOOL 1 // More accurate. (med scanner, sleeper, etc.)
+#define PULSE_NONE    0   // So !M.pulse checks would be possible.
+#define PULSE_SLOW    1   // <60     bpm
+#define PULSE_NORM    2   //  60-90  bpm
+#define PULSE_FAST    3   //  90-120 bpm
+#define PULSE_2FAST   4   // >120    bpm
+#define PULSE_THREADY 5   // Occurs during hypovolemic shock
+#define GETPULSE_HAND 0   // Less accurate. (hand)
+#define GETPULSE_TOOL 1   // More accurate. (med scanner, sleeper, etc.)
+#define PULSE_MAX_BPM 250 // Highest, readable BPM by machines and humans.
 
 //intent flags
 #define I_HELP		"help"
@@ -95,6 +97,10 @@
 #define DEFAULT_ATTACK_COOLDOWN 8 //Default timeout for aggressive actions
 #define DEFAULT_QUICK_COOLDOWN  4
 
+#define FAST_WEAPON_COOLDOWN 3
+#define DEFAULT_WEAPON_COOLDOWN 5
+#define SLOW_WEAPON_COOLDOWN 7
+
 #define MIN_SUPPLIED_LAW_NUMBER 15
 #define MAX_SUPPLIED_LAW_NUMBER 50
 
@@ -122,6 +128,7 @@
 #define STR_VLOW       -2
 
 // Gluttony levels.
+#define GLUT_NONE 0       // Eat nothing, meant for phorosians
 #define GLUT_TINY 1       // Eat anything tiny and smaller
 #define GLUT_SMALLER 2    // Eat anything smaller than we are
 #define GLUT_ANYTHING 4   // Eat anything, ever
@@ -157,7 +164,10 @@
 #define INCAPACITATION_STUNNED 8
 #define INCAPACITATION_FORCELYING 16 //needs a better name - represents being knocked down BUT still conscious.
 #define INCAPACITATION_KNOCKOUT 32
+#define INCAPACITATION_WEAKENED 64
 
+#define INCAPACITATION_UNRESISTING (INCAPACITATION_KNOCKOUT|INCAPACITATION_STUNNED)
+#define INCAPACITATION_DISRUPTED (INCAPACITATION_UNRESISTING|INCAPACITATION_WEAKENED)
 #define INCAPACITATION_KNOCKDOWN (INCAPACITATION_KNOCKOUT|INCAPACITATION_FORCELYING)
 #define INCAPACITATION_DISABLED (INCAPACITATION_KNOCKDOWN|INCAPACITATION_STUNNED)
 #define INCAPACITATION_DEFAULT (INCAPACITATION_RESTRAINED|INCAPACITATION_BUCKLED_FULLY|INCAPACITATION_DISABLED)
@@ -172,6 +182,7 @@
 #define BP_BRAIN    "brain"
 #define BP_LIVER    "liver"
 #define BP_KIDNEYS  "kidneys"
+#define BP_STOMACH  "stomach"
 #define BP_PLASMA   "plasma vessel"
 #define BP_APPENDIX "appendix"
 #define BP_CELL     "cell"
@@ -186,13 +197,33 @@
 #define BP_POLYP    "polyp segment"
 #define BP_ANCHOR   "anchoring ligament"
 #define BP_PHORON   "phoron filter"
-#define BP_NERVECLUSTER "nerve cluster"
+#define BP_ACETONE  "acetone reactor"
+
+// Vox bits.
+#define BP_HINDTONGUE "hindtongue"
 
 // Robo Organs.
 #define BP_POSIBRAIN	"posibrain"
 #define BP_VOICE		"vocal synthesiser"
 #define BP_STACK		"stack"
-#define BP_OPTICS		"optics"
+#define BP_FLOAT		"floatation disc"
+#define BP_JETS			"maneuvering jets"
+#define BP_COOLING_FINS "cooling fins"
+
+//Augmetations
+#define BP_AUGMENT_R_ARM         "right arm augment"
+#define BP_AUGMENT_L_ARM         "left arm augment"
+#define BP_AUGMENT_R_HAND        "right hand augment"
+#define BP_AUGMENT_L_HAND        "left hand augment"
+#define BP_AUGMENT_R_LEG         "right leg augment"
+#define BP_AUGMENT_L_LEG         "left leg augment"
+#define BP_AUGMENT_CHEST_ARMOUR   "chest armor augment"
+#define BP_AUGMENT_CHEST_ACTIVE  "active chest augment"
+#define BP_AUGMENT_HEAD           "head augment"
+
+//Augment flags
+#define AUGMENTATION_MECHANIC 1
+#define AUGMENTATION_ORGANIC  2
 
 // Limbs.
 #define BP_L_FOOT "l_foot"
@@ -211,6 +242,9 @@
 
 // Prosthetic helpers.
 #define BP_IS_ROBOTIC(org)  (org.status & ORGAN_ROBOTIC)
+#define BP_IS_ASSISTED(org) (org.status & ORGAN_ASSISTED)
+#define BP_IS_BRITTLE(org)  (org.status & ORGAN_BRITTLE)
+#define BP_IS_CRYSTAL(org)  (org.status & ORGAN_CRYSTAL)
 
 #define SYNTH_BLOOD_COLOUR "#030303"
 #define SYNTH_FLESH_COLOUR "#575757"
@@ -250,24 +284,48 @@
 #define CORPSE_CAN_REENTER 1
 #define CORPSE_CAN_REENTER_AND_RESPAWN 2
 
-#define SPECIES_HUMAN "Human"
-//#define SPECIES_DIONA "Diona"
-#define SPECIES_VOX "Vox"
-#define SPECIES_IPC "Machine"
-#define SPECIES_UNATHI "Unathi"
-#define SPECIES_SKRELL "Skrell"
-#define SPECIES_NABBER "Giant Armoured Serpentid"
-#define SPECIES_PROMETHEAN "Promethean"
-#define SPECIES_PHOROSIAN "Phorosian"
+#define SPECIES_HUMAN       "Human"
+#define SPECIES_DIONA       "Diona"
+#define SPECIES_VOX         "Vox"
+#define SPECIES_VOX_ARMALIS "Vox Armalis"
+#define SPECIES_IPC         "Machine"
+#define SPECIES_UNATHI      "Unathi"
+#define SPECIES_SKRELL      "Skrell"
+#define SPECIES_NABBER      "giant armoured serpentid"
+#define SPECIES_PROMETHEAN  "Promethean"
+#define SPECIES_XENO        "Xenophage"
+#define SPECIES_ALIEN       "Humanoid"
+#define SPECIES_ADHERENT    "Adherent"
+#define SPECIES_GOLEM       "Golem"
+#define SPECIES_YEOSA       "Yeosa'Unathi"
+#define SPECIES_VATGROWN    "Vat-Grown Human"
+#define SPECIES_SPACER      "Space-Adapted Human"
+#define SPECIES_TRITONIAN   "Tritonian"
+#define SPECIES_GRAVWORLDER "Grav-Adapted Human"
+#define SPECIES_PHOROSIAN   "Phorosian"
+#define SPECIES_BOGANI      "Bogani"
+#define SPECIES_EGYNO       "Egyno"
+
+#define STATION_SPECIES list(SPECIES_HUMAN, SPECIES_DIONA, SPECIES_IPC, SPECIES_UNATHI, SPECIES_SKRELL, SPECIES_TRITONIAN, SPECIES_SPACER, SPECIES_VATGROWN, SPECIES_GRAVWORLDER)
+#define RESTRICTED_SPECIES list(SPECIES_VOX, SPECIES_XENO, SPECIES_ALIEN, SPECIES_GOLEM)
 
 #define SURGERY_CLOSED 0
 #define SURGERY_OPEN 1
 #define SURGERY_RETRACTED 2
 #define SURGERY_ENCASED 3
 
-#define STASIS_MISC "misc"
-#define STASIS_CRYOBAG "cryobag"
-#define STASIS_COLD "cold"
+#define STASIS_MISC     "misc"
+#define STASIS_CRYOBAG  "cryobag"
+#define STASIS_COLD     "cold"
+
+#define AURA_CANCEL 1
+#define AURA_FALSE  2
+#define AURA_TYPE_BULLET "Bullet"
+#define AURA_TYPE_WEAPON "Weapon"
+#define AURA_TYPE_THROWN "Thrown"
+#define AURA_TYPE_LIFE   "Life"
+
+#define SPECIES_BLOOD_DEFAULT 560
 
 #define SLIME_EVOLUTION_THRESHOLD 30
 
@@ -275,3 +333,18 @@
 #define MOB_INPUT_TEXT "text"
 #define MOB_INPUT_MESSAGE "message"
 #define MOB_INPUT_NUM "num"
+
+#define MOB_CLIMB_TIME_SMALL 30
+#define MOB_CLIMB_TIME_MEDIUM 50
+
+#define MOB_FACTION_NEUTRAL "neutral"
+
+#define ROBOT_MODULE_TYPE_GROUNDED "grounded"
+#define ROBOT_MODULE_TYPE_FLYING   "flying"
+
+#define RADIO_INTERRUPT_DEFAULT 30
+
+//Spawn types for characters
+#define CHARACTER_SPAWN_TYPE_CRYONET         1 //Will spawn at a cryopod of the last network and faction stored in the character
+#define CHARACTER_SPAWN_TYPE_FRONTIER_BEACON 2 //Will spawn at a frontier beacon of the same faction as the character's default faction
+#define CHARACTER_SPAWN_TYPE_LACE_STORAGE    3 //Will spawn at the lace storage

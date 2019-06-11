@@ -123,15 +123,15 @@
 	var/protected = 0
 
 	//anomaly suits give best protection, but excavation suits are almost as good
-	if(istype(H.back,/obj/item/weapon/rig/hazmat))
-		var/obj/item/weapon/rig/hazmat/rig = H.back
+	if(istype(H.back,/obj/item/weapon/rig/hazmat) || istype(H.back, /obj/item/weapon/rig/hazard))
+		var/obj/item/weapon/rig/rig = H.back
 		if(rig.suit_is_deployed() && !rig.offline)
 			protected += 1
 
 	if(istype(H.wear_suit,/obj/item/clothing/suit/bio_suit/anomaly))
-		protected += 0.6
+		protected += 0.7
 	else if(istype(H.wear_suit,/obj/item/clothing/suit/space/void/excavation))
-		protected += 0.5
+		protected += 0.6
 
 	if(istype(H.head,/obj/item/clothing/head/bio_hood/anomaly))
 		protected += 0.3

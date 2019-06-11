@@ -225,8 +225,8 @@
 	item_state = "cult"
 
 /obj/item/clothing/shoes/cyborg
-	name = "black shoes"
-	desc = "Some plain, black shoes."
+	name = "cyborg boots"
+	desc = "Shoes for a cyborg costume."
 	icon_state = "boots"
 
 /obj/item/clothing/shoes/slippers
@@ -266,3 +266,24 @@
 	name = "athletic shoes"
 	desc = "A pair of sleek atheletic shoes. Made by and for the sporty types."
 	icon_state = "sportshoe"
+
+/obj/item/clothing/shoes/laceup/sneakies
+	desc = "The height of fashion, and they're pre-polished. Upon further inspection, the soles appear to be on backwards. They look uncomfortable."
+	species_restricted = list(SPECIES_HUMAN, SPECIES_IPC)
+	move_trail = /obj/effect/decal/cleanable/blood/tracks/footprints/reversed
+	item_flags = ITEM_FLAG_SILENT
+
+/obj/item/clothing/shoes/heels
+	name = "high heels"
+	icon_state = "heels"
+	desc = "A pair of colourable high heels."
+
+/obj/item/clothing/shoes/heels/black
+	name = "black high heels"
+	desc = "A pair of black high heels."
+	color = COLOR_GRAY15
+
+obj/item/clothing/shoes/heels/red
+	name = "red high heels"
+	desc = "A pair of red high heels."
+	color = COLOR_RED

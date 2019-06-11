@@ -46,10 +46,11 @@
 	var/is_synth = isSynthetic()
 	if(!(skipjumpsuit && skipface))
 		var/species_name = "\improper "
-		if(is_synth && species.type != /datum/species/machine)
-			species_name += "Cyborg "
+		if(is_synth && species.cyborg_noun)
+			species_name += "[species.cyborg_noun] "
 		species_name += "[species.name]"
-		msg += ", <b><font color='[species.get_flesh_colour(src)]'> \a [species_name]!</font></b>"
+		msg += ", <b><font color='[species.get_flesh_colour(src)]'>\a [species_name]!</font></b>[(user.can_use_codex() && SScodex.get_codex_entry(get_codex_value())) ?  SPAN_NOTICE(" \[<a href='?src=\ref[SScodex];show_examined_info=\ref[src];show_to=\ref[user]'>?</a>\]") : ""]"
+
 	var/extra_species_text = species.get_additional_examine_text(src)
 	if(extra_species_text)
 		msg += "[extra_species_text]<br>"
@@ -142,7 +143,7 @@
 	//Disfigured face
 	if(!skipface) //Disfigurement only matters for the head currently.
 		var/obj/item/organ/external/head/E = get_organ(BP_HEAD)
-		if(E && E.disfigured) //Check to see if we even have a head and if the head's disfigured.
+		if(E && (E.status & ORGAN_DISFIGURED)) //Check to see if we even have a head and if the head's disfigured.
 			if(E.species) //Check to make sure we have a species
 				msg += E.species.disfigure_msg(src)
 			else //Just in case they lack a species for whatever reason.
@@ -187,9 +188,19 @@
 		else if(!client)
 			msg += "<span class='deadsay'>[T.He] [T.is] [ssd_msg].</span>\n"
 
+	var/obj/item/organ/external/head/H = organs_by_name[BP_HEAD]
+	if(istype(H) && H.forehead_graffiti && H.graffiti_style)
+		msg += "<span class='notice'>[T.He] [T.has] \"[H.forehead_graffiti]\" written on [T.his] [H.name] in [H.graffiti_style]!</span>\n"
+
+	if(became_younger)
+		msg += "[T.He] looks a lot younger than you remember.\n"
+	if(became_older)
+		msg += "[T.He] looks a lot older than you remember.\n"
+
 	var/list/wound_flavor_text = list()
 	var/applying_pressure = ""
 	var/list/shown_objects = list()
+	var/list/hidden_bleeders = list()
 
 	for(var/organ_tag in species.has_limbs)
 
@@ -215,14 +226,16 @@
 
 		if(hidden && user != src)
 			if(E.status & ORGAN_BLEEDING && !(hidden.item_flags & ITEM_FLAG_THICKMATERIAL)) //not through a spacesuit
-				wound_flavor_text[hidden.name] = "<span class='danger'>[T.He] [T.has] blood soaking through [hidden]!</span><br>"
+				if(!hidden_bleeders[hidden])
+					hidden_bleeders[hidden] = list()
+				hidden_bleeders[hidden] += E.name
 		else
 			if(E.is_stump())
 				wound_flavor_text[E.name] += "<b>[T.He] [T.has] a stump where [T.his] [organ_descriptor] should be.</b>\n"
-				if(E.wounds.len && E.parent)
+				if(LAZYLEN(E.wounds) && E.parent)
 					wound_flavor_text[E.name] += "[T.He] [T.has] [E.get_wounds_desc()] on [T.his] [E.parent.name].<br>"
 			else
-				if(!is_synth && BP_IS_ROBOTIC(E) && (E.parent && !BP_IS_ROBOTIC(E.parent)))
+				if(!is_synth && BP_IS_ROBOTIC(E) && (E.parent && !BP_IS_ROBOTIC(E.parent) && !BP_IS_ASSISTED(E.parent)))
 					wound_flavor_text[E.name] = "[T.He] [T.has] a [E.name].\n"
 				var/wounddesc = E.get_wounds_desc()
 				if(wounddesc != "nothing")
@@ -234,9 +247,19 @@
 				wound_flavor_text[E.name] += "[T.His] [E.name] is dented and swollen!<br>"
 
 		for(var/datum/wound/wound in E.wounds)
-			if(wound.embedded_objects.len)
-				shown_objects += wound.embedded_objects
-				wound_flavor_text["[E.name]"] += "The [wound.desc] on [T.his] [E.name] has \a [english_list(wound.embedded_objects, and_text = " and \a ", comma_text = ", \a ")] sticking out of it!<br>"
+			var/list/embedlist = wound.embedded_objects
+			if(LAZYLEN(embedlist))
+				shown_objects += embedlist
+				var/parsedembed[0]
+				for(var/obj/embedded in embedlist)
+					if(!parsedembed.len || (!parsedembed.Find(embedded.name) && !parsedembed.Find("multiple [embedded.name]")))
+						parsedembed.Add(embedded.name)
+					else if(!parsedembed.Find("multiple [embedded.name]"))
+						parsedembed.Remove(embedded.name)
+						parsedembed.Add("multiple "+embedded.name)
+				wound_flavor_text["[E.name]"] += "The [wound.desc] on [T.his] [E.name] has \a [english_list(parsedembed, and_text = " and \a ", comma_text = ", \a ")] sticking out of it!<br>"
+	for(var/hidden in hidden_bleeders)
+		wound_flavor_text[hidden] = "[T.He] [T.has] blood soaking through [hidden] around [T.his] [english_list(hidden_bleeders[hidden])]!<br>"
 
 	msg += "<span class='warning'>"
 	for(var/limb in wound_flavor_text)
@@ -250,18 +273,15 @@
 	if(digitalcamo)
 		msg += "[T.He] [T.is] repulsively uncanny!\n"
 
-	if(hasHUD(user,"security"))
+	if(hasHUD(user, HUD_SECURITY))
 		var/perpname = "wot"
 		var/criminal = "None"
 
-		if(wear_id)
-			var/obj/item/weapon/card/id/I = wear_id.GetIdCard()
-			if(I)
-				perpname = I.registered_name
-			else
-				perpname = name
+		var/obj/item/weapon/card/id/id = GetIdCard()
+		if(istype(id))
+			perpname = id.registered_name
 		else
-			perpname = name
+			perpname = src.name
 
 		if(perpname)
 			var/datum/world_faction/faction = get_faction(user.GetFaction())
@@ -281,16 +301,13 @@
 				msg += "<span class = 'deptradio'>Criminal status:</span> <a href='?src=\ref[src];criminal=1'>\[[criminal]\]</a>\n"
 				msg += "<span class = 'deptradio'>Security records:</span> <a href='?src=\ref[src];secrecord=`'>\[View\]</a>\n"
 
-	if(hasHUD(user,"medical"))
+	if(hasHUD(user, HUD_MEDICAL))
 		var/perpname = "wot"
 		var/medical = "None"
 
-		if(wear_id)
-			if(istype(wear_id,/obj/item/weapon/card/id))
-				perpname = wear_id:registered_name
-			else if(istype(wear_id,/obj/item/device/pda))
-				var/obj/item/device/pda/tempPda = wear_id
-				perpname = tempPda.owner
+		var/obj/item/weapon/card/id/id = GetIdCard()
+		if(istype(id))
+			perpname = id.registered_name
 		else
 			perpname = src.name
 
@@ -305,46 +322,36 @@
 
 	if(print_flavor_text()) msg += "[print_flavor_text()]\n"
 
+	if(mind && user.mind && name == real_name)
+		var/list/relations = matchmaker.get_relationships_between(user.mind, mind, TRUE)
+		if(length(relations))
+			msg += "<br><span class='notice'>You know them. <a href='byond://?src=\ref[src];show_relations=1'>More...</a></span><br>"
+
 	msg += "*---------*</span><br>"
 	msg += applying_pressure
 
 	if (pose)
 		if( findtext(pose,".",lentext(pose)) == 0 && findtext(pose,"!",lentext(pose)) == 0 && findtext(pose,"?",lentext(pose)) == 0 )
 			pose = addtext(pose,".") //Makes sure all emotes end with a period.
-		msg += "[T.He] [pose]"
+		msg += "[T.He] [pose]\n"
 
+	var/show_descs = show_descriptors_to(user)
+	if(show_descs)
+		msg += "<span class='notice'>[jointext(show_descs, "<br>")]</span>"
 	to_chat(user, jointext(msg, null))
 
 //Helper procedure. Called by /mob/living/carbon/human/examine() and /mob/living/carbon/human/Topic() to determine HUD access to security and medical records.
 /proc/hasHUD(mob/M as mob, hudtype)
 	if(istype(M, /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = M
-		switch(hudtype)
-			if("security")
-				if(istype(H.glasses,/obj/item/clothing/glasses))
-					var/obj/item/clothing/glasses/G = H.glasses
-					return istype(G.hud, /obj/item/clothing/glasses/hud/security) || istype(G, /obj/item/clothing/glasses/hud/security)
-				else
-					return FALSE
-			if("medical")
-				if(istype(H.glasses,/obj/item/clothing/glasses))
-					var/obj/item/clothing/glasses/G = H.glasses
-					return istype(G.hud, /obj/item/clothing/glasses/hud/health) || istype(G, /obj/item/clothing/glasses/hud/health)
-				else
-					return FALSE
-			else
-				return 0
+		var/obj/item/clothing/glasses/G = H.glasses
+		return istype(G) && ((G.hud_type & hudtype) || (G.hud && (G.hud.hud_type & hudtype)))
 	else if(istype(M, /mob/living/silicon/robot))
 		var/mob/living/silicon/robot/R = M
-		switch(hudtype)
-			if("security")
-				return istype(R.module_state_1, /obj/item/borg/sight/hud/sec) || istype(R.module_state_2, /obj/item/borg/sight/hud/sec) || istype(R.module_state_3, /obj/item/borg/sight/hud/sec)
-			if("medical")
-				return istype(R.module_state_1, /obj/item/borg/sight/hud/med) || istype(R.module_state_2, /obj/item/borg/sight/hud/med) || istype(R.module_state_3, /obj/item/borg/sight/hud/med)
-			else
-				return 0
-	else
-		return 0
+		for(var/obj/item/borg/sight/sight in list(R.module_state_1, R.module_state_2, R.module_state_3))
+			if(istype(sight) && (sight.hud_type & hudtype))
+				return TRUE
+	return FALSE
 
 /mob/living/carbon/human/verb/pose()
 	set name = "Set Pose"

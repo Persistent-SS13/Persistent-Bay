@@ -2,7 +2,7 @@
 	name = "Circuit Imprinter"
 	desc = "A machine used for the production of circuits."
 	req_access = list(core_access_science_programs)
-	circuit = /obj/item/weapon/circuitboard/fabricator/circuitfab
+	circuit_type = /obj/item/weapon/circuitboard/fabricator/circuitfab
 	build_type = CIRCUITFAB
 
 	icon_state = 	 "circuitfab-idle"
@@ -93,10 +93,10 @@
 	build_path = /obj/item/weapon/circuitboard/operating
 	build_type = MEDICALFAB
 /datum/design/circuit/cryo_cell
-	name = "Cryotube"
+	name = "Cryocell"
 	id = "cryocell"
 	req_tech = list(TECH_DATA = 2, TECH_BIO = 3, TECH_ENGINEERING = 4)
-	build_path = /obj/item/weapon/circuitboard/cryo_tube
+	build_path = /obj/item/weapon/circuitboard/cryo_cell
 	build_type = MEDICALFAB
 /datum/design/circuit/resleever
 	name = "neural lace resleever"
@@ -474,7 +474,7 @@
 	name = "Body Scanner Console"
 	id = "bodyscanner_console"
 	req_tech = list(TECH_MATERIAL = 3, TECH_ENGINEERING = 3, TECH_BIO = 2, TECH_DATA = 3)
-	build_path = /obj/item/weapon/circuitboard/bodyscanner_console
+	build_path = /obj/item/weapon/circuitboard/body_scanconsole
 	build_type = MEDICALFAB
 
 /datum/design/circuit/bodyscanner

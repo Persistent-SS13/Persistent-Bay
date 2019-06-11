@@ -64,7 +64,7 @@
 	s.set_up(2, 1, src)
 	s.start()
 	src.last_spark = world.time
-	use_power(1000)
+	use_power_oneoff(1000)
 	var/turf/location = src.loc
 	if (isturf(location))
 		location.hotspot_expose(1000,500,1)

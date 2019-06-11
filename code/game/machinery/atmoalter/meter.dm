@@ -3,9 +3,9 @@
 	desc 			= "A gas flow meter. Monitors the pipe it is attached to."
 	icon 			= 'icons/obj/meter.dmi'
 	icon_state 		= "meterX"
+	layer = ABOVE_WINDOW_LAYER
 	anchored 		= TRUE
 	power_channel 	= ENVIRON
-	use_power 		= POWER_USE_IDLE
 	idle_power_usage= 15
 
 	//Radio
@@ -25,10 +25,44 @@
 /obj/machinery/meter/LateInitialize()
 	. = ..()
 	if (!target)
-		src.target = locate(/obj/machinery/atmospherics/pipe) in loc
-	update_icon()
+		set_target(locate(/obj/machinery/atmospherics/pipe) in loc)
+	queue_icon_update()
 
-/obj/machinery/meter/update_icon()
+/obj/machinery/meter/proc/set_target(atom/new_target)
+	clear_target()
+	target = new_target
+	GLOB.destroyed_event.register(target, src, .proc/clear_target)
+
+/obj/machinery/meter/proc/clear_target()
+	if(target)
+		GLOB.destroyed_event.unregister(target, src)
+		target = null	
+
+/obj/machinery/meter/Destroy()
+	clear_target()
+	. = ..()
+
+/obj/machinery/meter/Process()
+	. = ..()
+	if(!target)
+		return
+	var/datum/gas_mixture/pipe_air = target.return_air()
+	if(!pipe_air)
+		src.last_pressure = -1
+	else
+		src.last_pressure = pipe_air.return_pressure()
+
+	if(has_transmitter()) 
+		var/list/data = list(
+			// "tag" = id,
+			"device" = "AM",
+			"pressure" = (last_pressure > 0)? round(last_pressure) : 0,
+			"sigtype" = "status"
+		)
+		post_signal(data)
+	queue_icon_update()
+
+/obj/machinery/meter/on_update_icon()
 	if(!target || last_pressure == -1)
 		icon_state = "meterX"
 		return 0
@@ -49,24 +83,6 @@
 		icon_state = "meter3_[val]"
 	else
 		icon_state = "meter4"
-
-/obj/machinery/meter/Process()
-	. = ..()
-	var/datum/gas_mixture/pipe_air = target.return_air()
-	if(!pipe_air)
-		src.last_pressure = -1
-	else
-		src.last_pressure = pipe_air.return_pressure()
-
-	if(has_transmitter()) 
-		var/list/data = list(
-			// "tag" = id,
-			"device" = "AM",
-			"pressure" = (last_pressure > 0)? round(last_pressure) : 0,
-			"sigtype" = "status"
-		)
-		post_signal(data)
-	update_icon()
 
 /obj/machinery/meter/attack_hand(mob/user)
 	examine(user)
@@ -91,6 +107,7 @@
 
 
 /obj/machinery/meter/Click()
+
 	if(istype(usr, /mob/living/silicon/ai)) // ghosts can call ..() for examine
 		usr.examinate(src)
 		return 1
@@ -111,15 +128,10 @@
 		qdel(src)
 
 // TURF METER - REPORTS A TILE'S AIR CONTENTS
-/obj/machinery/meter/turf/New()
-	..()
-	src.target = loc
-	return 1
 
 /obj/machinery/meter/turf/Initialize()
-	. = ..()
 	if (!target)
-		src.target = loc
+		set_target(loc)
+	. = ..()
 
 /obj/machinery/meter/turf/attackby(var/obj/item/weapon/W as obj, var/mob/user as mob)
-	return

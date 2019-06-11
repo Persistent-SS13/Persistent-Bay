@@ -18,18 +18,26 @@
 	var/const/climb_time = 2 SECONDS
 	var/static/list/climbsounds = list('sound/effects/ladder.ogg','sound/effects/ladder2.ogg','sound/effects/ladder3.ogg','sound/effects/ladder4.ogg')
 	var/dnr = 0
+
+/obj/structure/ladder/New()
+	. = ..()
+	ADD_SAVED_VAR(allowed_directions)
+
+/obj/structure/ladder/proc/link_ladders()
+	// the upper will connect to the lower
+	for(var/obj/structure/ladder/L in GetBelow(src))
+		log_debug("Tring to link [src]([x][y][z]) down with [L]([L.x],[L.y],[L.z])")
+		log_debug("Linked!")
+		target_down = L
+		allowed_directions |= DOWN
+		L.target_up = src
+		L.allowed_directions |= UP
+		return
+
 /obj/structure/ladder/Initialize()
 	. = ..()
-	// the upper will connect to the lower
-	if(allowed_directions & DOWN) //we only want to do the top one, as it will initialize the ones before it.
-		for(var/obj/structure/ladder/L in GetBelow(src))
-			log_debug("Tring to link [src]([x][y][z]) down with [L]([L.x],[L.y],[L.z])")
-			if(L.allowed_directions & UP)
-				log_debug("Linked!")
-				target_down = L
-				L.target_up = src
-				return
-	update_icon()
+	link_ladders()
+	queue_icon_update()
 
 /obj/structure/ladder/Destroy()
 	if(target_down)
@@ -40,8 +48,8 @@
 		target_up = null
 	return ..()
 
-/obj/structure/ladder/attackby(obj/item/C as obj, mob/user as mob)
-	climb(user)
+/obj/structure/ladder/attackby(obj/item/I, mob/user)
+	climb(user, I)
 
 /obj/structure/ladder/attack_hand(var/mob/M)
 	climb(M)
@@ -58,14 +66,15 @@
 	climb(M)
 
 /obj/structure/ladder/proc/instant_climb(var/mob/M)
-	var/target_ladder = getTargetLadder(M)
+	var/atom/target_ladder = getTargetLadder(M)
 	if(target_ladder)
 		M.forceMove(get_turf(target_ladder))
 
-/obj/structure/ladder/proc/climb(var/mob/M)
+/obj/structure/ladder/proc/climb(mob/M, obj/item/I = null)
 	if(!M.may_climb_ladders(src))
 		return
 
+	add_fingerprint(M)
 	var/obj/structure/ladder/target_ladder = getTargetLadder(M)
 	if(!target_ladder)
 		return
@@ -85,7 +94,7 @@
 	target_ladder.audible_message("<span class='notice'>You hear something coming [direction] \the [src]</span>")
 
 	if(do_after(M, climb_time, src))
-		climbLadder(M, target_ladder)
+		climbLadder(M, target_ladder, I)
 		for (var/obj/item/grab/G in M)
 			G.adjust_position(force = 1)
 
@@ -137,20 +146,30 @@
 /mob/observer/ghost/may_climb_ladders(var/ladder)
 	return TRUE
 
-/obj/structure/ladder/proc/climbLadder(var/mob/M, var/target_ladder)
+/obj/structure/ladder/proc/climbLadder(mob/user, target_ladder, obj/item/I = null)
 	var/turf/T = get_turf(target_ladder)
 	for(var/atom/A in T)
-		if(!A.CanPass(M, M.loc, 1.5, 0))
-			to_chat(M, "<span class='notice'>\The [A] is blocking \the [src].</span>")
+		if(!A.CanPass(user, user.loc, 1.5, 0))
+			to_chat(user, "<span class='notice'>\The [A] is blocking \the [src].</span>")
+
+			//We cannot use the ladder, but we probably can remove the obstruction
+			var/atom/movable/M = A
+			if(istype(M) && M.movable_flags & MOVABLE_FLAG_Z_INTERACT)
+				if(isnull(I))
+					M.attack_hand(user)
+				else
+					M.attackby(I, user)
+
 			return FALSE
+
 	playsound(src, pick(climbsounds), 50)
 	playsound(target_ladder, pick(climbsounds), 50)
-	return M.Move(T)
+	return user.Move(T)
 
 /obj/structure/ladder/CanPass(obj/mover, turf/source, height, airflow)
 	return airflow || !density
 
-/obj/structure/ladder/update_icon()
+/obj/structure/ladder/on_update_icon()
 	icon_state = "ladder[!!(allowed_directions & UP)][!!(allowed_directions & DOWN)]"
 
 /obj/structure/ladder/up
@@ -162,7 +181,7 @@
 	icon_state = "ladder11"
 
 /obj/structure/stairs
-	name = "Stairs"
+	name = "stairs"
 	desc = "Stairs leading to another deck.  Not too useful if the gravity goes out."
 	icon = 'icons/obj/stairs.dmi'
 	density = FALSE
@@ -170,18 +189,26 @@
 	anchored = TRUE
 	plane = ABOVE_TURF_PLANE
 	layer = RUNE_LAYER
+	var/tmp/was_already_saved = FALSE //In order to fix multi-tiles objects we gotta make sure only the base turf of the object saves it
 
-/obj/structure/stairs/Initialize()
-	//var/foundabove = FALSE
+/obj/structure/stairs/should_save(datum/saver)
+	. = ..()
+	if(!.)
+		return FALSE
+	var/turf/T = saver
+	if(istype(saver))
+		return T == get_turf(src) //only save if we're on the "base" turf on which the stairs rest on
+	return FALSE
+
+/obj/structure/stairs/Initialize(var/mapload)
 	for(var/turf/turf in locs)
 		var/turf/simulated/open/above = GetAbove(turf)
-		if(above)
-			//foundabove = TRUE
-			if(!istype(above))
-				above.ChangeTurf(/turf/simulated/open)
-	//if(!foundabove)
-	//	warning("Stair created without level above: ([loc.x], [loc.y], [loc.z])")
-	//	return INITIALIZE_HINT_QDEL
+		if(!above)
+			warning("Stair created without level above: ([loc.x], [loc.y], [loc.z])")
+			return INITIALIZE_HINT_QDEL
+		//Don't do that, it can be exploited to get into places
+		// if(!istype(above))
+		// 	above.ChangeTurf(/turf/simulated/open)
 	. = ..()
 
 /obj/structure/stairs/CheckExit(atom/movable/mover as mob|obj, turf/target as turf)
@@ -199,17 +226,21 @@
 			var/mob/living/L = A
 			if(L.pulling)
 				L.pulling.forceMove(target)
+		if(ishuman(A))
+			var/mob/living/carbon/human/H = A
+			if(H.has_footsteps())
+				playsound(source, 'sound/effects/stairs_step.ogg', 50)
+				playsound(target, 'sound/effects/stairs_step.ogg', 50)
 	else
 		to_chat(A, "<span class='warning'>Something blocks the path.</span>")
 
 /obj/structure/stairs/proc/upperStep(var/turf/T)
 	return (T == loc)
 
-
 /obj/structure/stairs/CanPass(obj/mover, turf/source, height, airflow)
 	return airflow || !density
 
-	// type paths to make mapping easier.
+// type paths to make mapping easier.
 /obj/structure/stairs/north
 	dir = NORTH
 	bound_height = 64

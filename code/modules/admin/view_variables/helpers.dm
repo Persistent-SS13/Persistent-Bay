@@ -65,6 +65,12 @@
 		<option value='?_src_=vars;emp=\ref[src]'>Trigger EM pulse</option>
 		"}
 
+/mob/living/get_view_variables_options()
+	return ..() + {"
+		<option value='?_src_=vars;addaura=\ref[src]'>Add Aura</option>
+		<option value='?_src_=vars;removeaura=\ref[src]'>Remove Aura</option>
+		"}
+
 /mob/living/carbon/human/get_view_variables_options()
 	return ..() + {"
 		<option value='?_src_=vars;setspecies=\ref[src]'>Set Species</option>
@@ -104,18 +110,20 @@
 /datum/proc/get_initial_variable_value(varname)
 	return initial(vars[varname])
 
-/datum/proc/make_view_variables_variable_entry(varname, value)
+/datum/proc/make_view_variables_variable_entry(var/varname, var/value, var/hide_watch = 0)
 	return {"
 			(<a href='?_src_=vars;datumedit=\ref[src];varnameedit=[varname]'>E</a>)
 			(<a href='?_src_=vars;datumchange=\ref[src];varnamechange=[varname]'>C</a>)
 			(<a href='?_src_=vars;datummass=\ref[src];varnamemass=[varname]'>M</a>)
+			[hide_watch ? "" : "(<a href='?_src_=vars;datumwatch=\ref[src];varnamewatch=[varname]'>W</a>)"]
 			"}
 
 // No mass editing of clients
-/client/make_view_variables_variable_entry(varname, value)
+/client/make_view_variables_variable_entry(var/varname, var/value, var/hide_watch = 0)
 	return {"
 			(<a href='?_src_=vars;datumedit=\ref[src];varnameedit=[varname]'>E</a>)
 			(<a href='?_src_=vars;datumchange=\ref[src];varnamechange=[varname]'>C</a>)
+			[hide_watch ? "" : "(<a href='?_src_=vars;datumwatch=\ref[src];varnamewatch=[varname]'>W</a>)"]
 			"}
 
 // These methods are all procs and don't use stored lists to avoid VV exploits
@@ -192,6 +200,6 @@
 /proc/forbidden_varedit_object_types()
  	return list(
 		/datum/admins,						//Admins editing their own admin-power object? Yup, sounds like a good idea.,
-		/obj/machinery/blackbox_recorder,	//Prevents people messing with feedback gathering,
-		/datum/feedback_variable			//Prevents people messing with feedback gathering
+		// /obj/machinery/blackbox_recorder,	//Prevents people messing with feedback gathering,
+		// /datum/feedback_variable			//Prevents people messing with feedback gathering
 	)

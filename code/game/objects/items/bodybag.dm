@@ -39,7 +39,7 @@
 	storage_capacity = (MOB_MEDIUM * 2) - 1
 	var/contains_body = 0
 
-/obj/structure/closet/body_bag/attackby(W as obj, mob/user as mob)
+/obj/structure/closet/body_bag/attackby(var/obj/item/W, mob/user as mob)
 	if (istype(W, /obj/item/weapon/pen))
 		var/t = input(user, "What would you like the label to be?", text("[]", src.name), null)  as text
 		if (user.get_active_hand() != W)
@@ -48,21 +48,21 @@
 			return
 		t = sanitizeSafe(t, MAX_NAME_LEN)
 		if (t)
-			src.name = "body bag - "
+			src.SetName("body bag - ")
 			src.name += t
 			src.overlays += image(src.icon, "bodybag_label")
 		else
-			src.name = ("body bag")
+			src.SetName("body bag")
 	//..() //Doesn't need to run the parent. Since when can fucking bodybags be welded shut? -Agouri
 		return
 	else if(isWirecutter(W) || isScissors(W))
-		src.name = "body bag"
+		src.SetName("body bag")
 		src.overlays.Cut()
 		to_chat(user, "You cut the tag off \the [src].")
 		return
-	else if(istype(W, /obj/item/device/healthanalyzer/) && !opened)
+	else if(istype(W, /obj/item/device/scanner/health/) && !opened)
 		if(contains_body)
-			var/obj/item/device/healthanalyzer/HA = W
+			var/obj/item/device/scanner/health/HA = W
 			for(var/mob/living/L in contents)
 				HA.afterattack(L, user, TRUE)
 		else
@@ -91,3 +91,12 @@
 	..()
 	if((over_object == usr && (in_range(src, usr) || usr.contents.Find(src))))
 		fold(usr)
+
+/obj/item/robot_rack/body_bag
+	name = "stasis bag rack"
+	desc = "A rack for carrying folded stasis bags and body bags."
+	icon = 'icons/obj/closets/cryobag.dmi'
+	icon_state = "bodybag_folded"
+	object_type = /obj/item/bodybag
+	interact_type = /obj/structure/closet/body_bag
+	capacity = 3

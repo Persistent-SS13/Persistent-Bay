@@ -2,6 +2,7 @@
  * Contains:
  * 		Beds
  *		Roller beds
+ *		Mattresses
  */
 
 /*
@@ -10,7 +11,7 @@
 /obj/structure/bed
 	name = "bed"
 	desc = "This is used to lie in, sleep in or strap on."
-	icon = 'icons/obj/structures/beds.dmi'
+	icon = 'icons/obj/furniture.dmi'
 	icon_state = "bed"
 	anchored = 1
 	can_buckle = 1
@@ -19,31 +20,36 @@
 	mass = 50
 	max_health = 200
 	damthreshold_brute 	= 5
-	var/material/material
 	var/material/padding_material
 	var/base_icon = "bed"
 	var/material_alteration = MATERIAL_ALTERATION_ALL
+	var/buckling_sound = 'sound/effects/buckle.ogg'
 
-/obj/structure/bed/New(var/newloc, var/new_material, var/new_padding_material)
-	..(newloc)
-	color = null
-	if(!new_material)
-		new_material = MATERIAL_STEEL
-	material = SSmaterials.get_material_by_name(new_material)
+/obj/structure/bed/New(newloc, new_material = DEFAULT_FURNITURE_MATERIAL, new_padding_material)
+	..()
+	ADD_SAVED_VAR(padding_material)
+	ADD_SKIP_EMPTY(padding_material)
+
+/obj/structure/bed/Initialize(mapload, new_material = DEFAULT_FURNITURE_MATERIAL, new_padding_material)
+	. = ..()
+	if(!map_storage_loaded)
+		color = null
+		material = SSmaterials.get_material_by_name(new_material)
 	if(!istype(material))
+		log_warning("obj/structure/bed/Initialize(): [src]\ref[src] has a bad material type. Deleting!")
 		qdel(src)
 		return
-	if(new_padding_material)
+	if(new_padding_material && !map_storage_loaded)
 		padding_material = SSmaterials.get_material_by_name(new_padding_material)
-	update_icon()
+	queue_icon_update()
 
 /obj/structure/bed/get_material()
 	return material
 
 // Reuse the cache/code from stools, todo maybe unify.
-/obj/structure/bed/update_icon()
+/obj/structure/bed/on_update_icon()
 	// Prep icon.
-	icon_state = ""
+	icon_state = "blank"
 	overlays.Cut()
 	// Base icon.
 	var/cache_key = "[base_icon]-[material.name]"
@@ -65,7 +71,7 @@
 
 	// Strings.
 	if(material_alteration & MATERIAL_ALTERATION_NAME)
-		name = padding_material ? "[padding_material.adjective_name] [initial(name)]" : "[material.adjective_name] [initial(name)]" //this is not perfect but it will do for now.
+		SetName(padding_material ? "[padding_material.adjective_name] [initial(name)]" : "[material.adjective_name] [initial(name)]") //this is not perfect but it will do for now.
 
 	if(material_alteration & MATERIAL_ALTERATION_DESC)
 		desc = initial(desc)
@@ -117,8 +123,7 @@
 			return
 		C.use(1)
 		if(!istype(src.loc, /turf))
-			user.drop_from_inventory(src)
-			src.loc = get_turf(src)
+			src.forceMove(get_turf(src))
 		to_chat(user, "You add padding to \the [src].")
 		add_padding(padding_type)
 		return
@@ -140,6 +145,24 @@
 				qdel(W)
 	else
 		..()
+
+/obj/structure/bed/buckle_mob(mob/living/M)
+	. = ..()
+	if(. && buckling_sound)
+		playsound(src, buckling_sound, 20)
+
+/obj/structure/bed/Move()
+	. = ..()
+	if(buckled_mob)
+		buckled_mob.forceMove(src.loc)
+
+/obj/structure/bed/forceMove()
+	. = ..()
+	if(buckled_mob)
+		if(isturf(src.loc))
+			buckled_mob.forceMove(src.loc)
+		else
+			unbuckle_mob()
 
 /obj/structure/bed/proc/remove_padding()
 	if(padding_material)
@@ -163,10 +186,10 @@
 	base_icon = "psychbed"
 
 /obj/structure/bed/psych/New(var/newloc)
-	..(newloc,MATERIAL_WOOD,MATERIAL_LEATHER)
+	..(newloc,MATERIAL_WOOD, MATERIAL_LEATHER)
 
 /obj/structure/bed/padded/New(var/newloc)
-	..(newloc,MATERIAL_PLASTIC,MATERIAL_COTTON)
+	..(newloc,MATERIAL_ALUMINIUM,MATERIAL_COTTON)
 
 /obj/structure/bed/alien
 	name = "resting contraption"
@@ -174,116 +197,159 @@
 
 /obj/structure/bed/alien/New(var/newloc)
 	..(newloc,MATERIAL_RESIN)
+
 /*
  * Roller beds
  */
 /obj/structure/bed/roller
 	name = "roller bed"
-	icon = 'icons/obj/structures/rollerbed.dmi'
+	icon = 'icons/obj/rollerbed.dmi'
 	icon_state = "down"
 	anchored = 0
 	buckle_pixel_shift = "x=0;y=6"
+	var/item_form_type = /obj/item/roller	//The folded-up object path.
+	var/obj/item/weapon/reagent_containers/beaker
+	var/iv_attached = 0
+	var/iv_stand = TRUE
 
-/obj/structure/bed/roller/update_icon()
-	return // Doesn't care about material or anything else.
+/obj/structure/bed/roller/on_update_icon()
+	overlays.Cut()
+	if(density)
+		icon_state = "up"
+	else
+		icon_state = "down"
+	if(beaker)
+		var/image/iv = image(icon, "iv[iv_attached]")
+		var/percentage = round((beaker.reagents.total_volume / beaker.volume) * 100, 25)
+		var/image/filling = image(icon, "iv_filling[percentage]")
+		filling.color = beaker.reagents.get_color()
+		iv.overlays += filling
+		if(percentage < 25)
+			iv.overlays += image(icon, "light_low")
+		if(density)
+			iv.pixel_y = 6
+		overlays += iv
 
-/obj/structure/bed/roller/attackby(obj/item/weapon/W as obj, mob/user as mob)
-	if(isWrench(W) || istype(W,/obj/item/stack) || isWirecutter(W))
-		return
-	else if(istype(W,/obj/item/roller_holder))
-		if(buckled_mob)
-			user_unbuckle_mob(user)
-		else
-			visible_message("[user] collapses \the [src.name].")
-			new/obj/item/roller(get_turf(src))
-			spawn(0)
-				qdel(src)
-		return
+/obj/structure/bed/roller/attackby(obj/item/I, mob/user)
+	if(isWrench(I) || istype(I, /obj/item/stack) || isWirecutter(I))
+		return 1
+	if(iv_stand && !beaker && istype(I, /obj/item/weapon/reagent_containers))
+		if(!user.unEquip(I, src))
+			return
+		to_chat(user, "You attach \the [I] to \the [src].")
+		beaker = I
+		queue_icon_update()
+		return 1
 	..()
+
+/obj/structure/bed/roller/attack_hand(mob/living/user)
+	if(beaker && !buckled_mob)
+		remove_beaker(user)
+	else
+		..()
+
+/obj/structure/bed/roller/proc/collapse()
+	visible_message("[usr] collapses [src].")
+	new item_form_type(get_turf(src))
+	qdel(src)
+
+/obj/structure/bed/roller/post_buckle_mob(mob/living/M)
+	. = ..()
+	if(M == buckled_mob)
+		set_density(1)
+		queue_icon_update()
+	else
+		set_density(0)
+		if(iv_attached)
+			detach_iv(M, usr)
+		queue_icon_update()
+
+/obj/structure/bed/roller/Process()
+	if(!iv_attached || !buckled_mob || !beaker)
+		return PROCESS_KILL
+
+	//SSObj fires twice as fast as SSMobs, so gotta slow down to not OD our victims.
+	if(SSobj.times_fired % 2)
+		return
+
+	if(beaker.volume > 0)
+		beaker.reagents.trans_to_mob(buckled_mob, beaker.amount_per_transfer_from_this, CHEM_BLOOD)
+		queue_icon_update()
+
+/obj/structure/bed/roller/proc/remove_beaker(mob/user)
+	to_chat(user, "You detach \the [beaker] to \the [src].")
+	iv_attached = FALSE
+	beaker.dropInto(loc)
+	beaker = null
+	queue_icon_update()
+
+/obj/structure/bed/roller/proc/attach_iv(mob/living/carbon/human/target, mob/user)
+	if(!beaker)
+		return
+	if(do_IV_hookup(target, user, beaker))
+		iv_attached = TRUE
+		queue_icon_update()
+		START_PROCESSING(SSobj,src)
+
+/obj/structure/bed/roller/proc/detach_iv(mob/living/carbon/human/target, mob/user)
+	visible_message("\The [target] is taken off the IV on \the [src].")
+	iv_attached = FALSE
+	queue_icon_update()
+	STOP_PROCESSING(SSobj,src)
+
+/obj/structure/bed/roller/MouseDrop(over_object, src_location, over_location)
+	..()
+	if(!CanMouseDrop(over_object))	return
+	if(!(ishuman(usr) || isrobot(usr)))	return
+	if(over_object == buckled_mob && beaker)
+		if(iv_attached)
+			detach_iv(buckled_mob, usr)
+		else
+			attach_iv(buckled_mob, usr)
+		return
+	if(ishuman(over_object))
+		if(user_buckle_mob(over_object, usr))
+			attach_iv(buckled_mob, usr)
+			return
+	if(beaker)
+		remove_beaker(usr)
+		return
+	if(buckled_mob)	return
+	collapse()
 
 /obj/item/roller
 	name = "roller bed"
 	desc = "A collapsed roller bed that can be carried around."
-	icon = 'icons/obj/structures/rollerbed.dmi'
+	icon = 'icons/obj/rollerbed.dmi'
 	icon_state = "folded"
 	item_state = "rbed"
 	slot_flags = SLOT_BACK
 	w_class = ITEM_SIZE_LARGE
+	var/structure_form_type = /obj/structure/bed/roller	//The deployed form path.
 
 /obj/item/roller/attack_self(mob/user)
-		var/obj/structure/bed/roller/R = new /obj/structure/bed/roller(user.loc)
-		R.add_fingerprint(user)
-		qdel(src)
-
-/obj/item/roller/attackby(obj/item/weapon/W as obj, mob/user as mob)
-
-	if(istype(W,/obj/item/roller_holder))
-		var/obj/item/roller_holder/RH = W
-		if(!RH.held)
-			to_chat(user, "<span class='notice'>You collect the roller bed.</span>")
-			src.forceMove(RH)
-			RH.held = src
-			return
-
-	..()
-
-/obj/item/roller_holder
-	name = "roller bed rack"
-	desc = "A rack for carrying a collapsed roller bed."
-	icon = 'icons/obj/structures/rollerbed.dmi'
-	icon_state = "folded"
-	var/obj/item/roller/held
-
-/obj/item/roller_holder/New()
-	..()
-	held = new /obj/item/roller(src)
-
-/obj/item/roller_holder/attack_self(mob/user as mob)
-
-	if(!held)
-		to_chat(user, "<span class='notice'>The rack is empty.</span>")
-		return
-
-	to_chat(user, "<span class='notice'>You deploy the roller bed.</span>")
-	var/obj/structure/bed/roller/R = new /obj/structure/bed/roller(user.loc)
+	var/obj/structure/bed/roller/R = new structure_form_type(user.loc)
 	R.add_fingerprint(user)
-	qdel(held)
-	held = null
+	qdel(src)
 
+/obj/item/robot_rack/roller
+	name = "roller bed rack"
+	desc = "A rack for carrying collapsed roller beds. Can also be used for carrying ironing boards."
+	icon = 'icons/obj/rollerbed.dmi'
+	icon_state = "folded"
+	object_type = /obj/item/roller
+	interact_type = /obj/structure/bed/roller
+/*
+ * Mattresses
+ */
+/obj/structure/mattress
+	name = "mattress"
+	icon = 'icons/obj/furniture.dmi'
+	icon_state = "mattress"
+	desc = "A bare mattress. It doesn't look very comfortable."
+	anchored = 0
 
-/obj/structure/bed/roller/proc/move_buckled()
-	if(buckled_mob)
-		if(buckled_mob.buckled == src)
-			buckled_mob.forceMove(src.loc)
-		else
-			buckled_mob = null
-
-/obj/structure/bed/roller/post_buckle_mob(mob/living/M as mob)
-	if(M == buckled_mob)
-		set_density(1)
-		icon_state = "up"
-	else
-		set_density(0)
-		icon_state = "down"
-
-	return ..()
-
-/obj/structure/bed/roller/buckle_mob()
-	. = ..()
-	if(.)
-		GLOB.moved_event.register(src, src, /obj/structure/bed/roller/proc/move_buckled)
-
-/obj/structure/bed/roller/unbuckle_mob()
-	GLOB.moved_event.unregister(src, src)
-	return ..()
-
-/obj/structure/bed/roller/MouseDrop(over_object, src_location, over_location)
-	..()
-	if((over_object == usr && (in_range(src, usr) || usr.contents.Find(src))))
-		if(!ishuman(usr))	return
-		if(buckled_mob)	return 0
-		visible_message("[usr] collapses \the [src.name].")
-		new/obj/item/roller(get_turf(src))
-		spawn(0)
-			qdel(src)
-		return
+/obj/structure/mattress/dirty
+	name = "dirty mattress"
+	icon_state = "dirty_mattress"
+	desc = "A dirty, smelly mattress covered in body fluids. You wouldn't want to touch this."

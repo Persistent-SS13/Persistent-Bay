@@ -45,9 +45,9 @@
 /mob/zshadow/hear_say(var/message, var/verb = "says", var/datum/language/language = null, var/alt_name = "", var/italics = 0, var/mob/speaker = null, var/sound/speech_sound, var/sound_vol)
 	if(speaker && speaker.z != src.z)
 		return // Only relay speech on our actual z, otherwise we might relay sounds that were themselves relayed up!
-//	if(isliving(owner))
-//		verb += " from above"
-//	return owner.hear_say(message, verb, language, alt_name, italics, speaker, speech_sound, sound_vol)
+	if(isliving(owner))
+		verb += " from above"
+	return owner.hear_say(message, verb, language, alt_name, italics, speaker, speech_sound, sound_vol)
 
 /mob/zshadow/proc/sync_icon(var/mob/M)
 	var/lay = src.layer
@@ -72,11 +72,11 @@
 
 	// Clean up mob shadow if it has one
 	if(M.shadow)
+		var/client/C = src.client
+		if(C && C.eye == M.shadow)
+			src.reset_view(0)
 		qdel(M.shadow)
 		M.shadow = null
-		var/client/C = M.client
-		if(C && C.eye == shadow)
-			M.reset_view(0)
 
 //
 // Handle cases where the owner mob might have changed its icon or overlays.

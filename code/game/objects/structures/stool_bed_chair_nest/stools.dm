@@ -21,7 +21,7 @@ var/global/list/stool_cache = list() //haha stool
 /obj/item/weapon/stool/padded
 	icon_state = "stool_padded_preview" //set for the map
 
-/obj/item/weapon/stool/New(var/newloc, var/new_material, var/new_padding_material)
+/obj/item/weapon/stool/New(newloc, new_material = DEFAULT_FURNITURE_MATERIAL, new_padding_material)
 	..(newloc)
 	if(!new_material)
 		new_material = MATERIAL_STEEL
@@ -34,8 +34,8 @@ var/global/list/stool_cache = list() //haha stool
 	force = round(material.get_blunt_damage()*0.4)
 	update_icon()
 
-/obj/item/weapon/stool/padded/New(var/newloc, var/new_material)
-	..(newloc, MATERIAL_STEEL, MATERIAL_CARPET)
+/obj/item/weapon/stool/padded/New(newloc, new_material = DEFAULT_FURNITURE_MATERIAL)
+	..(newloc, new_material, MATERIAL_CARPET)
 
 /obj/item/weapon/stool/bar
 	name = "bar stool"
@@ -46,10 +46,10 @@ var/global/list/stool_cache = list() //haha stool
 /obj/item/weapon/stool/bar/padded
 	icon_state = "bar_stool_padded_preview"
 
-/obj/item/weapon/stool/bar/padded/New(var/newloc, var/new_material)
-	..(newloc, MATERIAL_STEEL, MATERIAL_CARPET)
+/obj/item/weapon/stool/bar/padded/New(newloc, new_material = DEFAULT_FURNITURE_MATERIAL)
+	..(newloc, new_material, MATERIAL_CARPET)
 
-/obj/item/weapon/stool/update_icon()
+/obj/item/weapon/stool/on_update_icon()
 	// Prep icon.
 	icon_state = ""
 	// Base icon.
@@ -71,10 +71,10 @@ var/global/list/stool_cache = list() //haha stool
 	overlays = noverlays
 	// Strings.
 	if(padding_material)
-		name = "[padding_material.display_name] [initial(name)]" //this is not perfect but it will do for now.
+		SetName("[padding_material.display_name] [initial(name)]") //this is not perfect but it will do for now.
 		desc = "A padded stool. Apply butt. It's made of [material.use_name] and covered with [padding_material.use_name]."
 	else
-		name = "[material.display_name] [initial(name)]"
+		SetName("[material.display_name] [initial(name)]")
 		desc = "A stool. Apply butt with care. It's made of [material.use_name]."
 
 /obj/item/weapon/stool/proc/add_padding(var/padding_type)
@@ -96,12 +96,12 @@ var/global/list/stool_cache = list() //haha stool
 		dismantle()
 		qdel(src)
 
-		var/blocked = target.run_armor_check(hit_zone, DAM_BLUNT)
-		target.Weaken(10 * blocked_mult(blocked))
-		target.apply_damage(20, DAM_BLUNT, hit_zone, blocked, used_weapon = src)
-		return
+		var/blocked = target.get_blocked_ratio(hit_zone, DAM_BLUNT)
+		target.Weaken(10 * (1 - blocked))
+		target.apply_damage(20, DAM_BLUNT, hit_zone, used_weapon = src)
+		return 1
 
-	..()
+	return ..()
 
 /obj/item/weapon/stool/ex_act(severity)
 	switch(severity)

@@ -1,9 +1,9 @@
-var/datum/antagonist/wizard/wizards
+GLOBAL_DATUM_INIT(wizards, /datum/antagonist/wizard, new)
 
 /datum/antagonist/wizard
 	id = MODE_WIZARD
-	role_text = "Space Wizard"
-	role_text_plural = "Space Wizards"
+	role_text = ANTAG_WIZARD
+	role_text_plural = ANTAG_WIZARD + "s"
 	landmark_id = "wizard"
 	welcome_text = "You will find a list of available spells in your spell book. Choose your magic arsenal carefully.<br>In your pockets you will find a teleport scroll. Use it as needed."
 	flags = ANTAG_OVERRIDE_JOB | ANTAG_CLEAR_EQUIPMENT | ANTAG_CHOOSE_NAME | ANTAG_VOTABLE | ANTAG_SET_APPEARANCE
@@ -16,11 +16,6 @@ var/datum/antagonist/wizard/wizards
 	min_player_age = 18
 
 	faction = "wizard"
-
-
-/datum/antagonist/wizard/New()
-	..()
-	wizards = src
 
 /datum/antagonist/wizard/create_objectives(var/datum/mind/wizard)
 
@@ -69,7 +64,7 @@ var/datum/antagonist/wizard/wizards
 	..()
 	wizard.store_memory("<B>Remember:</B> do not forget to prepare your spells.")
 	wizard.current.real_name = "[pick(GLOB.wizard_first)] [pick(GLOB.wizard_second)]"
-	wizard.current.name = wizard.current.real_name
+	wizard.current.SetName(wizard.current.real_name)
 
 /datum/antagonist/wizard/equip(var/mob/living/carbon/human/wizard_mob)
 
@@ -90,7 +85,7 @@ var/datum/antagonist/wizard/wizards
 		survivor = 1
 		break
 	if(!survivor)
-		feedback_set_details("round_end_result","loss - wizard killed")
+		SSstatistics.set_field_details("round_end_result","loss - wizard killed")
 		to_world("<span class='danger'><font size = 3>The [(current_antagonists.len>1)?"[role_text_plural] have":"[role_text] has"] been killed by the crew! The Space Wizards Federation has been taught a lesson they will not soon forget!</font></span>")
 
 

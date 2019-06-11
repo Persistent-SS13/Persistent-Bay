@@ -3,15 +3,16 @@
 	icon_state = "dart"
 	force = 5
 	sharpness = 1
-	embed = 1 //the dart is shot fast enough to pierce space suits, so I guess splintering inside the target can be a thing. Should be rare due to low damage.
-	var/reagent_amount = 15
+	embed = 1 //the dart is shot fast enough to pierce space suits, so I guess splintering inside the target can be a thing. Should be rare due to low damage
 	kill_count = 15 //shorter range
 	unacidable = 1
 	mass = 0.110
 	muzzle_type = null
+	var/reagent_amount = 15
 
 /obj/item/projectile/bullet/chemdart/New()
-	create_reagents(reagent_amount)
+	if(!reagents)
+		create_reagents(reagent_amount)
 	..()
 
 /obj/item/projectile/bullet/chemdart/on_hit(var/atom/target, var/blocked = 0, var/def_zone = null)

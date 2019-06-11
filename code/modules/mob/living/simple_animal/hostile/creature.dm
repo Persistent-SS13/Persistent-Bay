@@ -1,6 +1,6 @@
 /mob/living/simple_animal/hostile/creature
 	name = "greed"
-	desc = "You cant bear the sight of her."
+	desc = "A sanity-destroying otherthing."
 	icon = 'icons/mob/critter.dmi'
 	speak_emote = list("gibbers")
 	icon_state = "otherthing"
@@ -48,9 +48,7 @@
 	..()
 
 /mob/living/simple_animal/hostile/creature/cult
-
 	faction = "cult"
-
 	min_gas = null
 	max_gas = null
 	minbodytemp = 0

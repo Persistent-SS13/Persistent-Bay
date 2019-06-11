@@ -30,3 +30,6 @@ var/fileaccess_timer = 0
 var/custom_event_msg = null
 
 GLOBAL_VAR_INIT(visibility_pref, FALSE)
+ // Used for admin shenanigans.
+GLOBAL_VAR_INIT(random_players, 0)
+GLOBAL_VAR_INIT(triai, 0)

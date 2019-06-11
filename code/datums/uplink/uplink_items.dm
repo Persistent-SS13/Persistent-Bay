@@ -78,7 +78,7 @@ var/datum/uplink/uplink = new()
 	for(var/antag_role in antag_roles)
 		if(antag_role == "Exclude")
 			continue
-		var/datum/antagonist/antag = all_antag_types()[antag_role]
+		var/datum/antagonist/antag = GLOB.all_antag_types_[antag_role]
 		if(antag.is_antagonist(U.uplink_owner))
 			return !("Exclude" in antag_roles)
 	return ("Exclude" in antag_roles)
@@ -87,7 +87,7 @@ var/datum/uplink/uplink = new()
 	. = item_cost
 	if(U && U.uplink_owner)
 		for(var/antag_role in antag_costs)
-			var/datum/antagonist/antag = all_antag_types()[antag_role]
+			var/datum/antagonist/antag = GLOB.all_antag_types_[antag_role]
 			if(antag.is_antagonist(U.uplink_owner))
 				. = min(antag_costs[antag_role], .)
 	return max(1, U ?  U.get_item_cost(src, .) : .)
@@ -106,7 +106,7 @@ var/datum/uplink/uplink = new()
 	return
 
 /datum/uplink_item/proc/purchase_log(obj/item/device/uplink/U, var/mob/user, var/cost)
-	feedback_add_details("traitor_uplink_items_bought", "[src]")
+	SSstatistics.add_field_details("traitor_uplink_items_bought", "[src]")
 	log_and_message_admins("used \the [U.loc] to buy \a [src]")
 	if(user)
 		uplink_purchase_repository.add_entry(user.mind, src, cost)

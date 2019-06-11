@@ -62,6 +62,61 @@
 		if (I.implanted)
 			I.trigger(act, src)
 
+/mob/proc/format_emote(var/emoter = null, var/message = null)
+	var/pretext
+	var/subtext
+	var/nametext
+	var/end_char
+	var/start_char
+	var/name_anchor
+	var/anchor_char = get_prefix_key(/decl/prefix/visible_emote)
+
+	if(!message || !emoter)
+		return
+
+	message = html_decode(message)
+
+	name_anchor = findtext(message, anchor_char)
+	if(name_anchor > 0) // User supplied emote with visible_emote token (default ^)
+		pretext = copytext(message, 1, name_anchor)
+		subtext = copytext(message, name_anchor + 1, lentext(message) + 1)
+	else
+		// No token. Just the emote as usual.
+		subtext = message
+
+	// Oh shit, we got this far! Let's see... did the user attempt to use more than one token?
+	if(findtext(subtext, anchor_char))
+		// abort abort!
+		to_chat(emoter, "<span class='warning'>You may use only one \"[anchor_char]\" symbol in your emote.</span>")
+		return
+
+	if(pretext)
+		// Add a space at the end if we didn't already supply one.
+		end_char = copytext(pretext, lentext(pretext), lentext(pretext) + 1)
+		if(end_char != " ")
+			pretext += " "
+
+	// Grab the last character of the emote message.
+	end_char = copytext(subtext, lentext(subtext), lentext(subtext) + 1)
+	if(!(end_char in list(".", "?", "!", "\"", "-", "~"))) // gotta include ~ for all you fucking weebs
+		// No punctuation supplied. Tack a period on the end.
+		subtext += "."
+
+	// Add a space to the subtext, unless it begins with an apostrophe or comma.
+	if(subtext != ".")
+		// First, let's get rid of any existing space, to account for sloppy emoters ("X, ^ , Y")
+		subtext = trim_left(subtext)
+		start_char = copytext(subtext, 1, 2)
+		if(start_char != "," && start_char != "'")
+			subtext = " " + subtext
+
+	pretext = capitalize(html_encode(pretext))
+	nametext = html_encode(nametext)
+	subtext = html_encode(subtext)
+	// Store the player's name in a nice bold, naturalement
+	nametext = "<B>[emoter]</B>"
+	return pretext + nametext + subtext
+
 /mob/proc/custom_emote(var/m_type = VISIBLE_MESSAGE, var/message = null)
 
 	if((usr && stat) || (!use_me && usr == src))
@@ -73,8 +128,9 @@
 		input = sanitize(input(src,"Choose an emote to display.") as text|null)
 	else
 		input = message
+
 	if(input)
-		message = "<B>[src]</B> [input]"
+		message = format_emote(src, message)
 	else
 		return
 

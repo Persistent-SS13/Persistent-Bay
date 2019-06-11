@@ -2,34 +2,55 @@
 	name = "lattice"
 	desc = "A lightweight support lattice."
 	icon = 'icons/obj/smoothlattice.dmi'
-	icon_state = "lattice15"	// Only temporary for mapping. Updates in Init
-	density = 0
-	anchored = 1.0
+	icon_state = "lattice0"
+	density = FALSE
+	anchored = TRUE
 	w_class = ITEM_SIZE_NORMAL
-	plane = -18
+	plane = ABOVE_PLATING_PLANE
 	layer = LATTICE_LAYER
+	color = COLOR_STEEL
+	var/init_material = MATERIAL_STEEL
 	//	obj_flags = OBJ_FLAG_CONDUCTIBLE
 	mass = 5
 	max_health = 40
 
-/obj/structure/lattice/Initialize()
-	. = ..()
-	for(var/obj/structure/lattice/L in loc)
-		if(L != src)
-			log_debug("Found multiple [src.type] at '[log_info_line(loc)]'. Deleting self!")
-			return INITIALIZE_HINT_QDEL
+/obj/structure/lattice/get_material()
+	return material
 
-	update_icon(1)
+/obj/structure/lattice/Initialize(mapload, var/new_material)
+	. = ..()
+	if(!(istype(src.loc, /turf/space) || istype(src.loc, /turf/simulated/open)))
+		return INITIALIZE_HINT_QDEL
+	if(!new_material)
+		new_material = init_material
+	material = SSmaterials.get_material_by_name(new_material)
+	if(!istype(material))
+		return INITIALIZE_HINT_QDEL
+
+	SetName("[material.display_name] lattice")
+	desc = "A lightweight support [material.display_name] lattice."
+	color =  material.icon_colour
+
+	for(var/obj/structure/lattice/LAT in loc)
+		if(LAT != src)
+			log_debug("Found multiple lattices at '[log_info_line(loc)]'. Deleting extra lattices!")
+			qdel(LAT)
+	update_icon()
+	if(!mapload)
+		update_neighbors()
 
 /obj/structure/lattice/Destroy()
-	
-	// After this is deleted, the other lattices are updated.
-	for(var/dir in GLOB.cardinal)
-		var/obj/structure/lattice/L = locate(/obj/structure/lattice, get_step(src, dir))
-		if(L)
-			addtimer(CALLBACK(L, /obj/structure/lattice/update_icon))
+	var/turf/old_loc = get_turf(src)
+	. = ..()
+	if(old_loc)
+		update_neighbors(old_loc)
 
-	. = ..()	// Has to be called after, otherwise location is null
+/obj/structure/lattice/proc/update_neighbors(var/location = loc)
+	for (var/dir in GLOB.cardinal)
+		var/obj/structure/lattice/L = locate(/obj/structure/lattice, get_step(location, dir))
+		if(L)
+			L.update_icon()
+
 
 /obj/structure/lattice/attackby(obj/item/C as obj, mob/user as mob)
 
@@ -42,11 +63,10 @@
 		var/obj/item/weapon/tool/weldingtool/WT = C
 		if(WT.remove_fuel(0, user))
 			to_chat(user, "<span class='notice'>Slicing lattice joints ...</span>")
-		new /obj/item/stack/rods(loc)
+		new /obj/item/stack/material/rods(loc, 1, material.name)
 		qdel(src)
-
-/**	if (istype(C, /obj/item/stack/rods))
-		var/obj/item/stack/rods/R = C
+	if (istype(C, /obj/item/stack/material/rods))
+		var/obj/item/stack/material/rods/R = C
 		if(R.use(2))
 			src.alpha = 0
 			playsound(src, 'sound/weapons/Genhit.ogg', 50, 1)
@@ -55,25 +75,15 @@
 			return
 		else
 			to_chat(user, "<span class='notice'>You require at least two rods to complete the catwalk.</span>")
-			return
-**/
-	return
 
-/obj/structure/lattice/update_icon(var/propagate = 0)
-	. = ..()
-
+/obj/structure/lattice/on_update_icon()
 	var/dir_sum = 0
-
-	for(var/dir in GLOB.cardinal)
-		var/turf/T = get_step(src, dir)
-		var/obj/structure/lattice/L = locate(/obj/structure/lattice, T)
-		
-		if(L)
-			dir_sum += dir
-			if(propagate)
-				L.update_icon()
-			
-		if(!istype(T, /turf/space) && !istype(T, /turf/simulated/open))
-			dir_sum += dir
+	for (var/direction in GLOB.cardinal)
+		var/turf/T = get_step(src, direction)
+		if(locate(/obj/structure/lattice, T) || locate(/obj/structure/catwalk, T))
+			dir_sum += direction
+		else
+			if(!(istype(get_step(src, direction), /turf/space)) && !(istype(get_step(src, direction), /turf/simulated/open)))
+				dir_sum += direction
 
 	icon_state = "lattice[dir_sum]"

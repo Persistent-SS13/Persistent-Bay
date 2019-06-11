@@ -14,11 +14,11 @@
 
 	usr.forceMove(O)
 	usr.real_name = O.name
-	usr.name = O.name
+	usr.SetName(O.name)
 	usr.client.eye = O
 	usr.control_object = O
 	usr.ReplaceMovementHandler(/datum/movement_handler/mob/admin_possess)
-	feedback_add_details("admin_verb","PO") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	SSstatistics.add_field_details("admin_verb","PO") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /proc/release(obj/O)
 	set name = "Release Obj"
@@ -28,16 +28,16 @@
 	if(usr.control_object && usr.name_archive) //if you have a name archived and if you are actually relassing an object
 		usr.RemoveMovementHandler(/datum/movement_handler/mob/admin_possess)
 		usr.real_name = usr.name_archive
-		usr.name = usr.real_name
+		usr.SetName(usr.real_name)
 		if(ishuman(usr))
 			var/mob/living/carbon/human/H = usr
-			H.name = H.get_visible_name()
+			H.SetName(H.get_visible_name())
 //		usr.regenerate_icons() //So the name is updated properly
 
 	usr.forceMove(O.loc) // Appear where the object you were controlling is -- TLE
 	usr.client.eye = usr
 	usr.control_object = null
-	feedback_add_details("admin_verb","RO") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	SSstatistics.add_field_details("admin_verb","RO") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 /proc/givetestverbs(mob/M as mob in SSmobs.mob_list)
 	set desc = "Give this guy possess/release verbs"
@@ -45,4 +45,4 @@
 	set name = "Give Possessing Verbs"
 	M.verbs += /proc/possess
 	M.verbs += /proc/release
-	feedback_add_details("admin_verb","GPV") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	SSstatistics.add_field_details("admin_verb","GPV") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!

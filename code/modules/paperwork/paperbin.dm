@@ -13,6 +13,12 @@
 	var/carbon_amount
 	var/list/papers = new/list()	//List of papers put in the bin for reference.
 
+/obj/item/weapon/paper_bin/New()
+	. = ..()
+	ADD_SAVED_VAR(amount)
+	ADD_SAVED_VAR(carbon_amount)
+	ADD_SAVED_VAR(papers)
+	ADD_SKIP_EMPTY(papers)
 
 /obj/item/weapon/paper_bin/MouseDrop(mob/user as mob)
 	if((user == usr && (!( usr.restrained() ) && (!( usr.stat ) && (usr.contents.Find(src) || in_range(src, usr))))))
@@ -66,8 +72,6 @@
 						P.updateinfolinks()
 			else if (response == "Carbon-Copy")
 				P = new /obj/item/weapon/paper/carbon
-
-		P.loc = user.loc
 		user.put_in_hands(P)
 		to_chat(user, "<span class='notice'>You take [P] out of the [src].</span>")
 	else
@@ -81,13 +85,11 @@
 	if(istype(i, /obj/item/weapon/paper))
 		var/obj/item/weapon/paper/paper = i
 		if(paper.info && paper.info != "")
-			user.drop_item()
-			i.forceMove(src)
+			user.unEquip(i, src)
 			to_chat(user, "<span class='notice'>You put [i] in [src].</span>")
 			papers.Add(i)
 		else
-			user.drop_item()
-			i.loc = null
+			user.unEquip(i, src)
 			to_chat(user, "<span class='notice'>You put [i] in [src].</span>")
 			qdel(i)
 		update_icon()
@@ -127,7 +129,7 @@
 	return
 
 
-/obj/item/weapon/paper_bin/update_icon()
+/obj/item/weapon/paper_bin/on_update_icon()
 	if(amount < 1)
 		icon_state = "paper_bin0"
 	else

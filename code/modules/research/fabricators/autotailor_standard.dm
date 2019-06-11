@@ -1,7 +1,7 @@
 /obj/machinery/fabricator/autotailor
 	name = "auto-tailor (standard wear)"
 	desc = "An advanced machine capable of printing many types of clothing, this one is loaded with standard clothing designs."
-	circuit = /obj/item/weapon/circuitboard/fabricator/autotailor
+	circuit_type = /obj/item/weapon/circuitboard/fabricator/autotailor
 	build_type = AUTOTAILOR
 	req_access = list()
 
@@ -24,7 +24,7 @@
 	limits.atstandards |= src
 	req_access_faction = trying.uid
 	connected_faction = trying
-	
+
 /obj/machinery/fabricator/autotailor/can_disconnect(var/datum/world_faction/trying, var/mob/M)
 	var/datum/machine_limits/limits = trying.get_limits()
 	limits.atstandards -= src
@@ -311,10 +311,10 @@
 	id = "sci"
 	build_path = /obj/item/clothing/under/rank/scientist
 
-/datum/design/item/autotailor/under/worksuits/sci_jacket	//nt item
-	name = "Scientist tunic"
-	id = "sci_jacket"
-	build_path = /obj/item/clothing/accessory/nt_tunic
+// /datum/design/item/autotailor/under/worksuits/sci_jacket	//nt item
+// 	name = "Scientist tunic"
+// 	id = "sci_jacket"
+// 	build_path = /obj/item/clothing/accessory/nt_tunic
 
 /datum/design/item/autotailor/under/worksuits/sci_exec	//nt item
 	name = "Scientist jumpsuit - executive"
@@ -322,11 +322,11 @@
 	build_path = /obj/item/clothing/under/rank/scientist/executive
 	materials = list(MATERIAL_LEATHER = 5000, MATERIAL_PHORON = 2000)
 
-/datum/design/item/autotailor/under/worksuits/sci_exec_jacket	//nt item
-	name = "Scientist tunic - executive"
-	id = "sci_exec_jacket"
-	build_path = /obj/item/clothing/accessory/nt_tunic/exec
-	materials = list(MATERIAL_LEATHER = 2000, MATERIAL_PHORON = 1000)
+// /datum/design/item/autotailor/under/worksuits/sci_exec_jacket	//nt item
+// 	name = "Scientist tunic - executive"
+// 	id = "sci_exec_jacket"
+// 	build_path = /obj/item/clothing/accessory/nt_tunic/exec
+// 	materials = list(MATERIAL_LEATHER = 2000, MATERIAL_PHORON = 1000)
 
 /datum/design/item/autotailor/under/worksuits/sci_casual
 	name = "Scientist jumpsuit - casual"
@@ -1058,10 +1058,28 @@
 	id = "bup_black"
 	build_path = /obj/item/clothing/under/suit_jacket/nt
 
-/datum/design/item/autotailor/under/dressclothes/jacket_black	//nt item
+/datum/design/item/autotailor/under/dressclothes/jacket_black
 	name = "Suit jacket - black"
 	id = "jacket_black"
-	build_path = /obj/item/clothing/accessory/toggleable/nanotrasen_jacket
+	build_path = /obj/item/clothing/suit/storage/leather_jacket
+	materials = list(MATERIAL_LEATHER = 4000, MATERIAL_PHORON = 2000)
+
+/datum/design/item/autotailor/under/dressclothes/jacket_black_nt	//nt item
+	name = "Suit jacket - black NT"
+	id = "jacket_black_nt"
+	build_path = /obj/item/clothing/suit/storage/leather_jacket/nanotrasen
+	materials = list(MATERIAL_LEATHER = 4000, MATERIAL_PHORON = 2000)
+
+/datum/design/item/autotailor/under/dressclothes/jacket_brown
+	name = "Suit jacket - brown"
+	id = "jacket_brown"
+	build_path = /obj/item/clothing/suit/storage/toggle/brown_jacket
+	materials = list(MATERIAL_LEATHER = 4000, MATERIAL_PHORON = 2000)
+
+/datum/design/item/autotailor/under/dressclothes/jacket_brown_nt	//nt item
+	name = "Suit jacket - brown NT"
+	id = "jacket_brown_nt"
+	build_path = /obj/item/clothing/suit/storage/toggle/brown_jacket/nanotrasen
 	materials = list(MATERIAL_LEATHER = 4000, MATERIAL_PHORON = 2000)
 
 /datum/design/item/autotailor/under/dressclothes/bup_checkered
@@ -2050,3 +2068,277 @@
 	id = "pouch white"
 	build_path = /obj/item/clothing/accessory/storage/drop_pouches/white
 	materials = list(MATERIAL_LEATHER = 30000)
+
+//
+// underwear
+//
+/datum/design/item/autotailor/underwear
+	category = "Underwear"
+	materials = list(MATERIAL_COTTON = 1 SHEET)
+
+//
+//	Socks
+//
+/datum/design/item/autotailor/underwear/socks
+	name = "socks"
+	build_path = /obj/item/underwear/socks
+/datum/design/item/autotailor/underwear/socks/short
+	name = "short socks"
+	build_path = /obj/item/underwear/socks/short
+/datum/design/item/autotailor/underwear/socks/thigh
+	name = "thigh highs"
+	build_path = /obj/item/underwear/socks/thigh
+/datum/design/item/autotailor/underwear/socks/knee
+	build_path = /obj/item/underwear/socks/knee
+	name = "knee highs"
+/datum/design/item/autotailor/underwear/socks/striped_knee
+	build_path = /obj/item/underwear/socks/striped_knee
+	name = "striped knee highs"
+/datum/design/item/autotailor/underwear/socks/striped_thigh
+	build_path = /obj/item/underwear/socks/striped_thigh
+	name = "striped thigh highs"
+/datum/design/item/autotailor/underwear/socks/pantyhose
+	build_path = /obj/item/underwear/socks/pantyhose
+	name = "pantyhose"
+/datum/design/item/autotailor/underwear/socks/thin_thigh
+	build_path = /obj/item/underwear/socks/thin_thigh
+	name = "thin thigh highs"
+/datum/design/item/autotailor/underwear/socks/thin_knee
+	build_path = /obj/item/underwear/socks/thin_knee
+	name = "knee knee highs"
+/datum/design/item/autotailor/underwear/socks/rainbow_thigh
+	build_path = /obj/item/underwear/socks/rainbow_thigh
+	name = "rainbow thigh highs"
+/datum/design/item/autotailor/underwear/socks/rainbow_knee
+	build_path = /obj/item/underwear/socks/rainbow_knee
+	name = "rainbow knee highs"
+/datum/design/item/autotailor/underwear/socks/fishnet
+	build_path = /obj/item/underwear/socks/fishnet
+	name = "fishnet"
+
+//
+//	Tops
+//
+/datum/design/item/autotailor/underwear/bra
+	build_path = /obj/item/underwear/top/bra
+	name = "Bra"
+/datum/design/item/autotailor/underwear/bra/lacy
+	build_path = /obj/item/underwear/top/bra/lacy
+	name = "Lacy bra"
+/datum/design/item/autotailor/underwear/bra/lacy/alt
+	build_path = /obj/item/underwear/top/bra/lacy/alt
+	name = "Lacy bra, alt"
+/datum/design/item/autotailor/underwear/bra/sport
+	build_path = /obj/item/underwear/top/bra/sport
+	name = "Sports bra"
+/datum/design/item/autotailor/underwear/bra/sport/alt
+	build_path = /obj/item/underwear/top/bra/sport/alt
+	name = "Sports bra, alt"
+/datum/design/item/autotailor/underwear/bra/halterneck
+	build_path = /obj/item/underwear/top/bra/halterneck
+	name = "Halterneck bra"
+/datum/design/item/autotailor/underwear/bra/tubetop
+	build_path = /obj/item/underwear/top/bra/tubetop
+	name = "Tube Top"
+
+//
+// Bottoms
+//
+/datum/design/item/autotailor/underwear/bottom/briefs
+	build_path = /obj/item/underwear/bottom/briefs
+	name = "briefs"
+/datum/design/item/autotailor/underwear/bottom/panties
+	build_path = /obj/item/underwear/bottom/panties
+	name = "panties"
+/datum/design/item/autotailor/underwear/bottom/panties/alt
+	build_path = /obj/item/underwear/bottom/panties/alt
+	name = "panties, alt"
+/datum/design/item/autotailor/underwear/bottom/panties/noback
+	build_path = /obj/item/underwear/bottom/panties/noback
+	name = "panties"
+
+/datum/design/item/autotailor/underwear/bottom/boxers
+	build_path = /obj/item/underwear/bottom/boxers
+	name = "boxers"
+/datum/design/item/autotailor/underwear/bottom/boxers/loveheart
+	build_path = /obj/item/underwear/bottom/boxers/loveheart
+	name = "boxers, loveheart"
+/datum/design/item/autotailor/underwear/bottom/boxers/green_and_blue
+	build_path = /obj/item/underwear/bottom/boxers/green_and_blue
+	name = "boxers, green & blue striped"
+
+/datum/design/item/autotailor/underwear/bottom/thong
+	build_path = /obj/item/underwear/bottom/thong
+	name = "thong"
+/datum/design/item/autotailor/underwear/bottom/thong/lacy
+	build_path = /obj/item/underwear/bottom/thong/lacy
+	name = "lacy thong"
+/datum/design/item/autotailor/underwear/bottom/thong/lacy_alt
+	build_path = /obj/item/underwear/bottom/thong/lacy_alt
+	name = "lacy thong, alt"
+
+/datum/design/item/autotailor/underwear/bottom/shorts/compression
+	build_path = /obj/item/underwear/bottom/shorts/compression
+	name = "compression shorts"
+/datum/design/item/autotailor/underwear/bottom/shorts/expedition_pt
+	build_path = /obj/item/underwear/bottom/shorts/expedition_pt
+	name = "PT shorts, Expeditionary Corps"
+/datum/design/item/autotailor/underwear/bottom/shorts/fleet_pt
+	build_path = /obj/item/underwear/bottom/shorts/fleet_pt
+	name = "PT shorts, Fleet"
+/datum/design/item/autotailor/underwear/bottom/shorts/army_pt
+	build_path = /obj/item/underwear/bottom/shorts/army_pt
+	name = "PT shorts, Army"
+
+/datum/design/item/autotailor/underwear/bottom/longjon
+	build_path = /obj/item/underwear/bottom/longjon
+	name = "long john bottoms"
+
+
+//
+//	Undershirts
+//
+/datum/design/item/autotailor/underwear/undershirt
+	build_path = /obj/item/underwear/undershirt
+	name = "undershirt"
+/datum/design/item/autotailor/underwear/undershirt/female
+	build_path = /obj/item/underwear/undershirt/female
+	name = "undershirt, female"
+
+/datum/design/item/autotailor/underwear/undershirt/blouse/female
+	build_path = /obj/item/underwear/undershirt/blouse/female
+	name = "women's dress shirt"
+
+/datum/design/item/autotailor/underwear/undershirt/shirt
+	build_path = /obj/item/underwear/undershirt/shirt
+	name = "shirt"
+/datum/design/item/autotailor/underwear/undershirt/shirt/long
+	build_path = /obj/item/underwear/undershirt/shirt/long
+	name = "long Shirt"
+/datum/design/item/autotailor/underwear/undershirt/shirt/long/female
+	build_path = /obj/item/underwear/undershirt/shirt/long/female
+	name = "longsleeve shirt, female"
+/datum/design/item/autotailor/underwear/undershirt/shirt/long/stripe/black
+	build_path = /obj/item/underwear/undershirt/shirt/long/stripe/black
+	name = "longsleeve striped shirt, black"
+/datum/design/item/autotailor/underwear/undershirt/shirt/long/stripe/blue
+	build_path = /obj/item/underwear/undershirt/shirt/long/stripe/blue
+	name = "longsleeve striped shirt, blue"
+/datum/design/item/autotailor/underwear/undershirt/shirt/button
+	build_path = /obj/item/underwear/undershirt/shirt/button
+	name = "shirt, button down"
+/datum/design/item/autotailor/underwear/undershirt/shirt/button/female
+	build_path = /obj/item/underwear/undershirt/shirt/button/female
+	name = "button down shirt, female"
+/datum/design/item/autotailor/underwear/undershirt/shirt/expedition
+	build_path = /obj/item/underwear/undershirt/shirt/expedition
+	name = "shirt, expeditionary corps"
+/datum/design/item/autotailor/underwear/undershirt/shirt/expedition/female
+	build_path = /obj/item/underwear/undershirt/shirt/expedition/female
+	name = "shirt, expeditionary corps, female"
+/datum/design/item/autotailor/underwear/undershirt/shirt/heart
+	build_path = /obj/item/underwear/undershirt/shirt/heart
+	name = "shirt, heart"
+/datum/design/item/autotailor/underwear/undershirt/shirt/love_nt
+	build_path = /obj/item/underwear/undershirt/shirt/love_nt
+	name = "shirt, I<3NT"
+/datum/design/item/autotailor/underwear/undershirt/shirt/fleet
+	build_path = /obj/item/underwear/undershirt/shirt/fleet
+	name = "shirt, fleet"
+/datum/design/item/autotailor/underwear/undershirt/shirt/fleet/female
+	build_path = /obj/item/underwear/undershirt/shirt/fleet/female
+	name = "shirt, fleet, female"
+/datum/design/item/autotailor/underwear/undershirt/shirt/army
+	build_path = /obj/item/underwear/undershirt/shirt/army
+	name = "shirt, army"
+/datum/design/item/autotailor/underwear/undershirt/shirt/army/female
+	build_path = /obj/item/underwear/undershirt/shirt/army/female
+	name = "shirt, army, female"
+/datum/design/item/autotailor/underwear/undershirt/shirt/nt
+	build_path = /obj/item/underwear/undershirt/shirt/nt
+	name = "shirt, NT"
+/datum/design/item/autotailor/underwear/undershirt/shirt/shortsleeve
+	build_path = /obj/item/underwear/undershirt/shirt/shortsleeve
+	name = "shortsleeve shirt"
+/datum/design/item/autotailor/underwear/undershirt/shirt/shortsleeve/female
+	build_path = /obj/item/underwear/undershirt/shirt/shortsleeve/female
+	name = "shortsleeve shirt, female"
+/datum/design/item/autotailor/underwear/undershirt/shirt/tiedye
+	build_path = /obj/item/underwear/undershirt/shirt/tiedye
+	name = "shirt, tiedye"
+/datum/design/item/autotailor/underwear/undershirt/shirt/blue_striped
+	build_path = /obj/item/underwear/undershirt/shirt/blue_striped
+	name = "shirt, blue stripes"
+
+/datum/design/item/autotailor/underwear/undershirt/shirt/polo
+	build_path = /obj/item/underwear/undershirt/shirt/polo
+	name = "polo shirt"
+/datum/design/item/autotailor/underwear/undershirt/shirt/polo/female
+	build_path = /obj/item/underwear/undershirt/shirt/polo/female
+	name = "polo, female"
+/datum/design/item/autotailor/underwear/undershirt/shirt/polo/corp
+	build_path = /obj/item/underwear/undershirt/shirt/polo/corp
+	name = "polo, corporate"
+/datum/design/item/autotailor/underwear/undershirt/shirt/polo/nt
+	build_path = /obj/item/underwear/undershirt/shirt/polo/nt
+	name = "polo, NanoTrasen"
+/datum/design/item/autotailor/underwear/undershirt/shirt/polo/dais
+	build_path = /obj/item/underwear/undershirt/shirt/polo/dais
+	name = "polo, deimos advanced information systems"
+
+/datum/design/item/autotailor/underwear/undershirt/shirt/sport/green
+	build_path = /obj/item/underwear/undershirt/shirt/sport/green
+	name = "sport shirt, green"
+/datum/design/item/autotailor/underwear/undershirt/shirt/sport/red
+	build_path = /obj/item/underwear/undershirt/shirt/sport/red
+	name = "sport shirt, red"
+/datum/design/item/autotailor/underwear/undershirt/shirt/sport/blue
+	build_path = /obj/item/underwear/undershirt/shirt/sport/blue
+	name = "sport shirt, blue"
+
+/datum/design/item/autotailor/underwear/undershirt/tank_top
+	build_path = /obj/item/underwear/undershirt/tank_top
+	name = "tank top"
+/datum/design/item/autotailor/underwear/undershirt/tank_top/female
+	build_path = /obj/item/underwear/undershirt/tank_top/female
+	name = "tank top, female"
+/datum/design/item/autotailor/underwear/undershirt/tank_top/alt
+	build_path = /obj/item/underwear/undershirt/tank_top/alt
+	name = "tank top, alt"
+/datum/design/item/autotailor/underwear/undershirt/tank_top/alt/female
+	build_path = /obj/item/underwear/undershirt/tank_top/alt/female
+	name = "tank top alt, female"
+/datum/design/item/autotailor/underwear/undershirt/tank_top/fleet
+	build_path = /obj/item/underwear/undershirt/tank_top/fleet
+	name = "tTank top, fleet"
+/datum/design/item/autotailor/underwear/undershirt/tank_top/fleet/female
+	build_path = /obj/item/underwear/undershirt/tank_top/fleet/female
+	name = "tank top, fleet, female"
+/datum/design/item/autotailor/underwear/undershirt/tank_top/expedition
+	build_path = /obj/item/underwear/undershirt/tank_top/expedition
+	name = "tank top, expeditionary corps"
+/datum/design/item/autotailor/underwear/undershirt/tank_top/expedition/female
+	build_path = /obj/item/underwear/undershirt/tank_top/expedition/female
+	name = "tank top, expeditionary corps, female"
+/datum/design/item/autotailor/underwear/undershirt/tank_top/fire
+	build_path = /obj/item/underwear/undershirt/tank_top/fire
+	name = "tank top, fire"
+/datum/design/item/autotailor/underwear/undershirt/tank_top/rainbow
+	build_path = /obj/item/underwear/undershirt/tank_top/rainbow
+	name = "tank top, rainbow"
+/datum/design/item/autotailor/underwear/undershirt/tank_top/stripes
+	build_path = /obj/item/underwear/undershirt/tank_top/stripes
+	name = "tank top, striped"
+/datum/design/item/autotailor/underwear/undershirt/tank_top/sun
+	build_path = /obj/item/underwear/undershirt/tank_top/sun
+	name = "tank top, sun"
+
+/datum/design/item/autotailor/underwear/undershirt/longjon
+	build_path = /obj/item/underwear/undershirt/longjon
+	name = "long john shirt"
+
+/datum/design/item/autotailor/underwear/undershirt/turtleneck
+	build_path = /obj/item/underwear/undershirt/turtleneck
+	name = "turtleneck sweater"
+
+

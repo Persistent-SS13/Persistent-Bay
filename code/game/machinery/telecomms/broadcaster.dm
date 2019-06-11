@@ -17,7 +17,6 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 	desc = "A dish-shaped machine used to broadcast processed subspace signals."
 	density = 1
 	anchored = 1
-	use_power = 1
 	idle_power_usage = 25
 	machinetype = 5
 	produces_heat = 0
@@ -118,11 +117,20 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 	desc = "A compact machine used for portable subspace telecommuniations processing."
 	density = 1
 	anchored = 1
-	use_power = 0
+	use_power = POWER_USE_OFF
 	idle_power_usage = 0
 	machinetype = 6
 	produces_heat = 0
+	circuitboard = /obj/item/weapon/circuitboard/telecomms/allinone
+	var/listening_freqs
+	var/channel_color
+	var/channel_name
 	var/intercept = 0 // if nonzero, broadcasts all messages to syndicate channel
+	
+/obj/machinery/telecomms/allinone/Initialize()
+	if(!listening_freqs)
+		listening_freqs = ANTAG_FREQS	//Covers any updates to ANTAG_FREQS
+	return ..()
 
 /obj/machinery/telecomms/allinone/receive_signal(datum/signal/signal)
 
@@ -146,13 +154,13 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 
 		var/datum/radio_frequency/connection = signal.data["connection"]
 
-		if(connection.frequency in ANTAG_FREQS) // if antag broadcast, just
+		if(connection.frequency in listening_freqs) // if antag broadcast, just
 			Broadcast_Message(signal.data["connection"], signal.data["mob"],
 							  signal.data["vmask"], signal.data["vmessage"],
 							  signal.data["radio"], signal.data["message"],
 							  signal.data["name"], signal.data["job"],
 							  signal.data["realname"], signal.data["vname"],, signal.data["compression"], list(0), connection.frequency,
-							  signal.data["verb"], signal.data["language"], signal.data["faction_uid"], signal.data["channel_tag"], signal.data["channel_color"])
+							  signal.data["verb"], signal.data["language"], signal.data["faction_uid"], channel_name ? channel_name : signal.data["channel_tag"], channel_color ? channel_color : signal.data["channel_color"])
 		else
 			if(intercept)
 				Broadcast_Message(signal.data["connection"], signal.data["mob"],
@@ -222,7 +230,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 	@param channel_tag
 		The "name" of the frequency. Displayed in brackets before the message
 
- 	@param channel_color
+	@param channel_color
 		Color of the radio message
 
 **/
@@ -266,7 +274,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 		for(var/antag_freq in ANTAG_FREQS)
 			var/datum/radio_frequency/antag_connection = radio_controller.return_frequency(antag_freq)
 			for (var/obj/item/device/radio/R in antag_connection.devices["[RADIO_CHAT]"])
-				if(R.receive_range(antag_freq, level, faction_uid) > -1)
+				if(R.intercept && R.receive_range(antag_freq, level, faction_uid) > -1)
 					radios += R
 
 	// --- Broadcast to ALL radio devices ---
@@ -338,7 +346,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 		if(channel_tag)
 			freq_text = channel_tag
 
- 		// Default to commons channel green
+		// Default to commons channel green
 		if(!channel_color)
 			channel_color = channel_color_presets["Global Green"]
 
@@ -352,54 +360,7 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 		var/part_c = "</span></span>"
 
 
-		// --- Filter the message; place it in quotes apply a verb ---
-
-		var/quotedmsg = null
-		if(M)
-			quotedmsg = M.say_quote(message)
-		else
-			quotedmsg = "says, \"[message]\""
-
-		// --- This following recording is intended for research and feedback in the use of department radio channels ---
-
-		var/part_blackbox_b = "</span><b> \[[freq_text]\]</b> <span class='message'>" // Tweaked for security headsets -- TLE
-		var/blackbox_msg = "[part_a][name][part_blackbox_b][quotedmsg][part_c]"
-		//var/blackbox_admin_msg = "[part_a][M.name] (Real name: [M.real_name])[part_blackbox_b][quotedmsg][part_c]"
-
-		//BR.messages_admin += blackbox_admin_msg
-		if(istype(blackbox))
-			switch(display_freq)
-				if(PUB_FREQ)
-					blackbox.msg_common += blackbox_msg
-				if(SCI_FREQ)
-					blackbox.msg_science += blackbox_msg
-				if(COMM_FREQ)
-					blackbox.msg_command += blackbox_msg
-				if(MED_FREQ)
-					blackbox.msg_medical += blackbox_msg
-				if(ENG_FREQ)
-					blackbox.msg_engineering += blackbox_msg
-				if(SEC_FREQ)
-					blackbox.msg_security += blackbox_msg
-				if(DTH_FREQ)
-					blackbox.msg_deathsquad += blackbox_msg
-				if(SYND_FREQ)
-					blackbox.msg_syndicate += blackbox_msg
-				if(RAID_FREQ)
-					blackbox.msg_raider += blackbox_msg
-				if(SUP_FREQ)
-					blackbox.msg_cargo += blackbox_msg
-				if(SRV_FREQ)
-					blackbox.msg_service += blackbox_msg
-				if(EXP_FREQ)
-					blackbox.msg_exploration += blackbox_msg
-				else
-					blackbox.messages += blackbox_msg
-
-		//End of research and feedback code.
-
-	 /* ###### Send the message ###### */
-
+		 /* ###### Send the message ###### */
 
 	  	/* --- Process all the mobs that heard a masked voice (understood) --- */
 
@@ -527,7 +488,6 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 	if (length(heard_normal) || length(heard_garbled) || length(heard_gibberish))
 
 	  /* --- Some miscellaneous variables to format the string output --- */
-
 		var/freq_text = format_frequency(display_freq)
 		if(channel_tag)
 			freq_text = channel_tag
@@ -543,44 +503,8 @@ var/message_delay = 0 // To make sure restarting the recentmessages list is kept
 		if(data == 3) // intercepted radio message
 			part_b_extra = " <i>(Intercepted)</i>"
 
-		// Create a radio headset for the sole purpose of using its icon
-		var/obj/item/device/radio/headset/radio = new
-
-		var/part_b = "</span><b> \icon[radio]\[[freq_text]\][part_b_extra]</b> <span class='message'>" // Tweaked for security headsets -- TLE
-		var/part_blackbox_b = "</span><b> \[[freq_text]\]</b> <span class='message'>" // Tweaked for security headsets -- TLE
+		var/part_b = "</span><b> \[[freq_text]\][part_b_extra]</b> <span class='message'>" // Tweaked for security headsets -- TLE
 		var/part_c = "</span></span>"
-
-		var/blackbox_msg = "[part_a][source][part_blackbox_b]\"[text]\"[part_c]"
-
-		//BR.messages_admin += blackbox_admin_msg
-		if(istype(blackbox))
-			switch(display_freq)
-				if(PUB_FREQ)
-					blackbox.msg_common += blackbox_msg
-				if(SCI_FREQ)
-					blackbox.msg_science += blackbox_msg
-				if(COMM_FREQ)
-					blackbox.msg_command += blackbox_msg
-				if(MED_FREQ)
-					blackbox.msg_medical += blackbox_msg
-				if(ENG_FREQ)
-					blackbox.msg_engineering += blackbox_msg
-				if(SEC_FREQ)
-					blackbox.msg_security += blackbox_msg
-				if(DTH_FREQ)
-					blackbox.msg_deathsquad += blackbox_msg
-				if(SYND_FREQ)
-					blackbox.msg_syndicate += blackbox_msg
-				if(RAID_FREQ)
-					blackbox.msg_raider += blackbox_msg
-				if(SUP_FREQ)
-					blackbox.msg_cargo += blackbox_msg
-				if(SRV_FREQ)
-					blackbox.msg_service += blackbox_msg
-				if(EXP_FREQ)
-					blackbox.msg_exploration += blackbox_msg
-				else
-					blackbox.messages += blackbox_msg
 
 		//End of research and feedback code.
 

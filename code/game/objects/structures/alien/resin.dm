@@ -31,19 +31,18 @@
 	..()
 
 /obj/structure/alien/resin/attack_hand(var/mob/user)
-	if (HULK in user.mutations)
+	if (MUTATION_HULK in user.mutations)
 		visible_message(SPAN_DANGER("\The [user] destroys \the [name]!"))
 		kill()
 	else
 		// Aliens can get straight through these.
 		if(istype(user,/mob/living/carbon))
 			var/mob/living/carbon/M = user
-			if(locate(/obj/item/organ/internal/xenos/hivenode) in M.internal_organs)
+			if(locate(/obj/item/organ/internal/xeno/hivenode) in M.internal_organs)
 				visible_message("<span class='alium'>\The [user] strokes \the [name] and it melts away!</span>")
 				kill()
 				return
 		visible_message(SPAN_DANGER("\The [user] claws at \the [src]!"))
 		// Todo check attack datums.
 		rem_health(rand(5,10))
-	update_health()
 	return

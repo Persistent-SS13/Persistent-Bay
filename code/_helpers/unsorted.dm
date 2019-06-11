@@ -1,5 +1,5 @@
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:31
-
+#define crash_with(msg) CRASH(msg)
 /*
  * A large number of misc global procs.
  */
@@ -312,18 +312,18 @@ Turf and target are seperate in case you want to teleport some distance from a t
 
 		fully_replace_character_name(newname)
 
-
-
 //Picks a string of symbols to display as the law number for hacked or ion laws
 /proc/ionnum()
 	return "[pick("1","2","3","4","5","6","7","8","9","0")][pick("!","@","#","$","%","^","&","*")][pick("!","@","#","$","%","^","&","*")][pick("!","@","#","$","%","^","&","*")]"
 
 //When an AI is activated, it can choose from a list of non-slaved borgs to have as a slave.
-/proc/freeborg()
+/proc/freeborg(z)
+	var/list/zs = get_valid_silicon_zs(z)
+
 	var/select = null
 	var/list/borgs = list()
 	for (var/mob/living/silicon/robot/A in GLOB.player_list)
-		if (A.stat == 2 || A.connected_ai || A.scrambledcodes || istype(A,/mob/living/silicon/robot/drone))
+		if (A.stat == 2 || A.connected_ai || A.scrambledcodes || istype(A,/mob/living/silicon/robot/drone) || !((get_turf(A))?.z in zs))
 			continue
 		var/name = "[A.real_name] ([A.modtype] [A.braintype])"
 		borgs[name] = A
@@ -333,32 +333,38 @@ Turf and target are seperate in case you want to teleport some distance from a t
 		return borgs[select]
 
 //When a borg is activated, it can choose which AI it wants to be slaved to
-/proc/active_ais()
+/proc/active_ais(z)
+	var/list/zs = get_valid_silicon_zs(z)
+
 	. = list()
 	for(var/mob/living/silicon/ai/A in GLOB.living_mob_list_)
-		if(A.stat == DEAD)
-			continue
-		if(A.control_disabled == 1)
+		if(A.stat == DEAD || A.control_disabled || !((get_turf(A))?.z in zs))
 			continue
 		. += A
 	return .
 
 //Find an active ai with the least borgs. VERBOSE PROCNAME HUH!
-/proc/select_active_ai_with_fewest_borgs()
+/proc/select_active_ai_with_fewest_borgs(z)
 	var/mob/living/silicon/ai/selected
-	var/list/active = active_ais()
+	var/list/active = active_ais(z)
 	for(var/mob/living/silicon/ai/A in active)
 		if(!selected || (selected.connected_robots.len > A.connected_robots.len))
 			selected = A
 
 	return selected
 
-/proc/select_active_ai(var/mob/user)
-	var/list/ais = active_ais()
+/proc/select_active_ai(mob/user, z)
+	var/list/ais = active_ais(z)
 	if(ais.len)
-		if(user)	. = input(usr,"AI signals detected:", "AI selection") in ais
-		else		. = pick(ais)
-	return .
+		if(user)
+			. = input(user,"AI signals detected:", "AI selection") in ais
+		else
+			. = pick(ais)
+
+/proc/get_valid_silicon_zs(z)
+	if(z)
+		return GetConnectedZlevels(z)
+	return list() //We return an empty list, because we are apparently in nullspace
 
 /proc/get_sorted_mobs()
 	var/list/old_list = getmobs()
@@ -598,7 +604,7 @@ proc/GaussRandRound(var/sigma,var/roundto)
 //Takes: Anything that could possibly have variables and a varname to check.
 //Returns: 1 if found, 0 if not.
 /proc/hasvar(var/datum/A, var/varname)
-	if(A.vars.Find(varname)) return 1
+	if(A.vars.Find(lowertext(varname))) return 1
 	else return 0
 
 //Takes: Area type as text string or as typepath OR an instance of the area.
@@ -615,7 +621,7 @@ proc/GaussRandRound(var/sigma,var/roundto)
 		if(istype(N, areatype)) areas += N
 	return areas
 
-//Takes: Area type as text string or as typepath OR an instance of the area.
+//Takes: Area type as a typepath OR an instance of the area.
 //Returns: A list of all atoms	(objs, turfs, mobs) in areas of that type of that type in the world.
 /proc/get_area_all_atoms(var/areatype)
 	if(!areatype) return null
@@ -623,6 +629,8 @@ proc/GaussRandRound(var/sigma,var/roundto)
 	if(isarea(areatype))
 		var/area/areatemp = areatype
 		areatype = areatemp.type
+	if(!ispath(areatype, /area))
+		return null
 
 	var/list/atoms = new/list()
 	for(var/area/N in world)
@@ -880,7 +888,7 @@ var/global/list/common_tools = list(
 		return 1
 	return 0
 
-proc/is_hot(obj/item/W as obj)
+/proc/is_hot(obj/item/W as obj)
 	switch(W.type)
 		if(/obj/item/weapon/tool/weldingtool)
 			var/obj/item/weapon/tool/weldingtool/WT = W
@@ -907,6 +915,11 @@ proc/is_hot(obj/item/W as obj)
 			return 3800
 		if(/obj/item/weapon/melee/energy)
 			return 3500
+		if(/obj/item/weapon/blob_tendril) 
+			if(IsDamageTypeBurn(W.damtype))
+				return 1000
+			else
+				return 0
 		else
 			return 0
 
@@ -964,7 +977,7 @@ var/list/WALLITEMS = list(
 	/obj/machinery/status_display, /obj/machinery/requests_console, /obj/machinery/light_switch, /obj/structure/sign,
 	/obj/machinery/newscaster, /obj/machinery/firealarm, /obj/structure/noticeboard,
 	/obj/item/weapon/storage/secure/safe, /obj/machinery/door_timer, /obj/machinery/flasher, /obj/machinery/keycard_auth,
-	/obj/structure/mirror, /obj/structure/fireaxecabinet, /obj/structure/filingcabinet/wallcabinet
+	/obj/item/weapon/storage/mirror, /obj/structure/fireaxecabinet, /obj/structure/filingcabinet/wallcabinet
 	)
 /proc/gotwallitem(loc, dir)
 	for(var/obj/O in loc)
@@ -1046,7 +1059,7 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 
 /mob/dview/Destroy()
 	if(!destroy_ret)
-		crash_with("Prevented attempt to delete dview mob: [log_info_line(src)]")
+		CRASH("Prevented attempt to delete dview mob: [log_info_line(src)]")
 	else
 		return ..()
 	return destroy_ret // Prevents destruction
@@ -1054,7 +1067,7 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 /atom/proc/get_light_and_color(var/atom/origin)
 	if(origin)
 		color = origin.color
-		set_light(origin.light_range, origin.light_power, origin.light_color)
+		set_light(origin.light_max_bright, origin.light_inner_range, origin.light_outer_range, origin.light_falloff_curve)
 
 /mob/dview/Initialize()
 	. = ..()
@@ -1062,12 +1075,13 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 	STOP_PROCESSING(SSmobs, src)
 
 // call to generate a stack trace and print to runtime logs
-/proc/crash_with(msg)
-	CRASH(msg)
+///proc/crash_with(msg)
+//	CRASH(msg)
 
 /proc/pass()
 	return
 
+//clicking to move pulled objects onto assignee's turf/loc
 /proc/do_pull_click(mob/user, atom/A)
 	if(ismob(user.pulling))
 		var/mob/M = user.pulling
@@ -1077,3 +1091,8 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 		M.start_pulling(t)
 	else
 		step(user.pulling, get_dir(user.pulling.loc, A))
+
+/proc/convert2energy(var/mass)
+	return (mass * SPEED_OF_LIGHT) * (mass * SPEED_OF_LIGHT)
+
+#define isPDA(A) istype(A,/obj/item/modular_computer/pda)

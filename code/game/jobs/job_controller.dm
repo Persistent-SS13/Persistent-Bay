@@ -1,3 +1,4 @@
+//#TODO: Is this still in use?
 var/global/datum/controller/occupations/job_master
 
 /datum/controller/occupations
@@ -374,7 +375,7 @@ var/global/datum/controller/occupations/job_master
 		if(H.char_branch && H.char_branch.email_domain)
 			domain = H.char_branch.email_domain
 		else
-			domain = "freemail.nt"
+			domain = EMAIL_DOMAIN_DEFAULT
 		var/sanitized_name = sanitize(replacetext(replacetext(lowertext(H.real_name), " ", "."), "'", ""))
 		var/complete_login = "[sanitized_name]@[domain]"
 
@@ -472,7 +473,7 @@ var/global/datum/controller/occupations/job_master
 				else level4++ //not selected
 
 			tmp_str += "HIGH=[level1]|MEDIUM=[level2]|LOW=[level3]|NEVER=[level4]|BANNED=[level5]|YOUNG=[level6]|-"
-			feedback_add_details("job_preferences",tmp_str)
+			SSstatistics.add_field_details("job_preferences",tmp_str)
 
 
 /**

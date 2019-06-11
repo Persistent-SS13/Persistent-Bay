@@ -9,8 +9,8 @@
 	item_cost = DEFAULT_TELECRYSTAL_AMOUNT
 	path = /obj/item/toy/balloon
 
-/datum/uplink_item/item/badassery/balloon/NT
-	name = "For showing that you love NT SOO much (Useless Balloon)"
+/datum/uplink_item/item/badassery/balloon/corporate
+	name = "For showing that you love the company SOO much (Useless Balloon)"
 	path = /obj/item/toy/balloon/nanotrasen
 
 /datum/uplink_item/item/badassery/balloon/random
@@ -57,7 +57,7 @@
 	return bought_items
 
 /datum/uplink_item/item/badassery/random_many/purchase_log(obj/item/device/uplink/U)
-	feedback_add_details("traitor_uplink_items_bought", "[src]")
+	SSstatistics.add_field_details("traitor_uplink_items_bought", "[src]")
 	log_and_message_admins("used \the [U.loc] to buy \a [src]")
 
 /****************

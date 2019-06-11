@@ -40,8 +40,8 @@
 	result = /datum/reagent/synaptizine
 	required_reagents = list(/datum/reagent/sugar = 1, /datum/reagent/lithium = 1, /datum/reagent/water = 1)
 	result_amount = 3
-	minimum_temperature = 30 CELCIUS
-	maximum_temperature = (30 CELCIUS) + 100
+	minimum_temperature = 30 CELSIUS
+	maximum_temperature = (30 CELSIUS) + 100
 
 /datum/chemical_reaction/hyronalin
 	name = "Hyronalin"
@@ -93,8 +93,8 @@
 	result = /datum/reagent/cryptobiolin
 	required_reagents = list(/datum/reagent/potassium = 1, /datum/reagent/acetone = 1, /datum/reagent/sugar = 1)
 	result_amount = 3
-	minimum_temperature = 30 CELCIUS
-	maximum_temperature = 60 CELCIUS
+	minimum_temperature = 30 CELSIUS
+	maximum_temperature = 60 CELSIUS
 
 /datum/chemical_reaction/tricordrazine
 	name = "Tricordrazine"
@@ -120,8 +120,8 @@
 	result = /datum/reagent/dermaline
 	required_reagents = list(/datum/reagent/acetone = 1, /datum/reagent/phosphorus = 1, /datum/reagent/kelotane = 1)
 	result_amount = 3
-	minimum_temperature = (-50 CELCIUS) - 100
-	maximum_temperature = -50 CELCIUS
+	minimum_temperature = (-50 CELSIUS) - 100
+	maximum_temperature = -50 CELSIUS
 
 /datum/chemical_reaction/dexalinp
 	name = "Dexalin Plus"
@@ -153,8 +153,8 @@
 	result = /datum/reagent/cryoxadone
 	required_reagents = list(/datum/reagent/dexalin = 1, /datum/reagent/water = 1, /datum/reagent/acetone = 1)
 	result_amount = 3
-	minimum_temperature = (-25 CELCIUS) - 100
-	maximum_temperature = -25 CELCIUS
+	minimum_temperature = (-25 CELSIUS) - 100
+	maximum_temperature = -25 CELSIUS
 	mix_message = "The solution becomes sludge-like."
 
 /datum/chemical_reaction/clonexadone
@@ -162,8 +162,8 @@
 	result = /datum/reagent/clonexadone
 	required_reagents = list(/datum/reagent/cryoxadone = 1, /datum/reagent/sodium = 1, /datum/reagent/toxin/phoron = 0.1)
 	result_amount = 2
-	minimum_temperature = -100 CELCIUS
-	maximum_temperature = -75 CELCIUS
+	minimum_temperature = -100 CELSIUS
+	maximum_temperature = -75 CELSIUS
 	mix_message = "The solution thickens into translucent slime."
 
 /datum/chemical_reaction/spaceacillin
@@ -202,8 +202,8 @@
 	result = /datum/reagent/toxin/potassium_chloride
 	required_reagents = list(/datum/reagent/sodiumchloride = 1, /datum/reagent/potassium = 1)
 	result_amount = 2
-	minimum_temperature = 60 CELCIUS
-	maximum_temperature = (60 CELCIUS) + 100
+	minimum_temperature = 60 CELSIUS
+	maximum_temperature = (60 CELSIUS) + 100
 
 /datum/chemical_reaction/potassium_chlorophoride
 	name = "Potassium Chlorophoride"

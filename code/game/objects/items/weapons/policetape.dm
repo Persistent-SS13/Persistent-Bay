@@ -13,7 +13,6 @@
 
 /obj/item/taperoll/Initialize()
 	. = ..()
-
 	if(apply_tape)
 		var/turf/T = get_turf(src)
 		if(!T)
@@ -31,6 +30,7 @@ var/list/tape_roll_applications = list()
 	name = "tape"
 	icon = 'icons/policetape.dmi'
 	icon_state = "tape"
+	layer = ABOVE_DOOR_LAYER
 	randpixel = 0
 	anchored = 1
 	var/lifted = 0
@@ -38,7 +38,7 @@ var/list/tape_roll_applications = list()
 	var/tape_dir = 0
 	var/icon_base = "tape"
 
-/obj/item/tape/update_icon()
+/obj/item/tape/on_update_icon()
 	//Possible directional bitflags: 0 (AIRLOCK), 1 (NORTH), 2 (SOUTH), 4 (EAST), 8 (WEST), 3 (VERTICAL), 12 (HORIZONTAL)
 	switch (tape_dir)
 		if(0)  // AIRLOCK
@@ -123,7 +123,7 @@ var/list/tape_roll_applications = list()
 	req_one_access = list(core_access_medical_programs)
 	color = COLOR_GREEN
 
-/obj/item/taperoll/update_icon()
+/obj/item/taperoll/on_update_icon()
 	overlays.Cut()
 	var/image/overlay = image(icon = src.icon)
 	overlay.appearance_flags = RESET_COLOR
@@ -290,7 +290,7 @@ var/list/tape_roll_applications = list()
 	if(!crumpled)
 		crumpled = 1
 		update_icon()
-		name = "crumpled [name]"
+		SetName("crumpled [name]")
 
 /obj/item/tape/CanPass(atom/movable/mover, turf/target, height=0, air_group=0)
 	if(!lifted && ismob(mover))

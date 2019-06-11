@@ -20,6 +20,14 @@
 	else if (incapacitated())
 		return STATUS_UPDATE					// update only (orange visibility)
 	return STATUS_INTERACTIVE
+
+/mob/living/silicon/ai/shared_nano_interaction()
+	if(!has_power())
+		return STATUS_CLOSE
+	if (check_unable(1, 0))
+		return STATUS_CLOSE
+	return ..()
+
 	
 /mob/living/carbon/lace/shared_nano_interaction()
 	if (src.stat || !client)

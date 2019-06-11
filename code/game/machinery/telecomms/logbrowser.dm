@@ -22,7 +22,8 @@
 		if(stat & (BROKEN|NOPOWER))
 			return
 		user.set_machine(src)
-		var/dat = "<TITLE>Telecommunication Server Monitor</TITLE><center><b>Telecommunications Server Monitor</b></center>"
+		var/list/dat = list()
+		dat += "<TITLE>Telecommunication Server Monitor</TITLE><center><b>Telecommunications Server Monitor</b></center>"
 
 		switch(screen)
 
@@ -103,9 +104,9 @@
 				dat += "</ol>"
 
 
-
-		user << browse(dat, "window=comm_monitor;size=575x400")
-		onclose(user, "server_control")
+		var/datum/browser/popup = new(user, "comm_monitor", "Telecommunications Monitor", 575, 400)
+		popup.set_content(JOINTEXT(dat))
+		popup.open()
 
 		temp = ""
 		return
@@ -115,8 +116,6 @@
 		if(..())
 			return
 
-
-		add_fingerprint(usr)
 		usr.set_machine(src)
 
 		if(href_list["viewserver"])
@@ -198,7 +197,7 @@
 					new /obj/item/weapon/material/shard( src.loc )
 					var/obj/item/weapon/circuitboard/comm_server/M = new /obj/item/weapon/circuitboard/comm_server( A )
 					for (var/obj/C in src)
-						C.loc = src.loc
+						C.dropInto(loc)
 					A.circuit = M
 					A.state = 3
 					A.icon_state = "3"
@@ -209,7 +208,7 @@
 					var/obj/structure/computerframe/A = new /obj/structure/computerframe( src.loc )
 					var/obj/item/weapon/circuitboard/comm_server/M = new /obj/item/weapon/circuitboard/comm_server( A )
 					for (var/obj/C in src)
-						C.loc = src.loc
+						C.dropInto(loc)
 					A.circuit = M
 					A.state = 4
 					A.icon_state = "4"

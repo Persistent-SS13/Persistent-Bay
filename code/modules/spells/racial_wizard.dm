@@ -30,7 +30,6 @@
 		if(istype(S,reward))
 			to_chat(user, "\The [src] can do no more for you.")
 			return
-	user.drop_from_inventory(src)
 	var/a = new reward()
 	if(ispath(reward,/spell))
 		H.add_spell(a)
@@ -50,6 +49,20 @@
 			var/obj/item/I = new /obj/item/weapon/spacecash/bundle/c1000()
 			src.handle_item_insertion(I,1)
 
+/spell/messa_shroud/choose_targets()
+	return list(get_turf(holder))
+
+/spell/messa_shroud/cast(var/list/targets, mob/user)
+	var/turf/T = targets[1]
+
+	if(!istype(T))
+		return
+
+	var/obj/O = new /obj(T)
+	O.set_light(-10, 0.1, 10, 2, "#ffffff")
+
+	spawn(duration)
+		qdel(O)
 
 //VOX
 /spell/targeted/shapeshift/true_form
@@ -67,7 +80,7 @@
 	smoke_amt = 5
 	smoke_spread = 1
 
-	possible_transformations = list(/mob/living/simple_animal/hostile/armalis)
+	possible_transformations = list(/mob/living/simple_animal/parrot/space/lesser)
 
 	hud_state = "wiz_vox"
 
@@ -123,12 +136,12 @@
 /*
 /spell/aoe_turf/conjure/grove/gestalt
 	name = "Convert Gestalt"
-	desc = "Converts the surrounding area into a Dionaea gestalt."
+	desc = "Converts the surrounding area into a diona gestalt."
 
 	school = "racial"
 	spell_flags = 0
 	invocation_type = SpI_EMOTE
-	invocation = "rumbles as green alien plants grow quickly along the floor."
+	invocation = "rumbles as strange alien growth quickly overtakes their surroundings."
 
 	charge_type = Sp_HOLDVAR
 	holder_var_type = "bruteloss"

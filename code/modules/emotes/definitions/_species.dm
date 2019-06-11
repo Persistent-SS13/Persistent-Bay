@@ -38,6 +38,12 @@
 		/decl/emote/audible/bug_chitter
 		)
 
-/mob/living/carbon/human/set_species(var/new_species, var/default_colour)
+/datum/species/adherent
+	default_emotes = list(
+		/decl/emote/audible/adherent_chime,
+		/decl/emote/audible/adherent_ding
+	)
+
+/mob/living/carbon/human/set_species(var/new_species, var/default_colour = 1)
 	. = ..()
 	update_emotes()

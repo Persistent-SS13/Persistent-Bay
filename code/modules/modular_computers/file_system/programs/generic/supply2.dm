@@ -107,7 +107,7 @@
 			data["requests"] = requests
 		if(5) // export view..
 			var/list/exports[0]
-			for(var/datum/export_order/order in supply_controller.all_exports)
+			for(var/datum/export_order/order in SSsupply.all_exports)
 				exports.Add(list(list(
 					"name" = order.name,
 					"required" = order.required,
@@ -183,7 +183,7 @@
 			selected_telepads_revoke |= telepad
 		return 1
 	if(href_list["order"])
-		var/decl/hierarchy/supply_pack/P = locate(href_list["order"]) in supply_controller.master_supply_list
+		var/decl/hierarchy/supply_pack/P = locate(href_list["order"]) in SSsupply.master_supply_list
 		if(!istype(P) || P.is_category())
 			return 1
 
@@ -203,10 +203,10 @@
 		else if(issilicon(user))
 			idname = user.real_name
 
-		supply_controller.ordernum++
+		SSsupply.ordernum++
 
 		var/datum/supply_order/O = new /datum/supply_order()
-		O.ordernum = supply_controller.ordernum
+		O.ordernum = SSsupply.ordernum
 		O.object = P
 		O.orderedby = idname
 		O.reason = reason
@@ -239,7 +239,7 @@
 
 
 	if(href_list["launch_shuttle"])
-		var/datum/shuttle/autodock/ferry/supply/shuttle = supply_controller.shuttle
+		var/datum/shuttle/autodock/ferry/supply/shuttle = SSsupply.shuttle
 		if(!shuttle)
 			to_chat(user, "<span class='warning'>Error connecting to the shuttle.</span>")
 			return
@@ -288,7 +288,7 @@
 					if(export.business_name)
 						var/datum/small_business/business = get_business(export.business_name)
 						if(business)
-							var/earn = supply_controller.fill_order(export.export_id, closet)
+							var/earn = SSsupply.fill_order(export.export_id, closet)
 							if(earn)
 								var/datum/transaction/Te = new("Central Authority Exports", "Export ([export.name])", earn, 1)
 								business.central_account.do_transaction(Te)
@@ -296,7 +296,7 @@
 								sent++
 						break
 					else if(export.business_name == 0)
-						var/earn = supply_controller.fill_order(export.export_id, closet)
+						var/earn = SSsupply.fill_order(export.export_id, closet)
 						if(earn)
 							var/datum/transaction/Te = new("Central Authority Exports", "Export ([export.name])", earn, 1)
 							connected_faction.central_account.do_transaction(Te)
@@ -475,7 +475,8 @@
 		return 1
 	category_names = list()
 	category_contents = list()
-	for(var/decl/hierarchy/supply_pack/sp in cargo_supply_pack_root.children)
+	var/decl/hierarchy/supply_pack/root = decls_repository.get_decl(/decl/hierarchy/supply_pack)
+	for(var/decl/hierarchy/supply_pack/sp in root.children)
 		if(sp.is_category())
 			category_names.Add(sp.name)
 			var/list/category[0]
@@ -490,7 +491,7 @@
 			category_contents[sp.name] = category
 
 /datum/nano_module/program/supply/proc/get_shuttle_status()
-	var/datum/shuttle/autodock/ferry/supply/shuttle = supply_controller.shuttle
+	var/datum/shuttle/autodock/ferry/supply/shuttle = SSsupply.shuttle
 	if(!istype(shuttle))
 		return "No Connection"
 
@@ -532,8 +533,8 @@
 /datum/nano_module/program/supply/proc/print_summary(var/mob/user)
 	var/t = ""
 	t += "<center><BR><b><large>[GLOB.using_map.station_name]</large></b><BR><i>[station_date]</i><BR><i>Export overview<field></i></center><hr>"
-	for(var/source in point_source_descriptions)
-		t += "[point_source_descriptions[source]]: [supply_controller.point_sources[source] || 0]<br>"
+	for(var/source in SSsupply.point_sources)
+		t += "[SSsupply.point_sources[source]]: [SSsupply.point_sources[source] || 0]<br>"
 	print_text(t, user)
 /datum/nano_module/program/supply/proc/print_export(var/mob/user, var/id)
 	var/datum/world_faction/connected_faction

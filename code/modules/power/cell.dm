@@ -11,34 +11,20 @@
 	throw_speed = 3
 	throw_range = 5
 	w_class = ITEM_SIZE_NORMAL
-	var/c_uid
 	var/charge			                // Current charge
 	var/maxcharge = 1000 // Capacity in Wh
 	var/overlay_state
-	var/self_recharge = 0
-	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 50)
-
+	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 50, MATERIAL_PLASTIC = 20)
 
 /obj/item/weapon/cell/New()
-	if(isnull(charge))
-		charge = maxcharge
-	c_uid = sequential_id(/obj/item/weapon/cell)
-	..()
+	. = ..()
+	ADD_SAVED_VAR(charge)
 
 /obj/item/weapon/cell/Initialize()
 	. = ..()
-	START_PROCESSING(SSobj, src)
-	update_icon()
-
-/obj/item/weapon/cell/Destroy()
-	STOP_PROCESSING(SSobj, src)
-	return ..()
-
-/obj/item/weapon/cell/Process()
-	var/power = Clamp(charge + self_recharge, 0, maxcharge)
-	if(charge != power)
-		update_icon()
-	charge = power
+	if(isnull(charge))
+		charge = maxcharge
+	queue_icon_update()
 
 /obj/item/weapon/cell/drain_power(var/drain_check, var/surge, var/power = 0)
 
@@ -52,7 +38,7 @@
 
 	return use(cell_amt) / CELLRATE
 
-/obj/item/weapon/cell/update_icon()
+/obj/item/weapon/cell/on_update_icon()
 
 	var/new_overlay_state = null
 	if(percent() >= 95)
@@ -131,6 +117,8 @@
 		else
 			return 0
 
+/obj/item/weapon/cell/get_cell()
+	return src //no shit Sherlock
 
 // SUBTYPES BELOW
 
@@ -146,10 +134,10 @@
 	maxcharge = 100
 	matter = list(MATERIAL_STEEL = 70, MATERIAL_GLASS = 5)
 
-/obj/item/weapon/cell/device/variable/New(newloc, charge_amount)
-	if(charge_amount)
+/obj/item/weapon/cell/device/variable/Initialize(mapload, charge_amount)
+	if(!mapload)
 		maxcharge = charge_amount
-	..(newloc)
+	return ..(mapload)
 
 /obj/item/weapon/cell/device/standard
 	name = "standard device power cell"
@@ -171,7 +159,7 @@
 	desc = "A cheap old power cell. It's probably been in use for quite some time now."
 	origin_tech = list(TECH_POWER = 0)
 	maxcharge = 100
-	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 40)
+	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 40, MATERIAL_PLASTIC = 20)
 
 /obj/item/weapon/cell/crap/empty
 	charge = 0
@@ -181,7 +169,7 @@
 	desc = "A standard and relatively cheap power cell, commonly used."
 	origin_tech = list(TECH_POWER = 0)
 	maxcharge = 250
-	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 40)
+	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 40, MATERIAL_PLASTIC = 20)
 
 /obj/item/weapon/cell/crap/empty/New()
 	..()
@@ -193,7 +181,7 @@
 	desc = "A special power cell designed for heavy-duty use in area power controllers."
 	origin_tech = list(TECH_POWER = 1)
 	maxcharge = 500
-	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 50)
+	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 50, MATERIAL_PLASTIC = 20)
 
 
 /obj/item/weapon/cell/high
@@ -202,12 +190,10 @@
 	origin_tech = list(TECH_POWER = 2)
 	icon_state = "hcell"
 	maxcharge = 1000
-	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 60)
+	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 60, MATERIAL_PLASTIC = 20)
 
-/obj/item/weapon/cell/high/empty/New()
-	..()
+/obj/item/weapon/cell/high/empty
 	charge = 0
-
 
 /obj/item/weapon/cell/mecha
 	name = "exosuit power cell"
@@ -215,7 +201,7 @@
 	origin_tech = list(TECH_POWER = 3)
 	icon_state = "hcell"
 	maxcharge = 1500
-	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 70)
+	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 70, MATERIAL_ALUMINIUM = 20)
 
 
 /obj/item/weapon/cell/super
@@ -224,12 +210,10 @@
 	origin_tech = list(TECH_POWER = 5)
 	icon_state = "scell"
 	maxcharge = 2000
-	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 70)
+	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 70, MATERIAL_ALUMINIUM = 20)
 
-/obj/item/weapon/cell/super/empty/New()
-	..()
+/obj/item/weapon/cell/super/empty
 	charge = 0
-
 
 /obj/item/weapon/cell/hyper
 	name = "superior power cell"
@@ -237,12 +221,10 @@
 	origin_tech = list(TECH_POWER = 6)
 	icon_state = "hpcell"
 	maxcharge = 3000
-	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 80)
+	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 80, MATERIAL_ALUMINIUM = 20)
 
-/obj/item/weapon/cell/hyper/empty/New()
-	..()
+/obj/item/weapon/cell/hyper/empty
 	charge = 0
-
 
 /obj/item/weapon/cell/infinite
 	name = "experimental power cell"
@@ -250,7 +232,7 @@
 	icon_state = "icell"
 	origin_tech =  null
 	maxcharge = 3000
-	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 80)
+	matter = list(MATERIAL_STEEL = 700, MATERIAL_GLASS = 80, MATERIAL_ALUMINIUM = 20)
 
 /obj/item/weapon/cell/infinite/check_charge()
 	return 1
@@ -266,7 +248,7 @@
 	icon = 'icons/obj/power.dmi' //'icons/obj/harvest.dmi'
 	icon_state = "potato_cell" //"potato_battery"
 	maxcharge = 20
-	self_recharge = 0.2
+
 
 /obj/item/weapon/cell/slime
 	name = "charged slime core"
@@ -275,5 +257,4 @@
 	icon = 'icons/mob/slimes.dmi' //'icons/obj/harvest.dmi'
 	icon_state = "yellow slime extract" //"potato_battery"
 	maxcharge = 200
-	self_recharge = 1
 	matter = null

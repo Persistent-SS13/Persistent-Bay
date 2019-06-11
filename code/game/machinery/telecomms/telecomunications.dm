@@ -186,7 +186,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 				if(src != T)
 					links |= T
 
-/obj/machinery/telecomms/update_icon()
+/obj/machinery/telecomms/on_update_icon()
 	if(on && !overloaded_for)
 		icon_state = initial(icon_state)
 	else
@@ -200,7 +200,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 			on = 1
 	else
 		on = 0
-	use_power = on
+	update_use_power(on)
 
 /obj/machinery/telecomms/Process()
 	update_power()
@@ -400,9 +400,9 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 /obj/machinery/telecomms/relay/update_power()
 	..()
 	if(z in GLOB.using_map.station_levels)
-		idle_power_usage = 2.5 KILOWATTS
+		change_power_consumption(2.5 KILOWATTS, POWER_USE_IDLE)
 	else
-		idle_power_usage = 30 KILOWATTS
+		change_power_consumption(100 KILOWATTS, POWER_USE_IDLE)
 
 /obj/machinery/telecomms/relay/receive_information(datum/signal/signal, obj/machinery/telecomms/machine_from)
 
@@ -661,6 +661,7 @@ var/global/list/obj/machinery/telecomms/telecomms_list = list()
 		if(rule[1] == freq)
 			return list(rule[2], rule[3])
 	return list(format_frequency(freq), channel_color_presets["Global Green"])
+
 
 // Simple log entry datum
 

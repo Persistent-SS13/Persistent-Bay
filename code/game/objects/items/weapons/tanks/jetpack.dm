@@ -21,8 +21,8 @@
 	ion_trail.set_up(src)
 
 /obj/item/weapon/tank/jetpack/Destroy()
-	. = ..()
 	qdel(ion_trail)
+	..()
 
 /obj/item/weapon/tank/jetpack/examine(mob/living/user)
 	. = ..()
@@ -54,21 +54,19 @@
 
 	to_chat(usr, "You toggle the thrusters [on? "on":"off"].")
 
-/obj/item/weapon/tank/jetpack/proc/allow_thrust(num, mob/living/user as mob)
+/obj/item/weapon/tank/jetpack/proc/allow_thrust(num, mob/living/user)
 	if(!(src.on))
 		return 0
 	if((num < 0.005 || src.air_contents.total_moles < num))
 		src.ion_trail.stop()
 		return 0
 
-	var/datum/gas_mixture/G = src.air_contents.remove(num)
+	var/datum/gas_mixture/G = remove_air(num)
 
-	var/allgases = G.gas[GAS_CO2] + G.gas[GAS_NITROGEN] + G.gas[GAS_OXYGEN] + G.gas[GAS_PHORON]
-	if(allgases >= 0.005)
+	if(G.total_moles >= 0.005)
 		return 1
 
 	qdel(G)
-	return
 
 /obj/item/weapon/tank/jetpack/ui_action_click()
 	toggle()
@@ -119,7 +117,7 @@
 		src.ion_trail.stop()
 		return 0
 
-	var/datum/gas_mixture/G = pressure_vessel.air_contents.remove(num)
+	var/datum/gas_mixture/G = pressure_vessel.remove_air(num)
 
 	if(G.total_moles >= 0.005)
 		return 1

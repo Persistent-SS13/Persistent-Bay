@@ -28,11 +28,15 @@
 	..()
 
 /mob/living/carbon/lace/after_load()
+	. = ..()
 	if(container)
 		container.lacemob = src
 	for(var/datum/action/action in actions)
-		action.target = container
+		action.SetTarget(container)
 
+/mob/living/carbon/lace/Initialize()
+	. = ..()
+	update_action_buttons()
 
 /mob/living/carbon/lace/Destroy()
 	if(key)				//If there is a mob connected to this thing. Have to check key twice to avoid false death reporting.
@@ -46,11 +50,6 @@
 
 /mob/living/carbon/brain/say_understands(var/other)//Goddamn is this hackish, but this say code is so odd
 	if (istype(other, /mob/living/silicon/ai))
-		if(!(container && istype(container, /obj/item/device/lmi)))
-			return 0
-		else
-			return 1
-	if (istype(other, /mob/living/silicon/decoy))
 		if(!(container && istype(container, /obj/item/device/lmi)))
 			return 0
 		else
@@ -84,3 +83,6 @@
 /mob/living/carbon/lace/check_has_mouth()
 	return 0
 
+// /mob/living/carbon/lace/Life()
+// 	. = ..()
+// 	update_action_buttons()

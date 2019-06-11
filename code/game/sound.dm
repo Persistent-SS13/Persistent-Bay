@@ -52,16 +52,16 @@ GLOBAL_LIST_INIT(keyboard_sound,list('sound/machines/keyboard/keypress1.ogg','so
 GLOBAL_LIST_INIT(keystroke_sound,list('sound/machines/keyboard/keystroke1.ogg','sound/machines/keyboard/keystroke2.ogg','sound/machines/keyboard/keystroke3.ogg','sound/machines/keyboard/keystroke4.ogg'))
 GLOBAL_LIST_INIT(switch_sound,list('sound/machines/switch1.ogg','sound/machines/switch2.ogg','sound/machines/switch3.ogg','sound/machines/switch4.ogg'))
 GLOBAL_LIST_INIT(button_sound,list('sound/machines/button1.ogg','sound/machines/button2.ogg','sound/machines/button3.ogg','sound/machines/button4.ogg'))
+GLOBAL_LIST_INIT(chop_sound,list('sound/weapons/chop1.ogg','sound/weapons/chop2.ogg','sound/weapons/chop3.ogg'))
 
-/proc/playsound(var/atom/source, soundin, vol as num, vary, extrarange as num, falloff, var/is_global, var/frequency, var/is_ambience = 0)
+/proc/playsound(var/atom/source, soundin, vol as num, vary, extrarange as num, falloff, var/is_global, var/frequency, var/is_ambiance = 0)
 
 	soundin = get_sfx(soundin) // same sound for everyone
 
 	if(isarea(source))
 		error("[source] is an area and is trying to make the sound: [soundin]")
 		return
-
-	frequency = isnull(frequency) ? get_rand_frequency() : frequency // Same frequency for everybody
+	frequency = vary && isnull(frequency) ? get_rand_frequency() : frequency // Same frequency for everybody
 	var/turf/turf_source = get_turf(source)
 
  	// Looping through the player list has the added bonus of working for mobs inside containers
@@ -71,7 +71,7 @@ GLOBAL_LIST_INIT(button_sound,list('sound/machines/button1.ogg','sound/machines/
 			continue
 		if(get_dist(M, turf_source) <= (world.view + extrarange) * 2)
 			var/turf/T = get_turf(M)
-			if(T && T.z == turf_source.z && (!is_ambience || M.get_preference_value(/datum/client_preference/play_ambience) == GLOB.PREF_YES))
+			if(T && T.z == turf_source.z && (!is_ambiance || M.get_preference_value(/datum/client_preference/play_ambiance) == GLOB.PREF_YES))
 				M.playsound_local(turf_source, soundin, vol, vary, frequency, falloff, is_global, extrarange)
 
 var/const/FALLOFF_SOUNDS = 0.5
@@ -86,11 +86,10 @@ var/const/FALLOFF_SOUNDS = 0.5
 		S.channel = 0 //Any channel
 		S.volume = vol
 		S.environment = -1
-		if (vary)
-			if(frequency)
-				S.frequency = frequency
-			else
-				S.frequency = get_rand_frequency()
+		if(frequency)
+			S.frequency = frequency
+		else if (vary)
+			S.frequency = get_rand_frequency()
 
 	//sound volume falloff with pressure
 	var/pressure_factor = 1.0
@@ -186,4 +185,5 @@ var/const/FALLOFF_SOUNDS = 0.5
 			if ("keystroke") soundin = pick(GLOB.keystroke_sound)
 			if ("switch") soundin = pick(GLOB.switch_sound)
 			if ("button") soundin = pick(GLOB.button_sound)
+			if ("chop") soundin = pick(GLOB.chop_sound)
 	return soundin

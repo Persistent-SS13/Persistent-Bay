@@ -7,7 +7,6 @@
 	icon = 'icons/obj/virology.dmi'
 	icon_state = "analyser"
 
-	use_power = 1			//1 = idle, 2 = active
 	idle_power_usage = 20
 	active_power_usage = 300
 
@@ -94,8 +93,8 @@
 		if(scanned_item)
 			to_chat(user, "<span class=warning>\The [src] already has \a [scanned_item] inside!</span>")
 			return
-		user.drop_item()
-		I.loc = src
+		if(!user.unEquip(I, src))
+			return
 		scanned_item = I
 		to_chat(user, "<span class=notice>You put \the [I] into \the [src].</span>")
 
@@ -266,9 +265,9 @@
 	if(scanned_item)
 		//create report
 		var/obj/item/weapon/paper/P = new(src)
-		P.name = "[src] report #[++report_num]: [scanned_item.name]"
+		P.SetName("[src] report #[++report_num]: [scanned_item.name]")
 		P.stamped = list(/obj/item/weapon/stamp)
-		P.overlays = list("paper_stamped")
+		P.queue_icon_update()
 
 		//work out data
 		var/data = " - Mundane object: [scanned_item.desc ? scanned_item.desc : "No information on record."]<br>"
@@ -318,15 +317,12 @@
 		P.info = "<b>[src] analysis report #[report_num]</b><br>"
 		P.info += "<b>Scanned item:</b> [scanned_item.name]<br><br>" + data
 		last_scan_data = P.info
-		P.loc = src.loc
+		P.dropInto(loc)
 
-		scanned_item.loc = src.loc
+		scanned_item.dropInto(loc)
 		scanned_item = null
 
-/obj/machinery/radiocarbon_spectrometer/Topic(href, href_list)
-	if(stat & (NOPOWER|BROKEN))
-		return 0 // don't update UIs attached to this object
-
+/obj/machinery/radiocarbon_spectrometer/OnTopic(user, href_list)
 	if(href_list["scanItem"])
 		if(scanning)
 			stop_scanning()
@@ -336,30 +332,30 @@
 					scanner_progress = 0
 					scanning = 1
 					t_left_radspike = pick(5,10,15)
-					to_chat(usr, "<span class='notice'>Scan initiated.</span>")
+					to_chat(user, "<span class='notice'>Scan initiated.</span>")
 				else
-					to_chat(usr, "<span class='warning'>Could not initiate scan, seal requires replacing.</span>")
+					to_chat(user, "<span class='warning'>Could not initiate scan, seal requires replacing.</span>")
 			else
-				to_chat(usr, "<span class='warning'>Insert an item to scan.</span>")
+				to_chat(user, "<span class='warning'>Insert an item to scan.</span>")
+		. = TOPIC_REFRESH
 
-	if(href_list["maserWavelength"])
+	else if(href_list["maserWavelength"])
 		maser_wavelength = max(min(maser_wavelength + 1000 * text2num(href_list["maserWavelength"]), 10000), 1)
+		. = TOPIC_REFRESH
 
-	if(href_list["coolantRate"])
+	else if(href_list["coolantRate"])
 		coolant_usage_rate = max(min(coolant_usage_rate + text2num(href_list["coolantRate"]), 10000), 0)
+		. = TOPIC_REFRESH
 
-	if(href_list["toggle_rad_shield"])
+	else if(href_list["toggle_rad_shield"])
 		if(rad_shield)
 			rad_shield = 0
 		else
 			rad_shield = 1
+		. = TOPIC_REFRESH
 
-	if(href_list["ejectItem"])
+	else if(href_list["ejectItem"])
 		if(scanned_item)
-			scanned_item.forceMove(loc)
-			if(Adjacent(usr) && !issilicon(usr))
-				usr.put_in_hands(scanned_item)
+			scanned_item.dropInto(loc)
 			scanned_item = null
-
-	add_fingerprint(usr)
-	return 1 // update UIs attached to this object
+		. = TOPIC_REFRESH

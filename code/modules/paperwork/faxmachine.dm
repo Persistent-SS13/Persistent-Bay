@@ -5,12 +5,11 @@ GLOBAL_LIST_EMPTY(adminfaxes)	//cache for faxes that have been sent to admins
 
 /obj/machinery/photocopier/faxmachine
 	name = "fax machine"
-	icon = 'icons/obj/library.dmi'
+	icon = 'icons/obj/machines/faxmachine.dmi'
 	icon_state = "fax"
 	insert_anim = "faxsend"
 	req_one_access = list(access_lawyer, access_heads, access_armory, access_qm)
 
-	use_power = 1
 	idle_power_usage = 30
 	active_power_usage = 200
 
@@ -22,6 +21,11 @@ GLOBAL_LIST_EMPTY(adminfaxes)	//cache for faxes that have been sent to admins
 
 	var/static/list/admin_departments
 
+/obj/machinery/photocopier/faxmachine/New()
+	. = ..()
+	ADD_SAVED_VAR(department)
+	ADD_SAVED_VAR(destination)
+
 /obj/machinery/photocopier/faxmachine/Initialize()
 	. = ..()
 
@@ -31,6 +35,15 @@ GLOBAL_LIST_EMPTY(adminfaxes)	//cache for faxes that have been sent to admins
 	if(!destination) destination = "[GLOB.using_map.boss_name]"
 	if( !(("[department]" in GLOB.alldepartments) || ("[department]" in admin_departments)))
 		GLOB.alldepartments |= department
+
+/obj/machinery/photocopier/faxmachine/attackby(obj/item/O as obj, mob/user as mob)
+	if(istype(O, /obj/item/weapon/card/id))
+		if(!user.unEquip(O, src))
+			return
+		scan = O
+		to_chat(user, "<span class='notice'>You insert \the [O] into \the [src].</span>")
+	else
+		..()
 
 /obj/machinery/photocopier/faxmachine/attack_hand(mob/user as mob)
 	user.set_machine(src)
@@ -98,7 +111,6 @@ GLOBAL_LIST_EMPTY(adminfaxes)	//cache for faxes that have been sent to admins
 
 	else if(href_list["remove"])
 		if(copyitem)
-			copyitem.loc = usr.loc
 			usr.put_in_hands(copyitem)
 			to_chat(usr, "<span class='notice'>You take \the [copyitem] out of \the [src].</span>")
 			copyitem = null
@@ -107,17 +119,13 @@ GLOBAL_LIST_EMPTY(adminfaxes)	//cache for faxes that have been sent to admins
 	if(href_list["scan"])
 		if (scan)
 			if(ishuman(usr))
-				scan.loc = usr.loc
-				if(!usr.get_active_hand())
-					usr.put_in_hands(scan)
-				scan = null
+				usr.put_in_hands(scan)
 			else
-				scan.loc = src.loc
-				scan = null
+				scan.dropInto(loc)
+			scan = null
 		else
 			var/obj/item/I = usr.get_active_hand()
-			if (istype(I, /obj/item/weapon/card/id) && usr.unEquip(I))
-				I.loc = src
+			if (istype(I, /obj/item/weapon/card/id) && usr.unEquip(I, src))
 				scan = I
 		authenticated = 0
 
@@ -140,7 +148,7 @@ GLOBAL_LIST_EMPTY(adminfaxes)	//cache for faxes that have been sent to admins
 	if(stat & (BROKEN|NOPOWER))
 		return
 
-	use_power(200)
+	use_power_oneoff(200)
 
 	var/success = 0
 	for(var/obj/machinery/photocopier/faxmachine/F in GLOB.allfaxes)
@@ -175,14 +183,14 @@ GLOBAL_LIST_EMPTY(adminfaxes)	//cache for faxes that have been sent to admins
 	else
 		return 0
 
-	use_power(active_power_usage)
+	use_power_oneoff(active_power_usage)
 	return 1
 
 /obj/machinery/photocopier/faxmachine/proc/send_admin_fax(var/mob/sender, var/destination)
 	if(stat & (BROKEN|NOPOWER))
 		return
 
-	use_power(200)
+	use_power_oneoff(200)
 
 	//recieved copies should not use toner since it's being used by admins only.
 	var/obj/item/rcvdcopy
@@ -196,7 +204,7 @@ GLOBAL_LIST_EMPTY(adminfaxes)	//cache for faxes that have been sent to admins
 		visible_message("[src] beeps, \"Error transmitting message.\"")
 		return
 
-	rcvdcopy.loc = null //hopefully this shouldn't cause trouble
+	rcvdcopy.forceMove(null) //hopefully this shouldn't cause trouble
 	GLOB.adminfaxes += rcvdcopy
 
 	var/mob/intercepted = check_for_interception()

@@ -3,9 +3,6 @@
 //===================================
 /obj/item/weapon/tool/weldingtool/largetank
 	name = "industrial welding tool"
-	icon_state = "welder_l"
-	item_state = "welder"
-	desc = "A heavy-duty portable welder, made to ensure it won't suddenly go cold on you."
 	origin_tech = list(TECH_ENGINEERING = 2)
 	matter = list(MATERIAL_STEEL = 420, MATERIAL_GLASS = 180)
 	w_class = ITEM_SIZE_NORMAL
@@ -22,7 +19,7 @@
 //===================================
 /obj/item/weapon/welder_tank/large
 	name = "large welding fuel tank"
-	icon_state = "fuel_l"
+	icon_state = "tank_large"
 	w_class = ITEM_SIZE_SMALL
 	tank_volume = 80
 	starting_fuel = 80

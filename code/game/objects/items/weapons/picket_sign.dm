@@ -32,7 +32,7 @@
 		if(do_after(user, 10, src))
 			playsound(loc, 'sound/items/Wirecutter.ogg', 50, 1)
 			to_chat(user, "<span class='notice'>[user] takes apart the [src].</span>")
-			new /obj/item/stack/rods(user.loc, 1)
+			new /obj/item/stack/material/rods(user.loc, 1)
 			new /obj/item/stack/material/cardboard(user.loc, 2)
 			qdel(src)
 

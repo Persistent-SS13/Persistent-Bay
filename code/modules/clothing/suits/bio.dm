@@ -22,6 +22,7 @@
 		DAM_RADS 	= 20,
 		DAM_STUN 	= 0)
 	flags_inv = HIDEMASK|HIDEEARS|HIDEEYES|BLOCKHAIR
+	item_flags = ITEM_FLAG_THICKMATERIAL
 	body_parts_covered = HEAD|FACE|EYES
 	siemens_coefficient = 0.9
 
@@ -37,7 +38,7 @@
 	gas_transfer_coefficient = 0
 	permeability_coefficient = 0
 	body_parts_covered = UPPER_TORSO|LOWER_TORSO|LEGS|FEET|ARMS|HANDS
-	allowed = list(/obj/item/weapon/tank/emergency,/obj/item/weapon/pen,/obj/item/device/flashlight/pen,/obj/item/device/healthanalyzer,/obj/item/device/ano_scanner,/obj/item/clothing/head/bio_hood,/obj/item/clothing/mask/gas)
+	allowed = list(/obj/item/weapon/tank/emergency,/obj/item/weapon/pen,/obj/item/device/flashlight/pen,/obj/item/device/scanner/health,/obj/item/device/ano_scanner,/obj/item/clothing/head/bio_hood,/obj/item/clothing/mask/gas)
 	armor  = list(
 		DAM_BLUNT 	= 0,
 		DAM_PIERCE 	= 0,
@@ -52,6 +53,7 @@
 		DAM_RADS 	= 20,
 		DAM_STUN 	= 0)
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT|HIDETAIL
+	item_flags = ITEM_FLAG_THICKMATERIAL
 	siemens_coefficient = 0.9
 
 /obj/item/clothing/suit/bio_suit/New()
